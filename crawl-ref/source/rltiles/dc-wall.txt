@@ -23,7 +23,9 @@ wall/brick_dark5
 wall/brick_dark6
 # banner
 %weight 3
-wall/brick_dark-bnr1
+%back wall/brick_dark1
+wall/banners/banner1
+%back none
 
 %back wall/brick_dark0
 # torch (out)

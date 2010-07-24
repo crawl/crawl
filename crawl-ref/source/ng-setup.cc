@@ -400,6 +400,12 @@ void newgame_make_item(int slot, equipment_type eqslot,
         you.equip[eqslot] = slot;
 }
 
+void newgame_give_item(object_class_type base, int sub_type,
+                       int qty, int plus, int plus2)
+{
+    newgame_make_item(-1, EQ_NONE, base, sub_type, -1, qty, plus, plus2);
+}
+
 static void _newgame_clear_item(int slot)
 {
     you.inv[slot] = item_def();

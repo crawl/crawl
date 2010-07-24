@@ -1464,7 +1464,7 @@ bool fedhas_sunlight()
     if (cloud_count)
         mprf("Sunlight penetrates the thick gloom.");
 
-    return (processed_count);
+    return (true);
 }
 
 template<typename T>

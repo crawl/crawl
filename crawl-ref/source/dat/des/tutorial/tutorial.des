@@ -303,7 +303,7 @@ end
 function tutorial.message_pray ()
   local text = "Here's an altar to one of the gods in the game. You can pray on an altar with " .. tutorial.get_cmd("CMD_PRAY") .. " to start worshipping. Confirm your choice with a capital <white>Y</white>. Back in the game, you can then press " .. tutorial.get_cmd("CMD_DISPLAY_RELIGION")
   if crawl.is_tiles() then
-    text = text .. "or <white>right-click</white> on your character"
+    text = text .. " or <white>right-click</white> on your character"
   end
   text = text .. " to read the description of whatever god you're worshipping at the time."
 
@@ -331,7 +331,7 @@ MARKER:  I = lua:tutorial.message_log()
 MARKER:  J = lua:tutorial.message_monster_description()
 KFEAT:   ABCDEFGHQIJ = .
 COLOUR:  ABCDEFGHQIJ = blue
-#TILE:    ABCDEFGH = tutorial_message_tile_name_here
+FTILE:   ABCDEFGHQIJ = tutorial_pad
 MONS:    training dummy tile:mons_training_dummy hp:20 ; club ego:none
 epilogue{{
   tutorial.messagestart()
@@ -376,6 +376,7 @@ ITEM:    randbook disc:conjuration numspells:1 slevels:1 spell:magic_dart \
                   owner:Newbie
 KFEAT:   ABCDEF = .
 COLOUR:  ABCDEF = blue
+FTILE:   ABCDEF = tutorial_pad
 MARKER:  [ = lua:tutorial.message_upstairs()
 MARKER:  A = lua:tutorial.message_wield_ranged()
 # TODO: Targetting needs tutorial messages; these can't be done on the map side.
@@ -425,12 +426,13 @@ KFEAT:   pmn = .
 KITEM:   G = wand of fireball
 KFEAT:   ABCDEFGHI = .
 COLOUR:  ABCDEFGHI = blue
+FTILE:   ABCDEFGHI = tutorial_pad
 MARKER:  A = lua:tutorial.message( "You can chop up corpses with " .. tutorial.get_cmd("CMD_BUTCHER") .. " into edible meat chunks while standing over them. For that you'll need a sharp object, such as the axe over there.", "tutorial", "true" )
 MARKER:  d = lua:tutorial.message( "This axe was picked up automatically because you didn't have a butchering tool. Once you've " .. tutorial.get_cmd("CMD_BUTCHER") .. "hopped a corpse you're standing on, you can eat the resulting chunks with " .. tutorial.get_cmd("CMD_EAT") .. ", though only if you're hungry.", "tutorial", "true" )
 MARKER:  B = lua:tutorial.message_eat()
 MARKER:  C = lua:tutorial.message_identify()
 MARKER:  D = lua:tutorial.message( "These meat rations weigh too much. You can drop them with <white>d</white>. You can also drop e.g. only 10, by typing " .. tutorial.get_cmd("CMD_DROP") .. ", <white>10</white> and then selecting the meat rations.", "tutorial", "true" )
-MARKER:  E = lua:tutorial.message( "This sword is cursed. If you wield it, you can uncurse it by reading this remove curse scroll. Remove curse scrolls uncurses all the cursed items you have currently equipped. The other items in your inventory are not affected. Once the sword is uncursed, you can drop it with " .. tutorial.get_cmd("CMD_DROP") .. " or wield something else with " .. tutorial.get_cmd("CMD_WIELD_WEAPON") .. ".", "tutorial", "true" )
+MARKER:  E = lua:tutorial.message( "This sword is cursed. If you wield it, you can uncurse it by reading this remove curse scroll. Remove curse scrolls uncurse all the cursed items you have currently equipped. The other items in your inventory are not affected. Once the sword is uncursed, you can drop it with " .. tutorial.get_cmd("CMD_DROP") .. " or wield something else with " .. tutorial.get_cmd("CMD_WIELD_WEAPON") .. ".", "tutorial", "true" )
 MARKER:  F = lua:tutorial.message_quaff()
 MARKER:  G = lua:tutorial.message_evoke()
 MARKER:  H = lua:tutorial.message( "Here's some gold that can be spent in shops. Note that they don't buy items from you, so there's no need to carry stuff around that you can't use. Gold is picked up automatically.", "tutorial", "true" )
@@ -478,6 +480,7 @@ KMONS:   S = Sigmund
 KFEAT:   S = .
 KFEAT:   ABCDEF = .
 COLOUR:  ABCDEF = blue
+FTILE:   ABCDEF = tutorial_pad
 MONS:    rat, rat always_corpse
 MONS:    training dummy tile:mons_training_dummy spells:blink;blink;blink;blink;blink;blink ; whip ego:reaching
 MARKER:  A = lua:tutorial.message( "You may have been poisoned from the trap. Drink a potion of healing, or rest with " .. tutorial.get_cmd("CMD_REST") .. " to try to wait it out.", "tutorial", "true" )
@@ -515,7 +518,8 @@ PLACE:   D:5
 MONS:    pandemonium lord name:Plog name_replace spells:fire_storm;;haste;;;
 KFEAT:   ABC = .
 COLOUR:  ABC = blue
-MARKER:  A = lua:tutorial.message( "Congratulations, You have succeeded in defeating Sigmund! He is one of the many early game threats that you will face on your adventures.", "tutorial", "true" )
+FTILE:   ABC = tutorial_pad
+MARKER:  A = lua:tutorial.message( "Congratulations, you have succeeded in defeating Sigmund! He is one of the many early game threats that you will face on your adventures.", "tutorial", "true" )
 MARKER:  B = lua:tutorial.message( "Death in Crawl is almost inevitable, sometimes you will get yourself in way over your head; often, you will die.", "tutorial", "true" )
 MARKER:  C = lua:tutorial.message( "How on earth did you manage to defeat or escape from that Pandemonium lord?", "tutorial", "true" )
 MAP

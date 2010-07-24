@@ -166,6 +166,7 @@ earth_elemental MONS_EARTH_ELEMENTAL /*'#'*/
 fire_elemental MONS_FIRE_ELEMENTAL /*'#'*/
 water_elemental MONS_WATER_ELEMENTAL /*'{'*/
 air_elemental MONS_AIR_ELEMENTAL /*'v'*/
+iron_elemental MONS_IRON_ELEMENTAL
 fire_vortex MONS_FIRE_VORTEX /*'v'*/
 spatial_vortex MONS_SPATIAL_VORTEX /*'v'*/
 %rim 0
@@ -405,6 +406,7 @@ glowing_shapeshifter MONS_GLOWING_SHAPESHIFTER
 killer_klown MONS_KILLER_KLOWN
 slave MONS_SLAVE
 human_slave
+dwarf MONS_DWARF
 ## From the Wucad Mu wizlab
 human_monk_ghost MONS_HUMAN_MONK
 ## From the Cigotuvi wizlab
@@ -480,6 +482,7 @@ manticore MONS_MANTICORE
 griffon MONS_GRIFFON
 harpy MONS_HARPY
 sphinx MONS_SPHINX
+kenku MONS_KENKU
 
 ## Ice beast only
 ice_beast MONS_ICE_BEAST /*'I'*/

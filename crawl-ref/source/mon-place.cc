@@ -842,6 +842,7 @@ monster_type pick_random_monster_for_place(const level_id &place,
         chosen = pick_random_monster(place, lev, lev, NULL);
     while (!invalid_monster_type(chosen)
            && wanted_zombie_size != Z_NOZOMBIE
+           && !mons_class_flag(chosen, M_NO_POLY_TO)
            && mons_zombie_size(chosen) != wanted_zombie_size
            && (!want_corpse_capable
                || mons_class_can_leave_corpse(mons_species(chosen)))
@@ -1708,11 +1709,10 @@ static int _place_monster_aux(const mgen_data &mg,
 
     mark_interesting_monst(mon, mg.behaviour);
 
-    if (!Generating_Level && you.can_see(mon))
-        handle_seen_interrupt(mon);
-
     if (crawl_state.game_is_arena())
         arena_placed_monster(mon);
+    else if (!Generating_Level && you.can_see(mon))
+        handle_seen_interrupt(mon);
 
     return (mon->mindex());
 }

@@ -24,7 +24,7 @@ There is a list of frequently asked questions which you can access pressing
 1. Getting started
 ------------------
 If you'd like to dive in immediately, your best bets are to
-* start a game and pick a tutorial (press 'Ctrl-T' when asked for species), or
+* start a game and pick a tutorial (select tutorial in the game menu), or
 * read quickstart.txt (in the docs/ directory), or
 * for studious readers, browse the manual (see below for all doc files).
 

@@ -174,7 +174,7 @@ private:
     lua_State *_state;
     typedef std::set<std::string> sfset;
     sfset sourced_files;
-    unsigned long uniqindex;
+    unsigned int uniqindex;
 
     std::vector<lua_shutdown_listener*> shutdown_listeners;
 
@@ -228,7 +228,7 @@ private:
     std::string pattern;
     std::string lua_fn_name;
 
-    static unsigned long lfndx;
+    static unsigned int lfndx;
 
     bool translate() const;
     void pre_pattern(std::string &pat, std::string &fn) const;
@@ -237,7 +237,10 @@ private:
     static std::string new_fn_name();
 };
 
-// Defined in acr.cc
+// Defined in main.cc
+#ifdef DEBUG_GLOBALS
+#define clua (*real_clua)
+#endif
 extern CLua clua;
 
 void lua_set_exclusive_item(const item_def *item = NULL);

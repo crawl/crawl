@@ -663,23 +663,28 @@ static void _construct_species_menu(const newgame_def* ng,
     }
 
     // Add all the special button entries
+    tmp = new TextItem();
+    tmp->set_text("+ - Viable Species");
+    min_coord.x = X_MARGIN;
+    min_coord.y = SPECIAL_KEYS_START_Y;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
+    tmp->add_hotkey('+');
+    // If the player has a job chosen, use VIABLE, otherwise use RANDOM
     if (ng->job != JOB_UNKNOWN)
     {
-        tmp = new TextItem();
-        tmp->set_text("+ - Viable Species");
-        min_coord.x = X_MARGIN;
-        min_coord.y = SPECIAL_KEYS_START_Y;
-        max_coord.x = min_coord.x + tmp->get_text().size();
-        max_coord.y = min_coord.y + 1;
-        tmp->set_bounds(min_coord, max_coord);
-        tmp->set_fg_colour(BROWN);
-        tmp->add_hotkey('+');
         tmp->set_id(M_VIABLE);
-        tmp->set_highlight_colour(LIGHTGRAY);
-        tmp->set_description_text("Picks a random viable species based on your current job choice");
-        menu->attach_item(tmp);
-        tmp->set_visible(true);
     }
+    else
+    {
+        tmp->set_id(M_RANDOM);
+    }
+    tmp->set_highlight_colour(LIGHTGRAY);
+    tmp->set_description_text("Picks a random viable species based on your current job choice");
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
 
     tmp = new TextItem();
     tmp->set_text("# - Viable character");
@@ -1017,23 +1022,28 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
     }
 
     // Add all the special button entries
+    tmp = new TextItem();
+    tmp->set_text("+ - Viable background");
+    min_coord.x = X_MARGIN;
+    min_coord.y = SPECIAL_KEYS_START_Y;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
+    tmp->add_hotkey('+');
+    // If the player has species chosen, use VIABLE, otherwise use RANDOM
     if (ng->species != SP_UNKNOWN)
     {
-        tmp = new TextItem();
-        tmp->set_text("+ - Viable background");
-        min_coord.x = X_MARGIN;
-        min_coord.y = SPECIAL_KEYS_START_Y;
-        max_coord.x = min_coord.x + tmp->get_text().size();
-        max_coord.y = min_coord.y + 1;
-        tmp->set_bounds(min_coord, max_coord);
-        tmp->set_fg_colour(BROWN);
-        tmp->add_hotkey('+');
         tmp->set_id(M_VIABLE);
-        tmp->set_highlight_colour(LIGHTGRAY);
-        tmp->set_description_text("Picks a random viable background based on your current species choice");
-        menu->attach_item(tmp);
-        tmp->set_visible(true);
     }
+    else
+    {
+        tmp->set_id(M_RANDOM);
+    }
+    tmp->set_highlight_colour(LIGHTGRAY);
+    tmp->set_description_text("Picks a random viable background based on your current species choice");
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
 
     tmp = new TextItem();
     tmp->set_text("# - Viable character");

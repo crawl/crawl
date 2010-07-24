@@ -916,19 +916,19 @@ int get_next_fire_item(int current, int direction)
 
     if (fire_order.size() == 0)
         return -1;
-    if (current == -1)
-        return fire_order[0];
 
+    int next = direction > 0 ? 0 : -1;
     for (unsigned i = 0; i < fire_order.size(); i++)
     {
         if (fire_order[i] == current)
         {
-            unsigned int next =
-                (i + direction + fire_order.size()) % fire_order.size();
-            return fire_order[next];
+            next = i + direction;
+            break;
         }
     }
-    return fire_order[0];
+
+    next = (next + fire_order.size()) % fire_order.size();
+    return fire_order[next];
 }
 
 class fire_target_behaviour : public targeting_behaviour

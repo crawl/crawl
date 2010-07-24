@@ -12,6 +12,7 @@
 #include "flood_find.h"
 #include "fprop.h"
 #include "items.h"
+#include "itemprop.h"
 #include "libutil.h"
 #include "mapmark.h"
 #include "maps.h"
@@ -781,7 +782,7 @@ static bool _shoals_tide_sweep_items_clear(coord_def c)
         // to the nearest safe square.
         item_def &item(*si);
         // Let the tide break up stacks
-        if (!is_rune(item) && coinflip())
+        if (!item_is_rune(item) && coinflip())
             continue;
 
         const coord_def target(_shoals_escape_place_from(c, NULL, &item));

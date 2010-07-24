@@ -18,6 +18,8 @@
 
 #include <time.h>
 #include <stdint.h>
+#define __STDC_FORMAT_MACROS
+#include <inttypes.h>
 
 #include "defines.h"
 #include "enum.h"
@@ -65,7 +67,7 @@ protected:
 
 #define BURDEN_TO_AUM 0.1f           // scale factor for converting burden to aum
 
-extern char info[INFO_SIZE];         // defined in acr.cc {dlb}
+extern char info[INFO_SIZE];         // defined in main.cc {dlb}
 
 const int kNameLen = 30;
 #ifdef SHORT_FILE_NAMES

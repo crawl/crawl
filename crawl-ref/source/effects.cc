@@ -540,7 +540,6 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-#ifdef DGL_MILESTONES
     if (gate_type == DNGN_ENTER_ABYSS)
     {
         mark_milestone("abyss.enter",
@@ -551,7 +550,6 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
         mark_milestone("abyss.exit",
                        "escaped from the Abyss!" + _who_banished(who));
     }
-#endif
 
     std::string cast_into;
 
@@ -1195,8 +1193,9 @@ static bool _try_give_plain_armour(item_def &arm)
     default:
         return (false);
     }
-    // Clear the description flag.
-    set_equip_desc(arm, ISFLAG_NO_DESC);
+    arm.clear();
+    arm.quantity = 1;
+    arm.base_type = OBJ_ARMOUR;
     arm.sub_type = _pick_wearable_armour(result);
     arm.plus = random2(5) - 2;
 
@@ -1514,6 +1513,7 @@ static int _acquirement_misc_subtype()
            || result == MISC_RUNE_OF_ZOT
            || result == MISC_CRYSTAL_BALL_OF_FIXATION
            || result == MISC_EMPTY_EBONY_CASKET
+           || result == MISC_QUAD_DAMAGE
            || result == MISC_DECK_OF_PUNISHMENT);
 
     return (result);
@@ -2394,27 +2394,6 @@ bool recharge_wand(int item_slot)
             // Try again.
             item_slot = -1;
             continue;
-        }
-
-        // Weapons of electrocution can be "charged", i.e. gain +1 damage.
-        if (wand.base_type == OBJ_WEAPONS)
-        {
-            if (get_weapon_brand(wand) == SPWPN_ELECTROCUTION)
-            {
-                // Might fail because of already high enchantment.
-                if (enchant_weapon( ENCHANT_TO_DAM, false, wand ))
-                {
-                    you.wield_change = true;
-
-                    if (!item_ident(wand, ISFLAG_KNOW_TYPE))
-                        set_ident_flags(wand, ISFLAG_KNOW_TYPE);
-
-                    return (true);
-                }
-                return (false);
-            }
-            else
-                canned_msg( MSG_NOTHING_HAPPENS );
         }
 
         if (wand.base_type != OBJ_WANDS && !item_is_rod(wand))
@@ -3572,7 +3551,7 @@ static void _rot_inventory_food(long time_delta)
         item.special -= (time_delta / 20);
 
         if (food_is_rotten(item)
-            && (item.special + (time_delta / 20) >= 100))
+            && (item.special + (time_delta / 20) > ROTTING_CORPSE))
         {
             rotten_items.push_back(index_to_letter(i));
             if (you.equip[EQ_WEAPON] == i)
@@ -3861,76 +3840,6 @@ void handle_time()
         }
     }
 
-    // Random chance to identify staff in hand based off of Spellcasting
-    // and an appropriate other spell skill... is 1/20 too fast?
-    if (you.weapon()
-        && you.weapon()->base_type == OBJ_STAVES
-        && !item_type_known(*you.weapon())
-        && one_chance_in(20))
-    {
-        int total_skill = you.skills[SK_SPELLCASTING];
-
-        switch (you.weapon()->sub_type)
-        {
-        case STAFF_WIZARDRY:
-        case STAFF_ENERGY:
-            total_skill += you.skills[SK_SPELLCASTING];
-            break;
-        case STAFF_FIRE:
-            if (you.skills[SK_FIRE_MAGIC] > you.skills[SK_ICE_MAGIC])
-                total_skill += you.skills[SK_FIRE_MAGIC];
-            else
-                total_skill += you.skills[SK_ICE_MAGIC];
-            break;
-        case STAFF_COLD:
-            if (you.skills[SK_ICE_MAGIC] > you.skills[SK_FIRE_MAGIC])
-                total_skill += you.skills[SK_ICE_MAGIC];
-            else
-                total_skill += you.skills[SK_FIRE_MAGIC];
-            break;
-        case STAFF_AIR:
-            if (you.skills[SK_AIR_MAGIC] > you.skills[SK_EARTH_MAGIC])
-                total_skill += you.skills[SK_AIR_MAGIC];
-            else
-                total_skill += you.skills[SK_EARTH_MAGIC];
-            break;
-        case STAFF_EARTH:
-            if (you.skills[SK_EARTH_MAGIC] > you.skills[SK_AIR_MAGIC])
-                total_skill += you.skills[SK_EARTH_MAGIC];
-            else
-                total_skill += you.skills[SK_AIR_MAGIC];
-            break;
-        case STAFF_POISON:
-            total_skill += you.skills[SK_POISON_MAGIC];
-            break;
-        case STAFF_DEATH:
-            total_skill += you.skills[SK_NECROMANCY];
-            break;
-        case STAFF_CONJURATION:
-            total_skill += you.skills[SK_CONJURATIONS];
-            break;
-        case STAFF_ENCHANTMENT:
-            total_skill += you.skills[SK_ENCHANTMENTS];
-            break;
-        case STAFF_SUMMONING:
-            total_skill += you.skills[SK_SUMMONINGS];
-            break;
-        }
-
-        if (x_chance_in_y(total_skill, 100))
-        {
-            item_def& item = *you.weapon();
-
-            set_ident_type(OBJ_STAVES, item.sub_type, ID_KNOWN_TYPE);
-            set_ident_flags(item, ISFLAG_IDENT_MASK);
-
-            mprf("You are wielding %s.", item.name(DESC_NOCAP_A).c_str());
-            more();
-
-            you.wield_change = true;
-        }
-    }
-
     // Check to see if an upset god wants to do something to the player.
     handle_god_time();
 
@@ -4067,7 +3976,7 @@ static void _catchup_monster_moves(monsters *mon, int turns)
     // probably too annoying even for DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
          "mon #%d: range %d; "
-         "pos (%d,%d); targ %d(%d,%d); flags %ld",
+         "pos (%d,%d); targ %d(%d,%d); flags %"PRIx64,
          mon->mindex(), range, mon->pos().x, mon->pos().y,
          mon->foe, mon->target.x, mon->target.y, mon->flags );
 #endif
@@ -4290,6 +4199,8 @@ void update_level(long elapsedTime)
             mi->del_ench(ENCH_HELD, true);
 
         _catchup_monster_moves(*mi, turns);
+
+        mi->foe_memory = std::max(mi->foe_memory - turns, 0);
 
         if (turns >= 10 && mi->alive())
             mi->timeout_enchantments(turns / 10);
@@ -4916,7 +4827,7 @@ void slime_wall_damage(actor* act, int delay)
         return;
 
     // Up to 1d6 damage per wall per slot.
-    const int strength = div_rand_round(depth * walls * BASELINE_DELAY, delay);
+    const int strength = div_rand_round(depth * walls * delay, BASELINE_DELAY);
 
     if (act->atype() == ACT_PLAYER)
     {

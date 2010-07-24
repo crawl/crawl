@@ -1340,7 +1340,7 @@ static void _handle_macro_delay()
     run_macro();
 
     // Macros may not use up turns, but unless we zero time_taken,
-    // acr.cc will call world_reacts and increase turn count.
+    // main.cc will call world_reacts and increase turn count.
     if (!you.turn_is_over && you.time_taken)
         you.time_taken = 0;
 }

@@ -39,9 +39,18 @@
 
 #ifdef ASSERTS
 
-void AssertFailed(const char *expr, const char *file, int line);
+void AssertFailed(const char *expr, const char *file, int line, bool save_game);
 
-#define ASSERT(p)       do {if (!(p)) AssertFailed(#p, __FILE__, __LINE__);} while (false)
+#define ASSERT_SAVE(p)                                                  \
+    do {                                                                \
+        if (!(p)) AssertFailed(#p, __FILE__, __LINE__, true);           \
+    } while (false)
+
+#define ASSERT(p)                                                       \
+    do {                                                                \
+        if (!(p)) AssertFailed(#p, __FILE__, __LINE__, false);          \
+    } while (false)
+
 #define VERIFY(p)       ASSERT(p)
 
 void DEBUGSTR(const char *format,...);
@@ -49,6 +58,7 @@ void TRACE(const char *format,...);
 
 #else
 
+#define ASSERT_SAVE(p)  ((void) 0)
 #define ASSERT(p)       ((void) 0)
 #define VERIFY(p)       do {if (p) ;} while (false)
 

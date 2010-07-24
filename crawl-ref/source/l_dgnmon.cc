@@ -53,7 +53,7 @@ static int dgn_set_random_mon_list(lua_State *ls)
     // Don't complain if we're being called when the map is being loaded
     // and validated.
     if (you.level_type != LEVEL_PORTAL_VAULT
-        && !(you.start_time == 0 && !you.entering_level && !Generating_Level))
+        && (you.entering_level || Generating_Level))
     {
         luaL_error(ls, "Can only be used in portal vaults.");
         return (0);

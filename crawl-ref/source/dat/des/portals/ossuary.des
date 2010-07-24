@@ -57,8 +57,9 @@ function ossuary_setup_features(e)
         e.colour("< = brown")
         e.lrockcol("white")
         e.lfloorcol("yellow")
-        e.lrocktile("wall_tomb")
+        e.lrocktile("wall_sandstone")
         e.lfloortile("floor_sandstone")
+        e.tile("c = dngn_stone_wall_brown")
 end
 }}
 

@@ -452,8 +452,11 @@ std::string catpath(const std::string &first, const std::string &second)
         return (second);
 
     std::string directory = first;
-    if (directory[directory.length() - 1] != FILE_SEPARATOR)
+    if (directory[directory.length() - 1] != FILE_SEPARATOR
+        && (second.empty() || second[0] != FILE_SEPARATOR))
+    {
         directory += FILE_SEPARATOR;
+    }
     directory += second;
 
     return (directory);
@@ -527,7 +530,7 @@ bool file_exists(const std::string &name)
 // Low-tech existence check.
 bool dir_exists(const std::string &dir)
 {
-#ifdef TARGET_COMPILER_VC
+#ifdef TARGET_OS_WINDOWS
     DWORD lAttr = GetFileAttributes(dir.c_str());
     return (lAttr != INVALID_FILE_ATTRIBUTES
             && (lAttr & FILE_ATTRIBUTE_DIRECTORY));
@@ -755,6 +758,17 @@ std::string get_savefile_directory(bool ignore_game_type)
     if (!ignore_game_type)
         dir = catpath(dir, crawl_state.game_savedir_path());
     check_mkdir("Save directory", &dir, false);
+    if (dir.empty())
+        dir = ".";
+    return (dir);
+}
+
+std::string get_bonefile_directory(bool ignore_game_type)
+{
+    std::string dir = Options.shared_dir;
+    if (!ignore_game_type)
+        dir = catpath(dir, crawl_state.game_savedir_path());
+    check_mkdir("Bones directory", &dir, false);
     if (dir.empty())
         dir = ".";
     return (dir);
@@ -1267,8 +1281,8 @@ static void _close_level_gates()
         {
             if (feat_sealable_portal(grd(*ri)))
             {
+                remove_markers_and_listeners_at(*ri);
                 grd(*ri) = DNGN_STONE_ARCH;
-                env.markers.remove_markers_at(*ri, MAT_ANY);
             }
         }
     }
@@ -1613,20 +1627,23 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     los_changed();
 
-    if (load_mode == LOAD_START_GAME)
-        just_created_level = true;
-    else if (load_mode == LOAD_ENTER_LEVEL)
+    if (make_changes)
     {
+        // Closes all the gates if you're on the way out.
+        if (you.char_direction == GDT_ASCENDING
+            && you.level_type != LEVEL_PANDEMONIUM)
+        {
+            _close_level_gates();
+        }
+
+        // Markers must be activated early, since they may rely on
+        // events issued later, e.g. DET_ENTERING_LEVEL or
+        // the DET_TURN_ELAPSED from update_level.
+        env.markers.activate_all();
+
         // update corpses and fountains
         if (env.elapsed_time && !just_created_level)
             update_level(you.elapsed_time - env.elapsed_time);
-    }
-
-    // Closes all the gates if you're on the way out.
-    if (you.char_direction == GDT_ASCENDING
-        && you.level_type != LEVEL_PANDEMONIUM)
-    {
-        _close_level_gates();
     }
 
     // Apply all delayed actions, if any.
@@ -1693,11 +1710,6 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
         if (just_created_level)
             level_welcome_messages();
 
-        // Activate markers that want activating, but only when entering
-        // a new level. If we're reloading an existing game, markers are
-        // activated in main.cc.
-        env.markers.activate_all();
-
         // Centaurs have difficulty with stairs
         int timeval = ((you.species != SP_CENTAUR) ? player_movement_speed()
                                                    : 15);
@@ -1718,10 +1730,6 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
         if (just_created_level)
             run_map_epilogues();
-    }
-    else if (load_mode == LOAD_START_GAME)
-    {
-        env.markers.activate_all();
     }
 
     // Save the created/updated level out to disk:
@@ -1918,8 +1926,13 @@ static void _save_game_base()
 static void _save_game_exit()
 {
     // Prompt for saving macros.
-    if (crawl_state.unsaved_macros && yesno("Save macros?", true, 'n'))
+    if (crawl_state.unsaved_macros
+        && !crawl_state.seen_hups
+        && !crawl_state.game_wants_emergency_save
+        && yesno("Save macros?", true, 'n'))
+    {
         macro_save();
+    }
 
     // Must be exiting -- save level & goodbye!
     if (!you.entering_level)
@@ -1986,8 +1999,13 @@ void save_game(bool leave_game, const char *farewellmsg)
     // so Valgrind doesn't complain.
     _save_game_exit();
 
-    end(0, false, farewellmsg? "%s" : "See you soon, %s!",
-        farewellmsg? farewellmsg : you.your_name.c_str());
+    // Exit unless this is an emergency save, in which case let the
+    // crash handler re-raise the crashy signal.
+    if (!crawl_state.game_wants_emergency_save)
+    {
+        end(0, false, farewellmsg? "%s" : "See you soon, %s!",
+            farewellmsg? farewellmsg : you.your_name.c_str());
+    }
 }
 
 // Saves the game without exiting.
@@ -2005,15 +2023,12 @@ static std::string _make_portal_vault_ghost_suffix()
 
 static std::string _make_ghost_filename()
 {
+    std::string suffix;
     if (you.level_type == LEVEL_PORTAL_VAULT)
-    {
-        const std::string suffix = _make_portal_vault_ghost_suffix();
-        return get_savedir_filename("bones", "", suffix, true);
-    }
+        suffix = _make_portal_vault_ghost_suffix();
     else
-    {
-        return _make_filename("bones", level_id::current(), true);
-    }
+        suffix = _get_level_suffix(level_id::current());
+    return get_bonefile_directory() + "bones." + suffix;
 }
 
 #define BONES_DIAGNOSTICS (defined(WIZARD) || defined(DEBUG_BONES) | defined(DEBUG_DIAGNOSTICS))
@@ -2130,7 +2145,7 @@ bool load_ghost(bool creating_level)
 #ifdef BONES_DIAGNOSTICS
     if (do_diagnostics)
     {
-        mprf(MSGCH_DIAGNOSTICS, "Loaded ghost file with %lu ghost(s)",
+        mprf(MSGCH_DIAGNOSTICS, "Loaded ghost file with %u ghost(s)",
              ghosts.size());
     }
 #endif
@@ -2178,7 +2193,7 @@ bool load_ghost(bool creating_level)
 #ifdef BONES_DIAGNOSTICS
     if (do_diagnostics && unplaced_ghosts > 0)
     {
-        mprf(MSGCH_DIAGNOSTICS, "Unable to place %lu ghost(s)",
+        mprf(MSGCH_DIAGNOSTICS, "Unable to place %u ghost(s)",
              ghosts.size());
         ghost_errors = true;
     }

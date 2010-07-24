@@ -40,6 +40,7 @@ struct level_exit
 };
 
 #define FRESHEST_CORPSE 210
+#define ROTTING_CORPSE   99
 
 #define YOU_KILL(x) ((x) == KILL_YOU || (x) == KILL_YOU_MISSILE \
                      || (x) == KILL_YOU_CONF)

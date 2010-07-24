@@ -590,16 +590,8 @@ void MiscastEffect::_potion_effect(potion_type pot_eff, int pot_pow)
         return;
     }
 
-    monsters* mon_target = target_as_monster();
-
     switch (pot_eff)
     {
-        case POT_LEVITATION:
-            // There's no levitation enchantment for monsters, and,
-            // anyway, it's not nearly as inconvenient for monsters as
-            // for the player, so backlight them instead.
-            mon_target->add_ench(mon_enchant(ENCH_CORONA, pot_pow, kc));
-            break;
         case POT_BERSERK_RAGE:
             if (target->can_go_berserk())
             {
@@ -968,7 +960,18 @@ void MiscastEffect::_enchantment(int severity)
         switch (random2(crawl_state.game_is_arena() ? 1 : 2))
         {
         case 0:
-            _potion_effect(POT_LEVITATION, 20);
+            if (target->atype() == ACT_PLAYER)
+            {
+                you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
+                levitate_player(20);
+            }
+            else
+            {
+                // There's no levitation enchantment for monsters, and,
+                // anyway, it's not nearly as inconvenient for monsters as
+                // for the player, so backlight them instead.
+                target_as_monster()->add_ench(mon_enchant(ENCH_CORONA, 20, kc));
+            }
             break;
         case 1:
             // XXX: Something else for monsters?

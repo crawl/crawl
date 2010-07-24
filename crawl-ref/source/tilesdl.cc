@@ -520,6 +520,7 @@ int TilesFramework::getch_ck()
     wm->set_timer(res, &_timer_callback);
 
     m_tooltip.clear();
+    std::string prev_alt = m_region_msg->alt_text();
     m_region_msg->alt_text().clear();
 
     if (need_redraw())
@@ -552,9 +553,14 @@ int TilesFramework::getch_ck()
                             continue;
                         if (reg->update_alt_text(m_region_msg->alt_text()))
                         {
-                            set_need_redraw();
                             break;
                         }
+                    }
+
+                    if (prev_alt != m_region_msg->alt_text())
+                    {
+                        prev_alt = m_region_msg->alt_text();
+                        set_need_redraw();
                     }
                 }
             }
@@ -630,7 +636,7 @@ int TilesFramework::getch_ck()
                     // Stay within this input loop until the mouse moves
                     // to a semantically different location.  Crawl doesn't
                     // care about small mouse movements.
-                    if (last_loc == m_cur_loc)
+                    if (!need_redraw() && last_loc == m_cur_loc)
                         continue;
 
                     key = mouse_key;
@@ -906,7 +912,9 @@ bool TilesFramework::layout_statcol(bool message_overlay, bool show_gold_turns)
     int hud_height = 12 + (show_gold_turns ? 1 : 0);
     m_region_stat->resize(m_region_stat->mx, hud_height);
     crawl_view.hudsz.y = hud_height;
-    m_region_map->place(m_region_stat->sx, m_region_stat->ey, map_margin);
+    m_region_map->place(m_region_stat->sx, m_region_stat->ey,
+                        m_region_stat->ex, m_region_stat->ey + m_region_map->wy,
+                        map_margin);
 
     int inv_col = std::max(m_region_tile->ex, m_region_msg->ex);
     if (message_overlay)
@@ -920,12 +928,6 @@ bool TilesFramework::layout_statcol(bool message_overlay, bool show_gold_turns)
 
     int self_inv_y = m_windowsz.y - m_region_tab->wy;
     m_region_tab->place(inv_col, self_inv_y);
-
-    // recenter map above inventory
-    int map_cen_x = (m_region_tab->sx + m_region_tab->ex) / 2;
-    map_cen_x = std::min(map_cen_x, (int)(m_windowsz.x - m_region_map->wx/2));
-    m_region_map->place(map_cen_x - m_region_map->wx/2, m_region_map->sy,
-                        map_margin);
 
     int num_items = m_region_tab->mx * (m_region_tab->my - 1);
     return (num_items >= ENDOFPACK);
