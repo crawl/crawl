@@ -1647,21 +1647,20 @@ unsigned char random_monster_colour()
 void define_monster(monsters *mons)
 {
     int mcls                  = mons->type;
-    int hd, hp, hp_max, ac, ev, speed;
     int monnumber             = mons->number;
     monster_type monbase      = mons->base_monster;
     const monsterentry *m     = get_monster_data(mcls);
-    int col                   = mons_class_colour(mons->type);
+    int col                   = mons_class_colour(mcls);
+    int hd                    = mons_class_hit_dice(mcls);
+    int speed                 = mons_real_base_speed(mcls);
     mon_spellbook_type spells = MST_NO_SPELLS;
+    int hp, hp_max, ac, ev;
 
     mons->mname.clear();
-    hd = m->hpdice[0];
 
     // misc
     ac = m->AC;
     ev = m->ev;
-
-    speed = mons_real_base_speed(mcls);
 
     mons->god = GOD_NO_GOD;
 
@@ -2138,7 +2137,7 @@ int mons_power(int mc)
 {
     // For now, just return monster hit dice.
     ASSERT(smc);
-    return (smc->hpdice[0]);
+    return (mons_class_hit_dice(mc));
 }
 
 bool mons_aligned(const actor *m1, const actor *m2)
