@@ -309,7 +309,7 @@ int monsters::body_weight(bool /*base*/) const
     case MONS_SKELETON_LARGE:
     case MONS_SIMULACRUM_SMALL:
     case MONS_SIMULACRUM_LARGE:
-        mclass = number;
+        mclass = base_monster;
         break;
 
     default:
