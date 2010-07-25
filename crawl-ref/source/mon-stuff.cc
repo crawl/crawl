@@ -2075,6 +2075,29 @@ int monster_die(monsters *monster, killer_type killer,
         }
 
     }
+    else if (monster->type == MONS_DEMONIC_TENTACLE)
+    {
+        for (monster_iterator mit; mit; ++mit)
+        {
+            if (mit->alive()
+                && mit->type == MONS_DEMONIC_TENTACLE_SEGMENT
+                && mit->number == unsigned(monster->mindex()))
+            {
+                monster_die(*mit, KILL_MISC, NON_MONSTER, true);
+            }
+        }
+    }
+    else if (monster->type == MONS_DEMONIC_TENTACLE_SEGMENT
+             && killer != KILL_MISC)
+    {
+        if (!invalid_monster_index(monster->number)
+             && mons_base_type(&menv[monster->number]) == MONS_DEMONIC_TENTACLE
+             && menv[monster->number].alive())
+        {
+            monster_die(&menv[monster->number], killer, killer_index, silent,
+                        wizard, fake);
+        }
+    }
     else if (mons_is_elven_twin(monster) && mons_near(monster))
     {
         elven_twin_died(monster, in_transit, killer, killer_index);
