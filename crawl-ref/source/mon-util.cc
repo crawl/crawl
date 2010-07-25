@@ -1378,7 +1378,7 @@ int exper_value(const monsters *mon)
     const int item_usage  = mons_itemuse(mon);
 
     // XXX: Shapeshifters can qualify here, even though they can't cast.
-    const bool spellcaster = monster->can_use_spells();
+    const bool spellcaster = mon->can_use_spells();
 
     // Early out for no XP monsters.
     if (mons_class_flag(mc, M_NO_EXP_GAIN))
@@ -1398,7 +1398,7 @@ int exper_value(const monsters *mon)
     // Let's look for big spells.
     if (spellcaster)
     {
-        const monster_spells &hspell_pass = monster->spells;
+        const monster_spells &hspell_pass = mon->spells;
 
         for (int i = 0; i < 6; ++i)
         {
