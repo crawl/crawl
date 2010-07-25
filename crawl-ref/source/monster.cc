@@ -294,14 +294,8 @@ int monsters::body_weight(bool /*base*/) const
 {
     int mc = mons_base_type(this);
 
-    if (mc == MONS_SPECTRAL_THING
-        || mc == MONS_SPECTRAL_WARRIOR
-        || mc == MONS_ELECTRIC_GOLEM
-        || mc == MONS_RAKSHASA_FAKE
-        || mc == MONS_MARA_FAKE)
-    {
+    if (mc == MONS_RAKSHASA_FAKE || mc == MONS_MARA_FAKE)
         return (0);
-    }
 
     int weight = mons_weight(mc);
 
@@ -363,10 +357,6 @@ int monsters::body_weight(bool /*base*/) const
         {
         case 'L':
             weight /= 2;
-            break;
-
-        case 'p':
-            weight = 0;
             break;
         }
     }
