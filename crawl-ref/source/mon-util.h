@@ -206,7 +206,6 @@ int hit_points(int hit_dice, int min_hp, int rand_hp);
 
 int mons_type_hit_dice( int type );
 
-int mons_resist_turn_undead( const monsters *mon );
 bool mons_immune_magic( const monsters *mon );
 const char* mons_resist_string(const monsters *mon);
 
