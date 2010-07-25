@@ -373,6 +373,9 @@ public:
 // not cross safely (deep water, lava, traps).
 bool is_travelsafe_square(const coord_def& c, bool ignore_hostile)
 {
+    if (!in_bounds(c))
+        return (false);
+
     if (_travel_safe_grid.get())
     {
         const cell_travel_safety &cell((*_travel_safe_grid)(c));
@@ -1289,6 +1292,9 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode)
     // point_distance will hold the distance of all points from the starting
     // point, i.e. the distance travelled to get there.
     memset(point_distance, 0, sizeof(travel_distance_grid_t));
+
+    if (!in_bounds(start))
+        return coord_def();
 
     // Abort run if we're trying to go someplace evil. Travel to traps is
     // specifically allowed here if the player insists on it.
@@ -2416,6 +2422,12 @@ void start_translevel_travel(const travel_target &pos)
         return;
     }
 
+    if (pos.p.is_valid() && !in_bounds(pos.p.pos))
+    {
+        mpr("Sorry, I don't know how to get there.");
+        return;
+    }
+
     // Remember where we're going so we can easily go back if interrupted.
     you.travel_x = pos.p.pos.x;
     you.travel_y = pos.p.pos.y;
@@ -2811,6 +2823,7 @@ void start_travel(const coord_def& p)
     // Can we even travel to this square?
     if (!in_bounds(p))
         return;
+
     if (!is_travelsafe_square(p, true))
         return;
 
