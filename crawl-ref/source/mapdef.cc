@@ -4330,7 +4330,7 @@ void item_list::build_deck_spec(std::string s, item_spec* spec)
         spec->sub_type =
             _deck_type_string_to_subtype(_get_and_discard_word(&s));
     }
-    else 
+    else
     {
         spec->sub_type = _random_deck_subtype();
     }
