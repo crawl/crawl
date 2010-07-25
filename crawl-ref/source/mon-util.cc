@@ -723,7 +723,7 @@ bool mons_is_draconian(int mc)
 bool mons_foe_is_mons(const monsters *mons)
 {
     const actor *foe = mons->get_foe();
-    return foe && foe->atype() == ACT_MONSTER;
+    return (foe && foe->atype() == ACT_MONSTER);
 }
 
 int mons_weight(int mc)
@@ -1036,7 +1036,7 @@ bool mons_is_zombified(const monsters *mon)
 
 monster_type mons_base_type(const monsters *mon)
 {
-    return mons_is_zombified(mon) ? mon->base_monster : mon->type;
+    return (mons_is_zombified(mon) ? mon->base_monster : mon->type);
 }
 
 bool mons_class_can_leave_corpse(monster_type mc)
@@ -1237,7 +1237,7 @@ int mons_damage(int mc, int rt)
     if (rt < 0 || rt > 3)
         rt = 0;
     ASSERT(smc);
-    return smc->attack[rt].damage;
+    return (smc->attack[rt].damage);
 }
 
 bool mons_immune_magic(const monsters *mon)
@@ -1309,7 +1309,7 @@ bool mons_class_flattens_trees(int mc)
 
 bool mons_flattens_trees(const monsters *mon)
 {
-    return mons_class_flattens_trees(mons_base_type(mon));
+    return (mons_class_flattens_trees(mons_base_type(mon)));
 }
 
 bool mons_class_wall_shielded(int mc)
@@ -1357,42 +1357,42 @@ int mons_difficulty(int mc)
             + me->hpdice[3]);
 }
 
-int exper_value(const monsters *monster)
+int exper_value(const monsters *mon)
 {
     long x_val = 0;
 
     // These four are the original arguments.
-    const int  mclass      = monster->type;
-    const int  mHD         = monster->hit_dice;
-    int  maxhp             = monster->max_hit_points;
+    const int mc          = mon->type;
+    const int mhd         = mon->hit_dice;
+    int maxhp             = mon->max_hit_points;
 
     // Hacks to make merged slime creatures not worth so much exp.  We
     // will calculate the experience we would get for 1 blob, and then
     // just multiply it so that exp is linear with blobs merged. -cao
-    if (monster->type == MONS_SLIME_CREATURE && monster->number > 1)
-        maxhp /= monster->number;
+    if (mon->type == MONS_SLIME_CREATURE && mon->number > 1)
+        maxhp /= mon->number;
 
     // These are some values we care about.
-    const int  speed       = mons_base_speed(monster);
-    const int  modifier    = _mons_exp_mod(mclass);
-    const int  item_usage  = mons_itemuse(monster);
+    const int speed       = mons_base_speed(mon);
+    const int modifier    = _mons_exp_mod(mc);
+    const int item_usage  = mons_itemuse(mon);
 
     // XXX: Shapeshifters can qualify here, even though they can't cast.
     const bool spellcaster = monster->can_use_spells();
 
     // Early out for no XP monsters.
-    if (mons_class_flag(mclass, M_NO_EXP_GAIN))
+    if (mons_class_flag(mc, M_NO_EXP_GAIN))
         return (0);
 
     // The beta26 statues have non-spell-like abilities that the experience
     // code can't see, so inflate their XP a bit.  Ice statues and Roxanne
     // get plenty of XP for their spells.
-    if (mclass == MONS_ORANGE_STATUE || mclass == MONS_SILVER_STATUE)
-        return (mHD * 15);
+    if (mc == MONS_ORANGE_STATUE || mc == MONS_SILVER_STATUE)
+        return (mhd * 15);
 
-    x_val = (16 + maxhp) * (mHD * mHD) / 10;
+    x_val = (16 + maxhp) * (mhd * mhd) / 10;
 
-    // Let's calculate a simple difficulty modifier. -- bwr
+    // Let's calculate a simple difficulty modifier. - bwr
     int diff = 0;
 
     // Let's look for big spells.
@@ -1400,7 +1400,7 @@ int exper_value(const monsters *monster)
     {
         const monster_spells &hspell_pass = monster->spells;
 
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 6; ++i)
         {
             switch (hspell_pass[i])
             {
@@ -1437,7 +1437,7 @@ int exper_value(const monsters *monster)
     }
 
     // Let's look at regeneration.
-    if (monster_descriptor(mclass, MDSC_REGENERATES))
+    if (monster_descriptor(mc, MDSC_REGENERATES))
         diff += 15;
 
     // Monsters at normal or fast speed with big melee damage.
@@ -1445,7 +1445,7 @@ int exper_value(const monsters *monster)
     {
         int max_melee = 0;
         for (int i = 0; i < 4; ++i)
-            max_melee += mons_damage(mclass, i);
+            max_melee += mons_damage(mc, i);
 
         if (max_melee > 30)
             diff += (max_melee / ((speed == 10) ? 2 : 1));
@@ -1453,12 +1453,12 @@ int exper_value(const monsters *monster)
 
     // Monsters who can use equipment (even if only the equipment
     // they are given) can be considerably enhanced because of
-    // the way weapons work for monsters. -- bwr
+    // the way weapons work for monsters. - bwr
     if (item_usage >= MONUSE_STARTING_EQUIPMENT)
         diff += 30;
 
     // Set a reasonable range on the difficulty modifier...
-    // Currently 70% - 200%. -- bwr
+    // Currently 70% - 200%. - bwr
     if (diff > 100)
         diff = 100;
     else if (diff < -30)
@@ -1490,8 +1490,8 @@ int exper_value(const monsters *monster)
 
     // Slime creature exp hack part 2: Scale exp back up by the number
     // of blobs merged. -cao
-    if (monster->type == MONS_SLIME_CREATURE && monster->number > 1)
-        x_val *= monster->number;
+    if (mon->type == MONS_SLIME_CREATURE && mon->number > 1)
+        x_val *= mon->number;
 
     // Reductions for big values. - bwr
     if (x_val > 100)
@@ -3163,7 +3163,6 @@ bool monster_senior(const monsters *m1, const monsters *m2, bool fleeing)
     return (mchar1 == mchar2 && (fleeing || m1->hit_dice > m2->hit_dice));
 }
 
-
 bool mons_class_can_pass(int mc, const dungeon_feature_type grid)
 {
     if (mons_class_wall_shielded(mc))
@@ -3173,7 +3172,7 @@ bool mons_class_can_pass(int mc, const dungeon_feature_type grid)
                 || feat_is_rock(grid) && !feat_is_permarock(grid));
     }
 
-    return !feat_is_solid(grid);
+    return (!feat_is_solid(grid));
 }
 
 bool mons_can_pass(const monsters *mon, dungeon_feature_type grid)
@@ -3192,7 +3191,7 @@ static bool _mons_can_open_doors(const monsters *mon)
 // Normal/smart monsters know about secret doors, since they live in
 // the dungeon, unless they're marked specifically not to be opened unless
 // already opened by the player {bookofjude}.
-bool mons_can_open_door(const monsters* mon, const coord_def& pos)
+bool mons_can_open_door(const monsters *mon, const coord_def& pos)
 {
     if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto")
         return (false);
@@ -3207,7 +3206,7 @@ bool mons_can_open_door(const monsters* mon, const coord_def& pos)
 
 // Monsters that eat items (currently only jellies) also eat doors.
 // However, they don't realise that secret doors make good eating.
-bool mons_can_eat_door(const monsters* mon, const coord_def& pos)
+bool mons_can_eat_door(const monsters *mon, const coord_def& pos)
 {
     if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto")
         return (false);
@@ -3229,7 +3228,7 @@ bool mons_can_eat_door(const monsters* mon, const coord_def& pos)
     return (feat == DNGN_CLOSED_DOOR);
 }
 
-static bool _mons_can_pass_door(const monsters* mon, const coord_def& pos)
+static bool _mons_can_pass_door(const monsters *mon, const coord_def& pos)
 {
     return (mons_can_pass(mon, DNGN_FLOOR)
             && (mons_can_open_door(mon, pos)

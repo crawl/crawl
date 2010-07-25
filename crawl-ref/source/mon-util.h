@@ -199,8 +199,8 @@ bool mons_is_ghost_demon(int mc);
 bool mons_is_unique(int mc);
 bool mons_is_pghost(int mc);
 
-int mons_difficulty(int mtype);
-int exper_value(const monsters *monster);
+int mons_difficulty(int mc);
+int exper_value(const monsters *mon);
 
 int hit_points(int hit_dice, int min_hp, int rand_hp);
 
@@ -407,8 +407,8 @@ std::string get_mon_shape_str(const mon_body_shape shape);
 
 bool mons_class_can_pass(int mc, const dungeon_feature_type grid);
 bool mons_can_pass(const monsters *mon, dungeon_feature_type grid);
-bool mons_can_open_door(const monsters* mon, const coord_def& pos);
-bool mons_can_eat_door(const monsters* mon, const coord_def& pos);
+bool mons_can_open_door(const monsters *mon, const coord_def& pos);
+bool mons_can_eat_door(const monsters *mon, const coord_def& pos);
 bool mons_can_traverse(const monsters *mon, const coord_def& pos,
                        bool checktraps = true);
 
