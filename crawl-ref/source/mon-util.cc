@@ -1348,7 +1348,7 @@ int hit_points(int hit_dice, int min_hp, int rand_hp)
 }
 
 // This function returns the standard number of hit dice for a type of
-// monster, not a pacticular monsters current hit dice. - bwr
+// monster, not a particular monster's current hit dice. - bwr
 int mons_class_hit_dice(int mc)
 {
     const monsterentry *me = get_monster_data(mc);
