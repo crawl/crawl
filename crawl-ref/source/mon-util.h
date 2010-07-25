@@ -272,7 +272,7 @@ bool mons_enslaved_soul(const monsters *mon);
 bool name_zombie(monsters *mon, int mc, const std::string mon_name);
 bool name_zombie(monsters *mon, const monsters* orig);
 
-int mons_power(int mclass);
+int mons_power(int mc);
 
 unsigned mons_char(int mc);
 char mons_base_char(int mc);
