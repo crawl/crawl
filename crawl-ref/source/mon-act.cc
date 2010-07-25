@@ -1680,8 +1680,15 @@ void handle_monster_move(monsters *monster)
     coord_def old_pos = monster->pos();
 
     coord_def kraken_last_update = monster->pos();
+    bool just_once = true;
     while (monster->has_action_energy())
     {
+        if (just_once)
+        {
+            move_demon_tentacle(monster);
+            just_once = false;
+        }
+
         // The continues & breaks are WRT this.
         if (!monster->alive())
             break;

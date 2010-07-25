@@ -6227,7 +6227,7 @@ void monsters::react_to_damage(const actor *oppressor, int damage,
             && mons_base_type(&menv[number]) == MONS_KRAKEN_TENTACLE)
         {
 
-            // If we aare going to die, monster_die hook will handle
+            // If we are going to die, monster_die hook will handle
             // purging the tentacle.
             if (hit_points < menv[number].hit_points
                 && this->hit_points > 0)
@@ -6240,6 +6240,27 @@ void monsters::react_to_damage(const actor *oppressor, int damage,
                 if (invalid_monster(this))
                 {
                     type = MONS_KRAKEN_CONNECTOR;
+                    hit_points = -1;
+                }
+            }
+        }
+    }
+    else if (type == MONS_DEMONIC_TENTACLE_SEGMENT)
+    {
+        mprf("in tentacle damage pass");
+        if (!invalid_monster_index(number)
+            && mons_base_type(&menv[number]) == MONS_DEMONIC_TENTACLE)
+        {
+            if (hit_points < menv[number].hit_points)
+            {
+                int pass_damage = menv[number].hit_points -  hit_points;
+                menv[number].hurt(oppressor, pass_damage, flavour);
+
+                // We could be removed, undo this or certain post-hit
+                // effects will cry.
+                if (invalid_monster(this))
+                {
+                    type = MONS_DEMONIC_TENTACLE_SEGMENT;
                     hit_points = -1;
                 }
             }

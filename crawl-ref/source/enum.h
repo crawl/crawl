@@ -2129,7 +2129,9 @@ enum monster_type                      // (int) menv[].type
     MONS_IRON_GIANT,
     MONS_NELLIE,
     MONS_IRON_ELEMENTAL,
-    MONS_GIANT_SCORPION,               // 489
+    MONS_GIANT_SCORPION,
+    MONS_DEMONIC_TENTACLE,
+    MONS_DEMONIC_TENTACLE_SEGMENT,     // 491
 
     // Spriggans:
     MONS_SPRIGGAN = 500,
