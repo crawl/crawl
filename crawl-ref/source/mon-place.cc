@@ -214,7 +214,7 @@ bool monster_can_submerge(const monsters *mon, dungeon_feature_type feat)
 {
     if (testbits(env.pgrid(mon->pos()), FPROP_NO_SUBMERGE))
         return (false);
-    if (!mons->is_habitable_feat(feat))
+    if (!mon->is_habitable_feat(feat))
         return (false);
     if (mons_class_flag(mon->type, M_SUBMERGES))
         switch (mons_habitat(mon))
