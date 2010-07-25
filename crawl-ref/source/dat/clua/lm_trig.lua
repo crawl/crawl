@@ -11,7 +11,7 @@
 -- can be developed and used without have to update the ChangeFlags code.
 --
 -- Unlike with the observable/observer design pattern, each triggerer is
--- associated with a signle triggerable, rather than there being one observable
+-- associated with a single triggerable, rather than there being one observable
 -- and multiple observers, since each triggerer might have a data payload which
 -- is meant to be different for each triggerable.
 --
