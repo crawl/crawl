@@ -328,6 +328,10 @@ int monsters::body_weight(bool /*base*/) const
 
         switch (mclass)
         {
+        case MONS_IRON_IMP:
+            weight += 450;
+            break;
+
         case MONS_IRON_DEVIL:
             weight += 550;
             break;
