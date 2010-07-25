@@ -130,18 +130,17 @@ bool feat_compatible(dungeon_feature_type feat_wanted,
 //
 // If you have an actual monster, use this instead of the overloaded function
 // that uses only the monster class to make decisions.
-bool monster_habitable_grid(const monsters *m,
+bool monster_habitable_grid(const monsters *mon,
                             dungeon_feature_type actual_grid)
 {
     // Zombified monsters enjoy the same habitat as their original.
-    const monster_type montype = mons_is_zombified(m) ? mons_zombie_base(m)
-                                                      : m->type;
+    const monster_type mt = mons_base_type(mon);
 
-    return (monster_habitable_grid(montype,
+    return (monster_habitable_grid(mt,
                                    actual_grid,
                                    DNGN_UNSEEN,
-                                   mons_flies(m),
-                                   m->cannot_move()));
+                                   mons_flies(mon),
+                                   mon->cannot_move()));
 }
 
 bool mons_airborne(int mcls, int flies, bool paralysed)

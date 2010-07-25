@@ -1327,10 +1327,7 @@ bool mons_class_wall_shielded(int mc)
 
 bool mons_wall_shielded(const monsters *mon)
 {
-    const int montype = mons_is_zombified(mon) ? mons_zombie_base(mon)
-                                               : mon->type;
-
-    return (mons_class_wall_shielded(montype));
+    return (mons_class_wall_shielded(mons_base_type(mon)));
 }
 
 // This nice routine we keep in exactly the way it was.
@@ -2094,8 +2091,7 @@ habitat_type mons_class_habitat(int mc)
 
 habitat_type mons_habitat(const monsters *mon)
 {
-    return (mons_class_habitat(mons_is_zombified(mon) ? mons_zombie_base(mon)
-                                                      : mon->type));
+    return (mons_class_habitat(mons_base_type(mon)));
 }
 
 habitat_type mons_class_primary_habitat(int mc)
@@ -2186,10 +2182,7 @@ bool mons_class_wields_two_weapons(int mc)
 
 bool mons_wields_two_weapons(const monsters *mon)
 {
-    const int montype = mons_is_zombified(mon) ? mons_zombie_base(mon)
-                                               : mon->type;
-
-    return (mons_class_wields_two_weapons(montype));
+    return (mons_class_wields_two_weapons(mons_base_type(mon)));
 }
 
 bool mons_self_destructs(const monsters *m)
@@ -3190,10 +3183,7 @@ bool mons_class_can_pass(int mc, const dungeon_feature_type grid)
 
 bool mons_can_pass(const monsters *mon, dungeon_feature_type grid)
 {
-    const int montype = mons_is_zombified(mon) ? mons_zombie_base(mon)
-                                               : mon->type;
-
-    return (mons_class_can_pass(montype, grid));
+    return (mons_class_can_pass(mons_base_type(mon), grid));
 }
 
 static bool _mons_can_open_doors(const monsters *mon)
@@ -3251,19 +3241,19 @@ static bool _mons_can_pass_door(const monsters* mon, const coord_def& pos)
                 || mons_can_eat_door(mon, pos)));
 }
 
-bool mons_can_traverse(const monsters* mons, const coord_def& p,
+bool mons_can_traverse(const monsters *mon, const coord_def& p,
                        bool checktraps)
 {
-    if (_mons_can_pass_door(mons, p))
+    if (_mons_can_pass_door(mon, p))
         return (true);
 
-    if (!mons->is_habitable_feat(env.grid(p)))
+    if (!mon->is_habitable_feat(env.grid(p)))
         return (false);
 
     // Your friends only know about doors you know about, unless they feel
     // at home in this branch.
-    if (grd(p) == DNGN_SECRET_DOOR && mons->friendly()
-        && (mons_intel(mons) < I_NORMAL || !mons_is_native_in_branch(mons)))
+    if (grd(p) == DNGN_SECRET_DOOR && mon->friendly()
+        && (mons_intel(mon) < I_NORMAL || !mons_is_native_in_branch(mon)))
     {
         return (false);
     }
@@ -3275,17 +3265,14 @@ bool mons_can_traverse(const monsters* mons, const coord_def& p,
 
         // Don't allow allies to pass over known (to them) Zot traps.
         if (tt == TRAP_ZOT
-            && ptrap->is_known(mons)
-            && mons->friendly())
+            && ptrap->is_known(mon)
+            && mon->friendly())
         {
             return (false);
         }
 
         // Monsters cannot travel over teleport traps.
-        const monster_type montype = mons_is_zombified(mons)
-                                   ? mons_zombie_base(mons)
-                                   : mons->type;
-        if (!can_place_on_trap(montype, tt))
+        if (!can_place_on_trap(mons_base_type(mon), tt))
             return (false);
     }
 
