@@ -158,7 +158,7 @@ bool mons_airborne(int mcls, int flies, bool paralysed)
 // one check, so we no longer care if a water elemental springs into existence
 // on dry land, because they're supposed to be able to move onto dry land
 // anyway.
-bool monster_habitable_grid(monster_type montype,
+bool monster_habitable_grid(monster_type mt,
                             dungeon_feature_type actual_grid,
                             dungeon_feature_type wanted_grid_feature,
                             int flies, bool paralysed)
@@ -168,11 +168,11 @@ bool monster_habitable_grid(monster_type montype,
         return (false);
 
     const dungeon_feature_type feat_preferred =
-        habitat2grid(mons_class_primary_habitat(montype));
+        habitat2grid(mons_class_primary_habitat(mt));
     const dungeon_feature_type feat_nonpreferred =
-        habitat2grid(mons_class_secondary_habitat(montype));
+        habitat2grid(mons_class_secondary_habitat(mt));
 
-    const bool monster_is_airborne = mons_airborne(montype, flies, paralysed);
+    const bool monster_is_airborne = mons_airborne(mt, flies, paralysed);
 
     // If the caller insists on a specific feature type, try to honour
     // the request. This allows the builder to place amphibious
@@ -187,7 +187,7 @@ bool monster_habitable_grid(monster_type montype,
 
     // Special check for fire elementals since their habitat is floor which
     // is generally considered compatible with shallow water.
-    if (montype == MONS_FIRE_ELEMENTAL && feat_is_watery(actual_grid))
+    if (mt == MONS_FIRE_ELEMENTAL && feat_is_watery(actual_grid))
         return (false);
 
     if (feat_compatible(feat_preferred, actual_grid)
@@ -210,14 +210,14 @@ bool monster_habitable_grid(monster_type montype,
 }
 
 // Returns true if the monster can submerge in the given grid.
-bool monster_can_submerge(const monsters *mons, dungeon_feature_type feat)
+bool monster_can_submerge(const monsters *mon, dungeon_feature_type feat)
 {
-    if (testbits(env.pgrid(mons->pos()), FPROP_NO_SUBMERGE))
+    if (testbits(env.pgrid(mon->pos()), FPROP_NO_SUBMERGE))
         return (false);
     if (!mons->is_habitable_feat(feat))
         return (false);
-    if (mons_class_flag(mons->type, M_SUBMERGES))
-        switch (mons_habitat(mons))
+    if (mons_class_flag(mon->type, M_SUBMERGES))
+        switch (mons_habitat(mon))
         {
         case HT_WATER:
         case HT_AMPHIBIOUS:
