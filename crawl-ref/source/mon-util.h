@@ -204,7 +204,7 @@ int exper_value(const monsters *monster);
 
 int hit_points(int hit_dice, int min_hp, int rand_hp);
 
-int mons_type_hit_dice( int type );
+int mons_class_hit_dice(int mc);
 
 bool mons_immune_magic( const monsters *mon );
 const char* mons_resist_string(const monsters *mon);

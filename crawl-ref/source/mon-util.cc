@@ -1353,17 +1353,12 @@ int hit_points(int hit_dice, int min_hp, int rand_hp)
     return (hrolled);
 }
 
-// This function returns the standard number of hit dice for a type
-// of monster, not a pacticular monsters current hit dice. -- bwr
-// XXX: Rename to mons_class_* to be like the rest.
-int mons_type_hit_dice( int type )
+// This function returns the standard number of hit dice for a type of
+// monster, not a pacticular monsters current hit dice. - bwr
+int mons_class_hit_dice(int mc)
 {
-    struct monsterentry *mon_class = get_monster_data( type );
-
-    if (mon_class)
-        return (mon_class->hpdice[0]);
-
-    return (0);
+    const monsterentry *me = get_monster_data(mc);
+    return (me ? me->hpdice[0] : 0);
 }
 
 int mons_difficulty(int mtype)
