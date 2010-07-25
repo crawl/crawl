@@ -646,7 +646,7 @@ static std::string _user_home_crawl_subpath(const std::string subpath)
 static std::string _resolve_dir(const char* path, const char* suffix)
 {
 #if defined(DGAMELAUNCH)
-    return path;
+    return catpath(path, "");
 #else
     if (path[0] != '~')
         return std::string(path) + suffix;
