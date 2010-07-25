@@ -111,7 +111,7 @@ void mark_interesting_monst(monsters* monster,
 
 bool feat_compatible(dungeon_feature_type grid_wanted,
                      dungeon_feature_type actual_grid);
-bool monster_habitable_grid(const monsters *m,
+bool monster_habitable_grid(const monsters *mon,
                             dungeon_feature_type actual_grid);
 bool monster_habitable_grid(
     monster_type montype,

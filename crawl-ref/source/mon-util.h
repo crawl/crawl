@@ -409,7 +409,7 @@ bool mons_class_can_pass(int mc, const dungeon_feature_type grid);
 bool mons_can_pass(const monsters *mon, dungeon_feature_type grid);
 bool mons_can_open_door(const monsters* mon, const coord_def& pos);
 bool mons_can_eat_door(const monsters* mon, const coord_def& pos);
-bool mons_can_traverse(const monsters* mon, const coord_def& pos,
+bool mons_can_traverse(const monsters *mon, const coord_def& pos,
                        bool checktraps = true);
 
 mon_inv_type equip_slot_to_mslot(equipment_type eq);
