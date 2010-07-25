@@ -314,12 +314,8 @@ int mons_piety(const monsters *mon)
 
 bool mons_class_flag(int mc, uint64_t bf)
 {
-    const monsterentry *me = smc;
-
-    if (!me)
-        return (false);
-
-    return ((me->bitfields & bf) != 0);
+    const monsterentry *me = get_monster_data(mc);
+    return (me ? (me->bitfields & bf) != 0 : false);
 }
 
 int scan_mon_inv_randarts(const monsters *mon,
@@ -933,9 +929,7 @@ unsigned mons_char(int mc)
 char mons_base_char(int mc)
 {
     const monsterentry *me = get_monster_data(mc);
-    if (!me)
-        return 0;
-    return me->showchar;
+    return (me ? me->showchar : 0);
 }
 
 mon_itemuse_type mons_class_itemuse(int mc)
