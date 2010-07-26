@@ -99,6 +99,7 @@ giant_blowfly CORPSE_GIANT_BLOWFLY
 giant_mosquito CORPSE_GIANT_MOSQUITO
 yellow_wasp CORPSE_YELLOW_WASP
 red_wasp CORPSE_RED_WASP
+ghost_moth CORPSE_GHOST_MOTH
 moth_of_wrath CORPSE_MOTH_OF_WRATH
 
 ## Aquatics (';')

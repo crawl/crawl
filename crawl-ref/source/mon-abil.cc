@@ -2344,6 +2344,7 @@ void mon_nearby_ability(monsters *monster)
         break;
 
     case MONS_EYE_OF_DRAINING:
+    case MONS_GHOST_MOTH:
         if (_eyeball_will_use_ability(monster) && foe->atype() == ACT_PLAYER)
         {
             if (you.can_see(monster))

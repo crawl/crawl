@@ -69,7 +69,8 @@ function spiders_nest_random_monster_set(e)
                          wolf spider / trapdoor spider / giant mosquito / \
                          giant blowfly / yellow wasp / red wasp / \
                          giant beetle / boring beetle / boulder beetle / \
-                         giant centipede / giant scorpion")
+                         giant centipede / giant scorpion / ghost moth w:2 / \
+                         demonic crawler w:2")
 end
 }}
 
@@ -150,4 +151,35 @@ xxxxxxxxxW..3........4..4........55.xxxxx
 xxxxxxxxxWW..xxxxxxxW.44.Wxxxxxx....xxxxx
 xxxxxxxxxxxxxxxxxxxxWW..WWxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+###############################################################################
+# Layout: Octagonal rooms.
+# Foes:   A ghost moth and trapdoor spiders.
+# Loot:   Random good items.
+NAME:   spiders_nest_the_unseen
+TAGS:   spiders_nest no_item_gen no_monster_gen
+ORIENT: encompass
+WEIGHT: 5
+: spiders_nest_colours(_G)
+: spiders_nest_random_monster_set(_G)
+epilogue{{
+spiders_nest_milestone(_G)
+}}
+MONS:   trapdoor spider, ghost moth
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxx$$$$xxxxxxxxx$$$$xxxxxxxxx$$$$xxxxx
+xxxx......xxxxxxx......xxxxxxx......xxxx
+xxx........xxxxx........xxxxx........xxx
+xx..........xxx..........xxx..........xx
+x*..1........x............x...........*x
+x|..1..............<...............2..|x
+x|..1..............A...............1..|x
+x*..1........x............x...........*x
+xx..........xxx..........xxx..........xx
+xxx........xxxxx........xxxxx........xxx
+xxxx......xxxxxxx......xxxxxxx......xxxx
+xxxxx$$$$xxxxxxxxx$$$$xxxxxxxxx$$$$xxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
