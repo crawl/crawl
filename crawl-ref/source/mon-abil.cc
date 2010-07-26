@@ -2242,8 +2242,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
     return (used);
 }
 
-// Combines code using in Confusing Eye, Giant Eye and Eye of Draining to
-// reduce clutter.
+// Combines code for eyeball-type monsters, etc. to reduce clutter.
 static bool _eyeball_will_use_ability(monsters *monster)
 {
     return (coinflip()
