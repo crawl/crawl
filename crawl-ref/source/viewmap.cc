@@ -24,6 +24,7 @@
 #include "format.h"
 #include "libutil.h"
 #include "macro.h"
+#include "mon-util.h"
 #include "options.h"
 #include "place.h"
 #include "player.h"
@@ -389,7 +390,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
                     // env.map_knowledge, so we need to draw it
                     // directly.
                     cell->colour = WHITE;
-                    cell->glyph  = you.symbol;
+                    cell->glyph  = mons_char(you.symbol);
                 }
 
                 // If we've a waypoint on the current square, *and* the
