@@ -5035,11 +5035,13 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
 
     case AF_DRAIN_STR:
     case AF_DRAIN_DEX:
+    case AF_DRAIN_INT:
         if ((one_chance_in(20) || (damage_done > 0 && one_chance_in(3)))
             && defender->res_negative_energy() < random2(4))
         {
-            stat_type drained_stat = (flavour == AF_DRAIN_STR ? STAT_STR
-                                                              : STAT_DEX);
+            stat_type drained_stat = (flavour == AF_DRAIN_STR ? STAT_STR :
+                                      flavour == AF_DRAIN_DEX ? STAT_DEX
+                                                              : STAT_INT);
             defender->drain_stat(drained_stat, 1, attacker);
         }
         break;

@@ -1225,6 +1225,14 @@ mon_attack_def mons_attack_spec(const monsters *mon, int attk_number)
         attk.flavour = RANDOM_ELEMENT(flavours);
     }
 
+    if (attk.flavour == AF_DRAIN_STAT)
+    {
+        mon_attack_flavour flavours[] =
+            {AF_DRAIN_STR, AF_DRAIN_DEX, AF_DRAIN_INT};
+
+        attk.flavour = RANDOM_ELEMENT(flavours);
+    }
+
     // Slime creature attacks are multiplied by the number merged.
     if (mon->type == MONS_SLIME_CREATURE && mon->number > 1)
         attk.damage *= mon->number;
