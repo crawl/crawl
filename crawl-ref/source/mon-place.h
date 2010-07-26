@@ -111,15 +111,15 @@ void mark_interesting_monst(monsters* monster,
 
 bool feat_compatible(dungeon_feature_type grid_wanted,
                      dungeon_feature_type actual_grid);
-bool monster_habitable_grid(const monsters *m,
+bool monster_habitable_grid(const monsters *mon,
                             dungeon_feature_type actual_grid);
 bool monster_habitable_grid(
-    monster_type montype,
+    monster_type mt,
     dungeon_feature_type actual_grid,
     dungeon_feature_type wanted_grid_feature = DNGN_UNSEEN,
     int flies = -1,
     bool paralysed = false);
-bool monster_can_submerge(const monsters *mons, dungeon_feature_type grid);
+bool monster_can_submerge(const monsters *mon, dungeon_feature_type grid);
 coord_def find_newmons_square(int mons_class, const coord_def &p);
 coord_def find_newmons_square_contiguous(monster_type mons_class,
                                          const coord_def &start,

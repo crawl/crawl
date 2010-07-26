@@ -292,31 +292,12 @@ size_type monsters::body_size(size_part_type /* psize */, bool /* base */) const
 
 int monsters::body_weight(bool /*base*/) const
 {
-    int mclass = type;
+    int mc = mons_base_type(this);
 
-    switch (mclass)
-    {
-    case MONS_SPECTRAL_THING:
-    case MONS_SPECTRAL_WARRIOR:
-    case MONS_ELECTRIC_GOLEM:
-    case MONS_RAKSHASA_FAKE:
-    case MONS_MARA_FAKE:
+    if (mc == MONS_RAKSHASA_FAKE || mc == MONS_MARA_FAKE)
         return (0);
 
-    case MONS_ZOMBIE_SMALL:
-    case MONS_ZOMBIE_LARGE:
-    case MONS_SKELETON_SMALL:
-    case MONS_SKELETON_LARGE:
-    case MONS_SIMULACRUM_SMALL:
-    case MONS_SIMULACRUM_LARGE:
-        mclass = number;
-        break;
-
-    default:
-        break;
-    }
-
-    int weight = mons_weight(mclass);
+    int weight = mons_weight(mc);
 
     // weight == 0 in the monster entry indicates "no corpse".  Can't
     // use CE_NOCORPSE, because the corpse-effect field is used for
@@ -326,8 +307,12 @@ int monsters::body_weight(bool /*base*/) const
     {
         weight = actor::body_weight();
 
-        switch (mclass)
+        switch (mc)
         {
+        case MONS_IRON_IMP:
+            weight += 450;
+            break;
+
         case MONS_IRON_DEVIL:
             weight += 550;
             break;
@@ -368,23 +353,19 @@ int monsters::body_weight(bool /*base*/) const
             break;
         }
 
-        switch (mons_base_char(mclass))
+        switch (mons_base_char(mc))
         {
         case 'L':
             weight /= 2;
             break;
-
-        case 'p':
-            weight = 0;
-            break;
         }
     }
 
-    if (type == MONS_SKELETON_SMALL || type == MONS_SKELETON_LARGE)
+    if (mc == MONS_SKELETON_SMALL || mc == MONS_SKELETON_LARGE)
         weight /= 2;
 
     // Slime creature weight is multiplied by the number merged.
-    if (type == MONS_SLIME_CREATURE && number > 1)
+    if (mc == MONS_SLIME_CREATURE && number > 1)
         weight *= number;
 
     return (weight);

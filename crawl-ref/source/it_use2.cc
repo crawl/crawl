@@ -163,13 +163,13 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         mprf(MSGCH_DURATION, "You feel %s all of a sudden.",
              were_mighty ? "mightier" : "very mighty");
 
+        // conceivable max gain of +184 {dlb}
+        you.increase_duration(DUR_MIGHT, (35 + random2(pow)) / factor, 80);
+
         if (were_mighty)
             contaminate_player(1, was_known);
         else
             notify_stat_change(STAT_STR, 5, true, "");
-
-        // conceivable max gain of +184 {dlb}
-        you.increase_duration(DUR_MIGHT, (35 + random2(pow)) / factor, 80);
 
         did_god_conduct(DID_STIMULANTS, 4 + random2(4), was_known);
         break;
@@ -182,13 +182,13 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         mprf(MSGCH_DURATION, "You feel %s all of a sudden.",
              were_brilliant ? "clever" : "more clever");
 
+        you.increase_duration(DUR_BRILLIANCE,
+                              (35 + random2(pow)) / factor, 80);
+
         if (were_brilliant)
             contaminate_player(1, was_known);
         else
             notify_stat_change(STAT_INT, 5, true, "");
-
-        you.increase_duration(DUR_BRILLIANCE,
-                              (35 + random2(pow)) / factor, 80);
 
         did_god_conduct(DID_STIMULANTS, 4 + random2(4), was_known);
         break;
@@ -201,13 +201,12 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         mprf(MSGCH_DURATION, "You feel %s all of a sudden.",
              were_agile ? "agile" : "more agile");
 
+        you.increase_duration(DUR_AGILITY, (35 + random2(pow)) / factor, 80);
+
         if (were_agile)
             contaminate_player(1, was_known);
         else
             notify_stat_change(STAT_DEX, 5, true, "");
-
-        you.increase_duration(DUR_AGILITY, (35 + random2(pow)) / factor, 80);
-        you.redraw_evasion = true;
 
         did_god_conduct(DID_STIMULANTS, 4 + random2(4), was_known);
         break;
