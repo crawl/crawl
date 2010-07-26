@@ -95,6 +95,7 @@ giant_blowfly MONS_GIANT_BLOWFLY
 giant_mosquito MONS_GIANT_MOSQUITO
 yellow_wasp MONS_YELLOW_WASP
 red_wasp MONS_RED_WASP
+ghost_moth MONS_GHOST_MOTH
 moth_of_wrath MONS_MOTH_OF_WRATH
 
 ## Aquatics (';')
