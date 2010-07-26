@@ -848,6 +848,7 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     case SPELL_CONJURE_BALL_LIGHTNING:
     case SPELL_SUMMON_DRAKES:
     case SPELL_SUMMON_HORRIBLE_THINGS:
+    case SPELL_MALIGN_GATEWAY:
     case SPELL_HAUNT:
     case SPELL_SYMBOL_OF_TORMENT:
     case SPELL_SUMMON_GREATER_DEMON:
@@ -2173,6 +2174,10 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_HORRIBLE_THINGS:
         _do_high_level_summon(monster, monsterNearby, spell_cast,
                               _pick_horrible_thing, random_range(3, 5), god);
+        return;
+
+    case SPELL_MALIGN_GATEWAY:
+        cast_malign_gateway(monster, 200);
         return;
 
     case SPELL_CONJURE_BALL_LIGHTNING:
