@@ -753,6 +753,10 @@ gargoyle
 
 A hideous stone statue come to life.
 %%%%
+ghost moth
+
+A vile interdimensional predator that feeds on the life force of living beings. The few who have seen one and lived say it resembles an enormous spiny moth. Its bizarre lifecycle involves the production of ambrosia, much valued by gods and wizards.
+%%%%
 ghoul
 
 An undead humanoid creature, created from a decaying corpse by some unholy means of necromancy. It exists to spread disease and decay, and gains power from decaying corpses in the same way a necrophage does.

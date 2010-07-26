@@ -73,7 +73,7 @@ static int _mons_misc_level(int mcls)
     }
 
     if (mons_is_unique(mcls))
-        return (mons_type_hit_dice(mcls) * 14 / 10 + 1);
+        return (mons_class_hit_dice(mcls) * 14 / 10 + 1);
 
     switch (mcls)
     {

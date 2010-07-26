@@ -282,17 +282,17 @@
 { MUT_MAGIC_RESISTANCE,           5,  3, false, false,
   "magic resistance",
 
-  {"You are resistant to magic.",
-   "You are highly resistant to magic.",
-   "You are extremely resistant to the effects of magic."},
+  {"You are resistant to hostile enchantments.",
+   "You are highly resistant to hostile enchantments.",
+   "You are extremely resistant to the effects of hostile enchantments."},
 
-  {"You feel resistant to magic.",
-   "You feel more resistant to magic.",
-   "You feel almost impervious to the effects of magic."},
+  {"You feel resistant to hostile enchantments.",
+   "You feel more resistant to hostile enchantments.",
+   "You feel almost impervious to the effects of hostile enchantments."},
 
-  {"You feel less resistant to magic.",
-   "You feel less resistant to magic.",
-   "You feel vulnerable to magic again."},
+  {"You feel less resistant to hostile enchantments.",
+   "You feel less resistant to hostile enchantments.",
+   "You feel vulnerable to magic hostile enchantments."},
 
   "magic resistance"
 },

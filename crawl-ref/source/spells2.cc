@@ -643,6 +643,12 @@ bool vampiric_drain(int pow, const dist &vmove)
         return (true);
     }
 
+    if (monster->observable() && monster->undead_or_demonic())
+    {
+        mpr("Draining that being is not a good idea.");
+        return (false);
+    }
+
     god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
 

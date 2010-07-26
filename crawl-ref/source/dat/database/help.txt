@@ -135,7 +135,7 @@ level-map
 <w>_</w>      : Cycle through altars.
 
 <h>Other
-<w>Ctrl-C</w> : Clear level and main maps.
+<w>Ctrl-C</w> : Clear item and monster memory.
 <w>Ctrl-F</w> : Forget level map.
 %%%%
 interlevel-travel.branch.prompt
