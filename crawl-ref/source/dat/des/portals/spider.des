@@ -69,8 +69,8 @@ function spiders_nest_random_monster_set(e)
                          wolf spider / trapdoor spider / giant mosquito / \
                          giant blowfly / yellow wasp / red wasp / \
                          giant beetle / boring beetle / boulder beetle / \
-                         giant centipede / giant scorpion / ghost moth w:2 / \
-                         demonic crawler w:2")
+                         giant centipede / giant scorpion / jumping spider / \
+                         ghost moth w:2 / demonic crawler w:2")
 end
 }}
 
@@ -121,7 +121,7 @@ spiders_nest_milestone(_G)
 MONS:    giant centipede
 MONS:    scorpion
 MONS:    trapdoor spider generate_awake / nothing w:20
-MONS:    redback / wolf spider
+MONS:    redback / wolf spider / jumping spider
 MONS:    giant scorpion / demonic crawler
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

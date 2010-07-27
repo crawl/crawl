@@ -2130,7 +2130,8 @@ enum monster_type                      // (int) menv[].type
     MONS_NELLIE,
     MONS_IRON_ELEMENTAL,
     MONS_GIANT_SCORPION,
-    MONS_GHOST_MOTH,                   // 490
+    MONS_GHOST_MOTH,
+    MONS_JUMPING_SPIDER,               // 491
 
     // Spriggans:
     MONS_SPRIGGAN = 500,
@@ -2416,6 +2417,7 @@ enum mon_spellbook_type
     MST_IRON_GIANT,
     MST_IRON_ELEMENTAL,
     MST_MENNAS,
+    MST_JUMPING_SPIDER,
 
     MST_TEST_SPAWNER = 200,
     NUM_MSTYPES,

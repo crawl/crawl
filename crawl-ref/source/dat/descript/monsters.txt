@@ -1061,6 +1061,10 @@ jellyfish
 
 A pulsating glob of transparent flesh, waiting just below the surface to sting you with its many tentacles.
 %%%%
+jumping spider
+
+A large spider with an extraordinary ability to leap to its prey from a great distance.
+%%%%
 kenku
 
 A bird-brained creature that looks at you with hatred.
