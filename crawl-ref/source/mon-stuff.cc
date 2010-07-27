@@ -2086,6 +2086,15 @@ int monster_die(monsters *monster, killer_type killer,
                 monster_die(*mit, KILL_MISC, NON_MONSTER, true);
             }
         }
+        if (monster->has_ench(ENCH_PORTAL_TIMER))
+        {
+            coord_def base_pos = monster->props["base_position"].get_coord();
+
+            if (env.grid(base_pos) == DNGN_TEMP_PORTAL)
+            {
+                env.grid(base_pos) = DNGN_FLOOR;
+            }
+        }
     }
     else if (monster->type == MONS_DEMONIC_TENTACLE_SEGMENT
              && killer != KILL_MISC)
