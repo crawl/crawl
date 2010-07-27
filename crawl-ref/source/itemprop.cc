@@ -432,6 +432,7 @@ static food_def Food_prop[NUM_FOODS] =
     { FOOD_HONEYCOMB,    "honeycomb",    2000,     0,     0,  40, 1, FFL_NONE },
     { FOOD_PIZZA,        "pizza",        1500,     0,     0,  40, 1, FFL_NONE },
     { FOOD_CHEESE,       "cheese",       1200,     0,     0,  40, 1, FFL_NONE },
+    { FOOD_AMBROSIA,     "ambrosia",     2500,     0,     0,  40, 1, FFL_NONE }
 };
 
 // Must call this functions early on so that the above tables can
@@ -442,7 +443,7 @@ void init_properties()
     COMPILE_CHECK(NUM_ARMOURS  == 37, c1);
     COMPILE_CHECK(NUM_WEAPONS  == 56, c2);
     COMPILE_CHECK(NUM_MISSILES ==  9, c3);
-    COMPILE_CHECK(NUM_FOODS    == 22, c4);
+    COMPILE_CHECK(NUM_FOODS    == 23, c4);
 
     int i;
 
