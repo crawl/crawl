@@ -1691,10 +1691,12 @@ void move_demon_tentacle(monsters * tentacle)
     std::vector<coord_def> foe_positions;
 
     bool attack_foe = false;
-    if (!tentacle->has_ench(ENCH_SEVERED))
+    bool severed = tentacle->has_ench(ENCH_SEVERED);
+
+    if (!severed)
     {
         collect_foe_positions(tentacle, foe_positions);
-        attack_foe = foe_positions.empty();
+        attack_foe = !foe_positions.empty();
     }
 
     coord_def base_position;
@@ -1717,7 +1719,7 @@ void move_demon_tentacle(monsters * tentacle)
 
     purge_connectors(tentacle->mindex(), valid_demonic_connection);
 
-    if (tentacle->has_ench(ENCH_SEVERED))
+    if (severed)
     {
         std::random_shuffle(compass_idx, compass_idx + 8);
         for (unsigned i = 0; i < 8; ++i)
@@ -1727,7 +1729,6 @@ void move_demon_tentacle(monsters * tentacle)
                 && tentacle->is_habitable(new_base))
             {
                 tentacle->props["base_position"].get_coord() = new_base;
-                env.pgrid(base_position) |= FPROP_BLOODY;
                 base_position = new_base;
                 break;
             }
@@ -1762,18 +1763,22 @@ void move_demon_tentacle(monsters * tentacle)
         for (int i=0; i < 8; ++i)
         {
             coord_def test = old_pos + Compass[compass_idx[i]];
-            if (tentacle->is_habitable(test)
+            if (!severed
+                && tentacle->is_habitable(test)
                 && (visited_count < demonic_max_dist
                     || connection_data.find(test)->second.size() > 1))
             {
                 new_pos = test;
                 break;
             }
-
-
+            else if (tentacle->is_habitable(test)
+                     && visited_count > 1
+                     && connection_data.find(test)->second.size() > 1)
+            {
+                new_pos = test;
+                break;
+            }
         }
-
-
     }
 
     if (new_pos != old_pos)
