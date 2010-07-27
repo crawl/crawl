@@ -746,6 +746,10 @@ pear
 
 A delicious juicy fruit.
 %%%%
+piece of ambrosia
+
+A portion of strange substance, produced by ghost moths. Consuming it provides magical energy as well as nutrition, at the cost of losing your mental focus for a short period.
+%%%%
 plate mail
 
 A suit of mail and large plates of metal.
