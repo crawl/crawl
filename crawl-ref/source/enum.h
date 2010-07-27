@@ -1281,6 +1281,8 @@ enum enchant_type
     ENCH_SILENCE,
     ENCH_AWAKEN_FOREST,
     ENCH_EXPLODING,
+    ENCH_PORTAL_TIMER,
+    ENCH_SEVERED,
 
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.

@@ -5319,8 +5319,29 @@ void monsters::apply_enchantment(const mon_enchant &me)
         }
 
     }
+    break;
+
+    case ENCH_PORTAL_TIMER:
+    {
+        if (decay_enchantment(me))
+        {
+            // Do a thing.
+            add_ench(ENCH_SEVERED);
+        }
+    }
+    break;
+
+    case ENCH_SEVERED:
+    {
+        simple_monster_message(this, " writhes!");
+        // We don't have a reasonable agent to give.
+        // Don't clean up the monster in order to credit properly.
+        //hurt(NULL, dam, BEAM_NAPALM, false);
+        hurt(NULL, 20);
+    }
 
     break;
+
     case ENCH_GLOWING_SHAPESHIFTER: // This ench never runs out!
         // Number of actions is fine for shapeshifters.  Don't change
         // shape while taking the stairs because monster_polymorph() has
@@ -6327,7 +6348,7 @@ static const char *enchant_names[] =
     "sleepy", "held", "battle_frenzy", "temp_pacif", "petrifying",
     "petrified", "lowered_mr", "soul_ripe", "slowly_dying", "eat_items",
     "aquatic_land", "spore_production", "slouch", "swift", "tide",
-    "insane", "silenced", "awaken_forest", "exploding", "buggy",
+    "insane", "silenced", "awaken_forest", "exploding", "tethered", "severd", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -6490,6 +6511,10 @@ int mon_enchant::calc_duration(const monsters *mons,
 
     case ENCH_EXPLODING:
         return (random_range(3,7) * 10);
+
+    case ENCH_PORTAL_TIMER:
+        cturn = 1000 / _mod_speed(10, mons->speed);
+        break;
 
     case ENCH_ABJ:
         if (deg >= 6)
