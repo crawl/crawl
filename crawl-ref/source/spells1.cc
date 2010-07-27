@@ -1089,7 +1089,7 @@ static bool _know_spell(spell_type spell)
     }
 
     int fail = spell_fail(spell);
-    mprf("fail = %d", fail);
+    dprf("fail = %d", fail);
 
     if (fail > random2(50) + 50)
     {
