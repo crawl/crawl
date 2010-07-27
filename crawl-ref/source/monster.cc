@@ -4681,6 +4681,12 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             forest_message(pos(), "The forest calms down.");
         break;
 
+    case ENCH_BLEED:
+        if (!quiet)
+            simple_monster_message(this, " is no longer bleeding.");
+        break;
+
+
     default:
         break;
     }
@@ -4768,7 +4774,7 @@ void monsters::timeout_enchantments(int levels)
         case ENCH_SICK:  case ENCH_SLEEPY: case ENCH_PARALYSIS:
         case ENCH_PETRIFYING: case ENCH_PETRIFIED: case ENCH_SWIFT:
         case ENCH_BATTLE_FRENZY: case ENCH_TEMP_PACIF: case ENCH_SILENCE:
-        case ENCH_LOWERED_MR: case ENCH_SOUL_RIPE:
+        case ENCH_LOWERED_MR: case ENCH_SOUL_RIPE: case ENCH_BLEED:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -5360,6 +5366,24 @@ void monsters::apply_enchantment(const mon_enchant &me)
         decay_enchantment(me);
         break;
 
+
+    case ENCH_BLEED:
+    {
+        // 3, 6, 9% of current hp
+        int dam = random2((1 + hit_points)*(me.degree * 3)/100);
+
+        if (dam < hit_points)
+        {
+            hurt(NULL, dam);
+
+            dprf("hit_points: %d ; bleed damage: %d ; degree: %d",
+                 hit_points, dam, me.degree);
+        }
+
+        decay_enchantment(me, true);
+        break;
+    }
+
     default:
         break;
     }
@@ -5482,6 +5506,18 @@ bool monsters::sicken(int amount)
     }
 
     add_ench(mon_enchant(ENCH_SICK, 0, KC_OTHER, amount * 10));
+
+    return (true);
+}
+
+bool monsters::bleed(int amount, int degree)
+{
+    if (!has_ench(ENCH_BLEED) && you.can_see(this))
+    {
+        mprf("%s begins to bleed from its wounds!", name(DESC_CAP_THE).c_str());
+    }
+
+    add_ench(mon_enchant(ENCH_BLEED, degree, KC_OTHER, amount * 10));
 
     return (true);
 }
@@ -6308,7 +6344,8 @@ static const char *enchant_names[] =
     "sleepy", "held", "battle_frenzy", "temp_pacif", "petrifying",
     "petrified", "lowered_mr", "soul_ripe", "slowly_dying", "eat_items",
     "aquatic_land", "spore_production", "slouch", "swift", "tide",
-    "insane", "silenced", "awaken_forest", "exploding", "buggy",
+    "insane", "silenced", "awaken_forest", "exploding", "bleeding",
+    "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -6515,3 +6552,4 @@ void mon_enchant::set_duration(const monsters *mons, const mon_enchant *added)
     if (duration > maxduration)
         maxduration = duration;
 }
+

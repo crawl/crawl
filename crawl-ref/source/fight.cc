@@ -925,6 +925,11 @@ bool melee_attack::player_attack()
         && where == defender->pos())
     {
         print_wounds(defender->as_monster());
+
+	const int degree = player_mutation_level(MUT_CLAWS);
+
+	if (defender->can_bleed() && degree > 0)
+		defender->as_monster()->bleed(5 + roll_dice(degree, 3), degree);
     }
 
     return (did_primary_hit || did_hit);
@@ -1274,7 +1279,7 @@ bool melee_attack::player_aux_unarmed()
 
             if (attack_shield_blocked(true))
                 continue;
-            if (player_aux_apply())
+            if (player_aux_apply(atk))
                 return (true);
         }
     }
@@ -1282,7 +1287,7 @@ bool melee_attack::player_aux_unarmed()
     return (false);
 }
 
-bool melee_attack::player_aux_apply()
+bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 {
     did_hit = true;
 
@@ -1296,10 +1301,54 @@ bool melee_attack::player_aux_apply()
 
     // Clear stab bonus which will be set for the primary weapon attack.
     stab_bonus  = 0;
-    aux_damage  = player_apply_monster_ac(aux_damage);
 
-    aux_damage  = defender->hurt(&you, aux_damage, BEAM_MISSILE, false);
+    const int pre_ac_dmg = aux_damage;
+    const int post_ac_dmg = player_apply_monster_ac(aux_damage);
+
+    aux_damage = post_ac_dmg;
+    aux_damage = defender->hurt(&you, aux_damage, BEAM_MISSILE, false);
     damage_done = aux_damage;
+
+    switch(atk)
+    {
+        case UNAT_PUNCH:
+        {
+            const int degree = player_mutation_level(MUT_CLAWS);
+
+            if (defender->as_monster()->hit_points > 0 && degree > 0
+                && defender->can_bleed())
+            {
+                defender->as_monster()->bleed(3 + roll_dice(degree, 3), degree);
+            }
+            break;
+        }
+
+        case UNAT_HEADBUTT:
+        {
+            const int horns = player_mutation_level(MUT_HORNS);
+            const int stun = bestroll(std::min(damage_done, 7), 1 + horns);
+
+            defender->as_monster()->speed_increment -= stun;
+            break;
+        }
+
+        case UNAT_KICK:
+        {
+            const int hooves = player_mutation_level(MUT_HOOVES);
+
+            if (hooves && pre_ac_dmg > post_ac_dmg)
+            {
+                const int dmg = bestroll(pre_ac_dmg - post_ac_dmg, hooves);
+                // do some of the previously ignored damage in extra-damage
+                damage_done += defender->hurt(&you, dmg, BEAM_MISSILE, false);
+            }
+
+            break;
+        }
+
+        default:
+            break;
+    }
 
     if (damage_done > 0)
     {

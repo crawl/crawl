@@ -3268,6 +3268,7 @@ static std::string _describe_mons_enchantment(const monsters &mons,
     case ENCH_LOWERED_MR:    return "susceptible to magic";
     case ENCH_SWIFT:         return "moving somewhat quickly";
     case ENCH_SILENCE:       return "radiating silence";
+    case ENCH_BLEED:         return "bleeding";
     default:                 return "";
     }
 }
