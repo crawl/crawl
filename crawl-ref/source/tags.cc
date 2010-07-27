@@ -1791,6 +1791,7 @@ static void tag_read_you_items(reader &th, char minorVersion)
 
     // how many inventory slots?
     count_c = unmarshallByte(th);
+    ASSERT(count_c == ENDOFPACK); // not supposed to change
     for (i = 0; i < count_c; ++i)
         unmarshallItem(th, you.inv[i]);
 
@@ -1838,40 +1839,56 @@ static void tag_read_you_items(reader &th, char minorVersion)
 
     // how many unique items?
     count_c = unmarshallByte(th);
-    for (j = 0; j < count_c; ++j)
+    ASSERT(count_c >= 0);
+    for (j = 0; j < count_c && j < NO_UNRANDARTS; ++j)
     {
         you.unique_items[j] =
             static_cast<unique_item_status_type>(unmarshallByte(th));
     }
-
     // # of unrandarts could certainly change.
     // If it does, the new ones won't exist yet - zero them out.
     for (; j < NO_UNRANDARTS; j++)
         you.unique_items[j] = UNIQ_NOT_EXISTS;
+    for (j = NO_UNRANDARTS; j < count_c; j++)
+        unmarshallByte(th);
 
     // how many books?
     count_c = unmarshallByte(th);
-    for (j = 0; j < count_c; ++j)
+    ASSERT(count_c >= 0);
+    for (j = 0; j < count_c && j < NUM_FIXED_BOOKS; ++j)
         you.had_book[j] = unmarshallByte(th);
+    for (j = count_c; j < NUM_FIXED_BOOKS; ++j)
+        you.seen_spell[j] = 0;
+    for (j = NUM_FIXED_BOOKS; j < count_c; ++j)
+        unmarshallByte(th);
 
     // how many spells?
     count_s = unmarshallShort(th);
-    if (count_s > NUM_SPELLS)
-        count_s = NUM_SPELLS;
-    for (j = 0; j < count_s; ++j)
+    ASSERT(count_s >= 0);
+    for (j = 0; j < count_s && j < NUM_SPELLS; ++j)
         you.seen_spell[j] = unmarshallByte(th);
+    for (j = count_s; j < NUM_SPELLS; ++j)
+        you.seen_spell[j] = 0;
+    for (j = NUM_SPELLS; j < count_s; ++j)
+        unmarshallByte(th);
 
     count_s = unmarshallShort(th);
-    if (count_s > NUM_WEAPONS)
-        count_s = NUM_WEAPONS;
-    for (j = 0; j < count_s; ++j)
+    ASSERT(count_s >= 0);
+    for (j = 0; j < count_s && j < NUM_WEAPONS; ++j)
         you.seen_weapon[j] = unmarshallInt(th);
+    for (j = count_s; j < NUM_WEAPONS; ++j)
+        you.seen_weapon[j] = 0;
+    for (j = NUM_WEAPONS; j < count_s; ++j)
+        unmarshallInt(th);
 
     count_s = unmarshallShort(th);
-    if (count_s > NUM_ARMOURS)
-        count_s = NUM_ARMOURS;
-    for (j = 0; j < count_s; ++j)
+    ASSERT(count_s >= 0);
+    for (j = 0; j < count_s && j < NUM_ARMOURS; ++j)
         you.seen_armour[j] = unmarshallInt(th);
+    for (j = count_s; j < NUM_ARMOURS; ++j)
+        you.seen_armour[j] = 0;
+    for (j = NUM_ARMOURS; j < count_s; ++j)
+        unmarshallInt(th);
 }
 
 static PlaceInfo unmarshallPlaceInfo(reader &th, char minorVersion)
