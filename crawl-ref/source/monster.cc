@@ -5408,6 +5408,9 @@ bool monsters::is_summoned(int* duration, int* summon_type) const
     if (summon_type != NULL)
         *summon_type = summ.degree;
 
+    if (mons_is_conjured(type))
+        return (false);
+
     switch (summ.degree)
     {
     // Temporarily dancing weapons are really there.
@@ -5417,8 +5420,7 @@ bool monsters::is_summoned(int* duration, int* summon_type) const
     case SPELL_ANIMATE_DEAD:
     case SPELL_ANIMATE_SKELETON:
 
-    // Fire vortices are made from real fire.
-    case SPELL_FIRE_STORM:
+    // Conjured stuff (fire vortices, ball lightning, IOOD) is handled above.
 
     // Clones aren't really summoned (though their equipment might be).
     case MON_SUMM_CLONE:

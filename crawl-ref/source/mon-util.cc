@@ -719,6 +719,18 @@ bool mons_is_draconian(int mc)
     return (mc >= MONS_FIRST_DRACONIAN && mc <= MONS_LAST_DRACONIAN);
 }
 
+// Conjured (as opposed to summoned) monsters are actually here, eventhough
+// they're typically volatile (like, made of real fire).  As such, they
+// should be immune to Abjuration or Recall.  Also, they count as things
+// rather than beings.
+bool mons_is_conjured(int mc)
+{
+    return mons_is_projectile(mc)
+           || mc == MONS_FIRE_VORTEX
+           || mc == MONS_SPATIAL_VORTEX
+           || mc == MONS_BALL_LIGHTNING;
+}
+
 // Returns true if the given monster's foe is also a monster.
 bool mons_foe_is_mons(const monsters *mons)
 {
