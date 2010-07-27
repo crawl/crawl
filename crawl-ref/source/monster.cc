@@ -5325,7 +5325,17 @@ void monsters::apply_enchantment(const mon_enchant &me)
     {
         if (decay_enchantment(me))
         {
+            coord_def base_position = this->props["base_position"].get_coord();
             // Do a thing.
+            if (you.see_cell(base_position))
+            {
+                mprf("The portal closes, %s is severed", name(DESC_NOCAP_THE).c_str());
+            }
+
+            if (env.grid(base_position) == DNGN_TEMP_PORTAL)
+            {
+                env.grid(base_position) = DNGN_FLOOR;
+            }
             add_ench(ENCH_SEVERED);
         }
     }
@@ -6513,7 +6523,7 @@ int mon_enchant::calc_duration(const monsters *mons,
         return (random_range(3,7) * 10);
 
     case ENCH_PORTAL_TIMER:
-        cturn = 1000 / _mod_speed(10, mons->speed);
+        cturn = 30 * 10 / _mod_speed(10, mons->speed);
         break;
 
     case ENCH_ABJ:
