@@ -2367,6 +2367,7 @@ static tileidx_t _tileidx_food(const item_def &item)
     case FOOD_BEEF_JERKY:   return TILE_FOOD_BEEF_JERKY;
     case FOOD_CHEESE:       return TILE_FOOD_CHEESE;
     case FOOD_SAUSAGE:      return TILE_FOOD_SAUSAGE;
+    case FOOD_AMBROSIA:     return TILE_FOOD_AMBROSIA;
     case FOOD_CHUNK:        return _tileidx_chunk(item);
     }
 

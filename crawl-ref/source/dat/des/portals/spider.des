@@ -157,7 +157,7 @@ ENDMAP
 ###############################################################################
 # Layout: Octagonal rooms.
 # Foes:   A ghost moth and trapdoor spiders.
-# Loot:   Random good items.
+# Loot:   Random good items, possibility of ambrosia.
 NAME:   spiders_nest_the_unseen
 TAGS:   spiders_nest no_item_gen no_monster_gen
 ORIENT: encompass
@@ -168,6 +168,8 @@ epilogue{{
 spiders_nest_milestone(_G)
 }}
 MONS:   trapdoor spider, ghost moth
+SUBST:  * = **d
+ITEM:   piece of ambrosia
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxx$$$$xxxxxxxxx$$$$xxxxxxxxx$$$$xxxxx
@@ -183,4 +185,36 @@ xxx........xxxxx........xxxxx........xxx
 xxxx......xxxxxxx......xxxxxxx......xxxx
 xxxxx$$$$xxxxxxxxx$$$$xxxxxxxxx$$$$xxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+###############################################################################
+# Layout: Octagonal room with a pillar and water.
+# Foes:   A ghost moth with a few tarantellas.
+# Loot:   Ambrosia.
+NAME:   spiders_nest_ghost_moth_duel
+TAGS:   spiders_nest no_item_gen no_monster_gen generate_awake
+ORIENT: encompass
+WEIGHT: 5
+: spiders_nest_colours(_G)
+: spiders_nest_random_monster_set(_G)
+epilogue{{
+spiders_nest_milestone(_G)
+}}
+MONS:   ghost moth, tarantella
+ITEM:   piece of ambrosia
+MAP
+xxxxxxxxxxxxxx
+xxxxx.<A.xxxxx
+xxxx......xxxx
+xxx........xxx
+xx....WW....xx
+x....WxxW....x
+x...WxxxxW...x
+x.2.WxxxxW.2.x
+x.22.WxxW.22.x
+xx....WW....xx
+xxx...1....xxx
+xxxx......xxxx
+xxxxxddddxxxxx
+xxxxxxxxxxxxxx
 ENDMAP

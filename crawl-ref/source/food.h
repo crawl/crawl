@@ -32,7 +32,8 @@ enum food_type
     FOOD_CHEESE,
     FOOD_SAUSAGE,                      //   20
     FOOD_CHUNK,
-    NUM_FOODS                          //   22
+    FOOD_AMBROSIA,
+    NUM_FOODS                          //   23
 };
 
 int count_corpses_in_pack(bool blood_only = false);

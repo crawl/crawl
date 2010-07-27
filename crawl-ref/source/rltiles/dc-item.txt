@@ -490,6 +490,7 @@ lychee FOOD_LYCHEE
 beef_jerky FOOD_BEEF_JERKY
 cheese FOOD_CHEESE
 sausage FOOD_SAUSAGE
+piece_of_ambrosia FOOD_AMBROSIA
 bone FOOD_BONE
 chunk FOOD_CHUNK
 chunk_rotten FOOD_CHUNK_ROTTEN
