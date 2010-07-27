@@ -1684,11 +1684,18 @@ void move_demon_tentacle(monsters * tentacle)
     {
         return;
     }
+    int compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
+
     int tentacle_idx = tentacle->mindex();
 
     std::vector<coord_def> foe_positions;
-    collect_foe_positions(tentacle, foe_positions);
-    bool no_foe = foe_positions.empty();
+
+    bool attack_foe = false;
+    if (!tentacle->has_ench(ENCH_SEVERED))
+    {
+        collect_foe_positions(tentacle, foe_positions);
+        attack_foe = foe_positions.empty();
+    }
 
     coord_def base_position;
     if (!tentacle->props.exists("base_position"))
@@ -1710,6 +1717,23 @@ void move_demon_tentacle(monsters * tentacle)
 
     purge_connectors(tentacle->mindex(), valid_demonic_connection);
 
+    if (tentacle->has_ench(ENCH_SEVERED))
+    {
+        std::random_shuffle(compass_idx, compass_idx + 8);
+        for (unsigned i = 0; i < 8; ++i)
+        {
+            coord_def new_base = base_position + Compass[compass_idx[i]];
+            if (!actor_at(new_base)
+                && tentacle->is_habitable(new_base))
+            {
+                tentacle->props["base_position"].get_coord() = new_base;
+                env.pgrid(base_position) |= FPROP_BLOODY;
+                base_position = new_base;
+                break;
+            }
+        }
+    }
+
     coord_def new_pos = tentacle->pos();
     coord_def old_pos = tentacle->pos();
 
@@ -1721,16 +1745,15 @@ void move_demon_tentacle(monsters * tentacle)
     attack_constraints.target_positions = &foe_positions;
 
     bool path_found = false;
-    if (!no_foe)
+    if (attack_foe)
     {
         path_found = tentacle_pathfind(tentacle, attack_constraints,
                                        new_pos, foe_positions, visited_count);
     }
 
-    int compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
 
 
-    if (no_foe || !path_found)
+    if (!attack_foe || !path_found)
     {
         // todo: set a random position?
 

@@ -267,6 +267,15 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap     = MF_STAIR_BRANCH;
             break;
 
+        case DNGN_TEMP_PORTAL:
+            f.dchar       = DCHAR_ARCH;
+            f.colour      = ETC_SHIMMER_BLUE;
+            f.map_colour  = LIGHTGREY;
+            f.colour      = ETC_SHIMMER_BLUE;
+            f.minimap     = MF_STAIR_UP;
+            break;
+
+
         case DNGN_ESCAPE_HATCH_DOWN:
             f.dchar      = DCHAR_STAIRS_DOWN;
             f.colour     = BROWN;
