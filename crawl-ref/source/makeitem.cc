@@ -2806,14 +2806,14 @@ static void _generate_potion_item(item_def& item, int force_type,
                || (agent == GOD_XOM && _is_boring_item(OBJ_POTIONS, stype)
                    && --tries > 0));
 
-        if (stype == POT_GAIN_STRENGTH || stype == POT_GAIN_DEXTERITY
-            || stype == POT_GAIN_INTELLIGENCE || stype == POT_EXPERIENCE
-            || stype == POT_RESTORE_ABILITIES)
-        {
-            item.quantity = 1;
-        }
-
         item.sub_type = stype;
+    }
+
+    if (stype == POT_GAIN_STRENGTH || stype == POT_GAIN_DEXTERITY
+        || stype == POT_GAIN_INTELLIGENCE || stype == POT_EXPERIENCE
+        || stype == POT_RESTORE_ABILITIES)
+    {
+        item.quantity = 1;
     }
 
     if (is_blood_potion(item))
