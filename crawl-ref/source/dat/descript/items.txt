@@ -601,7 +601,7 @@ The scaly skin of a dragon. It can be fashioned into proper armour, but even in 
 %%%%
 javelin
 
-A long, light polearm that can be thrown by hand. {{
+A long, light stick that can be thrown by hand. {{
 if you.race() == "Halfling"
     or you.race() == "Kobold"
     or you.race() == "Spriggan"
