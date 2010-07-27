@@ -5344,6 +5344,8 @@ void monsters::apply_enchantment(const mon_enchant &me)
     case ENCH_SEVERED:
     {
         simple_monster_message(this, " writhes!");
+        coord_def base_position = props["base_position"].get_coord();
+        env.pgrid(base_position) |= FPROP_BLOODY;
         // We don't have a reasonable agent to give.
         // Don't clean up the monster in order to credit properly.
         //hurt(NULL, dam, BEAM_NAPALM, false);
