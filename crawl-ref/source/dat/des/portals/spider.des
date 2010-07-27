@@ -70,7 +70,7 @@ function spiders_nest_random_monster_set(e)
                          giant blowfly / yellow wasp / red wasp / \
                          giant beetle / boring beetle / boulder beetle / \
                          giant centipede / giant scorpion / jumping spider / \
-                         ghost moth w:2 / demonic crawler w:2")
+                         tarantella / ghost moth w:2 / demonic crawler w:2")
 end
 }}
 
@@ -119,9 +119,10 @@ epilogue{{
 spiders_nest_milestone(_G)
 }}
 MONS:    giant centipede
-MONS:    scorpion
+MONS:    scorpion / giant scorpion w:1
 MONS:    trapdoor spider generate_awake / nothing w:20
-MONS:    redback / wolf spider / jumping spider
+MONS:    redback / wolf spider
+MONS:    jumping spider / tarantella w:20
 MONS:    giant scorpion / demonic crawler
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -145,10 +146,10 @@ xxx..3.xxxxxxxx2222xxx..xxxW..Wxxxxxx.**x
 xxxW....xxxxxx.2222.xx..xx.....Wxxxxx.<*x
 xxxxxx...xxxx...xx...x..x...xx..Wxxx....x
 xxxxxxx...xx...xxxx........xxxx..Wx...xxx
-xxxxxxxx......xxxxxx..44..xxxxxx.....xxxx
-xxxxxxxxx............4..4........55.xxxxx
-xxxxxxxxxW..3........4..4........55.xxxxx
-xxxxxxxxxWW..xxxxxxxW.44.Wxxxxxx....xxxxx
+xxxxxxxx......xxxxxx..44..xxxxxx.55..xxxx
+xxxxxxxxx............4554.......5665xxxxx
+xxxxxxxxxW..3........4554.......5665xxxxx
+xxxxxxxxxWW..xxxxxxxW.44.Wxxxxxx.55.xxxxx
 xxxxxxxxxxxxxxxxxxxxWW..WWxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
