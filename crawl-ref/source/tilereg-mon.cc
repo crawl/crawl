@@ -152,7 +152,7 @@ const monsters *MonsterRegion::get_monster(unsigned int idx) const
     if (item.idx >= static_cast<int>(m_mon_info.size()))
         return (NULL);
 
-    return (m_mon_info[item.idx].m_mon);
+    return (m_mon_info[item.idx].mon());
 }
 
 void MonsterRegion::pack_buffers()
