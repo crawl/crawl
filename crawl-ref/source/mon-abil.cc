@@ -1096,6 +1096,7 @@ static void _establish_connection(int tentacle,
         else
             menv[tentacle].props["inwards"].get_int() = -1;
 
+     //   mprf ("null tentacle thing, res %d", menv[tentacle].props["inwards"].get_int());
         return;
     }
 
@@ -1330,6 +1331,7 @@ struct tentacle_connect_constraints
 {
     std::map<coord_def, std::set<int> > * connection_constraints;
 
+    monsters * base_monster;
 
     tentacle_connect_constraints()
     {
@@ -1357,21 +1359,21 @@ struct tentacle_connect_constraints
             std::map<coord_def, std::set<int> >::iterator probe
                         = connection_constraints->find(temp.pos);
 
-            if (feat_is_solid(env.grid(temp.pos))
-                || env.grid(temp.pos) == DNGN_LAVA
-                || actor_at(temp.pos)
-                )
+            if (probe == connection_constraints->end()
+                || probe->second.find(node.connect_level) == probe->second.end())
+            {
+                continue;
+            }
+
+
+            if (!base_monster->is_habitable(temp.pos)
+                || actor_at(temp.pos))
             {
                 temp.path_distance = DISCONNECT_DIST;
             }
             else
                 temp.path_distance = 1 + node.path_distance;
 
-            if (probe == connection_constraints->end()
-                || probe->second.find(node.connect_level) == probe->second.end())
-            {
-                continue;
-            }
 
 
             //temp.estimate = grid_distance(temp.pos, kraken->pos());
@@ -1380,16 +1382,20 @@ struct tentacle_connect_constraints
             temp.estimate = 0;
             int test_level = node.connect_level;
 
-            for (std::set<int>::iterator j = probe->second.begin();
+/*            for (std::set<int>::iterator j = probe->second.begin();
                  j!= probe->second.end();
                  j++)
             {
                 if (*j == (test_level + 1))
                     test_level++;
             }
+            */
+            while (probe->second.find(test_level + 1) != probe->second.end())
+                test_level++;
 
             int max = probe->second.empty() ? INT_MAX : *(probe->second.rbegin());
 
+//            mprf("start %d, test %d, max %d", temp.connect_level, test_level, max);
             if (test_level < max)
                 continue;
 
@@ -1512,8 +1518,15 @@ bool try_tentacle_connect(const coord_def & new_pos, const coord_def & base_posi
                           monster_type connect_type)
 {
     // Nothing to do here.
+    // Except fix the tentacle end's pointer, idiot.
     if (base_position == new_pos)
-        return true;
+    {
+        if (tentacle_idx == base_idx)
+            menv[tentacle_idx].props["inwards"].get_int() = -1;
+        else
+            menv[tentacle_idx].props["inwards"].get_int() = base_idx;
+        return (true);
+    }
 
     int start_level = 0;
     std::map<coord_def, std::set<int> >::iterator it
@@ -1658,6 +1671,10 @@ int collect_connection_data(monsters * start_monster,
             && valid_segment_type(&menv[next_idx]))
         {
             current_mon = &menv[next_idx];
+            if (current_mon->number != start_monster->mindex())
+            {
+                mprf("link information corruption!!! tentacle in chain doesn't match mindex");
+            }
             if (!retract_found)
             {
                 retract_pos = current_mon->pos();
@@ -1667,11 +1684,13 @@ int collect_connection_data(monsters * start_monster,
         else
         {
             current_mon = NULL;
+//            mprf("null at count %d", current_count);
         }
         current_count++;
     }
 
 
+//    mprf("returned count %d", current_count);
     return current_count;
 }
 
@@ -1763,16 +1782,34 @@ void move_demon_tentacle(monsters * tentacle)
         for (int i=0; i < 8; ++i)
         {
             coord_def test = old_pos + Compass[compass_idx[i]];
+            //coord_def test = old_pos;
+            //test.x++;
+            if (!in_bounds(test)
+                || actor_at(test))
+            {
+                continue;
+            }
+
+            int escalated = 0;
+            std::map<coord_def, std::set<int> >::iterator probe = connection_data.find(test);
+
+            while (probe->second.find(escalated + 1) != probe->second.end() )
+                escalated++;
+
+
             if (!severed
                 && tentacle->is_habitable(test)
+                && escalated == *probe->second.rbegin()
                 && (visited_count < demonic_max_dist
                     || connection_data.find(test)->second.size() > 1))
             {
                 new_pos = test;
+//                mprf("start 0, escalated %d max %d", escalated, *probe->second.rbegin());
                 break;
             }
             else if (tentacle->is_habitable(test)
                      && visited_count > 1
+                     && escalated == *probe->second.rbegin()
                      && connection_data.find(test)->second.size() > 1)
             {
                 new_pos = test;
@@ -1812,6 +1849,7 @@ void move_demon_tentacle(monsters * tentacle)
 
     tentacle_connect_constraints connect_costs;
     connect_costs.connection_constraints = &connection_data;
+    connect_costs.base_monster = tentacle;
 
     bool connected = try_tentacle_connect(new_pos, base_position,
                                           tentacle_idx, tentacle_idx,
@@ -1822,14 +1860,17 @@ void move_demon_tentacle(monsters * tentacle)
     {
         // This should really never fail for demonic tentacles (they don't
         // have the whole shifting base problem). -cao
-        mprf("tentacle connect failed! What the heck!");
-        mgrd(tentacle->pos()) = tentacle->mindex();
+        mprf("tentacle connect failed! What the heck!  severed status %d", tentacle->has_ench(ENCH_SEVERED));
+        mprf("pathed to %d %d from %d %d mid %d count %d", new_pos.x, new_pos.y, old_pos.x, old_pos.y, tentacle->mindex(), visited_count);
+
+//        mgrd(tentacle->pos()) = tentacle->mindex();
 
         // Is it ok to purge the tentacle here?
         monster_die(tentacle, KILL_MISC, NON_MONSTER, true);
         return;
     }
 
+//    mprf("mindex %d vsisted %d", tentacle_idx, visited_count);
     tentacle->check_redraw(old_pos);
     tentacle->apply_location_effects(old_pos);
 }
@@ -1990,6 +2031,7 @@ void move_kraken_tentacles(monsters * kraken)
         mgrd(tentacle->pos()) = tentacle->mindex();
 
         connect_costs.connection_constraints = &connection_data;
+        connect_costs.base_monster = tentacle;
         //bool connected = try_tentacle_connect(new_pos, headnum, tentacle_idx, connect_costs);
         bool connected = try_tentacle_connect(new_pos, kraken->pos(),
                                               tentacle_idx, kraken->mindex(),
