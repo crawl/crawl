@@ -162,7 +162,7 @@ const char* stat_desc(stat_type stat, stat_desc_type desc)
     return (descs[stat][desc]);
 }
 
-void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
+void modify_stat(stat_type which_stat, signed char amount, bool suppress_msg,
                  const char *cause, bool see_source)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -190,7 +190,7 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
     _handle_stat_change(which_stat, cause, see_source);
 }
 
-void notify_stat_change(stat_type which_stat, char amount, bool suppress_msg,
+void notify_stat_change(stat_type which_stat, signed char amount, bool suppress_msg,
                         const char *cause, bool see_source)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -216,7 +216,7 @@ void notify_stat_change(stat_type which_stat, char amount, bool suppress_msg,
     _handle_stat_change(which_stat, cause, see_source);
 }
 
-void notify_stat_change(stat_type which_stat, char amount, bool suppress_msg,
+void notify_stat_change(stat_type which_stat, signed char amount, bool suppress_msg,
                         const item_def &cause, bool removed)
 {
     std::string name = cause.name(DESC_NOCAP_THE, false, true, false, false,

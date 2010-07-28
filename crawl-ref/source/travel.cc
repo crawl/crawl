@@ -890,9 +890,9 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
 // Don't call travel() if you.running >= 0.
 command_type travel()
 {
-    char holdx, holdy;
-    char *move_x = &holdx;
-    char *move_y = &holdy;
+    int holdx, holdy;
+    int *move_x = &holdx;
+    int *move_y = &holdy;
     holdx = holdy = 0;
 
     command_type result = CMD_NO_CMD;
@@ -1092,7 +1092,7 @@ command_type travel()
     return direction_to_command( *move_x, *move_y );
 }
 
-command_type direction_to_command( char x, char y )
+command_type direction_to_command( int x, int y )
 {
     if ( x == -1 && y == -1 ) return CMD_MOVE_UP_LEFT;
     if ( x == -1 && y ==  0 ) return CMD_MOVE_LEFT;
@@ -1665,7 +1665,7 @@ bool travel_pathfind::path_examine_point(const coord_def &c)
 // Try to avoid to let travel (including autoexplore) move the player right
 // next to a lurking (previously unseen) monster.
 void find_travel_pos(const coord_def& youpos,
-                     char *move_x, char *move_y,
+                     int *move_x, int *move_y,
                      std::vector<coord_def>* features)
 {
     travel_pathfind tp;
