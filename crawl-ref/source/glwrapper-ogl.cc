@@ -151,7 +151,11 @@ void OGLStateManager::reset_view_for_resize(const coord_def &m_windowsz)
     glLoadIdentity();
 
     // For ease, vertex positions are pixel positions.
+#ifdef USE_GLES
     glOrthox(0, m_windowsz.x, m_windowsz.y, 0, -1000, 1000);
+#else
+    glOrtho(0, m_windowsz.x, m_windowsz.y, 0, -1000, 1000);
+#endif
 }
 
 void OGLStateManager::reset_transform()
