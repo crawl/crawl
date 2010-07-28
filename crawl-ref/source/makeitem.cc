@@ -1796,69 +1796,6 @@ brand_ok:
     }
 }
 
-static item_status_flag_type _determine_missile_race(const item_def& item,
-                                                     int item_race)
-{
-    item_status_flag_type rc = ISFLAG_NO_RACE;
-
-    if (item.sub_type > MI_MAX_RACIAL)
-        return rc;
-
-    switch (item_race)
-    {
-    case MAKE_ITEM_ELVEN:
-        rc = ISFLAG_ELVEN;
-        break;
-
-    case MAKE_ITEM_DWARVEN:
-        rc = ISFLAG_DWARVEN;
-        break;
-
-    case MAKE_ITEM_ORCISH:
-        rc = ISFLAG_ORCISH;
-        break;
-
-    case MAKE_ITEM_RANDOM_RACE:
-        // Elves don't make bolts, sling bullets, or throwing nets.
-        if ((item.sub_type == MI_ARROW
-                || item.sub_type == MI_DART
-                || item.sub_type == MI_JAVELIN)
-            && one_chance_in(4))
-        {
-            rc = ISFLAG_ELVEN;
-        }
-
-        // Orcs don't make sling bullets or throwing nets.
-        if ((item.sub_type == MI_ARROW
-                || item.sub_type == MI_BOLT
-                || item.sub_type == MI_DART
-                || item.sub_type == MI_JAVELIN)
-            && one_chance_in(4))
-        {
-            rc = ISFLAG_ORCISH;
-        }
-
-        // Dwarves don't make arrows, sling bullets, javelins, or
-        // throwing nets.
-        if ((item.sub_type == MI_DART || item.sub_type == MI_BOLT)
-            && one_chance_in(6))
-        {
-            rc = ISFLAG_DWARVEN;
-        }
-
-        // Dwarves don't make needles.
-        if (item.sub_type == MI_NEEDLE)
-        {
-            if (one_chance_in(10))
-                rc = ISFLAG_ELVEN;
-            if (one_chance_in(6))
-                rc = ISFLAG_ORCISH;
-        }
-        break;
-    }
-    return rc;
-}
-
 // Current list is based on dpeg's original post to the Wiki, found at the
 // page: <http://crawl.develz.org/wiki/doku.php?id=DCSS%3Aissue%3A41>.
 // Remember to update the code in is_missile_brand_ok if adding or altering
@@ -2079,7 +2016,7 @@ static void _generate_missile_item(item_def& item, int force_type,
         return;
     }
 
-    set_equip_race(item, _determine_missile_race(item, item_race));
+    set_equip_race(item, ISFLAG_NO_RACE);
 
     if (!no_brand)
     {
@@ -2102,13 +2039,6 @@ static void _generate_missile_item(item_def& item, int force_type,
 
     if (x_chance_in_y(11 + item_level, 100))
         item.plus += random2(5);
-
-    // Elven arrows and dwarven bolts are quality items.
-    if (get_equip_race(item) == ISFLAG_ELVEN && item.sub_type == MI_ARROW
-        || get_equip_race(item) == ISFLAG_DWARVEN && item.sub_type == MI_BOLT)
-    {
-        item.plus += random2(3);
-    }
 }
 
 static bool _try_make_armour_artefact(item_def& item, int force_type,
