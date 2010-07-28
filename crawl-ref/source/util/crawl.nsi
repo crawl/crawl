@@ -15,7 +15,7 @@ SetCompressor /SOLID lzma
 !include "MUI2.nsh"
 
 Name "${DCSS} ${VERSION}"
-Outfile "crawl-${VERSION}.setup.exe"
+Outfile "stone_soup-${VERSION}-win32-installer.exe"
 XPStyle on
 !define MUI_ICON util\crawl.ico
 
