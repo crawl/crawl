@@ -14,13 +14,15 @@ const char* stat_desc(stat_type stat, stat_desc_type desc);
 
 void attribute_increase();
 
-void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
+void modify_stat(stat_type which_stat, signed char amount, bool suppress_msg,
                  const char* cause, bool see_source = true);
 
-void notify_stat_change(stat_type which_stat, char amount, bool suppress_msg,
-                        const char* cause, bool see_source = true);
-void notify_stat_change(stat_type which_stat, char amount, bool suppress_msg,
-                        const item_def &cause, bool removed = false);
+void notify_stat_change(stat_type which_stat, signed char amount,
+                        bool suppress_msg, const char* cause,
+                        bool see_source = true);
+void notify_stat_change(stat_type which_stat, signed char amount,
+                        bool suppress_msg, const item_def &cause,
+                        bool removed = false);
 void notify_stat_change(const char* cause);
 
 void jiyva_stat_action();

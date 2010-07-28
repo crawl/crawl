@@ -85,7 +85,7 @@ public:
     mon_attitude_type attitude;
     beh_type behaviour;
     unsigned short foe;
-    char ench_countdown;
+    signed char ench_countdown;
     mon_enchant_list enchantments;
     uint64_t flags;                    // bitfield of boolean flags
 

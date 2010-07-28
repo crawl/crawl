@@ -63,13 +63,13 @@ void travel_init_load_level();
 void travel_init_new_level();
 
 unsigned char is_waypoint(const coord_def &p);
-command_type direction_to_command(char x, char y);
+command_type direction_to_command(int x, int y);
 bool is_resting(void);
 void explore_pickup_event(int did_pickup, int tried_pickup);
 bool feat_is_traversable(dungeon_feature_type feat);
 bool is_unknown_stair(const coord_def &p);
 
-void find_travel_pos(const coord_def& youpos, char *move_x, char *move_y,
+void find_travel_pos(const coord_def& youpos, int *move_x, int *move_y,
                      std::vector<coord_def>* coords = NULL);
 
 bool is_travelsafe_square(const coord_def& c, bool ignore_hostile = false);
