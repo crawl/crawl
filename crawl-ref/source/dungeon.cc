@@ -4593,6 +4593,8 @@ static dungeon_feature_type _dgn_find_rune_subst_tags(const std::string &tags)
 
 static void _fixup_after_vault()
 {
+    _dgn_set_floor_colours();
+
     link_items();
     env.markers.activate_all();
 
