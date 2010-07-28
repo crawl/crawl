@@ -73,7 +73,7 @@ static bool _travel_colour_override(const coord_def& p)
     // Options.clean_map is set.
     const map_cell& cell = env.map_knowledge(p);
     show_class cls = get_cell_show_class(cell, Options.clean_map);
-    if(cls == SH_FEATURE)
+    if (cls == SH_FEATURE)
     {
         switch(cell.feat())
         {
@@ -433,7 +433,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
                 cell->glyph = g.ch;
                 cell->colour = g.col;
 
-                if(travel_mode && _travel_colour_override(c))
+                if (travel_mode && _travel_colour_override(c))
                     cell->colour = _get_travel_colour(c);
 
                 if (c == you.pos() && !crawl_state.arena_suspended && on_level)

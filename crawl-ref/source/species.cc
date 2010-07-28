@@ -46,7 +46,7 @@ species_type random_draconian_player_species()
 
 species_type get_species(const int index)
 {
-    if(index < 0 || index >= ng_num_species())
+    if (index < 0 || index >= ng_num_species())
         return (SP_UNKNOWN);
 
     return (species_order[index]);

@@ -2061,7 +2061,7 @@ static std::string _invalid_monster_str(monster_type type)
 
 static std::string _mon_special_name(const monsters& mon, description_level_type desc, bool force_seen)
 {
-    if(desc == DESC_NONE)
+    if (desc == DESC_NONE)
         return "";
 
     monster_type type = mon.type;
@@ -2090,7 +2090,7 @@ static std::string _mon_special_name(const monsters& mon, description_level_type
         }
     }
 
-    if(desc == DESC_DBNAME)
+    if (desc == DESC_DBNAME)
     {
         monster_info mi(&mon, MILEV_NAME);
         return mi.db_name();
@@ -2102,7 +2102,7 @@ static std::string _mon_special_name(const monsters& mon, description_level_type
 std::string monsters::name(description_level_type desc, bool force_vis) const
 {
     std::string s = _mon_special_name(*this, desc, force_vis);
-    if(!s.empty() || desc == DESC_NONE)
+    if (!s.empty() || desc == DESC_NONE)
         return s;
 
     monster_info mi(this, MILEV_NAME);
@@ -2113,7 +2113,7 @@ std::string monsters::base_name(description_level_type desc, bool force_vis)
     const
 {
     std::string s = _mon_special_name(*this, desc, force_vis);
-    if(!s.empty() || desc == DESC_NONE)
+    if (!s.empty() || desc == DESC_NONE)
         return s;
 
     monster_info mi(this, MILEV_NAME);
@@ -2124,7 +2124,7 @@ std::string monsters::full_name(description_level_type desc,
                                 bool use_comma) const
 {
     std::string s = _mon_special_name(*this, desc, true);
-    if(!s.empty() || desc == DESC_NONE)
+    if (!s.empty() || desc == DESC_NONE)
         return s;
 
     monster_info mi(this, MILEV_NAME);
@@ -5028,7 +5028,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
     {
         // Reduce the timer, if that means we lose the enchantment then
         // spawn a spore and re-add the enchantment
-        if(decay_enchantment(me))
+        if (decay_enchantment(me))
         {
             monster_type mtype = type;
             bolt beam;

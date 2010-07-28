@@ -358,23 +358,23 @@ void marshallUnsigned(writer& th, uint64_t v)
     {
         unsigned char b = (unsigned char)(v & 0x7f);
         v >>= 7;
-        if(v)
+        if (v)
             b |= 0x80;
         th.writeByte(b);
     }
-    while(v);
+    while (v);
 }
 
 uint64_t unmarshallUnsigned(reader& th)
 {
     unsigned i = 0;
     uint64_t v = 0;
-    for(;;)
+    for (;;)
     {
         unsigned char b = th.readByte();
         v |= (uint64_t)(b & 0x7f) << i;
         i += 7;
-        if(!(b & 0x80))
+        if (!(b & 0x80))
             break;
     }
     return v;
@@ -382,7 +382,7 @@ uint64_t unmarshallUnsigned(reader& th)
 
 void marshallSigned(writer& th, int64_t v)
 {
-    if(v < 0)
+    if (v < 0)
         marshallUnsigned(th, (uint64_t)((-v - 1) << 1) | 1);
     else
         marshallUnsigned(th, (uint64_t)(v << 1));
@@ -392,7 +392,7 @@ int64_t unmarshallSigned(reader& th)
 {
     uint64_t u;
     unmarshallUnsigned(th, u);
-    if(u & 1)
+    if (u & 1)
         return (int64_t)(-(u >> 1) - 1);
     else
         return (int64_t)(u >> 1);
@@ -1228,7 +1228,7 @@ static void tag_construct_you(writer &th)
     marshallByte(th, 0);
 
     marshallInt(th, you.dactions.size());
-    for(unsigned int k = 0; k < you.dactions.size(); k++)
+    for (unsigned int k = 0; k < you.dactions.size(); k++)
         marshallByte(th, you.dactions[k]);
 
     // List of currently beholding monsters (usually empty).
@@ -2246,26 +2246,26 @@ void marshallMapCell(writer &th, const map_cell &cell)
 {
     unsigned flags = 0;
 
-    if(cell.flags > 0xffff)
+    if (cell.flags > 0xffff)
         flags |= MAP_SERIALIZE_FLAGS_32;
-    else if(cell.flags > 0xff)
+    else if (cell.flags > 0xff)
         flags |= MAP_SERIALIZE_FLAGS_16;
-    else if(cell.flags)
+    else if (cell.flags)
         flags |= MAP_SERIALIZE_FLAGS_8;
 
-    if(cell.feat() != DNGN_UNSEEN)
+    if (cell.feat() != DNGN_UNSEEN)
         flags |= MAP_SERIALIZE_FEATURE;
 
-    if(cell.feat_colour())
+    if (cell.feat_colour())
         flags |= MAP_SERIALIZE_FEATURE_COLOR;
 
-    if(cell.cloud() != CLOUD_NONE)
+    if (cell.cloud() != CLOUD_NONE)
         flags |= MAP_SERIALIZE_CLOUD;
 
-    if(cell.item())
+    if (cell.item())
         flags |= MAP_SERIALIZE_ITEM;
 
-    if(cell.monster() != MONS_NO_MONSTER && !cell.detected_monster())
+    if (cell.monster() != MONS_NO_MONSTER && !cell.detected_monster())
         flags |= MAP_SERIALIZE_MONSTER;
 
     marshallUnsigned(th, flags);
@@ -2283,21 +2283,21 @@ void marshallMapCell(writer &th, const map_cell &cell)
         break;
     }
 
-    if(flags & MAP_SERIALIZE_FEATURE)
+    if (flags & MAP_SERIALIZE_FEATURE)
         marshallUnsigned(th, cell.feat());
 
-    if(flags & MAP_SERIALIZE_FEATURE_COLOR)
+    if (flags & MAP_SERIALIZE_FEATURE_COLOR)
         marshallUnsigned(th, cell.feat_colour());
 
-    if(flags & MAP_SERIALIZE_CLOUD)
+    if (flags & MAP_SERIALIZE_CLOUD)
         marshallUnsigned(th, cell.cloud());
 
-    if(flags & MAP_SERIALIZE_ITEM)
+    if (flags & MAP_SERIALIZE_ITEM)
         marshallItem(th, *cell.item());
 
-    if(flags & MAP_SERIALIZE_MONSTER)
+    if (flags & MAP_SERIALIZE_MONSTER)
         marshallMonsterInfo(th, *cell.monsterinfo());
-    else if(cell.detected_monster())
+    else if (cell.detected_monster())
         marshallUnsigned(th, cell.monster());
 }
 
@@ -2324,31 +2324,31 @@ void unmarshallMapCell(reader &th, map_cell& cell)
     dungeon_feature_type feature = DNGN_UNSEEN;
     unsigned feat_colour = 0;
 
-    if(flags & MAP_SERIALIZE_FEATURE)
+    if (flags & MAP_SERIALIZE_FEATURE)
         feature = (dungeon_feature_type)unmarshallUnsigned(th);
 
-    if(flags & MAP_SERIALIZE_FEATURE_COLOR)
+    if (flags & MAP_SERIALIZE_FEATURE_COLOR)
         feat_colour = unmarshallUnsigned(th);
 
     cell.set_feature(feature, feat_colour);
 
-    if(flags & MAP_SERIALIZE_CLOUD)
+    if (flags & MAP_SERIALIZE_CLOUD)
         cell.set_cloud((cloud_type)unmarshallUnsigned(th));
 
-    if(flags & MAP_SERIALIZE_ITEM)
+    if (flags & MAP_SERIALIZE_ITEM)
     {
         item_def item;
         unmarshallItem(th, item);
         cell.set_item(item, false);
     }
 
-    if(flags & MAP_SERIALIZE_MONSTER)
+    if (flags & MAP_SERIALIZE_MONSTER)
     {
         monster_info mi;
         unmarshallMonsterInfo(th, mi);
         cell.set_monster(mi);
     }
-    else if(cell_flags & MAP_DETECTED_MONSTER)
+    else if (cell_flags & MAP_DETECTED_MONSTER)
         cell.set_detected_monster((monster_type)unmarshallUnsigned(th));
 
     // set this last so the other sets don't override this

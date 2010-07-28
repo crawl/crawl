@@ -294,7 +294,7 @@ int main(int argc, char* argv[])
 {
     init_genrand(time(0));
 
-    while(true)
+    while (true)
     {
         u32 value = sha256_genrand();
         fwrite(&value, sizeof(u32), 1, stdout);

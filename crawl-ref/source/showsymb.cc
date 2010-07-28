@@ -31,14 +31,14 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell, bool colored)
     unsigned short colour = BLACK;
     const feature_def &fdef = get_feature_def(feat);
 
-    if(!colored)
+    if (!colored)
     {
         if (cell.flags & MAP_EMPHASIZE)
             colour = fdef.seen_em_colour;
         else
             colour = fdef.seen_colour;
 
-        if(colour)
+        if (colour)
             return colour;
     }
 
@@ -156,23 +156,23 @@ static int _get_mons_colour(const monster_info& mi)
 
 show_class get_cell_show_class(const map_cell& cell, bool only_stationary_monsters)
 {
-    if(cell.invisible_monster())
+    if (cell.invisible_monster())
         return SH_INVIS_EXPOSED;
 
-    if(cell.monster() != MONS_NO_MONSTER
+    if (cell.monster() != MONS_NO_MONSTER
             && (!only_stationary_monsters || mons_class_is_stationary(cell.monster())))
         return SH_MONSTER;
 
-    if(cell.cloud() != CLOUD_NONE)
+    if (cell.cloud() != CLOUD_NONE)
         return SH_CLOUD;
 
     if (feat_is_trap(cell.feat()) || is_critical_feature(cell.feat()))
         return SH_FEATURE;
 
-    if(cell.detected_item() || cell.item())
+    if (cell.detected_item() || cell.item())
         return SH_ITEM;
 
-    if(cell.feat())
+    if (cell.feat())
         return SH_FEATURE;
 
     return SH_NOTHING;
@@ -212,33 +212,33 @@ glyph get_cell_glyph_with_class(const map_cell& cell, show_class cls, int color_
     switch(cls)
     {
     case SH_INVIS_EXPOSED:
-        if(!cell.invisible_monster())
+        if (!cell.invisible_monster())
             return g;
 
         show.cls = SH_INVIS_EXPOSED;
-        if(cell.cloud() != CLOUD_NONE)
+        if (cell.cloud() != CLOUD_NONE)
             g.col = get_cloud_colour(cell.cloud());
         else
             g.col = ripple_table[cell.feat_colour() & 0xf];
         break;
 
     case SH_MONSTER:
-        if(cell.monster() == MONS_NO_MONSTER)
+        if (cell.monster() == MONS_NO_MONSTER)
             return g;
 
         show = cell.monster();
-        if(cell.detected_monster())
+        if (cell.detected_monster())
             g.col = Options.detected_monster_colour;
-        else if(!colored)
+        else if (!colored)
             g.col = DARKGRAY;
-        else if(const monster_info* mi = cell.monsterinfo())
+        else if (const monster_info* mi = cell.monsterinfo())
             g.col = _get_mons_colour(*mi);
         else
             g.col = mons_class_colour(show.mons);
         break;
 
     case SH_CLOUD:
-        if(!cell.cloud())
+        if (!cell.cloud())
             return g;
 
         show.cls = SH_CLOUD;
@@ -249,12 +249,12 @@ glyph get_cell_glyph_with_class(const map_cell& cell, show_class cls, int color_
         break;
 
     case SH_FEATURE:
-        if(!cell.feat())
+        if (!cell.feat())
             return g;
 
         show = cell.feat();
         g.col = _cell_feat_show_colour(cell, colored);
-        if(cell.detected_item() || cell.item())
+        if (cell.detected_item() || cell.item())
         {
             if (Options.feature_item_brand && is_critical_feature(cell.feat()))
                 g.col |= COLFLAG_FEATURE_ITEM;
@@ -264,12 +264,12 @@ glyph get_cell_glyph_with_class(const map_cell& cell, show_class cls, int color_
         break;
 
     case SH_ITEM:
-        if(cell.detected_item())
+        if (cell.detected_item())
         {
             show = SHOW_ITEM_DETECTED;
             g.col = Options.detected_item_colour;
         }
-        else if(cell.item())
+        else if (cell.item())
         {
             const item_info* eitem = cell.item();
             show = *eitem;
@@ -293,7 +293,7 @@ glyph get_cell_glyph_with_class(const map_cell& cell, show_class cls, int color_
         return g;
     }
 
-    if(cls == SH_MONSTER)
+    if (cls == SH_MONSTER)
         g.ch = mons_char(show.mons);
     else
     {
@@ -301,7 +301,7 @@ glyph get_cell_glyph_with_class(const map_cell& cell, show_class cls, int color_
         g.ch = cell.seen() ? fdef.symbol : fdef.magic_symbol;
     }
 
-    if(g.col)
+    if (g.col)
         g.col = real_colour(g.col);
 
     return g;

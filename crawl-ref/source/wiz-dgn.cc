@@ -762,13 +762,13 @@ void wizard_list_levels()
     std::vector<level_id> levs = travel_cache.known_levels();
 
     mpr("Known levels:");
-    for(unsigned int i = 0; i < levs.size(); i++)
+    for (unsigned int i = 0; i < levs.size(); i++)
     {
         const LevelInfo* lv = travel_cache.find_level_info(levs[i]);
         ASSERT(lv);
 
         std::string cnts = "";
-        for(int j = 0; j < NUM_DA_COUNTERS; j++)
+        for (int j = 0; j < NUM_DA_COUNTERS; j++)
         {
             char num[20];
             sprintf(num, "%d/", lv->da_counters[j]);
@@ -779,7 +779,7 @@ void wizard_list_levels()
     }
 
     std::string cnts = "";
-    for(int j = 0; j < NUM_DA_COUNTERS; j++)
+    for (int j = 0; j < NUM_DA_COUNTERS; j++)
     {
         char num[20];
         sprintf(num, "%d/", query_da_counter((daction_type)j));

@@ -1526,7 +1526,7 @@ void manage_fire_shield(int delay)
     int old_dur = you.duration[DUR_FIRE_SHIELD];
 
     you.duration[DUR_FIRE_SHIELD]-= delay;
-    if(you.duration[DUR_FIRE_SHIELD] < 0)
+    if (you.duration[DUR_FIRE_SHIELD] < 0)
         you.duration[DUR_FIRE_SHIELD] = 0;
 
     if (!you.duration[DUR_FIRE_SHIELD])

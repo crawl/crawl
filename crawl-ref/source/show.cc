@@ -122,17 +122,17 @@ static void _update_feat_at(const coord_def &gp)
 {
     dungeon_feature_type feat = grid_appearance(gp);
     unsigned colour = env.grid_colours(gp);
-    if(feat == DNGN_TREE && !colour)
+    if (feat == DNGN_TREE && !colour)
         colour = _tree_colour(gp);
     env.map_knowledge(gp).set_feature(feat, colour);
 
-    if(haloed(gp))
+    if (haloed(gp))
         env.map_knowledge(gp).flags |= MAP_HALOED;
 
-    if(silenced(gp))
+    if (silenced(gp))
         env.map_knowledge(gp).flags |= MAP_SILENCED;
 
-    if(is_sanctuary(gp))
+    if (is_sanctuary(gp))
     {
         if (testbits(env.pgrid(gp), FPROP_SANCTUARY_1))
             env.map_knowledge(gp).flags |= MAP_SANCTUARY_1;
@@ -140,25 +140,25 @@ static void _update_feat_at(const coord_def &gp)
             env.map_knowledge(gp).flags |= MAP_SANCTUARY_2;
     }
 
-    if(you.get_beholder(gp))
+    if (you.get_beholder(gp))
         env.map_knowledge(gp).flags |= MAP_WITHHELD;
 
-    if(feat >= DNGN_STONE_STAIRS_DOWN_I
+    if (feat >= DNGN_STONE_STAIRS_DOWN_I
                             && feat <= DNGN_ESCAPE_HATCH_UP
                             && is_exclude_root(gp))
         env.map_knowledge(gp).flags |= MAP_EXCLUDED_STAIRS;
 
-    if(is_bloodcovered(gp))
+    if (is_bloodcovered(gp))
         env.map_knowledge(gp).flags |= MAP_BLOODY;
 
-    if(is_moldy(gp))
+    if (is_moldy(gp))
     {
         env.map_knowledge(gp).flags |= MAP_MOLDY;
-        if(glowing_mold(gp))
+        if (glowing_mold(gp))
             env.map_knowledge(gp).flags |= MAP_GLOWING_MOLDY;
     }
 
-    if(emphasise(gp))
+    if (emphasise(gp))
         env.map_knowledge(gp).flags |= MAP_EMPHASIZE;
 
     // Tell the world first.
