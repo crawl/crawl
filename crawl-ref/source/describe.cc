@@ -956,28 +956,29 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
     if (verbose)
     {
         if (is_demonic(item) && !launcher)
-            description += "\nDemonspawn are more deadly with it.";
+            description += "\nDemonspawn deal slightly more damage with it.";
         else if (get_equip_race(item) != ISFLAG_NO_RACE)
         {
             unsigned long race = get_equip_race(item);
 
             if (race == ISFLAG_DWARVEN)
-                description += "\nIt is well-crafted and very durable.";
+                description += "\nIt is well-crafted, durable, and resistant "
+                               "to corrosion. Dwarves deal slightly more "
+                               "damage with it.";
 
-            description += "\n";
-            description += (race == ISFLAG_DWARVEN) ? "Dwarves" :
-                           (race == ISFLAG_ELVEN)   ? "Elves"
-                                                    : "Orcs";
-            description += " are more deadly with it";
+            if (race == ISFLAG_ORCISH)
+                description += "\nOrcs deal slightly more damage with it.";
+
+            if (race == ISFLAG_ELVEN)
+                description += "\nElves are slightly more accurate with it.";
 
             if (launcher)
             {
-                description += ", and it is most deadly when used with ";
+                description += " It is most effective when used with ";
                 description += racial_description_string(item);
-                description += "ammunition";
+                description += "ammunition.";
             }
 
-            description += ".";
         }
     }
 
@@ -1359,7 +1360,8 @@ static std::string _describe_armour( const item_def &item, bool verbose )
         unsigned long race = get_equip_race(item);
 
         if (race == ISFLAG_DWARVEN)
-            description += "\nIt is well-crafted and very durable.";
+            description += "\nIt is well-crafted, durable, and resistant to "
+                           "corrosion.";
         else if (race == ISFLAG_ELVEN)
         {
             description += "\nIt is well-crafted and unobstructive";
