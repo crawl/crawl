@@ -1928,7 +1928,7 @@ void check_antennae_detect()
         if (!mon)
         {
             map_cell& cell = env.map_knowledge(*ri);
-            if(cell.detected_monster())
+            if (cell.detected_monster())
                 cell.clear_monster();
         }
         else if (!mons_is_firewood(mon))

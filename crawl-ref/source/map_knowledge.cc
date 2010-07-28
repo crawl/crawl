@@ -155,7 +155,7 @@ void set_terrain_visible(const coord_def &c)
 {
     map_cell* cell = &env.map_knowledge(c);
     set_terrain_seen(c);
-    if(!(cell->flags & MAP_VISIBLE_FLAG))
+    if (!(cell->flags & MAP_VISIBLE_FLAG))
     {
         cell->flags |= MAP_VISIBLE_FLAG;
         env.visible.insert(c);
@@ -165,7 +165,7 @@ void set_terrain_visible(const coord_def &c)
 
 void clear_terrain_visibility()
 {
-    for(std::set<coord_def>::iterator i = env.visible.begin(); i != env.visible.end(); ++i)
+    for (std::set<coord_def>::iterator i = env.visible.begin(); i != env.visible.end(); ++i)
         env.map_knowledge(*i).flags &=~ MAP_VISIBLE_FLAG;
     env.visible.clear();
 }

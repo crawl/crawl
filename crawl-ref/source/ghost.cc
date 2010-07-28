@@ -495,7 +495,7 @@ mon_attack_flavour ugly_thing_colour_to_flavour(unsigned char u_colour)
         break;
     }
 
-    if(u_colour & 8)
+    if (u_colour & 8)
         u_att_flav = _very_ugly_thing_flavour_upgrade(u_att_flav);
     return (u_att_flav);
 }

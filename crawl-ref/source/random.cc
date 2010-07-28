@@ -315,7 +315,7 @@ bool defer_rand::x_chance_in_y_contd(int x, int y, int index)
 
         // y = expn_rand_2 - expn_rand_1;  no-op
         x = expn_minimum_fail - expn_rand_1;
-    } while(1);
+    } while (1);
 }
 
 int defer_rand::random2(int maxp1)

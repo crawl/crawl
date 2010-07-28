@@ -570,7 +570,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
                 case SPWPN_PAIN:
                     if (you.skills[SK_NECROMANCY] == 0)
                         mpr("You have a feeling of ineptitude.");
-                    else if(you.skills[SK_NECROMANCY] <= 4)
+                    else if (you.skills[SK_NECROMANCY] <= 4)
                         mpr("Pain shudders through your arm!");
                     else
                         mpr("A searing pain shoots up your arm!");

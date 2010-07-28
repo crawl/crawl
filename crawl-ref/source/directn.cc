@@ -2073,7 +2073,7 @@ void full_describe_square(const coord_def &c)
 
     if (mons && mons->visible_to(&you))
     {
-        if(mons_is_unknown_mimic(mons))
+        if (mons_is_unknown_mimic(mons))
             describe_item(const_cast<item_def&>(get_mimic_item(mons)));
         else
         {
@@ -3302,7 +3302,7 @@ static std::vector<std::string> _get_monster_behaviour_vector(const monster_info
 {
     std::vector<std::string> descs;
 
-    if(mi.is(MB_SLEEPING) || mi.is(MB_DORMANT))
+    if (mi.is(MB_SLEEPING) || mi.is(MB_DORMANT))
         descs.push_back(mi.is(MB_CONFUSED) ? "sleepwalking" : "resting");
     else if (mi.is(MB_FLEEING))
         descs.push_back("retreating");
@@ -3347,7 +3347,7 @@ static std::vector<std::string> _get_monster_desc_vector(const monster_info& mi)
     else if (mi.is(MB_ENSLAVED))
         descs.push_back("disembodied soul");
 
-    if(mi.fire_blocker)
+    if (mi.fire_blocker)
     {
         descs.push_back("fire blocked by "
                         + feature_description(mi.fire_blocker, NUM_TRAPS, "",
@@ -3367,7 +3367,7 @@ static std::string _get_monster_desc(const monster_info& mi)
     if (mi.is(MB_MESMERIZING))
         text += "You are mesmerised by her song.\n";
 
-    if(mi.is(MB_SLEEPING) || mi.is(MB_DORMANT))
+    if (mi.is(MB_SLEEPING) || mi.is(MB_DORMANT))
     {
         text += pronoun + " appears to be "
                 + (mi.is(MB_CONFUSED) ? "sleepwalking"
@@ -3524,7 +3524,7 @@ std::string get_monster_equipment_desc(const monster_info& mi, bool full_desc,
         const item_def* mon_alt = mi.inv[MSLOT_ALT_WEAPON].get();
 
         // _describe_monster_weapon already took care of this
-        if(mons_class_wields_two_weapons(mi.type) || mons_class_wields_two_weapons(mi.base_type))
+        if (mons_class_wields_two_weapons(mi.type) || mons_class_wields_two_weapons(mi.base_type))
             mon_alt = 0;
 
         bool found_sth    = !weap.empty();

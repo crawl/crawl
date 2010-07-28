@@ -2049,7 +2049,7 @@ static void _decrement_durations()
         if (you.duration[DUR_DIVINE_SHIELD] > 1)
         {
             you.duration[DUR_DIVINE_SHIELD] -= delay;
-            if(you.duration[DUR_DIVINE_SHIELD] <= 1)
+            if (you.duration[DUR_DIVINE_SHIELD] <= 1)
             {
                 you.duration[DUR_DIVINE_SHIELD] = 1;
                 mpr("Your divine shield starts to fade.", MSGCH_DURATION);
@@ -3646,10 +3646,10 @@ static void _move_player(coord_def move)
         you.time_taken = div_rand_round(you.time_taken * 3, 2);
 
         monsters * current = monster_at(you.pos());
-        if(!current || !fedhas_passthrough(current))
+        if (!current || !fedhas_passthrough(current))
         {
             // Probably need better messages. -cao
-            if(mons_genus(targ_monst->type) == MONS_FUNGUS)
+            if (mons_genus(targ_monst->type) == MONS_FUNGUS)
             {
                 mprf("You walk carefully through the fungus.");
             }

@@ -1978,7 +1978,7 @@ int acquirement_create_item(object_class_type class_wanted,
         // Not a god, prefer better brands.
         if (!divine && !is_artefact(doodad) && doodad.base_type == OBJ_WEAPONS)
         {
-            while(_weapon_brand_quality(get_weapon_brand(doodad),
+            while (_weapon_brand_quality(get_weapon_brand(doodad),
                                         is_range_weapon(doodad)) < random2(6))
             {
                 reroll_brand(doodad, MAKE_GOOD_ITEM);

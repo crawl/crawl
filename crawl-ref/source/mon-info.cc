@@ -272,7 +272,7 @@ monster_info::monster_info(const monsters *m, int milev)
         }
         else if (mons_is_wandering(m) && !mons_is_batty(m))
         {
-            if(mons_is_stationary(m))
+            if (mons_is_stationary(m))
                 mb |= ULL1 << MB_UNAWARE;
             else
                 mb |= ULL1 << MB_WANDERING;
@@ -790,7 +790,7 @@ void monster_info::to_string(int count, std::string& desc,
         {
             out << pluralise(mons_type_name(MONS_DRACONIAN, DESC_PLAIN));
         }
-        else if(type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
+        else if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
                 || type == MONS_DANCING_WEAPON || !mname.empty() || !fullname)
         {
             out << pluralise(mons_type_name(type, DESC_PLAIN));
