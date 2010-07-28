@@ -491,6 +491,10 @@ ifdef GL
 DEFINES_L += -DUSE_GL
 endif
 
+ifdef GLES
+DEFINES_L += -DUSE_GLES
+endif
+
 ifdef FT
 DEFINES_L += -DUSE_FT
 endif
@@ -527,11 +531,15 @@ LIBS += -pthread -lSDL_image $(SDL_LDFLAGS) $(FREETYPE_LDFLAGS)
 
 endif # pkg-config
 
+ifdef GLES
+LIBS += -lSDL_gles -lEGL -lGLES_CM
+else
 ifneq ($(uname_S),Darwin)
 ifeq (,$(findstring MINGW,$(uname_S)))
 LIBS += -lGL -lGLU
 else
 LIBS += -lopengl32 -lglu32
+endif
 endif
 endif
 
