@@ -1052,7 +1052,7 @@ KFEAT:    G = C / needle trap / antique armour shop / altar_zin
           You'll notice that 'G' is the symbol of a granite statue. Kxxx
           directives allow you to assign arbitrary definitions to any symbol.
 
-          KFEAT features are specified as a feature name (see section I
+          KFEAT features are specified as a feature name (see section N
           for a full list of feature names). As another example, you can
           place a portal to the Abyss as:
 
