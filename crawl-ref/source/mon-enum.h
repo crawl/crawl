@@ -68,13 +68,9 @@ enum mon_attack_flavour
     AF_CONFUSE,
     AF_DISEASE,
     AF_DRAIN_STR,
-#if TAG_MAJOR_VERSION != 28
     AF_DRAIN_INT,
-#endif
     AF_DRAIN_DEX,
-#if TAG_MAJOR_VERSION != 28
     AF_DRAIN_STAT,
-#endif
     AF_DRAIN_XP,
     AF_ELEC,
     AF_FIRE,
@@ -100,10 +96,6 @@ enum mon_attack_flavour
     AF_STEAL_FOOD,
     AF_CRUSH,
     AF_REACH,
-#if TAG_MAJOR_VERSION == 28
-    AF_DRAIN_INT,
-    AF_DRAIN_STAT,
-#endif
 };
 
 // Non-spell "summoning" types to give to monsters::mark_summoned(), or
