@@ -6261,7 +6261,7 @@ void monsters::react_to_damage(const actor *oppressor, int damage,
     }
     else if (type == MONS_DEMONIC_TENTACLE_SEGMENT)
     {
-        mprf("in tentacle damage pass");
+        //mprf("in tentacle damage pass");
         if (!invalid_monster_index(number)
             && mons_base_type(&menv[number]) == MONS_DEMONIC_TENTACLE)
         {
