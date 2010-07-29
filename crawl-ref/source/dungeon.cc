@@ -8350,6 +8350,30 @@ static coord_def _dgn_find_labyrinth_entry_point()
     return (dgn_find_feature_marker(DNGN_ENTER_LABYRINTH));
 }
 
+// Make hatches and shafts land the player a bit away from the wall.
+// Specifically, the adjacent cell with least slime walls next to it.
+// XXX: This can still give bad situations if the layout is not bubbly,
+//      e.g. when a vault is placed with connecting corridors.
+static void _fixup_slime_hatch_dest(coord_def* pos)
+{
+    int max_walls = 9;
+    for (adjacent_iterator ai(*pos, true); ai; ++ai)
+    {
+        if (!feat_is_traversable(env.grid(*ai)))
+            continue;
+        int walls = 0;
+        for (adjacent_iterator bi(*ai); bi && walls < max_walls; ++bi)
+            if (env.grid(*bi) == DNGN_SLIMY_WALL)
+                walls++;
+        if (walls < max_walls)
+        {
+            *pos = *ai;
+            max_walls = walls;
+        }
+    }
+    ASSERT(max_walls < 9);
+}    
+
 coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
                                 coord_def base_pos, bool find_closest)
 {
@@ -8378,10 +8402,13 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
         stair_to_find = DNGN_FLOOR;
     }
 
+    // Shafts and hatches.
     if (stair_to_find == DNGN_ESCAPE_HATCH_UP
         || stair_to_find == DNGN_ESCAPE_HATCH_DOWN)
     {
-        const coord_def pos(_dgn_find_closest_to_stone_stairs(base_pos));
+        coord_def pos(_dgn_find_closest_to_stone_stairs(base_pos));
+        if (player_in_branch(BRANCH_SLIME_PITS))
+            _fixup_slime_hatch_dest(&pos);
         if (in_bounds(pos))
             return (pos);
     }
