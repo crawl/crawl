@@ -60,8 +60,6 @@ unsigned char make_high_colour(unsigned char colour);
 bool is_element_colour(int col);
 int  element_colour(int element, bool no_random = false);
 
-int name_length_by_colour(int col);
-
 #if defined(TARGET_OS_WINDOWS) || defined(TARGET_OS_DOS) || defined(USE_TILE)
 unsigned short dos_brand( unsigned short colour,
                           unsigned brand = CHATTR_REVERSE);
