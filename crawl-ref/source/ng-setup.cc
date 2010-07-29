@@ -1264,8 +1264,7 @@ static void _racialise_starting_equipment()
         {
             // Don't change object type modifier unless it starts plain.
             if ((you.inv[i].base_type == OBJ_ARMOUR
-                    || you.inv[i].base_type == OBJ_WEAPONS
-                    || you.inv[i].base_type == OBJ_MISSILES)
+                    || you.inv[i].base_type == OBJ_WEAPONS)
                 && get_equip_race(you.inv[i]) == ISFLAG_NO_RACE)
             {
                 // Now add appropriate species type mod.
