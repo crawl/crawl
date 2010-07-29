@@ -2991,7 +2991,7 @@ static void tag_missing_level_tiles()
         {
             coord_def gc(i, j);
             tileidx_t fg, bg;
-            tileidx_from_show(&fg, &bg, get_map_knowledge_obj(gc));
+            tileidx_from_map_cell(&fg, &bg, env.map_knowledge(gc));
 
             env.tile_bk_bg(gc) = bg;
             env.tile_bk_fg(gc) = fg;
