@@ -6474,14 +6474,11 @@ void spotty_level(bool seeded, int iterations, bool boxy)
                 grd[j + 1][k] = DNGN_STONE_STAIRS_UP_I;
             }
 
-            if (grd[j][k - 1] == DNGN_ROCK_WALL)
-                grd[j][k - 1] = DNGN_FLOOR;
-            if (grd[j][k + 1] == DNGN_ROCK_WALL)
-                grd[j][k + 1] = DNGN_FLOOR;
-            if (grd[j - 1][k] == DNGN_ROCK_WALL)
-                grd[j - 1][k] = DNGN_FLOOR;
-            if (grd[j + 1][k] == DNGN_ROCK_WALL)
-                grd[j + 1][k] = DNGN_FLOOR;
+            coord_def c(j,k);
+            const int r = (player_in_branch(BRANCH_SLIME_PITS) ? 2 : 1);
+            for (radius_iterator ri(c, r, C_POINTY); ri; ++ri)
+                if (grd(*ri) == DNGN_ROCK_WALL)
+                    grd(*ri) = DNGN_FLOOR;
         }
     }                           // end if !seeded
 
