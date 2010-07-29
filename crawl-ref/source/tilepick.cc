@@ -24,6 +24,7 @@
 #include "options.h"
 #include "player.h"
 #include "shopping.h"
+#include "showsymb.h"
 #include "state.h"
 #include "terrain.h"
 #include "tiledef-dngn.h"
@@ -409,11 +410,11 @@ tileidx_t tileidx_out_of_bounds(int branch)
         return (TILE_DNGN_UNSEEN | TILE_FLAG_UNSEEN);
 }
 
-void tileidx_from_show(tileidx_t *fg, tileidx_t *bg, const show_type &show)
+void tileidx_from_map_cell(tileidx_t *fg, tileidx_t *bg, const map_cell &cell)
 {
-    *bg = _tileidx_feature_base(show.feat);
+    *bg = _tileidx_feature_base(cell.feat());
 
-    switch (show.cls)
+    switch (get_cell_show_class(cell))
     {
     default:
     case SH_NOTHING:
@@ -421,7 +422,7 @@ void tileidx_from_show(tileidx_t *fg, tileidx_t *bg, const show_type &show)
         *fg = 0;
         break;
     case SH_ITEM:
-        *fg = tileidx_show_item(show.item);
+        *fg = tileidx_item(*cell.item());
         break;
     case SH_CLOUD:
         *fg = TILE_CLOUD_GREY_SMOKE;
@@ -430,7 +431,7 @@ void tileidx_from_show(tileidx_t *fg, tileidx_t *bg, const show_type &show)
         *fg = TILE_UNSEEN_MONSTER;
         break;
     case SH_MONSTER:
-        *fg = _tileidx_monster_base(show.mons);
+        *fg = _tileidx_monster_base(cell.monster());
         break;
     }
 }
@@ -447,17 +448,17 @@ void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, const coord_def& gc)
     const map_cell &cell = env.map_knowledge(gc);
 
     // Override terrain for magic mapping.
-    if (!cell.seen() && is_terrain_mapped(gc))
+    if (!cell.seen() && env.map_knowledge(gc).mapped())
         *bg = _tileidx_feature_base(cell.feat());
     else
         *bg = mem_bg;
     *bg |= tileidx_unseen_flag(gc);
 
     // Override foreground for monsters/items
-    if (is_map_knowledge_detected_mons(gc))
-        *fg = _tileidx_monster_base(cell.object.mons);
-    else if (is_map_knowledge_detected_item(gc))
-        *fg = tileidx_show_item(cell.object.item);
+    if (env.map_knowledge(gc).detected_monster())
+        *fg = _tileidx_monster_base(cell.monster());
+    else if (env.map_knowledge(gc).detected_item())
+        *fg = tileidx_item(*cell.item());
     else
         *fg = mem_fg;
 }
