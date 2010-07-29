@@ -1738,8 +1738,8 @@ static monsterentry mondata[] = {
        AT_NO_ATK },
     { 9, 3, 5, 0 },
     10, 6, MST_NO_SPELLS, CE_POISONOUS, Z_NOZOMBIE, S_SCREAM,
-    I_NORMAL, HT_LAND, FL_NONE, 9, DEFAULT_ENERGY,
-    MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_BIG
+    I_INSECT, HT_LAND, FL_NONE, 9, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_BIG
 },
 
 // testudines and crocodiles ('t')
