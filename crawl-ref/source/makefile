@@ -458,9 +458,12 @@ ifndef BUILD_LUA
 endif
 
 ifndef BUILD_SQLITE
-  ifeq ($(shell grep -q sqlite3_prepare_v2 $(SQLITE_INCLUDE_DIR)/sqlite3.h 2>/dev/null && echo yes),yes)
+  ifeq ($(shell grep -q sqlite3_prepare $(SQLITE_INCLUDE_DIR)/sqlite3.h 2>/dev/null && echo yes),yes)
     INCLUDES_L += -I$(SQLITE_INCLUDE_DIR)
     LIBS += $(SQLITE_LIB)
+    ifneq ($(shell grep -q sqlite3_prepare_v2 $(SQLITE_INCLUDE_DIR)/sqlite3.h 2>/dev/null && echo yes),yes)
+      DEFINES_L += -DANCIENT_SQLITE
+    endif
   else
     BUILD_SQLITE = yes
   endif
