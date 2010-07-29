@@ -4094,10 +4094,11 @@ beh_type actual_same_attitude(const monsters & base)
 // temporarily.
 void mons_att_changed(monsters *mon)
 {
+    const mon_attitude_type att = mon->temp_attitude();
+
     if (mons_base_type(mon) == MONS_KRAKEN)
     {
         const int headnum = mon->mindex();
-        const mon_attitude_type att = mon->temp_attitude();
 
         for (monster_iterator mi; mi; ++mi)
             if (mi->type == MONS_KRAKEN_TENTACLE
@@ -4113,6 +4114,17 @@ void mons_att_changed(monsters *mon)
                     }
                 }
             }
+    }
+    if (mon->type == MONS_DEMONIC_TENTACLE_SEGMENT
+        || mon->type == MONS_DEMONIC_TENTACLE)
+    {
+        int base_idx = mon->type == MONS_DEMONIC_TENTACLE ? mon->mindex() : mon->number;
+
+        menv[base_idx].attitude = att;
+        for (monster_iterator mi; mi; ++mi)
+        {
+            mi->attitude = att;
+        }
     }
 }
 
