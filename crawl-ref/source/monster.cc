@@ -5064,6 +5064,8 @@ void monsters::apply_enchantment(const mon_enchant &me)
             {
                 env.grid(base_position) = DNGN_FLOOR;
             }
+
+            env.pgrid(base_position) |= FPROP_BLOODY;
             add_ench(ENCH_SEVERED);
         }
     }
@@ -5073,7 +5075,12 @@ void monsters::apply_enchantment(const mon_enchant &me)
     {
         simple_monster_message(this, " writhes!");
         coord_def base_position = props["base_position"].get_coord();
-        env.pgrid(base_position) |= FPROP_BLOODY;
+        dungeon_feature_type ftype = env.grid(base_position);
+        if (feat_has_solid_floor(ftype)
+            && !feat_is_watery(ftype))
+        {
+            env.pgrid(base_position) |= FPROP_BLOODY;
+        }
         // We don't have a reasonable agent to give.
         // Don't clean up the monster in order to credit properly.
         //hurt(NULL, dam, BEAM_NAPALM, false);
