@@ -4715,6 +4715,7 @@ static monsterentry mondata[] = {
     I_NORMAL, HT_LAND, FL_FLY, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_MEDIUM
 },
+
 // major demons ('&')
 // Random demon in pan - only one per level.  Stats are stored in ghost struct.
 {
@@ -4782,7 +4783,6 @@ static monsterentry mondata[] = {
 },
 
 // other symbols
-
 {
     MONS_DEATH_COB, '%', YELLOW, "death cob",
     M_SPEAKS,
