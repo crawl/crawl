@@ -316,6 +316,7 @@ public:
     bool is_unholy() const;
     bool is_evil() const;
     bool is_unclean() const;
+    bool is_known_chaotic() const;
     bool is_chaotic() const;
     bool is_insubstantial() const;
     int res_fire() const;
@@ -383,6 +384,7 @@ public:
 
     void poison(actor *agent, int amount = 1);
     bool sicken(int strength);
+    bool bleed(int amount, int degree);
     void paralyse(actor *, int str);
     void petrify(actor *, int str);
     void slow_down(actor *, int str);

@@ -75,15 +75,14 @@ int detect_items(int pow)
         // Note: assumptions are being made here about how
         // terrain can change (eg it used to be solid, and
         // thus item free).
-        if (is_terrain_changed(*ri))
+        if (env.map_knowledge(*ri).changed())
             continue;
 
         if (igrd(*ri) != NON_ITEM
-            && (!get_map_knowledge_obj(*ri) || !is_map_knowledge_item(*ri)))
+            && !env.map_knowledge(*ri).item())
         {
             items_found++;
-            set_map_knowledge_obj(*ri, show_type(SHOW_ITEM_DETECTED));
-            set_map_knowledge_detected_item(*ri);
+            env.map_knowledge(*ri).set_detected_item();
         }
     }
 
@@ -128,12 +127,12 @@ static bool _mark_detected_creature(coord_def where, const monsters *mon,
                 continue;
 
             // Try not to overwrite another detected monster.
-            if (is_map_knowledge_detected_mons(place))
+            if (env.map_knowledge(place).detected_monster())
                 continue;
 
             // Don't print monsters on terrain they cannot pass through,
             // not even if said terrain has since changed.
-            if (map_bounds(place) && !is_terrain_changed(place)
+            if (map_bounds(place) && !env.map_knowledge(place).changed()
                 && mon->can_pass_through_feat(grd(place)))
             {
                 found_good = true;
@@ -145,8 +144,7 @@ static bool _mark_detected_creature(coord_def where, const monsters *mon,
             where = place;
     }
 
-    set_map_knowledge_obj(where, show_type(mons_detected_base(mon->type)));
-    set_map_knowledge_detected_mons(where);
+    env.map_knowledge(where).set_detected_monster(mons_detected_base(mon->type));
 
     return (found_good);
 }

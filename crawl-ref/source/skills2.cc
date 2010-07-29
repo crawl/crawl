@@ -1649,7 +1649,17 @@ static std::string _replace_skill_keys(const std::string &text)
     return res.str();
 }
 
-std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
+unsigned get_skill_rank(unsigned skill_lev)
+{
+    // Translate skill level into skill ranking {dlb}:
+    return ((skill_lev <= 7)  ? 0 :
+                            (skill_lev <= 14) ? 1 :
+                            (skill_lev <= 20) ? 2 :
+                            (skill_lev <= 26) ? 3
+                            /* level 27 */    : 4);
+}
+
+std::string skill_title_by_rank( unsigned char best_skill, unsigned char skill_rank,
                          int species, int str, int dex, int god )
 {
     // paranoia
@@ -1668,13 +1678,8 @@ std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
     if (god == -1)
         god = you.religion;
 
-    // Translate skill level into skill ranking {dlb}:
     // Increment rank by one to "skip" skill name in array {dlb}:
-    const int skill_rank = ((skill_lev <= 7)  ? 1 :
-                            (skill_lev <= 14) ? 2 :
-                            (skill_lev <= 20) ? 3 :
-                            (skill_lev <= 26) ? 4
-                            /* level 27 */    : 5);
+    ++skill_rank;
 
     std::string result;
 
@@ -1700,7 +1705,7 @@ std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
 
         case SK_BOWS:
             if (player_genus(GENPC_ELVEN, static_cast<species_type>(species))
-                && skill_lev == 27)
+                && skill_rank == 5)
             {
                 result = "Master Archer";
                 break;
@@ -1730,6 +1735,12 @@ std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
 
     return (result.empty() ? std::string("Invalid Title")
                            : result);
+}
+
+std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
+                         int species, int str, int dex, int god )
+{
+    return skill_title_by_rank(best_skill, get_skill_rank(skill_lev), species, str, dex, god);
 }
 
 std::string player_title()

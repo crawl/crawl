@@ -1978,7 +1978,7 @@ int acquirement_create_item(object_class_type class_wanted,
         // Not a god, prefer better brands.
         if (!divine && !is_artefact(doodad) && doodad.base_type == OBJ_WEAPONS)
         {
-            while(_weapon_brand_quality(get_weapon_brand(doodad),
+            while (_weapon_brand_quality(get_weapon_brand(doodad),
                                         is_range_weapon(doodad)) < random2(6))
             {
                 reroll_brand(doodad, MAKE_GOOD_ITEM);
@@ -3130,7 +3130,7 @@ void change_labyrinth(bool msg)
 
         int count_known = 0;
         for (rectangle_iterator ri(c1, c2); ri; ++ri)
-            if (is_terrain_seen(*ri))
+            if (env.map_knowledge(*ri).seen())
                 count_known++;
 
         if (tries > 1 && count_known > size * size / 6)
@@ -3141,7 +3141,7 @@ void change_labyrinth(bool msg)
         // directions, and by floor on the two remaining sides.
         for (rectangle_iterator ri(c1, c2); ri; ++ri)
         {
-            if (is_terrain_seen(*ri) || !feat_is_wall(grd(*ri)))
+            if (env.map_knowledge(*ri).seen() || !feat_is_wall(grd(*ri)))
                 continue;
 
             // Skip on grids inside vaults so as not to disrupt them.
@@ -3255,7 +3255,7 @@ void change_labyrinth(bool msg)
                 continue;
 
             // Don't change any grids we remember.
-            if (is_terrain_seen(p.x, p.y))
+            if (env.map_knowledge(p).seen())
                 continue;
 
             // We don't want to deal with monsters being shifted around.
@@ -4231,8 +4231,9 @@ static void _maybe_restart_fountain_flow(const coord_def& where,
         grd(where) = static_cast<dungeon_feature_type> (grid
                         - (DNGN_DRY_FOUNTAIN_BLUE - DNGN_FOUNTAIN_BLUE));
 
-        if (is_terrain_seen(where))
-            set_map_knowledge_obj(where, grd(where));
+        // XXX: why should the player magically know this?!
+        if (env.map_knowledge(where).seen())
+            env.map_knowledge(where).set_feature(grd(where));
 
         // Clean bloody floor.
         if (is_bloodcovered(where))

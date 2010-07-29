@@ -392,7 +392,7 @@ static int _exploration_estimate(bool seen_only = false, bool debug = false)
         tries++;
 
         coord_def pos = random_in_bounds();
-        if (!seen_only && is_terrain_known(pos) || is_terrain_seen(pos))
+        if (!seen_only && env.map_knowledge(pos).known() || env.map_knowledge(pos).seen())
         {
             seen++;
             total++;

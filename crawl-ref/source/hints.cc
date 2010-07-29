@@ -1569,10 +1569,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     std::ostringstream text;
     std::vector<command_type> cmd;
 
-#ifndef USE_TILE
-    const coord_def e = grid2show(gc);
-#endif
-
     Hints.hints_just_triggered = true;
     Hints.hints_events[seen_what] = false;
     Hints.hints_left--;
@@ -1958,7 +1954,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         if (monster_at(gc))
             DELAY_EVENT;
 
-        text << glyph_to_tagstr(get_show_glyph(env.show(e))) << " ";
+        text << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc))) << " ";
 #else
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Stairs", gc);
@@ -1987,7 +1983,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
         text << "These ";
 #ifndef USE_TILE
-        text << glyph_to_tagstr(get_show_glyph(env.show(e)));
+        text << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc)));
         text << " ";
 #else
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
@@ -2013,7 +2009,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             DELAY_EVENT;
 
         // FIXME: Branch entrance character is not being colored yellow.
-        text << glyph_to_tagstr(get_show_glyph(env.show(e))) << " ";
+        text << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc))) << " ";
 #else
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Branch stairs", gc);
@@ -2046,7 +2042,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         if (monster_at(gc))
             DELAY_EVENT;
 
-        text << glyph_to_tagstr(get_show_glyph(env.show(e))) << " ";
+        text << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc))) << " ";
 #else
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Portal", gc);
@@ -2112,7 +2108,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "of these nasty constructions";
 #ifndef USE_TILE
         {
-            glyph g = get_show_glyph(env.show(e));
+            glyph g = get_cell_glyph(env.map_knowledge(gc));
 
             if (g.ch == ' ' || g.col == BLACK)
                 g.col = LIGHTCYAN;
@@ -2133,7 +2129,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_SEEN_ALTAR:
         text << "That ";
 #ifndef USE_TILE
-        text << glyph_to_tagstr(get_show_glyph(env.show(e))) << " ";
+        text << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc))) << " ";
 #else
         {
             tiles.place_cursor(CURSOR_TUTORIAL, gc);
@@ -2171,7 +2167,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #endif
         text << "That "
 #ifndef USE_TILE
-             << _colourize_glyph(YELLOW, get_screen_glyph(gc)) << " "
+             << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc))) << " "
 #endif
                 "is a shop. You can enter it by typing <w>%</w> or <w>%</w>"
 #ifdef USE_TILE
@@ -2199,7 +2195,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
         text << "That "
 #ifndef USE_TILE
-             << _colourize_glyph(WHITE, get_screen_glyph(gc)) << " "
+             << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc))) << " "
 #endif
                 "is a closed door. You can open it by walking into it. "
                 "Sometimes it is useful to close a door. Do so by pressing "
@@ -2233,7 +2229,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #endif
         text << "That ";
 #ifndef USE_TILE
-        text << _colourize_glyph(WHITE, get_screen_glyph(gc)) << " ";
+        text << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc))) << " ";
 #endif
         if (grd(gc) == DNGN_SECRET_DOOR)
             text << "is";
@@ -4726,13 +4722,13 @@ bool hints_monster_interesting(const monsters *mons)
     return (false);
 }
 
-void hints_describe_monster(const monsters *mons, bool has_stat_desc)
+void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
 {
     std::ostringstream ostr;
     ostr << "\n\n<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
     bool dangerous = false;
-    if (mons_is_unique(mons->type))
+    if (mons_is_unique(mi.type))
     {
         ostr << "Did you think you were the only adventurer in the dungeon? "
                 "Well, you thought wrong! These unique adversaries often "
@@ -4740,7 +4736,7 @@ void hints_describe_monster(const monsters *mons, bool has_stat_desc)
                 "careful.\n\n";
         dangerous = true;
     }
-    else if (mons->type == MONS_PLAYER_GHOST)
+    else if (mi.type == MONS_PLAYER_GHOST)
     {
         ostr << "The ghost of a deceased adventurer, it would like nothing "
                 "better than to send you the same way.\n\n";
@@ -4748,7 +4744,7 @@ void hints_describe_monster(const monsters *mons, bool has_stat_desc)
     }
     else
     {
-        const char ch = mons_base_char(mons->type);
+        const char ch = mons_base_char(mi.type);
         if (ch >= '1' && ch <= '5')
         {
             ostr << "This monster is a demon of the "
@@ -4762,12 +4758,12 @@ void hints_describe_monster(const monsters *mons, bool has_stat_desc)
         }
 
         // Don't call friendly monsters dangerous.
-        if (!mons_att_wont_attack(mons->attitude))
+        if (!mons_att_wont_attack(mi.attitude))
         {
             // 8 is the default value for the note-taking of OOD monsters.
             // Since I'm too lazy to come up with any measurement of my own
             // I'll simply reuse that one.
-            const int level_diff = mons_level(mons->type) - (you.absdepth0 + 8);
+            const int level_diff = mons_level(mi.type) - (you.absdepth0 + 8);
 
             if (you.level_type == LEVEL_DUNGEON && level_diff >= 0)
             {
@@ -4781,7 +4777,7 @@ void hints_describe_monster(const monsters *mons, bool has_stat_desc)
         }
     }
 
-    if (mons->berserk())
+    if (mi.is(MB_BERSERK))
     {
         ostr << "A berserking monster is bloodthirsty and fighting madly. "
                 "Such a blood rage makes it particularly dangerous!\n\n";
@@ -4789,13 +4785,13 @@ void hints_describe_monster(const monsters *mons, bool has_stat_desc)
     }
 
     // Monster is highlighted.
-    if (mons->friendly())
+    if (mi.attitude == ATT_FRIENDLY)
     {
         ostr << "Friendly monsters will follow you around and attempt to aid "
                 "you in battle. You can order your allies by <w>t</w>alking "
                 "to them.";
 
-        if (!mons_att_wont_attack(mons->attitude))
+        if (!mons_att_wont_attack(mi.attitude))
         {
             ostr << "\n\nHowever, it is only <w>temporarily</w> friendly, "
                     "and will become dangerous again when this friendliness "
@@ -4804,7 +4800,7 @@ void hints_describe_monster(const monsters *mons, bool has_stat_desc)
     }
     else if (dangerous)
     {
-        if (!Hints.hints_explored && mons->foe != MHITYOU)
+        if (!Hints.hints_explored && (mi.is(MB_WANDERING) || mi.is(MB_UNAWARE)))
         {
             ostr << "You can easily mark its square as dangerous to avoid "
                     "accidentally entering into its field of view when using "
@@ -4829,19 +4825,19 @@ void hints_describe_monster(const monsters *mons, bool has_stat_desc)
         }
     }
     else if (Options.stab_brand != CHATTR_NORMAL
-             && mons_looks_stabbable(mons))
+             && mi.is(MB_STABBABLE))
     {
         ostr << "Apparently "
-             << mons_pronoun((monster_type) mons->type, PRONOUN_NOCAP)
+             << mons_pronoun((monster_type) mi.type, PRONOUN_NOCAP)
              << " has not noticed you - yet. Note that you do not have to "
                 "engage every monster you meet. Sometimes, discretion is the "
                 "better part of valour.";
     }
     else if (Options.may_stab_brand != CHATTR_NORMAL
-             && mons_looks_distracted(mons))
+             && mi.is(MB_DISTRACTED))
     {
         ostr << "Apparently "
-             << mons_pronoun((monster_type) mons->type, PRONOUN_NOCAP)
+             << mons_pronoun((monster_type) mi.type, PRONOUN_NOCAP)
              << " has been distracted by something. You could use this "
                 "opportunity to sneak up on this monster - or to sneak away.";
     }

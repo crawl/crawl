@@ -188,7 +188,7 @@ private:
     std::string target_silence_description() const;
     std::vector<std::string> target_cell_description_suffixes() const;
     std::vector<std::string> monster_description_suffixes(
-        const monsters* mon) const;
+        const monster_info& mi) const;
 
     void describe_cell() const;
 
@@ -281,7 +281,7 @@ void get_square_desc(const coord_def &c, describe_info &inf,
                      bool examine_mons = false, bool show_floor = false);
 
 void describe_floor();
-std::string get_monster_equipment_desc(const monsters *mon,
+std::string get_monster_equipment_desc(const monster_info& mi,
                                 bool full_desc = true,
                                 description_level_type mondtype = DESC_CAP_A,
                                 bool print_attitude = false);

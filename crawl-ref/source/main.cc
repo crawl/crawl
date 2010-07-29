@@ -2049,7 +2049,7 @@ static void _decrement_durations()
         if (you.duration[DUR_DIVINE_SHIELD] > 1)
         {
             you.duration[DUR_DIVINE_SHIELD] -= delay;
-            if(you.duration[DUR_DIVINE_SHIELD] <= 1)
+            if (you.duration[DUR_DIVINE_SHIELD] <= 1)
             {
                 you.duration[DUR_DIVINE_SHIELD] = 1;
                 mpr("Your divine shield starts to fade.", MSGCH_DURATION);
@@ -3248,9 +3248,9 @@ static void _open_door(coord_def move, bool check_confused)
         // Even if some of the door is out of LOS, we want the entire
         // door to be updated.  Hitting this case requires a really big
         // door!
-        if (is_terrain_seen(dc))
+        if (env.map_knowledge(dc).seen())
         {
-            set_map_knowledge_obj(dc, DNGN_OPEN_DOOR);
+            env.map_knowledge(dc).set_feature(DNGN_OPEN_DOOR);
 #ifdef USE_TILE
             env.tile_bk_bg(dc) = TILE_DNGN_OPEN_DOOR;
 #endif
@@ -3473,9 +3473,9 @@ static void _close_door(coord_def move)
             // Even if some of the door is out of LOS once it's closed
             // (or even if some of it is out of LOS when it's open), we
             // want the entire door to be updated.
-            if (is_terrain_seen(dc))
+            if (env.map_knowledge(dc).seen())
             {
-                set_map_knowledge_obj(dc, DNGN_CLOSED_DOOR);
+                env.map_knowledge(dc).set_feature(DNGN_CLOSED_DOOR);
 #ifdef USE_TILE
                 env.tile_bk_bg(dc) = TILE_DNGN_CLOSED_DOOR;
 #endif
@@ -3646,10 +3646,10 @@ static void _move_player(coord_def move)
         you.time_taken = div_rand_round(you.time_taken * 3, 2);
 
         monsters * current = monster_at(you.pos());
-        if(!current || !fedhas_passthrough(current))
+        if (!current || !fedhas_passthrough(current))
         {
             // Probably need better messages. -cao
-            if(mons_genus(targ_monst->type) == MONS_FUNGUS)
+            if (mons_genus(targ_monst->type) == MONS_FUNGUS)
             {
                 mprf("You walk carefully through the fungus.");
             }

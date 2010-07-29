@@ -69,8 +69,8 @@ function spiders_nest_random_monster_set(e)
                          wolf spider / trapdoor spider / giant mosquito / \
                          giant blowfly / yellow wasp / red wasp / \
                          giant beetle / boring beetle / boulder beetle / \
-                         giant centipede / giant scorpion / ghost moth w:2 / \
-                         demonic crawler w:2")
+                         giant centipede / giant scorpion / jumping spider / \
+                         tarantella / ghost moth w:2 / demonic crawler w:2")
 end
 }}
 
@@ -84,8 +84,8 @@ end
 # Entries ##########################################
 
 NAME:   portal_spiders_nest_entry_a
-TAGS:   uniq_spiders_nest patrolling no_monster_gen chance_spider
-CHANCE: 1%
+TAGS:   uniq_spiders_nest patrolling no_monster_gen chance_spiders_nest
+CHANCE: 5%
 DEPTH:  Lair
 : spiders_nest_portal(_G)
 MAP
@@ -119,9 +119,10 @@ epilogue{{
 spiders_nest_milestone(_G)
 }}
 MONS:    giant centipede
-MONS:    scorpion
+MONS:    scorpion / giant scorpion w:1
 MONS:    trapdoor spider generate_awake / nothing w:20
 MONS:    redback / wolf spider
+MONS:    jumping spider / tarantella w:20
 MONS:    giant scorpion / demonic crawler
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -145,10 +146,10 @@ xxx..3.xxxxxxxx2222xxx..xxxW..Wxxxxxx.**x
 xxxW....xxxxxx.2222.xx..xx.....Wxxxxx.<*x
 xxxxxx...xxxx...xx...x..x...xx..Wxxx....x
 xxxxxxx...xx...xxxx........xxxx..Wx...xxx
-xxxxxxxx......xxxxxx..44..xxxxxx.....xxxx
-xxxxxxxxx............4..4........55.xxxxx
-xxxxxxxxxW..3........4..4........55.xxxxx
-xxxxxxxxxWW..xxxxxxxW.44.Wxxxxxx....xxxxx
+xxxxxxxx......xxxxxx..44..xxxxxx.55..xxxx
+xxxxxxxxx............4554.......5665xxxxx
+xxxxxxxxxW..3........4554.......5665xxxxx
+xxxxxxxxxWW..xxxxxxxW.44.Wxxxxxx.55.xxxxx
 xxxxxxxxxxxxxxxxxxxxWW..WWxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
@@ -156,7 +157,7 @@ ENDMAP
 ###############################################################################
 # Layout: Octagonal rooms.
 # Foes:   A ghost moth and trapdoor spiders.
-# Loot:   Random good items.
+# Loot:   Random good items, possibility of ambrosia.
 NAME:   spiders_nest_the_unseen
 TAGS:   spiders_nest no_item_gen no_monster_gen
 ORIENT: encompass
@@ -167,6 +168,8 @@ epilogue{{
 spiders_nest_milestone(_G)
 }}
 MONS:   trapdoor spider, ghost moth
+SUBST:  * = **d
+ITEM:   piece of ambrosia
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxx$$$$xxxxxxxxx$$$$xxxxxxxxx$$$$xxxxx
@@ -182,4 +185,36 @@ xxx........xxxxx........xxxxx........xxx
 xxxx......xxxxxxx......xxxxxxx......xxxx
 xxxxx$$$$xxxxxxxxx$$$$xxxxxxxxx$$$$xxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+###############################################################################
+# Layout: Octagonal room with a pillar and water.
+# Foes:   A ghost moth with a few tarantellas.
+# Loot:   Ambrosia.
+NAME:   spiders_nest_ghost_moth_duel
+TAGS:   spiders_nest no_item_gen no_monster_gen generate_awake
+ORIENT: encompass
+WEIGHT: 5
+: spiders_nest_colours(_G)
+: spiders_nest_random_monster_set(_G)
+epilogue{{
+spiders_nest_milestone(_G)
+}}
+MONS:   ghost moth, tarantella
+ITEM:   piece of ambrosia
+MAP
+xxxxxxxxxxxxxx
+xxxxx.<A.xxxxx
+xxxx......xxxx
+xxx........xxx
+xx....WW....xx
+x....WxxW....x
+x...WxxxxW...x
+x.2.WxxxxW.2.x
+x.22.WxxW.22.x
+xx....WW....xx
+xxx...1....xxx
+xxxx......xxxx
+xxxxxddddxxxxx
+xxxxxxxxxxxxxx
 ENDMAP

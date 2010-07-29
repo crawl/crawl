@@ -766,7 +766,7 @@ int reveal_traps(const int range)
         {
             traps_found++;
             trap.reveal();
-            set_map_knowledge_obj(trap.pos, show_type(grd(trap.pos)));
+            env.map_knowledge(trap.pos).set_feature(grd(trap.pos));
             set_terrain_mapped(trap.pos);
         }
     }
@@ -1498,7 +1498,7 @@ void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
 
     igrd(pos) = NON_ITEM;
 
-    if (is_terrain_seen(pos) && open_shaft)
+    if (env.map_knowledge(pos).seen() && open_shaft)
     {
         mpr("A shaft opens up in the floor!");
         grd(pos) = DNGN_TRAP_NATURAL;
@@ -1510,7 +1510,7 @@ void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
 
         if (mitm[o].defined())
         {
-            if (is_terrain_seen(pos))
+            if (env.map_knowledge(pos).seen())
             {
                 mprf("%s falls through the shaft.",
                      mitm[o].name(DESC_INVENTORY).c_str());

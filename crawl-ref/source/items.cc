@@ -3613,3 +3613,202 @@ void move_items(const coord_def r, const coord_def p)
     igrd(p) = igrd(r);
     igrd(r) = NON_ITEM;
 }
+
+// erase everything the player doesn't know
+item_info get_item_info(const item_def& item)
+{
+    item_info ii;
+
+    ii.base_type = item.base_type;
+    ii.quantity = item.quantity;
+    ii.colour = item.colour;
+    ii.inscription = item.inscription;
+    ii.flags = item.flags & (0
+            | ISFLAG_IDENT_MASK | ISFLAG_BLESSED_WEAPON | ISFLAG_SEEN_CURSED
+            | ISFLAG_ARTEFACT_MASK | ISFLAG_DROPPED | ISFLAG_THROWN
+            | ISFLAG_COSMETIC_MASK | ISFLAG_RACIAL_MASK);
+
+    if (in_inventory(item))
+    {
+        ii.link = item.link;
+        ii.slot = item.slot;
+        ii.pos = coord_def(-1, -1);
+    }
+    else
+        ii.pos = grid2player(item.pos);
+
+    // keep god number
+    if (item.orig_monnum < 0)
+        ii.orig_monnum = item.orig_monnum;
+
+    switch (item.base_type)
+    {
+    case OBJ_WEAPONS:
+    case OBJ_MISSILES:
+        ii.sub_type = item.sub_type;
+        if (item_ident(ii, ISFLAG_KNOW_PLUSES))
+        {
+            ii.plus = item.plus;
+            ii.plus2 = item.plus2;
+        }
+        if (item_type_known(item))
+            ii.special = item.special; // brand
+        break;
+    case OBJ_ARMOUR:
+        ii.sub_type = item.sub_type;
+        if (item_ident(ii, ISFLAG_KNOW_PLUSES))
+            ii.plus = item.plus;
+        if (item_type_known(item))
+            ii.special = item.special; // brand
+        break;
+    case OBJ_WANDS:
+        if (item_type_known(item))
+            ii.sub_type = item.sub_type;
+        ii.special = item.special; // appearance
+        if (item_ident(ii, ISFLAG_KNOW_PLUSES))
+            ii.plus = item.plus; // charges
+        ii.plus2 = item.plus2; // num zapped/recharged or empty
+        break;
+    case OBJ_POTIONS:
+        if (item_type_known(item))
+            ii.sub_type = item.sub_type;
+        ii.plus = item.plus; // appearance
+        break;
+    case OBJ_FOOD:
+        ii.sub_type = item.sub_type;
+        if (ii.sub_type == FOOD_CHUNK)
+        {
+            ii.plus = item.plus; // monster
+            ii.special = food_is_rotten(item) ? 99 : 100;
+        }
+        break;
+    case OBJ_CORPSES:
+        ii.sub_type = item.sub_type;
+        ii.plus = item.plus; // monster
+        ii.special = food_is_rotten(item) ? 99 : 100;
+        break;
+    case OBJ_SCROLLS:
+        if (item_type_known(item))
+            ii.sub_type = item.sub_type;
+        ii.special = item.special; // name seed, part 1
+        ii.plus = item.plus;  // name seed, part 2
+        break;
+    case OBJ_JEWELLERY:
+        if (item_type_known(item))
+            ii.sub_type = item.sub_type;
+        else
+        {
+            ii.sub_type = jewellery_is_amulet(item) ? AMU_FIRST_AMULET : RING_FIRST_RING;
+            if (item_ident(ii, ISFLAG_KNOW_PLUSES))
+                ii.plus = item.plus; // str/dex/int/ac/ev ring plus
+        }
+        ii.special = item.special; // appearance
+        break;
+    case OBJ_BOOKS:
+        if (item_type_known(item) || item.sub_type == BOOK_MANUAL || item.sub_type == BOOK_DESTRUCTION)
+            ii.sub_type = item.sub_type;
+        ii.special = item.special; // appearance
+        break;
+    case OBJ_STAVES:
+        if (item_type_known(item))
+        {
+            ii.sub_type = item.sub_type;
+            if (item_ident(ii, ISFLAG_KNOW_PLUSES) && item.props.exists("rod_enchantment"))
+                ii.props["rod_enchantment"] = item.props["rod_enchantment"];
+        }
+        else
+            ii.sub_type = item_is_rod(item) ? STAFF_FIRST_ROD : 0;
+        ii.special = item.special; // appearance
+        break;
+    case OBJ_MISCELLANY:
+        if (item_type_known(item))
+            ii.sub_type = item.sub_type;
+        else
+        {
+            if (item.sub_type >= MISC_DECK_OF_ESCAPE && item.sub_type <= MISC_DECK_OF_DEFENCE)
+                ii.sub_type = MISC_DECK_OF_ESCAPE;
+            else if (item.sub_type >= MISC_CRYSTAL_BALL_OF_ENERGY && item.sub_type <= MISC_CRYSTAL_BALL_OF_SEEING)
+                ii.sub_type = MISC_CRYSTAL_BALL_OF_FIXATION;
+            else if (item.sub_type >= MISC_BOX_OF_BEASTS && item.sub_type <= MISC_EMPTY_EBONY_CASKET)
+                ii.sub_type = MISC_BOX_OF_BEASTS;
+            else
+                ii.sub_type = item.sub_type;
+        }
+
+        if (ii.sub_type == MISC_RUNE_OF_ZOT)
+            ii.plus = item.plus; // which rune
+
+        if (ii.sub_type == MISC_DECK_OF_ESCAPE)
+        {
+            const int num_cards = cards_in_deck(item);
+            CrawlVector info_cards;
+            CrawlVector info_card_flags;
+            bool found_unmarked = false;
+            for (int i = 0; i < num_cards; ++i)
+            {
+                unsigned char flags;
+                const card_type card = get_card_and_flags(item, -i-1, flags);
+                if (flags & CFLAG_MARKED)
+                {
+                    info_cards.push_back((char)card);
+                    info_card_flags.push_back((char)flags);
+                }
+                else if (!found_unmarked)
+                {
+                    // special card to tell at which point cards are no longer continuous
+                    info_cards.push_back((char)0);
+                    info_card_flags.push_back((char)0);
+                    found_unmarked = true;
+                }
+            }
+            // TODO: this leaks both whether the seen cards are still there and their order: the representation needs to be fixed
+            for (int i = 0; i < num_cards; ++i)
+            {
+                unsigned char flags;
+                const card_type card = get_card_and_flags(item, -i-1, flags);
+                if (flags & CFLAG_SEEN && !(flags & CFLAG_MARKED))
+                {
+                    info_cards.push_back((char)card);
+                    info_card_flags.push_back((char)flags);
+                }
+            }
+            ii.props["cards"] = info_cards;
+            ii.props["card_flags"] = info_card_flags;
+        }
+        break;
+    case OBJ_ORBS:
+    case OBJ_GOLD:
+    default:
+        ii.sub_type = item.sub_type;
+    }
+
+    if (item_ident(item, ISFLAG_KNOW_CURSE))
+        ii.flags |= (item.flags & ISFLAG_CURSED);
+
+    if (item_type_known(item)) {
+        if (item.props.exists(ARTEFACT_NAME_KEY))
+            ii.props[ARTEFACT_NAME_KEY] = item.props[ARTEFACT_NAME_KEY];
+    }
+
+    const char* copy_props[] = {ARTEFACT_APPEAR_KEY, KNOWN_PROPS_KEY, CORPSE_NAME_KEY, CORPSE_NAME_TYPE_KEY, "jewellery_tried", "drawn_cards"};
+    for (unsigned i = 0; i < (sizeof(copy_props) / sizeof(copy_props[0])); ++i)
+    {
+        if (item.props.exists(copy_props[i]))
+            ii.props[copy_props[i]] = item.props[copy_props[i]];
+    }
+
+    if (item.props.exists(ARTEFACT_PROPS_KEY))
+    {
+        CrawlVector props = item.props[ARTEFACT_PROPS_KEY].get_vector();
+        const CrawlVector &known = item.props[KNOWN_PROPS_KEY].get_vector();
+
+        for (unsigned i = 0; i < props.size(); ++i) {
+            if (i >= known.size() || !known[i].get_bool())
+                props[i] = (short)0;
+        }
+
+        ii.props[ARTEFACT_PROPS_KEY] = props;
+    }
+
+    return ii;
+}

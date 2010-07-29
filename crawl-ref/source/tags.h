@@ -13,6 +13,8 @@
 #include "tag-version.h"
 
 struct show_type;
+struct monster_info;
+struct map_cell;
 
 enum tag_type   // used during save/load process to identify data blocks
 {
@@ -135,7 +137,8 @@ void marshallString4 (writer &, const std::string &);
 void marshallCoord   (writer &, const coord_def &);
 void marshallItem    (writer &, const item_def &);
 void marshallMonster (writer &, const monsters &);
-void marshallShowtype (writer &, const show_type &);
+void marshallMonsterInfo (writer &, const monster_info &);
+void marshallMapCell (writer &, const map_cell &);
 
 void marshallEnumVal (writer &, const enum_info *, int);
 
@@ -144,6 +147,9 @@ inline void marshallEnum(writer& wr, enm value)
 {
     marshallEnumVal(wr, &enum_details<enm>::desc, static_cast<int>(value));
 }
+
+void marshallUnsigned(writer& th, uint64_t v);
+void marshallSigned(writer& th, int64_t v);
 
 /* ***********************************************************************
  * reader API
@@ -189,7 +195,8 @@ void        unmarshallString4 (reader &, std::string&);
 coord_def   unmarshallCoord   (reader &);
 void        unmarshallItem    (reader &, item_def &item);
 void        unmarshallMonster (reader &, monsters &item);
-show_type   unmarshallShowtype (reader &);
+void        unmarshallMonsterInfo (reader &, monster_info &mi);
+void        unmarshallMapCell (reader &, map_cell& cell);
 
 int         unmarshallEnumVal (reader &, const enum_info *);
 
@@ -197,6 +204,20 @@ template<typename enm>
 inline enm unmarshallEnum(writer& wr)
 {
     return static_cast<enm>(unmarshallEnumVal(wr, &enum_details<enm>::desc));
+}
+
+uint64_t unmarshallUnsigned(reader& th);
+template<typename T>
+static inline void unmarshallUnsigned(reader& th, T& v)
+{
+    v = (T)unmarshallUnsigned(th);
+}
+
+int64_t unmarshallSigned(reader& th);
+template<typename T>
+static inline void unmarshallSigned(reader& th, T& v)
+{
+    v = (T)unmarshallSigned(th);
 }
 
 /* ***********************************************************************

@@ -1926,21 +1926,13 @@ void check_antennae_detect()
     {
         const monsters* mon = monster_at(*ri);
         if (!mon)
-            map_knowledge_forget_mons(*ri);
-        else if (!mons_is_firewood(mon))
         {
-            show_type old_obj = get_map_knowledge_obj(*ri);
-            show_type obj = show_type();
-
-            obj.cls = SH_MONSTER;
-            obj.feat = old_obj.feat;
-            obj.item = old_obj.item;
-            obj.mons = MONS_SENSED;
-            obj.colour = 0;
-
-            set_map_knowledge_obj(*ri, obj);
-            set_map_knowledge_detected_mons(*ri);
+            map_cell& cell = env.map_knowledge(*ri);
+            if (cell.detected_monster())
+                cell.clear_monster();
         }
+        else if (!mons_is_firewood(mon))
+            env.map_knowledge(*ri).set_detected_monster(MONS_SENSED);
     }
 }
 

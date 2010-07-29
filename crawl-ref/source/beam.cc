@@ -2426,7 +2426,7 @@ void bolt::affect_ground()
             env.pgrid(pos()) |= FPROP_MOLD;
         }
 
-        if(x_chance_in_y(2, 21)
+        if (x_chance_in_y(2, 21)
            && mons_class_can_pass(MONS_BALLISTOMYCETE, env.grid(pos()))
            && !actor_at(pos()))
         {

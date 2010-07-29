@@ -573,9 +573,9 @@ static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
         }
 
         // If dumping, only laundry list the seen gods
-        if(!display)
+        if (!display)
         {
-            if(has_altar_been_seen)
+            if (has_altar_been_seen)
                 disp += god_name(god, false) + "\n";
             continue;
         }

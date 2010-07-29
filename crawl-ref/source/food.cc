@@ -1838,6 +1838,9 @@ static void _eating(unsigned char item_class, int item_type)
         case FOOD_BREAD_RATION:
             food_value = 4400;
             break;
+        case FOOD_AMBROSIA:
+            food_value = 2500;
+            break;
         case FOOD_HONEYCOMB:
             food_value = 2000;
             break;
@@ -2087,6 +2090,11 @@ void finished_eating_message(int food_type)
     case FOOD_ROYAL_JELLY:
         mpr("That royal jelly was delicious!");
         restore_stat(STAT_ALL, 0, false);
+        break;
+    case FOOD_AMBROSIA:                       // XXX: could put some more
+        mpr("That ambrosia tasted strange."); // inspired messages here --evk
+        potion_effect(POT_CONFUSION, 0, false, false);
+        potion_effect(POT_MAGIC, 0, false, false);
         break;
     case FOOD_PIZZA:
         if (!Options.pizza.empty() && !one_chance_in(3))
@@ -2387,6 +2395,7 @@ static int _player_likes_food_type(int type)
 
     case FOOD_HONEYCOMB:
     case FOOD_ROYAL_JELLY:
+    case FOOD_AMBROSIA:
         return 0;
 
     case NUM_FOODS:

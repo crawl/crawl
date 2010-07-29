@@ -412,14 +412,16 @@ static bool _build_level_vetoable(int level_number, int level_type,
         {
             CrawlVector &vault_maps =
                 you.props[YOU_PORTAL_VAULT_MAPS_KEY].get_vector();
-            vault_maps.push_back(_portal_vault_map_name);
+            if (vault_maps.size() < vault_maps.get_max_size())
+                vault_maps.push_back(_portal_vault_map_name);
         }
 
         if (you.level_type == LEVEL_PORTAL_VAULT)
         {
             CrawlVector &vault_names =
                 you.props[YOU_PORTAL_VAULT_NAMES_KEY].get_vector();
-            vault_names.push_back(you.level_type_name);
+            if (vault_names.size() < vault_names.get_max_size())
+                vault_names.push_back(you.level_type_name);
         }
 
         dgn_postprocess_level();
@@ -4591,6 +4593,8 @@ static dungeon_feature_type _dgn_find_rune_subst_tags(const std::string &tags)
 
 static void _fixup_after_vault()
 {
+    _dgn_set_floor_colours();
+
     link_items();
     env.markers.activate_all();
 
@@ -5721,9 +5725,9 @@ void dgn_replace_area( const coord_def& p1, const coord_def& p2,
         if (grd(*ri) == replace && unforbidden(*ri, mapmask))
         {
             grd(*ri) = feature;
-            if (needs_update && is_terrain_seen(*ri))
+            if (needs_update && env.map_knowledge(*ri).seen())
             {
-                set_map_knowledge_obj(*ri, feature);
+                env.map_knowledge(*ri).set_feature(feature);
 #ifdef USE_TILE
                 env.tile_bk_bg(*ri) = feature;
 #endif

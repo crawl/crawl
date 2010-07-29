@@ -1428,11 +1428,20 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
                 return (false);
         }
         else if (spell_cast == SPELL_BLINK_RANGE)
+        {
             blink_range(monster);
+            monster->lose_energy(EUT_SPELL);
+        }
         else if (spell_cast == SPELL_BLINK_AWAY)
+        {
             blink_away(monster);
+            monster->lose_energy(EUT_SPELL);
+        }
         else if (spell_cast == SPELL_BLINK_CLOSE)
+        {
             blink_close(monster);
+            monster->lose_energy(EUT_SPELL);
+        }
         else
         {
             if (spell_needs_foe(spell_cast))

@@ -326,7 +326,7 @@ void search_dungeon(const coord_def & start,
 
                 }
 
-                if(connecting_square(adjacent))
+                if (connecting_square(adjacent))
                 {
 //                    if (res.second)
                     fringe.push(res.first);
@@ -460,7 +460,7 @@ static void _merge_ench_durations(monsters *initial_slime, monsters *merge_to)
         if (!i->second.duration)
             i->second.duration = 1;
 
-        if(no_initial)
+        if (no_initial)
             merge_to->add_ench(i->second);
         else
             merge_to->update_ench(i->second);
@@ -567,7 +567,7 @@ static bool _do_merge(monsters *initial_slime, monsters *merge_to)
     bool can_move = merge_to->has_action_energy();
     merge_to->speed_increment -= entry->speed;
 
-    if(can_move)
+    if (can_move)
     {
         merge_to->speed_increment -= entry->energy_usage.move;
 
@@ -1129,7 +1129,7 @@ static void _establish_connection(int tentacle,
         }
     }
 
-    while(current)
+    while (current)
     {
 
         // Last monster we visited or placed
@@ -2570,8 +2570,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
     return (used);
 }
 
-// Combines code using in Confusing Eye, Giant Eye and Eye of Draining to
-// reduce clutter.
+// Combines code for eyeball-type monsters, etc. to reduce clutter.
 static bool _eyeball_will_use_ability(monsters *monster)
 {
     return (coinflip()
@@ -2893,7 +2892,7 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
         }
 
         const position_node * thread = &(*candidates[index]);
-        while(thread)
+        while (thread)
         {
             if (you.see_cell(thread->pos))
             {

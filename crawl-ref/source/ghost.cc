@@ -443,11 +443,33 @@ static unsigned char _ugly_thing_assign_colour(unsigned char force_colour,
     return (colour);
 }
 
-static mon_attack_flavour _ugly_thing_colour_to_flavour(unsigned char u_colour)
+static mon_attack_flavour _very_ugly_thing_flavour_upgrade(mon_attack_flavour u_att_flav)
+{
+    switch (u_att_flav)
+    {
+    case AF_FIRE:
+        u_att_flav = AF_NAPALM;
+        break;
+
+    case AF_POISON_NASTY:
+        u_att_flav = AF_POISON_MEDIUM;
+        break;
+
+    case AF_DISEASE:
+        u_att_flav = AF_ROT;
+        break;
+
+    default:
+        break;
+    }
+
+    return (u_att_flav);
+}
+mon_attack_flavour ugly_thing_colour_to_flavour(unsigned char u_colour)
 {
     mon_attack_flavour u_att_flav = AF_PLAIN;
 
-    switch (u_colour)
+    switch (u_colour & 7)
     {
     case RED:
         u_att_flav = AF_FIRE;
@@ -477,29 +499,8 @@ static mon_attack_flavour _ugly_thing_colour_to_flavour(unsigned char u_colour)
         break;
     }
 
-    return (u_att_flav);
-}
-
-static mon_attack_flavour _very_ugly_thing_flavour_upgrade(mon_attack_flavour u_att_flav)
-{
-    switch (u_att_flav)
-    {
-    case AF_FIRE:
-        u_att_flav = AF_NAPALM;
-        break;
-
-    case AF_POISON_NASTY:
-        u_att_flav = AF_POISON_MEDIUM;
-        break;
-
-    case AF_DISEASE:
-        u_att_flav = AF_ROT;
-        break;
-
-    default:
-        break;
-    }
-
+    if (u_colour & 8)
+        u_att_flav = _very_ugly_thing_flavour_upgrade(u_att_flav);
     return (u_att_flav);
 }
 
@@ -545,7 +546,7 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
                                                    : BLACK);
 
     // Pick a compatible attack flavour for this colour.
-    att_flav = _ugly_thing_colour_to_flavour(colour);
+    att_flav = ugly_thing_colour_to_flavour(colour);
 
     // Pick a compatible resistance for this attack flavour.
     ugly_thing_add_resistance(false, att_flav);
@@ -581,9 +582,9 @@ void ghost_demon::ugly_thing_to_very_ugly_thing()
     ugly_thing_add_resistance(true, att_flav);
 }
 
-void ghost_demon::ugly_thing_add_resistance(bool very_ugly,
-                                            mon_attack_flavour u_att_flav)
+mon_resist_def ugly_thing_resists(bool very_ugly, mon_attack_flavour u_att_flav)
 {
+    mon_resist_def resists;
     resists.elec = 0;
     resists.poison = 0;
     resists.fire = 0;
@@ -625,6 +626,13 @@ void ghost_demon::ugly_thing_add_resistance(bool very_ugly,
     default:
         break;
     }
+    return resists;
+}
+
+void ghost_demon::ugly_thing_add_resistance(bool very_ugly,
+                                            mon_attack_flavour u_att_flav)
+{
+    resists = ::ugly_thing_resists(very_ugly, u_att_flav);
 }
 
 void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)

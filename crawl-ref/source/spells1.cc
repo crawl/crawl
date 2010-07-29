@@ -1089,7 +1089,7 @@ static bool _know_spell(spell_type spell)
     }
 
     int fail = spell_fail(spell);
-    mprf("fail = %d", fail);
+    dprf("fail = %d", fail);
 
     if (fail > random2(50) + 50)
     {
@@ -1526,7 +1526,7 @@ void manage_fire_shield(int delay)
     int old_dur = you.duration[DUR_FIRE_SHIELD];
 
     you.duration[DUR_FIRE_SHIELD]-= delay;
-    if(you.duration[DUR_FIRE_SHIELD] < 0)
+    if (you.duration[DUR_FIRE_SHIELD] < 0)
         you.duration[DUR_FIRE_SHIELD] = 0;
 
     if (!you.duration[DUR_FIRE_SHIELD])
