@@ -215,10 +215,10 @@ static void _update_item_at(const coord_def &gp)
     env.map_knowledge(gp).set_item(get_item_info(*eitem), more_items);
 
 #ifdef USE_TILE
-    if (feat_is_stair(feat))
-        tile_place_item_marker(ep, *eitem);
+    if (feat_is_stair(env.grid(gp)))
+        tile_place_item_marker(grid2show(gp), *eitem);
     else
-        tile_place_item(ep, *eitem);
+        tile_place_item(grid2show(gp), *eitem);
 #endif
 }
 

@@ -87,6 +87,7 @@
  #include "tilemcache.h"
  #include "tilepick.h"
  #include "tileview.h"
+ #include "showsymb.h"
 #endif
 #include "travel.h"
 
