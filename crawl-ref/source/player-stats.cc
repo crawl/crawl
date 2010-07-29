@@ -621,7 +621,7 @@ void update_stat_zero()
 
         int paramax = STAT_DEATH_TURNS - STAT_DEATH_START_PARA;
         int paradiff = std::max(you.stat_zero[i] - STAT_DEATH_START_PARA, 0);
-        if (x_chance_in_y(paradiff*paradiff, paramax*paramax))
+        if (x_chance_in_y(paradiff*paradiff, 2*paramax*paramax))
         {
             para_stat = s;
             num_para++;
