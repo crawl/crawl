@@ -657,6 +657,8 @@ bool cast_malign_gateway(actor * caster, int pow, god_type god)
                 menv[tentacle_idx].flags |= MF_NO_REWARD;
                 menv[tentacle_idx].add_ench(ENCH_PORTAL_TIMER);
                 env.grid(menv[tentacle_idx].pos()) = DNGN_TEMP_PORTAL;
+                menv[tentacle_idx].props["base_position"].get_coord()
+                                    = menv[tentacle_idx].pos();
                 return (true);
             }
         }
