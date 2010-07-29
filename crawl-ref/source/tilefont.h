@@ -24,7 +24,7 @@ public:
     // contain their own version of this factory function.
     static FontWrapper *create();
 
-    virtual ~FontWrapper() {};
+    virtual ~FontWrapper() {}
 
     // font loading
     virtual bool load_font(const char *font_name, unsigned int font_size,
