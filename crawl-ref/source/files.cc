@@ -1180,7 +1180,7 @@ static void _safe_write_tagged_file(const std::string &filename,
 
 static void _place_player_on_stair(level_area_type old_level_type,
                                    branch_type old_branch,
-                                   int stair_taken)
+                                   int stair_taken, const coord_def& old_pos)
 {
     bool find_first = true;
 
@@ -1268,7 +1268,7 @@ static void _place_player_on_stair(level_area_type old_level_type,
 
     const coord_def where_to_go =
         dgn_find_nearby_stair(static_cast<dungeon_feature_type>(stair_taken),
-                              you.pos(), find_first);
+                              old_pos, find_first);
     you.moveto(where_to_go);
 }
 
@@ -1477,6 +1477,9 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
                             you.level_type, you.where_are_you, you.absdepth0);
 #endif
 
+    // Save player position for shaft, hatch destination.
+    const coord_def old_pos = you.pos();
+
     // Going up/down stairs, going through a portal, or being banished
     // means the previous x/y movement direction is no longer valid.
     you.reset_prev_move();
@@ -1657,7 +1660,7 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
         if (you.level_type != LEVEL_ABYSS)
         {
             _place_player_on_stair(old_level.level_type,
-                                   old_level.branch, stair_taken);
+                                   old_level.branch, stair_taken, old_pos);
         }
         else
             you.moveto(ABYSS_CENTRE);
