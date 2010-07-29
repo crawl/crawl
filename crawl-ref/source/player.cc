@@ -3184,9 +3184,6 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_MERFOLK:
-                if (you.experience_level % 3)
-                    hp_adjust++;
-
                 if (!(you.experience_level % 5))
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
