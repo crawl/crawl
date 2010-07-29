@@ -522,10 +522,3 @@ unsigned real_colour(unsigned raw_colour)
 
     return (raw_colour);
 }
-
-int name_length_by_colour(int col)
-{
-    const unsigned short nlen[] = {5, 4, 5, 4, 3, 7, 5, 9, 8, 9, 10, 9, 8, 12, 6, 5};
-
-    return nlen[col];
-}
