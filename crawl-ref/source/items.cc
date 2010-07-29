@@ -3746,7 +3746,7 @@ item_info get_item_info(const item_def& item)
             bool found_unmarked = false;
             for (int i = 0; i < num_cards; ++i)
             {
-                unsigned char flags;
+                uint8_t flags;
                 const card_type card = get_card_and_flags(item, -i-1, flags);
                 if (flags & CFLAG_MARKED)
                 {
@@ -3764,7 +3764,7 @@ item_info get_item_info(const item_def& item)
             // TODO: this leaks both whether the seen cards are still there and their order: the representation needs to be fixed
             for (int i = 0; i < num_cards; ++i)
             {
-                unsigned char flags;
+                uint8_t flags;
                 const card_type card = get_card_and_flags(item, -i-1, flags);
                 if (flags & CFLAG_SEEN && !(flags & CFLAG_MARKED))
                 {

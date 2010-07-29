@@ -62,7 +62,7 @@ void stop_running(void);
 void travel_init_load_level();
 void travel_init_new_level();
 
-unsigned char is_waypoint(const coord_def &p);
+uint8_t is_waypoint(const coord_def &p);
 command_type direction_to_command(int x, int y);
 bool is_resting(void);
 void explore_pickup_event(int did_pickup, int tried_pickup);
@@ -99,7 +99,7 @@ void start_travel(const coord_def& p);
 
 command_type travel();
 
-int travel_direction(unsigned char branch, int subdungeondepth);
+int travel_direction(uint8_t branch, int subdungeondepth);
 
 void prevent_travel_to(const std::string &dungeon_feature_name);
 
@@ -325,7 +325,7 @@ struct LevelInfo
     }
 
     void save(writer&) const;
-    void load(reader&, char minorVersion);
+    void load(reader&, int minorVersion);
 
     std::vector<stair_info> &get_stairs()
     {
@@ -363,7 +363,7 @@ struct LevelInfo
 
     // Returns true if the given branch is known to be accessible from the
     // current level.
-    bool is_known_branch(unsigned char branch) const;
+    bool is_known_branch(uint8_t branch) const;
 
     FixedVector<int, NUM_DA_COUNTERS> da_counters;
 
@@ -438,7 +438,7 @@ public:
 
     void add_waypoint(int x = -1, int y = -1);
     void delete_waypoint();
-    unsigned char is_waypoint(const level_pos &lp) const;
+    uint8_t is_waypoint(const level_pos &lp) const;
     void list_waypoints() const;
     void update_waypoints() const;
 
@@ -446,9 +446,9 @@ public:
     void update();
 
     void save(writer&) const;
-    void load(reader&, char minorVersion);
+    void load(reader&, int minorVersion);
 
-    bool is_known_branch(unsigned char branch) const;
+    bool is_known_branch(uint8_t branch) const;
 
     void update_da_counters(); // of the current level
 

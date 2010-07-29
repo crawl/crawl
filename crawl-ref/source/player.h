@@ -51,23 +51,23 @@ public:
   int base_magic_points;      // temporary max MP loss? (currently unused)
   int base_magic_points2;     // base MPs from levels and potions of magic
 
-  FixedVector<char, NUM_STATS> stat_loss;
-  FixedVector<char, NUM_STATS> base_stats;
+  FixedVector<int8_t, NUM_STATS> stat_loss;
+  FixedVector<int8_t, NUM_STATS> base_stats;
   FixedVector<int, NUM_STATS> stat_zero;
   FixedVector<std::string, NUM_STATS> stat_zero_cause;
   stat_type last_chosen;
 
   int hunger;
-  char hunger_state;
   int disease;
-  char max_level;
-  unsigned char hit_points_regeneration;
-  unsigned char magic_points_regeneration;
+  uint8_t hunger_state;
+  uint8_t max_level;
+  uint8_t hit_points_regeneration;
+  uint8_t magic_points_regeneration;
   unsigned int experience;
   int experience_level;
   int gold;
 
-  FixedVector<signed char, NUM_EQUIP> equip;
+  FixedVector<int8_t, NUM_EQUIP> equip;
   FixedVector<bool, NUM_EQUIP> melded;
   unsigned short unrand_reacts;
 
@@ -79,7 +79,7 @@ public:
   int burden;
   burden_state_type burden_state;
   FixedVector<spell_type, 25> spells;
-  char spell_no;
+  uint8_t spell_no;
   game_direction_type char_direction;
   bool opened_zot;
   bool royal_jelly_dead;
@@ -94,7 +94,7 @@ public:
   int berserk_penalty;                // penalty for moving while berserk
 
   FixedVector<int, NUM_ATTRIBUTES> attribute;
-  FixedVector<unsigned char, NUM_AMMO> quiver; // default items for quiver
+  FixedVector<uint8_t, NUM_AMMO> quiver; // default items for quiver
   FixedVector<int, NUM_OBJECT_CLASSES> sacrifice_value;
 
   undead_state_type is_undead;
@@ -107,10 +107,10 @@ public:
   bool xray_vision;
 #endif
 
-  FixedVector<unsigned char, 50>  skills;
+  FixedVector<uint8_t, 50>  skills;
   FixedVector<bool, 50>  practise_skill;
   FixedVector<unsigned int, 50>   skill_points;
-  FixedVector<unsigned char, 50>  skill_order;
+  FixedVector<uint8_t, 50>  skill_order;
 
   skill_type sage_bonus_skill;  // If Sage is in effect, which skill it affects.
   int sage_bonus_degree;        // How much bonus XP to give in that skill.
@@ -119,7 +119,7 @@ public:
   int  total_skill_points;
   int  exp_available;
 
-  FixedArray<unsigned char, 6, 50> item_description;
+  FixedArray<uint8_t, 6, 50> item_description;
   FixedVector<unique_item_status_type, MAX_UNRANDARTS> unique_items;
   FixedVector<bool, NUM_MONSTERS> unique_creatures;
 
@@ -161,19 +161,19 @@ public:
 
   branch_type where_are_you;
 
-  FixedVector<unsigned char, 30> branch_stairs;
+  FixedVector<uint8_t, 30> branch_stairs;
 
   god_type religion;
   std::string second_god_name; // Random second name of Jiyva
-  unsigned char piety;
-  unsigned char piety_hysteresis;       // amount of stored-up docking
-  unsigned char gift_timeout;
-  FixedVector<unsigned char, MAX_NUM_GODS>  penance;
-  FixedVector<unsigned char, MAX_NUM_GODS>  worshipped;
-  FixedVector<short,         MAX_NUM_GODS>  num_gifts;
+  uint8_t piety;
+  uint8_t piety_hysteresis;       // amount of stored-up docking
+  uint8_t gift_timeout;
+  FixedVector<uint8_t, MAX_NUM_GODS>  penance;
+  FixedVector<uint8_t, MAX_NUM_GODS>  worshipped;
+  FixedVector<short,   MAX_NUM_GODS>  num_gifts;
 
-  FixedVector<unsigned char, NUM_MUTATIONS> mutation;
-  FixedVector<unsigned char, NUM_MUTATIONS> innate_mutations;
+  FixedVector<uint8_t, NUM_MUTATIONS> mutation;
+  FixedVector<uint8_t, NUM_MUTATIONS> innate_mutations;
 
   struct demon_trait
   {
@@ -183,18 +183,18 @@ public:
 
   std::vector<demon_trait> demonic_traits;
 
-  unsigned char magic_contamination;
+  uint8_t magic_contamination;
 
   FixedVector<bool, NUM_FIXED_BOOKS> had_book;
   FixedVector<bool, NUM_SPELLS>      seen_spell;
   FixedVector<uint32_t, NUM_WEAPONS> seen_weapon;
   FixedVector<uint32_t, NUM_ARMOURS> seen_armour;
 
-  unsigned char normal_vision;        // how far the species gets to see
-  unsigned char current_vision;       // current sight radius (cells)
+  uint8_t normal_vision;        // how far the species gets to see
+  uint8_t current_vision;       // current sight radius (cells)
 
   branch_type   hell_branch;          // which branch the player goes to on hell exit
-  unsigned char hell_exit;            // which level player goes to on hell exit
+  uint8_t       hell_exit;            // which level player goes to on hell exit
 
   int           real_time;            // real time played (in seconds)
   int           num_turns;            // number of turns taken
@@ -264,7 +264,7 @@ public:
   bool redraw_armour_class;
   bool redraw_evasion;
 
-  unsigned char flash_colour;
+  uint8_t flash_colour;
 
   int time_taken;
 
@@ -315,14 +315,14 @@ public:
 
     void reset_prev_move();
 
-    char stat(stat_type stat, bool nonneg=true) const;
-    char strength() const;
-    char intel() const;
-    char dex() const;
-    char max_stat(stat_type stat) const;
-    char max_strength() const;
-    char max_intel() const;
-    char max_dex() const;
+    int8_t stat(stat_type stat, bool nonneg=true) const;
+    int8_t strength() const;
+    int8_t intel() const;
+    int8_t dex() const;
+    int8_t max_stat(stat_type stat) const;
+    int8_t max_strength() const;
+    int8_t max_intel() const;
+    int8_t max_dex() const;
 
     bool in_water() const;
     bool can_swim(bool permanently = false) const;
@@ -729,7 +729,7 @@ int player_teleport(bool calc_unid = true);
 bool items_give_ability(const int slot, artefact_prop_type abil);
 int scan_artefacts(artefact_prop_type which_property, bool calc_unid = true);
 
-int slaying_bonus(char which_affected, bool ranged = false);
+int slaying_bonus(weapon_property_type which_affected, bool ranged = false);
 
 unsigned int exp_needed(int lev);
 
@@ -737,7 +737,7 @@ int get_expiration_threshold(duration_type dur);
 bool dur_expiring(duration_type dur);
 void display_char_status(void);
 
-void forget_map(unsigned char chance_forgotten = 100, bool force = false);
+void forget_map(int chance_forgotten = 100, bool force = false);
 
 void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = NULL,
               unsigned int* actual_avail_gain = NULL);

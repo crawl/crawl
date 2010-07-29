@@ -130,7 +130,7 @@ void shuffle_all_decks_on_level();
 
 // Return true if it was a "genuine" draw, false otherwise.
 bool card_effect(card_type which_card, deck_rarity_type rarity,
-                 unsigned char card_flags = 0, bool tell_card = true);
+                 uint8_t card_flags = 0, bool tell_card = true);
 void draw_from_deck_of_punishment();
 
 bool      top_card_is_known(const item_def &item);
@@ -139,12 +139,12 @@ card_type top_card(const item_def &item);
 bool is_deck(const item_def &item);
 bool bad_deck(const item_def &item);
 deck_rarity_type deck_rarity(const item_def &item);
-unsigned char deck_rarity_to_color(deck_rarity_type rarity);
+uint8_t deck_rarity_to_color(deck_rarity_type rarity);
 void init_deck(item_def &item);
 
 int cards_in_deck(const item_def &deck);
 card_type get_card_and_flags(const item_def& deck, int idx,
-                             unsigned char& _flags);
+                             uint8_t& _flags);
 
 const std::vector<card_type> get_drawn_cards(const item_def& deck);
 

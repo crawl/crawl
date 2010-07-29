@@ -753,7 +753,7 @@ static int dgn_lfloorcol(lua_State *ls)
 
             return (0);
         }
-        map->floor_colour = (unsigned char) colour;
+        map->floor_colour = colour;
     }
     PLUARET(string, colour_to_str(map->floor_colour).c_str());
 }
@@ -787,7 +787,7 @@ static int dgn_lrockcol(lua_State *ls)
             return (0);
         }
 
-        map->rock_colour = (unsigned char) colour;
+        map->rock_colour = colour;
     }
     PLUARET(string, colour_to_str(map->rock_colour).c_str());
 }
@@ -830,7 +830,7 @@ static int dgn_change_floor_colour(lua_State *ls)
     const int colour = _lua_colour(ls, 1, BLACK);
     const bool update_now = _lua_boolean(ls, 2, false);
 
-    env.floor_colour = (unsigned char) colour;
+    env.floor_colour = colour;
 
     if (crawl_state.need_save && update_now)
         viewwindow();
@@ -842,7 +842,7 @@ static int dgn_change_rock_colour(lua_State *ls)
     const int colour = _lua_colour(ls, 1, BLACK);
     const bool update_now = _lua_boolean(ls, 2, false);
 
-    env.rock_colour = (unsigned char) colour;
+    env.rock_colour = colour;
 
     if (crawl_state.need_save && update_now)
         viewwindow();

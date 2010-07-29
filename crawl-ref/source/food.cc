@@ -58,7 +58,7 @@ static corpse_effect_type _determine_chunk_effect(corpse_effect_type chunktype,
                                                   bool rotten_chunk);
 static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
                        int mon_intel = 0);
-static void _eating(unsigned char item_class, int item_type);
+static void _eating(object_class_type item_class, int item_type);
 static void _describe_food_change(int hunger_increment);
 static bool _vampire_consume_corpse(int slot, bool invent);
 static void _heal_from_food(int hp_amt, int mp_amt = 0, bool unrot = false,
@@ -869,7 +869,7 @@ static std::string _how_hungry()
 
 bool food_change(bool suppress_message)
 {
-    char newstate = HS_ENGORGED;
+    uint8_t newstate = HS_ENGORGED;
     bool state_changed = false;
     bool less_hungry   = false;
 
@@ -1817,7 +1817,7 @@ static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
     }
 }
 
-static void _eating(unsigned char item_class, int item_type)
+static void _eating(object_class_type item_class, int item_type)
 {
     int food_value = 0;
     int how_herbivorous = player_mutation_level(MUT_HERBIVOROUS);

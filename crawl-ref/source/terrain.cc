@@ -1274,7 +1274,7 @@ bool slide_feature_over(const coord_def &src, coord_def prefered_dest,
 
 // Returns true if we manage to scramble free.
 bool fall_into_a_pool( const coord_def& entry, bool allow_shift,
-                       unsigned char terrain )
+                       dungeon_feature_type terrain )
 {
     bool escape = false;
     coord_def empty;

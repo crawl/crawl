@@ -3666,8 +3666,8 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
 }
 
 static void _handle_accidental_death(const int orig_hp,
-    const FixedVector<char, NUM_STATS> orig_stat_loss,
-    const FixedVector<unsigned char, NUM_MUTATIONS> &orig_mutation)
+    const FixedVector<int8_t, NUM_STATS> orig_stat_loss,
+    const FixedVector<uint8_t, NUM_MUTATIONS> &orig_mutation)
 {
     // Did ouch() return early because the player died from the Xom
     // effect, even though neither is the player under penance nor is
@@ -3855,9 +3855,9 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
 #endif
 
     const int  orig_hp       = you.hp;
-    const FixedVector<char, NUM_STATS> orig_stat_loss = you.stat_loss;
+    const FixedVector<int8_t, NUM_STATS> orig_stat_loss = you.stat_loss;
 
-    const FixedVector<unsigned char, NUM_MUTATIONS> orig_mutation
+    const FixedVector<uint8_t, NUM_MUTATIONS> orig_mutation
         = you.mutation;
 
 #ifdef NOTE_DEBUG_XOM
@@ -4203,7 +4203,7 @@ bool xom_saves_your_life(const int dam, const int death_source,
         stat_type s = static_cast<stat_type>(i);
         while (you.max_stat(s) < 1)
             you.base_stats[s]++;
-        you.stat_loss[s] = std::min<char>(you.stat_loss[s], you.max_stat(s) - 1);
+        you.stat_loss[s] = std::min<int8_t>(you.stat_loss[s], you.max_stat(s) - 1);
     }
 
     god_speaks(GOD_XOM, "Xom revives you!");

@@ -41,7 +41,7 @@ public:
     Stash(int xp = -1, int yp = -1);
 
     static bool is_boring_feature(dungeon_feature_type feat);
-    static void filter(object_class_type base_type, unsigned char sub_type);
+    static void filter(object_class_type base_type, uint8_t sub_type);
     static void filter(const std::string &filt);
 
     static std::string stash_item_name(const item_def &item);
@@ -98,7 +98,7 @@ private:
 
 private:
     bool verified;      // Is this correct to the best of our knowledge?
-    unsigned char x, y;
+    uint8_t x, y;
     int  abspos;
     dungeon_feature_type feat;
     trap_type trap;

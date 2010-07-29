@@ -702,7 +702,7 @@ bool mons_is_mimic(int mc)
 
 bool mons_is_demon(int mc)
 {
-    const int show_char = mons_base_char(mc);
+    const char show_char = mons_base_char(mc);
 
     // Not every demonic monster is a demon (hell hog, hell hound, etc.)
     if (mons_class_holiness(mc) == MH_DEMONIC
@@ -933,7 +933,7 @@ bool mons_sense_invis(const monsters *mon)
     return (mons_class_flag(mon->type, M_SENSE_INVIS));
 }
 
-unsigned mons_char(int mc)
+wchar_t mons_char(int mc)
 {
     return monster_symbols[mc].glyph;
 }
@@ -1646,9 +1646,9 @@ static void _get_spells(mon_spellbook_type& book, monsters *mon)
 
 // Never hand out DARKGREY as a monster colour, even if it is randomly
 // chosen.
-unsigned char random_monster_colour()
+uint8_t random_monster_colour()
 {
-    unsigned char col = DARKGREY;
+    uint8_t col = DARKGREY;
     while (col == DARKGREY)
         col = random_colour();
 
@@ -1853,7 +1853,7 @@ static const char *ugly_colour_names[] = {
     "red", "brown", "green", "cyan", "purple", "white"
 };
 
-std::string ugly_thing_colour_name(unsigned char colour)
+std::string ugly_thing_colour_name(uint8_t colour)
 {
     int colour_offset = ugly_thing_colour_offset(colour);
 
@@ -1871,11 +1871,11 @@ std::string ugly_thing_colour_name(const monsters *mon)
         return ("buggy");
 }
 
-static const unsigned char ugly_colour_values[] = {
+static const uint8_t ugly_colour_values[] = {
     RED, BROWN, GREEN, CYAN, MAGENTA, LIGHTGREY
 };
 
-unsigned char ugly_thing_random_colour()
+uint8_t ugly_thing_random_colour()
 {
     return (RANDOM_ELEMENT(ugly_colour_values));
 }
@@ -1890,7 +1890,7 @@ int str_to_ugly_thing_colour(const std::string &s)
     return (BLACK);
 }
 
-int ugly_thing_colour_offset(const unsigned char colour)
+int ugly_thing_colour_offset(const uint8_t colour)
 {
     for (unsigned i = 0; i < ARRAYSZ(ugly_colour_values); ++i)
     {
@@ -3125,7 +3125,7 @@ bool monster_shover(const monsters *m)
     if (_mons_has_smite_attack(m))
         return (false);
 
-    int mchar = me->showchar;
+    char mchar = me->showchar;
 
     // Somewhat arbitrary: giants and dragons are too big to get past anything,
     // beetles are too dumb (arguable), dancing weapons can't communicate, eyes
@@ -3146,8 +3146,8 @@ bool monster_senior(const monsters *m1, const monsters *m2, bool fleeing)
     if (!me1 || !me2)
         return (false);
 
-    int mchar1 = me1->showchar;
-    int mchar2 = me2->showchar;
+    char mchar1 = me1->showchar;
+    char mchar2 = me2->showchar;
 
     // If both are demons, the smaller number is the nastier demon.
     if (isadigit(mchar1) && isadigit(mchar2))

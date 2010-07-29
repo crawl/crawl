@@ -85,7 +85,7 @@ public:
     mon_attitude_type attitude;
     beh_type behaviour;
     unsigned short foe;
-    signed char ench_countdown;
+    int8_t ench_countdown;
     mon_enchant_list enchantments;
     uint64_t flags;                    // bitfield of boolean flags
 
@@ -203,7 +203,7 @@ public:
     void pandemon_init();
     void dancing_weapon_init();
     void uglything_init(bool only_mutate = false);
-    void uglything_mutate(unsigned char force_colour = BLACK);
+    void uglything_mutate(uint8_t force_colour = BLACK);
     void uglything_upgrade();
     void destroy_inventory();
     void load_spells(mon_spellbook_type spellbook);

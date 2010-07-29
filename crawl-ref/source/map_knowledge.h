@@ -66,7 +66,7 @@ struct map_cell
     // Clear prior to show update. Need to retain at least "seen" flag.
     void clear_data()
     {
-        const unsigned char f = flags & MAP_SEEN_FLAG;
+        const uint8_t f = flags & MAP_SEEN_FLAG;
         clear();
         flags = f;
     }
@@ -213,7 +213,7 @@ struct map_cell
 
 private:
     dungeon_feature_type _feat;
-    unsigned char _feat_colour;
+    uint8_t _feat_colour;
     item_info* _item;
     union
     {

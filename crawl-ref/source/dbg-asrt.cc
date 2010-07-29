@@ -285,7 +285,7 @@ static void _dump_player(FILE *file)
     fprintf(file, "Equipment:\n");
     for (int i = 0; i < NUM_EQUIP; ++i)
     {
-        signed char eq = you.equip[i];
+        int8_t eq = you.equip[i];
 
         if (eq == -1)
             continue;

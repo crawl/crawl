@@ -122,15 +122,16 @@ travel_distance_grid_t travel_point_distance;
 // Apply slime wall checks when checking if squares are travelsafe.
 bool g_Slime_Wall_Check = true;
 
-static unsigned char curr_waypoints[GXM][GYM];
+static uint8_t curr_waypoints[GXM][GYM];
 static FixedArray< map_cell, GXM, GYM >  mapshadow;
 
-const signed char TRAVERSABLE = 1;
-const signed char IMPASSABLE  = 0;
-const signed char FORBIDDEN   = -1;
+const int8_t TRAVERSABLE = 1;
+const int8_t IMPASSABLE  = 0;
+const int8_t FORBIDDEN   = -1;
 
 // Map of terrain types that are traversable.
-static signed char traversable_terrain[256];
+// Should be [NUM_FEATURES], but we're paranoid here.
+static int8_t traversable_terrain[256];
 
 /*
  * Warn if interlevel travel is going to take you outside levels in
@@ -271,7 +272,7 @@ const char *run_mode_name(int runmode)
                                             : "");
 }
 
-unsigned char is_waypoint(const coord_def &p)
+uint8_t is_waypoint(const coord_def &p)
 {
     if (!can_travel_interlevel())
         return 0;
@@ -462,10 +463,10 @@ static bool _is_safe_move(const coord_def& c)
     return (!is_damaging_cloud(ctype, true));
 }
 
-static void _set_pass_feature(unsigned char grid, signed char pass)
+static void _set_pass_feature(dungeon_feature_type grid, signed char pass)
 {
-    if (traversable_terrain[(unsigned) grid] != FORBIDDEN)
-        traversable_terrain[(unsigned) grid] = pass;
+    if (traversable_terrain[grid] != FORBIDDEN)
+        traversable_terrain[grid] = pass;
 }
 
 // Sets traversable terrain based on the character's role and whether or not he
@@ -475,16 +476,15 @@ void init_travel_terrain_check(bool check_race_equip)
     if (check_race_equip)
     {
         // Swimmers get deep water.
-        signed char water = (player_likes_water(true) ? TRAVERSABLE
-                                                      : IMPASSABLE);
+        int8_t water = (player_likes_water(true) ? TRAVERSABLE : IMPASSABLE);
 
         // If the player has overridden deep water already, we'll respect that.
         _set_pass_feature(DNGN_DEEP_WATER, water);
 
         // Permanently levitating players can cross most hostile terrain.
-        const signed char trav = (you.permanent_levitation()
-                                  || you.permanent_flight() ? TRAVERSABLE
-                                                            : IMPASSABLE);
+        const int8_t trav = (you.permanent_levitation()
+                             || you.permanent_flight() ? TRAVERSABLE
+                                                       : IMPASSABLE);
 
         if (water != TRAVERSABLE)
             _set_pass_feature(DNGN_DEEP_WATER, trav);
@@ -1905,7 +1905,7 @@ std::string get_trans_travel_dest(const travel_target &target,
 
 // Returns the level on the given branch that's closest to the player's
 // current location.
-static int _get_nearest_level_depth(unsigned char branch)
+static int _get_nearest_level_depth(uint8_t branch)
 {
     int depth = 1;
 
@@ -3435,7 +3435,7 @@ void LevelInfo::clear_distances()
         stairs[i].clear_distance();
 }
 
-bool LevelInfo::is_known_branch(unsigned char branch) const
+bool LevelInfo::is_known_branch(uint8_t branch) const
 {
     for (int i = 0, count = stairs.size(); i < count; ++i)
         if (stairs[i].destination.id.branch == branch)
@@ -3472,7 +3472,7 @@ void LevelInfo::save(writer& outf) const
         marshallShort(outf, da_counters[i]);
 }
 
-void LevelInfo::load(reader& inf, char minorVersion)
+void LevelInfo::load(reader& inf, int minorVersion)
 {
     stairs.clear();
     int stair_count = unmarshallShort(inf);
@@ -3556,7 +3556,7 @@ void TravelCache::list_waypoints() const
         mpr(line.c_str());
 }
 
-unsigned char TravelCache::is_waypoint(const level_pos &lp) const
+uint8_t TravelCache::is_waypoint(const level_pos &lp) const
 {
     for (int i = 0; i < TRAVEL_WAYPOINT_COUNT; ++i)
         if (lp == waypoints[i])
@@ -3574,7 +3574,7 @@ void TravelCache::update_waypoints() const
     for (lp.pos.x = 1; lp.pos.x < GXM; ++lp.pos.x)
         for (lp.pos.y = 1; lp.pos.y < GYM; ++lp.pos.y)
         {
-            unsigned char wpc = is_waypoint(lp);
+            uint8_t wpc = is_waypoint(lp);
             if (wpc)
                 curr_waypoints[lp.pos.x][lp.pos.y] = wpc;
         }
@@ -3708,7 +3708,7 @@ void TravelCache::clear_distances()
         i->second.clear_distances();
 }
 
-bool TravelCache::is_known_branch(unsigned char branch) const
+bool TravelCache::is_known_branch(uint8_t branch) const
 {
     std::map<level_id, LevelInfo>::const_iterator i = levels.begin();
     for ( ; i != levels.end(); ++i)
@@ -3738,13 +3738,13 @@ void TravelCache::save(writer& outf) const
         waypoints[wp].save(outf);
 }
 
-void TravelCache::load(reader& inf, char minorVersion)
+void TravelCache::load(reader& inf, int minorVersion)
 {
     levels.clear();
 
     // Check version. If not compatible, we just ignore the file altogether.
-    unsigned char major = unmarshallByte(inf),
-                  minor = unmarshallByte(inf);
+    int major = unmarshallByte(inf),
+        minor = unmarshallByte(inf);
     if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION)
         return;
 

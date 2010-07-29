@@ -189,8 +189,8 @@ Stash::Stash(int xp, int yp) : enabled(true), items()
         xp = you.pos().x;
         yp = you.pos().y;
     }
-    x = (unsigned char) xp;
-    y = (unsigned char) yp;
+    x = xp;
+    y = yp;
     abspos = GXM * (int) y + x;
 
     update();
@@ -220,7 +220,7 @@ void Stash::filter(const std::string &str)
 {
     std::string base = str;
 
-    unsigned char subc = 255;
+    uint8_t       subc = 255;
     std::string   subs = "";
     std::string::size_type cpos = base.find(":", 0);
     if (cpos != std::string::npos)
@@ -249,7 +249,7 @@ void Stash::filter(const std::string &str)
     }
 }
 
-void Stash::filter(object_class_type base, unsigned char sub)
+void Stash::filter(object_class_type base, uint8_t sub)
 {
     item_def item;
     item.base_type = base;
@@ -816,8 +816,7 @@ void Stash::save(writer& outf) const
     marshallByte(outf, trap);
 
     // Note: Enabled save value is inverted logic, so that it defaults to true
-    marshallByte(outf,
-        (unsigned char) ((verified? 1 : 0) | (!enabled? 2 : 0)) );
+    marshallByte(outf, ((verified? 1 : 0) | (!enabled? 2 : 0)) );
 
     // And dump the items individually. We don't bother saving fields we're
     // not interested in (and don't anticipate being interested in).
@@ -833,12 +832,10 @@ void Stash::load(reader& inf)
     x = unmarshallByte(inf);
     y = unmarshallByte(inf);
 
-    feat =  static_cast<dungeon_feature_type>(
-                static_cast<unsigned char>( unmarshallByte(inf) ));
-    trap =  static_cast<trap_type>(
-                static_cast<unsigned char>( unmarshallByte(inf) ));
+    feat =  static_cast<dungeon_feature_type>(unmarshallUByte(inf));
+    trap =  static_cast<trap_type>(unmarshallUByte(inf));
 
-    unsigned char flags = unmarshallByte(inf);
+    uint8_t flags = unmarshallUByte(inf);
     verified = (flags & 1) != 0;
 
     // Note: Enabled save value is inverted so it defaults to true.

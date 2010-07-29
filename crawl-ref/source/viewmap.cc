@@ -91,12 +91,12 @@ static bool _travel_colour_override(const coord_def& p)
 }
 
 
-unsigned get_sightmap_char(dungeon_feature_type feat)
+wchar_t get_sightmap_char(dungeon_feature_type feat)
 {
     return (get_feature_def(feat).symbol);
 }
 
-unsigned get_magicmap_char(dungeon_feature_type feat)
+wchar_t get_magicmap_char(dungeon_feature_type feat)
 {
     return (get_feature_def(feat).magic_symbol);
 }
@@ -246,13 +246,9 @@ static bool _is_feature_fudged(int feature, const coord_def& where)
     if (is_feature(feature, where))
         return (true);
 
-    // 'grid' can fit in an unsigned char, but making this a short shuts up
-    // warnings about out-of-range case values.
-    short grid = grd(where);
-
     if (feature == '<')
     {
-        switch (grid)
+        switch (grd(where))
         {
         case DNGN_EXIT_HELL:
         case DNGN_EXIT_PORTAL_VAULT:
@@ -266,7 +262,7 @@ static bool _is_feature_fudged(int feature, const coord_def& where)
     }
     else if (feature == '>')
     {
-        switch (grid)
+        switch (grd(where))
         {
         case DNGN_ENTER_DIS:
         case DNGN_ENTER_GEHENNA:
@@ -344,7 +340,7 @@ static int _find_feature(int feature, int curs_x, int curs_y,
 }
 
 void find_features(const std::vector<coord_def>& features,
-                   unsigned char feature, std::vector<coord_def> *found)
+                   wchar_t feature, std::vector<coord_def> *found)
 {
     for (unsigned feat = 0; feat < features.size(); ++feat)
     {
@@ -452,8 +448,8 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
                 if (Options.show_waypoints)
                 {
                     // XXX: This is a horrible hack.
-                    screen_buffer_t bc = cell->glyph;
-                    unsigned char ch = is_waypoint(c);
+                    wchar_t bc = cell->glyph;
+                    uint8_t ch = is_waypoint(c);
                     if (ch && (bc == get_sightmap_char(DNGN_FLOOR)
                                || bc == get_magicmap_char(DNGN_FLOOR)))
                     {

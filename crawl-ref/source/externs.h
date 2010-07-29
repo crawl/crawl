@@ -271,7 +271,7 @@ struct cloud_struct
     coord_def     pos;
     cloud_type    type;
     int           decay;
-    unsigned char spread_rate;
+    uint8_t       spread_rate;
     kill_category whose;
     killer_type   killer;
     int           colour;
@@ -299,11 +299,11 @@ struct cloud_struct
 struct shop_struct
 {
     coord_def           pos;
-    unsigned char       greed;
+    uint8_t             greed;
     shop_type           type;
-    unsigned char       level;
+    uint8_t             level;
 
-    FixedVector<unsigned char, 3> keeper_name;
+    FixedVector<uint8_t, 3> keeper_name;
 
     bool defined() const { return type != SHOP_UNASSIGNED; }
 };
@@ -495,12 +495,12 @@ class monsters;
 struct item_def
 {
     object_class_type base_type:8; // basic class (ie OBJ_WEAPON)
-    unsigned char  sub_type;       // type within that class (ie WPN_DAGGER)
+    uint8_t        sub_type;       // type within that class (ie WPN_DAGGER)
     short          plus;           // +to hit, charges, corpse mon id
     short          plus2;          // +to dam, sub-sub type for boots/helms
     int            special;        // special stuff
-    unsigned char  colour;         // item colour
-    unsigned char  rnd;            // random number, used for tile choice
+    uint8_t        colour;         // item colour
+    uint8_t        rnd;            // random number, used for tile choice
     short          quantity;       // number of items
     uint64_t       flags;          // item status flags
 
@@ -752,7 +752,7 @@ private:
 struct mon_display
 {
     monster_type type;
-    unsigned     glyph;
+    wchar_t      glyph;
     unsigned     colour;
     monster_type detected; // What a monster of type "type" is detected as.
 

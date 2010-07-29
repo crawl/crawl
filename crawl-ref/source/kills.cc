@@ -80,8 +80,8 @@ void KillMaster::save(writer& outf) const
 
 void KillMaster::load(reader& inf)
 {
-    unsigned char major = unmarshallByte(inf),
-                  minor = unmarshallByte(inf);
+    int major = unmarshallByte(inf),
+        minor = unmarshallByte(inf);
     if (major != KILLS_MAJOR_VERSION
         || (minor != KILLS_MINOR_VERSION && minor > 0))
     {

@@ -3610,7 +3610,7 @@ void monsters::dancing_weapon_init()
     colour          = ghost->colour;
 }
 
-void monsters::uglything_mutate(unsigned char force_colour)
+void monsters::uglything_mutate(uint8_t force_colour)
 {
     ghost->init_ugly_thing(type == MONS_VERY_UGLY_THING, true, force_colour);
     uglything_init(true);
@@ -6002,7 +6002,7 @@ void monsters::react_to_damage(const actor *oppressor, int damage,
             int old_hp                = hit_points;
             unsigned long old_flags   = flags;
             mon_enchant_list old_ench = enchantments;
-            char old_ench_countdown   = ench_countdown;
+            int8_t old_ench_countdown   = ench_countdown;
 
             if (!fly_died)
                 monster_drop_ething(this, mons_aligned(oppressor, &you));

@@ -49,7 +49,7 @@ void hints_finished(void);
 void hints_dissection_reminder(bool healthy);
 void hints_healing_reminder(void);
 
-void taken_new_item(unsigned char item_type);
+void taken_new_item(object_class_type item_type);
 void hints_gained_new_skill(int skill);
 void hints_monster_seen(const monsters& mon);
 void hints_first_item(const item_def& item);

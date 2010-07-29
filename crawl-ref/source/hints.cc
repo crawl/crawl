@@ -977,7 +977,7 @@ void hints_healing_reminder()
 
 // Give a message if you see, pick up or inspect an item type for the
 // first time.
-void taken_new_item(unsigned char item_type)
+void taken_new_item(object_class_type item_type)
 {
     switch (item_type)
     {

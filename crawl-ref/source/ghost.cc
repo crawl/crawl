@@ -422,10 +422,10 @@ void ghost_demon::init_player_ghost()
     add_spells();
 }
 
-static unsigned char _ugly_thing_assign_colour(unsigned char force_colour,
-                                               unsigned char force_not_colour)
+static uint8_t _ugly_thing_assign_colour(uint8_t force_colour,
+                                         uint8_t force_not_colour)
 {
-    unsigned char colour;
+    uint8_t colour;
 
     if (force_colour != BLACK)
         colour = force_colour;
@@ -461,7 +461,7 @@ static mon_attack_flavour _very_ugly_thing_flavour_upgrade(mon_attack_flavour u_
 
     return (u_att_flav);
 }
-mon_attack_flavour ugly_thing_colour_to_flavour(unsigned char u_colour)
+mon_attack_flavour ugly_thing_colour_to_flavour(uint8_t u_colour)
 {
     mon_attack_flavour u_att_flav = AF_PLAIN;
 
@@ -501,7 +501,7 @@ mon_attack_flavour ugly_thing_colour_to_flavour(unsigned char u_colour)
 }
 
 void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
-                                  unsigned char force_colour)
+                                  uint8_t force_colour)
 {
     // Movement speed: 11, the same as in mon-data.h.
     speed = 11;

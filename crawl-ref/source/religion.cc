@@ -946,8 +946,7 @@ static void _inc_penance(god_type god, int val)
         take_note(Note(NOTE_PENANCE, god));
 
         you.penance[god] += val;
-        you.penance[god] = std::min<unsigned char>(MAX_PENANCE,
-                                                   you.penance[god]);
+        you.penance[god] = std::min((uint8_t)MAX_PENANCE, you.penance[god]);
 
         // Orcish bonuses don't apply under penance.
         if (god == GOD_BEOGH)
@@ -1004,8 +1003,7 @@ static void _inc_penance(god_type god, int val)
     else
     {
         you.penance[god] += val;
-        you.penance[god] = std::min<unsigned char>(MAX_PENANCE,
-                                                   you.penance[god]);
+        you.penance[god] = std::min((uint8_t)MAX_PENANCE, you.penance[god]);
     }
 }
 
@@ -2523,8 +2521,7 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
         // piety_hysteresis is the amount of _loss_ stored up, so this
         // may look backwards.
         const int old_hysteresis = you.piety_hysteresis;
-        you.piety_hysteresis =
-            (unsigned char)std::max<int>(0, you.piety_hysteresis - pgn);
+        you.piety_hysteresis = std::max<int>(0, you.piety_hysteresis - pgn);
         const int pgn_borrowed = (old_hysteresis - you.piety_hysteresis);
         pgn -= pgn_borrowed;
 
@@ -2633,7 +2630,7 @@ void lose_piety(int pgn)
 
     // Apply hysteresis.
     const int old_hysteresis = you.piety_hysteresis;
-    you.piety_hysteresis = (unsigned char)std::min<int>(
+    you.piety_hysteresis = std::min<int>(
         PIETY_HYSTERESIS_LIMIT, you.piety_hysteresis + pgn);
     const int pgn_borrowed = (you.piety_hysteresis - old_hysteresis);
     pgn -= pgn_borrowed;
@@ -3721,7 +3718,7 @@ int god_colour(god_type god) // mv - added
     return (YELLOW);
 }
 
-char god_message_altar_colour(god_type god)
+uint8_t god_message_altar_colour(god_type god)
 {
     int rnd;
 

@@ -363,7 +363,7 @@ static void _unequip_artefact_effect(const item_def &item, bool *show_msgs=NULL)
 // other places *cough* auto-butchering *cough*.    {gdl}
 static void _equip_weapon_effect(item_def& item, bool showMsgs)
 {
-    unsigned char special = 0;
+    int special = 0;
 
     const bool artefact     = is_artefact(item);
     const bool known_cursed = item_known_cursed(item);

@@ -994,7 +994,7 @@ static std::vector<std::string> _get_desc_keys(std::string regex,
     return (all_matches);
 }
 
-static std::vector<std::string> _get_monster_keys(unsigned char showchar)
+static std::vector<std::string> _get_monster_keys(wchar_t showchar)
 {
     std::vector<std::string> mon_keys;
 

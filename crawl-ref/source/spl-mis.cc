@@ -576,8 +576,7 @@ bool MiscastEffect::_big_cloud(cloud_type cl_type, int cloud_pow, int size,
     return (true);
 }
 
-bool MiscastEffect::_lose_stat(stat_type which_stat,
-                               unsigned char stat_loss)
+bool MiscastEffect::_lose_stat(stat_type which_stat, int8_t stat_loss)
 {
     return (lose_stat(which_stat, stat_loss, false, cause));
 }

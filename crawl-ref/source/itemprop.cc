@@ -2577,7 +2577,7 @@ std::string food_type_name (int sub_type)
     return (Food_prop[Food_index[sub_type]].name);
 }
 
-const char* weapon_base_name(unsigned char subtype)
+const char* weapon_base_name(uint8_t subtype)
 {
     return Weapon_prop[Weapon_index[subtype]].name;
 }

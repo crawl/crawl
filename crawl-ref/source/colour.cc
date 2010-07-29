@@ -8,14 +8,14 @@
 #include "player.h"
 #include "random.h"
 
-unsigned char random_colour(void)
+uint8_t random_colour(void)
 {
     return (1 + random2(15));
 }
 
-unsigned char random_uncommon_colour()
+uint8_t random_uncommon_colour()
 {
-    unsigned char result;
+    uint8_t result;
 
     do
         result = random_colour();
@@ -24,7 +24,7 @@ unsigned char random_uncommon_colour()
     return (result);
 }
 
-unsigned char make_low_colour(unsigned char colour)
+uint8_t make_low_colour(uint8_t colour)
 {
     if (colour >= 8 && colour <= 15)
         return (colour - 8);
@@ -32,7 +32,7 @@ unsigned char make_low_colour(unsigned char colour)
     return (colour);
 }
 
-unsigned char make_high_colour(unsigned char colour)
+uint8_t make_high_colour(uint8_t colour)
 {
     if (colour <= 7)
         return (colour + 8);
@@ -326,7 +326,7 @@ const std::string cols[16] =
     "lightred", "lightmagenta", "yellow", "white"
 };
 
-const std::string colour_to_str(unsigned char colour)
+const std::string colour_to_str(uint8_t colour)
 {
     if ( colour >= 16 )
         return "lightgrey";

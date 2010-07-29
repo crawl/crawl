@@ -3684,7 +3684,7 @@ static void _print_save_version(char *name)
         goto cleanup;
     }
 
-    char major, minor;
+    int major, minor;
     if (!get_save_version(charf, major, minor))
     {
         fprintf(stderr, "Save file is invalid.\n");

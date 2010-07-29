@@ -89,7 +89,7 @@ static void _los_cloud_changed(const coord_def& p, cloud_type t)
 
 static void _new_cloud( int cloud, cloud_type type, const coord_def& p,
                         int decay, kill_category whose, killer_type killer,
-                        unsigned char spread_rate, int colour, std::string name,
+                        uint8_t spread_rate, int colour, std::string name,
                         std::string tile)
 {
     ASSERT( env.cloud[cloud].type == CLOUD_NONE );

@@ -44,8 +44,8 @@ struct Branch
     const char* entry_message;
     int shop_chance;       // How likely a level is to have shops (percent)
     bool has_uniques;
-    char floor_colour;          // Zot needs special handling.
-    char rock_colour;
+    uint8_t floor_colour;          // Zot needs special handling.
+    uint8_t rock_colour;
     int       (*mons_rarity_function)(int);
     int       (*mons_level_function)(int);
     int       (*num_traps_function)(int);

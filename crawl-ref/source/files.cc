@@ -113,17 +113,17 @@ static std::vector<SavefileCallback::callback>* _callback_list = NULL;
 
 static void _save_level(const level_id& lid);
 
-static bool _get_and_validate_version( FILE *restoreFile, char& major,
-                                       char& minor, std::string* reason = 0);
+static bool _get_and_validate_version( FILE *restoreFile, int& major,
+                                       int& minor, std::string* reason = 0);
 
 
 static bool _determine_ghost_version( FILE *ghostFile,
-                                      char &majorVersion, char &minorVersion );
+                                      int &majorVersion, int &minorVersion );
 
-static void _restore_ghost_version( FILE *ghostFile, char major, char minor );
+static void _restore_ghost_version( FILE *ghostFile, int major, int minor );
 
 static void _restore_tagged_file( FILE *restoreFile, int fileType,
-                                  char minorVersion );
+                                  int minorVersion );
 
 const short GHOST_SIGNATURE = short( 0xDC55 );
 
@@ -255,8 +255,8 @@ player_save_info read_character_info(const std::string &savefile)
     if (!charf)
         return fromfile;
 
-    char majorVersion;
-    char minorVersion;
+    int majorVersion;
+    int minorVersion;
 
     if (_get_and_validate_version(charf, majorVersion, minorVersion))
     {
@@ -1157,7 +1157,7 @@ static void _write_tagged_file( const std::string &filename,
                                 bool extended_version = false )
 {
     // find all relevant tags
-    char tags[NUM_TAGS];
+    int8_t tags[NUM_TAGS];
     tag_set_expected(tags, fileType);
 
     _write_version( filename, outf, TAG_MAJOR_VERSION, TAG_MINOR_VERSION,
@@ -1601,8 +1601,8 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
         // BEGIN -- must load the old level : pre-load tasks
 
         // LOAD various tags
-        char majorVersion;
-        char minorVersion;
+        int majorVersion;
+        int minorVersion;
 
         std::string reason;
         if (!_get_and_validate_version( levelFile, majorVersion, minorVersion,
@@ -2062,8 +2062,8 @@ bool load_ghost(bool creating_level)
 
 #endif // BONES_DIAGNOSTICS
 
-    char majorVersion;
-    char minorVersion;
+    int majorVersion;
+    int minorVersion;
 
     const std::string cha_fil = _make_ghost_filename();
     FILE *gfile = fopen(cha_fil.c_str(), "rb");
@@ -2215,8 +2215,8 @@ void restore_game(const std::string& name)
     if (!charf )
         end(-1, true, "Unable to open %s for reading!\n", charFile.c_str() );
 
-    char majorVersion;
-    char minorVersion;
+    int majorVersion;
+    int minorVersion;
     std::string reason;
     if (!_get_and_validate_version(charf, majorVersion, minorVersion, &reason))
     {
@@ -2356,10 +2356,10 @@ level_excursion::~level_excursion()
     }
 }
 
-bool get_save_version(FILE *file, char &major, char &minor)
+bool get_save_version(FILE *file, int &major, int &minor)
 {
     // Read first two bytes.
-    char buf[2];
+    uint8_t buf[2];
     if (read2(file, buf, 2) != 2)
     {
         // Empty file?
@@ -2373,8 +2373,8 @@ bool get_save_version(FILE *file, char &major, char &minor)
     return (true);
 }
 
-static bool _get_and_validate_version(FILE *restoreFile, char &major,
-                                      char &minor, std::string* reason)
+static bool _get_and_validate_version(FILE *restoreFile, int &major,
+                                      int &minor, std::string* reason)
 {
     std::string dummy;
     if (reason == 0)
@@ -2425,9 +2425,9 @@ static bool _get_and_validate_version(FILE *restoreFile, char &major,
 }
 
 static void _restore_tagged_file( FILE *restoreFile, int fileType,
-                                  char minorVersion )
+                                  int minorVersion )
 {
-    char tags[NUM_TAGS];
+    int8_t tags[NUM_TAGS];
     tag_set_expected(tags, fileType);
 
     while (true)
@@ -2448,10 +2448,10 @@ static void _restore_tagged_file( FILE *restoreFile, int fileType,
 }
 
 static bool _determine_ghost_version( FILE *ghostFile,
-                                      char &majorVersion, char &minorVersion )
+                                      int &majorVersion, int &minorVersion )
 {
     // Read first two bytes.
-    char buf[2];
+    uint8_t buf[2];
     if (read2(ghostFile, buf, 2) != 2)
         return (false);               // empty file?
 
@@ -2477,7 +2477,7 @@ static bool _determine_ghost_version( FILE *ghostFile,
 }
 
 static void _restore_ghost_version( FILE *ghostFile,
-                                    char majorVersion, char minorVersion )
+                                    int majorVersion, int minorVersion )
 {
     switch (majorVersion)
     {

@@ -1540,7 +1540,7 @@ static std::string _describe_deck( const item_def &item )
         description += "Next card(s): ";
         for (int i = 0; i < num_cards; ++i)
         {
-            unsigned char flags;
+            uint8_t flags;
             const card_type card = get_card_and_flags(item, -i-1, flags);
             if (flags & CFLAG_MARKED)
             {
@@ -1559,7 +1559,7 @@ static std::string _describe_deck( const item_def &item )
     std::vector<card_type> marked_cards;
     for (int i = last_known_card + 1; i < num_cards; ++i)
     {
-        unsigned char flags;
+        uint8_t flags;
         const card_type card = get_card_and_flags(item, -i-1, flags);
         if (flags & CFLAG_MARKED)
             marked_cards.push_back(card);
@@ -1583,7 +1583,7 @@ static std::string _describe_deck( const item_def &item )
     std::vector<card_type> seen_cards;
     for (int i = 0; i < num_cards; ++i)
     {
-        unsigned char flags;
+        uint8_t flags;
         const card_type card = get_card_and_flags(item, -i-1, flags);
 
         // This *might* leak a bit of information...oh well.
@@ -3230,7 +3230,7 @@ std::string get_ghost_description(const monster_info &mi, bool concise)
 
     gstr << mi.mname << " the "
          << skill_title_by_rank(mi.u.ghost.best_skill,
-                        (unsigned char)mi.u.ghost.best_skill_rank,
+                        mi.u.ghost.best_skill_rank,
                         gspecies,
                         str, dex, mi.u.ghost.religion)
          << ", a" << xl_rank_names[mi.u.ghost.xl_rank] << " ";
