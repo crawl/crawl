@@ -1079,9 +1079,9 @@ void TilesFramework::update_minimap(const coord_def &gc, map_feature f)
 
     if (f == MF_WALL || f == MF_FLOOR)
     {
-        if (is_terrain_known(gc) && !is_terrain_seen(gc)
-            || is_map_knowledge_detected_item(gc)
-            || is_map_knowledge_detected_mons(gc))
+        if (env.map_knowledge(gc).known() && !env.map_knowledge(gc).seen()
+            || env.map_knowledge(gc).detected_item()
+            || env.map_knowledge(gc).detected_mons())
         {
             f = (f == MF_WALL) ? MF_MAP_WALL : MF_MAP_FLOOR;
         }

@@ -15,6 +15,7 @@
 #include <stdlib.h>
 
 #include "externs.h"
+#include "mon-info.h"
 
 class formatted_string;
 class writer;
@@ -64,7 +65,7 @@ void hints_inscription_info(bool autoinscribe, std::string prompt);
 bool hints_pos_interesting(int x, int y);
 void hints_describe_pos(int x, int y);
 bool hints_monster_interesting(const monsters *mons);
-void hints_describe_monster(const monsters *mons, bool has_stat_desc);
+void hints_describe_monster(const monster_info& mi, bool has_stat_desc);
 
 void hints_observe_cell(const coord_def& gc);
 

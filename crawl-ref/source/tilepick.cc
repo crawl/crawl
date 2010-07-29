@@ -864,6 +864,10 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_SCORPION;
     case MONS_GIANT_SCORPION:
         return TILEP_MONS_GIANT_SCORPION;
+    case MONS_TARANTELLA:
+        return TILEP_MONS_TARANTELLA;
+    case MONS_JUMPING_SPIDER:
+        return TILEP_MONS_JUMPING_SPIDER;
     case MONS_WOLF_SPIDER:
         return TILEP_MONS_WOLF_SPIDER;
     case MONS_TRAPDOOR_SPIDER:
@@ -1788,16 +1792,7 @@ tileidx_t tileidx_monster(const monsters *mons)
     else if (mons_looks_distracted(mons))
         ch |= TILE_FLAG_MAY_STAB;
 
-    std::string damage_desc;
-    mon_dam_level_type damage_level;
-    mons_get_damage_level(mons, damage_desc, damage_level);
-
-    // If no messages about wounds, don't display an icon either.
-    if (monster_descriptor(mons->type, MDSC_NOMSG_WOUNDS)
-        || mons_is_unknown_mimic(mons))
-    {
-        damage_level = MDAM_OKAY;
-    }
+    mon_dam_level_type damage_level = mons_get_damage_level(mons);
 
     switch (damage_level)
     {
@@ -2363,6 +2358,7 @@ static tileidx_t _tileidx_food(const item_def &item)
     case FOOD_BEEF_JERKY:   return TILE_FOOD_BEEF_JERKY;
     case FOOD_CHEESE:       return TILE_FOOD_CHEESE;
     case FOOD_SAUSAGE:      return TILE_FOOD_SAUSAGE;
+    case FOOD_AMBROSIA:     return TILE_FOOD_AMBROSIA;
     case FOOD_CHUNK:        return _tileidx_chunk(item);
     }
 
@@ -2566,6 +2562,10 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_SCORPION;
     case MONS_GIANT_SCORPION:
         return TILE_CORPSE_GIANT_SCORPION;
+    case MONS_TARANTELLA:
+        return TILE_CORPSE_TARANTELLA;
+    case MONS_JUMPING_SPIDER:
+        return TILE_CORPSE_JUMPING_SPIDER;
     case MONS_WOLF_SPIDER:
         return TILE_CORPSE_WOLF_SPIDER;
     case MONS_TRAPDOOR_SPIDER:
@@ -3753,10 +3753,11 @@ tileidx_t tileidx_unseen_flag(const coord_def &gc)
 {
     if (!map_bounds(gc))
         return (TILE_FLAG_UNSEEN);
-    else if (is_terrain_known(gc)
-                && !is_terrain_seen(gc)
-             || is_map_knowledge_detected_item(gc)
-             || is_map_knowledge_detected_mons(gc))
+    else if (env.map_knowledge(gc).known()
+                && !env.map_knowledge(gc).seen()
+             || env.map_knowledge(gc).detected_item()
+             || env.map_knowledge(gc).detected_monster()
+             )
     {
         return (TILE_FLAG_MM_UNSEEN);
     }

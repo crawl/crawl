@@ -224,6 +224,7 @@ bool mons_is_mimic( int mc );
 bool mons_is_statue( int mc, bool allow_disintegrate = false );
 bool mons_is_demon( int mc );
 bool mons_is_draconian( int mc );
+bool mons_is_conjured(int mc);
 
 bool mons_class_wields_two_weapons(int mc);
 bool mons_wields_two_weapons(const monsters *m);
@@ -381,6 +382,7 @@ bool monster_shover(const monsters *m);
 bool monster_senior(const monsters *first, const monsters *second,
                     bool fleeing = false);
 monster_type draco_subspecies(const monsters *mon);
+std::string ugly_thing_colour_name(unsigned char colour);
 std::string ugly_thing_colour_name(const monsters *mon);
 unsigned char ugly_thing_random_colour();
 int str_to_ugly_thing_colour(const std::string &s);

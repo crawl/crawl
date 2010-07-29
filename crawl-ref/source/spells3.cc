@@ -2020,8 +2020,11 @@ bool recall(char type_recalled)
         if (!monster->friendly())
             continue;
 
-        if (mons_class_is_stationary(monster->type))
+        if (mons_class_is_stationary(monster->type)
+            || mons_is_conjured(monster->type))
+        {
             continue;
+        }
 
         if (!monster_habitable_grid(monster, DNGN_FLOOR))
             continue;

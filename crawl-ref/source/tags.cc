@@ -73,6 +73,7 @@
 #include "itemname.h"
 #include "libutil.h"
 #include "mapmark.h"
+#include "mon-info.h"
 #include "mon-util.h"
 #include "mon-transit.h"
 #include "quiver.h"
@@ -349,6 +350,52 @@ int32_t unmarshallInt(reader &th)
     int32_t data = (b1 << 24) | ((b2 & 0x000000FF) << 16);
     data |= ((b3 & 0x000000FF) << 8) | (b4 & 0x000000FF);
     return data;
+}
+
+void marshallUnsigned(writer& th, uint64_t v)
+{
+    do
+    {
+        unsigned char b = (unsigned char)(v & 0x7f);
+        v >>= 7;
+        if (v)
+            b |= 0x80;
+        th.writeByte(b);
+    }
+    while (v);
+}
+
+uint64_t unmarshallUnsigned(reader& th)
+{
+    unsigned i = 0;
+    uint64_t v = 0;
+    for (;;)
+    {
+        unsigned char b = th.readByte();
+        v |= (uint64_t)(b & 0x7f) << i;
+        i += 7;
+        if (!(b & 0x80))
+            break;
+    }
+    return v;
+}
+
+void marshallSigned(writer& th, int64_t v)
+{
+    if (v < 0)
+        marshallUnsigned(th, (uint64_t)((-v - 1) << 1) | 1);
+    else
+        marshallUnsigned(th, (uint64_t)(v << 1));
+}
+
+int64_t unmarshallSigned(reader& th)
+{
+    uint64_t u;
+    unmarshallUnsigned(th, u);
+    if (u & 1)
+        return (int64_t)(-(u >> 1) - 1);
+    else
+        return (int64_t)(u >> 1);
 }
 
 // FIXME: Kill this abomination - it will break!
@@ -1181,7 +1228,7 @@ static void tag_construct_you(writer &th)
     marshallByte(th, 0);
 
     marshallInt(th, you.dactions.size());
-    for(unsigned int k = 0; k < you.dactions.size(); k++)
+    for (unsigned int k = 0; k < you.dactions.size(); k++)
         marshallByte(th, you.dactions[k]);
 
     // List of currently beholding monsters (usually empty).
@@ -1791,6 +1838,7 @@ static void tag_read_you_items(reader &th, char minorVersion)
 
     // how many inventory slots?
     count_c = unmarshallByte(th);
+    ASSERT(count_c == ENDOFPACK); // not supposed to change
     for (i = 0; i < count_c; ++i)
         unmarshallItem(th, you.inv[i]);
 
@@ -1838,40 +1886,56 @@ static void tag_read_you_items(reader &th, char minorVersion)
 
     // how many unique items?
     count_c = unmarshallByte(th);
-    for (j = 0; j < count_c; ++j)
+    ASSERT(count_c >= 0);
+    for (j = 0; j < count_c && j < NO_UNRANDARTS; ++j)
     {
         you.unique_items[j] =
             static_cast<unique_item_status_type>(unmarshallByte(th));
     }
-
     // # of unrandarts could certainly change.
     // If it does, the new ones won't exist yet - zero them out.
     for (; j < NO_UNRANDARTS; j++)
         you.unique_items[j] = UNIQ_NOT_EXISTS;
+    for (j = NO_UNRANDARTS; j < count_c; j++)
+        unmarshallByte(th);
 
     // how many books?
     count_c = unmarshallByte(th);
-    for (j = 0; j < count_c; ++j)
+    ASSERT(count_c >= 0);
+    for (j = 0; j < count_c && j < NUM_FIXED_BOOKS; ++j)
         you.had_book[j] = unmarshallByte(th);
+    for (j = count_c; j < NUM_FIXED_BOOKS; ++j)
+        you.seen_spell[j] = 0;
+    for (j = NUM_FIXED_BOOKS; j < count_c; ++j)
+        unmarshallByte(th);
 
     // how many spells?
     count_s = unmarshallShort(th);
-    if (count_s > NUM_SPELLS)
-        count_s = NUM_SPELLS;
-    for (j = 0; j < count_s; ++j)
+    ASSERT(count_s >= 0);
+    for (j = 0; j < count_s && j < NUM_SPELLS; ++j)
         you.seen_spell[j] = unmarshallByte(th);
+    for (j = count_s; j < NUM_SPELLS; ++j)
+        you.seen_spell[j] = 0;
+    for (j = NUM_SPELLS; j < count_s; ++j)
+        unmarshallByte(th);
 
     count_s = unmarshallShort(th);
-    if (count_s > NUM_WEAPONS)
-        count_s = NUM_WEAPONS;
-    for (j = 0; j < count_s; ++j)
+    ASSERT(count_s >= 0);
+    for (j = 0; j < count_s && j < NUM_WEAPONS; ++j)
         you.seen_weapon[j] = unmarshallInt(th);
+    for (j = count_s; j < NUM_WEAPONS; ++j)
+        you.seen_weapon[j] = 0;
+    for (j = NUM_WEAPONS; j < count_s; ++j)
+        unmarshallInt(th);
 
     count_s = unmarshallShort(th);
-    if (count_s > NUM_ARMOURS)
-        count_s = NUM_ARMOURS;
-    for (j = 0; j < count_s; ++j)
+    ASSERT(count_s >= 0);
+    for (j = 0; j < count_s && j < NUM_ARMOURS; ++j)
         you.seen_armour[j] = unmarshallInt(th);
+    for (j = count_s; j < NUM_ARMOURS; ++j)
+        you.seen_armour[j] = 0;
+    for (j = NUM_ARMOURS; j < count_s; ++j)
+        unmarshallInt(th);
 }
 
 static PlaceInfo unmarshallPlaceInfo(reader &th, char minorVersion)
@@ -2034,8 +2098,7 @@ static void tag_construct_level(writer &th)
         for (int count_y = 0; count_y < GYM; count_y++)
         {
             marshallByte(th, grd[count_x][count_y]);
-            marshallShowtype(th, env.map_knowledge[count_x][count_y].object);
-            marshallShort(th, env.map_knowledge[count_x][count_y].flags);
+            marshallMapCell(th, env.map_knowledge[count_x][count_y]);
             marshallInt(th, env.pgrid[count_x][count_y]);
         }
 
@@ -2168,24 +2231,128 @@ void unmarshallItem(reader &th, item_def &item)
         artefact_fixup_props(item);
 }
 
-void marshallShowtype(writer &th, const show_type &obj)
+#define MAP_SERIALIZE_FLAGS_MASK 3
+#define MAP_SERIALIZE_FLAGS_8 1
+#define MAP_SERIALIZE_FLAGS_16 2
+#define MAP_SERIALIZE_FLAGS_32 3
+
+#define MAP_SERIALIZE_FEATURE 4
+#define MAP_SERIALIZE_FEATURE_COLOR 8
+#define MAP_SERIALIZE_ITEM 0x10
+#define MAP_SERIALIZE_CLOUD 0x20
+#define MAP_SERIALIZE_MONSTER 0x40
+
+void marshallMapCell(writer &th, const map_cell &cell)
 {
-    marshallByte(th, obj.cls);
-    marshallShort(th, obj.feat);
-    marshallShort(th, obj.item);
-    marshallShort(th, obj.mons);
-    marshallShort(th, obj.colour);
+    unsigned flags = 0;
+
+    if (cell.flags > 0xffff)
+        flags |= MAP_SERIALIZE_FLAGS_32;
+    else if (cell.flags > 0xff)
+        flags |= MAP_SERIALIZE_FLAGS_16;
+    else if (cell.flags)
+        flags |= MAP_SERIALIZE_FLAGS_8;
+
+    if (cell.feat() != DNGN_UNSEEN)
+        flags |= MAP_SERIALIZE_FEATURE;
+
+    if (cell.feat_colour())
+        flags |= MAP_SERIALIZE_FEATURE_COLOR;
+
+    if (cell.cloud() != CLOUD_NONE)
+        flags |= MAP_SERIALIZE_CLOUD;
+
+    if (cell.item())
+        flags |= MAP_SERIALIZE_ITEM;
+
+    if (cell.monster() != MONS_NO_MONSTER && !cell.detected_monster())
+        flags |= MAP_SERIALIZE_MONSTER;
+
+    marshallUnsigned(th, flags);
+
+    switch(flags & MAP_SERIALIZE_FLAGS_MASK)
+    {
+    case MAP_SERIALIZE_FLAGS_8:
+        marshallByte(th, cell.flags);
+        break;
+    case MAP_SERIALIZE_FLAGS_16:
+        marshallShort(th, cell.flags);
+        break;
+    case MAP_SERIALIZE_FLAGS_32:
+        marshallInt(th, cell.flags);
+        break;
+    }
+
+    if (flags & MAP_SERIALIZE_FEATURE)
+        marshallUnsigned(th, cell.feat());
+
+    if (flags & MAP_SERIALIZE_FEATURE_COLOR)
+        marshallUnsigned(th, cell.feat_colour());
+
+    if (flags & MAP_SERIALIZE_CLOUD)
+        marshallUnsigned(th, cell.cloud());
+
+    if (flags & MAP_SERIALIZE_ITEM)
+        marshallItem(th, *cell.item());
+
+    if (flags & MAP_SERIALIZE_MONSTER)
+        marshallMonsterInfo(th, *cell.monsterinfo());
+    else if (cell.detected_monster())
+        marshallUnsigned(th, cell.monster());
 }
 
-show_type unmarshallShowtype(reader &th)
+void unmarshallMapCell(reader &th, map_cell& cell)
 {
-    show_type obj;
-    obj.cls = static_cast<show_class>(unmarshallByte(th));
-    obj.feat = static_cast<dungeon_feature_type>(unmarshallShort(th));
-    obj.item = static_cast<show_item_type>(unmarshallShort(th));
-    obj.mons = static_cast<monster_type>(unmarshallShort(th));
-    obj.colour = unmarshallShort(th);
-    return (obj);
+    unsigned flags = unmarshallUnsigned(th);
+    unsigned cell_flags = 0;
+
+    cell.clear();
+
+    switch(flags & MAP_SERIALIZE_FLAGS_MASK)
+    {
+    case MAP_SERIALIZE_FLAGS_8:
+        cell_flags = unmarshallByte(th);
+        break;
+    case MAP_SERIALIZE_FLAGS_16:
+        cell_flags = unmarshallShort(th);
+        break;
+    case MAP_SERIALIZE_FLAGS_32:
+        cell_flags = unmarshallInt(th);
+        break;
+    }
+
+    dungeon_feature_type feature = DNGN_UNSEEN;
+    unsigned feat_colour = 0;
+
+    if (flags & MAP_SERIALIZE_FEATURE)
+        feature = (dungeon_feature_type)unmarshallUnsigned(th);
+
+    if (flags & MAP_SERIALIZE_FEATURE_COLOR)
+        feat_colour = unmarshallUnsigned(th);
+
+    cell.set_feature(feature, feat_colour);
+
+    if (flags & MAP_SERIALIZE_CLOUD)
+        cell.set_cloud((cloud_type)unmarshallUnsigned(th));
+
+    if (flags & MAP_SERIALIZE_ITEM)
+    {
+        item_def item;
+        unmarshallItem(th, item);
+        cell.set_item(item, false);
+    }
+
+    if (flags & MAP_SERIALIZE_MONSTER)
+    {
+        monster_info mi;
+        unmarshallMonsterInfo(th, mi);
+        cell.set_monster(mi);
+    }
+    else if (cell_flags & MAP_DETECTED_MONSTER)
+        cell.set_detected_monster((monster_type)unmarshallUnsigned(th));
+
+    // set this last so the other sets don't override this
+    cell.flags = cell_flags;
 }
 
 static void tag_construct_level_items(writer &th)
@@ -2290,6 +2457,40 @@ void marshallMonster(writer &th, const monsters &m)
     }
 
     m.props.write(th);
+}
+
+void marshallMonsterInfo(writer &th, const monster_info& mi)
+{
+    marshallCoord(th, mi.pos);
+    marshallUnsigned(th, mi.mb);
+    marshallString(th, mi.mname);
+    marshallUnsigned(th, mi.type);
+    marshallUnsigned(th, mi.base_type);
+    marshallUnsigned(th, mi.number);
+    marshallUnsigned(th, mi.colour);
+    marshallUnsigned(th, mi.attitude);
+    marshallUnsigned(th, mi.dam);
+    marshallUnsigned(th, mi.fire_blocker);
+    marshallString(th, mi.description);
+    marshallString(th, mi.quote);
+    marshallUnsigned(th, mi.fly);
+}
+
+void unmarshallMonsterInfo(reader &th, monster_info& mi)
+{
+    mi.pos = unmarshallCoord(th);
+    unmarshallUnsigned(th, mi.mb);
+    mi.mname = unmarshallString(th);
+    unmarshallUnsigned(th, mi.type);
+    unmarshallUnsigned(th, mi.base_type);
+    unmarshallUnsigned(th, mi.number);
+    unmarshallUnsigned(th, mi.colour);
+    unmarshallUnsigned(th, mi.attitude);
+    unmarshallUnsigned(th, mi.dam);
+    unmarshallUnsigned(th, mi.fire_blocker);
+    mi.description = unmarshallString(th);
+    mi.quote = unmarshallString(th);
+    unmarshallUnsigned(th, mi.fly);
 }
 
 static void tag_construct_level_monsters(writer &th)
@@ -2453,8 +2654,8 @@ static void tag_read_level( reader &th, char minorVersion )
                 static_cast<dungeon_feature_type>(
                     static_cast<unsigned char>(unmarshallByte(th)) );
 
-            env.map_knowledge[i][j].object   = unmarshallShowtype(th);
-            env.map_knowledge[i][j].flags    = unmarshallShort(th);
+            unmarshallMapCell(th, env.map_knowledge[i][j]);
+            env.map_knowledge[i][j].flags &=~ MAP_VISIBLE_FLAG;
             env.pgrid[i][j] = unmarshallInt(th);
 
             mgrd[i][j] = NON_MONSTER;

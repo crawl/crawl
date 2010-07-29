@@ -1282,6 +1282,7 @@ enum enchant_type
     ENCH_SILENCE,
     ENCH_AWAKEN_FOREST,
     ENCH_EXPLODING,
+    ENCH_BLEED,
     ENCH_PORTAL_TIMER,
     ENCH_SEVERED,
 
@@ -2134,8 +2135,10 @@ enum monster_type                      // (int) menv[].type
     MONS_IRON_ELEMENTAL,
     MONS_GIANT_SCORPION,
     MONS_GHOST_MOTH,
+    MONS_JUMPING_SPIDER,
+    MONS_TARANTELLA,
     MONS_DEMONIC_TENTACLE,
-    MONS_DEMONIC_TENTACLE_SEGMENT,     // 492
+    MONS_DEMONIC_TENTACLE_SEGMENT,     // 494
 
     // Spriggans:
     MONS_SPRIGGAN = 500,
@@ -2421,6 +2424,7 @@ enum mon_spellbook_type
     MST_IRON_GIANT,
     MST_IRON_ELEMENTAL,
     MST_MENNAS,
+    MST_JUMPING_SPIDER,
 
     MST_TEST_SPAWNER = 200,
     NUM_MSTYPES,

@@ -1308,7 +1308,7 @@ static bool _pre_more()
         return true;
 
 #ifdef WIZARD
-    if(luaterp_running())
+    if (luaterp_running())
         return true;
 #endif
 

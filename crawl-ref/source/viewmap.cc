@@ -41,6 +41,56 @@
 #include "tileview.h"
 #endif
 
+
+static unsigned _get_travel_colour(const coord_def& p)
+{
+#ifdef WIZARD
+    if (you.wizard && testbits(env.pgrid(p), FPROP_HIGHLIGHT))
+        return (LIGHTGREEN);
+#endif
+
+    if (is_waypoint(p))
+        return LIGHTGREEN;
+
+    short dist = travel_point_distance[p.x][p.y];
+    return dist > 0?                    Options.tc_reachable        :
+           dist == PD_EXCLUDED?         Options.tc_excluded         :
+           dist == PD_EXCLUDED_RADIUS?  Options.tc_exclude_circle   :
+           dist < 0?                    Options.tc_dangerous        :
+                                        Options.tc_disconnected;
+}
+
+static bool _travel_colour_override(const coord_def& p)
+{
+    if (is_waypoint(p) || travel_point_distance[p.x][p.y] == PD_EXCLUDED)
+        return (true);
+#ifdef WIZARD
+    if (you.wizard && testbits(env.pgrid(p), FPROP_HIGHLIGHT))
+        return (true);
+#endif
+
+    // [ds] Elaborate dance to get map colouring right if
+    // Options.clean_map is set.
+    const map_cell& cell = env.map_knowledge(p);
+    show_class cls = get_cell_show_class(cell, Options.clean_map);
+    if (cls == SH_FEATURE)
+    {
+        switch(cell.feat())
+        {
+        case DNGN_FLOOR:
+        case DNGN_LAVA:
+        case DNGN_DEEP_WATER:
+        case DNGN_SHALLOW_WATER:
+            return true;
+        default:
+            return false;
+        }
+    }
+    else
+        return false;
+}
+
+
 unsigned get_sightmap_char(dungeon_feature_type feat)
 {
     return (get_feature_def(feat).symbol);
@@ -61,7 +111,7 @@ unsigned get_magicmap_char(dungeon_feature_type feat)
 // 5. Anything else will look for the exact same character in the level map.
 bool is_feature(int feature, const coord_def& where)
 {
-    if (!env.map_knowledge(where).object && !you.see_cell(where))
+    if (!env.map_knowledge(where).known() && !you.see_cell(where))
         return (false);
 
     dungeon_feature_type grid = grd(where);
@@ -184,13 +234,13 @@ bool is_feature(int feature, const coord_def& where)
             return (false);
         }
     default:
-        return get_map_knowledge_char(where.x, where.y) == (unsigned) feature;
+        return get_cell_glyph(env.map_knowledge(where)).ch == (unsigned) feature;
     }
 }
 
 static bool _is_feature_fudged(int feature, const coord_def& where)
 {
-    if (!env.map_knowledge(where).object)
+    if (!env.map_knowledge(where).known())
         return (false);
 
     if (is_feature(feature, where))
@@ -379,9 +429,12 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
             }
             else
             {
-                cell->glyph =
-                    env.map_knowledge(c).glyph(Options.clean_map);
-                cell->colour = real_colour(get_map_col(c, travel_mode));
+                glyph g = get_cell_glyph(env.map_knowledge(c), Options.clean_map, -1);
+                cell->glyph = g.ch;
+                cell->colour = g.col;
+
+                if (travel_mode && _travel_colour_override(c))
+                    cell->colour = _get_travel_colour(c);
 
                 if (c == you.pos() && !crawl_state.arena_suspended && on_level)
                 {
@@ -469,11 +522,7 @@ class feature_list
 
     group get_group(const coord_def& gc)
     {
-        show_type obj = env.map_knowledge(gc).object;
-        if (obj != SH_FEATURE)
-            return G_NONE;
-
-        dungeon_feature_type feat = obj.feat;
+        dungeon_feature_type feat = env.map_knowledge(gc).feat();
 
         if (feat_is_staircase(feat) || feat_is_escape_hatch(feat))
             return feat_dir(feat);
@@ -489,7 +538,7 @@ class feature_list
     void maybe_add(const coord_def& gc)
     {
 #ifndef USE_TILE
-        if (!is_terrain_known(gc))
+        if (!env.map_knowledge(gc).known())
             return;
 
         group grp = get_group(gc);
@@ -1243,44 +1292,6 @@ bool emphasise(const coord_def& where)
             && you.where_are_you != BRANCH_VESTIBULE_OF_HELL);
 }
 
-static unsigned _get_travel_colour(const coord_def& p)
-{
-#ifdef WIZARD
-    if (you.wizard && testbits(env.pgrid(p), FPROP_HIGHLIGHT))
-        return (LIGHTGREEN);
-#endif
-
-    if (is_waypoint(p))
-        return LIGHTGREEN;
-
-    short dist = travel_point_distance[p.x][p.y];
-    return dist > 0?                    Options.tc_reachable        :
-           dist == PD_EXCLUDED?         Options.tc_excluded         :
-           dist == PD_EXCLUDED_RADIUS?  Options.tc_exclude_circle   :
-           dist < 0?                    Options.tc_dangerous        :
-                                        Options.tc_disconnected;
-}
-
-static bool _travel_colour_override(const coord_def& p)
-{
-    if (is_waypoint(p) || travel_point_distance[p.x][p.y] == PD_EXCLUDED)
-        return (true);
-#ifdef WIZARD
-    if (you.wizard && testbits(env.pgrid(p), FPROP_HIGHLIGHT))
-        return (true);
-#endif
-
-    // [ds] Elaborate dance to get map colouring right if
-    // Options.clean_map is set.
-    show_type obj = get_map_knowledge_obj(p);
-    if (Options.clean_map && obj.is_cleanable_monster())
-        obj.cls = SH_FEATURE;
-    return (obj.cls == SH_FEATURE && (obj.feat == DNGN_FLOOR ||
-                                      obj.feat == DNGN_LAVA ||
-                                      obj.feat == DNGN_DEEP_WATER ||
-                                      obj.feat == DNGN_SHALLOW_WATER));
-}
-
 #ifndef USE_TILE
 // Get glyph for feature list; here because it's so similar
 // to get_map_col.
@@ -1289,7 +1300,7 @@ static glyph _get_feat_glyph(const coord_def& gc)
     // XXX: it's unclear whether we want to display all features
     // or just those not obscured by remembered/detected stuff.
     dungeon_feature_type feat = env.map_knowledge(gc).feat();
-    const bool terrain_seen = is_terrain_seen(gc);
+    const bool terrain_seen = env.map_knowledge(gc).seen();
     const feature_def &fdef = get_feature_def(feat);
     glyph g;
     g.ch  = terrain_seen ? fdef.symbol : fdef.magic_symbol;
@@ -1304,19 +1315,3 @@ static glyph _get_feat_glyph(const coord_def& gc)
     return g;
 }
 #endif
-
-unsigned get_map_col(const coord_def& p, bool travel)
-{
-    if (travel && _travel_colour_override(p))
-        return _get_travel_colour(p);
-
-    const show_type& obj = env.map_knowledge(p).object;
-    if (obj.cls == SH_FEATURE && emphasise(p))
-    {
-        const feature_def& fdef = get_feature_def(obj);
-        if (fdef.seen_em_colour)
-            return fdef.seen_em_colour;
-    }
-
-    return get_map_knowledge_col(p);
-}

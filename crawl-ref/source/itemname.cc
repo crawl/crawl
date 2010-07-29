@@ -1556,6 +1556,7 @@ std::string item_def::name_aux(description_level_type desc,
         case FOOD_BEEF_JERKY: buff << "beef jerky"; break;
         case FOOD_CHEESE: buff << "cheese"; break;
         case FOOD_SAUSAGE: buff << "sausage"; break;
+        case FOOD_AMBROSIA: buff << "piece of ambrosia"; break;
         case FOOD_CHUNK:
             if (!basename && !dbname)
             {

@@ -182,7 +182,7 @@ private:
     unarmed_attack_type player_aux_choose_baseattack();
     void player_aux_setup(unarmed_attack_type atk);
     bool player_aux_test_hit();
-    bool player_aux_apply();
+    bool player_aux_apply(unarmed_attack_type atk);
 
     int  player_stat_modify_damage(int damage);
     int  player_aux_stat_modify_damage(int damage);

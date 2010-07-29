@@ -1061,6 +1061,10 @@ jellyfish
 
 A pulsating glob of transparent flesh, waiting just below the surface to sting you with its many tentacles.
 %%%%
+jumping spider
+
+A large spider with an extraordinary ability to leap to its prey from a great distance.
+%%%%
 kenku
 
 A bird-brained creature that looks at you with hatred.
@@ -1618,6 +1622,10 @@ end
 swamp worm
 
 A large slimy worm, adept at swimming through the muck of this foul swamp.
+%%%%
+tarantella
+
+A small but greatly-feared spider whose venom causes even resistant victims to break into a frenzied dance.
 %%%%
 tentacle
 

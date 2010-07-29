@@ -554,7 +554,7 @@ static std::string _milestone_kill_verb(killer_type killer)
 }
 
 static void _check_kill_milestone(const monsters *mons,
-                                 killer_type killer, int i)
+                                  killer_type killer, int i)
 {
     // XXX: See comment in monster_polymorph.
     bool is_unique = mons_is_unique(mons->type);
@@ -563,8 +563,9 @@ static void _check_kill_milestone(const monsters *mons,
 
     if (mons->type == MONS_PLAYER_GHOST)
     {
+        monster_info mi(mons);
         std::string milestone = _milestone_kill_verb(killer) + "the ghost of ";
-        milestone += get_ghost_description(*mons, true);
+        milestone += get_ghost_description(mi, true);
         milestone += ".";
         mark_milestone("ghost", milestone);
     }
@@ -2960,44 +2961,54 @@ bool monster_can_hit_monster(monsters *monster, const monsters *targ)
     return (weapon && weapon_skill(*weapon) == SK_POLEARMS);
 }
 
-void mons_get_damage_level(const monsters* monster, std::string& desc,
-                           mon_dam_level_type& dam_level)
+mon_dam_level_type mons_get_damage_level(const monsters* monster)
 {
+    if (monster_descriptor(monster->type, MDSC_NOMSG_WOUNDS)
+        || monster_descriptor(monster->get_mislead_type(), MDSC_NOMSG_WOUNDS)
+        || mons_is_unknown_mimic(monster))
+        return MDAM_OKAY;
+
     if (monster->hit_points <= monster->max_hit_points / 6)
-    {
-        desc += "almost ";
-        desc += _wounded_damaged(monster->type) ? "destroyed" : "dead";
-        dam_level = MDAM_ALMOST_DEAD;
-        return;
-    }
-
-    if (monster->hit_points <= monster->max_hit_points / 4)
-    {
-        desc += "severely ";
-        dam_level = MDAM_SEVERELY_DAMAGED;
-    }
+        return MDAM_ALMOST_DEAD;
+    else if (monster->hit_points <= monster->max_hit_points / 4)
+        return MDAM_SEVERELY_DAMAGED;
     else if (monster->hit_points <= monster->max_hit_points / 3)
-    {
-        desc += "heavily ";
-        dam_level = MDAM_HEAVILY_DAMAGED;
-    }
+        return MDAM_HEAVILY_DAMAGED;
     else if (monster->hit_points <= monster->max_hit_points * 3 / 4)
-    {
-        desc += "moderately ";
-        dam_level = MDAM_MODERATELY_DAMAGED;
-    }
+        return MDAM_MODERATELY_DAMAGED;
     else if (monster->hit_points < monster->max_hit_points)
-    {
-        desc += "lightly ";
-        dam_level = MDAM_LIGHTLY_DAMAGED;
-    }
+        return MDAM_LIGHTLY_DAMAGED;
     else
-    {
-        desc += "not ";
-        dam_level = MDAM_OKAY;
-    }
+        return MDAM_OKAY;
+}
 
-    desc += _wounded_damaged(monster->type) ? "damaged" : "wounded";
+std::string get_damage_level_string(monster_type mon_type, mon_dam_level_type mdam)
+{
+    std::ostringstream ss;
+    switch(mdam) {
+    case MDAM_ALMOST_DEAD:
+        ss << "almost";
+        ss << (_wounded_damaged(mon_type) ? " destroyed" : " dead");
+        return ss.str();
+    case MDAM_SEVERELY_DAMAGED:
+        ss << "severely";
+        break;
+    case MDAM_HEAVILY_DAMAGED:
+        ss << "heavily";
+        break;
+    case MDAM_MODERATELY_DAMAGED:
+        ss << "moderately";
+        break;
+    case MDAM_LIGHTLY_DAMAGED:
+        ss << "lightly";
+        break;
+    case MDAM_OKAY:
+    default:
+        ss << "not";
+        break;
+    }
+    ss << (_wounded_damaged(mon_type) ? " damaged" : " wounded");
+    return ss.str();
 }
 
 std::string get_wounds_description_sentence(const monsters *monster)
@@ -3017,9 +3028,8 @@ std::string get_wounds_description(const monsters *monster, bool colour)
     if (monster_descriptor(monster->type, MDSC_NOMSG_WOUNDS))
         return "";
 
-    std::string desc;
-    mon_dam_level_type dam_level;
-    mons_get_damage_level(monster, desc, dam_level);
+    mon_dam_level_type dam_level = mons_get_damage_level(monster);
+    std::string desc = get_damage_level_string(monster->type, dam_level);
     if (colour)
     {
         const int col = channel_to_colour(MSGCH_MONSTER_DAMAGE, dam_level);
@@ -3036,9 +3046,8 @@ void print_wounds(const monsters *monster)
     if (monster_descriptor(monster->type, MDSC_NOMSG_WOUNDS))
         return;
 
-    std::string desc;
-    mon_dam_level_type dam_level;
-    mons_get_damage_level(monster, desc, dam_level);
+    mon_dam_level_type dam_level = mons_get_damage_level(monster);
+    std::string desc = get_damage_level_string(monster->type, dam_level);
 
     desc.insert(0, " is ");
     desc += ".";

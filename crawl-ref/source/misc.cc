@@ -1568,7 +1568,7 @@ bool mons_is_safe(const monsters *mon, const bool want_move,
 
         bool result = is_safe;
 
-        monster_info mi(mon, true);
+        monster_info mi(mon, MILEV_SKIP_SAFE);
         if (clua.callfn("ch_mon_is_safe", "Ibbd>b",
                         &mi, is_safe, moving, dist,
                         &result))
@@ -1630,7 +1630,7 @@ static bool _exposed_monsters_nearby(bool want_move)
 {
     const int radius = want_move ? 2 : 1;
     for (radius_iterator ri(you.pos(), radius); ri; ++ri)
-        if (env.show(grid2show(*ri)).cls == SH_INVIS_EXPOSED)
+        if (env.map_knowledge(*ri).flags & MAP_INVISIBLE_MONSTER)
             return (true);
     return (false);
 }

@@ -632,7 +632,10 @@ kill_ghost::kill_ghost(const monsters *mon)
     // Check whether this is really a ghost, since we also have to handle
     // the Pandemonic demons.
     if (mon->type == MONS_PLAYER_GHOST && !mon->is_summoned())
-        ghost_name = "The ghost of " + get_ghost_description(*mon, true);
+    {
+        monster_info mi(mon);
+        ghost_name = "The ghost of " + get_ghost_description(mi, true);
+    }
 }
 
 std::string kill_ghost::info() const

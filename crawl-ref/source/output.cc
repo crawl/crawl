@@ -48,6 +48,7 @@
 #include "travel.h"
 #include "viewchar.h"
 #include "viewgeom.h"
+#include "showsymb.h"
 
 #ifndef USE_TILE
 #include "directn.h"
@@ -1069,19 +1070,18 @@ static bool _mons_hostile(const monsters *mon)
     return (!mon->friendly() && !mon->neutral());
 }
 
-static std::string _get_monster_name(const monster_info& m,
-                                     int count)
+static std::string _get_monster_name(const monster_info& mi,
+                                     int count, bool fullname)
 {
     std::string desc = "";
-    const monsters *mon = m.m_mon;
 
     bool adj = false;
-    if (mon->friendly())
+    if (mi.attitude == ATT_FRIENDLY)
     {
         desc += "friendly ";
         adj = true;
     }
-    else if (mon->neutral())
+    else if (mi.attitude != ATT_HOSTILE)
     {
         desc += "neutral ";
         adj = true;
@@ -1089,11 +1089,11 @@ static std::string _get_monster_name(const monster_info& m,
 
     std::string monpane_desc;
     int col;
-    m.to_string(count, monpane_desc, col);
+    mi.to_string(count, monpane_desc, col, fullname);
 
     if (count == 1)
     {
-        if (!mon->is_named())
+        if (!mi.is(MB_NAME_THE))
         {
             desc = ((!adj && is_vowel(monpane_desc[0])) ? "an "
                                                         : "a ")
@@ -1158,13 +1158,13 @@ std::string mpr_monster_list(bool past)
     {
         if (i > 0 && monster_info::less_than(mons[i-1], mons[i]))
         {
-            describe.push_back(_get_monster_name(mons[i-1], count).c_str());
+            describe.push_back(_get_monster_name(mons[i-1], count, true).c_str());
             count = 0;
         }
         count++;
     }
 
-    describe.push_back(_get_monster_name(mons[mons.size()-1], count).c_str());
+    describe.push_back(_get_monster_name(mons[mons.size()-1], count, true).c_str());
 
     msg = "You ";
     msg += (past ? "could" : "can");
@@ -1189,7 +1189,7 @@ static void _print_next_monster_desc(const std::vector<monster_info>& mons,
     for (end = start + 1; end < mons.size(); ++end)
     {
         // Array is sorted, so if !(m1 < m2), m1 and m2 are "equal".
-        if (monster_info::less_than(mons[start], mons[end], zombified))
+        if (monster_info::less_than(mons[start], mons[end], zombified, zombified))
             break;
     }
     // Postcondition: all monsters in [start, end) are "equal"
@@ -1211,8 +1211,9 @@ static void _print_next_monster_desc(const std::vector<monster_info>& mons,
         for (unsigned int i_mon = start; i_mon < end; i_mon++)
         {
             monster_info mi = mons[i_mon];
-            textcolor(mi.m_glyph_colour);
-            cprintf("%s", stringize_glyph(mi.m_glyph).c_str());
+            glyph g = get_mons_glyph(mi.mon());
+            textcolor(g.col);
+            cprintf("%s", stringize_glyph(g.ch).c_str());
             ++printed;
 
             // Printing too many looks pretty bad, though.
@@ -1229,7 +1230,7 @@ static void _print_next_monster_desc(const std::vector<monster_info>& mons,
             monster_info mi = mons[start];
 
             int dam_color;
-            switch (mi.m_damage_level)
+            switch (mi.dam)
             {
             // NOTE: In os x, light versions of foreground colors are OK,
             //       but not background colors.  So stick wth standards.
@@ -1266,7 +1267,7 @@ static void _print_next_monster_desc(const std::vector<monster_info>& mons,
         {
             int desc_color;
             std::string desc;
-            mons[start].to_string(count, desc, desc_color);
+            mons[start].to_string(count, desc, desc_color, zombified);
             textcolor(desc_color);
             desc.resize(crawl_view.mlistsz.x-printed, ' ');
             cprintf("%s", desc.c_str());
@@ -1311,15 +1312,13 @@ int update_monster_pane()
 
         // Use type names rather than full names ("small zombie" vs
         // "rat zombie") in order to take up fewer lines.
-        for (unsigned int i = 0; i < mons.size(); i++)
-            mons[i].m_fullname = false;
 
         std::sort(mons.begin(), mons.end(),
                   monster_info::less_than_wrapper);
 
         lines_needed = mons.size();
         for (unsigned int i = 1; i < mons.size(); i++)
-            if (!monster_info::less_than(mons[i-1], mons[i], false))
+            if (!monster_info::less_than(mons[i-1], mons[i], false, false))
                 --lines_needed;
     }
 

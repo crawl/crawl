@@ -490,7 +490,7 @@ static void _jiyva_convert_slime(monsters* slime)
     slime->god = GOD_NO_GOD;
 
     // Don't trigger an assert in mons_make_god_gift
-    if(testbits(slime->flags, MF_GOD_GIFT))
+    if (testbits(slime->flags, MF_GOD_GIFT))
         slime->flags &= ~MF_GOD_GIFT;
 
     mons_make_god_gift(slime, GOD_JIYVA);

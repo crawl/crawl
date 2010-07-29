@@ -29,6 +29,7 @@
 #include "effects.h"
 #include "env.h"
 #include "map_knowledge.h"
+#include "feature.h"
 #include "fprop.h"
 #include "food.h"
 #include "goditem.h"
@@ -925,6 +926,11 @@ bool melee_attack::player_attack()
         && where == defender->pos())
     {
         print_wounds(defender->as_monster());
+
+	const int degree = player_mutation_level(MUT_CLAWS);
+
+	if (defender->can_bleed() && degree > 0)
+		defender->as_monster()->bleed(5 + roll_dice(degree, 3), degree);
     }
 
     return (did_primary_hit || did_hit);
@@ -1274,7 +1280,7 @@ bool melee_attack::player_aux_unarmed()
 
             if (attack_shield_blocked(true))
                 continue;
-            if (player_aux_apply())
+            if (player_aux_apply(atk))
                 return (true);
         }
     }
@@ -1282,7 +1288,7 @@ bool melee_attack::player_aux_unarmed()
     return (false);
 }
 
-bool melee_attack::player_aux_apply()
+bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 {
     did_hit = true;
 
@@ -1296,10 +1302,54 @@ bool melee_attack::player_aux_apply()
 
     // Clear stab bonus which will be set for the primary weapon attack.
     stab_bonus  = 0;
-    aux_damage  = player_apply_monster_ac(aux_damage);
 
-    aux_damage  = defender->hurt(&you, aux_damage, BEAM_MISSILE, false);
+    const int pre_ac_dmg = aux_damage;
+    const int post_ac_dmg = player_apply_monster_ac(aux_damage);
+
+    aux_damage = post_ac_dmg;
+    aux_damage = defender->hurt(&you, aux_damage, BEAM_MISSILE, false);
     damage_done = aux_damage;
+
+    switch(atk)
+    {
+        case UNAT_PUNCH:
+        {
+            const int degree = player_mutation_level(MUT_CLAWS);
+
+            if (defender->as_monster()->hit_points > 0 && degree > 0
+                && defender->can_bleed())
+            {
+                defender->as_monster()->bleed(3 + roll_dice(degree, 3), degree);
+            }
+            break;
+        }
+
+        case UNAT_HEADBUTT:
+        {
+            const int horns = player_mutation_level(MUT_HORNS);
+            const int stun = bestroll(std::min(damage_done, 7), 1 + horns);
+
+            defender->as_monster()->speed_increment -= stun;
+            break;
+        }
+
+        case UNAT_KICK:
+        {
+            const int hooves = player_mutation_level(MUT_HOOVES);
+
+            if (hooves && pre_ac_dmg > post_ac_dmg)
+            {
+                const int dmg = bestroll(pre_ac_dmg - post_ac_dmg, hooves);
+                // do some of the previously ignored damage in extra-damage
+                damage_done += defender->hurt(&you, dmg, BEAM_MISSILE, false);
+            }
+
+            break;
+        }
+
+        default:
+            break;
+    }
 
     if (damage_done > 0)
     {
@@ -2663,7 +2713,7 @@ static bool _move_stairs(const actor* attacker, const actor* defender)
     // Don't move around notable terrain the player is aware of if it's
     // out of sight.
     if (is_notable_terrain(stair_feat)
-        && is_terrain_known(orig_pos.x, orig_pos.y) && !you.see_cell(orig_pos))
+        && env.map_knowledge(orig_pos).known() && !you.see_cell(orig_pos))
     {
         return (false);
     }
@@ -5036,14 +5086,14 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         break;
 
     case AF_DRAIN_STR:
-    case AF_DRAIN_DEX:
     case AF_DRAIN_INT:
+    case AF_DRAIN_DEX:
         if ((one_chance_in(20) || (damage_done > 0 && one_chance_in(3)))
             && defender->res_negative_energy() < random2(4))
         {
             stat_type drained_stat = (flavour == AF_DRAIN_STR ? STAT_STR :
-                                      flavour == AF_DRAIN_DEX ? STAT_DEX
-                                                              : STAT_INT);
+                                      flavour == AF_DRAIN_INT ? STAT_INT
+                                                              : STAT_DEX);
             defender->drain_stat(drained_stat, 1, attacker);
         }
         break;
@@ -5235,7 +5285,7 @@ void melee_attack::mons_do_eyeball_confusion()
         const int ench_pow = player_mutation_level(MUT_EYEBALLS) * 30;
         monsters *mon = attacker->as_monster();
 
-        if(!mon->check_res_magic(ench_pow)
+        if (!mon->check_res_magic(ench_pow)
             && mons_class_is_confusable(mon->type))
         {
             mprf("The eyeballs on your body gaze at %s.",

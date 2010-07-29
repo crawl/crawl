@@ -2,7 +2,7 @@
 #define TAG_VERSION_H
 
 // Let CDO updaters know if the syntax changes.
-#define TAG_MAJOR_VERSION  28
+#define TAG_MAJOR_VERSION  29
 
 // Minor version will be reset to zero when major version changes.
 enum tag_minor_version

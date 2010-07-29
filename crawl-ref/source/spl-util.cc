@@ -1081,7 +1081,7 @@ spell_type zap_type_to_spell(zap_type zap)
 
 bool spell_is_empowered(spell_type spell)
 {
-    if( (you.religion == GOD_VEHUMET)
+    if ( (you.religion == GOD_VEHUMET)
         && vehumet_supports_spell(spell)
         && piety_rank() > 2)
     {
