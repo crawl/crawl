@@ -403,7 +403,7 @@ bool lose_stat(stat_type which_stat, unsigned char stat_loss, bool force,
     if (stat_loss > 0)
     {
         you.stat_loss[which_stat] += stat_loss;
-        _handle_stat_change(which_stat);
+        _handle_stat_change(which_stat, cause, see_source);
         return (true);
     }
     else
@@ -559,6 +559,7 @@ static void _handle_stat_change(stat_type stat, const char* cause, bool see_sour
     if (you.stat(stat) <= 0 && you.stat_zero[stat] == 0)
     {
         you.stat_zero[stat] = STAT_ZERO_START;
+        you.stat_zero_cause[stat] = cause;
         mprf(MSGCH_WARN, "You have lost your %s.", stat_desc(stat, SD_NAME));
         // 2 to 5 turns of paralysis (XXX: decremented right away?)
         you.increase_duration(DUR_PARALYSIS, 2 + random2(3));
@@ -613,7 +614,10 @@ void update_stat_zero()
         }
 
         if (you.stat_zero[i] > STAT_DEATH_TURNS)
-            ouch(INSTANT_DEATH, NON_MONSTER, _statloss_killtype(s));
+        {
+            ouch(INSTANT_DEATH, NON_MONSTER,
+                 _statloss_killtype(s), you.stat_zero_cause[i].c_str());
+         }
 
         int paramax = STAT_DEATH_TURNS - STAT_DEATH_START_PARA;
         int paradiff = std::max(you.stat_zero[i] - STAT_DEATH_START_PARA, 0);

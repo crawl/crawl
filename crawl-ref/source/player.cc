@@ -5172,6 +5172,7 @@ void player::init()
     stat_loss.init(0);
     base_stats.init(0);
     stat_zero.init(0);
+    stat_zero_cause.init("");
     last_chosen        = STAT_RANDOM;
 
     hunger          = 6000;
