@@ -1757,7 +1757,7 @@ static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
 
     case CE_POISONOUS:
         mpr("Yeeuch - this meat is poisonous!");
-        if (poison_player(3 + random2(4), "poisonous meat"))
+        if (poison_player(3 + random2(4), "", "poisonous meat"))
             xom_is_stimulated(random2(128));
         break;
 
@@ -2266,7 +2266,7 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
                     // Always print this message - maybe you lost poison
                     // resistance due to feeding.
                     mpr("Blech - this blood tastes nasty!");
-                    if (poison_player(1 + random2(3), "poisoned blood"))
+                    if (poison_player(1 + random2(3), "", "poisoned blood"))
                         xom_is_stimulated(random2(128));
                     stop_delay();
                     return;

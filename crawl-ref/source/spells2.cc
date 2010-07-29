@@ -494,7 +494,7 @@ void cast_toxic_radiance(bool non_player)
     else if (!player_res_poison())
     {
         mpr("You feel rather sick.");
-        poison_player(2, "toxic radiance");
+        poison_player(2, "", "toxic radiance");
     }
 
     counted_monster_list affected_monsters;
