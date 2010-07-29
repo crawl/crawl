@@ -1211,6 +1211,23 @@ void mons_relocated(monsters *monster)
             monster_die(&menv[base_id], KILL_RESET, -1, true, false);
         }
     }
+    else if (monster->type == MONS_DEMONIC_TENTACLE
+             || monster->type == MONS_DEMONIC_TENTACLE_SEGMENT)
+    {
+        int base_id = monster->type == MONS_DEMONIC_TENTACLE
+                      ? monster->mindex() : monster->number;
+
+        monster_die(&menv[base_id], KILL_RESET, -1, true, false);
+
+        for (monster_iterator mit; mit; ++mit)
+        {
+            if (mit->number == base_id && mit->type == MONS_DEMONIC_TENTACLE_SEGMENT)
+            {
+                monster_die(*mit, KILL_RESET, -1, true, false);
+            }
+        }
+
+    }
 }
 
 static int _destroy_tentacle(int tentacle_idx, monsters * origin)
