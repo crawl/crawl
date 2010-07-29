@@ -1922,13 +1922,12 @@ bool project_noise()
     if (!show_map(lpos, false, false, false))
         lpos = level_pos::current();
     pos = lpos.pos;
-    ASSERT(map_bounds(pos));
 
     redraw_screen();
 
     dprf("Target square (%d,%d)", pos.x, pos.y);
 
-    if (!silenced(pos))
+    if (!in_bounds(pos) || !silenced(pos))
     {
         if (in_bounds(pos) && !feat_is_solid(grd(pos)))
         {
