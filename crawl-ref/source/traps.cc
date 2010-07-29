@@ -1298,7 +1298,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
 
                     // Needle traps can poison.
                     if (poison)
-                        poison_player(1 + random2(3), "a needle trap");
+                        poison_player(1 + random2(3), "", "a needle trap");
 
                     ouch(damage_taken, NON_MONSTER, KILLED_BY_TRAP,
                          shot.name(DESC_PLAIN).c_str());
