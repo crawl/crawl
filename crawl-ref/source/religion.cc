@@ -3562,30 +3562,6 @@ void handle_god_time()
     if (one_chance_in(100))
     {
         // Choose a god randomly from those to whom we owe penance.
-        //
-        // Proof: (By induction)
-        //
-        // 1) n = 1, probability of choosing god is one_chance_in(1)
-        // 2) Asuume true for n = k (ie. prob = 1 / n for all n)
-        // 3) For n = k + 1,
-        //
-        //      P:new-found-god = 1 / n (see algorithm)
-        //      P:other-gods = (1 - P:new-found-god) * P:god-at-n=k
-        //                             1        1
-        //                   = (1 - -------) * ---
-        //                           k + 1      k
-        //
-        //                          k         1
-        //                   = ----------- * ---
-        //                        k + 1       k
-        //
-        //                       1       1
-        //                   = -----  = ---
-        //                     k + 1     n
-        //
-        // Therefore, by induction the probability is uniform.  As for
-        // why we do it this way... it requires only one pass and doesn't
-        // require an array.
 
         god_type which_god = GOD_NO_GOD;
         unsigned int count = 0;
