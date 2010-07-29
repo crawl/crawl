@@ -2560,7 +2560,7 @@ static void _regenerate_hp_and_mp(int delay)
         return;
 
     ASSERT(tmp >= 0 && tmp < 100);
-    you.hit_points_regeneration = static_cast<unsigned char>(tmp);
+    you.hit_points_regeneration = tmp;
 
     // XXX: Doing the same as the above, although overflow isn't an
     // issue with magic point regeneration, yet. -- bwr
@@ -2579,7 +2579,7 @@ static void _regenerate_hp_and_mp(int delay)
     }
 
     ASSERT(tmp >= 0 && tmp < 100);
-    you.magic_points_regeneration = static_cast<unsigned char>(tmp);
+    you.magic_points_regeneration = tmp;
 }
 
 static void _update_mold_state(const coord_def & pos)
@@ -4078,6 +4078,8 @@ static void _compile_time_asserts()
     COMPILE_CHECK(sizeof(float) == sizeof(int32_t), c15);
     COMPILE_CHECK(sizeof(feature_property_type) <= sizeof(terrain_property_t), c16);
     COMPILE_CHECK(sizeof(level_flag_type) <= sizeof(int32_t), c17);
+    // Travel cache, traversable_terrain.
+    COMPILE_CHECK(NUM_FEATURES <= 256, c18);
 
     // Also some runtime stuff; I don't know if the order of branches[]
     // needs to match the enum, but it currently does.

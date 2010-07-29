@@ -1227,9 +1227,9 @@ bool cast_twisted_resurrection(int pow, god_type god)
         (total_mass > 500 + roll_dice(3, 1000)) ? MONS_ABOMINATION_LARGE
                                                 : MONS_ABOMINATION_SMALL;
 
-    char colour = (rotted == how_many_corpses)          ? BROWN :
-                  (rotted >= random2(how_many_corpses)) ? RED
-                                                        : LIGHTRED;
+    uint8_t colour = (rotted == how_many_corpses)          ? BROWN :
+                     (rotted >= random2(how_many_corpses)) ? RED
+                                                           : LIGHTRED;
 
     const int monster =
         create_monster(
@@ -1954,7 +1954,7 @@ bool project_noise()
 // 0 = anything
 // 1 = undead only (Yred religion ability)
 // 2 = orcs only (Beogh religion ability)
-bool recall(char type_recalled)
+bool recall(int type_recalled)
 {
     int loopy          = 0;      // general purpose looping variable {dlb}
     bool success       = false;  // more accurately: "apparent success" {dlb}

@@ -1629,7 +1629,7 @@ static unrandart_entry *_seekunrandart( const item_def &item )
     return get_unrand_entry(item.special);
 }
 
-int find_okay_unrandart(unsigned char aclass, unsigned char atype,
+int find_okay_unrandart(uint8_t aclass, uint8_t atype,
                         unrand_special_type specialness, bool in_abyss)
 {
     int ret = -1;

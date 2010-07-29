@@ -1017,7 +1017,7 @@ int place_monster(mgen_data mg, bool force_pos)
     band_monsters[0] = mg.cls;
 
     // The (very) ugly thing band colour.
-    static unsigned char ugly_colour = BLACK;
+    static uint8_t ugly_colour = BLACK;
 
     if (create_band)
     {

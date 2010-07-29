@@ -919,7 +919,7 @@ int spellbook_contents( item_def &book, read_book_action_type action,
 
 //jmf: was in shopping.cc
 // Rarity 100 is reserved for unused books.
-int book_rarity(unsigned char which_book)
+int book_rarity(uint8_t which_book)
 {
     switch (which_book)
     {
@@ -1009,7 +1009,7 @@ int book_rarity(unsigned char which_book)
     }
 }
 
-static unsigned char _lowest_rarity[NUM_SPELLS];
+static uint8_t _lowest_rarity[NUM_SPELLS];
 
 void init_spell_rarities()
 {

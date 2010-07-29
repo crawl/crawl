@@ -17,8 +17,8 @@ typedef std::vector<vault_placement*> vault_placement_refv;
 
 struct crawl_environment
 {
-    unsigned char rock_colour;
-    unsigned char floor_colour;
+    uint8_t rock_colour;
+    uint8_t floor_colour;
 
     FixedVector< item_def, MAX_ITEMS >       item;  // item list
     FixedVector< monsters, MAX_MONSTERS >    mons;  // monster list

@@ -16,7 +16,7 @@
 struct item_types_pair
 {
     object_class_type base_type;
-    unsigned char     sub_type;
+    uint8_t           sub_type;
 };
 
 enum item_type_id_type

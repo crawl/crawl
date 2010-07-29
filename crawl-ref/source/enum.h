@@ -2675,7 +2675,7 @@ enum score_format_type
     SCORE_VERBOSE,              // everything (dates, times, god, etc.)
 };
 
-enum shop_type // (unsigned char) env.sh_type[], item_in_shop(), in_a_shop()
+enum shop_type // (uint8_t) env.sh_type[], item_in_shop(), in_a_shop()
 {
     SHOP_WEAPON,
     SHOP_ARMOUR,

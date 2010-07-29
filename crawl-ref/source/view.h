@@ -18,7 +18,7 @@ bool mon_enemies_around(const monsters *monster);
 void seen_monsters_react();
 
 void find_features(const std::vector<coord_def>& features,
-        unsigned char feature, std::vector<coord_def> *found);
+        wchar_t feature, std::vector<coord_def> *found);
 
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    bool force = false, bool deterministic = false,
@@ -35,10 +35,10 @@ std::string screenshot(bool fullscreen = false);
 
 bool view_update();
 void view_update_at(const coord_def &pos);
-void flash_view(int colour = BLACK); // inside #ifndef USE_TILE?
-void flash_view_delay(int colour = BLACK, long delay = 150);
+void flash_view(uint8_t colour = BLACK); // inside #ifndef USE_TILE?
+void flash_view_delay(uint8_t colour = BLACK, int delay = 150);
 #ifndef USE_TILE
-void flash_monster_colour(const monsters *mon, unsigned char fmc_colour,
+void flash_monster_colour(const monsters *mon, uint8_t fmc_colour,
                           int fmc_delay);
 #endif
 

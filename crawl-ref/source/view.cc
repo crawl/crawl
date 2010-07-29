@@ -218,12 +218,12 @@ void update_monsters_in_view()
 // Random difficulties are used in the few cases where we want repeated maps
 // to give different results; scrolls and cards, since they are a finite
 // resource.
-static const FixedArray<char, GXM, GYM>& _tile_difficulties(bool random)
+static const FixedArray<uint8_t, GXM, GYM>& _tile_difficulties(bool random)
 {
     // We will often be called with the same level parameter and cutoff, so
     // cache this (DS with passive mapping autoexploring could be 5000 calls
     // in a second or so).
-    static FixedArray<char, GXM, GYM> cache;
+    static FixedArray<uint8_t, GXM, GYM> cache;
     static int cache_seed = -1;
 
     int seed = random ? -1 :
@@ -333,7 +333,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     int  num_altars        = 0;
     int  num_shops_portals = 0;
 
-    const FixedArray<char, GXM, GYM>& difficulty =
+    const FixedArray<uint8_t, GXM, GYM>& difficulty =
         _tile_difficulties(!deterministic);
 
     std::auto_ptr<FixedArray<bool, GXM, GYM> > detectable;
@@ -601,12 +601,12 @@ void view_update_at(const coord_def &pos)
 }
 
 #ifndef USE_TILE
-void flash_monster_colour(const monsters *mon, unsigned char fmc_colour,
+void flash_monster_colour(const monsters *mon, uint8_t fmc_colour,
                           int fmc_delay)
 {
     if (you.can_see(mon))
     {
-        unsigned char old_flash_colour = you.flash_colour;
+        uint8_t old_flash_colour = you.flash_colour;
         coord_def c(mon->pos());
 
         you.flash_colour = fmc_colour;
@@ -632,13 +632,13 @@ bool view_update()
     return (false);
 }
 
-void flash_view(int colour)
+void flash_view(uint8_t colour)
 {
     you.flash_colour = colour;
     viewwindow(false);
 }
 
-void flash_view_delay(int colour, long flash_delay)
+void flash_view_delay(uint8_t colour, int flash_delay)
 {
     flash_view(colour);
     // Scale delay to match change in arena_delay.

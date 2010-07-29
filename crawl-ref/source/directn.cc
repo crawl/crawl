@@ -119,14 +119,14 @@ static bool _find_mlist( const coord_def& where, int mode, bool need_path,
                          int range );
 #endif
 
-static char _find_square_wrapper(coord_def &mfp, char direction,
+static bool _find_square_wrapper(coord_def &mfp, int direction,
                                  bool (*find_targ)(const coord_def&, int,
                                                    bool, int),
                                  bool need_path, int mode,
                                  int range, bool wrap,
                                  int los = LOS_ANY);
 
-static char _find_square(coord_def &mfp, int direction,
+static bool _find_square(coord_def &mfp, int direction,
                          bool (*find_targ)(const coord_def&, int, bool, int),
                          bool need_path, int mode, int range,
                          bool wrap, int los = LOS_ANY);
@@ -2430,7 +2430,7 @@ bool in_los_bounds(const coord_def& p)
 // is -1, goes backwards.
 //
 //---------------------------------------------------------------
-static char _find_square(coord_def &mfp, int direction,
+static bool _find_square(coord_def &mfp, int direction,
                          bool (*find_targ)(const coord_def& wh, int mode,
                                            bool need_path, int range),
                          bool need_path, int mode, int range, bool wrap,
@@ -2446,7 +2446,7 @@ static char _find_square(coord_def &mfp, int direction,
     int i, j;
 
     if (los == LOS_NONE)
-        return (0);
+        return (false);
 
     if (los == LOS_FLIPVH || los == LOS_FLIPHV)
     {
@@ -2496,7 +2496,7 @@ static char _find_square(coord_def &mfp, int direction,
         {
             mfp = vyou;
             if (find_targ(you.pos(), mode, need_path, range))
-                return (1);
+                return (true);
             return (_find_square(mfp, direction,
                                  find_targ, need_path, mode, range, false,
                                  _next_los(direction, los, wrap)));
@@ -2628,7 +2628,7 @@ static char _find_square(coord_def &mfp, int direction,
         if (find_targ(coord_def(targ_x, targ_y), mode, need_path, range))
         {
             mfp.set(temp_xps, temp_yps);
-            return (1);
+            return (true);
         }
     }
 
@@ -2640,14 +2640,14 @@ static char _find_square(coord_def &mfp, int direction,
 // XXX Unbelievably hacky. And to think that my goal was to clean up the code.
 // Identical to find_square, except that mfp is in grid coordinates
 // rather than view coordinates.
-static char _find_square_wrapper(coord_def& mfp, char direction,
+static bool _find_square_wrapper(coord_def& mfp, int direction,
                                  bool (*find_targ)(const coord_def& where, int mode,
                                                    bool need_path, int range),
                                  bool need_path, int mode, int range,
                                  bool wrap, int los )
 {
     mfp = grid2view(mfp);
-    const char r =  _find_square(mfp, direction, find_targ, need_path,
+    const bool r =  _find_square(mfp, direction, find_targ, need_path,
                                  mode, range, wrap, los);
     mfp = view2grid(mfp);
     return r;

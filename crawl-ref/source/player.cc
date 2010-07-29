@@ -2547,7 +2547,7 @@ int burden_change(void)
 }
 
 // force is true for forget_map command on level map.
-void forget_map(unsigned char chance_forgotten, bool force)
+void forget_map(int chance_forgotten, bool force)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -4045,7 +4045,7 @@ unsigned int exp_needed(int lev)
 }
 
 // returns bonuses from rings of slaying, etc.
-int slaying_bonus(char which_affected, bool ranged)
+int slaying_bonus(weapon_property_type which_affected, bool ranged)
 {
     int ret = 0;
 

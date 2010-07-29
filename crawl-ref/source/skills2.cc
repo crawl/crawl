@@ -1659,7 +1659,7 @@ unsigned get_skill_rank(unsigned skill_lev)
                             /* level 27 */    : 4);
 }
 
-std::string skill_title_by_rank( unsigned char best_skill, unsigned char skill_rank,
+std::string skill_title_by_rank( uint8_t best_skill, uint8_t skill_rank,
                          int species, int str, int dex, int god )
 {
     // paranoia
@@ -1737,7 +1737,7 @@ std::string skill_title_by_rank( unsigned char best_skill, unsigned char skill_r
                            : result);
 }
 
-std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
+std::string skill_title( uint8_t best_skill, uint8_t skill_lev,
                          int species, int str, int dex, int god )
 {
     return skill_title_by_rank(best_skill, get_skill_rank(skill_lev), species, str, dex, god);
@@ -1745,7 +1745,7 @@ std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
 
 std::string player_title()
 {
-    const unsigned char best = best_skill(SK_FIGHTING, (NUM_SKILLS - 1));
+    const uint8_t best = best_skill(SK_FIGHTING, (NUM_SKILLS - 1));
     return (skill_title( best, you.skills[ best ] ));
 }
 
@@ -1987,7 +1987,7 @@ bool is_invalid_skill(int skill)
 void dump_skills(std::string &text)
 {
     char tmp_quant[20];
-    for (unsigned char i = 0; i < 50; i++)
+    for (uint8_t i = 0; i < 50; i++)
     {
         if (you.skills[i] > 0)
         {

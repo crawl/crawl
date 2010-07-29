@@ -24,7 +24,7 @@
 #define DEBUG_TEMPLES
 #endif
 
-static unsigned char _random_potion_description()
+static uint8_t _random_potion_description()
 {
     int desc, nature, colour;
 
@@ -45,7 +45,7 @@ static unsigned char _random_potion_description()
     while (colour == PDC_CLEAR && nature > PDQ_VISCOUS
            || desc == PDESCS(PDC_CLEAR));
 
-    return static_cast<unsigned char>(desc);
+    return desc;
 }
 
 // Determine starting depths of branches.

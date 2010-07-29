@@ -1249,10 +1249,6 @@ void down_stairs(dungeon_feature_type force_stair,
         }
     }
 
-    unsigned char pc = 0;
-    unsigned char pt = random2avg(28, 3);
-
-
     switch (you.level_type)
     {
     case LEVEL_ABYSS:
@@ -1264,7 +1260,7 @@ void down_stairs(dungeon_feature_type force_stair,
     case LEVEL_PANDEMONIUM:
         init_pandemonium();
 
-        for (pc = 0; pc < pt; pc++)
+        for (int pc = random2avg(28, 3); pc > 0; pc--)
             pandemonium_mons();
         break;
 

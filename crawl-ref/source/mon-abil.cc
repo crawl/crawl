@@ -344,7 +344,7 @@ bool ugly_thing_mutate(monsters *ugly, bool proximity)
 
     std::string src = "";
 
-    unsigned char mon_colour = BLACK;
+    uint8_t mon_colour = BLACK;
 
     if (!proximity)
         success = true;

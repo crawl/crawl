@@ -119,7 +119,7 @@ namespace arena
     std::vector<int> uniques_list;
     std::vector<int> a_spawners;
     std::vector<int> b_spawners;
-    signed char      to_respawn[MAX_MONSTERS];
+    int8_t           to_respawn[MAX_MONSTERS];
 
     int item_drop_times[MAX_ITEMS];
 

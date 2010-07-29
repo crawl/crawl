@@ -41,17 +41,17 @@ struct mon_attack_def
 struct mon_energy_usage
 {
 public:
-    char move;
-    char swim;
-    char attack;
-    char missile; // Arrows/crossbows/etc
-    char spell;
-    char special;
-    char item;    // Using an item (i.e., drinking a potion)
+    int8_t move;
+    int8_t swim;
+    int8_t attack;
+    int8_t missile; // Arrows/crossbows/etc
+    int8_t spell;
+    int8_t special;
+    int8_t item;    // Using an item (i.e., drinking a potion)
 
     // Percent of monster->speed used when picking up an item; defaults
     // to 100%
-    char pickup_percent;
+    int8_t pickup_percent;
 
 public:
     mon_energy_usage(int mv = 10, int sw = 10, int att = 10, int miss = 10,
@@ -102,7 +102,7 @@ public:
                                          100) );
     }
 private:
-    char combine(char a, char b, char def = 10) const {
+    int8_t combine(int8_t a, int8_t b, int8_t def = 10) const {
         return (b != def? b : a);
     }
 };
@@ -111,7 +111,8 @@ struct monsterentry
 {
     short mc;            // monster number
 
-    unsigned char showchar, colour;
+    char showchar;
+    uint8_t colour;
     const char *name;
 
     uint64_t bitfields;
@@ -122,7 +123,7 @@ struct monsterentry
     // ((((max_hp / 7) + 1) * (mHD * mHD) + 1) * exp_mod) / 10
     //     ^^^^^^ see below at hpdice
     //   Note that this may make draining attacks less attractive (LRH)
-    char exp_mod;
+    int8_t exp_mod;
 
     monster_type genus,         // "team" the monster plays for
                  species;       // corpse type of the monster
@@ -142,8 +143,8 @@ struct monsterentry
     // hp will be around 135 each time.
     unsigned       hpdice[4];
 
-    char AC; // armour class
-    char ev; // evasion
+    int8_t AC; // armour class
+    int8_t ev; // evasion
     mon_spellbook_type sec;
     corpse_effect_type corpse_thingy;
     zombie_size_type   zombie_size;
@@ -151,7 +152,7 @@ struct monsterentry
     mon_intel_type     intel;
     habitat_type     habitat;
     flight_type      fly;
-    char             speed;        // How quickly speed_increment increases
+    int8_t           speed;        // How quickly speed_increment increases
     mon_energy_usage energy_usage; // And how quickly it decreases
     mon_itemuse_type gmon_use;
     mon_itemeat_type gmon_eat;
@@ -275,7 +276,7 @@ bool name_zombie(monsters *mon, const monsters* orig);
 
 int mons_power(int mc);
 
-unsigned mons_char(int mc);
+wchar_t mons_char(int mc);
 char mons_base_char(int mc);
 
 int mons_class_colour(int mc);
@@ -382,12 +383,12 @@ bool monster_shover(const monsters *m);
 bool monster_senior(const monsters *first, const monsters *second,
                     bool fleeing = false);
 monster_type draco_subspecies(const monsters *mon);
-std::string ugly_thing_colour_name(unsigned char colour);
+std::string ugly_thing_colour_name(uint8_t colour);
 std::string ugly_thing_colour_name(const monsters *mon);
-unsigned char ugly_thing_random_colour();
+uint8_t ugly_thing_random_colour();
 int str_to_ugly_thing_colour(const std::string &s);
-unsigned char random_monster_colour();
-int ugly_thing_colour_offset(const unsigned char colour);
+uint8_t random_monster_colour();
+int ugly_thing_colour_offset(const uint8_t colour);
 std::string  draconian_colour_name(monster_type mon_type);
 monster_type draconian_colour_by_name(const std::string &colour);
 
