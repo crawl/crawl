@@ -14,6 +14,7 @@
 
 struct show_type;
 struct monster_info;
+struct map_cell;
 
 enum tag_type   // used during save/load process to identify data blocks
 {
