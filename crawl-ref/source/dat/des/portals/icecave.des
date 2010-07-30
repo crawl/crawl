@@ -19,7 +19,7 @@ function ice_cave_portal(e)
     "portal. Whatever lives on the other side, they will be full of " ..
     "grim and arctic fury. You note that the archway is melting away."
 
-  local timeout_turns = crawl.random_range(1200, 1700)
+  local timeout_turns = crawl.random_range(2700, 3300)
 
   local messager =
     timed_msg {

@@ -21,7 +21,7 @@ function bailey_portal(e, ptype)
   end
   desc_long = string.gsub(desc_long, "\n%s+", "\n")
 
-  local timeout_turns = crawl.random_range(1500, 2000)
+  local timeout_turns = crawl.random_range(2700, 3300)
 
   local messager =
     timed_msg {
