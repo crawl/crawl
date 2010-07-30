@@ -1,13 +1,6 @@
 /*
  *  File:       message.cc
  *  Summary:    Functions used to print messages.
- *
- * Todo:
- *   - change uses of cancelable_get_line to msgwin_get_line
- *   - Handle resizing properly, in particular initial resize.
- *
- * Maybe:
- *   - Redraw message window at same places that cause refresh?
  */
 
 #include "AppHdr.h"
