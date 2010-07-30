@@ -1609,10 +1609,27 @@ void purge_connectors(int tentacle_idx,
     }
 }
 
-void collect_foe_positions(monsters * mons, std::vector<coord_def> & foe_positions)
+struct complicated_sight_check
+{
+    coord_def base_position;
+    bool operator()(monsters * mons, actor * test)
+    {
+        return (test->visible_to(mons) && cell_see_cell(base_position, test->pos()));
+    }
+};
+
+static bool _basic_sight_check(monsters * mons, actor * test)
+{
+    return (mons->can_see(test ));
+}
+
+template<typename T>
+void collect_foe_positions(monsters * mons, std::vector<coord_def> & foe_positions,
+                           T & sight_check)
 {
     coord_def foe_pos(-1, -1);
-    if (mons->near_foe())
+    actor * foe = mons->get_foe();
+    if (foe && sight_check(mons, foe))
     {
         foe_positions.push_back(mons->get_foe()->pos());
         foe_pos = foe_positions.back();
@@ -1624,7 +1641,7 @@ void collect_foe_positions(monsters * mons, std::vector<coord_def> & foe_positio
         if (!mons_is_firewood(test)
             && !mons_aligned(test, mons)
             && test->pos() != foe_pos
-            && mons->can_see(test))
+            && sight_check(mons, test))
         {
             foe_positions.push_back(test->pos());
         }
@@ -1674,7 +1691,7 @@ int collect_connection_data(monsters * start_monster,
             && valid_segment_type(&menv[next_idx]))
         {
             current_mon = &menv[next_idx];
-            if (current_mon->number != start_monster->mindex())
+            if (int(current_mon->number) != start_monster->mindex())
             {
                 mprf("link information corruption!!! tentacle in chain doesn't match mindex");
             }
@@ -1715,12 +1732,6 @@ void move_demon_tentacle(monsters * tentacle)
     bool attack_foe = false;
     bool severed = tentacle->has_ench(ENCH_SEVERED);
 
-    if (!severed)
-    {
-        collect_foe_positions(tentacle, foe_positions);
-        attack_foe = !foe_positions.empty();
-    }
-
     coord_def base_position;
     if (!tentacle->props.exists("base_position"))
     {
@@ -1728,6 +1739,16 @@ void move_demon_tentacle(monsters * tentacle)
     }
 
     base_position = tentacle->props["base_position"].get_coord();
+
+
+    if (!severed)
+    {
+        complicated_sight_check base_sight;
+        base_sight.base_position = base_position;
+        collect_foe_positions(tentacle, foe_positions, base_sight);
+        attack_foe = !foe_positions.empty();
+    }
+
 
     coord_def retract_pos;
     std::map<coord_def, std::set<int> > connection_data;
@@ -1892,7 +1913,7 @@ void move_kraken_tentacles(monsters * kraken)
     bool no_foe = false;
 
     std::vector<coord_def> foe_positions;
-    collect_foe_positions(kraken, foe_positions);
+    collect_foe_positions(kraken, foe_positions, _basic_sight_check);
 
     //if (!kraken->near_foe())
     if (foe_positions.empty()
