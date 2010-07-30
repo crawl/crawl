@@ -1578,7 +1578,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_SEEN_POTION:
         text << "You have picked up your first potion"
 #ifndef USE_TILE
-                " ('<w>!</w>'). Use "
+                " ('<w>"
+             << stringize_glyph(get_item_symbol(SHOW_ITEM_POTION))
+             << "</w>'). Use "
 #else
                 ". Simply click on it with your <w>left mouse button</w>, or "
                 "press "
@@ -1594,7 +1596,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_SEEN_SCROLL:
         text << "You have picked up your first scroll"
 #ifndef USE_TILE
-                " ('<w>?</w>'). Type "
+                " ('<w>"
+             << stringize_glyph(get_item_symbol(SHOW_ITEM_SCROLL))
+             << "</w>'). Type "
 #else
                 ". Simply click on it with your <w>left mouse button</w>, or "
                 "type "
@@ -1608,7 +1612,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_SEEN_WAND:
         text << "You have picked up your first wand"
 #ifndef USE_TILE
-                " ('<w>/</w>'). Type "
+                " ('<w>"
+             << stringize_glyph(get_item_symbol(SHOW_ITEM_WAND))
+             << "</w>'). Type "
 #else
                 ". Simply click on it with your <w>left mouse button</w>, or "
                 "type "
@@ -1622,7 +1628,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #ifndef USE_TILE
         text << "('<w>";
 
-        text << static_cast<char>(get_item_symbol(SHOW_ITEM_BOOK))
+        text << stringize_glyph(get_item_symbol(SHOW_ITEM_BOOK))
              << "'</w>) "
              << "that you can read by typing <w>%</w>. "
                 "If it's a spellbook you'll then be able to memorise spells "
@@ -1663,7 +1669,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_SEEN_WEAPON:
         text << "This is the first weapon "
 #ifndef USE_TILE
-                "('<w>)</w>') "
+                "('<w>"
+             << stringize_glyph(get_item_symbol(SHOW_ITEM_WEAPON))
+             << "</w>') "
 #endif
                 "you've picked up. Use <w>%</w> "
 #ifdef USE_TILE
@@ -1697,7 +1705,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_SEEN_MISSILES:
         text << "This is the first stack of missiles "
 #ifndef USE_TILE
-                "('<w>(</w>') "
+                "('<w>"
+             << stringize_glyph(get_item_symbol(SHOW_ITEM_MISSILE))
+             << "</w>') "
 #endif
                 "you've picked up. Missiles like darts and throwing nets "
                 "can be thrown by hand, but other missiles like arrows and "
@@ -1734,7 +1744,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_SEEN_ARMOUR:
         text << "This is the first piece of armour "
 #ifndef USE_TILE
-                "('<w>[</w>') "
+                "('<w>"
+             << stringize_glyph(get_item_symbol(SHOW_ITEM_ARMOUR))
+             << "</w>') "
 #endif
                 "you've picked up. "
 #ifdef USE_TILE
@@ -1768,7 +1780,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_SEEN_FOOD:
         text << "You have picked up some food"
 #ifndef USE_TILE
-                " ('<w>percent</w>')"
+                " ('<w>"
+             << stringize_glyph(get_item_symbol(SHOW_ITEM_FOOD))
+             << "</w>')"
 #endif
                 ". You can eat it by typing <w>%</w>"
 #ifdef USE_TILE
@@ -1858,11 +1872,15 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_SEEN_JEWELLERY:
         text << "You have picked up a a piece of jewellery, either a ring"
 #ifndef USE_TILE
-             << " ('<w>=</w>')"
+             << " ('<w>"
+             << stringize_glyph(get_item_symbol(SHOW_ITEM_RING))
+             << "</w>')"
 #endif
              << " or an amulet"
 #ifndef USE_TILE
-             << " ('<w>\"</w>')"
+             << " ('<w>"
+             << stringize_glyph(get_item_symbol(SHOW_ITEM_AMULET))
+             << "</w>')"
              << ". Type <w>%</w> to put it on and <w>%</w> to remove "
                 "it. You can view its properties from your <w>%</w>nventory"
 #else
@@ -1899,7 +1917,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #ifndef USE_TILE
                 ", both of which are represented by '<w>";
 
-        text << static_cast<char>(get_item_symbol(SHOW_ITEM_STAVE))
+        text << stringize_glyph(get_item_symbol(SHOW_ITEM_STAVE))
              << "</w>'"
 #endif
                 ". Both must be <w>%</w>ielded to be of use. "
@@ -1924,7 +1942,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_SEEN_GOLD:
         text << "You have picked up your first pile of gold"
 #ifndef USE_TILE
-                " ('<yellow>$</yellow>')"
+                " ('<yellow>"
+             << stringize_glyph(get_item_symbol(SHOW_ITEM_GOLD))
+             << "</yellow>')"
 #endif
                 ". Unlike all other objects in Crawl it doesn't show up in "
                 "your inventory, takes up no space in your inventory, weighs "

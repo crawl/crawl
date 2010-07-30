@@ -109,7 +109,7 @@ unsigned get_magicmap_char(dungeon_feature_type feat)
 // 3. '^' for traps
 // 4. '_' for altars
 // 5. Anything else will look for the exact same character in the level map.
-bool is_feature(int feature, const coord_def& where)
+bool is_feature(wchar_t feature, const coord_def& where)
 {
     if (!env.map_knowledge(where).known() && !you.see_cell(where))
         return (false);
@@ -234,7 +234,7 @@ bool is_feature(int feature, const coord_def& where)
             return (false);
         }
     default:
-        return get_cell_glyph(env.map_knowledge(where)).ch == (unsigned) feature;
+        return get_cell_glyph(env.map_knowledge(where)).ch == feature;
     }
 }
 

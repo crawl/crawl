@@ -307,12 +307,12 @@ glyph get_cell_glyph_with_class(const map_cell& cell, show_class cls, int color_
     return g;
 }
 
-unsigned get_feat_symbol(dungeon_feature_type feat)
+wchar_t get_feat_symbol(dungeon_feature_type feat)
 {
     return (get_feature_def(feat).symbol);
 }
 
-unsigned get_item_symbol(show_item_type it)
+wchar_t get_item_symbol(show_item_type it)
 {
     return (get_feature_def(show_type(it)).symbol);
 }
