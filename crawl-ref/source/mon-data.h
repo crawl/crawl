@@ -2116,8 +2116,8 @@ static monsterentry mondata[] = {
     { {AT_HIT, AF_NAPALM, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 8, 3, 5, 0 },
     12, 13, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SCREAM,
-    I_NORMAL, HT_LAND, FL_NONE, 12, DEFAULT_ENERGY,
-    MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_MEDIUM
+    I_ANIMAL, HT_LAND, FL_NONE, 12, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
 // These nasties are never randomly generated, only sometimes specially
