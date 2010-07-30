@@ -713,7 +713,8 @@ static bool _ball_of_energy(void)
 
     if (use < 2)
     {
-        lose_stat(STAT_INT, 1, false, "using a ball of energy");
+        const int loss = roll_dice(1, 2 * you.max_intel() / 3);
+        lose_stat(STAT_INT, loss, false, "using a ball of seeing");
     }
     else if (use < 4 && enough_mp(1, true))
     {
