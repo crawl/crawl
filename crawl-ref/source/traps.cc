@@ -474,7 +474,8 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 mpr("A huge blade swings out and slices into you!");
                 const int damage = (you.absdepth0 * 2) + random2avg(29, 2)
                     - random2(1 + you.armour_class());
-                ouch(damage, NON_MONSTER, KILLED_BY_TRAP, "blade");
+                std::string n = name(DESC_NOCAP_A) + " trap";
+                ouch(damage, NON_MONSTER, KILLED_BY_TRAP, n.c_str());
                 bleed_onto_floor(you.pos(), MONS_PLAYER, damage, true);
             }
         }
@@ -1296,12 +1297,13 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
                     msg += "hits you!";
                     mpr(msg.c_str());
 
+                    std::string n = name(DESC_NOCAP_A) + " trap";
+
                     // Needle traps can poison.
                     if (poison)
-                        poison_player(1 + random2(3), "", "a needle trap");
+                        poison_player(1 + random2(3), "", n);
 
-                    ouch(damage_taken, NON_MONSTER, KILLED_BY_TRAP,
-                         shot.name(DESC_PLAIN).c_str());
+                    ouch(damage_taken, NON_MONSTER, KILLED_BY_TRAP, n.c_str());
                 }
                 else            // trap dodged
                 {

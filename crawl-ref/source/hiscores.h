@@ -162,7 +162,6 @@ private:
     std::string terse_missile_name() const;
     std::string terse_beam_cause() const;
     std::string terse_wild_magic() const;
-    std::string terse_trap() const;
     const char *damage_verb() const;
     std::string death_source_desc() const;
     std::string damage_string(bool terse = false) const;
