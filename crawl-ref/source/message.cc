@@ -1087,7 +1087,10 @@ int msgwin_get_line(std::string prompt, char *buf, int len,
 {
     msgwin_prompt(prompt);
     int ret = cancelable_get_line(buf, len, mh, keyproc);
-    msgwin_reply(ret == 0 ? buf : "");
+    std::string reply;
+    if (ret == 0)
+        reply = replace_all(buf, "<", "<<");
+    msgwin_reply(reply);
     return ret;
 }
 

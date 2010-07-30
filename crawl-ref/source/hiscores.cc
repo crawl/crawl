@@ -1425,17 +1425,6 @@ std::string scorefile_entry::terse_wild_magic() const
     return terse_beam_cause();
 }
 
-std::string scorefile_entry::terse_trap() const
-{
-    std::string trap = !auxkilldata.empty()? auxkilldata + " trap"
-                                   : "trap";
-    if (trap.find("n ") == 0)
-        trap = trap.substr(2);
-    trim_string(trap);
-
-    return (trap);
-}
-
 void scorefile_entry::fixup_char_name()
 {
     if (race_class_name.empty())
@@ -1793,13 +1782,11 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
 
     case KILLED_BY_TRAP:
         if (terse)
-            desc += terse_trap();
+            desc += auxkilldata.c_str();
         else
         {
-            snprintf( scratch, sizeof(scratch),
-                      "Killed by triggering a%s%s trap",
-                      auxkilldata.empty() ? "" : " ",
-                      auxkilldata.c_str() );
+            snprintf(scratch, sizeof(scratch), "Killed by triggering %s",
+                     auxkilldata.c_str());
             desc += scratch;
         }
         needs_damage = true;
