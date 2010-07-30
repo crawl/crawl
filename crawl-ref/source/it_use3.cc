@@ -437,7 +437,7 @@ static bool _ball_of_seeing(void)
 
     if (use < 2)
     {
-        lose_stat( STAT_INT, 1, false, "using a ball of seeing");
+        lose_stat(STAT_INT, 1, false, "using a ball of seeing");
     }
     else if (use < 5 && enough_mp(1, true))
     {
@@ -718,12 +718,12 @@ static bool _ball_of_energy(void)
     }
     else if (use < 4 && enough_mp(1, true))
     {
-        mpr( "You feel your power drain away!" );
-        set_mp( 0, false );
+        mpr("You feel your power drain away!");
+        set_mp(0, false);
     }
     else if (use < 6)
     {
-        confuse_player( 10 + random2(10), false );
+        confuse_player(10 + random2(10), false);
     }
     else
     {
@@ -732,13 +732,13 @@ static bool _ball_of_energy(void)
         if (random2avg(77 - you.skills[SK_EVOCATIONS] * 2, 4) > proportional
             || one_chance_in(25))
         {
-            mpr( "You feel your power drain away!" );
-            set_mp( 0, false );
+            mpr("You feel your power drain away!");
+            set_mp(0, false);
         }
         else
         {
-            mpr( "You are suffused with power!" );
-            inc_mp( 6 + roll_dice( 2, you.skills[SK_EVOCATIONS] ), false );
+            mpr("You are suffused with power!");
+            inc_mp(6 + roll_dice(2, you.skills[SK_EVOCATIONS]), false);
 
             ret = true;
         }
