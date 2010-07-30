@@ -23,7 +23,7 @@ function sewer_portal(e)
 "visitors, left to collect dust in the damp caverns. You have an uncanny "..
 "feeling that the drain will fall apart rather soon."
 
-  local timeout_turns = crawl.random_range(1500, 2000)
+  local timeout_turns = crawl.random_range(2700, 3300)
 
   local messager =
     timed_msg {
