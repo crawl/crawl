@@ -26,7 +26,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    coord_def origin = coord_def(-1, -1));
 void reautomap_level();
 
-bool is_feature(int feature, const coord_def& where);
+bool is_feature(wchar_t feature, const coord_def& where);
 
 void clear_feature_overrides();
 void add_feature_override(const std::string &text);
