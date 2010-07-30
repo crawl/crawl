@@ -8,9 +8,9 @@
 #define MAP_SEEN_FLAG           0x02
 #define MAP_CHANGED_FLAG        0x04 // FIXME: this doesn't belong here
 #define MAP_DETECTED_MONSTER    0x08
-#define MAP_INVISIBLE_MONSTER    0x10
+#define MAP_INVISIBLE_MONSTER   0x10
 #define MAP_DETECTED_ITEM       0x20
-#define MAP_VISIBLE_FLAG            0x40
+#define MAP_VISIBLE_FLAG        0x40
 #define MAP_GRID_KNOWN          0xFF
 
 #define MAP_EMPHASIZE 0x100
@@ -44,23 +44,23 @@ struct map_cell
     map_cell(const map_cell& c)
     {
         memcpy(this, &c, sizeof(map_cell));
-        if(!(flags & MAP_DETECTED_MONSTER) && _mons.info)
+        if (!(flags & MAP_DETECTED_MONSTER) && _mons.info)
             _mons.info = new monster_info(*_mons.info);
-        if(_item)
+        if (_item)
             _item = new item_info(*_item);
     }
 
     ~map_cell()
     {
-        if(!(flags & MAP_DETECTED_MONSTER) && _mons.info)
+        if (!(flags & MAP_DETECTED_MONSTER) && _mons.info)
             delete _mons.info;
-        if(_item)
+        if (_item)
             delete _item;
     }
 
     void clear()
     {
-            *this = map_cell();
+        *this = map_cell();
     }
 
     dungeon_feature_type feat() const
@@ -93,7 +93,7 @@ struct map_cell
     {
         clear_item();
         _item = new item_info(ii);
-        if(more_items)
+        if (more_items)
             flags |= MAP_MORE_ITEMS;
     }
 
@@ -105,7 +105,7 @@ struct map_cell
 
     void clear_item()
     {
-        if(_item)
+        if (_item)
         {
             delete _item;
             _item = 0;
@@ -115,9 +115,9 @@ struct map_cell
 
     monster_type monster() const
     {
-        if(flags & MAP_DETECTED_MONSTER)
+        if (flags & MAP_DETECTED_MONSTER)
             return _mons.detected;
-        else if(_mons.info)
+        else if (_mons.info)
             return _mons.info->type;
         else
             return MONS_NO_MONSTER;
@@ -125,7 +125,7 @@ struct map_cell
 
     monster_info* monsterinfo() const
     {
-        if(flags & MAP_DETECTED_MONSTER)
+        if (flags & MAP_DETECTED_MONSTER)
             return 0;
         else
             return _mons.info;
@@ -162,7 +162,7 @@ struct map_cell
 
     void clear_monster()
     {
-        if(!(flags & MAP_DETECTED_MONSTER) && _mons.info)
+        if (!(flags & MAP_DETECTED_MONSTER) && _mons.info)
             delete _mons.info;
         flags &= ~(MAP_DETECTED_MONSTER | MAP_INVISIBLE_MONSTER);
         memset(&_mons, 0, sizeof(_mons));
