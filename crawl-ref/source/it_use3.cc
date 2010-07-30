@@ -441,7 +441,7 @@ static bool _ball_of_seeing(void)
     }
     else if (use < 5 && enough_mp(1, true))
     {
-        mpr("You feel power drain from you!");
+        mpr("You feel your power drain away!");
         set_mp(0, false);
         // if you're out of mana, the switch chain falls through to confusion
     }
