@@ -294,7 +294,7 @@ static void _update_monster(const monsters* mons)
 
 void show_update_at(const coord_def &gp, bool terrain_only)
 {
-    env.map_knowledge(gp).clear();
+    env.map_knowledge(gp).clear_data();
 
     // The sequence is grid, items, clouds, monsters.
     _update_feat_at(gp);

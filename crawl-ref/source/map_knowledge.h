@@ -63,6 +63,14 @@ struct map_cell
         *this = map_cell();
     }
 
+    // Clear prior to show update. Need to retain at least "seen" flag.
+    void clear_data()
+    {
+        const unsigned char f = flags & MAP_SEEN_FLAG;
+        clear();
+        flags = f;
+    }
+
     dungeon_feature_type feat() const
     {
         return _feat;
