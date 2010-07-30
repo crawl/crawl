@@ -1287,9 +1287,12 @@ struct tentacle_attack_constraints
                 // If we can still feasibly retract (haven't left connect range)
                 if (!temp.departure)
                 {
-                    while (probe->second.find(connect_level + 1) != probe->second.end() )
+                    if (probe->second.find(connect_level) != probe->second.end())
                     {
-                        connect_level++;
+                        while (probe->second.find(connect_level + 1) != probe->second.end() )
+                        {
+                            connect_level++;
+                        }
                     }
 
                     int delta = connect_level - base_connect_level;
