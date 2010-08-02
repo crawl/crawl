@@ -1392,7 +1392,7 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg)
 
     case RING_LEVITATION:
         if (you.duration[DUR_LEVITATION] && !you.permanent_levitation()
-            && you.attribute[ATTR_LEV_UNCANCELLABLE])
+            && !you.attribute[ATTR_LEV_UNCANCELLABLE])
         {
             you.duration[DUR_LEVITATION] = 1;
         }
