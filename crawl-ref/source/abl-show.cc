@@ -2418,9 +2418,7 @@ std::vector<talent> your_talents(bool check_confused)
     }
 
     // Note: This ability only applies to this counter.
-    if (player_equip(EQ_RINGS, RING_LEVITATION)
-        || player_equip_ego_type(EQ_BOOTS, SPARM_LEVITATION)
-        || scan_artefacts( ARTP_LEVITATE))
+    if (player_evokable_levitation())
     {
         // Has no effect on permanently flying Kenku.
         if (!you.permanent_flight() && !you.attribute[ATTR_LEV_UNCANCELLABLE])

@@ -1045,6 +1045,13 @@ bool player_equip_unrand(int unrand_index)
     return (false);
 }
 
+int player_evokable_levitation()
+{
+    return player_equip(EQ_RINGS, RING_LEVITATION)
+           + player_equip_ego_type(EQ_BOOTS, SPARM_LEVITATION)
+           + scan_artefacts(ARTP_LEVITATE);
+}
+
 // Given an adjacent monster, returns true if the player can hit it (the
 // monster should not be submerged, or be submerged in shallow water if
 // the player has a polearm).
