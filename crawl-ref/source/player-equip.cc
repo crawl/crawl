@@ -332,7 +332,8 @@ static void _unequip_artefact_effect(const item_def &item, bool *show_msgs=NULL)
     if (proprt[ARTP_LEVITATE] != 0
         && you.duration[DUR_LEVITATION] > 2
         && !you.attribute[ATTR_LEV_UNCANCELLABLE]
-        && !you.permanent_levitation())
+        && !you.permanent_levitation()
+        && !player_evokable_levitation())
     {
         you.duration[DUR_LEVITATION] = 1;
     }
@@ -964,8 +965,11 @@ static void _unequip_armour_effect(item_def& item)
         break;
 
     case SPARM_LEVITATION:
-        if (you.duration[DUR_LEVITATION] && !you.attribute[ATTR_LEV_UNCANCELLABLE])
+        if (you.duration[DUR_LEVITATION] && !you.attribute[ATTR_LEV_UNCANCELLABLE]
+            && !player_evokable_levitation())
+        {
             you.duration[DUR_LEVITATION] = 1;
+        }
         break;
 
     case SPARM_MAGIC_RESISTANCE:
@@ -1392,7 +1396,8 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg)
 
     case RING_LEVITATION:
         if (you.duration[DUR_LEVITATION] && !you.permanent_levitation()
-            && !you.attribute[ATTR_LEV_UNCANCELLABLE])
+            && !you.attribute[ATTR_LEV_UNCANCELLABLE]
+            && !player_evokable_levitation())
         {
             you.duration[DUR_LEVITATION] = 1;
         }
