@@ -675,8 +675,8 @@ void up_stairs(dungeon_feature_type force_stair,
             xom_is_stimulated(255, "Xom snickers loudly.", true);
     }
 
-    if (you.skills[SK_TRANSLOCATIONS] > 0 && !allow_control_teleport( true ))
-        mpr( "You sense a powerful magical force warping space.", MSGCH_WARN );
+    if (!allow_control_teleport(true))
+        mpr("You sense a powerful magical force warping space.", MSGCH_WARN);
 
     if (collect_travel_data)
     {
@@ -1277,8 +1277,8 @@ void down_stairs(dungeon_feature_type force_stair,
     // Clear list of beholding monsters.
     you.clear_beholders();
 
-    if (you.skills[SK_TRANSLOCATIONS] > 0 && !allow_control_teleport( true ))
-        mpr( "You sense a powerful magical force warping space.", MSGCH_WARN );
+    if (!allow_control_teleport( true ))
+        mpr("You sense a powerful magical force warping space.", MSGCH_WARN);
 
     trackers_init_new_level(true);
 
