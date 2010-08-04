@@ -465,13 +465,13 @@ kill_method_type str_to_kill_method(const std::string &s)
 
 scorefile_entry::scorefile_entry(int dam, int dsource, int dtype,
                                  const char *aux, bool death_cause_only,
-                                 const char *dsource_name)
+                                 const char *dsource_name, time_t dt)
 {
     reset();
 
     init_death_cause(dam, dsource, dtype, aux, dsource_name);
     if (!death_cause_only)
-        init();
+        init(dt);
 }
 
 scorefile_entry::scorefile_entry()
@@ -1109,7 +1109,7 @@ static int _award_modified_experience()
     return (result);
 }
 
-void scorefile_entry::init()
+void scorefile_entry::init(time_t dt)
 {
     // Score file entry version:
     //
@@ -1265,8 +1265,8 @@ void scorefile_entry::init()
     }
 
     birth_time = you.birth_time;     // start time of game
-    death_time = time( NULL );       // end time of game
-
+    death_time = (dt != 0 ? dt : time(NULL)); // end time of game
+        
     if (you.real_time != -1)
         real_time = you.real_time + long(death_time - you.start_time);
     else
@@ -2352,7 +2352,8 @@ std::string xlog_fields::xlog_line() const
 
 void mark_milestone(const std::string &type,
                     const std::string &milestone,
-                    bool report_origin_level)
+                    bool report_origin_level,
+                    time_t t)
 {
 #ifdef DGL_MILESTONES
     static std::string lasttype, lastmilestone;
