@@ -1277,13 +1277,15 @@ void mons_make_god_gift(monsters *mon, god_type god)
     if (god == GOD_NO_GOD)
         god = acting_god;
 
-    mon->god = god;
-
-#ifdef DEBUG
     if (mon->flags & MF_GOD_GIFT)
-        mprf(MSGCH_DIAGNOSTICS, "Monster '%s' is already a gift of god '%s'",
-             mon->name(DESC_PLAIN, true).c_str(), god_name(god).c_str());
-#endif
+    {
+        dprf("Monster '%s' was already a gift of god '%s', now god '%s'.",
+             mon->name(DESC_PLAIN, true).c_str(),
+             god_name(mon->god).c_str(),
+             god_name(god).c_str());
+    }
+
+    mon->god = god;
     mon->flags |= MF_GOD_GIFT;
 }
 
