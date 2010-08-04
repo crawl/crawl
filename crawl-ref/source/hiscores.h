@@ -22,7 +22,7 @@ std::string hiscores_format_single_long( const scorefile_entry &se,
                                          bool verbose = false );
 
 void mark_milestone(const std::string &type, const std::string &milestone,
-                    bool report_origin_level = false);
+                    bool report_origin_level = false, time_t t = 0);
 
 #ifdef DGL_WHEREIS
 std::string xlog_status_line();
@@ -119,14 +119,15 @@ public:
     scorefile_entry();
     scorefile_entry(int damage, int death_source, int death_type,
                     const char *aux, bool death_cause_only = false,
-                    const char *death_source_name = NULL);
+                    const char *death_source_name = NULL,
+                    time_t death_time = 0);
     scorefile_entry(const scorefile_entry &se);
 
     scorefile_entry &operator = (const scorefile_entry &other);
 
     void init_death_cause(int damage, int death_source, int death_type,
                           const char *aux, const char *death_source_name);
-    void init();
+    void init(time_t death_time = 0);
     void reset();
 
     enum death_desc_verbosity {
