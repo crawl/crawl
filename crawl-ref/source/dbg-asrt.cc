@@ -544,8 +544,10 @@ void do_crash_dump()
 
     char name[180];
 
+    // Want same time for file name and crash milestone.
+    const time_t t = time(NULL);
     snprintf(name, sizeof(name), "%scrash-%s-%s.txt", dir.c_str(),
-            you.your_name.c_str(), make_file_time(time(NULL)).c_str());
+            you.your_name.c_str(), make_file_time(t).c_str());
 
     fprintf(stderr, "\nWriting crash info to %s\n", name);
     errno = 0;
@@ -645,7 +647,7 @@ void do_crash_dump()
     set_msg_dump_file(NULL);
 
 #ifdef ASSERTS
-    mark_milestone("crash", _assert_msg);
+    mark_milestone("crash", _assert_msg, false, t);
 #endif
 
     if (file != stderr)
