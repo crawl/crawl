@@ -1740,30 +1740,26 @@ ENDMAP
 ##############################################################################
 # Sounds of Crawl: the Drone.
 NAME:    dpeg_entry_sounds_drone
-TAGS:    entry no_monster_gen no_rotate
+TAGS:    entry no_monster_gen
 MONS:    generate_awake boring beetle / boring beetle
 ORIENT:  float
-SHUFFLE: {<
+NSUBST:  . = 1={< / *:.
+NSUBST:  ' = 1:> / 7:x / *:.
+SUBST:   " = .
 MAP
-xxx.....@....ccccc....@.....xxx
-xx...........cx>xc...........xx
-x............cxxxc............x
-.............cxxxc.............
-.............cxxxc.............
-@.......(....cxxxc....[.......@
-.............cxxxc.............
-ccccccccccccccxxxcccccccccccccc
-cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxc
-c>xxxxxxxxxxxxx1xxxxxxxxxxxxx>c
-cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxc
-ccccccccccccccxxxcccccccccccccc
-.............cxxxc.............
-@.......]....cxxxc....{.......@
-.............cxxxc.............
-.............cxxxc.............
-x............cxxxc............x
-xx...........cx>xc...........xx
-xxx.....@....ccccc....@.....xxx
+  ....ccccc...  
+  ....c'''c...  
+......c'''c.....
+......c'''c.....
+..ccccc'''ccccc.
+..c''''"""''''c.
+..c''''"1"''''c.
+..c''''"""''''c.
+..ccccc'''ccccc.
+......c'''c.....
+......c'''c.....
+  ....c'''c... 
+  ....ccccc...
 ENDMAP
 
 ##############################################################################
