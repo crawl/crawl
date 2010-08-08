@@ -4686,6 +4686,17 @@ void read_scroll(int slot)
         return;
     }
 
+    const scroll_type which_scroll = static_cast<scroll_type>(scroll.sub_type);
+    const bool alreadyknown = item_type_known(scroll);
+
+    if (alreadyknown
+        && (which_scroll == SCR_BLINKING || which_scroll == SCR_TELEPORTATION)
+        && item_blocks_teleport(false, false))
+    {
+        mpr("You cannot teleport right now.");
+        return;
+    }
+
     // Ok - now we FINALLY get to read a scroll !!! {dlb}
     you.turn_is_over = true;
 
@@ -4696,18 +4707,6 @@ void read_scroll(int slot)
         mpr((player_mutation_level(MUT_BLURRY_VISION) == 3 && one_chance_in(3))
                         ? "This scroll appears to be blank."
                         : "The writing blurs in front of your eyes.");
-        return;
-    }
-
-    // Decrement and handle inventory if any scroll other than paper {dlb}:
-    const scroll_type which_scroll = static_cast<scroll_type>(scroll.sub_type);
-    const bool alreadyknown = item_type_known(scroll);
-
-    if (alreadyknown
-        && (which_scroll == SCR_BLINKING || which_scroll == SCR_TELEPORTATION)
-        && item_blocks_teleport(false, false))
-    {
-        mpr("You cannot teleport right now.");
         return;
     }
 
