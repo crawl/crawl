@@ -404,7 +404,7 @@ A huge and very powerful demon, wreathed in fire and shadows.
 %%%%
 bear
 
-A common cave bear.
+A common cave bear. If provoked, it may become angry!
 %%%%
 beast
 
@@ -420,7 +420,7 @@ An unusually large kobold.
 %%%%
 black bear
 
-A small black bear.
+A small black bear. If provoked, it may become angry!
 %%%%
 black draconian
 
@@ -909,7 +909,7 @@ A large creature with the hindquarters of a lion and the wings, head and talons 
 %%%%
 grizzly bear
 
-A large, nasty bear with grey fur.
+A large, nasty bear with grey fur. If provoked, it may become angry!
 %%%%
 guardian mummy
 
@@ -1329,7 +1329,7 @@ The apparition of an unfortunate adventurer.
 %%%%
 polar bear
 
-A large and very strong bear covered in glistening white fur.
+A large and very strong bear covered in glistening white fur. If provoked, it may become angry!
 %%%%
 program bug
 
