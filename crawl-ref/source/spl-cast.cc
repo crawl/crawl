@@ -879,7 +879,7 @@ bool is_prevented_teleport(spell_type spell)
     return ((spell == SPELL_BLINK
            || spell == SPELL_CONTROLLED_BLINK
            || spell == SPELL_TELEPORT_SELF)
-           && scan_artefacts(ARTP_PREVENT_TELEPORTATION, false));
+           && item_blocks_teleport(false, false));
 }
 
 bool spell_is_uncastable(spell_type spell, std::string &msg)
