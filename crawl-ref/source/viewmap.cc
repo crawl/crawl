@@ -644,6 +644,9 @@ public:
 
 static level_pos _stair_dest(const coord_def& p, command_type dir)
 {
+    if (!in_bounds(p))
+        return (level_pos());
+
     if (feat_stair_direction(env.map_knowledge(p).feat()) != dir)
         return (level_pos());
 
