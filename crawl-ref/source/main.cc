@@ -3543,7 +3543,7 @@ static void _do_berserk_no_combat_penalty(void)
 
         // I do these three separately, because the might and
         // haste counters can be different.
-        int berserk_delay_penalty = you.berserk_penalty * BASELINE_DELAY;
+        int berserk_delay_penalty = you.berserk_penalty * BASELINE_DELAY / 2;
         you.duration[DUR_BERSERKER] -= berserk_delay_penalty;
         if (you.duration[DUR_BERSERKER] < 1)
             you.duration[DUR_BERSERKER] = 1;
