@@ -3545,16 +3545,16 @@ static void _do_berserk_no_combat_penalty(void)
         // haste counters can be different.
         int berserk_delay_penalty = you.berserk_penalty * BASELINE_DELAY / 2;
         you.duration[DUR_BERSERKER] -= berserk_delay_penalty;
-        if (you.duration[DUR_BERSERKER] < 1)
-            you.duration[DUR_BERSERKER] = 1;
+        if (you.duration[DUR_BERSERKER] < BASELINE_DELAY)
+            you.duration[DUR_BERSERKER] = BASELINE_DELAY;
 
         you.duration[DUR_MIGHT] -= berserk_delay_penalty;
-        if (you.duration[DUR_MIGHT] < 1)
-            you.duration[DUR_MIGHT] = 1;
+        if (you.duration[DUR_MIGHT] < BASELINE_DELAY)
+            you.duration[DUR_MIGHT] = BASELINE_DELAY;
 
         you.duration[DUR_HASTE] -= berserk_delay_penalty;
-        if (you.duration[DUR_HASTE] < 1)
-            you.duration[DUR_HASTE] = 1;
+        if (you.duration[DUR_HASTE] < BASELINE_DELAY)
+            you.duration[DUR_HASTE] = BASELINE_DELAY;
     }
     return;
 }                               // end do_berserk_no_combat_penalty()
