@@ -31,6 +31,9 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell, bool colored)
     unsigned short colour = BLACK;
     const feature_def &fdef = get_feature_def(feat);
 
+    // These aren't shown mossy/bloody/slimy.
+    const bool norecolour = is_critical_feature(feat) || feat_is_trap(feat);
+
     if (!colored)
     {
         if (cell.flags & MAP_EMPHASIZE)
@@ -64,11 +67,11 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell, bool colored)
                 colour = LIGHTGREY; // 1/12
         }
     }
-    else if (cell.flags & MAP_BLOODY && !is_critical_feature(feat) && !feat_is_trap(feat))
+    else if (cell.flags & MAP_BLOODY && !norecolour)
         colour = RED;
-    else if (cell.flags & MAP_MOLDY && !is_critical_feature(feat) && !feat_is_trap(feat))
+    else if (cell.flags & MAP_MOLDY && !norecolour)
         colour = (cell.flags & MAP_GLOWING_MOLDY) ? LIGHTRED : LIGHTGREEN;
-    else if (cell.flags & MAP_CORRODING)
+    else if (cell.flags & MAP_CORRODING && !norecolour)
         colour = LIGHTGREEN;
     else if (cell.feat_colour())
         colour = cell.feat_colour();
