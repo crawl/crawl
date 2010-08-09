@@ -83,9 +83,7 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell, bool colored)
         }
     }
 
-    // TODO: should be a feat_is_whatever(feat)
-    if (feat >= DNGN_FLOOR_MIN && feat <= DNGN_FLOOR_MAX
-        || feat == DNGN_UNDISCOVERED_TRAP)
+    if (feat >= DNGN_FLOOR_MIN && feat <= DNGN_FLOOR_MAX)
     {
         if (cell.flags & MAP_HALOED)
         {
