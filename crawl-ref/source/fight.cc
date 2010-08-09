@@ -3378,9 +3378,6 @@ bool melee_attack::apply_damage_brand()
 
         attacker->heal(hp_boost);
 
-        if (attacker->hunger_level() != HS_ENGORGED)
-            attacker->make_hungry(-random2avg(59, 2));
-
         attacker->god_conduct(DID_NECROMANCY, 2);
         break;
     }
