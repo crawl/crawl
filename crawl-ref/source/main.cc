@@ -3541,20 +3541,21 @@ static void _do_berserk_no_combat_penalty(void)
             break;
         }
 
-        // I do these three separately, because the might and
+        const int hasted_base_delay = BASELINE_DELAY / 2;
+        int berserk_delay_penalty = you.berserk_penalty * hasted_base_delay;
+        // Do these three separately, because the might and
         // haste counters can be different.
-        int berserk_delay_penalty = you.berserk_penalty * BASELINE_DELAY / 2;
         you.duration[DUR_BERSERKER] -= berserk_delay_penalty;
-        if (you.duration[DUR_BERSERKER] < BASELINE_DELAY)
-            you.duration[DUR_BERSERKER] = BASELINE_DELAY;
+        if (you.duration[DUR_BERSERKER] < hasted_base_delay)
+            you.duration[DUR_BERSERKER] = hasted_base_delay;
 
         you.duration[DUR_MIGHT] -= berserk_delay_penalty;
-        if (you.duration[DUR_MIGHT] < BASELINE_DELAY)
-            you.duration[DUR_MIGHT] = BASELINE_DELAY;
+        if (you.duration[DUR_MIGHT] < hasted_base_delay)
+            you.duration[DUR_MIGHT] = hasted_base_delay;
 
         you.duration[DUR_HASTE] -= berserk_delay_penalty;
-        if (you.duration[DUR_HASTE] < BASELINE_DELAY)
-            you.duration[DUR_HASTE] = BASELINE_DELAY;
+        if (you.duration[DUR_HASTE] < hasted_base_delay)
+            you.duration[DUR_HASTE] = hasted_base_delay;
     }
     return;
 }                               // end do_berserk_no_combat_penalty()
