@@ -703,10 +703,11 @@ void tile_place_monster(const coord_def &gc, const monsters *mon)
 
 void tile_place_cloud(const coord_def &gc, const cloud_struct &cl)
 {
+    const coord_def ep = view2show(grid2view(gc));
     // In the Shoals, ink is handled differently. (jpeg)
     // I'm not sure it is even possible anywhere else, but just to be safe...
     if (cl.type != CLOUD_INK || !player_in_branch(BRANCH_SHOALS))
-        env.tile_fg(gc) = tileidx_cloud(cl);
+        env.tile_fg(ep) = tileidx_cloud(cl);
 }
 
 unsigned int num_tile_rays = 0;
