@@ -3790,7 +3790,7 @@ void handle_time()
     {
         // [ds] Move magic contamination effects closer to b26 again.
         const bool glow_effect =
-            (you.magic_contamination > 5
+            (get_contamination_level() > 1
              && x_chance_in_y(you.magic_contamination, 12));
 
         if (glow_effect && is_sanctuary(you.pos()))
