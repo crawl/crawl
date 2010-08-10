@@ -1014,8 +1014,7 @@ void MiscastEffect::_enchantment(int severity)
             _potion_effect(POT_CONFUSION, 10);
             break;
         case 2:
-            mpr("You feel saturated with unharnessed energies!");
-            you.magic_contamination += random2avg(19, 3);
+            contaminate_player(random2avg(19, 3));
             break;
         case 3:
             do
@@ -1183,8 +1182,7 @@ void MiscastEffect::_translocation(int severity)
             send_abyss();
             break;
         case 3:
-            mpr("You feel saturated with unharnessed energies!");
-            you.magic_contamination += random2avg(19, 3);
+            contaminate_player(random2avg(19, 3));
             break;
         }
         break;
@@ -1875,8 +1873,7 @@ void MiscastEffect::_transmutation(int severity)
             _potion_effect(POT_CONFUSION, 10);
             break;
         case 3:
-            mpr("You feel saturated with unharnessed energies!");
-            you.magic_contamination += random2avg(19, 3);
+            contaminate_player(random2avg(19, 3));
             break;
         }
         break;
@@ -1894,7 +1891,7 @@ void MiscastEffect::_transmutation(int severity)
             if (_ouch(3 + random2avg(18, 2)) && target->alive())
             {
                 if (target->atype() == ACT_PLAYER)
-                    you.magic_contamination += random2avg(35, 3);
+                    contaminate_player(random2avg(35, 3), false, false, false);
             }
             break;
 
