@@ -1051,7 +1051,7 @@ void abjuration(int pow)
 void antimagic()
 {
     duration_type dur_list[] = {
-        DUR_INVIS, DUR_CONF, DUR_PARALYSIS, DUR_SLOW, DUR_HASTE,
+        DUR_INVIS, DUR_CONF, DUR_PARALYSIS, DUR_HASTE,
         DUR_MIGHT, DUR_AGILITY, DUR_BRILLIANCE, DUR_FIRE_SHIELD, DUR_ICY_ARMOUR, DUR_REPEL_MISSILES,
         DUR_REGENERATION, DUR_SWIFTNESS, DUR_STONEMAIL, DUR_CONTROL_TELEPORT,
         DUR_TRANSFORMATION, DUR_DEATH_CHANNEL, DUR_DEFLECT_MISSILES,
@@ -1069,6 +1069,10 @@ void antimagic()
 
     if (!you.permanent_flight() && you.duration[DUR_CONTROLLED_FLIGHT] > 1)
         you.duration[DUR_CONTROLLED_FLIGHT] = 1;
+
+    // Post-berserk slowing isn't magic, so don't remove that.
+    if (you.duration[DUR_SLOW] > you.duration[DUR_EXHAUSTED])
+        you.duration[DUR_SLOW] = std::max(you.duration[DUR_EXHAUSTED], 1);
 
     for (unsigned int i = 0; i < ARRAYSZ(dur_list); ++i)
         if (you.duration[dur_list[i]] > 1)
