@@ -4523,14 +4523,16 @@ int get_contamination_level()
     const int glow = you.magic_contamination;
 
     if (glow > 60)
-        return (glow / 20 + 2);
+        return (glow / 20 + 3);
     if (glow > 40)
-        return (4);
+        return (5);
     if (glow > 25)
-        return (3);
+        return (4);
     if (glow > 15)
-        return (2);
+        return (3);
     if (glow > 5)
+        return (2);
+    if (glow > 0)
         return (1);
 
     return (0);
@@ -4558,47 +4560,49 @@ void contaminate_player(int change, bool controlled, bool status_only)
     if (you.magic_contamination != old_amount)
         dprf("change: %d  radiation: %d", change, you.magic_contamination);
 
-    if (status_only || (new_level >= 1 && old_level == 0)
-        || (old_amount == 0 && you.magic_contamination > 0))
+    if (status_only ||
+        (new_level >= 1 && old_level <= 1 && new_level != old_level))
     {
-        if (new_level > 3)
-        {
-            mpr( (new_level == 4) ?
-                 "Your entire body has taken on an eerie glow!" :
-                 "You are engulfed in a nimbus of crackling magics!");
+        if (new_level > 5)
+            mprf("You are engulfed in a nimbus of crackling magics!");
+        else if (new_level == 5)
+            mprf("Your entire body has taken on an eerie glow!");
         }
-        else if (new_level == 0 && old_amount == 0
-                 && you.magic_contamination > 0)
-        {
-            mpr("You are very lightly contaminated with residual magic.");
-        }
-        else
+        else if (new_level > 1)
         {
             mprf("You are %s with residual magics%s",
-                 (new_level == 3) ? "practically glowing" :
-                 (new_level == 2) ? "heavily infused" :
-                 (new_level == 1) ? "contaminated"
+                 (new_level == 4) ? "practically glowing" :
+                 (new_level == 3) ? "heavily infused" :
+                 (new_level == 2) ? "contaminated"
                                   : "lightly contaminated",
-                 (new_level == 3) ? "!" : ".");
+                 (new_level == 4) ? "!" : ".");
+        }
+        else // new_level == 1
+        {
+            mpr("You are very lightly contaminated with residual magic.");
         }
     }
     else if (new_level != old_level)
     {
-        mprf((change > 0) ? MSGCH_WARN : MSGCH_RECOVERY,
-             "You feel %s contaminated with magical energies.",
-             (change > 0) ? "more" : "less" );
+        if (old_level == 1 && new_level == 0)
+            mpr("Your magical contamination has completely faded away.");
+        else
+        {
+            mprf((change > 0) ? MSGCH_WARN : MSGCH_RECOVERY,
+                 "You feel %s contaminated with magical energies.",
+                 (change > 0) ? "more" : "less");
+        }
 
         if (change > 0)
             xom_is_stimulated(new_level * 32);
 
-        if (new_level == 0 && you.duration[DUR_INVIS] && !you.backlit())
+        if (old_level > 1 && new_level <= 1
+            && you.duration[DUR_INVIS] && !you.backlit())
         {
             mpr("You fade completely from view now that you are no longer "
                 "glowing from magical contamination.");
         }
     }
-    else if (old_level == 0 && old_amount > 0 && you.magic_contamination == 0)
-        mpr("Your magical contamination has completely faded away.");
 
     if (status_only)
         return;
@@ -6480,7 +6484,7 @@ bool player::visible_to(const actor *looker) const
 
 bool player::backlit(bool check_haloed, bool self_halo) const
 {
-    if (get_contamination_level() > 0 || duration[DUR_CORONA]
+    if (get_contamination_level() > 1 || duration[DUR_CORONA]
         || duration[DUR_LIQUID_FLAMES] || duration[DUR_QUAD_DAMAGE])
     {
         return (true);
