@@ -283,7 +283,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
             return (true);
         }
 
-        if (get_contamination_level() > 0)
+        if (get_contamination_level() > 1)
         {
             mprf(MSGCH_DURATION,
                  "You become %stransparent, but the glow from your "

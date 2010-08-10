@@ -725,15 +725,15 @@ static void _get_status_lights(std::vector<status_light>& out)
     if (you.attribute[ATTR_HELD])
         out.push_back(status_light(RED, "Held"));
 
-    if (you.magic_contamination || you.backlit(false))
+    const int cont = get_contamination_level();
+    if (cont || you.backlit(false))
     {
-        int colour = LIGHTBLUE;
-        if (you.magic_contamination > 0)
-        {
-            colour = (you.magic_contamination > 5
-                        ? _bad_ench_colour( you.magic_contamination, 15, 25 )
-                        : DARKGREY);
-        }
+        int colour = DARKGREY;
+        if (you.backlit(false))
+            colour = LIGHTBLUE;
+        if (cont > 1)
+            colour = _bad_ench_colour(cont, 2, 3);
+
         out.push_back(status_light(colour, "Glow"));
     }
 
@@ -2255,15 +2255,15 @@ std::string _status_mut_abilities()
         status.push_back(help);
     }
 
-    if (you.magic_contamination > 0)
+    const int cont = get_contamination_level();
+    if (cont > 0)
     {
-        const int cont = get_contamination_level();
         snprintf(info, INFO_SIZE, "%sglowing",
-                 (cont == 0) ? "very slightly " :
-                 (cont == 1) ? "slightly " :
-                 (cont == 2) ? "" :
-                 (cont == 3) ? "moderately " :
-                 (cont == 4) ? "heavily "
+                 (cont == 1) ? "very slightly " :
+                 (cont == 2) ? "slightly " :
+                 (cont == 3) ? "" :
+                 (cont == 4) ? "moderately " :
+                 (cont == 5) ? "heavily "
                              : "really heavily ");
 
         status.push_back(info);
