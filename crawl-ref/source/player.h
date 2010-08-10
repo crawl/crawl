@@ -183,7 +183,7 @@ public:
 
   std::vector<demon_trait> demonic_traits;
 
-  uint8_t magic_contamination;
+  int magic_contamination;
 
   FixedVector<bool, NUM_FIXED_BOOKS> had_book;
   FixedVector<bool, NUM_SPELLS>      seen_spell;
