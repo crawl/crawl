@@ -914,7 +914,7 @@ void down_stairs(dungeon_feature_type force_stair,
         if (!is_valid_shaft_level())
         {
             if (known_trap)
-                mpr("The shaft disappears is a puff of logic!");
+                mpr("The shaft disappears in a puff of logic!");
             _maybe_destroy_trap(you.pos());
             return;
         }
