@@ -3290,7 +3290,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "some powerful magics, like invisibility, haste or potions of "
                 "resistance. ";
 
-        if (you.magic_contamination < 5)
+        if (get_contamination_level() < 2)
         {
             text << "As long as the status only shows in grey nothing will "
                     "actually happen as a result of it, but as you continue "
