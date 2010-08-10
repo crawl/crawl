@@ -679,8 +679,23 @@ static mutation_type _get_random_xom_mutation()
     return (mutat);
 }
 
-static mutation_type _get_random_mutation(int preferred_multiplier = 100,
-                                          bool prefer_good = true)
+static bool _mut_matches_class(mutation_type mutclass, const mutation_def& mdef)
+{
+    switch (mutclass)
+    {
+    case RANDOM_MUTATION:
+        return (true);
+    case RANDOM_BAD_MUTATION:
+        return (mdef.bad);
+    case RANDOM_GOOD_MUTATION:
+        return (!mdef.bad);
+    default:
+        ASSERT(false);
+        return (false);
+    }
+}
+
+static mutation_type _get_random_mutation(mutation_type mutclass)
 {
     int cweight = 0;
     mutation_type chosen = NUM_MUTATIONS;
@@ -694,17 +709,15 @@ static mutation_type _get_random_mutation(int preferred_multiplier = 100,
         if (!mdef.rarity)
             continue;
 
+        if (!_mut_matches_class(mutclass, mdef))
+            continue;
+
         if (!_accept_mutation(curr, true))
             continue;
 
-        const bool weighted = mdef.bad != prefer_good;
-        int weight = mdef.rarity;
-        if (weighted)
-            weight = weight * preferred_multiplier / 100;
+        cweight += mdef.rarity;
 
-        cweight += weight;
-
-        if (x_chance_in_y(weight, cweight))
+        if (x_chance_in_y(mdef.rarity, cweight))
             chosen = curr;
     }
 
@@ -1061,16 +1074,12 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     switch (which_mutation)
     {
     case RANDOM_MUTATION:
-        mutat = _get_random_mutation();
+    case RANDOM_GOOD_MUTATION:
+    case RANDOM_BAD_MUTATION:
+        mutat = _get_random_mutation(which_mutation);
         break;
     case RANDOM_XOM_MUTATION:
         mutat = _get_random_xom_mutation();
-        break;
-    case RANDOM_GOOD_MUTATION:
-        mutat = _get_random_mutation(500, true);
-        break;
-    case RANDOM_BAD_MUTATION:
-        mutat = _get_random_mutation(500, false);
         break;
     case RANDOM_SLIME_MUTATION:
         mutat = _get_random_slime_mutation();
