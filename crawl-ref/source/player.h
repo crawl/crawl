@@ -795,7 +795,8 @@ int get_contamination_level();
 void set_mp(int new_amount, bool max_too);
 
 void contaminate_player(int change, bool controlled = false,
-                        bool status_only = false);
+                        bool status_only = false,
+                        bool msg = true);
 
 bool confuse_player(int amount, bool resistable = true);
 

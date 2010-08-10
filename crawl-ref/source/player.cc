@@ -4541,7 +4541,7 @@ int get_contamination_level()
 // controlled is true if the player actively did something to cause
 // contamination (such as drink a known potion of resistance),
 // status_only is true only for the status output
-void contaminate_player(int change, bool controlled, bool status_only)
+void contaminate_player(int change, bool controlled, bool status_only, bool msg)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -4561,13 +4561,12 @@ void contaminate_player(int change, bool controlled, bool status_only)
         dprf("change: %d  radiation: %d", change, you.magic_contamination);
 
     if (status_only ||
-        (new_level >= 1 && old_level <= 1 && new_level != old_level))
+        (msg && new_level >= 1 && old_level <= 1 && new_level != old_level))
     {
         if (new_level > 5)
             mprf("You are engulfed in a nimbus of crackling magics!");
         else if (new_level == 5)
             mprf("Your entire body has taken on an eerie glow!");
-        }
         else if (new_level > 1)
         {
             mprf("You are %s with residual magics%s",
@@ -4578,11 +4577,9 @@ void contaminate_player(int change, bool controlled, bool status_only)
                  (new_level == 4) ? "!" : ".");
         }
         else // new_level == 1
-        {
             mpr("You are very lightly contaminated with residual magic.");
-        }
     }
-    else if (new_level != old_level)
+    else if (msg && new_level != old_level)
     {
         if (old_level == 1 && new_level == 0)
             mpr("Your magical contamination has completely faded away.");
