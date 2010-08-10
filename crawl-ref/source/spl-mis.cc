@@ -1535,8 +1535,7 @@ void MiscastEffect::_divination_mon(int severity)
 void MiscastEffect::_necromancy(int severity)
 {
     if (target->atype() == ACT_PLAYER && you.religion == GOD_KIKUBAAQUDGHA
-        && !player_under_penance() && you.piety >= piety_breakpoint(1)
-        && x_chance_in_y(you.piety, 150))
+        && !player_under_penance() && you.piety >= piety_breakpoint(1))
     {
         const bool death_curse =
                      (cause.find("death curse") != std::string::npos);
@@ -1544,13 +1543,24 @@ void MiscastEffect::_necromancy(int severity)
         if (spell != SPELL_NO_SPELL)
         {
             // An actual necromancy miscast.
-            canned_msg(MSG_NOTHING_HAPPENS);
-            return;
+            if (x_chance_in_y(you.piety, 150))
+            {
+                canned_msg(MSG_NOTHING_HAPPENS);
+                return;
+            }
         }
         else if (death_curse)
         {
-            simple_god_message(" averts the curse.");
-            return;
+            if (coinflip())
+            {
+                simple_god_message(" averts the curse.");
+                return;
+            }
+            else
+            {
+                simple_god_message(" partially averts the curse.");
+                severity = std::max(severity - 1, 0);
+            }
         }
     }
 
