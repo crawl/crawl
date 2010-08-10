@@ -1538,8 +1538,20 @@ void MiscastEffect::_necromancy(int severity)
         && !player_under_penance() && you.piety >= piety_breakpoint(1)
         && x_chance_in_y(you.piety, 150))
     {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return;
+        const bool death_curse =
+                     (cause.find("death curse") != std::string::npos);
+
+        if (spell != SPELL_NO_SPELL)
+        {
+            // An actual necromancy miscast.
+            canned_msg(MSG_NOTHING_HAPPENS);
+            return;
+        }
+        else if (death_curse)
+        {
+            simple_god_message(" averts the curse.");
+            return;
+        }
     }
 
     switch (severity)
