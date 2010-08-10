@@ -935,7 +935,7 @@ bool cast_revivification(int pow)
             if (x_chance_in_y(8, pow))
                 loss++;
 
-        dec_max_hp(loss);
+        dec_max_hp(loss * you.hp_max / 100);
         set_hp(you.hp_max, false);
 
         if (you.duration[DUR_DEATHS_DOOR])
