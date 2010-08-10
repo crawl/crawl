@@ -4546,31 +4546,17 @@ void contaminate_player(int change, bool controlled, bool status_only)
     if (status_only && !you.magic_contamination)
         return;
 
-    // get current contamination level
     int old_amount = you.magic_contamination;
     int old_level  = get_contamination_level();
     int new_level  = 0;
-#ifdef DEBUG_DIAGNOSTICS
-    if (change > 0 || (change < 0 && you.magic_contamination))
-    {
-        mprf(MSGCH_DIAGNOSTICS, "change: %d  radiation: %d",
-             change, change + you.magic_contamination );
-    }
-#endif
 
-    // make the change
-    if (change + you.magic_contamination < 0)
-        you.magic_contamination = 0;
-    else
-    {
-        if (change + you.magic_contamination > 250)
-            you.magic_contamination = 250;
-        else
-            you.magic_contamination += change;
-    }
+    you.magic_contamination = 
+        std::max(0, std::min(250, you.magic_contamination + change));
 
-    // figure out new level
     new_level = get_contamination_level();
+
+    if (you.magic_contamination != old_amount)
+        dprf("change: %d  radiation: %d", change, you.magic_contamination);
 
     if (status_only || (new_level >= 1 && old_level == 0)
         || (old_amount == 0 && you.magic_contamination > 0))
