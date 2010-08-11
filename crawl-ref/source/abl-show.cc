@@ -1160,7 +1160,7 @@ static bool _activate_talent(const talent& tal)
             break;
     }
 
-    if (hungerCheck && you.species != SP_VAMPIRE
+    if (hungerCheck && !you.is_undead
         && you.hunger_state == HS_STARVING)
     {
         mpr("You're too hungry.");
