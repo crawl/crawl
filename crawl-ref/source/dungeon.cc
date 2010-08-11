@@ -1832,6 +1832,8 @@ static void _dgn_verify_connectivity(unsigned nvaults)
         return;
     }
 
+    // XXX: Interlevel connectivity fixup relies on being the last
+    //      point at which a level may be vetoed.
     if (!_fixup_interlevel_connectivity())
     {
         dgn_level_vetoed = true;
@@ -8760,17 +8762,20 @@ static bool _fixup_interlevel_connectivity()
     // Note: this check is undirectional and assumes that levels below this
     // one have not been created yet.  If this is not the case, it will not
     // guarantee or preserve connectivity.
+    //
+    // XXX: If successful, the previous level's connectedness information
+    //      is updated, so we rely on the level not being vetoed after
+    //      this check.
 
     if (you.level_type != LEVEL_DUNGEON || your_branch().depth == -1)
         return (true);
     if (branches[you.where_are_you].branch_flags & BFLAG_ISLANDED)
         return (true);
 
-    StairConnectivity full;
-    StairConnectivity &prev_con = (player_branch_depth() == 1) ? full :
-        (connectivity[your_branch().id][player_branch_depth() - 2]);
-    StairConnectivity &this_con =
-        (connectivity[your_branch().id][player_branch_depth() - 1]);
+    StairConnectivity prev_con;
+    if (player_branch_depth() > 1)
+        prev_con = connectivity[your_branch().id][player_branch_depth() - 2];
+    StairConnectivity this_con;
 
     FixedVector<coord_def, 3> up_gc;
     FixedVector<coord_def, 3> down_gc;
@@ -9017,6 +9022,11 @@ static bool _fixup_interlevel_connectivity()
             this_con.connected[i] = false;
 
     }
+
+    // Save the connectivity.
+    if (player_branch_depth() > 1)
+        connectivity[your_branch().id][player_branch_depth() - 2] = prev_con;
+    connectivity[your_branch().id][player_branch_depth() - 1] = this_con;
 
     return (true);
 }
