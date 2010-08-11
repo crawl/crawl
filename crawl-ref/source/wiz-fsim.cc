@@ -29,6 +29,7 @@
 #include "player.h"
 #include "skills2.h"
 #include "species.h"
+#include "stuff.h"
 
 #ifdef WIZARD
 static int _create_fsim_monster(int mtype, int hp)
@@ -536,9 +537,20 @@ int fsim_kit_equip(const std::string &kit)
 // of current weapon skill.
 void debug_fight_statistics(bool use_defaults, bool defence)
 {
-    int punching_bag = get_monster_by_name(Options.fsim_mons);
+    char specs[100];
+    mpr("Which monster by name? ", MSGCH_PROMPT);
+    if (cancelable_get_line_autohist(specs, sizeof specs) || !*specs)
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
+
+    int punching_bag = get_monster_by_name(specs);
     if (punching_bag == -1 || punching_bag == MONS_NO_MONSTER)
-        punching_bag = MONS_WORM;
+    {
+        mpr("invalid monster");
+        return;
+    }
 
     int mindex = _create_fsim_monster(punching_bag, 500);
     if (mindex == -1)
