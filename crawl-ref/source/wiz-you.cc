@@ -653,21 +653,13 @@ void wizard_get_religion(void)
 void wizard_set_stats()
 {
     char buf[80];
-    mprf(MSGCH_PROMPT, "Enter values for Str, Int, Dex (space separated): ");
+    mprf(MSGCH_PROMPT, "Enter values for AC, GDR, EV (space separated): ");
     if (cancelable_get_line_autohist(buf, sizeof buf))
         return;
 
-    int sstr = you.strength(),
-        sdex = you.dex(),
-        sint = you.intel();
+    sscanf(buf, "%d %d %d", &you.ac, &you.gdr, &you.ev);
 
-    sscanf(buf, "%d %d %d", &sstr, &sint, &sdex);
-
-    you.base_stats[STAT_STR] = debug_cap_stat(sstr);
-    you.base_stats[STAT_INT] = debug_cap_stat(sint);
-    you.base_stats[STAT_DEX] = debug_cap_stat(sdex);
-    you.stat_loss.init(0);
-    you.redraw_stats.init(true);
+    you.redraw_armour_class = true;
     you.redraw_evasion = true;
 }
 

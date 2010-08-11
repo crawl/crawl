@@ -46,6 +46,10 @@ public:
   int base_hp;                // temporary max HP loss (rotting)
   int base_hp2;               // base HPs from levels (and permanent loss)
 
+  int ac;
+  int ev;
+  int gdr;
+
   int magic_points;
   int max_magic_points;
   int base_magic_points;      // temporary max MP loss? (currently unused)

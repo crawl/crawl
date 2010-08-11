@@ -1,4 +1,4 @@
- /*
+/*
  *  File:       player.cc
  *  Summary:    Player related functions.
  *  Written by: Linley Henzell
@@ -2257,66 +2257,7 @@ int player_scale_evasion(const int prescaled_ev, const int scale)
 // Total EV for player using the revised 0.6 evasion model.
 int player_evasion(ev_ignore_type evit)
 {
-    const int size_factor = player_evasion_size_factor();
-    // Repulsion fields and size are all that matters when paralysed or
-    // at 0 dex.
-    if ((you.cannot_move() || you.stat_zero[STAT_DEX])
-        && !(evit & EV_IGNORE_HELPLESS))
-    {
-        const int paralysed_base_ev = 2 + size_factor / 2;
-        const int repulsion_ev = _player_para_evasion_bonuses(evit);
-        return std::max(1, paralysed_base_ev + repulsion_ev);
-    }
-
-    const int scale = 100;
-    const int size_base_ev = (10 + size_factor) * scale;
-
-    const int adjusted_evasion_penalty =
-        _player_adjusted_evasion_penalty(scale);
-
-    // The last two parameters are not important.
-    const int ev_dex = stepdown_value(you.dex(), 10, 24, 72, 72);
-
-    const int dodge_bonus =
-        (7 + you.skills[SK_DODGING] * ev_dex) * scale
-        / (20 - size_factor);
-
-    // [ds] Dodging penalty for being in high EVP armour, almost
-    // identical to v0.5/4.1 penalty, but with the EVP discount being
-    // 1 instead of 0.5 so that leather armour is fully discounted.
-    // The 1 EVP of leather armour may still incur an
-    // adjusted_evasion_penalty, however.
-    const int armour_dodge_penalty =
-        std::max(0,
-                 (30 * player_size_adjusted_body_armour_evasion_penalty(scale)
-                  - 30 * scale)
-                 / std::max(1, (int) you.strength()));
-
-    // Adjust dodge bonus for the effects of being suited up in armour.
-    const int armour_adjusted_dodge_bonus =
-        std::max(0, dodge_bonus - armour_dodge_penalty);
-
-    const int adjusted_shield_penalty =
-        player_adjusted_shield_evasion_penalty(scale);
-
-    const int prestepdown_evasion =
-        size_base_ev
-        + armour_adjusted_dodge_bonus
-        - adjusted_evasion_penalty
-        - adjusted_shield_penalty;
-
-    const int poststepdown_evasion =
-        stepdown_value(prestepdown_evasion, 20*scale, 30*scale, 60*scale, -1);
-
-    const int evasion_bonuses = player_evasion_bonuses(evit) * scale;
-
-    const int prescaled_evasion =
-        poststepdown_evasion + evasion_bonuses;
-
-    const int final_evasion =
-        player_scale_evasion(prescaled_evasion, scale);
-
-    return (unscale_round_up(final_evasion, scale));
+    return (you.ev);
 }
 
 int player_body_armour_racial_spellcasting_bonus(const int scale)
@@ -5607,150 +5548,12 @@ int player_icemail_armour_class()
 
 int player::armour_class() const
 {
-    int AC = 0;
-
-    for (int eq = EQ_MIN_ARMOUR; eq <= EQ_MAX_ARMOUR; ++eq)
-    {
-        if (eq == EQ_SHIELD)
-            continue;
-
-        if (!player_wearing_slot(eq))
-            continue;
-
-        const item_def& item   = inv[equip[eq]];
-        const int ac_value     = property(item, PARM_AC ) * 100;
-        const int racial_bonus = _player_armour_racial_bonus(item);
-
-        // [ds] effectively: ac_value * (22 + Arm) / 22, where Arm =
-        // Armour Skill + racial_skill_bonus / 2.
-        AC += ac_value * (44 + 2 * skills[SK_ARMOUR] + racial_bonus) / 44;
-        AC += item.plus * 100;
-
-        // The deformed don't fit into body armour very well.
-        // (This includes nagas and centaurs.)
-        if (eq == EQ_BODY_ARMOUR && (player_mutation_level(MUT_DEFORMED)
-            || player_mutation_level(MUT_PSEUDOPODS)))
-            AC -= ac_value / 2;
-    }
-
-    AC += player_equip( EQ_RINGS_PLUS, RING_PROTECTION ) * 100;
-
-    if (player_equip_ego_type( EQ_WEAPON, SPWPN_PROTECTION ))
-        AC += 500;
-
-    if (player_equip_ego_type( EQ_SHIELD, SPARM_PROTECTION ))
-        AC += 300;
-
-    AC += scan_artefacts(ARTP_AC) * 100;
-
-    if (duration[DUR_ICY_ARMOUR])
-        AC += 400 + 100 * skills[SK_ICE_MAGIC] / 3;         // max 13
-
-    if (duration[DUR_STONEMAIL])
-        AC += 500 + 100 * skills[SK_EARTH_MAGIC] / 2;       // max 18
-
-    if (duration[DUR_STONESKIN])
-        AC += 200 + 100 * skills[SK_EARTH_MAGIC] / 5;       // max 7
-
-    if (mutation[MUT_ICEMAIL])
-        AC += 100 * player_icemail_armour_class();
-
-    if (attribute[ATTR_TRANSFORMATION] == TRAN_NONE
-        || attribute[ATTR_TRANSFORMATION] == TRAN_LICH
-        || attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
-    {
-        // Being a lich doesn't preclude the benefits of hide/scales -- bwr
-        //
-        // Note: Even though necromutation is a high level spell, it does
-        // allow the character full armour (so the bonus is low). -- bwr
-        if (attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
-            AC += (300 + 100 * skills[SK_NECROMANCY] / 6);   // max 7
-
-        //jmf: only give:
-        if (player_genus(GENPC_DRACONIAN))
-        {
-            if (experience_level < 8)
-                AC += 200;
-            else if (species == SP_GREY_DRACONIAN)
-                AC += 100 + 100 * (experience_level - 4) / 2;  // max 12
-            else
-                AC += 100 + (100 * experience_level / 4);      // max 7
-        }
-        else
-        {
-            switch (species)
-            {
-            case SP_NAGA:
-                AC += 100 * experience_level / 3;              // max 9
-                break;
-
-            default:
-                break;
-            }
-        }
-    }
-    else
-    {
-        // transformations:
-        switch (attribute[ATTR_TRANSFORMATION])
-        {
-        case TRAN_NONE:
-        case TRAN_BLADE_HANDS:
-        case TRAN_LICH:  // can wear normal body armour (small bonus)
-            break;
-
-        case TRAN_SPIDER: // low level (small bonus), also gets EV
-            AC += (200 + 100 * skills[SK_POISON_MAGIC] / 6); // max 6
-            break;
-
-        case TRAN_ICE_BEAST:
-            AC += (500 + 100 * (skills[SK_ICE_MAGIC] + 1) / 4); // max 12
-
-            if (duration[DUR_ICY_ARMOUR])
-                AC += (100 + 100 * skills[SK_ICE_MAGIC] / 4);   // max +7
-            break;
-
-        case TRAN_DRAGON:
-            AC += (700 + 100 * skills[SK_FIRE_MAGIC] / 3);      // max 16
-            break;
-
-        case TRAN_STATUE: // main ability is armour (high bonus)
-            AC += (1700 + 100 * skills[SK_EARTH_MAGIC] / 2);    // max 30
-
-            if (duration[DUR_STONESKIN] || duration[DUR_STONEMAIL])
-                AC += (100 + 100 * skills[SK_EARTH_MAGIC] / 4); // max +7
-            break;
-
-        default:
-            break;
-        }
-    }
-
-    // Scale mutations, etc.
-    AC += player_mutation_level(MUT_TOUGH_SKIN) ? player_mutation_level(MUT_TOUGH_SKIN) * 100 : 0;                          // +1, +2, +3
-    AC += player_mutation_level(MUT_SHAGGY_FUR) ? player_mutation_level(MUT_SHAGGY_FUR) * 100 : 0;                          // +1, +2, +3
-    AC += player_mutation_level(MUT_IRIDESCENT_SCALES) ? player_mutation_level(MUT_IRIDESCENT_SCALES) * 300 : 0;            // +3, +6, +9
-    AC += player_mutation_level(MUT_LARGE_BONE_PLATES) ? 100 + player_mutation_level(MUT_LARGE_BONE_PLATES) * 100 : 0;      // +2, +3, +4
-    AC += player_mutation_level(MUT_ROUGH_BLACK_SCALES) ? 100 + player_mutation_level(MUT_ROUGH_BLACK_SCALES) * 300 : 0;    // +4, +7, +10
-    AC += player_mutation_level(MUT_RUGGED_BROWN_SCALES) ? 200 : 0;                                                         // +2, +2, +2
-    AC += player_mutation_level(MUT_ICY_BLUE_SCALES) ? player_mutation_level(MUT_ICY_BLUE_SCALES) * 100 : 0;                // +1, +2, +3
-    AC += player_mutation_level(MUT_MOLTEN_SCALES) ? player_mutation_level(MUT_MOLTEN_SCALES) * 100 : 0;                    // +1, +2, +3
-    AC += player_mutation_level(MUT_SLIMY_GREEN_SCALES) ? player_mutation_level(MUT_SLIMY_GREEN_SCALES) * 100 : 0;          // +1, +2, +3
-    AC += player_mutation_level(MUT_THIN_METALLIC_SCALES) ? player_mutation_level(MUT_THIN_METALLIC_SCALES) * 100 : 0;      // +1, +2, +3
-    AC += player_mutation_level(MUT_YELLOW_SCALES) ? player_mutation_level(MUT_YELLOW_SCALES) * 100 : 0;                    // +1, +2, +3
-    AC += player_mutation_level(MUT_GELATINOUS_BODY) ? (player_mutation_level(MUT_GELATINOUS_BODY) == 3 ? 200 : 100) : 0;   // +1, +1, +2
-    return (AC / 100);
+    return (ac);
 }
 
 int player::gdr_perc() const
 {
-    const item_def *body_armour = slot_item(EQ_BODY_ARMOUR, false);
-
-    if (!body_armour)
-        return (0);
-
-    const int body_base_AC = property(*body_armour, PARM_AC);
-    return (std::max(body_base_AC - 2, 0) * 5 / 2);
+    return (gdr);
 }
 
 int player::melee_evasion(const actor *act, ev_ignore_type evit) const
