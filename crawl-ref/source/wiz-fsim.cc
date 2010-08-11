@@ -97,13 +97,12 @@ static void _fsim_item(FILE *out,
 static void _fsim_defence_item(FILE *out, int cum, int hits, int max,
                                int speed, int iters)
 {
-    // AC | EV | Arm | Dod | Acc | Av.Dam | Av.HitDam | Eff.Dam | Max.Dam | Av.Time
-    fprintf(out, "%2d   %2d    %2d   %2d   %3d%%   %5.2f      %5.2f      %5.2f      %3d"
+    // AC | GDR | EV |   Acc | Av.Dam | Av.HitDam | Eff.Dam | Max.Dam | Av.Time
+    fprintf(out, "%2d    %2d   %2d  %3d%%   %5.2f      %5.2f      %5.2f      %3d"
             "       %2d\n",
             you.armour_class(),
+            you.gdr_perc(),
             player_evasion(),
-            you.skills[SK_DODGING],
-            you.skills[SK_ARMOUR],
             100 * hits / iters,
             double(cum) / iters,
             hits? double(cum) / hits : 0.0,
@@ -162,13 +161,13 @@ static bool _fsim_ranged_combat(FILE *out, int wskill, int mi,
     return (true);
 }
 
-static bool _fsim_mon_melee(FILE *out, int dodge, int armour, int mi)
+static bool _fsim_mon_melee(FILE *out, int ac, int gdr, int ev, int mi)
 {
-    you.skills[SK_DODGING] = dodge;
-    you.skills[SK_ARMOUR]  = armour;
-
     const int yhp  = you.hp;
     const int ymhp = you.hp_max;
+    you.ac = ac;
+    you.gdr = gdr;
+    you.ev = ev;
     unsigned int cumulative_damage = 0;
     int hits = 0;
     int maxdam = 0;
@@ -361,41 +360,23 @@ static void _fsim_defence_title(FILE *o, int mon)
     fprintf(o, "\n");
     _fsim_mon_stats(o, menv[mon]);
     fprintf(o, "\n");
-    fprintf(o, "AC | EV | Dod | Arm | Acc | Av.Dam | Av.HitDam | Eff.Dam | Max.Dam | Av.Time\n");
+    fprintf(o, "AC | GDR | EV | Acc | Av.Dam | Av.HitDam | Eff.Dam | Max.Dam | Av.Time\n");
 }
 
 static bool _fsim_mon_hit_you(FILE *ostat, int mindex, int)
 {
     _fsim_defence_title(ostat, mindex);
 
-    for (int sk = 0; sk <= 27; ++sk)
+    for (int ac = 0; ac <= 40; ac += 5)
+    for (int gdr = 0; gdr <= 80; gdr += 10)
+    for (int ev = 0; ev <= 40; ev += 5)
     {
         mesclr();
-        mprf("Calculating average damage for %s at dodging %d",
+        mprf("Calculating average damage for %s at ac/gdr/ev %d/%d/%d",
              menv[mindex].name(DESC_PLAIN).c_str(),
-             sk);
+             ac, gdr, ev);
 
-        if (!_fsim_mon_melee(ostat, sk, 0, mindex))
-            return (false);
-
-        fflush(ostat);
-        // Not checking in the combat loop itself; that would be more responsive
-        // for the user, but slow down the sim with all the calls to kbhit().
-        if (kbhit() && getch() == 27)
-        {
-            mprf("Canceling simulation\n");
-            return (false);
-        }
-    }
-
-    for (int sk = 0; sk <= 27; ++sk)
-    {
-        mesclr();
-        mprf("Calculating average damage for %s at armour %d",
-             menv[mindex].name(DESC_PLAIN).c_str(),
-             sk);
-
-        if (!_fsim_mon_melee(ostat, 0, sk, mindex))
+        if (!_fsim_mon_melee(ostat, ac, gdr, ev, mindex))
             return (false);
 
         fflush(ostat);
