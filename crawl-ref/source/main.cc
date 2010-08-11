@@ -1535,7 +1535,7 @@ static void _do_rest()
 {
     if (you.hunger_state == HS_STARVING && !you_min_hunger())
     {
-        mpr("You are too hungry to rest.");
+        mpr("You're too hungry to rest.");
         return;
     }
 
