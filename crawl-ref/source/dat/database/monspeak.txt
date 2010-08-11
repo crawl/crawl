@@ -3500,7 +3500,7 @@ _Eustachio_common_
 
 @The_monster@ screams @at_foe@, "At last I'll have my revenge!"
 
-@The_monster@ screams @at_foe@, "Hey, you killed my favorite bat!"
+@The_monster@ screams @at_foe@, "Hey, you killed my favourite bat!"
 
 @The_monster@ says @to_foe@, "Summoning is fun!"
 
