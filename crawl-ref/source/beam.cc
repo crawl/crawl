@@ -1732,8 +1732,7 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
 
     case BEAM_HELLFIRE:
         resist = monster->res_hellfire();
-        dprf("%d", resist);
-        if (resist > 2)
+        if (resist > 0)
         {
             if (doFlavouredEffects)
             {
@@ -1743,13 +1742,6 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
             }
 
             hurted = 0;
-        }
-        else if (resist > 0)
-        {
-            if (doFlavouredEffects)
-                simple_monster_message(monster, " partially resists.");
-
-            hurted /= 2;
         }
         else if (resist < 0)
         {
