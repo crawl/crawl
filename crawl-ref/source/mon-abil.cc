@@ -2246,6 +2246,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
 static bool _eyeball_will_use_ability(monsters *monster)
 {
     return (coinflip()
+        && !mons_is_confused(monster)
         && !mons_is_wandering(monster)
         && !mons_is_fleeing(monster)
         && !monster->pacified()
@@ -2327,17 +2328,6 @@ void mon_nearby_ability(monsters *monster)
     case MONS_GIANT_EYEBALL:
         if (_eyeball_will_use_ability(monster))
         {
-            if(mons_is_confused(monster))
-            {
-                int chance = 3;
-
-                for(monster_iterator mi(monster->get_los()); mi; ++mi)
-                {
-                    if(one_chance_in(++chance))
-                        foe = *mi;
-                }
-            }
-
             const bool can_see = you.can_see(monster);
             if (can_see && you.can_see(foe))
                 mprf("%s stares at %s.",
