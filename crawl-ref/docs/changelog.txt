@@ -5,6 +5,16 @@ Stone Soup 0.7.1 (20100724)
 
 Stone Soup 0.7 (20100724)
 -------------------------
+
+0.7 Highlights
+--------------
+* Fix over-enthusiastic Armour nerf.
+* New tutorial and mini-game (Dungeon Sprint).
+* Removed instant stat death.
+* Aptitudes now on a scale +5 to -5.
+* New starting menus, mouse-operable in tiles builds.
+* New monsters: elephants and spriggans. 
+
 Balance fixes
 * Monster double actions due to energy randomisation always include a move.
 * Greatly accelerate armour training when armour is heavy relative to skill.
