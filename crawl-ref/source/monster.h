@@ -319,6 +319,7 @@ public:
     bool is_known_chaotic() const;
     bool is_chaotic() const;
     bool is_insubstantial() const;
+    int res_hellfire() const;
     int res_fire() const;
     int res_steam() const;
     int res_cold() const;

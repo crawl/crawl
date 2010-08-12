@@ -2992,6 +2992,13 @@ bool monsters::is_insubstantial() const
     return (mons_class_flag(type, M_INSUBSTANTIAL));
 }
 
+int monsters::res_hellfire() const
+{
+    int res = get_mons_resists(this).hellfire;
+
+    return res;
+}
+
 int monsters::res_fire() const
 {
     const mon_resist_def res = get_mons_resists(this);

@@ -1731,7 +1731,8 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         break;
 
     case BEAM_HELLFIRE:
-        resist = monster->res_fire();
+        resist = monster->res_hellfire();
+        dprf("%d", resist);
         if (resist > 2)
         {
             if (doFlavouredEffects)
