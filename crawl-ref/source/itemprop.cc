@@ -538,10 +538,14 @@ void do_curse_item( item_def &item, bool quiet )
 
 void do_uncurse_item( item_def &item )
 {
-    if (in_inventory(item) && you.equip[EQ_WEAPON] == item.link)
+    if (in_inventory(item))
     {
-        // Redraw the weapon.
-        you.wield_change = true;
+        if (you.equip[EQ_WEAPON] == item.link)
+        {
+            // Redraw the weapon.
+            you.wield_change = true;
+        }
+        item.flags |= ISFLAG_KNOW_CURSE;
     }
     item.flags &= (~ISFLAG_CURSED);
     item.flags &= (~ISFLAG_SEEN_CURSED);
