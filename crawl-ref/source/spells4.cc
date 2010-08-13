@@ -608,8 +608,6 @@ void cast_ignite_poison(int pow)
     }
 
     int totalstrength = 0;
-    int ammo_burnt = 0;
-    int potions_burnt = 0;
     bool was_wielding = false;
 
     for (int i = 0; i < ENDOFPACK; ++i)
@@ -624,7 +622,8 @@ void cast_ignite_poison(int pow)
         {
             // Burn poison ammo.
             strength = item.quantity;
-            ammo_burnt += item.quantity;
+            mprf("Your %s burn%s!",
+                 item.name(DESC_PLAIN).c_str(), item.quantity == 1 ? "s" : "");
         }
         else if (item.base_type == OBJ_POTIONS)
         {
@@ -643,7 +642,10 @@ void cast_ignite_poison(int pow)
             }
 
             if (strength)
-                potions_burnt += item.quantity;
+            {
+                mprf("%s explode%s!",
+                     item.name(DESC_PLAIN).c_str(), item.quantity == 1 ? "s" : "");
+            }
         }
 
         if (strength)
@@ -659,17 +661,6 @@ void cast_ignite_poison(int pow)
         }
 
         totalstrength += strength;
-    }
-
-    if (ammo_burnt)
-        mpr("Some ammunition you are carrying burns!");
-
-    if (potions_burnt)
-    {
-        mprf("%s potion%s you are carrying explode%s!",
-             potions_burnt > 1 ? "Some" : "A",
-             potions_burnt > 1 ? "s" : "",
-             potions_burnt > 1 ? "" : "s");
     }
 
     if (was_wielding)
