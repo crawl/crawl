@@ -496,7 +496,7 @@ bool Menu::process_key( int keyin )
             const int next = get_cursor();
             if (next != -1)
             {
-                select_index(next);
+                select_index(next, num);
                 get_selected(&sel);
                 draw_select_count( sel.size() );
                 if (get_cursor() < next)
