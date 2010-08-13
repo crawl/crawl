@@ -572,7 +572,7 @@ static void _handle_stat_change(stat_type stat, const char* cause, bool see_sour
     {
     case STAT_STR:
         burden_change();
-        you.redraw_armour_class = true;
+        you.redraw_armour_class = true; // includes shields
         break;
 
     case STAT_INT:
@@ -580,6 +580,7 @@ static void _handle_stat_change(stat_type stat, const char* cause, bool see_sour
 
     case STAT_DEX:
         you.redraw_evasion = true;
+        you.redraw_armour_class = true; // includes shields
         break;
 
     default:
