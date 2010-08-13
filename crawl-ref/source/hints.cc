@@ -175,9 +175,7 @@ void pick_hints(newgame_def* choice)
         print_hints_menu(i);
 
     formatted_string::parse_string(
-        "\n"
-        "<brown>SPACE - Back to background selection; "
-        "Bksp - Back to species selection; X - Quit"
+        "<brown>\nEsc - Quit"
         "\n* - Random hints mode character"
         "</brown>\n").display();
 
@@ -203,7 +201,6 @@ void pick_hints(newgame_def* choice)
 
         switch (keyn)
         {
-        case CK_BKSP:
         case 'X':
         CASE_ESCAPE
             cprintf("\nGoodbye!");
