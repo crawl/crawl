@@ -1000,7 +1000,7 @@ static void _sdump_spells(dump_params &par)
 
         text += "You " + verb + " the following spells:\n\n";
 
-        text += " Your Spells              Type           Power          Success   Level" "\n";
+        text += " Your Spells              Type           Power        Success   Level  Hunger" "\n";
 
         for (int j = 0; j < 52; j++)
         {
@@ -1038,16 +1038,21 @@ static void _sdump_spells(dump_params &par)
 
                 spell_line += spell_power_string(spell);
 
-                for (int i = spell_line.length(); i < 56; ++i )
+                for (int i = spell_line.length(); i < 54; ++i )
                     spell_line += ' ';
 
                 spell_line += failure_rate_to_string(spell_fail(spell));
 
-                for (int i = spell_line.length(); i < 68; i++)
+                for (int i = spell_line.length(); i < 66; i++)
                     spell_line += ' ';
 
                 itoa(spell_difficulty(spell), tmp_quant, 10 );
                 spell_line += tmp_quant;
+
+                for (int i = spell_line.length(); i < 71; i++)
+                    spell_line += ' ';
+
+                spell_line += spell_hunger_string(spell);
                 spell_line += "\n";
 
                 text += spell_line;
