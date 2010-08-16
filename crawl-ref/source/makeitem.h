@@ -35,6 +35,7 @@ int item_corpse(monster_type monster, const item_spec &ispec);
 void item_colour(item_def &item);
 void init_rod_mp(item_def &item, int ncharges = -1, int item_level = -1);
 
+int wand_max_charges(int subtype);
 jewellery_type get_random_ring_type();
 jewellery_type get_random_amulet_type();
 armour_type get_random_body_armour_type(int level);
