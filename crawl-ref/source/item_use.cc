@@ -5113,7 +5113,11 @@ bool stasis_blocks_effect(bool calc_unid,
 
         // In all cases, the amulet auto-ids if requested.
         if (amulet && identify)
+        {
             set_ident_type(*amulet, ID_KNOWN_TYPE);
+            mprf("You are wearing: %s",
+                  amulet->name(DESC_INVENTORY_EQUIP).c_str());
+        }
         return (true);
     }
     return (false);
