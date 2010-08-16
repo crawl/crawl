@@ -2259,8 +2259,8 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
 }
 #endif
 
-static bool _find_fprop_unoccupied(const coord_def & where, int mode, bool need_path,
-                          int range = -1)
+static bool _find_fprop_unoccupied(const coord_def & where, int mode,
+                                   bool need_path, int range = -1)
 {
     // Don't target out of range.
     if (!_is_target_in_range(where, range))

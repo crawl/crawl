@@ -3724,7 +3724,8 @@ void bolt::handle_stop_attack_prompt(monsters* mon)
         if (friend_info.count == 1 && !friend_info.dont_stop
             || foe_info.count == 1 && !foe_info.dont_stop)
         {
-            if (stop_attack_prompt(mon, true, target))
+            const bool autohit_first = (hit == AUTOMATIC_HIT);
+            if (stop_attack_prompt(mon, true, target, autohit_first))
             {
                 beam_cancelled = true;
                 finish_beam();

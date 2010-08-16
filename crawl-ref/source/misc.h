@@ -99,7 +99,7 @@ void reveal_secret_door(const coord_def& p);
 std::string your_hand(bool plural);
 
 bool stop_attack_prompt(const monsters *mon, bool beam_attack,
-                        coord_def beam_target);
+                        coord_def beam_target, bool autohit_first = false);
 
 bool is_orckind(const actor *act);
 
