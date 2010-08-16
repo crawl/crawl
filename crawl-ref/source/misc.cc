@@ -2039,7 +2039,7 @@ std::string your_hand(bool plural)
 }
 
 bool stop_attack_prompt(const monsters *mon, bool beam_attack,
-                        coord_def beam_target)
+                        coord_def beam_target, bool autohit_first)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -2074,6 +2074,9 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
             else if (you.pos() < beam_target && beam_target < mon->pos()
                      || you.pos() > beam_target && beam_target > mon->pos())
             {
+                if (autohit_first)
+                    return (false);
+                    
                 verb += "in " + mon->name(DESC_NOCAP_THE) + "'s direction";
                 need_mon_name = false;
             }
