@@ -41,7 +41,7 @@
 #include "tileview.h"
 #endif
 
-
+#ifndef USE_TILE
 static unsigned _get_travel_colour(const coord_def& p)
 {
 #ifdef WIZARD
@@ -59,7 +59,9 @@ static unsigned _get_travel_colour(const coord_def& p)
            dist < 0?                    Options.tc_dangerous        :
                                         Options.tc_disconnected;
 }
+#endif
 
+#ifndef USE_TILE
 static bool _travel_colour_override(const coord_def& p)
 {
     if (is_waypoint(p) || travel_point_distance[p.x][p.y] == PD_EXCLUDED)
@@ -89,7 +91,7 @@ static bool _travel_colour_override(const coord_def& p)
     else
         return false;
 }
-
+#endif
 
 wchar_t get_sightmap_char(dungeon_feature_type feat)
 {
