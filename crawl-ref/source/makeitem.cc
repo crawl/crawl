@@ -2580,7 +2580,7 @@ static int _random_wand_subtype()
     return rc;
 }
 
-static int _wand_max_charges(int subtype)
+int wand_max_charges(int subtype)
 {
     switch (subtype)
     {
@@ -2605,7 +2605,7 @@ static void _generate_wand_item(item_def& item, int force_type)
         item.sub_type = _random_wand_subtype();
 
     // Generate charges randomly...
-    item.plus = random2avg(_wand_max_charges(item.sub_type), 3);
+    item.plus = random2avg(wand_max_charges(item.sub_type), 3);
 
     // ...but 0 charges is silly
     if (item.plus == 0)

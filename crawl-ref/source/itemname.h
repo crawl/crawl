@@ -93,7 +93,7 @@ int property( const item_def &item, int prop_type );
 
 const char* racial_description_string(const item_def& item, bool terse = false);
 
-bool check_item_knowledge(bool quiet = false);
+bool check_item_knowledge(bool quiet = false, bool inverted = false);
 
 std::string quant_name( const item_def &item, int quant,
                         description_level_type des, bool terse = false );

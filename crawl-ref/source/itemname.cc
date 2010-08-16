@@ -1613,7 +1613,7 @@ std::string item_def::name_aux(description_level_type desc,
         {
             if (cursed())
                 buff << "cursed ";
-            else if (Options.show_uncursed && !terse
+            else if (Options.show_uncursed && !terse && desc != DESC_PLAIN
                      && (!is_randart || !know_type)
                      && (!ring_has_pluses(*this) || !know_pluses)
                      // If the item is worn, its curse status is known,
@@ -2089,7 +2089,7 @@ public:
 
     virtual std::string get_text(const bool = false) const
     {
-        return std::string(" ") + item->name(DESC_PLAIN);
+        return std::string(" ") + item->name(DESC_PLAIN, false, true);
     }
 };
 
@@ -2102,17 +2102,16 @@ static MenuEntry *discoveries_item_mangle(MenuEntry *me)
     return (newme);
 }
 
-bool item_names( const item_def *it1,
-                 const item_def *it2 )
+bool identified_item_names( const item_def *it1,
+                            const item_def *it2 )
 {
-    return it1->name(DESC_PLAIN, false, false, false)
-           < it2->name(DESC_PLAIN, false, false, false);
+    return it1->name(DESC_PLAIN, false, true, false)
+           < it2->name(DESC_PLAIN, false, true, false);
 }
 
-bool check_item_knowledge(bool quiet)
+bool check_item_knowledge(bool quiet, bool inverted)
 {
     std::vector<const item_def*> items;
-    bool rc = true;
 
     const object_class_type idx_to_objtype[5] = { OBJ_WANDS, OBJ_SCROLLS,
                                                   OBJ_JEWELLERY, OBJ_POTIONS,
@@ -2120,11 +2119,15 @@ bool check_item_knowledge(bool quiet)
     const int idx_to_maxtype[5] = { NUM_WANDS, NUM_SCROLLS,
                                     NUM_JEWELLERY, NUM_POTIONS, NUM_STAVES };
 
-
+    bool has_unknown_items = false;
     for (int i = 0; i < 5; i++)
         for (int j = 0; j < idx_to_maxtype[i]; j++)
         {
-            if (type_ids[i][j] == ID_KNOWN_TYPE)
+            if (i == 2 && j >= NUM_RINGS && j < AMU_FIRST_AMULET)
+                continue;
+                
+            if (inverted ? type_ids[i][j] != ID_KNOWN_TYPE
+                         : type_ids[i][j] == ID_KNOWN_TYPE)
             {
                 item_def* ptmp = new item_def;
                 if (ptmp != 0)
@@ -2133,37 +2136,48 @@ bool check_item_knowledge(bool quiet)
                     ptmp->sub_type  = j;
                     ptmp->colour    = 1;
                     ptmp->quantity  = 1;
+                    if (i == 0)
+                        ptmp->plus = wand_max_charges(j);
                     items.push_back(ptmp);
                 }
             }
+            else if (!inverted)
+                has_unknown_items = true;
         }
 
     if (items.empty())
     {
-        rc = false;
         if (!quiet)
             mpr("You don't recognise anything yet!");
+        return (false);
     }
+
+    std::sort(items.begin(), items.end(), identified_item_names);
+    InvMenu menu;
+        
+    if (inverted)
+        menu.set_title("Items not yet recognised: (toggle with -)");
+    else if (has_unknown_items)
+        menu.set_title("You recognise: (toggle with -)");
     else
+        menu.set_title("You recognise all items:");
+                                             
+    menu.set_flags(MF_NOSELECT);
+    menu.set_type(MT_KNOW);
+    menu.load_items(items, discoveries_item_mangle);
+    menu.show(true);
+    char last_char = menu.getkey();
+    redraw_screen();
+
+    for (std::vector<const item_def*>::iterator iter = items.begin();
+         iter != items.end(); ++iter)
     {
-        rc = true;
-        std::sort(items.begin(), items.end(), item_names);
-        InvMenu menu;
-        menu.set_title("You recognise:");
-        menu.set_flags(MF_NOSELECT);
-        menu.set_type(MT_KNOW);
-        menu.load_items(items, discoveries_item_mangle);
-        menu.show();
-        redraw_screen();
-
-        for (std::vector<const item_def*>::iterator iter = items.begin();
-             iter != items.end(); ++iter)
-        {
-            delete *iter;
-        }
+         delete *iter;
     }
-
-    return (rc);
+    if (last_char == '-' && (inverted || has_unknown_items))
+        check_item_knowledge(quiet, !inverted);
+ 
+    return (true);
 }
 
 
