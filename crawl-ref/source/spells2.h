@@ -17,7 +17,7 @@ bool burn_freeze(int pow, beam_type flavour, monsters *monster);
 
 void corpse_rot();
 
-bool vampiric_drain(int pow, const dist &vmove);
+bool vampiric_drain(int pow, monsters *monster);
 int detect_creatures(int pow, bool telepathic = false);
 int detect_items(int pow);
 int detect_traps(int pow);

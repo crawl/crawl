@@ -1284,8 +1284,10 @@ spret_type your_spells(spell_type spell, int powc,
 #endif
 
         if (is_valid_spell(spell))
+        {
             mprf(MSGCH_ERROR, "Spell '%s' is not a player castable spell.",
                 spell_title(spell));
+        }
         else
             mpr("Invalid spell!", MSGCH_ERROR);
 
@@ -1339,13 +1341,15 @@ static spret_type _do_cast(spell_type spell, int powc,
     {
     // spells using burn_freeze()
     case SPELL_FREEZE:
+    {
         if (!burn_freeze(powc, _spell_to_beam_type(spell),
-                         monster_at(you.pos() + spd.delta)))
+                         monster_at(spd.isTarget ? beam.target
+                                                 : you.pos() + spd.delta)))
         {
             return (SPRET_ABORT);
         }
         break;
-
+    }
     case SPELL_SANDBLAST:
         if (!cast_sandblast(powc, beam))
             return (SPRET_ABORT);
@@ -1357,7 +1361,12 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_VAMPIRIC_DRAINING:
-        vampiric_drain(powc, spd);
+        if (!vampiric_drain(powc,
+                            monster_at(spd.isTarget ? beam.target
+                                                    : you.pos() + spd.delta)))
+        {
+            return (SPRET_ABORT);
+        }
         break;
 
     case SPELL_IOOD:

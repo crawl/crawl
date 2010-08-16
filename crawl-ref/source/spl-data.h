@@ -8,6 +8,22 @@
 #ifndef SPLDATA_H
 #define SPLDATA_H
 
+/*
+struct spell_desc
+{
+    enum, spell name,
+    spell schools,
+    flags,
+    level,
+    power_cap,
+    min_range, max_range, (-1 if not applicable)
+    noise_mod,
+    int noise_mod;
+    target_prompt,
+    monster spell: needs tracer?,
+    monster spell: utility spell?
+}
+*/
 
 {
     SPELL_TELEPORT_SELF, "Teleport Self",
@@ -744,7 +760,7 @@
 {
     SPELL_VAMPIRIC_DRAINING, "Vampiric Draining",
      SPTYP_NECROMANCY,
-     SPFLAG_DIR | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
      3,
      200,
      1, 1,
@@ -796,7 +812,7 @@
 {
     SPELL_FREEZE, "Freeze",
      SPTYP_ICE,
-     SPFLAG_DIR | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
      1,
      25,
      1, 1,
