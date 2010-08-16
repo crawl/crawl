@@ -1528,10 +1528,42 @@ bool has_spells_to_memorise(bool silent, int current_spell)
                          silent, (spell_type) current_spell);
 }
 
+static int _failure_rate_to_group( int fail )
+{
+    return (fail == 100) ? 100 :
+           (fail > 77)   ?  78 :
+           (fail > 71)   ?  72 :
+           (fail > 64)   ?  65 :
+           (fail > 59)   ?  60 :
+           (fail > 50)   ?  51 :
+           (fail > 40)   ?  41 :
+           (fail > 35)   ?  36 :
+           (fail > 28)   ?  29 :
+           (fail > 22)   ?  23 :
+           (fail >  0)   ?   1 : 0;
+}
+
 static bool _sort_mem_spells(spell_type a, spell_type b)
 {
-    if (spell_fail(a) != spell_fail(b))
-        return (spell_fail(a) < spell_fail(b));
+    // List spells we can memorize right away first.
+    if (player_spell_levels() >= spell_levels_required(a)
+        && player_spell_levels() < spell_levels_required(b))
+    {
+        return (true);
+    }
+    else if (player_spell_levels() < spell_levels_required(a)
+             && player_spell_levels() >= spell_levels_required(b))
+    {
+        return (false);
+    }
+
+    // Don't sort by failure rate beyond what the player can see in the
+    // success descriptions.
+    const int fail_rate_a = _failure_rate_to_group(spell_fail(a));
+    const int fail_rate_b = _failure_rate_to_group(spell_fail(b));
+    if (fail_rate_a != fail_rate_b)
+        return (fail_rate_a < fail_rate_b);
+        
     if (spell_difficulty(a) != spell_difficulty(b))
         return (spell_difficulty(a) < spell_difficulty(b));
 
