@@ -1010,8 +1010,11 @@ static void _maybe_spawn_jellies(int dam, const char* aux,
             int count_created = 0;
             for (int i = 0; i < how_many; ++i)
             {
+                int foe = death_source;
+                if (invalid_monster_index(foe))
+                    foe = MHITNOT;
                 mgen_data mg(mon, BEH_FRIENDLY, &you, 2, 0, you.pos(),
-                             death_source, 0, GOD_JIYVA);
+                             foe, 0, GOD_JIYVA);
 
                 if (create_monster(mg) != -1)
                     count_created++;
