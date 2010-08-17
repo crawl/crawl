@@ -1615,6 +1615,8 @@ static int _place_monster_aux(const mgen_data &mg,
         mon->mark_summoned(mg.abjuration_duration, true,
                            mg.summon_type);
     }
+    ASSERT(!invalid_monster_index(mg.foe)
+           || mg.foe == MHITYOU || mg.foe == MHITNOT);
     mon->foe = mg.foe;
 
     std::string blame_prefix;
