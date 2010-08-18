@@ -1999,6 +1999,7 @@ enum monster_type                      // (int) menv[].type
 
     MONS_DEEP_ELF_BLADEMASTER,
     MONS_DEEP_ELF_MASTER_ARCHER,
+    MONS_DEEP_DWARF,
 
     // The Lords of Hell (also unique):
     MONS_GERYON = 340,                 //  340
