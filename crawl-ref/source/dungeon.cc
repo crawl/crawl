@@ -603,8 +603,7 @@ bool set_level_flags(unsigned long flags, bool silent)
     bool can_control = allow_control_teleport(true);
     bool can_map     = player_in_mappable_area();
 
-    if (you.skills[SK_TRANSLOCATIONS] > 0
-        && could_control && !can_control && !silent)
+    if (could_control && !can_control && !silent)
     {
         mpr("You sense the appearance of a powerful magical force "
             "which warps space.", MSGCH_WARN);
@@ -630,8 +629,7 @@ bool unset_level_flags(unsigned long flags, bool silent)
     bool can_control = allow_control_teleport(true);
     bool can_map     = player_in_mappable_area();
 
-    if (you.skills[SK_TRANSLOCATIONS] > 0
-        && !could_control && can_control && !silent)
+    if (!could_control && can_control && !silent)
     {
         // Isn't really a "recovery", but I couldn't think of where
         // else to send it.
