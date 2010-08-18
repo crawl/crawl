@@ -3937,6 +3937,18 @@ static monsterentry mondata[] = {
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
+{
+    MONS_DEEP_DWARF, '@', BROWN, "deep dwarf",
+    M_WARM_BLOOD | M_SPEAKS | M_NO_REGEN,
+    MR_NO_FLAGS,
+    550, 10, MONS_DWARF, MONS_DEEP_DWARF, MH_NATURAL, -6,
+    { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 5, 3, 5, 0 },
+    2, 12, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT,
+    I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
+    MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
+},
+
 {   // dummy, for now
     MONS_DEMONSPAWN, '@', DARKGREY, "demonspawn", // likely to become '6'
     M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
