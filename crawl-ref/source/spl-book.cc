@@ -1609,14 +1609,22 @@ static spell_type _choose_mem_spell(spell_list &spells,
     const bool text_only = true;
 #endif
 
-    Menu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
+    ToggleableMenu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
                     | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING,
-                    "", text_only);
+                    text_only);
 #ifdef USE_TILE
+    // [enne] Hack.  Use a separate title, so the column headers are aligned.
+    spell_menu.set_title(
+        new MenuEntry(" Your Spells - Memorisation  (toggle to descriptions with '!')",
+            MEL_TITLE));
+
+    spell_menu.set_title(
+        new MenuEntry(" Your Spells - Descriptions  (toggle to memorisation with '!')",
+            MEL_TITLE), false);
+
     {
-        // [enne] - Hack.  Make title an item so that it's aligned.
         MenuEntry* me =
-            new MenuEntry("    Spells                         Type          "
+            new MenuEntry("     Spells                        Type          "
                           "                Success  Level",
                 MEL_ITEM);
         me->colour = BLUE;
@@ -1624,13 +1632,21 @@ static spell_type _choose_mem_spell(spell_list &spells,
     }
 #else
     spell_menu.set_title(
-        new MenuEntry("     Spells                        Type          "
+        new MenuEntry("     Spells (Memorisation)         Type          "
                       "                Success  Level",
             MEL_TITLE));
+            
+    spell_menu.set_title(
+        new MenuEntry("     Spells (Description)          Type          "
+                      "                Success  Level",
+            MEL_TITLE), false);
 #endif
 
     spell_menu.set_highlighter(NULL);
     spell_menu.set_tag("spell");
+    
+    spell_menu.action_cycle = Menu::CYCLE_TOGGLE;
+    spell_menu.menu_action  = Menu::ACT_EXECUTE;
 
     std::string more_str = make_stringf("<lightgreen>%d spell level%s left"
                                         "<lightgreen>",
@@ -1653,6 +1669,11 @@ static spell_type _choose_mem_spell(spell_list &spells,
                                  num_race,
                                  num_race > 1 ? "s" : "");
     }
+
+#ifndef USE_TILE
+    // Tiles menus get this information in the title.
+    more_str += "   Toggle display with '<w>!</w>'";
+#endif
 
     spell_menu.set_more(formatted_string::parse_string(more_str));
 
@@ -1703,8 +1724,9 @@ static spell_type _choose_mem_spell(spell_list &spells,
 
         desc << "</" << colour_to_str(colour) << ">";
 
-        MenuEntry* me = new MenuEntry(desc.str(), MEL_ITEM, 1,
-                                      index_to_letter(i % 52));
+        MenuEntry* me =
+            new MenuEntry(desc.str(), MEL_ITEM, 1,
+                          index_to_letter(i % 52));
 
 #ifdef USE_TILE
         me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
@@ -1729,7 +1751,10 @@ static spell_type _choose_mem_spell(spell_list &spells,
         const spell_type spell = *static_cast<spell_type*>(sel[0]->data);
         ASSERT(is_valid_spell(spell));
 
-        return (spell);
+        if (spell_menu.menu_action == Menu::ACT_EXAMINE)
+            describe_spell(spell);
+        else
+            return (spell);
     }
 }
 
