@@ -125,7 +125,6 @@ bool set_branch_flags(unsigned long flags, bool silent,
     bool can_map     = player_in_mappable_area();
 
     if (you.level_type == LEVEL_DUNGEON && branch == you.where_are_you
-        && you.skills[SK_TRANSLOCATIONS] > 0
         && could_control && !can_control && !silent)
     {
         mpr("You sense the appearance of a powerful magical force "
@@ -158,7 +157,6 @@ bool unset_branch_flags(unsigned long flags, bool silent,
     const bool can_map     = player_in_mappable_area();
 
     if (you.level_type == LEVEL_DUNGEON && branch == you.where_are_you
-        && you.skills[SK_TRANSLOCATIONS] > 0
         && !could_control && can_control && !silent)
     {
         // Isn't really a "recovery", but I couldn't think of where
