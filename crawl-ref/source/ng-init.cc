@@ -68,6 +68,9 @@ void initialise_branch_depths()
     dprf("Disabling branch: %s", branches[disabled_branch].shortname);
     branches[disabled_branch].startdepth = -1;
 
+    branches[BRANCH_SPIDER_NEST].startdepth = -1;
+    branches[BRANCH_FOREST].startdepth = -1;
+
     if (crawl_state.game_is_sprint())
         branches[BRANCH_MAIN_DUNGEON].depth = 1;
     else

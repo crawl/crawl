@@ -3102,7 +3102,9 @@ static void _rune_from_specs(const char* _specs, item_def &item)
             MSGCH_PROMPT);
         mpr("[g] serpentine [h] elven    [i] golden   [j] decaying [k] barnacle [l] demonic",
             MSGCH_PROMPT);
-        mpr("[m] abyssal    [n] glowing  [o] magical  [p] fiery    [q] dark     [r] buggy",
+        mpr("[m] abyssal    [n] glowing  [o] magical  [p] fiery    [q] dark     [r] gossamer",
+            MSGCH_PROMPT);
+        mpr("[s] mossy      [t] buggy",
             MSGCH_PROMPT);
         mpr("Which rune (ESC to exit)? ", MSGCH_PROMPT);
 
@@ -3139,6 +3141,9 @@ static void _rune_from_specs(const char* _specs, item_def &item)
             RUNE_LOM_LOBON,
             RUNE_CEREBOV,
             RUNE_GLOORX_VLOQ,
+
+            RUNE_SPIDER_NEST,
+            RUNE_FOREST,
             NUM_RUNE_TYPES
         };
 

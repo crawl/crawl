@@ -137,6 +137,7 @@ static global_level_info g_lev_infos[] = {
     {mons_swamp_level,    BRANCH_SWAMP,        14},
     {mons_shoals_level,   BRANCH_SHOALS,       14},
     {mons_pitsnake_level, BRANCH_SNAKE_PIT,    15},
+    {mons_spidernest_level,BRANCH_SPIDER_NEST, 15},
     {mons_pitslime_level, BRANCH_SLIME_PITS,   16},
     {mons_crypt_level,    BRANCH_CRYPT,        19},
     {mons_tomb_level,     BRANCH_TOMB,         21},
@@ -1861,6 +1862,96 @@ int mons_pitsnake_rare(int mcls)
     }
 }
 
+// The Spider Nest
+int mons_spidernest_level(int mcls)
+{
+    int mlev = absdungeon_depth(BRANCH_SPIDER_NEST, 1);
+
+    switch (mcls)
+    {
+    case MONS_GIANT_COCKROACH:
+    case MONS_GIANT_MITE:
+    case MONS_SCORPION:
+    case MONS_REDBACK:
+    case MONS_WOLF_SPIDER:
+    case MONS_TRAPDOOR_SPIDER:
+    case MONS_GIANT_MOSQUITO:
+    case MONS_GIANT_BLOWFLY:
+        mlev++;
+        break;
+
+    case MONS_YELLOW_WASP:
+    case MONS_RED_WASP:
+    case MONS_GIANT_BEETLE:
+        mlev += 2;
+        break;
+
+    case MONS_BORING_BEETLE:
+    case MONS_BOULDER_BEETLE:
+    case MONS_GIANT_CENTIPEDE:
+        mlev += 3;
+        break;
+
+    case MONS_GIANT_SCORPION:
+    case MONS_JUMPING_SPIDER:
+        mlev += 4;
+        break;
+
+    case MONS_TARANTELLA:
+    case MONS_GHOST_MOTH:
+    case MONS_DEMONIC_CRAWLER:
+        mlev += 5;
+        break;
+
+    default:
+        mlev += 99;
+    }
+
+    return (mlev);
+}
+
+int mons_spidernest_rare(int mcls)
+{
+    switch (mcls)
+    {
+    case MONS_GIANT_COCKROACH:
+    case MONS_GIANT_MITE:
+        return 60;
+
+    case MONS_SCORPION:
+    case MONS_REDBACK:
+    case MONS_WOLF_SPIDER:
+    case MONS_TRAPDOOR_SPIDER:
+        return 50;
+
+    case MONS_GIANT_MOSQUITO:
+    case MONS_GIANT_BLOWFLY:
+        return 40;
+
+    case MONS_YELLOW_WASP:
+    case MONS_RED_WASP:
+        return 20;
+
+    case MONS_GIANT_BEETLE:
+    case MONS_BORING_BEETLE:
+    case MONS_BOULDER_BEETLE:
+    case MONS_GIANT_CENTIPEDE:
+    case MONS_GIANT_SCORPION:
+        return 15;
+
+    case MONS_JUMPING_SPIDER:
+    case MONS_TARANTELLA:
+        return 10;
+
+    case MONS_GHOST_MOTH:
+    case MONS_DEMONIC_CRAWLER:
+        return 5;
+
+    default:
+        return 0;
+    }
+}
+
 // The Slime Pits
 int mons_pitslime_level(int mcls)
 {
@@ -2236,6 +2327,56 @@ int mons_tomb_rare(int mcls)
     // A nod to the fabled pyramid traps, these should be really rare.
     case MONS_TRAPDOOR_SPIDER:
         return 1;
+
+    default:
+        return 0;
+    }
+}
+
+// The Enchanted Forest
+int mons_forest_level(int mcls)
+{
+    int mlev = absdungeon_depth(BRANCH_FOREST, 1);
+
+    switch (mcls)
+    {
+    case MONS_SPRIGGAN:
+    case MONS_SPRIGGAN_DRUID:
+    case MONS_BEAR:
+    case MONS_WOLF:
+        mlev++;
+        break;
+
+    case MONS_SPRIGGAN_RIDER:
+        mlev += 2;
+        break;
+
+    case MONS_SPRIGGAN_DEFENDER:
+        mlev += 5;
+        break;
+
+    default:
+        mlev += 99;
+    }
+
+    return (mlev);
+}
+
+int mons_forest_rare(int mcls)
+{
+    switch (mcls)
+    {
+    case MONS_SPRIGGAN:
+        return 99;
+
+    case MONS_SPRIGGAN_DRUID:
+    case MONS_SPRIGGAN_RIDER:
+    case MONS_BEAR:
+    case MONS_WOLF:
+        return 40;
+
+    case MONS_SPRIGGAN_DEFENDER:
+        return 10;
 
     default:
         return 0;

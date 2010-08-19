@@ -743,6 +743,7 @@ void item_colour(item_def &item)
                 break;
 
             case RUNE_TARTARUS:                 // bone
+            case RUNE_SPIDER_NEST:
                 item.colour = ETC_BONE;
                 break;
 
