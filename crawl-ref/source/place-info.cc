@@ -49,12 +49,12 @@ void PlaceInfo::assert_validity() const
         // Pandemonium level.
         // ASSERT(num_visits <= levels_seen);
         ;
-/*
+#if TAG_MAJOR_VERSION != 29
     // Commented out to allow games with broken place_info to continue.
     // Please uncomment at a later point in 0.8 development. (jpeg)
     else if (level_type == LEVEL_DUNGEON && branches[branch].depth > 0)
         ASSERT(levels_seen <= (unsigned long) branches[branch].depth);
-*/
+#endif
 
     ASSERT(turns_total == (turns_explore + turns_travel + turns_interlevel
                            + turns_resting + turns_other));
