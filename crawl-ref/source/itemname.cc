@@ -781,6 +781,8 @@ static const char* rune_type_name(int p)
     case RUNE_TOMB:        return "golden";
     case RUNE_SWAMP:       return "decaying";
     case RUNE_SHOALS:      return "barnacled";
+    case RUNE_SPIDER_NEST: return "gossamer";
+    case RUNE_FOREST:      return "mossy";
 
     // pandemonium and abyss runes:
     case RUNE_DEMONIC:     return "demonic";

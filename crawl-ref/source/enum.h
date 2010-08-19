@@ -364,6 +364,8 @@ enum branch_type                // you.where_are_you
     BRANCH_TARTARUS,
     BRANCH_LAST_HELL = BRANCH_TARTARUS,
     BRANCH_HALL_OF_ZOT,
+    BRANCH_FOREST,
+    BRANCH_SPIDER_NEST,
     NUM_BRANCHES
 };
 
@@ -1097,7 +1099,9 @@ enum dungeon_feature_type
     DNGN_ENTER_TOMB,
     DNGN_ENTER_SWAMP,                  //  122
     DNGN_ENTER_SHOALS,
-    DNGN_ENTER_LAST_BRANCH = DNGN_ENTER_SHOALS,
+    DNGN_ENTER_SPIDER_NEST,
+    DNGN_ENTER_FOREST,
+    DNGN_ENTER_LAST_BRANCH = DNGN_ENTER_FOREST,
 
     // Exits from various branches
     // Order must be the same as above
@@ -1116,7 +1120,9 @@ enum dungeon_feature_type
     DNGN_RETURN_FROM_TOMB,
     DNGN_RETURN_FROM_SWAMP,            //  142
     DNGN_RETURN_FROM_SHOALS,
-    DNGN_RETURN_FROM_LAST_BRANCH = DNGN_RETURN_FROM_SHOALS,
+    DNGN_RETURN_FROM_SPIDER_NEST,
+    DNGN_RETURN_FROM_FOREST,
+    DNGN_RETURN_FROM_LAST_BRANCH = DNGN_RETURN_FROM_FOREST,
 
     // Portals to various places unknown.
     DNGN_ENTER_PORTAL_VAULT = 160,

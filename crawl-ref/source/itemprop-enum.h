@@ -281,6 +281,9 @@ enum rune_type
     RUNE_LOM_LOBON,
     RUNE_CEREBOV,
     RUNE_GLOORX_VLOQ,
+
+    RUNE_SPIDER_NEST,
+    RUNE_FOREST,
     NUM_RUNE_TYPES             // should always be last
 };
 
