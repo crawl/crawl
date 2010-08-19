@@ -297,6 +297,8 @@ static void _reset_game()
     travel_cache = TravelCache();
     you.clear_place_info();
     overview_clear();
+    clear_message_window();
+    note_list.clear();
     msg::deinitialise_mpr_streams();
 
 #ifdef USE_TILE

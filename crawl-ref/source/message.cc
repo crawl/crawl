@@ -579,6 +579,11 @@ void display_message_window()
     msgwin.show();
 }
 
+void clear_message_window()
+{
+    msgwin = message_window();
+}
+
 void scroll_message_window(int n)
 {
     msgwin.scroll(n);
