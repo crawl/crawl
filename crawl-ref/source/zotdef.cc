@@ -295,7 +295,7 @@ void golem_wave(int power)
     monster_type golems[]={ MONS_CLAY_GOLEM, MONS_WOOD_GOLEM, MONS_STONE_GOLEM,
 	    MONS_IRON_GOLEM, MONS_CRYSTAL_GOLEM, MONS_TOENAIL_GOLEM};
     monster_type boss[]={MONS_ELECTRIC_GOLEM};
-    zotdef_fill_from_list(golems, sizeof(golems)/sizeof(monster_type), 6, power);	// reduced size
+    zotdef_fill_from_list(golems, sizeof(golems)/sizeof(monster_type), 6, power*2/3);	// reduced size
     zotdef_choose_boss(boss, sizeof(boss)/sizeof(monster_type), power);
     mpr("Booming thuds herald the arrival of something large...",MSGCH_DANGER);
     more();
