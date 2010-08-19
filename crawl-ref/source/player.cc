@@ -250,8 +250,7 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
                      // as defined in init.txt (see trapwalk.lua)
                      if (type != TRAP_SHAFT // Known shafts aren't traps
                          && (new_grid != DNGN_TRAP_MECHANICAL
-                         || !clua.callbooleanfn(false, "ch_cross_trap",
-                                                "s", trap_name(p))))
+                         || (!clua.callbooleanfn(false, "ch_cross_trap", "s", trap_name(p))) && !game_is_zotdef()))
 #endif
                 {
                     std::string prompt = make_stringf(
