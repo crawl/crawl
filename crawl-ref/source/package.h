@@ -93,7 +93,7 @@ private:
     std::stack<len_t> unlinked_blocks;
     std::map<len_t, std::pair<len_t, len_t> > block_map;
     len_t extend_block(len_t at, len_t size, len_t by);
-    len_t alloc_block();
+    len_t alloc_block(len_t &size);
     void finish_chunk(const std::string name, len_t at);
     void free_chunk(const std::string name);
     len_t write_directory();

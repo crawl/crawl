@@ -9,9 +9,6 @@ Guarantees:
   the exact state it had at the last commit().
 
 Caveats/issues:
-* Benchmarked on random chunks of size 2^random2(X) * frandom(1),
-  naive reusing of the first slab of free space produces less waste than
-  best fit.  I don't fully understand why, but for now, let's use that.
 * Unless DO_FSYNC is defined, crashes that put down the operating system
   may break the consistency guarantee.
 * A commit() will break readers who read a chunk that was deleted or
@@ -291,25 +288,40 @@ len_t package::extend_block(len_t at, len_t size, len_t by)
     return by;
 }
 
-len_t package::alloc_block()
+len_t package::alloc_block(len_t &size)
 {
-    for(fb_t::iterator bl = free_blocks.begin(); bl!=free_blocks.end(); bl++)
+    fb_t::iterator bl, best_big, best_small;
+    len_t bb_size = (len_t)-1, bs_size = 0;
+    for(bl = free_blocks.begin(); bl!=free_blocks.end(); bl++)
     {
-        // don't reuse very small blocks
-        if (bl->second < 16)
-            continue;
-
-          len_t at = bl->first;
-          len_t free = bl->second;
-          dprintf("found a block for reuse at %u size %u\n", at, free);
-          free_blocks.erase(bl);
-          free_blocks[at + sizeof(block_header)] = free - sizeof(block_header);
-
-          return at;
+        if (bl->second < bb_size && bl->second >= size + sizeof(block_header))
+            best_big = bl, bb_size = bl->second;
+        // don't reuse very small blocks unless they're big enough
+        else if (bl->second >= 16 && bl->second > bs_size)
+            best_small = bl, bs_size = bl->second;
     }
-    len_t at = file_len;
+    if (bb_size != (len_t)-1)
+        bl = best_big;
+    else if (bs_size != 0)
+        bl = best_small;
+    else
+    {
+        len_t at = file_len;
 
-    file_len += sizeof(block_header);
+        file_len += sizeof(block_header) + size;
+        return at;
+    }
+
+    len_t at = bl->first;
+    len_t free = bl->second;
+    dprintf("found a block for reuse at %u size %u\n", at, free);
+    free_blocks.erase(bl);
+    free -= sizeof(block_header);
+    if (size > free)
+        size = free;
+    if ((free -= size))
+        free_blocks[at + sizeof(block_header) + size] = free;
+
     return at;
 }
 
@@ -686,11 +698,10 @@ void chunk_writer::raw_write(const void *data, len_t len)
 {
     while (len > 0)
     {
-        int space = pkg->extend_block(cur_block, block_len, len);
+        len_t space = pkg->extend_block(cur_block, block_len, len);
         if (!space)
         {
-            len_t next_block = pkg->alloc_block();
-            space = pkg->extend_block(next_block, 0, len);
+            len_t next_block = pkg->alloc_block(space = len);
             ASSERT(space > 0);
             if (cur_block)
                 finish_block(next_block);
