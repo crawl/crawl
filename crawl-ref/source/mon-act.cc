@@ -3489,7 +3489,8 @@ static bool _monster_move(monsters *monster)
         // Check for attacking another monster.
         if (monsters* targ = monster_at(monster->pos() + mmov))
         {
-            if (mons_aligned(monster, targ))
+            if (mons_aligned(monster, targ) &&
+                (!game_is_zotdef() || !mons_is_firewood(targ))) // Zotdef: monsters will cut down firewood
                 ret = _monster_swaps_places(monster, mmov);
             else
             {
