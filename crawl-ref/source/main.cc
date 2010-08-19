@@ -287,6 +287,7 @@ static void _reset_game()
     you.copy_from(you_ref);
     StashTrack = StashTracker();
     travel_cache = TravelCache();
+    you.clear_place_info();
     overview_clear();
     msg::deinitialise_mpr_streams();
 

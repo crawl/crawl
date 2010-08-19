@@ -555,6 +555,7 @@ public:
                               level_area_type level_type2) const;
     PlaceInfo& get_place_info(branch_type branch) const;
     PlaceInfo& get_place_info(level_area_type level_type2) const;
+    void clear_place_info();
 
     void goto_place(const level_id &level);
 
