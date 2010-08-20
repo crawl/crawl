@@ -420,6 +420,7 @@ void package::read_directory(len_t start)
     ASSERT(directory.empty());
     directory[""] = start;
 
+    dprintf("package: reading directory\n");
     chunk_reader *rd = new chunk_reader(*this, start);
 
     dir_entry ch;
@@ -428,6 +429,7 @@ void package::read_directory(len_t start)
         if (res != sizeof(dir_entry))
             fail("save file corrupted -- truncated directory");
         directory[std::string(ch.name, 4)] = htole(ch.start);
+        dprintf("* %s\n", std::string(ch.name, 4).c_str());
     }
 
     delete rd;
