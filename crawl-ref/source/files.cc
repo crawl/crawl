@@ -2369,6 +2369,23 @@ bool get_save_version(FILE *file, int &major, int &minor)
     return (true);
 }
 
+bool get_save_version(chunk_reader &file, int &major, int &minor)
+{
+    // Read first two bytes.
+    uint8_t buf[2];
+    if (file.read(buf, 2) != 2)
+    {
+        // Empty file?
+        major = minor = -1;
+        return (false);
+    }
+
+    major = buf[0];
+    minor = buf[1];
+
+    return (true);
+}
+
 static bool _get_and_validate_version(FILE *restoreFile, int &major,
                                       int &minor, std::string* reason)
 {
