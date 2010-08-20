@@ -9,6 +9,7 @@
 #include <string.h>
 
 #include "AppHdr.h"
+#include "errors.h"
 #include "libutil.h"
 #include "stuff.h"
 
@@ -19,8 +20,9 @@ void fail(const char *msg, ...)
     std::string buf = vmake_stringf(msg, args);
     va_end(args);
 
-    // TODO: throw an exception or sumthing here when expected
-    end(1, true, buf.c_str());
+    // Do we want to call end() right on when there's no one trying catching,
+    // or should we risk exception code mess things up?
+    throw ext_fail_exception(buf);
 }
 
 void sysfail(const char *msg, ...)
@@ -33,6 +35,5 @@ void sysfail(const char *msg, ...)
     buf += ": ";
     buf += strerror(errno);
 
-    // TODO: throw an exception or sumthing here when expected
-    end(1, true, buf.c_str());
+    throw ext_fail_exception(buf);
 }
