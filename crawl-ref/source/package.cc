@@ -428,8 +428,10 @@ void package::read_directory(len_t start)
     {
         if (res != sizeof(dir_entry))
             fail("save file corrupted -- truncated directory");
-        directory[std::string(ch.name, 4)] = htole(ch.start);
-        dprintf("* %s\n", std::string(ch.name, 4).c_str());
+        std::string chname(ch.name, 4);
+        chname.resize(strlen(chname.c_str()));
+        directory[chname] = htole(ch.start);
+        dprintf("* %s\n", chname.c_str());
     }
 
     delete rd;
