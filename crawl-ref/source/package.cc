@@ -209,7 +209,7 @@ void package::seek(len_t to)
 
 chunk_writer* package::writer(const std::string name)
 {
-    return new chunk_writer(this, name);
+    return new chunk_writer(*this, name);
 }
 
 chunk_reader* package::reader(const std::string name)
@@ -217,7 +217,7 @@ chunk_reader* package::reader(const std::string name)
     directory_t::iterator ch = directory.find(name);
     if (ch == directory.end())
         return 0;
-    return new chunk_reader(this, ch->second);
+    return new chunk_reader(*this, ch->second);
 }
 
 len_t package::extend_block(len_t at, len_t size, len_t by)
@@ -318,7 +318,7 @@ len_t package::write_directory()
     dprintf("writing directory of size %u*%u\n", (unsigned int)dir.size(),
             (unsigned int)sizeof(dir_entry));
     {
-        chunk_writer dch(this, "");
+        chunk_writer dch(*this, "");
         dch.write(&dir.front(), dir.size() * sizeof(dir_entry));
     }
 
@@ -420,7 +420,7 @@ void package::read_directory(len_t start)
     ASSERT(directory.empty());
     directory[""] = start;
 
-    chunk_reader *rd = new chunk_reader(this, start);
+    chunk_reader *rd = new chunk_reader(*this, start);
 
     dir_entry ch;
     while(len_t res = rd->read(&ch, sizeof(dir_entry)))
@@ -488,12 +488,11 @@ void package::trace_chunk(len_t start)
 }
 
 
-chunk_writer::chunk_writer(package *parent, const std::string _name)
+chunk_writer::chunk_writer(package &parent, const std::string _name)
     : first_block(0), cur_block(0), block_len(0)
 {
     dprintf("chunk_writer(%s): starting\n", _name.c_str());
-    ASSERT(parent);
-    pkg = parent;
+    pkg = &parent;
     pkg->n_users++;
     name = _name;
 
@@ -600,14 +599,11 @@ void chunk_writer::write(const void *data, len_t len)
 #endif
 }
 
-chunk_reader::chunk_reader(package *parent, len_t start)
-    : block_left(0)
+void chunk_reader::init(len_t start)
 {
-    dprintf("chunk_reader(%u): starting\n", start);
-    ASSERT(parent);
-    pkg = parent;
     pkg->n_users++;
     next_block = start;
+    block_left = 0;
 
 #ifdef USE_ZLIB
     zs.zalloc    = 0;
@@ -619,6 +615,22 @@ chunk_reader::chunk_reader(package *parent, len_t start)
         fail("save file decompression failed during init: %s", zs.msg);
     eof = false;
 #endif
+}
+
+chunk_reader::chunk_reader(package &parent, len_t start)
+{
+    dprintf("chunk_reader[%u]: starting\n", start);
+    pkg = &parent;
+    init(start);
+}
+
+chunk_reader::chunk_reader(package &parent, const std::string _name)
+{
+    if (!parent.has_chunk(_name))
+        fail("save file corrupted -- chunk \"%s\" missing", _name.c_str());
+    dprintf("chunk_reader(%s): starting\n", _name.c_str());
+    pkg = &parent;
+    init(parent.directory[_name]);
 }
 
 chunk_reader::~chunk_reader()

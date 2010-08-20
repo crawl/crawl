@@ -20,7 +20,6 @@ class package;
 class chunk_writer
 {
 private:
-    chunk_writer(package *parent, const std::string _name);
     package *pkg;
     std::string name;
     len_t first_block;
@@ -33,6 +32,7 @@ private:
     void raw_write(const void *data, len_t len);
     void finish_block(len_t next);
 public:
+    chunk_writer(package &parent, const std::string _name);
     ~chunk_writer();
     void write(const void *data, len_t len);
     friend class package;
@@ -41,7 +41,8 @@ public:
 class chunk_reader
 {
 private:
-    chunk_reader(package *parent, len_t start);
+    chunk_reader(package &parent, len_t start);
+    void init(len_t start);
     package *pkg;
     len_t next_block;
     len_t off, block_left;
@@ -52,6 +53,7 @@ private:
 #endif
     len_t raw_read(void *data, len_t len);
 public:
+    chunk_reader(package &parent, const std::string _name);
     ~chunk_reader();
     len_t read(void *data, len_t len);
     friend class package;
