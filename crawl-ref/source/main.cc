@@ -57,6 +57,7 @@
 #include "dungeon.h"
 #include "effects.h"
 #include "env.h"
+#include "errors.h"
 #include "map_knowledge.h"
 #include "fprop.h"
 #include "fight.h"
@@ -319,6 +320,10 @@ static void _launch_game_loop()
         {
             game_ended = true;
             _reset_game();
+        }
+        catch (ext_fail_exception &fe)
+        {
+            end(1, false, fe.msg.c_str());
         }
     } while (Options.restart_after_game
              && game_ended
