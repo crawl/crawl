@@ -445,6 +445,8 @@
 //jmf: end of new defines
 // ====================== -----------------------------------------------------
 
+#define SAVE_SUFFIX ".cs"
+
 #ifdef MULTIUSER
     // If you are installing Crawl for multiple users, define SAVE_DIR
     // to the directory where saves, bones, and score file will go...

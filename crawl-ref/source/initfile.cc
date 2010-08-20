@@ -20,6 +20,7 @@
 #include "dlua.h"
 #include "delay.h"
 #include "directn.h"
+#include "errors.h"
 #include "kills.h"
 #include "files.h"
 #include "defines.h"
@@ -3626,79 +3627,21 @@ static void _print_version()
 
 static void _print_save_version(char *name)
 {
-#ifdef LOAD_UNPACKAGE_CMD
-    bool need_unlink = false;
-#endif
-    std::string basename = get_savedir_filename(name, "", "");
-    std::string filename = basename + ".chr";
-
-    FILE *charf = fopen(name, "rb");
-
-    if (!charf)
+    try
     {
-#ifdef LOAD_UNPACKAGE_CMD
-        std::string zipfile = basename + PACKAGE_SUFFIX;
-        FILE *handle = fopen(zipfile.c_str(), "rb+");
-        if (handle == NULL)
-        {
-            fprintf(stderr, "Unable to open %s for reading!\n",
-                            zipfile.c_str());
-            return;
-        }
+        package save((get_savedir_filename(name, "", "") + SAVE_SUFFIX).c_str(), false);
+        chunk_reader charf(save, "chr");
+
+        int major, minor;
+        if (!get_save_version(charf, major, minor))
+            fail("Save file is invalid.");
         else
-        {
-            fclose(handle);
-
-            // Create command.
-            char cmd_buff[1024];
-
-            std::string zipname = basename;
-            std::string directory = get_savefile_directory();
-            std::string savefile = filename;
-            savefile.erase(0, savefile.rfind(FILE_SEPARATOR) + 1);
-
-            escape_path_spaces(zipname);
-            escape_path_spaces(directory);
-            escape_path_spaces(savefile);
-            snprintf( cmd_buff, sizeof(cmd_buff), UNPACK_SPECIFIC_FILE_CMD,
-                      zipname.c_str(),
-                      directory.c_str(),
-                      savefile.c_str() );
-
-            if (system( cmd_buff ) != 0)
-            {
-                fprintf(stderr, "Warning: Zip command "
-                                "(UNPACK_SPECIFIC_FILE_CMD) "
-                                "returned non-zero value!\n" );
-            }
-            need_unlink = true;
-        }
-#endif
-        charf = fopen(filename.c_str(), "rb");
+            printf("Save file version for %s is %d.%d\n", name, major, minor);
     }
-    if (!charf)
+    catch (ext_fail_exception &fe)
     {
-        fprintf(stderr, "Unable to open %s for reading!\n", filename.c_str());
-        goto cleanup;
+        fprintf(stderr, "Error: %s\n", fe.msg.c_str());
     }
-
-    int major, minor;
-    if (!get_save_version(charf, major, minor))
-    {
-        fprintf(stderr, "Save file is invalid.\n");
-    }
-    else
-    {
-        printf("Save file version for %s is %d.%d\n", name, major, minor);
-    }
-
-cleanup:
-#ifdef LOAD_UNPACKAGE_CMD
-    if (need_unlink)
-        unlink(filename.c_str());
-#else
-    ;
-#endif
 }
 
 static bool _check_extra_opt(char* _opt)
