@@ -25,6 +25,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "travel.h"
+#include "transform.h"
 
 static void _jiyva_convert_slime(monster* slime);
 static void _fedhas_neutralise_plant(monster* plant);
@@ -142,6 +143,75 @@ void fedhas_neutralise(monster* mons)
         mons->flags |= MF_ATT_CHANGE_ATTEMPT;
         del_exclude(mons->pos());
     }
+}
+
+static void _print_charm_converted_speech(const std::string key,
+                                          monster *mon,
+                                          msg_channel_type channel)
+{
+    std::string msg = getSpeakString("charm_converted_" + key);
+
+    if (!msg.empty())
+    {
+        msg = do_mon_str_replacements(msg, mon);
+        mpr(msg.c_str(), channel);
+    }
+}
+
+void passive_enslavement_convert(monster* mons)
+{
+    if (you.are_charming()
+        && mons->alive()
+        && is_player_same_species(mons->type, true)
+        && mons->foe == MHITYOU
+        && !mons->is_summoned()
+        && !mons->is_shapeshifter()
+        && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT)
+        && !mons->friendly()
+        && you.visible_to(mons)
+        && !mons->asleep()
+        && !mons_is_confused(mons)
+        && !mons->paralysed())
+    {
+        mons->flags |= MF_ATT_CHANGE_ATTEMPT;
+
+        const int hd = mons->hit_dice;
+
+        if (random2(4 + you.experience_level / 3)
+                 > random2(hd) + hd + random2(5))
+        {
+            passive_enslavement_convert_monster(mons);
+            stop_running();
+        }
+    }
+}
+
+// enslavement for RING_CHARM
+void passive_enslavement_convert_monster(monster* mons)
+{
+    if (one_chance_in(1 + mons->hit_dice * mons->hit_dice))
+    {
+        _print_charm_converted_speech("reaction_sight", mons,
+                                      MSGCH_FRIEND_ENCHANT);
+        if (!one_chance_in(3))
+            _print_charm_converted_speech("speech_sight", mons, MSGCH_TALK);
+
+        mons->attitude = ATT_FRIENDLY;
+
+        // The monster is not really *created* friendly, but should it
+        // become hostile later on, it won't count as a good kill.
+        mons->flags |= MF_NO_REWARD;
+
+        if (mons->is_patrolling())
+           // Make monster stop patrolling and forget their patrol point,
+           // they're supposed to follow you now.
+           mons->patrol_point = coord_def(0, 0);
+    }
+    else
+        mons->add_ench(ENCH_CHARM);
+
+    behaviour_event(mons, ME_ALERT, MHITNOT);
+    mons_att_changed(mons);
 }
 
 // Make summoned (temporary) god gifts disappear on penance or when

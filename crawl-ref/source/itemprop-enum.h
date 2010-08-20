@@ -178,10 +178,13 @@ enum jewellery_type
     RING_PROTECTION_FROM_MAGIC,        //   20
     RING_FIRE,
     RING_ICE,
-    RING_TELEPORT_CONTROL,             //   23
+    RING_TELEPORT_CONTROL,
 
     NUM_RINGS,                         //   24, keep as last ring; can overlap
                                        //   safely with first amulet.
+    // RINGS after num_rings are for unique types for artefacts
+    //   (no non-artefact version).
+    RING_CHARM,                        //   25
 
     AMU_FIRST_AMULET = 35,
     AMU_RAGE = AMU_FIRST_AMULET,       //   35

@@ -6287,6 +6287,11 @@ bool player::can_see_invisible() const
     return (can_see_invisible(true));
 }
 
+bool player::are_charming() const
+{
+    return player_equip(EQ_RINGS, RING_CHARM, true);
+}
+
 bool player::invisible() const
 {
     return (duration[DUR_INVIS] && !backlit());

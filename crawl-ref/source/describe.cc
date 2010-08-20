@@ -229,6 +229,7 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
         { "MP",     ARTP_MAGICAL_POWER,         0 },
         { "SInv",   ARTP_EYESIGHT,              2 },
         { "Stlth",  ARTP_STEALTH,               2 }, // handled specially
+        { "Charm",  ARTP_CHARM,                 2 },
         { "Curse",  ARTP_CURSED,                2 },
     };
 

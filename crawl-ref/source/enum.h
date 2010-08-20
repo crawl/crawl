@@ -2840,6 +2840,7 @@ enum artefact_prop_type
     ARTP_STEALTH,
     ARTP_MAGICAL_POWER,
     ARTP_PONDEROUS,
+    ARTP_CHARM,
     ARTP_NUM_PROPERTIES
 };
 
