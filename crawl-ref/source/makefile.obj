@@ -42,6 +42,7 @@ directn.o \
 dlua.o \
 dungeon.o \
 effects.o \
+errors.o \
 exclude.o \
 feature.o \
 fight.o \
@@ -147,6 +148,7 @@ ng-wanderer.o \
 notes.o \
 ouch.o \
 output.o \
+package.o \
 pattern.o \
 place-info.o \
 place.o \
