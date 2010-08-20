@@ -11,9 +11,10 @@ Stone Soup 0.7 (20100724)
 * Fix over-enthusiastic Armour nerf.
 * New tutorial and mini-game (Dungeon Sprint).
 * Removed instant stat death.
+* Overhauled Demonspawn mutations.
 * Aptitudes now on a scale +5 to -5.
 * New starting menus, mouse-operable in tiles builds.
-* New monsters: elephants and spriggans. 
+* Removed Thief and Death Knight character backgrounds.
 
 Balance fixes
 * Monster double actions due to energy randomisation always include a move.
