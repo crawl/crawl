@@ -12,17 +12,13 @@
 
 #include "artefact.h"
 #include "beam.h"
-#include "coord.h"
-#include "coordit.h"
 #include "delay.h"
 #include "effects.h"
 #include "env.h"
 #include "godconduct.h"
 #include "itemprop.h"
-#include "items.h"
 #include "libutil.h"
 #include "makeitem.h"
-#include "map_knowledge.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
@@ -31,141 +27,7 @@
 #include "quiver.h"
 #include "shout.h"
 #include "stuff.h"
-#include "traps.h"
 #include "view.h"
-
-int detect_traps(int pow)
-{
-    pow = std::min(50, pow);
-
-    // Trap detection moved to traps.cc.  -am
-
-    const int range = 8 + random2(8) + pow;
-    return reveal_traps(range);
-}
-
-int detect_items(int pow)
-{
-    int items_found = 0;
-    const int map_radius = 8 + random2(8) + pow;
-
-    for (radius_iterator ri(you.pos(), map_radius, C_SQUARE); ri; ++ri)
-    {
-        // Don't expose new dug out areas:
-        // Note: assumptions are being made here about how
-        // terrain can change (eg it used to be solid, and
-        // thus item free).
-        if (env.map_knowledge(*ri).changed())
-            continue;
-
-        if (igrd(*ri) != NON_ITEM
-            && !env.map_knowledge(*ri).item())
-        {
-            items_found++;
-            env.map_knowledge(*ri).set_detected_item();
-        }
-    }
-
-    return (items_found);
-}
-
-static void _fuzz_detect_creatures(int pow, int *fuzz_radius, int *fuzz_chance)
-{
-    dprf("dc_fuzz: Power is %d", pow);
-
-    pow = std::max(1, pow);
-
-    *fuzz_radius = pow >= 50 ? 1 : 2;
-
-    // Fuzz chance starts off at 100% and declines to a low of 10% for
-    // obscenely powerful castings (pow caps around the 60 mark).
-    *fuzz_chance = 100 - 90 * (pow - 1) / 59;
-    if (*fuzz_chance < 10)
-        *fuzz_chance = 10;
-}
-
-static bool _mark_detected_creature(coord_def where, const monsters *mon,
-                                    int fuzz_chance, int fuzz_radius)
-{
-    bool found_good = false;
-
-    if (fuzz_radius && x_chance_in_y(fuzz_chance, 100))
-    {
-        const int fuzz_diam = 2 * fuzz_radius + 1;
-
-        coord_def place;
-        // Try five times to find a valid placement, else we attempt to place
-        // the monster where it really is (and may fail).
-        for (int itry = 0; itry < 5; ++itry)
-        {
-            place.set(where.x + random2(fuzz_diam) - fuzz_radius,
-                      where.y + random2(fuzz_diam) - fuzz_radius);
-
-            // If the player would be able to see a monster at this location
-            // don't place it there.
-            if (you.see_cell(place))
-                continue;
-
-            // Try not to overwrite another detected monster.
-            if (env.map_knowledge(place).detected_monster())
-                continue;
-
-            // Don't print monsters on terrain they cannot pass through,
-            // not even if said terrain has since changed.
-            if (map_bounds(place) && !env.map_knowledge(place).changed()
-                && mon->can_pass_through_feat(grd(place)))
-            {
-                found_good = true;
-                break;
-            }
-        }
-
-        if (found_good)
-            where = place;
-    }
-
-    env.map_knowledge(where).set_detected_monster(mons_detected_base(mon->type));
-
-    return (found_good);
-}
-
-int detect_creatures(int pow, bool telepathic)
-{
-    int fuzz_radius = 0, fuzz_chance = 0;
-    if (!telepathic)
-        _fuzz_detect_creatures(pow, &fuzz_radius, &fuzz_chance);
-
-    int creatures_found = 0;
-    const int map_radius = 8 + random2(8) + pow;
-
-    // Clear the map so detect creatures is more useful and the detection
-    // fuzz is harder to analyse by averaging.
-    if (!telepathic)
-        clear_map(false);
-
-    for (radius_iterator ri(you.pos(), map_radius, C_SQUARE); ri; ++ri)
-    {
-        if (monsters *mon = monster_at(*ri))
-        {
-            // If you can see the monster, don't "detect" it elsewhere.
-            if (!mons_near(mon) || !mon->visible_to(&you))
-            {
-                creatures_found++;
-                _mark_detected_creature(*ri, mon, fuzz_chance, fuzz_radius);
-            }
-
-            // Assuming that highly intelligent spellcasters can
-            // detect scrying. -- bwr
-            if (mons_intel(mon) == I_HIGH
-                && mons_class_flag(mon->type, M_SPELLCASTER))
-            {
-                behaviour_event(mon, ME_DISTURB, MHITYOU, you.pos());
-            }
-        }
-    }
-
-    return (creatures_found);
-}
 
 // We need to know what brands equate with what missile brands to know if
 // we should disallow temporary branding or not.

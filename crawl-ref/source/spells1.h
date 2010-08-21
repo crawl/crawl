@@ -11,9 +11,6 @@
 struct bolt;
 
 bool cast_sure_blade(int power);
-int cast_healing(int pow, bool divine_ability = false,
-                 const coord_def& where = coord_def(0, 0),
-                 bool not_self = false, targ_mode_type mode = TARG_NUM_MODES);
 
 void cast_confusing_touch(int power);
 void cast_cure_poison(int pow);
@@ -42,6 +39,4 @@ void ice_armour(int pow, bool extending);
 void missile_prot(int pow);
 void stone_scales(int pow);
 
-void antimagic();
-void identify(int power, int item_slot = -1);
 #endif
