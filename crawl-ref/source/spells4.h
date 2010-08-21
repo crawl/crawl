@@ -29,7 +29,6 @@ bool cast_evaporate(int pow, bolt& beem, int potion);
 bool cast_fulsome_distillation(int pow, bool check_range = true);
 void cast_phase_shift(int pow);
 bool cast_fragmentation(int powc, const dist& spd);
-bool cast_apportation(int powc, const coord_def& where);
 void cast_ignite_poison(int pow);
 void cast_intoxicate(int pow);
 void cast_mass_sleep(int pow);
@@ -43,9 +42,6 @@ void cast_silence(int pow);
 void cast_tame_beasts(int pow);
 void cast_dispersal(int pow);
 void cast_stoneskin(int pow);
-
-int cast_semi_controlled_blink(int pow);
-bool cast_portal_projectile(int pow);
 
 //returns true if it slowed the monster
 bool do_slow_monster(monsters* mon, kill_category whose_kill);

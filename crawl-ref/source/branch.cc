@@ -10,7 +10,7 @@
 #include "mon-pick.h"
 #include "place.h"
 #include "player.h"
-#include "spells3.h"
+#include "spl-transloc.h"
 #include "traps.h"
 
 Branch& your_branch()

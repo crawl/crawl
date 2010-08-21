@@ -27,7 +27,7 @@
 #include "place.h"
 #include "random.h"
 #include "spells1.h"
-#include "spells3.h"
+#include "spl-transloc.h"
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"

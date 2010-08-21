@@ -25,8 +25,6 @@ void big_cloud(cloud_type cl_type, kill_category whose, killer_type killer,
                const coord_def& where, int pow, int size, int spread_rate = -1,
                int colour = -1, std::string name = "", std::string tile = "");
 
-int blink(int pow, bool high_level_controlled_blink, bool wizard_blink = false);
-
 int cast_big_c(int pow, cloud_type cty, kill_category whose, bolt &beam);
 void cast_confusing_touch(int power);
 void cast_cure_poison(int pow);
@@ -61,5 +59,4 @@ void stone_scales(int pow);
 void antimagic();
 void identify(int power, int item_slot = -1);
 void manage_fire_shield(int delay);
-void random_blink(bool, bool override_abyss = false);
 #endif
