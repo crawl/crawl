@@ -2691,6 +2691,7 @@ void mark_interesting_monst(monsters* monster, beh_type behaviour)
                 || you.level_type == LEVEL_ABYSS)
              && mons_rarity(monster->type) <= Options.rare_interesting
              && monster->hit_dice > 2 // Don't note the really low-hd monsters.
+             && !mons_class_flag(monster->type, M_NO_EXP_GAIN)
              && mons_rarity(monster->type) > 0)
     {
         interesting = true;
