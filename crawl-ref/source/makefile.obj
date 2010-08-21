@@ -175,6 +175,7 @@ spells4.o \
 spl-book.o \
 spl-cast.o \
 spl-mis.o \
+spl-summoning.o \
 spl-util.o \
 spl-zap.o \
 sprint.o \

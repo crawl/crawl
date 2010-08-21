@@ -8,12 +8,6 @@
 #include "AppHdr.h"
 
 #include "spells1.h"
-
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <iostream>
-
 #include "externs.h"
 
 #include "abyss.h"
