@@ -1,5 +1,5 @@
-#ifndef SPL_OTHER_H
-#define SPL_OTHER_H
+#ifndef SPL_GODITEM_H
+#define SPL_GODITEM_H
 
 void identify(int power, int item_slot = -1);
 int cast_healing(int pow, bool divine_ability = false,

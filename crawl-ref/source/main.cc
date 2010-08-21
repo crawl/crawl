@@ -111,7 +111,7 @@
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-clouds.h"
-#include "spl-other.h"
+#include "spl-goditem.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
 #include "stairs.h"

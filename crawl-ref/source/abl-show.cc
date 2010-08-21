@@ -49,7 +49,7 @@
 #include "spells3.h"
 #include "spl-cast.h"
 #include "spl-damage.h"
-#include "spl-other.h"
+#include "spl-goditem.h"
 #include "spl-transloc.h"
 #include "spl-summoning.h"
 #include "spl-util.h"

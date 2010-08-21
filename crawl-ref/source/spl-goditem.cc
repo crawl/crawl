@@ -1,12 +1,12 @@
 /*
- *  File:     spl-other.cc
+ *  File:     spl-goditem.cc
  *  Summary:  Pseudo spells triggered by gods and various items.
  */
 
 #include "AppHdr.h"
 
 #include "externs.h"
-#include "spl-other.h"
+#include "spl-goditem.h"
 
 #include "artefact.h"
 #include "attitude-change.h"
