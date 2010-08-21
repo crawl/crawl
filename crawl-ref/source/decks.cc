@@ -51,6 +51,7 @@
 #include "spells2.h"
 #include "spells4.h"
 #include "spl-cast.h"
+#include "spl-damage.h"
 #include "spl-mis.h"
 #include "spl-other.h"
 #include "spl-summoning.h"

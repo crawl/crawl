@@ -48,6 +48,7 @@
 #include "spells1.h"
 #include "spells3.h"
 #include "spl-cast.h"
+#include "spl-damage.h"
 #include "spl-other.h"
 #include "spl-transloc.h"
 #include "spl-summoning.h"

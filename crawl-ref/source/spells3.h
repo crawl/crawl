@@ -8,12 +8,6 @@
 #ifndef SPELLS3_H
 #define SPELLS3_H
 
-class dist;
-struct bolt;
-
-int airstrike(int pow, const dist &beam);
-bool cast_bone_shards(int power, bolt &);
-
 bool cast_selective_amnesia(bool force);
 bool project_noise();
 

@@ -7,16 +7,8 @@
 #ifndef SPELLS2_H
 #define SPELLS2_H
 
-#include "enum.h"
 #include "itemprop-enum.h"
 
-class dist;
-
 bool brand_weapon(brand_type which_brand, int power);
-bool burn_freeze(int pow, beam_type flavour, monsters *monster);
-
-bool vampiric_drain(int pow, monsters *monster);
-void cast_refrigeration(int pow, bool non_player = false);
-void cast_toxic_radiance(bool non_player = false);
 
 #endif

@@ -10,30 +10,22 @@
 #include "externs.h"
 
 #include "areas.h"
-#include "beam.h"
-#include "cloud.h"
 #include "coord.h"
-#include "debug.h"
-#include "effects.h"
 #include "env.h"
 #include "food.h"
 #include "godconduct.h"
-#include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"
-#include "mon-behv.h"
 #include "mon-place.h"
 #include "religion.h"
 #include "shout.h"
-#include "spells1.h"
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "stuff.h"
 #include "terrain.h"
-#include "travel.h"
 #include "viewmap.h"
 
 bool cast_selective_amnesia(bool force)
@@ -97,105 +89,6 @@ bool cast_selective_amnesia(bool force)
     }
 
     return (true);
-}
-
-int airstrike(int pow, const dist &beam)
-{
-    bool success = false;
-
-    monsters *monster = monster_at(beam.target);
-
-    if (monster == NULL)
-        canned_msg(MSG_SPELL_FIZZLES);
-    else
-    {
-        god_conduct_trigger conducts[3];
-        disable_attack_conducts(conducts);
-
-        success = !stop_attack_prompt(monster, false, you.pos());
-
-        if (success)
-        {
-            set_attack_conducts(conducts, monster);
-
-            mprf("The air twists around and strikes %s!",
-                 monster->name(DESC_NOCAP_THE).c_str());
-
-            behaviour_event(monster, ME_ANNOY, MHITYOU);
-            if (mons_is_mimic(monster->type))
-                mimic_alert(monster);
-        }
-
-        enable_attack_conducts(conducts);
-
-        if (success)
-        {
-            int hurted = 8 + random2(random2(4) + (random2(pow) / 6)
-                           + (random2(pow) / 7));
-
-            if (mons_flies(monster))
-            {
-                hurted *= 3;
-                hurted /= 2;
-            }
-
-            hurted -= random2(1 + monster->ac);
-
-            hurted = std::max(0, hurted);
-
-            monster->hurt(&you, hurted);
-            if (monster->alive())
-                print_wounds(monster);
-        }
-    }
-
-    return (success);
-}
-
-bool cast_bone_shards(int power, bolt &beam)
-{
-    if (!you.weapon() || you.weapon()->base_type != OBJ_CORPSES)
-    {
-        canned_msg(MSG_SPELL_FIZZLES);
-        return (false);
-    }
-
-    bool success = false;
-
-    const bool was_orc = (mons_species(you.weapon()->plus) == MONS_ORC);
-
-    if (you.weapon()->sub_type != CORPSE_SKELETON)
-    {
-        mpr("The corpse collapses into a pulpy mess.");
-
-        dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
-
-        if (was_orc)
-            did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
-    }
-    else
-    {
-        // Practical max of 100 * 15 + 3000 = 4500.
-        // Actual max of    200 * 15 + 3000 = 6000.
-        power *= 15;
-        power += mons_weight(you.weapon()->plus);
-
-        if (!player_tracer(ZAP_BONE_SHARDS, power, beam))
-            return (false);
-
-        mpr("The skeleton explodes into sharp fragments of bone!");
-
-        dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
-
-        if (was_orc)
-            did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
-
-        zapping(ZAP_BONE_SHARDS, power, beam);
-
-        success = true;
-    }
-
-    return (success);
 }
 
 bool cast_sublimation_of_blood(int pow)
