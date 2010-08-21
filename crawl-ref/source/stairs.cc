@@ -26,7 +26,7 @@
 #include "output.h"
 #include "place.h"
 #include "random.h"
-#include "spells1.h"
+#include "spl-clouds.h"
 #include "spl-transloc.h"
 #include "stash.h"
 #include "state.h"

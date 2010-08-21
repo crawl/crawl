@@ -33,12 +33,10 @@
 #include "mon-behv.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
-#include "ouch.h"
 #include "player-stats.h"
 #include "quiver.h"
 #include "religion.h"
 #include "shout.h"
-#include "skills.h"
 #include "spells1.h"
 #include "spl-mis.h"
 #include "spl-util.h"
@@ -60,7 +58,7 @@ enum DEBRIS                 // jmf: add for shatter, dig, and Giants to throw
 // Just to avoid typing this over and over.
 // Returns true if monster died. -- bwr
 static bool _player_hurt_monster(monsters& m, int damage,
-        beam_type flavour = BEAM_MISSILE)
+                                 beam_type flavour = BEAM_MISSILE)
 {
     if (damage > 0)
     {
@@ -850,21 +848,6 @@ void cast_dispersal(int pow)
         mpr("The air shimmers briefly around you.");
 }
 
-int make_a_normal_cloud(coord_def where, int pow, int spread_rate,
-                        cloud_type ctype, kill_category whose,
-                        killer_type killer, int colour, std::string name,
-                        std::string tile)
-{
-    if (killer == KILL_NONE)
-        killer = cloud_struct::whose_to_killer(whose);
-
-    place_cloud( ctype, where,
-                 (3 + random2(pow / 4) + random2(pow / 4) + random2(pow / 4)),
-                 whose, killer, spread_rate, colour, name, tile );
-
-    return 1;
-}
-
 static bool _feat_is_passwallable(dungeon_feature_type feat)
 {
     // Irony: you can passwall through a secret door but not a door.
@@ -988,275 +971,6 @@ bool backlight_monsters(coord_def where, int pow, int garbage)
         simple_monster_message(monster, " glows brighter for a moment.");
     else
         simple_monster_message(monster, " glows brighter.");
-
-    return (true);
-}
-
-// Returns a vector of cloud types created by this potion type.
-// FIXME: Heavily duplicated code.
-static std::vector<int> _get_evaporate_result(int potion)
-{
-    std::vector <int> beams;
-    bool random_potion = false;
-    switch (potion)
-    {
-    case POT_STRONG_POISON:
-    case POT_POISON:
-        beams.push_back(BEAM_POTION_POISON);
-        break;
-
-    case POT_DEGENERATION:
-        beams.push_back(BEAM_POTION_POISON);
-        beams.push_back(BEAM_POTION_MIASMA);
-        break;
-
-    case POT_DECAY:
-        beams.push_back(BEAM_POTION_MIASMA);
-        break;
-
-    case POT_PARALYSIS:
-    case POT_CONFUSION:
-    case POT_SLOWING:
-        beams.push_back(BEAM_POTION_STINKING_CLOUD);
-        break;
-
-    case POT_WATER:
-    case POT_PORRIDGE:
-        beams.push_back(BEAM_POTION_STEAM);
-        break;
-
-    case POT_BLOOD:
-    case POT_BLOOD_COAGULATED:
-        beams.push_back(BEAM_POTION_STINKING_CLOUD);
-        // deliberate fall through
-    case POT_BERSERK_RAGE:
-        beams.push_back(BEAM_POTION_FIRE);
-        beams.push_back(BEAM_POTION_STEAM);
-        break;
-
-    case POT_MUTATION:
-        beams.push_back(BEAM_POTION_MUTAGENIC);
-        // deliberate fall-through
-    case POT_GAIN_STRENGTH:
-    case POT_GAIN_DEXTERITY:
-    case POT_GAIN_INTELLIGENCE:
-    case POT_EXPERIENCE:
-    case POT_MAGIC:
-        beams.push_back(BEAM_POTION_FIRE);
-        beams.push_back(BEAM_POTION_COLD);
-        beams.push_back(BEAM_POTION_POISON);
-        beams.push_back(BEAM_POTION_MIASMA);
-        random_potion = true;
-        break;
-
-    default:
-        beams.push_back(BEAM_POTION_FIRE);
-        beams.push_back(BEAM_POTION_STINKING_CLOUD);
-        beams.push_back(BEAM_POTION_COLD);
-        beams.push_back(BEAM_POTION_POISON);
-        beams.push_back(BEAM_POTION_BLUE_SMOKE);
-        beams.push_back(BEAM_POTION_STEAM);
-        random_potion = true;
-        break;
-    }
-
-    std::vector<int> clouds;
-    for (unsigned int k = 0; k < beams.size(); ++k)
-        clouds.push_back(beam2cloud((beam_type) beams[k]));
-
-    if (random_potion)
-    {
-        // handled in beam.cc
-        clouds.push_back(CLOUD_FIRE);
-        clouds.push_back(CLOUD_STINK);
-        clouds.push_back(CLOUD_COLD);
-        clouds.push_back(CLOUD_POISON);
-        clouds.push_back(CLOUD_BLUE_SMOKE);
-        clouds.push_back(CLOUD_STEAM);
-    }
-
-    return (clouds);
-}
-
-// Returns a comma-separated list of all cloud types potentially created
-// by this potion type. Doesn't respect the different probabilities.
-std::string get_evaporate_result_list(int potion)
-{
-    std::vector<int> clouds = _get_evaporate_result(potion);
-    std::sort(clouds.begin(), clouds.end());
-
-    std::vector<std::string> clouds_list;
-
-    int old_cloud = -1;
-    for (unsigned int k = 0; k < clouds.size(); ++k)
-    {
-        const int new_cloud = clouds[k];
-        if (new_cloud == old_cloud)
-            continue;
-
-        // This relies on all smoke types being handled as blue.
-        if (new_cloud == CLOUD_BLUE_SMOKE)
-            clouds_list.push_back("coloured smoke");
-        else
-            clouds_list.push_back(cloud_type_name((cloud_type) new_cloud));
-
-        old_cloud = new_cloud;
-    }
-
-    return comma_separated_line(clouds_list.begin(), clouds_list.end(),
-                                " or ", ", ");
-}
-
-
-// Assumes beem.range is already set -cao
-bool cast_evaporate(int pow, bolt& beem, int pot_idx)
-{
-    ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);
-    item_def& potion = you.inv[pot_idx];
-
-    beem.name        = "potion";
-    beem.colour      = potion.colour;
-    beem.glyph       = dchar_glyph(DCHAR_FIRED_FLASK);
-    beem.beam_source = MHITYOU;
-    beem.thrower     = KILL_YOU_MISSILE;
-    beem.is_beam     = false;
-    beem.aux_source.clear();
-
-    beem.hit        = you.dex() / 2 + roll_dice( 2, you.skills[SK_THROWING] / 2 + 1 );
-    beem.damage     = dice_def( 1, 0 );  // no damage, just producing clouds
-    beem.ench_power = pow;               // used for duration only?
-    beem.is_explosion = true;
-
-    beem.flavour    = BEAM_POTION_STINKING_CLOUD;
-    beam_type tracer_flavour = BEAM_MMISSILE;
-
-    switch (potion.sub_type)
-    {
-    case POT_STRONG_POISON:
-        beem.ench_power *= 2;
-        // deliberate fall-through
-    case POT_POISON:
-        beem.flavour   = BEAM_POTION_POISON;
-        tracer_flavour = BEAM_POISON;
-        break;
-
-    case POT_DEGENERATION:
-        beem.effect_known = false;
-        beem.flavour   = (coinflip() ? BEAM_POTION_POISON : BEAM_POTION_MIASMA);
-        tracer_flavour = BEAM_MIASMA;
-        beem.ench_power *= 2;
-        break;
-
-    case POT_DECAY:
-        beem.flavour   = BEAM_POTION_MIASMA;
-        tracer_flavour = BEAM_MIASMA;
-        beem.ench_power *= 2;
-        break;
-
-    case POT_PARALYSIS:
-        beem.ench_power *= 2;
-        // fall through
-    case POT_CONFUSION:
-    case POT_SLOWING:
-        tracer_flavour = beem.flavour = BEAM_POTION_STINKING_CLOUD;
-        break;
-
-    case POT_WATER:
-    case POT_PORRIDGE:
-        tracer_flavour = beem.flavour = BEAM_POTION_STEAM;
-        break;
-
-    case POT_BLOOD:
-    case POT_BLOOD_COAGULATED:
-        if (one_chance_in(3))
-            break; // stinking cloud
-        // deliberate fall through
-    case POT_BERSERK_RAGE:
-        beem.effect_known = false;
-        beem.flavour = (coinflip() ? BEAM_POTION_FIRE : BEAM_POTION_STEAM);
-        if (potion.sub_type == POT_BERSERK_RAGE)
-            tracer_flavour = BEAM_FIRE;
-        else
-            tracer_flavour = BEAM_RANDOM;
-        break;
-
-    case POT_MUTATION:
-        // Maybe we'll get a mutagenic cloud.
-        if (coinflip())
-        {
-            beem.effect_known = true;
-            tracer_flavour = beem.flavour = BEAM_POTION_MUTAGENIC;
-            break;
-        }
-        // if not, deliberate fall through for something random
-
-    case POT_GAIN_STRENGTH:
-    case POT_GAIN_DEXTERITY:
-    case POT_GAIN_INTELLIGENCE:
-    case POT_EXPERIENCE:
-    case POT_MAGIC:
-        beem.effect_known = false;
-        switch (random2(5))
-        {
-        case 0:   beem.flavour = BEAM_POTION_FIRE;   break;
-        case 1:   beem.flavour = BEAM_POTION_COLD;   break;
-        case 2:   beem.flavour = BEAM_POTION_POISON; break;
-        case 3:   beem.flavour = BEAM_POTION_MIASMA; break;
-        default:  beem.flavour = BEAM_POTION_RANDOM; break;
-        }
-        tracer_flavour = BEAM_RANDOM;
-        break;
-
-    default:
-        beem.effect_known = false;
-        switch (random2(12))
-        {
-        case 0:   beem.flavour = BEAM_POTION_FIRE;            break;
-        case 1:   beem.flavour = BEAM_POTION_STINKING_CLOUD;  break;
-        case 2:   beem.flavour = BEAM_POTION_COLD;            break;
-        case 3:   beem.flavour = BEAM_POTION_POISON;          break;
-        case 4:   beem.flavour = BEAM_POTION_RANDOM;          break;
-        case 5:   beem.flavour = BEAM_POTION_BLUE_SMOKE;      break;
-        case 6:   beem.flavour = BEAM_POTION_BLACK_SMOKE;     break;
-        default:  beem.flavour = BEAM_POTION_STEAM;           break;
-        }
-        tracer_flavour = BEAM_RANDOM;
-        break;
-    }
-
-    // Fire tracer. FIXME: use player_tracer() here!
-    beem.source         = you.pos();
-    beem.can_see_invis  = you.can_see_invisible();
-    beem.smart_monster  = true;
-    beem.attitude       = ATT_FRIENDLY;
-    beem.beam_cancelled = false;
-    beem.is_tracer      = true;
-    beem.friend_info.reset();
-
-    beam_type real_flavour = beem.flavour;
-    beem.flavour           = tracer_flavour;
-    beem.fire();
-
-    if (beem.beam_cancelled)
-    {
-        // We don't want to fire through friendlies or at ourselves.
-        canned_msg(MSG_OK);
-        return (false);
-    }
-
-    if (coinflip())
-        exercise(SK_THROWING, 1);
-
-    // Really fire.
-    beem.flavour = real_flavour;
-    beem.is_tracer = false;
-    beem.fire();
-
-    // Use up a potion.
-    if (is_blood_potion(potion))
-        remove_oldest_blood_potion(potion);
-
-    dec_inv_item_quantity(pot_idx, 1);
 
     return (true);
 }

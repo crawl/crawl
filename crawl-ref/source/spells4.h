@@ -14,18 +14,12 @@ class dist;
 struct bolt;
 
 bool backlight_monsters(coord_def where, int pow, int garbage);
-int make_a_normal_cloud(coord_def where, int pow, int spread_rate,
-                        cloud_type ctype, kill_category,
-                        killer_type killer = KILL_NONE, int colour = -1,
-                        std::string name = "", std::string tile = "");
 int disperse_monsters(coord_def where, int pow);
 
 void remove_condensation_shield();
 void cast_condensation_shield(int pow);
 void cast_detect_secret_doors(int pow);
 void cast_discharge(int pow);
-std::string get_evaporate_result_list(int potion);
-bool cast_evaporate(int pow, bolt& beem, int potion);
 bool cast_fulsome_distillation(int pow, bool check_range = true);
 void cast_phase_shift(int pow);
 bool cast_fragmentation(int powc, const dist& spd);

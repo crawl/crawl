@@ -12,9 +12,7 @@
 #include "artefact.h"
 #include "attitude-change.h"
 #include "beam.h"
-#include "cloud.h"
 #include "coord.h"
-#include "coordit.h"
 #include "describe.h"
 #include "effects.h"
 #include "env.h"
@@ -355,149 +353,6 @@ void identify(int power, int item_slot)
         item_slot = -1;
     }
     while (id_used > 0);
-}
-
-// Returns whether the spell was actually cast.
-bool conjure_flame(int pow, const coord_def& where)
-{
-    // FIXME: This would be better handled by a flag to enforce max range.
-    if (grid_distance(where, you.pos()) > spell_range(SPELL_CONJURE_FLAME,
-                                                      pow, true)
-        || !in_bounds(where))
-    {
-        mpr("That's too far away.");
-        return (false);
-    }
-
-    if (you.trans_wall_blocking(where))
-    {
-        mpr("A translucent wall is in the way.");
-        return (false);
-    }
-
-    if (cell_is_solid(where))
-    {
-        if (grd(where) == DNGN_WAX_WALL)
-            mpr("The flames aren't hot enough to melt wax walls!");
-        else
-            mpr("You can't ignite solid rock!");
-        return (false);
-    }
-
-    const int cloud = env.cgrid(where);
-
-    if (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE)
-    {
-        mpr("There's already a cloud there!");
-        return (false);
-    }
-
-    // Note that self-targeting is handled by SPFLAG_NOT_SELF.
-    monsters *monster = monster_at(where);
-    if (monster)
-    {
-        if (you.can_see(monster))
-        {
-            mpr("You can't place the cloud on a creature.");
-            return (false);
-        }
-        else
-        {
-            // FIXME: maybe should do _paranoid_option_disable() here?
-            mpr("You see a ghostly outline there, and the spell fizzles.");
-            return (true);      // Don't give free detection!
-        }
-    }
-
-    if (cloud != EMPTY_CLOUD)
-    {
-        // Reinforce the cloud - but not too much.
-        // It must be a fire cloud from a previous test.
-        mpr("The fire roars with new energy!");
-        const int extra_dur = 2 + std::min(random2(pow) / 2, 20);
-        env.cloud[cloud].decay += extra_dur * 5;
-        env.cloud[cloud].set_whose(KC_YOU);
-    }
-    else
-    {
-        const int durat = std::min(5 + (random2(pow)/2) + (random2(pow)/2), 23);
-        place_cloud(CLOUD_FIRE, where, durat, KC_YOU);
-    }
-
-    return (true);
-}
-
-// Assumes beem.range has already been set. -cao
-bool stinking_cloud( int pow, bolt &beem )
-{
-    beem.name        = "stinking cloud";
-    beem.colour      = GREEN;
-    beem.damage      = dice_def( 1, 0 );
-    beem.hit         = 20;
-    beem.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
-    beem.flavour     = BEAM_POTION_STINKING_CLOUD;
-    beem.ench_power  = pow;
-    beem.beam_source = MHITYOU;
-    beem.thrower     = KILL_YOU;
-    beem.is_beam     = false;
-    beem.is_explosion = true;
-    beem.aux_source.clear();
-
-    // Don't bother tracing if you're targeting yourself.
-    if (beem.target != you.pos())
-    {
-        // Fire tracer.
-        beem.source            = you.pos();
-        beem.can_see_invis     = you.can_see_invisible();
-        beem.smart_monster     = true;
-        beem.attitude          = ATT_FRIENDLY;
-        beem.friend_info.count = 0;
-        beem.is_tracer         = true;
-        beem.fire();
-
-        if (beem.beam_cancelled)
-        {
-            // We don't want to fire through friendlies.
-            canned_msg(MSG_OK);
-            return (false);
-        }
-    }
-
-    // Really fire.
-    beem.is_tracer = false;
-    beem.fire();
-
-    return (true);
-}
-
-int cast_big_c(int pow, cloud_type cty, kill_category whose, bolt &beam)
-{
-    big_cloud( cty, whose, beam.target, pow, 8 + random2(3), -1 );
-    return (1);
-}
-
-void big_cloud(cloud_type cl_type, kill_category whose,
-               const coord_def& where, int pow, int size, int spread_rate,
-               int colour, std::string name, std::string tile)
-{
-    big_cloud(cl_type, whose, cloud_struct::whose_to_killer(whose),
-              where, pow, size, spread_rate, colour, name, tile);
-}
-
-void big_cloud(cloud_type cl_type, killer_type killer,
-               const coord_def& where, int pow, int size, int spread_rate,
-               int colour, std::string name, std::string tile)
-{
-    big_cloud(cl_type, cloud_struct::killer_to_whose(killer), killer,
-              where, pow, size, spread_rate, colour, name, tile);
-}
-
-void big_cloud(cloud_type cl_type, kill_category whose, killer_type killer,
-               const coord_def& where, int pow, int size, int spread_rate,
-               int colour, std::string name, std::string tile)
-{
-    apply_area_cloud(make_a_normal_cloud, where, pow, size,
-                     cl_type, whose, killer, spread_rate, colour, name, tile);
 }
 
 static bool _mons_hostile(const monsters *mon)
@@ -1261,20 +1116,6 @@ void cast_teleport_control(int power)
                           "You feel in control.");
 }
 
-void cast_ring_of_flames(int power)
-{
-    // You shouldn't be able to cast this in the rain. {due}
-    if (in_what_cloud(CLOUD_RAIN))
-    {
-        mpr("Your spell sizzles in the rain.");
-        return;
-    }
-    you.increase_duration(DUR_FIRE_SHIELD,
-                          5 + (power / 10) + (random2(power) / 5), 50,
-                          "The air around you leaps into flame!");
-    manage_fire_shield(1);
-}
-
 void cast_confusing_touch(int power)
 {
     msg::stream << "Your " << your_hand(true) << " begin to glow "
@@ -1310,32 +1151,4 @@ bool cast_sure_blade(int power)
     }
 
     return (success);
-}
-
-void manage_fire_shield(int delay)
-{
-    ASSERT(you.duration[DUR_FIRE_SHIELD]);
-
-    int old_dur = you.duration[DUR_FIRE_SHIELD];
-
-    you.duration[DUR_FIRE_SHIELD]-= delay;
-    if (you.duration[DUR_FIRE_SHIELD] < 0)
-        you.duration[DUR_FIRE_SHIELD] = 0;
-
-    if (!you.duration[DUR_FIRE_SHIELD])
-    {
-        mpr("Your ring of flames gutters out.", MSGCH_DURATION);
-        return;
-    }
-
-    int threshold = get_expiration_threshold(DUR_FIRE_SHIELD);
-
-
-    if (old_dur > threshold && you.duration[DUR_FIRE_SHIELD] < threshold)
-        mpr("Your ring of flames is guttering out.", MSGCH_WARN);
-
-    // Place fire clouds all around you
-    for ( adjacent_iterator ai(you.pos()); ai; ++ai )
-        if (!feat_is_solid(grd(*ai)) && env.cgrid(*ai) == EMPTY_CLOUD)
-            place_cloud( CLOUD_FIRE, *ai, 1 + random2(6), KC_YOU );
 }
