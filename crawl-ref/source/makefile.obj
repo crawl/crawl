@@ -175,6 +175,7 @@ spells4.o \
 spl-book.o \
 spl-cast.o \
 spl-clouds.o \
+spl-damage.o \
 spl-mis.o \
 spl-other.o \
 spl-summoning.o \

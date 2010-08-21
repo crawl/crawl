@@ -11,29 +11,18 @@
 #include "externs.h"
 
 class dist;
-struct bolt;
 
 bool backlight_monsters(coord_def where, int pow, int garbage);
-int disperse_monsters(coord_def where, int pow);
-
 void remove_condensation_shield();
 void cast_condensation_shield(int pow);
-void cast_discharge(int pow);
 bool cast_fulsome_distillation(int pow, bool check_range = true);
 void cast_phase_shift(int pow);
-bool cast_fragmentation(int powc, const dist& spd);
-void cast_ignite_poison(int pow);
 void cast_intoxicate(int pow);
 void cast_mass_sleep(int pow);
 bool cast_passwall(const coord_def& delta, int pow);
-bool wielding_rocks();
-bool cast_sandblast(int powc, bolt &beam);
 void cast_see_invisible(int pow);
-
-void cast_shatter(int pow);
 void cast_silence(int pow);
 void cast_tame_beasts(int pow);
-void cast_dispersal(int pow);
 void cast_stoneskin(int pow);
 
 //returns true if it slowed the monster
