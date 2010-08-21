@@ -21,7 +21,7 @@
 
 #define ART_FUNC_H
 
-#include "cloud.h"         // For storm's bow rain
+#include "cloud.h"         // For storm bow's and robe of clouds' rain
 #include "effects.h"       // For Sceptre of Torment tormenting
 #include "env.h"           // For storm bow env.cgrid
 #include "food.h"          // For evokes
