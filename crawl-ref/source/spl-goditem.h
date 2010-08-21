@@ -20,4 +20,6 @@ bool cast_imprison(int pow, monsters *monster, int source);
 
 bool cast_smiting(int power, const coord_def& where);
 
+void stonemail(int pow);
+
 #endif

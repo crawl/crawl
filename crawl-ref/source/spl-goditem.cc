@@ -32,6 +32,7 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "terrain.h"
+#include "transform.h"
 #include "traps.h"
 #include "view.h"
 
@@ -795,3 +796,28 @@ bool cast_smiting(int pow, const coord_def& where)
     return (success);
 }
 
+void stonemail(int pow)
+{
+    if (you.duration[DUR_ICY_ARMOUR] || you.duration[DUR_STONESKIN])
+    {
+        mpr("The spell conflicts with another spell still in effect.");
+        return;
+    }
+
+    if (you.duration[DUR_STONEMAIL])
+        mpr("Your scaly armour looks firmer.");
+    else
+    {
+        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE)
+            mpr( "Your stone body feels more resilient." );
+        else
+            mpr( "A set of stone scales covers your body!" );
+
+        you.redraw_evasion = true;
+        you.redraw_armour_class = true;
+    }
+
+    you.increase_duration(DUR_STONEMAIL, 20 + random2(pow) + random2(pow), 100,
+                          NULL);
+    burden_change();
+}
