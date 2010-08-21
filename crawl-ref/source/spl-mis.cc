@@ -29,7 +29,7 @@
 #include "player.h"
 #include "player-stats.h"
 #include "religion.h"
-#include "spells1.h"
+#include "spl-clouds.h"
 #include "state.h"
 #include "stuff.h"
 #include "areas.h"

@@ -12,13 +12,11 @@
 
 #include "artefact.h"
 #include "beam.h"
-#include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
 #include "delay.h"
 #include "effects.h"
 #include "env.h"
-#include "fprop.h"
 #include "godconduct.h"
 #include "itemprop.h"
 #include "items.h"
@@ -30,7 +28,6 @@
 #include "mon-behv.h"
 #include "mon-iter.h"
 #include "ouch.h"
-#include "player.h"
 #include "quiver.h"
 #include "shout.h"
 #include "stuff.h"
@@ -168,34 +165,6 @@ int detect_creatures(int pow, bool telepathic)
     }
 
     return (creatures_found);
-}
-
-void corpse_rot()
-{
-    for (radius_iterator ri(you.pos(), 6, C_ROUND, you.get_los_no_trans());
-         ri; ++ri)
-    {
-        if (!is_sanctuary(*ri) && env.cgrid(*ri) == EMPTY_CLOUD)
-            for (stack_iterator si(*ri); si; ++si)
-                if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
-                {
-                    // Found a corpse.  Skeletonise it if possible.
-                    if (!mons_skeleton(si->plus))
-                        destroy_item(si->index());
-                    else
-                        turn_corpse_into_skeleton(*si);
-
-                    place_cloud(CLOUD_MIASMA, *ri, 4+random2avg(16, 3), KC_YOU);
-
-                    // Don't look for more corpses here.
-                    break;
-                }
-    }
-
-    if (you.can_smell())
-        mpr("You smell decay.");
-
-    // Should make zombies decay into skeletons?
 }
 
 // We need to know what brands equate with what missile brands to know if

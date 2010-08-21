@@ -73,6 +73,7 @@
 #include "spells4.h"
 #include "spl-book.h"
 #include "spl-cast.h"
+#include "spl-clouds.h"
 #include "spl-mis.h"
 #include "spl-transloc.h"
 #include "spl-util.h"

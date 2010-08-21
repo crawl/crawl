@@ -41,6 +41,7 @@
 #include "spl-util.h"
 #include "spl-cast.h"
 #include "spells1.h"
+#include "spl-clouds.h"
 #include "spl-summoning.h"
 #include "state.h"
 #include "stuff.h"
