@@ -8,51 +8,43 @@
 #include "AppHdr.h"
 #include "externs.h"
 
-#include "abyss.h"
+#include "areas.h"
 #include "artefact.h"
 #include "beam.h"
 #include "cloud.h"
+#include "coord.h"
 #include "coordit.h"
 #include "debug.h"
 #include "delay.h"
-#include "directn.h"
 #include "dungeon.h"
 #include "effects.h"
 #include "env.h"
-#include "invent.h"
+#include "godconduct.h"
+#include "hints.h"
 #include "it_use2.h"
-#include "item_use.h"
+#include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "libutil.h"
 #include "los.h"
 #include "makeitem.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-place.h"
-#include "coord.h"
 #include "mon-stuff.h"
-#include "mon-util.h"
 #include "ouch.h"
-#include "player.h"
 #include "player-stats.h"
 #include "quiver.h"
 #include "religion.h"
-#include "godconduct.h"
+#include "shout.h"
 #include "skills.h"
 #include "spells1.h"
-#include "spells4.h"
 #include "spl-mis.h"
 #include "spl-util.h"
-#include "stuff.h"
-#include "areas.h"
-#include "teleport.h"
-#include "terrain.h"
 #include "transform.h"
 #include "traps.h"
-#include "hints.h"
 #include "view.h"
-#include "shout.h"
 #include "viewchar.h"
 
 enum DEBRIS                 // jmf: add for shatter, dig, and Giants to throw
@@ -1821,126 +1813,6 @@ bool cast_fragmentation(int pow, const dist& spd)
     return (true);
 }
 
-bool cast_portal_projectile(int pow)
-{
-    dist target;
-    int item = get_ammo_to_shoot(-1, target, true);
-    if (item == -1)
-        return (false);
-
-    if (cell_is_solid(target.target))
-    {
-        mpr("You can't shoot at gazebos.");
-        return (false);
-    }
-
-    // Can't use portal through walls. (That'd be just too cheap!)
-    if (you.trans_wall_blocking( target.target ))
-    {
-        mpr("A translucent wall is in the way.");
-        return (false);
-    }
-
-    if (!check_warning_inscriptions(you.inv[item], OPER_FIRE))
-        return (false);
-
-    bolt beam;
-    throw_it( beam, item, true, random2(pow/4), &target );
-
-    return (true);
-}
-
-bool cast_apportation(int pow, const coord_def& where)
-{
-    if (you.trans_wall_blocking(where))
-    {
-        mpr("Something is in the way.");
-        return (false);
-    }
-
-    // Letting mostly-melee characters spam apport after every Shoals
-    // fight seems like it has too much grinding potential.  We could
-    // weaken this for high power.
-    if (grd(where) == DNGN_DEEP_WATER || grd(where) == DNGN_LAVA)
-    {
-        mpr("The density of the terrain blocks your spell.");
-        return (false);
-    }
-
-    // Let's look at the top item in that square...
-    // And don't allow apporting from shop inventories.
-    const int item_idx = igrd(where);
-    if (item_idx == NON_ITEM || !in_bounds(where))
-    {
-        // Maybe the player *thought* there was something there (a mimic.)
-        if (monsters* m = monster_at(where))
-        {
-            if (mons_is_mimic(m->type) && you.can_see(m))
-            {
-                mprf("%s twitches.", m->name(DESC_CAP_THE).c_str());
-                // Nothing else gives this message, so identify the mimic.
-                m->flags |= MF_KNOWN_MIMIC;
-                return (true);  // otherwise you get free mimic ID
-            }
-        }
-
-        mpr("There are no items there.");
-        return (false);
-    }
-
-    item_def& item = mitm[item_idx];
-
-    // Protect the player from destroying the item.
-    if (feat_destroys_item(grd(you.pos()), item))
-    {
-        mpr( "That would be silly while over this terrain!" );
-        return (false);
-    }
-
-    // Mass of one unit.
-    const int unit_mass = item_mass(item);
-    const int max_mass = pow * 30 + random2(pow * 20);
-
-    int max_units = item.quantity;
-    if (unit_mass > 0)
-        max_units = max_mass / unit_mass;
-
-    if (max_units <= 0)
-    {
-        mpr("The mass is resisting your pull.");
-        return (true);
-    }
-
-    // We need to modify the item *before* we move it, because
-    // move_top_item() might change the location, or merge
-    // with something at our position.
-    mprf("Yoink! You pull the item%s to yourself.",
-         (item.quantity > 1) ? "s" : "");
-
-    if (max_units < item.quantity)
-    {
-        item.quantity = max_units;
-        mpr("You feel that some mass got lost in the cosmic void.");
-    }
-
-    // If we apport a net, free the monster under it.
-    if (item.base_type == OBJ_MISSILES
-        && item.sub_type == MI_THROWING_NET
-        && item_is_stationary(item))
-    {
-        remove_item_stationary(item);
-        if (monsters *monster = monster_at(where))
-            monster->del_ench(ENCH_HELD, true);
-    }
-
-    // Actually move the item.
-    move_top_item(where, you.pos());
-    // Mark the item as found now.
-    origin_set(you.pos());
-
-    return (true);
-}
-
 bool wielding_rocks()
 {
     bool rc = false;
@@ -1992,76 +1864,6 @@ void cast_condensation_shield(int pow)
             you.redraw_armour_class = true;
         }
     }
-}
-
-static int _quadrant_blink(coord_def where, int pow, int, actor *)
-{
-    if (where == you.pos())
-        return (0);
-
-    if (you.level_type == LEVEL_ABYSS)
-    {
-        abyss_teleport( false );
-        if (you.pet_target != MHITYOU)
-            you.pet_target = MHITNOT;
-        return (1);
-    }
-
-    if (pow > 100)
-        pow = 100;
-
-    const int dist = random2(6) + 2;  // 2-7
-
-    // This is where you would *like* to go.
-    const coord_def base = you.pos() + (where - you.pos()) * dist;
-
-    // This can take a while if pow is high and there's lots of translucent
-    // walls nearby.
-    coord_def target;
-    bool found = false;
-    for (int i = 0; i < (pow*pow) / 500 + 1; ++i)
-    {
-        // Find a space near our base point...
-        // First try to find a random square not adjacent to the basepoint,
-        // then one adjacent if that fails.
-        if (!random_near_space(base, target)
-            && !random_near_space(base, target, true))
-        {
-            return 0;
-        }
-
-        // ... which is close enough, but also far enough from us.
-        if (distance(base, target) > 10 || distance(you.pos(), target) < 8)
-            continue;
-
-        if (!you.see_cell_no_trans(target))
-            continue;
-
-        found = true;
-        break;
-    }
-
-    if (!found)
-        return(0);
-
-    coord_def origin = you.pos();
-    move_player_to_grid(target, false, true);
-
-    // Leave a purple cloud.
-    place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), KC_YOU);
-
-    return (1);
-}
-
-int cast_semi_controlled_blink(int pow)
-{
-    int result = apply_one_neighbouring_square(_quadrant_blink, pow);
-
-    // Controlled blink causes glowing.
-    if (result)
-        contaminate_player(1, true);
-
-    return (result);
 }
 
 void cast_stoneskin(int pow)

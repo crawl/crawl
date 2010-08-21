@@ -1,7 +1,6 @@
 /*
  *  File:       spells1.cc
  *  Summary:    Implementations of some additional spells.
- *              Mostly Translocations.
  *  Written by: Linley Henzell
  */
 
@@ -10,7 +9,6 @@
 #include "spells1.h"
 #include "externs.h"
 
-#include "abyss.h"
 #include "artefact.h"
 #include "attitude-change.h"
 #include "beam.h"
@@ -18,235 +16,32 @@
 #include "coord.h"
 #include "coordit.h"
 #include "describe.h"
-#include "directn.h"
 #include "effects.h"
 #include "env.h"
+#include "godconduct.h"
 #include "invent.h"
 #include "it_use2.h"
 #include "itemname.h"
 #include "itemprop.h"
-#include "item_use.h"
 #include "los.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-iter.h"
 #include "mon-stuff.h"
-#include "mon-util.h"
 #include "options.h"
-#include "player.h"
 #include "religion.h"
-#include "godconduct.h"
+#include "shout.h"
 #include "spells2.h"
 #include "spells3.h"
 #include "spells4.h"
 #include "spl-cast.h"
 #include "spl-util.h"
-#include "state.h"
 #include "stuff.h"
-#include "teleport.h"
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
 #include "view.h"
-#include "shout.h"
 #include "viewchar.h"
-
-static bool _abyss_blocks_teleport(bool cblink)
-{
-    // Lugonu worshippers get their perks.
-    if (you.religion == GOD_LUGONU)
-        return (false);
-
-    // Controlled Blink (the spell) works quite reliably in the Abyss.
-    return (cblink ? one_chance_in(3) : !one_chance_in(3));
-}
-
-// If wizard_blink is set, all restriction are ignored (except for
-// a monster being at the target spot), and the player gains no
-// contamination.
-int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
-{
-    ASSERT(!crawl_state.game_is_arena());
-
-    dist beam;
-
-    if (crawl_state.is_repeating_cmd())
-    {
-        crawl_state.cant_cmd_repeat("You can't repeat controlled blinks.");
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
-        return (1);
-    }
-
-    // yes, there is a logic to this ordering {dlb}:
-    if (item_blocks_teleport(true, true) && !wizard_blink)
-        canned_msg(MSG_STRANGE_STASIS);
-    else if (you.level_type == LEVEL_ABYSS
-             && _abyss_blocks_teleport(high_level_controlled_blink)
-             && !wizard_blink)
-    {
-        mpr("The power of the Abyss keeps you in your place!");
-    }
-    else if (you.confused() && !wizard_blink)
-        random_blink(false);
-    else if (!allow_control_teleport(true) && !wizard_blink)
-    {
-        mpr("A powerful magic interferes with your control of the blink.");
-        if (high_level_controlled_blink)
-            return (cast_semi_controlled_blink(pow));
-        random_blink(false);
-    }
-    else
-    {
-        // query for location {dlb}:
-        while (!crawl_state.seen_hups)
-        {
-            direction_chooser_args args;
-            args.restricts = DIR_TARGET;
-            args.needs_path = false;
-            args.may_target_monster = false;
-            args.top_prompt = "Blink to where?";
-            direction(beam, args);
-
-            if (!beam.isValid || beam.target == you.pos())
-            {
-                if (!wizard_blink
-                    && !yesno("Are you sure you want to cancel this blink?",
-                              false, 'n'))
-                {
-                    mesclr();
-                    continue;
-                }
-                canned_msg(MSG_OK);
-                return (-1);         // early return {dlb}
-            }
-
-            monsters* beholder = you.get_beholder(beam.target);
-            if (!wizard_blink && beholder)
-            {
-                mprf("You cannot blink away from %s!",
-                    beholder->name(DESC_NOCAP_THE, true).c_str());
-                continue;
-            }
-
-            if (grd(beam.target) == DNGN_OPEN_SEA)
-            {
-                mesclr();
-                mpr("You can't blink into the sea!");
-            }
-            else if (you.see_cell_no_trans(beam.target))
-            {
-                // Grid in los, no problem.
-                break;
-            }
-            else if (you.trans_wall_blocking( beam.target ))
-            {
-                // Wizard blink can move past translucent walls.
-                if (wizard_blink)
-                    break;
-
-                mesclr();
-                mpr("You can't blink through translucent walls.");
-            }
-            else
-            {
-                mesclr();
-                mpr("You can only blink to visible locations.");
-            }
-        }
-
-        // Allow wizard blink to send player into walls, in case the
-        // user wants to alter that grid to something else.
-        if (wizard_blink && feat_is_solid(grd(beam.target)))
-            grd(beam.target) = DNGN_FLOOR;
-
-        if (feat_is_solid(grd(beam.target)) || monster_at(beam.target))
-        {
-            mpr("Oops! Maybe something was there already.");
-            random_blink(false);
-        }
-        else if (you.level_type == LEVEL_ABYSS && !wizard_blink)
-        {
-            abyss_teleport( false );
-            if (you.pet_target != MHITYOU)
-                you.pet_target = MHITNOT;
-        }
-        else
-        {
-            // Leave a purple cloud.
-            place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), KC_YOU);
-            move_player_to_grid(beam.target, false, true);
-
-            // Controlling teleport contaminates the player. -- bwr
-            if (!wizard_blink)
-                contaminate_player( 1, true );
-
-
-            if (!wizard_blink && you.duration[DUR_CONDENSATION_SHIELD] > 0)
-                remove_condensation_shield();
-        }
-    }
-
-    crawl_state.cancel_cmd_again();
-    crawl_state.cancel_cmd_repeat();
-
-    return (1);
-}
-
-void random_blink(bool allow_partial_control, bool override_abyss)
-{
-    ASSERT(!crawl_state.game_is_arena());
-
-    bool success = false;
-    coord_def target;
-
-    if (item_blocks_teleport(true, true))
-        canned_msg(MSG_STRANGE_STASIS);
-    else if (you.level_type == LEVEL_ABYSS
-             && !override_abyss && !one_chance_in(3))
-    {
-        mpr("The power of the Abyss keeps you in your place!");
-    }
-    // First try to find a random square not adjacent to the player,
-    // then one adjacent if that fails.
-    else if (!random_near_space(you.pos(), target)
-             && !random_near_space(you.pos(), target, true))
-    {
-        mpr("You feel jittery for a moment.");
-    }
-
-#ifdef USE_SEMI_CONTROLLED_BLINK
-    //jmf: Add back control, but effect is cast_semi_controlled_blink(pow).
-    else if (player_control_teleport() && !you.confused()
-             && allow_partial_control && allow_control_teleport())
-    {
-        mpr("You may select the general direction of your translocation.");
-        cast_semi_controlled_blink(100);
-        maybe_id_ring_TC();
-        success = true;
-    }
-#endif
-    else
-    {
-        canned_msg(MSG_YOU_BLINK);
-        coord_def origin = you.pos();
-        move_player_to_grid(target, false, true);
-        success = true;
-
-        // Leave a purple cloud.
-        place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), KC_YOU);
-
-        if (you.level_type == LEVEL_ABYSS)
-        {
-            abyss_teleport(false);
-            if (you.pet_target != MHITYOU)
-                you.pet_target = MHITNOT;
-        }
-    }
-
-    if (success && you.duration[DUR_CONDENSATION_SHIELD] > 0)
-        remove_condensation_shield();
-}
 
 bool fireball(int pow, bolt &beam)
 {

@@ -54,6 +54,7 @@
 #include "spl-cast.h"
 #include "spl-mis.h"
 #include "spl-summoning.h"
+#include "spl-transloc.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"

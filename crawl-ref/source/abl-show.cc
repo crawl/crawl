@@ -49,6 +49,7 @@
 #include "spl-util.h"
 #include "spells1.h"
 #include "spells3.h"
+#include "spl-transloc.h"
 #include "spl-summoning.h"
 #include "state.h"
 #include "stuff.h"
