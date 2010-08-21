@@ -61,7 +61,7 @@
 #include "skills.h"
 #include "spells4.h"
 #include "spl-clouds.h"
-#include "spl-other.h"
+#include "spl-goditem.h"
 #include "spl-transloc.h"
 #include "state.h"
 #include "stuff.h"
