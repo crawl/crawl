@@ -176,6 +176,7 @@ spl-book.o \
 spl-cast.o \
 spl-clouds.o \
 spl-mis.o \
+spl-other.o \
 spl-summoning.o \
 spl-transloc.o \
 spl-util.o \

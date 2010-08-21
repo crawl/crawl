@@ -59,6 +59,7 @@
 #include "spl-book.h"
 #include "spl-clouds.h"
 #include "spl-mis.h"
+#include "spl-other.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"

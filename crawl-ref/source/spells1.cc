@@ -9,15 +9,11 @@
 #include "spells1.h"
 #include "externs.h"
 
-#include "artefact.h"
-#include "attitude-change.h"
 #include "beam.h"
 #include "coord.h"
-#include "describe.h"
 #include "effects.h"
 #include "env.h"
 #include "godconduct.h"
-#include "invent.h"
 #include "it_use2.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -25,8 +21,6 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-iter.h"
-#include "mon-stuff.h"
-#include "options.h"
 #include "religion.h"
 #include "shout.h"
 #include "spells2.h"
@@ -37,7 +31,6 @@
 #include "stuff.h"
 #include "terrain.h"
 #include "transform.h"
-#include "traps.h"
 #include "view.h"
 #include "viewchar.h"
 
@@ -290,311 +283,6 @@ void cast_chain_lightning(int pow, const actor *caster)
     more();
 }
 
-void identify(int power, int item_slot)
-{
-    int id_used = 1;
-
-    // Scrolls of identify *may* produce "extra" identifications.
-    if (power == -1 && one_chance_in(5))
-        id_used += (coinflip()? 1 : 2);
-
-    do
-    {
-        if (item_slot == -1)
-        {
-            item_slot = prompt_invent_item("Identify which item?", MT_INVLIST,
-                                           OSEL_UNIDENT, true, true, false);
-        }
-        if (prompt_failed(item_slot))
-            return;
-
-        item_def& item(you.inv[item_slot]);
-
-        if (fully_identified(item))
-        {
-            mpr("Choose an unidentified item, or Esc to abort.");
-            if (Options.auto_list)
-                more();
-            item_slot = -1;
-            continue;
-        }
-
-        set_ident_type(item, ID_KNOWN_TYPE);
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
-        if (Options.autoinscribe_artefacts && is_artefact(item))
-            add_autoinscription( item, artefact_auto_inscription(item));
-
-        // For scrolls, now id the scroll, unless already known.
-        if (power == -1
-            && get_ident_type(OBJ_SCROLLS, SCR_IDENTIFY) != ID_KNOWN_TYPE)
-        {
-            set_ident_type(OBJ_SCROLLS, SCR_IDENTIFY, ID_KNOWN_TYPE);
-
-            const int wpn = you.equip[EQ_WEAPON];
-            if (wpn != -1
-                && you.inv[wpn].base_type == OBJ_SCROLLS
-                && you.inv[wpn].sub_type == SCR_IDENTIFY)
-            {
-                you.wield_change = true;
-            }
-        }
-
-        // Output identified item.
-        mpr(item.name(DESC_INVENTORY_EQUIP).c_str());
-        if (item_slot == you.equip[EQ_WEAPON])
-            you.wield_change = true;
-
-        id_used--;
-
-        if (Options.auto_list && id_used > 0)
-            more();
-
-        // In case we get to try again.
-        item_slot = -1;
-    }
-    while (id_used > 0);
-}
-
-static bool _mons_hostile(const monsters *mon)
-{
-    // Needs to be done this way because of friendly/neutral enchantments.
-    return (!mon->wont_attack() && !mon->neutral());
-}
-
-// Check whether this monster might be pacified.
-// Returns 0, if monster can be pacified but the attempt failed.
-// Returns 1, if monster is pacified.
-// Returns -1, if monster can never be pacified.
-static int _can_pacify_monster(const monsters *mon, const int healed)
-{
-    if (you.religion != GOD_ELYVILON)
-        return (-1);
-
-    if (healed < 1)
-        return (0);
-
-    // I was thinking of jellies when I wrote this, but maybe we shouldn't
-    // exclude zombies and such... (jpeg)
-    if (mons_intel(mon) <= I_PLANT // no self-awareness
-        || mon->type == MONS_KRAKEN_TENTACLE
-        || mon->type == MONS_KRAKEN_CONNECTOR) // body part
-    {
-        return (-1);
-    }
-
-    const mon_holy_type holiness = mon->holiness();
-
-    if (!mon->is_holy()
-        && holiness != MH_UNDEAD
-        && holiness != MH_DEMONIC
-        && holiness != MH_NATURAL)
-    {
-        return (-1);
-    }
-
-    if (mons_is_stationary(mon)) // not able to leave the level
-        return (-1);
-
-    if (mon->asleep()) // not aware of what is happening
-        return (0);
-
-    const int factor = (mons_intel(mon) <= I_ANIMAL)       ? 3 : // animals
-                       (is_player_same_species(mon->type)) ? 2   // same species
-                                                           : 1;  // other
-
-    int divisor = 3;
-
-    if (mon->is_holy())
-        divisor--;
-    else if (holiness == MH_UNDEAD)
-        divisor++;
-    else if (holiness == MH_DEMONIC)
-        divisor += 2;
-
-    const int random_factor = random2((you.skills[SK_INVOCATIONS] + 1) *
-                                      healed / divisor);
-
-    dprf("pacifying %s? max hp: %d, factor: %d, Inv: %d, healed: %d, rnd: %d",
-         mon->name(DESC_PLAIN).c_str(), mon->max_hit_points, factor,
-         you.skills[SK_INVOCATIONS], healed, random_factor);
-
-    if (mon->max_hit_points < factor * random_factor)
-        return (1);
-
-    return (0);
-}
-
-// Returns: 1 -- success, 0 -- failure, -1 -- cancel
-static int _healing_spell(int healed, bool divine_ability,
-                          const coord_def& where, bool not_self,
-                          targ_mode_type mode)
-{
-    ASSERT(healed >= 1);
-
-    bolt beam;
-    dist spd;
-
-    if (where.origin())
-    {
-        spd.isValid = spell_direction(spd, beam, DIR_TARGET,
-                                      mode != TARG_NUM_MODES ? mode :
-                                      you.religion == GOD_ELYVILON ?
-                                            TARG_ANY : TARG_FRIEND,
-                                      LOS_RADIUS,
-                                      false, true, true, "Heal", NULL);
-    }
-    else
-    {
-        spd.target  = where;
-        spd.isValid = in_bounds(spd.target);
-    }
-
-    if (!spd.isValid)
-        return (-1);
-
-    if (spd.target == you.pos())
-    {
-        if (not_self)
-        {
-            mpr("You can only heal others!");
-            return (-1);
-        }
-
-        mpr("You are healed.");
-        inc_hp(healed, false);
-        return (1);
-    }
-
-    monsters* monster = monster_at(spd.target);
-    if (!monster)
-    {
-        mpr("There isn't anything there!");
-        // This isn't a cancel, to avoid leaking invisible monster
-        // locations.
-        return (0);
-    }
-
-    const int can_pacify = _can_pacify_monster(monster, healed);
-    const bool is_hostile = _mons_hostile(monster);
-
-    // Don't divinely heal a monster you can't pacify.
-    if (divine_ability
-        && you.religion == GOD_ELYVILON
-        && can_pacify <= 0)
-    {
-        if (can_pacify == 0)
-            canned_msg(MSG_NOTHING_HAPPENS);
-        else
-            mpr("You cannot pacify this monster!");
-        return (0);
-    }
-
-    bool did_something = false;
-
-    if (you.religion == GOD_ELYVILON
-        && can_pacify == 1
-        && is_hostile)
-    {
-        did_something = true;
-
-        const bool is_holy     = monster->is_holy();
-        const bool is_summoned = monster->is_summoned();
-
-        int pgain = 0;
-        if (!is_holy && !is_summoned && you.piety < MAX_PIETY)
-            pgain = random2(monster->max_hit_points / (2 + you.piety / 20));
-
-        // The feedback no longer tells you if you gained any piety this time,
-        // it tells you merely the general rate.
-        if (random2(1 + pgain))
-            simple_god_message(" approves of your offer of peace.");
-        else
-            mpr("Elyvilon supports your offer of peace.");
-
-        if (is_holy)
-            good_god_holy_attitude_change(monster);
-        else
-        {
-            simple_monster_message(monster, " turns neutral.");
-            mons_pacify(monster, ATT_NEUTRAL);
-
-            // Give a small piety return.
-            gain_piety(pgain, 2);
-        }
-    }
-
-    if (monster->heal(healed))
-    {
-        did_something = true;
-        mprf("You heal %s.", monster->name(DESC_NOCAP_THE).c_str());
-
-        if (monster->hit_points == monster->max_hit_points)
-            simple_monster_message(monster, " is completely healed.");
-        else
-            print_wounds(monster);
-
-        if (you.religion == GOD_ELYVILON && !is_hostile)
-        {
-            if (one_chance_in(8))
-                simple_god_message(" approves of your healing of a fellow "
-                                   "creature.");
-            else
-                mpr("Elyvilon appreciates your healing of a fellow creature.");
-
-            // Give a small piety return.
-            gain_piety(1, 8);
-        }
-    }
-
-    if (!did_something)
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return (0);
-    }
-
-    return (1);
-}
-
-// Returns: 1 -- success, 0 -- failure, -1 -- cancel
-int cast_healing(int pow, bool divine_ability, const coord_def& where,
-                 bool not_self, targ_mode_type mode)
-{
-    pow = std::min(50, pow);
-    return (_healing_spell(pow + roll_dice(2, pow) - 2, divine_ability, where,
-                           not_self, mode));
-}
-
-bool cast_revivification(int pow)
-{
-    if (you.hp == you.hp_max)
-        canned_msg(MSG_NOTHING_HAPPENS);
-    else if (you.hp_max < 21)
-        mpr("You lack the resilience to cast this spell.");
-    else
-    {
-        mpr("Your body is healed in an amazingly painful way.");
-
-        int loss = 2;
-        for (int i = 0; i < 9; ++i)
-            if (x_chance_in_y(8, pow))
-                loss++;
-
-        dec_max_hp(loss * you.hp_max / 100);
-        set_hp(you.hp_max, false);
-
-        if (you.duration[DUR_DEATHS_DOOR])
-        {
-            mpr("Your life is in your own hands once again.", MSGCH_DURATION);
-            you.increase_duration(DUR_PARALYSIS, 5 + random2(5));
-            confuse_player(10 + random2(10));
-            you.duration[DUR_DEATHS_DOOR] = 0;
-        }
-        return (true);
-    }
-
-    return (false);
-}
-
 void cast_cure_poison(int pow)
 {
     if (you.duration[DUR_POISONING] > 0)
@@ -685,44 +373,6 @@ void abjuration(int pow)
                 simple_monster_message(*mon, " shudders.");
         }
     }
-}
-
-// Antimagic is sort of an anti-extension... it sets a lot of magical
-// durations to 1 so it's very nasty at times (and potentially lethal,
-// that's why we reduce levitation to 2, so that the player has a chance
-// to stop insta-death... sure the others could lead to death, but that's
-// not as direct as falling into deep water) -- bwr
-void antimagic()
-{
-    duration_type dur_list[] = {
-        DUR_INVIS, DUR_CONF, DUR_PARALYSIS, DUR_HASTE,
-        DUR_MIGHT, DUR_AGILITY, DUR_BRILLIANCE, DUR_FIRE_SHIELD, DUR_ICY_ARMOUR, DUR_REPEL_MISSILES,
-        DUR_REGENERATION, DUR_SWIFTNESS, DUR_STONEMAIL, DUR_CONTROL_TELEPORT,
-        DUR_TRANSFORMATION, DUR_DEATH_CHANNEL, DUR_DEFLECT_MISSILES,
-        DUR_PHASE_SHIFT, DUR_SEE_INVISIBLE, DUR_WEAPON_BRAND, DUR_SILENCE,
-        DUR_CONDENSATION_SHIELD, DUR_STONESKIN, DUR_BARGAIN,
-        DUR_INSULATION, DUR_RESIST_POISON, DUR_RESIST_FIRE, DUR_RESIST_COLD,
-        DUR_SLAYING, DUR_STEALTH, DUR_MAGIC_SHIELD, DUR_SAGE, DUR_PETRIFIED
-    };
-
-    if (!you.permanent_levitation() && !you.permanent_flight()
-        && you.duration[DUR_LEVITATION] > 2)
-    {
-        you.duration[DUR_LEVITATION] = 2;
-    }
-
-    if (!you.permanent_flight() && you.duration[DUR_CONTROLLED_FLIGHT] > 1)
-        you.duration[DUR_CONTROLLED_FLIGHT] = 1;
-
-    // Post-berserk slowing isn't magic, so don't remove that.
-    if (you.duration[DUR_SLOW] > you.duration[DUR_EXHAUSTED])
-        you.duration[DUR_SLOW] = std::max(you.duration[DUR_EXHAUSTED], 1);
-
-    for (unsigned int i = 0; i < ARRAYSZ(dur_list); ++i)
-        if (you.duration[dur_list[i]] > 1)
-            you.duration[dur_list[i]] = 1;
-
-    contaminate_player(-1 * (1 + random2(5)));
 }
 
 static bool _know_spell(spell_type spell)

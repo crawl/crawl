@@ -18,7 +18,6 @@ int disperse_monsters(coord_def where, int pow);
 
 void remove_condensation_shield();
 void cast_condensation_shield(int pow);
-void cast_detect_secret_doors(int pow);
 void cast_discharge(int pow);
 bool cast_fulsome_distillation(int pow, bool check_range = true);
 void cast_phase_shift(int pow);
