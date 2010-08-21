@@ -39,6 +39,7 @@
 #include "spells3.h"
 #include "spells4.h"
 #include "spl-mis.h"
+#include "spl-summoning.h"
 #include "stash.h"
 #include "state.h"
 #include "transform.h"

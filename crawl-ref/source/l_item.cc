@@ -22,7 +22,7 @@
 #include "output.h"
 #include "player.h"
 #include "skills2.h"
-#include "spells2.h"
+#include "spl-summoning.h"
 #include "stuff.h"
 
 /////////////////////////////////////////////////////////////////////

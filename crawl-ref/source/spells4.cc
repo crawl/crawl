@@ -6,12 +6,6 @@
  */
 
 #include "AppHdr.h"
-
-#include <string>
-#include <iostream>
-#include <stdio.h>
-#include <algorithm>
-
 #include "externs.h"
 
 #include "abyss.h"
