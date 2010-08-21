@@ -68,4 +68,6 @@ bool cast_simulacrum(int pow, god_type god = GOD_NO_GOD);
 bool cast_twisted_resurrection(int pow, god_type god = GOD_NO_GOD);
 bool cast_haunt(int pow, const coord_def& where, god_type god = GOD_NO_GOD);
 
+void abjuration(int pow);
+
 #endif

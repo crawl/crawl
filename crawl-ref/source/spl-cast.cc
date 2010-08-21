@@ -1815,7 +1815,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_STONEMAIL:
-        stone_scales(powc);
+        stonemail(powc);
         break;
 
     case SPELL_CONDENSATION_SHIELD:

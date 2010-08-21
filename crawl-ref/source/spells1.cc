@@ -67,55 +67,6 @@ void cast_deaths_door(int pow)
     return;
 }
 
-void abjuration(int pow)
-{
-    mpr("Send 'em back where they came from!");
-
-    // Scale power into something comparable to summon lifetime.
-    const int abjdur = pow * 12;
-
-    for (monster_iterator mon(you.get_los()); mon; ++mon)
-    {
-        if (mon->wont_attack())
-            continue;
-
-        int duration;
-        if (mon->is_summoned(&duration))
-        {
-            int sockage = std::max(fuzz_value(abjdur, 60, 30), 40);
-            dprf("%s abj: dur: %d, abj: %d",
-                 mon->name(DESC_PLAIN).c_str(), duration, sockage);
-
-            bool shielded = false;
-            // TSO and Trog's abjuration protection.
-            if (mons_is_god_gift(*mon, GOD_SHINING_ONE))
-            {
-                sockage = sockage * (30 - mon->hit_dice) / 45;
-                if (sockage < duration)
-                {
-                    simple_god_message(" protects a fellow warrior from your evil magic!",
-                                       GOD_SHINING_ONE);
-                    shielded = true;
-                }
-            }
-            else if (mons_is_god_gift(*mon, GOD_TROG))
-            {
-                sockage = sockage * 8 / 15;
-                if (sockage < duration)
-                {
-                    simple_god_message(" shields an ally from your puny magic!",
-                                       GOD_TROG);
-                    shielded = true;
-                }
-            }
-
-            mon_enchant abj = mon->get_ench(ENCH_ABJ);
-            if (!mon->lose_ench_duration(abj, sockage) && !shielded)
-                simple_monster_message(*mon, " shudders.");
-        }
-    }
-}
-
 static bool _know_spell(spell_type spell)
 {
     if (spell == NUM_SPELLS)
@@ -281,10 +232,6 @@ void extension(int pow)
     if (you.duration[DUR_INSULATION] && _know_spell(SPELL_INSULATION))
         cast_insulation(pow);
 
-    // Xom only currently.
-    if (you.duration[DUR_STONEMAIL] && _know_spell(SPELL_STONEMAIL))
-        stone_scales(pow);
-
     if (you.duration[DUR_CONTROLLED_FLIGHT] && _know_spell(SPELL_FLY))
         cast_fly(pow);
 
@@ -375,32 +322,6 @@ void ice_armour(int pow, bool extending)
 
     you.increase_duration(DUR_ICY_ARMOUR, 20 + random2(pow) + random2(pow), 50,
                           NULL);
-}
-
-void stone_scales(int pow)
-{
-    if (you.duration[DUR_ICY_ARMOUR] || you.duration[DUR_STONESKIN])
-    {
-        mpr("The spell conflicts with another spell still in effect.");
-        return;
-    }
-
-    if (you.duration[DUR_STONEMAIL])
-        mpr("Your scaly armour looks firmer.");
-    else
-    {
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE)
-            mpr( "Your stone body feels more resilient." );
-        else
-            mpr( "A set of stone scales covers your body!" );
-
-        you.redraw_evasion = true;
-        you.redraw_armour_class = true;
-    }
-
-    you.increase_duration(DUR_STONEMAIL, 20 + random2(pow) + random2(pow), 100,
-                          NULL);
-    burden_change();
 }
 
 void missile_prot(int pow)

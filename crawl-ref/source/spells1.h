@@ -17,7 +17,6 @@ void cast_deaths_door(int pow);
 bool cast_revivification(int pow);
 void cast_berserk(void);
 void extension(int pow);
-void abjuration(int pow);
 void cast_fly(int power);
 
 void cast_insulation(int power);
@@ -30,6 +29,5 @@ void deflection(int pow);
 void remove_ice_armour();
 void ice_armour(int pow, bool extending);
 void missile_prot(int pow);
-void stone_scales(int pow);
 
 #endif
