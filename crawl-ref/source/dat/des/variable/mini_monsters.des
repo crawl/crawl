@@ -1577,7 +1577,7 @@ xx+xx
 ENDMAP
 
 NAME:   kilobyte_rumbling_trees
-DEPTH:  D:12-20, Elf, Lair
+DEPTH:  D:12-20, Elf, Lair:4-8
 MONS:   patrolling spriggan druid
 FTILE:  .t1@ = floor_lair
 MAP
