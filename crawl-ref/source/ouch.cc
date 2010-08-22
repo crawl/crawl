@@ -64,7 +64,7 @@
 #include "shopping.h"
 #include "skills2.h"
 #include "spells1.h"
-#include "spells4.h"
+#include "spl-other.h"
 #include "state.h"
 #include "stuff.h"
 #include "transform.h"

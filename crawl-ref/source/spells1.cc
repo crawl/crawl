@@ -15,22 +15,12 @@
 #include "itemprop.h"
 #include "message.h"
 #include "misc.h"
-#include "religion.h"
-#include "spells3.h"
 #include "spells4.h"
 #include "spl-cast.h"
+#include "spl-other.h"
 #include "spl-util.h"
-#include "stuff.h"
 #include "terrain.h"
 #include "transform.h"
-
-void cast_cure_poison(int pow)
-{
-    if (you.duration[DUR_POISONING] > 0)
-        reduce_poison_player(2 + random2(pow) + random2(3));
-    else
-        canned_msg(MSG_NOTHING_HAPPENS);
-}
 
 int allowed_deaths_door_hp(void)
 {

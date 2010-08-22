@@ -11,9 +11,4 @@
 bool cast_selective_amnesia(bool force);
 bool project_noise();
 
-bool recall(int type_recalled);
-bool cast_sublimation_of_blood(int pow);
-
-bool cast_death_channel(int pow, god_type god = GOD_NO_GOD);
-
 #endif

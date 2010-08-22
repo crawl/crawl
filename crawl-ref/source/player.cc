@@ -63,7 +63,7 @@
 #include "skills2.h"
 #include "species.h"
 #include "spells1.h"
-#include "spells4.h"
+#include "spl-other.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
 #include "sprint.h"

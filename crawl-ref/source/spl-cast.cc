@@ -61,6 +61,7 @@
 #include "spl-damage.h"
 #include "spl-goditem.h"
 #include "spl-mis.h"
+#include "spl-other.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
