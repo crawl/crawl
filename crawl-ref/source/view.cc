@@ -56,7 +56,7 @@
 #include "random.h"
 #include "stuff.h"
 #include "env.h"
-#include "spells3.h"
+#include "spells2.h"
 #include "stash.h"
 #include "travel.h"
 #include "state.h"

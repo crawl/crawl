@@ -1,6 +1,6 @@
 /*
  *  File:       spells1.cc
- *  Summary:    Implementations of some additional spells.
+ *  Summary:    Implementations of some additional enchantment spells.
  *  Written by: Linley Henzell
  */
 
@@ -15,7 +15,7 @@
 #include "itemprop.h"
 #include "message.h"
 #include "misc.h"
-#include "spells4.h"
+#include "spells2.h"
 #include "spl-cast.h"
 #include "spl-other.h"
 #include "spl-util.h"

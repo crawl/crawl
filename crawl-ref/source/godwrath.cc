@@ -34,7 +34,7 @@
 #include "ouch.h"
 #include "player-stats.h"
 #include "religion.h"
-#include "spells4.h"
+#include "spells2.h"
 #include "spl-clouds.h"
 #include "spl-goditem.h"
 #include "spl-mis.h"

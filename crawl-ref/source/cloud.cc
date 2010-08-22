@@ -26,7 +26,7 @@
 #include "ouch.h"
 #include "player.h"
 #include "random.h"
-#include "spells4.h"
+#include "spells2.h"
 #include "stuff.h"
 #include "env.h"
 #include "terrain.h"

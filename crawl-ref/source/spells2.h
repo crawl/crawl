@@ -9,6 +9,13 @@
 
 #include "itemprop-enum.h"
 
+class dist;
+
 bool brand_weapon(brand_type which_brand, int power);
+
+bool cast_selective_amnesia(bool force);
+
+void cast_see_invisible(int pow);
+void cast_silence(int pow);
 
 #endif
