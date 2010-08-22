@@ -30,7 +30,7 @@
 #include "mon-place.h"     // For Sceptre of Asmodeus evoke
 #include "mon-stuff.h"     // For Scythe of Curses cursing items
 #include "spl-cast.h"      // For evokes
-#include "spl-mis.h"       // For Staff of Wucad Mu miscasts
+#include "spl-miscast.h"   // For Staff of Wucad Mu miscasts
 #include "spl-summoning.h" // For Zonguldrok animating dead
 #include "terrain.h"       // For storm bow.
 

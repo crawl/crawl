@@ -50,7 +50,7 @@
 #include "spl-cast.h"
 #include "spl-damage.h"
 #include "spl-goditem.h"
-#include "spl-mis.h"
+#include "spl-miscast.h"
 #include "spl-other.h"
 #include "spl-selfench.h"
 #include "spl-summoning.h"

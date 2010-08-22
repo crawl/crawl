@@ -173,7 +173,7 @@ spl-cast.o \
 spl-clouds.o \
 spl-damage.o \
 spl-goditem.o \
-spl-mis.o \
+spl-miscast.o \
 spl-monench.o \
 spl-other.o \
 spl-selfench.o \

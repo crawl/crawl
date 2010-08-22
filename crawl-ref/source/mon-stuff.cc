@@ -53,7 +53,7 @@
 #include "random.h"
 #include "religion.h"
 #include "shout.h"
-#include "spl-mis.h"
+#include "spl-miscast.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
 #include "stash.h"

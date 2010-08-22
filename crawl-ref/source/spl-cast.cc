@@ -56,7 +56,7 @@
 #include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-goditem.h"
-#include "spl-mis.h"
+#include "spl-miscast.h"
 #include "spl-monench.h"
 #include "spl-other.h"
 #include "spl-selfench.h"

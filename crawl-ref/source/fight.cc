@@ -61,7 +61,7 @@
 #include "shopping.h"
 #include "skills.h"
 #include "spl-clouds.h"
-#include "spl-mis.h"
+#include "spl-miscast.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
 #include "state.h"

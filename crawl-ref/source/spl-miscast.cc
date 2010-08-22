@@ -1,12 +1,12 @@
 /*
- *  File:       spl-mis.cc
+ *  File:       spl-miscast.cc
  *  Summary:    Spell miscast class.
  *  Written by: Matthew Cline
  */
 
 #include "AppHdr.h"
 
-#include "spl-mis.h"
+#include "spl-miscast.h"
 
 #include "externs.h"
 
