@@ -159,6 +159,7 @@ elephant_dire MONS_DIRE_ELEPHANT
 elephant_demonic MONS_HELLEPHANT
 %sdir dc-mon/unique
 nellie MONS_NELLIE
+dc-mon/holy/apis MONS_APIS
 
 ### Elemental monsters
 %sdir dc-mon/nonliving
@@ -412,10 +413,12 @@ deformed_human MONS_DEFORMED_HUMAN
 ## From an entry vault
 halfling MONS_HALFLING
 demonspawn MONS_DEMONSPAWN
+holy/paladin MONS_PALADIN
 
 ## Angels ('A')
-cherub MONS_CHERUB
+angel MONS_ANGEL
 daeva MONS_DAEVA
+holy/cherub MONS_CHERUB
 
 ## Giants ('C')
 %sdir dc-mon/unique
@@ -461,6 +464,7 @@ golden_dragon MONS_GOLDEN_DRAGON
 shadow_dragon MONS_SHADOW_DRAGON
 undead/bone_dragon MONS_BONE_DRAGON
 serpent_of_hell MONS_SERPENT_OF_HELL
+holy/eastern_dragon MONS_HOLY_DRAGON
 
 ## Eyes ('G')
 %sdir dc-mon/fungi_plants
@@ -473,6 +477,7 @@ great_orb_of_eyes MONS_GREAT_ORB_OF_EYES
 shining_eye MONS_SHINING_EYE
 eye_of_devastation MONS_EYE_OF_DEVASTATION
 golden_eye MONS_GOLDEN_EYE
+dc-mon/holy/ophan MONS_OPHAN
 
 ## Hybrids ('H')
 hippogriff MONS_HIPPOGRIFF
