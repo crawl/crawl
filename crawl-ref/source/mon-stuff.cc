@@ -532,7 +532,7 @@ int place_monster_corpse(const monsters *monster, bool silent,
                      mitm[o].name(DESC_CAP_A).c_str());
             }
         }
-        const bool poison = (mons_corpse_effect(corpse_class) == CE_POISONOUS
+        const bool poison = (chunk_is_poisonous(mons_corpse_effect(corpse_class))
                              && player_res_poison() <= 0);
 
         if (o != NON_ITEM)

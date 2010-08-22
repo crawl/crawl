@@ -390,6 +390,7 @@ bool cast_fulsome_distillation(int pow, bool check_range)
         break;
 
     case CE_POISONOUS:
+    case CE_POISON_CONTAM:
         pot_type = POT_POISON;
         break;
 

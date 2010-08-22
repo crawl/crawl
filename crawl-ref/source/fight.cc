@@ -718,11 +718,11 @@ static bool _vamp_wants_blood_from_monster(const monsters *mon)
     if (!mons_has_blood(mon->type))
         return (false);
 
-    const int chunk_type = mons_corpse_effect( mon->type );
+    const corpse_effect_type chunk_type = mons_corpse_effect( mon->type );
 
     // Don't drink poisonous or mutagenic blood.
     return (chunk_type == CE_CLEAN || chunk_type == CE_CONTAMINATED
-            || chunk_type == CE_POISONOUS && player_res_poison());
+            || chunk_is_poisonous(chunk_type) && player_res_poison());
 }
 
 // Should life protection protect from this?
@@ -737,7 +737,7 @@ static bool _player_vampire_draws_blood(const monsters* mon, const int damage,
     if (!_vamp_wants_blood_from_monster(mon))
         return (false);
 
-    const int chunk_type = mons_corpse_effect(mon->type);
+    const corpse_effect_type chunk_type = mons_corpse_effect( mon->type );
 
     // Now print message, need biting unless already done (never for bat form!)
     if (needs_bite_msg && !player_in_bat_form())
@@ -778,10 +778,13 @@ static bool _player_vampire_draws_blood(const monsters* mon, const int damage,
         int food_value = 0;
         if (chunk_type == CE_CLEAN)
             food_value = 30 + random2avg(59, 2);
-        else if (chunk_type == CE_CONTAMINATED || chunk_type == CE_POISONOUS)
+        else if (chunk_type == CE_CONTAMINATED
+                 || chunk_is_poisonous(chunk_type))
+        {
             food_value = 15 + random2avg(29, 2);
-
-        // Bats get a rather less nutrition out of it.
+        }
+        
+        // Bats get rather less nutrition out of it.
         if (player_in_bat_form())
             food_value /= 2;
 
