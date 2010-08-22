@@ -28,7 +28,7 @@
 #include "mon-util.h"
 #include "player.h"
 #include "random.h"
-#include "spells4.h"
+#include "spl-other.h"
 #include "spl-util.h"
 #include "stairs.h"
 #include "stash.h"

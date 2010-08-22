@@ -11,7 +11,6 @@
 bool cast_sure_blade(int power);
 
 void cast_confusing_touch(int power);
-void cast_cure_poison(int pow);
 int allowed_deaths_door_hp(void);
 void cast_deaths_door(int pow);
 bool cast_revivification(int pow);
