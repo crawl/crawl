@@ -1,26 +1,19 @@
 /*
- *  File:       spells2.cc
- *  Summary:    Implementations of some additional enchantment spells.
- *  Written by: Linley Henzell
+ *  File:     spl-wpnench.cc
+ *  Summary:  Weapon enchantment spells.
  */
 
 #include "AppHdr.h"
 
-#include "spells2.h"
+#include "spl-wpnench.h"
 #include "externs.h"
 
-#include "areas.h"
 #include "artefact.h"
-#include "delay.h"
-#include "hints.h"
 #include "itemprop.h"
-#include "libutil.h"
 #include "makeitem.h"
 #include "message.h"
+#include "misc.h"
 #include "shout.h"
-#include "spl-cast.h"
-#include "spl-util.h"
-#include "stuff.h"
 
 
 // We need to know what brands equate with what missile brands to know if
@@ -227,100 +220,39 @@ bool brand_weapon(brand_type which_brand, int power)
     return (true);
 }
 
-bool cast_selective_amnesia(bool force)
+void cast_confusing_touch(int power)
 {
-    if (you.spell_no == 0)
+    msg::stream << "Your " << your_hand(true) << " begin to glow "
+                << (you.duration[DUR_CONFUSING_TOUCH] ? "brighter" : "red")
+                << "." << std::endl;
+
+    you.increase_duration(DUR_CONFUSING_TOUCH, 5 + (random2(power) / 5),
+                          50, NULL);
+
+}
+
+bool cast_sure_blade(int power)
+{
+    bool success = false;
+
+    if (!you.weapon())
+        mpr("You aren't wielding a weapon!");
+    else if (weapon_skill(you.weapon()->base_type,
+                          you.weapon()->sub_type) != SK_SHORT_BLADES)
     {
-        canned_msg(MSG_NO_SPELLS);
-        return (false);
-    }
-
-    int keyin = 0;
-
-    // Pick a spell to forget.
-    while (true)
-    {
-        mpr("Forget which spell ([?*] list [ESC] exit)? ", MSGCH_PROMPT);
-        keyin = get_ch();
-
-        if (key_is_escape(keyin))
-            return (false);
-
-        if (keyin == '?' || keyin == '*')
-        {
-            keyin = list_spells(false);
-            redraw_screen();
-        }
-
-        if (!isaalpha(keyin))
-            mesclr();
-        else
-            break;
-    }
-
-    const spell_type spell = get_spell_by_letter(keyin);
-    const int slot = get_spell_slot_by_letter(keyin);
-
-    if (spell == SPELL_NO_SPELL)
-    {
-        mpr("You don't know that spell.");
-        return (false);
-    }
-
-    if (!force
-        && random2(you.skills[SK_SPELLCASTING])
-           < random2(spell_difficulty(spell)))
-    {
-        mpr("Oops! This spell sure is a blunt instrument.");
-        forget_map(20 + random2(50));
+        mpr("You cannot bond with this weapon.");
     }
     else
     {
-        const int ep_gain = spell_mana(spell);
-        del_spell_from_memory_by_slot(slot);
+        if (!you.duration[DUR_SURE_BLADE])
+            mpr("You become one with your weapon.");
+        else if (you.duration[DUR_SURE_BLADE] < 25 * BASELINE_DELAY)
+            mpr("Your bond becomes stronger.");
 
-        if (ep_gain > 0)
-        {
-            inc_mp(ep_gain, false);
-            mpr("The spell releases its latent energy back to you as "
-                "it unravels.");
-        }
+        you.increase_duration(DUR_SURE_BLADE, 8 + (random2(power) / 10),
+                              25, NULL);
+        success = true;
     }
 
-    return (true);
-}
-
-void cast_see_invisible(int pow)
-{
-    if (you.can_see_invisible())
-        mpr("You feel as though your vision will be sharpened longer.");
-    else
-    {
-        mpr("Your vision seems to sharpen.");
-
-        // We might have to turn autopickup back on again.
-        // TODO: Once the spell times out we might want to check all monsters
-        //       in LOS for invisibility and turn autopickup off again, if
-        //       needed.
-        autotoggle_autopickup(false);
-    }
-
-    // No message if you already are under the spell.
-    you.increase_duration(DUR_SEE_INVISIBLE, 10 + random2(2 + pow/2), 100);
-}
-
-void cast_silence(int pow)
-{
-    if (!you.attribute[ATTR_WAS_SILENCED])
-        mpr("A profound silence engulfs you.");
-
-    you.attribute[ATTR_WAS_SILENCED] = 1;
-
-    you.increase_duration(DUR_SILENCE, 10 + random2avg(pow, 2), 100);
-    invalidate_agrid(true);
-
-    if (you.beheld())
-        you.update_beholders();
-
-    learned_something_new(HINT_YOU_SILENCE);
+    return (success);
 }

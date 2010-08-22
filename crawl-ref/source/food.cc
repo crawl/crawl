@@ -25,6 +25,7 @@
 #include "delay.h"
 #include "effects.h"
 #include "env.h"
+#include "hints.h"
 #include "invent.h"
 #include "items.h"
 #include "itemname.h"
@@ -46,12 +47,10 @@
 #include "religion.h"
 #include "godconduct.h"
 #include "skills2.h"
-#include "spells2.h"
 #include "state.h"
 #include "stuff.h"
 #include "transform.h"
 #include "travel.h"
-#include "hints.h"
 #include "xom.h"
 
 static corpse_effect_type _determine_chunk_effect(corpse_effect_type chunktype,

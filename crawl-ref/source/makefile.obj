@@ -168,8 +168,6 @@ showsymb.o \
 skills.o \
 skills2.o \
 species.o \
-spells1.o \
-spells2.o \
 spl-book.o \
 spl-cast.o \
 spl-clouds.o \
@@ -178,9 +176,11 @@ spl-goditem.o \
 spl-mis.o \
 spl-monench.o \
 spl-other.o \
+spl-selfench.o \
 spl-summoning.o \
 spl-transloc.o \
 spl-util.o \
+spl-wpnench.o \
 spl-zap.o \
 sprint.o \
 sqldbm.o \

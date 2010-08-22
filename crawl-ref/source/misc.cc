@@ -79,8 +79,6 @@
 #include "shopping.h"
 #include "skills.h"
 #include "skills2.h"
-#include "spells1.h"
-#include "spells2.h"
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
