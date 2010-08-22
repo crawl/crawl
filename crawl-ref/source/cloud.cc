@@ -19,22 +19,21 @@
 #include "coord.h"
 #include "coordit.h"
 #include "dungeon.h"
+#include "env.h"
 #include "fight.h"
 #include "fprop.h"
 #include "los.h"
 #include "mapmark.h"
+#include "mutation.h"
 #include "ouch.h"
 #include "player.h"
 #include "random.h"
-#include "spells2.h"
 #include "stuff.h"
-#include "env.h"
 #include "terrain.h"
 #ifdef USE_TILE
 #include "tiledef-gui.h"
 #include "tiledef-main.h"
 #endif
-#include "mutation.h"
 
 static int _actual_spread_rate(cloud_type type, int spread_rate)
 {
