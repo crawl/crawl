@@ -17,11 +17,12 @@ enum corpse_effect_type
     CE_CLEAN,           //    1
     CE_CONTAMINATED,    //    2
     CE_POISONOUS,       //    3
-    CE_HCL,             //    4
-    CE_MUTAGEN_RANDOM,  //    5
-    CE_MUTAGEN_GOOD,    //    6 - may be worth implementing {dlb}
-    CE_MUTAGEN_BAD,     //    7 - may be worth implementing {dlb}
-    CE_RANDOM,          //    8 - not used, but may be worth implementing {dlb}
+    CE_POISON_CONTAM,   //    4
+    CE_HCL,             //    5
+    CE_MUTAGEN_RANDOM,  //    6
+    CE_MUTAGEN_GOOD,    //    7 - may be worth implementing {dlb}
+    CE_MUTAGEN_BAD,     //    8 - may be worth implementing {dlb}
+    CE_RANDOM,          //    9 - not used, but may be worth implementing {dlb}
     CE_ROTTEN = 50,     //   50 - must remain at 50 for now {dlb}
 };
 

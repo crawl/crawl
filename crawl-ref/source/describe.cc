@@ -1923,6 +1923,15 @@ std::string get_item_description( const item_def &item, bool verbose,
                                    "sickness.";
                 }
                 break;
+            case CE_POISON_CONTAM:
+                description << "\n\nThis meat is poisonous";
+                if (player_mutation_level(MUT_SAPROVOROUS) < 3)
+                {
+                    description << " and may cause sickness even if poison "
+                                   "resistant";
+                }
+                description << ".";
+                break;
             default:
                 break;
             }
