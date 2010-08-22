@@ -760,6 +760,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         set_item_ego_type( item, OBJ_WEAPONS, SPWPN_FLAMING );
         break;
 
+    case MONS_ANGEL:
     case MONS_CHERUB:
         force_item     = true;
         item_race      = MAKE_ITEM_NO_RACE;
@@ -1624,6 +1625,7 @@ void give_armour(monsters *mon, int level)
         item.sub_type = ARM_LEATHER_ARMOUR;
         break;
 
+    case MONS_ANGEL:
     case MONS_CHERUB:
     case MONS_SIGMUND:
     case MONS_WIGHT:

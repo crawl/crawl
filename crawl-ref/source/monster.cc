@@ -1264,7 +1264,7 @@ static bool _is_signature_weapon(monsters *monster, const item_def &weapon)
     if (weapon.base_type != OBJ_WEAPONS)
         return (false);
 
-    if (monster->type == MONS_CHERUB)
+    if (monster->type == MONS_CHERUB || monster->type == MONS_ANGEL)
         return (weapon.sub_type == WPN_HOLY_SCOURGE);
 
     if (monster->type == MONS_DAEVA)
