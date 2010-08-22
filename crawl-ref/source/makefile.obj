@@ -170,14 +170,13 @@ skills2.o \
 species.o \
 spells1.o \
 spells2.o \
-spells3.o \
-spells4.o \
 spl-book.o \
 spl-cast.o \
 spl-clouds.o \
 spl-damage.o \
 spl-goditem.o \
 spl-mis.o \
+spl-monench.o \
 spl-other.o \
 spl-summoning.o \
 spl-transloc.o \

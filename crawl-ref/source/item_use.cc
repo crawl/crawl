@@ -67,7 +67,7 @@
 #include "shopping.h"
 #include "skills.h"
 #include "skills2.h"
-#include "spells4.h"
+#include "spells2.h"
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-clouds.h"

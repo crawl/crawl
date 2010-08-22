@@ -43,7 +43,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "env.h"
-#include "spells3.h"
+#include "spells2.h"
 #include "terrain.h"
 #ifdef USE_TILE
  #include "tiledef-dngn.h"

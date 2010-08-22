@@ -1,6 +1,7 @@
 /*
  *  File:     spl-damage.cc
  *  Summary:  Damage-dealing spells not already handled elsewhere.
+ *            Other targeted spells are covered in spl-zap.cc.
  */
 
 #include "AppHdr.h"
@@ -997,7 +998,7 @@ void cast_shatter(int pow)
         break;
 
     default:
-        mpr("cast_shatter(): unknown transformation in spells4.cc");
+        mpr("cast_shatter(): unknown transformation in spl-damage.cc");
     }
 
     if (damage > 0)
