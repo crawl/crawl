@@ -34,7 +34,7 @@
 #include "mon-stuff.h"
 #include "ng-init.h"
 #include "options.h"
-#include "spl-mis.h"
+#include "spl-miscast.h"
 #include "spl-util.h"
 #include "state.h"
 #ifdef USE_TILE

@@ -36,7 +36,7 @@
 #include "religion.h"
 #include "spl-clouds.h"
 #include "spl-goditem.h"
-#include "spl-mis.h"
+#include "spl-miscast.h"
 #include "spl-selfench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"

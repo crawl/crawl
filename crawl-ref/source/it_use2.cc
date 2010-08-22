@@ -32,7 +32,7 @@
 #include "player-stats.h"
 #include "religion.h"
 #include "skills2.h"
-#include "spl-mis.h"
+#include "spl-miscast.h"
 #include "spl-util.h"
 #include "stuff.h"
 #include "terrain.h"

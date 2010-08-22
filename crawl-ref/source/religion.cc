@@ -75,7 +75,7 @@
 #include "shopping.h"
 #include "skills2.h"
 #include "spl-book.h"
-#include "spl-mis.h"
+#include "spl-miscast.h"
 #include "spl-selfench.h"
 #include "sprint.h"
 #include "stash.h"

@@ -6,11 +6,15 @@
 
 #include "AppHdr.h"
 
+#include "xom.h"
+
 #include <algorithm>
 
+#include "areas.h"
 #include "artefact.h"
 #include "beam.h"
 #include "branch.h"
+#include "coord.h"
 #include "coordit.h"
 #include "database.h"
 #ifdef WIZARD
@@ -20,30 +24,29 @@
 #include "directn.h"
 #include "effects.h"
 #include "env.h"
-#include "map_knowledge.h"
 #include "feature.h"
 #include "goditem.h"
 #include "it_use2.h"
+#include "item_use.h" // for safe_to_remove_or_wear()
 #include "itemprop.h"
 #include "items.h"
 #include "kills.h"
 #include "libutil.h"
 #include "los.h"
 #include "makeitem.h"
+#include "map_knowledge.h"
 #include "message.h"
+#include "mgen_data.h"
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-iter.h"
-#include "mon-util.h"
 #include "mon-place.h"
-#include "mgen_data.h"
-#include "coord.h"
 #include "mon-stuff.h"
+#include "mon-util.h"
 #include "mutation.h"
 #include "notes.h"
 #include "options.h"
 #include "ouch.h"
-#include "item_use.h" // for safe_to_remove_or_wear()
 #include "output.h"   // for the monster list
 #include "player.h"
 #include "player-equip.h"
@@ -52,7 +55,7 @@
 #include "shout.h"
 #include "spl-book.h"
 #include "spl-cast.h"
-#include "spl-mis.h"
+#include "spl-miscast.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
@@ -60,7 +63,6 @@
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
-#include "areas.h"
 #include "teleport.h"
 #include "terrain.h"
 #include "transform.h"
@@ -68,7 +70,6 @@
 #include "travel.h"
 #include "view.h"
 #include "viewchar.h"
-#include "xom.h"
 
 #ifdef DEBUG_XOM
 #    define DEBUG_RELIGION

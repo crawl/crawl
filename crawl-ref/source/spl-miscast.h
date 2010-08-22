@@ -1,11 +1,11 @@
 /*
- *  File:       spl-mis.h
+ *  File:       spl-miscast.h
  *  Summary:    Spell miscast class.
  *  Written by: Matthew Cline
  */
 
-#ifndef SPL_MIS_H
-#define SPL_MIS_H
+#ifndef SPL_MISCAST_H
+#define SPL_MISCAST_H
 
 #include "enum.h"
 
