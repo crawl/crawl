@@ -951,6 +951,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_CURSE_TOE;
 
     // angelic beings ('A')
+    case MONS_ANGEL:
+        return TILEP_MONS_ANGEL;
     case MONS_CHERUB:
         return TILEP_MONS_CHERUB;
     case MONS_DAEVA:
@@ -1010,6 +1012,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_BONE_DRAGON;
     case MONS_SERPENT_OF_HELL:
         return TILEP_MONS_SERPENT_OF_HELL;
+    case MONS_HOLY_DRAGON:
+        return TILEP_MONS_HOLY_DRAGON;
 
     // efreet ('E')
     case MONS_EFREET:
@@ -1042,6 +1046,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_EYE_OF_DEVASTATION;
     case MONS_GOLDEN_EYE:
         return TILEP_MONS_GOLDEN_EYE;
+    case MONS_OPHAN:
+        return TILEP_MONS_OPHAN;
 
     // hybrids ('H')
     case MONS_HIPPOGRIFF:
@@ -1225,6 +1231,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_DIRE_ELEPHANT;
     case MONS_HELLEPHANT:
         return TILEP_MONS_HELLEPHANT;
+    case MONS_APIS:
+        return TILEP_MONS_APIS;
 
     // large zombies etc. ('Z')
     case MONS_ZOMBIE_LARGE:
@@ -1284,6 +1292,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_KILLER_KLOWN;
     case MONS_SLAVE:
         return _mon_mod(TILEP_MONS_SLAVE, tile_num_prop);
+    case MONS_PALADIN:
+        return TILEP_MONS_PALADIN;
 
     // mimics
     case MONS_GOLD_MIMIC:
