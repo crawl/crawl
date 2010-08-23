@@ -12,6 +12,7 @@
 
 #include "externs.h"
 
+#include "acquire.h"
 #include "beam.h"
 #include "cio.h"
 #include "coordit.h"

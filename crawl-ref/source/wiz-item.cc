@@ -10,6 +10,7 @@
 
 #include <errno.h>
 
+#include "acquire.h"
 #include "artefact.h"
 #include "coordit.h"
 #include "message.h"

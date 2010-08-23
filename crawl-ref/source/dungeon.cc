@@ -16,6 +16,7 @@
 #include <cmath>
 
 #include "abyss.h"
+#include "acquire.h"
 #include "artefact.h"
 #include "branch.h"
 #include "chardump.h"

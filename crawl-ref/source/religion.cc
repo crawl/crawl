@@ -22,6 +22,7 @@
 #include "externs.h"
 
 #include "abl-show.h"
+#include "acquire.h"
 #include "areas.h"
 #include "artefact.h"
 #include "attitude-change.h"
