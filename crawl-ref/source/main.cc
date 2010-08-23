@@ -31,6 +31,7 @@
 
 #include "abl-show.h"
 #include "abyss.h"
+#include "acquire.h"
 #include "areas.h"
 #include "artefact.h"
 #include "arena.h"

@@ -10,6 +10,7 @@
 
 #include <algorithm>
 
+#include "acquire.h"
 #include "areas.h"
 #include "artefact.h"
 #include "beam.h"

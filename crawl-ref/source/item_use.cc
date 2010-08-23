@@ -17,6 +17,7 @@
 #include "externs.h"
 
 #include "abl-show.h"
+#include "acquire.h"
 #include "artefact.h"
 #include "beam.h"
 #include "cio.h"
