@@ -1920,10 +1920,8 @@ ENDMAP
 NAME:     corrupted_temple
 PLACE:    Temple
 ORIENT:   encompass
-SUBST:    O = OOC
+NSUBST:   O = 3:B / *:O
 KFEAT:    O = altar_lugonu
-# C doesn't work in the Temple.
-KFEAT:    C = altar_makhleb / altar_xom / altar_beogh / altar_vehumet
 MONS:     plant col:random name:demonic name_adjective
 SUBST:    . = . x:1 w:1 l:1
 SUBST:    x = xxxcv
@@ -1949,9 +1947,9 @@ MAP
  xxxxx x'..x xxxxx
 xx.O.xxx.'.xxx.O.xx
 x...'''''.'.'..'..x
-xO.'.......'.'''.Bx
+xO.'.......'.'''.Ox
 x.'.......'.....'.x
-xx.O.xxx.'.xxx.B.xx
+xx.O.xxx.'.xxx.O.xx
  xxxxx x..'x xxxxx
        x.'.x
        x..'x
