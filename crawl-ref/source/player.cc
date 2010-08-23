@@ -2112,9 +2112,7 @@ int player_size_adjusted_body_armour_evasion_penalty(int scale)
 
     const int size = you.body_size(PSIZE_BODY);
 
-    const int size_bonus_factor =
-        (size < SIZE_SMALL || size > SIZE_LARGE)?
-        (size - SIZE_MEDIUM) * scale / 4 : 0;
+    const int size_bonus_factor = (size - SIZE_MEDIUM) * scale / 4;
 
     const int size_adjusted_penalty =
         std::max(0,
