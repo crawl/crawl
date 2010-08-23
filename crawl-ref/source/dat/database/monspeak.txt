@@ -5561,6 +5561,20 @@ sheep
 
 @The_monster@ "Baaaas" balefully.
 %%%%
+silenced silent spectre
+
+VISUAL:@The_monster@ gestures at you to be quiet.
+
+VISUAL:@The_monster@ flutters as if in a wind.
+
+VISUAL:@The_monster@ stares at you with its ghostly eyes.
+
+VISUAL:@The_monster@ fades in and out of visibility.
+
+VISUAL:@The_monster@ flickers into the darkness.
+
+VISUAL:@The_monster@ grins at you slowly.
+%%%%
 default silver statue
 
 VISUAL:@The_monster@ glitters in the dim dungeon light.

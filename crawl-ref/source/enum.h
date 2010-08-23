@@ -2142,6 +2142,7 @@ enum monster_type                      // (int) menv[].type
     MONS_GHOST_MOTH,
     MONS_JUMPING_SPIDER,               
     MONS_TARANTELLA,                   // 492
+    MONS_SILENT_SPECTRE,
 
     // Spriggans:
     MONS_SPRIGGAN = 500,

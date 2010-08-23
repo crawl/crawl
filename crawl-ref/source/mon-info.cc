@@ -292,6 +292,9 @@ monster_info::monster_info(const monsters *m, int milev)
     if (mons_class_flag(m->type, M_DEFLECT_MISSILES))
         mb |= ULL1 << MB_DEFLECT_MSL;
 
+    if (m->type == MONS_SILENT_SPECTRE);
+        mb |= ULL1 << MB_SILENCING;
+
     if (you.beheld_by(m))
         mb |= ULL1 << MB_MESMERIZING;
 
@@ -865,7 +868,7 @@ std::vector<std::string> monster_info::attributes() const
     if (is(MB_INSANE))
         v.push_back("frenzied and insane");
     if (is(MB_BERSERK))
-          v.push_back("berserk");
+        v.push_back("berserk");
     if (is(MB_FRENZIED))
         v.push_back("consumed by blood-lust");
     if (is(MB_HASTED))
