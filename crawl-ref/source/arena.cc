@@ -7,8 +7,6 @@
 
 #include "arena.h"
 
-#include "areas.h"
-#include "artefact.h"
 #include "cio.h"
 #include "colour.h"
 #include "command.h"

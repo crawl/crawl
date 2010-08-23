@@ -39,9 +39,6 @@
 #include "mon-util.h"
 #include "mon-stuff.h"
 #include "options.h"
-#ifdef USE_TILE
- #include "output.h"
-#endif
 #include "place.h"
 #include "player.h"
 #include "stash.h"

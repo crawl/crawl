@@ -9,7 +9,6 @@
 #include <cctype>
 
 #include "cio.h"
-#include "colour.h"
 #include "command.h"
 #include "coord.h"
 #include "env.h"
@@ -23,7 +22,6 @@
 #ifdef USE_TILE
  #include "mon-stuff.h"
  #include "mon-util.h"
- #include "newgame.h"
  #include "terrain.h"
  #include "tilebuf.h"
  #include "tilefont.h"

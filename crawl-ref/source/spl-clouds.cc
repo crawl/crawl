@@ -17,7 +17,6 @@
 #include "env.h"
 #include "fprop.h"
 #include "godconduct.h"
-#include "it_use2.h"
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"

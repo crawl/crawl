@@ -40,7 +40,6 @@
 #include "message.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
-#include "newgame.h"
 #include "output.h"
 #include "player.h"
 #include "random.h"

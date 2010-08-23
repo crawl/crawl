@@ -21,7 +21,6 @@
 #include "branch.h"
 #include "chardump.h"
 #include "cloud.h"
-#include "colour.h"
 #include "coord.h"
 #include "coordit.h"
 #include "defines.h"
