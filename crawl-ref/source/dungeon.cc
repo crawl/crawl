@@ -1849,7 +1849,7 @@ static void _dgn_verify_connectivity(unsigned nvaults)
 // * A vector, with one cell per dungeon level (unset if there's no
 //   overflow temples on that level).
 //
-// * The cell of the previous vector is a vector, with one overlfow
+// * The cell of the previous vector is a vector, with one overflow
 //   temple definition per cell.
 //
 // * The cell of the previous vector is a hash table, containing the
@@ -2661,7 +2661,7 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
 {
     if (!minivault && player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
     {
-        // Temple vault determined at new game tiem.
+        // Temple vault determined at new game time.
         const std::string name = you.props[TEMPLE_MAP_KEY];
 
         // Tolerate this for a little while, for old games.
