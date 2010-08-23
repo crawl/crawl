@@ -1,7 +1,6 @@
 #include "AppHdr.h"
 
 #include "externs.h"
-#include "items.h"
 #include "maps.h"
 #include "mon-util.h"
 #include "mpr.h"

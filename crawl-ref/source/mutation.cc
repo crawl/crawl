@@ -48,7 +48,6 @@
 #include "stuff.h"
 #include "transform.h"
 #include "hints.h"
-#include "view.h"
 #include "xom.h"
 
 static int _body_covered();

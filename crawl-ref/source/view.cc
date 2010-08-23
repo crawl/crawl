@@ -21,7 +21,6 @@
 #include "map_knowledge.h"
 #include "viewchar.h"
 #include "viewgeom.h"
-#include "viewmap.h"
 #include "showsymb.h"
 
 #include "attitude-change.h"
@@ -40,7 +39,6 @@
 #include "exclude.h"
 #include "feature.h"
 #include "files.h"
-#include "godabil.h"
 #include "hints.h"
 #include "libutil.h"
 #include "macro.h"
@@ -50,7 +48,6 @@
 #include "mon-iter.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
-#include "newgame.h"
 #include "options.h"
 #include "notes.h"
 #include "output.h"

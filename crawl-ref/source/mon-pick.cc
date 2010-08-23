@@ -10,7 +10,6 @@
 
 #include "externs.h"
 #include "branch.h"
-#include "misc.h"
 #include "mon-util.h"
 #include "place.h"
 

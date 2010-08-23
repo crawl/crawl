@@ -22,7 +22,6 @@
 #include "directn.h"
 #include "kills.h"
 #include "files.h"
-#include "fprop.h"
 #include "defines.h"
 #ifdef USE_TILE
  #include "tilereg-map.h"
@@ -33,7 +32,6 @@
 #include "macro.h"
 #include "message.h"
 #include "mon-util.h"
-#include "newgame.h"
 #include "jobs.h"
 #include "player.h"
 #include "religion.h"

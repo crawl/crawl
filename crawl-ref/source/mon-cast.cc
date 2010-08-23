@@ -28,7 +28,6 @@
 #include "mon-place.h"
 #include "mon-project.h"
 #include "terrain.h"
-#include "hints.h"
 #include "mislead.h"
 #include "mgen_data.h"
 #include "coord.h"
@@ -50,7 +49,6 @@
 #include "traps.h"
 #include "view.h"
 #include "viewchar.h"
-#include "xom.h"
 
 #include <algorithm>
 

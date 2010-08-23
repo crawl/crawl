@@ -23,7 +23,6 @@
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
-#include "it_use2.h"
 #include "invent.h"
 #include "makeitem.h"
 #include "mapdef.h"
