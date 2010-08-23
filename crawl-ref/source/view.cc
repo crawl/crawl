@@ -39,6 +39,8 @@
 #include "exclude.h"
 #include "feature.h"
 #include "files.h"
+#include "fprop.h"
+#include "godconduct.h"
 #include "hints.h"
 #include "libutil.h"
 #include "macro.h"
@@ -730,6 +732,12 @@ static int player_view_update_at(const coord_def &gc)
         ret |= UF_AFFECT_EXCLUDES;
 
     set_terrain_visible(gc);
+
+    if (!(env.pgrid(gc) & FPROP_SEEN))
+    {
+        env.pgrid(gc) |= FPROP_SEEN;
+        did_god_conduct(DID_EXPLORATION, 1);
+    }
 
 #ifdef USE_TILE
     const coord_def ep = grid2show(gc);
