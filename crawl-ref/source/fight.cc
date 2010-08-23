@@ -3466,18 +3466,16 @@ bool melee_attack::apply_damage_brand()
             dec_mp(mp_loss);
             obvious_effect = true;
         }
-        else
+        else if (defender->as_monster()->can_use_spells()
+                 && !mons_class_flag(defender->id(), M_FAKE_SPELLS))
         {
             defender->as_monster()->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
-                            attacker->kill_alignment(), // doesn't matter
-                            random2(damage_done * 2) * BASELINE_DELAY));
-            if (defender->as_monster()->can_use_spells())
-            {
-                special_damage_message =
-                        apostrophise(defender->name(DESC_CAP_THE))
-                        + " magic leaks into the air.";
-                obvious_effect = true;
-            }
+                        attacker->kill_alignment(), // doesn't matter
+                        random2(damage_done * 2) * BASELINE_DELAY));
+            special_damage_message =
+                    apostrophise(defender->name(DESC_CAP_THE))
+                    + " magic leaks into the air.";
+            obvious_effect = true;
         }
         break;
     }
