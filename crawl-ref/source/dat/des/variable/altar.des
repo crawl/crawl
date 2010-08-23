@@ -481,58 +481,6 @@ cccyy..yycc
      @@
 ENDMAP
 
-###############################################################################
-# Altars to the good gods by TGW.
-NAME:    tgw_good
-DEPTH:   5-27
-TAGS:    no_item_gen no_monster_gen
-SHUFFLE: XYZ
-KFEAT:   X = altar_shining_one
-KFEAT:   Y = altar_elyvilon
-KFEAT:   Z = altar_zin
-COLOUR:  a = darkgrey / red / blue w:3 / lightred w:2
-COLOUR:  b = darkgrey w:100 / red w:50 / lightgrey / blue w:30 / cyan / lightred
-COLOUR:  c = darkgrey w:7 / red w:2 / lightgrey w:4 / blue w:4 / cyan w:2
-COLOUR:  d = darkgrey w:4 / lightgrey w:4 / blue / cyan w:4
-COLOUR:  e = blue / cyan w:4
-COLOUR:  f = blue / cyan w:7
-SUBST:   abcdef = w
-SUBST:   G = ...BBC
-NSUBST:  H = 2:C / *:H
-SUBST:   H = .BBCCC
-COLOUR:  B = white
-COLOUR:  C = yellow
-SUBST:   B = .
-NSUBST:  C = 1:M / 3:d / *:.
-ITEM:    any scroll / scroll of holy word
-MONS:    human; falchion / human; falchion ego:holy_wrath w:1 \
-         / human; quarterstaff / human; quarterstaff ego:holy_wrath w:1 \
-         / human
-MONS:    gnoll; falchion / gnoll; falchion ego:holy_wrath w:1 / gnoll; \
-         quarterstaff / gnoll; quarterstaff ego:holy_wrath w:1 / gnoll
-MONS:    orc; falchion / orc; falchion ego:holy_wrath w:1 \
-         / orc; quarterstaff / orc; quarterstaff ego:holy_wrath w:1 / orc
-SUBST:   M = 123
-MAP
-                xxxxxxxxxxxxx
-               xxaaaaaaaaaaaxx
-              xxbbbbbbbbbbbbbxx
-             xxcccccccccccccccxx
-            xxdddddddddddddddddxx
-           xxeeeeeeeeeeeeeeeeeeexx
-xxxxxxxxxxxxfffffffffffffffffffffxx
-x..........GGGGGGHHHHHHHHHHHGGGGGGxx
-@..........GGGGGGHHHXHHYHHZHHHGGGGGGx
-x..........GGGGGGHHHHHHHHHHHGGGGGGxx
-xxxxxxxxxxxxfffffffffffffffffffffxx
-           xxeeeeeeeeeeeeeeeeeeexx
-            xxdddddddddddddddddxx
-             xxcccccccccccccccxx
-              xxbbbbbbbbbbbbbxx
-               xxaaaaaaaaaaaxx
-                xxxxxxxxxxxxx
-ENDMAP
-
 NAME:  jiyva_altar_1
 DEPTH: D:2-20
 KFEAT: _ = altar_jiyva
