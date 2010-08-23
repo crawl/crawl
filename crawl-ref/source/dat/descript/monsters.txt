@@ -1470,6 +1470,10 @@ shining eye
 
 A huge and strangely deformed eyeball, pulsating with energy. Beauty is certainly nowhere to be found in this beholder.
 %%%%
+silent spectre
+
+The bane of wizards, these terrible spirits bring an unearthly silence to the area around them.
+%%%%
 silver statue
 
 A beautiful statue of silvery hue. Its eyes glow with an otherworldly radiance.

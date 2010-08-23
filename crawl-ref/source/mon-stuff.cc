@@ -1378,6 +1378,8 @@ int monster_die(monsters *monster, killer_type killer,
     // Monsters haloes should be removed when they die.
     if (monster->holiness() == MH_HOLY)
         invalidate_agrid();
+    if (monster->type == MONS_SILENT_SPECTRE)
+        invalidate_agrid();
 
     // Clear auto exclusion now the monster is killed -- if we know about it.
     if (mons_near(monster) || wizard)
