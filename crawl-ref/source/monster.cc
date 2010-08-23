@@ -4504,6 +4504,7 @@ void monsters::timeout_enchantments(int levels)
         case ENCH_PETRIFYING: case ENCH_PETRIFIED: case ENCH_SWIFT:
         case ENCH_BATTLE_FRENZY: case ENCH_TEMP_PACIF: case ENCH_SILENCE:
         case ENCH_LOWERED_MR: case ENCH_SOUL_RIPE: case ENCH_BLEED:
+        case ENCH_ANTIMAGIC:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -4670,6 +4671,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
     case ENCH_LOWERED_MR:
     case ENCH_SOUL_RIPE:
     case ENCH_TIDE:
+    case ENCH_ANTIMAGIC:
         decay_enchantment(me);
         break;
 
@@ -6074,7 +6076,7 @@ static const char *enchant_names[] =
     "petrified", "lowered_mr", "soul_ripe", "slowly_dying", "eat_items",
     "aquatic_land", "spore_production", "slouch", "swift", "tide",
     "insane", "silenced", "awaken_forest", "exploding", "bleeding",
-    "buggy",
+    "antimagic", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

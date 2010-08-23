@@ -3068,6 +3068,7 @@ int melee_attack::random_chaos_brand()
                      5, SPWPN_DRAINING,
                      5, SPWPN_VAMPIRICISM,
                      5, SPWPN_HOLY_WRATH,
+                     5, SPWPN_ANTIMAGIC,
                      2, SPWPN_CONFUSE,
                      2, SPWPN_DISTORTION,
                      0));
@@ -3119,6 +3120,10 @@ int melee_attack::random_chaos_brand()
                 susceptible = false;
             }
             break;
+        case SPWPN_ANTIMAGIC:
+            if (!defender->as_monster()->can_use_spells())
+                susceptible = false;
+            break;
         default:
             break;
         }
@@ -3140,6 +3145,7 @@ int melee_attack::random_chaos_brand()
     case SPWPN_DISTORTION:      brand_name += "distortion"; break;
     case SPWPN_VAMPIRICISM:     brand_name += "vampiricism"; break;
     case SPWPN_VORPAL:          brand_name += "vorpal"; break;
+    case SPWPN_ANTIMAGIC:       brand_name += "anti-magic"; break;
     // ranged weapon brands
     case SPWPN_FLAME:           brand_name += "flame"; break;
     case SPWPN_FROST:           brand_name += "frost"; break;
@@ -3448,6 +3454,31 @@ bool melee_attack::apply_damage_brand()
 
     case SPWPN_CHAOS:
         chaos_affects_defender();
+        break;
+
+    case SPWPN_ANTIMAGIC:
+        if (defender->atype() == ACT_PLAYER)
+        {
+            int mp_loss = std::min(you.magic_points, random2(damage_done * 2));
+            if (!mp_loss)
+                break;
+            mpr("You feel your power leaking away.", MSGCH_WARN);
+            dec_mp(mp_loss);
+            obvious_effect = true;
+        }
+        else
+        {
+            defender->as_monster()->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
+                            attacker->kill_alignment(), // doesn't matter
+                            random2(damage_done * 2) * BASELINE_DELAY));
+            if (defender->as_monster()->can_use_spells())
+            {
+                special_damage_message =
+                        apostrophise(defender->name(DESC_CAP_THE))
+                        + " magic leaks into the air.";
+                obvious_effect = true;
+            }
+        }
         break;
     }
 

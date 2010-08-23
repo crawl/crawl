@@ -1397,6 +1397,22 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
         if (spell_cast == SPELL_POLYMORPH_OTHER && monster->friendly())
             return (false);
 
+
+        // Past this point, we're actually casting, instead of just pondering.
+
+        // Check for antimagic.
+        if (monster->has_ench(ENCH_ANTIMAGIC)
+            && !x_chance_in_y(monster->hit_dice * BASELINE_DELAY,
+                              monster->hit_dice * BASELINE_DELAY
+                              + monster->get_ench(ENCH_ANTIMAGIC).duration))
+        {
+            // This may be a bad idea -- if we decide monsters shouldn't
+            // lose a turn like players do not, please make this just return.
+            simple_monster_message(monster, " falters for a moment.");
+            monster->lose_energy(EUT_SPELL);
+            return (true);
+        }
+
         // Try to animate dead: if nothing rises, pretend we didn't cast it.
         if (spell_cast == SPELL_ANIMATE_DEAD)
         {

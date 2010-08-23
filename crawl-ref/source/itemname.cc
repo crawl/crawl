@@ -414,6 +414,8 @@ const char* weapon_brand_name(const item_def& item, bool terse)
             default:             return "";
             }
         }
+    case SPWPN_ANTIMAGIC: return terse ? " (antimagic)" : ""; // non-terse
+                                                      // handled elsewhere
 
     // ranged weapon brands
     case SPWPN_FLAME: return ((terse) ? " (flame)" : " of flame");
@@ -1144,6 +1146,8 @@ std::string ego_type_string (const item_def &item)
         // ("vampiric hand axe", etc)
         if (get_weapon_brand(item) == SPWPN_VAMPIRICISM)
             return "vampiricism";
+        else if (get_weapon_brand(item) == SPWPN_ANTIMAGIC)
+            return "anti-magic";
         else if (get_weapon_brand(item) != SPWPN_NORMAL)
             return std::string(weapon_brand_name(item, false)).substr(4);
         else
@@ -1287,10 +1291,13 @@ std::string item_def::name_aux(description_level_type desc,
             buff << racial_description_string(*this, terse);
         }
 
-        if (know_brand && !terse
-            && get_weapon_brand(*this) == SPWPN_VAMPIRICISM)
+        if (know_brand && !terse)
         {
-            buff << "vampiric ";
+            int brand = get_weapon_brand(*this);
+            if (brand == SPWPN_VAMPIRICISM)
+                buff << "vampiric ";
+            else if (brand == SPWPN_ANTIMAGIC)
+                buff << "anti-magic ";
         }
         buff << item_base_name(*this);
 

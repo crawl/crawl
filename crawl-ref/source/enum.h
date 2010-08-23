@@ -1288,6 +1288,7 @@ enum enchant_type
     ENCH_AWAKEN_FOREST,
     ENCH_EXPLODING,
     ENCH_BLEED,
+    ENCH_ANTIMAGIC,
 
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.

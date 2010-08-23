@@ -4057,6 +4057,7 @@ static int str_to_ego(item_spec &spec, std::string ego_str)
         "confuse",
         "penetration",
         "reaping",
+        "anti-magic",
         NULL
     };
     COMPILE_CHECK(ARRAYSZ(weapon_brands) == NUM_REAL_SPECIAL_WEAPONS,

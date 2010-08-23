@@ -881,6 +881,11 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
                     "animated as a zombie friendly to the killer.";
             }
             break;
+        case SPWPN_ANTIMAGIC:
+            description += "It hinders all kind of magic users and even "
+                    "some types of magical creatures by disrupting the "
+                    "flow of magical energy. The wielder is affected as well.";
+            break;
         }
     }
 
