@@ -25,6 +25,8 @@ enum feature_property_type
     FPROP_GLOW_MOLD     = (1 << 13),
     // Immune to spawning jellies and off-level eating.
     FPROP_NO_JIYVA      = (1 << 14),
+    // Permanent, unlike map memory.
+    FPROP_SEEN          = (1 << 15),
 };
 
 
