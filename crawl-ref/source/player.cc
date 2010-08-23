@@ -5952,16 +5952,13 @@ int player::res_magic() const
 
     switch (species)
     {
-    case SP_MOUNTAIN_DWARF:
-    case SP_HILL_ORC:
-        rm = experience_level * 2;
-        break;
     default:
         rm = experience_level * 3;
         break;
     case SP_HIGH_ELF:
     case SP_SLUDGE_ELF:
     case SP_DEEP_ELF:
+    case SP_MOUNTAIN_DWARF:
     case SP_VAMPIRE:
     case SP_DEMIGOD:
     case SP_OGRE:
