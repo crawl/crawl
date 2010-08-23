@@ -1916,7 +1916,7 @@ bbbbb...bbbbbbbbb...bbb...bbbbbbbbb...bbbbb
                   bbbbbbb
 ENDMAP
 
-# 2 gods (plus Lugonu and possibly more)
+# 3 gods (plus Lugonu)
 NAME:     corrupted_temple
 PLACE:    Temple
 ORIENT:   encompass
@@ -1958,6 +1958,208 @@ xx.O.xxx.'.xxx.O.xx
        x[.(x
        x1{1x
        xxxxx
+ENDMAP
+
+# 8 gods
+NAME:    temple_alley_garden
+PLACE:   Temple
+TAGS:    no_rotate
+ORIENT:  encompass
+COLOUR:  ' : darkgrey w:3 / white w:1 / none
+COLOUR:  . = green, " = brown
+FTILE:   .t = floor_grass, 'ABGT = floor_vault, D" = floor_dirt
+SUBST:   D = G
+NSUBST:  A = { / ( / [
+NSUBST:  . = 12:1 / 7:2 / *:.
+SUBST:   "' = .
+MONS:    bush, plant
+MAP
+tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+tt''''''''''....................................................tt
+tt'G'''''G''.............................t............t.........tt
+tt''''''''''......................t.............................tt
+tt''''''''''....................................t...............tt
+tt''''A'''''...............................................t....tt
+tt''''''''''................cccccccccccccccccccccccc............tt
+tt''''''''''................c''''''''''''''''''''''c....t.......tt
+tt''''''''''..t.t.t.t.t.t...c'''B''''B''''B''''B'''c............tt
+tt'T'''''T''"""""""""""""""Dc''''''''''''''''''''''c............tt
+tt''''''''''""""""""""""""""+''''''''''''''''''''''c.........t..tt
+tt''''A'''''""""""""""""""""+''''''T''''''''T''''''c...t........tt
+tt''''''''''""""""""""""""""+''''''''''''''''''''''c............tt
+tt'T'''''T''"""""""""""""""Dc''''''''''''''''''''''c............tt
+tt''''''''''..t.t.t.t.t.t...c'''B''''B''''B''''B'''c......t.....tt
+tt''''''''''................c''''''''''''''''''''''c............tt
+tt''''''''''................cccccccccccccccccccccccc............tt
+tt''''A'''''..........................................t.........tt
+tt''''''''''..................t.................................tt
+tt''''''''''.................................t..................tt
+tt'G'''''G''.........................t.......................t..tt
+tt''''''''''....................................................tt
+tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+ENDMAP
+
+# 6 gods
+NAME:    temple_island
+PLACE:   Temple
+TAGS:    no_rotate
+ORIENT:  encompass
+SUBST:   W = W:30 w
+SUBST:   ~ = ':20 W
+COLOUR:  ' = green / brown w:2
+FTILE:   'A = floor_grass, .BT = floor_vault
+NSUBST:  ' = 5:t / 7:1 / 4:2 / .
+NSUBST:  A = { / ( / [
+MONS:    bush, plant
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
+xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
+xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
+xwwwwwwwwwwwWWWWWWWWWWWWWWWWWWWwwwwwwwwwwwx
+xwwwwwwwwwwWW~~~~~~~~~~~~~~~~~WWwwwwwwwwwwx
+xwwwwwwwwwWW~'''''''''''''''''~WWwwwwwwwwwx
+xwwwwwwwwWW~'''''''''''''''''''~WWwwwwwwwwx
+xwwwwwwwWW~'''''''''''''''''''''~WWwwwwwwwx
+xwwwwwwWW~''''''''xxxxxxx''''A'''~WWwwwwwwx
+xwwwwwWW~'''''''xxx.....xxx'''''''~WWwwwwwx
+xwwwwWW~''''''xxx.........xxx''''''~WWwwwwx
+xwwwwW~''''''xx....B...B....xx''''''~Wwwwwx
+xwwwwW~''''''+..............Bx''''''~Wwwwwx
+xwwwwW~''A'''+.......T.......x''''''~Wwwwwx
+xwwwwW~''''''+..............Bx''''''~Wwwwwx
+xwwwwW~''''''xx....B...B....xx''''''~Wwwwwx
+xwwwwWW~''''''xxx.........xxx''''''~WWwwwwx
+xwwwwwWW~'''''''xxx.....xxx'''''''~WWwwwwwx
+xwwwwwwWW~''''''''xxxxxxx''''A'''~WWwwwwwwx
+xwwwwwwwWW~'''''''''''''''''''''~WWwwwwwwwx
+xwwwwwwwwWW~'''''''''''''''''''~WWwwwwwwwwx
+xwwwwwwwwwWW~'''''''''''''''''~WWwwwwwwwwwx
+xwwwwwwwwwwWW~~~~~~~~~~~~~~~~~WWwwwwwwwwwwx
+xwwwwwwwwwwwWWWWWWWWWWWWWWWWWWWwwwwwwwwwwwx
+xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
+xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
+xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# 8 gods
+NAME:    temple_compass
+PLACE:   Temple
+WEIGHT:  3
+TAGS:    no_rotate
+ORIENT:  encompass
+MAP
+xxxxxxx     xxxxxxx     xxxxxxx
+x.....x     x.....x     x.....x
+x..B..x     x..B..x     x..B..x
+x.....xx    x.....x    xx.....x
+xxxxxx.xx   xxx.xxx   xx.xxxxxx
+     xx.xx    x.x    xx.xx
+      xx.xx   x.x   xx.xx
+       xx.xx  x.x  xx.xx
+        xx.xx x.x xx.xx
+         xx.xxx.xxx.xx
+xxxxxxx   xx.......xx   xxxxxxx
+x.....xxxxxx.(...[.xxxxxx.....x
+x..B.......................B..x
+x.....xxxxxx...{...xxxxxx.....x
+xxxxxxx   xx.......xx   xxxxxxx
+         xx.xxx.xxx.xx
+        xx.xx x.x xx.xx
+       xx.xx  x.x  xx.xx
+      xx.xx   x.x   xx.xx
+     xx.xx    x.x    xx.xx
+xxxxxx.xx   xxx.xxx   xx.xxxxxx
+x.....xx    x.....x    xx.....x
+x..B..x     x..B..x     x..B..x
+x.....x     x.....x     x.....x
+xxxxxxx     xxxxxxx     xxxxxxx
+ENDMAP
+
+# 12 gods
+NAME:    temple_forest_path
+WEIGHT:  5
+PLACE:   Temple
+TAGS:    no_rotate
+ORIENT:  encompass
+SHUFFLE: '"
+FTILE:   ' = floor_dirt, ."tABX = floor_grass
+NSUBST:  A = { / ( / [
+SUBST:   ' = ., " = t
+KFEAT:   X : G / U / T
+COLOUR:  . = green / brown w:2
+MAP
+                ttttttttt
+           ttttttttttttttttt
+         ttttttttt.....ttttttttt
+      tttttttttt.........tttttttttt
+    ttttttttt''..A.....A..''ttttttttt
+   tttttttt''tt.....X.....tt''tttttttt
+ ttttttttt'tttt...........tttt'ttttttttt
+ttttt.....tttttt....A....tttttt.....ttttt
+ttt..B......tttttt.....tttttt......B..ttt
+tt...........ttttttt"ttttttt...........tt
+tt.....X..B..ttttttt"ttttttt..B..X.....tt
+tt...........tttttt"""tttttt...........tt
+ttt..B......t"""tt""w""tt"""t......B..ttt
+ttttt.....tttttt"""www"""tttttt.....ttttt
+ttttt'tttttttttttt""w""tttttttttttt'ttttt
+tttttt'tttttttttttt"""tttttttttttt'tttttt
+ttttttt'tt.....tt""ttt""tt.....tt'ttttttt
+ ttttttt......B..ttttttt..B......ttttttt
+ tttttt.B.........ttttt.........B.tttttt
+  ttttt.....X.....ttttt.....X.....ttttt
+  ttttt...........ttttt...........ttttt
+   ttttt......B..ttttttt..B......ttttt
+    tttttt.....tt''ttt''tt.....tttttt
+      ttttttttttttt'''ttttttttttttt
+        ttttttttttttttttttttttttt
+               ttttttttttt
+ENDMAP
+
+# 9 gods
+NAME:    temple_forest_star
+WEIGHT:  5
+PLACE:   Temple
+TAGS:    no_rotate
+ORIENT:  encompass
+SUBST:   ' : t"
+FTILE:   "A = floor_dirt, tBTX. = floor_grass
+NSUBST:  A = { / ( / [
+SUBST:   " = .
+SHUFFLE: TX
+KFEAT:   X : G / U
+COLOUR:  . = green / brown w:2
+MAP
+                ttttttttt
+           ttttttttttttttttt
+         ttttttttt.....ttttttttt
+      tttttttttt.........tttttttttt
+    ttttttttt''..X.....X..''ttttttttt
+   tttttttt''tt.....B.....tt''tttttttt
+ ttttttttt'tttt...........tttt'ttttttttt
+ttttt.....tttttt....X....tttttt.....ttttt
+ttt..B......tttttt.....tttttt......B..ttt
+tt...........ttttttt"ttttttt...........tt
+tt.....X..B..ttttttt"ttttttt..B..X.....tt
+tt..........."tttttt"tttttt"...........tt
+ttt..B......tt""ttt"""ttt""tt......B..ttt
+ttttt.....tttttt"""AAA"""tttttt.....ttttt
+ttttt'tttttttttttt"""""tttttttttttt'ttttt
+tttttt'ttttttttt""ttttt""ttttttttt'tttttt
+ttttttt'tt....."ttttttttt".....tt'ttttttt
+ ttttttt......T..ttttttt..T......ttttttt
+ tttttt.T.........ttttt.........T.tttttt
+  ttttt.....B.....ttttt.....B.....ttttt
+  ttttt...........ttttt...........ttttt
+   ttttt......T..ttttttt..T......ttttt
+    tttttt.....tt''ttt''tt.....tttttt
+      ttttttttttttt'''ttttttttttttt
+        ttttttttttttttttttttttttt
+               ttttttttttt
 ENDMAP
 
 #############################################################################
