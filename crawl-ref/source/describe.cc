@@ -2934,14 +2934,14 @@ static std::string _monster_stat_description(const monster_info& mi)
 
     // Size
     const char *sizes[NUM_SIZE_LEVELS] = {
-        "tiny",
-        "little",
-        "small",
+        "as big as a rat",
+        "as big as a spriggan",
+        "as big as a kobold",
         NULL,     // don't display anything for 'medium'
-        "large",
-        "big",
-        "giant",
-        "huge",
+        "as big as an ogre",
+        "as big as a hydra",
+        "as big as a giant",
+        "as big as a dragon",
     };
 
     if (sizes[mi.body_size()])
