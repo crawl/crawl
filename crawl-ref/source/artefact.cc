@@ -1687,7 +1687,7 @@ unrand_special_type get_unrand_specialness(int unrand_index)
     if (unrand_index < UNRAND_START || unrand_index > UNRAND_LAST)
         return (UNRANDSPEC_NORMAL);
 
-    if (unranddata[unrand_index].flags & UNRAND_FLAG_SPECIAL)
+    if (unranddata[unrand_index - UNRAND_START].flags & UNRAND_FLAG_SPECIAL)
         return (UNRANDSPEC_SPECIAL);
 
     return (UNRANDSPEC_NORMAL);
