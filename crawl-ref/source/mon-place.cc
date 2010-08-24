@@ -337,7 +337,8 @@ static void _hell_spawn_random_monsters()
 // one_chance_in(value) checks with the new x_chance_in_y(5, value). (jpeg)
 void spawn_random_monsters()
 {
-    if (crawl_state.game_is_arena())
+    if (crawl_state.game_is_arena() ||
+        (you.level_type == LEVEL_DUNGEON && crawl_state.game_is_sprint()))
         return;
 
 #ifdef DEBUG_MON_CREATION
