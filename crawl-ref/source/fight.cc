@@ -5373,6 +5373,11 @@ bool melee_attack::do_trample()
 {
     do
     {
+        monsters *def_monster = defender->as_monster();
+        if (def_monster && mons_is_stationary(def_monster))
+            // don't even print a message
+            return false;
+
         int size_diff = attacker->body_size() - defender->body_size();
         if (!x_chance_in_y(size_diff + 3, 6))
             break;
