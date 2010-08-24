@@ -5365,6 +5365,32 @@ void melee_attack::mons_do_spines()
     }
 }
 
+bool melee_attack::mons_trample()
+{
+    int size_diff = attacker->body_size() - defender->body_size();
+    if (!x_chance_in_y(size_diff + 3, 6))
+        return false;
+
+    coord_def old_pos = defender->pos();
+    coord_def new_pos = defender->pos() + defender->pos() - attacker->pos();
+
+    // need a valid tile
+    if (grd(new_pos) < DNGN_SHALLOW_WATER)
+        return false;
+
+    // don't trample into a monster - or do we want to cause a chain reaction
+    // here?
+    if (actor_at(new_pos))
+        return false;
+
+    defender->move_to_pos(new_pos);
+
+    if (attacker->is_habitable(old_pos))
+        attacker->move_to_pos(old_pos);
+
+    return true;
+}
+
 void melee_attack::mons_perform_attack_rounds()
 {
     const int nrounds = attacker->as_monster()->has_hydra_multi_attack() ?
@@ -5680,6 +5706,29 @@ void melee_attack::mons_perform_attack_rounds()
             special_damage = 0;
             special_damage_message.clear();
             special_damage_flavour = BEAM_NONE;
+
+            if (attacker != defender && attk.type == AT_TRAMPLE)
+            {
+                if (mons_trample())
+                {
+                    if (needs_message)
+                    {
+                        mprf("%s %s backwards!",
+                             def_name(DESC_CAP_THE).c_str(),
+                             defender->conj_verb("stumble").c_str());
+                    }
+                }
+                else
+                {
+                    if (needs_message)
+                    {
+                        mprf("%s %s %s ground!",
+                             def_name(DESC_CAP_THE).c_str(),
+                             defender->conj_verb("hold").c_str(),
+                             defender->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str());
+                    }
+                }
+            }
 
             // Monsters attacking themselves don't get attack flavour.
             // The message sequences look too weird.  Also, stealing
