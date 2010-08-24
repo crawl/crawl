@@ -916,14 +916,16 @@ static weapon_type _determine_weapon_subtype(int item_level)
     return rc;
 }
 
-static bool _try_make_item_special_unrand(item_def& item, int force_type,
-                                          int item_level)
+static bool _try_make_item_unrand(item_def& item, int force_type)
 {
-    dprf("Making special unrand artefact.");
+    if (you.level_type == LEVEL_PANDEMONIUM)
+    {
+        return (false);
+    }
 
-    bool abyss = item_level == level_id(LEVEL_ABYSS).absdepth();
     int idx = find_okay_unrandart(item.base_type, force_type,
-                                  UNRANDSPEC_SPECIAL, abyss);
+                                  UNRANDSPEC_EITHER,
+                                  you.level_type == LEVEL_ABYSS);
 
     if (idx != -1 && make_item_unrandart(item, idx))
         return (true);
@@ -942,17 +944,10 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         // Make a randart or unrandart.
 
         // 1 in 50 randarts are unrandarts.
-        if (you.level_type != LEVEL_ABYSS
-            && you.level_type != LEVEL_PANDEMONIUM
-            && one_chance_in(50) && !force_randart)
+        if (one_chance_in(50) && !force_randart)
         {
-            const int idx = find_okay_unrandart(OBJ_WEAPONS, force_type,
-                                                UNRANDSPEC_NORMAL);
-            if (idx != -1)
-            {
-                make_item_unrandart(item, idx);
+            if (_try_make_item_unrand(item, force_type))
                 return (true);
-            }
         }
 
         // The other 98% are normal randarts.
@@ -987,14 +982,6 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         if (get_weapon_brand(item) == SPWPN_HOLY_WRATH)
             item.flags &= (~ISFLAG_CURSED);
         return (true);
-    }
-
-    // If it isn't an artefact yet, try to make a special unrand artefact.
-    if (item_level > 6
-        && one_chance_in(12)
-        && x_chance_in_y(31 + item_level * 3, 3000))
-    {
-        return (_try_make_item_special_unrand(item, force_type, item_level));
     }
 
     return (false);
@@ -2053,18 +2040,10 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
         // Make a randart or unrandart.
 
         // 1 in 50 randarts are unrandarts.
-        if (you.level_type != LEVEL_ABYSS
-            && you.level_type != LEVEL_PANDEMONIUM
-            && one_chance_in(50) && !force_randart)
+        if (one_chance_in(50) && !force_randart)
         {
-            // The old generation code did not respect force_type here.
-            const int idx = find_okay_unrandart(OBJ_ARMOUR, force_type,
-                                                UNRANDSPEC_NORMAL);
-            if (idx != -1)
-            {
-                make_item_unrandart(item, idx);
+            if (_try_make_item_unrand(item, force_type))
                 return (true);
-            }
         }
 
         // The other 98% are normal randarts.
@@ -2103,14 +2082,6 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
         }
 
         return (true);
-    }
-
-    // If it isn't an artefact yet, try to make a special unrand artefact.
-    if (item_level > 6
-        && one_chance_in(12)
-        && x_chance_in_y(31 + item_level * 3, 3000))
-    {
-        return (_try_make_item_special_unrand(item, force_type, item_level));
     }
 
     return (false);
@@ -2952,25 +2923,15 @@ static void _generate_staff_item(item_def& item, int force_type, int item_level)
 static bool _try_make_jewellery_unrandart(item_def& item, int force_type,
                                           int item_level)
 {
-    bool rc = false;
-
     if (item_level > 2
-        && you.level_type != LEVEL_ABYSS
-        && you.level_type != LEVEL_PANDEMONIUM
         && one_chance_in(20)
         && x_chance_in_y(101 + item_level * 3, 2000))
     {
-        // The old generation code did not respect force_type here.
-        const int idx = find_okay_unrandart(OBJ_JEWELLERY, force_type,
-                                            UNRANDSPEC_NORMAL);
-        if (idx != -1)
-        {
-            make_item_unrandart(item, idx);
-            rc = true;
-        }
+        if (_try_make_item_unrand(item, force_type))
+            return (true);
     }
 
-    return (rc);
+    return (false);
 }
 
 static int _determine_ring_plus(int subtype)
@@ -3060,13 +3021,6 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
         && x_chance_in_y(101 + item_level * 3, 4000))
     {
         make_item_randart(item);
-    }
-    // If it isn't an artefact yet, try to make a special unrand artefact.
-    else if (item_level > 6
-             && one_chance_in(12)
-             && x_chance_in_y(31 + item_level * 3, 3000))
-    {
-        _try_make_item_special_unrand(item, force_type, item_level);
     }
     else if (item.sub_type == RING_HUNGER || item.sub_type == RING_TELEPORTATION
              || one_chance_in(50))
