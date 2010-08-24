@@ -183,6 +183,7 @@ struct monster_info : public monster_info_base
             return false;
         return mons_class_can_regenerate(type);
     }
+    size_type body_size() const;
 
 protected:
     std::string _core_name() const;

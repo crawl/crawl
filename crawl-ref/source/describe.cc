@@ -2932,6 +2932,21 @@ static std::string _monster_stat_description(const monster_info& mi)
     else if (monster_descriptor(mi.type, MDSC_REGENERATES))
         result << pronoun << " regenerates quickly.\n";
 
+    // Size
+    const char *sizes[NUM_SIZE_LEVELS] = {
+        "tiny",
+        "little",
+        "small",
+        NULL,     // don't display anything for 'medium'
+        "large",
+        "big",
+        "giant",
+        "huge",
+    };
+
+    if (sizes[mi.body_size()])
+        result << pronoun << " is " << sizes[mi.body_size()] << ".\n";
+
     return (result.str());
 }
 
