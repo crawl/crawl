@@ -936,7 +936,8 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
                                       int item_level, bool force_randart = false)
 {
     if (item.sub_type != WPN_CLUB && item_level > 2
-        && x_chance_in_y(101 + item_level * 3, 4000) || force_randart)
+          && x_chance_in_y(101 + item_level * 3, 4000)
+        || force_randart)
     {
         // Make a randart or unrandart.
 
