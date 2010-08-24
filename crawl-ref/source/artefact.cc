@@ -1629,8 +1629,7 @@ static unrandart_entry *_seekunrandart( const item_def &item )
     return get_unrand_entry(item.special);
 }
 
-int find_okay_unrandart(uint8_t aclass, uint8_t atype,
-                        unrand_special_type specialness, bool in_abyss)
+int find_okay_unrandart(uint8_t aclass, uint8_t atype, bool in_abyss)
 {
     int ret = -1;
 
@@ -1667,12 +1666,6 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype,
             continue;
         }
 
-        if (specialness != UNRANDSPEC_EITHER
-            && specialness != get_unrand_specialness(index))
-        {
-            continue;
-        }
-
         count++;
 
         if (one_chance_in(count))
@@ -1680,23 +1673,6 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype,
     }
 
     return (ret);
-}
-
-unrand_special_type get_unrand_specialness(int unrand_index)
-{
-    if (unrand_index < UNRAND_START || unrand_index > UNRAND_LAST)
-        return (UNRANDSPEC_NORMAL);
-
-    if (unranddata[unrand_index - UNRAND_START].flags & UNRAND_FLAG_SPECIAL)
-        return (UNRANDSPEC_SPECIAL);
-
-    return (UNRANDSPEC_NORMAL);
-}
-
-unrand_special_type get_unrand_specialness(const item_def &item)
-{
-    ASSERT(is_unrandom_artefact(item));
-    return get_unrand_specialness(item.special);
 }
 
 int get_unrandart_num( const char *name )

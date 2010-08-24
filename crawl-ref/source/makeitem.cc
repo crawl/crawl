@@ -924,7 +924,6 @@ static bool _try_make_item_unrand(item_def& item, int force_type)
     }
 
     int idx = find_okay_unrandart(item.base_type, force_type,
-                                  UNRANDSPEC_EITHER,
                                   you.level_type == LEVEL_ABYSS);
 
     if (idx != -1 && make_item_unrandart(item, idx))
