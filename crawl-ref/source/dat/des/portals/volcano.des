@@ -596,6 +596,81 @@ xxxxxxcc.2.ccxxxxxx
 xxxxxxxcccccxxxxxxx
 ENDMAP
 
+NAME:   vgs_dualism
+TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_rotate no_vmirror
+KFEAT:  B = altar_makhleb / altar_trog / altar_vehumet
+KFEAT:  C = altar_makhleb / altar_trog / altar_vehumet
+#       Place the secret door.
+NSUBST: X = 1:= / *:x
+#       Sets up the temple guardians.
+:       fiery_guardians(_G)
+#       Loot: 8 items.
+:       volcano_setup(_G, false, true)
+MAP
+xxxxxxxxx+xxxxxxxxx
+x...xxxx...xxxx...x
+x.B.xxx..<..xxx.C.x
+x...xx..xXx..xx...x
+xx.xx.1xXdXx1.xx.xx
+xx.x..xXefgXx..x.xx
+x....xXdexfgXx....x
+x....xXXXXXXXx....x
+x......1...1......x
+xxx......2......xxx
+xxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   vgs_hot_hot_hot
+TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_rotate no_vmirror
+KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
+#       Place the secret doors.
+NSUBST: X = 1:= / *:x
+NSUBST: Y = 1:= / *:x
+#       Sets up the temple guardians.
+:       fiery_guardians(_G)
+KMONS:  l = lava snake / lava fish w:20 / lava worm w:20 / nothing w:70
+KFEAT:  l = l
+#       Loot: 8 items.
+:       volcano_setup(_G, false, true)
+MAP
+xxxxxxxxx.xxxxxxxxx
+xxx..xxxx.xcccccccc
+xx.xx..x.xxc.l.ldlc
+x.xXXXx.xxccl1l.lec
+x.xXgXxxxxGc.l.l.lc
+xx.XXX..<...l2l.l.c
+xx.xx.xxxxGc.l.l.lc
+xx.xxx.xccccl1l.lfc
+x.xx..YYc....l.lelc
+xx..xxYgc._.l.ldlfc
+xxxxxxxxccccccccccc
+ENDMAP
+
+NAME:   vgs_many_chambers
+TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_rotate no_vmirror
+KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
+#       Place the secret doors.
+NSUBST: X = 1:= / *:x
+NSUBST: Y = 1:= / *:x
+#       Sets up the temple guardians.
+:       fiery_guardians(_G)
+MONS:   clay golem w:50 / molten gargoyle w:2
+#       Loot: 8 items, 10 gold.
+:       volcano_setup(_G, false, true)
+MAP
+xxxxxxxxx+xxxxxxxxx
+xx....xx...xx....xx
+x$...1.+.<.+.1...$x
+x$G..T.x...x.T..G$x
+x$.....xx+xx.....$x
+xx....xx...xx....xx
+xxxxXXxx121xxYYxxxx
+xxxxdefX._.Ydefxxxx
+xxx3g$$X...Y$$g3xxx
+xxxxxxxxx.xxxxxxxxx
+xxxxxxxxxxxxxxxxxxx
+ENDMAP
+
 ###############################################################################
 
 ###############################################################################
