@@ -338,7 +338,9 @@ static void _hell_spawn_random_monsters()
 void spawn_random_monsters()
 {
     if (crawl_state.game_is_arena() ||
-        (you.level_type == LEVEL_DUNGEON && crawl_state.game_is_sprint()))
+        (crawl_state.game_is_sprint() &&
+         you.level_type == LEVEL_DUNGEON &&
+         you.char_direction == GDT_DESCENDING))
         return;
 
 #ifdef DEBUG_MON_CREATION
