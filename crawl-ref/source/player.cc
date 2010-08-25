@@ -4949,7 +4949,7 @@ void dec_exhaust_player(int delay)
     }
 }
 
-bool haste_player(int turns)
+bool haste_player(int turns, bool rageext)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -4971,7 +4971,7 @@ bool haste_player(int turns)
         mpr("You feel yourself speed up.");
     else if (you.duration[DUR_HASTE] > threshold * BASELINE_DELAY)
         mpr("You already have as much speed as you can handle.");
-    else
+    else if (!rageext)
     {
         mpr("You feel as though your hastened speed will last longer.");
         contaminate_player(1, true); // always deliberate
