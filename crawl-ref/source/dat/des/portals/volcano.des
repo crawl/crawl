@@ -899,6 +899,50 @@ xxxxxxxxc1cxxxcKcxxxxxxxxxx
 xxxxxxxxcccxxxcccxxxxxxxxxx
 ENDMAP
 
+NAME:    vts_chambers
+TAGS:    volcano_tomb_subvault no_item_gen no_monster_gen no_rotate no_hmirror
+TAGS:    no_vmirror
+#        Traps and doors.
+NSUBST:  X = 1:= / *:c
+NSUBST:  Y = 1:= / *:c
+NSUBST:  t = 1:! / *:.
+KFEAT:   ! = alarm trap
+NSUBST:  r = 2:r / *:.
+NSUBST:  s = 2:s / *:.
+KFEAT:   r = bolt trap
+KFEAT:   s = axe trap
+#        The monsters. The patrolling tag seems to keep them from wandering
+#        around, opening the secret doors. It might also be keeping them from
+#        "answering" the alarm traps though.
+MONS:    patrolling mummy
+MONS:    human skeleton / elf skeleton / dwarf skeleton / merfolk skeleton / \
+         kenku skeleton
+MONS:    ogre skeleton / troll skeleton / draconian skeleton / naga skeleton / \
+         minotaur skeleton
+MONS:    patrolling menkaure / patrolling guardian mummy
+#        Loot: 21 gold, 10 items.
+:        volcano_setup(_G, false, true)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxcccccxxxxxxxxxxxxxxxxx
+xxxxxc...cxxxxxxxxxxxxxxxxx
+xxxxcc.<.cccxxxcccccccccxxx
+xxccc......ccccc..$X$$$cxxx
+cxc1.........3....$X$$$cxxx
+ccccc.c2.c.ccccc..$X$$$cxxx
+....+...2..cxxxcccccc=ccxxx
+ccccc.c2.c.ccccc..$Xssscxxx
+cxc1.........3....$Xssscxxx
+xxccc......ccccc..$Xssscxxx
+xxxxcc.cc.ccddeccYcccc=cxxx
+xxxxxc3cc3c1eeg+!.=4Yttcccx
+xxxccc.cc.cccccccYccctt=1cx
+xxxc...cc...crrrc..3c=ccccx
+xxxc...cc...crrr=.3.cffcxxx
+xxxc$$$cc$$$=rrrc3..=fgcxxx
+xxxcccccccccccccccccccccxxx
+ENDMAP
+
 ###############################################################################
 
 ###############################################################################
