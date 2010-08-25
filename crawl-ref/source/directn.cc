@@ -2888,8 +2888,6 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
     case DNGN_STONE_STAIRS_UP_I:
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
-        if (player_in_hell())
-            return ("gateway back to the Vestibule of Hell");
         return ("stone staircase leading up");
     case DNGN_ENTER_HELL:
         return ("gateway to Hell");

@@ -942,6 +942,19 @@ int dgn_count_disconnected_zones(bool choose_stairless,
                                       fill);
 }
 
+static void _fixup_hell_stairs()
+{
+    for (int i = 0; i < GXM; i++)
+        for (int j = 0; j < GYM; j++)
+        {
+            if (grd[i][j] >= DNGN_STONE_STAIRS_UP_I
+                && grd[i][j] <= DNGN_ESCAPE_HATCH_UP)
+            {
+                grd[i][j] = DNGN_ENTER_HELL;
+            }
+        }
+}
+
 static void _fixup_pandemonium_stairs()
 {
     for (int i = 0; i < GXM; i++)
@@ -2214,6 +2227,9 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
     // Translate stairs for pandemonium levels.
     if (level_type == LEVEL_PANDEMONIUM)
         _fixup_pandemonium_stairs();
+
+    if (player_in_hell())
+        _fixup_hell_stairs();
 }                               // end builder()
 
 
