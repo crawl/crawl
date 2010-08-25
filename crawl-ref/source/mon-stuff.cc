@@ -1436,7 +1436,7 @@ int monster_die(monsters *monster, killer_type killer,
 
             you.increase_duration(DUR_BERSERKER, bonus);
             you.increase_duration(DUR_MIGHT, bonus);
-            haste_player(bonus * 2);
+            haste_player(bonus * 2, true);
 
             mpr("You feel the power of Trog in you as your rage grows.",
                 MSGCH_GOD, GOD_TROG);
@@ -1447,7 +1447,7 @@ int monster_die(monsters *monster, killer_type killer,
 
             you.increase_duration(DUR_BERSERKER, bonus);
             you.increase_duration(DUR_MIGHT, bonus);
-            haste_player(bonus * 2);
+            haste_player(bonus * 2, true);
 
             mpr("Your amulet glows a violent red.");
         }

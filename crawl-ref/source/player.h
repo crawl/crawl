@@ -815,7 +815,7 @@ bool slow_player(int turns);
 void dec_slow_player(int delay);
 void dec_exhaust_player(int delay);
 
-bool haste_player(int turns);
+bool haste_player(int turns, bool rageext = false);
 void dec_haste_player(int delay);
 void levitate_player(int pow);
 
