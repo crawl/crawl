@@ -56,7 +56,7 @@ struct Branch
     int travel_shortcut;         // Which key to press for travel.
     bool any_upstair_exits;      // any upstair exits the branch (Hell branches)
     bool dangerous_bottom_level; // bottom level is more dangerous than normal
-    int ambient_noise;
+    int ambient_noise;           // affects noise loudness and player stealth
 };
 
 extern Branch branches[];
