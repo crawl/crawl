@@ -545,13 +545,6 @@ std::string get_god_likes(god_type which_god, bool verbose)
         likes.push_back(info);
         break;
 
-    case GOD_SHINING_ONE:
-        snprintf(info, INFO_SIZE, "you sacrifice unholy and evil items%s",
-                 verbose ? " (by dropping them on an altar and praying)" : "");
-
-        likes.push_back(info);
-        break;
-
     case GOD_BEOGH:
         snprintf(info, INFO_SIZE, "you bless dead orcs%s",
                  verbose ? " (by standing over their remains and <w>p</w>raying)" : "");
@@ -3083,7 +3076,7 @@ bool god_likes_items(god_type god)
 
     switch (god)
     {
-    case GOD_ZIN: case GOD_SHINING_ONE: case GOD_BEOGH: case GOD_NEMELEX_XOBEH:
+    case GOD_ZIN: case GOD_BEOGH: case GOD_NEMELEX_XOBEH:
         return (true);
 
     case GOD_NO_GOD: case NUM_GODS: case GOD_RANDOM: case GOD_NAMELESS:
@@ -3110,9 +3103,6 @@ bool god_likes_item(god_type god, const item_def& item)
     {
     case GOD_ZIN:
         return (item.base_type == OBJ_GOLD);
-
-    case GOD_SHINING_ONE:
-        return (is_unholy_item(item) || is_evil_item(item));
 
     case GOD_BEOGH:
         return (item.base_type == OBJ_CORPSES
