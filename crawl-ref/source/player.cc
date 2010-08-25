@@ -3354,14 +3354,19 @@ int check_stealth(void)
     // a personal silence spell would naturally be different, but this
     // silence radiates for a distance and prevents monster spellcasting,
     // which pretty much gives away the stealth game.
+    // this penalty is dependent on the actual amount of ambient noise
+    // in the level -doy
     if (you.duration[DUR_SILENCE])
-        stealth -= 50;
+        stealth -= 50 + current_level_ambient_noise();
 
     // Mutations.
     stealth += 25 * player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
     stealth += 40 * player_mutation_level(MUT_NIGHTSTALKER);
     if (player_mutation_level(MUT_TRANSLUCENT_SKIN) > 1)
         stealth += 20 * (player_mutation_level(MUT_TRANSLUCENT_SKIN) - 1);
+
+    // it's easier to be stealthy when there's a lot of background noise
+    stealth += 2 * current_level_ambient_noise();
 
     stealth = std::max(0, stealth);
 
