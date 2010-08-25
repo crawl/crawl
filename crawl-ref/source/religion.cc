@@ -2695,6 +2695,12 @@ void lose_piety(int pgn)
         int diffrank = piety_rank(you.piety) - piety_rank(old_piety);
         che_handle_change(CB_PIETY, diffrank);
     }
+
+    if (you.religion == GOD_SHINING_ONE)
+    {
+        // Piety change affects halo radius.
+        invalidate_agrid(true);
+    }
 }
 
 // Fedhas worshipers are on the hook for most plants and fungi
