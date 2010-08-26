@@ -16,6 +16,7 @@
 
 // Write the message window contents out.
 void display_message_window();
+void clear_message_window();
 
 void scroll_message_window(int n);
 

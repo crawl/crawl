@@ -44,13 +44,11 @@
 #include "libutil.h"
 #include "message.h"
 #include "mon-util.h"
-#include "newgame.h"
 #include "jobs.h"
 #include "options.h"
 #include "ouch.h"
 #include "place.h"
 #include "player.h"
-#include "player-stats.h"
 #include "religion.h"
 #include "shopping.h"
 #include "species.h"
@@ -465,13 +463,13 @@ kill_method_type str_to_kill_method(const std::string &s)
 
 scorefile_entry::scorefile_entry(int dam, int dsource, int dtype,
                                  const char *aux, bool death_cause_only,
-                                 const char *dsource_name)
+                                 const char *dsource_name, time_t dt)
 {
     reset();
 
     init_death_cause(dam, dsource, dtype, aux, dsource_name);
     if (!death_cause_only)
-        init();
+        init(dt);
 }
 
 scorefile_entry::scorefile_entry()
@@ -1109,7 +1107,7 @@ static int _award_modified_experience()
     return (result);
 }
 
-void scorefile_entry::init()
+void scorefile_entry::init(time_t dt)
 {
     // Score file entry version:
     //
@@ -1265,8 +1263,8 @@ void scorefile_entry::init()
     }
 
     birth_time = you.birth_time;     // start time of game
-    death_time = time( NULL );       // end time of game
-
+    death_time = (dt != 0 ? dt : time(NULL)); // end time of game
+        
     if (you.real_time != -1)
         real_time = you.real_time + long(death_time - you.start_time);
     else
@@ -1423,17 +1421,6 @@ std::string scorefile_entry::terse_beam_cause() const
 std::string scorefile_entry::terse_wild_magic() const
 {
     return terse_beam_cause();
-}
-
-std::string scorefile_entry::terse_trap() const
-{
-    std::string trap = !auxkilldata.empty()? auxkilldata + " trap"
-                                   : "trap";
-    if (trap.find("n ") == 0)
-        trap = trap.substr(2);
-    trim_string(trap);
-
-    return (trap);
 }
 
 void scorefile_entry::fixup_char_name()
@@ -1793,13 +1780,11 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
 
     case KILLED_BY_TRAP:
         if (terse)
-            desc += terse_trap();
+            desc += auxkilldata.c_str();
         else
         {
-            snprintf( scratch, sizeof(scratch),
-                      "Killed by triggering a%s%s trap",
-                      auxkilldata.empty() ? "" : " ",
-                      auxkilldata.c_str() );
+            snprintf(scratch, sizeof(scratch), "Killed by triggering %s",
+                     auxkilldata.c_str());
             desc += scratch;
         }
         needs_damage = true;
@@ -2365,7 +2350,8 @@ std::string xlog_fields::xlog_line() const
 
 void mark_milestone(const std::string &type,
                     const std::string &milestone,
-                    bool report_origin_level)
+                    bool report_origin_level,
+                    time_t t)
 {
 #ifdef DGL_MILESTONES
     static std::string lasttype, lastmilestone;

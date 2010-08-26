@@ -81,7 +81,7 @@ int dgn_map_add_transform(lua_State *ls,
 
 void clua_push_item(lua_State *ls, item_def *item);
 
-class monster_info;
+struct monster_info;
 void lua_push_moninf(lua_State *ls, monster_info *mi);
 
 #endif

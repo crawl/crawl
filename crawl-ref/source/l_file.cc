@@ -212,6 +212,7 @@ static const struct luaL_reg file_dlib[] =
     { "marshall",   file_marshall },
     { "marshall_meta", file_marshall_meta },
     { "unmarshall_meta", file_unmarshall_meta },
+    { "unmarshall_boolean", file_unmarshall_boolean },
     { "unmarshall_number", file_unmarshall_number },
     { "unmarshall_string", file_unmarshall_string },
     { "unmarshall_fn", file_unmarshall_fn },

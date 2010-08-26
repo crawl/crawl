@@ -271,52 +271,18 @@ bool monsters::can_drown() const
 
 size_type monsters::body_size(size_part_type /* psize */, bool /* base */) const
 {
-    const monsterentry *e = get_monster_data(type);
-    size_type ret = (e ? e->size : SIZE_MEDIUM);
-
-    // Slime creature size is increased by the number merged.
-    if (type == MONS_SLIME_CREATURE)
-    {
-        if (number == 2)
-            ret = SIZE_MEDIUM;
-        else if (number == 3)
-            ret = SIZE_LARGE;
-        else if (number == 4)
-            ret = SIZE_BIG;
-        else if (number == 5)
-            ret = SIZE_GIANT;
-    }
-
-    return (ret);
+    monster_info mi(this, MILEV_NAME);
+    return mi.body_size();
 }
 
 int monsters::body_weight(bool /*base*/) const
 {
-    int mclass = type;
+    int mc = mons_base_type(this);
 
-    switch (mclass)
-    {
-    case MONS_SPECTRAL_THING:
-    case MONS_SPECTRAL_WARRIOR:
-    case MONS_ELECTRIC_GOLEM:
-    case MONS_RAKSHASA_FAKE:
-    case MONS_MARA_FAKE:
+    if (mc == MONS_RAKSHASA_FAKE || mc == MONS_MARA_FAKE)
         return (0);
 
-    case MONS_ZOMBIE_SMALL:
-    case MONS_ZOMBIE_LARGE:
-    case MONS_SKELETON_SMALL:
-    case MONS_SKELETON_LARGE:
-    case MONS_SIMULACRUM_SMALL:
-    case MONS_SIMULACRUM_LARGE:
-        mclass = number;
-        break;
-
-    default:
-        break;
-    }
-
-    int weight = mons_weight(mclass);
+    int weight = mons_weight(mc);
 
     // weight == 0 in the monster entry indicates "no corpse".  Can't
     // use CE_NOCORPSE, because the corpse-effect field is used for
@@ -326,8 +292,12 @@ int monsters::body_weight(bool /*base*/) const
     {
         weight = actor::body_weight();
 
-        switch (mclass)
+        switch (mc)
         {
+        case MONS_IRON_IMP:
+            weight += 450;
+            break;
+
         case MONS_IRON_DEVIL:
             weight += 550;
             break;
@@ -368,23 +338,19 @@ int monsters::body_weight(bool /*base*/) const
             break;
         }
 
-        switch (mons_base_char(mclass))
+        switch (mons_base_char(mc))
         {
         case 'L':
             weight /= 2;
             break;
-
-        case 'p':
-            weight = 0;
-            break;
         }
     }
 
-    if (type == MONS_SKELETON_SMALL || type == MONS_SKELETON_LARGE)
+    if (mc == MONS_SKELETON_SMALL || mc == MONS_SKELETON_LARGE)
         weight /= 2;
 
     // Slime creature weight is multiplied by the number merged.
-    if (type == MONS_SLIME_CREATURE && number > 1)
+    if (mc == MONS_SLIME_CREATURE && number > 1)
         weight *= number;
 
     return (weight);
@@ -2078,20 +2044,22 @@ static std::string _invalid_monster_str(monster_type type)
     return (str);
 }
 
-static std::string _str_monam(const monsters& mon, description_level_type desc,
-                              bool force_seen)
+static std::string _mon_special_name(const monsters& mon, description_level_type desc, bool force_seen)
 {
+    if (desc == DESC_NONE)
+        return "";
+
     monster_type type = mon.type;
     if (!crawl_state.game_is_arena() && you.misled())
         type = mon.get_mislead_type();
+
+    const bool arena_submerged = crawl_state.game_is_arena() && !force_seen
+                                     && mon.submerged();
 
     if (type == MONS_NO_MONSTER)
         return ("DEAD MONSTER");
     else if (invalid_monster_type(type) && type != MONS_PROGRAM_BUG)
         return _invalid_monster_str(type);
-
-    const bool arena_submerged = crawl_state.game_is_arena() && !force_seen
-                                     && mon.submerged();
 
     // Handle non-visible case first.
     if (!force_seen && !mon.observable() && !arena_submerged)
@@ -2107,330 +2075,45 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
         }
     }
 
-    // Assumed visible from now on.
-
-    // Various special cases:
-    // mimics, dancing weapons, ghosts, Pan demons
-    if (desc != DESC_DBNAME && mons_is_unknown_mimic(&mon))
-        return (get_mimic_item(&mon).name(desc));
-
-    if (type == MONS_DANCING_WEAPON && mon.inv[MSLOT_WEAPON] != NON_ITEM)
-    {
-        unsigned long ignore_flags = ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES;
-        bool          use_inscrip  = true;
-
-        if (desc == DESC_BASENAME || desc == DESC_QUALNAME
-            || desc == DESC_DBNAME)
-        {
-            use_inscrip = false;
-        }
-
-        const item_def& item = mitm[mon.inv[MSLOT_WEAPON]];
-        return (item.name(desc, false, false, use_inscrip, false,
-                          ignore_flags));
-    }
-
     if (desc == DESC_DBNAME)
-        return (get_monster_data(type)->name);
-
-    if (type == MONS_PLAYER_GHOST)
-        return (apostrophise(mon.mname) + " ghost");
-    else if (type == MONS_PLAYER_ILLUSION)
-        return (apostrophise(mon.mname) + " illusion");
-
-    // Some monsters might want the name of a different creature.
-    monster_type nametype = type;
-
-    // Tack on other prefixes.
-    switch (type)
     {
-    case MONS_ZOMBIE_SMALL:     case MONS_ZOMBIE_LARGE:
-    case MONS_SKELETON_SMALL:   case MONS_SKELETON_LARGE:
-    case MONS_SIMULACRUM_SMALL: case MONS_SIMULACRUM_LARGE:
-    case MONS_SPECTRAL_THING:
-        nametype = mon.base_monster;
-        break;
-
-    default:
-        break;
+        monster_info mi(&mon, MILEV_NAME);
+        return mi.db_name();
     }
 
-    // If the monster has an explicit name, return that, handling it like
-    // a unique's name.  Special handling for named hydras.
-    if (desc != DESC_BASENAME && !mon.mname.empty()
-        && mons_genus(nametype) != MONS_HYDRA
-        && !testbits(mon.flags, MF_NAME_DESCRIPTOR))
-    {
-        return (mon.mname);
-    }
-
-    std::string result;
-
-    // Start building the name string.
-
-    // Start with the prefix.
-    // (Uniques don't get this, because their names are proper nouns.)
-    if (!mons_is_unique(nametype)
-        && ((mon.mname.empty() || testbits(mon.flags, MF_NAME_DESCRIPTOR))
-            || mons_genus(nametype) == MONS_HYDRA))
-    {
-        const bool use_your = mon.friendly();
-        switch (desc)
-        {
-        case DESC_CAP_THE:
-            result = (use_your ? "Your " : "The ");
-            break;
-        case DESC_NOCAP_THE:
-            result = (use_your ? "your " : "the ");
-            break;
-        case DESC_CAP_A:
-            if (mon.mname.empty() || (testbits(mon.flags, MF_NAME_DESCRIPTOR)
-                && !testbits(mon.flags, MF_NAME_DEFINITE)))
-                result = "A ";
-            else
-                result = "The ";
-            break;
-        case DESC_NOCAP_A:
-            if (mon.mname.empty() || (testbits(mon.flags, MF_NAME_DESCRIPTOR)
-                && !testbits(mon.flags, MF_NAME_DEFINITE)))
-                result = "a ";
-            else
-                result = "the ";
-            break;
-        case DESC_PLAIN:
-        default:
-            break;
-        }
-    }
-
-    if (arena_submerged)
-        result += "submerged ";
-
-    // Tack on other prefixes.
-    switch (type)
-    {
-    case MONS_UGLY_THING:
-    case MONS_VERY_UGLY_THING:
-        result += ugly_thing_colour_name(&mon) + " ";
-        break;
-
-    case MONS_SPECTRAL_THING:
-        result += "spectral ";
-        break;
-
-    case MONS_DRACONIAN_CALLER:
-    case MONS_DRACONIAN_MONK:
-    case MONS_DRACONIAN_ZEALOT:
-    case MONS_DRACONIAN_SHIFTER:
-    case MONS_DRACONIAN_ANNIHILATOR:
-    case MONS_DRACONIAN_KNIGHT:
-    case MONS_DRACONIAN_SCORCHER:
-        if (mon.base_monster != MONS_NO_MONSTER) // database search
-            result += draconian_colour_name(mon.base_monster) + " ";
-        break;
-
-    default:
-        break;
-    }
-
-    if (type == MONS_SLIME_CREATURE && desc != DESC_DBNAME)
-    {
-        ASSERT(mon.number <= 5);
-        const char* cardinals[] = {"buggy ", "", "large ", "very large ",
-                                   "enormous ", "titanic "};
-        result += cardinals[mon.number];
-    }
-
-    if (type == MONS_BALLISTOMYCETE && desc != DESC_DBNAME)
-        result += mon.number ? "active " : "";
-
-    // Done here to cover cases of undead versions of hydras.
-    if (mons_genus(nametype) == MONS_HYDRA
-        && mon.number > 0 && desc != DESC_DBNAME)
-    {
-        if (nametype == MONS_LERNAEAN_HYDRA)
-            result += "the ";
-
-        if (mon.number < 11)
-        {
-            const char* cardinals[] = {"one", "two", "three", "four", "five",
-                                       "six", "seven", "eight", "nine", "ten"};
-            result += cardinals[mon.number - 1];
-        }
-        else
-            result += make_stringf("%d", mon.number);
-
-        result += "-headed ";
-    }
-
-    if (!mon.mname.empty())
-        result += mon.mname;
-    else if (nametype == MONS_LERNAEAN_HYDRA)
-        result += "Lernaean hydra";
-    else
-    {
-        // Add the base name.
-        if (invalid_monster_type(nametype) && nametype != MONS_PROGRAM_BUG)
-            result += _invalid_monster_str(nametype);
-        else
-            result += get_monster_data(nametype)->name;
-    }
-
-    // Add suffixes.
-    switch (type)
-    {
-    case MONS_ZOMBIE_SMALL:
-    case MONS_ZOMBIE_LARGE:
-        result += " zombie";
-        break;
-    case MONS_SKELETON_SMALL:
-    case MONS_SKELETON_LARGE:
-        result += " skeleton";
-        break;
-    case MONS_SIMULACRUM_SMALL:
-    case MONS_SIMULACRUM_LARGE:
-        result += " simulacrum";
-        break;
-    default:
-        break;
-    }
-
-    // Vowel fix: Change 'a orc' to 'an orc'.
-    if (result.length() >= 3
-        && (result[0] == 'a' || result[0] == 'A')
-        && result[1] == ' '
-        && is_vowel(result[2])
-        // XXX: Hack
-        && !starts_with(&result[2], "one-"))
-    {
-        result.insert(1, "n");
-    }
-
-    if (mons_is_unique(type) && starts_with(result, "the "))
-    {
-        switch (desc)
-        {
-        case DESC_CAP_THE:
-        case DESC_CAP_A:
-            result = upcase_first(result);
-            break;
-
-        default:
-            break;
-        }
-    }
-
-    if ((mon.flags & MF_KNOWN_MIMIC) && mon.is_shapeshifter())
-    {
-        // If momentarily in original form, don't display "shaped
-        // shifter".
-        if (mons_genus(type) != MONS_SHAPESHIFTER)
-            result += " shaped shifter";
-    }
-
-    // All done.
-    return (result);
+    return "";
 }
 
 std::string monsters::name(description_level_type desc, bool force_vis) const
 {
-    if (desc == DESC_NONE)
-        return ("");
+    std::string s = _mon_special_name(*this, desc, force_vis);
+    if (!s.empty() || desc == DESC_NONE)
+        return s;
 
-    const bool possessive =
-        (desc == DESC_NOCAP_YOUR || desc == DESC_NOCAP_ITS);
-
-    if (possessive)
-        desc = DESC_NOCAP_THE;
-
-    std::string monnam;
-    if ((flags & MF_NAME_MASK) && (force_vis || observable())
-        || crawl_state.game_is_arena() && mons_class_is_zombified(type))
-    {
-        monnam = full_name(desc);
-    }
-    else
-        monnam = _str_monam(*this, desc, force_vis);
-
-    return (possessive ? apostrophise(monnam) : monnam);
+    monster_info mi(this, MILEV_NAME);
+    return mi.proper_name(desc);
 }
 
 std::string monsters::base_name(description_level_type desc, bool force_vis)
     const
 {
-    if (desc == DESC_NONE)
-        return ("");
+    std::string s = _mon_special_name(*this, desc, force_vis);
+    if (!s.empty() || desc == DESC_NONE)
+        return s;
 
-    if (ghost.get() || mons_is_unique(type))
-        return (name(desc, force_vis));
-    else
-    {
-        unwind_var<std::string> tmname(
-            const_cast<monsters*>(this)->mname, "");
-        return (name(desc, force_vis));
-    }
+    monster_info mi(this, MILEV_NAME);
+    return mi.common_name(desc);
 }
 
 std::string monsters::full_name(description_level_type desc,
                                 bool use_comma) const
 {
-    if (desc == DESC_NONE)
-        return ("");
+    std::string s = _mon_special_name(*this, desc, true);
+    if (!s.empty() || desc == DESC_NONE)
+        return s;
 
-    std::string title = _str_monam(*this, desc, true);
-
-    const unsigned long flag = flags & MF_NAME_MASK;
-
-    if (flag == MF_NAME_REPLACE && !testbits(flags, MF_NAME_DESCRIPTOR))
-    {
-        switch(desc)
-        {
-        case DESC_CAP_THE:
-        case DESC_CAP_A:
-        case DESC_CAP_YOUR:
-            title = uppercase_first(title);
-            break;
-
-        default:
-            break;
-        }
-    }
-
-    int _type = mons_is_zombified(this) ? base_monster : type;
-    if (!crawl_state.game_is_arena() && you.misled())
-        _type = get_mislead_type();
-
-    if (mons_genus(_type) == MONS_HYDRA && flag == 0)
-        return (title);
-
-    if (has_base_name())
-    {
-        if (flag == MF_NAME_SUFFIX)
-        {
-            title  = base_name(desc, true);
-            title += " ";
-            title += mname;
-        }
-        else if (flag == MF_NAME_ADJECTIVE)
-        {
-            title += " ";
-            title += base_name(DESC_PLAIN, true);
-        }
-        else if (flag == MF_NAME_REPLACE)
-            ;
-        else
-        {
-            if (use_comma)
-                title += ",";
-            title += " ";
-            title += base_name(DESC_NOCAP_THE, true);
-        }
-    }
-
-    if (flag == MF_NAME_ADJECTIVE)
-        title = apply_description(desc, title);
-
-    return (title);
+    monster_info mi(this, MILEV_NAME);
+    return mi.full_name(desc);
 }
 
 std::string monsters::pronoun(pronoun_type pro, bool force_visible) const
@@ -2486,7 +2169,7 @@ std::string monsters::hand_name(bool plural, bool *can_plural) const
     case MON_SHAPE_QUADRUPED_TAILLESS:
     case MON_SHAPE_QUADRUPED_WINGED:
     case MON_SHAPE_ARACHNID:
-        if (type == MONS_SCORPION || rand && one_chance_in(4))
+        if (mons_genus(type) == MONS_SCORPION || rand && one_chance_in(4))
             str = "pincer";
         else
         {
@@ -3253,7 +2936,7 @@ bool monsters::is_unclean() const
     return (false);
 }
 
-bool monsters::is_chaotic() const
+bool monsters::is_known_chaotic() const
 {
     if (type == MONS_UGLY_THING
         || type == MONS_VERY_UGLY_THING
@@ -3265,7 +2948,7 @@ bool monsters::is_chaotic() const
         return (true);
     }
 
-    if (is_shapeshifter())
+    if (is_shapeshifter() && (flags & MF_KNOWN_MIMIC))
         return (true);
 
     // Knowing chaotic spells is not enough to make you "essentially"
@@ -3284,9 +2967,21 @@ bool monsters::is_chaotic() const
     return (false);
 }
 
+bool monsters::is_chaotic() const
+{
+    return is_shapeshifter() || is_known_chaotic();
+}
+
 bool monsters::is_insubstantial() const
 {
     return (mons_class_flag(type, M_INSUBSTANTIAL));
+}
+
+int monsters::res_hellfire() const
+{
+    int res = get_mons_resists(this).hellfire;
+
+    return res;
 }
 
 int monsters::res_fire() const
@@ -3907,7 +3602,7 @@ void monsters::dancing_weapon_init()
     colour          = ghost->colour;
 }
 
-void monsters::uglything_mutate(unsigned char force_colour)
+void monsters::uglything_mutate(uint8_t force_colour)
 {
     ghost->init_ugly_thing(type == MONS_VERY_UGLY_THING, true, force_colour);
     uglything_init(true);
@@ -4518,7 +4213,8 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             // This should only happen because of fleeing sanctuary
             snprintf(info, INFO_SIZE, " stops retreating.");
         }
-        else if (type != MONS_KRAKEN_TENTACLE)
+        else if (type != MONS_KRAKEN_TENTACLE
+                 && type != MONS_KRAKEN_CONNECTOR)
         {
             snprintf(info, INFO_SIZE, " seems to regain %s courage.",
                      pronoun(PRONOUN_NOCAP_POSSESSIVE, true).c_str());
@@ -4699,6 +4395,12 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             forest_message(pos(), "The forest calms down.");
         break;
 
+    case ENCH_BLEED:
+        if (!quiet)
+            simple_monster_message(this, " is no longer bleeding.");
+        break;
+
+
     default:
         break;
     }
@@ -4786,7 +4488,8 @@ void monsters::timeout_enchantments(int levels)
         case ENCH_SICK:  case ENCH_SLEEPY: case ENCH_PARALYSIS:
         case ENCH_PETRIFYING: case ENCH_PETRIFIED: case ENCH_SWIFT:
         case ENCH_BATTLE_FRENZY: case ENCH_TEMP_PACIF: case ENCH_SILENCE:
-        case ENCH_LOWERED_MR: case ENCH_SOUL_RIPE:
+        case ENCH_LOWERED_MR: case ENCH_SOUL_RIPE: case ENCH_BLEED:
+        case ENCH_ANTIMAGIC:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -4953,6 +4656,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
     case ENCH_LOWERED_MR:
     case ENCH_SOUL_RIPE:
     case ENCH_TIDE:
+    case ENCH_ANTIMAGIC:
         decay_enchantment(me);
         break;
 
@@ -5318,7 +5022,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
     {
         // Reduce the timer, if that means we lose the enchantment then
         // spawn a spore and re-add the enchantment
-        if(decay_enchantment(me))
+        if (decay_enchantment(me))
         {
             monster_type mtype = type;
             bolt beam;
@@ -5378,6 +5082,24 @@ void monsters::apply_enchantment(const mon_enchant &me)
         decay_enchantment(me);
         break;
 
+
+    case ENCH_BLEED:
+    {
+        // 3, 6, 9% of current hp
+        int dam = random2((1 + hit_points)*(me.degree * 3)/100);
+
+        if (dam < hit_points)
+        {
+            hurt(NULL, dam);
+
+            dprf("hit_points: %d ; bleed damage: %d ; degree: %d",
+                 hit_points, dam, me.degree);
+        }
+
+        decay_enchantment(me, true);
+        break;
+    }
+
     default:
         break;
     }
@@ -5426,6 +5148,9 @@ bool monsters::is_summoned(int* duration, int* summon_type) const
     if (summon_type != NULL)
         *summon_type = summ.degree;
 
+    if (mons_is_conjured(type))
+        return (false);
+
     switch (summ.degree)
     {
     // Temporarily dancing weapons are really there.
@@ -5435,8 +5160,7 @@ bool monsters::is_summoned(int* duration, int* summon_type) const
     case SPELL_ANIMATE_DEAD:
     case SPELL_ANIMATE_SKELETON:
 
-    // Fire vortices are made from real fire.
-    case SPELL_FIRE_STORM:
+    // Conjured stuff (fire vortices, ball lightning, IOOD) is handled above.
 
     // Clones aren't really summoned (though their equipment might be).
     case MON_SUMM_CLONE:
@@ -5498,6 +5222,18 @@ bool monsters::sicken(int amount)
     }
 
     add_ench(mon_enchant(ENCH_SICK, 0, KC_OTHER, amount * 10));
+
+    return (true);
+}
+
+bool monsters::bleed(int amount, int degree)
+{
+    if (!has_ench(ENCH_BLEED) && you.can_see(this))
+    {
+        mprf("%s begins to bleed from its wounds!", name(DESC_CAP_THE).c_str());
+    }
+
+    add_ench(mon_enchant(ENCH_BLEED, degree, KC_OTHER, amount * 10));
 
     return (true);
 }
@@ -5571,7 +5307,8 @@ int monsters::foe_distance() const
 
 bool monsters::can_go_berserk() const
 {
-    if (holiness() != MH_NATURAL || type == MONS_KRAKEN_TENTACLE)
+    if (holiness() != MH_NATURAL || type == MONS_KRAKEN_TENTACLE
+        || type == MONS_KRAKEN_CONNECTOR)
         return (false);
 
     if (mons_intel(this) == I_PLANT)
@@ -6219,6 +5956,30 @@ void monsters::react_to_damage(const actor *oppressor, int damage,
             }
         }
     }
+    else if (type == MONS_KRAKEN_CONNECTOR)
+    {
+        if (!invalid_monster_index(number)
+            && mons_base_type(&menv[number]) == MONS_KRAKEN_TENTACLE)
+        {
+
+            // If we aare going to die, monster_die hook will handle
+            // purging the tentacle.
+            if (hit_points < menv[number].hit_points
+                && this->hit_points > 0)
+            {
+                int pass_damage = menv[number].hit_points -  hit_points;
+                menv[number].hurt(oppressor, pass_damage, flavour);
+
+                // We could be removed, undo this or certain post-hit
+                // effects will cry.
+                if (invalid_monster(this))
+                {
+                    type = MONS_KRAKEN_CONNECTOR;
+                    hit_points = -1;
+                }
+            }
+        }
+    }
     else if (type == MONS_BUSH && flavour == BEAM_FIRE
              && damage>8 && x_chance_in_y(damage, 20))
     {
@@ -6235,7 +5996,7 @@ void monsters::react_to_damage(const actor *oppressor, int damage,
             int old_hp                = hit_points;
             unsigned long old_flags   = flags;
             mon_enchant_list old_ench = enchantments;
-            char old_ench_countdown   = ench_countdown;
+            int8_t old_ench_countdown   = ench_countdown;
 
             if (!fly_died)
                 monster_drop_ething(this, mons_aligned(oppressor, &you));
@@ -6299,7 +6060,8 @@ static const char *enchant_names[] =
     "sleepy", "held", "battle_frenzy", "temp_pacif", "petrifying",
     "petrified", "lowered_mr", "soul_ripe", "slowly_dying", "eat_items",
     "aquatic_land", "spore_production", "slouch", "swift", "tide",
-    "insane", "silenced", "awaken_forest", "exploding", "buggy",
+    "insane", "silenced", "awaken_forest", "exploding", "bleeding",
+    "antimagic", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -6506,3 +6268,4 @@ void mon_enchant::set_duration(const monsters *mons, const mon_enchant *added)
     if (duration > maxduration)
         maxduration = duration;
 }
+

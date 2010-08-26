@@ -6,11 +6,16 @@
 
 #include "AppHdr.h"
 
+#include "xom.h"
+
 #include <algorithm>
 
+#include "acquire.h"
+#include "areas.h"
 #include "artefact.h"
 #include "beam.h"
 #include "branch.h"
+#include "coord.h"
 #include "coordit.h"
 #include "database.h"
 #ifdef WIZARD
@@ -20,47 +25,45 @@
 #include "directn.h"
 #include "effects.h"
 #include "env.h"
-#include "map_knowledge.h"
 #include "feature.h"
 #include "goditem.h"
 #include "it_use2.h"
+#include "item_use.h" // for safe_to_remove_or_wear()
 #include "itemprop.h"
 #include "items.h"
 #include "kills.h"
 #include "libutil.h"
 #include "los.h"
 #include "makeitem.h"
+#include "map_knowledge.h"
 #include "message.h"
+#include "mgen_data.h"
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-iter.h"
-#include "mon-util.h"
 #include "mon-place.h"
-#include "mgen_data.h"
-#include "coord.h"
 #include "mon-stuff.h"
+#include "mon-util.h"
 #include "mutation.h"
 #include "notes.h"
 #include "options.h"
 #include "ouch.h"
-#include "item_use.h" // for safe_to_remove_or_wear()
 #include "output.h"   // for the monster list
 #include "player.h"
 #include "player-equip.h"
 #include "player-stats.h"
 #include "religion.h"
 #include "shout.h"
-#include "spells2.h"
-#include "spells3.h"
 #include "spl-book.h"
 #include "spl-cast.h"
-#include "spl-mis.h"
+#include "spl-miscast.h"
+#include "spl-summoning.h"
+#include "spl-transloc.h"
 #include "spl-util.h"
 #include "stairs.h"
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
-#include "areas.h"
 #include "teleport.h"
 #include "terrain.h"
 #include "transform.h"
@@ -68,7 +71,6 @@
 #include "travel.h"
 #include "view.h"
 #include "viewchar.h"
-#include "xom.h"
 
 #ifdef DEBUG_XOM
 #    define DEBUG_RELIGION
@@ -392,7 +394,7 @@ static int _exploration_estimate(bool seen_only = false, bool debug = false)
         tries++;
 
         coord_def pos = random_in_bounds();
-        if (!seen_only && is_terrain_known(pos) || is_terrain_seen(pos))
+        if (!seen_only && env.map_knowledge(pos).known() || env.map_knowledge(pos).seen())
         {
             seen++;
             total++;
@@ -3666,8 +3668,8 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
 }
 
 static void _handle_accidental_death(const int orig_hp,
-    const FixedVector<char, NUM_STATS> orig_stat_loss,
-    const FixedVector<unsigned char, NUM_MUTATIONS> &orig_mutation)
+    const FixedVector<int8_t, NUM_STATS> orig_stat_loss,
+    const FixedVector<uint8_t, NUM_MUTATIONS> &orig_mutation)
 {
     // Did ouch() return early because the player died from the Xom
     // effect, even though neither is the player under penance nor is
@@ -3855,9 +3857,9 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
 #endif
 
     const int  orig_hp       = you.hp;
-    const FixedVector<char, NUM_STATS> orig_stat_loss = you.stat_loss;
+    const FixedVector<int8_t, NUM_STATS> orig_stat_loss = you.stat_loss;
 
-    const FixedVector<unsigned char, NUM_MUTATIONS> orig_mutation
+    const FixedVector<uint8_t, NUM_MUTATIONS> orig_mutation
         = you.mutation;
 
 #ifdef NOTE_DEBUG_XOM
@@ -4203,7 +4205,7 @@ bool xom_saves_your_life(const int dam, const int death_source,
         stat_type s = static_cast<stat_type>(i);
         while (you.max_stat(s) < 1)
             you.base_stats[s]++;
-        you.stat_loss[s] = std::min<char>(you.stat_loss[s], you.max_stat(s) - 1);
+        you.stat_loss[s] = std::min<int8_t>(you.stat_loss[s], you.max_stat(s) - 1);
     }
 
     god_speaks(GOD_XOM, "Xom revives you!");

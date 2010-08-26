@@ -7,6 +7,7 @@
 
 #include "shout.h"
 
+#include "branch.h"
 #include "cluautil.h"
 #include "coord.h"
 #include "database.h"
@@ -393,6 +394,15 @@ bool noisy(int loudness, const coord_def& where, const char *msg, int who,
            bool mermaid)
 {
     bool ret = false;
+
+    // high ambient noise makes sounds harder to hear
+    int ambient = current_level_ambient_noise();
+    if (ambient < 0) {
+        loudness += random2avg(abs(ambient), 3);
+    }
+    else {
+        loudness -= random2avg(abs(ambient), 3);
+    }
 
     if (loudness <= 0)
         return (false);

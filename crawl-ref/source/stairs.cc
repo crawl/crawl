@@ -26,8 +26,8 @@
 #include "output.h"
 #include "place.h"
 #include "random.h"
-#include "spells1.h"
-#include "spells3.h"
+#include "spl-clouds.h"
+#include "spl-transloc.h"
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
@@ -499,8 +499,10 @@ void up_stairs(dungeon_feature_type force_stair,
     // Up and down both work for portals.
     if (feat_is_bidirectional_portal(stair_find))
     {
-        down_stairs(force_stair, entry_cause);
-        return;
+        if (!(stair_find == DNGN_ENTER_HELL && player_in_hell())) {
+            down_stairs(force_stair, entry_cause);
+            return;
+        }
     }
     // Probably still need this check here (teleportation) -- bwr
     else if (feat_stair_direction(stair_find) != CMD_GO_UPSTAIRS)
@@ -675,8 +677,8 @@ void up_stairs(dungeon_feature_type force_stair,
             xom_is_stimulated(255, "Xom snickers loudly.", true);
     }
 
-    if (you.skills[SK_TRANSLOCATIONS] > 0 && !allow_control_teleport( true ))
-        mpr( "You sense a powerful magical force warping space.", MSGCH_WARN );
+    if (!allow_control_teleport(true))
+        mpr("You sense a powerful magical force warping space.", MSGCH_WARN);
 
     if (collect_travel_data)
     {
@@ -853,7 +855,10 @@ void down_stairs(dungeon_feature_type force_stair,
     // Up and down both work for portals.
     if (feat_is_bidirectional_portal(stair_find))
     {
-        ;
+        if (stair_find == DNGN_ENTER_HELL && player_in_hell()) {
+            up_stairs(force_stair, entry_cause);
+            return;
+        }
     }
     // Probably still need this check here (teleportation) -- bwr
     else if (feat_stair_direction(stair_find) != CMD_GO_DOWNSTAIRS && !shaft)
@@ -914,7 +919,7 @@ void down_stairs(dungeon_feature_type force_stair,
         if (!is_valid_shaft_level())
         {
             if (known_trap)
-                mpr("The shaft disappears is a puff of logic!");
+                mpr("The shaft disappears in a puff of logic!");
             _maybe_destroy_trap(you.pos());
             return;
         }
@@ -1249,10 +1254,6 @@ void down_stairs(dungeon_feature_type force_stair,
         }
     }
 
-    unsigned char pc = 0;
-    unsigned char pt = random2avg(28, 3);
-
-
     switch (you.level_type)
     {
     case LEVEL_ABYSS:
@@ -1264,7 +1265,7 @@ void down_stairs(dungeon_feature_type force_stair,
     case LEVEL_PANDEMONIUM:
         init_pandemonium();
 
-        for (pc = 0; pc < pt; pc++)
+        for (int pc = random2avg(28, 3); pc > 0; pc--)
             pandemonium_mons();
         break;
 
@@ -1281,8 +1282,8 @@ void down_stairs(dungeon_feature_type force_stair,
     // Clear list of beholding monsters.
     you.clear_beholders();
 
-    if (you.skills[SK_TRANSLOCATIONS] > 0 && !allow_control_teleport( true ))
-        mpr( "You sense a powerful magical force warping space.", MSGCH_WARN );
+    if (!allow_control_teleport(true))
+        mpr("You sense a powerful magical force warping space.", MSGCH_WARN);
 
     trackers_init_new_level(true);
 

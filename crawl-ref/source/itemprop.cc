@@ -21,7 +21,6 @@
 #include "invent.h"
 #include "items.h"
 #include "itemprop.h"
-#include "macro.h"
 #include "mon-util.h"
 #include "mon-stuff.h"
 #include "notes.h"
@@ -413,8 +412,8 @@ static food_def Food_prop[NUM_FOODS] =
     { FOOD_BEEF_JERKY,   "beef jerky",    800,   100,  -250,  20, 1, FFL_NONE },
 
     { FOOD_BREAD_RATION, "bread ration", 4400, -1500,   750,  80, 4, FFL_NONE },
-    { FOOD_SNOZZCUMBER,  "snozzcumber",  1500,  -500,   500,  50, 1, FFL_NONE },
 
+    { FOOD_SNOZZCUMBER,  "snozzcumber",  1500,  -500,   500,  50, 1, FFL_FRUIT},
     { FOOD_ORANGE,       "orange",       1000,  -350,   400,  20, 1, FFL_FRUIT},
     { FOOD_BANANA,       "banana",       1000,  -350,   400,  20, 1, FFL_FRUIT},
     { FOOD_LEMON,        "lemon",        1000,  -350,   400,  20, 1, FFL_FRUIT},
@@ -432,6 +431,7 @@ static food_def Food_prop[NUM_FOODS] =
     { FOOD_HONEYCOMB,    "honeycomb",    2000,     0,     0,  40, 1, FFL_NONE },
     { FOOD_PIZZA,        "pizza",        1500,     0,     0,  40, 1, FFL_NONE },
     { FOOD_CHEESE,       "cheese",       1200,     0,     0,  40, 1, FFL_NONE },
+    { FOOD_AMBROSIA,     "ambrosia",     2500,     0,     0,  40, 1, FFL_NONE }
 };
 
 // Must call this functions early on so that the above tables can
@@ -442,7 +442,7 @@ void init_properties()
     COMPILE_CHECK(NUM_ARMOURS  == 37, c1);
     COMPILE_CHECK(NUM_WEAPONS  == 56, c2);
     COMPILE_CHECK(NUM_MISSILES ==  9, c3);
-    COMPILE_CHECK(NUM_FOODS    == 22, c4);
+    COMPILE_CHECK(NUM_FOODS    == 23, c4);
 
     int i;
 
@@ -537,10 +537,14 @@ void do_curse_item( item_def &item, bool quiet )
 
 void do_uncurse_item( item_def &item )
 {
-    if (in_inventory(item) && you.equip[EQ_WEAPON] == item.link)
+    if (in_inventory(item))
     {
-        // Redraw the weapon.
-        you.wield_change = true;
+        if (you.equip[EQ_WEAPON] == item.link)
+        {
+            // Redraw the weapon.
+            you.wield_change = true;
+        }
+        item.flags |= ISFLAG_KNOW_CURSE;
     }
     item.flags &= (~ISFLAG_CURSED);
     item.flags &= (~ISFLAG_SEEN_CURSED);
@@ -2576,7 +2580,7 @@ std::string food_type_name (int sub_type)
     return (Food_prop[Food_index[sub_type]].name);
 }
 
-const char* weapon_base_name(unsigned char subtype)
+const char* weapon_base_name(uint8_t subtype)
 {
     return Weapon_prop[Weapon_index[subtype]].name;
 }

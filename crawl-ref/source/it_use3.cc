@@ -43,10 +43,10 @@
 #include "godconduct.h"
 #include "skills.h"
 #include "skills2.h"
-#include "spells1.h"
-#include "spells2.h"
 #include "spl-book.h"
 #include "spl-cast.h"
+#include "spl-clouds.h"
+#include "spl-summoning.h"
 #include "state.h"
 #include "stuff.h"
 #include "areas.h"
@@ -437,11 +437,11 @@ static bool _ball_of_seeing(void)
 
     if (use < 2)
     {
-        lose_stat( STAT_INT, 1, false, "using a ball of seeing");
+        lose_stat(STAT_INT, 1, false, "using a ball of seeing");
     }
     else if (use < 5 && enough_mp(1, true))
     {
-        mpr("You feel power drain from you!");
+        mpr("You feel your power drain away!");
         set_mp(0, false);
         // if you're out of mana, the switch chain falls through to confusion
     }
@@ -713,16 +713,17 @@ static bool _ball_of_energy(void)
 
     if (use < 2)
     {
-        lose_stat(STAT_INT, 1, false, "using a ball of energy");
+        const int loss = roll_dice(1, 2 * you.max_intel() / 3);
+        lose_stat(STAT_INT, loss, false, "using a ball of energy");
     }
     else if (use < 4 && enough_mp(1, true))
     {
-        mpr( "You feel your power drain away!" );
-        set_mp( 0, false );
+        mpr("You feel your power drain away!");
+        set_mp(0, false);
     }
     else if (use < 6)
     {
-        confuse_player( 10 + random2(10), false );
+        confuse_player(10 + random2(10), false);
     }
     else
     {
@@ -731,13 +732,13 @@ static bool _ball_of_energy(void)
         if (random2avg(77 - you.skills[SK_EVOCATIONS] * 2, 4) > proportional
             || one_chance_in(25))
         {
-            mpr( "You feel your power drain away!" );
-            set_mp( 0, false );
+            mpr("You feel your power drain away!");
+            set_mp(0, false);
         }
         else
         {
-            mpr( "You are suffused with power!" );
-            inc_mp( 6 + roll_dice( 2, you.skills[SK_EVOCATIONS] ), false );
+            mpr("You are suffused with power!");
+            inc_mp(6 + roll_dice(2, you.skills[SK_EVOCATIONS]), false);
 
             ret = true;
         }

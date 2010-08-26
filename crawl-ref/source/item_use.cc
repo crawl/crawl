@@ -17,6 +17,7 @@
 #include "externs.h"
 
 #include "abl-show.h"
+#include "acquire.h"
 #include "artefact.h"
 #include "beam.h"
 #include "cio.h"
@@ -36,14 +37,12 @@
 #include "food.h"
 #include "godabil.h"
 #include "goditem.h"
-#include "godpassive.h"
 #include "invent.h"
 #include "it_use2.h"
 #include "it_use3.h"
 #include "items.h"
 #include "itemname.h"
 #include "itemprop.h"
-#include "los.h"
 #include "macro.h"
 #include "message.h"
 #include "misc.h"
@@ -60,20 +59,20 @@
 #include "ouch.h"
 #include "player.h"
 #include "player-equip.h"
-#include "player-stats.h"
 #include "quiver.h"
 #include "religion.h"
 #include "godconduct.h"
 #include "shopping.h"
 #include "skills.h"
 #include "skills2.h"
-#include "spells1.h"
-#include "spells2.h"
-#include "spells3.h"
-#include "spells4.h"
 #include "spl-book.h"
 #include "spl-cast.h"
-#include "spl-mis.h"
+#include "spl-clouds.h"
+#include "spl-damage.h"
+#include "spl-goditem.h"
+#include "spl-miscast.h"
+#include "spl-selfench.h"
+#include "spl-transloc.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
@@ -3625,7 +3624,7 @@ static bool _dont_use_invis()
         mpr("You can't turn invisible.");
         return (true);
     }
-    else if (get_contamination_level() > 0
+    else if (get_contamination_level() > 1
              && !yesno("Invisibility will do you no good right now; "
                        "use anyway?", false, 'n'))
     {
@@ -4407,8 +4406,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
         hide2armour(arm);
         ac_change = property(arm, PARM_AC) - ac_change;
 
-        if (is_cursed)
-            do_uncurse_item(arm);
+        do_uncurse_item(arm);
 
         // No additional enchantment.
         return (true);
@@ -4452,9 +4450,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
 
     arm.plus++;
     ac_change++;
-
-    if (is_cursed)
-        do_uncurse_item(arm);
+    do_uncurse_item(arm);
 
     return (true);
 }
@@ -4711,6 +4707,17 @@ void read_scroll(int slot)
         return;
     }
 
+    const scroll_type which_scroll = static_cast<scroll_type>(scroll.sub_type);
+    const bool alreadyknown = item_type_known(scroll);
+
+    if (alreadyknown
+        && (which_scroll == SCR_BLINKING || which_scroll == SCR_TELEPORTATION)
+        && item_blocks_teleport(false, false))
+    {
+        mpr("You cannot teleport right now.");
+        return;
+    }
+
     // Ok - now we FINALLY get to read a scroll !!! {dlb}
     you.turn_is_over = true;
 
@@ -4721,18 +4728,6 @@ void read_scroll(int slot)
         mpr((player_mutation_level(MUT_BLURRY_VISION) == 3 && one_chance_in(3))
                         ? "This scroll appears to be blank."
                         : "The writing blurs in front of your eyes.");
-        return;
-    }
-
-    // Decrement and handle inventory if any scroll other than paper {dlb}:
-    const scroll_type which_scroll = static_cast<scroll_type>(scroll.sub_type);
-    const bool alreadyknown = item_type_known(scroll);
-
-    if (alreadyknown
-        && (which_scroll == SCR_BLINKING || which_scroll == SCR_TELEPORTATION)
-        && item_blocks_teleport(false, false))
-    {
-        mpr("You cannot teleport right now.");
         return;
     }
 
@@ -5142,7 +5137,11 @@ bool stasis_blocks_effect(bool calc_unid,
 
         // In all cases, the amulet auto-ids if requested.
         if (amulet && identify)
+        {
             set_ident_type(*amulet, ID_KNOWN_TYPE);
+            mprf("You are wearing: %s",
+                  amulet->name(DESC_INVENTORY_EQUIP).c_str());
+        }
         return (true);
     }
     return (false);

@@ -20,7 +20,6 @@
 #include "makeitem.h"
 #include "maps.h"
 #include "menu.h"
-#include "ng-init.h"
 #include "ng-input.h"
 #include "ng-restr.h"
 #include "options.h"

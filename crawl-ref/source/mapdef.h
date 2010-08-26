@@ -894,7 +894,7 @@ public:
 
     map_def         *original;
 
-    unsigned char   rock_colour, floor_colour;
+    uint8_t         rock_colour, floor_colour;
     int             rock_tile, floor_tile;
 
     dungeon_feature_type border_fill_type;

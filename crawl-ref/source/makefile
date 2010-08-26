@@ -458,9 +458,12 @@ ifndef BUILD_LUA
 endif
 
 ifndef BUILD_SQLITE
-  ifeq ($(shell grep -q sqlite3_prepare_v2 $(SQLITE_INCLUDE_DIR)/sqlite3.h 2>/dev/null && echo yes),yes)
+  ifeq ($(shell grep -q sqlite3_prepare $(SQLITE_INCLUDE_DIR)/sqlite3.h 2>/dev/null && echo yes),yes)
     INCLUDES_L += -I$(SQLITE_INCLUDE_DIR)
     LIBS += $(SQLITE_LIB)
+    ifneq ($(shell grep -q sqlite3_prepare_v2 $(SQLITE_INCLUDE_DIR)/sqlite3.h 2>/dev/null && echo yes),yes)
+      DEFINES_L += -DANCIENT_SQLITE
+    endif
   else
     BUILD_SQLITE = yes
   endif
@@ -489,6 +492,10 @@ endif
 
 ifdef GL
 DEFINES_L += -DUSE_GL
+endif
+
+ifdef GLES
+DEFINES_L += -DUSE_GLES
 endif
 
 ifdef FT
@@ -527,11 +534,15 @@ LIBS += -pthread -lSDL_image $(SDL_LDFLAGS) $(FREETYPE_LDFLAGS)
 
 endif # pkg-config
 
+ifdef GLES
+LIBS += -lSDL_gles -lEGL -lGLES_CM
+else
 ifneq ($(uname_S),Darwin)
 ifeq (,$(findstring MINGW,$(uname_S)))
 LIBS += -lGL -lGLU
 else
 LIBS += -lopengl32 -lglu32
+endif
 endif
 endif
 

@@ -22,7 +22,6 @@
 #include "directn.h"
 #include "kills.h"
 #include "files.h"
-#include "fprop.h"
 #include "defines.h"
 #ifdef USE_TILE
  #include "tilereg-map.h"
@@ -33,7 +32,6 @@
 #include "macro.h"
 #include "message.h"
 #include "mon-util.h"
-#include "newgame.h"
 #include "jobs.h"
 #include "player.h"
 #include "religion.h"
@@ -646,7 +644,7 @@ static std::string _user_home_crawl_subpath(const std::string subpath)
 static std::string _resolve_dir(const char* path, const char* suffix)
 {
 #if defined(DGAMELAUNCH)
-    return path;
+    return catpath(path, "");
 #else
     if (path[0] != '~')
         return std::string(path) + suffix;
@@ -3684,7 +3682,7 @@ static void _print_save_version(char *name)
         goto cleanup;
     }
 
-    char major, minor;
+    int major, minor;
     if (!get_save_version(charf, major, minor))
     {
         fprintf(stderr, "Save file is invalid.\n");

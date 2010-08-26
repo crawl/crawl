@@ -64,25 +64,8 @@ struct show_info
 };
 
 class monsters;
-class show_def
-{
-    FixedArray<show_type, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> grid;
 
-    void _update_feat_at(const coord_def &gp, const coord_def &ep);
-    void _update_item_at(const coord_def &gp, const coord_def &ep);
-    void _update_cloud(int cloudno);
-    void _update_monster(const monsters *monster);
-
-public:
-    show_type operator()(const coord_def &ep) const { return grid(ep); }
-
-    void init(bool terrain_only = false);
-    void update_at(const coord_def &gp, const coord_def &ep,
-                   bool terrain_only = false);
-};
-
-// Convert a show object as in env.show to one to be stored in
-// env.map_knowledge (re-setting feature colour mainly).
-show_type to_knowledge(show_type obj);
+void show_init(bool terrain_only = false);
+void show_update_at(const coord_def &gp, bool terrain_only = false);
 
 #endif

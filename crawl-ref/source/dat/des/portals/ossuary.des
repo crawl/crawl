@@ -19,7 +19,7 @@ function ossuary_portal(e)
 "staircase will be gone. They say that some distant relatives of the pharaohs "..
 "were entombed here."
 
-  local timeout_turns = crawl.random_range(1500, 2000)
+  local timeout_turns = crawl.random_range(2700, 3300)
 
   local messager =
     timed_msg {

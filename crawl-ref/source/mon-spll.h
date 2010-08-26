@@ -1451,6 +1451,17 @@
       }
     },
 
+    {  MST_JUMPING_SPIDER,
+      {
+       SPELL_BLINK_CLOSE,
+       SPELL_BLINK_CLOSE,
+       SPELL_BLINK_CLOSE,
+       SPELL_BLINK_CLOSE,
+       SPELL_BLINK_CLOSE,
+       SPELL_BLINK_AWAY
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,

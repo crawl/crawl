@@ -7,7 +7,7 @@
 #include "fixedarray.h"
 #include "los_def.h"
 
-typedef unsigned char losfield_t;
+typedef uint8_t losfield_t;
 typedef losfield_t halflos_t[LOS_MAX_RANGE+1][2*LOS_MAX_RANGE+1];
 static const int o_half_x = 0;
 static const int o_half_y = LOS_MAX_RANGE;

@@ -43,7 +43,7 @@ function bazaar_portal()
   if not crawl.one_chance_in(6) then
     local pdesc = 'flickering gateway to a bazaar'
     return timed_marker {
-                  low=blow, high=bhigh, msg=messager,
+                  low=blow, high=bhigh, msg=messager, single_timed=true,
                   disappear='The gate to the bazaar disappears!',
                   desc = pdesc, desc_long = desc_long, dst = 'bazaar',
                   floor = 'stone_arch'

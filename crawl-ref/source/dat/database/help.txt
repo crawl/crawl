@@ -111,10 +111,10 @@ level-map
 <w>Esc</w>    : Leave level map (also <w>Space</w> or any unused key).
 <w>Dir.</w>   : Move the cursor.
 <w>Shift-Dir.</w> : Move the cursor in larger steps (7 by default).
-<w>-</w>/<w>+</w>    : Scroll level map 20 grids up/down.
+<w>-</w> or <w>+</w> : Scroll level map 20 grids up or down.
 <w>.</w>      : Start travel (also <w>Enter</w> and <w>,</w> and <w>;</w>).
          (Moves cursor to the last travel destination if still on @.)
-<w>[</w>/<w>]</w>    : Examine the next higher/lower level
+<w>[</w> or <w>]</w> : Examine the next higher or lower level
 <w>G</w>      : Go to another level by branch and depth
 
 <h>Travel exclusions
@@ -127,7 +127,7 @@ level-map
 <w>W</w>      : Cycle through all waypoints on the level.
 
 <h>Cycle through features
-<w><<</w>/<w>></w>    : Cycle through up/down stairs.
+<w><<</w> or <w>></w> : Cycle through up or down stairs.
 <w>^</w>      : Cycle through traps.
 <w>Tab</w>    : Cycle through shops and portals.
 <w>*</w>      : Cycle forward through stashes (by default, all items).
@@ -135,7 +135,7 @@ level-map
 <w>_</w>      : Cycle through altars.
 
 <h>Other
-<w>Ctrl-C</w> : Clear level and main maps.
+<w>Ctrl-C</w> : Clear item and monster memory.
 <w>Ctrl-F</w> : Forget level map.
 %%%%
 interlevel-travel.branch.prompt
@@ -161,7 +161,7 @@ interlevel-travel.depth.prompt
  <w>Enter</w>  : Go to the default level.
  <w><<</w>      : Change the default to one level above the current.
  <w>></w>      : Change default to one level below the current.
- <w>-</w>/<w>p</w>    : Change default to the branch above this one.
+ <w>-</w> or <w>p</w> : Change default to the branch above this one.
  <w>$</w>      : Change default to deepest visited level in this branch.
  <w>^</w>      : Change default to the entrance to the current level.
 %%%%

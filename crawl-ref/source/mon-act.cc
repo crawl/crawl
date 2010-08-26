@@ -49,7 +49,6 @@
 #include "random.h"
 #include "religion.h"
 #include "shopping.h" // for item values
-#include "spells1.h"
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -123,7 +122,10 @@ static void _monster_regenerate(monsters *monster)
 static bool _swap_monsters(monsters* mover, monsters* moved)
 {
     // Can't swap with a stationary monster.
-    if (mons_is_stationary(moved))
+    // Although nominally stationary kraken tentacles can be swapped
+    // with the main body.
+    if (mons_is_stationary(moved)
+        && moved->type != MONS_KRAKEN_TENTACLE)
         return (false);
 
     // Swapping is a purposeful action.
@@ -337,24 +339,6 @@ static void _maybe_set_patrol_route(monsters *monster)
     {
         monster->patrol_point = monster->pos();
     }
-}
-
-// Keep kraken tentacles from wandering too far away from the boss monster.
-static void _kraken_tentacle_movement_clamp(monsters *tentacle)
-{
-    if (tentacle->type != MONS_KRAKEN_TENTACLE)
-        return;
-
-    const int kraken_idx = tentacle->number;
-    ASSERT(!invalid_monster_index(kraken_idx));
-
-    monsters *kraken = &menv[kraken_idx];
-    const int distance_to_head =
-        grid_distance(tentacle->pos(), kraken->pos());
-    // Beyond max distance, the only move the tentacle can make is
-    // back towards the head.
-    if (distance_to_head >= KRAKEN_TENTACLE_RANGE)
-        mmov = (kraken->pos() - tentacle->pos()).sgn();
 }
 
 //---------------------------------------------------------------
@@ -1692,14 +1676,23 @@ void handle_monster_move(monsters *monster)
 #ifdef DEBUG_MONS_SCAN
     bool monster_was_floating = mgrd(monster->pos()) != monster->mindex();
 #endif
+    coord_def old_pos = monster->pos();
 
+    coord_def kraken_last_update = monster->pos();
     while (monster->has_action_energy())
     {
         // The continues & breaks are WRT this.
         if (!monster->alive())
             break;
 
-        const coord_def old_pos = monster->pos();
+        if (old_pos != monster->pos()
+            && mons_base_type(monster) == MONS_KRAKEN)
+        {
+            move_kraken_tentacles(monster);
+            kraken_last_update = monster->pos();
+        }
+
+        old_pos = monster->pos();
 
 #ifdef DEBUG_MONS_SCAN
         if (!monster_was_floating
@@ -1893,7 +1886,6 @@ void handle_monster_move(monsters *monster)
         {
             // Calculates mmov based on monster target.
             _handle_movement(monster);
-            _kraken_tentacle_movement_clamp(monster);
 
             if (mons_is_confused(monster)
                 || monster->type == MONS_AIR_ELEMENTAL
@@ -2033,6 +2025,23 @@ void handle_monster_move(monsters *monster)
 
             // See if we move into (and fight) an unfriendly monster.
             monsters* targ = monster_at(monster->pos() + mmov);
+            if (mons_base_type(monster) == MONS_KRAKEN
+                && targ && targ->type == MONS_KRAKEN_CONNECTOR
+                && targ->props.exists("inwards") && targ->props["inwards"].get_int() == monster->mindex()
+                && env.grid(targ->pos()) == DNGN_DEEP_WATER)
+            {
+                bool basis = targ->props.exists("outwards");
+                int out_idx = basis ? targ->props["outwards"].get_int() : -1;
+                if (out_idx != -1)
+                {
+                    menv[out_idx].props["inwards"].get_int() = monster->mindex();
+                }
+
+                monster_die(targ,
+                            KILL_MISC, NON_MONSTER, true);
+                targ = NULL;
+            }
+
             if (targ
                 && targ != monster
                 && !mons_aligned(monster, targ)
@@ -2045,8 +2054,9 @@ void handle_monster_move(monsters *monster)
                     continue;
                 }
                 // Figure out if they fight.
-                else if (!mons_is_firewood(targ)
-                         && monsters_fight(monster, targ))
+                else if ((!mons_is_firewood(targ)
+                          || monster->type == MONS_KRAKEN_TENTACLE)
+                              && monsters_fight(monster, targ))
                 {
                     if (mons_is_batty(monster))
                     {
@@ -2081,6 +2091,15 @@ void handle_monster_move(monsters *monster)
             handle_behaviour(monster);
             ASSERT(in_bounds(monster->target) || monster->target.origin());
         }
+    }
+
+    if (mons_base_type(monster) == MONS_KRAKEN)
+    {
+        if (monster->pos() != kraken_last_update)
+        {
+            move_kraken_tentacles(monster);
+        }
+        move_kraken_tentacles(monster);
     }
 
     if (monster->type != MONS_NO_MONSTER && monster->hit_points < 1)
@@ -2683,6 +2702,28 @@ static bool _no_habitable_adjacent_grids(const monsters *mon)
     return (true);
 }
 
+static bool _same_kraken_parts(const monsters * mpusher,
+                               const monsters * mpushee)
+{
+    if (mons_base_type(mpusher) != MONS_KRAKEN)
+        return (false);
+
+    if (mpushee->type == MONS_KRAKEN_TENTACLE
+        && int(mpushee->number) == mpusher->mindex())
+    {
+        return (true);
+    }
+
+    if (mpushee->type == MONS_KRAKEN_CONNECTOR
+        && int(menv[mpushee->number].number) == mpusher->mindex()
+        && mpushee->props.exists("inwards") && mpushee->props["inwards"].get_int() == mpusher->mindex())
+    {
+        return (true);
+    }
+
+    return false;
+}
+
 static bool _mons_can_displace(const monsters *mpusher,
                                const monsters *mpushee)
 {
@@ -2693,16 +2734,22 @@ static bool _mons_can_displace(const monsters *mpusher,
     if (invalid_monster_index(ipushee))
         return (false);
 
-    if (immobile_monster[ipushee])
+
+    if (immobile_monster[ipushee]
+        && !_same_kraken_parts(mpusher, mpushee))
+    {
         return (false);
+    }
 
     // Confused monsters can't be pushed past, sleeping monsters
     // can't push. Note that sleeping monsters can't be pushed
     // past, either, but they may be woken up by a crowd trying to
     // elbow past them, and the wake-up check happens downstream.
     if (mons_is_confused(mpusher)      || mons_is_confused(mpushee)
-        || mpusher->cannot_move()   || mpushee->cannot_move()
-        || mons_is_stationary(mpusher) || mons_is_stationary(mpushee)
+        || mpusher->cannot_move()   || mons_is_stationary(mpusher)
+        || (!_same_kraken_parts(mpusher, mpushee)
+           && (mpushee->cannot_move()
+               || mons_is_stationary(mpushee)))
         || mpusher->asleep())
     {
         return (false);

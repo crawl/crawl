@@ -743,6 +743,7 @@ void item_colour(item_def &item)
                 break;
 
             case RUNE_TARTARUS:                 // bone
+            case RUNE_SPIDER_NEST:
                 item.colour = ETC_BONE;
                 break;
 
@@ -915,14 +916,15 @@ static weapon_type _determine_weapon_subtype(int item_level)
     return rc;
 }
 
-static bool _try_make_item_special_unrand(item_def& item, int force_type,
-                                          int item_level)
+static bool _try_make_item_unrand(item_def& item, int force_type)
 {
-    dprf("Making special unrand artefact.");
+    if (you.level_type == LEVEL_PANDEMONIUM)
+    {
+        return (false);
+    }
 
-    bool abyss = item_level == level_id(LEVEL_ABYSS).absdepth();
     int idx = find_okay_unrandart(item.base_type, force_type,
-                                  UNRANDSPEC_SPECIAL, abyss);
+                                  you.level_type == LEVEL_ABYSS);
 
     if (idx != -1 && make_item_unrandart(item, idx))
         return (true);
@@ -935,22 +937,16 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
                                       int item_level, bool force_randart = false)
 {
     if (item.sub_type != WPN_CLUB && item_level > 2
-        && x_chance_in_y(101 + item_level * 3, 4000) || force_randart)
+          && x_chance_in_y(101 + item_level * 3, 4000)
+        || force_randart)
     {
         // Make a randart or unrandart.
 
         // 1 in 50 randarts are unrandarts.
-        if (you.level_type != LEVEL_ABYSS
-            && you.level_type != LEVEL_PANDEMONIUM
-            && one_chance_in(50) && !force_randart)
+        if (one_chance_in(50) && !force_randart)
         {
-            const int idx = find_okay_unrandart(OBJ_WEAPONS, force_type,
-                                                UNRANDSPEC_NORMAL);
-            if (idx != -1)
-            {
-                make_item_unrandart(item, idx);
+            if (_try_make_item_unrand(item, force_type))
                 return (true);
-            }
         }
 
         // The other 98% are normal randarts.
@@ -985,14 +981,6 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         if (get_weapon_brand(item) == SPWPN_HOLY_WRATH)
             item.flags &= (~ISFLAG_CURSED);
         return (true);
-    }
-
-    // If it isn't an artefact yet, try to make a special unrand artefact.
-    if (item_level > 6
-        && one_chance_in(12)
-        && x_chance_in_y(31 + item_level * 3, 3000))
-    {
-        return (_try_make_item_special_unrand(item, force_type, item_level));
     }
 
     return (false);
@@ -1607,6 +1595,7 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
     case SPWPN_REACHING:
     case SPWPN_RETURNING:
     case SPWPN_CONFUSE:
+    case SPWPN_ANTIMAGIC:
         if (is_range_weapon(item))
             return (false);
         break;
@@ -1794,69 +1783,6 @@ brand_ok:
             set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NORMAL);
         }
     }
-}
-
-static item_status_flag_type _determine_missile_race(const item_def& item,
-                                                     int item_race)
-{
-    item_status_flag_type rc = ISFLAG_NO_RACE;
-
-    if (item.sub_type > MI_MAX_RACIAL)
-        return rc;
-
-    switch (item_race)
-    {
-    case MAKE_ITEM_ELVEN:
-        rc = ISFLAG_ELVEN;
-        break;
-
-    case MAKE_ITEM_DWARVEN:
-        rc = ISFLAG_DWARVEN;
-        break;
-
-    case MAKE_ITEM_ORCISH:
-        rc = ISFLAG_ORCISH;
-        break;
-
-    case MAKE_ITEM_RANDOM_RACE:
-        // Elves don't make bolts, sling bullets, or throwing nets.
-        if ((item.sub_type == MI_ARROW
-                || item.sub_type == MI_DART
-                || item.sub_type == MI_JAVELIN)
-            && one_chance_in(4))
-        {
-            rc = ISFLAG_ELVEN;
-        }
-
-        // Orcs don't make sling bullets or throwing nets.
-        if ((item.sub_type == MI_ARROW
-                || item.sub_type == MI_BOLT
-                || item.sub_type == MI_DART
-                || item.sub_type == MI_JAVELIN)
-            && one_chance_in(4))
-        {
-            rc = ISFLAG_ORCISH;
-        }
-
-        // Dwarves don't make arrows, sling bullets, javelins, or
-        // throwing nets.
-        if ((item.sub_type == MI_DART || item.sub_type == MI_BOLT)
-            && one_chance_in(6))
-        {
-            rc = ISFLAG_DWARVEN;
-        }
-
-        // Dwarves don't make needles.
-        if (item.sub_type == MI_NEEDLE)
-        {
-            if (one_chance_in(10))
-                rc = ISFLAG_ELVEN;
-            if (one_chance_in(6))
-                rc = ISFLAG_ORCISH;
-        }
-        break;
-    }
-    return rc;
 }
 
 // Current list is based on dpeg's original post to the Wiki, found at the
@@ -2079,7 +2005,7 @@ static void _generate_missile_item(item_def& item, int force_type,
         return;
     }
 
-    set_equip_race(item, _determine_missile_race(item, item_race));
+    set_equip_race(item, ISFLAG_NO_RACE);
 
     if (!no_brand)
     {
@@ -2102,13 +2028,6 @@ static void _generate_missile_item(item_def& item, int force_type,
 
     if (x_chance_in_y(11 + item_level, 100))
         item.plus += random2(5);
-
-    // Elven arrows and dwarven bolts are quality items.
-    if (get_equip_race(item) == ISFLAG_ELVEN && item.sub_type == MI_ARROW
-        || get_equip_race(item) == ISFLAG_DWARVEN && item.sub_type == MI_BOLT)
-    {
-        item.plus += random2(3);
-    }
 }
 
 static bool _try_make_armour_artefact(item_def& item, int force_type,
@@ -2120,18 +2039,10 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
         // Make a randart or unrandart.
 
         // 1 in 50 randarts are unrandarts.
-        if (you.level_type != LEVEL_ABYSS
-            && you.level_type != LEVEL_PANDEMONIUM
-            && one_chance_in(50) && !force_randart)
+        if (one_chance_in(50) && !force_randart)
         {
-            // The old generation code did not respect force_type here.
-            const int idx = find_okay_unrandart(OBJ_ARMOUR, force_type,
-                                                UNRANDSPEC_NORMAL);
-            if (idx != -1)
-            {
-                make_item_unrandart(item, idx);
+            if (_try_make_item_unrand(item, force_type))
                 return (true);
-            }
         }
 
         // The other 98% are normal randarts.
@@ -2170,14 +2081,6 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
         }
 
         return (true);
-    }
-
-    // If it isn't an artefact yet, try to make a special unrand artefact.
-    if (item_level > 6
-        && one_chance_in(12)
-        && x_chance_in_y(31 + item_level * 3, 3000))
-    {
-        return (_try_make_item_special_unrand(item, force_type, item_level));
     }
 
     return (false);
@@ -2650,7 +2553,7 @@ static int _random_wand_subtype()
     return rc;
 }
 
-static int _wand_max_charges(int subtype)
+int wand_max_charges(int subtype)
 {
     switch (subtype)
     {
@@ -2675,7 +2578,7 @@ static void _generate_wand_item(item_def& item, int force_type)
         item.sub_type = _random_wand_subtype();
 
     // Generate charges randomly...
-    item.plus = random2avg(_wand_max_charges(item.sub_type), 3);
+    item.plus = random2avg(wand_max_charges(item.sub_type), 3);
 
     // ...but 0 charges is silly
     if (item.plus == 0)
@@ -2806,14 +2709,16 @@ static void _generate_potion_item(item_def& item, int force_type,
                || (agent == GOD_XOM && _is_boring_item(OBJ_POTIONS, stype)
                    && --tries > 0));
 
-        if (stype == POT_GAIN_STRENGTH || stype == POT_GAIN_DEXTERITY
-            || stype == POT_GAIN_INTELLIGENCE || stype == POT_EXPERIENCE
-            || stype == POT_RESTORE_ABILITIES)
-        {
-            item.quantity = 1;
-        }
-
         item.sub_type = stype;
+    }
+
+    if (item.sub_type == POT_GAIN_STRENGTH
+        || item.sub_type == POT_GAIN_DEXTERITY
+        || item.sub_type == POT_GAIN_INTELLIGENCE
+        || item.sub_type == POT_EXPERIENCE
+        || item.sub_type == POT_RESTORE_ABILITIES)
+    {
+        item.quantity = 1;
     }
 
     if (is_blood_potion(item))
@@ -3017,25 +2922,15 @@ static void _generate_staff_item(item_def& item, int force_type, int item_level)
 static bool _try_make_jewellery_unrandart(item_def& item, int force_type,
                                           int item_level)
 {
-    bool rc = false;
-
     if (item_level > 2
-        && you.level_type != LEVEL_ABYSS
-        && you.level_type != LEVEL_PANDEMONIUM
         && one_chance_in(20)
         && x_chance_in_y(101 + item_level * 3, 2000))
     {
-        // The old generation code did not respect force_type here.
-        const int idx = find_okay_unrandart(OBJ_JEWELLERY, force_type,
-                                            UNRANDSPEC_NORMAL);
-        if (idx != -1)
-        {
-            make_item_unrandart(item, idx);
-            rc = true;
-        }
+        if (_try_make_item_unrand(item, force_type))
+            return (true);
     }
 
-    return (rc);
+    return (false);
 }
 
 static int _determine_ring_plus(int subtype)
@@ -3125,13 +3020,6 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
         && x_chance_in_y(101 + item_level * 3, 4000))
     {
         make_item_randart(item);
-    }
-    // If it isn't an artefact yet, try to make a special unrand artefact.
-    else if (item_level > 6
-             && one_chance_in(12)
-             && x_chance_in_y(31 + item_level * 3, 3000))
-    {
-        _try_make_item_special_unrand(item, force_type, item_level);
     }
     else if (item.sub_type == RING_HUNGER || item.sub_type == RING_TELEPORTATION
              || one_chance_in(50))

@@ -1,7 +1,6 @@
 #include "AppHdr.h"
 
 #include "ng-input.h"
-#include "newgame.h"
 
 #include "cio.h"
 #include "files.h"

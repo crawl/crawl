@@ -28,7 +28,6 @@
 #include "mon-place.h"
 #include "mon-project.h"
 #include "terrain.h"
-#include "hints.h"
 #include "mislead.h"
 #include "mgen_data.h"
 #include "coord.h"
@@ -40,8 +39,9 @@
 #include "shout.h"
 #include "spl-util.h"
 #include "spl-cast.h"
-#include "spells1.h"
-#include "spells3.h"
+#include "spl-clouds.h"
+#include "spl-damage.h"
+#include "spl-summoning.h"
 #include "state.h"
 #include "stuff.h"
 #include "areas.h"
@@ -49,7 +49,11 @@
 #include "traps.h"
 #include "view.h"
 #include "viewchar.h"
-#include "xom.h"
+
+#include <algorithm>
+
+// kraken stuff
+const int MAX_ACTIVE_KRAKEN_TENTACLES = 4;
 
 static bool _valid_mon_spells[NUM_SPELLS];
 
@@ -1391,6 +1395,22 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
         if (spell_cast == SPELL_POLYMORPH_OTHER && monster->friendly())
             return (false);
 
+
+        // Past this point, we're actually casting, instead of just pondering.
+
+        // Check for antimagic.
+        if (monster->has_ench(ENCH_ANTIMAGIC)
+            && !x_chance_in_y(monster->hit_dice * BASELINE_DELAY,
+                              monster->hit_dice * BASELINE_DELAY
+                              + monster->get_ench(ENCH_ANTIMAGIC).duration))
+        {
+            // This may be a bad idea -- if we decide monsters shouldn't
+            // lose a turn like players do not, please make this just return.
+            simple_monster_message(monster, " falters for a moment.");
+            monster->lose_energy(EUT_SPELL);
+            return (true);
+        }
+
         // Try to animate dead: if nothing rises, pretend we didn't cast it.
         if (spell_cast == SPELL_ANIMATE_DEAD)
         {
@@ -1422,11 +1442,20 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
                 return (false);
         }
         else if (spell_cast == SPELL_BLINK_RANGE)
+        {
             blink_range(monster);
+            monster->lose_energy(EUT_SPELL);
+        }
         else if (spell_cast == SPELL_BLINK_AWAY)
+        {
             blink_away(monster);
+            monster->lose_energy(EUT_SPELL);
+        }
         else if (spell_cast == SPELL_BLINK_CLOSE)
+        {
             blink_close(monster);
+            monster->lose_energy(EUT_SPELL);
+        }
         else
         {
             if (spell_needs_foe(spell_cast))
@@ -1905,42 +1934,68 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                 MSGCH_ERROR);
             return;
         }
-        sumcount2 = std::max(random2(9), random2(9)); // up to eight tentacles
-        if (sumcount2 == 0)
-            return;
+        int tentacle_count = 0;
 
-        for (sumcount = 0; sumcount < MAX_MONSTERS; ++sumcount)
-            if (menv[sumcount].type == MONS_KRAKEN_TENTACLE
-                && (int)menv[sumcount].number == kraken_index)
-            {
-                // Reduce by tentacles already placed.
-                sumcount2--;
-            }
-
-        for (sumcount = sumcount2; sumcount > 0; --sumcount)
+        for (monster_iterator mi; mi; ++mi)
         {
-            // Tentacles aren't really summoned (controlled by spell_cast
-            // being passed to summon_type), so I'm not sure what the
-            // abjuration value (3) is doing there. (jpeg)
-            int tentacle = create_monster(
-                mgen_data(MONS_KRAKEN_TENTACLE, SAME_ATTITUDE(monster), monster,
-                          3, spell_cast, monster->pos(), monster->foe, 0, god,
-                          MONS_NO_MONSTER, kraken_index, monster->colour,
-                          you.absdepth0, PROX_CLOSE_TO_PLAYER,
-                          you.level_type));
-
-            if (tentacle < 0)
+            if (int (mi->number) == kraken_index
+                    && mi->type == MONS_KRAKEN_TENTACLE)
             {
-                sumcount2--;
-            }
-            else if (monster->holiness() == MH_UNDEAD)
-            {
-                menv[tentacle].flags |= MF_HONORARY_UNDEAD;
+                tentacle_count++;
             }
         }
-        if (sumcount2 == 1)
+
+        int possible_count = MAX_ACTIVE_KRAKEN_TENTACLES - tentacle_count;
+
+        if (possible_count <= 0)
+            return;
+
+        std::vector<coord_def> adj_squares;
+
+        // collect open adjacent squares, candidate squares must be
+        // water and not already occupied.
+        for (adjacent_iterator adj_it(monster->pos()); adj_it; ++adj_it)
+        {
+            if (!monster_at(*adj_it)
+                && feat_is_water(env.grid(*adj_it))
+                && env.grid(*adj_it) != DNGN_OPEN_SEA)
+            {
+                adj_squares.push_back(*adj_it);
+            }
+        }
+
+        if (unsigned(possible_count) > adj_squares.size())
+            possible_count = adj_squares.size();
+        else if (adj_squares.size() > unsigned(possible_count))
+            std::random_shuffle(adj_squares.begin(), adj_squares.end());
+
+
+        int created_count = 0;
+
+        for (int i=0;i<possible_count;++i)
+        {
+            int tentacle = create_monster(
+                mgen_data(MONS_KRAKEN_TENTACLE, SAME_ATTITUDE(monster), monster,
+                          0, 0, adj_squares[i], monster->foe,
+                          MG_FORCE_PLACE, god, MONS_NO_MONSTER, kraken_index,
+                          monster->colour, you.absdepth0, PROX_CLOSE_TO_PLAYER,
+                          you.level_type));
+
+            if (tentacle >= 0)
+            {
+                created_count++;
+                menv[tentacle].props["inwards"].get_int() = kraken_index;
+                if (monster->holiness() == MH_UNDEAD)
+                {
+                    menv[tentacle].flags |= MF_HONORARY_UNDEAD;
+                }
+            }
+        }
+
+
+        if (created_count == 1)
             mpr("A tentacle rises from the water!");
-        else if (sumcount2 > 1)
+        else if (created_count > 1)
             mpr("Tentacles burst out of the water!");
         return;
     }

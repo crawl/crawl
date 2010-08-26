@@ -476,10 +476,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = -2;
         *ofs_y = -2;
         break;
-    case TILEP_MONS_OGRE_MAGE:
-        *ofs_x = -4;
-        *ofs_y = -2;
-        break;
     // Shift upwards and to the right.
     case TILEP_MONS_AGNES:
         *ofs_x = 1;

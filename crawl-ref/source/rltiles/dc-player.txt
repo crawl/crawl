@@ -78,6 +78,8 @@ spriggan_m SPRIGGAN
 spriggan_f
 minotaur_m MINOTAUR
 minotaur_f
+minotaur_brown1_m
+minotaur_brown2_m
 demonspawn_pink DEMONSPAWN
 demonspawn_red_f
 demonspawn_red_m

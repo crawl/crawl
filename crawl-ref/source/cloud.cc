@@ -19,22 +19,21 @@
 #include "coord.h"
 #include "coordit.h"
 #include "dungeon.h"
+#include "env.h"
 #include "fight.h"
 #include "fprop.h"
 #include "los.h"
 #include "mapmark.h"
+#include "mutation.h"
 #include "ouch.h"
 #include "player.h"
 #include "random.h"
-#include "spells4.h"
 #include "stuff.h"
-#include "env.h"
 #include "terrain.h"
 #ifdef USE_TILE
 #include "tiledef-gui.h"
 #include "tiledef-main.h"
 #endif
-#include "mutation.h"
 
 static int _actual_spread_rate(cloud_type type, int spread_rate)
 {
@@ -89,7 +88,7 @@ static void _los_cloud_changed(const coord_def& p, cloud_type t)
 
 static void _new_cloud( int cloud, cloud_type type, const coord_def& p,
                         int decay, kill_category whose, killer_type killer,
-                        unsigned char spread_rate, int colour, std::string name,
+                        uint8_t spread_rate, int colour, std::string name,
                         std::string tile)
 {
     ASSERT( env.cloud[cloud].type == CLOUD_NONE );

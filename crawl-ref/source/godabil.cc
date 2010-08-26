@@ -48,10 +48,10 @@
 #include "skills2.h"
 #include "shopping.h"
 #include "shout.h"
-#include "spells1.h"
-#include "spells3.h"
-#include "spells4.h"
 #include "spl-book.h"
+#include "spl-monench.h"
+#include "spl-summoning.h"
+#include "spl-transloc.h"
 #include "spl-util.h"
 #include "stash.h"
 #include "state.h"
@@ -166,8 +166,9 @@ int zin_recite_to_single_monster(const coord_def& where,
     if (pow == -1)
         pow = (2 * skill_bump(SK_INVOCATIONS) + you.piety / 5) / 2;
 
-    int resist;
     const mon_holy_type holiness = mon->holiness();
+    bool impressible = true;
+    int resist;
 
     if (mon->is_holy())
         resist = std::max(0, 7 - random2(you.skills[SK_INVOCATIONS]));
@@ -176,9 +177,18 @@ int zin_recite_to_single_monster(const coord_def& where,
         resist = mon->res_magic();
 
         if (holiness == MH_UNDEAD)
+        {
+            impressible = false;
             pow -= 2 + random2(3);
+        }
         else if (holiness == MH_DEMONIC)
+        {
+            impressible = false;
             pow -= 3 + random2(5);
+        }
+
+        if (mon->is_unclean() || mon->is_chaotic())
+            impressible = false;
     }
 
     pow -= resist;
@@ -246,8 +256,9 @@ int zin_recite_to_single_monster(const coord_def& where,
         case 10:
         case 11:
         case 12:
-            if (!mon->add_ench(mon_enchant(ENCH_TEMP_PACIF, 0, KC_YOU,
-                               (16 + random2avg(13, 2)) * 10)))
+            if (!impressible
+                || !mon->add_ench(mon_enchant(ENCH_TEMP_PACIF, 0, KC_YOU,
+                                  (16 + random2avg(13, 2)) * 10)))
             {
                 return (0);
             }
@@ -274,20 +285,10 @@ int zin_recite_to_single_monster(const coord_def& where,
                 good_god_holy_attitude_change(mon);
             else
             {
-                if (holiness == MH_UNDEAD || holiness == MH_DEMONIC)
-                {
-                    if (!mon->add_ench(mon_enchant(ENCH_TEMP_PACIF, 0, KC_YOU,
-                                       (16 + random2avg(13, 2)) * 10)))
-                    {
-                        return (0);
-                    }
-                    simple_monster_message(mon, " seems impressed!");
-                }
-                else
-                {
-                    simple_monster_message(mon, " seems fully impressed!");
-                    mons_pacify(mon);
-                }
+                if (!impressible)
+                    return (0);
+                simple_monster_message(mon, " seems fully impressed!");
+                mons_pacify(mon);
             }
             break;
     }

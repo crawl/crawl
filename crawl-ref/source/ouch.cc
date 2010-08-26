@@ -43,6 +43,7 @@
 #include "files.h"
 #include "fight.h"
 #include "godabil.h"
+#include "hints.h"
 #include "hiscores.h"
 #include "invent.h"
 #include "itemname.h"
@@ -50,10 +51,10 @@
 #include "items.h"
 #include "macro.h"
 #include "message.h"
+#include "mgen_data.h"
 #include "misc.h"
 #include "mon-util.h"
 #include "mon-place.h"
-#include "mgen_data.h"
 #include "mon-stuff.h"
 #include "notes.h"
 #include "output.h"
@@ -63,12 +64,11 @@
 #include "religion.h"
 #include "shopping.h"
 #include "skills2.h"
-#include "spells1.h"
-#include "spells4.h"
+#include "spl-selfench.h"
+#include "spl-other.h"
 #include "state.h"
 #include "stuff.h"
 #include "transform.h"
-#include "hints.h"
 #include "view.h"
 #include "shout.h"
 #include "xom.h"
@@ -474,12 +474,24 @@ static int _get_target_class(beam_type flavour)
     return (target_class);
 }
 
+static const char* _part_stack_string(const int num, const int total)
+{
+    if (num == total)
+        return "Your";
+
+    std::string ret  = uppercase_first(number_in_words(num));
+                ret += " of your";
+
+    return ret.c_str();
+}
+
 // XXX: These expose functions could use being reworked into a real system...
 // the usage and implementation is currently very hacky.
 // Handles the destruction of inventory items from the elements.
 static bool _expose_invent_to_element(beam_type flavour, int strength)
 {
     int num_dest = 0;
+    int total_dest = 0;
     int jiyva_block = 0;
 
     const int target_class = _get_target_class(flavour);
@@ -538,6 +550,11 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
                 continue;
             }
 
+            // Get name and quantity before destruction.
+            const std::string item_name = you.inv[i].name(DESC_PLAIN);
+            const int quantity = you.inv[i].quantity;
+            num_dest = 0;
+
             // Loop through all items in the stack.
             for (int j = 0; j < you.inv[i].quantity; ++j)
             {
@@ -554,6 +571,48 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
                         remove_oldest_blood_potion(you.inv[i]);
                 }
             }
+            
+            // Name destroyed items.
+            // TODO: Combine messages using a vector.
+            if (num_dest > 0)
+            {
+                switch (target_class)
+                {
+                case OBJ_SCROLLS:
+                    mprf("%s %s catch%s fire!",
+                         _part_stack_string(num_dest, quantity),
+                         item_name.c_str(),
+                         (num_dest == 1) ? "es" : "");
+                    break;
+
+                case OBJ_POTIONS:
+                    mprf("%s %s freeze%s and shatter%s!",
+                         _part_stack_string(num_dest, quantity),
+                         item_name.c_str(),
+                         (num_dest == 1) ? "s" : "",
+                         (num_dest == 1) ? "s" : "");
+                     break;
+
+                case OBJ_FOOD:
+                    // Message handled elsewhere.
+                    if (flavour == BEAM_DEVOUR_FOOD)
+                        break;
+                    mprf("%s %s %s covered with spores!",
+                         _part_stack_string(num_dest, quantity),
+                         item_name.c_str(),
+                         (num_dest == 1) ? "is" : "are");
+                     break;
+
+                default:
+                    mprf("%s %s %s destroyed!",
+                         _part_stack_string(num_dest, quantity),
+                         item_name.c_str(),
+                         (num_dest == 1) ? "is" : "are");
+                     break;
+                }
+
+                total_dest += num_dest;
+            }
         }
     }
 
@@ -561,41 +620,15 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
     {
         mprf("%s shields %s delectables from destruction.",
              god_name(GOD_JIYVA).c_str(),
-             (num_dest > 0) ? "some of your" : "your");
+             (total_dest > 0) ? "some of your" : "your");
     }
 
-    if (!num_dest)
+    if (!total_dest)
         return (false);
 
     // Message handled elsewhere.
     if (flavour == BEAM_DEVOUR_FOOD)
         return (true);
-
-    switch (target_class)
-    {
-    case OBJ_SCROLLS:
-        mprf("%s you are carrying %s fire!",
-             (num_dest > 1) ? "Some of the scrolls" : "A scroll",
-             (num_dest > 1) ? "catch" : "catches" );
-        break;
-
-    case OBJ_POTIONS:
-        mprf("%s you are carrying %s and %s!",
-             (num_dest > 1) ? "Some of the potions" : "A potion",
-             (num_dest > 1) ? "freeze" : "freezes",
-             (num_dest > 1) ? "shatter" : "shatters" );
-        break;
-
-    case OBJ_FOOD:
-        mpr("Some of your food is covered with spores!");
-        break;
-
-    default:
-        mprf("%s you are carrying %s destroyed!",
-             (num_dest > 1) ? "Some items" : "An item",
-             (num_dest > 1) ? "were" : "was" );
-        break;
-    }
 
     xom_is_stimulated((num_dest > 1) ? 32 : 16);
 
@@ -977,8 +1010,11 @@ static void _maybe_spawn_jellies(int dam, const char* aux,
             int count_created = 0;
             for (int i = 0; i < how_many; ++i)
             {
+                int foe = death_source;
+                if (invalid_monster_index(foe))
+                    foe = MHITNOT;
                 mgen_data mg(mon, BEH_FRIENDLY, &you, 2, 0, you.pos(),
-                             death_source, 0, GOD_JIYVA);
+                             foe, 0, GOD_JIYVA);
 
                 if (create_monster(mg) != -1)
                     count_created++;

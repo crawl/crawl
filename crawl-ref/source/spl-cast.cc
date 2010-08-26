@@ -17,7 +17,6 @@
 #include "areas.h"
 #include "beam.h"
 #include "colour.h"
-#include "coord.h"
 #include "coordit.h"
 #include "describe.h"
 #include "directn.h"
@@ -30,7 +29,6 @@
 #include "goditem.h"
 #include "hints.h"
 #include "invent.h"
-#include "it_use2.h"
 #include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -51,14 +49,18 @@
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
-#include "skills2.h"
-#include "spells1.h"
-#include "spells2.h"
-#include "spells3.h"
-#include "spells4.h"
 #include "spl-book.h"
-#include "spl-mis.h"
+#include "spl-clouds.h"
+#include "spl-damage.h"
+#include "spl-goditem.h"
+#include "spl-miscast.h"
+#include "spl-monench.h"
+#include "spl-other.h"
+#include "spl-selfench.h"
+#include "spl-summoning.h"
+#include "spl-transloc.h"
 #include "spl-util.h"
+#include "spl-wpnench.h"
 #include "spl-zap.h"
 #include "sprint.h"
 #include "state.h"
@@ -154,7 +156,7 @@ static std::string _spell_base_description(spell_type spell)
     // spell schools
     desc << spell_schools_string(spell);
 
-    const int so_far = desc.str().length() - (name_length_by_colour(highlight)+2);
+    const int so_far = desc.str().length() - (colour_to_str(highlight).length()+2);
     if (so_far < 60)
         desc << std::string(60 - so_far, ' ');
 
@@ -879,7 +881,7 @@ bool is_prevented_teleport(spell_type spell)
     return ((spell == SPELL_BLINK
            || spell == SPELL_CONTROLLED_BLINK
            || spell == SPELL_TELEPORT_SELF)
-           && scan_artefacts(ARTP_PREVENT_TELEPORTATION, false));
+           && item_blocks_teleport(false, false));
 }
 
 bool spell_is_uncastable(spell_type spell, std::string &msg)
@@ -1284,8 +1286,10 @@ spret_type your_spells(spell_type spell, int powc,
 #endif
 
         if (is_valid_spell(spell))
+        {
             mprf(MSGCH_ERROR, "Spell '%s' is not a player castable spell.",
                 spell_title(spell));
+        }
         else
             mpr("Invalid spell!", MSGCH_ERROR);
 
@@ -1339,13 +1343,15 @@ static spret_type _do_cast(spell_type spell, int powc,
     {
     // spells using burn_freeze()
     case SPELL_FREEZE:
+    {
         if (!burn_freeze(powc, _spell_to_beam_type(spell),
-                         monster_at(you.pos() + spd.delta)))
+                         monster_at(spd.isTarget ? beam.target
+                                                 : you.pos() + spd.delta)))
         {
             return (SPRET_ABORT);
         }
         break;
-
+    }
     case SPELL_SANDBLAST:
         if (!cast_sandblast(powc, beam))
             return (SPRET_ABORT);
@@ -1357,7 +1363,12 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_VAMPIRIC_DRAINING:
-        vampiric_drain(powc, spd);
+        if (!vampiric_drain(powc,
+                            monster_at(spd.isTarget ? beam.target
+                                                    : you.pos() + spd.delta)))
+        {
+            return (SPRET_ABORT);
+        }
         break;
 
     case SPELL_IOOD:
@@ -1801,7 +1812,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_STONEMAIL:
-        stone_scales(powc);
+        stonemail(powc);
         break;
 
     case SPELL_CONDENSATION_SHIELD:

@@ -10,6 +10,7 @@
 
 #include <errno.h>
 
+#include "acquire.h"
 #include "artefact.h"
 #include "coordit.h"
 #include "message.h"
@@ -22,7 +23,6 @@
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
-#include "it_use2.h"
 #include "invent.h"
 #include "makeitem.h"
 #include "mapdef.h"
@@ -312,7 +312,7 @@ const char* _prop_name[ARTP_NUM_PROPERTIES] = {
 #define ARTP_VAL_POS  1
 #define ARTP_VAL_ANY  2
 
-char _prop_type[ARTP_NUM_PROPERTIES] = {
+int8_t _prop_type[ARTP_NUM_PROPERTIES] = {
     ARTP_VAL_POS,  //BRAND
     ARTP_VAL_ANY,  //AC
     ARTP_VAL_ANY,  //EVASION

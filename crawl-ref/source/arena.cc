@@ -7,8 +7,6 @@
 
 #include "arena.h"
 
-#include "areas.h"
-#include "artefact.h"
 #include "cio.h"
 #include "colour.h"
 #include "command.h"
@@ -34,7 +32,7 @@
 #include "mon-stuff.h"
 #include "ng-init.h"
 #include "options.h"
-#include "spl-mis.h"
+#include "spl-miscast.h"
 #include "spl-util.h"
 #include "state.h"
 #ifdef USE_TILE
@@ -119,7 +117,7 @@ namespace arena
     std::vector<int> uniques_list;
     std::vector<int> a_spawners;
     std::vector<int> b_spawners;
-    char             to_respawn[MAX_MONSTERS];
+    int8_t           to_respawn[MAX_MONSTERS];
 
     int item_drop_times[MAX_ITEMS];
 

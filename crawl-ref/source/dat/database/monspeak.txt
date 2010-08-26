@@ -3500,7 +3500,7 @@ _Eustachio_common_
 
 @The_monster@ screams @at_foe@, "At last I'll have my revenge!"
 
-@The_monster@ screams @at_foe@, "Hey, you killed my favorite bat!"
+@The_monster@ screams @at_foe@, "Hey, you killed my favourite bat!"
 
 @The_monster@ says @to_foe@, "Summoning is fun!"
 
@@ -5530,7 +5530,7 @@ VISUAL:@The_monster@ pantomimes @foe_possessive@ execution.
 
 VISUAL:@The_monster@ pokes out @possessive@ tongue.
 
-VISUAL:@The_monster@ grows four more heads, takes them off and juggles! 
+VISUAL:@The_monster@ grows four more heads, takes them off and juggles!
 
 @The_monster@ says @to_foe@, "Come and play with me!"
 ## END Killer Klown ##
@@ -5560,6 +5560,20 @@ w:2
 sheep
 
 @The_monster@ "Baaaas" balefully.
+%%%%
+silenced silent spectre
+
+VISUAL:@The_monster@ gestures at you to be quiet.
+
+VISUAL:@The_monster@ flutters as if in a wind.
+
+VISUAL:@The_monster@ stares at you with its ghostly eyes.
+
+VISUAL:@The_monster@ fades in and out of visibility.
+
+VISUAL:@The_monster@ flickers into the darkness.
+
+VISUAL:@The_monster@ grins at you slowly.
 %%%%
 default silver statue
 

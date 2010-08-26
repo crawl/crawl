@@ -115,11 +115,15 @@ void debug_dump_levgen()
     else
     {
         const CrawlHashTable &vaults = props[LEVEL_VAULTS_KEY].get_table();
-        CrawlHashTable::const_iterator i = vaults.begin();
+        // const_iterator asserts if the table has hash_map == NULL
+        if (!vaults.empty())
+        {
+            CrawlHashTable::const_iterator i = vaults.begin();
 
-        for (; i != vaults.end(); ++i)
-            mprf("    %s: %s", i->first.c_str(),
-                 i->second.get_string().c_str());
+            for (; i != vaults.end(); ++i)
+                mprf("    %s: %s", i->first.c_str(),
+                     i->second.get_string().c_str());
+        }
     }
     mpr("");
 }

@@ -10,7 +10,6 @@
 
 #include "branch.h"
 #include "chardump.h"
-#include "coord.h"
 #include "dungeon.h"
 #include "env.h"
 #include "flood_find.h"
@@ -132,13 +131,6 @@ static bool mg_do_build_level(int niters)
                     env.level_build_method.c_str(),
                     level_id::current().describe().c_str(),
                     vaults.c_str());
-
-            // Mapping would only have mapped squares that the player can
-            // reach - explicitly map the full level.
-            coord_def c;
-            for (c.y = 0; c.y < GYM; ++c.y)
-                for (c.x = 0; c.x < GXM; ++c.x)
-                    set_map_knowledge_obj(c, grd(c));
 
             dump_map(fp);
 

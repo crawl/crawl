@@ -22,6 +22,7 @@
 #include "externs.h"
 
 #include "abl-show.h"
+#include "acquire.h"
 #include "areas.h"
 #include "artefact.h"
 #include "attitude-change.h"
@@ -39,8 +40,6 @@
 #include "effects.h"
 #include "env.h"
 #include "enum.h"
-#include "fprop.h"
-#include "fight.h"
 #include "files.h"
 #include "food.h"
 #include "godabil.h"
@@ -63,10 +62,8 @@
 #include "mon-util.h"
 #include "mon-place.h"
 #include "mgen_data.h"
-#include "coord.h"
 #include "mon-stuff.h"
 #include "mutation.h"
-#include "newgame.h"
 #include "notes.h"
 #include "options.h"
 #include "ouch.h"
@@ -74,10 +71,9 @@
 #include "player.h"
 #include "shopping.h"
 #include "skills2.h"
-#include "spells1.h"
-#include "spells3.h"
 #include "spl-book.h"
-#include "spl-mis.h"
+#include "spl-miscast.h"
+#include "spl-selfench.h"
 #include "sprint.h"
 #include "stash.h"
 #include "state.h"
@@ -549,13 +545,6 @@ std::string get_god_likes(god_type which_god, bool verbose)
         likes.push_back(info);
         break;
 
-    case GOD_SHINING_ONE:
-        snprintf(info, INFO_SIZE, "you sacrifice unholy and evil items%s",
-                 verbose ? " (by dropping them on an altar and praying)" : "");
-
-        likes.push_back(info);
-        break;
-
     case GOD_BEOGH:
         snprintf(info, INFO_SIZE, "you bless dead orcs%s",
                  verbose ? " (by standing over their remains and <w>p</w>raying)" : "");
@@ -946,8 +935,7 @@ static void _inc_penance(god_type god, int val)
         take_note(Note(NOTE_PENANCE, god));
 
         you.penance[god] += val;
-        you.penance[god] = std::min<unsigned char>(MAX_PENANCE,
-                                                   you.penance[god]);
+        you.penance[god] = std::min((uint8_t)MAX_PENANCE, you.penance[god]);
 
         // Orcish bonuses don't apply under penance.
         if (god == GOD_BEOGH)
@@ -1004,8 +992,7 @@ static void _inc_penance(god_type god, int val)
     else
     {
         you.penance[god] += val;
-        you.penance[god] = std::min<unsigned char>(MAX_PENANCE,
-                                                   you.penance[god]);
+        you.penance[god] = std::min((uint8_t)MAX_PENANCE, you.penance[god]);
     }
 }
 
@@ -1277,15 +1264,15 @@ void mons_make_god_gift(monsters *mon, god_type god)
     if (god == GOD_NO_GOD)
         god = acting_god;
 
-    ASSERT(!(mon->flags & MF_GOD_GIFT));
+    if (mon->flags & MF_GOD_GIFT)
+    {
+        dprf("Monster '%s' was already a gift of god '%s', now god '%s'.",
+             mon->name(DESC_PLAIN, true).c_str(),
+             god_name(mon->god).c_str(),
+             god_name(god).c_str());
+    }
 
     mon->god = god;
-
-#ifdef DEBUG
-    if (mon->flags & MF_GOD_GIFT)
-        mprf(MSGCH_DIAGNOSTICS, "Monster '%s' is already a gift of god '%s'",
-             mon->name(DESC_PLAIN, true).c_str(), god_name(god).c_str());
-#endif
     mon->flags |= MF_GOD_GIFT;
 }
 
@@ -2523,8 +2510,7 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
         // piety_hysteresis is the amount of _loss_ stored up, so this
         // may look backwards.
         const int old_hysteresis = you.piety_hysteresis;
-        you.piety_hysteresis =
-            (unsigned char)std::max<int>(0, you.piety_hysteresis - pgn);
+        you.piety_hysteresis = std::max<int>(0, you.piety_hysteresis - pgn);
         const int pgn_borrowed = (old_hysteresis - you.piety_hysteresis);
         pgn -= pgn_borrowed;
 
@@ -2633,7 +2619,7 @@ void lose_piety(int pgn)
 
     // Apply hysteresis.
     const int old_hysteresis = you.piety_hysteresis;
-    you.piety_hysteresis = (unsigned char)std::min<int>(
+    you.piety_hysteresis = std::min<int>(
         PIETY_HYSTERESIS_LIMIT, you.piety_hysteresis + pgn);
     const int pgn_borrowed = (you.piety_hysteresis - old_hysteresis);
     pgn -= pgn_borrowed;
@@ -2708,6 +2694,12 @@ void lose_piety(int pgn)
     {
         int diffrank = piety_rank(you.piety) - piety_rank(old_piety);
         che_handle_change(CB_PIETY, diffrank);
+    }
+
+    if (you.religion == GOD_SHINING_ONE)
+    {
+        // Piety change affects halo radius.
+        invalidate_agrid(true);
     }
 }
 
@@ -3090,7 +3082,7 @@ bool god_likes_items(god_type god)
 
     switch (god)
     {
-    case GOD_ZIN: case GOD_SHINING_ONE: case GOD_BEOGH: case GOD_NEMELEX_XOBEH:
+    case GOD_ZIN: case GOD_BEOGH: case GOD_NEMELEX_XOBEH:
         return (true);
 
     case GOD_NO_GOD: case NUM_GODS: case GOD_RANDOM: case GOD_NAMELESS:
@@ -3117,9 +3109,6 @@ bool god_likes_item(god_type god, const item_def& item)
     {
     case GOD_ZIN:
         return (item.base_type == OBJ_GOLD);
-
-    case GOD_SHINING_ONE:
-        return (is_unholy_item(item) || is_evil_item(item));
 
     case GOD_BEOGH:
         return (item.base_type == OBJ_CORPSES
@@ -3562,30 +3551,6 @@ void handle_god_time()
     if (one_chance_in(100))
     {
         // Choose a god randomly from those to whom we owe penance.
-        //
-        // Proof: (By induction)
-        //
-        // 1) n = 1, probability of choosing god is one_chance_in(1)
-        // 2) Asuume true for n = k (ie. prob = 1 / n for all n)
-        // 3) For n = k + 1,
-        //
-        //      P:new-found-god = 1 / n (see algorithm)
-        //      P:other-gods = (1 - P:new-found-god) * P:god-at-n=k
-        //                             1        1
-        //                   = (1 - -------) * ---
-        //                           k + 1      k
-        //
-        //                          k         1
-        //                   = ----------- * ---
-        //                        k + 1       k
-        //
-        //                       1       1
-        //                   = -----  = ---
-        //                     k + 1     n
-        //
-        // Therefore, by induction the probability is uniform.  As for
-        // why we do it this way... it requires only one pass and doesn't
-        // require an array.
 
         god_type which_god = GOD_NO_GOD;
         unsigned int count = 0;
@@ -3745,7 +3710,7 @@ int god_colour(god_type god) // mv - added
     return (YELLOW);
 }
 
-char god_message_altar_colour(god_type god)
+uint8_t god_message_altar_colour(god_type god)
 {
     int rnd;
 
