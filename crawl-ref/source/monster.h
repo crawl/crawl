@@ -85,7 +85,7 @@ public:
     mon_attitude_type attitude;
     beh_type behaviour;
     unsigned short foe;
-    char ench_countdown;
+    int8_t ench_countdown;
     mon_enchant_list enchantments;
     uint64_t flags;                    // bitfield of boolean flags
 
@@ -203,7 +203,7 @@ public:
     void pandemon_init();
     void dancing_weapon_init();
     void uglything_init(bool only_mutate = false);
-    void uglything_mutate(unsigned char force_colour = BLACK);
+    void uglything_mutate(uint8_t force_colour = BLACK);
     void uglything_upgrade();
     void destroy_inventory();
     void load_spells(mon_spellbook_type spellbook);
@@ -316,8 +316,10 @@ public:
     bool is_unholy() const;
     bool is_evil() const;
     bool is_unclean() const;
+    bool is_known_chaotic() const;
     bool is_chaotic() const;
     bool is_insubstantial() const;
+    int res_hellfire() const;
     int res_fire() const;
     int res_steam() const;
     int res_cold() const;
@@ -383,6 +385,7 @@ public:
 
     void poison(actor *agent, int amount = 1);
     bool sicken(int strength);
+    bool bleed(int amount, int degree);
     void paralyse(actor *, int str);
     void petrify(actor *, int str);
     void slow_down(actor *, int str);

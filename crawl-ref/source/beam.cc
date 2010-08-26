@@ -59,9 +59,10 @@
 #include "religion.h"
 #include "godconduct.h"
 #include "skills.h"
-#include "spells1.h"
-#include "spells3.h"
-#include "spells4.h"
+#include "spl-clouds.h"
+#include "spl-goditem.h"
+#include "spl-monench.h"
+#include "spl-transloc.h"
 #include "state.h"
 #include "stuff.h"
 #include "teleport.h"
@@ -1731,8 +1732,8 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         break;
 
     case BEAM_HELLFIRE:
-        resist = monster->res_fire();
-        if (resist > 2)
+        resist = monster->res_hellfire();
+        if (resist > 0)
         {
             if (doFlavouredEffects)
             {
@@ -1742,13 +1743,6 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
             }
 
             hurted = 0;
-        }
-        else if (resist > 0)
-        {
-            if (doFlavouredEffects)
-                simple_monster_message(monster, " partially resists.");
-
-            hurted /= 2;
         }
         else if (resist < 0)
         {
@@ -2426,7 +2420,7 @@ void bolt::affect_ground()
             env.pgrid(pos()) |= FPROP_MOLD;
         }
 
-        if(x_chance_in_y(2, 21)
+        if (x_chance_in_y(2, 21)
            && mons_class_can_pass(MONS_BALLISTOMYCETE, env.grid(pos()))
            && !actor_at(pos()))
         {
@@ -3731,7 +3725,8 @@ void bolt::handle_stop_attack_prompt(monsters* mon)
         if (friend_info.count == 1 && !friend_info.dont_stop
             || foe_info.count == 1 && !foe_info.dont_stop)
         {
-            if (stop_attack_prompt(mon, true, target))
+            const bool autohit_first = (hit == AUTOMATIC_HIT);
+            if (stop_attack_prompt(mon, true, target, autohit_first))
             {
                 beam_cancelled = true;
                 finish_beam();

@@ -24,6 +24,7 @@
 #include "options.h"
 #include "player.h"
 #include "shopping.h"
+#include "showsymb.h"
 #include "state.h"
 #include "terrain.h"
 #include "tiledef-dngn.h"
@@ -409,11 +410,11 @@ tileidx_t tileidx_out_of_bounds(int branch)
         return (TILE_DNGN_UNSEEN | TILE_FLAG_UNSEEN);
 }
 
-void tileidx_from_show(tileidx_t *fg, tileidx_t *bg, const show_type &show)
+void tileidx_from_map_cell(tileidx_t *fg, tileidx_t *bg, const map_cell &cell)
 {
-    *bg = _tileidx_feature_base(show.feat);
+    *bg = _tileidx_feature_base(cell.feat());
 
-    switch (show.cls)
+    switch (get_cell_show_class(cell))
     {
     default:
     case SH_NOTHING:
@@ -421,7 +422,7 @@ void tileidx_from_show(tileidx_t *fg, tileidx_t *bg, const show_type &show)
         *fg = 0;
         break;
     case SH_ITEM:
-        *fg = tileidx_show_item(show.item);
+        *fg = tileidx_item(*cell.item());
         break;
     case SH_CLOUD:
         *fg = TILE_CLOUD_GREY_SMOKE;
@@ -430,7 +431,7 @@ void tileidx_from_show(tileidx_t *fg, tileidx_t *bg, const show_type &show)
         *fg = TILE_UNSEEN_MONSTER;
         break;
     case SH_MONSTER:
-        *fg = _tileidx_monster_base(show.mons);
+        *fg = _tileidx_monster_base(cell.monster());
         break;
     }
 }
@@ -447,17 +448,17 @@ void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, const coord_def& gc)
     const map_cell &cell = env.map_knowledge(gc);
 
     // Override terrain for magic mapping.
-    if (!cell.seen() && is_terrain_mapped(gc))
+    if (!cell.seen() && env.map_knowledge(gc).mapped())
         *bg = _tileidx_feature_base(cell.feat());
     else
         *bg = mem_bg;
     *bg |= tileidx_unseen_flag(gc);
 
     // Override foreground for monsters/items
-    if (is_map_knowledge_detected_mons(gc))
-        *fg = _tileidx_monster_base(cell.object.mons);
-    else if (is_map_knowledge_detected_item(gc))
-        *fg = tileidx_show_item(cell.object.item);
+    if (env.map_knowledge(gc).detected_monster())
+        *fg = _tileidx_monster_base(cell.monster());
+    else if (env.map_knowledge(gc).detected_item())
+        *fg = tileidx_item(*cell.item());
     else
         *fg = mem_fg;
 }
@@ -862,6 +863,12 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_GIANT_CENTIPEDE;
     case MONS_SCORPION:
         return TILEP_MONS_SCORPION;
+    case MONS_GIANT_SCORPION:
+        return TILEP_MONS_GIANT_SCORPION;
+    case MONS_TARANTELLA:
+        return TILEP_MONS_TARANTELLA;
+    case MONS_JUMPING_SPIDER:
+        return TILEP_MONS_JUMPING_SPIDER;
     case MONS_WOLF_SPIDER:
         return TILEP_MONS_WOLF_SPIDER;
     case MONS_TRAPDOOR_SPIDER:
@@ -942,6 +949,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_GIANT_BLOWFLY;
     case MONS_RED_WASP:
         return TILEP_MONS_RED_WASP;
+    case MONS_GHOST_MOTH:
+        return TILEP_MONS_GHOST_MOTH;
     case MONS_MOTH_OF_WRATH:
         return TILEP_MONS_MOTH_OF_WRATH;
 
@@ -1784,16 +1793,7 @@ tileidx_t tileidx_monster(const monsters *mons)
     else if (mons_looks_distracted(mons))
         ch |= TILE_FLAG_MAY_STAB;
 
-    std::string damage_desc;
-    mon_dam_level_type damage_level;
-    mons_get_damage_level(mons, damage_desc, damage_level);
-
-    // If no messages about wounds, don't display an icon either.
-    if (monster_descriptor(mons->type, MDSC_NOMSG_WOUNDS)
-        || mons_is_unknown_mimic(mons))
-    {
-        damage_level = MDAM_OKAY;
-    }
+    mon_dam_level_type damage_level = mons_get_damage_level(mons);
 
     switch (damage_level)
     {
@@ -2359,6 +2359,7 @@ static tileidx_t _tileidx_food(const item_def &item)
     case FOOD_BEEF_JERKY:   return TILE_FOOD_BEEF_JERKY;
     case FOOD_CHEESE:       return TILE_FOOD_CHEESE;
     case FOOD_SAUSAGE:      return TILE_FOOD_SAUSAGE;
+    case FOOD_AMBROSIA:     return TILE_FOOD_AMBROSIA;
     case FOOD_CHUNK:        return _tileidx_chunk(item);
     }
 
@@ -2560,6 +2561,12 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_GIANT_CENTIPEDE;
     case MONS_SCORPION:
         return TILE_CORPSE_SCORPION;
+    case MONS_GIANT_SCORPION:
+        return TILE_CORPSE_GIANT_SCORPION;
+    case MONS_TARANTELLA:
+        return TILE_CORPSE_TARANTELLA;
+    case MONS_JUMPING_SPIDER:
+        return TILE_CORPSE_JUMPING_SPIDER;
     case MONS_WOLF_SPIDER:
         return TILE_CORPSE_WOLF_SPIDER;
     case MONS_TRAPDOOR_SPIDER:
@@ -2622,6 +2629,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_YELLOW_WASP;
     case MONS_RED_WASP:
         return TILE_CORPSE_RED_WASP;
+    case MONS_GHOST_MOTH:
+        return TILE_CORPSE_GHOST_MOTH;
     case MONS_MOTH_OF_WRATH:
         return TILE_CORPSE_MOTH_OF_WRATH;
 
@@ -3745,10 +3754,11 @@ tileidx_t tileidx_unseen_flag(const coord_def &gc)
 {
     if (!map_bounds(gc))
         return (TILE_FLAG_UNSEEN);
-    else if (is_terrain_known(gc)
-                && !is_terrain_seen(gc)
-             || is_map_knowledge_detected_item(gc)
-             || is_map_knowledge_detected_mons(gc))
+    else if (env.map_knowledge(gc).known()
+                && !env.map_knowledge(gc).seen()
+             || env.map_knowledge(gc).detected_item()
+             || env.map_knowledge(gc).detected_monster()
+             )
     {
         return (TILE_FLAG_MM_UNSEEN);
     }

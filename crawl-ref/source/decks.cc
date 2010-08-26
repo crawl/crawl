@@ -12,6 +12,7 @@
 
 #include "externs.h"
 
+#include "acquire.h"
 #include "beam.h"
 #include "cio.h"
 #include "coordit.h"
@@ -47,13 +48,16 @@
 #include "religion.h"
 #include "godconduct.h"
 #include "skills2.h"
-#include "spells1.h"
-#include "spells2.h"
-#include "spells3.h"
-#include "spells4.h"
 #include "spl-cast.h"
-#include "spl-mis.h"
+#include "spl-damage.h"
+#include "spl-goditem.h"
+#include "spl-miscast.h"
+#include "spl-other.h"
+#include "spl-selfench.h"
+#include "spl-summoning.h"
+#include "spl-transloc.h"
 #include "spl-util.h"
+#include "spl-wpnench.h"
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -193,7 +197,7 @@ const deck_archetype deck_of_punishment[] = {
     END_OF_DECK
 };
 
-static void _check_odd_card(unsigned char flags)
+static void _check_odd_card(uint8_t flags)
 {
     if ((flags & CFLAG_ODDITY) && !(flags & CFLAG_SEEN))
         mpr("This card doesn't seem to belong here.");
@@ -235,7 +239,7 @@ static void _shuffle_deck(item_def &deck)
 }
 
 card_type get_card_and_flags(const item_def& deck, int idx,
-                             unsigned char& _flags)
+                             uint8_t& _flags)
 {
     const CrawlHashTable &props = deck.props;
     const CrawlVector    &cards = props["cards"].get_vector();
@@ -245,13 +249,13 @@ card_type get_card_and_flags(const item_def& deck, int idx,
     if (idx < 0)
         idx += static_cast<int>(cards.size());
 
-    _flags = (unsigned char) flags[idx].get_byte();
+    _flags = (uint8_t) flags[idx].get_byte();
 
     return static_cast<card_type>(cards[idx].get_byte());
 }
 
 static void _set_card_and_flags(item_def& deck, int idx, card_type card,
-                                unsigned char _flags)
+                                uint8_t _flags)
 {
     CrawlHashTable &props = deck.props;
     CrawlVector    &cards = props["cards"].get_vector();
@@ -260,8 +264,8 @@ static void _set_card_and_flags(item_def& deck, int idx, card_type card,
     if (idx == -1)
         idx = static_cast<int>(cards.size()) - 1;
 
-    cards[idx] = (char) card;
-    flags[idx] = (char) _flags;
+    cards[idx].get_byte() = card;
+    flags[idx].get_byte() = _flags;
 }
 
 const char* card_name(card_type card)
@@ -329,7 +333,7 @@ const char* card_name(card_type card)
     return "a very buggy card";
 }
 
-static const deck_archetype* _random_sub_deck(unsigned char deck_type)
+static const deck_archetype* _random_sub_deck(uint8_t deck_type)
 {
     const deck_archetype *pdeck = NULL;
     switch (deck_type)
@@ -392,7 +396,7 @@ static card_type _choose_from_archetype(const deck_archetype* pdeck,
     return result;
 }
 
-static card_type _random_card(unsigned char deck_type, deck_rarity_type rarity,
+static card_type _random_card(uint8_t deck_type, deck_rarity_type rarity,
                               bool &was_oddity)
 {
     const deck_archetype *pdeck = _random_sub_deck(deck_type);
@@ -412,7 +416,7 @@ static card_type _random_card(const item_def& item, bool &was_oddity)
 }
 
 static card_type _draw_top_card(item_def& deck, bool message,
-                                unsigned char &_flags)
+                                uint8_t &_flags)
 {
     CrawlHashTable &props = deck.props;
     CrawlVector    &cards = props["cards"].get_vector();
@@ -441,7 +445,7 @@ static card_type _draw_top_card(item_def& deck, bool message,
 }
 
 static void _push_top_card(item_def& deck, card_type card,
-                           unsigned char _flags)
+                           uint8_t _flags)
 {
     CrawlHashTable &props = deck.props;
     CrawlVector    &cards = props["cards"].get_vector();
@@ -551,8 +555,8 @@ static bool _check_buggy_deck(item_def& deck)
 
     for (vec_size i = 0; i < num_cards; ++i)
     {
-        unsigned char card   = cards[i].get_byte();
-        unsigned char _flags = flags[i].get_byte();
+        uint8_t card   = cards[i].get_byte();
+        uint8_t _flags = flags[i].get_byte();
         if (card >= NUM_CARDS)
         {
             cards.erase(i);
@@ -757,7 +761,7 @@ static void _deck_ident(item_def& deck)
 // This also shuffles the deck.
 static void _deck_lose_card(item_def& deck)
 {
-    unsigned char flags = 0;
+    uint8_t flags = 0;
     // Seen cards are only half as likely to fall out,
     // marked cards only one-quarter as likely (note that marked
     // cards are also seen.)
@@ -798,7 +802,7 @@ bool deck_peek()
     const int    num_cards = cards.size();
 
     card_type card1, card2;
-    unsigned char flags1, flags2;
+    uint8_t flags1, flags2;
 
     card1 = get_card_and_flags(deck, 0, flags1);
 
@@ -891,7 +895,7 @@ bool deck_mark()
     std::vector<std::string> names;
     for (int i = 0; i < num_to_mark; ++i)
     {
-        unsigned char flags;
+        uint8_t flags;
         card_type     card = get_card_and_flags(deck, i, flags);
 
         flags |= CFLAG_SEEN | CFLAG_MARKED;
@@ -983,12 +987,12 @@ bool deck_stack()
     const int num_cards    = cards_in_deck(deck);
     const int num_to_stack = (num_cards < 5 ? num_cards : 5);
 
-    std::vector<card_type>     draws;
-    std::vector<unsigned char> flags;
+    std::vector<card_type> draws;
+    std::vector<uint8_t>   flags;
     for (int i = 0; i < num_cards; ++i)
     {
-        unsigned char _flags;
-        card_type     card = _draw_top_card(deck, false, _flags);
+        uint8_t   _flags;
+        card_type card = _draw_top_card(deck, false, _flags);
 
         if (i < num_to_stack)
         {
@@ -1115,13 +1119,13 @@ bool deck_triple_draw()
     }
 
     const int num_to_draw = (num_cards < 3 ? num_cards : 3);
-    std::vector<card_type>     draws;
-    std::vector<unsigned char> flags;
+    std::vector<card_type> draws;
+    std::vector<uint8_t>   flags;
 
     for (int i = 0; i < num_to_draw; ++i)
     {
-        unsigned char _flags;
-        card_type     card = _draw_top_card(deck, false, _flags);
+        uint8_t _flags;
+        card_type card = _draw_top_card(deck, false, _flags);
 
         draws.push_back(card);
         flags.push_back(_flags);
@@ -1161,7 +1165,7 @@ bool deck_triple_draw()
 
     // Don't forget to update the number of marked ones, too.
     // But don't reduce the number of non-brownie draws.
-    char num_marked_left = deck.props["num_marked"].get_byte();
+    uint8_t num_marked_left = deck.props["num_marked"].get_byte();
     for (int i = 0; i < num_to_draw; ++i)
     {
         _remember_drawn_card(deck, draws[i], false);
@@ -1206,7 +1210,7 @@ void draw_from_deck_of_punishment()
 }
 
 static int _xom_check_card(item_def &deck, card_type card,
-                           unsigned char flags)
+                           uint8_t flags)
 {
     int amusement = 64;
 
@@ -1257,7 +1261,7 @@ void evoke_deck( item_def& deck )
     const deck_rarity_type rarity = deck_rarity(deck);
     CrawlHashTable &props = deck.props;
 
-    unsigned char flags = 0;
+    uint8_t flags = 0;
     card_type card = _draw_top_card(deck, true, flags);
 
     // Oddity cards don't give any information about the deck.
@@ -1975,7 +1979,7 @@ static void _shuffle_card(int power, deck_rarity_type rarity)
     int perm[NUM_STATS] = { 0, 1, 2 };
     std::random_shuffle(perm, perm + 3);
 
-    FixedVector<char, NUM_STATS> new_base;
+    FixedVector<int8_t, NUM_STATS> new_base;
     for (int i = 0; i < NUM_STATS; ++i)
         new_base[perm[i]]  = you.base_stats[i];
 
@@ -2294,7 +2298,12 @@ static bool _trowel_card(int power, deck_rarity_type rarity)
 
     const int power_level = get_power_level(power, rarity);
     bool done_stuff = false;
-    if (power_level >= 2)
+
+    // [ds] FIXME: Remove the LEVEL_DUNGEON restriction once Crawl
+    // handles stacked level_area_types correctly. We should also
+    // review whether Trowel being able to create infinite portal
+    // vaults is a Good Thing, because it looks pretty broken to me.
+    if (power_level >= 2 && you.level_type == LEVEL_DUNGEON)
     {
         // Generate a portal to something.
         const map_def *map = random_map_for_tag("trowel_portal");
@@ -2773,7 +2782,7 @@ static int _card_power(deck_rarity_type rarity)
 }
 
 bool card_effect(card_type which_card, deck_rarity_type rarity,
-                 unsigned char flags, bool tell_card)
+                 uint8_t flags, bool tell_card)
 {
     bool rc = true;
     const int power = _card_power(rarity);
@@ -2941,7 +2950,7 @@ bool top_card_is_known(const item_def &deck)
     if (!is_deck(deck))
         return (false);
 
-    unsigned char flags;
+    uint8_t flags;
     get_card_and_flags(deck, -1, flags);
 
     return (flags & CFLAG_MARKED);
@@ -2952,7 +2961,7 @@ card_type top_card(const item_def &deck)
     if (!is_deck(deck))
         return (NUM_CARDS);
 
-    unsigned char flags;
+    uint8_t flags;
     card_type card = get_card_and_flags(deck, -1, flags);
 
     UNUSED(flags);
@@ -2985,13 +2994,13 @@ deck_rarity_type deck_rarity(const item_def &item)
     return static_cast<deck_rarity_type>(item.special);
 }
 
-unsigned char deck_rarity_to_color(deck_rarity_type rarity)
+uint8_t deck_rarity_to_color(deck_rarity_type rarity)
 {
     switch (rarity)
     {
     case DECK_RARITY_COMMON:
     {
-        const unsigned char colours[] = {LIGHTBLUE, GREEN, CYAN, RED};
+        const uint8_t colours[] = {LIGHTBLUE, GREEN, CYAN, RED};
         return RANDOM_ELEMENT(colours);
     }
 
@@ -3027,7 +3036,7 @@ void init_deck(item_def &item)
         bool      was_odd = false;
         card_type card    = _random_card(item, was_odd);
 
-        unsigned char flags = 0;
+        uint8_t flags = 0;
         if (was_odd)
             flags = CFLAG_ODDITY;
 

@@ -14,6 +14,9 @@
 #include "mon-enum.h"
 #include "mon_resist_def.h"
 
+mon_attack_flavour ugly_thing_colour_to_flavour(uint8_t u_colour);
+mon_resist_def ugly_thing_resists(bool very_ugly, mon_attack_flavour u_att_flav);
+
 class ghost_demon
 {
 public:
@@ -34,7 +37,7 @@ public:
     mon_resist_def resists;
 
     bool spellcaster, cycle_colours;
-    unsigned char colour;
+    uint8_t colour;
     flight_type fly;
 
     monster_spells spells;
@@ -45,7 +48,7 @@ public:
     void init_random_demon();
     void init_player_ghost();
     void init_ugly_thing(bool very_ugly, bool only_mutate = false,
-                         unsigned char force_colour = BLACK);
+                         uint8_t force_colour = BLACK);
     void init_dancing_weapon(const item_def& weapon, int power);
     void ugly_thing_to_very_ugly_thing();
 

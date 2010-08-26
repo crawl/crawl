@@ -219,55 +219,23 @@ function trove.get_trove_item(e, value, base_item)
 end
 
 function trove.portal(e)
-    local d = crawl.roll_dice
-    local entry_fee = 5 * math.floor(200 + d(3,200) / 3 + d(10) * d(10) * d(10))
-    local a = you.absdepth()
-    local lock_fee = 100 + 10 * d(a)
-    local timeout_turns = crawl.random_range(1600, 3000) + 5 * (30 - a) * (30 - a)
-    local dur = "n exceptionally long"
-    if timeout_turns < 2000 then
-        dur = " rather brief"
-    elseif timeout_turns < 3000 then
-        dur = " long"
-    elseif timeout_turns < 5000 then
-        dur = " very long"
-    end
     local desc_long = [[ Once upon a time, an enterprising thief and wizard, terrified of being caught committing an act of burglary, created a system of portals leading into the secret treasure troves and chambers of the rich. Too scared to loot them himself, he instead charged an extortionate fee for entry to anyone who wanted to rifle through them.
 
 The secrets of the gateways died with him when his fellow thieves, disgusted at his betrayal of their 'ideals', had him murdered. With his death, the now-uncontrolled portals began moving rapidly from one dimension to the next, stopping only long enough to absorb magical energy.]]
-    local messager =
-        timed_msg {
-            visible = true,
-            -- $F{xxx} will be substituted with the 'entity' property of the timed
-            -- marker, or with the desc property (if entity is not set).
-           messages = time_messages(timeout_turns,
-                       "$F{The} hums gently. It seems happy to stay here for a" ..
-                       dur .. " time.",
-                       "$F{The} dims for a moment, then brightens again.",
-                       "$F{The} flickers impatiently between here and not.",
-                       "$F{The} flickers urgently, almost stroboscopically.")
-    }
 
     local item = trove.get_trove_item(e, 800)
 
     local function stair ()
         return trove_marker  {
-            amount = entry_fee,
-            secondary_amount = lock_fee,
             toll_item = item,
-            dur = dur,
             entity = "portal",
             toll_desc = "to enter a treasure trove",
-            lock_desc = "to a nasty imp",
             desc = "portal to a secret trove of treasure",
             desc_long = desc_long,
             overview = "Trove",
             dst = "trove",
             dstorigin = "in a treasure trove",
-            turns = timeout_turns,
-            msg = messager,
             floor = "floor",
-            disappear = "The portal fades slowly, and then, between one blink and the next, disappears completely."
         }
     end
     e.lua_marker("O", stair)

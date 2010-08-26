@@ -601,7 +601,7 @@ The scaly skin of a dragon. It can be fashioned into proper armour, but even in 
 %%%%
 javelin
 
-A long, light polearm that can be thrown by hand. {{
+A long, light stick that can be thrown by hand. {{
 if you.race() == "Halfling"
     or you.race() == "Kobold"
     or you.race() == "Spriggan"
@@ -745,6 +745,10 @@ A pair of gloves.
 pear
 
 A delicious juicy fruit.
+%%%%
+piece of ambrosia
+
+A portion of strange substance, produced by ghost moths. Consuming it provides magical energy as well as nutrition, at the cost of losing your mental focus for a short period.
 %%%%
 plate mail
 

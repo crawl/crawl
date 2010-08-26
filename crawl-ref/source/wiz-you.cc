@@ -83,7 +83,7 @@ void wizard_change_species( void )
     you.is_undead = get_undead_state(sp);
 
     // Change permanent mutations, but preserve non-permanent ones.
-    unsigned char prev_muts[NUM_MUTATIONS];
+    uint8_t prev_muts[NUM_MUTATIONS];
     for (i = 0; i < NUM_MUTATIONS; ++i)
     {
         if (you.innate_mutations[i] > 0)

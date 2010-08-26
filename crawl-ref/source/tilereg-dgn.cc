@@ -1133,7 +1133,7 @@ bool DungeonRegion::update_alt_text(std::string &alt)
         return (false);
     if (!map_bounds(gc))
         return (false);
-    if (!is_terrain_seen(gc))
+    if (!env.map_knowledge(gc).seen())
         return (false);
     if (m_last_clicked_grid == gc)
         return (false);

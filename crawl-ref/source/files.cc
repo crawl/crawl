@@ -38,7 +38,6 @@
 
 #include "abyss.h"
 #include "act-iter.h"
-#include "areas.h"
 #include "artefact.h"
 #include "chardump.h"
 #include "cloud.h"
@@ -59,7 +58,6 @@
 #include "jobs.h"
 #include "kills.h"
 #include "libutil.h"
-#include "losglobal.h"
 #include "macro.h"
 #include "mapmark.h"
 #include "message.h"
@@ -71,7 +69,6 @@
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "mon-transit.h"
-#include "newgame.h"
 #include "notes.h"
 #include "options.h"
 #include "output.h"
@@ -90,7 +87,6 @@
 #include "terrain.h"
 #include "travel.h"
 #include "hints.h"
-#include "view.h"
 #include "viewgeom.h"
 
 #ifdef TARGET_OS_WINDOWS
@@ -113,17 +109,17 @@ static std::vector<SavefileCallback::callback>* _callback_list = NULL;
 
 static void _save_level(const level_id& lid);
 
-static bool _get_and_validate_version( FILE *restoreFile, char& major,
-                                       char& minor, std::string* reason = 0);
+static bool _get_and_validate_version( FILE *restoreFile, int& major,
+                                       int& minor, std::string* reason = 0);
 
 
 static bool _determine_ghost_version( FILE *ghostFile,
-                                      char &majorVersion, char &minorVersion );
+                                      int &majorVersion, int &minorVersion );
 
-static void _restore_ghost_version( FILE *ghostFile, char major, char minor );
+static void _restore_ghost_version( FILE *ghostFile, int major, int minor );
 
 static void _restore_tagged_file( FILE *restoreFile, int fileType,
-                                  char minorVersion );
+                                  int minorVersion );
 
 const short GHOST_SIGNATURE = short( 0xDC55 );
 
@@ -255,8 +251,8 @@ player_save_info read_character_info(const std::string &savefile)
     if (!charf)
         return fromfile;
 
-    char majorVersion;
-    char minorVersion;
+    int majorVersion;
+    int minorVersion;
 
     if (_get_and_validate_version(charf, majorVersion, minorVersion))
     {
@@ -1157,7 +1153,7 @@ static void _write_tagged_file( const std::string &filename,
                                 bool extended_version = false )
 {
     // find all relevant tags
-    char tags[NUM_TAGS];
+    int8_t tags[NUM_TAGS];
     tag_set_expected(tags, fileType);
 
     _write_version( filename, outf, TAG_MAJOR_VERSION, TAG_MINOR_VERSION,
@@ -1180,7 +1176,7 @@ static void _safe_write_tagged_file(const std::string &filename,
 
 static void _place_player_on_stair(level_area_type old_level_type,
                                    branch_type old_branch,
-                                   int stair_taken)
+                                   int stair_taken, const coord_def& old_pos)
 {
     bool find_first = true;
 
@@ -1268,7 +1264,7 @@ static void _place_player_on_stair(level_area_type old_level_type,
 
     const coord_def where_to_go =
         dgn_find_nearby_stair(static_cast<dungeon_feature_type>(stair_taken),
-                              you.pos(), find_first);
+                              old_pos, find_first);
     you.moveto(where_to_go);
 }
 
@@ -1477,6 +1473,9 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
                             you.level_type, you.where_are_you, you.absdepth0);
 #endif
 
+    // Save player position for shaft, hatch destination.
+    const coord_def old_pos = you.pos();
+
     // Going up/down stairs, going through a portal, or being banished
     // means the previous x/y movement direction is no longer valid.
     you.reset_prev_move();
@@ -1598,8 +1597,8 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
         // BEGIN -- must load the old level : pre-load tasks
 
         // LOAD various tags
-        char majorVersion;
-        char minorVersion;
+        int majorVersion;
+        int minorVersion;
 
         std::string reason;
         if (!_get_and_validate_version( levelFile, majorVersion, minorVersion,
@@ -1627,24 +1626,22 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     los_changed();
 
-    if (make_changes)
+    // Closes all the gates if you're on the way out.
+    // Before marker activation since it removes some.
+    if (make_changes && you.char_direction == GDT_ASCENDING
+        && you.level_type != LEVEL_PANDEMONIUM)
     {
-        // Closes all the gates if you're on the way out.
-        if (you.char_direction == GDT_ASCENDING
-            && you.level_type != LEVEL_PANDEMONIUM)
-        {
-            _close_level_gates();
-        }
+        _close_level_gates();
+    }
 
-        // Markers must be activated early, since they may rely on
-        // events issued later, e.g. DET_ENTERING_LEVEL or
-        // the DET_TURN_ELAPSED from update_level.
+    // Markers must be activated early, since they may rely on
+    // events issued later, e.g. DET_ENTERING_LEVEL or
+    // the DET_TURN_ELAPSED from update_level.
+    if (make_changes || load_mode == LOAD_RESTART_GAME)
         env.markers.activate_all();
 
-        // update corpses and fountains
-        if (env.elapsed_time && !just_created_level)
-            update_level(you.elapsed_time - env.elapsed_time);
-    }
+    if (make_changes && env.elapsed_time && !just_created_level)
+        update_level(you.elapsed_time - env.elapsed_time);
 
     // Apply all delayed actions, if any.
     if (just_created_level)
@@ -1659,7 +1656,7 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
         if (you.level_type != LEVEL_ABYSS)
         {
             _place_player_on_stair(old_level.level_type,
-                                   old_level.branch, stair_taken);
+                                   old_level.branch, stair_taken, old_pos);
         }
         else
             you.moveto(ABYSS_CENTRE);
@@ -2061,8 +2058,8 @@ bool load_ghost(bool creating_level)
 
 #endif // BONES_DIAGNOSTICS
 
-    char majorVersion;
-    char minorVersion;
+    int majorVersion;
+    int minorVersion;
 
     const std::string cha_fil = _make_ghost_filename();
     FILE *gfile = fopen(cha_fil.c_str(), "rb");
@@ -2214,8 +2211,8 @@ void restore_game(const std::string& name)
     if (!charf )
         end(-1, true, "Unable to open %s for reading!\n", charFile.c_str() );
 
-    char majorVersion;
-    char minorVersion;
+    int majorVersion;
+    int minorVersion;
     std::string reason;
     if (!_get_and_validate_version(charf, majorVersion, minorVersion, &reason))
     {
@@ -2355,10 +2352,10 @@ level_excursion::~level_excursion()
     }
 }
 
-bool get_save_version(FILE *file, char &major, char &minor)
+bool get_save_version(FILE *file, int &major, int &minor)
 {
     // Read first two bytes.
-    char buf[2];
+    uint8_t buf[2];
     if (read2(file, buf, 2) != 2)
     {
         // Empty file?
@@ -2372,8 +2369,8 @@ bool get_save_version(FILE *file, char &major, char &minor)
     return (true);
 }
 
-static bool _get_and_validate_version(FILE *restoreFile, char &major,
-                                      char &minor, std::string* reason)
+static bool _get_and_validate_version(FILE *restoreFile, int &major,
+                                      int &minor, std::string* reason)
 {
     std::string dummy;
     if (reason == 0)
@@ -2424,9 +2421,9 @@ static bool _get_and_validate_version(FILE *restoreFile, char &major,
 }
 
 static void _restore_tagged_file( FILE *restoreFile, int fileType,
-                                  char minorVersion )
+                                  int minorVersion )
 {
-    char tags[NUM_TAGS];
+    int8_t tags[NUM_TAGS];
     tag_set_expected(tags, fileType);
 
     while (true)
@@ -2447,10 +2444,10 @@ static void _restore_tagged_file( FILE *restoreFile, int fileType,
 }
 
 static bool _determine_ghost_version( FILE *ghostFile,
-                                      char &majorVersion, char &minorVersion )
+                                      int &majorVersion, int &minorVersion )
 {
     // Read first two bytes.
-    char buf[2];
+    uint8_t buf[2];
     if (read2(ghostFile, buf, 2) != 2)
         return (false);               // empty file?
 
@@ -2476,7 +2473,7 @@ static bool _determine_ghost_version( FILE *ghostFile,
 }
 
 static void _restore_ghost_version( FILE *ghostFile,
-                                    char majorVersion, char minorVersion )
+                                    int majorVersion, int minorVersion )
 {
     switch (majorVersion)
     {

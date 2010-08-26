@@ -25,6 +25,7 @@
 #include "delay.h"
 #include "effects.h"
 #include "env.h"
+#include "hints.h"
 #include "invent.h"
 #include "items.h"
 #include "itemname.h"
@@ -46,19 +47,17 @@
 #include "religion.h"
 #include "godconduct.h"
 #include "skills2.h"
-#include "spells2.h"
 #include "state.h"
 #include "stuff.h"
 #include "transform.h"
 #include "travel.h"
-#include "hints.h"
 #include "xom.h"
 
 static corpse_effect_type _determine_chunk_effect(corpse_effect_type chunktype,
                                                   bool rotten_chunk);
 static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
                        int mon_intel = 0);
-static void _eating(unsigned char item_class, int item_type);
+static void _eating(object_class_type item_class, int item_type);
 static void _describe_food_change(int hunger_increment);
 static bool _vampire_consume_corpse(int slot, bool invent);
 static void _heal_from_food(int hp_amt, int mp_amt = 0, bool unrot = false,
@@ -869,7 +868,7 @@ static std::string _how_hungry()
 
 bool food_change(bool suppress_message)
 {
-    char newstate = HS_ENGORGED;
+    uint8_t newstate = HS_ENGORGED;
     bool state_changed = false;
     bool less_hungry   = false;
 
@@ -1756,8 +1755,9 @@ static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
         break;
 
     case CE_POISONOUS:
+    case CE_POISON_CONTAM:
         mpr("Yeeuch - this meat is poisonous!");
-        if (poison_player(3 + random2(4), "poisonous meat"))
+        if (poison_player(3 + random2(4), "", "poisonous meat"))
             xom_is_stimulated(random2(128));
         break;
 
@@ -1817,7 +1817,7 @@ static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
     }
 }
 
-static void _eating(unsigned char item_class, int item_type)
+static void _eating(object_class_type item_class, int item_type)
 {
     int food_value = 0;
     int how_herbivorous = player_mutation_level(MUT_HERBIVOROUS);
@@ -1837,6 +1837,9 @@ static void _eating(unsigned char item_class, int item_type)
             break;
         case FOOD_BREAD_RATION:
             food_value = 4400;
+            break;
+        case FOOD_AMBROSIA:
+            food_value = 2500;
             break;
         case FOOD_HONEYCOMB:
             food_value = 2000;
@@ -2088,6 +2091,11 @@ void finished_eating_message(int food_type)
         mpr("That royal jelly was delicious!");
         restore_stat(STAT_ALL, 0, false);
         break;
+    case FOOD_AMBROSIA:                       // XXX: could put some more
+        mpr("That ambrosia tasted strange."); // inspired messages here --evk
+        potion_effect(POT_CONFUSION, 0, false, false);
+        potion_effect(POT_MAGIC, 0, false, false);
+        break;
     case FOOD_PIZZA:
         if (!Options.pizza.empty() && !one_chance_in(3))
             mprf("Mmm... %s.", Options.pizza.c_str());
@@ -2254,11 +2262,12 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
                     break;
 
                 case CE_POISONOUS:
+                case CE_POISON_CONTAM:
                     make_hungry(food_value / 2, false);
                     // Always print this message - maybe you lost poison
                     // resistance due to feeding.
                     mpr("Blech - this blood tastes nasty!");
-                    if (poison_player(1 + random2(3), "poisoned blood"))
+                    if (poison_player(1 + random2(3), "", "poisoned blood"))
                         xom_is_stimulated(random2(128));
                     stop_delay();
                     return;
@@ -2314,7 +2323,7 @@ bool is_poisonous(const item_def &food)
     if (player_res_poison(false))
         return (false);
 
-    return (mons_corpse_effect(food.plus) == CE_POISONOUS);
+    return (chunk_is_poisonous(mons_corpse_effect(food.plus)));
 }
 
 // Returns true if a food item (also corpses) is mutagenic.
@@ -2340,7 +2349,9 @@ bool is_contaminated(const item_def &food)
     if (you.species == SP_GHOUL)
         return (false);
 
-    return (mons_corpse_effect(food.plus) == CE_CONTAMINATED);
+    const corpse_effect_type chunk_type = mons_corpse_effect(food.plus);
+    return (chunk_type == CE_CONTAMINATED
+            || player_res_poison(false) && chunk_type == CE_POISON_CONTAM);
 }
 
 // Returns true if a food item (also corpses) will cause rotting.
@@ -2387,6 +2398,7 @@ static int _player_likes_food_type(int type)
 
     case FOOD_HONEYCOMB:
     case FOOD_ROYAL_JELLY:
+    case FOOD_AMBROSIA:
         return 0;
 
     case NUM_FOODS:
@@ -2679,6 +2691,11 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
     return (survey_says);
 }
 
+bool chunk_is_poisonous(int chunktype)
+{
+    return (chunktype == CE_POISONOUS || chunktype == CE_POISON_CONTAM);
+}
+
 // See if you can follow along here -- except for the amulet of the gourmand
 // addition (long missing and requested), what follows is an expansion of how
 // chunks were handled in the codebase up to this date ... {dlb}
@@ -2699,6 +2716,13 @@ static corpse_effect_type _determine_chunk_effect(corpse_effect_type chunktype,
             chunktype = CE_CLEAN;
         break;
 
+    case CE_POISON_CONTAM:
+        if (player_res_poison() <= 0)
+        {
+            chunktype = CE_POISONOUS;
+            break;
+        }
+        // else fall through
     case CE_CONTAMINATED:
         switch (player_mutation_level(MUT_SAPROVOROUS))
         {

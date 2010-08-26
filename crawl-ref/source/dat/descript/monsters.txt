@@ -66,7 +66,7 @@ The lord of the Iron City of Dis.
 %%%%
 Dissolution
 
-The Pits of Slime used to be a thriving civilization, and Dissolution was the prophet of their god. When the city was overtaken by its current residents, only Dissolution survived, for he alone turned faithfully to the Slime God. Dissolution become a tremendous mass of acidic ooze, yet retained his intelligence. He is filled with hatred for anything that can hold a form.
+The Pits of Slime used to be a thriving civilization, and Dissolution was the prophet of their god. When the city was overtaken by its current residents, only Dissolution survived, for he alone turned faithfully to the Slime God. Dissolution became a tremendous mass of acidic ooze, yet retained his intelligence. He is filled with hatred for anything that can hold a form.
 %%%%
 Donald
 {{
@@ -404,7 +404,7 @@ A huge and very powerful demon, wreathed in fire and shadows.
 %%%%
 bear
 
-A common cave bear.
+A common cave bear. If provoked, it may become angry!
 %%%%
 beast
 
@@ -420,7 +420,7 @@ An unusually large kobold.
 %%%%
 black bear
 
-A small black bear.
+A small black bear. If provoked, it may become angry!
 %%%%
 black draconian
 
@@ -757,6 +757,10 @@ gargoyle
 
 A hideous stone statue come to life.
 %%%%
+ghost moth
+
+A vile interdimensional predator that feeds on the life force of living beings. The few who have seen one and lived say it resembles an enormous spiny moth. Its bizarre lifecycle involves the production of ambrosia, much valued by gods and wizards.
+%%%%
 ghoul
 
 An undead humanoid creature, created from a decaying corpse by some unholy means of necromancy. It exists to spread disease and decay, and gains power from decaying corpses in the same way a necrophage does.
@@ -833,6 +837,10 @@ giant orange brain
 
 A huge wrinkled brain, floating just off the floor. Every now and then it seems to pulsate.
 %%%%
+giant scorpion
+
+A bigger and deadlier relative of the deadly dungeon scorpion.
+%%%%
 giant slug
 
 A huge and disgusting gastropod.
@@ -905,7 +913,7 @@ A large creature with the hindquarters of a lion and the wings, head and talons 
 %%%%
 grizzly bear
 
-A large, nasty bear with grey fur.
+A large, nasty bear with grey fur. If provoked, it may become angry!
 %%%%
 guardian mummy
 
@@ -1056,6 +1064,10 @@ A pulsating mass of acidic protoplasm. It can and will eat almost anything, and 
 jellyfish
 
 A pulsating glob of transparent flesh, waiting just below the surface to sting you with its many tentacles.
+%%%%
+jumping spider
+
+A large spider with an extraordinary ability to leap to its prey from a great distance.
 %%%%
 kenku
 
@@ -1321,7 +1333,7 @@ The apparition of an unfortunate adventurer.
 %%%%
 polar bear
 
-A large and very strong bear covered in glistening white fur.
+A large and very strong bear covered in glistening white fur. If provoked, it may become angry!
 %%%%
 program bug
 
@@ -1461,6 +1473,10 @@ A stupid woolly animal, with murder in its eyes. It looks surprised.
 shining eye
 
 A huge and strangely deformed eyeball, pulsating with energy. Beauty is certainly nowhere to be found in this beholder.
+%%%%
+silent spectre
+
+The bane of wizards, these terrible spirits bring an unearthly silence to the area around them.
 %%%%
 silver statue
 
@@ -1614,6 +1630,10 @@ end
 swamp worm
 
 A large slimy worm, adept at swimming through the muck of this foul swamp.
+%%%%
+tarantella
+
+A small but greatly-feared spider whose venom causes even resistant victims to break into a frenzied dance.
 %%%%
 tentacle
 

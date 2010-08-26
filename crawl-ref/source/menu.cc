@@ -9,7 +9,6 @@
 #include <cctype>
 
 #include "cio.h"
-#include "colour.h"
 #include "command.h"
 #include "coord.h"
 #include "env.h"
@@ -23,7 +22,6 @@
 #ifdef USE_TILE
  #include "mon-stuff.h"
  #include "mon-util.h"
- #include "newgame.h"
  #include "terrain.h"
  #include "tilebuf.h"
  #include "tilefont.h"
@@ -496,7 +494,7 @@ bool Menu::process_key( int keyin )
             const int next = get_cursor();
             if (next != -1)
             {
-                select_index(next);
+                select_index(next, num);
                 get_selected(&sel);
                 draw_select_count( sel.size() );
                 if (get_cursor() < next)
@@ -931,8 +929,7 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
     if (!monster_descriptor(m->type, MDSC_NOMSG_WOUNDS))
     {
         std::string damage_desc;
-        mon_dam_level_type damage_level;
-        mons_get_damage_level(m, damage_desc, damage_level);
+        mon_dam_level_type damage_level = mons_get_damage_level(m);
 
         switch (damage_level)
         {

@@ -29,21 +29,21 @@
 #include "directn.h"
 #include "effects.h"
 #include "env.h"
-#include "map_knowledge.h"
 #include "fight.h"
-#include "food.h"
 #include "godabil.h"
-#include "goditem.h"
+#include "godconduct.h"
 #include "godpassive.h"
+#include "hints.h"
 #include "hiscores.h"
+#include "it_use2.h"
+#include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
-#include "item_use.h"
-#include "it_use2.h"
 #include "kills.h"
 #include "libutil.h"
 #include "macro.h"
+#include "map_knowledge.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-util.h"
@@ -57,14 +57,14 @@
 #include "quiver.h"
 #include "random.h"
 #include "religion.h"
-#include "godconduct.h"
 #include "shopping.h"
+#include "shout.h"
 #include "skills.h"
 #include "skills2.h"
 #include "species.h"
-#include "spells1.h"
-#include "spells3.h"
-#include "spells4.h"
+#include "spl-other.h"
+#include "spl-selfench.h"
+#include "spl-transloc.h"
 #include "spl-util.h"
 #include "sprint.h"
 #include "stairs.h"
@@ -78,9 +78,7 @@
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
-#include "hints.h"
 #include "view.h"
-#include "shout.h"
 #include "viewgeom.h"
 #include "xom.h"
 
@@ -1049,6 +1047,13 @@ bool player_equip_unrand(int unrand_index)
     }
 
     return (false);
+}
+
+int player_evokable_levitation()
+{
+    return player_equip(EQ_RINGS, RING_LEVITATION)
+           + player_equip_ego_type(EQ_BOOTS, SPARM_LEVITATION)
+           + scan_artefacts(ARTP_LEVITATE);
 }
 
 // Given an adjacent monster, returns true if the player can hit it (the
@@ -2113,9 +2118,7 @@ int player_size_adjusted_body_armour_evasion_penalty(int scale)
 
     const int size = you.body_size(PSIZE_BODY);
 
-    const int size_bonus_factor =
-        (size < SIZE_SMALL || size > SIZE_LARGE)?
-        (size - SIZE_MEDIUM) * scale / 4 : 0;
+    const int size_bonus_factor = (size - SIZE_MEDIUM) * scale / 4;
 
     const int size_adjusted_penalty =
         std::max(0,
@@ -2553,7 +2556,7 @@ int burden_change(void)
 }
 
 // force is true for forget_map command on level map.
-void forget_map(unsigned char chance_forgotten, bool force)
+void forget_map(int chance_forgotten, bool force)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -3190,9 +3193,6 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_MERFOLK:
-                if (you.experience_level % 3)
-                    hp_adjust++;
-
                 if (!(you.experience_level % 5))
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
@@ -3388,14 +3388,19 @@ int check_stealth(void)
     // a personal silence spell would naturally be different, but this
     // silence radiates for a distance and prevents monster spellcasting,
     // which pretty much gives away the stealth game.
+    // this penalty is dependent on the actual amount of ambient noise
+    // in the level -doy
     if (you.duration[DUR_SILENCE])
-        stealth -= 50;
+        stealth -= 50 + current_level_ambient_noise();
 
     // Mutations.
     stealth += 25 * player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
     stealth += 40 * player_mutation_level(MUT_NIGHTSTALKER);
     if (player_mutation_level(MUT_TRANSLUCENT_SKIN) > 1)
         stealth += 20 * (player_mutation_level(MUT_TRANSLUCENT_SKIN) - 1);
+
+    // it's easier to be stealthy when there's a lot of background noise
+    stealth += 2 * current_level_ambient_noise();
 
     stealth = std::max(0, stealth);
 
@@ -4083,7 +4088,7 @@ unsigned int exp_needed(int lev)
 }
 
 // returns bonuses from rings of slaying, etc.
-int slaying_bonus(char which_affected, bool ranged)
+int slaying_bonus(weapon_property_type which_affected, bool ranged)
 {
     int ret = 0;
 
@@ -4544,6 +4549,9 @@ int get_real_mp(bool include_items)
     if (enp > 50)
         enp = 50 + ((enp - 50) / 2);
 
+    if (include_items && player_equip_ego_type(EQ_WEAPON, SPWPN_ANTIMAGIC))
+        enp /= 3;
+
     enp = std::max(enp, 0);
 
     return enp;
@@ -4554,14 +4562,16 @@ int get_contamination_level()
     const int glow = you.magic_contamination;
 
     if (glow > 60)
-        return (glow / 20 + 2);
+        return (glow / 20 + 3);
     if (glow > 40)
-        return (4);
+        return (5);
     if (glow > 25)
-        return (3);
+        return (4);
     if (glow > 15)
-        return (2);
+        return (3);
     if (glow > 5)
+        return (2);
+    if (glow > 0)
         return (1);
 
     return (0);
@@ -4570,80 +4580,65 @@ int get_contamination_level()
 // controlled is true if the player actively did something to cause
 // contamination (such as drink a known potion of resistance),
 // status_only is true only for the status output
-void contaminate_player(int change, bool controlled, bool status_only)
+void contaminate_player(int change, bool controlled, bool status_only, bool msg)
 {
     ASSERT(!crawl_state.game_is_arena());
 
     if (status_only && !you.magic_contamination)
         return;
 
-    // get current contamination level
     int old_amount = you.magic_contamination;
     int old_level  = get_contamination_level();
     int new_level  = 0;
-#ifdef DEBUG_DIAGNOSTICS
-    if (change > 0 || (change < 0 && you.magic_contamination))
-    {
-        mprf(MSGCH_DIAGNOSTICS, "change: %d  radiation: %d",
-             change, change + you.magic_contamination );
-    }
-#endif
 
-    // make the change
-    if (change + you.magic_contamination < 0)
-        you.magic_contamination = 0;
-    else
-    {
-        if (change + you.magic_contamination > 250)
-            you.magic_contamination = 250;
-        else
-            you.magic_contamination += change;
-    }
+    you.magic_contamination = 
+        std::max(0, std::min(250, you.magic_contamination + change));
 
-    // figure out new level
     new_level = get_contamination_level();
 
-    if (status_only || (new_level >= 1 && old_level == 0)
-        || (old_amount == 0 && you.magic_contamination > 0))
+    if (you.magic_contamination != old_amount)
+        dprf("change: %d  radiation: %d", change, you.magic_contamination);
+
+    if (status_only ||
+        (msg && new_level >= 1 && old_level <= 1 && new_level != old_level))
     {
-        if (new_level > 3)
-        {
-            mpr( (new_level == 4) ?
-                 "Your entire body has taken on an eerie glow!" :
-                 "You are engulfed in a nimbus of crackling magics!");
-        }
-        else if (new_level == 0 && old_amount == 0
-                 && you.magic_contamination > 0)
-        {
-            mpr("You are very lightly contaminated with residual magic.");
-        }
-        else
+        if (new_level > 5)
+            mprf("You are engulfed in a nimbus of crackling magics!");
+        else if (new_level == 5)
+            mprf("Your entire body has taken on an eerie glow!");
+        else if (new_level > 1)
         {
             mprf("You are %s with residual magics%s",
-                 (new_level == 3) ? "practically glowing" :
-                 (new_level == 2) ? "heavily infused" :
-                 (new_level == 1) ? "contaminated"
+                 (new_level == 4) ? "practically glowing" :
+                 (new_level == 3) ? "heavily infused" :
+                 (new_level == 2) ? "contaminated"
                                   : "lightly contaminated",
-                 (new_level == 3) ? "!" : ".");
+                 (new_level == 4) ? "!" : ".");
         }
+        else // new_level == 1
+            mpr("You are very lightly contaminated with residual magic.");
     }
-    else if (new_level != old_level)
+    else if (msg && new_level != old_level)
     {
-        mprf((change > 0) ? MSGCH_WARN : MSGCH_RECOVERY,
-             "You feel %s contaminated with magical energies.",
-             (change > 0) ? "more" : "less" );
+        if (old_level == 1 && new_level == 0)
+            mpr("Your magical contamination has completely faded away.");
+        else
+        {
+            mprf((change > 0) ? MSGCH_WARN : MSGCH_RECOVERY,
+                 "You feel %s contaminated with magical energies.",
+                 (change > 0) ? "more" : "less");
+        }
 
         if (change > 0)
             xom_is_stimulated(new_level * 32);
 
-        if (new_level == 0 && you.duration[DUR_INVIS] && !you.backlit())
+        if (old_level > 1 && new_level <= 1
+            && you.duration[DUR_INVIS] && !you.backlit())
         {
             mpr("You fade completely from view now that you are no longer "
                 "glowing from magical contamination.");
         }
     }
-    else if (old_level == 0 && old_amount > 0 && you.magic_contamination == 0)
-        mpr("Your magical contamination has completely faded away.");
 
     if (status_only)
         return;
@@ -4682,6 +4677,7 @@ bool confuse_player(int amount, bool resistable)
             item_def* const amu = you.slot_item(EQ_AMULET, false);
             if (!item_ident(*amu, ISFLAG_KNOW_TYPE))
             {
+                set_ident_type(amu->base_type, amu->sub_type, ID_KNOWN_TYPE);
                 set_ident_flags(*amu, ISFLAG_KNOW_TYPE);
                 mprf("You are wearing: %s",
                      amu->name(DESC_INVENTORY_EQUIP).c_str());
@@ -4993,7 +4989,7 @@ void dec_exhaust_player(int delay)
     }
 }
 
-bool haste_player(int turns)
+bool haste_player(int turns, bool rageext)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -5015,7 +5011,7 @@ bool haste_player(int turns)
         mpr("You feel yourself speed up.");
     else if (you.duration[DUR_HASTE] > threshold * BASELINE_DELAY)
         mpr("You already have as much speed as you can handle.");
-    else
+    else if (!rageext)
     {
         mpr("You feel as though your hastened speed will last longer.");
         contaminate_player(1, true); // always deliberate
@@ -5207,6 +5203,7 @@ void player::init()
     stat_loss.init(0);
     base_stats.init(0);
     stat_zero.init(0);
+    stat_zero_cause.init("");
     last_chosen        = STAT_RANDOM;
 
     hunger          = 6000;
@@ -5999,16 +5996,13 @@ int player::res_magic() const
 
     switch (species)
     {
-    case SP_MOUNTAIN_DWARF:
-    case SP_HILL_ORC:
-        rm = experience_level * 2;
-        break;
     default:
         rm = experience_level * 3;
         break;
     case SP_HIGH_ELF:
     case SP_SLUDGE_ELF:
     case SP_DEEP_ELF:
+    case SP_MOUNTAIN_DWARF:
     case SP_VAMPIRE:
     case SP_DEMIGOD:
     case SP_OGRE:
@@ -6535,7 +6529,7 @@ bool player::visible_to(const actor *looker) const
 
 bool player::backlit(bool check_haloed, bool self_halo) const
 {
-    if (get_contamination_level() > 0 || duration[DUR_CORONA]
+    if (get_contamination_level() > 1 || duration[DUR_CORONA]
         || duration[DUR_LIQUID_FLAMES] || duration[DUR_QUAD_DAMAGE])
     {
         return (true);

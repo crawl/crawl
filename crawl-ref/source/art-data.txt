@@ -721,7 +721,7 @@ TILE_EQ:  crystal_spear
 INT:      3
 DESC_END: Presumably this relic led to the invention of the famous spell, or maybe the other way around.
 
-NAME:     captain's cutlass
+NAME:     Captain's cutlass
 APPEAR:   black cutlass
 OBJ:      OBJ_WEAPONS/WPN_SABRE
 PLUS:     +6/+7

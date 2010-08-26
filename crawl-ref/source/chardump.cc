@@ -35,7 +35,6 @@
 #include "itemname.h"
 #include "items.h"
 #include "kills.h"
-#include "macro.h"
 #include "message.h"
 #include "menu.h"
 #include "mutation.h"
@@ -1000,7 +999,7 @@ static void _sdump_spells(dump_params &par)
 
         text += "You " + verb + " the following spells:\n\n";
 
-        text += " Your Spells              Type           Power          Success   Level" "\n";
+        text += " Your Spells              Type           Power        Success   Level  Hunger" "\n";
 
         for (int j = 0; j < 52; j++)
         {
@@ -1038,16 +1037,21 @@ static void _sdump_spells(dump_params &par)
 
                 spell_line += spell_power_string(spell);
 
-                for (int i = spell_line.length(); i < 56; ++i )
+                for (int i = spell_line.length(); i < 54; ++i )
                     spell_line += ' ';
 
                 spell_line += failure_rate_to_string(spell_fail(spell));
 
-                for (int i = spell_line.length(); i < 68; i++)
+                for (int i = spell_line.length(); i < 66; i++)
                     spell_line += ' ';
 
                 itoa(spell_difficulty(spell), tmp_quant, 10 );
                 spell_line += tmp_quant;
+
+                for (int i = spell_line.length(); i < 71; i++)
+                    spell_line += ' ';
+
+                spell_line += spell_hunger_string(spell);
                 spell_line += "\n";
 
                 text += spell_line;
@@ -1289,7 +1293,7 @@ void dump_map(FILE *fp, bool debug, bool dist)
         for (int y = min_y; y <= max_y; ++y)
         {
             for (int x = min_x; x <= max_x; ++x)
-                fputc( env.map_knowledge[x][y].glyph(), fp );
+                fputc( get_cell_glyph(env.map_knowledge[x][y]).ch, fp );
 
             fputc('\n', fp);
         }

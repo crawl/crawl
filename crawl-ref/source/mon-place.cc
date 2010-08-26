@@ -24,7 +24,6 @@
 #include "options.h"
 #include "ghost.h"
 #include "lev-pand.h"
-#include "libutil.h"
 #include "message.h"
 #include "mislead.h"
 #include "mon-behv.h"
@@ -130,18 +129,17 @@ bool feat_compatible(dungeon_feature_type feat_wanted,
 //
 // If you have an actual monster, use this instead of the overloaded function
 // that uses only the monster class to make decisions.
-bool monster_habitable_grid(const monsters *m,
+bool monster_habitable_grid(const monsters *mon,
                             dungeon_feature_type actual_grid)
 {
     // Zombified monsters enjoy the same habitat as their original.
-    const monster_type montype = mons_is_zombified(m) ? mons_zombie_base(m)
-                                                      : m->type;
+    const monster_type mt = mons_base_type(mon);
 
-    return (monster_habitable_grid(montype,
+    return (monster_habitable_grid(mt,
                                    actual_grid,
                                    DNGN_UNSEEN,
-                                   mons_flies(m),
-                                   m->cannot_move()));
+                                   mons_flies(mon),
+                                   mon->cannot_move()));
 }
 
 bool mons_airborne(int mcls, int flies, bool paralysed)
@@ -159,7 +157,7 @@ bool mons_airborne(int mcls, int flies, bool paralysed)
 // one check, so we no longer care if a water elemental springs into existence
 // on dry land, because they're supposed to be able to move onto dry land
 // anyway.
-bool monster_habitable_grid(monster_type montype,
+bool monster_habitable_grid(monster_type mt,
                             dungeon_feature_type actual_grid,
                             dungeon_feature_type wanted_grid_feature,
                             int flies, bool paralysed)
@@ -169,11 +167,11 @@ bool monster_habitable_grid(monster_type montype,
         return (false);
 
     const dungeon_feature_type feat_preferred =
-        habitat2grid(mons_class_primary_habitat(montype));
+        habitat2grid(mons_class_primary_habitat(mt));
     const dungeon_feature_type feat_nonpreferred =
-        habitat2grid(mons_class_secondary_habitat(montype));
+        habitat2grid(mons_class_secondary_habitat(mt));
 
-    const bool monster_is_airborne = mons_airborne(montype, flies, paralysed);
+    const bool monster_is_airborne = mons_airborne(mt, flies, paralysed);
 
     // If the caller insists on a specific feature type, try to honour
     // the request. This allows the builder to place amphibious
@@ -188,7 +186,7 @@ bool monster_habitable_grid(monster_type montype,
 
     // Special check for fire elementals since their habitat is floor which
     // is generally considered compatible with shallow water.
-    if (montype == MONS_FIRE_ELEMENTAL && feat_is_watery(actual_grid))
+    if (mt == MONS_FIRE_ELEMENTAL && feat_is_watery(actual_grid))
         return (false);
 
     if (feat_compatible(feat_preferred, actual_grid)
@@ -211,14 +209,14 @@ bool monster_habitable_grid(monster_type montype,
 }
 
 // Returns true if the monster can submerge in the given grid.
-bool monster_can_submerge(const monsters *mons, dungeon_feature_type feat)
+bool monster_can_submerge(const monsters *mon, dungeon_feature_type feat)
 {
-    if (testbits(env.pgrid(mons->pos()), FPROP_NO_SUBMERGE))
+    if (testbits(env.pgrid(mon->pos()), FPROP_NO_SUBMERGE))
         return (false);
-    if (!mons->is_habitable_feat(feat))
+    if (!mon->is_habitable_feat(feat))
         return (false);
-    if (mons_class_flag(mons->type, M_SUBMERGES))
-        switch (mons_habitat(mons))
+    if (mons_class_flag(mon->type, M_SUBMERGES))
+        switch (mons_habitat(mon))
         {
         case HT_WATER:
         case HT_AMPHIBIOUS:
@@ -339,7 +337,10 @@ static void _hell_spawn_random_monsters()
 // one_chance_in(value) checks with the new x_chance_in_y(5, value). (jpeg)
 void spawn_random_monsters()
 {
-    if (crawl_state.game_is_arena())
+    if (crawl_state.game_is_arena() ||
+        (crawl_state.game_is_sprint() &&
+         you.level_type == LEVEL_DUNGEON &&
+         you.char_direction == GDT_DESCENDING))
         return;
 
 #ifdef DEBUG_MON_CREATION
@@ -1018,7 +1019,7 @@ int place_monster(mgen_data mg, bool force_pos)
     band_monsters[0] = mg.cls;
 
     // The (very) ugly thing band colour.
-    static unsigned char ugly_colour = BLACK;
+    static uint8_t ugly_colour = BLACK;
 
     if (create_band)
     {
@@ -1455,6 +1456,8 @@ static int _place_monster_aux(const mgen_data &mg,
     // Holy monsters need their halo!
     if (mon->holiness() == MH_HOLY)
         invalidate_agrid(true);
+    if (mg.cls == MONS_SILENT_SPECTRE)
+        invalidate_agrid(true);
 
     // If the caller requested a specific colour for this monster, apply
     // it now.
@@ -1616,6 +1619,8 @@ static int _place_monster_aux(const mgen_data &mg,
         mon->mark_summoned(mg.abjuration_duration, true,
                            mg.summon_type);
     }
+    ASSERT(!invalid_monster_index(mg.foe)
+           || mg.foe == MHITYOU || mg.foe == MHITNOT);
     mon->foe = mg.foe;
 
     std::string blame_prefix;
@@ -2690,6 +2695,7 @@ void mark_interesting_monst(monsters* monster, beh_type behaviour)
                 || you.level_type == LEVEL_ABYSS)
              && mons_rarity(monster->type) <= Options.rare_interesting
              && monster->hit_dice > 2 // Don't note the really low-hd monsters.
+             && !mons_class_flag(monster->type, M_NO_EXP_GAIN)
              && mons_rarity(monster->type) > 0)
     {
         interesting = true;

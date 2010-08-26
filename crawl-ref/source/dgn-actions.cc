@@ -194,7 +194,7 @@ static void _apply_daction(daction_type act)
 
 void catchup_dactions()
 {
-    while(env.dactions_done < you.dactions.size())
+    while (env.dactions_done < you.dactions.size())
         _apply_daction(you.dactions[env.dactions_done++]);
 }
 

@@ -19,4 +19,6 @@ void ballisto_on_move(monsters * monster, const coord_def & pos);
 void activate_ballistomycetes(monsters * monster, const coord_def & origin,
                               bool player_kill);
 
+void move_kraken_tentacles(monsters * kraken);
+
 #endif

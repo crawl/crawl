@@ -198,7 +198,8 @@ void init_level_connectivity();
 void read_level_connectivity(reader &th);
 void write_level_connectivity(writer &th);
 
-bool builder(int level_number, int level_type, bool enable_random_maps = true);
+bool builder(int level_number, level_area_type level_type,
+             bool enable_random_maps = true);
 void dgn_veto_level();
 
 void dgn_clear_vault_placements(vault_placement_refv &vps);

@@ -46,10 +46,13 @@
 #include "skills.h"
 #include "species.h"
 #include "spl-cast.h"
+#include "spl-damage.h"
+#include "spl-goditem.h"
+#include "spl-other.h"
+#include "spl-transloc.h"
+#include "spl-selfench.h"
+#include "spl-summoning.h"
 #include "spl-util.h"
-#include "spells1.h"
-#include "spells2.h"
-#include "spells3.h"
 #include "state.h"
 #include "stuff.h"
 #include "areas.h"
@@ -1160,7 +1163,7 @@ static bool _activate_talent(const talent& tal)
             break;
     }
 
-    if (hungerCheck && you.species != SP_VAMPIRE
+    if (hungerCheck && !you.is_undead
         && you.hunger_state == HS_STARVING)
     {
         mpr("You're too hungry.");
@@ -2418,9 +2421,7 @@ std::vector<talent> your_talents(bool check_confused)
     }
 
     // Note: This ability only applies to this counter.
-    if (player_equip(EQ_RINGS, RING_LEVITATION)
-        || player_equip_ego_type(EQ_BOOTS, SPARM_LEVITATION)
-        || scan_artefacts( ARTP_LEVITATE))
+    if (player_evokable_levitation())
     {
         // Has no effect on permanently flying Kenku.
         if (!you.permanent_flight() && !you.attribute[ATTR_LEV_UNCANCELLABLE])

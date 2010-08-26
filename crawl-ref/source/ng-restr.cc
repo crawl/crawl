@@ -9,7 +9,6 @@
 #include "AppHdr.h"
 
 #include "ng-restr.h"
-#include "newgame.h"
 #include "species.h"
 #include "jobs.h"
 

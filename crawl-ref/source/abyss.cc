@@ -15,26 +15,26 @@
 #include "artefact.h"
 #include "cloud.h"
 #include "colour.h"
-#include "coordit.h"
-#include "los.h"
-#include "makeitem.h"
-#include "mapmark.h"
-#include "maps.h"
-#include "message.h"
-#include "misc.h"
-#include "mon-iter.h"
-#include "mon-util.h"
-#include "mon-place.h"
-#include "mgen_data.h"
 #include "coord.h"
-#include "mon-transit.h"
-#include "player.h"
+#include "coordit.h"
 #include "dungeon.h"
+#include "env.h"
 #include "itemprop.h"
 #include "items.h"
 #include "l_defs.h"
 #include "lev-pand.h"
 #include "los.h"
+#include "makeitem.h"
+#include "mapmark.h"
+#include "maps.h"
+#include "message.h"
+#include "mgen_data.h"
+#include "misc.h"
+#include "mon-iter.h"
+#include "mon-place.h"
+#include "mon-transit.h"
+#include "mon-util.h"
+#include "player.h"
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"
@@ -42,8 +42,6 @@
 #include "sprint.h"
 #include "state.h"
 #include "stuff.h"
-#include "env.h"
-#include "spells3.h"
 #include "terrain.h"
 #ifdef USE_TILE
  #include "tiledef-dngn.h"
@@ -601,10 +599,10 @@ private:
     int abyss_exit_nearness() const
     {
         int nearness = INFINITE_DISTANCE;
-        // is_terrain_known() doesn't work on unmappable levels because
+        // env.map_knowledge().known() doesn't work on unmappable levels because
         // mapping flags are not set on such levels.
         for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
-            if (grd(*ri) == DNGN_EXIT_ABYSS && get_screen_glyph(*ri) != ' ')
+            if (grd(*ri) == DNGN_EXIT_ABYSS && env.map_knowledge(*ri).seen())
                 nearness = std::min(nearness, grid_distance(you.pos(), *ri));
 
         return (nearness);
@@ -613,10 +611,10 @@ private:
     int abyss_rune_nearness() const
     {
         int nearness = INFINITE_DISTANCE;
-        // See above comment about is_terrain_known().
+        // See above comment about env.map_knowledge().known().
         for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
         {
-            if (get_screen_glyph(*ri) != ' ')
+            if (env.map_knowledge(*ri).seen())
             {
                 for (stack_iterator si(*ri); si; ++si)
                     if (item_is_rune(*si, RUNE_ABYSSAL))

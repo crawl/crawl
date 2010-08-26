@@ -1,7 +1,6 @@
 #include "AppHdr.h"
 
 #include "externs.h"
-#include "items.h"
 #include "maps.h"
 #include "mon-util.h"
 #include "mpr.h"
@@ -47,7 +46,7 @@ int sprint_modify_abyss_exit_chance(int exit_chance)
 /* XXX: ugh, can't think of a better thing to do here */
 bool sprint_veto_random_abyss_monster(monster_type type)
 {
-    return random2(20) > (int)get_monster_data(type)->hpdice[0];
+    return random2(20) > mons_class_hit_dice(type);
 }
 
 mapref_vector get_sprint_maps()

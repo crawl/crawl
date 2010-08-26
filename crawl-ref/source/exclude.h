@@ -100,6 +100,6 @@ bool is_excluded(const coord_def &p, const exclude_set &exc = curr_excludes);
 class writer;
 class reader;
 void marshallExcludes(writer& outf, const exclude_set& excludes);
-void unmarshallExcludes(reader& inf, char minorVersion, exclude_set& excludes);
+void unmarshallExcludes(reader& inf, int minorVersion, exclude_set& excludes);
 
 #endif

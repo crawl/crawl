@@ -4057,6 +4057,7 @@ static int str_to_ego(item_spec &spec, std::string ego_str)
         "confuse",
         "penetration",
         "reaping",
+        "anti-magic",
         NULL
     };
     COMPILE_CHECK(ARRAYSZ(weapon_brands) == NUM_REAL_SPECIAL_WEAPONS,
@@ -4330,7 +4331,7 @@ void item_list::build_deck_spec(std::string s, item_spec* spec)
         spec->sub_type =
             _deck_type_string_to_subtype(_get_and_discard_word(&s));
     }
-    else 
+    else
     {
         spec->sub_type = _random_deck_subtype();
     }

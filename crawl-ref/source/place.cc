@@ -69,7 +69,7 @@ std::string place_name( unsigned short place, bool long_name,
                         bool include_number )
 {
 
-    unsigned char branch = (unsigned char) ((place >> 8) & 0xFF);
+    uint8_t branch = (place >> 8) & 0xFF;
     int lev = place & 0xFF;
 
     std::string result;

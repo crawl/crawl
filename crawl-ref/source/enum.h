@@ -364,6 +364,8 @@ enum branch_type                // you.where_are_you
     BRANCH_TARTARUS,
     BRANCH_LAST_HELL = BRANCH_TARTARUS,
     BRANCH_HALL_OF_ZOT,
+    BRANCH_FOREST,
+    BRANCH_SPIDER_NEST,
     NUM_BRANCHES
 };
 
@@ -1097,7 +1099,9 @@ enum dungeon_feature_type
     DNGN_ENTER_TOMB,
     DNGN_ENTER_SWAMP,                  //  122
     DNGN_ENTER_SHOALS,
-    DNGN_ENTER_LAST_BRANCH = DNGN_ENTER_SHOALS,
+    DNGN_ENTER_SPIDER_NEST,
+    DNGN_ENTER_FOREST,
+    DNGN_ENTER_LAST_BRANCH = DNGN_ENTER_FOREST,
 
     // Exits from various branches
     // Order must be the same as above
@@ -1116,7 +1120,9 @@ enum dungeon_feature_type
     DNGN_RETURN_FROM_TOMB,
     DNGN_RETURN_FROM_SWAMP,            //  142
     DNGN_RETURN_FROM_SHOALS,
-    DNGN_RETURN_FROM_LAST_BRANCH = DNGN_RETURN_FROM_SHOALS,
+    DNGN_RETURN_FROM_SPIDER_NEST,
+    DNGN_RETURN_FROM_FOREST,
+    DNGN_RETURN_FROM_LAST_BRANCH = DNGN_RETURN_FROM_FOREST,
 
     // Portals to various places unknown.
     DNGN_ENTER_PORTAL_VAULT = 160,
@@ -1281,6 +1287,8 @@ enum enchant_type
     ENCH_SILENCE,
     ENCH_AWAKEN_FOREST,
     ENCH_EXPLODING,
+    ENCH_BLEED,
+    ENCH_ANTIMAGIC,
 
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
@@ -1999,6 +2007,7 @@ enum monster_type                      // (int) menv[].type
 
     MONS_DEEP_ELF_BLADEMASTER,
     MONS_DEEP_ELF_MASTER_ARCHER,
+    MONS_DEEP_DWARF,
 
     // The Lords of Hell (also unique):
     MONS_GERYON = 340,                 //  340
@@ -2076,6 +2085,7 @@ enum monster_type                      // (int) menv[].type
     MONS_WATER_ELEMENTAL,
     MONS_SWAMP_WORM,                   //  435
     MONS_SHARK,
+    MONS_KRAKEN_CONNECTOR,
 
     // Monsters which move through rock:
     MONS_ROCK_WORM = 440,
@@ -2128,7 +2138,12 @@ enum monster_type                      // (int) menv[].type
     MONS_CHUCK,
     MONS_IRON_GIANT,
     MONS_NELLIE,
-    MONS_IRON_ELEMENTAL,               // 488
+    MONS_IRON_ELEMENTAL,
+    MONS_GIANT_SCORPION,
+    MONS_GHOST_MOTH,
+    MONS_JUMPING_SPIDER,               
+    MONS_TARANTELLA,                   // 492
+    MONS_SILENT_SPECTRE,
 
     // Spriggans:
     MONS_SPRIGGAN = 500,
@@ -2414,6 +2429,7 @@ enum mon_spellbook_type
     MST_IRON_GIANT,
     MST_IRON_ELEMENTAL,
     MST_MENNAS,
+    MST_JUMPING_SPIDER,
 
     MST_TEST_SPAWNER = 200,
     NUM_MSTYPES,
@@ -2669,7 +2685,7 @@ enum score_format_type
     SCORE_VERBOSE,              // everything (dates, times, god, etc.)
 };
 
-enum shop_type // (unsigned char) env.sh_type[], item_in_shop(), in_a_shop()
+enum shop_type // (uint8_t) env.sh_type[], item_in_shop(), in_a_shop()
 {
     SHOP_WEAPON,
     SHOP_ARMOUR,

@@ -71,7 +71,7 @@ function volcano_portal (e)
                       "though triggered by the air, rocks fall from the roof " ..
                       "and sides of the tunnel, slowly filling the entry."
 
-    local timeout_turns = crawl.random_range(1200, 1700)
+    local timeout_turns = crawl.random_range(2700, 3300)
     local messager =
         timed_msg {
             visible = true,

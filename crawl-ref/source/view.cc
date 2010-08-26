@@ -21,7 +21,6 @@
 #include "map_knowledge.h"
 #include "viewchar.h"
 #include "viewgeom.h"
-#include "viewmap.h"
 #include "showsymb.h"
 
 #include "attitude-change.h"
@@ -36,10 +35,11 @@
 #include "delay.h"
 #include "dgn-overview.h"
 #include "directn.h"
+#include "env.h"
 #include "exclude.h"
 #include "feature.h"
 #include "files.h"
-#include "godabil.h"
+#include "hints.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
@@ -48,23 +48,18 @@
 #include "mon-iter.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
-#include "newgame.h"
 #include "options.h"
 #include "notes.h"
 #include "output.h"
 #include "player.h"
 #include "random.h"
-#include "stuff.h"
-#include "env.h"
-#include "spells3.h"
 #include "stash.h"
-#include "travel.h"
 #include "state.h"
+#include "stuff.h"
 #include "terrain.h"
 #include "tilemcache.h"
 #include "tilesdl.h"
 #include "travel.h"
-#include "hints.h"
 #include "xom.h"
 
 #ifdef USE_TILE
@@ -76,11 +71,6 @@
 //#define DEBUG_PANE_BOUNDS
 
 crawl_view_geometry crawl_view;
-
-bool is_notable_terrain(dungeon_feature_type ftype)
-{
-    return (get_feature_def(ftype).is_notable());
-}
 
 void handle_seen_interrupt(monsters* monster)
 {
@@ -223,12 +213,12 @@ void update_monsters_in_view()
 // Random difficulties are used in the few cases where we want repeated maps
 // to give different results; scrolls and cards, since they are a finite
 // resource.
-static const FixedArray<char, GXM, GYM>& _tile_difficulties(bool random)
+static const FixedArray<uint8_t, GXM, GYM>& _tile_difficulties(bool random)
 {
     // We will often be called with the same level parameter and cutoff, so
     // cache this (DS with passive mapping autoexploring could be 5000 calls
     // in a second or so).
-    static FixedArray<char, GXM, GYM> cache;
+    static FixedArray<uint8_t, GXM, GYM> cache;
     static int cache_seed = -1;
 
     int seed = random ? -1 :
@@ -338,7 +328,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     int  num_altars        = 0;
     int  num_shops_portals = 0;
 
-    const FixedArray<char, GXM, GYM>& difficulty =
+    const FixedArray<uint8_t, GXM, GYM>& difficulty =
         _tile_difficulties(!deterministic);
 
     std::auto_ptr<FixedArray<bool, GXM, GYM> > detectable;
@@ -364,10 +354,10 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                 continue;
         }
 
-        if (is_terrain_changed(*ri))
-            clear_map_knowledge_grid(*ri);
+        if (env.map_knowledge(*ri).changed())
+            env.map_knowledge(*ri).clear();
 
-        if (!wizard_map && (is_terrain_seen(*ri) || is_terrain_mapped(*ri)))
+        if (!wizard_map && (env.map_knowledge(*ri).seen() || env.map_knowledge(*ri).mapped()))
             continue;
 
         if (!wizard_map && !deterministic && !((*detectable)(*ri)))
@@ -394,9 +384,9 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         if (open)
         {
             if (wizard_map)
-                set_map_knowledge_obj(*ri, grd(*ri));
-            else if (!get_map_knowledge_obj(*ri))
-                set_map_knowledge_obj(*ri, magic_map_base_feat(grd(*ri)));
+                env.map_knowledge(*ri).set_feature(grd(*ri));
+            else if (!env.map_knowledge(*ri).feat())
+                env.map_knowledge(*ri).set_feature(magic_map_base_feat(grd(*ri)));
 
             if (wizard_map)
             {
@@ -513,9 +503,8 @@ std::string screenshot(bool fullscreen)
 
             int ch =
                   (!map_bounds(gc))             ? 0 :
-                  (!crawl_view.in_grid_los(gc)) ? get_map_knowledge_char(gc) :
                   (gc == you.pos())             ? mons_char(you.symbol)
-                                                : get_screen_glyph(gc);
+                                                : get_cell_glyph(env.map_knowledge(gc)).ch;
 
             if (ch && !isprint(ch))
             {
@@ -585,20 +574,18 @@ void view_update_at(const coord_def &pos)
     if (pos == you.pos())
         return;
 
-    const coord_def vp = grid2view(pos);
-    const coord_def ep = view2show(vp);
-    env.show.update_at(pos, ep);
+    show_update_at(pos);
 
 #ifndef USE_TILE
-    show_type object = env.show(ep);
-    if (!object)
+    if (!env.map_knowledge(pos).visible())
         return;
-    glyph g = get_show_glyph(object);
+    glyph g = get_cell_glyph(env.map_knowledge(pos));
 
     int flash_colour = you.flash_colour;
     if (flash_colour == BLACK)
         flash_colour = _viewmap_flash_colour();
 
+    const coord_def vp = grid2view(pos);
     cgotoxy(vp.x, vp.y);
     put_colour_ch(flash_colour? real_colour(flash_colour) : g.col, g.ch);
 
@@ -609,12 +596,12 @@ void view_update_at(const coord_def &pos)
 }
 
 #ifndef USE_TILE
-void flash_monster_colour(const monsters *mon, unsigned char fmc_colour,
+void flash_monster_colour(const monsters *mon, uint8_t fmc_colour,
                           int fmc_delay)
 {
     if (you.can_see(mon))
     {
-        unsigned char old_flash_colour = you.flash_colour;
+        uint8_t old_flash_colour = you.flash_colour;
         coord_def c(mon->pos());
 
         you.flash_colour = fmc_colour;
@@ -640,13 +627,13 @@ bool view_update()
     return (false);
 }
 
-void flash_view(int colour)
+void flash_view(uint8_t colour)
 {
     you.flash_colour = colour;
     viewwindow(false);
 }
 
-void flash_view_delay(int colour, long flash_delay)
+void flash_view_delay(uint8_t colour, int flash_delay)
 {
     flash_view(colour);
     // Scale delay to match change in arena_delay.
@@ -702,7 +689,6 @@ enum update_flags
 // exclusion LOS might have been affected.
 static int player_view_update_at(const coord_def &gc)
 {
-    const coord_def ep = grid2show(gc);
     maybe_remove_autoexclusion(gc);
     int ret = 0;
 
@@ -733,16 +719,13 @@ static int player_view_update_at(const coord_def &gc)
     if (Hints.hints_left)
         hints_observe_cell(gc);
 
-    if (is_terrain_changed(gc) || !is_terrain_seen(gc))
+    if (env.map_knowledge(gc).changed() || !env.map_knowledge(gc).seen())
         ret |= UF_AFFECT_EXCLUDES;
 
-    if (!crawl_state.game_is_arena())
-        set_terrain_seen(gc);
-    set_map_knowledge_obj(gc, to_knowledge(env.show(ep)));
-    set_map_knowledge_detected_mons(gc, false);
-    set_map_knowledge_detected_item(gc, false);
+    set_terrain_visible(gc);
 
 #ifdef USE_TILE
+    const coord_def ep = grid2show(gc);
     if (!player_in_mappable_area())
         return (ret); // XXX: is this necessary?
 
@@ -790,9 +773,10 @@ static void _draw_out_of_bounds(screen_cell_t *cell)
 static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc)
 {
     // Outside the env.show area.
-    cell->glyph  = get_map_knowledge_char(gc);
-    cell->colour = Options.colour_map ? real_colour(get_map_col(gc, false))
-                                      : DARKGREY;
+    glyph g = get_cell_glyph(env.map_knowledge(gc));
+    cell->glyph  = g.ch;
+    cell->colour = g.col;
+
 #ifdef USE_TILE
     tileidx_out_of_los(&cell->tile_fg, &cell->tile_bg, gc);
 #endif
@@ -829,7 +813,7 @@ static void _draw_los(screen_cell_t *cell,
                       const coord_def &gc, const coord_def &ep,
                       bool anim_updates)
 {
-    glyph g = get_show_glyph(env.show(ep));
+    glyph g = get_cell_glyph(env.map_knowledge(gc));
     cell->glyph  = g.ch;
     cell->colour = g.col;
 
@@ -840,17 +824,6 @@ static void _draw_los(screen_cell_t *cell,
         tile_apply_animations(cell->tile_bg, &env.tile_flv(gc));
 #else
     UNUSED(anim_updates);
-#endif
-}
-
-static void _draw_los_backup(screen_cell_t *cell,
-                             const coord_def &gc, const coord_def &ep)
-{
-    cell->glyph  = get_map_knowledge_char(gc);
-    cell->colour = Options.colour_map ? real_colour(get_map_col(gc, false))
-                                      : DARKGREY;
-#ifdef USE_TILE
-    tileidx_out_of_los(&cell->tile_fg, &cell->tile_bg, gc);
 #endif
 }
 
@@ -891,7 +864,7 @@ void viewwindow(bool show_updates)
         tiles.clear_overlays();
 #endif
 
-        env.show.init(_show_terrain);
+        show_init(_show_terrain);
     }
 
     if (show_updates)
@@ -904,7 +877,7 @@ void viewwindow(bool show_updates)
     {
         // Reset env.show if we munged it.
         if (_show_terrain)
-            env.show.init();
+            show_init();
         return;
     }
 
@@ -935,7 +908,7 @@ void viewwindow(bool show_updates)
         else if (you.see_cell(gc) && you.on_current_level)
             _draw_los(cell, gc, ep, anim_updates);
         else
-            _draw_los_backup(cell, gc, ep);
+            _draw_outside_los(cell, gc);
 
         cell->flash_colour = BLACK;
 
@@ -987,7 +960,7 @@ void viewwindow(bool show_updates)
 
     // Reset env.show if we munged it.
     if (_show_terrain)
-        env.show.init();
+        show_init();
 
     _debug_pane_bounds();
 }

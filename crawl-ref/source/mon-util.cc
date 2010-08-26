@@ -19,8 +19,9 @@
 #include "debug.h"
 #include "directn.h"
 #include "env.h"
-#include "fprop.h"
 #include "fight.h"
+#include "food.h"
+#include "fprop.h"
 #include "ghost.h"
 #include "goditem.h"
 #include "itemname.h"
@@ -314,12 +315,8 @@ int mons_piety(const monsters *mon)
 
 bool mons_class_flag(int mc, uint64_t bf)
 {
-    const monsterentry *me = smc;
-
-    if (!me)
-        return (false);
-
-    return ((me->bitfields & bf) != 0);
+    const monsterentry *me = get_monster_data(mc);
+    return (me ? (me->bitfields & bf) != 0 : false);
 }
 
 int scan_mon_inv_randarts(const monsters *mon,
@@ -488,7 +485,9 @@ bool mons_is_stationary(const monsters *mon)
 bool mons_is_firewood(const monsters *mon)
 {
     return (mons_is_stationary(mon)
-            && mons_class_flag(mon->type, M_NO_EXP_GAIN));
+            && mons_class_flag(mon->type, M_NO_EXP_GAIN)
+            && mon->type != MONS_KRAKEN_TENTACLE
+            && mon->type != MONS_KRAKEN_CONNECTOR);
 }
 
 // "body" in a purely grammatical sense.
@@ -610,7 +609,7 @@ bool mons_is_native_in_branch(const monsters *monster,
 
 bool mons_is_poisoner(const monsters *mon)
 {
-    if (mons_corpse_effect(mon->type) == CE_POISONOUS)
+    if (chunk_is_poisonous(mons_corpse_effect(mon->type)))
         return (true);
 
     if (mon->has_attack_flavour(AF_POISON)
@@ -704,7 +703,7 @@ bool mons_is_mimic(int mc)
 
 bool mons_is_demon(int mc)
 {
-    const int show_char = mons_base_char(mc);
+    const char show_char = mons_base_char(mc);
 
     // Not every demonic monster is a demon (hell hog, hell hound, etc.)
     if (mons_class_holiness(mc) == MH_DEMONIC
@@ -721,11 +720,23 @@ bool mons_is_draconian(int mc)
     return (mc >= MONS_FIRST_DRACONIAN && mc <= MONS_LAST_DRACONIAN);
 }
 
+// Conjured (as opposed to summoned) monsters are actually here, eventhough
+// they're typically volatile (like, made of real fire).  As such, they
+// should be immune to Abjuration or Recall.  Also, they count as things
+// rather than beings.
+bool mons_is_conjured(int mc)
+{
+    return mons_is_projectile(mc)
+           || mc == MONS_FIRE_VORTEX
+           || mc == MONS_SPATIAL_VORTEX
+           || mc == MONS_BALL_LIGHTNING;
+}
+
 // Returns true if the given monster's foe is also a monster.
 bool mons_foe_is_mons(const monsters *mons)
 {
     const actor *foe = mons->get_foe();
-    return foe && foe->atype() == ACT_MONSTER;
+    return (foe && foe->atype() == ACT_MONSTER);
 }
 
 int mons_weight(int mc)
@@ -923,7 +934,7 @@ bool mons_sense_invis(const monsters *mon)
     return (mons_class_flag(mon->type, M_SENSE_INVIS));
 }
 
-unsigned mons_char(int mc)
+wchar_t mons_char(int mc)
 {
     return monster_symbols[mc].glyph;
 }
@@ -931,9 +942,7 @@ unsigned mons_char(int mc)
 char mons_base_char(int mc)
 {
     const monsterentry *me = get_monster_data(mc);
-    if (!me)
-        return 0;
-    return me->showchar;
+    return (me ? me->showchar : 0);
 }
 
 mon_itemuse_type mons_class_itemuse(int mc)
@@ -1040,7 +1049,7 @@ bool mons_is_zombified(const monsters *mon)
 
 monster_type mons_base_type(const monsters *mon)
 {
-    return mons_is_zombified(mon) ? mon->base_monster : mon->type;
+    return (mons_is_zombified(mon) ? mon->base_monster : mon->type);
 }
 
 bool mons_class_can_leave_corpse(monster_type mc)
@@ -1229,6 +1238,14 @@ mon_attack_def mons_attack_spec(const monsters *mon, int attk_number)
         attk.flavour = RANDOM_ELEMENT(flavours);
     }
 
+    if (attk.flavour == AF_DRAIN_STAT)
+    {
+        mon_attack_flavour flavours[] =
+            {AF_DRAIN_STR, AF_DRAIN_DEX, AF_DRAIN_INT};
+
+        attk.flavour = RANDOM_ELEMENT(flavours);
+    }
+
     // Slime creature attacks are multiplied by the number merged.
     if (mon->type == MONS_SLIME_CREATURE && mon->number > 1)
         attk.damage *= mon->number;
@@ -1241,7 +1258,7 @@ int mons_damage(int mc, int rt)
     if (rt < 0 || rt > 3)
         rt = 0;
     ASSERT(smc);
-    return smc->attack[rt].damage;
+    return (smc->attack[rt].damage);
 }
 
 bool mons_immune_magic(const monsters *mon)
@@ -1285,15 +1302,7 @@ flight_type mons_flies(const monsters *mon, bool randarts)
     if (mons_is_ghost_demon(mon->type) && mon->ghost.get())
         return (mon->ghost->fly);
 
-    const int montype = mons_is_zombified(mon) ? mons_zombie_base(mon)
-                                               : mon->type;
-
-    flight_type ret = mons_class_flies(montype);
-
-    // Handle the case where the zombified base monster can't fly, but
-    // the zombified monster can (e.g. spectral things).
-    if (ret == FL_NONE && mons_is_zombified(mon))
-        ret = mons_class_flies(mon->type);
+    flight_type ret = mons_class_flies(mons_base_type(mon));
 
     if (randarts && ret == FL_NONE
         && scan_mon_inv_randarts(mon, ARTP_LEVITATE) > 0)
@@ -1321,7 +1330,7 @@ bool mons_class_flattens_trees(int mc)
 
 bool mons_flattens_trees(const monsters *mon)
 {
-    return mons_class_flattens_trees(mons_base_type(mon));
+    return (mons_class_flattens_trees(mons_base_type(mon)));
 }
 
 bool mons_class_wall_shielded(int mc)
@@ -1331,10 +1340,7 @@ bool mons_class_wall_shielded(int mc)
 
 bool mons_wall_shielded(const monsters *mon)
 {
-    const int montype = mons_is_zombified(mon) ? mons_zombie_base(mon)
-                                               : mon->type;
-
-    return (mons_class_wall_shielded(montype));
+    return (mons_class_wall_shielded(mons_base_type(mon)));
 }
 
 // This nice routine we keep in exactly the way it was.
@@ -1351,73 +1357,71 @@ int hit_points(int hit_dice, int min_hp, int rand_hp)
     return (hrolled);
 }
 
-// This function returns the standard number of hit dice for a type
-// of monster, not a pacticular monsters current hit dice. -- bwr
-// XXX: Rename to mons_class_* to be like the rest.
-int mons_type_hit_dice( int type )
+// This function returns the standard number of hit dice for a type of
+// monster, not a particular monster's current hit dice. - bwr
+int mons_class_hit_dice(int mc)
 {
-    struct monsterentry *mon_class = get_monster_data( type );
-
-    if (mon_class)
-        return (mon_class->hpdice[0]);
-
-    return (0);
+    const monsterentry *me = get_monster_data(mc);
+    return (me ? me->hpdice[0] : 0);
 }
 
-int mons_difficulty(int mtype)
+int mons_difficulty(int mc)
 {
     // Currently, difficulty is defined as "average hp".  Leaks too much info?
-    const monsterentry* me = get_monster_data(mtype);
+    const monsterentry* me = get_monster_data(mc);
+
+    if (!me)
+        return (0);
 
     // [ds] XXX: Use monster experience value as a better indicator of diff.?
     return (me->hpdice[0] * (me->hpdice[1] + (me->hpdice[2]/2))
             + me->hpdice[3]);
 }
 
-int exper_value(const monsters *monster)
+int exper_value(const monsters *mon)
 {
     long x_val = 0;
 
     // These four are the original arguments.
-    const int  mclass      = monster->type;
-    const int  mHD         = monster->hit_dice;
-    int  maxhp             = monster->max_hit_points;
+    const int mc          = mon->type;
+    const int mhd         = mon->hit_dice;
+    int maxhp             = mon->max_hit_points;
 
     // Hacks to make merged slime creatures not worth so much exp.  We
     // will calculate the experience we would get for 1 blob, and then
     // just multiply it so that exp is linear with blobs merged. -cao
-    if (monster->type == MONS_SLIME_CREATURE && monster->number > 1)
-        maxhp /= monster->number;
+    if (mon->type == MONS_SLIME_CREATURE && mon->number > 1)
+        maxhp /= mon->number;
 
     // These are some values we care about.
-    const int  speed       = mons_base_speed(monster);
-    const int  modifier    = _mons_exp_mod(mclass);
-    const int  item_usage  = mons_itemuse(monster);
+    const int speed       = mons_base_speed(mon);
+    const int modifier    = _mons_exp_mod(mc);
+    const int item_usage  = mons_itemuse(mon);
 
     // XXX: Shapeshifters can qualify here, even though they can't cast.
-    const bool spellcaster = monster->can_use_spells();
+    const bool spellcaster = mon->can_use_spells();
 
     // Early out for no XP monsters.
-    if (mons_class_flag(mclass, M_NO_EXP_GAIN))
+    if (mons_class_flag(mc, M_NO_EXP_GAIN))
         return (0);
 
     // The beta26 statues have non-spell-like abilities that the experience
     // code can't see, so inflate their XP a bit.  Ice statues and Roxanne
     // get plenty of XP for their spells.
-    if (mclass == MONS_ORANGE_STATUE || mclass == MONS_SILVER_STATUE)
-        return (mHD * 15);
+    if (mc == MONS_ORANGE_STATUE || mc == MONS_SILVER_STATUE)
+        return (mhd * 15);
 
-    x_val = (16 + maxhp) * (mHD * mHD) / 10;
+    x_val = (16 + maxhp) * (mhd * mhd) / 10;
 
-    // Let's calculate a simple difficulty modifier. -- bwr
+    // Let's calculate a simple difficulty modifier. - bwr
     int diff = 0;
 
     // Let's look for big spells.
     if (spellcaster)
     {
-        const monster_spells &hspell_pass = monster->spells;
+        const monster_spells &hspell_pass = mon->spells;
 
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 6; ++i)
         {
             switch (hspell_pass[i])
             {
@@ -1454,7 +1458,7 @@ int exper_value(const monsters *monster)
     }
 
     // Let's look at regeneration.
-    if (monster_descriptor(mclass, MDSC_REGENERATES))
+    if (monster_descriptor(mc, MDSC_REGENERATES))
         diff += 15;
 
     // Monsters at normal or fast speed with big melee damage.
@@ -1462,7 +1466,7 @@ int exper_value(const monsters *monster)
     {
         int max_melee = 0;
         for (int i = 0; i < 4; ++i)
-            max_melee += mons_damage(mclass, i);
+            max_melee += mons_damage(mc, i);
 
         if (max_melee > 30)
             diff += (max_melee / ((speed == 10) ? 2 : 1));
@@ -1470,12 +1474,12 @@ int exper_value(const monsters *monster)
 
     // Monsters who can use equipment (even if only the equipment
     // they are given) can be considerably enhanced because of
-    // the way weapons work for monsters. -- bwr
+    // the way weapons work for monsters. - bwr
     if (item_usage >= MONUSE_STARTING_EQUIPMENT)
         diff += 30;
 
     // Set a reasonable range on the difficulty modifier...
-    // Currently 70% - 200%. -- bwr
+    // Currently 70% - 200%. - bwr
     if (diff > 100)
         diff = 100;
     else if (diff < -30)
@@ -1507,8 +1511,8 @@ int exper_value(const monsters *monster)
 
     // Slime creature exp hack part 2: Scale exp back up by the number
     // of blobs merged. -cao
-    if (monster->type == MONS_SLIME_CREATURE && monster->number > 1)
-        x_val *= monster->number;
+    if (mon->type == MONS_SLIME_CREATURE && mon->number > 1)
+        x_val *= mon->number;
 
     // Reductions for big values. - bwr
     if (x_val > 100)
@@ -1643,9 +1647,9 @@ static void _get_spells(mon_spellbook_type& book, monsters *mon)
 
 // Never hand out DARKGREY as a monster colour, even if it is randomly
 // chosen.
-unsigned char random_monster_colour()
+uint8_t random_monster_colour()
 {
-    unsigned char col = DARKGREY;
+    uint8_t col = DARKGREY;
     while (col == DARKGREY)
         col = random_colour();
 
@@ -1656,21 +1660,20 @@ unsigned char random_monster_colour()
 void define_monster(monsters *mons)
 {
     int mcls                  = mons->type;
-    int hd, hp, hp_max, ac, ev, speed;
     int monnumber             = mons->number;
     monster_type monbase      = mons->base_monster;
     const monsterentry *m     = get_monster_data(mcls);
-    int col                   = mons_class_colour(mons->type);
+    int col                   = mons_class_colour(mcls);
+    int hd                    = mons_class_hit_dice(mcls);
+    int speed                 = mons_real_base_speed(mcls);
     mon_spellbook_type spells = MST_NO_SPELLS;
+    int hp, hp_max, ac, ev;
 
     mons->mname.clear();
-    hd = m->hpdice[0];
 
     // misc
     ac = m->AC;
     ev = m->ev;
-
-    speed = mons_real_base_speed(mcls);
 
     mons->god = GOD_NO_GOD;
 
@@ -1851,12 +1854,9 @@ static const char *ugly_colour_names[] = {
     "red", "brown", "green", "cyan", "purple", "white"
 };
 
-std::string ugly_thing_colour_name(const monsters *mon)
+std::string ugly_thing_colour_name(uint8_t colour)
 {
-    int colour_offset = -1;
-
-    if (mon->type == MONS_UGLY_THING || mon->type == MONS_VERY_UGLY_THING)
-        colour_offset = ugly_thing_colour_offset(mon->colour);
+    int colour_offset = ugly_thing_colour_offset(colour);
 
     if (colour_offset == -1)
         return ("buggy");
@@ -1864,11 +1864,19 @@ std::string ugly_thing_colour_name(const monsters *mon)
     return (ugly_colour_names[colour_offset]);
 }
 
-static const unsigned char ugly_colour_values[] = {
+std::string ugly_thing_colour_name(const monsters *mon)
+{
+    if (mon->type == MONS_UGLY_THING || mon->type == MONS_VERY_UGLY_THING)
+        return (ugly_thing_colour_name(mon->colour));
+    else
+        return ("buggy");
+}
+
+static const uint8_t ugly_colour_values[] = {
     RED, BROWN, GREEN, CYAN, MAGENTA, LIGHTGREY
 };
 
-unsigned char ugly_thing_random_colour()
+uint8_t ugly_thing_random_colour()
 {
     return (RANDOM_ELEMENT(ugly_colour_values));
 }
@@ -1883,7 +1891,7 @@ int str_to_ugly_thing_colour(const std::string &s)
     return (BLACK);
 }
 
-int ugly_thing_colour_offset(const unsigned char colour)
+int ugly_thing_colour_offset(const uint8_t colour)
 {
     for (unsigned i = 0; i < ARRAYSZ(ugly_colour_values); ++i)
     {
@@ -2104,8 +2112,7 @@ habitat_type mons_class_habitat(int mc)
 
 habitat_type mons_habitat(const monsters *mon)
 {
-    return (mons_class_habitat(mons_is_zombified(mon) ? mons_zombie_base(mon)
-                                                      : mon->type));
+    return (mons_class_habitat(mons_base_type(mon)));
 }
 
 habitat_type mons_class_primary_habitat(int mc)
@@ -2147,7 +2154,7 @@ int mons_power(int mc)
 {
     // For now, just return monster hit dice.
     ASSERT(smc);
-    return (smc->hpdice[0]);
+    return (mons_class_hit_dice(mc));
 }
 
 bool mons_aligned(const actor *m1, const actor *m2)
@@ -2196,10 +2203,7 @@ bool mons_class_wields_two_weapons(int mc)
 
 bool mons_wields_two_weapons(const monsters *mon)
 {
-    const int montype = mons_is_zombified(mon) ? mons_zombie_base(mon)
-                                               : mon->type;
-
-    return (mons_class_wields_two_weapons(montype));
+    return (mons_class_wields_two_weapons(mons_base_type(mon)));
 }
 
 bool mons_self_destructs(const monsters *m)
@@ -3122,7 +3126,7 @@ bool monster_shover(const monsters *m)
     if (_mons_has_smite_attack(m))
         return (false);
 
-    int mchar = me->showchar;
+    char mchar = me->showchar;
 
     // Somewhat arbitrary: giants and dragons are too big to get past anything,
     // beetles are too dumb (arguable), dancing weapons can't communicate, eyes
@@ -3143,8 +3147,8 @@ bool monster_senior(const monsters *m1, const monsters *m2, bool fleeing)
     if (!me1 || !me2)
         return (false);
 
-    int mchar1 = me1->showchar;
-    int mchar2 = me2->showchar;
+    char mchar1 = me1->showchar;
+    char mchar2 = me2->showchar;
 
     // If both are demons, the smaller number is the nastier demon.
     if (isadigit(mchar1) && isadigit(mchar2))
@@ -3185,7 +3189,6 @@ bool monster_senior(const monsters *m1, const monsters *m2, bool fleeing)
     return (mchar1 == mchar2 && (fleeing || m1->hit_dice > m2->hit_dice));
 }
 
-
 bool mons_class_can_pass(int mc, const dungeon_feature_type grid)
 {
     if (mons_class_wall_shielded(mc))
@@ -3195,15 +3198,12 @@ bool mons_class_can_pass(int mc, const dungeon_feature_type grid)
                 || feat_is_rock(grid) && !feat_is_permarock(grid));
     }
 
-    return !feat_is_solid(grid);
+    return (!feat_is_solid(grid));
 }
 
 bool mons_can_pass(const monsters *mon, dungeon_feature_type grid)
 {
-    const int montype = mons_is_zombified(mon) ? mons_zombie_base(mon)
-                                               : mon->type;
-
-    return (mons_class_can_pass(montype, grid));
+    return (mons_class_can_pass(mons_base_type(mon), grid));
 }
 
 static bool _mons_can_open_doors(const monsters *mon)
@@ -3217,7 +3217,7 @@ static bool _mons_can_open_doors(const monsters *mon)
 // Normal/smart monsters know about secret doors, since they live in
 // the dungeon, unless they're marked specifically not to be opened unless
 // already opened by the player {bookofjude}.
-bool mons_can_open_door(const monsters* mon, const coord_def& pos)
+bool mons_can_open_door(const monsters *mon, const coord_def& pos)
 {
     if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto")
         return (false);
@@ -3232,7 +3232,7 @@ bool mons_can_open_door(const monsters* mon, const coord_def& pos)
 
 // Monsters that eat items (currently only jellies) also eat doors.
 // However, they don't realise that secret doors make good eating.
-bool mons_can_eat_door(const monsters* mon, const coord_def& pos)
+bool mons_can_eat_door(const monsters *mon, const coord_def& pos)
 {
     if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto")
         return (false);
@@ -3254,26 +3254,26 @@ bool mons_can_eat_door(const monsters* mon, const coord_def& pos)
     return (feat == DNGN_CLOSED_DOOR);
 }
 
-static bool _mons_can_pass_door(const monsters* mon, const coord_def& pos)
+static bool _mons_can_pass_door(const monsters *mon, const coord_def& pos)
 {
     return (mons_can_pass(mon, DNGN_FLOOR)
             && (mons_can_open_door(mon, pos)
                 || mons_can_eat_door(mon, pos)));
 }
 
-bool mons_can_traverse(const monsters* mons, const coord_def& p,
+bool mons_can_traverse(const monsters *mon, const coord_def& p,
                        bool checktraps)
 {
-    if (_mons_can_pass_door(mons, p))
+    if (_mons_can_pass_door(mon, p))
         return (true);
 
-    if (!mons->is_habitable_feat(env.grid(p)))
+    if (!mon->is_habitable_feat(env.grid(p)))
         return (false);
 
     // Your friends only know about doors you know about, unless they feel
     // at home in this branch.
-    if (grd(p) == DNGN_SECRET_DOOR && mons->friendly()
-        && (mons_intel(mons) < I_NORMAL || !mons_is_native_in_branch(mons)))
+    if (grd(p) == DNGN_SECRET_DOOR && mon->friendly()
+        && (mons_intel(mon) < I_NORMAL || !mons_is_native_in_branch(mon)))
     {
         return (false);
     }
@@ -3285,17 +3285,14 @@ bool mons_can_traverse(const monsters* mons, const coord_def& p,
 
         // Don't allow allies to pass over known (to them) Zot traps.
         if (tt == TRAP_ZOT
-            && ptrap->is_known(mons)
-            && mons->friendly())
+            && ptrap->is_known(mon)
+            && mon->friendly())
         {
             return (false);
         }
 
         // Monsters cannot travel over teleport traps.
-        const monster_type montype = mons_is_zombified(mons)
-                                   ? mons_zombie_base(mons)
-                                   : mons->type;
-        if (!can_place_on_trap(montype, tt))
+        if (!can_place_on_trap(mons_base_type(mon), tt))
             return (false);
     }
 

@@ -49,8 +49,12 @@ void PlaceInfo::assert_validity() const
         // Pandemonium level.
         // ASSERT(num_visits <= levels_seen);
         ;
+#if TAG_MAJOR_VERSION != 29
+    // Commented out to allow games with broken place_info to continue.
+    // Please uncomment at a later point in 0.8 development. (jpeg)
     else if (level_type == LEVEL_DUNGEON && branches[branch].depth > 0)
         ASSERT(levels_seen <= (unsigned long) branches[branch].depth);
+#endif
 
     ASSERT(turns_total == (turns_explore + turns_travel + turns_interlevel
                            + turns_resting + turns_other));
@@ -182,4 +186,13 @@ PlaceInfo& player::get_place_info(branch_type branch,
         return (PlaceInfo&) branch_info[branch];
     else
         return (PlaceInfo&) non_branch_info[level_type2 - 1];
+}
+
+void player::clear_place_info()
+{
+    you.global_info = PlaceInfo();
+    for (unsigned int i = 0; i < NUM_BRANCHES; ++i)
+        branch_info[i] = PlaceInfo();
+    for (unsigned int i = 0; i < NUM_LEVEL_AREA_TYPES - 1; ++i)
+        non_branch_info[i] = PlaceInfo();
 }

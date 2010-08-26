@@ -31,6 +31,7 @@
 
 #include "abl-show.h"
 #include "abyss.h"
+#include "acquire.h"
 #include "areas.h"
 #include "artefact.h"
 #include "arena.h"
@@ -43,10 +44,8 @@
 #include "command.h"
 #include "coord.h"
 #include "coordit.h"
-#include "ctest.h"
 #include "crash.h"
 #include "database.h"
-#include "dbg-maps.h"
 #include "dbg-scan.h"
 #include "debug.h"
 #include "delay.h"
@@ -74,8 +73,6 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
-#include "lev-pand.h"
-#include "los.h"
 #include "luaterp.h"
 #include "macro.h"
 #include "makeitem.h"
@@ -90,8 +87,6 @@
 #include "mon-transit.h"
 #include "mon-util.h"
 #include "mutation.h"
-#include "newgame.h"
-#include "ng-init.h"
 #include "notes.h"
 #include "options.h"
 #include "ouch.h"
@@ -106,12 +101,13 @@
 #include "skills.h"
 #include "skills2.h"
 #include "species.h"
-#include "spells1.h"
-#include "spells2.h"
-#include "spells3.h"
-#include "spells4.h"
 #include "spl-book.h"
 #include "spl-cast.h"
+#include "spl-clouds.h"
+#include "spl-goditem.h"
+#include "spl-other.h"
+#include "spl-selfench.h"
+#include "spl-transloc.h"
 #include "spl-util.h"
 #include "stairs.h"
 #include "stash.h"
@@ -295,7 +291,10 @@ static void _reset_game()
     you.init();
     StashTrack = StashTracker();
     travel_cache = TravelCache();
+    you.clear_place_info();
     overview_clear();
+    clear_message_window();
+    note_list.clear();
     msg::deinitialise_mpr_streams();
 
 #ifdef USE_TILE
@@ -1548,7 +1547,7 @@ static void _do_rest()
 {
     if (you.hunger_state == HS_STARVING && !you_min_hunger())
     {
-        mpr("You are too hungry to rest.");
+        mpr("You're too hungry to rest.");
         return;
     }
 
@@ -2062,7 +2061,7 @@ static void _decrement_durations()
         if (you.duration[DUR_DIVINE_SHIELD] > 1)
         {
             you.duration[DUR_DIVINE_SHIELD] -= delay;
-            if(you.duration[DUR_DIVINE_SHIELD] <= 1)
+            if (you.duration[DUR_DIVINE_SHIELD] <= 1)
             {
                 you.duration[DUR_DIVINE_SHIELD] = 1;
                 mpr("Your divine shield starts to fade.", MSGCH_DURATION);
@@ -2573,7 +2572,7 @@ static void _regenerate_hp_and_mp(int delay)
         return;
 
     ASSERT(tmp >= 0 && tmp < 100);
-    you.hit_points_regeneration = static_cast<unsigned char>(tmp);
+    you.hit_points_regeneration = tmp;
 
     // XXX: Doing the same as the above, although overflow isn't an
     // issue with magic point regeneration, yet. -- bwr
@@ -2592,7 +2591,7 @@ static void _regenerate_hp_and_mp(int delay)
     }
 
     ASSERT(tmp >= 0 && tmp < 100);
-    you.magic_points_regeneration = static_cast<unsigned char>(tmp);
+    you.magic_points_regeneration = tmp;
 }
 
 static void _update_mold_state(const coord_def & pos)
@@ -2723,6 +2722,9 @@ static void _player_reacts_to_monsters()
 
 void world_reacts()
 {
+    // All markers should be activated at this point.
+    ASSERT(!env.markers.need_activate());
+
     reset_show_terrain();
 
     crawl_state.clear_mon_acting();
@@ -2887,10 +2889,38 @@ static int _check_adjacent(dungeon_feature_type feat, coord_def& delta)
 {
     int num = 0;
 
-    for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
+    std::vector<coord_def> doors;
+    for (adjacent_iterator ai(you.pos(), true); ai; ++ai)
     {
         if (grd(*ai) == feat)
         {
+            // Specialcase doors to take into account gates.
+            if (feat_is_door(feat))
+            {
+                bool found_door = false;
+                for (unsigned int i = 0; i < doors.size(); ++i)
+                {
+                    if (doors[i] == *ai)
+                    {
+                        found_door = true;
+                        break;
+                    }
+                }
+
+                // Already included in a gate, skip this door.
+                if (found_door)
+                    continue;
+                    
+                // Check if it's part of a gate. If so, remember all its doors.
+                std::set<coord_def> all_door;
+                find_connected_identical(*ai, grd(*ai), all_door);
+                for (std::set<coord_def>::const_iterator dc = all_door.begin();
+                     dc != all_door.end(); ++dc)
+                {
+                     doors.push_back(*dc);
+                }
+            }
+
             num++;
             delta = *ai - you.pos();
         }
@@ -3258,9 +3288,9 @@ static void _open_door(coord_def move, bool check_confused)
         // Even if some of the door is out of LOS, we want the entire
         // door to be updated.  Hitting this case requires a really big
         // door!
-        if (is_terrain_seen(dc))
+        if (env.map_knowledge(dc).seen())
         {
-            set_map_knowledge_obj(dc, DNGN_OPEN_DOOR);
+            env.map_knowledge(dc).set_feature(DNGN_OPEN_DOOR);
 #ifdef USE_TILE
             env.tile_bk_bg(dc) = TILE_DNGN_OPEN_DOOR;
 #endif
@@ -3483,9 +3513,9 @@ static void _close_door(coord_def move)
             // Even if some of the door is out of LOS once it's closed
             // (or even if some of it is out of LOS when it's open), we
             // want the entire door to be updated.
-            if (is_terrain_seen(dc))
+            if (env.map_knowledge(dc).seen())
             {
-                set_map_knowledge_obj(dc, DNGN_CLOSED_DOOR);
+                env.map_knowledge(dc).set_feature(DNGN_CLOSED_DOOR);
 #ifdef USE_TILE
                 env.tile_bk_bg(dc) = TILE_DNGN_CLOSED_DOOR;
 #endif
@@ -3551,20 +3581,21 @@ static void _do_berserk_no_combat_penalty(void)
             break;
         }
 
-        // I do these three separately, because the might and
+        const int hasted_base_delay = BASELINE_DELAY / 2;
+        int berserk_delay_penalty = you.berserk_penalty * hasted_base_delay;
+        // Do these three separately, because the might and
         // haste counters can be different.
-        int berserk_delay_penalty = you.berserk_penalty * BASELINE_DELAY;
         you.duration[DUR_BERSERKER] -= berserk_delay_penalty;
-        if (you.duration[DUR_BERSERKER] < 1)
-            you.duration[DUR_BERSERKER] = 1;
+        if (you.duration[DUR_BERSERKER] < hasted_base_delay)
+            you.duration[DUR_BERSERKER] = hasted_base_delay;
 
         you.duration[DUR_MIGHT] -= berserk_delay_penalty;
-        if (you.duration[DUR_MIGHT] < 1)
-            you.duration[DUR_MIGHT] = 1;
+        if (you.duration[DUR_MIGHT] < hasted_base_delay)
+            you.duration[DUR_MIGHT] = hasted_base_delay;
 
         you.duration[DUR_HASTE] -= berserk_delay_penalty;
-        if (you.duration[DUR_HASTE] < 1)
-            you.duration[DUR_HASTE] = 1;
+        if (you.duration[DUR_HASTE] < hasted_base_delay)
+            you.duration[DUR_HASTE] = hasted_base_delay;
     }
     return;
 }                               // end do_berserk_no_combat_penalty()
@@ -3656,10 +3687,10 @@ static void _move_player(coord_def move)
         you.time_taken = div_rand_round(you.time_taken * 3, 2);
 
         monsters * current = monster_at(you.pos());
-        if(!current || !fedhas_passthrough(current))
+        if (!current || !fedhas_passthrough(current))
         {
             // Probably need better messages. -cao
-            if(mons_genus(targ_monst->type) == MONS_FUNGUS)
+            if (mons_genus(targ_monst->type) == MONS_FUNGUS)
             {
                 mprf("You walk carefully through the fungus.");
             }
@@ -4088,6 +4119,8 @@ static void _compile_time_asserts()
     COMPILE_CHECK(sizeof(float) == sizeof(int32_t), c15);
     COMPILE_CHECK(sizeof(feature_property_type) <= sizeof(terrain_property_t), c16);
     COMPILE_CHECK(sizeof(level_flag_type) <= sizeof(int32_t), c17);
+    // Travel cache, traversable_terrain.
+    COMPILE_CHECK(NUM_FEATURES <= 256, c18);
 
     // Also some runtime stuff; I don't know if the order of branches[]
     // needs to match the enum, but it currently does.

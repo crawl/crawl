@@ -23,7 +23,7 @@
 #include "shopping.h"
 #include "skills2.h"
 #include "spl-cast.h"
-#include "spl-mis.h"
+#include "spl-miscast.h"
 #include "state.h"
 #include "stuff.h"
 #include "transform.h"
@@ -332,7 +332,8 @@ static void _unequip_artefact_effect(const item_def &item, bool *show_msgs=NULL)
     if (proprt[ARTP_LEVITATE] != 0
         && you.duration[DUR_LEVITATION] > 2
         && !you.attribute[ATTR_LEV_UNCANCELLABLE]
-        && !you.permanent_levitation())
+        && !you.permanent_levitation()
+        && !player_evokable_levitation())
     {
         you.duration[DUR_LEVITATION] = 1;
     }
@@ -363,7 +364,7 @@ static void _unequip_artefact_effect(const item_def &item, bool *show_msgs=NULL)
 // other places *cough* auto-butchering *cough*.    {gdl}
 static void _equip_weapon_effect(item_def& item, bool showMsgs)
 {
-    unsigned char special = 0;
+    int special = 0;
 
     const bool artefact     = is_artefact(item);
     const bool known_cursed = item_known_cursed(item);
@@ -570,7 +571,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
                 case SPWPN_PAIN:
                     if (you.skills[SK_NECROMANCY] == 0)
                         mpr("You have a feeling of ineptitude.");
-                    else if(you.skills[SK_NECROMANCY] <= 4)
+                    else if (you.skills[SK_NECROMANCY] <= 4)
                         mpr("Pain shudders through your arm!");
                     else
                         mpr("A searing pain shoots up your arm!");
@@ -589,6 +590,12 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
 
                 case SPWPN_REAPING:
                     mpr("It is briefly surrounded by shifting shadows.");
+                    break;
+
+                case SPWPN_ANTIMAGIC:
+                    calc_mp();
+                    // Even if your maxmp is 0.
+                    mpr("You feel magic leave you.");
                     break;
 
                 default:
@@ -747,6 +754,11 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs)
                     MiscastEffect(&you, WIELD_MISCAST, SPTYP_TRANSLOCATION,
                                   9, 90, "distortion unwield");
                 }
+                break;
+
+            case SPWPN_ANTIMAGIC:
+                calc_mp();
+                mpr("You feel magic returning to you.");
                 break;
 
                 // NOTE: When more are added here, *must* duplicate unwielding
@@ -964,8 +976,11 @@ static void _unequip_armour_effect(item_def& item)
         break;
 
     case SPARM_LEVITATION:
-        if (you.duration[DUR_LEVITATION] && !you.attribute[ATTR_LEV_UNCANCELLABLE])
+        if (you.duration[DUR_LEVITATION] && !you.attribute[ATTR_LEV_UNCANCELLABLE]
+            && !player_evokable_levitation())
+        {
             you.duration[DUR_LEVITATION] = 1;
+        }
         break;
 
     case SPARM_MAGIC_RESISTANCE:
@@ -1392,7 +1407,8 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg)
 
     case RING_LEVITATION:
         if (you.duration[DUR_LEVITATION] && !you.permanent_levitation()
-            && you.attribute[ATTR_LEV_UNCANCELLABLE])
+            && !you.attribute[ATTR_LEV_UNCANCELLABLE]
+            && !player_evokable_levitation())
         {
             you.duration[DUR_LEVITATION] = 1;
         }

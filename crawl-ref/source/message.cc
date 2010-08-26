@@ -1,13 +1,6 @@
 /*
  *  File:       message.cc
  *  Summary:    Functions used to print messages.
- *
- * Todo:
- *   - change uses of cancelable_get_line to msgwin_get_line
- *   - Handle resizing properly, in particular initial resize.
- *
- * Maybe:
- *   - Redraw message window at same places that cause refresh?
  */
 
 #include "AppHdr.h"
@@ -38,7 +31,6 @@
 #include "hints.h"
 #include "view.h"
 #include "shout.h"
-#include "viewchar.h"
 #include "viewgeom.h"
 
 #include <sstream>
@@ -586,6 +578,11 @@ void display_message_window()
     msgwin.show();
 }
 
+void clear_message_window()
+{
+    msgwin = message_window();
+}
+
 void scroll_message_window(int n)
 {
     msgwin.scroll(n);
@@ -1094,7 +1091,10 @@ int msgwin_get_line(std::string prompt, char *buf, int len,
 {
     msgwin_prompt(prompt);
     int ret = cancelable_get_line(buf, len, mh, keyproc);
-    msgwin_reply(ret == 0 ? buf : "");
+    std::string reply;
+    if (ret == 0)
+        reply = replace_all(buf, "<", "<<");
+    msgwin_reply(reply);
     return ret;
 }
 
@@ -1308,7 +1308,7 @@ static bool _pre_more()
         return true;
 
 #ifdef WIZARD
-    if(luaterp_running())
+    if (luaterp_running())
         return true;
 #endif
 

@@ -1,11 +1,11 @@
 /*
- *  File:       spl-mis.h
+ *  File:       spl-miscast.h
  *  Summary:    Spell miscast class.
  *  Written by: Matthew Cline
  */
 
-#ifndef SPL_MIS_H
-#define SPL_MIS_H
+#ifndef SPL_MISCAST_H
+#define SPL_MISCAST_H
 
 #include "enum.h"
 
@@ -113,7 +113,7 @@ private:
     bool _explosion();
     bool _big_cloud(cloud_type cl_type, int cloud_pow, int size,
                     int spread_rate = -1);
-    bool _lose_stat(stat_type which_stat, unsigned char stat_loss);
+    bool _lose_stat(stat_type which_stat, int8_t stat_loss);
     void _potion_effect(potion_type pot_eff, int pot_pow);
     bool _create_monster(monster_type what, int abj_deg, bool alert = false);
     void send_abyss();

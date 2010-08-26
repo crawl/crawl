@@ -38,7 +38,7 @@ bool cast_iood(actor *caster, int pow, bolt *beam)
         mtarg = MHITYOU;
 
     int mind = -1;
-    for(int i=0; i < 10 && mind == -1; i++)
+    for (int i=0; i < 10 && mind == -1; i++)
     {
         mind = mons_place(mgen_data(MONS_ORB_OF_DESTRUCTION,
                 (caster->atype() == ACT_PLAYER) ? BEH_FRIENDLY :

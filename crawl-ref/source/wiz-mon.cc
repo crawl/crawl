@@ -24,24 +24,23 @@
 #include "jobs.h"
 #include "macro.h"
 #include "map_knowledge.h"
-#include "message.h"
-#include "mon-place.h"
-#include "terrain.h"
-#include "mgen_data.h"
 #include "mapdef.h"
+#include "message.h"
+#include "mgen_data.h"
+#include "mon-iter.h"
 #include "mon-pathfind.h"
+#include "mon-place.h"
 #include "mon-speak.h"
 #include "mon-stuff.h"
-#include "mon-iter.h"
 #include "mon-util.h"
 #include "output.h"
 #include "religion.h"
 #include "shout.h"
 #include "showsymb.h"
-#include "spells2.h"
-#include "spl-mis.h"
+#include "spl-miscast.h"
 #include "spl-util.h"
 #include "stuff.h"
+#include "terrain.h"
 #include "view.h"
 #include "viewmap.h"
 
@@ -551,12 +550,7 @@ void debug_stethoscope(int mon)
 void wizard_detect_creatures()
 {
     for (monster_iterator mi; mi; ++mi)
-    {
-        show_type obj(mi->type);
-        set_map_knowledge_obj(mi->pos(), obj);
-        set_map_knowledge_detected_mons(mi->pos(), true);
-        env.map_knowledge(mi->pos()).object.colour = get_mons_glyph(*mi, false).col;
-    }
+        env.map_knowledge(mi->pos()).set_monster(monster_info(*mi));
 }
 
 // Dismisses all monsters on the level or all monsters that match a user
