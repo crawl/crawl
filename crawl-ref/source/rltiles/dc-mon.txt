@@ -329,6 +329,7 @@ overlay_mace MONS_STATUE_MACE
 overlay_mage_hat MONS_STATUE_MAGE
 overlay_scythe MONS_STATUE_SCYTHE
 overlay_sword MONS_STATUE_SWORD
+overlay_whip MONS_STATUE_WHIP
 %back none
 
 %back light_vine_statue_base
@@ -339,6 +340,7 @@ overlay_mace MONS_LIGHT_VINE_STATUE_MACE
 overlay_mage MONS_LIGHT_VINE_STATUE_MAGE
 overlay_scythe MONS_LIGHT_VINE_STATUE_SCYTHE
 overlay_sword MONS_LIGHT_VINE_STATUE_SWORD
+overlay_whip MONS_LIGHT_VINE_STATUE_WHIP
 %back none
 
 %back dark_vine_statue_base
@@ -349,6 +351,7 @@ overlay_mace MONS_DARK_VINE_STATUE_MACE
 overlay_mage MONS_DARK_VINE_STATUE_MAGE
 overlay_scythe MONS_DARK_VINE_STATUE_SCYTHE
 overlay_sword MONS_DARK_VINE_STATUE_SWORD
+overlay_whip MONS_DARK_VINE_STATUE_WHIP
 %back none
 
 %rim 0
@@ -360,6 +363,8 @@ guardian-eyeclosed-flame1
 guardian-eyeclosed-flame2
 guardian-eyeclosed-flame3
 guardian-eyeclosed-flame4
+
+firespitter_statue MONS_FIRESPITTER_STATUE
 %rim 1
 
 ## Gargoyles ('9')

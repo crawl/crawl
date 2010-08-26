@@ -671,6 +671,85 @@ xxxxxxxxx.xxxxxxxxx
 xxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+NAME:   vgs_firespitter
+TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_rotate no_vmirror
+KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
+#       Sets up the temple guardians.
+:       fiery_guardians(_G)
+#       Not sure if this one should be an actual_spellcaster - the caster
+#       statues in statue_cache aren't, so I'm taking that as a precedent.
+KMONS:  G = statue name:firespitter name_adjective name_descriptor \
+        tile:mons_firespitter_statue generate_awake \
+        spells:throw_flame;sticky_flame;.;bolt_of_magma;fireball;.
+MARKER: G = lua:MonPropsMarker:new { description = "Statue of a large head of a humanoid. Its mouth is blackened with scorch-marks. There is a faint ember glow in its empty eyes." }
+#       Loot: 12 items, 6 gold.
+:       volcano_setup(_G, false, true)
+MAP
+xxxxxxxxc+cxxxxxxxx
+xcccccccc.ccccccccx
+xc$$$gggc.......<cx
+xc...defc....cccccx
+xcll...cc...1.1.ccx
+xcGl....+....2._.cx
+xcll...cc...1.1.ccx
+xc...defc....cccccx
+xc$$$gggc.......<cx
+xcccccccccccccccccx
+xxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   vgs_trial_of_fire_spitters
+TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_rotate no_vmirror
+KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
+#       Sets up the temple guardians.
+:       fiery_guardians(_G)
+KMONS:  F = statue name:firespitter name_adjective name_descriptor \
+        tile:mons_firespitter_statue generate_awake \
+        spells:throw_flame;sticky_flame;.;bolt_of_magma;fireball;.
+MARKER: F = lua:MonPropsMarker:new { description = "Statue of a large head of a humanoid. Its mouth is blackened with scorch-marks. There is a faint ember glow in its empty eyes." }
+#       Loot: 10 items.
+:       volcano_setup(_G, false, true)
+MAP
+xxxxxxxxx+xxxxxxxxx
+xcccccccc.........x
+xc.....cccccccccc.x
+xc...c.cFcFcFcFcc.x
+xc121c.c.c.c.c.cc.x
+xcdgdc.c.c.c.c.c..x
+xceCecc.c.c.c.c.cGx
+xcfgfcc.c.c.c.c.cxx
+xcg<gccFcFcFcFcFcxx
+xccccccccccccccccxx
+xxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   vgs_trial_of_fire_lashers
+TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_rotate no_vmirror
+KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
+#       Sets up the temple guardians.
+:       fiery_guardians(_G)
+KMONS:  G = statue name:lasher name_adjective name_descriptor \
+        generate_awake ; whip ego:flaming
+KMONS:  F = statue name:lasher name_adjective name_descriptor \
+        generate_awake ; whip ego:reaching
+KMONS:  l = lava fish / lava worm / nothing
+KFEAT:  l = l
+#       Loot: 10 items.
+:       volcano_setup(_G, false, true)
+MAP
+xcccccccx+xxxxxxxxx
+xc.....cc.cxxxxxxxx
+xc...cc.c.cccccxxxx
+xc...c.cc..cGccxxxx
+xc...c.lccc.cGcccxx
+xc121c.llcGc.ccFcxx
+xcdgdc.llccGc..ccxx
+xceCec.lllccccc.cxx
+xcfgfc.lllllc...cxx
+xcg<gc.......cFccxx
+xcccccccccccccccxxx
+ENDMAP
+
 ###############################################################################
 
 ###############################################################################
