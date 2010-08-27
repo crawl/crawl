@@ -1068,10 +1068,12 @@ static void _write_tagged_file( const std::string &filename,
     _write_version( filename, outf, TAG_MAJOR_VERSION, TAG_MINOR_VERSION,
                     extended_version );
 
+    writer outw(filename, outf);
+
     // all other tags
     for (int i = 1; i < NUM_TAGS; i++)
         if (tags[i] == 1)
-            tag_write(filename, static_cast<tag_type>(i), outf);
+            tag_write(static_cast<tag_type>(i), outw);
 }
 
 static void _safe_write_tagged_file(const std::string &filename,
@@ -1081,6 +1083,23 @@ static void _safe_write_tagged_file(const std::string &filename,
 {
     safe_file_writer writer(filename, "wb", lock);
     _write_tagged_file(filename, writer.open(), tag, extended_version);
+}
+
+static void _write_tagged_chunk(const std::string &chunkname, int tag)
+{
+    writer outf(*you.save, chunkname);
+    // find all relevant tags
+    int8_t tags[NUM_TAGS];
+    tag_set_expected(tags, tag);
+
+    // write version
+    marshallByte(outf, TAG_MAJOR_VERSION);
+    marshallByte(outf, TAG_MINOR_VERSION);
+
+    // all other tags
+    for (int i = 1; i < NUM_TAGS; i++)
+        if (tags[i] == 1)
+            tag_write(static_cast<tag_type>(i), outf);
 }
 
 static void _place_player_on_stair(level_area_type old_level_type,

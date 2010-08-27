@@ -11,6 +11,7 @@
 #include <stdint.h>
 
 #include "tag-version.h"
+#include "package.h"
 
 struct show_type;
 struct monster_info;
@@ -96,14 +97,20 @@ class writer
 public:
     writer(const std::string &filename, FILE* output,
            bool ignore_errors = false)
-        : _filename(filename), _file(output),
+        : _filename(filename), _file(output), _chunk(0),
           _ignore_errors(ignore_errors), _pbuf(0), failed(false)
     {
         ASSERT(output);
     }
     writer(std::vector<unsigned char>* poutput)
-        : _filename(), _file(0), _ignore_errors(false),
+        : _filename(), _file(0), _chunk(0), _ignore_errors(false),
           _pbuf(poutput), failed(false) { ASSERT(poutput); }
+    writer(package &save, const std::string &chunkname)
+        : _filename(), _file(0), _chunk(0), _ignore_errors(false),
+          failed(false)
+    {
+        _chunk = save.writer(chunkname);
+    }
 
     void writeByte(unsigned char byte);
     void write(const void *data, size_t size);
@@ -117,6 +124,7 @@ private:
 private:
     std::string _filename;
     FILE* _file;
+    chunk_writer *_chunk;
     bool _ignore_errors;
 
     std::vector<unsigned char>* _pbuf;
@@ -227,7 +235,7 @@ static inline void unmarshallSigned(reader& th, T& v)
  * *********************************************************************** */
 
 tag_type tag_read(FILE* inf, int minorVersion, int8_t expected_tags[NUM_TAGS]);
-void tag_write(const std::string &filename, tag_type tagID, FILE* outf);
+void tag_write(tag_type tagID, writer &outf);
 void tag_set_expected(int8_t tags[], int fileType);
 void tag_missing(int tag, int minorVersion);
 
