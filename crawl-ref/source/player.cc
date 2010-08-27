@@ -5431,6 +5431,7 @@ player::~player()
 {
     delete kills;
     delete m_quiver;
+    ASSERT(!save); // the save file should be closed or deleted
 }
 
 bool player::is_levitating() const

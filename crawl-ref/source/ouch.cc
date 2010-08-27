@@ -1333,6 +1333,11 @@ static void delete_files()
         std::string tmpname = basename + suffixes[i];
         unlink( tmpname.c_str() );
     }
+
+    you.save->abort();
+    delete you.save;
+    you.save = 0;
+    unlink((basename + SAVE_SUFFIX).c_str());
 }
 
 void end_game(scorefile_entry &se)

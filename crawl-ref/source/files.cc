@@ -1855,6 +1855,9 @@ static void _save_game_exit()
         delete _callback_list;
         _callback_list = NULL;
     }
+
+    delete you.save;
+    you.save = 0;
 }
 
 void save_game(bool leave_game, const char *farewellmsg)
@@ -2082,6 +2085,9 @@ bool load_ghost(bool creating_level)
 
 void restore_game(const std::string& name)
 {
+    you.save = new package((get_savedir_filename(name, "", "")
+                           + SAVE_SUFFIX).c_str(), true);
+
     if (!_check_unpack_saved_game(name))
         end(-1, true, "Couldn't find save for %s!\n", name.c_str());
 
