@@ -70,12 +70,14 @@ public:
     void delete_chunk(const std::string name);
     bool has_chunk(const std::string name);
     std::vector<std::string> list_chunks();
+    void abort();
 private:
     bool rw;
     int fd;
     len_t file_len;
     int n_users;
     bool dirty;
+    bool aborted;
     std::map<std::string, len_t> directory;
     std::map<len_t, len_t> free_blocks;
     std::stack<len_t> unlinked_blocks;
