@@ -463,40 +463,6 @@
     // #define SAVE_DIR_PATH       "/opt/crawl/lib/"
     // #define SAVE_DIR_PATH       ""
 
-    // Define SAVE_PACKAGE_CMD to a command to compress and bundle the save
-    // game files into a single unit... the two %s will be replaced with the
-    // players save file name.  Define LOAD_UNPACKAGE_CMD to undo this process
-    // the %s is the same as above.  The second %s in LOAD_UNPACKAGE_CMD
-    // is for the output directory.
-    //
-    // PACKAGE_SUFFIX is used when the package file name is needed
-    //
-
-/*
-    FIXME: Unless sanitized elsewhere in the codebase, a specially crafted
-           save directory or character name will allow arbitrary code execution
-           with escalated privileges (namely, with group "games").
-    FIXME: replace system(3) with fork(2) and execve(2).
-*/
-
-    // The default behaviour is to compress with tar on Unices, zip on Windows/DOS.
-    // To avoid compression entirely, define SAVE_PACKAGE_NONE.
-    #ifndef SAVE_PACKAGE_NONE
-    #ifdef USE_TAR
-      #define PACKAGE_SUFFIX ".tar.gz"
-      #define SAVE_PACKAGE_CMD "tar"
-      #define LOAD_UNPACKAGE_CMD "tar -zxf %s"PACKAGE_SUFFIX" -C %s"
-      #define UNPACK_SPECIFIC_FILE_CMD LOAD_UNPACKAGE_CMD " %s"
-    #else
-    #ifdef USE_ZIP
-      #define PACKAGE_SUFFIX ".zip"
-      #define SAVE_PACKAGE_CMD "/usr/bin/zip -m -q -j"
-      #define LOAD_UNPACKAGE_CMD "/usr/bin/unzip -q -o %s"PACKAGE_SUFFIX" -d %s"
-      #define UNPACK_SPECIFIC_FILE_CMD LOAD_UNPACKAGE_CMD " %s"
-    #endif
-    #endif
-    #endif // SAVE_PACKAGE_NONE
-
     // This defines the chmod permissions for score and bones files.
     #define SHARED_FILES_CHMOD_PRIVATE  0664
     #define SHARED_FILES_CHMOD_PUBLIC   0664

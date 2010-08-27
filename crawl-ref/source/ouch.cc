@@ -1323,9 +1323,6 @@ static void delete_files()
 #ifdef CLUA_BINDINGS
         ".lua",
 #endif
-#ifdef PACKAGE_SUFFIX
-        PACKAGE_SUFFIX ,
-#endif
         ".st", ".kil", ".tc", ".nts", ".tut", ".chr", ".msg", ".tdl"
     };
 

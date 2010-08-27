@@ -174,63 +174,17 @@ bool is_save_file_name(const std::string &name)
     return _is_uid_file(name, ".chr");
 }
 
-#ifdef LOAD_UNPACKAGE_CMD
-bool is_packed_save(const std::string &name)
-{
-    return _is_uid_file(name, PACKAGE_SUFFIX);
-}
-#endif
-
 bool save_exists(const std::string& name)
 {
     const std::string basename = get_savedir_filename(name, "", "");
-
-#ifdef LOAD_UNPACKAGE_CMD
-    const std::string zipname = basename + PACKAGE_SUFFIX;
-    if (file_exists(zipname))
-        return (true);
-#endif
 
     const std::string savename = basename + ".chr";
     return (file_exists(savename));
 }
 
-#ifdef LOAD_UNPACKAGE_CMD
-void unpack_file(std::string basename)
-{
-    const std::string zipname = basename + PACKAGE_SUFFIX;
-
-    if (!file_exists(zipname))
-        return;
-
-    // Create command.
-    char cmd_buff[1024];
-
-    std::string directory = get_savefile_directory();
-
-    escape_path_spaces(basename);
-    escape_path_spaces(directory);
-    snprintf(cmd_buff, sizeof(cmd_buff), LOAD_UNPACKAGE_CMD,
-             basename.c_str(), directory.c_str());
-
-    if (system(cmd_buff) != 0)
-    {
-        cprintf("\nWarning: Zip command (LOAD_UNPACKAGE_CMD) "
-                     "returned non-zero value!\n");
-    }
-
-    // Remove save game package.
-    unlink(zipname.c_str());
-}
-#endif
-
 static bool _check_unpack_saved_game(const std::string& name)
 {
     const std::string basename = get_savedir_filename(name, "", "");
-
-#ifdef LOAD_UNPACKAGE_CMD
-    unpack_file(basename);
-#endif
 
     const std::string savename = basename + ".chr";
     FILE *handle = fopen(savename.c_str(), "rb+");
@@ -900,29 +854,6 @@ std::vector<player_save_info> find_saved_characters()
         std::string::size_type point_pos = filename.find_first_of('.');
         std::string basename = filename.substr(0, point_pos);
 
-#ifdef LOAD_UNPACKAGE_CMD
-        if (!is_packed_save(filename))
-            continue;
-
-        std::string zipname = get_savedir_path(basename);
-        escape_path_spaces(zipname);
-
-        // This is the filename we actually read ourselves.
-        filename = basename + ".chr";
-        escape_path_spaces(filename);
-
-        std::string dir = get_savefile_directory();
-        escape_path_spaces(dir);
-
-        char cmd_buff[1024];
-        snprintf( cmd_buff, sizeof(cmd_buff), UNPACK_SPECIFIC_FILE_CMD,
-                  zipname.c_str(),
-                  dir.c_str(),
-                  filename.c_str() );
-
-        if (system(cmd_buff) != 0)
-            continue;
-#endif
         if (is_save_file_name(filename))
         {
             const std::string path = get_savedir_path(filename);
@@ -932,37 +863,15 @@ std::vector<player_save_info> find_saved_characters()
 #ifdef USE_TILE
                 if (Options.tile_menu_icons)
                 {
- #ifndef LOAD_UNPACKAGE_CMD
-                    basename = filename.substr(0,
-                            filename.length() - strlen(".chr"));
- #endif
                     std::string dollname = basename + ".tdl";
                     const std::string dollpath = get_savedir_path(dollname);
- #ifdef LOAD_UNPACKAGE_CMD
-                    escape_path_spaces(dollname);
-                    snprintf( cmd_buff, sizeof(cmd_buff),
-                              UNPACK_SPECIFIC_FILE_CMD,
-                              zipname.c_str(),
-                              dir.c_str(),
-                              dollname.c_str() );
-                    system(cmd_buff);
- #endif
                     _fill_player_doll(p, dollpath);
- #ifdef LOAD_UNPACKAGE_CMD
-                    // Throw away doll file.
-                    if (file_exists(dollpath.c_str()))
-                        unlink( dollpath.c_str() );
- #endif
                 }
 #endif
                 chars.push_back(p);
             }
         }
 
-#ifdef LOAD_UNPACKAGE_CMD
-        // If we unpacked the .sav file, throw it away now.
-        unlink( get_savedir_path(filename).c_str() );
-#endif
     }
 
     std::sort(chars.rbegin(), chars.rend());
@@ -1936,36 +1845,6 @@ static void _save_game_exit()
         _save_level(level_id::current());
 
     clrscr();
-
-#ifdef SAVE_PACKAGE_CMD
-    std::string dirname = get_savefile_directory();
-    escape_path_spaces(dirname);
-    std::string basename = get_save_filename(you.your_name, "", "");
-    escape_path_spaces(basename);
-
-    char cmd_buff[1024];
-
-#ifdef USE_TAR
-    snprintf( cmd_buff, sizeof(cmd_buff),
-              "cd %s && FILES=`echo %s.*` && "SAVE_PACKAGE_CMD" -zcf %s"PACKAGE_SUFFIX" $FILES && rm $FILES",
-              dirname.c_str(), basename.c_str(), basename.c_str());
-#else
-# ifdef USE_ZIP
-    snprintf( cmd_buff, sizeof(cmd_buff),
-              SAVE_PACKAGE_CMD" %s"PACKAGE_SUFFIX" %s.*",
-              (dirname+basename).c_str(), (dirname+basename).c_str());
-# else
-    No save package defined.
-# endif
-#endif
-
-    if (system( cmd_buff ) != 0)
-    {
-        cprintf( "\nWarning: Zip command (SAVE_PACKAGE_CMD) returned "
-                     "non-zero value!\n" );
-    }
-    DO_CHMOD_PRIVATE ( (dirname + basename + PACKAGE_SUFFIX).c_str() );
-#endif
 
 #ifdef DGL_WHEREIS
     whereis_record("saved");
