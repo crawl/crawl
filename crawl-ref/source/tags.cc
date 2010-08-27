@@ -875,10 +875,8 @@ time_t parse_date_string( char buff[20] )
 
 // Write a tagged chunk of data to the FILE*.
 // tagId specifies what to write.
-void tag_write(const std::string &filename, tag_type tagID, FILE* outf)
+void tag_write(tag_type tagID, writer &outf)
 {
-    ASSERT(outf);
-
     std::vector<unsigned char> buf;
     writer th(&buf);
     switch (tagID)
@@ -907,13 +905,13 @@ void tag_write(const std::string &filename, tag_type tagID, FILE* outf)
 
     // Write tag header.
     {
-        writer tmp(filename, outf);
+        writer tmp(outf);
         marshallShort(tmp, tagID);
         marshallInt(tmp, buf.size());
     }
 
     // Write tag data.
-    write2(outf, &buf[0], buf.size());
+    outf.write(&buf[0], buf.size());
 }
 
 // Read a single tagged chunk of data from fp into memory.
