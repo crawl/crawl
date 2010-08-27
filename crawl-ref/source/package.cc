@@ -212,7 +212,7 @@ void package::seek(len_t to)
 
 chunk_writer* package::writer(const std::string name)
 {
-    return new chunk_writer(*this, name);
+    return new chunk_writer(this, name);
 }
 
 chunk_reader* package::reader(const std::string name)
@@ -220,7 +220,7 @@ chunk_reader* package::reader(const std::string name)
     directory_t::iterator ch = directory.find(name);
     if (ch == directory.end())
         return 0;
-    return new chunk_reader(*this, ch->second);
+    return new chunk_reader(this, ch->second);
 }
 
 len_t package::extend_block(len_t at, len_t size, len_t by)
@@ -321,7 +321,7 @@ len_t package::write_directory()
     dprintf("writing directory of size %u*%u\n", (unsigned int)dir.size(),
             (unsigned int)sizeof(dir_entry));
     {
-        chunk_writer dch(*this, "");
+        chunk_writer dch(this, "");
         dch.write(&dir.front(), dir.size() * sizeof(dir_entry));
     }
 
@@ -424,7 +424,7 @@ void package::read_directory(len_t start)
     directory[""] = start;
 
     dprintf("package: reading directory\n");
-    chunk_reader *rd = new chunk_reader(*this, start);
+    chunk_reader *rd = new chunk_reader(this, start);
 
     dir_entry ch;
     while(len_t res = rd->read(&ch, sizeof(dir_entry)))
@@ -503,12 +503,13 @@ void package::abort()
 }
 
 
-chunk_writer::chunk_writer(package &parent, const std::string _name)
+chunk_writer::chunk_writer(package *parent, const std::string _name)
     : first_block(0), cur_block(0), block_len(0)
 {
-    ASSERT(!parent.aborted);
+    ASSERT(parent);
+    ASSERT(!parent->aborted);
     dprintf("chunk_writer(%s): starting\n", _name.c_str());
-    pkg = &parent;
+    pkg = parent;
     pkg->n_users++;
     name = _name;
 
@@ -529,7 +530,7 @@ chunk_writer::~chunk_writer()
 {
     dprintf("chunk_writer(%s): closing\n", name.c_str());
 
-    ASSERT(pkg->n_users >= 0);
+    ASSERT(pkg->n_users > 0);
     pkg->n_users--;
     if (pkg->aborted)
         return;
@@ -638,20 +639,22 @@ void chunk_reader::init(len_t start)
 #endif
 }
 
-chunk_reader::chunk_reader(package &parent, len_t start)
+chunk_reader::chunk_reader(package *parent, len_t start)
 {
+    ASSERT(parent);
     dprintf("chunk_reader[%u]: starting\n", start);
-    pkg = &parent;
+    pkg = parent;
     init(start);
 }
 
-chunk_reader::chunk_reader(package &parent, const std::string _name)
+chunk_reader::chunk_reader(package *parent, const std::string _name)
 {
-    if (!parent.has_chunk(_name))
+    ASSERT(parent);
+    if (!parent->has_chunk(_name))
         fail("save file corrupted -- chunk \"%s\" missing", _name.c_str());
     dprintf("chunk_reader(%s): starting\n", _name.c_str());
-    pkg = &parent;
-    init(parent.directory[_name]);
+    pkg = parent;
+    init(parent->directory[_name]);
 }
 
 chunk_reader::~chunk_reader()
@@ -662,7 +665,7 @@ chunk_reader::~chunk_reader()
     if (inflateEnd(&zs) != Z_OK)
         fail("save file decompression failed during clean-up: %s", zs.msg);
 #endif
-    ASSERT(pkg->n_users >= 0);
+    ASSERT(pkg->n_users > 0);
     pkg->n_users--;
 }
 
