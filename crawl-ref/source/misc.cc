@@ -1922,7 +1922,8 @@ void run_environment_effects()
     }
 
     run_corruption_effects(you.time_taken);
-    shoals_apply_tides(div_rand_round(you.time_taken, 10));
+    shoals_apply_tides(div_rand_round(you.time_taken, BASELINE_DELAY),
+                       false, true);
     timeout_tombs(you.time_taken);
 }
 
@@ -2066,7 +2067,7 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
             {
                 if (autohit_first)
                     return (false);
-                    
+
                 verb += "in " + mon->name(DESC_NOCAP_THE) + "'s direction";
                 need_mon_name = false;
             }
