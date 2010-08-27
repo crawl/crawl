@@ -1221,8 +1221,12 @@ static void _give_starting_food()
     }
 
     // Give another one for hungry species.
-    if (player_mutation_level(MUT_FAST_METABOLISM))
+    // And healers, to give pacifists a better chance. [rob]
+    if (player_mutation_level(MUT_FAST_METABOLISM)
+        || you.char_class == JOB_HEALER)
+    {
         item.quantity = 2;
+    }
 
     const int slot = find_free_slot(item);
     you.inv[slot]  = item;       // will ASSERT if couldn't find free slot
