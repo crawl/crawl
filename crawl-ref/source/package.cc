@@ -88,7 +88,7 @@ typedef std::map<len_t, bm_p> bm_t;
 typedef std::map<len_t, len_t> fb_t;
 
 package::package(const char* file, bool writeable, bool empty)
-  : n_users(0), dirty(false)
+  : n_users(0), dirty(false), aborted(false)
 {
     dprintf("package: initializing file=\"%s\" rw=%d\n", file, writeable);
     ASSERT(writeable || !empty);
@@ -149,7 +149,7 @@ package::~package()
     dprintf("package: finalizing\n");
     ASSERT(!n_users);
 
-    if (rw)
+    if (rw && !aborted)
     {
         commit();
         if (ftruncate(fd, file_len))
@@ -157,7 +157,7 @@ package::~package()
     }
 
     // all errors here should be cached write errors
-    if (close(fd))
+    if (close(fd) && !aborted)
         sysfail(rw ? "write error while saving"
                    : "can't close the save I've just read???");
     dprintf("package: closed\n");
@@ -168,6 +168,7 @@ void package::commit()
     ASSERT(rw);
     if (!dirty)
         return;
+    ASSERT(!aborted);
 
 #ifdef COSTLY_ASSERTS
     fsck();
@@ -201,6 +202,8 @@ void package::commit()
 
 void package::seek(len_t to)
 {
+    ASSERT(!aborted);
+
     if (to > file_len)
         fail("save file corrupted -- invalid offset");
     if (lseek(fd, to, SEEK_SET) != (off_t)to)
@@ -491,10 +494,19 @@ void package::trace_chunk(len_t start)
     }
 }
 
+void package::abort()
+{
+    // Disable any further operations, allow a shutdown.  All errors past
+    // this point are ignored (assuming we already failed).  All writes since
+    // the last commit() are lost.
+    aborted = true;
+}
+
 
 chunk_writer::chunk_writer(package &parent, const std::string _name)
     : first_block(0), cur_block(0), block_len(0)
 {
+    ASSERT(!parent.aborted);
     dprintf("chunk_writer(%s): starting\n", _name.c_str());
     pkg = &parent;
     pkg->n_users++;
@@ -517,6 +529,11 @@ chunk_writer::~chunk_writer()
 {
     dprintf("chunk_writer(%s): closing\n", name.c_str());
 
+    ASSERT(pkg->n_users >= 0);
+    pkg->n_users--;
+    if (pkg->aborted)
+        return;
+
 #ifdef USE_ZLIB
     zs.avail_in = 0;
     int res;
@@ -536,9 +553,6 @@ chunk_writer::~chunk_writer()
     if (cur_block)
         finish_block(0);
     pkg->finish_chunk(name, first_block);
-
-    ASSERT(pkg->n_users >= 0);
-    pkg->n_users--;
 }
 
 void chunk_writer::raw_write(const void *data, len_t len)
@@ -583,6 +597,8 @@ void chunk_writer::finish_block(len_t next)
 
 void chunk_writer::write(const void *data, len_t len)
 {
+    ASSERT(!pkg->aborted);
+
 #ifdef USE_ZLIB
     zs.next_in  = (Bytef*)data;
     zs.avail_in = len;
@@ -605,6 +621,7 @@ void chunk_writer::write(const void *data, len_t len)
 
 void chunk_reader::init(len_t start)
 {
+    ASSERT(!pkg->aborted);
     pkg->n_users++;
     next_block = start;
     block_left = 0;
@@ -694,6 +711,9 @@ len_t chunk_reader::raw_read(void *data, len_t len)
 
 len_t chunk_reader::read(void *data, len_t len)
 {
+    if (pkg->aborted)
+        return 0;
+
 #ifdef USE_ZLIB
     ASSERT(len > 0);
     if (eof)
