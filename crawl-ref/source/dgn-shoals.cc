@@ -101,6 +101,8 @@ static int _shoals_feature_height(dungeon_feature_type feat)
 {
     switch (feat)
     {
+    case DNGN_STONE_WALL:
+        return SHT_STONE;
     case DNGN_FLOOR:
         return SHT_FLOOR;
     case DNGN_SHALLOW_WATER:
@@ -108,7 +110,7 @@ static int _shoals_feature_height(dungeon_feature_type feat)
     case DNGN_DEEP_WATER:
         return SHT_SHALLOW_WATER - 1;
     default:
-        return 0;
+        return feat_is_solid(feat)? SHT_ROCK : SHT_FLOOR;
     }
 }
 
@@ -708,7 +710,7 @@ void shoals_postprocess_level()
             continue;
 
         const dungeon_feature_type feat(grd(c));
-        if (!_shoals_tide_susceptible_feat(feat))
+        if (!_shoals_tide_susceptible_feat(feat) && !feat_is_solid(feat))
             continue;
 
         const dungeon_feature_type expected_feat(_shoals_feature_at(c));
