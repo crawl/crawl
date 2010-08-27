@@ -3630,7 +3630,7 @@ static void _print_save_version(char *name)
     try
     {
         package save((get_savedir_filename(name, "", "") + SAVE_SUFFIX).c_str(), false);
-        chunk_reader charf(save, "chr");
+        chunk_reader charf(&save, "chr");
 
         int major, minor;
         if (!get_save_version(charf, major, minor))

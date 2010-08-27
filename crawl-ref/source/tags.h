@@ -105,11 +105,11 @@ public:
     writer(std::vector<unsigned char>* poutput)
         : _filename(), _file(0), _chunk(0), _ignore_errors(false),
           _pbuf(poutput), failed(false) { ASSERT(poutput); }
-    writer(package &save, const std::string &chunkname)
+    writer(package *save, const std::string &chunkname)
         : _filename(), _file(0), _chunk(0), _ignore_errors(false),
           failed(false)
     {
-        _chunk = save.writer(chunkname);
+        _chunk = save->writer(chunkname);
     }
 
     void writeByte(unsigned char byte);

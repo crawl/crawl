@@ -1087,7 +1087,7 @@ static void _safe_write_tagged_file(const std::string &filename,
 
 static void _write_tagged_chunk(const std::string &chunkname, int tag)
 {
-    writer outf(*you.save, chunkname);
+    writer outf(you.save, chunkname);
     // find all relevant tags
     int8_t tags[NUM_TAGS];
     tag_set_expected(tags, tag);
