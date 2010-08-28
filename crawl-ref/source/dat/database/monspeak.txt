@@ -5533,6 +5533,8 @@ VISUAL:@The_monster@ pokes out @possessive@ tongue.
 VISUAL:@The_monster@ grows four more heads, takes them off and juggles!
 
 @The_monster@ says @to_foe@, "Come and play with me!"
+
+@The_monster@ says, "Trust me, I am a doctor."
 ## END Killer Klown ##
 %%%%
 moth of wrath
