@@ -5496,6 +5496,9 @@ killer bee
 
 __NONE
 %%%%
+########################
+# Welcome to the circus!
+########################
 Killer Klown
 
 @_Killer_Klown_common_@
@@ -5520,6 +5523,8 @@ VISUAL:@The_monster@ grins with merry abandon.
 
 VISUAL:@The_monster@ pulls ten torches out off its hat and starts juggling.
 
+VISUAL:@The_monster@ sprays water @at_foe@.
+
 @The_monster@ howls with blood-lust!
 %%%%
 _Killer_Klown_rare_
@@ -5532,9 +5537,11 @@ VISUAL:@The_monster@ pokes out @possessive@ tongue.
 
 VISUAL:@The_monster@ grows four more heads, takes them off and juggles!
 
+VISUAL:@The_monster@ is skipping for a moment.
+
 @The_monster@ says @to_foe@, "Come and play with me!"
 
-@The_monster@ says, "Trust me, I am a doctor."
+@The_monster@ says, "Trust me, I'm a doctor."
 ## END Killer Klown ##
 %%%%
 moth of wrath
