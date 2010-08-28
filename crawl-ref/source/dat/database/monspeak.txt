@@ -5537,7 +5537,7 @@ VISUAL:@The_monster@ pokes out @possessive@ tongue.
 
 VISUAL:@The_monster@ grows four more heads, takes them off and juggles!
 
-VISUAL:@The_monster@ is skipping for a moment.
+VISUAL:@The_monster@ skips for a moment.
 
 @The_monster@ says @to_foe@, "Come and play with me!"
 
