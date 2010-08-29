@@ -237,7 +237,7 @@ bool monsters::floundering() const
 
 bool monsters::can_pass_through_feat(dungeon_feature_type grid) const
 {
-    return mons_can_pass(this, grid);
+    return mons_class_can_pass(mons_base_type(this), grid);
 }
 
 bool monsters::is_habitable_feat(dungeon_feature_type actual_grid) const
