@@ -5026,13 +5026,11 @@ void dec_disease_player(int delay)
 int count_worn_ego(int which_ego)
 {
     int result = 0;
-    for (int slot = EQ_MIN_ARMOUR; slot <= EQ_MAX_ARMOUR; ++slot)
+    for (int eq = EQ_MIN_ARMOUR; eq <= EQ_MAX_ARMOUR; ++eq)
     {
-        if (you.equip[slot] != -1
-            && get_armour_ego_type(you.inv[you.equip[slot]]) == which_ego)
-        {
+        const item_def* item = you.slot_item(static_cast<equipment_type>(eq));
+        if (item && get_armour_ego_type(*item) == which_ego)
             result++;
-        }
     }
 
     return (result);
