@@ -447,14 +447,13 @@ static std::string _get_unseen_branches()
         const branch_type branch = branches[i].id;
 
         if (i == missing_lair_branch)
-        {
             continue;
-        }
 
         if (i == BRANCH_VESTIBULE_OF_HELL && found_portals[PORTAL_HELL])
-        {
             continue;
-        }
+
+        if (i == BRANCH_FOREST || i == BRANCH_SPIDER_NEST)
+            continue;
 
         if (stair_level.find(branch) == stair_level.end())
         {
