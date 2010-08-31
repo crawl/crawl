@@ -6844,11 +6844,7 @@ static bool _plan_6(int level_number)
     dgn_ensure_vault_placed(success, false);
 
     // This "back door" is often one of the easier ways to get out of
-    // pandemonium... the easiest is to use the banish spell.
-    //
-    // Note, that although "level_number > 20" will work for most
-    // trips to pandemonium (through regular portals), it won't work
-    // for demonspawn who gate themselves there. -- bwr
+    // pandemonium.
     if ((player_in_branch(BRANCH_MAIN_DUNGEON) && level_number > 20
             || you.level_type == LEVEL_PANDEMONIUM)
         && coinflip())
