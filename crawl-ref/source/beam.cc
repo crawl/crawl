@@ -33,6 +33,7 @@
 #include "effects.h"
 #include "env.h"
 #include "enum.h"
+#include "exercise.h"
 #include "godabil.h"
 #include "map_knowledge.h"
 #include "fprop.h"
@@ -3052,8 +3053,8 @@ bool bolt::misses_player()
         train_shields_more = true;
     }
 
-    if (!aimed_at_feet && coinflip())
-        you.check_train_dodging();
+    if (!aimed_at_feet)
+        practise(EX_BEAM_MAY_HIT);
 
     defer_rand r;
     bool miss = true;
@@ -3102,8 +3103,8 @@ bool bolt::misses_player()
         miss = false;
     }
 
-    if (one_chance_in(6) && train_shields_more)
-        exercise(SK_SHIELDS, 1);
+    if (train_shields_more)
+        practise(EX_SHIELD_BEAM_FAIL);
 
     return (miss);
 }
@@ -3484,8 +3485,7 @@ void bolt::affect_player()
          "Player damage: rolled=%d; after AC=%d", roll, hurted );
 #endif
 
-    if (one_chance_in(4))
-        you.check_train_armour();
+    practise(EX_BEAM_WILL_HIT);
 
     bool was_affected = false;
     int  old_hp       = you.hp;

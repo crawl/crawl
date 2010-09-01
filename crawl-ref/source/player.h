@@ -539,8 +539,6 @@ public:
     void shield_block_succeeded(actor *foe);
 
     bool wearing_light_armour(bool with_skill = false) const;
-    bool check_train_armour(int amount = 1);
-    bool check_train_dodging(int amount = 1);
     int  skill(skill_type skill, bool skill_bump = false) const;
 
     bool do_shaft();

@@ -33,6 +33,7 @@
 #include "directn.h"
 #include "dgnevent.h"
 #include "env.h"
+#include "exercise.h"
 #include "fight.h"
 #include "fprop.h"
 #include "food.h"
@@ -2356,25 +2357,7 @@ void handle_time()
     _rot_inventory_food(time_delta);
 
     // Exercise armour *xor* stealth skill: {dlb}
-    if (one_chance_in(6) && you.check_train_armour())
-    {
-        // Armour trained in check_train_armour
-    }
-    // Exercise stealth skill:
-    else if (you.burden_state == BS_UNENCUMBERED
-             && !you.berserk()
-             && !you.attribute[ATTR_SHADOWS])
-    {
-        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, false);
-        const int armour_mass = body_armour? item_mass(*body_armour) : 0;
-        if (!x_chance_in_y(armour_mass, 1000)
-            // Diminishing returns for stealth training by waiting.
-            && you.skills[SK_STEALTH] <= 2 + random2(3)
-            && one_chance_in(18))
-        {
-            exercise(SK_STEALTH, 1);
-        }
-    }
+    practise(EX_WAIT);
 
     if (you.level_type == LEVEL_LABYRINTH)
     {

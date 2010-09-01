@@ -13,6 +13,7 @@
 #include "database.h"
 #include "dlua.h"
 #include "env.h"
+#include "exercise.h"
 #include "ghost.h"
 #include "jobs.h"
 #include "libutil.h"
@@ -368,19 +369,12 @@ bool check_awaken(monsters* monster)
     if (x_chance_in_y(mons_perc + 1, stealth))
         return (true); // Oops, the monster wakes up!
 
-    const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, false);
-    const int armour_mass = body_armour? item_mass(*body_armour) : 0;
     // You didn't wake the monster!
-    if (!x_chance_in_y(armour_mass, 1000)
-        && you.can_see(monster) // to avoid leaking information
-        && you.burden_state == BS_UNENCUMBERED
-        && !you.attribute[ATTR_SHADOWS]
+    if (you.can_see(monster) // to avoid leaking information
         && !monster->wont_attack()
-        && !mons_class_flag(monster->type, M_NO_EXP_GAIN)
-            // If invisible, training happens much more rarely.
-        && (!unnatural_stealthy && one_chance_in(25) || one_chance_in(100)))
+        && !mons_class_flag(monster->type, M_NO_EXP_GAIN))
     {
-        exercise(SK_STEALTH, 1);
+        practise(unnatural_stealthy ? EX_SNEAK_INVIS : EX_SNEAK);
     }
 
     return (false);

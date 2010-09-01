@@ -122,8 +122,6 @@ private:
     int fire_res_apply_cerebov_downgrade(int res);
     void drain_defender();
     void rot_defender(int amount, int immediate = 0);
-    void check_defender_train_armour();
-    void check_defender_train_dodging();
     void splash_defender_with_acid(int strength);
     void splash_monster_with_acid(int strength);
     bool decapitate_hydra(int damage_done, int damage_type = -1);

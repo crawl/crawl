@@ -29,6 +29,7 @@
 #include "directn.h"
 #include "effects.h"
 #include "env.h"
+#include "exercise.h"
 #include "fight.h"
 #include "godabil.h"
 #include "godconduct.h"
@@ -169,7 +170,7 @@ static bool _check_moveto_trap(const coord_def& p)
             if (!you.running.is_any_travel())
                 more();
 
-            exercise(SK_TRAPS_DOORS, 3);
+            practise(EX_TRAP_PASSIVE);
             print_stats();
             return (false);
         }
@@ -2618,7 +2619,7 @@ void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
         // Bonus skill training from Sage.
         you.exp_available =
             (exp_gained * you.sage_bonus_degree) / 100 + exp_gained / 2;
-        exercise(you.sage_bonus_skill, 20);
+        practise(EX_SAGE, you.sage_bonus_skill);
         you.exp_available = old_avail;
         exp_gained /= 2;
     }
@@ -5595,8 +5596,7 @@ void player::shield_block_succeeded(actor *foe)
     actor::shield_block_succeeded(foe);
 
     shield_blocks++;
-    if (coinflip())
-        exercise(SK_SHIELDS, 1);
+    practise(EX_SHIELD_BLOCK);
 }
 
 int player::skill(skill_type sk, bool bump) const
@@ -6805,34 +6805,4 @@ void player::goto_place(const level_id &lid)
         where_are_you = static_cast<branch_type>(lid.branch);
         absdepth0 = absdungeon_depth(lid.branch, lid.depth);
     }
-}
-
-bool player::check_train_armour(int amount)
-{
-    ASSERT(this == &you);
-    if (const item_def *armour = slot_item(EQ_BODY_ARMOUR, false))
-    {
-        // XXX: animal skin; should be a better way to get at that.
-        const int mass_base = 100;
-        const int mass = std::max(item_mass(*armour) - mass_base, 0);
-        if (x_chance_in_y(mass, 50 * skill(SK_ARMOUR)))
-        {
-            exercise(SK_ARMOUR, amount);
-            return (true);
-        }
-    }
-    return (false);
-}
-
-bool player::check_train_dodging(int amount)
-{
-    ASSERT(this == &you);
-    const item_def *armour = slot_item(EQ_BODY_ARMOUR, false);
-    const int mass = armour? item_mass(*armour) : 0;
-    if (!x_chance_in_y(mass, 800))
-    {
-        exercise(SK_DODGING, amount);
-        return (true);
-    }
-    return (false);
 }

@@ -23,6 +23,7 @@
 #include "directn.h"
 #include "effects.h"
 #include "env.h"
+#include "exercise.h"
 #include "fight.h"
 #include "food.h"
 #include "invent.h"
@@ -542,7 +543,7 @@ void tome_of_power(int slot)
     }
 
     mpr("You find yourself reciting the magical words!");
-    exercise( SK_EVOCATIONS, 1 );
+    practise(EX_WILL_READ_TOME);
 
     if (x_chance_in_y(7, 50))
     {
@@ -631,7 +632,7 @@ void skill_manual(int slot)
 
     mprf("You read about %s.", skill_name(skill));
 
-    exercise(skill, 500);
+    practise(EX_READ_MANUAL, skill);
 
     if (--manual.plus2 <= 0)
     {
@@ -975,7 +976,7 @@ bool evoke_item(int slot)
     if (!did_work)
         canned_msg(MSG_NOTHING_HAPPENS);
     else if (pract > 0)
-        exercise( SK_EVOCATIONS, pract );
+        practise(EX_DID_EVOKE_ITEM, pract);
 
     if (ident && !item_type_known(item))
     {

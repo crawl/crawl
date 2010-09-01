@@ -28,6 +28,7 @@
 #include "directn.h"
 #include "effects.h"
 #include "env.h"
+#include "exercise.h"
 #include "map_knowledge.h"
 #include "feature.h"
 #include "fprop.h"
@@ -1720,7 +1721,7 @@ int melee_attack::player_stab(int damage)
         // Construct reasonable message.
         stab_message(defender, stab_bonus);
 
-        exercise(SK_STABBING, 1 + random2avg(5, 4));
+        practise(EX_WILL_STAB);
 
         did_god_conduct(DID_STABBING, 4);
     }
@@ -1974,15 +1975,8 @@ int melee_attack::player_weapon_type_modify(int damage)
 void melee_attack::player_exercise_combat_skills()
 {
     const bool helpless = defender->cannot_fight();
-
-    if (!helpless || you.skills[wpn_skill] < 1)
-        exercise(wpn_skill, 1);
-
-    if ((!helpless || you.skills[SK_FIGHTING] < 1)
-        && one_chance_in(3))
-    {
-        exercise(SK_FIGHTING, 1);
-    }
+    practise(helpless ? EX_WILL_HIT_HELPLESS : EX_WILL_HIT,
+             wpn_skill);
 }
 
 void melee_attack::player_check_weapon_effects()
@@ -4661,19 +4655,6 @@ void melee_attack::mons_announce_dud_hit(const mon_attack_def &attk)
     }
 }
 
-void melee_attack::check_defender_train_dodging()
-{
-    // It's possible to train both dodging and armour under the new scheme.
-    if (attacker_visible && one_chance_in(3) && defender->check_train_dodging())
-        perceived_attack = true;
-}
-
-void melee_attack::check_defender_train_armour()
-{
-    if (coinflip())
-        defender->check_train_armour(coinflip()? 2 : 1);
-}
-
 void melee_attack::mons_set_weapon(const mon_attack_def &attk)
 {
     weapon = (attk.type == AT_HIT) ? attacker->weapon(attack_number) : NULL;
@@ -5612,8 +5593,12 @@ void melee_attack::mons_perform_attack_rounds()
                 perceived_attack = true;
                 this_round_hit = did_hit = true;
             }
-            else
-                check_defender_train_dodging();
+            // XXX: what is the chance for here?
+            else if (attacker_visible && one_chance_in(3))
+            {
+                perceived_attack = true;
+                practise(EX_MONSTER_MAY_HIT);
+            }
         }
 
         if (!shield_blocked)
@@ -5711,7 +5696,9 @@ void melee_attack::mons_perform_attack_rounds()
             if (shield_blocked)
                 dprf("ERROR: Non-zero damage after shield block!");
             mons_announce_hit(attk);
-            check_defender_train_armour();
+
+            if (defender == &you)
+                practise(EX_MONSTER_WILL_HIT);
 
             if (defender->can_bleed()
                 && !defender->is_summoned()

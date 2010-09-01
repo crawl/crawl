@@ -15,6 +15,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "env.h"
+#include "exercise.h"
 #include "fprop.h"
 #include "godconduct.h"
 #include "itemprop.h"
@@ -513,8 +514,7 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
         return (false);
     }
 
-    if (coinflip())
-        exercise(SK_THROWING, 1);
+    practise(EX_WILL_THROW_POTION);
 
     // Really fire.
     beem.flavour = real_flavour;
