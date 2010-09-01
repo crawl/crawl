@@ -3102,8 +3102,8 @@ bool bolt::misses_player()
         miss = false;
     }
 
-    if (coinflip() && train_shields_more)
-        exercise(SK_SHIELDS, one_chance_in(3) ? 1 : 0);
+    if (one_chance_in(6) && train_shields_more)
+        exercise(SK_SHIELDS, 1);
 
     return (miss);
 }
