@@ -1324,19 +1324,19 @@ static int _acquirement_weapon_subtype(bool divine)
         if (is_blessed(item_considered))
             continue;
 
-        int acqweight = property(item_considered, PWPN_ACQ_WEIGHT);
+        int acqweight = property(item_considered, PWPN_ACQ_WEIGHT) * 100;
 
         if (!acqweight)
             continue;
 
-        // HANDS_DOUBLE > HANDS_TWO
+        // HANDS_DOUBLE > HANDS_TWO, but it's currently never returned.
         const bool two_handed = hands_reqd(item_considered, you.body_size()) >= HANDS_TWO;
 
         // For non-Trog/Okawaru acquirements, give a boost to high-end items.
         if (!divine && !is_range_weapon(item_considered))
         {
-            if (acqweight < 5)
-                acqweight = 5;
+            if (acqweight < 500)
+                acqweight = 500;
             int damage = property(item_considered, PWPN_DAMAGE);
             if (!two_handed)
                 damage = damage * 3 / 2;
