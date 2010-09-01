@@ -19,6 +19,7 @@
 #include "delay.h"
 #include "describe.h"
 #include "directn.h"
+#include "exercise.h"
 #include "map_knowledge.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -710,7 +711,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         // Exercise T&D if the trap revealed itself, but not if it ran
         // out of ammo.
         if (!you_know && this->type != TRAP_UNASSIGNED && this->is_known())
-            exercise(SK_TRAPS_DOORS, ((coinflip()) ? 2 : 1));
+            practise(EX_TRAP_TRIGGER);
     }
 
     if (trap_destroyed)
@@ -867,7 +868,7 @@ void disarm_trap(const coord_def& where)
     {
         mpr("You failed to disarm the trap.");
         if (random2(you.dex()) > 5 + random2(5 + you.absdepth0))
-            exercise(SK_TRAPS_DOORS, 1 + random2(you.absdepth0 / 5));
+            practise(EX_TRAP_DISARM_FAIL, you.absdepth0);
         else
         {
             if (trap.type == TRAP_NET && trap.pos != you.pos())
@@ -881,15 +882,14 @@ void disarm_trap(const coord_def& where)
             else
                 trap.trigger(you, true);
 
-            if (coinflip())
-                exercise(SK_TRAPS_DOORS, 1);
+            practise(EX_TRAP_DISARM_TRIGGER);
         }
     }
     else
     {
         mpr("You have disarmed the trap.");
         trap.disarm();
-        exercise(SK_TRAPS_DOORS, 1 + random2(5) + (you.absdepth0/5));
+        practise(EX_TRAP_DISARM, you.absdepth0);
     }
 }
 
@@ -946,8 +946,7 @@ void remove_net_from(monsters *mon)
                 mpr("You fail to remove the net.");
         }
 
-        if (random2(you.dex()) > 5 + random2( 2*mon->body_size(PSIZE_BODY) ))
-            exercise(SK_TRAPS_DOORS, 1 + random2(mon->body_size(PSIZE_BODY)/2));
+        practise(EX_REMOVE_NET);
         return;
     }
 
@@ -1264,8 +1263,8 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
 
             // Check for shield blocking.
             // Exercise only if the trap was unknown (to prevent scumming.)
-            if (!was_known && player_shield_class() && coinflip())
-                exercise(SK_SHIELDS, 1);
+            if (!was_known && player_shield_class())
+                practise(EX_SHIELD_TRAP);
 
             const int con_block = random2(20 + you.shield_block_penalty());
             const int pro_block = you.shield_bonus();
@@ -1312,8 +1311,8 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
                 }
 
                 // Exercise only if the trap was unknown (to prevent scumming.)
-                if (!was_known && coinflip())
-                    you.check_train_dodging();
+                if (!was_known)
+                    practise(EX_DODGE_TRAP);
             }
         }
         else if (act.atype() == ACT_MONSTER)

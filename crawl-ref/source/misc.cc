@@ -41,6 +41,7 @@
 #include "dgnevent.h"
 #include "directn.h"
 #include "env.h"
+#include "exercise.h"
 #include "fight.h"
 #include "files.h"
 #include "flood_find.h"
@@ -1290,7 +1291,7 @@ void search_around(bool only_adjacent)
             {
                 mpr("You found a secret door!");
                 reveal_secret_door(*ri);
-                exercise(SK_TRAPS_DOORS, (coinflip() ? 2 : 1));
+                practise(EX_FOUND_SECRET_DOOR);
             }
             else if (grd(*ri) == DNGN_UNDISCOVERED_TRAP
                      && x_chance_in_y(effective + 1, 17))
@@ -1301,7 +1302,7 @@ void search_around(bool only_adjacent)
                     ptrap->reveal();
                     mpr("You found a trap!");
                     learned_something_new(HINT_SEEN_TRAP, *ri);
-                    exercise(SK_TRAPS_DOORS, (coinflip() ? 2 : 1));
+                    practise(EX_TRAP_FOUND);
                 }
                 else
                 {
