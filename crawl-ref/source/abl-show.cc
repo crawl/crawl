@@ -1422,11 +1422,8 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_EVOKE_BERSERK:    // amulet of rage, randarts
-        // Only exercise if berserk succeeds.
-        // Because of the test above, this should always happen,
-        // but I'm leaving it in - haranp
-        if (go_berserk(true))
-            exercise(SK_EVOCATIONS, 1);
+        go_berserk(true);
+        exercise(SK_EVOCATIONS, 1);
         break;
 
     // Fly (kenku) - eventually becomes permanent (see main.cc).
@@ -1502,8 +1499,8 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_ZIN_VITALISATION:
-        if (zin_vitalisation())
-            exercise(SK_INVOCATIONS, (coinflip() ? 3 : 2));
+        zin_vitalisation();
+        exercise(SK_INVOCATIONS, (coinflip() ? 3 : 2));
         break;
 
     case ABIL_ZIN_IMPRISON:
@@ -1542,8 +1539,9 @@ static bool _do_ability(const ability_def& abil)
     }
 
     case ABIL_ZIN_SANCTUARY:
-        if (zin_sanctuary())
-            exercise(SK_INVOCATIONS, 5 + random2(8));
+        if (!zin_sanctuary())
+            return (false);
+        exercise(SK_INVOCATIONS, 5 + random2(8));
         break;
 
     case ABIL_ZIN_CURE_ALL_MUTATIONS:
@@ -2015,8 +2013,8 @@ static bool _do_ability(const ability_def& abil)
     }
 
     case ABIL_JIYVA_CURE_BAD_MUTATION:
-        if (jiyva_remove_bad_mutation())
-            exercise(SK_INVOCATIONS, 5 + random2(5));
+        jiyva_remove_bad_mutation();
+        exercise(SK_INVOCATIONS, 5 + random2(5));
         break;
 
     case ABIL_HARM_PROTECTION:
