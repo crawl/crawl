@@ -2650,6 +2650,8 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
                 set_item_ego_type(wpn, OBJ_WEAPONS,
                                   coinflip() ? SPWPN_FLAMING : SPWPN_FREEZING);
             }
+            else
+                set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_NORMAL);
         }
         else if (power_level == 2)
         {
