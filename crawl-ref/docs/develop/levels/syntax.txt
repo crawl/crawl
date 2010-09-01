@@ -334,7 +334,7 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
           * "no_trap_gen": Prevents random trap generation at the time of the
              vault's creation.
           * "no_shop_gen": Prevents random shop generation at the time of the
-             valut's creation.
+             vault's creation.
           * "uniq_BAR": (uniq_ with any suffix) specifies that only one of
              the vaults with this tag can be used in a game.
           * "luniq": specifies that this vault can be used only once on a
