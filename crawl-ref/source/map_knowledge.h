@@ -59,6 +59,20 @@ struct map_cell
             delete _item;
     }
 
+    map_cell& operator=(const map_cell& c)
+    {
+        if (!(flags & MAP_DETECTED_MONSTER) && _mons.info)
+            delete _mons.info;
+        if (_item)
+            delete _item;
+        memcpy(this, &c, sizeof(map_cell));
+        if (!(flags & MAP_DETECTED_MONSTER) && _mons.info)
+            _mons.info = new monster_info(*_mons.info);
+        if (_item)
+            _item = new item_info(*_item);
+         return (*this);
+    }
+
     void clear()
     {
         *this = map_cell();
