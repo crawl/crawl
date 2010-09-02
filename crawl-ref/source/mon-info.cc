@@ -292,7 +292,7 @@ monster_info::monster_info(const monsters *m, int milev)
     if (mons_class_flag(m->type, M_DEFLECT_MISSILES))
         mb |= ULL1 << MB_DEFLECT_MSL;
 
-    if (m->type == MONS_SILENT_SPECTRE);
+    if (m->type == MONS_SILENT_SPECTRE)
         mb |= ULL1 << MB_SILENCING;
 
     if (you.beheld_by(m))

@@ -3,7 +3,8 @@
 
 void dgn_build_shoals_level(int level_number);
 void shoals_postprocess_level();
-void shoals_apply_tides(long turns_elapsed, bool force = false);
+void shoals_apply_tides(long turns_elapsed, bool force,
+                        bool incremental_tide);
 void shoals_release_tide(monsters *caller);
 
 #ifdef WIZARD

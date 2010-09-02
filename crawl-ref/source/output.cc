@@ -755,6 +755,9 @@ static void _get_status_lights(std::vector<status_light>& out)
         out.push_back(status_light(color, "DChan"));
     }
 
+    if (you.duration[DUR_TELEPATHY])
+        out.push_back(status_light(LIGHTBLUE, "Emp"));
+
     if (you.duration[DUR_BREATH_WEAPON])
         out.push_back(status_light(YELLOW, "BWpn"));
 
