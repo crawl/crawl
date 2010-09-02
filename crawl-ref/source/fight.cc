@@ -5597,7 +5597,8 @@ void melee_attack::mons_perform_attack_rounds()
             else if (attacker_visible && one_chance_in(3))
             {
                 perceived_attack = true;
-                practise(EX_MONSTER_MAY_HIT);
+                if (defender == &you)
+                    practise(EX_MONSTER_MAY_HIT);
             }
         }
 
