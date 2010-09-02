@@ -455,11 +455,23 @@ bool is_player_same_species(const int mon, bool transform)
     if (you.species == SP_MERFOLK && mons_genus(mon) == MONS_MERMAID)
         return (true);
 
-    return (mons_genus(mon) == mons_genus(player_mons()));
+    return (mons_genus(mon) == mons_genus(player_mons(false)));
 }
 
-monster_type player_mons()
+void update_player_symbol()
 {
+    you.symbol = Options.show_player_species ? player_mons() : transform_mons();
+}
+
+monster_type player_mons(bool transform)
+{
+    if (transform)
+    {
+        monster_type mons = transform_mons();
+        if (mons != MONS_PLAYER)
+            return mons;
+    }
+
     switch (you.species)
     {
     case SP_HUMAN:
@@ -531,7 +543,7 @@ monster_type player_mons()
     case SP_VAMPIRE:
         return MONS_VAMPIRE;
     case SP_DEEP_DWARF:
-        return MONS_DWARF; // until/if DD monsters are added
+        return MONS_DEEP_DWARF;
     case SP_ELF:
     case SP_HILL_DWARF:
     case SP_OGRE_MAGE:
