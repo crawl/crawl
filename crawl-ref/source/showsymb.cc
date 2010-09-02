@@ -218,7 +218,7 @@ glyph get_cell_glyph_with_class(const map_cell& cell, show_class cls, int color_
 
         show.cls = SH_INVIS_EXPOSED;
         if (cell.cloud() != CLOUD_NONE)
-            g.col = get_cloud_colour(cell.cloud());
+            g.col = cell.cloud_colour();
         else
             g.col = ripple_table[cell.feat_colour() & 0xf];
         break;
@@ -244,7 +244,7 @@ glyph get_cell_glyph_with_class(const map_cell& cell, show_class cls, int color_
 
         show.cls = SH_CLOUD;
         if (colored)
-            g.col = get_cloud_colour(cell.cloud());
+            g.col = cell.cloud_colour();
         else
             g.col = DARKGRAY;
         break;

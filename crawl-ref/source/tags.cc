@@ -2256,6 +2256,7 @@ void unmarshallItem(reader &th, item_def &item)
 #define MAP_SERIALIZE_ITEM 0x10
 #define MAP_SERIALIZE_CLOUD 0x20
 #define MAP_SERIALIZE_MONSTER 0x40
+#define MAP_SERIALIZE_CLOUD_COLOUR 0x80
 
 void marshallMapCell(writer &th, const map_cell &cell)
 {
@@ -2276,6 +2277,9 @@ void marshallMapCell(writer &th, const map_cell &cell)
 
     if (cell.cloud() != CLOUD_NONE)
         flags |= MAP_SERIALIZE_CLOUD;
+
+    if (cell.cloud_colour())
+        flags |= MAP_SERIALIZE_CLOUD_COLOUR;
 
     if (cell.item())
         flags |= MAP_SERIALIZE_ITEM;
@@ -2306,6 +2310,9 @@ void marshallMapCell(writer &th, const map_cell &cell)
 
     if (flags & MAP_SERIALIZE_CLOUD)
         marshallUnsigned(th, cell.cloud());
+
+    if (flags & MAP_SERIALIZE_CLOUD_COLOUR)
+        marshallUnsigned(th, cell.cloud_colour());
 
     if (flags & MAP_SERIALIZE_ITEM)
         marshallItem(th, *cell.item());
@@ -2347,8 +2354,15 @@ void unmarshallMapCell(reader &th, map_cell& cell)
 
     cell.set_feature(feature, feat_colour);
 
+    cloud_type cloud = CLOUD_NONE;
+    unsigned cloud_colour = 0;
     if (flags & MAP_SERIALIZE_CLOUD)
-        cell.set_cloud((cloud_type)unmarshallUnsigned(th));
+        cloud = (cloud_type)unmarshallUnsigned(th);
+
+    if (flags & MAP_SERIALIZE_CLOUD_COLOUR)
+        cloud_colour = unmarshallUnsigned(th);
+
+    cell.set_cloud(cloud, cloud_colour);
 
     if (flags & MAP_SERIALIZE_ITEM)
     {
