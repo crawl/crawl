@@ -1406,7 +1406,7 @@ static int _place_monster_aux(const mgen_data &mg,
     // Not a god gift, give priestly monsters a god.
     else if (mons_class_flag(mg.cls, M_PRIEST))
     {
-        if (mg.cls == MONS_WAYNE)
+        if (mg.cls == MONS_FRANCIS)
             mon->god = GOD_OKAWARU;
         else
         {

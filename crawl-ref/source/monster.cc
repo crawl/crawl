@@ -1275,7 +1275,7 @@ static bool _is_signature_weapon(monsters *monster, const item_def &weapon)
         if (monster->type == MONS_PIKEL)
             return (weapon.sub_type == WPN_WHIP);
 
-        if (monster->type == MONS_WAYNE)
+        if (monster->type == MONS_FRANCIS)
             return (weapon_skill(weapon) == SK_AXES);
 
         if (monster->type == MONS_NIKOLA)
