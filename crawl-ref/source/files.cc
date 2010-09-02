@@ -52,6 +52,7 @@
 #include "dungeon.h"
 #include "effects.h"
 #include "env.h"
+#include "errors.h"
 #include "ghost.h"
 #include "initfile.h"
 #include "items.h"
@@ -109,9 +110,8 @@ static std::vector<SavefileCallback::callback>* _callback_list = NULL;
 
 static void _save_level(const level_id& lid);
 
-static bool _get_and_validate_version( FILE *restoreFile, int& major,
-                                       int& minor, std::string* reason = 0);
-
+static bool _get_and_validate_version(reader &inf, int &major,
+                                      int &minor, std::string* reason = 0);
 
 static bool _determine_ghost_version( FILE *ghostFile,
                                       int &majorVersion, int &minorVersion );
@@ -120,6 +120,8 @@ static void _restore_ghost_version( FILE *ghostFile, int major, int minor );
 
 static void _restore_tagged_file( FILE *restoreFile, int fileType,
                                   int minorVersion );
+static bool _restore_tagged_chunk(package *save, const std::string name,
+                                  int fileType, const char* complaint);
 
 const short GHOST_SIGNATURE = short( 0xDC55 );
 
@@ -205,16 +207,22 @@ player_save_info read_character_info(const std::string &savefile)
     if (!charf)
         return fromfile;
 
-    int majorVersion;
-    int minorVersion;
-
-    if (_get_and_validate_version(charf, majorVersion, minorVersion))
+    // TODO: use chunks
+    uint8_t version[2];
+    if (fread(version, 1, 2, charf)!=2
+        || version[0] != TAG_MAJOR_VERSION
+        || version[1] > TAG_MINOR_VERSION)
+    {
+        dprf("%s: not a compatible version", savefile.c_str());
+    }
+    else
     {
         // Backup before we clobber "you".
         const player backup(you);
         unwind_var<game_type> gtype(crawl_state.type);
 
-        _restore_tagged_file(charf, TAGTYPE_PLAYER_NAME, minorVersion);
+        // NOTE: _restore_tagged_chunk eats the version itself!
+        _restore_tagged_file(charf, TAGTYPE_PLAYER_NAME, version[1]);
 
         fromfile = you;
         you.copy_from(backup);
@@ -1413,8 +1421,7 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     bool just_created_level = false;
 
-    std::string cha_fil = _make_filename(you.your_name, level_id::current(),
-                                         false);
+    std::string level_name = _get_level_suffix(level_id::current());
 
     if (you.level_type == LEVEL_DUNGEON && old_level.level_type == LEVEL_DUNGEON
         || load_mode == LOAD_START_GAME && you.char_direction != GDT_GAME_START)
@@ -1423,7 +1430,7 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
         if (Generated_Levels.find(current) == Generated_Levels.end())
         {
             // Make sure the old file is gone.
-            unlink(cha_fil.c_str());
+            you.save->delete_chunk(level_name);
 
             // Save the information for later deletion -- DML 6/11/99
             Generated_Levels.insert(current);
@@ -1472,12 +1479,11 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     // Try to open level savefile.
 #ifdef DEBUG_LEVEL_LOAD
-    mprf(MSGCH_DIAGNOSTICS, "Try to open file %s", cha_fil.c_str());
+    mprf(MSGCH_DIAGNOSTICS, "Try to open file %s", level_name.c_str());
 #endif
-    FILE *levelFile = fopen(cha_fil.c_str(), "rb");
 
     // GENERATE new level when the file can't be opened:
-    if (levelFile == NULL)
+    if (!you.save->has_chunk(level_name))
     {
 #ifdef DEBUG_LEVEL_LOAD
         mpr("Generating new file...", MSGCH_DIAGNOSTICS);
@@ -1522,30 +1528,7 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
 #ifdef DEBUG_LEVEL_LOAD
         mpr("Loading old file...", MSGCH_DIAGNOSTICS);
 #endif
-        // BEGIN -- must load the old level : pre-load tasks
-
-        // LOAD various tags
-        int majorVersion;
-        int minorVersion;
-
-        std::string reason;
-        if (!_get_and_validate_version( levelFile, majorVersion, minorVersion,
-                                        &reason ))
-        {
-            print_error_screen("\nLevel file is invalid. %s\n", reason.c_str());
-            end(-1, false, "\nLevel file is invalid.  %s\n", reason.c_str());
-        }
-
-        _restore_tagged_file(levelFile, TAGTYPE_LEVEL, minorVersion);
-
-        // Sanity check - EOF
-        if (!feof( levelFile ))
-        {
-            end(-1, false, "\nIncomplete read of \"%s\" - aborting.\n",
-                cha_fil.c_str());
-        }
-
-        fclose( levelFile );
+        _restore_tagged_chunk(you.save, level_name, TAGTYPE_LEVEL, "Level file is invalid.");
 
         // POST-LOAD tasks :
         link_items();
@@ -1770,20 +1753,17 @@ void _save_level(const level_id& lid)
 {
     travel_cache.get_level_info(lid).update();
 
-    const std::string cha_fil = _make_filename(you.your_name, lid);
-
     // Nail all items to the ground.
     fix_item_coordinates();
 
-    _safe_write_tagged_file(cha_fil, TAGTYPE_LEVEL);
+    _write_tagged_chunk(_get_level_suffix(lid), TAGTYPE_LEVEL);
 }
 
 #define SAVEFILE(file, savefn) \
     do                        \
     {                         \
-        safe_file_writer fwriter(file);  \
-        writer w(file, fwriter.open());  \
-        savefn(w);                       \
+        writer w(you.save, file);           \
+        savefn(w);                \
     } while (false)
 
 // Stack allocated std::string's go in separate function, so Valgrind doesn't
@@ -1791,8 +1771,7 @@ void _save_level(const level_id& lid)
 static void _save_game_base()
 {
     /* Stashes */
-    const std::string stashfile = get_savedir_filename(you.your_name, "", "st");
-    SAVEFILE(stashfile, StashTrack.save);
+    SAVEFILE("st", StashTrack.save);
 
 #ifdef CLUA_BINDINGS
     /* lua */
@@ -1803,31 +1782,20 @@ static void _save_game_base()
 #endif
 
     /* kills */
-    const std::string kill_file =
-        get_savedir_filename(you.your_name, "", "kil");
-    SAVEFILE(kill_file, you.kills->save);
+    SAVEFILE("kil", you.kills->save);
 
     /* travel cache */
-    const std::string travel_cache_file =
-        get_savedir_filename(you.your_name,"","tc");
-    SAVEFILE(travel_cache_file, travel_cache.save);
+    SAVEFILE("tc", travel_cache.save);
 
     /* notes */
-    const std::string notes_file =
-        get_savedir_filename(you.your_name, "", "nts");
-    SAVEFILE(notes_file, save_notes);
+    SAVEFILE("nts", save_notes);
 
     /* hints mode */
     if (Hints.hints_left)
-    {
-        const std::string tutor_file =
-            get_savedir_filename(you.your_name, "", "tut");
-        SAVEFILE(tutor_file, save_hints);
-    }
+        SAVEFILE("tut", save_hints);
 
     /* messages */
-    const std::string msg_file = get_savedir_filename(you.your_name, "", "msg");
-    SAVEFILE(msg_file, save_messages);
+    SAVEFILE("msg", save_messages);
 
     /* tile dolls (empty for ASCII)*/
 #ifdef USE_TILE
@@ -2118,13 +2086,16 @@ void restore_game(const std::string& name)
     int majorVersion;
     int minorVersion;
     std::string reason;
-    if (!_get_and_validate_version(charf, majorVersion, minorVersion, &reason))
+    uint8_t version[2];
+    if (fread(version, 1, 2, charf)!=2
+        || version[0] != TAG_MAJOR_VERSION
+        || version[1] > TAG_MINOR_VERSION)
     {
-        print_error_screen("\nSave file %s is invalid. %s\n", charFile.c_str(),
-                           reason.c_str());
-        end(-1, false, "\nSave file %s is invalid.  %s\n", charFile.c_str(),
-            reason.c_str());
+        dprf("%s: not a compatible version", charFile.c_str());
     }
+    // bad version: print_error_screen("\nSave file %s is invalid. %s\n", charFile.c_str(),
+    majorVersion = version[0];
+    minorVersion = version[1];
 
     _restore_tagged_file(charf, TAGTYPE_PLAYER, minorVersion);
 
@@ -2136,13 +2107,10 @@ void restore_game(const std::string& name)
     }
     fclose(charf);
 
-    std::string stashFile = get_savedir_filename(name, "", "st");
-    FILE *stashf = fopen(stashFile.c_str(), "rb");
-    if (stashf)
+    if (you.save->has_chunk("st"))
     {
-        reader inf(stashf, minorVersion);
+        reader inf(you.save, "st", minorVersion);
         StashTrack.load(inf);
-        fclose(stashf);
     }
 
 #ifdef CLUA_BINDINGS
@@ -2150,51 +2118,37 @@ void restore_game(const std::string& name)
     clua.execfile(luaFile.c_str());
 #endif
 
-    std::string killFile = get_savedir_filename(name, "", "kil");
-    FILE *killf = fopen(killFile.c_str(), "rb");
-    if (killf)
+    if (you.save->has_chunk("kil"))
     {
-        reader inf(killf, minorVersion);
+        reader inf(you.save, "kil", minorVersion);
         you.kills->load(inf);
-        fclose(killf);
     }
 
     std::string travelCacheFile = get_savedir_filename(name, "", "tc");
-    FILE *travelf = fopen(travelCacheFile.c_str(), "rb");
-    if (travelf)
+    if (you.save->has_chunk("tc"))
     {
-        reader inf(travelf, minorVersion);
+        reader inf(you.save, "tc", minorVersion);
         travel_cache.load(inf, minorVersion);
-        fclose(travelf);
     }
 
-    std::string notesFile = get_savedir_filename(name, "", "nts");
-    FILE *notesf = fopen(notesFile.c_str(), "rb");
-    if (notesf)
+    if (you.save->has_chunk("nts"))
     {
-        reader inf(notesf, minorVersion);
+        reader inf(you.save, "nts", minorVersion);
         load_notes(inf);
-        fclose(notesf);
     }
 
     /* hints mode */
-    std::string tutorFile = get_savedir_filename(name, "", "tut");
-    FILE *tutorf = fopen(tutorFile.c_str(), "rb");
-    if (tutorf)
+    if (you.save->has_chunk("tut"))
     {
-        reader inf(tutorf, minorVersion);
+        reader inf(you.save, "tut", minorVersion);
         load_hints(inf);
-        fclose(tutorf);
     }
 
     /* messages */
-    std::string msgFile = get_savedir_filename(name, "", "msg");
-    FILE *msgf = fopen(msgFile.c_str(), "rb");
-    if (msgf)
+    if (you.save->has_chunk("msg"))
     {
-        reader inf(msgf, minorVersion);
+        reader inf(you.save, "msg", minorVersion);
         load_messages(inf);
-        fclose(msgf);
     }
 
     SavefileCallback::post_restore();
@@ -2273,11 +2227,15 @@ bool get_save_version(FILE *file, int &major, int &minor)
     return (true);
 }
 
-bool get_save_version(chunk_reader &file, int &major, int &minor)
+bool get_save_version(reader &file, int &major, int &minor)
 {
     // Read first two bytes.
     uint8_t buf[2];
-    if (file.read(buf, 2) != 2)
+    try
+    {
+        file.read(buf, 2);
+    }
+    catch (short_read_exception E)
     {
         // Empty file?
         major = minor = -1;
@@ -2290,14 +2248,14 @@ bool get_save_version(chunk_reader &file, int &major, int &minor)
     return (true);
 }
 
-static bool _get_and_validate_version(FILE *restoreFile, int &major,
+static bool _get_and_validate_version(reader &inf, int &major,
                                       int &minor, std::string* reason)
 {
     std::string dummy;
     if (reason == 0)
         reason = &dummy;
 
-    if (!get_save_version(restoreFile, major, minor))
+    if (!get_save_version(inf, major, minor))
     {
         *reason = "File is corrupt.";
         return (false);
@@ -2346,10 +2304,11 @@ static void _restore_tagged_file( FILE *restoreFile, int fileType,
 {
     int8_t tags[NUM_TAGS];
     tag_set_expected(tags, fileType);
+    reader inf(restoreFile, minorVersion);
 
     while (true)
     {
-        tag_type tt = tag_read(restoreFile, minorVersion, tags);
+        tag_type tt = tag_read(inf, minorVersion, tags);
         if (tt == TAG_SKIP)
             continue;
         if (tt == TAG_NO_TAG)
@@ -2361,7 +2320,51 @@ static void _restore_tagged_file( FILE *restoreFile, int fileType,
     // Go through and init missing tags.
     for (int i = 0; i < NUM_TAGS; i++)
         if (tags[i] == 1)           // expected but never read
-            tag_missing(i, minorVersion);
+            tag_missing(i);
+}
+
+static bool _restore_tagged_chunk(package *save, const std::string name,
+                                  int fileType, const char* complaint)
+{
+    int8_t tags[NUM_TAGS];
+    tag_set_expected(tags, fileType);
+
+    reader inf(save, name);
+
+    int majorVersion, minorVersion;
+    std::string reason;
+    if (!_get_and_validate_version(inf, majorVersion, minorVersion, &reason))
+    {
+        if (!complaint)
+            return false;
+        else
+        {
+            char msg[128];
+            snprintf(msg, sizeof(msg), "\n%s  %%s\n", complaint);
+            print_error_screen(msg, reason.c_str());
+            end(-1, false, msg, reason.c_str());
+        }
+    }
+
+    while (true)
+    {
+        tag_type tt = tag_read(inf, minorVersion, tags);
+        if (tt == TAG_SKIP)
+            continue;
+        if (tt == TAG_NO_TAG)
+            break;
+
+        tags[tt] = 0;                // tag read
+    }
+
+    inf.fail_if_not_eof(name);
+
+    // Go through and init missing tags.
+    for (int i = 0; i < NUM_TAGS; i++)
+        if (tags[i] == 1)           // expected but never read
+            tag_missing(i);
+
+    return true;
 }
 
 static bool _determine_ghost_version( FILE *ghostFile,

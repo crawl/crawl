@@ -109,8 +109,11 @@ public:
         : _filename(), _file(0), _chunk(0), _ignore_errors(false),
           failed(false)
     {
+        ASSERT(save);
         _chunk = save->writer(chunkname);
     }
+
+    ~writer() { if (_chunk) delete _chunk; }
 
     void writeByte(unsigned char byte);
     void write(const void *data, size_t size);
@@ -169,12 +172,14 @@ class reader
 public:
     reader(const std::string &filename, int minorVersion = TAG_MINOR_VERSION);
     reader(FILE* input, int minorVersion = TAG_MINOR_VERSION)
-        : _file(input), opened_file(false), _pbuf(0), _read_offset(0),
-          _minorVersion(minorVersion) {}
+        : _file(input), _chunk(0), opened_file(false), _pbuf(0),
+          _read_offset(0), _minorVersion(minorVersion) {}
     reader(const std::vector<unsigned char>& input,
            int minorVersion = TAG_MINOR_VERSION)
-        : _file(0), opened_file(false), _pbuf(&input), _read_offset(0),
-          _minorVersion(minorVersion) {}
+        : _file(0), _chunk(0), opened_file(false), _pbuf(&input),
+          _read_offset(0), _minorVersion(minorVersion) {}
+    reader(package *save, const std::string &chunkname,
+           int minorVersion = TAG_MINOR_VERSION);
     ~reader();
 
     unsigned char readByte();
@@ -182,9 +187,11 @@ public:
     void advance(size_t size);
     int getMinorVersion();
     bool valid() const;
+    void fail_if_not_eof(const std::string name);
 
 private:
     FILE* _file;
+    chunk_reader *_chunk;
     bool  opened_file;
     const std::vector<unsigned char>* _pbuf;
     unsigned int _read_offset;
@@ -193,6 +200,8 @@ private:
     std::map<const enum_info*, enum_read_state> seen_enums;
     friend int unmarshallEnumVal(reader &, const enum_info *);
 };
+
+class short_read_exception : std::exception {};
 
 int8_t      unmarshallByte    (reader &);
 int16_t     unmarshallShort   (reader &);
@@ -234,10 +243,10 @@ static inline void unmarshallSigned(reader& th, T& v)
  * Tag interface
  * *********************************************************************** */
 
-tag_type tag_read(FILE* inf, int minorVersion, int8_t expected_tags[NUM_TAGS]);
+tag_type tag_read(reader &inf, int minorVersion, int8_t expected_tags[NUM_TAGS]);
 void tag_write(tag_type tagID, writer &outf);
 void tag_set_expected(int8_t tags[], int fileType);
-void tag_missing(int tag, int minorVersion);
+void tag_missing(int tag);
 
 /* ***********************************************************************
  * misc

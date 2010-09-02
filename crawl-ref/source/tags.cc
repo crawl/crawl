@@ -66,6 +66,7 @@
 #include "describe.h"
 #include "dungeon.h"
 #include "enum.h"
+#include "errors.h"
 #include "map_knowledge.h"
 #include "externs.h"
 #include "files.h"
@@ -110,15 +111,25 @@ level_id_set Generated_Levels;
 static int _tag_minor_version = -1;
 
 reader::reader(const std::string &filename, int minorVersion)
-    : _file(NULL), opened_file(false), _pbuf(NULL), _read_offset(0),
+    : _chunk(0), _pbuf(NULL), _read_offset(0),
       _minorVersion(minorVersion), seen_enums()
 {
     _file       = fopen(filename.c_str(), "rb");
     opened_file = !!_file;
 }
 
+reader::reader(package *save, const std::string &chunkname, int minorVersion)
+    : _file(0), _chunk(0), opened_file(false), _pbuf(0), _read_offset(0),
+     _minorVersion(minorVersion)
+{
+    ASSERT(save);
+    _chunk = new chunk_reader(save, chunkname);
+}
+
 reader::~reader()
 {
+    if (_chunk)
+        delete _chunk;
     if (opened_file && _file)
         fclose(_file);
 }
@@ -138,7 +149,19 @@ bool reader::valid() const
 unsigned char reader::readByte()
 {
     if (_file)
-        return static_cast<unsigned char>(fgetc(_file));
+    {
+        int b = fgetc(_file);
+        if (b == EOF)
+            throw short_read_exception();
+        return b;
+    }
+    else if (_chunk)
+    {
+        unsigned char buf;
+        if (_chunk->read(&buf, 1) != 1)
+            throw short_read_exception();
+        return buf;
+    }
     else
         return (*_pbuf)[_read_offset++];
 }
@@ -148,9 +171,17 @@ void reader::read(void *data, size_t size)
     if (_file)
     {
         if (data)
-            fread(data, 1, size, _file);
+        {
+            if (fread(data, 1, size, _file) != size)
+                throw short_read_exception();
+        }
         else
             fseek(_file, (long)size, SEEK_CUR);
+    }
+    else if (_chunk)
+    {
+        if (_chunk->read(data, size) != size)
+            throw short_read_exception();
     }
     else
     {
@@ -165,6 +196,15 @@ void reader::read(void *data, size_t size)
 int reader::getMinorVersion()
 {
     return _minorVersion;
+}
+
+void reader::fail_if_not_eof(const std::string name)
+{
+    // currently only for chunks
+    ASSERT(_chunk);
+    char dummy;
+    if (_chunk->read(&dummy, 1))
+        fail(("Incomplete read of \"" + name + "\" - aborting.").c_str());
 }
 
 void writer::check_ok(bool ok)
@@ -182,7 +222,9 @@ void writer::writeByte(unsigned char ch)
     if (failed)
         return;
 
-    if (_file)
+    if (_chunk)
+        _chunk->write(&ch, 1);
+    else if (_file)
         check_ok(fputc(ch, _file) != EOF);
     else
         _pbuf->push_back(ch);
@@ -193,7 +235,9 @@ void writer::write(const void *data, size_t size)
     if (failed)
         return;
 
-    if (_file)
+    if (_chunk)
+        _chunk->write(data, size);
+    else if (_file)
         check_ok(fwrite(data, 1, size, _file) == size);
     else
     {
@@ -204,6 +248,7 @@ void writer::write(const void *data, size_t size)
 
 long writer::tell()
 {
+    ASSERT(!_chunk);
     return _file? ftell(_file) : _pbuf->size();
 }
 
@@ -904,11 +949,8 @@ void tag_write(tag_type tagID, writer &outf)
         return;
 
     // Write tag header.
-    {
-        writer tmp(outf);
-        marshallShort(tmp, tagID);
-        marshallInt(tmp, buf.size());
-    }
+    marshallShort(outf, tagID);
+    marshallInt(outf, buf.size());
 
     // Write tag data.
     outf.write(&buf[0], buf.size());
@@ -920,24 +962,29 @@ void tag_write(tag_type tagID, writer &outf)
 //
 // minorVersion is available for any sub-readers that need it
 // (like TAG_LEVEL_MONSTERS).
-tag_type tag_read(FILE *fp, int minorVersion, int8_t expected_tags[NUM_TAGS])
+tag_type tag_read(reader &inf, int minorVersion, int8_t expected_tags[NUM_TAGS])
 {
     // Read header info and data
     short tag_id = NUM_TAGS;
     std::vector<unsigned char> buf;
     {
-        reader tmp(fp, minorVersion);
-        tag_id = unmarshallShort(tmp);
+        try
+        {
+            tag_id = unmarshallShort(inf);
+        }
+        catch (short_read_exception E)
+        {
+            return TAG_NO_TAG;
+        }
         if (tag_id < 0 || tag_id >= NUM_TAGS)
             return TAG_NO_TAG;
-        const int data_size = unmarshallInt(tmp);
+        const int data_size = unmarshallInt(inf);
         if (data_size < 0)
             return TAG_NO_TAG;
 
         // Fetch data in one go
         buf.resize(data_size);
-        if (read2(fp, &buf[0], buf.size()) != (int)buf.size())
-            return TAG_NO_TAG;
+        inf.read(&buf[0], buf.size());
 
         if (!expected_tags[tag_id])
             return TAG_SKIP;
@@ -982,7 +1029,7 @@ tag_type tag_read(FILE *fp, int minorVersion, int8_t expected_tags[NUM_TAGS])
 
 // minorVersion is available for any child functions that need it
 // (currently none).
-void tag_missing(int tag, int minorVersion)
+void tag_missing(int tag)
 {
     switch (tag)
     {
