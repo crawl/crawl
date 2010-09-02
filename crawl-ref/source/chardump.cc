@@ -35,7 +35,6 @@
 #include "itemname.h"
 #include "items.h"
 #include "kills.h"
-#include "macro.h"
 #include "message.h"
 #include "menu.h"
 #include "mutation.h"

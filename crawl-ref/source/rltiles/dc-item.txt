@@ -163,7 +163,10 @@ i-chaos BRAND_CHAOS
 i-evasion BRAND_EVASION
 i-confusion BRAND_CONFUSION
 i-penetration BRAND_PENETRATION
-i-reaping BRAND_REAPING BRAND_WEP_LAST
+i-reaping BRAND_REAPING
+%rim 1
+i-antimagic BRAND_ANTIMAGIC BRAND_WEP_LAST
+%rim 0
 # missile-only brands, order doesn't matter
 i-dispersal BRAND_DISPERSAL
 i-explosion BRAND_EXPLOSION

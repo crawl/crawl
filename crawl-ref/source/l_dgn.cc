@@ -1851,7 +1851,7 @@ LUAFN(dgn_fill_grd_area)
 
 LUAFN(dgn_apply_tide)
 {
-    shoals_apply_tides(0, true);
+    shoals_apply_tides(0, true, true);
     return (0);
 }
 

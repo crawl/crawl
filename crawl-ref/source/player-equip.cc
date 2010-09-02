@@ -23,7 +23,7 @@
 #include "shopping.h"
 #include "skills2.h"
 #include "spl-cast.h"
-#include "spl-mis.h"
+#include "spl-miscast.h"
 #include "state.h"
 #include "stuff.h"
 #include "transform.h"
@@ -592,6 +592,12 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
                     mpr("It is briefly surrounded by shifting shadows.");
                     break;
 
+                case SPWPN_ANTIMAGIC:
+                    calc_mp();
+                    // Even if your maxmp is 0.
+                    mpr("You feel magic leave you.");
+                    break;
+
                 default:
                     break;
                 }
@@ -748,6 +754,11 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs)
                     MiscastEffect(&you, WIELD_MISCAST, SPTYP_TRANSLOCATION,
                                   9, 90, "distortion unwield");
                 }
+                break;
+
+            case SPWPN_ANTIMAGIC:
+                calc_mp();
+                mpr("You feel magic returning to you.");
                 break;
 
                 // NOTE: When more are added here, *must* duplicate unwielding

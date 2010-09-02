@@ -60,9 +60,9 @@
 #include "godconduct.h"
 #include "shopping.h"
 #include "skills.h"
-#include "spells1.h"
-#include "spells3.h"
-#include "spl-mis.h"
+#include "spl-clouds.h"
+#include "spl-miscast.h"
+#include "spl-summoning.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
@@ -718,11 +718,11 @@ static bool _vamp_wants_blood_from_monster(const monsters *mon)
     if (!mons_has_blood(mon->type))
         return (false);
 
-    const int chunk_type = mons_corpse_effect( mon->type );
+    const corpse_effect_type chunk_type = mons_corpse_effect( mon->type );
 
     // Don't drink poisonous or mutagenic blood.
     return (chunk_type == CE_CLEAN || chunk_type == CE_CONTAMINATED
-            || chunk_type == CE_POISONOUS && player_res_poison());
+            || chunk_is_poisonous(chunk_type) && player_res_poison());
 }
 
 // Should life protection protect from this?
@@ -737,7 +737,7 @@ static bool _player_vampire_draws_blood(const monsters* mon, const int damage,
     if (!_vamp_wants_blood_from_monster(mon))
         return (false);
 
-    const int chunk_type = mons_corpse_effect(mon->type);
+    const corpse_effect_type chunk_type = mons_corpse_effect( mon->type );
 
     // Now print message, need biting unless already done (never for bat form!)
     if (needs_bite_msg && !player_in_bat_form())
@@ -778,10 +778,13 @@ static bool _player_vampire_draws_blood(const monsters* mon, const int damage,
         int food_value = 0;
         if (chunk_type == CE_CLEAN)
             food_value = 30 + random2avg(59, 2);
-        else if (chunk_type == CE_CONTAMINATED || chunk_type == CE_POISONOUS)
+        else if (chunk_type == CE_CONTAMINATED
+                 || chunk_is_poisonous(chunk_type))
+        {
             food_value = 15 + random2avg(29, 2);
-
-        // Bats get a rather less nutrition out of it.
+        }
+        
+        // Bats get rather less nutrition out of it.
         if (player_in_bat_form())
             food_value /= 2;
 
@@ -886,6 +889,10 @@ bool melee_attack::player_attack()
         // [ds] Monster may disappear after behaviour event.
         if (!defender->alive())
             return (true);
+
+        // ugh, inspecting attack_verb here is pretty ugly
+        if (damage_done && attack_verb == "trample")
+            do_trample();
 
         player_sustain_passive_damage();
 
@@ -1853,8 +1860,8 @@ int melee_attack::player_weapon_type_modify(int damage)
             else
             {
                 attack_verb = "maul";
-                if (defender->body_size() <= SIZE_MEDIUM && coinflip())
-                    attack_verb = "trample on";
+                if (coinflip())
+                    attack_verb = "trample";
             }
             break;
         } // transformations
@@ -3065,6 +3072,7 @@ int melee_attack::random_chaos_brand()
                      5, SPWPN_DRAINING,
                      5, SPWPN_VAMPIRICISM,
                      5, SPWPN_HOLY_WRATH,
+                     5, SPWPN_ANTIMAGIC,
                      2, SPWPN_CONFUSE,
                      2, SPWPN_DISTORTION,
                      0));
@@ -3116,6 +3124,10 @@ int melee_attack::random_chaos_brand()
                 susceptible = false;
             }
             break;
+        case SPWPN_ANTIMAGIC:
+            if (!defender->as_monster()->can_use_spells())
+                susceptible = false;
+            break;
         default:
             break;
         }
@@ -3137,6 +3149,7 @@ int melee_attack::random_chaos_brand()
     case SPWPN_DISTORTION:      brand_name += "distortion"; break;
     case SPWPN_VAMPIRICISM:     brand_name += "vampiricism"; break;
     case SPWPN_VORPAL:          brand_name += "vorpal"; break;
+    case SPWPN_ANTIMAGIC:       brand_name += "anti-magic"; break;
     // ranged weapon brands
     case SPWPN_FLAME:           brand_name += "flame"; break;
     case SPWPN_FROST:           brand_name += "frost"; break;
@@ -3445,6 +3458,29 @@ bool melee_attack::apply_damage_brand()
 
     case SPWPN_CHAOS:
         chaos_affects_defender();
+        break;
+
+    case SPWPN_ANTIMAGIC:
+        if (defender->atype() == ACT_PLAYER)
+        {
+            int mp_loss = std::min(you.magic_points, random2(damage_done * 2));
+            if (!mp_loss)
+                break;
+            mpr("You feel your power leaking away.", MSGCH_WARN);
+            dec_mp(mp_loss);
+            obvious_effect = true;
+        }
+        else if (defender->as_monster()->can_use_spells()
+                 && !mons_class_flag(defender->id(), M_FAKE_SPELLS))
+        {
+            defender->as_monster()->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
+                        attacker->kill_alignment(), // doesn't matter
+                        random2(damage_done * 2) * BASELINE_DELAY));
+            special_damage_message =
+                    apostrophise(defender->name(DESC_CAP_THE))
+                    + " magic leaks into the air.";
+            obvious_effect = true;
+        }
         break;
     }
 
@@ -5333,6 +5369,57 @@ void melee_attack::mons_do_spines()
     }
 }
 
+bool melee_attack::do_trample()
+{
+    do
+    {
+        monsters *def_monster = defender->as_monster();
+        if (def_monster && mons_is_stationary(def_monster))
+            // don't even print a message
+            return false;
+
+        int size_diff = attacker->body_size() - defender->body_size();
+        if (!x_chance_in_y(size_diff + 3, 6))
+            break;
+
+        coord_def old_pos = defender->pos();
+        coord_def new_pos = defender->pos() + defender->pos() - attacker->pos();
+
+        // need a valid tile
+        if (grd(new_pos) < DNGN_SHALLOW_WATER)
+            break;
+
+        // don't trample into a monster - or do we want to cause a chain
+        // reaction here?
+        if (actor_at(new_pos))
+            break;
+
+        defender->move_to_pos(new_pos);
+
+        if (attacker->is_habitable(old_pos))
+            attacker->move_to_pos(old_pos);
+
+        if (needs_message)
+        {
+            mprf("%s %s backwards!",
+                 def_name(DESC_CAP_THE).c_str(),
+                 defender->conj_verb("stumble").c_str());
+        }
+
+        return true;
+    } while (0);
+
+    if (needs_message)
+    {
+        mprf("%s %s %s ground!",
+             def_name(DESC_CAP_THE).c_str(),
+             defender->conj_verb("hold").c_str(),
+             defender->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str());
+    }
+
+    return false;
+}
+
 void melee_attack::mons_perform_attack_rounds()
 {
     const int nrounds = attacker->as_monster()->has_hydra_multi_attack() ?
@@ -5648,6 +5735,9 @@ void melee_attack::mons_perform_attack_rounds()
             special_damage = 0;
             special_damage_message.clear();
             special_damage_flavour = BEAM_NONE;
+
+            if (attacker != defender && attk.type == AT_TRAMPLE)
+                do_trample();
 
             // Monsters attacking themselves don't get attack flavour.
             // The message sequences look too weird.  Also, stealing

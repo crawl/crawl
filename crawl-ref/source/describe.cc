@@ -40,15 +40,14 @@
 #include "message.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
-#include "newgame.h"
 #include "output.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"
 #include "rng.h"
 #include "skills2.h"
-#include "spells4.h"
 #include "spl-book.h"
+#include "spl-clouds.h"
 #include "stuff.h"
 #include "env.h"
 #include "spl-cast.h"
@@ -880,6 +879,11 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
                     "corpse in good enough shape, the corpse will be "
                     "animated as a zombie friendly to the killer.";
             }
+            break;
+        case SPWPN_ANTIMAGIC:
+            description += "It hinders all kind of magic users and even "
+                    "some types of magical creatures by disrupting the "
+                    "flow of magical energy. The wielder is affected as well.";
             break;
         }
     }
@@ -1923,6 +1927,15 @@ std::string get_item_description( const item_def &item, bool verbose,
                                    "sickness.";
                 }
                 break;
+            case CE_POISON_CONTAM:
+                description << "\n\nThis meat is poisonous";
+                if (player_mutation_level(MUT_SAPROVOROUS) < 3)
+                {
+                    description << " and may cause sickness even if poison "
+                                   "resistant";
+                }
+                description << ".";
+                break;
             default:
                 break;
             }
@@ -2919,6 +2932,21 @@ static std::string _monster_stat_description(const monster_info& mi)
     else if (monster_descriptor(mi.type, MDSC_REGENERATES))
         result << pronoun << " regenerates quickly.\n";
 
+    // Size
+    const char *sizes[NUM_SIZE_LEVELS] = {
+        "as big as a rat",
+        "as big as a spriggan",
+        "as big as a kobold",
+        NULL,     // don't display anything for 'medium'
+        "as big as an ogre",
+        "as big as a hydra",
+        "as big as a giant",
+        "as big as a dragon",
+    };
+
+    if (sizes[mi.body_size()])
+        result << pronoun << " is " << sizes[mi.body_size()] << ".\n";
+
     return (result.str());
 }
 
@@ -3355,11 +3383,13 @@ static std::string _religion_help(god_type god)
 
     case GOD_SHINING_ONE:
     {
-        result += "You can pray at an altar to sacrifice evil items.";
         int halo_size = you.halo_radius2();
         if (halo_size >= 0)
         {
-            result += " You radiate a ";
+            if (!result.empty())
+                result += " ";
+
+            result += "You radiate a ";
 
             if (halo_size > 37)
                 result += "large ";

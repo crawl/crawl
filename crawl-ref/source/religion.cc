@@ -22,6 +22,7 @@
 #include "externs.h"
 
 #include "abl-show.h"
+#include "acquire.h"
 #include "areas.h"
 #include "artefact.h"
 #include "attitude-change.h"
@@ -39,8 +40,6 @@
 #include "effects.h"
 #include "env.h"
 #include "enum.h"
-#include "fprop.h"
-#include "fight.h"
 #include "files.h"
 #include "food.h"
 #include "godabil.h"
@@ -63,10 +62,8 @@
 #include "mon-util.h"
 #include "mon-place.h"
 #include "mgen_data.h"
-#include "coord.h"
 #include "mon-stuff.h"
 #include "mutation.h"
-#include "newgame.h"
 #include "notes.h"
 #include "options.h"
 #include "ouch.h"
@@ -74,10 +71,9 @@
 #include "player.h"
 #include "shopping.h"
 #include "skills2.h"
-#include "spells1.h"
-#include "spells3.h"
 #include "spl-book.h"
-#include "spl-mis.h"
+#include "spl-miscast.h"
+#include "spl-selfench.h"
 #include "sprint.h"
 #include "stash.h"
 #include "state.h"
@@ -545,13 +541,6 @@ std::string get_god_likes(god_type which_god, bool verbose)
     case GOD_ZIN:
         snprintf(info, INFO_SIZE, "you donate money%s",
                  verbose ? " (by praying at an altar)" : "");
-
-        likes.push_back(info);
-        break;
-
-    case GOD_SHINING_ONE:
-        snprintf(info, INFO_SIZE, "you sacrifice unholy and evil items%s",
-                 verbose ? " (by dropping them on an altar and praying)" : "");
 
         likes.push_back(info);
         break;
@@ -2571,7 +2560,7 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
         // Every piety level change also affects AC from orcish gear.
         you.redraw_armour_class = true;
         // Or the player's symbol.
-        you.symbol = transform_mons();
+        update_player_symbol();
     }
 
     if (you.religion == GOD_CHEIBRIADOS)
@@ -2705,6 +2694,12 @@ void lose_piety(int pgn)
     {
         int diffrank = piety_rank(you.piety) - piety_rank(old_piety);
         che_handle_change(CB_PIETY, diffrank);
+    }
+
+    if (you.religion == GOD_SHINING_ONE)
+    {
+        // Piety change affects halo radius.
+        invalidate_agrid(true);
     }
 }
 
@@ -3087,7 +3082,7 @@ bool god_likes_items(god_type god)
 
     switch (god)
     {
-    case GOD_ZIN: case GOD_SHINING_ONE: case GOD_BEOGH: case GOD_NEMELEX_XOBEH:
+    case GOD_ZIN: case GOD_BEOGH: case GOD_NEMELEX_XOBEH:
         return (true);
 
     case GOD_NO_GOD: case NUM_GODS: case GOD_RANDOM: case GOD_NAMELESS:
@@ -3114,9 +3109,6 @@ bool god_likes_item(god_type god, const item_def& item)
     {
     case GOD_ZIN:
         return (item.base_type == OBJ_GOLD);
-
-    case GOD_SHINING_ONE:
-        return (is_unholy_item(item) || is_evil_item(item));
 
     case GOD_BEOGH:
         return (item.base_type == OBJ_CORPSES

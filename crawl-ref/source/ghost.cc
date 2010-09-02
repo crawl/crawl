@@ -24,7 +24,6 @@
 #include "spl-cast.h"
 #include "mon-util.h"
 #include "mon-transit.h"
-#include "place.h"
 #include "player.h"
 #include "religion.h"
 

@@ -15,6 +15,7 @@
 #include "coordit.h"
 #include "database.h"
 #include "directn.h"
+#include "dungeon.h"
 #include "env.h"
 #include "libutil.h"
 #include "los.h"
@@ -366,6 +367,7 @@ void clear_globals_on_exit()
 {
     clear_rays_on_exit();
     clear_zap_info_on_exit();
+    dgn_clear_vault_placements(env.level_vaults);
 }
 
 // Used by do_crash_dump() to tell if the crash happened during exit() hooks.

@@ -28,7 +28,6 @@
 #include "mon-place.h"
 #include "mon-project.h"
 #include "terrain.h"
-#include "hints.h"
 #include "mislead.h"
 #include "mgen_data.h"
 #include "coord.h"
@@ -40,8 +39,9 @@
 #include "shout.h"
 #include "spl-util.h"
 #include "spl-cast.h"
-#include "spells1.h"
-#include "spells3.h"
+#include "spl-clouds.h"
+#include "spl-damage.h"
+#include "spl-summoning.h"
 #include "state.h"
 #include "stuff.h"
 #include "areas.h"
@@ -49,7 +49,6 @@
 #include "traps.h"
 #include "view.h"
 #include "viewchar.h"
-#include "xom.h"
 
 #include <algorithm>
 
@@ -1395,6 +1394,22 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
         // the player.
         if (spell_cast == SPELL_POLYMORPH_OTHER && monster->friendly())
             return (false);
+
+
+        // Past this point, we're actually casting, instead of just pondering.
+
+        // Check for antimagic.
+        if (monster->has_ench(ENCH_ANTIMAGIC)
+            && !x_chance_in_y(monster->hit_dice * BASELINE_DELAY,
+                              monster->hit_dice * BASELINE_DELAY
+                              + monster->get_ench(ENCH_ANTIMAGIC).duration))
+        {
+            // This may be a bad idea -- if we decide monsters shouldn't
+            // lose a turn like players do not, please make this just return.
+            simple_monster_message(monster, " falters for a moment.");
+            monster->lose_energy(EUT_SPELL);
+            return (true);
+        }
 
         // Try to animate dead: if nothing rises, pretend we didn't cast it.
         if (spell_cast == SPELL_ANIMATE_DEAD)

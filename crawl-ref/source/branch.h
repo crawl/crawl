@@ -56,6 +56,7 @@ struct Branch
     int travel_shortcut;         // Which key to press for travel.
     bool any_upstair_exits;      // any upstair exits the branch (Hell branches)
     bool dangerous_bottom_level; // bottom level is more dangerous than normal
+    int ambient_noise;           // affects noise loudness and player stealth
 };
 
 extern Branch branches[];
@@ -69,6 +70,9 @@ level_id current_level_parent();
 
 branch_type str_to_branch(const std::string &branch,
                           branch_type err = NUM_BRANCHES);
+
+int branch_ambient_noise(branch_type branch);
+int current_level_ambient_noise();
 
 const char *level_area_type_name(int level_type);
 level_area_type str_to_level_area_type(const std::string &s);

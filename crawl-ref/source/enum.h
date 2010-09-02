@@ -1288,6 +1288,7 @@ enum enchant_type
     ENCH_AWAKEN_FOREST,
     ENCH_EXPLODING,
     ENCH_BLEED,
+    ENCH_ANTIMAGIC,
 
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
@@ -2141,6 +2142,7 @@ enum monster_type                      // (int) menv[].type
     MONS_GHOST_MOTH,
     MONS_JUMPING_SPIDER,               
     MONS_TARANTELLA,                   // 492
+    MONS_SILENT_SPECTRE,
 
     // Spriggans:
     MONS_SPRIGGAN = 500,

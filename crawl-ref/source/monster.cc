@@ -237,7 +237,7 @@ bool monsters::floundering() const
 
 bool monsters::can_pass_through_feat(dungeon_feature_type grid) const
 {
-    return mons_can_pass(this, grid);
+    return mons_class_can_pass(mons_base_type(this), grid);
 }
 
 bool monsters::is_habitable_feat(dungeon_feature_type actual_grid) const
@@ -271,23 +271,8 @@ bool monsters::can_drown() const
 
 size_type monsters::body_size(size_part_type /* psize */, bool /* base */) const
 {
-    const monsterentry *e = get_monster_data(type);
-    size_type ret = (e ? e->size : SIZE_MEDIUM);
-
-    // Slime creature size is increased by the number merged.
-    if (type == MONS_SLIME_CREATURE)
-    {
-        if (number == 2)
-            ret = SIZE_MEDIUM;
-        else if (number == 3)
-            ret = SIZE_LARGE;
-        else if (number == 4)
-            ret = SIZE_BIG;
-        else if (number == 5)
-            ret = SIZE_GIANT;
-    }
-
-    return (ret);
+    monster_info mi(this, MILEV_NAME);
+    return mi.body_size();
 }
 
 int monsters::body_weight(bool /*base*/) const
@@ -4504,6 +4489,7 @@ void monsters::timeout_enchantments(int levels)
         case ENCH_PETRIFYING: case ENCH_PETRIFIED: case ENCH_SWIFT:
         case ENCH_BATTLE_FRENZY: case ENCH_TEMP_PACIF: case ENCH_SILENCE:
         case ENCH_LOWERED_MR: case ENCH_SOUL_RIPE: case ENCH_BLEED:
+        case ENCH_ANTIMAGIC:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -4670,6 +4656,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
     case ENCH_LOWERED_MR:
     case ENCH_SOUL_RIPE:
     case ENCH_TIDE:
+    case ENCH_ANTIMAGIC:
         decay_enchantment(me);
         break;
 
@@ -6074,7 +6061,7 @@ static const char *enchant_names[] =
     "petrified", "lowered_mr", "soul_ripe", "slowly_dying", "eat_items",
     "aquatic_land", "spore_production", "slouch", "swift", "tide",
     "insane", "silenced", "awaken_forest", "exploding", "bleeding",
-    "buggy",
+    "antimagic", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

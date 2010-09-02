@@ -328,6 +328,10 @@ force_more_message = Your scales start
 force_more_message = You fall through a shaft
 force_more_message = You are starting to lose your buoyancy
 
+# Announcements of timed portal vaults (bazaar, labyrinths):
+force_more_message = interdimensional caravan
+force_more_message = distant snort
+
 ##### 4-k	Firing Commands #######################
 #
 # fire_items_start = a

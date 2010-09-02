@@ -153,6 +153,7 @@ private:
     bool mons_attack_warded_off();
     int mons_attk_delay();
     int mons_calc_damage(const mon_attack_def &attk);
+    bool do_trample();
     void mons_apply_attack_flavour(const mon_attack_def &attk);
     int mons_apply_defender_ac(int damage, int damage_max);
     bool mons_perform_attack();

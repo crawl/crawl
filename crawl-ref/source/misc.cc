@@ -30,15 +30,12 @@
 
 #include "abyss.h"
 #include "areas.h"
-#include "branch.h"
-#include "chardump.h"
 #include "clua.h"
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
 #include "database.h"
 #include "delay.h"
-#include "dgn-overview.h"
 #include "dgn-shoals.h"
 #include "directn.h"
 #include "dgnevent.h"
@@ -56,7 +53,6 @@
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
-#include "lev-pand.h"
 #include "libutil.h"
 #include "macro.h"
 #include "makeitem.h"
@@ -69,8 +65,6 @@
 #include "mon-util.h"
 #include "mon-stuff.h"
 #include "ouch.h"
-#include "output.h"
-#include "place.h"
 #include "player.h"
 #include "player-stats.h"
 #include "random.h"
@@ -79,12 +73,9 @@
 #include "shopping.h"
 #include "skills.h"
 #include "skills2.h"
-#include "spells1.h"
-#include "spells3.h"
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
-#include "tagstring.h"
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
@@ -93,7 +84,6 @@
 #include "view.h"
 #include "viewgeom.h"
 #include "shout.h"
-#include "viewchar.h"
 #include "xom.h"
 
 static void _create_monster_hide(const item_def corpse)
@@ -1932,7 +1922,8 @@ void run_environment_effects()
     }
 
     run_corruption_effects(you.time_taken);
-    shoals_apply_tides(div_rand_round(you.time_taken, 10));
+    shoals_apply_tides(div_rand_round(you.time_taken, BASELINE_DELAY),
+                       false, true);
     timeout_tombs(you.time_taken);
 }
 
@@ -2009,7 +2000,7 @@ std::string your_hand(bool plural)
     switch (you.attribute[ATTR_TRANSFORMATION])
     {
     default:
-        mpr("ERROR: unknown transformation in your_hand() (spells4.cc)",
+        mpr("ERROR: unknown transformation in your_hand() (misc.cc)",
             MSGCH_ERROR);
     case TRAN_NONE:
     case TRAN_STATUE:
@@ -2076,7 +2067,7 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
             {
                 if (autohit_first)
                     return (false);
-                    
+
                 verb += "in " + mon->name(DESC_NOCAP_THE) + "'s direction";
                 need_mon_name = false;
             }

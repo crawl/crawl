@@ -13,7 +13,7 @@
 #include "attitude-change.h"
 #include "cloud.h"
 #include "cluautil.h"
-#include "colour.h"
+#include "coord.h"
 #include "coordit.h"
 #include "database.h"
 #include "delay.h"
@@ -27,6 +27,8 @@
 #include "files.h"
 #include "food.h"
 #include "godabil.h"
+#include "godconduct.h"
+#include "hints.h"
 #include "hiscores.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -35,36 +37,32 @@
 #include "libutil.h"
 #include "makeitem.h"
 #include "message.h"
+#include "mgen_data.h"
 #include "misc.h"
 #include "mon-abil.h"
 #include "mon-behv.h"
-#include "mon-clone.h"
 #include "mon-death.h"
 #include "mon-iter.h"
 #include "mon-place.h"
-#include "mon-util.h"
-#include "mgen_data.h"
-#include "coord.h"
 #include "mon-speak.h"
+#include "mon-util.h"
 #include "notes.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"
-#include "godconduct.h"
-#include "spl-mis.h"
+#include "shout.h"
+#include "spl-miscast.h"
+#include "spl-summoning.h"
 #include "spl-util.h"
+#include "stash.h"
 #include "state.h"
 #include "stuff.h"
 #include "tagstring.h"
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
-#include "hints.h"
 #include "view.h"
-#include "shout.h"
-#include "spells3.h"
 #include "viewchar.h"
-#include "stash.h"
 #include "xom.h"
 
 static bool _wounded_damaged(monster_type mon_type);
@@ -532,7 +530,7 @@ int place_monster_corpse(const monsters *monster, bool silent,
                      mitm[o].name(DESC_CAP_A).c_str());
             }
         }
-        const bool poison = (mons_corpse_effect(corpse_class) == CE_POISONOUS
+        const bool poison = (chunk_is_poisonous(mons_corpse_effect(corpse_class))
                              && player_res_poison() <= 0);
 
         if (o != NON_ITEM)
@@ -1378,6 +1376,8 @@ int monster_die(monsters *monster, killer_type killer,
     // Monsters haloes should be removed when they die.
     if (monster->holiness() == MH_HOLY)
         invalidate_agrid();
+    if (monster->type == MONS_SILENT_SPECTRE)
+        invalidate_agrid();
 
     // Clear auto exclusion now the monster is killed -- if we know about it.
     if (mons_near(monster) || wizard)
@@ -1436,7 +1436,7 @@ int monster_die(monsters *monster, killer_type killer,
 
             you.increase_duration(DUR_BERSERKER, bonus);
             you.increase_duration(DUR_MIGHT, bonus);
-            haste_player(bonus * 2);
+            haste_player(bonus * 2, true);
 
             mpr("You feel the power of Trog in you as your rage grows.",
                 MSGCH_GOD, GOD_TROG);
@@ -1447,7 +1447,7 @@ int monster_die(monsters *monster, killer_type killer,
 
             you.increase_duration(DUR_BERSERKER, bonus);
             you.increase_duration(DUR_MIGHT, bonus);
-            haste_player(bonus * 2);
+            haste_player(bonus * 2, true);
 
             mpr("Your amulet glows a violent red.");
         }

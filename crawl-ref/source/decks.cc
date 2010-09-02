@@ -12,6 +12,7 @@
 
 #include "externs.h"
 
+#include "acquire.h"
 #include "beam.h"
 #include "cio.h"
 #include "coordit.h"
@@ -47,13 +48,16 @@
 #include "religion.h"
 #include "godconduct.h"
 #include "skills2.h"
-#include "spells1.h"
-#include "spells2.h"
-#include "spells3.h"
-#include "spells4.h"
 #include "spl-cast.h"
-#include "spl-mis.h"
+#include "spl-damage.h"
+#include "spl-goditem.h"
+#include "spl-miscast.h"
+#include "spl-other.h"
+#include "spl-selfench.h"
+#include "spl-summoning.h"
+#include "spl-transloc.h"
 #include "spl-util.h"
+#include "spl-wpnench.h"
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -2646,6 +2650,8 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
                 set_item_ego_type(wpn, OBJ_WEAPONS,
                                   coinflip() ? SPWPN_FLAMING : SPWPN_FREEZING);
             }
+            else
+                set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_NORMAL);
         }
         else if (power_level == 2)
         {

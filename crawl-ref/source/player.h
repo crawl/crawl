@@ -757,7 +757,8 @@ void level_change(bool skip_attribute_increase = false);
 bool player_genus( genus_type which_genus,
                    species_type species = SP_UNKNOWN );
 bool is_player_same_species( const int mon, bool = false );
-monster_type player_mons();
+monster_type player_mons(bool transform = true);
+void update_player_symbol();
 
 bool you_can_wear( int eq, bool special_armour = false );
 bool player_has_feet(void);
@@ -815,7 +816,7 @@ bool slow_player(int turns);
 void dec_slow_player(int delay);
 void dec_exhaust_player(int delay);
 
-bool haste_player(int turns);
+bool haste_player(int turns, bool rageext = false);
 void dec_haste_player(int delay);
 void levitate_player(int pow);
 

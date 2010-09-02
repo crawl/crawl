@@ -66,7 +66,7 @@ The lord of the Iron City of Dis.
 %%%%
 Dissolution
 
-The Pits of Slime used to be a thriving civilization, and Dissolution was the prophet of their god. When the city was overtaken by its current residents, only Dissolution survived, for he alone turned faithfully to the Slime God. Dissolution become a tremendous mass of acidic ooze, yet retained his intelligence. He is filled with hatred for anything that can hold a form.
+The Pits of Slime used to be a thriving civilization, and Dissolution was the prophet of their god. When the city was overtaken by its current residents, only Dissolution survived, for he alone turned faithfully to the Slime God. Dissolution became a tremendous mass of acidic ooze, yet retained his intelligence. He is filled with hatred for anything that can hold a form.
 %%%%
 Donald
 {{
@@ -1469,6 +1469,10 @@ A stupid woolly animal, with murder in its eyes. It looks surprised.
 shining eye
 
 A huge and strangely deformed eyeball, pulsating with energy. Beauty is certainly nowhere to be found in this beholder.
+%%%%
+silent spectre
+
+The bane of wizards, these terrible spirits bring an unearthly silence to the area around them.
 %%%%
 silver statue
 
