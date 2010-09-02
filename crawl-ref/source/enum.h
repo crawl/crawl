@@ -1965,11 +1965,11 @@ enum monster_type                      // (int) menv[].type
     MONS_MAUD,
     MONS_LOUISE,                       //  300
 #if (TAG_MAJOR_VERSION <= 29)
-    MONS_FRANCIS,
+    MONS_FRANCIS_OLD,
 #endif
     MONS_FRANCES,
     MONS_RUPERT,
-    MONS_WAYNE,
+    MONS_FRANCIS,
 #if (TAG_MAJOR_VERSION <= 29)
     MONS_DUANE,                        //  305
 #endif
@@ -2426,7 +2426,7 @@ enum mon_spellbook_type
     MST_ALLIGATOR,
     MST_BORIS,
     MST_FREDERICK,
-    MST_WAYNE,
+    MST_FRANCIS,
     MST_SPRIGGAN_DRUID,
     MST_THE_ENCHANTRESS,
     MST_HELLEPHANT,

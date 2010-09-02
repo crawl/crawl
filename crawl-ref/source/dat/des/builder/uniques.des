@@ -307,9 +307,9 @@ NAME:   uniq_urug
 DEPTH:  10-13, 14-16, !Lair, !Slime
 : place_unique(_G, "Urug")
 
-NAME:   uniq_wayne
+NAME:   uniq_francis
 DEPTH:  17-19, 20-27, !Lair, !Slime
-: place_unique(_G, "Wayne")
+: place_unique(_G, "Francis")
 
 NAME:   uniq_xtahua
 DEPTH:  20-27, !Lair, !Slime

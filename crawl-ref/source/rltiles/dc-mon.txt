@@ -394,7 +394,7 @@ psyche MONS_PSYCHE
 rupert MONS_RUPERT
 sigmund MONS_SIGMUND
 terence MONS_TERENCE
-wayne MONS_WAYNE
+francis MONS_FRANCIS
 %sdir dc-mon
 
 human MONS_HUMAN
