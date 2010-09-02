@@ -36,6 +36,7 @@
 #include "artefact.h"
 #include "beam.h"
 #include "chardump.h"
+#include "coord.h"
 #include "delay.h"
 #include "dgnevent.h"
 #include "effects.h"
@@ -1031,6 +1032,30 @@ static void _maybe_spawn_jellies(int dam, const char* aux,
     }
 }
 
+void _place_player_corpse(bool explode)
+{
+    if (!in_bounds(you.pos()))
+        return;
+
+    item_def corpse;
+    if (fill_out_corpse(0, player_mons(), corpse) == MONS_NO_MONSTER)
+        return;
+
+    if (explode && explode_corpse(corpse, you.pos()))
+        return;
+
+    int o = get_item_slot();
+    if (o == NON_ITEM)
+    {
+        item_was_destroyed(corpse);
+        return;
+    }
+
+    mitm[o] = corpse;
+
+    move_item_to_grid(&o, you.pos(), !you.in_water());
+}
+
 
 #if defined(WIZARD) || defined(DEBUG)
 static void _wizard_restore_life()
@@ -1251,6 +1276,8 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         you.deaths++;
         you.lives--;
         you.dead = true;
+
+        _place_player_corpse(death_type == KILLED_BY_DISINT);
         return;
     }
 
