@@ -410,6 +410,7 @@ LFLOORTILE: floor_tomb
 LROCKTILE:  wall_zot_magenta
 KITEM:      Z = Orb of Zot
 KMASK:      Z = no_item_gen
+COLOUR:     G = magenta
 
 #traps
 SUBST:    C = X:900 c:100 =
@@ -451,7 +452,7 @@ xxxxxxxxxX..8.....................XXXXXXXXXXXXX.....................8..Xxxxxxxxx
 xxxxxxxxxX.......?..?.....8.8.....XXX...1...XXX.....8.8.....?..?.......Xxxxxxxxx
 xxxxxxxxxXX.8...........?.........XX..1...1..XX.........?...........8.XXxxxxxxxx
 xxxxxxxxxxXX......................X1...!!!...1X......................XXxxxxxxxxx
-xxxxxxxxxxxXX.....4....2....8.8......1.!Z!.1......8.8....2....4.....XXxxxxxxxxxx
+xxxxxxxxxxxXX.....4....2....8.8......1.GZG.1......8.8....2....4.....XXxxxxxxxxxx
 xxxxxxxxxxXX....?...?.....?...?...X1...!!!...1X...?...?.....?....?...XXxxxxxxxxx
 xxxxxxxxxXX.......?....?..........XX..1...1..XX..........?....2.......XXxxxxxxxx
 xxxxxxxxxX.....8..........8.8.....XXX...1...XXX.....8.8..........8.....Xxxxxxxxx

@@ -36,7 +36,7 @@
 #include "player.h"
 #include "religion.h"
 #include "spl-cast.h"
-#include "spl-mis.h"
+#include "spl-miscast.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
@@ -438,10 +438,10 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_ISKENDERUNS_MYSTIC_BLAST,
      SPELL_TELEPORT_OTHER,
      SPELL_VENOM_BOLT,
+     SPELL_POISONOUS_CLOUD,
      SPELL_IRON_SHOT,
      SPELL_INVISIBILITY,
      SPELL_MASS_CONFUSION,
-     SPELL_POISONOUS_CLOUD,
      },
 
     // Book of Cantrips
@@ -735,8 +735,8 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     // Rod of venom
     {SPELL_CURE_POISON,
      SPELL_VENOM_BOLT,
-     SPELL_POISON_ARROW,
      SPELL_POISONOUS_CLOUD,
+     SPELL_POISON_ARROW,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,

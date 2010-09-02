@@ -29,21 +29,21 @@
 #include "directn.h"
 #include "effects.h"
 #include "env.h"
-#include "map_knowledge.h"
 #include "fight.h"
-#include "food.h"
 #include "godabil.h"
-#include "goditem.h"
+#include "godconduct.h"
 #include "godpassive.h"
+#include "hints.h"
 #include "hiscores.h"
+#include "it_use2.h"
+#include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
-#include "item_use.h"
-#include "it_use2.h"
 #include "kills.h"
 #include "libutil.h"
 #include "macro.h"
+#include "map_knowledge.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-util.h"
@@ -57,14 +57,14 @@
 #include "quiver.h"
 #include "random.h"
 #include "religion.h"
-#include "godconduct.h"
 #include "shopping.h"
+#include "shout.h"
 #include "skills.h"
 #include "skills2.h"
 #include "species.h"
-#include "spells1.h"
-#include "spells3.h"
-#include "spells4.h"
+#include "spl-other.h"
+#include "spl-selfench.h"
+#include "spl-transloc.h"
 #include "spl-util.h"
 #include "sprint.h"
 #include "stairs.h"
@@ -78,9 +78,7 @@
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
-#include "hints.h"
 #include "view.h"
-#include "shout.h"
 #include "viewgeom.h"
 #include "xom.h"
 
@@ -457,11 +455,23 @@ bool is_player_same_species(const int mon, bool transform)
     if (you.species == SP_MERFOLK && mons_genus(mon) == MONS_MERMAID)
         return (true);
 
-    return (mons_genus(mon) == mons_genus(player_mons()));
+    return (mons_genus(mon) == mons_genus(player_mons(false)));
 }
 
-monster_type player_mons()
+void update_player_symbol()
 {
+    you.symbol = Options.show_player_species ? player_mons() : transform_mons();
+}
+
+monster_type player_mons(bool transform)
+{
+    if (transform)
+    {
+        monster_type mons = transform_mons();
+        if (mons != MONS_PLAYER)
+            return mons;
+    }
+
     switch (you.species)
     {
     case SP_HUMAN:
@@ -533,7 +543,7 @@ monster_type player_mons()
     case SP_VAMPIRE:
         return MONS_VAMPIRE;
     case SP_DEEP_DWARF:
-        return MONS_DWARF; // until/if DD monsters are added
+        return MONS_DEEP_DWARF;
     case SP_ELF:
     case SP_HILL_DWARF:
     case SP_OGRE_MAGE:
@@ -2114,9 +2124,7 @@ int player_size_adjusted_body_armour_evasion_penalty(int scale)
 
     const int size = you.body_size(PSIZE_BODY);
 
-    const int size_bonus_factor =
-        (size < SIZE_SMALL || size > SIZE_LARGE)?
-        (size - SIZE_MEDIUM) * scale / 4 : 0;
+    const int size_bonus_factor = (size - SIZE_MEDIUM) * scale / 4;
 
     const int size_adjusted_penalty =
         std::max(0,
@@ -3358,14 +3366,19 @@ int check_stealth(void)
     // a personal silence spell would naturally be different, but this
     // silence radiates for a distance and prevents monster spellcasting,
     // which pretty much gives away the stealth game.
+    // this penalty is dependent on the actual amount of ambient noise
+    // in the level -doy
     if (you.duration[DUR_SILENCE])
-        stealth -= 50;
+        stealth -= 50 + current_level_ambient_noise();
 
     // Mutations.
     stealth += 25 * player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
     stealth += 40 * player_mutation_level(MUT_NIGHTSTALKER);
     if (player_mutation_level(MUT_TRANSLUCENT_SKIN) > 1)
         stealth += 20 * (player_mutation_level(MUT_TRANSLUCENT_SKIN) - 1);
+
+    // it's easier to be stealthy when there's a lot of background noise
+    stealth += 2 * current_level_ambient_noise();
 
     stealth = std::max(0, stealth);
 
@@ -4513,6 +4526,9 @@ int get_real_mp(bool include_items)
     if (enp > 50)
         enp = 50 + ((enp - 50) / 2);
 
+    if (include_items && player_equip_ego_type(EQ_WEAPON, SPWPN_ANTIMAGIC))
+        enp /= 3;
+
     enp = std::max(enp, 0);
 
     return enp;
@@ -4950,7 +4966,7 @@ void dec_exhaust_player(int delay)
     }
 }
 
-bool haste_player(int turns)
+bool haste_player(int turns, bool rageext)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -4972,7 +4988,7 @@ bool haste_player(int turns)
         mpr("You feel yourself speed up.");
     else if (you.duration[DUR_HASTE] > threshold * BASELINE_DELAY)
         mpr("You already have as much speed as you can handle.");
-    else
+    else if (!rageext)
     {
         mpr("You feel as though your hastened speed will last longer.");
         contaminate_player(1, true); // always deliberate
@@ -5081,13 +5097,11 @@ void levitate_player(int pow)
 int count_worn_ego(int which_ego)
 {
     int result = 0;
-    for (int slot = EQ_MIN_ARMOUR; slot <= EQ_MAX_ARMOUR; ++slot)
+    for (int eq = EQ_MIN_ARMOUR; eq <= EQ_MAX_ARMOUR; ++eq)
     {
-        if (you.equip[slot] != -1
-            && get_armour_ego_type(you.inv[you.equip[slot]]) == which_ego)
-        {
+        const item_def* item = you.slot_item(static_cast<equipment_type>(eq));
+        if (item && get_armour_ego_type(*item) == which_ego)
             result++;
-        }
     }
 
     return (result);
@@ -5951,16 +5965,13 @@ int player::res_magic() const
 
     switch (species)
     {
-    case SP_MOUNTAIN_DWARF:
-    case SP_HILL_ORC:
-        rm = experience_level * 2;
-        break;
     default:
         rm = experience_level * 3;
         break;
     case SP_HIGH_ELF:
     case SP_SLUDGE_ELF:
     case SP_DEEP_ELF:
+    case SP_MOUNTAIN_DWARF:
     case SP_VAMPIRE:
     case SP_DEMIGOD:
     case SP_OGRE:

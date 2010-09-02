@@ -25,7 +25,6 @@
 #include "itemprop.h"
 #include "menu.h"
 #include "player.h"
-#include "player-stats.h"
 #include "species.h"
 #include "stuff.h"
 #include "hints.h"

@@ -292,6 +292,9 @@ monster_info::monster_info(const monsters *m, int milev)
     if (mons_class_flag(m->type, M_DEFLECT_MISSILES))
         mb |= ULL1 << MB_DEFLECT_MSL;
 
+    if (m->type == MONS_SILENT_SPECTRE)
+        mb |= ULL1 << MB_SILENCING;
+
     if (you.beheld_by(m))
         mb |= ULL1 << MB_MESMERIZING;
 
@@ -865,7 +868,7 @@ std::vector<std::string> monster_info::attributes() const
     if (is(MB_INSANE))
         v.push_back("frenzied and insane");
     if (is(MB_BERSERK))
-          v.push_back("berserk");
+        v.push_back("berserk");
     if (is(MB_FRENZIED))
         v.push_back("consumed by blood-lust");
     if (is(MB_HASTED))
@@ -1079,6 +1082,27 @@ int monster_info::base_speed() const
 
     return (mons_class_is_zombified(type) ? mons_class_zombie_base_speed(base_type)
                                    : mons_class_base_speed(type));
+}
+
+size_type monster_info::body_size() const
+{
+    const monsterentry *e = get_monster_data(type);
+    size_type ret = (e ? e->size : SIZE_MEDIUM);
+
+    // Slime creature size is increased by the number merged.
+    if (type == MONS_SLIME_CREATURE)
+    {
+        if (number == 2)
+            ret = SIZE_MEDIUM;
+        else if (number == 3)
+            ret = SIZE_LARGE;
+        else if (number == 4)
+            ret = SIZE_BIG;
+        else if (number == 5)
+            ret = SIZE_GIANT;
+    }
+
+    return (ret);
 }
 
 void get_monster_info(std::vector<monster_info>& mons)

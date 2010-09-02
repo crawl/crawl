@@ -352,6 +352,9 @@ int player::silence_radius2() const
 
 int monsters::silence_radius2() const
 {
+    if (type == MONS_SILENT_SPECTRE)
+        return 150;
+
     if (!has_ench(ENCH_SILENCE))
         return (-1);
     const int dur = get_ench(ENCH_SILENCE).duration;

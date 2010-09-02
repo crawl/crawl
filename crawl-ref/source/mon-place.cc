@@ -24,7 +24,6 @@
 #include "options.h"
 #include "ghost.h"
 #include "lev-pand.h"
-#include "libutil.h"
 #include "message.h"
 #include "mislead.h"
 #include "mon-behv.h"
@@ -338,7 +337,10 @@ static void _hell_spawn_random_monsters()
 // one_chance_in(value) checks with the new x_chance_in_y(5, value). (jpeg)
 void spawn_random_monsters()
 {
-    if (crawl_state.game_is_arena())
+    if (crawl_state.game_is_arena() ||
+        (crawl_state.game_is_sprint() &&
+         you.level_type == LEVEL_DUNGEON &&
+         you.char_direction == GDT_DESCENDING))
         return;
 
 #ifdef DEBUG_MON_CREATION
@@ -1453,6 +1455,8 @@ static int _place_monster_aux(const mgen_data &mg,
 
     // Holy monsters need their halo!
     if (mon->holiness() == MH_HOLY)
+        invalidate_agrid(true);
+    if (mg.cls == MONS_SILENT_SPECTRE)
         invalidate_agrid(true);
 
     // If the caller requested a specific colour for this monster, apply
@@ -2691,6 +2695,7 @@ void mark_interesting_monst(monsters* monster, beh_type behaviour)
                 || you.level_type == LEVEL_ABYSS)
              && mons_rarity(monster->type) <= Options.rare_interesting
              && monster->hit_dice > 2 // Don't note the really low-hd monsters.
+             && !mons_class_flag(monster->type, M_NO_EXP_GAIN)
              && mons_rarity(monster->type) > 0)
     {
         interesting = true;

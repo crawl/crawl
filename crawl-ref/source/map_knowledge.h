@@ -34,9 +34,10 @@
  */
 struct map_cell
 {
-    unsigned short flags;   // Flags describing the mappedness of this square.
+    uint32_t flags;   // Flags describing the mappedness of this square.
 
-    map_cell() : flags(0), _feat(DNGN_UNSEEN), _feat_colour(0), _item(0), _cloud(CLOUD_NONE)
+    map_cell() : flags(0), _feat(DNGN_UNSEEN), _feat_colour(0),
+                 _item(0), _cloud(CLOUD_NONE)
     {
         memset(&_mons, 0, sizeof(_mons));
     }
@@ -56,6 +57,20 @@ struct map_cell
             delete _mons.info;
         if (_item)
             delete _item;
+    }
+
+    map_cell& operator=(const map_cell& c)
+    {
+        if (!(flags & MAP_DETECTED_MONSTER) && _mons.info)
+            delete _mons.info;
+        if (_item)
+            delete _item;
+        memcpy(this, &c, sizeof(map_cell));
+        if (!(flags & MAP_DETECTED_MONSTER) && _mons.info)
+            _mons.info = new monster_info(*_mons.info);
+        if (_item)
+            _item = new item_info(*_item);
+         return (*this);
     }
 
     void clear()

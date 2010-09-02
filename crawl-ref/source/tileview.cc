@@ -10,7 +10,6 @@
 #include "fprop.h"
 #include "items.h"
 #include "kills.h"
-#include "libutil.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "options.h"

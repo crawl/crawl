@@ -24,13 +24,6 @@ struct bolt;
 #define ARTEFACT_NAME_KEY   "artefact_name"
 #define ARTEFACT_APPEAR_KEY "artefact_appearance"
 
-enum unrand_special_type
-{
-    UNRANDSPEC_EITHER,
-    UNRANDSPEC_NORMAL,
-    UNRANDSPEC_SPECIAL,
-};
-
 enum unrand_flag_type
 {
     UNRAND_FLAG_NONE             = 0x00,
@@ -117,7 +110,6 @@ std::string artefact_name( const item_def &item, bool appearance = false );
 const char *unrandart_descrip( int which_descrip, const item_def &item );
 
 int find_okay_unrandart(uint8_t aclass, uint8_t atype = OBJ_RANDOM,
-                        unrand_special_type specialness = UNRANDSPEC_EITHER,
                         bool in_abyss = false);
 
 typedef FixedVector< int, ART_PROPERTIES >  artefact_properties_t;
@@ -155,9 +147,6 @@ bool randart_is_bad( const item_def &item, artefact_properties_t &proprt );
 int find_unrandart_index(const item_def& artefact);
 
 unrandart_entry* get_unrand_entry(int unrand_index);
-
-unrand_special_type get_unrand_specialness(int unrand_index);
-unrand_special_type get_unrand_specialness(const item_def &item);
 
 void artefact_set_properties( item_def              &item,
                               const artefact_properties_t &proprt );

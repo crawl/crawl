@@ -1,12 +1,8 @@
-/*
- *  File:       spells3.h
- *  Summary:    Implementations of some additional spells.
- *  Written by: Linley Henzell
- */
+#ifndef SPL_SUMMONING
+#define SPL_SUMMONING
 
-
-#ifndef SPELLS3_H
-#define SPELLS3_H
+#include "enum.h"
+#include "itemprop-enum.h"
 
 //Bitfield for animate dead messages
 #define DEAD_ARE_WALKING 1
@@ -16,26 +12,30 @@
 #define DEAD_ARE_HOPPING 16
 #define DEAD_ARE_FLOATING 32
 
-#include "itemprop-enum.h"
+bool summon_animals(int pow);
+bool cast_summon_butterflies(int pow, god_type god = GOD_NO_GOD);
+bool cast_summon_small_mammals(int pow, god_type god = GOD_NO_GOD);
 
-class dist;
-struct bolt;
+bool item_is_snakable(const item_def& item);
+bool cast_sticks_to_snakes(int pow, god_type god = GOD_NO_GOD);
 
-bool allow_control_teleport(bool quiet = false);
-int airstrike(int pow, const dist &beam);
-bool cast_bone_shards(int power, bolt &);
-
-bool cast_selective_amnesia(bool force);
-bool cast_smiting(int power, const coord_def& where);
-bool entomb(int pow);
-bool cast_imprison(int pow, monsters *monster, int source);
-bool project_noise();
-bool detect_curse(int scroll, bool suppress_msg);
-
-int portal();
-bool recall(int type_recalled);
-bool remove_curse(bool suppress_msg);
-bool cast_sublimation_of_blood(int pow);
+bool cast_summon_scorpions(int pow, god_type god = GOD_NO_GOD);
+bool cast_summon_swarm(int pow, god_type god = GOD_NO_GOD);
+bool cast_call_canine_familiar(int pow, god_type god = GOD_NO_GOD);
+bool cast_summon_elemental(int pow, god_type god = GOD_NO_GOD,
+                           monster_type restricted_type = MONS_NO_MONSTER,
+                           int unfriendly = 2, int horde_penalty = 0);
+bool cast_summon_ice_beast(int pow, god_type god = GOD_NO_GOD);
+bool cast_summon_ugly_thing(int pow, god_type god = GOD_NO_GOD);
+bool cast_summon_dragon(int pow, god_type god = GOD_NO_GOD);
+bool summon_berserker(int pow, god_type god = GOD_NO_GOD, int spell = 0,
+                      bool force_hostile = false);
+bool summon_holy_warrior(int pow, god_type god = GOD_NO_GOD, int spell = 0,
+                         bool force_hostile = false, bool permanent = false,
+                         bool quiet = false);
+bool cast_tukimas_dance(int pow, god_type god = GOD_NO_GOD,
+                        bool force_hostile = false);
+bool cast_conjure_ball_lightning(int pow, god_type god = GOD_NO_GOD);
 
 bool cast_call_imp(int pow, god_type god = GOD_NO_GOD);
 bool summon_lesser_demon(int pow, god_type god = GOD_NO_GOD, int spell = 0,
@@ -67,12 +67,7 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
 bool cast_simulacrum(int pow, god_type god = GOD_NO_GOD);
 bool cast_twisted_resurrection(int pow, god_type god = GOD_NO_GOD);
 bool cast_haunt(int pow, const coord_def& where, god_type god = GOD_NO_GOD);
-bool cast_death_channel(int pow, god_type god = GOD_NO_GOD);
 
-void you_teleport();
-void you_teleport_now(bool allow_control,
-                      bool new_abyss_area = false,
-                      bool wizard_tele = false);
-bool you_teleport_to(const coord_def where,
-                     bool move_monsters = false);
+void abjuration(int pow);
+
 #endif

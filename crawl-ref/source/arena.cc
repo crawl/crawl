@@ -7,8 +7,6 @@
 
 #include "arena.h"
 
-#include "areas.h"
-#include "artefact.h"
 #include "cio.h"
 #include "colour.h"
 #include "command.h"
@@ -34,7 +32,7 @@
 #include "mon-stuff.h"
 #include "ng-init.h"
 #include "options.h"
-#include "spl-mis.h"
+#include "spl-miscast.h"
 #include "spl-util.h"
 #include "state.h"
 #ifdef USE_TILE

@@ -38,7 +38,6 @@
 
 #include "abyss.h"
 #include "act-iter.h"
-#include "areas.h"
 #include "artefact.h"
 #include "chardump.h"
 #include "cloud.h"
@@ -59,7 +58,6 @@
 #include "jobs.h"
 #include "kills.h"
 #include "libutil.h"
-#include "losglobal.h"
 #include "macro.h"
 #include "mapmark.h"
 #include "message.h"
@@ -71,7 +69,6 @@
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "mon-transit.h"
-#include "newgame.h"
 #include "notes.h"
 #include "options.h"
 #include "output.h"
@@ -90,7 +87,6 @@
 #include "terrain.h"
 #include "travel.h"
 #include "hints.h"
-#include "view.h"
 #include "viewgeom.h"
 
 #ifdef TARGET_OS_WINDOWS

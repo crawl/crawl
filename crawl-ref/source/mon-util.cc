@@ -19,8 +19,9 @@
 #include "debug.h"
 #include "directn.h"
 #include "env.h"
-#include "fprop.h"
 #include "fight.h"
+#include "food.h"
+#include "fprop.h"
 #include "ghost.h"
 #include "goditem.h"
 #include "itemname.h"
@@ -608,7 +609,7 @@ bool mons_is_native_in_branch(const monsters *monster,
 
 bool mons_is_poisoner(const monsters *mon)
 {
-    if (mons_corpse_effect(mon->type) == CE_POISONOUS)
+    if (chunk_is_poisonous(mons_corpse_effect(mon->type)))
         return (true);
 
     if (mon->has_attack_flavour(AF_POISON)
@@ -3200,11 +3201,6 @@ bool mons_class_can_pass(int mc, const dungeon_feature_type grid)
     return (!feat_is_solid(grid));
 }
 
-bool mons_can_pass(const monsters *mon, dungeon_feature_type grid)
-{
-    return (mons_class_can_pass(mons_base_type(mon), grid));
-}
-
 static bool _mons_can_open_doors(const monsters *mon)
 {
     return (mons_itemuse(mon) >= MONUSE_OPEN_DOORS);
@@ -3255,7 +3251,7 @@ bool mons_can_eat_door(const monsters *mon, const coord_def& pos)
 
 static bool _mons_can_pass_door(const monsters *mon, const coord_def& pos)
 {
-    return (mons_can_pass(mon, DNGN_FLOOR)
+    return (mon->can_pass_through_feat(DNGN_FLOOR)
             && (mons_can_open_door(mon, pos)
                 || mons_can_eat_door(mon, pos)));
 }

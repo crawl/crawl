@@ -48,7 +48,6 @@
 #include "stuff.h"
 #include "transform.h"
 #include "hints.h"
-#include "view.h"
 #include "xom.h"
 
 static int _body_covered();
@@ -1906,8 +1905,8 @@ bool balance_demonic_guardian()
 void check_demonic_guardian()
 {
     const int mutlevel = player_mutation_level(MUT_DEMONIC_GUARDIAN);
-    if (you.duration[DUR_DEMONIC_GUARDIAN] == 0
-        && balance_demonic_guardian())
+    if (balance_demonic_guardian() &&
+        you.duration[DUR_DEMONIC_GUARDIAN] == 0)
     {
         const monster_type disallowed[] = { MONS_NEQOXEC, MONS_YNOXINUL, MONS_HELLWING,
                                             MONS_BLUE_DEATH, MONS_GREEN_DEATH,
@@ -1933,7 +1932,7 @@ void check_demonic_guardian()
         menv[guardian].flags |= MF_NO_REWARD;
         menv[guardian].flags |= MF_DEMONIC_GUARDIAN;
 
-        you.duration[DUR_DEMONIC_GUARDIAN] = (mutlevel+1)*3*10;
+        you.duration[DUR_DEMONIC_GUARDIAN] = 100 + random2(200);
     }
 }
 

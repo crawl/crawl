@@ -156,7 +156,7 @@ static void _jobs_stat_init(job_type which_job)
     case JOB_CHAOS_KNIGHT:      s =  4; i =  4; d =  4; hp = 13; mp = 1; break;
 
     case JOB_REAVER:            s =  5; i =  5; d =  2; hp = 13; mp = 1; break;
-    case JOB_HEALER:            s =  5; i =  5; d =  2; hp = 13; mp = 1; break;
+    case JOB_HEALER:            s =  5; i =  5; d =  2; hp = 13; mp = 2; break;
     case JOB_PRIEST:            s =  5; i =  4; d =  3; hp = 12; mp = 1; break;
 
     case JOB_ASSASSIN:          s =  3; i =  3; d =  6; hp = 12; mp = 0; break;
@@ -642,14 +642,13 @@ static void _give_items_skills(const newgame_def& ng)
         you.religion = GOD_ELYVILON;
         you.piety = 55;
 
-        you.equip[EQ_WEAPON] = -1; // Healers fight unarmed.
+        you.equip[EQ_WEAPON] = -1;
 
         newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         newgame_make_item(1, EQ_NONE, OBJ_POTIONS, POT_HEALING);
         newgame_make_item(2, EQ_NONE, OBJ_POTIONS, POT_HEAL_WOUNDS);
 
         you.skills[SK_FIGHTING]       = 2;
-        you.skills[SK_UNARMED_COMBAT] = 3;
         you.skills[SK_DODGING]        = 1;
         you.skills[SK_INVOCATIONS]    = 4;
         break;
@@ -1221,8 +1220,12 @@ static void _give_starting_food()
     }
 
     // Give another one for hungry species.
-    if (player_mutation_level(MUT_FAST_METABOLISM))
+    // And healers, to give pacifists a better chance. [rob]
+    if (player_mutation_level(MUT_FAST_METABOLISM)
+        || you.char_class == JOB_HEALER)
+    {
         item.quantity = 2;
+    }
 
     const int slot = find_free_slot(item);
     you.inv[slot]  = item;       // will ASSERT if couldn't find free slot

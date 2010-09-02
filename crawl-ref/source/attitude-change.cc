@@ -11,8 +11,6 @@
 #include "coordit.h"
 #include "database.h"
 #include "env.h"
-#include "files.h"
-#include "godabil.h"
 #include "goditem.h"
 #include "itemprop.h"
 #include "message.h"

@@ -16,11 +16,11 @@
 #include <cmath>
 
 #include "abyss.h"
+#include "acquire.h"
 #include "artefact.h"
 #include "branch.h"
 #include "chardump.h"
 #include "cloud.h"
-#include "colour.h"
 #include "coord.h"
 #include "coordit.h"
 #include "defines.h"
@@ -58,8 +58,8 @@
 #include "player.h"
 #include "random.h"
 #include "religion.h"
-#include "spells3.h"
 #include "spl-book.h"
+#include "spl-transloc.h"
 #include "spl-util.h"
 #include "sprint.h"
 #include "state.h"
@@ -940,6 +940,19 @@ int dgn_count_disconnected_zones(bool choose_stairless,
 {
     return process_disconnected_zones(0, 0, GXM-1, GYM-1, choose_stairless,
                                       fill);
+}
+
+static void _fixup_hell_stairs()
+{
+    for (int i = 0; i < GXM; i++)
+        for (int j = 0; j < GYM; j++)
+        {
+            if (grd[i][j] >= DNGN_STONE_STAIRS_UP_I
+                && grd[i][j] <= DNGN_ESCAPE_HATCH_UP)
+            {
+                grd[i][j] = DNGN_ENTER_HELL;
+            }
+        }
 }
 
 static void _fixup_pandemonium_stairs()
@@ -1849,7 +1862,7 @@ static void _dgn_verify_connectivity(unsigned nvaults)
 // * A vector, with one cell per dungeon level (unset if there's no
 //   overflow temples on that level).
 //
-// * The cell of the previous vector is a vector, with one overlfow
+// * The cell of the previous vector is a vector, with one overflow
 //   temple definition per cell.
 //
 // * The cell of the previous vector is a hash table, containing the
@@ -2214,6 +2227,9 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
     // Translate stairs for pandemonium levels.
     if (level_type == LEVEL_PANDEMONIUM)
         _fixup_pandemonium_stairs();
+
+    if (player_in_hell())
+        _fixup_hell_stairs();
 }                               // end builder()
 
 
@@ -2661,7 +2677,7 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
 {
     if (!minivault && player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
     {
-        // Temple vault determined at new game tiem.
+        // Temple vault determined at new game time.
         const std::string name = you.props[TEMPLE_MAP_KEY];
 
         // Tolerate this for a little while, for old games.

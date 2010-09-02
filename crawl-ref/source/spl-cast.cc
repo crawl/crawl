@@ -17,7 +17,6 @@
 #include "areas.h"
 #include "beam.h"
 #include "colour.h"
-#include "coord.h"
 #include "coordit.h"
 #include "describe.h"
 #include "directn.h"
@@ -30,7 +29,6 @@
 #include "goditem.h"
 #include "hints.h"
 #include "invent.h"
-#include "it_use2.h"
 #include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -51,14 +49,18 @@
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
-#include "skills2.h"
-#include "spells1.h"
-#include "spells2.h"
-#include "spells3.h"
-#include "spells4.h"
 #include "spl-book.h"
-#include "spl-mis.h"
+#include "spl-clouds.h"
+#include "spl-damage.h"
+#include "spl-goditem.h"
+#include "spl-miscast.h"
+#include "spl-monench.h"
+#include "spl-other.h"
+#include "spl-selfench.h"
+#include "spl-summoning.h"
+#include "spl-transloc.h"
 #include "spl-util.h"
+#include "spl-wpnench.h"
 #include "spl-zap.h"
 #include "sprint.h"
 #include "state.h"
@@ -1810,7 +1812,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_STONEMAIL:
-        stone_scales(powc);
+        stonemail(powc);
         break;
 
     case SPELL_CONDENSATION_SHIELD:

@@ -26,8 +26,8 @@
 #include "output.h"
 #include "place.h"
 #include "random.h"
-#include "spells1.h"
-#include "spells3.h"
+#include "spl-clouds.h"
+#include "spl-transloc.h"
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
@@ -499,8 +499,10 @@ void up_stairs(dungeon_feature_type force_stair,
     // Up and down both work for portals.
     if (feat_is_bidirectional_portal(stair_find))
     {
-        down_stairs(force_stair, entry_cause);
-        return;
+        if (!(stair_find == DNGN_ENTER_HELL && player_in_hell())) {
+            down_stairs(force_stair, entry_cause);
+            return;
+        }
     }
     // Probably still need this check here (teleportation) -- bwr
     else if (feat_stair_direction(stair_find) != CMD_GO_UPSTAIRS)
@@ -853,7 +855,10 @@ void down_stairs(dungeon_feature_type force_stair,
     // Up and down both work for portals.
     if (feat_is_bidirectional_portal(stair_find))
     {
-        ;
+        if (stair_find == DNGN_ENTER_HELL && player_in_hell()) {
+            up_stairs(force_stair, entry_cause);
+            return;
+        }
     }
     // Probably still need this check here (teleportation) -- bwr
     else if (feat_stair_direction(stair_find) != CMD_GO_DOWNSTAIRS && !shaft)

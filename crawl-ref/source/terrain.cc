@@ -34,7 +34,7 @@
 #include "player.h"
 #include "random.h"
 #include "religion.h"
-#include "spells3.h"
+#include "spl-transloc.h"
 #include "stuff.h"
 #include "env.h"
 #ifdef USE_TILE
