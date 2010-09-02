@@ -2252,7 +2252,7 @@ void unmarshallItem(reader &th, item_def &item)
 #define MAP_SERIALIZE_FLAGS_32 3
 
 #define MAP_SERIALIZE_FEATURE 4
-#define MAP_SERIALIZE_FEATURE_COLOR 8
+#define MAP_SERIALIZE_FEATURE_COLOUR 8
 #define MAP_SERIALIZE_ITEM 0x10
 #define MAP_SERIALIZE_CLOUD 0x20
 #define MAP_SERIALIZE_MONSTER 0x40
@@ -2272,7 +2272,7 @@ void marshallMapCell(writer &th, const map_cell &cell)
         flags |= MAP_SERIALIZE_FEATURE;
 
     if (cell.feat_colour())
-        flags |= MAP_SERIALIZE_FEATURE_COLOR;
+        flags |= MAP_SERIALIZE_FEATURE_COLOUR;
 
     if (cell.cloud() != CLOUD_NONE)
         flags |= MAP_SERIALIZE_CLOUD;
@@ -2301,7 +2301,7 @@ void marshallMapCell(writer &th, const map_cell &cell)
     if (flags & MAP_SERIALIZE_FEATURE)
         marshallUnsigned(th, cell.feat());
 
-    if (flags & MAP_SERIALIZE_FEATURE_COLOR)
+    if (flags & MAP_SERIALIZE_FEATURE_COLOUR)
         marshallUnsigned(th, cell.feat_colour());
 
     if (flags & MAP_SERIALIZE_CLOUD)
@@ -2342,7 +2342,7 @@ void unmarshallMapCell(reader &th, map_cell& cell)
     if (flags & MAP_SERIALIZE_FEATURE)
         feature = (dungeon_feature_type)unmarshallUnsigned(th);
 
-    if (flags & MAP_SERIALIZE_FEATURE_COLOR)
+    if (flags & MAP_SERIALIZE_FEATURE_COLOUR)
         feat_colour = unmarshallUnsigned(th);
 
     cell.set_feature(feature, feat_colour);
