@@ -2645,7 +2645,7 @@ void update_level(long elapsedTime)
 #endif
 
     update_corpses(elapsedTime);
-    shoals_apply_tides(turns, true);
+    shoals_apply_tides(turns, true, turns < 5);
     timeout_tombs(turns);
     recharge_rods(turns, true);
 

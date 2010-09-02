@@ -49,7 +49,6 @@
 #ifdef USE_TILE
  #include "tileview.h"
 #endif
-#include "transform.h"
 #include "view.h"
 #include "viewchar.h"
 
@@ -263,7 +262,7 @@ static void _post_init(bool newc)
 
     tiles.resize();
 #endif
-    you.symbol = transform_mons();
+    update_player_symbol();
 
     draw_border();
     new_level();

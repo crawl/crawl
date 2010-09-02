@@ -3201,11 +3201,6 @@ bool mons_class_can_pass(int mc, const dungeon_feature_type grid)
     return (!feat_is_solid(grid));
 }
 
-bool mons_can_pass(const monsters *mon, dungeon_feature_type grid)
-{
-    return (mons_class_can_pass(mons_base_type(mon), grid));
-}
-
 static bool _mons_can_open_doors(const monsters *mon)
 {
     return (mons_itemuse(mon) >= MONUSE_OPEN_DOORS);
@@ -3256,7 +3251,7 @@ bool mons_can_eat_door(const monsters *mon, const coord_def& pos)
 
 static bool _mons_can_pass_door(const monsters *mon, const coord_def& pos)
 {
-    return (mons_can_pass(mon, DNGN_FLOOR)
+    return (mon->can_pass_through_feat(DNGN_FLOOR)
             && (mons_can_open_door(mon, pos)
                 || mons_can_eat_door(mon, pos)));
 }
