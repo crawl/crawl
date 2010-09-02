@@ -261,8 +261,8 @@ MONS:   big kobold / kobold demonologist
 MONS:   deep elf fighter / w:5 deep elf knight / w:3 deep elf mage /\
         w:2 deep elf priest
 MONS:   Ijyb / Blork the Orc / Urug / Erolcha / Snorg / Terence / Jessica /\
-        Sigmund / Psyche / Erica / Norbert / Agnes / Maud / Louise / Rupert /\
-        Wayne / Duane / Norris / goblin
+        Sigmund / Psyche / Erica / Agnes / Maud / Louise / Rupert /\
+        Wayne / Norris / goblin
 KITEM:  ! = any potion / potion of confusion, \
             any potion / potion of paralysis, any potion / potion of slowing
 KITEM:  $ = q:132 gold / q:66 gold / q:33 gold

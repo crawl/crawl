@@ -87,10 +87,6 @@ Dowan
 
 A beautiful but vain elf with an aptitude for magic and little else. His skills are the perfect complement of his twin sister Duvessa's fighting prowess.
 %%%%
-Duane
-
-A mercenary whose only significant trait is his unusually large ears. He was hired to guard something (or possibly someone), but who or what that is, he can't tell you. If he did, he'd have to kill you. In fact, he'd like to just kill you anyway.
-%%%%
 Duvessa
 
 A plain-looking elven fighter who is technically brilliant in many forms of combat, but over-confident because of it. She is complemented by the magical skills of her twin brother, Dowan.
@@ -124,10 +120,6 @@ An apprentice summoner with a flowing moustache. He has funny ideas about honour
 Frances
 
 A stout warrior who once bested a powerful lord of Pandemonium in combat, gaining control over the demon's realm and thanes. The battle left her with a deep facial scar, one that she carries as a badge of honour rather than a symbol of shame.
-%%%%
-Francis
-
-A wizened spellcaster.
 %%%%
 Frederick
 
@@ -254,10 +246,6 @@ A black centaur warrior with a malicious look in the eyes.
 Nikola
 
 A brilliant scientist obsessed with electricity. In his attempts to perfect his electric golem, he was involved in a terrible accident, and now phases in and out of reality.
-%%%%
-Norbert
-
-A skilled warrior, looking to further develop his reputation as a great slayer of monsters. Be warned: he defines 'monster' rather more liberally than most dictionaries.
 %%%%
 Norris
 

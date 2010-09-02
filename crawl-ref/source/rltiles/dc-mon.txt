@@ -373,12 +373,10 @@ molten_gargoyle MONS_MOLTEN_GARGOYLE
 # Unique humans, in alphabetical order
 agnes MONS_AGNES
 donald MONS_DONALD
-duane MONS_DUANE
 edmund MONS_EDMUND
 erica MONS_ERICA
 eustachio MONS_EUSTACHIO
 frances MONS_FRANCES
-francis MONS_FRANCIS
 frederick MONS_FREDERICK
 harold MONS_HAROLD
 jessica MONS_JESSICA
@@ -391,7 +389,6 @@ margery MONS_MARGERY
 maud MONS_MAUD
 maurice MONS_MAURICE
 nikola MONS_NIKOLA
-norbert MONS_NORBERT
 norris MONS_NORRIS
 psyche MONS_PSYCHE
 rupert MONS_RUPERT
