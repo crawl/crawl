@@ -325,6 +325,10 @@ static void _launch_game_loop()
         {
             end(1, false, fe.msg.c_str());
         }
+        catch(short_read_exception &E)
+        {
+            end(1, false, "Error: truncation inside the save file.\n");
+        }
     } while (Options.restart_after_game
              && game_ended
              && !crawl_state.seen_hups);
