@@ -196,9 +196,15 @@ struct map_cell
         return _cloud;
     }
 
-    void set_cloud(cloud_type ncloud)
+    unsigned cloud_colour() const
+    {
+        return _cloud_colour;
+    }
+
+    void set_cloud(cloud_type ncloud, unsigned colour = 0)
     {
         _cloud = ncloud;
+        _cloud_colour = colour;
     }
 
     bool known() const
@@ -236,6 +242,7 @@ private:
         monster_type detected;
     } _mons;
     cloud_type _cloud;
+    uint8_t _cloud_colour;
 };
 
 void set_terrain_mapped( int x, int y );

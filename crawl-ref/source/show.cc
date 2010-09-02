@@ -229,7 +229,7 @@ static void _update_cloud(int cloudno)
 {
     const coord_def gp = env.cloud[cloudno].pos;
     cloud_type cloud = env.cloud[cloudno].type;
-    env.map_knowledge(gp).set_cloud(cloud);
+    env.map_knowledge(gp).set_cloud(cloud, get_cloud_colour(cloudno));
 
 #ifdef USE_TILE
     tile_place_cloud(gp, env.cloud[cloudno]);
