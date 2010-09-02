@@ -815,7 +815,8 @@ KMONS: a = patrolling Jozef hd:15 hp:100 \
 KMONS: b = patrolling Joseph hd:5 hp:150 ; ankus ego:freezing \
  . blowgun . needle ego:curare q:7
 : else
-KMONS: a = patrolling Francis hp:100 ; war axe ego:holy_wrath
+# changed Francis to Wayne for now
+KMONS: a = patrolling Wayne hp:100 ; war axe ego:holy_wrath
 KMONS: b = patrolling Frances hp:150 ; war axe ego:holy_wrath \
  . blowgun . needle ego:curare q:7
 :end

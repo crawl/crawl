@@ -125,10 +125,6 @@ NAME:   uniq_donald
 DEPTH:  Swamp, Snake, Shoals, Slime, Crypt:1-4, Blade, Elf:2-6, Orc:3-4
 : place_unique(_G, "Donald")
 
-NAME:   uniq_duane
-DEPTH:  17-19, 20-27, !Lair, !Slime
-: place_unique(_G, "Duane")
-
 NAME:   uniq_duvessa
 DEPTH:  4-7, 8-9, !Lair, !Slime
 : place_unique(_G, "Duvessa band")
@@ -152,10 +148,6 @@ DEPTH:  10-13, 14-16, !Lair, !Slime
 NAME:   uniq_frances
 DEPTH:  17-19, 20-27, !Lair, !Slime
 : place_unique(_G, "Frances")
-
-NAME:   uniq_francis
-DEPTH:  17-19, 20-27, !Lair, !Slime
-: place_unique(_G, "Francis")
 
 NAME:   uniq_frederick
 DEPTH:  20-27, !Lair, !Slime
@@ -244,10 +236,6 @@ DEPTH:  11-17, !Lair, !Slime
 NAME:   uniq_nikola
 DEPTH:  14-16, 17-19, !Lair, !Slime
 : place_unique(_G, "Nikola")
-
-NAME:   uniq_norbert
-DEPTH:  10-13, 14-16, !Lair, !Slime
-: place_unique(_G, "Norbert")
 
 NAME:   uniq_norris
 DEPTH:  17-19, !Lair, !Slime

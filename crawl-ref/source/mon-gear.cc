@@ -292,7 +292,6 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     case MONS_OGRE_MAGE:
     case MONS_NAGA_WARRIOR:
     case MONS_GREATER_NAGA:
-    case MONS_DUANE:
         item_race = MAKE_ITEM_NO_RACE;
         if (!one_chance_in(5))
         {
@@ -482,7 +481,6 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
 
     case MONS_DANCING_WEAPON:   // give_level may have been adjusted above
     case MONS_FRANCES:
-    case MONS_FRANCIS:
     case MONS_HAROLD:
     case MONS_LOUISE:
     case MONS_NAGA:
@@ -564,7 +562,6 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         item_race = MAKE_ITEM_ORCISH;
         // deliberate fall-through
 
-    case MONS_NORBERT:
     case MONS_JOZEF:
     case MONS_VAULT_GUARD:
     case MONS_VAMPIRE_KNIGHT:
@@ -1425,7 +1422,6 @@ void give_shield(monsters *mon, int level)
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_SHIELD,
                               level * 2 + 1, MAKE_ITEM_DWARVEN, 1);
         break;
-    case MONS_NORBERT:
     case MONS_LOUISE:
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_LARGE_SHIELD,
                               level * 2 + 1, MAKE_ITEM_RANDOM_RACE, 1);
@@ -1510,7 +1506,6 @@ void give_armour(monsters *mon, int level)
     case MONS_HAROLD:
     case MONS_JOSEPHINE:
     case MONS_JOZEF:
-    case MONS_NORBERT:
     case MONS_PSYCHE:
         if (x_chance_in_y(2, 5))
         {
@@ -1551,7 +1546,6 @@ void give_armour(monsters *mon, int level)
         item_race = MAKE_ITEM_ORCISH;
         // deliberate fall through {dlb}
 
-    case MONS_DUANE:
     case MONS_EDMUND:
     case MONS_RUPERT:
     {
@@ -1766,7 +1760,6 @@ void give_armour(monsters *mon, int level)
         // fall-through
     case MONS_AGNES:
     case MONS_FRANCES:
-    case MONS_FRANCIS:
     case MONS_NECROMANCER:
     case MONS_VAMPIRE_MAGE:
     case MONS_PIKEL:
