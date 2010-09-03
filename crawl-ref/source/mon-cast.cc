@@ -1060,8 +1060,11 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
         return (false);
 
     // Yes, there is a logic to this ordering {dlb}:
+    // .. berserk check is necessary for out-of-sequence actions like emergency
+    // slot spells {blue}
     if (monster->asleep()
         || monster->submerged()
+        || monster->berserk()
         || (!monster->can_use_spells()
             && !spellcasting_poly
             && draco_breath == SPELL_NO_SPELL))
