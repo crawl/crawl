@@ -719,7 +719,8 @@ len_t chunk_reader::read(void *data, len_t len)
         return 0;
 
 #ifdef USE_ZLIB
-    ASSERT(len > 0);
+    if (!len)
+        return 0;
     if (eof)
         return 0;
 
