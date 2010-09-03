@@ -1006,8 +1006,8 @@ void tilep_print_parts(char *fbuf, const dolls_data &doll)
         *ptr = ':';
         ptr++;
     }
-    ptr--; // erase the last ':'
-    *ptr = 0;
+    ptr[0] = '\n'; // erase the last ':'
+    ptr[1] = 0;
 }
 
 #endif
