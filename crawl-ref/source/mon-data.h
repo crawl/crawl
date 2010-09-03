@@ -4824,8 +4824,8 @@ static monsterentry mondata[] = {
 // non-human uniques
 {
     MONS_MENNAS, 'A', ETC_SILVER, "Mennas",
-    M_FIGHTER | M_SPELLCASTER | M_SEE_INVIS | M_SPEAKS | M_GLOWS_LIGHT
-        | M_UNIQUE,
+    M_FIGHTER | M_SPELLCASTER | M_ACTUAL_SPELLS | M_SEE_INVIS | M_SPEAKS
+        | M_GLOWS_LIGHT | M_UNIQUE,
     MR_RES_POISON | MR_RES_ELEC,
     0, 10, MONS_ANGEL, MONS_ANGEL, MH_HOLY, -8,
     { {AT_HIT, AF_PLAIN, 30}, {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK,

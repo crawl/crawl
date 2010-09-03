@@ -315,6 +315,11 @@ NAME:   uniq_xtahua
 DEPTH:  20-27, !Lair, !Slime
 : place_unique(_G, "Xtahua")
 
+NAME:   uniq_mennas
+# would be cool to get him wandering around Pan too
+DEPTH:  20-27, !Lair, !Slime
+: place_unique(_G, "Mennas")
+
 
 ################################################################################
 # Non-dungeon Uniques
