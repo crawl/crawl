@@ -187,34 +187,6 @@ int actor::body_weight(bool base) const
     }
 }
 
-bool actor::check_train_armour(int amount)
-{
-    if (const item_def *armour = slot_item(EQ_BODY_ARMOUR, false))
-    {
-        // XXX: animal skin; should be a better way to get at that.
-        const int mass_base = 100;
-        const int mass = std::max(item_mass(*armour) - mass_base, 0);
-        if (x_chance_in_y(mass, 50 * skill(SK_ARMOUR)))
-        {
-            this->exercise(SK_ARMOUR, amount);
-            return (true);
-        }
-    }
-    return (false);
-}
-
-bool actor::check_train_dodging(int amount)
-{
-    const item_def *armour = slot_item(EQ_BODY_ARMOUR, false);
-    const int mass = armour? item_mass(*armour) : 0;
-    if (!x_chance_in_y(mass, 800))
-    {
-        this->exercise(SK_DODGING, amount);
-        return (true);
-    }
-    return (false);
-}
-
 kill_category actor_kill_alignment(const actor *act)
 {
     return (act? act->kill_alignment() : KC_OTHER);
