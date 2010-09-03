@@ -5599,11 +5599,6 @@ void player::shield_block_succeeded(actor *foe)
         exercise(SK_SHIELDS, 1);
 }
 
-void player::exercise(skill_type sk, int qty)
-{
-    ::exercise(sk, qty);
-}
-
 int player::skill(skill_type sk, bool bump) const
 {
     return (bump? skill_bump(sk) : skills[sk]);
@@ -6810,4 +6805,34 @@ void player::goto_place(const level_id &lid)
         where_are_you = static_cast<branch_type>(lid.branch);
         absdepth0 = absdungeon_depth(lid.branch, lid.depth);
     }
+}
+
+bool player::check_train_armour(int amount)
+{
+    ASSERT(this == &you);
+    if (const item_def *armour = slot_item(EQ_BODY_ARMOUR, false))
+    {
+        // XXX: animal skin; should be a better way to get at that.
+        const int mass_base = 100;
+        const int mass = std::max(item_mass(*armour) - mass_base, 0);
+        if (x_chance_in_y(mass, 50 * skill(SK_ARMOUR)))
+        {
+            exercise(SK_ARMOUR, amount);
+            return (true);
+        }
+    }
+    return (false);
+}
+
+bool player::check_train_dodging(int amount)
+{
+    ASSERT(this == &you);
+    const item_def *armour = slot_item(EQ_BODY_ARMOUR, false);
+    const int mass = armour? item_mass(*armour) : 0;
+    if (!x_chance_in_y(mass, 800))
+    {
+        exercise(SK_DODGING, amount);
+        return (true);
+    }
+    return (false);
 }
