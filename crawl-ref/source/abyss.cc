@@ -1069,6 +1069,9 @@ struct corrupt_env
 static void _place_corruption_seed(const coord_def &pos, int duration)
 {
     env.markers.add(new map_corruption_marker(pos, duration));
+    // Corruption markers don't need activation, though we might 
+    // occasionally miss other unactivated markers by clearing.
+    env.markers.clear_need_activate();
 }
 
 static void _initialise_level_corrupt_seeds(int power)
