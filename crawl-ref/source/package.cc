@@ -280,6 +280,7 @@ void package::finish_chunk(const std::string name, len_t at)
 {
     free_chunk(name);
     directory[name] = at;
+    dirty = true;
 }
 
 void package::free_chunk(const std::string name)
