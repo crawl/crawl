@@ -3576,6 +3576,7 @@ enum commandline_option_type
     CLO_EXTRA_OPT_FIRST,
     CLO_EXTRA_OPT_LAST,
     CLO_SPRINT_MAP,
+    CLO_EDIT_SAVE,
 
     CLO_NOPS
 };
@@ -3585,7 +3586,7 @@ static const char *cmd_ops[] = {
     "rcdir", "tscores", "vscores", "scorefile", "morgue", "macro",
     "mapstat", "arena", "test", "script", "builddb", "help", "version",
     "seed", "save-version", "sprint", "extra-opt-first", "extra-opt-last",
-    "sprint-map"
+    "sprint-map", "edit-save",
 };
 
 const int num_cmd_ops = CLO_NOPS;
@@ -3643,6 +3644,143 @@ static void _print_save_version(char *name)
         fprintf(stderr, "Error: %s\n", fe.msg.c_str());
     }
 }
+
+enum es_command_type
+{
+    ES_LS,
+    ES_RM,
+    ES_GET,
+    ES_PUT,
+    ES_REPACK,
+    NUM_ES
+};
+
+static struct es_command
+{
+    es_command_type cmd;
+    const char* name;
+    bool rw;
+    int min_args, max_args;
+} es_commands[] =
+{
+    { ES_LS,       "ls",   false, 0, 0, },
+    { ES_GET,      "get",  false, 1, 2, },
+    { ES_PUT,      "put",  true,  1, 2, },
+    { ES_RM,       "rm",   true,  1, 1, },
+};
+
+#define ERR(...) do { fprintf(stderr, __VA_ARGS__); return; } while(0)
+static void _edit_save(int argc, char **argv)
+{
+    if (argc <= 1 || !strcmp(argv[1], "help"))
+    {
+        printf("Usage: crawl --edit-save <name> <command>, where <command> may be:\n"
+               "  ls                        list the chunks\n"
+               "  get <chunk> [<file>]      write a chunk from <file> (default \"chunk\", \"-\" for stdout)\n"
+               "  put <chunk> [<file>]      extract a chunk to <file> (default \"chunk\", \"-\" for stdin)\n"
+               "  rm <chunk>                delete a chunk\n"
+               );
+        return;
+    }
+    const char *name = argv[0];
+    const char *cmdn = argv[1];
+
+    es_command_type cmd = NUM_ES;
+    bool rw;
+
+    for (unsigned int nc = 0; nc < ARRAYSZ(es_commands); nc++)
+        if (!strcmp(es_commands[nc].name, cmdn))
+        {
+            if (argc < es_commands[nc].min_args + 2)
+                ERR("Too few arguments for %s.\n", cmdn);
+            else if (argc > es_commands[nc].max_args + 2)
+                ERR("Too many arguments for %s.\n", cmdn);
+            cmd = es_commands[nc].cmd;
+            rw = es_commands[nc].rw;
+            break;
+        }
+    if (cmd == NUM_ES)
+        ERR("Unknown command: %s.\n", cmdn);
+
+    try
+    {
+        package save((get_savedir_filename(name, "", "") + SAVE_SUFFIX).c_str(), rw);
+
+        if (cmd == ES_LS)
+        {
+            std::vector<std::string> list = save.list_chunks();
+            for (size_t i = 0; i < list.size(); i++)
+                printf("%s\n", list[i].c_str());
+        }
+        else if (cmd == ES_GET)
+        {
+            const char *chunk = argv[2];
+            if (!*chunk || strlen(chunk) > 4)
+                ERR("Invalid chunk name \"%s\".\n", chunk);
+            if (!save.has_chunk(chunk))
+                ERR("No such chunk in the save file.\n");
+            chunk_reader inc(&save, chunk);
+
+            const char *file = (argc == 4) ? argv[3] : "chunk";
+            FILE *f;
+            if (strcmp(file, "-"))
+                f = fopen(file, "wb");
+            else
+                f = stdout;
+            if (!f)
+                sysfail("Can't open \"%s\" for writing", file);
+
+            char buf[16384];
+            while(size_t s = inc.read(buf, sizeof(buf)))
+                if (fwrite(buf, 1, s, f) != s)
+                    sysfail("Error writing \"%s\"", file);
+
+            if (f != stdout)
+                if (fclose(f))
+                    sysfail("Write error on close of \"%s\"", file);
+        }
+        else if (cmd == ES_PUT)
+        {
+            const char *chunk = argv[2];
+            if (!*chunk || strlen(chunk) > 4)
+                ERR("Invalid chunk name \"%s\".\n", chunk);
+
+            const char *file = (argc == 4) ? argv[3] : "chunk";
+            FILE *f;
+            if (strcmp(file, "-"))
+                f = fopen(file, "rb");
+            else
+                f = stdin;
+            if (!f)
+                sysfail("Can't read \"%s\"", file);
+            chunk_writer outc(&save, chunk);
+
+            char buf[16384];
+            while(size_t s = fread(buf, 1, sizeof(buf), f))
+                outc.write(buf, s);
+            if (ferror(f))
+                sysfail("Error reading \"%s\"", file);
+
+            if (f != stdin)
+                fclose(f);
+        }
+        else if (cmd == ES_RM)
+        {
+            const char *chunk = argv[2];
+            if (!*chunk || strlen(chunk) > 4)
+                ERR("Invalid chunk name \"%s\".\n", chunk);
+            if (!save.has_chunk(chunk))
+                ERR("No such chunk in the save file.\n");
+
+            save.delete_chunk(chunk);
+        }
+    }
+    catch (ext_fail_exception &fe)
+    {
+        fprintf(stderr, "Error: %s\n", fe.msg.c_str());
+    }
+}
+#undef ERR
 
 static bool _check_extra_opt(char* _opt)
 {
@@ -3971,6 +4109,14 @@ bool parse_args( int argc, char **argv, bool rc_only )
                 return (false);
 
             _print_save_version(next_arg);
+            end(0);
+
+        case CLO_EDIT_SAVE:
+            // Always parse.
+            if (!next_is_param)
+                return (false);
+
+            _edit_save(argc - current - 1, argv + current + 1);
             end(0);
 
         case CLO_SEED:
