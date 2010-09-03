@@ -1300,7 +1300,7 @@ ENDMAP
 # Gehenna 1, hellfire
 NAME: sprint_mu_gehenna_hellfire
 TAGS: sprint_mu_gehenna no_rotate no_hmirror no_vmirror no_dup
-KMONS: 1 = patrolling serpent of hell
+KMONS: 1 = patrolling the serpent of hell
 KFEAT: 1 = lava
 KMONS: 2 = hellion
 KMONS: 3 = fiend

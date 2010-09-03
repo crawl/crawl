@@ -2717,7 +2717,6 @@ int mons_gehenna_level(int mcls)
     case MONS_LICH:
     case MONS_PIT_FIEND:
     case MONS_REAPER:
-    case MONS_SERPENT_OF_HELL:
     case MONS_BONE_DRAGON:
     case MONS_SOUL_EATER:
     case MONS_SPECTRAL_WARRIOR:
@@ -2811,7 +2810,6 @@ int mons_gehenna_rare(int mcls)
         return 5;
 
     case MONS_ANCIENT_LICH:
-    case MONS_SERPENT_OF_HELL:
         return 4;
 
     default:

@@ -745,7 +745,7 @@ ENDMAP
 NAME:   geh_old
 ORIENT: encompass
 MONS:   Asmodeus, Fiend, Balrug, molten gargoyle
-MONS:   Serpent of Hell, random, random
+MONS:   the Serpent of Hell, random, random
 : geh_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -823,7 +823,7 @@ KMONS:  7 = molten gargoyle
 KMONS:  8 = imp
 # Place one Serpent in the inner circle.
 KFEAT:  H = lava
-KMONS:  H = Serpent of Hell
+KMONS:  H = the Serpent of Hell
 NSUBST: X = 1:H / *:l
 SUBST:  4 = 344567788
 SUBST:  % = $ |
