@@ -2897,7 +2897,7 @@ static int _check_adjacent(dungeon_feature_type feat, coord_def& delta)
                 // Already included in a gate, skip this door.
                 if (found_door)
                     continue;
-                    
+
                 // Check if it's part of a gate. If so, remember all its doors.
                 std::set<coord_def> all_door;
                 find_connected_identical(*ai, grd(*ai), all_door);

@@ -976,7 +976,7 @@ static void _mummy_curse(monsters* monster, killer_type killer, int index)
 
     if ((monster->type == MONS_MUMMY || monster->type == MONS_MENKAURE)
         && YOU_KILL(killer))
-    {        
+    {
         // Kiku protects you from ordinary mummy curses.
         if (you.religion == GOD_KIKUBAAQUDGHA && !player_under_penance()
             && you.piety >= piety_breakpoint(1))

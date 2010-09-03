@@ -8386,7 +8386,7 @@ static void _fixup_slime_hatch_dest(coord_def* pos)
         }
     }
     ASSERT(max_walls < 9);
-}    
+}
 
 coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
                                 coord_def base_pos, bool find_closest)

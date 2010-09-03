@@ -2134,7 +2134,7 @@ bool check_item_knowledge(bool quiet, bool inverted)
         {
             if (i == 2 && j >= NUM_RINGS && j < AMU_FIRST_AMULET)
                 continue;
-                
+
             if (inverted ? type_ids[i][j] != ID_KNOWN_TYPE
                          : type_ids[i][j] == ID_KNOWN_TYPE)
             {
@@ -2163,14 +2163,14 @@ bool check_item_knowledge(bool quiet, bool inverted)
 
     std::sort(items.begin(), items.end(), identified_item_names);
     InvMenu menu;
-        
+
     if (inverted)
         menu.set_title("Items not yet recognised: (toggle with -)");
     else if (has_unknown_items)
         menu.set_title("You recognise: (toggle with -)");
     else
         menu.set_title("You recognise all items:");
-                                             
+
     menu.set_flags(MF_NOSELECT);
     menu.set_type(MT_KNOW);
     menu.load_items(items, discoveries_item_mangle);
@@ -2185,7 +2185,7 @@ bool check_item_knowledge(bool quiet, bool inverted)
     }
     if (last_char == '-' && (inverted || has_unknown_items))
         check_item_knowledge(quiet, !inverted);
- 
+
     return (true);
 }
 
