@@ -1,3 +1,10 @@
+Stone Soup 0.7.2
+----------------
+* Fix a variety of crash bugs.
+* Update 0.7 changelog.
+* Fix weapon acquirement not considering some rare weapons.
+* A variety of other bug fixes.
+
 Stone Soup 0.7.1 (20100724)
 ---------------------------
 * Fix travel excludes not being saved.
