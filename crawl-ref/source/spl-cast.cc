@@ -549,6 +549,8 @@ void do_cast_spell_cmd(bool force)
         flush_input_buffer(FLUSH_ON_FAILURE);
 }
 
+static void exercise_spell(spell_type spell, bool success);
+
 // Returns false if spell failed, and true otherwise.
 bool cast_a_spell(bool check_range, spell_type spell)
 {
@@ -675,7 +677,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
             return (false);
         }
 
-        exercise_spell( spell, true, cast_result == SPRET_SUCCESS );
+        exercise_spell(spell, cast_result == SPRET_SUCCESS);
         did_god_conduct( DID_SPELL_CASTING, 1 + random2(5) );
     }
 
@@ -1960,7 +1962,7 @@ static spret_type _do_cast(spell_type spell, int powc,
     return (SPRET_SUCCESS);
 }
 
-void exercise_spell(spell_type spell, bool spc, bool success)
+static void exercise_spell(spell_type spell, bool success)
 {
     // (!success) reduces skill increase for miscast spells
     int skill;
@@ -2017,13 +2019,8 @@ void exercise_spell(spell_type spell, bool spc, bool success)
        spellcasting had also been generally exercised at the same time
        ****************************************************************** */
 
-    if (spc)
-    {
-        const int exercise_amount =
-            exercise(SK_SPELLCASTING, one_chance_in(3) ? 1
-                            : random2(1 + random2(diff)));
-        exer      += exercise_amount;
-    }
+    exer += exercise(SK_SPELLCASTING, one_chance_in(3) ? 1
+                                      : random2(1 + random2(diff)));
 
     // Avoid doubly rewarding spell practise in sprint
     // (by inflated XP and inflated piety gain)
