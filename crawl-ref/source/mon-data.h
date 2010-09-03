@@ -3438,10 +3438,10 @@ static monsterentry mondata[] = {
 
 // wraiths ('W')
 {
-    MONS_WIGHT, 'W', LIGHTGREY, "wight",
+    MONS_WIGHT, 'z', GREEN, "wight",
     M_NO_FLAGS,
     MR_RES_POISON | mrd(MR_RES_COLD, 2),
-    0, 16, MONS_WRAITH, MONS_WIGHT, MH_UNDEAD, -4,
+    0, 16, MONS_WIGHT, MONS_WIGHT, MH_UNDEAD, -4,
     { {AT_HIT, AF_DRAIN_XP, 8}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 3, 3, 5, 0 },
     4, 10, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,

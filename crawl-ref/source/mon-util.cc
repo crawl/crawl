@@ -3851,7 +3851,7 @@ mon_body_shape get_mon_shape(const int type)
     case 'y': // winged insects
         return (MON_SHAPE_INSECT_WINGED);
     case 'z': // small skeletons
-        if (type == MONS_SKELETAL_WARRIOR)
+        if (type == MONS_SKELETAL_WARRIOR || type == MONS_WIGHT)
             return (MON_SHAPE_HUMANOID);
         else
         {
