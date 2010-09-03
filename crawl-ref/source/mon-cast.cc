@@ -2521,6 +2521,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                                                 tomb_duration,
                                                 mon_index,
                                                 mon_index));
+            env.markers.clear_need_activate(); // doesn't need activation
         }
         return;
     }

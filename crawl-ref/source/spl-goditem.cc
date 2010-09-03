@@ -747,6 +747,7 @@ bool cast_imprison(int pow, monsters *monster, int source)
                                             tomb_duration,
                                             source,
                                             monster->mindex()));
+        env.markers.clear_need_activate(); // doesn't need activation
         return (true);
     }
 
