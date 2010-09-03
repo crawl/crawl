@@ -5,13 +5,13 @@
 #ifndef LIBUNIX_H
 #define LIBUNIX_H
 
+#ifndef O_BINARY
+#define O_BINARY 0
+#endif
+
 #ifndef USE_TILE
 
 // Some replacement routines missing in gcc
-
-#ifndef O_BINARY
-#define O_BINARY O_RDWR
-#endif
 
 #ifdef UNICODE_GLYPHS
 typedef unsigned int screen_buffer_t;
