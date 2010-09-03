@@ -62,7 +62,7 @@
 # weapon = (short sword | hand axe | spear | mace | trident | random)
 # book = (fire | ice | summ | random)
 # wand = (enslavement | confusion | magic darts | frost | flame | striking | random)
-# chaos_knight = (Xom | Makhleb | random)
+# chaos_knight = (Xom | Makhleb | Lugonu | random)
 # priest       = (Zin | Yredelemnul | Beogh | random)
 # species = (Human |...| Vampire | random)
 # job     = (Fighter |...| Wanderer | random)
