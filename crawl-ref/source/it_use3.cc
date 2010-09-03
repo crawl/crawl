@@ -303,7 +303,11 @@ static bool _evoke_horn_of_geryon(item_def &item)
     // Note: This assumes that the Vestibule has not been changed.
     bool rc = false;
 
-    if (player_in_branch( BRANCH_VESTIBULE_OF_HELL ))
+    if (silenced(you.pos())) {
+        mpr("You can't produce a sound!");
+        return false;
+    }
+    else if (player_in_branch( BRANCH_VESTIBULE_OF_HELL ))
     {
         mpr("You produce a weird and mournful sound.");
 
