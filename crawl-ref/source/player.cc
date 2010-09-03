@@ -4569,7 +4569,7 @@ void contaminate_player(int change, bool controlled, bool status_only, bool msg)
     int old_level  = get_contamination_level();
     int new_level  = 0;
 
-    you.magic_contamination = 
+    you.magic_contamination =
         std::max(0, std::min(250, you.magic_contamination + change));
 
     new_level = get_contamination_level();

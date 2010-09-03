@@ -784,7 +784,7 @@ static bool _player_vampire_draws_blood(const monsters* mon, const int damage,
         {
             food_value = 15 + random2avg(29, 2);
         }
-        
+
         // Bats get rather less nutrition out of it.
         if (player_in_bat_form())
             food_value /= 2;
@@ -935,10 +935,10 @@ bool melee_attack::player_attack()
     {
         print_wounds(defender->as_monster());
 
-	const int degree = player_mutation_level(MUT_CLAWS);
+        const int degree = player_mutation_level(MUT_CLAWS);
 
-	if (defender->can_bleed() && degree > 0)
-		defender->as_monster()->bleed(5 + roll_dice(degree, 3), degree);
+        if (defender->can_bleed() && degree > 0)
+            defender->as_monster()->bleed(5 + roll_dice(degree, 3), degree);
     }
 
     return (did_primary_hit || did_hit);

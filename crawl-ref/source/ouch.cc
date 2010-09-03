@@ -571,7 +571,7 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
                         remove_oldest_blood_potion(you.inv[i]);
                 }
             }
-            
+
             // Name destroyed items.
             // TODO: Combine messages using a vector.
             if (num_dest > 0)

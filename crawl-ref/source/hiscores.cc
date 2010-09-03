@@ -1264,7 +1264,7 @@ void scorefile_entry::init(time_t dt)
 
     birth_time = you.birth_time;     // start time of game
     death_time = (dt != 0 ? dt : time(NULL)); // end time of game
-        
+
     if (you.real_time != -1)
         real_time = you.real_time + long(death_time - you.start_time);
     else
