@@ -402,6 +402,7 @@ NSUBST: $ = 1:b / 1:s / *:|
 : acq_on_sight(_G, 'b', {"book","book","wand"})
 : acq_on_sight(_G, 's', {"staff","jewellery","jewellery"})
 KITEM: | = superb_item, superb_item, superb_item, gold
+KFEAT: b = floor
 COLOUR: # = yellow
 KFEAT: # = closed_door
 : lua_marker('#', props_marker {
