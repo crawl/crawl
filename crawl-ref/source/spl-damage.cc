@@ -833,14 +833,14 @@ static int _shatter_monsters(coord_def where, int pow, int, actor *)
         break;
 
     default:
-        if (mon->is_insubstantial()) // normal damage
+        if (mon->is_insubstantial()) // no damage
             dam_dice.num = 0;
+        else if (mons_flies(mon))    // 1/3 damage
+            dam_dice.num = 1;
         else if (mon->is_icy())      // 3/2 damage
             dam_dice.num = 4;
         else if (mon->is_skeletal()) // double damage
             dam_dice.num = 6;
-        else if (mons_flies(mon))    // 1/3 damage
-            dam_dice.num = 1;
         else
         {
             const bool petrifying = mon->petrifying();
