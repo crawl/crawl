@@ -87,9 +87,7 @@ function hell_branches_remaining()
 end
 
 function serpent_of_hell_setup(e)
-   crawl.mpr("hell branches remaining: " .. hell_branches_remaining())
    if crawl.one_chance_in(hell_branches_remaining()) then
-      crawl.mpr("placing the serpent")
       e.kmons('D = the Serpent of Hell')
    end
 end
