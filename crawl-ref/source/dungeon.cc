@@ -5370,6 +5370,11 @@ int dgn_place_monster(mons_spec &mspec,
         // Store any extra flags here.
         mg.extra_flags |= mspec.extra_monster_flags;
 
+        // have to do this before the monster is created, so things are
+        // initialized properly
+        if (mspec.props.exists("serpent_of_hell_flavour"))
+            mg.props["serpent_of_hell_flavour"] =
+                mspec.props["serpent_of_hell_flavour"].get_int();
         const int mindex = place_monster(mg, true);
         if (mindex != -1)
         {
