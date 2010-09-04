@@ -1243,22 +1243,24 @@ static bool _is_signature_weapon(monsters *monster, const item_def &weapon)
     // we are more interested in the brand, and the brand is *rare*.
     if (mons_is_unique(monster->type))
     {
-        // We might allow Sigmund to pick up a better scythe if he finds one...
+        // We might allow Sigmund to pick up a better scythe if he finds
+        // one...
         if (monster->type == MONS_SIGMUND)
             return (weapon.sub_type == WPN_SCYTHE);
 
         // Crazy Yiuf's got MONUSE_STARTING_EQUIPMENT right now, but
-        // in case that ever changes we don't want him to swap away
+        // in case that ever changes we don't want him to switch away
         // from his quarterstaff of chaos.
         if (monster->type == MONS_CRAZY_YIUF)
             return (false);
 
         // Distortion/chaos is immensely flavourful, and we shouldn't
-        // allow her to switch away from it.
+        // allow Psyche to switch away from it.
         if (monster->type == MONS_PSYCHE)
             return (false);
 
-        // Don't switch away from the customary scimitar of flaming.
+        // Don't switch Azrael away from the customary scimitar of
+        // flaming.
         if (monster->type == MONS_AZRAEL)
             return (false);
 
@@ -1272,6 +1274,9 @@ static bool _is_signature_weapon(monsters *monster, const item_def &weapon)
                     || weapon.sub_type == WPN_DIRE_FLAIL);
         }
 
+        // Pikel's got MONUSE_STARTING_EQUIPMENT right now, but,
+        // in case that ever changes, we don't want him to switch away
+        // from a whip.
         if (monster->type == MONS_PIKEL)
             return (weapon.sub_type == WPN_WHIP);
 
