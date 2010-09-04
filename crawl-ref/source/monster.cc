@@ -1278,7 +1278,7 @@ static bool _is_signature_weapon(monsters *monster, const item_def &weapon)
         // in case that ever changes, we don't want him to switch away
         // from a whip.
         if (monster->type == MONS_PIKEL)
-            return (weapon.sub_type == WPN_WHIP);
+            return (get_vorpal_type(weapon) == DVORP_SLASHING);
 
         if (monster->type == MONS_WIGLAF)
             return (weapon_skill(weapon) == SK_AXES);
