@@ -791,6 +791,14 @@ void direct_effect(monsters *source, spell_type spell,
             defender->confuse(source, source->hit_dice * 12);
         break;
 
+    case SPELL_SUMMON_SPECTRAL_ORCS:
+        if (def)
+            simple_monster_message(def, " is surrounded by Orcish apparitions.");
+        else
+            mpr("Orcish apparitions take form around you.");
+        mons_cast_spectral_orcs(source);
+        break;
+
     default:
         ASSERT(false);
     }

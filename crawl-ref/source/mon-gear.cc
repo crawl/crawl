@@ -168,12 +168,14 @@ static void _give_potion(monsters *mon, int level)
 
 static item_make_species_type _give_weapon(monsters *mon, int level,
                                            bool melee_only = false,
-                                           bool give_aux_melee = true)
+                                           bool give_aux_melee = true,
+                                           bool spectral_orcs = false)
 {
     bool force_item = false;
 
     item_def               item;
     item_make_species_type item_race = MAKE_ITEM_RANDOM_RACE;
+    int type = mon->type;
 
     item.base_type = OBJ_UNASSIGNED;
 
@@ -186,7 +188,10 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     // moved setting of quantity here to keep it in mind {dlb}
     item.quantity = 1;
 
-    switch (mon->type)
+    if (spectral_orcs)
+        type = mon->number;
+
+    switch (type)
     {
     case MONS_KOBOLD:
         // A few of the smarter kobolds have blowguns.
@@ -1453,7 +1458,7 @@ void give_shield(monsters *mon, int level)
     }
 }
 
-void give_armour(monsters *mon, int level)
+void give_armour(monsters *mon, int level, bool spectral_orcs)
 {
     item_def               item;
     item_make_species_type item_race = MAKE_ITEM_RANDOM_RACE;
@@ -1466,8 +1471,14 @@ void give_armour(monsters *mon, int level)
                           // switch. Others will get force_colour.
 
     bool force_item = false;
+    int type = mon->type;
 
-    switch (mon->type)
+    if (spectral_orcs)
+    {
+        type = mon->number;
+    }
+
+    switch (type)
     {
     case MONS_DEEP_ELF_BLADEMASTER:
     case MONS_DEEP_ELF_MASTER_ARCHER:
@@ -1849,7 +1860,7 @@ static void _give_gold(monsters *mon, int level)
     _give_monster_item(mon, idx);
 }
 
-void give_item(int mid, int level_number, bool mons_summoned)
+void give_item(int mid, int level_number, bool mons_summoned, bool spectral_orcs)
 {
     monsters *mons = &menv[mid];
 
@@ -1860,10 +1871,10 @@ void give_item(int mid, int level_number, bool mons_summoned)
     _give_wand(mons, level_number);
     _give_potion(mons, level_number);
 
-    const item_make_species_type item_race = _give_weapon(mons, level_number);
+    const item_make_species_type item_race = _give_weapon(mons, level_number, false, true, spectral_orcs);
 
     _give_ammo(mons, level_number, item_race, mons_summoned);
 
-    give_armour(mons, 1 + level_number / 2);
+    give_armour(mons, 1 + level_number / 2, spectral_orcs);
     give_shield(mons, 1 + level_number / 2);
 }

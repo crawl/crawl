@@ -2673,6 +2673,19 @@ struct spell_desc
 },
 
 {
+    SPELL_SUMMON_SPECTRAL_ORCS, "Summon Spectral Orcs",
+     SPTYP_NECROMANCY,
+     SPFLAG_MONSTER | SPFLAG_TARGET,
+     4,
+     0,
+     LOS_RADIUS, LOS_RADIUS,
+     1,
+     NULL,
+     false,
+     false,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,
