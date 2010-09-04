@@ -31,15 +31,6 @@ enum tag_type   // used during save/load process to identify data blocks
     TAG_SKIP
 };
 
-enum tag_file_type   // file types supported by tag system
-{
-    TAGTYPE_PLAYER = 0,         // Foo.sav
-    TAGTYPE_LEVEL,              // Foo.00a, .01a, etc.
-    TAGTYPE_GHOST,              // bones.xxx
-
-    TAGTYPE_PLAYER_NAME,        // Used only to read the player name
-};
-
 struct enum_info
 {
     void (*collect)(std::vector<std::pair<int,std::string> >& prs);
@@ -237,10 +228,8 @@ static inline void unmarshallSigned(reader& th, T& v)
  * Tag interface
  * *********************************************************************** */
 
-tag_type tag_read(reader &inf, int minorVersion, int8_t expected_tags[NUM_TAGS]);
+void tag_read(reader &inf, int minorVersion, tag_type tag_id);
 void tag_write(tag_type tagID, writer &outf);
-void tag_set_expected(int8_t tags[], int fileType);
-void tag_missing(int tag);
 
 /* ***********************************************************************
  * misc

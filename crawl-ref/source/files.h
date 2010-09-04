@@ -104,7 +104,6 @@ void save_game(bool leave_game, const char *bye = NULL);
 // Save game without exiting (used when changing levels).
 void save_game_state();
 
-bool get_save_version(FILE *file, int &major, int &minor);
 bool get_save_version(reader &file, int &major, int &minor);
 
 bool save_exists(const std::string& name);

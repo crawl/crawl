@@ -118,10 +118,10 @@ static bool _determine_ghost_version( FILE *ghostFile,
 
 static void _restore_ghost_version( FILE *ghostFile, int major, int minor );
 
-static void _restore_tagged_file( FILE *restoreFile, int fileType,
+static void _restore_tagged_file(FILE *restoreFile, tag_type tag,
                                   int minorVersion );
 static bool _restore_tagged_chunk(package *save, const std::string name,
-                                  int fileType, const char* complaint);
+                                  tag_type tag, const char* complaint);
 
 const short GHOST_SIGNATURE = short( 0xDC55 );
 
@@ -208,7 +208,7 @@ player_save_info read_character_info(const std::string &savefile)
         unwind_var<game_type> gtype(crawl_state.type);
 
         // NOTE: _restore_tagged_chunk eats the version itself!
-        _restore_tagged_file(charf, TAGTYPE_PLAYER_NAME, version[1]);
+        _restore_tagged_file(charf, TAG_CHR, version[1]);
 
         fromfile = you;
         you.copy_from(backup);
@@ -1052,26 +1052,19 @@ private:
 };
 
 static void _write_tagged_file( const std::string &filename,
-                                FILE *outf, int fileType,
+                                FILE *outf, tag_type tag_id,
                                 bool extended_version = false )
 {
-    // find all relevant tags
-    int8_t tags[NUM_TAGS];
-    tag_set_expected(tags, fileType);
-
     _write_version( filename, outf, TAG_MAJOR_VERSION, TAG_MINOR_VERSION,
                     extended_version );
 
     writer outw(filename, outf);
 
-    // all other tags
-    for (int i = 1; i < NUM_TAGS; i++)
-        if (tags[i] == 1)
-            tag_write(static_cast<tag_type>(i), outw);
+    tag_write(tag_id, outw);
 }
 
 static void _safe_write_tagged_file(const std::string &filename,
-                                    int tag,
+                                    tag_type tag,
                                     bool lock = false,
                                     bool extended_version = false)
 {
@@ -1079,21 +1072,15 @@ static void _safe_write_tagged_file(const std::string &filename,
     _write_tagged_file(filename, writer.open(), tag, extended_version);
 }
 
-static void _write_tagged_chunk(const std::string &chunkname, int tag)
+static void _write_tagged_chunk(const std::string &chunkname, tag_type tag)
 {
     writer outf(you.save, chunkname);
-    // find all relevant tags
-    int8_t tags[NUM_TAGS];
-    tag_set_expected(tags, tag);
 
     // write version
     marshallByte(outf, TAG_MAJOR_VERSION);
     marshallByte(outf, TAG_MINOR_VERSION);
 
-    // all other tags
-    for (int i = 1; i < NUM_TAGS; i++)
-        if (tags[i] == 1)
-            tag_write(static_cast<tag_type>(i), outf);
+    tag_write(tag, outf);
 }
 
 static void _place_player_on_stair(level_area_type old_level_type,
@@ -1514,7 +1501,7 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
 #ifdef DEBUG_LEVEL_LOAD
         mpr("Loading old file...", MSGCH_DIAGNOSTICS);
 #endif
-        _restore_tagged_chunk(you.save, level_name, TAGTYPE_LEVEL, "Level file is invalid.");
+        _restore_tagged_chunk(you.save, level_name, TAG_LEVEL, "Level file is invalid.");
 
         // POST-LOAD tasks :
         link_items();
@@ -1742,7 +1729,7 @@ void _save_level(const level_id& lid)
     // Nail all items to the ground.
     fix_item_coordinates();
 
-    _write_tagged_chunk(_get_level_suffix(lid), TAGTYPE_LEVEL);
+    _write_tagged_chunk(_get_level_suffix(lid), TAG_LEVEL);
 }
 
 #define SAVEFILE(file, savefn) \
@@ -1786,8 +1773,8 @@ static void _save_game_base()
     SAVEFILE("tdl", save_doll_file);
 #endif
 
-    _write_tagged_chunk("you", TAGTYPE_PLAYER);
-    _write_tagged_chunk("chr", TAGTYPE_PLAYER_NAME);
+    _write_tagged_chunk("you", TAG_YOU);
+    _write_tagged_chunk("chr", TAG_CHR);
 }
 
 // Stack allocated std::string's go in separate function, so Valgrind doesn't
@@ -2051,8 +2038,8 @@ void restore_game(const std::string& name)
     you.save = new package((get_savedir_filename(name, "", "")
                            + SAVE_SUFFIX).c_str(), true);
 
-    _restore_tagged_chunk(you.save, "chr", TAGTYPE_PLAYER_NAME, "Player data is invalid.");
-    _restore_tagged_chunk(you.save, "you", TAGTYPE_PLAYER, "Save data is invalid.");
+    _restore_tagged_chunk(you.save, "chr", TAG_CHR, "Player data is invalid.");
+    _restore_tagged_chunk(you.save, "you", TAG_YOU, "Save data is invalid.");
 
     const int minorVersion = crawl_state.minorVersion;
 
@@ -2165,23 +2152,6 @@ level_excursion::~level_excursion()
     }
 }
 
-bool get_save_version(FILE *file, int &major, int &minor)
-{
-    // Read first two bytes.
-    uint8_t buf[2];
-    if (read2(file, buf, 2) != 2)
-    {
-        // Empty file?
-        major = minor = -1;
-        return (false);
-    }
-
-    major = buf[0];
-    minor = buf[1];
-
-    return (true);
-}
-
 bool get_save_version(reader &file, int &major, int &minor)
 {
     // Read first two bytes.
@@ -2254,36 +2224,16 @@ static bool _get_and_validate_version(reader &inf, int &major,
     return (true);
 }
 
-static void _restore_tagged_file( FILE *restoreFile, int fileType,
+static void _restore_tagged_file( FILE *restoreFile, tag_type tag,
                                   int minorVersion )
 {
-    int8_t tags[NUM_TAGS];
-    tag_set_expected(tags, fileType);
     reader inf(restoreFile, minorVersion);
-
-    while (true)
-    {
-        tag_type tt = tag_read(inf, minorVersion, tags);
-        if (tt == TAG_SKIP)
-            continue;
-        if (tt == TAG_NO_TAG)
-            break;
-
-        tags[tt] = 0;                // tag read
-    }
-
-    // Go through and init missing tags.
-    for (int i = 0; i < NUM_TAGS; i++)
-        if (tags[i] == 1)           // expected but never read
-            tag_missing(i);
+    tag_read(inf, minorVersion, tag);
 }
 
 static bool _restore_tagged_chunk(package *save, const std::string name,
-                                  int fileType, const char* complaint)
+                                  tag_type tag, const char* complaint)
 {
-    int8_t tags[NUM_TAGS];
-    tag_set_expected(tags, fileType);
-
     reader inf(save, name);
 
     int majorVersion, minorVersion;
@@ -2295,31 +2245,17 @@ static bool _restore_tagged_chunk(package *save, const std::string name,
         else
         {
             char msg[128];
-            snprintf(msg, sizeof(msg), "\n%s  %%s\n", complaint);
-            print_error_screen(msg, reason.c_str());
-            end(-1, false, msg, reason.c_str());
+            snprintf(msg, sizeof(msg), "\n%s  %s\n", complaint, reason.c_str());
+            print_error_screen(msg);
+            end(-1, false, msg);
         }
     }
 
     crawl_state.minorVersion = minorVersion;
-    while (true)
-    {
-        tag_type tt = tag_read(inf, minorVersion, tags);
-        if (tt == TAG_SKIP)
-            continue;
-        if (tt == TAG_NO_TAG)
-            break;
 
-        tags[tt] = 0;                // tag read
-    }
+    tag_read(inf, minorVersion, tag);
 
     inf.fail_if_not_eof(name);
-
-    // Go through and init missing tags.
-    for (int i = 0; i < NUM_TAGS; i++)
-        if (tags[i] == 1)           // expected but never read
-            tag_missing(i);
-
     return true;
 }
 
@@ -2358,7 +2294,7 @@ static void _restore_ghost_version( FILE *ghostFile,
     switch (majorVersion)
     {
     case TAG_MAJOR_VERSION:
-        _restore_tagged_file(ghostFile, TAGTYPE_GHOST, minorVersion);
+        _restore_tagged_file(ghostFile, TAG_GHOST, minorVersion);
         break;
     default:
         break;
@@ -2413,7 +2349,7 @@ void save_ghost( bool force )
         return;
     }
 
-    _safe_write_tagged_file(cha_fil, TAGTYPE_GHOST, true, true);
+    _safe_write_tagged_file(cha_fil, TAG_GHOST, true, true);
 
 #ifdef BONES_DIAGNOSTICS
     if (do_diagnostics)
