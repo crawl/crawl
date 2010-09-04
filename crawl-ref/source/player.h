@@ -283,6 +283,10 @@ public:
   int         escaped_death_cause;
   std::string escaped_death_aux;
 
+  int turn_damage;   // cumulative damage per turn
+  int damage_source; // death source of last damage done to player
+  int source_damage; // cumulative damage for you.damage_source
+
   // When other levels are loaded (e.g. viewing), is the player on this level?
   bool on_current_level;
 

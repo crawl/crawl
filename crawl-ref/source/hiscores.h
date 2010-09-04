@@ -91,6 +91,8 @@ private:
     int         final_max_hp;       // net HPs after rot
     int         final_max_max_hp;   // gross HPs before rot
     int         damage;             // damage of final attack
+    int         source_damage;      // total damage done by death_source
+    int         turn_damage;        // total damage done last turn
     int         str;                // final str (useful for nickname)
     int         intel;              // final int
     int         dex;                // final dex (useful for nickname)

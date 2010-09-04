@@ -1048,6 +1048,13 @@ static void _wizard_restore_life()
 }
 #endif
 
+void reset_damage_counters()
+{
+    you.turn_damage = 0;
+    you.damage_source = NON_MONSTER;
+    you.source_damage = 0;
+}
+
 // death_source should be set to NON_MONSTER for non-monsters. {dlb}
 void ouch(int dam, int death_source, kill_method_type death_type,
           const char *aux, bool see_source, const char *death_source_name)
@@ -1106,6 +1113,14 @@ void ouch(int dam, int death_source, kill_method_type death_type,
                 return;
             }
         }
+
+        you.turn_damage += dam;
+        if (you.damage_source != death_source)
+        {
+            you.damage_source = death_source;
+            you.source_damage = 0;
+        }
+        you.source_damage += dam;
 
         dec_hp(dam, true);
 
