@@ -148,7 +148,7 @@ void DungeonRegion::pack_buffers()
     for (unsigned int i = 0; i < m_overlays.size(); i++)
     {
         // overlays must be from the main image and must be in LOS.
-        if (!crawl_view.in_grid_los(m_overlays[i].gc))
+        if (!crawl_view.in_los_bounds_g(m_overlays[i].gc))
             continue;
 
         tileidx_t idx = m_overlays[i].idx;
@@ -195,7 +195,7 @@ void DungeonRegion::render()
     {
         for (unsigned int i = 0; i < m_tags[t].size(); i++)
         {
-            if (!crawl_view.in_grid_los(m_tags[t][i].gc))
+            if (!crawl_view.in_los_bounds_g(m_tags[t][i].gc))
                 continue;
 
             const coord_def ep = grid2show(m_tags[t][i].gc);
