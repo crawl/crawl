@@ -1741,64 +1741,50 @@ void mons_cast_spectral_orcs(monsters *monster)
         fpos = menv[monster->foe].pos();
     }
 
-    int num = random2(3) + 1;
     int created;
     int hp;
-    monsterentry *m;
     const int abj = 3;
+    monsterentry *m;
     monsters *orc;
 
-
-    for (int j = 0; j < num; ++j)
+    for (int i = random2(3) + 1; i > 0; --i)
     {
         created = create_monster(
                   mgen_data(MONS_SPECTRAL_THING, SAME_ATTITUDE(monster), monster,
                           abj, SPELL_SUMMON_SPECTRAL_ORCS, fpos, monster->foe, 0,
                           GOD_BEOGH, MONS_ORC));
+
         if (created != -1)
         {
-             orc = &menv[created];
-             // which base type this orc is pretending to be for
-             // gear purposes
-             orc->number = MONS_ORC;
+            orc = &menv[created];
 
-             if (one_chance_in(2))
-             {
-                 m = get_monster_data(MONS_ORC_WARRIOR);
-                 orc->hit_dice = m->hpdice[0];
-                 hp = hit_points(m->hpdice[0], m->hpdice[1], m->hpdice[2]);
-                 orc->max_hit_points = hp;
-                 orc->hit_points = hp;
-                 orc->number = MONS_ORC_WARRIOR;
-                 orc->base_monster = MONS_ORC_WARRIOR;
-             }
-             else if (one_chance_in(3))
-             {
-                 m = get_monster_data(MONS_ORC_KNIGHT);
-                 orc->hit_dice = m->hpdice[0];
-                 hp = hit_points(m->hpdice[0], m->hpdice[1], m->hpdice[2]);
-                 orc->max_hit_points = hp;
-                 orc->hit_points = hp;
-                 orc->number = MONS_ORC_KNIGHT;
-                 orc->base_monster = MONS_ORC_KNIGHT;
-             }
-             else if (one_chance_in(10))
-             {
-                 m = get_monster_data(MONS_ORC_WARLORD);
-                 orc->hit_dice = m->hpdice[0];
-                 hp = hit_points(m->hpdice[0], m->hpdice[1], m->hpdice[2]);
-                 orc->max_hit_points = hp;
-                 orc->hit_points = hp;
-                 orc->number = MONS_ORC_WARLORD;
-                 orc->base_monster = MONS_ORC_WARLORD;
-             }
+            // which base type this orc is pretending to be for
+            // gear purposes
+            orc->number = MONS_ORC;
 
-             give_item(created, you.absdepth0, true, true);
-             // set gear as summoned
-             orc->mark_summoned(abj, true, SPELL_SUMMON_SPECTRAL_ORCS);
-         }
-     }
- }
+            if (coinflip())
+                orc->number = MONS_ORC_WARRIOR;
+            else if (one_chance_in(3))
+                orc->number = MONS_ORC_KNIGHT;
+            else if (one_chance_in(10))
+                orc->number = MONS_ORC_WARLORD;
+
+            if (orc->number != MONS_ORC)
+            {
+                m = get_monster_data(orc->number);
+                orc->hit_dice = m->hpdice[0];
+                hp = hit_points(m->hpdice[0], m->hpdice[1], m->hpdice[2]);
+                orc->hit_points = hp;
+                orc->max_hit_points = hp;
+                orc->base_monster = (monster_type) orc->number;
+            }
+
+            give_item(created, you.absdepth0, true, true);
+            // set gear as summoned
+            orc->mark_summoned(abj, true, SPELL_SUMMON_SPECTRAL_ORCS);
+        }
+    }
+}
 
 void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                bool do_noise, bool special_ability)
