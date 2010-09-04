@@ -3474,7 +3474,10 @@ bool god_hates_spell(spell_type spell, god_type god)
         // it, or destroying it.
         if ((disciplines & SPTYP_POISON) && spell != SPELL_CURE_POISON
             && spell != SPELL_RESIST_POISON && spell != SPELL_IGNITE_POISON)
+        {
             return (true);
+        }
+        break;
     case GOD_YREDELEMNUL:
         if (is_holy_spell(spell))
             return (true);
