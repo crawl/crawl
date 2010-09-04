@@ -954,7 +954,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_MOTH_OF_WRATH:
         return TILEP_MONS_MOTH_OF_WRATH;
 
-    // small zombies etc. ('z')
+    // small zombies, etc. ('z')
     case MONS_ZOMBIE_SMALL:
         return TILEP_MONS_ZOMBIE_SMALL;
     case MONS_SIMULACRUM_SMALL:
@@ -1251,7 +1251,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_HELLEPHANT:
         return TILEP_MONS_HELLEPHANT;
 
-    // large zombies etc. ('Z')
+    // large zombies, etc. ('Z')
     case MONS_ZOMBIE_LARGE:
         return TILEP_MONS_ZOMBIE_LARGE;
     case MONS_SKELETON_LARGE:
