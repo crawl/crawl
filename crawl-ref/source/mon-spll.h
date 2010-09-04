@@ -1495,7 +1495,6 @@
       }
     },
 
-
     {  MST_JUMPING_SPIDER,
       {
        SPELL_BLINK_CLOSE,
