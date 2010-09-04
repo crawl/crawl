@@ -323,10 +323,12 @@ static void _launch_game_loop()
         }
         catch (ext_fail_exception &fe)
         {
+            print_error_screen(fe.msg.c_str());
             end(1, false, fe.msg.c_str());
         }
         catch(short_read_exception &E)
         {
+            print_error_screen("Error: truncation inside the save file.\n");
             end(1, false, "Error: truncation inside the save file.\n");
         }
     } while (Options.restart_after_game
