@@ -951,11 +951,11 @@ static bool _nuke_wall_msg(dungeon_feature_type feat, const coord_def& p)
     case DNGN_ORCISH_IDOL:
         if (hear)
         {
-            chan = MSGCH_SOUND;
             if (see)
                 msg = "You hear a hideous screaming!";
             else
                 msg = "The idol screams as its substance crumbles away!";
+            chan = MSGCH_SOUND;
         }
         else if (see)
             msg = "The idol twists and shakes as its substance crumbles away!";
@@ -1036,8 +1036,18 @@ void bolt::nuke_wall_effect()
 
     obvious_effect = _nuke_wall_msg(feat, pos());
 
-    if (feat == DNGN_ORCISH_IDOL && beam_source == NON_MONSTER)
-        did_god_conduct(DID_DESTROY_ORCISH_IDOL, 8);
+    if (feat == DNGN_ORCISH_IDOL)
+    {
+        if (beam_source == NON_MONSTER)
+            did_god_conduct(DID_DESTROY_ORCISH_IDOL, 8);
+    }
+    else if (feat == DNGN_TREE)
+    {
+        if (whose_kill() == KC_YOU)
+            did_god_conduct(DID_KILL_PLANT, 1);
+        else if (whose_kill() == KC_FRIENDLY)
+            did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1, effect_known, 0);
+    }
 
     finish_beam();
 }
@@ -1840,7 +1850,7 @@ static bool _monster_resists_mass_enchantment(monsters *monster,
     // of "is unaffected" messages. --Eino
     else if (mons_is_firewood(monster))
     {
-        return(true);
+        return (true);
     }
     else  // trying to enchant an unnatural creature doesn't work
     {
