@@ -799,6 +799,9 @@ monster_type mons_genus(int mc)
         return (MONS_DRACONIAN);
     }
 
+    if (mc == MONS_NO_MONSTER)
+        return (MONS_NO_MONSTER);
+
     ASSERT(smc);
     return (smc->genus);
 }
