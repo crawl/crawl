@@ -3048,6 +3048,31 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         inf.body << _describe_demon(mi.mname, mi.fly) << "\n";
         break;
 
+    case MONS_SERPENT_OF_HELL:
+        // XXX: ick
+        switch (mi.colour)
+        {
+        case RED:
+            inf.body << "A huge red glowing dragon, burning with hellfire.\n";
+            break;
+
+        case WHITE:
+            inf.body << "A huge gleaming white dragon, covered in shards of ice.\n";
+            break;
+
+        case CYAN:
+            inf.body << "A huge metallic dragon, glowing with power.\n";
+            break;
+
+        case MAGENTA:
+            inf.body << "A huge and dark dragon, wreathed in terrifying shadows.\n";
+            break;
+
+        default:
+            inf.body << "Well now, isn't this buggy?\n";
+        }
+        break;
+
     case MONS_PROGRAM_BUG:
         inf.body << "If this monster is a \"program bug\", then it's "
                 "recommended that you save your game and reload.  Please report "

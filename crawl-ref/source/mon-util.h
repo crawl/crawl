@@ -248,6 +248,7 @@ bool intelligent_ally(const monsters *mon);
 bool mons_skeleton(int mc);
 
 int mons_weight(int mc);
+mon_resist_def serpent_of_hell_resists(int flavour);
 
 int mons_class_base_speed(int mc);
 int mons_class_zombie_base_speed(int zombie_base_mc);
