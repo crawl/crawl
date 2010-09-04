@@ -718,6 +718,7 @@ int mons_standard_level(int mcls)
     case MONS_SIMULACRUM_SMALL:
     case MONS_SIMULACRUM_LARGE:
     case MONS_ROCK_WORM:
+    case MONS_ELEPHANT:
         return 17;
 
     case MONS_DRAGON:
@@ -995,6 +996,7 @@ int mons_standard_rare(int mcls)
     case MONS_VAMPIRE:
     case MONS_WEAPON_MIMIC:
     case MONS_YELLOW_WASP:
+    case MONS_ELEPHANT:
         return 30;
 
     case MONS_FLAYED_GHOST:
@@ -1410,6 +1412,7 @@ int mons_lair_level(int mcls)
     case MONS_LINDWURM:
     case MONS_REDBACK:
     case MONS_WANDERING_MUSHROOM:
+    case MONS_ELEPHANT:
         mlev += 6;
         break;
 
@@ -1476,6 +1479,7 @@ int mons_lair_rare(int mcls)
     case MONS_HYDRA:
     case MONS_KOMODO_DRAGON:
     case MONS_YAK:
+    case MONS_ELEPHANT:
         return 50;
 
     case MONS_BLACK_MAMBA:

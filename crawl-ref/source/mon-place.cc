@@ -2317,6 +2317,11 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         band = BAND_MERFOLK_IMPALER;
         band_size = random_range(3, 5);
         break;
+
+    case MONS_ELEPHANT:
+        band = BAND_ELEPHANT;
+        band_size = 2 + random2(4);
+        break;
     } // end switch
 
     if (band != BAND_NO_BAND && band_size == 0)
@@ -2651,6 +2656,10 @@ static monster_type _band_member(band_type band, int power)
     case BAND_MERFOLK_IMPALER:
     case BAND_MERFOLK_JAVELINEER:
         mon_type = MONS_MERFOLK;
+        break;
+
+    case BAND_ELEPHANT:
+        mon_type = MONS_ELEPHANT;
         break;
 
     default:
