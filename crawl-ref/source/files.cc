@@ -119,8 +119,6 @@ static bool _determine_ghost_version( FILE *ghostFile,
 static void _restore_ghost(FILE *ghostFile, const std::string filename,
                            int minorVersion);
 
-static void _restore_tagged_file(FILE *restoreFile, tag_type tag,
-                                  int minorVersion );
 static bool _restore_tagged_chunk(package *save, const std::string name,
                                   tag_type tag, const char* complaint);
 
@@ -179,42 +177,26 @@ bool is_save_file_name(const std::string &name)
 
 bool save_exists(const std::string& name)
 {
-    const std::string basename = get_savedir_filename(name, "", "");
-
-    const std::string savename = basename + SAVE_SUFFIX;
-    mprf("save name: [%s]", savename.c_str());
-    return (file_exists(savename));
+    return (file_exists(get_savedir_filename(name, "", "") + SAVE_SUFFIX));
 }
 
 // Returns the save_info from the save.
-player_save_info read_character_info(const std::string &savefile)
+player_save_info read_character_info(package *save)
 {
     player_save_info fromfile;
-    FILE *charf = fopen(savefile.c_str(), "rb");
-    if (!charf)
-        return fromfile;
 
-    // TODO: use chunks
-    uint8_t version[2];
-    if (fread(version, 1, 2, charf)!=2
-        || version[0] != TAG_MAJOR_VERSION
-        || version[1] > TAG_MINOR_VERSION)
-    {
-        dprf("%s: not a compatible version", savefile.c_str());
+    // Backup before we clobber "you".
+    const player backup(you);
+    unwind_var<game_type> gtype(crawl_state.type);
+
+    try // need a redundant try block just so we can restore the backup
+    {   // (or risk an = operator on you getting misused)
+        if (_restore_tagged_chunk(save, "chr", TAG_CHR, 0))
+            fromfile = you;
     }
-    else
-    {
-        // Backup before we clobber "you".
-        const player backup(you);
-        unwind_var<game_type> gtype(crawl_state.type);
+    catch (ext_fail_exception &E) {}
 
-        // NOTE: _restore_tagged_chunk eats the version itself!
-        _restore_tagged_file(charf, TAG_CHR, version[1]);
-
-        fromfile = you;
-        you.copy_from(backup);
-    }
-    fclose(charf);
+    you.copy_from(backup);
 
     return fromfile;
 }
@@ -851,19 +833,22 @@ std::vector<player_save_info> find_saved_characters()
 
         if (is_save_file_name(filename))
         {
-            const std::string path = get_savedir_path(filename);
-            player_save_info p = read_character_info(path);
-            if (!p.name.empty())
+            try
             {
-#ifdef USE_TILE
-                if (Options.tile_menu_icons)
+                package save(get_savedir_path(filename).c_str(), false);
+                player_save_info p = read_character_info(&save);
+                if (!p.name.empty())
                 {
-                    std::string dollname = basename + ".tdl";
-                    const std::string dollpath = get_savedir_path(dollname);
-                    _fill_player_doll(p, dollpath);
-                }
+#ifdef USE_TILE
+                    if (Options.tile_menu_icons && save.has_chunk("tdl"))
+                        _fill_player_doll(p, &save);
 #endif
-                chars.push_back(p);
+                    chars.push_back(p);
+                }
+            }
+            catch (ext_fail_exception &E)
+            {
+                dprf("%s: %s", filename.c_str(), E.msg.c_str());
             }
         }
 
@@ -2180,13 +2165,6 @@ static bool _get_and_validate_version(reader &inf, int &major,
     return (true);
 }
 
-static void _restore_tagged_file( FILE *restoreFile, tag_type tag,
-                                  int minorVersion )
-{
-    reader inf(restoreFile, minorVersion);
-    tag_read(inf, minorVersion, tag);
-}
-
 static bool _restore_tagged_chunk(package *save, const std::string name,
                                   tag_type tag, const char* complaint)
 {
@@ -2197,7 +2175,10 @@ static bool _restore_tagged_chunk(package *save, const std::string name,
     if (!_get_and_validate_version(inf, majorVersion, minorVersion, &reason))
     {
         if (!complaint)
+        {
+            dprf("chunk %s: %s", name.c_str(), reason.c_str());
             return false;
+        }
         else
         {
             char msg[128];
@@ -2209,7 +2190,14 @@ static bool _restore_tagged_chunk(package *save, const std::string name,
 
     crawl_state.minorVersion = minorVersion;
 
-    tag_read(inf, minorVersion, tag);
+    try
+    {
+        tag_read(inf, minorVersion, tag);
+    }
+    catch (short_read_exception &E)
+    {
+        fail("truncated save chunk (%s)", name.c_str());
+    };
 
     inf.fail_if_not_eof(name);
     return true;
