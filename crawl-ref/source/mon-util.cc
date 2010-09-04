@@ -3851,9 +3851,13 @@ mon_body_shape get_mon_shape(const int type)
         return (MON_SHAPE_MISC);
     case 'y': // winged insects
         return (MON_SHAPE_INSECT_WINGED);
-    case 'z': // small skeletons
-        if (type == MONS_SKELETAL_WARRIOR || type == MONS_WIGHT)
+    case 'z': // small zombies etc.
+        if (type == MONS_WIGHT
+            || type == MONS_SKELETAL_WARRIOR
+            || type == MONS_FLAMING_CORPSE)
+        {
             return (MON_SHAPE_HUMANOID);
+        }
         else
         {
             // constructed type, not enough info to determine shape
