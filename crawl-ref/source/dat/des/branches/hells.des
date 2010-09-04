@@ -87,7 +87,8 @@ function hell_branches_remaining()
 end
 
 function serpent_of_hell_setup(e)
-   if crawl.one_chance_in(hell_branches_remaining()) then
+   if not you.uniques("the Serpent of Hell") and
+      crawl.one_chance_in(hell_branches_remaining()) then
       e.kmons('D = the Serpent of Hell')
    end
 end
