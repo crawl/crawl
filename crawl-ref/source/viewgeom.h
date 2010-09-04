@@ -76,12 +76,12 @@ public:
 
     inline coord_def view2grid(const coord_def &pos) const
     {
-        return (pos - viewhalfsz + vgrdc);
+        return (pos - viewhalfsz + vgrdc - coord_def(1, 1));
     }
 
     inline coord_def grid2view(const coord_def &pos) const
     {
-        return (pos - vgrdc + viewhalfsz);
+        return (pos - vgrdc + viewhalfsz + coord_def(1, 1));
     }
 
     inline coord_def view2show(const coord_def &pos) const
@@ -106,12 +106,12 @@ public:
 
     inline coord_def screen2view(const coord_def& pos) const
     {
-        return (pos - viewp);
+        return (pos - viewp + termp);
     }
 
     inline coord_def view2screen(const coord_def& pos) const
     {
-        return (pos + viewp);
+        return (pos + viewp - termp);
     }
 
     inline coord_def screen2grid(const coord_def& pos) const
@@ -142,8 +142,8 @@ public:
 
     bool in_viewport_v(const coord_def &c) const
     {
-        return (c.x >= 0 && c.y >= 0
-                && c.x < viewsz.x && c.y < viewsz.y);
+        return (c.x > 0 && c.y > 0
+                && c.x <= viewsz.x && c.y <= viewsz.y);
     }
 
     bool in_viewport_s(const coord_def &c) const
