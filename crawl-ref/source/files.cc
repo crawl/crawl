@@ -1775,10 +1775,7 @@ static void _save_game_base()
 
 #ifdef CLUA_BINDINGS
     /* lua */
-    const std::string lua_file = get_savedir_filename(you.your_name, "", "lua");
-    clua.save(lua_file.c_str());
-    // Note that luaFile may not exist.
-    DO_CHMOD_PRIVATE(lua_file.c_str());
+    SAVEFILE("lua", clua.save);
 #endif
 
     /* kills */
@@ -2107,8 +2104,14 @@ void restore_game(const std::string& name)
     }
 
 #ifdef CLUA_BINDINGS
-    std::string luaFile = get_savedir_filename(name, "", "lua");
-    clua.execfile(luaFile.c_str());
+    if (you.save->has_chunk("lua"))
+    {
+        std::vector<char> buf;
+        chunk_reader inf(you.save, "lua");
+        inf.read_all(buf);
+        buf.push_back(0);
+        clua.execstring(&buf[0]);
+    }
 #endif
 
     if (you.save->has_chunk("kil"))

@@ -116,15 +116,14 @@ void CLua::gc()
     lua_gc(state(), LUA_GCCOLLECT, 0);
 }
 
-void CLua::save(const char *file)
+void CLua::save(writer &outf)
 {
     if (!_state)
         return;
 
-    CLuaSave clsave = { file, NULL };
-    callfn("c_save", "u", &clsave);
-    if (clsave.handle)
-        fclose(clsave.handle);
+    std::string res;
+    callfn("c_save", ">s", &res);
+    outf.write(res.c_str(), res.size());
 }
 
 int CLua::file_write(lua_State *ls)

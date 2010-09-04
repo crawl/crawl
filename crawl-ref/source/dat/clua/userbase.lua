@@ -13,14 +13,16 @@ chk_lua_save            = { }
 chk_force_autopickup    = { }
 chk_deny_autopickup     = { }
 
-function c_save(file)
+function c_save()
     if not chk_lua_save then
         return
     end
 
+    local res = ""
     for i, fn in ipairs(chk_lua_save) do
-        fn(file)
+        res = res .. fn(file)
     end
+    return res
 end
 
 -- This function returns true to tell Crawl not to process the option further
