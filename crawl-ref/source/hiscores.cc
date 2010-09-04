@@ -517,6 +517,8 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     final_max_hp      = se.final_max_hp;
     final_max_max_hp  = se.final_max_max_hp;
     damage            = se.damage;
+    source_damage     = se.source_damage;
+    turn_damage       = se.turn_damage;
     str               = se.str;
     intel             = se.intel;
     dex               = se.dex;
@@ -689,10 +691,13 @@ void scorefile_entry::init_with_fields()
     final_max_hp     = fields->int_field("mhp");
     final_max_max_hp = fields->int_field("mmhp");
 
-    damage = fields->int_field("dam");
-    str    = fields->int_field("str");
-    intel  = fields->int_field("int");
-    dex    = fields->int_field("dex");
+    damage        = fields->int_field("dam");
+    source_damage = fields->int_field("sdam");
+    turn_damage   = fields->int_field("tdam");
+
+    str   = fields->int_field("str");
+    intel = fields->int_field("int");
+    dex   = fields->int_field("dex");
 
     god      = str_to_god(fields->str_field("god"));
     piety    = fields->int_field("piety");
@@ -809,6 +814,8 @@ void scorefile_entry::set_score_fields() const
     const std::string killer = death_source_desc();
     fields->add_field("killer", "%s", killer.c_str());
     fields->add_field("dam", "%d", damage);
+    fields->add_field("sdam", "%d", source_damage);
+    fields->add_field("tdam", "%d", turn_damage);
 
     fields->add_field("kaux", "%s", auxkilldata.c_str());
 
@@ -1055,6 +1062,8 @@ void scorefile_entry::reset()
     intel                = -1;
     dex                  = -1;
     damage               = -1;
+    source_damage        = -1;
+    turn_damage          = -1;
     god                  = GOD_NO_GOD;
     piety                = -1;
     penance              = -1;
@@ -1237,6 +1246,9 @@ void scorefile_entry::init(time_t dt)
     final_hp         = you.hp;
     final_max_hp     = you.hp_max;
     final_max_max_hp = get_real_hp(true, true);
+
+    source_damage    = you.source_damage;
+    turn_damage      = you.turn_damage;
 
     str   = you.strength();
     intel = you.intel();
