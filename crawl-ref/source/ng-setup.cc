@@ -1103,7 +1103,6 @@ static void _give_items_skills(const newgame_def& ng)
     // Deep Dwarves get healing potions and wand of healing (3).
     if (you.species == SP_DEEP_DWARF)
     {
-        newgame_make_item(-1, EQ_NONE, OBJ_POTIONS, POT_HEALING, -1, 2);
         newgame_make_item(-1, EQ_NONE, OBJ_POTIONS, POT_HEAL_WOUNDS, -1, 2);
         newgame_make_item(-1, EQ_NONE, OBJ_WANDS, WAND_HEALING, -1, 1, 3);
     }
