@@ -173,30 +173,16 @@ static bool _is_uid_file(const std::string &name, const std::string &ext)
 
 bool is_save_file_name(const std::string &name)
 {
-    return _is_uid_file(name, ".chr");
+    return _is_uid_file(name, SAVE_SUFFIX);
 }
 
 bool save_exists(const std::string& name)
 {
     const std::string basename = get_savedir_filename(name, "", "");
 
-    const std::string savename = basename + ".chr";
+    const std::string savename = basename + SAVE_SUFFIX;
+    mprf("save name: [%s]", savename.c_str());
     return (file_exists(savename));
-}
-
-static bool _check_unpack_saved_game(const std::string& name)
-{
-    const std::string basename = get_savedir_filename(name, "", "");
-
-    const std::string savename = basename + ".chr";
-    FILE *handle = fopen(savename.c_str(), "rb+");
-
-    if (handle != NULL)
-    {
-        fclose(handle);
-        return (true);
-    }
-    return (false);
 }
 
 // Returns the save_info from the save.
@@ -1800,8 +1786,8 @@ static void _save_game_base()
     SAVEFILE("tdl", save_doll_file);
 #endif
 
-    const std::string charFile = get_savedir_filename(you.your_name, "", "chr");
-    _safe_write_tagged_file(charFile, TAGTYPE_PLAYER);
+    _write_tagged_chunk("you", TAGTYPE_PLAYER);
+    _write_tagged_chunk("chr", TAGTYPE_PLAYER_NAME);
 }
 
 // Stack allocated std::string's go in separate function, so Valgrind doesn't
@@ -2065,37 +2051,10 @@ void restore_game(const std::string& name)
     you.save = new package((get_savedir_filename(name, "", "")
                            + SAVE_SUFFIX).c_str(), true);
 
-    if (!_check_unpack_saved_game(name))
-        end(-1, true, "Couldn't find save for %s!\n", name.c_str());
+    _restore_tagged_chunk(you.save, "chr", TAGTYPE_PLAYER_NAME, "Player data is invalid.");
+    _restore_tagged_chunk(you.save, "you", TAGTYPE_PLAYER, "Save data is invalid.");
 
-    std::string charFile = get_savedir_filename(name, "", "chr");
-    FILE *charf = fopen(charFile.c_str(), "rb");
-    if (!charf )
-        end(-1, true, "Unable to open %s for reading!\n", charFile.c_str() );
-
-    int majorVersion;
-    int minorVersion;
-    std::string reason;
-    uint8_t version[2];
-    if (fread(version, 1, 2, charf)!=2
-        || version[0] != TAG_MAJOR_VERSION
-        || version[1] > TAG_MINOR_VERSION)
-    {
-        dprf("%s: not a compatible version", charFile.c_str());
-    }
-    // bad version: print_error_screen("\nSave file %s is invalid. %s\n", charFile.c_str(),
-    majorVersion = version[0];
-    minorVersion = version[1];
-
-    _restore_tagged_file(charf, TAGTYPE_PLAYER, minorVersion);
-
-    // Sanity check - EOF
-    if (!feof(charf))
-    {
-        end(-1, false, "\nIncomplete read of \"%s\" - aborting.\n",
-            charFile.c_str());
-    }
-    fclose(charf);
+    const int minorVersion = crawl_state.minorVersion;
 
     if (you.save->has_chunk("st"))
     {
@@ -2342,6 +2301,7 @@ static bool _restore_tagged_chunk(package *save, const std::string name,
         }
     }
 
+    crawl_state.minorVersion = minorVersion;
     while (true)
     {
         tag_type tt = tag_read(inf, minorVersion, tags);
