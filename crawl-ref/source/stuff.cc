@@ -375,6 +375,7 @@ void clear_globals_on_exit()
 // free'd by exit() hooks when exit() is called, and we don't want to reference
 // free'd memory.
 bool CrawlIsExiting = false;
+bool CrawlIsCrashing = false;
 
 void end(int exit_code, bool print_error, const char *format, ...)
 {
@@ -418,6 +419,8 @@ void end(int exit_code, bool print_error, const char *format, ...)
 #endif
 
     CrawlIsExiting = true;
+    if (exit_code)
+        CrawlIsCrashing = true;
     exit(exit_code);
 }
 
