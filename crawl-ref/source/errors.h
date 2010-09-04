@@ -12,4 +12,6 @@ public:
     const std::string msg;
 };
 
+extern bool CrawlIsCrashing;
+
 #endif
