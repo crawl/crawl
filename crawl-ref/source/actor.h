@@ -188,6 +188,7 @@ public:
     virtual void expose_to_element(beam_type element, int strength = 0) = 0;
     virtual void drain_stat(stat_type stat, int amount, actor* attacker) { }
     virtual bool can_hibernate(bool holi_only = false) const;
+    virtual bool can_sleep() const;
     virtual void hibernate(int power = 0) = 0;
     virtual void check_awaken(int disturbance) = 0;
 

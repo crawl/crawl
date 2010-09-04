@@ -124,7 +124,7 @@ bool actor::can_hibernate(bool holi_only) const
     if (!holi_only)
     {
         // The monster is berserk or already asleep.
-        if (berserk() || asleep())
+        if (!can_sleep())
             return (false);
 
         // The monster is cold-resistant and can't be hibernated.
@@ -140,6 +140,14 @@ bool actor::can_hibernate(bool holi_only) const
     }
 
     return (true);
+}
+
+bool actor::can_sleep() const
+{
+    const mon_holy_type holi = holiness();
+    if (holi == MH_UNDEAD || holi == MH_NONLIVING || holi == MH_PLANT)
+        return (false);
+    return !(berserk() || asleep());
 }
 
 void actor::shield_block_succeeded(actor *foe)
