@@ -3598,6 +3598,11 @@ void handle_god_time()
             return;
 
         // All the rest will excommunicate you if piety goes below 1.
+        case GOD_JIYVA:
+            if (one_chance_in(20))
+                lose_piety(1);
+            break;
+
         case GOD_YREDELEMNUL:
         case GOD_KIKUBAAQUDGHA:
         case GOD_VEHUMET:
@@ -3619,14 +3624,6 @@ void handle_god_time()
                 lose_piety(1);
             break;
 
-        case GOD_SIF_MUNA:
-            // [dshaligram] Sif Muna is now very patient - has to be
-            // to make up for the new spell training requirements, else
-            // it's practically impossible to get Master of Arcane status.
-            if (one_chance_in(100))
-                lose_piety(1);
-            break;
-
         case GOD_NEMELEX_XOBEH:
             // Nemelex is relatively patient.
             if (one_chance_in(35))
@@ -3635,8 +3632,11 @@ void handle_god_time()
                 you.attribute[ATTR_CARD_COUNTDOWN]--;
             break;
 
-        case GOD_JIYVA:
-            if (one_chance_in(20))
+        case GOD_SIF_MUNA:
+            // [dshaligram] Sif Muna is now very patient - has to be
+            // to make up for the new spell training requirements, else
+            // it's practically impossible to get Master of Arcane status.
+            if (one_chance_in(100))
                 lose_piety(1);
             break;
 
