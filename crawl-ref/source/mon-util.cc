@@ -275,6 +275,35 @@ const mon_resist_def &get_mons_class_resists(int mc)
     return (me ? me->resists : get_monster_data(MONS_PROGRAM_BUG)->resists);
 }
 
+mon_resist_def serpent_of_hell_resists(int flavour)
+{
+    mon_resist_def res;
+
+    switch (flavour)
+    {
+    case BRANCH_GEHENNA:
+        res.hellfire = 1;
+        res.fire = 3;
+        break;
+
+    case BRANCH_COCYTUS:
+        res.cold = 3;
+        break;
+
+    case BRANCH_TARTARUS:
+        res.rotting = 1;
+        break;
+    }
+
+    return res;
+}
+
+static mon_resist_def serpent_of_hell_resists(const monsters *mon)
+{
+    int flavour = mon->props["serpent_of_hell_flavour"].get_int();
+    return serpent_of_hell_resists(flavour);
+}
+
 mon_resist_def get_mons_resists(const monsters *mon)
 {
     mon_resist_def resists;
@@ -292,6 +321,10 @@ mon_resist_def get_mons_resists(const monsters *mon)
         if (draco_species != mon->type)
             resists |= get_mons_class_resists(draco_species);
     }
+
+    if (mon->type == MONS_SERPENT_OF_HELL)
+        resists |= serpent_of_hell_resists(mon);
+
     return (resists);
 }
 
@@ -1550,9 +1583,10 @@ monster_type random_draconian_monster_species()
 // MST_WIZARD-type spellbooks contain no unholy, evil, unclean or
 // chaotic spells.
 static bool _get_spellbook_list(mon_spellbook_type book[6],
-                                monster_type mon_type)
+                                monsters *mon)
 {
     bool retval = true;
+    int mon_type = mon->type;
 
     book[0] = MST_NO_SPELLS;
     book[1] = MST_NO_SPELLS;
@@ -1615,6 +1649,26 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
         book[5] = MST_NECROMANCER_II;
         break;
 
+    case MONS_SERPENT_OF_HELL:
+        switch (mon->props["serpent_of_hell_flavour"].get_int())
+        {
+        case BRANCH_GEHENNA:
+            book[0] = MST_SERPENT_OF_HELL_GEHENNA;
+            break;
+        case BRANCH_COCYTUS:
+            book[0] = MST_SERPENT_OF_HELL_COCYTUS;
+            break;
+        case BRANCH_DIS:
+            book[0] = MST_SERPENT_OF_HELL_DIS;
+            break;
+        case BRANCH_TARTARUS:
+            book[0] = MST_SERPENT_OF_HELL_TARTARUS;
+            break;
+        default:
+            book[0] = MST_SERPENT_OF_HELL_GEHENNA;
+        }
+        break;
+
     default:
         retval = false;
         break;
@@ -1628,7 +1682,7 @@ static void _get_spells(mon_spellbook_type& book, monsters *mon)
     if (book == MST_NO_SPELLS && mons_class_flag(mon->type, M_SPELLCASTER))
     {
         mon_spellbook_type multi_book[6];
-        if (_get_spellbook_list(multi_book, mon->type))
+        if (_get_spellbook_list(multi_book, mon))
         {
             do
                 book = multi_book[random2(6)];
@@ -1654,6 +1708,27 @@ uint8_t random_monster_colour()
         col = random_colour();
 
     return (col);
+}
+
+static int _serpent_of_hell_color(const monsters *mon)
+{
+    switch (mon->props["serpent_of_hell_flavour"].get_int())
+    {
+    case BRANCH_GEHENNA:
+        return RED;
+        break;
+    case BRANCH_COCYTUS:
+        return WHITE;
+        break;
+    case BRANCH_DIS:
+        return CYAN;
+        break;
+    case BRANCH_TARTARUS:
+        return MAGENTA;
+        break;
+    default:
+        return RED;
+    }
 }
 
 // Generate a shiny, new and unscarred monster.
@@ -1765,6 +1840,13 @@ void define_monster(monsters *mons)
         hd += random2(10) - 4;
         ac += random2(5) - 2;
         ev += random2(5) - 2;
+        break;
+
+    case MONS_SERPENT_OF_HELL:
+        // we have a sprint map that places the serpent of hell
+        ASSERT(player_in_hell() || crawl_state.game_is_sprint());
+        mons->props["serpent_of_hell_flavour"].get_int() = you.where_are_you;
+        col = _serpent_of_hell_color(mons);
         break;
 
     default:

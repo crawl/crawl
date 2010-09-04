@@ -983,6 +983,28 @@ monster_type monster_info::draco_subspecies() const
     return (ret);
 }
 
+// XXX: ick ick ick
+static int serpent_of_hell_colour_to_flavour(uint8_t colour)
+{
+    switch (colour)
+    {
+    case RED:
+        return BRANCH_GEHENNA;
+        break;
+    case WHITE:
+        return BRANCH_COCYTUS;
+        break;
+    case CYAN:
+        return BRANCH_DIS;
+        break;
+    case MAGENTA:
+        return BRANCH_TARTARUS;
+        break;
+    default:
+        return BRANCH_GEHENNA;
+    }
+}
+
 mon_resist_def monster_info::resists() const
 {
     if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING)
@@ -992,6 +1014,13 @@ mon_resist_def monster_info::resists() const
     }
 
     mon_resist_def resist = get_mons_class_resists(type);
+
+    if (type == MONS_SERPENT_OF_HELL)
+    {
+        resist |= serpent_of_hell_resists(
+            serpent_of_hell_colour_to_flavour(colour)
+        );
+    }
 
     if (mons_genus(type) == MONS_DRACONIAN && type != MONS_DRACONIAN
         || type == MONS_TIAMAT)
