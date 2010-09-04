@@ -2089,7 +2089,7 @@ void finished_eating_message(int food_type)
         break;
     case FOOD_ROYAL_JELLY:
         mpr("That royal jelly was delicious!");
-        restore_stat(STAT_RANDOM, 1, false);
+        restore_stat(STAT_ALL, 0, false);
         break;
     case FOOD_AMBROSIA:                       // XXX: could put some more
         mpr("That ambrosia tasted strange."); // inspired messages here --evk
