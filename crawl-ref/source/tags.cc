@@ -172,11 +172,13 @@ int reader::getMinorVersion()
 
 void reader::fail_if_not_eof(const std::string name)
 {
-    // currently only for chunks
-    ASSERT(_chunk);
     char dummy;
-    if (_chunk->read(&dummy, 1))
+    if (_chunk ? _chunk->read(&dummy, 1) :
+        _file ? (fgetc(_file) != EOF) :
+        _read_offset >= _pbuf->size())
+    {
         fail(("Incomplete read of \"" + name + "\" - aborting.").c_str());
+    }
 }
 
 void writer::check_ok(bool ok)

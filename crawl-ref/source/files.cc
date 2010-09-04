@@ -114,9 +114,10 @@ static bool _get_and_validate_version(reader &inf, int &major,
                                       int &minor, std::string* reason = 0);
 
 static bool _determine_ghost_version( FILE *ghostFile,
-                                      int &majorVersion, int &minorVersion );
+                                      int &majorVersion, int &minorVersion);
 
-static void _restore_ghost_version( FILE *ghostFile, int major, int minor );
+static void _restore_ghost(FILE *ghostFile, const std::string filename,
+                           int minorVersion);
 
 static void _restore_tagged_file(FILE *restoreFile, tag_type tag,
                                   int minorVersion );
@@ -959,34 +960,26 @@ std::string make_filename(std::string prefix, int level, branch_type where,
     return _make_filename(prefix, lid, isGhost);
 }
 
-static void _write_version( const std::string &filename,
-                            FILE *dataFile,
-                            int majorVersion, int minorVersion,
-                            bool extended_version )
+static void _write_ghost_version(writer &outf)
 {
-    // write version
-    writer outf(filename, dataFile);
-
-    marshallByte(outf, majorVersion);
-    marshallByte(outf, minorVersion);
+    marshallByte(outf, TAG_MAJOR_VERSION);
+    marshallByte(outf, TAG_MINOR_VERSION);
 
     // extended_version just pads the version out to four 32-bit words.
     // This makes the bones file compatible with Hearse with no extra
     // munging needed.
-    if (extended_version)
-    {
-        // Use a single signature 16-bit word to indicate that this is
-        // Stone Soup and to disambiguate this (unmunged) bones file
-        // from the munged bones files offered by the old Crawl-aware
-        // hearse.pl. Crawl-aware hearse.pl will prefix the bones file
-        // with the first 16-bits of the Crawl version, and the following
-        // 7 16-bit words set to 0.
-        marshallShort(outf, GHOST_SIGNATURE);
 
-        // Write the three remaining 32-bit words of padding.
-        for (int i = 0; i < 3; ++i)
-            marshallInt(outf, 0);
-    }
+    // Use a single signature 16-bit word to indicate that this is
+    // Stone Soup and to disambiguate this (unmunged) bones file
+    // from the munged bones files offered by the old Crawl-aware
+    // hearse.pl. Crawl-aware hearse.pl will prefix the bones file
+    // with the first 16-bits of the Crawl version, and the following
+    // 7 16-bit words set to 0.
+    marshallShort(outf, GHOST_SIGNATURE);
+
+    // Write the three remaining 32-bit words of padding.
+    for (int i = 0; i < 3; ++i)
+        marshallInt(outf, 0);
 }
 
 class safe_file_writer
@@ -1050,27 +1043,6 @@ private:
 
     FILE *filep;
 };
-
-static void _write_tagged_file( const std::string &filename,
-                                FILE *outf, tag_type tag_id,
-                                bool extended_version = false )
-{
-    _write_version( filename, outf, TAG_MAJOR_VERSION, TAG_MINOR_VERSION,
-                    extended_version );
-
-    writer outw(filename, outf);
-
-    tag_write(tag_id, outw);
-}
-
-static void _safe_write_tagged_file(const std::string &filename,
-                                    tag_type tag,
-                                    bool lock = false,
-                                    bool extended_version = false)
-{
-    safe_file_writer writer(filename, "wb", lock);
-    _write_tagged_file(filename, writer.open(), tag, extended_version);
-}
 
 static void _write_tagged_chunk(const std::string &chunkname, tag_type tag)
 {
@@ -1937,23 +1909,7 @@ bool load_ghost(bool creating_level)
     }
 
     ghosts.clear();
-    _restore_ghost_version(gfile, majorVersion, minorVersion);
-
-    // Sanity check - EOF.
-    if (!feof(gfile))
-    {
-        fclose(gfile);
-#ifdef BONES_DIAGNOSTICS
-        if (do_diagnostics)
-        {
-            mprf(MSGCH_DIAGNOSTICS, "Incomplete read of \"%s\".",
-                 cha_fil.c_str() );
-            more();
-        }
-#endif
-        return (false);
-    }
-
+    _restore_ghost(gfile, cha_fil, minorVersion);
     fclose(gfile);
 
     // FIXME: This message will have to be shortened again as trunk reaches
@@ -2280,7 +2236,14 @@ static bool _determine_ghost_version( FILE *ghostFile,
         && minorVersion <= TAG_MINOR_VERSION)
     {
         // Discard three more 32-bit words of padding.
-        inf.read(NULL, 3*4);
+        try // don't crash on corrupted ghosts
+        {
+            inf.read(NULL, 3*4);
+        }
+        catch (short_read_exception &E)
+        {
+            return (false);
+        }
         return !feof(ghostFile);
     }
 
@@ -2288,17 +2251,11 @@ static bool _determine_ghost_version( FILE *ghostFile,
     return (false);
 }
 
-static void _restore_ghost_version( FILE *ghostFile,
-                                    int majorVersion, int minorVersion )
+static void _restore_ghost(FILE *ghostFile, std::string filename, int minorVersion)
 {
-    switch (majorVersion)
-    {
-    case TAG_MAJOR_VERSION:
-        _restore_tagged_file(ghostFile, TAG_GHOST, minorVersion);
-        break;
-    default:
-        break;
-    }
+    reader inf(ghostFile, minorVersion);
+    tag_read(inf, minorVersion, TAG_GHOST);
+    inf.fail_if_not_eof(filename);
 }
 
 void save_ghost( bool force )
@@ -2349,7 +2306,11 @@ void save_ghost( bool force )
         return;
     }
 
-    _safe_write_tagged_file(cha_fil, TAG_GHOST, true, true);
+    safe_file_writer sw(cha_fil, "wb", true);
+    writer outw(cha_fil, sw.open());
+
+    _write_ghost_version(outw);
+    tag_write(TAG_GHOST, outw);
 
 #ifdef BONES_DIAGNOSTICS
     if (do_diagnostics)
