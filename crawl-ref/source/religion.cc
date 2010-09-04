@@ -2350,7 +2350,8 @@ std::string adjust_abil_message(const char *pmsg)
     std::string pm = pmsg;
 
     if ((pos = pm.find("{biology}")) != -1)
-        switch(you.is_undead)
+    {
+        switch (you.is_undead)
         {
         case US_UNDEAD:      // mummies -- time has no meaning!
             return "";
@@ -2362,6 +2363,7 @@ std::string adjust_abil_message(const char *pmsg)
             pm.replace(pos, 9, "biology");
             break;
         }
+    }
     return (pm);
 }
 
@@ -3445,7 +3447,7 @@ bool god_likes_fresh_corpses(god_type god)
 
 bool god_likes_spell(spell_type spell, god_type god)
 {
-    switch(god)
+    switch (god)
     {
     case GOD_VEHUMET:
         return (vehumet_supports_spell(spell));
@@ -4110,16 +4112,16 @@ static bool _is_temple_god(god_type god)
     if (!_is_god(god))
         return (false);
 
-    switch(god)
+    switch (god)
     {
     case GOD_NO_GOD:
     case GOD_LUGONU:
     case GOD_BEOGH:
     case GOD_JIYVA:
-        return false;
+        return (false);
 
     default:
-        return true;
+        return (true);
     }
 }
 
