@@ -87,7 +87,7 @@ ENDMAP
 NAME:    david_vaults_3
 TAGS:    vault_entry
 ORIENT:  float
-MONS:    human, human / Donald, human / human / Norris, human / Francis, human
+MONS:    human, human / Donald, human / human / Norris, human / Wiglaf
 SHUFFLE: 2345
 MAP
 @..........@
@@ -262,7 +262,7 @@ MONS:   deep elf fighter / w:5 deep elf knight / w:3 deep elf mage /\
         w:2 deep elf priest
 MONS:   Ijyb / Blork the Orc / Urug / Erolcha / Snorg / Terence / Jessica /\
         Sigmund / Psyche / Erica / Agnes / Maud / Louise / Rupert /\
-        Francis / Norris / goblin
+        Wiglaf / Norris / goblin
 KITEM:  ! = any potion / potion of confusion, \
             any potion / potion of paralysis, any potion / potion of slowing
 KITEM:  $ = q:132 gold / q:66 gold / q:33 gold

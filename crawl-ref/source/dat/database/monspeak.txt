@@ -5163,24 +5163,24 @@ VISUAL:@The_monster@ grins evilly.
 @The_monster@ screams @at_foe@, "I love blood!"
 ## END Urug ##
 %%%%
-############ FRANCIS ### A dwarf. Nuff said.
-Francis
+############ WIGLAF ### A dwarf. Nuff said.
+Wiglaf
 
-@_Francis_common_@
-
-w:5
-@_Francis_rare_@
-
-@_Francis_nondwarf_@
-%%%%
-related Francis
-
-@_Francis_common_@
+@_Wiglaf_common_@
 
 w:5
-@_Francis_rare_@
+@_Wiglaf_rare_@
+
+@_Wiglaf_nondwarf_@
 %%%%
-_Francis_common_
+related Wiglaf
+
+@_Wiglaf_common_@
+
+w:5
+@_Wiglaf_rare_@
+%%%%
+_Wiglaf_common_
 
 @The_monster@ says @to_foe@, "Ma axe will split yer heid!"
 
@@ -5188,7 +5188,7 @@ _Francis_common_
 
 @The_monster@ yells out a battle-cry.
 %%%%
-_Francis_rare_
+_Wiglaf_rare_
 
 VISUAL:@The_monster@ eyes you carefully - or perhaps drunkenly.
 
@@ -5214,7 +5214,7 @@ w:1
 w:1
 @The_monster@ says, "I'm nae pished! Nae yet."
 %%%%
-_Francis_nondwarf_
+_Wiglaf_nondwarf_
 
 w:5
 @The_monster@ says, "Orcs, orcs, elves an' a glaikit @player_genus@." @player_only@
@@ -5224,7 +5224,7 @@ w:5
 @The_monster@ says @to_foe@, "Ye cannae match a dwarf in combat."
 
 @The_monster@ says @to_foe@, "Have ye nae fought a dwarf yet?"
-## END Francis ##
+## END Wiglaf ##
 %%%%
 ############ XTAHUA ### An ancient dragon
 Xtahua
