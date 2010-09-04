@@ -1335,10 +1335,7 @@ flight_type mons_flies(const monsters *mon, bool randarts)
     if (mons_is_ghost_demon(mon->type) && mon->ghost.get())
         return (mon->ghost->fly);
 
-    const int montype = mons_is_zombified(mon) ? mons_zombie_base(mon)
-                                               : mon->type;
-
-    flight_type ret = mons_class_flies(montype);
+    flight_type ret = mons_class_flies(mons_base_type(mon));
 
     // Handle the case where the zombified base monster can't fly, but
     // the zombified monster can (e.g. spectral things).
