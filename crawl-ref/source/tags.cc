@@ -929,10 +929,12 @@ void tag_write(tag_type tagID, writer &outf)
     case TAG_YOU:            tag_construct_you(th);            break;
     case TAG_YOU_ITEMS:      tag_construct_you_items(th);      break;
     case TAG_YOU_DUNGEON:    tag_construct_you_dungeon(th);    break;
-    case TAG_LEVEL:          tag_construct_level(th);          break;
-    case TAG_LEVEL_ITEMS:    tag_construct_level_items(th);    break;
-    case TAG_LEVEL_MONSTERS: tag_construct_level_monsters(th); break;
-    case TAG_LEVEL_TILES:    tag_construct_level_tiles(th);    break;
+    case TAG_LEVEL:
+        tag_construct_level(th);
+        tag_construct_level_items(th);
+        tag_construct_level_monsters(th);
+        tag_construct_level_tiles(th);
+        break;
     case TAG_GHOST:          tag_construct_ghost(th);          break;
     case TAG_LOST_MONSTERS:
         tag_construct_lost_monsters(th);
@@ -999,10 +1001,12 @@ tag_type tag_read(reader &inf, int minorVersion, int8_t expected_tags[NUM_TAGS])
     case TAG_YOU:            tag_read_you(th, minorVersion);            break;
     case TAG_YOU_ITEMS:      tag_read_you_items(th, minorVersion);      break;
     case TAG_YOU_DUNGEON:    tag_read_you_dungeon(th, minorVersion);    break;
-    case TAG_LEVEL:          tag_read_level(th, minorVersion);          break;
-    case TAG_LEVEL_ITEMS:    tag_read_level_items(th, minorVersion);    break;
-    case TAG_LEVEL_MONSTERS: tag_read_level_monsters(th, minorVersion); break;
-    case TAG_LEVEL_TILES:    tag_read_level_tiles(th);                  break;
+    case TAG_LEVEL:
+        tag_read_level(th, minorVersion);
+        tag_read_level_items(th, minorVersion);
+        tag_read_level_monsters(th, minorVersion);
+        tag_read_level_tiles(th);
+        break;
     case TAG_GHOST:          tag_read_ghost(th, minorVersion);          break;
     case TAG_LOST_MONSTERS:
         tag_read_lost_monsters(th);
@@ -1033,9 +1037,6 @@ void tag_missing(int tag)
 {
     switch (tag)
     {
-        case TAG_LEVEL_TILES:
-            tag_missing_level_tiles();
-            break;
         default:
             end(-1, false,
                 "Tag (%d) is missing, save file is probably corrupted",
@@ -1065,12 +1066,8 @@ void tag_set_expected(int8_t tags[], int fileType)
                     tags[i] = 1;
                 break;
             case TAGTYPE_LEVEL:
-                if (i >= TAG_LEVEL && i < TAG_GHOST)
+                if (i == TAG_LEVEL)
                     tags[i] = 1;
-#ifdef USE_TILE
-                if (i == TAG_LEVEL_TILES)
-                    tags[i] = 1;
-#endif
                 break;
             case TAGTYPE_GHOST:
                 if (i == TAG_GHOST)
@@ -2598,6 +2595,7 @@ void tag_construct_level_tiles(writer &th)
     unsigned int tile = 0;
     unsigned int last_tile = 0;
 
+    marshallBoolean(th, true);
     // Legacy version number.
     marshallShort(th, 0);
 
@@ -2685,6 +2683,8 @@ void tag_construct_level_tiles(writer &th)
 
     mcache.construct(th);
 
+#else
+    marshallBoolean(th, false);
 #endif
 }
 
@@ -2962,6 +2962,11 @@ static void tag_read_level_monsters(reader &th, int minorVersion)
 
 void tag_read_level_tiles(reader &th)
 {
+    if (!unmarshallBoolean(th))
+    {
+        tag_missing_level_tiles();
+        return;
+    }
 #ifdef USE_TILE
     for (int i = 0; i < GXM; i++)
         for (int j = 0; j < GYM; j++)
@@ -3024,6 +3029,18 @@ void tag_read_level_tiles(reader &th)
         }
 
     mcache.read(th);
+#else
+    // Snarf all remaining data, throwing it out.
+    // This can happen only when loading in console a save from tiles.
+    // It's a data loss bug that needs to be fixed.
+    try
+    {
+        while (1)
+            unmarshallByte(th);
+    }
+    catch (short_read_exception E)
+    {
+    }
 #endif
 }
 

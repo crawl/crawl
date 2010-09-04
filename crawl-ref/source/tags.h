@@ -23,12 +23,9 @@ enum tag_type   // used during save/load process to identify data blocks
     TAG_YOU = 1,                        // 'you' structure
     TAG_YOU_ITEMS,                      // your items
     TAG_YOU_DUNGEON,                    // dungeon specs (stairs, branches, features)
-    TAG_LEVEL,                          // various grids & clouds
-    TAG_LEVEL_ITEMS,                    // items/traps
-    TAG_LEVEL_MONSTERS,                 // monsters
+    TAG_LEVEL,                          // a single dungeon level
     TAG_GHOST,                          // ghost
     TAG_LOST_MONSTERS,                  // monsters in transit
-    TAG_LEVEL_TILES,
     TAG_GAME_STATE,
     NUM_TAGS,
 
