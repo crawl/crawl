@@ -1484,6 +1484,18 @@
       }
     },
 
+    {  MST_NERGALLE,
+      {
+       SPELL_BOLT_OF_DRAINING,
+       SPELL_SUMMON_SPECTRAL_ORCS,
+       SPELL_NO_SPELL,
+       SPELL_DISPEL_UNDEAD,
+       SPELL_HASTE_OTHER,
+       SPELL_TELEPORT_SELF
+      }
+    },
+
+
     {  MST_JUMPING_SPIDER,
       {
        SPELL_BLINK_CLOSE,

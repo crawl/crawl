@@ -31,9 +31,11 @@
 #include "mislead.h"
 #include "mgen_data.h"
 #include "coord.h"
+#include "mon-gear.h"
 #include "mon-speak.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
+#include "monster.h"
 #include "random.h"
 #include "religion.h"
 #include "shout.h"
@@ -174,7 +176,8 @@ static bool _set_allied_target(monsters * caster, bolt & pbolt)
     for (monster_iterator targ(caster); targ; ++targ)
     {
         if (*targ != caster
-            && mons_genus(targ->type) == caster_genus
+            && (mons_genus(targ->type) == caster_genus
+                || mons_genus(targ->base_monster) == caster_genus)
             && mons_aligned(*targ, caster)
             && !targ->has_ench(ENCH_CHARM)
             && _flavour_benefits_monster(pbolt.flavour, **targ))
@@ -777,7 +780,8 @@ static bool _los_free_spell(spell_type spell_cast)
         || spell_cast == SPELL_HAUNT
         || spell_cast == SPELL_FIRE_STORM
         || spell_cast == SPELL_AIRSTRIKE
-        || spell_cast == SPELL_MISLEAD);
+        || spell_cast == SPELL_MISLEAD
+        || spell_cast == SPELL_SUMMON_SPECTRAL_ORCS);
 }
 
 // Set up bolt structure for monster spell casting.
@@ -874,6 +878,7 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     case SPELL_SILENCE:
     case SPELL_AWAKEN_FOREST:
     case SPELL_SUMMON_CANIFORMS:
+    case SPELL_SUMMON_SPECTRAL_ORCS:
         return (true);
     default:
         if (check_validity)
@@ -1718,6 +1723,82 @@ static void _mons_cast_summon_illusion(monsters *monster, spell_type spell)
 
     mons_summon_illusion_from(monster, foe, spell);
 }
+
+void mons_cast_spectral_orcs(monsters *monster)
+{
+    coord_def fpos;
+
+    switch (monster->foe)
+    {
+    case MHITNOT:
+        return;
+
+    case MHITYOU:
+        fpos = you.pos();
+        break;
+
+    default:
+        fpos = menv[monster->foe].pos();
+    }
+
+    int num = random2(3) + 1;
+    int created;
+    int hp;
+    monsterentry *m;
+    const int abj = 3;
+    monsters *orc;
+
+
+    for (int j = 0; j < num; ++j)
+    {
+        created = create_monster(
+                  mgen_data(MONS_SPECTRAL_THING, SAME_ATTITUDE(monster), monster,
+                          abj, SPELL_SUMMON_SPECTRAL_ORCS, fpos, monster->foe, 0,
+                          GOD_BEOGH, MONS_ORC));
+        if (created != -1)
+        {
+             orc = &menv[created];
+             // which base type this orc is pretending to be for
+             // gear purposes
+             orc->number = MONS_ORC;
+
+             if (one_chance_in(2))
+             {
+                 m = get_monster_data(MONS_ORC_WARRIOR);
+                 orc->hit_dice = m->hpdice[0];
+                 hp = hit_points(m->hpdice[0], m->hpdice[1], m->hpdice[2]);
+                 orc->max_hit_points = hp;
+                 orc->hit_points = hp;
+                 orc->number = MONS_ORC_WARRIOR;
+                 orc->base_monster = MONS_ORC_WARRIOR;
+             }
+             else if (one_chance_in(3))
+             {
+                 m = get_monster_data(MONS_ORC_KNIGHT);
+                 orc->hit_dice = m->hpdice[0];
+                 hp = hit_points(m->hpdice[0], m->hpdice[1], m->hpdice[2]);
+                 orc->max_hit_points = hp;
+                 orc->hit_points = hp;
+                 orc->number = MONS_ORC_KNIGHT;
+                 orc->base_monster = MONS_ORC_KNIGHT;
+             }
+             else if (one_chance_in(10))
+             {
+                 m = get_monster_data(MONS_ORC_WARLORD);
+                 orc->hit_dice = m->hpdice[0];
+                 hp = hit_points(m->hpdice[0], m->hpdice[1], m->hpdice[2]);
+                 orc->max_hit_points = hp;
+                 orc->hit_points = hp;
+                 orc->number = MONS_ORC_WARLORD;
+                 orc->base_monster = MONS_ORC_WARLORD;
+             }
+
+             give_item(created, you.absdepth0, true, true);
+             // set gear as summoned
+             orc->mark_summoned(abj, true, SPELL_SUMMON_SPECTRAL_ORCS);
+         }
+     }
+ }
 
 void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                bool do_noise, bool special_ability)

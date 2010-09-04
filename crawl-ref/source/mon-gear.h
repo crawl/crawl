@@ -7,5 +7,5 @@
 #define MON_GEAR_H
 
 
-void give_item(int mid, int level_number, bool mons_summoned);
+void give_item(int mid, int level_number, bool mons_summoned, bool spectral_orcs = false);
 #endif

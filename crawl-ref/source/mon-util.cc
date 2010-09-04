@@ -2905,6 +2905,7 @@ static bool _ms_los_spell(spell_type monspell)
         || monspell == SPELL_AIRSTRIKE
         || monspell == SPELL_HAUNT
         || monspell == SPELL_MISLEAD
+        || monspell == SPELL_SUMMON_SPECTRAL_ORCS
         || spell_typematch(monspell, SPTYP_SUMMONING))
     {
         return (true);
