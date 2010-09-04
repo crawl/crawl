@@ -6208,6 +6208,10 @@ void player::paralyse(actor *who, int str)
     if (stasis_blocks_effect(true, true, "%s gives you a mild electric shock."))
         return;
 
+    if (!(who && who->as_monster() && who->as_monster()->type == MONS_RED_WASP) &&
+        duration[DUR_PARALYSIS])
+        return;
+
     int &paralysis(duration[DUR_PARALYSIS]);
 
     mprf("You %s the ability to move!",

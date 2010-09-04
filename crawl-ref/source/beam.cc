@@ -3111,6 +3111,10 @@ bool bolt::misses_player()
 
 void bolt::affect_player_enchantment()
 {
+    // boost paralysis odds a bit, since chain paralysis from beams was removed
+    if (flavour == BEAM_PARALYSIS)
+        ench_power = ench_power * 6 / 5;
+
     if (flavour != BEAM_POLYMORPH && has_saving_throw()
         && you.check_res_magic(ench_power))
     {
