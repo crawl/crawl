@@ -163,7 +163,11 @@ unsigned char reader::readByte()
         return buf;
     }
     else
+    {
+        if (_read_offset >= _pbuf->size())
+            throw short_read_exception();
         return (*_pbuf)[_read_offset++];
+    }
 }
 
 void reader::read(void *data, size_t size)
