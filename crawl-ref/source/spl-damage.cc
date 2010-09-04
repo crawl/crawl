@@ -1697,7 +1697,7 @@ bool cast_fragmentation(int pow, const dist& spd)
         beam.name       = "blast of crystal shards";
         beam.damage.num = 5;
 
-        if (grid == DNGN_GREEN_CRYSTAL_WALL && coinflip())
+        if (coinflip())
         {
             beam.ex_size    = coinflip() ? 3 : 2;
             grd(spd.target) = DNGN_FLOOR;
