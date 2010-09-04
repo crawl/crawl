@@ -559,6 +559,8 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
 
     _potion_stack_changed_message(blood, coag_count, "coagulate%s");
 
+    request_autoinscribe();
+
     // Identify both blood and coagulated blood, if necessary.
     if (!knew_blood)
         set_ident_type( OBJ_POTIONS, POT_BLOOD, ID_KNOWN_TYPE );
