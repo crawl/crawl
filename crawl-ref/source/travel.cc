@@ -2175,6 +2175,9 @@ level_id find_down_level(level_id curr)
 
 level_id find_deepest_explored(level_id curr)
 {
+    ASSERT(curr.branch != NUM_BRANCHES
+           && curr.level_type == LEVEL_DUNGEON);
+
     for (int i = branches[curr.branch].depth; i > 0; --i)
     {
         const level_id lid(curr.branch, i);

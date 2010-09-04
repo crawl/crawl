@@ -52,7 +52,9 @@ LUAFN(l_feature_is_traversable)
 LUAFN(l_find_deepest_explored)
 {
     const std::string &branch = luaL_checkstring(ls, 1);
-    level_id lid(str_to_branch(branch), 1);
+    const level_id lid(str_to_branch(branch), 1);
+    if (lid.branch == NUM_BRANCHES)
+        luaL_error(ls, "Bad branch name: '%s'", branch.c_str());
     PLUARET(number, find_deepest_explored(lid).depth);
 }
 
