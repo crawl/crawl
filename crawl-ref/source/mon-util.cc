@@ -3939,7 +3939,7 @@ mon_body_shape get_mon_shape(const int type)
         return (MON_SHAPE_MISC);
     case 'y': // winged insects
         return (MON_SHAPE_INSECT_WINGED);
-    case 'z': // small zombies etc.
+    case 'z': // small zombies, etc.
         if (type == MONS_WIGHT
             || type == MONS_SKELETAL_WARRIOR
             || type == MONS_FLAMING_CORPSE)
@@ -4017,9 +4017,10 @@ mon_body_shape get_mon_shape(const int type)
             return (MON_SHAPE_QUADRUPED_TAILLESS);
         else
             return (MON_SHAPE_QUADRUPED);
-    case 'Z': // constructed type, not enough info to determine shape
+    case 'Z': // large zombies, etc.
+        // constructed type, not enough info to determine shape
         return (MON_SHAPE_MISC);
-    case ';': // Fish and eels
+    case ';': // water monsters
         if (type == MONS_ELECTRIC_EEL)
             return (MON_SHAPE_SNAKE);
         else

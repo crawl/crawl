@@ -2059,7 +2059,7 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL
 },
 
-// small zombies etc. ('z')
+// small zombies, etc. ('z')
 // zombie, skeleton and simulacra species depend on corpse species,
 // or else are chosen randomly
 {
