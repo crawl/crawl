@@ -742,7 +742,22 @@ std::string savedir_versioned_path(const std::string &shortpath)
 }
 
 #ifdef USE_TILE
-static void _fill_player_doll(player_save_info &p, const std::string &dollfile)
+#define LINEMAX 1024
+static bool _readln(chunk_reader &rd, char *buf)
+{
+    for (int space = LINEMAX - 1; space; space--)
+    {
+        if (!rd.read(buf, 1))
+            return false;
+        if (*buf == '\n')
+            break;
+        buf++;
+    }
+    *buf = 0;
+    return true;
+}
+
+static void _fill_player_doll(player_save_info &p, package *save)
 {
     dolls_data equip_doll;
     for (unsigned int j = 0; j < TILEP_PART_MAX; ++j)
@@ -753,24 +768,21 @@ static void _fill_player_doll(player_save_info &p, const std::string &dollfile)
 
     bool success = false;
 
-    FILE *fdoll = fopen(dollfile.c_str(), "r");
-    if (fdoll)
+    chunk_reader fdoll(save, "tdl");
     {
-        char fbuf[1024];
-        memset(fbuf, 0, sizeof(fbuf));
-        if (fscanf(fdoll, "%1023s", fbuf) != EOF)
+        char fbuf[LINEMAX];
+        if (_readln(fdoll,fbuf))
         {
             tilep_scan_parts(fbuf, equip_doll, p.species, p.experience_level);
             tilep_race_default(p.species, p.experience_level, &equip_doll);
             success = true;
 
-            while (fscanf(fdoll, "%1023s", fbuf) != EOF)
+            while (_readln(fdoll, fbuf))
             {
                 if (strcmp(fbuf, "net") == 0)
                     p.held_in_net = true;
             }
         }
-        fclose(fdoll);
     }
 
     if (!success) // Use default doll instead.
