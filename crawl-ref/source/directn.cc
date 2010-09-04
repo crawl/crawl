@@ -1682,7 +1682,7 @@ void direction_chooser::do_redraws()
 
     if (need_cursor_redraw || Options.use_fake_cursor)
     {
-        cursorxy(crawl_view.grid2screen(target()) - coord_def(1,1));
+        cursorxy(crawl_view.grid2screen(target()));
         need_cursor_redraw = false;
     }
 }
