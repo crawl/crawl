@@ -271,12 +271,14 @@ static void CHECK_INITIALIZED(uint32_t x)
 #endif
 
 // static helpers
+static void tag_construct_char(writer &th);
 static void tag_construct_you(writer &th);
 static void tag_construct_you_items(writer &th);
 static void tag_construct_you_dungeon(writer &th);
 static void tag_construct_lost_monsters(writer &th);
 static void tag_construct_lost_items(writer &th);
 static void tag_construct_game_state(writer &th);
+static void tag_read_char(reader &th, int minorVersion);
 static void tag_read_you(reader &th, int minorVersion);
 static void tag_read_you_items(reader &th, int minorVersion);
 static void tag_read_you_dungeon(reader &th, int minorVersion);
@@ -930,9 +932,17 @@ void tag_write(tag_type tagID, writer &outf)
     writer th(&buf);
     switch (tagID)
     {
-    case TAG_YOU:            tag_construct_you(th);            break;
-    case TAG_YOU_ITEMS:      tag_construct_you_items(th);      break;
-    case TAG_YOU_DUNGEON:    tag_construct_you_dungeon(th);    break;
+    case TAG_CHR:
+        tag_construct_char(th);
+        tag_construct_game_state(th);
+        break;
+    case TAG_YOU:
+        tag_construct_you(th);
+        tag_construct_you_items(th);
+        tag_construct_you_dungeon(th);
+        tag_construct_lost_monsters(th);
+        tag_construct_lost_items(th);
+        break;
     case TAG_LEVEL:
         tag_construct_level(th);
         tag_construct_level_items(th);
@@ -940,11 +950,6 @@ void tag_write(tag_type tagID, writer &outf)
         tag_construct_level_tiles(th);
         break;
     case TAG_GHOST:          tag_construct_ghost(th);          break;
-    case TAG_LOST_MONSTERS:
-        tag_construct_lost_monsters(th);
-        tag_construct_lost_items(th);
-        break;
-    case TAG_GAME_STATE:     tag_construct_game_state(th);     break;
     default:
         // I don't know how to make that!
         break;
@@ -1002,9 +1007,17 @@ tag_type tag_read(reader &inf, int minorVersion, int8_t expected_tags[NUM_TAGS])
     reader th(buf, minorVersion);
     switch (tag_id)
     {
-    case TAG_YOU:            tag_read_you(th, minorVersion);            break;
-    case TAG_YOU_ITEMS:      tag_read_you_items(th, minorVersion);      break;
-    case TAG_YOU_DUNGEON:    tag_read_you_dungeon(th, minorVersion);    break;
+    case TAG_CHR:
+        tag_read_char(th, minorVersion);
+        tag_read_game_state(th);
+        break;
+    case TAG_YOU:
+        tag_read_you(th, minorVersion);
+        tag_read_you_items(th, minorVersion);
+        tag_read_you_dungeon(th, minorVersion);
+        tag_read_lost_monsters(th);
+        tag_read_lost_items(th);
+        break;
     case TAG_LEVEL:
         tag_read_level(th, minorVersion);
         tag_read_level_items(th, minorVersion);
@@ -1012,11 +1025,6 @@ tag_type tag_read(reader &inf, int minorVersion, int8_t expected_tags[NUM_TAGS])
         tag_read_level_tiles(th);
         break;
     case TAG_GHOST:          tag_read_ghost(th, minorVersion);          break;
-    case TAG_LOST_MONSTERS:
-        tag_read_lost_monsters(th);
-        tag_read_lost_items(th);
-        break;
-    case TAG_GAME_STATE:     tag_read_game_state(th);                   break;
     default:
         // I don't know how to read that!
         ASSERT(false);
@@ -1059,14 +1067,11 @@ void tag_set_expected(int8_t tags[], int fileType)
         switch (fileType)
         {
             case TAGTYPE_PLAYER:
-                if (i >= TAG_YOU && i <= TAG_YOU_DUNGEON
-                    || i == TAG_LOST_MONSTERS || i == TAG_GAME_STATE)
-                {
+                if (i == TAG_YOU)
                     tags[i] = 1;
-                }
                 break;
             case TAGTYPE_PLAYER_NAME:
-                if (i == TAG_YOU || i == TAG_GAME_STATE)
+                if (i == TAG_CHR)
                     tags[i] = 1;
                 break;
             case TAGTYPE_LEVEL:
@@ -1093,15 +1098,25 @@ void tag_set_expected(int8_t tags[], int fileType)
 // be restored even if a later version increases these constants.
 
 // --------------------------- player tags (foo.sav) -------------------- //
+static void tag_construct_char(writer &th)
+{
+    marshallString(th, you.your_name, kNameLen);
+    marshallString(th, Version::Long());
+
+    marshallByte(th, you.species);
+    marshallByte(th, you.char_class);
+    marshallByte(th, you.experience_level);
+    marshallString(th, you.class_name, 30);
+    marshallByte(th, you.religion);
+    marshallString(th, you.second_god_name);
+
+    marshallByte(th, you.wizard);
+}
+
 static void tag_construct_you(writer &th)
 {
     int i, j;
 
-    marshallString(th, you.your_name, kNameLen);
-    marshallString(th, Version::Long());
-
-    marshallByte(th, you.religion);
-    marshallString(th, you.second_god_name);
     marshallByte(th, you.piety);
     marshallByte(th, you.rotting);
     marshallShort(th, you.pet_target);
@@ -1128,8 +1143,6 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.entry_cause_god);
 
     marshallInt(th, you.disease);
-    marshallByte(th, you.species);
-
     marshallShort(th, you.hp);
 
     marshallShort(th, you.hunger);
@@ -1162,8 +1175,6 @@ static void tag_construct_you(writer &th)
     marshallInt(th, you.experience);
     marshallInt(th, you.gold);
 
-    marshallByte(th, you.char_class);
-    marshallByte(th, you.experience_level);
     marshallInt(th, you.exp_available);
 
     marshallShort(th, you.base_hp);
@@ -1173,8 +1184,6 @@ static void tag_construct_you(writer &th)
 
     marshallShort(th, you.pos().x);
     marshallShort(th, you.pos().y);
-
-    marshallString(th, you.class_name, 30);
 
     marshallShort(th, you.burden);
 
@@ -1254,8 +1263,6 @@ static void tag_construct_you(writer &th)
     // elapsed time
     marshallInt(th, you.elapsed_time);
 
-    // wizard mode used
-    marshallByte(th, you.wizard);
 
     // time of game start
     marshallString(th, make_date_string( you.birth_time ).c_str(), 20);
@@ -1644,19 +1651,27 @@ static void tag_construct_game_state(writer &th)
     marshallByte( th, crawl_state.type );
 }
 
+static void tag_read_char(reader &th, int minorVersion)
+{
+    you.your_name         = unmarshallString(th, kNameLen);
+    const std::string old_version = unmarshallString(th);
+    dprf("Last save Crawl version: %s", old_version.c_str());
+
+    you.species           = static_cast<species_type>(unmarshallByte(th));
+    you.char_class        = static_cast<job_type>(unmarshallByte(th));
+    you.experience_level  = unmarshallByte(th);
+    unmarshallCString(th, you.class_name, 30);
+    you.religion          = static_cast<god_type>(unmarshallByte(th));
+    you.second_god_name   = unmarshallString(th);
+
+    you.wizard            = unmarshallBoolean(th);
+}
+
 static void tag_read_you(reader &th, int minorVersion)
 {
     char buff[20];      // For birth date.
     int i,j;
     int count;
-
-    you.your_name         = unmarshallString(th, kNameLen);
-    const std::string old_version = unmarshallString(th);
-    dprf("Last save Crawl version: %s", old_version.c_str());
-
-    you.religion          = static_cast<god_type>(unmarshallByte(th));
-
-    you.second_god_name = unmarshallString(th);
 
     you.piety             = unmarshallByte(th);
     you.rotting           = unmarshallByte(th);
@@ -1690,7 +1705,6 @@ static void tag_read_you(reader &th, int minorVersion)
     you.entry_cause_god = static_cast<god_type>( unmarshallByte(th) );
     you.disease         = unmarshallInt(th);
 
-    you.species         = static_cast<species_type>(unmarshallByte(th));
     you.hp              = unmarshallShort(th);
     you.hunger          = unmarshallShort(th);
 
@@ -1726,9 +1740,6 @@ static void tag_read_you(reader &th, int minorVersion)
     you.hit_points_regeneration   = unmarshallShort(th) / 100;
     you.experience                = unmarshallInt(th);
     you.gold                      = unmarshallInt(th);
-
-    you.char_class                = static_cast<job_type>(unmarshallByte(th));
-    you.experience_level          = unmarshallByte(th);
     you.exp_available             = unmarshallInt(th);
 
     you.base_hp                   = unmarshallShort(th);
@@ -1739,8 +1750,6 @@ static void tag_read_you(reader &th, int minorVersion)
     const int x = unmarshallShort(th);
     const int y = unmarshallShort(th);
     you.moveto(coord_def(x, y));
-
-    unmarshallCString(th, you.class_name, 30);
 
     you.burden = unmarshallShort(th);
 
@@ -1845,9 +1854,6 @@ static void tag_read_you(reader &th, int minorVersion)
 
     // elapsed time
     you.elapsed_time   = unmarshallInt(th);
-
-    // wizard mode
-    you.wizard         = unmarshallBoolean(th);
 
     // time of character creation
     unmarshallCString( th, buff, 20 );

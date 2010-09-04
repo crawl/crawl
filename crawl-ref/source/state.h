@@ -100,6 +100,9 @@ struct game_state
     // Any changes to macros that need to be changed?
     bool unsaved_macros;
 
+    // Version of the last character save.
+    int minorVersion;
+
 protected:
     void reset_cmd_repeat();
     void reset_cmd_again();
