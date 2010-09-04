@@ -5660,7 +5660,7 @@ void monsters::hibernate(int)
 
 void monsters::put_to_sleep(actor *attacker, int strength)
 {
-    if (has_ench(ENCH_SLEEPY))
+    if (!can_sleep())
         return;
 
     behaviour = BEH_SLEEP;

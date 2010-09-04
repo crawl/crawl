@@ -6639,7 +6639,7 @@ void player::put_to_sleep(actor*, int power)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (duration[DUR_SLEEP])
+    if (!can_sleep())
         return;
 
     mpr("You fall asleep!");
