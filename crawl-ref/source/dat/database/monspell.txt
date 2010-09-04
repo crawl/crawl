@@ -234,7 +234,7 @@ unseen Geryon cast
 
 You hear a weird and mournful sound.
 %%%%
-Wayne cast
+Wiglaf cast
 
 @The_monster@ raises a hand and says an invocation.
 
@@ -242,7 +242,7 @@ Wayne cast
 
 @The_monster@ prays in loud words.
 %%%%
-unseen Wayne cast
+unseen Wiglaf cast
 
 You hear an invocation said in the dwarven tongue.
 
