@@ -3331,7 +3331,7 @@ void slime_wall_damage(actor* act, int delay)
 
         if (you.religion != GOD_JIYVA || you.penance[GOD_JIYVA])
         {
-            splash_with_acid(strength, true,
+            splash_with_acid(strength, false,
                              (walls > 1) ? "The walls burn you!"
                                          : "The wall burns you!");
         }
@@ -3351,7 +3351,6 @@ void slime_wall_damage(actor* act, int delay)
              mprf((walls > 1) ? "The walls burn %s!" : "The wall burns %s!",
                   mon->name(DESC_NOCAP_THE).c_str());
          }
-         corrode_monster(mon);
          mon->hurt(NULL, dam, BEAM_ACID);
     }
 }
