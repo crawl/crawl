@@ -536,7 +536,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         level = MAKE_GOOD_ITEM;
         break;
 
-    case MONS_FRANCIS:
+    case MONS_WIGLAF:
         item_race = MAKE_ITEM_DWARVEN;
 
         item.base_type = OBJ_WEAPONS;
@@ -1423,7 +1423,7 @@ void give_shield(monsters *mon, int level)
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER,
                               level * 2 + 1, MAKE_ITEM_RANDOM_RACE, 1);
         break;
-    case MONS_FRANCIS:
+    case MONS_WIGLAF:
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_SHIELD,
                               level * 2 + 1, MAKE_ITEM_DWARVEN, 1);
         break;
@@ -1570,7 +1570,7 @@ void give_armour(monsters *mon, int level, bool spectral_orcs)
         break;
     }
 
-    case MONS_FRANCIS:
+    case MONS_WIGLAF:
         item_race = MAKE_ITEM_DWARVEN;
         item.base_type = OBJ_ARMOUR;
         if (one_chance_in(3))

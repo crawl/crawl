@@ -1396,7 +1396,7 @@
       }
     },
 
-    {  MST_FRANCIS,
+    {  MST_WIGLAF,
       {
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
