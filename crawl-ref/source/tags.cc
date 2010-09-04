@@ -4,44 +4,12 @@
  *  Written by: Gordon Lipford
  */
 
-/* ------------------------- how tags work ----------------------------------
-
-1. Tag types are enumerated in tags.h.
-
-2. Tags are written to a FILE* using tag_write(tag_type t).  The serialization
-   request is forwarded appropriately.
-
-3. Tags are read from a FILE* with tag_read(), which does not need a tag_type
-   argument.  A header is read, which tells tag_read what to construct.
-
-4. In order to know which tags are used by a particular file type, a client
-   calls tag_set_expected( fileType ), which sets up an array of 8-bit ints.
-   Within the array, a value of 1 means the tag is expected; -1 means that
-   the tag is not expected.  A client can then set values in this array to
-   anything other than 1 to indicate a successful tag_read() of that tag.
-
-5. A case should be provided in tag_missing() for any tag which might be
-   missing from a tagged save file.  For example, if a developer adds
-   TAG_YOU_NEW_STUFF to the player save file, he would have to provide a
-   case in tag_missing() for this tag since it might not be there in
-   earlier savefiles.   The tags defined with the original tag system (and
-   so not needing cases in tag_missing()) are as follows:
-
-    TAG_YOU = 1,              // 'you' structure
-    TAG_YOU_ITEMS,            // your items
-    TAG_YOU_DUNGEON,          // dungeon specs (stairs, branches, features)
-    TAG_LEVEL,                // various grids & clouds
-    TAG_LEVEL_ITEMS,          // items/traps
-    TAG_LEVEL_MONSTERS,       // monsters
-    TAG_GHOST,                // ghost
-
-6. The marshalling and unmarshalling of data is done in network order and
-   is meant to keep savefiles cross-platform.  They are non-ascii - always
-   FTP in binary mode.  Note also that the marshalling sizes are 1, 2, and 4
-   for byte, short, and long - assuming that 'int' would have been
-   insufficient on 16 bit systems (and that Crawl otherwise lacks
-   system-independent data types).
-
+/*
+   The marshalling and unmarshalling of data is done in big endian and
+   is meant to keep savefiles cross-platform.  Note also that the marshalling
+   sizes are 1, 2, and 4 for byte, short, and int.  If a strange platform
+   with different sizes of these basic types pops up, please sed it to fixed-
+   width ones.  For now, that wasn't done in order to keep things convenient.
 */
 
 #include "AppHdr.h"
@@ -960,46 +928,25 @@ void tag_write(tag_type tagID, writer &outf)
         return;
 
     // Write tag header.
-    marshallShort(outf, tagID);
     marshallInt(outf, buf.size());
 
     // Write tag data.
     outf.write(&buf[0], buf.size());
 }
 
-// Read a single tagged chunk of data from fp into memory.
-// TAG_NO_TAG is returned if there's nothing left to read in the file
-// (or on an error).
+// Read a piece of data from inf into memory, then run the appropiate reader.
 //
 // minorVersion is available for any sub-readers that need it
-// (like TAG_LEVEL_MONSTERS).
-tag_type tag_read(reader &inf, int minorVersion, int8_t expected_tags[NUM_TAGS])
+void tag_read(reader &inf, int minorVersion, tag_type tag_id)
 {
     // Read header info and data
-    short tag_id = NUM_TAGS;
     std::vector<unsigned char> buf;
-    {
-        try
-        {
-            tag_id = unmarshallShort(inf);
-        }
-        catch (short_read_exception E)
-        {
-            return TAG_NO_TAG;
-        }
-        if (tag_id < 0 || tag_id >= NUM_TAGS)
-            return TAG_NO_TAG;
-        const int data_size = unmarshallInt(inf);
-        if (data_size < 0)
-            return TAG_NO_TAG;
+    const int data_size = unmarshallInt(inf);
+    ASSERT(data_size >= 0);
 
-        // Fetch data in one go
-        buf.resize(data_size);
-        inf.read(&buf[0], buf.size());
-
-        if (!expected_tags[tag_id])
-            return TAG_SKIP;
-    }
+    // Fetch data in one go
+    buf.resize(data_size);
+    inf.read(&buf[0], buf.size());
 
     unwind_var<int> tag_minor_version(_tag_minor_version, minorVersion);
 
@@ -1027,77 +974,10 @@ tag_type tag_read(reader &inf, int minorVersion, int8_t expected_tags[NUM_TAGS])
     case TAG_GHOST:          tag_read_ghost(th, minorVersion);          break;
     default:
         // I don't know how to read that!
-        ASSERT(false);
-        return TAG_NO_TAG;
-    }
-
-    return static_cast<tag_type>(tag_id);
-}
-
-
-// Older savefiles might want to call this to get a tag properly
-// initialised if it wasn't part of the savefile.  For now, none are
-// supported.
-
-// This function will be called AFTER all other tags for the savefile
-// are read, so everything that can be initialised should have been by
-// now.
-
-// minorVersion is available for any child functions that need it
-// (currently none).
-void tag_missing(int tag)
-{
-    switch (tag)
-    {
-        default:
-            end(-1, false,
-                "Tag (%d) is missing, save file is probably corrupted",
-                tag);
+        ASSERT(!"unknown tag type");
     }
 }
 
-// utility
-void tag_set_expected(int8_t tags[], int fileType)
-{
-    int i;
-
-    for (i = 0; i < NUM_TAGS; i++)
-    {
-        tags[i] = 0;
-        switch (fileType)
-        {
-            case TAGTYPE_PLAYER:
-                if (i == TAG_YOU)
-                    tags[i] = 1;
-                break;
-            case TAGTYPE_PLAYER_NAME:
-                if (i == TAG_CHR)
-                    tags[i] = 1;
-                break;
-            case TAGTYPE_LEVEL:
-                if (i == TAG_LEVEL)
-                    tags[i] = 1;
-                break;
-            case TAGTYPE_GHOST:
-                if (i == TAG_GHOST)
-                    tags[i] = 1;
-                break;
-            default:
-                // I don't know what kind of file that is!
-                break;
-        }
-    }
-}
-
-// NEVER _MODIFY_ THE CONSTRUCT/READ FUNCTIONS, EVER.  THAT IS THE WHOLE POINT
-// OF USING TAGS.  Apologies for the screaming.
-
-// Note anyway that the formats are somewhat flexible;  you could change map
-// size, the # of slots in player inventory, etc.  Constants like GXM,
-// NUM_EQUIP, and NUM_DURATIONS are saved, so the appropriate amount will
-// be restored even if a later version increases these constants.
-
-// --------------------------- player tags (foo.sav) -------------------- //
 static void tag_construct_char(writer &th)
 {
     marshallString(th, you.your_name, kNameLen);
