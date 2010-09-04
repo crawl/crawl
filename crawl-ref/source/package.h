@@ -56,6 +56,7 @@ public:
     chunk_reader(package *parent, const std::string _name);
     ~chunk_reader();
     len_t read(void *data, len_t len);
+    void read_all(std::vector<char> &data);
     friend class package;
 };
 

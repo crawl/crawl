@@ -749,3 +749,17 @@ len_t chunk_reader::read(void *data, len_t len)
     return raw_read(data, len);
 #endif
 }
+
+void chunk_reader::read_all(std::vector<char> &data)
+{
+#define SPACE 1024
+    len_t s, at;
+    do
+    {
+        at = data.size();
+        data.resize(at + SPACE);
+        s = read(&data[at], SPACE);
+    } while (s == SPACE);
+    data.resize(at + s);
+#undef SPACE
+}
