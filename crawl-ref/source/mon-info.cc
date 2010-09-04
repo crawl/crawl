@@ -207,7 +207,9 @@ monster_info::monster_info(const monsters *m, int milev)
 
     if (mons_is_unique(type) || mons_is_unique(base_type))
     {
-        if (type == MONS_LERNAEAN_HYDRA || base_type == MONS_LERNAEAN_HYDRA)
+        if (type == MONS_LERNAEAN_HYDRA  || base_type == MONS_LERNAEAN_HYDRA ||
+            type == MONS_ROYAL_JELLY     ||
+            type == MONS_SERPENT_OF_HELL || base_type == MONS_SERPENT_OF_HELL)
             mb |= ULL1 << MB_NAME_THE;
         else
             mb |= (ULL1 << MB_NAME_UNQUALIFIED) | (ULL1 << MB_NAME_THE);
@@ -435,6 +437,10 @@ std::string monster_info::_core_name() const
         s = mname;
     else if (nametype == MONS_LERNAEAN_HYDRA)
         s = "Lernaean hydra"; // TODO: put this into mon-data.h
+    else if (nametype == MONS_ROYAL_JELLY)
+        s = "royal jelly";
+    else if (nametype == MONS_SERPENT_OF_HELL)
+        s = "Serpent of Hell";
     else if (invalid_monster_type(nametype) && nametype != MONS_PROGRAM_BUG)
         s = "INVALID MONSTER";
     else
