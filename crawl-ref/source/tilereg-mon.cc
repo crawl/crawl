@@ -173,7 +173,7 @@ void MonsterRegion::pack_buffers()
                 const coord_def gc = mon->position;
                 const coord_def ep = grid2show(gc);
 
-                if (crawl_view.in_grid_los(gc))
+                if (crawl_view.in_los_bounds_g(gc))
                 {
                     packed_cell cell;
                     cell.fg = env.tile_fg(ep);
