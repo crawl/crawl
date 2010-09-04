@@ -1847,12 +1847,13 @@ void define_monster(monsters *mons)
         ev += random2(5) - 2;
         break;
 
-    case MONS_SERPENT_OF_HELL:
-        // we have a sprint map that places the serpent of hell
-        ASSERT(player_in_hell() || crawl_state.game_is_sprint());
-        mons->props["serpent_of_hell_flavour"].get_int() = you.where_are_you;
+    case MONS_SERPENT_OF_HELL: {
+        int &flavour = mons->props["serpent_of_hell_flavour"].get_int();
+        if (!flavour)
+            flavour = player_in_hell() ? you.where_are_you : BRANCH_GEHENNA;
         col = _serpent_of_hell_color(mons);
         break;
+    }
 
     default:
         if (mons_is_mimic(mcls))

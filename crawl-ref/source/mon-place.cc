@@ -1391,6 +1391,10 @@ static int _place_monster_aux(const mgen_data &mg,
         }
     }
 
+    if (mg.props.exists("serpent_of_hell_flavour"))
+        mon->props["serpent_of_hell_flavour"] =
+            mg.props["serpent_of_hell_flavour"].get_int();
+
     // Generate a brand shiny new monster, or zombie.
     if (mons_class_is_zombified(mg.cls))
         _define_zombie(mon, mg.base_type, mg.cls, mg.power, fpos);
