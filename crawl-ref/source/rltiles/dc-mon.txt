@@ -588,7 +588,6 @@ vampire_knight MONS_VAMPIRE_KNIGHT
 vampire_mage MONS_VAMPIRE_MAGE
 
 ## Wraiths ('W')
-wight MONS_WIGHT
 wraith MONS_WRAITH
 shadow_wraith MONS_SHADOW_WRAITH
 freezing_wraith MONS_FREEZING_WRAITH
@@ -721,6 +720,7 @@ minotaur MONS_MINOTAUR /*'t'*/
 
 ## Small zombified monsters ('z')
 %sdir dc-mon/undead
+wight MONS_WIGHT
 skeletal_warrior MONS_SKELETAL_WARRIOR
 %rim 0
 flaming_corpse MONS_FLAMING_CORPSE
