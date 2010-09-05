@@ -419,7 +419,8 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     {
     case TRAP_TELEPORT:
         // Never revealed by monsters.
-        if (!you_trigger && !you_know)
+        // except when it's in sight, it's pretty obvious what happened. -doy
+        if (!you_trigger && !you_know && !in_sight)
             this->hide();
         triggerer.teleport(true);
         break;
