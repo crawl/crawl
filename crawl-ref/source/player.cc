@@ -120,7 +120,8 @@ static void _moveto_maybe_repel_stairs()
     }
 }
 
-static bool _check_moveto_cloud(const coord_def& p)
+static bool _check_moveto_cloud(const coord_def& p,
+                                const std::string &move_verb)
 {
     const int cloud = env.cgrid(p);
     if (cloud != EMPTY_CLOUD && !you.confused())
@@ -132,7 +133,8 @@ static bool _check_moveto_cloud(const coord_def& p)
                 || ctype != env.cloud[ env.cgrid(you.pos()) ].type))
         {
             std::string prompt = make_stringf(
-                                    "Really step into that cloud of %s?",
+                                    "Really %s into that cloud of %s?",
+                                    move_verb.c_str(),
                                     cloud_name_at_index(cloud).c_str());
 
             if (!yesno(prompt.c_str(), false, 'n'))
@@ -145,7 +147,7 @@ static bool _check_moveto_cloud(const coord_def& p)
     return (true);
 }
 
-static bool _check_moveto_trap(const coord_def& p)
+static bool _check_moveto_trap(const coord_def& p, const std::string &move_verb)
 {
     // If we're walking along, give a chance to avoid traps.
     const dungeon_feature_type new_grid = env.grid(p);
@@ -164,8 +166,9 @@ static bool _check_moveto_trap(const coord_def& p)
             viewwindow();
 
             mprf(MSGCH_WARN,
-                 "Wait a moment, %s! Do you really want to step there?",
-                 you.your_name.c_str());
+                 "Wait a moment, %s! Do you really want to %s there?",
+                 you.your_name.c_str(),
+                 move_verb.c_str());
 
             if (!you.running.is_any_travel())
                 more();
@@ -185,7 +188,11 @@ static bool _check_moveto_trap(const coord_def& p)
         const trap_type type = get_trap_type(p);
         if (type == TRAP_ZOT)
         {
-            if (!yes_or_no("Do you really want to step into the Zot trap"))
+            std::string prompt = make_stringf(
+                "Do you really want to %s into the Zot trap",
+                move_verb.c_str()
+            );
+            if (!yes_or_no(prompt.c_str()))
             {
                 canned_msg(MSG_OK);
                 return (false);
@@ -215,7 +222,8 @@ static bool _check_moveto_trap(const coord_def& p)
 #endif
         {
             std::string prompt = make_stringf(
-                "Really step %s that %s?",
+                "Really %s %s that %s?",
+                move_verb.c_str(),
                 (type == TRAP_ALARM) ? "onto" : "into",
                 feature_description(new_grid, type,
                                     "", DESC_BASENAME,
@@ -231,7 +239,8 @@ static bool _check_moveto_trap(const coord_def& p)
     return (true);
 }
 
-static bool _check_moveto_dangerous(const coord_def& p)
+static bool _check_moveto_dangerous(const coord_def& p,
+                                    const std::string move_verb)
 {
     if (you.can_swim() && feat_is_water(env.grid(p))
         || !is_feat_dangerous(env.grid(p)))
@@ -243,20 +252,21 @@ static bool _check_moveto_dangerous(const coord_def& p)
     return (false);
 }
 
-static bool _check_moveto_terrain(const coord_def& p)
+static bool _check_moveto_terrain(const coord_def& p,
+                                  const std::string &move_verb)
 {
     // Only consider terrain if player is not levitating.
     if (you.airborne())
         return (true);
 
-    return (_check_moveto_dangerous(p));
+    return (_check_moveto_dangerous(p, move_verb));
 }
 
-bool check_moveto(const coord_def& p)
+bool check_moveto(const coord_def& p, const std::string &move_verb)
 {
-    return (_check_moveto_cloud(p)
-            && _check_moveto_trap(p)
-            && _check_moveto_terrain(p));
+    return (_check_moveto_cloud(p, move_verb)
+            && _check_moveto_trap(p, move_verb)
+            && _check_moveto_terrain(p, move_verb));
 }
 
 void moveto_location_effects(dungeon_feature_type old_feat,
