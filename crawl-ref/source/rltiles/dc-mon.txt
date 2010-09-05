@@ -490,7 +490,7 @@ harpy MONS_HARPY
 sphinx MONS_SPHINX
 kenku MONS_KENKU
 
-## Ice beast only
+## Ice beasts
 ice_beast MONS_ICE_BEAST /*'I'*/
 
 ## Jellies ('J')
