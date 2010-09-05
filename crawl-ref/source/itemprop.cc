@@ -680,7 +680,7 @@ unsigned long full_ident_mask( const item_def& item )
         break;
     }
 
-    if (item_type_known(item.base_type, item.sub_type))
+    if (item_type_known(item.base_type, item.sub_type) && !is_artefact(item))
         flagset &= (~ISFLAG_KNOW_TYPE);
 
     if (is_artefact(item))
