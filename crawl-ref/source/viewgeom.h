@@ -74,9 +74,39 @@ public:
     // Recalculate vlos1 and vlos2.
     void calc_vlos();
 
-    coord_def view_centre() const
+    inline coord_def view_centre() const
     {
         return viewp + viewhalfsz;
+    }
+
+    inline coord_def view2grid(const coord_def &pos) const
+    {
+        return (pos - view_centre() + vgrdc);
+    }
+
+    inline coord_def grid2view(const coord_def &pos) const
+    {
+        return (pos - vgrdc + view_centre());
+    }
+
+    inline coord_def view2show(const coord_def &pos) const
+    {
+        return (pos - vlos1);
+    }
+
+    inline coord_def show2view(const coord_def &pos) const
+    {
+        return (pos + vlos1);
+    }
+
+    inline coord_def grid2show(const coord_def &pos) const
+    {
+        return (view2show(grid2view(pos)));
+    }
+
+    inline coord_def show2grid(const coord_def &pos) const
+    {
+        return (view2grid(show2view(pos)));
     }
 
     coord_def glosc() const
@@ -113,32 +143,32 @@ extern crawl_view_geometry crawl_view;
 
 inline coord_def view2grid(const coord_def &pos)
 {
-    return pos - crawl_view.view_centre() + crawl_view.vgrdc;
+    return crawl_view.view2grid(pos);
 }
 
 inline coord_def grid2view(const coord_def &pos)
 {
-    return (pos - crawl_view.vgrdc + crawl_view.view_centre());
+    return crawl_view.grid2view(pos);
 }
 
 inline coord_def view2show(const coord_def &pos)
 {
-    return (pos - crawl_view.vlos1);
+    return crawl_view.view2show(pos);
 }
 
 inline coord_def show2view(const coord_def &pos)
 {
-    return (pos + crawl_view.vlos1);
+    return crawl_view.show2view(pos);
 }
 
 inline coord_def grid2show(const coord_def &pos)
 {
-    return (view2show(grid2view(pos)));
+    return crawl_view.grid2show(pos);
 }
 
 inline coord_def show2grid(const coord_def &pos)
 {
-    return (view2grid(show2view(pos)));
+    return crawl_view.show2grid(pos);
 }
 
 #endif
