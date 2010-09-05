@@ -1293,51 +1293,10 @@ static std::string morgue_name(time_t when_crawl_got_even)
 // Delete save files on game end.
 static void delete_files()
 {
-    // clean all levels that we think we have ever visited
-    for (level_id_set::const_iterator i = Generated_Levels.begin();
-         i != Generated_Levels.end(); ++i)
-    {
-        const level_id &place(*i);
-        unlink(
-            make_filename(you.your_name,
-                          place.absdepth(),
-                          place.branch,
-                          place.level_type,
-                          false).c_str());
-    }
-
-    // temp levels, if any
-    unlink( make_filename( you.your_name, 0, BRANCH_MAIN_DUNGEON,
-                           LEVEL_ABYSS, false ).c_str() );
-    unlink( make_filename( you.your_name, 0, BRANCH_MAIN_DUNGEON,
-                           LEVEL_PANDEMONIUM, false ).c_str() );
-    unlink( make_filename( you.your_name, 0, BRANCH_MAIN_DUNGEON,
-                           LEVEL_LABYRINTH, false ).c_str() );
-    unlink( make_filename( you.your_name, 0, BRANCH_MAIN_DUNGEON,
-                           LEVEL_PORTAL_VAULT, false ).c_str() );
-
-    // create base file name
-    std::string basename = get_savedir_filename(you.your_name, "", "");
-
-    const char* suffixes[] = {
-#ifdef CLUA_BINDINGS
-        ".lua",
-#endif
-        ".st", ".kil", ".tc", ".nts", ".tut", ".chr", ".msg", ".tdl"
-    };
-
-    const int num_suffixes = sizeof(suffixes) / sizeof(const char*);
-
-    for (int i = 0; i < num_suffixes; ++i)
-    {
-        std::string tmpname = basename + suffixes[i];
-        unlink( tmpname.c_str() );
-    }
-
     you.save->abort();
     delete you.save;
     you.save = 0;
-    unlink((basename + SAVE_SUFFIX).c_str());
+    unlink((get_savedir_filename(you.your_name, "", "") + SAVE_SUFFIX).c_str());
 }
 
 void end_game(scorefile_entry &se)
