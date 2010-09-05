@@ -315,7 +315,7 @@ formatted_string describe_mutations()
         break;
     }
 
-    switch(you.body_size(PSIZE_TORSO, true))
+    switch (you.body_size(PSIZE_TORSO, true))
     {
     case SIZE_LITTLE:
         result += "You are tiny and cannot use many weapons and most armour.\n";
@@ -330,7 +330,7 @@ formatted_string describe_mutations()
         have_any = true;
         break;
     default:
-        ;
+        break;
     }
 
     if (player_genus(GENPC_DRACONIAN))
@@ -406,7 +406,7 @@ formatted_string describe_mutations()
             "hunger status.\n";
     }
 
-    return formatted_string::parse_string(result);
+    return (formatted_string::parse_string(result));
 }
 
 static void _display_vampire_attributes()
