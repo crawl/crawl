@@ -3660,6 +3660,7 @@ item_info get_item_info(const item_def& item)
         break;
     case OBJ_ARMOUR:
         ii.sub_type = item.sub_type;
+        ii.plus2    = item.plus2;      // sub-subtype (gauntlets, etc)
         if (item_ident(ii, ISFLAG_KNOW_PLUSES))
             ii.plus = item.plus;
         if (item_type_known(item))
