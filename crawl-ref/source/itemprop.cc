@@ -1198,8 +1198,9 @@ bool is_enchantable_weapon(const item_def &wpn, bool uncurse, bool first)
         return (false);
 
     // Blowguns don't have any to-dam.
+    // but they can be uncursed. -doy
     if (!first && wpn.base_type == OBJ_WEAPONS && wpn.sub_type == WPN_BLOWGUN)
-        return (false);
+        return (uncurse && wpn.cursed());
 
     // Artefacts or highly enchanted weapons cannot be enchanted,
     // only uncursed.
