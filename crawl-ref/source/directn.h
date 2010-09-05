@@ -264,10 +264,6 @@ bool in_viewport_bounds(int x, int y);
 inline bool in_viewport_bounds(const coord_def& pos) {
   return in_viewport_bounds(pos.x, pos.y);
 }
-bool in_los(int x, int y);
-bool in_los(const coord_def &pos);
-bool in_vlos(int x, int y);
-bool in_vlos(const coord_def &pos);
 
 std::string thing_do_grammar(description_level_type dtype,
                              bool add_stop,

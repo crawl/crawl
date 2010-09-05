@@ -1151,7 +1151,7 @@ void direction_chooser::draw_beam_if_needed()
     }
 
     // We shouldn't ever get a beam to an out-of-LOS target.
-    ASSERT(in_los(target()));
+    ASSERT(you.see_cell(target()));
 
     // Work with a copy in order not to mangle anything.
     ray_def ray = beam;
@@ -1161,7 +1161,7 @@ void direction_chooser::draw_beam_if_needed()
     for (; ray.pos() != target(); ray.advance())
     {
         const coord_def p = ray.pos();
-        ASSERT(in_los(p));
+        ASSERT(you.see_cell(p));
 
         if (p == you.pos())
             continue;
@@ -2140,27 +2140,6 @@ static void _describe_oos_square(const coord_def& where)
 #endif
 }
 
-bool in_vlos(int x, int y)
-{
-    return in_vlos(coord_def(x,y));
-}
-
-bool in_vlos(const coord_def &pos)
-{
-    return (in_los_bounds(pos) && env.map_knowledge(view2grid(pos)).visible()
-                                   || pos == grid2view(you.pos()));
-}
-
-bool in_los(int x, int y)
-{
-    return in_los(coord_def(x,y));
-}
-
-bool in_los(const coord_def& pos)
-{
-    return (in_vlos(grid2view(pos)));
-}
-
 static bool _mons_is_valid_target(const monsters *mon, int mode, int range)
 {
     // Monster types that you can't gain experience from don't count as
@@ -2204,7 +2183,7 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
     if (static_cast<int>(mlist.size()) <= idx)
         return (false);
 
-    if (!_is_target_in_range(where, range) || !in_los(where))
+    if (!_is_target_in_range(where, range) || !you.see_cell(where))
         return (false);
 
     const monsters* mon = monster_at(where);
@@ -2267,7 +2246,7 @@ static bool _find_fprop_unoccupied(const coord_def & where, int mode,
         return (false);
 
     monsters * mon = monster_at(where);
-    if (mon || !in_los(where))
+    if (mon || !you.see_cell(where))
         return (false);
 
     // Monster in LOS but only via glass walls, so no direct path.
@@ -2305,7 +2284,7 @@ static bool _find_monster( const coord_def& where, int mode, bool need_path,
     const monsters* mon = monster_at(where);
 
     // No monster or outside LOS.
-    if (mon == NULL || !in_los(where))
+    if (mon == NULL || !you.see_cell(where))
         return (false);
 
     // Monster in LOS but only via glass walls, so no direct path.
@@ -2343,7 +2322,7 @@ static bool _find_feature( const coord_def& where, int mode,
                            bool /* need_path */, int /* range */)
 {
     // The stair need not be in LOS if the square is mapped.
-    if (!in_los(where) && !env.map_knowledge(where).seen())
+    if (!you.see_cell(where) && !env.map_knowledge(where).seen())
         return (false);
 
     return is_feature(mode, where);
@@ -2615,17 +2594,18 @@ static bool _find_square(coord_def &mfp, int direction,
 
         const int targ_x = you.pos().x + temp_xps - ctrx;
         const int targ_y = you.pos().y + temp_yps - ctry;
+        const coord_def targ(targ_x, targ_y);
 
-        if (!crawl_view.in_grid_viewport(coord_def(targ_x, targ_y)))
+        if (!crawl_view.in_grid_viewport(targ))
             continue;
 
-        if (!in_bounds(targ_x, targ_y))
+        if (!in_bounds(targ))
             continue;
 
-        if ((onlyVis || onlyHidden) && onlyVis != in_los(targ_x, targ_y))
+        if ((onlyVis || onlyHidden) && onlyVis != you.see_cell(targ))
             continue;
 
-        if (find_targ(coord_def(targ_x, targ_y), mode, need_path, range))
+        if (find_targ(targ, mode, need_path, range))
         {
             mfp.set(temp_xps, temp_yps);
             return (true);
