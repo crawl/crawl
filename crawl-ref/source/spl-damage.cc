@@ -15,6 +15,7 @@
 #include "coord.h"
 #include "directn.h"
 #include "env.h"
+#include "food.h"
 #include "godconduct.h"
 #include "it_use2.h"
 #include "itemprop.h"
@@ -1015,6 +1016,103 @@ void cast_shatter(int pow)
         mpr("Ka-crash!", MSGCH_SOUND);
 }
 
+static int _ignite_poison_affect_item(item_def& item, bool in_inv)
+{
+    int strength = 0;
+
+    // Poison branding becomes fire branding.
+    // don't affect non-wielded weapons, they don't start dripping poison until
+    // you wield them. -doy
+    if (&item == you.weapon()
+        && you.duration[DUR_WEAPON_BRAND]
+        && get_weapon_brand(item) == SPWPN_VENOM)
+    {
+        if (set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING))
+        {
+            mprf("%s bursts into flame!",
+                 item.name(DESC_CAP_YOUR).c_str());
+
+            you.wield_change = true;
+
+            int increase = 1 + you.duration[DUR_WEAPON_BRAND]
+                               /(2 * BASELINE_DELAY);
+
+            you.increase_duration(DUR_WEAPON_BRAND, increase, 80);
+        }
+
+        // and don't destroy it
+        return 0;
+    }
+    else if (item.base_type == OBJ_MISSILES && item.special == SPMSL_POISONED)
+    {
+        // Burn poison ammo.
+        strength = item.quantity;
+    }
+    else if (item.base_type == OBJ_POTIONS)
+    {
+        // Burn poisonous potions.
+        switch (item.sub_type)
+        {
+        case POT_STRONG_POISON:
+            strength = 20 * item.quantity;
+            break;
+        case POT_DEGENERATION:
+        case POT_POISON:
+            strength = 10 * item.quantity;
+            break;
+        default:
+            break;
+        }
+    }
+    else if (item.base_type == OBJ_CORPSES &&
+             item.sub_type == CORPSE_BODY &&
+             chunk_is_poisonous(mons_corpse_effect(item.plus)))
+    {
+        strength = mons_weight(item.plus) / 25;
+    }
+    else if (item.base_type == OBJ_FOOD &&
+             item.sub_type == FOOD_CHUNK &&
+             chunk_is_poisonous(mons_corpse_effect(item.plus)))
+    {
+        strength += 30 * item.quantity;
+    }
+
+    if (strength)
+    {
+        if (in_inv)
+        {
+            if (item.base_type == OBJ_POTIONS)
+                mprf("%s explode%s!",
+                     item.name(DESC_PLAIN).c_str(), item.quantity == 1 ? "s" : "");
+            else
+                mprf("Your %s burn%s!",
+                     item.name(DESC_PLAIN).c_str(), item.quantity == 1 ? "s" : "");
+        }
+
+        if (item.base_type == OBJ_CORPSES &&
+            item.sub_type == CORPSE_BODY &&
+            mons_skeleton(item.plus))
+        {
+            turn_corpse_into_skeleton(item);
+        }
+        else
+        {
+            if (in_inv && &item == you.weapon())
+            {
+                unwield_item();
+                canned_msg(MSG_EMPTY_HANDED);
+            }
+            item_was_destroyed(item);
+            if (in_inv)
+                destroy_item(item);
+            else
+                destroy_item(item.index());
+        }
+    }
+
+    return strength;
+}
+
 static int _ignite_poison_objects(coord_def where, int pow, int, actor *)
 {
     UNUSED(pow);
@@ -1023,23 +1121,7 @@ static int _ignite_poison_objects(coord_def where, int pow, int, actor *)
 
     for (stack_iterator si(where); si; ++si)
     {
-        if (si->base_type == OBJ_POTIONS)
-        {
-            switch (si->sub_type)
-            {
-            // intentional fall-through all the way down
-            case POT_STRONG_POISON:
-                strength += 20;
-            case POT_DEGENERATION:
-                strength += 10;
-            case POT_POISON:
-                strength += 10;
-                destroy_item(si->index());
-            default:
-                break;
-            }
-        }
-        // FIXME: implement burning poisoned ammo
+        strength += _ignite_poison_affect_item(*si, false);
     }
 
     if (strength > 0)
@@ -1133,27 +1215,7 @@ void cast_ignite_poison(int pow)
 {
     flash_view(RED);
 
-    // Poison branding becomes fire branding.
-    if (you.weapon()
-        && you.duration[DUR_WEAPON_BRAND]
-        && get_weapon_brand(*you.weapon()) == SPWPN_VENOM)
-    {
-        if (set_item_ego_type(*you.weapon(), OBJ_WEAPONS, SPWPN_FLAMING))
-        {
-            mprf("%s bursts into flame!",
-                 you.weapon()->name(DESC_CAP_YOUR).c_str());
-
-            you.wield_change = true;
-
-            int increase = 1 + you.duration[DUR_WEAPON_BRAND]
-                               /(2 * BASELINE_DELAY);
-
-            you.increase_duration(DUR_WEAPON_BRAND, increase, 80);
-        }
-    }
-
     int totalstrength = 0;
-    bool was_wielding = false;
 
     for (int i = 0; i < ENDOFPACK; ++i)
     {
@@ -1161,55 +1223,8 @@ void cast_ignite_poison(int pow)
         if (!item.defined())
             continue;
 
-        int strength = 0;
-
-        if (item.base_type == OBJ_MISSILES && item.special == SPMSL_POISONED)
-        {
-            // Burn poison ammo.
-            strength = item.quantity;
-            mprf("Your %s burn%s!",
-                 item.name(DESC_PLAIN).c_str(), item.quantity == 1 ? "s" : "");
-        }
-        else if (item.base_type == OBJ_POTIONS)
-        {
-            // Burn poisonous potions.
-            switch (item.sub_type)
-            {
-            case POT_STRONG_POISON:
-                strength = 20 * item.quantity;
-                break;
-            case POT_DEGENERATION:
-            case POT_POISON:
-                strength = 10 * item.quantity;
-                break;
-            default:
-                break;
-            }
-
-            if (strength)
-            {
-                mprf("%s explode%s!",
-                     item.name(DESC_PLAIN).c_str(), item.quantity == 1 ? "s" : "");
-            }
-        }
-
-        if (strength)
-        {
-            if (i == you.equip[EQ_WEAPON])
-            {
-                unwield_item();
-                was_wielding = true;
-            }
-
-            item_was_destroyed(item);
-            destroy_item(item);
-        }
-
-        totalstrength += strength;
+        totalstrength += _ignite_poison_affect_item(item, true);
     }
-
-    if (was_wielding)
-        canned_msg(MSG_EMPTY_HANDED);
 
     if (totalstrength)
     {
