@@ -142,7 +142,7 @@ DEPTH:  8-9, 10-13, !Lair, !Slime
 : place_unique(_G, "Erolcha")
 
 NAME:   uniq_eustachio
-DEPTH:  10-13, 14-16, !Lair, !Slime
+DEPTH:  8-9, 10-13, !Lair, !Slime
 : place_unique(_G, "Eustachio")
 
 NAME:   uniq_frances
