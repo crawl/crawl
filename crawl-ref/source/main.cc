@@ -1815,7 +1815,7 @@ void process_command(command_type cmd)
         // Mouse commands.
     case CMD_MOUSE_MOVE:
     {
-        const coord_def dest = view2grid(crawl_view.mousep);
+        const coord_def dest = crawl_view.screen2grid(crawl_view.mousep);
         if (in_bounds(dest))
             terse_describe_square(dest);
         break;
@@ -1827,9 +1827,9 @@ void process_command(command_type cmd)
         // CMD_MOUSE_TRAVEL and get rid of CMD_MOUSE_CLICK and
         // CMD_MOUSE_MOVE.
         c_mouse_event cme = get_mouse_event();
-        if (cme && crawl_view.in_view_viewport(cme.pos))
+        if (cme && crawl_view.in_viewport_s(cme.pos))
         {
-            const coord_def dest = view2grid(cme.pos);
+            const coord_def dest = crawl_view.screen2grid(cme.pos);
             if (cme.left_clicked())
             {
                 if (in_bounds(dest))

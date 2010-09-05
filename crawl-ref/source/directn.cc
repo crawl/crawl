@@ -440,7 +440,7 @@ static void _draw_ray_glyph(const coord_def &pos, int colour,
         }
     }
     const coord_def vp = grid2view(pos);
-    cgotoxy(vp.x, vp.y, GOTO_CRT);
+    cgotoxy(vp.x, vp.y, GOTO_DNGN);
     textcolor(real_colour(colour));
     putch(glych);
 }
@@ -1682,7 +1682,7 @@ void direction_chooser::do_redraws()
 
     if (need_cursor_redraw || Options.use_fake_cursor)
     {
-        cursorxy(grid2view(target()));
+        cursorxy(crawl_view.grid2screen(target()) - coord_def(1,1));
         need_cursor_redraw = false;
     }
 }
@@ -1864,7 +1864,7 @@ bool direction_chooser::do_main_loop()
     }
 
     // Don't allow going out of bounds.
-    if (!in_viewport_bounds(grid2view(target())))
+    if (!crawl_view.in_viewport_g(target()))
         set_target(old_target);
 
     if (loop_done)
@@ -2388,16 +2388,6 @@ static int _next_los(int dir, int los, bool wrap)
     return (los);
 }
 
-bool in_viewport_bounds(int x, int y)
-{
-    return crawl_view.in_view_viewport(coord_def(x, y));
-}
-
-bool in_los_bounds(const coord_def& p)
-{
-    return crawl_view.in_view_los(p);
-}
-
 //---------------------------------------------------------------
 //
 // find_square
@@ -2429,7 +2419,7 @@ static bool _find_square(coord_def &mfp, int direction,
 
     if (los == LOS_FLIPVH || los == LOS_FLIPHV)
     {
-        if (in_los_bounds(mfp))
+        if (in_los_bounds_v(mfp))
         {
             // We've been told to flip between visible/hidden, so we
             // need to find what we're currently on.
@@ -2596,7 +2586,7 @@ static bool _find_square(coord_def &mfp, int direction,
         const int targ_y = you.pos().y + temp_yps - ctry;
         const coord_def targ(targ_x, targ_y);
 
-        if (!crawl_view.in_grid_viewport(targ))
+        if (!crawl_view.in_viewport_g(targ))
             continue;
 
         if (!in_bounds(targ))

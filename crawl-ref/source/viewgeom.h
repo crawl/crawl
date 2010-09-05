@@ -74,19 +74,14 @@ public:
     // Recalculate vlos1 and vlos2.
     void calc_vlos();
 
-    inline coord_def view_centre() const
-    {
-        return viewp + viewhalfsz;
-    }
-
     inline coord_def view2grid(const coord_def &pos) const
     {
-        return (pos - view_centre() + vgrdc);
+        return (pos - viewhalfsz + vgrdc);
     }
 
     inline coord_def grid2view(const coord_def &pos) const
     {
-        return (pos - vgrdc + view_centre());
+        return (pos - vgrdc + viewhalfsz);
     }
 
     inline coord_def view2show(const coord_def &pos) const
@@ -109,33 +104,56 @@ public:
         return (view2grid(show2view(pos)));
     }
 
+    inline coord_def screen2view(const coord_def& pos) const
+    {
+        return (pos - viewp);
+    }
+
+    inline coord_def view2screen(const coord_def& pos) const
+    {
+        return (pos + viewp);
+    }
+
+    inline coord_def screen2grid(const coord_def& pos) const
+    {
+        return view2grid(screen2view(pos));
+    }
+
+    inline coord_def grid2screen(const coord_def& pos) const
+    {
+        return view2screen(grid2view(pos));
+    }
+
     coord_def glosc() const
     {
         return (glos1 + glos2) / 2;
     }
 
-    bool in_grid_los(const coord_def &c) const
+    bool in_los_bounds_g(const coord_def &c) const
     {
         return (c.x >= glos1.x && c.x <= glos2.x
                 && c.y >= glos1.y && c.y <= glos2.y);
     }
 
-    bool in_view_los(const coord_def &c) const
+    bool in_los_bounds_v(const coord_def &c) const
     {
-        return (c.x >= vlos1.x && c.x <= vlos2.x
-                && c.y >= vlos1.y && c.y <= vlos2.y);
+        return in_los_bounds_g(view2grid(c));
     }
 
-    bool in_view_viewport(const coord_def &c) const
+    bool in_viewport_v(const coord_def &c) const
     {
-        return (c.x >= viewp.x && c.y >= viewp.y
-                && c.x < viewp.x + viewsz.x
-                && c.y < viewp.y + viewsz.y);
+        return (c.x >= 0 && c.y >= 0
+                && c.x < viewsz.x && c.y < viewsz.y);
     }
 
-    bool in_grid_viewport(const coord_def &c) const
+    bool in_viewport_s(const coord_def &c) const
     {
-        return in_view_viewport(grid2view(c));
+        return in_viewport_v(screen2view(c));
+    }
+
+    bool in_viewport_g(const coord_def &c) const
+    {
+        return in_viewport_v(grid2view(c));
     }
 };
 
@@ -169,6 +187,16 @@ inline coord_def grid2show(const coord_def &pos)
 inline coord_def show2grid(const coord_def &pos)
 {
     return crawl_view.show2grid(pos);
+}
+
+inline bool in_los_bounds_v(const coord_def& pos)
+{
+    return crawl_view.in_los_bounds_v(pos);
+}
+
+inline bool in_los_bounds_g(const coord_def& pos)
+{
+    return crawl_view.in_los_bounds_g(pos);
 }
 
 #endif

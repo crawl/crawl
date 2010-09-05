@@ -169,7 +169,7 @@ static void _zap_animation(int colour, const monsters *mon = NULL,
 
     const coord_def drawp = grid2view(p);
 
-    if (in_los_bounds(drawp))
+    if (in_los_bounds_v(drawp))
     {
         // Default to whatever colour magic is today.
         if (colour == -1)
@@ -179,7 +179,7 @@ static void _zap_animation(int colour, const monsters *mon = NULL,
         tiles.add_overlay(p, tileidx_zap(colour));
 #else
         view_update();
-        cgotoxy(drawp.x, drawp.y, GOTO_CRT);
+        cgotoxy(drawp.x, drawp.y, GOTO_DNGN);
         put_colour_ch(colour, dchar_glyph(DCHAR_FIRED_ZAP));
 #endif
 
@@ -750,7 +750,7 @@ void bolt::draw(const coord_def& p)
 
     const coord_def drawpos = grid2view(p);
 
-    if (!in_los_bounds(drawpos))
+    if (!in_los_bounds_v(drawpos))
         return;
 
 #ifdef USE_TILE
@@ -765,7 +765,7 @@ void bolt::draw(const coord_def& p)
     if (tile_beam != -1)
         tiles.add_overlay(p, tile_beam);
 #else
-    cgotoxy(drawpos.x, drawpos.y);
+    cgotoxy(drawpos.x, drawpos.y, GOTO_DNGN);
     put_colour_ch(colour == BLACK ? random_colour()
                                   : element_colour(colour),
                   glyph);
@@ -5220,13 +5220,13 @@ void bolt::explosion_draw_cell(const coord_def& p)
     {
         const coord_def drawpos = grid2view(p);
 #ifdef USE_TILE
-        if (in_los_bounds(drawpos))
+        if (in_los_bounds_v(drawpos))
             tiles.add_overlay(p, tileidx_bolt(*this));
 #else
         // bounds check
-        if (in_los_bounds(drawpos))
+        if (in_los_bounds_v(drawpos))
         {
-            cgotoxy(drawpos.x, drawpos.y, GOTO_CRT);
+            cgotoxy(drawpos.x, drawpos.y, GOTO_DNGN);
             put_colour_ch(colour == BLACK ? random_colour() : colour,
                           dchar_glyph(DCHAR_EXPLOSION));
         }
