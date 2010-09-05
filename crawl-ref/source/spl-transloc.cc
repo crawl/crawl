@@ -124,6 +124,10 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
                 mesclr();
                 mpr("You can't blink into the sea!");
             }
+            else if (!check_moveto(beam.target, "blink"))
+            {
+                // try again (messages handled by check_moveto)
+            }
             else if (you.see_cell_no_trans(beam.target))
             {
                 // Grid in los, no problem.
