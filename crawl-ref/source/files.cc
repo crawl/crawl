@@ -1791,7 +1791,10 @@ void save_game(bool leave_game, const char *farewellmsg)
 
     // If just save, early out.
     if (!leave_game)
+    {
+        you.save->commit();
         return;
+    }
 
     // Stack allocated std::string's go in separate function,
     // so Valgrind doesn't complain.
@@ -2087,6 +2090,9 @@ void level_excursion::go_to(const level_id& next)
     }
 
     you.on_current_level = (level_id::current() == original);
+
+    // Don't let uncommitted writes accumulate.
+    you.save->commit();
 }
 
 level_excursion::~level_excursion()
