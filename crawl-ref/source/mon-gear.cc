@@ -1450,7 +1450,11 @@ void give_shield(monsters *mon, int level)
 
             item_def *gaunt = mon->shield();
             if (gaunt)
+            {
+                if (get_armour_ego_type(*gaunt) == SPARM_ARCHERY)
+                    set_item_ego_type(*gaunt, OBJ_ARMOUR, SPARM_NORMAL);
                 gaunt->plus2 = TGLOV_DESC_GAUNTLETS;
+            }
         }
         break;
     default:
