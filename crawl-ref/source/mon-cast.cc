@@ -961,7 +961,6 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
             mprf("Porkalator: targeting %s instead",
                  targ->name(DESC_PLAIN).c_str());
 #endif
-            monster_polymorph(targ, hog_type);
         }
         // else target remains as specified
     }
