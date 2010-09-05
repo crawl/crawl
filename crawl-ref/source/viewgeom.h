@@ -135,7 +135,7 @@ public:
 
     bool in_grid_viewport(const coord_def &c) const
     {
-        return in_view_viewport(c - vgrdc + view_centre());
+        return in_view_viewport(grid2view(c));
     }
 };
 
