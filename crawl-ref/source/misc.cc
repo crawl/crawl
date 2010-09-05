@@ -54,6 +54,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
+#include "kills.h"
 #include "libutil.h"
 #include "macro.h"
 #include "makeitem.h"
@@ -2058,6 +2059,10 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
     if (isFriendly)
     {
         // Listed in the form: "your rat", "Blork the orc".
+        std::string mon_name = mon->name(DESC_PLAIN);
+        mon_name = std::string("your ") +
+                   (you.religion == GOD_OKAWARU ? "ally the " : "") +
+                   mon_name;
         std::string verb = "";
         bool need_mon_name = true;
         if (beam_attack)
@@ -2071,7 +2076,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
                 if (autohit_first)
                     return (false);
 
-                verb += "in " + mon->name(DESC_NOCAP_THE) + "'s direction";
+                verb += "in " + apostrophise(mon_name) + " direction";
                 need_mon_name = false;
             }
             else
@@ -2081,7 +2086,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
             verb = "attack ";
 
         if (need_mon_name)
-            verb += mon->name(DESC_NOCAP_THE);
+            verb += mon_name;
 
         snprintf(info, INFO_SIZE, "Really %s%s?",
                  verb.c_str(),
