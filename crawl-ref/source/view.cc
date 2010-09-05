@@ -586,7 +586,7 @@ void view_update_at(const coord_def &pos)
         flash_colour = _viewmap_flash_colour();
 
     const coord_def vp = grid2view(pos);
-    cgotoxy(vp.x, vp.y);
+    cgotoxy(vp.x, vp.y, GOTO_DNGN);
     put_colour_ch(flash_colour? real_colour(flash_colour) : g.col, g.ch);
 
     // Force colour back to normal, else clrscr() will flood screen
@@ -887,8 +887,8 @@ void viewwindow(bool show_updates)
     if (flash_colour == BLACK)
         flash_colour = _viewmap_flash_colour();
 
-    const coord_def &tl = crawl_view.viewp;
-    const coord_def br  = tl + crawl_view.viewsz - coord_def(1,1);
+    const coord_def tl = coord_def(1, 1);
+    const coord_def br = crawl_view.viewsz;
     for (rectangle_iterator ri(tl, br); ri; ++ri)
     {
         // in grid coords
@@ -897,7 +897,7 @@ void viewwindow(bool show_updates)
 
         if (!map_bounds(gc))
             _draw_out_of_bounds(cell);
-        else if (!crawl_view.in_grid_los(gc))
+        else if (!crawl_view.in_los_bounds_g(gc))
             _draw_outside_los(cell, gc);
         else if (gc == you.pos() && you.on_current_level && !_show_terrain
                  && !crawl_state.game_is_arena()

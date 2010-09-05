@@ -259,12 +259,6 @@ char mlist_index_to_letter(int index);
 
 void direction(dist &moves, const direction_chooser_args& args);
 
-bool in_los_bounds(const coord_def& p);
-bool in_viewport_bounds(int x, int y);
-inline bool in_viewport_bounds(const coord_def& pos) {
-  return in_viewport_bounds(pos.x, pos.y);
-}
-
 std::string thing_do_grammar(description_level_type dtype,
                              bool add_stop,
                              bool force_article,
