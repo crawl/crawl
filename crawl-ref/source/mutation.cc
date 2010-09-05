@@ -346,6 +346,7 @@ formatted_string describe_mutations()
         std::ostringstream num;
         num << ac;
         result += "Your scales are hard (AC +" + num.str() + ").\n";
+        have_any = true;
     }
 
     result += "</lightblue>";
