@@ -4823,6 +4823,9 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
             // Don't restore items to monster if it reverts.
             orig_mon.inv = mon->inv;
 
+            // monsters can't cast spells in hog form either -doy
+            mon->spells.clear();
+
             // For monster reverting to original form.
             mon->props[ORIG_MONSTER_KEY] = orig_mon;
         }
