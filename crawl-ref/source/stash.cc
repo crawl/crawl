@@ -12,6 +12,7 @@
 #include "clua.h"
 #include "command.h"
 #include "coord.h"
+#include "coordit.h"
 #include "describe.h"
 #include "directn.h"
 #include "food.h"
@@ -1583,26 +1584,22 @@ void StashTracker::update_visible_stashes(
 
     LevelStashes *lev = find_current_level();
     coord_def c;
-    for (c.y = crawl_view.glos1.y; c.y <= crawl_view.glos2.y; ++c.y)
-        for (c.x = crawl_view.glos1.x; c.x <= crawl_view.glos2.x; ++c.x)
+    for (radius_iterator ri(you.get_los()); ri; ++ri)
+    {
+        const dungeon_feature_type feat = grd(*ri);
+        if ((!lev || !lev->update_stash(*ri))
+            && mode == ST_AGGRESSIVE
+            && (_grid_has_perceived_item(*ri)
+                || !Stash::is_boring_feature(feat)))
         {
-            if (!in_bounds(c) || !you.see_cell(c))
-                continue;
-
-            const dungeon_feature_type grid = grd(c);
-            if ((!lev || !lev->update_stash(c))
-                && mode == ST_AGGRESSIVE
-                && (_grid_has_perceived_item(c)
-                    || !Stash::is_boring_feature(grid)))
-            {
-                if (!lev)
-                    lev = &get_current_level();
-                lev->add_stash(c.x, c.y);
-            }
-
-            if (grid == DNGN_ENTER_SHOP)
-                get_shop(c);
+            if (!lev)
+                lev = &get_current_level();
+            lev->add_stash(ri->x, ri->y);
         }
+
+        if (feat == DNGN_ENTER_SHOP)
+            get_shop(*ri);
+    }
 
     if (lev && !lev->stash_count())
         remove_level();
