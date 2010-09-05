@@ -448,6 +448,7 @@ death_drake MONS_DEATH_DRAKE
 %sdir dc-mon/unique
 xtahua MONS_XTAHUA
 lernaean_hydra MONS_LERNAEAN_HYDRA
+serpent_of_hell MONS_SERPENT_OF_HELL
 %sdir dc-mon
 wyvern MONS_WYVERN
 dragon MONS_DRAGON
@@ -468,7 +469,6 @@ storm_dragon MONS_STORM_DRAGON
 golden_dragon MONS_GOLDEN_DRAGON
 shadow_dragon MONS_SHADOW_DRAGON
 undead/bone_dragon MONS_BONE_DRAGON
-serpent_of_hell MONS_SERPENT_OF_HELL
 
 ## Eyes ('G')
 %sdir dc-mon/fungi_plants
