@@ -3119,7 +3119,8 @@ int melee_attack::random_chaos_brand()
             }
             break;
         case SPWPN_ANTIMAGIC:
-            if (!defender->as_monster()->can_use_spells())
+            if (defender->as_monster() &&
+                !defender->as_monster()->can_use_spells())
                 susceptible = false;
             break;
         default:
