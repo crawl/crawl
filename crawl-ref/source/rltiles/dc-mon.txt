@@ -468,7 +468,8 @@ iron_dragon MONS_IRON_DRAGON
 storm_dragon MONS_STORM_DRAGON
 golden_dragon MONS_GOLDEN_DRAGON
 shadow_dragon MONS_SHADOW_DRAGON
-undead/bone_dragon MONS_BONE_DRAGON
+%sdir dc-mon/undead
+bone_dragon MONS_BONE_DRAGON
 
 ## Eyes ('G')
 %sdir dc-mon/fungi_plants
@@ -484,6 +485,7 @@ golden_eye MONS_GOLDEN_EYE
 
 ## Hybrids ('H')
 hippogriff MONS_HIPPOGRIFF
+minotaur MONS_MINOTAUR
 manticore MONS_MANTICORE
 griffon MONS_GRIFFON
 harpy MONS_HARPY
@@ -509,8 +511,9 @@ pulsating_lump MONS_PULSATING_LUMP
 giant_amoeba MONS_GIANT_AMOEBA
 brown_ooze MONS_BROWN_OOZE
 azure_jelly MONS_AZURE_JELLY
-undead/death_ooze MONS_DEATH_OOZE
 acid_blob MONS_ACID_BLOB
+%sdir dc-mon/undead
+death_ooze MONS_DEATH_OOZE
 
 ## Kobolds ('K')
 %sdir dc-mon/unique
@@ -713,10 +716,8 @@ ghost MONS_PLAYER_GHOST
 %rim 1
 flayed_ghost MONS_FLAYED_GHOST
 hungry_ghost MONS_HUNGRY_GHOST
-%sdir dc-mon
-nonliving/insubstantial_wisp MONS_INSUBSTANTIAL_WISP
-
-minotaur MONS_MINOTAUR /*'t'*/
+%sdir dc-mon/nonliving
+insubstantial_wisp MONS_INSUBSTANTIAL_WISP
 
 ## Small zombified monsters ('z')
 %sdir dc-mon/undead
