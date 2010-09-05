@@ -338,7 +338,7 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
 // string, rather than the return value of artefact_auto_inscription(),
 // in case more information about the randart has been learned since
 // the last auto-inscription.
-static void _trim_randart_inscrip( item_def& item )
+void trim_randart_inscrip( item_def& item )
 {
     std::vector<std::string> propnames = _randart_propnames(item);
 
@@ -364,7 +364,7 @@ std::string artefact_auto_inscription( const item_def& item )
 void add_autoinscription( item_def &item, std::string ainscrip)
 {
     // Remove previous randart inscription.
-    _trim_randart_inscrip(item);
+    trim_randart_inscrip(item);
 
     add_inscription(item, ainscrip);
 }
