@@ -210,18 +210,18 @@ void debug_item_scan( void )
     // Quickly scan monsters for "program bug"s.
     for (i = 0; i < MAX_MONSTERS; ++i)
     {
-        const monsters& monster = menv[i];
+        const monsters& mons = menv[i];
 
-        if (monster.type == MONS_NO_MONSTER)
+        if (mons.type == MONS_NO_MONSTER)
             continue;
 
-        if (monster.name(DESC_PLAIN, true).find("questionable") !=
+        if (mons.name(DESC_PLAIN, true).find("questionable") !=
             std::string::npos)
         {
             mprf(MSGCH_ERROR, "Program bug detected!");
             mprf(MSGCH_ERROR,
                  "Buggy monster detected: monster #%d; position (%d,%d)",
-                 i, monster.pos().x, monster.pos().y);
+                 i, mons.pos().x, mons.pos().y);
         }
     }
 }

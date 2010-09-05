@@ -905,19 +905,19 @@ static void _xom_checks_damage(kill_method_type death_type,
         }
 
         int amusementvalue = 1;
-        const monsters *monster = &menv[death_source];
+        const monsters* mons = &menv[death_source];
 
-        if (!monster->alive())
+        if (!mons->alive())
             return;
 
-        if (monster->wont_attack())
+        if (mons->wont_attack())
         {
             // Xom thinks collateral damage is funny.
             xom_is_stimulated(255 * dam / (dam + you.hp));
             return;
         }
 
-        int leveldif = monster->hit_dice - you.experience_level;
+        int leveldif = mons->hit_dice - you.experience_level;
         if (leveldif == 0)
             leveldif = 1;
 
@@ -926,10 +926,10 @@ static void _xom_checks_damage(kill_method_type death_type,
         // creature of lower level than yourself.
         amusementvalue += leveldif * leveldif * dam;
 
-        if (!monster->visible_to(&you))
+        if (!mons->visible_to(&you))
             amusementvalue += 10;
 
-        if (monster->speed < 100/player_movement_speed())
+        if (mons->speed < 100/player_movement_speed())
             amusementvalue += 8;
 
         if (death_type != KILLED_BY_BEAM

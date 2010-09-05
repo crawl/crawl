@@ -366,18 +366,18 @@ static bool _efreet_flask(int slot)
 
     mpr("You open the flask...");
 
-    const int monster =
+    const int mons =
         create_monster(
             mgen_data(MONS_EFREET,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                       &you, 0, 0, you.pos(),
                       MHITYOU, MG_FORCE_BEH));
 
-    if (monster != -1)
+    if (mons != -1)
     {
         mpr("...and a huge efreet comes out.");
 
-        if (player_angers_monster(&menv[monster]))
+        if (player_angers_monster(&menv[mons]))
             friendly = false;
 
         if (silenced(you.pos()))

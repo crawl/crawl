@@ -212,7 +212,7 @@ void elven_twin_died(monsters* twin, bool in_transit, killer_type killer, int ki
 
     bool found_duvessa = false;
     bool found_dowan = false;
-    monsters *monster;
+    monsters* mons;
 
     for (monster_iterator mi; mi; ++mi)
     {
@@ -225,13 +225,13 @@ void elven_twin_died(monsters* twin, bool in_transit, killer_type killer, int ki
 
         if (mons_is_duvessa(*mi))
         {
-            monster = *mi;
+            mons = *mi;
             found_duvessa = true;
             break;
         }
         else if (mons_is_dowan(*mi))
         {
-            monster = *mi;
+            mons = *mi;
             found_dowan = true;
             break;
         }
@@ -241,67 +241,67 @@ void elven_twin_died(monsters* twin, bool in_transit, killer_type killer, int ki
         return;
 
     // Okay, let them climb stairs now.
-    monster->props["can_climb"] = "yes";
+    mons->props["can_climb"] = "yes";
     if (!in_transit)
-        monster->props["speech_prefix"] = "twin_died";
+        mons->props["speech_prefix"] = "twin_died";
     else
-        monster->props["speech_prefix"] = "twin_banished";
+        mons->props["speech_prefix"] = "twin_banished";
 
     // If you've stabbed one of them, the other one is likely asleep still.
-    if (monster->asleep())
-        behaviour_event(monster, ME_DISTURB, MHITNOT, monster->pos());
+    if (mons->asleep())
+        behaviour_event(mons, ME_DISTURB, MHITNOT, mons->pos());
 
     // Will generate strings such as 'Duvessa_Duvessa_dies' or, alternately
     // 'Dowan_Dowan_dies', but as neither will match, these can safely be
     // ignored.
-    std::string key = "_" + monster->name(DESC_CAP_THE, true) + "_"
+    std::string key = "_" + mons->name(DESC_CAP_THE, true) + "_"
                           + twin->name(DESC_CAP_THE) + "_dies_";
 
-    if (mons_near(monster) && !monster->observable())
+    if (mons_near(mons) && !mons->observable())
         key += "invisible_";
-    else if (!mons_near(monster))
+    else if (!mons_near(mons))
         key += "distance_";
 
     bool i_killed = ((killer == KILL_MON || killer == KILL_MON_MISSILE)
-                      && monster->mindex() == killer_index);
+                      && mons->mindex() == killer_index);
 
     if (i_killed)
     {
         key += "bytwin_";
-        monster->props["speech_prefix"] = "twin_ikilled";
+        mons->props["speech_prefix"] = "twin_ikilled";
     }
 
     std::string death_message = getSpeakString(key);
 
     // Check if they can speak or not: they may have been polymorphed.
-    if (mons_near(monster) && !death_message.empty() && monster->can_speak())
-        mons_speaks_msg(monster, death_message, MSGCH_TALK, silenced(you.pos()));
-    else if (monster->can_speak())
+    if (mons_near(mons) && !death_message.empty() && mons->can_speak())
+        mons_speaks_msg(mons, death_message, MSGCH_TALK, silenced(you.pos()));
+    else if (mons->can_speak())
         mprf("%s", death_message.c_str());
 
     if (found_duvessa)
     {
-        if (mons_near(monster))
+        if (mons_near(mons))
             // Provides its own flavour message.
-            monster->go_berserk(true);
+            mons->go_berserk(true);
         else
             // She'll go berserk the next time she sees you
-            monster->flags |= MF_GOING_BERSERK;
+            mons->flags |= MF_GOING_BERSERK;
     }
     else if (found_dowan)
     {
-        if (monster->observable())
+        if (mons->observable())
         {
-            monster->add_ench(ENCH_HASTE);
-            simple_monster_message(monster, " seems to find hidden reserves of power!");
+            mons->add_ench(ENCH_HASTE);
+            simple_monster_message(mons, " seems to find hidden reserves of power!");
         }
         else
-            monster->props["dowan_upgrade"] = bool(true);
+            mons->props["dowan_upgrade"] = bool(true);
 
-        monster->spells[0] = SPELL_THROW_ICICLE;
-        monster->spells[1] = SPELL_BLINK;
-        monster->spells[3] = SPELL_STONE_ARROW;
-        monster->spells[4] = SPELL_HASTE;
+        mons->spells[0] = SPELL_THROW_ICICLE;
+        mons->spells[1] = SPELL_BLINK;
+        mons->spells[3] = SPELL_STONE_ARROW;
+        mons->spells[4] = SPELL_HASTE;
         // Nothing with 6.
     }
 }
@@ -311,7 +311,7 @@ void elven_twins_pacify (monsters *twin)
 {
     bool found_duvessa = false;
     bool found_dowan = false;
-    monsters *monster;
+    monsters* mons;
 
     for (monster_iterator mi; mi; ++mi)
     {
@@ -324,13 +324,13 @@ void elven_twins_pacify (monsters *twin)
 
         if (mons_is_duvessa(*mi))
         {
-            monster = *mi;
+            mons = *mi;
             found_duvessa = true;
             break;
         }
         else if (mons_is_dowan(*mi))
         {
-            monster = *mi;
+            mons = *mi;
             found_dowan = true;
             break;
         }
@@ -340,16 +340,16 @@ void elven_twins_pacify (monsters *twin)
         return;
 
     // This shouldn't happen, but sometimes it does.
-    if (monster->neutral())
+    if (mons->neutral())
         return;
 
     if (you.religion == GOD_ELYVILON)
-        gain_piety(random2(monster->max_hit_points / (2 + you.piety / 20)), 2);
+        gain_piety(random2(mons->max_hit_points / (2 + you.piety / 20)), 2);
 
-    if (mons_near(monster))
-        simple_monster_message(monster, " likewise turns neutral.");
+    if (mons_near(mons))
+        simple_monster_message(mons, " likewise turns neutral.");
 
-    mons_pacify(monster, ATT_NEUTRAL);
+    mons_pacify(mons, ATT_NEUTRAL);
 }
 
 // And if you attack a pacified elven twin, the other will unpacify.
@@ -357,7 +357,7 @@ void elven_twins_unpacify (monsters *twin)
 {
     bool found_duvessa = false;
     bool found_dowan = false;
-    monsters *monster;
+    monsters* mons;
 
     for (monster_iterator mi; mi; ++mi)
     {
@@ -370,13 +370,13 @@ void elven_twins_unpacify (monsters *twin)
 
         if (mons_is_duvessa(*mi))
         {
-            monster = *mi;
+            mons = *mi;
             found_duvessa = true;
             break;
         }
         else if (mons_is_dowan(*mi))
         {
-            monster = *mi;
+            mons = *mi;
             found_dowan = true;
             break;
         }
@@ -385,5 +385,5 @@ void elven_twins_unpacify (monsters *twin)
     if (!found_duvessa && !found_dowan)
         return;
 
-    behaviour_event(monster, ME_WHACK, MHITYOU, you.pos(), false);
+    behaviour_event(mons, ME_WHACK, MHITYOU, you.pos(), false);
 }

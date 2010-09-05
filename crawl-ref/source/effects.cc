@@ -140,49 +140,49 @@ int holy_word_monsters(coord_def where, int pow, int caster,
         retval = holy_word_player(pow, caster, attacker);
 
     // Is a monster in this cell?
-    monsters *monster = monster_at(where);
-    if (monster == NULL)
+    monsters* mons = monster_at(where);
+    if (mons == NULL)
         return (retval);
 
-    if (!monster->alive() || !monster->undead_or_demonic())
+    if (!mons->alive() || !mons->undead_or_demonic())
         return (retval);
 
     int hploss;
 
     // Holy word won't kill its user.
-    if (attacker == monster)
-        hploss = std::max(0, monster->hit_points / 2 - 1);
+    if (attacker == mons)
+        hploss = std::max(0, mons->hit_points / 2 - 1);
     else
         hploss = roll_dice(3, 15) + (random2(pow) / 3);
 
     if (hploss)
-        simple_monster_message(monster, " convulses!");
+        simple_monster_message(mons, " convulses!");
 
-    monster->hurt(attacker, hploss, BEAM_MISSILE, false);
+    mons->hurt(attacker, hploss, BEAM_MISSILE, false);
 
     if (hploss)
     {
         retval = 1;
 
-        if (monster->alive())
+        if (mons->alive())
         {
             // Holy word won't annoy, slow, or frighten its user.
-            if (attacker != monster)
+            if (attacker != mons)
             {
                 // Currently, holy word annoys the monsters it affects
                 // because it can kill them, and because hostile
                 // monsters don't use it.
                 if (attacker != NULL)
-                    behaviour_event(monster, ME_ANNOY, attacker->mindex());
+                    behaviour_event(mons, ME_ANNOY, attacker->mindex());
 
-                if (monster->speed_increment >= 25)
-                    monster->speed_increment -= 20;
+                if (mons->speed_increment >= 25)
+                    mons->speed_increment -= 20;
 
-                monster->add_ench(ENCH_FEAR);
+                mons->add_ench(ENCH_FEAR);
             }
         }
         else
-            monster->hurt(attacker, INSTANT_DEATH);
+            mons->hurt(attacker, INSTANT_DEATH);
     }
 
     return (retval);
@@ -315,28 +315,28 @@ int torment_monsters(coord_def where, int pow, int caster, actor *attacker)
         retval = torment_player(0, caster);
 
     // Is a monster in this cell?
-    monsters *monster = monster_at(where);
-    if (monster == NULL)
+    monsters* mons = monster_at(where);
+    if (mons == NULL)
         return (retval);
 
-    if (!monster->alive() || monster->res_torment())
+    if (!mons->alive() || mons->res_torment())
         return (retval);
 
-    int hploss = std::max(0, monster->hit_points / 2 - 1);
+    int hploss = std::max(0, mons->hit_points / 2 - 1);
 
     if (hploss)
     {
-        simple_monster_message(monster, " convulses!");
+        simple_monster_message(mons, " convulses!");
 
         // Currently, torment doesn't annoy the monsters it affects
         // because it can't kill them, and because hostile monsters use
         // it.  It does alert them, though.
         // XXX: attacker isn't passed through "int torment()".
-        behaviour_event(monster, ME_ALERT,
+        behaviour_event(mons, ME_ALERT,
                         attacker ? attacker->mindex() : MHITNOT);
     }
 
-    monster->hurt(NULL, hploss, BEAM_TORMENT_DAMAGE);
+    mons->hurt(NULL, hploss, BEAM_TORMENT_DAMAGE);
 
     if (hploss)
         retval = 1;
@@ -3020,19 +3020,19 @@ int spawn_corpse_mushrooms(item_def &corpse,
 
         fringe.pop();
 
-        monsters * monster = monster_at(current);
+        monsters* mons = monster_at(current);
 
         bool player_occupant = you.pos() == current;
 
         // Is this square occupied by a non mushroom?
-        if (monster && monster->mons_species() != MONS_TOADSTOOL
+        if (mons && mons->mons_species() != MONS_TOADSTOOL
             || player_occupant && you.religion != GOD_FEDHAS
             || !is_harmless_cloud(cloud_type_at(current)))
         {
             continue;
         }
 
-        if (!monster)
+        if (!mons)
         {
             const int mushroom = create_monster(
                         mgen_data(MONS_TOADSTOOL,

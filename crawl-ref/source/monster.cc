@@ -1225,15 +1225,15 @@ bool monsters::pickup_launcher(item_def &launch, int near, bool force)
     return (eslot == -1 ? false : pickup(launch, eslot, near));
 }
 
-static bool _is_signature_weapon(monsters *monster, const item_def &weapon)
+static bool _is_signature_weapon(monsters* mons, const item_def &weapon)
 {
     if (weapon.base_type != OBJ_WEAPONS)
         return (false);
 
-    if (monster->type == MONS_ANGEL)
+    if (mons->type == MONS_ANGEL)
         return (weapon.sub_type == WPN_HOLY_SCOURGE);
 
-    if (monster->type == MONS_DAEVA)
+    if (mons->type == MONS_DAEVA)
         return (weapon.sub_type == WPN_EUDEMON_BLADE);
 
     // Some other uniques have a signature weapon, usually because they
@@ -1241,33 +1241,33 @@ static bool _is_signature_weapon(monsters *monster, const item_def &weapon)
     // and/or descriptions.
     // Upgrading to a similar type is pretty much always allowed, unless
     // we are more interested in the brand, and the brand is *rare*.
-    if (mons_is_unique(monster->type))
+    if (mons_is_unique(mons->type))
     {
         // We might allow Sigmund to pick up a better scythe if he finds
         // one...
-        if (monster->type == MONS_SIGMUND)
+        if (mons->type == MONS_SIGMUND)
             return (weapon.sub_type == WPN_SCYTHE);
 
         // Crazy Yiuf's got MONUSE_STARTING_EQUIPMENT right now, but
         // in case that ever changes we don't want him to switch away
         // from his quarterstaff of chaos.
-        if (monster->type == MONS_CRAZY_YIUF)
+        if (mons->type == MONS_CRAZY_YIUF)
             return (false);
 
         // Distortion/chaos is immensely flavourful, and we shouldn't
         // allow Psyche to switch away from it.
-        if (monster->type == MONS_PSYCHE)
+        if (mons->type == MONS_PSYCHE)
             return (false);
 
         // Don't switch Azrael away from the customary scimitar of
         // flaming.
-        if (monster->type == MONS_AZRAEL)
+        if (mons->type == MONS_AZRAEL)
             return (false);
 
-        if (monster->type == MONS_AGNES)
+        if (mons->type == MONS_AGNES)
             return (weapon.sub_type == WPN_LAJATANG);
 
-        if (monster->type == MONS_EDMUND)
+        if (mons->type == MONS_EDMUND)
         {
             return (weapon.sub_type == WPN_FLAIL
                     || weapon.sub_type == WPN_SPIKED_FLAIL
@@ -1277,18 +1277,18 @@ static bool _is_signature_weapon(monsters *monster, const item_def &weapon)
         // Pikel's got MONUSE_STARTING_EQUIPMENT right now, but,
         // in case that ever changes, we don't want him to switch away
         // from a whip.
-        if (monster->type == MONS_PIKEL)
+        if (mons->type == MONS_PIKEL)
             return (get_vorpal_type(weapon) == DVORP_SLASHING);
 
-        if (monster->type == MONS_WIGLAF)
+        if (mons->type == MONS_WIGLAF)
             return (weapon_skill(weapon) == SK_AXES);
 
-        if (monster->type == MONS_NIKOLA)
+        if (mons->type == MONS_NIKOLA)
             return (get_weapon_brand(weapon) == SPWPN_ELECTROCUTION);
 
         // Technically, this includes knives, but it would have to be
         // a superpowered knife to be an upgrade to a short sword.
-        if (monster->type == MONS_DUVESSA)
+        if (mons->type == MONS_DUVESSA)
         {
             return (weapon_skill(weapon) == SK_SHORT_BLADES
                     || weapon_skill(weapon) == SK_LONG_BLADES);
@@ -1300,13 +1300,13 @@ static bool _is_signature_weapon(monsters *monster, const item_def &weapon)
         switch (weapon.special)
         {
         case UNRAND_ASMODEUS:
-            return (monster->type == MONS_ASMODEUS);
+            return (mons->type == MONS_ASMODEUS);
 
         case UNRAND_DISPATER:
-            return (monster->type == MONS_DISPATER);
+            return (mons->type == MONS_DISPATER);
 
         case UNRAND_CEREBOV:
-            return (monster->type == MONS_CEREBOV);
+            return (mons->type == MONS_CEREBOV);
         }
     }
 

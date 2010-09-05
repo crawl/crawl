@@ -37,14 +37,14 @@ void set_random_target(monsters* mon);
 
 void make_mons_leave_level(monsters *mon);
 
-bool monster_can_hit_monster(monsters *monster, const monsters *targ);
+bool monster_can_hit_monster(monsters* mons, const monsters *targ);
 
-bool mons_avoids_cloud(const monsters *monster, cloud_type cl_type,
+bool mons_avoids_cloud(const monsters* mons, cloud_type cl_type,
                        bool placement = false);
 
 // Like the above, but allow a monster to move from one damaging cloud
 // to another.
-bool mons_avoids_cloud(const monsters *monster, int cloud_num,
+bool mons_avoids_cloud(const monsters* mons, int cloud_num,
                        cloud_type *cl_type = NULL, bool placement = false);
 
 #endif

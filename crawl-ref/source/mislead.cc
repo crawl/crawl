@@ -40,31 +40,31 @@ bool unsuitable_misled_monster(monster_type mons)
 );
 }
 
-monster_type get_misled_monster (monsters *monster)
+monster_type get_misled_monster(monsters* mons)
 {
-    monster_type mons = random_monster_at_grid(monster->pos());
-    if (unsuitable_misled_monster(mons))
-        mons = random_monster_at_grid(monster->pos());
+    monster_type mt = random_monster_at_grid(mons->pos());
+    if (unsuitable_misled_monster(mt))
+        mt = random_monster_at_grid(mons->pos());
 
-    if (unsuitable_misled_monster(mons))
+    if (unsuitable_misled_monster(mt))
         return (MONS_GIANT_BAT);
 
-    return mons;
+    return mt;
 }
 
-bool update_mislead_monster(monsters* monster)
+bool update_mislead_monster(monsters* mons)
 {
     // Don't affect uniques, named monsters, and monsters with special tiles.
-    if (mons_is_unique(monster->type) || !monster->mname.empty()
-        || monster->props.exists("monster_tile")
-        || monster->props.exists("mislead_as")
-        || monster->type == MONS_ORB_OF_DESTRUCTION)
+    if (mons_is_unique(mons->type) || !mons->mname.empty()
+        || mons->props.exists("monster_tile")
+        || mons->props.exists("mislead_as")
+        || mons->type == MONS_ORB_OF_DESTRUCTION)
     {
         return (false);
     }
 
-    short misled_as = get_misled_monster(monster);
-    monster->props["mislead_as"] = misled_as;
+    short misled_as = get_misled_monster(mons);
+    mons->props["mislead_as"] = misled_as;
 
     if (misled_as == MONS_GIANT_BAT)
         return (false);
@@ -83,11 +83,11 @@ int update_mislead_monsters(monsters* caster)
     return count;
 }
 
-void mons_cast_mislead(monsters *monster)
+void mons_cast_mislead(monsters* mons)
 {
     // This really only affects the player; it causes confusion when cast on
     // non-player foes, but that is dealt with inside ye-great-Switch-of-Doom.
-    if (monster->foe != MHITYOU)
+    if (mons->foe != MHITYOU)
         return;
 
     // We deal with pointless misleads in the right place now.
@@ -98,10 +98,10 @@ void mons_cast_mislead(monsters *monster)
         return;
     }
 
-    update_mislead_monsters(monster);
+    update_mislead_monsters(mons);
 
     const int old_value = you.duration[DUR_MISLED];
-    you.increase_duration(DUR_MISLED, monster->hit_dice * 12 / 3, 50);
+    you.increase_duration(DUR_MISLED, mons->hit_dice * 12 / 3, 50);
     if (you.duration[DUR_MISLED] > old_value)
     {
         you.check_awaken(500);

@@ -70,49 +70,49 @@ enum poly_power_type {
     PPT_SAME,
 };
 
-bool monster_polymorph(monsters *monster, monster_type targetc,
+bool monster_polymorph(monsters* mons, monster_type targetc,
                        poly_power_type power = PPT_SAME,
                        bool force_beh = false);
 
-int monster_die(monsters *monster, killer_type killer,
+int monster_die(monsters* mons, killer_type killer,
                 int killer_index, bool silent = false, bool wizard = false,
                 bool fake = false);
 
 int mounted_kill(monsters *daddy, monster_type mc, killer_type killer,
                 int killer_index);
 
-monster_type fill_out_corpse(const monsters* monster,
+monster_type fill_out_corpse(const monsters* mons,
                              monster_type mtype,
                              item_def& corpse,
                              bool force_corpse = false);
 
 bool explode_corpse(item_def& corpse, const coord_def& where);
 
-int place_monster_corpse(const monsters *monster, bool silent,
+int place_monster_corpse(const monsters* mons, bool silent,
                          bool force = false);
 
-void slimify_monster(monsters *monster, bool hostile = false);
+void slimify_monster(monsters* mons, bool hostile = false);
 
-bool mon_can_be_slimified(monsters *monster);
+bool mon_can_be_slimified(monsters* mons);
 
-void corrode_monster(monsters *monster);
+void corrode_monster(monsters* mons);
 
-void mons_check_pool(monsters *monster, const coord_def &oldpos,
+void mons_check_pool(monsters* mons, const coord_def &oldpos,
                      killer_type killer = KILL_NONE, int killnum = -1);
 
-void monster_cleanup(monsters *monster);
+void monster_cleanup(monsters* mons);
 
 int dismiss_monsters(std::string pattern);
 
 bool curse_an_item(bool decay_potions, bool quiet = false);
 
 
-void monster_drop_ething(monsters *monster, bool mark_item_origins = false,
+void monster_drop_ething(monsters* mons, bool mark_item_origins = false,
                          int owner_id = NON_ITEM);
 
-bool monster_blink(monsters *monster, bool quiet = false);
+bool monster_blink(monsters* mons, bool quiet = false);
 
-bool simple_monster_message(const monsters *monster, const char *event,
+bool simple_monster_message(const monsters* mons, const char *event,
                             msg_channel_type channel = MSGCH_PLAIN,
                             int param = 0,
                             description_level_type descrip = DESC_CAP_THE);
@@ -132,14 +132,14 @@ monsters *choose_random_monster_on_level(
     bool in_sight = true, bool near_by = false,
     bool prefer_named = false, bool prefer_priest = false);
 
-bool swap_places(monsters *monster);
-bool swap_places(monsters *monster, const coord_def &loc);
-bool swap_check(monsters *monster, coord_def &loc, bool quiet = false);
+bool swap_places(monsters* mons);
+bool swap_places(monsters* mons, const coord_def &loc);
+bool swap_check(monsters* mons, coord_def &loc, bool quiet = false);
 
 
-std::string get_wounds_description(const monsters *monster, bool colour=false);
-std::string get_wounds_description_sentence(const monsters *monster);
-void print_wounds(const monsters *monster);
+std::string get_wounds_description(const monsters* mons, bool colour=false);
+std::string get_wounds_description_sentence(const monsters* mons);
+void print_wounds(const monsters* mons);
 bool monster_descriptor(int which_class, mon_desc_type which_descriptor);
 
 // Return your target, if it still exists and is visible to you.
@@ -149,7 +149,7 @@ mon_dam_level_type mons_get_damage_level(const monsters*);
 
 std::string get_damage_level_string(monster_type mon_type, mon_dam_level_type mdam);
 
-void seen_monster(monsters *monster);
+void seen_monster(monsters* mons);
 
 bool shift_monster(monsters *mon, coord_def p = coord_def(0, 0));
 
@@ -161,7 +161,7 @@ int mons_pick_best_missile(monsters *mons, item_def **launcher,
 int mons_thrown_weapon_damage(const item_def *weap,
                               bool only_returning_weapons = false);
 
-int mons_natural_regen_rate(monsters *monster);
+int mons_natural_regen_rate(monsters* mons);
 
 void mons_relocated(monsters *mons);
 void mons_att_changed(monsters *mons);
@@ -171,16 +171,16 @@ bool can_go_straight(const coord_def& p1, const coord_def& p2,
 
 bool is_item_jelly_edible(const item_def &item);
 
-bool monster_random_space(const monsters *monster, coord_def& target,
+bool monster_random_space(const monsters* mons, coord_def& target,
                           bool forbid_sanctuary = false);
 bool monster_random_space(monster_type mon, coord_def& target,
                           bool forbid_sanctuary = false);
-void monster_teleport(monsters *monster, bool instan, bool silent = false);
+void monster_teleport(monsters* mons, bool instan, bool silent = false);
 void mons_clear_trapping_net(monsters *mon);
 
-std::string summoned_poof_msg(const monsters* monster, bool plural = false);
+std::string summoned_poof_msg(const monsters* mons, bool plural = false);
 std::string summoned_poof_msg(const int midx, const item_def &item);
-std::string summoned_poof_msg(const monsters* monster, const item_def &item);
+std::string summoned_poof_msg(const monsters* mons, const item_def &item);
 
 bool mons_reaped(actor *killer, monsters *victim);
 

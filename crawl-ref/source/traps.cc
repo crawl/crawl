@@ -157,8 +157,8 @@ bool trap_def::is_known(const actor* act) const
         return (player_knows);
     else if (act->atype() == ACT_MONSTER)
     {
-        const monsters* monster = act->as_monster();
-        const int intel = mons_intel(monster);
+        const monsters* mons = act->as_monster();
+        const int intel = mons_intel(mons);
 
         // Smarter trap handling for intelligent monsters
         // * monsters native to a branch can be assumed to know the trap
@@ -175,14 +175,14 @@ bool trap_def::is_known(const actor* act) const
             // * Allied zombies won't fall through shafts. (No herding!)
             // * Highly intelligent monsters never fall through shafts.
             return (intel >= I_HIGH
-                    || intel > I_PLANT && mons_is_native_in_branch(monster)
-                    || player_knows && monster->wont_attack());
+                    || intel > I_PLANT && mons_is_native_in_branch(mons)
+                    || player_knows && mons->wont_attack());
         }
         else
         {
             return (intel >= I_NORMAL
-                    && (mons_is_native_in_branch(monster)
-                        || player_knows && monster->wont_attack()
+                    && (mons_is_native_in_branch(mons)
+                        || player_knows && mons->wont_attack()
                         || intel >= I_HIGH && one_chance_in(3)));
         }
     }

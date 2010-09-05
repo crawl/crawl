@@ -341,15 +341,15 @@ void unlink_item( int dest )
     if (dest == NON_ITEM || !mitm[dest].defined())
         return;
 
-    monsters* monster = mitm[dest].holding_monster();
+    monsters* mons = mitm[dest].holding_monster();
 
-    if (monster != NULL)
+    if (mons != NULL)
     {
         for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
         {
-            if (monster->inv[i] == dest)
+            if (mons->inv[i] == dest)
             {
-                monster->inv[i] = NON_ITEM;
+                mons->inv[i] = NON_ITEM;
 
                 mitm[dest].pos.reset();
                 mitm[dest].link = NON_ITEM;
@@ -359,7 +359,7 @@ void unlink_item( int dest )
         mprf(MSGCH_ERROR, "Item %s claims to be held by monster %s, but "
                           "it isn't in the monster's inventory.",
              mitm[dest].name(DESC_PLAIN, false, true).c_str(),
-             monster->name(DESC_PLAIN, true).c_str());
+             mons->name(DESC_PLAIN, true).c_str());
         // Don't return so the debugging code can take a look at it.
     }
     // Unlinking a newly created item, or a a temporary one, or an item in
@@ -859,12 +859,12 @@ static void _origin_set_portal_vault(item_def &item)
     item.props[PORTAL_VAULT_ORIGIN_KEY] = you.level_type_origin;
 }
 
-void origin_set_monster(item_def &item, const monsters *monster)
+void origin_set_monster(item_def &item, const monsters* mons)
 {
     if (!origin_known(item))
     {
         if (!item.orig_monnum)
-            item.orig_monnum = monster->type + 1;
+            item.orig_monnum = mons->type + 1;
         item.orig_place = get_packed_place();
         _origin_set_portal_vault(item);
     }

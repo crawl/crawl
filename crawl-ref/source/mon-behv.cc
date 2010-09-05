@@ -29,7 +29,7 @@
 #include "view.h"
 #include "shout.h"
 
-static void _set_nearest_monster_foe(monsters *monster);
+static void _set_nearest_monster_foe(monsters* mons);
 
 static void _guess_invis_foe_pos(monsters *mon)
 {
@@ -60,10 +60,10 @@ static void _mon_check_foe_invalid(monsters *mon)
     {
         if (actor *foe = mon->get_foe())
         {
-            const monsters *foe_monster = foe->as_monster();
-            if (foe_monster->alive()
-                && (mon->friendly() != foe_monster->friendly()
-                    || mon->neutral() != foe_monster->neutral()))
+            const monsters *foe_mons = foe->as_monster();
+            if (foe_mons->alive()
+                && (mon->friendly() != foe_mons->friendly()
+                    || mon->neutral() != foe_mons->neutral()))
             {
                 return;
             }

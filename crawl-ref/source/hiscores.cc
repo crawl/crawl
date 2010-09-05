@@ -917,14 +917,14 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
         && !invalid_monster_index(death_source)
         && menv[death_source].type != -1)
     {
-        const monsters *monster = &menv[death_source];
+        const monsters* mons = &menv[death_source];
 
         // Previously the weapon was only used for dancing weapons,
         // but now we pass it in as a string through the scorefile
         // entry to be appended in hiscores_format_single in long or
         // medium scorefile formats.
         if (death_type == KILLED_BY_MONSTER
-            && monster->inv[MSLOT_WEAPON] != NON_ITEM)
+            && mons->inv[MSLOT_WEAPON] != NON_ITEM)
         {
             // [ds] The highscore entry may be constructed while the player
             // is alive (for notes), so make sure we don't reveal info we
@@ -932,25 +932,25 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             if (you.hp <= 0)
             {
 #ifdef HISCORE_WEAPON_DETAIL
-                set_ident_flags( mitm[monster->inv[MSLOT_WEAPON]],
+                set_ident_flags( mitm[mons->inv[MSLOT_WEAPON]],
                                  ISFLAG_IDENT_MASK );
 #else
                 // changing this to ignore the pluses to keep it short
-                unset_ident_flags( mitm[monster->inv[MSLOT_WEAPON]],
+                unset_ident_flags( mitm[mons->inv[MSLOT_WEAPON]],
                                    ISFLAG_IDENT_MASK );
 
-                set_ident_flags( mitm[monster->inv[MSLOT_WEAPON]],
+                set_ident_flags( mitm[mons->inv[MSLOT_WEAPON]],
                                  ISFLAG_KNOW_TYPE );
 
                 // clear "runed" description text to make shorter yet
-                set_equip_desc( mitm[monster->inv[MSLOT_WEAPON]], 0 );
+                set_equip_desc( mitm[mons->inv[MSLOT_WEAPON]], 0 );
 #endif
             }
 
             // Setting this is redundant for dancing weapons, however
             // we do care about the above indentification. -- bwr
-            if (monster->type != MONS_DANCING_WEAPON)
-                auxkilldata = mitm[monster->inv[MSLOT_WEAPON]].name(DESC_NOCAP_A);
+            if (mons->type != MONS_DANCING_WEAPON)
+                auxkilldata = mitm[mons->inv[MSLOT_WEAPON]].name(DESC_NOCAP_A);
         }
 
         const bool death = you.hp <= 0;
@@ -958,22 +958,22 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
         const description_level_type desc =
             death_type == KILLED_BY_SPORE ? DESC_PLAIN : DESC_NOCAP_A;
 
-        death_source_name = monster->name(desc, death);
+        death_source_name = mons->name(desc, death);
 
-        if (death || you.can_see(monster))
-            death_source_name = monster->full_name(desc, true);
+        if (death || you.can_see(mons))
+            death_source_name = mons->full_name(desc, true);
 
-        if (death && monster->type == MONS_MARA_FAKE)
+        if (death && mons->type == MONS_MARA_FAKE)
             death_source_name = "an illusion of Mara";
 
-        if (monster->has_ench(ENCH_SHAPESHIFTER))
+        if (mons->has_ench(ENCH_SHAPESHIFTER))
             death_source_name += " (shapeshifter)";
-        else if (monster->has_ench(ENCH_GLOWING_SHAPESHIFTER))
+        else if (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER))
             death_source_name += " (glowing shapeshifter)";
 
-        if (monster->props.exists("blame"))
+        if (mons->props.exists("blame"))
         {
-            const CrawlVector& blame = monster->props["blame"].get_vector();
+            const CrawlVector& blame = mons->props["blame"].get_vector();
 
             indirectkiller = blame[blame.size() - 1].get_string();
 

@@ -36,7 +36,7 @@ struct mon_attack_def
     }
 };
 
-// Amount of monster->speed_increment used by different actions; defaults
+// Amount of mons->speed_increment used by different actions; defaults
 // to 10.
 struct mon_energy_usage
 {
@@ -49,7 +49,7 @@ public:
     int8_t special;
     int8_t item;    // Using an item (i.e., drinking a potion)
 
-    // Percent of monster->speed used when picking up an item; defaults
+    // Percent of mons->speed used when picking up an item; defaults
     // to 100%
     int8_t pickup_percent;
 
@@ -263,7 +263,7 @@ monster_type mons_zombie_base(const monsters *mon);
 bool mons_class_is_zombified(int mc);
 monster_type mons_base_type(const monsters *mon);
 bool mons_class_can_leave_corpse(monster_type mc);
-bool mons_is_zombified(const monsters *monster);
+bool mons_is_zombified(const monsters* mons);
 bool mons_class_can_be_zombified(int mc);
 bool mons_can_be_zombified(const monsters *mon);
 bool mons_class_can_use_stairs(int mc);
@@ -320,7 +320,7 @@ mon_attitude_type mons_attitude(const monsters *m);
 bool mons_foe_is_mons(const monsters *mons);
 
 bool mons_behaviour_perceptible(const monsters *mon);
-bool mons_is_native_in_branch(const monsters *monster,
+bool mons_is_native_in_branch(const monsters* mons,
                               const branch_type branch = you.where_are_you);
 bool mons_is_poisoner(const monsters *mon);
 
@@ -356,10 +356,10 @@ monster_type mons_species(int mc);
 bool mons_looks_stabbable(const monsters *m);
 bool mons_looks_distracted(const monsters *m);
 
-void mons_start_fleeing_from_sanctuary(monsters *monster);
-void mons_stop_fleeing_from_sanctuary(monsters *monster);
+void mons_start_fleeing_from_sanctuary(monsters* mons);
+void mons_stop_fleeing_from_sanctuary(monsters* mons);
 
-bool mons_landlubbers_in_reach(const monsters *monster);
+bool mons_landlubbers_in_reach(const monsters* mons);
 
 bool mons_class_is_confusable(int mc);
 bool mons_class_is_slowable(int mc);
@@ -400,7 +400,7 @@ void         init_mon_name_cache();
 monster_type get_monster_by_name(std::string name, bool exact = false);
 
 std::string do_mon_str_replacements(const std::string &msg,
-                                    const monsters* monster, int s_type = -1);
+                                    const monsters* mons, int s_type = -1);
 
 mon_body_shape get_mon_shape(const monsters *mon);
 mon_body_shape get_mon_shape(const int type);
@@ -421,7 +421,7 @@ mon_inv_type item_to_mslot(const item_def &item);
 int scan_mon_inv_randarts(const monsters *mon,
                           artefact_prop_type ra_prop);
 
-bool player_or_mon_in_sanct(const monsters* monster);
+bool player_or_mon_in_sanct(const monsters* mons);
 
 int get_dist_to_nearest_monster();
 

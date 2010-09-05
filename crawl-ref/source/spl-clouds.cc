@@ -84,10 +84,10 @@ bool conjure_flame(int pow, const coord_def& where)
     }
 
     // Note that self-targeting is handled by SPFLAG_NOT_SELF.
-    monsters *monster = monster_at(where);
-    if (monster)
+    monsters* mons = monster_at(where);
+    if (mons)
     {
-        if (you.can_see(monster))
+        if (you.can_see(mons))
         {
             mpr("You can't place the cloud on a creature.");
             return (false);

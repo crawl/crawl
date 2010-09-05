@@ -211,8 +211,8 @@ static int _healing_spell(int healed, bool divine_ability,
         return (1);
     }
 
-    monsters* monster = monster_at(spd.target);
-    if (!monster)
+    monsters* mons = monster_at(spd.target);
+    if (!mons)
     {
         mpr("There isn't anything there!");
         // This isn't a cancel, to avoid leaking invisible monster
@@ -220,8 +220,8 @@ static int _healing_spell(int healed, bool divine_ability,
         return (0);
     }
 
-    const int can_pacify  = _can_pacify_monster(monster, healed);
-    const bool is_hostile = _mons_hostile(monster);
+    const int can_pacify  = _can_pacify_monster(mons, healed);
+    const bool is_hostile = _mons_hostile(mons);
 
     // Don't divinely heal a monster you can't pacify.
     if (divine_ability
@@ -243,12 +243,12 @@ static int _healing_spell(int healed, bool divine_ability,
     {
         did_something = true;
 
-        const bool is_holy     = monster->is_holy();
-        const bool is_summoned = monster->is_summoned();
+        const bool is_holy     = mons->is_holy();
+        const bool is_summoned = mons->is_summoned();
 
         int pgain = 0;
         if (!is_holy && !is_summoned && you.piety < MAX_PIETY)
-            pgain = random2(monster->max_hit_points / (2 + you.piety / 20));
+            pgain = random2(mons->max_hit_points / (2 + you.piety / 20));
 
         // The feedback no longer tells you if you gained any piety this time,
         // it tells you merely the general rate.
@@ -258,26 +258,26 @@ static int _healing_spell(int healed, bool divine_ability,
             mpr("Elyvilon supports your offer of peace.");
 
         if (is_holy)
-            good_god_holy_attitude_change(monster);
+            good_god_holy_attitude_change(mons);
         else
         {
-            simple_monster_message(monster, " turns neutral.");
-            mons_pacify(monster, ATT_NEUTRAL);
+            simple_monster_message(mons, " turns neutral.");
+            mons_pacify(mons, ATT_NEUTRAL);
 
             // Give a small piety return.
             gain_piety(pgain, 2);
         }
     }
 
-    if (monster->heal(healed))
+    if (mons->heal(healed))
     {
         did_something = true;
-        mprf("You heal %s.", monster->name(DESC_NOCAP_THE).c_str());
+        mprf("You heal %s.", mons->name(DESC_NOCAP_THE).c_str());
 
-        if (monster->hit_points == monster->max_hit_points)
-            simple_monster_message(monster, " is completely healed.");
+        if (mons->hit_points == mons->max_hit_points)
+            simple_monster_message(mons, " is completely healed.");
         else
-            print_wounds(monster);
+            print_wounds(mons);
 
         if (you.religion == GOD_ELYVILON && !is_hostile)
         {
@@ -737,16 +737,16 @@ bool entomb(int pow)
     return (_do_imprison(pow, you.pos(), false));
 }
 
-bool cast_imprison(int pow, monsters *monster, int source)
+bool cast_imprison(int pow, monsters* mons, int source)
 {
-    if (_do_imprison(pow, monster->pos(), true))
+    if (_do_imprison(pow, mons->pos(), true))
     {
         const int tomb_duration = BASELINE_DELAY
             * pow;
-        env.markers.add(new map_tomb_marker(monster->pos(),
+        env.markers.add(new map_tomb_marker(mons->pos(),
                                             tomb_duration,
                                             source,
-                                            monster->mindex()));
+                                            mons->mindex()));
         env.markers.clear_need_activate(); // doesn't need activation
         return (true);
     }

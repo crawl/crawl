@@ -192,7 +192,7 @@ static void _mons_load_player_enchantments(monsters *creator, monsters *target)
     }
 }
 
-void mons_summon_illusion_from(monsters *monster, actor *foe,
+void mons_summon_illusion_from(monsters* mons, actor *foe,
                                spell_type spell_cast)
 {
     if (foe->atype() == ACT_PLAYER)
@@ -200,8 +200,8 @@ void mons_summon_illusion_from(monsters *monster, actor *foe,
         ASSERT(foe == &you);
         const int midx =
             create_monster(
-                mgen_data(MONS_PLAYER_ILLUSION, SAME_ATTITUDE(monster), monster,
-                          6, spell_cast, monster->pos(), monster->foe, 0));
+                mgen_data(MONS_PLAYER_ILLUSION, SAME_ATTITUDE(mons), mons,
+                          6, spell_cast, mons->pos(), mons->foe, 0));
         if (midx != -1)
         {
             mpr("There is a horrible, sudden wrenching feeling in your soul!",
@@ -212,13 +212,13 @@ void mons_summon_illusion_from(monsters *monster, actor *foe,
             clone->type = MONS_PLAYER_ILLUSION;
             _init_player_illusion_properties(
                 get_monster_data(MONS_PLAYER_ILLUSION));
-            _mons_load_player_enchantments(monster, clone);
+            _mons_load_player_enchantments(mons, clone);
         }
     }
     else
     {
         monsters *mfoe = foe->as_monster();
-        _mons_summon_monster_illusion(monster, mfoe);
+        _mons_summon_monster_illusion(mons, mfoe);
     }
 }
 

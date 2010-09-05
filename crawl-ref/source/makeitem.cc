@@ -3319,13 +3319,13 @@ static bool _item_corpse_def(monster_type mons, item_def &item,
 // Creates a corpse item and returns its item index, or NON_ITEM if it
 // fails. The corpse is not linked into the item grid; nor is the
 // item's position set to anything meaningful.
-int item_corpse(monster_type monster, const item_spec &ispec)
+int item_corpse(monster_type mons, const item_spec &ispec)
 {
-    if (monster != MONS_NO_MONSTER)
-        monster = mons_species(monster);
+    if (mons != MONS_NO_MONSTER)
+        mons = mons_species(mons);
 
-    if (monster == MONS_NO_MONSTER
-        || !mons_class_can_leave_corpse(monster))
+    if (mons == MONS_NO_MONSTER
+        || !mons_class_can_leave_corpse(mons))
     {
         return (NON_ITEM);
     }
@@ -3335,7 +3335,7 @@ int item_corpse(monster_type monster, const item_spec &ispec)
         return (NON_ITEM);
 
     item_def &item(mitm[p]);
-    if (!_item_corpse_def(monster, item, ispec))
+    if (!_item_corpse_def(mons, item, ispec))
     {
         item.clear();
         return (NON_ITEM);

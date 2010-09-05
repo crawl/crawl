@@ -72,30 +72,30 @@
 
 crawl_view_geometry crawl_view;
 
-void handle_seen_interrupt(monsters* monster)
+void handle_seen_interrupt(monsters* mons)
 {
-    if (mons_is_unknown_mimic(monster))
+    if (mons_is_unknown_mimic(mons))
         return;
 
-    activity_interrupt_data aid(monster);
-    if (!monster->seen_context.empty())
-        aid.context = monster->seen_context;
+    activity_interrupt_data aid(mons);
+    if (!mons->seen_context.empty())
+        aid.context = mons->seen_context;
     // XXX: Hack to make the 'seen' monster spec flag work.
-    else if (testbits(monster->flags, MF_WAS_IN_VIEW)
-        || testbits(monster->flags, MF_SEEN))
+    else if (testbits(mons->flags, MF_WAS_IN_VIEW)
+        || testbits(mons->flags, MF_SEEN))
     {
         aid.context = "already seen";
     }
     else
         aid.context = "newly seen";
 
-    if (!mons_is_safe(monster)
-        && !mons_class_flag(monster->type, M_NO_EXP_GAIN)
-            || monster->type == MONS_BALLISTOMYCETE && monster->number > 0)
+    if (!mons_is_safe(mons)
+        && !mons_class_flag(mons->type, M_NO_EXP_GAIN)
+            || mons->type == MONS_BALLISTOMYCETE && mons->number > 0)
     {
         interrupt_activity(AI_SEE_MONSTER, aid);
     }
-    seen_monster( monster );
+    seen_monster(mons);
 }
 
 void flush_comes_into_view()
@@ -438,17 +438,17 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 }
 
 // Is the given monster near (in LOS of) the player?
-bool mons_near(const monsters *monster)
+bool mons_near(const monsters* mons)
 {
     if (crawl_state.game_is_arena() || crawl_state.arena_suspended)
         return (true);
-    return (you.see_cell(monster->pos()));
+    return (you.see_cell(mons->pos()));
 }
 
-bool mon_enemies_around(const monsters *monster)
+bool mon_enemies_around(const monsters* mons)
 {
     // If the monster has a foe, return true.
-    if (monster->foe != MHITNOT && monster->foe != MHITYOU)
+    if (mons->foe != MHITNOT && mons->foe != MHITYOU)
         return (true);
 
     if (crawl_state.game_is_arena())
@@ -457,16 +457,16 @@ bool mon_enemies_around(const monsters *monster)
         // we don't have one.
         return (false);
     }
-    else if (monster->wont_attack())
+    else if (mons->wont_attack())
     {
         // Additionally, if an ally is nearby and *you* have a foe,
         // consider it as the ally's enemy too.
-        return (mons_near(monster) && there_are_monsters_nearby(true));
+        return (mons_near(mons) && there_are_monsters_nearby(true));
     }
     else
     {
         // For hostile monsters *you* are the main enemy.
-        return (mons_near(monster));
+        return (mons_near(mons));
     }
 }
 

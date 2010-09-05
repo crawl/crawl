@@ -299,29 +299,29 @@ move_again:
                      feature_description(pos, false, DESC_NOCAP_A).c_str());
         }
 
-        monsters* monster = (victim && victim->atype() == ACT_MONSTER) ?
+        monsters* mons = (victim && victim->atype() == ACT_MONSTER) ?
             (monsters*) victim : 0;
 
-        if (monster && mons_is_projectile(victim->id()))
+        if (mons && mons_is_projectile(victim->id()))
         {
             if (mon.observable())
                 mpr("The orbs collide in a blinding explosion!");
             else
                 noisy(40, pos, "You hear a loud magical explosion!");
-            monster_die(monster, KILL_DISMISSED, NON_MONSTER);
+            monster_die(mons, KILL_DISMISSED, NON_MONSTER);
             _iood_hit(mon, pos, true);
             return (true);
         }
 
-        if (monster && monster->submerged())
+        if (mons && mons->submerged())
         {
             // Try to swap with the submerged creature.
-            if (monster->is_habitable(mon.pos()))
+            if (mons->is_habitable(mon.pos()))
             {
                 dprf("iood: Swapping with a submerged monster.");
-                monster->set_position(mon.pos());
+                mons->set_position(mon.pos());
                 mon.set_position(pos);
-                mgrd(monster->pos()) = monster->mindex();
+                mgrd(mons->pos()) = mons->mindex();
                 mgrd(pos) = mon.mindex();
 
                 return (false);
@@ -345,7 +345,7 @@ move_again:
                 }
                 else
                 {
-                    simple_monster_message(monster, (" blocks "
+                    simple_monster_message(mons, (" blocks "
                         + mon.name(DESC_NOCAP_THE, true) + ".").c_str());
                 }
                 victim->shield_block_succeeded(&mon);

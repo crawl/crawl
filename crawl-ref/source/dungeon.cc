@@ -2107,7 +2107,7 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
         _specr_2(sr);
     }
 
-    // Now place items, monster, gates, etc.
+    // Now place items, mons, gates, etc.
     // Stairs must exist by this point (except in Shoals where they are
     // yet to be placed). Some items and monsters already exist.
 

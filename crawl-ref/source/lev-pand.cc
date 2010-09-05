@@ -24,11 +24,11 @@ void init_pandemonium(void)
 
     for (pc = 0; pc < MAX_MONSTERS; ++pc)
     {
-        monsters *monster = &menv[pc];
+        monsters* mons = &menv[pc];
 
         // Looks for unique demons and sets appropriate lists of demons.
         // NB - also sets the level colours.
-        if (monster->type == MONS_MNOLEG)
+        if (mons->type == MONS_MNOLEG)
         {
             env.mons_alloc[0] = MONS_ABOMINATION_SMALL;
             env.mons_alloc[1] = MONS_ABOMINATION_SMALL;
@@ -43,7 +43,7 @@ void init_pandemonium(void)
             return;
         }
 
-        if (monster->type == MONS_LOM_LOBON)
+        if (mons->type == MONS_LOM_LOBON)
         {
             env.mons_alloc[0] = MONS_HELLWING;
             env.mons_alloc[1] = MONS_SMOKE_DEMON;
@@ -58,7 +58,7 @@ void init_pandemonium(void)
             return;
         }
 
-        if (monster->type == MONS_CEREBOV)
+        if (mons->type == MONS_CEREBOV)
         {
             env.mons_alloc[0] = MONS_EFREET;
             env.mons_alloc[1] = MONS_ABOMINATION_SMALL;
@@ -73,7 +73,7 @@ void init_pandemonium(void)
             return;
         }
 
-        if (monster->type == MONS_GLOORX_VLOQ)
+        if (mons->type == MONS_GLOORX_VLOQ)
         {
             env.mons_alloc[0] = MONS_SKELETON_SMALL;
             env.mons_alloc[1] = MONS_SKELETON_SMALL;

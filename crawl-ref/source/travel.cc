@@ -2307,9 +2307,9 @@ static travel_target _prompt_travel_depth(const level_id &id,
     }
 }
 
-bool travel_kill_monster(const monsters * monster)
+bool travel_kill_monster(const monsters* mons)
 {
-    if (monster->type != MONS_TOADSTOOL)
+    if (mons->type != MONS_TOADSTOOL)
         return (false);
 
     if (!wielded_weapon_check(you.weapon(), true))
