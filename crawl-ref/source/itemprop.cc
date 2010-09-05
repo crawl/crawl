@@ -652,8 +652,13 @@ unsigned long full_ident_mask( const item_def& item )
     case OBJ_ORBS:
     case OBJ_SCROLLS:
     case OBJ_POTIONS:
-    case OBJ_STAVES:
         flagset = ISFLAG_KNOW_TYPE;
+        break;
+    case OBJ_STAVES:
+        if (item_is_rod(item))
+            flagset = ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PLUSES;
+        else
+            flagset = ISFLAG_KNOW_TYPE;
         break;
     case OBJ_WANDS:
         flagset = (ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PLUSES);
