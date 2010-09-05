@@ -1860,6 +1860,12 @@ static void _give_gold(monsters *mon, int level)
     _give_monster_item(mon, idx);
 }
 
+void give_weapon(int mid, int level_number, bool mons_summoned, bool spectral_orcs)
+{
+    monsters *mons = &menv[mid];
+    _give_weapon(mons, level_number, false, true, spectral_orcs);
+}
+
 void give_item(int mid, int level_number, bool mons_summoned, bool spectral_orcs)
 {
     monsters *mons = &menv[mid];

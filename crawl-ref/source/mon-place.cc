@@ -1570,7 +1570,7 @@ static int _place_monster_aux(const mgen_data &mg,
         give_item(mon->mindex(), mg.power, summoned);
         // Give these monsters a second weapon. - bwr
         if (mons_class_wields_two_weapons(mg.cls))
-            give_item(mon->mindex(), mg.power, summoned);
+            give_weapon(mon->mindex(), mg.power, summoned);
 
         unwind_var<int> save_speedinc(mon->speed_increment);
         mon->wield_melee_weapon(false);
