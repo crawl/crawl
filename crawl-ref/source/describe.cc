@@ -1495,7 +1495,8 @@ static std::string _describe_jewellery( const item_def &item, bool verbose)
             description += "\n";
             description += rand_desc;
         }
-        if (!item_ident(item, ISFLAG_KNOW_PROPERTIES))
+        if (!item_ident(item, ISFLAG_KNOW_PROPERTIES) ||
+            !item_ident(item, ISFLAG_KNOW_TYPE))
         {
             description += "\nThis ";
             description += (jewellery_is_amulet(item) ? "amulet" : "ring");
