@@ -11,7 +11,7 @@
 
 #ifndef USE_TILE
 
-// Some replacement routines missing in gcc
+// Emulate Borland C functions not present elsewhere
 
 #ifdef UNICODE_GLYPHS
 typedef unsigned int screen_buffer_t;

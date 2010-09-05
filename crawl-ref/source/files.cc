@@ -79,6 +79,7 @@
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
+#include "syscalls.h"
 #include "tags.h"
 #ifdef USE_TILE
  #include "tiledef-player.h"
@@ -90,14 +91,6 @@
 #include "hints.h"
 #include "viewgeom.h"
 
-#ifdef TARGET_OS_WINDOWS
-# ifdef TARGET_COMPILER_VC
-#  include <direct.h>
-# endif
-# define WIN32_LEAN_AND_MEAN
-# include <windows.h>
-# define rename(foo,bar) !MoveFileEx(foo, bar, MOVEFILE_REPLACE_EXISTING)
-#endif
 #include <dirent.h>
 
 #ifndef HAVE_STAT
