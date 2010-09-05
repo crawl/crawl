@@ -659,7 +659,7 @@ bool you_can_wear(int eq, bool special_armour)
 bool player_has_feet()
 {
     if (you.species == SP_NAGA
-        || player_genus(GENPC_DRACONIAN))
+        || (you.species == SP_MERFOLK && you.swimming()))
     {
         return (false);
     }
@@ -6292,6 +6292,10 @@ int player::has_talons(bool allow_tran) const
         if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
             return (0);
     }
+
+    // XXX: Do merfolk in water belong under allow_tran?
+    if (you.species == SP_MERFOLK && you.swimming())
+        return (0);
 
     return (player_mutation_level(MUT_TALONS));
 }
