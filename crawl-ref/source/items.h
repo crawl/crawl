@@ -107,7 +107,7 @@ mon_inv_type get_mon_equip_slot(const monsters* mon, const item_def &item);
 
 void origin_reset(item_def &item);
 void origin_set(const coord_def& where);
-void origin_set_monster(item_def &item, const monsters *monster);
+void origin_set_monster(item_def &item, const monsters* mons);
 bool origin_known(const item_def &item);
 bool origin_describable(const item_def &item);
 std::string origin_desc(const item_def &item);

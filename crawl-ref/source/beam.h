@@ -255,8 +255,8 @@ public:
     void tracer_affect_player();
     void tracer_affect_monster(monsters* mon);
     bool handle_statue_disintegration(monsters* mon);
-    void apply_bolt_paralysis(monsters *monster);
-    void apply_bolt_petrify(monsters *monster);
+    void apply_bolt_paralysis(monsters* mons);
+    void apply_bolt_petrify(monsters* mons);
     void enchantment_affect_monster(monsters* mon);
     mon_resist_type try_enchant_monster(monsters *mon);
     void tracer_enchantment_affect_monster(monsters* mon);
@@ -296,7 +296,7 @@ public:
                                   bool stop_at_statues, bool stop_at_walls);
 };
 
-int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
+int mons_adjust_flavoured(monsters* mons, bolt &pbolt, int hurted,
                           bool doFlavouredEffects = true);
 
 // Return whether the effect was visible.
@@ -307,14 +307,14 @@ bool enchant_monster_with_flavour(monsters* mon, actor *atk,
 bool mass_enchantment( enchant_type wh_enchant, int pow, int who,
                        int *m_succumbed = NULL, int *m_attempted = NULL );
 
-bool curare_hits_monster(actor *agent, monsters *monster, kill_category who,
+bool curare_hits_monster(actor *agent, monsters* mons, kill_category who,
                          int levels = 1);
-bool poison_monster(monsters *monster, kill_category who, int levels = 1,
+bool poison_monster(monsters* mons, kill_category who, int levels = 1,
                     bool force = false, bool verbose = true);
-bool miasma_monster(monsters *monster, kill_category who);
-bool napalm_monster(monsters *monster, kill_category who, int levels = 1,
+bool miasma_monster(monsters* mons, kill_category who);
+bool napalm_monster(monsters* mons, kill_category who, int levels = 1,
                     bool verbose = true);
-void fire_tracer( const monsters *monster, struct bolt &pbolt,
+void fire_tracer( const monsters* mons, struct bolt &pbolt,
                   bool explode_only = false );
 void mimic_alert( monsters *mimic );
 bool zapping(zap_type ztype, int power, bolt &pbolt,

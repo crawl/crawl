@@ -591,49 +591,49 @@ bool mons_behaviour_perceptible(const monsters *mon)
 // Returns true for monsters that obviously (to the player) feel
 // "thematically at home" in a branch.  Currently used for native
 // monsters recognising traps and patrolling branch entrances.
-bool mons_is_native_in_branch(const monsters *monster,
+bool mons_is_native_in_branch(const monsters* mons,
                               const branch_type branch)
 {
     switch (branch)
     {
     case BRANCH_ELVEN_HALLS:
-        return (mons_genus(monster->type) == MONS_ELF);
+        return (mons_genus(mons->type) == MONS_ELF);
 
     case BRANCH_ORCISH_MINES:
-        return (mons_genus(monster->type) == MONS_ORC);
+        return (mons_genus(mons->type) == MONS_ORC);
 
     case BRANCH_SHOALS:
-        return (mons_species(monster->type) == MONS_CYCLOPS
-                || mons_species(monster->type) == MONS_MERFOLK
-                || mons_genus(monster->type) == MONS_MERMAID
-                || monster->type == MONS_HARPY);
+        return (mons_species(mons->type) == MONS_CYCLOPS
+                || mons_species(mons->type) == MONS_MERFOLK
+                || mons_genus(mons->type) == MONS_MERMAID
+                || mons->type == MONS_HARPY);
 
     case BRANCH_SLIME_PITS:
-        return (mons_genus(monster->type) == MONS_JELLY);
+        return (mons_genus(mons->type) == MONS_JELLY);
 
     case BRANCH_SNAKE_PIT:
-        return (mons_genus(monster->type) == MONS_NAGA
-                || mons_genus(monster->type) == MONS_SNAKE);
+        return (mons_genus(mons->type) == MONS_NAGA
+                || mons_genus(mons->type) == MONS_SNAKE);
 
     case BRANCH_HALL_OF_ZOT:
-        return (mons_genus(monster->type) == MONS_DRACONIAN
-                || monster->type == MONS_ORB_GUARDIAN
-                || monster->type == MONS_ORB_OF_FIRE
-                || monster->type == MONS_DEATH_COB);
+        return (mons_genus(mons->type) == MONS_DRACONIAN
+                || mons->type == MONS_ORB_GUARDIAN
+                || mons->type == MONS_ORB_OF_FIRE
+                || mons->type == MONS_DEATH_COB);
 
     case BRANCH_CRYPT:
-        return (monster->holiness() == MH_UNDEAD);
+        return (mons->holiness() == MH_UNDEAD);
 
     case BRANCH_TOMB:
-        return (mons_genus(monster->type) == MONS_MUMMY);
+        return (mons_genus(mons->type) == MONS_MUMMY);
 
     case BRANCH_HIVE:
-        return (monster->type == MONS_KILLER_BEE_LARVA
-                || monster->type == MONS_KILLER_BEE
-                || monster->type == MONS_QUEEN_BEE);
+        return (mons->type == MONS_KILLER_BEE_LARVA
+                || mons->type == MONS_KILLER_BEE
+                || mons->type == MONS_QUEEN_BEE);
 
     case BRANCH_HALL_OF_BLADES:
-        return (monster->type == MONS_DANCING_WEAPON);
+        return (mons->type == MONS_DANCING_WEAPON);
 
     default:
         return (false);
@@ -2418,19 +2418,19 @@ bool mons_looks_distracted(const monsters *m)
             && uat != UCAT_SLEEPING);
 }
 
-void mons_start_fleeing_from_sanctuary(monsters *monster)
+void mons_start_fleeing_from_sanctuary(monsters* mons)
 {
-    monster->flags |= MF_FLEEING_FROM_SANCTUARY;
-    monster->target = env.sanctuary_pos;
-    behaviour_event(monster, ME_SCARE, MHITNOT, env.sanctuary_pos);
+    mons->flags |= MF_FLEEING_FROM_SANCTUARY;
+    mons->target = env.sanctuary_pos;
+    behaviour_event(mons, ME_SCARE, MHITNOT, env.sanctuary_pos);
 }
 
-void mons_stop_fleeing_from_sanctuary(monsters *monster)
+void mons_stop_fleeing_from_sanctuary(monsters* mons)
 {
-    const bool had_flag = (monster->flags & MF_FLEEING_FROM_SANCTUARY);
-    monster->flags &= (~MF_FLEEING_FROM_SANCTUARY);
+    const bool had_flag = (mons->flags & MF_FLEEING_FROM_SANCTUARY);
+    mons->flags &= (~MF_FLEEING_FROM_SANCTUARY);
     if (had_flag)
-        behaviour_event(monster, ME_EVAL, MHITYOU);
+        behaviour_event(mons, ME_EVAL, MHITYOU);
 }
 
 void mons_pacify(monsters *mon, mon_attitude_type att)
@@ -3167,12 +3167,12 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
 
 // Checks if the monster can use smiting/torment to attack without
 // unimpeded LOS to the player.
-static bool _mons_has_smite_attack(const monsters *monster)
+static bool _mons_has_smite_attack(const monsters* mons)
 {
-    if (monster->type == MONS_FIEND)
+    if (mons->type == MONS_FIEND)
         return (true);
 
-    const monster_spells &hspell_pass = monster->spells;
+    const monster_spells &hspell_pass = mons->spells;
     for (unsigned i = 0; i < hspell_pass.size(); ++i)
         if (hspell_pass[i] == SPELL_SYMBOL_OF_TORMENT
             || hspell_pass[i] == SPELL_SMITING
@@ -3502,16 +3502,16 @@ static std::string _pluralise_player_genus()
 // Replaces the "@foo@" strings in monster shout and monster speak
 // definitions.
 std::string do_mon_str_replacements(const std::string &in_msg,
-                                    const monsters* monster, int s_type)
+                                    const monsters* mons, int s_type)
 {
     std::string msg = in_msg;
 
-    const actor*    foe   = (monster->wont_attack()
-                             && invalid_monster_index(monster->foe)) ?
-                            &you : monster->get_foe();
+    const actor*    foe   = (mons->wont_attack()
+                             && invalid_monster_index(mons->foe)) ?
+                            &you : mons->get_foe();
 
     if (s_type < 0 || s_type >= NUM_LOUDNESS || s_type == NUM_SHOUTS)
-        s_type = mons_shouts(monster->type);
+        s_type = mons_shouts(mons->type);
 
     // FIXME: Handle player_genus in case it was not generalized to foe_genus.
     msg = replace_all(msg, "@player_genus@", species_name(you.species, true));
@@ -3596,19 +3596,19 @@ std::string do_mon_str_replacements(const std::string &in_msg,
 
     description_level_type nocap = DESC_NOCAP_THE, cap = DESC_CAP_THE;
 
-    if (monster->is_named() && you.can_see(monster))
+    if (mons->is_named() && you.can_see(mons))
     {
-        const std::string name = monster->name(DESC_CAP_THE);
+        const std::string name = mons->name(DESC_CAP_THE);
 
         msg = replace_all(msg, "@the_something@", name);
         msg = replace_all(msg, "@The_something@", name);
         msg = replace_all(msg, "@the_monster@",   name);
         msg = replace_all(msg, "@The_monster@",   name);
     }
-    else if (monster->attitude == ATT_FRIENDLY
-             && !mons_is_unique(monster->type)
+    else if (mons->attitude == ATT_FRIENDLY
+             && !mons_is_unique(mons->type)
              && !crawl_state.game_is_arena()
-             && you.can_see(monster))
+             && you.can_see(mons))
     {
         nocap = DESC_PLAIN;
         cap   = DESC_PLAIN;
@@ -3619,9 +3619,9 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         msg = replace_all(msg, "@The_monster@",   "Your @the_monster@");
     }
 
-    if (you.see_cell(monster->pos()))
+    if (you.see_cell(mons->pos()))
     {
-        dungeon_feature_type feat = grd(monster->pos());
+        dungeon_feature_type feat = grd(mons->pos());
         if (feat < DNGN_MINMOVE || feat >= NUM_FEATURES)
             msg = replace_all(msg, "@surface@", "buggy surface");
         else if (feat == DNGN_LAVA)
@@ -3641,17 +3641,17 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         msg = replace_all(msg, "@feature@", "buggy unseen feature");
     }
 
-    if (you.can_see(monster))
+    if (you.can_see(mons))
     {
-        std::string something = monster->name(DESC_PLAIN);
+        std::string something = mons->name(DESC_PLAIN);
         msg = replace_all(msg, "@something@",   something);
-        msg = replace_all(msg, "@a_something@", monster->name(DESC_NOCAP_A));
-        msg = replace_all(msg, "@the_something@", monster->name(nocap));
+        msg = replace_all(msg, "@a_something@", mons->name(DESC_NOCAP_A));
+        msg = replace_all(msg, "@the_something@", mons->name(nocap));
 
         something[0] = toupper(something[0]);
         msg = replace_all(msg, "@Something@",   something);
-        msg = replace_all(msg, "@A_something@", monster->name(DESC_CAP_A));
-        msg = replace_all(msg, "@The_something@", monster->name(cap));
+        msg = replace_all(msg, "@A_something@", mons->name(DESC_CAP_A));
+        msg = replace_all(msg, "@The_something@", mons->name(cap));
     }
     else
     {
@@ -3667,30 +3667,30 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     // Player name.
     msg = replace_all(msg, "@player_name@", you.your_name);
 
-    std::string plain = monster->name(DESC_PLAIN);
+    std::string plain = mons->name(DESC_PLAIN);
     msg = replace_all(msg, "@monster@",     plain);
-    msg = replace_all(msg, "@a_monster@",   monster->name(DESC_NOCAP_A));
-    msg = replace_all(msg, "@the_monster@", monster->name(nocap));
+    msg = replace_all(msg, "@a_monster@",   mons->name(DESC_NOCAP_A));
+    msg = replace_all(msg, "@the_monster@", mons->name(nocap));
 
     plain[0] = toupper(plain[0]);
     msg = replace_all(msg, "@Monster@",     plain);
-    msg = replace_all(msg, "@A_monster@",   monster->name(DESC_CAP_A));
-    msg = replace_all(msg, "@The_monster@", monster->name(cap));
+    msg = replace_all(msg, "@A_monster@",   mons->name(DESC_CAP_A));
+    msg = replace_all(msg, "@The_monster@", mons->name(cap));
 
     msg = replace_all(msg, "@Pronoun@",
-                      monster->pronoun(PRONOUN_CAP));
+                      mons->pronoun(PRONOUN_CAP));
     msg = replace_all(msg, "@pronoun@",
-                      monster->pronoun(PRONOUN_NOCAP));
+                      mons->pronoun(PRONOUN_NOCAP));
     msg = replace_all(msg, "@Possessive@",
-                      monster->pronoun(PRONOUN_CAP_POSSESSIVE));
+                      mons->pronoun(PRONOUN_CAP_POSSESSIVE));
     msg = replace_all(msg, "@possessive@",
-                      monster->pronoun(PRONOUN_NOCAP_POSSESSIVE));
+                      mons->pronoun(PRONOUN_NOCAP_POSSESSIVE));
     msg = replace_all(msg, "@objective@",
-                      monster->pronoun(PRONOUN_OBJECTIVE));
+                      mons->pronoun(PRONOUN_OBJECTIVE));
 
     // Body parts.
     bool        can_plural = false;
-    std::string part_str   = monster->hand_name(false, &can_plural);
+    std::string part_str   = mons->hand_name(false, &can_plural);
 
     msg = replace_all(msg, "@hand@", part_str);
     msg = replace_all(msg, "@Hand@", upcase_first(part_str));
@@ -3698,13 +3698,13 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     if (!can_plural)
         part_str = "NO PLURAL HANDS";
     else
-        part_str = monster->hand_name(true);
+        part_str = mons->hand_name(true);
 
     msg = replace_all(msg, "@hands@", part_str);
     msg = replace_all(msg, "@Hands@", upcase_first(part_str));
 
     can_plural = false;
-    part_str   = monster->arm_name(false, &can_plural);
+    part_str   = mons->arm_name(false, &can_plural);
 
     msg = replace_all(msg, "@arm@", part_str);
     msg = replace_all(msg, "@Arm@", upcase_first(part_str));
@@ -3712,13 +3712,13 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     if (!can_plural)
         part_str = "NO PLURAL ARMS";
     else
-        part_str = monster->arm_name(true);
+        part_str = mons->arm_name(true);
 
     msg = replace_all(msg, "@arms@", part_str);
     msg = replace_all(msg, "@Arms@", upcase_first(part_str));
 
     can_plural = false;
-    part_str   = monster->foot_name(false, &can_plural);
+    part_str   = mons->foot_name(false, &can_plural);
 
     msg = replace_all(msg, "@foot@", part_str);
     msg = replace_all(msg, "@Foot@", upcase_first(part_str));
@@ -3726,7 +3726,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     if (!can_plural)
         part_str = "NO PLURAL FOOT";
     else
-        part_str = monster->foot_name(true);
+        part_str = mons->foot_name(true);
 
     msg = replace_all(msg, "@feet@", part_str);
     msg = replace_all(msg, "@Feet@", upcase_first(part_str));
@@ -3750,22 +3750,22 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     // The monster's god, not the player's.  Atheists get
     // "NO GOD"/"NO GOD", and worshippers of nameless gods get
     // "a god"/"its god".
-    if (monster->god == GOD_NO_GOD)
+    if (mons->god == GOD_NO_GOD)
     {
         msg = replace_all(msg, "@God@", "NO GOD");
         msg = replace_all(msg, "@possessive_God@", "NO GOD");
     }
-    else if (monster->god == GOD_NAMELESS)
+    else if (mons->god == GOD_NAMELESS)
     {
         msg = replace_all(msg, "@God@", "a god");
-        std::string possessive = monster->pronoun(PRONOUN_NOCAP_POSSESSIVE);
+        std::string possessive = mons->pronoun(PRONOUN_NOCAP_POSSESSIVE);
         possessive += " god";
         msg = replace_all(msg, "@possessive_God@", possessive.c_str());
     }
     else
     {
-        msg = replace_all(msg, "@God@", god_name(monster->god));
-        msg = replace_all(msg, "@possessive_God@", god_name(monster->god));
+        msg = replace_all(msg, "@God@", god_name(mons->god));
+        msg = replace_all(msg, "@possessive_God@", god_name(mons->god));
     }
 
     // Replace with species specific insults.
@@ -4094,30 +4094,30 @@ std::string get_mon_shape_str(const mon_body_shape shape)
     return (shape_names[shape]);
 }
 
-bool player_or_mon_in_sanct(const monsters* monster)
+bool player_or_mon_in_sanct(const monsters* mons)
 {
     return (is_sanctuary(you.pos())
-            || is_sanctuary(monster->pos()));
+            || is_sanctuary(mons->pos()));
 }
 
-bool mons_landlubbers_in_reach(const monsters *monster)
+bool mons_landlubbers_in_reach(const monsters* mons)
 {
-    if (mons_has_ranged_spell(monster)
-        || mons_has_ranged_ability(monster)
-        || mons_has_ranged_attack(monster))
+    if (mons_has_ranged_spell(mons)
+        || mons_has_ranged_ability(mons)
+        || mons_has_ranged_attack(mons))
     {
         return (true);
     }
 
-    const reach_type range = monster->reach_range();
+    const reach_type range = mons->reach_range();
     actor *act;
-    for (radius_iterator ai(monster->pos(),
+    for (radius_iterator ai(mons->pos(),
                             range ? 2 : 1,
                             (range == REACH_KNIGHT) ? C_ROUND : C_SQUARE,
                             NULL,
                             true);
                          ai; ++ai)
-        if ((act = actor_at(*ai)) && !mons_aligned(monster, act))
+        if ((act = actor_at(*ai)) && !mons_aligned(mons, act))
             return (true);
 
     return (false);

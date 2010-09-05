@@ -2142,7 +2142,7 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     return player_monattk_final_hit_effects(false);
 }
 
-void melee_attack::_monster_die(monsters* monster, killer_type killer,
+void melee_attack::_monster_die(monsters* mons, killer_type killer,
                                 int killer_index)
 {
     const bool chaos = (damage_brand == SPWPN_CHAOS);
@@ -2151,9 +2151,9 @@ void melee_attack::_monster_die(monsters* monster, killer_type killer,
     // Copy defender before it gets reset by monster_die().
     monsters* def_copy = NULL;
     if (chaos || reaping)
-        def_copy = new monsters(*monster);
+        def_copy = new monsters(*mons);
 
-    int corpse = monster_die(monster, killer, killer_index);
+    int corpse = monster_die(mons, killer, killer_index);
 
     if (chaos)
     {
@@ -2223,7 +2223,7 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
     if (!res)
         return (rawdamage);
 
-    const bool monster = (defender->atype() == ACT_MONSTER);
+    const bool mons = (defender->atype() == ACT_MONSTER);
 
     const int resistible_fraction = get_resistible_fraction(flavour);
 
@@ -2232,7 +2232,7 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
 
     if (res > 0)
     {
-        if (monster && res >= 3)
+        if (mons && res >= 3)
             resistible = 0;
         else
         {
@@ -2244,7 +2244,7 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
 
             // Use a new formula for players, but keep the old, more
             // effective one for monsters.
-            if (monster)
+            if (mons)
                 resistible /= 1 + bonus_res + res * res;
             else
                 resistible /= resist_fraction(res, bonus_res);

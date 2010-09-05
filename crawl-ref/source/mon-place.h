@@ -106,7 +106,7 @@ monster_type summon_any_dragon(dragon_class_type dct);
 
 bool drac_colour_incompatible(int drac, int colour);
 
-void mark_interesting_monst(monsters* monster,
+void mark_interesting_monst(monsters* mons,
                             beh_type behaviour = BEH_SLEEP);
 
 bool feat_compatible(dungeon_feature_type grid_wanted,

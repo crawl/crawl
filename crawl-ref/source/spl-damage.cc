@@ -150,8 +150,8 @@ void cast_chain_lightning(int pow, const actor *caster)
     beam.is_explosion   = false;
     beam.is_tracer      = false;
 
-    if (const monsters *monster = caster->as_monster())
-        beam.source_name = monster->name(DESC_PLAIN, true);
+    if (const monsters* mons = caster->as_monster())
+        beam.source_name = mons->name(DESC_PLAIN, true);
 
     bool first = true;
     coord_def source, target;
@@ -233,10 +233,10 @@ void cast_chain_lightning(int pow, const actor *caster)
 
         if (caster == &you)
         {
-            monsters *monster = monster_at(target);
-            if (monster)
+            monsters* mons = monster_at(target);
+            if (mons)
             {
-                if (stop_attack_prompt(monster, false, you.pos()))
+                if (stop_attack_prompt(mons, false, you.pos()))
                     return;
             }
         }
@@ -374,7 +374,7 @@ void cast_toxic_radiance(bool non_player)
         {
             // Monsters affected by corona are still invisible in that
             // radiation passes through them without affecting them. Therefore,
-            // this check should not be !monster->invisible().
+            // this check should not be !mons->invisible().
             if (!mi->has_ench(ENCH_INVIS))
             {
                 kill_category kc = KC_YOU;
@@ -499,16 +499,16 @@ void cast_refrigeration(int pow, bool non_player)
     }
 }
 
-bool vampiric_drain(int pow, monsters *monster)
+bool vampiric_drain(int pow, monsters* mons)
 {
-    if (monster == NULL || monster->submerged())
+    if (mons == NULL || mons->submerged())
     {
         mpr("There isn't anything there!");
         // Cost to disallow freely locating invisible monsters.
         return (true);
     }
 
-    if (monster->observable() && monster->undead_or_demonic())
+    if (mons->observable() && mons->undead_or_demonic())
     {
         mpr("Draining that being is not a good idea.");
         return (false);
@@ -517,13 +517,13 @@ bool vampiric_drain(int pow, monsters *monster)
     god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
 
-    const bool success = !stop_attack_prompt(monster, false, you.pos());
+    const bool success = !stop_attack_prompt(mons, false, you.pos());
 
     if (success)
     {
-        set_attack_conducts(conducts, monster);
+        set_attack_conducts(conducts, mons);
 
-        behaviour_event(monster, ME_WHACK, MHITYOU, you.pos());
+        behaviour_event(mons, ME_WHACK, MHITYOU, you.pos());
     }
 
     enable_attack_conducts(conducts);
@@ -531,22 +531,22 @@ bool vampiric_drain(int pow, monsters *monster)
     if (!success)
         return (false);
 
-    if (!monster->alive())
+    if (!mons->alive())
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return (true);
     }
 
     // Monster might be invisible or player misled.
-    if (monster->undead_or_demonic())
+    if (mons->undead_or_demonic())
     {
         mpr("Aaaarggghhhhh!");
         dec_hp(random2avg(39, 2) + 10, false, "vampiric drain backlash");
         return (true);
     }
 
-    if (monster->holiness() != MH_NATURAL
-        || monster->res_negative_energy())
+    if (mons->holiness() != MH_NATURAL
+        || mons->res_negative_energy())
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return (true);
@@ -555,7 +555,7 @@ bool vampiric_drain(int pow, monsters *monster)
     // The practical maximum of this is about 25 (pow @ 100). - bwr
     int hp_gain = 3 + random2avg(9, 2) + random2(pow) / 7;
 
-        hp_gain = std::min(monster->hit_points, hp_gain);
+        hp_gain = std::min(mons->hit_points, hp_gain);
         hp_gain = std::min(you.hp_max - you.hp, hp_gain);
 
     if (!hp_gain)
@@ -564,12 +564,12 @@ bool vampiric_drain(int pow, monsters *monster)
         return (true);
     }
 
-    const bool mons_was_summoned = monster->is_summoned();
+    const bool mons_was_summoned = mons->is_summoned();
 
-    monster->hurt(&you, hp_gain);
+    mons->hurt(&you, hp_gain);
 
-    if (monster->alive())
-        print_wounds(monster);
+    if (mons->alive())
+        print_wounds(mons);
 
     hp_gain /= 2;
 
@@ -582,11 +582,11 @@ bool vampiric_drain(int pow, monsters *monster)
     return (true);
 }
 
-bool burn_freeze(int pow, beam_type flavour, monsters *monster)
+bool burn_freeze(int pow, beam_type flavour, monsters* mons)
 {
     pow = std::min(25, pow);
 
-    if (monster == NULL || monster->submerged())
+    if (mons == NULL || mons->submerged())
     {
         mpr("There isn't anything close enough!");
         // If there's no monster there, you still pay the costs in
@@ -597,11 +597,11 @@ bool burn_freeze(int pow, beam_type flavour, monsters *monster)
     god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
 
-    const bool success = !stop_attack_prompt(monster, false, you.pos());
+    const bool success = !stop_attack_prompt(mons, false, you.pos());
 
     if (success)
     {
-        set_attack_conducts(conducts, monster);
+        set_attack_conducts(conducts, mons);
 
         mprf("You %s %s.",
              (flavour == BEAM_FIRE)        ? "burn" :
@@ -609,9 +609,9 @@ bool burn_freeze(int pow, beam_type flavour, monsters *monster)
              (flavour == BEAM_MISSILE)     ? "crush" :
              (flavour == BEAM_ELECTRICITY) ? "zap"
                                            : "______",
-             monster->name(DESC_NOCAP_THE).c_str());
+             mons->name(DESC_NOCAP_THE).c_str());
 
-        behaviour_event(monster, ME_ANNOY, MHITYOU);
+        behaviour_event(mons, ME_ANNOY, MHITYOU);
     }
 
     enable_attack_conducts(conducts);
@@ -624,21 +624,21 @@ bool burn_freeze(int pow, beam_type flavour, monsters *monster)
     beam.thrower = KILL_YOU;
 
     const int orig_hurted = roll_dice(1, 3 + pow / 3);
-    int hurted = mons_adjust_flavoured(monster, beam, orig_hurted);
-    monster->hurt(&you, hurted);
+    int hurted = mons_adjust_flavoured(mons, beam, orig_hurted);
+    mons->hurt(&you, hurted);
 
-    if (monster->alive())
+    if (mons->alive())
     {
-        monster->expose_to_element(flavour, orig_hurted);
-        print_wounds(monster);
+        mons->expose_to_element(flavour, orig_hurted);
+        print_wounds(mons);
 
         if (flavour == BEAM_COLD)
         {
-            const int cold_res = monster->res_cold();
+            const int cold_res = mons->res_cold();
             if (cold_res <= 0)
             {
                 const int stun = (1 - cold_res) * random2(2 + pow/5);
-                monster->speed_increment -= stun;
+                mons->speed_increment -= stun;
             }
         }
     }
@@ -650,27 +650,27 @@ int airstrike(int pow, const dist &beam)
 {
     bool success = false;
 
-    monsters *monster = monster_at(beam.target);
+    monsters* mons = monster_at(beam.target);
 
-    if (monster == NULL)
+    if (mons == NULL)
         canned_msg(MSG_SPELL_FIZZLES);
     else
     {
         god_conduct_trigger conducts[3];
         disable_attack_conducts(conducts);
 
-        success = !stop_attack_prompt(monster, false, you.pos());
+        success = !stop_attack_prompt(mons, false, you.pos());
 
         if (success)
         {
-            set_attack_conducts(conducts, monster);
+            set_attack_conducts(conducts, mons);
 
             mprf("The air twists around and strikes %s!",
-                 monster->name(DESC_NOCAP_THE).c_str());
+                 mons->name(DESC_NOCAP_THE).c_str());
 
-            behaviour_event(monster, ME_ANNOY, MHITYOU);
-            if (mons_is_mimic(monster->type))
-                mimic_alert(monster);
+            behaviour_event(mons, ME_ANNOY, MHITYOU);
+            if (mons_is_mimic(mons->type))
+                mimic_alert(mons);
         }
 
         enable_attack_conducts(conducts);
@@ -680,19 +680,19 @@ int airstrike(int pow, const dist &beam)
             int hurted = 8 + random2(random2(4) + (random2(pow) / 6)
                            + (random2(pow) / 7));
 
-            if (mons_flies(monster))
+            if (mons_flies(mons))
             {
                 hurted *= 3;
                 hurted /= 2;
             }
 
-            hurted -= random2(1 + monster->ac);
+            hurted -= random2(1 + mons->ac);
 
             hurted = std::max(0, hurted);
 
-            monster->hurt(&you, hurted);
-            if (monster->alive())
-                print_wounds(monster);
+            mons->hurt(&you, hurted);
+            if (mons->alive())
+                print_wounds(mons);
         }
     }
 
@@ -1273,7 +1273,7 @@ void cast_ignite_poison(int pow)
 
 static int _discharge_monsters(coord_def where, int pow, int, actor *)
 {
-    monsters *monster = monster_at(where);
+    monsters* mons = monster_at(where);
     int damage = 0;
 
     bolt beam;
@@ -1289,20 +1289,20 @@ static int _discharge_monsters(coord_def where, int pow, int, actor *)
             damage /= 2;
         ouch(damage, NON_MONSTER, KILLED_BY_WILD_MAGIC);
     }
-    else if (monster == NULL)
+    else if (mons == NULL)
         return (0);
-    else if (monster->res_elec() > 0 || mons_flies(monster))
+    else if (mons->res_elec() > 0 || mons_flies(mons))
         return (0);
     else
     {
         damage = 3 + random2(5 + pow/10);
-        damage = mons_adjust_flavoured(monster, beam, damage );
+        damage = mons_adjust_flavoured(mons, beam, damage );
 
         if (damage)
         {
             mprf("%s is struck by lightning.",
-                 monster->name(DESC_CAP_THE).c_str());
-            _player_hurt_monster(*monster, damage);
+                 mons->name(DESC_CAP_THE).c_str());
+            _player_hurt_monster(*mons, damage);
         }
     }
 

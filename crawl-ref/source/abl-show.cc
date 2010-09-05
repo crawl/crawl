@@ -1519,12 +1519,12 @@ static bool _do_ability(const ability_def& abil)
             return (false);
         }
 
-        monsters *monster = monster_at(beam.target);
+        monsters* mons = monster_at(beam.target);
 
         power = 3 + roll_dice(3, 10 * (3 + you.skills[SK_INVOCATIONS])
-                                    / (3 + monster->hit_dice)) / 3;
+                                    / (3 + mons->hit_dice)) / 3;
 
-        if (!cast_imprison(power, monster, -GOD_ZIN))
+        if (!cast_imprison(power, mons, -GOD_ZIN))
             return (false);
         break;
     }

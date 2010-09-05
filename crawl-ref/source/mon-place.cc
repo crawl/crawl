@@ -2678,7 +2678,7 @@ static int _ood_limit()
     return Options.ood_interesting;
 }
 
-void mark_interesting_monst(monsters* monster, beh_type behaviour)
+void mark_interesting_monst(monsters* mons, beh_type behaviour)
 {
     if (crawl_state.game_is_arena())
         return;
@@ -2686,37 +2686,37 @@ void mark_interesting_monst(monsters* monster, beh_type behaviour)
     bool interesting = false;
 
     // Unique monsters are always intersting
-    if (mons_is_unique(monster->type))
+    if (mons_is_unique(mons->type))
         interesting = true;
     // If it's never going to attack us, then not interesting
     else if (behaviour == BEH_FRIENDLY)
         interesting = false;
     // Jellies are never interesting to Jiyva.
-    else if (monster->type == MONS_JELLY && you.religion == GOD_JIYVA)
+    else if (mons->type == MONS_JELLY && you.religion == GOD_JIYVA)
         interesting = false;
     else if (you.where_are_you == BRANCH_MAIN_DUNGEON
              && you.level_type == LEVEL_DUNGEON
-             && mons_level(monster->type) >= you.absdepth0 + _ood_limit()
-             && mons_level(monster->type) < 99
-             && !(monster->type >= MONS_EARTH_ELEMENTAL
-                  && monster->type <= MONS_AIR_ELEMENTAL)
-             && !mons_class_flag( monster->type, M_NO_EXP_GAIN ))
+             && mons_level(mons->type) >= you.absdepth0 + _ood_limit()
+             && mons_level(mons->type) < 99
+             && !(mons->type >= MONS_EARTH_ELEMENTAL
+                  && mons->type <= MONS_AIR_ELEMENTAL)
+             && !mons_class_flag( mons->type, M_NO_EXP_GAIN ))
     {
         interesting = true;
     }
     else if ((you.level_type == LEVEL_DUNGEON
                 || you.level_type == LEVEL_ABYSS)
-             && mons_rarity(monster->type) <= Options.rare_interesting
-             && monster->hit_dice > 2 // Don't note the really low-hd monsters.
-             && !mons_class_flag(monster->type, M_NO_EXP_GAIN)
-             && mons_rarity(monster->type) > 0)
+             && mons_rarity(mons->type) <= Options.rare_interesting
+             && mons->hit_dice > 2 // Don't note the really low-hd monsters.
+             && !mons_class_flag(mons->type, M_NO_EXP_GAIN)
+             && mons_rarity(mons->type) > 0)
     {
         interesting = true;
     }
     // Don't waste time on moname() if user isn't using this option
     else if (Options.note_monsters.size() > 0)
     {
-        const std::string iname = mons_type_name(monster->type, DESC_NOCAP_A);
+        const std::string iname = mons_type_name(mons->type, DESC_NOCAP_A);
         for (unsigned i = 0; i < Options.note_monsters.size(); ++i)
         {
             if (Options.note_monsters[i].matches(iname))
@@ -2728,7 +2728,7 @@ void mark_interesting_monst(monsters* monster, beh_type behaviour)
     }
 
     if (interesting)
-        monster->flags |= MF_INTERESTING;
+        mons->flags |= MF_INTERESTING;
 }
 
 // PUBLIC FUNCTION -- mons_place().

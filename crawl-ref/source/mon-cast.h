@@ -15,20 +15,20 @@ struct bolt;
 void init_mons_spells();
 bool is_valid_mon_spell(spell_type spell);
 
-bool handle_mon_spell(monsters *monster, bolt &beem);
+bool handle_mon_spell(monsters* mons, bolt &beem);
 
 bolt mons_spells(monsters *mons, spell_type spell_cast, int power,
                  bool check_validity = false);
-void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
+void mons_cast(monsters* mons, bolt &pbolt, spell_type spell_cast,
                bool do_noise = true, bool special_ability = false);
-void mons_cast_noise(monsters *monster, const bolt &pbolt,
+void mons_cast_noise(monsters* mons, const bolt &pbolt,
                      spell_type spell_cast, bool special_ability = false);
-bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
+bool setup_mons_cast(monsters* mons, bolt &pbolt, spell_type spell_cast,
                      bool check_validity = false);
 
-void mons_cast_haunt(monsters *monster);
-void mons_cast_mislead(monsters *monster);
+void mons_cast_haunt(monsters* mons);
+void mons_cast_mislead(monsters* mons);
 bool actor_is_illusion_cloneable(actor *target);
-void mons_cast_spectral_orcs(monsters *monster);
+void mons_cast_spectral_orcs(monsters* mons);
 
 #endif

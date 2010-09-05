@@ -855,8 +855,8 @@ bool cast_apportation(int pow, const coord_def& where)
         && item_is_stationary(item))
     {
         remove_item_stationary(item);
-        if (monsters *monster = monster_at(where))
-            monster->del_ench(ENCH_HELD, true);
+        if (monsters* mons = monster_at(where))
+            mons->del_ench(ENCH_HELD, true);
     }
 
     // Actually move the item.

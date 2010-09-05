@@ -13,8 +13,8 @@
 
 void init_monsters_seens();
 
-bool mons_near(const monsters *monster);
-bool mon_enemies_around(const monsters *monster);
+bool mons_near(const monsters* mons);
+bool mon_enemies_around(const monsters* mons);
 void seen_monsters_react();
 
 void find_features(const std::vector<coord_def>& features,
@@ -44,7 +44,7 @@ void flash_monster_colour(const monsters *mon, uint8_t fmc_colour,
 
 void viewwindow(bool show_updates = true);
 void update_monsters_in_view();
-void handle_seen_interrupt(monsters* monster);
+void handle_seen_interrupt(monsters* mons);
 void flush_comes_into_view();
 
 void toggle_show_terrain();

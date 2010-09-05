@@ -1902,9 +1902,9 @@ static int _xom_animate_monster_weapon(int sever, bool debug = false)
 
     mg.non_actor_summoner = "Xom";
 
-    const int monster = create_monster(mg);
+    const int mons = create_monster(mg);
 
-    if (monster == -1)
+    if (mons == -1)
         return (XOM_DID_NOTHING);
 
     // Make the monster unwield its weapon.
@@ -1915,11 +1915,11 @@ static int _xom_animate_monster_weapon(int sever, bool debug = false)
          apostrophise(mon->name(DESC_CAP_THE)).c_str(),
          mitm[wpn].name(DESC_PLAIN).c_str());
 
-    destroy_item(menv[monster].inv[MSLOT_WEAPON]);
+    destroy_item(menv[mons].inv[MSLOT_WEAPON]);
 
-    menv[monster].inv[MSLOT_WEAPON] = wpn;
-    mitm[wpn].set_holding_monster(monster);
-    menv[monster].colour = mitm[wpn].colour;
+    menv[mons].inv[MSLOT_WEAPON] = wpn;
+    mitm[wpn].set_holding_monster(mons);
+    menv[mons].colour = mitm[wpn].colour;
 
     return (XOM_GOOD_ANIMATE_MON_WPN);
 }

@@ -698,13 +698,12 @@ bool summon_berserker(int pow, god_type god, int spell,
     if (force_hostile)
         mg.non_actor_summoner = "the rage of " + god_name(god, false);
 
-    int monster =
-        create_monster(mg);
+    int mons = create_monster(mg);
 
-    if (monster == -1)
+    if (mons == -1)
         return (false);
 
-    monsters *summon = &menv[monster];
+    monsters *summon = &menv[mons];
 
     summon->go_berserk(false);
     mon_enchant berserk = summon->get_ench(ENCH_BERSERK);
@@ -718,7 +717,7 @@ bool summon_berserker(int pow, god_type god, int spell,
     summon->update_ench(berserk);
     summon->update_ench(abj);
 
-    player_angers_monster(&menv[monster]);
+    player_angers_monster(&menv[mons]);
     return (true);
 }
 
@@ -739,12 +738,12 @@ static bool _summon_holy_being_wrapper(int pow, god_type god, int spell,
     if (!friendly)
         mg.non_actor_summoner = god_name(god, false);
 
-    const int monster = create_monster(mg);
+    const int mons = create_monster(mg);
 
-    if (monster == -1)
+    if (mons == -1)
         return (false);
 
-    monsters *summon = &menv[monster];
+    monsters *summon = &menv[mons];
     summon->flags |= MF_ATT_CHANGE_ATTEMPT;
 
     if (!quiet)
@@ -755,7 +754,7 @@ static bool _summon_holy_being_wrapper(int pow, god_type god, int spell,
                                  : "");
     }
 
-    player_angers_monster(&menv[monster]);
+    player_angers_monster(&menv[mons]);
     return (true);
 }
 
@@ -810,7 +809,7 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
         mitm[i] = *wpn;
     }
 
-    int monster;
+    int mons;
 
     if (success)
     {
@@ -828,9 +827,9 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
         if (force_hostile)
             mg.non_actor_summoner = god_name(god, false);
 
-        monster = create_monster(mg);
+        mons = create_monster(mg);
 
-        if (monster == -1)
+        if (mons == -1)
         {
             mitm[i].clear();
             success = false;
@@ -861,7 +860,7 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
     mitm[i] = *wpn;
     mitm[i].quantity = 1;
     mitm[i].pos.set(-2, -2);
-    mitm[i].link = NON_ITEM + 1 + monster;
+    mitm[i].link = NON_ITEM + 1 + mons;
 
     // Mark the weapon as thrown, so that we'll autograb it when the
     // tango's done.
@@ -876,7 +875,7 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
 
     wpn->clear();
 
-    monsters& dancing_weapon = menv[monster];
+    monsters& dancing_weapon = menv[mons];
 
     destroy_item(dancing_weapon.inv[MSLOT_WEAPON]);
     dancing_weapon.inv[MSLOT_WEAPON] = i;
@@ -923,16 +922,16 @@ bool cast_conjure_ball_lightning(int pow, god_type god)
         if (!found)
             target = you.pos();
 
-        const int monster =
+        const int mons =
             mons_place(
                 mgen_data(MONS_BALL_LIGHTNING, BEH_FRIENDLY, &you,
                           0, SPELL_CONJURE_BALL_LIGHTNING,
                           target, MHITNOT, 0, god));
 
-        if (monster != -1)
+        if (mons != -1)
         {
             success = true;
-            menv[monster].add_ench(ENCH_SHORT_LIVED);
+            menv[mons].add_ench(ENCH_SHORT_LIVED);
         }
     }
 
@@ -955,19 +954,19 @@ bool cast_call_imp(int pow, god_type god)
 
     const int dur = std::min(2 + (random2(pow) / 4), 6);
 
-    const int monster =
+    const int mons =
         create_monster(
             mgen_data(mon, BEH_FRIENDLY, &you, dur, SPELL_CALL_IMP,
                       you.pos(), MHITYOU, MG_FORCE_BEH, god));
 
-    if (monster != -1)
+    if (mons != -1)
     {
         mpr((mon == MONS_WHITE_IMP)  ? "A beastly little devil appears in a puff of frigid air." :
             (mon == MONS_SHADOW_IMP) ? "A shadowy apparition takes form in the air." :
             (mon == MONS_IRON_IMP)   ? "A metallic apparition takes form in the air."
                                      : "A beastly little devil appears in a puff of flame.");
 
-        player_angers_monster(&menv[monster]);
+        player_angers_monster(&menv[mons]);
         return (true);
     }
 
@@ -981,20 +980,20 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
 {
     bool success = false;
 
-    const int monster =
+    const int mons =
         create_monster(
             mgen_data(mon,
                       friendly ? BEH_FRIENDLY :
                           charmed ? BEH_CHARMED : BEH_HOSTILE, &you,
                       dur, spell, you.pos(), MHITYOU, MG_FORCE_BEH, god));
 
-    if (monster != -1)
+    if (mons != -1)
     {
         success = true;
 
         mpr("A demon appears!");
 
-        if (!player_angers_monster(&menv[monster]) && !friendly)
+        if (!player_angers_monster(&menv[mons]) && !friendly)
         {
             mpr(charmed ? "You don't feel so good about this..."
                         : "It doesn't look very happy.");
@@ -1093,16 +1092,16 @@ bool cast_shadow_creatures(god_type god)
 {
     mpr("Wisps of shadow whirl around you...");
 
-    const int monster =
+    const int mons =
         create_monster(
             mgen_data(RANDOM_MONSTER, BEH_FRIENDLY, &you,
                       2, SPELL_SHADOW_CREATURES,
                       you.pos(), MHITYOU,
                       MG_FORCE_BEH, god), false);
 
-    if (monster != -1)
+    if (mons != -1)
     {
-        player_angers_monster(&menv[monster]);
+        player_angers_monster(&menv[mons]);
         return (true);
     }
 
@@ -1140,33 +1139,33 @@ bool cast_summon_horrible_things(int pow, god_type god)
 
     while (how_many_big-- > 0)
     {
-        const int monster =
+        const int mons =
             create_monster(
                mgen_data(MONS_TENTACLED_MONSTROSITY, BEH_FRIENDLY, &you,
                          6, SPELL_SUMMON_HORRIBLE_THINGS,
                          you.pos(), MHITYOU,
                          MG_FORCE_BEH, god));
 
-        if (monster != -1)
+        if (mons != -1)
         {
             count++;
-            player_angers_monster(&menv[monster]);
+            player_angers_monster(&menv[mons]);
         }
     }
 
     while (how_many_small-- > 0)
     {
-        const int monster =
+        const int mons =
             create_monster(
                mgen_data(MONS_ABOMINATION_LARGE, BEH_FRIENDLY, &you,
                          6, SPELL_SUMMON_HORRIBLE_THINGS,
                          you.pos(), MHITYOU,
                          MG_FORCE_BEH, god));
 
-        if (monster != -1)
+        if (mons != -1)
         {
             count++;
-            player_angers_monster(&menv[monster]);
+            player_angers_monster(&menv[mons]);
         }
     }
 
@@ -1194,9 +1193,9 @@ static bool _animatable_remains(const item_def& item)
 // undead can be equipped with the second monster's items if the second
 // monster is either of the same type as the first, or if the second
 // monster wasn't killed by the player or a player's pet.
-void equip_undead(const coord_def &a, int corps, int monster, int monnum)
+void equip_undead(const coord_def &a, int corps, int mons, int monnum)
 {
-    monsters* mon = &menv[monster];
+    monsters* mon = &menv[mons];
 
     if (mons_class_itemuse(monnum) < MONUSE_STARTING_EQUIPMENT)
         return;
@@ -1433,12 +1432,12 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
 
     mg.non_actor_summoner = nas;
 
-    int monster = create_monster(mg);
+    int mons = create_monster(mg);
 
     if (mon_index != NULL)
-        *mon_index = monster;
+        *mon_index = mons;
 
-    if (monster == -1)
+    if (mons == -1)
         return (false);
 
     const int monnum = item.orig_monnum - 1;
@@ -1449,15 +1448,15 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
         std::string name = get_corpse_name(item, &name_type);
 
         if (name_type == 0 || (name_type & MF_NAME_MASK) == MF_NAME_REPLACE)
-            name_zombie(&menv[monster], monnum, name);
+            name_zombie(&menv[mons], monnum, name);
     }
 
-    equip_undead(pos, corps, monster, monnum);
+    equip_undead(pos, corps, mons, monnum);
 
     destroy_item(corps);
 
     if (!force_beh)
-        player_angers_monster(&menv[monster]);
+        player_angers_monster(&menv[mons]);
 
     //Bitfield for motions - determines text displayed when animating dead
     if (mons_class_primary_habitat(zombie_type)    == HT_WATER
@@ -1625,20 +1624,20 @@ bool cast_simulacrum(int pow, god_type god)
 
         for (int i = 0; i < how_many; ++i)
         {
-            const int monster =
+            const int mons =
                 create_monster(
                     mgen_data(sim_type, BEH_FRIENDLY, &you,
                               6, SPELL_SIMULACRUM,
                               you.pos(), MHITYOU,
                               MG_FORCE_BEH, god, type));
 
-            if (monster != -1)
+            if (mons != -1)
             {
                 count++;
 
                 dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
 
-                player_angers_monster(&menv[monster]);
+                player_angers_monster(&menv[mons]);
             }
         }
 
@@ -1712,7 +1711,7 @@ bool cast_twisted_resurrection(int pow, god_type god)
                      (rotted >= random2(how_many_corpses)) ? RED
                                                            : LIGHTRED;
 
-    const int monster =
+    const int mons =
         create_monster(
             mgen_data(mon, BEH_FRIENDLY, &you,
                       0, 0,
@@ -1720,7 +1719,7 @@ bool cast_twisted_resurrection(int pow, god_type god)
                       MG_FORCE_BEH, god,
                       MONS_NO_MONSTER, 0, colour));
 
-    if (monster == -1)
+    if (mons == -1)
     {
         mpr("The corpses collapse into a pulpy mess.");
 
@@ -1731,7 +1730,7 @@ bool cast_twisted_resurrection(int pow, god_type god)
     }
 
     // Mark this abomination as undead.
-    menv[monster].flags |= MF_HONORARY_UNDEAD;
+    menv[mons].flags |= MF_HONORARY_UNDEAD;
 
     mpr("The heap of corpses melds into an agglomeration of writhing flesh!");
 
@@ -1740,21 +1739,21 @@ bool cast_twisted_resurrection(int pow, god_type god)
 
     if (mon == MONS_ABOMINATION_LARGE)
     {
-        menv[monster].hit_dice = 8 + total_mass / ((colour == LIGHTRED) ? 500 :
+        menv[mons].hit_dice = 8 + total_mass / ((colour == LIGHTRED) ? 500 :
                                                    (colour == RED)      ? 1000
                                                                         : 2500);
 
-        menv[monster].hit_dice = std::min(30, menv[monster].hit_dice);
+        menv[mons].hit_dice = std::min(30, menv[mons].hit_dice);
 
         // XXX: No convenient way to get the hit dice size right now.
-        menv[monster].hit_points = hit_points(menv[monster].hit_dice, 2, 5);
-        menv[monster].max_hit_points = menv[monster].hit_points;
+        menv[mons].hit_points = hit_points(menv[mons].hit_dice, 2, 5);
+        menv[mons].max_hit_points = menv[mons].hit_points;
 
         if (colour == LIGHTRED)
-            menv[monster].ac += total_mass / 1000;
+            menv[mons].ac += total_mass / 1000;
     }
 
-    player_angers_monster(&menv[monster]);
+    player_angers_monster(&menv[mons]);
     return (true);
 }
 
@@ -1792,18 +1791,18 @@ bool cast_haunt(int pow, const coord_def& where, god_type god)
         if ((chance == 3 || chance == 8) && you.can_see_invisible())
             mon = MONS_SHADOW_WRAITH;                               //  0%/8%
 
-        const int monster =
+        const int mons =
             create_monster(
                 mgen_data(mon,
                           BEH_FRIENDLY, &you,
                           5, SPELL_HAUNT,
                           where, mi, MG_FORCE_BEH, god));
 
-        if (monster != -1)
+        if (mons != -1)
         {
             success++;
 
-            if (player_angers_monster(&menv[monster]))
+            if (player_angers_monster(&menv[mons]))
                 friendly = false;
         }
     }

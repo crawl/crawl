@@ -112,7 +112,7 @@ bool can_travel_to(const level_id &lid);
 bool can_travel_interlevel();
 bool prompt_stop_explore(int es_why);
 
-bool travel_kill_monster(const monsters * monster);
+bool travel_kill_monster(const monsters* mons);
 
 enum translevel_prompt_flags
 {

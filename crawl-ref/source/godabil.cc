@@ -1169,14 +1169,14 @@ int fedhas_fungal_bloom()
                     simple_monster_message(target, "'s flesh rots away.");
 
                     monster_die(target, KILL_MISC, NON_MONSTER, true);
-                    int monster = create_monster(mg);
-                    env.mons[monster].flags = monster_flags;
-                    env.mons[monster].enchantments = ench;
+                    int mons = create_monster(mg);
+                    env.mons[mons].flags = monster_flags;
+                    env.mons[mons].enchantments = ench;
 
-                    if (env.mons[monster].hit_points > current_hp)
-                        env.mons[monster].hit_points = current_hp;
+                    if (env.mons[mons].hit_points > current_hp)
+                        env.mons[mons].hit_points = current_hp;
 
-                    behaviour_event(&env.mons[monster], ME_ALERT, MHITYOU);
+                    behaviour_event(&env.mons[mons], ME_ALERT, MHITYOU);
 
                     continue;
                 }
@@ -1382,13 +1382,13 @@ bool fedhas_sunlight()
             // credit if the monster dies. The enchantment is inflicted via
             // the dungeon_terrain_changed call chain and that doesn't keep
             // track of what caused the terrain change. -cao
-            monsters * monster = monster_at(target);
-            if (monster && ftype == DNGN_FLOOR
-                && monster->has_ench(ENCH_AQUATIC_LAND))
+            monsters* mons = monster_at(target);
+            if (mons && ftype == DNGN_FLOOR
+                && mons->has_ench(ENCH_AQUATIC_LAND))
             {
-                mon_enchant temp = monster->get_ench(ENCH_AQUATIC_LAND);
+                mon_enchant temp = mons->get_ench(ENCH_AQUATIC_LAND);
                 temp.who = KC_YOU;
-                monster->add_ench(temp);
+                mons->add_ench(temp);
             }
 
             processed_count++;
