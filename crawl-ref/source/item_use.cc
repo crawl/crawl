@@ -631,8 +631,8 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return (false);
         }
 
-        if (!ignore_temporary && you.swimming()
-            && you.species == SP_MERFOLK)
+        if (!ignore_temporary
+            && you.species == SP_MERFOLK && you.swimming())
         {
             if (verbose)
                mpr("You don't currently have feet!");
