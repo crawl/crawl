@@ -3362,6 +3362,7 @@ void reroll_brand(item_def &item, int item_level)
     default:
         ASSERT(!"can't reroll brands of this type");
     }
+    item_set_appearance(item);
 }
 
 static int _roll_rod_enchant(int item_level)
