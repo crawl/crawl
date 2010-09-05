@@ -663,6 +663,11 @@ void wizard_make_object_randart()
             return;
         }
 
+        // need to trim before the object changes, or else the old properties
+        // won't be removed
+        if (Options.autoinscribe_artefacts)
+            trim_randart_inscrip(item);
+
         item.special = 0;
         item.flags  &= ~ISFLAG_RANDART;
         item.props.clear();
