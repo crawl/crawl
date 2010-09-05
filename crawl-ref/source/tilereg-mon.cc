@@ -171,7 +171,7 @@ void MonsterRegion::pack_buffers()
             if (mon)
             {
                 const coord_def gc = mon->position;
-                const coord_def ep = view2show(grid2view(gc));
+                const coord_def ep = grid2show(gc);
 
                 if (crawl_view.in_grid_los(gc))
                 {

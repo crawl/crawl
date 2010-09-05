@@ -893,7 +893,7 @@ void viewwindow(bool show_updates)
     {
         // in grid coords
         const coord_def gc = view2grid(*ri);
-        const coord_def ep = view2show(grid2view(gc));
+        const coord_def ep = grid2show(gc);
 
         if (!map_bounds(gc))
             _draw_out_of_bounds(cell);

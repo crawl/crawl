@@ -635,7 +635,7 @@ void tile_place_monster(const coord_def &gc, const monsters *mon)
     if (!mon)
         return;
 
-    const coord_def ep = view2show(grid2view(gc));
+    const coord_def ep = grid2show(gc);
 
     tileidx_t t = tileidx_monster(mon);
     tileidx_t t0   = t & TILE_FLAG_MASK;
@@ -702,7 +702,7 @@ void tile_place_monster(const coord_def &gc, const monsters *mon)
 
 void tile_place_cloud(const coord_def &gc, const cloud_struct &cl)
 {
-    const coord_def ep = view2show(grid2view(gc));
+    const coord_def ep = grid2show(gc);
     // In the Shoals, ink is handled differently. (jpeg)
     // I'm not sure it is even possible anywhere else, but just to be safe...
     if (cl.type != CLOUD_INK || !player_in_branch(BRANCH_SHOALS))
@@ -726,7 +726,7 @@ void tile_place_ray(const coord_def &gc, bool in_range)
     if (num_tile_rays < tile_ray_vec.size() - 1)
     {
         tile_ray_vec[num_tile_rays].in_range = in_range;
-        tile_ray_vec[num_tile_rays++].ep = view2show(grid2view(gc));
+        tile_ray_vec[num_tile_rays++].ep = grid2show(gc);
     }
 }
 

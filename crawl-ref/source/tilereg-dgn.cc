@@ -947,7 +947,7 @@ bool DungeonRegion::update_tip_text(std::string &tip)
 
         if (you.see_cell(gc))
         {
-            const coord_def ep = view2show(grid2view(gc));
+            const coord_def ep = grid2show(gc);
 
             tip += make_stringf("GC(%d, %d) EP(%d, %d)\n\n",
                                 gc.x, gc.y, ep.x, ep.y);
