@@ -372,6 +372,7 @@ NAME:     vaults_vault
 PLACE:    Vault:8
 ORIENT:   encompass
 TAGS:     no_rotate no_dump
+SHUFFLE:  ABCD
 SUBVAULT: A : vault8_quadrant_prize
 SUBVAULT: B : vault8_quadrant
 SUBVAULT: C : vault8_quadrant
