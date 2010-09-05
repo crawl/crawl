@@ -41,6 +41,7 @@
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
+#include "syscalls.h"
 #include "tags.h"
 #include "travel.h"
 #include "items.h"
@@ -3663,10 +3664,11 @@ static struct es_command
     int min_args, max_args;
 } es_commands[] =
 {
-    { ES_LS,       "ls",   false, 0, 0, },
-    { ES_GET,      "get",  false, 1, 2, },
-    { ES_PUT,      "put",  true,  1, 2, },
-    { ES_RM,       "rm",   true,  1, 1, },
+    { ES_LS,      "ls",      false, 0, 0, },
+    { ES_GET,     "get",     false, 1, 2, },
+    { ES_PUT,     "put",     true,  1, 2, },
+    { ES_RM,      "rm",      true,  1, 1, },
+    { ES_REPACK,  "repack",  false, 0, 0, },
 };
 
 #define ERR(...) do { fprintf(stderr, __VA_ARGS__); return; } while(0)
@@ -3679,6 +3681,7 @@ static void _edit_save(int argc, char **argv)
                "  get <chunk> [<file>]      write a chunk from <file> (default \"chunk\", \"-\" for stdout)\n"
                "  put <chunk> [<file>]      extract a chunk to <file> (default \"chunk\", \"-\" for stdin)\n"
                "  rm <chunk>                delete a chunk\n"
+               "  repack                    defrag and reclaim unused space\n"
                );
         return;
     }
@@ -3773,6 +3776,25 @@ static void _edit_save(int argc, char **argv)
                 ERR("No such chunk in the save file.\n");
 
             save.delete_chunk(chunk);
+        }
+        else if (cmd == ES_REPACK)
+        {
+            package save2((get_savedir_filename(name, "", "") + ".tmp").c_str(),
+                           true, true);
+            std::vector<std::string> list = save.list_chunks();
+            for (size_t i = 0; i < list.size(); i++)
+            {
+                char buf[16384];
+
+                chunk_reader in(&save, list[i]);
+                chunk_writer out(&save2, list[i]);
+
+                while(len_t s = in.read(buf, sizeof(buf)))
+                    out.write(buf, s);
+            }
+            save2.commit();
+            rename((get_savedir_filename(name, "", "") + ".tmp").c_str(),
+                   (get_savedir_filename(name, "", "") + SAVE_SUFFIX).c_str());
         }
     }
     catch (ext_fail_exception &fe)
