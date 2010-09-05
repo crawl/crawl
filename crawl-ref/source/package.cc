@@ -40,7 +40,7 @@ Caveats/issues:
 #include "errors.h"
 
 #undef  FSCK_VERBOSE
-#define COSTLY_ASSERTS
+#undef  COSTLY_ASSERTS
 #undef  DO_FSYNC
 #undef  DEBUG_PACKAGE
 
