@@ -4016,7 +4016,7 @@ mon_body_shape get_mon_shape(const int type)
             return (MON_SHAPE_HUMANOID);
     case 'X': // large abominations
         return (MON_SHAPE_MISC);
-    case 'Y': // yaks and sheep
+    case 'Y': // yaks, sheep and elephants
         if (type == MONS_SHEEP)
             return (MON_SHAPE_QUADRUPED_TAILLESS);
         else
