@@ -54,10 +54,24 @@ bool conjure_flame(int pow, const coord_def& where)
 
     if (cell_is_solid(where))
     {
-        if (grd(where) == DNGN_WAX_WALL)
+        switch (grd(where))
+        {
+        case DNGN_WAX_WALL:
             mpr("The flames aren't hot enough to melt wax walls!");
-        else
+            break;
+        case DNGN_METAL_WALL:
+            mpr("You can't ignite solid metal!");
+            break;
+        case DNGN_GREEN_CRYSTAL_WALL:
+            mpr("You can't ignite solid crystal!");
+            break;
+        case DNGN_TREE:
+            mpr("The flames aren't hot enough to burn down trees!");
+            break;
+        default:
             mpr("You can't ignite solid rock!");
+            break;
+        }
         return (false);
     }
 
