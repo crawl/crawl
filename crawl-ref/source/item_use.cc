@@ -4540,7 +4540,7 @@ static bool _scroll_modify_item(item_def scroll)
         {
             // Might still fail on highly enchanted weapons of electrocution.
             // (If so, already prints the "Nothing happens" message.)
-            if (recharge_wand(item_slot))
+            if (recharge_wand(item_slot, false))
                 return (true);
             return (false);
         }
