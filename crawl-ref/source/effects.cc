@@ -884,7 +884,7 @@ void random_uselessness(int scroll_slot)
     }
 }
 
-bool recharge_wand(int item_slot)
+bool recharge_wand(int item_slot, bool known)
 {
     do
     {
@@ -898,7 +898,7 @@ bool recharge_wand(int item_slot)
 
         item_def &wand = you.inv[ item_slot ];
 
-        if (!item_is_rechargeable(wand, true, true))
+        if (!item_is_rechargeable(wand, known, true))
         {
             mpr("Choose an item to recharge, or Esc to abort.");
             if (Options.auto_list)
