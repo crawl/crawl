@@ -2145,6 +2145,9 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
 void melee_attack::_monster_die(monster* mons, killer_type killer,
                                 int killer_index)
 {
+    if (invalid_monster(mons))
+        return; // Already died some other way.
+
     const bool chaos = (damage_brand == SPWPN_CHAOS);
     const bool reaping = (damage_brand == SPWPN_REAPING);
 
