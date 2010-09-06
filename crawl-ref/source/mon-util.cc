@@ -1012,6 +1012,7 @@ mon_itemeat_type mons_itemeat(const monster* mon)
         return (MONEAT_NOTHING);
     else if (mons_enslaved_intact_soul(mon))
         return (mons_class_itemeat(mons_zombie_base(mon)));
+
     if (mon->has_ench(ENCH_EAT_ITEMS))
         return (MONEAT_ITEMS);
 
