@@ -1956,28 +1956,19 @@ enum monster_type                      // (int) menv[].type
     MONS_SNORG, // was Anita - Snorg is correct 16jan2000 {dlb}
     MONS_ERICA,
     MONS_JOSEPHINE,
-    MONS_HAROLD,                       //  295
-#if (TAG_MAJOR_VERSION <= 29)
-    MONS_NORBERT,
-#endif
+    MONS_HAROLD,
     MONS_JOZEF,
     MONS_AGNES,
     MONS_MAUD,
-    MONS_LOUISE,                       //  300
-#if (TAG_MAJOR_VERSION <= 29)
-    MONS_FRANCIS,
-#endif
+    MONS_LOUISE,
     MONS_FRANCES,
     MONS_RUPERT,
     MONS_WIGLAF,
-#if (TAG_MAJOR_VERSION <= 29)
-    MONS_DUANE,                        //  305
-#endif
     MONS_XTAHUA,
     MONS_NORRIS,
     MONS_FREDERICK,
     MONS_MARGERY,
-    MONS_BORIS,                        //  310
+    MONS_BORIS,
     MONS_POLYPHEMUS,
 // BCR - end second batch of uniques.
 
@@ -2377,19 +2368,16 @@ enum mon_spellbook_type
     MST_HELL_HOG,
     MST_SWAMP_DRAGON,
     MST_SWAMP_DRAKE,
-#if (TAG_MAJOR_VERSION <= 29)
-    MST_SERPENT_OF_HELL_GEHENNA,       // 125
-#endif
     MST_BOGGART,
     MST_EYE_OF_DEVASTATION,
     MST_QUICKSILVER_DRAGON,
     MST_IRON_DRAGON,
-    MST_SKELETAL_WARRIOR,              // 130
+    MST_SKELETAL_WARRIOR,
     MST_NORRIS,
     MST_DEATH_DRAKE,
     MST_DRAC_SCORCHER, // As Bioster would say.. pig*s
     MST_DRAC_CALLER,
-    MST_DRAC_SHIFTER,                  // 135
+    MST_DRAC_SHIFTER,
     MST_CURSE_TOE,
     MST_ICE_STATUE,
     // unique monsters' "spellbooks"
@@ -2437,9 +2425,7 @@ enum mon_spellbook_type
     MST_IRON_ELEMENTAL,
     MST_MENNAS,
     MST_JUMPING_SPIDER,
-#if (TAG_MAJOR_VERSION > 29)
-    MST_SERPENT_OF_HELL_GEHENNA,       // 125
-#endif
+    MST_SERPENT_OF_HELL_GEHENNA,
     MST_SERPENT_OF_HELL_COCYTUS,
     MST_SERPENT_OF_HELL_TARTARUS,     // 190
     MST_SERPENT_OF_HELL_DIS,
