@@ -79,8 +79,6 @@
 #include "shopping.h"
 #include "skills.h"
 #include "skills2.h"
-#include "spells1.h"
-#include "spells3.h"
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
@@ -2009,7 +2007,7 @@ std::string your_hand(bool plural)
     switch (you.attribute[ATTR_TRANSFORMATION])
     {
     default:
-        mpr("ERROR: unknown transformation in your_hand() (spells4.cc)",
+        mpr("ERROR: unknown transformation in your_hand() (misc.cc)",
             MSGCH_ERROR);
     case TRAN_NONE:
     case TRAN_STATUE:

@@ -36,7 +36,7 @@
 #include "player.h"
 #include "religion.h"
 #include "spl-cast.h"
-#include "spl-mis.h"
+#include "spl-miscast.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
