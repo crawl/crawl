@@ -182,7 +182,7 @@ static void crawl_sendkeys_proc(lua_State *ls, int argi)
             return;
 
         for ( ; *keys; ++keys)
-            macro_buf_add(*keys);
+            macro_sendkeys_end_add_expanded(*keys);
     }
     else if (lua_istable(ls, argi))
     {
@@ -201,8 +201,7 @@ static void crawl_sendkeys_proc(lua_State *ls, int argi)
     }
     else if (lua_isnumber(ls, argi))
     {
-        int key = luaL_checkint(ls, argi);
-        macro_buf_add(key);
+        macro_sendkeys_end_add_expanded(luaL_checkint(ls, argi));
     }
 }
 
@@ -259,7 +258,7 @@ static int crawl_process_keys(lua_State *ls)
 
     flush_input_buffer(FLUSH_BEFORE_COMMAND);
     for (int i = 1, len = strlen(keys); i < len; i++)
-        macro_buf_add(keys[i]);
+        macro_sendkeys_end_add_expanded(keys[i]);
 
     process_command(cmd);
 
@@ -687,11 +686,9 @@ LUAFN(_crawl_args)
 
 LUAFN(_crawl_milestone)
 {
-#ifdef DGL_MILESTONES
     mark_milestone(luaL_checkstring(ls, 1),
                    luaL_checkstring(ls, 2),
                    lua_toboolean(ls, 3));
-#endif
     return (0);
 }
 
@@ -733,7 +730,7 @@ LUAFN(_crawl_millis)
 }
 #endif
 
-std::string _crawl_make_name(lua_State *ls)
+static std::string _crawl_make_name(lua_State *ls)
 {
     // A quick wrapper around itemname:make_name. Seed is random_int().
     // Possible parameters: all caps, max length, char start. By default

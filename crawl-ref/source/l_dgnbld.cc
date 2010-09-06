@@ -156,7 +156,7 @@ static int _fill_area (lua_State *ls, map_lines &lines, int x1, int y1, int x2, 
 }
 
 // Specifically only deals with horizontal lines.
-std::vector<coord_def> _box_side (int x1, int y1, int x2, int y2, int side)
+static std::vector<coord_def> _box_side (int x1, int y1, int x2, int y2, int side)
 {
     std::vector<coord_def> line;
 

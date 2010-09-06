@@ -20,6 +20,7 @@
 #include "kills.h"
 #include "clua.h"
 #include "options.h"
+#include "viewchar.h"
 
 #define KILLS_MAJOR_VERSION 4
 #define KILLS_MINOR_VERSION 1
@@ -79,8 +80,8 @@ void KillMaster::save(writer& outf) const
 
 void KillMaster::load(reader& inf)
 {
-    unsigned char major = unmarshallByte(inf),
-                  minor = unmarshallByte(inf);
+    int major = unmarshallByte(inf),
+        minor = unmarshallByte(inf);
     if (major != KILLS_MAJOR_VERSION
         || (minor != KILLS_MINOR_VERSION && minor > 0))
     {
@@ -104,16 +105,16 @@ void KillMaster::record_kill(const monsters *mon, int killer, bool ispet)
     categorized_kills[kc].record_kill(mon);
 }
 
-long KillMaster::total_kills() const
+int KillMaster::total_kills() const
 {
-    long grandtotal = 0L;
+    int grandtotal = 0;
     for (int i = KC_YOU; i < KC_NCATEGORIES; ++i)
     {
         if (categorized_kills[i].empty())
             continue;
 
         std::vector<kill_exp> kills;
-        long count = categorized_kills[i].get_kills(kills);
+        int count = categorized_kills[i].get_kills(kills);
         grandtotal += count;
     }
     return (grandtotal);
@@ -128,7 +129,7 @@ std::string KillMaster::kill_info() const
 
     bool needseparator = false;
     int categories = 0;
-    long grandtotal = 0L;
+    int grandtotal = 0;
 
     Kills catkills[KC_NCATEGORIES];
     for (int i = 0; i < KC_NCATEGORIES; ++i)
@@ -144,7 +145,7 @@ std::string KillMaster::kill_info() const
 
         categories++;
         std::vector<kill_exp> kills;
-        long count = catkills[i].get_kills(kills);
+        int count = catkills[i].get_kills(kills);
         grandtotal += count;
 
         add_kill_info( killtext,
@@ -161,7 +162,7 @@ std::string KillMaster::kill_info() const
     {
         char buf[200];
         snprintf(buf, sizeof buf,
-                "Grand Total: %ld creatures vanquished",
+                "Grand Total: %d creatures vanquished",
                 grandtotal);
         grandt = buf;
     }
@@ -186,7 +187,7 @@ std::string KillMaster::kill_info() const
 
 void KillMaster::add_kill_info(std::string &killtext,
                                std::vector<kill_exp> &kills,
-                               long count,
+                               int count,
                                const char *category,
                                bool separator) const
 {
@@ -234,21 +235,21 @@ void KillMaster::add_kill_info(std::string &killtext,
         {
             char numbuf[100];
             snprintf(numbuf, sizeof numbuf,
-                    "%ld creature%s vanquished." "\n", count,
+                    "%d creature%s vanquished." "\n", count,
                     count > 1? "s" : "");
             killtext += numbuf;
         }
     }
 }
 
-long KillMaster::num_kills(const monsters *mon, kill_category cat) const
+int KillMaster::num_kills(const monsters *mon, kill_category cat) const
 {
     return categorized_kills[cat].num_kills(mon);
 }
 
-long KillMaster::num_kills(const monsters *mon) const
+int KillMaster::num_kills(const monsters *mon) const
 {
-    long total = 0;
+    int total = 0;
     for (int cat = 0; cat < KC_NCATEGORIES; cat++)
         total += categorized_kills[cat].num_kills(mon);
 
@@ -299,9 +300,9 @@ void Kills::record_kill(const monsters *mon)
         k = kill_def(mon);
 }
 
-long Kills::get_kills(std::vector<kill_exp> &all_kills) const
+int Kills::get_kills(std::vector<kill_exp> &all_kills) const
 {
-    long count = 0;
+    int count = 0;
     kill_map::const_iterator iter = kills.begin();
     for (; iter != kills.end(); ++iter)
     {
@@ -348,7 +349,7 @@ void Kills::load(reader& inf)
     // How many kill records?
     int kill_count = unmarshallInt(inf);
     kills.clear();
-    for (long i = 0; i < kill_count; ++i)
+    for (int i = 0; i < kill_count; ++i)
     {
         kill_monster_desc md;
         md.load(inf);
@@ -632,7 +633,10 @@ kill_ghost::kill_ghost(const monsters *mon)
     // Check whether this is really a ghost, since we also have to handle
     // the Pandemonic demons.
     if (mon->type == MONS_PLAYER_GHOST && !mon->is_summoned())
-        ghost_name = "The ghost of " + get_ghost_description(*mon, true);
+    {
+        monster_info mi(mon);
+        ghost_name = "The ghost of " + get_ghost_description(mi, true);
+    }
 }
 
 std::string kill_ghost::info() const
@@ -857,8 +861,8 @@ static int kill_lualc_symbol(lua_State *ls)
     kill_exp *ke = static_cast<kill_exp*>( lua_touserdata(ls, 1) );
     if (ke)
     {
-        unsigned char ch = ke->monnum != -1?
-                    mons_char(ke->monnum) :
+        wchar_t ch = ke->monnum != -1?
+                     mons_char(ke->monnum) :
               is_ghost(ke)? 'p' : '&';
 
         if (ke->monnum == MONS_PROGRAM_BUG)
@@ -868,20 +872,21 @@ static int kill_lualc_symbol(lua_State *ls)
         {
         case kill_monster_desc::M_ZOMBIE:
         case kill_monster_desc::M_SKELETON:
+            ch = mons_char(mons_zombie_size(ke->monnum) == Z_SMALL ?
+                           MONS_ZOMBIE_SMALL : MONS_ZOMBIE_LARGE);
+            break;
         case kill_monster_desc::M_SIMULACRUM:
-            ch = mons_zombie_size(ke->monnum) == Z_SMALL ? 'z' : 'Z';
+            ch = mons_char(mons_zombie_size(ke->monnum) == Z_SMALL ?
+                           MONS_SIMULACRUM_SMALL : MONS_SIMULACRUM_LARGE);
             break;
         case kill_monster_desc::M_SPECTRE:
-            ch = 'W';
+            ch = mons_char(MONS_SPECTRAL_THING);
             break;
         default:
             break;
         }
 
-        char s[2];
-        s[0] = (char) ch;
-        s[1] = 0;
-        lua_pushstring(ls, s);
+        lua_pushstring(ls, stringize_glyph(ch).c_str());
         return 1;
     }
     return 0;
@@ -948,7 +953,7 @@ static int kill_lualc_summary(lua_State *ls)
         return 0;
     }
 
-    unsigned long count = 0;
+    unsigned int count = 0;
     for (int i = 1; ; ++i)
     {
         lua_rawgeti(ls, 1, i);
@@ -972,7 +977,7 @@ static int kill_lualc_summary(lua_State *ls)
     char buf[120];
     *buf = 0;
     if (count)
-        snprintf(buf, sizeof buf, "%lu creature%s vanquished.",
+        snprintf(buf, sizeof buf, "%u creature%s vanquished.",
                 count, count > 1? "s" : "");
     lua_pushstring(ls, buf);
     return 1;

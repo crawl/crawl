@@ -496,7 +496,7 @@ bool Menu::process_key( int keyin )
             const int next = get_cursor();
             if (next != -1)
             {
-                select_index(next);
+                select_index(next, num);
                 get_selected(&sel);
                 draw_select_count( sel.size() );
                 if (get_cursor() < next)
@@ -931,8 +931,7 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
     if (!monster_descriptor(m->type, MDSC_NOMSG_WOUNDS))
     {
         std::string damage_desc;
-        mon_dam_level_type damage_level;
-        mons_get_damage_level(m, damage_desc, damage_level);
+        mon_dam_level_type damage_level = mons_get_damage_level(m);
 
         switch (damage_level)
         {
@@ -1586,6 +1585,12 @@ int linebreak_string2( std::string& s, int maxcol )
     size_t loc = 0;
     int xpos = 0, spaceloc = 0;
     int breakcount = 0;
+
+    // [ds] Don't loop forever if the user is playing silly games with
+    // their term size.
+    if (maxcol < 1)
+        return 0;
+
     while ( loc < s.size() )
     {
         if ( s[loc] == '<' )    // tag
@@ -1843,7 +1848,7 @@ int ToggleableMenu::pre_process(int key)
  *           |          |
  *           ------------end(x,y)
  */
-bool _AABB_intersection(const coord_def& item_start,
+static bool _AABB_intersection(const coord_def& item_start,
                               const coord_def& item_end,
                               const coord_def& aabb_start,
                               const coord_def& aabb_end)

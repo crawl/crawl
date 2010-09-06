@@ -496,6 +496,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     case MONS_BLACK_DRACONIAN:
     case MONS_YELLOW_DRACONIAN:
     case MONS_PURPLE_DRACONIAN:
+    case MONS_GREY_DRACONIAN:
         if (mons_genus(mon->type) == MONS_NAGA)
             item_race = MAKE_ITEM_NO_RACE;
 
@@ -778,6 +779,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
 
     case MONS_PALADIN:
     case MONS_DAEVA:
+    case MONS_MENNAS:
         force_item     = true;
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
@@ -1369,6 +1371,7 @@ void give_shield(monsters *mon, int level)
     {
     case MONS_PALADIN:
     case MONS_DAEVA:
+    case MONS_MENNAS:
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_LARGE_SHIELD,
                               level * 2 + 1, MAKE_ITEM_NO_RACE, 1);
         break;
@@ -1717,6 +1720,7 @@ void give_armour(monsters *mon, int level)
     case MONS_BLACK_DRACONIAN:
     case MONS_YELLOW_DRACONIAN:
     case MONS_PURPLE_DRACONIAN:
+    case MONS_GREY_DRACONIAN:
     case MONS_DRACONIAN_SHIFTER:
     case MONS_DRACONIAN_SCORCHER:
     case MONS_DRACONIAN_ANNIHILATOR:

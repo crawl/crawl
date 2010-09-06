@@ -18,6 +18,7 @@
 #include "dgnevent.h"
 #include "directn.h"
 #include "map_knowledge.h"
+#include "feature.h"
 #include "fprop.h"
 #include "godabil.h"
 #include "itemprop.h"
@@ -643,9 +644,6 @@ bool feat_destroys_item(dungeon_feature_type feat, const item_def &item,
     {
     case DNGN_SHALLOW_WATER:
     case DNGN_DEEP_WATER:
-        if (is_rune(item) && item.plus == RUNE_ABYSSAL)
-            return (true);
-
         if (noisy)
             mprf(MSGCH_SOUND, "You hear a splash.");
         return (false);
@@ -653,7 +651,7 @@ bool feat_destroys_item(dungeon_feature_type feat, const item_def &item,
     case DNGN_LAVA:
         if (noisy)
             mprf(MSGCH_SOUND, "You hear a sizzling splash.");
-        return (item.base_type == OBJ_SCROLLS);
+        return (true);
 
     default:
         return (false);
@@ -910,7 +908,7 @@ static void _dgn_check_terrain_covering(const coord_def &pos,
     }
 }
 
-void _dgn_check_terrain_player(const coord_def pos)
+static void _dgn_check_terrain_player(const coord_def pos)
 {
     if (pos != you.pos())
         return;
@@ -1067,13 +1065,13 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     const dungeon_feature_type feat2 = grd(pos2);
 
     if (is_notable_terrain(feat1) && !you.see_cell(pos1)
-        && is_terrain_known(pos1))
+        && env.map_knowledge(pos1).known())
     {
         return (false);
     }
 
     if (is_notable_terrain(feat2) && !you.see_cell(pos2)
-        && is_terrain_known(pos2))
+        && env.map_knowledge(pos2).known())
     {
         return (false);
     }
@@ -1276,7 +1274,7 @@ bool slide_feature_over(const coord_def &src, coord_def prefered_dest,
 
 // Returns true if we manage to scramble free.
 bool fall_into_a_pool( const coord_def& entry, bool allow_shift,
-                       unsigned char terrain )
+                       dungeon_feature_type terrain )
 {
     bool escape = false;
     coord_def empty;

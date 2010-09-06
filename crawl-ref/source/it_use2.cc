@@ -163,13 +163,13 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         mprf(MSGCH_DURATION, "You feel %s all of a sudden.",
              were_mighty ? "mightier" : "very mighty");
 
+        // conceivable max gain of +184 {dlb}
+        you.increase_duration(DUR_MIGHT, (35 + random2(pow)) / factor, 80);
+
         if (were_mighty)
             contaminate_player(1, was_known);
         else
             notify_stat_change(STAT_STR, 5, true, "");
-
-        // conceivable max gain of +184 {dlb}
-        you.increase_duration(DUR_MIGHT, (35 + random2(pow)) / factor, 80);
 
         did_god_conduct(DID_STIMULANTS, 4 + random2(4), was_known);
         break;
@@ -182,13 +182,13 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         mprf(MSGCH_DURATION, "You feel %s all of a sudden.",
              were_brilliant ? "clever" : "more clever");
 
+        you.increase_duration(DUR_BRILLIANCE,
+                              (35 + random2(pow)) / factor, 80);
+
         if (were_brilliant)
             contaminate_player(1, was_known);
         else
             notify_stat_change(STAT_INT, 5, true, "");
-
-        you.increase_duration(DUR_BRILLIANCE,
-                              (35 + random2(pow)) / factor, 80);
 
         did_god_conduct(DID_STIMULANTS, 4 + random2(4), was_known);
         break;
@@ -201,13 +201,12 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         mprf(MSGCH_DURATION, "You feel %s all of a sudden.",
              were_agile ? "agile" : "more agile");
 
+        you.increase_duration(DUR_AGILITY, (35 + random2(pow)) / factor, 80);
+
         if (were_agile)
             contaminate_player(1, was_known);
         else
             notify_stat_change(STAT_DEX, 5, true, "");
-
-        you.increase_duration(DUR_AGILITY, (35 + random2(pow)) / factor, 80);
-        you.redraw_evasion = true;
 
         did_god_conduct(DID_STIMULANTS, 4 + random2(4), was_known);
         break;
@@ -229,39 +228,8 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         break;
 
     case POT_LEVITATION:
-        bool standing;
-        standing = !you.airborne();
-        mprf(MSGCH_DURATION,
-             "You feel %s buoyant.", standing ? "very" : "more");
-
-        if (standing)
-            mpr("You gently float upwards from the floor.");
-
-        // Amulet of Controlled Flight can auto-ID.
-        if (!you.duration[DUR_LEVITATION]
-            && wearing_amulet(AMU_CONTROLLED_FLIGHT)
-            && !extrinsic_amulet_effect(AMU_CONTROLLED_FLIGHT))
-        {
-            item_def& amu(you.inv[you.equip[EQ_AMULET]]);
-            if (!is_artefact(amu) && !item_type_known(amu))
-            {
-                set_ident_type(amu.base_type, amu.sub_type, ID_KNOWN_TYPE);
-                set_ident_flags(amu, ISFLAG_KNOW_PROPERTIES);
-                mprf("You are wearing: %s",
-                     amu.name(DESC_INVENTORY_EQUIP).c_str());
-            }
-        }
-
-        you.increase_duration(DUR_LEVITATION, 25 + random2(pow), 100);
-
-        // Merfolk boots unmeld if levitation takes us out of water.
-        if (standing && you.species == SP_MERFOLK
-            && feat_is_water(grd(you.pos())))
-        {
-            unmeld_one_equip(EQ_BOOTS);
-        }
-
-        burden_change();
+        you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
+        levitate_player(pow);
         break;
 
     case POT_POISON:
@@ -278,9 +246,9 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
                  (pot_eff == POT_POISON) ? "very" : "extremely" );
 
             if (pot_eff == POT_POISON)
-                poison_player(1 + random2avg(5, 2), "a potion of poison");
+                poison_player(1 + random2avg(5, 2), "", "a potion of poison");
             else
-                poison_player(3 + random2avg(13, 2), "a potion of strong poison");
+                poison_player(3 + random2avg(13, 2), "", "a potion of strong poison");
             xom_is_stimulated(128 / xom_factor);
         }
         break;
@@ -315,7 +283,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
             return (true);
         }
 
-        if (get_contamination_level() > 0)
+        if (get_contamination_level() > 1)
         {
             mprf(MSGCH_DURATION,
                  "You become %stransparent, but the glow from your "

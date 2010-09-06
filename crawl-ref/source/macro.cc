@@ -65,6 +65,7 @@ static macromap *all_maps[] =
 };
 
 static keybuf Buffer;
+static keybuf SendKeysBuffer;
 
 #define USERFUNCBASE -10000
 static std::vector<std::string> userfunctions;
@@ -214,7 +215,11 @@ static std::string get_macro_file()
 
 #if defined(DGL_MACRO_ABSOLUTE_PATH)
     return (dir.empty()? "macro.txt" : dir);
-#elif defined(DGL_NAMED_MACRO_FILE)
+#endif
+
+    check_mkdir("Macro directory", &dir, true);
+
+#if defined(DGL_NAMED_MACRO_FILE)
     return (dir + strip_filename_unsafe_chars(you.your_name) + "-macro.txt");
 #else
     return (dir + "macro.txt");
@@ -403,6 +408,33 @@ static void macro_del( macromap &mapref, keyseq key )
 
 static void _register_expanded_keys(int num, bool reverse);
 
+// Safely add macro-expanded keystrokes to the end of Crawl's keyboard
+// buffer. Macro-expanded keystrokes will be held in a separate
+// keybuffer until the primary keybuffer is empty, at which point
+// they'll be added to the primary keybuffer.
+void macro_sendkeys_end_add_expanded(int key)
+{
+    SendKeysBuffer.push_back(key);
+}
+
+// Effectively the same as macro_sendkeys_end_add_expanded, but adding to
+// the front of the keybuffer.
+void macro_sendkeys_start_add_expanded(int key)
+{
+    macro_buf_add(key, true, true);
+}
+
+static void _macro_inject_sent_keys()
+{
+    if (Buffer.empty() && !SendKeysBuffer.empty())
+    {
+        // Transfer keys from SendKeysBuffer to the main Buffer as
+        // expanded keystrokes and empty SendKeysBuffer.
+        macro_buf_add(SendKeysBuffer, false, true);
+        SendKeysBuffer.clear();
+    }
+}
+
 /*
  * Adds keypresses from a sequence into the internal keybuffer. Ignores
  * macros.
@@ -530,6 +562,19 @@ static void _register_expanded_keys(int num, bool reverse)
 
 static int macro_keys_left = -1;
 
+void macro_clear_buffers()
+{
+    crawl_state.cancel_cmd_repeat();
+    crawl_state.cancel_cmd_again();
+
+    Buffer.clear();
+    SendKeysBuffer.clear();
+    expanded_keys_left = 0;
+    macro_keys_left = -1;
+
+    crawl_state.show_more_prompt = true;
+}
+
 bool is_processing_macro()
 {
     return (macro_keys_left >= 0);
@@ -578,6 +623,8 @@ int macro_buf_get()
 {
     ASSERT(macro_keys_left <= (int)Buffer.size()
            && expanded_keys_left <= (int)Buffer.size());
+
+    _macro_inject_sent_keys();
 
     if (Buffer.size() == 0)
     {
@@ -631,7 +678,8 @@ void macro_save()
         return;
     }
 
-    f << "# WARNING: This file is entirely auto-generated." << std::endl
+    f << "# " CRAWL " " << Version::Long() << " macro file" << std::endl
+      << "# WARNING: This file is entirely auto-generated." << std::endl
       << std::endl << "# Key Mappings:" << std::endl;
     for (int mc = KMC_DEFAULT; mc < KMC_CONTEXT_COUNT; ++mc)
     {
@@ -712,6 +760,8 @@ int getchm(KeymapContext mc, int (*rgetch)())
  */
 int getch_with_command_macros()
 {
+    _macro_inject_sent_keys();
+
     if (Buffer.size() == 0)
     {
         // Read some keys...

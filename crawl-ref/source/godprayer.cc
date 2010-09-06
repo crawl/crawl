@@ -464,7 +464,7 @@ static int _gold_to_donation(int gold)
     return static_cast<int>((gold * log((float)gold)) / MAX_PIETY);
 }
 
-void _zin_donate_gold()
+static void _zin_donate_gold()
 {
     if (you.gold == 0)
     {
@@ -563,11 +563,12 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item)
     //      item-accepting gods and corpse-accepting gods.
     if (god_likes_fresh_corpses(you.religion))
     {
+        gain_piety(13, 19);
+
+        // The feedback is not accurate any longer on purpose; it only reveals
+        // the rate you get piety at.
         if (x_chance_in_y(13, 19))
-        {
-            gain_piety(1);
             relative_piety_gain = PIETY_SOME;
-        }
     }
     else
     {
@@ -596,11 +597,9 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item)
             else if (item.sub_type == CORPSE_SKELETON)
                 chance -= 2;
 
+            gain_piety(chance, 20);
             if (x_chance_in_y(chance, 20))
-            {
-                gain_piety(1);
                 relative_piety_gain = PIETY_SOME;
-            }
             break;
         }
 
@@ -619,20 +618,27 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item)
             }
             // Nemelex piety gain is fairly fast... at least when you
             // have low piety.
-            if (item.base_type == OBJ_CORPSES && one_chance_in(2 + you.piety/50)
-                || x_chance_in_y(value/2 + 1, 30 + you.piety/2))
+            int piety_change, piety_denom;
+            if (item.base_type == OBJ_CORPSES)
             {
-                if (is_artefact(item))
-                {
-                    gain_piety(2);
-                    relative_piety_gain = PIETY_LOTS;
-                }
-                else
-                {
-                    gain_piety(1);
-                    relative_piety_gain = PIETY_SOME;
-                }
+                piety_change = 1;
+                piety_denom = 2 + you.piety/50;
             }
+            else
+            {
+                piety_change = value/2 + 1;
+                if (is_artefact(item))
+                    piety_change *= 2;
+                piety_denom = 30 + you.piety/2;
+            }
+
+            gain_piety(piety_change, piety_denom);
+
+            // Preserving the old behaviour of giving the big message for
+            // artifacts and artifacts only.
+            relative_piety_gain = x_chance_in_y(piety_change, piety_denom) ?
+                                    is_artefact(item) ?
+                                      PIETY_LOTS : PIETY_SOME : PIETY_NONE;
 
             if (item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK
                 || is_blood_potion(item))
@@ -660,12 +666,9 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item)
             const int value = item_value(item) / item.quantity;
             // compress into range 0..250
             const int stepped = stepdown_value(value, 50, 50, 200, 250);
-            const int gain = div_rand_round(stepped, 50);
-            if (gain > 0)
-            {
-                gain_piety(gain);
-                relative_piety_gain = (gain > 1) ? PIETY_LOTS : PIETY_SOME;
-            }
+            gain_piety(stepped, 50);
+            relative_piety_gain = (piety_gain_t)std::min(2,
+                                    div_rand_round(stepped, 50));
         }
 
         default:
@@ -803,9 +806,9 @@ void offer_items()
     {
         ASSERT(disliked_item);
 
-        if (disliked_item->base_type == OBJ_ORBS)
+        if (item_is_orb(*disliked_item))
             simple_god_message(" wants the Orb's power used on the surface!");
-        else if (is_rune(*disliked_item))
+        else if (item_is_rune(*disliked_item))
             simple_god_message(" wants the runes to be proudly displayed.");
         else if (disliked_item->base_type == OBJ_MISCELLANY
                  && disliked_item->sub_type == MISC_HORN_OF_GERYON)

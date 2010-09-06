@@ -20,7 +20,7 @@ enum read_book_action_type
     RBOOK_READ_SPELL,
 };
 
-int  book_rarity(unsigned char which_book);
+int  book_rarity(uint8_t which_book);
 int  spell_rarity(spell_type which_spell);
 void init_spell_rarities();
 

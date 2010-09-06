@@ -13,6 +13,8 @@
 #include "tag-version.h"
 
 struct show_type;
+struct monster_info;
+struct map_cell;
 
 enum tag_type   // used during save/load process to identify data blocks
 {
@@ -125,17 +127,19 @@ private:
     friend void marshallEnumVal(writer&, const enum_info*, int);
 };
 
-void marshallByte    (writer &, const char& );
+void marshallByte    (writer &, int8_t );
 void marshallShort   (writer &, int16_t );
-void marshallInt    (writer &, int32_t );
+void marshallInt     (writer &, int32_t );
 void marshallFloat   (writer &, float );
+void marshallUByte   (writer &, uint8_t );
 void marshallBoolean (writer &, bool );
 void marshallString  (writer &, const std::string &, int maxSize = 0);
 void marshallString4 (writer &, const std::string &);
 void marshallCoord   (writer &, const coord_def &);
 void marshallItem    (writer &, const item_def &);
 void marshallMonster (writer &, const monsters &);
-void marshallShowtype (writer &, const show_type &);
+void marshallMonsterInfo (writer &, const monster_info &);
+void marshallMapCell (writer &, const map_cell &);
 
 void marshallEnumVal (writer &, const enum_info *, int);
 
@@ -145,6 +149,9 @@ inline void marshallEnum(writer& wr, enm value)
     marshallEnumVal(wr, &enum_details<enm>::desc, static_cast<int>(value));
 }
 
+void marshallUnsigned(writer& th, uint64_t v);
+void marshallSigned(writer& th, int64_t v);
+
 /* ***********************************************************************
  * reader API
  * *********************************************************************** */
@@ -152,12 +159,12 @@ inline void marshallEnum(writer& wr, enm value)
 class reader
 {
 public:
-    reader(const std::string &filename, char minorVersion = TAG_MINOR_VERSION);
-    reader(FILE* input, char minorVersion = TAG_MINOR_VERSION)
+    reader(const std::string &filename, int minorVersion = TAG_MINOR_VERSION);
+    reader(FILE* input, int minorVersion = TAG_MINOR_VERSION)
         : _file(input), opened_file(false), _pbuf(0), _read_offset(0),
           _minorVersion(minorVersion) {}
     reader(const std::vector<unsigned char>& input,
-           char minorVersion = TAG_MINOR_VERSION)
+           int minorVersion = TAG_MINOR_VERSION)
         : _file(0), opened_file(false), _pbuf(&input), _read_offset(0),
           _minorVersion(minorVersion) {}
     ~reader();
@@ -165,7 +172,7 @@ public:
     unsigned char readByte();
     void read(void *data, size_t size);
     void advance(size_t size);
-    char getMinorVersion();
+    int getMinorVersion();
     bool valid() const;
 
 private:
@@ -173,23 +180,25 @@ private:
     bool  opened_file;
     const std::vector<unsigned char>* _pbuf;
     unsigned int _read_offset;
-    char _minorVersion;
+    int _minorVersion;
 
     std::map<const enum_info*, enum_read_state> seen_enums;
     friend int unmarshallEnumVal(reader &, const enum_info *);
 };
 
-char        unmarshallByte    (reader &);
+int8_t      unmarshallByte    (reader &);
 int16_t     unmarshallShort   (reader &);
 int32_t     unmarshallInt    (reader &);
 float       unmarshallFloat   (reader &);
+uint8_t     unmarshallUByte   (reader &);
 bool        unmarshallBoolean (reader &);
 std::string unmarshallString  (reader &, int maxSize = 1000);
 void        unmarshallString4 (reader &, std::string&);
 coord_def   unmarshallCoord   (reader &);
 void        unmarshallItem    (reader &, item_def &item);
 void        unmarshallMonster (reader &, monsters &item);
-show_type   unmarshallShowtype (reader &);
+void        unmarshallMonsterInfo (reader &, monster_info &mi);
+void        unmarshallMapCell (reader &, map_cell& cell);
 
 int         unmarshallEnumVal (reader &, const enum_info *);
 
@@ -199,14 +208,28 @@ inline enm unmarshallEnum(writer& wr)
     return static_cast<enm>(unmarshallEnumVal(wr, &enum_details<enm>::desc));
 }
 
+uint64_t unmarshallUnsigned(reader& th);
+template<typename T>
+static inline void unmarshallUnsigned(reader& th, T& v)
+{
+    v = (T)unmarshallUnsigned(th);
+}
+
+int64_t unmarshallSigned(reader& th);
+template<typename T>
+static inline void unmarshallSigned(reader& th, T& v)
+{
+    v = (T)unmarshallSigned(th);
+}
+
 /* ***********************************************************************
  * Tag interface
  * *********************************************************************** */
 
-tag_type tag_read(FILE* inf, char minorVersion, char expected_tags[NUM_TAGS]);
+tag_type tag_read(FILE* inf, int minorVersion, int8_t expected_tags[NUM_TAGS]);
 void tag_write(const std::string &filename, tag_type tagID, FILE* outf);
-void tag_set_expected(char tags[], int fileType);
-void tag_missing(int tag, char minorVersion);
+void tag_set_expected(int8_t tags[], int fileType);
+void tag_missing(int tag, int minorVersion);
 
 /* ***********************************************************************
  * misc

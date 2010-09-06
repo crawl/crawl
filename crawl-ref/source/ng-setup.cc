@@ -316,7 +316,7 @@ void give_basic_mutations(species_type speci)
         you.innate_mutations[i] = you.mutation[i];
 }
 
-void _newgame_make_item_tutorial(int slot, equipment_type eqslot,
+static void _newgame_make_item_tutorial(int slot, equipment_type eqslot,
                                  object_class_type base,
                                  int sub_type, int replacement = -1,
                                  int qty = 1, int plus = 0, int plus2 = 0)
@@ -388,6 +388,12 @@ void newgame_make_item(int slot, equipment_type eqslot,
 
     if (eqslot != EQ_NONE && you.equip[eqslot] == -1)
         you.equip[eqslot] = slot;
+}
+
+void newgame_give_item(object_class_type base, int sub_type,
+                       int qty, int plus, int plus2)
+{
+    newgame_make_item(-1, EQ_NONE, base, sub_type, -1, qty, plus, plus2);
 }
 
 static void _newgame_clear_item(int slot)
@@ -1222,7 +1228,7 @@ static void _give_starting_food()
     you.inv[slot]  = item;       // will ASSERT if couldn't find free slot
 }
 
-void _setup_tutorial_miscs()
+static void _setup_tutorial_miscs()
 {
     // Give him spellcasting
     you.skills[SK_SPELLCASTING] = 3;
@@ -1258,8 +1264,7 @@ static void _racialise_starting_equipment()
         {
             // Don't change object type modifier unless it starts plain.
             if ((you.inv[i].base_type == OBJ_ARMOUR
-                    || you.inv[i].base_type == OBJ_WEAPONS
-                    || you.inv[i].base_type == OBJ_MISSILES)
+                    || you.inv[i].base_type == OBJ_WEAPONS)
                 && get_equip_race(you.inv[i]) == ISFLAG_NO_RACE)
             {
                 // Now add appropriate species type mod.

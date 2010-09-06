@@ -40,7 +40,7 @@ struct VColour
 
 struct GLW_2VF
 {
-    GLW_2VF() {};
+    GLW_2VF() {}
     GLW_2VF(float l, float m) : x(l), y(m) {}
 
     inline void set(float l, float m)
@@ -61,7 +61,7 @@ struct GLW_2VF
 
 struct GLW_3VF
 {
-    GLW_3VF() {};
+    GLW_3VF() {}
     GLW_3VF(float l, float m, float n) : x(l), y(m), z(n) {}
     GLW_3VF(float l, float m) : x(l), y(m), z(0.0) {}
 
@@ -156,7 +156,7 @@ class GLStateManager
 {
 public:
     // To silence pre 4.3 g++ compiler warnings
-    virtual ~GLStateManager() {};
+    virtual ~GLStateManager() {}
 
     // Note: the init/shutdown static functions should be written in the derived
     // implementation-specific cc file, e.g. glwrapper-ogl.cc.
@@ -189,7 +189,7 @@ class GenericTexture;
 class GLShapeBuffer
 {
 public:
-    virtual ~GLShapeBuffer() {};
+    virtual ~GLShapeBuffer() {}
 
     // Static Constructors
     // Note: the init/shutdown static functions should be written in the derived

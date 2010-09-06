@@ -73,7 +73,7 @@ static bool _is_noteworthy_hp( int hp, int maxhp )
             && hp <= (maxhp * Options.note_hp_percent) / 100);
 }
 
-static int _dungeon_branch_depth( unsigned char branch )
+static int _dungeon_branch_depth( uint8_t branch )
 {
     if (branch >= NUM_BRANCHES)
         return -1;
@@ -82,8 +82,7 @@ static int _dungeon_branch_depth( unsigned char branch )
 
 static bool _is_noteworthy_dlevel( unsigned short place )
 {
-    const unsigned char branch =
-        static_cast<unsigned char>((place >> 8) & 0xFF);
+    const uint8_t branch = (place >> 8) & 0xFF;
     const int lev = (place & 0xFF);
 
     // Special levels (Abyss, etc.) are always interesting.
@@ -429,7 +428,6 @@ Note::Note( NOTE_TYPES t, int f, int s, const char* n, const char* d ) :
 
 void Note::check_milestone() const
 {
-#ifdef DGL_MILESTONES
     if (crawl_state.game_is_arena())
         return;
 
@@ -458,7 +456,6 @@ void Note::check_milestone() const
             }
         }
     }
-#endif
 }
 
 void Note::save(writer& outf) const

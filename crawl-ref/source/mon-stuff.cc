@@ -69,7 +69,7 @@
 
 static bool _wounded_damaged(monster_type mon_type);
 
-int _make_mimic_item(monster_type type)
+static int _make_mimic_item(monster_type type)
 {
     int it = items(0, OBJ_RANDOM, OBJ_RANDOM, true, 0, 0);
 
@@ -353,6 +353,10 @@ monster_type fill_out_corpse(const monsters* monster,
     corpse.special     = FRESHEST_CORPSE;  // rot time
     corpse.quantity    = 1;
     corpse.orig_monnum = mtype + 1;
+
+    if (mtype == MONS_ROTTING_HULK)
+        corpse.special = ROTTING_CORPSE;
+
     if (monster)
     {
         corpse.props[MONSTER_NUMBER] = short(monster->number);
@@ -547,14 +551,13 @@ static void _hints_inspect_kill()
         learned_something_new(HINT_KILLED_MONSTER);
 }
 
-#ifdef DGL_MILESTONES
 static std::string _milestone_kill_verb(killer_type killer)
 {
     return (killer == KILL_RESET ? "banished " : "killed ");
 }
 
 static void _check_kill_milestone(const monsters *mons,
-                                 killer_type killer, int i)
+                                  killer_type killer, int i)
 {
     // XXX: See comment in monster_polymorph.
     bool is_unique = mons_is_unique(mons->type);
@@ -563,8 +566,9 @@ static void _check_kill_milestone(const monsters *mons,
 
     if (mons->type == MONS_PLAYER_GHOST)
     {
+        monster_info mi(mons);
         std::string milestone = _milestone_kill_verb(killer) + "the ghost of ";
-        milestone += get_ghost_description(*mons, true);
+        milestone += get_ghost_description(mi, true);
         milestone += ".";
         mark_milestone("ghost", milestone);
     }
@@ -577,7 +581,6 @@ static void _check_kill_milestone(const monsters *mons,
                        + ".");
     }
 }
-#endif // DGL_MILESTONES
 
 static void _give_monster_experience(monsters *victim,
                                      int killer_index, int experience,
@@ -797,7 +800,7 @@ static bool _beogh_forcibly_convert_orc(monsters *monster, killer_type killer,
         && mons_species(monster->type) == MONS_ORC
         && !monster->is_summoned() && !monster->is_shapeshifter()
         && !player_under_penance() && you.piety >= piety_breakpoint(2)
-        && mons_near(monster))
+        && mons_near(monster) && !mons_is_god_gift(monster))
     {
         bool convert = false;
 
@@ -976,8 +979,19 @@ static void _mummy_curse(monsters* monster, killer_type killer, int index)
     if (!target->alive())
         return;
 
-    if ((monster->type == MONS_MUMMY || monster->type == MONS_MENKAURE) && YOU_KILL(killer))
+    if ((monster->type == MONS_MUMMY || monster->type == MONS_MENKAURE)
+        && YOU_KILL(killer))
+    {        
+        // Kiku protects you from ordinary mummy curses.
+        if (you.religion == GOD_KIKUBAAQUDGHA && !player_under_penance()
+            && you.piety >= piety_breakpoint(1))
+        {
+            simple_god_message(" averts the curse.");
+            return;
+        }
+
         curse_an_item(true);
+    }
     else
     {
         if (index == NON_MONSTER)
@@ -995,15 +1009,15 @@ static void _mummy_curse(monsters* monster, killer_type killer, int index)
     }
 }
 
-void _setup_base_explosion(bolt & beam, const monsters & origin)
+static void _setup_base_explosion(bolt & beam, const monsters & origin)
 {
     beam.is_tracer    = false;
     beam.is_explosion = true;
     beam.beam_source  = origin.mindex();
     beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
     beam.source       = origin.pos();
+    beam.source_name  = origin.base_name(DESC_BASENAME);
     beam.target       = origin.pos();
-    beam.source_name  = "ball lightning";
 
     if (!crawl_state.game_is_arena() && origin.attitude == ATT_FRIENDLY
         && !origin.is_summoned())
@@ -1117,7 +1131,7 @@ static bool _spore_goes_pop(monsters *monster, killer_type killer,
     return (true);
 }
 
-void _monster_die_cloud(const monsters* monster, bool corpse, bool silent,
+static void _monster_die_cloud(const monsters* monster, bool corpse, bool silent,
                         bool summoned)
 {
     // Chaos spawn always leave behind a cloud of chaos.
@@ -1157,17 +1171,10 @@ void _monster_die_cloud(const monsters* monster, bool corpse, bool silent,
     }
 }
 
-static int _tentacle_too_far(monsters *head, monsters *tentacle)
-{
-    // The Shoals produce no disjoint bodies of water.
-    // If this ever changes, we'd need to check if the head and tentacle
-    // are still in the same pool.
-    // XXX: Actually, using Fedhas' Sunlight power you can separate pools...
-    return grid_distance(head->pos(), tentacle->pos()) > KRAKEN_TENTACLE_RANGE;
-}
-
 void mons_relocated(monsters *monster)
 {
+
+    // If the main body teleports get rid of the tentacles
     if (mons_base_type(monster) == MONS_KRAKEN)
     {
         int headnum = monster->mindex();
@@ -1178,22 +1185,82 @@ void mons_relocated(monsters *monster)
         for (monster_iterator mi; mi; ++mi)
         {
             if (mi->type == MONS_KRAKEN_TENTACLE
-                && (int)mi->number == headnum
-                && _tentacle_too_far(monster, *mi))
+                && (int)mi->number == headnum)
             {
+                for (monster_iterator connect; connect; ++connect)
+                {
+                    if (connect->type == MONS_KRAKEN_CONNECTOR
+                        && (int) connect->number == mi->mindex())
+                    {
+                        monster_die(*connect, KILL_RESET, -1, true, false);
+                    }
+                }
                 monster_die(*mi, KILL_RESET, -1, true, false);
             }
         }
     }
-    else if (monster->type == MONS_KRAKEN_TENTACLE)
+    // If a tentacle/segment is relocated just kill the tentacle
+    else if (monster->type == MONS_KRAKEN_TENTACLE
+             || monster->type == MONS_KRAKEN_CONNECTOR)
     {
-        if (invalid_monster_index(monster->number)
-            || menv[monster->number].type != MONS_KRAKEN
-            || _tentacle_too_far(&menv[monster->number], monster))
+        int base_id = monster->mindex();
+
+        if (monster->type == MONS_KRAKEN_CONNECTOR)
         {
-            monster_die(monster, KILL_RESET, -1, true, false);
+            base_id = monster->number;
+        }
+
+        for (monster_iterator connect; connect; ++connect)
+        {
+            if (connect->type == MONS_KRAKEN_CONNECTOR
+                && (int) connect->number == base_id)
+            {
+                monster_die(*connect, KILL_RESET, -1, true, false);
+            }
+        }
+
+        if (!::invalid_monster_index(base_id)
+            && menv[base_id].type == MONS_KRAKEN_TENTACLE)
+        {
+            monster_die(&menv[base_id], KILL_RESET, -1, true, false);
         }
     }
+}
+
+static int _destroy_tentacle(int tentacle_idx, monsters * origin)
+{
+    int seen = 0;
+
+    if (invalid_monster_index(tentacle_idx))
+        return (0);
+
+
+    // Some issue with using monster_die leading to DEAD_MONSTER
+    // or w/e. Using hurt seems to cause more problems though.
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->type == MONS_KRAKEN_CONNECTOR
+            && (int)mi->number == tentacle_idx
+            && mi->mindex() != origin->mindex() )
+        {
+            if (mons_near(*mi))
+                seen++;
+            //mi->hurt(*mi, INSTANT_DEATH);
+            monster_die(*mi, KILL_MISC, NON_MONSTER, true);
+        }
+    }
+
+    if (origin->mindex() != tentacle_idx)
+    {
+        if (mons_near(&menv[tentacle_idx]))
+            seen++;
+
+        //mprf("killing base, %d %d", origin->mindex(), tentacle_idx);
+        //menv[tentacle_idx].hurt(&menv[tentacle_idx], INSTANT_DEATH);
+        monster_die(&menv[tentacle_idx], KILL_MISC, NON_MONSTER, true);
+    }
+
+    return (seen);
 }
 
 static int _destroy_tentacles(monsters *head)
@@ -1209,6 +1276,14 @@ static int _destroy_tentacles(monsters *head)
         if (mi->type == MONS_KRAKEN_TENTACLE
             && (int)mi->number == headnum)
         {
+            for (monster_iterator connect; connect; ++connect)
+            {
+                if (connect->type == MONS_KRAKEN_CONNECTOR
+                    && (int) connect->number == mi->mindex())
+                {
+                    connect->hurt(*connect, INSTANT_DEATH);
+                }
+            }
             if (mons_near(*mi))
                 tent++;
             mi->hurt(*mi, INSTANT_DEATH);
@@ -1268,6 +1343,9 @@ int monster_die(monsters *monster, killer_type killer,
     // If the monster was calling the tide, let go now.
     monster->del_ench(ENCH_TIDE);
 
+    // Same for silencers.
+    monster->del_ench(ENCH_SILENCE);
+
     crawl_state.inc_mon_acting(monster);
 
     ASSERT(!( YOU_KILL(killer) && crawl_state.game_is_arena() ));
@@ -1324,10 +1402,8 @@ int monster_die(monsters *monster, killer_type killer,
 
     bool in_transit          = false;
 
-#ifdef DGL_MILESTONES
     if (!crawl_state.game_is_arena())
         _check_kill_milestone(monster, killer, killer_index);
-#endif
 
     // Award experience for suicide if the suicide was caused by the
     // player.
@@ -2002,6 +2078,18 @@ int monster_die(monsters *monster, killer_type killer,
                 "back into the water like the carrion they now are.");
         }
     }
+    else if ((monster->type == MONS_KRAKEN_CONNECTOR
+                  || monster->type == MONS_KRAKEN_TENTACLE)
+              && killer != KILL_MISC)
+    {
+        int t_idx = monster->type == MONS_KRAKEN_TENTACLE
+                    ? monster->mindex() : monster->number;
+        if (_destroy_tentacle(t_idx, monster) && !in_transit)
+        {
+            //mprf("A tentacle died?");
+        }
+
+    }
     else if (mons_is_elven_twin(monster) && mons_near(monster))
     {
         elven_twin_died(monster, in_transit, killer, killer_index);
@@ -2199,6 +2287,7 @@ static bool _valid_morph(monsters *monster, monster_type new_mclass)
 
     // Various inappropriate polymorph targets.
     if (mons_class_holiness(new_mclass) != monster->holiness()
+        || mons_class_flag(new_mclass, M_NO_POLY_TO)  // explicitely disallowed
         || mons_class_flag(new_mclass, M_UNIQUE)      // no uniques
         || mons_class_flag(new_mclass, M_NO_EXP_GAIN) // not helpless
         || new_mclass == mons_species(monster->type)  // must be different
@@ -2214,11 +2303,7 @@ static bool _valid_morph(monsters *monster, monster_type new_mclass)
         // smart enough to handle.
         || mons_is_ghost_demon(new_mclass)
 
-        // Only for use by game testers or in the arena.
-        || new_mclass == MONS_TEST_SPAWNER
-
         // Other poly-unsuitable things.
-        || new_mclass == MONS_ORB_GUARDIAN
         || mons_is_statue(new_mclass)
         || mons_is_projectile(new_mclass)
 
@@ -2858,44 +2943,54 @@ bool monster_can_hit_monster(monsters *monster, const monsters *targ)
     return (weapon && weapon_skill(*weapon) == SK_POLEARMS);
 }
 
-void mons_get_damage_level(const monsters* monster, std::string& desc,
-                           mon_dam_level_type& dam_level)
+mon_dam_level_type mons_get_damage_level(const monsters* monster)
 {
+    if (monster_descriptor(monster->type, MDSC_NOMSG_WOUNDS)
+        || monster_descriptor(monster->get_mislead_type(), MDSC_NOMSG_WOUNDS)
+        || mons_is_unknown_mimic(monster))
+        return MDAM_OKAY;
+
     if (monster->hit_points <= monster->max_hit_points / 6)
-    {
-        desc += "almost ";
-        desc += _wounded_damaged(monster->type) ? "destroyed" : "dead";
-        dam_level = MDAM_ALMOST_DEAD;
-        return;
-    }
-
-    if (monster->hit_points <= monster->max_hit_points / 4)
-    {
-        desc += "severely ";
-        dam_level = MDAM_SEVERELY_DAMAGED;
-    }
+        return MDAM_ALMOST_DEAD;
+    else if (monster->hit_points <= monster->max_hit_points / 4)
+        return MDAM_SEVERELY_DAMAGED;
     else if (monster->hit_points <= monster->max_hit_points / 3)
-    {
-        desc += "heavily ";
-        dam_level = MDAM_HEAVILY_DAMAGED;
-    }
+        return MDAM_HEAVILY_DAMAGED;
     else if (monster->hit_points <= monster->max_hit_points * 3 / 4)
-    {
-        desc += "moderately ";
-        dam_level = MDAM_MODERATELY_DAMAGED;
-    }
+        return MDAM_MODERATELY_DAMAGED;
     else if (monster->hit_points < monster->max_hit_points)
-    {
-        desc += "lightly ";
-        dam_level = MDAM_LIGHTLY_DAMAGED;
-    }
+        return MDAM_LIGHTLY_DAMAGED;
     else
-    {
-        desc += "not ";
-        dam_level = MDAM_OKAY;
-    }
+        return MDAM_OKAY;
+}
 
-    desc += _wounded_damaged(monster->type) ? "damaged" : "wounded";
+std::string get_damage_level_string(monster_type mon_type, mon_dam_level_type mdam)
+{
+    std::ostringstream ss;
+    switch(mdam) {
+    case MDAM_ALMOST_DEAD:
+        ss << "almost";
+        ss << (_wounded_damaged(mon_type) ? " destroyed" : " dead");
+        return ss.str();
+    case MDAM_SEVERELY_DAMAGED:
+        ss << "severely";
+        break;
+    case MDAM_HEAVILY_DAMAGED:
+        ss << "heavily";
+        break;
+    case MDAM_MODERATELY_DAMAGED:
+        ss << "moderately";
+        break;
+    case MDAM_LIGHTLY_DAMAGED:
+        ss << "lightly";
+        break;
+    case MDAM_OKAY:
+    default:
+        ss << "not";
+        break;
+    }
+    ss << (_wounded_damaged(mon_type) ? " damaged" : " wounded");
+    return ss.str();
 }
 
 std::string get_wounds_description_sentence(const monsters *monster)
@@ -2915,9 +3010,8 @@ std::string get_wounds_description(const monsters *monster, bool colour)
     if (monster_descriptor(monster->type, MDSC_NOMSG_WOUNDS))
         return "";
 
-    std::string desc;
-    mon_dam_level_type dam_level;
-    mons_get_damage_level(monster, desc, dam_level);
+    mon_dam_level_type dam_level = mons_get_damage_level(monster);
+    std::string desc = get_damage_level_string(monster->type, dam_level);
     if (colour)
     {
         const int col = channel_to_colour(MSGCH_MONSTER_DAMAGE, dam_level);
@@ -2934,9 +3028,8 @@ void print_wounds(const monsters *monster)
     if (monster_descriptor(monster->type, MDSC_NOMSG_WOUNDS))
         return;
 
-    std::string desc;
-    mon_dam_level_type dam_level;
-    mons_get_damage_level(monster, desc, dam_level);
+    mon_dam_level_type dam_level = mons_get_damage_level(monster);
+    std::string desc = get_damage_level_string(monster->type, dam_level);
 
     desc.insert(0, " is ");
     desc += ".";
@@ -3008,19 +3101,30 @@ void make_mons_leave_level(monsters *mon)
 bool can_go_straight(const coord_def& p1, const coord_def& p2,
                      dungeon_feature_type allowed)
 {
+    if (p1 == p2)
+        return (true);
+
     if (distance(p1, p2) > get_los_radius_sq())
         return (false);
 
     // XXX: Hack to improve results for now. See FIXME above.
-    if (!exists_ray(p1, p2, opc_immob))
+    ray_def ray;
+    if (!find_ray(p1, p2, ray, opc_immob))
         return (false);
 
     dungeon_feature_type max_disallowed = DNGN_MAXOPAQUE;
     if (allowed != DNGN_UNSEEN)
         max_disallowed = static_cast<dungeon_feature_type>(allowed - 1);
 
-    return (!num_feats_between(p1, p2, DNGN_UNSEEN, max_disallowed,
-                               true, true));
+    for (ray.advance(); ray.pos() != p2; ray.advance())
+    {
+        ASSERT(map_bounds(ray.pos()));
+        dungeon_feature_type feat = env.grid(ray.pos());
+        if (feat >= DNGN_UNSEEN && feat <= max_disallowed)
+            return (false);
+    }
+
+    return (true);
 }
 
 // The default suitable() function for choose_random_nearby_monster().
@@ -3972,7 +4076,7 @@ beh_type actual_same_attitude(const monsters & base)
 // temporarily.
 void mons_att_changed(monsters *mon)
 {
-    if (mon->type == MONS_KRAKEN)
+    if (mons_base_type(mon) == MONS_KRAKEN)
     {
         const int headnum = mon->mindex();
         const mon_attitude_type att = mon->temp_attitude();
@@ -3982,6 +4086,14 @@ void mons_att_changed(monsters *mon)
                 && (int)mi->number == headnum)
             {
                 mi->attitude = att;
+                for (monster_iterator connect; connect; ++connect)
+                {
+                    if (connect->type == MONS_KRAKEN_CONNECTOR
+                        && (int) connect->number == mi->mindex())
+                    {
+                        connect->attitude = att;
+                    }
+                }
             }
     }
 }
@@ -4048,7 +4160,7 @@ void forest_damage(const actor *mon)
                         "A tree reaches out and hits you!",
                         "A root smacks you from below.",
                         0));
-                    ouch(damage, mon->mindex(), KILLED_BY_MONSTER,
+                    ouch(damage, mon->mindex(), KILLED_BY_BEAM,
                          "angry trees", true);
                 }
                 else

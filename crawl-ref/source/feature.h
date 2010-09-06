@@ -10,7 +10,7 @@ struct feature_def
     unsigned            magic_symbol;    // symbol used for magic-mapped terrain
     unsigned short      colour;          // normal in LoS colour
     unsigned short      map_colour;      // colour when out of LoS on display
-    unsigned short      seen_colour;     // map_colour when is_terrain_seen()
+    unsigned short      seen_colour;     // map_colour when env.map_knowledge().seen()
     unsigned short      em_colour;       // Emphasised colour when in LoS.
     unsigned short      seen_em_colour;  // Emphasised colour when out of LoS
     unsigned            flags;
@@ -40,6 +40,11 @@ struct feature_override
 
 const feature_def &get_feature_def(show_type object);
 const feature_def &get_feature_def(dungeon_feature_type feat);
+
+static inline bool is_notable_terrain(dungeon_feature_type ftype)
+{
+    return (get_feature_def(ftype).is_notable());
+}
 
 void init_show_table();
 

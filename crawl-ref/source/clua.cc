@@ -84,7 +84,7 @@ void CLua::getglobal(const char *name)
 std::string CLua::setuniqregistry()
 {
     char name[100];
-    snprintf(name, sizeof name, "__cru%lu", uniqindex++);
+    snprintf(name, sizeof name, "__cru%u", uniqindex++);
     lua_pushstring(state(), name);
     lua_insert(state(), -2);
     lua_settable(state(), LUA_REGISTRYINDEX);
@@ -779,7 +779,7 @@ static lua_pat_op pat_ops[] =
     { "||", " or ",  true,  true },
 };
 
-unsigned long lua_text_pattern::lfndx = 0L;
+unsigned int lua_text_pattern::lfndx = 0;
 
 bool lua_text_pattern::is_lua_pattern(const std::string &s)
 {
@@ -852,7 +852,7 @@ void lua_text_pattern::post_pattern(std::string &pat, std::string &fn) const
 
 std::string lua_text_pattern::new_fn_name()
 {
-    return (make_stringf("__ch_stash_search_%lu", lfndx++));
+    return (make_stringf("__ch_stash_search_%u", lfndx++));
 }
 
 bool lua_text_pattern::translate() const

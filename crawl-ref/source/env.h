@@ -17,8 +17,8 @@ typedef std::vector<vault_placement*> vault_placement_refv;
 
 struct crawl_environment
 {
-    unsigned char rock_colour;
-    unsigned char floor_colour;
+    uint8_t rock_colour;
+    uint8_t floor_colour;
 
     FixedVector< item_def, MAX_ITEMS >       item;  // item list
     FixedVector< monsters, MAX_MONSTERS >    mons;  // monster list
@@ -44,11 +44,9 @@ struct crawl_environment
 
     std::auto_ptr<grid_heightmap>            heightmap;
 
-    // Player-remembered terrain. TODO: move to class player.
+    // Player-remembered terrain and LOS
     FixedArray< map_cell, GXM, GYM >         map_knowledge;
-
-    // Objects that are in LOS, used for drawing.
-    show_def show;
+    std::set<coord_def> visible;
 
 #ifdef USE_TILE
     // indexed by grid coords
@@ -101,6 +99,9 @@ struct crawl_environment
     int forest_awoken_until;
 };
 
+#ifdef DEBUG_GLOBALS
+#define env (*real_env)
+#endif
 extern struct crawl_environment env;
 
 #endif

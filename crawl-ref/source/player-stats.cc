@@ -15,45 +15,45 @@
 #include "transform.h"
 #include "hints.h"
 
-char player::stat(stat_type s, bool nonneg) const
+int8_t player::stat(stat_type s, bool nonneg) const
 {
-    const char val = max_stat(s) - stat_loss[s];
-    return (nonneg ? std::max<char>(val, 0) : val);
+    const int8_t val = max_stat(s) - stat_loss[s];
+    return (nonneg ? std::max<int8_t>(val, 0) : val);
 }
 
-char player::strength() const
+int8_t player::strength() const
 {
     return (stat(STAT_STR));
 }
 
-char player::intel() const
+int8_t player::intel() const
 {
     return (stat(STAT_INT));
 }
 
-char player::dex() const
+int8_t player::dex() const
 {
     return (stat(STAT_DEX));
 }
 
 static int _stat_modifier(stat_type stat);
 
-char player::max_stat(stat_type s) const
+int8_t player::max_stat(stat_type s) const
 {
     return (std::min(base_stats[s] + _stat_modifier(s), 72));
 }
 
-char player::max_strength() const
+int8_t player::max_strength() const
 {
     return (max_stat(STAT_STR));
 }
 
-char player::max_intel() const
+int8_t player::max_intel() const
 {
     return (max_stat(STAT_INT));
 }
 
-char player::max_dex() const
+int8_t player::max_dex() const
 {
     return (max_stat(STAT_DEX));
 }
@@ -118,7 +118,7 @@ void jiyva_stat_action()
 
     for (int x = 0; x < 3; ++x)
     {
-         const char m = you.max_stat(static_cast<stat_type>(x));
+         const int8_t m = you.max_stat(static_cast<stat_type>(x));
          dec_weight[x] = std::min(10, std::max(0, m - 7));
     }
 
@@ -162,7 +162,7 @@ const char* stat_desc(stat_type stat, stat_desc_type desc)
     return (descs[stat][desc]);
 }
 
-void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
+void modify_stat(stat_type which_stat, int8_t amount, bool suppress_msg,
                  const char *cause, bool see_source)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -190,7 +190,7 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
     _handle_stat_change(which_stat, cause, see_source);
 }
 
-void notify_stat_change(stat_type which_stat, char amount, bool suppress_msg,
+void notify_stat_change(stat_type which_stat, int8_t amount, bool suppress_msg,
                         const char *cause, bool see_source)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -216,7 +216,7 @@ void notify_stat_change(stat_type which_stat, char amount, bool suppress_msg,
     _handle_stat_change(which_stat, cause, see_source);
 }
 
-void notify_stat_change(stat_type which_stat, char amount, bool suppress_msg,
+void notify_stat_change(stat_type which_stat, int8_t amount, bool suppress_msg,
                         const item_def &cause, bool removed)
 {
     std::string name = cause.name(DESC_NOCAP_THE, false, true, false, false,
@@ -384,7 +384,7 @@ static int _stat_modifier(stat_type stat)
 // use player::decrease_stats() instead iff:
 // (a) player_sust_abil() should not factor in; and
 // (b) there is no floor to the final stat values {dlb}
-bool lose_stat(stat_type which_stat, unsigned char stat_loss, bool force,
+bool lose_stat(stat_type which_stat, int8_t stat_loss, bool force,
                const char *cause, bool see_source)
 {
     if (which_stat == STAT_RANDOM)
@@ -403,20 +403,20 @@ bool lose_stat(stat_type which_stat, unsigned char stat_loss, bool force,
     if (stat_loss > 0)
     {
         you.stat_loss[which_stat] += stat_loss;
-        _handle_stat_change(which_stat);
+        _handle_stat_change(which_stat, cause, see_source);
         return (true);
     }
     else
         return (false);
 }
 
-bool lose_stat(stat_type which_stat, unsigned char stat_loss, bool force,
+bool lose_stat(stat_type which_stat, int8_t stat_loss, bool force,
                const std::string cause, bool see_source)
 {
     return lose_stat(which_stat, stat_loss, force, cause.c_str(), see_source);
 }
 
-bool lose_stat(stat_type which_stat, unsigned char stat_loss,
+bool lose_stat(stat_type which_stat, int8_t stat_loss,
                const monsters* cause, bool force)
 {
     if (cause == NULL || invalid_monster(cause))
@@ -433,7 +433,7 @@ bool lose_stat(stat_type which_stat, unsigned char stat_loss,
     return lose_stat(which_stat, stat_loss, force, name, vis);
 }
 
-bool lose_stat(stat_type which_stat, unsigned char stat_loss,
+bool lose_stat(stat_type which_stat, int8_t stat_loss,
                const item_def &cause, bool removed, bool force)
 {
     std::string name = cause.name(DESC_NOCAP_THE, false, true, false, false,
@@ -502,7 +502,7 @@ static stat_type _random_lost_stat()
 // a message if suppress_msg is false, and doing so in the recovery
 // channel if recovery is true.  If stat_gain is 0, restore the stat
 // completely.
-bool restore_stat(stat_type which_stat, unsigned char stat_gain,
+bool restore_stat(stat_type which_stat, int8_t stat_gain,
                   bool suppress_msg, bool recovery)
 {
     // A bit hackish, but cut me some slack, man! --
@@ -542,13 +542,15 @@ static void _normalize_stat(stat_type stat)
 {
     ASSERT(you.stat_loss[stat] >= 0);
     // XXX: this doesn't prevent effective stats over 72.
-    you.base_stats[stat] = std::min<char>(you.base_stats[stat], 72);
+    you.base_stats[stat] = std::min<int8_t>(you.base_stats[stat], 72);
 }
 
 // Number of turns of stat at zero you start with.
 #define STAT_ZERO_START 10
 // Number of turns of stat at zero you can survive.
 #define STAT_DEATH_TURNS 100
+// Number of turns of stat at zero after which random paralysis starts.
+#define STAT_DEATH_START_PARA 50
 
 static void _handle_stat_change(stat_type stat, const char* cause, bool see_source)
 {
@@ -557,6 +559,7 @@ static void _handle_stat_change(stat_type stat, const char* cause, bool see_sour
     if (you.stat(stat) <= 0 && you.stat_zero[stat] == 0)
     {
         you.stat_zero[stat] = STAT_ZERO_START;
+        you.stat_zero_cause[stat] = cause;
         mprf(MSGCH_WARN, "You have lost your %s.", stat_desc(stat, SD_NAME));
         // 2 to 5 turns of paralysis (XXX: decremented right away?)
         you.increase_duration(DUR_PARALYSIS, 2 + random2(3));
@@ -569,7 +572,7 @@ static void _handle_stat_change(stat_type stat, const char* cause, bool see_sour
     {
     case STAT_STR:
         burden_change();
-        you.redraw_armour_class = true;
+        you.redraw_armour_class = true; // includes shields
         break;
 
     case STAT_INT:
@@ -577,6 +580,7 @@ static void _handle_stat_change(stat_type stat, const char* cause, bool see_sour
 
     case STAT_DEX:
         you.redraw_evasion = true;
+        you.redraw_armour_class = true; // includes shields
         break;
 
     default:
@@ -593,6 +597,8 @@ static void _handle_stat_change(const char* aux, bool see_source)
 // Called once per turn.
 void update_stat_zero()
 {
+    stat_type para_stat = NUM_STATS;
+    int num_para = 0;
     for (int i = 0; i < NUM_STATS; ++i)
     {
         stat_type s = static_cast<stat_type>(i);
@@ -609,6 +615,36 @@ void update_stat_zero()
         }
 
         if (you.stat_zero[i] > STAT_DEATH_TURNS)
-            ouch(INSTANT_DEATH, NON_MONSTER, _statloss_killtype(s));
+        {
+            ouch(INSTANT_DEATH, NON_MONSTER,
+                 _statloss_killtype(s), you.stat_zero_cause[i].c_str());
+         }
+
+        int paramax = STAT_DEATH_TURNS - STAT_DEATH_START_PARA;
+        int paradiff = std::max(you.stat_zero[i] - STAT_DEATH_START_PARA, 0);
+        if (x_chance_in_y(paradiff*paradiff, 2*paramax*paramax))
+        {
+            para_stat = s;
+            num_para++;
+        }
+    }
+
+    switch (num_para)
+    {
+    case 0:
+        break;
+    case 1:
+        if (you.duration[DUR_PARALYSIS])
+            break;
+        mprf(MSGCH_WARN, "You faint for lack of %s.",
+                         stat_desc(para_stat, SD_NAME));
+        you.increase_duration(DUR_PARALYSIS, 1 + roll_dice(1,3));
+        break;
+    default:
+        if (you.duration[DUR_PARALYSIS])
+            break;
+        mprf(MSGCH_WARN, "Your lost attributes cause you to faint.");
+        you.increase_duration(DUR_PARALYSIS, 1 + roll_dice(num_para, 3));
+        break;
     }
 }

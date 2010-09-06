@@ -7,13 +7,13 @@
 #include "fixedarray.h"
 #include "los_def.h"
 
-typedef unsigned char losfield_t;
+typedef uint8_t losfield_t;
 typedef losfield_t halflos_t[LOS_MAX_RANGE+1][2*LOS_MAX_RANGE+1];
-const int o_half_x = 0;
-const int o_half_y = LOS_MAX_RANGE;
+static const int o_half_x = 0;
+static const int o_half_y = LOS_MAX_RANGE;
 typedef halflos_t globallos_t[GXM][GYM];
 
-globallos_t globallos;
+static globallos_t globallos;
 
 static losfield_t* _lookup_globallos(const coord_def& p, const coord_def& q)
 {

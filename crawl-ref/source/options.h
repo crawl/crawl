@@ -44,9 +44,12 @@ public:
     std::string macro_dir;      // Directory containing macro.txt
     std::string morgue_dir;     // Directory where character dumps and morgue
                                 // dumps are saved. Overrides crawl_dir.
+    std::string shared_dir;     // Directory where the logfile, scores and bones
+                                // are stored.  On a multi-user system, this dir
+                                // should be accessible by different people.
     std::vector<std::string> additional_macro_files;
 
-    unsigned long       seed;   // Non-random games.
+    uint32_t    seed;   // Non-random games.
 
 #ifdef DGL_SIMPLE_MESSAGING
     bool        messaging;      // Check for messages.
@@ -93,7 +96,7 @@ public:
     bool        show_gold_turns; // Show gold and turns in HUD.
     bool        show_beam;       // Show targeting beam by default.
 
-    long        autopickups;     // items to autopickup
+    uint32_t    autopickups;     // items to autopickup
     bool        show_inventory_weights; // show weights in inventory listings
     bool        colour_map;      // add colour to the map
     bool        clean_map;       // remove unseen clouds/monsters
@@ -297,6 +300,8 @@ public:
                                     // on the term's own cursor.
     bool        use_fake_player_cursor;
 
+    bool        show_player_species;
+
     int         level_map_cursor_step;  // The cursor increment in the level
                                         // map.
 
@@ -308,7 +313,7 @@ public:
 
 #ifdef WIZARD
     // Parameters for fight simulations.
-    long        fsim_rounds;
+    int         fsim_rounds;
     int         fsim_str, fsim_int, fsim_dex;
     int         fsim_xl;
     std::string fsim_mons;
@@ -386,7 +391,6 @@ private:
 public:
     // Convenience accessors for the second-class options in named_options.
     int         o_int(const char *name, int def = 0) const;
-    long        o_long(const char *name, long def = 0L) const;
     bool        o_bool(const char *name, bool def = false) const;
     std::string o_str(const char *name, const char *def = NULL) const;
     int         o_colour(const char *name, int def = LIGHTGREY) const;

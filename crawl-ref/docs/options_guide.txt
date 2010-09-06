@@ -119,7 +119,7 @@ The contents of this text are:
                 mouse_input, wiz_mode, char_set, classic_item_colours,
                 colour, char_set, cset_ascii, cset_ibm, cset_dec,
                 cset_unicode, feature, mon_glyph, pizza,
-                use_fake_player_cursor
+                use_fake_player_cursor, show_player_species
 
 6-b     DOS and Windows.
                 dos_use_background_intensity
@@ -2172,6 +2172,17 @@ mon_glyph = <monster name or symbol> : <colour> <glyph>
 
              mon_glyph = player ghost : \_
 
+        You can also redefine several "pseudo" monsters, them being:
+
+             player
+             sensed monster
+             merged slime creature
+             vampire bat
+             kenku
+             demonspawn
+             demigod
+             halfling
+
 pizza = <topping name>
         The player's choice of pizza topping.
 
@@ -2180,6 +2191,11 @@ use_fake_player_cursor = true
         terminal cursor. This means it won't flicker when the cursor
         is turned off to move elsewhere for drawing, and allows
         turning the cursor off by default. Has no effect in the Tiles build.
+
+show_player_species = false
+        Displays your character as a member of its species. For example, if
+        you're a Hill Orc, you will be shown as an 'o' rather than '@'. Has
+        no effect in Tiles.
 
 6-b     DOS and Windows.
 ------------------------

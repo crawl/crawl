@@ -133,13 +133,6 @@ static bool mg_do_build_level(int niters)
                     level_id::current().describe().c_str(),
                     vaults.c_str());
 
-            // Mapping would only have mapped squares that the player can
-            // reach - explicitly map the full level.
-            coord_def c;
-            for (c.y = 0; c.y < GYM; ++c.y)
-                for (c.x = 0; c.x < GXM; ++c.x)
-                    set_map_knowledge_obj(c, grd(c));
-
             dump_map(fp);
 
             return (false);

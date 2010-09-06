@@ -50,17 +50,15 @@ enum element_type
 
 int str_to_colour(const std::string &str, int default_colour = -1,
                   bool accept_number = true);
-const std::string colour_to_str(unsigned char colour);
+const std::string colour_to_str(uint8_t colour);
 unsigned int str_to_tile_colour(std::string colour);
 
-unsigned char random_colour();
-unsigned char random_uncommon_colour();
-unsigned char make_low_colour(unsigned char colour);
-unsigned char make_high_colour(unsigned char colour);
+uint8_t random_colour();
+uint8_t random_uncommon_colour();
+uint8_t make_low_colour(uint8_t colour);
+uint8_t make_high_colour(uint8_t colour);
 bool is_element_colour(int col);
 int  element_colour(int element, bool no_random = false);
-
-int name_length_by_colour(int col);
 
 #if defined(TARGET_OS_WINDOWS) || defined(TARGET_OS_DOS) || defined(USE_TILE)
 unsigned short dos_brand( unsigned short colour,

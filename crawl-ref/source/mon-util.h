@@ -41,17 +41,17 @@ struct mon_attack_def
 struct mon_energy_usage
 {
 public:
-    char move;
-    char swim;
-    char attack;
-    char missile; // Arrows/crossbows/etc
-    char spell;
-    char special;
-    char item;    // Using an item (i.e., drinking a potion)
+    int8_t move;
+    int8_t swim;
+    int8_t attack;
+    int8_t missile; // Arrows/crossbows/etc
+    int8_t spell;
+    int8_t special;
+    int8_t item;    // Using an item (i.e., drinking a potion)
 
     // Percent of monster->speed used when picking up an item; defaults
     // to 100%
-    char pickup_percent;
+    int8_t pickup_percent;
 
 public:
     mon_energy_usage(int mv = 10, int sw = 10, int att = 10, int miss = 10,
@@ -102,7 +102,7 @@ public:
                                          100) );
     }
 private:
-    char combine(char a, char b, char def = 10) const {
+    int8_t combine(int8_t a, int8_t b, int8_t def = 10) const {
         return (b != def? b : a);
     }
 };
@@ -111,7 +111,8 @@ struct monsterentry
 {
     short mc;            // monster number
 
-    unsigned char showchar, colour;
+    char showchar;
+    uint8_t colour;
     const char *name;
 
     uint64_t bitfields;
@@ -122,7 +123,7 @@ struct monsterentry
     // ((((max_hp / 7) + 1) * (mHD * mHD) + 1) * exp_mod) / 10
     //     ^^^^^^ see below at hpdice
     //   Note that this may make draining attacks less attractive (LRH)
-    char exp_mod;
+    int8_t exp_mod;
 
     monster_type genus,         // "team" the monster plays for
                  species;       // corpse type of the monster
@@ -142,8 +143,8 @@ struct monsterentry
     // hp will be around 135 each time.
     unsigned       hpdice[4];
 
-    char AC; // armour class
-    char ev; // evasion
+    int8_t AC; // armour class
+    int8_t ev; // evasion
     mon_spellbook_type sec;
     corpse_effect_type corpse_thingy;
     zombie_size_type   zombie_size;
@@ -151,7 +152,7 @@ struct monsterentry
     mon_intel_type     intel;
     habitat_type     habitat;
     flight_type      fly;
-    char             speed;        // How quickly speed_increment increases
+    int8_t           speed;        // How quickly speed_increment increases
     mon_energy_usage energy_usage; // And how quickly it decreases
     mon_itemuse_type gmon_use;
     mon_itemeat_type gmon_eat;
@@ -161,7 +162,7 @@ struct monsterentry
 habitat_type grid2habitat(dungeon_feature_type grid);
 dungeon_feature_type habitat2grid(habitat_type ht);
 
-monsterentry *get_monster_data(int p_monsterid);
+monsterentry *get_monster_data(int mc);
 const mon_resist_def &get_mons_class_resists(int mc);
 mon_resist_def get_mons_resists(const monsters *mon);
 
@@ -199,14 +200,13 @@ bool mons_is_ghost_demon(int mc);
 bool mons_is_unique(int mc);
 bool mons_is_pghost(int mc);
 
-int mons_difficulty(int mtype);
-int exper_value(const monsters *monster);
+int mons_difficulty(int mc);
+int exper_value(const monsters *mon);
 
 int hit_points(int hit_dice, int min_hp, int rand_hp);
 
-int mons_type_hit_dice( int type );
+int mons_class_hit_dice(int mc);
 
-int mons_resist_turn_undead( const monsters *mon );
 bool mons_immune_magic( const monsters *mon );
 const char* mons_resist_string(const monsters *mon);
 
@@ -225,6 +225,7 @@ bool mons_is_mimic( int mc );
 bool mons_is_statue( int mc, bool allow_disintegrate = false );
 bool mons_is_demon( int mc );
 bool mons_is_draconian( int mc );
+bool mons_is_conjured(int mc);
 
 bool mons_class_wields_two_weapons(int mc);
 bool mons_wields_two_weapons(const monsters *m);
@@ -273,9 +274,9 @@ bool mons_enslaved_soul(const monsters *mon);
 bool name_zombie(monsters *mon, int mc, const std::string mon_name);
 bool name_zombie(monsters *mon, const monsters* orig);
 
-int mons_power(int mclass);
+int mons_power(int mc);
 
-unsigned mons_char(int mc);
+wchar_t mons_char(int mc);
 char mons_base_char(int mc);
 
 int mons_class_colour(int mc);
@@ -359,8 +360,6 @@ void mons_stop_fleeing_from_sanctuary(monsters *monster);
 
 bool mons_landlubbers_in_reach(const monsters *monster);
 
-bool mons_has_smite_attack(const monsters *monster);
-
 bool mons_class_is_confusable(int mc);
 bool mons_class_is_slowable(int mc);
 bool mons_class_is_stationary(int mc);
@@ -384,11 +383,12 @@ bool monster_shover(const monsters *m);
 bool monster_senior(const monsters *first, const monsters *second,
                     bool fleeing = false);
 monster_type draco_subspecies(const monsters *mon);
+std::string ugly_thing_colour_name(uint8_t colour);
 std::string ugly_thing_colour_name(const monsters *mon);
-unsigned char ugly_thing_random_colour();
+uint8_t ugly_thing_random_colour();
 int str_to_ugly_thing_colour(const std::string &s);
-unsigned char random_monster_colour();
-int ugly_thing_colour_offset(const unsigned char colour);
+uint8_t random_monster_colour();
+int ugly_thing_colour_offset(const uint8_t colour);
 std::string  draconian_colour_name(monster_type mon_type);
 monster_type draconian_colour_by_name(const std::string &colour);
 
@@ -410,9 +410,9 @@ std::string get_mon_shape_str(const mon_body_shape shape);
 
 bool mons_class_can_pass(int mc, const dungeon_feature_type grid);
 bool mons_can_pass(const monsters *mon, dungeon_feature_type grid);
-bool mons_can_open_door(const monsters* mon, const coord_def& pos);
-bool mons_can_eat_door(const monsters* mon, const coord_def& pos);
-bool mons_can_traverse(const monsters* mon, const coord_def& pos,
+bool mons_can_open_door(const monsters *mon, const coord_def& pos);
+bool mons_can_eat_door(const monsters *mon, const coord_def& pos);
+bool mons_can_traverse(const monsters *mon, const coord_def& pos,
                        bool checktraps = true);
 
 mon_inv_type equip_slot_to_mslot(equipment_type eq);

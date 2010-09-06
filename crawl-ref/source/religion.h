@@ -44,13 +44,14 @@ void dec_penance(god_type god, int val);
 
 void excommunication(god_type new_god = GOD_NO_GOD);
 
-void gain_piety(int pgn, bool force = false);
+void gain_piety(int pgn, int denominator = 1,
+                bool force = false, bool should_scale_piety = true);
 void dock_piety(int pietyloss, int penance);
 void god_speaks(god_type god, const char *mesg);
 void lose_piety(int pgn);
 void handle_god_time(void);
 int god_colour(god_type god);
-char god_message_altar_colour(god_type god);
+uint8_t god_message_altar_colour(god_type god);
 bool player_can_join_god(god_type which_god);
 void god_pitch(god_type which_god);
 int piety_rank(int piety = -1);

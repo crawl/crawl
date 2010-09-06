@@ -427,23 +427,21 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
     if (feat_is_closed_door(grd(npos)) || grd(npos) == DNGN_SECRET_DOOR
         && env.markers.property_at(npos, MAT_ANY, "door_restict") != "veto")
     {
-        return 2;
+        return (2);
     }
 
-    const int montype = mons_is_zombified(mons) ? mons_zombie_base(mons)
-                                                : mons->type;
-
-    const bool airborne = mons_airborne(montype, -1, false);
+    const monster_type mt = mons_base_type(mons);
+    const bool airborne = mons_airborne(mt, -1, false);
 
     // Travelling through water, entering or leaving water is more expensive
     // for non-amphibious monsters, so they'll avoid it where possible.
     // (The resulting path might not be optimal but it will lead to a path
     // a monster of such habits is likely to prefer.)
     // Only tested for shallow water since they can't enter deep water anyway.
-    if (!airborne && !mons_class_amphibious(montype)
+    if (!airborne && !mons_class_amphibious(mt)
         && (grd(pos) == DNGN_SHALLOW_WATER || grd(npos) == DNGN_SHALLOW_WATER))
     {
-        return 2;
+        return (2);
     }
 
     // Try to avoid (known) traps.
@@ -460,16 +458,16 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
                 return (3);
 
             // To hostile monsters, these traps are completely harmless.
-            return 1;
+            return (1);
         }
 
         // Mechanical traps can be avoided by flying, as can shafts, and
         // tele traps are never traversable anyway.
         if (knows_trap && !airborne)
-            return 2;
+            return (2);
     }
 
-    return 1;
+    return (1);
 }
 
 // The estimated cost to reach a grid is simply max(dx, dy).

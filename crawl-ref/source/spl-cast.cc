@@ -34,6 +34,7 @@
 #include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "items.h"
 #include "macro.h"
 #include "map_knowledge.h"
 #include "menu.h"
@@ -59,6 +60,7 @@
 #include "spl-mis.h"
 #include "spl-util.h"
 #include "spl-zap.h"
+#include "sprint.h"
 #include "state.h"
 #include "stuff.h"
 #ifdef USE_TILE
@@ -152,7 +154,7 @@ static std::string _spell_base_description(spell_type spell)
     // spell schools
     desc << spell_schools_string(spell);
 
-    const int so_far = desc.str().length() - (name_length_by_colour(highlight)+2);
+    const int so_far = desc.str().length() - (colour_to_str(highlight).length()+2);
     if (so_far < 60)
         desc << std::string(60 - so_far, ' ');
 
@@ -877,7 +879,7 @@ bool is_prevented_teleport(spell_type spell)
     return ((spell == SPELL_BLINK
            || spell == SPELL_CONTROLLED_BLINK
            || spell == SPELL_TELEPORT_SELF)
-           && scan_artefacts(ARTP_PREVENT_TELEPORTATION, false));
+           && item_blocks_teleport(false, false));
 }
 
 bool spell_is_uncastable(spell_type spell, std::string &msg)
@@ -964,7 +966,7 @@ static void _try_monster_cast(spell_type spell, int powc,
 }
 #endif // WIZARD
 
-beam_type _spell_to_beam_type(spell_type spell)
+static beam_type _spell_to_beam_type(spell_type spell)
 {
     switch (spell)
     {
@@ -974,7 +976,7 @@ beam_type _spell_to_beam_type(spell_type spell)
     return BEAM_NONE;
 }
 
-int _setup_evaporate_cast()
+static int _setup_evaporate_cast()
 {
     int rc = prompt_invent_item("Throw which potion?", MT_INVLIST, OBJ_POTIONS);
 
@@ -1026,13 +1028,41 @@ static spret_type _do_cast(spell_type spell, int powc,
                            god_type god, int potion,
                            bool check_range = false);
 
+static bool _spellcasting_aborted(spell_type spell,
+                                  bool check_range_usability,
+                                  bool wiz_cast)
+{
+    std::string msg;
+    if (!wiz_cast && spell_is_uncastable(spell, msg))
+    {
+        mpr(msg);
+        return (true);
+    }
+
+    if (is_prevented_teleport(spell)
+        && !yesno("You cannot teleport right now. Cast anyway?", true, 'n'))
+    {
+        return (true);
+    }
+
+    if (check_range_usability
+        && spell == SPELL_FULSOME_DISTILLATION
+        && !corpse_at(you.pos()))
+    {
+        mpr("There aren't any corpses here.");
+        return (true);
+    }
+    return (false);
+}
+
 // Returns SPRET_SUCCESS if spell is successfully cast for purposes of
 // exercising, SPRET_FAIL otherwise, or SPRET_ABORT if the player canceled
 // the casting.
 // Not all of these are actually real spells; invocations, decks, rods or misc.
 // effects might also land us here.
 // Others are currently unused or unimplemented.
-spret_type your_spells(spell_type spell, int powc, bool allow_fail, bool check_range)
+spret_type your_spells(spell_type spell, int powc,
+                       bool allow_fail, bool check_range)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -1044,19 +1074,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail, bool check_r
 
     // [dshaligram] Any action that depends on the spellcasting attempt to have
     // succeeded must be performed after the switch().
-
-    std::string msg;
-    if (!wiz_cast && spell_is_uncastable(spell, msg))
-    {
-        mpr(msg);
+    if (_spellcasting_aborted(spell, check_range, wiz_cast))
         return (SPRET_ABORT);
-    }
-
-    if (is_prevented_teleport(spell)
-        && !yesno("You cannot teleport right now. Cast anyway?", true, 'n'))
-    {
-        return (SPRET_ABORT);
-    }
 
     const unsigned int flags = get_spell_flags(spell);
 
@@ -1265,8 +1284,10 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail, bool check_r
 #endif
 
         if (is_valid_spell(spell))
+        {
             mprf(MSGCH_ERROR, "Spell '%s' is not a player castable spell.",
                 spell_title(spell));
+        }
         else
             mpr("Invalid spell!", MSGCH_ERROR);
 
@@ -1320,13 +1341,15 @@ static spret_type _do_cast(spell_type spell, int powc,
     {
     // spells using burn_freeze()
     case SPELL_FREEZE:
+    {
         if (!burn_freeze(powc, _spell_to_beam_type(spell),
-                         monster_at(you.pos() + spd.delta)))
+                         monster_at(spd.isTarget ? beam.target
+                                                 : you.pos() + spd.delta)))
         {
             return (SPRET_ABORT);
         }
         break;
-
+    }
     case SPELL_SANDBLAST:
         if (!cast_sandblast(powc, beam))
             return (SPRET_ABORT);
@@ -1338,7 +1361,12 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_VAMPIRIC_DRAINING:
-        vampiric_drain(powc, spd);
+        if (!vampiric_drain(powc,
+                            monster_at(spd.isTarget ? beam.target
+                                                    : you.pos() + spd.delta)))
+        {
+            return (SPRET_ABORT);
+        }
         break;
 
     case SPELL_IOOD:
@@ -1773,7 +1801,8 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_LEVITATION:
-        potion_effect(POT_LEVITATION, powc);
+        you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
+        levitate_player(powc);
         break;
 
     case SPELL_FLY:
@@ -1997,6 +2026,11 @@ void exercise_spell(spell_type spell, bool spc, bool success)
                             : random2(1 + random2(diff)));
         exer      += exercise_amount;
     }
+
+    // Avoid doubly rewarding spell practise in sprint
+    // (by inflated XP and inflated piety gain)
+    if (crawl_state.game_is_sprint())
+        exer = sprint_modify_exp_inverse(exer);
 
     if (exer)
         did_god_conduct(DID_SPELL_PRACTISE, exer);

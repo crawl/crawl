@@ -1303,8 +1303,8 @@ void read_maps()
 // expects to be present.
 void reread_maps()
 {
-    dprf("reread_maps:: discarding %lu existing maps",
-         (unsigned long)vdefs.size());
+    dprf("reread_maps:: discarding %u existing maps",
+         vdefs.size());
 
     // BOOM!
     vdefs.clear();

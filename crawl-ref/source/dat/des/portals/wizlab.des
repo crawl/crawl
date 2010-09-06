@@ -87,7 +87,7 @@ function wizlab_portal (e)
                       "It might lead to their secret laboratory, but beware!" ..
                       " Surely it will be guarded by magical traps and "      ..
                       "terrible monsters."
-    local timeout_turns = crawl.random_range(1200, 1700)
+    local timeout_turns = crawl.random_range(2700, 3300)
     local messager =
         timed_msg {
             visible = true,

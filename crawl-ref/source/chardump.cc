@@ -285,28 +285,28 @@ static void _sdump_visits(dump_params &par)
     for (unsigned int i = 0; i < branches_visited.size(); i++)
         branches_total += branches_visited[i];
 
-    text += make_stringf("You %svisited %ld branch",
+    text += make_stringf("You %svisited %d branch",
                          have.c_str(), branches_visited.size());
     if (branches_visited.size() != 1)
         text += "es";
-    text += make_stringf(" of the dungeon, and %s %ld of its levels.\n",
+    text += make_stringf(" of the dungeon, and %s %d of its levels.\n",
                          seen.c_str(), branches_total.levels_seen);
 
     PlaceInfo place_info = you.get_place_info(LEVEL_PANDEMONIUM);
     if (place_info.num_visits > 0)
     {
-        text += make_stringf("You %svisited Pandemonium %ld time",
+        text += make_stringf("You %svisited Pandemonium %d time",
                              have.c_str(), place_info.num_visits);
         if (place_info.num_visits > 1)
             text += "s";
-        text += make_stringf(", and %s %ld of its levels.\n",
+        text += make_stringf(", and %s %d of its levels.\n",
                              seen.c_str(), place_info.levels_seen);
     }
 
     place_info = you.get_place_info(LEVEL_ABYSS);
     if (place_info.num_visits > 0)
     {
-        text += make_stringf("You %svisited the Abyss %ld time",
+        text += make_stringf("You %svisited the Abyss %d time",
                              have.c_str(), place_info.num_visits);
         if (place_info.num_visits > 1)
             text += "s";
@@ -316,7 +316,7 @@ static void _sdump_visits(dump_params &par)
     place_info = you.get_place_info(LEVEL_LABYRINTH);
     if (place_info.num_visits > 0)
     {
-        text += make_stringf("You %svisited %ld Labyrinth",
+        text += make_stringf("You %svisited %d Labyrinth",
                              have.c_str(), place_info.num_visits);
         if (place_info.num_visits > 1)
             text += "s";
@@ -363,18 +363,18 @@ static void _sdump_visits(dump_params &par)
 
         if (num_zigs > 0)
         {
-            text += make_stringf("You %svisited %ld Ziggurat",
+            text += make_stringf("You %svisited %d Ziggurat",
                                  have.c_str(), num_zigs);
             if (num_zigs > 1)
                 text += "s";
-            text += make_stringf(", and %s %ld of %s levels.\n",
+            text += make_stringf(", and %s %d of %s levels.\n",
                                  seen.c_str(), zig_levels,
                                  num_zigs > 1 ? "their" : "its");
         }
 
         if (!misc_portals.empty())
         {
-            text += make_stringf("You %svisited %ld portal chamber",
+            text += make_stringf("You %svisited %d portal chamber",
                                  have.c_str(), misc_portals.size());
             if (misc_portals.size() > 1)
                 text += "s";
@@ -1000,7 +1000,7 @@ static void _sdump_spells(dump_params &par)
 
         text += "You " + verb + " the following spells:\n\n";
 
-        text += " Your Spells              Type           Power          Success   Level" "\n";
+        text += " Your Spells              Type           Power        Success   Level  Hunger" "\n";
 
         for (int j = 0; j < 52; j++)
         {
@@ -1038,16 +1038,21 @@ static void _sdump_spells(dump_params &par)
 
                 spell_line += spell_power_string(spell);
 
-                for (int i = spell_line.length(); i < 56; ++i )
+                for (int i = spell_line.length(); i < 54; ++i )
                     spell_line += ' ';
 
                 spell_line += failure_rate_to_string(spell_fail(spell));
 
-                for (int i = spell_line.length(); i < 68; i++)
+                for (int i = spell_line.length(); i < 66; i++)
                     spell_line += ' ';
 
                 itoa(spell_difficulty(spell), tmp_quant, 10 );
                 spell_line += tmp_quant;
+
+                for (int i = spell_line.length(); i < 71; i++)
+                    spell_line += ' ';
+
+                spell_line += spell_hunger_string(spell);
                 spell_line += "\n";
 
                 text += spell_line;
@@ -1289,7 +1294,7 @@ void dump_map(FILE *fp, bool debug, bool dist)
         for (int y = min_y; y <= max_y; ++y)
         {
             for (int x = min_x; x <= max_x; ++x)
-                fputc( env.map_knowledge[x][y].glyph(), fp );
+                fputc( get_cell_glyph(env.map_knowledge[x][y]).ch, fp );
 
             fputc('\n', fp);
         }

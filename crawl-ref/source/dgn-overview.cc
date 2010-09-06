@@ -42,10 +42,7 @@ typedef std::map<level_pos, god_type> altar_map_type;
 typedef std::map<level_pos, portal_type> portal_map_type;
 typedef std::map<level_pos, std::string> portal_vault_map_type;
 typedef std::map<level_pos, std::string> portal_note_map_type;
-// NOTE: The value for colours here is char rather than unsigned char
-// because g++ needs it to be char for marshallMap in tags.cc to
-// compile properly.
-typedef std::map<level_pos, char> portal_vault_colour_map_type;
+typedef std::map<level_pos, uint8_t> portal_vault_colour_map_type;
 typedef std::map<level_id, std::string> annotation_map_type;
 
 stair_map_type stair_level;
@@ -71,6 +68,19 @@ static std::string _get_portals();
 static std::string _get_notes();
 static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
                                           bool print_unseen, bool display);
+
+void overview_clear()
+{
+    stair_level.clear();
+    shops_present.clear();
+    altars_present.clear();
+    portals_present.clear();
+    portal_vaults_present.clear();
+    portal_vault_notes.clear();
+    portal_vault_colours.clear();
+    level_annotations.clear();
+    level_exclusions.clear();
+}
 
 void seen_notable_thing(dungeon_feature_type which_thing, const coord_def& pos)
 {
@@ -266,8 +276,7 @@ static std::string _portal_vaults_description_string()
             {
                 if (last_id.depth == 10000)
                 {
-                    unsigned char col =
-                        (unsigned char) portal_vault_colours[ci_portals->first];
+                    uint8_t col = portal_vault_colours[ci_portals->first];
                     disp += '<';
                     disp += colour_to_str(col) + '>';
                     disp += vault_names_vec[i];
@@ -560,9 +569,9 @@ static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
         }
 
         // If dumping, only laundry list the seen gods
-        if(!display)
+        if (!display)
         {
-            if(has_altar_been_seen)
+            if (has_altar_been_seen)
                 disp += god_name(god, false) + "\n";
             continue;
         }
@@ -836,7 +845,7 @@ void unnotice_altar()
         altars_present.erase(curpos);
 }
 
-portal_type feature_to_portal( unsigned char feat )
+portal_type feature_to_portal( dungeon_feature_type feat )
 {
     switch (feat)
     {
@@ -874,12 +883,12 @@ void _seen_other_thing( dungeon_feature_type which_thing, const coord_def& pos )
         portal_name = replace_all(portal_name, "_", " ");
         portal_vaults_present[where] = uppercase_first(portal_name);
 
-        unsigned char col;
+        uint8_t col;
         if (env.grid_colours(pos) != BLACK)
             col = env.grid_colours(pos);
         else
             col = get_feature_def(which_thing).colour;
-        portal_vault_colours[where] = (char) element_colour(col, true);
+        portal_vault_colours[where] = element_colour(col, true);
 
         portal_vault_notes[where] =
             env.markers.property_at(pos, MAT_ANY, "overview_note");

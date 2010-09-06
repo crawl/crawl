@@ -24,6 +24,7 @@
 #include "skills2.h"
 #include "spl-cast.h"
 #include "spl-mis.h"
+#include "state.h"
 #include "stuff.h"
 #include "transform.h"
 #include "xom.h"
@@ -330,7 +331,9 @@ static void _unequip_artefact_effect(const item_def &item, bool *show_msgs=NULL)
 
     if (proprt[ARTP_LEVITATE] != 0
         && you.duration[DUR_LEVITATION] > 2
-        && !you.permanent_levitation())
+        && !you.attribute[ATTR_LEV_UNCANCELLABLE]
+        && !you.permanent_levitation()
+        && !player_evokable_levitation())
     {
         you.duration[DUR_LEVITATION] = 1;
     }
@@ -361,7 +364,7 @@ static void _unequip_artefact_effect(const item_def &item, bool *show_msgs=NULL)
 // other places *cough* auto-butchering *cough*.    {gdl}
 static void _equip_weapon_effect(item_def& item, bool showMsgs)
 {
-    unsigned char special = 0;
+    int special = 0;
 
     const bool artefact     = is_artefact(item);
     const bool known_cursed = item_known_cursed(item);
@@ -568,7 +571,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
                 case SPWPN_PAIN:
                     if (you.skills[SK_NECROMANCY] == 0)
                         mpr("You have a feeling of ineptitude.");
-                    else if(you.skills[SK_NECROMANCY] <= 4)
+                    else if (you.skills[SK_NECROMANCY] <= 4)
                         mpr("Pain shudders through your arm!");
                     else
                         mpr("A searing pain shoots up your arm!");
@@ -846,7 +849,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
             break;
 
         case SPARM_POSITIVE_ENERGY:
-            mpr("Your life-force is being protected.");
+            mpr("Your life force is being protected.");
             break;
 
         case SPARM_ARCHMAGI:
@@ -962,8 +965,11 @@ static void _unequip_armour_effect(item_def& item)
         break;
 
     case SPARM_LEVITATION:
-        if (you.duration[DUR_LEVITATION])
+        if (you.duration[DUR_LEVITATION] && !you.attribute[ATTR_LEV_UNCANCELLABLE]
+            && !player_evokable_levitation())
+        {
             you.duration[DUR_LEVITATION] = 1;
+        }
         break;
 
     case SPARM_MAGIC_RESISTANCE:
@@ -1193,7 +1199,10 @@ static void _equip_jewellery_effect(item_def &item)
         break;
 
     case RING_TELEPORTATION:
-        mpr("You feel slightly jumpy.");
+        if (crawl_state.game_is_sprint())
+            mpr("You feel a slight, muted jump rush through you.");
+        else
+            mpr("You feel slightly jumpy.");
         if (artefact)
             fake_rap = ARTP_CAUSE_TELEPORTATION;
         else
@@ -1386,8 +1395,12 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg)
         break;
 
     case RING_LEVITATION:
-        if (you.duration[DUR_LEVITATION] && !you.permanent_levitation())
+        if (you.duration[DUR_LEVITATION] && !you.permanent_levitation()
+            && !you.attribute[ATTR_LEV_UNCANCELLABLE]
+            && !player_evokable_levitation())
+        {
             you.duration[DUR_LEVITATION] = 1;
+        }
         break;
 
     case RING_INVISIBILITY:

@@ -13,6 +13,7 @@
 #include "player.h"
 #include "player-stats.h"
 #include "religion.h"
+#include "state.h"
 #include "stuff.h"
 
 int che_boost_level()
@@ -108,6 +109,9 @@ void jiyva_eat_offlevel_items()
 {
     // For wizard mode 'J' command
     if (you.religion != GOD_JIYVA)
+        return;
+
+    if (crawl_state.game_is_sprint())
         return;
 
     while (true)

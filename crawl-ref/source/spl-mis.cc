@@ -576,8 +576,7 @@ bool MiscastEffect::_big_cloud(cloud_type cl_type, int cloud_pow, int size,
     return (true);
 }
 
-bool MiscastEffect::_lose_stat(stat_type which_stat,
-                               unsigned char stat_loss)
+bool MiscastEffect::_lose_stat(stat_type which_stat, int8_t stat_loss)
 {
     return (lose_stat(which_stat, stat_loss, false, cause));
 }
@@ -590,16 +589,8 @@ void MiscastEffect::_potion_effect(potion_type pot_eff, int pot_pow)
         return;
     }
 
-    monsters* mon_target = target_as_monster();
-
     switch (pot_eff)
     {
-        case POT_LEVITATION:
-            // There's no levitation enchantment for monsters, and,
-            // anyway, it's not nearly as inconvenient for monsters as
-            // for the player, so backlight them instead.
-            mon_target->add_ench(mon_enchant(ENCH_CORONA, pot_pow, kc));
-            break;
         case POT_BERSERK_RAGE:
             if (target->can_go_berserk())
             {
@@ -968,7 +959,18 @@ void MiscastEffect::_enchantment(int severity)
         switch (random2(crawl_state.game_is_arena() ? 1 : 2))
         {
         case 0:
-            _potion_effect(POT_LEVITATION, 20);
+            if (target->atype() == ACT_PLAYER)
+            {
+                you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
+                levitate_player(20);
+            }
+            else
+            {
+                // There's no levitation enchantment for monsters, and,
+                // anyway, it's not nearly as inconvenient for monsters as
+                // for the player, so backlight them instead.
+                target_as_monster()->add_ench(mon_enchant(ENCH_CORONA, 20, kc));
+            }
             break;
         case 1:
             // XXX: Something else for monsters?
@@ -1012,8 +1014,7 @@ void MiscastEffect::_enchantment(int severity)
             _potion_effect(POT_CONFUSION, 10);
             break;
         case 2:
-            mpr("You feel saturated with unharnessed energies!");
-            you.magic_contamination += random2avg(19, 3);
+            contaminate_player(random2avg(19, 3));
             break;
         case 3:
             do
@@ -1181,8 +1182,7 @@ void MiscastEffect::_translocation(int severity)
             send_abyss();
             break;
         case 3:
-            mpr("You feel saturated with unharnessed energies!");
-            you.magic_contamination += random2avg(19, 3);
+            contaminate_player(random2avg(19, 3));
             break;
         }
         break;
@@ -1535,11 +1535,33 @@ void MiscastEffect::_divination_mon(int severity)
 void MiscastEffect::_necromancy(int severity)
 {
     if (target->atype() == ACT_PLAYER && you.religion == GOD_KIKUBAAQUDGHA
-        && !player_under_penance() && you.piety >= piety_breakpoint(1)
-        && x_chance_in_y(you.piety, 150))
+        && !player_under_penance() && you.piety >= piety_breakpoint(1))
     {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return;
+        const bool death_curse =
+                     (cause.find("death curse") != std::string::npos);
+
+        if (spell != SPELL_NO_SPELL)
+        {
+            // An actual necromancy miscast.
+            if (x_chance_in_y(you.piety, 150))
+            {
+                canned_msg(MSG_NOTHING_HAPPENS);
+                return;
+            }
+        }
+        else if (death_curse)
+        {
+            if (coinflip())
+            {
+                simple_god_message(" averts the curse.");
+                return;
+            }
+            else
+            {
+                simple_god_message(" partially averts the curse.");
+                severity = std::max(severity - 1, 0);
+            }
+        }
     }
 
     switch (severity)
@@ -1873,8 +1895,7 @@ void MiscastEffect::_transmutation(int severity)
             _potion_effect(POT_CONFUSION, 10);
             break;
         case 3:
-            mpr("You feel saturated with unharnessed energies!");
-            you.magic_contamination += random2avg(19, 3);
+            contaminate_player(random2avg(19, 3));
             break;
         }
         break;
@@ -1892,7 +1913,7 @@ void MiscastEffect::_transmutation(int severity)
             if (_ouch(3 + random2avg(18, 2)) && target->alive())
             {
                 if (target->atype() == ACT_PLAYER)
-                    you.magic_contamination += random2avg(35, 3);
+                    contaminate_player(random2avg(35, 3), false, false, false);
             }
             break;
 

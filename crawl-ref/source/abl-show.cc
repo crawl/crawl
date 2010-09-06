@@ -1160,7 +1160,7 @@ static bool _activate_talent(const talent& tal)
             break;
     }
 
-    if (hungerCheck && you.species != SP_VAMPIRE
+    if (hungerCheck && !you.is_undead
         && you.hunger_state == HS_STARVING)
     {
         mpr("You're too hungry.");
@@ -1207,7 +1207,7 @@ static bool _activate_talent(const talent& tal)
     return (success);
 }
 
-int _calc_breath_ability_range(ability_type ability)
+static int _calc_breath_ability_range(ability_type ability)
 {
     // Following monster draconian abilities.
     switch (ability)
@@ -1426,7 +1426,7 @@ static bool _do_ability(const ability_def& abil)
             exercise(SK_EVOCATIONS, 1);
         break;
 
-    // Fly (kenku) - eventually becomes permanent (see acr.cc).
+    // Fly (kenku) - eventually becomes permanent (see main.cc).
     case ABIL_FLY:
         cast_fly(you.experience_level * 4);
 
@@ -1472,11 +1472,12 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_EVOKE_LEVITATE:           // ring, boots, randarts
-        potion_effect(POT_LEVITATION, 2 * you.skills[SK_EVOCATIONS] + 30);
+        levitate_player(2 * you.skills[SK_EVOCATIONS] + 30);
         exercise(SK_EVOCATIONS, 1);
         break;
 
     case ABIL_EVOKE_STOP_LEVITATING:
+        ASSERT(!you.attribute[ATTR_LEV_UNCANCELLABLE]);
         mpr("You feel heavy.");
         you.duration[DUR_LEVITATION] = 1;
         break;
@@ -1905,24 +1906,23 @@ static bool _do_ability(const ability_def& abil)
         simple_god_message(" appreciates your contribution to the "
                            "ecosystem.", GOD_FEDHAS);
 
-        // We are following the blood god sacrifice piety gain model, given as:
-        // if (random2(level + 10) > 5)
-        //    piety_change = 1;
-        //  where level = 10
-        // so the chance of gaining 1 piety from a corpse sacrifice to a blood
-        // god is (14/20 == 70/100)
-        //
         // Doubling the expected value per sacrifice to approximate the
         // extra piety gain blood god worshipers get for the initial kill.
         // -cao
 
-        int piety_gain = binomial_generator(count*2, 70);
-        gain_piety(piety_gain);
+        int piety_gain = 0;
+        for (int i = 0; i < count * 2; i++)
+            piety_gain += random2(15); // avg 1.4 piety per corpse
+        gain_piety(piety_gain, 10);
         break;
     }
 
     case ABIL_FEDHAS_SUNLIGHT:
-        fedhas_sunlight();
+        if (!fedhas_sunlight())
+        {
+            canned_msg(MSG_OK);
+            return (false);
+        }
         exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
@@ -2068,13 +2068,27 @@ static bool _do_ability(const ability_def& abil)
     return (true);
 }
 
+// [ds] Increase piety cost for god abilities that are particularly
+// overpowered in Sprint. Yes, this is a hack. No, I don't care.
+static int _scale_piety_cost(ability_type abil, int original_cost)
+{
+    // Abilities that have aroused our ire earn 2.5x their classic
+    // Crawl piety cost.
+    return ((crawl_state.game_is_sprint()
+             && (abil == ABIL_TROG_BROTHERS_IN_ARMS
+                 || abil == ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB))
+            ? div_rand_round(original_cost * 5, 2)
+            : original_cost);
+}
+
 static void _pay_ability_costs(const ability_def& abil)
 {
     // currently only delayed fireball is instantaneous -- bwr
     you.turn_is_over = !(abil.flags & ABFLAG_INSTANT);
 
     const int food_cost  = abil.food_cost + random2avg(abil.food_cost, 2);
-    const int piety_cost = abil.piety_cost.cost();
+    const int piety_cost =
+        _scale_piety_cost(abil.ability, abil.piety_cost.cost());
     const int hp_cost    = abil.hp_cost.cost(you.hp_max);
 
     dprf("Cost: mp=%d; hp=%d; food=%d; piety=%d",
@@ -2404,12 +2418,10 @@ std::vector<talent> your_talents(bool check_confused)
     }
 
     // Note: This ability only applies to this counter.
-    if (player_equip(EQ_RINGS, RING_LEVITATION)
-        || player_equip_ego_type(EQ_BOOTS, SPARM_LEVITATION)
-        || scan_artefacts( ARTP_LEVITATE))
+    if (player_evokable_levitation())
     {
         // Has no effect on permanently flying Kenku.
-        if (!you.permanent_flight())
+        if (!you.permanent_flight() && !you.attribute[ATTR_LEV_UNCANCELLABLE])
         {
             // Now you can only turn levitation off if you have an
             // activatable item.  Potions and miscast effects will
@@ -2421,7 +2433,7 @@ std::vector<talent> your_talents(bool check_confused)
         }
     }
 
-    if (player_equip(EQ_RINGS, RING_TELEPORTATION))
+    if (player_equip(EQ_RINGS, RING_TELEPORTATION) && !crawl_state.game_is_sprint())
         _add_talent(talents, ABIL_EVOKE_TELEPORTATION, check_confused);
 
     // Find hotkeys for the non-hotkeyed talents.

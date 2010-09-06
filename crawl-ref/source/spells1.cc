@@ -339,7 +339,7 @@ bool cast_hellfire_burst(int pow, bolt &beam)
     return (true);
 }
 
-bool _lightning_los(const coord_def& source, const coord_def& target)
+static bool _lightning_los(const coord_def& source, const coord_def& target)
 {
     // XXX: currently bounded by circular LOS radius;
     // XXX: adapt opacity -- allow passing clouds.
@@ -732,7 +732,8 @@ static int _can_pacify_monster(const monsters *mon, const int healed)
     // I was thinking of jellies when I wrote this, but maybe we shouldn't
     // exclude zombies and such... (jpeg)
     if (mons_intel(mon) <= I_PLANT // no self-awareness
-        || mon->type == MONS_KRAKEN_TENTACLE) // body part
+        || mon->type == MONS_KRAKEN_TENTACLE
+        || mon->type == MONS_KRAKEN_CONNECTOR) // body part
     {
         return (-1);
     }
@@ -857,12 +858,11 @@ static int _healing_spell(int healed, bool divine_ability,
 
         int pgain = 0;
         if (!is_holy && !is_summoned && you.piety < MAX_PIETY)
-        {
-            pgain = random2(1 + random2(monster->max_hit_points /
-                            (2 + you.piety / 20)));
-        }
+            pgain = random2(monster->max_hit_points / (2 + you.piety / 20));
 
-        if (pgain > 0)
+        // The feedback no longer tells you if you gained any piety this time,
+        // it tells you merely the general rate.
+        if (random2(1 + pgain))
             simple_god_message(" approves of your offer of peace.");
         else
             mpr("Elyvilon supports your offer of peace.");
@@ -875,8 +875,7 @@ static int _healing_spell(int healed, bool divine_ability,
             mons_pacify(monster, ATT_NEUTRAL);
 
             // Give a small piety return.
-            if (pgain > 0)
-                gain_piety(pgain);
+            gain_piety(pgain, 2);
         }
     }
 
@@ -892,24 +891,14 @@ static int _healing_spell(int healed, bool divine_ability,
 
         if (you.religion == GOD_ELYVILON && !is_hostile)
         {
-            int pgain = 0;
-            if (one_chance_in(8) && you.piety < MAX_PIETY)
-                pgain = 1;
-
-            if (pgain > 0)
-            {
+            if (one_chance_in(8))
                 simple_god_message(" approves of your healing of a fellow "
                                    "creature.");
-            }
             else
-            {
-                mpr("Elyvilon appreciates your healing of a fellow "
-                    "creature.");
-            }
+                mpr("Elyvilon appreciates your healing of a fellow creature.");
 
             // Give a small piety return.
-            if (pgain > 0)
-                gain_piety(pgain);
+            gain_piety(1, 8);
         }
     }
 
@@ -946,7 +935,7 @@ bool cast_revivification(int pow)
             if (x_chance_in_y(8, pow))
                 loss++;
 
-        dec_max_hp(loss);
+        dec_max_hp(loss * you.hp_max / 100);
         set_hp(you.hp_max, false);
 
         if (you.duration[DUR_DEATHS_DOOR])
@@ -1062,7 +1051,7 @@ void abjuration(int pow)
 void antimagic()
 {
     duration_type dur_list[] = {
-        DUR_INVIS, DUR_CONF, DUR_PARALYSIS, DUR_SLOW, DUR_HASTE,
+        DUR_INVIS, DUR_CONF, DUR_PARALYSIS, DUR_HASTE,
         DUR_MIGHT, DUR_AGILITY, DUR_BRILLIANCE, DUR_FIRE_SHIELD, DUR_ICY_ARMOUR, DUR_REPEL_MISSILES,
         DUR_REGENERATION, DUR_SWIFTNESS, DUR_STONEMAIL, DUR_CONTROL_TELEPORT,
         DUR_TRANSFORMATION, DUR_DEATH_CHANNEL, DUR_DEFLECT_MISSILES,
@@ -1081,6 +1070,10 @@ void antimagic()
     if (!you.permanent_flight() && you.duration[DUR_CONTROLLED_FLIGHT] > 1)
         you.duration[DUR_CONTROLLED_FLIGHT] = 1;
 
+    // Post-berserk slowing isn't magic, so don't remove that.
+    if (you.duration[DUR_SLOW] > you.duration[DUR_EXHAUSTED])
+        you.duration[DUR_SLOW] = std::max(you.duration[DUR_EXHAUSTED], 1);
+
     for (unsigned int i = 0; i < ARRAYSZ(dur_list); ++i)
         if (you.duration[dur_list[i]] > 1)
             you.duration[dur_list[i]] = 1;
@@ -1088,7 +1081,7 @@ void antimagic()
     contaminate_player(-1 * (1 + random2(5)));
 }
 
-bool _know_spell(spell_type spell)
+static bool _know_spell(spell_type spell)
 {
     if (spell == NUM_SPELLS)
         return (false);
@@ -1100,7 +1093,7 @@ bool _know_spell(spell_type spell)
     }
 
     int fail = spell_fail(spell);
-    mprf("fail = %d", fail);
+    dprf("fail = %d", fail);
 
     if (fail > random2(50) + 50)
     {
@@ -1111,7 +1104,7 @@ bool _know_spell(spell_type spell)
     return (true);
 }
 
-spell_type _brand_spell()
+static spell_type _brand_spell()
 {
     const item_def *wpn = you.weapon();
 
@@ -1148,7 +1141,7 @@ spell_type _brand_spell()
     }
 }
 
-spell_type _transform_spell()
+static spell_type _transform_spell()
 {
     switch(you.attribute[ATTR_TRANSFORMATION])
     {
@@ -1209,7 +1202,7 @@ void extension(int pow)
     if (you.duration[DUR_LEVITATION] && !you.duration[DUR_CONTROLLED_FLIGHT]
         && _know_spell(SPELL_LEVITATION))
     {
-        potion_effect(POT_LEVITATION, pow);
+        levitate_player(pow);
     }
 
     if (you.duration[DUR_INVIS] && _know_spell(SPELL_INVISIBILITY))
@@ -1537,7 +1530,7 @@ void manage_fire_shield(int delay)
     int old_dur = you.duration[DUR_FIRE_SHIELD];
 
     you.duration[DUR_FIRE_SHIELD]-= delay;
-    if(you.duration[DUR_FIRE_SHIELD] < 0)
+    if (you.duration[DUR_FIRE_SHIELD] < 0)
         you.duration[DUR_FIRE_SHIELD] = 0;
 
     if (!you.duration[DUR_FIRE_SHIELD])

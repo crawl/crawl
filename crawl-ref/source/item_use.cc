@@ -903,19 +903,19 @@ int get_next_fire_item(int current, int direction)
 
     if (fire_order.size() == 0)
         return -1;
-    if (current == -1)
-        return fire_order[0];
 
+    int next = direction > 0 ? 0 : -1;
     for (unsigned i = 0; i < fire_order.size(); i++)
     {
         if (fire_order[i] == current)
         {
-            unsigned int next =
-                (i + direction + fire_order.size()) % fire_order.size();
-            return fire_order[next];
+            next = i + direction;
+            break;
         }
     }
-    return fire_order[0];
+
+    next = (next + fire_order.size()) % fire_order.size();
+    return fire_order[next];
 }
 
 class fire_target_behaviour : public targeting_behaviour
@@ -1619,7 +1619,7 @@ static bool _blessed_hit_victim(bolt &beam, actor* victim, int &dmg,
     return (false);
 }
 
-int _blowgun_power_roll(bolt &beam)
+static int _blowgun_power_roll(bolt &beam)
 {
     actor* agent = beam.agent();
     if (!agent)
@@ -1649,7 +1649,7 @@ int _blowgun_power_roll(bolt &beam)
     return (base_power + blowgun->plus);
 }
 
-bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
+static bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
 {
     actor* agent = beam.agent();
 
@@ -2158,7 +2158,7 @@ static void identify_floor_missiles_matching(item_def mitem, int idflags)
             }
 }
 
-void _merge_ammo_in_inventory(int slot)
+static void _merge_ammo_in_inventory(int slot)
 {
     if (!you.inv[slot].defined())
         return;
@@ -3585,15 +3585,15 @@ bool remove_ring(int slot, bool announce)
     return (true);
 }
 
-int _wand_range(zap_type ztype)
+static int _wand_range(zap_type ztype)
 {
     // FIXME: Eventually we should have sensible values here.
-    return (8);
+    return (LOS_RADIUS);
 }
 
-int _max_wand_range()
+static int _max_wand_range()
 {
-    return (8);
+    return (LOS_RADIUS);
 }
 
 static bool _dont_use_invis()
@@ -3606,7 +3606,7 @@ static bool _dont_use_invis()
         mpr("You can't turn invisible.");
         return (true);
     }
-    else if (get_contamination_level() > 0
+    else if (get_contamination_level() > 1
              && !yesno("Invisibility will do you no good right now; "
                        "use anyway?", false, 'n'))
     {
@@ -4382,8 +4382,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
         hide2armour(arm);
         ac_change = property(arm, PARM_AC) - ac_change;
 
-        if (is_cursed)
-            do_uncurse_item(arm);
+        do_uncurse_item(arm);
 
         // No additional enchantment.
         return (true);
@@ -4427,9 +4426,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
 
     arm.plus++;
     ac_change++;
-
-    if (is_cursed)
-        do_uncurse_item(arm);
+    do_uncurse_item(arm);
 
     return (true);
 }
@@ -4686,6 +4683,17 @@ void read_scroll(int slot)
         return;
     }
 
+    const scroll_type which_scroll = static_cast<scroll_type>(scroll.sub_type);
+    const bool alreadyknown = item_type_known(scroll);
+
+    if (alreadyknown
+        && (which_scroll == SCR_BLINKING || which_scroll == SCR_TELEPORTATION)
+        && item_blocks_teleport(false, false))
+    {
+        mpr("You cannot teleport right now.");
+        return;
+    }
+
     // Ok - now we FINALLY get to read a scroll !!! {dlb}
     you.turn_is_over = true;
 
@@ -4696,18 +4704,6 @@ void read_scroll(int slot)
         mpr((player_mutation_level(MUT_BLURRY_VISION) == 3 && one_chance_in(3))
                         ? "This scroll appears to be blank."
                         : "The writing blurs in front of your eyes.");
-        return;
-    }
-
-    // Decrement and handle inventory if any scroll other than paper {dlb}:
-    const scroll_type which_scroll = static_cast<scroll_type>(scroll.sub_type);
-    const bool alreadyknown = item_type_known(scroll);
-
-    if (alreadyknown
-        && (which_scroll == SCR_BLINKING || which_scroll == SCR_TELEPORTATION)
-        && item_blocks_teleport(false, false))
-    {
-        mpr("You cannot teleport right now.");
         return;
     }
 
@@ -5117,7 +5113,11 @@ bool stasis_blocks_effect(bool calc_unid,
 
         // In all cases, the amulet auto-ids if requested.
         if (amulet && identify)
+        {
             set_ident_type(*amulet, ID_KNOWN_TYPE);
+            mprf("You are wearing: %s",
+                  amulet->name(DESC_INVENTORY_EQUIP).c_str());
+        }
         return (true);
     }
     return (false);

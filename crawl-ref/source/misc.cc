@@ -49,6 +49,7 @@
 #include "flood_find.h"
 #include "fprop.h"
 #include "food.h"
+#include "ghost.h"
 #include "godabil.h"
 #include "hiscores.h"
 #include "itemname.h"
@@ -1567,7 +1568,7 @@ bool mons_is_safe(const monsters *mon, const bool want_move,
 
         bool result = is_safe;
 
-        monster_info mi(mon, true);
+        monster_info mi(mon, MILEV_SKIP_SAFE);
         if (clua.callfn("ch_mon_is_safe", "Ibbd>b",
                         &mi, is_safe, moving, dist,
                         &result))
@@ -1629,7 +1630,7 @@ static bool _exposed_monsters_nearby(bool want_move)
 {
     const int radius = want_move ? 2 : 1;
     for (radius_iterator ri(you.pos(), radius); ri; ++ri)
-        if (env.show(grid2show(*ri)).cls == SH_INVIS_EXPOSED)
+        if (env.map_knowledge(*ri).flags & MAP_INVISIBLE_MONSTER)
             return (true);
     return (false);
 }
@@ -2038,7 +2039,7 @@ std::string your_hand(bool plural)
 }
 
 bool stop_attack_prompt(const monsters *mon, bool beam_attack,
-                        coord_def beam_target)
+                        coord_def beam_target, bool autohit_first)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -2073,6 +2074,9 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
             else if (you.pos() < beam_target && beam_target < mon->pos()
                      || you.pos() > beam_target && beam_target > mon->pos())
             {
+                if (autohit_first)
+                    return (false);
+                    
                 verb += "in " + mon->name(DESC_NOCAP_THE) + "'s direction";
                 need_mon_name = false;
             }
@@ -2137,6 +2141,11 @@ bool is_orckind(const actor *act)
         {
             return (true);
         }
+        if (mons_is_ghost_demon(mon->type)
+            && mon->ghost->species == SP_HILL_ORC)
+        {
+            return (true);
+        }
     }
 
     return (false);
@@ -2162,6 +2171,12 @@ bool is_dragonkind(const actor *act)
     if (mons_is_zombified(mon)
         && (mons_genus(mon->base_monster) == MONS_DRAGON
             || mons_genus(mon->base_monster) == MONS_DRACONIAN))
+    {
+        return (true);
+    }
+
+    if (mons_is_ghost_demon(mon->type)
+        && species_genus(mon->ghost->species) == GENPC_DRACONIAN)
     {
         return (true);
     }

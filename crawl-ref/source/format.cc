@@ -508,6 +508,13 @@ void formatted_string::swap(formatted_string& other)
     ops.swap(other.ops);
 }
 
+void formatted_string::all_caps()
+{
+    for (unsigned int i = 0; i < ops.size(); i++)
+        if (ops[i].type == FSOP_TEXT)
+            uppercase(ops[i].text);
+}
+
 int count_linebreaks(const formatted_string& fs)
 {
     std::string::size_type where = 0;
@@ -530,7 +537,7 @@ int count_linebreaks(const formatted_string& fs)
 // Return the actual (string) offset of character #loc to be printed,
 // i.e. ignoring tags. So for instance, if s == "<tag>ab</tag>", then
 // _find_string_location(s, 2) == 6.
-int _find_string_location(const std::string& s, int loc)
+static int _find_string_location(const std::string& s, int loc)
 {
     int real_offset = 0;
     bool in_tag = false;

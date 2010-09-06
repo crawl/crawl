@@ -60,6 +60,16 @@ newgame_def::newgame_def()
 {
 }
 
+void newgame_def::clear_character()
+{
+    species  = SP_UNKNOWN;
+    job      = JOB_UNKNOWN;
+    weapon   = WPN_UNKNOWN;
+    book     = SBT_NONE;
+    religion = GOD_NO_GOD;
+    wand     = SWT_NO_SELECTION;
+}
+
 enum MenuOptions
 {
     M_QUIT = -1,
@@ -544,11 +554,22 @@ void make_rod(item_def &item, stave_type rod_type, int ncharges)
     init_rod_mp(item, ncharges);
 }
 
+// Set ng_choice to defaults without overwriting name and game type.
+static void _set_default_choice(newgame_def* ng_choice,
+                                const newgame_def& defaults)
+{
+    const std::string name = ng_choice->name;
+    const game_type type   = ng_choice->type;
+    *ng_choice = defaults;
+    ng_choice->name = name;
+    ng_choice->type = type;
+}
+
 static void _mark_fully_random(newgame_def* ng, newgame_def* ng_choice,
                                bool viable)
 {
     // Reset *ng so _resolve_species_job will work properly.
-    *ng = newgame_def();
+    ng->clear_character();
 
     ng_choice->fully_random = true;
     if (viable)
@@ -561,17 +582,6 @@ static void _mark_fully_random(newgame_def* ng, newgame_def* ng_choice,
         ng_choice->species = SP_RANDOM;
         ng_choice->job = JOB_RANDOM;
     }
-}
-
-// Set ng_choice to defaults without overwriting name and game type.
-static void _set_default_choice(newgame_def* ng_choice,
-                                const newgame_def& defaults)
-{
-    const std::string name = ng_choice->name;
-    const game_type type   = ng_choice->type;
-    *ng_choice = defaults;
-    ng_choice->name = name;
-    ng_choice->type = type;
 }
 
 /**
@@ -650,23 +660,28 @@ static void _construct_species_menu(const newgame_def* ng,
     }
 
     // Add all the special button entries
+    tmp = new TextItem();
+    tmp->set_text("+ - Viable Species");
+    min_coord.x = X_MARGIN;
+    min_coord.y = SPECIAL_KEYS_START_Y;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
+    tmp->add_hotkey('+');
+    // If the player has a job chosen, use VIABLE, otherwise use RANDOM
     if (ng->job != JOB_UNKNOWN)
     {
-        tmp = new TextItem();
-        tmp->set_text("+ - Viable Species");
-        min_coord.x = X_MARGIN;
-        min_coord.y = SPECIAL_KEYS_START_Y;
-        max_coord.x = min_coord.x + tmp->get_text().size();
-        max_coord.y = min_coord.y + 1;
-        tmp->set_bounds(min_coord, max_coord);
-        tmp->set_fg_colour(BROWN);
-        tmp->add_hotkey('+');
         tmp->set_id(M_VIABLE);
-        tmp->set_highlight_colour(LIGHTGRAY);
-        tmp->set_description_text("Picks a random viable species based on your current job choice");
-        menu->attach_item(tmp);
-        tmp->set_visible(true);
     }
+    else
+    {
+        tmp->set_id(M_RANDOM);
+    }
+    tmp->set_highlight_colour(LIGHTGRAY);
+    tmp->set_description_text("Picks a random viable species based on your current job choice");
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
 
     tmp = new TextItem();
     tmp->set_text("# - Viable character");
@@ -1004,23 +1019,28 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
     }
 
     // Add all the special button entries
+    tmp = new TextItem();
+    tmp->set_text("+ - Viable background");
+    min_coord.x = X_MARGIN;
+    min_coord.y = SPECIAL_KEYS_START_Y;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
+    tmp->add_hotkey('+');
+    // If the player has species chosen, use VIABLE, otherwise use RANDOM
     if (ng->species != SP_UNKNOWN)
     {
-        tmp = new TextItem();
-        tmp->set_text("+ - Viable background");
-        min_coord.x = X_MARGIN;
-        min_coord.y = SPECIAL_KEYS_START_Y;
-        max_coord.x = min_coord.x + tmp->get_text().size();
-        max_coord.y = min_coord.y + 1;
-        tmp->set_bounds(min_coord, max_coord);
-        tmp->set_fg_colour(BROWN);
-        tmp->add_hotkey('+');
         tmp->set_id(M_VIABLE);
-        tmp->set_highlight_colour(LIGHTGRAY);
-        tmp->set_description_text("Picks a random viable background based on your current species choice");
-        menu->attach_item(tmp);
-        tmp->set_visible(true);
     }
+    else
+    {
+        tmp->set_id(M_RANDOM);
+    }
+    tmp->set_highlight_colour(LIGHTGRAY);
+    tmp->set_description_text("Picks a random viable background based on your current species choice");
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
 
     tmp = new TextItem();
     tmp->set_text("# - Viable character");
@@ -1698,7 +1718,7 @@ static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
     return (true);
 }
 
-startup_book_type _fixup_book(startup_book_type book, int numbooks)
+static startup_book_type _fixup_book(startup_book_type book, int numbooks)
 {
     if (book == SBT_RANDOM)
         return (SBT_RANDOM);
@@ -1710,7 +1730,7 @@ startup_book_type _fixup_book(startup_book_type book, int numbooks)
         return (SBT_NONE);
 }
 
-std::string _startup_book_name(startup_book_type book)
+static std::string _startup_book_name(startup_book_type book)
 {
     switch (book)
     {
@@ -2935,9 +2955,14 @@ static void _construct_sprint_map_menu(const mapref_vector& maps,
     }
 }
 
+static bool _cmp_map_by_name(const map_def* m1, const map_def* m2)
+{
+    return (m1->desc_or_name() < m2->desc_or_name());
+}
+
 static void _prompt_sprint_map(const newgame_def* ng, newgame_def* ng_choice,
                                const newgame_def& defaults,
-                               const mapref_vector &maps)
+                               mapref_vector maps)
 {
     PrecisionMenu menu;
     menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
@@ -2947,6 +2972,7 @@ static void _prompt_sprint_map(const newgame_def* ng, newgame_def* ng_choice,
     menu.attach_object(freeform);
     menu.set_active_object(freeform);
 
+    std::sort(maps.begin(), maps.end(), _cmp_map_by_name);
     _construct_sprint_map_menu(maps, defaults, freeform);
 
     BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
@@ -3020,7 +3046,7 @@ static void _prompt_sprint_map(const newgame_def* ng, newgame_def* ng_choice,
             list_commands('?');
             return _prompt_sprint_map(ng, ng_choice, defaults, maps);
         case M_DEFAULT_CHOICE:
-            *ng_choice = defaults;
+            _set_default_choice(ng_choice, defaults);
             return;
         case M_RANDOM:
             // FIXME setting this to "random" is broken

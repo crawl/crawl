@@ -312,7 +312,7 @@ const char* _prop_name[ARTP_NUM_PROPERTIES] = {
 #define ARTP_VAL_POS  1
 #define ARTP_VAL_ANY  2
 
-char _prop_type[ARTP_NUM_PROPERTIES] = {
+int8_t _prop_type[ARTP_NUM_PROPERTIES] = {
     ARTP_VAL_POS,  //BRAND
     ARTP_VAL_ANY,  //AC
     ARTP_VAL_ANY,  //EVASION
@@ -462,7 +462,7 @@ void wizard_tweak_object(void)
 
     while (true)
     {
-        void *field_ptr = NULL;
+        int64_t old_val = 0; // flags are uint64_t, but they don't care
 
         while (true)
         {
@@ -484,15 +484,15 @@ void wizard_tweak_object(void)
             keyin = tolower( get_ch() );
 
             if (keyin == 'a')
-                field_ptr = &(you.inv[item].plus);
+                old_val = you.inv[item].plus;
             else if (keyin == 'b')
-                field_ptr = &(you.inv[item].plus2);
+                old_val = you.inv[item].plus2;
             else if (keyin == 'c')
-                field_ptr = &(you.inv[item].special);
+                old_val = you.inv[item].special;
             else if (keyin == 'd')
-                field_ptr = &(you.inv[item].quantity);
+                old_val = you.inv[item].quantity;
             else if (keyin == 'e')
-                field_ptr = &(you.inv[item].flags);
+                old_val = you.inv[item].flags;
             else if (key_is_escape(keyin) || keyin == ' '
                     || keyin == '\r' || keyin == '\n')
             {
@@ -510,16 +510,10 @@ void wizard_tweak_object(void)
             continue;
         }
 
-        if (keyin != 'c' && keyin != 'e')
-        {
-            const short *const ptr = static_cast< short * >( field_ptr );
-            mprf("Old value: %d (0x%04x)", *ptr, *ptr );
-        }
+        if (keyin != 'e')
+            mprf("Old value: %"PRId64" (0x%04"PRIx64")", old_val, old_val);
         else
-        {
-            const long *const ptr = static_cast< long * >( field_ptr );
-            mprf("Old value: %ld (0x%08lx)", *ptr, *ptr );
-        }
+            mprf("Old value: 0x%08"PRIx64, old_val);
 
         msgwin_get_line("New value? ", specs, sizeof(specs));
         if (specs[0] == '\0')
@@ -527,21 +521,23 @@ void wizard_tweak_object(void)
 
         char *end;
         const bool hex = (keyin == 'e');
-        int   new_value = strtol(specs, &end, hex ? 16 : 0);
+        int64_t new_val = strtoll(specs, &end, hex ? 16 : 0);
 
-        if (new_value == 0 && end == specs)
+        if (end == specs)
             return;
 
-        if (keyin != 'c' && keyin != 'e')
-        {
-            short *ptr = static_cast< short * >( field_ptr );
-            *ptr = new_value;
-        }
+        if (keyin == 'a')
+            you.inv[item].plus = new_val;
+        else if (keyin == 'b')
+            you.inv[item].plus2 = new_val;
+        else if (keyin == 'c')
+            you.inv[item].special = new_val;
+        else if (keyin == 'd')
+            you.inv[item].quantity = new_val;
+        else if (keyin == 'e')
+            you.inv[item].flags = new_val;
         else
-        {
-            long *ptr = static_cast< long * >( field_ptr );
-            *ptr = new_value;
-        }
+            ASSERT(!"unhandled keyin");
     }
 }
 

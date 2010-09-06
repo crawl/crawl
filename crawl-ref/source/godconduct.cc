@@ -58,6 +58,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
     if (you.religion != GOD_NO_GOD && you.religion != GOD_XOM)
     {
         int piety_change = 0;
+        int piety_denom = 1;
         int penance = 0;
 
         god_acting gdact;
@@ -342,8 +343,10 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
                 simple_god_message(" accepts your kill.");
                 retval = true;
-                if (random2(level + 18 - you.experience_level / 2) > 5)
-                    piety_change = 1;
+                piety_denom = level + 18 - you.experience_level / 2;
+                piety_change = piety_denom - 6;
+                piety_denom = std::max(piety_denom, 1);
+                piety_change = std::max(piety_change, 0);
                 break;
 
             default:
@@ -366,11 +369,11 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 simple_god_message(" accepts your kill.");
                 retval = true;
                 // Holy gods are easier to please this way.
-                if (random2(level + 18 - (is_good_god(you.religion) ? 0 :
-                                          you.experience_level / 2)) > 4)
-                {
-                    piety_change = 1;
-                }
+                piety_denom = level + 18 - (is_good_god(you.religion) ? 0 :
+                                          you.experience_level / 2);
+                piety_change = piety_denom - 5;
+                piety_denom = std::max(piety_denom, 1);
+                piety_change = std::max(piety_change, 0);
                 break;
 
             default:
@@ -393,11 +396,11 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 simple_god_message(" accepts your kill.");
                 retval = true;
                 // Holy gods are easier to please this way.
-                if (random2(level + 18 - (is_good_god(you.religion) ? 0 :
-                                          you.experience_level / 2)) > 3)
-                {
-                    piety_change = 1;
-                }
+                piety_denom = level + 18 - (is_good_god(you.religion) ? 0 :
+                                          you.experience_level / 2);
+                piety_change = piety_denom - 4;
+                piety_denom = std::max(piety_denom, 1);
+                piety_change = std::max(piety_change, 0);
                 break;
 
             default:
@@ -412,8 +415,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             {
                 simple_god_message(" accepts your kill.");
                 retval = true;
-                if (random2(level + 18) > 3)
-                    piety_change = 1;
+                piety_denom = level + 18;
+                piety_change = piety_denom - 4;
             }
             break;
 
@@ -424,8 +427,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             {
                 simple_god_message(" accepts your kill.");
                 retval = true;
-                if (random2(level + 18) > 3)
-                    piety_change = 1;
+                piety_denom = level + 18;
+                piety_change = piety_denom - 4;
             }
             break;
 
@@ -436,8 +439,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 simple_god_message(" appreciates your killing of a heretic "
                                    "priest.");
                 retval = true;
-                if (random2(level + 10) > 5)
-                    piety_change = 1;
+                piety_denom = level + 10;
+                piety_change = piety_denom - 6;
             }
             break;
 
@@ -448,8 +451,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 simple_god_message(" appreciates your killing of a magic "
                                    "user.");
                 retval = true;
-                if (random2(level + 10) > 5)
-                    piety_change = 1;
+                piety_denom = level + 10;
+                piety_change = piety_denom - 6;
             }
             break;
 
@@ -458,21 +461,23 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 && !god_hates_attacking_friend(you.religion, victim))
             {
                 retval = true;
-                if (random2(level + 18 - you.experience_level / 2) > 5)
+                piety_denom = level + 18 - you.experience_level / 2;
+                piety_change = piety_denom - 6;
+                piety_denom = std::max(piety_denom, 1);
+                piety_change = std::max(piety_change, 0);
+
+                const int speed_delta =
+                    cheibriados_monster_player_speed_delta(victim);
+                dprf("Che DID_KILL_FAST: %s speed delta: %d",
+                     victim->name(DESC_PLAIN, true).c_str(),
+                     speed_delta);
+                if (speed_delta > 0 && x_chance_in_y(speed_delta, 12))
                 {
-                    piety_change = 1;
-                    const int speed_delta =
-                        cheibriados_monster_player_speed_delta(victim);
-                    dprf("Che DID_KILL_FAST: %s speed delta: %d",
-                         victim->name(DESC_PLAIN, true).c_str(),
-                         speed_delta);
-                    if (speed_delta > 0 && x_chance_in_y(speed_delta, 12))
-                        ++piety_change;
+                    piety_change *= 2;
+                    simple_god_message(" thoroughly appreciates the change of pace.");
                 }
-                simple_god_message(
-                    piety_change == 2
-                    ? " thoroughly appreciates the change of pace."
-                    : " appreciates the change of pace.");
+                else
+                    simple_god_message(" appreciates the change of pace.");
             }
             break;
 
@@ -507,16 +512,15 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
                 simple_god_message(" accepts your kill.");
                 retval = true;
-                if (random2(level + 18) > 2)
-                    piety_change = 1;
+                piety_denom = level + 18;
+                piety_change = piety_denom - 3;
 
                 if (you.religion == GOD_YREDELEMNUL)
                 {
                     simple_god_message(" appreciates your killing of a holy "
                                        "being.");
                     retval = true;
-                    if (random2(level + 10) > 5)
-                        piety_change = 1;
+                    piety_change *= 2;
                 }
                 break;
 
@@ -538,8 +542,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
                 simple_god_message(" accepts your slave's kill.");
                 retval = true;
-                if (random2(level + 18) > 2)
-                    piety_change = 1;
+                piety_denom = level + 18;
+                piety_change = piety_denom - 3;
                 break;
 
             default:
@@ -573,8 +577,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
                 simple_god_message(" accepts your collateral kill.");
                 retval = true;
-                if (random2(level + 18) > 2)
-                    piety_change = 1;
+                piety_denom = level + 18;
+                piety_change = piety_denom - 3;
                 break;
 
             default:
@@ -593,8 +597,10 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_LUGONU:
                 simple_god_message(" accepts your slave's kill.");
                 retval = true;
-                if (random2(level + 10 - you.experience_level/3) > 5)
-                    piety_change = 1;
+                piety_denom = level + 10 - you.experience_level/3;
+                piety_change = piety_denom - 6;
+                piety_denom = std::max(piety_denom, 1);
+                piety_change = std::max(piety_change, 0);
                 break;
             default:
                 break;
@@ -611,8 +617,10 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_LUGONU:
                 simple_god_message(" accepts your collateral kill.");
                 retval = true;
-                if (random2(level + 10 - you.experience_level/3) > 5)
-                    piety_change = 1;
+                piety_denom = level + 10 - you.experience_level/3;
+                piety_change = piety_denom - 6;
+                piety_denom = std::max(piety_denom, 1);
+                piety_change = std::max(piety_change, 0);
                 break;
             default:
                 break;
@@ -628,8 +636,10 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_LUGONU:
                 simple_god_message(" accepts your slave's kill.");
                 retval = true;
-                if (random2(level + 10 - you.experience_level/3) > 5)
-                    piety_change = 1;
+                piety_denom = level + 10 - you.experience_level/3;
+                piety_change = piety_denom - 6;
+                piety_denom = std::max(piety_denom, 1);
+                piety_change = std::max(piety_change, 0);
                 break;
             default:
                 break;
@@ -646,11 +656,11 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_LUGONU:
                 simple_god_message(" accepts your collateral kill.");
                 retval = true;
-                if (random2(level + 10 - (is_good_god(you.religion) ? 0 :
-                                          you.experience_level/3)) > 5)
-                {
-                    piety_change = 1;
-                }
+                piety_denom = level + 10 - (is_good_god(you.religion) ? 0 :
+                                            you.experience_level/3);
+                piety_change = piety_denom - 6;
+                piety_denom = std::max(piety_denom, 1);
+                piety_change = std::max(piety_change, 0);
                 break;
             default:
                 break;
@@ -664,8 +674,10 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_BEOGH:
                 simple_god_message(" accepts your slave's kill.");
                 retval = true;
-                if (random2(level + 10 - you.experience_level/3) > 5)
-                    piety_change = 1;
+                piety_denom = level + 10 - you.experience_level/3;
+                piety_change = piety_denom - 6;
+                piety_denom = std::max(piety_denom, 1);
+                piety_change = std::max(piety_change, 0);
                 break;
             default:
                 break;
@@ -681,11 +693,11 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_BEOGH:
                 simple_god_message(" accepts your collateral kill.");
                 retval = true;
-                if (random2(level + 10 - (is_good_god(you.religion) ? 0 :
-                                          you.experience_level/3)) > 5)
-                {
-                    piety_change = 1;
-                }
+                piety_denom = level + 10 - (is_good_god(you.religion) ? 0 :
+                                            you.experience_level/3);
+                piety_change = piety_denom - 6;
+                piety_denom = std::max(piety_denom, 1);
+                piety_change = std::max(piety_change, 0);
                 break;
             default:
                 break;
@@ -699,8 +711,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 simple_god_message(" accepts your collateral kill.");
                 retval = true;
 
-                if (random2(level + 10) > 5)
-                    piety_change = 1;
+                piety_denom = level + 10;
+                piety_change = piety_denom - 6;
             }
             break;
 
@@ -711,8 +723,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 simple_god_message(" accepts your collateral kill.");
                 retval = true;
 
-                if (random2(level + 10) > 5)
-                    piety_change = 1;
+                piety_denom = level + 10;
+                piety_change = piety_denom - 6;
             }
             break;
 
@@ -750,8 +762,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 // kills tend to do both at the same time (unlike
                 // melee).  This means high level spells probably work
                 // pretty much like they used to (use spell, get piety).
-                piety_change = div_rand_round(level + 10, 80);
-                dprf("Spell practise, level: %d, dpiety: %d", level, piety_change);
+                piety_change = level + 10;
+                piety_denom = 80;
                 retval = true;
             }
             break;
@@ -925,9 +937,9 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         }
 
         if (piety_change > 0)
-            gain_piety(piety_change);
+            gain_piety(piety_change, piety_denom);
         else
-            dock_piety(-piety_change, penance);
+            dock_piety(div_rand_round(-piety_change, piety_denom), penance);
 
 #ifdef DEBUG_DIAGNOSTICS
         if (retval)
@@ -958,9 +970,10 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
             COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS, c1);
             mprf(MSGCH_DIAGNOSTICS,
-                 "conduct: %s; piety: %d (%+d); penance: %d (%+d)",
+                 "conduct: %s; piety: %d (%+d/%d); penance: %d (%+d)",
                  conducts[thing_done],
-                 you.piety, piety_change, you.penance[you.religion], penance);
+                 you.piety, piety_change, piety_denom,
+                 you.penance[you.religion], penance);
 
         }
 #endif
@@ -982,9 +995,9 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 // since a Beogh worshipper zapping an orc with lightning might cause it to
 // become a follower on the first hit, and the second hit would be
 // against a friendly orc.
-static FixedVector<bool, NUM_MONSTERS> _first_attack_conduct;
-static FixedVector<bool, NUM_MONSTERS> _first_attack_was_unchivalric;
-static FixedVector<bool, NUM_MONSTERS> _first_attack_was_friendly;
+static FixedVector<bool, MAX_MONSTERS> _first_attack_conduct;
+static FixedVector<bool, MAX_MONSTERS> _first_attack_was_unchivalric;
+static FixedVector<bool, MAX_MONSTERS> _first_attack_was_friendly;
 
 void god_conduct_turn_start()
 {

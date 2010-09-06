@@ -75,14 +75,14 @@ static void _fsim_item(FILE *out,
                        bool melee,
                        const item_def *weap,
                        const char *wskill,
-                       unsigned long damage,
-                       long iterations, long hits,
-                       int maxdam, unsigned long time)
+                       unsigned int damage,
+                       int iterations, int hits,
+                       int maxdam, unsigned int time)
 {
     double hitdam = hits? double(damage) / hits : 0.0;
     double avspeed = ((double) time / (double)  iterations);
     fprintf(out,
-            " %-5s|  %3ld%%    |  %5.2f |    %5.2f  |"
+            " %-5s|  %3d%%    |  %5.2f |    %5.2f  |"
             "   %5.2f |   %3d   |   %5.2g\n",
             wskill,
             100 * hits / iterations,
@@ -93,11 +93,11 @@ static void _fsim_item(FILE *out,
             avspeed);
 }
 
-static void _fsim_defence_item(FILE *out, long cum, int hits, int max,
-                               int speed, long iters)
+static void _fsim_defence_item(FILE *out, int cum, int hits, int max,
+                               int speed, int iters)
 {
     // AC | EV | Arm | Dod | Acc | Av.Dam | Av.HitDam | Eff.Dam | Max.Dam | Av.Time
-    fprintf(out, "%2d   %2d    %2d   %2d   %3ld%%   %5.2f      %5.2f      %5.2f      %3d"
+    fprintf(out, "%2d   %2d    %2d   %2d   %3d%%   %5.2f      %5.2f      %5.2f      %3d"
             "       %2d\n",
             you.armour_class(),
             player_evasion(),
@@ -117,9 +117,9 @@ static bool _fsim_ranged_combat(FILE *out, int wskill, int mi,
 {
     monsters &mon = menv[mi];
     const monsters orig = mon;
-    unsigned long cumulative_damage = 0L;
-    unsigned long time_taken = 0L;
-    long hits = 0L;
+    unsigned int cumulative_damage = 0;
+    unsigned int time_taken = 0;
+    int hits = 0;
     int maxdam = 0;
 
     const int thrown = missile_slot == -1 ? you.m_quiver->get_fire_item() : missile_slot;
@@ -132,9 +132,9 @@ static bool _fsim_ranged_combat(FILE *out, int wskill, int mi,
     _fsim_set_ranged_skill(wskill, item);
 
     no_messages mx;
-    const long iter_limit = Options.fsim_rounds;
+    const int iter_limit = Options.fsim_rounds;
     const int hunger = you.hunger;
-    for (long i = 0; i < iter_limit; ++i)
+    for (int i = 0; i < iter_limit; ++i)
     {
         mon = orig;
         bolt beam;
@@ -168,12 +168,12 @@ static bool _fsim_mon_melee(FILE *out, int dodge, int armour, int mi)
 
     const int yhp  = you.hp;
     const int ymhp = you.hp_max;
-    unsigned long cumulative_damage = 0L;
-    long hits = 0L;
+    unsigned int cumulative_damage = 0;
+    int hits = 0;
     int maxdam = 0;
     no_messages mx;
 
-    for (long i = 0; i < Options.fsim_rounds; ++i)
+    for (int i = 0; i < Options.fsim_rounds; ++i)
     {
         you.hp = you.hp_max = 5000;
         monster_attack(&menv[mi]);
@@ -198,17 +198,17 @@ static bool _fsim_melee_combat(FILE *out, int wskill, int mi,
 {
     monsters &mon = menv[mi];
     const monsters orig = mon;
-    unsigned long cumulative_damage = 0L;
-    unsigned long time_taken = 0L;
-    long hits = 0L;
+    unsigned int cumulative_damage = 0;
+    unsigned int time_taken = 0;
+    int hits = 0;
     int maxdam = 0;
 
     _fsim_set_melee_skill(wskill, item);
 
     no_messages mx;
-    const long iter_limit = Options.fsim_rounds;
+    const int iter_limit = Options.fsim_rounds;
     const int hunger = you.hunger;
-    for (long i = 0; i < iter_limit; ++i)
+    for (int i = 0; i < iter_limit; ++i)
     {
         mon            = orig;
         mon.hit_points = mon.max_hit_points;
@@ -320,7 +320,7 @@ static void _fsim_mon_stats(FILE *o, const monsters &mon)
 static void _fsim_title(FILE *o, int mon, int ms)
 {
     fprintf(o, CRAWL " version %s\n\n", Version::Long().c_str());
-    fprintf(o, "Combat simulation: %s %s vs. %s (%ld rounds) (%s)\n",
+    fprintf(o, "Combat simulation: %s %s vs. %s (%d rounds) (%s)\n",
             species_name(you.species).c_str(),
             you.class_name,
             menv[mon].name(DESC_PLAIN, true).c_str(),
@@ -346,7 +346,7 @@ static void _fsim_title(FILE *o, int mon, int ms)
 static void _fsim_defence_title(FILE *o, int mon)
 {
     fprintf(o, CRAWL " version %s\n\n", Version::Long().c_str());
-    fprintf(o, "Combat simulation: %s vs. %s %s (%ld rounds) (%s)\n",
+    fprintf(o, "Combat simulation: %s vs. %s %s (%d rounds) (%s)\n",
             menv[mon].name(DESC_PLAIN).c_str(),
             species_name(you.species).c_str(),
             you.class_name,
@@ -449,8 +449,8 @@ static bool debug_fight_sim(int mindex, int missile_slot,
     }
 
     bool success = true;
-    unwind_var<FixedVector<unsigned char, 50> > skills(you.skills);
-    unwind_var<FixedVector<char, NUM_STATS> > stats(you.base_stats);
+    unwind_var<FixedVector<uint8_t, 50> > skills(you.skills);
+    unwind_var<FixedVector<int8_t, NUM_STATS> > stats(you.base_stats);
     unwind_var<int> xp(you.experience_level);
 
     for (int i = SK_FIGHTING; i < NUM_SKILLS; ++i)

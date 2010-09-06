@@ -679,8 +679,23 @@ static mutation_type _get_random_xom_mutation()
     return (mutat);
 }
 
-static mutation_type _get_random_mutation(int preferred_multiplier = 100,
-                                          bool prefer_good = true)
+static bool _mut_matches_class(mutation_type mutclass, const mutation_def& mdef)
+{
+    switch (mutclass)
+    {
+    case RANDOM_MUTATION:
+        return (true);
+    case RANDOM_BAD_MUTATION:
+        return (mdef.bad);
+    case RANDOM_GOOD_MUTATION:
+        return (!mdef.bad);
+    default:
+        ASSERT(false);
+        return (false);
+    }
+}
+
+static mutation_type _get_random_mutation(mutation_type mutclass)
 {
     int cweight = 0;
     mutation_type chosen = NUM_MUTATIONS;
@@ -694,17 +709,15 @@ static mutation_type _get_random_mutation(int preferred_multiplier = 100,
         if (!mdef.rarity)
             continue;
 
+        if (!_mut_matches_class(mutclass, mdef))
+            continue;
+
         if (!_accept_mutation(curr, true))
             continue;
 
-        const bool weighted = mdef.bad != prefer_good;
-        int weight = mdef.rarity;
-        if (weighted)
-            weight = weight * preferred_multiplier / 100;
+        cweight += mdef.rarity;
 
-        cweight += weight;
-
-        if (x_chance_in_y(weight, cweight))
+        if (x_chance_in_y(mdef.rarity, cweight))
             chosen = curr;
     }
 
@@ -1061,16 +1074,12 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     switch (which_mutation)
     {
     case RANDOM_MUTATION:
-        mutat = _get_random_mutation();
+    case RANDOM_GOOD_MUTATION:
+    case RANDOM_BAD_MUTATION:
+        mutat = _get_random_mutation(which_mutation);
         break;
     case RANDOM_XOM_MUTATION:
         mutat = _get_random_xom_mutation();
-        break;
-    case RANDOM_GOOD_MUTATION:
-        mutat = _get_random_mutation(500, true);
-        break;
-    case RANDOM_BAD_MUTATION:
-        mutat = _get_random_mutation(500, false);
         break;
     case RANDOM_SLIME_MUTATION:
         mutat = _get_random_slime_mutation();
@@ -1643,8 +1652,10 @@ try_again:
     int absfacet = 0;
     int scales = 0;
     int slots_lost = 0;
-    int breath_weapons = 0;
-    int elemental = 0;
+    int fire_breath = 0;
+    int poison_breath = 0;
+    int ice_elemental = 0;
+    int fire_elemental = 0;
 
     std::set<const facet_def *> facets_used;
 
@@ -1674,11 +1685,17 @@ try_again:
                 if (_is_covering(m))
                     ++scales;
 
-                if (i == 0 && (m == MUT_SPIT_POISON || m == MUT_BREATHE_FLAMES))
-                    breath_weapons++;
+                if (i == 0 && m == MUT_SPIT_POISON)
+                    poison_breath++;
 
-                if (m == MUT_COLD_RESISTANCE || m == MUT_THROW_FLAMES)
-                    elemental++;
+                if (i == 0 && m == MUT_BREATHE_FLAMES)
+                    fire_breath++;
+
+                if (m == MUT_COLD_RESISTANCE)
+                    ice_elemental++;
+
+                if (m == MUT_THROW_FLAMES)
+                    fire_elemental++;
 
                 if (m == MUT_CLAWS && i == 2
                     || m == MUT_HORNS && i == 0
@@ -1701,10 +1718,13 @@ try_again:
     if (slots_lost != NUM_BODY_SLOTS)
         goto try_again;
 
-    if (breath_weapons > 1)
+    if (fire_breath + poison_breath > 1)
         goto try_again;
 
-    if (elemental > 1)
+    if (ice_elemental + fire_elemental > 1)
+        goto try_again;
+
+    if (fire_breath + ice_elemental > 1)
         goto try_again;
 
     return ret;
@@ -1926,21 +1946,13 @@ void check_antennae_detect()
     {
         const monsters* mon = monster_at(*ri);
         if (!mon)
-            map_knowledge_forget_mons(*ri);
-        else if (!mons_is_firewood(mon))
         {
-            show_type old_obj = get_map_knowledge_obj(*ri);
-            show_type obj = show_type();
-
-            obj.cls = SH_MONSTER;
-            obj.feat = old_obj.feat;
-            obj.item = old_obj.item;
-            obj.mons = MONS_SENSED;
-            obj.colour = 0;
-
-            set_map_knowledge_obj(*ri, obj);
-            set_map_knowledge_detected_mons(*ri);
+            map_cell& cell = env.map_knowledge(*ri);
+            if (cell.detected_monster())
+                cell.clear_monster();
         }
+        else if (!mons_is_firewood(mon))
+            env.map_knowledge(*ri).set_detected_monster(MONS_SENSED);
     }
 }
 

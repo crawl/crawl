@@ -351,7 +351,7 @@ static void handle_hangup(int)
     // on key-presses to immediately return, including any call that was
     // still blocking in the main thread when the HUP signal was caught.
     // This should guarantee that the main thread will un-stall and
-    // will eventually return to _input() in acr.cc, which will then
+    // will eventually return to _input() in main.cc, which will then
     // call sighup_save_and_exit().
     //
     // The point to all this is that if a user is playing a game on a

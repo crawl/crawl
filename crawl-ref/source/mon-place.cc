@@ -130,18 +130,17 @@ bool feat_compatible(dungeon_feature_type feat_wanted,
 //
 // If you have an actual monster, use this instead of the overloaded function
 // that uses only the monster class to make decisions.
-bool monster_habitable_grid(const monsters *m,
+bool monster_habitable_grid(const monsters *mon,
                             dungeon_feature_type actual_grid)
 {
     // Zombified monsters enjoy the same habitat as their original.
-    const monster_type montype = mons_is_zombified(m) ? mons_zombie_base(m)
-                                                      : m->type;
+    const monster_type mt = mons_base_type(mon);
 
-    return (monster_habitable_grid(montype,
+    return (monster_habitable_grid(mt,
                                    actual_grid,
                                    DNGN_UNSEEN,
-                                   mons_flies(m),
-                                   m->cannot_move()));
+                                   mons_flies(mon),
+                                   mon->cannot_move()));
 }
 
 bool mons_airborne(int mcls, int flies, bool paralysed)
@@ -159,7 +158,7 @@ bool mons_airborne(int mcls, int flies, bool paralysed)
 // one check, so we no longer care if a water elemental springs into existence
 // on dry land, because they're supposed to be able to move onto dry land
 // anyway.
-bool monster_habitable_grid(monster_type montype,
+bool monster_habitable_grid(monster_type mt,
                             dungeon_feature_type actual_grid,
                             dungeon_feature_type wanted_grid_feature,
                             int flies, bool paralysed)
@@ -169,11 +168,11 @@ bool monster_habitable_grid(monster_type montype,
         return (false);
 
     const dungeon_feature_type feat_preferred =
-        habitat2grid(mons_class_primary_habitat(montype));
+        habitat2grid(mons_class_primary_habitat(mt));
     const dungeon_feature_type feat_nonpreferred =
-        habitat2grid(mons_class_secondary_habitat(montype));
+        habitat2grid(mons_class_secondary_habitat(mt));
 
-    const bool monster_is_airborne = mons_airborne(montype, flies, paralysed);
+    const bool monster_is_airborne = mons_airborne(mt, flies, paralysed);
 
     // If the caller insists on a specific feature type, try to honour
     // the request. This allows the builder to place amphibious
@@ -188,7 +187,7 @@ bool monster_habitable_grid(monster_type montype,
 
     // Special check for fire elementals since their habitat is floor which
     // is generally considered compatible with shallow water.
-    if (montype == MONS_FIRE_ELEMENTAL && feat_is_watery(actual_grid))
+    if (mt == MONS_FIRE_ELEMENTAL && feat_is_watery(actual_grid))
         return (false);
 
     if (feat_compatible(feat_preferred, actual_grid)
@@ -211,14 +210,14 @@ bool monster_habitable_grid(monster_type montype,
 }
 
 // Returns true if the monster can submerge in the given grid.
-bool monster_can_submerge(const monsters *mons, dungeon_feature_type feat)
+bool monster_can_submerge(const monsters *mon, dungeon_feature_type feat)
 {
-    if (testbits(env.pgrid(mons->pos()), FPROP_NO_SUBMERGE))
+    if (testbits(env.pgrid(mon->pos()), FPROP_NO_SUBMERGE))
         return (false);
-    if (!mons->is_habitable_feat(feat))
+    if (!mon->is_habitable_feat(feat))
         return (false);
-    if (mons_class_flag(mons->type, M_SUBMERGES))
-        switch (mons_habitat(mons))
+    if (mons_class_flag(mon->type, M_SUBMERGES))
+        switch (mons_habitat(mon))
         {
         case HT_WATER:
         case HT_AMPHIBIOUS:
@@ -437,7 +436,7 @@ monster_type pick_random_monster(const level_id &place,
     return pick_random_monster(place, level, level, chose_ood_monster);
 }
 
-std::vector<monster_type> _find_valid_monster_types(const level_id &place)
+static std::vector<monster_type> _find_valid_monster_types(const level_id &place)
 {
     static std::vector<monster_type> valid_monster_types;
     static level_id last_monster_type_place;
@@ -842,6 +841,7 @@ monster_type pick_random_monster_for_place(const level_id &place,
         chosen = pick_random_monster(place, lev, lev, NULL);
     while (!invalid_monster_type(chosen)
            && wanted_zombie_size != Z_NOZOMBIE
+           && !mons_class_flag(chosen, M_NO_POLY_TO)
            && mons_zombie_size(chosen) != wanted_zombie_size
            && (!want_corpse_capable
                || mons_class_can_leave_corpse(mons_species(chosen)))
@@ -1017,7 +1017,7 @@ int place_monster(mgen_data mg, bool force_pos)
     band_monsters[0] = mg.cls;
 
     // The (very) ugly thing band colour.
-    static unsigned char ugly_colour = BLACK;
+    static uint8_t ugly_colour = BLACK;
 
     if (create_band)
     {
@@ -1615,6 +1615,8 @@ static int _place_monster_aux(const mgen_data &mg,
         mon->mark_summoned(mg.abjuration_duration, true,
                            mg.summon_type);
     }
+    ASSERT(!invalid_monster_index(mg.foe)
+           || mg.foe == MHITYOU || mg.foe == MHITNOT);
     mon->foe = mg.foe;
 
     std::string blame_prefix;
@@ -1708,11 +1710,10 @@ static int _place_monster_aux(const mgen_data &mg,
 
     mark_interesting_monst(mon, mg.behaviour);
 
-    if (!Generating_Level && you.can_see(mon))
-        handle_seen_interrupt(mon);
-
     if (crawl_state.game_is_arena())
         arena_placed_monster(mon);
+    else if (!Generating_Level && you.can_see(mon))
+        handle_seen_interrupt(mon);
 
     return (mon->mindex());
 }
@@ -2234,6 +2235,7 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
     case MONS_YELLOW_DRACONIAN:
     case MONS_BLACK_DRACONIAN:
     case MONS_GREEN_DRACONIAN:
+    case MONS_GREY_DRACONIAN:
     case MONS_PALE_DRACONIAN:
         if (power > 18 && one_chance_in(3) && you.level_type == LEVEL_DUNGEON)
         {
@@ -2582,23 +2584,24 @@ static monster_type _band_member(band_type band, int power)
         break;
     case BAND_DRACONIAN:
     {
-        temp_rand = random2( (power < 24) ? 24 : 37 );
+        temp_rand = random2( (power < 24) ? 27 : 40 );
         mon_type =
-                ((temp_rand > 35) ? MONS_DRACONIAN_CALLER :     // 1 in 34
-                 (temp_rand > 33) ? MONS_DRACONIAN_KNIGHT :     // 2 in 34
-                 (temp_rand > 31) ? MONS_DRACONIAN_MONK :       // 2 in 34
-                 (temp_rand > 29) ? MONS_DRACONIAN_SHIFTER :    // 2 in 34
-                 (temp_rand > 27) ? MONS_DRACONIAN_ANNIHILATOR :// 2 in 34
-                 (temp_rand > 25) ? MONS_DRACONIAN_SCORCHER :   // 2 in 34
-                 (temp_rand > 23) ? MONS_DRACONIAN_ZEALOT :     // 2 in 34
-                 (temp_rand > 20) ? MONS_YELLOW_DRACONIAN :     // 3 in 34
-                 (temp_rand > 17) ? MONS_GREEN_DRACONIAN :      // 3 in 34
-                 (temp_rand > 14) ? MONS_BLACK_DRACONIAN :      // 3 in 34
-                 (temp_rand > 11) ? MONS_WHITE_DRACONIAN :      // 3 in 34
-                 (temp_rand >  8) ? MONS_PALE_DRACONIAN :       // 3 in 34
-                 (temp_rand >  5) ? MONS_PURPLE_DRACONIAN :     // 3 in 34
-                 (temp_rand >  2) ? MONS_MOTTLED_DRACONIAN :    // 3 in 34
-                                    MONS_RED_DRACONIAN );       // 3 in 34
+                ((temp_rand > 38) ? MONS_DRACONIAN_CALLER :     // 1
+                 (temp_rand > 36) ? MONS_DRACONIAN_KNIGHT :     // 2
+                 (temp_rand > 34) ? MONS_DRACONIAN_MONK :       // 2
+                 (temp_rand > 32) ? MONS_DRACONIAN_SHIFTER :    // 2
+                 (temp_rand > 30) ? MONS_DRACONIAN_ANNIHILATOR :// 2
+                 (temp_rand > 28) ? MONS_DRACONIAN_SCORCHER :   // 2
+                 (temp_rand > 26) ? MONS_DRACONIAN_ZEALOT :     // 2
+                 (temp_rand > 23) ? MONS_GREY_DRACONIAN :       // 3
+                 (temp_rand > 20) ? MONS_YELLOW_DRACONIAN :     // 3
+                 (temp_rand > 17) ? MONS_GREEN_DRACONIAN :      // 3
+                 (temp_rand > 14) ? MONS_BLACK_DRACONIAN :      // 3
+                 (temp_rand > 11) ? MONS_WHITE_DRACONIAN :      // 3
+                 (temp_rand >  8) ? MONS_PALE_DRACONIAN :       // 3
+                 (temp_rand >  5) ? MONS_PURPLE_DRACONIAN :     // 3
+                 (temp_rand >  2) ? MONS_MOTTLED_DRACONIAN :    // 3
+                                    MONS_RED_DRACONIAN );       // 3
         break;
     }
     case BAND_ILSUIW:
@@ -2688,6 +2691,7 @@ void mark_interesting_monst(monsters* monster, beh_type behaviour)
                 || you.level_type == LEVEL_ABYSS)
              && mons_rarity(monster->type) <= Options.rare_interesting
              && monster->hit_dice > 2 // Don't note the really low-hd monsters.
+             && !mons_class_flag(monster->type, M_NO_EXP_GAIN)
              && mons_rarity(monster->type) > 0)
     {
         interesting = true;
@@ -2771,11 +2775,8 @@ int mons_place(mgen_data mg)
         mg.cls    = _pick_zot_exit_defender();
         mg.flags |= MG_PERMIT_BANDS;
     }
-    else if (mg.cls == RANDOM_MONSTER
-        || mg.level_type == LEVEL_PANDEMONIUM && !mg.summoned())
-    {
+    else if (mg.cls == RANDOM_MONSTER)
         mg.flags |= MG_PERMIT_BANDS;
-    }
 
     // Translate level_type.
     switch (mg.level_type)
@@ -3241,14 +3242,7 @@ monster_type summon_any_dragon(dragon_class_type dct)
         break;
 
     case DRAGON_DRACONIAN:
-        temp_rand = random2(70);
-        mon = ((temp_rand > 60) ? MONS_YELLOW_DRACONIAN :
-               (temp_rand > 50) ? MONS_BLACK_DRACONIAN :
-               (temp_rand > 40) ? MONS_PALE_DRACONIAN :
-               (temp_rand > 30) ? MONS_GREEN_DRACONIAN :
-               (temp_rand > 20) ? MONS_PURPLE_DRACONIAN :
-               (temp_rand > 10) ? MONS_RED_DRACONIAN
-                                : MONS_WHITE_DRACONIAN);
+        mon = random_draconian_monster_species();
         break;
 
     case DRAGON_DRAGON:

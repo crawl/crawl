@@ -940,7 +940,7 @@ static bool _cloud_helper(cloud_func func, const coord_def& where,
     return (false);
 }
 
-bool _spell_range_varies(spell_type spell)
+static bool _spell_range_varies(spell_type spell)
 {
     int minrange = _seekspell(spell)->min_range;
     int maxrange = _seekspell(spell)->max_range;
@@ -1081,7 +1081,7 @@ spell_type zap_type_to_spell(zap_type zap)
 
 bool spell_is_empowered(spell_type spell)
 {
-    if( (you.religion == GOD_VEHUMET)
+    if ( (you.religion == GOD_VEHUMET)
         && vehumet_supports_spell(spell)
         && piety_rank() > 2)
     {

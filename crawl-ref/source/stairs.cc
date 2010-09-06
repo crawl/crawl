@@ -675,8 +675,8 @@ void up_stairs(dungeon_feature_type force_stair,
             xom_is_stimulated(255, "Xom snickers loudly.", true);
     }
 
-    if (you.skills[SK_TRANSLOCATIONS] > 0 && !allow_control_teleport( true ))
-        mpr( "You sense a powerful magical force warping space.", MSGCH_WARN );
+    if (!allow_control_teleport(true))
+        mpr("You sense a powerful magical force warping space.", MSGCH_WARN);
 
     if (collect_travel_data)
     {
@@ -801,7 +801,7 @@ static void _player_change_level_downstairs(dungeon_feature_type stair_find,
     }
 }
 
-void _maybe_destroy_trap(const coord_def &p)
+static void _maybe_destroy_trap(const coord_def &p)
 {
     trap_def* trap = find_trap(p);
     if (trap)
@@ -914,7 +914,7 @@ void down_stairs(dungeon_feature_type force_stair,
         if (!is_valid_shaft_level())
         {
             if (known_trap)
-                mpr("The shaft disappears is a puff of logic!");
+                mpr("The shaft disappears in a puff of logic!");
             _maybe_destroy_trap(you.pos());
             return;
         }
@@ -933,11 +933,9 @@ void down_stairs(dungeon_feature_type force_stair,
         }
         shaft_level = absdungeon_depth(shaft_dest.branch, shaft_dest.depth);
 
-#ifdef DGL_MILESTONES
         if (!known_trap && shaft_level - you.absdepth0 > 1)
             mark_milestone("shaft", "fell down a shaft to " +
                                     short_place_name(shaft_dest) + ".");
-#endif
 
         if (you.flight_mode() != FL_FLY || force_stair)
             mpr("You fall through a shaft!");
@@ -1017,7 +1015,6 @@ void down_stairs(dungeon_feature_type force_stair,
     // Fire level-leaving trigger.
     _leaving_level_now();
 
-#ifdef DGL_MILESTONES
     if (!force_stair && !crawl_state.game_is_arena())
     {
         // Not entirely accurate - the player could die before
@@ -1030,7 +1027,6 @@ void down_stairs(dungeon_feature_type force_stair,
             mark_milestone("abyss.exit", "escaped from the Abyss!");
         }
     }
-#endif
 
     // Interlevel travel data.
     const bool collect_travel_data = can_travel_interlevel();
@@ -1127,9 +1123,7 @@ void down_stairs(dungeon_feature_type force_stair,
         // Are these too long?
         mpr("As you enter the labyrinth, previously moving walls settle noisily into place.");
         mpr("You hear the metallic echo of a distant snort before it fades into the rock.");
-#ifdef DGL_MILESTONES
         mark_milestone("br.enter", "entered a Labyrinth.");
-#endif
         break;
 
     case LEVEL_ABYSS:
@@ -1255,46 +1249,19 @@ void down_stairs(dungeon_feature_type force_stair,
         }
     }
 
-    unsigned char pc = 0;
-    unsigned char pt = random2avg(28, 3);
-
-
     switch (you.level_type)
     {
     case LEVEL_ABYSS:
         grd(you.pos()) = DNGN_FLOOR;
 
         init_pandemonium();     // colours only
-
-        if (player_in_hell())
-        {
-            you.where_are_you = you.hell_branch;
-            you.absdepth0    = you.hell_exit - 1;
-        }
         break;
 
     case LEVEL_PANDEMONIUM:
-        if (old_level.level_type == LEVEL_PANDEMONIUM)
-        {
-            init_pandemonium();
+        init_pandemonium();
 
-            for (pc = 0; pc < pt; pc++)
-                pandemonium_mons();
-        }
-        else
-        {
-            init_pandemonium();
-
-            for (pc = 0; pc < pt; pc++)
-                pandemonium_mons();
-
-            if (player_in_hell())
-            {
-                you.where_are_you = BRANCH_MAIN_DUNGEON;
-                you.hell_exit  = 26;
-                you.absdepth0 = 26;
-            }
-        }
+        for (int pc = random2avg(28, 3); pc > 0; pc--)
+            pandemonium_mons();
         break;
 
     default:
@@ -1310,8 +1277,8 @@ void down_stairs(dungeon_feature_type force_stair,
     // Clear list of beholding monsters.
     you.clear_beholders();
 
-    if (you.skills[SK_TRANSLOCATIONS] > 0 && !allow_control_teleport( true ))
-        mpr( "You sense a powerful magical force warping space.", MSGCH_WARN );
+    if (!allow_control_teleport(true))
+        mpr("You sense a powerful magical force warping space.", MSGCH_WARN);
 
     trackers_init_new_level(true);
 

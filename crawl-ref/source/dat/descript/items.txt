@@ -601,7 +601,7 @@ The scaly skin of a dragon. It can be fashioned into proper armour, but even in 
 %%%%
 javelin
 
-A long, light polearm that can be thrown by hand. {{
+A long, light stick that can be thrown by hand. {{
 if you.race() == "Halfling"
     or you.race() == "Kobold"
     or you.race() == "Spriggan"
@@ -746,6 +746,10 @@ pear
 
 A delicious juicy fruit.
 %%%%
+piece of ambrosia
+
+A portion of strange substance, produced by ghost moths. Consuming it provides magical energy as well as nutrition, at the cost of losing your mental focus for a short period.
+%%%%
 plate mail
 
 A suit of mail and large plates of metal.
@@ -865,6 +869,10 @@ A terribly venomous potion.
 potion of water
 
 A unique substance, vital for the existence of most life.
+%%%%
+quad damage
+
+A mysterious item resembling a rune of some kind. Once evoked, it will make the user glow blue and add a reverb to all sound... and there may be other effects as well.
 %%%%
 quarterstaff
 
@@ -991,10 +999,6 @@ rod of destruction
 
 This rod contains spells of mayhem and destruction.
 %%%%
-rod of discovery
-
-This rod contains spells which reveal various aspects of an explorer's surroundings to them.
-%%%%
 rod of smiting
 
 This rod allows its wielder to smite foes from afar.
@@ -1118,7 +1122,7 @@ It is easy to be blinded to the essential uselessness of this scroll by the sens
 %%%%
 scroll of recharging
 
-This scroll restores the charges of any magical wand or rod chosen by its reader, and can also be used to increase the damage dealt by weapons of electrocution.
+This scroll restores the charges of any magical wand or rod chosen by its reader.
 %%%%
 scroll of remove curse
 
@@ -1218,7 +1222,7 @@ This staff increases the power of earth spells cast by its wielder. It can crush
 %%%%
 staff of enchantment
 
-This staff increases the power of enchantments cast by its wielder.
+This staff increases the power of enchantments cast by its wielder, and increases their resistance to hostile enchantments.
 %%%%
 staff of energy
 

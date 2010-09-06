@@ -490,6 +490,7 @@ lychee FOOD_LYCHEE
 beef_jerky FOOD_BEEF_JERKY
 cheese FOOD_CHEESE
 sausage FOOD_SAUSAGE
+piece_of_ambrosia FOOD_AMBROSIA
 bone FOOD_BONE
 chunk FOOD_CHUNK
 chunk_rotten FOOD_CHUNK_ROTTEN
@@ -809,7 +810,6 @@ i-rod_destruction_ice ROD_DESTRUCTION_ICE
 i-rod_destruction_lightning ROD_DESTRUCTION_LIGHTNING
 i-rod_destruction_inaccuracy ROD_DESTRUCTION_INACCURACY
 i-rod_warding ROD_WARDING
-i-rod_discovery ROD_DISCOVERY
 i-rod_demonology ROD_DEMONOLOGY
 i-rod_striking ROD_STRIKING
 i-rod_venom ROD_VENOM ROD_ID_LAST

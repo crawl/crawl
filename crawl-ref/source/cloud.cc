@@ -80,9 +80,17 @@ static bool _killer_whose_match(kill_category whose, killer_type killer)
 }
 #endif
 
+static bool _is_opaque_cloud(cloud_type ctype);
+
+static void _los_cloud_changed(const coord_def& p, cloud_type t)
+{
+    if (_is_opaque_cloud(t))
+        invalidate_los_around(p);
+}
+
 static void _new_cloud( int cloud, cloud_type type, const coord_def& p,
                         int decay, kill_category whose, killer_type killer,
-                        unsigned char spread_rate, int colour, std::string name,
+                        uint8_t spread_rate, int colour, std::string name,
                         std::string tile)
 {
     ASSERT( env.cloud[cloud].type == CLOUD_NONE );
@@ -113,7 +121,7 @@ static void _new_cloud( int cloud, cloud_type type, const coord_def& p,
     env.cgrid(p)  = cloud;
     env.cloud_no++;
 
-    los_cloud_changed(p);
+    _los_cloud_changed(p, type);
 }
 
 static void _place_new_cloud(cloud_type cltype, const coord_def& p, int decay,
@@ -336,6 +344,7 @@ void delete_cloud( int cloud )
     cloud_struct& c = env.cloud[cloud];
     if (c.type != CLOUD_NONE)
     {
+        cloud_type t = c.type;
         if (c.type == CLOUD_RAIN)
             _maybe_leave_water(c);
 
@@ -349,7 +358,7 @@ void delete_cloud( int cloud )
         c.tile        = "";
 
         env.cgrid(c.pos) = EMPTY_CLOUD;
-        los_cloud_changed(c.pos);
+        _los_cloud_changed(c.pos, t);
         c.pos.reset();
         env.cloud_no--;
     }
@@ -371,8 +380,8 @@ void move_cloud( int cloud, const coord_def& newpos )
         env.cgrid(oldpos) = EMPTY_CLOUD;
         env.cgrid(newpos) = cloud;
         env.cloud[cloud].pos = newpos;
-        los_cloud_changed(oldpos);
-        los_cloud_changed(newpos);
+        _los_cloud_changed(oldpos, env.cloud[cloud].type);
+        _los_cloud_changed(newpos, env.cloud[cloud].type);
     }
 }
 
@@ -536,6 +545,11 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
             }
         }
     }
+}
+
+static bool _is_opaque_cloud(cloud_type ctype)
+{
+    return (ctype >= CLOUD_OPAQUE_FIRST && ctype <= CLOUD_OPAQUE_LAST);
 }
 
 bool is_opaque_cloud(int cloud_idx)

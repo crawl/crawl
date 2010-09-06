@@ -48,6 +48,7 @@
 #include "travel.h"
 #include "viewchar.h"
 #include "viewgeom.h"
+#include "showsymb.h"
 
 #ifndef USE_TILE
 #include "directn.h"
@@ -231,7 +232,7 @@ void update_turn_count()
 
     // Show the turn count starting from 1. You can still quit on turn 0.
     textcolor(HUD_VALUE_COLOUR);
-    cprintf("%ld", you.num_turns);
+    cprintf("%d", you.num_turns);
     textcolor(LIGHTGREY);
 }
 
@@ -363,7 +364,7 @@ static void _print_stats_hp(int x, int y)
         HP_Bar.draw(19, y, you.hp, you.hp_max);
 }
 
-short _get_stat_colour(stat_type stat)
+static short _get_stat_colour(stat_type stat)
 {
     if (you.stat_zero[stat] > 0)
         return (LIGHTRED);
@@ -585,6 +586,12 @@ static void _get_status_lights(std::vector<status_light>& out)
         out.push_back(status_light(color, "DDoor"));
     }
 
+    if (you.duration[DUR_QUAD_DAMAGE])
+    {
+        int color = _dur_colour(BLUE, dur_expiring(DUR_QUAD_DAMAGE));
+        out.push_back(status_light(color, "Quad"));
+    }
+
     if (you.duration[DUR_DEFLECT_MISSILES])
     {
         int color = _dur_colour( MAGENTA, dur_expiring(DUR_DEFLECT_MISSILES) );
@@ -621,7 +628,8 @@ static void _get_status_lights(std::vector<status_light>& out)
         }
         else
         {
-            int color = _dur_colour(BLUE, expiring);
+            int color = _dur_colour(you.attribute[ATTR_LEV_UNCANCELLABLE] ?
+                                    GREEN : BLUE, expiring);
             out.push_back(status_light(color, "Lev"));
         }
     }
@@ -717,15 +725,15 @@ static void _get_status_lights(std::vector<status_light>& out)
     if (you.attribute[ATTR_HELD])
         out.push_back(status_light(RED, "Held"));
 
-    if (you.magic_contamination || you.backlit(false))
+    const int cont = get_contamination_level();
+    if (cont || you.backlit(false))
     {
-        int colour = LIGHTBLUE;
-        if (you.magic_contamination > 0)
-        {
-            colour = (you.magic_contamination > 5
-                        ? _bad_ench_colour( you.magic_contamination, 15, 25 )
-                        : DARKGREY);
-        }
+        int colour = DARKGREY;
+        if (you.backlit(false))
+            colour = LIGHTBLUE;
+        if (cont > 1)
+            colour = _bad_ench_colour(cont, 2, 3);
+
         out.push_back(status_light(colour, "Glow"));
     }
 
@@ -769,7 +777,7 @@ static void _print_status_lights(int y)
     const size_t line_end = crawl_view.hudsz.y+1;
 
     cgotoxy(1, line_cur, GOTO_STAT);
-    ASSERT(wherex()-crawl_view.hudp.x == 0);
+    ASSERT_SAVE(wherex() == crawl_view.hudp.x);
 
     size_t i_light = 0;
     while (true)
@@ -1062,19 +1070,18 @@ static bool _mons_hostile(const monsters *mon)
     return (!mon->friendly() && !mon->neutral());
 }
 
-static std::string _get_monster_name(const monster_info& m,
-                                     int count)
+static std::string _get_monster_name(const monster_info& mi,
+                                     int count, bool fullname)
 {
     std::string desc = "";
-    const monsters *mon = m.m_mon;
 
     bool adj = false;
-    if (mon->friendly())
+    if (mi.attitude == ATT_FRIENDLY)
     {
         desc += "friendly ";
         adj = true;
     }
-    else if (mon->neutral())
+    else if (mi.attitude != ATT_HOSTILE)
     {
         desc += "neutral ";
         adj = true;
@@ -1082,11 +1089,11 @@ static std::string _get_monster_name(const monster_info& m,
 
     std::string monpane_desc;
     int col;
-    m.to_string(count, monpane_desc, col);
+    mi.to_string(count, monpane_desc, col, fullname);
 
     if (count == 1)
     {
-        if (!mon->is_named())
+        if (!mi.is(MB_NAME_THE))
         {
             desc = ((!adj && is_vowel(monpane_desc[0])) ? "an "
                                                         : "a ")
@@ -1151,13 +1158,13 @@ std::string mpr_monster_list(bool past)
     {
         if (i > 0 && monster_info::less_than(mons[i-1], mons[i]))
         {
-            describe.push_back(_get_monster_name(mons[i-1], count).c_str());
+            describe.push_back(_get_monster_name(mons[i-1], count, true).c_str());
             count = 0;
         }
         count++;
     }
 
-    describe.push_back(_get_monster_name(mons[mons.size()-1], count).c_str());
+    describe.push_back(_get_monster_name(mons[mons.size()-1], count, true).c_str());
 
     msg = "You ";
     msg += (past ? "could" : "can");
@@ -1182,7 +1189,7 @@ static void _print_next_monster_desc(const std::vector<monster_info>& mons,
     for (end = start + 1; end < mons.size(); ++end)
     {
         // Array is sorted, so if !(m1 < m2), m1 and m2 are "equal".
-        if (monster_info::less_than(mons[start], mons[end], zombified))
+        if (monster_info::less_than(mons[start], mons[end], zombified, zombified))
             break;
     }
     // Postcondition: all monsters in [start, end) are "equal"
@@ -1204,8 +1211,9 @@ static void _print_next_monster_desc(const std::vector<monster_info>& mons,
         for (unsigned int i_mon = start; i_mon < end; i_mon++)
         {
             monster_info mi = mons[i_mon];
-            textcolor(mi.m_glyph_colour);
-            cprintf("%s", stringize_glyph(mi.m_glyph).c_str());
+            glyph g = get_mons_glyph(mi.mon());
+            textcolor(g.col);
+            cprintf("%s", stringize_glyph(g.ch).c_str());
             ++printed;
 
             // Printing too many looks pretty bad, though.
@@ -1222,7 +1230,7 @@ static void _print_next_monster_desc(const std::vector<monster_info>& mons,
             monster_info mi = mons[start];
 
             int dam_color;
-            switch (mi.m_damage_level)
+            switch (mi.dam)
             {
             // NOTE: In os x, light versions of foreground colors are OK,
             //       but not background colors.  So stick wth standards.
@@ -1259,7 +1267,7 @@ static void _print_next_monster_desc(const std::vector<monster_info>& mons,
         {
             int desc_color;
             std::string desc;
-            mons[start].to_string(count, desc, desc_color);
+            mons[start].to_string(count, desc, desc_color, zombified);
             textcolor(desc_color);
             desc.resize(crawl_view.mlistsz.x-printed, ' ');
             cprintf("%s", desc.c_str());
@@ -1304,15 +1312,13 @@ int update_monster_pane()
 
         // Use type names rather than full names ("small zombie" vs
         // "rat zombie") in order to take up fewer lines.
-        for (unsigned int i = 0; i < mons.size(); i++)
-            mons[i].m_fullname = false;
 
         std::sort(mons.begin(), mons.end(),
                   monster_info::less_than_wrapper);
 
         lines_needed = mons.size();
         for (unsigned int i = 1; i < mons.size(); i++)
-            if (!monster_info::less_than(mons[i-1], mons[i], false))
+            if (!monster_info::less_than(mons[i-1], mons[i], false, false))
                 --lines_needed;
     }
 
@@ -1915,7 +1921,7 @@ static std::vector<formatted_string> _get_overview_resistances(
 }
 
 // New scrollable status overview screen, including stats, mutations etc.
-char _get_overview_screen_results()
+static char _get_overview_screen_results()
 {
     bool calc_unid = false;
     formatted_scroller overview;
@@ -2007,7 +2013,7 @@ void print_overview_screen()
     }
 }
 
-std::string _get_expiration_string(duration_type dur, const char* msg)
+static std::string _get_expiration_string(duration_type dur, const char* msg)
 {
     std::string help = msg;
     if (dur_expiring(dur))
@@ -2249,15 +2255,15 @@ std::string _status_mut_abilities()
         status.push_back(help);
     }
 
-    if (you.magic_contamination > 0)
+    const int cont = get_contamination_level();
+    if (cont > 0)
     {
-        const int cont = get_contamination_level();
         snprintf(info, INFO_SIZE, "%sglowing",
-                 (cont == 0) ? "very slightly " :
-                 (cont == 1) ? "slightly " :
-                 (cont == 2) ? "" :
-                 (cont == 3) ? "moderately " :
-                 (cont == 4) ? "heavily "
+                 (cont == 1) ? "very slightly " :
+                 (cont == 2) ? "slightly " :
+                 (cont == 3) ? "" :
+                 (cont == 4) ? "moderately " :
+                 (cont == 5) ? "heavily "
                              : "really heavily ");
 
         status.push_back(info);

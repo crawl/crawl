@@ -24,9 +24,9 @@ class  level_id;
 class  dlua_chunk;
 class  monsters;
 
-typedef unsigned char hash_size;
-typedef unsigned char vec_size;
-typedef unsigned char store_flags;
+typedef uint8_t hash_size;
+typedef uint8_t vec_size;
+typedef uint8_t store_flags;
 
 #define VEC_MAX_SIZE  255
 #define HASH_MAX_SIZE 255

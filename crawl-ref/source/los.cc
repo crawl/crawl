@@ -256,7 +256,7 @@ struct cellray
 // This determines which ray is considered better by find_ray,
 // used with list::sort.
 // Returns true if a is strictly better than b, false else.
-bool _is_better(const cellray& a, const cellray& b)
+static bool _is_better(const cellray& a, const cellray& b)
 {
     // Only compare cellrays with equal target.
     ASSERT(a.target() == b.target());
@@ -279,7 +279,7 @@ enum compare_type
 
 // Check whether one of the passed cellrays is a subray of the
 // other in terms of footprint.
-compare_type _compare_cellrays(const cellray& a, const cellray& b)
+static compare_type _compare_cellrays(const cellray& a, const cellray& b)
 {
     if (a.target() != b.target())
         return C_NEITHER;
@@ -475,7 +475,7 @@ bool complexity_lt( const std::pair<int,int>& lhs,
 }
 
 // Cast all rays
-void raycast()
+static void raycast()
 {
     static bool done_raycast = false;
     if (done_raycast)
@@ -566,7 +566,7 @@ void cellray::calc_params()
 // Find ray in positive quadrant.
 // opc has been translated for this quadrant.
 // XXX: Allow finding ray of minimum opacity.
-bool _find_ray_se(const coord_def& target, ray_def& ray,
+static bool _find_ray_se(const coord_def& target, ray_def& ray,
                   const opacity_func& opc, const circle_def& bds,
                   bool cycle)
 {
@@ -690,7 +690,11 @@ dungeon_feature_type ray_blocker(const coord_def& source,
     ray_def ray;
     if (!find_ray(source, target, ray, opc_default))
     {
+#ifdef WIZARD
+        ASSERT (you.xray_vision);
+#else
         ASSERT (false);
+#endif
         return (NUM_FEATURES);
     }
 
@@ -814,7 +818,7 @@ bool cell_see_cell(const coord_def& p1, const coord_def& p2)
 // Smoke will now only block LOS after two cells of smoke. This is
 // done by updating with a second array.
 
-void _losight_quadrant(los_grid& sh, const los_param& dat, int sx, int sy)
+static void _losight_quadrant(los_grid& sh, const los_param& dat, int sx, int sy)
 {
     const unsigned int num_cellrays = cellray_ends.size();
 
