@@ -3573,8 +3573,8 @@ static const char *cmd_ops[] = {
     "sprint-map", "edit-save",
 };
 
-const int num_cmd_ops = CLO_NOPS;
-bool arg_seen[num_cmd_ops];
+static const int num_cmd_ops = CLO_NOPS;
+static bool arg_seen[num_cmd_ops];
 
 std::string find_executable_path()
 {
