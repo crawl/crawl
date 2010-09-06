@@ -3200,60 +3200,6 @@ _Dowan_Duvessa_dies_distance_bytwin_
 
 @_Dowan_Duvessa_dies_distance_@
 %%%%
-############ DUANE ### A mercenary guarding the dungeon
-Duane
-
-@_Duane_common_@
-
-w:2
-
-@_Duane_rare_@
-%%%%
-confused Duane
-
-@The_monster@ screams, "I'll never tell! Never!"
-
-@The_monster@ says, "Torture me, I'll never tell!"
-
-@The_monster@ whispers, "Okay, okay - the keys are - no!"
-%%%%
-_Duane_common_
-
-VISUAL:@The_monster@ looks @at_foe@ suspiciously.
-
-VISUAL:@The_monster@ squints @at_foe@.
-
-@The_monster@ says, "People used to make fun of my ears. They're dead, now."
-
-@The_monster@ says, "Do you know why I'm the best guard in the world? I'm still alive."
-
-@The_monster@ says, "I think you've seen too much. Better that you die now."
-
-@The_monster@ says @to_foe@, "Are you looking at my ears?"
-
-@The_monster@ says, "Nobody's ever stolen something I've guarded."
-
-@The_monster@ says, "My employer pays me to say nothing."
-
-@The_monster@ says @to_foe@, "You won't find it. I'm very good at what I do."
-
-@The_monster@ says, "I'm not one to boast, but I'm very good."
-
-@The_monster@ hisses @at_foe@, "What do you want?"
-%%%%
-_Duane_rare_
-
-@The_monster@ says, "I could tell you some amazing stories... but then you'd have to die."
-
-@The_monster@ says, "Did you just laugh? Why did you laugh?" @player_only@
-
-@The_monster@ says @to_foe@, "I've still got bits of the last thief I caught. Want to see?"
-
-@The_monster@ says @to_foe@, "You look a bit like a thief."
-
-w:1
-@The_monster@ says, "The last guard my employer hired fell asleep on the job. Can you imagine that?"
-%%%%
 ############ DUVESSA ### An over-confident elf fighter, twin sister of Dowan
 twin_died Duvessa
 
@@ -3574,55 +3520,6 @@ w:1
 @The_monster@ says, "Even the Halls of Hell could not contain me."
 
 @The_monster@ says, "I will defeat you, of this I have no doubt!" @player_only@
-%%%%
-############ FRANCIS ### A wizard looking for body-parts as spell components
-Francis
-
-@_Francis_common_@
-
-w:4
-@_Francis_rare_@
-%%%%
-_Francis_common_
-
-SPELL:@The_monster@ casts a spell.
-ENCHANT:@The_monster@'s hands start to glow with a soft light.
-
-VISUAL:@The_monster@ ponders the situation.
-
-VISUAL:@The_monster@ looks for a scalpel.
-
-VISUAL:@The_monster@ throws something at @foe@.
-
-@The_monster@ says @to_foe@, "You've got nice eyes. I could use them."
-
-@The_monster@ says @to_foe@, "I only need a few of your organs!"
-
-@The_monster@ says @to_foe@, "This won't hurt a bit."
-
-@The_monster@ says @to_foe@, "I have something special for you."
-
-@The_monster@ says @to_foe@, "Don't worry, I'll take only what I need."
-%%%%
-_Francis_rare_
-
-@The_monster@ says @to_foe@, "Relax, I know what I'm doing!"
-
-@The_monster@ asks @foe,@ "Did you know that corpses are an important natural resource?"
-
-@The_monster@ asks @foe,@ "How about a little dissection?"
-
-@The_monster@ says @to_foe@, "Excuse me, but I need your head."
-
-@The_monster@ says @to_foe@, "I want you in my laboratory!"
-
-@The_monster@ says @to_foe@, "What about your heart? Do you need it?"
-
-@The_monster@ screams @at_foe@, "Don't move! I want to cut off your ear!"
-
-@The_monster@ says @to_foe@, "Say, could I borrow your tongue for a while?"
-
-## END Francis ##
 %%%%
 ############ FREDERICK ### A mercenary guarding the dungeon
 Frederick
@@ -4623,46 +4520,6 @@ Nikola
 
 @The_monster@ mumbles, "Hm, I wonder if you're conductive."
 %%%%
-############ NORBERT ### A skilled warrior looking for some fame. More kills = more fame.
-Norbert
-
-@_Norbert_common_@
-
-w:5
-@_Norbert_rare_@
-%%%%
-_Norbert_common_
-
-VISUAL:@The_monster@ smiles happily.
-
-@The_monster@ asks @foe,@ "Did you write a will? You should."
-
-@The_monster@ says @to_foe@, "I love killing ugly monsters like you."
-
-@The_monster@ says @to_foe@, "Another dead monster... It must be my lucky day!"
-
-@The_monster@ screams @at_foe@, "Die, monster!"
-
-@The_monster@ screams @at_foe@, "Blood and destruction!"
-
-@The_monster@ screams @at_foe@, "Pray, because you'll die soon!"
-
-@The_monster@ shouts @at_foe@, "Your time has come!"
-%%%%
-_Norbert_rare_
-
-@The_monster@ says @to_foe@, "A pity your head will make such an ugly trophy."
-
-@The_monster@ says @to_foe@, "You know, it's an honour to die by my hand."
-
-@The_monster@ says @to_foe@, "I'm sorry but you don't have a chance."
-
-@The_monster@ screams @at_foe@, "I'm a hero!"
-
-@The_monster@ shouts @at_foe@, "YES! Another notch!"
-
-## END Norbert ##
-%%%%
 ############ NORRIS ### An enlightened but crazy man
 Norris
 
@@ -5306,24 +5163,24 @@ VISUAL:@The_monster@ grins evilly.
 @The_monster@ screams @at_foe@, "I love blood!"
 ## END Urug ##
 %%%%
-############ WAYNE ### A dwarf. Nuff said.
-Wayne
+############ WIGLAF ### A dwarf. Nuff said.
+Wiglaf
 
-@_Wayne_common_@
-
-w:5
-@_Wayne_rare_@
-
-@_Wayne_nondwarf_@
-%%%%
-related Wayne
-
-@_Wayne_common_@
+@_Wiglaf_common_@
 
 w:5
-@_Wayne_rare_@
+@_Wiglaf_rare_@
+
+@_Wiglaf_nondwarf_@
 %%%%
-_Wayne_common_
+related Wiglaf
+
+@_Wiglaf_common_@
+
+w:5
+@_Wiglaf_rare_@
+%%%%
+_Wiglaf_common_
 
 @The_monster@ says @to_foe@, "Ma axe will split yer heid!"
 
@@ -5331,7 +5188,7 @@ _Wayne_common_
 
 @The_monster@ yells out a battle-cry.
 %%%%
-_Wayne_rare_
+_Wiglaf_rare_
 
 VISUAL:@The_monster@ eyes you carefully - or perhaps drunkenly.
 
@@ -5357,7 +5214,7 @@ w:1
 w:1
 @The_monster@ says, "I'm nae pished! Nae yet."
 %%%%
-_Wayne_nondwarf_
+_Wiglaf_nondwarf_
 
 w:5
 @The_monster@ says, "Orcs, orcs, elves an' a glaikit @player_genus@." @player_only@
@@ -5367,7 +5224,7 @@ w:5
 @The_monster@ says @to_foe@, "Ye cannae match a dwarf in combat."
 
 @The_monster@ says @to_foe@, "Have ye nae fought a dwarf yet?"
-## END Wayne ##
+## END Wiglaf ##
 %%%%
 ############ XTAHUA ### An ancient dragon
 Xtahua
@@ -5496,6 +5353,9 @@ killer bee
 
 __NONE
 %%%%
+########################
+# Welcome to the circus!
+########################
 Killer Klown
 
 @_Killer_Klown_common_@
@@ -5520,6 +5380,8 @@ VISUAL:@The_monster@ grins with merry abandon.
 
 VISUAL:@The_monster@ pulls ten torches out off its hat and starts juggling.
 
+VISUAL:@The_monster@ sprays water @at_foe@.
+
 @The_monster@ howls with blood-lust!
 %%%%
 _Killer_Klown_rare_
@@ -5532,7 +5394,11 @@ VISUAL:@The_monster@ pokes out @possessive@ tongue.
 
 VISUAL:@The_monster@ grows four more heads, takes them off and juggles!
 
+VISUAL:@The_monster@ skips for a moment.
+
 @The_monster@ says @to_foe@, "Come and play with me!"
+
+@The_monster@ says, "Trust me, I'm a doctor."
 ## END Killer Klown ##
 %%%%
 moth of wrath
@@ -5560,6 +5426,20 @@ w:2
 sheep
 
 @The_monster@ "Baaaas" balefully.
+%%%%
+silenced silent spectre
+
+VISUAL:@The_monster@ gestures at you to be quiet.
+
+VISUAL:@The_monster@ flutters as if in a wind.
+
+VISUAL:@The_monster@ stares at you with its ghostly eyes.
+
+VISUAL:@The_monster@ fades in and out of visibility.
+
+VISUAL:@The_monster@ flickers into the darkness.
+
+VISUAL:@The_monster@ grins at you slowly.
 %%%%
 default silver statue
 
@@ -6272,3 +6152,54 @@ VISUAL:@The_monster@ looks at itself and cries without tears.
 
 # Pungent Stench
 @The_monster@ screams, "I am only a sick, bizarre, defaced creation."
+
+##### REMOVED #####
+############ FRANCIS ### A wizard looking for body-parts as spell components
+#Francis
+
+#@_Francis_common_@
+
+#w:4
+#@_Francis_rare_@
+#%%%%
+#_Francis_common_
+
+#SPELL:@The_monster@ casts a spell.
+#ENCHANT:@The_monster@'s hands start to glow with a soft light.
+
+#VISUAL:@The_monster@ ponders the situation.
+
+#VISUAL:@The_monster@ looks for a scalpel.
+
+#VISUAL:@The_monster@ throws something at @foe@.
+
+#@The_monster@ says @to_foe@, "You've got nice eyes. I could use them."
+
+#@The_monster@ says @to_foe@, "I only need a few of your organs!"
+
+#@The_monster@ says @to_foe@, "This won't hurt a bit."
+
+#@The_monster@ says @to_foe@, "I have something special for you."
+
+#@The_monster@ says @to_foe@, "Don't worry, I'll take only what I need."
+#%%%%
+#_Francis_rare_
+
+#@The_monster@ says @to_foe@, "Relax, I know what I'm doing!"
+
+#@The_monster@ asks @foe,@ "Did you know that corpses are an important natural resource?"
+
+#@The_monster@ asks @foe,@ "How about a little dissection?"
+
+#@The_monster@ says @to_foe@, "Excuse me, but I need your head."
+
+#@The_monster@ says @to_foe@, "I want you in my laboratory!"
+
+#@The_monster@ says @to_foe@, "What about your heart? Do you need it?"
+
+#@The_monster@ screams @at_foe@, "Don't move! I want to cut off your ear!"
+
+#@The_monster@ says @to_foe@, "Say, could I borrow your tongue for a while?"
+
+### END Francis ##
+#%%%%

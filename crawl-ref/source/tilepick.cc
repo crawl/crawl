@@ -386,7 +386,7 @@ tileidx_t tileidx_feature(const coord_def &gc)
             else if (player_in_branch(BRANCH_SHOALS))
                 t = TILE_SHOALS_SHALLOW_WATER;
 
-            monsters *mon = monster_at(gc);
+            monster* mon = monster_at(gc);
             if (mon)
             {
                 // Add disturbance to tile.
@@ -468,7 +468,7 @@ static bool _is_skeleton(const int z_type)
     return (z_type == MONS_SKELETON_SMALL || z_type == MONS_SKELETON_LARGE);
 }
 
-static tileidx_t _tileidx_monster_zombified(const monsters *mon)
+static tileidx_t _tileidx_monster_zombified(const monster* mon)
 {
     const int z_type = mon->type;
 
@@ -583,7 +583,7 @@ static tileidx_t _tileidx_monster_zombified(const monsters *mon)
 
 // Special case for *taurs which have a different tile
 // for when they have a bow.
-static int _bow_offset(const monsters *mon)
+static int _bow_offset(const monster* mon)
 {
     int mon_wep = mon->inv[MSLOT_WEAPON];
     if (mon_wep == NON_ITEM)
@@ -954,13 +954,15 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_MOTH_OF_WRATH:
         return TILEP_MONS_MOTH_OF_WRATH;
 
-    // small zombies etc. ('z')
+    // small zombies, etc. ('z')
     case MONS_ZOMBIE_SMALL:
         return TILEP_MONS_ZOMBIE_SMALL;
     case MONS_SIMULACRUM_SMALL:
         return TILEP_MONS_SIMULACRUM_SMALL;
     case MONS_SKELETON_SMALL:
         return TILEP_MONS_SKELETON_SMALL;
+    case MONS_WIGHT:
+        return TILEP_MONS_WIGHT;
     case MONS_SKELETAL_WARRIOR:
         return TILEP_MONS_SKELETAL_WARRIOR;
     case MONS_FLYING_SKULL:
@@ -1222,8 +1224,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_VAMPIRE_MAGE;
 
     // wraiths ('W')
-    case MONS_WIGHT:
-        return TILEP_MONS_WIGHT;
     case MONS_WRAITH:
         return TILEP_MONS_WRAITH;
     case MONS_SHADOW_WRAITH:
@@ -1261,7 +1261,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_APIS:
         return TILEP_MONS_APIS;
 
-    // large zombies etc. ('Z')
+    // large zombies, etc. ('Z')
     case MONS_ZOMBIE_LARGE:
         return TILEP_MONS_ZOMBIE_LARGE;
     case MONS_SKELETON_LARGE:
@@ -1646,8 +1646,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_JOSEPHINE;
     case MONS_HAROLD:
         return TILEP_MONS_HAROLD;
-    case MONS_NORBERT:
-        return TILEP_MONS_NORBERT;
     case MONS_JOZEF:
         return TILEP_MONS_JOZEF;
     case MONS_AGNES:
@@ -1656,16 +1654,12 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_MAUD;
     case MONS_LOUISE:
         return TILEP_MONS_LOUISE;
-    case MONS_FRANCIS:
-        return TILEP_MONS_FRANCIS;
     case MONS_FRANCES:
         return TILEP_MONS_FRANCES;
     case MONS_RUPERT:
         return TILEP_MONS_RUPERT;
-    case MONS_WAYNE:
-        return TILEP_MONS_WAYNE;
-    case MONS_DUANE:
-        return TILEP_MONS_DUANE;
+    case MONS_WIGLAF:
+        return TILEP_MONS_WIGLAF;
     case MONS_NORRIS:
         return TILEP_MONS_NORRIS;
     case MONS_FREDERICK:
@@ -1703,7 +1697,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     return TILEP_MONS_PROGRAM_BUG;
 }
 
-static tileidx_t _tileidx_monster_no_props(const monsters *mon)
+static tileidx_t _tileidx_monster_no_props(const monster* mon)
 {
     bool in_water = feat_is_water(grd(mon->pos()));
     const bool misled = (!crawl_state.game_is_arena() && you.misled());
@@ -1779,7 +1773,7 @@ static tileidx_t _tileidx_monster_no_props(const monsters *mon)
     }
 }
 
-tileidx_t tileidx_monster(const monsters *mons)
+tileidx_t tileidx_monster(const monster* mons)
 {
     tileidx_t ch = _tileidx_monster_no_props(mons);
 
@@ -1856,7 +1850,7 @@ tileidx_t tileidx_monster(const monsters *mons)
     return ch;
 }
 
-tileidx_t tileidx_draco_base(const monsters *mon)
+tileidx_t tileidx_draco_base(const monster* mon)
 {
     int draco = draco_subspecies(mon);
     int colour = 0;
@@ -1878,7 +1872,7 @@ tileidx_t tileidx_draco_base(const monsters *mon)
     return (TILEP_DRACO_BASE + colour);
 }
 
-tileidx_t tileidx_draco_job(const monsters *mon)
+tileidx_t tileidx_draco_job(const monster* mon)
 {
 
     switch (mon->type)
@@ -3866,7 +3860,7 @@ std::string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix)
     return (tile_string);
 }
 
-void tile_init_props(monsters *mon)
+void tile_init_props(monster* mon)
 {
     // Not necessary.
     if (mon->props.exists("monster_tile") || mon->props.exists("tile_num"))

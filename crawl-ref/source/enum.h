@@ -1291,6 +1291,7 @@ enum enchant_type
     ENCH_AWAKEN_FOREST,
     ENCH_EXPLODING,
     ENCH_BLEED,
+    ENCH_ANTIMAGIC,
     ENCH_FADING_AWAY,
     ENCH_PREPARING_RESURRECT,
 
@@ -1961,16 +1962,22 @@ enum monster_type                      // (int) menv[].type
     MONS_ERICA,
     MONS_JOSEPHINE,
     MONS_HAROLD,                       //  295
+#if (TAG_MAJOR_VERSION <= 29)
     MONS_NORBERT,
+#endif
     MONS_JOZEF,
     MONS_AGNES,
     MONS_MAUD,
     MONS_LOUISE,                       //  300
+#if (TAG_MAJOR_VERSION <= 29)
     MONS_FRANCIS,
+#endif
     MONS_FRANCES,
     MONS_RUPERT,
-    MONS_WAYNE,
+    MONS_WIGLAF,
+#if (TAG_MAJOR_VERSION <= 29)
     MONS_DUANE,                        //  305
+#endif
     MONS_XTAHUA,
     MONS_NORRIS,
     MONS_FREDERICK,
@@ -2144,8 +2151,9 @@ enum monster_type                      // (int) menv[].type
     MONS_IRON_ELEMENTAL,
     MONS_GIANT_SCORPION,
     MONS_GHOST_MOTH,
-    MONS_JUMPING_SPIDER,               
+    MONS_JUMPING_SPIDER,
     MONS_TARANTELLA,                   // 492
+    MONS_SILENT_SPECTRE,
 
     // Spriggans:
     MONS_SPRIGGAN = 500,
@@ -2386,7 +2394,9 @@ enum mon_spellbook_type
     MST_HELL_HOG,
     MST_SWAMP_DRAGON,
     MST_SWAMP_DRAKE,
-    MST_SERPENT_OF_HELL,               // 125
+#if (TAG_MAJOR_VERSION <= 29)
+    MST_SERPENT_OF_HELL_GEHENNA,       // 125
+#endif
     MST_BOGGART,
     MST_EYE_OF_DEVASTATION,
     MST_QUICKSILVER_DRAGON,
@@ -2435,7 +2445,7 @@ enum mon_spellbook_type
     MST_ALLIGATOR,
     MST_BORIS,
     MST_FREDERICK,
-    MST_WAYNE,                        // 180
+    MST_WIGLAF,
     MST_SPRIGGAN_DRUID,
     MST_THE_ENCHANTRESS,
     MST_HELLEPHANT,
@@ -2444,6 +2454,13 @@ enum mon_spellbook_type
     MST_IRON_ELEMENTAL,
     MST_MENNAS,
     MST_JUMPING_SPIDER,
+#if (TAG_MAJOR_VERSION > 29)
+    MST_SERPENT_OF_HELL_GEHENNA,       // 125
+#endif
+    MST_SERPENT_OF_HELL_COCYTUS,
+    MST_SERPENT_OF_HELL_TARTARUS,     // 190
+    MST_SERPENT_OF_HELL_DIS,
+    MST_NERGALLE,
     MST_CHERUB,
     MST_PHOENIX,
     MST_SILVER_STAR,
@@ -3055,6 +3072,7 @@ enum spell_type
     SPELL_AWAKEN_FOREST,
     SPELL_SUMMON_CANIFORMS,
     SPELL_IRON_ELEMENTALS,
+    SPELL_SUMMON_SPECTRAL_ORCS,
     SPELL_RESURRECT,
     SPELL_LIGHT_BEAM,
     SPELL_HOLY_WORD,

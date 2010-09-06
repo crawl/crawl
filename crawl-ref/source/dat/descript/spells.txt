@@ -406,7 +406,7 @@ This spell prevents a creature from moving.
 %%%%
 Passwall
 
-This spell tunes the caster's body such that it can instantly pass through solid rock. This can be dangerous, since it is possible for the spell to expire while the caster is en route, and it also takes time for the caster to attune to the rock, during which time they will be helpless.
+This spell tunes the caster's body such that it can instantly pass through solid rock. This can be dangerous, since it takes time for the caster to attune to the rock, during which time they will be helpless.
 %%%%
 Petrify
 

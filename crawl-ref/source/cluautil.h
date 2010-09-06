@@ -128,15 +128,15 @@ void clua_push_coord(lua_State *ls, const coord_def &c);
 class dgn_event;
 void clua_push_dgn_event(lua_State *ls, const dgn_event *devent);
 
-class monsters;
+class monster;
 struct MonsterWrap
 {
-    monsters *mons;
+    monster* mons;
     long      turn;
 };
 
 // XXX: These are currently defined outside cluautil.cc.
-void push_monster(lua_State *ls, monsters* mons);
+void push_monster(lua_State *ls, monster* mons);
 void clua_push_item(lua_State *ls, item_def *item);
 item_def *clua_get_item(lua_State *ls, int ndx);
 void lua_push_floor_items(lua_State *ls, int link);

@@ -158,7 +158,7 @@ bool recall(int type_recalled)
     int step_value     = 1;
     int end_count      = (MAX_MONSTERS - 1);
 
-    monsters *monster = NULL;
+    monster* mons = NULL;
 
     // someone really had to make life difficult {dlb}:
     // sometimes goes through monster list backwards
@@ -172,40 +172,40 @@ bool recall(int type_recalled)
     for (loopy = start_count; loopy != end_count + step_value;
          loopy += step_value)
     {
-        monster = &menv[loopy];
+        mons = &menv[loopy];
 
-        if (monster->type == MONS_NO_MONSTER)
+        if (mons->type == MONS_NO_MONSTER)
             continue;
 
-        if (!monster->friendly())
+        if (!mons->friendly())
             continue;
 
-        if (mons_class_is_stationary(monster->type)
-            || mons_is_conjured(monster->type))
+        if (mons_class_is_stationary(mons->type)
+            || mons_is_conjured(mons->type))
         {
             continue;
         }
 
-        if (!monster_habitable_grid(monster, DNGN_FLOOR))
+        if (!monster_habitable_grid(mons, DNGN_FLOOR))
             continue;
 
         if (type_recalled == 1) // undead
         {
-            if (monster->holiness() != MH_UNDEAD)
+            if (mons->holiness() != MH_UNDEAD)
                 continue;
         }
         else if (type_recalled == 2) // Beogh
         {
-            if (!is_orcish_follower(monster))
+            if (!is_orcish_follower(mons))
                 continue;
         }
 
         coord_def empty;
         if (empty_surrounds(you.pos(), DNGN_FLOOR, 3, false, empty)
-            && monster->move_to_pos(empty))
+            && mons->move_to_pos(empty))
         {
             // only informed if monsters recalled are visible {dlb}:
-            if (simple_monster_message(monster, " is recalled."))
+            if (simple_monster_message(mons, " is recalled."))
                 success = true;
         }
         else
@@ -287,16 +287,16 @@ static int _intoxicate_monsters(coord_def where, int pow, int, actor *)
 {
     UNUSED( pow );
 
-    monsters *monster = monster_at(where);
-    if (monster == NULL
-        || mons_intel(monster) < I_NORMAL
-        || monster->holiness() != MH_NATURAL
-        || monster->res_poison() > 0)
+    monster* mons = monster_at(where);
+    if (mons == NULL
+        || mons_intel(mons) < I_NORMAL
+        || mons->holiness() != MH_NATURAL
+        || mons->res_poison() > 0)
     {
         return 0;
     }
 
-    monster->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_YOU));
+    mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_YOU));
     return 1;
 }
 
@@ -390,6 +390,7 @@ bool cast_fulsome_distillation(int pow, bool check_range)
         break;
 
     case CE_POISONOUS:
+    case CE_POISON_CONTAM:
         pot_type = POT_POISON;
         break;
 

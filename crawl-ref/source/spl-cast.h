@@ -60,8 +60,6 @@ int calc_spell_range(spell_type spell, int power = 0,
                      bool real_cast = false);
 int spell_enhancement( unsigned int typeflags );
 
-void exercise_spell(spell_type spell_ex, bool spc, bool divide);
-
 bool cast_a_spell( bool check_range, spell_type spell = SPELL_NO_SPELL );
 
 bool maybe_identify_staff( item_def &item, spell_type spell = SPELL_NO_SPELL );

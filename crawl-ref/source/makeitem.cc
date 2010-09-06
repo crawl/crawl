@@ -916,14 +916,15 @@ static weapon_type _determine_weapon_subtype(int item_level)
     return rc;
 }
 
-static bool _try_make_item_special_unrand(item_def& item, int force_type,
-                                          int item_level)
+static bool _try_make_item_unrand(item_def& item, int force_type)
 {
-    dprf("Making special unrand artefact.");
+    if (you.level_type == LEVEL_PANDEMONIUM)
+    {
+        return (false);
+    }
 
-    bool abyss = item_level == level_id(LEVEL_ABYSS).absdepth();
     int idx = find_okay_unrandart(item.base_type, force_type,
-                                  UNRANDSPEC_SPECIAL, abyss);
+                                  you.level_type == LEVEL_ABYSS);
 
     if (idx != -1 && make_item_unrandart(item, idx))
         return (true);
@@ -936,22 +937,16 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
                                       int item_level, bool force_randart = false)
 {
     if (item.sub_type != WPN_CLUB && item_level > 2
-        && x_chance_in_y(101 + item_level * 3, 4000) || force_randart)
+          && x_chance_in_y(101 + item_level * 3, 4000)
+        || force_randart)
     {
         // Make a randart or unrandart.
 
         // 1 in 50 randarts are unrandarts.
-        if (you.level_type != LEVEL_ABYSS
-            && you.level_type != LEVEL_PANDEMONIUM
-            && one_chance_in(50) && !force_randart)
+        if (one_chance_in(50) && !force_randart)
         {
-            const int idx = find_okay_unrandart(OBJ_WEAPONS, force_type,
-                                                UNRANDSPEC_NORMAL);
-            if (idx != -1)
-            {
-                make_item_unrandart(item, idx);
+            if (_try_make_item_unrand(item, force_type))
                 return (true);
-            }
         }
 
         // The other 98% are normal randarts.
@@ -986,14 +981,6 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         if (get_weapon_brand(item) == SPWPN_HOLY_WRATH)
             item.flags &= (~ISFLAG_CURSED);
         return (true);
-    }
-
-    // If it isn't an artefact yet, try to make a special unrand artefact.
-    if (item_level > 6
-        && one_chance_in(12)
-        && x_chance_in_y(31 + item_level * 3, 3000))
-    {
-        return (_try_make_item_special_unrand(item, force_type, item_level));
     }
 
     return (false);
@@ -1510,33 +1497,33 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
         case WPN_DEMON_WHIP:
         case WPN_DEMON_BLADE:
         case WPN_DEMON_TRIDENT:
-            if (one_chance_in(5))	// 4.9%, 7.3% blades
+            if (one_chance_in(5))       // 4.9%, 7.3% blades
                 rc = SPWPN_VAMPIRICISM;
 
-            if (one_chance_in(10))	// 2.7%, 4.0% blades
+            if (one_chance_in(10))      // 2.7%, 4.0% blades
                 rc = SPWPN_PAIN;
 
-            if (one_chance_in(3)	// 13.6%, 0% blades
+            if (one_chance_in(3)        // 13.6%, 0% blades
                 && (item.sub_type == WPN_DEMON_WHIP
                     || item.sub_type == WPN_DEMON_TRIDENT))
             {
                 rc = SPWPN_REACHING;
             }
 
-            if (one_chance_in(5))	// 10.2%
+            if (one_chance_in(5))       // 10.2%
                 rc = SPWPN_DRAINING;
 
-            if (one_chance_in(5))	// 12.8%
+            if (one_chance_in(5))       // 12.8%
                 rc = coinflip() ? SPWPN_FLAMING : SPWPN_FREEZING;
 
-            if (one_chance_in(5))	// 16%
+            if (one_chance_in(5))       // 16%
                 rc = SPWPN_ELECTROCUTION;
 
-            if (one_chance_in(5))	// 20%
+            if (one_chance_in(5))       // 20%
                 rc = SPWPN_VENOM;
             break;
 
-        case WPN_BLESSED_FALCHION:     // special gifts of TSO
+        case WPN_BLESSED_FALCHION:      // special gifts of TSO
         case WPN_BLESSED_LONG_SWORD:
         case WPN_BLESSED_SCIMITAR:
         case WPN_BLESSED_KATANA:
@@ -1608,6 +1595,7 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
     case SPWPN_REACHING:
     case SPWPN_RETURNING:
     case SPWPN_CONFUSE:
+    case SPWPN_ANTIMAGIC:
         if (is_range_weapon(item))
             return (false);
         break;
@@ -2051,18 +2039,10 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
         // Make a randart or unrandart.
 
         // 1 in 50 randarts are unrandarts.
-        if (you.level_type != LEVEL_ABYSS
-            && you.level_type != LEVEL_PANDEMONIUM
-            && one_chance_in(50) && !force_randart)
+        if (one_chance_in(50) && !force_randart)
         {
-            // The old generation code did not respect force_type here.
-            const int idx = find_okay_unrandart(OBJ_ARMOUR, force_type,
-                                                UNRANDSPEC_NORMAL);
-            if (idx != -1)
-            {
-                make_item_unrandart(item, idx);
+            if (_try_make_item_unrand(item, force_type))
                 return (true);
-            }
         }
 
         // The other 98% are normal randarts.
@@ -2101,14 +2081,6 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
         }
 
         return (true);
-    }
-
-    // If it isn't an artefact yet, try to make a special unrand artefact.
-    if (item_level > 6
-        && one_chance_in(12)
-        && x_chance_in_y(31 + item_level * 3, 3000))
-    {
-        return (_try_make_item_special_unrand(item, force_type, item_level));
     }
 
     return (false);
@@ -2950,25 +2922,15 @@ static void _generate_staff_item(item_def& item, int force_type, int item_level)
 static bool _try_make_jewellery_unrandart(item_def& item, int force_type,
                                           int item_level)
 {
-    bool rc = false;
-
     if (item_level > 2
-        && you.level_type != LEVEL_ABYSS
-        && you.level_type != LEVEL_PANDEMONIUM
         && one_chance_in(20)
         && x_chance_in_y(101 + item_level * 3, 2000))
     {
-        // The old generation code did not respect force_type here.
-        const int idx = find_okay_unrandart(OBJ_JEWELLERY, force_type,
-                                            UNRANDSPEC_NORMAL);
-        if (idx != -1)
-        {
-            make_item_unrandart(item, idx);
-            rc = true;
-        }
+        if (_try_make_item_unrand(item, force_type))
+            return (true);
     }
 
-    return (rc);
+    return (false);
 }
 
 static int _determine_ring_plus(int subtype)
@@ -3058,13 +3020,6 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
         && x_chance_in_y(101 + item_level * 3, 4000))
     {
         make_item_randart(item);
-    }
-    // If it isn't an artefact yet, try to make a special unrand artefact.
-    else if (item_level > 6
-             && one_chance_in(12)
-             && x_chance_in_y(31 + item_level * 3, 3000))
-    {
-        _try_make_item_special_unrand(item, force_type, item_level);
     }
     else if (item.sub_type == RING_HUNGER || item.sub_type == RING_TELEPORTATION
              || one_chance_in(50))
@@ -3364,13 +3319,13 @@ static bool _item_corpse_def(monster_type mons, item_def &item,
 // Creates a corpse item and returns its item index, or NON_ITEM if it
 // fails. The corpse is not linked into the item grid; nor is the
 // item's position set to anything meaningful.
-int item_corpse(monster_type monster, const item_spec &ispec)
+int item_corpse(monster_type mons, const item_spec &ispec)
 {
-    if (monster != MONS_NO_MONSTER)
-        monster = mons_species(monster);
+    if (mons != MONS_NO_MONSTER)
+        mons = mons_species(mons);
 
-    if (monster == MONS_NO_MONSTER
-        || !mons_class_can_leave_corpse(monster))
+    if (mons == MONS_NO_MONSTER
+        || !mons_class_can_leave_corpse(mons))
     {
         return (NON_ITEM);
     }
@@ -3380,7 +3335,7 @@ int item_corpse(monster_type monster, const item_spec &ispec)
         return (NON_ITEM);
 
     item_def &item(mitm[p]);
-    if (!_item_corpse_def(monster, item, ispec))
+    if (!_item_corpse_def(mons, item, ispec))
     {
         item.clear();
         return (NON_ITEM);
@@ -3407,6 +3362,7 @@ void reroll_brand(item_def &item, int item_level)
     default:
         ASSERT(!"can't reroll brands of this type");
     }
+    item_set_appearance(item);
 }
 
 static int _roll_rod_enchant(int item_level)

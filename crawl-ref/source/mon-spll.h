@@ -822,13 +822,46 @@
       }
     },
 
-    {  MST_SERPENT_OF_HELL,
+    {  MST_SERPENT_OF_HELL_GEHENNA,
       {
        SPELL_HELLFIRE,
-       SPELL_HELLFIRE,
+       SPELL_FIRE_BREATH,
        SPELL_NO_SPELL,
        SPELL_HELLFIRE,
-       SPELL_HELLFIRE,
+       SPELL_FIRE_BREATH,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_SERPENT_OF_HELL_COCYTUS,
+      {
+       SPELL_FREEZING_CLOUD,
+       SPELL_COLD_BREATH,
+       SPELL_NO_SPELL,
+       SPELL_FREEZING_CLOUD,
+       SPELL_COLD_BREATH,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_SERPENT_OF_HELL_DIS,
+      {
+       SPELL_METAL_SPLINTERS,
+       SPELL_QUICKSILVER_BOLT,
+       SPELL_NO_SPELL,
+       SPELL_METAL_SPLINTERS,
+       SPELL_QUICKSILVER_BOLT,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_SERPENT_OF_HELL_TARTARUS,
+      {
+       SPELL_BOLT_OF_DRAINING,
+       SPELL_MIASMA,
+       SPELL_NO_SPELL,
+       SPELL_BOLT_OF_DRAINING,
+       SPELL_MIASMA,
        SPELL_NO_SPELL
       }
     },
@@ -1363,7 +1396,7 @@
       }
     },
 
-    {  MST_WAYNE,
+    {  MST_WIGLAF,
       {
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
@@ -1448,6 +1481,17 @@
        SPELL_NO_SPELL,
        SPELL_MINOR_HEALING,
        SPELL_MINOR_HEALING
+      }
+    },
+
+    {  MST_NERGALLE,
+      {
+       SPELL_BOLT_OF_DRAINING,
+       SPELL_SUMMON_SPECTRAL_ORCS,
+       SPELL_NO_SPELL,
+       SPELL_DISPEL_UNDEAD,
+       SPELL_HASTE_OTHER,
+       SPELL_TELEPORT_SELF
       }
     },
 

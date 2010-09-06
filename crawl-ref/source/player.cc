@@ -29,11 +29,10 @@
 #include "directn.h"
 #include "effects.h"
 #include "env.h"
+#include "exercise.h"
 #include "fight.h"
-#include "food.h"
 #include "godabil.h"
 #include "godconduct.h"
-#include "goditem.h"
 #include "godpassive.h"
 #include "hints.h"
 #include "hiscores.h"
@@ -121,7 +120,8 @@ static void _moveto_maybe_repel_stairs()
     }
 }
 
-static bool _check_moveto_cloud(const coord_def& p)
+static bool _check_moveto_cloud(const coord_def& p,
+                                const std::string &move_verb)
 {
     const int cloud = env.cgrid(p);
     if (cloud != EMPTY_CLOUD && !you.confused())
@@ -133,7 +133,8 @@ static bool _check_moveto_cloud(const coord_def& p)
                 || ctype != env.cloud[ env.cgrid(you.pos()) ].type))
         {
             std::string prompt = make_stringf(
-                                    "Really step into that cloud of %s?",
+                                    "Really %s into that cloud of %s?",
+                                    move_verb.c_str(),
                                     cloud_name_at_index(cloud).c_str());
 
             if (!yesno(prompt.c_str(), false, 'n'))
@@ -146,7 +147,7 @@ static bool _check_moveto_cloud(const coord_def& p)
     return (true);
 }
 
-static bool _check_moveto_trap(const coord_def& p)
+static bool _check_moveto_trap(const coord_def& p, const std::string &move_verb)
 {
     // If we're walking along, give a chance to avoid traps.
     const dungeon_feature_type new_grid = env.grid(p);
@@ -165,13 +166,14 @@ static bool _check_moveto_trap(const coord_def& p)
             viewwindow();
 
             mprf(MSGCH_WARN,
-                 "Wait a moment, %s! Do you really want to step there?",
-                 you.your_name.c_str());
+                 "Wait a moment, %s! Do you really want to %s there?",
+                 you.your_name.c_str(),
+                 move_verb.c_str());
 
             if (!you.running.is_any_travel())
                 more();
 
-            exercise(SK_TRAPS_DOORS, 3);
+            practise(EX_TRAP_PASSIVE);
             print_stats();
             return (false);
         }
@@ -186,7 +188,11 @@ static bool _check_moveto_trap(const coord_def& p)
         const trap_type type = get_trap_type(p);
         if (type == TRAP_ZOT)
         {
-            if (!yes_or_no("Do you really want to step into the Zot trap"))
+            std::string prompt = make_stringf(
+                "Do you really want to %s into the Zot trap",
+                move_verb.c_str()
+            );
+            if (!yes_or_no(prompt.c_str()))
             {
                 canned_msg(MSG_OK);
                 return (false);
@@ -216,7 +222,8 @@ static bool _check_moveto_trap(const coord_def& p)
 #endif
         {
             std::string prompt = make_stringf(
-                "Really step %s that %s?",
+                "Really %s %s that %s?",
+                move_verb.c_str(),
                 (type == TRAP_ALARM) ? "onto" : "into",
                 feature_description(new_grid, type,
                                     "", DESC_BASENAME,
@@ -232,7 +239,8 @@ static bool _check_moveto_trap(const coord_def& p)
     return (true);
 }
 
-static bool _check_moveto_dangerous(const coord_def& p)
+static bool _check_moveto_dangerous(const coord_def& p,
+                                    const std::string move_verb)
 {
     if (you.can_swim() && feat_is_water(env.grid(p))
         || !is_feat_dangerous(env.grid(p)))
@@ -244,20 +252,21 @@ static bool _check_moveto_dangerous(const coord_def& p)
     return (false);
 }
 
-static bool _check_moveto_terrain(const coord_def& p)
+static bool _check_moveto_terrain(const coord_def& p,
+                                  const std::string &move_verb)
 {
     // Only consider terrain if player is not levitating.
     if (you.airborne())
         return (true);
 
-    return (_check_moveto_dangerous(p));
+    return (_check_moveto_dangerous(p, move_verb));
 }
 
-bool check_moveto(const coord_def& p)
+bool check_moveto(const coord_def& p, const std::string &move_verb)
 {
-    return (_check_moveto_cloud(p)
-            && _check_moveto_trap(p)
-            && _check_moveto_terrain(p));
+    return (_check_moveto_cloud(p, move_verb)
+            && _check_moveto_trap(p, move_verb)
+            && _check_moveto_terrain(p, move_verb));
 }
 
 void moveto_location_effects(dungeon_feature_type old_feat,
@@ -457,11 +466,23 @@ bool is_player_same_species(const int mon, bool transform)
     if (you.species == SP_MERFOLK && mons_genus(mon) == MONS_MERMAID)
         return (true);
 
-    return (mons_genus(mon) == mons_genus(player_mons()));
+    return (mons_genus(mon) == mons_genus(player_mons(false)));
 }
 
-monster_type player_mons()
+void update_player_symbol()
 {
+    you.symbol = Options.show_player_species ? player_mons() : transform_mons();
+}
+
+monster_type player_mons(bool transform)
+{
+    if (transform)
+    {
+        monster_type mons = transform_mons();
+        if (mons != MONS_PLAYER)
+            return mons;
+    }
+
     switch (you.species)
     {
     case SP_HUMAN:
@@ -533,7 +554,7 @@ monster_type player_mons()
     case SP_VAMPIRE:
         return MONS_VAMPIRE;
     case SP_DEEP_DWARF:
-        return MONS_DWARF; // until/if DD monsters are added
+        return MONS_DEEP_DWARF;
     case SP_ELF:
     case SP_HILL_DWARF:
     case SP_OGRE_MAGE:
@@ -638,7 +659,7 @@ bool you_can_wear(int eq, bool special_armour)
 bool player_has_feet()
 {
     if (you.species == SP_NAGA
-        || player_genus(GENPC_DRACONIAN))
+        || (you.species == SP_MERFOLK && you.swimming()))
     {
         return (false);
     }
@@ -1055,7 +1076,7 @@ int player_evokable_levitation()
 // Given an adjacent monster, returns true if the player can hit it (the
 // monster should not be submerged, or be submerged in shallow water if
 // the player has a polearm).
-bool player_can_hit_monster(const monsters *mon)
+bool player_can_hit_monster(const monster* mon)
 {
     if (!mon->submerged())
         return (true);
@@ -2114,9 +2135,7 @@ int player_size_adjusted_body_armour_evasion_penalty(int scale)
 
     const int size = you.body_size(PSIZE_BODY);
 
-    const int size_bonus_factor =
-        (size < SIZE_SMALL || size > SIZE_LARGE)?
-        (size - SIZE_MEDIUM) * scale / 4 : 0;
+    const int size_bonus_factor = (size - SIZE_MEDIUM) * scale / 4;
 
     const int size_adjusted_penalty =
         std::max(0,
@@ -2610,7 +2629,7 @@ void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
         // Bonus skill training from Sage.
         you.exp_available =
             (exp_gained * you.sage_bonus_degree) / 100 + exp_gained / 2;
-        exercise(you.sage_bonus_skill, 20);
+        practise(EX_SAGE, you.sage_bonus_skill);
         you.exp_available = old_avail;
         exp_gained /= 2;
     }
@@ -3358,14 +3377,19 @@ int check_stealth(void)
     // a personal silence spell would naturally be different, but this
     // silence radiates for a distance and prevents monster spellcasting,
     // which pretty much gives away the stealth game.
+    // this penalty is dependent on the actual amount of ambient noise
+    // in the level -doy
     if (you.duration[DUR_SILENCE])
-        stealth -= 50;
+        stealth -= 50 + current_level_ambient_noise();
 
     // Mutations.
     stealth += 25 * player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
     stealth += 40 * player_mutation_level(MUT_NIGHTSTALKER);
     if (player_mutation_level(MUT_TRANSLUCENT_SKIN) > 1)
         stealth += 20 * (player_mutation_level(MUT_TRANSLUCENT_SKIN) - 1);
+
+    // it's easier to be stealthy when there's a lot of background noise
+    stealth += 2 * current_level_ambient_noise();
 
     stealth = std::max(0, stealth);
 
@@ -4513,6 +4537,9 @@ int get_real_mp(bool include_items)
     if (enp > 50)
         enp = 50 + ((enp - 50) / 2);
 
+    if (include_items && player_equip_ego_type(EQ_WEAPON, SPWPN_ANTIMAGIC))
+        enp /= 3;
+
     enp = std::max(enp, 0);
 
     return enp;
@@ -4552,7 +4579,7 @@ void contaminate_player(int change, bool controlled, bool status_only, bool msg)
     int old_level  = get_contamination_level();
     int new_level  = 0;
 
-    you.magic_contamination = 
+    you.magic_contamination =
         std::max(0, std::min(250, you.magic_contamination + change));
 
     new_level = get_contamination_level();
@@ -4950,7 +4977,7 @@ void dec_exhaust_player(int delay)
     }
 }
 
-bool haste_player(int turns)
+bool haste_player(int turns, bool rageext)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -4972,7 +4999,7 @@ bool haste_player(int turns)
         mpr("You feel yourself speed up.");
     else if (you.duration[DUR_HASTE] > threshold * BASELINE_DELAY)
         mpr("You already have as much speed as you can handle.");
-    else
+    else if (!rageext)
     {
         mpr("You feel as though your hastened speed will last longer.");
         contaminate_player(1, true); // always deliberate
@@ -5081,13 +5108,11 @@ void levitate_player(int pow)
 int count_worn_ego(int which_ego)
 {
     int result = 0;
-    for (int slot = EQ_MIN_ARMOUR; slot <= EQ_MAX_ARMOUR; ++slot)
+    for (int eq = EQ_MIN_ARMOUR; eq <= EQ_MAX_ARMOUR; ++eq)
     {
-        if (you.equip[slot] != -1
-            && get_armour_ego_type(you.inv[you.equip[slot]]) == which_ego)
-        {
+        const item_def* item = you.slot_item(static_cast<equipment_type>(eq));
+        if (item && get_armour_ego_type(*item) == which_ego)
             result++;
-        }
     }
 
     return (result);
@@ -5581,13 +5606,7 @@ void player::shield_block_succeeded(actor *foe)
     actor::shield_block_succeeded(foe);
 
     shield_blocks++;
-    if (coinflip())
-        exercise(SK_SHIELDS, 1);
-}
-
-void player::exercise(skill_type sk, int qty)
-{
-    ::exercise(sk, qty);
+    practise(EX_SHIELD_BLOCK);
 }
 
 int player::skill(skill_type sk, bool bump) const
@@ -5951,16 +5970,13 @@ int player::res_magic() const
 
     switch (species)
     {
-    case SP_MOUNTAIN_DWARF:
-    case SP_HILL_ORC:
-        rm = experience_level * 2;
-        break;
     default:
         rm = experience_level * 3;
         break;
     case SP_HIGH_ELF:
     case SP_SLUDGE_ELF:
     case SP_DEEP_ELF:
+    case SP_MOUNTAIN_DWARF:
     case SP_VAMPIRE:
     case SP_DEMIGOD:
     case SP_OGRE:
@@ -6112,7 +6128,7 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
     // We ignore cleanup_dead here.
     if (agent->atype() == ACT_MONSTER)
     {
-        const monsters *mon = agent->as_monster();
+        const monster* mon = agent->as_monster();
         ouch(amount, mon->mindex(),
              KILLED_BY_MONSTER, "", mon->visible_to(&you));
     }
@@ -6202,6 +6218,10 @@ void player::paralyse(actor *who, int str)
     if (stasis_blocks_effect(true, true, "%s gives you a mild electric shock."))
         return;
 
+    if (!(who && who->as_monster() && who->as_monster()->type == MONS_RED_WASP) &&
+        duration[DUR_PARALYSIS])
+        return;
+
     int &paralysis(duration[DUR_PARALYSIS]);
 
     mprf("You %s the ability to move!",
@@ -6272,6 +6292,10 @@ int player::has_talons(bool allow_tran) const
         if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
             return (0);
     }
+
+    // XXX: Do merfolk in water belong under allow_tran?
+    if (you.species == SP_MERFOLK && you.swimming())
+        return (0);
 
     return (player_mutation_level(MUT_TALONS));
 }
@@ -6472,7 +6496,7 @@ bool player::visible_to(const actor *looker) const
     if (this == looker)
         return (can_see_invisible() || !invisible());
 
-    const monsters* mon = looker->as_monster();
+    const monster* mon = looker->as_monster();
     return (!invisible()
             || in_water()
             || mon->can_see_invisible()
@@ -6633,7 +6657,7 @@ void player::put_to_sleep(actor*, int power)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (duration[DUR_SLEEP])
+    if (!can_sleep())
         return;
 
     mpr("You fall asleep!");

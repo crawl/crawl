@@ -27,7 +27,6 @@
 #include "stuff.h"
 #include "env.h"
 #include "libutil.h"
-#include "macro.h"
 #include "mon-behv.h"
 #include "mon-util.h"
 #include "notes.h"
@@ -38,7 +37,6 @@
 #include "spl-damage.h"
 #include "spl-zap.h"
 #include "terrain.h"
-#include "itemprop.h"
 #include "item_use.h"
 #include "transform.h"
 

@@ -15,9 +15,9 @@
 #include "coord.h"
 #include "coordit.h"
 #include "env.h"
+#include "exercise.h"
 #include "fprop.h"
 #include "godconduct.h"
-#include "it_use2.h"
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
@@ -54,10 +54,24 @@ bool conjure_flame(int pow, const coord_def& where)
 
     if (cell_is_solid(where))
     {
-        if (grd(where) == DNGN_WAX_WALL)
+        switch (grd(where))
+        {
+        case DNGN_WAX_WALL:
             mpr("The flames aren't hot enough to melt wax walls!");
-        else
+            break;
+        case DNGN_METAL_WALL:
+            mpr("You can't ignite solid metal!");
+            break;
+        case DNGN_GREEN_CRYSTAL_WALL:
+            mpr("You can't ignite solid crystal!");
+            break;
+        case DNGN_TREE:
+            mpr("The flames aren't hot enough to burn down trees!");
+            break;
+        default:
             mpr("You can't ignite solid rock!");
+            break;
+        }
         return (false);
     }
 
@@ -70,10 +84,10 @@ bool conjure_flame(int pow, const coord_def& where)
     }
 
     // Note that self-targeting is handled by SPFLAG_NOT_SELF.
-    monsters *monster = monster_at(where);
-    if (monster)
+    monster* mons = monster_at(where);
+    if (mons)
     {
-        if (you.can_see(monster))
+        if (you.can_see(mons))
         {
             mpr("You can't place the cloud on a creature.");
             return (false);
@@ -514,8 +528,7 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
         return (false);
     }
 
-    if (coinflip())
-        exercise(SK_THROWING, 1);
+    practise(EX_WILL_THROW_POTION);
 
     // Really fire.
     beem.flavour = real_flavour;
@@ -531,7 +544,7 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
     return (true);
 }
 
-int holy_flames (monsters* caster, actor* defender)
+int holy_flames(monster* caster, actor* defender)
 {
     const coord_def pos = defender->pos();
     int cloud_count = 0;

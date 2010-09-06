@@ -34,7 +34,7 @@ bool lose_stat(stat_type which_stat, int8_t stat_loss,
                bool force = false, const char* cause = NULL,
                bool see_source = true);
 bool lose_stat(stat_type which_stat, int8_t stat_loss,
-               const monsters* cause, bool force = false);
+               const monster* cause, bool force = false);
 bool lose_stat(stat_type which_stat, int8_t stat_loss,
                const item_def &cause, bool removed, bool force = false);
 

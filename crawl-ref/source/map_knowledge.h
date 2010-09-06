@@ -34,9 +34,10 @@
  */
 struct map_cell
 {
-    unsigned short flags;   // Flags describing the mappedness of this square.
+    uint32_t flags;   // Flags describing the mappedness of this square.
 
-    map_cell() : flags(0), _feat(DNGN_UNSEEN), _feat_colour(0), _item(0), _cloud(CLOUD_NONE)
+    map_cell() : flags(0), _feat(DNGN_UNSEEN), _feat_colour(0),
+                 _item(0), _cloud(CLOUD_NONE), _cloud_colour(0)
     {
         memset(&_mons, 0, sizeof(_mons));
     }
@@ -56,6 +57,20 @@ struct map_cell
             delete _mons.info;
         if (_item)
             delete _item;
+    }
+
+    map_cell& operator=(const map_cell& c)
+    {
+        if (!(flags & MAP_DETECTED_MONSTER) && _mons.info)
+            delete _mons.info;
+        if (_item)
+            delete _item;
+        memcpy(this, &c, sizeof(map_cell));
+        if (!(flags & MAP_DETECTED_MONSTER) && _mons.info)
+            _mons.info = new monster_info(*_mons.info);
+        if (_item)
+            _item = new item_info(*_item);
+         return (*this);
     }
 
     void clear()
@@ -181,9 +196,15 @@ struct map_cell
         return _cloud;
     }
 
-    void set_cloud(cloud_type ncloud)
+    unsigned cloud_colour() const
+    {
+        return _cloud_colour;
+    }
+
+    void set_cloud(cloud_type ncloud, unsigned colour = 0)
     {
         _cloud = ncloud;
+        _cloud_colour = colour;
     }
 
     bool known() const
@@ -221,6 +242,7 @@ private:
         monster_type detected;
     } _mons;
     cloud_type _cloud;
+    uint8_t _cloud_colour;
 };
 
 void set_terrain_mapped( int x, int y );

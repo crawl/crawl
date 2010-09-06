@@ -87,7 +87,7 @@ struct monster_info : public monster_info_base
 #define MILEV_SKIP_SAFE -1
 #define MILEV_NAME -2
     monster_info() {}
-    monster_info(const monsters* m, int level = MILEV_ALL);
+    monster_info(const monster* m, int level = MILEV_ALL);
     monster_info(monster_type p_type, monster_type p_base_type = MONS_NO_MONSTER);
 
     monster_info(const monster_info& mi)
@@ -111,7 +111,7 @@ struct monster_info : public monster_info_base
     void to_string(int count, std::string& desc, int& desc_color, bool fullname = true) const;
 
     // TODO: remove this
-    monsters* mon() const;
+    monster* mon() const;
 
     /* only real equipment is visible, miscellany is for mimic items */
     std::auto_ptr<item_def> inv[6];
@@ -184,6 +184,7 @@ struct monster_info : public monster_info_base
             return false;
         return mons_class_can_regenerate(type);
     }
+    size_type body_size() const;
 
 protected:
     std::string _core_name() const;

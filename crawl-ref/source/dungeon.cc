@@ -16,11 +16,11 @@
 #include <cmath>
 
 #include "abyss.h"
+#include "acquire.h"
 #include "artefact.h"
 #include "branch.h"
 #include "chardump.h"
 #include "cloud.h"
-#include "colour.h"
 #include "coord.h"
 #include "coordit.h"
 #include "defines.h"
@@ -942,6 +942,19 @@ int dgn_count_disconnected_zones(bool choose_stairless,
                                       fill);
 }
 
+static void _fixup_hell_stairs()
+{
+    for (int i = 0; i < GXM; i++)
+        for (int j = 0; j < GYM; j++)
+        {
+            if (grd[i][j] >= DNGN_STONE_STAIRS_UP_I
+                && grd[i][j] <= DNGN_ESCAPE_HATCH_UP)
+            {
+                grd[i][j] = DNGN_ENTER_HELL;
+            }
+        }
+}
+
 static void _fixup_pandemonium_stairs()
 {
     for (int i = 0; i < GXM; i++)
@@ -1849,7 +1862,7 @@ static void _dgn_verify_connectivity(unsigned nvaults)
 // * A vector, with one cell per dungeon level (unset if there's no
 //   overflow temples on that level).
 //
-// * The cell of the previous vector is a vector, with one overlfow
+// * The cell of the previous vector is a vector, with one overflow
 //   temple definition per cell.
 //
 // * The cell of the previous vector is a hash table, containing the
@@ -2094,7 +2107,7 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
         _specr_2(sr);
     }
 
-    // Now place items, monster, gates, etc.
+    // Now place items, mons, gates, etc.
     // Stairs must exist by this point (except in Shoals where they are
     // yet to be placed). Some items and monsters already exist.
 
@@ -2214,6 +2227,9 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
     // Translate stairs for pandemonium levels.
     if (level_type == LEVEL_PANDEMONIUM)
         _fixup_pandemonium_stairs();
+
+    if (player_in_hell())
+        _fixup_hell_stairs();
 }                               // end builder()
 
 
@@ -2661,7 +2677,7 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
 {
     if (!minivault && player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
     {
-        // Temple vault determined at new game tiem.
+        // Temple vault determined at new game time.
         const std::string name = you.props[TEMPLE_MAP_KEY];
 
         // Tolerate this for a little while, for old games.
@@ -5128,7 +5144,7 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
                                      const int mid,
                                      const int monster_level)
 {
-    monsters &mon(menv[mindex]);
+    monster& mon(menv[mindex]);
 
     unwind_var<int> save_speedinc(mon.speed_increment);
 
@@ -5354,10 +5370,15 @@ int dgn_place_monster(mons_spec &mspec,
         // Store any extra flags here.
         mg.extra_flags |= mspec.extra_monster_flags;
 
+        // have to do this before the monster is created, so things are
+        // initialized properly
+        if (mspec.props.exists("serpent_of_hell_flavour"))
+            mg.props["serpent_of_hell_flavour"] =
+                mspec.props["serpent_of_hell_flavour"].get_int();
         const int mindex = place_monster(mg, true);
         if (mindex != -1)
         {
-            monsters &mons(menv[mindex]);
+            monster& mons(menv[mindex]);
             if (!mspec.items.empty())
                 _dgn_give_mon_spec_items(mspec, mindex, mid, monster_level);
             if (mspec.explicit_spells)
@@ -6828,11 +6849,7 @@ static bool _plan_6(int level_number)
     dgn_ensure_vault_placed(success, false);
 
     // This "back door" is often one of the easier ways to get out of
-    // pandemonium... the easiest is to use the banish spell.
-    //
-    // Note, that although "level_number > 20" will work for most
-    // trips to pandemonium (through regular portals), it won't work
-    // for demonspawn who gate themselves there. -- bwr
+    // pandemonium.
     if ((player_in_branch(BRANCH_MAIN_DUNGEON) && level_number > 20
             || you.level_type == LEVEL_PANDEMONIUM)
         && coinflip())
@@ -8374,7 +8391,7 @@ static void _fixup_slime_hatch_dest(coord_def* pos)
         }
     }
     ASSERT(max_walls < 9);
-}    
+}
 
 coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
                                 coord_def base_pos, bool find_closest)

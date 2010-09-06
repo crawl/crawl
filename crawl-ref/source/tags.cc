@@ -2252,10 +2252,11 @@ void unmarshallItem(reader &th, item_def &item)
 #define MAP_SERIALIZE_FLAGS_32 3
 
 #define MAP_SERIALIZE_FEATURE 4
-#define MAP_SERIALIZE_FEATURE_COLOR 8
+#define MAP_SERIALIZE_FEATURE_COLOUR 8
 #define MAP_SERIALIZE_ITEM 0x10
 #define MAP_SERIALIZE_CLOUD 0x20
 #define MAP_SERIALIZE_MONSTER 0x40
+#define MAP_SERIALIZE_CLOUD_COLOUR 0x80
 
 void marshallMapCell(writer &th, const map_cell &cell)
 {
@@ -2272,10 +2273,13 @@ void marshallMapCell(writer &th, const map_cell &cell)
         flags |= MAP_SERIALIZE_FEATURE;
 
     if (cell.feat_colour())
-        flags |= MAP_SERIALIZE_FEATURE_COLOR;
+        flags |= MAP_SERIALIZE_FEATURE_COLOUR;
 
     if (cell.cloud() != CLOUD_NONE)
         flags |= MAP_SERIALIZE_CLOUD;
+
+    if (cell.cloud_colour())
+        flags |= MAP_SERIALIZE_CLOUD_COLOUR;
 
     if (cell.item())
         flags |= MAP_SERIALIZE_ITEM;
@@ -2301,11 +2305,14 @@ void marshallMapCell(writer &th, const map_cell &cell)
     if (flags & MAP_SERIALIZE_FEATURE)
         marshallUnsigned(th, cell.feat());
 
-    if (flags & MAP_SERIALIZE_FEATURE_COLOR)
+    if (flags & MAP_SERIALIZE_FEATURE_COLOUR)
         marshallUnsigned(th, cell.feat_colour());
 
     if (flags & MAP_SERIALIZE_CLOUD)
         marshallUnsigned(th, cell.cloud());
+
+    if (flags & MAP_SERIALIZE_CLOUD_COLOUR)
+        marshallUnsigned(th, cell.cloud_colour());
 
     if (flags & MAP_SERIALIZE_ITEM)
         marshallItem(th, *cell.item());
@@ -2342,13 +2349,20 @@ void unmarshallMapCell(reader &th, map_cell& cell)
     if (flags & MAP_SERIALIZE_FEATURE)
         feature = (dungeon_feature_type)unmarshallUnsigned(th);
 
-    if (flags & MAP_SERIALIZE_FEATURE_COLOR)
+    if (flags & MAP_SERIALIZE_FEATURE_COLOUR)
         feat_colour = unmarshallUnsigned(th);
 
     cell.set_feature(feature, feat_colour);
 
+    cloud_type cloud = CLOUD_NONE;
+    unsigned cloud_colour = 0;
     if (flags & MAP_SERIALIZE_CLOUD)
-        cell.set_cloud((cloud_type)unmarshallUnsigned(th));
+        cloud = (cloud_type)unmarshallUnsigned(th);
+
+    if (flags & MAP_SERIALIZE_CLOUD_COLOUR)
+        cloud_colour = unmarshallUnsigned(th);
+
+    cell.set_cloud(cloud, cloud_colour);
 
     if (flags & MAP_SERIALIZE_ITEM)
     {
@@ -2411,7 +2425,7 @@ static mon_enchant unmarshall_mon_enchant(reader &th)
     return (me);
 }
 
-void marshallMonster(writer &th, const monsters &m)
+void marshallMonster(writer &th, const monster& m)
 {
     if (!m.alive())
     {
@@ -2523,7 +2537,7 @@ static void tag_construct_level_monsters(writer &th)
 
     for (int i = 0; i < nm; i++)
     {
-        monsters &m(menv[i]);
+        monster& m(menv[i]);
 
 #if defined(DEBUG) || defined(DEBUG_MONS_SCAN)
         if (m.type != MONS_NO_MONSTER)
@@ -2791,7 +2805,7 @@ static void tag_read_level_items(reader &th, int minorVersion)
 #endif
 }
 
-void unmarshallMonster(reader &th, monsters &m)
+void unmarshallMonster(reader &th, monster& m)
 {
     m.reset();
 
@@ -2884,7 +2898,7 @@ static void tag_read_level_monsters(reader &th, int minorVersion)
 
     for (i = 0; i < count; i++)
     {
-        monsters &m = menv[i];
+        monster& m = menv[i];
         unmarshallMonster(th, m);
 
         // place monster

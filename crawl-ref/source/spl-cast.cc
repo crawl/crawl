@@ -17,12 +17,12 @@
 #include "areas.h"
 #include "beam.h"
 #include "colour.h"
-#include "coord.h"
 #include "coordit.h"
 #include "describe.h"
 #include "directn.h"
 #include "effects.h"
 #include "env.h"
+#include "exercise.h"
 #include "food.h"
 #include "format.h"
 #include "godabil.h"
@@ -30,7 +30,6 @@
 #include "goditem.h"
 #include "hints.h"
 #include "invent.h"
-#include "it_use2.h"
 #include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -51,7 +50,6 @@
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
-#include "skills2.h"
 #include "spl-book.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
@@ -678,7 +676,8 @@ bool cast_a_spell(bool check_range, spell_type spell)
             return (false);
         }
 
-        exercise_spell( spell, true, cast_result == SPRET_SUCCESS );
+        practise(cast_result == SPRET_SUCCESS ? EX_DID_CAST : EX_DID_MISCAST,
+                 spell);
         did_god_conduct( DID_SPELL_CASTING, 1 + random2(5) );
     }
 
@@ -930,7 +929,7 @@ static void _try_monster_cast(spell_type spell, int powc,
         return;
     }
 
-    monsters* mon = get_free_monster();
+    monster* mon = get_free_monster();
     if (!mon)
     {
         mpr("Couldn't try casting monster spell because there is "
@@ -1965,80 +1964,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     }
 
     return (SPRET_SUCCESS);
-}
-
-void exercise_spell(spell_type spell, bool spc, bool success)
-{
-    // (!success) reduces skill increase for miscast spells
-    int skill;
-    int exer = 0;
-    int workout = 0;
-
-    unsigned int disciplines = get_spell_disciplines(spell);
-
-    //jmf: evil evil evil -- exclude HOLY bit
-    disciplines &= (~SPTYP_HOLY);
-
-    int skillcount = count_bits( disciplines );
-
-    if (!success)
-        skillcount += 4 + random2(10);
-
-    const int diff = spell_difficulty(spell);
-
-    // Fill all disciplines into a vector, then shuffle the vector, and
-    // exercise skills in that random order. That way, small xp pools
-    // don't always train exclusively the first skill.
-    std::vector<int> disc;
-    for (int ndx = 0; ndx <= SPTYP_LAST_EXPONENT; ndx++)
-    {
-        if (!spell_typematch( spell, 1 << ndx ))
-            continue;
-
-        disc.push_back(ndx);
-    }
-    std::random_shuffle(disc.begin(), disc.end());
-
-    for (unsigned int k = 0; k < disc.size(); ++k)
-    {
-        int ndx = disc[k];
-        skill = spell_type2skill( 1 << ndx );
-        workout = (random2(1 + diff) / skillcount);
-
-        if (!one_chance_in(5))
-            workout++;       // most recently, this was an automatic add {dlb}
-
-        const int exercise_amount = exercise( skill, workout );
-        exer      += exercise_amount;
-    }
-
-    /* ******************************************************************
-       Other recent formulae for the above:
-
-       * workout = random2(spell_difficulty(spell_ex)
-       * (10 + (spell_difficulty(spell_ex) * 2 )) / 10 / spellsy + 1);
-
-       * workout = spell_difficulty(spell_ex)
-       * (15 + spell_difficulty(spell_ex)) / 15 / spellsy;
-
-       spellcasting had also been generally exercised at the same time
-       ****************************************************************** */
-
-    if (spc)
-    {
-        const int exercise_amount =
-            exercise(SK_SPELLCASTING, one_chance_in(3) ? 1
-                            : random2(1 + random2(diff)));
-        exer      += exercise_amount;
-    }
-
-    // Avoid doubly rewarding spell practise in sprint
-    // (by inflated XP and inflated piety gain)
-    if (crawl_state.game_is_sprint())
-        exer = sprint_modify_exp_inverse(exer);
-
-    if (exer)
-        did_god_conduct(DID_SPELL_PRACTISE, exer);
 }
 
 const char* failure_rate_to_string( int fail )

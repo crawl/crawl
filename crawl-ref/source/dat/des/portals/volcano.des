@@ -116,7 +116,7 @@ end
 dgn.set_lt_callback("volcano", "volcano_feat_descs")
 
 -- Destinations:
-function volcano_setup (e, metal)
+function volcano_setup (e, metal, subvault)
     setup_loot(e)
     e.kfeat("< = exit_portal_vault")
     e.kfeat("I = exit_portal_vault")
@@ -130,18 +130,21 @@ function volcano_setup (e, metal)
     e.colour("< = red")
     e.lrockcol("red")
     e.lrocktile("wall_pebble_red")
-    if metal == nil then
+    if metal == nil or metal == false then
         e.colour("c = lightred")
         e.colour("G = lightred")
         e.colour("= = lightred")
         e.lfloorcol("red")
         e.lfloortile("floor_rough_red")
     end
-    e.set_random_mon_list([[hog / fire elemental / fire vortex / giant ant /
-                            bumblebee / fire drake / lindwurm / imp / redback /
-                            manticore / hell hound / hell hog / ghoul /
-                            flayed ghost / pulsating lump / toenail golem /
-                            efreet / vampire]])
+    if subvault == nil then
+        e.set_random_mon_list([[hog / fire elemental / fire vortex /
+                                giant ant / bumblebee / fire drake / lindwurm /
+                                imp / redback / manticore / hell hound /
+                                hell hog / ghoul / flayed ghost /
+                                pulsating lump / toenail golem / efreet /
+                                vampire]])
+    end
 end
 
 function volcano_milestone(e)
@@ -531,13 +534,9 @@ NAME:       volcano_grotto
 WEIGHT:     60
 ORIENT:     encompass
 TAGS:       volcano no_item_gen no_monster_gen
-KFEAT:      _ = altar_makhleb / altar_trog / altar_vehumet
+SUBVAULT:   B : volcano_grotto_subvault
 KMONS:      l = lava snake w:2 / lava fish w:5 / nothing w:120
 KFEAT:      l = l
-#           Sets up the temple guardians.
-:           fiery_guardians(_G)
-MONS:       clay golem w:50 / molten gargoyle w:2
-#           Loot: 9 items, 8 gold.
 :           volcano_setup(_G)
 :           place_large_volcano(_G)
 epilogue{{
@@ -561,19 +560,196 @@ MAP
   xxy....LlllllllllllllllllllL....yxx    xx.xx
    xy.....LlllllllllllllllllLL...yxx     xx.x
    xy.y...LllllllllllllllllLL...yxx      x.yx
-   xxyxy...LllllllllllllllL...yyxx      xx+xx
-    xxxxy...LllllllllllllL...yxxx      xx...xx
-       xxy...LL....LlllllL..yxx   cccccx.....xccccc
-        xxy....xxx..LlllL...yx   ccd$ecc..<..ccd$fcc
-         xy.yxxx<xxy.LLL...yxx   c.$f$.c.....c.$e$.c
-         xx.xx....xxx.....yxx    c.g$g.ccc+ccc.g$g.c
-          x.xxx.....xxy....yx    c..3..c.....c..3..c
-          xx..xxxAxx.xxy..yxx    cc...c=.111.=c...cc
-           xxx..xxx.xxxx..xx      cccccc.G_G.cccccc
-             xxx.x.xx  xxxx            cc.2.cc
-               x...x                    ccccc
+   xxyxy...LllllllllllllllL...yyxBBBBBBBBBBBBBBBBBBB
+    xxxxy...LllllllllllllL...yxxxBBBBBBBBBBBBBBBBBBB
+       xxy...LL....LlllllL..yxx  BBBBBBBBBBBBBBBBBBB
+        xxy....xxx..LlllL...yx   BBBBBBBBBBBBBBBBBBB
+         xy.yxxx<xxy.LLL...yxx   BBBBBBBBBBBBBBBBBBB
+         xx.xx....xxx.....yxx    BBBBBBBBBBBBBBBBBBB
+          x.xxx.....xxy....yx    BBBBBBBBBBBBBBBBBBB
+          xx..xxxAxx.xxy..yxx    BBBBBBBBBBBBBBBBBBB
+           xxx..xxx.xxxx..xx     BBBBBBBBBBBBBBBBBBB
+             xxx.x.xx  xxxx      BBBBBBBBBBBBBBBBBBB
+               x...x             BBBBBBBBBBBBBBBBBBB
                xxxxx
 ENDMAP
+
+NAME:  vgs_original
+TAGS:  volcano_grotto_subvault no_item_gen no_monster_gen no_rotate no_vmirror
+KFEAT: _ = altar_makhleb / altar_trog / altar_vehumet
+#      Sets up the temple guardians.
+:      fiery_guardians(_G)
+MONS:  clay golem w:50 / molten gargoyle w:2
+#      Loot: 9 items, 8 gold.
+:      volcano_setup(_G, false, true)
+MAP
+xxxxxxxxx+xxxxxxxxx
+xxxxxxxx...xxxxxxxx
+xcccccx.....xcccccx
+ccd$ecc..<..ccd$fcc
+c.$f$.c.....c.$e$.c
+c.g$g.ccc+ccc.g$g.c
+c..3..c.....c..3..c
+cc...c=.111.=c...cc
+xcccccc.G_G.ccccccx
+xxxxxxcc.2.ccxxxxxx
+xxxxxxxcccccxxxxxxx
+ENDMAP
+
+NAME:   vgs_dualism
+TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_rotate no_vmirror
+KFEAT:  B = altar_makhleb / altar_trog / altar_vehumet
+KFEAT:  C = altar_makhleb / altar_trog / altar_vehumet
+#       Place the secret door.
+NSUBST: X = 1:= / *:x
+#       Sets up the temple guardians.
+:       fiery_guardians(_G)
+#       Loot: 8 items.
+:       volcano_setup(_G, false, true)
+MAP
+xxxxxxxxx+xxxxxxxxx
+x...xxxx...xxxx...x
+x.B.xxx..<..xxx.C.x
+x...xx..xXx..xx...x
+xx.xx.1xXdXx1.xx.xx
+xx.x..xXefgXx..x.xx
+x....xXdexfgXx....x
+x....xXXXXXXXx....x
+x......1...1......x
+xxx......2......xxx
+xxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   vgs_hot_hot_hot
+TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_rotate no_vmirror
+KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
+#       Place the secret doors.
+NSUBST: X = 1:= / *:x
+NSUBST: Y = 1:= / *:x
+#       Sets up the temple guardians.
+:       fiery_guardians(_G)
+KMONS:  l = lava snake / lava fish w:20 / lava worm w:20 / nothing w:70
+KFEAT:  l = l
+#       Loot: 8 items.
+:       volcano_setup(_G, false, true)
+MAP
+xxxxxxxxx.xxxxxxxxx
+xxx..xxxx.xcccccccc
+xx.xx..x.xxc.l.ldlc
+x.xXXXx.xxccl1l.lec
+x.xXgXxxxxGc.l.l.lc
+xx.XXX..<...l2l.l.c
+xx.xx.xxxxGc.l.l.lc
+xx.xxx.xccccl1l.lfc
+x.xx..YYc....l.lelc
+xx..xxYgc._.l.ldlfc
+xxxxxxxxccccccccccc
+ENDMAP
+
+NAME:   vgs_many_chambers
+TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_rotate no_vmirror
+KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
+#       Place the secret doors.
+NSUBST: X = 1:= / *:x
+NSUBST: Y = 1:= / *:x
+#       Sets up the temple guardians.
+:       fiery_guardians(_G)
+MONS:   clay golem w:50 / molten gargoyle w:2
+#       Loot: 8 items, 10 gold.
+:       volcano_setup(_G, false, true)
+MAP
+xxxxxxxxx+xxxxxxxxx
+xx....xx...xx....xx
+x$...1.+.<.+.1...$x
+x$G..T.x...x.T..G$x
+x$.....xx+xx.....$x
+xx....xx...xx....xx
+xxxxXXxx121xxYYxxxx
+xxxxdefX._.Ydefxxxx
+xxx3g$$X...Y$$g3xxx
+xxxxxxxxx.xxxxxxxxx
+xxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   vgs_firespitter
+TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_rotate no_vmirror
+KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
+#       Sets up the temple guardians.
+:       fiery_guardians(_G)
+#       Not sure if this one should be an actual_spellcaster - the caster
+#       statues in statue_cache aren't, so I'm taking that as a precedent.
+KMONS:  G = statue name:firespitter name_adjective name_descriptor \
+        tile:mons_firespitter_statue generate_awake \
+        spells:throw_flame;sticky_flame;.;bolt_of_magma;fireball;.
+MARKER: G = lua:MonPropsMarker:new { description = "Statue of a large head of a humanoid. Its mouth is blackened with scorch-marks. There is a faint ember glow in its empty eyes." }
+#       Loot: 12 items, 6 gold.
+:       volcano_setup(_G, false, true)
+MAP
+xxxxxxxxc+cxxxxxxxx
+xcccccccc.ccccccccx
+xc$$$gggc.......<cx
+xc...defc....cccccx
+xcll...cc...1.1.ccx
+xcGl....+....2._.cx
+xcll...cc...1.1.ccx
+xc...defc....cccccx
+xc$$$gggc.......<cx
+xcccccccccccccccccx
+xxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   vgs_trial_of_fire_spitters
+TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_rotate no_vmirror
+KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
+#       Sets up the temple guardians.
+:       fiery_guardians(_G)
+KMONS:  F = statue name:firespitter name_adjective name_descriptor \
+        tile:mons_firespitter_statue generate_awake \
+        spells:throw_flame;sticky_flame;.;bolt_of_magma;fireball;.
+MARKER: F = lua:MonPropsMarker:new { description = "Statue of a large head of a humanoid. Its mouth is blackened with scorch-marks. There is a faint ember glow in its empty eyes." }
+#       Loot: 10 items.
+:       volcano_setup(_G, false, true)
+MAP
+xxxxxxxxx+xxxxxxxxx
+xcccccccc.........x
+xc.....cccccccccc.x
+xc...c.cFcFcFcFcc.x
+xc121c.c.c.c.c.cc.x
+xcdgdc.c.c.c.c.c..x
+xceCecc.c.c.c.c.cGx
+xcfgfcc.c.c.c.c.cxx
+xcg<gccFcFcFcFcFcxx
+xccccccccccccccccxx
+xxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   vgs_trial_of_fire_lashers
+TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_rotate no_vmirror
+KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
+#       Sets up the temple guardians.
+:       fiery_guardians(_G)
+KMONS:  G = statue name:lasher name_adjective name_descriptor \
+        generate_awake ; whip ego:flaming
+KMONS:  F = statue name:lasher name_adjective name_descriptor \
+        generate_awake ; whip ego:reaching
+KMONS:  l = lava fish / lava worm / nothing
+KFEAT:  l = l
+#       Loot: 10 items.
+:       volcano_setup(_G, false, true)
+MAP
+xcccccccx+xxxxxxxxx
+xc.....cc.cxxxxxxxx
+xc...cc.c.cccccxxxx
+xc...c.cc..cGccxxxx
+xc...c.lccc.cGcccxx
+xc121c.llcGc.ccFcxx
+xcdgdc.llccGc..ccxx
+xceCec.lllccccc.cxx
+xcfgfc.lllllc...cxx
+xcg<gc.......cFccxx
+xcccccccccccccccxxx
+ENDMAP
+
 ###############################################################################
 
 ###############################################################################
@@ -729,24 +905,12 @@ NAME:       volcano_tomb
 WEIGHT:     30
 ORIENT:     encompass
 TAGS:       volcano no_item_gen no_monster_gen no_rotate
-#           Sets up the temple guardians, 1s and 2s.
+SUBVAULT:   B : volcano_tomb_subvault
 #           The flying skulls on lava.
 KFEAT:      u = lava
 KMONS:      u = flying skull
-#           We have a specific monster set for this vault.
-MONS:       mummy
-MONS:       menkaure / guardian mummy
-MONS:       fire drake skeleton w:5 / lindwurm skeleton w:1 / hog skeleton / hound skeleton
-MONS:       mummy
-#           Loot: 4 gold, 8 items.
-SHUFFLE:    12K
 :           volcano_setup(_G)
 :           place_large_volcano(_G)
-KFEAT:      JK = l
-MARKER:     J = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
-                                  start_clouds = 1, cloud_type = "flame"}
-MARKER:     K = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
-                                  start_clouds = 1, cloud_type = "flame"}
 epilogue{{
 volcano_milestone(_G)
 }}
@@ -754,28 +918,110 @@ MAP
                  xxxx
             xxxxxxyyxxxxx
           xxxy..yy.....yxxxx
-         xxy........yyx...yxxx                             xxxx
-       xxxy.................yxxx                        xxxxyyxx
-     xxxy.........LLLL........yxxx                     xxy.y..Lxx
-    xxy.........LLllllLL........yxxx            cccccccxy.y.3Lllx
-   xxy..<..A...LllllllllLLL.......yxxx          c..Y..cy.xxxLlllx
-  xxy.........LlllllllllllllLLL.....yxc       ccc.....=.xx xxllJx
- xxy........LLlllllllllllllllllLLL...lcccccccccGc..3..ccc   xxxxx
-xxy....LLlLlllllllllllllllllllllllL........+....+.3<3.+Kc
-xy....LlllllllllllllllllllllllllL....lcccccccccGc..3..ccc
-xLl.LllllllllllllllllllllllllllllL..yxc       ccc.....c
-xlllllllllllllllllGlllllllllllllllLLxx        c1c..Y..c
-xxlllllllllllllGlllllGlllllllllllllxx        cc+ccccc=cc cccccc
- xxlllllllllllllllllllllllllllllllxx       ccc.........ccc$defc
-  xxullllllllGllllVllllGlllllllluxx        c2+.lllllll.+4=ge$fc
-   xxxlllllllllllllllllllllllllxxx         ccc.........ccc$defc
-     xxllllllllGlllllGlllllllxxx             cc+ccccc+cc cccccc
-      xxllllllllllGlllllllllxxx               c1c   cKc
-       xxllllllllllllllllllxxx                ccc   ccc
+         xxy........yyx...yxxx        BBBBBBBBBBBBBBBBBBBBBBBBBBB
+       xxxy.................yxxx      BBBBBBBBBBBBBBBBBBBBBBBBBBB
+     xxxy.........LLLL........yxxx    BBBBBBBBBBBBBBBBBBBBBBBBBBB
+    xxy.........LLllllLL........yxxx  BBBBBBBBBBBBBBBBBBBBBBBBBBB
+   xxy..<..A...LllllllllLLL.......yxxxBBBBBBBBBBBBBBBBBBBBBBBBBBB
+  xxy.........LlllllllllllllLLL.....yxBBBBBBBBBBBBBBBBBBBBBBBBBBB
+ xxy........LLlllllllllllllllllLLL...lBBBBBBBBBBBBBBBBBBBBBBBBBBB
+xxy....LLlLlllllllllllllllllllllllL...BBBBBBBBBBBBBBBBBBBBBBBBBBB
+xy....LlllllllllllllllllllllllllL....lBBBBBBBBBBBBBBBBBBBBBBBBBBB
+xLl.LllllllllllllllllllllllllllllL..yxBBBBBBBBBBBBBBBBBBBBBBBBBBB
+xlllllllllllllllllGlllllllllllllllLLxxBBBBBBBBBBBBBBBBBBBBBBBBBBB
+xxlllllllllllllGlllllGlllllllllllllxx BBBBBBBBBBBBBBBBBBBBBBBBBBB
+ xxlllllllllllllllllllllllllllllllxx  BBBBBBBBBBBBBBBBBBBBBBBBBBB
+  xxullllllllGllllVllllGlllllllluxx   BBBBBBBBBBBBBBBBBBBBBBBBBBB
+   xxxlllllllllllllllllllllllllxxx    BBBBBBBBBBBBBBBBBBBBBBBBBBB
+     xxllllllllGlllllGlllllllxxx      BBBBBBBBBBBBBBBBBBBBBBBBBBB
+      xxllllllllllGlllllllllxxx       BBBBBBBBBBBBBBBBBBBBBBBBBBB
+       xxllllllllllllllllllxxx        BBBBBBBBBBBBBBBBBBBBBBBBBBB
         xxxllllllllllllllxxx
           xxxlxxlxxxxlxxxx
             xxxxxx  xxx
 ENDMAP
+
+NAME:    vts_original
+TAGS:    volcano_tomb_subvault no_item_gen no_monster_gen no_rotate no_hmirror
+TAGS:    no_vmirror
+#        We have a specific monster set for this vault.
+MONS:    mummy
+MONS:    menkaure / guardian mummy
+MONS:    fire drake skeleton w:5 / lindwurm skeleton w:1 / hog skeleton / hound skeleton
+MONS:    mummy
+#        Loot: 4 gold, 8 items.
+:        volcano_setup(_G, false, true)
+SHUFFLE: 12K
+KFEAT:   JK = l
+MARKER:  J = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
+                               start_clouds = 1, cloud_type = "flame"}
+MARKER:  K = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
+                               start_clouds = 1, cloud_type = "flame"}
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxyyxxx
+xxxxxxxxxxxxxxxxxxxy.y..Lxx
+xxxxxxxxxxcccccccxy.y.3Lllx
+xxxxxxxxxxc..Y..cy.xxxLlllx
+cxxxxxxxccc.....=.xxxxxllJx
+cccccccccGc..3..cccxxxxxxxx
+.....+....+.3<3.+Kcxxxxxxxx
+cccccccccGc..3..cccxxxxxxxx
+cxxxxxxxccc.....cxxxxxxxxxx
+xxxxxxxxc1c..Y..cxxxxxxxxxx
+xxxxxxxcc+ccccc=ccxccccccxx
+xxxxxccc.........ccc$defcxx
+xxxxxc2+.lllllll.+4=ge$fcxx
+xxxxxccc.........ccc$defcxx
+xxxxxxxcc+ccccc+cc ccccccxx
+xxxxxxxxc1cxxxcKcxxxxxxxxxx
+xxxxxxxxcccxxxcccxxxxxxxxxx
+ENDMAP
+
+NAME:    vts_chambers
+TAGS:    volcano_tomb_subvault no_item_gen no_monster_gen no_rotate no_hmirror
+TAGS:    no_vmirror
+#        Traps and doors.
+NSUBST:  X = 1:= / *:c
+NSUBST:  Y = 1:= / *:c
+NSUBST:  t = 1:! / *:.
+KFEAT:   ! = alarm trap
+NSUBST:  r = 2:r / *:.
+NSUBST:  s = 2:s / *:.
+KFEAT:   r = bolt trap
+KFEAT:   s = axe trap
+#        The monsters. The patrolling tag seems to keep them from wandering
+#        around, opening the secret doors. It might also be keeping them from
+#        "answering" the alarm traps though.
+MONS:    patrolling mummy
+MONS:    human skeleton / elf skeleton / dwarf skeleton / merfolk skeleton / \
+         kenku skeleton
+MONS:    ogre skeleton / troll skeleton / draconian skeleton / naga skeleton / \
+         minotaur skeleton
+MONS:    patrolling menkaure / patrolling guardian mummy
+#        Loot: 21 gold, 10 items.
+:        volcano_setup(_G, false, true)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxcccccxxxxxxxxxxxxxxxxx
+xxxxxc...cxxxxxxxxxxxxxxxxx
+xxxxcc.<.cccxxxcccccccccxxx
+xxccc......ccccc..$X$$$cxxx
+cxc1.........3....$X$$$cxxx
+ccccc.c2.c.ccccc..$X$$$cxxx
+....+...2..cxxxcccccc=ccxxx
+ccccc.c2.c.ccccc..$Xssscxxx
+cxc1.........3....$Xssscxxx
+xxccc......ccccc..$Xssscxxx
+xxxxcc.cc.ccddeccYcccc=cxxx
+xxxxxc3cc3c1eeg+!.=4Yttcccx
+xxxccc.cc.cccccccYccctt=1cx
+xxxc...cc...crrrc..3c=ccccx
+xxxc...cc...crrr=.3.cffcxxx
+xxxc$$$cc$$$=rrrc3..=fgcxxx
+xxxcccccccccccccccccccccxxx
+ENDMAP
+
 ###############################################################################
 
 ###############################################################################

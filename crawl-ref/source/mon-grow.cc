@@ -102,7 +102,7 @@ static const monster_level_up *_monster_level_up_target(monster_type type,
     return (NULL);
 }
 
-void monsters::upgrade_type(monster_type after, bool adjust_hd,
+void monster::upgrade_type(monster_type after, bool adjust_hd,
                             bool adjust_hp)
 {
     const monsterentry *orig = get_monster_data(type);
@@ -110,7 +110,7 @@ void monsters::upgrade_type(monster_type after, bool adjust_hd,
     type   = after;
 
     // Initialise a dummy monster to save work.
-    monsters dummy;
+    monster dummy;
     dummy.type = after;
     define_monster(&dummy);
 
@@ -147,7 +147,7 @@ void monsters::upgrade_type(monster_type after, bool adjust_hd,
         uglything_upgrade();
 }
 
-bool monsters::level_up_change()
+bool monster::level_up_change()
 {
     if (const monster_level_up *lup =
         _monster_level_up_target(static_cast<monster_type>(type), hit_dice))
@@ -158,7 +158,7 @@ bool monsters::level_up_change()
     return (false);
 }
 
-bool monsters::level_up()
+bool monster::level_up()
 {
     if (hit_dice >= MAX_MONS_HD)
         return (false);
@@ -190,7 +190,7 @@ bool monsters::level_up()
     return (true);
 }
 
-void monsters::init_experience()
+void monster::init_experience()
 {
     if (experience || !alive())
         return;
@@ -198,7 +198,7 @@ void monsters::init_experience()
     experience = mexplevs[std::min(hit_dice, MAX_MONS_HD)];
 }
 
-bool monsters::gain_exp(int exp)
+bool monster::gain_exp(int exp)
 {
     if (!alive())
         return (false);
@@ -221,7 +221,7 @@ bool monsters::gain_exp(int exp)
 
     experience += exp;
 
-    const monsters mcopy(*this);
+    const monster mcopy(*this);
     int levels_gained = 0;
     // Monsters can gain a maximum of two levels from one kill.
     while (hit_dice < MAX_MONS_HD

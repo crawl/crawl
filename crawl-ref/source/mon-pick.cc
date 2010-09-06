@@ -10,7 +10,6 @@
 
 #include "externs.h"
 #include "branch.h"
-#include "misc.h"
 #include "mon-util.h"
 #include "place.h"
 
@@ -261,6 +260,7 @@ bool mons_abyss(int mcls)
     case MONS_SHADOW_DEMON:
     case MONS_SHADOW_IMP:
     case MONS_SHINING_EYE:
+    case MONS_SILENT_SPECTRE:
     case MONS_SIXFIRHY:
     case MONS_BONE_DRAGON:
     case MONS_SKELETAL_WARRIOR:
@@ -442,6 +442,7 @@ int mons_rare_abyss(int mcls)
     case MONS_WIZARD:
     case MONS_WOOD_GOLEM:
     case MONS_DEATH_DRAKE:
+    case MONS_SILENT_SPECTRE:
         return 5;
 
     case MONS_AIR_ELEMENTAL:
@@ -717,6 +718,7 @@ int mons_standard_level(int mcls)
     case MONS_SIMULACRUM_SMALL:
     case MONS_SIMULACRUM_LARGE:
     case MONS_ROCK_WORM:
+    case MONS_ELEPHANT:
         return 17;
 
     case MONS_DRAGON:
@@ -994,6 +996,7 @@ int mons_standard_rare(int mcls)
     case MONS_VAMPIRE:
     case MONS_WEAPON_MIMIC:
     case MONS_YELLOW_WASP:
+    case MONS_ELEPHANT:
         return 30;
 
     case MONS_FLAYED_GHOST:
@@ -1409,6 +1412,7 @@ int mons_lair_level(int mcls)
     case MONS_LINDWURM:
     case MONS_REDBACK:
     case MONS_WANDERING_MUSHROOM:
+    case MONS_ELEPHANT:
         mlev += 6;
         break;
 
@@ -1475,6 +1479,7 @@ int mons_lair_rare(int mcls)
     case MONS_HYDRA:
     case MONS_KOMODO_DRAGON:
     case MONS_YAK:
+    case MONS_ELEPHANT:
         return 50;
 
     case MONS_BLACK_MAMBA:
@@ -2135,6 +2140,7 @@ int mons_crypt_level(int mcls)
     case MONS_ROTTING_HULK:
     case MONS_WRAITH:
     case MONS_FLYING_SKULL:
+    case MONS_SILENT_SPECTRE:
         mlev += 3;
         break;
 
@@ -2190,6 +2196,7 @@ int mons_crypt_rare(int mcls)
         return 33;
 
     case MONS_SHADOW:
+    case MONS_SILENT_SPECTRE:
         return 30;
 
     case MONS_NECROMANCER:
@@ -2714,7 +2721,6 @@ int mons_gehenna_level(int mcls)
     case MONS_LICH:
     case MONS_PIT_FIEND:
     case MONS_REAPER:
-    case MONS_SERPENT_OF_HELL:
     case MONS_BONE_DRAGON:
     case MONS_SOUL_EATER:
     case MONS_SPECTRAL_WARRIOR:
@@ -2808,7 +2814,6 @@ int mons_gehenna_rare(int mcls)
         return 5;
 
     case MONS_ANCIENT_LICH:
-    case MONS_SERPENT_OF_HELL:
         return 4;
 
     default:
@@ -2986,6 +2991,7 @@ int mons_tartarus_level(int mcls)
     case MONS_SHADOW:
     case MONS_SHADOW_DEMON:
     case MONS_WRAITH:
+    case MONS_SILENT_SPECTRE:
         mlev += 3;
         break;
 
@@ -3080,6 +3086,7 @@ int mons_tartarus_rare(int mcls)
         return 40;
 
     case MONS_SOUL_EATER:
+    case MONS_SILENT_SPECTRE:
         return 35;
 
     case MONS_ICE_DEVIL:

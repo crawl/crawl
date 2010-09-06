@@ -105,6 +105,17 @@ Technical:
 * Abstract tiles code from SDL and OpenGL.
 * Cleaned up game selection code.
 
+
+Stone Soup 0.6.1 (20100609)
+---------------------------
+* Fix instant starvation bug related to vampiric weapon butchery.
+* Fix Cheibriados excommunication permanent stat gain.
+* Reenable sound for mingw builds.
+* Xcode, Visual C++ and clang build fixes.
+* Fix save handling on BSD systems.
+* Fix Lua markers not being reactivated after viewing other levels.
+* Selected other bug fixes.
+
 Stone Soup 0.6 (20100326)
 -------------------------
 Disclaimer: These are merely the highlights, not an exhaustive list of changes.
@@ -268,7 +279,6 @@ Monsters
 * Monsters' sense invisible is more effective on invisible monsters,
   and less effective on invisible players.
 * Hungry ghosts eat corpses.
-* Confused monsters zap wands in random directions.
 * Bashing plants or fungi will only train Fighting/Unarmed Combat up to level 1.
 * Several cool new uniques.
 * Unique speech much more varied and interesting.

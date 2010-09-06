@@ -1,20 +1,19 @@
 Contains all monsters with the following ASCII glyphs:
-a (insects)
-b (bat, butterflies)
-h (hounds)
+a (ants)
+b (batty monsters)
+h (hounds and hogs)
 j (slugs)
-k (bees)
+k (killer bees)
 l (lizards) but not drakes (also l)
 r (rodents)
-s (spiders, scorpion)
+s (spiders and insects)
 w (worms)
 y (flying insects)
-B (beetles) but not program bug
+B (beetles)
 F (frogs)
-Q (queen insects)
 S (snakes)
 U (bears)
-Y (yaks, sheep)
-; (fish) and jellyfish (J)
+Y (yaks, sheep and elephants)
+; (water monsters) and jellyfish (J)
 
 See mon-data.h.

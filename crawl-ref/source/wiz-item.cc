@@ -10,6 +10,7 @@
 
 #include <errno.h>
 
+#include "acquire.h"
 #include "artefact.h"
 #include "coordit.h"
 #include "message.h"
@@ -22,7 +23,6 @@
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
-#include "it_use2.h"
 #include "invent.h"
 #include "makeitem.h"
 #include "mapdef.h"
@@ -203,7 +203,7 @@ void wizard_create_spec_object()
             mon = MONS_DRACONIAN;
         }
 
-        monsters dummy;
+        monster dummy;
         dummy.type = mon;
 
         if (mons_genus(mon) == MONS_HYDRA)
@@ -662,6 +662,11 @@ void wizard_make_object_randart()
             canned_msg(MSG_OK);
             return;
         }
+
+        // need to trim before the object changes, or else the old properties
+        // won't be removed
+        if (Options.autoinscribe_artefacts)
+            trim_randart_inscrip(item);
 
         item.special = 0;
         item.flags  &= ~ISFLAG_RANDART;

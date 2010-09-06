@@ -96,14 +96,14 @@ private:
     void init();
     std::string get_default_cause(bool attribute_to_user) const;
 
-    monsters* target_as_monster()
+    monster* target_as_monster()
     {
-        return dynamic_cast<monsters*>(target);
+        return dynamic_cast<monster* >(target);
     }
 
-    monsters* source_as_monster()
+    monster* source_as_monster()
     {
-        return dynamic_cast<monsters*>(act_source);
+        return dynamic_cast<monster* >(act_source);
     }
 
     bool neither_end_silenced();

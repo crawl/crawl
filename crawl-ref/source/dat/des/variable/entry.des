@@ -634,10 +634,13 @@ ENDMAP
 
 #############################################################################
 NAME:    dpeg_entry_shrine
-TAGS:    entry no_monster_gen no_pool_fixup
-SHUFFLE: ABl/CDl/abw/cdw
-SUBST:   A=@, B=+, C=x, D=l
-SUBST:   a=@, b=+, c=x, d=w
+TAGS:    entry no_monster_gen no_pool_fixup no_rotate
+: if crawl.coinflip() then
+SUBST:   A=@, B=., C=x, D=l
+: else
+SUBST:   A=x, B=l, C=@, D=.
+: end
+SHUFFLE: lw
 ORIENT:  float
 MAP
 xxxxxxxxCxxxxxxxx
@@ -1747,8 +1750,8 @@ NSUBST:  . = 1={< / *:.
 NSUBST:  ' = 1:> / 7:x / *:.
 SUBST:   " = .
 MAP
-  ....ccccc...  
-  ....c'''c...  
+  ....ccccc...
+  ....c'''c...
 ......c'''c.....
 ......c'''c.....
 ..ccccc'''ccccc.
@@ -1758,7 +1761,7 @@ MAP
 ..ccccc'''ccccc.
 ......c'''c.....
 ......c'''c.....
-  ....c'''c... 
+  ....c'''c...
   ....ccccc...
 ENDMAP
 

@@ -330,6 +330,7 @@ overlay_mace MONS_STATUE_MACE
 overlay_mage_hat MONS_STATUE_MAGE
 overlay_scythe MONS_STATUE_SCYTHE
 overlay_sword MONS_STATUE_SWORD
+overlay_whip MONS_STATUE_WHIP
 %back none
 
 %back light_vine_statue_base
@@ -340,6 +341,7 @@ overlay_mace MONS_LIGHT_VINE_STATUE_MACE
 overlay_mage MONS_LIGHT_VINE_STATUE_MAGE
 overlay_scythe MONS_LIGHT_VINE_STATUE_SCYTHE
 overlay_sword MONS_LIGHT_VINE_STATUE_SWORD
+overlay_whip MONS_LIGHT_VINE_STATUE_WHIP
 %back none
 
 %back dark_vine_statue_base
@@ -350,6 +352,7 @@ overlay_mace MONS_DARK_VINE_STATUE_MACE
 overlay_mage MONS_DARK_VINE_STATUE_MAGE
 overlay_scythe MONS_DARK_VINE_STATUE_SCYTHE
 overlay_sword MONS_DARK_VINE_STATUE_SWORD
+overlay_whip MONS_DARK_VINE_STATUE_WHIP
 %back none
 
 %rim 0
@@ -361,6 +364,8 @@ guardian-eyeclosed-flame1
 guardian-eyeclosed-flame2
 guardian-eyeclosed-flame3
 guardian-eyeclosed-flame4
+
+firespitter_statue MONS_FIRESPITTER_STATUE
 %rim 1
 
 ## Gargoyles ('9')
@@ -374,12 +379,10 @@ molten_gargoyle MONS_MOLTEN_GARGOYLE
 # Unique humans, in alphabetical order
 agnes MONS_AGNES
 donald MONS_DONALD
-duane MONS_DUANE
 edmund MONS_EDMUND
 erica MONS_ERICA
 eustachio MONS_EUSTACHIO
 frances MONS_FRANCES
-francis MONS_FRANCIS
 frederick MONS_FREDERICK
 harold MONS_HAROLD
 jessica MONS_JESSICA
@@ -392,13 +395,12 @@ margery MONS_MARGERY
 maud MONS_MAUD
 maurice MONS_MAURICE
 nikola MONS_NIKOLA
-norbert MONS_NORBERT
 norris MONS_NORRIS
 psyche MONS_PSYCHE
 rupert MONS_RUPERT
 sigmund MONS_SIGMUND
 terence MONS_TERENCE
-wayne MONS_WAYNE
+wiglaf MONS_WIGLAF
 %sdir dc-mon
 
 human MONS_HUMAN
@@ -449,6 +451,7 @@ death_drake MONS_DEATH_DRAKE
 %sdir dc-mon/unique
 xtahua MONS_XTAHUA
 lernaean_hydra MONS_LERNAEAN_HYDRA
+serpent_of_hell MONS_SERPENT_OF_HELL
 %sdir dc-mon
 wyvern MONS_WYVERN
 dragon MONS_DRAGON
@@ -468,9 +471,8 @@ iron_dragon MONS_IRON_DRAGON
 storm_dragon MONS_STORM_DRAGON
 golden_dragon MONS_GOLDEN_DRAGON
 shadow_dragon MONS_SHADOW_DRAGON
-undead/bone_dragon MONS_BONE_DRAGON
-serpent_of_hell MONS_SERPENT_OF_HELL
 holy/eastern_dragon MONS_HOLY_DRAGON
+undead/bone_dragon MONS_BONE_DRAGON
 
 ## Eyes ('G')
 %sdir dc-mon/fungi_plants
@@ -487,6 +489,7 @@ dc-mon/holy/ophan MONS_OPHAN
 
 ## Hybrids ('H')
 hippogriff MONS_HIPPOGRIFF
+minotaur MONS_MINOTAUR
 manticore MONS_MANTICORE
 griffon MONS_GRIFFON
 harpy MONS_HARPY
@@ -496,7 +499,7 @@ kenku MONS_KENKU
 shedu MONS_SHEDU
 %sdir dc-mon
 
-## Ice beast only
+## Ice beasts
 ice_beast MONS_ICE_BEAST /*'I'*/
 
 ## Jellies ('J')
@@ -515,8 +518,9 @@ pulsating_lump MONS_PULSATING_LUMP
 giant_amoeba MONS_GIANT_AMOEBA
 brown_ooze MONS_BROWN_OOZE
 azure_jelly MONS_AZURE_JELLY
-undead/death_ooze MONS_DEATH_OOZE
 acid_blob MONS_ACID_BLOB
+%sdir dc-mon/undead
+death_ooze MONS_DEATH_OOZE
 
 ## Kobolds ('K')
 %sdir dc-mon/unique
@@ -594,7 +598,6 @@ vampire_knight MONS_VAMPIRE_KNIGHT
 vampire_mage MONS_VAMPIRE_MAGE
 
 ## Wraiths ('W')
-wight MONS_WIGHT
 wraith MONS_WRAITH
 shadow_wraith MONS_SHADOW_WRAITH
 freezing_wraith MONS_FREEZING_WRAITH
@@ -720,13 +723,12 @@ ghost MONS_PLAYER_GHOST
 %rim 1
 flayed_ghost MONS_FLAYED_GHOST
 hungry_ghost MONS_HUNGRY_GHOST
-%sdir dc-mon
-nonliving/insubstantial_wisp MONS_INSUBSTANTIAL_WISP
-
-minotaur MONS_MINOTAUR /*'t'*/
+%sdir dc-mon/nonliving
+insubstantial_wisp MONS_INSUBSTANTIAL_WISP
 
 ## Small zombified monsters ('z')
 %sdir dc-mon/undead
+wight MONS_WIGHT
 skeletal_warrior MONS_SKELETAL_WARRIOR
 %rim 0
 flaming_corpse MONS_FLAMING_CORPSE

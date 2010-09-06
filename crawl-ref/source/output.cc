@@ -34,11 +34,9 @@
 #include "mon-info.h"
 #include "mon-util.h"
 #include "mutation.h"
-#include "newgame.h"
 #include "jobs.h"
 #include "ouch.h"
 #include "player.h"
-#include "player-stats.h"
 #include "place.h"
 #include "religion.h"
 #include "skills2.h"
@@ -757,6 +755,9 @@ static void _get_status_lights(std::vector<status_light>& out)
         out.push_back(status_light(color, "DChan"));
     }
 
+    if (you.duration[DUR_TELEPATHY])
+        out.push_back(status_light(LIGHTBLUE, "Emp"));
+
     if (you.duration[DUR_BREATH_WEAPON])
         out.push_back(status_light(YELLOW, "BWpn"));
 
@@ -1065,7 +1066,7 @@ void draw_border(void)
 // Monster pane
 // ----------------------------------------------------------------------
 
-static bool _mons_hostile(const monsters *mon)
+static bool _mons_hostile(const monster* mon)
 {
     return (!mon->friendly() && !mon->neutral());
 }
@@ -1111,7 +1112,7 @@ static std::string _get_monster_name(const monster_info& mi,
 // hostile/neutral/friendly) than the second, or, if both monsters share the
 // same attitude, if the first monster has a lower type.
 // If monster type and attitude are the same, return false.
-bool compare_monsters_attitude( const monsters *m1, const monsters *m2 )
+bool compare_monsters_attitude( const monster* m1, const monster* m2 )
 {
     if (_mons_hostile(m1) && !_mons_hostile(m2))
         return (true);

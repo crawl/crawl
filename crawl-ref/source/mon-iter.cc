@@ -36,12 +36,12 @@ monster_iterator::operator bool() const
     return (curr_mid < MAX_MONSTERS);
 }
 
-monsters* monster_iterator::operator*() const
+monster* monster_iterator::operator*() const
 {
     return (&env.mons[curr_mid]);
 }
 
-monsters* monster_iterator::operator->() const
+monster* monster_iterator::operator->() const
 {
     return (&env.mons[curr_mid]);
 }
@@ -61,7 +61,7 @@ monster_iterator monster_iterator::operator++(int)
 
 bool monster_iterator::valid(int mid) const
 {
-    monsters* mon = &env.mons[mid];
+    monster* mon = &env.mons[mid];
     if (!mon->alive())
         return (false);
     switch (restr)

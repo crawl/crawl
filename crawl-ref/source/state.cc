@@ -196,7 +196,7 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
 
     if (ai == AI_SEE_MONSTER)
     {
-        const monsters* mon = static_cast<const monsters*>(at.data);
+        const monster* mon = static_cast<const monster* >(at.data);
         if (!you.can_see(mon))
             return (false);
 
@@ -257,7 +257,7 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
         // This check is for when command repetition is used to
         // whack away at a 0xp monster, since the player feels safe
         // when the only monsters around are 0xp.
-        const monsters* mon = static_cast<const monsters*>(at.data);
+        const monster* mon = static_cast<const monster* >(at.data);
 
         if (mons_class_flag(mon->type, M_NO_EXP_GAIN)
             && mon->visible_to(&you))
@@ -395,12 +395,12 @@ bool game_state::is_mon_acting() const
     return (mon_act != NULL);
 }
 
-monsters* game_state::which_mon_acting() const
+monster* game_state::which_mon_acting() const
 {
     return (mon_act);
 }
 
-void game_state::inc_mon_acting(monsters* mon)
+void game_state::inc_mon_acting(monster* mon)
 {
     ASSERT(!invalid_monster(mon));
 
@@ -410,7 +410,7 @@ void game_state::inc_mon_acting(monsters* mon)
     mon_act = mon;
 }
 
-void game_state::dec_mon_acting(monsters* mon)
+void game_state::dec_mon_acting(monster* mon)
 {
     ASSERT(mon_act == mon);
 
@@ -431,7 +431,7 @@ void game_state::clear_mon_acting()
     mon_act_stack.clear();
 }
 
-void game_state::mon_gone(monsters* mon)
+void game_state::mon_gone(monster* mon)
 {
     for (unsigned int i = 0, size = mon_act_stack.size(); i < size; i++)
     {
