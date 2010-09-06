@@ -38,6 +38,7 @@ Caveats/issues:
 #include "package.h"
 #include "endianness.h"
 #include "errors.h"
+#include "syscalls.h"
 
 #undef  FSCK_VERBOSE
 #undef  COSTLY_ASSERTS
@@ -108,6 +109,9 @@ package::package(const char* file, bool writeable, bool empty)
         fd = open(file, (writeable? O_RDWR : O_RDONLY) | O_BINARY, 0666);
         if (fd == -1)
             sysfail("can't open save file (%s)", file);
+
+        if (!lock_file(fd))
+            fail("Another game is already in progress using this save!");
 
         file_header head;
         ssize_t res = ::read(fd, &head, sizeof(file_header));
