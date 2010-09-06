@@ -722,7 +722,7 @@ void static _get_randart_properties(const item_def &item,
 
     if (aclass == OBJ_WEAPONS) // Only weapons get brands, of course.
     {
-        proprt[ARTP_BRAND] = SPWPN_FLAMING + random2(15);        // brand
+        proprt[ARTP_BRAND] = SPWPN_FLAMING + random2(16);        // brand
 
         if (one_chance_in(6))
             proprt[ARTP_BRAND] = SPWPN_FLAMING + random2(2);
