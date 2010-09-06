@@ -341,15 +341,15 @@ void unlink_item( int dest )
     if (dest == NON_ITEM || !mitm[dest].defined())
         return;
 
-    monsters* monster = mitm[dest].holding_monster();
+    monster* mons = mitm[dest].holding_monster();
 
-    if (monster != NULL)
+    if (mons != NULL)
     {
         for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
         {
-            if (monster->inv[i] == dest)
+            if (mons->inv[i] == dest)
             {
-                monster->inv[i] = NON_ITEM;
+                mons->inv[i] = NON_ITEM;
 
                 mitm[dest].pos.reset();
                 mitm[dest].link = NON_ITEM;
@@ -359,7 +359,7 @@ void unlink_item( int dest )
         mprf(MSGCH_ERROR, "Item %s claims to be held by monster %s, but "
                           "it isn't in the monster's inventory.",
              mitm[dest].name(DESC_PLAIN, false, true).c_str(),
-             monster->name(DESC_PLAIN, true).c_str());
+             mons->name(DESC_PLAIN, true).c_str());
         // Don't return so the debugging code can take a look at it.
     }
     // Unlinking a newly created item, or a a temporary one, or an item in
@@ -859,12 +859,12 @@ static void _origin_set_portal_vault(item_def &item)
     item.props[PORTAL_VAULT_ORIGIN_KEY] = you.level_type_origin;
 }
 
-void origin_set_monster(item_def &item, const monsters *monster)
+void origin_set_monster(item_def &item, const monster* mons)
 {
     if (!origin_known(item))
     {
         if (!item.orig_monnum)
-            item.orig_monnum = monster->type + 1;
+            item.orig_monnum = mons->type + 1;
         item.orig_place = get_packed_place();
         _origin_set_portal_vault(item);
     }
@@ -1918,7 +1918,7 @@ const item_def* top_item_at(const coord_def& where, bool allow_mimic_item)
 {
     if (allow_mimic_item)
     {
-        const monsters* mon = monster_at(where);
+        const monster* mon = monster_at(where);
         if (mon && mons_is_unknown_mimic(mon))
             return &get_mimic_item(mon);
     }
@@ -1956,7 +1956,7 @@ bool multiple_items_at(const coord_def& where, bool allow_mimic_item)
 
     if (allow_mimic_item)
     {
-        const monsters* mon = monster_at(where);
+        const monster* mon = monster_at(where);
         if (mon && mons_is_unknown_mimic(mon))
             ++found_count;
     }
@@ -2128,7 +2128,7 @@ int get_equip_slot(const item_def *item)
     return worn;
 }
 
-mon_inv_type get_mon_equip_slot(const monsters* mon, const item_def &item)
+mon_inv_type get_mon_equip_slot(const monster* mon, const item_def &item)
 {
     ASSERT(mon->alive());
 
@@ -2983,7 +2983,7 @@ int item_def::armour_rating() const
     return (property(*this, PARM_AC) + plus);
 }
 
-monsters* item_def::holding_monster() const
+monster* item_def::holding_monster() const
 {
     if (!pos.equals(-2, -2))
         return (NULL);
@@ -3660,6 +3660,7 @@ item_info get_item_info(const item_def& item)
         break;
     case OBJ_ARMOUR:
         ii.sub_type = item.sub_type;
+        ii.plus2    = item.plus2;      // sub-subtype (gauntlets, etc)
         if (item_ident(ii, ISFLAG_KNOW_PLUSES))
             ii.plus = item.plus;
         if (item_type_known(item))

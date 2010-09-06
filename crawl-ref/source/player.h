@@ -12,6 +12,7 @@
 #include "beam.h"
 #include "quiver.h"
 #include "itemprop-enum.h"
+#include "package.h"
 #include "place-info.h"
 
 #include "species.h"
@@ -286,6 +287,10 @@ public:
   int         escaped_death_cause;
   std::string escaped_death_aux;
 
+  int turn_damage;   // cumulative damage per turn
+  int damage_source; // death source of last damage done to player
+  int source_damage; // cumulative damage for you.damage_source
+
   // When other levels are loaded (e.g. viewing), is the player on this level?
   bool on_current_level;
 
@@ -293,6 +298,9 @@ public:
   // 0 = no, 1 = cardinal move, 2 = diagonal move
   int walking;
 
+
+  // The save file itself.
+  package *save;
 
 protected:
     FixedVector<PlaceInfo, NUM_BRANCHES>             branch_info;
@@ -353,16 +361,16 @@ public:
     bool travelling_light() const;
 
     // Dealing with beholders. Implemented in behold.cc.
-    void add_beholder(const monsters *mon);
+    void add_beholder(const monster* mon);
     bool beheld() const;
-    bool beheld_by(const monsters *mon) const;
-    monsters* get_beholder(const coord_def &pos) const;
-    monsters* get_any_beholder() const;
-    void remove_beholder(const monsters *mon);
+    bool beheld_by(const monster* mon) const;
+    monster* get_beholder(const coord_def &pos) const;
+    monster* get_any_beholder() const;
+    void remove_beholder(const monster* mon);
     void clear_beholders();
     void beholders_check_noise(int loudness);
     void update_beholders();
-    void update_beholder(const monsters *mon);
+    void update_beholder(const monster* mon);
 
     kill_category kill_alignment() const;
 
@@ -381,9 +389,9 @@ public:
     int mindex() const;
     int       get_experience_level() const;
     actor_type atype() const { return ACT_PLAYER; }
-    monsters* as_monster() { return NULL; }
+    monster* as_monster() { return NULL; }
     player* as_player() { return this; }
-    const monsters* as_monster() const { return NULL; }
+    const monster* as_monster() const { return NULL; }
     const player* as_player() const { return this; }
 
     god_type  deity() const;
@@ -542,7 +550,6 @@ public:
     void shield_block_succeeded(actor *foe);
 
     bool wearing_light_armour(bool with_skill = false) const;
-    void exercise(skill_type skill, int qty);
     int  skill(skill_type skill, bool skill_bump = false) const;
 
     bool do_shaft();
@@ -584,7 +591,7 @@ public:
 
 protected:
     void _removed_beholder();
-    bool _possible_beholder(const monsters *mon) const;
+    bool _possible_beholder(const monster* mon) const;
 };
 
 #ifdef DEBUG_GLOBALS
@@ -614,7 +621,7 @@ struct player_save_info
     std::string short_desc() const;
 };
 
-class monsters;
+class monster;
 struct item_def;
 
 // Helper. Use move_player_to_grid or player::apply_location_effects instead.
@@ -622,7 +629,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
                              bool stepped=false, bool allow_shift=true,
                              const coord_def& old_pos=coord_def());
 
-bool check_moveto(const coord_def& p);
+bool check_moveto(const coord_def& p, const std::string &move_verb = "step");
 void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift);
 
 bool player_in_mappable_area(void);
@@ -634,7 +641,7 @@ bool berserk_check_wielded_weapon(void);
 int player_equip( equipment_type slot, int sub_type, bool calc_unid = true );
 int player_equip_ego_type( int slot, int sub_type );
 bool player_equip_unrand( int unrand_index );
-bool player_can_hit_monster(const monsters *mon);
+bool player_can_hit_monster(const monster* mon);
 
 bool player_is_shapechanged(void);
 

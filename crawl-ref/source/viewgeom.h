@@ -74,9 +74,54 @@ public:
     // Recalculate vlos1 and vlos2.
     void calc_vlos();
 
-    coord_def view_centre() const
+    inline coord_def view2grid(const coord_def &pos) const
     {
-        return viewp + viewhalfsz;
+        return (pos - viewhalfsz + vgrdc - coord_def(1, 1));
+    }
+
+    inline coord_def grid2view(const coord_def &pos) const
+    {
+        return (pos - vgrdc + viewhalfsz + coord_def(1, 1));
+    }
+
+    inline coord_def view2show(const coord_def &pos) const
+    {
+        return (pos - vlos1);
+    }
+
+    inline coord_def show2view(const coord_def &pos) const
+    {
+        return (pos + vlos1);
+    }
+
+    inline coord_def grid2show(const coord_def &pos) const
+    {
+        return (view2show(grid2view(pos)));
+    }
+
+    inline coord_def show2grid(const coord_def &pos) const
+    {
+        return (view2grid(show2view(pos)));
+    }
+
+    inline coord_def screen2view(const coord_def& pos) const
+    {
+        return (pos - viewp + termp);
+    }
+
+    inline coord_def view2screen(const coord_def& pos) const
+    {
+        return (pos + viewp - termp);
+    }
+
+    inline coord_def screen2grid(const coord_def& pos) const
+    {
+        return view2grid(screen2view(pos));
+    }
+
+    inline coord_def grid2screen(const coord_def& pos) const
+    {
+        return view2screen(grid2view(pos));
     }
 
     coord_def glosc() const
@@ -84,81 +129,74 @@ public:
         return (glos1 + glos2) / 2;
     }
 
-    bool in_grid_los(const coord_def &c) const
+    bool in_los_bounds_g(const coord_def &c) const
     {
         return (c.x >= glos1.x && c.x <= glos2.x
                 && c.y >= glos1.y && c.y <= glos2.y);
     }
 
-    bool in_view_los(const coord_def &c) const
+    bool in_los_bounds_v(const coord_def &c) const
     {
-        return (c.x >= vlos1.x && c.x <= vlos2.x
-                && c.y >= vlos1.y && c.y <= vlos2.y);
+        return in_los_bounds_g(view2grid(c));
     }
 
-    bool in_view_viewport(const coord_def &c) const
+    bool in_viewport_v(const coord_def &c) const
     {
-        return (c.x >= viewp.x && c.y >= viewp.y
-                && c.x < viewp.x + viewsz.x
-                && c.y < viewp.y + viewsz.y);
+        return (c.x > 0 && c.y > 0
+                && c.x <= viewsz.x && c.y <= viewsz.y);
     }
 
-    bool in_grid_viewport(const coord_def &c) const
+    bool in_viewport_s(const coord_def &c) const
     {
-        return in_view_viewport(c - vgrdc + view_centre());
+        return in_viewport_v(screen2view(c));
+    }
+
+    bool in_viewport_g(const coord_def &c) const
+    {
+        return in_viewport_v(grid2view(c));
     }
 };
 
 extern crawl_view_geometry crawl_view;
 
-inline int view2gridX(int vx)
-{
-    return (crawl_view.vgrdc.x + vx - crawl_view.view_centre().x);
-}
-
-inline int view2gridY(int vy)
-{
-    return (crawl_view.vgrdc.y + vy - crawl_view.view_centre().y);
-}
-
 inline coord_def view2grid(const coord_def &pos)
 {
-    return pos - crawl_view.view_centre() + crawl_view.vgrdc;
-}
-
-inline int grid2viewX(int gx)
-{
-    return (gx - crawl_view.vgrdc.x + crawl_view.view_centre().x);
-}
-
-inline int grid2viewY(int gy)
-{
-    return (gy - crawl_view.vgrdc.y + crawl_view.view_centre().y);
+    return crawl_view.view2grid(pos);
 }
 
 inline coord_def grid2view(const coord_def &pos)
 {
-    return (pos - crawl_view.vgrdc + crawl_view.view_centre());
+    return crawl_view.grid2view(pos);
 }
 
 inline coord_def view2show(const coord_def &pos)
 {
-    return (pos - crawl_view.vlos1);
+    return crawl_view.view2show(pos);
 }
 
 inline coord_def show2view(const coord_def &pos)
 {
-    return (pos + crawl_view.vlos1);
+    return crawl_view.show2view(pos);
 }
 
 inline coord_def grid2show(const coord_def &pos)
 {
-    return (view2show(grid2view(pos)));
+    return crawl_view.grid2show(pos);
 }
 
 inline coord_def show2grid(const coord_def &pos)
 {
-    return (view2grid(show2view(pos)));
+    return crawl_view.show2grid(pos);
+}
+
+inline bool in_los_bounds_v(const coord_def& pos)
+{
+    return crawl_view.in_los_bounds_v(pos);
+}
+
+inline bool in_los_bounds_g(const coord_def& pos)
+{
+    return crawl_view.in_los_bounds_g(pos);
 }
 
 #endif

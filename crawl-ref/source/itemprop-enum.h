@@ -94,6 +94,7 @@ enum brand_type // equivalent to (you.inv[].special or mitm[].special) % 30
     SPWPN_FROST,   // ranged, only
     SPWPN_VAMPIRICISM,
     SPWPN_PAIN,
+    SPWPN_ANTIMAGIC,
     SPWPN_DISTORTION,
     SPWPN_REACHING,
     SPWPN_RETURNING,
@@ -105,7 +106,6 @@ enum brand_type // equivalent to (you.inv[].special or mitm[].special) % 30
     SPWPN_CONFUSE,
     SPWPN_PENETRATION,
     SPWPN_REAPING,
-    SPWPN_ANTIMAGIC,
 
     NUM_REAL_SPECIAL_WEAPONS,
 

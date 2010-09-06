@@ -20,6 +20,7 @@
 # Similar options for reverting later changes:
 # include                 = 052_monster_glyphs.txt
 # include                 = 060_monster_glyphs.txt
+# include                 = 071_monster_glyphs.txt
 
 # Crawl Init file
 #
@@ -62,7 +63,7 @@
 # weapon = (short sword | hand axe | spear | mace | trident | random)
 # book = (fire | ice | summ | random)
 # wand = (enslavement | confusion | magic darts | frost | flame | striking | random)
-# chaos_knight = (Xom | Makhleb | random)
+# chaos_knight = (Xom | Makhleb | Lugonu | random)
 # priest       = (Zin | Yredelemnul | Beogh | random)
 # species = (Human |...| Vampire | random)
 # job     = (Fighter |...| Wanderer | random)

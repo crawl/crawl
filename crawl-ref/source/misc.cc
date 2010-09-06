@@ -41,6 +41,7 @@
 #include "dgnevent.h"
 #include "directn.h"
 #include "env.h"
+#include "exercise.h"
 #include "fight.h"
 #include "files.h"
 #include "flood_find.h"
@@ -53,6 +54,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
+#include "kills.h"
 #include "libutil.h"
 #include "macro.h"
 #include "makeitem.h"
@@ -558,6 +560,8 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
                                 == ID_KNOWN_TYPE;
 
     _potion_stack_changed_message(blood, coag_count, "coagulate%s");
+
+    request_autoinscribe();
 
     // Identify both blood and coagulated blood, if necessary.
     if (!knew_blood)
@@ -1158,7 +1162,7 @@ void bleed_onto_floor(const coord_def& where, monster_type montype,
 
     if (montype != NUM_MONSTERS && montype != MONS_PLAYER)
     {
-        monsters m;
+        monster m;
         m.type = montype;
         if (!m.can_bleed())
             return;
@@ -1291,7 +1295,7 @@ void search_around(bool only_adjacent)
             {
                 mpr("You found a secret door!");
                 reveal_secret_door(*ri);
-                exercise(SK_TRAPS_DOORS, (coinflip() ? 2 : 1));
+                practise(EX_FOUND_SECRET_DOOR);
             }
             else if (grd(*ri) == DNGN_UNDISCOVERED_TRAP
                      && x_chance_in_y(effective + 1, 17))
@@ -1302,7 +1306,7 @@ void search_around(bool only_adjacent)
                     ptrap->reveal();
                     mpr("You found a trap!");
                     learned_something_new(HINT_SEEN_TRAP, *ri);
-                    exercise(SK_TRAPS_DOORS, (coinflip() ? 2 : 1));
+                    practise(EX_TRAP_FOUND);
                 }
                 else
                 {
@@ -1456,7 +1460,7 @@ bool go_berserk(bool intentional, bool potion)
 
 // Returns true if the monster has a path to the player, or it has to be
 // assumed that this is the case.
-static bool _mons_has_path_to_player(const monsters *mon, bool want_move = false)
+static bool _mons_has_path_to_player(const monster* mon, bool want_move = false)
 {
     // Don't consider sleeping monsters safe, in case the player would
     // rather retreat and try another path for maximum stabbing chances.
@@ -1497,7 +1501,7 @@ static bool _mons_has_path_to_player(const monsters *mon, bool want_move = false
     return (false);
 }
 
-bool mons_can_hurt_player(const monsters *mon, const bool want_move)
+bool mons_can_hurt_player(const monster* mon, const bool want_move)
 {
     // FIXME: This takes into account whether the player knows the map!
     // It also always returns true for sleeping monsters, but that's okay
@@ -1522,7 +1526,7 @@ bool mons_can_hurt_player(const monsters *mon, const bool want_move)
     return (false);
 }
 
-bool mons_is_safe(const monsters *mon, const bool want_move,
+bool mons_is_safe(const monster* mon, const bool want_move,
                   const bool consider_user_options)
 {
     if (mons_is_unknown_mimic(mon))
@@ -1582,7 +1586,7 @@ bool mons_is_safe(const monsters *mon, const bool want_move,
 // require_visible Require that monsters be visible to the player
 // range           search radius (defaults: LOS)
 //
-std::vector<monsters*> get_nearby_monsters(bool want_move,
+std::vector<monster* > get_nearby_monsters(bool want_move,
                                            bool just_check,
                                            bool dangerous_only,
                                            bool consider_user_options,
@@ -1594,12 +1598,12 @@ std::vector<monsters*> get_nearby_monsters(bool want_move,
     if (range == -1)
         range = LOS_RADIUS;
 
-    std::vector<monsters*> mons;
+    std::vector<monster* > mons;
 
     // Sweep every visible square within range.
     for (radius_iterator ri(you.pos(), range); ri; ++ri)
     {
-        if (monsters* mon = monster_at(*ri))
+        if (monster* mon = monster_at(*ri))
         {
             if (mon->alive()
                 && (!require_visible || mon->visible_to(&you))
@@ -1654,14 +1658,14 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
     }
 
     // Monster check.
-    std::vector<monsters*> visible =
+    std::vector<monster* > visible =
         get_nearby_monsters(want_move, !announce, true, true, true, range);
 
     // Announce the presence of monsters (Eidolos).
     std::string msg;
     if (visible.size() == 1)
     {
-        const monsters &m = *visible[0];
+        const monster& m = *visible[0];
         const std::string monname = mons_is_mimic(m.type)
                                   ? "A mimic"
                                   : m.name(DESC_CAP_A);
@@ -1763,7 +1767,7 @@ static void _drop_tomb(const coord_def& pos, bool premature)
 {
     int count = 0;
 
-    monsters* mon = monster_at(pos);
+    monster* mon = monster_at(pos);
     // Don't wander on duty!
     if (mon)
         mon->behaviour = BEH_SEEK;
@@ -1813,15 +1817,15 @@ void timeout_tombs(int duration)
         cmark->duration -= duration;
 
         // Tombs without monsters in them disappear early.
-        monsters *mon_entombed = monster_at(cmark->pos);
+        monster* mon_entombed = monster_at(cmark->pos);
         if (cmark->duration <= 0 || !mon_entombed)
         {
             _drop_tomb(cmark->pos, !mon_entombed);
 
-            monsters *mon_src =
+            monster* mon_src =
                 !invalid_monster_index(cmark->source) ? &menv[cmark->source]
                                                       : NULL;
-            monsters *mon_targ =
+            monster* mon_targ =
                 !invalid_monster_index(cmark->target) ? &menv[cmark->target]
                                                       : NULL;
 
@@ -2106,7 +2110,7 @@ std::string your_hand(bool plural)
     return result;
 }
 
-bool stop_attack_prompt(const monsters *mon, bool beam_attack,
+bool stop_attack_prompt(const monster* mon, bool beam_attack,
                         coord_def beam_target, bool autohit_first)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -2132,6 +2136,10 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
     if (isFriendly)
     {
         // Listed in the form: "your rat", "Blork the orc".
+        std::string mon_name = mon->name(DESC_PLAIN);
+        mon_name = std::string("your ") +
+                   (you.religion == GOD_OKAWARU ? "ally the " : "") +
+                   mon_name;
         std::string verb = "";
         bool need_mon_name = true;
         if (beam_attack)
@@ -2145,7 +2153,7 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
                 if (autohit_first)
                     return (false);
 
-                verb += "in " + mon->name(DESC_NOCAP_THE) + "'s direction";
+                verb += "in " + apostrophise(mon_name) + " direction";
                 need_mon_name = false;
             }
             else
@@ -2155,7 +2163,7 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
             verb = "attack ";
 
         if (need_mon_name)
-            verb += mon->name(DESC_NOCAP_THE);
+            verb += mon_name;
 
         snprintf(info, INFO_SIZE, "Really %s%s?",
                  verb.c_str(),
@@ -2203,7 +2211,7 @@ bool is_orckind(const actor *act)
 
     if (act->atype() == ACT_MONSTER)
     {
-        const monsters* mon = act->as_monster();
+        const monster* mon = act->as_monster();
         if (mons_is_zombified(mon)
             && mons_genus(mon->base_monster) == MONS_ORC)
         {
@@ -2231,7 +2239,7 @@ bool is_dragonkind(const actor *act)
         return (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON);
 
     // Else the actor is a monster.
-    const monsters* mon = act->as_monster();
+    const monster* mon = act->as_monster();
 
     if (mon->type == MONS_SERPENT_OF_HELL)
         return (true);
@@ -2253,9 +2261,9 @@ bool is_dragonkind(const actor *act)
 }
 
 // Make the player swap positions with a given monster.
-void swap_with_monster(monsters *mon_to_swap)
+void swap_with_monster(monster* mon_to_swap)
 {
-    monsters& mon(*mon_to_swap);
+    monster& mon(*mon_to_swap);
     ASSERT(mon.alive());
     const coord_def newpos = mon.pos();
 

@@ -32,6 +32,7 @@
 #include "directn.h"
 #include "effects.h"
 #include "env.h"
+#include "exercise.h"
 #include "map_knowledge.h"
 #include "fight.h"
 #include "food.h"
@@ -643,8 +644,8 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return (false);
         }
 
-        if (!ignore_temporary && you.swimming()
-            && you.species == SP_MERFOLK)
+        if (!ignore_temporary
+            && you.species == SP_MERFOLK && you.swimming())
         {
             if (verbose)
                mpr("You don't currently have feet!");
@@ -1555,7 +1556,7 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
     }
     else
     {
-        monsters *mon = victim->as_monster();
+        monster* mon = victim->as_monster();
 
         if (!(mon->flags & MF_WAS_IN_VIEW))
             mon->seen_context = "thin air";
@@ -1674,7 +1675,7 @@ static bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
     if (!agent || agent->atype() == ACT_MONSTER || beam.reflections > 0)
         return (true);
 
-    monsters* mons = victim->as_monster();
+    monster* mons = victim->as_monster();
 
     const int skill = you.skills[SK_THROWING];
     const item_def* wp = agent->weapon();
@@ -1827,7 +1828,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         // But not for Nessos.
         if (agent->atype() == ACT_MONSTER)
         {
-            const monsters* mon = static_cast<const monsters*>(agent);
+            const monster* mon = static_cast<const monster* >(agent);
             if (mon->type != MONS_NESSOS)
                 bow_brand = SPWPN_NORMAL;
         }
@@ -1859,7 +1860,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     }
     else
     {
-        const monsters *mon = agent->as_monster();
+        const monster* mon = agent->as_monster();
 
         beam.attitude      = mons_attitude(mon);
         beam.beam_source   = mon->mindex();
@@ -2573,6 +2574,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             }
         }
 
+        practise(EX_WILL_LAUNCH, launcher_skill);
+
         // Removed 2 random2(2)s from each of the learning curves, but
         // left slings because they're hard enough to develop without
         // a good source of shot in the dungeon.
@@ -2580,10 +2583,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         {
         case SK_SLINGS:
         {
-            // Slings are really easy to learn because they're not
-            // really all that good, and it's harder to get ammo anyway.
-            exercise(SK_SLINGS, 1 + random2avg(3, 2));
-
             // Sling bullets are designed for slinging and easier to aim.
             if (wepType == MI_SLING_BULLET)
                 baseHit += 4;
@@ -2610,7 +2609,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         // comes from dexterity.  (Dex bonus here as well as below.)
         case SK_THROWING:
             baseHit -= 2;
-            exercise(SK_THROWING, (coinflip()? 2 : 1));
             exHitBonus += (effSkill * 3) / 2 + you.dex() / 2;
 
             // No extra damage for blowguns.
@@ -2624,7 +2622,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         case SK_BOWS:
         {
             baseHit -= 3;
-            exercise(SK_BOWS, (coinflip()? 2 : 1));
             exHitBonus += (effSkill * 2);
 
             // Strength is good if you're using a nice bow.
@@ -2649,7 +2646,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             // Crossbows are easy for unskilled people.
 
         case SK_CROSSBOWS:
-            exercise(SK_CROSSBOWS, (coinflip()? 2 : 1));
             baseHit++;
             exHitBonus += (3 * effSkill) / 2 + 6;
             // exDamBonus += effSkill * 2 / 3 + 4;
@@ -2836,9 +2832,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 // Darts also using throwing skills, now.
                 exHitBonus += skill_bump(SK_THROWING);
                 exDamBonus += you.skills[SK_THROWING] * 3 / 5;
-
-                // exercise skills
-                exercise(SK_THROWING, 1 + random2avg(3, 2));
                 break;
 
             case MI_JAVELIN:
@@ -2852,9 +2845,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
                 // High dex helps damage a bit, too (aim for weak spots).
                 exDamBonus = stat_adjust(exDamBonus, you.dex(), 20, 150, 100);
-
-                // Javelins train throwing quickly.
-                exercise(SK_THROWING, 1 + coinflip());
                 break;
 
             case MI_THROWING_NET:
@@ -2868,19 +2858,18 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 exHitBonus += (skill_bump(SK_THROWING) * 7 / 2);
                 // Adjust for strength and dex.
                 exHitBonus = dex_adjust_thrown_tohit(exHitBonus);
-
-                // Nets train throwing.
-                exercise(SK_THROWING, 1);
                 break;
             }
 
             if (ammo_brand == SPMSL_STEEL)
                 dice_mult = dice_mult * 150 / 100;
-        }
 
-        // exercise skill
-        if (coinflip())
-            exercise(SK_THROWING, 1);
+            practise(EX_WILL_THROW_MSL, wepType);
+        }
+        else
+        {
+            practise(EX_WILL_THROW_WEAPON);
+        }
 
         // ID check
         if (!teleport
@@ -2916,8 +2905,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     }
     else // LRET_FUMBLED
     {
-        if (one_chance_in(20))
-            exercise(SK_THROWING, 1);
+        practise(EX_WILL_THROW_OTHER);
 
         exHitBonus = you.dex() / 4;
     }
@@ -3882,7 +3870,7 @@ void zap_wand(int slot)
         set_ident_flags(wand, ISFLAG_KNOW_PLUSES);
     }
 
-    exercise(SK_EVOCATIONS, 1);
+    practise(EX_DID_ZAP_WAND);
     alert_nearby_monsters();
 
     if (!alreadyknown && !alreadytried && risky)
@@ -4577,7 +4565,7 @@ static bool _scroll_modify_item(item_def scroll)
         {
             // Might still fail on highly enchanted weapons of electrocution.
             // (If so, already prints the "Nothing happens" message.)
-            if (recharge_wand(item_slot))
+            if (recharge_wand(item_slot, false))
                 return (true);
             return (false);
         }
@@ -4628,7 +4616,7 @@ static void _vulnerability_scroll()
     // Go over all creatures in LOS.
     for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
     {
-        if (monsters* mon = monster_at(*ri))
+        if (monster* mon = monster_at(*ri))
         {
             // Dispel all magical enchantments.
             for (unsigned int i = 0; i < ARRAYSZ(lost_enchantments); ++i)
@@ -4750,8 +4738,7 @@ void read_scroll(int slot)
             return;
         }
 
-        if (!you.skills[SK_SPELLCASTING])
-            exercise(SK_SPELLCASTING, (coinflip()? 2 : 1));
+        practise(EX_WILL_READ_SCROLL);
     }
 
     // It is the exception, not the rule, that the scroll will not
@@ -4811,14 +4798,14 @@ void read_scroll(int slot)
 
     case SCR_SUMMONING:
     {
-        const int monster = create_monster(
-                                mgen_data(MONS_ABOMINATION_SMALL, BEH_FRIENDLY,
-                                          &you, 0, 0, you.pos(), MHITYOU,
-                                          MG_FORCE_BEH));
-        if (monster != -1)
+        const int mons = create_monster(
+                            mgen_data(MONS_ABOMINATION_SMALL, BEH_FRIENDLY,
+                                      &you, 0, 0, you.pos(), MHITYOU,
+                                      MG_FORCE_BEH));
+        if (mons != -1)
         {
             mpr("A horrible Thing appears!");
-            player_angers_monster(&menv[monster]);
+            player_angers_monster(&menv[mons]);
         }
         else
         {

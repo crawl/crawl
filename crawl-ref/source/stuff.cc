@@ -15,6 +15,7 @@
 #include "coordit.h"
 #include "database.h"
 #include "directn.h"
+#include "dungeon.h"
 #include "env.h"
 #include "libutil.h"
 #include "los.h"
@@ -166,7 +167,7 @@ void set_redraw_status(uint64_t flags)
     you.redraw_status_flags |= flags;
 }
 
-static bool _is_religious_follower(const monsters* mon)
+static bool _is_religious_follower(const monster* mon)
 {
     return ((you.religion == GOD_YREDELEMNUL || you.religion == GOD_BEOGH)
             && is_follower(mon));
@@ -177,7 +178,7 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
     if (!in_bounds(pos) || pos == you.pos())
         return (false);
 
-    monsters *fmenv = monster_at(pos);
+    monster* fmenv = monster_at(pos);
     if (fmenv == NULL)
         return (false);
 
@@ -249,7 +250,7 @@ static int follower_tag_radius2()
     // only adjacent friendlies may follow.
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
     {
-        if (const monsters *mon = monster_at(*ai))
+        if (const monster* mon = monster_at(*ai))
             if (!mon->friendly())
                 return (2);
     }
@@ -366,6 +367,7 @@ void clear_globals_on_exit()
 {
     clear_rays_on_exit();
     clear_zap_info_on_exit();
+    dgn_clear_vault_placements(env.level_vaults);
 }
 
 // Used by do_crash_dump() to tell if the crash happened during exit() hooks.
@@ -373,6 +375,7 @@ void clear_globals_on_exit()
 // free'd by exit() hooks when exit() is called, and we don't want to reference
 // free'd memory.
 bool CrawlIsExiting = false;
+bool CrawlIsCrashing = false;
 
 void end(int exit_code, bool print_error, const char *format, ...)
 {
@@ -416,6 +419,8 @@ void end(int exit_code, bool print_error, const char *format, ...)
 #endif
 
     CrawlIsExiting = true;
+    if (exit_code)
+        CrawlIsCrashing = true;
     exit(exit_code);
 }
 
@@ -990,7 +995,7 @@ void zap_los_monsters(bool items_also)
 
         // If we ever allow starting with a friendly monster,
         // we'll have to check here.
-        monsters *mon = monster_at(*ri);
+        monster* mon = monster_at(*ri);
         if (mon == NULL || mons_class_flag(mon->type, M_NO_EXP_GAIN))
             continue;
 

@@ -13,24 +13,24 @@ struct god_conduct_trigger
     int pgain;
     bool known;
     bool enabled;
-    std::auto_ptr<monsters> victim;
+    std::auto_ptr<monster> victim;
 
     god_conduct_trigger(conduct_type c = NUM_CONDUCTS,
                         int pg = 0,
                         bool kn = true,
-                        const monsters *vict = NULL);
+                        const monster* vict = NULL);
 
     void set(conduct_type c = NUM_CONDUCTS,
              int pg = 0,
              bool kn = true,
-             const monsters *vict = NULL);
+             const monster* vict = NULL);
 
     ~god_conduct_trigger();
 };
 
 bool did_god_conduct(conduct_type thing_done, int level, bool known = true,
-                     const monsters *victim = NULL);
-void set_attack_conducts(god_conduct_trigger conduct[3], const monsters *mon,
+                     const monster* victim = NULL);
+void set_attack_conducts(god_conduct_trigger conduct[3], const monster* mon,
                          bool known = true);
 void enable_attack_conducts(god_conduct_trigger conduct[3]);
 void disable_attack_conducts(god_conduct_trigger conduct[3]);

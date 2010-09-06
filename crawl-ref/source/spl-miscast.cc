@@ -157,7 +157,7 @@ void MiscastEffect::init()
     }
     else if (!invalid_monster_index(kill_source))
     {
-        monsters* mon_source = &menv[kill_source];
+        monster* mon_source = &menv[kill_source];
         ASSERT(mon_source->type != -1);
 
         act_source = mon_source;
@@ -500,7 +500,7 @@ bool MiscastEffect::_ouch(int dam, beam_type flavour)
     // Delay do_msg() until after avoid_lethal().
     if (target->atype() == ACT_MONSTER)
     {
-        monsters* mon_target = target_as_monster();
+        monster* mon_target = target_as_monster();
 
         do_msg(true);
 
@@ -677,7 +677,7 @@ bool MiscastEffect::_create_monster(monster_type what, int abj_deg,
     if (target->atype() == ACT_MONSTER && you.penance[god] == 0
         && source != ZOT_TRAP_MISCAST)
     {
-        monsters* mon_target = target_as_monster();
+        monster* mon_target = target_as_monster();
 
         switch (mon_target->temp_attitude())
         {
@@ -2109,7 +2109,7 @@ void MiscastEffect::_fire(int severity)
                 napalm_player(random2avg(7,3)  + 1);
             else
             {
-                monsters* mon_target = target_as_monster();
+                monster* mon_target = target_as_monster();
                 mon_target->add_ench(mon_enchant(ENCH_STICKY_FLAME,
                     std::min(4, 1 + random2(mon_target->hit_dice) / 2), kc));
             }

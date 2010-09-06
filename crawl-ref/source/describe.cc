@@ -338,7 +338,7 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
 // string, rather than the return value of artefact_auto_inscription(),
 // in case more information about the randart has been learned since
 // the last auto-inscription.
-static void _trim_randart_inscrip( item_def& item )
+void trim_randart_inscrip( item_def& item )
 {
     std::vector<std::string> propnames = _randart_propnames(item);
 
@@ -364,7 +364,7 @@ std::string artefact_auto_inscription( const item_def& item )
 void add_autoinscription( item_def &item, std::string ainscrip)
 {
     // Remove previous randart inscription.
-    _trim_randart_inscrip(item);
+    trim_randart_inscrip(item);
 
     add_inscription(item, ainscrip);
 }
@@ -1495,7 +1495,8 @@ static std::string _describe_jewellery( const item_def &item, bool verbose)
             description += "\n";
             description += rand_desc;
         }
-        if (!item_ident(item, ISFLAG_KNOW_PROPERTIES))
+        if (!item_ident(item, ISFLAG_KNOW_PROPERTIES) ||
+            !item_ident(item, ISFLAG_KNOW_TYPE))
         {
             description += "\nThis ";
             description += (jewellery_is_amulet(item) ? "amulet" : "ring");
@@ -3048,6 +3049,31 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         inf.body << _describe_demon(mi.mname, mi.fly) << "\n";
         break;
 
+    case MONS_SERPENT_OF_HELL:
+        // XXX: ick
+        switch (mi.colour)
+        {
+        case RED:
+            inf.body << "A huge red glowing dragon, burning with hellfire.\n";
+            break;
+
+        case WHITE:
+            inf.body << "A huge gleaming white dragon, covered in shards of ice.\n";
+            break;
+
+        case CYAN:
+            inf.body << "A huge metallic dragon, glowing with power.\n";
+            break;
+
+        case MAGENTA:
+            inf.body << "A huge and dark dragon, wreathed in terrifying shadows.\n";
+            break;
+
+        default:
+            inf.body << "Well now, isn't this buggy?\n";
+        }
+        break;
+
     case MONS_PROGRAM_BUG:
         inf.body << "If this monster is a \"program bug\", then it's "
                 "recommended that you save your game and reload.  Please report "
@@ -3097,7 +3123,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         inf.quote += "\n";
 
 #ifdef DEBUG_DIAGNOSTICS
-    struct monsters& mons = *mi.mon();
+    struct monster& mons = *mi.mon();
     const actor *mfoe = mons.get_foe();
     inf.body << "\nMonster foe: "
              << (mfoe? mfoe->name(DESC_PLAIN, true)

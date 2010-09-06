@@ -517,6 +517,8 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     final_max_hp      = se.final_max_hp;
     final_max_max_hp  = se.final_max_max_hp;
     damage            = se.damage;
+    source_damage     = se.source_damage;
+    turn_damage       = se.turn_damage;
     str               = se.str;
     intel             = se.intel;
     dex               = se.dex;
@@ -689,10 +691,13 @@ void scorefile_entry::init_with_fields()
     final_max_hp     = fields->int_field("mhp");
     final_max_max_hp = fields->int_field("mmhp");
 
-    damage = fields->int_field("dam");
-    str    = fields->int_field("str");
-    intel  = fields->int_field("int");
-    dex    = fields->int_field("dex");
+    damage        = fields->int_field("dam");
+    source_damage = fields->int_field("sdam");
+    turn_damage   = fields->int_field("tdam");
+
+    str   = fields->int_field("str");
+    intel = fields->int_field("int");
+    dex   = fields->int_field("dex");
 
     god      = str_to_god(fields->str_field("god"));
     piety    = fields->int_field("piety");
@@ -809,6 +814,8 @@ void scorefile_entry::set_score_fields() const
     const std::string killer = death_source_desc();
     fields->add_field("killer", "%s", killer.c_str());
     fields->add_field("dam", "%d", damage);
+    fields->add_field("sdam", "%d", source_damage);
+    fields->add_field("tdam", "%d", turn_damage);
 
     fields->add_field("kaux", "%s", auxkilldata.c_str());
 
@@ -910,14 +917,14 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
         && !invalid_monster_index(death_source)
         && menv[death_source].type != -1)
     {
-        const monsters *monster = &menv[death_source];
+        const monster* mons = &menv[death_source];
 
         // Previously the weapon was only used for dancing weapons,
         // but now we pass it in as a string through the scorefile
         // entry to be appended in hiscores_format_single in long or
         // medium scorefile formats.
         if (death_type == KILLED_BY_MONSTER
-            && monster->inv[MSLOT_WEAPON] != NON_ITEM)
+            && mons->inv[MSLOT_WEAPON] != NON_ITEM)
         {
             // [ds] The highscore entry may be constructed while the player
             // is alive (for notes), so make sure we don't reveal info we
@@ -925,25 +932,25 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             if (you.hp <= 0)
             {
 #ifdef HISCORE_WEAPON_DETAIL
-                set_ident_flags( mitm[monster->inv[MSLOT_WEAPON]],
+                set_ident_flags( mitm[mons->inv[MSLOT_WEAPON]],
                                  ISFLAG_IDENT_MASK );
 #else
                 // changing this to ignore the pluses to keep it short
-                unset_ident_flags( mitm[monster->inv[MSLOT_WEAPON]],
+                unset_ident_flags( mitm[mons->inv[MSLOT_WEAPON]],
                                    ISFLAG_IDENT_MASK );
 
-                set_ident_flags( mitm[monster->inv[MSLOT_WEAPON]],
+                set_ident_flags( mitm[mons->inv[MSLOT_WEAPON]],
                                  ISFLAG_KNOW_TYPE );
 
                 // clear "runed" description text to make shorter yet
-                set_equip_desc( mitm[monster->inv[MSLOT_WEAPON]], 0 );
+                set_equip_desc( mitm[mons->inv[MSLOT_WEAPON]], 0 );
 #endif
             }
 
             // Setting this is redundant for dancing weapons, however
             // we do care about the above indentification. -- bwr
-            if (monster->type != MONS_DANCING_WEAPON)
-                auxkilldata = mitm[monster->inv[MSLOT_WEAPON]].name(DESC_NOCAP_A);
+            if (mons->type != MONS_DANCING_WEAPON)
+                auxkilldata = mitm[mons->inv[MSLOT_WEAPON]].name(DESC_NOCAP_A);
         }
 
         const bool death = you.hp <= 0;
@@ -951,22 +958,22 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
         const description_level_type desc =
             death_type == KILLED_BY_SPORE ? DESC_PLAIN : DESC_NOCAP_A;
 
-        death_source_name = monster->name(desc, death);
+        death_source_name = mons->name(desc, death);
 
-        if (death || you.can_see(monster))
-            death_source_name = monster->full_name(desc, true);
+        if (death || you.can_see(mons))
+            death_source_name = mons->full_name(desc, true);
 
-        if (death && monster->type == MONS_MARA_FAKE)
+        if (death && mons->type == MONS_MARA_FAKE)
             death_source_name = "an illusion of Mara";
 
-        if (monster->has_ench(ENCH_SHAPESHIFTER))
+        if (mons->has_ench(ENCH_SHAPESHIFTER))
             death_source_name += " (shapeshifter)";
-        else if (monster->has_ench(ENCH_GLOWING_SHAPESHIFTER))
+        else if (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER))
             death_source_name += " (glowing shapeshifter)";
 
-        if (monster->props.exists("blame"))
+        if (mons->props.exists("blame"))
         {
-            const CrawlVector& blame = monster->props["blame"].get_vector();
+            const CrawlVector& blame = mons->props["blame"].get_vector();
 
             indirectkiller = blame[blame.size() - 1].get_string();
 
@@ -1055,6 +1062,8 @@ void scorefile_entry::reset()
     intel                = -1;
     dex                  = -1;
     damage               = -1;
+    source_damage        = -1;
+    turn_damage          = -1;
     god                  = GOD_NO_GOD;
     piety                = -1;
     penance              = -1;
@@ -1238,6 +1247,9 @@ void scorefile_entry::init(time_t dt)
     final_max_hp     = you.hp_max;
     final_max_max_hp = get_real_hp(true, true);
 
+    source_damage    = you.source_damage;
+    turn_damage      = you.turn_damage;
+
     str   = you.strength();
     intel = you.intel();
     dex   = you.dex();
@@ -1264,7 +1276,7 @@ void scorefile_entry::init(time_t dt)
 
     birth_time = you.birth_time;     // start time of game
     death_time = (dt != 0 ? dt : time(NULL)); // end time of game
-        
+
     if (you.real_time != -1)
         real_time = you.real_time + long(death_time - you.start_time);
     else

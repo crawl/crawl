@@ -19,6 +19,7 @@
 #include "delay.h"
 #include "describe.h"
 #include "directn.h"
+#include "exercise.h"
 #include "map_knowledge.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -156,8 +157,8 @@ bool trap_def::is_known(const actor* act) const
         return (player_knows);
     else if (act->atype() == ACT_MONSTER)
     {
-        const monsters* monster = act->as_monster();
-        const int intel = mons_intel(monster);
+        const monster* mons = act->as_monster();
+        const int intel = mons_intel(mons);
 
         // Smarter trap handling for intelligent monsters
         // * monsters native to a branch can be assumed to know the trap
@@ -174,14 +175,14 @@ bool trap_def::is_known(const actor* act) const
             // * Allied zombies won't fall through shafts. (No herding!)
             // * Highly intelligent monsters never fall through shafts.
             return (intel >= I_HIGH
-                    || intel > I_PLANT && mons_is_native_in_branch(monster)
-                    || player_knows && monster->wont_attack());
+                    || intel > I_PLANT && mons_is_native_in_branch(mons)
+                    || player_knows && mons->wont_attack());
         }
         else
         {
             return (intel >= I_NORMAL
-                    && (mons_is_native_in_branch(monster)
-                        || player_knows && monster->wont_attack()
+                    && (mons_is_native_in_branch(mons)
+                        || player_knows && mons->wont_attack()
                         || intel >= I_HIGH && one_chance_in(3)));
         }
     }
@@ -246,7 +247,7 @@ void mark_net_trapping(const coord_def& where)
     }
 }
 
-void monster_caught_in_net(monsters *mon, bolt &pbolt)
+void monster_caught_in_net(monster* mon, bolt &pbolt)
 {
     if (mon->body_size(PSIZE_BODY) >= SIZE_GIANT)
         return;
@@ -320,7 +321,7 @@ bool player_caught_in_net()
     return (false);
 }
 
-void check_net_will_hold_monster(monsters *mons)
+void check_net_will_hold_monster(monster* mons)
 {
     if (mons->body_size(PSIZE_BODY) >= SIZE_GIANT)
     {
@@ -374,7 +375,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     // triggering process.
     bool trap_destroyed = false;
 
-    monsters* m = triggerer.as_monster();
+    monster* m = triggerer.as_monster();
 
     // Smarter monsters and those native to the level will simply
     // side-step known shafts. Unless they are already looking for
@@ -418,7 +419,8 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     {
     case TRAP_TELEPORT:
         // Never revealed by monsters.
-        if (!you_trigger && !you_know)
+        // except when it's in sight, it's pretty obvious what happened. -doy
+        if (!you_trigger && !you_know && !in_sight)
             this->hide();
         triggerer.teleport(true);
         break;
@@ -710,7 +712,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         // Exercise T&D if the trap revealed itself, but not if it ran
         // out of ammo.
         if (!you_know && this->type != TRAP_UNASSIGNED && this->is_known())
-            exercise(SK_TRAPS_DOORS, ((coinflip()) ? 2 : 1));
+            practise(EX_TRAP_TRIGGER);
     }
 
     if (trap_destroyed)
@@ -867,7 +869,7 @@ void disarm_trap(const coord_def& where)
     {
         mpr("You failed to disarm the trap.");
         if (random2(you.dex()) > 5 + random2(5 + you.absdepth0))
-            exercise(SK_TRAPS_DOORS, 1 + random2(you.absdepth0 / 5));
+            practise(EX_TRAP_DISARM_FAIL, you.absdepth0);
         else
         {
             if (trap.type == TRAP_NET && trap.pos != you.pos())
@@ -881,15 +883,14 @@ void disarm_trap(const coord_def& where)
             else
                 trap.trigger(you, true);
 
-            if (coinflip())
-                exercise(SK_TRAPS_DOORS, 1);
+            practise(EX_TRAP_DISARM_TRIGGER);
         }
     }
     else
     {
         mpr("You have disarmed the trap.");
         trap.disarm();
-        exercise(SK_TRAPS_DOORS, 1 + random2(5) + (you.absdepth0/5));
+        practise(EX_TRAP_DISARM, you.absdepth0);
     }
 }
 
@@ -897,7 +898,7 @@ void disarm_trap(const coord_def& where)
 // This doesn't actually have any effect (yet).
 // Do not expect gratitude for this!
 // ----------------------------------
-void remove_net_from(monsters *mon)
+void remove_net_from(monster* mon)
 {
     you.turn_is_over = true;
 
@@ -946,8 +947,7 @@ void remove_net_from(monsters *mon)
                 mpr("You fail to remove the net.");
         }
 
-        if (random2(you.dex()) > 5 + random2( 2*mon->body_size(PSIZE_BODY) ))
-            exercise(SK_TRAPS_DOORS, 1 + random2(mon->body_size(PSIZE_BODY)/2));
+        practise(EX_REMOVE_NET);
         return;
     }
 
@@ -1202,12 +1202,15 @@ item_def trap_def::generate_trap_item()
         set_item_ego_type(item, base, SPWPN_NORMAL);
     }
 
-    // give appropriate racial flag for Orcish Mines and Elven Halls
+    // give appropriate racial flag for Dwarf Hall, Orcish Mines
+    // and Elven Halls
     // should we ever allow properties of dungeon features, we could use that
     if (you.where_are_you == BRANCH_ORCISH_MINES)
         set_equip_race( item, ISFLAG_ORCISH );
     else if (you.where_are_you == BRANCH_ELVEN_HALLS)
         set_equip_race( item, ISFLAG_ELVEN );
+    else if (you.where_are_you == BRANCH_DWARF_HALL)
+        set_equip_race( item, ISFLAG_DWARVEN );
 
     item_colour(item);
     return item;
@@ -1264,8 +1267,8 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
 
             // Check for shield blocking.
             // Exercise only if the trap was unknown (to prevent scumming.)
-            if (!was_known && player_shield_class() && coinflip())
-                exercise(SK_SHIELDS, 1);
+            if (!was_known && player_shield_class())
+                practise(EX_SHIELD_TRAP);
 
             const int con_block = random2(20 + you.shield_block_penalty());
             const int pro_block = you.shield_bonus();
@@ -1312,8 +1315,8 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
                 }
 
                 // Exercise only if the trap was unknown (to prevent scumming.)
-                if (!was_known && coinflip())
-                    you.check_train_dodging();
+                if (!was_known)
+                    practise(EX_DODGE_TRAP);
             }
         }
         else if (act.atype() == ACT_MONSTER)

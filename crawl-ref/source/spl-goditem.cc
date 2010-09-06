@@ -101,7 +101,7 @@ void identify(int power, int item_slot)
     while (id_used > 0);
 }
 
-static bool _mons_hostile(const monsters *mon)
+static bool _mons_hostile(const monster* mon)
 {
     // Needs to be done this way because of friendly/neutral enchantments.
     return (!mon->wont_attack() && !mon->neutral());
@@ -111,7 +111,7 @@ static bool _mons_hostile(const monsters *mon)
 // Returns 0, if monster can be pacified but the attempt failed.
 // Returns 1, if monster is pacified.
 // Returns -1, if monster can never be pacified.
-static int _can_pacify_monster(const monsters *mon, const int healed)
+static int _can_pacify_monster(const monster* mon, const int healed)
 {
     if (you.religion != GOD_ELYVILON)
         return (-1);
@@ -211,8 +211,8 @@ static int _healing_spell(int healed, bool divine_ability,
         return (1);
     }
 
-    monsters* monster = monster_at(spd.target);
-    if (!monster)
+    monster* mons = monster_at(spd.target);
+    if (!mons)
     {
         mpr("There isn't anything there!");
         // This isn't a cancel, to avoid leaking invisible monster
@@ -220,8 +220,8 @@ static int _healing_spell(int healed, bool divine_ability,
         return (0);
     }
 
-    const int can_pacify  = _can_pacify_monster(monster, healed);
-    const bool is_hostile = _mons_hostile(monster);
+    const int can_pacify  = _can_pacify_monster(mons, healed);
+    const bool is_hostile = _mons_hostile(mons);
 
     // Don't divinely heal a monster you can't pacify.
     if (divine_ability
@@ -243,12 +243,12 @@ static int _healing_spell(int healed, bool divine_ability,
     {
         did_something = true;
 
-        const bool is_holy     = monster->is_holy();
-        const bool is_summoned = monster->is_summoned();
+        const bool is_holy     = mons->is_holy();
+        const bool is_summoned = mons->is_summoned();
 
         int pgain = 0;
         if (!is_holy && !is_summoned && you.piety < MAX_PIETY)
-            pgain = random2(monster->max_hit_points / (2 + you.piety / 20));
+            pgain = random2(mons->max_hit_points / (2 + you.piety / 20));
 
         // The feedback no longer tells you if you gained any piety this time,
         // it tells you merely the general rate.
@@ -258,26 +258,26 @@ static int _healing_spell(int healed, bool divine_ability,
             mpr("Elyvilon supports your offer of peace.");
 
         if (is_holy)
-            good_god_holy_attitude_change(monster);
+            good_god_holy_attitude_change(mons);
         else
         {
-            simple_monster_message(monster, " turns neutral.");
-            mons_pacify(monster, ATT_NEUTRAL);
+            simple_monster_message(mons, " turns neutral.");
+            mons_pacify(mons, ATT_NEUTRAL);
 
             // Give a small piety return.
             gain_piety(pgain, 2);
         }
     }
 
-    if (monster->heal(healed))
+    if (mons->heal(healed))
     {
         did_something = true;
-        mprf("You heal %s.", monster->name(DESC_NOCAP_THE).c_str());
+        mprf("You heal %s.", mons->name(DESC_NOCAP_THE).c_str());
 
-        if (monster->hit_points == monster->max_hit_points)
-            simple_monster_message(monster, " is completely healed.");
+        if (mons->hit_points == mons->max_hit_points)
+            simple_monster_message(mons, " is completely healed.");
         else
-            print_wounds(monster);
+            print_wounds(mons);
 
         if (you.religion == GOD_ELYVILON && !is_hostile)
         {
@@ -448,7 +448,7 @@ static void _fuzz_detect_creatures(int pow, int *fuzz_radius, int *fuzz_chance)
         *fuzz_chance = 10;
 }
 
-static bool _mark_detected_creature(coord_def where, const monsters *mon,
+static bool _mark_detected_creature(coord_def where, const monster* mon,
                                     int fuzz_chance, int fuzz_radius)
 {
     bool found_good = false;
@@ -509,7 +509,7 @@ int detect_creatures(int pow, bool telepathic)
 
     for (radius_iterator ri(you.pos(), map_radius, C_SQUARE); ri; ++ri)
     {
-        if (monsters *mon = monster_at(*ri))
+        if (monster* mon = monster_at(*ri))
         {
             // If you can see the monster, don't "detect" it elsewhere.
             if (!mons_near(mon) || !mon->visible_to(&you))
@@ -737,16 +737,17 @@ bool entomb(int pow)
     return (_do_imprison(pow, you.pos(), false));
 }
 
-bool cast_imprison(int pow, monsters *monster, int source)
+bool cast_imprison(int pow, monster* mons, int source)
 {
-    if (_do_imprison(pow, monster->pos(), true))
+    if (_do_imprison(pow, mons->pos(), true))
     {
         const int tomb_duration = BASELINE_DELAY
             * pow;
-        env.markers.add(new map_tomb_marker(monster->pos(),
+        env.markers.add(new map_tomb_marker(mons->pos(),
                                             tomb_duration,
                                             source,
-                                            monster->mindex()));
+                                            mons->mindex()));
+        env.markers.clear_need_activate(); // doesn't need activation
         return (true);
     }
 
@@ -755,7 +756,7 @@ bool cast_imprison(int pow, monsters *monster, int source)
 
 bool cast_smiting(int pow, const coord_def& where)
 {
-    monsters *m = monster_at(where);
+    monster* m = monster_at(where);
 
     if (m == NULL)
     {

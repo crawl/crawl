@@ -36,7 +36,7 @@ struct mon_attack_def
     }
 };
 
-// Amount of monster->speed_increment used by different actions; defaults
+// Amount of mons->speed_increment used by different actions; defaults
 // to 10.
 struct mon_energy_usage
 {
@@ -49,7 +49,7 @@ public:
     int8_t special;
     int8_t item;    // Using an item (i.e., drinking a potion)
 
-    // Percent of monster->speed used when picking up an item; defaults
+    // Percent of mons->speed used when picking up an item; defaults
     // to 100%
     int8_t pickup_percent;
 
@@ -164,34 +164,34 @@ dungeon_feature_type habitat2grid(habitat_type ht);
 
 monsterentry *get_monster_data(int mc);
 const mon_resist_def &get_mons_class_resists(int mc);
-mon_resist_def get_mons_resists(const monsters *mon);
+mon_resist_def get_mons_resists(const monster* mon);
 
 void init_monsters();
 void init_monster_symbols();
 
-monsters *monster_at(const coord_def &pos);
+monster *monster_at(const coord_def &pos);
 
 // this is the old moname()
 std::string mons_type_name(int type, description_level_type desc);
 
-bool give_monster_proper_name(monsters *mon, bool orcs_only = true);
+bool give_monster_proper_name(monster* mon, bool orcs_only = true);
 
 flight_type mons_class_flies(int mc);
-flight_type mons_flies(const monsters *mon, bool randarts = true);
+flight_type mons_flies(const monster* mon, bool randarts = true);
 
 bool mons_class_amphibious(int mc);
 bool mons_class_flattens_trees(int mc);
-bool mons_amphibious(const monsters *mon);
-bool mons_flattens_trees(const monsters *mon);
+bool mons_amphibious(const monster* mon);
+bool mons_flattens_trees(const monster* mon);
 bool mons_class_wall_shielded(int mc);
-bool mons_wall_shielded(const monsters *mon);
+bool mons_wall_shielded(const monster* mon);
 
 mon_itemuse_type mons_class_itemuse(int mc);
-mon_itemuse_type mons_itemuse(const monsters *mon);
+mon_itemuse_type mons_itemuse(const monster* mon);
 mon_itemeat_type mons_class_itemeat(int mc);
-mon_itemeat_type mons_itemeat(const monsters *mon);
+mon_itemeat_type mons_itemeat(const monster* mon);
 
-bool mons_sense_invis(const monsters *mon);
+bool mons_sense_invis(const monster* mon);
 
 int get_shout_noise_level(const shout_type shout);
 shout_type mons_shouts(int mclass, bool demon_shout = false);
@@ -201,23 +201,23 @@ bool mons_is_unique(int mc);
 bool mons_is_pghost(int mc);
 
 int mons_difficulty(int mc);
-int exper_value(const monsters *mon);
+int exper_value(const monster* mon);
 
 int hit_points(int hit_dice, int min_hp, int rand_hp);
 
 int mons_class_hit_dice(int mc);
 
-bool mons_immune_magic( const monsters *mon );
-const char* mons_resist_string(const monsters *mon);
+bool mons_immune_magic( const monster* mon );
+const char* mons_resist_string(const monster* mon);
 
 int mons_damage(int mc, int rt);
-mon_attack_def mons_attack_spec(const monsters *mon, int attk_number);
+mon_attack_def mons_attack_spec(const monster* mon, int attk_number);
 
 corpse_effect_type mons_corpse_effect(int mc);
 
 bool mons_class_flag(int mc, uint64_t bf);
 
-int mons_unusable_items(const monsters *mon);
+int mons_unusable_items(const monster* mon);
 
 mon_holy_type mons_class_holiness(int mc);
 
@@ -228,51 +228,52 @@ bool mons_is_draconian( int mc );
 bool mons_is_conjured(int mc);
 
 bool mons_class_wields_two_weapons(int mc);
-bool mons_wields_two_weapons(const monsters *m);
-bool mons_self_destructs(const monsters *m);
+bool mons_wields_two_weapons(const monster* m);
+bool mons_self_destructs(const monster* m);
 
 mon_intel_type mons_class_intel(int mc);
-mon_intel_type mons_intel(const monsters *mon);
+mon_intel_type mons_intel(const monster* mon);
 
 // Use mons_habitat() and mons_primary_habitat() wherever possible,
 // since the class variants do not handle zombies correctly.
 habitat_type mons_class_habitat(int mc);
-habitat_type mons_habitat(const monsters *mon);
+habitat_type mons_habitat(const monster* mon);
 habitat_type mons_class_primary_habitat(int mc);
-habitat_type mons_primary_habitat(const monsters *mon);
+habitat_type mons_primary_habitat(const monster* mon);
 habitat_type mons_class_secondary_habitat(int mc);
-habitat_type mons_secondary_habitat(const monsters *mon);
+habitat_type mons_secondary_habitat(const monster* mon);
 
-bool intelligent_ally(const monsters *mon);
+bool intelligent_ally(const monster* mon);
 
 bool mons_skeleton(int mc);
 
 int mons_weight(int mc);
+mon_resist_def serpent_of_hell_resists(int flavour);
 
 int mons_class_base_speed(int mc);
 int mons_class_zombie_base_speed(int zombie_base_mc);
-int mons_base_speed(const monsters *mon);
+int mons_base_speed(const monster* mon);
 int mons_real_base_speed(int mc);
 
 bool mons_class_can_regenerate(int mc);
-bool mons_can_regenerate(const monsters *mon);
+bool mons_can_regenerate(const monster* mon);
 zombie_size_type zombie_class_size(monster_type cs);
 int mons_zombie_size(int mc);
-monster_type mons_zombie_base(const monsters *mon);
+monster_type mons_zombie_base(const monster* mon);
 bool mons_class_is_zombified(int mc);
-monster_type mons_base_type(const monsters *mon);
+monster_type mons_base_type(const monster* mon);
 bool mons_class_can_leave_corpse(monster_type mc);
-bool mons_is_zombified(const monsters *monster);
+bool mons_is_zombified(const monster* mons);
 bool mons_class_can_be_zombified(int mc);
-bool mons_can_be_zombified(const monsters *mon);
+bool mons_can_be_zombified(const monster* mon);
 bool mons_class_can_use_stairs(int mc);
-bool mons_can_use_stairs(const monsters *mon);
-bool mons_enslaved_body_and_soul(const monsters *mon);
-bool mons_enslaved_twisted_soul(const monsters *mon);
-bool mons_enslaved_intact_soul(const monsters *mon);
-bool mons_enslaved_soul(const monsters *mon);
-bool name_zombie(monsters *mon, int mc, const std::string mon_name);
-bool name_zombie(monsters *mon, const monsters* orig);
+bool mons_can_use_stairs(const monster* mon);
+bool mons_enslaved_body_and_soul(const monster* mon);
+bool mons_enslaved_twisted_soul(const monster* mon);
+bool mons_enslaved_intact_soul(const monster* mon);
+bool mons_enslaved_soul(const monster* mon);
+bool name_zombie(monster* mon, int mc, const std::string mon_name);
+bool name_zombie(monster* mon, const monster* orig);
 
 int mons_power(int mc);
 
@@ -280,32 +281,32 @@ wchar_t mons_char(int mc);
 char mons_base_char(int mc);
 
 int mons_class_colour(int mc);
-int mons_colour(const monsters *mon);
+int mons_colour(const monster* mon);
 
-void mons_load_spells(monsters *mon, mon_spellbook_type book);
+void mons_load_spells(monster* mon, mon_spellbook_type book);
 
 monster_type royal_jelly_ejectable_monster();
 monster_type random_draconian_monster_species();
 
-void define_monster(monsters *mons);
+void define_monster(monster* mons);
 
-void mons_pacify(monsters *mon, mon_attitude_type att = ATT_GOOD_NEUTRAL);
+void mons_pacify(monster* mon, mon_attitude_type att = ATT_GOOD_NEUTRAL);
 
 bool mons_should_fire(struct bolt &beam);
 
 bool ms_direct_nasty(spell_type monspell);
 
-bool ms_useful_fleeing_out_of_sight(const monsters *mon, spell_type monspell);
-bool ms_quick_get_away(const monsters *mon, spell_type monspell);
-bool ms_waste_of_time(const monsters *mon, spell_type monspell);
-bool ms_low_hitpoint_cast(const monsters *mon, spell_type monspell);
+bool ms_useful_fleeing_out_of_sight(const monster* mon, spell_type monspell);
+bool ms_quick_get_away(const monster* mon, spell_type monspell);
+bool ms_waste_of_time(const monster* mon, spell_type monspell);
+bool ms_low_hitpoint_cast(const monster* mon, spell_type monspell);
 
 bool mons_has_los_ability(monster_type mon_type);
-bool mons_has_los_attack(const monsters *mon);
-bool mons_has_ranged_spell(const monsters *mon, bool attack_only = false,
+bool mons_has_los_attack(const monster* mon);
+bool mons_has_ranged_spell(const monster* mon, bool attack_only = false,
                            bool ench_too = true);
-bool mons_has_ranged_attack(const monsters *mon);
-bool mons_has_ranged_ability(const monsters *mon);
+bool mons_has_ranged_attack(const monster* mon);
+bool mons_has_ranged_ability(const monster* mon);
 
 const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
                          bool visible = true);
@@ -314,77 +315,77 @@ bool mons_aligned(const actor *m1, const actor *m2);
 bool mons_atts_aligned(mon_attitude_type fr1, mon_attitude_type fr2);
 
 bool mons_att_wont_attack(mon_attitude_type fr);
-mon_attitude_type mons_attitude(const monsters *m);
+mon_attitude_type mons_attitude(const monster* m);
 
-bool mons_foe_is_mons(const monsters *mons);
+bool mons_foe_is_mons(const monster* mons);
 
-bool mons_behaviour_perceptible(const monsters *mon);
-bool mons_is_native_in_branch(const monsters *monster,
+bool mons_behaviour_perceptible(const monster* mon);
+bool mons_is_native_in_branch(const monster* mons,
                               const branch_type branch = you.where_are_you);
-bool mons_is_poisoner(const monsters *mon);
+bool mons_is_poisoner(const monster* mon);
 
 // Whether the monster is temporarily confused (class_too = false)
 // or confused at all (class_too = true; temporarily or by class).
-bool mons_is_confused(const monsters *m, bool class_too = false);
+bool mons_is_confused(const monster* m, bool class_too = false);
 
-bool mons_is_wandering(const monsters *m);
-bool mons_is_seeking(const monsters *m);
-bool mons_is_fleeing(const monsters *m);
-bool mons_is_panicking(const monsters *m);
-bool mons_is_cornered(const monsters *m);
-bool mons_is_lurking(const monsters *m);
-bool mons_is_batty(const monsters *m);
-bool mons_is_influenced_by_sanctuary(const monsters *m);
-bool mons_is_fleeing_sanctuary(const monsters *m);
-bool mons_was_seen(const monsters *m);
-bool mons_is_known_mimic(const monsters *m);
-bool mons_is_unknown_mimic(const monsters *m);
+bool mons_is_wandering(const monster* m);
+bool mons_is_seeking(const monster* m);
+bool mons_is_fleeing(const monster* m);
+bool mons_is_panicking(const monster* m);
+bool mons_is_cornered(const monster* m);
+bool mons_is_lurking(const monster* m);
+bool mons_is_batty(const monster* m);
+bool mons_is_influenced_by_sanctuary(const monster* m);
+bool mons_is_fleeing_sanctuary(const monster* m);
+bool mons_was_seen(const monster* m);
+bool mons_is_known_mimic(const monster* m);
+bool mons_is_unknown_mimic(const monster* m);
 bool mons_is_skeletal(int mc);
 bool mons_class_is_slime(int mc);
-bool mons_is_slime(const monsters *mon);
+bool mons_is_slime(const monster* mon);
 bool mons_class_is_plant(int mc);
-bool mons_is_plant(const monsters *mon);
-bool mons_eats_items(const monsters *mon);
-bool mons_eats_corpses(const monsters *mon);
-bool mons_eats_food(const monsters *mon);
-bool mons_has_lifeforce(const monsters *mon);
+bool mons_is_plant(const monster* mon);
+bool mons_eats_items(const monster* mon);
+bool mons_eats_corpses(const monster* mon);
+bool mons_eats_food(const monster* mon);
+bool mons_has_lifeforce(const monster* mon);
 monster_type mons_genus(int mc);
 monster_type mons_detected_base(monster_type mt);
 monster_type mons_species(int mc);
 
-bool mons_looks_stabbable(const monsters *m);
-bool mons_looks_distracted(const monsters *m);
+bool mons_looks_stabbable(const monster* m);
+bool mons_looks_distracted(const monster* m);
 
-void mons_start_fleeing_from_sanctuary(monsters *monster);
-void mons_stop_fleeing_from_sanctuary(monsters *monster);
+void mons_start_fleeing_from_sanctuary(monster* mons);
+void mons_stop_fleeing_from_sanctuary(monster* mons);
 
-bool mons_landlubbers_in_reach(const monsters *monster);
+bool mons_landlubbers_in_reach(const monster* mons);
 
 bool mons_class_is_confusable(int mc);
 bool mons_class_is_slowable(int mc);
 bool mons_class_is_stationary(int mc);
-bool mons_is_stationary(const monsters *mon);
-bool mons_is_firewood(const monsters *mon);
-bool mons_has_body(const monsters *mon);
+bool mons_is_stationary(const monster* mon);
+bool mons_is_firewood(const monster* mon);
+bool mons_has_body(const monster* mon);
 
-int cheibriados_monster_player_speed_delta(const monsters *mon);
-bool cheibriados_thinks_mons_is_fast( const monsters *mon );
+int cheibriados_monster_player_speed_delta(const monster* mon);
+bool cheibriados_thinks_mons_is_fast( const monster* mon );
 bool mons_is_projectile(int mc);
 bool mons_has_blood(int mc);
 
-bool invalid_monster(const monsters *mon);
+bool invalid_monster(const monster* mon);
 bool invalid_monster_type(monster_type mt);
 bool invalid_monster_index(int i);
 
-void mons_remove_from_grid(const monsters *mon);
+void mons_remove_from_grid(const monster* mon);
 
-bool monster_shover(const monsters *m);
+bool monster_shover(const monster* m);
 
-bool monster_senior(const monsters *first, const monsters *second,
+bool monster_senior(const monster* first, const monster* second,
                     bool fleeing = false);
-monster_type draco_subspecies(const monsters *mon);
+monster_type draco_subspecies(const monster* mon);
 std::string ugly_thing_colour_name(uint8_t colour);
-std::string ugly_thing_colour_name(const monsters *mon);
+std::string ugly_thing_colour_name(const monster* mon);
 uint8_t ugly_thing_random_colour();
 int str_to_ugly_thing_colour(const std::string &s);
 uint8_t random_monster_colour();
@@ -399,28 +400,28 @@ void         init_mon_name_cache();
 monster_type get_monster_by_name(std::string name, bool exact = false);
 
 std::string do_mon_str_replacements(const std::string &msg,
-                                    const monsters* monster, int s_type = -1);
+                                    const monster* mons, int s_type = -1);
 
-mon_body_shape get_mon_shape(const monsters *mon);
+mon_body_shape get_mon_shape(const monster* mon);
 mon_body_shape get_mon_shape(const int type);
 
-std::string get_mon_shape_str(const monsters *mon);
+std::string get_mon_shape_str(const monster* mon);
 std::string get_mon_shape_str(const int type);
 std::string get_mon_shape_str(const mon_body_shape shape);
 
 bool mons_class_can_pass(int mc, const dungeon_feature_type grid);
-bool mons_can_open_door(const monsters *mon, const coord_def& pos);
-bool mons_can_eat_door(const monsters *mon, const coord_def& pos);
-bool mons_can_traverse(const monsters *mon, const coord_def& pos,
+bool mons_can_open_door(const monster* mon, const coord_def& pos);
+bool mons_can_eat_door(const monster* mon, const coord_def& pos);
+bool mons_can_traverse(const monster* mon, const coord_def& pos,
                        bool checktraps = true);
 
 mon_inv_type equip_slot_to_mslot(equipment_type eq);
 mon_inv_type item_to_mslot(const item_def &item);
 
-int scan_mon_inv_randarts(const monsters *mon,
+int scan_mon_inv_randarts(const monster* mon,
                           artefact_prop_type ra_prop);
 
-bool player_or_mon_in_sanct(const monsters* monster);
+bool player_or_mon_in_sanct(const monster* mons);
 
 int get_dist_to_nearest_monster();
 

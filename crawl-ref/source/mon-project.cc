@@ -29,7 +29,7 @@
 #include "terrain.h"
 #include "viewchar.h"
 
-static void _fuzz_direction(monsters &mon, int pow);
+static void _fuzz_direction(monster& mon, int pow);
 
 bool cast_iood(actor *caster, int pow, bolt *beam)
 {
@@ -42,7 +42,7 @@ bool cast_iood(actor *caster, int pow, bolt *beam)
     {
         mind = mons_place(mgen_data(MONS_ORB_OF_DESTRUCTION,
                 (caster->atype() == ACT_PLAYER) ? BEH_FRIENDLY :
-                    ((monsters*)caster)->friendly() ? BEH_FRIENDLY : BEH_HOSTILE,
+                    ((monster* )caster)->friendly() ? BEH_FRIENDLY : BEH_HOSTILE,
                 caster,
                 0,
                 SPELL_IOOD,
@@ -58,7 +58,7 @@ bool cast_iood(actor *caster, int pow, bolt *beam)
         return (false);
     }
 
-    monsters &mon = menv[mind];
+    monster& mon = menv[mind];
     const coord_def pos = caster->pos();
     beam->choose_ray();
     dprf("beam (%d,%d)+t*(%d,%d)  ray (%f,%f)+t*(%f,%f)",
@@ -70,7 +70,7 @@ bool cast_iood(actor *caster, int pow, bolt *beam)
     mon.props["iood_vx"].get_float() = beam->ray.r.dir.x;
     mon.props["iood_vy"].get_float() = beam->ray.r.dir.y;
     mon.props["iood_kc"].get_byte() = (caster->atype() == ACT_PLAYER) ? KC_YOU :
-            ((monsters*)caster)->friendly() ? KC_FRIENDLY : KC_OTHER;
+            ((monster* )caster)->friendly() ? KC_FRIENDLY : KC_OTHER;
     mon.props["iood_pow"].get_short() = pow;
     mon.flags &= ~MF_JUST_SUMMONED;
     mon.props["iood_caster"].get_string() = caster->as_monster()
@@ -103,7 +103,7 @@ static bool _in_front(float vx, float vy, float dx, float dy, float angle)
     return ((dx-vx)*(dx-vx) + (dy-vy)*(dy-vy) <= (angle*angle));
 }
 
-static void _iood_dissipate(monsters &mon, bool msg = true)
+static void _iood_dissipate(monster& mon, bool msg = true)
 {
     if (msg)
         simple_monster_message(&mon, " dissipates.");
@@ -111,7 +111,7 @@ static void _iood_dissipate(monsters &mon, bool msg = true)
     monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
 }
 
-static void _fuzz_direction(monsters &mon, int pow)
+static void _fuzz_direction(monster& mon, int pow)
 {
     const float x = mon.props["iood_x"];
     const float y = mon.props["iood_y"];
@@ -137,7 +137,7 @@ static void _fuzz_direction(monsters &mon, int pow)
 }
 
 // Alas, too much differs to reuse beam shield blocks :(
-static bool _iood_shielded(monsters &mon, actor &victim)
+static bool _iood_shielded(monster& mon, actor &victim)
 {
     if (!victim.shield() || victim.incapacitated())
         return (false);
@@ -149,7 +149,7 @@ static bool _iood_shielded(monsters &mon, actor &victim)
     return (pro_block >= con_block);
 }
 
-static bool _iood_hit(monsters &mon, const coord_def &pos, bool big_boom = false)
+static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
 {
     bolt beam;
     beam.name = "orb of destruction";
@@ -187,7 +187,7 @@ static bool _iood_hit(monsters &mon, const coord_def &pos, bool big_boom = false
 }
 
 // returns true if the orb is gone
-bool iood_act(monsters &mon, bool no_trail)
+bool iood_act(monster& mon, bool no_trail)
 {
     ASSERT(mons_is_projectile(mon.type));
 
@@ -299,29 +299,29 @@ move_again:
                      feature_description(pos, false, DESC_NOCAP_A).c_str());
         }
 
-        monsters* monster = (victim && victim->atype() == ACT_MONSTER) ?
-            (monsters*) victim : 0;
+        monster* mons = (victim && victim->atype() == ACT_MONSTER) ?
+            (monster* ) victim : 0;
 
-        if (monster && mons_is_projectile(victim->id()))
+        if (mons && mons_is_projectile(victim->id()))
         {
             if (mon.observable())
                 mpr("The orbs collide in a blinding explosion!");
             else
                 noisy(40, pos, "You hear a loud magical explosion!");
-            monster_die(monster, KILL_DISMISSED, NON_MONSTER);
+            monster_die(mons, KILL_DISMISSED, NON_MONSTER);
             _iood_hit(mon, pos, true);
             return (true);
         }
 
-        if (monster && monster->submerged())
+        if (mons && mons->submerged())
         {
             // Try to swap with the submerged creature.
-            if (monster->is_habitable(mon.pos()))
+            if (mons->is_habitable(mon.pos()))
             {
                 dprf("iood: Swapping with a submerged monster.");
-                monster->set_position(mon.pos());
+                mons->set_position(mon.pos());
                 mon.set_position(pos);
-                mgrd(monster->pos()) = monster->mindex();
+                mgrd(mons->pos()) = mons->mindex();
                 mgrd(pos) = mon.mindex();
 
                 return (false);
@@ -345,7 +345,7 @@ move_again:
                 }
                 else
                 {
-                    simple_monster_message(monster, (" blocks "
+                    simple_monster_message(mons, (" blocks "
                         + mon.name(DESC_NOCAP_THE, true) + ".").c_str());
                 }
                 victim->shield_block_succeeded(&mon);
@@ -415,7 +415,7 @@ move_again:
 // Reduced copy of iood_act to move the orb while the player
 // is off-level. Just goes straight and dissipates instead of
 // hitting anything.
-static bool _iood_catchup_move(monsters& mon)
+static bool _iood_catchup_move(monster& mon)
 {
     float x = mon.props["iood_x"];
     float y = mon.props["iood_y"];
@@ -468,9 +468,9 @@ static bool _iood_catchup_move(monsters& mon)
     return (false);
 }
 
-void iood_catchup(monsters* mons, int pturns)
+void iood_catchup(monster* mons, int pturns)
 {
-    monsters& mon = *mons;
+    monster& mon = *mons;
     ASSERT(mons_is_projectile(mon.type));
 
     const int moves = pturns * mon.speed / BASELINE_DELAY;

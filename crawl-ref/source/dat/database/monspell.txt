@@ -117,6 +117,14 @@ unseen Symbol of Torment cast
 
 @The_something@ calls on the powers of Hell!
 %%%%
+Holy Word cast
+
+@The_monster@ calls on the powers of Heaven!
+%%%%
+unseen Holy Word cast
+
+@The_something@ calls on the powers of Heaven!
+%%%%
 Orb of Destruction cast
 
 @The_monster@ conjures a glowing orb.
@@ -234,7 +242,7 @@ unseen Geryon cast
 
 You hear a weird and mournful sound.
 %%%%
-Wayne cast
+Wiglaf cast
 
 @The_monster@ raises a hand and says an invocation.
 
@@ -242,7 +250,7 @@ Wayne cast
 
 @The_monster@ prays in loud words.
 %%%%
-unseen Wayne cast
+unseen Wiglaf cast
 
 You hear an invocation said in the dwarven tongue.
 

@@ -35,7 +35,7 @@
 #include "tiledef-main.h"
 #endif
 
-static int _actual_spread_rate(cloud_type type, int spread_rate)
+int actual_spread_rate(cloud_type type, int spread_rate)
 {
     if (spread_rate >= 0)
         return spread_rate;
@@ -65,11 +65,12 @@ static bool _killer_whose_match(kill_category whose, killer_type killer)
             return (killer == KILL_YOU_MISSILE || killer == KILL_YOU_CONF);
 
         case KC_FRIENDLY:
-            return (killer == KILL_MON_MISSILE || killer == KILL_YOU_CONF);
+            return (killer == KILL_MON_MISSILE || killer == KILL_YOU_CONF 
+                    || killer == KILL_MON);
 
         case KC_OTHER:
             return (killer == KILL_MON_MISSILE || killer == KILL_MISCAST
-                    || killer == KILL_MISC);
+                    || killer == KILL_MISC || killer == KILL_MON);
 
         case KC_NCATEGORIES:
             ASSERT(false);
@@ -499,7 +500,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
             return;
     }
 
-    const int spread_rate = _actual_spread_rate(cl_type, _spread_rate);
+    const int spread_rate = actual_spread_rate(cl_type, _spread_rate);
 
     // Too many clouds.
     if (env.cloud_no >= MAX_CLOUDS)
@@ -623,6 +624,8 @@ cloud_type beam2cloud(beam_type flavour)
         return CLOUD_RANDOM;
     case BEAM_INK:
         return CLOUD_INK;
+    case BEAM_HOLY_FLAME:
+        return CLOUD_HOLY_FLAMES;
     }
 }
 
@@ -648,6 +651,7 @@ beam_type cloud2beam(cloud_type flavour)
     case CLOUD_MUTAGENIC:    return BEAM_POTION_MUTAGENIC;
     case CLOUD_GLOOM:        return BEAM_GLOOM;
     case CLOUD_INK:          return BEAM_INK;
+    case CLOUD_HOLY_FLAMES:  return BEAM_HOLY_FLAME;
     case CLOUD_RANDOM:       return BEAM_RANDOM;
     }
 }
@@ -679,6 +683,16 @@ int max_cloud_damage(cloud_type cl_type, int power)
         resist = player_res_fire();
 
         // Intentional fall-through
+    case CLOUD_HOLY_FLAMES:
+        if (resist == 0)
+        {
+            if (you.is_evil() || you.is_unholy())
+                resist = -1;
+            else if (you.is_holy())
+                resist = 3;
+        }
+
+        // Intentional fall through
     case CLOUD_COLD:
         if (you.mutation[MUT_PASSIVE_FREEZE])
             return (0);
@@ -754,7 +768,8 @@ void in_a_cloud()
 {
     int cl = env.cgrid(you.pos());
     int hurted = 0;
-    int resist;
+    int resist = 0;
+    std::string name = env.cloud[cl].name;
 
     const cloud_struct &cloud(env.cloud[cl]);
 
@@ -948,6 +963,39 @@ void in_a_cloud()
         }
         break;
 
+    case CLOUD_HOLY_FLAMES:
+        mprf("You are engulfed in %s!", !name.empty() ? name.c_str() : "blessed fire");
+
+        // Stats are the same for fire, except resists are based on holiness.
+        // Damage is reduced if you are holy, increased if you are evil/unholy.
+        if (you.is_evil() || you.is_unholy())
+            resist = -1;
+        else if (you.is_holy())
+            resist = 3;
+
+        if (resist <= 0)
+        {
+            hurted += ((random2avg(23, 3) + 10) * you.time_taken) / 10;
+
+            if (resist < 0)
+                hurted += ((random2avg(14, 2) + 3) * you.time_taken) / 10;
+
+            hurted -= random2(you.armour_class());
+
+            if (hurted < 0)
+                hurted = 0;
+            else
+                ouch(hurted, cl, KILLED_BY_CLOUD, "blessed fire");
+        }
+        else
+        {
+            canned_msg(MSG_YOU_RESIST);
+            hurted += ((random2avg(23, 3) + 10) * you.time_taken) / 10;
+            hurted /= resist_fraction(resist);
+            ouch(hurted, cl, KILLED_BY_CLOUD, "blessed fire");
+        }
+        break;
+
     default:
         break;
     }
@@ -980,7 +1028,11 @@ bool is_damaging_cloud(cloud_type type, bool temp)
         return (!you.res_rotting());
     case CLOUD_MUTAGENIC:
         return (you.can_mutate());
+    case CLOUD_HOLY_FLAMES:
+        if (you.is_holy())
+            return (false);
 
+        return (true);
     default:
         // Smoke, never harmful.
         return (false);
@@ -1049,7 +1101,7 @@ static const char *_terse_cloud_names[] =
     "flame", "noxious fumes", "freezing vapour", "poison gases",
     "black smoke", "grey smoke", "blue smoke",
     "purple smoke", "translocational energy", "fire",
-    "steam", "gloom", "ink", "foul pestilence", "thin mist",
+    "steam", "gloom", "ink", "blessed fire", "foul pestilence", "thin mist",
     "seething chaos", "rain", "mutagenic fog", "magical condensation",
 };
 
@@ -1059,9 +1111,9 @@ static const char *_verbose_cloud_names[] =
     "roaring flames", "noxious fumes", "freezing vapours", "poison gas",
     "black smoke", "grey smoke", "blue smoke",
     "purple smoke", "translocational energy", "roaring flames",
-    "a cloud of scalding steam", "a thick gloom", "ink", "a dark miasma",
-    "thin mist", "seething chaos", "the rain", "a mutagenic fog",
-    "magical condensation",
+    "a cloud of scalding steam", "a thick gloom", "ink", "blessed fire",
+    "a dark miasma", "thin mist", "seething chaos", "the rain", 
+    "a mutagenic fog", "magical condensation",
 };
 
 std::string cloud_type_name(cloud_type type, bool terse)
@@ -1229,6 +1281,10 @@ int get_cloud_colour(int cloudno)
 
     case CLOUD_MAGIC_TRAIL:
         which_colour = ETC_MAGIC;
+        break;
+
+    case CLOUD_HOLY_FLAMES:
+        which_colour = ETC_HOLY;
         break;
 
     default:

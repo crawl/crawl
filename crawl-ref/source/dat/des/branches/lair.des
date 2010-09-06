@@ -764,7 +764,7 @@ MARKER: o = lua:monster_on_death { \
             veto_fragmentation="veto", veto_disintegrate="veto", \
          }
 MARKER:  c = lua:portal_desc { desc="moss-covered stone wall", \
-             desc_lost="This stone wall is ancient, and covered in moss." }
+             desc_long="This stone wall is ancient, and covered in moss." }
 MAP
   xxxxxxxxxxx
  xxxxxXX.XXXxx

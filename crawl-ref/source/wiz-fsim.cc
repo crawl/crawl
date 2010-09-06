@@ -42,7 +42,7 @@ static int _create_fsim_monster(int mtype, int hp)
     if (mi == -1)
         return (mi);
 
-    monsters *mon = &menv[mi];
+    monster* mon = &menv[mi];
     mon->hit_points = mon->max_hit_points = hp;
     return (mi);
 }
@@ -115,8 +115,8 @@ static void _fsim_defence_item(FILE *out, int cum, int hits, int max,
 static bool _fsim_ranged_combat(FILE *out, int wskill, int mi,
                                 const item_def *item, int missile_slot)
 {
-    monsters &mon = menv[mi];
-    const monsters orig = mon;
+    monster& mon = menv[mi];
+    const monster orig = mon;
     unsigned int cumulative_damage = 0;
     unsigned int time_taken = 0;
     int hits = 0;
@@ -196,8 +196,8 @@ static bool _fsim_mon_melee(FILE *out, int dodge, int armour, int mi)
 static bool _fsim_melee_combat(FILE *out, int wskill, int mi,
                                const item_def *item)
 {
-    monsters &mon = menv[mi];
-    const monsters orig = mon;
+    monster& mon = menv[mi];
+    const monster orig = mon;
     unsigned int cumulative_damage = 0;
     unsigned int time_taken = 0;
     int hits = 0;
@@ -309,7 +309,7 @@ static std::string _fsim_time_string()
     return ("");
 }
 
-static void _fsim_mon_stats(FILE *o, const monsters &mon)
+static void _fsim_mon_stats(FILE *o, const monster& mon)
 {
     fprintf(o, "Monster   : %s\n", mon.name(DESC_PLAIN, true).c_str());
     fprintf(o, "HD        : %d\n", mon.hit_dice);

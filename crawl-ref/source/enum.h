@@ -258,6 +258,8 @@ enum beam_type                  // beam[].flavour
     BEAM_POTION_RAIN,
     BEAM_GLOOM,
     BEAM_INK,
+    BEAM_HOLY_FLAME,
+    BEAM_HOLY_LIGHT,
     BEAM_POTION_RANDOM,
 
     BEAM_LAST_REAL = BEAM_POTION_RANDOM,
@@ -366,6 +368,7 @@ enum branch_type                // you.where_are_you
     BRANCH_HALL_OF_ZOT,
     BRANCH_FOREST,
     BRANCH_SPIDER_NEST,
+    BRANCH_DWARF_HALL,
     NUM_BRANCHES
 };
 
@@ -438,9 +441,10 @@ enum cloud_type
     CLOUD_STEAM,
     CLOUD_GLOOM,
     CLOUD_INK,
+    CLOUD_HOLY_FLAMES,
 
     CLOUD_OPAQUE_FIRST = CLOUD_BLACK_SMOKE,
-    CLOUD_OPAQUE_LAST  = CLOUD_INK,
+    CLOUD_OPAQUE_LAST  = CLOUD_HOLY_FLAMES,
 
     CLOUD_MIASMA,
     CLOUD_MIST,
@@ -971,8 +975,9 @@ enum dungeon_char_type
 //
 // * New stairs/portals: update grid_stair_direction.
 // * Any: edit view.cc and add a glyph and colour for the feature.
-// * Any: edit direct.cc and add a description for the feature.
-// * Any: edit dat/descript.txt and add a long description if appropriate.
+// * Any: edit directn.cc and add a description for the feature.
+// * Any: edit dat/descript/features.txt and add a
+//        long description if appropriate.
 // * Any: check the grid_* functions in misc.cc and make sure
 //        they return sane values for your new feature.
 // * Any: edit dungeon.cc and add a symbol to map_feature() and
@@ -1085,17 +1090,18 @@ enum dungeon_feature_type
 
     // Entrances to various branches
     DNGN_ENTER_FIRST_BRANCH = 110,     //  110
-    DNGN_ENTER_ORCISH_MINES = DNGN_ENTER_FIRST_BRANCH,
+    DNGN_ENTER_DWARF_HALL = DNGN_ENTER_FIRST_BRANCH,
+    DNGN_ENTER_ORCISH_MINES,
     DNGN_ENTER_HIVE,
     DNGN_ENTER_LAIR,
     DNGN_ENTER_SLIME_PITS,
-    DNGN_ENTER_VAULTS,
-    DNGN_ENTER_CRYPT,                //  115
+    DNGN_ENTER_VAULTS,                 //  115
+    DNGN_ENTER_CRYPT,
     DNGN_ENTER_HALL_OF_BLADES,
     DNGN_ENTER_ZOT,
     DNGN_ENTER_TEMPLE,
-    DNGN_ENTER_SNAKE_PIT,
-    DNGN_ENTER_ELVEN_HALLS,            //  120
+    DNGN_ENTER_SNAKE_PIT,              //  120
+    DNGN_ENTER_ELVEN_HALLS,
     DNGN_ENTER_TOMB,
     DNGN_ENTER_SWAMP,                  //  122
     DNGN_ENTER_SHOALS,
@@ -1106,17 +1112,18 @@ enum dungeon_feature_type
     // Exits from various branches
     // Order must be the same as above
     DNGN_RETURN_FROM_FIRST_BRANCH = 130, //  130
-    DNGN_RETURN_FROM_ORCISH_MINES = DNGN_RETURN_FROM_FIRST_BRANCH,
+    DNGN_RETURN_FROM_DWARF_HALL = DNGN_RETURN_FROM_FIRST_BRANCH,
+    DNGN_RETURN_FROM_ORCISH_MINES,
     DNGN_RETURN_FROM_HIVE,
     DNGN_RETURN_FROM_LAIR,
     DNGN_RETURN_FROM_SLIME_PITS,
-    DNGN_RETURN_FROM_VAULTS,
-    DNGN_RETURN_FROM_CRYPT,            //  135
+    DNGN_RETURN_FROM_VAULTS,           //  135
+    DNGN_RETURN_FROM_CRYPT,
     DNGN_RETURN_FROM_HALL_OF_BLADES,
     DNGN_RETURN_FROM_ZOT,
     DNGN_RETURN_FROM_TEMPLE,
-    DNGN_RETURN_FROM_SNAKE_PIT,
-    DNGN_RETURN_FROM_ELVEN_HALLS,      //  140
+    DNGN_RETURN_FROM_SNAKE_PIT,        //  140
+    DNGN_RETURN_FROM_ELVEN_HALLS,
     DNGN_RETURN_FROM_TOMB,
     DNGN_RETURN_FROM_SWAMP,            //  142
     DNGN_RETURN_FROM_SHOALS,
@@ -1289,6 +1296,8 @@ enum enchant_type
     ENCH_EXPLODING,
     ENCH_BLEED,
     ENCH_ANTIMAGIC,
+    ENCH_FADING_AWAY,
+    ENCH_PREPARING_RESURRECT,
 
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
@@ -1957,22 +1966,19 @@ enum monster_type                      // (int) menv[].type
     MONS_SNORG, // was Anita - Snorg is correct 16jan2000 {dlb}
     MONS_ERICA,
     MONS_JOSEPHINE,
-    MONS_HAROLD,                       //  295
-    MONS_NORBERT,
+    MONS_HAROLD,
     MONS_JOZEF,
     MONS_AGNES,
     MONS_MAUD,
-    MONS_LOUISE,                       //  300
-    MONS_FRANCIS,
+    MONS_LOUISE,
     MONS_FRANCES,
     MONS_RUPERT,
-    MONS_WAYNE,
-    MONS_DUANE,                        //  305
+    MONS_WIGLAF,
     MONS_XTAHUA,
     MONS_NORRIS,
     MONS_FREDERICK,
     MONS_MARGERY,
-    MONS_BORIS,                        //  310
+    MONS_BORIS,
     MONS_POLYPHEMUS,
 // BCR - end second batch of uniques.
 
@@ -2141,7 +2147,7 @@ enum monster_type                      // (int) menv[].type
     MONS_IRON_ELEMENTAL,
     MONS_GIANT_SCORPION,
     MONS_GHOST_MOTH,
-    MONS_JUMPING_SPIDER,               
+    MONS_JUMPING_SPIDER,
     MONS_TARANTELLA,                   // 492
     MONS_SILENT_SPECTRE,
 
@@ -2155,6 +2161,18 @@ enum monster_type                      // (int) menv[].type
     MONS_THE_ENCHANTRESS,
     MONS_FIREFLY,
     MONS_MENNAS,
+
+    // New holy monsters etc
+    MONS_CHERUB,
+    MONS_PHOENIX,
+    MONS_SILVER_STAR,
+    MONS_BLESSED_TOE,
+    MONS_SHEDU,
+    MONS_OPHAN,
+    MONS_SPIRIT,
+    MONS_PALADIN,
+    MONS_APIS,
+    MONS_HOLY_DRAGON,
 
     // Testing monsters
     MONS_TEST_SPAWNER,
@@ -2372,18 +2390,17 @@ enum mon_spellbook_type
     MST_HELL_HOG,
     MST_SWAMP_DRAGON,
     MST_SWAMP_DRAKE,
-    MST_SERPENT_OF_HELL,               // 125
-    MST_BOGGART,
+    MST_BOGGART,                       // 125
     MST_EYE_OF_DEVASTATION,
     MST_QUICKSILVER_DRAGON,
     MST_IRON_DRAGON,
-    MST_SKELETAL_WARRIOR,              // 130
-    MST_NORRIS,
+    MST_SKELETAL_WARRIOR,
+    MST_NORRIS,                        // 130
     MST_DEATH_DRAKE,
     MST_DRAC_SCORCHER, // As Bioster would say.. pig*s
     MST_DRAC_CALLER,
-    MST_DRAC_SHIFTER,                  // 135
-    MST_CURSE_TOE,
+    MST_DRAC_SHIFTER,
+    MST_CURSE_TOE,                     // 135
     MST_ICE_STATUE,
     // unique monsters' "spellbooks"
     MST_RUPERT = 140,
@@ -2396,7 +2413,7 @@ enum mon_spellbook_type
     MST_KIRKE,
     MST_MENKAURE,
     MST_DOWAN,
-    MST_GERYON,
+    MST_GERYON,                        // 150
     MST_DISPATER,
     MST_ASMODEUS,
     MST_ERESHKIGAL,
@@ -2406,32 +2423,46 @@ enum mon_spellbook_type
     MST_CEREBOV,
     MST_GLOORX_VLOQ,
     MST_JESSICA,
-    MST_BERSERK_ESCAPE,               // 165
+    MST_BERSERK_ESCAPE,                // 165
     MST_GASTRONOK,
     MST_MAURICE,
     MST_KHUFU,
     MST_NIKOLA,
-    MST_DISSOLUTION,                  // 170
+    MST_DISSOLUTION,                   // 170
     MST_AIZUL,
     MST_EXECUTIONER,
     MST_HAROLD,
     MST_MARA,
-    MST_MARA_FAKE,
+    MST_MARA_FAKE,                     // 175
     MST_MERFOLK_AQUAMANCER,
     MST_ALLIGATOR,
     MST_BORIS,
     MST_FREDERICK,
-    MST_WAYNE,
+    MST_WIGLAF,                        // 180
     MST_SPRIGGAN_DRUID,
     MST_THE_ENCHANTRESS,
     MST_HELLEPHANT,
     MST_GRINDER,
-    MST_IRON_GIANT,
+    MST_IRON_GIANT,                    // 185
     MST_IRON_ELEMENTAL,
     MST_MENNAS,
     MST_JUMPING_SPIDER,
+    MST_SERPENT_OF_HELL_GEHENNA,
+    MST_SERPENT_OF_HELL_COCYTUS,       // 190
+    MST_SERPENT_OF_HELL_TARTARUS,
+    MST_SERPENT_OF_HELL_DIS,
+    MST_NERGALLE,
+    MST_CHERUB,
+    MST_PHOENIX,                       // 195
+    MST_SILVER_STAR,
+    MST_BLESSED_TOE,
+    MST_SHEDU,
+    MST_OPHAN,
+    MST_SPIRIT,                        // 200
+    MST_PALADIN,
+    MST_HOLY_DRAGON,
 
-    MST_TEST_SPAWNER = 200,
+    MST_TEST_SPAWNER = 205,
     NUM_MSTYPES,
     MST_NO_SPELLS = 250
 };
@@ -3033,6 +3064,16 @@ enum spell_type
     SPELL_AWAKEN_FOREST,
     SPELL_SUMMON_CANIFORMS,
     SPELL_IRON_ELEMENTALS,
+    SPELL_SUMMON_SPECTRAL_ORCS,
+    SPELL_RESURRECT,
+    SPELL_LIGHT_BEAM,
+    SPELL_HOLY_WORD,
+    SPELL_SUMMON_HOLIES,
+    SPELL_SUMMON_GREATER_HOLY,
+    SPELL_HEAL_OTHER,
+    SPELL_SACRIFICE,
+    SPELL_HOLY_FLAMES,
+    SPELL_HOLY_BREATH,
 
     NUM_SPELLS
 };
@@ -3284,6 +3325,9 @@ enum zap_type
     ZAP_PRIMAL_WAVE,
     ZAP_IOOD,
     ZAP_SUNRAY,
+    ZAP_LIGHT_BEAM,
+    ZAP_HOLY_FLAMES,
+    ZAP_HOLY_BREATH,
 
     NUM_ZAPS
 };

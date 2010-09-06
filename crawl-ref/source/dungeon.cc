@@ -793,6 +793,7 @@ static bool _is_bottom_exit_stair(const coord_def &c)
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
     case DNGN_EXIT_HELL:
+    case DNGN_RETURN_FROM_DWARF_HALL:
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_HIVE:
     case DNGN_RETURN_FROM_LAIR:
@@ -832,6 +833,7 @@ static bool _is_exit_stair(const coord_def &c)
     case DNGN_STONE_STAIRS_UP_III:
     case DNGN_ESCAPE_HATCH_UP:
     case DNGN_EXIT_HELL:
+    case DNGN_RETURN_FROM_DWARF_HALL:
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_HIVE:
     case DNGN_RETURN_FROM_LAIR:
@@ -2107,7 +2109,7 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
         _specr_2(sr);
     }
 
-    // Now place items, monster, gates, etc.
+    // Now place items, mons, gates, etc.
     // Stairs must exist by this point (except in Shoals where they are
     // yet to be placed). Some items and monsters already exist.
 
@@ -4059,6 +4061,14 @@ static void _builder_items(int level_number, level_area_type level_type, int ite
                 mitm[item_no].special = 0; // no ego type
             }
         }
+
+        // porridge in the dwarf hall
+        if (player_in_branch( BRANCH_DWARF_HALL )
+            && level_number > 2 && one_chance_in(10))
+        {
+            item_no = items( 0, OBJ_POTIONS, POT_PORRIDGE, false, 0, 250,
+                             MMT_NO_ITEM );
+        }
     }
 }
 
@@ -5144,7 +5154,7 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
                                      const int mid,
                                      const int monster_level)
 {
-    monsters &mon(menv[mindex]);
+    monster& mon(menv[mindex]);
 
     unwind_var<int> save_speedinc(mon.speed_increment);
 
@@ -5370,10 +5380,15 @@ int dgn_place_monster(mons_spec &mspec,
         // Store any extra flags here.
         mg.extra_flags |= mspec.extra_monster_flags;
 
+        // have to do this before the monster is created, so things are
+        // initialized properly
+        if (mspec.props.exists("serpent_of_hell_flavour"))
+            mg.props["serpent_of_hell_flavour"] =
+                mspec.props["serpent_of_hell_flavour"].get_int();
         const int mindex = place_monster(mg, true);
         if (mindex != -1)
         {
-            monsters &mons(menv[mindex]);
+            monster& mons(menv[mindex]);
             if (!mspec.items.empty())
                 _dgn_give_mon_spec_items(mspec, mindex, mid, monster_level);
             if (mspec.explicit_spells)
@@ -6045,6 +6060,17 @@ static dungeon_feature_type _pick_an_altar()
         case BRANCH_CRYPT:
             altar_type = (coinflip() ? DNGN_ALTAR_KIKUBAAQUDGHA
                                      : DNGN_ALTAR_YREDELEMNUL);
+            break;
+
+        case BRANCH_DWARF_HALL:
+            temp_rand = random2(10); // 50% chance of Okawaru
+
+            altar_type = ((temp_rand == 0) ? DNGN_ALTAR_KIKUBAAQUDGHA :
+                          (temp_rand == 1) ? DNGN_ALTAR_YREDELEMNUL :
+                          (temp_rand == 2) ? DNGN_ALTAR_NEMELEX_XOBEH :
+                          (temp_rand == 3) ? DNGN_ALTAR_TROG :
+                          (temp_rand == 4) ? DNGN_ALTAR_CHEIBRIADOS
+                                           : DNGN_ALTAR_OKAWARU);
             break;
 
         case BRANCH_ORCISH_MINES:    // violent gods
@@ -6844,11 +6870,7 @@ static bool _plan_6(int level_number)
     dgn_ensure_vault_placed(success, false);
 
     // This "back door" is often one of the easier ways to get out of
-    // pandemonium... the easiest is to use the banish spell.
-    //
-    // Note, that although "level_number > 20" will work for most
-    // trips to pandemonium (through regular portals), it won't work
-    // for demonspawn who gate themselves there. -- bwr
+    // pandemonium.
     if ((player_in_branch(BRANCH_MAIN_DUNGEON) && level_number > 20
             || you.level_type == LEVEL_PANDEMONIUM)
         && coinflip())
@@ -8390,7 +8412,7 @@ static void _fixup_slime_hatch_dest(coord_def* pos)
         }
     }
     ASSERT(max_walls < 9);
-}    
+}
 
 coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
                                 coord_def base_pos, bool find_closest)

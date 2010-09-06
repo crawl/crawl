@@ -287,7 +287,7 @@ inline bool is_stash(const LevelStashes *ls, const coord_def& p)
 
 static bool _is_monster_blocked(const coord_def& c)
 {
-    const monsters *mons = monster_at(c);
+    const monster* mons = monster_at(c);
     return (mons
             && mons->visible_to(&you)
             && mons_is_stationary(mons)
@@ -429,7 +429,7 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile)
 // safe.
 static bool _is_safe_move(const coord_def& c)
 {
-    if (const monsters *mon = monster_at(c))
+    if (const monster* mon = monster_at(c))
     {
         // Stop before wasting energy on plants and fungi,
         // unless worshipping Fedhas.
@@ -604,7 +604,7 @@ inline static void _check_interesting_square(const coord_def pos,
 {
     if (ES_item || ES_greedy || ES_glow || ES_art || ES_rune)
     {
-        if (const monsters *mons = monster_at(pos))
+        if (const monster* mons = monster_at(pos))
         {
             if (mons_is_unknown_mimic(mons))
                 ed.found_item(pos, get_mimic_item(mons));
@@ -1159,7 +1159,7 @@ static bool _is_greed_inducing_square(const LevelStashes *ls,
     if (ls && ls->needs_visit(c))
         return (true);
 
-    if (const monsters *mons = monster_at(c))
+    if (const monster* mons = monster_at(c))
     {
         if (mons_is_unknown_mimic(mons) && mons_was_seen(mons))
             if (item_needs_autopickup(get_mimic_item(mons)))
@@ -2175,6 +2175,9 @@ level_id find_down_level(level_id curr)
 
 level_id find_deepest_explored(level_id curr)
 {
+    ASSERT(curr.branch != NUM_BRANCHES
+           && curr.level_type == LEVEL_DUNGEON);
+
     for (int i = branches[curr.branch].depth; i > 0; --i)
     {
         const level_id lid(curr.branch, i);
@@ -2304,9 +2307,9 @@ static travel_target _prompt_travel_depth(const level_id &id,
     }
 }
 
-bool travel_kill_monster(const monsters * monster)
+bool travel_kill_monster(const monster* mons)
 {
-    if (monster->type != MONS_TOADSTOOL)
+    if (mons->type != MONS_TOADSTOOL)
         return (false);
 
     if (!wielded_weapon_check(you.weapon(), true))
@@ -3938,7 +3941,7 @@ bool runrest::run_grids_changed() const
     if (env.cgrid(you.pos() + pos) != EMPTY_CLOUD)
         return (true);
 
-    monsters * mon = monster_at(you.pos() + pos);
+    monster* mon = monster_at(you.pos() + pos);
     if (mon && !fedhas_passthrough(mon))
         return (true);
 

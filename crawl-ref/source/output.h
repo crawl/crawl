@@ -43,7 +43,7 @@ void update_turn_count(void);
 void print_stats(void);
 void print_stats_level(void);
 void draw_border(void);
-bool compare_monsters_attitude( const monsters *m1, const monsters *m2 );
+bool compare_monsters_attitude( const monster* m1, const monster* m2 );
 
 std::string mpr_monster_list(bool past = false);
 void redraw_skill(const std::string &your_name, const std::string &class_name);

@@ -145,7 +145,7 @@ TAGS: sprint_mu_entry no_rotate no_hmirror no_vmirror no_dup
 MONS: patrolling ooze / patrolling grey rat
 MONS: patrolling giant mite / patrolling grey rat / patrolling jessica
 MONS: patrolling phantom hd:2 / patrolling wolf hd:2 / patrolling scorpion / \
-	patrolling crazy yiuf
+      patrolling crazy yiuf
 MONS: patrolling human hd:2 hp:35 / patrolling elf hd:2 hp:30
 KITEM: * = potion of levitation q:2 / potion of levitation q:1 / any potion, \
  potion of cure mutation q:2 / potion of cure mutation q:1 / any potion, \
@@ -178,7 +178,7 @@ TAGS: sprint_mu_entry no_rotate no_hmirror no_vmirror no_dup
 MONS: patrolling ooze / patrolling grey rat
 MONS: patrolling giant mite / patrolling grey rat / patrolling jessica
 MONS: patrolling phantom hd:2 / patrolling wolf hd:2 / patrolling scorpion / \
-	patrolling crazy yiuf
+      patrolling crazy yiuf
 MONS: patrolling human hd:2 hp:35 / patrolling elf hd:2 hp:30
 KITEM: * = potion of levitation q:2 / potion of levitation q:1 / any potion, \
  potion of cure mutation q:2 / potion of cure mutation q:1 / any potion, \
@@ -390,18 +390,19 @@ ENDMAP
 # Elf 1, gauntlet
 NAME: sprint_mu_elf_gauntlet
 TAGS: sprint_mu_elf no_rotate no_hmirror no_vmirror no_dup
-MONS: 		deep elf knight / deep elf priest / deep elf summoner / deep elf conjurer
-MONS: 		deep elf annihilator ; robe ego:poison_resistance | robe ego:resistance | robe /\
-			deep elf demonologist ; robe ego:poison_resistance | robe ego:cold_resistance | robe /\
-			w:5 deep elf conjurer ; robe ego:poison_resistance | robe ego:cold_resistance | robe 
-MONS: 		deep elf death mage ; robe ego:poison_resistance | robe ego:cold_resistance | robe /\
-			deep elf high priest ; robe ego:poison_resistance | robe ego:cold_resistance | robe
-MONS: 		deep elf blademaster ; chain mail ego:cold_resistance /\
-			deep elf master archer ; chain mail ego:poison_resistance . longbow . q:30 arrow
+MONS: deep elf knight / deep elf priest / deep elf summoner / deep elf conjurer
+MONS: deep elf annihilator ; robe ego:poison_resistance | robe ego:resistance | robe /\
+      deep elf demonologist ; robe ego:poison_resistance | robe ego:cold_resistance | robe /\
+      w:5 deep elf conjurer ; robe ego:poison_resistance | robe ego:cold_resistance | robe
+MONS: deep elf death mage ; robe ego:poison_resistance | robe ego:cold_resistance | robe /\
+      deep elf high priest ; robe ego:poison_resistance | robe ego:cold_resistance | robe
+MONS: deep elf blademaster ; chain mail ego:cold_resistance /\
+      deep elf master archer ; chain mail ego:poison_resistance . longbow . q:30 arrow
 NSUBST: $ = 1:b / 1:s / *:|
 : acq_on_sight(_G, 'b', {"book","book","wand"})
 : acq_on_sight(_G, 's', {"staff","jewellery","jewellery"})
 KITEM: | = superb_item, superb_item, superb_item, gold
+KFEAT: b = floor
 COLOUR: # = yellow
 KFEAT: # = closed_door
 : lua_marker('#', props_marker {
@@ -815,7 +816,8 @@ KMONS: a = patrolling Jozef hd:15 hp:100 \
 KMONS: b = patrolling Joseph hd:5 hp:150 ; ankus ego:freezing \
  . blowgun . needle ego:curare q:7
 : else
-KMONS: a = patrolling Francis hp:100 ; war axe ego:holy_wrath
+# changed Francis to Wiglaf for now
+KMONS: a = patrolling Wiglaf hp:100 ; war axe ego:holy_wrath
 KMONS: b = patrolling Frances hp:150 ; war axe ego:holy_wrath \
  . blowgun . needle ego:curare q:7
 :end
@@ -894,20 +896,20 @@ ENDMAP
 NAME: sprint_mu_vaults_butterflies
 TAGS: sprint_mu_vaults no_rotate no_hmirror no_vmirror no_dup
 MONS: centaur warrior, lich, shadow dragon, ogre mage
-MONS: 		vault guard ; short sword ego:electrocution | long sword ego:flaming |\
-			dire flail ego:vampiricism | war axe ego:freezing | spear ego:vorpal |\
-			great mace ego:pain | great sword ego:venom .\
-			chain mail ego:poison_resistance | chain mail ego:cold_resistance |\
-			scale mail ego:poison_resistance | scale mail ego:cold_resistance |\
-			plate mail ego:fire_resistance . large shield ego:reflection |\
-			shield ego:protection | large shield ego:positive_energy
+MONS: vault guard ; short sword ego:electrocution | long sword ego:flaming |\
+      dire flail ego:vampiricism | war axe ego:freezing | spear ego:vorpal |\
+      great mace ego:pain | great sword ego:venom .\
+      chain mail ego:poison_resistance | chain mail ego:cold_resistance |\
+      scale mail ego:poison_resistance | scale mail ego:cold_resistance |\
+      plate mail ego:fire_resistance . large shield ego:reflection |\
+      shield ego:protection | large shield ego:positive_energy
 MONS: stone giant / shadow dragon / quicksilver dragon / golden dragon /\
-    titan / fire giant / frost giant
+      titan / fire giant / frost giant
 MONS: skeletal warrior
 KMONS: 8 = silver statue
 KMONS: f = butterfly
 KMONS: U = Norris ; ankus ego:vorpal . large shield ego:reflection / \
- Frederick ; trident ego:freezing . large shield ego:reflection
+           Frederick ; trident ego:freezing . large shield ego:reflection
 KMONS: C = generate_awake Chuck
 KMONS: k = yaktaur captain ; crossbow ego:chaos . bolt
 KMONS: b = bush
@@ -1146,7 +1148,7 @@ KMONS: e = col:gold skeletal warrior name:ancient_champion name_replace \
        w:3 executioner's axe ego:vorpal
 MARKER: e = lua:MonPropsMarker:new {description="The unfathomably ancient " \
         .. "skeleton of a humanoid creature. It has hundreds of golden sigils " \
-		.. "eteched onto its bones, and pulses with terrible, unholy power.\n"}
+        .. "etched onto its bones, and pulses with terrible, unholy power.\n"}
 KITEM: e = superb_item, superb_item
 KMONS: p = plant
 KMONS: 1 = patrolling vampire knight
@@ -1300,7 +1302,7 @@ ENDMAP
 # Gehenna 1, hellfire
 NAME: sprint_mu_gehenna_hellfire
 TAGS: sprint_mu_gehenna no_rotate no_hmirror no_vmirror no_dup
-KMONS: 1 = patrolling serpent of hell
+KMONS: 1 = patrolling the serpent of hell
 KFEAT: 1 = lava
 KMONS: 2 = hellion
 KMONS: 3 = fiend
@@ -1515,7 +1517,7 @@ MARKER: # = lua:lock_door {}
 MARKER: # = lua:restrict_door {}
 MARKER: ~ = lua:props_marker({ \
         door_description_prefix="magically reinforced ", \
-        veto_shatter="veto", veto_disintegrate="veto", veto_fragmentation="veto" \
+        veto_shatter="veto", veto_disintegrate="veto", veto_fragmentation="veto", door_restrict="veto" \
         })
 KPROP: =X#kp+^ag78yL45il%3x21*To$. = no_rtele_into
 MAP

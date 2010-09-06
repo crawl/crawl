@@ -336,10 +336,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         if (you.species == SP_VAMPIRE)
             mpr("Blech - this tastes like water.");
         else
-        {
             mpr("This tastes like water.");
-            lessen_hunger(20, true);
-        }
         break;
 
     case POT_EXPERIENCE:

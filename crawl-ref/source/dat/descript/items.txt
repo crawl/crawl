@@ -1222,7 +1222,7 @@ This staff increases the power of earth spells cast by its wielder. It can crush
 %%%%
 staff of enchantment
 
-This staff increases the power of enchantments cast by its wielder, and increases their resistance to hostile enchantments.
+This staff increases the power of enchantments cast by its wielder, and harnesses their innate skill to increase their resistance to hostile enchantments.
 %%%%
 staff of energy
 

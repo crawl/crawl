@@ -51,7 +51,7 @@ void hints_healing_reminder(void);
 
 void taken_new_item(object_class_type item_type);
 void hints_gained_new_skill(int skill);
-void hints_monster_seen(const monsters& mon);
+void hints_monster_seen(const monster& mon);
 void hints_first_item(const item_def& item);
 void learned_something_new(hints_event_type seen_what,
                            coord_def gc = coord_def());
@@ -64,7 +64,7 @@ void hints_describe_item(const item_def &item);
 void hints_inscription_info(bool autoinscribe, std::string prompt);
 bool hints_pos_interesting(int x, int y);
 void hints_describe_pos(int x, int y);
-bool hints_monster_interesting(const monsters *mons);
+bool hints_monster_interesting(const monster* mons);
 void hints_describe_monster(const monster_info& mi, bool has_stat_desc);
 
 void hints_observe_cell(const coord_def& gc);

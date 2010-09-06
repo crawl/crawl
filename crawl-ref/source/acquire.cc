@@ -1235,6 +1235,13 @@ int acquirement_create_item(object_class_type class_wanted,
         // (which work together with Necromantic magic).
         if (agent == GOD_TROG)
         {
+            // ... but he loves the antimagic brand specially.
+            if (one_chance_in(10) && doodad.base_type == OBJ_WEAPONS
+                && !is_range_weapon(doodad) && !is_unrandom_artefact(doodad))
+            {
+                set_item_ego_type(doodad, OBJ_WEAPONS, SPWPN_ANTIMAGIC);
+            }
+
             int brand = get_weapon_brand(doodad);
             if (brand == SPWPN_PAIN
                 || is_unrandom_artefact(doodad)

@@ -1149,7 +1149,7 @@ void TilesFramework::add_text_tag(text_tag_type type, const std::string &tag,
     m_region_tile->add_text_tag(type, tag, gc);
 }
 
-void TilesFramework::add_text_tag(text_tag_type type, const monsters* mon)
+void TilesFramework::add_text_tag(text_tag_type type, const monster* mon)
 {
     // HACK.  Names cover up pan demons in a weird way.
     if (mon->type == MONS_PANDEMONIUM_DEMON)
