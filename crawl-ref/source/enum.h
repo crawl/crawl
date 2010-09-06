@@ -1672,7 +1672,11 @@ enum targ_mode_type
 // NOTE: Changing this order will break saves!
 enum monster_type                      // (int) menv[].type
 {
+#if TAG_MAJOR_VERSION == 30
     MONS_GIANT_ANT,                    //    0
+#else
+    MONS_PROGRAM_BUG,                  //    0
+#endif
     MONS_GIANT_BAT,
     MONS_CENTAUR,
     MONS_RED_DEVIL,
@@ -1857,9 +1861,9 @@ enum monster_type                      // (int) menv[].type
     MONS_GIANT_COCKROACH,
     MONS_SMALL_SNAKE,
     MONS_KENKU,
-    MONS_WOLF,     //jmf: added
-    MONS_WARG,     //jmf: added for orc mines
-    MONS_BEAR,     //jmf: added bears!
+    MONS_WOLF,
+    MONS_WARG,
+    MONS_BEAR,
     MONS_GRIZZLY_BEAR,
     MONS_POLAR_BEAR,
     MONS_BLACK_BEAR,                   //  190
@@ -1885,9 +1889,18 @@ enum monster_type                      // (int) menv[].type
 
     MONS_HYPERACTIVE_BALLISTOMYCETE,
     MONS_HALFLING,              // for recolouring only.  And let's remove them!
-
-    //jmf: end new monsters
-    MONS_WHITE_IMP = 220,              //  220
+    MONS_FELID,                 // reserved.  Miaow!
+      MONS_UNUSED_210,
+      MONS_UNUSED_211,
+      MONS_UNUSED_212,
+      MONS_UNUSED_213,
+      MONS_UNUSED_214,
+      MONS_UNUSED_215,
+      MONS_UNUSED_216,
+      MONS_UNUSED_217,
+      MONS_UNUSED_218,
+      MONS_UNUSED_219,
+    MONS_WHITE_IMP,                    //  220
     MONS_LEMURE,
     MONS_UFETUBUS,
     MONS_IRON_IMP,
@@ -1917,19 +1930,23 @@ enum monster_type                      // (int) menv[].type
     MONS_GARGOYLE,
     MONS_METAL_GARGOYLE,
     MONS_MOLTEN_GARGOYLE,
+#if TAG_MAJOR_VERSION == 30
     MONS_PROGRAM_BUG,                  //  250
+#else
+    MONS_GIANT_ANT,                    //  250
+#endif
 // BCR - begin first batch of uniques.
     MONS_MNOLEG,
     MONS_LOM_LOBON,
     MONS_CEREBOV,
     MONS_GLOORX_VLOQ,                  //  254
-    MONS_MOLLUSC_LORD,                 //  XXX: not used
-    // 256
-    // 257
-    // 258
-    // 259
+      MONS_UNUSED_MOLLUSC_LORD,
+      MONS_UNUSED_256,
+      MONS_UNUSED_257,
+      MONS_UNUSED_258,
+      MONS_UNUSED_259,
 // BCR - End first batch of uniques.
-    MONS_NAGA_MAGE = 260,              //  260
+    MONS_NAGA_MAGE,                    //  260
     MONS_NAGA_WARRIOR,
     MONS_ORC_WARLORD,
     MONS_DEEP_ELF_SOLDIER,
@@ -2013,15 +2030,35 @@ enum monster_type                      // (int) menv[].type
     MONS_DEEP_ELF_BLADEMASTER,
     MONS_DEEP_ELF_MASTER_ARCHER,
     MONS_DEEP_DWARF,
+      MONS_UNUSED_331,
+      MONS_UNUSED_332,
+      MONS_UNUSED_333,
+      MONS_UNUSED_334,
+      MONS_UNUSED_335,
+      MONS_UNUSED_336,
+      MONS_UNUSED_337,
+      MONS_UNUSED_338,
+      MONS_UNUSED_339,
 
     // The Lords of Hell (also unique):
-    MONS_GERYON = 340,                 //  340
+    MONS_GERYON,                       //  340
     MONS_DISPATER,
     MONS_ASMODEUS,
     MONS_ANTAEUS,
     MONS_ERESHKIGAL,                   //  344
+      MONS_UNUSED_345,
+      MONS_UNUSED_346,
+      MONS_UNUSED_347,
+      MONS_UNUSED_348,
+      MONS_UNUSED_349,
+      MONS_UNUSED_350,
+      MONS_UNUSED_351,
+      MONS_UNUSED_352,
+      MONS_UNUSED_353,
+      MONS_UNUSED_354,
+      MONS_UNUSED_355,
 
-    MONS_ANCIENT_LICH = 356,           //  356
+    MONS_ANCIENT_LICH,                 //  356
     MONS_OOZE,
     MONS_KRAKEN,
     MONS_KRAKEN_TENTACLE,
@@ -2050,7 +2087,7 @@ enum monster_type                      // (int) menv[].type
     MONS_QUOKKA,         // Quokka are a type of wallaby, returned -- bwr 382
     MONS_TRAPDOOR_SPIDER,
     MONS_CHAOS_SPAWN,
-    MONS_EYE_OF_DEVASTATION = 385,     //  385
+    MONS_EYE_OF_DEVASTATION,           //  385
     MONS_MOTH_OF_WRATH,
     MONS_DEATH_COB,
     MONS_CURSE_TOE,
@@ -2075,15 +2112,33 @@ enum monster_type                      // (int) menv[].type
     MONS_KOMODO_DRAGON,                //  406
 
     MONS_PLAYER_ILLUSION,
+      MONS_UNUSED_408,
+      MONS_UNUSED_409,
+      MONS_UNUSED_410,
+      MONS_UNUSED_411,
+      MONS_UNUSED_412,
+      MONS_UNUSED_413,
+      MONS_UNUSED_414,
+      MONS_UNUSED_415,
+      MONS_UNUSED_416,
+      MONS_UNUSED_417,
+      MONS_UNUSED_418,
+      MONS_UNUSED_419,
 
     // Lava monsters:
-    MONS_LAVA_WORM = 420,              //  420
+    MONS_LAVA_WORM,                    //  420
     MONS_LAVA_FISH,
     MONS_LAVA_SNAKE,
     MONS_SALAMANDER,                   //  423 mv: was another lava thing
+      MONS_UNUSED_424,
+      MONS_UNUSED_425,
+      MONS_UNUSED_426,
+      MONS_UNUSED_427,
+      MONS_UNUSED_428,
+      MONS_UNUSED_429,
 
     // Water monsters:
-    MONS_BIG_FISH = 430,               //  430
+    MONS_BIG_FISH,                     //  430
     MONS_GIANT_GOLDFISH,
     MONS_ELECTRIC_EEL,
     MONS_JELLYFISH,
@@ -2091,9 +2146,11 @@ enum monster_type                      // (int) menv[].type
     MONS_SWAMP_WORM,                   //  435
     MONS_SHARK,
     MONS_KRAKEN_CONNECTOR,
+      MONS_UNUSED_438,
+      MONS_UNUSED_439,
 
     // Monsters which move through rock:
-    MONS_ROCK_WORM = 440,
+    MONS_ROCK_WORM,
 
     // Statuary
     MONS_ORANGE_STATUE,
@@ -2101,9 +2158,13 @@ enum monster_type                      // (int) menv[].type
     MONS_ICE_STATUE,
     MONS_STATUE,
     MONS_TRAINING_DUMMY,
+      MONS_UNUSED_446,
+      MONS_UNUSED_447,
+      MONS_UNUSED_448,
+      MONS_UNUSED_449,
 
     // Third batch of uniques
-    MONS_ROXANNE = 450, // -- statue, too!
+    MONS_ROXANNE, // -- statue, too!
     MONS_SONJA,
     MONS_EUSTACHIO,
     MONS_AZRAEL,
@@ -2124,8 +2185,6 @@ enum monster_type                      // (int) menv[].type
     MONS_MAURICE,
     MONS_KHUFU,
     MONS_NIKOLA,                       // 470
-
-    // New set of monsters {november, 2009}
     MONS_GOLDEN_EYE,
     MONS_AIZUL,
     MONS_PIKEL,
@@ -2149,9 +2208,15 @@ enum monster_type                      // (int) menv[].type
     MONS_JUMPING_SPIDER,
     MONS_TARANTELLA,                   // 492
     MONS_SILENT_SPECTRE,
+      MONS_UNUSED_494,
+      MONS_UNUSED_495,
+      MONS_UNUSED_496,
+      MONS_UNUSED_497,
+      MONS_UNUSED_498,
+      MONS_UNUSED_499,
 
     // Spriggans:
-    MONS_SPRIGGAN = 500,
+    MONS_SPRIGGAN,
     MONS_SPRIGGAN_DRUID,
     MONS_SPRIGGAN_ASSASSIN,
     MONS_SPRIGGAN_RIDER,
