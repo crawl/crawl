@@ -258,6 +258,8 @@ enum beam_type                  // beam[].flavour
     BEAM_POTION_RAIN,
     BEAM_GLOOM,
     BEAM_INK,
+    BEAM_HOLY_FLAME,
+    BEAM_HOLY_LIGHT,
     BEAM_POTION_RANDOM,
 
     BEAM_LAST_REAL = BEAM_POTION_RANDOM,
@@ -438,9 +440,10 @@ enum cloud_type
     CLOUD_STEAM,
     CLOUD_GLOOM,
     CLOUD_INK,
+    CLOUD_HOLY_FLAMES,
 
     CLOUD_OPAQUE_FIRST = CLOUD_BLACK_SMOKE,
-    CLOUD_OPAQUE_LAST  = CLOUD_INK,
+    CLOUD_OPAQUE_LAST  = CLOUD_HOLY_FLAMES,
 
     CLOUD_MIASMA,
     CLOUD_MIST,
@@ -1289,6 +1292,8 @@ enum enchant_type
     ENCH_EXPLODING,
     ENCH_BLEED,
     ENCH_ANTIMAGIC,
+    ENCH_FADING_AWAY,
+    ENCH_PREPARING_RESURRECT,
 
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
@@ -2152,6 +2157,18 @@ enum monster_type                      // (int) menv[].type
     MONS_FIREFLY,
     MONS_MENNAS,
 
+    // New holy monsters etc
+    MONS_CHERUB,
+    MONS_PHOENIX,
+    MONS_SILVER_STAR,
+    MONS_BLESSED_TOE,
+    MONS_SHEDU,
+    MONS_OPHAN,
+    MONS_SPIRIT,
+    MONS_PALADIN,
+    MONS_APIS,
+    MONS_HOLY_DRAGON,
+
     // Testing monsters
     MONS_TEST_SPAWNER,
 
@@ -2430,6 +2447,15 @@ enum mon_spellbook_type
     MST_SERPENT_OF_HELL_TARTARUS,     // 190
     MST_SERPENT_OF_HELL_DIS,
     MST_NERGALLE,
+    MST_CHERUB,
+    MST_PHOENIX,
+    MST_SILVER_STAR,
+    MST_BLESSED_TOE,
+    MST_SHEDU,
+    MST_OPHAN,
+    MST_SPIRIT,
+    MST_PALADIN,
+    MST_HOLY_DRAGON,
 
     MST_TEST_SPAWNER = 200,
     NUM_MSTYPES,
@@ -3033,6 +3059,15 @@ enum spell_type
     SPELL_SUMMON_CANIFORMS,
     SPELL_IRON_ELEMENTALS,
     SPELL_SUMMON_SPECTRAL_ORCS,
+    SPELL_RESURRECT,
+    SPELL_LIGHT_BEAM,
+    SPELL_HOLY_WORD,
+    SPELL_SUMMON_HOLIES,
+    SPELL_SUMMON_GREATER_HOLY,
+    SPELL_HEAL_OTHER,
+    SPELL_SACRIFICE,
+    SPELL_HOLY_FLAMES,
+    SPELL_HOLY_BREATH,
 
     NUM_SPELLS
 };
@@ -3284,6 +3319,9 @@ enum zap_type
     ZAP_PRIMAL_WAVE,
     ZAP_IOOD,
     ZAP_SUNRAY,
+    ZAP_LIGHT_BEAM,
+    ZAP_HOLY_FLAMES,
+    ZAP_HOLY_BREATH,
 
     NUM_ZAPS
 };

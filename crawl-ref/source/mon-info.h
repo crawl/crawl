@@ -46,6 +46,7 @@ enum monster_info_flags
     MB_SUBMERGED,
     MB_BLEEDING,
     MB_DEFLECT_MSL,
+    MB_PREP_RESURRECT,
     MB_SAFE,
     MB_UNSAFE,
     MB_NAME_SUFFIX, // [art] rat foo does...

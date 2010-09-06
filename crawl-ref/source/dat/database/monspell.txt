@@ -117,6 +117,14 @@ unseen Symbol of Torment cast
 
 @The_something@ calls on the powers of Hell!
 %%%%
+Holy Word cast
+
+@The_monster@ calls on the powers of Heaven!
+%%%%
+unseen Holy Word cast
+
+@The_something@ calls on the powers of Heaven!
+%%%%
 Orb of Destruction cast
 
 @The_monster@ conjures a glowing orb.

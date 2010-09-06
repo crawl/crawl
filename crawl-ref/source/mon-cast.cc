@@ -177,7 +177,8 @@ static bool _set_allied_target(monster* caster, bolt & pbolt)
     {
         if (*targ != caster
             && (mons_genus(targ->type) == caster_genus
-                || mons_genus(targ->base_monster) == caster_genus)
+                || mons_genus(targ->base_monster) == caster_genus
+                || targ->is_holy() && caster->is_holy())
             && mons_aligned(*targ, caster)
             && !targ->has_ench(ENCH_CHARM)
             && _flavour_benefits_monster(pbolt.flavour, **targ))
@@ -467,6 +468,7 @@ bolt mons_spells( monster* mons, spell_type spell_cast, int power,
                                                    : dice_def(3, 15);
         break;
 
+    case SPELL_HEAL_OTHER:
     case SPELL_MINOR_HEALING:
         beam.flavour  = BEAM_HEALING;
         beam.hit      = 25 + (power / 5);
@@ -694,6 +696,16 @@ bolt mons_spells( monster* mons, spell_type spell_cast, int power,
         beam.is_beam    = true;
         break;
 
+    case SPELL_HOLY_BREATH:
+        beam.name     = "blast of cleansing flame";
+        beam.damage   = dice_def( 3, (mons->hit_dice * 2) );
+        beam.colour   = ETC_HOLY;
+        beam.flavour  = BEAM_HOLY;
+        beam.hit      = 18 + power / 25;
+        beam.is_beam  = true;
+        beam.is_big_cloud = true;
+        break;
+
     case SPELL_DRACONIAN_BREATH:
         beam.damage      = dice_def( 3, (mons->hit_dice * 2) );
         beam.hit         = 30;
@@ -781,6 +793,9 @@ static bool _los_free_spell(spell_type spell_cast)
         || spell_cast == SPELL_FIRE_STORM
         || spell_cast == SPELL_AIRSTRIKE
         || spell_cast == SPELL_MISLEAD
+        || spell_cast == SPELL_RESURRECT
+        || spell_cast == SPELL_SACRIFICE
+        || spell_cast == SPELL_HOLY_FLAMES
         || spell_cast == SPELL_SUMMON_SPECTRAL_ORCS);
 }
 
@@ -817,7 +832,10 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         case SPELL_BRAIN_FEED:
         case SPELL_MISLEAD:
         case SPELL_SMITING:
+        case SPELL_RESURRECT:
+        case SPELL_SACRIFICE:
         case SPELL_AIRSTRIKE:
+        case SPELL_HOLY_FLAMES:
             return (true);
         default:
             // Other spells get normal setup:
@@ -853,6 +871,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_HORRIBLE_THINGS:
     case SPELL_HAUNT:
     case SPELL_SYMBOL_OF_TORMENT:
+    case SPELL_HOLY_WORD:
     case SPELL_SUMMON_GREATER_DEMON:
     case SPELL_CANTRIP:
     case SPELL_BERSERKER_RAGE:
@@ -879,6 +898,8 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_AWAKEN_FOREST:
     case SPELL_SUMMON_CANIFORMS:
     case SPELL_SUMMON_SPECTRAL_ORCS:
+    case SPELL_SUMMON_HOLIES:
+    case SPELL_SUMMON_GREATER_HOLY:
         return (true);
     default:
         if (check_validity)
@@ -1275,9 +1296,13 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 // Setup the spell.
                 setup_mons_cast(mons, beem, spell_cast);
 
-                // Try to find a nearby ally to haste
-                if (spell_cast == SPELL_HASTE_OTHER
-                    && !_set_allied_target(mons, beem))
+                // Try to find a nearby ally to haste, heal
+                // resurrect, or sacrifice itself for.
+                if ((spell_cast == SPELL_HASTE_OTHER
+                     || spell_cast == SPELL_HEAL_OTHER
+                     || spell_cast == SPELL_RESURRECT
+                     || spell_cast == SPELL_SACRIFICE)
+                        && !_set_allied_target(mons, beem))
                 {
                     spell_cast = SPELL_NO_SPELL;
                     continue;
@@ -2295,6 +2320,14 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         torment(mons->mindex(), mons->pos());
         return;
 
+    case SPELL_HOLY_WORD:
+        // friendly holies don't care if you are friendly
+        if (!monsterNearby)
+            return;
+
+        holy_word(0, mons->mindex(), mons->pos());
+        return;
+
     case SPELL_SUMMON_GREATER_DEMON:
         if (_mons_abjured(mons, monsterNearby))
             return;
@@ -2371,6 +2404,47 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                           mons, duration, spell_cast, mons->pos(),
                           mons->foe, 0, god));
         }
+        return;
+
+    case SPELL_SUMMON_HOLIES: // Holy monsters.
+        if (_mons_abjured(mons, monsterNearby))
+            return;
+
+        sumcount2 = 1 + random2(2) + random2(mons->hit_dice / 4 + 1);
+
+        duration  = std::min(2 + mons->hit_dice / 5, 6);
+        for (int i = 0; i < sumcount2; ++i)
+        {
+            create_monster(
+                mgen_data(static_cast<monster_type>(random_choose_weighted(
+                            90, MONS_CHERUB,    5, MONS_SILVER_STAR,
+                            20, MONS_SPIRIT,    5, MONS_OPHAN,
+                            8,  MONS_SHEDU,     20,  MONS_PALADIN,
+                            2,  MONS_PHOENIX,   1,  MONS_APIS,
+                            // No holy dragons
+                          0)), SAME_ATTITUDE(mons),
+                          mons, duration, spell_cast, mons->pos(),
+                          mons->foe, 0, god));
+        }
+        return;
+
+    case SPELL_SUMMON_GREATER_HOLY: // Holy monsters.
+        if (_mons_abjured(mons, monsterNearby))
+            return;
+
+        sumcount2 = 1 + random2(2) + random2(mons->hit_dice / 4 + 1);
+
+        duration  = std::min(2 + mons->hit_dice / 5, 6);
+        create_monster(
+            mgen_data(static_cast<monster_type>(random_choose_weighted(
+                        10, MONS_SILVER_STAR, 10, MONS_PHOENIX,
+                        10, MONS_APIS,        5,  MONS_DAEVA,
+                        2,  MONS_HOLY_DRAGON,
+                        // No holy dragons
+                      0)), SAME_ATTITUDE(mons),
+                      mons, duration, spell_cast, mons->pos(),
+                      mons->foe, 0, god));
+
         return;
 
     // TODO: Outsource the cantrip messages and allow specification of

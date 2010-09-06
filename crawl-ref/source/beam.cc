@@ -2320,6 +2320,9 @@ void bolt::affect_endpoint()
     if (name == "blast of poison")
         big_cloud(CLOUD_POISON, whose_kill(), killer(), pos(), 0, 7+random2(5));
 
+    if (origin_spell == SPELL_HOLY_BREATH)
+        big_cloud(CLOUD_HOLY_FLAMES, whose_kill(), killer(), pos(), 0, 7+random2(5));
+
     if (name == "foul vapour")
     {
         // death drake; swamp drakes handled earlier
@@ -2562,6 +2565,9 @@ void bolt::affect_place_clouds()
 
     if (name == "blast of poison")
         place_cloud(CLOUD_POISON, p, random2(4) + 2, whose_kill(), killer());
+
+    if (origin_spell == SPELL_HOLY_BREATH)
+        place_cloud(CLOUD_HOLY_FLAMES, p, random2(4) + 2, whose_kill(), killer());
 
     // Fire/cold over water/lava
     if (feat == DNGN_LAVA && flavour == BEAM_COLD
@@ -5654,6 +5660,8 @@ std::string beam_type_name(beam_type type)
     case BEAM_DEVOUR_FOOD:          return ("devour food");
     case BEAM_GLOOM:                return ("gloom");
     case BEAM_INK:                  return ("ink");
+    case BEAM_HOLY_FLAME:           return ("cleansing flame");
+    case BEAM_HOLY_LIGHT:           return ("holy light");
 
     case NUM_BEAMS:                 DEBUGSTR("invalid beam type");
                                     return ("INVALID");

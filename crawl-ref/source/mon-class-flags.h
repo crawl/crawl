@@ -115,4 +115,7 @@ const uint64_t M_NO_POLY_TO        = (uint64_t)1<<34;
 
 // has special abilities coded as spells which are entirely non-magical
 const uint64_t M_FAKE_SPELLS       = (uint64_t)1<<35;
+
+// always leaves a corpse
+const uint64_t M_ALWAYS_CORPSE     = (uint64_t)1<<36;
 #endif

@@ -106,6 +106,8 @@ static uint64_t ench_to_mb(const monster& mons, enchant_type ench)
         return ULL1 << MB_PARALYSED;
     case ENCH_SOUL_RIPE:
         return ULL1 << MB_POSSESSABLE;
+    case ENCH_PREPARING_RESURRECT:
+        return ULL1 << MB_PREP_RESURRECT;
     default:
         return 0;
     }
@@ -908,6 +910,8 @@ std::vector<std::string> monster_info::attributes() const
         v.push_back("bleeding");
     if (is(MB_DEFLECT_MSL))
         v.push_back("missile deflection");
+    if (is(MB_PREP_RESURRECT))
+        v.push_back("quietly preparing");
     return v;
 }
 

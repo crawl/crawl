@@ -97,6 +97,7 @@ enum mon_attack_flavour
     AF_STEAL_FOOD,
     AF_CRUSH,
     AF_REACH,
+    AF_HOLY,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or
