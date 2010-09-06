@@ -37,7 +37,7 @@ struct map_cell
     uint32_t flags;   // Flags describing the mappedness of this square.
 
     map_cell() : flags(0), _feat(DNGN_UNSEEN), _feat_colour(0),
-                 _item(0), _cloud(CLOUD_NONE)
+                 _item(0), _cloud(CLOUD_NONE), _cloud_colour(0)
     {
         memset(&_mons, 0, sizeof(_mons));
     }
