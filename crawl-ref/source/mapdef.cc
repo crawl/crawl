@@ -3712,7 +3712,7 @@ mons_spec mons_list::get_hydra_spec(const std::string &name) const
     }
 
     if (nheads < 1)
-        nheads = MONS_PROGRAM_BUG;  // What can I say? :P
+        nheads = 27;  // What can I say? :P
     else if (nheads > 20)
     {
 #if defined(DEBUG) || defined(DEBUG_DIAGNOSTICS)
