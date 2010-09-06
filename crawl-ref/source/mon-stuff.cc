@@ -3486,7 +3486,6 @@ int mons_natural_regen_rate(monster* mons)
         divider *= (mons_enslaved_soul(mons)) ? 2 : 4;
         break;
 
-    // And golems have it worse.
     case MH_NONLIVING:
         divider *= 5;
         break;
