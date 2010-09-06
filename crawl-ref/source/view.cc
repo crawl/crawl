@@ -581,13 +581,17 @@ void view_update_at(const coord_def &pos)
         return;
     glyph g = get_cell_glyph(env.map_knowledge(pos));
 
-    int flash_colour = you.flash_colour;
-    if (flash_colour == BLACK)
-        flash_colour = _viewmap_flash_colour();
+    int flash_colour = you.flash_colour == BLACK
+        ? _viewmap_flash_colour()
+        : you.flash_colour;
+    int cell_colour =
+        flash_colour && env.map_knowledge(pos).monster() == MONS_NO_MONSTER
+            ? real_colour(flash_colour)
+            : g.col;
 
     const coord_def vp = grid2view(pos);
     cgotoxy(vp.x, vp.y, GOTO_DNGN);
-    put_colour_ch(flash_colour? real_colour(flash_colour) : g.col, g.ch);
+    put_colour_ch(cell_colour, g.ch);
 
     // Force colour back to normal, else clrscr() will flood screen
     // with this colour on DOS.
@@ -915,8 +919,15 @@ void viewwindow(bool show_updates)
         // Alter colour if flashing the characters vision.
         if (flash_colour)
         {
-            cell->colour = you.see_cell(gc) ? real_colour(flash_colour)
-                                            : DARKGREY;
+            if (you.see_cell(gc))
+            {
+                if (env.map_knowledge(gc).monster() == MONS_NO_MONSTER)
+                    cell->colour = real_colour(flash_colour);
+            }
+            else
+            {
+                cell->colour = DARKGREY;
+            }
             cell->flash_colour = cell->colour;
         }
         else if (crawl_state.darken_range >= 0)
