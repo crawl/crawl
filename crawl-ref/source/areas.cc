@@ -404,9 +404,38 @@ int player::halo_radius2() const
 
 int monster::halo_radius2() const
 {
-    // Angels and Daevas are haloed.
-    if (holiness() == MH_HOLY)
-        return (2*2);
-    else
+    if (holiness() != MH_HOLY)
         return (-1);
+    // The values here depend on 1. power, 2. sentience.  Thus, high-ranked
+    // sentient celestials have really big haloes, while holy animals get
+    // small ones.
+    switch(type)
+    {
+    case MONS_SPIRIT:
+        return (1);
+    case MONS_ANGEL:
+        return (26);
+    case MONS_CHERUB:
+        return (29);
+    case MONS_DAEVA:
+        return (32);
+    case MONS_HOLY_DRAGON:
+        return (5);
+    case MONS_OPHAN:
+        return (64); // highest rank among sentient ones
+    case MONS_PHOENIX:
+        return (10);
+    case MONS_SHEDU:
+        return (10);
+    case MONS_APIS:
+        return (4);
+    case MONS_PALADIN:
+        return (4);  // mere humans
+    case MONS_BLESSED_TOE:
+        return (17);
+    case MONS_SILVER_STAR:
+        return (40); // dumb but with an immense power
+    default:
+        return (4);
+    }
 }

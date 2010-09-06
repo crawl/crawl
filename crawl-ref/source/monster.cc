@@ -1230,7 +1230,7 @@ static bool _is_signature_weapon(monster* mons, const item_def &weapon)
     if (weapon.base_type != OBJ_WEAPONS)
         return (false);
 
-    if (mons->type == MONS_ANGEL)
+    if (mons->type == MONS_CHERUB || mons->type == MONS_ANGEL)
         return (weapon.sub_type == WPN_HOLY_SCOURGE);
 
     if (mons->type == MONS_DAEVA)
@@ -6067,7 +6067,7 @@ static const char *enchant_names[] =
     "petrified", "lowered_mr", "soul_ripe", "slowly_dying", "eat_items",
     "aquatic_land", "spore_production", "slouch", "swift", "tide",
     "insane", "silenced", "awaken_forest", "exploding", "bleeding",
-    "antimagic", "buggy",
+    "antimagic", "fading_away", "preparing_resurrect", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -6227,6 +6227,15 @@ int mon_enchant::calc_duration(const monster* mons,
         // This is used as a simple timer, when the enchantment runs out
         // the monster will create a giant spore.
         return (random_range(475, 525) * 10);
+
+    case ENCH_FADING_AWAY:
+        // Also used as a simple timer. When it runs out, it will summon a
+        // greater holy being.
+        return (random_range(800, 1300) * 10);
+
+    case ENCH_PREPARING_RESURRECT:
+        // A timer. When it runs out, the creature will cast resurrect.
+        return (random_range(1, 3) * 10);
 
     case ENCH_EXPLODING:
         return (random_range(3,7) * 10);

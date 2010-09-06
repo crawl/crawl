@@ -3549,6 +3549,7 @@ static void _mons_in_cloud(monster* mons)
 {
     int wc = env.cgrid(mons->pos());
     int hurted = 0;
+    int resist = 0;
     bolt beam;
 
     const int speed = ((mons->speed > 0) ? mons->speed : 10);
@@ -3685,6 +3686,25 @@ static void _mons_in_cloud(monster* mons)
             if (mons->mutate())
                 wake = true;
         }
+        break;
+
+    case CLOUD_HOLY_FLAMES:
+        cloud.announce_actor_engulfed(mons);
+
+        if (mons->is_holy())
+            resist = 3;
+        if (mons->is_evil() || mons->is_unholy())
+            resist = -1;
+
+        hurted +=
+            resist_adjust_damage( mons,
+                                  BEAM_HOLY_FLAME,
+                                  resist,
+                                  ((random2avg(16, 3) + 6) * 10) / speed );
+
+        dprf("Pain: %d, resist: %d", hurted, resist);
+
+        hurted -= random2(1 + mons->ac);
         break;
 
     case CLOUD_CHAOS:

@@ -764,6 +764,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         break;
 
     case MONS_ANGEL:
+    case MONS_CHERUB:
         force_item     = true;
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
@@ -778,6 +779,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.plus2 = 1 + random2(3);
         break;
 
+    case MONS_PALADIN:
     case MONS_DAEVA:
     case MONS_MENNAS:
         force_item     = true;
@@ -1369,6 +1371,7 @@ void give_shield(monster* mon, int level)
 
     switch (mon->type)
     {
+    case MONS_PALADIN:
     case MONS_DAEVA:
     case MONS_MENNAS:
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_LARGE_SHIELD,
@@ -1598,6 +1601,7 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         item_race = MAKE_ITEM_ORCISH;
         // deliberate fall through {dlb}
 
+    case MONS_PALADIN:
     case MONS_FREDERICK:
     case MONS_HELL_KNIGHT:
     case MONS_LOUISE:
@@ -1634,6 +1638,7 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         break;
 
     case MONS_ANGEL:
+    case MONS_CHERUB:
     case MONS_SIGMUND:
     case MONS_WIGHT:
         item_race = MAKE_ITEM_NO_RACE;

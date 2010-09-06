@@ -66,6 +66,9 @@
 #include "player-stats.h"
 #include "religion.h"
 #include "skills.h"
+#include "skills2.h"
+#include "spl-book.h"
+#include "spl-clouds.h"
 #include "spl-miscast.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
@@ -797,6 +800,16 @@ void direct_effect(monster* source, spell_type spell,
         else
             mpr("Orcish apparitions take form around you.");
         mons_cast_spectral_orcs(source);
+        break;
+
+    case SPELL_HOLY_FLAMES:
+        if (holy_flames(source, defender))
+        {
+            if (!def)
+                mpr("Blessed fire suddenly surrounds you!");
+            else
+                simple_monster_message(def, " is surrounded by blessed fire!");
+        }
         break;
 
     default:

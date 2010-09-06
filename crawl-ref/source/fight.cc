@@ -5243,6 +5243,24 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
              special_attack_punctuation().c_str());
         break;
 
+    case AF_HOLY:
+
+        if (defender->is_evil() || defender->is_unholy())
+            special_damage = attk.damage * 0.75;
+
+        if (needs_message && special_damage)
+        {
+            mprf("%s %s %s%s",
+                 atk_name(DESC_CAP_THE).c_str(),
+                 attacker->conj_verb("sear").c_str(),
+                 mons_defender_name().c_str(),
+                 special_attack_punctuation().c_str());
+
+        }
+
+        break;
+
+
     }
 }
 

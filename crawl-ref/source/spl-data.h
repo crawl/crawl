@@ -2686,6 +2686,123 @@ struct spell_desc
 },
 
 {
+    SPELL_RESURRECT, "Resurrection",
+     SPTYP_HOLY,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_HELPFUL,
+     6,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_LIGHT_BEAM, "Light Beam",
+     SPTYP_CONJURATION | SPTYP_HOLY,
+     SPFLAG_DIR_OR_TARGET,
+     6,
+     200,
+     6, 6,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_SUMMON_HOLIES, "Summon Holies",
+     SPTYP_SUMMONING | SPTYP_HOLY,
+     SPFLAG_MONSTER,
+     5,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_SUMMON_GREATER_HOLY, "Summon Greater Holy",
+     SPTYP_SUMMONING | SPTYP_HOLY,
+     SPFLAG_MONSTER,
+     9,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_HOLY_WORD, "Holy Word",
+     SPTYP_HOLY,
+     SPFLAG_AREA,
+     6,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_HEAL_OTHER, "Heal Other",
+     SPTYP_HOLY,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL,
+     6,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_SACRIFICE, "Sacrifice",
+     SPTYP_HOLY,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_HELPFUL,
+     6,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_HOLY_FLAMES, "Holy Flames",
+     SPTYP_HOLY,
+     SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
+     7,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_HOLY_BREATH, "Holy Breath",
+     SPTYP_CONJURATION | SPTYP_HOLY,
+     SPFLAG_GRID | SPFLAG_AREA,
+     5,
+     200,
+     6, 6,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

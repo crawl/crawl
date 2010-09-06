@@ -1506,6 +1506,50 @@
       }
     },
 
+    {  MST_HOLY_DRAGON,
+      {
+       SPELL_HOLY_BREATH,
+       SPELL_HOLY_BREATH,
+       SPELL_NO_SPELL,
+       SPELL_HOLY_BREATH,
+       SPELL_HOLY_BREATH,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_BLESSED_TOE,
+      {
+       SPELL_SUMMON_HOLIES,
+       SPELL_SUMMON_HOLIES,
+       SPELL_HEAL_OTHER,
+       SPELL_HOLY_WORD,
+       SPELL_SUMMON_HOLIES,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_SPIRIT,
+      {
+       SPELL_BLINK_AWAY,
+       SPELL_BLINK_AWAY,
+       SPELL_BLINK_AWAY,
+       SPELL_BLINK_AWAY,
+       SPELL_BLINK_AWAY,
+       SPELL_BLINK_AWAY
+      }
+    },
+
+    {  MST_OPHAN,
+      {
+       SPELL_BOLT_OF_FIRE,
+       SPELL_HOLY_FLAMES,
+       SPELL_NO_SPELL,
+       SPELL_BOLT_OF_FIRE,
+       SPELL_HOLY_FLAMES,
+       SPELL_NO_SPELL
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,

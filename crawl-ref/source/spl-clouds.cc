@@ -543,3 +543,27 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
 
     return (true);
 }
+
+int holy_flames(monster* caster, actor* defender)
+{
+    const coord_def pos = defender->pos();
+    int cloud_count = 0;
+
+    for ( adjacent_iterator ai(pos); ai; ++ai )
+    {
+        if (!in_bounds(*ai)
+            || env.cgrid(*ai) != EMPTY_CLOUD
+            || feat_is_solid(grd(*ai))
+            || is_sanctuary(*ai)
+            || monster_at(*ai))
+        {
+            continue;
+        }
+
+        place_cloud(CLOUD_HOLY_FLAMES, *ai, caster->hit_dice * 5, KILL_MON);
+
+        cloud_count++;
+    }
+
+    return cloud_count;
+}

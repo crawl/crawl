@@ -477,7 +477,9 @@ std::string pluralise(const std::string &name,
         return name.substr(0, name.length() - 1) + "i";
     }
     else if (ends_with(name, "sheep") || ends_with(name, "fish")
-             || ends_with(name, "folk"))
+             || ends_with(name, "folk") || ends_with(name, "shedu")
+             // "shedu" is male, "lammasu" is female of the same creature
+             || ends_with(name, "lammasu") || ends_with(name, "lamassu"))
     {
         return name;
     }
@@ -500,6 +502,12 @@ std::string pluralise(const std::string &name,
     }
     else if (name == "foot")
         return "feet";
+    else if (name == "ophan" || name == "cherub")
+    {
+        // unlike "angel" which is fully assimilated and "cherub" which may be
+        // pluralized both ways, "ophan" always uses hebrew pluralization
+        return name + "im";
+    }
 
     return name + "s";
 }
