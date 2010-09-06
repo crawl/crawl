@@ -14,8 +14,8 @@ void cast_chain_lightning(int pow, const actor *caster);
 
 void cast_toxic_radiance(bool non_player = false);
 void cast_refrigeration(int pow, bool non_player = false);
-bool vampiric_drain(int pow, monsters *monster);
-bool burn_freeze(int pow, beam_type flavour, monsters *monster);
+bool vampiric_drain(int pow, monster* mons);
+bool burn_freeze(int pow, beam_type flavour, monster* mons);
 
 int airstrike(int pow, const dist &beam);
 bool cast_bone_shards(int power, bolt &);

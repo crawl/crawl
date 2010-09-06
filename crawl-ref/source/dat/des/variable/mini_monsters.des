@@ -934,7 +934,7 @@ ENDMAP
 #
 NAME:   sword_in_stone
 TAGS:   mini_float patrolling
-DEPTH:  5-26, !Lair, !Orc, !Tomb
+DEPTH:  5-26, !Lair, !Orc, !Tomb, !Shoals, !Slime, !Swamp, !Snake
 NSUBST: k = 4=k / *= .:19 k:1
 KITEM:  S = good_item long sword / good_item great sword / good_item katana /\
             good_item triple sword / good_item double sword
@@ -959,14 +959,14 @@ KMONS: C = Urug / elf; sabre | long sword . leather armour . buckler | nothing
 KMONS: D = Joseph / elf; long sword | scimitar . chain mail . shield
 KMONS: E = Erica / orc knight
 KMONS: F = Harold / orc knight
-KMONS: G = Norbert / hell knight
+KMONS: G = Donald / hell knight
 KMONS: H = Jozef / hell knight
 KMONS: I = Louise / wizard; long sword . robe | leather armour . shield
 KMONS: J = Maud / necromancer; great sword . robe | leather armour
 KMONS: K = Frances / deep elf knight
-KMONS: L = Francis / deep elf knight
+KMONS: L = Agnes / deep elf knight
 KMONS: M = Rupert / vampire knight
-KMONS: N = Wayne / vault guard
+KMONS: N = Wiglaf / vault guard
 KMONS: O = Frederick / draconian knight
 KMONS: W = human; short sword . banded mail | chain mail . large shield
 KMONS: X = human; scimitar . scale mail|chain mail . shield

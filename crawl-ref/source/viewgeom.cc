@@ -415,6 +415,6 @@ void crawl_view_geometry::init_geometry()
 
 void crawl_view_geometry::calc_vlos()
 {
-    vlos1 = glos1 - vgrdc + view_centre();
-    vlos2 = glos2 - vgrdc + view_centre();
+    vlos1 = grid2view(glos1);
+    vlos2 = grid2view(glos2);
 }

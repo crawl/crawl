@@ -31,6 +31,7 @@
 
 #include "abl-show.h"
 #include "abyss.h"
+#include "acquire.h"
 #include "areas.h"
 #include "artefact.h"
 #include "arena.h"
@@ -43,10 +44,8 @@
 #include "command.h"
 #include "coord.h"
 #include "coordit.h"
-#include "ctest.h"
 #include "crash.h"
 #include "database.h"
-#include "dbg-maps.h"
 #include "dbg-scan.h"
 #include "debug.h"
 #include "delay.h"
@@ -74,8 +73,6 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
-#include "lev-pand.h"
-#include "los.h"
 #include "luaterp.h"
 #include "macro.h"
 #include "makeitem.h"
@@ -90,8 +87,6 @@
 #include "mon-transit.h"
 #include "mon-util.h"
 #include "mutation.h"
-#include "newgame.h"
-#include "ng-init.h"
 #include "notes.h"
 #include "options.h"
 #include "ouch.h"
@@ -1079,6 +1074,8 @@ static void _input()
     // Currently only set if Xom accidentally kills the player.
     you.reset_escaped_death();
 
+    reset_damage_counters();
+
     if (crawl_state.is_replaying_keys() && crawl_state.is_repeating_cmd()
         && kbhit())
     {
@@ -1229,7 +1226,7 @@ static bool _stairs_check_mesmerised()
 {
     if (you.beheld() && !you.confused())
     {
-        const monsters* beholder = you.get_any_beholder();
+        const monster* beholder = you.get_any_beholder();
         mprf("You cannot move away from %s!",
              beholder->name(DESC_NOCAP_THE, true).c_str());
         return (true);
@@ -1820,7 +1817,7 @@ void process_command(command_type cmd)
         // Mouse commands.
     case CMD_MOUSE_MOVE:
     {
-        const coord_def dest = view2grid(crawl_view.mousep);
+        const coord_def dest = crawl_view.screen2grid(crawl_view.mousep);
         if (in_bounds(dest))
             terse_describe_square(dest);
         break;
@@ -1832,9 +1829,9 @@ void process_command(command_type cmd)
         // CMD_MOUSE_TRAVEL and get rid of CMD_MOUSE_CLICK and
         // CMD_MOUSE_MOVE.
         c_mouse_event cme = get_mouse_event();
-        if (cme && crawl_view.in_view_viewport(cme.pos))
+        if (cme && crawl_view.in_viewport_s(cme.pos))
         {
-            const coord_def dest = view2grid(cme.pos);
+            const coord_def dest = crawl_view.screen2grid(cme.pos);
             if (cme.left_clicked())
             {
                 if (in_bounds(dest))
@@ -2902,7 +2899,7 @@ static int _check_adjacent(dungeon_feature_type feat, coord_def& delta)
                 // Already included in a gate, skip this door.
                 if (found_door)
                     continue;
-                    
+
                 // Check if it's part of a gate. If so, remember all its doors.
                 std::set<coord_def> all_door;
                 find_connected_identical(*ai, grd(*ai), all_door);
@@ -2926,7 +2923,7 @@ static int _check_adjacent(dungeon_feature_type feat, coord_def& delta)
 static bool _untrap_target(const coord_def move, bool check_confused)
 {
     const coord_def target = you.pos() + move;
-    monsters* mon = monster_at(target);
+    monster* mon = monster_at(target);
     if (mon && player_can_hit_monster(mon))
     {
         if (mon->caught() && mon->friendly()
@@ -3405,7 +3402,7 @@ static void _close_door(coord_def move)
              i != all_door.end(); ++i)
         {
             const coord_def& dc = *i;
-            if (monsters* mon = monster_at(dc))
+            if (monster* mon = monster_at(dc))
             {
                 // Need to make sure that turn_is_over is set if
                 // creature is invisible.
@@ -3669,7 +3666,7 @@ static void _move_player(coord_def move)
         return;
 
     const dungeon_feature_type targ_grid = grd(targ);
-    monsters *targ_monst = monster_at(targ);
+    monster* targ_monst = monster_at(targ);
     if (fedhas_passthrough(targ_monst))
     {
         // Moving on a plant takes 1.5 x normal move delay. We
@@ -3678,7 +3675,7 @@ static void _move_player(coord_def move)
         // on the message spam).
         you.time_taken = div_rand_round(you.time_taken * 3, 2);
 
-        monsters * current = monster_at(you.pos());
+        monster* current = monster_at(you.pos());
         if (!current || !fedhas_passthrough(current))
         {
             // Probably need better messages. -cao
@@ -3705,7 +3702,7 @@ static void _move_player(coord_def move)
 
     // You cannot move away from a mermaid but you CAN fight monsters on
     // neighbouring squares.
-    monsters *beholder = NULL;
+    monster* beholder = NULL;
     if (!you.confused())
         beholder = you.get_beholder(targ);
 
@@ -4089,7 +4086,7 @@ static void _compile_time_asserts()
     COMPILE_CHECK(SP_VAMPIRE == 30              , c3);
     COMPILE_CHECK(SPELL_DEBUGGING_RAY == 102    , c4);
     COMPILE_CHECK(SPELL_PETRIFY == 154          , c5);
-    COMPILE_CHECK(NUM_SPELLS == 213             , c6);
+    COMPILE_CHECK(NUM_SPELLS == 214             , c6);
 
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
     COMPILE_CHECK(NUM_SPECIES < SP_UNKNOWN      , c7);

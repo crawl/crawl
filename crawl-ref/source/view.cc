@@ -21,7 +21,6 @@
 #include "map_knowledge.h"
 #include "viewchar.h"
 #include "viewgeom.h"
-#include "viewmap.h"
 #include "showsymb.h"
 
 #include "attitude-change.h"
@@ -40,7 +39,6 @@
 #include "exclude.h"
 #include "feature.h"
 #include "files.h"
-#include "godabil.h"
 #include "hints.h"
 #include "libutil.h"
 #include "macro.h"
@@ -50,7 +48,6 @@
 #include "mon-iter.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
-#include "newgame.h"
 #include "options.h"
 #include "notes.h"
 #include "output.h"
@@ -75,30 +72,30 @@
 
 crawl_view_geometry crawl_view;
 
-void handle_seen_interrupt(monsters* monster)
+void handle_seen_interrupt(monster* mons)
 {
-    if (mons_is_unknown_mimic(monster))
+    if (mons_is_unknown_mimic(mons))
         return;
 
-    activity_interrupt_data aid(monster);
-    if (!monster->seen_context.empty())
-        aid.context = monster->seen_context;
+    activity_interrupt_data aid(mons);
+    if (!mons->seen_context.empty())
+        aid.context = mons->seen_context;
     // XXX: Hack to make the 'seen' monster spec flag work.
-    else if (testbits(monster->flags, MF_WAS_IN_VIEW)
-        || testbits(monster->flags, MF_SEEN))
+    else if (testbits(mons->flags, MF_WAS_IN_VIEW)
+        || testbits(mons->flags, MF_SEEN))
     {
         aid.context = "already seen";
     }
     else
         aid.context = "newly seen";
 
-    if (!mons_is_safe(monster)
-        && !mons_class_flag(monster->type, M_NO_EXP_GAIN)
-            || monster->type == MONS_BALLISTOMYCETE && monster->number > 0)
+    if (!mons_is_safe(mons)
+        && !mons_class_flag(mons->type, M_NO_EXP_GAIN)
+            || mons->type == MONS_BALLISTOMYCETE && mons->number > 0)
     {
         interrupt_activity(AI_SEE_MONSTER, aid);
     }
-    seen_monster( monster );
+    seen_monster(mons);
 }
 
 void flush_comes_into_view()
@@ -109,7 +106,7 @@ void flush_comes_into_view()
         return;
     }
 
-    monsters* mon = crawl_state.which_mon_acting();
+    monster* mon = crawl_state.which_mon_acting();
 
     if (!mon || !mon->alive() || (mon->flags & MF_WAS_IN_VIEW)
         || !you.can_see(mon))
@@ -441,17 +438,17 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 }
 
 // Is the given monster near (in LOS of) the player?
-bool mons_near(const monsters *monster)
+bool mons_near(const monster* mons)
 {
     if (crawl_state.game_is_arena() || crawl_state.arena_suspended)
         return (true);
-    return (you.see_cell(monster->pos()));
+    return (you.see_cell(mons->pos()));
 }
 
-bool mon_enemies_around(const monsters *monster)
+bool mon_enemies_around(const monster* mons)
 {
     // If the monster has a foe, return true.
-    if (monster->foe != MHITNOT && monster->foe != MHITYOU)
+    if (mons->foe != MHITNOT && mons->foe != MHITYOU)
         return (true);
 
     if (crawl_state.game_is_arena())
@@ -460,16 +457,16 @@ bool mon_enemies_around(const monsters *monster)
         // we don't have one.
         return (false);
     }
-    else if (monster->wont_attack())
+    else if (mons->wont_attack())
     {
         // Additionally, if an ally is nearby and *you* have a foe,
         // consider it as the ally's enemy too.
-        return (mons_near(monster) && there_are_monsters_nearby(true));
+        return (mons_near(mons) && there_are_monsters_nearby(true));
     }
     else
     {
-        // For hostile monsters *you* are the main enemy.
-        return (mons_near(monster));
+        // For hostile monster* you* are the main enemy.
+        return (mons_near(mons));
     }
 }
 
@@ -584,13 +581,17 @@ void view_update_at(const coord_def &pos)
         return;
     glyph g = get_cell_glyph(env.map_knowledge(pos));
 
-    int flash_colour = you.flash_colour;
-    if (flash_colour == BLACK)
-        flash_colour = _viewmap_flash_colour();
+    int flash_colour = you.flash_colour == BLACK
+        ? _viewmap_flash_colour()
+        : you.flash_colour;
+    int cell_colour =
+        flash_colour && env.map_knowledge(pos).monster() == MONS_NO_MONSTER
+            ? real_colour(flash_colour)
+            : g.col;
 
     const coord_def vp = grid2view(pos);
-    cgotoxy(vp.x, vp.y);
-    put_colour_ch(flash_colour? real_colour(flash_colour) : g.col, g.ch);
+    cgotoxy(vp.x, vp.y, GOTO_DNGN);
+    put_colour_ch(cell_colour, g.ch);
 
     // Force colour back to normal, else clrscr() will flood screen
     // with this colour on DOS.
@@ -599,7 +600,7 @@ void view_update_at(const coord_def &pos)
 }
 
 #ifndef USE_TILE
-void flash_monster_colour(const monsters *mon, uint8_t fmc_colour,
+void flash_monster_colour(const monster* mon, uint8_t fmc_colour,
                           int fmc_delay)
 {
     if (you.can_see(mon))
@@ -890,17 +891,17 @@ void viewwindow(bool show_updates)
     if (flash_colour == BLACK)
         flash_colour = _viewmap_flash_colour();
 
-    const coord_def &tl = crawl_view.viewp;
-    const coord_def br  = tl + crawl_view.viewsz - coord_def(1,1);
+    const coord_def tl = coord_def(1, 1);
+    const coord_def br = crawl_view.viewsz;
     for (rectangle_iterator ri(tl, br); ri; ++ri)
     {
         // in grid coords
         const coord_def gc = view2grid(*ri);
-        const coord_def ep = view2show(grid2view(gc));
+        const coord_def ep = grid2show(gc);
 
         if (!map_bounds(gc))
             _draw_out_of_bounds(cell);
-        else if (!crawl_view.in_grid_los(gc))
+        else if (!crawl_view.in_los_bounds_g(gc))
             _draw_outside_los(cell, gc);
         else if (gc == you.pos() && you.on_current_level && !_show_terrain
                  && !crawl_state.game_is_arena()
@@ -918,8 +919,15 @@ void viewwindow(bool show_updates)
         // Alter colour if flashing the characters vision.
         if (flash_colour)
         {
-            cell->colour = you.see_cell(gc) ? real_colour(flash_colour)
-                                            : DARKGREY;
+            if (you.see_cell(gc))
+            {
+                if (env.map_knowledge(gc).monster() == MONS_NO_MONSTER)
+                    cell->colour = real_colour(flash_colour);
+            }
+            else
+            {
+                cell->colour = DARKGREY;
+            }
             cell->flash_colour = cell->colour;
         }
         else if (crawl_state.darken_range >= 0)

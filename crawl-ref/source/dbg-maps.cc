@@ -10,7 +10,6 @@
 
 #include "branch.h"
 #include "chardump.h"
-#include "coord.h"
 #include "dungeon.h"
 #include "env.h"
 #include "flood_find.h"

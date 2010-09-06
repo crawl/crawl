@@ -9,7 +9,6 @@
 #include <cctype>
 
 #include "cio.h"
-#include "colour.h"
 #include "command.h"
 #include "coord.h"
 #include "env.h"
@@ -23,7 +22,6 @@
 #ifdef USE_TILE
  #include "mon-stuff.h"
  #include "mon-util.h"
- #include "newgame.h"
  #include "terrain.h"
  #include "tilebuf.h"
  #include "tilefont.h"
@@ -797,7 +795,7 @@ void Menu::select_items(int key, int qty)
     cgotoxy( x, y );
 }
 
-MonsterMenuEntry::MonsterMenuEntry(const std::string &str, const monsters* mon,
+MonsterMenuEntry::MonsterMenuEntry(const std::string &str, const monster* mon,
                                    int hotkey) :
     MenuEntry(str, MEL_ITEM, 1, hotkey)
 {
@@ -856,7 +854,7 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
     if (!Options.tile_menu_icons)
         return (false);
 
-    monsters *m = (monsters*)(data);
+    monster* m = (monster* )(data);
     if (!m)
         return (false);
 

@@ -24,25 +24,25 @@
 
 static int _sleep_monsters(coord_def where, int pow, int, actor *)
 {
-    monsters *monster = monster_at(where);
-    if (!monster)
+    monster* mons = monster_at(where);
+    if (!mons)
         return (0);
 
-    if (!monster->can_hibernate(true))
+    if (!mons->can_hibernate(true))
         return (0);
 
-    if (monster->check_res_magic(pow))
+    if (mons->check_res_magic(pow))
         return (0);
 
-    const int res = monster->res_cold();
+    const int res = mons->res_cold();
     if (res > 0 && one_chance_in(std::max(4 - res, 1)))
         return (0);
 
-    if (monster->has_ench(ENCH_SLEEP_WARY) && !one_chance_in(3))
+    if (mons->has_ench(ENCH_SLEEP_WARY) && !one_chance_in(3))
         return (0);
 
-    monster->hibernate();
-    monster->expose_to_element(BEAM_COLD, 2);
+    mons->hibernate();
+    mons->expose_to_element(BEAM_COLD, 2);
     return (1);
 }
 
@@ -75,33 +75,33 @@ static bool _is_domesticated_animal(int type)
 
 static int _tame_beast_monsters(coord_def where, int pow, int, actor *)
 {
-    monsters *monster = monster_at(where);
-    if (monster == NULL)
+    monster* mons = monster_at(where);
+    if (mons == NULL)
         return 0;
 
-    if (!_is_domesticated_animal(monster->type) || monster->friendly()
-        || player_will_anger_monster(monster))
+    if (!_is_domesticated_animal(mons->type) || mons->friendly()
+        || player_will_anger_monster(mons))
     {
         return 0;
     }
 
     // 50% bonus for dogs
-    if (monster->type == MONS_HOUND || monster->type == MONS_WAR_DOG )
+    if (mons->type == MONS_HOUND || mons->type == MONS_WAR_DOG )
         pow += (pow / 2);
 
-    if (you.species == SP_HILL_ORC && monster->type == MONS_WARG)
+    if (you.species == SP_HILL_ORC && mons->type == MONS_WARG)
         pow += (pow / 2);
 
-    if (monster->check_res_magic(pow))
+    if (mons->check_res_magic(pow))
         return 0;
 
-    simple_monster_message(monster, " is tamed!");
+    simple_monster_message(mons, " is tamed!");
 
     if (random2(100) < random2(pow / 10))
-        monster->attitude = ATT_FRIENDLY;  // permanent
+        mons->attitude = ATT_FRIENDLY;  // permanent
     else
-        monster->add_ench(ENCH_CHARM);     // temporary
-    mons_att_changed(monster);
+        mons->add_ench(ENCH_CHARM);     // temporary
+    mons_att_changed(mons);
 
     return 1;
 }
@@ -116,45 +116,45 @@ bool backlight_monsters(coord_def where, int pow, int garbage)
     UNUSED(pow);
     UNUSED(garbage);
 
-    monsters *monster = monster_at(where);
-    if (monster == NULL)
+    monster* mons = monster_at(where);
+    if (mons == NULL)
         return (false);
 
     // Already glowing.
-    if (mons_class_flag(monster->type, M_GLOWS_LIGHT)
-        || mons_class_flag(monster->type, M_GLOWS_RADIATION))
+    if (mons_class_flag(mons->type, M_GLOWS_LIGHT)
+        || mons_class_flag(mons->type, M_GLOWS_RADIATION))
     {
         return (false);
     }
 
-    mon_enchant bklt = monster->get_ench(ENCH_CORONA);
+    mon_enchant bklt = mons->get_ench(ENCH_CORONA);
     const int lvl = bklt.degree;
 
     // This enchantment overrides invisibility (neat).
-    if (monster->has_ench(ENCH_INVIS))
+    if (mons->has_ench(ENCH_INVIS))
     {
-        if (!monster->has_ench(ENCH_CORONA))
+        if (!mons->has_ench(ENCH_CORONA))
         {
-            monster->add_ench(
+            mons->add_ench(
                 mon_enchant(ENCH_CORONA, 1, KC_OTHER, random_range(30, 50)));
-            simple_monster_message(monster, " is lined in light.");
+            simple_monster_message(mons, " is lined in light.");
         }
         return (true);
     }
 
-    monster->add_ench(mon_enchant(ENCH_CORONA, 1));
+    mons->add_ench(mon_enchant(ENCH_CORONA, 1));
 
     if (lvl == 0)
-        simple_monster_message(monster, " is outlined in light.");
+        simple_monster_message(mons, " is outlined in light.");
     else if (lvl == 4)
-        simple_monster_message(monster, " glows brighter for a moment.");
+        simple_monster_message(mons, " glows brighter for a moment.");
     else
-        simple_monster_message(monster, " glows brighter.");
+        simple_monster_message(mons, " glows brighter.");
 
     return (true);
 }
 
-bool do_slow_monster(monsters* mon, kill_category whose_kill)
+bool do_slow_monster(monster* mon, kill_category whose_kill)
 {
     // Try to remove haste, if monster is hasted.
     if (mon->del_ench(ENCH_HASTE, true))

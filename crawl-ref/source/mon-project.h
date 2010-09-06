@@ -10,7 +10,7 @@
 #include "beam.h"
 
 bool cast_iood(actor *caster, int pow, bolt *beam);
-bool iood_act(monsters &mon, bool no_trail = false);
-void iood_catchup(monsters *mon, int turns);
+bool iood_act(monster& mon, bool no_trail = false);
+void iood_catchup(monster* mon, int turns);
 
 #endif

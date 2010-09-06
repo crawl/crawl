@@ -417,7 +417,7 @@ bool lose_stat(stat_type which_stat, int8_t stat_loss, bool force,
 }
 
 bool lose_stat(stat_type which_stat, int8_t stat_loss,
-               const monsters* cause, bool force)
+               const monster* cause, bool force)
 {
     if (cause == NULL || invalid_monster(cause))
         return lose_stat(which_stat, stat_loss, force, NULL, true);

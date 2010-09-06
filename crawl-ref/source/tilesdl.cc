@@ -7,9 +7,6 @@
 #include "coord.h"
 #include "directn.h"
 #include "env.h"
-#include "food.h"
-#include "itemname.h"
-#include "itemprop.h"
 #include "files.h"
 #include "glwrapper.h"
 #include "libutil.h"
@@ -19,8 +16,6 @@
 #include "mon-util.h"
 #include "options.h"
 #include "player.h"
-#include "spl-book.h"
-#include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
 #include "tiledef-dngn.h"
@@ -1154,7 +1149,7 @@ void TilesFramework::add_text_tag(text_tag_type type, const std::string &tag,
     m_region_tile->add_text_tag(type, tag, gc);
 }
 
-void TilesFramework::add_text_tag(text_tag_type type, const monsters* mon)
+void TilesFramework::add_text_tag(text_tag_type type, const monster* mon)
 {
     // HACK.  Names cover up pan demons in a weird way.
     if (mon->type == MONS_PANDEMONIUM_DEMON)

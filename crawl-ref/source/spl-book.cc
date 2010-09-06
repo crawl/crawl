@@ -438,10 +438,10 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_ISKENDERUNS_MYSTIC_BLAST,
      SPELL_TELEPORT_OTHER,
      SPELL_VENOM_BOLT,
+     SPELL_POISONOUS_CLOUD,
      SPELL_IRON_SHOT,
      SPELL_INVISIBILITY,
      SPELL_MASS_CONFUSION,
-     SPELL_POISONOUS_CLOUD,
      },
 
     // Book of Cantrips
@@ -735,8 +735,8 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     // Rod of venom
     {SPELL_CURE_POISON,
      SPELL_VENOM_BOLT,
-     SPELL_POISON_ARROW,
      SPELL_POISONOUS_CLOUD,
+     SPELL_POISON_ARROW,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -1563,7 +1563,7 @@ static bool _sort_mem_spells(spell_type a, spell_type b)
     const int fail_rate_b = _failure_rate_to_group(spell_fail(b));
     if (fail_rate_a != fail_rate_b)
         return (fail_rate_a < fail_rate_b);
-        
+
     if (spell_difficulty(a) != spell_difficulty(b))
         return (spell_difficulty(a) < spell_difficulty(b));
 
@@ -1635,7 +1635,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
         new MenuEntry("     Spells (Memorisation)         Type          "
                       "                Success  Level",
             MEL_TITLE));
-            
+
     spell_menu.set_title(
         new MenuEntry("     Spells (Description)          Type          "
                       "                Success  Level",
@@ -1644,7 +1644,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
 
     spell_menu.set_highlighter(NULL);
     spell_menu.set_tag("spell");
-    
+
     spell_menu.action_cycle = Menu::CYCLE_TOGGLE;
     spell_menu.menu_action  = Menu::ACT_EXECUTE;
 

@@ -1,5 +1,6 @@
 OBJECTS = \
 abl-show.o \
+acquire.o \
 abyss.o \
 act-iter.o \
 actor-los.o \
@@ -43,6 +44,7 @@ dlua.o \
 dungeon.o \
 effects.o \
 exclude.o \
+exercise.o \
 feature.o \
 fight.o \
 files.o \

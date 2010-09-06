@@ -1755,6 +1755,7 @@ static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
         break;
 
     case CE_POISONOUS:
+    case CE_POISON_CONTAM:
         mpr("Yeeuch - this meat is poisonous!");
         if (poison_player(3 + random2(4), "", "poisonous meat"))
             xom_is_stimulated(random2(128));
@@ -2261,6 +2262,7 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
                     break;
 
                 case CE_POISONOUS:
+                case CE_POISON_CONTAM:
                     make_hungry(food_value / 2, false);
                     // Always print this message - maybe you lost poison
                     // resistance due to feeding.
@@ -2321,7 +2323,7 @@ bool is_poisonous(const item_def &food)
     if (player_res_poison(false))
         return (false);
 
-    return (mons_corpse_effect(food.plus) == CE_POISONOUS);
+    return (chunk_is_poisonous(mons_corpse_effect(food.plus)));
 }
 
 // Returns true if a food item (also corpses) is mutagenic.
@@ -2347,7 +2349,9 @@ bool is_contaminated(const item_def &food)
     if (you.species == SP_GHOUL)
         return (false);
 
-    return (mons_corpse_effect(food.plus) == CE_CONTAMINATED);
+    const corpse_effect_type chunk_type = mons_corpse_effect(food.plus);
+    return (chunk_type == CE_CONTAMINATED
+            || player_res_poison(false) && chunk_type == CE_POISON_CONTAM);
 }
 
 // Returns true if a food item (also corpses) will cause rotting.
@@ -2687,6 +2691,11 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
     return (survey_says);
 }
 
+bool chunk_is_poisonous(int chunktype)
+{
+    return (chunktype == CE_POISONOUS || chunktype == CE_POISON_CONTAM);
+}
+
 // See if you can follow along here -- except for the amulet of the gourmand
 // addition (long missing and requested), what follows is an expansion of how
 // chunks were handled in the codebase up to this date ... {dlb}
@@ -2707,6 +2716,13 @@ static corpse_effect_type _determine_chunk_effect(corpse_effect_type chunktype,
             chunktype = CE_CLEAN;
         break;
 
+    case CE_POISON_CONTAM:
+        if (player_res_poison() <= 0)
+        {
+            chunktype = CE_POISONOUS;
+            break;
+        }
+        // else fall through
     case CE_CONTAMINATED:
         switch (player_mutation_level(MUT_SAPROVOROUS))
         {

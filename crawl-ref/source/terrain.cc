@@ -797,7 +797,7 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
 
     if (move_monster)
     {
-        if (monsters *mon = monster_at(src))
+        if (monster* mon = monster_at(src))
         {
             mon->moveto(dst);
             mgrd(dst) = mgrd(src);
@@ -869,7 +869,7 @@ static void _dgn_check_terrain_items(const coord_def &pos, bool preserve_items)
 
 static void _dgn_check_terrain_monsters(const coord_def &pos)
 {
-    if (monsters* m = monster_at(pos))
+    if (monster* m = monster_at(pos))
         m->apply_location_effects(pos);
 }
 
@@ -918,7 +918,7 @@ static void _dgn_check_terrain_player(const coord_def pos)
         // If the monster can't stay submerged in the new terrain and
         // there aren't any adjacent squares where it can stay
         // submerged then move it.
-        monsters* mon = monster_at(pos);
+        monster* mon = monster_at(pos);
         if (mon && !mon->submerged())
             monster_teleport(mon, true, false);
         move_player_to_grid(pos, false, true);
@@ -982,7 +982,7 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
     std::string orig_actor, dest_actor;
     if (orig_pos == you.pos())
         orig_actor = "you";
-    else if (const monsters *m = monster_at(orig_pos))
+    else if (const monster* m = monster_at(orig_pos))
     {
         if (you.can_see(m))
             orig_actor = m->name(DESC_NOCAP_THE);
@@ -990,7 +990,7 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
 
     if (dest_pos == you.pos())
         dest_actor = "you";
-    else if (const monsters *m = monster_at(dest_pos))
+    else if (const monster* m = monster_at(dest_pos))
     {
         if (you.can_see(m))
             dest_actor = m->name(DESC_NOCAP_THE);

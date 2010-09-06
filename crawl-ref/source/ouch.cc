@@ -77,6 +77,26 @@
 static void end_game( scorefile_entry &se );
 static void _item_corrode(int slot);
 
+static void _maybe_melt_player_enchantments(beam_type flavour)
+{
+    if (flavour == BEAM_FIRE || flavour == BEAM_LAVA
+        || flavour == BEAM_HELLFIRE || flavour == BEAM_NAPALM
+        || flavour == BEAM_STEAM)
+    {
+        if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
+            remove_condensation_shield();
+
+        if (you.mutation[MUT_ICEMAIL])
+        {
+            mpr("Your icy envelope dissipates!", MSGCH_DURATION);
+            you.duration[DUR_ICEMAIL_DEPLETED] = ICEMAIL_TIME;
+            you.redraw_armour_class = true;
+        }
+
+        if (you.duration[DUR_ICY_ARMOUR] > 0)
+            remove_ice_armour();
+    }
+}
 
 // NOTE: DOES NOT check for hellfire!!!
 int check_your_resists(int hurted, beam_type flavour, std::string source,
@@ -94,14 +114,7 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
         kaux = beam->name;
     }
 
-    if (flavour == BEAM_FIRE || flavour == BEAM_LAVA
-        || flavour == BEAM_HELLFIRE || flavour == BEAM_FRAG)
-    {
-        if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
-            remove_condensation_shield();
-        if (you.duration[DUR_ICY_ARMOUR] > 0)
-            remove_ice_armour();
-    }
+    _maybe_melt_player_enchantments(flavour);
 
     switch (flavour)
     {
@@ -571,7 +584,7 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
                         remove_oldest_blood_potion(you.inv[i]);
                 }
             }
-            
+
             // Name destroyed items.
             // TODO: Combine messages using a vector.
             if (num_dest > 0)
@@ -718,26 +731,7 @@ bool expose_items_to_element(beam_type flavour, const coord_def& where,
 // XXX: This function is far from perfect and a work in progress.
 bool expose_player_to_element(beam_type flavour, int strength)
 {
-    // Note that BEAM_TELEPORT is sent here when the player
-    // blinks or teleports.
-    if (flavour == BEAM_FIRE || flavour == BEAM_LAVA
-        || flavour == BEAM_HELLFIRE || flavour == BEAM_FRAG
-        || flavour == BEAM_TELEPORT || flavour == BEAM_NAPALM
-        || flavour == BEAM_STEAM)
-    {
-        if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
-            remove_condensation_shield();
-
-        if (you.mutation[MUT_ICEMAIL])
-        {
-            mpr("Your icy envelope dissipates!", MSGCH_DURATION);
-            you.duration[DUR_ICEMAIL_DEPLETED] = ICEMAIL_TIME;
-            you.redraw_armour_class = true;
-        }
-
-        if (you.duration[DUR_ICY_ARMOUR] > 0)
-            remove_ice_armour();
-    }
+    _maybe_melt_player_enchantments(flavour);
 
     if (strength <= 0)
         return (false);
@@ -905,19 +899,19 @@ static void _xom_checks_damage(kill_method_type death_type,
         }
 
         int amusementvalue = 1;
-        const monsters *monster = &menv[death_source];
+        const monster* mons = &menv[death_source];
 
-        if (!monster->alive())
+        if (!mons->alive())
             return;
 
-        if (monster->wont_attack())
+        if (mons->wont_attack())
         {
             // Xom thinks collateral damage is funny.
             xom_is_stimulated(255 * dam / (dam + you.hp));
             return;
         }
 
-        int leveldif = monster->hit_dice - you.experience_level;
+        int leveldif = mons->hit_dice - you.experience_level;
         if (leveldif == 0)
             leveldif = 1;
 
@@ -926,10 +920,10 @@ static void _xom_checks_damage(kill_method_type death_type,
         // creature of lower level than yourself.
         amusementvalue += leveldif * leveldif * dam;
 
-        if (!monster->visible_to(&you))
+        if (!mons->visible_to(&you))
             amusementvalue += 10;
 
-        if (monster->speed < 100/player_movement_speed())
+        if (mons->speed < 100/player_movement_speed())
             amusementvalue += 8;
 
         if (death_type != KILLED_BY_BEAM
@@ -956,7 +950,7 @@ static void _yred_mirrors_injury(int dam, int death_source)
         if (dam <= 0 || invalid_monster_index(death_source))
             return;
 
-        monsters *mon = &menv[death_source];
+        monster* mon = &menv[death_source];
 
         if (!mon->alive())
             return;
@@ -1048,6 +1042,13 @@ static void _wizard_restore_life()
 }
 #endif
 
+void reset_damage_counters()
+{
+    you.turn_damage = 0;
+    you.damage_source = NON_MONSTER;
+    you.source_damage = 0;
+}
+
 // death_source should be set to NON_MONSTER for non-monsters. {dlb}
 void ouch(int dam, int death_source, kill_method_type death_type,
           const char *aux, bool see_source, const char *death_source_name)
@@ -1106,6 +1107,14 @@ void ouch(int dam, int death_source, kill_method_type death_type,
                 return;
             }
         }
+
+        you.turn_damage += dam;
+        if (you.damage_source != death_source)
+        {
+            you.damage_source = death_source;
+            you.source_damage = 0;
+        }
+        you.source_damage += dam;
 
         dec_hp(dam, true);
 

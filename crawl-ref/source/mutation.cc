@@ -48,7 +48,6 @@
 #include "stuff.h"
 #include "transform.h"
 #include "hints.h"
-#include "view.h"
 #include "xom.h"
 
 static int _body_covered();
@@ -316,7 +315,7 @@ formatted_string describe_mutations()
         break;
     }
 
-    switch(you.body_size(PSIZE_TORSO, true))
+    switch (you.body_size(PSIZE_TORSO, true))
     {
     case SIZE_LITTLE:
         result += "You are tiny and cannot use many weapons and most armour.\n";
@@ -331,7 +330,7 @@ formatted_string describe_mutations()
         have_any = true;
         break;
     default:
-        ;
+        break;
     }
 
     if (player_genus(GENPC_DRACONIAN))
@@ -347,6 +346,7 @@ formatted_string describe_mutations()
         std::ostringstream num;
         num << ac;
         result += "Your scales are hard (AC +" + num.str() + ").\n";
+        have_any = true;
     }
 
     result += "</lightblue>";
@@ -406,7 +406,7 @@ formatted_string describe_mutations()
             "hunger status.\n";
     }
 
-    return formatted_string::parse_string(result);
+    return (formatted_string::parse_string(result));
 }
 
 static void _display_vampire_attributes()
@@ -1906,8 +1906,8 @@ bool balance_demonic_guardian()
 void check_demonic_guardian()
 {
     const int mutlevel = player_mutation_level(MUT_DEMONIC_GUARDIAN);
-    if (you.duration[DUR_DEMONIC_GUARDIAN] == 0
-        && balance_demonic_guardian())
+    if (balance_demonic_guardian() &&
+        you.duration[DUR_DEMONIC_GUARDIAN] == 0)
     {
         const monster_type disallowed[] = { MONS_NEQOXEC, MONS_YNOXINUL, MONS_HELLWING,
                                             MONS_BLUE_DEATH, MONS_GREEN_DEATH,
@@ -1933,7 +1933,7 @@ void check_demonic_guardian()
         menv[guardian].flags |= MF_NO_REWARD;
         menv[guardian].flags |= MF_DEMONIC_GUARDIAN;
 
-        you.duration[DUR_DEMONIC_GUARDIAN] = (mutlevel+1)*3*10;
+        you.duration[DUR_DEMONIC_GUARDIAN] = 100 + random2(200);
     }
 }
 
@@ -1944,7 +1944,7 @@ void check_antennae_detect()
 
     for (radius_iterator ri(you.pos(), radius, C_SQUARE); ri; ++ri)
     {
-        const monsters* mon = monster_at(*ri);
+        const monster* mon = monster_at(*ri);
         if (!mon)
         {
             map_cell& cell = env.map_knowledge(*ri);

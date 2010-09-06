@@ -21,7 +21,6 @@
 #include "spl-cast.h"
 #include "spl-other.h"
 #include "spl-util.h"
-#include "spl-wpnench.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "transform.h"

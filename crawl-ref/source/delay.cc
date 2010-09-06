@@ -26,7 +26,6 @@
 #include "exclude.h"
 #include "food.h"
 #include "godabil.h"
-#include "godpassive.h"
 #include "invent.h"
 #include "items.h"
 #include "itemname.h"
@@ -44,7 +43,6 @@
 #include "output.h"
 #include "player.h"
 #include "player-equip.h"
-#include "player-stats.h"
 #include "random.h"
 #include "religion.h"
 #include "godconduct.h"
@@ -1014,7 +1012,7 @@ static void _finish_delay(const delay_queue_item &delay)
             }
 
             // Move any monsters out of the way.
-            monsters *m = monster_at(pass);
+            monster* m = monster_at(pass);
             if (m)
             {
                 // One square, a few squares, anywhere...
@@ -1466,7 +1464,7 @@ inline static void _monster_warning(activity_interrupt_type ai,
     if (!delay_is_run(atype) && !_is_butcher_delay(atype))
         return;
 
-    const monsters* mon = static_cast<const monsters*>(at.data);
+    const monster* mon = static_cast<const monster* >(at.data);
     if (!you.can_see(mon))
         return;
     if (at.context == "already seen" || at.context == "uncharm")
@@ -1535,7 +1533,7 @@ inline static void _monster_warning(activity_interrupt_type ai,
                     + " is" + mweap + ".";
         }
         mpr(text, MSGCH_WARN);
-        const_cast<monsters*>(mon)->seen_context = "just seen";
+        const_cast<monster* >(mon)->seen_context = "just seen";
     }
 
     if (Hints.hints_left)
@@ -1580,7 +1578,7 @@ bool interrupt_activity( activity_interrupt_type ai,
     const interrupt_block block_recursive_interrupts;
     if (ai == AI_HIT_MONSTER || ai == AI_MONSTER_ATTACKS)
     {
-        const monsters* mon = static_cast<const monsters*>(at.data);
+        const monster* mon = static_cast<const monster* >(at.data);
         if (mon && !mon->visible_to(&you) && !mon->submerged())
             autotoggle_autopickup(true);
     }

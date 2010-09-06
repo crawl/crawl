@@ -111,7 +111,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
                 return (-1);         // early return {dlb}
             }
 
-            monsters* beholder = you.get_beholder(beam.target);
+            monster* beholder = you.get_beholder(beam.target);
             if (!wizard_blink && beholder)
             {
                 mprf("You cannot blink away from %s!",
@@ -123,6 +123,10 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
             {
                 mesclr();
                 mpr("You can't blink into the sea!");
+            }
+            else if (!check_moveto(beam.target, "blink"))
+            {
+                // try again (messages handled by check_moveto)
             }
             else if (you.see_cell_no_trans(beam.target))
             {
@@ -452,7 +456,7 @@ bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizard_tele)
                 return (false);
             }
 
-            monsters *beholder = you.get_beholder(pos);
+            monster* beholder = you.get_beholder(pos);
             if (beholder && !wizard_tele)
             {
                 mprf("You cannot teleport away from %s!",
@@ -598,7 +602,7 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
     {
         if (monster_at(where) && move_monsters && !_cell_vetoes_teleport(where, false))
         {
-            monsters *mons = monster_at(where);
+            monster* mons = monster_at(where);
             mons->teleport(true);
         }
         else
@@ -615,7 +619,7 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
                     if (monster_at(*ai) && move_monsters
                             && !_cell_vetoes_teleport(*ai, false))
                     {
-                        monsters *mons = monster_at(*ai);
+                        monster* mons = monster_at(*ai);
                         mons->teleport(true);
                         where = *ai;
                         break;
@@ -795,7 +799,7 @@ bool cast_apportation(int pow, const coord_def& where)
     if (item_idx == NON_ITEM || !in_bounds(where))
     {
         // Maybe the player *thought* there was something there (a mimic.)
-        if (monsters* m = monster_at(where))
+        if (monster* m = monster_at(where))
         {
             if (mons_is_mimic(m->type) && you.can_see(m))
             {
@@ -851,8 +855,8 @@ bool cast_apportation(int pow, const coord_def& where)
         && item_is_stationary(item))
     {
         remove_item_stationary(item);
-        if (monsters *monster = monster_at(where))
-            monster->del_ench(ENCH_HELD, true);
+        if (monster* mons = monster_at(where))
+            mons->del_ench(ENCH_HELD, true);
     }
 
     // Actually move the item.

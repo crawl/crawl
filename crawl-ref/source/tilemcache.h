@@ -69,7 +69,7 @@ class mcache_manager
 public:
     ~mcache_manager();
 
-    unsigned int register_monster(const monsters *mon);
+    unsigned int register_monster(const monster* mon);
     mcache_entry *get(tileidx_t idx);
 
     void clear_nonref();

@@ -664,7 +664,7 @@ public:
     }
 };
 
-static void _abyss_lose_monster(monsters &mons)
+static void _abyss_lose_monster(monster& mons)
 {
     if (mons.needs_transit())
         mons.set_transit( level_id(LEVEL_ABYSS) );
@@ -717,7 +717,7 @@ static void _abyss_wipe_square_at(coord_def p)
     lose_item_stack(p);
 
     // Nuke monster.
-    if (monsters *mon = monster_at(p))
+    if (monster* mon = monster_at(p))
         _abyss_lose_monster(*mon);
 
     // Delete cloud.
@@ -1069,6 +1069,9 @@ struct corrupt_env
 static void _place_corruption_seed(const coord_def &pos, int duration)
 {
     env.markers.add(new map_corruption_marker(pos, duration));
+    // Corruption markers don't need activation, though we might
+    // occasionally miss other unactivated markers by clearing.
+    env.markers.clear_need_activate();
 }
 
 static void _initialise_level_corrupt_seeds(int power)

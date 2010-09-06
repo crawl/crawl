@@ -139,7 +139,7 @@ void cursorxy(int x, int y)
 {
 #if defined(USE_TILE)
     coord_def ep(x, y);
-    coord_def gc = view2grid(ep);
+    coord_def gc = crawl_view.screen2grid(ep);
     tiles.place_cursor(CURSOR_MOUSE, gc);
 #elif defined(UNIX)
     if (Options.use_fake_cursor)

@@ -29,7 +29,7 @@ DEPTH:  12-27
 }}
 MARKER: O = lua: timed_marker {  \
                  low=400, high=600, msg=messager, floor = 'stone_arch', \
-                 single_timed=true \ 
+                 single_timed=true \
             }
 KFEAT: O = enter_labyrinth
 MAP

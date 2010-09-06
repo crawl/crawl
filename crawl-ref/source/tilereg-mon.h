@@ -23,7 +23,7 @@ public:
     virtual const std::string name() const { return "Monsters"; }
 
 protected:
-    const monsters *get_monster(unsigned int idx) const;
+    const monster* get_monster(unsigned int idx) const;
 
     virtual void pack_buffers();
     virtual void draw_tag();

@@ -23,7 +23,6 @@
 #include "initfile.h"
 #include "itemname.h"
 #include "items.h"
-#include "jobs.h"
 #include "lev-pand.h"
 #include "macro.h"
 #include "maps.h"
@@ -34,7 +33,6 @@
 #include "mon-util.h"
 #include "mutation.h"
 #include "newgame.h"
-#include "ng-init.h"
 #include "ng-input.h"
 #include "ng-setup.h"
 #include "notes.h"
@@ -51,7 +49,6 @@
 #ifdef USE_TILE
  #include "tileview.h"
 #endif
-#include "transform.h"
 #include "view.h"
 #include "viewchar.h"
 
@@ -265,7 +262,7 @@ static void _post_init(bool newc)
 
     tiles.resize();
 #endif
-    you.symbol = transform_mons();
+    update_player_symbol();
 
     draw_border();
     new_level();

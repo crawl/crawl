@@ -66,7 +66,7 @@ The lord of the Iron City of Dis.
 %%%%
 Dissolution
 
-The Pits of Slime used to be a thriving civilization, and Dissolution was the prophet of their god. When the city was overtaken by its current residents, only Dissolution survived, for he alone turned faithfully to the Slime God. Dissolution become a tremendous mass of acidic ooze, yet retained his intelligence. He is filled with hatred for anything that can hold a form.
+The Pits of Slime used to be a thriving civilization, and Dissolution was the prophet of their god. When the city was overtaken by its current residents, only Dissolution survived, for he alone turned faithfully to the Slime God. Dissolution became a tremendous mass of acidic ooze, yet retained his intelligence. He is filled with hatred for anything that can hold a form.
 %%%%
 Donald
 {{
@@ -86,10 +86,6 @@ return descript
 Dowan
 
 A beautiful but vain elf with an aptitude for magic and little else. His skills are the perfect complement of his twin sister Duvessa's fighting prowess.
-%%%%
-Duane
-
-A mercenary whose only significant trait is his unusually large ears. He was hired to guard something (or possibly someone), but who or what that is, he can't tell you. If he did, he'd have to kill you. In fact, he'd like to just kill you anyway.
 %%%%
 Duvessa
 
@@ -124,10 +120,6 @@ An apprentice summoner with a flowing moustache. He has funny ideas about honour
 Frances
 
 A stout warrior who once bested a powerful lord of Pandemonium in combat, gaining control over the demon's realm and thanes. The battle left her with a deep facial scar, one that she carries as a badge of honour rather than a symbol of shame.
-%%%%
-Francis
-
-A wizened spellcaster.
 %%%%
 Frederick
 
@@ -225,7 +217,7 @@ Mennas
 
 There was once a human priest named Mennas. He travelled far and wide preaching of Zin to any who would listen, going even so far as to travel into Orcish lands, preaching to orcs about laws and mercy. By all accounts the orcs were not happy with Mennas. They demanded he swear Beogh was the one true god, and when Mennas remained silent they cut out his tongue.
 
-Quite whether or not this angel is that same Mennas is something of a mystery, as he seems to have difficulty speaking.
+Whether or not this angel is that same Mennas is something of a mystery, as he seems to have difficulty speaking.
 %%%%
 Menkaure
 
@@ -254,10 +246,6 @@ A black centaur warrior with a malicious look in the eyes.
 Nikola
 
 A brilliant scientist obsessed with electricity. In his attempts to perfect his electric golem, he was involved in a terrible accident, and now phases in and out of reality.
-%%%%
-Norbert
-
-A skilled warrior, looking to further develop his reputation as a great slayer of monsters. Be warned: he defines 'monster' rather more liberally than most dictionaries.
 %%%%
 Norris
 
@@ -297,10 +285,6 @@ Saint Roka
 
 A mighty warlord. Some orcs even say he is the Chosen One of Beogh.
 %%%%
-Serpent of Hell
-
-A huge red glowing dragon, burning with hellfire.
-%%%%
 Sigmund
 
 The bane of all young adventurers, Sigmund combines delusions of greatness with nasty tactics.
@@ -334,7 +318,7 @@ else
 end
 }}
 %%%%
-Wayne
+Wiglaf
 
 A fat dwarf wearing a stupid-looking hat.
 {{
@@ -1501,6 +1485,10 @@ A stupid woolly animal, with murder in its eyes. It looks surprised.
 shining eye
 
 A huge and strangely deformed eyeball, pulsating with energy. Beauty is certainly nowhere to be found in this beholder.
+%%%%
+silent spectre
+
+The bane of wizards, these terrible spirits bring an unearthly silence to the area around them.
 %%%%
 silver star
 

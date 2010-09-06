@@ -597,8 +597,8 @@ end
 --      missile (stones, etc).
 --
 -- * door_opened, door_closed: Called whenever doors are opened and closed by
---      the player, or whenever they are closed by monsters (monsters do not
---      open doors).
+--      the player, or whenever they are opened by monsters (monsters do not
+--      close doors).
 --
 -- * hp_warning: Called whenever a HP warning is triggered.
 

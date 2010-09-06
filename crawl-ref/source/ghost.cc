@@ -24,7 +24,6 @@
 #include "spl-cast.h"
 #include "mon-util.h"
 #include "mon-transit.h"
-#include "place.h"
 #include "player.h"
 #include "religion.h"
 
@@ -863,7 +862,7 @@ void ghost_demon::find_transiting_ghosts(
         {
             if (i->mons.type == MONS_PLAYER_GHOST)
             {
-                const monsters &m = i->mons;
+                const monster& m = i->mons;
                 if (m.ghost.get())
                 {
                     announce_ghost(*m.ghost);

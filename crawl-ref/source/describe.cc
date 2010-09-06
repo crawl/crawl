@@ -40,7 +40,6 @@
 #include "message.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
-#include "newgame.h"
 #include "output.h"
 #include "player.h"
 #include "random.h"
@@ -339,7 +338,7 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
 // string, rather than the return value of artefact_auto_inscription(),
 // in case more information about the randart has been learned since
 // the last auto-inscription.
-static void _trim_randart_inscrip( item_def& item )
+void trim_randart_inscrip( item_def& item )
 {
     std::vector<std::string> propnames = _randart_propnames(item);
 
@@ -365,7 +364,7 @@ std::string artefact_auto_inscription( const item_def& item )
 void add_autoinscription( item_def &item, std::string ainscrip)
 {
     // Remove previous randart inscription.
-    _trim_randart_inscrip(item);
+    trim_randart_inscrip(item);
 
     add_inscription(item, ainscrip);
 }
@@ -880,6 +879,11 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
                     "corpse in good enough shape, the corpse will be "
                     "animated as a zombie friendly to the killer.";
             }
+            break;
+        case SPWPN_ANTIMAGIC:
+            description += "It hinders all kind of magic users and even "
+                    "some types of magical creatures by disrupting the "
+                    "flow of magical energy. The wielder is affected as well.";
             break;
         }
     }
@@ -1491,7 +1495,8 @@ static std::string _describe_jewellery( const item_def &item, bool verbose)
             description += "\n";
             description += rand_desc;
         }
-        if (!item_ident(item, ISFLAG_KNOW_PROPERTIES))
+        if (!item_ident(item, ISFLAG_KNOW_PROPERTIES) ||
+            !item_ident(item, ISFLAG_KNOW_TYPE))
         {
             description += "\nThis ";
             description += (jewellery_is_amulet(item) ? "amulet" : "ring");
@@ -1922,6 +1927,15 @@ std::string get_item_description( const item_def &item, bool verbose,
                     description << "\n\nMeat like this may occasionally cause "
                                    "sickness.";
                 }
+                break;
+            case CE_POISON_CONTAM:
+                description << "\n\nThis meat is poisonous";
+                if (player_mutation_level(MUT_SAPROVOROUS) < 3)
+                {
+                    description << " and may cause sickness even if poison "
+                                   "resistant";
+                }
+                description << ".";
                 break;
             default:
                 break;
@@ -2919,6 +2933,21 @@ static std::string _monster_stat_description(const monster_info& mi)
     else if (monster_descriptor(mi.type, MDSC_REGENERATES))
         result << pronoun << " regenerates quickly.\n";
 
+    // Size
+    const char *sizes[NUM_SIZE_LEVELS] = {
+        "as big as a rat",
+        "as big as a spriggan",
+        "as big as a kobold",
+        NULL,     // don't display anything for 'medium'
+        "as big as an ogre",
+        "as big as a hydra",
+        "as big as a giant",
+        "as big as a dragon",
+    };
+
+    if (sizes[mi.body_size()])
+        result << pronoun << " is " << sizes[mi.body_size()] << ".\n";
+
     return (result.str());
 }
 
@@ -3020,6 +3049,31 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         inf.body << _describe_demon(mi.mname, mi.fly) << "\n";
         break;
 
+    case MONS_SERPENT_OF_HELL:
+        // XXX: ick
+        switch (mi.colour)
+        {
+        case RED:
+            inf.body << "A huge red glowing dragon, burning with hellfire.\n";
+            break;
+
+        case WHITE:
+            inf.body << "A huge gleaming white dragon, covered in shards of ice.\n";
+            break;
+
+        case CYAN:
+            inf.body << "A huge metallic dragon, glowing with power.\n";
+            break;
+
+        case MAGENTA:
+            inf.body << "A huge and dark dragon, wreathed in terrifying shadows.\n";
+            break;
+
+        default:
+            inf.body << "Well now, isn't this buggy?\n";
+        }
+        break;
+
     case MONS_PROGRAM_BUG:
         inf.body << "If this monster is a \"program bug\", then it's "
                 "recommended that you save your game and reload.  Please report "
@@ -3069,7 +3123,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         inf.quote += "\n";
 
 #ifdef DEBUG_DIAGNOSTICS
-    struct monsters& mons = *mi.mon();
+    struct monster& mons = *mi.mon();
     const actor *mfoe = mons.get_foe();
     inf.body << "\nMonster foe: "
              << (mfoe? mfoe->name(DESC_PLAIN, true)
@@ -3355,11 +3409,13 @@ static std::string _religion_help(god_type god)
 
     case GOD_SHINING_ONE:
     {
-        result += "You can pray at an altar to sacrifice evil items.";
         int halo_size = you.halo_radius2();
         if (halo_size >= 0)
         {
-            result += " You radiate a ";
+            if (!result.empty())
+                result += " ";
+
+            result += "You radiate a ";
 
             if (halo_size > 37)
                 result += "large ";

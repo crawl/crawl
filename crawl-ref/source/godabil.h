@@ -41,14 +41,14 @@ bool beogh_water_walk();
 
 bool yred_injury_mirror(bool actual = true);
 void yred_drain_life(int pow);
-void yred_make_enslaved_soul(monsters *mon, bool force_hostile = false,
+void yred_make_enslaved_soul(monster* mon, bool force_hostile = false,
                              bool quiet = false, bool unrestricted = false);
 
 bool kiku_receive_corpses(int pow, coord_def where);
 
 bool fedhas_passthrough_class(const monster_type mc);
-bool fedhas_passthrough(const monsters * target);
-bool fedhas_shoot_through(const bolt & beam, const monsters * victim);
+bool fedhas_passthrough(const monster* target);
+bool fedhas_shoot_through(const bolt & beam, const monster* victim);
 int fedhas_fungal_bloom();
 bool fedhas_sunlight();
 bool prioritise_adjacent(const coord_def &target,
@@ -57,7 +57,7 @@ bool fedhas_plant_ring_from_fruit();
 int fedhas_rain(const coord_def &target);
 int fedhas_corpse_spores(beh_type behavior = BEH_FRIENDLY,
                          bool interactive = true);
-bool mons_is_evolvable(const monsters * mon);
+bool mons_is_evolvable(const monster* mon);
 bool fedhas_evolve_flora();
 
 void lugonu_bend_space();

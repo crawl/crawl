@@ -10,6 +10,7 @@
 
 #include <algorithm>
 
+#include "acquire.h"
 #include "areas.h"
 #include "artefact.h"
 #include "beam.h"
@@ -889,14 +890,14 @@ static int _xom_give_item(int power, bool debug = false)
     return (XOM_GOOD_RANDOM_ITEM);
 }
 
-static bool _choose_mutatable_monster(const monsters* mon)
+static bool _choose_mutatable_monster(const monster* mon)
 {
     return (mon->alive() && mon->can_safely_mutate()
             && !mon->submerged());
 }
 
 static bool _is_chaos_upgradeable(const item_def &item,
-                                  const monsters* mon)
+                                  const monster* mon)
 {
     // Since Xom is a god, he is capable of changing randarts, but not
     // other artefacts.
@@ -957,7 +958,7 @@ static bool _is_chaos_upgradeable(const item_def &item,
     return (false);
 }
 
-static bool _choose_chaos_upgrade(const monsters* mon)
+static bool _choose_chaos_upgrade(const monster* mon)
 {
     // Only choose monsters that will attack.
     if (!mon->alive() || mons_attitude(mon) != ATT_HOSTILE
@@ -1035,7 +1036,7 @@ static bool _choose_chaos_upgrade(const monsters* mon)
     return (false);
 }
 
-static void _do_chaos_upgrade(item_def &item, const monsters* mon)
+static void _do_chaos_upgrade(item_def &item, const monster* mon)
 {
     ASSERT(item.base_type == OBJ_MISSILES
            || item.base_type == OBJ_WEAPONS);
@@ -1340,7 +1341,7 @@ static int _xom_send_allies(int sever, bool debug = false)
             if (summons[i] == -1)
                 continue;
 
-            monsters *mon = &menv[summons[i]];
+            monster* mon = &menv[summons[i]];
 
             if (hostiletype != 0)
             {
@@ -1426,7 +1427,7 @@ static int _xom_polymorph_nearby_monster(bool helpful, bool debug = false)
 {
     if (there_are_monsters_nearby(false, false))
     {
-        monsters *mon =
+        monster* mon =
             choose_random_nearby_monster(0, _choose_mutatable_monster);
         // [ds] Be less eager to polymorph plants, since there are now
         // locations with lots of plants (Lair and Shoals).
@@ -1486,26 +1487,26 @@ static int _xom_polymorph_nearby_monster(bool helpful, bool debug = false)
     return (XOM_DID_NOTHING);
 }
 
-static void _confuse_monster(monsters mons, int sever)
+static void _confuse_monster(monster* mons, int sever)
 {
-    if (!mons_class_is_confusable(mons.type))
+    if (!mons_class_is_confusable(mons->type))
         return;
 
-    const bool was_confused = mons.confused();
-    if (mons.add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_FRIENDLY,
+    const bool was_confused = mons->confused();
+    if (mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_FRIENDLY,
                                   random2(sever))))
     {
         if (was_confused)
-            simple_monster_message(&mons, " looks rather more confused.");
+            simple_monster_message(mons, " looks rather more confused.");
         else
-            simple_monster_message(&mons, " looks rather confused.");
+            simple_monster_message(mons, " looks rather confused.");
     }
 }
 
-static bool _swap_monsters(monsters *m1, monsters *m2)
+static bool _swap_monsters(monster* m1, monster* m2)
 {
-    monsters& mon1(*m1);
-    monsters& mon2(*m2);
+    monster& mon1(*m1);
+    monster& mon2(*m2);
 
     const bool mon1_caught = mon1.caught();
     const bool mon2_caught = mon2.caught();
@@ -1567,7 +1568,7 @@ static int _xom_swap_weapons(bool debug = false)
         return (XOM_DID_NOTHING);
     }
 
-    std::vector<monsters *> mons_wpn;
+    std::vector<monster* > mons_wpn;
     for (monster_iterator mi(&you); mi; ++mi)
     {
         if (!wpn || mi->wont_attack() || mi->is_summoned()
@@ -1603,7 +1604,7 @@ static int _xom_swap_weapons(bool debug = false)
 
     const int num_mons = mons_wpn.size();
     // Pick a random monster...
-    monsters *mon = mons_wpn[random2(num_mons)];
+    monster* mon = mons_wpn[random2(num_mons)];
 
     // ...and get its weapon.
     int monwpn = mon->inv[MSLOT_WEAPON];
@@ -1694,7 +1695,7 @@ static int _xom_rearrange_pieces(int sever, bool debug = false)
     if (player_stair_delay())
         return (XOM_DID_NOTHING);
 
-    std::vector<monsters *> mons;
+    std::vector<monster* > mons;
     for (monster_iterator mi(&you); mi; ++mi)
         mons.push_back(*mi);
 
@@ -1709,12 +1710,12 @@ static int _xom_rearrange_pieces(int sever, bool debug = false)
     const int num_mons = mons.size();
 
     // Swap places with a random monster.
-    monsters *mon = mons[random2(num_mons)];
+    monster* mon = mons[random2(num_mons)];
     swap_with_monster(mon);
 
     // Sometimes confuse said monster.
     if (coinflip())
-        _confuse_monster(*mon, sever);
+        _confuse_monster(mon, sever);
 
     if (num_mons > 1 && x_chance_in_y(sever, 70))
     {
@@ -1736,9 +1737,9 @@ static int _xom_rearrange_pieces(int sever, bool debug = false)
                     did_message = true;
                 }
                 if (one_chance_in(3))
-                    _confuse_monster(*mons[mon1], sever);
+                    _confuse_monster(mons[mon1], sever);
                 if (one_chance_in(3))
-                    _confuse_monster(*mons[mon2], sever);
+                    _confuse_monster(mons[mon2], sever);
             }
         }
     }
@@ -1851,7 +1852,7 @@ static int _xom_snakes_to_sticks(int sever, bool debug = false)
 
 static int _xom_animate_monster_weapon(int sever, bool debug = false)
 {
-    std::vector<monsters *> mons_wpn;
+    std::vector<monster* > mons_wpn;
     for (monster_iterator mi(&you); mi; ++mi)
     {
         if (mi->wont_attack() || mi->is_summoned()
@@ -1887,7 +1888,7 @@ static int _xom_animate_monster_weapon(int sever, bool debug = false)
 
     const int num_mons = mons_wpn.size();
     // Pick a random monster...
-    monsters *mon = mons_wpn[random2(num_mons)];
+    monster* mon = mons_wpn[random2(num_mons)];
 
     // ...and get its weapon.
     const int wpn = mon->inv[MSLOT_WEAPON];
@@ -1901,9 +1902,9 @@ static int _xom_animate_monster_weapon(int sever, bool debug = false)
 
     mg.non_actor_summoner = "Xom";
 
-    const int monster = create_monster(mg);
+    const int mons = create_monster(mg);
 
-    if (monster == -1)
+    if (mons == -1)
         return (XOM_DID_NOTHING);
 
     // Make the monster unwield its weapon.
@@ -1914,11 +1915,11 @@ static int _xom_animate_monster_weapon(int sever, bool debug = false)
          apostrophise(mon->name(DESC_CAP_THE)).c_str(),
          mitm[wpn].name(DESC_PLAIN).c_str());
 
-    destroy_item(menv[monster].inv[MSLOT_WEAPON]);
+    destroy_item(menv[mons].inv[MSLOT_WEAPON]);
 
-    menv[monster].inv[MSLOT_WEAPON] = wpn;
-    mitm[wpn].set_holding_monster(monster);
-    menv[monster].colour = mitm[wpn].colour;
+    menv[mons].inv[MSLOT_WEAPON] = wpn;
+    mitm[wpn].set_holding_monster(mons);
+    menv[mons].colour = mitm[wpn].colour;
 
     return (XOM_GOOD_ANIMATE_MON_WPN);
 }
@@ -2032,7 +2033,7 @@ static int _xom_throw_divine_lightning(bool debug = false)
     bool found_hostile = false;
     for (radius_iterator ri(you.pos(), 2, true, true, true); ri; ++ri)
     {
-        if (monsters* mon = monster_at(*ri))
+        if (monster* mon = monster_at(*ri))
         {
             if (!mon->wont_attack())
             {
@@ -2969,7 +2970,7 @@ static int _xom_lose_stats(bool debug = false)
 
 static int _xom_chaos_upgrade_nearby_monster(bool debug = false)
 {
-    monsters *mon = choose_random_nearby_monster(0, _choose_chaos_upgrade);
+    monster* mon = choose_random_nearby_monster(0, _choose_chaos_upgrade);
 
     if (!mon)
         return (XOM_DID_NOTHING);

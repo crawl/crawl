@@ -148,7 +148,7 @@ void DungeonRegion::pack_buffers()
     for (unsigned int i = 0; i < m_overlays.size(); i++)
     {
         // overlays must be from the main image and must be in LOS.
-        if (!crawl_view.in_grid_los(m_overlays[i].gc))
+        if (!crawl_view.in_los_bounds_g(m_overlays[i].gc))
             continue;
 
         tileidx_t idx = m_overlays[i].idx;
@@ -195,7 +195,7 @@ void DungeonRegion::render()
     {
         for (unsigned int i = 0; i < m_tags[t].size(); i++)
         {
-            if (!crawl_view.in_grid_los(m_tags[t][i].gc))
+            if (!crawl_view.in_los_bounds_g(m_tags[t][i].gc))
                 continue;
 
             const coord_def ep = grid2show(m_tags[t][i].gc);
@@ -656,7 +656,7 @@ static const bool _have_appropriate_spell(const actor* target)
     return (false);
 }
 
-static bool _handle_distant_monster(monsters* mon, unsigned char mod)
+static bool _handle_distant_monster(monster* mon, unsigned char mod)
 {
     const coord_def gc = mon->pos();
     const bool shift = (mod & MOD_SHIFT);
@@ -851,7 +851,7 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
 
 int tile_click_cell(const coord_def &gc, unsigned char mod)
 {
-    monsters* mon = monster_at(gc);
+    monster* mon = monster_at(gc);
     if (mon && you.can_see(mon))
     {
         if (_handle_distant_monster(mon, mod))
@@ -947,7 +947,7 @@ bool DungeonRegion::update_tip_text(std::string &tip)
 
         if (you.see_cell(gc))
         {
-            const coord_def ep = view2show(grid2view(gc));
+            const coord_def ep = grid2show(gc);
 
             tip += make_stringf("GC(%d, %d) EP(%d, %d)\n\n",
                                 gc.x, gc.y, ep.x, ep.y);
@@ -1036,7 +1036,7 @@ bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
 
         if (!cell_is_solid(gc))
         {
-            const monsters *mon = monster_at(gc);
+            const monster* mon = monster_at(gc);
             if (!mon || mon->friendly() || !mon->visible_to(&you))
                 tip = "[L-Click] Move\n";
             else if (mon)
@@ -1054,7 +1054,7 @@ bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
 
     if (gc != you.pos())
     {
-        const monsters* mon = monster_at(gc);
+        const monster* mon = monster_at(gc);
         if (mon && you.can_see(mon))
         {
             if (you.see_cell_no_trans(mon->pos())

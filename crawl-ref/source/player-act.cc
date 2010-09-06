@@ -485,7 +485,7 @@ void player::attacking(actor *other)
 
     if (other && other->atype() == ACT_MONSTER)
     {
-        const monsters *mon = other->as_monster();
+        const monster* mon = other->as_monster();
         if (!mon->friendly() && !mon->neutral())
             pet_target = mon->mindex();
     }

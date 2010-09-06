@@ -197,7 +197,7 @@ static int dgn_mons_from_index(lua_State *ls)
 {
     const int index = luaL_checkint(ls, 1);
 
-    monsters *mons = &menv[index];
+    monster* mons = &menv[index];
 
     if (mons->type != -1)
         push_monster(ls, mons);
@@ -211,7 +211,7 @@ static int dgn_mons_at(lua_State *ls)
 {
     COORDS(c, 1, 2);
 
-    monsters *mon = monster_at(c);
+    monster* mon = monster_at(c);
     if (mon && mon->alive())
         push_monster(ls, mon);
     else

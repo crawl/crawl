@@ -490,7 +490,7 @@ struct level_pos
     void load(reader&);
 };
 
-class monsters;
+class monster;
 
 struct item_def
 {
@@ -550,7 +550,7 @@ public:
     void set_holding_monster(int midx);
 
     // Returns monster holding this item.  NULL if none.
-    monsters* holding_monster() const;
+    monster* holding_monster() const;
 
     // Returns true if a monster is holding this item.
     bool held_by_monster() const;

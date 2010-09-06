@@ -19,21 +19,15 @@
 #include "env.h"
 #include "food.h"
 #include "godconduct.h"
-#include "godpassive.h"
 #include "hints.h"
 #include "item_use.h"
-#include "itemname.h"
 #include "itemprop.h"
-#include "los.h"
 #include "misc.h"
 #include "mutation.h"
 #include "player.h"
 #include "player-equip.h"
 #include "player-stats.h"
-#include "religion.h"
-#include "skills2.h"
 #include "spl-miscast.h"
-#include "spl-util.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "transform.h"
@@ -342,10 +336,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         if (you.species == SP_VAMPIRE)
             mpr("Blech - this tastes like water.");
         else
-        {
             mpr("This tastes like water.");
-            lessen_hunger(20, true);
-        }
         break;
 
     case POT_EXPERIENCE:
