@@ -6063,7 +6063,7 @@ static dungeon_feature_type _pick_an_altar()
             break;
 
         case BRANCH_DWARF_HALL:
-            temp_rand = random2(10); // 50% chance of Beogh
+            temp_rand = random2(10); // 50% chance of Okawaru
 
             altar_type = ((temp_rand == 0) ? DNGN_ALTAR_KIKUBAAQUDGHA :
                           (temp_rand == 1) ? DNGN_ALTAR_YREDELEMNUL :
