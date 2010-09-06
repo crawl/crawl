@@ -40,6 +40,8 @@ int mons_hive_level(int mcls);
 int mons_hive_rare(int mcls);
 int mons_lair_level(int mcls);
 int mons_lair_rare(int mcls);
+int mons_dwarf_level(int mcls);
+int mons_dwarf_rare(int mcls);
 int mons_mineorc_level(int mcls);
 int mons_mineorc_rare(int mcls);
 int mons_pitslime_level(int mcls);

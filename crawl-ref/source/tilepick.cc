@@ -240,6 +240,7 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_ENTER_PANDEMONIUM;
     case DNGN_TRANSIT_PANDEMONIUM:
         return TILE_DNGN_TRANSIT_PANDEMONIUM;
+    case DNGN_ENTER_DWARF_HALL:
     case DNGN_ENTER_ORCISH_MINES:
     case DNGN_ENTER_HIVE:
     case DNGN_ENTER_LAIR:
@@ -260,6 +261,7 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
             return TILE_DNGN_ENTER_ZOT_OPEN;
         return TILE_DNGN_ENTER_ZOT_CLOSED;
 
+    case DNGN_RETURN_FROM_DWARF_HALL:
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_HIVE:
     case DNGN_RETURN_FROM_LAIR:
