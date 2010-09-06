@@ -2015,7 +2015,6 @@ void restore_game(const std::string& name)
         you.kills->load(inf);
     }
 
-    std::string travelCacheFile = get_savedir_filename(name, "", "tc");
     if (you.save->has_chunk("tc"))
     {
         reader inf(you.save, "tc", minorVersion);
