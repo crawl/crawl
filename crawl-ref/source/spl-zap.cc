@@ -100,6 +100,8 @@ zap_type spell_to_zap(spell_type spell)
         return ZAP_INVISIBILITY;
     case SPELL_DIG:
         return ZAP_DIGGING;
+    case SPELL_LIGHT_BEAM:
+        return ZAP_LIGHT_BEAM;
     case SPELL_DEBUGGING_RAY:
         return ZAP_DEBUGGING_RAY;
     default:

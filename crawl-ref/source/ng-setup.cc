@@ -1113,7 +1113,6 @@ static void _give_items_skills(const newgame_def& ng)
     // Deep Dwarves get healing potions and wand of healing (3).
     if (you.species == SP_DEEP_DWARF)
     {
-        newgame_make_item(-1, EQ_NONE, OBJ_POTIONS, POT_HEALING, -1, 2);
         newgame_make_item(-1, EQ_NONE, OBJ_POTIONS, POT_HEAL_WOUNDS, -1, 2);
         newgame_make_item(-1, EQ_NONE, OBJ_WANDS, WAND_HEALING, -1, 1, 3);
     }
@@ -1667,6 +1666,10 @@ static void _setup_generic(const newgame_def& ng)
 
     // Generate the second name of Jiyva
     fix_up_jiyva_name();
+
+    // Create the save file.
+    you.save = new package((get_savedir_filename(you.your_name, "", "")
+                            + SAVE_SUFFIX).c_str(), true, true);
 
     // Pretend that a savefile was just loaded, in order to
     // get things setup properly.

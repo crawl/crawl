@@ -9,7 +9,7 @@
 #include "enum.h"
 
 class level_id;
-class monsters;
+class monster;
 struct mgen_data;
 
 struct coord_def;
@@ -24,11 +24,11 @@ bool arena_veto_random_monster(monster_type type);
 bool arena_veto_place_monster(const mgen_data &mg, bool first_band_member,
                               const coord_def& pos);
 
-void arena_placed_monster(monsters *monster);
+void arena_placed_monster(monster* mons);
 
-void arena_split_monster(monsters *split_from, monsters *split_to);
+void arena_split_monster(monster* split_from, monster* split_to);
 
-void arena_monster_died(monsters *monster, killer_type killer,
+void arena_monster_died(monster* mons, killer_type killer,
                         int killer_index, bool silent, int corpse);
 
 int arena_cull_items();

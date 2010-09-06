@@ -652,8 +652,13 @@ unsigned long full_ident_mask( const item_def& item )
     case OBJ_ORBS:
     case OBJ_SCROLLS:
     case OBJ_POTIONS:
-    case OBJ_STAVES:
         flagset = ISFLAG_KNOW_TYPE;
+        break;
+    case OBJ_STAVES:
+        if (item_is_rod(item))
+            flagset = ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PLUSES;
+        else
+            flagset = ISFLAG_KNOW_TYPE;
         break;
     case OBJ_WANDS:
         flagset = (ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PLUSES);
@@ -675,7 +680,7 @@ unsigned long full_ident_mask( const item_def& item )
         break;
     }
 
-    if (item_type_known(item.base_type, item.sub_type))
+    if (item_type_known(item.base_type, item.sub_type) && !is_artefact(item))
         flagset &= (~ISFLAG_KNOW_TYPE);
 
     if (is_artefact(item))
@@ -1193,8 +1198,9 @@ bool is_enchantable_weapon(const item_def &wpn, bool uncurse, bool first)
         return (false);
 
     // Blowguns don't have any to-dam.
+    // but they can be uncursed. -doy
     if (!first && wpn.base_type == OBJ_WEAPONS && wpn.sub_type == WPN_BLOWGUN)
-        return (false);
+        return (uncurse && wpn.cursed());
 
     // Artefacts or highly enchanted weapons cannot be enchanted,
     // only uncursed.

@@ -1435,7 +1435,7 @@ static void _swap_monster_card(int power, deck_rarity_type rarity)
 {
     // Swap between you and another monster.
     // Don't choose yourself unless there are no monsters nearby.
-    monsters *mon_to_swap = choose_random_nearby_monster(0);
+    monster* mon_to_swap = choose_random_nearby_monster(0);
     if (!mon_to_swap)
         mpr("You spin around.");
     else
@@ -1476,7 +1476,7 @@ static void _damnation_card(int power, deck_rarity_type rarity)
     for (int i = 0; i < 1 + extra_targets; ++i)
     {
         // Pick a random monster nearby to banish (or yourself).
-        monsters *mon_to_banish = choose_random_nearby_monster(1);
+        monster* mon_to_banish = choose_random_nearby_monster(1);
 
         // Bonus banishments only banish monsters.
         if (i != 0 && !mon_to_banish)
@@ -1627,7 +1627,7 @@ static int _drain_monsters(coord_def where, int pow, int, actor *)
         drain_exp();
     else
     {
-        monsters* mon = monster_at(where);
+        monster* mon = monster_at(where);
         if (mon == NULL)
             return (0);
 

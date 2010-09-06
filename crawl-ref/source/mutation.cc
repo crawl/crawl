@@ -322,7 +322,7 @@ formatted_string describe_mutations()
         break;
     }
 
-    switch(you.body_size(PSIZE_TORSO, true))
+    switch (you.body_size(PSIZE_TORSO, true))
     {
     case SIZE_LITTLE:
         result += "You are tiny and cannot use many weapons and most armour.\n";
@@ -337,7 +337,7 @@ formatted_string describe_mutations()
         have_any = true;
         break;
     default:
-        ;
+        break;
     }
 
     if (player_genus(GENPC_DRACONIAN))
@@ -353,6 +353,7 @@ formatted_string describe_mutations()
         std::ostringstream num;
         num << ac;
         result += "Your scales are hard (AC +" + num.str() + ").\n";
+        have_any = true;
     }
 
     result += "</lightblue>";
@@ -412,7 +413,7 @@ formatted_string describe_mutations()
             "hunger status.\n";
     }
 
-    return formatted_string::parse_string(result);
+    return (formatted_string::parse_string(result));
 }
 
 static void _display_vampire_attributes()
@@ -1954,7 +1955,7 @@ void check_antennae_detect()
 
     for (radius_iterator ri(you.pos(), radius, C_SQUARE); ri; ++ri)
     {
-        const monsters* mon = monster_at(*ri);
+        const monster* mon = monster_at(*ri);
         if (!mon)
         {
             map_cell& cell = env.map_knowledge(*ri);

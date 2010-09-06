@@ -117,7 +117,7 @@ static int _mons_misc_level(int mcls)
     case MONS_QUEEN_ANT:
         return 25;
 
-    case MONS_ANGEL:
+    case MONS_CHERUB:
         return 27;
 
     case MONS_DAEVA:
@@ -130,6 +130,7 @@ static int _mons_misc_level(int mcls)
 static global_level_info g_lev_infos[] = {
     {mons_standard_level, BRANCH_MAIN_DUNGEON,  1},
     {_mons_misc_level,    BRANCH_MAIN_DUNGEON,  1},
+    {mons_dwarf_level,    BRANCH_DWARF_HALL,    7},
     {mons_mineorc_level,  BRANCH_ORCISH_MINES,  8},
     {mons_lair_level,     BRANCH_LAIR,         10},
     {mons_hallelf_level,  BRANCH_ELVEN_HALLS,  11},
@@ -192,7 +193,7 @@ bool mons_abyss(int mcls)
     case MONS_ABOMINATION_SMALL:
     case MONS_AIR_ELEMENTAL:
     case MONS_ANCIENT_LICH:
-    case MONS_ANGEL:
+    case MONS_CHERUB:
     case MONS_BALRUG:
     case MONS_BLUE_DEATH:
     case MONS_BLUE_DEVIL:
@@ -422,7 +423,7 @@ int mons_rare_abyss(int mcls)
     case MONS_SOUL_EATER:
         return 7;
 
-    case MONS_ANGEL:
+    case MONS_CHERUB:
     case MONS_IRON_DEVIL:
         return 6;
 
@@ -718,6 +719,7 @@ int mons_standard_level(int mcls)
     case MONS_SIMULACRUM_SMALL:
     case MONS_SIMULACRUM_LARGE:
     case MONS_ROCK_WORM:
+    case MONS_ELEPHANT:
         return 17;
 
     case MONS_DRAGON:
@@ -995,6 +997,7 @@ int mons_standard_rare(int mcls)
     case MONS_VAMPIRE:
     case MONS_WEAPON_MIMIC:
     case MONS_YELLOW_WASP:
+    case MONS_ELEPHANT:
         return 30;
 
     case MONS_FLAYED_GHOST:
@@ -1107,6 +1110,31 @@ int mons_standard_rare(int mcls)
     case MONS_SHINING_EYE:
     case MONS_TOENAIL_GOLEM:
         return 2;
+
+    default:
+        return 0;
+    }
+}
+
+// The Dwarf Hall of Fallen Heroes
+int mons_dwarf_level(int mcls)
+{
+    int mlev = absdungeon_depth(BRANCH_DWARF_HALL, 1);
+
+    switch (mcls)
+    {
+    default:
+        mlev += 99;
+        break;
+    }
+
+    return (mlev);
+}
+
+int mons_dwarf_rare(int mcls)
+{
+    switch (mcls)
+    {
 
     default:
         return 0;
@@ -1410,6 +1438,7 @@ int mons_lair_level(int mcls)
     case MONS_LINDWURM:
     case MONS_REDBACK:
     case MONS_WANDERING_MUSHROOM:
+    case MONS_ELEPHANT:
         mlev += 6;
         break;
 
@@ -1476,6 +1505,7 @@ int mons_lair_rare(int mcls)
     case MONS_HYDRA:
     case MONS_KOMODO_DRAGON:
     case MONS_YAK:
+    case MONS_ELEPHANT:
         return 50;
 
     case MONS_BLACK_MAMBA:
@@ -2717,7 +2747,6 @@ int mons_gehenna_level(int mcls)
     case MONS_LICH:
     case MONS_PIT_FIEND:
     case MONS_REAPER:
-    case MONS_SERPENT_OF_HELL:
     case MONS_BONE_DRAGON:
     case MONS_SOUL_EATER:
     case MONS_SPECTRAL_WARRIOR:
@@ -2811,7 +2840,6 @@ int mons_gehenna_rare(int mcls)
         return 5;
 
     case MONS_ANCIENT_LICH:
-    case MONS_SERPENT_OF_HELL:
         return 4;
 
     default:

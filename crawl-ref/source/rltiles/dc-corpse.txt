@@ -273,7 +273,7 @@ iron_troll CORPSE_IRON_TROLL
 deep_troll CORPSE_DEEP_TROLL
 
 ## Human shaped ('@')
-unique/wayne CORPSE_DWARF
+unique/wiglaf CORPSE_DWARF
 human CORPSE_HUMAN
 %back dc-misc/blood_green
 shapeshifter CORPSE_SHAPESHIFTER

@@ -862,7 +862,7 @@ void ghost_demon::find_transiting_ghosts(
         {
             if (i->mons.type == MONS_PLAYER_GHOST)
             {
-                const monsters &m = i->mons;
+                const monster& m = i->mons;
                 if (m.ghost.get())
                 {
                     announce_ghost(*m.ghost);
@@ -909,6 +909,7 @@ int ghost_demon::n_extra_ghosts()
         // areas at this depth, such as portal vaults.
         if (subdepth < 9 && you.where_are_you == BRANCH_MAIN_DUNGEON
             || subdepth < 2 && you.where_are_you == BRANCH_LAIR
+            || subdepth < 3 && you.where_are_you == BRANCH_DWARF_HALL
             || subdepth < 2 && you.where_are_you == BRANCH_ORCISH_MINES)
         {
             return (0);

@@ -1252,7 +1252,7 @@ static bool _give_nemelex_gift(bool forced = false)
     return (false);
 }
 
-void mons_make_god_gift(monsters *mon, god_type god)
+void mons_make_god_gift(monster* mon, god_type god)
 {
     const god_type acting_god =
         (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
@@ -1276,37 +1276,37 @@ void mons_make_god_gift(monsters *mon, god_type god)
     mon->flags |= MF_GOD_GIFT;
 }
 
-bool mons_is_god_gift(const monsters *mon, god_type god)
+bool mons_is_god_gift(const monster* mon, god_type god)
 {
     return ((mon->flags & MF_GOD_GIFT) && mon->god == god);
 }
 
-bool is_undead_slave(const monsters* mon)
+bool is_undead_slave(const monster* mon)
 {
     return (mon->alive() && mon->holiness() == MH_UNDEAD
             && mon->attitude == ATT_FRIENDLY);
 }
 
-bool is_yred_undead_slave(const monsters* mon)
+bool is_yred_undead_slave(const monster* mon)
 {
     return (is_undead_slave(mon) && mons_is_god_gift(mon, GOD_YREDELEMNUL));
 }
 
-bool is_orcish_follower(const monsters* mon)
+bool is_orcish_follower(const monster* mon)
 {
     return (mon->alive() && mons_species(mon->type) == MONS_ORC
             && mon->attitude == ATT_FRIENDLY
             && mons_is_god_gift(mon, GOD_BEOGH));
 }
 
-bool is_fellow_slime(const monsters* mon)
+bool is_fellow_slime(const monster* mon)
 {
     return (mon->alive() && mons_is_slime(mon)
             && mon->attitude == ATT_STRICT_NEUTRAL
             && mons_is_god_gift(mon, GOD_JIYVA));
 }
 
-bool is_neutral_plant(const monsters* mon)
+bool is_neutral_plant(const monster* mon)
 {
     return (mon->alive() && mons_is_plant(mon)
             && mon->attitude == ATT_GOOD_NEUTRAL);
@@ -1322,19 +1322,19 @@ static bool _has_jelly()
     return (false);
 }
 
-bool is_good_lawful_follower(const monsters* mon)
+bool is_good_lawful_follower(const monster* mon)
 {
     return (mon->alive() && !mon->is_unholy() && !mon->is_evil()
             && !mon->is_unclean() && !mon->is_chaotic() && mon->friendly());
 }
 
-bool is_good_follower(const monsters* mon)
+bool is_good_follower(const monster* mon)
 {
     return (mon->alive() && !mon->is_unholy() && !mon->is_evil()
             && mon->friendly());
 }
 
-bool is_follower(const monsters* mon)
+bool is_follower(const monster* mon)
 {
     if (you.religion == GOD_YREDELEMNUL)
         return (is_undead_slave(mon));
@@ -1352,7 +1352,7 @@ bool is_follower(const monsters* mon)
         return (mon->alive() && mon->friendly());
 }
 
-static bool _blessing_wpn(monsters* mon)
+static bool _blessing_wpn(monster* mon)
 {
     // Pick a monster's weapon.
     const int weapon = mon->inv[MSLOT_WEAPON];
@@ -1380,7 +1380,7 @@ static bool _blessing_wpn(monsters* mon)
     return (true);
 }
 
-static bool _blessing_AC(monsters* mon)
+static bool _blessing_AC(monster* mon)
 {
     // Pick either a monster's armour or its shield.
     const int armour = mon->inv[MSLOT_ARMOUR];
@@ -1407,7 +1407,7 @@ static bool _blessing_AC(monsters* mon)
     return (true);
 }
 
-static bool _blessing_balms(monsters *mon)
+static bool _blessing_balms(monster* mon)
 {
     // Remove poisoning, sickness, confusion, and rotting, like a potion
     // of healing, but without the healing.  Also, remove slowing and
@@ -1435,7 +1435,7 @@ static bool _blessing_balms(monsters *mon)
     return (success);
 }
 
-static bool _blessing_healing(monsters* mon)
+static bool _blessing_healing(monster* mon)
 {
     const int healing = mon->max_hit_points / 4 + 1;
 
@@ -1451,7 +1451,7 @@ static bool _blessing_healing(monsters* mon)
     return (false);
 }
 
-static bool _tso_blessing_holy_wpn(monsters* mon)
+static bool _tso_blessing_holy_wpn(monster* mon)
 {
     // Pick a monster's weapon.
     const int weapon = mon->inv[MSLOT_WEAPON];
@@ -1492,7 +1492,7 @@ static bool _tso_blessing_holy_wpn(monsters* mon)
     return (true);
 }
 
-static bool _tso_blessing_holy_arm(monsters* mon)
+static bool _tso_blessing_holy_arm(monster* mon)
 {
     // If a monster has full negative energy resistance, get out.
     if (mon->res_negative_energy() == 3)
@@ -1527,7 +1527,7 @@ static bool _tso_blessing_holy_arm(monsters* mon)
     return (true);
 }
 
-static bool _increase_ench_duration(monsters *mon,
+static bool _increase_ench_duration(monster* mon,
                                     mon_enchant ench,
                                     const int increase)
 {
@@ -1544,7 +1544,7 @@ static bool _increase_ench_duration(monsters *mon,
     return (true);
 }
 
-static int _tso_blessing_extend_stay(monsters* mon)
+static int _tso_blessing_extend_stay(monster* mon)
 {
     if (!mon->has_ench(ENCH_ABJ))
         return (0);
@@ -1559,7 +1559,7 @@ static int _tso_blessing_extend_stay(monsters* mon)
     return _increase_ench_duration(mon, abj, increase);
 }
 
-static bool _tso_blessing_friendliness(monsters* mon)
+static bool _tso_blessing_friendliness(monster* mon)
 {
     if (!mon->has_ench(ENCH_CHARM))
         return (false);
@@ -1581,7 +1581,7 @@ static void _beogh_reinf_callback(const mgen_data &mg, int &midx, int placed)
     if (midx == -1)
         return;
 
-    monsters* mon = &menv[midx];
+    monster* mon = &menv[midx];
 
     mon->flags |= MF_ATT_CHANGE_ATTEMPT;
 
@@ -1630,7 +1630,7 @@ static void _beogh_blessing_reinforcements()
     }
 }
 
-static bool _beogh_blessing_priesthood(monsters* mon)
+static bool _beogh_blessing_priesthood(monster* mon)
 {
     monster_type priest_type = MONS_PROGRAM_BUG;
 
@@ -1656,9 +1656,9 @@ static bool _beogh_blessing_priesthood(monsters* mon)
 // one, bless a random follower within sight of the player, if any, or,
 // with decreasing chances, any follower on the level.
 // Blessing can be enforced with a wizard mode command.
-bool bless_follower(monsters *follower,
+bool bless_follower(monster* follower,
                     god_type god,
-                    bool (*suitable)(const monsters* mon),
+                    bool (*suitable)(const monster* mon),
                     bool force)
 {
     int chance = (force ? coinflip() : random2(20));
@@ -2316,7 +2316,7 @@ void god_speaks(god_type god, const char *mesg)
 
     int orig_mon = mgrd(you.pos());
 
-    monsters fake_mon;
+    monster fake_mon;
     fake_mon.type       = MONS_PROGRAM_BUG;
     fake_mon.hit_points = 1;
     fake_mon.god        = god;
@@ -2350,7 +2350,8 @@ std::string adjust_abil_message(const char *pmsg)
     std::string pm = pmsg;
 
     if ((pos = pm.find("{biology}")) != -1)
-        switch(you.is_undead)
+    {
+        switch (you.is_undead)
         {
         case US_UNDEAD:      // mummies -- time has no meaning!
             return "";
@@ -2362,6 +2363,7 @@ std::string adjust_abil_message(const char *pmsg)
             pm.replace(pos, 9, "biology");
             break;
         }
+    }
     return (pm);
 }
 
@@ -2714,13 +2716,13 @@ bool fedhas_protects_species(int mc)
             && mc != MONS_GIANT_SPORE);
 }
 
-bool fedhas_protects(const monsters * target)
+bool fedhas_protects(const monster* target)
 {
     return target && fedhas_protects_species(target->mons_species());
 }
 
 // Fedhas neutralises most plants and fungi
-bool fedhas_neutralises(const monsters * target)
+bool fedhas_neutralises(const monster* target)
 {
     return (target && mons_is_plant(target));
 }
@@ -3413,7 +3415,7 @@ bool god_hates_cannibalism(god_type god)
     return (is_good_god(god) || god == GOD_BEOGH);
 }
 
-bool god_hates_killing(god_type god, const monsters* mon)
+bool god_hates_killing(god_type god, const monster* mon)
 {
     bool retval = false;
     const mon_holy_type holiness = mon->holiness();
@@ -3447,7 +3449,7 @@ bool god_likes_fresh_corpses(god_type god)
 
 bool god_likes_spell(spell_type spell, god_type god)
 {
-    switch(god)
+    switch (god)
     {
     case GOD_VEHUMET:
         return (vehumet_supports_spell(spell));
@@ -3476,7 +3478,10 @@ bool god_hates_spell(spell_type spell, god_type god)
         // it, or destroying it.
         if ((disciplines & SPTYP_POISON) && spell != SPELL_CURE_POISON
             && spell != SPELL_RESIST_POISON && spell != SPELL_IGNITE_POISON)
+        {
             return (true);
+        }
+        break;
     case GOD_YREDELEMNUL:
         if (is_holy_spell(spell))
             return (true);
@@ -3600,6 +3605,11 @@ void handle_god_time()
             return;
 
         // All the rest will excommunicate you if piety goes below 1.
+        case GOD_JIYVA:
+            if (one_chance_in(20))
+                lose_piety(1);
+            break;
+
         case GOD_YREDELEMNUL:
         case GOD_KIKUBAAQUDGHA:
         case GOD_VEHUMET:
@@ -3621,14 +3631,6 @@ void handle_god_time()
                 lose_piety(1);
             break;
 
-        case GOD_SIF_MUNA:
-            // [dshaligram] Sif Muna is now very patient - has to be
-            // to make up for the new spell training requirements, else
-            // it's practically impossible to get Master of Arcane status.
-            if (one_chance_in(100))
-                lose_piety(1);
-            break;
-
         case GOD_NEMELEX_XOBEH:
             // Nemelex is relatively patient.
             if (one_chance_in(35))
@@ -3637,8 +3639,11 @@ void handle_god_time()
                 you.attribute[ATTR_CARD_COUNTDOWN]--;
             break;
 
-        case GOD_JIYVA:
-            if (one_chance_in(20))
+        case GOD_SIF_MUNA:
+            // [dshaligram] Sif Muna is now very patient - has to be
+            // to make up for the new spell training requirements, else
+            // it's practically impossible to get Master of Arcane status.
+            if (one_chance_in(100))
                 lose_piety(1);
             break;
 
@@ -3807,7 +3812,7 @@ int piety_breakpoint(int i)
 
 // Returns true if the Shining One doesn't mind your using unchivalric
 // attacks on this creature.
-bool tso_unchivalric_attack_safe_monster(const monsters *mon)
+bool tso_unchivalric_attack_safe_monster(const monster* mon)
 {
     const mon_holy_type holiness = mon->holiness();
     return (mons_intel(mon) < I_NORMAL
@@ -3815,7 +3820,7 @@ bool tso_unchivalric_attack_safe_monster(const monsters *mon)
             || !mon->is_holy() && holiness != MH_NATURAL);
 }
 
-int get_monster_tension(const monsters *mons, god_type god)
+int get_monster_tension(const monster* mons, god_type god)
 {
     if (!mons->alive())
         return 0;
@@ -3911,7 +3916,7 @@ int get_tension(god_type god)
     bool nearby_monster = false;
     for (radius_iterator ri(you.get_los()); ri; ri++)
     {
-        const monsters *mon = monster_at(*ri);
+        const monster* mon = monster_at(*ri);
 
         if (mon && mon->alive() && you.can_see(mon))
         {
@@ -4109,16 +4114,16 @@ static bool _is_temple_god(god_type god)
     if (!_is_god(god))
         return (false);
 
-    switch(god)
+    switch (god)
     {
     case GOD_NO_GOD:
     case GOD_LUGONU:
     case GOD_BEOGH:
     case GOD_JIYVA:
-        return false;
+        return (false);
 
     default:
-        return true;
+        return (true);
     }
 }
 

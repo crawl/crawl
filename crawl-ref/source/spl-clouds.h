@@ -31,4 +31,5 @@ int make_a_normal_cloud(coord_def where, int pow, int spread_rate,
 std::string get_evaporate_result_list(int potion);
 bool cast_evaporate(int pow, bolt& beem, int potion);
 
+int holy_flames(monster* caster, actor* defender);
 #endif

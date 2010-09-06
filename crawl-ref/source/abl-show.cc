@@ -26,6 +26,7 @@
 #include "directn.h"
 #include "effects.h"
 #include "env.h"
+#include "exercise.h"
 #include "food.h"
 #include "godabil.h"
 #include "item_use.h"
@@ -1205,7 +1206,10 @@ static bool _activate_talent(const talent& tal)
 
     const bool success = _do_ability(abil);
     if (success)
+    {
+        practise(EX_USED_ABIL, abil.ability);
         _pay_ability_costs(abil);
+    }
 
     return (success);
 }
@@ -1310,9 +1314,6 @@ static bool _do_ability(const ability_def& abil)
             you_teleport_now(true, true); // instant and to new area of Abyss
         else
             you_teleport();
-
-        if (abil.ability == ABIL_EVOKE_TELEPORTATION)
-            exercise(SK_EVOCATIONS, 1);
         break;
 
     case ABIL_BREATHE_FIRE:
@@ -1416,17 +1417,10 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_EVOKE_BLINK:      // randarts
     case ABIL_BLINK:            // mutation
         random_blink(true);
-
-        if (abil.ability == ABIL_EVOKE_BLINK)
-            exercise(SK_EVOCATIONS, 1);
         break;
 
     case ABIL_EVOKE_BERSERK:    // amulet of rage, randarts
-        // Only exercise if berserk succeeds.
-        // Because of the test above, this should always happen,
-        // but I'm leaving it in - haranp
-        if (go_berserk(true))
-            exercise(SK_EVOCATIONS, 1);
+        go_berserk(true);
         break;
 
     // Fly (kenku) - eventually becomes permanent (see main.cc).
@@ -1466,7 +1460,6 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_EVOKE_TURN_INVISIBLE:     // ring, randarts, darkness items
         potion_effect(POT_INVISIBILITY, 2 * you.skills[SK_EVOCATIONS] + 5);
         contaminate_player(1 + random2(3), true);
-        exercise(SK_EVOCATIONS, 1);
         break;
 
     case ABIL_EVOKE_TURN_VISIBLE:
@@ -1476,7 +1469,6 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_EVOKE_LEVITATE:           // ring, boots, randarts
         levitate_player(2 * you.skills[SK_EVOCATIONS] + 30);
-        exercise(SK_EVOCATIONS, 1);
         break;
 
     case ABIL_EVOKE_STOP_LEVITATING:
@@ -1498,12 +1490,10 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_ZIN_RECITE:
         start_delay(DELAY_RECITE, 3, -1, you.hp);
-        exercise(SK_INVOCATIONS, 2);
         break;
 
     case ABIL_ZIN_VITALISATION:
-        if (zin_vitalisation())
-            exercise(SK_INVOCATIONS, (coinflip() ? 3 : 2));
+        zin_vitalisation();
         break;
 
     case ABIL_ZIN_IMPRISON:
@@ -1529,21 +1519,19 @@ static bool _do_ability(const ability_def& abil)
             return (false);
         }
 
-        monsters *monster = monster_at(beam.target);
+        monster* mons = monster_at(beam.target);
 
         power = 3 + roll_dice(3, 10 * (3 + you.skills[SK_INVOCATIONS])
-                                    / (3 + monster->hit_dice)) / 3;
+                                    / (3 + mons->hit_dice)) / 3;
 
-        if (!cast_imprison(power, monster, -GOD_ZIN))
+        if (!cast_imprison(power, mons, -GOD_ZIN))
             return (false);
-
-        exercise(SK_INVOCATIONS, 3 + random2(5));
         break;
     }
 
     case ABIL_ZIN_SANCTUARY:
-        if (zin_sanctuary())
-            exercise(SK_INVOCATIONS, 5 + random2(8));
+        if (!zin_sanctuary())
+            return (false);
         break;
 
     case ABIL_ZIN_CURE_ALL_MUTATIONS:
@@ -1552,23 +1540,19 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_TSO_DIVINE_SHIELD:
         tso_divine_shield();
-        exercise(SK_INVOCATIONS, (coinflip() ? 3 : 2));
         break;
 
     case ABIL_TSO_CLEANSING_FLAME:
         cleansing_flame(10 + (you.skills[SK_INVOCATIONS] * 7) / 6,
                         CLEANSING_FLAME_INVOCATION, you.pos(), &you);
-        exercise(SK_INVOCATIONS, 3 + random2(6));
         break;
 
     case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
         summon_holy_warrior(you.skills[SK_INVOCATIONS] * 4, GOD_SHINING_ONE);
-        exercise(SK_INVOCATIONS, 8 + random2(10));
         break;
 
     case ABIL_KIKU_RECEIVE_CORPSES:
         kiku_receive_corpses(you.skills[SK_INVOCATIONS] * 4, you.pos());
-        exercise(SK_INVOCATIONS, (coinflip() ? 3 : 2));
         break;
 
     case ABIL_YRED_INJURY_MIRROR:
@@ -1583,12 +1567,10 @@ static bool _do_ability(const ability_def& abil)
         {
             mpr("There are no remains here to animate!");
         }
-        exercise(SK_INVOCATIONS, 2 + random2(4));
         break;
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
         recall(1);
-        exercise(SK_INVOCATIONS, 1);
         break;
 
     case ABIL_YRED_ANIMATE_DEAD:
@@ -1596,12 +1578,10 @@ static bool _do_ability(const ability_def& abil)
 
         animate_dead(&you, 1 + you.skills[SK_INVOCATIONS], BEH_FRIENDLY,
                      MHITYOU, &you, "", GOD_YREDELEMNUL);
-        exercise(SK_INVOCATIONS, 2 + random2(4));
         break;
 
     case ABIL_YRED_DRAIN_LIFE:
         yred_drain_life(you.skills[SK_INVOCATIONS]);
-        exercise(SK_INVOCATIONS, 2 + random2(4));
         break;
 
     case ABIL_YRED_ENSLAVE_SOUL:
@@ -1616,8 +1596,6 @@ static bool _do_ability(const ability_def& abil)
         {
             return (false);
         }
-
-        exercise(SK_INVOCATIONS, 8 + random2(10));
         break;
     }
 
@@ -1625,17 +1603,14 @@ static bool _do_ability(const ability_def& abil)
         mpr("You channel some magical energy.");
 
         inc_mp(1 + random2(you.skills[SK_INVOCATIONS] / 4 + 2), false);
-        exercise(SK_INVOCATIONS, 1 + random2(3));
         break;
 
     case ABIL_OKAWARU_MIGHT:
         potion_effect(POT_MIGHT, you.skills[SK_INVOCATIONS] * 8);
-        exercise(SK_INVOCATIONS, 1 + random2(3));
         break;
 
     case ABIL_OKAWARU_HASTE:
         potion_effect(POT_SPEED, you.skills[SK_INVOCATIONS] * 8);
-        exercise(SK_INVOCATIONS, 3 + random2(7));
         break;
 
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
@@ -1659,14 +1634,11 @@ static bool _do_ability(const ability_def& abil)
         case 3: beam.range = 13; zapping(ZAP_ELECTRICITY, power, beam); break;
         case 4: beam.range =  8; zapping(ZAP_BREATHE_ACID, power/2, beam); break;
         }
-
-        exercise(SK_INVOCATIONS, 1);
         break;
 
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
         summon_demon_type(static_cast<monster_type>(MONS_NEQOXEC + random2(5)),
                           20 + you.skills[SK_INVOCATIONS] * 3, GOD_MAKHLEB);
-        exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
     case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
@@ -1696,14 +1668,11 @@ static bool _do_ability(const ability_def& abil)
             }
             zapping(ztype, power, beam);
         }
-
-        exercise(SK_INVOCATIONS, 3 + random2(5));
         break;
 
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
         summon_demon_type(static_cast<monster_type>(MONS_EXECUTIONER + random2(5)),
                           20 + you.skills[SK_INVOCATIONS] * 3, GOD_MAKHLEB);
-        exercise(SK_INVOCATIONS, 6 + random2(6));
         break;
 
     case ABIL_TROG_BURN_SPELLBOOKS:
@@ -1750,13 +1719,11 @@ static bool _do_ability(const ability_def& abil)
             return (false);
         }
 
-        exercise(SK_INVOCATIONS, 1);
         break;
     }
 
     case ABIL_ELYVILON_PURIFICATION:
         elyvilon_purification();
-        exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
     case ABIL_ELYVILON_GREATER_HEALING_SELF:
@@ -1770,33 +1737,25 @@ static bool _do_ability(const ability_def& abil)
         {
             return (false);
         }
-
-        exercise(SK_INVOCATIONS, 3 + random2(5));
         break;
     }
 
     case ABIL_ELYVILON_RESTORATION:
         restore_stat(STAT_ALL, 0, false);
         unrot_hp(100);
-
-        exercise(SK_INVOCATIONS, 4 + random2(6));
         break;
 
     case ABIL_ELYVILON_DIVINE_VIGOUR:
         if (!elyvilon_divine_vigour())
             return (false);
-
-        exercise(SK_INVOCATIONS, 6 + random2(10));
         break;
 
     case ABIL_LUGONU_ABYSS_EXIT:
         banished(DNGN_EXIT_ABYSS);
-        exercise(SK_INVOCATIONS, 8 + random2(10));
         break;
 
     case ABIL_LUGONU_BEND_SPACE:
         lugonu_bend_space();
-        exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
     case ABIL_LUGONU_BANISH:
@@ -1815,14 +1774,11 @@ static bool _do_ability(const ability_def& abil)
         {
             return (false);
         }
-
-        exercise(SK_INVOCATIONS, 3 + random2(5));
         break;
 
     case ABIL_LUGONU_CORRUPT:
         if (!lugonu_corrupt_level(300 + you.skills[SK_INVOCATIONS] * 15))
             return (false);
-        exercise(SK_INVOCATIONS, 5 + random2(5));
         break;
 
     case ABIL_LUGONU_ABYSS_ENTER:
@@ -1855,31 +1811,26 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_NEMELEX_DRAW_ONE:
         if (!choose_deck_and_draw())
             return (false);
-        exercise(SK_EVOCATIONS, 1 + random2(2));
         break;
 
     case ABIL_NEMELEX_PEEK_TWO:
         if (!deck_peek())
             return (false);
-        exercise(SK_EVOCATIONS, 2 + random2(2));
         break;
 
     case ABIL_NEMELEX_TRIPLE_DRAW:
         if (!deck_triple_draw())
             return (false);
-        exercise(SK_EVOCATIONS, 3 + random2(3));
         break;
 
     case ABIL_NEMELEX_MARK_FOUR:
         if (!deck_mark())
             return (false);
-        exercise(SK_EVOCATIONS, 4 + random2(4));
         break;
 
     case ABIL_NEMELEX_STACK_FIVE:
         if (!deck_stack())
             return (false);
-        exercise(SK_EVOCATIONS, 5 + random2(5));
         break;
 
     case ABIL_BEOGH_SMITING:
@@ -1888,12 +1839,10 @@ static bool _do_ability(const ability_def& abil)
         {
             return (false);
         }
-        exercise(SK_INVOCATIONS, (coinflip() ? 3 : 2));
         break;
 
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
         recall(2);
-        exercise(SK_INVOCATIONS, 1);
         break;
 
     case ABIL_FEDHAS_FUNGAL_BLOOM:
@@ -1926,14 +1875,11 @@ static bool _do_ability(const ability_def& abil)
             canned_msg(MSG_OK);
             return (false);
         }
-        exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
     case ABIL_FEDHAS_PLANT_RING:
         if (!fedhas_plant_ring_from_fruit())
             return (false);
-
-        exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
     case ABIL_FEDHAS_RAIN:
@@ -1942,8 +1888,6 @@ static bool _do_ability(const ability_def& abil)
             canned_msg(MSG_NOTHING_HAPPENS);
             return (false);
         }
-
-        exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
     case ABIL_FEDHAS_SPAWN_SPORES:
@@ -1957,16 +1901,12 @@ static bool _do_ability(const ability_def& abil)
                 canned_msg(MSG_OK);
             return (false);
         }
-
-        exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
     }
 
     case ABIL_FEDHAS_EVOLUTION:
         if (!fedhas_evolve_flora())
             return (false);
-
-        exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
     case ABIL_TRAN_BAT:
@@ -1991,8 +1931,6 @@ static bool _do_ability(const ability_def& abil)
 
         if (create_monster(mg) == -1)
             return (false);
-
-        exercise(SK_INVOCATIONS, 1 + random2(3));
         break;
     }
 
@@ -2009,14 +1947,11 @@ static bool _do_ability(const ability_def& abil)
         you.increase_duration(DUR_SLIMIFY,
                               you.skills[SK_INVOCATIONS] * 3 / 2 + 3,
                               100);
-
-        exercise(SK_INVOCATIONS, 3 + random2(5));
         break;
     }
 
     case ABIL_JIYVA_CURE_BAD_MUTATION:
-        if (jiyva_remove_bad_mutation())
-            exercise(SK_INVOCATIONS, 5 + random2(5));
+        jiyva_remove_bad_mutation();
         break;
 
     case ABIL_HARM_PROTECTION:
@@ -2031,18 +1966,15 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_CHEIBRIADOS_TIME_STEP:
         cheibriados_time_step(you.skills[SK_INVOCATIONS]*you.piety/10);
-        exercise(SK_INVOCATIONS, 5 + random2(5));
         break;
 
     case ABIL_CHEIBRIADOS_TIME_BEND:
         cheibriados_time_bend(16 + you.skills[SK_INVOCATIONS] * 8);
-        exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
     case ABIL_CHEIBRIADOS_SLOUCH:
         mpr("You can feel time thicken.");
         dprf("your speed is %d", player_movement_speed());
-        exercise(SK_INVOCATIONS, 4 + random2(4));
         cheibriados_slouch(0);
         break;
 

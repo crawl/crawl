@@ -1037,4 +1037,36 @@
     6 // XXX: Less noise because it's poison?
 },
 
+{
+    ZAP_LIGHT_BEAM,
+    "beam of light",
+    200,
+    new calcdice_calculator<3, 11, 1, 3>,
+    new tohit_calculator<10, 1, 25>,
+    ETC_HOLY,
+    false,
+    BEAM_HOLY_LIGHT,
+    DCHAR_FIRED_ZAP,
+    true,
+    true,
+    false,
+    6
+},
+
+{
+    ZAP_HOLY_BREATH,
+    "holy breath",
+    50,
+    new dicedef_calculator<3, 2, 1, 6>,
+    new tohit_calculator<6, 1, 6>,
+    ETC_HOLY,
+    false,
+    BEAM_HOLY_FLAME,
+    DCHAR_FIRED_ZAP,
+    true,
+    true,
+    false,
+    0 // Explosion does the noise.
+},
+
 #endif

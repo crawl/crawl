@@ -33,6 +33,7 @@
 #include "directn.h"
 #include "dgnevent.h"
 #include "env.h"
+#include "exercise.h"
 #include "fight.h"
 #include "fprop.h"
 #include "food.h"
@@ -65,6 +66,9 @@
 #include "player-stats.h"
 #include "religion.h"
 #include "skills.h"
+#include "skills2.h"
+#include "spl-book.h"
+#include "spl-clouds.h"
 #include "spl-miscast.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
@@ -139,49 +143,49 @@ int holy_word_monsters(coord_def where, int pow, int caster,
         retval = holy_word_player(pow, caster, attacker);
 
     // Is a monster in this cell?
-    monsters *monster = monster_at(where);
-    if (monster == NULL)
+    monster* mons = monster_at(where);
+    if (mons == NULL)
         return (retval);
 
-    if (!monster->alive() || !monster->undead_or_demonic())
+    if (!mons->alive() || !mons->undead_or_demonic())
         return (retval);
 
     int hploss;
 
     // Holy word won't kill its user.
-    if (attacker == monster)
-        hploss = std::max(0, monster->hit_points / 2 - 1);
+    if (attacker == mons)
+        hploss = std::max(0, mons->hit_points / 2 - 1);
     else
         hploss = roll_dice(3, 15) + (random2(pow) / 3);
 
     if (hploss)
-        simple_monster_message(monster, " convulses!");
+        simple_monster_message(mons, " convulses!");
 
-    monster->hurt(attacker, hploss, BEAM_MISSILE, false);
+    mons->hurt(attacker, hploss, BEAM_MISSILE, false);
 
     if (hploss)
     {
         retval = 1;
 
-        if (monster->alive())
+        if (mons->alive())
         {
             // Holy word won't annoy, slow, or frighten its user.
-            if (attacker != monster)
+            if (attacker != mons)
             {
                 // Currently, holy word annoys the monsters it affects
                 // because it can kill them, and because hostile
                 // monsters don't use it.
                 if (attacker != NULL)
-                    behaviour_event(monster, ME_ANNOY, attacker->mindex());
+                    behaviour_event(mons, ME_ANNOY, attacker->mindex());
 
-                if (monster->speed_increment >= 25)
-                    monster->speed_increment -= 20;
+                if (mons->speed_increment >= 25)
+                    mons->speed_increment -= 20;
 
-                monster->add_ench(ENCH_FEAR);
+                mons->add_ench(ENCH_FEAR);
             }
         }
         else
-            monster->hurt(attacker, INSTANT_DEATH);
+            mons->hurt(attacker, INSTANT_DEATH);
     }
 
     return (retval);
@@ -314,28 +318,28 @@ int torment_monsters(coord_def where, int pow, int caster, actor *attacker)
         retval = torment_player(0, caster);
 
     // Is a monster in this cell?
-    monsters *monster = monster_at(where);
-    if (monster == NULL)
+    monster* mons = monster_at(where);
+    if (mons == NULL)
         return (retval);
 
-    if (!monster->alive() || monster->res_torment())
+    if (!mons->alive() || mons->res_torment())
         return (retval);
 
-    int hploss = std::max(0, monster->hit_points / 2 - 1);
+    int hploss = std::max(0, mons->hit_points / 2 - 1);
 
     if (hploss)
     {
-        simple_monster_message(monster, " convulses!");
+        simple_monster_message(mons, " convulses!");
 
         // Currently, torment doesn't annoy the monsters it affects
         // because it can't kill them, and because hostile monsters use
         // it.  It does alert them, though.
         // XXX: attacker isn't passed through "int torment()".
-        behaviour_event(monster, ME_ALERT,
+        behaviour_event(mons, ME_ALERT,
                         attacker ? attacker->mindex() : MHITNOT);
     }
 
-    monster->hurt(NULL, hploss, BEAM_TORMENT_DAMAGE);
+    mons->hurt(NULL, hploss, BEAM_TORMENT_DAMAGE);
 
     if (hploss)
         retval = 1;
@@ -706,10 +710,10 @@ bool forget_spell(void)
     return (true);
 }
 
-void direct_effect(monsters *source, spell_type spell,
+void direct_effect(monster* source, spell_type spell,
                    bolt &pbolt, actor *defender)
 {
-    monsters *def = defender->as_monster();
+    monster* def = defender->as_monster();
 
     if (def)
     {
@@ -788,6 +792,24 @@ void direct_effect(monsters *source, spell_type spell,
             mons_cast_mislead(source);
         else
             defender->confuse(source, source->hit_dice * 12);
+        break;
+
+    case SPELL_SUMMON_SPECTRAL_ORCS:
+        if (def)
+            simple_monster_message(def, " is surrounded by Orcish apparitions.");
+        else
+            mpr("Orcish apparitions take form around you.");
+        mons_cast_spectral_orcs(source);
+        break;
+
+    case SPELL_HOLY_FLAMES:
+        if (holy_flames(source, defender))
+        {
+            if (!def)
+                mpr("Blessed fire suddenly surrounds you!");
+            else
+                simple_monster_message(def, " is surrounded by blessed fire!");
+        }
         break;
 
     default:
@@ -875,7 +897,7 @@ void random_uselessness(int scroll_slot)
     }
 }
 
-bool recharge_wand(int item_slot)
+bool recharge_wand(int item_slot, bool known)
 {
     do
     {
@@ -889,7 +911,7 @@ bool recharge_wand(int item_slot)
 
         item_def &wand = you.inv[ item_slot ];
 
-        if (!item_is_rechargeable(wand, true, true))
+        if (!item_is_rechargeable(wand, known, true))
         {
             mpr("Choose an item to recharge, or Esc to abort.");
             if (Options.auto_list)
@@ -981,7 +1003,7 @@ bool recharge_wand(int item_slot)
 }
 
 // Berserking monsters cannot be ordered around.
-static bool _follows_orders(monsters* mon)
+static bool _follows_orders(monster* mon)
 {
     return (mon->friendly() && mon->type != MONS_GIANT_SPORE
         && !mon->berserk());
@@ -1082,7 +1104,7 @@ void yell(bool force)
         std::string previous;
         if (!(you.prev_targ == MHITNOT || you.prev_targ == MHITYOU))
         {
-            const monsters *target = &menv[you.prev_targ];
+            const monster* target = &menv[you.prev_targ];
             if (target->alive() && you.can_see(target))
             {
                 previous = "   p - Attack previous target.";
@@ -1178,7 +1200,7 @@ void yell(bool force)
             bool cancel = !targ.isValid;
             if (!cancel)
             {
-                const monsters* m = monster_at(targ.target);
+                const monster* m = monster_at(targ.target);
                 cancel = (m == NULL || !you.can_see(m));
                 if (!cancel)
                     mons_targd = m->mindex();
@@ -2356,25 +2378,7 @@ void handle_time()
     _rot_inventory_food(time_delta);
 
     // Exercise armour *xor* stealth skill: {dlb}
-    if (one_chance_in(6) && you.check_train_armour())
-    {
-        // Armour trained in check_train_armour
-    }
-    // Exercise stealth skill:
-    else if (you.burden_state == BS_UNENCUMBERED
-             && !you.berserk()
-             && !you.attribute[ATTR_SHADOWS])
-    {
-        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, false);
-        const int armour_mass = body_armour? item_mass(*body_armour) : 0;
-        if (!x_chance_in_y(armour_mass, 1000)
-            // Diminishing returns for stealth training by waiting.
-            && you.skills[SK_STEALTH] <= 2 + random2(3)
-            && one_chance_in(18))
-        {
-            exercise(SK_STEALTH, 1);
-        }
-    }
+    practise(EX_WAIT);
 
     if (you.level_type == LEVEL_LABYRINTH)
     {
@@ -2441,7 +2445,7 @@ void handle_time()
 
 // Move monsters around to fake them walking around while player was
 // off-level. Also let them go back to sleep eventually.
-static void _catchup_monster_moves(monsters *mon, int turns)
+static void _catchup_monster_moves(monster* mon, int turns)
 {
     // Summoned monsters might have disappeared.
     if (!mon->alive())
@@ -3029,19 +3033,19 @@ int spawn_corpse_mushrooms(item_def &corpse,
 
         fringe.pop();
 
-        monsters * monster = monster_at(current);
+        monster* mons = monster_at(current);
 
         bool player_occupant = you.pos() == current;
 
         // Is this square occupied by a non mushroom?
-        if (monster && monster->mons_species() != MONS_TOADSTOOL
+        if (mons && mons->mons_species() != MONS_TOADSTOOL
             || player_occupant && you.religion != GOD_FEDHAS
             || !is_harmless_cloud(cloud_type_at(current)))
         {
             continue;
         }
 
-        if (!monster)
+        if (!mons)
         {
             const int mushroom = create_monster(
                         mgen_data(MONS_TOADSTOOL,
@@ -3340,14 +3344,14 @@ void slime_wall_damage(actor* act, int delay)
 
         if (you.religion != GOD_JIYVA || you.penance[GOD_JIYVA])
         {
-            splash_with_acid(strength, true,
+            splash_with_acid(strength, false,
                              (walls > 1) ? "The walls burn you!"
                                          : "The wall burns you!");
         }
     }
     else
     {
-        monsters* mon = act->as_monster();
+        monster* mon = act->as_monster();
 
         // Slime native monsters are immune to slime walls.
         if (mons_is_slime(mon))
@@ -3360,7 +3364,6 @@ void slime_wall_damage(actor* act, int delay)
              mprf((walls > 1) ? "The walls burn %s!" : "The wall burns %s!",
                   mon->name(DESC_NOCAP_THE).c_str());
          }
-         corrode_monster(mon);
          mon->hurt(NULL, dam, BEAM_ACID);
     }
 }

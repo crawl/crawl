@@ -135,7 +135,7 @@ namespace arena
     int message_pos = 0;
     level_id place(BRANCH_MAIN_DUNGEON, 20);
 
-    void adjust_spells(monsters* mons, bool no_summons, bool no_animate)
+    void adjust_spells(monster* mons, bool no_summons, bool no_animate)
     {
         monster_spells &spells(mons->spells);
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
@@ -163,7 +163,7 @@ namespace arena
         if (!Options.arena_list_eq || file == NULL)
             return;
 
-        const monsters* mon = &menv[imon];
+        const monster* mon = &menv[imon];
 
         std::vector<int> items;
 
@@ -779,7 +779,7 @@ namespace arena
                 // from ending attempt to displace whatever is in
                 // our position.
                 int       midx  = mgrd(pos);
-                monsters* other = &menv[midx];
+                monster* other = &menv[midx];
 
                 if (to_respawn[midx] == -1)
                 {
@@ -1136,14 +1136,14 @@ bool arena_veto_place_monster(const mgen_data &mg, bool first_band_member,
 
 // XXX: Still having some trouble with book-keeping if a slime creature
 // is placed via splitting.
-void arena_placed_monster(monsters *monster)
+void arena_placed_monster(monster* mons)
 {
-    if (monster->attitude == ATT_FRIENDLY)
+    if (mons->attitude == ATT_FRIENDLY)
     {
         arena::faction_a.active_members++;
         arena::faction_b.won = false;
     }
-    else if (monster->attitude == ATT_HOSTILE)
+    else if (mons->attitude == ATT_HOSTILE)
     {
         arena::faction_b.active_members++;
         arena::faction_a.won = false;
@@ -1151,29 +1151,29 @@ void arena_placed_monster(monsters *monster)
     else
     {
         mprf(MSGCH_ERROR, "Placed neutral (%d) monster %s",
-             static_cast<int>(monster->attitude),
-             monster->name(DESC_PLAIN, true).c_str());
+             static_cast<int>(mons->attitude),
+             mons->name(DESC_PLAIN, true).c_str());
     }
 
     if (!arena::allow_summons || !arena::allow_animate)
     {
-        arena::adjust_spells(monster, !arena::allow_summons,
+        arena::adjust_spells(mons, !arena::allow_summons,
                              !arena::allow_animate);
     }
 
-    if (monster->type == MONS_TEST_SPAWNER)
+    if (mons->type == MONS_TEST_SPAWNER)
     {
-        if (monster->attitude == ATT_FRIENDLY)
-            arena::a_spawners.push_back(monster->mindex());
-        else if (monster->attitude == ATT_HOSTILE)
-            arena::b_spawners.push_back(monster->mindex());
+        if (mons->attitude == ATT_FRIENDLY)
+            arena::a_spawners.push_back(mons->mindex());
+        else if (mons->attitude == ATT_HOSTILE)
+            arena::b_spawners.push_back(mons->mindex());
     }
 
-    const bool summoned = monster->is_summoned();
+    const bool summoned = mons->is_summoned();
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf("%s %s!",
-         monster->full_name(DESC_CAP_A, true).c_str(),
+         mons->full_name(DESC_CAP_A, true).c_str(),
          arena::is_respawning                ? "respawns" :
          (summoned && ! arena::real_summons) ? "is summoned"
                                              : "enters the arena");
@@ -1181,7 +1181,7 @@ void arena_placed_monster(monsters *monster)
 
     for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
     {
-        short it = monster->inv[i];
+        short it = mons->inv[i];
         if (it != NON_ITEM)
         {
             item_def &item(mitm[it]);
@@ -1199,33 +1199,33 @@ void arena_placed_monster(monsters *monster)
         }
     }
 
-    if (arena::name_monsters && !monster->is_named())
-        monster->mname = make_name(random_int(), false);
+    if (arena::name_monsters && !mons->is_named())
+        mons->mname = make_name(random_int(), false);
 
     if (summoned)
     {
         // Real summons drop corpses and items.
         if (arena::real_summons)
         {
-            monster->del_ench(ENCH_ABJ, true, false);
+            mons->del_ench(ENCH_ABJ, true, false);
             for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
             {
-                short it = monster->inv[i];
+                short it = mons->inv[i];
                 if (it != NON_ITEM)
                     mitm[it].flags &= ~ISFLAG_SUMMONED;
             }
         }
 
         if (arena::move_summons)
-            monster_teleport(monster, true, true);
+            monster_teleport(mons, true, true);
 
         if (!arena::allow_chain_summons)
-            arena::adjust_spells(monster, true, false);
+            arena::adjust_spells(mons, true, false);
     }
 }
 
 // Take care of respawning slime creatures merging and then splitting.
-void arena_split_monster(monsters *split_from, monsters *split_to)
+void arena_split_monster(monster* split_from, monster* split_to)
 {
     if (!arena::respawn)
         return;
@@ -1239,12 +1239,12 @@ void arena_split_monster(monsters *split_from, monsters *split_to)
     arena::to_respawn[split_to->mindex()] = member_idx;
 }
 
-void arena_monster_died(monsters *monster, killer_type killer,
+void arena_monster_died(monster* mons, killer_type killer,
                         int killer_index, bool silent, int corpse)
 {
-    if (monster->attitude == ATT_FRIENDLY)
+    if (mons->attitude == ATT_FRIENDLY)
         arena::faction_a.active_members--;
-    else if (monster->attitude == ATT_HOSTILE)
+    else if (mons->attitude == ATT_HOSTILE)
         arena::faction_b.active_members--;
 
     if (arena::faction_a.active_members > 0
@@ -1261,55 +1261,55 @@ void arena_monster_died(monsters *monster, killer_type killer,
     else if (arena::faction_a.active_members <= 0
              && arena::faction_b.active_members <= 0)
     {
-        if (monster->flags & MF_HARD_RESET && !MON_KILL(killer))
+        if (mons->flags & MF_HARD_RESET && !MON_KILL(killer))
             game_ended_with_error("Last arena monster was dismissed.");
         // If all monsters are dead, and the last one to die is a giant
         // spore or ball lightning, then that monster's faction is the
         // winner, since self-destruction is their purpose.  But if a
         // trap causes the spore to explode, and that kills everything,
         // it's a tie, since it counts as the trap killing everyone.
-        else if (mons_self_destructs(monster) && MON_KILL(killer))
+        else if (mons_self_destructs(mons) && MON_KILL(killer))
         {
-            if (monster->attitude == ATT_FRIENDLY)
+            if (mons->attitude == ATT_FRIENDLY)
                 arena::faction_a.won = true;
-            else if (monster->attitude == ATT_HOSTILE)
+            else if (mons->attitude == ATT_HOSTILE)
                 arena::faction_b.won = true;
         }
     }
 
     // Only respawn those monsers which were initally placed in the
     // arena.
-    const int midx = monster->mindex();
+    const int midx = mons->mindex();
     if (arena::respawn && arena::to_respawn[midx] != -1
         // Don't respawn when a slime 'dies' from merging with another
         // slime.
-        && !(monster->type == MONS_SLIME_CREATURE && silent
+        && !(mons->type == MONS_SLIME_CREATURE && silent
              && killer == KILL_MISC
              && killer_index == NON_MONSTER))
     {
         arena::faction *fac = NULL;
-        if (monster->attitude == ATT_FRIENDLY)
+        if (mons->attitude == ATT_FRIENDLY)
             fac = &arena::faction_a;
-        else if (monster->attitude == ATT_HOSTILE)
+        else if (mons->attitude == ATT_HOSTILE)
             fac = &arena::faction_b;
 
         if (fac)
         {
             int member_idx = arena::to_respawn[midx];
             fac->respawn_list.push_back(member_idx);
-            fac->respawn_pos.push_back(monster->pos());
+            fac->respawn_pos.push_back(mons->pos());
 
             // Un-merge slime when it respawns, but only if it's
             // specifically a slime, and not a random monster which
             // happens to be a slime.
-            if (monster->type == MONS_SLIME_CREATURE
+            if (mons->type == MONS_SLIME_CREATURE
                 && (fac->members.get_monster(member_idx).mid
                     == MONS_SLIME_CREATURE))
             {
-                for (unsigned int i = 1; i < monster->number; i++)
+                for (unsigned int i = 1; i < mons->number; i++)
                 {
                     fac->respawn_list.push_back(member_idx);
-                    fac->respawn_pos.push_back(monster->pos());
+                    fac->respawn_pos.push_back(mons->pos());
                 }
             }
 
@@ -1321,12 +1321,12 @@ void arena_monster_died(monsters *monster, killer_type killer,
         arena::item_drop_times[corpse] = arena::turns;
 
     // Won't be dropping any items.
-    if (monster->flags & MF_HARD_RESET)
+    if (mons->flags & MF_HARD_RESET)
         return;
 
     for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
     {
-        int idx = monster->inv[i];
+        int idx = mons->inv[i];
         if (idx == NON_ITEM)
             continue;
 

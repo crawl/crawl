@@ -23,6 +23,7 @@
 #include "directn.h"
 #include "effects.h"
 #include "env.h"
+#include "exercise.h"
 #include "fight.h"
 #include "food.h"
 #include "invent.h"
@@ -222,7 +223,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     const coord_def delta = beam.target - you.pos();
     const int x_distance  = abs(delta.x);
     const int y_distance  = abs(delta.y);
-    monsters* mons = monster_at(beam.target);
+    monster* mons = monster_at(beam.target);
 
     const int x_middle = std::max(beam.target.x, you.pos().x)
                             - (x_distance / 2);
@@ -286,7 +287,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         if (success)
         {
             // Monster might have died or gone away.
-            if (monsters* m = monster_at(beam.target))
+            if (monster* m = monster_at(beam.target))
                 if (mons_is_mimic(m->type))
                     mimic_alert(m);
         }
@@ -302,7 +303,11 @@ static bool _evoke_horn_of_geryon(item_def &item)
     // Note: This assumes that the Vestibule has not been changed.
     bool rc = false;
 
-    if (player_in_branch( BRANCH_VESTIBULE_OF_HELL ))
+    if (silenced(you.pos())) {
+        mpr("You can't produce a sound!");
+        return false;
+    }
+    else if (player_in_branch( BRANCH_VESTIBULE_OF_HELL ))
     {
         mpr("You produce a weird and mournful sound.");
 
@@ -361,18 +366,18 @@ static bool _efreet_flask(int slot)
 
     mpr("You open the flask...");
 
-    const int monster =
+    const int mons =
         create_monster(
             mgen_data(MONS_EFREET,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                       &you, 0, 0, you.pos(),
                       MHITYOU, MG_FORCE_BEH));
 
-    if (monster != -1)
+    if (mons != -1)
     {
         mpr("...and a huge efreet comes out.");
 
-        if (player_angers_monster(&menv[monster]))
+        if (player_angers_monster(&menv[mons]))
             friendly = false;
 
         if (silenced(you.pos()))
@@ -542,7 +547,7 @@ void tome_of_power(int slot)
     }
 
     mpr("You find yourself reciting the magical words!");
-    exercise( SK_EVOCATIONS, 1 );
+    practise(EX_WILL_READ_TOME);
 
     if (x_chance_in_y(7, 50))
     {
@@ -631,7 +636,7 @@ void skill_manual(int slot)
 
     mprf("You read about %s.", skill_name(skill));
 
-    exercise(skill, 500);
+    practise(EX_READ_MANUAL, skill);
 
     if (--manual.plus2 <= 0)
     {
@@ -975,7 +980,7 @@ bool evoke_item(int slot)
     if (!did_work)
         canned_msg(MSG_NOTHING_HAPPENS);
     else if (pract > 0)
-        exercise( SK_EVOCATIONS, pract );
+        practise(EX_DID_EVOKE_ITEM, pract);
 
     if (ident && !item_type_known(item))
     {

@@ -3,9 +3,9 @@
 
 #include "los_def.h"
 
-bool need_auto_exclude(const monsters *mon, bool sleepy = false);
-void set_auto_exclude(const monsters *mon);
-void remove_auto_exclude(const monsters *mon, bool sleepy = false);
+bool need_auto_exclude(const monster* mon, bool sleepy = false);
+void set_auto_exclude(const monster* mon);
+void remove_auto_exclude(const monster* mon, bool sleepy = false);
 
 void init_exclusion_los();
 void update_exclusion_los(std::vector<coord_def> changed);

@@ -1,0 +1,8 @@
+# Changes for 0.8 include monster glyph changes.
+
+###########################
+# monsters
+###########################
+
+# small zombies, etc.
+mon_glyph = wight : lightgrey W

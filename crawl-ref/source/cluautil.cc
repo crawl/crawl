@@ -31,7 +31,7 @@ int push_activity_interrupt(lua_State *ls, activity_interrupt_data *t)
         break;
     case AIP_MONSTER:
         // FIXME: We're casting away the const...
-        push_monster(ls, (monsters *) t->data);
+        push_monster(ls, (monster* ) t->data);
         break;
     default:
         lua_pushnil(ls);

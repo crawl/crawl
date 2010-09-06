@@ -21,7 +21,7 @@ struct crawl_environment
     uint8_t floor_colour;
 
     FixedVector< item_def, MAX_ITEMS >       item;  // item list
-    FixedVector< monsters, MAX_MONSTERS >    mons;  // monster list
+    FixedVector< monster, MAX_MONSTERS >    mons;  // monster list
 
     feature_grid                             grid;  // terrain grid
     FixedArray<terrain_property_t, GXM, GYM> pgrid; // terrain properties

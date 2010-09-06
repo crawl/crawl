@@ -72,6 +72,26 @@ function tar_setup(e)
    e.kmask('O = no_item_gen')
    e.kitem('O = bone rune of Zot')
 end
+
+-- the Serpent should appear in exactly one hell end
+-- XXX: are things like shafts going to break this?
+function hell_branches_remaining()
+   local hell_branches = { "Geh", "Coc", "Dis", "Tar" }
+   local ret = #hell_branches
+   for _, branch in pairs(hell_branches) do
+      if travel.find_deepest_explored(branch) == 7 then
+         ret = ret - 1
+      end
+   end
+   return ret
+end
+
+function serpent_of_hell_setup(e)
+   if not you.uniques("the Serpent of Hell") and
+      crawl.one_chance_in(hell_branches_remaining()) then
+      e.kmons('D = the Serpent of Hell')
+   end
+end
 }}
 
 
@@ -634,6 +654,7 @@ ENDMAP
 NAME:    dis_old
 ORIENT:  north
 MONS:    Dispater, Fiend, Ice Fiend, iron devil, metal gargoyle, iron dragon
+: serpent_of_hell_setup(_G)
 SHUFFLE: 23
 SUBST:   4 = 4446
 : dis_setup(_G)
@@ -653,7 +674,7 @@ xxxxxxxxv..v.v.....vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv.....v.v..vxxxxxxxx
 xxxxxxxxv..v|v.....+$$v$$+$$v||vvvvvvvvvvvvvvvvv$$$$v4.4.v$$v.....v|v..vxxxxxxxx
 xxxxxxxxv..vvvv+vvvv$$+$$v$$+||v...............v$$$$+.4.4+$$v+vv+vvvv..vxxxxxxxx
 xxxxxxxxv....vv.vvvvvvvvvvvvvvvv.v..v..v..v..v.v$$$$v4.4.v$$+||v.vv5...vxxxxxxxx
-xxxxxxxxv...vvv................v...............vvvvvvvvvvvvvvvvv.vvv...vxxxxxxxx
+xxxxxxxxv...vvv................v.......D.......vvvvvvvvvvvvvvvvv.vvv...vxxxxxxxx
 xxxxxxxxv...5vv................+...............+.................vv....vxxxxxxxx
 xxxxxxxxv...vvv+vvvvvvvvvvvvvvvv.v..v..v..v..v.vvvvvvvvvvvvvvvvv.vvv...vxxxxxxxx
 xxxxxxxxv....vv..v.+$$$$$v.....v...............vvvvvvvvvvvvvvvvv.vv5...vxxxxxxxx
@@ -688,6 +709,7 @@ MONS:    Dispater, fiend, ice fiend, iron devil, metal gargoyle, iron dragon
 MONS:    iron troll
 KMONS:   8 = iron golem
 KFEAT:   8 = .
+: serpent_of_hell_setup(_G)
 SHUFFLE: 23
 SUBST:   4 = 4:20 7
 SUBST:   8 = 8o
@@ -721,7 +743,7 @@ xxxxxxv..5vv.WW..vv5vv5vv5vv5vvv=vv.........+...vvvv|vv...v.v...vv...vv..vxxxxxx
 xxxxxxv..vvv.WW..+................+..v...v..v...vvvvOv1.........+..o.v...vxxxxxx
 xxxxxxv..vvv.WW..+................+..5.W.5..v...vvvv|v6.........+..o.v...vxxxxxx
 xxxxxxv..5vv.WW..vv5vv5vv5vv5vvv=vv..v.W.v..v...vvvv|vv...v.v...vv...vv..vxxxxxx
-xxxxxxv..vvv.8W..vvvvvvvvvvvvvv$$$v..5.W.5..v...vvvv|vvo3......vvv...v5..vxxxxxx
+xxxxxxv..vvv.8W..vvvvvvvvvvvvvv$$$v..5.W.5..v..Dvvvv|vvo3......vvv...v5..vxxxxxx
 xxxxxxv....vv....v.......v...vv$$$v..v...v..vv+vvvvv||vvo......vvvv+vvv..vxxxxxx
 xxxxxxv.....vv...+.......+...vv|$|v.........vv..vvvv$$vvv...v.vvvv..v....vxxxxxx
 xxxxxxv......vvv.v.......v...vvvvvv..vv+vv..vvv.vvvv$$$$vvv...vvvv.vv....vxxxxxx
@@ -745,7 +767,8 @@ ENDMAP
 NAME:   geh_old
 ORIENT: encompass
 MONS:   Asmodeus, Fiend, Balrug, molten gargoyle
-MONS:   Serpent of Hell, random, random
+MONS:   nothing, random, random
+: serpent_of_hell_setup(_G)
 : geh_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -771,7 +794,7 @@ xxxxx..4..llllll...cccccccc+c+c+c+c+c+c+c+c+c+c....lll......xxxxxxxxxx
 xxxxxx..lllllll..4.c.....c....................c....llll.....xxxxxxxxxx
 xxxxx...llllll.....c.V.V.+....0.....3.....0...c.....llll....x..xxxxxxx
 xxxx...llllll...l..c.....c....................c....lllll........xxxxxx
-xxxxx...lllll..ll..c..5..cccccccccccccccccccccc.4..llllll........xxxxx
+xxxxx...lllll..ll..c..D..cccccccccccccccccccccc.4..llllll........xxxxx
 xxxx...lllll..llll.c.....c...............c....c....lllllll.......xxxxx
 xxxx...lllll..llll.c.V.V.c.......0.......c....c....lllllll.......xxxxx
 xxxxx...lllll..lll.c.....+...............+....c...lllllll........xxxxx
@@ -822,9 +845,9 @@ MONS:   Balrug, sun demon, hellion, fire giant
 KMONS:  7 = molten gargoyle
 KMONS:  8 = imp
 # Place one Serpent in the inner circle.
-KFEAT:  H = lava
-KMONS:  H = Serpent of Hell
-NSUBST: X = 1:H / *:l
+: serpent_of_hell_setup(_G)
+KFEAT:  D = lava
+NSUBST: X = 1:D / *:l
 SUBST:  4 = 344567788
 SUBST:  % = $ |
 SUBST:  " : """.l , " : ""; , " = .l , ; = ...l
@@ -904,8 +927,9 @@ ENDMAP
 NAME:    coc_dpeg
 ORIENT:  encompass
 MONS:    Antaeus, Ice Fiend, ice dragon / nothing
+: serpent_of_hell_setup(_G)
 ITEM:    any, any misc, any misc, any misc
-SHUFFLE: O1d / e0% / f9* / g8|
+SHUFFLE: O1dD / e0%H / f9*H / g8|H
 KMONS:   d = ice devil w:5 / Ice Fiend / nothing w:5
 KITEM:   d = any
 SUBST:   ' = w .
@@ -926,9 +950,9 @@ xxxxw...ww..cccccc.....www.wwwwwwwwww'3..........cc....9.2..cc..wwxxxx
 xxxxw..ww..ccccccc+c....ww.'wwwwwwwwwww''........ccf********cc..wwxxxx
 xxxxw..ww..cc.%%%%.cc...ww..wwwwwwwwwwwwwwwww'....ccccccc+ccc...'wxxxx
 xxxxw..ww..cc2.e0.2cc...ww..wwwwwwwwwwwwwwwwwwww'......c...c.....wxxxx
-xxxxw..ww..cc.%%%%.cc..www.'wwwwwwwwwwwwwwwwwwwwwwwww'.cc+cc.....wxxxx
+xxxxw..ww..cc.%%%%.cc..www.'wwwwwwwwwwwwwwwwwwwwwwwww'.cc+cc..H..wxxxx
 xxxxw..www..c+cccccc...ww..wwwwwwwwwwwwwwwwwwwwwwwwwww..........wwxxxx
-xxxxww..ww....cccc....www.wwwwwwwwwwwwwwwwwwwwwwwwwwwww........wwwxxxx
+xxxxww..ww....ccccH...www.wwwwwwwwwwwwwwwwwwwwwwwwwwwww........wwwxxxx
 xxxxww..www..........www..wwwwwwwwwwwwwwwwwwwwwwwwwwww'..2....w..wxxxx
 xxxxwww..wwww......wwww..wwwwwwwwwwwwwwwwwwwwwwwwwww'............wxxxx
 xxxxwwww..wwwwwwwwwwww..wwwwwwwwwwwwwwwwwwwwwwwwww..............wwxxxx
@@ -958,9 +982,9 @@ xxxxwww'.....wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww..c.$dddd$.c...wwwwwwxxxx
 xxxxwww..cc..'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww'...$$$$$$cc....wwwwwxxxx
 xxxxwww.cccc..'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww'.ccccccc....wwwwwwxxxx
 xxxxwww.cg.cc..'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww........ww..wwwwwwwxxxx
-xxxxww'.c||.cc...'wwwwwwwwwwwwwwwwwwwwwwwwwwww.....wwwwwwwwwwwwwwwxxxx
+xxxxww'.c||.cc...'wwwwwwwwwwwwwwwwwwwwwwwwwwww.D...wwwwwwwwwwwwwwwxxxx
 xxxxww'.c||.8cc......'wwwwwwwwwwwwwwwwwwwwwww'...w..wwwwwwwwwwwwwwxxxx
-xxxxww..c||2.2cc........'wwwwwwwwwwwwwwwwww....wwww..wwwwwwwwwwwwwxxxx
+xxxxww..c||2.2cc..H.....'wwwwwwwwwwwwwwwwww....wwww..wwwwwwwwwwwwwxxxx
 xxxxww..c||....cc..............3'wwwwwwwww...wwwwwww.....wwccccwwwxxxx
 xxxxww..cccc+ccccc..........wwwwwwwwwww'3...wwwwwwwwwww.2.cc2dccwwxxxx
 xxxxwww..ccc...........'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.+dd1Ocwwxxxx
@@ -983,6 +1007,9 @@ ORIENT:  encompass
 SHUFFLE: $|, 2X
 SUBST:   X=., 3=3.
 MONS:    Antaeus, Ice Fiend, ice dragon, Ice Fiend
+: serpent_of_hell_setup(_G)
+KFEAT:   D = deep_water
+NSUBST:  H = 1:D / *:w
 : coc_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1031,7 +1058,7 @@ xxxxxxxxx....cc...ww....cccccccccc2Xcccccccccc....ww...cc....xxxxxxxxx
 xxxxxxxxxx....cc...ww............................ww...cc....xxxxxxxxxx
 xxxxxxxxxxx....cc...ww..........................ww...cc....xxxxxxxxxxx
 xxxxxxxxxxxx....cc...wwwwwwwwwwwww..wwwwwwwwwwwww...cc....xxxxxxxxxxxx
-xxxxxxxxxxxxx....cc...wwwwwwwwwwww..wwwwwwwwwwww...cc....xxxxxxxxxxxxx
+xxxxxxxxxxxxx....cc...wwwwwwwwwHww..wwHwwwwwwwww...cc....xxxxxxxxxxxxx
 xxxxxxxxxxxxxx....cc...wwwwwwwwwww..wwwwwwwwwww...cc....xxxxxxxxxxxxxx
 xxxxxxxxxxxxxxx....cc............................cc....xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxx....cc..........................cc....xxxxxxxxxxxxxxxx
@@ -1061,6 +1088,7 @@ KMONS:   9 = frost giant
 SUBST:   3 = 3333344445555666779
 KMONS:   E = water elemental
 KFEAT:   E = w
+: serpent_of_hell_setup(_G)
 SUBST:   ^ : ^^^W. , ^ = W.
 SUBST:   X : XXXc. , X = c.
 SUBST:   " = 8:1 .:10
@@ -1074,7 +1102,7 @@ MAP
 ######################################################################
 #ccccc............wwwwwwwwwwwwwwwwxxxxxxxxxwwwwwww......3......cccccc#
 #cccc..............wwwwwwwwwwwwwwwwxxxxxxxwwwwwwww.3.3......c...ccccc#
-#ccc...wwwwwwwwww..wwwwwwwwwwwEwwwwwwxxxwwwwwwww....3....cccc....'.cc#
+#ccc...wwwwwwwwww..wwwwwwwwwwwEwwwwwwxxxwwwwwwww....3..D.cccc....'.cc#
 #ccc..wwwwww8www.2.wwwwwwwwwEw.wEwwwwwwwwwwwwww...3..3...cccccc..c..c#
 #ccc..ww|$|www.......wwwwwwww...wwwwwwwwwwwwwwwww......ccccccc...cc.c#
 #ccc..ww$O$....1..............8..Ewwwwwwwwwwwwwwww...ccccc"c"c.cccc.'#
@@ -1142,6 +1170,7 @@ NAME:   tar_old
 ORIENT: encompass
 MONS:   Ereshkigal, necrophage, wraith, shadow, small zombie
 MONS:   small skeleton, Shadow Fiend
+: serpent_of_hell_setup(_G)
 : tar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1153,7 +1182,7 @@ xxxx.............ccccc..cccc.....ccc.cccc.........................xxxx
 xxxx...........ccc.........ccccccc.....cc.........................xxxx
 xxxx.........ccc.......2............V..cc.........................xxxx
 xxxx........cc4........................cc...........xxxxxxxx......xxxx
-xxxx........cc44xxx==xxx...............cc..........xx......xx.....xxxx
+xxxx........cc44xxx==xxx......D........cc..........xx......xx.....xxxx
 xxxx........ccxxx......xxx.......ccc++ccc.........xx........xx....xxxx
 xxxx........cxx..........xxx.....ccc44ccc.........x..........x....xxxx
 xxxx........cx............xx....cccc44cc.........xx..........xx...xxxx
@@ -1216,6 +1245,7 @@ ORIENT:  encompass
 MONS:    Ereshkigal, shadow fiend, reaper, soul eater, shadow demon
 MONS:    shadow dragon, shadow wraith
 KMONS:   8 = shadow imp
+: serpent_of_hell_setup(_G)
  ## Randomising the secret doors to get into the pyramid.
  ## There may be secret doors that lead nowhere.
 SHUFFLE: FfGgHh
@@ -1255,7 +1285,7 @@ xxxx..cc..c..c.c...x$$x...c.c..c..cc........ccc....xxxxx....ccc...xxxx
 xxxx..cc..c..c.c...x||x...c.c..h..cc........ccc..xxxxxxxxx..ccc...xxxx
 xxxx..cc..c..h.c.xxx..xxx.c.c..c..cc........cc..xxxxxxxxxxx..cc...xxxx
 xxxx..cc..c..c.c.nO..2.1n.c.c..c..cc........cc=cxxxxxxxxxxxc=cc...xxxx
-xxxx..cc..c..c.c.xxx..xxx.c.c..c..cc........cc.c...........c.cc...xxxx
+xxxx..cc..c..c.c.xxx..xxx.c.c..cD.cc........cc.c...........c.cc...xxxx
 xxxx..cc..c..c.c...x||x...c.c..c..cc........cc.c.xxxxxxxxx.c.cc...xxxx
 xxxx..cc..c..c.c...x$$x...c.c..c..cc........cc.c=xxxxxxxxc=c.cc...xxxx
 xxxx..cc..c..G.c...xnnx...c.c..g..cc........cc.c.xx.444.xc.c.cc...xxxx

@@ -892,7 +892,7 @@ static bool _jiyva_retribution()
     {
         int tries = 0;
         bool found_one = false;
-        monsters *mon;
+        monster* mon;
 
         while (tries < 10)
         {

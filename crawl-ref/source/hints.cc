@@ -689,7 +689,7 @@ void hints_death_screen()
 
         if (hint == 5)
         {
-            std::vector<monsters*> visible =
+            std::vector<monster* > visible =
                 get_nearby_monsters(false, true, true, false);
 
             if (visible.size() < 2)
@@ -1099,7 +1099,7 @@ static std::string _colourize_glyph(int col, unsigned ch)
 }
 #endif
 
-static bool _mons_is_highlighted(const monsters *mons)
+static bool _mons_is_highlighted(const monster* mons)
 {
     return (mons->friendly()
                 && Options.friend_brand != CHATTR_NORMAL
@@ -1157,7 +1157,7 @@ static bool _advise_use_wand()
     return (false);
 }
 
-void hints_monster_seen(const monsters &mon)
+void hints_monster_seen(const monster& mon)
 {
     if (mons_class_flag(mon.type, M_NO_EXP_GAIN))
     {
@@ -3064,7 +3064,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_MONSTER_BRAND:
 #ifdef USE_TILE
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
-        if (const monsters *m = monster_at(gc))
+        if (const monster* m = monster_at(gc))
             tiles.add_text_tag(TAG_TUTORIAL, m->name(DESC_CAP_A), gc);
 #endif
         text << "That monster looks a bit unusual. You might wish to examine "
@@ -3079,7 +3079,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_MONSTER_FRIENDLY:
     {
-        const monsters *m = monster_at(gc);
+        const monster* m = monster_at(gc);
 
         if (!m)
             DELAY_EVENT;
@@ -3106,7 +3106,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_MONSTER_SHOUT:
     {
-        const monsters* m = monster_at(gc);
+        const monster* m = monster_at(gc);
 
         if (!m)
             DELAY_EVENT;
@@ -3156,7 +3156,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_MONSTER_LEFT_LOS:
     {
-        const monsters* m = monster_at(gc);
+        const monster* m = monster_at(gc);
 
         if (!m || !you.can_see(m))
             DELAY_EVENT;
@@ -3175,7 +3175,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_SEEN_TOADSTOOL:
     {
-        const monsters* m = monster_at(gc);
+        const monster* m = monster_at(gc);
 
         if (!m || !you.can_see(m))
             DELAY_EVENT;
@@ -3189,7 +3189,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_SEEN_ZERO_EXP_MON:
     {
-        const monsters* m = monster_at(gc);
+        const monster* m = monster_at(gc);
 
         if (!m || !you.can_see(m))
             DELAY_EVENT;
@@ -4712,7 +4712,7 @@ static void _hints_describe_disturbance(int x, int y)
 static bool _water_is_disturbed(int x, int y)
 {
     const coord_def c(x,y);
-    const monsters *mon = monster_at(c);
+    const monster* mon = monster_at(c);
 
     if (!mon || grd(c) != DNGN_SHALLOW_WATER || !you.see_cell(c))
         return (false);
@@ -4720,7 +4720,7 @@ static bool _water_is_disturbed(int x, int y)
     return (!mon->visible_to(&you) && !mons_flies(mon));
 }
 
-bool hints_monster_interesting(const monsters *mons)
+bool hints_monster_interesting(const monster* mons)
 {
     if (mons_is_unique(mons->type) || mons->type == MONS_PLAYER_GHOST)
         return (true);

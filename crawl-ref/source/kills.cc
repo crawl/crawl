@@ -96,7 +96,7 @@ void KillMaster::load(reader& inf)
     }
 }
 
-void KillMaster::record_kill(const monsters *mon, int killer, bool ispet)
+void KillMaster::record_kill(const monster* mon, int killer, bool ispet)
 {
     const kill_category kc =
         YOU_KILL(killer)? KC_YOU :
@@ -242,12 +242,12 @@ void KillMaster::add_kill_info(std::string &killtext,
     }
 }
 
-int KillMaster::num_kills(const monsters *mon, kill_category cat) const
+int KillMaster::num_kills(const monster* mon, kill_category cat) const
 {
     return categorized_kills[cat].num_kills(mon);
 }
 
-int KillMaster::num_kills(const monsters *mon) const
+int KillMaster::num_kills(const monster* mon) const
 {
     int total = 0;
     for (int cat = 0; cat < KC_NCATEGORIES; cat++)
@@ -279,7 +279,7 @@ void Kills::merge(const Kills &k)
     }
 }
 
-void Kills::record_kill(const monsters *mon)
+void Kills::record_kill(const monster* mon)
 {
     // Handle player ghosts separately, but don't handle summoned
     // ghosts at all. {due}
@@ -366,7 +366,7 @@ void Kills::load(reader& inf)
     }
 }
 
-void Kills::record_ghost_kill(const monsters *mon)
+void Kills::record_ghost_kill(const monster* mon)
 {
     // We should never get to this point, but just in case... {due}
     if (mon->is_summoned())
@@ -375,7 +375,7 @@ void Kills::record_ghost_kill(const monsters *mon)
     ghosts.push_back(ghostk);
 }
 
-int Kills::num_kills(const monsters *mon) const
+int Kills::num_kills(const monster* mon) const
 {
     kill_monster_desc desc(mon);
     kill_map::const_iterator iter = kills.find(desc);
@@ -391,7 +391,7 @@ int Kills::num_kills(const monsters *mon) const
     return total;
 }
 
-kill_def::kill_def(const monsters *mon) : kills(0), exp(0)
+kill_def::kill_def(const monster* mon) : kills(0), exp(0)
 {
     exp = exper_value(mon);
     add_kill(mon, get_packed_place());
@@ -485,7 +485,7 @@ void kill_def::merge(const kill_def &k, bool uniq)
     }
 }
 
-void kill_def::add_kill(const monsters *mon, unsigned short place)
+void kill_def::add_kill(const monster* mon, unsigned short place)
 {
     kills++;
     // They're only unique if they aren't summoned.
@@ -624,7 +624,7 @@ void kill_def::load(reader& inf)
         places.push_back((unsigned short) unmarshallShort(inf));
 }
 
-kill_ghost::kill_ghost(const monsters *mon)
+kill_ghost::kill_ghost(const monster* mon)
 {
     exp = exper_value(mon);
     place = get_packed_place();
@@ -660,7 +660,7 @@ void kill_ghost::load(reader& inf)
     place = (unsigned short) unmarshallShort(inf);
 }
 
-kill_monster_desc::kill_monster_desc(const monsters *mon)
+kill_monster_desc::kill_monster_desc(const monster* mon)
 {
     monnum = mon->type;
     modifier = M_NORMAL;

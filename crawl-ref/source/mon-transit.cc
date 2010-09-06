@@ -108,7 +108,7 @@ m_transit_list *get_transit_list(const level_id &lid)
     return (i != the_lost_ones.end()? &i->second : NULL);
 }
 
-void add_monster_to_transit(const level_id &lid, const monsters &m)
+void add_monster_to_transit(const level_id &lid, const monster& m)
 {
     m_transit_list &mlist = the_lost_ones[lid];
     mlist.push_back(m);
@@ -231,7 +231,7 @@ void place_transiting_items()
 //////////////////////////////////////////////////////////////////////////
 // follower
 
-follower::follower(const monsters &m) : mons(m), items()
+follower::follower(const monster& m) : mons(m), items()
 {
     load_mons_items();
 }
@@ -250,7 +250,7 @@ bool follower::place(bool near_player)
     for (int i = 0; i < MAX_MONSTERS - 5; ++i)
     {
         // Find first empty slot in menv and copy monster into it.
-        monsters &m = menv[i];
+        monster& m = menv[i];
         if (m.alive())
             continue;
         m = mons;
@@ -298,7 +298,7 @@ bool follower::place(bool near_player)
     return (false);
 }
 
-void follower::restore_mons_items(monsters &m)
+void follower::restore_mons_items(monster& m)
 {
     for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
     {

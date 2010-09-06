@@ -61,6 +61,7 @@ enum band_type
     BAND_MERFOLK_IMPALER,
     BAND_MERFOLK_JAVELINEER,
     BAND_ALLIGATOR,
+    BAND_ELEPHANT,
     NUM_BANDS                   // always last
 };
 

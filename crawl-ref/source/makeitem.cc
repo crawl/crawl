@@ -1497,33 +1497,33 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
         case WPN_DEMON_WHIP:
         case WPN_DEMON_BLADE:
         case WPN_DEMON_TRIDENT:
-            if (one_chance_in(5))	// 4.9%, 7.3% blades
+            if (one_chance_in(5))       // 4.9%, 7.3% blades
                 rc = SPWPN_VAMPIRICISM;
 
-            if (one_chance_in(10))	// 2.7%, 4.0% blades
+            if (one_chance_in(10))      // 2.7%, 4.0% blades
                 rc = SPWPN_PAIN;
 
-            if (one_chance_in(3)	// 13.6%, 0% blades
+            if (one_chance_in(3)        // 13.6%, 0% blades
                 && (item.sub_type == WPN_DEMON_WHIP
                     || item.sub_type == WPN_DEMON_TRIDENT))
             {
                 rc = SPWPN_REACHING;
             }
 
-            if (one_chance_in(5))	// 10.2%
+            if (one_chance_in(5))       // 10.2%
                 rc = SPWPN_DRAINING;
 
-            if (one_chance_in(5))	// 12.8%
+            if (one_chance_in(5))       // 12.8%
                 rc = coinflip() ? SPWPN_FLAMING : SPWPN_FREEZING;
 
-            if (one_chance_in(5))	// 16%
+            if (one_chance_in(5))       // 16%
                 rc = SPWPN_ELECTROCUTION;
 
-            if (one_chance_in(5))	// 20%
+            if (one_chance_in(5))       // 20%
                 rc = SPWPN_VENOM;
             break;
 
-        case WPN_BLESSED_FALCHION:     // special gifts of TSO
+        case WPN_BLESSED_FALCHION:      // special gifts of TSO
         case WPN_BLESSED_LONG_SWORD:
         case WPN_BLESSED_SCIMITAR:
         case WPN_BLESSED_KATANA:
@@ -3319,13 +3319,13 @@ static bool _item_corpse_def(monster_type mons, item_def &item,
 // Creates a corpse item and returns its item index, or NON_ITEM if it
 // fails. The corpse is not linked into the item grid; nor is the
 // item's position set to anything meaningful.
-int item_corpse(monster_type monster, const item_spec &ispec)
+int item_corpse(monster_type mons, const item_spec &ispec)
 {
-    if (monster != MONS_NO_MONSTER)
-        monster = mons_species(monster);
+    if (mons != MONS_NO_MONSTER)
+        mons = mons_species(mons);
 
-    if (monster == MONS_NO_MONSTER
-        || !mons_class_can_leave_corpse(monster))
+    if (mons == MONS_NO_MONSTER
+        || !mons_class_can_leave_corpse(mons))
     {
         return (NON_ITEM);
     }
@@ -3335,7 +3335,7 @@ int item_corpse(monster_type monster, const item_spec &ispec)
         return (NON_ITEM);
 
     item_def &item(mitm[p]);
-    if (!_item_corpse_def(monster, item, ispec))
+    if (!_item_corpse_def(mons, item, ispec))
     {
         item.clear();
         return (NON_ITEM);
@@ -3362,6 +3362,7 @@ void reroll_brand(item_def &item, int item_level)
     default:
         ASSERT(!"can't reroll brands of this type");
     }
+    item_set_appearance(item);
 }
 
 static int _roll_rod_enchant(int item_level)

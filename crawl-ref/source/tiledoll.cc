@@ -78,7 +78,7 @@ bool save_doll_data(int mode, int num, const dolls_data* dolls)
         for (unsigned int i = 0; i < NUM_MAX_DOLLS; ++i)
         {
             tilep_print_parts(fbuf, dolls[i]);
-            fprintf(fp, "%s\n", fbuf);
+            fprintf(fp, "%s", fbuf);
         }
         fclose(fp);
 
@@ -398,20 +398,18 @@ void fill_doll_equipment(dolls_data &result)
 }
 
 // Writes equipment information into per-character doll file.
-void save_doll_file(FILE *dollf)
+void save_doll_file(writer &dollf)
 {
-    ASSERT(dollf);
-
     dolls_data result = player_doll;
     fill_doll_equipment(result);
 
     // Write into file.
     char fbuf[80];
     tilep_print_parts(fbuf, result);
-    fprintf(dollf, "%s\n", fbuf);
+    dollf.write(fbuf, strlen(fbuf));
 
     if (you.attribute[ATTR_HELD] > 0)
-        fprintf(dollf, "net\n");
+        dollf.write("net\n", 4);
 }
 
 void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll, int x, int y, bool submerged, bool ghost)

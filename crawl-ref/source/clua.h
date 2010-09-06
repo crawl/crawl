@@ -107,7 +107,7 @@ public:
         return state();
     }
 
-    void save(const char *filename);
+    void save(writer &outf);
     void gc();
 
     void setglobal(const char *name);
