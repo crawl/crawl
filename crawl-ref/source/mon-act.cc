@@ -49,7 +49,6 @@
 #include "random.h"
 #include "religion.h"
 #include "shopping.h" // for item values
-#include "spells1.h"
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"

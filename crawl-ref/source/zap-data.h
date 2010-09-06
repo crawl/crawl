@@ -425,7 +425,7 @@
 {
     ZAP_BONE_SHARDS,
     "spray of bone shards",
-    // Incoming power is highly dependent on mass (see spells3.cc).
+    // Incoming power is highly dependent on mass (see spl-damage.cc).
     // Basic function is power * 15 + mass...  with the largest
     // available mass (3000) we get a power of 4500 at a power
     // level of 100 (for 3d29).

@@ -10,7 +10,7 @@
 #include "l_libs.h"
 
 #include "env.h"
-#include "spells2.h"
+#include "spl-damage.h"
 
 LUAWRAP(_refrigeration, cast_refrigeration(luaL_checkint(ls, 1), true))
 LUAWRAP(_toxic_radiance, cast_toxic_radiance(true))

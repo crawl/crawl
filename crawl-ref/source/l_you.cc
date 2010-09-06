@@ -23,7 +23,7 @@
 #include "species.h"
 #include "stairs.h"
 #include "skills2.h"
-#include "spells3.h"
+#include "spl-transloc.h"
 #include "spl-util.h"
 #include "stuff.h"
 #include "transform.h"

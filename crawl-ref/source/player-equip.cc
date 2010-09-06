@@ -23,7 +23,7 @@
 #include "shopping.h"
 #include "skills2.h"
 #include "spl-cast.h"
-#include "spl-mis.h"
+#include "spl-miscast.h"
 #include "state.h"
 #include "stuff.h"
 #include "transform.h"
