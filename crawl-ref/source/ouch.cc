@@ -718,11 +718,9 @@ bool expose_items_to_element(beam_type flavour, const coord_def& where,
 // XXX: This function is far from perfect and a work in progress.
 bool expose_player_to_element(beam_type flavour, int strength)
 {
-    // Note that BEAM_TELEPORT is sent here when the player
-    // blinks or teleports.
     if (flavour == BEAM_FIRE || flavour == BEAM_LAVA
         || flavour == BEAM_HELLFIRE || flavour == BEAM_FRAG
-        || flavour == BEAM_TELEPORT || flavour == BEAM_NAPALM
+        || flavour == BEAM_NAPALM
         || flavour == BEAM_STEAM)
     {
         if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
