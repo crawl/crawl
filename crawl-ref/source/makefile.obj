@@ -192,6 +192,7 @@ stairs.o \
 startup.o \
 stash.o \
 state.o \
+status.o \
 store.o \
 stuff.o \
 syscalls.o \

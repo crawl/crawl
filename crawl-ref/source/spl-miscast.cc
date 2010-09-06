@@ -1913,7 +1913,7 @@ void MiscastEffect::_transmutation(int severity)
             if (_ouch(3 + random2avg(18, 2)) && target->alive())
             {
                 if (target->atype() == ACT_PLAYER)
-                    contaminate_player(random2avg(35, 3), false, false, false);
+                    contaminate_player(random2avg(35, 3), false, false);
             }
             break;
 
