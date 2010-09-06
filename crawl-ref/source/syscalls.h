@@ -16,6 +16,6 @@
 # define rename(foo,bar) !MoveFileEx(foo, bar, MOVEFILE_REPLACE_EXISTING)
 #endif
 
-bool lock_file(int fd);
+bool lock_file(int fd, bool write);
 
 #endif

@@ -101,6 +101,9 @@ package::package(const char* file, bool writeable, bool empty)
         if (fd == -1)
             sysfail("can't create save file (%s)", file);
 
+        if (!lock_file(fd, true))
+            sysfail("failed to lock newly created save (%s)", file);
+
         dirty = true;
         file_len = sizeof(file_header);
     }
@@ -110,7 +113,7 @@ package::package(const char* file, bool writeable, bool empty)
         if (fd == -1)
             sysfail("can't open save file (%s)", file);
 
-        if (!lock_file(fd))
+        if (!lock_file(fd, writeable))
             fail("Another game is already in progress using this save!");
 
         file_header head;
