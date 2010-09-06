@@ -77,6 +77,26 @@
 static void end_game( scorefile_entry &se );
 static void _item_corrode(int slot);
 
+static void _maybe_melt_player_enchantments(beam_type flavour)
+{
+    if (flavour == BEAM_FIRE || flavour == BEAM_LAVA
+        || flavour == BEAM_HELLFIRE || flavour == BEAM_NAPALM
+        || flavour == BEAM_STEAM)
+    {
+        if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
+            remove_condensation_shield();
+
+        if (you.mutation[MUT_ICEMAIL])
+        {
+            mpr("Your icy envelope dissipates!", MSGCH_DURATION);
+            you.duration[DUR_ICEMAIL_DEPLETED] = ICEMAIL_TIME;
+            you.redraw_armour_class = true;
+        }
+
+        if (you.duration[DUR_ICY_ARMOUR] > 0)
+            remove_ice_armour();
+    }
+}
 
 // NOTE: DOES NOT check for hellfire!!!
 int check_your_resists(int hurted, beam_type flavour, std::string source,
@@ -94,14 +114,7 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
         kaux = beam->name;
     }
 
-    if (flavour == BEAM_FIRE || flavour == BEAM_LAVA
-        || flavour == BEAM_HELLFIRE || flavour == BEAM_FRAG)
-    {
-        if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
-            remove_condensation_shield();
-        if (you.duration[DUR_ICY_ARMOUR] > 0)
-            remove_ice_armour();
-    }
+    _maybe_melt_player_enchantments(flavour);
 
     switch (flavour)
     {
@@ -718,24 +731,7 @@ bool expose_items_to_element(beam_type flavour, const coord_def& where,
 // XXX: This function is far from perfect and a work in progress.
 bool expose_player_to_element(beam_type flavour, int strength)
 {
-    if (flavour == BEAM_FIRE || flavour == BEAM_LAVA
-        || flavour == BEAM_HELLFIRE || flavour == BEAM_FRAG
-        || flavour == BEAM_NAPALM
-        || flavour == BEAM_STEAM)
-    {
-        if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
-            remove_condensation_shield();
-
-        if (you.mutation[MUT_ICEMAIL])
-        {
-            mpr("Your icy envelope dissipates!", MSGCH_DURATION);
-            you.duration[DUR_ICEMAIL_DEPLETED] = ICEMAIL_TIME;
-            you.redraw_armour_class = true;
-        }
-
-        if (you.duration[DUR_ICY_ARMOUR] > 0)
-            remove_ice_armour();
-    }
+    _maybe_melt_player_enchantments(flavour);
 
     if (strength <= 0)
         return (false);
