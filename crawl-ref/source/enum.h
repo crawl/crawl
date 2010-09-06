@@ -2389,17 +2389,17 @@ enum mon_spellbook_type
     MST_HELL_HOG,
     MST_SWAMP_DRAGON,
     MST_SWAMP_DRAKE,
-    MST_BOGGART,
+    MST_BOGGART,                       // 125
     MST_EYE_OF_DEVASTATION,
     MST_QUICKSILVER_DRAGON,
     MST_IRON_DRAGON,
     MST_SKELETAL_WARRIOR,
-    MST_NORRIS,
+    MST_NORRIS,                        // 130
     MST_DEATH_DRAKE,
     MST_DRAC_SCORCHER, // As Bioster would say.. pig*s
     MST_DRAC_CALLER,
     MST_DRAC_SHIFTER,
-    MST_CURSE_TOE,
+    MST_CURSE_TOE,                     // 135
     MST_ICE_STATUE,
     // unique monsters' "spellbooks"
     MST_RUPERT = 140,
@@ -2412,7 +2412,7 @@ enum mon_spellbook_type
     MST_KIRKE,
     MST_MENKAURE,
     MST_DOWAN,
-    MST_GERYON,
+    MST_GERYON,                        // 150
     MST_DISPATER,
     MST_ASMODEUS,
     MST_ERESHKIGAL,
@@ -2422,42 +2422,42 @@ enum mon_spellbook_type
     MST_CEREBOV,
     MST_GLOORX_VLOQ,
     MST_JESSICA,
-    MST_BERSERK_ESCAPE,               // 165
+    MST_BERSERK_ESCAPE,                // 165
     MST_GASTRONOK,
     MST_MAURICE,
     MST_KHUFU,
     MST_NIKOLA,
-    MST_DISSOLUTION,                  // 170
+    MST_DISSOLUTION,                   // 170
     MST_AIZUL,
     MST_EXECUTIONER,
     MST_HAROLD,
     MST_MARA,
-    MST_MARA_FAKE,
+    MST_MARA_FAKE,                     // 175
     MST_MERFOLK_AQUAMANCER,
     MST_ALLIGATOR,
     MST_BORIS,
     MST_FREDERICK,
-    MST_WIGLAF,
+    MST_WIGLAF,                        // 180
     MST_SPRIGGAN_DRUID,
     MST_THE_ENCHANTRESS,
     MST_HELLEPHANT,
     MST_GRINDER,
-    MST_IRON_GIANT,
+    MST_IRON_GIANT,                    // 185
     MST_IRON_ELEMENTAL,
     MST_MENNAS,
     MST_JUMPING_SPIDER,
     MST_SERPENT_OF_HELL_GEHENNA,
-    MST_SERPENT_OF_HELL_COCYTUS,
-    MST_SERPENT_OF_HELL_TARTARUS,     // 190
+    MST_SERPENT_OF_HELL_COCYTUS,       // 190
+    MST_SERPENT_OF_HELL_TARTARUS,
     MST_SERPENT_OF_HELL_DIS,
     MST_NERGALLE,
     MST_CHERUB,
-    MST_PHOENIX,
+    MST_PHOENIX,                       // 195
     MST_SILVER_STAR,
     MST_BLESSED_TOE,
     MST_SHEDU,
     MST_OPHAN,
-    MST_SPIRIT,
+    MST_SPIRIT,                        // 200
     MST_PALADIN,
     MST_HOLY_DRAGON,
 
