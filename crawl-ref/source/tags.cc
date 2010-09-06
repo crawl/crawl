@@ -1607,12 +1607,7 @@ static void tag_read_you(reader &th, int minorVersion)
     for (i = 0; i < NUM_STATS; ++i)
         you.stat_zero[i] = unmarshallByte(th);
     for (i = 0; i < NUM_STATS; ++i)
-    {
-        if (minorVersion < TAG_MINOR_STAT_CAUSE)
-            you.stat_zero_cause[i] = "";
-        else
-            you.stat_zero_cause[i] = unmarshallString(th);
-    }
+        you.stat_zero_cause[i] = unmarshallString(th);
 
     you.last_chosen = (stat_type) unmarshallByte(th);
 
