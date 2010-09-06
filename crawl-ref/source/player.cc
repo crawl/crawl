@@ -29,6 +29,7 @@
 #include "directn.h"
 #include "effects.h"
 #include "env.h"
+#include "errors.h"
 #include "exercise.h"
 #include "fight.h"
 #include "godabil.h"
@@ -5442,6 +5443,13 @@ player::~player()
 {
     delete kills;
     delete m_quiver;
+    if (CrawlIsCrashing && save)
+    {
+        save->abort();
+        delete save;
+        save = 0;
+    }
+    ASSERT(!save); // the save file should be closed or deleted
 }
 
 bool player::is_levitating() const

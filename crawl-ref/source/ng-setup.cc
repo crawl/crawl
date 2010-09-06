@@ -1641,6 +1641,10 @@ static void _setup_generic(const newgame_def& ng)
     // Generate the second name of Jiyva
     fix_up_jiyva_name();
 
+    // Create the save file.
+    you.save = new package((get_savedir_filename(you.your_name, "", "")
+                            + SAVE_SUFFIX).c_str(), true, true);
+
     // Pretend that a savefile was just loaded, in order to
     // get things setup properly.
     SavefileCallback::post_restore();
