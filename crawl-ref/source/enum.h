@@ -2461,7 +2461,7 @@ enum mon_spellbook_type
     MST_PALADIN,
     MST_HOLY_DRAGON,
 
-    MST_TEST_SPAWNER = 200,
+    MST_TEST_SPAWNER = 205,
     NUM_MSTYPES,
     MST_NO_SPELLS = 250
 };
