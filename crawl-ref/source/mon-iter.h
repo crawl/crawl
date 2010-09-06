@@ -30,8 +30,8 @@ public:
     explicit monster_iterator(const actor* act_);
 
     operator bool() const;
-    monsters* operator*() const;
-    monsters* operator->() const;
+    monster* operator*() const;
+    monster* operator->() const;
     monster_iterator& operator++();
     monster_iterator operator++(int);
 

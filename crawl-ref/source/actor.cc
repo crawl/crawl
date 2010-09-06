@@ -133,7 +133,7 @@ bool actor::can_hibernate(bool holi_only) const
 
         // The monster has slept recently.
         if (atype() == ACT_MONSTER
-            && static_cast<const monsters*>(this)->has_ench(ENCH_SLEEP_WARY))
+            && static_cast<const monster* >(this)->has_ench(ENCH_SLEEP_WARY))
         {
             return (false);
         }

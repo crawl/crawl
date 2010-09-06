@@ -140,7 +140,7 @@ int holy_word_monsters(coord_def where, int pow, int caster,
         retval = holy_word_player(pow, caster, attacker);
 
     // Is a monster in this cell?
-    monsters* mons = monster_at(where);
+    monster* mons = monster_at(where);
     if (mons == NULL)
         return (retval);
 
@@ -315,7 +315,7 @@ int torment_monsters(coord_def where, int pow, int caster, actor *attacker)
         retval = torment_player(0, caster);
 
     // Is a monster in this cell?
-    monsters* mons = monster_at(where);
+    monster* mons = monster_at(where);
     if (mons == NULL)
         return (retval);
 
@@ -707,10 +707,10 @@ bool forget_spell(void)
     return (true);
 }
 
-void direct_effect(monsters *source, spell_type spell,
+void direct_effect(monster* source, spell_type spell,
                    bolt &pbolt, actor *defender)
 {
-    monsters *def = defender->as_monster();
+    monster* def = defender->as_monster();
 
     if (def)
     {
@@ -990,7 +990,7 @@ bool recharge_wand(int item_slot)
 }
 
 // Berserking monsters cannot be ordered around.
-static bool _follows_orders(monsters* mon)
+static bool _follows_orders(monster* mon)
 {
     return (mon->friendly() && mon->type != MONS_GIANT_SPORE
         && !mon->berserk());
@@ -1091,7 +1091,7 @@ void yell(bool force)
         std::string previous;
         if (!(you.prev_targ == MHITNOT || you.prev_targ == MHITYOU))
         {
-            const monsters *target = &menv[you.prev_targ];
+            const monster* target = &menv[you.prev_targ];
             if (target->alive() && you.can_see(target))
             {
                 previous = "   p - Attack previous target.";
@@ -1187,7 +1187,7 @@ void yell(bool force)
             bool cancel = !targ.isValid;
             if (!cancel)
             {
-                const monsters* m = monster_at(targ.target);
+                const monster* m = monster_at(targ.target);
                 cancel = (m == NULL || !you.can_see(m));
                 if (!cancel)
                     mons_targd = m->mindex();
@@ -2432,7 +2432,7 @@ void handle_time()
 
 // Move monsters around to fake them walking around while player was
 // off-level. Also let them go back to sleep eventually.
-static void _catchup_monster_moves(monsters *mon, int turns)
+static void _catchup_monster_moves(monster* mon, int turns)
 {
     // Summoned monsters might have disappeared.
     if (!mon->alive())
@@ -3020,7 +3020,7 @@ int spawn_corpse_mushrooms(item_def &corpse,
 
         fringe.pop();
 
-        monsters* mons = monster_at(current);
+        monster* mons = monster_at(current);
 
         bool player_occupant = you.pos() == current;
 
@@ -3338,7 +3338,7 @@ void slime_wall_damage(actor* act, int delay)
     }
     else
     {
-        monsters* mon = act->as_monster();
+        monster* mon = act->as_monster();
 
         // Slime native monsters are immune to slime walls.
         if (mons_is_slime(mon))

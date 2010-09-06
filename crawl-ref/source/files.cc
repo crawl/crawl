@@ -1301,7 +1301,7 @@ static bool _grab_follower_at(const coord_def &pos)
     if (pos == you.pos())
         return (false);
 
-    monsters *fmenv = monster_at(pos);
+    monster* fmenv = monster_at(pos);
     if (!fmenv || !fmenv->alive())
         return (false);
 
@@ -1337,14 +1337,14 @@ static void _grab_followers()
     const bool can_follow = level_type_allows_followers(you.level_type);
 
     int non_stair_using_allies = 0;
-    monsters *dowan = NULL;
-    monsters *duvessa = NULL;
-    monsters *pikel = NULL;
+    monster* dowan = NULL;
+    monster* duvessa = NULL;
+    monster* pikel = NULL;
 
     // Handle nearby ghosts.
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
     {
-        monsters *fmenv = monster_at(*ai);
+        monster* fmenv = monster_at(*ai);
         if (fmenv == NULL)
             continue;
 
@@ -1428,7 +1428,7 @@ static void _grab_followers()
     // Clear flags of monsters that didn't follow.
     for (int i = 0; i < MAX_MONSTERS; ++i)
     {
-        monsters *mons = &menv[i];
+        monster* mons = &menv[i];
         if (!mons->alive())
             continue;
         mons->flags &= ~MF_TAKING_STAIRS;
@@ -1662,7 +1662,7 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
             you.moveto(ABYSS_CENTRE);
 
         // This should fix the "monster occurring under the player" bug.
-        if (monsters* mon = monster_at(you.pos()))
+        if (monster* mon = monster_at(you.pos()))
             monster_teleport(mon, true, true);
     }
 

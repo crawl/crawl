@@ -7,18 +7,18 @@
 #ifndef MONABIL_H
 #define MONABIL_H
 
-class monsters;
+class monster;
 struct bolt;
 
-bool mon_special_ability(monsters* mons, bolt & beem);
-void mon_nearby_ability(monsters* mons);
+bool mon_special_ability(monster* mons, bolt & beem);
+void mon_nearby_ability(monster* mons);
 
-bool ugly_thing_mutate(monsters *ugly, bool proximity = false);
+bool ugly_thing_mutate(monster* ugly, bool proximity = false);
 
-void ballisto_on_move(monsters* mons, const coord_def & pos);
-void activate_ballistomycetes(monsters* mons, const coord_def & origin,
+void ballisto_on_move(monster* mons, const coord_def & pos);
+void activate_ballistomycetes(monster* mons, const coord_def & origin,
                               bool player_kill);
 
-void move_kraken_tentacles(monsters * kraken);
+void move_kraken_tentacles(monster* kraken);
 
 #endif

@@ -10,7 +10,7 @@
 #include "player.h"
 #include <vector>
 
-class monsters;
+class monster;
 class mon_acting;
 
 struct god_act_state
@@ -107,8 +107,8 @@ protected:
     god_act_state              god_act;
     std::vector<god_act_state> god_act_stack;
 
-    monsters*              mon_act;
-    std::vector<monsters*> mon_act_stack;
+    monster*              mon_act;
+    std::vector<monster* > mon_act_stack;
 
 public:
     game_state();
@@ -148,11 +148,11 @@ public:
     std::vector<god_act_state> other_gods_acting() const;
 
     bool      is_mon_acting() const;
-    monsters* which_mon_acting() const;
-    void      inc_mon_acting(monsters* mon);
-    void      dec_mon_acting(monsters* mon);
+    monster* which_mon_acting() const;
+    void      inc_mon_acting(monster* mon);
+    void      dec_mon_acting(monster* mon);
     void      clear_mon_acting();
-    void      mon_gone(monsters* mon);
+    void      mon_gone(monster* mon);
 
     void dump();
     bool player_is_dead() const;
@@ -202,7 +202,7 @@ private:
 class mon_acting
 {
 public:
-    mon_acting(monsters* _mon) : mon(_mon)
+    mon_acting(monster* _mon) : mon(_mon)
     {
         crawl_state.inc_mon_acting(_mon);
     }
@@ -215,7 +215,7 @@ public:
     }
 
 private:
-    monsters *mon;
+    monster* mon;
 };
 
 

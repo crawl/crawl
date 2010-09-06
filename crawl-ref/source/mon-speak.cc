@@ -220,7 +220,7 @@ static std::string _try_exact_string(const std::vector<std::string> &prefixes,
 
 static std::string __get_speak_string(const std::vector<std::string> &prefixes,
                                       const std::string &key,
-                                      const monsters* mons,
+                                      const monster* mons,
                                       bool no_player, bool no_foe,
                                       bool no_foe_name, bool no_god,
                                       bool unseen)
@@ -289,7 +289,7 @@ static std::string __get_speak_string(const std::vector<std::string> &prefixes,
 
 static std::string _get_speak_string(const std::vector<std::string> &prefixes,
                                      std::string key,
-                                     const monsters* mons,
+                                     const monster* mons,
                                      bool no_player, bool no_foe,
                                      bool no_foe_name, bool no_god,
                                      bool unseen)
@@ -337,7 +337,7 @@ static std::string _get_speak_string(const std::vector<std::string> &prefixes,
 
 // Returns true if the monster did speak, false otherwise.
 // Maybe monsters will speak!
-void maybe_mons_speaks (monsters* mons)
+void maybe_mons_speaks (monster* mons)
 {
 #define MON_SPEAK_CHANCE 21
 
@@ -391,7 +391,7 @@ void maybe_mons_speaks (monsters* mons)
 
 
 // Returns true if something is said.
-bool mons_speaks(monsters* mons)
+bool mons_speaks(monster* mons)
 {
     ASSERT(!invalid_monster_type(mons->type));
 
@@ -472,7 +472,7 @@ bool mons_speaks(monsters* mons)
     const actor*    foe   = (!crawl_state.game_is_arena() && mons->wont_attack()
                                 && invalid_monster_index(mons->foe)) ?
                                     &you : mons->get_foe();
-    const monsters* m_foe = foe ? foe->as_monster() : NULL;
+    const monster* m_foe = foe ? foe->as_monster() : NULL;
 
     if (!foe || foe->atype() == ACT_PLAYER || mons->wont_attack())
     {
@@ -825,7 +825,7 @@ bool mons_speaks(monsters* mons)
     return (mons_speaks_msg(mons, msg, MSGCH_TALK, silence));
 }
 
-bool mons_speaks_msg(monsters* mons, const std::string &msg,
+bool mons_speaks_msg(monster* mons, const std::string &msg,
                      const msg_channel_type def_chan, const bool silence)
 {
     if (!mons_near(mons))

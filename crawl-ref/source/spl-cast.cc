@@ -929,7 +929,7 @@ static void _try_monster_cast(spell_type spell, int powc,
         return;
     }
 
-    monsters* mon = get_free_monster();
+    monster* mon = get_free_monster();
     if (!mon)
     {
         mpr("Couldn't try casting monster spell because there is "

@@ -149,7 +149,7 @@ private:
     std::string build_targeting_hint_string() const;
 
     actor* targeted_actor() const;
-    monsters* targeted_monster() const;
+    monster* targeted_monster() const;
 
     // Functions which print things to the user.
     // Each one is commented with a sample output.

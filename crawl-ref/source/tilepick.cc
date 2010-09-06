@@ -386,7 +386,7 @@ tileidx_t tileidx_feature(const coord_def &gc)
             else if (player_in_branch(BRANCH_SHOALS))
                 t = TILE_SHOALS_SHALLOW_WATER;
 
-            monsters *mon = monster_at(gc);
+            monster* mon = monster_at(gc);
             if (mon)
             {
                 // Add disturbance to tile.
@@ -468,7 +468,7 @@ static bool _is_skeleton(const int z_type)
     return (z_type == MONS_SKELETON_SMALL || z_type == MONS_SKELETON_LARGE);
 }
 
-static tileidx_t _tileidx_monster_zombified(const monsters *mon)
+static tileidx_t _tileidx_monster_zombified(const monster* mon)
 {
     const int z_type = mon->type;
 
@@ -583,7 +583,7 @@ static tileidx_t _tileidx_monster_zombified(const monsters *mon)
 
 // Special case for *taurs which have a different tile
 // for when they have a bow.
-static int _bow_offset(const monsters *mon)
+static int _bow_offset(const monster* mon)
 {
     int mon_wep = mon->inv[MSLOT_WEAPON];
     if (mon_wep == NON_ITEM)
@@ -1685,7 +1685,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     return TILEP_MONS_PROGRAM_BUG;
 }
 
-static tileidx_t _tileidx_monster_no_props(const monsters *mon)
+static tileidx_t _tileidx_monster_no_props(const monster* mon)
 {
     bool in_water = feat_is_water(grd(mon->pos()));
     const bool misled = (!crawl_state.game_is_arena() && you.misled());
@@ -1761,7 +1761,7 @@ static tileidx_t _tileidx_monster_no_props(const monsters *mon)
     }
 }
 
-tileidx_t tileidx_monster(const monsters *mons)
+tileidx_t tileidx_monster(const monster* mons)
 {
     tileidx_t ch = _tileidx_monster_no_props(mons);
 
@@ -1838,7 +1838,7 @@ tileidx_t tileidx_monster(const monsters *mons)
     return ch;
 }
 
-tileidx_t tileidx_draco_base(const monsters *mon)
+tileidx_t tileidx_draco_base(const monster* mon)
 {
     int draco = draco_subspecies(mon);
     int colour = 0;
@@ -1860,7 +1860,7 @@ tileidx_t tileidx_draco_base(const monsters *mon)
     return (TILEP_DRACO_BASE + colour);
 }
 
-tileidx_t tileidx_draco_job(const monsters *mon)
+tileidx_t tileidx_draco_job(const monster* mon)
 {
 
     switch (mon->type)
@@ -3848,7 +3848,7 @@ std::string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix)
     return (tile_string);
 }
 
-void tile_init_props(monsters *mon)
+void tile_init_props(monster* mon)
 {
     // Not necessary.
     if (mon->props.exists("monster_tile") || mon->props.exists("tile_num"))

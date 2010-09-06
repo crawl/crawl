@@ -89,11 +89,11 @@ bool player_will_anger_monster(monster_type type, bool *holy = NULL,
                                bool *unholy = NULL, bool *lawful = NULL,
                                bool *antimagical = NULL);
 
-bool player_will_anger_monster(monsters *mon, bool *holy = NULL,
+bool player_will_anger_monster(monster* mon, bool *holy = NULL,
                                bool *unholy = NULL, bool *lawful = NULL,
                                bool *antimagical = NULL);
 
-bool player_angers_monster(monsters *mon);
+bool player_angers_monster(monster* mon);
 
 bool empty_surrounds( const coord_def& where, dungeon_feature_type spc_wanted,
                       int radius, bool allow_centre, coord_def& empty );
@@ -106,12 +106,12 @@ monster_type summon_any_dragon(dragon_class_type dct);
 
 bool drac_colour_incompatible(int drac, int colour);
 
-void mark_interesting_monst(monsters* mons,
+void mark_interesting_monst(monster* mons,
                             beh_type behaviour = BEH_SLEEP);
 
 bool feat_compatible(dungeon_feature_type grid_wanted,
                      dungeon_feature_type actual_grid);
-bool monster_habitable_grid(const monsters *mon,
+bool monster_habitable_grid(const monster* mon,
                             dungeon_feature_type actual_grid);
 bool monster_habitable_grid(
     monster_type mt,
@@ -119,7 +119,7 @@ bool monster_habitable_grid(
     dungeon_feature_type wanted_grid_feature = DNGN_UNSEEN,
     int flies = -1,
     bool paralysed = false);
-bool monster_can_submerge(const monsters *mon, dungeon_feature_type grid);
+bool monster_can_submerge(const monster* mon, dungeon_feature_type grid);
 coord_def find_newmons_square(int mons_class, const coord_def &p);
 coord_def find_newmons_square_contiguous(monster_type mons_class,
                                          const coord_def &start,
@@ -133,11 +133,11 @@ void get_vault_mon_list(std::vector<mons_spec> &list);
 
 void setup_vault_mon_list();
 
-monsters* get_free_monster();
+monster* get_free_monster();
 
 bool can_place_on_trap(int mon_type, trap_type trap);
 bool mons_airborne(int mcls, int flies, bool paralysed);
-void mons_add_blame(monsters *mon, const std::string &blame_string);
+void mons_add_blame(monster* mon, const std::string &blame_string);
 
 // Active monster band may influence gear generation on band followers.
 extern band_type active_monster_band;

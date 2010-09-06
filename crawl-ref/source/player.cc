@@ -1076,7 +1076,7 @@ int player_evokable_levitation()
 // Given an adjacent monster, returns true if the player can hit it (the
 // monster should not be submerged, or be submerged in shallow water if
 // the player has a polearm).
-bool player_can_hit_monster(const monsters *mon)
+bool player_can_hit_monster(const monster* mon)
 {
     if (!mon->submerged())
         return (true);
@@ -6128,7 +6128,7 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
     // We ignore cleanup_dead here.
     if (agent->atype() == ACT_MONSTER)
     {
-        const monsters *mon = agent->as_monster();
+        const monster* mon = agent->as_monster();
         ouch(amount, mon->mindex(),
              KILLED_BY_MONSTER, "", mon->visible_to(&you));
     }
@@ -6492,7 +6492,7 @@ bool player::visible_to(const actor *looker) const
     if (this == looker)
         return (can_see_invisible() || !invisible());
 
-    const monsters* mon = looker->as_monster();
+    const monster* mon = looker->as_monster();
     return (!invisible()
             || in_water()
             || mon->can_see_invisible()

@@ -320,7 +320,7 @@ bool Stash::is_boring_feature(dungeon_feature_type feature)
 
 static bool _grid_has_mimic_item(const coord_def& pos)
 {
-    const monsters *mon = monster_at(pos);
+    const monster* mon = monster_at(pos);
     return (mon && mons_is_unknown_mimic(mon));
 }
 

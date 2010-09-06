@@ -49,7 +49,7 @@ opacity_type opacity_no_trans::operator()(const coord_def& p) const
         return base;
 }
 
-static bool mons_block_immob(const monsters* mons)
+static bool mons_block_immob(const monster* mons)
 {
     if (mons == NULL)
         return false;

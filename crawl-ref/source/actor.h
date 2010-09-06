@@ -19,9 +19,9 @@ public:
     virtual int       mindex() const = 0;
     virtual actor_type atype() const = 0;
 
-    virtual monsters* as_monster() = 0;
+    virtual monster* as_monster() = 0;
     virtual player* as_player() = 0;
-    virtual const monsters* as_monster() const = 0;
+    virtual const monster* as_monster() const = 0;
     virtual const player* as_player() const = 0;
 
     virtual kill_category kill_alignment() const = 0;

@@ -202,7 +202,7 @@ LUAFN(debug_dismiss_adjacent)
 {
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
     {
-        monsters* mon = monster_at(*ai);
+        monster* mon = monster_at(*ai);
 
         if (mon)
         {

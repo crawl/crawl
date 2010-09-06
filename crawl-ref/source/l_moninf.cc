@@ -102,7 +102,7 @@ LUAFN(mi_get_monster_at)
         return (0);
     if (env.mgrid(p) == NON_MONSTER)
         return (0);
-    monsters* m = &env.mons[env.mgrid(p)];
+    monster* m = &env.mons[env.mgrid(p)];
     if (!m->visible_to(&you))
         return (0);
     monster_info mi(m);

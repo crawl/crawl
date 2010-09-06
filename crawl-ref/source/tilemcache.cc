@@ -68,12 +68,12 @@ static void marshallDemon(writer &th, const demon_data &demon)
 class mcache_monster : public mcache_entry
 {
 public:
-    mcache_monster(const monsters *mon);
+    mcache_monster(const monster* mon);
     mcache_monster(reader &th);
 
     virtual int info(tile_draw_info *dinfo) const;
 
-    static bool valid(const monsters *mon);
+    static bool valid(const monster* mon);
 
     static bool get_weapon_offset(tileidx_t mon_tile, int *ofs_x, int *ofs_y);
 
@@ -87,12 +87,12 @@ protected:
 class mcache_draco : public mcache_entry
 {
 public:
-    mcache_draco(const monsters *mon);
+    mcache_draco(const monster* mon);
     mcache_draco(reader &th);
 
     virtual int info(tile_draw_info *dinfo) const;
 
-    static bool valid(const monsters *mon);
+    static bool valid(const monster* mon);
 
     virtual void construct(writer &th);
 
@@ -105,12 +105,12 @@ protected:
 class mcache_ghost : public mcache_entry
 {
 public:
-    mcache_ghost(const monsters *mon);
+    mcache_ghost(const monster* mon);
     mcache_ghost(reader &th);
 
     virtual const dolls_data *doll() const;
 
-    static bool valid(const monsters *mon);
+    static bool valid(const monster* mon);
 
     virtual void construct(writer &th);
 
@@ -123,12 +123,12 @@ protected:
 class mcache_demon : public mcache_entry
 {
 public:
-    mcache_demon(const monsters *mon);
+    mcache_demon(const monster* mon);
     mcache_demon(reader &th);
 
     virtual int info(tile_draw_info *dinfo) const;
 
-    static bool valid(const monsters *mon);
+    static bool valid(const monster* mon);
 
     virtual void construct(writer &th);
 
@@ -170,7 +170,7 @@ mcache_manager::~mcache_manager()
     clear_all();
 }
 
-unsigned int mcache_manager::register_monster(const monsters *mon)
+unsigned int mcache_manager::register_monster(const monster* mon)
 {
     ASSERT(mon);
     if (!mon)
@@ -327,7 +327,7 @@ void mcache_entry::construct(writer &th)
 /////////////////////////////////////////////////////////////////////////////
 // mcache_monster
 
-mcache_monster::mcache_monster(const monsters *mon)
+mcache_monster::mcache_monster(const monster* mon)
 {
     ASSERT(mcache_monster::valid(mon));
 
@@ -558,7 +558,7 @@ int mcache_monster::info(tile_draw_info *dinfo) const
     return (count);
 }
 
-bool mcache_monster::valid(const monsters *mon)
+bool mcache_monster::valid(const monster* mon)
 {
     if (!mon)
         return (false);
@@ -589,7 +589,7 @@ void mcache_monster::construct(writer &th)
 /////////////////////////////////////////////////////////////////////////////
 // mcache_draco
 
-mcache_draco::mcache_draco(const monsters *mon)
+mcache_draco::mcache_draco(const monster* mon)
 {
     ASSERT(mcache_draco::valid(mon));
 
@@ -612,7 +612,7 @@ int mcache_draco::info(tile_draw_info *dinfo) const
     return i;
 }
 
-bool mcache_draco::valid(const monsters *mon)
+bool mcache_draco::valid(const monster* mon)
 {
     return (mon && mons_is_draconian(mon->type));
 }
@@ -636,7 +636,7 @@ void mcache_draco::construct(writer &th)
 /////////////////////////////////////////////////////////////////////////////
 // mcache_ghost
 
-mcache_ghost::mcache_ghost(const monsters *mon)
+mcache_ghost::mcache_ghost(const monster* mon)
 {
     ASSERT(mcache_ghost::valid(mon));
 
@@ -771,7 +771,7 @@ const dolls_data *mcache_ghost::doll() const
     return &m_doll;
 }
 
-bool mcache_ghost::valid(const monsters *mon)
+bool mcache_ghost::valid(const monster* mon)
 {
     return (mon && mons_is_pghost(mon->type));
 }
@@ -796,7 +796,7 @@ bool mcache_ghost::transparent() const
 /////////////////////////////////////////////////////////////////////////////
 // mcache_demon
 
-mcache_demon::mcache_demon(const monsters *mon)
+mcache_demon::mcache_demon(const monster* mon)
 {
     ASSERT(mcache_demon::valid(mon));
 
@@ -838,7 +838,7 @@ int mcache_demon::info(tile_draw_info *dinfo) const
     }
 }
 
-bool mcache_demon::valid(const monsters *mon)
+bool mcache_demon::valid(const monster* mon)
 {
     return (mon && mon->type == MONS_PANDEMONIUM_DEMON);
 }

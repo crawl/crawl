@@ -137,7 +137,7 @@ void marshallString  (writer &, const std::string &, int maxSize = 0);
 void marshallString4 (writer &, const std::string &);
 void marshallCoord   (writer &, const coord_def &);
 void marshallItem    (writer &, const item_def &);
-void marshallMonster (writer &, const monsters &);
+void marshallMonster (writer &, const monster& );
 void marshallMonsterInfo (writer &, const monster_info &);
 void marshallMapCell (writer &, const map_cell &);
 
@@ -196,7 +196,7 @@ std::string unmarshallString  (reader &, int maxSize = 1000);
 void        unmarshallString4 (reader &, std::string&);
 coord_def   unmarshallCoord   (reader &);
 void        unmarshallItem    (reader &, item_def &item);
-void        unmarshallMonster (reader &, monsters &item);
+void        unmarshallMonster (reader &, monster& item);
 void        unmarshallMonsterInfo (reader &, monster_info &mi);
 void        unmarshallMapCell (reader &, map_cell& cell);
 

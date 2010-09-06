@@ -26,11 +26,11 @@
 #include "stuff.h"
 #include "travel.h"
 
-static void _jiyva_convert_slime(monsters* slime);
-static void _fedhas_neutralise_plant(monsters *plant);
+static void _jiyva_convert_slime(monster* slime);
+static void _fedhas_neutralise_plant(monster* plant);
 
 
-void good_god_follower_attitude_change(monsters* mons)
+void good_god_follower_attitude_change(monster* mons)
 {
     if (you.undead_or_demonic() || crawl_state.game_is_arena())
         return;
@@ -70,7 +70,7 @@ void good_god_follower_attitude_change(monsters* mons)
     }
 }
 
-void beogh_follower_convert(monsters* mons, bool orc_hit)
+void beogh_follower_convert(monster* mons, bool orc_hit)
 {
     if (you.species != SP_HILL_ORC || crawl_state.game_is_arena())
         return;
@@ -110,7 +110,7 @@ void beogh_follower_convert(monsters* mons, bool orc_hit)
     }
 }
 
-void slime_convert(monsters* mons)
+void slime_convert(monster* mons)
 {
     if (you.religion == GOD_JIYVA && mons_is_slime(mons)
         && !mons->is_summoned()
@@ -130,7 +130,7 @@ void slime_convert(monsters* mons)
     }
 }
 
-void fedhas_neutralise(monsters* mons)
+void fedhas_neutralise(monster* mons)
 {
     if (you.religion == GOD_FEDHAS
         && mons->attitude == ATT_HOSTILE
@@ -178,7 +178,7 @@ bool yred_slaves_abandon_you()
 
     for (radius_iterator ri(you.pos(), 9); ri; ++ri)
     {
-        monsters* mons = monster_at(*ri);
+        monster* mons = monster_at(*ri);
         if (mons == NULL)
             continue;
 
@@ -229,7 +229,7 @@ bool beogh_followers_abandon_you()
 
     for (radius_iterator ri(you.pos(), 9); ri; ++ri)
     {
-        monsters* mons = monster_at(*ri);
+        monster* mons = monster_at(*ri);
         if (mons == NULL)
             continue;
 
@@ -294,7 +294,7 @@ bool beogh_followers_abandon_you()
 
 static void _print_good_god_holy_being_speech(bool neutral,
                                               const std::string key,
-                                              monsters *mon,
+                                              monster* mon,
                                               msg_channel_type channel)
 {
     std::string full_key = "good_god_";
@@ -314,7 +314,7 @@ static void _print_good_god_holy_being_speech(bool neutral,
 
 // Holy monsters may turn good neutral when encountering followers of
 // the good gods, and be made worshippers of TSO if necessary.
-void good_god_holy_attitude_change(monsters *holy)
+void good_god_holy_attitude_change(monster* holy)
 {
     ASSERT(holy->is_holy());
 
@@ -344,7 +344,7 @@ void good_god_holy_attitude_change(monsters *holy)
     mons_att_changed(holy);
 }
 
-void good_god_holy_fail_attitude_change(monsters *holy)
+void good_god_holy_fail_attitude_change(monster* holy)
 {
     ASSERT(holy->is_holy());
 
@@ -360,7 +360,7 @@ void good_god_holy_fail_attitude_change(monsters *holy)
 }
 
 static void _print_converted_orc_speech(const std::string key,
-                                        monsters *mon,
+                                        monster* mon,
                                         msg_channel_type channel)
 {
     std::string msg = getSpeakString("beogh_converted_orc_" + key);
@@ -374,7 +374,7 @@ static void _print_converted_orc_speech(const std::string key,
 
 // Orcs may turn friendly when encountering followers of Beogh, and be
 // made gifts of Beogh.
-void beogh_convert_orc(monsters *orc, bool emergency,
+void beogh_convert_orc(monster* orc, bool emergency,
                        bool converted_by_follower)
 {
     ASSERT(mons_species(orc->type) == MONS_ORC);
@@ -436,7 +436,7 @@ void beogh_convert_orc(monsters *orc, bool emergency,
     mons_att_changed(orc);
 }
 
-static void _fedhas_neutralise_plant(monsters *plant)
+static void _fedhas_neutralise_plant(monster* plant)
 {
     if (!plant
         || !fedhas_neutralises(plant)
@@ -451,7 +451,7 @@ static void _fedhas_neutralise_plant(monsters *plant)
     mons_att_changed(plant);
 }
 
-static void _jiyva_convert_slime(monsters* slime)
+static void _jiyva_convert_slime(monster* slime)
 {
     ASSERT(mons_is_slime(slime));
 

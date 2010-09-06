@@ -175,7 +175,7 @@ public:
 class MonsterMenuEntry : public MenuEntry
 {
 public:
-    MonsterMenuEntry(const std::string &str, const monsters* mon, int hotkey);
+    MonsterMenuEntry(const std::string &str, const monster* mon, int hotkey);
 
 #ifdef USE_TILE
     virtual bool get_tiles(std::vector<tile_def>& tileset) const;

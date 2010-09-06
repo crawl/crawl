@@ -158,7 +158,7 @@ bool recall(int type_recalled)
     int step_value     = 1;
     int end_count      = (MAX_MONSTERS - 1);
 
-    monsters* mons = NULL;
+    monster* mons = NULL;
 
     // someone really had to make life difficult {dlb}:
     // sometimes goes through monster list backwards
@@ -287,7 +287,7 @@ static int _intoxicate_monsters(coord_def where, int pow, int, actor *)
 {
     UNUSED( pow );
 
-    monsters* mons = monster_at(where);
+    monster* mons = monster_at(where);
     if (mons == NULL
         || mons_intel(mons) < I_NORMAL
         || mons->holiness() != MH_NATURAL

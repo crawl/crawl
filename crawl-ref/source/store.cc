@@ -110,8 +110,8 @@ CrawlStoreValue::CrawlStoreValue(const CrawlStoreValue &other)
 
     case SV_MONST:
     {
-        monsters* mon;
-        mon = new monsters(*static_cast<monsters*>(other.val.ptr));
+        monster* mon;
+        mon = new monster(*static_cast<monster* >(other.val.ptr));
         val.ptr = static_cast<void*>(mon);
         break;
     }
@@ -227,7 +227,7 @@ CrawlStoreValue::CrawlStoreValue(const level_pos &_val)
     get_level_pos() = _val;
 }
 
-CrawlStoreValue::CrawlStoreValue(const monsters &_val)
+CrawlStoreValue::CrawlStoreValue(const monster& _val)
     : type(SV_MONST), flags(SFLAG_UNSET)
 {
     val.ptr = NULL;
@@ -336,7 +336,7 @@ void CrawlStoreValue::unset(bool force)
 
     case SV_MONST:
     {
-        monsters* mon = static_cast<monsters*>(val.ptr);
+        monster* mon = static_cast<monster* >(val.ptr);
         delete mon;
         val.ptr = NULL;
         break;
@@ -541,7 +541,7 @@ void CrawlStoreValue::write(writer &th) const
 
     case SV_MONST:
     {
-        monsters* mon = static_cast<monsters*>(val.ptr);
+        monster* mon = static_cast<monster* >(val.ptr);
         marshallMonster(th, *mon);
         break;
     }
@@ -653,9 +653,9 @@ void CrawlStoreValue::read(reader &th)
 
     case SV_MONST:
     {
-        monsters mon;
+        monster mon;
         unmarshallMonster(th, mon);
-        val.ptr = (void*) new monsters(mon);
+        val.ptr = (void*) new monster(mon);
 
         break;
     }
@@ -839,9 +839,9 @@ level_pos &CrawlStoreValue::get_level_pos()
     GET_VAL_PTR(SV_LEV_POS, level_pos*, new level_pos());
 }
 
-monsters &CrawlStoreValue::get_monster()
+monster &CrawlStoreValue::get_monster()
 {
-    GET_VAL_PTR(SV_MONST, monsters*, new monsters());
+    GET_VAL_PTR(SV_MONST, monster* , new monster());
 }
 
 dlua_chunk &CrawlStoreValue::get_lua()
@@ -963,7 +963,7 @@ CrawlStoreValue::operator CrawlVector&()           { return get_vector();     }
 CrawlStoreValue::operator item_def&()              { return get_item();       }
 CrawlStoreValue::operator level_id&()              { return get_level_id();   }
 CrawlStoreValue::operator level_pos&()             { return get_level_pos();  }
-CrawlStoreValue::operator monsters&()              { return get_monster();    }
+CrawlStoreValue::operator monster& ()              { return get_monster();    }
 CrawlStoreValue::operator dlua_chunk&()            { return get_lua(); }
 
 ///////////////////////////
@@ -1107,7 +1107,7 @@ CrawlStoreValue &CrawlStoreValue::operator = (const level_pos &_val)
     return (*this);
 }
 
-CrawlStoreValue &CrawlStoreValue::operator = (const monsters &_val)
+CrawlStoreValue &CrawlStoreValue::operator = (const monster& _val)
 {
     get_monster() = _val;
     return (*this);

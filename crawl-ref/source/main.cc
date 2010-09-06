@@ -1226,7 +1226,7 @@ static bool _stairs_check_mesmerised()
 {
     if (you.beheld() && !you.confused())
     {
-        const monsters* beholder = you.get_any_beholder();
+        const monster* beholder = you.get_any_beholder();
         mprf("You cannot move away from %s!",
              beholder->name(DESC_NOCAP_THE, true).c_str());
         return (true);
@@ -2923,7 +2923,7 @@ static int _check_adjacent(dungeon_feature_type feat, coord_def& delta)
 static bool _untrap_target(const coord_def move, bool check_confused)
 {
     const coord_def target = you.pos() + move;
-    monsters* mon = monster_at(target);
+    monster* mon = monster_at(target);
     if (mon && player_can_hit_monster(mon))
     {
         if (mon->caught() && mon->friendly()
@@ -3402,7 +3402,7 @@ static void _close_door(coord_def move)
              i != all_door.end(); ++i)
         {
             const coord_def& dc = *i;
-            if (monsters* mon = monster_at(dc))
+            if (monster* mon = monster_at(dc))
             {
                 // Need to make sure that turn_is_over is set if
                 // creature is invisible.
@@ -3666,7 +3666,7 @@ static void _move_player(coord_def move)
         return;
 
     const dungeon_feature_type targ_grid = grd(targ);
-    monsters *targ_monst = monster_at(targ);
+    monster* targ_monst = monster_at(targ);
     if (fedhas_passthrough(targ_monst))
     {
         // Moving on a plant takes 1.5 x normal move delay. We
@@ -3675,7 +3675,7 @@ static void _move_player(coord_def move)
         // on the message spam).
         you.time_taken = div_rand_round(you.time_taken * 3, 2);
 
-        monsters * current = monster_at(you.pos());
+        monster* current = monster_at(you.pos());
         if (!current || !fedhas_passthrough(current))
         {
             // Probably need better messages. -cao
@@ -3702,7 +3702,7 @@ static void _move_player(coord_def move)
 
     // You cannot move away from a mermaid but you CAN fight monsters on
     // neighbouring squares.
-    monsters *beholder = NULL;
+    monster* beholder = NULL;
     if (!you.confused())
         beholder = you.get_beholder(targ);
 

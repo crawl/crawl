@@ -84,7 +84,7 @@ bool conjure_flame(int pow, const coord_def& where)
     }
 
     // Note that self-targeting is handled by SPFLAG_NOT_SELF.
-    monsters* mons = monster_at(where);
+    monster* mons = monster_at(where);
     if (mons)
     {
         if (you.can_see(mons))

@@ -24,7 +24,7 @@ void init_pandemonium(void)
 
     for (pc = 0; pc < MAX_MONSTERS; ++pc)
     {
-        monsters* mons = &menv[pc];
+        monster* mons = &menv[pc];
 
         // Looks for unique demons and sets appropriate lists of demons.
         // NB - also sets the level colours.

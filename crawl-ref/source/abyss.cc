@@ -664,7 +664,7 @@ public:
     }
 };
 
-static void _abyss_lose_monster(monsters &mons)
+static void _abyss_lose_monster(monster& mons)
 {
     if (mons.needs_transit())
         mons.set_transit( level_id(LEVEL_ABYSS) );
@@ -717,7 +717,7 @@ static void _abyss_wipe_square_at(coord_def p)
     lose_item_stack(p);
 
     // Nuke monster.
-    if (monsters *mon = monster_at(p))
+    if (monster* mon = monster_at(p))
         _abyss_lose_monster(*mon);
 
     // Delete cloud.

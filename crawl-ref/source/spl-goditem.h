@@ -17,7 +17,7 @@ bool remove_curse(bool suppress_msg);
 bool detect_curse(int scroll, bool suppress_msg);
 
 bool entomb(int pow);
-bool cast_imprison(int pow, monsters* mons, int source);
+bool cast_imprison(int pow, monster* mons, int source);
 
 bool cast_smiting(int power, const coord_def& where);
 

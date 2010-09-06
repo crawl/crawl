@@ -25,9 +25,9 @@
 #include "spl-book.h"
 
 
-static void _give_monster_item(monsters *mon, int thing,
+static void _give_monster_item(monster* mon, int thing,
                                bool force_item = false,
-                               bool (monsters::*pickupfn)(item_def&, int) = NULL)
+                               bool (monster::*pickupfn)(item_def&, int) = NULL)
 {
     if (thing == NON_ITEM || thing == -1)
         return;
@@ -75,7 +75,7 @@ static void _give_monster_item(monsters *mon, int thing,
         item_colour(mthing);
 }
 
-static void _give_scroll(monsters *mon, int level)
+static void _give_scroll(monster* mon, int level)
 {
     int thing_created = NON_ITEM;
 
@@ -106,7 +106,7 @@ static void _give_scroll(monsters *mon, int level)
     _give_monster_item(mon, thing_created, true);
 }
 
-static void _give_wand(monsters *mon, int level)
+static void _give_wand(monster* mon, int level)
 {
     if (mons_is_unique(mon->type) && !mons_class_flag(mon->type, M_NO_WAND)
         && (one_chance_in(5) || mon->type == MONS_MAURICE && one_chance_in(3)))
@@ -138,7 +138,7 @@ static void _give_wand(monsters *mon, int level)
     }
 }
 
-static void _give_potion(monsters *mon, int level)
+static void _give_potion(monster* mon, int level)
 {
     if (mons_species(mon->type) == MONS_VAMPIRE && one_chance_in(5))
     {
@@ -162,11 +162,11 @@ static void _give_potion(monsters *mon, int level)
 
         mitm[thing_created].flags = 0;
         _give_monster_item(mon, thing_created, false,
-                           &monsters::pickup_potion);
+                           &monster::pickup_potion);
     }
 }
 
-static item_make_species_type _give_weapon(monsters *mon, int level,
+static item_make_species_type _give_weapon(monster* mon, int level,
                                            bool melee_only = false,
                                            bool give_aux_melee = true,
                                            bool spectral_orcs = false)
@@ -1122,7 +1122,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
 
 // Hands out ammunition fitting the monster's launcher (if any), or else any
 // throwable weapon depending on the monster type.
-static void _give_ammo(monsters *mon, int level,
+static void _give_ammo(monster* mon, int level,
                        item_make_species_type item_race,
                        bool mons_summoned)
 {
@@ -1325,14 +1325,14 @@ static void _give_ammo(monsters *mon, int level,
             w.quantity = qty;
             _give_monster_item(mon, thing_created, false,
                                (weap_class == OBJ_WEAPONS?
-                                &monsters::pickup_melee_weapon
-                                : &monsters::pickup_throwable_weapon));
+                                &monster::pickup_melee_weapon
+                                : &monster::pickup_throwable_weapon));
         }
     }
 }
 
 static bool make_item_for_monster(
-    monsters *mons,
+    monster* mons,
     object_class_type base,
     int subtype,
     int level,
@@ -1353,7 +1353,7 @@ static bool make_item_for_monster(
     return (true);
 }
 
-void give_shield(monsters *mon, int level)
+void give_shield(monster* mon, int level)
 {
     const item_def *main_weap = mon->mslot_item(MSLOT_WEAPON);
     const item_def *alt_weap  = mon->mslot_item(MSLOT_ALT_WEAPON);
@@ -1462,7 +1462,7 @@ void give_shield(monsters *mon, int level)
     }
 }
 
-void give_armour(monsters *mon, int level, bool spectral_orcs)
+void give_armour(monster* mon, int level, bool spectral_orcs)
 {
     item_def               item;
     item_make_species_type item_race = MAKE_ITEM_RANDOM_RACE;
@@ -1858,7 +1858,7 @@ void give_armour(monsters *mon, int level, bool spectral_orcs)
     }
 }
 
-static void _give_gold(monsters *mon, int level)
+static void _give_gold(monster* mon, int level)
 {
     const int idx = items(0, OBJ_GOLD, 0, true, level, 0);
     _give_monster_item(mon, idx);
@@ -1866,13 +1866,13 @@ static void _give_gold(monsters *mon, int level)
 
 void give_weapon(int mid, int level_number, bool mons_summoned, bool spectral_orcs)
 {
-    monsters *mons = &menv[mid];
+    monster *mons = &menv[mid];
     _give_weapon(mons, level_number, false, true, spectral_orcs);
 }
 
 void give_item(int mid, int level_number, bool mons_summoned, bool spectral_orcs)
 {
-    monsters *mons = &menv[mid];
+    monster* mons = &menv[mid];
 
     if (mons->type == MONS_MAURICE)
         _give_gold(mons, level_number);

@@ -451,7 +451,7 @@ bool cast_summon_elemental(int pow, god_type god,
 
         targ = you.pos() + smove.delta;
 
-        if (const monsters *m = monster_at(targ))
+        if (const monster* m = monster_at(targ))
         {
             if (you.can_see(m))
                 mpr("There's something there already!");
@@ -703,7 +703,7 @@ bool summon_berserker(int pow, god_type god, int spell,
     if (mons == -1)
         return (false);
 
-    monsters *summon = &menv[mons];
+    monster* summon = &menv[mons];
 
     summon->go_berserk(false);
     mon_enchant berserk = summon->get_ench(ENCH_BERSERK);
@@ -743,7 +743,7 @@ static bool _summon_holy_being_wrapper(int pow, god_type god, int spell,
     if (mons == -1)
         return (false);
 
-    monsters *summon = &menv[mons];
+    monster* summon = &menv[mons];
     summon->flags |= MF_ATT_CHANGE_ATTEMPT;
 
     if (!quiet)
@@ -875,7 +875,7 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
 
     wpn->clear();
 
-    monsters& dancing_weapon = menv[mons];
+    monster& dancing_weapon = menv[mons];
 
     destroy_item(dancing_weapon.inv[MSLOT_WEAPON]);
     dancing_weapon.inv[MSLOT_WEAPON] = i;
@@ -1195,7 +1195,7 @@ static bool _animatable_remains(const item_def& item)
 // monster wasn't killed by the player or a player's pet.
 void equip_undead(const coord_def &a, int corps, int mons, int monnum)
 {
-    monsters* mon = &menv[mons];
+    monster* mon = &menv[mons];
 
     if (mons_class_itemuse(monnum) < MONUSE_STARTING_EQUIPMENT)
         return;
@@ -1759,7 +1759,7 @@ bool cast_twisted_resurrection(int pow, god_type god)
 
 bool cast_haunt(int pow, const coord_def& where, god_type god)
 {
-    monsters *m = monster_at(where);
+    monster* m = monster_at(where);
 
     if (m == NULL)
     {

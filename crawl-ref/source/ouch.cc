@@ -905,7 +905,7 @@ static void _xom_checks_damage(kill_method_type death_type,
         }
 
         int amusementvalue = 1;
-        const monsters* mons = &menv[death_source];
+        const monster* mons = &menv[death_source];
 
         if (!mons->alive())
             return;
@@ -956,7 +956,7 @@ static void _yred_mirrors_injury(int dam, int death_source)
         if (dam <= 0 || invalid_monster_index(death_source))
             return;
 
-        monsters *mon = &menv[death_source];
+        monster* mon = &menv[death_source];
 
         if (!mon->alive())
             return;

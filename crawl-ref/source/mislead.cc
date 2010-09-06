@@ -40,7 +40,7 @@ bool unsuitable_misled_monster(monster_type mons)
 );
 }
 
-monster_type get_misled_monster(monsters* mons)
+monster_type get_misled_monster(monster* mons)
 {
     monster_type mt = random_monster_at_grid(mons->pos());
     if (unsuitable_misled_monster(mt))
@@ -52,7 +52,7 @@ monster_type get_misled_monster(monsters* mons)
     return mt;
 }
 
-bool update_mislead_monster(monsters* mons)
+bool update_mislead_monster(monster* mons)
 {
     // Don't affect uniques, named monsters, and monsters with special tiles.
     if (mons_is_unique(mons->type) || !mons->mname.empty()
@@ -72,7 +72,7 @@ bool update_mislead_monster(monsters* mons)
     return (true);
 }
 
-int update_mislead_monsters(monsters* caster)
+int update_mislead_monsters(monster* caster)
 {
     int count = 0;
 
@@ -83,7 +83,7 @@ int update_mislead_monsters(monsters* caster)
     return count;
 }
 
-void mons_cast_mislead(monsters* mons)
+void mons_cast_mislead(monster* mons)
 {
     // This really only affects the player; it causes confusion when cast on
     // non-player foes, but that is dealt with inside ye-great-Switch-of-Doom.

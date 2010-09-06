@@ -68,7 +68,7 @@ int MonsterRegion::handle_mouse(MouseEvent &event)
 
 
     unsigned int item_idx = cursor_index();
-    const monsters *mon = get_monster(item_idx);
+    const monster* mon = get_monster(item_idx);
     if (!mon)
         return (0);
 
@@ -99,7 +99,7 @@ bool MonsterRegion::update_tip_text(std::string &tip)
         return (false);
 
     unsigned int item_idx = cursor_index();
-    const monsters *mon = get_monster(item_idx);
+    const monster* mon = get_monster(item_idx);
     if (!mon)
         return (false);
 
@@ -123,7 +123,7 @@ bool MonsterRegion::update_alt_text(std::string &alt)
         return (false);
     }
 
-    const monsters *mon = get_monster(item_idx);
+    const monster* mon = get_monster(item_idx);
     if (!mon)
         return (false);
 
@@ -143,7 +143,7 @@ bool MonsterRegion::update_alt_text(std::string &alt)
     return (true);
 }
 
-const monsters *MonsterRegion::get_monster(unsigned int idx) const
+const monster* MonsterRegion::get_monster(unsigned int idx) const
 {
     if (idx >= m_items.size())
         return (NULL);
@@ -167,7 +167,7 @@ void MonsterRegion::pack_buffers()
             bool cursor = (i < m_items.size()) ?
                 (m_items[i].flag & TILEI_FLAG_CURSOR) : false;
 
-            const monsters *mon = get_monster(i++);
+            const monster* mon = get_monster(i++);
             if (mon)
             {
                 const coord_def gc = mon->position;
@@ -209,7 +209,7 @@ void MonsterRegion::draw_tag()
     if (idx == -1)
         return;
 
-    const monsters *mon = get_monster(idx);
+    const monster* mon = get_monster(idx);
     if (!mon)
         return;
 

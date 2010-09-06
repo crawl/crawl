@@ -135,7 +135,7 @@ namespace arena
     int message_pos = 0;
     level_id place(BRANCH_MAIN_DUNGEON, 20);
 
-    void adjust_spells(monsters* mons, bool no_summons, bool no_animate)
+    void adjust_spells(monster* mons, bool no_summons, bool no_animate)
     {
         monster_spells &spells(mons->spells);
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
@@ -163,7 +163,7 @@ namespace arena
         if (!Options.arena_list_eq || file == NULL)
             return;
 
-        const monsters* mon = &menv[imon];
+        const monster* mon = &menv[imon];
 
         std::vector<int> items;
 
@@ -779,7 +779,7 @@ namespace arena
                 // from ending attempt to displace whatever is in
                 // our position.
                 int       midx  = mgrd(pos);
-                monsters* other = &menv[midx];
+                monster* other = &menv[midx];
 
                 if (to_respawn[midx] == -1)
                 {
@@ -1136,7 +1136,7 @@ bool arena_veto_place_monster(const mgen_data &mg, bool first_band_member,
 
 // XXX: Still having some trouble with book-keeping if a slime creature
 // is placed via splitting.
-void arena_placed_monster(monsters* mons)
+void arena_placed_monster(monster* mons)
 {
     if (mons->attitude == ATT_FRIENDLY)
     {
@@ -1225,7 +1225,7 @@ void arena_placed_monster(monsters* mons)
 }
 
 // Take care of respawning slime creatures merging and then splitting.
-void arena_split_monster(monsters *split_from, monsters *split_to)
+void arena_split_monster(monster* split_from, monster* split_to)
 {
     if (!arena::respawn)
         return;
@@ -1239,7 +1239,7 @@ void arena_split_monster(monsters *split_from, monsters *split_to)
     arena::to_respawn[split_to->mindex()] = member_idx;
 }
 
-void arena_monster_died(monsters* mons, killer_type killer,
+void arena_monster_died(monster* mons, killer_type killer,
                         int killer_index, bool silent, int corpse)
 {
     if (mons->attitude == ATT_FRIENDLY)

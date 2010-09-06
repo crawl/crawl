@@ -10,7 +10,7 @@
 
 struct bolt;
 
-class monsters;
+class monster;
 struct item_def;
 
 void banished(dungeon_feature_type gate_type, const std::string &who = "");
@@ -45,7 +45,7 @@ void random_uselessness(int scroll_slot = -1);
 
 bool recharge_wand(const int item_slot = -1);
 
-void direct_effect(monsters *src, spell_type spl, bolt &pbolt, actor *defender);
+void direct_effect(monster* src, spell_type spl, bolt &pbolt, actor *defender);
 
 void yell(bool force = false);
 

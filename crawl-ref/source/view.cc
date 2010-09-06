@@ -72,7 +72,7 @@
 
 crawl_view_geometry crawl_view;
 
-void handle_seen_interrupt(monsters* mons)
+void handle_seen_interrupt(monster* mons)
 {
     if (mons_is_unknown_mimic(mons))
         return;
@@ -106,7 +106,7 @@ void flush_comes_into_view()
         return;
     }
 
-    monsters* mon = crawl_state.which_mon_acting();
+    monster* mon = crawl_state.which_mon_acting();
 
     if (!mon || !mon->alive() || (mon->flags & MF_WAS_IN_VIEW)
         || !you.can_see(mon))
@@ -438,14 +438,14 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 }
 
 // Is the given monster near (in LOS of) the player?
-bool mons_near(const monsters* mons)
+bool mons_near(const monster* mons)
 {
     if (crawl_state.game_is_arena() || crawl_state.arena_suspended)
         return (true);
     return (you.see_cell(mons->pos()));
 }
 
-bool mon_enemies_around(const monsters* mons)
+bool mon_enemies_around(const monster* mons)
 {
     // If the monster has a foe, return true.
     if (mons->foe != MHITNOT && mons->foe != MHITYOU)
@@ -465,7 +465,7 @@ bool mon_enemies_around(const monsters* mons)
     }
     else
     {
-        // For hostile monsters *you* are the main enemy.
+        // For hostile monster* you* are the main enemy.
         return (mons_near(mons));
     }
 }
@@ -596,7 +596,7 @@ void view_update_at(const coord_def &pos)
 }
 
 #ifndef USE_TILE
-void flash_monster_colour(const monsters *mon, uint8_t fmc_colour,
+void flash_monster_colour(const monster* mon, uint8_t fmc_colour,
                           int fmc_delay)
 {
     if (you.can_see(mon))

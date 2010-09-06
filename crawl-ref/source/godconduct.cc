@@ -16,18 +16,18 @@
 // god_conduct_trigger
 
 god_conduct_trigger::god_conduct_trigger(
-    conduct_type c, int pg, bool kn, const monsters *vict)
+    conduct_type c, int pg, bool kn, const monster* vict)
   : conduct(c), pgain(pg), known(kn), enabled(true), victim(NULL)
 {
     if (vict)
     {
-        victim.reset(new monsters);
+        victim.reset(new monster);
         *(victim.get()) = *vict;
     }
 }
 
 void god_conduct_trigger::set(conduct_type c, int pg, bool kn,
-                              const monsters *vict)
+                              const monster* vict)
 {
     conduct = c;
     pgain = pg;
@@ -35,7 +35,7 @@ void god_conduct_trigger::set(conduct_type c, int pg, bool kn,
     victim.reset(NULL);
     if (vict)
     {
-        victim.reset(new monsters);
+        victim.reset(new monster);
         *victim.get() = *vict;
     }
 }
@@ -49,7 +49,7 @@ god_conduct_trigger::~god_conduct_trigger()
 // This function is the merger of done_good() and naughty().
 // Returns true if god was interested (good or bad) in conduct.
 bool did_god_conduct(conduct_type thing_done, int level, bool known,
-                     const monsters *victim)
+                     const monster* victim)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -1008,7 +1008,7 @@ void god_conduct_turn_start()
 
 #define NEW_GIFT_FLAGS (MF_JUST_SUMMONED | MF_GOD_GIFT)
 
-void set_attack_conducts(god_conduct_trigger conduct[3], const monsters *mon,
+void set_attack_conducts(god_conduct_trigger conduct[3], const monster* mon,
                          bool known)
 {
     const unsigned int midx = mon->mindex();
