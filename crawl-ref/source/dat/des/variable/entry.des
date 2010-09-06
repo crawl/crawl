@@ -671,7 +671,7 @@ c..............{..............c
 c...T.....................T...c
 c............[...(............c
 cc........T.........T........cc
- cc...T.................T...c
+ cc...T.................T...cc
   ccc..........T..........ccc
     ccccc.............ccccc
         ccccccccccccccc
@@ -1740,30 +1740,26 @@ ENDMAP
 ##############################################################################
 # Sounds of Crawl: the Drone.
 NAME:    dpeg_entry_sounds_drone
-TAGS:    entry no_monster_gen no_rotate
+TAGS:    entry no_monster_gen
 MONS:    generate_awake boring beetle / boring beetle
 ORIENT:  float
-SHUFFLE: {<
+NSUBST:  . = 1={< / *:.
+NSUBST:  ' = 1:> / 7:x / *:.
+SUBST:   " = .
 MAP
-xxx.....@....ccccc....@.....xxx
-xx...........cx>xc...........xx
-x............cxxxc............x
-.............cxxxc.............
-.............cxxxc.............
-@.......(....cxxxc....[.......@
-.............cxxxc.............
-ccccccccccccccxxxcccccccccccccc
-cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxc
-c>xxxxxxxxxxxxx1xxxxxxxxxxxxx>c
-cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxc
-ccccccccccccccxxxcccccccccccccc
-.............cxxxc.............
-@.......]....cxxxc....{.......@
-.............cxxxc.............
-.............cxxxc.............
-x............cxxxc............x
-xx...........cx>xc...........xx
-xxx.....@....ccccc....@.....xxx
+  ....ccccc...  
+  ....c'''c...  
+......c'''c.....
+......c'''c.....
+..ccccc'''ccccc.
+..c''''"""''''c.
+..c''''"1"''''c.
+..c''''"""''''c.
+..ccccc'''ccccc.
+......c'''c.....
+......c'''c.....
+  ....c'''c... 
+  ....ccccc...
 ENDMAP
 
 ##############################################################################
@@ -1919,14 +1915,13 @@ ORIENT:  float
 MONS:    plant
 SHUFFLE: 1x
 SUBST:   x = '
-FTILE:   '1{ = floor_grass
-FTILE:   . = floor_grass / floor_normal
-COLOUR:  ' = green
-COLOUR:  . = green / none
-SUBST:   ' = .:140 d
+SUBST:   ' = ':140 d
+SUBST:   . = '.
 KITEM:   d : apple / apricot / pear / apricot / orange / banana / \
              strawberry / lemon
-KFEAT:   d = .
+KFEAT:   d = '
+FTILE:   d'1{ = floor_grass
+COLOUR:  d' = green
 MAP
   .....
  .x...x.
@@ -3223,19 +3218,14 @@ ENDMAP
 NAME:    kb_entry_jail
 TAGS:    entry no_monster_gen no_item_gen
 ORIENT:  north
-SHUFFLE: ABCDEFGHIJKLMNOPQRST
-KFEAT:   ABCDEFGHIJKLMNOPQRST = floor
+SHUFFLE: ABCDEFGHIJKLMNOPQRSTUV
+KFEAT:   ABCDEFGHIJKLMNOPQRSTUV = floor
 KMONS:   A = human ; nothing
 KMONS:   B = elf ; nothing
 KMONS:   C = dwarf ; nothing
 KMONS:   D = orc ; nothing
 KMONS:   E = merfolk ; nothing
-KMONS:   F = human name:halfling n_rpl n_spe n_des tile:halfling ; nothing
-MARKER:  F = lua:MonPropsMarker:new { description="This is a degenerate human, " ..\
-               "both mentally and physically similar to a child of perhaps " ..\
-               "ten, perhaps twelve years of age, yet looking older. It looks " ..\
-               "mischievous, as if prone to no good.\n" ..\
-               "It definitely deserves an axe to the head." }
+KMONS:   F = halfling ; nothing
 KMONS:   G = kobold ; nothing
 KMONS:   H = spriggan ; nothing
 KMONS:   I = naga ; nothing
@@ -3243,17 +3233,15 @@ KMONS:   J = centaur ; nothing
 KMONS:   K = ogre ; nothing
 KMONS:   L = troll
 KMONS:   M = minotaur ; nothing
-KMONS:   N = human col:lightblue name:kenku n_rpl n_spe n_des ; nothing
-MARKER:  N = lua:MonPropsMarker:new { description="A bird-brained creature " ..\
-               "that looks at you with hatred." }
+KMONS:   N = kenku ; nothing
 KMONS:   O = draconian ; nothing
-KMONS:   P = human name:demonspawn n_rpl n_spe n_des tile:demonspawn ; nothing
-MARKER:  P = lua:MonPropsMarker:new { description="This fellow looks mostly " ..\
-               "like a human, yet you sense something evil about him." }
+KMONS:   P = demonspawn ; nothing
 KMONS:   Q = mummy
-KMONS:   R = elf ; nothing
+#KMONS:  R = a new race!
 KMONS:   S = ghoul ; nothing
 KMONS:   T = vampire spells:. ; nothing
+KMONS:   U = demigod ; nothing
+#KMONS:  V = a new race!
 COLOUR:  m = cyan
 TILE:    m = dngn_grate
 :           dgn.set_feature_desc_short("translucent rock wall",
@@ -3287,6 +3275,8 @@ ccc.ccc
 cQm.mRc
 ccc.ccc
 cSm.mTc
+ccc.ccc
+cUm.mVc
 ccc+ccc
   c@c
 ENDMAP
@@ -4015,6 +4005,7 @@ ORIENT:  float
 SHUFFLE: ]def
 SUBST:   c : cx
 TILE:    c = wall_stone_brick
+TILE:    x = wall_vines
 KFEAT:   ' = floor
 FTILE:   '+]def{[T = floor_cobble_blood
 SUBST:   X = T

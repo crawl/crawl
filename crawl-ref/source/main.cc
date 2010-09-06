@@ -87,6 +87,7 @@
 #include "mon-cast.h"
 #include "mon-iter.h"
 #include "mon-stuff.h"
+#include "mon-transit.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "newgame.h"
@@ -149,14 +150,18 @@
 // Globals whose construction/destruction order needs to be managed
 // ----------------------------------------------------------------------
 
+#ifdef DEBUG_GLOBALS
+CLua clua;
+CLua dlua;
+#else
 CLua clua(true);
 CLua dlua(false);      // Lua interpreter for the dungeon builder.
+#endif
 crawl_environment env; // Requires dlua.
+
 player you;
-system_environment SysEnv;
+
 game_state crawl_state;
-
-
 
 std::string init_file_error;    // externed in newgame.cc
 
@@ -220,6 +225,13 @@ static void _compile_time_asserts();
 
 int main(int argc, char *argv[])
 {
+#ifdef DEBUG_GLOBALS
+    real_you = new player();
+    real_clua = new CLua(true);
+    real_dlua = new CLua(false);
+    real_crawl_state = new game_state();
+    real_env = new crawl_environment();
+#endif
     _compile_time_asserts();  // Just to quiet "unused static function" warning.
 
     init_crash_handler();
@@ -273,6 +285,30 @@ int main(int argc, char *argv[])
     return 0;
 }
 
+static void _reset_game()
+{
+    clrscr();
+    crawl_state.type = GAME_TYPE_UNSPECIFIED;
+    clear_message_store();
+    macro_clear_buffers();
+    transit_lists_clear();
+    you.init();
+    StashTrack = StashTracker();
+    travel_cache = TravelCache();
+    you.clear_place_info();
+    overview_clear();
+    clear_message_window();
+    note_list.clear();
+    msg::deinitialise_mpr_streams();
+
+#ifdef USE_TILE
+    // [ds] Don't show the title screen again, just go back to
+    // the menu.
+    Options.tile_title_screen = false;
+    tiles.clear_text_tags(TAG_NAMED_MONSTER);
+#endif
+}
+
 static void _launch_game_loop()
 {
     bool game_ended = false;
@@ -286,15 +322,7 @@ static void _launch_game_loop()
         catch (game_ended_condition &ge)
         {
             game_ended = true;
-            crawl_state.type = GAME_TYPE_UNSPECIFIED;
-            clear_message_store();
-            you.reset();
-            msg::deinitialise_mpr_streams();
-#ifdef USE_TILE
-            // [ds] Don't show the title screen again, just go back to
-            // the menu.
-            Options.tile_title_screen = false;
-#endif
+            _reset_game();
         }
     } while (Options.restart_after_game
              && game_ended
@@ -320,10 +348,6 @@ static void _launch_game()
                     << " " << you.class_name << ".</yellow>"
                     << std::endl;
     }
-
-    // Activate markers only after the welcome message, so the
-    // player can see any resulting messages.
-    env.markers.activate_all();
 
 #ifdef USE_TILE
     viewwindow();
@@ -570,6 +594,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case CONTROL('I'): debug_item_statistics(); break;
     case CONTROL('L'): wizard_set_xl(); break;
     case CONTROL('T'): debug_terp_dlua(); break;
+    case CONTROL('V'): wizard_toggle_xray_vision(); break;
     case CONTROL('X'): debug_xom_effects(); break;
 
     case 'O': debug_test_explore();                  break;
@@ -1395,7 +1420,7 @@ static void _experience_check()
     if (you.experience_level < 27)
     {
         int xp_needed = (exp_needed(you.experience_level+2)-you.experience)+1;
-        mprf("Level %d requires %ld experience (%d point%s to go!)",
+        mprf("Level %d requires %d experience (%d point%s to go!)",
               you.experience_level + 1,
               exp_needed(you.experience_level + 2) + 1,
               xp_needed,
@@ -1513,7 +1538,7 @@ static void _do_rest()
 {
     if (you.hunger_state == HS_STARVING && !you_min_hunger())
     {
-        mpr("You are too hungry to rest.");
+        mpr("You're too hungry to rest.");
         return;
     }
 
@@ -2027,7 +2052,7 @@ static void _decrement_durations()
         if (you.duration[DUR_DIVINE_SHIELD] > 1)
         {
             you.duration[DUR_DIVINE_SHIELD] -= delay;
-            if(you.duration[DUR_DIVINE_SHIELD] <= 1)
+            if (you.duration[DUR_DIVINE_SHIELD] <= 1)
             {
                 you.duration[DUR_DIVINE_SHIELD] = 1;
                 mpr("Your divine shield starts to fade.", MSGCH_DURATION);
@@ -2215,6 +2240,8 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_SLIMIFY, delay, "You feel less slimy.",
                           coinflip(), "Your slime is starting to congeal.");
     _decrement_a_duration(DUR_MISLED, delay, "Your thoughts are your own once more.");
+    _decrement_a_duration(DUR_QUAD_DAMAGE, delay, NULL, 0,
+                          "Quad Damage is wearing off.");
 
     if (you.duration[DUR_PARALYSIS] || you.petrified())
     {
@@ -2357,7 +2384,7 @@ static void _decrement_durations()
         && one_chance_in(5))
     {
         you.duration[DUR_PIETY_POOL]--;
-        gain_piety(1, true);
+        gain_piety(1, 1, true);
 
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_SACRIFICE) || defined(DEBUG_PIETY)
         mpr("Piety increases by 1 due to piety pool.", MSGCH_DIAGNOSTICS);
@@ -2367,18 +2394,32 @@ static void _decrement_durations()
 #endif
     }
 
-    if (!you.permanent_levitation() && !you.permanent_flight())
+    if (you.duration[DUR_LEVITATION])
     {
-        if (_decrement_a_duration(DUR_LEVITATION, delay,
-                                  "You float gracefully downwards.",
-                                  random2(6),
-                                  "You are starting to lose your buoyancy!"))
+        if (!you.permanent_levitation() && !you.permanent_flight())
         {
-            burden_change();
-            // Landing kills controlled flight.
-            you.duration[DUR_CONTROLLED_FLIGHT] = 0;
-            // Re-enter the terrain.
-            move_player_to_grid(you.pos(), false, true);
+            if (_decrement_a_duration(DUR_LEVITATION, delay,
+                                      "You float gracefully downwards.",
+                                      random2(6),
+                                      "You are starting to lose your buoyancy!"))
+            {
+                burden_change();
+                // Landing kills controlled flight.
+                you.duration[DUR_CONTROLLED_FLIGHT] = 0;
+                you.attribute[ATTR_LEV_UNCANCELLABLE] = 0;
+                // Re-enter the terrain.
+                move_player_to_grid(you.pos(), false, true);
+            }
+        }
+        else
+        {
+            // Just time out potions/spells/miscasts.
+            if ((you.duration[DUR_LEVITATION] -= delay) <= 0)
+            {
+                you.attribute[ATTR_LEV_UNCANCELLABLE] = 0;
+                // permanent_levitation() has a hack that requires >1
+                you.duration[DUR_LEVITATION] = 2;
+            }
         }
     }
 
@@ -2522,7 +2563,7 @@ static void _regenerate_hp_and_mp(int delay)
         return;
 
     ASSERT(tmp >= 0 && tmp < 100);
-    you.hit_points_regeneration = static_cast<unsigned char>(tmp);
+    you.hit_points_regeneration = tmp;
 
     // XXX: Doing the same as the above, although overflow isn't an
     // issue with magic point regeneration, yet. -- bwr
@@ -2541,7 +2582,7 @@ static void _regenerate_hp_and_mp(int delay)
     }
 
     ASSERT(tmp >= 0 && tmp < 100);
-    you.magic_points_regeneration = static_cast<unsigned char>(tmp);
+    you.magic_points_regeneration = tmp;
 }
 
 static void _update_mold_state(const coord_def & pos)
@@ -2589,41 +2630,15 @@ static void _update_mold()
     }
 }
 
-void world_reacts()
+static void _player_reacts()
 {
-    reset_show_terrain();
-
-    crawl_state.clear_mon_acting();
-
-    if (!crawl_state.game_is_arena())
-    {
-        you.turn_is_over = true;
-        religion_turn_end();
-        crawl_state.clear_god_acting();
-    }
-
-#ifdef USE_TILE
-    if (Hints.hints_left)
-    {
-        tiles.clear_text_tags(TAG_TUTORIAL);
-        tiles.place_cursor(CURSOR_TUTORIAL, Region::NO_CURSOR);
-    }
-#endif
-
-    _check_banished();
-    _check_shafts();
-    _check_sanctuary();
-
-    run_environment_effects();
-
     if (!you.cannot_act() && !player_mutation_level(MUT_BLURRY_VISION)
         && x_chance_in_y(you.skills[SK_TRAPS_DOORS], 50))
     {
         search_around(false); // Check nonadjacent squares too.
     }
 
-    if (!crawl_state.game_is_arena())
-        stealth = check_stealth();
+    stealth = check_stealth();
 
 #ifdef DEBUG_STEALTH
     // Too annoying for regular diagnostics.
@@ -2642,20 +2657,20 @@ void world_reacts()
     if (you.unrand_reacts != 0)
         unrand_reacts();
 
-    if (!crawl_state.game_is_arena() && one_chance_in(10))
+    if (one_chance_in(10))
     {
+        const int teleportitis_level = player_teleport();
         // this is instantaneous
-        if (player_teleport() > 0 && one_chance_in(100 / player_teleport()))
+        if (teleportitis_level > 0 && one_chance_in(100 / teleportitis_level))
             you_teleport_now(true);
         else if (you.level_type == LEVEL_ABYSS && one_chance_in(30))
             you_teleport_now(false, true); // to new area of the Abyss
     }
 
-    if (!crawl_state.game_is_arena() && env.cgrid(you.pos()) != EMPTY_CLOUD)
+    if (env.cgrid(you.pos()) != EMPTY_CLOUD)
         in_a_cloud();
 
-    if (!crawl_state.game_is_arena())
-        slime_wall_damage(&you, you.time_taken);
+    slime_wall_damage(&you, you.time_taken);
 
     if (you.level_type == LEVEL_DUNGEON && you.duration[DUR_TELEPATHY])
         detect_creatures(1 + you.duration[DUR_TELEPATHY] /
@@ -2681,6 +2696,54 @@ void world_reacts()
     // Player stealth check.
     seen_monsters_react();
 
+    update_stat_zero();
+}
+
+// Ran after monsters and clouds get to act.
+static void _player_reacts_to_monsters()
+{
+    if (you.duration[DUR_FIRE_SHIELD] > 0)
+        manage_fire_shield(you.time_taken);
+
+    if (player_mutation_level(MUT_ANTENNAE))
+        check_antennae_detect();
+
+    handle_starvation();
+}
+
+void world_reacts()
+{
+    // All markers should be activated at this point.
+    ASSERT(!env.markers.need_activate());
+
+    reset_show_terrain();
+
+    crawl_state.clear_mon_acting();
+
+    if (!crawl_state.game_is_arena())
+    {
+        you.turn_is_over = true;
+        religion_turn_end();
+        crawl_state.clear_god_acting();
+    }
+
+#ifdef USE_TILE
+    if (Hints.hints_left)
+    {
+        tiles.clear_text_tags(TAG_TUTORIAL);
+        tiles.place_cursor(CURSOR_TUTORIAL, Region::NO_CURSOR);
+    }
+#endif
+
+    _check_banished();
+    _check_shafts();
+    _check_sanctuary();
+
+    run_environment_effects();
+
+    if (!crawl_state.game_is_arena())
+        _player_reacts();
+
     handle_monsters();
 
     _check_banished();
@@ -2704,17 +2767,11 @@ void world_reacts()
     }
 
     handle_time();
-    update_stat_zero();
     manage_clouds();
     _update_mold();
 
-    if (you.duration[DUR_FIRE_SHIELD] > 0)
-        manage_fire_shield(you.time_taken);
-
-    if (player_mutation_level(MUT_ANTENNAE))
-        check_antennae_detect();
-
-    handle_starvation();
+    if (!crawl_state.game_is_arena())
+        _player_reacts_to_monsters();
 
     viewwindow();
 
@@ -2823,10 +2880,38 @@ static int _check_adjacent(dungeon_feature_type feat, coord_def& delta)
 {
     int num = 0;
 
-    for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
+    std::vector<coord_def> doors;
+    for (adjacent_iterator ai(you.pos(), true); ai; ++ai)
     {
         if (grd(*ai) == feat)
         {
+            // Specialcase doors to take into account gates.
+            if (feat_is_door(feat))
+            {
+                bool found_door = false;
+                for (unsigned int i = 0; i < doors.size(); ++i)
+                {
+                    if (doors[i] == *ai)
+                    {
+                        found_door = true;
+                        break;
+                    }
+                }
+
+                // Already included in a gate, skip this door.
+                if (found_door)
+                    continue;
+                    
+                // Check if it's part of a gate. If so, remember all its doors.
+                std::set<coord_def> all_door;
+                find_connected_identical(*ai, grd(*ai), all_door);
+                for (std::set<coord_def>::const_iterator dc = all_door.begin();
+                     dc != all_door.end(); ++dc)
+                {
+                     doors.push_back(*dc);
+                }
+            }
+
             num++;
             delta = *ai - you.pos();
         }
@@ -3194,9 +3279,9 @@ static void _open_door(coord_def move, bool check_confused)
         // Even if some of the door is out of LOS, we want the entire
         // door to be updated.  Hitting this case requires a really big
         // door!
-        if (is_terrain_seen(dc))
+        if (env.map_knowledge(dc).seen())
         {
-            set_map_knowledge_obj(dc, DNGN_OPEN_DOOR);
+            env.map_knowledge(dc).set_feature(DNGN_OPEN_DOOR);
 #ifdef USE_TILE
             env.tile_bk_bg(dc) = TILE_DNGN_OPEN_DOOR;
 #endif
@@ -3419,9 +3504,9 @@ static void _close_door(coord_def move)
             // Even if some of the door is out of LOS once it's closed
             // (or even if some of it is out of LOS when it's open), we
             // want the entire door to be updated.
-            if (is_terrain_seen(dc))
+            if (env.map_knowledge(dc).seen())
             {
-                set_map_knowledge_obj(dc, DNGN_CLOSED_DOOR);
+                env.map_knowledge(dc).set_feature(DNGN_CLOSED_DOOR);
 #ifdef USE_TILE
                 env.tile_bk_bg(dc) = TILE_DNGN_CLOSED_DOOR;
 #endif
@@ -3487,20 +3572,21 @@ static void _do_berserk_no_combat_penalty(void)
             break;
         }
 
-        // I do these three separately, because the might and
+        const int hasted_base_delay = BASELINE_DELAY / 2;
+        int berserk_delay_penalty = you.berserk_penalty * hasted_base_delay;
+        // Do these three separately, because the might and
         // haste counters can be different.
-        int berserk_delay_penalty = you.berserk_penalty * BASELINE_DELAY;
         you.duration[DUR_BERSERKER] -= berserk_delay_penalty;
-        if (you.duration[DUR_BERSERKER] < 1)
-            you.duration[DUR_BERSERKER] = 1;
+        if (you.duration[DUR_BERSERKER] < hasted_base_delay)
+            you.duration[DUR_BERSERKER] = hasted_base_delay;
 
         you.duration[DUR_MIGHT] -= berserk_delay_penalty;
-        if (you.duration[DUR_MIGHT] < 1)
-            you.duration[DUR_MIGHT] = 1;
+        if (you.duration[DUR_MIGHT] < hasted_base_delay)
+            you.duration[DUR_MIGHT] = hasted_base_delay;
 
         you.duration[DUR_HASTE] -= berserk_delay_penalty;
-        if (you.duration[DUR_HASTE] < 1)
-            you.duration[DUR_HASTE] = 1;
+        if (you.duration[DUR_HASTE] < hasted_base_delay)
+            you.duration[DUR_HASTE] = hasted_base_delay;
     }
     return;
 }                               // end do_berserk_no_combat_penalty()
@@ -3592,10 +3678,10 @@ static void _move_player(coord_def move)
         you.time_taken = div_rand_round(you.time_taken * 3, 2);
 
         monsters * current = monster_at(you.pos());
-        if(!current || !fedhas_passthrough(current))
+        if (!current || !fedhas_passthrough(current))
         {
             // Probably need better messages. -cao
-            if(mons_genus(targ_monst->type) == MONS_FUNGUS)
+            if (mons_genus(targ_monst->type) == MONS_FUNGUS)
             {
                 mprf("You walk carefully through the fungus.");
             }
@@ -4024,6 +4110,8 @@ static void _compile_time_asserts()
     COMPILE_CHECK(sizeof(float) == sizeof(int32_t), c15);
     COMPILE_CHECK(sizeof(feature_property_type) <= sizeof(terrain_property_t), c16);
     COMPILE_CHECK(sizeof(level_flag_type) <= sizeof(int32_t), c17);
+    // Travel cache, traversable_terrain.
+    COMPILE_CHECK(NUM_FEATURES <= 256, c18);
 
     // Also some runtime stuff; I don't know if the order of branches[]
     // needs to match the enum, but it currently does.

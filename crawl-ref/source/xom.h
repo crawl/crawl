@@ -80,7 +80,7 @@ void xom_is_stimulated(int maxinterestingness, const std::string& message,
                        bool force_message = false);
 bool xom_is_nice(int tension = -1);
 int xom_acts(bool niceness, int sever, int tension = -1, bool debug = false);
-const char *describe_xom_favour(bool upper = false);
+const std::string describe_xom_favour(bool upper = false);
 
 inline int xom_acts(int sever, int tension = -1)
 {

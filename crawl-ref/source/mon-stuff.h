@@ -40,6 +40,7 @@ struct level_exit
 };
 
 #define FRESHEST_CORPSE 210
+#define ROTTING_CORPSE   99
 
 #define YOU_KILL(x) ((x) == KILL_YOU || (x) == KILL_YOU_MISSILE \
                      || (x) == KILL_YOU_CONF)
@@ -144,8 +145,9 @@ bool monster_descriptor(int which_class, mon_desc_type which_descriptor);
 // Return your target, if it still exists and is visible to you.
 monsters *get_current_target();
 
-void mons_get_damage_level(const monsters*, std::string& desc,
-                           mon_dam_level_type&);
+mon_dam_level_type mons_get_damage_level(const monsters*);
+
+std::string get_damage_level_string(monster_type mon_type, mon_dam_level_type mdam);
 
 void seen_monster(monsters *monster);
 

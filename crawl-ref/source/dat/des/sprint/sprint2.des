@@ -1,0 +1,912 @@
+NAME:   the_violet_keep_of_menkaure
+DESC:   Sprint II: "The Violet Keep of Menkaure"
+TAGS:   sprint entry no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+ORIENT: encompass
+FLAGS:  no_rotate no_hmirror no_vmirror
+SHUFFLE: 123
+SUBST:  ' = '......
+KFEAT:  ' = net trap / needle trap / bolt trap / axe trap / arrow trap
+MONS:   Menkaure, baby alligator, crocodile, big fish, kraken, shark
+MARKER: a = lua:fog_machine { \
+             pow_min = 1, pow_max = 2, delay = 3, \
+             size = 1, walk_dist = 8, spread_rate= -1, \
+             cloud_type= "steam" }
+KFEAT:  a = shallow_water
+MARKER: d = lua:fog_machine { \
+             pow_min = 3, pow_max = 6, delay = 3, \
+             size = 1, walk_dist = 16, spread_rate= -1, \
+             cloud_type= "grey smoke" }
+KFEAT:  d = shallow_water
+KMONS:  b = orange rat / scorpion / giant blowfly / blink frog
+KITEM:  b = star_item
+SUBVAULT: A : sprint2_stairs_cluster
+SUBVAULT: B : sprint2_nice
+SUBVAULT: C : sprint2_nice
+SUBVAULT: D : sprint2_nice
+SUBVAULT: E : sprint2_obstacle
+SUBVAULT: F : sprint2_obstacle
+SUBVAULT: H : sprint2_obstacle
+SUBVAULT: K : sprint2_obstacle
+SUBVAULT: S : sprint2_obstacle
+SUBVAULT: G : sprint2_timed_cluster
+SUBVAULT: I : sprint2_smallroom_cluster
+SUBVAULT: J : sprint2_smallroom_final_cluster
+SUBVAULT: L : sprint2_transparent_cluster
+SUBVAULT: M : sprint2_second_timed_cluster
+SUBVAULT: N : sprint2_sniper_area
+SUBVAULT: O : sprint2_heavy_combat_area
+SUBVAULT: P : sprint2_mutation_trap_area
+SUBVAULT: Q : sprint2_forest_area
+SUBVAULT: R : sprint2_light_combat_area
+SUBVAULT: T : sprint2_behind_water
+SUBVAULT: U : sprint2_near_end_vault
+MAP
+cRRRRRRRRRRRRRRRRRRRRRR  JJJJ  GGGGGGQQQQQQQQQQQQQQQQQQQQQQQQQ
+cRRRRRRRRRRRRRRRRRRRRRR  JJJJ  GGGGGGQQQQQQQQQQQQQQQQQQQQQQQQQ
+cRRRRRRRRRRRRRRRRRRRRRRJJJJJJJJGGGGGGQQQQQQQQQQQQQQQQQQQQQQQQQ
+cRRRRRRRRRRRRRcccc+ccccJJJJJJJJGGGGGGQQQQQQQQQQQQQQQQQQQQQQQQQ
+cRRRRRRRRRRRRccHHHHHHHccJJJJJGGGGGGGGQQQQQQQQQQQQQQQQQQQQQQQQQ
+cRRRRRRRRRRRccHHHHHHHHHccJJJJGGGGGGGGQQQQQQQQQQQQQQQQQQQQQQQQQ
+cRRRRRRRRRRR+HHHHHHHHHHHcJJJJGGGGGGGGQQQQQQQQQQQQQQQQQQQQQQQQQ
+cMMMMMMMMMMMccHHHHHHHHHccI'''GGGGGGGGQQQQQQQQQQQXXXXXXPPPPPPPP
+cMMMMMMMMMMMWccHHHHHHHccII''''GGGGGGGollllllllXXX''''XPPPPPPPP
+cMMMMMMMMMMMWWc+++m+++cIIII''''GGGGGGooooooooooOOOOO'XPPPPPPPP
+cmmmmmmmmmmWWW.........IIII''''GGGGGGoDDDDDDDDoOOOOO'XPPPPPPPP
+cmBBBBBBBBmWWWW2AAAAA..IIIIIII'GGGGGGoDDDDDDDDoOOOOO'XPPPPPPPP
+cmBBBBBBBBmWWWWAAAAAAA.IIIIIII'GGGGGGoDDDDDDDDoOOOOO'XPPPPPPPP
+cmBBBBBBBBmWWWWAAAAAAA....IIII''GGGGGoDDDDDDDDoOOOOO'XPPPPPPPP
+cmBBBBBBBBmWWAAAAAAAAAAA..IIIII''GGGGoDDDDDDDDoOOOOO'XPPPPPPPP
+cmBBBBBBBBmWAAAAAAAAAAAAA..IIII''GGGGoDDDDDDDDoOOOOO'XPPPPPPPP
+cmBBBBBBBBmWAAAAAAAAAAAAA..IIII''GGGGoDDDDDDDDoOOOOO'XPPPPPPPP
+cmBBBBBBBB+WAAAAAAAAAAAAA..IIII''GGGGoDDDDDDDDoOOOOO'XPPPPPPPP
+cmBBBBBBBBmWAAAAAAAAAAAAA....III''GGGooooooo+ooOOOOO'XPPPPPPPP
+cooooooommmWAAAAAAAAAAAAA1.....WWWWWWWWWWWWW...wwwXUUUUUUUUccc
+ccLLLLLccccWWAAAAAAAAAAAWW.....Wm+mmmmmmmmWccc.w5wXUUUUUUUcc
+ccLLLLLLLLccWWWAAAAAAAWWWWWWW..WmCCCCCCCCmWW4ccwwwXUUUUUUcc
+ccLLLLLLm+cc+cWAAAAAAAWWWWWWWW3WmCCCCCCCCmW4wwccccXXXXXWcc
+ccLLLLLmmKccbcWWAAAAAWWWlllaWWWWmCCCCCCCCmWWW4wccTTTTTXWc
+ccLLLLmmKKKccccWWWWWWWWWWllllWWWmCCCCCCCCmWW4wwwTTTTTTXWc
+ccLLLLmKKKKKc|c+++m+++cWlllllllWmCCCCCCCCmWWdW4wTTTTTTXWc
+ccLLLLmKKKKKcccEEEEEEEcclllcccllmCCCCCCCCmW4WWw4TTTTTTXWc
+ccLLLLmKKKKKccEEEEEEEEEccllc|cllmCCCCCCCCmWWww4wXTTTTTXWc
+ccLLLL+KKKKK+EEEEEEEEEEE+llc+cllmCCCCCCCCmWwwwXXXXXXXXXWc
+ccLLLLcKKKKKccEEEEEEEEEcclllllllmmmmmmmmmmWwwwo666wwwwWWc
+ccLLLLcKKKKKcccEEEEEEEccmmmmmmmmmWWWWWWWWWwwwwo666wwwwWWc
+ccLLLLcKKKKKcNcccc+ccccFFFFFFFmmmWccccccccwXXXXXXXXXwwWWc
+ccLLLLccKKKccNNNNmmmccFFFFFFFFFmmWcNNNNNNcXXSSSSSSSXXwWWc
+ccLLLLcccKccNNNNNNNN+FFFFFFFFFFF+WcNNNNNNcXSSSSSSSSSXXWWc
+ccLLLL''cccNNNNNNNNNccFFFFFFFFFccccNNNNNN+SSSSSSSSSSS+WWc
+ccLLLLcNNNNNNNNNNNNNNccFFFFFFFcccccNNNNNNccSSSSSSSSSccccc
+cccccccNNNNNNNNNNNNNNNccccmccccNNNNNNNNNNcccSSSSSSScc
+cNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNc ccccccccc
+cccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+NAME:   sprint2_stairs_cluster_1
+TAGS:   sprint2_stairs_cluster
+SUBVAULT: A : sprint2_early
+SUBVAULT: B : sprint2_early
+SUBVAULT: b : sprint2_early
+SUBVAULT: D : sprint2_early
+SHUFFLE: de
+LFLOORCOL: magenta
+COLOUR: x = magenta
+COLOUR: + = magenta
+MAP
+    xx+xx
+   xxDDDxx
+   xDDDDDx
+ xxxxDDDxxxx
+xxAxxx+xxxBxx
+xAAAxx.xxBBBx
++AAA+{[(+BBB+
+xAAAxx.xxBBBx
+xxAxxx+xxxBxx
+ xxxxbbbxxxx
+   xbbbbbx
+   xxbbbxx
+    xx+xx
+ENDMAP
+
+NAME:   sprint2_early_2
+TAGS:   sprint2_early no_item_gen no_trap_gen no_pool_fixup
+MONS:   mermaid
+KITEM:  $ = gold q:243
+COLOUR: x = magenta
+MAP
+ ...
+.1x..
+ .$.
+ENDMAP
+
+NAME:   sprint2_early_3
+TAGS:   sprint2_early no_item_gen no_trap_gen no_pool_fixup
+MONS:   necrophage
+KITEM:  $ = gold q:243
+COLOUR: x = magenta
+MAP
+ .x.
+11x11
+ .$.
+ENDMAP
+
+NAME:   sprint2_early_5
+TAGS:   sprint2_early no_item_gen no_trap_gen no_pool_fixup
+MONS:   giant snail
+KITEM:  $ = gold q:243
+COLOUR: x = magenta
+MAP
+ .x.
+11xx1
+ .$x
+ENDMAP
+
+NAME:   sprint2_early_6
+TAGS:   sprint2_early no_item_gen no_trap_gen no_pool_fixup
+MONS:   brain worm
+KITEM:  $ = gold q:243
+COLOUR: x = magenta
+MAP
+ .xx
+1xx11
+ 1$.
+ENDMAP
+
+NAME:   sprint2_early_7
+TAGS:   sprint2_early no_item_gen no_trap_gen no_pool_fixup
+MONS:   boulder beetle
+KITEM:  $ = gold q:243
+COLOUR: x = magenta
+MAP
+ .x.
+.1x1.
+ .x$
+ENDMAP
+
+NAME:   sprint2_early_8
+TAGS:   sprint2_early no_item_gen no_trap_gen no_pool_fixup
+MONS:   hippogriff
+KITEM:  $ = gold q:243
+COLOUR: x = magenta
+MAP
+ .x.
+1xxx1
+ .x$
+ENDMAP
+
+NAME:   sprint2_early_9
+TAGS:   sprint2_early no_item_gen no_trap_gen no_pool_fixup
+MONS:   giant centipede
+KITEM:  $ = gold q:243
+COLOUR: x = magenta
+MAP
+ .x.
+11x11
+ x$x
+ENDMAP
+
+NAME:   sprint2_temple
+TAGS:   sprint2_nice no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+SHUFFLE: abdefghijklmnopqr
+KFEAT:  a = altar_zin
+KFEAT:  b = altar_shining_one
+KFEAT:  d = altar_kikubaaqudgha
+KFEAT:  e = altar_yredelemnul
+KFEAT:  f = altar_xom
+KFEAT:  g = altar_vehumet
+KFEAT:  h = altar_okawaru
+KFEAT:  i = altar_makhleb
+KFEAT:  j = altar_sif_muna
+KFEAT:  k = altar_trog
+KFEAT:  l = altar_nemelex_xobeh
+KFEAT:  m = altar_elyvilon
+KFEAT:  n = altar_lugonu
+KFEAT:  o = altar_beogh
+KFEAT:  p = altar_jiyva
+KFEAT:  q = altar_fedhas
+KFEAT:  r = altar_cheibriados
+MAP
+....d...
+...g.h..
+..k.l...
+.T.o.p..
+..a.i.m.
+...r.q.j
+....n.f.
+.....b.e
+ENDMAP
+
+NAME:   sprint2_shoproom
+TAGS:   sprint2_nice no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+NSUBST: a = 1:b / 1:c / 2:d / 2:e / 1:f / 1:g / 2:h / 1:i / *:a
+KFEAT:  a = any shop
+KFEAT:  b = book shop
+KFEAT:  c = antique weapon shop
+KFEAT:  d = antique armour shop
+KFEAT:  e = distillery shop
+KFEAT:  f = food shop
+KFEAT:  g = wand shop
+KFEAT:  h = jewellery shop
+KFEAT:  i = scroll shop
+MAP
+....a.a.
+...a.a..
+..a.a...
+.T.a....
+..a.a...
+...a.a..
+....a.a.
+.....a.a
+ENDMAP
+
+NAME:   sprint2_basic_supplies
+TAGS:   sprint2_nice no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+NSUBST: % = 1:a / 1:b / 1:c / *:%
+KITEM:  a = potion of levitation q:3
+KITEM:  b = potion of resistance q:3
+KITEM:  c = potion of magic q:3
+MAP
+%%%%%%%%
+%%%%%%%%
+%%%%%%%%
+%%%%%%%%
+%%%%%%%%
+%%%%%%%%
+%%%%%%%%
+%%%%%%%%
+ENDMAP
+
+NAME:   sprint2_obstacle_1
+TAGS:   sprint2_obstacle no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+MONS:   patrolling flying skull
+NSUBST: l = 12:1 / *:l
+SHUFFLE: l.
+MARKER: a = lua:fog_machine { \
+             pow_min = 2, pow_max = 4, delay = 3, \
+             size = 4, walk_dist = 8, spread_rate= -1, \
+             cloud_type= "foul pestilence" }
+KFEAT:  a = lava
+MAP
+  lllllll
+ lllllllll
+lllllalllll
+ lllllllll
+  lllllll
+ENDMAP
+
+NAME:   sprint2_obstacle_2
+TAGS:   sprint2_obstacle no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+KMONS:  a = ice statue
+SHUFFLE: w.
+MARKER: a = lua:fog_machine { \
+             pow_min = 2, pow_max = 4, delay = 3, \
+             size = 4, walk_dist = 8, spread_rate= -1, \
+             cloud_type= "freezing vapour" }
+MAP
+  wwwwwww
+ wwwwwwwww
+wwwwwawwwww
+ wwwwwwwww
+  wwwwwww
+ENDMAP
+
+NAME:   sprint2_obstacle_3
+TAGS:   sprint2_obstacle no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+KMONS:  a = silver statue
+SHUFFLE:  l.
+MARKER: a = lua:fog_machine { \
+             pow_min = 2, pow_max = 4, delay = 3, \
+             size = 4, walk_dist = 8, spread_rate= -1, \
+             cloud_type= "poison gases" }
+MAP
+  lllllll
+ lllllllll
+lllllalllll
+ lllllllll
+  lllllll
+ENDMAP
+
+NAME:   sprint2_obstacle_4
+TAGS:   sprint2_obstacle no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+KMONS:  a = orange crystal statue
+MARKER: a = lua:fog_machine { \
+             pow_min = 2, pow_max = 4, delay = 3, \
+             size = 4, walk_dist = 8, spread_rate= -1, \
+             cloud_type= "mutagenic fog" }
+MAP
+  lllllll
+ lllllllll
+lllllalllll
+ lllllllll
+  lllllll
+ENDMAP
+
+NAME:   sprint2_obstacle_5
+TAGS:   sprint2_obstacle no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+NSUBST: l = 4:D / *:l
+KMONS:  D = lava snake
+MARKER: a = lua:fog_machine { \
+             pow_min = 2, pow_max = 4, delay = 3, \
+             size = 4, walk_dist = 8, spread_rate= -1, \
+             cloud_type= "flame" }
+MAP
+  lllllll
+ lllllllll
+lllllalllll
+ lllllllll
+  lllllll
+ENDMAP
+
+NAME:   sprint2_obstacle_6
+TAGS:   sprint2_obstacle no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+KMONS:  a = Roxanne
+SUBST:  l = .
+MARKER: a = lua:fog_machine { \
+             pow_min = 2, pow_max = 4, delay = 3, \
+             size = 4, walk_dist = 8, spread_rate= -1, \
+             cloud_type= "rain" }
+MAP
+  lllllll
+ lllllllll
+lllllalllll
+ lllllllll
+  lllllll
+ENDMAP
+
+NAME:   sprint2_obstacle_7
+TAGS:   sprint2_obstacle no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+NSUBST: l = 8:1 / *:w
+KMONS:  a = electric eel
+MONS:   electric eel
+MARKER: a = lua:fog_machine { \
+             pow_min = 2, pow_max = 4, delay = 3, \
+             size = 4, walk_dist = 8, spread_rate= -1, \
+             cloud_type= "rain" }
+MAP
+  lllllll
+ lllllllll
+lllllalllll
+ lllllllll
+  lllllll
+ENDMAP
+
+
+NAME:   sprint2_timed_cluster_1
+TAGS:   sprint2_timed_cluster no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+MARKER: + = lua:restrict_door()
+{{  local messager =
+    timed_msg {
+      visible = true,
+      messages = time_messages(27000, "", "", "", "")
+    } }}
+MARKER: k = lua:fog_machine { \
+             pow_min = 2, pow_max = 4, delay = 3, \
+             size = 1, walk_dist = 12, spread_rate= -1, \
+             cloud_type= "foul pestilence" }
+MARKER: x = lua: timed_marker {  \
+                 low=250, high=350, msg=messager, floor = 'floor' }
+KFEAT:  x = stone_wall
+MARKER: y = lua: timed_marker {  \
+                 low=1000, high=1200, msg=messager, floor = 'floor' }
+KFEAT:  y = stone_wall
+MARKER: z = lua: timed_marker {  \
+                 low=4000, high=4400, msg=messager, floor = 'floor' }
+KFEAT:  z = stone_wall
+MONS:   patrolling polar bear, patrolling rotting hulk, patrolling swamp drake, patrolling crystal golem, patrolling toenail golem, patrolling iron golem
+KMONS:  a = patrolling yellow wasp
+KITEM:  m = gold q:81
+KMONS:  m = patrolling yaktaur
+KMONS:  b = patrolling death drake
+KMONS:  n = patrolling death drake
+KITEM:  n = potion of levitation q:3
+KMONS:  d = patrolling electric golem
+KITEM:  d = gold q:243
+KMONS:  o = wood golem
+KMONS:  p = clay golem
+SHUFFLE: fgiAC
+KMONS:  f = greater mummy
+KMONS:  g = golden eye
+KMONS:  i = curse toe
+KMONS:  A = vampire knight
+KMONS:  C = Gloorx Vloq
+COLOUR: c = magenta
+COLOUR: = = magenta
+COLOUR: x = magenta
+COLOUR: y = magenta
+COLOUR: z = magenta
+MAP
+cc.
+cxcc
+c11c
+ca1c
+cmcc
+cccc.
+||cycc
+||c22c
+||cb3c
+||ccnc
+...czc.
+.k.coccc
+...=p45c
+X+XXXd6c
+f.gXXX=c
+.....X
+.....X
+i.C.AX
+XXXXXX
+ENDMAP
+
+NAME:   sprint2_second_timed_cluster_1
+TAGS:   sprint2_second_timed_cluster no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+FLAGS:  no_rotate no_hmirror no_vmirror
+{{  local messager =
+    timed_msg {
+      visible = true,
+      messages = time_messages(27000, "", "", "", "")
+    } }}
+KITEM:  $ = gold q:81
+SHUFFLE: 123, 456
+MONS:   golden dragon, Cacodemon, storm dragon, skeletal warrior, kobold demonologist, yaktaur captain
+KMONS:  d = elephant
+KMONS:  e = centaur warrior
+KMONS:  f = Kirke
+KMONS:  g = frost giant
+KMONS:  h = deep elf high priest
+KMONS:  i = bone dragon
+MARKER: x = lua: timed_marker {  \
+                 low=500, high=750, msg=messager, floor = 'floor' }
+KFEAT:  x = stone_wall
+MARKER: y = lua: timed_marker {  \
+                 low=2000, high=3000, msg=messager, floor = 'floor' }
+KFEAT:  y = stone_wall
+COLOUR: c = magenta
+COLOUR: x = magenta
+COLOUR: y = magenta
+MAP
+cghiccdefcc
+c$123y$456x
+ccccccccccc
+ENDMAP
+
+
+NAME:   sprint2_smallroom_cluster_1
+TAGS:   sprint2_smallroom_cluster no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+FLAGS:  no_rotate no_hmirror no_vmirror
+MARKER: + = lua:restrict_door()
+MONS:   deep elf master archer
+SUBVAULT: A : sprint2_smallroom
+SUBVAULT: B : sprint2_smallroom
+SUBVAULT: D : sprint2_smallroom
+MAP
+  l
+ 1l
+cccc
+cAA+
+cAAcccc
+ccccBB+
+   cBBc
+   ccccc
+    cDD+
+    cDDc
+    cccc
+      ccc
+ENDMAP
+
+NAME:   sprint2_smallroom_final_cluster_1
+TAGS:   sprint2_smallroom_final_cluster no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+FLAGS:  no_rotate no_hmirror no_vmirror
+MARKER: + = lua:restrict_door()
+NSUBST: * = 1:a / 1:b / *:|
+KITEM:  a = scroll of acquirement q:3 / potion of cure mutation q:3 / potion of experience
+KITEM:  b = scroll of acquirement / potion of magic q:9 / potion of speed q:3
+SUBVAULT: D : sprint2_smallroom
+SUBVAULT: E : sprint2_smallroom
+SUBVAULT: F : sprint2_smallroom
+SUBVAULT: G : sprint2_smallroom
+SUBVAULT: H : sprint2_smallroom
+SUBVAULT: I : sprint2_smallroom
+MAP
+  ****
+  ****
+HHFFGGII
+HHFFGGII
+ UDDEE
+  DDEE
+  c++c
+ENDMAP
+
+
+NAME:   sprint2_smallroom_1
+TAGS:   sprint2_smallroom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+MONS:   soldier ant
+KITEM:  $ = gold q:81
+MAP
+11
+1$
+ENDMAP
+
+NAME:   sprint2_smallroom_2
+TAGS:   sprint2_smallroom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+MONS:   hell hog
+KITEM:  $ = gold q:81
+MAP
+*1
+1$
+ENDMAP
+
+
+NAME:   sprint2_smallroom_3
+TAGS:   sprint2_smallroom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+MONS:   redback
+KITEM:  $ = gold q:81
+MAP
+*1
+1$
+ENDMAP
+
+NAME:   sprint2_smallroom_4
+TAGS:   sprint2_smallroom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+MONS:   wyvern
+KITEM:  $ = gold q:81
+MAP
+*1
+1$
+ENDMAP
+
+NAME:   sprint2_smallroom_5
+TAGS:   sprint2_smallroom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+MONS:   unseen horror
+KITEM:  $ = gold q:81
+MAP
+%1
+1$
+ENDMAP
+
+NAME:   sprint2_smallroom_6
+TAGS:   sprint2_smallroom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+MONS:   dragon
+KITEM:  $ = gold q:81
+MAP
+%*
+1$
+ENDMAP
+
+NAME:   sprint2_smallroom_7
+TAGS:   sprint2_smallroom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+MONS:   ice dragon
+KITEM:  $ = gold q:81
+MAP
+%*
+1$
+ENDMAP
+
+NAME:   sprint2_smallroom_8
+TAGS:   sprint2_smallroom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+MONS:   iron elemental
+KITEM:  $ = gold q:81
+MAP
+**
+1$
+ENDMAP
+
+NAME:   sprint2_smallroom_9
+TAGS:   sprint2_smallroom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+MONS:   spiny frog
+KITEM:  $ = gold q:81
+MAP
+%1
+1$
+ENDMAP
+
+NAME:   sprint2_smallroom_10
+TAGS:   sprint2_smallroom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+MONS:   great orb of eyes
+KITEM:  $ = gold q:81
+MAP
+%%
+1$
+ENDMAP
+
+NAME:   sprint2_smallroom_11
+TAGS:   sprint2_smallroom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+MONS:   griffon
+KITEM:  $ = gold q:81
+MAP
+11
+1$
+ENDMAP
+
+NAME:   sprint2_smallroom_12
+TAGS:   sprint2_smallroom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+MONS:   pulsating lump
+KITEM:  $ = gold q:81
+MAP
+11
+1$
+ENDMAP
+
+NAME:   sprint2_smallroom_13
+TAGS:   sprint2_smallroom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+MONS:   shining eye
+KITEM:  $ = gold q:81
+MAP
+11
+1$
+ENDMAP
+
+NAME:   sprint2_smallroom_14
+TAGS:   sprint2_smallroom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+MONS:   giant amoeba
+KITEM:  $ = gold q:81
+MAP
+11
+1$
+ENDMAP
+
+NAME:   sprint2_smallroom_15
+TAGS:   sprint2_smallroom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+MONS:   pulsating lump
+KITEM:  $ = gold q:81
+MAP
+11
+1$
+ENDMAP
+
+NAME:   sprint2_smallroom_16
+TAGS:   sprint2_smallroom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+MONS:   black bear
+KITEM:  $ = gold q:81
+MAP
+11
+1$
+ENDMAP
+
+NAME:   sprint2_smallroom_17
+TAGS:   sprint2_smallroom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+MONS:   grizzly bear
+KITEM:  $ = gold q:81
+MAP
+%1
+1$
+ENDMAP
+
+NAME:   sprint2_smallroom_18
+TAGS:   sprint2_smallroom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+MONS:   spectral thing
+KITEM:  $ = gold q:81
+MAP
+%1
+1$
+ENDMAP
+
+NAME:   sprint2_smallroom_19
+TAGS:   sprint2_smallroom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+MONS:   death yak
+KITEM:  $ = gold q:81
+MAP
+%%
+1$
+ENDMAP
+
+
+
+NAME:   sprint2_transparent_cluster_1
+TAGS:   sprint2_transparent_cluster no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+FLAGS:  no_rotate no_hmirror no_vmirror
+MARKER: + = lua:restrict_door()
+MONS:   oklob plant, orc warlord / Nikola / draconian knight, toenail golem, the Lernaean hydra
+SUBST:  ' = '.
+KFEAT:  ' = net trap / needle trap / bolt trap / axe trap / arrow trap
+KFEAT:  , = book shop
+KFEAT:  f = any shop
+NSUBST: | = 1:a / 2:b / 1:d / 6:$ / *:|
+KITEM:  $ = gold q:81
+KITEM:  a = scroll of acquirement q:3 / potion of cure mutation q:3 / potion of experience
+KITEM:  b = scroll of acquirement / potion of magic q:9 / potion of speed q:3
+KITEM:  d = potion of levitation q:3
+SUBVAULT: A : sprint2_smallroom
+SUBVAULT: B : sprint2_smallroom
+SUBVAULT: D : sprint2_smallroom
+MAP
+*BBmc
+*BBmAA+'
+,1*+AA
+*DDm%
+*DDm
+c+cc
+|2|c
+c+mm
+3|3m
+c+mm
+|4|c
+c+cc
+|||c
+|f|+
+|||c
+cccc
+ENDMAP
+
+NAME:   sprint2_sniper_area_1
+TAGS:   sprint2_sniper_area no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+FLAGS:  no_rotate no_hmirror no_vmirror
+MARKER: + = lua:restrict_door()
+NSUBST: g = 4:g / *:|
+KMONS:  g = orc priest
+NSUBST: b = 2:i / 1:b / *:|
+NSUBST: f = 1:a / 2:b / 1:h / 9:$ / *:|
+KITEM:  a = scroll of acquirement q:3 / potion of cure mutation q:3 / potion of experience
+KITEM:  $ = gold q:81
+KITEM:  b = scroll of acquirement / potion of magic q:9 / potion of speed q:3
+KITEM:  h = potion of levitation q:3
+MONS:   Nessos, brown ooze, sixfirhy, Gastronok, orc sorcerer, dire elephant
+SUBST:  . = '.....
+KFEAT:  ' = net trap / needle trap / bolt trap / axe trap / arrow trap
+KFEAT:  q = book shop
+KFEAT:  i = any shop
+MAP
+            q
+            ....                  ffffff
+           i.......               ffffff
+          cmcmcmcm.               ffffff
+      ||||gggggggm..              ffffff
+      ccccmcmcmcmm...         6555ffffff
+1bbbbl...............+2+333+4+....ffffff
+ENDMAP
+
+NAME:   sprint2_heavy_combat_area_1
+TAGS:   sprint2_heavy_combat_area no_item_gen no_trap_gen no_pool_fixup
+MARKER: + = lua:restrict_door()
+NSUBST: . = 1:1 / 1:2 / 1:3 / 1:4 / 3:$ / *:.
+MONS:   hellephant, Sonja, draconian shifter, giant orange brain
+KITEM:  $ = gold q:243
+COLOUR: X = red
+COLOUR: + = red
+COLOUR: . = red
+MAP
+XX+XX
+X...X
+X.Y.X
+X...X
+X...X
+X...X
+X...X
+X.Y.X
+X...X
+XX+XX
+ENDMAP
+
+NAME:   sprint2_mutation_trap_area_1
+TAGS:   sprint2_mutation_trap_area no_item_gen no_trap_gen no_pool_fixup
+FLAGS:  no_rotate no_hmirror no_vmirror
+MARKER: + = lua:restrict_door()
+MONS:   giant eyeball, shining eye
+NSUBST: | = 1:a / *:|
+KITEM:  a = potion of mutation q:27
+MAP
+122..221
+1++++++1
+2+l..l+2
+2+l..l+2
+1+l..l+1
+1+l..l+1
+2+l..l+2
+2+l..l+2
+1+l..l+1
+|Xl..lX|
+|Xl..lX|
+XXl..lXX
+ENDMAP
+
+NAME:   sprint2_forest_area_1
+TAGS:   sprint2_forest_area no_item_gen no_trap_gen no_pool_fixup
+MARKER: + = lua:restrict_door()
+{{
+lua_marker("A", portal_desc { spawn_spot = 1 })
+
+function mons_gen (data, triggerable, triggerer, marker, ev)
+    function spawn_zombie (x, y, spec)
+        local mons = dgn.create_monster(x, y, spec)
+        crawl.mpr("Murray drops in to check on your progress.")
+        return mons
+    end
+
+    if data.awoke == true then
+        return
+    end
+    local graves = dgn.find_marker_positions_by_prop("spawn_spot", 1)
+    for _, pos in ipairs(graves) do
+        local niceguy = spawn_zombie(pos.x, pos.y, "generate_awake Murray")
+    end
+
+    data.awoke = true
+end
+
+local mons_gen_marker = TriggerableFunction:new {
+    data = {
+        awoke = 0
+    },
+    func = mons_gen,
+    repeated = true,
+    props = {listen_to_slaves = true, only_at_slave = true }
+    }
+mons_gen_marker:add_triggerer(DgnTriggerer:new {
+    type = "player_move" })
+lua_marker("e", mons_gen_marker) }}
+SUBST:  A = .
+SUBST:  e = .
+KITEM:  Z = Orb of Zot
+NSUBST: a = 3:1 / 3:2 / 27:$ / *:'
+SHUFFLE: ' = '........
+KFEAT:  ' = net trap / needle trap / bolt trap / axe trap / arrow trap
+KITEM:  $ = gold q:27
+MONS:   quicksilver dragon, Lorocyproca, giant spore
+COLOUR: X = magenta
+COLOUR: + = magenta
+COLOUR: o = magenta
+MAP
+XXXXXXXXXXXXXXXXXXXXXXXXX
++.3.+aattaaaaattaaaaattaX
+X.3.XattaataaattaaatattaX
+XAXXXattaattaattaattaataX
+X...XattaattaataaattaaaaX
+XXXeXataaattaaaaaattaaaaX
+XZ..XaaaaaXXXXXXXXXX++XXX
+XoooXXXXXXX
+ENDMAP
+
+NAME:   sprint2_light_combat_area_1
+TAGS:   sprint2_light_combat_area no_item_gen no_trap_gen no_pool_fixup
+FLAGS:  no_rotate no_hmirror no_vmirror
+MARKER: + = lua:restrict_door()
+NSUBST: 1 = 1:1 / *:e
+NSUBST: f = 1:f / 1:3 / *:4
+KITEM:  a = scroll of acquirement q:3 / potion of cure mutation q:3 / potion of experience
+KFEAT:  e = any shop
+KITEM:  f = potion of levitation q:3
+SHUFFLE: 12
+MONS:   golden dragon, storm dragon, rotting devil, iron imp
+SUBVAULT: A : sprint2_smallroom
+SUBVAULT: B : sprint2_smallroom
+SUBVAULT: C : sprint2_smallroom
+SUBVAULT: D : sprint2_smallroom
+SUBVAULT: E : sprint2_smallroom
+MAP
+cccccccccccccccccccccc
+cEEDDCC+BBc1111e+.+a2c
+cEEDDCCcBBccccccc.cccc
+c+cccccc+ccff
+ceeeeeecAA+f
+ceeeeeecAAc
+ccccccccc.
+ENDMAP
+
+NAME:   sprint2_behind_water_1
+TAGS:   sprint2_behind_water no_item_gen no_trap_gen no_pool_fixup
+FLAGS:  no_rotate no_hmirror no_vmirror
+MARKER: + = lua:restrict_door()
+MONS:   deep troll, sphinx
+KITEM:  . = gold q:27
+MAP
+ ..c..
+c.1c.2
++..+..
+c.1c.2
+ ..c..
+ENDMAP
+
+NAME:   sprint2_near_end_vault_1
+TAGS:   sprint2_near_end_vault no_item_gen no_trap_gen no_pool_fixup
+FLAGS:  no_rotate no_hmirror no_vmirror
+SHUFFLE: 123
+MONS:   deep elf blademaster, eye of devastation, harpy
+MARKER: d = lua:fog_machine { \
+             pow_min = 3, pow_max = 6, delay = 3, \
+             size = 1, walk_dist = 8, spread_rate= -1, \
+             cloud_type= "thin mist" }
+SUBST:  d = .
+SUBST:  . = %
+MAP
+........
+.1d2.3.
+......
+ENDMAP

@@ -39,9 +39,9 @@ void turn_corpse_into_blood_potions (item_def &item);
 void turn_corpse_into_skeleton_and_blood_potions(item_def &item);
 void split_potions_into_decay(int obj, int amount, bool need_msg = true);
 
-void blood_spray(const coord_def& where, monster_type mon, int level);
 void bleed_onto_floor(const coord_def& where, monster_type mon, int damage,
                       bool spatter = false, bool smell_alert = true);
+void blood_spray(const coord_def& where, monster_type mon, int level);
 void generate_random_blood_spatter_on_level(
     const map_mask *susceptible_area = NULL);
 
@@ -99,7 +99,7 @@ void reveal_secret_door(const coord_def& p);
 std::string your_hand(bool plural);
 
 bool stop_attack_prompt(const monsters *mon, bool beam_attack,
-                        coord_def beam_target);
+                        coord_def beam_target, bool autohit_first = false);
 
 bool is_orckind(const actor *act);
 

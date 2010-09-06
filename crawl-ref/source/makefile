@@ -25,12 +25,19 @@
 #    DATADIR       -- place to hold immutable files.  Can be either relative to
 #                     "prefix" or absolute.
 #    SAVEDIR       -- place to hold writeable data (saves, database, morgue
-#                     dumps).  Can be relative to "prefix" or absolute.
+#                     dumps).  Can be relative to "prefix", absolute or placed
+#                     in the user's home dir (~).  Remember to protect the ~
+#                     from your shell!
+#    SHAREDDIR     -- place to hold site-wide writeable data (scores, the
+#                     logfile, ghosts).  Will be placed insite the SAVEDIR if
+#                     not specified.
 #       Layout examples:
 #         prefix=~/crawl DATADIR=data/ SAVEDIR=saves/
 #                  -- everything under ~/crawl
 #         prefix=/usr/local
-#                  -- a typical multiuser installation
+#                  -- a typical old-style multiuser installation
+#         prefix=/usr/local SAVEDIR='~/.crawl' SHAREDDIR=/var/games/crawl
+#                  -- multiuser installation with secure saves
 #
 #    V             -- set to anything to enable verbose build
 #
@@ -134,6 +141,11 @@ else
 LIBLUA := contrib/install/lib/liblua.a
 endif
 LIBZ := contrib/install/lib/libz.a
+
+LUA_INCLUDE_DIR := /usr/include/lua5.1
+LUA_LIB := -llua5.1
+SQLITE_INCLUDE_DIR := /usr/include
+SQLITE_LIB := -lsqlite3
 
 #
 # Platform Detection
@@ -347,6 +359,7 @@ INCLUDES_L += -Iutil -I.
 ifdef APPLE_GCC
 
 ARCH := $(uname_M)
+export ARCH
 
 ifeq ($(ARCH),ppc)
 	SDK_VER := 10.4
@@ -432,9 +445,9 @@ endif
 endif
 
 ifndef BUILD_LUA
-  ifneq (,$(wildcard /usr/include/lua5.1))
-    INCLUDES_L += -I/usr/include/lua5.1
-    LIBS += -llua5.1
+  ifneq (,$(wildcard $(LUA_INCLUDE_DIR)/lua.h))
+    INCLUDES_L += -I$(LUA_INCLUDE_DIR)
+    LIBS += $(LUA_LIB)
   else
     ifneq (,$(wildcard /usr/include/lua.h))
       LIBS += -llua
@@ -445,10 +458,14 @@ ifndef BUILD_LUA
 endif
 
 ifndef BUILD_SQLITE
-  ifneq ($(shell grep -q sqlite3_prepare_v2 /usr/include/sqlite3.h 2>/dev/null && echo yes),yes)
-    BUILD_SQLITE = yes
+  ifeq ($(shell grep -q sqlite3_prepare $(SQLITE_INCLUDE_DIR)/sqlite3.h 2>/dev/null && echo yes),yes)
+    INCLUDES_L += -I$(SQLITE_INCLUDE_DIR)
+    LIBS += $(SQLITE_LIB)
+    ifneq ($(shell grep -q sqlite3_prepare_v2 $(SQLITE_INCLUDE_DIR)/sqlite3.h 2>/dev/null && echo yes),yes)
+      DEFINES_L += -DANCIENT_SQLITE
+    endif
   else
-    LIBS += -lsqlite3
+    BUILD_SQLITE = yes
   endif
 endif
 
@@ -475,6 +492,10 @@ endif
 
 ifdef GL
 DEFINES_L += -DUSE_GL
+endif
+
+ifdef GLES
+DEFINES_L += -DUSE_GLES
 endif
 
 ifdef FT
@@ -513,11 +534,15 @@ LIBS += -pthread -lSDL_image $(SDL_LDFLAGS) $(FREETYPE_LDFLAGS)
 
 endif # pkg-config
 
+ifdef GLES
+LIBS += -lSDL_gles -lEGL -lGLES_CM
+else
 ifneq ($(uname_S),Darwin)
 ifeq (,$(findstring MINGW,$(uname_S)))
 LIBS += -lGL -lGLU
 else
 LIBS += -lopengl32 -lglu32
+endif
 endif
 endif
 
@@ -616,9 +641,10 @@ else
 endif
 
 ifneq ($(strip $(SAVEDIR)),)
-  ifneq ($(filter \~%,$(SAVEDIR)),)
+  ifneq ($(filter ~%,$(SAVEDIR)),)
     CFOTHERS_L += -DSAVE_DIR_PATH=\"$(SAVEDIR)\"
     savedir_fp :=
+    shareddir_fp :=
   else
     ifeq ($(filter /%,$(SAVEDIR)),)
       ifneq ($(prefix),)
@@ -627,6 +653,22 @@ ifneq ($(strip $(SAVEDIR)),)
     endif
     CFOTHERS_L += -DSAVE_DIR_PATH=\"$(abspath $(SAVEDIR))\"
     savedir_fp := $(abspath $(strip $(DESTDIR))$(strip $(SAVEDIR)))
+    shareddir_fp := $(savedir_fp)/saves
+  endif
+endif
+
+ifneq ($(strip $(SHAREDDIR)),)
+  ifneq ($(filter ~%,$(SHAREDDIR)),)
+    CFOTHERS_L += -DSHARED_DIR_PATH=\"$(SHAREDDIR)\"
+    shareddir_fp :=
+  else
+    ifeq ($(filter /%,$(SHAREDDIR)),)
+      ifneq ($(prefix),)
+	override SHAREDDIR := $(strip $(prefix))/$(strip $(SHAREDDIR))
+      endif
+    endif
+    CFOTHERS_L += -DSHARED_DIR_PATH=\"$(abspath $(SHAREDDIR))\"
+    shareddir_fp := $(abspath $(strip $(DESTDIR))$(strip $(SHAREDDIR)))
   endif
 endif
 
@@ -725,7 +767,7 @@ YACC_CFLAGS  := $(ALL_CFLAGS) -w -DYYENABLE_NLS=0 -DYYLTYPE_IS_TRIVIAL=0
 
 UTIL = util/
 
-EXTRA_OBJECTS += $(UTIL)levcomp.tab.o $(UTIL)levcomp.lex.o
+EXTRA_OBJECTS += $(YACC_OBJECTS)
 
 LEX := $(shell which flex 2> /dev/null)
 YACC := $(shell which bison 2> /dev/null)
@@ -815,10 +857,10 @@ GENERATED_FILES := art-data.h $(RLTILES)/dc-unrand.txt
 
 GAME_DEPENDS  := $(DESTTILEFILES) $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS)
 SRC_PKG_BASE  := stone_soup
-SRC_VERSION   := $(shell git describe --tags --long 2>/dev/null || cat util/release_ver)
+SRC_VERSION   := $(shell git describe --tags --long $(MERGE_BASE) 2>/dev/null || cat util/release_ver)
 
 # when making release builds, use just the bare tag
-SRC_VERSION_SHORT := $(shell git describe --tags 2>/dev/null || cat util/release_ver)
+SRC_VERSION_SHORT := $(shell git describe --tags $(MERGE_BASE) 2>/dev/null || cat util/release_ver)
 ifneq (,$(SRC_VERSION_SHORT))
   ifeq (,$(findstring -,$(SRC_VERSION_SHORT)))
     SRC_VERSION := $(SRC_VERSION_SHORT)
@@ -830,7 +872,8 @@ SRC_PKG_TAR   := $(PKG_SRC_DIR).tar.bz2
 SRC_PKG_TAR_NODEPS := $(PKG_SRC_DIR)-nodeps.tar.bz2
 SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 
-.PHONY: all test install clean clean-contrib distclean debug profile wizard package-source source
+.PHONY: all test install clean clean-contrib distclean debug profile wizard package-source source \
+        build-windows package-windows
 
 all: $(GENERATED_FILES) $(GAME) $(GENERATED_DOCS)
 
@@ -840,6 +883,7 @@ test:
 
 ifeq (,$(findstring clean,$(MAKECMDGOALS)))
 ifeq (,$(findstring test,$(MAKECMDGOALS)))
+ifeq (,$(filter %-windows,$(MAKECMDGOALS)))
 
 #
 # CFLAGS difference check
@@ -865,7 +909,7 @@ TRACK_CFLAGS = $(subst ','\'',$(CC) $(CXX) $(ALL_CFLAGS))           # (stray ' f
 ##########################################################################
 # Dependencies
 
-DEPS := $(shell ls $(OBJECTS:.o=.d) 2> /dev/null)
+DEPS := $(shell ls $(OBJECTS:.o=.d) $(YACC_OBJECTS:.o=.d) 2> /dev/null)
 
 ifneq ($(DEPS),)
 -include $(DEPS)
@@ -873,8 +917,9 @@ endif
 
 endif
 endif
+endif
 
-depend: $(OBJECTS:.o=.d)
+depend: $(OBJECTS:.o=.d) $(YACC_OBJECTS:.o=.d)
 
 # This information is included in crash reports, and is printed with
 # "crawl -version"
@@ -884,7 +929,7 @@ compflag.h: $(OBJECTS:.o=.cc)
 build.h: $(OBJECTS:.o=.cc)
 	$(QUIET_GEN)util/gen_ver.pl $@ $(MERGE_BASE)
 
-version.cc: build.h compflag.h
+version.o: build.h compflag.h
 
 ##########################################################################
 # Documentation
@@ -897,8 +942,7 @@ $(DOC_BASE)/aptitudes.txt: $(DOC_TEMPLATES)/apt-tmpl.txt player.cc skills2.cc \
 # The level compiler
 #
 
-$(UTIL)levcomp.tab.o: $(CONTRIB_LIBS)
-$(UTIL)levcomp.lex.o: $(CONTRIB_LIBS)
+$(YACC_OBJECTS): $(CONTRIB_LIBS)
 
 ifndef NO_YACC
 
@@ -979,28 +1023,38 @@ ifeq ($(USE_DGAMELAUNCH),)
 endif
 ifneq ($(savedir_fp),)
 	mkdir -p $(savedir_fp)/saves
-ifneq ($(patsubst /var/%,%,$(savedir_fp)),$(savedir_fp))
-# Only if we're being installed for real.  Installations to a staging dir
-# which are then packaged would trample existing files; these need to be
-# handled by packagers themselves.
-	touch $(savedir_fp)/saves/logfile
-	touch $(savedir_fp)/saves/scores
-endif
 	mkdir -p $(savedir_fp)/morgue
 ifeq ($(USE_DGAMELAUNCH),)
 	$(CHOWN) -R $(INSTALL_UGRP) $(savedir_fp) || true
 	$(CHMOD) $(MCHMOD_SAVEDIR) $(savedir_fp) || true
 	$(CHMOD) $(MCHMOD_SAVEDIR) $(savedir_fp)/saves || true
-	$(CHMOD) $(MCHMOD_LOGS) $(savedir_fp)/saves/logfile || true
-	$(CHMOD) $(MCHMOD_LOGS) $(savedir_fp)/saves/scores || true
 	$(CHMOD) $(MCHMOD_SAVEDIR) $(savedir_fp)/morgue || true
+endif
+endif
+ifneq ($(shareddir_fp),)
+	mkdir -p $(shareddir_fp)
+ifneq ($(patsubst /var/%,%,$(shareddir_fp)),$(shareddir_fp))
+# Only if we're being installed for real.  Installations to a staging dir
+# which are then packaged would trample existing files; these need to be
+# handled by packagers themselves.
+	touch $(shareddir_fp)/logfile
+	touch $(shareddir_fp)/scores
+endif
+ifeq ($(USE_DGAMELAUNCH),)
+	$(CHOWN) -R $(INSTALL_UGRP) $(shareddir_fp) || true
+	$(CHMOD) $(MCHMOD_SAVEDIR) $(shareddir_fp) || true
+	$(CHMOD) $(MCHMOD_LOGS) $(shareddir_fp)/logfile || true
+	$(CHMOD) $(MCHMOD_LOGS) $(shareddir_fp)/scores || true
 endif
 endif
 
 clean:
 	+$(MAKE) -C $(UTIL) clean
 	+$(MAKE) -C $(RLTILES) clean
-	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o libunix.o $(OBJECTS) $(OBJECTS:.o=.d) *.ixx build.h compflag.h .contrib-libs .cflags
+	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
+	    libunix.o $(OBJECTS) $(OBJECTS:.o=.d) $(YACC_OBJECTS:.o=.d) *.ixx  \
+	    build.h compflag.h .contrib-libs .cflags
+	$(RM) -r build-win
 
 clean-contrib:
 	+$(MAKE) -C contrib clean
@@ -1037,7 +1091,7 @@ endif
 $(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS) $(CONTRIB_LIBS)
 
 ifdef NO_INLINE_DEPGEN
-$(OBJECTS): $(OBJECTS:%.o=%.d)
+$(OBJECTS): $(OBJECTS:%.o=%.d) $(YACC_OBJECTS:%.o=%.d)
 endif
 
 %.d: %.cc .cflags $(GENERATED_FILES)
@@ -1140,3 +1194,25 @@ source: removeold
 removeold:
 	if [ -f ../../$(SRC_PKG_TAR) ]; then $(RM) ../../$(SRC_PKG_TAR); fi
 	if [ -f ../../$(SRC_PKG_ZIP) ]; then $(RM) ../../$(SRC_PKG_ZIP); fi
+
+#############################################################################
+# Building the unified Windows package.
+#
+
+# You need to have NSIS installed.
+package-windows:
+ifneq (x$(SRC_VERSION_SHORT),x$(shell cat build-win/version.txt 2>/dev/null))
+	+$(MAKE) build-windows
+endif
+	makensis -NOCD -DVERSION=$(SRC_VERSION_SHORT) util/crawl.nsi
+
+build-windows:
+ifneq ($(GAME),crawl.exe)
+	@echo "This is only for Windows; please specify CROSSHOST.";false
+endif
+	+$(MAKE) clean
+	+$(MAKE) TILES=y DESTDIR=build-win SAVEDIR='~/crawl' install
+	mv build-win/crawl.exe build-win/crawl-tiles.exe
+	+$(MAKE) TILES=  DESTDIR=build-win SAVEDIR='~/crawl' install
+	mv build-win/crawl.exe build-win/crawl-console.exe
+	echo $(SRC_VERSION_SHORT) >build-win/version.txt

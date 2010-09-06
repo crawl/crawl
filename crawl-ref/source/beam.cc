@@ -403,7 +403,7 @@ void init_zap_index()
         zap_index[zap_data[i].ztype] = i;
 }
 
-const zap_info* _seek_zap(zap_type z_type)
+static const zap_info* _seek_zap(zap_type z_type)
 {
     if (zap_index[z_type] == -1)
         return (NULL);
@@ -1351,7 +1351,6 @@ void bolt::do_fire()
     {
         if (range_used() > range)
         {
-            // previous step was still < range, but end point
             ray.regress();
             extra_range_used++;
             ASSERT(range_used() >= range);
@@ -1363,7 +1362,7 @@ void bolt::do_fire()
         if (!affects_nothing)
             affect_cell();
 
-        if (range_used() >= range)
+        if (range_used() > range)
             break;
 
         if (beam_cancelled)
@@ -1732,8 +1731,8 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         break;
 
     case BEAM_HELLFIRE:
-        resist = monster->res_fire();
-        if (resist > 2)
+        resist = monster->res_hellfire();
+        if (resist > 0)
         {
             if (doFlavouredEffects)
             {
@@ -1743,13 +1742,6 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
             }
 
             hurted = 0;
-        }
-        else if (resist > 0)
-        {
-            if (doFlavouredEffects)
-                simple_monster_message(monster, " partially resists.");
-
-            hurted /= 2;
         }
         else if (resist < 0)
         {
@@ -2430,7 +2422,7 @@ void bolt::affect_ground()
             env.pgrid(pos()) |= FPROP_MOLD;
         }
 
-        if(x_chance_in_y(2, 21)
+        if (x_chance_in_y(2, 21)
            && mons_class_can_pass(MONS_BALLISTOMYCETE, env.grid(pos()))
            && !actor_at(pos()))
         {
@@ -2704,9 +2696,13 @@ void bolt::internal_ouch(int dam)
 
     const char *what = aux_source.empty() ? name.c_str() : aux_source.c_str();
 
+    if (YOU_KILL(thrower) && you.duration[DUR_QUAD_DAMAGE])
+        dam *= 4;
+
     // The order of this is important.
     if (monst && (monst->type == MONS_GIANT_SPORE
-                  || monst->type == MONS_BALL_LIGHTNING))
+                  || monst->type == MONS_BALL_LIGHTNING
+                  || monst->type == MONS_HYPERACTIVE_BALLISTOMYCETE))
     {
         ouch(dam, beam_source, KILLED_BY_SPORE, aux_source.c_str(), true,
              source_name.empty() ? NULL : source_name.c_str());
@@ -3734,7 +3730,8 @@ void bolt::handle_stop_attack_prompt(monsters* mon)
         if (friend_info.count == 1 && !friend_info.dont_stop
             || foe_info.count == 1 && !foe_info.dont_stop)
         {
-            if (stop_attack_prompt(mon, true, target))
+            const bool autohit_first = (hit == AUTOMATIC_HIT);
+            if (stop_attack_prompt(mon, true, target, autohit_first))
             {
                 beam_cancelled = true;
                 finish_beam();
@@ -4388,7 +4385,7 @@ bool bolt::has_saving_throw() const
     }
 }
 
-bool _ench_flavour_affects_monster(beam_type flavour, const monsters* mon)
+static bool _ench_flavour_affects_monster(beam_type flavour, const monsters* mon)
 {
     bool rc = true;
     switch (flavour)
@@ -4787,8 +4784,10 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
             return (MON_OTHER);
         }
 
-        if (mon->friendly())
-            return (MON_UNAFFECTED);
+        // Being a puppet on magic strings is a nasty thing.
+        // Mindless creatures shouldn't probably mind, but because of complex
+        // behaviour of enslaved neutrals, let's disallow that for now.
+        mon->attitude = ATT_HOSTILE;
 
         // XXX: Another hackish thing for Pikel's band neutrality.
         if (mons_is_pikel(mon))
@@ -5353,10 +5352,6 @@ bool bolt::nasty_to(const monsters *mon) const
     // Positive effects.
     if (nice_to(mon))
         return (false);
-
-    // No charming holy beings!
-    if (flavour == BEAM_CHARM)
-        return (mon->is_holy());
 
     // Friendly and good neutral monsters don't mind being teleported.
     if (flavour == BEAM_TELEPORT)

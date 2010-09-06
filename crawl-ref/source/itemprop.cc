@@ -381,6 +381,12 @@ static missile_def Missile_prop[NUM_MISSILES] =
     { MI_THROWING_NET,  "throwing net",  0,   30, true  },
 };
 
+enum food_flag_type
+{
+    FFL_NONE  = 0x00,
+    FFL_FRUIT = 0x01,
+};
+
 struct food_def
 {
     int         id;
@@ -390,6 +396,7 @@ struct food_def
     int         herb_mod;
     int         mass;
     int         turns;
+    uint32_t    flags;
 };
 
 // NOTE: Any food with special random messages or side effects
@@ -400,30 +407,32 @@ struct food_def
 static int Food_index[NUM_FOODS];
 static food_def Food_prop[NUM_FOODS] =
 {
-    { FOOD_MEAT_RATION,  "meat ration",  5000,   500, -1500,  80, 4 },
-    { FOOD_SAUSAGE,      "sausage",      1500,   150,  -400,  40, 1 },
-    { FOOD_CHUNK,        "chunk",        1000,   100,  -500, 100, 3 },
-    { FOOD_BEEF_JERKY,   "beef jerky",    800,   100,  -250,  20, 1 },
+    { FOOD_MEAT_RATION,  "meat ration",  5000,   500, -1500,  80, 4, FFL_NONE },
+    { FOOD_SAUSAGE,      "sausage",      1500,   150,  -400,  40, 1, FFL_NONE },
+    { FOOD_CHUNK,        "chunk",        1000,   100,  -500, 100, 3, FFL_NONE },
+    { FOOD_BEEF_JERKY,   "beef jerky",    800,   100,  -250,  20, 1, FFL_NONE },
 
-    { FOOD_BREAD_RATION, "bread ration", 4400, -1500,   750,  80, 4 },
-    { FOOD_SNOZZCUMBER,  "snozzcumber",  1500,  -500,   500,  50, 1 },
-    { FOOD_ORANGE,       "orange",       1000,  -350,   400,  20, 1 },
-    { FOOD_BANANA,       "banana",       1000,  -350,   400,  20, 1 },
-    { FOOD_LEMON,        "lemon",        1000,  -350,   400,  20, 1 },
-    { FOOD_PEAR,         "pear",          700,  -250,   300,  20, 1 },
-    { FOOD_APPLE,        "apple",         700,  -250,   300,  20, 1 },
-    { FOOD_APRICOT,      "apricot",       700,  -250,   300,  15, 1 },
-    { FOOD_CHOKO,        "choko",         600,  -200,   250,  30, 1 },
-    { FOOD_RAMBUTAN,     "rambutan",      600,  -200,   250,  10, 1 },
-    { FOOD_LYCHEE,       "lychee",        600,  -200,   250,  10, 1 },
-    { FOOD_STRAWBERRY,   "strawberry",    200,   -80,   100,   5, 1 },
-    { FOOD_GRAPE,        "grape",         100,   -40,    50,   2, 1 },
-    { FOOD_SULTANA,      "sultana",        70,   -30,    30,   1, 1 },
+    { FOOD_BREAD_RATION, "bread ration", 4400, -1500,   750,  80, 4, FFL_NONE },
 
-    { FOOD_ROYAL_JELLY,  "royal jelly",  4000,     0,     0,  55, 1 },
-    { FOOD_HONEYCOMB,    "honeycomb",    2000,     0,     0,  40, 1 },
-    { FOOD_PIZZA,        "pizza",        1500,     0,     0,  40, 1 },
-    { FOOD_CHEESE,       "cheese",       1200,     0,     0,  40, 1 },
+    { FOOD_SNOZZCUMBER,  "snozzcumber",  1500,  -500,   500,  50, 1, FFL_FRUIT},
+    { FOOD_ORANGE,       "orange",       1000,  -350,   400,  20, 1, FFL_FRUIT},
+    { FOOD_BANANA,       "banana",       1000,  -350,   400,  20, 1, FFL_FRUIT},
+    { FOOD_LEMON,        "lemon",        1000,  -350,   400,  20, 1, FFL_FRUIT},
+    { FOOD_PEAR,         "pear",          700,  -250,   300,  20, 1, FFL_FRUIT},
+    { FOOD_APPLE,        "apple",         700,  -250,   300,  20, 1, FFL_FRUIT},
+    { FOOD_APRICOT,      "apricot",       700,  -250,   300,  15, 1, FFL_FRUIT},
+    { FOOD_CHOKO,        "choko",         600,  -200,   250,  30, 1, FFL_FRUIT},
+    { FOOD_RAMBUTAN,     "rambutan",      600,  -200,   250,  10, 1, FFL_FRUIT},
+    { FOOD_LYCHEE,       "lychee",        600,  -200,   250,  10, 1, FFL_FRUIT},
+    { FOOD_STRAWBERRY,   "strawberry",    200,   -80,   100,   5, 1, FFL_FRUIT},
+    { FOOD_GRAPE,        "grape",         100,   -40,    50,   2, 1, FFL_FRUIT},
+    { FOOD_SULTANA,      "sultana",        70,   -30,    30,   1, 1, FFL_FRUIT},
+
+    { FOOD_ROYAL_JELLY,  "royal jelly",  4000,     0,     0,  55, 1, FFL_NONE },
+    { FOOD_HONEYCOMB,    "honeycomb",    2000,     0,     0,  40, 1, FFL_NONE },
+    { FOOD_PIZZA,        "pizza",        1500,     0,     0,  40, 1, FFL_NONE },
+    { FOOD_CHEESE,       "cheese",       1200,     0,     0,  40, 1, FFL_NONE },
+    { FOOD_AMBROSIA,     "ambrosia",     2500,     0,     0,  40, 1, FFL_NONE }
 };
 
 // Must call this functions early on so that the above tables can
@@ -434,7 +443,7 @@ void init_properties()
     COMPILE_CHECK(NUM_ARMOURS  == 37, c1);
     COMPILE_CHECK(NUM_WEAPONS  == 56, c2);
     COMPILE_CHECK(NUM_MISSILES ==  9, c3);
-    COMPILE_CHECK(NUM_FOODS    == 22, c4);
+    COMPILE_CHECK(NUM_FOODS    == 23, c4);
 
     int i;
 
@@ -529,10 +538,14 @@ void do_curse_item( item_def &item, bool quiet )
 
 void do_uncurse_item( item_def &item )
 {
-    if (in_inventory(item) && you.equip[EQ_WEAPON] == item.link)
+    if (in_inventory(item))
     {
-        // Redraw the weapon.
-        you.wield_change = true;
+        if (you.equip[EQ_WEAPON] == item.link)
+        {
+            // Redraw the weapon.
+            you.wield_change = true;
+        }
+        item.flags |= ISFLAG_KNOW_CURSE;
     }
     item.flags &= (~ISFLAG_CURSED);
     item.flags &= (~ISFLAG_SEEN_CURSED);
@@ -1112,8 +1125,7 @@ bool check_armour_size( const item_def &item, size_type size )
     return (fit_armour_size( item, size ) == 0);
 }
 
-// Returns whether a wand or rod can be charged, or a weapon of electrocution
-// enchanted.
+// Returns whether a wand or rod can be charged.
 // If hide_charged is true, wands known to be full will return false.
 // (This distinction is necessary because even full wands/rods give a message.)
 bool item_is_rechargeable(const item_def &it, bool hide_charged, bool weapons)
@@ -1146,22 +1158,6 @@ bool item_is_rechargeable(const item_def &it, bool hide_charged, bool weapons)
                     || short(it.props["rod_enchantment"]) < MAX_WPN_ENCHANT);
         }
         return (true);
-    }
-    else if (it.base_type == OBJ_WEAPONS)
-    {
-        // Might be electrocution.
-        if (weapons && !item_type_known(it))
-            return (true);
-
-        // Weapons of electrocution can get +1 to-dam this way.
-        if (!is_artefact(it)
-            && get_weapon_brand(it) == SPWPN_ELECTROCUTION
-            && item_type_known(it)
-            && (!item_ident(it, ISFLAG_KNOW_PLUSES)
-                || it.plus2 < MAX_WPN_ENCHANT))
-        {
-            return (true);
-        }
     }
 
     return (false);
@@ -1968,6 +1964,34 @@ bool item_is_staff( const item_def &item )
 }
 
 //
+// Macguffins
+//
+bool item_is_rune(const item_def &item, rune_type which_rune)
+{
+    return (item.base_type == OBJ_MISCELLANY
+            && item.sub_type == MISC_RUNE_OF_ZOT
+            && (which_rune == NUM_RUNE_TYPES || item.plus == which_rune));
+}
+
+bool item_is_unique_rune(const item_def &item)
+{
+    return (item.base_type == OBJ_MISCELLANY
+            && item.sub_type == MISC_RUNE_OF_ZOT
+            && item.plus != RUNE_DEMONIC
+            && item.plus != RUNE_ABYSSAL);
+}
+
+bool item_is_orb(const item_def &item)
+{
+    return (item.base_type == OBJ_ORBS && item.sub_type == ORB_ZOT);
+}
+
+bool item_is_corpse(const item_def &item)
+{
+    return (item.base_type == OBJ_CORPSES && item.sub_type == CORPSE_BODY);
+}
+
+//
 // Ring functions:
 
 // Returns number of pluses on jewellery (always none for amulets yet).
@@ -2089,28 +2113,18 @@ bool is_fruit(const item_def & item)
     if (item.base_type != OBJ_FOOD)
         return (false);
 
-    switch (item.sub_type)
-    {
-    case FOOD_APPLE:
-    case FOOD_APRICOT:
-    case FOOD_BANANA:
-    case FOOD_CHOKO:
-    case FOOD_GRAPE:
-    case FOOD_LEMON:
-    case FOOD_LYCHEE:
-    case FOOD_ORANGE:
-    case FOOD_PEAR:
-    case FOOD_RAMBUTAN:
-    case FOOD_STRAWBERRY:
-    case FOOD_SULTANA:
-        return (true);
-    };
-
-    return (false);
+    return (Food_prop[Food_index[item.sub_type]].flags & FFL_FRUIT);
 }
+
+uint32_t item_fruit_mask(const item_def &item)
+{
+    return (is_fruit(item)? (1 << Food_index[item.sub_type]) : 0);
+}
+
 bool food_is_rotten(const item_def &item)
 {
-    return (item.special < 100) && (item.base_type == OBJ_CORPSES
+    return (item.special <= ROTTING_CORPSE)
+                                    && (item.base_type == OBJ_CORPSES
                                        && item.sub_type == CORPSE_BODY
                                     || item.base_type == OBJ_FOOD
                                        && item.sub_type == FOOD_CHUNK);
@@ -2567,7 +2581,7 @@ std::string food_type_name (int sub_type)
     return (Food_prop[Food_index[sub_type]].name);
 }
 
-const char* weapon_base_name(unsigned char subtype)
+const char* weapon_base_name(uint8_t subtype)
 {
     return Weapon_prop[Weapon_index[subtype]].name;
 }

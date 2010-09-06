@@ -1245,6 +1245,7 @@ xxxxxxxxxxxxxx
 ENDMAP
 
 NAME:       tgw_sif
+DEPTH:      D:3-18, Elf
 TAGS:       no_item_gen no_monster_gen no_pool_fixup
 TAGS:       temple_overflow_sif_muna uniq_altar_sif_muna
 KFEAT:      _ = altar_sif_muna

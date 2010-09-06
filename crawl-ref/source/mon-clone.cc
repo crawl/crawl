@@ -32,7 +32,7 @@ const std::string clone_slave_key  = "mclonedupe";
 
 static std::string _monster_clone_id_for(monsters *mons)
 {
-    return make_stringf("%s%ld",
+    return make_stringf("%s%d",
                         mons->name(DESC_PLAIN, true).c_str(),
                         you.num_turns);
 }

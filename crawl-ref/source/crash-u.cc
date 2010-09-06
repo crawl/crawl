@@ -120,6 +120,12 @@ static void _crash_signal_handler(int sig_num)
 
     do_crash_dump();
 
+    if (crawl_state.game_wants_emergency_save && crawl_state.need_save
+        && !crawl_state.saving_game)
+    {
+        save_game(true, NULL);
+    }
+
     // Now crash for real.
     signal(sig_num, SIG_DFL);
     raise(sig_num);

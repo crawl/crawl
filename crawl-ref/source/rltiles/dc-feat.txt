@@ -42,6 +42,9 @@ gate_open_right DNGN_GATE_OPEN_RIGHT
 fleshy_orifice_closed DNGN_FLESHY_ORIFICE
 fleshy_orifice_open
 
+%sdir dc-dngn/gateways
+dngn_stone_arch DNGN_STONE_ARCH
+
 %sdir dc-dngn
 dngn_orcish_idol DNGN_ORCISH_IDOL
 dngn_granite_statue DNGN_GRANITE_STATUE
@@ -155,6 +158,22 @@ dngn_shallow_water_murky DNGN_SHALLOW_WATER_MURKY
 dngn_shallow_water_murky2
 dngn_shallow_water_murky_disturbance DNGN_SHALLOW_WATER_MURKY_DISTURBANCE
 dngn_shallow_water_murky_disturbance2
+
+grey_dirt_bb SHORE_N
+grey_dirt_bl SHORE_W
+grey_dirt_br SHORE_E
+grey_dirt_bcl SHORE_NW
+grey_dirt_bcr SHORE_NE
+
+dngn_shallow_bord_top DNGN_WAVE_N
+dngn_shallow_bord_tr DNGN_WAVE_NE
+dngn_shallow_bord_rgt DNGN_WAVE_E
+dngn_shallow_bord_br DNGN_WAVE_SE
+dngn_shallow_bord_btm DNGN_WAVE_S
+dngn_shallow_bord_bl DNGN_WAVE_SW
+dngn_shallow_bord_lft DNGN_WAVE_W
+dngn_shallow_bord_tl DNGN_WAVE_NW
+
 # Make all base variants equally likely, but their special ones less so.
 %weight 4
 dngn_shoals_deep_water1 SHOALS_DEEP_WATER
@@ -244,7 +263,6 @@ dngn_enter_abyss DNGN_ENTER_ABYSS
 dngn_exit_abyss DNGN_EXIT_ABYSS
 dngn_exit_abyss_flickering
 
-dngn_stone_arch DNGN_STONE_ARCH
 dngn_enter_labyrinth DNGN_ENTER_LABYRINTH
 dngn_enter_pandemonium DNGN_ENTER_PANDEMONIUM
 dngn_portal DNGN_PORTAL
@@ -285,12 +303,14 @@ dngn_altar_zin DNGN_ALTAR_ZIN
 dngn_altar_shining_one DNGN_ALTAR_SHINING_ONE
 dngn_altar_kikubaaqudgha DNGN_ALTAR_KIKUBAAQUDGHA
 dngn_altar_yredelemnul DNGN_ALTAR_YREDELEMNUL
-dngn_altar_xom_blue DNGN_ALTAR_XOM
-dngn_altar_xom_green
-dngn_altar_xom_pink
-dngn_altar_xom_red
-dngn_altar_xom_turquoise
-dngn_altar_xom_yellow
+dngn_altar_xom0 DNGN_ALTAR_XOM
+dngn_altar_xom1
+dngn_altar_xom2
+dngn_altar_xom3
+dngn_altar_xom4
+dngn_altar_xom5
+dngn_altar_xom6
+dngn_altar_xom7
 dngn_altar_vehumet DNGN_ALTAR_VEHUMET
 dngn_altar_okawaru DNGN_ALTAR_OKAWARU
 dngn_altar_makhleb_flame1 DNGN_ALTAR_MAKHLEB

@@ -122,15 +122,16 @@ travel_distance_grid_t travel_point_distance;
 // Apply slime wall checks when checking if squares are travelsafe.
 bool g_Slime_Wall_Check = true;
 
-static unsigned char curr_waypoints[GXM][GYM];
+static uint8_t curr_waypoints[GXM][GYM];
 static FixedArray< map_cell, GXM, GYM >  mapshadow;
 
-const signed char TRAVERSABLE = 1;
-const signed char IMPASSABLE  = 0;
-const signed char FORBIDDEN   = -1;
+const int8_t TRAVERSABLE = 1;
+const int8_t IMPASSABLE  = 0;
+const int8_t FORBIDDEN   = -1;
 
 // Map of terrain types that are traversable.
-static signed char traversable_terrain[256];
+// Should be [NUM_FEATURES], but we're paranoid here.
+static int8_t traversable_terrain[256];
 
 /*
  * Warn if interlevel travel is going to take you outside levels in
@@ -193,12 +194,12 @@ static bool _is_greed_inducing_square(const LevelStashes *ls,
 // Returns true if there is a known trap at (x,y). Returns false for non-trap
 // squares as also for undiscovered traps.
 //
-inline bool is_trap(const coord_def& c)
+static inline bool is_trap(const coord_def& c)
 {
     return feat_is_trap(env.map_knowledge(c).feat());
 }
 
-inline bool _is_safe_trap (const coord_def& c)
+static inline bool _is_safe_trap (const coord_def& c)
 {
 #ifdef CLUA_BINDINGS
     if (clua.callbooleanfn(false, "ch_cross_trap", "s", trap_name_at(c)))
@@ -271,7 +272,7 @@ const char *run_mode_name(int runmode)
                                             : "");
 }
 
-unsigned char is_waypoint(const coord_def &p)
+uint8_t is_waypoint(const coord_def &p)
 {
     if (!can_travel_interlevel())
         return 0;
@@ -373,6 +374,9 @@ public:
 // not cross safely (deep water, lava, traps).
 bool is_travelsafe_square(const coord_def& c, bool ignore_hostile)
 {
+    if (!in_bounds(c))
+        return (false);
+
     if (_travel_safe_grid.get())
     {
         const cell_travel_safety &cell((*_travel_safe_grid)(c));
@@ -380,7 +384,7 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile)
                 : cell.safe);
     }
 
-    if (!is_terrain_known(c))
+    if (!env.map_knowledge(c).known())
         return (false);
 
     // In the Abyss, disallow travelling into unseen territory
@@ -392,14 +396,15 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile)
 
     // Also make note of what's displayed on the level map for
     // plant/fungus checks.
-    const show_type levelmap_object = get_map_knowledge_obj(c);
+    const map_cell& levelmap_cell = env.map_knowledge(c);
 
     // Travel will not voluntarily cross squares blocked by immobile monsters.
+    // TODO: do this properly based only on map_knowledge instead of this bizarre manner
     if (!ignore_hostile
-        && levelmap_object.cls == SH_MONSTER
+        && levelmap_cell.monster() != MONS_NO_MONSTER
         && _is_monster_blocked(c)
         // _is_monster_blocked can only return true if monster_at(c) != NULL
-        && monster_at(c)->type == levelmap_object.mons)
+        && monster_at(c)->type == levelmap_cell.monster())
     {
         return (false);
     }
@@ -458,10 +463,10 @@ static bool _is_safe_move(const coord_def& c)
     return (!is_damaging_cloud(ctype, true));
 }
 
-static void _set_pass_feature(unsigned char grid, signed char pass)
+static void _set_pass_feature(dungeon_feature_type grid, signed char pass)
 {
-    if (traversable_terrain[(unsigned) grid] != FORBIDDEN)
-        traversable_terrain[(unsigned) grid] = pass;
+    if (traversable_terrain[grid] != FORBIDDEN)
+        traversable_terrain[grid] = pass;
 }
 
 // Sets traversable terrain based on the character's role and whether or not he
@@ -471,16 +476,15 @@ void init_travel_terrain_check(bool check_race_equip)
     if (check_race_equip)
     {
         // Swimmers get deep water.
-        signed char water = (player_likes_water(true) ? TRAVERSABLE
-                                                      : IMPASSABLE);
+        int8_t water = (player_likes_water(true) ? TRAVERSABLE : IMPASSABLE);
 
         // If the player has overridden deep water already, we'll respect that.
         _set_pass_feature(DNGN_DEEP_WATER, water);
 
         // Permanently levitating players can cross most hostile terrain.
-        const signed char trav = (you.permanent_levitation()
-                                  || you.permanent_flight() ? TRAVERSABLE
-                                                            : IMPASSABLE);
+        const int8_t trav = (you.permanent_levitation()
+                             || you.permanent_flight() ? TRAVERSABLE
+                                                       : IMPASSABLE);
 
         if (water != TRAVERSABLE)
             _set_pass_feature(DNGN_DEEP_WATER, trav);
@@ -655,7 +659,7 @@ static bool _is_valid_explore_target(const coord_def& where)
 {
     // If an adjacent square is unmapped, it's valid.
     for ( adjacent_iterator ai(where); ai; ++ai )
-        if (!is_terrain_seen(*ai))
+        if (!env.map_knowledge(*ai).seen())
             return (true);
 
     if (you.running == RMODE_EXPLORE_GREEDY)
@@ -783,7 +787,7 @@ static void _explore_find_target_square()
 
             // Has moving along the straight line found an unexplored
             // square?
-            if (!is_terrain_seen(target + delta) && target != you.pos()
+            if (!env.map_knowledge(target + delta).seen() && target != you.pos()
                 && target != whereto)
             {
                 // Auto-explore is only zigzagging if the prefered
@@ -886,9 +890,9 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
 // Don't call travel() if you.running >= 0.
 command_type travel()
 {
-    char holdx, holdy;
-    char *move_x = &holdx;
-    char *move_y = &holdy;
+    int holdx, holdy;
+    int *move_x = &holdx;
+    int *move_y = &holdy;
     holdx = holdy = 0;
 
     command_type result = CMD_NO_CMD;
@@ -910,7 +914,7 @@ command_type travel()
         for (rectangle_iterator ri(1); ri; ++ri)
         {
             const coord_def p(*ri);
-            if (!mapshadow(p).seen() && is_terrain_seen(p))
+            if (!mapshadow(p).seen() && env.map_knowledge(p).seen())
                 _check_interesting_square(p, discoveries);
         }
 
@@ -1088,7 +1092,7 @@ command_type travel()
     return direction_to_command( *move_x, *move_y );
 }
 
-command_type direction_to_command( char x, char y )
+command_type direction_to_command( int x, int y )
 {
     if ( x == -1 && y == -1 ) return CMD_MOVE_UP_LEFT;
     if ( x == -1 && y ==  0 ) return CMD_MOVE_LEFT;
@@ -1113,12 +1117,12 @@ static void _fill_exclude_radius(const travel_exclude &exc)
     for (int y = c.y - radius; y <= c.y + radius; ++y)
         for (int x = c.x - radius; x <= c.x + radius; ++x)
         {
-            if (!map_bounds(x, y) || !is_terrain_known(x, y)
+            const coord_def p(x, y);
+            if (!map_bounds(x, y) || !env.map_knowledge(p).known()
                 || travel_point_distance[x][y])
             {
                 continue;
             }
-            const coord_def p(x, y);
 
             if (is_exclude_root(p))
                 travel_point_distance[x][y] = PD_EXCLUDED;
@@ -1289,6 +1293,9 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode)
     // point_distance will hold the distance of all points from the starting
     // point, i.e. the distance travelled to get there.
     memset(point_distance, 0, sizeof(travel_distance_grid_t));
+
+    if (!in_bounds(start))
+        return coord_def();
 
     // Abort run if we're trying to go someplace evil. Travel to traps is
     // specifically allowed here if the player insists on it.
@@ -1489,7 +1496,7 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
     if (floodout
         && (runmode == RMODE_EXPLORE || runmode == RMODE_EXPLORE_GREEDY))
     {
-        if (!is_terrain_seen(dc))
+        if (!env.map_knowledge(dc).seen())
         {
             if (!need_for_greed)
             {
@@ -1658,7 +1665,7 @@ bool travel_pathfind::path_examine_point(const coord_def &c)
 // Try to avoid to let travel (including autoexplore) move the player right
 // next to a lurking (previously unseen) monster.
 void find_travel_pos(const coord_def& youpos,
-                     char *move_x, char *move_y,
+                     int *move_x, int *move_y,
                      std::vector<coord_def>* features)
 {
     travel_pathfind tp;
@@ -1688,7 +1695,7 @@ void find_travel_pos(const coord_def& youpos,
         coord_def unseen = coord_def();
         for (adjacent_iterator ai(dest); ai; ++ai)
             if (!you.see_cell(*ai)
-                && (!is_terrain_seen(*ai)
+                && (!env.map_knowledge(*ai).seen()
                     || !feat_is_wall(env.map_knowledge(*ai).feat())))
             {
                 unseen = *ai;
@@ -1898,7 +1905,7 @@ std::string get_trans_travel_dest(const travel_target &target,
 
 // Returns the level on the given branch that's closest to the player's
 // current location.
-static int _get_nearest_level_depth(unsigned char branch)
+static int _get_nearest_level_depth(uint8_t branch)
 {
     int depth = 1;
 
@@ -2416,6 +2423,12 @@ void start_translevel_travel(const travel_target &pos)
         return;
     }
 
+    if (pos.p.is_valid() && !in_bounds(pos.p.pos))
+    {
+        mpr("Sorry, I don't know how to get there.");
+        return;
+    }
+
     // Remember where we're going so we can easily go back if interrupted.
     you.travel_x = pos.p.pos.x;
     you.travel_y = pos.p.pos.y;
@@ -2811,6 +2824,7 @@ void start_travel(const coord_def& p)
     // Can we even travel to this square?
     if (!in_bounds(p))
         return;
+
     if (!is_travelsafe_square(p, true))
         return;
 
@@ -3108,6 +3122,11 @@ bool LevelInfo::empty() const
     return (stairs.empty() && excludes.empty());
 }
 
+void LevelInfo::update_excludes()
+{
+    excludes = curr_excludes;
+}
+
 void LevelInfo::update()
 {
     // First, set excludes, so that stair distances will be correctly populated.
@@ -3400,11 +3419,10 @@ void LevelInfo::get_stairs(std::vector<coord_def> &st)
     for (rectangle_iterator ri(1); ri; ++ri)
     {
         const dungeon_feature_type feat = grd(*ri);
-        const int envc = env.map_knowledge(*ri).object;
 
-        if ((*ri == you.pos() || envc)
+        if ((*ri == you.pos() || env.map_knowledge(*ri).known())
             && feat_is_travelable_stair(feat)
-            && (is_terrain_seen(*ri) || !is_branch_stair(*ri)))
+            && (env.map_knowledge(*ri).seen() || !is_branch_stair(*ri)))
         {
             st.push_back(*ri);
         }
@@ -3417,7 +3435,7 @@ void LevelInfo::clear_distances()
         stairs[i].clear_distance();
 }
 
-bool LevelInfo::is_known_branch(unsigned char branch) const
+bool LevelInfo::is_known_branch(uint8_t branch) const
 {
     for (int i = 0, count = stairs.size(); i < count; ++i)
         if (stairs[i].destination.id.branch == branch)
@@ -3454,7 +3472,7 @@ void LevelInfo::save(writer& outf) const
         marshallShort(outf, da_counters[i]);
 }
 
-void LevelInfo::load(reader& inf, char minorVersion)
+void LevelInfo::load(reader& inf, int minorVersion)
 {
     stairs.clear();
     int stair_count = unmarshallShort(inf);
@@ -3483,17 +3501,10 @@ void LevelInfo::load(reader& inf, char minorVersion)
 
     unmarshallExcludes(inf, minorVersion, excludes);
 
-#if TAG_MAJOR_VERSION == 27
-    if (minorVersion >= TAG_MINOR_DA_MSTATS)
-    {
-#endif
     int n_count = unmarshallByte(inf);
     ASSERT(n_count >= 0 && n_count <= NUM_DA_COUNTERS);
     for (int i = 0; i < n_count; i++)
         da_counters[i] = unmarshallShort(inf);
-#if TAG_MAJOR_VERSION == 27
-    }
-#endif
 }
 
 void LevelInfo::fixup()
@@ -3545,7 +3556,7 @@ void TravelCache::list_waypoints() const
         mpr(line.c_str());
 }
 
-unsigned char TravelCache::is_waypoint(const level_pos &lp) const
+uint8_t TravelCache::is_waypoint(const level_pos &lp) const
 {
     for (int i = 0; i < TRAVEL_WAYPOINT_COUNT; ++i)
         if (lp == waypoints[i])
@@ -3563,7 +3574,7 @@ void TravelCache::update_waypoints() const
     for (lp.pos.x = 1; lp.pos.x < GXM; ++lp.pos.x)
         for (lp.pos.y = 1; lp.pos.y < GYM; ++lp.pos.y)
         {
-            unsigned char wpc = is_waypoint(lp);
+            uint8_t wpc = is_waypoint(lp);
             if (wpc)
                 curr_waypoints[lp.pos.x][lp.pos.y] = wpc;
         }
@@ -3697,7 +3708,7 @@ void TravelCache::clear_distances()
         i->second.clear_distances();
 }
 
-bool TravelCache::is_known_branch(unsigned char branch) const
+bool TravelCache::is_known_branch(uint8_t branch) const
 {
     std::map<level_id, LevelInfo>::const_iterator i = levels.begin();
     for ( ; i != levels.end(); ++i)
@@ -3727,13 +3738,13 @@ void TravelCache::save(writer& outf) const
         waypoints[wp].save(outf);
 }
 
-void TravelCache::load(reader& inf, char minorVersion)
+void TravelCache::load(reader& inf, int minorVersion)
 {
     levels.clear();
 
     // Check version. If not compatible, we just ignore the file altogether.
-    unsigned char major = unmarshallByte(inf),
-                  minor = unmarshallByte(inf);
+    int major = unmarshallByte(inf),
+        minor = unmarshallByte(inf);
     if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION)
         return;
 
@@ -3752,10 +3763,7 @@ void TravelCache::load(reader& inf, char minorVersion)
         // Non-dungeon levels aren't persistent, but we do
         // save the current level.
         if (id.level_type != LEVEL_DUNGEON && id != level_id::current())
-        {
-            ASSERT(false);
             continue;
-        }
 
         levels[id] = linfo;
     }
@@ -3769,6 +3777,11 @@ void TravelCache::load(reader& inf, char minorVersion)
 void TravelCache::set_level_excludes()
 {
     get_level_info(level_id::current()).set_level_excludes();
+}
+
+void TravelCache::update_excludes()
+{
+    get_level_info(level_id::current()).update_excludes();
 }
 
 void TravelCache::update()
@@ -4161,7 +4174,7 @@ void explore_discoveries::found_item(const coord_def &pos, const item_def &i)
                          || ((Options.explore_stop & ES_ARTEFACT)
                              && (i.flags & ISFLAG_ARTEFACT_MASK))
                          || ((Options.explore_stop & ES_RUNE)
-                             && is_rune(i)) ))
+                             && item_is_rune(i)) ))
             {
                 ; // More conditions to stop for
             }

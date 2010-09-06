@@ -146,7 +146,7 @@ It is usually found in decks of changes and dungeons.
 %%%%
 the Trowel card
 
-This card may create an altar, a statue, a golem or even a portal.
+This card may create an altar, a statue, a golem or even a portal, but works best only in the main dungeon and its branches.
 It is usually found in decks of changes and dungeons.
 %%%%
 the Minefield card

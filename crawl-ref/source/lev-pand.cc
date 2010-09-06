@@ -183,6 +183,7 @@ void pandemonium_mons(void)
     }
     mgen_data mg(static_cast<monster_type>(pan_mons));
     mg.level_type = LEVEL_PANDEMONIUM;
+    mg.flags |= MG_PERMIT_BANDS;
 
     mons_place(mg);
 }

@@ -175,9 +175,7 @@ void pick_hints(newgame_def* choice)
         print_hints_menu(i);
 
     formatted_string::parse_string(
-        "\n"
-        "<brown>SPACE - Back to background selection; "
-        "Bksp - Back to species selection; X - Quit"
+        "<brown>\nEsc - Quit"
         "\n* - Random hints mode character"
         "</brown>\n").display();
 
@@ -203,7 +201,6 @@ void pick_hints(newgame_def* choice)
 
         switch (keyn)
         {
-        case CK_BKSP:
         case 'X':
         CASE_ESCAPE
             cprintf("\nGoodbye!");
@@ -977,7 +974,7 @@ void hints_healing_reminder()
 
 // Give a message if you see, pick up or inspect an item type for the
 // first time.
-void taken_new_item(unsigned char item_type)
+void taken_new_item(object_class_type item_type)
 {
     switch (item_type)
     {
@@ -1569,10 +1566,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     std::ostringstream text;
     std::vector<command_type> cmd;
 
-#ifndef USE_TILE
-    const coord_def e = grid2show(gc);
-#endif
-
     Hints.hints_just_triggered = true;
     Hints.hints_events[seen_what] = false;
     Hints.hints_left--;
@@ -1582,7 +1575,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_SEEN_POTION:
         text << "You have picked up your first potion"
 #ifndef USE_TILE
-                " ('<w>!</w>'). Use "
+                " ('<w>"
+             << stringize_glyph(get_item_symbol(SHOW_ITEM_POTION))
+             << "</w>'). Use "
 #else
                 ". Simply click on it with your <w>left mouse button</w>, or "
                 "press "
@@ -1598,7 +1593,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_SEEN_SCROLL:
         text << "You have picked up your first scroll"
 #ifndef USE_TILE
-                " ('<w>?</w>'). Type "
+                " ('<w>"
+             << stringize_glyph(get_item_symbol(SHOW_ITEM_SCROLL))
+             << "</w>'). Type "
 #else
                 ". Simply click on it with your <w>left mouse button</w>, or "
                 "type "
@@ -1612,7 +1609,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_SEEN_WAND:
         text << "You have picked up your first wand"
 #ifndef USE_TILE
-                " ('<w>/</w>'). Type "
+                " ('<w>"
+             << stringize_glyph(get_item_symbol(SHOW_ITEM_WAND))
+             << "</w>'). Type "
 #else
                 ". Simply click on it with your <w>left mouse button</w>, or "
                 "type "
@@ -1626,7 +1625,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #ifndef USE_TILE
         text << "('<w>";
 
-        text << static_cast<char>(get_item_symbol(SHOW_ITEM_BOOK))
+        text << stringize_glyph(get_item_symbol(SHOW_ITEM_BOOK))
              << "'</w>) "
              << "that you can read by typing <w>%</w>. "
                 "If it's a spellbook you'll then be able to memorise spells "
@@ -1667,7 +1666,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_SEEN_WEAPON:
         text << "This is the first weapon "
 #ifndef USE_TILE
-                "('<w>)</w>') "
+                "('<w>"
+             << stringize_glyph(get_item_symbol(SHOW_ITEM_WEAPON))
+             << "</w>') "
 #endif
                 "you've picked up. Use <w>%</w> "
 #ifdef USE_TILE
@@ -1701,7 +1702,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_SEEN_MISSILES:
         text << "This is the first stack of missiles "
 #ifndef USE_TILE
-                "('<w>(</w>') "
+                "('<w>"
+             << stringize_glyph(get_item_symbol(SHOW_ITEM_MISSILE))
+             << "</w>') "
 #endif
                 "you've picked up. Missiles like darts and throwing nets "
                 "can be thrown by hand, but other missiles like arrows and "
@@ -1738,7 +1741,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_SEEN_ARMOUR:
         text << "This is the first piece of armour "
 #ifndef USE_TILE
-                "('<w>[</w>') "
+                "('<w>"
+             << stringize_glyph(get_item_symbol(SHOW_ITEM_ARMOUR))
+             << "</w>') "
 #endif
                 "you've picked up. "
 #ifdef USE_TILE
@@ -1772,7 +1777,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_SEEN_FOOD:
         text << "You have picked up some food"
 #ifndef USE_TILE
-                " ('<w>percent</w>')"
+                " ('<w>"
+             << stringize_glyph(get_item_symbol(SHOW_ITEM_FOOD))
+             << "</w>')"
 #endif
                 ". You can eat it by typing <w>%</w>"
 #ifdef USE_TILE
@@ -1862,11 +1869,15 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_SEEN_JEWELLERY:
         text << "You have picked up a a piece of jewellery, either a ring"
 #ifndef USE_TILE
-             << " ('<w>=</w>')"
+             << " ('<w>"
+             << stringize_glyph(get_item_symbol(SHOW_ITEM_RING))
+             << "</w>')"
 #endif
              << " or an amulet"
 #ifndef USE_TILE
-             << " ('<w>\"</w>')"
+             << " ('<w>"
+             << stringize_glyph(get_item_symbol(SHOW_ITEM_AMULET))
+             << "</w>')"
              << ". Type <w>%</w> to put it on and <w>%</w> to remove "
                 "it. You can view its properties from your <w>%</w>nventory"
 #else
@@ -1903,7 +1914,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #ifndef USE_TILE
                 ", both of which are represented by '<w>";
 
-        text << static_cast<char>(get_item_symbol(SHOW_ITEM_STAVE))
+        text << stringize_glyph(get_item_symbol(SHOW_ITEM_STAVE))
              << "</w>'"
 #endif
                 ". Both must be <w>%</w>ielded to be of use. "
@@ -1928,7 +1939,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_SEEN_GOLD:
         text << "You have picked up your first pile of gold"
 #ifndef USE_TILE
-                " ('<yellow>$</yellow>')"
+                " ('<yellow>"
+             << stringize_glyph(get_item_symbol(SHOW_ITEM_GOLD))
+             << "</yellow>')"
 #endif
                 ". Unlike all other objects in Crawl it doesn't show up in "
                 "your inventory, takes up no space in your inventory, weighs "
@@ -1958,7 +1971,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         if (monster_at(gc))
             DELAY_EVENT;
 
-        text << glyph_to_tagstr(get_show_glyph(env.show(e))) << " ";
+        text << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc))) << " ";
 #else
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Stairs", gc);
@@ -1987,7 +2000,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
         text << "These ";
 #ifndef USE_TILE
-        text << glyph_to_tagstr(get_show_glyph(env.show(e)));
+        text << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc)));
         text << " ";
 #else
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
@@ -2013,7 +2026,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             DELAY_EVENT;
 
         // FIXME: Branch entrance character is not being colored yellow.
-        text << glyph_to_tagstr(get_show_glyph(env.show(e))) << " ";
+        text << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc))) << " ";
 #else
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Branch stairs", gc);
@@ -2046,7 +2059,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         if (monster_at(gc))
             DELAY_EVENT;
 
-        text << glyph_to_tagstr(get_show_glyph(env.show(e))) << " ";
+        text << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc))) << " ";
 #else
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Portal", gc);
@@ -2112,7 +2125,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "of these nasty constructions";
 #ifndef USE_TILE
         {
-            glyph g = get_show_glyph(env.show(e));
+            glyph g = get_cell_glyph(env.map_knowledge(gc));
 
             if (g.ch == ' ' || g.col == BLACK)
                 g.col = LIGHTCYAN;
@@ -2133,7 +2146,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_SEEN_ALTAR:
         text << "That ";
 #ifndef USE_TILE
-        text << glyph_to_tagstr(get_show_glyph(env.show(e))) << " ";
+        text << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc))) << " ";
 #else
         {
             tiles.place_cursor(CURSOR_TUTORIAL, gc);
@@ -2171,7 +2184,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #endif
         text << "That "
 #ifndef USE_TILE
-             << _colourize_glyph(YELLOW, get_screen_glyph(gc)) << " "
+             << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc))) << " "
 #endif
                 "is a shop. You can enter it by typing <w>%</w> or <w>%</w>"
 #ifdef USE_TILE
@@ -2199,7 +2212,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
         text << "That "
 #ifndef USE_TILE
-             << _colourize_glyph(WHITE, get_screen_glyph(gc)) << " "
+             << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc))) << " "
 #endif
                 "is a closed door. You can open it by walking into it. "
                 "Sometimes it is useful to close a door. Do so by pressing "
@@ -2233,7 +2246,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #endif
         text << "That ";
 #ifndef USE_TILE
-        text << _colourize_glyph(WHITE, get_screen_glyph(gc)) << " ";
+        text << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc))) << " ";
 #endif
         if (grd(gc) == DNGN_SECRET_DOOR)
             text << "is";
@@ -3274,7 +3287,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "some powerful magics, like invisibility, haste or potions of "
                 "resistance. ";
 
-        if (you.magic_contamination < 5)
+        if (get_contamination_level() < 2)
         {
             text << "As long as the status only shows in grey nothing will "
                     "actually happen as a result of it, but as you continue "
@@ -3624,13 +3637,13 @@ void hints_describe_item(const item_def &item)
                 {
                     // Then only compare with other launcher skills.
                     curr_wpskill = range_skill(item);
-                    best_wpskill = best_skill(SK_SLINGS, SK_THROWING, 99);
+                    best_wpskill = best_skill(SK_SLINGS, SK_THROWING);
                 }
                 else
                 {
                     // Compare with other melee weapons.
                     curr_wpskill = weapon_skill(item);
-                    best_wpskill = best_skill(SK_SHORT_BLADES, SK_STAVES, 99);
+                    best_wpskill = best_skill(SK_SHORT_BLADES, SK_STAVES);
                     // Maybe unarmed is better.
                     if (you.skills[SK_UNARMED_COMBAT] > you.skills[best_wpskill])
                         best_wpskill = SK_UNARMED_COMBAT;
@@ -4726,13 +4739,13 @@ bool hints_monster_interesting(const monsters *mons)
     return (false);
 }
 
-void hints_describe_monster(const monsters *mons, bool has_stat_desc)
+void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
 {
     std::ostringstream ostr;
     ostr << "\n\n<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
     bool dangerous = false;
-    if (mons_is_unique(mons->type))
+    if (mons_is_unique(mi.type))
     {
         ostr << "Did you think you were the only adventurer in the dungeon? "
                 "Well, you thought wrong! These unique adversaries often "
@@ -4740,7 +4753,7 @@ void hints_describe_monster(const monsters *mons, bool has_stat_desc)
                 "careful.\n\n";
         dangerous = true;
     }
-    else if (mons->type == MONS_PLAYER_GHOST)
+    else if (mi.type == MONS_PLAYER_GHOST)
     {
         ostr << "The ghost of a deceased adventurer, it would like nothing "
                 "better than to send you the same way.\n\n";
@@ -4748,7 +4761,7 @@ void hints_describe_monster(const monsters *mons, bool has_stat_desc)
     }
     else
     {
-        const char ch = mons_base_char(mons->type);
+        const char ch = mons_base_char(mi.type);
         if (ch >= '1' && ch <= '5')
         {
             ostr << "This monster is a demon of the "
@@ -4762,12 +4775,12 @@ void hints_describe_monster(const monsters *mons, bool has_stat_desc)
         }
 
         // Don't call friendly monsters dangerous.
-        if (!mons_att_wont_attack(mons->attitude))
+        if (!mons_att_wont_attack(mi.attitude))
         {
             // 8 is the default value for the note-taking of OOD monsters.
             // Since I'm too lazy to come up with any measurement of my own
             // I'll simply reuse that one.
-            const int level_diff = mons_level(mons->type) - (you.absdepth0 + 8);
+            const int level_diff = mons_level(mi.type) - (you.absdepth0 + 8);
 
             if (you.level_type == LEVEL_DUNGEON && level_diff >= 0)
             {
@@ -4781,7 +4794,7 @@ void hints_describe_monster(const monsters *mons, bool has_stat_desc)
         }
     }
 
-    if (mons->berserk())
+    if (mi.is(MB_BERSERK))
     {
         ostr << "A berserking monster is bloodthirsty and fighting madly. "
                 "Such a blood rage makes it particularly dangerous!\n\n";
@@ -4789,13 +4802,13 @@ void hints_describe_monster(const monsters *mons, bool has_stat_desc)
     }
 
     // Monster is highlighted.
-    if (mons->friendly())
+    if (mi.attitude == ATT_FRIENDLY)
     {
         ostr << "Friendly monsters will follow you around and attempt to aid "
                 "you in battle. You can order your allies by <w>t</w>alking "
                 "to them.";
 
-        if (!mons_att_wont_attack(mons->attitude))
+        if (!mons_att_wont_attack(mi.attitude))
         {
             ostr << "\n\nHowever, it is only <w>temporarily</w> friendly, "
                     "and will become dangerous again when this friendliness "
@@ -4804,7 +4817,7 @@ void hints_describe_monster(const monsters *mons, bool has_stat_desc)
     }
     else if (dangerous)
     {
-        if (!Hints.hints_explored && mons->foe != MHITYOU)
+        if (!Hints.hints_explored && (mi.is(MB_WANDERING) || mi.is(MB_UNAWARE)))
         {
             ostr << "You can easily mark its square as dangerous to avoid "
                     "accidentally entering into its field of view when using "
@@ -4829,19 +4842,19 @@ void hints_describe_monster(const monsters *mons, bool has_stat_desc)
         }
     }
     else if (Options.stab_brand != CHATTR_NORMAL
-             && mons_looks_stabbable(mons))
+             && mi.is(MB_STABBABLE))
     {
         ostr << "Apparently "
-             << mons_pronoun((monster_type) mons->type, PRONOUN_NOCAP)
+             << mons_pronoun((monster_type) mi.type, PRONOUN_NOCAP)
              << " has not noticed you - yet. Note that you do not have to "
                 "engage every monster you meet. Sometimes, discretion is the "
                 "better part of valour.";
     }
     else if (Options.may_stab_brand != CHATTR_NORMAL
-             && mons_looks_distracted(mons))
+             && mi.is(MB_DISTRACTED))
     {
         ostr << "Apparently "
-             << mons_pronoun((monster_type) mons->type, PRONOUN_NOCAP)
+             << mons_pronoun((monster_type) mi.type, PRONOUN_NOCAP)
              << " has been distracted by something. You could use this "
                 "opportunity to sneak up on this monster - or to sneak away.";
     }

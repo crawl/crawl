@@ -9,7 +9,13 @@
 // If other UI types use the -ogl wrapper they should
 // include more conditional includes here.
 #ifdef USE_SDL
+#ifdef USE_GLES
+#include <SDL.h>
+#include <SDL_gles.h>
+#include <GLES/gl.h>
+#else
 #include <SDL_opengl.h>
+#endif
 #endif
 
 #include "debug.h"
@@ -83,7 +89,7 @@ void OGLStateManager::set(const GLState& state)
             // [enne] This should *not* be necessary, but the Linux OpenGL
             // driver that I'm using sets this to the last colour of the
             // colour array.  So, we need to unset it here.
-            glColor3f(1.0f, 1.0f, 1.0f);
+            glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         }
     }
 
@@ -145,7 +151,11 @@ void OGLStateManager::reset_view_for_resize(const coord_def &m_windowsz)
     glLoadIdentity();
 
     // For ease, vertex positions are pixel positions.
+#ifdef USE_GLES
+    glOrthox(0, m_windowsz.x, m_windowsz.y, 0, -1000, 1000);
+#else
     glOrtho(0, m_windowsz.x, m_windowsz.y, 0, -1000, 1000);
+#endif
 }
 
 void OGLStateManager::reset_transform()
@@ -185,9 +195,14 @@ void OGLStateManager::load_texture(unsigned char *pixels, unsigned int width,
     // Also assume that the texture is already bound using bind_texture
 
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+#ifdef GL_CLAMP
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-
+#else
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+#endif
+#ifndef USE_GLES
     if (mip_opt == MIPMAP_CREATE)
     {
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
@@ -197,6 +212,7 @@ void OGLStateManager::load_texture(unsigned char *pixels, unsigned int width,
                           texture_format, format, pixels);
     }
     else
+#endif
     {
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);

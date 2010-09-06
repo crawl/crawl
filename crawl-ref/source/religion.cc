@@ -865,10 +865,8 @@ void dec_penance(god_type god, int val)
         {
             you.penance[god] = 0;
 
-#ifdef DGL_MILESTONES
             mark_milestone("god.mollify",
                            "mollified " + god_name(god) + ".");
-#endif
 
             const bool dead_jiyva = (god == GOD_JIYVA && jiyva_is_dead());
 
@@ -909,10 +907,8 @@ void dec_penance(god_type god, int val)
         { // Nemelex's penance works actively only until 100
             if ((you.penance[god] -= val) > 100)
                 return;
-#ifdef DGL_MILESTONES
             mark_milestone("god.mollify",
                            "partially mollified " + god_name(god) + ".");
-#endif
             simple_god_message(" seems mollified... mostly.", god);
             take_note(Note(NOTE_MOLLIFY_GOD, god));
         }
@@ -950,8 +946,7 @@ static void _inc_penance(god_type god, int val)
         take_note(Note(NOTE_PENANCE, god));
 
         you.penance[god] += val;
-        you.penance[god] = std::min<unsigned char>(MAX_PENANCE,
-                                                   you.penance[god]);
+        you.penance[god] = std::min((uint8_t)MAX_PENANCE, you.penance[god]);
 
         // Orcish bonuses don't apply under penance.
         if (god == GOD_BEOGH)
@@ -1008,8 +1003,7 @@ static void _inc_penance(god_type god, int val)
     else
     {
         you.penance[god] += val;
-        you.penance[god] = std::min<unsigned char>(MAX_PENANCE,
-                                                   you.penance[god]);
+        you.penance[god] = std::min((uint8_t)MAX_PENANCE, you.penance[god]);
     }
 }
 
@@ -1281,15 +1275,15 @@ void mons_make_god_gift(monsters *mon, god_type god)
     if (god == GOD_NO_GOD)
         god = acting_god;
 
-    ASSERT(!(mon->flags & MF_GOD_GIFT));
+    if (mon->flags & MF_GOD_GIFT)
+    {
+        dprf("Monster '%s' was already a gift of god '%s', now god '%s'.",
+             mon->name(DESC_PLAIN, true).c_str(),
+             god_name(mon->god).c_str(),
+             god_name(god).c_str());
+    }
 
     mon->god = god;
-
-#ifdef DEBUG
-    if (mon->flags & MF_GOD_GIFT)
-        mprf(MSGCH_DIAGNOSTICS, "Monster '%s' is already a gift of god '%s'",
-             mon->name(DESC_PLAIN, true).c_str(), god_name(god).c_str());
-#endif
     mon->flags |= MF_GOD_GIFT;
 }
 
@@ -1329,7 +1323,7 @@ bool is_neutral_plant(const monsters* mon)
             && mon->attitude == ATT_GOOD_NEUTRAL);
 }
 
-bool _has_jelly()
+static bool _has_jelly()
 {
     ASSERT(you.religion == GOD_JIYVA);
 
@@ -2452,7 +2446,7 @@ int piety_scale(int piety)
     return (piety);
 }
 
-void gain_piety(int original_gain, bool force)
+void gain_piety(int original_gain, int denominator, bool force, bool should_scale_piety)
 {
     if (original_gain <= 0)
         return;
@@ -2464,7 +2458,14 @@ void gain_piety(int original_gain, bool force)
     if (you.religion == GOD_NO_GOD || you.religion == GOD_XOM)
         return;
 
-    int pgn = piety_scale(original_gain);
+    int pgn = should_scale_piety? piety_scale(original_gain) : original_gain;
+
+    if (crawl_state.game_is_sprint() && should_scale_piety)
+        pgn = sprint_modify_piety(pgn);
+
+    pgn = div_rand_round(pgn, denominator);
+    if (pgn <= 0)
+        return;
 
     // check to see if we owe anything first
     if (you.penance[you.religion] > 0)
@@ -2520,8 +2521,7 @@ void gain_piety(int original_gain, bool force)
         // piety_hysteresis is the amount of _loss_ stored up, so this
         // may look backwards.
         const int old_hysteresis = you.piety_hysteresis;
-        you.piety_hysteresis =
-            (unsigned char)std::max<int>(0, you.piety_hysteresis - pgn);
+        you.piety_hysteresis = std::max<int>(0, you.piety_hysteresis - pgn);
         const int pgn_borrowed = (old_hysteresis - you.piety_hysteresis);
         pgn -= pgn_borrowed;
 
@@ -2533,11 +2533,6 @@ void gain_piety(int original_gain, bool force)
     }
 
     int old_piety = you.piety;
-
-    if (crawl_state.game_is_sprint())
-    {
-        pgn = sprint_modify_piety(pgn);
-    }
 
     you.piety += std::min<int>(MAX_PIETY - you.piety, pgn);
 
@@ -2575,6 +2570,8 @@ void gain_piety(int original_gain, bool force)
     {
         // Every piety level change also affects AC from orcish gear.
         you.redraw_armour_class = true;
+        // Or the player's symbol.
+        you.symbol = transform_mons();
     }
 
     if (you.religion == GOD_CHEIBRIADOS)
@@ -2633,7 +2630,7 @@ void lose_piety(int pgn)
 
     // Apply hysteresis.
     const int old_hysteresis = you.piety_hysteresis;
-    you.piety_hysteresis = (unsigned char)std::min<int>(
+    you.piety_hysteresis = std::min<int>(
         PIETY_HYSTERESIS_LIMIT, you.piety_hysteresis + pgn);
     const int pgn_borrowed = (you.piety_hysteresis - old_hysteresis);
     pgn -= pgn_borrowed;
@@ -2766,9 +2763,7 @@ void excommunication(god_type new_god)
     mpr("You have lost your religion!");
     more();
 
-#ifdef DGL_MILESTONES
     mark_milestone("god.renounce", "abandoned " + god_name(old_god) + ".");
-#endif
 
     if (god_hates_your_god(old_god, new_god))
     {
@@ -3130,7 +3125,7 @@ bool god_likes_item(god_type god, const item_def& item)
     case GOD_NEMELEX_XOBEH:
         return (!is_deck(item)
                 && !item.is_critical()
-                && !is_rune(item)
+                && !item_is_rune(item)
                 && item.base_type != OBJ_GOLD
                 && (item.base_type != OBJ_MISCELLANY
                     || item.sub_type != MISC_HORN_OF_GERYON
@@ -3258,10 +3253,8 @@ void god_pitch(god_type which_god)
     whereis_record();
 #endif
 
-#ifdef DGL_MILESTONES
     mark_milestone("god.worship", "became a worshipper of "
                    + god_name(you.religion) + ".");
-#endif
 
     simple_god_message(
         make_stringf(" welcomes you%s!",
@@ -3270,7 +3263,7 @@ void god_pitch(god_type which_god)
     if (crawl_state.game_is_tutorial())
     {
         // Tutorial needs minor destruction usable.
-        gain_piety(35, true);
+        gain_piety(35, 1, true, false);
     }
 
     god_welcome_identify_gear();
@@ -3335,7 +3328,7 @@ void god_pitch(god_type which_god)
     {
         // Give a piety bonus when switching between good gods.
         if (good_god_switch && old_piety > 15)
-            gain_piety(std::min(30, old_piety - 15));
+            gain_piety(std::min(30, old_piety - 15), 1, true, false);
     }
     else if (is_evil_god(you.religion))
     {
@@ -3351,7 +3344,7 @@ void god_pitch(god_type which_god)
 
     // Note that you.worshipped[] has already been incremented.
     if (you.religion == GOD_LUGONU && you.worshipped[GOD_LUGONU] == 1)
-        gain_piety(20);         // allow instant access to first power
+        gain_piety(20, 1, true, false);  // allow instant access to first power
 
     // Complimentary jelly upon joining.
     if (you.religion == GOD_JIYVA)
@@ -3566,30 +3559,6 @@ void handle_god_time()
     if (one_chance_in(100))
     {
         // Choose a god randomly from those to whom we owe penance.
-        //
-        // Proof: (By induction)
-        //
-        // 1) n = 1, probability of choosing god is one_chance_in(1)
-        // 2) Asuume true for n = k (ie. prob = 1 / n for all n)
-        // 3) For n = k + 1,
-        //
-        //      P:new-found-god = 1 / n (see algorithm)
-        //      P:other-gods = (1 - P:new-found-god) * P:god-at-n=k
-        //                             1        1
-        //                   = (1 - -------) * ---
-        //                           k + 1      k
-        //
-        //                          k         1
-        //                   = ----------- * ---
-        //                        k + 1       k
-        //
-        //                       1       1
-        //                   = -----  = ---
-        //                     k + 1     n
-        //
-        // Therefore, by induction the probability is uniform.  As for
-        // why we do it this way... it requires only one pass and doesn't
-        // require an array.
 
         god_type which_god = GOD_NO_GOD;
         unsigned int count = 0;
@@ -3622,18 +3591,18 @@ void handle_god_time()
 
         // These gods like long-standing worshippers.
         case GOD_ELYVILON:
-            if (_need_free_piety() && one_chance_in(20))
-                gain_piety(1);
+            if (_need_free_piety())
+                gain_piety(1, 20);
             return;
 
         case GOD_SHINING_ONE:
-            if (_need_free_piety() && one_chance_in(15))
-                gain_piety(1);
+            if (_need_free_piety())
+                gain_piety(1, 15);
             return;
 
         case GOD_ZIN:
-            if (_need_free_piety() && one_chance_in(12))
-                gain_piety(1);
+            if (_need_free_piety())
+                gain_piety(1, 12);
             return;
 
         // All the rest will excommunicate you if piety goes below 1.
@@ -3749,7 +3718,7 @@ int god_colour(god_type god) // mv - added
     return (YELLOW);
 }
 
-char god_message_altar_colour(god_type god)
+uint8_t god_message_altar_colour(god_type god)
 {
     int rnd;
 

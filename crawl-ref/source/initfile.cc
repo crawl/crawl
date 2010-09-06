@@ -52,6 +52,7 @@
 #ifdef TARGET_OS_WINDOWS
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <shlwapi.h>
 #elif defined ( __APPLE__ )
 extern char **NXArgv;
 #elif defined ( __linux__ )
@@ -59,6 +60,7 @@ extern char **NXArgv;
 #endif
 
 const std::string game_options::interrupt_prefix = "interrupt_";
+system_environment SysEnv;
 game_options Options;
 
 const static char *obj_syms = ")([/%.?=!.+\\0}X$";
@@ -616,6 +618,44 @@ void game_options::set_activity_interrupt(const std::string &activity_name,
     eints[AI_FORCE_INTERRUPT] = true;
 }
 
+static std::string _user_home_dir()
+{
+#ifdef TARGET_OS_WINDOWS
+    char home[MAX_PATH];
+    if (SHGetFolderPath(0, CSIDL_APPDATA, 0, 0, home))
+        strcpy(home, "./");
+#else
+    const char *home = getenv("HOME");
+    if (!home || !*home)
+        home = "./";
+#endif
+    return (home);
+}
+
+static std::string _user_home_subpath(const std::string subpath)
+{
+    return catpath(_user_home_dir(), subpath);
+}
+
+static std::string _user_home_crawl_subpath(const std::string subpath)
+{
+    return _user_home_subpath(catpath(".crawl", subpath));
+}
+
+#if defined(SAVE_DIR_PATH) || defined(SHARED_DIR_PATH)
+static std::string _resolve_dir(const char* path, const char* suffix)
+{
+#if defined(DGAMELAUNCH)
+    return catpath(path, "");
+#else
+    if (path[0] != '~')
+        return std::string(path) + suffix;
+    else
+        return _user_home_subpath(std::string(path + 1) + suffix);
+#endif
+}
+#endif
+
 void game_options::reset_options()
 {
     filename     = "unknown";
@@ -630,33 +670,29 @@ void game_options::reset_options()
     restart_after_game = false;
 #endif
 
+    macro_dir = SysEnv.macro_dir;
+
 #if !defined(DGAMELAUNCH)
-    macro_dir = "settings/";
+    if (macro_dir.empty())
+    {
+#ifdef UNIX
+        macro_dir = _user_home_crawl_subpath("");
+#else
+        macro_dir = "settings/";
+#endif
+    }
 #endif
 
 #if defined(SAVE_DIR_PATH)
-#if defined(DGAMELAUNCH)
-    save_dir   = SAVE_DIR_PATH;
-#else
-    if (SAVE_DIR_PATH[0] != '~')
-    {
-        save_dir   = SAVE_DIR_PATH "/saves/";
-        morgue_dir = SAVE_DIR_PATH "/morgue/";
-    }
-    else
-    {
-        const char *home = getenv("HOME");
-        if (!home || !*home)
-            home = "./";
-        save_dir = (std::string)home + (SAVE_DIR_PATH + 1) + "/saves/";
-        morgue_dir = (std::string)home + (SAVE_DIR_PATH + 1) + "/morgue/";
-    }
-#endif
+    save_dir   = _resolve_dir(SAVE_DIR_PATH, "/saves/");
+    morgue_dir = _resolve_dir(SAVE_DIR_PATH, "/morgue/");
 #elif defined(TARGET_OS_MACOSX)
-    std::string tmp_path_base = std::string(getenv("HOME")) + "/Library/Application Support/" CRAWL;
+    const std::string tmp_path_base =
+        _user_home_subpath("Library/Application Support/" CRAWL);
     save_dir   = tmp_path_base + "/saves/";
     morgue_dir = tmp_path_base + "/morgue/";
-    macro_dir  = tmp_path_base;
+    if (SysEnv.macro_dir.empty())
+        macro_dir  = tmp_path_base;
 #elif !defined(TARGET_OS_DOS)
     save_dir   = "saves/";
 #else
@@ -665,6 +701,12 @@ void game_options::reset_options()
 
 #if !defined(SHORT_FILE_NAMES) && !defined(SAVE_DIR_PATH) && !defined(TARGET_OS_MACOSX)
     morgue_dir = "morgue/";
+#endif
+
+#if defined(SHARED_DIR_PATH)
+    shared_dir = _resolve_dir(SHARED_DIR_PATH, "/");
+#else
+    shared_dir = save_dir;
 #endif
 
     additional_macro_files.clear();
@@ -717,13 +759,13 @@ void game_options::reset_options()
 #endif
 
     // set it to the .crawlrc default
-    autopickups = ((1L << 15) | // gold
-                   (1L <<  6) | // scrolls
-                   (1L <<  8) | // potions
-                   (1L << 10) | // books
-                   (1L <<  7) | // jewellery
-                   (1L <<  3) | // wands
-                   (1L <<  4)); // food
+    autopickups = ((1 << 15) | // gold
+                   (1 <<  6) | // scrolls
+                   (1 <<  8) | // potions
+                   (1 << 10) | // books
+                   (1 <<  7) | // jewellery
+                   (1 <<  3) | // wands
+                   (1 <<  4)); // food
 
     suppress_startup_errors = false;
 
@@ -818,6 +860,7 @@ void game_options::reset_options()
     use_fake_cursor        = false;
 #endif
     use_fake_player_cursor = true;
+    show_player_species    = false;
 
     stash_tracking         = STM_ALL;
 
@@ -1239,6 +1282,7 @@ static std::string _find_crawlrc()
 #ifndef DATA_DIR_PATH
         { "", "init.txt" },
         { "..", "init.txt" },
+        { "../settings", "init.txt" },
 #endif
         { NULL, NULL }                // placeholder to mark end
     };
@@ -1332,8 +1376,8 @@ std::string read_init_file(bool runscript)
         Options.read_option_line(SysEnv.extra_opts_last[i], false);
     }
 
-    Options.filename     = "unknown";
-    Options.basefilename = "unknown";
+    Options.filename     = init_file_name;
+    Options.basefilename = get_base_filename(init_file_name);
     Options.line_num     = -1;
 
     return ("");
@@ -2092,7 +2136,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "autopickup")
     {
         // clear out autopickup
-        autopickups = 0L;
+        autopickups = 0;
 
         for (size_t i = 0; i < field.length(); i++)
         {
@@ -2128,7 +2172,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                 ;
 
             if (j < obj_syms_len)
-                autopickups |= (1L << j);
+                autopickups |= (1 << j);
             else
             {
                 report_error (
@@ -2332,15 +2376,17 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         game.map = field;
     }
-#ifndef DGAMELAUNCH
     // [ds] For dgamelaunch setups, the player should *not* be able to
     // set game type in their rc; the only way to set game type for
     // DGL builds should be the command-line options.
     else if (key == "type")
     {
+#if defined(DGAMELAUNCH)
+        game.type = Options.game.type;
+#else
         game.type = _str_to_gametype(field);
-    }
 #endif
+    }
     else if (key == "species" || key == "race")
     {
         game.species = _str_to_species(field);
@@ -2838,6 +2884,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else BOOL_OPTION(use_fake_cursor);
     else BOOL_OPTION(use_fake_player_cursor);
+    else BOOL_OPTION(show_player_species);
     else if (key == "force_more_message")
     {
         std::vector<std::string> fragments = split_string(",", field);
@@ -3637,7 +3684,7 @@ static void _print_save_version(char *name)
         goto cleanup;
     }
 
-    char major, minor;
+    int major, minor;
     if (!get_save_version(charf, major, minor))
     {
         fprintf(stderr, "Save file is invalid.\n");
@@ -3842,7 +3889,10 @@ bool parse_args( int argc, char **argv, bool rc_only )
 
         case CLO_ARENA:
             if (!rc_only)
+            {
                 Options.game.type = GAME_TYPE_ARENA;
+                Options.restart_after_game = false;
+            }
             if (next_is_param)
             {
                 if (!rc_only)
@@ -3884,8 +3934,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
         case CLO_MACRO:
             if (!next_is_param)
                 return (false);
-            if (!rc_only)
-                Options.macro_dir = next_arg;
+            SysEnv.macro_dir = next_arg;
             nextUsed = true;
             break;
 
@@ -3987,7 +4036,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
             if (!next_is_param)
                 return (false);
 
-            if (!sscanf(next_arg, "%lx", &Options.seed))
+            if (!sscanf(next_arg, "%x", &Options.seed))
                 return (false);
             nextUsed = true;
             break;
@@ -4054,21 +4103,6 @@ int game_options::o_int(const char *name, int def) const
     if (i != named_options.end())
     {
         val = atoi(i->second.c_str());
-    }
-    return (val);
-}
-
-long game_options::o_long(const char *name, long def) const
-{
-    long val = def;
-    opt_map::const_iterator i = named_options.find(name);
-    if (i != named_options.end())
-    {
-        const char *s = i->second.c_str();
-        char *es = NULL;
-        long num = strtol(s, &es, 10);
-        if (s != (const char *) es && es)
-            val = num;
     }
     return (val);
 }

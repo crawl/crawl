@@ -148,7 +148,7 @@ static const char *describe_xom_mood()
                              : "a very special plaything of Xom.";
 }
 
-const char *describe_xom_favour(bool upper)
+const std::string describe_xom_favour(bool upper)
 {
     std::string favour;
     if (you.religion != GOD_XOM)
@@ -161,7 +161,7 @@ const char *describe_xom_favour(bool upper)
     if (upper)
         favour = uppercase_first(favour);
 
-    return (favour.c_str());
+    return (favour);
 }
 
 static std::string _get_xom_speech(const std::string key)
@@ -392,7 +392,7 @@ static int _exploration_estimate(bool seen_only = false, bool debug = false)
         tries++;
 
         coord_def pos = random_in_bounds();
-        if (!seen_only && is_terrain_known(pos) || is_terrain_seen(pos))
+        if (!seen_only && env.map_knowledge(pos).known() || env.map_knowledge(pos).seen())
         {
             seen++;
             total++;
@@ -3666,8 +3666,8 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
 }
 
 static void _handle_accidental_death(const int orig_hp,
-    const FixedVector<char, NUM_STATS> orig_stat_loss,
-    const FixedVector<unsigned char, NUM_MUTATIONS> &orig_mutation)
+    const FixedVector<int8_t, NUM_STATS> orig_stat_loss,
+    const FixedVector<uint8_t, NUM_MUTATIONS> &orig_mutation)
 {
     // Did ouch() return early because the player died from the Xom
     // effect, even though neither is the player under penance nor is
@@ -3855,9 +3855,9 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
 #endif
 
     const int  orig_hp       = you.hp;
-    const FixedVector<char, NUM_STATS> orig_stat_loss = you.stat_loss;
+    const FixedVector<int8_t, NUM_STATS> orig_stat_loss = you.stat_loss;
 
-    const FixedVector<unsigned char, NUM_MUTATIONS> orig_mutation
+    const FixedVector<uint8_t, NUM_MUTATIONS> orig_mutation
         = you.mutation;
 
 #ifdef NOTE_DEBUG_XOM
@@ -3992,14 +3992,14 @@ void xom_check_lost_item(const item_def& item)
         xom_is_stimulated(255, "Xom laughs nastily.", true);
     else if (is_special_unrandom_artefact(item))
         xom_is_stimulated(128, "Xom snickers.", true);
-    else if (is_rune(item))
+    else if (item_is_rune(item))
     {
         // If you'd dropped it, check if that means you'd dropped your
         // third rune, and now you don't have enough to get into Zot.
         if (item.flags & ISFLAG_BEEN_IN_INV)
             _xom_check_less_runes(item.quantity);
 
-        if (is_unique_rune(item))
+        if (item_is_unique_rune(item))
             xom_is_stimulated(255, "Xom snickers loudly.", true);
         else if (you.entry_cause == EC_SELF_EXPLICIT
                  && !(item.flags & ISFLAG_BEEN_IN_INV))
@@ -4037,11 +4037,11 @@ void xom_check_destroyed_item(const item_def& item, int cause)
     }
     else if (is_special_unrandom_artefact(item))
         xom_is_stimulated(128, "Xom snickers.", true);
-    else if (is_rune(item))
+    else if (item_is_rune(item))
     {
         _xom_check_less_runes(item.quantity);
 
-        if (is_unique_rune(item) || item.plus == RUNE_ABYSSAL)
+        if (item_is_unique_rune(item) || item.plus == RUNE_ABYSSAL)
             amusement = 255;
         else
             amusement = 64 * item.quantity;
@@ -4203,7 +4203,7 @@ bool xom_saves_your_life(const int dam, const int death_source,
         stat_type s = static_cast<stat_type>(i);
         while (you.max_stat(s) < 1)
             you.base_stats[s]++;
-        you.stat_loss[s] = std::min<char>(you.stat_loss[s], you.max_stat(s) - 1);
+        you.stat_loss[s] = std::min<int8_t>(you.stat_loss[s], you.max_stat(s) - 1);
     }
 
     god_speaks(GOD_XOM, "Xom revives you!");
@@ -4237,7 +4237,7 @@ static bool _sort_xom_effects(const xom_effect_count &a,
     return (a.count > b.count);
 }
 
-static const char* _xom_effect_to_name(int effect)
+static const std::string _xom_effect_to_name(int effect)
 {
     ASSERT(effect < XOM_PLAYER_DEAD);
 
@@ -4270,7 +4270,7 @@ static const char* _xom_effect_to_name(int effect)
     }
     result += _xom_effect_names[effect];
 
-    return (result.c_str());
+    return (result);
 }
 
 static char* _list_exploration_estimate()

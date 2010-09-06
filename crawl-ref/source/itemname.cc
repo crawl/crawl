@@ -143,7 +143,7 @@ std::string item_def::name(description_level_type descrip,
         }
     }
 
-    if (this->base_type == OBJ_ORBS
+    if (item_is_orb(*this)
         || (ident || item_type_known( *this ))
             && (this->base_type == OBJ_MISCELLANY
                    && this->sub_type == MISC_HORN_OF_GERYON
@@ -301,7 +301,7 @@ std::string item_def::name(description_level_type descrip,
     return buff.str();
 }
 
-bool _missile_brand_is_prefix(special_missile_type brand)
+static bool _missile_brand_is_prefix(special_missile_type brand)
 {
     switch (brand)
     {
@@ -316,7 +316,7 @@ bool _missile_brand_is_prefix(special_missile_type brand)
     }
 }
 
-bool _missile_brand_is_postfix(special_missile_type brand)
+static bool _missile_brand_is_postfix(special_missile_type brand)
 {
     return (brand != SPMSL_NORMAL && !_missile_brand_is_prefix(brand));
 }
@@ -781,6 +781,8 @@ static const char* rune_type_name(int p)
     case RUNE_TOMB:        return "golden";
     case RUNE_SWAMP:       return "decaying";
     case RUNE_SHOALS:      return "barnacled";
+    case RUNE_SPIDER_NEST: return "gossamer";
+    case RUNE_FOREST:      return "mossy";
 
     // pandemonium and abyss runes:
     case RUNE_DEMONIC:     return "demonic";
@@ -835,6 +837,7 @@ static const char* misc_type_name(int type, bool known)
         case MISC_BOTTLED_EFREET:           return "bottled efreet";
         case MISC_STONE_OF_EARTH_ELEMENTALS:
             return "stone of earth elementals";
+        case MISC_QUAD_DAMAGE:              return "quad damage";
 
         case MISC_RUNE_OF_ZOT:
         case NUM_MISCELLANY:
@@ -869,6 +872,7 @@ static const char* misc_type_name(int type, bool known)
         case MISC_DISC_OF_STORMS:            return "grey disc";
         case MISC_STONE_OF_EARTH_ELEMENTALS: return "nondescript stone";
         case MISC_BOTTLED_EFREET:            return "sealed bronze flask";
+        case MISC_QUAD_DAMAGE:               return "quad damage";
 
         case MISC_RUNE_OF_ZOT:
         case NUM_MISCELLANY:
@@ -1021,7 +1025,6 @@ static const char* staff_type_name(int stafftype)
     case STAFF_SPELL_SUMMONING: return "summoning";
     case STAFF_CHANNELING:      return "channeling";
     case STAFF_WARDING:         return "warding";
-    case STAFF_DISCOVERY:       return "discovery";
     case STAFF_SMITING:         return "smiting";
     case STAFF_STRIKING:        return "striking";
     case STAFF_DEMONOLOGY:      return "demonology";
@@ -1555,10 +1558,11 @@ std::string item_def::name_aux(description_level_type desc,
         case FOOD_BEEF_JERKY: buff << "beef jerky"; break;
         case FOOD_CHEESE: buff << "cheese"; break;
         case FOOD_SAUSAGE: buff << "sausage"; break;
+        case FOOD_AMBROSIA: buff << "piece of ambrosia"; break;
         case FOOD_CHUNK:
             if (!basename && !dbname)
             {
-                if (food_is_rotten(*this))
+                if (food_is_rotten(*this) && it_plus != MONS_ROTTING_HULK)
                     buff << "rotting ";
 
                 buff << "chunk of "
@@ -1611,7 +1615,7 @@ std::string item_def::name_aux(description_level_type desc,
         {
             if (cursed())
                 buff << "cursed ";
-            else if (Options.show_uncursed && !terse
+            else if (Options.show_uncursed && !terse && desc != DESC_PLAIN
                      && (!is_randart || !know_type)
                      && (!ring_has_pluses(*this) || !know_pluses)
                      // If the item is worn, its curse status is known,
@@ -1798,7 +1802,7 @@ std::string item_def::name_aux(description_level_type desc,
 
     case OBJ_CORPSES:
     {
-        if (food_is_rotten(*this) && !dbname)
+        if (food_is_rotten(*this) && !dbname && it_plus != MONS_ROTTING_HULK)
             buff << "rotting ";
 
         uint64_t name_type, name_flags = 0;
@@ -2087,7 +2091,7 @@ public:
 
     virtual std::string get_text(const bool = false) const
     {
-        return std::string(" ") + item->name(DESC_PLAIN);
+        return std::string(" ") + item->name(DESC_PLAIN, false, true);
     }
 };
 
@@ -2100,17 +2104,16 @@ static MenuEntry *discoveries_item_mangle(MenuEntry *me)
     return (newme);
 }
 
-bool item_names( const item_def *it1,
-                 const item_def *it2 )
+bool identified_item_names( const item_def *it1,
+                            const item_def *it2 )
 {
-    return it1->name(DESC_PLAIN, false, false, false)
-           < it2->name(DESC_PLAIN, false, false, false);
+    return it1->name(DESC_PLAIN, false, true, false)
+           < it2->name(DESC_PLAIN, false, true, false);
 }
 
-bool check_item_knowledge(bool quiet)
+bool check_item_knowledge(bool quiet, bool inverted)
 {
     std::vector<const item_def*> items;
-    bool rc = true;
 
     const object_class_type idx_to_objtype[5] = { OBJ_WANDS, OBJ_SCROLLS,
                                                   OBJ_JEWELLERY, OBJ_POTIONS,
@@ -2118,11 +2121,15 @@ bool check_item_knowledge(bool quiet)
     const int idx_to_maxtype[5] = { NUM_WANDS, NUM_SCROLLS,
                                     NUM_JEWELLERY, NUM_POTIONS, NUM_STAVES };
 
-
+    bool has_unknown_items = false;
     for (int i = 0; i < 5; i++)
         for (int j = 0; j < idx_to_maxtype[i]; j++)
         {
-            if (type_ids[i][j] == ID_KNOWN_TYPE)
+            if (i == 2 && j >= NUM_RINGS && j < AMU_FIRST_AMULET)
+                continue;
+                
+            if (inverted ? type_ids[i][j] != ID_KNOWN_TYPE
+                         : type_ids[i][j] == ID_KNOWN_TYPE)
             {
                 item_def* ptmp = new item_def;
                 if (ptmp != 0)
@@ -2131,37 +2138,48 @@ bool check_item_knowledge(bool quiet)
                     ptmp->sub_type  = j;
                     ptmp->colour    = 1;
                     ptmp->quantity  = 1;
+                    if (i == 0)
+                        ptmp->plus = wand_max_charges(j);
                     items.push_back(ptmp);
                 }
             }
+            else if (!inverted)
+                has_unknown_items = true;
         }
 
     if (items.empty())
     {
-        rc = false;
         if (!quiet)
             mpr("You don't recognise anything yet!");
+        return (false);
     }
+
+    std::sort(items.begin(), items.end(), identified_item_names);
+    InvMenu menu;
+        
+    if (inverted)
+        menu.set_title("Items not yet recognised: (toggle with -)");
+    else if (has_unknown_items)
+        menu.set_title("You recognise: (toggle with -)");
     else
+        menu.set_title("You recognise all items:");
+                                             
+    menu.set_flags(MF_NOSELECT);
+    menu.set_type(MT_KNOW);
+    menu.load_items(items, discoveries_item_mangle);
+    menu.show(true);
+    char last_char = menu.getkey();
+    redraw_screen();
+
+    for (std::vector<const item_def*>::iterator iter = items.begin();
+         iter != items.end(); ++iter)
     {
-        rc = true;
-        std::sort(items.begin(), items.end(), item_names);
-        InvMenu menu;
-        menu.set_title("You recognise:");
-        menu.set_flags(MF_NOSELECT);
-        menu.set_type(MT_KNOW);
-        menu.load_items(items, discoveries_item_mangle);
-        menu.show();
-        redraw_screen();
-
-        for (std::vector<const item_def*>::iterator iter = items.begin();
-             iter != items.end(); ++iter)
-        {
-            delete *iter;
-        }
+         delete *iter;
     }
-
-    return (rc);
+    if (last_char == '-' && (inverted || has_unknown_items))
+        check_item_knowledge(quiet, !inverted);
+ 
+    return (true);
 }
 
 
@@ -2653,6 +2671,7 @@ bool is_bad_item(const item_def &item, bool temp)
         case RING_HUNGER:
             // Even Vampires can use this ring.
             return (!you.is_undead);
+        case RING_EVASION:
         case RING_PROTECTION:
         case RING_STRENGTH:
         case RING_DEXTERITY:
@@ -2797,6 +2816,8 @@ bool is_useless_item(const item_def &item, bool temp)
         case SCR_RANDOM_USELESSNESS:
         case SCR_NOISE:
             return (true);
+        case SCR_TELEPORTATION:
+            return (crawl_state.game_is_sprint());
         default:
             return (false);
         }
@@ -2914,7 +2935,11 @@ bool is_useless_item(const item_def &item, bool temp)
             return (you.religion == GOD_TROG);
 
         case RING_TELEPORT_CONTROL:
-            return (player_control_teleport(true, temp, false));
+            return (player_control_teleport(true, temp, false)
+                    || crawl_state.game_is_sprint());
+
+        case RING_TELEPORTATION:
+            return (crawl_state.game_is_sprint());
 
         case RING_INVISIBILITY:
             return (temp && you.backlit(true));
@@ -3189,23 +3214,17 @@ void init_item_name_cache()
                 }
             }
 
-            int o = items(0, base_type, sub_type, true, 1,
-                          MAKE_ITEM_NO_RACE);
-
-            if (o == NON_ITEM)
-                continue;
-
-            item_def       &item(mitm[o]);
-            item_types_pair pair = {base_type, sub_type};
-
-            // Make sure item isn't an artefact.
-            item.flags  &= ~ISFLAG_ARTEFACT_MASK;
-            item.special = 0;
-
-            std::string    name = item.name(DESC_DBNAME, true, true);
-            glyph g = get_item_glyph(&item);
-            destroy_item(o, true);
+            item_def item;
+            item.base_type = base_type;
+            item.sub_type = sub_type;
+            if (is_deck(item))
+            {
+                item.plus = 1;
+                init_deck(item);
+            }
+            std::string name = item.name(DESC_DBNAME, true, true);
             lowercase(name);
+            glyph g = get_item_glyph(&item);
 
             if (base_type == OBJ_JEWELLERY && name == "buggy jewellery")
                 continue;
@@ -3218,7 +3237,7 @@ void init_item_name_cache()
 
             if (item_names_cache.find(name) == item_names_cache.end())
             {
-                item_names_cache[name] = pair;
+                item_names_cache[name] = (item_types_pair){base_type, sub_type};
                 if (g.ch)
                     item_names_by_glyph_cache[g.ch].push_back(name);
             }

@@ -1072,10 +1072,11 @@ MAP
 ENDMAP
 
 ##### Hairy devils (4) and bears.
-NAME: hairy_minivault
-TAGS: patrolling
-MONS: hairy devil / nothing w:20
-MONS: black bear w:20 / grizzly bear / nothing w:20
+NAME:  hairy_minivault
+DEPTH: D:9-27
+TAGS:  patrolling
+MONS:  hairy devil / nothing w:20
+MONS:  black bear w:20 / grizzly bear / nothing w:20
 MAP
 xxxxxxxxxxxxx
 @.....xxxxxxx
@@ -1275,7 +1276,7 @@ ENDMAP
 # And for now, something woody (1KB)
 NAME: forest_paths
 DEPTH: D, Lair
-FTILE:  .t0@*12 = floor_lair
+FTILE:  .t0@*123 = floor_lair
 : if you.absdepth()>15 then
 MONS:   spriggan, spriggan druid, spriggan rider
 SUBST:  0=1

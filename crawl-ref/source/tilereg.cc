@@ -49,6 +49,21 @@ void Region::place(int _sx, int _sy, int margin)
     recalculate();
 }
 
+void Region::place(int _sx, int _sy, int _ex, int _ey, int margin)
+{
+    sx = _sx;
+    sy = _sy;
+    ex = _ex;
+    ey = _ey;
+    wx = ex - sx;
+    wy = ey - sy;
+    ox = margin;
+    oy = margin;
+
+    on_resize();
+}
+
+
 void Region::place(int _sx, int _sy)
 {
     sx = _sx;

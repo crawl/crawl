@@ -28,6 +28,8 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "terrain.h"
+#include "transform.h"
+#include "view.h"
 #include "xom.h"
 
 #ifdef WIZARD
@@ -81,7 +83,7 @@ void wizard_change_species( void )
     you.is_undead = get_undead_state(sp);
 
     // Change permanent mutations, but preserve non-permanent ones.
-    unsigned char prev_muts[NUM_MUTATIONS];
+    uint8_t prev_muts[NUM_MUTATIONS];
     for (i = 0; i < NUM_MUTATIONS; ++i)
     {
         if (you.innate_mutations[i] > 0)
@@ -147,6 +149,7 @@ void wizard_change_species( void )
         break;
     }
 
+    you.symbol = transform_mons();
 #ifdef USE_TILE
     init_player_doll();
 #endif
@@ -310,7 +313,7 @@ void wizard_set_piety()
     mprf("Setting piety to %d.", newpiety);
     int diff = newpiety - you.piety;
     if (diff > 0)
-        gain_piety(diff);
+        gain_piety(diff, 1, true, false);
     else
         lose_piety(-diff);
 
@@ -734,7 +737,8 @@ static const char* dur_names[] =
     "slimify",
     "time step",
     "icemail depleted",
-    "misled"
+    "misled",
+    "quad damage",
 };
 
 void wizard_edit_durations( void )
@@ -914,3 +918,12 @@ void wizard_get_god_gift (void)
     if (!do_god_gift(false, true))
         mpr("Nothing happens.");
 }
+
+void wizard_toggle_xray_vision()
+{
+#ifdef WIZARD
+    you.xray_vision = !you.xray_vision;
+#endif
+    viewwindow(true);
+}
+

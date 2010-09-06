@@ -13,7 +13,7 @@
 #include <stdlib.h>
 
 #include "externs.h"
-
+#include "hints.h"
 #include "itemprop.h"
 #include "notes.h"
 #include "output.h"
@@ -23,7 +23,7 @@
 #include "spl-cast.h"
 #include "sprint.h"
 #include "state.h"
-#include "hints.h"
+#include "transform.h"
 
 
 // MAX_COST_LIMIT is the maximum XP amount it will cost to raise a skill
@@ -281,9 +281,9 @@ static int _stat_mult(skill_type exsk, int skill_inc)
     return (skill_inc * std::max<int>(5, stat) / 10);
 }
 
-void _gain_skill_level(skill_type exsk)
+static void _gain_skill_level(skill_type exsk)
 {
-    skill_type old_best_skill = best_skill(SK_FIGHTING, (NUM_SKILLS - 1), 99);
+    skill_type old_best_skill = best_skill(SK_FIGHTING, (NUM_SKILLS - 1));
 
     you.skills[exsk]++;
 
@@ -331,19 +331,22 @@ void _gain_skill_level(skill_type exsk)
     }
 
     const skill_type best_spell = best_skill(SK_SPELLCASTING,
-                                             SK_POISON_MAGIC, 99);
+                                             SK_POISON_MAGIC);
     if (exsk == SK_SPELLCASTING
         && you.skills[exsk] == 1 && best_spell == SK_SPELLCASTING)
     {
         mpr("You're starting to get the hang of this magic thing.");
     }
 
-    const skill_type best = best_skill(SK_FIGHTING, (NUM_SKILLS - 1), 99);
+    const skill_type best = best_skill(SK_FIGHTING, (NUM_SKILLS - 1));
     if (best != old_best_skill || old_best_skill == exsk)
         redraw_skill(you.your_name, player_title());
 
     if (you.weapon() && item_is_staff(*you.weapon()))
         maybe_identify_staff(*you.weapon());
+
+    // Ogres -> ogre mages.
+    you.symbol = transform_mons();
 }
 
 static int _exercise2(int exski)

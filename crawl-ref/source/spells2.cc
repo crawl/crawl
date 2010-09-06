@@ -75,15 +75,14 @@ int detect_items(int pow)
         // Note: assumptions are being made here about how
         // terrain can change (eg it used to be solid, and
         // thus item free).
-        if (is_terrain_changed(*ri))
+        if (env.map_knowledge(*ri).changed())
             continue;
 
         if (igrd(*ri) != NON_ITEM
-            && (!get_map_knowledge_obj(*ri) || !is_map_knowledge_item(*ri)))
+            && !env.map_knowledge(*ri).item())
         {
             items_found++;
-            set_map_knowledge_obj(*ri, show_type(SHOW_ITEM_DETECTED));
-            set_map_knowledge_detected_item(*ri);
+            env.map_knowledge(*ri).set_detected_item();
         }
     }
 
@@ -128,12 +127,12 @@ static bool _mark_detected_creature(coord_def where, const monsters *mon,
                 continue;
 
             // Try not to overwrite another detected monster.
-            if (is_map_knowledge_detected_mons(place))
+            if (env.map_knowledge(place).detected_monster())
                 continue;
 
             // Don't print monsters on terrain they cannot pass through,
             // not even if said terrain has since changed.
-            if (map_bounds(place) && !is_terrain_changed(place)
+            if (map_bounds(place) && !env.map_knowledge(place).changed()
                 && mon->can_pass_through_feat(grd(place)))
             {
                 found_good = true;
@@ -145,8 +144,7 @@ static bool _mark_detected_creature(coord_def where, const monsters *mon,
             where = place;
     }
 
-    set_map_knowledge_obj(where, show_type(mons_detected_base(mon->type)));
-    set_map_knowledge_detected_mons(where);
+    env.map_knowledge(where).set_detected_monster(mons_detected_base(mon->type));
 
     return (found_good);
 }
@@ -219,7 +217,7 @@ void corpse_rot()
 
 // We need to know what brands equate with what missile brands to know if
 // we should disallow temporary branding or not.
-special_missile_type _convert_to_missile(brand_type which_brand)
+static special_missile_type _convert_to_missile(brand_type which_brand)
 {
     switch (which_brand)
     {
@@ -237,7 +235,7 @@ special_missile_type _convert_to_missile(brand_type which_brand)
 }
 
 // Some launchers need to convert different brands.
-brand_type _convert_to_launcher(brand_type which_brand)
+static brand_type _convert_to_launcher(brand_type which_brand)
 {
     switch (which_brand)
     {
@@ -246,7 +244,7 @@ brand_type _convert_to_launcher(brand_type which_brand)
     }
 }
 
-bool _ok_for_launchers(brand_type which_brand)
+static bool _ok_for_launchers(brand_type which_brand)
 {
     switch (which_brand)
     {
@@ -293,6 +291,7 @@ bool brand_weapon(brand_type which_brand, int power)
     const int wpn_type = get_vorpal_type(weapon);
     if (which_brand == SPWPN_VENOM && wpn_type == DVORP_CRUSHING
         || which_brand == SPWPN_VORPAL && wpn_type != DVORP_SLICING
+                                       && wpn_type != DVORP_STABBING
         || which_brand == SPWPN_DUMMY_CRUSHING && wpn_type != DVORP_CRUSHING)
     {
         return (false);
@@ -495,7 +494,7 @@ void cast_toxic_radiance(bool non_player)
     else if (!player_res_poison())
     {
         mpr("You feel rather sick.");
-        poison_player(2, "toxic radiance");
+        poison_player(2, "", "toxic radiance");
     }
 
     counted_monster_list affected_monsters;
@@ -631,15 +630,19 @@ void cast_refrigeration(int pow, bool non_player)
     }
 }
 
-bool vampiric_drain(int pow, const dist &vmove)
+bool vampiric_drain(int pow, monsters *monster)
 {
-    monsters *monster = monster_at(you.pos() + vmove.delta);
-
     if (monster == NULL || monster->submerged())
     {
         mpr("There isn't anything there!");
         // Cost to disallow freely locating invisible monsters.
         return (true);
+    }
+
+    if (monster->observable() && monster->undead_or_demonic())
+    {
+        mpr("Draining that being is not a good idea.");
+        return (false);
     }
 
     god_conduct_trigger conducts[3];
@@ -656,57 +659,58 @@ bool vampiric_drain(int pow, const dist &vmove)
 
     enable_attack_conducts(conducts);
 
-    if (success)
+    if (!success)
+        return (false);
+        
+    if (!monster->alive())
     {
-        if (!monster->alive())
-        {
-            canned_msg(MSG_NOTHING_HAPPENS);
-            return (false);
-        }
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return (true);
+    }
 
-        if (monster->undead_or_demonic())
-        {
-            mpr("Aaaarggghhhhh!");
-            dec_hp(random2avg(39, 2) + 10, false, "vampiric drain backlash");
-            return (false);
-        }
+    // Monster might be invisible or player misled.
+    if (monster->undead_or_demonic())
+    {
+        mpr("Aaaarggghhhhh!");
+        dec_hp(random2avg(39, 2) + 10, false, "vampiric drain backlash");
+        return (true);
+    }
 
-        if (monster->holiness() != MH_NATURAL
-            || monster->res_negative_energy())
-        {
-            canned_msg(MSG_NOTHING_HAPPENS);
-            return (false);
-        }
+    if (monster->holiness() != MH_NATURAL
+        || monster->res_negative_energy())
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return (true);
+    }
 
-        // The practical maximum of this is about 25 (pow @ 100). - bwr
-        int hp_gain = 3 + random2avg(9, 2) + random2(pow) / 7;
+    // The practical maximum of this is about 25 (pow @ 100). - bwr
+    int hp_gain = 3 + random2avg(9, 2) + random2(pow) / 7;
 
         hp_gain = std::min(monster->hit_points, hp_gain);
         hp_gain = std::min(you.hp_max - you.hp, hp_gain);
 
-        if (!hp_gain)
-        {
-            canned_msg(MSG_NOTHING_HAPPENS);
-            return (false);
-        }
-
-        const bool mons_was_summoned = monster->is_summoned();
-
-        monster->hurt(&you, hp_gain);
-
-        if (monster->alive())
-            print_wounds(monster);
-
-        hp_gain /= 2;
-
-        if (hp_gain && !mons_was_summoned)
-        {
-            mpr("You feel life coursing into your body.");
-            inc_hp(hp_gain, false);
-        }
+    if (!hp_gain)
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return (true);
     }
 
-    return (success);
+    const bool mons_was_summoned = monster->is_summoned();
+
+    monster->hurt(&you, hp_gain);
+
+    if (monster->alive())
+        print_wounds(monster);
+
+    hp_gain /= 2;
+
+    if (hp_gain && !mons_was_summoned)
+    {
+        mpr("You feel life coursing into your body.");
+        inc_hp(hp_gain, false);
+    }
+
+    return (true);
 }
 
 bool burn_freeze(int pow, beam_type flavour, monsters *monster)
@@ -743,34 +747,34 @@ bool burn_freeze(int pow, beam_type flavour, monsters *monster)
 
     enable_attack_conducts(conducts);
 
-    if (success)
+    if (!success)
+        return (false);
+
+    bolt beam;
+    beam.flavour = flavour;
+    beam.thrower = KILL_YOU;
+
+    const int orig_hurted = roll_dice(1, 3 + pow / 3);
+    int hurted = mons_adjust_flavoured(monster, beam, orig_hurted);
+    monster->hurt(&you, hurted);
+
+    if (monster->alive())
     {
-        bolt beam;
-        beam.flavour = flavour;
-        beam.thrower = KILL_YOU;
+        monster->expose_to_element(flavour, orig_hurted);
+        print_wounds(monster);
 
-        const int orig_hurted = roll_dice(1, 3 + pow / 3);
-        int hurted = mons_adjust_flavoured(monster, beam, orig_hurted);
-        monster->hurt(&you, hurted);
-
-        if (monster->alive())
+        if (flavour == BEAM_COLD)
         {
-            monster->expose_to_element(flavour, orig_hurted);
-            print_wounds(monster);
-
-            if (flavour == BEAM_COLD)
+            const int cold_res = monster->res_cold();
+            if (cold_res <= 0)
             {
-                const int cold_res = monster->res_cold();
-                if (cold_res <= 0)
-                {
-                    const int stun = (1 - cold_res) * random2(2 + pow/5);
-                    monster->speed_increment -= stun;
-                }
+                const int stun = (1 - cold_res) * random2(2 + pow/5);
+                monster->speed_increment -= stun;
             }
         }
     }
 
-    return (success);
+    return (true);
 }
 
 bool summon_animals(int pow)
@@ -1138,7 +1142,7 @@ bool cast_call_canine_familiar(int pow, god_type god)
     return (success);
 }
 
-int _count_summons(monster_type type)
+static int _count_summons(monster_type type)
 {
     int cnt = 0;
 
@@ -1605,8 +1609,8 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
     conduct_type why = good_god_hates_item_handling(*wpn);
     if (!why)
         why = god_hates_item_handling(*wpn);
-    // FIXME: Replace this with a call to a proper destructor.
-    wpn->quantity = 0;
+
+    wpn->clear();
 
     monsters& dancing_weapon = menv[monster];
 

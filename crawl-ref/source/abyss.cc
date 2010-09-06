@@ -30,6 +30,7 @@
 #include "mon-transit.h"
 #include "player.h"
 #include "dungeon.h"
+#include "itemprop.h"
 #include "items.h"
 #include "l_defs.h"
 #include "lev-pand.h"
@@ -600,10 +601,10 @@ private:
     int abyss_exit_nearness() const
     {
         int nearness = INFINITE_DISTANCE;
-        // is_terrain_known() doesn't work on unmappable levels because
+        // env.map_knowledge().known() doesn't work on unmappable levels because
         // mapping flags are not set on such levels.
         for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
-            if (grd(*ri) == DNGN_EXIT_ABYSS && get_screen_glyph(*ri) != ' ')
+            if (grd(*ri) == DNGN_EXIT_ABYSS && env.map_knowledge(*ri).seen())
                 nearness = std::min(nearness, grid_distance(you.pos(), *ri));
 
         return (nearness);
@@ -612,13 +613,13 @@ private:
     int abyss_rune_nearness() const
     {
         int nearness = INFINITE_DISTANCE;
-        // See above comment about is_terrain_known().
+        // See above comment about env.map_knowledge().known().
         for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
         {
-            if (get_screen_glyph(*ri) != ' ')
+            if (env.map_knowledge(*ri).seen())
             {
                 for (stack_iterator si(*ri); si; ++si)
-                    if (is_rune(*si) && si->plus == RUNE_ABYSSAL)
+                    if (item_is_rune(*si, RUNE_ABYSSAL))
                         nearness = std::min(nearness,
                                             grid_distance(you.pos(),*ri));
             }
@@ -730,20 +731,7 @@ static void _abyss_wipe_square_at(coord_def p)
     env.level_map_mask(p) = 0;
     env.level_map_ids(p)  = INVALID_MAP_INDEX;
 
-    // Look for Lua markers on this square that are listening for
-    // non-positional events, (such as bazaar portals listening for
-    // turncount changes) and detach them manually from the dungeon
-    // event dispatcher.
-    const std::vector<map_marker *> markers = env.markers.get_markers_at(p);
-    for (int i = 0, size = markers.size(); i < size; ++i)
-    {
-        if (markers[i]->get_type() == MAT_LUA_MARKER)
-            dungeon_events.remove_listener(
-                dynamic_cast<map_lua_marker*>(markers[i]));
-    }
-
-    env.markers.remove_markers_at(p);
-    dungeon_events.clear_listeners_at(p);
+    remove_markers_and_listeners_at(p);
 }
 
 // Removes monsters, clouds, dungeon features, and items from the

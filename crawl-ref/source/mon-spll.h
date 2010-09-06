@@ -1440,6 +1440,28 @@
       }
     },
 
+    {  MST_MENNAS,
+      {
+       SPELL_NO_SPELL,
+       SPELL_CONFUSE,
+       SPELL_SILENCE,
+       SPELL_NO_SPELL,
+       SPELL_MINOR_HEALING,
+       SPELL_MINOR_HEALING
+      }
+    },
+
+    {  MST_JUMPING_SPIDER,
+      {
+       SPELL_BLINK_CLOSE,
+       SPELL_BLINK_CLOSE,
+       SPELL_BLINK_CLOSE,
+       SPELL_BLINK_CLOSE,
+       SPELL_BLINK_CLOSE,
+       SPELL_BLINK_AWAY
+      }
+    },
+
     {  MST_HOLY_DRAGON,
       {
        SPELL_HOLY_BREATH,

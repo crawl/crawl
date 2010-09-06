@@ -2415,7 +2415,7 @@ std::string map_def::validate_temple_map()
         {
             if ( ( (unsigned long) num ) != altars.size() )
             {
-                return make_stringf("Temple should contain %lu altars, but "
+                return make_stringf("Temple should contain %u altars, but "
                                     "has %d.", altars.size(), num);
             }
         }
@@ -2738,7 +2738,7 @@ coord_def map_def::float_aligned_place() const
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
-         "Aligning floating vault with %lu points vs %lu reference points",
+         "Aligning floating vault with %u points vs %u reference points",
          our_anchors.size(), map_anchor_points.size());
 #endif
 
@@ -4231,6 +4231,111 @@ item_spec item_list::parse_corpse_spec(item_spec &result, std::string s)
     return (result);
 }
 
+// Strips the first word from s and returns it.
+static std::string _get_and_discard_word(std::string* s) {
+    std::string result;
+    const size_t spaceloc = s->find(' ');
+    if (spaceloc == std::string::npos) {
+        result = *s;
+        s->clear();
+    }
+    else
+    {
+        result = s->substr(0, spaceloc);
+        s->erase(0, spaceloc + 1);
+    }
+
+    return result;
+}
+
+static deck_rarity_type _rarity_string_to_rarity(const std::string& s) {
+    if (s == "common")    return DECK_RARITY_COMMON;
+    if (s == "plain")     return DECK_RARITY_COMMON; // synonym
+    if (s == "rare")      return DECK_RARITY_RARE;
+    if (s == "ornate")    return DECK_RARITY_RARE; // synonym
+    if (s == "legendary") return DECK_RARITY_LEGENDARY;
+    // FIXME: log an error here.
+    return DECK_RARITY_COMMON;
+}
+
+static misc_item_type _deck_type_string_to_subtype(const std::string& s) {
+    if (s == "escape")      return MISC_DECK_OF_ESCAPE;
+    if (s == "destruction") return MISC_DECK_OF_DESTRUCTION;
+    if (s == "dungeons")    return MISC_DECK_OF_DUNGEONS;
+    if (s == "summoning")   return MISC_DECK_OF_SUMMONING;
+    if (s == "wonders")     return MISC_DECK_OF_WONDERS;
+    if (s == "punishment")  return MISC_DECK_OF_PUNISHMENT;
+    if (s == "war")         return MISC_DECK_OF_WAR;
+    if (s == "changes")     return MISC_DECK_OF_CHANGES;
+    if (s == "defence")     return MISC_DECK_OF_DEFENCE;
+    // FIXME: log an error here.
+    return NUM_MISCELLANY;
+}
+
+static misc_item_type _random_deck_subtype()
+{
+    item_def dummy;
+    dummy.base_type = OBJ_MISCELLANY;
+    while (true)
+    {
+        dummy.sub_type = random2(NUM_MISCELLANY);
+
+        if (!is_deck(dummy))
+            continue;
+
+        if (dummy.sub_type == MISC_DECK_OF_PUNISHMENT)
+            continue;
+
+        if ((dummy.sub_type == MISC_DECK_OF_ESCAPE
+             || dummy.sub_type == MISC_DECK_OF_DESTRUCTION
+             || dummy.sub_type == MISC_DECK_OF_DUNGEONS
+             || dummy.sub_type == MISC_DECK_OF_SUMMONING
+             || dummy.sub_type == MISC_DECK_OF_WONDERS)
+            && !one_chance_in(5))
+        {
+            continue;
+        }
+
+        return static_cast<misc_item_type>(dummy.sub_type);
+    }
+}
+
+void item_list::build_deck_spec(std::string s, item_spec* spec)
+{
+    spec->base_type = OBJ_MISCELLANY;
+    std::string word = _get_and_discard_word(&s);
+
+    // The deck description can start with either "[rarity] deck..." or
+    // just "deck".
+    if (word != "deck")
+    {
+        spec->item_special = _rarity_string_to_rarity(word);
+        word = _get_and_discard_word(&s);
+    }
+    else
+    {
+        spec->item_special = random_deck_rarity();
+    }
+
+    // Error checking.
+    if (word != "deck")
+    {
+        error = make_stringf("Bad spec: %s", s.c_str());
+        return;
+    }
+
+    word = _get_and_discard_word(&s);
+    if (word == "of")
+    {
+        spec->sub_type =
+            _deck_type_string_to_subtype(_get_and_discard_word(&s));
+    }
+    else
+    {
+        spec->sub_type = _random_deck_subtype();
+    }
+}
+
 item_spec item_list::parse_single_spec(std::string s)
 {
     item_spec result;
@@ -4452,6 +4557,12 @@ item_spec item_list::parse_single_spec(std::string s)
         result.sub_type = BOOK_MINOR_MAGIC_I;
         result.plus = -1;
 
+        return (result);
+    }
+
+    if (s.find("deck") != std::string::npos)
+    {
+        build_deck_spec(s, &result);
         return (result);
     }
 

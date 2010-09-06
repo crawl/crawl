@@ -28,6 +28,10 @@
 #include "stuff.h"
 #include "travel.h"
 
+static void _jiyva_convert_slime(monsters* slime);
+static void _fedhas_neutralise_plant(monsters *plant);
+
+
 void good_god_follower_attitude_change(monsters *monster)
 {
     if (you.undead_or_demonic() || crawl_state.game_is_arena())
@@ -122,7 +126,7 @@ void slime_convert(monsters* monster)
         monster->flags |= MF_ATT_CHANGE_ATTEMPT;
         if (!player_under_penance())
         {
-            jiyva_convert_slime(monster);
+            _jiyva_convert_slime(monster);
             stop_running();
         }
     }
@@ -136,7 +140,7 @@ void fedhas_neutralise(monsters* monster)
         && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)
         && !player_under_penance())
     {
-        fedhas_neutralise_plant(monster);
+        _fedhas_neutralise_plant(monster);
         monster->flags |= MF_ATT_CHANGE_ATTEMPT;
         del_exclude(monster->pos());
     }
@@ -434,7 +438,7 @@ void beogh_convert_orc(monsters *orc, bool emergency,
     mons_att_changed(orc);
 }
 
-void fedhas_neutralise_plant(monsters *plant)
+static void _fedhas_neutralise_plant(monsters *plant)
 {
     if (!plant
         || !fedhas_neutralises(plant)
@@ -449,7 +453,7 @@ void fedhas_neutralise_plant(monsters *plant)
     mons_att_changed(plant);
 }
 
-void jiyva_convert_slime(monsters* slime)
+static void _jiyva_convert_slime(monsters* slime)
 {
     ASSERT(mons_is_slime(slime));
 
@@ -486,7 +490,7 @@ void jiyva_convert_slime(monsters* slime)
     slime->god = GOD_NO_GOD;
 
     // Don't trigger an assert in mons_make_god_gift
-    if(testbits(slime->flags, MF_GOD_GIFT))
+    if (testbits(slime->flags, MF_GOD_GIFT))
         slime->flags &= ~MF_GOD_GIFT;
 
     mons_make_god_gift(slime, GOD_JIYVA);

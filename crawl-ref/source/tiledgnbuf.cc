@@ -9,9 +9,11 @@
 #include "tiledgnbuf.h"
 
 #include "cloud.h"
+#include "coord.h"
 #include "coordit.h"
 #include "env.h"
 #include "player.h"
+#include "terrain.h"
 #include "tiledef-dngn.h"
 #include "tiledef-player.h"
 #include "tiledoll.h"
@@ -148,23 +150,20 @@ wave_type _get_wave_type(bool shallow)
     return (shallow ? WV_SHALLOW : WV_DEEP);
 }
 
-static void _pack_wave(int tileidx, packed_cell *cell)
+static void _add_overlay(int tileidx, packed_cell *cell)
 {
     cell->dngn_overlay[cell->num_dngn_overlay++] = tileidx;
 }
 
-void pack_waves(const coord_def &gc, packed_cell *cell)
+static void _pack_shoal_waves(const coord_def &gc, packed_cell *cell)
 {
-    if (!player_in_branch(BRANCH_SHOALS))
-        return;
-
     // Add wave tiles on floor adjacent to shallow water.
     const dungeon_feature_type feat = env.map_knowledge(gc).feat();
     const bool feat_has_ink = (cloud_type_at(coord_def(gc)) == CLOUD_INK);
 
     if (feat == DNGN_DEEP_WATER && feat_has_ink)
     {
-        _pack_wave(TILE_WAVE_INK_FULL, cell);
+        _add_overlay(TILE_WAVE_INK_FULL, cell);
         return;
     }
 
@@ -186,7 +185,7 @@ void pack_waves(const coord_def &gc, packed_cell *cell)
 
     for (radius_iterator ri(gc, 1, true, false, true); ri; ++ri)
     {
-        if (!is_terrain_seen(*ri) && !is_terrain_mapped(*ri))
+        if (!env.map_knowledge(*ri).seen() && !env.map_knowledge(*ri).mapped())
             continue;
 
         const bool ink = (cloud_type_at(coord_def(*ri)) == CLOUD_INK);
@@ -278,64 +277,167 @@ void pack_waves(const coord_def &gc, packed_cell *cell)
     {
         // First check for shallow water.
         if (north == WV_SHALLOW)
-            _pack_wave(TILE_WAVE_N, cell);
+            _add_overlay(TILE_WAVE_N, cell);
         if (south == WV_SHALLOW)
-            _pack_wave(TILE_WAVE_S, cell);
+            _add_overlay(TILE_WAVE_S, cell);
         if (east == WV_SHALLOW)
-            _pack_wave(TILE_WAVE_E, cell);
+            _add_overlay(TILE_WAVE_E, cell);
         if (west == WV_SHALLOW)
-            _pack_wave(TILE_WAVE_W, cell);
+            _add_overlay(TILE_WAVE_W, cell);
 
         // Then check for deep water, overwriting shallow
         // corner waves, if necessary.
         if (north == WV_DEEP)
-            _pack_wave(TILE_WAVE_DEEP_N, cell);
+            _add_overlay(TILE_WAVE_DEEP_N, cell);
         if (south == WV_DEEP)
-            _pack_wave(TILE_WAVE_DEEP_S, cell);
+            _add_overlay(TILE_WAVE_DEEP_S, cell);
         if (east == WV_DEEP)
-            _pack_wave(TILE_WAVE_DEEP_E, cell);
+            _add_overlay(TILE_WAVE_DEEP_E, cell);
         if (west == WV_DEEP)
-            _pack_wave(TILE_WAVE_DEEP_W, cell);
+            _add_overlay(TILE_WAVE_DEEP_W, cell);
 
         if (ne == WV_SHALLOW && !north && !east)
-            _pack_wave(TILE_WAVE_CORNER_NE, cell);
+            _add_overlay(TILE_WAVE_CORNER_NE, cell);
         else if (ne == WV_DEEP && north != WV_DEEP && east != WV_DEEP)
-            _pack_wave(TILE_WAVE_DEEP_CORNER_NE, cell);
+            _add_overlay(TILE_WAVE_DEEP_CORNER_NE, cell);
         if (nw == WV_SHALLOW && !north && !west)
-            _pack_wave(TILE_WAVE_CORNER_NW, cell);
+            _add_overlay(TILE_WAVE_CORNER_NW, cell);
         else if (nw == WV_DEEP && north != WV_DEEP && west != WV_DEEP)
-            _pack_wave(TILE_WAVE_DEEP_CORNER_NW, cell);
+            _add_overlay(TILE_WAVE_DEEP_CORNER_NW, cell);
         if (se == WV_SHALLOW && !south && !east)
-            _pack_wave(TILE_WAVE_CORNER_SE, cell);
+            _add_overlay(TILE_WAVE_CORNER_SE, cell);
         else if (se == WV_DEEP && south != WV_DEEP && east != WV_DEEP)
-            _pack_wave(TILE_WAVE_DEEP_CORNER_SE, cell);
+            _add_overlay(TILE_WAVE_DEEP_CORNER_SE, cell);
         if (sw == WV_SHALLOW && !south && !west)
-            _pack_wave(TILE_WAVE_CORNER_SW, cell);
+            _add_overlay(TILE_WAVE_CORNER_SW, cell);
         else if (sw == WV_DEEP && south != WV_DEEP && west != WV_DEEP)
-            _pack_wave(TILE_WAVE_DEEP_CORNER_SW, cell);
+            _add_overlay(TILE_WAVE_DEEP_CORNER_SW, cell);
     }
 
     // Overlay with ink sheen, if necessary.
     if (feat_has_ink)
-        _pack_wave(TILE_WAVE_INK_FULL, cell);
+        _add_overlay(TILE_WAVE_INK_FULL, cell);
     else
     {
         if (inkn)
-            _pack_wave(TILE_WAVE_INK_N, cell);
+            _add_overlay(TILE_WAVE_INK_N, cell);
         if (inks)
-            _pack_wave(TILE_WAVE_INK_S, cell);
+            _add_overlay(TILE_WAVE_INK_S, cell);
         if (inke)
-            _pack_wave(TILE_WAVE_INK_E, cell);
+            _add_overlay(TILE_WAVE_INK_E, cell);
         if (inkw)
-            _pack_wave(TILE_WAVE_INK_W, cell);
+            _add_overlay(TILE_WAVE_INK_W, cell);
         if (inkne || inkn || inke)
-            _pack_wave(TILE_WAVE_INK_CORNER_NE, cell);
+            _add_overlay(TILE_WAVE_INK_CORNER_NE, cell);
         if (inknw || inkn || inkw)
-            _pack_wave(TILE_WAVE_INK_CORNER_NW, cell);
+            _add_overlay(TILE_WAVE_INK_CORNER_NW, cell);
         if (inkse || inks || inke)
-            _pack_wave(TILE_WAVE_INK_CORNER_SE, cell);
+            _add_overlay(TILE_WAVE_INK_CORNER_SE, cell);
         if (inksw || inks || inkw)
-            _pack_wave(TILE_WAVE_INK_CORNER_SW, cell);
+            _add_overlay(TILE_WAVE_INK_CORNER_SW, cell);
+    }
+}
+
+static dungeon_feature_type _safe_feat(coord_def gc)
+{
+    if (!map_bounds(gc))
+        return (DNGN_UNSEEN);
+
+    return (env.map_knowledge(gc).feat());
+}
+
+static bool _is_seen_land(coord_def gc)
+{
+    dungeon_feature_type feat = _safe_feat(gc);
+    return (feat != DNGN_UNSEEN && !feat_is_water(feat) && feat != DNGN_LAVA);
+}
+
+static bool _is_seen_shallow(coord_def gc)
+{
+    return (_safe_feat(gc) == DNGN_SHALLOW_WATER);
+}
+
+static void _pack_default_waves(const coord_def &gc, packed_cell *cell)
+{
+    // Any tile on water with an adjacent solid tile will get an extra
+    // bit of shoreline.
+    const dungeon_feature_type feat = env.map_knowledge(gc).feat();
+    if (!feat_is_water(feat) && feat != DNGN_LAVA || env.grid_colours(gc))
+        return;
+
+    if (feat == DNGN_DEEP_WATER)
+    {
+        if (_is_seen_shallow(coord_def(gc.x, gc.y - 1)))
+            _add_overlay(TILE_DNGN_WAVE_N, cell);
+        if (_is_seen_shallow(coord_def(gc.x + 1, gc.y - 1)))
+            _add_overlay(TILE_DNGN_WAVE_NE, cell);
+        if (_is_seen_shallow(coord_def(gc.x + 1, gc.y)))
+            _add_overlay(TILE_DNGN_WAVE_E, cell);
+        if (_is_seen_shallow(coord_def(gc.x + 1, gc.y + 1)))
+            _add_overlay(TILE_DNGN_WAVE_SE, cell);
+        if (_is_seen_shallow(coord_def(gc.x, gc.y + 1)))
+            _add_overlay(TILE_DNGN_WAVE_S, cell);
+        if (_is_seen_shallow(coord_def(gc.x - 1, gc.y + 1)))
+            _add_overlay(TILE_DNGN_WAVE_SW, cell);
+        if (_is_seen_shallow(coord_def(gc.x - 1, gc.y)))
+            _add_overlay(TILE_DNGN_WAVE_W, cell);
+        if (_is_seen_shallow(coord_def(gc.x - 1, gc.y - 1)))
+            _add_overlay(TILE_DNGN_WAVE_NW, cell);
+    }
+
+
+    bool north = _is_seen_land(coord_def(gc.x, gc.y - 1));
+    bool west  = _is_seen_land(coord_def(gc.x - 1, gc.y));
+    bool east  = _is_seen_land(coord_def(gc.x + 1, gc.y));
+
+    if (north || west || east)
+    {
+        if (north)
+            _add_overlay(TILE_SHORE_N, cell);
+        if (west)
+            _add_overlay(TILE_SHORE_W, cell);
+        if (east)
+            _add_overlay(TILE_SHORE_E, cell);
+        if (north && west)
+            _add_overlay(TILE_SHORE_NW, cell);
+        if (north && east)
+            _add_overlay(TILE_SHORE_NE, cell);
+    }
+}
+
+static bool _is_seen_wall(coord_def gc)
+{
+    dungeon_feature_type feat = _safe_feat(gc);
+    return (feat != DNGN_UNSEEN && feat <= DNGN_MAXWALL);
+}
+
+static void _pack_wall_shadows(const coord_def &gc, packed_cell *cell)
+{
+    if (_is_seen_wall(gc))
+        return;
+
+    if (_is_seen_wall(coord_def(gc.x - 1, gc.y)))
+        _add_overlay(TILE_DNGN_WALL_SHADOW_W, cell);
+    if (_is_seen_wall(coord_def(gc.x - 1, gc.y - 1)))
+        _add_overlay(TILE_DNGN_WALL_SHADOW_NW, cell);
+    if (_is_seen_wall(coord_def(gc.x, gc.y - 1)))
+        _add_overlay(TILE_DNGN_WALL_SHADOW_N, cell);
+    if (_is_seen_wall(coord_def(gc.x + 1, gc.y - 1)))
+        _add_overlay(TILE_DNGN_WALL_SHADOW_NE, cell);
+    if (_is_seen_wall(coord_def(gc.x + 1, gc.y)))
+        _add_overlay(TILE_DNGN_WALL_SHADOW_E, cell);
+}
+
+void pack_cell_overlays(const coord_def &gc, packed_cell *cell)
+{
+    if (player_in_branch(BRANCH_SHOALS))
+    {
+        _pack_shoal_waves(gc, cell);
+    }
+    else
+    {
+        _pack_default_waves(gc, cell);
+        _pack_wall_shadows(gc, cell);
     }
 }
 

@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 #include "artefact.h"
+#include "describe.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "player.h"
@@ -24,7 +25,10 @@ tileidx_t tilep_equ_weapon(const item_def &item)
 {
     if (item.base_type == OBJ_STAVES)
     {
-        int desc = (item.special / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
+        // Can't just use item.special here as STAFF_POWER abuses
+        // item.special for storing the MP in case of quick re-wield.
+        int orig_special = you.item_description[IDESC_STAVES][item.sub_type];
+        int desc = (orig_special / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
         if (item_is_rod(item))
             return TILEP_HAND1_ROD_BROWN + desc;
         else
@@ -405,6 +409,7 @@ static int _draconian_colour(int race, int level)
         case MONS_DRACONIAN:        return (0);
         case MONS_BLACK_DRACONIAN:  return (1);
         case MONS_YELLOW_DRACONIAN: return (2);
+        case MONS_GREY_DRACONIAN:   return (3);
         case MONS_GREEN_DRACONIAN:  return (4);
         case MONS_MOTTLED_DRACONIAN:return (5);
         case MONS_PALE_DRACONIAN:   return (6);
@@ -575,6 +580,8 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
         case SP_MERFOLK:
             result = you.in_water() ? TILEP_BASE_MERFOLK_WATER
                                     : TILEP_BASE_MERFOLK;
+            hair = TILEP_HAIR_GREEN;
+            beard = TILEP_BEARD_SHORT_GREEN;
             break;
         case SP_VAMPIRE:
             hair = TILEP_HAIR_ARWEN;
@@ -582,6 +589,10 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
         case SP_DEEP_DWARF:
             hair  = TILEP_HAIR_SHORT_WHITE;
             beard = TILEP_BEARD_LONG_WHITE;
+            break;
+        case SP_SPRIGGAN:
+            hair = 0;
+            beard = TILEP_BEARD_LONG_GREEN;
             break;
         default:
             // nothing to do

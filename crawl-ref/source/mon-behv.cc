@@ -11,6 +11,7 @@
 
 #include "coord.h"
 #include "coordit.h"
+#include "dungeon.h"
 #include "env.h"
 #include "fprop.h"
 #include "exclude.h"
@@ -30,33 +31,27 @@
 
 static void _set_nearest_monster_foe(monsters *monster);
 
-static void _guess_invis_foe_pos(monsters *mon, bool strict = true)
+static void _guess_invis_foe_pos(monsters *mon)
 {
     const actor* foe          = mon->get_foe();
     const int    guess_radius = mons_sense_invis(mon) ? 3 : 2;
 
     std::vector<coord_def> possibilities;
 
-    for (radius_iterator ri(mon->pos(), guess_radius, C_ROUND); ri; ++ri)
+    // NOTE: This depends on ignoring clouds, so that cells hidden by
+    // opaque clouds are included as a possibility for the foe's location.
+    los_def los(mon->pos(), opc_fullyopaque, circle_def(guess_radius, C_ROUND));
+    los.update();
+    for (radius_iterator ri(&los); ri; ++ri)
     {
-        // NOTE: This depends on mon_see_cell() ignoring clouds,
-        // so that cells hidden by opaque clouds are included
-        // as a possibility for the foe's location.
-        if (!strict || foe->is_habitable(*ri) && mon->mon_see_cell(*ri))
+        if (foe->is_habitable(*ri))
             possibilities.push_back(*ri);
-    }
-
-    // If being strict (monster must see possible cell, foe must be
-    // able to live there) gives no possibilites, then find *some*
-    // cell near the foe.
-    if (strict && possibilities.empty())
-    {
-        _guess_invis_foe_pos(mon, false);
-        return;
     }
 
     if (!possibilities.empty())
         mon->target = possibilities[random2(possibilities.size())];
+    else
+        mon->target = dgn_random_point_from(mon->pos(), guess_radius);
 }
 
 static void _mon_check_foe_invalid(monsters *mon)
@@ -115,9 +110,8 @@ void handle_behaviour(monsters *mon)
     bool isNeutral  = mon->neutral();
     bool wontAttack = mon->wont_attack();
 
-    // Whether the player is in LOS of the monster and can see
-    // or has guessed the player's location.
-    bool proxPlayer = mons_near(mon) && !crawl_state.game_is_arena();
+    // Whether the player position is in LOS of the monster.
+    bool proxPlayer = !crawl_state.game_is_arena() && mon->see_cell(you.pos());
 
 #ifdef WIZARD
     // If stealth is greater than actually possible (wizmode level)
@@ -204,7 +198,8 @@ void handle_behaviour(monsters *mon)
     }
 
     // Instead, berserkers attack nearest monsters.
-    if ((mon->berserk() || mon->type == MONS_GIANT_SPORE)
+    if (mon->behaviour != BEH_SLEEP
+        && (mon->berserk() || mon->type == MONS_GIANT_SPORE)
         && (mon->foe == MHITNOT || isFriendly && mon->foe == MHITYOU))
     {
         // Intelligent monsters prefer to attack the player,
@@ -386,38 +381,36 @@ void handle_behaviour(monsters *mon)
                                 mon->foe_memory = 0;
                         }
                     }
-
-                    // Either keep chasing, or start wandering.
-                    if (mon->foe_memory < 2)
-                    {
-                        mon->foe_memory = 0;
-                        new_beh = BEH_WANDER;
-                    }
-                    break;
                 }
 
-                ASSERT(mon->foe_memory == 0);
-                // Hack: smarter monsters will tend to pursue the player longer.
-                switch (mons_intel(mon))
-                {
-                case I_HIGH:
-                    mon->foe_memory = 100 + random2(200);
-                    break;
-                case I_NORMAL:
-                    mon->foe_memory = 50 + random2(100);
-                    break;
-                case I_ANIMAL:
-                case I_INSECT:
-                    mon->foe_memory = 25 + random2(75);
-                    break;
-                case I_PLANT:
-                    mon->foe_memory = 10 + random2(50);
-                    break;
-                }
-                break;  // switch/case BEH_SEEK
+
+                if (mon->foe_memory <= 0)
+                    new_beh = BEH_WANDER;
+
+                break;
             }
 
             ASSERT(proxFoe && mon->foe != MHITNOT);
+
+            // Monster can see foe: set memory in case it loses sight.
+            // Hack: smarter monsters will tend to pursue the player longer.
+            switch (mons_intel(mon))
+            {
+            case I_HIGH:
+                mon->foe_memory = 100 + random2(200);
+                break;
+            case I_NORMAL:
+                mon->foe_memory = 50 + random2(100);
+                break;
+            case I_ANIMAL:
+            case I_INSECT:
+                mon->foe_memory = 25 + random2(75);
+                break;
+            case I_PLANT:
+                mon->foe_memory = 10 + random2(50);
+                break;
+            }
+
             // Monster can see foe: continue 'tracking'
             // by updating target x,y.
             if (mon->foe == MHITYOU)
@@ -464,25 +457,6 @@ void handle_behaviour(monsters *mon)
             {
                 new_beh = BEH_FLEE;
 
-                // This is here instead of in the BEH_FLEE section of the switch
-                // for handle_behaviour, as it only needs to happen once per
-                // fleeing.
-                if (mon->type == MONS_KRAKEN)
-                {
-                    int tcount = 0;
-                    int headnum = mon->mindex();
-                    for (monster_iterator mi; mi; ++mi)
-                        if (mi->type == MONS_KRAKEN_TENTACLE
-                            && (int)mi->number == headnum)
-                        {
-                            monster_die(*mi, KILL_MISC, NON_MONSTER, true);
-                            tcount++;
-                        }
-
-                    if (tcount > 0)
-                        mpr("The kraken's tentacles slip beneath the water.",
-                            MSGCH_WARN);
-                }
             }
             break;
 
@@ -925,22 +899,6 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
 
         if (you.see_cell(mon->pos()))
             learned_something_new(HINT_FLEEING_MONSTER);
-
-        if (mon->type == MONS_KRAKEN)
-        {
-            int tcount = 0;
-            int headnum = mon->mindex();
-            for (monster_iterator mi; mi; ++mi)
-                if (mi->type == MONS_KRAKEN_TENTACLE
-                    && (int)mi->number == headnum)
-                {
-                    monster_die(*mi, KILL_MISC, NON_MONSTER, true);
-                    tcount++;
-                }
-
-            if (tcount > 0)
-                mpr("The kraken's tentacles slip beneath the water.", MSGCH_WARN);
-        }
 
         break;
 

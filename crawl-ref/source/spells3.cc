@@ -875,7 +875,7 @@ void equip_undead(const coord_def &a, int corps, int monster, int monnum)
 }
 
 //Displays message when raising dead with Animate Skeleton or Animate Dead
-void _display_undead_motions(int motions)
+static void _display_undead_motions(int motions)
 {
     std::vector<std::string> motions_list;
 
@@ -1227,9 +1227,9 @@ bool cast_twisted_resurrection(int pow, god_type god)
         (total_mass > 500 + roll_dice(3, 1000)) ? MONS_ABOMINATION_LARGE
                                                 : MONS_ABOMINATION_SMALL;
 
-    char colour = (rotted == how_many_corpses)          ? BROWN :
-                  (rotted >= random2(how_many_corpses)) ? RED
-                                                        : LIGHTRED;
+    uint8_t colour = (rotted == how_many_corpses)          ? BROWN :
+                     (rotted >= random2(how_many_corpses)) ? RED
+                                                           : LIGHTRED;
 
     const int monster =
         create_monster(
@@ -1410,7 +1410,7 @@ void you_teleport(void)
 }
 
 // Should return true if we don't want anyone to teleport here.
-bool _cell_vetoes_teleport (const coord_def cell, bool  check_monsters = true)
+static bool _cell_vetoes_teleport (const coord_def cell, bool  check_monsters = true)
 {
     // Monsters always veto teleport.
     if (monster_at(cell) && check_monsters)
@@ -1446,8 +1446,8 @@ bool _cell_vetoes_teleport (const coord_def cell, bool  check_monsters = true)
     }
 }
 
-void _handle_teleport_update (bool large_change, bool check_ring_TC,
-                            const coord_def old_pos)
+static void _handle_teleport_update (bool large_change, bool check_ring_TC,
+                                     const coord_def old_pos)
 {
     if (large_change)
     {
@@ -1486,17 +1486,21 @@ void _handle_teleport_update (bool large_change, bool check_ring_TC,
 #endif
 }
 
-static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizard_tele)
+static
+bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizard_tele)
 {
     bool is_controlled = (allow_control && !you.confused()
                           && player_control_teleport()
-                          && allow_control_teleport());
+                          && allow_control_teleport()
+                          && !you.berserk());
 
     // All wizard teleports are automatically controlled.
     if (wizard_tele)
         is_controlled = true;
 
-    if (item_blocks_teleport(true, true) && !wizard_tele)
+    if (!wizard_tele
+        && ((!new_abyss_area && crawl_state.game_is_sprint())
+            || item_blocks_teleport(true, true)))
     {
         canned_msg(MSG_STRANGE_STASIS);
         return (false);
@@ -1918,13 +1922,12 @@ bool project_noise()
     if (!show_map(lpos, false, false, false))
         lpos = level_pos::current();
     pos = lpos.pos;
-    ASSERT(map_bounds(pos));
 
     redraw_screen();
 
     dprf("Target square (%d,%d)", pos.x, pos.y);
 
-    if (!silenced(pos))
+    if (!in_bounds(pos) || !silenced(pos))
     {
         if (in_bounds(pos) && !feat_is_solid(grd(pos)))
         {
@@ -1951,7 +1954,7 @@ bool project_noise()
 // 0 = anything
 // 1 = undead only (Yred religion ability)
 // 2 = orcs only (Beogh religion ability)
-bool recall(char type_recalled)
+bool recall(int type_recalled)
 {
     int loopy          = 0;      // general purpose looping variable {dlb}
     bool success       = false;  // more accurately: "apparent success" {dlb}
@@ -1981,8 +1984,11 @@ bool recall(char type_recalled)
         if (!monster->friendly())
             continue;
 
-        if (mons_class_is_stationary(monster->type))
+        if (mons_class_is_stationary(monster->type)
+            || mons_is_conjured(monster->type))
+        {
             continue;
+        }
 
         if (!monster_habitable_grid(monster, DNGN_FLOOR))
             continue;

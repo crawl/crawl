@@ -541,7 +541,6 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-#ifdef DGL_MILESTONES
     if (gate_type == DNGN_ENTER_ABYSS)
     {
         mark_milestone("abyss.enter",
@@ -552,7 +551,6 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
         mark_milestone("abyss.exit",
                        "escaped from the Abyss!" + _who_banished(who));
     }
-#endif
 
     std::string cast_into;
 
@@ -1207,8 +1205,9 @@ static bool _try_give_plain_armour(item_def &arm)
     default:
         return (false);
     }
-    // Clear the description flag.
-    set_equip_desc(arm, ISFLAG_NO_DESC);
+    arm.clear();
+    arm.quantity = 1;
+    arm.base_type = OBJ_ARMOUR;
     arm.sub_type = _pick_wearable_armour(result);
     arm.plus = random2(5) - 2;
 
@@ -1223,8 +1222,8 @@ static bool _try_give_plain_armour(item_def &arm)
 }
 
 // Write results into arguments.
-void _acquirement_determine_food(int& type_wanted, int& quantity,
-                                 const has_vector& already_has)
+static void _acquirement_determine_food(int& type_wanted, int& quantity,
+                                        const has_vector& already_has)
 {
     // Food is a little less predictable now. - bwr
     if (you.species == SP_GHOUL)
@@ -1526,6 +1525,7 @@ static int _acquirement_misc_subtype()
            || result == MISC_RUNE_OF_ZOT
            || result == MISC_CRYSTAL_BALL_OF_FIXATION
            || result == MISC_EMPTY_EBONY_CASKET
+           || result == MISC_QUAD_DAMAGE
            || result == MISC_DECK_OF_PUNISHMENT);
 
     return (result);
@@ -1931,7 +1931,7 @@ static int _failed_acquirement(bool quiet)
     return (NON_ITEM);
 }
 
-int _weapon_brand_quality(int brand, bool range)
+static int _weapon_brand_quality(int brand, bool range)
 {
     switch(brand)
     {
@@ -1990,7 +1990,7 @@ int acquirement_create_item(object_class_type class_wanted,
         // Not a god, prefer better brands.
         if (!divine && !is_artefact(doodad) && doodad.base_type == OBJ_WEAPONS)
         {
-            while(_weapon_brand_quality(get_weapon_brand(doodad),
+            while (_weapon_brand_quality(get_weapon_brand(doodad),
                                         is_range_weapon(doodad)) < random2(6))
             {
                 reroll_brand(doodad, MAKE_GOOD_ITEM);
@@ -2408,27 +2408,6 @@ bool recharge_wand(int item_slot)
             continue;
         }
 
-        // Weapons of electrocution can be "charged", i.e. gain +1 damage.
-        if (wand.base_type == OBJ_WEAPONS)
-        {
-            if (get_weapon_brand(wand) == SPWPN_ELECTROCUTION)
-            {
-                // Might fail because of already high enchantment.
-                if (enchant_weapon( ENCHANT_TO_DAM, false, wand ))
-                {
-                    you.wield_change = true;
-
-                    if (!item_ident(wand, ISFLAG_KNOW_TYPE))
-                        set_ident_flags(wand, ISFLAG_KNOW_TYPE);
-
-                    return (true);
-                }
-                return (false);
-            }
-            else
-                canned_msg( MSG_NOTHING_HAPPENS );
-        }
-
         if (wand.base_type != OBJ_WANDS && !item_is_rod(wand))
             return (false);
 
@@ -2791,24 +2770,35 @@ bool forget_inventory(bool quiet)
     return (items_forgotten > 0);
 }
 
+inline static dungeon_feature_type _vitrified_feature(dungeon_feature_type feat)
+{
+    switch (feat)
+    {
+    case DNGN_ROCK_WALL:
+        return DNGN_CLEAR_ROCK_WALL;
+    case DNGN_STONE_WALL:
+        return DNGN_CLEAR_STONE_WALL;
+    case DNGN_PERMAROCK_WALL:
+        return DNGN_CLEAR_PERMAROCK_WALL;
+    default:
+        return feat;
+    }
+}
+
 // Returns true if there was a visible change.
 bool vitrify_area(int radius)
 {
     if (radius < 2)
         return (false);
 
-    // This hinges on clear wall types having the same order as non-clear ones!
-    const int clear_plus = DNGN_CLEAR_ROCK_WALL - DNGN_ROCK_WALL;
     bool something_happened = false;
     for (radius_iterator ri(you.pos(), radius, C_POINTY); ri; ++ri)
     {
         const dungeon_feature_type grid = grd(*ri);
-
-        if (grid == DNGN_ROCK_WALL
-            || grid == DNGN_STONE_WALL
-            || grid == DNGN_PERMAROCK_WALL)
+        const dungeon_feature_type newgrid = _vitrified_feature(grid);
+        if (newgrid != grid)
         {
-            grd(*ri) = static_cast<dungeon_feature_type>(grid + clear_plus);
+            grd(*ri) = newgrid;
             set_terrain_changed(ri->x, ri->y);
             something_happened = true;
         }
@@ -3152,7 +3142,7 @@ void change_labyrinth(bool msg)
 
         int count_known = 0;
         for (rectangle_iterator ri(c1, c2); ri; ++ri)
-            if (is_terrain_seen(*ri))
+            if (env.map_knowledge(*ri).seen())
                 count_known++;
 
         if (tries > 1 && count_known > size * size / 6)
@@ -3163,7 +3153,7 @@ void change_labyrinth(bool msg)
         // directions, and by floor on the two remaining sides.
         for (rectangle_iterator ri(c1, c2); ri; ++ri)
         {
-            if (is_terrain_seen(*ri) || !feat_is_wall(grd(*ri)))
+            if (env.map_knowledge(*ri).seen() || !feat_is_wall(grd(*ri)))
                 continue;
 
             // Skip on grids inside vaults so as not to disrupt them.
@@ -3277,7 +3267,7 @@ void change_labyrinth(bool msg)
                 continue;
 
             // Don't change any grids we remember.
-            if (is_terrain_seen(p.x, p.y))
+            if (env.map_knowledge(p).seen())
                 continue;
 
             // We don't want to deal with monsters being shifted around.
@@ -3573,7 +3563,7 @@ static void _rot_inventory_food(long time_delta)
         item.special -= (time_delta / 20);
 
         if (food_is_rotten(item)
-            && (item.special + (time_delta / 20) >= 100))
+            && (item.special + (time_delta / 20) > ROTTING_CORPSE))
         {
             rotten_items.push_back(index_to_letter(i));
             if (you.equip[EQ_WEAPON] == i)
@@ -3812,7 +3802,7 @@ void handle_time()
     {
         // [ds] Move magic contamination effects closer to b26 again.
         const bool glow_effect =
-            (you.magic_contamination > 5
+            (get_contamination_level() > 1
              && x_chance_in_y(you.magic_contamination, 12));
 
         if (glow_effect && is_sanctuary(you.pos()))
@@ -3859,76 +3849,6 @@ void handle_time()
             // we dial down the contamination a little faster if its actually
             // mutating you.  -- GDL
             contaminate_player(-(random2(you.magic_contamination / 4) + 1));
-        }
-    }
-
-    // Random chance to identify staff in hand based off of Spellcasting
-    // and an appropriate other spell skill... is 1/20 too fast?
-    if (you.weapon()
-        && you.weapon()->base_type == OBJ_STAVES
-        && !item_type_known(*you.weapon())
-        && one_chance_in(20))
-    {
-        int total_skill = you.skills[SK_SPELLCASTING];
-
-        switch (you.weapon()->sub_type)
-        {
-        case STAFF_WIZARDRY:
-        case STAFF_ENERGY:
-            total_skill += you.skills[SK_SPELLCASTING];
-            break;
-        case STAFF_FIRE:
-            if (you.skills[SK_FIRE_MAGIC] > you.skills[SK_ICE_MAGIC])
-                total_skill += you.skills[SK_FIRE_MAGIC];
-            else
-                total_skill += you.skills[SK_ICE_MAGIC];
-            break;
-        case STAFF_COLD:
-            if (you.skills[SK_ICE_MAGIC] > you.skills[SK_FIRE_MAGIC])
-                total_skill += you.skills[SK_ICE_MAGIC];
-            else
-                total_skill += you.skills[SK_FIRE_MAGIC];
-            break;
-        case STAFF_AIR:
-            if (you.skills[SK_AIR_MAGIC] > you.skills[SK_EARTH_MAGIC])
-                total_skill += you.skills[SK_AIR_MAGIC];
-            else
-                total_skill += you.skills[SK_EARTH_MAGIC];
-            break;
-        case STAFF_EARTH:
-            if (you.skills[SK_EARTH_MAGIC] > you.skills[SK_AIR_MAGIC])
-                total_skill += you.skills[SK_EARTH_MAGIC];
-            else
-                total_skill += you.skills[SK_AIR_MAGIC];
-            break;
-        case STAFF_POISON:
-            total_skill += you.skills[SK_POISON_MAGIC];
-            break;
-        case STAFF_DEATH:
-            total_skill += you.skills[SK_NECROMANCY];
-            break;
-        case STAFF_CONJURATION:
-            total_skill += you.skills[SK_CONJURATIONS];
-            break;
-        case STAFF_ENCHANTMENT:
-            total_skill += you.skills[SK_ENCHANTMENTS];
-            break;
-        case STAFF_SUMMONING:
-            total_skill += you.skills[SK_SUMMONINGS];
-            break;
-        }
-
-        if (x_chance_in_y(total_skill, 100))
-        {
-            item_def& item = *you.weapon();
-
-            set_ident_type(OBJ_STAVES, item.sub_type, ID_KNOWN_TYPE);
-            set_ident_flags(item, ISFLAG_IDENT_MASK);
-
-            mprf("You are wielding %s.", item.name(DESC_NOCAP_A).c_str());
-            more();
-
-            you.wield_change = true;
         }
     }
 
@@ -4068,7 +3988,7 @@ static void _catchup_monster_moves(monsters *mon, int turns)
     // probably too annoying even for DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
          "mon #%d: range %d; "
-         "pos (%d,%d); targ %d(%d,%d); flags %ld",
+         "pos (%d,%d); targ %d(%d,%d); flags %"PRIx64,
          mon->mindex(), range, mon->pos().x, mon->pos().y,
          mon->foe, mon->target.x, mon->target.y, mon->flags );
 #endif
@@ -4292,6 +4212,8 @@ void update_level(long elapsedTime)
 
         _catchup_monster_moves(*mi, turns);
 
+        mi->foe_memory = std::max(mi->foe_memory - turns, 0);
+
         if (turns >= 10 && mi->alive())
             mi->timeout_enchantments(turns / 10);
     }
@@ -4321,8 +4243,9 @@ static void _maybe_restart_fountain_flow(const coord_def& where,
         grd(where) = static_cast<dungeon_feature_type> (grid
                         - (DNGN_DRY_FOUNTAIN_BLUE - DNGN_FOUNTAIN_BLUE));
 
-        if (is_terrain_seen(where))
-            set_map_knowledge_obj(where, grd(where));
+        // XXX: why should the player magically know this?!
+        if (env.map_knowledge(where).seen())
+            env.map_knowledge(where).set_feature(grd(where));
 
         // Clean bloody floor.
         if (is_bloodcovered(where))
@@ -4917,7 +4840,7 @@ void slime_wall_damage(actor* act, int delay)
         return;
 
     // Up to 1d6 damage per wall per slot.
-    const int strength = div_rand_round(depth * walls * BASELINE_DELAY, delay);
+    const int strength = div_rand_round(depth * walls * delay, BASELINE_DELAY);
 
     if (act->atype() == ACT_PLAYER)
     {

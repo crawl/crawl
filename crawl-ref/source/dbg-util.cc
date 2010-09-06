@@ -5,8 +5,6 @@
  */
 
 #include "AppHdr.h"
-#define __STDC_FORMAT_MACROS
-#include <inttypes.h>
 
 #include "dbg-util.h"
 
@@ -117,11 +115,15 @@ void debug_dump_levgen()
     else
     {
         const CrawlHashTable &vaults = props[LEVEL_VAULTS_KEY].get_table();
-        CrawlHashTable::const_iterator i = vaults.begin();
+        // const_iterator asserts if the table has hash_map == NULL
+        if (!vaults.empty())
+        {
+            CrawlHashTable::const_iterator i = vaults.begin();
 
-        for (; i != vaults.end(); ++i)
-            mprf("    %s: %s", i->first.c_str(),
-                 i->second.get_string().c_str());
+            for (; i != vaults.end(); ++i)
+                mprf("    %s: %s", i->first.c_str(),
+                     i->second.get_string().c_str());
+        }
     }
     mpr("");
 }
@@ -237,8 +239,8 @@ void debug_dump_mon(const monsters* mon, bool recurse)
     {
         fprintf(stderr, "\nTravelling:\n");
         fprintf(stderr, "    travel_target      = %d\n", mon->travel_target);
-        fprintf(stderr, "    travel_path.size() = %lu\n",
-                (unsigned long) mon->travel_path.size());
+        fprintf(stderr, "    travel_path.size() = %u\n",
+                (unsigned int)mon->travel_path.size());
 
         if (mon->travel_path.size() > 0)
         {

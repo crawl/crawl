@@ -611,11 +611,12 @@ std::string map_tomb_marker::debug_describe() const
 //////////////////////////////////////////////////////////////////////////
 // Map markers in env.
 
-map_markers::map_markers() : markers()
+map_markers::map_markers() : markers(), have_inactive_markers(false)
 {
 }
 
-map_markers::map_markers(const map_markers &c) : markers()
+map_markers::map_markers(const map_markers &c)
+  : markers(), have_inactive_markers(false)
 {
     init_from(c);
 }
@@ -642,6 +643,12 @@ void map_markers::init_from(const map_markers &c)
     {
         add( i->second->clone() );
     }
+    have_inactive_markers = c.have_inactive_markers;
+}
+
+void map_markers::clear_need_activate()
+{
+    have_inactive_markers = false;
 }
 
 void map_markers::activate_all(bool verbose)
@@ -662,11 +669,30 @@ void map_markers::activate_all(bool verbose)
         if (!marker->property("post_activate_remove").empty())
             remove(marker);
     }
+
+    have_inactive_markers = false;
+}
+
+void map_markers::activate_markers_at(coord_def p)
+{
+    const std::vector<map_marker *> activatees = get_markers_at(p);
+    for (int i = 0, size = activatees.size(); i < size; ++i)
+        activatees[i]->activate();
+
+    const std::vector<map_marker *> active_markers = get_markers_at(p);
+    for (int i = 0, size = active_markers.size(); i < size; ++i)
+    {
+        const std::string prop =
+            active_markers[i]->property("post_activate_remove");
+        if (!prop.empty())
+            remove(active_markers[i]);
+    }
 }
 
 void map_markers::add(map_marker *marker)
 {
     markers.insert(dgn_pos_marker(marker->pos, marker));
+    have_inactive_markers = true;
 }
 
 void map_markers::unlink_marker(const map_marker *marker)
@@ -683,10 +709,17 @@ void map_markers::unlink_marker(const map_marker *marker)
     }
 }
 
+void map_markers::check_empty()
+{
+    if (markers.empty())
+        have_inactive_markers = false;
+}
+
 void map_markers::remove(map_marker *marker)
 {
     unlink_marker(marker);
     delete marker;
+    check_empty();
 }
 
 void map_markers::remove_markers_at(const coord_def &c,
@@ -703,6 +736,7 @@ void map_markers::remove_markers_at(const coord_def &c,
             markers.erase(todel);
         }
     }
+    check_empty();
 }
 
 map_marker *map_markers::find(const coord_def &c, map_marker_type type)
@@ -728,6 +762,7 @@ map_marker *map_markers::find(map_marker_type type)
 
 void map_markers::move(const coord_def &from, const coord_def &to)
 {
+    unwind_bool inactive(have_inactive_markers);
     std::pair<dgn_marker_map::iterator, dgn_marker_map::iterator>
         els = markers.equal_range(from);
 
@@ -749,6 +784,7 @@ void map_markers::move(const coord_def &from, const coord_def &to)
 
 void map_markers::move_marker(map_marker *marker, const coord_def &to)
 {
+    unwind_bool inactive(have_inactive_markers);
     unlink_marker(marker);
     marker->pos = to;
     add(marker);
@@ -814,6 +850,7 @@ void map_markers::clear()
          i != markers.end(); ++i)
         delete i->second;
     markers.clear();
+    check_empty();
 }
 
 static const long MARKERS_COOKY = 0x17742C32;
@@ -940,4 +977,25 @@ std::vector<map_marker*> find_markers_by_prop(
         }
     }
     return (markers);
+}
+
+///////////////////////////////////////////////////////////////////
+
+// Safely remove all markers and dungeon listeners at the given square.
+void remove_markers_and_listeners_at(coord_def p)
+{
+    // Look for Lua markers on this square that are listening for
+    // non-positional events, (such as bazaar portals listening for
+    // turncount changes) and detach them manually from the dungeon
+    // event dispatcher.
+    const std::vector<map_marker *> markers = env.markers.get_markers_at(p);
+    for (int i = 0, size = markers.size(); i < size; ++i)
+    {
+        if (markers[i]->get_type() == MAT_LUA_MARKER)
+            dungeon_events.remove_listener(
+                dynamic_cast<map_lua_marker*>(markers[i]));
+    }
+
+    env.markers.remove_markers_at(p);
+    dungeon_events.clear_listeners_at(p);
 }

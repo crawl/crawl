@@ -21,6 +21,7 @@
 #include "item_use.h"
 #include "itemprop.h"
 #include "items.h"
+#include "options.h"
 #include "output.h"
 #include "player.h"
 #include "player-equip.h"
@@ -183,7 +184,7 @@ static void _remove_equipment(const std::set<equipment_type>& removed,
 }
 
 // FIXME: merge this with you_can_wear(), can_wear_armour(), etc.
-bool _mutations_prevent_wearing(const item_def& item)
+static bool _mutations_prevent_wearing(const item_def& item)
 {
     const equipment_type eqslot = get_armour_slot(item);
 
@@ -325,7 +326,7 @@ static bool _check_for_cursed_equipment(const std::set<equipment_type> &remove,
 
 // Returns true if the player got prompted by an inscription warning and
 // chose to opt out.
-bool _check_transformation_inscription_warning(
+static bool _check_transformation_inscription_warning(
             const std::set<equipment_type> &remove)
 {
     // Check over all items to be removed or melded.
@@ -393,6 +394,34 @@ static bool _abort_or_fizzle(bool just_check)
         return (true); // pay the necessary costs
     }
     return (false); // SPRET_ABORT
+}
+
+monster_type transform_mons()
+{
+    switch(you.attribute[ATTR_TRANSFORMATION])
+    {
+    case TRAN_SPIDER:
+        return MONS_GIANT_COCKROACH; //uhh...
+    case TRAN_STATUE:
+        return MONS_STATUE;
+    case TRAN_ICE_BEAST:
+        return MONS_ICE_BEAST;
+    case TRAN_DRAGON:
+        return MONS_DRAGON;
+    case TRAN_LICH:
+        return MONS_LICH;
+    case TRAN_BAT:
+        return you.species == SP_VAMPIRE ? MONS_VAMPIRE_BAT : MONS_GIANT_BAT;
+    case TRAN_PIG:
+        return MONS_HOG;
+    case TRAN_BLADE_HANDS:
+    case TRAN_NONE:
+        if (Options.show_player_species)
+            return player_mons();
+        return MONS_PLAYER;
+    }
+    ASSERT(!"unknown transformation");
+    return MONS_PLAYER;
 }
 
 // Transforms you into the specified form. If force is true, checks for
@@ -499,7 +528,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         return (_abort_or_fizzle(just_check));
     }
 
-    int str = 0, dex = 0, symbol = '@', colour = LIGHTGREY, xhp = 0, dur = 0;
+    int str = 0, dex = 0, xhp = 0, dur = 0;
     const char* tran_name = "buggy";
     const char* msg = "You transform into something buggy!";
     switch (which_trans)
@@ -507,8 +536,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
     case TRAN_SPIDER:
         tran_name = "spider";
         dex       = 5;
-        symbol    = 's';
-        colour    = BROWN;
         dur       = std::min(10 + random2(pow) + random2(pow), 60);
         msg       = "You turn into a venomous arachnid creature.";
         break;
@@ -524,8 +551,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
         str       = 2;
         dex       = -2;
         xhp       = 15;
-        symbol    = '8';
-        colour    = LIGHTGREY;
         dur       = std::min(20 + random2(pow) + random2(pow), 100);
         if (player_genus(GENPC_DWARVEN) && one_chance_in(10))
             msg = "You inwardly fear your resemblance to a lawn ornament.";
@@ -536,8 +561,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
     case TRAN_ICE_BEAST:
         tran_name = "ice beast";
         xhp       = 12;
-        symbol    = 'I';
-        colour    = WHITE;
         dur       = std::min(30 + random2(pow) + random2(pow), 100);
         msg       = "You turn into a creature of crystalline ice.";
         break;
@@ -546,8 +569,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
         tran_name = "dragon";
         str       = 10;
         xhp       = 16;
-        symbol    = 'D';
-        colour    = GREEN;
         dur       = std::min(20 + random2(pow) + random2(pow), 100);
         if (you.species == SP_MERFOLK && you.swimming())
         {
@@ -561,8 +582,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
     case TRAN_LICH:
         tran_name = "lich";
         str       = 3;
-        symbol    = 'L';
-        colour    = LIGHTGREY;
         dur       = std::min(20 + random2(pow) + random2(pow), 100);
         msg       = "Your body is suffused with negative energy!";
         break;
@@ -571,8 +590,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
         tran_name = "bat";
         str       = -5;
         dex       = 5;
-        symbol    = 'b';
-        colour    = (you.species == SP_VAMPIRE ? DARKGREY : LIGHTGREY);
         dur       = std::min(20 + random2(pow) + random2(pow), 100);
         if (you.species == SP_VAMPIRE)
             msg = "You turn into a vampire bat.";
@@ -582,8 +599,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
 
     case TRAN_PIG:
         tran_name = "pig";
-        symbol    = 'h';
-        colour    = RED;
         dur       = pow;
         msg       = "You have been turned into a pig!";
         you.transform_uncancellable = true;
@@ -622,8 +637,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
     // Update your status.
     you.attribute[ATTR_TRANSFORMATION] = which_trans;
     you.set_duration(DUR_TRANSFORMATION, dur);
-    you.symbol = symbol;
-    you.colour = colour;
+    you.symbol = transform_mons();
 
     burden_change();
 
@@ -712,8 +726,7 @@ void untransform(bool skip_wielding, bool skip_move)
     you.redraw_armour_class = true;
     you.wield_change        = true;
 
-    you.symbol = '@';
-    you.colour = LIGHTGREY;
+    you.symbol = MONS_PLAYER;
 
     // Must be unset first or else infinite loops might result. -- bwr
     const transformation_type old_form =

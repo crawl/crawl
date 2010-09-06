@@ -262,7 +262,11 @@ int SDLWrapper::init(coord_def *m_windowsz)
             printf("Failed to set key repeat mode: %s\n", SDL_GetError());
     }
 
+#ifdef USE_GLES
+    unsigned int flags = SDL_SWSURFACE;
+#else
     unsigned int flags = SDL_OPENGL;
+#endif
 
     bool too_small = (video_info->current_w < 1024 || video_info->current_h < 800);
     if (Options.tile_full_screen == SCREENMODE_FULL

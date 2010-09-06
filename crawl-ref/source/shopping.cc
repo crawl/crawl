@@ -2006,8 +2006,7 @@ unsigned int item_value(item_def item, bool ident)
             valued = 120;
         else if (item.sub_type == STAFF_SMITING
                 || item.sub_type == STAFF_STRIKING
-                || item.sub_type == STAFF_WARDING
-                || item.sub_type == STAFF_DISCOVERY)
+                || item.sub_type == STAFF_WARDING)
         {
             valued = 150;
         }
@@ -2611,7 +2610,7 @@ void ShoppingListMenu::draw_title()
 
         cgotoxy(1, 1);
         textcolor(title->colour);
-        cprintf("%d %s%s, total cost %ld gp",
+        cprintf("%d %s%s, total cost %d gp",
                 title->quantity, title->text.c_str(),
                 title->quantity > 1? "s" : "",
                 total_cost);
@@ -2779,8 +2778,8 @@ void ShoppingList::display()
     redraw_screen();
 }
 
-bool _compare_shopping_things(const CrawlStoreValue& a,
-                              const CrawlStoreValue& b)
+static bool _compare_shopping_things(const CrawlStoreValue& a,
+                                     const CrawlStoreValue& b)
 {
     const CrawlHashTable& hash_a = a.get_table();
     const CrawlHashTable& hash_b = b.get_table();

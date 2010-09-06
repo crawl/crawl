@@ -142,7 +142,7 @@ public:
     void save(writer&) const;
     void load(reader&);
 
-    long get_kills(std::vector<kill_exp> &v) const;
+    int get_kills(std::vector<kill_exp> &v) const;
     int num_kills(const monsters *mon) const;
 private:
     typedef std::map<kill_monster_desc,
@@ -170,11 +170,11 @@ public:
     void load(reader&);
 
     // Number of kills, by category.
-    long num_kills(const monsters *mon, kill_category cat) const;
+    int num_kills(const monsters *mon, kill_category cat) const;
     // Number of kills, any category.
-    long num_kills(const monsters *mon) const;
+    int num_kills(const monsters *mon) const;
 
-    long total_kills() const;
+    int total_kills() const;
 
     std::string kill_info() const;
 private:
@@ -183,7 +183,7 @@ private:
     Kills categorized_kills[KC_NCATEGORIES];
 private:
     void add_kill_info(std::string &, std::vector<kill_exp> &,
-                       long count, const char *c, bool separator)
+                       int count, const char *c, bool separator)
         const;
 };
 

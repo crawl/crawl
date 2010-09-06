@@ -1,4 +1,11 @@
-Balancing 0.6 features:
+Stone Soup 0.7.1 (20100724)
+---------------------------
+* Fix travel excludes not being saved.
+* Fix map markers not being activated on game reload.
+
+Stone Soup 0.7 (20100724)
+-------------------------
+Balance fixes
 * Monster double actions due to energy randomisation always include a move.
 * Greatly accelerate armour training when armour is heavy relative to skill.
 * Make heavy armour guaranteed damage reduction percentage independent of
@@ -8,22 +15,19 @@ Balancing 0.6 features:
 * Nagas and worshippers of Cheibriados don't suffer from as much hunger.
 
 Unsorted:
-* New mini-game, Dungeon Crawl Sprint.
-* New tutorial, old tutorial now a hints mode.
+* New mini-game, Dungeon Sprint.
+* New tutorial, old tutorial is now a hints mode.
 * Aptitudes now on a scale +5 to -5.
 * Track the source of poison for death messages.
 * Magic mapping and Lugonu's self-banishment now work in Pandemonium.
-* Remove Death Knights and Thieves.
 * Ghouls can no longer starve; they just rot faster.
-* New tiles monster list tab.
-* Player body size is now described on the "A" screen.
-* Warpers now start with a few darts of dispersal.
 
 Interface:
 * New starting menus, mouse-operable in tiles builds.
-* New inventory selection mode with cursor.
+* New tiles monster list tab.
 * Swap water and disturbance glyphs ('~' and '{').
 * Show effective weapon speed in '@' character info.
+* Player body size is now described on the "A" screen.
 
 Game:
 * Walls in the Slime Pits are acidic.
@@ -45,12 +49,9 @@ Game:
 Gods:
 * Zin no longer objects to deaths of non-sentient allies, and takes
   collateral kills of unclean and chaotic monsters.
-* Zin's Recite has been adjusted to be less harsh.
 * Zin has a new power: Imprison.
 * Elyvilon's Divine Vigour scales better in terms of power.
 * Yredelemnul no longer gifts vampires.
-* Kikubaaqudgha no longer protects from torment if the torment is from
-  pain-branding a weapon.
 * Sif Muna's piety is no longer unfair to skilled species.
 * Nemelex no longer takes gold sacrifices.
 * Fedhas can now evolve ballistomycetes into hyperactive ballistomycetes.
@@ -62,14 +63,13 @@ Items:
 * Scrolls of holy word do more damage to susceptible monsters.
 * Blowguns no longer show damage, as they do none; accordingly, scrolls of
   enchant weapon II no longer work on them.
-* The "Sniper" unrandart is now a crossbow instead of a hand crossbow.
 * Flame- and frost-branded darts no longer always mulch, and the steel brand
   is properly applied for thrown weapons.
 * Demon tridents can be blessed by TSO.
 
 Backgrounds:
 * Thieves and Death Knights are no more.
-* Warpers receive darts of dispersion.
+* Warpers receive darts of dispersal.
 
 Monsters:
 * Anacondas are now amphibious.
@@ -89,17 +89,14 @@ Monsters:
 * Wayne is now capable of laying a major smackdown.
 
 Spells:
-* Call Imp is buffed: it is now level 2, it takes spell power into account,
-  and it can summon iron imps.
+* Call Imp is now level 2, takes spell power into account, and can summon
+  iron imps.
 * Call Canine Familiar replaces Summon Elemental in the book of Callings,
   and is removed from the book of Summonings.
-* Summon Ugly Thing is nerfed: at full spell power, it now summons very ugly
-  things only 33% of the time.
-* Invisibility no longer works on glowing monsters, as Corona doesn't
-  either.
-* Extension is nerfed: it now only extends spells that you know.
-* Death's Door doesn't paralyze you anymore, it just blocks healing effects
-  -- except for Borgnjor's Revification.
+* Summon Ugly Thing summons very ugly things less often at high power.
+* Invisibility no longer works on glowing monsters.
+* Extension only extends spells that you know.
+* Death's Door only blocks healing, paralysis only for Revivification.
 * Summon Ugly Things is level 6, Haunt is level 7.
 
 Technical:

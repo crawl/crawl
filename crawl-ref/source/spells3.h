@@ -33,7 +33,7 @@ bool project_noise();
 bool detect_curse(int scroll, bool suppress_msg);
 
 int portal();
-bool recall(char type_recalled);
+bool recall(int type_recalled);
 bool remove_curse(bool suppress_msg);
 bool cast_sublimation_of_blood(int pow);
 

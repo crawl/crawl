@@ -70,6 +70,7 @@ std::vector<player_save_info> find_all_saved_characters();
 std::vector<player_save_info> find_saved_characters();
 
 std::string get_savefile_directory(bool ignore_game_type = false);
+std::string get_bonefile_directory(bool ignore_game_type = false);
 std::string get_save_filename(const std::string &pre,
                               const std::string &suf,
                               const std::string &ext,
@@ -103,7 +104,7 @@ void save_game(bool leave_game, const char *bye = NULL);
 // Save game without exiting (used when changing levels).
 void save_game_state();
 
-bool get_save_version(FILE *file, char &major, char &minor);
+bool get_save_version(FILE *file, int &major, int &minor);
 
 bool save_exists(const std::string& name);
 void restore_game(const std::string& name);

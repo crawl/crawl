@@ -23,9 +23,9 @@ struct packed_cell
     FixedVector<int, MAX_DNGN_OVERLAY> dngn_overlay;
 };
 
-// For a given location, pack any waves (or ink) into the
-// dungeon overlay of the passed in packed_cell.
-void pack_waves(const coord_def &gc, packed_cell *cell);
+// For a given location, pack any waves/ink/wall shadow tiles
+// that require knowledge of the surrounding env cells.
+void pack_cell_overlays(const coord_def &gc, packed_cell *cell);
 
 class dolls_data;
 class mcache_entry;

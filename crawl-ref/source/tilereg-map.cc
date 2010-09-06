@@ -251,9 +251,7 @@ int MapRegion::handle_mouse(MouseEvent &event)
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
         return 0;
 
-    int cx;
-    int cy;
-    if (!mouse_pos(event.px, event.py, cx, cy))
+    if (!inside(event.px, event.py))
     {
         if (m_far_view)
         {
@@ -264,11 +262,8 @@ int MapRegion::handle_mouse(MouseEvent &event)
         return 0;
     }
 
-    const int x = event.px - sx;
-    const int y = event.py - sy;
-    if (x < 0 || x > wx || y < 0 || y > wy)
-        return (0);
-
+    int cx, cy;
+    mouse_pos(event.px, event.py, cx, cy);
     const coord_def gc(m_min_gx + cx, m_min_gy + cy);
 
     tiles.place_cursor(CURSOR_MOUSE, gc);

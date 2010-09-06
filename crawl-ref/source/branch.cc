@@ -125,7 +125,6 @@ bool set_branch_flags(unsigned long flags, bool silent,
     bool can_map     = player_in_mappable_area();
 
     if (you.level_type == LEVEL_DUNGEON && branch == you.where_are_you
-        && you.skills[SK_TRANSLOCATIONS] > 0
         && could_control && !can_control && !silent)
     {
         mpr("You sense the appearance of a powerful magical force "
@@ -158,7 +157,6 @@ bool unset_branch_flags(unsigned long flags, bool silent,
     const bool can_map     = player_in_mappable_area();
 
     if (you.level_type == LEVEL_DUNGEON && branch == you.where_are_you
-        && you.skills[SK_TRANSLOCATIONS] > 0
         && !could_control && can_control && !silent)
     {
         // Isn't really a "recovery", but I couldn't think of where
@@ -328,7 +326,7 @@ Branch branches[] = {
       0, true, YELLOW, LIGHTGREY,
       mons_tomb_rare, mons_tomb_level,
       NULL, NULL, NULL, NULL,
-      0, 'G', false, true },
+      0, 'W', false, true },
 
     { BRANCH_VESTIBULE_OF_HELL, BRANCH_MAIN_DUNGEON, 21, 27, 1, -1, 0, 0,
       DNGN_ENTER_HELL, DNGN_EXIT_HELL, // sentinel
@@ -355,7 +353,7 @@ Branch branches[] = {
       0, false, DARKGREY, RED,
       mons_gehenna_rare, mons_gehenna_level,
       NULL, NULL, NULL, NULL,
-      0, 'N', true, true },
+      0, 'G', true, true },
 
     { BRANCH_COCYTUS, BRANCH_VESTIBULE_OF_HELL, 1, 1, 7, -1, BFLAG_ISLANDED, 0,
       DNGN_ENTER_COCYTUS, NUM_FEATURES, // sentinel
@@ -383,4 +381,22 @@ Branch branches[] = {
       mons_hallzot_rare, mons_hallzot_level,
       NULL, NULL, NULL, NULL,
       1, 'Z', false, true },
+
+    { BRANCH_FOREST, BRANCH_MAIN_DUNGEON, 3, 6, 5, 7, 0, 0,
+      DNGN_ENTER_FOREST, DNGN_RETURN_FROM_FOREST,
+      "Forest", "the Enchanted Forest", "Forest",
+      NULL,
+      20, true, BROWN, BROWN,
+      mons_forest_rare, mons_forest_level,
+      NULL, NULL, NULL, NULL,
+      10, 'F', false, true },
+
+    { BRANCH_SPIDER_NEST, BRANCH_LAIR, 3, 6, 5, 7, 0, 0,
+      DNGN_ENTER_SPIDER_NEST, DNGN_RETURN_FROM_SPIDER_NEST,
+      "Spider Nest", "the Spider Nest", "Spider",
+      NULL,
+      20, true, BROWN, YELLOW,
+      mons_spidernest_rare, mons_spidernest_level,
+      NULL, NULL, NULL, NULL,
+      0, 'N', false, true },
 };

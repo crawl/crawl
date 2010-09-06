@@ -710,18 +710,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
 
-    // Rod of discovery
-    {SPELL_DETECT_SECRET_DOORS,
-     SPELL_DETECT_TRAPS,
-     SPELL_DETECT_ITEMS,
-     SPELL_NO_SPELL,
-     SPELL_NO_SPELL,
-     SPELL_NO_SPELL,
-     SPELL_NO_SPELL,
-     SPELL_NO_SPELL,
-     },
-
-    // Rod of demonology
+   // Rod of demonology
     {SPELL_CALL_IMP,
      SPELL_ABJURATION,
      SPELL_RECALL,
@@ -930,7 +919,7 @@ int spellbook_contents( item_def &book, read_book_action_type action,
 
 //jmf: was in shopping.cc
 // Rarity 100 is reserved for unused books.
-int book_rarity(unsigned char which_book)
+int book_rarity(uint8_t which_book)
 {
     switch (which_book)
     {
@@ -1020,7 +1009,7 @@ int book_rarity(unsigned char which_book)
     }
 }
 
-static unsigned char _lowest_rarity[NUM_SPELLS];
+static uint8_t _lowest_rarity[NUM_SPELLS];
 
 void init_spell_rarities()
 {
@@ -1501,8 +1490,8 @@ static bool _get_mem_list(spell_list &mem_spells,
         const std::string species = "a " + species_name(you.species);
         mprf(MSGCH_PROMPT,
              "You cannot memorise any of the available spells because you "
-             "are %s %s.", lichform ? "in Lich form"
-                                    : lowercase_string(species).c_str());
+             "are %s.", lichform ? "in Lich form"
+                                 : lowercase_string(species).c_str());
     }
     else if (num_low_levels > 0 || num_low_xl > 0)
     {
@@ -1539,10 +1528,42 @@ bool has_spells_to_memorise(bool silent, int current_spell)
                          silent, (spell_type) current_spell);
 }
 
+static int _failure_rate_to_group( int fail )
+{
+    return (fail == 100) ? 100 :
+           (fail > 77)   ?  78 :
+           (fail > 71)   ?  72 :
+           (fail > 64)   ?  65 :
+           (fail > 59)   ?  60 :
+           (fail > 50)   ?  51 :
+           (fail > 40)   ?  41 :
+           (fail > 35)   ?  36 :
+           (fail > 28)   ?  29 :
+           (fail > 22)   ?  23 :
+           (fail >  0)   ?   1 : 0;
+}
+
 static bool _sort_mem_spells(spell_type a, spell_type b)
 {
-    if (spell_fail(a) != spell_fail(b))
-        return (spell_fail(a) < spell_fail(b));
+    // List spells we can memorize right away first.
+    if (player_spell_levels() >= spell_levels_required(a)
+        && player_spell_levels() < spell_levels_required(b))
+    {
+        return (true);
+    }
+    else if (player_spell_levels() < spell_levels_required(a)
+             && player_spell_levels() >= spell_levels_required(b))
+    {
+        return (false);
+    }
+
+    // Don't sort by failure rate beyond what the player can see in the
+    // success descriptions.
+    const int fail_rate_a = _failure_rate_to_group(spell_fail(a));
+    const int fail_rate_b = _failure_rate_to_group(spell_fail(b));
+    if (fail_rate_a != fail_rate_b)
+        return (fail_rate_a < fail_rate_b);
+        
     if (spell_difficulty(a) != spell_difficulty(b))
         return (spell_difficulty(a) < spell_difficulty(b));
 
@@ -1588,14 +1609,22 @@ static spell_type _choose_mem_spell(spell_list &spells,
     const bool text_only = true;
 #endif
 
-    Menu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
+    ToggleableMenu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
                     | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING,
-                    "", text_only);
+                    text_only);
 #ifdef USE_TILE
+    // [enne] Hack.  Use a separate title, so the column headers are aligned.
+    spell_menu.set_title(
+        new MenuEntry(" Your Spells - Memorisation  (toggle to descriptions with '!')",
+            MEL_TITLE));
+
+    spell_menu.set_title(
+        new MenuEntry(" Your Spells - Descriptions  (toggle to memorisation with '!')",
+            MEL_TITLE), false);
+
     {
-        // [enne] - Hack.  Make title an item so that it's aligned.
         MenuEntry* me =
-            new MenuEntry("    Spells                         Type          "
+            new MenuEntry("     Spells                        Type          "
                           "                Success  Level",
                 MEL_ITEM);
         me->colour = BLUE;
@@ -1603,13 +1632,21 @@ static spell_type _choose_mem_spell(spell_list &spells,
     }
 #else
     spell_menu.set_title(
-        new MenuEntry("     Spells                        Type          "
+        new MenuEntry("     Spells (Memorisation)         Type          "
                       "                Success  Level",
             MEL_TITLE));
+            
+    spell_menu.set_title(
+        new MenuEntry("     Spells (Description)          Type          "
+                      "                Success  Level",
+            MEL_TITLE), false);
 #endif
 
     spell_menu.set_highlighter(NULL);
     spell_menu.set_tag("spell");
+    
+    spell_menu.action_cycle = Menu::CYCLE_TOGGLE;
+    spell_menu.menu_action  = Menu::ACT_EXECUTE;
 
     std::string more_str = make_stringf("<lightgreen>%d spell level%s left"
                                         "<lightgreen>",
@@ -1632,6 +1669,11 @@ static spell_type _choose_mem_spell(spell_list &spells,
                                  num_race,
                                  num_race > 1 ? "s" : "");
     }
+
+#ifndef USE_TILE
+    // Tiles menus get this information in the title.
+    more_str += "   Toggle display with '<w>!</w>'";
+#endif
 
     spell_menu.set_more(formatted_string::parse_string(more_str));
 
@@ -1673,7 +1715,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
         desc << std::setw(30) << spell_title(spell);
         desc << spell_schools_string(spell);
 
-        int so_far = desc.str().length() - ( name_length_by_colour(colour)+2);
+        int so_far = desc.str().length() - (colour_to_str(colour).length()+2);
         if (so_far < 60)
             desc << std::string(60 - so_far, ' ');
 
@@ -1682,8 +1724,9 @@ static spell_type _choose_mem_spell(spell_list &spells,
 
         desc << "</" << colour_to_str(colour) << ">";
 
-        MenuEntry* me = new MenuEntry(desc.str(), MEL_ITEM, 1,
-                                      index_to_letter(i % 52));
+        MenuEntry* me =
+            new MenuEntry(desc.str(), MEL_ITEM, 1,
+                          index_to_letter(i % 52));
 
 #ifdef USE_TILE
         me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
@@ -1708,7 +1751,10 @@ static spell_type _choose_mem_spell(spell_list &spells,
         const spell_type spell = *static_cast<spell_type*>(sel[0]->data);
         ASSERT(is_valid_spell(spell));
 
-        return (spell);
+        if (spell_menu.menu_action == Menu::ACT_EXAMINE)
+            describe_spell(spell);
+        else
+            return (spell);
     }
 }
 

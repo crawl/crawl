@@ -56,6 +56,7 @@
 #include "transform.h"
 #include "hints.h"
 #include "xom.h"
+#include "mon-info.h"
 
 #define LONG_DESC_KEY "long_desc_key"
 #define QUOTE_KEY "quote_key"
@@ -545,15 +546,11 @@ int str_to_trap(const std::string &s)
 // Describes the random demons you find in Pandemonium.
 //
 //---------------------------------------------------------------
-static std::string _describe_demon(const monsters &mons)
+static std::string _describe_demon(const std::string& name, flight_type fly)
 {
-    ASSERT(mons.ghost.get());
-
-    const ghost_demon &ghost = *mons.ghost;
-
     const long seed =
-        std::accumulate(ghost.name.begin(), ghost.name.end(), 0L) *
-        ghost.name.length();
+        std::accumulate(name.begin(), name.end(), 0L) *
+        name.length();
 
     rng_save_excursion exc;
     seed_rng( seed );
@@ -663,10 +660,10 @@ static std::string _describe_demon(const monsters &mons)
     };
 
     std::ostringstream description;
-    description << "A powerful demon, " << ghost.name << " has a"
+    description << "A powerful demon, " << name << " has a"
                 << RANDOM_ELEMENT(body_descs) << "body";
 
-    switch (ghost.fly)
+    switch (fly)
     {
     case FL_FLY:
         description << RANDOM_ELEMENT(wing_names);
@@ -956,28 +953,29 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
     if (verbose)
     {
         if (is_demonic(item) && !launcher)
-            description += "\nDemonspawn are more deadly with it.";
+            description += "\nDemonspawn deal slightly more damage with it.";
         else if (get_equip_race(item) != ISFLAG_NO_RACE)
         {
             unsigned long race = get_equip_race(item);
 
             if (race == ISFLAG_DWARVEN)
-                description += "\nIt is well-crafted and very durable.";
+                description += "\nIt is well-crafted, durable, and resistant "
+                               "to corrosion. Dwarves deal slightly more "
+                               "damage with it.";
 
-            description += "\n";
-            description += (race == ISFLAG_DWARVEN) ? "Dwarves" :
-                           (race == ISFLAG_ELVEN)   ? "Elves"
-                                                    : "Orcs";
-            description += " are more deadly with it";
+            if (race == ISFLAG_ORCISH)
+                description += "\nOrcs deal slightly more damage with it.";
+
+            if (race == ISFLAG_ELVEN)
+                description += "\nElves are slightly more accurate with it.";
 
             if (launcher)
             {
-                description += ", and it is most deadly when used with ";
+                description += " It is most effective when used with ";
                 description += racial_description_string(item);
-                description += "ammunition";
+                description += "ammunition.";
             }
 
-            description += ".";
         }
     }
 
@@ -1359,7 +1357,8 @@ static std::string _describe_armour( const item_def &item, bool verbose )
         unsigned long race = get_equip_race(item);
 
         if (race == ISFLAG_DWARVEN)
-            description += "\nIt is well-crafted and very durable.";
+            description += "\nIt is well-crafted, durable, and resistant to "
+                           "corrosion.";
         else if (race == ISFLAG_ELVEN)
         {
             description += "\nIt is well-crafted and unobstructive";
@@ -1541,7 +1540,7 @@ static std::string _describe_deck( const item_def &item )
         description += "Next card(s): ";
         for (int i = 0; i < num_cards; ++i)
         {
-            unsigned char flags;
+            uint8_t flags;
             const card_type card = get_card_and_flags(item, -i-1, flags);
             if (flags & CFLAG_MARKED)
             {
@@ -1560,7 +1559,7 @@ static std::string _describe_deck( const item_def &item )
     std::vector<card_type> marked_cards;
     for (int i = last_known_card + 1; i < num_cards; ++i)
     {
-        unsigned char flags;
+        uint8_t flags;
         const card_type card = get_card_and_flags(item, -i-1, flags);
         if (flags & CFLAG_MARKED)
             marked_cards.push_back(card);
@@ -1584,7 +1583,7 @@ static std::string _describe_deck( const item_def &item )
     std::vector<card_type> seen_cards;
     for (int i = 0; i < num_cards; ++i)
     {
-        unsigned char flags;
+        uint8_t flags;
         const card_type card = get_card_and_flags(item, -i-1, flags);
 
         // This *might* leak a bit of information...oh well.
@@ -2549,8 +2548,9 @@ static void _append_spell_stats(const spell_type spell,
 }
 
 // Returns true if you can memorise the spell.
-bool _get_spell_description(const spell_type spell, std::string &description,
-                            const item_def* item = NULL)
+static bool _get_spell_description(const spell_type spell,
+                                   std::string &description,
+                                   const item_def* item = NULL)
 {
     description.reserve(500);
 
@@ -2646,9 +2646,9 @@ void describe_spell(spell_type spelled, const item_def* item)
     }
 }
 
-static std::string _describe_draconian_role(const monsters *mon)
+static std::string _describe_draconian_role(monster_type type)
 {
-    switch (mon->type)
+    switch (type)
     {
     case MONS_DRACONIAN_SHIFTER:
         return "It darts around disconcertingly without taking a step.";
@@ -2689,16 +2689,18 @@ static std::string _describe_draconian_colour(int species)
         return "Smoke pours from its nostrils.";
     case MONS_WHITE_DRACONIAN:
         return "Frost pours from its nostrils.";
+    case MONS_GREY_DRACONIAN:
+        return "Its scales seem rigid and its tail muscular.";
     case MONS_PALE_DRACONIAN:
         return "It is cloaked in a pall of superheated steam.";
     }
     return ("");
 }
 
-static std::string _describe_draconian(const monsters *mon)
+static std::string _describe_draconian(const monster_info& mi)
 {
     std::string description;
-    const int subsp = draco_subspecies( mon );
+    const int subsp = mi.draco_subspecies();
 
     if (subsp == MONS_DRACONIAN)
         description += "A ";
@@ -2715,6 +2717,7 @@ static std::string _describe_draconian(const monsters *mon)
     case MONS_PURPLE_DRACONIAN:     description += "purple-";  break;
     case MONS_RED_DRACONIAN:        description += "red-";     break;
     case MONS_WHITE_DRACONIAN:      description += "white-";   break;
+    case MONS_GREY_DRACONIAN:       description += "grey-";    break;
     case MONS_PALE_DRACONIAN:       description += "pale-";    break;
     default:
         break;
@@ -2729,9 +2732,9 @@ static std::string _describe_draconian(const monsters *mon)
             description += "  " + drac_col;
     }
 
-    if (subsp != mon->type)
+    if (subsp != mi.type)
     {
-        const std::string drac_role = _describe_draconian_role(mon);
+        const std::string drac_role = _describe_draconian_role(mi.type);
         if (!drac_role.empty())
             description += "  " + drac_role;
     }
@@ -2764,17 +2767,13 @@ static const char* _get_resist_name(mon_resist_flags res_type)
 
 // Describe a monster's (intrinsic) resistances, speed and a few other
 // attributes.
-static std::string _monster_stat_description(const monsters& mon)
+static std::string _monster_stat_description(const monster_info& mi)
 {
     std::ostringstream result;
 
     // Don't leak or duplicate resistance information for ghost demon
     // monsters, except for (very) ugly things.
-    const mon_resist_def resist =
-        (mons_is_ghost_demon(mon.type)
-                && mon.type != MONS_UGLY_THING
-                && mon.type != MONS_VERY_UGLY_THING)
-            ? get_mons_class_resists(mon.type) : get_mons_resists(&mon);
+    const mon_resist_def resist = mi.resists();
 
     const mon_resist_flags resists[] = {
         MR_RES_ELEC,   MR_RES_POISON, MR_RES_FIRE,
@@ -2837,8 +2836,7 @@ static std::string _monster_stat_description(const monsters& mon)
         resist_descriptions.push_back(tmp);
     }
 
-    const char* pronoun = mons_pronoun(static_cast<monster_type>(mon.type),
-                                       PRONOUN_CAP, true);
+    const char* pronoun = mi.pronoun(PRONOUN_CAP);
 
     if (!resist_descriptions.empty())
     {
@@ -2857,42 +2855,37 @@ static std::string _monster_stat_description(const monsters& mon)
                << ".\n";
     }
 
-    // Magic resistance at MAG_IMMUNE, but not for Rs, as there is then
-    // too much information leak.
-    if (mon.type != MONS_RAKSHASA && mon.type != MONS_RAKSHASA_FAKE)
+    int mr = mi.res_magic();
+    if (mr == MAG_IMMUNE)
+        result << pronoun << " is immune to hostile enchantments.\n";
+    else // How resistant is it? Same scale as the player.
     {
-        if (mons_immune_magic(&mon))
-            result << pronoun << " is immune to hostile enchantments.\n";
-        else // How resistant is it? Same scale as the player.
+        if (mr >= 10)
         {
-            const int mr = mon.res_magic();
-            if (mr >= 10)
-            {
-                result << pronoun << make_stringf(" is %s resistant to hostile enchantments.\n",
-                                                  magic_res_adjective(mr).c_str());
-            }
+            result << pronoun << make_stringf(" is %s resistant to hostile enchantments.\n",
+                    magic_res_adjective(mr).c_str());
         }
     }
 
-    if (mons_class_flag(mon.type, M_STATIONARY))
+    if (mons_class_flag(mi.type, M_STATIONARY))
         result << pronoun << " cannot move.\n";
 
-    if (mons_class_flag(mon.type, M_GLOWS_LIGHT))
+    if (mons_class_flag(mi.type, M_GLOWS_LIGHT))
         result << pronoun << " is outlined in light.\n";
-    else if (mons_class_flag(mon.type, M_GLOWS_RADIATION))
+    else if (mons_class_flag(mi.type, M_GLOWS_RADIATION))
         result << pronoun << " is glowing with mutagenic radiation.\n";
 
     // These differ between ghost demon monsters, so would be spoily.
-    if (!mons_is_ghost_demon(mon.type))
+    if (!mons_is_ghost_demon(mi.type))
     {
         // Seeing/sensing invisible.
-        if (mons_class_flag(mon.type, M_SEE_INVIS))
+        if (mons_class_flag(mi.type, M_SEE_INVIS))
             result << pronoun << " can see invisible.\n";
-        else if (mons_class_flag(mon.type, M_SENSE_INVIS))
+        else if (mons_class_flag(mi.type, M_SENSE_INVIS))
             result << pronoun << " can sense the presence of invisible creatures.\n";
 
         // Unusual monster speed.
-        const int speed = mons_base_speed(&mon);
+        const int speed = mi.base_speed();
         if (speed != 10 && speed != 0)
         {
             result << pronoun << " is ";
@@ -2914,64 +2907,55 @@ static std::string _monster_stat_description(const monsters& mon)
     // This doesn't give anything away since no (very) ugly things can
     // fly, all ghosts can fly, and for demons it's already mentioned in
     // their flavour description.
-    const flight_type fly = mons_flies(&mon, false);
-
-    if (fly != FL_NONE)
+    if (mi.fly != FL_NONE)
     {
         result << pronoun << " can "
-               << (fly == FL_FLY ? "fly" : "levitate") << ".\n";
+               << (mi.fly == FL_FLY ? "fly" : "levitate") << ".\n";
     }
 
     // Unusual regeneration rates.
-    if (!mons_can_regenerate(&mon))
+    if (!mi.can_regenerate())
         result << pronoun << " cannot regenerate.\n";
-    else if (monster_descriptor(mon.type, MDSC_REGENERATES))
+    else if (monster_descriptor(mi.type, MDSC_REGENERATES))
         result << pronoun << " regenerates quickly.\n";
 
     return (result.str());
 }
 
 // Fetches the monster's database description and reads it into inf.
-void get_monster_db_desc(const monsters& mons, describe_info &inf,
+void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                          bool &has_stat_desc, bool force_seen)
 {
-    // For undetected mimics describe mimicked item instead.
-    if (!force_seen && mons_is_unknown_mimic(&mons))
-    {
-        get_item_desc(get_mimic_item(&mons), inf);
-        return;
-    }
-
     if (inf.title.empty())
-        inf.title = mons.full_name(DESC_CAP_A, true);
+        inf.title = mi.full_name(DESC_CAP_A, true);
 
-    const std::string db_name = mons.base_name(DESC_DBNAME, force_seen);
+    std::string db_name = mi.db_name();
 
     // This is somewhat hackish, but it's a good way of over-riding monsters'
     // descriptions in Lua vaults by using MonPropsMarker. This is also the
     // method used by set_feature_desc_long, etc. {due}
-    if (mons.props.exists("description"))
-        inf.body << mons.props["description"].get_string();
+    if (!mi.description.empty())
+        inf.body << mi.description;
     // Don't get description for player ghosts.
-    else if (mons.type != MONS_PLAYER_GHOST
-             && mons.type != MONS_PLAYER_ILLUSION)
+    else if (mi.type != MONS_PLAYER_GHOST
+             && mi.type != MONS_PLAYER_ILLUSION)
     {
         inf.body << getLongDescription(db_name);
     }
 
     // And quotes {due}
-    if (mons.props.exists("quote"))
-        inf.quote = mons.props["quote"].get_string();
+    if (!mi.quote.empty())
+        inf.quote = mi.quote;
     else
         inf.quote = getQuoteString(db_name);
 
     std::string symbol;
-    symbol += get_monster_data(mons.type)->showchar;
+    symbol += get_monster_data(mi.type)->showchar;
     if (isaupper(symbol[0]))
         symbol = "cap-" + symbol;
 
     std::string quote2;
-    if (!mons_is_unique(mons.type))
+    if (!mons_is_unique(mi.type))
     {
         std::string symbol_prefix = "__";
         symbol_prefix += symbol;
@@ -2988,17 +2972,17 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     // following special descriptions rather pointless. I certainly can't
     // say I like them, though "It has come for your soul!" and
     // "It wants to drink your blood!" have something going for them. (jpeg)
-    switch (mons.type)
+    switch (mi.type)
     {
     case MONS_VAMPIRE:
     case MONS_VAMPIRE_KNIGHT:
     case MONS_VAMPIRE_MAGE:
-        if (you.is_undead == US_ALIVE && !mons.wont_attack())
+        if (you.is_undead == US_ALIVE && mi.attitude == ATT_HOSTILE)
             inf.body << "\nIt wants to drink your blood!\n";
         break;
 
     case MONS_REAPER:
-        if (you.is_undead == US_ALIVE && !mons.wont_attack())
+        if (you.is_undead == US_ALIVE && mi.attitude == ATT_HOSTILE)
             inf.body <<  "\nIt has come for your soul!\n";
         break;
 
@@ -3011,6 +2995,7 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     case MONS_BLACK_DRACONIAN:
     case MONS_YELLOW_DRACONIAN:
     case MONS_PURPLE_DRACONIAN:
+    case MONS_GREY_DRACONIAN:
     case MONS_DRACONIAN_SHIFTER:
     case MONS_DRACONIAN_SCORCHER:
     case MONS_DRACONIAN_ZEALOT:
@@ -3019,20 +3004,20 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     case MONS_DRACONIAN_MONK:
     case MONS_DRACONIAN_KNIGHT:
     {
-        inf.body << "\n" << _describe_draconian( &mons );
+        inf.body << "\n" << _describe_draconian(mi);
         break;
     }
 
     case MONS_PLAYER_GHOST:
-        inf.body << "The apparition of " << get_ghost_description(mons) << ".\n";
+        inf.body << "The apparition of " << get_ghost_description(mi) << ".\n";
         break;
 
     case MONS_PLAYER_ILLUSION:
-        inf.body << "An illusion of " << get_ghost_description(mons) << ".\n";
+        inf.body << "An illusion of " << get_ghost_description(mi) << ".\n";
         break;
 
     case MONS_PANDEMONIUM_DEMON:
-        inf.body << _describe_demon(mons) << "\n";
+        inf.body << _describe_demon(mi.mname, mi.fly) << "\n";
         break;
 
     case MONS_PROGRAM_BUG:
@@ -3046,7 +3031,7 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
         break;
     }
 
-    if (!mons_is_unique(mons.type))
+    if (!mons_is_unique(mi.type))
     {
         std::string symbol_suffix = "__";
         symbol_suffix += symbol;
@@ -3060,22 +3045,20 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     }
 
     // Get information on resistances, speed, etc.
-    std::string result = _monster_stat_description(mons);
+    std::string result = _monster_stat_description(mi);
     if (!result.empty())
     {
         inf.body << "\n" << result;
         has_stat_desc = true;
     }
 
-    if (!mons_can_use_stairs(&mons))
+    if (!mons_class_can_use_stairs(mi.type))
     {
-        inf.body << "\n" << mons_pronoun(static_cast<monster_type>(mons.type),
-                                    PRONOUN_CAP, true)
+        inf.body << "\n" << mi.pronoun(PRONOUN_CAP)
                  << " is incapable of using stairs.\n";
     }
 
-    if (mons.is_summoned() && (mons.type != MONS_RAKSHASA_FAKE
-                               && mons.type != MONS_MARA_FAKE))
+    if (mi.is(MB_SUMMONED))
     {
         inf.body << "\n" << "This monster has been summoned, and is thus only "
                        "temporary. Killing it yields no experience, nutrition "
@@ -3086,6 +3069,7 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
         inf.quote += "\n";
 
 #ifdef DEBUG_DIAGNOSTICS
+    struct monsters& mons = *mi.mon();
     const actor *mfoe = mons.get_foe();
     inf.body << "\nMonster foe: "
              << (mfoe? mfoe->name(DESC_PLAIN, true)
@@ -3163,14 +3147,13 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
 #endif
 }
 
-void describe_monsters(const monsters& mons, bool force_seen,
+void describe_monsters(const monster_info &mi, bool force_seen,
                        const std::string &footer,
-                       bool wait_until_keypressed)
+                       bool wait_until_key_pressed)
 {
     describe_info inf;
     bool has_stat_desc = false;
-
-    get_monster_db_desc(mons, inf, has_stat_desc, force_seen);
+    get_monster_db_desc(mi, inf, has_stat_desc, force_seen);
 
     if (!footer.empty())
     {
@@ -3187,23 +3170,31 @@ void describe_monsters(const monsters& mons, bool force_seen,
     // TODO enne - this should really move into get_monster_db_desc
     // and an additional tutorial string added to describe_info.
     if (Hints.hints_left)
-        hints_describe_monster(&mons, has_stat_desc);
+        hints_describe_monster(mi, has_stat_desc);
 
-    if (wait_until_keypressed)
+    if (wait_until_key_pressed)
         wait_for_keypress();
 }
+
+static const char* xl_rank_names[] = {
+    " weakling",
+    "n average",
+    "n experienced",
+    " powerful",
+    " mighty",
+    " great",
+    "n awesomely powerful",
+    " legendary"
+};
 
 // Describes the current ghost's previous owner. The caller must
 // prepend "The apparition of" or whatever and append any trailing
 // punctuation that's wanted.
-std::string get_ghost_description(const monsters &mons, bool concise)
+std::string get_ghost_description(const monster_info &mi, bool concise)
 {
-    ASSERT(mons.ghost.get());
     std::ostringstream gstr;
 
-    const ghost_demon &ghost = *(mons.ghost);
-
-    const species_type gspecies = ghost.species;
+    const species_type gspecies = mi.u.ghost.species;
 
     // We're fudging stats so that unarmed combat gets based off
     // of the ghost's species, not the player's stats... exact
@@ -3237,38 +3228,29 @@ std::string get_ghost_description(const monsters &mons, bool concise)
         break;
     }
 
-    gstr << ghost.name << " the "
-         << skill_title(ghost.best_skill,
-                        (unsigned char)ghost.best_skill_level,
+    gstr << mi.mname << " the "
+         << skill_title_by_rank(mi.u.ghost.best_skill,
+                        mi.u.ghost.best_skill_rank,
                         gspecies,
-                        str, dex, ghost.religion)
-         << ", a"
-         << ((ghost.xl <  4) ? " weakling" :
-             (ghost.xl <  7) ? "n average" :
-             (ghost.xl < 11) ? "n experienced" :
-             (ghost.xl < 16) ? " powerful" :
-             (ghost.xl < 22) ? " mighty" :
-             (ghost.xl < 26) ? " great" :
-             (ghost.xl < 27) ? "n awesomely powerful"
-                             : " legendary")
-         << " ";
+                        str, dex, mi.u.ghost.religion)
+         << ", a" << xl_rank_names[mi.u.ghost.xl_rank] << " ";
 
     if (concise)
     {
         gstr << get_species_abbrev(gspecies)
-             << get_job_abbrev(ghost.job);
+             << get_job_abbrev(mi.u.ghost.job);
     }
     else
     {
         gstr << species_name(gspecies)
              << " "
-             << get_job_name(ghost.job);
+             << get_job_name(mi.u.ghost.job);
     }
 
-    if (ghost.religion != GOD_NO_GOD)
+    if (mi.u.ghost.religion != GOD_NO_GOD)
     {
         gstr << " of "
-             << god_name(ghost.religion);
+             << god_name(mi.u.ghost.religion);
     }
 
     return (gstr.str());
@@ -3318,7 +3300,7 @@ static bool _print_god_abil_desc(int god, int numpower)
     return (true);
 }
 
-static std::string _describe_favour_generic(god_type which_god)
+static const std::string _describe_favour_generic(god_type which_god)
 {
     const std::string godname = god_name(which_god);
     return (you.piety > 130) ? "A prized avatar of " + godname + ".":
@@ -3441,7 +3423,7 @@ static std::string _religion_help(god_type god)
         break;
 
     case GOD_FEDHAS:
-        if(you.piety >= piety_breakpoint(0))
+        if (you.piety >= piety_breakpoint(0))
         {
             result += "Evolving plants requires fruit, "
                       "evolving fungi requires piety.";

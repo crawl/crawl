@@ -3500,7 +3500,7 @@ _Eustachio_common_
 
 @The_monster@ screams @at_foe@, "At last I'll have my revenge!"
 
-@The_monster@ screams @at_foe@, "Hey, you killed my favorite bat!"
+@The_monster@ screams @at_foe@, "Hey, you killed my favourite bat!"
 
 @The_monster@ says @to_foe@, "Summoning is fun!"
 
@@ -4405,6 +4405,21 @@ __NONE
 
 w:5
 @The_monster@ sings off-key, "You got some money for me?"
+%%%%
+############ MENNAS ### A silenct Angel.
+Mennas
+
+VISUAL:@The_monster@ gestures at you. @player_only@
+
+VISUAL:@The_monster@ looks to the heavens.
+
+VISUAL:@The_monster@ shakes his head sadly.
+
+VISUAL:@The_monster@ is caught in a moment of prayer.
+%%%%
+silenced Mennas
+
+@Mennas@
 %%%%
 ############ MENKAURE ### A mummy whose rest you've disturbed
 Menkaure
@@ -5503,6 +5518,8 @@ VISUAL:@The_monster@ smiles at @foe@.
 
 VISUAL:@The_monster@ grins with merry abandon.
 
+VISUAL:@The_monster@ pulls ten torches out off its hat and starts juggling.
+
 @The_monster@ howls with blood-lust!
 %%%%
 _Killer_Klown_rare_
@@ -5512,6 +5529,8 @@ _Killer_Klown_rare_
 VISUAL:@The_monster@ pantomimes @foe_possessive@ execution.
 
 VISUAL:@The_monster@ pokes out @possessive@ tongue.
+
+VISUAL:@The_monster@ grows four more heads, takes them off and juggles!
 
 @The_monster@ says @to_foe@, "Come and play with me!"
 ## END Killer Klown ##

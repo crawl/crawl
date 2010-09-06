@@ -11,6 +11,8 @@
 #include "stuff.h"
 
 #define YYERROR_VERBOSE 1
+#define YYENABLE_NLS 0
+#define YYLTYPE_IS_TRIVIAL 0
 
 int yylex();
 

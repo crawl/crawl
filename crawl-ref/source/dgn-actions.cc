@@ -42,7 +42,7 @@ static const char *daction_names[] =
     "remove Jiyva altars",
 };
 
-bool _mons_matches_counter(const monsters *mon, daction_type act)
+static bool _mons_matches_counter(const monsters *mon, daction_type act)
 {
     if (!mon || !mon->alive())
         return (false);
@@ -105,7 +105,7 @@ void add_daction(daction_type act)
     catchup_dactions();
 }
 
-void _apply_daction(daction_type act)
+static void _apply_daction(daction_type act)
 {
     ASSERT(act >= 0 && act < NUM_DACTIONS);
     dprf("applying delayed action: %s", daction_names[act]);
@@ -194,7 +194,7 @@ void _apply_daction(daction_type act)
 
 void catchup_dactions()
 {
-    while(env.dactions_done < you.dactions.size())
+    while (env.dactions_done < you.dactions.size())
         _apply_daction(you.dactions[env.dactions_done++]);
 }
 

@@ -167,16 +167,29 @@ int zin_recite_to_single_monster(const coord_def& where,
         pow = (2 * skill_bump(SK_INVOCATIONS) + you.piety / 5) / 2;
 
     const mon_holy_type holiness = mon->holiness();
+    bool impressible = true;
+    int resist;
 
-    int resist = std::min(mon->res_magic(), 11);
     if (mon->is_holy())
-        resist -= 2 + random2(3);
-    else if (holiness == MH_UNDEAD)
-        resist += 2 + random2(3);
-    else if (holiness == MH_DEMONIC)
-        resist += 3 + random2(5);
-    resist -= random2(you.skills[SK_INVOCATIONS]);
-    resist = std::max(0, resist);
+        resist = std::max(0, 7 - random2(you.skills[SK_INVOCATIONS]));
+    else
+    {
+        resist = mon->res_magic();
+
+        if (holiness == MH_UNDEAD)
+        {
+            impressible = false;
+            pow -= 2 + random2(3);
+        }
+        else if (holiness == MH_DEMONIC)
+        {
+            impressible = false;
+            pow -= 3 + random2(5);
+        }
+
+        if (mon->is_unclean() || mon->is_chaotic())
+            impressible = false;
+    }
 
     pow -= resist;
 
@@ -243,8 +256,9 @@ int zin_recite_to_single_monster(const coord_def& where,
         case 10:
         case 11:
         case 12:
-            if (!mon->add_ench(mon_enchant(ENCH_TEMP_PACIF, 0, KC_YOU,
-                               (16 + random2avg(13, 2)) * 10)))
+            if (!impressible
+                || !mon->add_ench(mon_enchant(ENCH_TEMP_PACIF, 0, KC_YOU,
+                                  (16 + random2avg(13, 2)) * 10)))
             {
                 return (0);
             }
@@ -271,20 +285,10 @@ int zin_recite_to_single_monster(const coord_def& where,
                 good_god_holy_attitude_change(mon);
             else
             {
-                if (holiness == MH_UNDEAD || holiness == MH_DEMONIC)
-                {
-                    if (!mon->add_ench(mon_enchant(ENCH_TEMP_PACIF, 0, KC_YOU,
-                                       (16 + random2avg(13, 2)) * 10)))
-                    {
-                        return (0);
-                    }
-                    simple_monster_message(mon, " seems impressed!");
-                }
-                else
-                {
-                    simple_monster_message(mon, " seems fully impressed!");
-                    mons_pacify(mon);
-                }
+                if (!impressible)
+                    return (0);
+                simple_monster_message(mon, " seems fully impressed!");
+                mons_pacify(mon);
             }
             break;
     }
@@ -1461,7 +1465,7 @@ bool fedhas_sunlight()
     if (cloud_count)
         mprf("Sunlight penetrates the thick gloom.");
 
-    return (processed_count);
+    return (true);
 }
 
 template<typename T>
@@ -1995,8 +1999,8 @@ struct monster_conversion
 // fedhas_evolve_flora() can upgrade it, and set up a monster_conversion
 // structure for it.  Return true (and fill in possible_monster) if the
 // monster can be upgraded, and return false otherwise.
-bool _possible_evolution(const monsters * input,
-                         monster_conversion & possible_monster)
+static bool _possible_evolution(const monsters * input,
+                                monster_conversion & possible_monster)
 {
     switch (input->type)
     {
@@ -2032,21 +2036,6 @@ bool mons_is_evolvable(const monsters * mon)
 {
     monster_conversion temp;
     return (_possible_evolution(mon, temp));
-}
-
-void _collect_adjacent_monsters(std::vector<monster_conversion>& available,
-                                const coord_def& center)
-{
-    for (adjacent_iterator adjacent(center, false); adjacent; ++adjacent)
-    {
-        monsters* candidate = monster_at(*adjacent);
-        monster_conversion monster_upgrade;
-        if (candidate && _possible_evolution(candidate, monster_upgrade))
-        {
-            monster_upgrade.base_monster = candidate;
-            available.push_back(monster_upgrade);
-        }
-    }
 }
 
 static bool _place_ballisto(const coord_def & pos)

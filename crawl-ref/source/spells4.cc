@@ -337,7 +337,7 @@ void cast_phase_shift(int pow)
     if (!you.duration[DUR_PHASE_SHIFT])
         mpr("You feel the strange sensation of being on two planes at once.");
     else
-        mpr("Your feel the material plane grow further away.");
+        mpr("You feel the material plane grow further away.");
 
     you.increase_duration(DUR_PHASE_SHIFT, 5 + random2(pow), 30);
     you.redraw_evasion = true;
@@ -346,7 +346,7 @@ void cast_phase_shift(int pow)
 void cast_see_invisible(int pow)
 {
     if (you.can_see_invisible())
-        mpr("Nothing seems to happen.");
+        mpr("You feel as though your vision will be sharpened longer.");
     else
     {
         mpr("Your vision seems to sharpen.");
@@ -608,8 +608,6 @@ void cast_ignite_poison(int pow)
     }
 
     int totalstrength = 0;
-    int ammo_burnt = 0;
-    int potions_burnt = 0;
     bool was_wielding = false;
 
     for (int i = 0; i < ENDOFPACK; ++i)
@@ -624,7 +622,8 @@ void cast_ignite_poison(int pow)
         {
             // Burn poison ammo.
             strength = item.quantity;
-            ammo_burnt += item.quantity;
+            mprf("Your %s burn%s!",
+                 item.name(DESC_PLAIN).c_str(), item.quantity == 1 ? "s" : "");
         }
         else if (item.base_type == OBJ_POTIONS)
         {
@@ -643,7 +642,10 @@ void cast_ignite_poison(int pow)
             }
 
             if (strength)
-                potions_burnt += item.quantity;
+            {
+                mprf("%s explode%s!",
+                     item.name(DESC_PLAIN).c_str(), item.quantity == 1 ? "s" : "");
+            }
         }
 
         if (strength)
@@ -659,17 +661,6 @@ void cast_ignite_poison(int pow)
         }
 
         totalstrength += strength;
-    }
-
-    if (ammo_burnt)
-        mpr("Some ammunition you are carrying burns!");
-
-    if (potions_burnt)
-    {
-        mprf("%s potion%s you are carrying explode%s!",
-             potions_burnt > 1 ? "Some" : "A",
-             potions_burnt > 1 ? "s" : "",
-             potions_burnt > 1 ? "" : "s");
     }
 
     if (was_wielding)
@@ -888,7 +879,7 @@ int make_a_normal_cloud(coord_def where, int pow, int spread_rate,
     return 1;
 }
 
-bool _feat_is_passwallable(dungeon_feature_type feat)
+static bool _feat_is_passwallable(dungeon_feature_type feat)
 {
     // Irony: you can passwall through a secret door but not a door.
     // Worked stone walls are out, they're not diggable and
@@ -1293,23 +1284,15 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
 bool cast_fulsome_distillation(int pow, bool check_range)
 {
     int num_corpses = 0;
-    int corpse = -1;
-
-    // Determine how many corpses are available.
-    for (stack_iterator si(you.pos(), true); si; ++si)
-    {
-        if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
-        {
-            corpse = si->index();
-            ++num_corpses;
-        }
-    }
+    item_def *corpse = corpse_at(you.pos(), &num_corpses);
+    if (num_corpses && you.flight_mode() == FL_LEVITATE)
+        num_corpses = -1;
 
     // If there is only one corpse, distill it; otherwise, ask the player
     // which corpse to use.
     switch (num_corpses)
     {
-        case 0:
+        case 0: case -1:
             // Allow using Z to victory dance fulsome.
             if (!check_range)
             {
@@ -1317,7 +1300,10 @@ bool cast_fulsome_distillation(int pow, bool check_range)
                 return (true);
             }
 
-            mpr("There aren't any corpses here!");
+            if (num_corpses == -1)
+                mpr("You can't reach the corpse!");
+            else
+                mpr("There aren't any corpses here.");
             return (false);
         case 1:
             // Use the only corpse available without prompting.
@@ -1325,24 +1311,27 @@ bool cast_fulsome_distillation(int pow, bool check_range)
         default:
             // Search items at the player's location for corpses.
             // The last corpse detected earlier is irrelevant.
-            corpse = -1;
+            corpse = NULL;
             for (stack_iterator si(you.pos(), true); si; ++si)
             {
-                if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
+                if (item_is_corpse(*si))
                 {
-                    snprintf(info, INFO_SIZE, "Distill a potion from %s?",
-                             get_menu_colour_prefix_tags(*si, DESC_NOCAP_THE).c_str());
+                    const std::string corpsedesc =
+                        get_menu_colour_prefix_tags(*si, DESC_NOCAP_THE);
+                    const std::string prompt =
+                        make_stringf("Distill a potion from %s?",
+                                     corpsedesc.c_str());
 
-                    if (yesno(info, true, 0, false))
+                    if (yesno(prompt.c_str(), true, 0, false))
                     {
-                        corpse = si->index();
+                        corpse = &*si;
                         break;
                     }
                 }
             }
     }
 
-    if (corpse == -1)
+    if (!corpse)
     {
         canned_msg(MSG_OK);
         return (false);
@@ -1350,14 +1339,14 @@ bool cast_fulsome_distillation(int pow, bool check_range)
 
     potion_type pot_type = POT_WATER;
 
-    switch (mons_corpse_effect(mitm[corpse].plus))
+    switch (mons_corpse_effect(corpse->plus))
     {
     case CE_CLEAN:
         pot_type = POT_WATER;
         break;
 
     case CE_CONTAMINATED:
-        pot_type = (mons_weight(mitm[corpse].plus) >= 900)
+        pot_type = (mons_weight(corpse->plus) >= 900)
             ? POT_DEGENERATION : POT_CONFUSION;
         break;
 
@@ -1382,7 +1371,7 @@ bool cast_fulsome_distillation(int pow, bool check_range)
         break;
     }
 
-    switch (mitm[corpse].plus)
+    switch (corpse->plus)
     {
     case MONS_RED_WASP:              // paralysis attack
         pot_type = POT_PARALYSIS;
@@ -1396,7 +1385,7 @@ bool cast_fulsome_distillation(int pow, bool check_range)
         break;
     }
 
-    struct monsterentry* smc = get_monster_data(mitm[corpse].plus);
+    struct monsterentry* smc = get_monster_data(corpse->plus);
 
     for (int nattk = 0; nattk < 4; ++nattk)
     {
@@ -1411,26 +1400,26 @@ bool cast_fulsome_distillation(int pow, bool check_range)
         }
     }
 
-    const bool was_orc = (mons_species(mitm[corpse].plus) == MONS_ORC);
+    const bool was_orc = (mons_species(corpse->plus) == MONS_ORC);
 
     // We borrow the corpse's object to make our potion.
-    mitm[corpse].base_type = OBJ_POTIONS;
-    mitm[corpse].sub_type  = pot_type;
-    mitm[corpse].quantity  = 1;
-    mitm[corpse].plus      = 0;
-    mitm[corpse].plus2     = 0;
-    mitm[corpse].flags     = 0;
-    mitm[corpse].inscription.clear();
-    item_colour(mitm[corpse]); // sets special as well
+    corpse->base_type = OBJ_POTIONS;
+    corpse->sub_type  = pot_type;
+    corpse->quantity  = 1;
+    corpse->plus      = 0;
+    corpse->plus2     = 0;
+    corpse->flags     = 0;
+    corpse->inscription.clear();
+    item_colour(*corpse); // sets special as well
 
     // Always identify said potion.
-    set_ident_type(mitm[corpse], ID_KNOWN_TYPE);
+    set_ident_type(*corpse, ID_KNOWN_TYPE);
 
     mprf("You extract %s from the corpse.",
-         mitm[corpse].name(DESC_NOCAP_A).c_str());
+         corpse->name(DESC_NOCAP_A).c_str());
 
     // Try to move the potion to the player (for convenience).
-    if (move_item_to_player(corpse, 1) != 1)
+    if (move_item_to_player(corpse->index(), 1) != 1)
         mpr("Unfortunately, you can't carry it right now!");
 
     if (was_orc)

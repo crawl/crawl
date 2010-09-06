@@ -34,10 +34,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "travel.h"
-
-#ifdef DGL_MILESTONES
 #include "hiscores.h"
-#endif
 
 #ifdef ASSERTS
 static std::string _assert_msg;
@@ -159,8 +156,8 @@ static void _dump_player(FILE *file)
 
     if (you.delay_queue.size() > 0)
     {
-        fprintf(file, "Delayed (%lu):\n",
-                (unsigned long) you.delay_queue.size());
+        fprintf(file, "Delayed (%u):\n",
+                (unsigned int)you.delay_queue.size());
         for (unsigned int i = 0; i < you.delay_queue.size(); ++i)
         {
             const delay_queue_item &item = you.delay_queue[i];
@@ -288,7 +285,7 @@ static void _dump_player(FILE *file)
     fprintf(file, "Equipment:\n");
     for (int i = 0; i < NUM_EQUIP; ++i)
     {
-        char eq = you.equip[i];
+        int8_t eq = you.equip[i];
 
         if (eq == -1)
             continue;
@@ -505,6 +502,15 @@ static void _dump_command_line(FILE *file)
     fprintf(file, "\n\n");
 }
 
+// Dump any game options that could affect stability.
+static void _dump_options(FILE *file)
+{
+    fprintf(file, "RC options:\n");
+    fprintf(file, "restart_after_game = %s\n",
+            Options.restart_after_game? "true" : "false");
+    fprintf(file, "\n\n");
+}
+
 // Defined in stuff.cc.  Not a part of crawl_state, since that's a
 // global C++ instance which is free'd by exit() hooks when exit()
 // is called, and we don't want to reference free'd memory.
@@ -538,8 +544,10 @@ void do_crash_dump()
 
     char name[180];
 
+    // Want same time for file name and crash milestone.
+    const time_t t = time(NULL);
     snprintf(name, sizeof(name), "%scrash-%s-%s.txt", dir.c_str(),
-            you.your_name.c_str(), make_file_time(time(NULL)).c_str());
+            you.your_name.c_str(), make_file_time(t).c_str());
 
     fprintf(stderr, "\nWriting crash info to %s\n", name);
     errno = 0;
@@ -566,6 +574,8 @@ void do_crash_dump()
     _dump_ver_stuff(file);
 
     _dump_command_line(file);
+
+    _dump_options(file);
 
     // First get the immediate cause of the crash and the stack trace,
     // since that's most important and later attempts to get more information
@@ -636,8 +646,8 @@ void do_crash_dump()
 
     set_msg_dump_file(NULL);
 
-#ifdef DGL_MILESTONES
-    mark_milestone("crash", _assert_msg);
+#ifdef ASSERTS
+    mark_milestone("crash", _assert_msg, false, t);
 #endif
 
     if (file != stderr)
@@ -672,9 +682,12 @@ static void _BreakStrToDebugger(const char *mesg)
 // AssertFailed
 //
 //---------------------------------------------------------------
-void AssertFailed(const char *expr, const char *file, int line)
+void AssertFailed(const char *expr, const char *file, int line, bool save_game)
 {
     char mesg[512];
+
+    if (save_game)
+        crawl_state.game_wants_emergency_save = true;
 
     const char *fileName = file + strlen(file); // strip off path
 

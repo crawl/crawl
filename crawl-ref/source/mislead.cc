@@ -34,6 +34,7 @@ bool unsuitable_misled_monster(monster_type mons)
             || mons == MONS_SHAPESHIFTER || mons == MONS_PANDEMONIUM_DEMON
             || mons == MONS_KILLER_KLOWN || mons == MONS_KRAKEN
             || mons == MONS_KRAKEN_TENTACLE || mons == MONS_HYDRA
+            || mons == MONS_KRAKEN_CONNECTOR
             || mons == MONS_GIANT_BAT
             || mons == MONS_GLOWING_SHAPESHIFTER
 );

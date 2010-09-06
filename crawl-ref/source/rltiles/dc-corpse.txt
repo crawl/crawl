@@ -67,6 +67,9 @@ orange_rat CORPSE_ORANGE_RAT
 giant_centipede CORPSE_GIANT_CENTIPEDE
 giant_mite CORPSE_GIANT_MITE
 scorpion CORPSE_SCORPION
+giant_scorpion CORPSE_GIANT_SCORPION
+tarantella CORPSE_TARANTELLA
+jumping_spider CORPSE_JUMPING_SPIDER
 wolf_spider CORPSE_WOLF_SPIDER
 trapdoor_spider CORPSE_TRAPDOOR_SPIDER
 redback CORPSE_REDBACK
@@ -98,6 +101,7 @@ giant_blowfly CORPSE_GIANT_BLOWFLY
 giant_mosquito CORPSE_GIANT_MOSQUITO
 yellow_wasp CORPSE_YELLOW_WASP
 red_wasp CORPSE_RED_WASP
+ghost_moth CORPSE_GHOST_MOTH
 moth_of_wrath CORPSE_MOTH_OF_WRATH
 
 ## Aquatics (';')

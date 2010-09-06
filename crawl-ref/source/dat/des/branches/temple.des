@@ -391,6 +391,7 @@ ENDMAP
 NAME:   minmay_temple_entry_poolview
 TAGS:   temple_entry no_pool_fixup
 ORIENT: float
+KPROP:  ? = no_rtele_into
 SUBST:  ? : lw
 SUBST:  c : cx
 MAP
@@ -1075,6 +1076,7 @@ KMONS:   1 = giant goldfish / electric eel / big fish
 SUBST:   W = w
 :end
 KPROP: wW1 = no_submerge
+KPROP: wW1 = no_rtele_into
 #
 : local brnd = crawl.random2(10)
 : if brnd == 0 then

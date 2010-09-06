@@ -78,16 +78,18 @@ spriggan_m SPRIGGAN
 spriggan_f
 minotaur_m MINOTAUR
 minotaur_f
+minotaur_brown1_m
+minotaur_brown2_m
 demonspawn_pink DEMONSPAWN
 demonspawn_red_f
 demonspawn_red_m
 demonspawn_black_f
 demonspawn_black_m
 ghoul GHOUL
-kenku_winged_f KENKU
-kenku_winged_m
-kenku_wingless_f
+kenku_wingless_f KENKU
 kenku_wingless_m
+kenku_winged_f
+kenku_winged_m
 merfolk_m MERFOLK
 merfolk_f
 merfolk_water_m MERFOLK_WATER
@@ -777,6 +779,7 @@ ponytail_yellow PONYTAIL_YELLOW
 knot_red KNOT_RED
 brown1 BROWN1
 brown2 BROWN2
+green GREEN
 %end_ctg
 
 ###Beard
@@ -787,10 +790,12 @@ short_black SHORT_BLACK
 short_red SHORT_RED
 short_yellow SHORT_YELLOW
 short_white SHORT_WHITE
+short_green SHORT_GREEN
 long_black LONG_BLACK
 long_red LONG_RED
 long_yellow LONG_YELLOW
 long_white LONG_WHITE
+long_green LONG_GREEN
 pj PJ
 %end_ctg
 

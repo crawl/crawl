@@ -32,6 +32,8 @@ typedef std::map<level_id, i_transit_list> items_in_transit;
 extern monsters_in_transit the_lost_ones;
 extern items_in_transit    transiting_items;
 
+void transit_lists_clear();
+
 m_transit_list *get_transit_list(const level_id &where);
 void add_monster_to_transit(const level_id &dest, const monsters &m);
 void add_item_to_transit(const level_id &dest, const item_def &i);

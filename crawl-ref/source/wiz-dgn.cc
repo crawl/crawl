@@ -135,7 +135,7 @@ void wizard_place_stairs( bool down )
 
 // Try to find and use stairs already in the portal vault level,
 // since this might be a multi-level portal vault like a ziggurat.
-bool _take_portal_vault_stairs( const bool down )
+static bool _take_portal_vault_stairs( const bool down )
 {
     ASSERT(you.level_type == LEVEL_PORTAL_VAULT);
 
@@ -406,7 +406,7 @@ void wizard_list_branches()
             }
         }
 
-        mprf(MSGCH_DIAGNOSTICS, "%lu on D:%lu (%s)", temples.size(),
+        mprf(MSGCH_DIAGNOSTICS, "%u on D:%u (%s)", temples.size(),
              i + 1,
              comma_separated_line( god_names.begin(),
                                    god_names.end() ).c_str()
@@ -762,13 +762,13 @@ void wizard_list_levels()
     std::vector<level_id> levs = travel_cache.known_levels();
 
     mpr("Known levels:");
-    for(unsigned int i = 0; i < levs.size(); i++)
+    for (unsigned int i = 0; i < levs.size(); i++)
     {
         const LevelInfo* lv = travel_cache.find_level_info(levs[i]);
         ASSERT(lv);
 
         std::string cnts = "";
-        for(int j = 0; j < NUM_DA_COUNTERS; j++)
+        for (int j = 0; j < NUM_DA_COUNTERS; j++)
         {
             char num[20];
             sprintf(num, "%d/", lv->da_counters[j]);
@@ -779,7 +779,7 @@ void wizard_list_levels()
     }
 
     std::string cnts = "";
-    for(int j = 0; j < NUM_DA_COUNTERS; j++)
+    for (int j = 0; j < NUM_DA_COUNTERS; j++)
     {
         char num[20];
         sprintf(num, "%d/", query_da_counter((daction_type)j));
