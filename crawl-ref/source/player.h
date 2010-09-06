@@ -800,11 +800,11 @@ int get_real_hp(bool trans, bool rotted = false);
 int get_real_mp(bool include_items);
 
 int get_contamination_level();
+std::string describe_contamination(int level);
 
 void set_mp(int new_amount, bool max_too);
 
 void contaminate_player(int change, bool controlled = false,
-                        bool status_only = false,
                         bool msg = true);
 
 bool confuse_player(int amount, bool resistable = true);

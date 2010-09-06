@@ -44,6 +44,7 @@
 #include "stairs.h"
 #include "startup.h"
 #include "state.h"
+#include "status.h"
 #include "stuff.h"
 #include "terrain.h"
 #ifdef USE_TILE
@@ -74,6 +75,7 @@ static void _initialize()
     init_spell_descs();        // This needs to be way up top. {dlb}
     init_zap_index();
     init_mut_index();
+    init_duration_index();
     init_mon_name_cache();
     init_mons_spells();
 
