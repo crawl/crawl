@@ -2399,7 +2399,7 @@ std::string map_def::validate_temple_map()
         {
             temple_tag = replace_all(temple_tag, "_", " ");
 
-            god_type god = string_to_god(temple_tag.c_str(), true);
+            god_type god = str_to_god(temple_tag);
 
             if (god == GOD_NO_GOD)
             {
@@ -4148,7 +4148,7 @@ static int str_to_ego(item_spec &spec, std::string ego_str)
 int item_list::parse_acquirement_source(const std::string &source)
 {
     const std::string god_name(replace_all_of(source, "_", " "));
-    const god_type god(string_to_god(god_name.c_str(), true));
+    const god_type god(str_to_god(god_name));
     if (god == GOD_NO_GOD)
         error = make_stringf("unknown god name: '%s'", god_name.c_str());
     return (god);

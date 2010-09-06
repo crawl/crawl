@@ -11,7 +11,6 @@
 #include "delay.h"
 #include "env.h"
 #include "food.h"
-#include "initfile.h"
 #include "libutil.h"
 #include "mapmark.h"
 #include "mon-util.h"

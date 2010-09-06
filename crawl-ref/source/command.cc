@@ -1316,7 +1316,7 @@ static void _do_description(std::string key, std::string type,
 
     int width = std::min(80, get_number_of_cols());
 
-    god_type which_god = string_to_god(key.c_str());
+    god_type which_god = str_to_god(key);
     if (which_god != GOD_NO_GOD)
     {
         if (is_good_god(which_god))

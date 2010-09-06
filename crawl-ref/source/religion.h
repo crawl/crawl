@@ -33,7 +33,7 @@ void simple_god_message(const char *event, god_type which_deity = you.religion);
 int piety_breakpoint(int i);
 std::string god_name(god_type which_god, bool long_name = false);
 std::string god_name_jiyva(bool second_name = false);
-god_type string_to_god(const char *name, bool exact = true);
+god_type str_to_god(const std::string name, bool exact = true);
 
 std::string get_god_powers(god_type which_god);
 std::string get_god_likes(god_type which_god, bool verbose = false);

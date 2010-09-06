@@ -678,7 +678,7 @@ void wizard_make_object_randart()
     char name[80];
     if (!cancelable_get_line(name, sizeof( name )) && name[0])
     {
-        god_type god = string_to_god(name, false);
+        god_type god = str_to_god(name, false);
         if (god == GOD_NO_GOD)
            mpr("No such god, leaving item origin alone.");
         else
