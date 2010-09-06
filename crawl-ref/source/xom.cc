@@ -1487,19 +1487,19 @@ static int _xom_polymorph_nearby_monster(bool helpful, bool debug = false)
     return (XOM_DID_NOTHING);
 }
 
-static void _confuse_monster(monster mons, int sever)
+static void _confuse_monster(monster* mons, int sever)
 {
-    if (!mons_class_is_confusable(mons.type))
+    if (!mons_class_is_confusable(mons->type))
         return;
 
-    const bool was_confused = mons.confused();
-    if (mons.add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_FRIENDLY,
+    const bool was_confused = mons->confused();
+    if (mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_FRIENDLY,
                                   random2(sever))))
     {
         if (was_confused)
-            simple_monster_message(&mons, " looks rather more confused.");
+            simple_monster_message(mons, " looks rather more confused.");
         else
-            simple_monster_message(&mons, " looks rather confused.");
+            simple_monster_message(mons, " looks rather confused.");
     }
 }
 
@@ -1715,7 +1715,7 @@ static int _xom_rearrange_pieces(int sever, bool debug = false)
 
     // Sometimes confuse said monster.
     if (coinflip())
-        _confuse_monster(*mon, sever);
+        _confuse_monster(mon, sever);
 
     if (num_mons > 1 && x_chance_in_y(sever, 70))
     {
@@ -1737,9 +1737,9 @@ static int _xom_rearrange_pieces(int sever, bool debug = false)
                     did_message = true;
                 }
                 if (one_chance_in(3))
-                    _confuse_monster(*mons[mon1], sever);
+                    _confuse_monster(mons[mon1], sever);
                 if (one_chance_in(3))
-                    _confuse_monster(*mons[mon2], sever);
+                    _confuse_monster(mons[mon2], sever);
             }
         }
     }
