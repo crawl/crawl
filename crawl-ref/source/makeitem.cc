@@ -1236,6 +1236,9 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
         case WPN_DIRE_FLAIL:
         case WPN_HAMMER:
             if (one_chance_in(25))
+                rc = SPWPN_ANTIMAGIC;
+
+            if (one_chance_in(25))
                 rc = SPWPN_PAIN;
 
             if (_got_distortion_roll(item_level))
@@ -1267,6 +1270,9 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
 
         case WPN_SHORT_SWORD:
         case WPN_SABRE:
+            if (one_chance_in(25))
+                rc = SPWPN_ANTIMAGIC;
+
             if (_got_distortion_roll(item_level))
                 rc = SPWPN_DISTORTION;
 
@@ -1307,6 +1313,9 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
         case WPN_GREAT_SWORD:
         case WPN_DOUBLE_SWORD:
         case WPN_TRIPLE_SWORD:
+            if (one_chance_in(25))
+                rc = SPWPN_ANTIMAGIC;
+
             if (one_chance_in(10))
                 rc = SPWPN_VAMPIRICISM;
 
@@ -1343,6 +1352,9 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
                 rc = SPWPN_DRAINING;
             // **** intentional fall through here ****
         case WPN_HAND_AXE:
+            if (one_chance_in(25))
+                rc = SPWPN_ANTIMAGIC;
+
             if (one_chance_in(30))
                 rc = SPWPN_PAIN;
 
@@ -1369,6 +1381,9 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             break;
 
         case WPN_WHIP:
+            if (one_chance_in(25))
+                rc = SPWPN_ANTIMAGIC;
+
             if (one_chance_in(12))
                 rc = SPWPN_HOLY_WRATH;
 
@@ -1409,6 +1424,9 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
                 rc = SPWPN_PROTECTION;
             // **** intentional fall through here ****
         case WPN_SPEAR:
+            if (one_chance_in(25))
+                rc = SPWPN_ANTIMAGIC;
+
             if (one_chance_in(25))
                 rc = SPWPN_PAIN;
 
@@ -1461,6 +1479,9 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
         // Quarterstaff - not powerful, as this would make the 'staves'
         // skill just too good.
         case WPN_QUARTERSTAFF:
+            if (one_chance_in(15))
+                rc = SPWPN_ANTIMAGIC;
+
             if (one_chance_in(30))
                 rc = SPWPN_PAIN;
 
