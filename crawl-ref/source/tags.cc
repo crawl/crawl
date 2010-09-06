@@ -4,44 +4,12 @@
  *  Written by: Gordon Lipford
  */
 
-/* ------------------------- how tags work ----------------------------------
-
-1. Tag types are enumerated in tags.h.
-
-2. Tags are written to a FILE* using tag_write(tag_type t).  The serialization
-   request is forwarded appropriately.
-
-3. Tags are read from a FILE* with tag_read(), which does not need a tag_type
-   argument.  A header is read, which tells tag_read what to construct.
-
-4. In order to know which tags are used by a particular file type, a client
-   calls tag_set_expected( fileType ), which sets up an array of 8-bit ints.
-   Within the array, a value of 1 means the tag is expected; -1 means that
-   the tag is not expected.  A client can then set values in this array to
-   anything other than 1 to indicate a successful tag_read() of that tag.
-
-5. A case should be provided in tag_missing() for any tag which might be
-   missing from a tagged save file.  For example, if a developer adds
-   TAG_YOU_NEW_STUFF to the player save file, he would have to provide a
-   case in tag_missing() for this tag since it might not be there in
-   earlier savefiles.   The tags defined with the original tag system (and
-   so not needing cases in tag_missing()) are as follows:
-
-    TAG_YOU = 1,              // 'you' structure
-    TAG_YOU_ITEMS,            // your items
-    TAG_YOU_DUNGEON,          // dungeon specs (stairs, branches, features)
-    TAG_LEVEL,                // various grids & clouds
-    TAG_LEVEL_ITEMS,          // items/traps
-    TAG_LEVEL_MONSTERS,       // monsters
-    TAG_GHOST,                // ghost
-
-6. The marshalling and unmarshalling of data is done in network order and
-   is meant to keep savefiles cross-platform.  They are non-ascii - always
-   FTP in binary mode.  Note also that the marshalling sizes are 1, 2, and 4
-   for byte, short, and long - assuming that 'int' would have been
-   insufficient on 16 bit systems (and that Crawl otherwise lacks
-   system-independent data types).
-
+/*
+   The marshalling and unmarshalling of data is done in big endian and
+   is meant to keep savefiles cross-platform.  Note also that the marshalling
+   sizes are 1, 2, and 4 for byte, short, and int.  If a strange platform
+   with different sizes of these basic types pops up, please sed it to fixed-
+   width ones.  For now, that wasn't done in order to keep things convenient.
 */
 
 #include "AppHdr.h"
@@ -66,6 +34,7 @@
 #include "describe.h"
 #include "dungeon.h"
 #include "enum.h"
+#include "errors.h"
 #include "map_knowledge.h"
 #include "externs.h"
 #include "files.h"
@@ -110,15 +79,25 @@ level_id_set Generated_Levels;
 static int _tag_minor_version = -1;
 
 reader::reader(const std::string &filename, int minorVersion)
-    : _file(NULL), opened_file(false), _pbuf(NULL), _read_offset(0),
+    : _chunk(0), _pbuf(NULL), _read_offset(0),
       _minorVersion(minorVersion), seen_enums()
 {
     _file       = fopen(filename.c_str(), "rb");
     opened_file = !!_file;
 }
 
+reader::reader(package *save, const std::string &chunkname, int minorVersion)
+    : _file(0), _chunk(0), opened_file(false), _pbuf(0), _read_offset(0),
+     _minorVersion(minorVersion)
+{
+    ASSERT(save);
+    _chunk = new chunk_reader(save, chunkname);
+}
+
 reader::~reader()
 {
+    if (_chunk)
+        delete _chunk;
     if (opened_file && _file)
         fclose(_file);
 }
@@ -138,9 +117,25 @@ bool reader::valid() const
 unsigned char reader::readByte()
 {
     if (_file)
-        return static_cast<unsigned char>(fgetc(_file));
+    {
+        int b = fgetc(_file);
+        if (b == EOF)
+            throw short_read_exception();
+        return b;
+    }
+    else if (_chunk)
+    {
+        unsigned char buf;
+        if (_chunk->read(&buf, 1) != 1)
+            throw short_read_exception();
+        return buf;
+    }
     else
+    {
+        if (_read_offset >= _pbuf->size())
+            throw short_read_exception();
         return (*_pbuf)[_read_offset++];
+    }
 }
 
 void reader::read(void *data, size_t size)
@@ -148,9 +143,17 @@ void reader::read(void *data, size_t size)
     if (_file)
     {
         if (data)
-            fread(data, 1, size, _file);
+        {
+            if (fread(data, 1, size, _file) != size)
+                throw short_read_exception();
+        }
         else
             fseek(_file, (long)size, SEEK_CUR);
+    }
+    else if (_chunk)
+    {
+        if (_chunk->read(data, size) != size)
+            throw short_read_exception();
     }
     else
     {
@@ -165,6 +168,17 @@ void reader::read(void *data, size_t size)
 int reader::getMinorVersion()
 {
     return _minorVersion;
+}
+
+void reader::fail_if_not_eof(const std::string name)
+{
+    char dummy;
+    if (_chunk ? _chunk->read(&dummy, 1) :
+        _file ? (fgetc(_file) != EOF) :
+        _read_offset >= _pbuf->size())
+    {
+        fail(("Incomplete read of \"" + name + "\" - aborting.").c_str());
+    }
 }
 
 void writer::check_ok(bool ok)
@@ -182,7 +196,9 @@ void writer::writeByte(unsigned char ch)
     if (failed)
         return;
 
-    if (_file)
+    if (_chunk)
+        _chunk->write(&ch, 1);
+    else if (_file)
         check_ok(fputc(ch, _file) != EOF);
     else
         _pbuf->push_back(ch);
@@ -193,7 +209,9 @@ void writer::write(const void *data, size_t size)
     if (failed)
         return;
 
-    if (_file)
+    if (_chunk)
+        _chunk->write(data, size);
+    else if (_file)
         check_ok(fwrite(data, 1, size, _file) == size);
     else
     {
@@ -204,6 +222,7 @@ void writer::write(const void *data, size_t size)
 
 long writer::tell()
 {
+    ASSERT(!_chunk);
     return _file? ftell(_file) : _pbuf->size();
 }
 
@@ -222,12 +241,14 @@ static void CHECK_INITIALIZED(uint32_t x)
 #endif
 
 // static helpers
+static void tag_construct_char(writer &th);
 static void tag_construct_you(writer &th);
 static void tag_construct_you_items(writer &th);
 static void tag_construct_you_dungeon(writer &th);
 static void tag_construct_lost_monsters(writer &th);
 static void tag_construct_lost_items(writer &th);
 static void tag_construct_game_state(writer &th);
+static void tag_read_char(reader &th, int minorVersion);
 static void tag_read_you(reader &th, int minorVersion);
 static void tag_read_you_items(reader &th, int minorVersion);
 static void tag_read_you_dungeon(reader &th, int minorVersion);
@@ -875,27 +896,30 @@ time_t parse_date_string( char buff[20] )
 
 // Write a tagged chunk of data to the FILE*.
 // tagId specifies what to write.
-void tag_write(const std::string &filename, tag_type tagID, FILE* outf)
+void tag_write(tag_type tagID, writer &outf)
 {
-    ASSERT(outf);
-
     std::vector<unsigned char> buf;
     writer th(&buf);
     switch (tagID)
     {
-    case TAG_YOU:            tag_construct_you(th);            break;
-    case TAG_YOU_ITEMS:      tag_construct_you_items(th);      break;
-    case TAG_YOU_DUNGEON:    tag_construct_you_dungeon(th);    break;
-    case TAG_LEVEL:          tag_construct_level(th);          break;
-    case TAG_LEVEL_ITEMS:    tag_construct_level_items(th);    break;
-    case TAG_LEVEL_MONSTERS: tag_construct_level_monsters(th); break;
-    case TAG_LEVEL_TILES:    tag_construct_level_tiles(th);    break;
-    case TAG_GHOST:          tag_construct_ghost(th);          break;
-    case TAG_LOST_MONSTERS:
+    case TAG_CHR:
+        tag_construct_char(th);
+        tag_construct_game_state(th);
+        break;
+    case TAG_YOU:
+        tag_construct_you(th);
+        tag_construct_you_items(th);
+        tag_construct_you_dungeon(th);
         tag_construct_lost_monsters(th);
         tag_construct_lost_items(th);
         break;
-    case TAG_GAME_STATE:     tag_construct_game_state(th);     break;
+    case TAG_LEVEL:
+        tag_construct_level(th);
+        tag_construct_level_items(th);
+        tag_construct_level_monsters(th);
+        tag_construct_level_tiles(th);
+        break;
+    case TAG_GHOST:          tag_construct_ghost(th);          break;
     default:
         // I don't know how to make that!
         break;
@@ -906,44 +930,25 @@ void tag_write(const std::string &filename, tag_type tagID, FILE* outf)
         return;
 
     // Write tag header.
-    {
-        writer tmp(filename, outf);
-        marshallShort(tmp, tagID);
-        marshallInt(tmp, buf.size());
-    }
+    marshallInt(outf, buf.size());
 
     // Write tag data.
-    write2(outf, &buf[0], buf.size());
+    outf.write(&buf[0], buf.size());
 }
 
-// Read a single tagged chunk of data from fp into memory.
-// TAG_NO_TAG is returned if there's nothing left to read in the file
-// (or on an error).
+// Read a piece of data from inf into memory, then run the appropiate reader.
 //
 // minorVersion is available for any sub-readers that need it
-// (like TAG_LEVEL_MONSTERS).
-tag_type tag_read(FILE *fp, int minorVersion, int8_t expected_tags[NUM_TAGS])
+void tag_read(reader &inf, int minorVersion, tag_type tag_id)
 {
     // Read header info and data
-    short tag_id = NUM_TAGS;
     std::vector<unsigned char> buf;
-    {
-        reader tmp(fp, minorVersion);
-        tag_id = unmarshallShort(tmp);
-        if (tag_id < 0 || tag_id >= NUM_TAGS)
-            return TAG_NO_TAG;
-        const int data_size = unmarshallInt(tmp);
-        if (data_size < 0)
-            return TAG_NO_TAG;
+    const int data_size = unmarshallInt(inf);
+    ASSERT(data_size >= 0);
 
-        // Fetch data in one go
-        buf.resize(data_size);
-        if (read2(fp, &buf[0], buf.size()) != (int)buf.size())
-            return TAG_NO_TAG;
-
-        if (!expected_tags[tag_id])
-            return TAG_SKIP;
-    }
+    // Fetch data in one go
+    buf.resize(data_size);
+    inf.read(&buf[0], buf.size());
 
     unwind_var<int> tag_minor_version(_tag_minor_version, minorVersion);
 
@@ -951,111 +956,49 @@ tag_type tag_read(FILE *fp, int minorVersion, int8_t expected_tags[NUM_TAGS])
     reader th(buf, minorVersion);
     switch (tag_id)
     {
-    case TAG_YOU:            tag_read_you(th, minorVersion);            break;
-    case TAG_YOU_ITEMS:      tag_read_you_items(th, minorVersion);      break;
-    case TAG_YOU_DUNGEON:    tag_read_you_dungeon(th, minorVersion);    break;
-    case TAG_LEVEL:          tag_read_level(th, minorVersion);          break;
-    case TAG_LEVEL_ITEMS:    tag_read_level_items(th, minorVersion);    break;
-    case TAG_LEVEL_MONSTERS: tag_read_level_monsters(th, minorVersion); break;
-    case TAG_LEVEL_TILES:    tag_read_level_tiles(th);                  break;
-    case TAG_GHOST:          tag_read_ghost(th, minorVersion);          break;
-    case TAG_LOST_MONSTERS:
+    case TAG_CHR:
+        tag_read_char(th, minorVersion);
+        tag_read_game_state(th);
+        break;
+    case TAG_YOU:
+        tag_read_you(th, minorVersion);
+        tag_read_you_items(th, minorVersion);
+        tag_read_you_dungeon(th, minorVersion);
         tag_read_lost_monsters(th);
         tag_read_lost_items(th);
         break;
-    case TAG_GAME_STATE:     tag_read_game_state(th);                   break;
+    case TAG_LEVEL:
+        tag_read_level(th, minorVersion);
+        tag_read_level_items(th, minorVersion);
+        tag_read_level_monsters(th, minorVersion);
+        tag_read_level_tiles(th);
+        break;
+    case TAG_GHOST:          tag_read_ghost(th, minorVersion);          break;
     default:
         // I don't know how to read that!
-        ASSERT(false);
-        return TAG_NO_TAG;
+        ASSERT(!"unknown tag type");
     }
-
-    return static_cast<tag_type>(tag_id);
 }
 
-
-// Older savefiles might want to call this to get a tag properly
-// initialised if it wasn't part of the savefile.  For now, none are
-// supported.
-
-// This function will be called AFTER all other tags for the savefile
-// are read, so everything that can be initialised should have been by
-// now.
-
-// minorVersion is available for any child functions that need it
-// (currently none).
-void tag_missing(int tag, int minorVersion)
+static void tag_construct_char(writer &th)
 {
-    switch (tag)
-    {
-        case TAG_LEVEL_TILES:
-            tag_missing_level_tiles();
-            break;
-        default:
-            end(-1, false,
-                "Tag (%d) is missing, save file is probably corrupted",
-                tag);
-    }
+    marshallString(th, you.your_name, kNameLen);
+    marshallString(th, Version::Long());
+
+    marshallByte(th, you.species);
+    marshallByte(th, you.char_class);
+    marshallByte(th, you.experience_level);
+    marshallString(th, you.class_name, 30);
+    marshallByte(th, you.religion);
+    marshallString(th, you.second_god_name);
+
+    marshallByte(th, you.wizard);
 }
 
-// utility
-void tag_set_expected(int8_t tags[], int fileType)
-{
-    int i;
-
-    for (i = 0; i < NUM_TAGS; i++)
-    {
-        tags[i] = 0;
-        switch (fileType)
-        {
-            case TAGTYPE_PLAYER:
-                if (i >= TAG_YOU && i <= TAG_YOU_DUNGEON
-                    || i == TAG_LOST_MONSTERS || i == TAG_GAME_STATE)
-                {
-                    tags[i] = 1;
-                }
-                break;
-            case TAGTYPE_PLAYER_NAME:
-                if (i == TAG_YOU || i == TAG_GAME_STATE)
-                    tags[i] = 1;
-                break;
-            case TAGTYPE_LEVEL:
-                if (i >= TAG_LEVEL && i < TAG_GHOST)
-                    tags[i] = 1;
-#ifdef USE_TILE
-                if (i == TAG_LEVEL_TILES)
-                    tags[i] = 1;
-#endif
-                break;
-            case TAGTYPE_GHOST:
-                if (i == TAG_GHOST)
-                    tags[i] = 1;
-                break;
-            default:
-                // I don't know what kind of file that is!
-                break;
-        }
-    }
-}
-
-// NEVER _MODIFY_ THE CONSTRUCT/READ FUNCTIONS, EVER.  THAT IS THE WHOLE POINT
-// OF USING TAGS.  Apologies for the screaming.
-
-// Note anyway that the formats are somewhat flexible;  you could change map
-// size, the # of slots in player inventory, etc.  Constants like GXM,
-// NUM_EQUIP, and NUM_DURATIONS are saved, so the appropriate amount will
-// be restored even if a later version increases these constants.
-
-// --------------------------- player tags (foo.sav) -------------------- //
 static void tag_construct_you(writer &th)
 {
     int i, j;
 
-    marshallString(th, you.your_name, kNameLen);
-    marshallString(th, Version::Long());
-
-    marshallByte(th, you.religion);
-    marshallString(th, you.second_god_name);
     marshallByte(th, you.piety);
     marshallByte(th, you.rotting);
     marshallShort(th, you.pet_target);
@@ -1082,8 +1025,6 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.entry_cause_god);
 
     marshallInt(th, you.disease);
-    marshallByte(th, you.species);
-
     marshallShort(th, you.hp);
 
     marshallShort(th, you.hunger);
@@ -1116,8 +1057,6 @@ static void tag_construct_you(writer &th)
     marshallInt(th, you.experience);
     marshallInt(th, you.gold);
 
-    marshallByte(th, you.char_class);
-    marshallByte(th, you.experience_level);
     marshallInt(th, you.exp_available);
 
     marshallShort(th, you.base_hp);
@@ -1127,8 +1066,6 @@ static void tag_construct_you(writer &th)
 
     marshallShort(th, you.pos().x);
     marshallShort(th, you.pos().y);
-
-    marshallString(th, you.class_name, 30);
 
     marshallShort(th, you.burden);
 
@@ -1208,8 +1145,6 @@ static void tag_construct_you(writer &th)
     // elapsed time
     marshallInt(th, you.elapsed_time);
 
-    // wizard mode used
-    marshallByte(th, you.wizard);
 
     // time of game start
     marshallString(th, make_date_string( you.birth_time ).c_str(), 20);
@@ -1598,19 +1533,27 @@ static void tag_construct_game_state(writer &th)
     marshallByte( th, crawl_state.type );
 }
 
+static void tag_read_char(reader &th, int minorVersion)
+{
+    you.your_name         = unmarshallString(th, kNameLen);
+    const std::string old_version = unmarshallString(th);
+    dprf("Last save Crawl version: %s", old_version.c_str());
+
+    you.species           = static_cast<species_type>(unmarshallByte(th));
+    you.char_class        = static_cast<job_type>(unmarshallByte(th));
+    you.experience_level  = unmarshallByte(th);
+    unmarshallCString(th, you.class_name, 30);
+    you.religion          = static_cast<god_type>(unmarshallByte(th));
+    you.second_god_name   = unmarshallString(th);
+
+    you.wizard            = unmarshallBoolean(th);
+}
+
 static void tag_read_you(reader &th, int minorVersion)
 {
     char buff[20];      // For birth date.
     int i,j;
     int count;
-
-    you.your_name         = unmarshallString(th, kNameLen);
-    const std::string old_version = unmarshallString(th);
-    dprf("Last save Crawl version: %s", old_version.c_str());
-
-    you.religion          = static_cast<god_type>(unmarshallByte(th));
-
-    you.second_god_name = unmarshallString(th);
 
     you.piety             = unmarshallByte(th);
     you.rotting           = unmarshallByte(th);
@@ -1644,7 +1587,6 @@ static void tag_read_you(reader &th, int minorVersion)
     you.entry_cause_god = static_cast<god_type>( unmarshallByte(th) );
     you.disease         = unmarshallInt(th);
 
-    you.species         = static_cast<species_type>(unmarshallByte(th));
     you.hp              = unmarshallShort(th);
     you.hunger          = unmarshallShort(th);
 
@@ -1665,12 +1607,7 @@ static void tag_read_you(reader &th, int minorVersion)
     for (i = 0; i < NUM_STATS; ++i)
         you.stat_zero[i] = unmarshallByte(th);
     for (i = 0; i < NUM_STATS; ++i)
-    {
-        if (minorVersion < TAG_MINOR_STAT_CAUSE)
-            you.stat_zero_cause[i] = "";
-        else
-            you.stat_zero_cause[i] = unmarshallString(th);
-    }
+        you.stat_zero_cause[i] = unmarshallString(th);
 
     you.last_chosen = (stat_type) unmarshallByte(th);
 
@@ -1680,9 +1617,6 @@ static void tag_read_you(reader &th, int minorVersion)
     you.hit_points_regeneration   = unmarshallShort(th) / 100;
     you.experience                = unmarshallInt(th);
     you.gold                      = unmarshallInt(th);
-
-    you.char_class                = static_cast<job_type>(unmarshallByte(th));
-    you.experience_level          = unmarshallByte(th);
     you.exp_available             = unmarshallInt(th);
 
     you.base_hp                   = unmarshallShort(th);
@@ -1693,8 +1627,6 @@ static void tag_read_you(reader &th, int minorVersion)
     const int x = unmarshallShort(th);
     const int y = unmarshallShort(th);
     you.moveto(coord_def(x, y));
-
-    unmarshallCString(th, you.class_name, 30);
 
     you.burden = unmarshallShort(th);
 
@@ -1799,9 +1731,6 @@ static void tag_read_you(reader &th, int minorVersion)
 
     // elapsed time
     you.elapsed_time   = unmarshallInt(th);
-
-    // wizard mode
-    you.wizard         = unmarshallBoolean(th);
 
     // time of character creation
     unmarshallCString( th, buff, 20 );
@@ -2567,6 +2496,7 @@ void tag_construct_level_tiles(writer &th)
     unsigned int tile = 0;
     unsigned int last_tile = 0;
 
+    marshallBoolean(th, true);
     // Legacy version number.
     marshallShort(th, 0);
 
@@ -2654,6 +2584,8 @@ void tag_construct_level_tiles(writer &th)
 
     mcache.construct(th);
 
+#else
+    marshallBoolean(th, false);
 #endif
 }
 
@@ -2931,6 +2863,11 @@ static void tag_read_level_monsters(reader &th, int minorVersion)
 
 void tag_read_level_tiles(reader &th)
 {
+    if (!unmarshallBoolean(th))
+    {
+        tag_missing_level_tiles();
+        return;
+    }
 #ifdef USE_TILE
     for (int i = 0; i < GXM; i++)
         for (int j = 0; j < GYM; j++)
@@ -2993,6 +2930,18 @@ void tag_read_level_tiles(reader &th)
         }
 
     mcache.read(th);
+#else
+    // Snarf all remaining data, throwing it out.
+    // This can happen only when loading in console a save from tiles.
+    // It's a data loss bug that needs to be fixed.
+    try
+    {
+        while (1)
+            unmarshallByte(th);
+    }
+    catch (short_read_exception E)
+    {
+    }
 #endif
 }
 

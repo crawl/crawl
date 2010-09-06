@@ -12,6 +12,7 @@
 #include "beam.h"
 #include "quiver.h"
 #include "itemprop-enum.h"
+#include "package.h"
 #include "place-info.h"
 
 #include "species.h"
@@ -294,6 +295,9 @@ public:
   // 0 = no, 1 = cardinal move, 2 = diagonal move
   int walking;
 
+
+  // The save file itself.
+  package *save;
 
 protected:
     FixedVector<PlaceInfo, NUM_BRANCHES>             branch_info;

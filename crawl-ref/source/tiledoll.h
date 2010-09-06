@@ -7,6 +7,8 @@
 #ifndef TILEDOLL_H
 #define TILEDOLL_H
 
+#include "tags.h"
+
 struct dolls_data
 {
     dolls_data();
@@ -31,7 +33,7 @@ extern int doll_gender;
 void init_player_doll();
 void fill_doll_equipment(dolls_data &result);
 void create_random_doll(dolls_data &result);
-void save_doll_file(FILE *dollf);
+void save_doll_file(writer &dollf);
 
 // Saves player doll definitions into dolls.txt.
 // Returns true if successful, else false.
