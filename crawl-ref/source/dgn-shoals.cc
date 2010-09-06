@@ -76,7 +76,7 @@ enum tide_direction
 };
 
 static tide_direction _shoals_tide_direction;
-static monsters *tide_caller = NULL;
+static monster* tide_caller = NULL;
 static coord_def tide_caller_pos;
 static long tide_called_turns = 0L;
 static int tide_called_peak = 0;
@@ -820,7 +820,7 @@ static bool _shoals_tide_sweep_actors_clear(coord_def c)
 
     if (victim->atype() == ACT_MONSTER)
     {
-        const monsters *mvictim = victim->as_monster();
+        const monster* mvictim = victim->as_monster();
         // Plants and statues cannot be moved away; the tide cannot
         // drown them.
         if (mons_class_is_stationary(mvictim->type))
@@ -1043,7 +1043,7 @@ static void _shoals_init_tide()
     }
 }
 
-static monsters *_shoals_find_tide_caller()
+static monster* _shoals_find_tide_caller()
 {
     for (monster_iterator mi; mi; ++mi)
         if (mi->has_ench(ENCH_TIDE))
@@ -1078,7 +1078,7 @@ void shoals_apply_tides(long turns_elapsed, bool force, bool incremental_tide)
     if (turns_elapsed > TIDE_UNIT * 2)
         turns_elapsed = turns_elapsed % TIDE_UNIT + TIDE_UNIT;
 
-    unwind_var<monsters*> tide_caller_unwind(tide_caller,
+    unwind_var<monster* > tide_caller_unwind(tide_caller,
                                              _shoals_find_tide_caller());
     if (tide_caller)
     {
@@ -1112,7 +1112,7 @@ void shoals_apply_tides(long turns_elapsed, bool force, bool incremental_tide)
     }
 }
 
-void shoals_release_tide(monsters *mons)
+void shoals_release_tide(monster* mons)
 {
     if (player_in_branch(BRANCH_SHOALS))
     {

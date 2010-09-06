@@ -58,14 +58,14 @@
 #include "shout.h"
 #include "viewchar.h"
 
-static bool _handle_pickup(monsters* mons);
-static void _mons_in_cloud(monsters* mons);
-static bool _mon_can_move_to_pos(const monsters* mons,
+static bool _handle_pickup(monster* mons);
+static void _mons_in_cloud(monster* mons);
+static bool _mon_can_move_to_pos(const monster* mons,
                                  const coord_def& delta,
                                  bool just_check = false);
-static bool _is_trap_safe(const monsters* mons, const coord_def& where,
+static bool _is_trap_safe(const monster* mons, const coord_def& where,
                           bool just_check = false);
-static bool _monster_move(monsters* mons);
+static bool _monster_move(monster* mons);
 static spell_type _map_wand_to_mspell(int wand_type);
 
 // [dshaligram] Doesn't need to be extern.
@@ -82,14 +82,14 @@ static bool immobile_monster[MAX_MONSTERS];
 // a C++ string just once, instead of twice every time a monster moves.
 static const std::string _just_seen("just seen");
 
-static inline bool _mons_natural_regen_roll(monsters* mons)
+static inline bool _mons_natural_regen_roll(monster* mons)
 {
     const int regen_rate = mons_natural_regen_rate(mons);
     return (x_chance_in_y(regen_rate, 25));
 }
 
 // Do natural regeneration for monster.
-static void _monster_regenerate(monsters* mons)
+static void _monster_regenerate(monster* mons)
 {
     if (mons->has_ench(ENCH_SICK) || !mons_can_regenerate(mons))
         return;
@@ -119,7 +119,7 @@ static void _monster_regenerate(monsters* mons)
     }
 }
 
-static bool _swap_monsters(monsters* mover, monsters* moved)
+static bool _swap_monsters(monster* mover, monster* moved)
 {
     // Can't swap with a stationary monster.
     // Although nominally stationary kraken tentacles can be swapped
@@ -183,7 +183,7 @@ static bool _swap_monsters(monsters* mover, monsters* moved)
     return (true);
 }
 
-static bool _do_mon_spell(monsters* mons, bolt &beem)
+static bool _do_mon_spell(monster* mons, bolt &beem)
 {
     // Shapeshifters don't get spells.
     if (!mons->is_shapeshifter() || !mons->is_actual_spellcaster())
@@ -198,7 +198,7 @@ static bool _do_mon_spell(monsters* mons, bolt &beem)
     return (false);
 }
 
-static void _swim_or_move_energy(monsters *mon)
+static void _swim_or_move_energy(monster* mon)
 {
     const dungeon_feature_type feat = grd(mon->pos());
 
@@ -212,7 +212,7 @@ static void _swim_or_move_energy(monsters *mon)
 // monster of the same alignment as the given monster that happens to
 // have a ranged attack. If this is true for the first monster encountered,
 // returns true. Otherwise returns false.
-static bool _ranged_allied_monster_in_dir(monsters *mon, coord_def p)
+static bool _ranged_allied_monster_in_dir(monster* mon, coord_def p)
 {
     coord_def pos = mon->pos();
 
@@ -222,7 +222,7 @@ static bool _ranged_allied_monster_in_dir(monsters *mon, coord_def p)
         if (!in_bounds(pos))
             break;
 
-        const monsters* ally = monster_at(pos);
+        const monster* ally = monster_at(pos);
         if (ally == NULL)
             continue;
 
@@ -250,7 +250,7 @@ static bool _ranged_allied_monster_in_dir(monsters *mon, coord_def p)
 // Check whether there's a monster of the same type and alignment adjacent
 // to the given monster in at least one of three given directions (relative to
 // the monster position).
-static bool _allied_monster_at(monsters *mon, coord_def a, coord_def b,
+static bool _allied_monster_at(monster* mon, coord_def a, coord_def b,
                                coord_def c)
 {
     std::vector<coord_def> pos;
@@ -263,7 +263,7 @@ static bool _allied_monster_at(monsters *mon, coord_def a, coord_def b,
         if (!in_bounds(pos[i]))
             continue;
 
-        const monsters *ally = monster_at(pos[i]);
+        const monster* ally = monster_at(pos[i]);
         if (ally == NULL)
             continue;
 
@@ -287,7 +287,7 @@ static bool _allied_monster_at(monsters *mon, coord_def a, coord_def b,
 
 // Altars as well as branch entrances are considered interesting for
 // some monster types.
-static bool _mon_on_interesting_grid(monsters *mon)
+static bool _mon_on_interesting_grid(monster* mon)
 {
     // Patrolling shouldn't happen all the time.
     if (one_chance_in(4))
@@ -330,7 +330,7 @@ static bool _mon_on_interesting_grid(monsters *mon)
 // If a hostile monster finds itself on a grid of an "interesting" feature,
 // while unoccupied, it will remain in that area, and try to return to it
 // if it left it for fighting, seeking etc.
-static void _maybe_set_patrol_route(monsters* mons)
+static void _maybe_set_patrol_route(monster* mons)
 {
     if (mons_is_wandering(mons)
         && !mons->friendly()
@@ -348,7 +348,7 @@ static void _maybe_set_patrol_route(monsters* mons)
 // Move the monster closer to its target square.
 //
 //---------------------------------------------------------------
-static void _handle_movement(monsters* mons)
+static void _handle_movement(monster* mons)
 {
     coord_def delta;
 
@@ -685,7 +685,7 @@ static void _handle_movement(monsters* mons)
 // the monster imbibed.
 //
 //---------------------------------------------------------------
-static bool _handle_potion(monsters* mons, bolt & beem)
+static bool _handle_potion(monster* mons, bolt & beem)
 {
     if (mons->asleep()
         || mons->inv[MSLOT_POTION] == NON_ITEM
@@ -724,7 +724,7 @@ static bool _handle_potion(monsters* mons, bolt & beem)
     return (rc);
 }
 
-static bool _handle_reaching(monsters* mons)
+static bool _handle_reaching(monster* mons)
 {
     bool       ret = false;
     const reach_type range = mons->reach_range();
@@ -780,7 +780,7 @@ static bool _handle_reaching(monsters* mons)
 // the monster read something.
 //
 //---------------------------------------------------------------
-static bool _handle_scroll(monsters* mons)
+static bool _handle_scroll(monster* mons)
 {
     // Yes, there is a logic to this ordering {dlb}:
     if (mons->asleep()
@@ -879,7 +879,7 @@ static bool _handle_scroll(monsters* mons)
 // monster zapped.
 //
 //---------------------------------------------------------------
-static bool _handle_wand(monsters* mons, bolt &beem)
+static bool _handle_wand(monster* mons, bolt &beem)
 {
     // Yes, there is a logic to this ordering {dlb}:
     // FIXME: monsters should be able to use wands
@@ -1053,7 +1053,7 @@ static bool _handle_wand(monsters* mons, bolt &beem)
     return (false);
 }
 
-static void _setup_generic_throw(monsters* mons, struct bolt &pbolt)
+static void _setup_generic_throw(monster* mons, struct bolt &pbolt)
 {
     // FIXME we should use a sensible range here
     pbolt.range = LOS_RADIUS;
@@ -1067,7 +1067,7 @@ static void _setup_generic_throw(monsters* mons, struct bolt &pbolt)
 }
 
 // msl is the item index of the thrown missile (or weapon).
-static bool _mons_throw(monsters* mons, struct bolt &pbolt, int msl)
+static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
 {
     std::string ammo_name;
 
@@ -1446,7 +1446,7 @@ static bool _mons_throw(monsters* mons, struct bolt &pbolt, int msl)
     return (true);
 }
 
-static bool _mons_has_launcher(const monsters *mons)
+static bool _mons_has_launcher(const monster* mons)
 {
     for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
     {
@@ -1467,7 +1467,7 @@ static bool _mons_has_launcher(const monsters *mons)
 // the monster hurled.
 //
 //---------------------------------------------------------------
-static bool _handle_throw(monsters* mons, bolt & beem)
+static bool _handle_throw(monster* mons, bolt & beem)
 {
     // Yes, there is a logic to this ordering {dlb}:
     if (mons->incapacitated()
@@ -1575,7 +1575,7 @@ static bool _handle_throw(monsters* mons, bolt & beem)
 }
 
 // Give the monster its action energy (aka speed_increment).
-static void _monster_add_energy(monsters* mons)
+static void _monster_add_energy(monster* mons)
 {
     if (mons->speed > 0)
     {
@@ -1596,7 +1596,7 @@ static void _monster_add_energy(monsters* mons)
 #    define DEBUG_ENERGY_USE(problem) ((void) 0)
 #endif
 
-void handle_monster_move(monsters* mons)
+void handle_monster_move(monster* mons)
 {
     mons->hit_points = std::min(mons->max_hit_points,
                                    mons->hit_points);
@@ -1900,7 +1900,7 @@ void handle_monster_move(monsters* mons)
 
                 // OK, mmov determined.
                 const coord_def newcell = mmov + mons->pos();
-                monsters* enemy = monster_at(newcell);
+                monster* enemy = monster_at(newcell);
                 if (enemy
                     && newcell != mons->pos()
                     && !is_sanctuary(mons->pos()))
@@ -2024,7 +2024,7 @@ void handle_monster_move(monsters* mons)
             }
 
             // See if we move into (and fight) an unfriendly monster.
-            monsters* targ = monster_at(mons->pos() + mmov);
+            monster* targ = monster_at(mons->pos() + mmov);
             if (mons_base_type(mons) == MONS_KRAKEN
                 && targ && targ->type == MONS_KRAKEN_CONNECTOR
                 && targ->props.exists("inwards") && targ->props["inwards"].get_int() == mons->mindex()
@@ -2154,7 +2154,7 @@ void handle_monsters()
         menv[i].flags &= ~MF_JUST_SUMMONED;
 }
 
-static bool _jelly_divide(monsters *parent)
+static bool _jelly_divide(monster* parent)
 {
     if (!mons_class_flag(parent->type, M_SPLITS))
         return (false);
@@ -2163,7 +2163,7 @@ static bool _jelly_divide(monsters *parent)
     if (parent->hit_points < reqd)
         return (false);
 
-    monsters *child = NULL;
+    monster* child = NULL;
     coord_def child_spot;
     int num_spots = 0;
 
@@ -2211,7 +2211,7 @@ static bool _jelly_divide(monsters *parent)
 }
 
 // XXX: This function assumes that only jellies eat items.
-static bool _monster_eat_item(monsters* mons, bool nearby)
+static bool _monster_eat_item(monster* mons, bool nearby)
 {
     if (!mons_eats_items(mons))
         return (false);
@@ -2330,7 +2330,7 @@ static bool _monster_eat_item(monsters* mons, bool nearby)
     return (eaten > 0);
 }
 
-static bool _monster_eat_single_corpse(monsters* mons, item_def& item,
+static bool _monster_eat_single_corpse(monster* mons, item_def& item,
                                        bool do_heal, bool nearby)
 {
     if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
@@ -2371,7 +2371,7 @@ static bool _monster_eat_single_corpse(monsters* mons, item_def& item,
     return (true);
 }
 
-static bool _monster_eat_corpse(monsters* mons, bool do_heal, bool nearby)
+static bool _monster_eat_corpse(monster* mons, bool do_heal, bool nearby)
 {
     if (!mons_eats_corpses(mons))
         return (false);
@@ -2390,7 +2390,7 @@ static bool _monster_eat_corpse(monsters* mons, bool do_heal, bool nearby)
     return (eaten > 0);
 }
 
-static bool _monster_eat_food(monsters* mons, bool nearby)
+static bool _monster_eat_food(monster* mons, bool nearby)
 {
     if (!mons_eats_food(mons))
         return (false);
@@ -2450,7 +2450,7 @@ static bool _monster_eat_food(monsters* mons, bool nearby)
 // Returns false if monster doesn't spend any time picking something up.
 //
 //---------------------------------------------------------------
-static bool _handle_pickup(monsters* mons)
+static bool _handle_pickup(monster* mons)
 {
     if (mons->asleep() || mons->submerged())
         return (false);
@@ -2531,7 +2531,7 @@ static int _estimated_trap_damage(trap_type trap)
 // regarded as safe.  Takes into account monster intelligence and
 // allegiance.
 // (just_check is used for intelligent monsters trying to avoid traps.)
-static bool _is_trap_safe(const monsters* mons, const coord_def& where,
+static bool _is_trap_safe(const monster* mons, const coord_def& where,
                           bool just_check)
 {
     const int intel = mons_intel(mons);
@@ -2624,7 +2624,7 @@ static bool _is_trap_safe(const monsters* mons, const coord_def& where,
         return (!mechanical || mons_flies(mons));
 }
 
-static void _mons_open_door(monsters* mons, const coord_def &pos)
+static void _mons_open_door(monster* mons, const coord_def &pos)
 {
     dungeon_feature_type grid = grd(pos);
     const char *adj = "", *noun = "door";
@@ -2688,12 +2688,12 @@ static void _mons_open_door(monsters* mons, const coord_def &pos)
     dungeon_events.fire_position_event(DET_DOOR_OPENED, pos);
 }
 
-static bool _habitat_okay(const monsters* mons, dungeon_feature_type targ)
+static bool _habitat_okay(const monster* mons, dungeon_feature_type targ)
 {
     return (monster_habitable_grid(mons, targ));
 }
 
-static bool _no_habitable_adjacent_grids(const monsters *mon)
+static bool _no_habitable_adjacent_grids(const monster* mon)
 {
     for (adjacent_iterator ai(mon->pos()); ai; ++ai)
         if (_habitat_okay(mon, grd(*ai)))
@@ -2702,8 +2702,8 @@ static bool _no_habitable_adjacent_grids(const monsters *mon)
     return (true);
 }
 
-static bool _same_kraken_parts(const monsters * mpusher,
-                               const monsters * mpushee)
+static bool _same_kraken_parts(const monster* mpusher,
+                               const monster* mpushee)
 {
     if (mons_base_type(mpusher) != MONS_KRAKEN)
         return (false);
@@ -2724,8 +2724,8 @@ static bool _same_kraken_parts(const monsters * mpusher,
     return false;
 }
 
-static bool _mons_can_displace(const monsters *mpusher,
-                               const monsters *mpushee)
+static bool _mons_can_displace(const monster* mpusher,
+                               const monster* mpushee)
 {
     if (invalid_monster(mpusher) || invalid_monster(mpushee))
         return (false);
@@ -2772,7 +2772,7 @@ static bool _mons_can_displace(const monsters *mpusher,
 // Check whether a monster can move to given square (described by its relative
 // coordinates to the current monster position). just_check is true only for
 // calls from is_trap_safe when checking the surrounding squares of a trap.
-static bool _mon_can_move_to_pos(const monsters* mons,
+static bool _mon_can_move_to_pos(const monster* mons,
                                  const coord_def& delta, bool just_check)
 {
     const coord_def targ = mons->pos() + delta;
@@ -2907,7 +2907,7 @@ static bool _mon_can_move_to_pos(const monsters* mons,
 
     // Smacking another monster is good, if the monsters
     // are aligned differently.
-    if (monsters *targmonster = monster_at(targ))
+    if (monster* targmonster = monster_at(targ))
     {
         if (just_check)
         {
@@ -2949,7 +2949,7 @@ static bool _mon_can_move_to_pos(const monsters* mons,
 }
 
 // Uses, and updates the global variable mmov.
-static void _find_good_alternate_move(monsters* mons,
+static void _find_good_alternate_move(monster* mons,
                                       const FixedArray<bool, 3, 3>& good_move)
 {
     const int current_distance = distance(mons->pos(), mons->target);
@@ -3030,7 +3030,7 @@ static void _find_good_alternate_move(monsters* mons,
     }
 }
 
-static void _jelly_grows(monsters* mons)
+static void _jelly_grows(monster* mons)
 {
     if (player_can_hear(mons->pos()))
     {
@@ -3047,12 +3047,12 @@ static void _jelly_grows(monsters* mons)
     _jelly_divide(mons);
 }
 
-static bool _monster_swaps_places( monsters *mon, const coord_def& delta )
+static bool _monster_swaps_places( monster* mon, const coord_def& delta )
 {
     if (delta.origin())
         return (false);
 
-    monsters* const m2 = monster_at(mon->pos() + delta);
+    monster* const m2 = monster_at(mon->pos() + delta);
 
     if (!m2)
         return (false);
@@ -3104,7 +3104,7 @@ static bool _monster_swaps_places( monsters *mon, const coord_def& delta )
     return (false);
 }
 
-static bool _do_move_monster(monsters* mons, const coord_def& delta)
+static bool _do_move_monster(monster* mons, const coord_def& delta)
 {
     const coord_def f = mons->pos() + delta;
 
@@ -3118,7 +3118,7 @@ static bool _do_move_monster(monsters* mons, const coord_def& delta)
     }
 
     // This includes the case where the monster attacks itself.
-    if (monsters* def = monster_at(f))
+    if (monster* def = monster_at(f))
     {
         monsters_fight(mons, def);
         return (true);
@@ -3192,7 +3192,7 @@ static bool _do_move_monster(monsters* mons, const coord_def& delta)
 // possibly aligned attitudes?
 // The aim of this is to have monsters cut down plants
 // to get to the player if necessary.
-static bool _may_cutdown(monsters* mons, monsters* targ)
+static bool _may_cutdown(monster* mons, monster* targ)
 {
     // Save friendly plants from allies.
     // [ds] I'm deliberately making the alignment checks symmetric here.
@@ -3204,7 +3204,7 @@ static bool _may_cutdown(monsters* mons, monsters* targ)
     return (mons_is_firewood(targ) && !bad_align);
 }
 
-static bool _monster_move(monsters* mons)
+static bool _monster_move(monster* mons)
 {
     FixedArray<bool, 3, 3> good_move;
 
@@ -3305,7 +3305,7 @@ static bool _monster_move(monsters* mons)
             if (one_chance_in(++count))
                 newpos = moves[i];
 
-        const monsters *mon2 = monster_at(newpos);
+        const monster* mon2 = monster_at(newpos);
         if (newpos == you.pos() && mons->wont_attack()
             || (mon2 && mons->wont_attack() == mon2->wont_attack()))
         {
@@ -3474,7 +3474,7 @@ static bool _monster_move(monsters* mons)
         }
 
         // Check for attacking another monster.
-        if (monsters* targ = monster_at(mons->pos() + mmov))
+        if (monster* targ = monster_at(mons->pos() + mmov))
         {
             if (mons_aligned(mons, targ))
                 ret = _monster_swaps_places(mons, mmov);
@@ -3518,7 +3518,7 @@ static bool _monster_move(monsters* mons)
     }
     else
     {
-        monsters* targ = monster_at(mons->pos() + mmov);
+        monster* targ = monster_at(mons->pos() + mmov);
         if (!mmov.origin() && targ && _may_cutdown(mons, targ))
         {
             monsters_fight(mons, targ);
@@ -3538,14 +3538,14 @@ static bool _monster_move(monsters* mons)
     return (ret);
 }
 
-static bool _mephitic_cloud_roll(const monsters* mons)
+static bool _mephitic_cloud_roll(const monster* mons)
 {
     const int meph_hd_cap = 21;
     return (mons->hit_dice >= meph_hd_cap? one_chance_in(50)
             : !x_chance_in_y(mons->hit_dice, meph_hd_cap));
 }
 
-static void _mons_in_cloud(monsters* mons)
+static void _mons_in_cloud(monster* mons)
 {
     int wc = env.cgrid(mons->pos());
     int hurted = 0;

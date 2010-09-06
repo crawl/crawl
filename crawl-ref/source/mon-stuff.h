@@ -55,14 +55,14 @@ struct level_exit
 #define MONST_INTERESTING(x) (x->flags & MF_INTERESTING)
 
 
-const item_def *give_mimic_item(monsters *mimic);
-const item_def &get_mimic_item(const monsters *mimic);
-int  get_mimic_colour( const monsters *mimic );
+const item_def *give_mimic_item(monster* mimic);
+const item_def &get_mimic_item(const monster* mimic);
+int  get_mimic_colour( const monster* mimic );
 
 void alert_nearby_monsters(void);
 
 beh_type attitude_creation_behavior(mon_attitude_type att);
-beh_type actual_same_attitude(const monsters & base);
+beh_type actual_same_attitude(const monster& base);
 
 enum poly_power_type {
     PPT_LESS,
@@ -70,119 +70,119 @@ enum poly_power_type {
     PPT_SAME,
 };
 
-bool monster_polymorph(monsters* mons, monster_type targetc,
+bool monster_polymorph(monster* mons, monster_type targetc,
                        poly_power_type power = PPT_SAME,
                        bool force_beh = false);
 
-int monster_die(monsters* mons, killer_type killer,
+int monster_die(monster* mons, killer_type killer,
                 int killer_index, bool silent = false, bool wizard = false,
                 bool fake = false);
 
-int mounted_kill(monsters *daddy, monster_type mc, killer_type killer,
+int mounted_kill(monster* daddy, monster_type mc, killer_type killer,
                 int killer_index);
 
-monster_type fill_out_corpse(const monsters* mons,
+monster_type fill_out_corpse(const monster* mons,
                              monster_type mtype,
                              item_def& corpse,
                              bool force_corpse = false);
 
 bool explode_corpse(item_def& corpse, const coord_def& where);
 
-int place_monster_corpse(const monsters* mons, bool silent,
+int place_monster_corpse(const monster* mons, bool silent,
                          bool force = false);
 
-void slimify_monster(monsters* mons, bool hostile = false);
+void slimify_monster(monster* mons, bool hostile = false);
 
-bool mon_can_be_slimified(monsters* mons);
+bool mon_can_be_slimified(monster* mons);
 
-void corrode_monster(monsters* mons);
+void corrode_monster(monster* mons);
 
-void mons_check_pool(monsters* mons, const coord_def &oldpos,
+void mons_check_pool(monster* mons, const coord_def &oldpos,
                      killer_type killer = KILL_NONE, int killnum = -1);
 
-void monster_cleanup(monsters* mons);
+void monster_cleanup(monster* mons);
 
 int dismiss_monsters(std::string pattern);
 
 bool curse_an_item(bool decay_potions, bool quiet = false);
 
 
-void monster_drop_ething(monsters* mons, bool mark_item_origins = false,
+void monster_drop_ething(monster* mons, bool mark_item_origins = false,
                          int owner_id = NON_ITEM);
 
-bool monster_blink(monsters* mons, bool quiet = false);
+bool monster_blink(monster* mons, bool quiet = false);
 
-bool simple_monster_message(const monsters* mons, const char *event,
+bool simple_monster_message(const monster* mons, const char *event,
                             msg_channel_type channel = MSGCH_PLAIN,
                             int param = 0,
                             description_level_type descrip = DESC_CAP_THE);
 
-bool choose_any_monster(const monsters* mon);
-monsters *choose_random_nearby_monster(
+bool choose_any_monster(const monster* mon);
+monster *choose_random_nearby_monster(
     int weight,
-    bool (*suitable)(const monsters* mon) =
+    bool (*suitable)(const monster* mon) =
         choose_any_monster,
     bool in_sight = true,
     bool prefer_named = false, bool prefer_priest = false);
 
-monsters *choose_random_monster_on_level(
+monster *choose_random_monster_on_level(
     int weight,
-    bool (*suitable)(const monsters* mon) =
+    bool (*suitable)(const monster* mon) =
         choose_any_monster,
     bool in_sight = true, bool near_by = false,
     bool prefer_named = false, bool prefer_priest = false);
 
-bool swap_places(monsters* mons);
-bool swap_places(monsters* mons, const coord_def &loc);
-bool swap_check(monsters* mons, coord_def &loc, bool quiet = false);
+bool swap_places(monster* mons);
+bool swap_places(monster* mons, const coord_def &loc);
+bool swap_check(monster* mons, coord_def &loc, bool quiet = false);
 
 
-std::string get_wounds_description(const monsters* mons, bool colour=false);
-std::string get_wounds_description_sentence(const monsters* mons);
-void print_wounds(const monsters* mons);
+std::string get_wounds_description(const monster* mons, bool colour=false);
+std::string get_wounds_description_sentence(const monster* mons);
+void print_wounds(const monster* mons);
 bool monster_descriptor(int which_class, mon_desc_type which_descriptor);
 
 // Return your target, if it still exists and is visible to you.
-monsters *get_current_target();
+monster *get_current_target();
 
-mon_dam_level_type mons_get_damage_level(const monsters*);
+mon_dam_level_type mons_get_damage_level(const monster* );
 
 std::string get_damage_level_string(monster_type mon_type, mon_dam_level_type mdam);
 
-void seen_monster(monsters* mons);
+void seen_monster(monster* mons);
 
-bool shift_monster(monsters *mon, coord_def p = coord_def(0, 0));
+bool shift_monster(monster* mon, coord_def p = coord_def(0, 0));
 
 int mons_weapon_damage_rating(const item_def &launcher);
-int mons_missile_damage(monsters *mons, const item_def *launch,
+int mons_missile_damage(monster* mons, const item_def *launch,
                         const item_def *missile);
-int mons_pick_best_missile(monsters *mons, item_def **launcher,
+int mons_pick_best_missile(monster* mons, item_def **launcher,
                            bool ignore_melee = false);
 int mons_thrown_weapon_damage(const item_def *weap,
                               bool only_returning_weapons = false);
 
-int mons_natural_regen_rate(monsters* mons);
+int mons_natural_regen_rate(monster* mons);
 
-void mons_relocated(monsters *mons);
-void mons_att_changed(monsters *mons);
+void mons_relocated(monster* mons);
+void mons_att_changed(monster* mons);
 
 bool can_go_straight(const coord_def& p1, const coord_def& p2,
                      dungeon_feature_type allowed);
 
 bool is_item_jelly_edible(const item_def &item);
 
-bool monster_random_space(const monsters* mons, coord_def& target,
+bool monster_random_space(const monster* mons, coord_def& target,
                           bool forbid_sanctuary = false);
 bool monster_random_space(monster_type mon, coord_def& target,
                           bool forbid_sanctuary = false);
-void monster_teleport(monsters* mons, bool instan, bool silent = false);
-void mons_clear_trapping_net(monsters *mon);
+void monster_teleport(monster* mons, bool instan, bool silent = false);
+void mons_clear_trapping_net(monster* mon);
 
-std::string summoned_poof_msg(const monsters* mons, bool plural = false);
+std::string summoned_poof_msg(const monster* mons, bool plural = false);
 std::string summoned_poof_msg(const int midx, const item_def &item);
-std::string summoned_poof_msg(const monsters* mons, const item_def &item);
+std::string summoned_poof_msg(const monster* mons, const item_def &item);
 
-bool mons_reaped(actor *killer, monsters *victim);
+bool mons_reaped(actor *killer, monster* victim);
 
 actor* forest_near_enemy(const actor *mon);
 void forest_message(const coord_def pos, const std::string msg,
@@ -191,7 +191,7 @@ void forest_damage(const actor *mon);
 
 struct bolt;
 
-void setup_spore_explosion(bolt & beam, const monsters & origin);
-void setup_lightning_explosion(bolt & beam, const monsters & origin);
+void setup_spore_explosion(bolt & beam, const monster& origin);
+void setup_lightning_explosion(bolt & beam, const monster& origin);
 
 #endif

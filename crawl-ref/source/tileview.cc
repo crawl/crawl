@@ -630,7 +630,7 @@ void tile_place_item_marker(const coord_def &gc, const item_def &item)
 }
 
 // Called from show_def::_update_monster() in show.cc
-void tile_place_monster(const coord_def &gc, const monsters *mon)
+void tile_place_monster(const coord_def &gc, const monster* mon)
 {
     if (!mon)
         return;
@@ -924,7 +924,7 @@ void tile_apply_properties(const coord_def &gc, tileidx_t *fg,
     bool print_blood = true;
     if (haloed(gc))
     {
-        monsters *mon = monster_at(gc);
+        monster* mon = monster_at(gc);
         if (you.see_cell(gc) && mon)
         {
             if (!mons_class_flag(mon->type, M_NO_EXP_GAIN)

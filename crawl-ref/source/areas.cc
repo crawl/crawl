@@ -205,7 +205,7 @@ void create_sanctuary(const coord_def& center, int time)
     int       trap_count  = 0;
     int       scare_count = 0;
     int       cloud_count = 0;
-    monsters *seen_mon    = NULL;
+    monster* seen_mon    = NULL;
 
     int shape = random2(4);
     for (radius_iterator ri(center, radius, C_POINTY); ri; ++ri)
@@ -257,7 +257,7 @@ void create_sanctuary(const coord_def& center, int time)
         // Scare all attacking monsters inside sanctuary, and make
         // all friendly monsters inside sanctuary stop attacking and
         // move towards the player.
-        if (monsters* mon = monster_at(pos))
+        if (monster* mon = monster_at(pos))
         {
             if (mon->friendly())
             {
@@ -350,7 +350,7 @@ int player::silence_radius2() const
     return (_silence_range(you.duration[DUR_SILENCE]));
 }
 
-int monsters::silence_radius2() const
+int monster::silence_radius2() const
 {
     if (type == MONS_SILENT_SPECTRE)
         return 150;
@@ -402,7 +402,7 @@ int player::halo_radius2() const
     return (-1);
 }
 
-int monsters::halo_radius2() const
+int monster::halo_radius2() const
 {
     // Angels and Daevas are haloed.
     if (holiness() == MH_HOLY)

@@ -114,7 +114,7 @@ public:
     void clear_text_tags(text_tag_type type);
     void add_text_tag(text_tag_type type, const std::string &tag,
                       const coord_def &gc);
-    void add_text_tag(text_tag_type type, const monsters* mon);
+    void add_text_tag(text_tag_type type, const monster* mon);
 
     bool initialise_items();
 

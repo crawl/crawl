@@ -6,7 +6,7 @@ void cast_tame_beasts(int pow);
 bool backlight_monsters(coord_def where, int pow, int garbage);
 
 //returns true if it slowed the monster
-bool do_slow_monster(monsters* mon, kill_category whose_kill);
+bool do_slow_monster(monster* mon, kill_category whose_kill);
 
 bool project_noise();
 

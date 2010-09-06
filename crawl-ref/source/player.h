@@ -354,16 +354,16 @@ public:
     bool travelling_light() const;
 
     // Dealing with beholders. Implemented in behold.cc.
-    void add_beholder(const monsters *mon);
+    void add_beholder(const monster* mon);
     bool beheld() const;
-    bool beheld_by(const monsters *mon) const;
-    monsters* get_beholder(const coord_def &pos) const;
-    monsters* get_any_beholder() const;
-    void remove_beholder(const monsters *mon);
+    bool beheld_by(const monster* mon) const;
+    monster* get_beholder(const coord_def &pos) const;
+    monster* get_any_beholder() const;
+    void remove_beholder(const monster* mon);
     void clear_beholders();
     void beholders_check_noise(int loudness);
     void update_beholders();
-    void update_beholder(const monsters *mon);
+    void update_beholder(const monster* mon);
 
     kill_category kill_alignment() const;
 
@@ -382,9 +382,9 @@ public:
     int mindex() const;
     int       get_experience_level() const;
     actor_type atype() const { return ACT_PLAYER; }
-    monsters* as_monster() { return NULL; }
+    monster* as_monster() { return NULL; }
     player* as_player() { return this; }
-    const monsters* as_monster() const { return NULL; }
+    const monster* as_monster() const { return NULL; }
     const player* as_player() const { return this; }
 
     god_type  deity() const;
@@ -584,7 +584,7 @@ public:
 
 protected:
     void _removed_beholder();
-    bool _possible_beholder(const monsters *mon) const;
+    bool _possible_beholder(const monster* mon) const;
 };
 
 #ifdef DEBUG_GLOBALS
@@ -614,7 +614,7 @@ struct player_save_info
     std::string short_desc() const;
 };
 
-class monsters;
+class monster;
 struct item_def;
 
 // Helper. Use move_player_to_grid or player::apply_location_effects instead.
@@ -634,7 +634,7 @@ bool berserk_check_wielded_weapon(void);
 int player_equip( equipment_type slot, int sub_type, bool calc_unid = true );
 int player_equip_ego_type( int slot, int sub_type );
 bool player_equip_unrand( int unrand_index );
-bool player_can_hit_monster(const monsters *mon);
+bool player_can_hit_monster(const monster* mon);
 
 bool player_is_shapechanged(void);
 

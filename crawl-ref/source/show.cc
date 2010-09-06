@@ -201,7 +201,7 @@ static void _update_item_at(const coord_def &gp)
     const item_def *eitem;
     bool more_items = false;
     // Check for mimics.
-    const monsters* m = monster_at(gp);
+    const monster* m = monster_at(gp);
     if (m && mons_is_unknown_mimic(m))
         eitem = &get_mimic_item(m);
     else if (you.visible_igrd(gp) != NON_ITEM)
@@ -236,7 +236,7 @@ static void _update_cloud(int cloudno)
 #endif
 }
 
-static void _check_monster_pos(const monsters* mons)
+static void _check_monster_pos(const monster* mons)
 {
     int s = mons->mindex();
     ASSERT(mgrd(mons->pos()) == s);
@@ -258,7 +258,7 @@ static void _check_monster_pos(const monsters* mons)
     }
 }
 
-static void _update_monster(const monsters* mons)
+static void _update_monster(const monster* mons)
 {
     _check_monster_pos(mons);
 
@@ -319,7 +319,7 @@ void show_update_at(const coord_def &gp, bool terrain_only)
         _update_cloud(cloud);
     }
 
-    const monsters *mons = monster_at(gp);
+    const monster* mons = monster_at(gp);
     if (mons && mons->alive())
         _update_monster(mons);
 

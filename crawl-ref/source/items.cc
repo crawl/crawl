@@ -341,7 +341,7 @@ void unlink_item( int dest )
     if (dest == NON_ITEM || !mitm[dest].defined())
         return;
 
-    monsters* mons = mitm[dest].holding_monster();
+    monster* mons = mitm[dest].holding_monster();
 
     if (mons != NULL)
     {
@@ -859,7 +859,7 @@ static void _origin_set_portal_vault(item_def &item)
     item.props[PORTAL_VAULT_ORIGIN_KEY] = you.level_type_origin;
 }
 
-void origin_set_monster(item_def &item, const monsters* mons)
+void origin_set_monster(item_def &item, const monster* mons)
 {
     if (!origin_known(item))
     {
@@ -1918,7 +1918,7 @@ const item_def* top_item_at(const coord_def& where, bool allow_mimic_item)
 {
     if (allow_mimic_item)
     {
-        const monsters* mon = monster_at(where);
+        const monster* mon = monster_at(where);
         if (mon && mons_is_unknown_mimic(mon))
             return &get_mimic_item(mon);
     }
@@ -1956,7 +1956,7 @@ bool multiple_items_at(const coord_def& where, bool allow_mimic_item)
 
     if (allow_mimic_item)
     {
-        const monsters* mon = monster_at(where);
+        const monster* mon = monster_at(where);
         if (mon && mons_is_unknown_mimic(mon))
             ++found_count;
     }
@@ -2128,7 +2128,7 @@ int get_equip_slot(const item_def *item)
     return worn;
 }
 
-mon_inv_type get_mon_equip_slot(const monsters* mon, const item_def &item)
+mon_inv_type get_mon_equip_slot(const monster* mon, const item_def &item)
 {
     ASSERT(mon->alive());
 
@@ -2983,7 +2983,7 @@ int item_def::armour_rating() const
     return (property(*this, PARM_AC) + plus);
 }
 
-monsters* item_def::holding_monster() const
+monster* item_def::holding_monster() const
 {
     if (!pos.equals(-2, -2))
         return (NULL);

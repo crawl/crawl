@@ -101,7 +101,7 @@ void identify(int power, int item_slot)
     while (id_used > 0);
 }
 
-static bool _mons_hostile(const monsters *mon)
+static bool _mons_hostile(const monster* mon)
 {
     // Needs to be done this way because of friendly/neutral enchantments.
     return (!mon->wont_attack() && !mon->neutral());
@@ -111,7 +111,7 @@ static bool _mons_hostile(const monsters *mon)
 // Returns 0, if monster can be pacified but the attempt failed.
 // Returns 1, if monster is pacified.
 // Returns -1, if monster can never be pacified.
-static int _can_pacify_monster(const monsters *mon, const int healed)
+static int _can_pacify_monster(const monster* mon, const int healed)
 {
     if (you.religion != GOD_ELYVILON)
         return (-1);
@@ -211,7 +211,7 @@ static int _healing_spell(int healed, bool divine_ability,
         return (1);
     }
 
-    monsters* mons = monster_at(spd.target);
+    monster* mons = monster_at(spd.target);
     if (!mons)
     {
         mpr("There isn't anything there!");
@@ -448,7 +448,7 @@ static void _fuzz_detect_creatures(int pow, int *fuzz_radius, int *fuzz_chance)
         *fuzz_chance = 10;
 }
 
-static bool _mark_detected_creature(coord_def where, const monsters *mon,
+static bool _mark_detected_creature(coord_def where, const monster* mon,
                                     int fuzz_chance, int fuzz_radius)
 {
     bool found_good = false;
@@ -509,7 +509,7 @@ int detect_creatures(int pow, bool telepathic)
 
     for (radius_iterator ri(you.pos(), map_radius, C_SQUARE); ri; ++ri)
     {
-        if (monsters *mon = monster_at(*ri))
+        if (monster* mon = monster_at(*ri))
         {
             // If you can see the monster, don't "detect" it elsewhere.
             if (!mons_near(mon) || !mon->visible_to(&you))
@@ -737,7 +737,7 @@ bool entomb(int pow)
     return (_do_imprison(pow, you.pos(), false));
 }
 
-bool cast_imprison(int pow, monsters* mons, int source)
+bool cast_imprison(int pow, monster* mons, int source)
 {
     if (_do_imprison(pow, mons->pos(), true))
     {
@@ -756,7 +756,7 @@ bool cast_imprison(int pow, monsters* mons, int source)
 
 bool cast_smiting(int pow, const coord_def& where)
 {
-    monsters *m = monster_at(where);
+    monster* m = monster_at(where);
 
     if (m == NULL)
     {

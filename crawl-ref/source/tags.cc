@@ -2425,7 +2425,7 @@ static mon_enchant unmarshall_mon_enchant(reader &th)
     return (me);
 }
 
-void marshallMonster(writer &th, const monsters &m)
+void marshallMonster(writer &th, const monster& m)
 {
     if (!m.alive())
     {
@@ -2537,7 +2537,7 @@ static void tag_construct_level_monsters(writer &th)
 
     for (int i = 0; i < nm; i++)
     {
-        monsters &m(menv[i]);
+        monster& m(menv[i]);
 
 #if defined(DEBUG) || defined(DEBUG_MONS_SCAN)
         if (m.type != MONS_NO_MONSTER)
@@ -2805,7 +2805,7 @@ static void tag_read_level_items(reader &th, int minorVersion)
 #endif
 }
 
-void unmarshallMonster(reader &th, monsters &m)
+void unmarshallMonster(reader &th, monster& m)
 {
     m.reset();
 
@@ -2898,7 +2898,7 @@ static void tag_read_level_monsters(reader &th, int minorVersion)
 
     for (i = 0; i < count; i++)
     {
-        monsters &m = menv[i];
+        monster& m = menv[i];
         unmarshallMonster(th, m);
 
         // place monster

@@ -134,7 +134,7 @@ private:
 
     void chaos_affects_defender();
     void chaos_affects_attacker();
-    void chaos_killed_defender(monsters* def_copy);
+    void chaos_killed_defender(monster* def_copy);
     int  random_chaos_brand();
     void do_miscast();
 
@@ -216,7 +216,7 @@ private:
     std::string player_why_missed();
     void player_warn_miss();
     void player_check_weapon_effects();
-    void _monster_die(monsters* mons, killer_type killer, int killer_index);
+    void _monster_die(monster* mons, killer_type killer, int killer_index);
 };
 
 #endif

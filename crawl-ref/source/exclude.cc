@@ -25,7 +25,7 @@
 #include "hints.h"
 #include "view.h"
 
-static bool _mon_needs_auto_exclude(const monsters *mon, bool sleepy = false)
+static bool _mon_needs_auto_exclude(const monster* mon, bool sleepy = false)
 {
     if (mons_is_stationary(mon))
     {
@@ -41,7 +41,7 @@ static bool _mon_needs_auto_exclude(const monsters *mon, bool sleepy = false)
 }
 
 // Check whether a given monster is listed in the auto_exclude option.
-bool need_auto_exclude(const monsters *mon, bool sleepy)
+bool need_auto_exclude(const monster* mon, bool sleepy)
 {
     // This only works if the name is lowercased.
     std::string name = mon->name(DESC_BASENAME,
@@ -63,7 +63,7 @@ bool need_auto_exclude(const monsters *mon, bool sleepy)
 
 // If the monster is in the auto_exclude list, automatically set an
 // exclusion.
-void set_auto_exclude(const monsters *mon)
+void set_auto_exclude(const monster* mon)
 {
     if (need_auto_exclude(mon) && !is_exclude_root(mon->pos()))
     {
@@ -87,7 +87,7 @@ void set_auto_exclude(const monsters *mon)
 
 // Clear auto exclusion if the monster is killed or wakes up with the
 // player in sight. If sleepy is true, stationary monsters are ignored.
-void remove_auto_exclude(const monsters *mon, bool sleepy)
+void remove_auto_exclude(const monster* mon, bool sleepy)
 {
     if (need_auto_exclude(mon, sleepy))
     {
@@ -524,7 +524,7 @@ void maybe_remove_autoexclusion(const coord_def &p)
         if (!exc->autoex)
             return;
 
-        const monsters *m = monster_at(p);
+        const monster* m = monster_at(p);
         if (!m || !you.can_see(m)
             || m->attitude != ATT_HOSTILE
                 && m->type != MONS_HYPERACTIVE_BALLISTOMYCETE

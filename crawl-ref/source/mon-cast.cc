@@ -61,7 +61,7 @@ static bool _valid_mon_spells[NUM_SPELLS];
 
 void init_mons_spells()
 {
-    monsters fake_mon;
+    monster fake_mon;
     fake_mon.type       = MONS_BLACK_DRACONIAN;
     fake_mon.hit_points = 1;
 
@@ -143,7 +143,7 @@ static spell_type _draco_type_to_breath(int drac_type)
     return (SPELL_DRACONIAN_BREATH);
 }
 
-static bool _flavour_benefits_monster(beam_type flavour, monsters & monster)
+static bool _flavour_benefits_monster(beam_type flavour, monster& monster)
 {
     switch(flavour)
     {
@@ -166,9 +166,9 @@ static bool _flavour_benefits_monster(beam_type flavour, monsters & monster)
 
 // Find an allied monster to cast a beneficial beam spell at.
 // Only used for haste other at the moment.
-static bool _set_allied_target(monsters * caster, bolt & pbolt)
+static bool _set_allied_target(monster* caster, bolt & pbolt)
 {
-    monsters * selected_target = NULL;
+    monster* selected_target = NULL;
     int min_distance = INT_MAX;
 
     monster_type caster_genus = mons_genus(caster->type);
@@ -201,7 +201,7 @@ static bool _set_allied_target(monsters * caster, bolt & pbolt)
     return (false);
 }
 
-bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
+bolt mons_spells( monster* mons, spell_type spell_cast, int power,
                   bool check_validity )
 {
     ASSERT(power > 0);
@@ -785,7 +785,7 @@ static bool _los_free_spell(spell_type spell_cast)
 }
 
 // Set up bolt structure for monster spell casting.
-bool setup_mons_cast(monsters* mons, bolt &pbolt, spell_type spell_cast,
+bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                      bool check_validity)
 {
     // always set these -- used by things other than fire_beam()
@@ -933,7 +933,7 @@ bool setup_mons_cast(monsters* mons, bolt &pbolt, spell_type spell_cast,
     }
     else if (spell_cast == SPELL_PORKALATOR && one_chance_in(3))
     {
-        monsters*    targ     = NULL;
+        monster*    targ     = NULL;
         int          count    = 0;
         monster_type hog_type = MONS_HOG;
         for (monster_iterator mi(mons); mi; ++mi)
@@ -969,7 +969,7 @@ bool setup_mons_cast(monsters* mons, bolt &pbolt, spell_type spell_cast,
 
 // Returns a suitable breath weapon for the draconian; does not handle all
 // draconians, does fire a tracer.
-static spell_type _get_draconian_breath_spell( monsters* mons )
+static spell_type _get_draconian_breath_spell( monster* mons )
 {
     spell_type draco_breath = SPELL_NO_SPELL;
 
@@ -1044,7 +1044,7 @@ static bool _animate_dead_okay()
 // a spell was cast.
 //
 //---------------------------------------------------------------
-bool handle_mon_spell(monsters* mons, bolt &beem)
+bool handle_mon_spell(monster* mons, bolt &beem)
 {
     bool monsterNearby = mons_near(mons);
     bool finalAnswer   = false;   // as in: "Is that your...?" {dlb}
@@ -1345,7 +1345,7 @@ bool handle_mon_spell(monsters* mons, bolt &beem)
                     else if (mons->type == MONS_DAEVA
                              && mons->god == GOD_SHINING_ONE)
                     {
-                        const monsters *mon = &menv[mons->foe];
+                        const monster* mon = &menv[mons->foe];
 
                         // Don't allow TSO-worshipping daevas to make
                         // unchivalric magic attacks, except against
@@ -1480,7 +1480,7 @@ static int _monster_abjure_square(const coord_def &pos,
                                   int pow, int actual,
                                   int wont_attack)
 {
-    monsters *target = monster_at(pos);
+    monster* target = monster_at(pos);
     if (target == NULL)
         return (0);
 
@@ -1569,7 +1569,7 @@ static int _apply_radius_around_square( const coord_def &c, int radius,
     return (res);
 }
 
-static int _monster_abjuration(const monsters *caster, bool actual)
+static int _monster_abjuration(const monster* caster, bool actual)
 {
     const bool wont_attack = caster->wont_attack();
     int maffected = 0;
@@ -1603,7 +1603,7 @@ static int _monster_abjuration(const monsters *caster, bool actual)
 }
 
 
-static bool _mons_abjured(monsters* mons, bool nearby)
+static bool _mons_abjured(monster* mons, bool nearby)
 {
     if (nearby && _monster_abjuration(mons, false) > 0
         && coinflip())
@@ -1661,7 +1661,7 @@ static monster_type _pick_undead_summon()
     return (RANDOM_ELEMENT(undead));
 }
 
-static void _do_high_level_summon(monsters* mons, bool monsterNearby,
+static void _do_high_level_summon(monster* mons, bool monsterNearby,
                                   spell_type spell_cast,
                                   monster_type (*mpicker)(), int nsummons,
                                   god_type god, coord_def *target = NULL)
@@ -1692,7 +1692,7 @@ static bool _legs_msg_applicable()
             && (you.species != SP_MERFOLK || !you.swimming()));
 }
 
-void mons_cast_haunt(monsters* mons)
+void mons_cast_haunt(monster* mons)
 {
     coord_def fpos;
 
@@ -1714,7 +1714,7 @@ void mons_cast_haunt(monsters* mons)
                           GOD_NO_GOD, &fpos);
 }
 
-static void _mons_cast_summon_illusion(monsters* mons, spell_type spell)
+static void _mons_cast_summon_illusion(monster* mons, spell_type spell)
 {
     actor *foe = mons->get_foe();
     if (!foe || !actor_is_illusion_cloneable(foe))
@@ -1723,7 +1723,7 @@ static void _mons_cast_summon_illusion(monsters* mons, spell_type spell)
     mons_summon_illusion_from(mons, foe, spell);
 }
 
-void mons_cast_spectral_orcs(monsters* mons)
+void mons_cast_spectral_orcs(monster* mons)
 {
     coord_def fpos;
 
@@ -1744,7 +1744,7 @@ void mons_cast_spectral_orcs(monsters* mons)
     int hp;
     const int abj = 3;
     monsterentry *m;
-    monsters *orc;
+    monster* orc;
 
     for (int i = random2(3) + 1; i > 0; --i)
     {
@@ -1785,7 +1785,7 @@ void mons_cast_spectral_orcs(monsters* mons)
     }
 }
 
-void mons_cast(monsters* mons, bolt &pbolt, spell_type spell_cast,
+void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                bool do_noise, bool special_ability)
 {
     // Always do setup.  It might be done already, but it doesn't hurt
@@ -2092,7 +2092,7 @@ void mons_cast(monsters* mons, bolt &pbolt, spell_type spell_cast,
             // Mara's clones are special; they have the same stats as him, and
             // are exact clones, so they are created damaged if necessary, with
             // identical enchants and with the same items.
-            monsters *new_fake = &menv[created];
+            monster* new_fake = &menv[created];
             new_fake->hit_points = mons->hit_points;
             new_fake->max_hit_points = mons->max_hit_points;
             mon_enchant_list::iterator ei;
@@ -2425,7 +2425,7 @@ void mons_cast(monsters* mons, bolt &pbolt, spell_type spell_cast,
             else
             {
                 // "Enchant" another monster.
-                const monsters* foe      = mons->get_foe()->as_monster();
+                const monster* foe      = mons->get_foe()->as_monster();
                 slugform = getSpeakString("gastronok_other_buff");
                 if (!slugform.empty())
                 {
@@ -2665,7 +2665,7 @@ void mons_cast(monsters* mons, bolt &pbolt, spell_type spell_cast,
         pbolt.fire();
 }
 
-static int _noise_level(const monsters* mons, spell_type spell,
+static int _noise_level(const monster* mons, spell_type spell,
                                   bool silent, bool innate)
 {
     const unsigned int flags = get_spell_flags(spell);
@@ -2697,7 +2697,7 @@ static int _noise_level(const monsters* mons, spell_type spell,
 }
 
 static unsigned int _noise_keys(std::vector<std::string>& key_list,
-                                const monsters* mons, const bolt& pbolt,
+                                const monster* mons, const bolt& pbolt,
                                 spell_type spell, bool priest, bool wizard,
                                 bool innate, bool targeted)
 {
@@ -2843,7 +2843,7 @@ static std::string _noise_message(const std::vector<std::string>& key_list,
 }
 
 static void _noise_fill_target(std::string& targ_prep, std::string& target,
-                        const monsters* mons, const bolt& pbolt,
+                        const monster* mons, const bolt& pbolt,
                         bool gestured)
 {
     targ_prep = "at";
@@ -2871,7 +2871,7 @@ static void _noise_fill_target(std::string& targ_prep, std::string& target,
     }
     else if (in_bounds(pbolt.target) && you.see_cell(pbolt.target))
     {
-        if (const monsters* mtarg = monster_at(pbolt.target))
+        if (const monster* mtarg = monster_at(pbolt.target))
         {
             if (you.can_see(mtarg))
                 target = mtarg->name(DESC_NOCAP_THE);
@@ -2913,7 +2913,7 @@ static void _noise_fill_target(std::string& targ_prep, std::string& target,
             if (pos == mons->pos())
                 continue;
 
-            const monsters *m = monster_at(pos);
+            const monster* m = monster_at(pos);
             if (pos == you.pos())
             {
                 // Be egotistical and assume that the monster is aiming at
@@ -3012,7 +3012,7 @@ static void _noise_fill_target(std::string& targ_prep, std::string& target,
         target = "something";
 }
 
-void mons_cast_noise(monsters* mons, const bolt &pbolt,
+void mons_cast_noise(monster* mons, const bolt &pbolt,
                      spell_type spell_cast, bool special_ability)
 {
     bool force_silent = false;

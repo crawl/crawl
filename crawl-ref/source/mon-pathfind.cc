@@ -29,7 +29,7 @@
 // (These requirements are usually preference of habitat of a specific monster
 // or a limit of the distance between start and any grid on the path.)
 
-int mons_tracking_range(const monsters *mon)
+int mons_tracking_range(const monster* mon)
 {
 
     int range = 0;
@@ -89,7 +89,7 @@ coord_def monster_pathfind::next_pos(const coord_def &c) const
 
 // The main method in the monster_pathfind class.
 // Returns true if a path was found, else false.
-bool monster_pathfind::init_pathfind(const monsters *mon, coord_def dest,
+bool monster_pathfind::init_pathfind(const monster* mon, coord_def dest,
                                      bool diag, bool msg, bool pass_unmapped)
 {
     mons   = mon;

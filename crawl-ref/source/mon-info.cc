@@ -34,7 +34,7 @@
 
 #define ULL1 ((uint64_t)1)
 
-static uint64_t ench_to_mb(const monsters &mons, enchant_type ench)
+static uint64_t ench_to_mb(const monster& mons, enchant_type ench)
 {
     // Suppress silly-looking combinations, even if they're
     // internally valid.
@@ -151,7 +151,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
         base_type = type;
 }
 
-monster_info::monster_info(const monsters *m, int milev)
+monster_info::monster_info(const monster* m, int milev)
 {
     mb = 0;
     attitude = ATT_HOSTILE;
@@ -394,7 +394,7 @@ monster_info::monster_info(const monsters *m, int milev)
     }
 }
 
-monsters* monster_info::mon() const
+monster* monster_info::mon() const
 {
     int m = env.mgrid(player2grid(pos));
     ASSERT(m >= 0);
@@ -1143,7 +1143,7 @@ size_type monster_info::body_size() const
 
 void get_monster_info(std::vector<monster_info>& mons)
 {
-    std::vector<monsters*> visible;
+    std::vector<monster* > visible;
     if (crawl_state.game_is_arena())
     {
         for (monster_iterator mi; mi; ++mi)

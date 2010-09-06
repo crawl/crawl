@@ -13,7 +13,7 @@
 #include "random.h"
 #include "ray.h"
 
-class monsters;
+class monster;
 
 enum mon_resist_type
 {
@@ -186,7 +186,7 @@ public:
 
     // Assume that all saving throws are failed, actually apply
     // the enchantment.
-    mon_resist_type apply_enchantment_to_monster(monsters* mon);
+    mon_resist_type apply_enchantment_to_monster(monster* mon);
 
     // Return whether any affected cell was seen.
     bool explode(bool show_more = true, bool hole_in_the_middle = false);
@@ -211,11 +211,11 @@ private:
     bool is_bouncy(dungeon_feature_type feat) const;
     bool stop_at_target() const;
     bool has_saving_throw() const;
-    bool is_harmless(const monsters *mon) const;
+    bool is_harmless(const monster* mon) const;
     bool harmless_to_player() const;
     bool is_reflectable(const item_def *item) const;
-    bool nasty_to(const monsters* mon) const;
-    bool nice_to(const monsters* mon) const;
+    bool nasty_to(const monster* mon) const;
+    bool nice_to(const monster* mon) const;
     bool found_player() const;
     bool need_regress() const;
 
@@ -241,7 +241,7 @@ public:
     void affect_cell();
     void affect_wall();
     void affect_actor(actor *act);
-    void affect_monster( monsters* m );
+    void affect_monster( monster* m );
     void affect_player();
     void affect_ground();
     void affect_place_clouds();
@@ -253,20 +253,20 @@ public:
     // Stuff when a monster or player is hit.
     void affect_player_enchantment();
     void tracer_affect_player();
-    void tracer_affect_monster(monsters* mon);
-    bool handle_statue_disintegration(monsters* mon);
-    void apply_bolt_paralysis(monsters* mons);
-    void apply_bolt_petrify(monsters* mons);
-    void enchantment_affect_monster(monsters* mon);
-    mon_resist_type try_enchant_monster(monsters *mon);
-    void tracer_enchantment_affect_monster(monsters* mon);
-    void tracer_nonenchantment_affect_monster(monsters* mon);
-    void update_hurt_or_helped(monsters *mon);
-    bool attempt_block(monsters* mon);
-    void handle_stop_attack_prompt(monsters* mon);
-    bool determine_damage(monsters* mon, int& preac, int& postac, int& final,
+    void tracer_affect_monster(monster* mon);
+    bool handle_statue_disintegration(monster* mon);
+    void apply_bolt_paralysis(monster* mons);
+    void apply_bolt_petrify(monster* mons);
+    void enchantment_affect_monster(monster* mon);
+    mon_resist_type try_enchant_monster(monster* mon);
+    void tracer_enchantment_affect_monster(monster* mon);
+    void tracer_nonenchantment_affect_monster(monster* mon);
+    void update_hurt_or_helped(monster* mon);
+    bool attempt_block(monster* mon);
+    void handle_stop_attack_prompt(monster* mon);
+    bool determine_damage(monster* mon, int& preac, int& postac, int& final,
                           std::vector<std::string> &messages);
-    void monster_post_hit(monsters* mon, int dmg);
+    void monster_post_hit(monster* mon, int dmg);
     bool misses_player();
 
     void initialise_fire();
@@ -296,27 +296,27 @@ public:
                                   bool stop_at_statues, bool stop_at_walls);
 };
 
-int mons_adjust_flavoured(monsters* mons, bolt &pbolt, int hurted,
+int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
                           bool doFlavouredEffects = true);
 
 // Return whether the effect was visible.
-bool enchant_monster_with_flavour(monsters* mon, actor *atk,
+bool enchant_monster_with_flavour(monster* mon, actor *atk,
                                   beam_type flavour, int powc = 0);
 
 // Return true if messages were generated during the enchantment.
 bool mass_enchantment( enchant_type wh_enchant, int pow, int who,
                        int *m_succumbed = NULL, int *m_attempted = NULL );
 
-bool curare_hits_monster(actor *agent, monsters* mons, kill_category who,
+bool curare_hits_monster(actor *agent, monster* mons, kill_category who,
                          int levels = 1);
-bool poison_monster(monsters* mons, kill_category who, int levels = 1,
+bool poison_monster(monster* mons, kill_category who, int levels = 1,
                     bool force = false, bool verbose = true);
-bool miasma_monster(monsters* mons, kill_category who);
-bool napalm_monster(monsters* mons, kill_category who, int levels = 1,
+bool miasma_monster(monster* mons, kill_category who);
+bool napalm_monster(monster* mons, kill_category who, int levels = 1,
                     bool verbose = true);
-void fire_tracer( const monsters* mons, struct bolt &pbolt,
+void fire_tracer( const monster* mons, struct bolt &pbolt,
                   bool explode_only = false );
-void mimic_alert( monsters *mimic );
+void mimic_alert( monster* mimic );
 bool zapping(zap_type ztype, int power, bolt &pbolt,
              bool needs_tracer = false, const char* msg = NULL);
 bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range = 0);

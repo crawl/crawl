@@ -15,7 +15,7 @@
 /////////////////////////////////////////////////////////////////////
 // Monster handling
 
-void push_monster(lua_State *ls, monsters *mons)
+void push_monster(lua_State *ls, monster* mons)
 {
     MonsterWrap *mw = clua_new_userdata< MonsterWrap >(ls, MONS_METATABLE);
     mw->turn = you.num_turns;
@@ -23,11 +23,11 @@ void push_monster(lua_State *ls, monsters *mons)
 }
 
 #define MDEF(name)                                                      \
-    static int l_mons_##name(lua_State *ls, monsters *mons,             \
+    static int l_mons_##name(lua_State *ls, monster* mons,             \
                              const char *attr)                         \
 
 #define MDEFN(name, closure)                    \
-    static int l_mons_##name(lua_State *ls, monsters *mons, const char *attrs) \
+    static int l_mons_##name(lua_State *ls, monster* mons, const char *attrs) \
     {                                                                   \
     lua_pushlightuserdata(ls, mons);                                    \
     lua_pushcclosure(ls, l_mons_##closure, 1);                          \
@@ -102,7 +102,7 @@ MDEF(energy)
 LUAFN(l_mons_add_energy)
 {
     ASSERT_DLUA;
-    monsters *mons = clua_get_lightuserdata<monsters>(ls, lua_upvalueindex(1));
+    monster* mons = clua_get_lightuserdata<monster>(ls, lua_upvalueindex(1));
     mons->speed_increment += luaL_checkint(ls, 1);
     return (0);
 }
@@ -221,7 +221,7 @@ static int l_mons_do_dismiss(lua_State *ls)
     // dismiss is only callable from dlua, not from managed VMs (i.e.
     // end-user scripts cannot dismiss monsters).
     ASSERT_DLUA;
-    monsters *mons = clua_get_lightuserdata<monsters>(ls, lua_upvalueindex(1));
+    monster* mons = clua_get_lightuserdata<monster>(ls, lua_upvalueindex(1));
 
     if (mons->alive())
     {
@@ -236,7 +236,7 @@ MDEFN(dismiss, do_dismiss)
 static int l_mons_do_run_ai(lua_State *ls)
 {
     ASSERT_DLUA;
-    monsters *mons = clua_get_lightuserdata<monsters>(ls, lua_upvalueindex(1));
+    monster* mons = clua_get_lightuserdata<monster>(ls, lua_upvalueindex(1));
     if (mons->alive())
         handle_monster_move(mons);
     return (0);
@@ -246,7 +246,7 @@ MDEFN(run_ai, do_run_ai)
 static int l_mons_do_handle_behaviour(lua_State *ls)
 {
     ASSERT_DLUA;
-    monsters *mons = clua_get_lightuserdata<monsters>(ls, lua_upvalueindex(1));
+    monster* mons = clua_get_lightuserdata<monster>(ls, lua_upvalueindex(1));
     if (mons->alive())
         handle_behaviour(mons);
     return (0);
@@ -258,7 +258,7 @@ static int l_mons_do_random_teleport(lua_State *ls)
     // We should only be able to teleport monsters from dlua.
     ASSERT_DLUA;
 
-    monsters *mons = clua_get_lightuserdata<monsters>(ls, lua_upvalueindex(1));
+    monster* mons = clua_get_lightuserdata<monster>(ls, lua_upvalueindex(1));
 
     if (mons->alive())
         mons->teleport(true);
@@ -279,8 +279,8 @@ static int l_mons_do_set_prop(lua_State *ls)
     // We should only be able to set properties from dlua.
     ASSERT_DLUA;
 
-    monsters *mons =
-        clua_get_lightuserdata<monsters>(ls, lua_upvalueindex(1));
+    monster* mons =
+        clua_get_lightuserdata<monster>(ls, lua_upvalueindex(1));
 
     const char *prop_name = luaL_checkstring(ls, 1);
 
@@ -317,8 +317,8 @@ static int l_mons_do_get_prop(lua_State *ls)
     // We should only be able to set properties from dlua.
     ASSERT_DLUA;
 
-    monsters *mons =
-        clua_get_lightuserdata<monsters>(ls, lua_upvalueindex(1));
+    monster* mons =
+        clua_get_lightuserdata<monster>(ls, lua_upvalueindex(1));
 
     const char *prop_name = luaL_checkstring(ls, 1);
 
@@ -366,8 +366,8 @@ static int l_mons_do_has_prop(lua_State *ls)
     // We should only be able to get properties from dlua.
     ASSERT_DLUA;
 
-    monsters *mons =
-        clua_get_lightuserdata<monsters>(ls, lua_upvalueindex(1));
+    monster* mons =
+        clua_get_lightuserdata<monster>(ls, lua_upvalueindex(1));
 
     const char *prop_name = luaL_checkstring(ls, 1);
 
@@ -386,7 +386,7 @@ MDEF(you_can_see)
 struct MonsAccessor
 {
     const char *attribute;
-    int (*accessor)(lua_State *ls, monsters *mons, const char *attr);
+    int (*accessor)(lua_State *ls, monster* mons, const char *attr);
 };
 
 static MonsAccessor mons_attrs[] =

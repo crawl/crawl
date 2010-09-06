@@ -150,7 +150,7 @@ void cast_chain_lightning(int pow, const actor *caster)
     beam.is_explosion   = false;
     beam.is_tracer      = false;
 
-    if (const monsters* mons = caster->as_monster())
+    if (const monster* mons = caster->as_monster())
         beam.source_name = mons->name(DESC_PLAIN, true);
 
     bool first = true;
@@ -233,7 +233,7 @@ void cast_chain_lightning(int pow, const actor *caster)
 
         if (caster == &you)
         {
-            monsters* mons = monster_at(target);
+            monster* mons = monster_at(target);
             if (mons)
             {
                 if (stop_attack_prompt(mons, false, you.pos()))
@@ -288,10 +288,10 @@ void cast_chain_lightning(int pow, const actor *caster)
     more();
 }
 
-typedef std::pair<const monsters*,int> counted_monster;
+typedef std::pair<const monster* ,int> counted_monster;
 typedef std::vector<counted_monster> counted_monster_list;
 static void _record_monster_by_name(counted_monster_list &list,
-                                    const monsters *mons)
+                                    const monster* mons)
 {
     const std::string name = mons->name(DESC_PLAIN);
     for (counted_monster_list::iterator i = list.begin(); i != list.end(); ++i)
@@ -499,7 +499,7 @@ void cast_refrigeration(int pow, bool non_player)
     }
 }
 
-bool vampiric_drain(int pow, monsters* mons)
+bool vampiric_drain(int pow, monster* mons)
 {
     if (mons == NULL || mons->submerged())
     {
@@ -582,7 +582,7 @@ bool vampiric_drain(int pow, monsters* mons)
     return (true);
 }
 
-bool burn_freeze(int pow, beam_type flavour, monsters* mons)
+bool burn_freeze(int pow, beam_type flavour, monster* mons)
 {
     pow = std::min(25, pow);
 
@@ -650,7 +650,7 @@ int airstrike(int pow, const dist &beam)
 {
     bool success = false;
 
-    monsters* mons = monster_at(beam.target);
+    monster* mons = monster_at(beam.target);
 
     if (mons == NULL)
         canned_msg(MSG_SPELL_FIZZLES);
@@ -757,7 +757,7 @@ enum DEBRIS                 // jmf: add for shatter, dig, and Giants to throw
 
 // Just to avoid typing this over and over.
 // Returns true if monster died. -- bwr
-static bool _player_hurt_monster(monsters& m, int damage,
+static bool _player_hurt_monster(monster& m, int damage,
                                  beam_type flavour = BEAM_MISSILE)
 {
     if (damage > 0)
@@ -783,7 +783,7 @@ static bool _player_hurt_monster(monsters& m, int damage,
 static int _shatter_monsters(coord_def where, int pow, int, actor *)
 {
     dice_def dam_dice(0, 5 + pow / 3); // number of dice set below
-    monsters *mon = monster_at(where);
+    monster* mon = monster_at(where);
 
     if (mon == NULL)
         return (0);
@@ -1088,7 +1088,7 @@ static int _ignite_poison_monsters(coord_def where, int pow, int, actor *)
 
     dice_def dam_dice(0, 5 + pow/7);  // Dice added below if applicable.
 
-    monsters *mon = monster_at(where);
+    monster* mon = monster_at(where);
     if (mon == NULL)
         return (0);
 
@@ -1273,7 +1273,7 @@ void cast_ignite_poison(int pow)
 
 static int _discharge_monsters(coord_def where, int pow, int, actor *)
 {
-    monsters* mons = monster_at(where);
+    monster* mons = monster_at(where);
     int damage = 0;
 
     bolt beam;
@@ -1357,7 +1357,7 @@ void cast_discharge(int pow)
 // the insane damage potential. - bwr
 int disperse_monsters(coord_def where, int pow, int, actor *)
 {
-    monsters *mon = monster_at(where);
+    monster* mon = monster_at(where);
     if (!mon)
         return (0);
 
@@ -1426,7 +1426,7 @@ bool cast_fragmentation(int pow, const dist& spd)
 
     const dungeon_feature_type grid = grd(spd.target);
 
-    if (monsters *mon = monster_at(spd.target))
+    if (monster* mon = monster_at(spd.target))
     {
         // Save the monster's name in case it isn't available later.
         const std::string name_cap_the = mon->name(DESC_CAP_THE);

@@ -917,7 +917,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
         && !invalid_monster_index(death_source)
         && menv[death_source].type != -1)
     {
-        const monsters* mons = &menv[death_source];
+        const monster* mons = &menv[death_source];
 
         // Previously the weapon was only used for dancing weapons,
         // but now we pass it in as a string through the scorefile

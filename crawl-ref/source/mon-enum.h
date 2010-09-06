@@ -99,7 +99,7 @@ enum mon_attack_flavour
     AF_REACH,
 };
 
-// Non-spell "summoning" types to give to monsters::mark_summoned(), or
+// Non-spell "summoning" types to give to monster::mark_summoned(), or
 // as the fourth parameter of mgen_data's constructor.
 //
 // Negative values since spells are non-negative.
@@ -166,7 +166,7 @@ enum mon_resist_flags
 
     // resistances
     // Notes:
-    // - negative energy is mostly handled via monsters::res_negative_energy()
+    // - negative energy is mostly handled via monster::res_negative_energy()
     MR_RES_ELEC          = (1<< 0),
     MR_RES_POISON        = (1<< 1),
     MR_RES_FIRE          = (1<< 2),

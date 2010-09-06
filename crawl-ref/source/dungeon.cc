@@ -5144,7 +5144,7 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
                                      const int mid,
                                      const int monster_level)
 {
-    monsters &mon(menv[mindex]);
+    monster& mon(menv[mindex]);
 
     unwind_var<int> save_speedinc(mon.speed_increment);
 
@@ -5378,7 +5378,7 @@ int dgn_place_monster(mons_spec &mspec,
         const int mindex = place_monster(mg, true);
         if (mindex != -1)
         {
-            monsters &mons(menv[mindex]);
+            monster& mons(menv[mindex]);
             if (!mspec.items.empty())
                 _dgn_give_mon_spec_items(mspec, mindex, mid, monster_level);
             if (mspec.explicit_spells)

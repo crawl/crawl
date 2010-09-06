@@ -39,7 +39,7 @@
 
 extern int stealth;             // defined in main.cc
 
-void handle_monster_shouts(monsters* mons, bool force)
+void handle_monster_shouts(monster* mons, bool force)
 {
     if (!force && x_chance_in_y(you.skills[SK_STEALTH], 30))
         return;
@@ -301,12 +301,12 @@ void handle_monster_shouts(monsters* mons, bool force)
         learned_something_new(HINT_MONSTER_SHOUT, mons->pos());
 }
 
-void force_monster_shout(monsters* mons)
+void force_monster_shout(monster* mons)
 {
     handle_monster_shouts(mons, true);
 }
 
-bool check_awaken(monsters* mons)
+bool check_awaken(monster* mons)
 {
     // Usually redundant because we iterate over player LOS,
     // but e.g. for you.xray_vision.

@@ -28,7 +28,7 @@ public:
     void merge_killer(kill_category who);
     void cap_degree();
 
-    void set_duration(const monsters *mons, const mon_enchant *exist);
+    void set_duration(const monster* mons, const mon_enchant *exist);
 
     bool operator < (const mon_enchant &other) const
     {
@@ -45,22 +45,22 @@ public:
     mon_enchant operator + (const mon_enchant &other) const;
 
 private:
-    int modded_speed(const monsters *mons, int hdplus) const;
-    int calc_duration(const monsters *mons, const mon_enchant *added) const;
+    int modded_speed(const monster* mons, int hdplus) const;
+    int calc_duration(const monster* mons, const mon_enchant *added) const;
 };
 
 typedef std::map<enchant_type, mon_enchant> mon_enchant_list;
 
 struct monsterentry;
 
-class monsters : public actor
+class monster : public actor
 {
 public:
-    monsters();
-    monsters(const monsters &other);
-    ~monsters();
+    monster();
+    monster(const monster& other);
+    ~monster();
 
-    monsters &operator = (const monsters &other);
+    monster& operator = (const monster& other);
     void reset();
 
 public:
@@ -414,9 +414,9 @@ public:
     int shield_bypass_ability(int tohit) const;
 
     actor_type atype() const { return ACT_MONSTER; }
-    monsters* as_monster() { return this; }
+    monster* as_monster() { return this; }
     player* as_player() { return NULL; }
-    const monsters* as_monster() const { return this; }
+    const monster* as_monster() const { return this; }
     const player* as_player() const { return NULL; }
 
     // Hacks, with a capital H.
@@ -434,7 +434,7 @@ public:
     void bind_spell_flags();
 
 private:
-    void init_with(const monsters &mons);
+    void init_with(const monster& mons);
     void swap_slots(mon_inv_type a, mon_inv_type b);
     bool need_message(int &near) const;
     bool level_up();

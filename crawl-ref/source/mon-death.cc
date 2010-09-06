@@ -22,7 +22,7 @@
 #include "view.h"
 
 // Pikel and band.
-bool mons_is_pikel (monsters* mons)
+bool mons_is_pikel (monster* mons)
 {
     return (mons->type == MONS_PIKEL
             || (mons->props.exists("original_name")
@@ -61,7 +61,7 @@ void pikel_band_neutralise (bool check_tagged)
 }
 
 // Kirke and band
-bool mons_is_kirke (monsters* mons)
+bool mons_is_kirke (monster* mons)
 {
     return (mons->type == MONS_KIRKE
             || (mons->props.exists("original_name")
@@ -88,7 +88,7 @@ void hogs_to_humans()
 
         const bool could_see = you.can_see(*mi);
 
-        monsters orig;
+        monster orig;
 
         if (mi->props.exists(ORIG_MONSTER_KEY))
             // Copy it, since the instance in props will get deleted
@@ -181,26 +181,26 @@ void hogs_to_humans()
 
 
 // Dowan and Duvessa
-bool mons_is_dowan (monsters *mons)
+bool mons_is_dowan (monster* mons)
 {
     return (mons->type == MONS_DOWAN
             || (mons->props.exists("original_name")
                 && mons->props["original_name"].get_string() == "Dowan"));
 }
 
-bool mons_is_duvessa (monsters *mons)
+bool mons_is_duvessa (monster* mons)
 {
     return (mons->type == MONS_DUVESSA
             || (mons->props.exists("original_name")
                 && mons->props["original_name"].get_string() == "Duvessa"));
 }
 
-bool mons_is_elven_twin (monsters *mons)
+bool mons_is_elven_twin (monster* mons)
 {
     return (mons_is_dowan(mons) || mons_is_duvessa(mons));
 }
 
-void elven_twin_died(monsters* twin, bool in_transit, killer_type killer, int killer_index)
+void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int killer_index)
 {
     // Sometimes, if you pacify one twin near a staircase, they leave
     // in the same turn. Convert, in those instances.
@@ -212,7 +212,7 @@ void elven_twin_died(monsters* twin, bool in_transit, killer_type killer, int ki
 
     bool found_duvessa = false;
     bool found_dowan = false;
-    monsters* mons;
+    monster* mons;
 
     for (monster_iterator mi; mi; ++mi)
     {
@@ -307,11 +307,11 @@ void elven_twin_died(monsters* twin, bool in_transit, killer_type killer, int ki
 }
 
 // If you pacify one twin, the other also pacifies.
-void elven_twins_pacify (monsters *twin)
+void elven_twins_pacify (monster* twin)
 {
     bool found_duvessa = false;
     bool found_dowan = false;
-    monsters* mons;
+    monster* mons;
 
     for (monster_iterator mi; mi; ++mi)
     {
@@ -353,11 +353,11 @@ void elven_twins_pacify (monsters *twin)
 }
 
 // And if you attack a pacified elven twin, the other will unpacify.
-void elven_twins_unpacify (monsters *twin)
+void elven_twins_unpacify (monster* twin)
 {
     bool found_duvessa = false;
     bool found_dowan = false;
-    monsters* mons;
+    monster* mons;
 
     for (monster_iterator mi; mi; ++mi)
     {

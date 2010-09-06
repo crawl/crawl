@@ -86,7 +86,7 @@
                                     // from remaining range
 
 // Helper functions (some of these should probably be public).
-static void _ench_animation(int flavour, const monsters *mon = NULL,
+static void _ench_animation(int flavour, const monster* mon = NULL,
                             bool force = false);
 static void _zappy(zap_type z_type, int power, bolt &pbolt);
 static beam_type _chaos_beam_flavour();
@@ -141,7 +141,7 @@ kill_category bolt::whose_kill() const
             return (KC_FRIENDLY);
         if (!invalid_monster_index(beam_source))
         {
-            const monsters *mon = &menv[beam_source];
+            const monster* mon = &menv[beam_source];
             if (mon->friendly())
                 return (KC_FRIENDLY);
         }
@@ -151,7 +151,7 @@ kill_category bolt::whose_kill() const
 
 // A simple animated flash from Rupert Smith (expanded to be more
 // generic).
-static void _zap_animation(int colour, const monsters *mon = NULL,
+static void _zap_animation(int colour, const monster* mon = NULL,
                            bool force = false)
 {
     coord_def p = you.pos();
@@ -198,7 +198,7 @@ static void _zap_animation(int colour, const monsters *mon = NULL,
 }
 
 // Special front function for zap_animation to interpret enchantment flavours.
-static void _ench_animation(int flavour, const monsters *mon, bool force)
+static void _ench_animation(int flavour, const monster* mon, bool force)
 {
     element_type elem;
     switch (flavour)
@@ -672,7 +672,7 @@ void bolt::initialise_fire()
     if (!seen && you.see_cell(source) && range > 0 && visible() )
     {
         seen = true;
-        const monsters* mon = monster_at(source);
+        const monster* mon = monster_at(source);
 
         if (flavour != BEAM_VISUAL
             && !is_tracer
@@ -1128,7 +1128,7 @@ bool bolt::hit_wall()
         // is blocked, even though its line of sight isn't blocked.  Give
         // a warning about this fact.
         std::string prompt = "Your line of fire to ";
-        const monsters* mon = monster_at(target);
+        const monster* mon = monster_at(target);
 
         if (mon && mon->observable())
             prompt += mon->name(DESC_NOCAP_THE);
@@ -1235,7 +1235,7 @@ void bolt::affect_cell()
     // affected the player on this square. -cao
     const bool still_wall = (was_solid && old_pos == pos());
     if ((!hit_player || is_beam || is_explosion) && !still_wall)
-        if (monsters* m = monster_at(pos()))
+        if (monster* m = monster_at(pos()))
             if (can_affect_actor(m))
                 affect_monster(m);
 
@@ -1459,7 +1459,7 @@ void bolt::do_fire()
         // Allow friendlies to react to projectiles, except when in
         // sanctuary when pet_target can only be explicitly changed by
         // the player.
-        const monsters *mon = &menv[beam_source];
+        const monster* mon = &menv[beam_source];
         if (foe_info.hurt > 0 && !mon->wont_attack() && !crawl_state.game_is_arena()
             && you.pet_target == MHITNOT && env.sanctuary_time <= 0)
         {
@@ -1475,7 +1475,7 @@ void bolt::do_fire()
 
 // Returns damage taken by a monster from a "flavoured" (fire, ice, etc.)
 // attack -- damage from clouds and branded weapons handled elsewhere.
-int mons_adjust_flavoured(monsters* mons, bolt &pbolt, int hurted,
+int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
                           bool doFlavouredEffects)
 {
     // If we're not doing flavoured effects, must be preliminary
@@ -1808,7 +1808,7 @@ int mons_adjust_flavoured(monsters* mons, bolt &pbolt, int hurted,
     return (hurted);
 }
 
-static bool _monster_resists_mass_enchantment(monsters* mons,
+static bool _monster_resists_mass_enchantment(monster* mons,
                                               enchant_type wh_enchant,
                                               int pow)
 {
@@ -1919,7 +1919,7 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
     return (msg_generated);
 }
 
-void bolt::apply_bolt_paralysis(monsters* mons)
+void bolt::apply_bolt_paralysis(monster* mons)
 {
     if (!mons->paralysed()
         && mons->add_ench(ENCH_PARALYSIS)
@@ -1938,7 +1938,7 @@ void bolt::apply_bolt_paralysis(monsters* mons)
 // out it remains properly petrified (no movement or actions). The second
 // part is similar to paralysis, except that insubstantial monsters can't be
 // affected and that stabbing damage is drastically reduced.
-void bolt::apply_bolt_petrify(monsters* mons)
+void bolt::apply_bolt_petrify(monster* mons)
 {
     int petrifying = mons->has_ench(ENCH_PETRIFYING);
     if (mons->petrified())
@@ -1969,7 +1969,7 @@ void bolt::apply_bolt_petrify(monsters* mons)
     }
 }
 
-bool curare_hits_monster(actor *agent, monsters* mons, kill_category who,
+bool curare_hits_monster(actor *agent, monster* mons, kill_category who,
                          int levels)
 {
     poison_monster(mons, who, levels, false);
@@ -2002,7 +2002,7 @@ bool curare_hits_monster(actor *agent, monsters* mons, kill_category who,
 }
 
 // Actually poisons a monster (with message).
-bool poison_monster(monsters* mons, kill_category who, int levels,
+bool poison_monster(monster* mons, kill_category who, int levels,
                     bool force, bool verbose)
 {
     if (!mons->alive())
@@ -2036,7 +2036,7 @@ bool poison_monster(monsters* mons, kill_category who, int levels,
 
 // Actually poisons, rots, and/or slows a monster with miasma (with
 // message).
-bool miasma_monster(monsters* mons, kill_category who)
+bool miasma_monster(monster* mons, kill_category who)
 {
     if (!mons->alive())
         return (false);
@@ -2066,7 +2066,7 @@ bool miasma_monster(monsters* mons, kill_category who)
 }
 
 // Actually napalms a monster (with message).
-bool napalm_monster(monsters* mons, kill_category who, int levels,
+bool napalm_monster(monster* mons, kill_category who, int levels,
                     bool verbose)
 {
     if (!mons->alive())
@@ -2098,7 +2098,7 @@ bool napalm_monster(monsters* mons, kill_category who, int levels,
 //
 //  Note that beam properties must be set, as the tracer will take them
 //  into account, as well as the monster's intelligence.
-void fire_tracer(const monsters* mons, bolt &pbolt, bool explode_only)
+void fire_tracer(const monster* mons, bolt &pbolt, bool explode_only)
 {
     // Don't fiddle with any input parameters other than tracer stuff!
     pbolt.is_tracer     = true;
@@ -2146,7 +2146,7 @@ void fire_tracer(const monsters* mons, bolt &pbolt, bool explode_only)
 // When a mimic is hit by a ranged attack, it teleports away (the slow
 // way) and changes its appearance - the appearance change is in
 // monster_teleport() in mon-stuff.cc.
-void mimic_alert(monsters *mimic)
+void mimic_alert(monster* mimic)
 {
     if (!mimic->alive())
         return;
@@ -2364,7 +2364,7 @@ void bolt::drop_object()
     {
         if (item->sub_type == MI_THROWING_NET)
         {
-            monsters* m = monster_at(pos());
+            monster* m = monster_at(pos());
             // Player or monster at position is caught in net.
             if (you.pos() == pos() && you.attribute[ATTR_HELD]
                 || m && m->caught())
@@ -2696,7 +2696,7 @@ void bolt::affect_place_explosion_clouds()
 // A little helper function to handle the calling of ouch()...
 void bolt::internal_ouch(int dam)
 {
-    monsters *monst = NULL;
+    monster* monst = NULL;
     if (!invalid_monster_index(beam_source) && menv[beam_source].type != -1)
         monst = &menv[beam_source];
 
@@ -2754,7 +2754,7 @@ bool bolt::fuzz_invis_tracer()
     if (beam_src != MHITNOT && beam_src != MHITYOU)
     {
         // Monsters that can sense invisible
-        const monsters *mon = &menv[beam_src];
+        const monster* mon = &menv[beam_src];
         if (mons_sense_invis(mon))
             return (dist == 0);
     }
@@ -2818,7 +2818,7 @@ std::string bolt::zapper() const
         return menv[beam_src].name(DESC_PLAIN);
 }
 
-bool bolt::is_harmless(const monsters *mon) const
+bool bolt::is_harmless(const monster* mon) const
 {
     // For enchantments, this is already handled in nasty_to().
     if (is_enchantment())
@@ -2943,7 +2943,7 @@ void bolt::reflect()
 
     if (pos() == you.pos())
         reflector = NON_MONSTER;
-    else if (monsters* m = monster_at(pos()))
+    else if (monster* m = monster_at(pos()))
         reflector = m->mindex();
     else
     {
@@ -3134,7 +3134,7 @@ void bolt::affect_player_enchantment()
         bool need_msg = true;
         if (thrower != KILL_YOU_MISSILE && !invalid_monster_index(beam_source))
         {
-            monsters *mon = &menv[beam_source];
+            monster* mon = &menv[beam_source];
             if (!mon->observable())
             {
                 mpr("Something tries to affect you, but you resist.");
@@ -3633,7 +3633,7 @@ int bolt::beam_source_as_target() const
                                     : MHITYOU);
 }
 
-void bolt::update_hurt_or_helped(monsters *mon)
+void bolt::update_hurt_or_helped(monster* mon)
 {
     if (!mons_atts_aligned(attitude, mons_attitude(mon)))
     {
@@ -3668,7 +3668,7 @@ void bolt::update_hurt_or_helped(monsters *mon)
     }
 }
 
-void bolt::tracer_enchantment_affect_monster(monsters* mon)
+void bolt::tracer_enchantment_affect_monster(monster* mon)
 {
     // Update friend or foe encountered.
     if (!mons_atts_aligned(attitude, mons_attitude(mon)))
@@ -3691,7 +3691,7 @@ void bolt::tracer_enchantment_affect_monster(monsters* mon)
 }
 
 // Return false if we should skip handling this monster.
-bool bolt::determine_damage(monsters* mon, int& preac, int& postac, int& final,
+bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
                             std::vector<std::string>& messages)
 {
     // preac: damage before AC modifier
@@ -3731,7 +3731,7 @@ bool bolt::determine_damage(monsters* mon, int& preac, int& postac, int& final,
     return (true);
 }
 
-void bolt::handle_stop_attack_prompt(monsters* mon)
+void bolt::handle_stop_attack_prompt(monster* mon)
 {
     if ((thrower == KILL_YOU_MISSILE || thrower == KILL_YOU)
         && !is_harmless(mon))
@@ -3756,7 +3756,7 @@ void bolt::handle_stop_attack_prompt(monsters* mon)
     }
 }
 
-void bolt::tracer_nonenchantment_affect_monster(monsters* mon)
+void bolt::tracer_nonenchantment_affect_monster(monster* mon)
 {
     std::vector<std::string> messages;
     int preac, post, final;
@@ -3805,7 +3805,7 @@ void bolt::tracer_nonenchantment_affect_monster(monsters* mon)
     extra_range_used += range_used_on_hit(mon);
 }
 
-void bolt::tracer_affect_monster(monsters* mon)
+void bolt::tracer_affect_monster(monster* mon)
 {
     // Ignore unseen monsters.
     if (!agent() || !mon->visible_to(agent()))
@@ -3834,7 +3834,7 @@ void bolt::tracer_affect_monster(monsters* mon)
         tracer_nonenchantment_affect_monster(mon);
 }
 
-void bolt::enchantment_affect_monster(monsters* mon)
+void bolt::enchantment_affect_monster(monster* mon)
 {
     god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
@@ -3908,7 +3908,7 @@ void bolt::enchantment_affect_monster(monsters* mon)
     extra_range_used += range_used_on_hit(mon);
 }
 
-void bolt::monster_post_hit(monsters* mon, int dmg)
+void bolt::monster_post_hit(monster* mon, int dmg)
 {
     if (YOU_KILL(thrower) && mons_near(mon))
         print_wounds(mon);
@@ -3967,7 +3967,7 @@ void bolt::water_hits_actor(actor *act)
 }
 
 // Return true if the block succeeded (including reflections.)
-bool bolt::attempt_block(monsters* mon)
+bool bolt::attempt_block(monster* mon)
 {
     const int shield_block = mon->shield_bonus();
     bool rc = false;
@@ -4008,7 +4008,7 @@ bool bolt::attempt_block(monsters* mon)
     return (rc);
 }
 
-bool bolt::handle_statue_disintegration(monsters* mon)
+bool bolt::handle_statue_disintegration(monster* mon)
 {
     bool rc = false;
     if ((flavour == BEAM_DISINTEGRATION || flavour == BEAM_NUKE)
@@ -4041,7 +4041,7 @@ bool bolt::handle_statue_disintegration(monsters* mon)
     return (rc);
 }
 
-void bolt::affect_monster(monsters* mon)
+void bolt::affect_monster(monster* mon)
 {
     // Don't hit dead monsters.
     if (!mon->alive())
@@ -4328,7 +4328,7 @@ void bolt::affect_monster(monsters* mon)
     }
 
     int      corpse = -1;
-    monsters orig   = *mon;
+    monster  orig   = *mon;
 
     if (mon->alive())
         monster_post_hit(mon, final);
@@ -4394,7 +4394,7 @@ bool bolt::has_saving_throw() const
     }
 }
 
-static bool _ench_flavour_affects_monster(beam_type flavour, const monsters* mon)
+static bool _ench_flavour_affects_monster(beam_type flavour, const monster* mon)
 {
     bool rc = true;
     switch (flavour)
@@ -4444,7 +4444,7 @@ static bool _ench_flavour_affects_monster(beam_type flavour, const monsters* mon
     return rc;
 }
 
-bool enchant_monster_with_flavour(monsters* mon, actor *foe,
+bool enchant_monster_with_flavour(monster* mon, actor *foe,
                                   beam_type flavour, int powc)
 {
     bolt dummy;
@@ -4455,7 +4455,7 @@ bool enchant_monster_with_flavour(monsters* mon, actor *foe,
     return dummy.obvious_effect;
 }
 
-mon_resist_type bolt::try_enchant_monster(monsters *mon)
+mon_resist_type bolt::try_enchant_monster(monster* mon)
 {
     // Early out if the enchantment is meaningless.
     if (!_ench_flavour_affects_monster(flavour, mon))
@@ -4486,7 +4486,7 @@ mon_resist_type bolt::try_enchant_monster(monsters *mon)
     return (apply_enchantment_to_monster(mon));
 }
 
-mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
+mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 {
     // Gigantic-switches-R-Us
     switch (flavour)
@@ -4814,7 +4814,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         if (mons_is_ghost_demon(mon->type))
             return (MON_UNAFFECTED);
 
-        monsters orig_mon(*mon);
+        monster orig_mon(*mon);
         if (monster_polymorph(mon, (mon->holiness() == MH_DEMONIC ?
                                         MONS_HELL_HOG : MONS_HOG)))
         {
@@ -5341,7 +5341,7 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
 // Only enchantments should need the actual monster type
 // to determine this; non-enchantments are pretty
 // straightforward.
-bool bolt::nasty_to(const monsters *mon) const
+bool bolt::nasty_to(const monster* mon) const
 {
     // Cleansing flame.
     if (flavour == BEAM_HOLY)
@@ -5396,7 +5396,7 @@ bool bolt::nasty_to(const monsters *mon) const
 // Return true if the bolt is considered nice by mon.
 // This is not the inverse of nasty_to(): the bolt needs to be
 // actively positive.
-bool bolt::nice_to(const monsters *mon) const
+bool bolt::nice_to(const monster* mon) const
 {
     // Polymorphing a (very) ugly thing will mutate it into a different
     // (very) ugly thing.

@@ -157,7 +157,7 @@ bool trap_def::is_known(const actor* act) const
         return (player_knows);
     else if (act->atype() == ACT_MONSTER)
     {
-        const monsters* mons = act->as_monster();
+        const monster* mons = act->as_monster();
         const int intel = mons_intel(mons);
 
         // Smarter trap handling for intelligent monsters
@@ -247,7 +247,7 @@ void mark_net_trapping(const coord_def& where)
     }
 }
 
-void monster_caught_in_net(monsters *mon, bolt &pbolt)
+void monster_caught_in_net(monster* mon, bolt &pbolt)
 {
     if (mon->body_size(PSIZE_BODY) >= SIZE_GIANT)
         return;
@@ -321,7 +321,7 @@ bool player_caught_in_net()
     return (false);
 }
 
-void check_net_will_hold_monster(monsters *mons)
+void check_net_will_hold_monster(monster* mons)
 {
     if (mons->body_size(PSIZE_BODY) >= SIZE_GIANT)
     {
@@ -375,7 +375,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     // triggering process.
     bool trap_destroyed = false;
 
-    monsters* m = triggerer.as_monster();
+    monster* m = triggerer.as_monster();
 
     // Smarter monsters and those native to the level will simply
     // side-step known shafts. Unless they are already looking for
@@ -898,7 +898,7 @@ void disarm_trap(const coord_def& where)
 // This doesn't actually have any effect (yet).
 // Do not expect gratitude for this!
 // ----------------------------------
-void remove_net_from(monsters *mon)
+void remove_net_from(monster* mon)
 {
     you.turn_is_over = true;
 

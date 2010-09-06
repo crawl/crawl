@@ -141,7 +141,7 @@ std::string debug_coord_str(const coord_def &pos)
                         !in_bounds(pos) ? " <OoB>" : "");
 }
 
-std::string debug_mon_str(const monsters* mon)
+std::string debug_mon_str(const monster* mon)
 {
     const int midx = mon->mindex();
     if (invalid_monster_index(midx))
@@ -154,7 +154,7 @@ std::string debug_mon_str(const monsters* mon)
     return (out);
 }
 
-void debug_dump_mon(const monsters* mon, bool recurse)
+void debug_dump_mon(const monster* mon, bool recurse)
 {
     const int midx = mon->mindex();
     if (invalid_monster_index(midx) || invalid_monster_type(mon->type))

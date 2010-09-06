@@ -867,8 +867,8 @@ help_file help_files[] = {
 
 static bool _compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
 {
-    monsters *a = static_cast<monsters*>( entry_a->data );
-    monsters *b = static_cast<monsters*>( entry_b->data );
+    monster* a = static_cast<monster* >( entry_a->data );
+    monster* b = static_cast<monster* >( entry_b->data );
 
     if (a->type == b->type)
         return (false);
@@ -882,8 +882,8 @@ static bool _compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
 // levels are equal, or by name if both level and hitdice are equal.
 static bool _compare_mon_toughness(MenuEntry *entry_a, MenuEntry* entry_b)
 {
-    monsters *a = static_cast<monsters*>( entry_a->data );
-    monsters *b = static_cast<monsters*>( entry_b->data );
+    monster* a = static_cast<monster* >( entry_a->data );
+    monster* b = static_cast<monster* >( entry_b->data );
 
     if (a->type == b->type)
         return (false);
@@ -1724,7 +1724,7 @@ static void _find_description(bool *again, std::string *error_inout)
                        MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING,
                        doing_mons, text_only);
     desc_menu.set_tag("description");
-    std::list<monsters> monster_list;
+    std::list<monster> monster_list;
     std::list<item_def> item_list;
     for (unsigned int i = 0, size = key_list.size(); i < size; i++)
     {
@@ -1737,7 +1737,7 @@ static void _find_description(bool *again, std::string *error_inout)
         {
             // Create and store fake monsters, so the menu code will
             // have something valid to refer to.
-            monsters     fake_mon;
+            monster     fake_mon;
             monster_type m_type = get_monster_by_name(str, true);
 
             // Not worth the effort handling the item; also, it would
@@ -1822,7 +1822,7 @@ static void _find_description(bool *again, std::string *error_inout)
 
             if (doing_mons)
             {
-                monsters* mon = (monsters*) sel[0]->data;
+                monster* mon = (monster* ) sel[0]->data;
                 key = mons_type_name(mon->type, DESC_PLAIN);
             }
             else if (doing_features)

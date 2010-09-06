@@ -98,7 +98,7 @@ enum LOSSelect
 };
 
 #ifdef WIZARD
-static void _wizard_make_friendly(monsters* m);
+static void _wizard_make_friendly(monster* m);
 #endif
 static void _describe_feature(const coord_def& where, bool oos);
 static void _describe_cell(const coord_def& where, bool in_range = true);
@@ -142,7 +142,7 @@ static void _debug_describe_feature_at(const coord_def &where);
 #endif
 
 #ifdef WIZARD
-static void _wizard_make_friendly(monsters* m)
+static void _wizard_make_friendly(monster* m)
 {
     if (m == NULL)
         return;
@@ -326,9 +326,9 @@ actor* direction_chooser::targeted_actor() const
         return targeted_monster();
 }
 
-monsters* direction_chooser::targeted_monster() const
+monster* direction_chooser::targeted_monster() const
 {
-    monsters* m = monster_at(target());
+    monster* m = monster_at(target());
     if (m && you.can_see(m) && !mons_is_unknown_mimic(m))
         return m;
     else
@@ -342,7 +342,7 @@ std::string direction_chooser::build_targeting_hint_string() const
     // Hint for 'p' - previous target, and for 'f' - current cell, if
     // applicable.
     const actor*    f_target = targeted_actor();
-    const monsters* p_target = get_current_target();
+    const monster* p_target = get_current_target();
 
     if (f_target && f_target == p_target)
     {
@@ -430,7 +430,7 @@ void direction_chooser::describe_cell() const
 static void _draw_ray_glyph(const coord_def &pos, int colour,
                             int glych, int mcol, bool in_range)
 {
-    if (const monsters *mons = monster_at(pos))
+    if (const monster* mons = monster_at(pos))
     {
         if (mons->alive() && mons->visible_to(&you)
             && !mons_is_unknown_mimic(mons))
@@ -448,7 +448,7 @@ static void _draw_ray_glyph(const coord_def &pos, int colour,
 
 // Unseen monsters in shallow water show a "strange disturbance".
 // (Unless flying!)
-static bool _mon_exposed_in_water(const monsters *mon)
+static bool _mon_exposed_in_water(const monster* mon)
 {
     if (!mon)
         return (false);
@@ -459,7 +459,7 @@ static bool _mon_exposed_in_water(const monsters *mon)
             && !mons_flies(mon));
 }
 
-static bool _mon_exposed_in_cloud(const monsters *mon)
+static bool _mon_exposed_in_cloud(const monster* mon)
 {
     if (!mon)
         return (false);
@@ -470,7 +470,7 @@ static bool _mon_exposed_in_cloud(const monsters *mon)
             && !mon->is_insubstantial());
 }
 
-static bool _mon_exposed(const monsters* mon)
+static bool _mon_exposed(const monster* mon)
 {
     return (_mon_exposed_in_water(mon) || _mon_exposed_in_cloud(mon));
 }
@@ -556,7 +556,7 @@ void full_describe_view()
             list_features.push_back(*ri);
         }
 
-        const monsters *mon = monster_at(*ri);
+        const monster* mon = monster_at(*ri);
         const bool unknown_mimic = (mon && mons_is_unknown_mimic(mon));
 
         if (unknown_mimic)      // It'll be on top.
@@ -777,7 +777,7 @@ void full_describe_view()
         if (quant == 1)
         {
             // Get selected monster.
-            monsters* m = static_cast<monsters*>(sel[0]->data);
+            monster* m = static_cast<monster* >(sel[0]->data);
 
 #ifdef USE_TILE
             // Highlight selected monster on the screen.
@@ -1072,7 +1072,7 @@ coord_def direction_chooser::find_default_target() const
         // Try to find an enemy monster.
 
         // First try to pick our previous target.
-        const monsters *mon_target = get_current_target();
+        const monster* mon_target = get_current_target();
         if (mon_target != NULL
             && (mode != TARG_EVOLVABLE_PLANTS
                     && mons_attitude(mon_target) == ATT_HOSTILE
@@ -1239,7 +1239,7 @@ void direction_chooser::update_previous_target() const
     you.prev_grd_targ.reset();
 
     // Maybe we should except just_looking here?
-    const monsters* m = monster_at(target());
+    const monster* m = monster_at(target());
     if (m && you.can_see(m))
         you.prev_targ = m->mindex();
     else if (looking_at_you())
@@ -1256,7 +1256,7 @@ bool direction_chooser::select(bool allow_out_of_range, bool endpoint)
         return false;
     }
 
-    const monsters* m = monster_at(target());
+    const monster* m = monster_at(target());
     moves.isEndpoint = endpoint || (m && _mon_exposed(m));
     moves.isValid  = true;
     moves.isTarget = true;
@@ -1352,7 +1352,7 @@ static void _push_back_if_nonempty(const std::string& str,
 void direction_chooser::print_target_monster_description(bool &did_cloud) const
 {
     // Do we see anything?
-    const monsters* mon = monster_at(target());
+    const monster* mon = monster_at(target());
     if (mon == NULL || mons_is_unknown_mimic(mon))
         return;
 
@@ -1521,7 +1521,7 @@ void direction_chooser::toggle_beam()
 
 bool direction_chooser::select_previous_target()
 {
-    if (const monsters* mon_target = get_current_target())
+    if (const monster* mon_target = get_current_target())
     {
         // We have all the information we need.
         moves.isValid  = true;
@@ -1567,7 +1567,7 @@ void direction_chooser::handle_wizard_command(command_type key_command,
     if (!you.wizard)
         return;
 
-    monsters* const m = monster_at(target());
+    monster* const m = monster_at(target());
     std::string marker_result = "";
 
     // These commands do something even if there's no monster there.
@@ -1980,7 +1980,7 @@ std::string get_terse_square_desc(const coord_def &gc)
     }
     else if (monster_at(gc) && you.can_see(monster_at(gc)))
     {
-        const monsters& mons = *monster_at(gc);
+        const monster& mons = *monster_at(gc);
 
         if (mons_is_mimic(mons.type) && !(mons.flags & MF_KNOWN_MIMIC))
             desc = get_mimic_item(&mons).name(DESC_PLAIN);
@@ -2015,7 +2015,7 @@ void get_square_desc(const coord_def &c, describe_info &inf,
     if (!you.see_cell(c))
         return;
 
-    const monsters* mons = monster_at(c);
+    const monster* mons = monster_at(c);
     const int oid = you.visible_igrd(c);
 
     if (mons && mons->visible_to(&you))
@@ -2068,7 +2068,7 @@ void full_describe_square(const coord_def &c)
     if (!you.see_cell(c))
         return;
 
-    const monsters* mons = monster_at(c);
+    const monster* mons = monster_at(c);
     const int oid = you.visible_igrd(c);
 
     if (mons && mons->visible_to(&you))
@@ -2140,7 +2140,7 @@ static void _describe_oos_square(const coord_def& where)
 #endif
 }
 
-static bool _mons_is_valid_target(const monsters *mon, int mode, int range)
+static bool _mons_is_valid_target(const monster* mon, int mode, int range)
 {
     // Monster types that you can't gain experience from don't count as
     // monsters.
@@ -2186,7 +2186,7 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
     if (!_is_target_in_range(where, range) || !you.see_cell(where))
         return (false);
 
-    const monsters* mon = monster_at(where);
+    const monster* mon = monster_at(where);
     if (mon == NULL)
         return (false);
 
@@ -2212,8 +2212,8 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
     if (need_path && _blocked_ray(mon->pos()))
         return (false);
 
-    const monsters *monl = mlist[real_idx].mon();
-    extern mon_attitude_type mons_attitude(const monsters *m);
+    const monster* monl = mlist[real_idx].mon();
+    extern mon_attitude_type mons_attitude(const monster* m);
 
     if (mons_attitude(mon) != mlist[idx].attitude)
         return (false);
@@ -2245,7 +2245,7 @@ static bool _find_fprop_unoccupied(const coord_def & where, int mode,
     if (!_is_target_in_range(where, range))
         return (false);
 
-    monsters * mon = monster_at(where);
+    monster* mon = monster_at(where);
     if (mon || !you.see_cell(where))
         return (false);
 
@@ -2281,7 +2281,7 @@ static bool _find_monster( const coord_def& where, int mode, bool need_path,
     if (!_is_target_in_range(where, range))
         return (false);
 
-    const monsters* mon = monster_at(where);
+    const monster* mon = monster_at(where);
 
     // No monster or outside LOS.
     if (mon == NULL || !you.see_cell(where))
@@ -3621,7 +3621,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
     if (where == you.pos() && !crawl_state.arena_suspended)
         mpr("You.", MSGCH_EXAMINE_FILTER);
 
-    if (const monsters* mon = monster_at(where))
+    if (const monster* mon = monster_at(where))
     {
         if (_mon_exposed_in_water(mon))
         {

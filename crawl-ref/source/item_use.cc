@@ -1537,7 +1537,7 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
     }
     else
     {
-        monsters *mon = victim->as_monster();
+        monster* mon = victim->as_monster();
 
         if (!(mon->flags & MF_WAS_IN_VIEW))
             mon->seen_context = "thin air";
@@ -1656,7 +1656,7 @@ static bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
     if (!agent || agent->atype() == ACT_MONSTER || beam.reflections > 0)
         return (true);
 
-    monsters* mons = victim->as_monster();
+    monster* mons = victim->as_monster();
 
     const int skill = you.skills[SK_THROWING];
     const item_def* wp = agent->weapon();
@@ -1809,7 +1809,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         // But not for Nessos.
         if (agent->atype() == ACT_MONSTER)
         {
-            const monsters* mon = static_cast<const monsters*>(agent);
+            const monster* mon = static_cast<const monster* >(agent);
             if (mon->type != MONS_NESSOS)
                 bow_brand = SPWPN_NORMAL;
         }
@@ -1841,7 +1841,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     }
     else
     {
-        const monsters *mon = agent->as_monster();
+        const monster* mon = agent->as_monster();
 
         beam.attitude      = mons_attitude(mon);
         beam.beam_source   = mon->mindex();
@@ -4591,7 +4591,7 @@ static void _vulnerability_scroll()
     // Go over all creatures in LOS.
     for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
     {
-        if (monsters* mon = monster_at(*ri))
+        if (monster* mon = monster_at(*ri))
         {
             // Dispel all magical enchantments.
             for (unsigned int i = 0; i < ARRAYSZ(lost_enchantments); ++i)

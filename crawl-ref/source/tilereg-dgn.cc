@@ -656,7 +656,7 @@ static const bool _have_appropriate_spell(const actor* target)
     return (false);
 }
 
-static bool _handle_distant_monster(monsters* mon, unsigned char mod)
+static bool _handle_distant_monster(monster* mon, unsigned char mod)
 {
     const coord_def gc = mon->pos();
     const bool shift = (mod & MOD_SHIFT);
@@ -851,7 +851,7 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
 
 int tile_click_cell(const coord_def &gc, unsigned char mod)
 {
-    monsters* mon = monster_at(gc);
+    monster* mon = monster_at(gc);
     if (mon && you.can_see(mon))
     {
         if (_handle_distant_monster(mon, mod))
@@ -1036,7 +1036,7 @@ bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
 
         if (!cell_is_solid(gc))
         {
-            const monsters *mon = monster_at(gc);
+            const monster* mon = monster_at(gc);
             if (!mon || mon->friendly() || !mon->visible_to(&you))
                 tip = "[L-Click] Move\n";
             else if (mon)
@@ -1054,7 +1054,7 @@ bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
 
     if (gc != you.pos())
     {
-        const monsters* mon = monster_at(gc);
+        const monster* mon = monster_at(gc);
         if (mon && you.can_see(mon))
         {
             if (you.see_cell_no_trans(mon->pos())

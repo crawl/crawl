@@ -203,7 +203,7 @@ void wizard_create_spec_object()
             mon = MONS_DRACONIAN;
         }
 
-        monsters dummy;
+        monster dummy;
         dummy.type = mon;
 
         if (mons_genus(mon) == MONS_HYDRA)

@@ -89,7 +89,7 @@ static opacity_solid opc_solid;
 class opacity_monmove : public opacity_func
 {
 public:
-    opacity_monmove(const monsters& m)
+    opacity_monmove(const monster& m)
         : mon(m)
     {
     }
@@ -98,7 +98,7 @@ public:
 
     opacity_type operator()(const coord_def& p) const;
 private:
-    const monsters& mon;
+    const monster& mon;
 };
 
 // Make any actor (as well as solid features) block.

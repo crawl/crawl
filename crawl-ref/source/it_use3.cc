@@ -223,7 +223,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     const coord_def delta = beam.target - you.pos();
     const int x_distance  = abs(delta.x);
     const int y_distance  = abs(delta.y);
-    monsters* mons = monster_at(beam.target);
+    monster* mons = monster_at(beam.target);
 
     const int x_middle = std::max(beam.target.x, you.pos().x)
                             - (x_distance / 2);
@@ -287,7 +287,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         if (success)
         {
             // Monster might have died or gone away.
-            if (monsters* m = monster_at(beam.target))
+            if (monster* m = monster_at(beam.target))
                 if (mons_is_mimic(m->type))
                     mimic_alert(m);
         }

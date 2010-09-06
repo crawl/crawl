@@ -24,7 +24,7 @@
 
 static int _sleep_monsters(coord_def where, int pow, int, actor *)
 {
-    monsters* mons = monster_at(where);
+    monster* mons = monster_at(where);
     if (!mons)
         return (0);
 
@@ -75,7 +75,7 @@ static bool _is_domesticated_animal(int type)
 
 static int _tame_beast_monsters(coord_def where, int pow, int, actor *)
 {
-    monsters* mons = monster_at(where);
+    monster* mons = monster_at(where);
     if (mons == NULL)
         return 0;
 
@@ -116,7 +116,7 @@ bool backlight_monsters(coord_def where, int pow, int garbage)
     UNUSED(pow);
     UNUSED(garbage);
 
-    monsters* mons = monster_at(where);
+    monster* mons = monster_at(where);
     if (mons == NULL)
         return (false);
 
@@ -154,7 +154,7 @@ bool backlight_monsters(coord_def where, int pow, int garbage)
     return (true);
 }
 
-bool do_slow_monster(monsters* mon, kill_category whose_kill)
+bool do_slow_monster(monster* mon, kill_category whose_kill)
 {
     // Try to remove haste, if monster is hasted.
     if (mon->del_ench(ENCH_HASTE, true))

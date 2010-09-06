@@ -20,31 +20,31 @@ enum mon_event_type
     ME_CORNERED,                        // cannot flee
 };
 
-class  monsters;
+class monster;
 struct coord_def;
 
-void behaviour_event(monsters *mon, mon_event_type event_type,
+void behaviour_event(monster* mon, mon_event_type event_type,
                      int src = MHITNOT, coord_def src_pos = coord_def(),
                      bool allow_shout = true);
 
 // This function is somewhat low level; you should probably use
 // behaviour_event(mon, ME_EVAL) instead.
-void handle_behaviour(monsters *mon);
+void handle_behaviour(monster* mon);
 
-void make_mons_stop_fleeing(monsters *mon);
+void make_mons_stop_fleeing(monster* mon);
 
-void set_random_target(monsters* mon);
+void set_random_target(monster* mon);
 
-void make_mons_leave_level(monsters *mon);
+void make_mons_leave_level(monster* mon);
 
-bool monster_can_hit_monster(monsters* mons, const monsters *targ);
+bool monster_can_hit_monster(monster* mons, const monster* targ);
 
-bool mons_avoids_cloud(const monsters* mons, cloud_type cl_type,
+bool mons_avoids_cloud(const monster* mons, cloud_type cl_type,
                        bool placement = false);
 
 // Like the above, but allow a monster to move from one damaging cloud
 // to another.
-bool mons_avoids_cloud(const monsters* mons, int cloud_num,
+bool mons_avoids_cloud(const monster* mons, int cloud_num,
                        cloud_type *cl_type = NULL, bool placement = false);
 
 #endif

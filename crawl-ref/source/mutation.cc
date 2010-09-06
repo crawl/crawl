@@ -1943,7 +1943,7 @@ void check_antennae_detect()
 
     for (radius_iterator ri(you.pos(), radius, C_SQUARE); ri; ++ri)
     {
-        const monsters* mon = monster_at(*ri);
+        const monster* mon = monster_at(*ri);
         if (!mon)
         {
             map_cell& cell = env.map_knowledge(*ri);
