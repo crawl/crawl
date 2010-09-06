@@ -318,6 +318,11 @@ static bool _mon_on_interesting_grid(monster* mon)
     case DNGN_RETURN_FROM_ELVEN_HALLS:
         return (mons_is_native_in_branch(mon, BRANCH_ELVEN_HALLS));
 
+    // Same for dwarves and the Dwarf Hall of Fallen Heroes.
+    case DNGN_ENTER_DWARF_HALL:
+    case DNGN_RETURN_FROM_DWARF_HALL:
+        return (mons_is_native_in_branch(mon, BRANCH_DWARF_HALL));
+
     // Killer bees always return to their hive.
     case DNGN_ENTER_HIVE:
         return (mons_is_native_in_branch(mon, BRANCH_HIVE));

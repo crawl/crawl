@@ -2895,6 +2895,8 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return ("gate leading out of Pandemonium");
     case DNGN_TRANSIT_PANDEMONIUM:
         return ("gate leading to another region of Pandemonium");
+    case DNGN_ENTER_DWARF_HALL:
+        return ("staircase to the Dwarf Hall of Fallen Heroes");
     case DNGN_ENTER_ORCISH_MINES:
         return ("staircase to the Orcish Mines");
     case DNGN_ENTER_HIVE:
@@ -2929,6 +2931,7 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return ("gate leading to a distant place");
     case DNGN_EXIT_PORTAL_VAULT:
         return ("gate leading back to the Dungeon");
+    case DNGN_RETURN_FROM_DWARF_HALL:
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_HIVE:
     case DNGN_RETURN_FROM_LAIR:

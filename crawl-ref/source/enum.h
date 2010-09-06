@@ -368,6 +368,7 @@ enum branch_type                // you.where_are_you
     BRANCH_HALL_OF_ZOT,
     BRANCH_FOREST,
     BRANCH_SPIDER_NEST,
+    BRANCH_DWARF_HALL,
     NUM_BRANCHES
 };
 
@@ -974,8 +975,9 @@ enum dungeon_char_type
 //
 // * New stairs/portals: update grid_stair_direction.
 // * Any: edit view.cc and add a glyph and colour for the feature.
-// * Any: edit direct.cc and add a description for the feature.
-// * Any: edit dat/descript.txt and add a long description if appropriate.
+// * Any: edit directn.cc and add a description for the feature.
+// * Any: edit dat/descript/features.txt and add a
+//        long description if appropriate.
 // * Any: check the grid_* functions in misc.cc and make sure
 //        they return sane values for your new feature.
 // * Any: edit dungeon.cc and add a symbol to map_feature() and
@@ -1088,17 +1090,18 @@ enum dungeon_feature_type
 
     // Entrances to various branches
     DNGN_ENTER_FIRST_BRANCH = 110,     //  110
-    DNGN_ENTER_ORCISH_MINES = DNGN_ENTER_FIRST_BRANCH,
+    DNGN_ENTER_DWARF_HALL = DNGN_ENTER_FIRST_BRANCH,
+    DNGN_ENTER_ORCISH_MINES,
     DNGN_ENTER_HIVE,
     DNGN_ENTER_LAIR,
     DNGN_ENTER_SLIME_PITS,
-    DNGN_ENTER_VAULTS,
-    DNGN_ENTER_CRYPT,                //  115
+    DNGN_ENTER_VAULTS,                 //  115
+    DNGN_ENTER_CRYPT,
     DNGN_ENTER_HALL_OF_BLADES,
     DNGN_ENTER_ZOT,
     DNGN_ENTER_TEMPLE,
-    DNGN_ENTER_SNAKE_PIT,
-    DNGN_ENTER_ELVEN_HALLS,            //  120
+    DNGN_ENTER_SNAKE_PIT,              //  120
+    DNGN_ENTER_ELVEN_HALLS,
     DNGN_ENTER_TOMB,
     DNGN_ENTER_SWAMP,                  //  122
     DNGN_ENTER_SHOALS,
@@ -1109,17 +1112,18 @@ enum dungeon_feature_type
     // Exits from various branches
     // Order must be the same as above
     DNGN_RETURN_FROM_FIRST_BRANCH = 130, //  130
-    DNGN_RETURN_FROM_ORCISH_MINES = DNGN_RETURN_FROM_FIRST_BRANCH,
+    DNGN_RETURN_FROM_DWARF_HALL = DNGN_RETURN_FROM_FIRST_BRANCH,
+    DNGN_RETURN_FROM_ORCISH_MINES,
     DNGN_RETURN_FROM_HIVE,
     DNGN_RETURN_FROM_LAIR,
     DNGN_RETURN_FROM_SLIME_PITS,
-    DNGN_RETURN_FROM_VAULTS,
-    DNGN_RETURN_FROM_CRYPT,            //  135
+    DNGN_RETURN_FROM_VAULTS,           //  135
+    DNGN_RETURN_FROM_CRYPT,
     DNGN_RETURN_FROM_HALL_OF_BLADES,
     DNGN_RETURN_FROM_ZOT,
     DNGN_RETURN_FROM_TEMPLE,
-    DNGN_RETURN_FROM_SNAKE_PIT,
-    DNGN_RETURN_FROM_ELVEN_HALLS,      //  140
+    DNGN_RETURN_FROM_SNAKE_PIT,        //  140
+    DNGN_RETURN_FROM_ELVEN_HALLS,
     DNGN_RETURN_FROM_TOMB,
     DNGN_RETURN_FROM_SWAMP,            //  142
     DNGN_RETURN_FROM_SHOALS,
