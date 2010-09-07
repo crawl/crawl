@@ -692,6 +692,85 @@ xxxxxxxx...xxxxxxxx
       xx@@@xx
 ENDMAP
 
+DEPTH: D, Elf
+MAP
+..xxx....
+....xx....
+ ....xx....
+  ....xx....
+   ....xx....
+    ....xx....
+     ....xxx...
+ENDMAP
+
+NAME: nrook_mini_vaults
+DEPTH: D
+MAP
+.........
+.vvvvvvv.
+.v.....v.
+.v.....v.
+.v.....+.
+.v.....v.
+.vvvvvvv.
+.........
+ENDMAP
+
+NAME: nrook_campfire
+DEPTH: D
+MARKER: P = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 10, pow_max = 10, delay = 5, \
+             size = 1, walk_dist = 0, start_clouds = 1 }
+MAP
+........
+..ttttt.
+.ttmmmt..
+.ttmPmtt.
+.ttmmmtt.
+.tttttt..
+.......
+ENDMAP
+
+NAME: nrook_uturn
+DEPTH: D, Elf
+MAP
+ xxxxxxxxxxxxxxxx
+ x..............xx
+@+...............xx
+ x................xx
+ xxxxxxxxxxxxxx....x
+ xxxxxxxxxxxxxxx...x
+ xxxxxxxxxxxxxx....x
+ x................xx
+@+...............xx
+ x..............xx
+ xxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME: nrook_pool_corridor
+DEPTH: D
+MAP
+ cccccccccccccccc
+ c..............c
+ c.wwwwwwwwwwww.c
+@+.wwwwwwwwwwww.+@
+ c.wwwwwwwwwwww.c
+ c.wwwwwwwwwwww.c
+ c..............c
+ cccccccccccccccc
+ENDMAP
+
+NAME: nrook_loot_triangle
+DEPTH: D, Elf, Vault, Snake, Dis
+MAP
+    v
+   vvv
+  vv.vv
+ vv.*.vv
+vvvv@vvvv
+ENDMAP
+
+
 #######################################################################
 #
 # Classical minivaults. All of these are 12x12, almost all are ancient.
