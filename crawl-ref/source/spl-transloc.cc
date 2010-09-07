@@ -959,13 +959,17 @@ bool cast_golubrias_passage(const coord_def& where)
     } while((grd(randomized_where) != DNGN_FLOOR ||
              monster_at(randomized_where) ||
              !you.see_cell(randomized_where) ||
+             you.trans_wall_blocking(randomized_where) ||
              randomized_where == you.pos()) &&
             tries < 100);
 
     if (tries >= 100)
     {
-        // XXX: bleh, dumb message
-        mpr("Creating a passage of Golubria requires sufficient empty space.");
+        if (you.trans_wall_blocking(randomized_where))
+            mpr("You cannot create a passage on the other side of the transparent wall.");
+        else
+            // XXX: bleh, dumb message
+            mpr("Creating a passage of Golubria requires sufficient empty space.");
         return false;
     }
 
