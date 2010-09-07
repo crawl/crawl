@@ -4272,6 +4272,7 @@ static misc_item_type _deck_type_string_to_subtype(const std::string& s) {
     if (s == "destruction") return MISC_DECK_OF_DESTRUCTION;
     if (s == "dungeons")    return MISC_DECK_OF_DUNGEONS;
     if (s == "summoning")   return MISC_DECK_OF_SUMMONING;
+    if (s == "summonings")  return MISC_DECK_OF_SUMMONING;
     if (s == "wonders")     return MISC_DECK_OF_WONDERS;
     if (s == "punishment")  return MISC_DECK_OF_PUNISHMENT;
     if (s == "war")         return MISC_DECK_OF_WAR;
