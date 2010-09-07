@@ -973,7 +973,8 @@ bool cast_golubrias_passage(const coord_def& where)
         return false;
     }
 
-    if (!allow_control_teleport(true))
+    if (!allow_control_teleport(true) ||
+        testbits(env.pgrid(randomized_where), FPROP_NO_CTELE_INTO))
     {
         // lose a turn
         mpr("A powerful magic interferes with the creation of the passage.");
