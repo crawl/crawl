@@ -1273,15 +1273,15 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_DELAYED_FIREBALL:
     {
         // Note: Power level of ball calculated at release. - bwr
-        const int pow = calc_spell_power(SPELL_DELAYED_FIREBALL, true);
-        const int fake_range = spell_range(SPELL_FIREBALL, pow, false);
+        power = calc_spell_power(SPELL_DELAYED_FIREBALL, true);
+        const int fake_range = spell_range(SPELL_FIREBALL, power, false);
 
         if (!spell_direction(spd, beam, DIR_NONE, TARG_HOSTILE, fake_range))
             return (false);
 
-        beam.range = spell_range(SPELL_FIREBALL, pow, true);
+        beam.range = spell_range(SPELL_FIREBALL, power, true);
 
-        if (!fireball(pow, beam))
+        if (!fireball(power, beam))
             return (false);
 
         // Only one allowed, since this is instantaneous. - bwr
@@ -1290,24 +1290,23 @@ static bool _do_ability(const ability_def& abil)
     }
 
     case ABIL_SPIT_POISON:      // Naga + spit poison mutation
-    {
-        const int pow = you.experience_level
-                        + player_mutation_level(MUT_SPIT_POISON) * 5
-                        + (you.species == SP_NAGA) * 10;
+        power = you.experience_level
+                + player_mutation_level(MUT_SPIT_POISON) * 5
+                + (you.species == SP_NAGA) * 10;
         beam.range = 6;         // following Venom Bolt
 
         if (!spell_direction(abild, beam)
-            || !player_tracer(ZAP_SPIT_POISON, pow, beam))
+            || !player_tracer(ZAP_SPIT_POISON, power, beam))
         {
             return (false);
         }
         else
         {
-            zapping(ZAP_SPIT_POISON, pow, beam);
+            zapping(ZAP_SPIT_POISON, power, beam);
             you.set_duration(DUR_BREATH_WEAPON, 3 + random2(5));
         }
         break;
-    }
+
     case ABIL_EVOKE_TELEPORTATION:    // ring of teleportation
     case ABIL_TELEPORTATION:          // teleport mut
         if (player_mutation_level(MUT_TELEPORT_AT_WILL) == 3)
@@ -1331,8 +1330,8 @@ static bool _do_ability(const ability_def& abil)
         switch (abil.ability)
         {
         case ABIL_BREATHE_FIRE:
-            power = you.experience_level;
-            power += player_mutation_level(MUT_BREATHE_FLAMES) * 4;
+            power = you.experience_level
+                    + player_mutation_level(MUT_BREATHE_FLAMES) * 4;
 
             if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
                 power += 12;
@@ -1587,15 +1586,14 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_YRED_ENSLAVE_SOUL:
     {
         god_acting gdact;
+        power = you.skills[SK_INVOCATIONS] * 4;
         beam.range = LOS_RADIUS;
+
         if (!spell_direction(spd, beam))
             return (false);
 
-        if (!zapping(ZAP_ENSLAVE_SOUL, you.skills[SK_INVOCATIONS] * 4, beam,
-                     true))
-        {
+        if (!zapping(ZAP_ENSLAVE_SOUL, power, beam))
             return (false);
-        }
         break;
     }
 
@@ -1618,8 +1616,8 @@ static bool _do_ability(const ability_def& abil)
             return (false);
 
         power = you.skills[SK_INVOCATIONS]
-                    + random2(1 + you.skills[SK_INVOCATIONS])
-                    + random2(1 + you.skills[SK_INVOCATIONS]);
+                + random2(1 + you.skills[SK_INVOCATIONS])
+                + random2(1 + you.skills[SK_INVOCATIONS]);
 
         // Since the actual beam is random, check with BEAM_MMISSILE and the
         // highest range possible (electricity).
@@ -1760,6 +1758,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_LUGONU_BANISH:
         beam.range = LOS_RADIUS;
+
         if (!spell_direction(spd, beam))
             return (false);
 
