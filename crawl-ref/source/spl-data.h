@@ -2031,6 +2031,19 @@ struct spell_desc
      false
 },
 
+{
+    SPELL_GOLUBRIAS_PASSAGE, "Golubria's Passage",
+     SPTYP_TRANSLOCATION,
+     SPFLAG_GRID | SPFLAG_NOT_SELF,
+     5,
+     0,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     false
+},
+
 // From here on, all spells are monster-only spells.
 
 {

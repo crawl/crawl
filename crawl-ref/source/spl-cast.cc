@@ -1959,6 +1959,11 @@ static spret_type _do_cast(spell_type spell, int powc,
             return (SPRET_ABORT);
         break;
 
+    case SPELL_GOLUBRIAS_PASSAGE:
+        if (!cast_golubrias_passage(beam.target))
+            return (SPRET_ABORT);
+        break;
+
     default:
         return (SPRET_NONE);
     }

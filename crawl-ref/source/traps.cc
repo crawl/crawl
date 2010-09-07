@@ -417,6 +417,10 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         this->shoot_ammo(triggerer, trig_knows);
     else switch (this->type)
     {
+    case TRAP_GOLUBRIA:
+        mpr("You enter the passage of Golubria");
+        trap_destroyed = true;
+        break;
     case TRAP_TELEPORT:
         // Never revealed by monsters.
         // except when it's in sight, it's pretty obvious what happened. -doy
@@ -1367,6 +1371,7 @@ dungeon_feature_type trap_category(trap_type type)
     case TRAP_TELEPORT:
     case TRAP_ALARM:
     case TRAP_ZOT:
+    case TRAP_GOLUBRIA:
         return (DNGN_TRAP_MAGICAL);
 
     case TRAP_DART:

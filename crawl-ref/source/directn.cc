@@ -2788,6 +2788,8 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
             return ("teleportation trap");
         case TRAP_ZOT:
             return ("Zot trap");
+        case TRAP_GOLUBRIA:
+            return ("passage of Golubria");
         default:
             error_message_to_player();
             return ("undefined trap");
