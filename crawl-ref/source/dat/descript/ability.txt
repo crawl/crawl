@@ -220,7 +220,7 @@ Heal hit points by draining the life force of the living monsters surrounding yo
 %%%%
 Enslave Soul
 
-Mark a monster's living soul as ripe for the taking. Once the marked monster dies, its soul will be yours.
+Mark a living intelligent monster's soul as ripe for the taking. Once the marked monster dies, its soul will be yours.
 
 The soul will retain at least some of the monster's innate healing ability and faculties, and sometimes even the monster's equipment. However, only a relatively uninjured monster can have its soul marked, and only one soul can be enslaved at a time. Furthermore, both the duration of the mark and the chance that the enslaved soul will remain intact are dependent on Invocations skill.
 
