@@ -354,7 +354,7 @@ void fill_status_info(int status, status_info* inf)
         inf->light_text   = "Blade";
         inf->short_text   = "bonded with blade";
         std::string desc;
-        if (you.duration[DUR_SURE_BLADE] > 15 * BASELINE_DELAY) 
+        if (you.duration[DUR_SURE_BLADE] > 15 * BASELINE_DELAY)
             desc = "strong ";
         else if (you.duration[DUR_SURE_BLADE] >  5 * BASELINE_DELAY)
             desc = "";
@@ -502,7 +502,7 @@ static void _describe_poison(status_info* inf)
     int pois = you.duration[DUR_POISONING];
     inf->light_colour = _bad_ench_colour(pois, 5, 10);
     inf->light_text   = "Pois";
-    const std::string adj = 
+    const std::string adj =
          (pois > 10) ? "extremely" :
          (pois > 5)  ? "very" :
          (pois > 3)  ? "quite"
