@@ -4,6 +4,254 @@
 # See entry.des for details.
 ##############################################################################
 
+###############################################################################
+# Probably looks better in tiles
+NAME:   evilmike_entry_home_sweet_home
+WEIGHT: 3
+TAGS:   entry no_monster_gen
+ORIENT: float
+COLOUR: ' = brown
+COLOUR: `1 = green
+COLOUR: - = darkgrey
+COLOUR: t = lightgreen
+FTILE:  `1t = floor_grass
+FTILE:  ' = floor_dirt
+FTILE:  -{V[ = floor_vault
+TILE:   c = wall_stone_brick
+MONS: bush
+SUBST: `'-: .
+MAP
+........@........
+.................
+..11111`'`11111..
+..1`````'`````1..
+..1``t``'``t``1..
+..1`````'`````1..
+..ccmccc+cccmcc..
+..c[--c---c---c..
+..c{--+---+---m..
+..ccccccc-c---m..
+..c-----c-c---c..
+..m-----+-ccccc..
+..m-----c-+---c..
+..c-----c-c-VVc..
+..cccmccccccmcc..
+.................
+ENDMAP
+
+###############################################################################
+NAME:   evilmike_entry_crescent
+TAGS:   entry no_monster_gen
+ORIENT: float
+SUBST:  = = =+x, $ = $0.
+MAP
+xxxxxxxxxx
+xx({[xxxxx
+xxx...xxxx
+x>xx...xxx
+xw$x...xxx
+xw.xx...xx
+xww.x...xx
+xwwwxx...x
+xwwwW=...=
+xwwwxx...x
+xww.x...xx
+xw.xx...xx
+xw$x...xxx
+x<xx...xxx
+xxx...xxxx
+xx@@@xxxxx
+ENDMAP
+
+###############################################################################
+NAME:    evilmike_entry_come_back
+WEIGHT:  2
+TAGS:    entry
+SHUFFLE: {[<
+ORIENT:  float
+NSUBST:  % = 1:1 / 1:0 / 1:> / *=%...
+MONS:    gnoll / ogre / giant frog / centaur
+MAP
+xxxxxxxxxx
+x[......{x
+x.xxxxxx.x
+x.x%%%%x.x
+..x%%%%x.x
+..m%%%%x.x
+..m%%%%x.x
+..mmmxxx.x
+........(x       
+ .....xxxx
+ENDMAP
+
+###############################################################################
+NAME:    evilmike_entry_hilbert_curve
+TAGS:    entry no_monster_gen no_pool_fixup
+ORIENT:  float
+SHUFFLE: ABCDEF<({[
+SUBST:   c:xxxcccwl, ABCDEF:.
+MAP
+.................
+.ccc.ccc.ccc.ccc.
+.cAc.cBc.cCc.cDc.
+.c.ccc.c.c.ccc.c.
+.c.....c.c.....c.
+.ccc.ccc.ccc.ccc.
+...c.c.....c.c...
+.ccc.ccccccc.ccc.
+.c.............c.
+.c.ccccc.ccccc.c.
+.cEc..<c.c(..cFc.
+.ccc.ccc.ccc.ccc.
+.....c.....c.....
+.ccc.ccc.ccc.ccc.
+.c.c..[c.c{..c.c.
+.c.ccccc.ccccc.c.
+.................
+ENDMAP
+
+###############################################################################
+NAME:   evilmike_entry_fibonacci_small
+TAGS:   entry no_monster_gen
+ORIENT: float
+WEIGHT: 6
+NSUBST: U = 1:+ / *:x, V = 1:+ / *:x, W = 1:+ / *:x, X = 1:+ / *:x
+SUBST:  .= .:2500 1
+MONS:   rat
+MAP
+    xxxxxxxxxxxx
+    xxx........x
+    xxx........x
+xxxxxxx........x
+xxxxxxx........x
+xxxxxxx........x
+x.....W........x
+x.....W........x
+x.....W........x
+x.....xxxxxXXXXx
+x.....x{+.x
+xxxxVVxxx+x
+xxxx...U..x
+xxxx...U..x
+ xxx...xxxx
+ xxxxxxxxxx
+ENDMAP
+
+###############################################################################
+NAME:    evilmike_entry_grusome_pit
+WEIGHT: 1
+TAGS:    entry no_rotate no_item_gen
+ORIENT:  northwest
+SUBST:   { = {:30 .
+ITEM:    q:1 chunk, skeleton, corpse
+SUBST:   Y = A.
+KFEAT:   A = known shaft trap
+SUBST:   ` = df `:60
+SUBST:   . = ' .:120
+SUBST:   ` = ''., V = Xx, U = Xxxx, x = X x:60
+KPROP:   X' = bloody
+SUBST:   X = x, ' = .
+SUBST:   = : xx=, = = +==
+SUBST:   . = .:320 d:5 e:20 f:5
+SUBST:   y : x
+MAP
+yyyyyyyyyyyy                               
+yyVVVVVyyyyy                               
+yVV...VVyyyy                               
+yV.YYY`VVyyyyyyyyyyyyyyyyyyyyyyy            
+yV.YAY`.Vyyyyyyyyyyyyyyxxxxyxxxy           
+yV.YYY`.UUyyyyxxxxxxyxxx..xxxxxy           
+yVV.```` UUUyUU....xxx.........@          
+yyVVVVU.``.UUU................xy          
+yyyyyyUU.`````......`.`.`.`...xy           
+     yyUUU..`.``...``........xxy           
+     yyyy=UUU..``.``.......xxxyy          
+     yyy.yyyUU............xxyyyy          
+     yyy>yyyyxxxx...{..xxxxyy             
+     yyy%yyyyyyyxx...xxxyyyyy             
+     yyy.yyyyyyyyxxxxxyyyyyyy       
+     yyy=yyyyyyyyyyyyyyyyyyyy       
+ENDMAP
+
+##############################################################################
+NAME:    evilmike_entry_teleporters
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: GTVt1`, pqr?
+SUBST:   `=. , p=?'', q=?''', r=?'''' , '=2d..
+SUBST:   X:Y. , Y:xx.
+KFEAT:   ? = teleport trap
+MONS:    plant, rat / giant newt / goblin w:5
+ITEM:    dart w:5 / stone
+MAP
+        xxx
+        xpx
+       xx+xx
+       xY.Yx
+       xX.Xx
+       xX.Xx
+      =x...xx
+  xxxxx..G..xxxxx
+xxxYXX.......XXYxxx
+x?+....G.{.G....+qx
+xxxYXX.......XXYxxx
+  xxxxx..G..xxxxx
+      xx...xx
+       xX.Xx
+       xX.Xx
+       xY.Yx
+       xx+xx
+        xrx
+        xxx 
+ENDMAP
+
+##############################################################
+NAME:   evilmike_entry_rings
+TAGS:   entry no_monster_gen no_pool_fixup
+ORIENT: float
+NSUBST: s = 1:+ / *:x, p = 1:+ / *:x, q = 1:+ / *:x, r = 1:+ / *:x
+NSUBST: _ = 1:w / *:., ' = 1:w / 1:( / *:., ` = 1:w / 1:[ / 1:d / *:.
+SUBST:  w:wlxm, x:xccv, +=+++. 
+ITEM:   stone / dart
+MAP
+   ...........   
+  ..rrrrrrrrr..  
+ ..rr.`````.rr.. 
+..rr.qqqqqqq.rr..
+.rr.qq.'''.qq.rr.
+.r.qq.ppppp.qq.r.
+.r`q.pp._.pp.q`r.
+.r`q'p.sss.p'q`r.
+.r`q'p_s{s_p'q`r.
+.r`q'p.sss.p'q`r.
+.r`q.pp._.pp.q`r.
+.r.qq.ppppp.qq.r.
+.rr.qq.'''.qq.rr.
+..rr.qqqqqqq.rr..
+ ..rr.`````.rr.. 
+  ..rrrrrrrrr..  
+   ...........    
+ENDMAP
+
+###############################################################
+# Player is usually encouraged to go towards the dangerous door with the 
+# bait. The monster is slow, and there's room to escape and close the door.
+NAME:    evilmike_entry_run_for_it
+TAGS:    entry no_monster_gen
+ORIENT:  float
+: if crawl.one_chance_in(4) then
+SHUFFLE: d'
+: end
+SUBST:   '=.
+MONS:    worm w:30 / mummy / human zombie
+ITEM:    stone / dart
+MAP
+xxxxxxxxxxxxxxxxx
+x%1.+d....{....'+
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################
 NAME:    minmay_entry_checkered_box
 TAGS:    entry
 ORIENT:  float
@@ -314,14 +562,8 @@ SUBST:  ABCDEFGH = +
 SUBST:  abcdefgh = x
 : else
 SUBST:  a=A, b=B, c=C, d=D, e=E, f=F, g=G, h=H
-NSUBST: A = 1:+ / *:X
-NSUBST: B = 1:+ / *:X
-NSUBST: C = 1:+ / *:X
-NSUBST: D = 1:+ / *:X
-NSUBST: E = 1:+ / *:X
-NSUBST: F = 1:+ / *:X
-NSUBST: G = 1:+ / *:X
-NSUBST: H = 1:+ / *:X
+NSUBST: A = 1:+ / *:X , B = 1:+ / *:X , C = 1:+ / *:X , D = 1:+ / *:X
+NSUBST: E = 1:+ / *:X , F = 1:+ / *:X , G = 1:+ / *:X , H = 1:+ / *:X
 SUBST:  X:Xxxx+, X=xx+
 : end
 MAP
@@ -1499,6 +1741,38 @@ MAP
   ....c'''c...
   ....ccccc...
 ENDMAP
+
+###############################################################################
+# Sounds of Crawl: the *ZOT*
+NAME:    evilmike_entry_sounds_zot
+TAGS:    entry no_monster_gen
+ORIENT:  float
+WEIGHT:  1
+KPROP:   >'Z1 = no_rtele_into
+KFEAT:   Z = zot trap
+SHUFFLE: <{[(, vXc
+MONS:    generate_awake ooze
+MAP
+     v..@..v     
+    vvv...vvv    
+   vvvvv<vvvvv   
+  vvvvvvvvvvvvv  
+ vvvvvvvvvvvvvvv 
+vvvvvvvvvvvvvvvvv
+.vvvvv>''''vvvvv.
+..vvvv'''''vvvv..
+@.(vvv''Z''vvv{.@
+..vvvv'''''vvvv..
+.vvvvv''1''vvvvv.
+vvvvvvvvvvvvvvvvv
+ vvvvvvvvvvvvvvv 
+  vvvvvvvvvvvvv  
+   vvvvv[vvvvv   
+    vvv...vvv    
+     v..@..v     
+ENDMAP
+
+
 
 ##############################################################################
 NAME:    dpeg_entry_arbitrary_a
