@@ -34,6 +34,7 @@
 #include "shout.h"
 #include "spl-util.h"
 #include "stuff.h"
+#include "terrain.h"
 #include "transform.h"
 #include "traps.h"
 #include "view.h"
@@ -652,7 +653,8 @@ int airstrike(int pow, const dist &beam)
     bool success = false;
 
     monster* mons = monster_at(beam.target);
-    if (mons && mons->submerged())
+    if (mons && (mons->submerged() ||
+                 (cell_is_solid(beam.target) && mons_wall_shielded(mons))))
         mons = NULL;
 
     if (mons == NULL)
