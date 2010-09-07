@@ -1056,6 +1056,13 @@ static bool _spellcasting_aborted(spell_type spell,
         mpr("There aren't any corpses here.");
         return (true);
     }
+
+    if (spell == SPELL_GOLUBRIAS_PASSAGE && !can_cast_golubrias_passage())
+    {
+        mpr("Only one passage may be opened at a time.");
+        return (true);
+    }
+
     return (false);
 }
 
