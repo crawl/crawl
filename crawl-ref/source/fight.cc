@@ -5233,10 +5233,12 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
     }
 
     case AF_CRUSH:
+    /*
         mprf("%s %s being crushed%s",
              def_name(DESC_CAP_THE).c_str(),
              defender->conj_verb("are").c_str(),
              special_attack_punctuation().c_str());
+    */
         break;
 
     case AF_HOLY:
