@@ -323,7 +323,6 @@ ENDMAP
 ######################################
 # This is weird, but in Zot weirdness fits. (nrook)
 NAME: nrook_zot_tub
-PLACE: D:1
 DEPTH: Zot
 KFEAT: X = W
 MARKER: X = lua:fog_machine { cloud_type="steam", \
