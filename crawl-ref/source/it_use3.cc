@@ -50,6 +50,7 @@
 #include "spl-summoning.h"
 #include "state.h"
 #include "stuff.h"
+#include "terrain.h"
 #include "areas.h"
 #include "view.h"
 #include "shout.h"
@@ -224,6 +225,9 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     const int x_distance  = abs(delta.x);
     const int y_distance  = abs(delta.y);
     monster* mons = monster_at(beam.target);
+    // don't allow targeting of submerged trapdoor spiders
+    if (mons && mons->submerged() && feat_is_floor(grd(beam.target)))
+        mons = NULL;
 
     const int x_middle = std::max(beam.target.x, you.pos().x)
                             - (x_distance / 2);
