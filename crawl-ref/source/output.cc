@@ -1675,8 +1675,7 @@ static char _get_overview_screen_results()
 {
     bool calc_unid = false;
     formatted_scroller overview;
-    // Set flags, and don't use easy exit.
-    overview.set_flags(MF_SINGLESELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP, false);
+    overview.set_flags(MF_SINGLESELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP);
     overview.set_more( formatted_string::parse_string(
 #ifdef USE_TILE
                         "<cyan>[ +/L-click : Page down.   - : Page up."
