@@ -951,7 +951,12 @@ static std::vector<coord_def> _find_golubria_on_level()
     return ret;
 }
 
-static bool _place_golubria(const coord_def& where)
+bool can_cast_golubrias_passage()
+{
+    return _find_golubria_on_level().size() < 2;
+}
+
+bool cast_golubrias_passage(const coord_def& where)
 {
     if (find_trap(where))
         return false;
@@ -963,18 +968,6 @@ static bool _place_golubria(const coord_def& where)
         return false;
 
     trap->reveal();
-
-    return true;
-}
-
-bool cast_golubrias_passage(const coord_def& where)
-{
-    std::vector<coord_def> loc = _find_golubria_on_level();
-    if (loc.size() > 1)
-        return false;
-
-    if (!_place_golubria(where))
-        return false;
 
     return true;
 }
