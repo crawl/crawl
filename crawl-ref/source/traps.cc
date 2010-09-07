@@ -414,7 +414,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
     // If set, the trap will be removed at the end of the
     // triggering process.
-    bool trap_destroyed = false;
+    bool trap_destroyed = false, know_trap_destroyed = false;;
 
     monster* m = triggerer.as_monster();
 
@@ -468,9 +468,14 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 simple_monster_message(m, " enters the passage of Golubria.");
 
             if (triggerer.move_to_pos(to))
+            {
                 trap_destroyed = true;
+                know_trap_destroyed = true;
+            }
             else
+            {
                 mpr("But it is blocked!");
+            }
         }
         break;
     }
@@ -773,7 +778,13 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     }
 
     if (trap_destroyed)
+    {
+        if (know_trap_destroyed)
+        {
+            env.map_knowledge(this->pos).set_feature(DNGN_FLOOR);
+        }
         this->destroy();
+    }
 }
 
 int trap_def::max_damage(const actor& act)
