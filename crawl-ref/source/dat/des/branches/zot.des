@@ -44,7 +44,6 @@ xxxxxxx
 xxxxxxx
 ENDMAP
 
-
 ###########################
 # Halls of Wrath
 #
@@ -208,7 +207,6 @@ MAP
 ................
 ENDMAP
 
-
 ###########################
 # Acid trip
 # chance for having all downstairs in the vault is 12.5%
@@ -320,6 +318,40 @@ MAP
    .....xx+++xx.....
     .....xx+xx.....
      .............
+ENDMAP
+
+######################################
+# This is weird, but in Zot weirdness fits. (nrook)
+NAME: nrook_zot_tub
+PLACE: D:1
+DEPTH: Zot
+KFEAT: X = W
+MARKER: X = lua:fog_machine { cloud_type="steam", \
+            pow_min = 2, pow_max = 10, delay = 25, \
+            size = 1, walk_dist = 3, spread_rate= 10 }
+KMONS: M = patrolling pale draconian att:neutral / \
+      patrolling pale draconian scorcher att:neutral w:2 / \
+      patrolling pale draconian caller att:neutral w:2 / \
+      patrolling pale draconian shifter att:neutral w:2 / \
+      patrolling pale draconian annihilator att:neutral w:2 / \
+      patrolling pale draconian knight att:neutral w:2 / \
+      patrolling pale draconian monk att:neutral w:2
+KFEAT: M = W
+KMONS: F = orb of fire att:neutral
+KFEAT: F = W
+MAP
+     @
+xxxxx+xxxxx
+xWWWWWWWWWx
+xWMWWMWWMWx
+xWWXWXWXWWx
+xWWWmmmWWWx
+xWMXmFmXMWx
+xWWWmmmWWWx
+xWWXWXWXWWx
+xWMWWMWWMWx
+xWWWWWWWWWx
+xxxxxxxxxxx
 ENDMAP
 
 ###################################################
