@@ -2032,7 +2032,7 @@ struct spell_desc
 },
 
 {
-    SPELL_GOLUBRIAS_PASSAGE, "Golubria's Passage",
+    SPELL_GOLUBRIAS_PASSAGE, "Passage of Golubria",
      SPTYP_TRANSLOCATION,
      SPFLAG_GRID | SPFLAG_NEUTRAL | SPFLAG_NOT_SELF | SPFLAG_ESCAPE,
      5,

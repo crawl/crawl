@@ -404,6 +404,10 @@ Paralyse
 
 This spell prevents a creature from moving.
 %%%%
+Passage of Golubria
+
+This spell opens a gateway (one side at a time), which allows instantaneous transport to the other opening to any creature entering it.
+%%%%
 Passwall
 
 This spell tunes the caster's body such that it can instantly pass through solid rock. This can be dangerous, since it takes time for the caster to attune to the rock, during which time they will be helpless.
