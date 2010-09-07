@@ -62,3 +62,16 @@
    fun:getpwuid_r@@GLIBC_2.2.5
    fun:getpwuid
 }
+
+# Zlib examines the data past the end of the buffer by design to reduce
+# the number of boundary checks.  This doesn't have any external effects.
+# http://www.zlib.net/zlib_faq.html#faq36
+# "Even though the code was correct, versions 1.2.4 and later was changed
+# to not stimulate these checkers."
+{
+   zlib_lookhead_optimization
+   Memcheck:Cond
+   fun:longest_match
+   fun:deflate_slow
+   fun:deflate
+}
