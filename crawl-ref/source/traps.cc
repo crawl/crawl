@@ -16,6 +16,7 @@
 #include "branch.h"
 #include "clua.h"
 #include "coord.h"
+#include "coordit.h"
 #include "delay.h"
 #include "describe.h"
 #include "directn.h"
@@ -363,6 +364,42 @@ void check_net_will_hold_monster(monster* mons)
         mons->add_ench(ENCH_HELD);
 }
 
+std::vector<coord_def> find_golubria_on_level()
+{
+    std::vector<coord_def> ret;
+    for (rectangle_iterator ri(coord_def(0, 0), coord_def(GXM-1, GYM-1)); ri; ++ri)
+    {
+        trap_def *trap = find_trap(*ri);
+        if (trap && trap->type == TRAP_GOLUBRIA)
+            ret.push_back(*ri);
+    }
+    ASSERT(ret.size() <= 2);
+    return ret;
+}
+
+static bool _find_other_passage_side(coord_def& to)
+{
+    std::vector<coord_def> passages = find_golubria_on_level();
+    if (passages.size() < 2)
+        return false;
+
+    if (to == passages[0])
+    {
+        to = passages[1];
+        return true;
+    }
+    else if (to == passages[1])
+    {
+        to = passages[0];
+        return true;
+    }
+    else
+    {
+        ASSERT(false);
+        return false;
+    }
+}
+
 void trap_def::trigger(actor& triggerer, bool flat_footed)
 {
     const bool you_know = this->is_known();
@@ -417,13 +454,22 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         this->shoot_ammo(triggerer, trig_knows);
     else switch (this->type)
     {
-    case TRAP_GOLUBRIA:
-        if (you_trigger)
-            mpr("You enter the passage of Golubria.");
-        else
-            simple_monster_message(m, " enters the passage of Golubria.");
-        trap_destroyed = true;
+    case TRAP_GOLUBRIA: {
+        coord_def to = p;
+        if (_find_other_passage_side(to))
+        {
+            if (you_trigger)
+                mpr("You enter the passage of Golubria.");
+            else
+                simple_monster_message(m, " enters the passage of Golubria.");
+
+            if (triggerer.move_to_pos(to))
+                trap_destroyed = true;
+            else
+                mpr("But it is blocked!");
+        }
         break;
+    }
     case TRAP_TELEPORT:
         // Never revealed by monsters.
         // except when it's in sight, it's pretty obvious what happened. -doy
