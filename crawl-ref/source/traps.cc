@@ -470,7 +470,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             if (triggerer.move_to_pos(to))
             {
                 trap_destroyed = true;
-                know_trap_destroyed = true;
+                know_trap_destroyed = you_trigger;
             }
             else
             {
