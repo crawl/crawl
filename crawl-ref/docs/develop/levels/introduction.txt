@@ -75,13 +75,17 @@ C.   The .des files
 ===================
 
 All fixed level information resides in various .des files to be found inside
-a folder of the dat/des directory. If you are interested in adding some vaults,
+folders of the dat/des directory. If you are interested in adding some vaults,
 say, start with the existing ones and modify them. If you are new to vault 
 making, look at the following files:
 
-  dat/des/variable 
-    entry.des - entry vaults (each game - but not tutorial games - uses one of
-                these premade maps for the vicinity of the entrance)
+  dat/des/variable/entry 
+    entry.des        - read for a brief guide towards map making
+    entry_simple.des - particularly simple entry vaults; they are ordered with
+                       learning the mapsyntax in mind (all games use a premade
+                       map like these for the vicinity of the entrance)
+
+  dat/des/variable
     float.des - floating vaults
     large.des - all regular vaults which have ORIENT:encompass/northwest etc
     mini.des  - minivaults (no ORIENT line at all)

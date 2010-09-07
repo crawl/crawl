@@ -1,0 +1,1080 @@
+##############################################################################
+# Simple maps for D:1 entry vaults.
+# See entry.des for where your new entry vault belongs.
+#
+# Please do not rearrange the vaults. The order is chosen so that readers are
+# introduced to new features one by one.
+##############################################################################
+
+##############################################################
+NAME:   minmay_entry_doors
+TAGS:   entry no_monster_gen
+ORIENT: float
+MAP
+     x+x
+     x.x
+     x+x
+     x.x
+    xx+xx
+xxxxx...xxxxx
++.+.+.{.+.+.+
+xxxxx...xxxxx
+    xx+xx
+     x.x
+     x+x
+     x.x
+     x+x
+ENDMAP
+
+##############################################################
+NAME:    minmay_entry_three_doors
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: {[(
+MAP
+x+xxxx+xxxx+x
+x...........x
+xxxx{x[x(xxxx
+   xxxxxxx
+ENDMAP
+
+##############################################################
+NAME:   minmay_entry_diagonal_passages
+TAGS:   entry
+ORIENT: float
+MAP
+   @xxxxx@
+   x.xxx.x
+  xxx.x.xxx
+@xxxxx.xxxxx@
+x.xxx.x.xxx.x
+xx.x.x.x.x.xx
+xxx.x.{.x.xxx
+xx.x.x.x.x.xx
+x.xxx.x.xxx.x
+@xxxxx.xxxxx@
+  xxx.x.xxx
+   x.xxx.x
+   @xxxxx@
+ENDMAP
+
+##############################################################
+NAME:    minmay_entry_wavy_path
+TAGS:    entry no_monster_gen
+ORIENT:  float
+SHUFFLE: {[
+MAP
+xxxxxxxxxxxxxxxxxxxxxx
+xx[{xxxxxxxxxxxxxxxxxx
+x....xx....xxxx....xxx
+x....x......xx......xx
+xx..xx..xx..xx..xx..xx
+xx..xx..xx..xx..xx..xx
+xx..xx..xx..xx..xx..xx
+xx..xx..xx..xx..xx..xx
+xx......xx......xx...@
+xxx....xxxx....xxxx..@
+xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:    matt_entry_spirals
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: {[(
+MAP
+xxxxxxxx@xxxxxxxxx
+x......x.x.x.....x
+x.xxxx.x.x.x.xxx.x
+x.x{.x.x.x.x..(x.x
+x.xx.x.x.x.xxxxx.x
+x....x.x.x.......x
+xxxxxx.x.x.xxxxxxx
+@................@
+x.xxxxxxxxxxxxxx.x
+x.x..........x...x
+x.x.xxxxxxxx.x.x.x
+x.x.x...[....x.x.x
+x.x.x.xxxxxxxx.x.x
+x...x..........x.x
+xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+###########################################################
+NAME:    eino_entry_druids_welcome
+TAGS:    entry no_monster_gen
+ORIENT:  float
+MONS:    plant
+MAP
+x1......@......1x
+xw1...........1wx
+xww1.........1wwx
+xwww1...[...1wwwx
+xwwww1.....1wwwwx
+xwwwww1.{.1wwwwwx
+xwwww1.....1wwwwx
+xwww1...(...1wwwx
+xww1.........1wwx
+xw1...........1wx
+x1......@......1x
+ENDMAP
+
+###########################################################
+NAME:   eino_entry_water_cross
+TAGS:   entry no_monster_gen
+ORIENT: float
+MONS:   plant
+MAP
+...................
+..1xWx1..[..1xWx1..
+.1xxWxx1...1xxWxx1.
+..WWWWW..{..WWWWW..
+.1xxWxx1...1xxWxx1.
+..1xWx1..(..1xWx1..
+...................
+ENDMAP
+
+###########################################################
+NAME:   eino_entry_water_star
+TAGS:   entry no_monster_gen no_rotate
+ORIENT: float
+MAP
+..xxxxxxx@xxxxxxx..
+....xxxx...xxxx....
+x.....x..W..x.....x
+xG..W....W....W..Gx
+xx...W..WWW..W...xx
+x.....WWWWWWW.....x
+....WWWW...WWWW....
+..WWWWW.({[.WWWWW..
+....WWWW...WWWW....
+x.....WWWWWWW.....x
+xx...W..WWW..W...xx
+xG..W....W....W..Gx
+x.....x..W..x.....x
+....xxxx...xxxx....
+..xxxxxxx@xxxxxxx..
+ENDMAP
+
+###########################################################
+NAME:    eino_entry_tree_alley
+TAGS:    entry no_monster_gen
+ORIENT:  float
+MONS:    plant
+SHUFFLE: 1t
+MAP
+xxxxxxxxxxxxxxxxx
+.111111111111111.
+@.....[.{.(.....@
+.111111111111111.
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:   lemuel_entry_funnel
+TAGS:   entry no_monster_gen
+ORIENT: float
+SUBST:  c : ccccwlx.
+MAP
+xxxxxxxxxxxxxxx
+x{.....(.....[x
+x.............x
+xx...ccccc...xx
+ x...ccccc...x
+ xx...ccc...xx
+  x...ccc...x
+  xx...c...xx
+   x...c...x
+   xx.....xx
+    x.....x
+    xx...xx
+     x...x
+     x...x
+     x+++x
+     x.@.x
+ENDMAP
+
+##############################################################
+# Reduced weight because of size and shape.
+NAME:    minmay_entry_pointy
+TAGS:    entry no_monster_gen
+WEIGHT:  4
+ORIENT:  float
+SHUFFLE: {[
+MAP
+xxx                     xxx
+x{xx                   xx[x
+xx.xx                 xx.xx
+ x..xx               xx..x
+ xx..xx             xx..xx
+  x...xx           xx...x
+  xx...xx         xx...xx
+   x....xx       xx....x
+   xx....xx     xx....xx
+    x.....xx   xx.....x
+    xx.....xx xx.....xx
+     x......xxx......x
+     xx......x......xx
+      x.............x
+ENDMAP
+
+##############################################################
+NAME:    minmay_entry_up_and_down
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: ([{, )]}
+MAP
+ccccccccc
+c.......c
++.(.[.{.+
+c.......c
+cnnnnnnnc
+c.......c
++.).].}.+
+c.......c
+ccccccccc
+ENDMAP
+
+##############################################################
+NAME:    onia_entry_pyramid
+TAGS:    entry no_rotate no_monster_gen
+ORIENT:  float
+SHUFFLE: xxxcvlw
+MAP
+        .........
+       .....x.....
+      .....xxx.....
+     .....xxxxx.....
+    .....x..(..x.....
+   .....xxx...xxx.....
+  .....xxxxx.xxxxx.....
+ .....x...........x.....
+.....xxx.........xxx.....
+....xxxxx.......xxxxx....
+...x..[..x.....x..{..x...
+..xxx...xxx...xxx...xxx..
+.xxxxx.xxxxx.xxxxx.xxxxx.
+............@............
+ENDMAP
+
+##############################################################################
+NAME:    lemuel_entry_cross
+TAGS:    entry no_monster_gen
+ORIENT:  float
+SHUFFLE: {[, >d
+ITEM:    stone / dart
+MAP
+      xxx
+      x{x
+      x.x
+      x.x
+      x.x
+xxxxxxx.xxxxxxx
+x[...........(x
+xxxxxxx.xxxxxxx
+      x.x
+      x.x
+      x.x
+     xx.xx
+     xG>Gx
+     xx.xx
+      x.x
+      x@x
+ENDMAP
+
+##############################################################################
+NAME:   lemuel_entry_lava_pool
+TAGS:   entry no_monster_gen
+ORIENT: float
+MAP
+    xxxxxxx
+   xx..{..xx
+   x(.....[x
+   x.......x
+   x.......x
+   x..lll..x
+   x.lllll.x
+   x.ll%ll.x
+   x.ll>ll.x
+   x.ll%ll.x
+   x.lllll.x
+   x..lll..x
+  xx.......xx
+xxx.........xxx
+x.............x
+x@.....@.....@x
+ENDMAP
+
+##############################################################
+NAME:    minmay_entry_four_houses
+TAGS:    entry no_monster_gen
+ORIENT:  float
+SHUFFLE: xcvb, {[(>
+MAP
+.............
+.xxxxx.ccccc.
+.x...x.c...c.
+.x.{.x.+.[.c.
+.x...x.c...c.
+.xx+xx.ccccc.
+.............
+.vvvvv.bb+bb.
+.v...v.b...b.
+.v.(.+.b.>.b.
+.v...v.b...b.
+.vvvvv.bbbbb.
+.............
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_radiant
+TAGS:    entry no_rotate
+ORIENT:  float
+NSUBST:  ' = 1:@ / *=.x
+MAP
+'xxxxxxx'xxxxxxx'
+x.xxxxxx.xxxxxx'x
+xx..xxxx+xxxx..xx
+xxxx..+...+..xxxx
+xxxxxxx.{.xxxxxxx
+xxxx..+...+..xxxx
+xx..xxxx+xxxx..xx
+x.xxxxxx.xxxxxx.x
+'xxxxxxx'xxxxxxx'
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_rooms_with_view
+TAGS:    entry no_monster_gen no_pool_fixup
+ORIENT:  float
+SHUFFLE: {[, lw
+MAP
+.......xxxxxx@0
+@+xlllxx......@
+.x.....x......x
+.l..{..l......x
+.l..T..l..%...x
+.x.....x......x
+xxxlllxxxwwwxxx
+x......x.....x.
+x...%..w..T..w.
+x......w..[..w.
+x......x.....x.
+@......xxwwwx+.
+0@xxxxxx......@
+ENDMAP
+
+##############################################################################
+NAME:   dpeg_entry_tiny_a
+TAGS:   entry
+ORIENT: float
+MAP
+{
+ENDMAP
+
+NAME:   dpeg_entry_tiny_b
+TAGS:   entry
+WEIGHT: 2
+ORIENT: float
+MAP
+xxx
++{+
+xxx
+ENDMAP
+
+NAME:   dpeg_entry_tiny_c
+TAGS:   entry
+WEIGHT: 4
+ORIENT: float
+MAP
+@....
+.xxx.
+.+{+.
+xxxxx
+ENDMAP
+
+NAME:   dpeg_entry_tiny_d
+TAGS:   entry
+WEIGHT: 4
+ORIENT: float
+MAP
+@....
+.xxx.
+.+{+.
+.xxx.
+.....
+ENDMAP
+
+NAME:   dpeg_entry_tiny_e
+TAGS:   entry
+WEIGHT: 1
+ORIENT: float
+MAP
+xxxxx
+x...x
++.{.+
+x...x
+xxxxx
+ENDMAP
+
+NAME:   dpeg_entry_tiny_f
+TAGS:   entry
+WEIGHT: 3
+ORIENT: float
+MAP
+@......
+.xxxxx.
+.x...x.
+.+.{.+.
+xx...xx
+xxxxxxx
+ENDMAP
+
+NAME:   dpeg_entry_tiny_g
+TAGS:   entry
+WEIGHT: 3
+ORIENT: float
+MAP
+@...xx
+.xx+xx
+.x...x
+.+.{.+
+xx...x
+xxxxxx
+ENDMAP
+
+NAME:   dpeg_entry_tiny_h
+TAGS:   entry
+WEIGHT: 3
+ORIENT: float
+MAP
+@xxxxxx
+.xxxxxx
+.x...xx
+.+.{.+.
+xx...x.
+xxxxxx@
+ENDMAP
+
+NAME:   dpeg_entry_tiny_i
+TAGS:   entry
+WEIGHT: 4
+ORIENT: float
+MAP
+xxxxx
+..{.@
+xxxxx
+ENDMAP
+
+NAME:   dpeg_entry_tiny_j
+TAGS:   entry
+WEIGHT: 3
+ORIENT: float
+SUBST:  v : vcbxxx
+MAP
+xxxxx
+xvvvx
+.({[@
+xvvvx
+xxxxx
+ENDMAP
+
+NAME:   dpeg_entry_tiny_k
+TAGS:   entry
+WEIGHT: 3
+ORIENT: float
+MAP
+xxxx
+x{.@
+xxxx
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_windows_large_door
+TAGS:    entry no_monster_gen no_rotate
+ORIENT:  float
+MAP
+.......
+.xxmmmxx.
+.x.....x.
+.m..{..m.
+.m.....m.
+.x.....x.
+.xx+++xx.
+.........
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_tetris
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: bbba
+MAP
+          x.@.x
+         xx...xx
+        xx..x..xx
+       xx..xxx..xx
+      xx..xxxxx..xx
+     xx..xxxxxxx..xx
+    xx..xxxxxxxxx..xx
+xxxxx..xxxxxxxxxxx..xxxxx
+x.......................x
+x.bb.bb..b..b..bb.bbb.b.x
+x..b.bb.bbb.b.bb..b..bb.x
+x..b........b........b..x
+xx...xxxxxx.b.xxxxxx...xx
+ xx...xxxxx...xxxxx...xx
+  xx...xxxxxxxxxxx...xx
+   xx...xxx...xxx...xx
+    xx...x..{..x...xx
+     xx...(...[...xx
+      xxx...x....xx
+        xxxxxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_boxorama
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: {[(<
+MAP
+xxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxx
+x.................................x
+x.................................x
+x...xxxxxxx...xxxxx...xxxx...xx...x
+x...xxxxxxx...xxxxx...xxxx...xx...x
+x...xxxxxxx...xxxxx...xxxx........x
+x...xxxxxxx...xxxxx........<..[...x
+x...xxxxxxx.......................x
+x.......................xxxxxxx...x
+x...(..{........xxxxx...xxxxxxx...x
+x........xxxx...xxxxx...xxxxxxx...x
+x...xx...xxxx...xxxxx...xxxxxxx...x
+x...xx...xxxx...xxxxx...xxxxxxx...x
+x.................................x
+x.................................x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_boxes_within_box
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: {[(
+MAP
+xxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxx
+x.................................x
+x.................................x
+x...xxxxxxx..xxxxxxxxxxx..xxxxx...x
+x...xxxxxxx..xxxxxxxxxxx..xxxxx...x
+x...xxx........xxxxxxxxx..xxxxx...x
+x............{.xxxxx......xxxxx...x
+x...xxx..[........................x
+x...xxx........x........(.xxxxx...x
+x...xxxxxx..xxxx.xxx......xxxxx...x
+x...xxxxxx..xxxx.xxx......xxxxx...x
+x...xxxxxx..xxxx.xxxx...xxxxxxx...x
+x...xxxxxx..xxxx.xxxx...xxxxxxx...x
+x.................................x
+x.................................x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_shelter
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: cvxxxx
+MAP
+@...........@
+.............
+....cc+cc....
+...cc...cc...
+...c..{..c...
+...cc...cc...
+....cc+cc....
+.............
+@...........@
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_triangle_fractal
+TAGS:    entry no_monster_gen no_rotate
+WEIGHT:  2
+ORIENT:  float
+SHUFFLE: {[(
+MAP
+xxxxxxxxxxxxxxxxxxxxxxx@x
+xxxxx.xxxxx.xxxxxxxxxxx.x
+xxxx..xxxx..xxxxxxxxxx..x
+xxx...xxx...xxxxxxxxx...x
+xx..(.xx..{.xxxxxxxx....x
+x.....+.....xxxxxxx.....x
+xxxxx+xxxxx+xxxxxx...x..x
+xxxxx.xxxxx.xxxxx...xx..x
+xxxx..xxxx..xxxx...xxx..x
+xxx...xxx...xxx...xxxx..x
+xx..[.xx..T.xx...xxxxx..x
+x.....+.....+...........x
+xxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_long_road
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: {[(
+MAP
+xx.(.@x..xx@
+xx...xx...=.
+.....xxx..xx
+....xxx...x.
+x...xx....x.
+x..xxx...xx.
+...xx....x..
+..xxx.{.xxx.
+..xx....xx..
+.xxxx..xx...
+xxx....xx@.[
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_ternary
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: cv
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxx
+xcxcxcxcxcxcxcxcxcxcxcxxcx
+x.x..c.....x..c.....x..c.x
+x.......x..x..x..c..c..c.x
+@.........................
+..x..x..x..(..x..x..x..x.@
+x.c..c..x..[..x..........x
+x.x.....c..{.....c..x....x
+xcxcxcxcxcxcxcxcxcxcxcxxcx
+xxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:   erik_entry_triangle_small
+TAGS:   entry
+WEIGHT: 4
+ORIENT: float
+MAP
+            xxx
+            x(x
+          xxx[xxx
+          x.+{+.x
+        xxx.xxx.xxx
+        x.+x+.+x+.x
+        x@xxx@xxx@x
+ENDMAP
+
+NAME:   erik_entry_triangle_medium
+WEIGHT: 3
+TAGS:   entry
+ORIENT: float
+MAP
+            xxx
+            x(x
+          xxx[xxx
+          x.+{+.x
+        xxx.xxx.xxx
+        x.+x+.+x+.x
+      xxx.xxx.xxx.xxx
+      x.+x+.+x+.+x+.x
+      x@xxx@xxx@xxx@x
+ENDMAP
+
+NAME:   erik_entry_triangle_large
+TAGS:   entry
+WEIGHT: 2
+ORIENT: float
+MAP
+            xxx
+            x(x
+          xxx[xxx
+          x.+{+.x
+        xxx.xxx.xxx
+        x.+x+.+x+.x
+      xxx.xxx.xxx.xxx
+      x.+x+.+x+.+x+.x
+    xxx.xxx.xxx.xxx.xxx
+    x.+x+.+x+.+x+.+x+.x
+    x@xxx@xxx@xxx@xxx@x
+ENDMAP
+
+NAME:   erik_entry_triangle_huge
+TAGS:   entry
+WEIGHT: 1
+ORIENT: float
+MAP
+            xxx
+            x(x
+          xxx[xxx
+          x.+{+.x
+        xxx.xxx.xxx
+        x.+x+.+x+.x
+      xxx.xxx.xxx.xxx
+      x.+x+.+x+.+x+.x
+    xxx.xxx.xxx.xxx.xxx
+    x.+x+.+x+.+x+.+x+.x
+  xxx.xxx.xxx.xxx.xxx.xxx
+  x.+x+.+x+.+x+.+x+.+x+.x
+  x@xxx@xxx@xxx@xxx@xxx@x
+ENDMAP
+
+##############################################################################
+NAME:    erik_entry_blinker_ship
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: cxxx
+MAP
+           ......
+          ..c..c.
+          .c.....
+  ....   ..c...c.
+...cc......cccc..
+..cccc...........
+.cc.cc...........
+..cc.....cc.ccc...............
+........c..[..cc.....c....ccc.
+.......cc.{.....c....c....c.c.
+........c..(..cc.....c....ccc.
+..cc.....cc.ccc...............
+.cc.cc...........
+..cccc...........
+...cc......cccc..
+...........c...c.
+          .c.....
+          ..c..c.
+           ......
+ENDMAP
+
+##############################################################################
+NAME:   matt_entry_refuge
+TAGS:   entry no_monster_gen
+ORIENT: float
+MAP
+xxxxx@xxxxxxxx@xxxx
+x.................x
+x.xxxxxxx+xxxxxxx.x
+x.x.............x.x
+x.x.xxxxxxxxxxx.x.x
+x.x.x.........x.x.x
+x.x.x.xxxxxxx.x.x.x
+x.x.x.x.....x.x.x.x
+@.x...x.({[.x...x.@
+x.x.x.x.....x.x.x.x
+x.x.x.xxx.xxx.x.x.x
+x.x.x.........x.x.x
+x.x.xxxxxxxxxxx.x.x
+x.x.............x.x
+x.xxxxxxx+xxxxxxx.x
+x.................x
+xxxx@xxxxxxxx@xxxxx
+ENDMAP
+
+##############################################################################
+NAME:   matt_entry_los_fun
+TAGS:   entry no_monster_gen
+ORIENT: float
+MAP
+        x+x
+        x.x
+  xxxxxxx+xxxxxxx
+  x.............x
+  x.xxxxxxxxxxx.x
+  x..x.......x..x
+  x.x.xxxxxxx.x.x
+  x.xx.......xx.x
+  x.x.xxx+xxx.x.x
+  x.x.x.....x.x.x
+xxx.x.x..<..x.x.xxx
++.+.x.+..{..+.x.+.+
+xxx.x.x.(.[.x.x.xxx
+  x.x.x.....x.x.x
+  x.x.xxx+xxx.x.x
+  x.xx.......xx.x
+  x.x.xxxxxxx.x.x
+  x..x.......x..x
+  x.xxxxxxxxxxx.x
+  x.............x
+  xxxxxxx+xxxxxxx
+        x.x
+        x+x
+ENDMAP
+
+##############################################################
+NAME:   minmay_entry_open_corners
+TAGS:   entry no_monster_gen
+ORIENT: float
+SUBST:  x : x:10 c:2 v:1 m:1
+MAP
+xxx...xxx...xxx
+x.............x
+x.............x
+...xxx...xxx...
+...x(.....[x...
+...x.......x...
+x.............x
+x......b......x
+x.............x
+...x.......x...
+...x{.....>x...
+...xxx...xxx...
+x.............x
+x.............x
+xxx...xxx...xxx
+ENDMAP
+
+##############################################################
+NAME:    minmay_entry_plants_in_alcoves
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: {[(, 11123t
+MONS:    plant, fungus, bush
+MAP
+xxxxxxxxxxx
+x1x1x1x1x1xxx
+@..........{x
+...........[x
+@..........(x
+x1x1x1x1x1xxx
+xxxxxxxxxxx
+ENDMAP
+
+##############################################################
+NAME:    minmay_entry_radiant_lines
+TAGS:    entry no_rotate
+ORIENT:  float
+SHUFFLE: xX
+SUBST:   X:xxxX, X:.lw, x:xxxvc
+MAP
+    .............
+  ........X........
+ .....x...X...x.....
+ ..X...x..X..x...X..
+....X..x..X..x..X....
+.....X..x.X.x..X.....
+..x...X.x.X.x.X...x..
+...xx..X.x.x.X..xx...
+.....xx.X...X.xx.....
+.......x.....x.......
+.XXXXXX...{...XXXXXX.
+.......x.....x.......
+.....xx.X...X.xx.....
+...xx..X.x.x.X..xx...
+..x...X.x.X.x.X...x..
+.....X..x.X.x..X.....
+....X..x..X..x..X....
+ ..X...x..X..x...X..
+ .....x...X...x.....
+  ........X........
+    .............
+ENDMAP
+
+##############################################################
+NAME:   noname_entry_rooms_in_the_neighbourhood
+TAGS:   entry no_monster_gen
+RTILE:  x = wall_hall
+FTILE:  .([{ = floor_hall
+ORIENT: float
+MAP
+ xxxxx             xxxxx
+xx...xx           xx...xx
+x.....x           x.....x
+x..(..+     V     +..[..x
+x.....x           x.....x
+xx...xx   xx+xx   xx...xx
+ xxxxx   xx...xx   xxxxx
+         x.....x
+         x..{..x
+         x.....x
+         xx...xx
+          xxxxx
+ENDMAP
+
+##############################################################
+NAME:    onia_entry_mini_spirals
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: ({[<, GT, vcxxxx
+MAP
+vvvvvvvvvvv
+vv...v...vv
+vv[v.v.v(vv
+vvvv.v.vvvv
+v.........v
+v.vv.~.vv.v
+v.<v...v{.v
+vvvv.@.vvvv
+ENDMAP
+
+###########################################################
+NAME:    dpeg_entry_line_fractal
+TAGS:    entry no_monster_gen no_rotate
+ORIENT:  float
+WEIGHT:  8
+SHUFFLE: cv
+MAP
+x@xxxxxxxxxxxxxxxxxxxx@x
+x......................x
+x.cccccc......cccccc...x
+x......................x
+x.vv..vv......vv..vv...x
+x......................x
+xxxxxxxxxx{}xxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_rooms_a
+TAGS:    entry no_monster_gen
+ORIENT:  float
+SHUFFLE: {[(, cvba
+MAP
+xxxxxxxxx@.xxxxxx
+xvvvvvvvx..xbbbbx
+xv.....vx..xb..bx
+xv..(..+...xb.[bx
+xv.....vx..xb..bx
+xvvvvvvvx...+..bx
+xxxxxxxxx..xb..bx
+@..........xb.{bx
+.........T.xb..bx
+xxxxxxxx...xbbbbx
+xxxxxxxx.@.xxxxxx
+ENDMAP
+
+############################################################################
+# A spiral sometimes made entirely of glass
+NAME:    zelgadis_glass_entry_small
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: {[(<, mvvcccxxxx
+SUBST:   < = .
+MAP
+...mmmmmmmm...
+..............
+.mm.mmmmmm.mm.
+.mm.m....m.mm.
+.mm.m.mm.m.mm.
+.mm.m{[m.m.mm.
+.mm.m(<m.m.mm.
+.mm.mmmm.m.mm.
+.........m.mm.
+...mmmmmmm....
+ENDMAP
+
+##############################################################################
+NAME:   dpeg_entry_snail
+TAGS:   entry no_monster_gen no_rotate
+ORIENT: float
+NSUBST: . = 1:d / *:.
+ITEM:   stone / dart
+MAP
+         xxxxxxxxxxxxxxxxx
+      xxxxxxxx.......xxxxxxx
+   xxxxxxx.......(.....xxxxxx
+  xxxxxx.................xxxxx
+ xxxxxx.........xxxx......xxxx
+xxxxxx........xxxxxxxx.....xxx
+xxxxx.......xxxx....xxx.....xx
+xxxxx......xxx........xx....xx
+xxxx.......xx...xxx...xxx....x
+xxxx......xxx..xxxxx...xx..[.x
+xxx.......xx..xxx.{xx..xx....x
+xxx......xxx..xxx.xx..xxx....x
+xxx......xxx...xx.....xx....xx
+xx........xx....xxxxxxx....xxx
+xx........xxx....xxxx......xxx
+xx........xxxx............xxxx
+xx........xxxxxxx......xxxxxx
+x....>.....xxxxxxxxxxxxxxxxx
+x....@.....xxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_three_smaller_balls
+TAGS:    entry no_rotate
+ORIENT:  float
+WEIGHT:  5
+SHUFFLE: {[(
+MAP
+   xxxxx  x@x  xxxxx
+ xxx...xxxx+xxxx...xxx
+xx.......xx.x........xx
+x.........x.x.........x
+x....[....+.+....(....x
+x.........x.x.........x
+xx.......xx.xx.......xx
+ xxx...xxxx+xxx....xxx
+  xx+xxxxx...xxxxx+xx
+  xx.xxx.......xxx.xx
+  x...x.........x...x
+  x...+....{....+...x
+  x...x.........x...x
+  x..xxx.......xxx.xx
+  xx.xxxxx...xxxxx.x
+   x..xxxxx+xxxxx..x
+   xx.............xx
+    xxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    dpeg_entry_three_bigger_balls
+TAGS:    entry no_rotate no_monster_gen
+ORIENT:  float
+WEIGHT:  5
+SHUFFLE: {[, }>
+MAP
+         xxxxx
+        xx...xx
+        x..{..x
+   xxxxxx.....xxxxxx
+ xxx...xxx...xxx...xxx
+xx.......xx+xx.......xx
+x.........x.x.........x
+x....[....+.+....(....x
+x.........x.x.........x
+xx.......xx+xx.......xx
+ xxx...xxxx.xxxx...xxx
+  xxxxxx.......xxxxxx
+  xxx.............xxx
+  xx...............xx
+  x.................x
+  x........T........x
+  x.......T}T.......x
+  x........T........x
+  xx...............xx
+   xx.............xx
+    xxxx.......xxxx
+       xxxx@xxxx
+ENDMAP
+
+##############################################################################
+NAME:    matt_entry_grand_opening
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: TV
+KMASK:   T = no_monster_gen
+MAP
+xxxxxxxxxx@xxxxxxxxxx
+x..x.............x..x
+x.x...............x.x
+xx.......x.x.......xx
+x......x.x.x.x......x
+x.....xx.x.x.xx.....x
+x.......Tx.xT.......x
+x..xxxxxxx.xxxxxxx..x
+@........({[........@
+x..xxxxxxx.xxxxxxx..x
+x.......Tx.xT.......x
+x.....xx.x.x.xx.....x
+x......x.x.x.x......x
+xx.......x.x.......xx
+x.x...............x.x
+x..x.............x..x
+xxxxxxxxxx@xxxxxxxxxx
+ENDMAP

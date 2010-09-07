@@ -1,0 +1,2522 @@
+##############################################################################
+# Small maps for D:1 entry vaults. 
+# Small maps which are also very simple should go to entry_simple.des. 
+# See entry.des for details.
+##############################################################################
+
+##############################################################
+NAME:    minmay_entry_split_and_join
+TAGS:    entry no_rotate
+ORIENT:  float
+SHUFFLE: {[(
+SUBST:   T = TV
+KMASK:   T = no_monster_gen
+MAP
+xxxxxxxxxxxx@xxxxxxxxxxxx
+xxxxxxxxxxx...xxxxxxxxxxx
+xxxxxxxxx...x...xxxxxxxxx
+xxxxxx....xxxxx....xxxxxx
+xxxx...xxxxxxxxxxx...xxxx
+xxx..xxxxxxxxxxxxxxx..xxx
+xxx+xxxxxxxx>xxxxxxxx+xxx
+xx...xxxxxx...xxxxxx...xx
+x.......................x
+x..T........T........T..x
+x.......................x
+xx...xxxxxx...xxxxxx...xx
+xxxxxxxxxxxx+xxxxxxxxxxxx
+xxxxxxxx.........xxxxxxxx
+xxxxxxx..{..[..(..xxxxxxx
+xxxxxxxx.........xxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################
+NAME:    minmay_entry_jagged
+TAGS:    entry no_monster_gen
+ORIENT:  float
+SHUFFLE: {[
+SUBST:   A = xx., B = x..
+KPROP:   A = no_rtele_into
+MAP
+xxxxxxxxxxxx
+x{AAAAAAAAAA
+xA.BBBBBBBBB
+xAB.........
+xAB.........
+xA.BBBBBBBBB
+x[AAAAAAAAAA
+xxxxxxxxxxxx
+ENDMAP
+
+##############################################################
+NAME:    minmay_entry_stair_chambers
+TAGS:    entry no_monster_gen
+ORIENT:  float
+SHUFFLE: {[(
+SUBST:   T = T V G b:3 .:3
+MAP
+xxxxxxx+xxxxxxx
+xxxxx.....xxxxx
+x...x.....x...x
+x.{.+..T..+.[.x
+x...x.....x...x
+xxxxx.....xxxxx
+xxxxxxx+xxxxxxx
+xxxxxx...xxxxxx
+   xxx.(.xxx
+   xxx...xxx
+   xxxxxxxxx
+ENDMAP
+
+##############################################################
+NAME:    minmay_entry_four_loops
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: {[(>
+SUBST:   x : x:200 c v:5 b:5
+SUBST:   b : x:200 c v:5 b:4 t:1 m:1
+MAP
+@xxxxxxxx  xxxxxxxx@
+x+......xxxx......+x
+x........xx........x
+x...bb...xx...bb...x
+x..bbbb..xx..bbbb..x
+x..bbbb..xx..bbbb..x
+x...bb...xx...bb...x
+x..................x
+xx........[.......xx
+ xxxxxx.{xx..xxxxxx
+ xxxxxx..xx(.xxxxxx
+xx.......>........xx
+x..................x
+x...bb...xx...bb...x
+x..bbbb..xx..bbbb..x
+x..bbbb..xx..bbbb..x
+x...bb...xx...bb...x
+x........xx........x
+x+......xxxx......+x
+@xxxxxxxx  xxxxxxxx@
+ENDMAP
+
+
+##############################################################
+NAME:    minmay_entry_stone_box
+TAGS:    entry
+ORIENT:  float
+NSUBST:  A = 1:= / 1=c= / *:c
+NSUBST:  B = 1:= / *:c
+SHUFFLE: {[(<
+SHUFFLE: ^B~>TVGl
+KFEAT:   ^ = teleport trap
+KFEAT:   ~ = shaft trap
+KMASK:   Tl = no_monster_gen
+MAP
+...........
+.[.......[.
+..cAAAAAc..
+..Ac...cA..
+..A.BBB.A..
+..A.B^B.A..
+..A.BBB.A..
+..Ac...cA..
+..cAAAAAc..
+.{.......<.
+...........
+ENDMAP
+
+##############################################################
+# A gimmicky, but cute cault.
+NAME:   minmay_entry_blink_away
+TAGS:   entry generate_awake
+WEIGHT: 2
+ORIENT: float
+MONS:   kobold; dart ego:dispersal q:3
+MAP
+xxxxxxxxxx..
+=.llllll{l@.
+x.xxxxxx=x..
+x1xxxxxx....
+xxx
+ENDMAP
+
+##############################################################
+NAME:    minmay_entry_semitransparent
+TAGS:    entry
+ORIENT:  float
+: if crawl.coinflip() == true then
+SUBST:   x : cccb
+SUBST:   m : n
+: else
+SUBST:   x : xxxb
+: end
+SHUFFLE: {[(
+MAP
+...........
+.xmxmxmxmx.
+...........
+...........
+...[.{.(...
+...........
+...........
+.xmxmxmxmx.
+...........
+ENDMAP
+
+##############################################################
+NAME:    minmay_entry_solitary_statue
+TAGS:    entry
+WEIGHT:  9
+ORIENT:  float
+SHUFFLE: {[(
+SUBST:   c : cccx
+MAP
+ccccccc
+c{.(.[c
+c.....c
+c..G..c
+c.....c
+c.....c
+ccc+ccc
+ENDMAP
+
+NAME:    minmay_entry_statue_studded
+TAGS:    entry
+ORIENT:  float
+WEIGHT:  1
+SHUFFLE: {[(
+SUBST:   c : cccx
+KMASK:   T = no_monster_gen
+MAP
+...........
+.GcGcGcGcG.
+.ccccccccc.
+.Gc{.(.[cG.
+.cc.....cc.
+.Gc..T..cG.
+.cc.....cc.
+.Gc.....cG.
+.cccc+cccc.
+.GcGc.cGcG.
+...........
+ENDMAP
+
+##############################################################
+NAME:    minmay_entry_four_circles
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: {[(>, AB
+SUBST:   A = ., B = x
+SUBST:   x : xxxcbv
+MAP
+...................
+..AAA...BBB...AAA..
+.AAAAA.BBBBB.AAAAA.
+.AAAAA.BBBBB.AAAAA.
+.AAAAA.BBBBB.AAAAA.
+..AAA...BBB...AAA..
+...................
+..BBB.........BBB..
+.BBBBB...>...BBBBB.
+.BBBBB..{.(..BBBBB.
+.BBBBB...[...BBBBB.
+..BBB.........BBB..
+...................
+..AAA...BBB...AAA..
+.AAAAA.BBBBB.AAAAA.
+.AAAAA.BBBBB.AAAAA.
+.AAAAA.BBBBB.AAAAA.
+..AAA...BBB...AAA..
+...................
+ENDMAP
+
+##############################################################
+NAME:    minmay_entry_five_plusses
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: {[(>, AB
+SUBST:   A = ., B = x
+SUBST:   x : xxxxxxccbvwl
+KMASK:   wl = no_monster_gen
+MAP
+.............
+..B...A...B..
+.BBB.AAA.BBB.
+..B...A...B..
+.............
+..A..[x>..A..
+.AAA.xxx.AAA.
+..A..{x(..A..
+.............
+..B...A...B..
+.BBB.AAA.BBB.
+..B...A...B..
+.............
+ENDMAP
+
+##############################################################
+NAME:   minmay_entry_nine_rooms
+TAGS:   entry no_monster_gen
+ORIENT: float
+NSUBST: ? = 1:{ / 1:[ / 1:( / *:TG.
+SUBST:  T = TV
+MAP
+xxxxxxxxxxxxxx+xx
+x...xxx...xxx...x
+x.?.....?.....?.x
+x...xxx...xxx...x
+xx.xxxxxxxxxxxxxx
+x...xxx...xxx...x
+x.?.....?.....?.x
+x...xxx...xxx...x
+xxxxxxxxxxxxxx.xx
+x...xxx...xxx...x
+x.?.....?.....?.x
+x...xxx...xxx...x
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################
+NAME:   minmay_entry_widening_spiral_wide
+TAGS:   entry no_monster_gen
+WEIGHT: 8
+ORIENT: float
+: if crawl.one_chance_in(4) then
+SUBST:  ABCDEFGH = +
+SUBST:  abcdefgh = x
+: else
+SUBST:  a=A, b=B, c=C, d=D, e=E, f=F, g=G, h=H
+NSUBST: A = 1:+ / *:X
+NSUBST: B = 1:+ / *:X
+NSUBST: C = 1:+ / *:X
+NSUBST: D = 1:+ / *:X
+NSUBST: E = 1:+ / *:X
+NSUBST: F = 1:+ / *:X
+NSUBST: G = 1:+ / *:X
+NSUBST: H = 1:+ / *:X
+SUBST:  X:Xxxx+, X=xx+
+: end
+MAP
+xxxxxxxxxxx
+x.........H
+x.........h
+x.........h
+x...xxxxxxxxxxxxxx
+x...x.....D......x
+x...x.....d......x
+x...x.....d......x
+x...x...xxxxxx...x
+x...x...x{+..x...x
+xGggxCccxxx..x...x
+x...x....xxaAxeeEx
+x...x....b...x...x
+x...x....b...x...x
+x...x....B...x...x
+x...xxxxxxxxxx...x
+x........f.......x
+x........f.......x
+x........F.......x
+xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   minmay_entry_widening_spiral_narrow
+TAGS:   entry no_monster_gen
+WEIGHT: 2
+ORIENT: float
+MAP
+xxxxxxxxxxx
+x.........+
+x.xxxxxxxxx
+x.x.......=
+x.x.xxxxxxxxxxxxxx
+x.x.x.....+......x
+x.x.x.xxxxxxxxxx.x
+x.x.x.x...+....x.x
+x.x.x.x.xxxxxx.x.x
+x.x.x.x.x{+..x.x.x
+x+x+x+x+xxx..x.x.x
+x.x.x.x.xxxx+x+x+x
+x.x.x.x..+}x.x.x.x
+x.x.x.xxxxxx.x.x.x
+x.x.x....+...x.x.x
+x.x.xxxxxxxxxx.x.x
+x.x......+.....x.x
+x.xxxxxxxxxxxxxx.x
+x........+.......x
+xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+##############################################################
+NAME:   minmay_entry_loop
+TAGS:   entry no_monster_gen
+SUBST:  X : xxxX
+NSUBST: X = 1:< / 1:> / *=..d
+ORIENT: float
+MAP
+      xxxxxxx
+    xxx.....xxx
+   xx.........xx
+  xx.....x.....xx
+  x.....xxx.....x
+ xx.....xxx.....xx
+ x.....xxxxx.....x
+ x.....xXXXx.....x
+ x.....xXXXx.....x
+ x.....xxxxx.....x
+ xx.....xxx.....xx
+  x.....xxx.....x
+  xx....[x.....xx
+   xx...{x....xx
+    xxxxxx@.xxx
+ENDMAP
+
+##############################################################################
+NAME:    erik_entry_orb_chamber
+TAGS:    entry no_rotate
+ORIENT:  float
+ITEM:    q:1 stone
+MONS:    rat
+SHUFFLE: {[(>
+MAP
+  ........@........
+  ........>........
+...xcXXXXXXXXXXXcx...
+...xXXX...1...XXXx...
+...xXX..1...1..XXx...
+...xX1.........1Xx...
+@(x....1..d..1....x[@
+...xX1.........1Xx...
+...xXX..1...1..XXx...
+...xXXX...1...XXXx...
+...xcXXXXXXXXXXXcx...
+  ........{........
+  ........@........
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_lava_altar
+TAGS:    entry no_monster_gen
+ORIENT:  northwest
+SHUFFLE: Cc, {Y
+SUBST:   ?=l. , Y=.
+WEIGHT:  6
+MAP
+xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx
+xxxxxx>lllllllllll..
+xxxxxxlClllllllll?..
+xxxxxxlllllllll??...
+xxxxxxllllllllll....
+xxxxxxllllllllll....
+xxxxxxllllllllll....
+xxxxxxlllllllll?....
+xxxxxxlllllllll.....
+xxxxxxllllllll?.....
+xxxxxxl?ll?ll?.....{
+xxxxxxll.??....
+xxxxxxl.........
+ENDMAP
+
+NAME:    dpeg_entry_water_altar
+TAGS:    entry no_monster_gen
+ORIENT:  northwest
+WEIGHT:  4
+SHUFFLE: Cc, {Y
+SUBST:   Y=.
+MAP
+xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx
+xxxxxx>wwwwwwwwwwwwww.
+xxxxxxwCwwwwwwwwwww...
+xxxxxxwwwwwwwwwwww..
+xxxxxxwwwwwwwwwwww..
+xxxxxxwwwwwwwwwww...
+xxxxxxwwwwwwwwwww...
+xxxxxxwwwwwwwwww....
+xxxxxxwwwwwwwwww....
+xxxxxxwwwwwwwww.....
+xxxxxxwwwwwwww.....{
+xxxxxxwwwwww.....
+xxxxxxw..........
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_fog
+TAGS:    entry no_monster_gen
+ORIENT:  float
+SHUFFLE: <>/>< , {}/}{
+MARKER:  # = lua:fog_machine { \
+             pow_max = 5, delay_min = 10, delay_max = 150, \
+             size = 5, start_clouds = 1}
+MAP
+xxxxxx
+x.{}.x
+x....x
+x.<>.x
+x....x
+x@##.x
+ENDMAP
+
+##############################################################
+NAME:    elethiomel_entry_shortcut
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: {[(, XY/AB
+KFEAT:   X = teleport trap
+SUBST:   Y=x, A=., B==, (=(., [=[.
+MAP
+   xxxx@xxxxxxx.@.x
+   xxxx.xxxxxx...xx
+   xxxx.xxxxx...xxx
+   xx....xxx...xxxx
+   xx{....x...xxxxx
+xxxxx........xxxxxx
+x].XY........xxxxxxxxx
+xxxxx.[..............@
+xxxxx.......(.xxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################
+# Indiana Jones and the Raiders of the Lost Ark
+NAME:   elethiomel_entry_indiana_jones
+TAGS:   entry
+ORIENT: float
+SUBST:  ~ = ~ .:5
+# Too bad there isn't a "rolling boulder" trap.
+MAP
+xxxxxxxxxx.xxxxxxxxxxxxxxx
+xxxxxxxxxx.xxxxxxxxxxxxxxx
+xxxxxxxxxx.xxxxxxxxxxxxxxx
+xxxxxxxxxx.xxxxxxxxxxxxxxx
+xxxxxxxxxx.xxxxxxx.....xxx
+xxxxxxx.......xx...~~~..xx
+.........{[(...+.G.~%~...x
+xxxxxxx.......xx...~~~..xx
+xxxxxxxxxx.xxxxxxx.....xxx
+xxxxxxxxxx.xxxxxxxxxxxxxxx
+xxxxxxxxxx.xxxxxxxxxxxxxxx
+xxxxxxxxxx.xxxxxxxxxxxxxxx
+xxxxxxxxxx.xxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################
+NAME:    onia_entry_pentagram
+TAGS:    entry no_monster_gen no_pool_fixup no_rotate
+ORIENT:  float
+SHUFFLE: ({[, x+/x+/x+/x+/cC/vV/lL/wW
+SUBST:   C=+, V=+
+NSUBST:  L = 1:. / *:l
+MAP
+       .............
+       ......x......
+       ......x......
+       .....xxx.....
+............xxx............
+...........xxxxx...........
+xxxxxxxxxx+xxxxx+xxxxxxxxxx
+..xxxxxxxxx.....xxxxxxxxx..
+....xxxxxxx..(..xxxxxxx....
+......xxxx.......xxxx......
+........xx..[.{..xx........
+   .....xxx.....xxx.....
+   .....xxxxx+xxxxx.....
+   ....xxxxxx.xxxxxx....
+   ....xxxxx...xxxxx....
+   ...xxxx.......xxxx...
+   ...xx...........xx...
+   ..x.....      ....x..
+   ........      .......
+ENDMAP
+
+##############################################################################
+NAME:   dpeg_entry_chase
+TAGS:   entry no_monster_gen no_pool_fixup no_rotate
+MONS:   kobold, hobgoblin / goblin / giant bat
+ITEM:   stone, dart
+ORIENT: float
+SUBST:  w : w l:1
+MAP
+xxxxxxxxxxxxx..........@
+xxxxxwwwwwwww2..........
+xxxxxxxxwwwwwww........x
+xxxxx.......wwww..wwwwwx
+xxww...(.).....wwwwwwwwx
+xwwww....[.{....wwww...x
+xwwwwww.................
+xwwwwwwwwwwwwwww.......@
+x1wwwwwwwwwwwwwwww......
+x1e1...wwwwwwwwwwwwwww.x
+x1d1...........wwwwwwwwx
+x>...................wwx
+xxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_rooms_b
+TAGS:    entry no_monster_gen
+ORIENT:  float
+SHUFFLE: {[(
+SHUFFLE: cvba
+NSUBST:  . = 1:d / *:.
+ITEM:    stone / dart
+MAP
+xxxxxxxxxxxxxxx
+xcccccccx.....x
+xc.....cx..[..x
+xc..(..cx.....x
+xc.....cxxxx+xx
+xc..{..cx......
+xc.....+......@
+xcccccccx......
+xxxxxxxxx..@...
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_rooms_c
+TAGS:    entry no_monster_gen
+ORIENT:  float
+SHUFFLE: {[
+SHUFFLE: cvba
+MAP
+xxxxxxxxxxxx
+xvcvcvcvcvcx
+xc........vx
+xv........cx
+xc.{....[.vx
+xv........cx
+xc........vx
+xvcvcv+vcvcx
+xxxxxx.xxxxx
+x..........x
+x.(..wwww..x
+x..........x
+xxxxxxxxxx@x
+ENDMAP
+
+#############################################################################
+NAME:    dpeg_entry_shrine
+TAGS:    entry no_monster_gen no_pool_fixup no_rotate
+: if crawl.coinflip() then
+SUBST:   A=@, B=., C=x, D=l
+: else
+SUBST:   A=x, B=l, C=@, D=.
+: end
+SHUFFLE: lw
+ORIENT:  float
+MAP
+xxxxxxxxCxxxxxxxx
+xlllllllDlllllllx
+xlllll.....lllllx
+xll....WWW....llx
+xl...WWW.WWW...lx
+AB..WWW.{..WW..lx
+xl...WWW.WWW...lx
+xll....WWW....llx
+xlllll.....lllllx
+xlllllllllllllllx
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_water_temple_mockup
+TAGS:    entry no_monster_gen no_rotate
+ORIENT:  float
+SHUFFLE: {[(, cxxx
+NSUBST:  . = 1:d / *:.
+SUBST:   T = TVVVV
+ITEM:    stone / dart
+MAP
+        ccccccc@ccccccc
+    ccccc.............ccccc
+  ccc..........T..........ccc
+ cc...T.................T...cc
+cc........T.........T........cc
+c..............{..............c
+c...T.....................T...c
+c............[...(............c
+cc........T.........T........cc
+ cc...T.................T...cc
+  ccc..........T..........ccc
+    ccccc.............ccccc
+        ccccccccccccccc
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_stone_temple_mockup
+TAGS:    entry no_monster_gen no_rotate
+ORIENT:  float
+SHUFFLE: {[(, cxxx
+NSUBST:  . = 1:d / *:.
+ITEM:    stone / dart
+SUBST:   T = TVVVV
+MAP
+     ccccccccccc
+  cccc....[....cccc
+ cc...............cc
+ c......T...T......c
+cc...T.........T...cc
+c.........w.........c
+c...T...........T...c
+c{.....w.....w......@
+c...T...........T...c
+c.........w.........c
+cc...T.........T...cc
+ c......T...T......c
+ cc...............cc
+  cccc....(....cccc
+     ccccccccccc
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_lava_temple_mockup
+TAGS:    entry no_monster_gen no_rotate
+ORIENT:  float
+SHUFFLE: {[(, cxxx
+NSUBST:  . = 1:d / *:.
+ITEM:    stone / dart
+SUBST:   T = TVVVV
+MAP
+         ccccc
+        cc...cc
+       cc..{..cc
+      cc.......cc
+     cc..T...T..cc
+    cc...........cc
+   cc.T....T....T.cc
+  cc...............cc
+ cc..T...T...T...T..cc
+cc...................cc
+c......T.......T......c
+c..[.......T.......(..c
+cc...................cc
+ccccccccccc@ccccccccccc
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_chambers_temple_mockup
+TAGS:    entry no_rotate
+ORIENT:  float
+SHUFFLE: {[(, cxxx
+SUBST:   T = TVVVV
+KMASK:   T = no_monster_gen
+MAP
+cccccccccccccc@ccccccccccccccc
+cccc......................cccc
+cc....c.cccc.cccc.cccc.cc...cc
+c..ccc...cc...cc...cc...ccc..c
+c.cccc.T.cc.T.cc.T.cc.T.cccc.c
+c.cccc...cc...cc...cc...cccc.c
+c...ccc.cccc.cccc.cccc.ccc...c
+c.T.ccc.cccc.cccc.cccc.ccc.T.c
+c............................c
+cc.cc...[.....{.....(....cc.cc
+c............................c
+c.T.ccc.cccc.cccc.cccc.ccc.T.c
+c...ccc.cccc.cccc.cccc.ccc...c
+c.cccc...cc...cc...cc...cccc.c
+c.cccc.T.cc.T.cc.T.cc.T.cccc.c
+c..ccc...cc...cc...cc...ccc..c
+cc...cc.cccc.cccc.cccc.cc...cc
+cccc......................cccc
+cccccccccccccccccccccccccccccc
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_leaves_temple_mockup
+TAGS:    entry no_monster_gen no_rotate
+ORIENT:  float
+SHUFFLE: {[, cxxx
+NSUBST:  . = 1:d / *:.
+ITEM:    stone / dart
+SUBST:   T = TVVVV
+MAP
+   ccccccccccccccccc
+  cc.ccccccccccccc.cc
+ cc....ccccccccc....cc
+cc..T....ccccc....T..cc
+c.....T....c....T.....c
+c..T....T.....T....T..c
+c.........{.(.........c
+ccccccc.........ccccccc
+ ccccccccc.[.ccccccccc
+  cccccccc...cccccccc
+   cccccc..T..cccccc
+    cccc.......cccc
+     cc..T...T..cc
+     c.....T.....c
+     ccc.......ccc
+       cccc@cccc
+ENDMAP
+
+##############################################################################
+NAME:   dpeg_entry_three_same_balls
+TAGS:   entry no_rotate no_monster_gen
+ORIENT: float
+SUBST:  ' = .x
+NSUBST: d = 1:d / *:'
+ITEM:   stone / dart
+MAP
+               xxxxx
+             xxx...xxx
+   xxxxxxxxxxx.......xx
+ xxx...xxxxxx.........x
+xx.......xx......(....x
+x..........xx.........x
+x....{....xxxx.......xx
+x.........xxxxxx...xxx
+xx.......xxxxxx.xxxx
+xxxx...xxxxxx...xxxx
+xxxxxxxxxxx.......xx
+xxx...''...........x
+x'.''d..xx....[....x
+x'.'xx'xxx.........x
+xd..'d...xx.......xx
+xx''..''..xxx...xxx
+ xxxxxxxx@xxxxxxx
+ENDMAP
+
+#############################################################################
+NAME:   lemuel_entry_hallway
+TAGS:   entry no_rotate no_monster_gen
+ORIENT: float
+NSUBST: ! = 1:> / *:!
+SUBST:  !:cvxGT
+MAP
+     x.@.x
+     x.!.x
+     x...x
+     x.!.x
+     x...x
+     x.!.x
+     x...x
+     x.!.x
+     x...x
+xxxxxx.!.xxxxxx
+x.............x
+x.............x
+x.....[{(.....x
+x.............x
+x.............x
+xxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:    lemuel_entry_rhombus
+TAGS:    entry no_monster_gen
+ORIENT:  float
+SHUFFLE: {[, abc
+SUBST:   a:+=, b=x, c=x
+MAP
+      x@x
+    xax.xcx
+   xx.....xx
+  xb.......bx
+ xx.........xx
+xc...........ax
+x.............x
+x......{......x
+x.....[>(.....x
+x......<......x
+x.............x
+xx...........xx
+ xc.........bx
+  xx.......xx
+   xa.....xc
+    xx...xx
+     bx.xa
+      x@x
+ENDMAP
+
+##############################################################################
+NAME:    lemuel_entry_room
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: {[, '?!
+SUBST:   ':.+, ?:x, !:x
+MAP
+xxxxxxxxxxx@xxxxxx
+xxxxxxxxxxx.xxxxxx
+xx..............xx
+xx..............xx
+xx..xx!?'xxxxx..xx
+xx..'.......(x..xx
+xx..!........x...@
+xx..?........x..xx
+xx..x...{....x..xx
+xx..x........?..xx
+@...x........!..xx
+xx..x[.......'..xx
+xx..xxxxx'?!xx..xx
+xx..............xx
+xx..............xx
+xxxxxx.xxxxxxxxxxx
+xxxxxx@xxxxxxxxxxx
+ENDMAP
+
+#########################################
+# good luck! (Shiori)
+NAME:    shiori_shiawase
+TAGS:    entry no_monster_gen no_rotate no_vmirror
+ORIENT:  float
+SHUFFLE: +=
+SUBST:   =:==x , x:xvcb
+MAP
+      x+x
+      x.x
+    xxx.xxx
+    =..{..=
+xxxxxxx.xxxxxxx
++.............+
+xxxx.xxxxx.xxxx
+  xx.xxxxx.xx
+  +.........+
+ xxxxxx.xxxxxx
+ =.....[.....=
+ xxxxxx.xxxxxx
+      x.x
+      x.x
+      x+x
+ENDMAP
+
+############################################################################
+# A spiral made of rock, with lots of "windows".
+NAME:    zelgadis_glass_entry_large
+TAGS:    entry
+ORIENT:  float
+WEIGHT:  1
+SHUFFLE: {[(<
+SUBST:   < = .
+NSUBST:  X = 4:+ / *:x
+MAP
+mxmxmxmxmxmxxmxxmx
+x................m
+m.xmXmxmxmxmxmXm.x
+x.m............x.m
+m.x.mxmxmXmxmx.m.x
+x.m.x........m.X.m
+m.X.m.xmxmxx.x.m.x
+x.m.x.m....x.m.x.m
+m.x.m.x.mx.m.X.m.x
+x.m.X.m{[m.x.m.x.m
+m.x.m.x(<x.m.x.m.x
+x.m.x.xmxx.x.m.x.m
+m.X.m......m.x.m.x
+x.m.xxmXmxmx.m.x.m
+m.x..........x.m.x
+x.xmXmxmxmxmXm.X.m
+m..............m.x
+xxmxmxmxmxmxmxmx@m
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_stonehenge_12_columns
+TAGS:    entry no_rotate
+ORIENT:  float
+WEIGHT:  3
+ITEM:    nothing, nothing, nothing
+SHUFFLE: cccbvxxx, def}
+MAP
+   ........................
+   ............cc..........
+  d......cc....cc....cc....e
+.........cc..........cc.......
+....cc........................
+....cc...................cc...
+.........................cc...
+..............................
+..cc..........................
+..cc...........{..........cc..
+..........................cc..
+..............................
+...cc.........................
+...cc...................cc....
+........................cc....
+.......cc..........cc.........
+  f....cc....cc....cc......}
+   ..........cc............
+   ........................
+ENDMAP
+
+NAME:    dpeg_entry_stonehenge_8_columns
+TAGS:    entry no_rotate
+ORIENT:  float
+WEIGHT:  7
+SHUFFLE: cccbvxxx
+MAP
+   ....................
+   .........cc.........
+   .........cc.........
+.....cc............cc.....
+.....cc............cc.....
+..........................
+..........................
+..cc.........}........cc..
+..cc........{.........cc..
+..........................
+..........................
+.....cc............cc.....
+.....cc............cc.....
+   .........cc.........
+   .........cc.........
+   ....................
+ENDMAP
+
+##############################################################################
+NAME:   dpeg_entry_simpleton_a
+TAGS:   entry  no_monster_gen
+ORIENT: float
+NSUBST: . = 1:d / *:.
+ITEM:   stone / dart
+MAP
+@xx           xx@
+x.xxxx     xxxx.x
+xx...xxx xxx...xx
+ xxx...xxx...xxx
+   xx.......xx
+    xxx.{.xxx
+   xx.......xx
+ xxx...xxx...xxx
+xx...xxx xxx...xx
+x.xxxx     xxxx.x
+@xx           xx@
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_simpleton_b
+TAGS:    entry
+ORIENT:  float
+ITEM:    nothing, nothing
+SHUFFLE: =+, TVG, {[
+SUBST:   c:cxx
+KMASK:   T = no_monster_gen
+MAP
+xx@...@xxxxxxxx
+xx+xxx+xxxxxxxx
+x.......x......
+x.......=..)..@
+x.T.[.T.x......
+x.......xxx=xxx
+x.......xcc=ccx
+xxxxxxxxxc...cx
+xccccccccc.{.cx
+@........+...cx
+xcccccccccccccx
+xxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_simpleton_c
+TAGS:    entry
+ORIENT:  float
+ITEM:    nothing, nothing
+SHUFFLE: =+, cx, de/{(, {[(
+MAP
+@.........@
+...xx+xx...
+...x...x...
+.xxx.d.xxx.
+.x.......x.
+.=.{.[.(.=.
+.x.......x.
+.xxx.e.xxx.
+...x...x...
+...xx+xx...
+@.........@
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_prison
+TAGS:    entry no_monster_gen
+ORIENT:  float
+SHUFFLE: ABCDEFGH
+SUBST:   A={, B=', C=', D=', E=', F=', G=', H=d
+SUBST:   ' = .:70 1 w:2
+SUBST:   . = .:60 2:1 3:1
+ITEM:    stone / dart
+MONS:    fungus, rat, giant cockroach
+MAP
+xxxxxxxxxxxxxxxxx
+x'A'x'B'x'C'x'D'x
+x'.'x'.'x'.'x'.'x
+xx+xxx+xxx+xxx+xx
+x'..............x
+x'..............+
+x'..............x
+xx+xxx+xxx+xxx+xx
+x'.'x'.'x'.'x'.'x
+x'E'x'F'x'G'x'H'x
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:   dpeg_entry_refuge
+TAGS:   entry
+ORIENT: float
+SUBST:  c:xxxc, %:%.T, T:TGv.
+KMASK:  T = no_monster_gen
+MAP
+.....................
+.....................
+..xxxxxxxx+xxxxxxxx..
+..xxxx.........xxxx..
+..xx...T.....%...xx..
+..x..T...c=c...%..x..
+..+.....cc{cc.....+..
+..+.....cc>cc.....+..
+..x..%...c=c...T..x..
+..xx...%.....T...xx..
+..xxxx.........xxxx..
+..xxxxxxxx+xxxxxxxx..
+.....................
+....................@
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_ratfight
+TAGS:    entry
+MONS:    rat, goblin, giant bat
+ORIENT:  float
+SHUFFLE: [{(
+SUBST:   X = x=
+MAP
+xxxxxxxxxxxx..@
+xx.1.%1xxxxx...
+x%.1.....xxx(..
+x1........xx...
+xxx...xx..xx...
+xxxxxxxxx.1x...
+xxxxxxxxxx+xXxx
+..[.xxxxxx....x
+....xxxxxx.{..x
+@...xxxxxxxx@xx
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_houses_and_road
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: {[(, +'
+SUBST:   ' : x + ':40, '=x+
+MAP
+xxxxxxx.@.xxxxxxx
+x.....x...x.....x
+x..(..'...+..[..x
+x.....xx.xx.....x
+xxx+xxxx.xxxx'xxx
+@....xx...xx....@
+.....xx...xx.....
+xxx+xxxx.xxxx+xxx
+x.....xx.xx.....x
+x..{..'...'..]..x
+x.....x...x.....x
+xxxxxxx.@.xxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_rhombus
+TAGS:    entry no_monster_gen
+ORIENT:  float
+SHUFFLE: ([/XY, @A
+SUBST:   X=., Y=., A=x
+MAP
+      xxAxx
+   xxxx...xxxx
+xxxx....(....xxxx
+@......X{Y......@
+xxxx....[....xxxx
+   xxxx...xxxx
+      xxAxx
+ENDMAP
+
+############################################################
+NAME:   zaba_entry_water
+TAGS:   entry no_monster_gen no_item_gen no_rotate
+ORIENT: float
+SUBST:  T = TV, ? = wW, > = >d
+ITEM:   dart / stone
+MAP
+xxx@xxx@xxx@xxx
+x.............x
+x.G.TTT>TTT.G.x
+x.............x
+xw?W?wwWww?W?wx
+xwwW?wwWww?Wwwx
+xwwWWwwWwwWWwwx
+xww?WwwWwwW?wwx
+xwwwW?wWw?Wwwwx
+xwwwWWwWwWWwwwx
+xwww?WwWwW?wwwx
+xwwwwWwWwWwwwwx
+xwwwwWWWWWwwwwx
+xwwww?WWW?wwwwx
+xwww?WWWWW?wwwx
+xww?WW...WW?wwx
+xw?WW.({[.WW?wx
+xww?WW...WW?wwx
+xwww?WWWWW?wwwx
+xwwww?????wwwwx
+xwwwwwwwwwwwwwx
+xwwwwwwwwwwwwwx
+xxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:    lemuel_entry_tunnels
+TAGS:    entry no_monster_gen
+ORIENT:  float
+SUBST:   ? = x.
+SHUFFLE: {[(
+MAP
+xxx
+x{xx          xxxxx
+x..xxxxxxxxxxxx[x?x
+xx.?xxxxx(xxxx?...x
+x?..xxxx..xxxx???.x
+x..?x?..?xxxx?x??.x
+x.?xx..xxxxx?.....x
+x.?xx.?xxxx?x.x???x
+xx..?.xxxx??..xxxxx
+ xx...?x??x..xx
+  xxx.xx....xx
+    x..x.??xx
+    xx.?.xxx
+     x..??xx
+     x?x.xxx
+     xx?.?xx
+      xx..?x
+       xxx@x
+ENDMAP
+
+##############################################################################
+NAME:    lemuel_entry_muddy
+TAGS:    entry no_monster_gen
+ORIENT:  float
+SHUFFLE: {[(
+SUBST:   ? = w'
+NSUBST:  ' = 12:W12" / 24=W"12 / *:.
+SUBST:   " = . W:1
+MONS:    nothing / plant, nothing / fungus
+MAP
+xxxxxxxxxxxxxxxxxxx
+xxxxx{''1''('1ww'[x
+xxxxx1'''1'''11ww'x
+xxxx?x''w.11''??1'x
+xxx??x''''''''2'1'x
+xxx?ww''11'''''?w'x
+xxxxww?''''''''''xx
+xxx?w?11?'22'2'''.x
+xxx?w11?''''w2''''x
+xxxx???''1''???''xx
+xxxxx?''1??''??'xxx
+xxxx?x'''''2?''"xxx
+xxxx?x'''2''''""xxx
+xxxx?w''''2''"""xxx
+xxxxx'22w""""""xxxx
+xxxxxxx""2"""""xxxx
+xxxxxxx""2""22xxxxx
+xxx.....""""xxxxxxx
+xx..xx......xxxxxxx
+@..xxxxx.....xxxxxx
+xxxxxxxxxx....xxxxx
+xxxxxxxxxxxx.@.xxxx
+ENDMAP
+
+##############################################################################
+NAME:    lemuel_entry_broad_hall_no_closet
+TAGS:    entry no_monster_gen
+ORIENT:  float
+SHUFFLE: {[(
+SUBST:   ? : xxcvG.
+WEIGHT:  4
+MAP
+xxxxxxxxxxx
+x{...(...[x
+x.........x
+x.?.....?.x
+x.........x
+x.........x
+x.?.....?.x
+x.........x
+x.........x
+x.?.....?.x
+x.........x
+x.........x
+x.?.....?.x
+x.........x
+x>.@.>.@.>x
+ENDMAP
+
+NAME:    lemuel_entry_broad_hall_high_closet
+TAGS:    entry no_monster_gen
+ORIENT:  float
+SUBST:   ? : xxcvG.
+ITEM:    meat ration / bread ration / beef jerky / spear / potion of water / \
+         apple / club / hammer / knife
+SHUFFLE: {[(
+WEIGHT:  3
+MAP
+xxxxxxxxxxxx
+x{...(...[xx
+x.........xx
+x.?.....?.xx
+x.........xx
+x.........xx
+x.?.....?.xx
+x.........xx
+x.........xxxxxx
+x.?.....?.xxxddx
+x.........=..ddx
+x.........xxxxxx
+x.?.....?.xx
+x.........xx
+x>.@.>.@.>xx
+ENDMAP
+
+NAME:    lemuel_entry_broad_hall_low_closet
+TAGS:    entry no_monster_gen
+ORIENT:  float
+SUBST:   ? : xxcvG.
+ITEM:    meat ration / bread ration / beef jerky / spear / potion of water / \
+         apple / club / hammer / knife
+SHUFFLE: {[(
+WEIGHT:  3
+MAP
+xxxxxxxxxxxx
+x{...(...[xx
+x.........xx
+x.?.....?.xx
+x.........xx
+x.........xxxxxx
+x.?.....?.xxxddx
+x.........=..ddx
+x.........xxxxxx
+x.?.....?.xx
+x.........xx
+x.........xx
+x.?.....?.xx
+x.........xx
+x>.@.>.@.>xx
+ENDMAP
+
+##############################################################################
+NAME:    lemuel_entry_behind_the_door_large
+TAGS:    entry no_monster_gen
+WEIGHT:  5
+ORIENT:  float
+SHUFFLE: {(
+SUBST:   b : bcvxxx
+MAP
+xxxxxxxxxxx
+x{...(...[x
+x.........x
+x.........x
+x.........x
+x.........x
+x.........x
+x.........x
+x.........x
+xb++bbb++bx
+x....@....x
+ENDMAP
+
+NAME:    lemuel_entry_behind_the_door_small
+TAGS:    entry no_monster_gen
+WEIGHT:  5
+ORIENT:  float
+SHUFFLE: {(
+SUBST:   b : bcvxxx
+MAP
+xxxxxxxxxxx
+x{...(...[x
+x.........x
+x.........x
+x.........x
+xb+bb+bb+bx
+x....@....x
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_oval
+TAGS:    entry no_rotate
+ORIENT:  float
+SHUFFLE: {[(<, @X, Aa/Bb/Dd/Ee
+SUBST:   A==, a=., B=c, b=c, D=c, d=c, E=c, e=c
+SUBST:   v:vxxx, c:vxxxxc
+SUBST:   X=x
+MAP
+        xxxxxxx@xxxxxxx
+    xxxxx.............xxxxx
+  xxx.......vxvxvxv.......xxx
+ xx......xvx.......xvx......xx
+ x....vxv.............vxv....x
+xx...x......cccAcEc......x...xx
+x...v..[..ccBbcaceccc..(..v...x
+x...x....cDddd.%.ccccc....x...X
+x...v....ccccc.%.ccccc....v...x
+x...x..<..ccccc.ccccc..{..x...x
+xx...v......ccccccc......v...xx
+ x....xvx.............xvx....x
+ xx......vxv.......vxv......xx
+  xxx.......xvxvxvx.......xxx
+    xxxxx.............xxxxx
+        xxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:   dpeg_entry_pond
+TAGS:   entry no_monster_gen no_pool_fixup
+ORIENT: float
+SUBST:  0 = 0 .
+SUBST:  ' = w'
+NSUBST: . = 1:d / *:.
+NSUBST: " = 1:@ / *:.
+ITEM:   stone / dart
+MAP
+".0.0....0."
+xxwwwwwwwxxx
+xwwwwwwwwwwx
+xwwww'wwwwwx
+xwww....'wwx
+xww......'wx
+x'.......'wx
+x....{..'wwx
+.........wwx
+@........xxx
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_rhombi
+TAGS:    entry no_monster_gen
+SHUFFLE: WYZ{/wyz(
+SUBST:   Z=x, Y=x, W=@, C==+x
+SUBST:   z=@, y=+, w=x
+NSUBST:  . = 1:d / *:.
+ITEM:    stone / dart
+ORIENT:  float
+MAP
+  xZxxx
+  xYxxxxxx
+ xx.xxxx.xx
+xx...xx.x+x
+x..{..+xx.xx
+xx...xxx...xx
+xxx.xxx.....xx
+xxxCxx...(...W
+xxx.xxx.....xx
+xx...xxx...xx
+x..[..+xx.xx
+xx...xx.x+x
+ xx.xxxx.xx
+  xxxxxxxx
+ENDMAP
+
+##############################################################################
+# Sounds of Crawl: the Slurp.
+NAME:    dpeg_entry_sounds_slurp
+TAGS:    entry no_monster_gen
+MONS:    generate_awake jelly / kobold
+ITEM:    dart
+ORIENT:  float
+SHUFFLE: {[(
+SUBST:   v:vxx
+MAP
+xxxxxxxxxxxxxxxxxxxxx....@.....
+xxxxx......xxxxxxxxxx.........@
+xxx............xxxxxx..........
+xx................xxxxxxxxxxxxx
+xx....vvvv.......xx.....xxxxxxx
+.....vv1dvvv.....x...{.....xxxx
+@....vdddd>vv................xx
+.....vvddvvv...x....vvv.......x
+xxx...vvvvv...xx...vvvvv..}...x
+xxx..........xx....vvvvv.....xx
+xxx..........xx.....vvv......xx
+xxxx........xx..............xxx
+xxxx.......xxxx....[......xxxxx
+xxxxx...xxxxxxxxx.....xxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Sounds of Crawl: the Drone.
+NAME:    dpeg_entry_sounds_drone
+TAGS:    entry no_monster_gen
+MONS:    generate_awake boring beetle / boring beetle
+ORIENT:  float
+NSUBST:  . = 1={< / *:.
+NSUBST:  ' = 1:> / 7:x / *:.
+SUBST:   " = .
+MAP
+  ....ccccc...
+  ....c'''c...
+......c'''c.....
+......c'''c.....
+..ccccc'''ccccc.
+..c''''"""''''c.
+..c''''"1"''''c.
+..c''''"""''''c.
+..ccccc'''ccccc.
+......c'''c.....
+......c'''c.....
+  ....c'''c...
+  ....ccccc...
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_arbitrary_a
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: [{
+SUBST:   ' : . x ':40, '=.x
+NSUBST:  . = 1:d / *:.
+ITEM:    stone / dart
+MAP
+    xxxxxxxxxxxxxxxxx
+   xx''xx''''''xx''xx
+   x''..'..xxx.'x..'x
+  xx'.{...xx'......'x
+  x'.....x''..[...'xx
+  x'....'.......''xxx
+ xx'.........''xxxxxx
+ x'........'xxxxxxxxx
+xx'......''xxxxxxxxx.
+x'.....'xxxxxxxxxxx..
+x...''xxxxxxxxxxxxx.@
+x.'xxxxxxxxxxxxxx....
+x..'xxxxxx''.'x..'xxx
+x'...'''x'.xx..'xxxxx
+x'..........xxxxxxxxx
+xx'..(.xxx'....''xxxx
+ xx'....xxxx''...''xx
+  xxxx'''x xxx''...'x
+     xxxxxxxxxx..@..x
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_arbitrary_b
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: {[(
+SUBST:   ' : . x ':40, '=.x
+MAP
+     xx'.@.'xxx
+   xxx'..'...'x
+  xx'...xxxx..xx
+  x...'xxxxx'.'x
+ xx.(.'xxxxxx..xx
+ x'....'xxxxx'..x
+xx...'...xxxxx'.'
+x..''xx'..'xx...@
+..'xxxxx.'.'...'x
+@.'xxxx'.....[.'x
+'..'x'....''...xx
+x'.....{.'xxx'.'x
+xx'''....xxxx'.xx
+ xxxx.'xxxxxxx.xx
+   xx.x'xxxxx.'xx
+   x'..@''xx.@.'x
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_arbitrary_c
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: TV, XY/({
+SUBST:   XY = .
+KMASK:   T = no_monster_gen
+MAP
+  xx..@..xx
+ xx...x...xx
+ x...xxx...x
+ x...xxx...x
+xx..xxxxx..xx
+x...........x
+x.....(.....x
+x.T..X[Y..T.x
+x.....{.....x
+x...........x
+xxxx..x..xxxx
+   xx...xx
+   x..@..x
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_subterranean_lakeside_camping
+TAGS:    entry no_monster_gen
+ORIENT:  float
+MONS:    goblin, rat, giant bat
+SHUFFLE: {[(
+SUBST:   ? : . w ?:40, ' : . x ':40
+SUBST:   ? = .w, ' = .x
+MAP
+      xxxxxxxxxxxxxxxxxxxx
+   xxxx?xx1.'xxxxxxxx'.33x
+ xxx'.??.xxx.xxx.x.x..xxxx
+xx'..?w.....?.....x..xxx'x
+x'.?www?.?.?www?.xx...2x.'
+x'?www?.??w.wwww?...?.xx.@
+xx.???.?wwww.www.?ww..x..'
+xxx'..?wwww??.wwwww?.xx.xx
+''xx..?www?[({?www?.xx.xxx
+@..xx?wwwww???wwwww?..xx'x
+..xx..?wwwww.wwwww?..x..xx
+x'.xxx.??wwww.ww.??...xxxx
+xx..x....??www.??...xxxx'x
+ xx...??....??.xx?.x.....x
+  xx'...'xxxxxxx''...'x.2x
+  x'.xxxxx'''xxxxxx''xx1xx
+  xxxxxxxx.@.xxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_more_subterranean_lakeside_camping
+TAGS:    entry no_monster_gen
+ORIENT:  float
+SHUFFLE: {[(
+SUBST:   ? : . w ?:40, ' : . x ':40
+SUBST:   ? = .w, ' = .x
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xwwwwwwwww?......'''....''.
+xwwwwww??...?w?......'.....
+xwww??....w.www??...'x'..'.
+xww??...?ww.w.ww.?..xx.....
+xw?....?ww[www..w.?..'.....
+xw?.(.?wwwwwwwww......'...@
+xw?....ww{wwww..w....'x.'..
+xww??...?wwww?.ww?....x.''.
+xwww??.....?wwww...x..'....
+xwwwwww??....???..'x....xx'
+xwwwwwwww??''...........'''
+xxxxxxxxxxxxxxxxx..@....'''
+ENDMAP
+
+##############################################################################
+NAME:   dpeg_entry_erosion
+TAGS:   entry
+ORIENT: float
+SUBST:  '=cx., "=+.=, c:xxc
+MAP
+xxxxxxxxxxxxxxxxxxxx
+xccccccx.......x..c.
+xccccccc..ccx'.x..x.
+xcc.(..c..'..c.'=''.
+xcc.[..+..c..+.x.."@
+xcc.{..c..cxxc.'..x.
+xccccccc..x....'xx'.
+xcccccxxc...cc......
+xxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_orchard
+TAGS:    entry
+ORIENT:  float
+MONS:    plant
+SHUFFLE: 1x
+SUBST:   x = '
+SUBST:   ' = ':140 d
+SUBST:   . = '.
+KITEM:   d : apple / apricot / pear / apricot / orange / banana / \
+             strawberry / lemon
+KFEAT:   d = '
+FTILE:   d'1{ = floor_grass
+COLOUR:  d' = green
+MAP
+  .....
+ .x...x.
+ '1'''1'
+..''{''..
+ '1'''1'
+ .x...x.
+  .....
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_round_a
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: {[(
+SUBST:   ? = x= , ' = x. , v : cvxxxx
+MAP
+xxxxxxxxxxxxxxxx.@
+@...xxxxxx.'xx.?..
+xxx'.xxxx.xx..xx..
+xxxx.'xxx?xxxxxx..
+xxxxx.xxx.xxxxxx..
+xx[x.......xxxxx..
+xx...vvvv..'xxxx..
+x'.vvvvvvv....xx..
+x..vvvvvv..xx'.x..
+xx..vv....xxxx'x..
+x(x'...xx{xxxx.?..
+xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_round_b
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: {[(
+SUBST:   ' : . x ':40, '=x.
+MAP
+   x@xxxxxxxx
+ xxx.xxxx...xx
+xx'...xx..x..@
+x'..x..'....xx
+x'.......'xxxx
+x'........xxxx
+x'...''....xxx
+xx..'xxx'...xx
+ x.'xxxxxx..xx
+ x..xxxxxxx.'x
+ xx.'xxxxxx..x
+  x..xxxxxx.{x
+  xx..xxxx..xx
+   xx...xx.'x
+    xxx.(.['x
+      xxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_round_c
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: {[(
+SUBST:   ' : . x ':40, '=x., " : . c ":40, "=.c , c:cxx
+MAP
+    xxxxxxx
+  xxx.....xxxx
+ xx'.."""....xxxxx
+xx'.."ccc".[.....xxxxxxx
+x...cccccc"...cc...xxx.@
+x.{.ccccc"..'.."cc..x.x.
+x....cc....'xx.."c".'xx.
+xx......(.'xxxx'....'xx.
+ x'..''...xxxxxxxx.'xxx.
+ x'..''xxxxxxxxxxxx.xxx.
+ xx''xxxxxxxxxxxxxx.xxx.
+  xxxxxxxxxxxxxxxxx@...@
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_short_road
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: {[(, XY
+SUBST:   X==, Y=x, %=%.
+MAP
+xxxxxx@.xxx
+x(.xx..xxxx
+x..x...+..x
+x..x..xx.[x
+x..+..xx..x
+xXxx..xxxxx
+x%Y..xxxxxx
+xxx..x...{x
+xx...+....x
+xx.@xxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_court
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: {[(, TVG
+KMASK:   T = no_monster_gen
+MAP
+xxxxx.@.xxxxx
+x...........x
+x.xxx...xxx.x
+x.x.......x.x
+x.x.T.x.T.x.x
+x.....x.....x
+x....xxx....x
+xxxx..x..xxxx
+x..+.....+..x
+x(.xxx+xxx..x
+x..x[....x.{x
+xxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_signposts
+TAGS:    entry no_monster_gen no_rotate
+ORIENT:  float
+SHUFFLE: DX'/CY"
+SUBST:   D = c, XC" = x, 'Y = .
+SHUFFLE: cvba
+NSUBST:  . = 1:d / *:.
+ITEM:    stone / dart
+MAP
+          xxxxxxxxxxx
+     xxxxxx...xxxx..xx
+xxxxxx..xD.xxx.xx.xx.xxxxx
+x..Cx.x.x.xxx'xxxx.x'x....
+x(...xx'X.'xx'Dx..xx.x.cx.
+x{.xxxXxx.x'x...'xxxx..xx@
+x[...xxX'CX'x.xCXx..xX.cx.
+x..Dx...xx.XXx'''.Xx.x....
+xxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_renting
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: [>, {(, T), TcGv, XY
+SUBST:   ':.x, X=+=x, Y=+=x
+KMASK:   T = no_monster_gen
+MAP
+xxxxxxxxxxxxxxxxxx..@
+x'''''''xxxxxxxxxx...
+x'.....'xxxx...xxx...
+x'.x+x.xxx'..T..'x...
+x..x.x.[xx.......Y...
+xxxx.xxxxx''x+x''x...
+xxxx.xxxxxxxx.xxxxxXx
+@...................@
+xxxxxx.xxxxxxxxxxx.xx
+xxxxxx+xxxxxx...'x.xx
+xxxx''.''xxxx.c..x.xx
+xxx'.....'xxx.{..+.xx
+xxx'.xxx.'xxx.c..xxxx
+xxxx..(..xxxx...'xxxx
+xxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_brainrot
+TAGS:    entry no_monster_gen
+MONS:    jackal / worm
+ORIENT:  float
+SHUFFLE: {(
+SUBST:   l = l.
+MAP
+xxxxxxxxxxxxxxxxx@xxx
+@.xx...xx..xx..xx.xxx
+xx..xl.x.xxx..x..x.xx
+xxlll.xxx...xxllxx.xx
+xxxll.xx.xxxx.xx.xxxx
+@..xxl.x.x...x..x.xxx
+xxx..lx.x..xxxxxx.x.x
+xx%xx.x.xxxx...(x.x.x
+xlxlxxxx.xxx....xx.xx
+x.xlx.xl..x.xxllxxxxx
+xx.x.x.xxx.x.x..xxxxx
+x.xxxxx.lxxxx.xxlllll
+x..x..x.....x.xxl%1>l
+x{...x.x.xll..xxlllll
+xxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_another_circle
+TAGS:    entry no_monster_gen no_rotate
+ORIENT:  float
+WEIGHT:  5
+SHUFFLE: lw
+MAP
+      xxxxxxxxxxx
+   xxxx.........xxxx
+  xx...xxxx+xxxx...xx
+ xx.xxxxxx...xxxxxx.xx
+ x.xxxxxxx...xxxxxxx.x
+xx.xxxxxxxx+xxxxxxxx.xx
+x.xxl..xx.....xxx.lxx.x
+x.xll..x.......x..llx.x
+@.xll(.+...{...+.[llx.@
+x.xll..x.......x..llx.x
+x.xxl..xx.....xxx.lxx.x
+xx.xxxxxxxx+xxxxxxxx.xx
+ x.xxxxxxx...xxxxxxx.x
+ xx.xxxxxx...xxxxxx.xx
+  xx...xxxx+xxxx...xx
+   xxxx.........xxxx
+      xxxxxxxxxxx
+ENDMAP
+
+NAME:    dpeg_entry_yet_another_circle
+TAGS:    entry no_monster_gen
+ORIENT:  float
+WEIGHT:  5
+SHUFFLE: {(, lw
+MAP
+      xxxxx@xxxxx
+   xxxx.........xxxx
+  xx...xxxx+xxxx...xx
+ xx.xxxxwwwwwwwxxxx.xx
+ x.xxxxxww...wwxxxxx.x
+xx.xxxxx...[...xxxxx.xx
+x.xxxxxxxxx+xxxxxxxxx.x
+x.x..x...........x..x.x
+x.+..+.....{.....+..+.x
+x.x..x...........x..x.x
+x.xxxxxxxxx+xxxxxxxxx.x
+xx.xxxxx...(...xxxxx.xx
+ x.xxxxxww...wwxxxxx.x
+ xx.xxxxwwwwwwwxxxx.xx
+  xx...xxxxxxxxx...x
+   xxxx.........xxxx
+      xxxxx@xxxxx
+ENDMAP
+
+##############################################################################
+NAME:   matt_entry_diagonals
+TAGS:   entry no_monster_gen
+ORIENT: float
+SUBST:  ':x., ":x., ?:x., _:x.
+MAP
+xxxxxxxxxx@xxxxxxxxxx
+xx..........'......xx
+x.x......_.x......x.x
+x..x......x......x..x
+x...x....x.x."..x...x
+x....x..x...x..x....x
+x.....xx...".xx.....x
+x.....x...x...x.....x
+x..x.x.?.x.....x....@
+@...x...x.(.[.x.x...x
+x..'.x.".x.{.x..._..x
+x.'...x...x.x.x.....x
+x....x.x...x...x....x
+x...x...x...x...x...x
+x..x.....x...?...x..x
+x.x.......x.......x.x
+xx.................xx
+xxxxxxxxxx@xxxxxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:    matt_entry_hidden_altar
+TAGS:    entry no_monster_gen
+ORIENT:  float
+SHUFFLE: {[(<, Aa1/Bb2/Bb2/Bb2/Cc3/Cc3/Cc3/Cc3/Cc3
+SUBST:   AC==, a=., 12=C, B=x, b=>, 3=%, c=T
+MAP
+xxx@xxx@xxx
+x.........x
+x....(....x
+x..xxAxx..x
+x..x.a.x..x
+@.[xT1Tx<.@
+x..x.T.x..x
+x..xxxxx..x
+x....{....x
+x.........x
+xxx@xxx@xxx
+ENDMAP
+
+##############################################################
+# A Maze of Twisty Passages, All Alike
+NAME:    elethiomel_entry_maze
+TAGS:    entry no_monster_gen
+ORIENT:  float
+SHUFFLE: {[(, WXYZ
+SUBST:   W=., X=X., X=x=., Y=Y., Y=x=., Z=Z., Z=x=.
+MAP
+xx@xxxxxxxxxxxxxxxxxxxxxxxxxx
+xx.x.......xxxxx...xx......xx
+xx.xXxxxxx.xxxxx.x.xxxxxxx.xx
+xx...x{..x...x...x...x(xxx..@
+xxxx.xxx.x.x.x.xxxxx.x.xxx.xx
+@..x...x...x.....xxx...x...xx
+xx.xxx.xxxxxxxxx.xxxxxxx.xxxx
+xx.....xxxxx.x.....x.W...x..@
+xxxx.xxxxxxx.x.xxx.x.xxxxx.xx
+xx...xxxxxxx...xxx...x...Z.xx
+xx.xxxxxxxxx.x.xxx.xxx.xxx.xx
+xx...xxxxx...x.....x...x...xx
+xxxx.x[xxx.xxxxxxxxx.xxx.xxxx
+xxxx.....Y...........xxx...xx
+xxxxxxxxxxxxxxxxxxxxxxxxxx@xx
+ENDMAP
+
+##############################################################
+# It's quiet. Too quiet....
+NAME:    elethiomel_entry_quiet
+TAGS:    entry no_monster_gen
+ORIENT:  float
+MONS:    rat / nothing, hobgoblin / goblin / nothing
+SHUFFLE: '"XY/ABVW, !?/CD
+SUBST:   ':., ":=, A:x, B:x, !:., ?:=, C:x, D:x, V=x, W=x, Y=@x
+SUBST:   c : cxx
+KFEAT:   X = teleport trap / floor
+MAP
+         x@x
+         x.x
+       ccc+ccc
+       c.G.G.c
+ xcccccc.....ccccccx
+ c%.2.cc.....cc11.$c
+ c%.2.=..G.G..=11..c
+ c%...cc.....cc11.$c
+xxcccccc.....ccccccxx
+YX''''"..G.G..?!!!!!!
+xxcccccc.....ccccccxx
+      cG.....Gc
+      c.[.{.(.c
+      ccccccccc
+ENDMAP
+
+NAME:    elethiomel_entry_005_b
+TAGS:    entry no_monster_gen
+ORIENT:  float
+MONS:    rat / nothing, hobgoblin / goblin / nothing
+SHUFFLE: '"/AB, !?XY/CDVW
+SUBST:   ':., ":=, A:x, B:x, !:., ?:=, C:x, D:x, Y=@x, V=x, W=x
+KFEAT:   X = teleport trap
+SUBST:   c : cxxx
+MAP
+         x@x
+         x.x
+       ccc+ccc
+       c.G.G.c
+ xcccccc.....ccccccx
+ c%.2.cc.....cc11.$c
+ cX.2.c..G.G..c11.Xc
+ c%...cc.....cc11.$c
+xxcccccc.....ccccccxx
+''''''"..G.G..?!!!!XY
+xxcccccc.....ccccccxx
+      cG.....Gc
+      c.[.{.(.c
+      ccccccccc
+ENDMAP
+
+##############################################################
+NAME:    onia_entry_mini_maze
+TAGS:    entry
+WEIGHT:  5
+ORIENT:  float
+ITEM:    apple / sausage / nothing / stone / potion of water
+SHUFFLE: ({[, Aa, Bb, Cc, Ee, Ff
+MONS:    w:30 nothing / w:10 plant / w:5 fungus / w:10 rat
+SUBST:   A=x, B=x, C=x, E=x, F=x, a=., b=., c=., e=., f=.
+SUBST:   X = x =
+MAP
+xxxxxxxxx@xxxxxxx
+x.......A.a.....x
+x.xxxxXexXxBxxx.x
+x.xd1.......x1f.x
+x.xxxxxxxXxbx.x.x
+x.X...x.......X.x
+xEx.x.x.xxxxx.xFx
+x...x.c...1dx...x
+xxxxxCxxxxxxxx.xx
+x...............x
+x.xxxxxX.Xxxxxx.x
+x.....[x(x{.....x
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    onia_entry_mini_maze_b
+TAGS:    entry
+WEIGHT:  5
+ORIENT:  float
+ITEM:    apple / sausage / nothing / stone / potion of water / w:30 nothing
+SHUFFLE: ({[ , AB
+SUBST:   A : x , B = +., X = x=
+MONS:    w:30 nothing / w:10 plant / w:3 fungus / w:1 worm
+MAP
+xxxxxxxxx@xxxxxxx
+x.......A.B.....x
+x.xxxxxBxxxAxxx.x
+x.xd1........dx.x
+x.xxxxxxxxxxx1x.x
+x.x...B.......x.x
+x.x.x.x.xxxxxAx.x
+x...x.x...1dx...x
+xxxxx.xxxxxxxx.xx
+x...............x
+x.xxxxxX.Xxxxxx.x
+x.....[x(x{.....x
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################
+NAME:    onia_entry_larder
+TAGS:    entry
+ORIENT:  float
+MONS:    w:100 rat / w:50 giant cockroach / quokka
+ITEM:    potion of water / any potion / choko / beef jerky / grape / sausage
+SUBST:   ? = .:30 1:20 d
+SUBST:   = = = +
+MAP
+xxxxxxxxxx@xxxxxxxxxx
+xxxx?x?x?x.x?x?x?xxxx
+xxxx=x=x=x+x=x=x=xxxx
+xxxx.x.x.x.x.x.x.xxxx
+x?=......({[......=?x
+xxxx.x.x.x.x.x.x.xxxx
+xxxx=x=x=x=x=x=x=xxxx
+xxxx?x?x?x?x?x?x?xxxx
+xxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+#############################
+NAME:    onia_entry_handbag
+TAGS:    entry
+ORIENT:  float
+MONS:    w:30 rat / ooze / small snake
+MONS:    giant bat / w:6 small snake / w:2 snake / w:2 jackal / w:4 giant cockroach
+SUBST:   ! = $%%% , ? = ..~
+SHUFFLE: {[, [<(
+MAP
+.......@........
+.xx..xx>x{x..xx.
+.....xxxxxx.....
+.xx1xx2?2?xx1xx.
+.(xx=2?!!2?=xx<.
+.xx1xx2?2?xx1xx.
+.....xxxxxx.....
+.xx..x[x>xx..xx.
+.......@........
+ENDMAP
+
+##############################################################
+NAME:     eino_entry_cavern_a
+TAGS:     entry no_monster_gen no_rotate
+ORIENT:   northwest
+SUBST:    V = V T:2
+SUBST:    ' : x.
+WEIGHT:   5
+MAP
+xxxxxxxxxxxxxxxxx
+xxxxx{xxxxxxxxxxx
+xxxxx..xxxxxxxxxx
+xxxxx(.[xxxxxxxxx
+xxxx....'''xxxxxx
+xxxx.....'''xxxxx
+xxx......''''xxxx
+xxx......'''xxxxx
+xxx.......'xxxxxx
+xx........xxxxxxx
+xx.........xxxxx.
+xx..............@
+xx.........xxxxxx
+xx.......V..xxxxx
+x...........xxxxx
+x.......V.V..xxxx
+x.............xxx
+xx.....V.V.V...xx
+xx..............x
+xxx@.@xxxxxxx@.xx
+ENDMAP
+
+NAME:     eino_entry_cavern_b
+TAGS:     entry no_monster_gen no_rotate
+ORIENT:   northwest
+WEIGHT:   5
+MAP
+xxxxxxxxxxxxxxxx
+xxxxxxx{xxxxxxxx
+xxxxxxx..xxxxxxx
+xxxxxxx...xxxwxx
+xxxxxx....xwwwxx
+xxxxxx..wwwwwwxx
+xxwwwwwwWwwwxxxx
+xwwwwwwww..xxxxx
+xwwxx.......xxxx
+xxxx........xxxx
+xxxx.........xxx
+xxxx..........xx
+xxxx..........xx
+xxxx...........@
+xxxxxx.......xxx
+xxxxxxxx.@.xxxxx
+ENDMAP
+
+NAME:     eino_entry_cavern_c
+TAGS:     entry no_monster_gen no_rotate
+ORIENT:   northwest
+NSUBST:   A = 1:= / x
+SUBST:    % = % .:5
+WEIGHT:   2
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x{.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxx........xxxxxxx.%.%.%.%.%.xxxxx
+xxxxx.............xAxxxxAxxxx.xxxxx
+xxxxxxx.................xxxxxAxxxxx
+xxxxxxxxxx......................xxb
+xxxxxxxxxxxxx.....................@
+xxxxxxxxxxxxxxxxx.............xxxxb
+xxxxxxxxxxxxxxxxxxxb.@.bxxxxxxxxxxx
+ENDMAP
+
+NAME:     eino_entry_cavern_d
+TAGS:     entry no_rotate
+ORIENT:   northeast
+SHUFFLE:  bvc
+SUBST:    ' : x.
+WEIGHT:   4
+SHUFFLE:  IJ
+SUBST:    J = .
+MAP
+xxxxxxxxxxxxxx
+xxxxxxxxx{xxxx
+xxxxxxxx...xxx
+xxxxxx.....xxx
+xxxxx.....''xx
+xxx.......''xx
+xx.........'xx
+......J.....'x
+@.....ccI..''x
+x....Icc...''x
+x......J...''x
+...........'xx
+@.........''xx
+x........''xxx
+xx.....xxxxxxx
+xxx.@.xxxxxxxx
+ENDMAP
+
+NAME:     eino_entry_cavern_e
+TAGS:     entry no_monster_gen no_rotate
+ORIENT:   northeast
+SUBST:    ' : x. , " : x. , ? = x.
+WEIGHT:   4
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx?{xx
+xxxxxxxxxx""xxxxxxxxxxxxxxx?...?xx
+xxxxxxxxx""""xxxxxxxxxxx?.......?x
+xxxxxxx""""""""xxxx?............?x
+xxxxxx""""""....??.............'xx
+xxxxx""".....................''xxx
+xG..x....................'''''xxxx
+@.......?..........??.''''''xxxxxx
+xG.%x..xxx?.......xxxxx''''xxxxxxx
+xxxxxxxxxxxxxxG.Gxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+################################################################################
+NAME:    entry_aquarium_a
+TAGS:    entry
+ORIENT:  float
+KMASK:   w = no_monster_gen
+KMONS:   Z = shark / giant goldfish
+KFEAT:   Z = w
+KMASK:   Z = no_monster_gen
+SHUFFLE: TTV
+WEIGHT:  5
+KMASK:   T = no_monster_gen
+KPROP:   wZ = no_submerge
+MAP
+xxxxxxxxxxxxxxxxxxxxxxx
+x.....................x
+x.............G...G...x
+x..mmmmmmmmm....(.....x
+@..mwwwwwwwm.T......T.x
+@..mwwwZwwwm....{.....x
+@..mwwwwwwwm.T......T.x
+x..mmmmmmmmm....[.....x
+x.............G...G...x
+x.....................x
+xxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   entry_aquarium_b
+TAGS:   entry
+ORIENT: float
+KMASK:  w = no_monster_gen
+KMONS:  Z = shark / giant goldfish
+KFEAT:  Z = w
+KMASK:  Z = no_monster_gen
+KPROP:  wZ = no_submerge
+WEIGHT: 5
+MAP
+xxxxxxxxxxxxxxx
+x....(.{.[....x
+x.G.xxxxxxx.G.x
+x.............x
+x.mmmmm.mmmmm.x
+x.mwwwm.mwwwm.x
+x.mwZwm.mwZwm.x
+x.mwwwm.mwwwm.x
+x.mmmmm.mmmmm.x
+x.............x
+xx@xxxxxxxxx@xx
+ENDMAP
+
+###########################################################
+# Eye to eye with the dorky.
+NAME:    lordsloth_entry_two_stooges
+TAGS:    entry no_rotate no_monster_gen no_item_gen
+: if crawl.one_chance_in(4) then
+SUBST:   [ = l, ( = l
+: end
+SUBST:   ':l...' , '=l. , l:lllWw , n:nv , v:vvvc
+SHUFFLE: 12
+KMONS:   1 = Ijyb, human
+KMONS:   2 = Psyche, human
+KFEAT:   1 = .
+KFEAT:   2 = .
+MAP
+.....................
+.....................
+..vvvvnnnnnnnnnvvvv..
+..vllllll[{(llllllv..
+..vlllllll.lllllllv..
+..vllll''...''llllv..
+..vll'.........'llv..
+..vl'...........'lv..
+..vl.............lv..
+..vmm..G.vvv.G..mmv..
+..v1m...........m2v..
+..vvvvvvv+++vvvvvvv..
+...vv...........vv...
+ ..vv...........vv..
+ ...vvv.......vvv...
+   ...vv+++++vv...
+    .............
+ENDMAP
+
+##############################################
+# Angband town! (Shiori)
+NAME:    shiori_angband_town
+ORIENT:  float
+WEIGHT:  1
+TAGS:    entry no_rotate
+NSUBST:  { = { / > / .
+NSUBST:  = = 3== / *=x
+SHUFFLE: ABC/DEF/GHI/JKL/MNO/PQR/STU
+NSUBST:  A = 1:=/x, B = *=%$, C = [/x
+NSUBST:  D = 1:=/x, E = *=%$, F = (/x
+SUBST:   GHIJKLMNOPQRSTU=x
+SUBST:   x:xc
+MAP
+xxxx=xxxxxxxxxxxxxx=xxxxxxxxxxxxxx=xxxxx
+x......................................x
+x.xAxxx..xxxxx....xSSSx....xPxxx.xxxMx.x
+=.ABCxx..xxxx+..{.STUTS..{.PQRxx.+xONM.=
+x.xCxxx...........xTxxx....xPxx+.xxxMx.x
+x.xxxxx..{........xxx+x................x
+x.xx+xx......{.............{.....xxxDx.x
+x.........xxxx+xx..xx+x...xxJxx..+xFED.x
+=.xxxx+...GHIxxxx..xxxx...xxKLx{.xxxFx.=
+x.xxxxx.{.xGxxxxx..xxxx.{.+xJxx..xxxxx.x
+x......................................x
+xxxx=xxxxxxxxxxxxxx=xxxxxxxxxxxxxxx=xxxx
+ENDMAP
+
+##############################################################
+# The zoo
+# With low chance (10%), the monsters spell Crawl or crawl.
+# This is considered harmless and not ASCII art. Don't hand
+# in other vaults where monsters spell other words, though :)
+NAME:    onia_entry_zoo_common
+TAGS:    entry
+ORIENT:  float
+: if crawl.one_chance_in(10) then
+SHUFFLE: 12
+MONS:    centaur / centaur warrior / yaktaur / yaktaur captain
+MONS:    ettin / frost giant / hill giant / stone giant / fire giant
+MONS:    rat / green rat / orange rat / grey rat / quokka
+MONS:    giant ant / soldier ant
+MONS:    spiny worm / ant larva / worm
+MONS:    lindwurm / gila monster / komodo dragon
+: else
+SHUFFLE: 1234567
+MONS:    giant gecko / iguana / giant newt / gila monster / komodo dragon
+MONS:    hog / jackal / wolf / hound / war dog
+MONS:    giant cockroach / giant ant / butterfly / killer bee / bumblebee /\
+         redback / giant mite
+MONS:    swamp worm / lindwurm / worm / spiny worm
+MONS:    swamp drake / hydra / wyvern / fire drake
+MONS:    bear / polar bear / grizzly bear / black bear
+MONS:    black mamba / water moccasin / anaconda / salamander / viper
+: end
+MAP
+xxxxxxxx@xxxxxxxx
+xxxxxx.G.G.xxxxxx
+xxx.G.......G.xxx
+x...............x
+x.G..xxxxxxx..G.x
+x....x12345x....x
+x.G..xmmmmmx..G.x
+x...............x
+xxx.............x
+xxxxxxxxxxxx....x
+xxxxx[{(<.....xxx
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################
+# There's a large version (with WEIGHT 2) in the huge maps section.
+NAME:   minmay_entry_arboretum_small
+WEIGHT: 8
+TAGS:   entry no_monster_gen no_item_gen
+ORIENT: float
+MONS:   plant / bush w:3, fungus col:any, fungus col:yellow, fungus col:red
+MONS:   fungus col:white, fungus col:magenta, fungus col:darkgrey
+KPROP:  ' = no_rtele_into
+SUBST:  ' = ...111t, 1:1112, 2=1111112, 2:234567
+FTILE:  .1234567t = floor_lair
+COLOUR: . = green
+SUBST:  " = .
+MAP
+xxxxxxxxxxxxxxxxx
+x'''''''''''''''x
+x'''''''''''''''x
+x'''''''''''''''x
+x'''''''''''''''x
+x'''''''''''''''x
+x'''''''''''''''x
+x'''''''''''''''x
+x'''''''''''''''x
+xxxxmmmmmmmmmxxxx
+"""""""""""""""""
+@""""{""[""(""""@
+"""""""""""""""""
+ENDMAP
+
+##############################################################
+NAME:    minmay_entry_cross
+TAGS:    entry no_monster_gen
+ORIENT:  float
+SUBST:   x : x:10 c:2 v:1
+SHUFFLE: ABC
+SUBST:   A=+, B=+x, C=+xx
+MAP
+xxxxxxx+xxxxxxx
+xxxxxx...xxxxxx
+xxxxxx...xxxxxx
+xxxxxx...xxxxxx
+xxxx{.....[xxxx
+xxxx.......xxxx
+x.............x
+A......T......B
+x.............x
+xxxx.......xxxx
+xxxx>.....(xxxx
+xxxxxx...xxxxxx
+xxxxxx...xxxxxx
+xxxxxx...xxxxxx
+xxxxxxxCxxxxxxx
+ENDMAP
+
+##############################################################
+# Background for the Abyss portals: someone made them, probably with
+# an evil mind. The upright citizens and adventurers were not able
+# to destroy those portals, so they sealed them instead.
+NAME:   minmay_entry_glassed_features
+TAGS:   entry no_monster_gen
+ORIENT: float
+KPROP:  'I = no_rtele_into
+SUBST:  I : G T I:4 A:1
+KFEAT:  A = enter_abyss
+MAP
+mmmmm.....mmmmm
+m'''m.....m'''m
+m'I'm.....m'I'm
+m'''m.....m'''m
+mmmmm.....mmmmm
+...............
+...............
+......({[......
+...............
+...............
+mmmmm.....mmmmm
+m'''m.....m'''m
+m'I'm.....m'I'm
+m'''m.....m'''m
+mmmmm.....mmmmm
+ENDMAP
+
+##############################################################
+# This map provides no space to run around/away, so there is
+# either some staircase or a known shaft.
+NAME:   minmay_entry_hallway
+TAGS:   entry no_monster_gen
+ORIENT: float
+SUBST:  x : x:10 c:2 v:1
+SUBST:  a : ab
+NSUBST: a = 1:< / 1:> / *:.
+NSUBST: b = 1:b / 1:b. / *:.
+KFEAT:  b = known shaft trap
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx
+@..xxx...xxx...xxx...xxx
+@..xxx.a.xxx.a.xxx.{.xxx
+@..xxx...xxx...xxx...xxx
+@....................xxx
+@..................[.xxx
+@....................xxx
+@..xxx...xxx...xxx...xxx
+@..xxx.a.xxx.a.xxx.(.xxx
+@..xxx...xxx...xxx...xxx
+xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################
+# The map can make it hard to get away, so reduced weight.
+NAME:    minmay_entry_floating_metal
+TAGS:    entry no_monster_gen
+WEIGHT:  3
+ORIENT:  southeast
+SHUFFLE: {(
+NSUBST:  V = 2:= / 2=v= / *:v
+NSUBST:  U = 2:= / 2=v= / *:v
+SUBST:   ' = .W
+MAP
+  '''''''''@'''''x
+ ''wwwwwwwwWwwwwwx
+''wwwwwvvvv+vwwwwx
+'wvvvvwv....vwwwwx
+@W+(>vwv.{>.vwwwwx
+'wvvvvwv....vwwwwx
+'wwwwwwvvvvvvwwwwx
+'wwwwwwwwwwwwwvvwx
+'wwwvvwwwwwwwwvvwx
+'wwwvvwwwwwwwwwwwx
+'wwwwwwwwwwwwwwwwx
+'wwwwwwwwwVVVVwwwx
+'WwwUUUwwwV<>Vwwwx
+'WwwU<UwwwVVVVwwwx
+'WwwU>Uwwwwwwwwwwx
+'wwwUUUwwwwwwwwwwx
+'wwwwWwwwwwwwwwwwx
+xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################
+# Net traps aren't going to kill you.
+NAME:   minmay_entry_trapped
+TAGS:   entry no_monster_gen
+ORIENT: float
+NSUBST: ~ = 3:~ / *=~.....
+SUBST:  ~ : ~^..
+KFEAT:  ~ = net trap
+KFEAT:  ^ = net trap / dart trap
+MAP
+    x+x
+    x~x
+    x~x
+   xx~xx
+xxxx..(xxxx
++~~~.{.~~~+
+xxxx[..xxxx
+   xx~xx
+    x~x
+    x~x
+    x+x
+ENDMAP
