@@ -117,6 +117,10 @@ void trap_def::prepare_ammo()
     case TRAP_ALARM:
         this->ammo_qty = 1 + random2(3);
         break;
+    case TRAP_GOLUBRIA:
+        // really, turns until it vanishes
+        this->ammo_qty = 30 + random2(20);
+        break;
     default:
         this->ammo_qty = 0;
         break;

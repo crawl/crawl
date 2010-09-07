@@ -2723,6 +2723,20 @@ static void _player_reacts_to_monsters()
     handle_starvation();
 }
 
+static void _update_golubria_traps()
+{
+    std::vector<coord_def> traps = find_golubria_on_level();
+    for (std::vector<coord_def>::const_iterator it = traps.begin(); it != traps.end(); ++it)
+    {
+        trap_def *trap = find_trap(*it);
+        if (trap && trap->type == TRAP_GOLUBRIA)
+        {
+            if (--trap->ammo_qty <= 0)
+                trap->destroy();
+        }
+    }
+}
+
 void world_reacts()
 {
     // All markers should be activated at this point.
@@ -2781,6 +2795,7 @@ void world_reacts()
     handle_time();
     manage_clouds();
     _update_mold();
+    _update_golubria_traps();
 
     if (!crawl_state.game_is_arena())
         _player_reacts_to_monsters();
