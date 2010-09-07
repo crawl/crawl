@@ -4,6 +4,34 @@
 # See entry.des for details.
 ##############################################################################
 
+NAME:    minmay_entry_checkered_box
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: {[(
+: if crawl.one_chance_in(4) then
+COLOUR:  ' = blue
+COLOUR:  " = green
+FTILE:   '{[( = floor_pebble_blue
+FTILE:   " = floor_pebble_green
+SUBST:   c = b, x = v
+: else
+COLOUR:  ' = brown
+COLOUR:  " = lightgrey
+FTILE:   '{[( = floor_pebble_brown
+# yes, this variation uses American spelling for some reason
+FTILE:   " = floor_pebble_lightgray
+: end
+SUBST:   ' = ., " = .
+MAP
+xcx@xcx
+c'"'"'c
+x"'"'"x
+c'"'"'c
+x"'"'"x
+c{"["(c
+xcxcxcx
+ENDMAP
+
 ##############################################################
 NAME:    minmay_entry_split_and_join
 TAGS:    entry no_rotate
