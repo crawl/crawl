@@ -3077,6 +3077,7 @@ enum spell_type
     SPELL_PORTAL_PROJECTILE,
     SPELL_SUMMON_UGLY_THING,
     SPELL_PETRIFY,
+    SPELL_GOLUBRIAS_PASSAGE,
 
     // Mostly monster-only spells after this point:
     SPELL_HELLFIRE_BURST,
@@ -3191,6 +3192,7 @@ enum trap_type                         // env.trap_type[]
     TRAP_ZOT,
     TRAP_NEEDLE,
     TRAP_SHAFT,
+    TRAP_GOLUBRIA,
     NUM_TRAPS,                         // must remain last 'regular' member {dlb}
     TRAP_UNASSIGNED = 100,             // keep set at 100 for now {dlb}
     TRAP_INDEPTH = 253,                // Level-appropriate trap.

@@ -15,6 +15,7 @@
 #include "coordit.h"
 #include "delay.h"
 #include "directn.h"
+#include "dungeon.h"
 #include "env.h"
 #include "fprop.h"
 #include "invent.h"
@@ -36,6 +37,7 @@
 #include "stuff.h"
 #include "teleport.h"
 #include "terrain.h"
+#include "traps.h"
 #include "travel.h"
 #include "view.h"
 #include "viewmap.h"
@@ -935,4 +937,44 @@ int cast_semi_controlled_blink(int pow)
         contaminate_player(1, true);
 
     return (result);
+}
+
+static std::vector<coord_def> _find_golubria_on_level()
+{
+    std::vector<coord_def> ret;
+    for (rectangle_iterator ri(coord_def(0, 0), coord_def(GXM-1, GYM-1)); ri; ++ri)
+    {
+        trap_def *trap = find_trap(*ri);
+        if (trap && trap->type == TRAP_GOLUBRIA)
+            ret.push_back(*ri);
+    }
+    return ret;
+}
+
+static bool _place_golubria(const coord_def& where)
+{
+    if (find_trap(where))
+        return false;
+
+    place_specific_trap(where, TRAP_GOLUBRIA);
+
+    trap_def *trap = find_trap(where);
+    if (!trap)
+        return false;
+
+    trap->reveal();
+
+    return true;
+}
+
+bool cast_golubrias_passage(const coord_def& where)
+{
+    std::vector<coord_def> loc = _find_golubria_on_level();
+    if (loc.size() > 1)
+        return false;
+
+    if (!_place_golubria(where))
+        return false;
+
+    return true;
 }
