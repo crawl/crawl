@@ -1,6 +1,6 @@
 ##############################################################################
-# Small maps for D:1 entry vaults. 
-# Small maps which are also very simple should go to entry_simple.des. 
+# Small maps for D:1 entry vaults.
+# Small maps which are also very simple should go to entry_simple.des.
 # See entry.des for details.
 ##############################################################################
 
@@ -80,7 +80,7 @@ x.x%%%%x.x
 ..m%%%%x.x
 ..m%%%%x.x
 ..mmmxxx.x
-........(x       
+........(x
  .....xxxx
 ENDMAP
 
@@ -155,22 +155,22 @@ SUBST:   = : xx=, = = +==
 SUBST:   . = .:320 d:5 e:20 f:5
 SUBST:   y : x
 MAP
-yyyyyyyyyyyy                               
-yyVVVVVyyyyy                               
-yVV...VVyyyy                               
-yV.YYY`VVyyyyyyyyyyyyyyyyyyyyyyy            
-yV.YAY`.Vyyyyyyyyyyyyyyxxxxyxxxy           
-yV.YYY`.UUyyyyxxxxxxyxxx..xxxxxy           
-yVV.```` UUUyUU....xxx.........@          
-yyVVVVU.``.UUU................xy          
-yyyyyyUU.`````......`.`.`.`...xy           
-     yyUUU..`.``...``........xxy           
-     yyyy=UUU..``.``.......xxxyy          
-     yyy.yyyUU............xxyyyy          
-     yyy>yyyyxxxx...{..xxxxyy             
-     yyy%yyyyyyyxx...xxxyyyyy             
-     yyy.yyyyyyyyxxxxxyyyyyyy       
-     yyy=yyyyyyyyyyyyyyyyyyyy       
+yyyyyyyyyyyy
+yyVVVVVyyyyy
+yVV...VVyyyy
+yV.YYY`VVyyyyyyyyyyyyyyyyyyyyyyy
+yV.YAY`.Vyyyyyyyyyyyyyyxxxxyxxxy
+yV.YYY`.UUyyyyxxxxxxyxxx..xxxxxy
+yVV.```` UUUyUU....xxx.........@
+yyVVVVU.``.UUU................xy
+yyyyyyUU.`````......`.`.`.`...xy
+     yyUUU..`.``...``........xxy
+     yyyy=UUU..``.``.......xxxyy
+     yyy.yyyUU............xxyyyy
+     yyy>yyyyxxxx...{..xxxxyy
+     yyy%yyyyyyyxx...xxxyyyyy
+     yyy.yyyyyyyyxxxxxyyyyyyy
+     yyy=yyyyyyyyyyyyyyyyyyyy
 ENDMAP
 
 ##############################################################################
@@ -202,7 +202,7 @@ xxxYXX.......XXYxxx
        xY.Yx
        xx+xx
         xrx
-        xxx 
+        xxx
 ENDMAP
 
 ##############################################################
@@ -211,12 +211,12 @@ TAGS:   entry no_monster_gen no_pool_fixup
 ORIENT: float
 NSUBST: s = 1:+ / *:x, p = 1:+ / *:x, q = 1:+ / *:x, r = 1:+ / *:x
 NSUBST: _ = 1:w / *:., ' = 1:w / 1:( / *:., ` = 1:w / 1:[ / 1:d / *:.
-SUBST:  w:wlxm, x:xccv, +=+++. 
+SUBST:  w:wlxm, x:xccv, +=+++.
 ITEM:   stone / dart
 MAP
-   ...........   
-  ..rrrrrrrrr..  
- ..rr.`````.rr.. 
+   ...........
+  ..rrrrrrrrr..
+ ..rr.`````.rr..
 ..rr.qqqqqqq.rr..
 .rr.qq.'''.qq.rr.
 .r.qq.ppppp.qq.r.
@@ -228,13 +228,13 @@ MAP
 .r.qq.ppppp.qq.r.
 .rr.qq.'''.qq.rr.
 ..rr.qqqqqqq.rr..
- ..rr.`````.rr.. 
-  ..rrrrrrrrr..  
-   ...........    
+ ..rr.`````.rr..
+  ..rrrrrrrrr..
+   ...........
 ENDMAP
 
 ###############################################################
-# Player is usually encouraged to go towards the dangerous door with the 
+# Player is usually encouraged to go towards the dangerous door with the
 # bait. The monster is slow, and there's room to escape and close the door.
 NAME:    evilmike_entry_run_for_it
 TAGS:    entry no_monster_gen
@@ -1753,11 +1753,11 @@ KFEAT:   Z = zot trap
 SHUFFLE: <{[(, vXc
 MONS:    generate_awake ooze
 MAP
-     v..@..v     
-    vvv...vvv    
-   vvvvv<vvvvv   
-  vvvvvvvvvvvvv  
- vvvvvvvvvvvvvvv 
+     v..@..v
+    vvv...vvv
+   vvvvv<vvvvv
+  vvvvvvvvvvvvv
+ vvvvvvvvvvvvvvv
 vvvvvvvvvvvvvvvvv
 .vvvvv>''''vvvvv.
 ..vvvv'''''vvvv..
@@ -1765,11 +1765,11 @@ vvvvvvvvvvvvvvvvv
 ..vvvv'''''vvvv..
 .vvvvv''1''vvvvv.
 vvvvvvvvvvvvvvvvv
- vvvvvvvvvvvvvvv 
-  vvvvvvvvvvvvv  
-   vvvvv[vvvvv   
-    vvv...vvv    
-     v..@..v     
+ vvvvvvvvvvvvvvv
+  vvvvvvvvvvvvv
+   vvvvv[vvvvv
+    vvv...vvv
+     v..@..v
 ENDMAP
 
 

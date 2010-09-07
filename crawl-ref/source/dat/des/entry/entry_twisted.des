@@ -869,16 +869,16 @@ WEIGHT:  1
 ORIENT:  float
 SHUFFLE: ABC
 KFEAT:   ABC = floor
-# 
+#
 KMONS:  A = dwarf col:lightblue name:gnome n_rpl n_spe n_des tile:mons_halfling\
                   ; nothing
-MARKER: A = lua:MonPropsMarker:new { description= \ 
+MARKER: A = lua:MonPropsMarker:new { description= \
             "A small, stout humanoid said to be good at finding its way through " ..\
             "underground passages. Once commonly found in dungeons across the " ..\
             "world, gnomes are now on the verge of extinction. This one may be " ..\
             "the last of its kind." }
 KMONS:  B = elf col:darkgrey name:grey_elf n_rpl n_spe n_des ; nothing
-MARKER: B = lua:MonPropsMarker:new { description= \ 
+MARKER: B = lua:MonPropsMarker:new { description= \
             "Once considered a unique species of its own, grey elves are now " ..\
             "more properly classified as a sub-species of high elf. Little " ..\
             "exists to distinguish them from their high elf cousins, aside " ..\

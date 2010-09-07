@@ -65,7 +65,7 @@ static bool _killer_whose_match(kill_category whose, killer_type killer)
             return (killer == KILL_YOU_MISSILE || killer == KILL_YOU_CONF);
 
         case KC_FRIENDLY:
-            return (killer == KILL_MON_MISSILE || killer == KILL_YOU_CONF 
+            return (killer == KILL_MON_MISSILE || killer == KILL_YOU_CONF
                     || killer == KILL_MON);
 
         case KC_OTHER:
@@ -1112,7 +1112,7 @@ static const char *_verbose_cloud_names[] =
     "black smoke", "grey smoke", "blue smoke",
     "purple smoke", "translocational energy", "roaring flames",
     "a cloud of scalding steam", "a thick gloom", "ink", "blessed fire",
-    "a dark miasma", "thin mist", "seething chaos", "the rain", 
+    "a dark miasma", "thin mist", "seething chaos", "the rain",
     "a mutagenic fog", "magical condensation",
 };
 

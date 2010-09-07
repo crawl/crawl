@@ -30,17 +30,17 @@
 # entry_simple.des. After that, glimpse through (ignore the other files)
 # docs/develop/levels/introduction.txt
 # which will allow you to make your own maps already! Once you are familiar
-# with this, you may look at more complicated vaults and read the more 
-# advanced documentation. Crawl also employs vaults in many other places; 
+# with this, you may look at more complicated vaults and read the more
+# advanced documentation. Crawl also employs vaults in many other places;
 # check the various .des files for what is going on. New maps are always
 # welcome.
-# 
+#
 # Some guidelines for entry vault creators:
-# - Try to come up with small maps. 
+# - Try to come up with small maps.
 # - Avoid placing guaranteed items.
-# - The same holds for any features which might trigger start-scumming, 
+# - The same holds for any features which might trigger start-scumming,
 #   like fountains or altars.
 # - Also avoid ASCII art. It probably won't work in Tiles anyway.
-# - Note that at the start of the game, the dungeon builder removes all 
+# - Note that at the start of the game, the dungeon builder removes all
 #   monsters in view of the player. Zero experience monsters like plants
 #   are exempt.
