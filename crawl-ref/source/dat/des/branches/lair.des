@@ -846,23 +846,35 @@ KMONS:  9 = rock worm
 KFEAT:  9 = rock_wall
 SUBST:  X = x.
 SUBST:  P = 11.
+# Give a hint about the dragon cave.
+: if crawl.one_chance_in(4) then
+SUBST:  C = c
+: elseif crawl.one_chance_in(3) then
+NSUBST: " = 2:$ / *:$..
+: elseif crawl.coinflip() then
+NSUBST: " = 1:GU / *:.
+: else
+KPROP:  = = bloody
+: end
+SUBST:  C = x
+SUBST:  _ = .
 MAP
             XXXXXxxXXxxXXxxxxXXxxxXXXxxx
  @........@xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
  ..PP.XX..Px..xxxxxxxxxxxxxxxxxX4x9xxxxx
  ..PP.XX..PPxxxxxxxxXX88Xxxxxx4%..xxxxxx
  ...x.....PPP.xxxxxP...88XxxxX44..Xxxxxx
- ..XxX........xxxxxX....88xxx244..xxxxxx
- .PxxxX..x...xxxxxxx....%XxxxxX41.4xxxxx
- @xxxxxxx..XPPxxxxxP11.XPxxxxxxxXP.xxxxx
-Xxxx$$xxxxxxx..xxxxxX1..xXxxxxXxx.1xxxxx
-Xxx$$$$xxxxx...Xxxxxxx2..x9xxxx...xxxxxx
-xxx$$$$$xxxx..xxxxxxxXx4..xXxx..4xxxxxxx
-xxxx$7$$xxx..x9xxxxxxxxx2P..X...xXxxxxxx
-xxxxx$$xxxX..Xxxxxxxxxxx....4.xxxxxxxxxx
-xxxxxxx=xX..xxxxxxxxxXx...P.xxxx236xxxxx
-xxxxxxxxP..xxxxxxxxxXx...Xx9Xxx5625%xxxx
-xxxxxxxX..xxXxxxxXxx...4xxxxxxx%334xxxxx
+ ..XxX..X.....xxxxxX....88xxx244..xxxxxx
+ .Pxxxxx.x...xxxxxxx....%XxxxxX41.4xxxxx
+ xxccccxx..XPPxxxxxP11.XPxxxxxxxXP.xxxxx
+Xxcc$$ccxxXxx..xxxxxX1..xXxxxxXxx.1xxxxx
+Xxc$$$$ccxxx...Xxxxxxx2..x9xxxx...xxxxxx
+xxc$$$$$cxxx..xxxxxxxXx4..xXxx..4xxxxxxx
+xxcc$7$$cxx..x9xxxxxxxxx2P..X...xXxxxxxx
+xxxcc$$CCxX..Xxxxxxxxxxx....4.xxxxxxxxxx
+xxxxccC=CX".xxxxxxxxxXx...P.xxxx236xxxxx
+xxxxxxxCP""xxxxxxxxxXx...Xx9Xxx5625%xxxx
+xxxxxxxX""xxXxxxxXxx...4xxxxxxx%334xxxxx
 xxxxxxxxX.2.xxxx9x....x..xxxxxxxx5.xxxxx
 xxxxxxxxxX...xXx...4Xxx2...1xxxx...xxxxx
 xxxxxxxxxxx.......Xxxxxx..........xxxxxx
