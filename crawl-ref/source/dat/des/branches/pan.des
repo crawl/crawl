@@ -428,7 +428,7 @@ LROCKCOL:  darkgrey
 KMONS:     V = patrolling Gloorx Vloq
 MONS:      Executioner, demonic crawler, shadow demon
 KITEM:     O = dark rune of Zot
-SUBST:     d = 1:O / *:.
+NSUBST:    d = 1:O / *:.
 epilogue{{
   crawl.mpr("Shadowy figures dance across your vision.")
   pan_lord_warning(_G)
