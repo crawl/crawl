@@ -857,3 +857,66 @@ MAP
       ..b'bb..
        ......
 ENDMAP
+
+###############################################################################
+# A gallery of extinct species
+# Includes 3 formerly playable races which aren't represented as normal monsters.
+# With much stolen from kb_entry_jail
+NAME:    evilmike_entry_obsolete
+TAGS:    entry no_monster_gen
+WEIGHT:  1
+ORIENT:  float
+SHUFFLE: ABC
+KFEAT:   ABC = floor
+# 
+KMONS:  A = dwarf col:lightblue name:gnome n_rpl n_spe n_des tile:mons_halfling\
+                  ; nothing
+MARKER: A = lua:MonPropsMarker:new { description= \ 
+            "A small, stout humanoid said to be good at finding its way through " ..\
+            "underground passages. Once commonly found in dungeons across the " ..\
+            "world, gnomes are now on the verge of extinction. This one may be " ..\
+            "the last of its kind." }
+KMONS:  B = elf col:darkgrey name:grey_elf n_rpl n_spe n_des ; nothing
+MARKER: B = lua:MonPropsMarker:new { description= \ 
+            "Once considered a unique species of its own, grey elves are now " ..\
+            "more properly classified as a sub-species of high elf. Little " ..\
+            "exists to distinguish them from their high elf cousins, aside " ..\
+            "from their supposed glamour (which is probably more myth than fact)." }
+KMONS:  C = dwarf name:hill_dwarf n_rpl n_spe n_des ; nothing
+MARKER: C = lua:MonPropsMarker:new { description= \
+            "Hill dwarves are basically just mountain dwarves who live on hills. " ..\
+            "They are otherwise indistinguishable from their mountain brethren. " ..\
+            "Once able adventurers, the hill dwarves no longer have any interest " ..\
+            "in dungeon delving. This one was captured specially for this exhibit." }
+#
+TILE:   m = dngn_grate
+FTILE:  .m+T = floor_vault
+TILE:   X = wall_vines
+COLOUR: .= lightgrey
+SUBST:  ':., X=x
+SUBST:  T:T.
+SUBST:  T=TTV
+: dgn.set_feature_desc_short("translucent rock wall",
+:                            "iron grate")
+: dgn.set_feature_desc_long("translucent rock wall",
+:                           "This iron grate looks rusted, as if " ..
+:                           "it could be disrupted with a spell " ..
+:                           "or a wand quite easily. It's too " ..
+:                           "strong to be breakable by hand, though.")
+MAP
+xxxxxxxxxxxxxxx
+xxxxxxxAxxxxxxx
+xxxxXXXmXXXxxxx
+xxxXX.....XXxxx
+xxXX...T...XXxx
+xxX.........Xxx
+xxX...ccc...Xxx
+xBm.T.c{+.T.+'@
+xxX...ccc...Xxx
+xxX.........Xxx
+xxXX...T...XXxx
+xxxXX.....XXxxx
+xxxxXXXmXXXxxxx
+xxxxxxxCxxxxxxx
+xxxxxxxxxxxxxxx
+ENDMAP
