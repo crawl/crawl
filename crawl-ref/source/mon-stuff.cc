@@ -488,8 +488,8 @@ int place_monster_corpse(const monster* mons, bool silent,
 
     // "always_corpse" forces monsters to always generate a corpse upon
     // their deaths.
-    if (mons->props.exists("always_corpse") || mons_class_flag(mons->type,
-            M_ALWAYS_CORPSE))
+    if (mons->props.exists("always_corpse")
+        || mons_class_flag(mons->type, M_ALWAYS_CORPSE))
     {
         vault_forced = true;
     }
@@ -512,9 +512,9 @@ int place_monster_corpse(const monster* mons, bool silent,
     origin_set_monster(mitm[o], mons);
 
     if ((mons->flags & MF_EXPLODE_KILL)
-            && explode_corpse(corpse, mons->pos()))
+        && explode_corpse(corpse, mons->pos()))
     {
-        // We already have a spray of chunks
+        // We already have a spray of chunks.
         destroy_item(o);
         return (-1);
     }
