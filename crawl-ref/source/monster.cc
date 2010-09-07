@@ -5235,7 +5235,8 @@ bool monster::bleed(int amount, int degree)
 {
     if (!has_ench(ENCH_BLEED) && you.can_see(this))
     {
-        mprf("%s begins to bleed from its wounds!", name(DESC_CAP_THE).c_str());
+        mprf("%s begins to bleed from %s wounds!", name(DESC_CAP_THE).c_str(),
+             pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str());
     }
 
     add_ench(mon_enchant(ENCH_BLEED, degree, KC_OTHER, amount * 10));
