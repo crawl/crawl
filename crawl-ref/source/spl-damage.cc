@@ -652,6 +652,8 @@ int airstrike(int pow, const dist &beam)
     bool success = false;
 
     monster* mons = monster_at(beam.target);
+    if (mons && mons->submerged())
+        mons = NULL;
 
     if (mons == NULL)
         canned_msg(MSG_SPELL_FIZZLES);
