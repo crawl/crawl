@@ -14,7 +14,8 @@
 # This file is structured as follows:
 # -1- Simple maps. Small and neither lua nor complicated syntax.
 # -2- Twisted maps. Maps which either use a lot of lua or heavy SUBSTing etc.
-# -3- Large maps.
+# -3- Large maps. Sizes of about 30x30 and up.
+#     If a map is both large and twisted, file under twisted.
 #
 # Entry vaults should be NAMEd as follows:
 #    NAME:  nick_entry_name
@@ -27,6 +28,550 @@
 ##############################################################################
 # -1- Simple maps.
 ##############################################################################
+
+##############################################################
+NAME:    minmay_entry_split_and_join
+TAGS:    entry no_rotate
+ORIENT:  float
+SHUFFLE: {[(
+SUBST:   T = TV
+KMASK:   T = no_monster_gen
+MAP
+xxxxxxxxxxxx@xxxxxxxxxxxx
+xxxxxxxxxxx...xxxxxxxxxxx
+xxxxxxxxx...x...xxxxxxxxx
+xxxxxx....xxxxx....xxxxxx
+xxxx...xxxxxxxxxxx...xxxx
+xxx..xxxxxxxxxxxxxxx..xxx
+xxx+xxxxxxxx>xxxxxxxx+xxx
+xx...xxxxxx...xxxxxx...xx
+x.......................x
+x..T........T........T..x
+x.......................x
+xx...xxxxxx...xxxxxx...xx
+xxxxxxxxxxxx+xxxxxxxxxxxx
+xxxxxxxx.........xxxxxxxx
+xxxxxxx..{..[..(..xxxxxxx
+xxxxxxxx.........xxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################
+NAME:    minmay_entry_jagged
+TAGS:    entry no_monster_gen
+ORIENT:  float
+SHUFFLE: {[
+SUBST:   A = xx., B = x..
+KPROP:   A = no_rtele_into
+MAP
+xxxxxxxxxxxx
+x{AAAAAAAAAA
+xA.BBBBBBBBB
+xAB.........
+xAB.........
+xA.BBBBBBBBB
+x[AAAAAAAAAA
+xxxxxxxxxxxx
+ENDMAP
+
+##############################################################
+NAME:    minmay_entry_stair_chambers
+TAGS:    entry no_monster_gen
+ORIENT:  float
+SHUFFLE: {[(
+SUBST:   T = T V G b:3 .:3
+MAP
+xxxxxxx+xxxxxxx
+xxxxx.....xxxxx
+x...x.....x...x
+x.{.+..T..+.[.x
+x...x.....x...x
+xxxxx.....xxxxx
+xxxxxxx+xxxxxxx
+xxxxxx...xxxxxx
+   xxx.(.xxx
+   xxx...xxx
+   xxxxxxxxx
+ENDMAP
+
+##############################################################
+NAME:    minmay_entry_four_loops
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: {[(>
+SUBST:   x : x:200 c v:5 b:5
+SUBST:   b : x:200 c v:5 b:4 t:1 m:1
+MAP
+@xxxxxxxx  xxxxxxxx@
+x+......xxxx......+x
+x........xx........x
+x...bb...xx...bb...x
+x..bbbb..xx..bbbb..x
+x..bbbb..xx..bbbb..x
+x...bb...xx...bb...x
+x..................x
+xx........[.......xx
+ xxxxxx.{xx..xxxxxx
+ xxxxxx..xx(.xxxxxx
+xx.......>........xx
+x..................x
+x...bb...xx...bb...x
+x..bbbb..xx..bbbb..x
+x..bbbb..xx..bbbb..x
+x...bb...xx...bb...x
+x........xx........x
+x+......xxxx......+x
+@xxxxxxxx  xxxxxxxx@
+ENDMAP
+
+##############################################################
+NAME:    minmay_entry_wavy_path
+TAGS:    entry no_monster_gen
+ORIENT:  float
+SHUFFLE: {[
+MAP
+xxxxxxxxxxxxxxxxxxxxxx
+xx[{xxxxxxxxxxxxxxxxxx
+x....xx....xxxx....xxx
+x....x......xx......xx
+xx..xx..xx..xx..xx..xx
+xx..xx..xx..xx..xx..xx
+xx..xx..xx..xx..xx..xx
+xx..xx..xx..xx..xx..xx
+xx......xx......xx...@
+xxx....xxxx....xxxx..@
+xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################
+NAME:    minmay_entry_stone_box
+TAGS:    entry
+ORIENT:  float
+NSUBST:  A = 1:= / 1=c= / *:c
+NSUBST:  B = 1:= / *:c
+SHUFFLE: {[(<
+SHUFFLE: ^B~>TVGl
+KFEAT:   ^ = teleport trap
+KFEAT:   ~ = shaft trap
+KMASK:   Tl = no_monster_gen
+MAP
+...........
+.[.......[.
+..cAAAAAc..
+..Ac...cA..
+..A.BBB.A..
+..A.B^B.A..
+..A.BBB.A..
+..Ac...cA..
+..cAAAAAc..
+.{.......<.
+...........
+ENDMAP
+
+##############################################################
+NAME:    minmay_entry_plants_in_alcoves
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: {[(, 11123t
+MONS:    plant, fungus, bush
+MAP
+xxxxxxxxxxx
+x1x1x1x1x1xxx
+@..........{x
+...........[x
+@..........(x
+x1x1x1x1x1xxx
+xxxxxxxxxxx
+ENDMAP
+
+##############################################################
+NAME:    minmay_entry_three_doors
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: {[(
+MAP
+x+xxxx+xxxx+x
+x...........x
+xxxx{x[x(xxxx
+   xxxxxxx
+ENDMAP
+
+##############################################################
+# A gimmicky, but cute cault.
+NAME:   minmay_entry_blink_away
+TAGS:   entry generate_awake
+WEIGHT: 2
+ORIENT: float
+MONS:   kobold; dart ego:dispersal q:3
+MAP
+xxxxxxxxxx..
+=.llllll{l@.
+x.xxxxxx=x..
+x1xxxxxx....
+xxx
+ENDMAP
+
+##############################################################
+NAME:    minmay_entry_semitransparent
+TAGS:    entry
+ORIENT:  float
+: if crawl.coinflip() == true then
+SUBST:   x : cccb
+SUBST:   m : n
+: else
+SUBST:   x : xxxb
+: end
+SHUFFLE: {[(
+MAP
+...........
+.xmxmxmxmx.
+...........
+...........
+...[.{.(...
+...........
+...........
+.xmxmxmxmx.
+...........
+ENDMAP
+
+##############################################################
+NAME:    minmay_entry_solitary_statue
+TAGS:    entry
+WEIGHT:  9
+ORIENT:  float
+SHUFFLE: {[(
+SUBST:   c : cccx
+MAP
+ccccccc
+c{.(.[c
+c.....c
+c..G..c
+c.....c
+c.....c
+ccc+ccc
+ENDMAP
+
+NAME:    minmay_entry_statue_studded
+TAGS:    entry
+ORIENT:  float
+WEIGHT:  1
+SHUFFLE: {[(
+SUBST:   c : cccx
+KMASK:   T = no_monster_gen
+MAP
+...........
+.GcGcGcGcG.
+.ccccccccc.
+.Gc{.(.[cG.
+.cc.....cc.
+.Gc..T..cG.
+.cc.....cc.
+.Gc.....cG.
+.cccc+cccc.
+.GcGc.cGcG.
+...........
+ENDMAP
+
+##############################################################
+NAME:    minmay_entry_four_circles
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: {[(>, AB
+SUBST:   A = ., B = x
+SUBST:   x : xxxcbv
+MAP
+...................
+..AAA...BBB...AAA..
+.AAAAA.BBBBB.AAAAA.
+.AAAAA.BBBBB.AAAAA.
+.AAAAA.BBBBB.AAAAA.
+..AAA...BBB...AAA..
+...................
+..BBB.........BBB..
+.BBBBB...>...BBBBB.
+.BBBBB..{.(..BBBBB.
+.BBBBB...[...BBBBB.
+..BBB.........BBB..
+...................
+..AAA...BBB...AAA..
+.AAAAA.BBBBB.AAAAA.
+.AAAAA.BBBBB.AAAAA.
+.AAAAA.BBBBB.AAAAA.
+..AAA...BBB...AAA..
+...................
+ENDMAP
+
+##############################################################
+NAME:    minmay_entry_five_plusses
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: {[(>, AB
+SUBST:   A = ., B = x
+SUBST:   x : xxxxxxccbvwl
+KMASK:   wl = no_monster_gen
+MAP
+.............
+..B...A...B..
+.BBB.AAA.BBB.
+..B...A...B..
+.............
+..A..[x>..A..
+.AAA.xxx.AAA.
+..A..{x(..A..
+.............
+..B...A...B..
+.BBB.AAA.BBB.
+..B...A...B..
+.............
+ENDMAP
+
+##############################################################
+NAME:   minmay_entry_nine_rooms
+TAGS:   entry no_monster_gen
+ORIENT: float
+NSUBST: ? = 1:{ / 1:[ / 1:( / *:TG.
+SUBST:  T = TV
+MAP
+xxxxxxxxxxxxxx+xx
+x...xxx...xxx...x
+x.?.....?.....?.x
+x...xxx...xxx...x
+xx.xxxxxxxxxxxxxx
+x...xxx...xxx...x
+x.?.....?.....?.x
+x...xxx...xxx...x
+xxxxxxxxxxxxxx.xx
+x...xxx...xxx...x
+x.?.....?.....?.x
+x...xxx...xxx...x
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################
+NAME:    minmay_entry_pointy
+TAGS:    entry no_monster_gen
+WEIGHT:  4
+ORIENT:  float
+SHUFFLE: {[
+MAP
+xxx                     xxx
+x{xx                   xx[x
+xx.xx                 xx.xx
+ x..xx               xx..x
+ xx..xx             xx..xx
+  x...xx           xx...x
+  xx...xx         xx...xx
+   x....xx       xx....x
+   xx....xx     xx....xx
+    x.....xx   xx.....x
+    xx.....xx xx.....xx
+     x......xxx......x
+     xx......x......xx
+      x.............x
+ENDMAP
+
+##############################################################
+NAME:   minmay_entry_doors
+TAGS:   entry no_monster_gen
+ORIENT: float
+MAP
+     x+x
+     x.x
+     x+x
+     x.x
+    xx+xx
+xxxxx...xxxxx
++.+.+.{.+.+.+
+xxxxx...xxxxx
+    xx+xx
+     x.x
+     x+x
+     x.x
+     x+x
+ENDMAP
+
+##############################################################
+NAME:    minmay_entry_four_houses
+TAGS:    entry no_monster_gen
+ORIENT:  float
+SHUFFLE: xcvb, {[(>
+MAP
+.............
+.xxxxx.ccccc.
+.x...x.c...c.
+.x.{.x.+.[.c.
+.x...x.c...c.
+.xx+xx.ccccc.
+.............
+.vvvvv.bb+bb.
+.v...v.b...b.
+.v.(.+.b.>.b.
+.v...v.b...b.
+.vvvvv.bbbbb.
+.............
+ENDMAP
+
+##############################################################
+NAME:    minmay_entry_up_and_down
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: ([{, )]}
+MAP
+ccccccccc
+c.......c
++.(.[.{.+
+c.......c
+cnnnnnnnc
+c.......c
++.).].}.+
+c.......c
+ccccccccc
+ENDMAP
+
+##############################################################
+NAME:   minmay_entry_widening_spiral_wide
+TAGS:   entry no_monster_gen
+WEIGHT: 8
+ORIENT: float
+: if crawl.one_chance_in(4) then
+SUBST:  ABCDEFGH = +
+SUBST:  abcdefgh = x
+: else
+SUBST:  a=A, b=B, c=C, d=D, e=E, f=F, g=G, h=H
+NSUBST: A = 1:+ / *:X
+NSUBST: B = 1:+ / *:X
+NSUBST: C = 1:+ / *:X
+NSUBST: D = 1:+ / *:X
+NSUBST: E = 1:+ / *:X
+NSUBST: F = 1:+ / *:X
+NSUBST: G = 1:+ / *:X
+NSUBST: H = 1:+ / *:X
+SUBST:  X:Xxxx+, X=xx+
+: end
+MAP
+xxxxxxxxxxx
+x.........H
+x.........h
+x.........h
+x...xxxxxxxxxxxxxx
+x...x.....D......x
+x...x.....d......x
+x...x.....d......x
+x...x...xxxxxx...x
+x...x...x{+..x...x
+xGggxCccxxx..x...x
+x...x....xxaAxeeEx
+x...x....b...x...x
+x...x....b...x...x
+x...x....B...x...x
+x...xxxxxxxxxx...x
+x........f.......x
+x........f.......x
+x........F.......x
+xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   minmay_entry_widening_spiral_narrow
+TAGS:   entry no_monster_gen
+WEIGHT: 2
+ORIENT: float
+MAP
+xxxxxxxxxxx
+x.........+
+x.xxxxxxxxx
+x.x.......=
+x.x.xxxxxxxxxxxxxx
+x.x.x.....+......x
+x.x.x.xxxxxxxxxx.x
+x.x.x.x...+....x.x
+x.x.x.x.xxxxxx.x.x
+x.x.x.x.x{+..x.x.x
+x+x+x+x+xxx..x.x.x
+x.x.x.x.xxxx+x+x+x
+x.x.x.x..+}x.x.x.x
+x.x.x.xxxxxx.x.x.x
+x.x.x....+...x.x.x
+x.x.xxxxxxxxxx.x.x
+x.x......+.....x.x
+x.xxxxxxxxxxxxxx.x
+x........+.......x
+xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################
+NAME:   minmay_entry_diagonal_passages
+TAGS:   entry
+ORIENT: float
+MAP
+   @xxxxx@
+   x.xxx.x
+  xxx.x.xxx
+@xxxxx.xxxxx@
+x.xxx.x.xxx.x
+xx.x.x.x.x.xx
+xxx.x.{.x.xxx
+xx.x.x.x.x.xx
+x.xxx.x.xxx.x
+@xxxxx.xxxxx@
+  xxx.x.xxx
+   x.xxx.x
+   @xxxxx@
+ENDMAP
+
+##############################################################
+NAME:   minmay_entry_loop
+TAGS:   entry no_monster_gen
+SUBST:  X : xxxX
+NSUBST: X = 1:< / 1:> / *=..d
+ORIENT: float
+MAP
+      xxxxxxx
+    xxx.....xxx
+   xx.........xx
+  xx.....x.....xx
+  x.....xxx.....x
+ xx.....xxx.....xx
+ x.....xxxxx.....x
+ x.....xXXXx.....x
+ x.....xXXXx.....x
+ x.....xxxxx.....x
+ xx.....xxx.....xx
+  x.....xxx.....x
+  xx....[x.....xx
+   xx...{x....xx
+    xxxxxx@.xxx
+ENDMAP
+
+##############################################################
+NAME:    minmay_entry_radiant_lines
+TAGS:    entry no_rotate
+ORIENT:  float
+SHUFFLE: xX
+SUBST:   X:xxxX, X:.lw, x:xxxvc
+MAP
+    .............
+  ........X........
+ .....x...X...x.....
+ ..X...x..X..x...X..
+....X..x..X..x..X....
+.....X..x.X.x..X.....
+..x...X.x.X.x.X...x..
+...xx..X.x.x.X..xx...
+.....xx.X...X.xx.....
+.......x.....x.......
+.XXXXXX...{...XXXXXX.
+.......x.....x.......
+.....xx.X...X.xx.....
+...xx..X.x.x.X..xx...
+..x...X.x.X.x.X...x..
+.....X..x.X.x..X.....
+....X..x..X..x..X....
+ ..X...x..X..x...X..
+ .....x...X...x.....
+  ........X........
+    .............
+ENDMAP
 
 ##############################################################
 NAME:    onia_entry_pyramid
@@ -3284,6 +3829,43 @@ ccc+ccc
   c@c
 ENDMAP
 
+##############################################################
+# FIXME
+NAME:    minmay_entry_shattered_statue
+TAGS:    entry
+ORIENT:  float
+ITEM:    stone q:8 w:1 / stone q:7 w:2 / stone q:6 w:4 / stone q:5 w:8 / \
+         stone q:4 / stone q:3 w:8 / stone q:2 w:4 / stone q:1 w:2 / nothing w:1
+ITEM:    stone q:6 w:1 / stone q:5 w:2 / stone q:4 w:4 / stone q:3 w:8 / \
+         stone q:2 / stone q:1 w:8 / nothing w:7
+ITEM:    stone q:4 w:1 / stone q:3 w:2 / stone q:2 w:4 / stone q:1 w:8 / \
+         nothing w:25
+ITEM:    stone q:2 w:1 / stone q:1 w:2 / nothing w:37
+ITEM:    stone q:1 w:1 / nothing w:39
+#TILE:    G = dngn_granite_stump
+SHUFFLE: {[(
+#:        dgn.set_feature_desc_short("granite statue",
+#:                                   "granite stump")
+#:        dgn.set_feature_desc_long("granite statue",
+#:                                  "This stump of granite was probably " ..
+#:                                  "a statue at some point in the past.")
+#: lua_marker("G", portal_desc { stump = 1,
+#        desc="granite stump",
+#        desc_long="This stump of granite was probably a statue at some point in the past.\n"})
+MAP
+   xxxxxxx
+  xx.....xx
+  x.{h[h(.x
+  xxhggghxx
+   xxx+xxx
+ xxxeeeeexxx
+xxgfedddefgxx
++hgfedGdefgh+
+xxgfedddefgxx
+ xxxeeeeexxx
+   xxxxxxx
+ENDMAP
+
 #########################################
 # A horror show for the beginning adventurer
 NAME:    shiori_entry_whats_in_store_for_you
@@ -4432,4 +5014,45 @@ x'''''''''''''''x
 x'''''''''''''''x
 x'''''''''''''''x
 xxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################
+# 32x29
+NAME:    minmay_entry_shoal_huts
+WEIGHT:  5
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: {[(
+SUBST:   y = w:39 W:1, Y = A:5 w:1, W = W:19 .:1, A = W
+TILE:    x = wall_vines
+MAP
+             ..........@.......
+         .....WWWWW........WWW...
+      ....WWWWYYYYYWW.....WYYYWW...
+    ...WWWYYYYyyyyyYYW....WYyyYYWW..
+   ..WWYYYyyywwwwwwyYW....xxxxxyYYW..
+  ..WYYyyywwwwwwwwyYW....xx...xxyyYW..
+  .WYyywwwwwwwwwwwyYW....x.....xwwyYW.
+ ..WYywwwwwwwwwwyyyYW....+..(..xwwyYW.
+ .WYywwwwwwwwyyyYYYW.....x.....xwyYW..
+ .WYywwxxxxxyYYYWWW......xx...xxwyYW.
+..WYywxx...xxWWW........WWxxxxxwwyYW.
+.WYywwx.....x.........WWYYYywwwwwyYW.
+.WYywwx..{..+........WYYyyywwwwwyYW..
+.WYywwx.....x.WWW....WYywwwwwwwwyYW.
+..WYywxx...xxWYYYW...WYywwwwwwwwyYW.
+ .WYywwxxxxxYYyyYW....WYywwwwwwwyYW.
+ .WYywwwwwwwyywwyYW...WYywwwwwwyYW..
+ .WYywwwwwwwwwwwyYxx+xxYywwwwwyYW..
+ ..WYywwwwwwwwwwwxx...xxywwwwwyYW.
+  .WYywwwwwwwwwwwx.....xwwwwwwyYW..
+  ..WYywwwwwwwwwwx..[..xwwwwwwwyYW.
+   ..WYywwwwwwwwwx.....xwwwwwwwyYW..
+    ..WYyywwwwwwwxx...xxwwwwwwwwyYW.
+     ..WYYyyywwwwwxxxxxwwwwwwwwyYW..
+      ..WWYYYyyyywwwwwyyyywwwyyYW..
+       ...WWWYYYYyyyyyYYYYyyyYYW..
+         ....WWWWYYYYYWWWWYYYWW..
+            .....WWWWW....WWW...
+                .......  .....
 ENDMAP
