@@ -1,0 +1,859 @@
+##############################################################################
+# -2- Twisted maps.
+##############################################################################
+#
+# The maps in this section are harder to read... which means that you can
+# learn more from them. There's a bunch of reasons why maps become rather
+# complicated: several layers of SUBST/SHUFFLE operations, serious use of
+# lua, use of SUBVAULTs or just plain obfusciation. Some maps simply have
+# extremely long headers, so we put them here.
+
+##############################################################################
+# Just another altar on DL:1
+#
+NAME:    dpeg_entry_hidden_altar
+TAGS:    entry no_monster_gen
+ORIENT:  float
+NSUBST:  ' = 1:@ / 1:{ / *:.
+SHUFFLE: {{[
+: if crawl.one_chance_in(4) then
+SHUFFLE: DE/de
+SUBST:   AB=x, ab=c, D=., E=+=, d=>, e=cx=+, ]=]]]>, C=CT
+: else
+SHUFFLE: Aa/Bb
+SUBST:   Aa==, B=x, b=c, D=>, ]=]>>>, E=cccx=, C=CCCT
+: end
+MONS:    gnoll
+MAP
+'''''''''''''''
+'''''''''''''''
+''xxxxBxxxxxxxx
+''xcccbcccccccx
+''xcclllc..1.cx
+''xcllllc....cx
+''xcl...c1...cx
+''AalDC.E...1cx
+''xcl...c....cx
+''xcllllc....cx
+''xcclllc...]cx
+''xcccccccccccx
+''xxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_thieves
+ORIENT:  float
+TAGS:    entry no_monster_gen
+WEIGHT:  20
+: if crawl.one_chance_in(7) then
+SHUFFLE: Aa/Bb, EF, CD
+NSUBST:  A=1:=/*:x, F=1:=/*:x, D=1:=/*:x
+SUBST:   Y=], a:=., BbCEG=x
+: else
+SHUFFLE: Aa/Bb, FG, CDE
+NSUBST:  A=1:=/*:x, F=1:=/*:x, D=1:=/*:x, E=1:=/*:x
+SUBST:   a:=., BbCG=x, Y=.
+:end
+SHUFFLE: H4/'"
+SUBST:   '=x, ":x"
+NSUBST:  "=1:<>/*:%, H=1:=/*:x, 4:4%., 4=%.
+SUBST:   Z=.=
+: if crawl.one_chance_in(7) then
+SHUFFLE: LK, IJ
+NSUBST:  L=1:=/*:x, I=1:=/*:x
+SUBST:   X=), KJM=x
+:else
+SHUFFLE: ML, IJ, JKL
+SUBST:   KL=x, X=.
+NSUBST:  M=1:=/*:x, I=1:=/*:x, J=1:=/*:x
+:end
+SHUFFLE: 123567
+SUBST:   12=., 3:3., 5:5., 3567=%, %=%.
+MAP
+xxxxxxxxxxxxx
+x11B2.D33F.[x
+AAAB.2D33FY.x
+xaaxCCxEExGGx
+@.....{.....@
+MMMxKxIIxZHHH
+x.XL7J65I.H4x
+x(.L7J56IxH4x
+xxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# 37 x 22 -- this one is huge and twisted, but it's also old...
+NAME:   dpeg_entry_water_fire
+TAGS:   entry no_monster_gen no_pool_fixup no_rotate
+ORIENT: float
+: local rnd = crawl.random2(12)
+: if rnd == 0 then
+NSUBST: A=*:., a=1:./*:l, b=1:./*:l
+: elseif rnd == 1 then
+NSUBST: B=*:., c=1:./*:l, d=1:./*:l, e=1:./*:l, f=1:./*:l, g=1:./*:l
+: elseif rnd == 2 then
+NSUBST: C=*:., h=1:./*:l, i=1:./*:l, j=1:./*:l, k=1:./*:l
+: elseif rnd == 3 then
+NSUBST: D=*:., m=1:./*:w, n=1:./*:w, o=1:./*:w, p=1:./*:w
+: elseif rnd == 4 then
+NSUBST: e=*:., q=1:./*:w, r=1:./*:w, s=1:./*:w
+SUBST:  E=., ABCabcdefghijk=l, DFmnoptuv=w
+: elseif rnd == 5 then
+NSUBST: F=*:., t=1:./*:w, u=1:./*:w, v=1:./*:w
+: else
+SUBST:  X=+
+NSUBST: Y=1:+/*:x
+: end
+MONS:   bush w:1 / plant w:6 / fungus w:9
+MONS:   fungus
+SUBST:  "=2', '=2..., 2:2.
+SUBST:  X=x, Y=x, ABCabcdefghijk=l, DEFmnopqrstuv=w
+: if crawl.coinflip() then
+SUBST:  Z=x, z=+, V=x
+: elseif crawl.coinflip() then
+SUBST:  Z=x, V=+
+NSUBST: z = 1:+ / *:x
+: else
+SUBST:  Zz=., V=x
+: end
+MAP
+            xxxxxx@xxxxxx
+       xxxxxx'''''''''''xxxxxx
+   xxxxx.......'"""""'.......xxxxx
+ xxx..........lll222www..........xxx
+xx......lllkkklll222wwpppwwww......xx
+x....gllglllCllll222wwwDwwwwwwww....x
+x.lllfffxlljjjlxxXXXxxwoowwwxwwssww.x
+xlAlxlBlxlllCxxx11111xxxnnwwxwwExwFxx
+xllAxeeexllCxx111111111xxDwwxwEwxvwvx
+xlbbxlBlxlClx11111111111xnnwxrrrxwuux
+xlAlxlddxilix11111G11111xDwwxwEwxwwFx
+xaalxlccxhhhx11111111111xmmwxqqqxwttx
+x...x...x...xx111111111xx...x...x...x
+x...V...V...xxYx11111xYxx...V...V...x
+xZzZx...x...xx.xxxYxxx.xx...x...xZzZx
+x..ZxZ..x...V...V...V...V...x..ZxZ..x
+x....ZzZx...x...x.}.x...x...xZzZ....x
+xx......xZzZxZzZx...xZzZxZzZx......xx
+ xxx...........ZxZzZxZ...........xxx
+   xxxxx.....................xxxxx
+       xxxxxx...[.{ (...xxxxxx
+            xxxxxxxxxxxxx
+ENDMAP
+
+#########################################
+# Representatives of all player genuses, locked up.
+NAME:    kb_entry_jail
+TAGS:    entry no_monster_gen no_item_gen
+ORIENT:  north
+SHUFFLE: ABCDEFGHIJKLMNOPQRSTUV
+KFEAT:   ABCDEFGHIJKLMNOPQRSTUV = floor
+KMONS:   A = human ; nothing
+KMONS:   B = elf ; nothing
+KMONS:   C = dwarf ; nothing
+KMONS:   D = orc ; nothing
+KMONS:   E = merfolk ; nothing
+KMONS:   F = halfling ; nothing
+KMONS:   G = kobold ; nothing
+KMONS:   H = spriggan ; nothing
+KMONS:   I = naga ; nothing
+KMONS:   J = centaur ; nothing
+KMONS:   K = ogre ; nothing
+KMONS:   L = troll
+KMONS:   M = minotaur ; nothing
+KMONS:   N = kenku ; nothing
+KMONS:   O = draconian ; nothing
+KMONS:   P = demonspawn ; nothing
+KMONS:   Q = mummy
+#KMONS:  R = a new race!
+KMONS:   S = ghoul ; nothing
+KMONS:   T = vampire spells:. ; nothing
+KMONS:   U = demigod ; nothing
+#KMONS:  V = a new race!
+COLOUR:  m = cyan
+TILE:    m = dngn_grate
+:           dgn.set_feature_desc_short("translucent rock wall",
+:                                      "iron grate")
+:           dgn.set_feature_desc_long("translucent rock wall",
+:                                     "This iron grate looks rusted, as if " ..
+:                                     "it could be disrupted with a spell " ..
+:                                     "or a wand quite easily. It's too " ..
+:                                     "strong to be breakable by hand, though.")
+MAP
+ccccccc
+c[.{.(c
+c.....c
+ccc+ccc
+cAm.mBc
+ccc.ccc
+cCm.mDc
+ccc.ccc
+cEm.mFc
+ccc.ccc
+cGm.mHc
+ccc.ccc
+cIm.mJc
+ccc.ccc
+cKm.mLc
+ccc.ccc
+cMm.mNc
+ccc.ccc
+cOm.mPc
+ccc.ccc
+cQm.mRc
+ccc.ccc
+cSm.mTc
+ccc.ccc
+cUm.mVc
+ccc+ccc
+  c@c
+ENDMAP
+
+##############################################################
+# FIXME
+NAME:    minmay_entry_shattered_statue
+TAGS:    entry
+ORIENT:  float
+ITEM:    stone q:8 w:1 / stone q:7 w:2 / stone q:6 w:4 / stone q:5 w:8 / \
+         stone q:4 / stone q:3 w:8 / stone q:2 w:4 / stone q:1 w:2 / nothing w:1
+ITEM:    stone q:6 w:1 / stone q:5 w:2 / stone q:4 w:4 / stone q:3 w:8 / \
+         stone q:2 / stone q:1 w:8 / nothing w:7
+ITEM:    stone q:4 w:1 / stone q:3 w:2 / stone q:2 w:4 / stone q:1 w:8 / \
+         nothing w:25
+ITEM:    stone q:2 w:1 / stone q:1 w:2 / nothing w:37
+ITEM:    stone q:1 w:1 / nothing w:39
+#TILE:    G = dngn_granite_stump
+SHUFFLE: {[(
+#:        dgn.set_feature_desc_short("granite statue",
+#:                                   "granite stump")
+#:        dgn.set_feature_desc_long("granite statue",
+#:                                  "This stump of granite was probably " ..
+#:                                  "a statue at some point in the past.")
+#: lua_marker("G", portal_desc { stump = 1,
+#        desc="granite stump",
+#        desc_long="This stump of granite was probably a statue at some point in the past.\n"})
+MAP
+   xxxxxxx
+  xx.....xx
+  x.{h[h(.x
+  xxhggghxx
+   xxx+xxx
+ xxxeeeeexxx
+xxgfedddefgxx
++hgfedGdefgh+
+xxgfedddefgxx
+ xxxeeeeexxx
+   xxxxxxx
+ENDMAP
+
+#########################################
+# A horror show for the beginning adventurer
+NAME:    shiori_entry_whats_in_store_for_you
+TAGS:    entry no_monster_gen no_pool_fixup no_item_gen
+ORIENT:  west
+SHUFFLE: =@/AB ,  AB/CD
+SUBST:   A==+++++ , B=@ , C=x , D=x
+NSUBST:  T = 1=T... / *=.
+KFEAT:   T = net trap
+# Seemingly pointless, since there are no active foes here... but
+# it had an unnerving effect on me the one time it happened by chance
+# ("Ack! Now I'm trapped too! Help!") so I coded it in. ^.^
+NSUBST:  M = 2=E / *=M E:2
+KFEAT:   E = teleport trap
+KFEAT:   MNOQ = shallow_water
+SHUFFLE: M/N/O/P/Q
+SUBST:   P = MNO
+#
+# Player monsters:
+KMONS: M = human / elf / orc; nothing / naga; nothing / centaur; nothing / \
+           draconian; nothing / ogre; nothing / minotaur / troll / kobold / \
+           mummy / ghoul / spriggan; nothing / dwarf; nothing / vampire spells:.
+# Player monsters, zombie versions (ghouls drop out because they need sustenance
+# and can't be reanimated once starved):
+KMONS: N = human zombie / elf zombie / orc zombie / naga zombie / ogre zombie / \
+           centaur zombie / draconian zombie / minotaur zombie / troll zombie / \
+           kobold zombie / mummy / spriggan zombie / merfolk zombie / dwarf zombie
+# Player monsters, skeleton versions:
+KMONS: O = human skeleton / elf skeleton / orc skeleton / naga skeleton / \
+           centaur skeleton / draconian skeleton / ogre skeleton / \
+           minotaur skeleton / troll skeleton / kobold skeleton / mummy / \
+           spriggan skeleton / dwarf skeleton / merfolk skeleton
+# And now for something completely different (if any of these turn out to be
+# able to escape or project spells out of their cells, they should be removed):
+KMONS: Q = orb of fire / ice dragon / shadow dragon / iron dragon / \
+           w:1 golden dragon / large abomination / tentacled monstrosity / \
+           w:1 black draconian; nothing / w:1 mottled draconian; nothing / \
+           w:1 yellow draconian; nothing / w:2 green draconian; nothing / \
+           w:1 purple draconian; nothing / w:2 red draconian; nothing / \
+           w:1 white draconian; nothing / w:1 pale draconian; nothing / nothing
+MAP
+xxxxxxxxxxxxxx     xxxxxxxxx
+xxxxxxxxMxMxMxxxxxxxMxMxMxMx
+xxxxxxxxmxmxmxMxMxMxmxmxmxmxxxx@x
+xxxxxx[......xmxmxmx.....T.mMxx=xx
+xxxxxx{..............xmxmxTxmx...xxx
+xxxxxx(..........xmxmxMxMm.T.T.>.mMx
+xxxxxxxxmxmxmxmxmxMxMxxxxxmxmx...xxx
+xxxxxxxxMxMxMxMxMxxxxx   xMxMxxAxx
+xxxxxxxxxxxxxxxxxx       xxxxxxBx
+ENDMAP
+
+#####################################
+# I am the great and powerful Oz! Pay no attention to the man behind
+# the curtain! ...if you stick close to the wall, you are always able
+# to avoid the flame clouds.
+NAME:   shiori_entry_oz
+TAGS:   entry
+ORIENT: float
+NSUBST: 1 = 1/%
+MONS:   kobold / goblin / hobgoblin / nothing
+MARKER: # = lua:fog_machine { \
+            pow_max = 5, delay_min = 100, delay_max = 150, \
+            size = 5, start_clouds = 1, \
+            cloud_type = "flame" }
+KFEAT:  # = l
+FTILE:  ' = floor_rough_red
+COLOUR: ' = red
+SUBST:  ' = .
+MAP
+bbbbbbbbb
+b.(.{.[.b
+b.......b
+b.......b
+b.b...b.b
+b.......b
+b.......b
+b.b'''b.b
+b.'''''.b
+@.'#'#'.@
+b.b'G'b.b
+b.......b
+bbb+b+bbb
+=1=.b.=1=
+bbb.b.bbb
+  b@b@b
+ENDMAP
+
+########################################
+# Entry with hidden altar
+NAME:    shiori_entry_hidden_altar
+TAGS:    entry no_monster_gen no_secret_doors no_pool_fixup
+ORIENT:  float
+SUBST:   B:.A , A:.x
+NSUBST:  E= 1=+ / *=+=x
+SUBST:   +:@+ , d=mlwG
+SHUFFLE: ef/gh/ij
+SUBST:   g=> , h=C/x , e=x , f=w , i=x , j=l
+MAP
+xxxExxxxxxx
+xAB.BAxfffx
+xB...Bxxehx
+E..{..=dghx
+xB...Bxxihx
+xAB.BAxjjjx
+xxxExxxxxxx
+ENDMAP
+
+############################################################################
+NAME:    dpeg_entry_concentric_ovals
+TAGS:    entry no_monster_gen no_rotate
+ORIENT:  float
+MONS:    worm / giant beetle, worm / giant beetle
+ITEM:    nothing / ring of hunger / \
+         ring of protection from fire / ring of protection from cold
+ITEM:    nothing / choko / pear / apple / sausage / banana / any scroll
+SHUFFLE: dD1AB/yyyyy, eE2FG/yyyyy, AB, FG
+SUBST:   y=x, A==, B=x, D=., F==, G=x, E=.
+SUBST:   ' : Wlncxxxv, " : Wlncxxxv
+MAP
+.........................
+.......xxxxx+xxxxx.......
+....xxxxxxxx.xxxxxxxx....
+...xxxxxx.......xxxxxx...
+..xxxxx...........xxxxx..
+..xxxx....'''''....xxxx..
+..xxx...'''''''''...xxx..
+.xxxx..''.......''..xxxx.
+.xdx...'..""+""..'...xex.
+.xDx..''.""..."".''..xEx.
+.x1x..''.""[({"".''..x2x.
+.xDx..''.""..."".''..xEx.
+.xDx...'.."""""..'...xEx.
+.BxAx..''.......''..xFxG.
+..xxx...''''.''''...xxx..
+..xxxx....''+''....xxxx..
+..xxxxx...........xxxxx..
+...xxxxxx.......xxxxxx...
+....xxxxxxxxxxxxxxxxx....
+.......xxxxxxxxxxx.......
+.........................
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_solitude
+TAGS:    entry no_monster_gen
+ORIENT:  float
+SHUFFLE: C{! / B(' / V["
+SUBST:   C=., !=@
+SHUFFLE: B(' / zzz, V[" / yyy
+SUBST:   z=x, y=x, B=., '==, V=., "==
+NSUBST:  . = 1:d / *:.
+ITEM:    stone / dart
+MAP
+xxxxxxxxxxxxxxxxxxx....@
+xxxxxxxCCCCCCCxxxxx.....
+xxxxxCCxxxxxxxCCxxx.....
+xxxxCxxxVVVVxxxxCxx.....
+xxxCxxVVxxxxVVxxxCx.....
+xxCxxVxxxBBxxxVxxCxxxxx'
+xxCxVxxxBxx(xxxVxxCxxxBx
+xCxxVxxBxxxxbxxVxxCxxxBx
+xCxxVxBxx{cvxxVxxxCxxxBx
+xCxVxxBxCxxx[VxxxCxxxBxx
+xCxVxxBxxCCxxxxCCxxxBxxx
+xCxVxxxBxxxCCCCxxxBBxxxx
+xCxxVxxxBBxxxxxxBBxxxxxx
+!xxxxVxxxxBBBBBBxxx.....
+xxxxxxVVVxxxxxxxxV".....
+xxxxxxxxxVVVVVVVVxx.....
+xxxxxxxxxxxxxxxxxxx....@
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_connections
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: {1/[2/(3/]4, Aa/Bb/Cc/Dd/Ee
+SUBST:   A==, a=...%, BCDEbcde=x
+SUBST:   1=@, 2:2., 3:33., 4:444., 234:x
+MAP
+22222222xxxxx333
+2[......BxxxD..3
+2.......xbbdx..3
+xAxxxCxxxxdbB.(3
+xxAxxxcxddxaA..3
+x...xcddxxAxxxxx
+x.{.DdcbB......4
+x...Bbbcx..]...4
+x...CccxC......4
+x111xxxxx4444444
+ENDMAP
+
+###################################################
+# A simple little maze-like thing
+NAME:    shiori_entry_maze
+ORIENT:  float
+TAGS:    entry no_monster_gen no_secret_doors
+SHUFFLE: [{(
+SUBST:   1= . 1:2 2:1 3:1
+NSUBST:  A= 1= + / 1= = / 2= =x / *= x
+NSUBST:  B= 1= + / 1= = / 2= =x / *= x
+NSUBST:  C= 1= + / 1= = / *= =x
+NSUBST:  @= 5=@+ / *= =x
+MONS:    fungus, plant, butterfly
+MAP
+xxx@xxx@xxx@xxx
+x.111.B0B.111.x
+xCx1xAxxxAx1xCx
+@.x.A11111A.x.@
+x1x.x1[1(1x.x1x
+x1xBx11>11xBx1x
+x1x.x11{11x.x1x
+@.x.A11111A.x.@
+xCx1xAxxxAx1xCx
+x.111.B0B.111.x
+xxx@xxx@xxx@xxx
+ENDMAP
+
+##############################################################################
+# 41 x 20 -- this one is huge and twisted, but hopefully worth it.
+# From cave/forest to hall.
+NAME:     erik_entry_cave_to_civilisation
+TAGS:     entry no_rotate
+WEIGHT:   20
+ORIENT:   float
+SHUFFLE:  {[(
+SUBST:    ?=C., !=CCC., C:ccxxt
+SUBVAULT: _ : cave_to_hall_subvault / cave_to_temple_subvault w:5
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xCCCCCCCCCCCCCCCCCCCCCCCCCxxxxxxxxxxxxxxx
+xC[!.!C...CC.??...C?....................x
+xC..CCC.CC.?C...C.?..C....C.............x
+xC!C..C..C.C..?..C..?C.?.C____________..x
+xC..CC!C.CC..C?.CC.......?____________..x
+xC.CC...C.C..C..??..C..?C.____________..x
+xC!.C.CCC.?C.?.C..CC...C..____________..x
+xCCC.CCC.C.C..C...?..C....____________..x
+xC{CCC..CC.CC......CC.....____________..@
+xC.C...C.CC.C..?C.........____________..x
+xC!.CCCCCC.C...C..C?.CC...____________..x
+xCCCC.C...C..C...C...?....____________..x
+xC!!C!.CCC.C?....?.C...?..____________..x
+xC..C!.C.C...C?...CC?...CC____________..x
+xCC..CC.?C.CC....C....C...C._________...x
+xC(.C..C.CC...C?.....??.................x
+xCCCCCCCCCCCCCCCCCCCCCCCCCCxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    erik_entry_cave_to_hall
+TAGS:    cave_to_hall_subvault no_rotate
+SHUFFLE: TTGGVY
+SUBST:   X : cX
+NSUBST:  X = 1:= / *:c
+KMASK:   T = no_monster_gen
+MAP
+...T....ccc.
+.......ccccc
+.......ccccc
+.cXXc...ccc.
+cX00Xc......
+X>cc%X...T..
+cXc%Xc......
+.cXXc...ccc.
+.......ccccc
+.......ccccc
+...T....ccc.
+  .........
+ENDMAP
+
+NAME:    erik_entry_cave_to_temple
+# Intentionally higher chances for the non-Temple gods.
+TAGS:    cave_to_temple_subvault no_rotate
+SUBST:   X : nnG
+NSUBST:  ' = 12:1 / 4:2 / 1:3 / *:.
+: local rnd = crawl.random2(9)
+: if rnd == 0 then
+KFEAT:   C = altar_beogh
+SUBST:   D=I, G=I
+KMONS:   3 = orc warrior / orc priest
+KMONS:   1 = orc / nothing
+KMONS:   2 = orc wizard / orc / nothing
+: elseif rnd == 1 then
+KFEAT:   C = altar_lugonu
+KFEAT:   D = enter_abyss
+KMONS:   1 = imp / quasit / iron imp / lemure / ufetubus / demonic crawler w:5
+SUBST:   t : U....
+: elseif rnd == 2 then
+KFEAT:   C = altar_jiyva
+SUBST:   D = .
+SUBST:   t : U....
+KMONS:   1 = jelly / ooze / giant amoeba w:3 / brown ooze w:2 / pulsating lump w:1
+:else
+SUBST:   D = C
+SHUFFLE: VCd
+KITEM:   d = any scroll
+: if crawl.coinflip() then
+KMONS:   1 : gnoll / orc
+: elseif crawl.coinflip() then
+KMONS:   2 : big kobold / ogre
+: else
+KMONS:   3 : troll
+: end
+: end
+SUBST:   t = T
+KMASK:   T = no_monster_gen
+MAP
+...T....ccc.
+............
+...xxxxxxxx.
+..xxxxt't<x.
+.xxxxx''''x.
+.G.x$X'C''x.
+...+0x''''x.
+...+0x''''x.
+.G.x$X'D''x.
+.xxxxx''''x.
+..xxxxt't>x.
+  .xxxxxxxx
+ENDMAP
+
+###########################################################
+# Basic island, with variations
+NAME:   enne_entry_octagon_isle
+ORIENT: float
+TAGS:   entry no_monster_gen
+FTILE:  '[({ = floor_sand_stone
+SUBST:  ' = .
+{{
+    octa_room({
+        oblique = crawl.random_range(3,7),
+        replace = '.',
+        outside = 'W',
+        inside  = '.'
+    })
+    if crawl.coinflip() then
+        smear_map({iterations=20, smear='x', onto='.W', boxy=true})
+    end
+}}
+SUBST: W:xw
+MAP
+ xxxxxxxxxxxxx
+x.............x
+x.............x
+x.............x
+x.............x
+......www......
+.....w[''w.....
+@....w'{'w....@
+.....w''(w.....
+......www......
+x.............x
+x.............x
+x.............x
+x.............x
+ xxxxxxxxxxxxx
+ENDMAP
+
+#######################################################################
+# Four elements.
+# Pretty hazardous, but the Earth side is always safe to leave through.
+# Players can safely watch at the clouds. Autoexplore will not run into
+# the chambers, players have to search for the secret door. Likewise,
+# all exits are secret except for the safe one.
+# This vault is great. I've seen players marvel at it. If need be, we
+# may delegate it to another branch, where less caution measures are
+# demanded. But I'd like to keep it on D:1 (dp).
+# Edited: translucent walls are less fun, but perfectly safe.
+NAME:    shiori_entry_elements
+TAGS:    entry no_monster_gen
+ORIENT:  float
+MARKER:  A = lua:fog_machine { \
+             pow_max = 10, delay_min = 50, delay_max = 300, \
+             size = 8, start_clouds = 1, \
+             cloud_type = "noxious fumes" }
+SUBST:   A = a ,  a = a m:1
+FTILE:   a = floor_slime
+COLOUR:  a = lightgreen
+SUBST:   a = .
+MARKER:  W = lua:fog_machine{\
+             pow_max = 10, delay_min = 50, delay_max = 300, \
+             size = 8, start_clouds = 1, \
+             cloud_type = "freezing vapour"}
+SUBST:   W = w
+SUBST:   w : Ww'" , ' = wwW"
+COLOUR:  " = blue
+SUBST:   " = .
+SUBST:   _ = w
+MARKER:  F = lua:fog_machine {\
+             pow_max = 10, delay_min = 50, delay_max = 300, \
+             size = 8, start_clouds = 1, \
+             cloud_type = "flame"}
+SUBST:   F = f
+SUBST:   f : fflF , f = llf , F = f
+FTILE:   f = floor_rough_red
+COLOUR:  f = red
+SUBST:   f = .
+MARKER:  E = lua:fog_machine{\
+             pow_max = 20, delay_min = 50, delay_max = 300, \
+             size = 12, start_clouds = 1, \
+             cloud_type = "black smoke"}
+SUBST:   E = e , e = e n:1
+FTILE:   e = floor_orc
+COLOUR:  e = brown
+SUBST:   e =.
+SHUFFLE: XZ
+NSUBST:  Z = ) / ]
+NSUBST:  X = ( / [
+MARKER:  = = lua:props_marker { \
+            door_open_prompt="This door is covered in warnings. Open " .. \
+                             "it anyway?", \
+            door_description_prefix="warning scrawled " \
+         }
+MAP
+          ...
+       ccc===ccc
+      cc..aaa..cc
+      c.aaaAaaa.c
+      c..aaaaa..c
+      cc...a...cc
+  cccccccnn=nnccccccc
+ cc..ccccc...ccccc..cc
+ c.w..ccccc+ccccc..f.c
+ c.ww.nccX...Zccn.ff.c
+.=www.n_c.....cln.fff=.
+.=wWww=.+..{..+.=ffFf=.
+.=www.n_c.....cln.fff=.
+ c.ww.nccZ...Xccn.ff.c
+ c.w..ccccc+ccccc..f.c
+ cc..cccccG.Gccccc..cc
+  cccccccnn+nnccccccc
+      cc...e...cc
+      c..eeeee..c
+      c.eeeEeee.c
+      cc..eee..cc
+       ccc+++ccc
+ENDMAP
+
+##############################################################################
+# Three entry vaults containing the same river.
+NAME:    lemuel_entry_river_bridge
+TAGS:    entry no_monster_gen
+ORIENT:  float
+SHUFFLE: {}, XXT
+COLOUR:  ' : brown / white
+FTILE:   ' = floor_dirt
+SUBST:   '=., X=x, T:tttT, T=t x:1
+: if crawl.coinflip() then
+TAGS:    no_pool_fixup
+: end
+WEIGHT:  3
+MAP
+xxxxxxxxxxxxxxxxxxx
+xXXXXXXXXXXXXXXXXXx
+xXXXX{.......}XXXXx
+xXXXX.........XXXXx
+xwXXX.........XXXXx
+xwwXX.........XXXXx
+xwwwX.........XXXXx
+xXwwX.........XXXXx
+xXwwww........XXXXx
+xXXwwwwww'w...XXXXx
+xXXXwwwww'wwwwXXXXx
+xXXXXwwww'wwwwwwXXx
+xXXXX...w'wwwwwwwXx
+xXXXX........wwwwXx
+xXXXX.........Xwwwx
+xXXXX.........XXwwx
+xXXXX.........XXXwx
+xxxxx.........xxxxx
+xxxxx....@....xxxxx
+ENDMAP
+
+NAME:    lemuel_entry_river_ford
+TAGS:    entry no_monster_gen
+ORIENT:  float
+WEIGHT:  6
+SHUFFLE: {}, XYZ
+SUBST:   X=W, Y=w, Z=w
+: if crawl.random2(3) > 0 then
+SUBST:   T=x, "=., '=.
+: else
+SUBST:   "=T.., '=T...., T:Tttt, T=t x:1
+: end
+MAP
+xxxxxxxxxxxxxxxxxxx
+xTTTTTTTTTTTTTTTTTx
+xTTTT{"""""""}TTTTx
+xTTTT"."..."."TTTTx
+xwTTT"'.''..."TTTTx
+xwwTT".'""".'"TTTTx
+xwwwT.''"""'."TTTTx
+xTwwX".'.''.'"TTTTx
+xTwwXw..'..''"TTTTx
+xTTXwwwwwww.."TTTTx
+xTTTXwwwwYYwwZTTTTx
+xTTTTXwwYwwwwwZwTTx
+xTTTT'..wwwwwZwwwTx
+xTTTT''..''..wwwwTx
+xTTTT''.''.'''Twwwx
+xTTTT'.'.''.''TTwwx
+xTTTT.........TTTwx
+xxxxx.........xxxxx
+xxxxx....@....xxxxx
+ENDMAP
+
+# Notes: chances are very good that there is a shallow water path.
+# Even if not, you can always see the door on the other side.
+NAME:    lemuel_entry_river_passageway
+TAGS:    entry no_monster_gen
+ORIENT:  float
+SHUFFLE: {}, ABC
+SUBST:   A:=, B:x, C:x
+WEIGHT:  1
+MAP
+xxxxxxxxxxxxxxxxxxx
+xxxWA{.......}xxxxx
+xxwWx.........xxxxx
+xwwWB.........xxxxx
+xwwWx.........xxxxx
+xwwWC.........xxxxx
+xxWwx.........xxxxx
+xxWwwwww......xxxxx
+xWxwwwwwwwwww.xxxxx
+xWxxwwwwwwwwwwxxxxx
+xxWxxwwwwwwwwwwwxxx
+xxWxx.wwwwwwwwwwwxx
+xxwWx......wwwwwwxx
+xwxw+.........xwwwx
+xwxxx.........xxwwx
+xxxxx.........xxxwx
+xxxxx.........xxxxx
+xxxxx.........xxxxx
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_caged_fury
+TAGS:    entry no_rotate
+MONS:    w:30 nothing / giant cockroach / w:2 worm
+MONS:    w:30 nothing / ooze
+MONS:    w:20 nothing / jackal / rat
+MONS:    w:30 nothing / ooze / w:2 jelly / giant cockroach / w:2 worm / \
+         w:5 jackal / w:5 rat
+# There is a very slight chance that a jelly or an intelligent monster
+# (hobgoblin) might spawn inside near the door. This is okay; added an exit.
+ORIENT:  float
+FTILE:   1234+ABCDEabcdem = floor_dirt
+SHUFFLE: abcde / fghij
+# Don't let auto-explore open the door and unleash the caged monsters.
+MARKER:   + = lua:props_marker { \
+            door_open_prompt="This door is covered in warnings. Open " .. \
+                             "it anyway?", \
+            door_description_prefix="warning scrawled " \
+         }
+SUBST:   f=A, g=B, h=C, i=D, j=E
+SUBST:   abcde = mx
+SUBST:   ABCDE : mx
+SUBST:   ===++
+SHUFFLE: xc, 123
+KMASK:   T = no_monster_gen
+MAP
+.................
+.xxxxxxxxxxxxxxx.
+.x4441321331444x.
+.x4312132211324x.
+.x4123213123134x.
+.xABCDEm+medcbax.
+.x.............x.
+.=T....xxx....T=.
+.x.....({[.....x.
+.x..T...]...T..x.
+.xxx=xxxxxxx=xxx.
+.................
+ENDMAP
+
+##############################################################################
+NAME:    dpeg_entry_pits
+TAGS:    entry no_monster_gen no_rotate no_pool_fixup
+WEIGHT:  20
+ORIENT:  float
+: if crawl.one_chance_in(4) then
+SUBST:   Yy=w, Zz=l, Xx"'=b
+NSUBST:  U = 1:} / *:{
+: elseif crawl.one_chance_in(3) then
+SUBST:   U=., Yy=w, Zz=l
+SHUFFLE: x_/'"
+SUBST:   x==, '=b, ":".b
+NSUBST:  X = 1:} / *:{
+: elseif crawl.one_chance_in(2) then
+SUBST:   U=., Zz=l, Xx"'=b
+NSUBST:  Y = 1:} / *:{, y = 1:. / *:w
+: else
+SUBST:   U=., Yy=w, Xx"'=b
+NSUBST:  Z = 1:} / *:{, z = 1:. / *:l
+: end
+SHUFFLE: bxxx
+MAP
+ .......    .......
+..wwww...  ...llll..
+.wywwyw......lzllzl.
+.wwYYww..UU..llZZll.
+.wywwyw......lzllzl.
+..wwww..b'bb..llll..
+ ......bx"bxb......
+      .'"XX"'.
+      .bx"bxb.
+      ..b'bb..
+       ......
+ENDMAP
