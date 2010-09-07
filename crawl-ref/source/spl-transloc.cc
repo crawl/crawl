@@ -958,14 +958,27 @@ bool can_cast_golubrias_passage()
 
 bool cast_golubrias_passage(const coord_def& where)
 {
-    if (find_trap(where))
+    if (grd(where) != DNGN_FLOOR)
+    {
+        // XXX: need to not give away hidden traps here, somehow...
+        // might have to randomize the placement location
+        mpr("You can only open a passage on empty floor.");
         return false;
+    }
+    else if (monster_at(where))
+    {
+        mpr("You can't open a passage on top of a monster!");
+        return false;
+    }
 
     place_specific_trap(where, TRAP_GOLUBRIA);
 
     trap_def *trap = find_trap(where);
     if (!trap)
+    {
+        mpr("Something buggy happened.");
         return false;
+    }
 
     trap->reveal();
 
