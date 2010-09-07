@@ -103,7 +103,7 @@ static int duration_index[NUM_DURATIONS];
 
 void init_duration_index()
 {
-    for (int i = 0; i < NUM_MUTATIONS; ++i)
+    for (int i = 0; i < NUM_DURATIONS; ++i)
         duration_index[i] = -1;
 
     for (unsigned i = 0; i < ARRAYSZ(duration_data); ++i)
