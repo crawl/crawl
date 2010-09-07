@@ -18,7 +18,6 @@ struct spell_desc
     power_cap,
     min_range, max_range, (-1 if not applicable)
     noise_mod,
-    int noise_mod;
     target_prompt,
     monster spell: needs tracer?,
     monster spell: utility spell?
