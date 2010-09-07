@@ -25,6 +25,7 @@ void monster_caught_in_net(monster* mon, bolt &pbolt);
 bool player_caught_in_net();
 void clear_trapping_net();
 void check_net_will_hold_monster(monster* mon);
+std::vector<coord_def> find_golubria_on_level();
 
 dungeon_feature_type trap_category(trap_type type);
 

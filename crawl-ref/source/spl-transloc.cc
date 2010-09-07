@@ -939,21 +939,9 @@ int cast_semi_controlled_blink(int pow)
     return (result);
 }
 
-static std::vector<coord_def> _find_golubria_on_level()
-{
-    std::vector<coord_def> ret;
-    for (rectangle_iterator ri(coord_def(0, 0), coord_def(GXM-1, GYM-1)); ri; ++ri)
-    {
-        trap_def *trap = find_trap(*ri);
-        if (trap && trap->type == TRAP_GOLUBRIA)
-            ret.push_back(*ri);
-    }
-    return ret;
-}
-
 bool can_cast_golubrias_passage()
 {
-    return _find_golubria_on_level().size() < 2;
+    return find_golubria_on_level().size() < 2;
 }
 
 bool cast_golubrias_passage(const coord_def& where)
