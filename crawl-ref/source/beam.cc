@@ -271,7 +271,7 @@ bool zapping(zap_type ztype, int power, bolt &pbolt,
 // Returns true if the path is considered "safe", and false if there are
 // monsters in the way the player doesn't want to hit.
 // NOTE: Doesn't check for the player being hit by a rebounding lightning bolt.
-bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
+bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
 {
     // Non-controlleable during confusion.
     // (We'll shoot in a different direction anyway.)
