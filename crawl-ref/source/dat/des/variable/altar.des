@@ -1453,6 +1453,7 @@ ENDMAP
 ### Xom overflow altars #######################################################
 
 NAME:   tgw_xom
+DEPTH:  !D:1
 TAGS:   no_item_gen no_monster gen temple_overflow_xom uniq_altar_xom
 KFEAT:  _ = altar_xom
 MONS:   orc; club ego:chaos / orc; dagger ego:chaos / orc; spear ego:chaos
