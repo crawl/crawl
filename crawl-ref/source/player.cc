@@ -218,6 +218,7 @@ static bool _check_moveto_trap(const coord_def& p, const std::string &move_verb)
              // Prompt for any trap where you might not have enough hp
              // as defined in init.txt (see trapwalk.lua)
              if (type != TRAP_SHAFT // Known shafts aren't traps
+                 && type != TRAP_GOLUBRIA // don't need a warning here
                  && (new_grid != DNGN_TRAP_MECHANICAL
                  || !clua.callbooleanfn(false, "ch_cross_trap",
                                         "s", trap_name_at(p))))
