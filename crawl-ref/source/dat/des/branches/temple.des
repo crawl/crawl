@@ -2311,17 +2311,16 @@ bbbbb...bbbbbbbbb...bbb...bbbbbbbbb...bbbbb
                   bbbbbbb
 ENDMAP
 
-# 3 gods (plus Lugonu)
+# A random number of temple gods, plus Lugonu.
 NAME:     corrupted_temple
 PLACE:    Temple
 ORIENT:   encompass
-NSUBST:   O = 3:B / *:O
+NSUBST:   O = 3:B / 3=OB / *:O
 KFEAT:    O = altar_lugonu
 MONS:     plant col:random name:demonic name_adjective
 SUBST:    . = . x:1 w:1 l:1
 SUBST:    x = xxxcv
 SUBST:    ' = .
-
 : local brnd = crawl.random2(4)
 : if brnd == 0 then
 LROCKCOL: magenta
@@ -2336,13 +2335,13 @@ MAP
        xxxxx
       xx.O.xx
       x.'...x
-      xO...Ox
+      xO.V.Ox
       x.'.'.x
-      xx.'.xx
+      xx.O.xx
  xxxxx x'..x xxxxx
 xx.O.xxx.'.xxx.O.xx
 x...'''''.'.'..'..x
-xO.'.......'.'''.Ox
+xO.V.O.....'.O'V.Ox
 x.'.......'.....'.x
 xx.O.xxx.'.xxx.O.xx
  xxxxx x..'x xxxxx
