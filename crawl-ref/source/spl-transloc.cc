@@ -946,22 +946,31 @@ bool can_cast_golubrias_passage()
 
 bool cast_golubrias_passage(const coord_def& where)
 {
-    if (grd(where) != DNGN_FLOOR)
+    // randomize position a bit to make it not as useful to use on monsters
+    // chasing you, as well as to not give away hidden trap positions
+    int tries = 0;
+    coord_def randomized_where = where;
+    do
     {
-        // XXX: need to not give away hidden traps here, somehow...
-        // might have to randomize the placement location
-        mpr("You can only open a passage on empty floor.");
-        return false;
-    }
-    else if (monster_at(where))
+        tries++;
+        randomized_where = where;
+        randomized_where.x += random_range(-2, 2);
+        randomized_where.y += random_range(-2, 2);
+    } while((grd(randomized_where) != DNGN_FLOOR ||
+             monster_at(randomized_where) ||
+             randomized_where == you.pos()) &&
+            tries < 100);
+
+    if (tries >= 100)
     {
-        mpr("You can't open a passage on top of a monster!");
+        // XXX: bleh, dumb message
+        mpr("Creating a passage of Golubria requires sufficient empty space.");
         return false;
     }
 
-    place_specific_trap(where, TRAP_GOLUBRIA);
+    place_specific_trap(randomized_where, TRAP_GOLUBRIA);
 
-    trap_def *trap = find_trap(where);
+    trap_def *trap = find_trap(randomized_where);
     if (!trap)
     {
         mpr("Something buggy happened.");
