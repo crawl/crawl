@@ -2512,21 +2512,6 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_HUGE
 },
 
-#if (TAG_MAJOR_VERSION <= 30)
-{
-    MONS_SERPENT_OF_HELL, 'D', RED, "the Serpent of Hell",
-    M_SPELLCASTER | M_SENSE_INVIS | M_UNIQUE,
-    MR_RES_POISON,
-    0, 18, MONS_SERPENT_OF_HELL, MONS_SERPENT_OF_HELL, MH_DEMONIC, -13,
-    { {AT_BITE, AF_PLAIN, 35}, {AT_CLAW, AF_PLAIN, 15},
-      {AT_TRAMPLE, AF_PLAIN, 15}, AT_NO_ATK },
-    { 20, 4, 4, 0 },
-    12, 9, MST_NO_SPELLS, CE_CLEAN, Z_NOZOMBIE, S_ROAR,
-    I_HIGH, HT_LAND, FL_FLY, 14, DEFAULT_ENERGY,
-    MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_HUGE
-},
-#endif
-
 {
     MONS_HOLY_DRAGON, 'D', ETC_HOLY, "holy dragon",
     M_SPELLCASTER | M_SENSE_INVIS | M_WARM_BLOOD | M_GLOWS_LIGHT,
@@ -5062,7 +5047,6 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_GIANT
 },
 
-#if (TAG_MAJOR_VERSION > 30)
 {
     MONS_SERPENT_OF_HELL, 'D', RED, "the Serpent of Hell",
     M_SPELLCASTER | M_SENSE_INVIS | M_UNIQUE,
@@ -5075,7 +5059,6 @@ static monsterentry mondata[] = {
     I_HIGH, HT_LAND, FL_FLY, 14, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_HUGE
 },
-#endif
 
 {
     MONS_DUVESSA, 'e', BLUE, "Duvessa",
