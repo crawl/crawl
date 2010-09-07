@@ -4336,8 +4336,17 @@ void item_list::build_deck_spec(std::string s, item_spec* spec)
     word = _get_and_discard_word(&s);
     if (word == "of")
     {
-        spec->sub_type =
-            _deck_type_string_to_subtype(_get_and_discard_word(&s));
+        std::string sub_type_str = _get_and_discard_word(&s);
+        int sub_type =
+            _deck_type_string_to_subtype(sub_type_str);
+
+        if (sub_type == NUM_MISCELLANY)
+        {
+            error = make_stringf("Bad deck type: %s", sub_type_str.c_str());
+            return;
+        }
+
+        spec->sub_type = sub_type;
     }
     else
     {
