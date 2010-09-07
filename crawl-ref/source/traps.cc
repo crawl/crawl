@@ -418,7 +418,10 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     else switch (this->type)
     {
     case TRAP_GOLUBRIA:
-        mpr("You enter the passage of Golubria");
+        if (you_trigger)
+            mpr("You enter the passage of Golubria.");
+        else
+            simple_monster_message(m, " enters the passage of Golubria.");
         trap_destroyed = true;
         break;
     case TRAP_TELEPORT:
