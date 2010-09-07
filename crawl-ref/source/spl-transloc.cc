@@ -969,6 +969,15 @@ bool cast_golubrias_passage(const coord_def& where)
         return false;
     }
 
+    if (!allow_control_teleport(true))
+    {
+        // lose a turn
+        mpr("A powerful magic interferes with the creation of the passage.");
+        place_cloud(CLOUD_TLOC_ENERGY, randomized_where, 3 + random2(3),
+                    KC_YOU);
+        return true;
+    }
+
     place_specific_trap(randomized_where, TRAP_GOLUBRIA);
 
     trap_def *trap = find_trap(randomized_where);
