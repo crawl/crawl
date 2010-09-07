@@ -324,6 +324,19 @@ static void _climb_message(dungeon_feature_type stair, bool going_up,
     }
 }
 
+static void _clear_golubria_traps()
+{
+    std::vector<coord_def> traps = find_golubria_on_level();
+    for (std::vector<coord_def>::const_iterator it = traps.begin(); it != traps.end(); ++it)
+    {
+        trap_def *trap = find_trap(*it);
+        if (trap && trap->type == TRAP_GOLUBRIA)
+        {
+            trap->destroy();
+        }
+    }
+}
+
 static void _leaving_level_now()
 {
     // Note the name ahead of time because the events may cause markers
@@ -452,6 +465,8 @@ static void _leaving_level_now()
 
         you.level_type_origin  = prep + article + you.level_type_name;
     }
+
+    _clear_golubria_traps();
 }
 
 static void _set_entry_cause(entry_cause_type default_cause,
