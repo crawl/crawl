@@ -891,8 +891,7 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile,
     if (!unrestricted)
         add_daction(DACT_OLD_ENSLAVED_SOULS_POOF);
 
-    const int type = mon->type;
-    monster_type soul_type = mons_species(type);
+    const monster_type soul_type = mons_species(mon->type);
     const std::string whose =
         you.can_see(mon) ? apostrophise(mon->name(DESC_CAP_THE))
                          : mon->pronoun(PRONOUN_CAP_POSSESSIVE);
