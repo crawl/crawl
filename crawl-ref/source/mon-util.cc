@@ -3142,28 +3142,28 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
     switch (variant)
     {
         case PRONOUN_CAP:
-            return ((gender == 0) ? "It" :
-                    (gender == 1) ? "He" : "She");
+            return ((gender == GENDER_NEUTER) ? "It" :
+                    (gender == GENDER_MALE)   ? "He" : "She");
 
         case PRONOUN_NOCAP:
-            return ((gender == 0) ? "it" :
-                    (gender == 1) ? "he" : "she");
+            return ((gender == GENDER_NEUTER) ? "it" :
+                    (gender == GENDER_MALE)   ? "he" : "she");
 
         case PRONOUN_CAP_POSSESSIVE:
-            return ((gender == 0) ? "Its" :
-                    (gender == 1) ? "His" : "Her");
+            return ((gender == GENDER_NEUTER) ? "Its" :
+                    (gender == GENDER_MALE)   ? "His" : "Her");
 
         case PRONOUN_NOCAP_POSSESSIVE:
-            return ((gender == 0) ? "its" :
-                    (gender == 1) ? "his" : "her");
+            return ((gender == GENDER_NEUTER) ? "its" :
+                    (gender == GENDER_MALE)   ? "his" : "her");
 
         case PRONOUN_REFLEXIVE:  // Awkward at start of sentence, always lower.
-            return ((gender == 0) ? "itself"  :
-                    (gender == 1) ? "himself" : "herself");
+            return ((gender == GENDER_NEUTER) ? "itself"  :
+                    (gender == GENDER_MALE)   ? "himself" : "herself");
 
         case PRONOUN_OBJECTIVE:  // Awkward at start of sentence, always lower.
-            return ((gender == 0) ? "it"  :
-                    (gender == 1) ? "him" : "her");
+            return ((gender == GENDER_NEUTER) ? "it"  :
+                    (gender == GENDER_MALE)   ? "him" : "her");
      }
 
     return ("");
