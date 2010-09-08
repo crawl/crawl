@@ -331,8 +331,8 @@ ENDMAP
 ##############################################################################
 
 ##############################################################################
-# elf_hall
-#
+## Classical elf_hall
+##
 NAME:    elf_hall
 PLACE:   Elf:7
 ORIENT:  northwest
@@ -394,8 +394,8 @@ ENDMAP
 
 
 ##############################################################################
-## alternative elf halls: gauntlets (David)
-
+## Alternative elf halls: gauntlets (David)
+##
 NAME:    elf_hall_gauntlet_wide
 PLACE:   Elf:7
 TAGS:    no_pool_fixup no_rotate
@@ -512,7 +512,7 @@ ENDMAP
 
 ##############################################################################
 ## minmay's Elf hall
-
+##
 NAME:    minmay_elf_hall
 PLACE:   Elf:7
 ORIENT:  southwest
@@ -572,6 +572,67 @@ xcc*$$*|$$|$$ccc7...7ccc|*|$$$||*$ccx
 cc$*|*|*|*|cccxcccccccxccc$*$$*$$$|cc
 c|*|$$|*ccccxxxxxxxxxxxxxcccc|*$||$*c
 cccccccccxxxxxxxxxxxxxxxxxxxccccccccc
+ENDMAP
+
+##############################################################################
+## minmay's more circular hall
+##
+NAME:    minmay_elf_hall_circle
+PLACE:   Elf:7
+ORIENT:  float
+TAGS:    no_rotate
+LFLAGS:  no_tele_control
+MONS:    deep elf high priest, deep elf demonologist, deep elf annihilator
+MONS:    deep elf sorcerer, deep elf death mage
+MONS:    deep elf blademaster, deep elf master archer
+SHUFFLE: 12345, 67
+SUBST:   1=1., 2=2., 3=3., 4=4., 5=5.
+KMONS:   $ = weight:450 nothing / deep elf sorcerer / deep elf annihilator
+KMONS:   * = weight:300 nothing / deep elf annihilator / deep elf death mage
+KMONS:   | = weight:600 nothing / deep elf demonologist / deep elf death mage
+KFEAT:   $ = $
+KFEAT:   * = *
+KFEAT:   | = |
+SUBST:   v = v .:2
+SUBST:   v : xvb
+SUBST:   | = | *:2
+SUBST:   $ = $:20 *:4 |:1
+SUBST:   * = * |:3
+MARKER:  U = lua:feat_change_change_flags { \
+            level_flags="!no_tele_control", final_feat="dry_fountain", \
+            group="fountain" \
+         }
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxcccccccccccxxxxxxxxxxx
+xxxxxxxxccc$|$|$|$|$cccxxxxxxxxx
+xxxxxxccc***$|$|$|$|$|cccxxxxxxx
+xxxxxcc******$|$|$|$|$|$ccxxxxxx
+xxxxcc**cc+cc|$|$|$|$|$|$ccxxxxx
+xxxcc**cc5..cccc|$|$|$|$|$ccxxxx
+xxxc****cc...2.ccccc$|$|$|$cxxxx
+xxcc*****ccc......3cccccc$|ccxxx
+xxc*****cc6cccc........5cccccxxx
+xcccccccc.....ccccc.5......6ccxx
+xc2........2......cccccc.....cxx
+xc..........4................cxx
+xc..3..5.......U..2........5.cxx
+xc7..................4....1..cxx
+xc.....2...vv.....vv.........cxx
+xc..........vvvvvvv..3.......cxx
+xc....2.......vvv.........2..cxx
+xc.........3...v...7.........cxx
+xc2.........5....4....4......cxx
+xcc.5....4..................ccxx
+xxc....vv6...4.......6vv...2cxxx
+xxcc...vvv2......5..2vvv.5.ccxxx
+xxxc3..vvvvv2.....2vvvvv..3cxxxx
+xxxcc....vvvvv...vvvvv....ccxxxx
+xxxxcc3....vvvv1vvvv....3ccxxxxx
+xxxxxcc.................ccxxxxxx
+xxxxxxccc3...1...1...3cccxxxxxxx
+xxxxxxxxccc.........cccxxxxxxxxx
+xxxxxxxxxxccccc@cccccxxxxxxxxxxx
 ENDMAP
 
 

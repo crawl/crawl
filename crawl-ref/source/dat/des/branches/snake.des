@@ -2,6 +2,40 @@
 # snake.des: All maps and branch endings relating to the Snake Pit.
 ###############################################################################
 
+NAME:   minmay_snake_pond
+DEPTH:  Snake
+MONS:   small snake w:3 / snake / water moccasin
+SUBST:  w = wwWW.1
+MAP
+  wwww
+ wwwwww
+wwwwwwww
+wwwwwwww
+wwwwwwww
+wwwwwwww
+ wwwwww
+  wwww
+ENDMAP
+
+NAME:   minmay_snake_river
+TAGS:   no_monster_gen generate_awake
+DEPTH:  Snake
+ORIENT: south
+# Black mambas and vipers can't swim, so none of those
+MONS:   small snake w:3 / snake / water moccasin / nothing w:5
+MONS:   anaconda / nothing w:5
+SUBST:  w = wwW
+KPROP:  12 = no_rtele_into
+MAP
+xxxxxxxxxxxxxxxxxxxxxx..@..xxxxxxxxxxxxxxxxxxxx..@.xxxxxxxxxxxxxxxxxxx
+xx211xxxxxxxxxxxxxxwwwWWWWWwwwwxxxxxxxxxxxxxwwwWWWWwwxxxxxxxxxxx112xxx
+xx211wwwwxxxxxwwwwwwwwwxxxxxwwwwwwwwxxxxwwwwwwxxxxwwwwwwxxxxxxww112xxx
+xx211xwwwwwwwwwwwwxxxxxxxxxxxxxwwwwwwwwwwwwxxxxxxxxxxxwwwwwwwwwx112xxx
+xxxxxxxxxxwwwwwxxxxxxxxxxxxxxxxxxxwwwwwwwxxxxxxxxxxxxxxxxwwwwxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
 ################################################################################
 # Snake endings
 ################################################################################
@@ -124,4 +158,63 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+################################################################################
+# Snake Pit: Coiled (minmay)
+#
+NAME:    minmay_snake_end_coiled
+PLACE:   Snake:5
+TAGS:    no_rotate
+ORIENT:  southwest
+MONS:    naga, naga warrior, naga mage, greater naga
+SUBST:   1 = 11., 2 = 23., 3 = 33., 4 = 44.
+SUBST:   c : c:20 x:4 v:1
+KITEM:   O = serpentine rune of Zot
+MAP
+xxxxxxxxxxxxxxxxxc.@..cxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxc....cxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxcc....ccxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxc......cxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxc..1...cxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxc...21.cxxxccccccccxxxxxx
+xxxxxxxxxxxcccccc......ccccc......cccxxxx
+xxxxxxxccccc..................1.....ccccc
+xxxxcccc............4....................
+xxccc.........................2.1.......@
+xcc..........................1...........
+xc..........ccccc......cccccc......cccccc
+cc..1....ccccxxxc......cxxxxccccccccxxxxx
+c.......ccxxxxxxc....1.cxxxxxxxxxxxxxxxxx
+c...4...cxxxxxxxc......cxxxxxxxxxxxxxxxxx
+c.......ccxxxxxxc.1.2..cxxxxxxxxxxxxxxxxx
+cc....1..ccccxxxc......cxxxxxxxxxxxxxxxxx
+xc..........ccccc......ccccccxxxxxxxxxxxx
+xcc.........................cccccxxxxxxxx
+xxccc..............4............ccccxxxxx
+xxxxcccc..1................1.......cccxxx
+xxxxxxxccccc.........................ccxx
+xxxxxxxxxxxcccccc......ccccc.....1....cxx
+xxxxxxxxxxxxxxxxc......cxxxcccc.......ccx
+xxxxxxxxxxxxxxxxc..1...cxxxxxxcc...4...cx
+xxxxxxxxxxxxxxxxc...21.cxxxxxxxc.......cx
+xxxxxxxxxxxxxxxxc..1...cxxxxxxcc...1...cx
+xxxxxxxxxxxxxxxxc......cxxxcccc.......ccx
+xxxxxxxxxxxcccccc......ccccc..........cxx
+xxxxxxxccccc.........................ccxx
+xxxxcccc........1.......2.....4....cccxxx
+xxccc........1....4.............ccccxxxxx
+xcc.........................cccccxxxxxxxx
+xc.....1....ccccc......ccccccxxxxxxxxxxxx
+cc.......ccccxxxc....1.cxxxxxxxxxxxxxxxxx
+c....1..ccxxxxxxc.1....cxxxxxxxxxxxxxxxxx
+c.......cxxxxxxxc....2.cxxxxxxxxxxxxxxxxx
+c...4...ccxxxxxxc..1...cxxxxxxxxxxxxxxxxx
+cc.......ccccxxxc2...1.cxxxxxxxxxxxxxxxxx
+xc......2...ccccc......ccccccxxxxxxxxxxxx
+xcc..1.4..........1.........cccccxxxxxxxx
+xxccc..........1.....4......1...ccccxxxxx
+xxxxcccc.....2..4..........12.4....cccxxx
+xxxxxxxccccc..1.....2..1....1....4..Ocxxx
+xxxxxxxxxxxcccccccccccccccccccccccccccxxx
 ENDMAP
