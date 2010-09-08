@@ -1810,6 +1810,35 @@ void mons_cast_spectral_orcs(monster* mons)
     }
 }
 
+bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
+{
+    // single calculation permissible {dlb}
+    bool monsterNearby = mons_near(mons);
+
+    switch (spell_cast)
+    {
+    case SPELL_ANIMATE_DEAD:
+        // see special handling in mon-stuff::handle_spell() {dlb}
+        if (mons->friendly() && !_animate_dead_okay())
+            return true;
+        break;
+
+    case SPELL_CHAIN_LIGHTNING:
+    case SPELL_SYMBOL_OF_TORMENT:
+    case SPELL_HOLY_WORD:
+        if (!monsterNearby ||
+            // friendly holies don't care if you are friendly
+            (mons->friendly() && spell_cast != SPELL_HOLY_WORD))
+            return true;
+        break;
+
+    default:
+        break;
+    }
+
+    return false;
+}
+
 void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                bool do_noise, bool special_ability)
 {
@@ -1828,6 +1857,12 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     mprf(MSGCH_DIAGNOSTICS, "Mon #%d casts %s (#%d)",
          mons->mindex(), spell_title(spell_cast), spell_cast);
 #endif
+
+    // for cancelling spells before messages are printed
+    // this is a hack, the monster should really have never chosen to cast
+    // the spell in the first place, we should never have gotten here -doy
+    if (_mon_spell_bail_out_early(mons, spell_cast))
+        return;
 
     if (spell_cast == SPELL_CANTRIP)
         do_noise = false;       // Spell itself does the messaging.
@@ -2203,10 +2238,6 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         return;
 
     case SPELL_ANIMATE_DEAD:
-        // see special handling in mon-stuff::handle_spell() {dlb}
-        if (mons->friendly() && !_animate_dead_okay())
-            return;
-
         animate_dead(mons, 5 + random2(5), SAME_ATTITUDE(mons),
                      mons->foe, mons, "", god);
         return;
@@ -2314,17 +2345,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         return;
 
     case SPELL_SYMBOL_OF_TORMENT:
-        if (!monsterNearby || mons->friendly())
-            return;
-
         torment(mons->mindex(), mons->pos());
         return;
 
     case SPELL_HOLY_WORD:
-        // friendly holies don't care if you are friendly
-        if (!monsterNearby)
-            return;
-
         holy_word(0, mons->mindex(), mons->pos());
         return;
 
@@ -2669,8 +2693,6 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         return;
     }
     case SPELL_CHAIN_LIGHTNING:
-        if (!monsterNearby || mons->friendly())
-            return;
         cast_chain_lightning(4 * mons->hit_dice, mons);
         return;
     case SPELL_SUMMON_EYEBALLS:
