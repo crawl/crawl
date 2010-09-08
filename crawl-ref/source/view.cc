@@ -778,7 +778,7 @@ static void _draw_out_of_bounds(screen_cell_t *cell)
 static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc)
 {
     // Outside the env.show area.
-    glyph g = get_cell_glyph(env.map_knowledge(gc));
+    glyph g = get_cell_glyph(env.map_knowledge(gc), Options.clean_map);
     cell->glyph  = g.ch;
     cell->colour = g.col;
 
