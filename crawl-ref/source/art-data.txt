@@ -186,6 +186,7 @@ TILE:    spwpn_wrath_of_trog
 TILE_EQ: axe_trog
 VALUE:   1000
 BOOL:    special
+BRAND:   SPWPN_ANTIMAGIC
 DESC_ID: This was the favourite weapon of the old god Trog, before it was
          lost one day. It induces a bloodthirsty berserker rage in anyone
          who uses it to strike another.
