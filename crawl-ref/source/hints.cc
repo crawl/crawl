@@ -859,10 +859,8 @@ void hints_finished()
 
     Hints.hints_events.init(false);
 
-    // Unlink hints mode file.
-    const std::string basename = get_savedir_filename(you.your_name, "", "");
-    const std::string tmpname = basename + ".tut";
-    unlink( tmpname.c_str() );
+    // Remove the hints mode file.
+    you.save->delete_chunk("tut");
 }
 
 // Occasionally remind religious characters of sacrifices.

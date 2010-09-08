@@ -1067,13 +1067,11 @@ void down_stairs(dungeon_feature_type force_stair,
     // instances of it.
     if (you.level_type != LEVEL_DUNGEON)
     {
-        std::string lname = make_filename(you.your_name, you.absdepth0,
-                                          you.where_are_you,
-                                          you.level_type, false);
+        std::string lname = get_level_filename(level_id::current());
 #ifdef DEBUG_DIAGNOSTICS
         mprf( MSGCH_DIAGNOSTICS, "Deleting: %s", lname.c_str() );
 #endif
-        unlink(lname.c_str());
+        you.save->delete_chunk(lname);
     }
 
     // Did we enter a new branch.

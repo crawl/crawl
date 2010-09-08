@@ -919,7 +919,7 @@ std::string get_prefs_filename()
 #endif
 }
 
-static std::string _get_level_suffix(const level_id& lid)
+std::string get_level_filename(const level_id& lid)
 {
     switch (lid.level_type)
     {
@@ -935,19 +935,6 @@ static std::string _get_level_suffix(const level_id& lid)
     case LEVEL_PORTAL_VAULT:
         return ("ptl");
     }
-}
-
-static std::string _make_filename(std::string prefix, const level_id& lid,
-                                  bool isGhost = false)
-{
-    return get_savedir_filename(prefix, "", _get_level_suffix(lid), isGhost);
-}
-
-std::string make_filename(std::string prefix, int level, branch_type where,
-                          level_area_type ltype, bool isGhost)
-{
-    level_id lid(where, subdungeon_depth(where, level), ltype);
-    return _make_filename(prefix, lid, isGhost);
 }
 
 static void _write_ghost_version(writer &outf)
@@ -1356,7 +1343,7 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     bool just_created_level = false;
 
-    std::string level_name = _get_level_suffix(level_id::current());
+    std::string level_name = get_level_filename(level_id::current());
 
     if (you.level_type == LEVEL_DUNGEON && old_level.level_type == LEVEL_DUNGEON
         || load_mode == LOAD_START_GAME && you.char_direction != GDT_GAME_START)
@@ -1691,7 +1678,7 @@ void _save_level(const level_id& lid)
     // Nail all items to the ground.
     fix_item_coordinates();
 
-    _write_tagged_chunk(_get_level_suffix(lid), TAG_LEVEL);
+    _write_tagged_chunk(get_level_filename(lid), TAG_LEVEL);
 }
 
 #define SAVEFILE(file, savefn) \
@@ -1821,7 +1808,7 @@ static std::string _make_ghost_filename()
     if (you.level_type == LEVEL_PORTAL_VAULT)
         suffix = _make_portal_vault_ghost_suffix();
     else
-        suffix = _get_level_suffix(level_id::current());
+        suffix = get_level_filename(level_id::current());
     return get_bonefile_directory() + "bones." + suffix;
 }
 

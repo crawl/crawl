@@ -127,8 +127,7 @@ public:
 void save_ghost( bool force = false );
 bool load_ghost( bool creating_level );
 
-std::string make_filename(std::string prefix, int level, branch_type branch,
-                          level_area_type lt, bool isGhost );
+std::string get_level_filename(const level_id& lid);
 
 FILE *lk_open(const char *mode, const std::string &file);
 void lk_close(FILE *handle, const char *mode, const std::string &file);
