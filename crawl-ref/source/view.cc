@@ -584,9 +584,11 @@ void view_update_at(const coord_def &pos)
     int flash_colour = you.flash_colour == BLACK
         ? _viewmap_flash_colour()
         : you.flash_colour;
+    int mons = env.map_knowledge(pos).monster();
     int cell_colour =
         flash_colour &&
-        (env.map_knowledge(pos).monster() == MONS_NO_MONSTER || !you.berserk())
+        (mons == MONS_NO_MONSTER || mons_class_is_firewood(mons) ||
+         !you.berserk())
             ? real_colour(flash_colour)
             : g.col;
 
@@ -922,7 +924,8 @@ void viewwindow(bool show_updates)
         {
             if (you.see_cell(gc))
             {
-                if (env.map_knowledge(gc).monster() == MONS_NO_MONSTER ||
+                monster_type mons = env.map_knowledge(gc).monster();
+                if (mons == MONS_NO_MONSTER || mons_class_is_firewood(mons) ||
                     !you.berserk())
                     cell->colour = real_colour(flash_colour);
             }
