@@ -86,6 +86,9 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell, bool colored)
         }
     }
 
+    if (feat == DNGN_SHALLOW_WATER && player_in_branch(BRANCH_SHOALS))
+        colour = ETC_WAVES;
+
     if (feat >= DNGN_FLOOR_MIN && feat <= DNGN_FLOOR_MAX)
     {
         if (cell.flags & MAP_HALOED)
