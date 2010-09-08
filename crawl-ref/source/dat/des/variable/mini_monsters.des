@@ -32,6 +32,39 @@ default-depth: D:9-27, Vault, Elf
 #
 ###############################################################################
 
+NAME:  minmay_newt_pond
+DEPTH: D:1-2
+KMONS: 1 = giant newt
+KFEAT: 1 = W
+SUBST: W = WWW1
+MAP
+ ......
+..WWWW.
+.WWWWW..
+.WWWWWW.
+.WWWWWW.
+..WWWW..
+ ......
+ENDMAP
+
+NAME:  minmay_butterfly_box
+DEPTH: D:1-4
+MONS:  butterfly
+MAP
+    ....
+   ......
+  ........
+ ..xxxxxx..
+...x1111x...
+...x1111x...
+...x1111x...
+...x1111x...
+ ..x++++x..
+  ........
+   ......
+    ....
+ENDMAP
+
 NAME:    eino_jars
 DEPTH:   D:4-14
 TAGS:    mini_float extra luniq_mini
@@ -240,6 +273,22 @@ x111x
 xxxxx
 ENDMAP
 
+NAME:   minmay_brainsmasher
+DEPTH:  D:8-26
+WEIGHT: 3
+MONS:   brain worm
+MAP
+  .....
+ .......
+....%....
+...nnn...
+..%n1n%..
+...nnn...
+....%....
+ .......
+  .....
+ENDMAP
+
 
 ###############################################################################
 #
@@ -247,6 +296,20 @@ ENDMAP
 #       Mammals, reptiles, also dragons, serpents.
 #
 ###############################################################################
+
+NAME:  minmay_rat_gold_closets
+DEPTH: D:1-2
+MONS:  rat / grey rat w:1
+SUBST: 1 = 111$
+MAP
+.............
+.x+x+x+x+x+x.
+.x1x1x1x1x1x.
+.xxxxxxxxxxx.
+.x1x1x1x1x1x.
+.x+x+x+x+x+x.
+.............
+ENDMAP
 
 NAME:  rats_and_rats_again
 TAGS:  mini_float
@@ -286,6 +349,46 @@ x.1.xxxxx1.1x
 x1.1.xxx1.1.x
 x.1.1.+1.1.1x
 xxxxxxxxxxxxx
+ENDMAP
+
+NAME:  minmay_rat_hole
+TAGS:  mini_float
+DEPTH: D:2-4
+MONS:  rat / grey rat w:1
+ITEM:  cheese w:30 / bread ration / meat ration / nothing w:60
+MAP
+ xxx
+xxdx
+xddxx
+xdddxxxx
+xxxx111xx
+  xx1111x
+  x11111x
+  x11111x
+  xx11xxx
+   xx@x
+ENDMAP
+
+NAME:  minmay_snake_closets
+TAGS:  mini_float no_monster_gen no_item_gen
+DEPTH: D:2-4
+MONS:  snake / small snake
+ITEM:  any scroll / any potion
+SUBST: ? = 111d
+MAP
+   xxxxxxx.@.xxxxxxx
+   x.?x..+...+..x?.x
+   x..x?.x...x.?x..x
+xxxx+xxxxx...xxxxx+xxxx
+x..+.....x...x.....+..x
+x?.x.....x...x.....x.?x
+x+xx?....+...+....?xxxx
+x?.x.....x...x.....x.?x
+x..+.....x...x.....+..x
+xxxx+xxxxx...xxxxx+xxxx
+   x..x?.x...x.?x..x
+   x.?x..+...+..x?.x
+   xxxxxxx.@.xxxxxxx
 ENDMAP
 
 NAME:    doghouse_eino
@@ -479,6 +582,32 @@ MAP
 ...........
 ENDMAP
 
+NAME:  minmay_serpent_palace
+TAGS:  no_monster_gen no_item_gen
+DEPTH: D:18-
+MONS:  naga / naga warrior w:2 / naga mage w:1, greater naga / guardian serpent
+MONS:  small snake / snake / water moccasin / viper / black mamba / anaconda
+MONS:  lindwurm
+SUBST: 1 = 11., 3 = ...3
+SUBST: c : cv
+MAP
+...............................
+.ccccccccccccccccccccccccccccc.
+.c3+33.33c..3..3..2....3.c%%%c.
+.c1ccccc1c.2...1.3.1.3.2.c%%%c.
+.c.c$$$c3c.3.3..2.......3c%%%c.
+.c1c$$$c3c....13...3.1...ccc+c.
+.c3c$$$c.c3.1.....1..3.3.1332c.
+.c1c2ccc3c....3.13....1.cccccc.
+.c.c.3313c.3.1......1.3.c3313c.
+.c3ccccccc1...3.....3...c3cc3c.
+.c33.313....3.....3...1.c2|c3c.
+.c1.31..3.3..ccc++ccc...cccc+c.
+.c32..33.1.33c4l..l4c..1.2.1.c.
+.cccccccccccccll..llcccccccccc.
+...............................
+ENDMAP
+
 
 ###############################################################################
 #
@@ -486,6 +615,46 @@ ENDMAP
 #       Goblins, gnolls, orcs, ogres etc. We include spriggans and centaurs.
 #
 ###############################################################################
+
+NAME:    minmay_goblin_outpost
+TAGS:    mini_float no_pool_fixup
+DEPTH:   D:2-4
+MONS:    goblin / hobgoblin w:5, goblin; sling . stone q:20
+SUBST:   y = .WWw, Y = ...W, . = .....1
+SHUFFLE: >X/_"
+SUBST:   X = x, _ = =, " = @
+MAP
+   XXX
+xxxx>xxxx
+xxxx=xxxx
+xwww2wwwx
+xyywwwyyx
+xYYYYYYYx
+x.......x
+x.......x
+x.......x
+@.......@
+xxxxxxxxx
+ENDMAP
+
+NAME:  minmay_goblin_kobold_house
+TAGS:  mini_float no_monster_gen
+DEPTH: D:2-4
+MONS:  goblin / hobgoblin, kobold
+SUBST: . = 1%......
+SUBST: 1 : 112
+MAP
+ xxxxxxx
+xx.....xx
+x.......x
+x.......x
+x.......x
+xx.....xx
+ xxx+xxx
+  x...x
+  x...x
+  xx+xx
+ENDMAP
 
 # Sigmund has been educating the oppressed masses in guerrilla warfare.
 NAME:    sigmund_army
@@ -504,6 +673,22 @@ x1n1x
 x111x
 xx+xx
  ...
+ENDMAP
+
+NAME:  minmay_mini_ossuary
+TAGS:  no_monster_gen no_item_gen
+DEPTH: D:4-8
+ITEM:  any scroll / any potion
+MONS:  mummy, kobold zombie / orc zombie / hobgoblin zombie
+MAP
+........
+.cccccc.
+.c.1ddc.
+.c.cccc.
+.c.22.c.
+.c2..2c.
+.cc~~cc.
+........
 ENDMAP
 
 NAME:  minmay_orc_keep
@@ -1188,6 +1373,77 @@ ENDMAP
 #
 ################################################################################
 
+NAME:  minmay_statue_bubble
+DEPTH: D:9-26
+MONS:  silver statue / orange crystal statue / ice statue w:5
+SUBST: ? = bbb.
+MAP
+ .......
+..bm?mb..
+.bm...mb.
+.m..*..m.
+.?.*1*.?.
+.m..*..m.
+.bm...mb.
+..bm?mb..
+ .......
+ENDMAP
+
+NAME:  minmay_protected_statue
+DEPTH: D:9-26
+MONS:  silver statue / orange crystal statue, plant, bush
+SUBST: n : n:20 m 2:1 3:1 t:1
+MAP
+  ...
+ .*|*.
+.*nnn*.
+.|n1n|.
+.*nnn*.
+ .*|*.
+  ...
+ENDMAP
+
+NAME:   minmay_statue_crystal_thing
+DEPTH:  D:9-26
+MONS:   orange crystal statue w:30 / silver statue / ice statue w:5
+NSUBST: ? = 1:= / *:b
+MAP
+      .....
+    ...b+b...
+  ...bbb.bbb...
+  .bbb.....bbb.
+ ..b...b=b...b..
+ .bb.bbb.bbb.bb.
+..b..b.....b..b..
+.bb.bb..*..bb.bb.
+.+..=..*1*..=..+.
+.bb.bb..*..bb.bb.
+..b..b.....b..b..
+ .bb.bbb.bbb.bb.
+ ..b...b=b...b..
+  .bbb.....bbb.
+  ...bbb.bbb...
+    ...b+b...
+      .....
+ENDMAP
+
+NAME:  minmay_dual_archer_statues
+DEPTH: D:10-26
+MONS:  statue tile:mons_statue_archer name:archer name_adjective; \
+       longbow . arrow q:30
+MONS:  bush
+MAP
+.........
+...ccc...
+.ccc|ccc.
+.c.2.2.c.
+.c12.21c.
+.c.2.2.c.
+.ccc.ccc.
+...c+c...
+.........
+ENDMAP
+
 # Another Ice Statue vault
 NAME:  ice2_lemuel
 DEPTH: D:12-26, Lair, Coc
@@ -1506,6 +1762,24 @@ ENDMAP
 #
 ###################################################################
 
+NAME:   minmay_sticks_and_stones
+DEPTH:  D:8-16
+WEIGHT: 5
+MONS:   wood golem, stone golem
+ITEM:   stone / club w:5 / large rock w:3 / quarterstaff w:1
+SUBST:  . = d:30 1 .:150
+MAP
+.........
+.........
+.........
+.........
+....2....
+.........
+.........
+.........
+.........
+ENDMAP
+
 NAME:   minmay_metal_thing
 DEPTH:  D:12-20
 KPROP:  .1* = no_rtele_into
@@ -1648,6 +1922,47 @@ ENDMAP
 #       Either using 8, 9, 0 glyphs or just many choices.
 #
 ###################################################################
+
+NAME:  minmay_ominous_box
+TAGS:  extra luniq_mini
+DEPTH: D:4-, Vault
+SUBST: 8 = 8.......
+MAP
+.......
+.vvvvv.
+.v...v.
+.v.8.v.
+.v...v.
+.vv=vv.
+..G.G..
+ .....
+ENDMAP
+
+NAME:    minmay_three_doors
+TAGS:    mini_float
+DEPTH:   D:4-
+SHUFFLE: 089
+MAP
+xxxxxxx
+xx...xx
+x.....x
+x..0..x
+x.....x
+xx...xx
+xxx+xxxxxxxxx
+......xx...xx
+......x.....x
+......+..9..x
+......x.....x
+......xx...xx
+xxx+xxxxxxxxx
+xx...xx
+x.....x
+x..8..x
+x.....x
+xx...xx
+xxxxxxx
+ENDMAP
 
 NAME:  minmay_layered_prison
 DEPTH: D:2-, Vault, Crypt
@@ -1964,6 +2279,150 @@ MAP
 ...............
 ENDMAP
 
+# Scythe of Curses
+#
+NAME:   minmay_guarded_unrand_curses
+TAGS:   no_monster_gen no_item_gen
+DEPTH:  D:8-, Crypt
+WEIGHT: 3
+MONS:   reaper, reaper; scythe unrand:scythe_of_curses, mummy, guardian mummy
+ITEM:   scroll of curse armour / scroll of curse weapon
+KPROP:  1d2 = no_rtele_into
+MAP
+..............
+.cccccc+cccccc.
+.c3.........3c.
+.c.+ccccccc+.c.
+.c.c...4...c.c.
+.c.c.mmmmm.c.c.
+.c.c.m1d1m.c.c.
+.+.c4md2dm4c.+.
+.c.c.m1d1m.c.c.
+.c.c.mmmmm.c.c.
+.c.c...4...c.c.
+.c.+ccccccc+.c.
+.c3.........3c.
+.cccccc+cccccc.
+...............
+ENDMAP
+
+# Crown of Dyrovepreva
+#
+NAME:   minmay_guarded_unrand_dyrovepreva
+TAGS:   no_monster_gen no_item_gen
+DEPTH:  D:10-
+WEIGHT: 3
+MONS:   crystal golem, orange crystal statue
+ITEM:   cap unrand:crown_of_dyrovepreva
+KPROP:  12d' = no_rtele_into
+SUBST:  ' = .
+MAP
+        .............
+       ...............
+      ...bb.......bb...
+     ...bbbb.....bbbb...
+    ...bbbbbb...bbbbbb...
+   ...bbbbbbbb2bbbbbbbb...
+  ...bb'''bbb'''bbb'''bb...
+ ...bb'''''b'''''b'''''bb...
+...bbb''1'''''1'''''1''bbb...
+..bbbb'''''b'''''b'''''bbbb..
+..bbbbb'''bbb'''bbb'''bbbbb..
+...bbbbb'bbbbbbbbbbb'bbbbb...
+....bbb''.bbb'1'bbb'''bbb....
+.....b'''''b'1'1'b'''''b.....
+....2b1'''1b1'd'1b1'''1b2....
+.....b'''''b'1'1'b'''''b.....
+....bbb'''bbb'1'bbb'''bbb....
+...bbbbb'bbbbb2bbbbb'bbbbb...
+..bbbbb'''bbb'1'bbb'''bbbbb..
+..bbbb'''''b'''''b'''''bbbb..
+...bbb1'''1'''''''1'''1bbb...
+ ...bb'''''b'''''b'''''bb...
+  ...bb'1'bbb'1'bbb'1'bb...
+   ...bbbbbbbbbbbbbbbbb...
+    ...bbbbbb.2.bbbbbb...
+     ...bbbb.....bbbb...
+      ...bb.......bb...
+       ...............
+        .............
+ENDMAP
+
+# Flaming Death
+#
+NAME:   minmay_guarded_unrand_flaming_death
+TAGS:   no_monster_gen no_item_gen
+DEPTH:  D:10-
+WEIGHT: 3
+# Fire elementals are speed 13, but can't open the doors.
+# The player may kill the efreet over the lava, losing the scimitar.
+# However, the player *can see* that the efreet is wielding an artefact.
+KMONS:  l = fire elemental / nothing w:40
+KFEAT:  l = l
+KMONS:  1 = patrolling Azrael; scimitar unrand:scimitar_of_flaming_death, \
+            patrolling efreet; scimitar unrand:scimitar_of_flaming_death
+KPROP:  1' = no_rtele_into
+SUBST:  v : vc
+SUBST:  ' = .
+MAP
+ ...........
+..vvvv+vvvv..
+.vvlllllllvv.
+.vlllllllllv.
+.vlllvvvlllv.
+.vllvv'vvllv.
+.vll+'1'+llv.
+.vllvv'vvllv.
+.vlllvvvlllv.
+.vlllllllllv.
+.vvlllllllvv.
+..vvvv+vvvv..
+ ...........
+ENDMAP
+
+# Ring of the Mage
+#
+NAME:   minmay_guarded_unrand_mage
+TAGS:   no_monster_gen no_item_gen
+DEPTH:  D:16-
+WEIGHT: 3
+MONS:   wizard, orange crystal statue / silver statue
+KMONS:  3 = lich / ancient lich
+KITEM:  3 = ring of protection from magic unrand:ring_of_the_mage
+KPROP:  32' = no_rtele_into
+SUBST:  ' = .
+MAP
+.......             .......
+.ccccc..           ..ccccc.
+.c...c...         ...c...c.
+.c.1.+....       ....+.1.c.
+.c...c.....     .....c...c.
+.cc+cc......   ......cc+cc.
+...........................
+ ......WWWWWWWWWWWWW......
+  .....WwwwwwwwwwwwW.....
+   ....WwcccccccccwW....
+    ...Wwc'''c'''cwW...
+     ..Wwc'3'='2'cwW..
+      .Wwc'''c'''cwW.
+      .Wwcccccc=ccwW.
+      .Wwc'''c'''cwW.
+     ..Wwc'2'='2'cwW..
+    ...Wwc'''c'''cwW...
+   ....Wwcc+ccccccwW....
+  .....WwwwwwwwwwwwW.....
+ ......WWWWWWWWWWWWW......
+...........................
+.cc+cc......   ......cc+cc.
+.c...c.....     .....c...c.
+.c.1.+....       ....+.1.c.
+.c...c...         ...c...c.
+.ccccc..           ..ccccc.
+.......             .......
+ENDMAP
+
+# Sword in stone
+#
 # There's a sword stuck inside a stone. Some knights are milling around
 # wondering how to get it out. If you had both Shatter and Apportation,
 # you could become the monarch! Or not..... (by Shiori)
