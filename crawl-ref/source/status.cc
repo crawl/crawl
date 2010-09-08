@@ -71,7 +71,7 @@ static duration_def duration_data[] =
     { DUR_SAGE, true,
       BLUE, "Sage", "", "" },
     { DUR_SEE_INVISIBLE, false,
-      0, "", "", "You can see invisible." },
+      BLUE, "SInv", "", "You can see invisible." },
     { DUR_SLAYING, false,
       0, "", "deadly", "" },
     { DUR_SLIMIFY, true,
