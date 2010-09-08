@@ -302,8 +302,9 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     shield(NULL), defender_shield(NULL),
     player_body_armour_penalty(0), player_shield_penalty(0),
     player_armour_tohit_penalty(0), player_shield_tohit_penalty(0),
-    can_do_unarmed(false), miscast_level(-1), miscast_type(SPTYP_NONE),
-    miscast_target(NULL), final_effects()
+    can_do_unarmed(false), apply_bleeding(false),
+    miscast_level(-1), miscast_type(SPTYP_NONE), miscast_target(NULL),
+    final_effects()
 {
     init_attack();
 }
@@ -936,9 +937,8 @@ bool melee_attack::player_attack()
         print_wounds(defender->as_monster());
 
         const int degree = player_mutation_level(MUT_CLAWS);
-
-        if (defender->can_bleed() && degree > 0)
-            defender->as_monster()->bleed(5 + roll_dice(degree, 3), degree);
+        if (apply_bleeding && defender->can_bleed() && degree > 0)
+            defender->as_monster()->bleed(3 + roll_dice(degree, 3), degree);
     }
 
     return (did_primary_hit || did_hit);
@@ -1321,16 +1321,8 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
     switch(atk)
     {
         case UNAT_PUNCH:
-        {
-            const int degree = player_mutation_level(MUT_CLAWS);
-
-            if (defender->as_monster()->hit_points > 0 && degree > 0
-                && defender->can_bleed())
-            {
-                defender->as_monster()->bleed(3 + roll_dice(degree, 3), degree);
-            }
+            apply_bleeding = true;
             break;
-        }
 
         case UNAT_HEADBUTT:
         {
@@ -4258,6 +4250,7 @@ int melee_attack::player_calc_base_unarmed_damage()
     {
         // Claw damage only applies for bare hands.
         damage += player_mutation_level(MUT_CLAWS) * 2;
+        apply_bleeding = true;
     }
 
     if (player_in_bat_form())
