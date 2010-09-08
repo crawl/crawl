@@ -435,7 +435,7 @@ static void _draw_ray_glyph(const coord_def &pos, int colour,
         if (mons->alive() && mons->visible_to(&you)
             && !mons_is_unknown_mimic(mons))
         {
-            glych  = get_cell_glyph(env.map_knowledge(pos)).ch;
+            glych  = get_cell_glyph(env.map_knowledge(pos), pos).ch;
             colour = mcol;
         }
     }
@@ -736,7 +736,7 @@ void full_describe_view()
             const coord_def c = list_features[i];
             std::string desc = "";
 #ifndef USE_TILE
-            glyph g = get_cell_glyph(env.map_knowledge(c));
+            glyph g = get_cell_glyph(env.map_knowledge(c), c);
             const std::string colour_str = colour_to_str(g.col);
             desc = "(<" + colour_str + ">";
             desc += stringize_glyph(g.ch);

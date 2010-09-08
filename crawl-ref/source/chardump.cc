@@ -1293,7 +1293,7 @@ void dump_map(FILE *fp, bool debug, bool dist)
         for (int y = min_y; y <= max_y; ++y)
         {
             for (int x = min_x; x <= max_x; ++x)
-                fputc( get_cell_glyph(env.map_knowledge[x][y]).ch, fp );
+                fputc( get_cell_glyph(env.map_knowledge[x][y], coord_def(x, y)).ch, fp );
 
             fputc('\n', fp);
         }

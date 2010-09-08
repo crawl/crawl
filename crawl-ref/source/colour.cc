@@ -47,7 +47,7 @@ bool is_element_colour( int col )
     return ((col & 0x007f) >= ETC_FIRE);
 }
 
-int element_colour( int element, bool no_random )
+int element_colour( int element, bool no_random, const coord_def& loc )
 {
     // Doing this so that we don't have to do recursion here at all
     // (these were the only cases which had possible double evaluation):
@@ -496,7 +496,7 @@ static unsigned _colflag2brand(int colflag)
 }
 #endif
 
-unsigned real_colour(unsigned raw_colour)
+unsigned real_colour(unsigned raw_colour, const coord_def& loc)
 {
     // This order is important - is_element_colour() doesn't want to see the
     // munged colours returned by dos_brand, so it should always be done
@@ -505,7 +505,7 @@ unsigned real_colour(unsigned raw_colour)
 
     // Evaluate any elemental colours to guarantee vanilla colour is returned
     if (is_element_colour( raw_colour ))
-        raw_colour = colflags | element_colour( raw_colour );
+        raw_colour = colflags | element_colour( raw_colour, false, loc );
 
 #if defined(TARGET_OS_WINDOWS) || defined(TARGET_OS_DOS) || defined(USE_TILE)
     if (colflags)

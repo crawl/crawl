@@ -1968,7 +1968,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         if (monster_at(gc))
             DELAY_EVENT;
 
-        text << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc))) << " ";
+        text << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc), gc)) << " ";
 #else
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Stairs", gc);
@@ -1997,7 +1997,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
         text << "These ";
 #ifndef USE_TILE
-        text << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc)));
+        text << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc), gc));
         text << " ";
 #else
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
@@ -2023,7 +2023,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             DELAY_EVENT;
 
         // FIXME: Branch entrance character is not being colored yellow.
-        text << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc))) << " ";
+        text << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc), gc)) << " ";
 #else
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Branch stairs", gc);
@@ -2056,7 +2056,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         if (monster_at(gc))
             DELAY_EVENT;
 
-        text << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc))) << " ";
+        text << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc), gc)) << " ";
 #else
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Portal", gc);
@@ -2122,7 +2122,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "of these nasty constructions";
 #ifndef USE_TILE
         {
-            glyph g = get_cell_glyph(env.map_knowledge(gc));
+            glyph g = get_cell_glyph(env.map_knowledge(gc), gc);
 
             if (g.ch == ' ' || g.col == BLACK)
                 g.col = LIGHTCYAN;
@@ -2143,7 +2143,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_SEEN_ALTAR:
         text << "That ";
 #ifndef USE_TILE
-        text << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc))) << " ";
+        text << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc), gc)) << " ";
 #else
         {
             tiles.place_cursor(CURSOR_TUTORIAL, gc);
@@ -2181,7 +2181,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #endif
         text << "That "
 #ifndef USE_TILE
-             << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc))) << " "
+             << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc), gc)) << " "
 #endif
                 "is a shop. You can enter it by typing <w>%</w> or <w>%</w>"
 #ifdef USE_TILE
@@ -2209,7 +2209,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
         text << "That "
 #ifndef USE_TILE
-             << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc))) << " "
+             << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc), gc)) << " "
 #endif
                 "is a closed door. You can open it by walking into it. "
                 "Sometimes it is useful to close a door. Do so by pressing "
@@ -2243,7 +2243,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #endif
         text << "That ";
 #ifndef USE_TILE
-        text << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc))) << " ";
+        text << glyph_to_tagstr(get_cell_glyph(env.map_knowledge(gc), gc)) << " ";
 #endif
         if (grd(gc) == DNGN_SECRET_DOOR)
             text << "is";

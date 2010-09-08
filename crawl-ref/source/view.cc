@@ -504,7 +504,7 @@ std::string screenshot(bool fullscreen)
             int ch =
                   (!map_bounds(gc))             ? 0 :
                   (gc == you.pos())             ? mons_char(you.symbol)
-                                                : get_cell_glyph(env.map_knowledge(gc)).ch;
+                                                : get_cell_glyph(env.map_knowledge(gc), gc).ch;
 
             if (ch && !isprint(ch))
             {
@@ -579,7 +579,7 @@ void view_update_at(const coord_def &pos)
 #ifndef USE_TILE
     if (!env.map_knowledge(pos).visible())
         return;
-    glyph g = get_cell_glyph(env.map_knowledge(pos));
+    glyph g = get_cell_glyph(env.map_knowledge(pos), pos);
 
     int flash_colour = you.flash_colour == BLACK
         ? _viewmap_flash_colour()
@@ -780,7 +780,7 @@ static void _draw_out_of_bounds(screen_cell_t *cell)
 static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc)
 {
     // Outside the env.show area.
-    glyph g = get_cell_glyph(env.map_knowledge(gc), Options.clean_map);
+    glyph g = get_cell_glyph(env.map_knowledge(gc), gc, Options.clean_map);
     cell->glyph  = g.ch;
     cell->colour = g.col;
 
@@ -820,7 +820,7 @@ static void _draw_los(screen_cell_t *cell,
                       const coord_def &gc, const coord_def &ep,
                       bool anim_updates)
 {
-    glyph g = get_cell_glyph(env.map_knowledge(gc));
+    glyph g = get_cell_glyph(env.map_knowledge(gc), gc);
     cell->glyph  = g.ch;
     cell->colour = g.col;
 
