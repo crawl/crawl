@@ -432,16 +432,11 @@ PLACE:      Zot:5
 ORIENT:     north
 TAGS:       no_dump
 LFLAGS:     no_tele_control
-MARKER:     Z = lua:item_pickup_change_flags { \
-                level_flags="!no_tele_control", item="auto" \
-            }
+SUBVAULT:   Y : orb_chamber
 LFLOORCOL:  magenta
 LROCKCOL:   lightmagenta
 LFLOORTILE: floor_tomb
 LROCKTILE:  wall_zot_magenta
-KITEM:      Z = Orb of Zot
-KMASK:      Z = no_item_gen
-COLOUR:     G = magenta
 
 #traps
 SUBST:    C = X:900 c:100 =
@@ -472,28 +467,28 @@ MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxXXXXXXXXXXXXXXXxxxxxxxxxxxxxxxxxxxxxxxXXXXXXXXXXXXXXXxxxxxxxxxxxxx
-xxxxxxxxxxxXXXX.............XXXXxxxxxxxxxxxxxxxxxXXXX.............XXXXxxxxxxxxxx
-xxxxxxxxxxXX...................XXXxxxxxxxxxxxxxXXX...................XXxxxxxxxxx
-xxxxxxxxxXX..........3...........XXxxxxxxxxxxxXX...........3..........XXxxxxxxxx
-xxxxxxxxxX..8.....................XXXXXXXXXXXXX.....................8..Xxxxxxxxx
-xxxxxxxxxX.......?..?.....8.8.....XXX...1...XXX.....8.8.....?..?.......Xxxxxxxxx
-xxxxxxxxxXX.8...........?.........XX..1...1..XX.........?...........8.XXxxxxxxxx
-xxxxxxxxxxXX......................X1...!!!...1X......................XXxxxxxxxxx
-xxxxxxxxxxxXX.....4....2....8.8......1.GZG.1......8.8....2....4.....XXxxxxxxxxxx
-xxxxxxxxxxXX....?...?.....?...?...X1...!!!...1X...?...?.....?....?...XXxxxxxxxxx
-xxxxxxxxxXX.......?....?..........XX..1...1..XX..........?....2.......XXxxxxxxxx
-xxxxxxxxxX.....8..........8.8.....XXX...1...XXX.....8.8..........8.....Xxxxxxxxx
-xxxxxxxxxX...8....................cXXXXXXXXXXXc....................8...Xxxxxxxxx
-xxxxxxxxxXX.....8.8.8..8.........ccccccccccccccc........8...8.8.8.....XXxxxxxxxx
-xxxxxxxxxxXX...............8...XcccccccccccccccccX...8............8..XXxxxxxxxxx
-xxxxxxxxxxxXX........8..8...XXXXcccccccccccccccccXXXX...8..8........XXxxxxxxxxxx
-xxxxxxxxxxxxXXa111accCCCCCCXXXXXcccccccccccccccccXXXXXCCCCCCccb111bXXxxxxxxxxxxx
-xxxxxxxxxxxcc...............AA1.ccccccccccccccccc.1BB...............ccxxxxxxxxxx
-xxxxxxxxxxcc...8.8..8.8.....cc1...ccccccccccccc...1cc.......8..8.8.8.ccxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxcccccccccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccYYYYYYYYYccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxcccYYYYYYYYYYYcccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxXXXXXXXXXXXXXXXxxxcYYYYYYYYYYYYYYYcxxxXXXXXXXXXXXXXXXxxxxxxxxxxxxx
+xxxxxxxxxxxXXXX.............XXXXcYYYYYYYYYYYYYYYcXXXX.............XXXXxxxxxxxxxx
+xxxxxxxxxxXX...................XXXYYYYYYYYYYYYYXXX...................XXxxxxxxxxx
+xxxxxxxxxXX..........3...........XXYYYYYYYYYYYXX...........3..........XXxxxxxxxx
+xxxxxxxxxX..8.....................XYYYYYYYYYYYX.....................8..Xxxxxxxxx
+xxxxxxxxxX.......?..?.....8.8.....YYYYYYYYYYYYY.....8.8.....?..?.......Xxxxxxxxx
+xxxxxxxxxXX.8...........?.........YYYYYYYYYYYYY.........?...........8.XXxxxxxxxx
+xxxxxxxxxxXX......................YYYYYYYYYYYYY......................XXxxxxxxxxx
+xxxxxxxxxxxXX.....4....2....8.8...YYYYYYYYYYYYY...8.8....2....4.....XXxxxxxxxxxx
+xxxxxxxxxxXX....?...?.....?...?...YYYYYYYYYYYYY...?...?.....?....?...XXxxxxxxxxx
+xxxxxxxxxXX.......?....?..........YYYYYYYYYYYYY..........?....2.......XXxxxxxxxx
+xxxxxxxxxX.....8..........8.8.....YYYYYYYYYYYYY.....8.8..........8.....Xxxxxxxxx
+xxxxxxxxxX...8....................cYYYYYYYYYYYc....................8...Xxxxxxxxx
+xxxxxxxxxXX.....8.8.8..8.........ccYYYYYYYYYYYcc........8...8.8.8.....XXxxxxxxxx
+xxxxxxxxxxXX...............8...XccYYYYYYYYYYYYYccX...8............8..XXxxxxxxxxx
+xxxxxxxxxxxXX........8..8...XXXXcYYYYYYYYYYYYYYYcXXXX...8..8........XXxxxxxxxxxx
+xxxxxxxxxxxxXXa111accCCCCCCXXXXXcYYYYYYYYYYYYYYYcXXXXXCCCCCCccb111bXXxxxxxxxxxxx
+xxxxxxxxxxxcc...............AA1.cccYYYYYYYYYYYccc.1BB...............ccxxxxxxxxxx
+xxxxxxxxxxcc...8.8..8.8.....cc1...ccYYYYYYYYYcc...1cc.......8..8.8.8.ccxxxxxxxxx
 xxxxxxxxxcc.8...8......8.8...ccc...ccccccccccc...ccc...8.8.8..8.......ccxxxxxxxx
 xxxxxxxxxc.8..8....8.8........ccc...............ccc.....8....8..8.8....cxxxxxxxx
 xxxxxxxxxc..8..8.8....8.8.8.5.cxcc.............ccxc.5.8.8.8....8.8...8.cxxxxxxxx
@@ -505,6 +500,72 @@ xxxxxxxxxcc...5..8..8.8....8.ccxxc.............cxxcc8.....8....8..5.8.ccxxxxxxxx
 xxxxxxxxxxcc8......8....8.8.ccxxcc.............ccxxcc.8.8....8....8..ccxxxxxxxxx
 xxxxxxxxxxxcc..............ccxxxc...............cxxxcc..............ccxxxxxxxxxx
 xxxxxxxxxxxxccccccccccccccccxxxxcccccccc@ccccccccxxxxccccccccccccccccxxxxxxxxxxx
+ENDMAP
+
+NAME:       orb_original
+TAGS:       orb_chamber
+MARKER: Z = lua:item_pickup_change_flags { \
+            level_flags="!no_tele_control", item="auto" \
+        }
+KITEM:  Z = Orb of Zot
+KMASK:  Z1! = no_item_gen
+COLOUR: G = magenta
+MONS:   patrolling Orb Guardian
+MAP
+   ccccccccc
+  ccccccccccc
+ccccccccccccccc
+ccccccccccccccc
+ ccccccccccccc
+  ccccccccccc
+  XXXXXXXXXXX
+ XXX...1...XXX
+ XX..1...1..XX
+ X1...!!!...1X
+ ...1.GZG.1...
+ X1...!!!...1X
+ XX..1...1..XX
+ XXX...1...XXX
+  XXXXXXXXXXX
+  ccccccccccc
+ ccccccccccccc
+ccccccccccccccc
+ccccccccccccccc
+  ccccccccccc
+   ccccccccc
+ENDMAP
+
+NAME:   orb_monky_inset
+TAGS:   orb_chamber
+WEIGHT: 5
+MARKER: Z = lua:item_pickup_change_flags { \
+            level_flags="!no_tele_control", item="auto" \
+        }
+KITEM:  Z = Orb of Zot
+KMASK:  Z1! = no_item_gen
+MONS:   patrolling Orb Guardian
+MAP
+   ccccccccc
+  ccccccccccc
+ccccccccccccccc
+ccccccccccccccc
+ ccccccccccccc
+  ccccccccccc
+  XXXXXXXXXXX
+ XXXX.....XXXX
+ XXX..X1X..XXX
+ X1..1XXX1..1X
+ ...1XXXXX1...
+ X1..1XXX1..1X
+ XXX..X1X..XXX
+ XXXX.....XXXX
+  X.XXX.XXX.X 
+  X..1...1..X
+ XX1..!!!..1XX
+cX...1!Z!1...Xc
+cXX1..!!!..1XXc
+  XXXXXXXXXXX
+   ccccccccc
 ENDMAP
 
 
