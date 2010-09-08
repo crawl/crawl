@@ -1488,8 +1488,9 @@ static bool _mons_has_path_to_player(const monster* mon, bool want_move = false)
     // known to the player and assuming unknown terrain to be traversable.
     monster_pathfind mp;
     const int range = mons_tracking_range(mon);
+    // Use a large safety margin.  x4 should be ok.
     if (range > 0)
-        mp.set_range(range);
+        mp.set_range(range * 4);
 
     if (mp.init_pathfind(mon, you.pos(), true, false, true))
         return (true);
@@ -1545,11 +1546,7 @@ bool mons_is_safe(const monster* mon, const bool want_move,
                        // Only seen through glass walls or within water?
                        // Assuming that there are no water-only/lava-only
                        // monsters capable of throwing or zapping wands.
-                    || ((!you.see_cell_no_trans(mon->pos())
-                         || mons_class_habitat(mon->type) == HT_WATER
-                         || mons_class_habitat(mon->type) == HT_LAVA
-                         || mons_is_stationary(mon))
-                        && !mons_can_hurt_player(mon, want_move)));
+                    || !mons_can_hurt_player(mon, want_move));
 
 #ifdef CLUA_BINDINGS
     if (consider_user_options)
