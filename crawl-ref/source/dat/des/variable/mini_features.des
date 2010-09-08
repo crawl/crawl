@@ -770,6 +770,594 @@ MAP
 vvvv@vvvv
 ENDMAP
 
+NAME:    minmay_hedge_maze
+TAGS:    extra luniq_mini mini_float
+DEPTH:   D, Lair
+MONS:    bush
+SHUFFLE: ABC
+SUBST:   A=. , BC=1
+MAP
+1111111@111
+@...C.1.B.1
+1A1.1.1.1.1
+1.1.1.B.A.@
+1.1B1.1.1C1
+1.....A...1
+1C1.111A1C1
+1.A.B.C.1.1
+1.1B1.1.1.1
+1...A.B...1
+1.1A1C111B1
+1.C.......1
+1111111@111
+ENDMAP
+
+NAME:  minmay_gold_behind_plants
+TAGS:  extra luniq_mini no_monster_gen
+DEPTH: D
+MONS:  plant
+MAP
+11111
+1$$$1
+1$$$1
+1$$$1
+11111
+ENDMAP
+
+NAME:   minmay_crystal_room
+TAGS:   extra luniq_mini mini_float
+DEPTH:  D, Elf
+NSUBST: ? = 1:b / *:?
+SUBST:  ? = bbbbb@
+MAP
+b?b?b?b?b
+?.......?
+b.......b
+?.......?
+b.......b
+?.......?
+b?b?b?b?b
+ENDMAP
+
+NAME:  minmay_strange_pillars
+TAGS:  extra luniq_mini
+DEPTH: D, Elf
+MAP
+ ...   ...
+..m.. ..m..
+.mbm...mbm.
+..m.. ..m..
+ ...   ...
+  .     .
+ ...   ...
+..m.. ..m..
+.mbm...mbm.
+..m.. ..m..
+ ...   ...
+ENDMAP
+
+NAME:  minmay_door_square
+TAGS:  extra luniq_mini
+DEPTH: D
+MAP
+.................
+.xxxxxxx+xxxxxxx.
+.xxxxxxx.xxxxxxx.
+.xxxxxxx.xxxxxxx.
+.xxx...+.+...xxx.
+.xxx.xxx.xxx.xxx.
+.xxx.xxx.xxx.xxx.
+.xxx+xxx.xxx+xxx.
+.+.............+.
+.xxx+xxx.xxx+xxx.
+.xxx.xxx.xxx.xxx.
+.xxx.xxx.xxx.xxx.
+.xxx...+.+...xxx.
+.xxxxxxx.xxxxxxx.
+.xxxxxxx.xxxxxxx.
+.xxxxxxx+xxxxxxx.
+.................
+ENDMAP
+
+NAME:  minmay_liquid_box
+TAGS:  extra luniq_mini mini_float no_monster_gen
+ITEM:  potion of water / nothing
+DEPTH: D
+SUBST: w : wWWld
+MAP
+xx+xx
+xwwwx
++www+
+xwwwx
+xx+xx
+ENDMAP
+
+NAME:  minmay_trapped_gold
+TAGS:  extra luniq_mini mini_float no_monster_gen
+DEPTH: D:16-, Crypt
+KFEAT: a = axe trap / bolt trap
+KFEAT: b = blade trap
+KFEAT: c = zot trap
+MAP
+   xxxxx
+xxxx$$$x
+@abc$$$x
+xxxx$$$x
+   xxxxx
+ENDMAP
+
+NAME:  minmay_fountain_box
+TAGS:  extra luniq_mini mini_float
+DEPTH: D, Elf
+KMASK: T = no_monster_gen
+KMASK: U = no_monster_gen
+SUBST: x : xxxxccbv
+MAP
+xxxx+xxxx
+x.......x
+x.T...T.x
+x.......x
++...U...+
+x.......x
+x.T...T.x
+x.......x
+xxxx+xxxx
+ENDMAP
+
+NAME:  minmay_tree_intersection
+TAGS:  extra luniq_mini mini_float
+DEPTH: D
+MAP
+xxx@xxx
+xxt.txx
+xtt.ttx
+@.....@
+xtt.ttx
+xxt.txx
+xxx@xxx
+ENDMAP
+
+NAME:  minmay_misc_feat_pillars
+TAGS:  extra luniq_mini
+DEPTH: D, Elf, Crypt
+SUBST: x : xxxxcvbmG
+MAP
+.............
+.x.x.x.x.x.x.
+.............
+ .x.x.x.x.x.
+ ...........
+ENDMAP
+
+NAME:  minmay_misc_feat_square
+TAGS:  extra luniq_mini
+DEPTH: D
+SUBST: x = x.
+KPROP: x = no_rtele_into
+MAP
+.......
+.xxxxx.
+.xxxxx.
+.xxxxx.
+.xxxxx.
+.xxxxx.
+.......
+ENDMAP
+
+NAME:  minmay_misc_feat_plants
+TAGS:  extra luniq_mini
+MONS:  plant, bush, fungus
+DEPTH: D
+SUBST: x : xxxxcvbmGt123
+MAP
+    ....
+  ........
+ ...x..x...
+ ..........
+..x......x..
+............
+............
+..x......x..
+ ..........
+ ...x..x...
+  ........
+    ....
+ENDMAP
+
+NAME:  minmay_misc_feat_rows
+TAGS:  extra luniq_mini
+DEPTH: D, Elf, Crypt
+MAP
+.......
+.xxxxx.
+.......
+.xxxxx.
+.......
+.xxxxx.
+.......
+.xxxxx.
+.......
+.xxxxx.
+.......
+ENDMAP
+
+NAME:  minmay_misc_feat_diagonals
+TAGS:  extra luniq_mini
+DEPTH: D, Elf
+SUBST: x : xmb
+MAP
+...............
+.x..x..x..x..x.
+..x..x..x..x...
+...x..x..x..x..
+.x..x..x..x..x.
+..x..x..x..x...
+ ............
+ENDMAP
+
+NAME:  minmay_misc_feat_doors
+TAGS:  extra mini_float luniq_mini
+DEPTH: D
+MAP
+x.x.x.x.x
+.........
+x.xx+xx.x
+..x...x..
+x.+...+.x
+..x...x..
+x.xx+xx.x
+.........
+x.x.x.x.x
+ENDMAP
+
+NAME:  minmay_misc_feat_encased
+TAGS:  extra mini_float luniq_mini
+DEPTH: D
+SUBST: c : bcvm
+SUBST: @ : +@
+MAP
+xxxxx@x
+@.....x
+x.ccc.x
+x.cbc.x
+x.ccc.x
+x.....@
+x@xxxxx
+ENDMAP
+
+NAME:  minmay_misc_feat_rugged
+TAGS:  extra mini_float luniq_mini
+DEPTH: D
+SUBST: A = x..., B = x.., C = x., D = xx.
+KPROP: BCD = no_rtele_into
+MAP
+xxxxxxxxxxxxxxxxxxxx
+xDDDDDDDDDDDDDDDDDDx
+xCCCCCCCCCCCCCCCCCCx
+xBBBBBBBBBBBBBBBBBBx
+xAAAAAAAAAAAAAAAAAAx
+@..................@
+xxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:  minmay_misc_feat_five
+TAGS:  extra luniq_mini
+DEPTH: D, Elf, Crypt
+SUBST: x : xxxxcvbm
+MAP
+...   ...
+.x.....x.
+....x....
+.x.....x.
+...   ...
+ENDMAP
+
+NAME:  minmay_misc_feat_chi
+TAGS:  extra luniq_mini
+DEPTH: D
+MAP
+..........
+.xx.....x.
+...x....x.
+....x..x..
+....xxx...
+...xxx....
+..x..x....
+.x....x...
+.x.....xx.
+..........
+ENDMAP
+
+NAME:   minmay_misc_feat_tower
+TAGS:   extra mini_float luniq_mini
+DEPTH:  D
+NSUBST: ? = 1:@ / *:?
+SUBST:  ? = @...
+SUBST:  X : xcvbmGT
+KMASK:  T = no_monster_gen
+MAP
+xx?xx   xx?xx
+x...xxxxx...x
+?.X.......X.?
+x...xxxxx...x
+xx.xxxxxxx.xx
+ x.xxxxxxx.x
+ x.xxxxxxx.x
+ x.xxxxxxx.x
+xx.xxxxxxx.xx
+x...xxxxx...x
+?.X.......X.?
+x...xxxxx...x
+xx?xx   xx?xx
+ENDMAP
+
+NAME:   minmay_misc_feat_enclosed
+TAGS:   extra luniq_mini
+DEPTH:  D
+SUBST:  X = xx.
+KPROP:  ' = no_rtele_into
+SUBST:  ' = .
+MAP
+.........
+.xxxXxxx.
+.xx'''xx.
+.x'''''x.
+.X'''''X.
+.x'''''x.
+.xx'''xx.
+.xxxXxxx.
+.........
+ENDMAP
+
+NAME:   minmay_misc_feat_room
+TAGS:   extra luniq_mini
+DEPTH:  D
+SUBST:  ? = GGGTUV
+KMASK:  T = no_monster_gen
+KMASK:  U = no_monster_gen
+MAP
+.......
+.xxxxx.
+.x...x.
+.+.?.+.
+.x...x.
+.xxxxx.
+.......
+ENDMAP
+
+NAME:   minmay_misc_feat_iff
+TAGS:   extra luniq_mini
+DEPTH:  D
+SUBST:  X : xcvb.
+MAP
+  ........
+ ...xxxx...
+..xxx..xxx..
+.xx......xx.
+.....XX.....
+....XXXX....
+....XXXX....
+.....XX.....
+.xx......xx.
+..xxx..xxx..
+ ...xxxx...
+  ........
+ENDMAP
+
+NAME:   minmay_misc_feat_columns
+TAGS:   extra luniq_mini
+DEPTH:  D, Elf, Crypt
+MAP
+...
+.x.
+.x....
+.x..x.
+....x....
+   .x..x.
+   ....x.
+      .x.
+      ...
+ENDMAP
+
+NAME:   minmay_misc_feat_cross
+TAGS:   extra luniq_mini
+DEPTH:  D, Elf, Crypt
+SUBST:  X : x.
+MAP
+...........
+.xxx.X.xxx.
+.xxx.X.xxx.
+.xxx.X.xxx.
+.....X.....
+.XXXXXXXXX.
+.....X.....
+.xxx.X.xxx.
+.xxx.X.xxx.
+.xxx.X.xxx.
+...........
+ENDMAP
+
+NAME:   minmay_misc_feat_ornament
+TAGS:   extra mini_float luniq_mini
+DEPTH:  D, Elf, Crypt
+MAP
+x@xxxxxxx@x
+x.x.....x.x
+x.x.x.x.x.x
+x...x.x...x
+xxxxx.xxxxx
+x...x.x...x
+x.x.x.x.x.x
+x.x.....x.x
+x@xxxxxxx@x
+ENDMAP
+
+NAME:   minmay_misc_feat_hallway
+TAGS:   extra mini_float luniq_mini
+DEPTH:  D, Crypt
+SUBST:  G : ..GGxb
+MAP
+xxx@xxx
+xG...Gx
+xxx.xxx
+xG...Gx
+xxx.xxx
+xG...Gx
+xxx.xxx
+xG...Gx
+xxx@xxx
+ENDMAP
+
+NAME:   minmay_misc_feat_alley
+TAGS:   extra mini_float luniq_mini
+DEPTH:  D, Elf, Crypt
+MAP
+xx@xx@xx
+x......x
+xxx..xxx
+x......x
+xx.xx.xx
+x......x
+x.xxxx.x
+x......x
+xx.xx.xx
+x......x
+xxx..xxx
+x......x
+xx@xx@xx
+ENDMAP
+
+NAME:   minmay_misc_feat_nine_boxes
+TAGS:   extra luniq_mini
+DEPTH:  D
+NSUBST: A = 1:. / *:x, B = 1:. / *:x, C = 1:. / *:x
+NSUBST: D = 1:. / *:x, E = 1:. / *:x, F = 1:. / *:x
+NSUBST: G = 1:. / *:x, H = 1:. / *:x, I = 1:. / *:x
+MAP
+...............
+.xAx..xBx..xCx.
+.A.A..B.B..C.C.
+.xAx..xBx..xCx.
+...............
+.xDx..xEx..xFx.
+.D.D..E.E..F.F.
+.xDx..xEx..xFx.
+...............
+.xGx..xHx..xIx.
+.G.G..H.H..I.I.
+.xGx..xHx..xIx.
+...............
+ENDMAP
+
+NAME:   minmay_misc_feat_four_crosses
+TAGS:   extra luniq_mini
+DEPTH:  D
+SUBST:  c : ccx
+SUBST:  G : GGGb
+MAP
+... ... ...
+.G...G...G.
+...c...c...
+ .ccc.ccc.
+...c...c...
+.G...G...G.
+...c...c...
+ .ccc.ccc.
+...c...c...
+.G...G...G.
+... ... ...
+ENDMAP
+
+NAME:   minmay_misc_feat_roman
+TAGS:   extra luniq_mini
+DEPTH:  D
+MAP
+.............
+.x.xxx.xxx.x.
+.x...x.x...x.
+.xxx.x.x.xxx.
+.............
+.xxx.x.x.xxx.
+.x.x.....x.x.
+.x.xxx.xxx.x.
+.............
+ENDMAP
+
+NAME:   minmay_misc_feat_more_columns
+TAGS:   extra luniq_mini
+DEPTH:  D
+SUBST:  X : x.
+MAP
+......   ......
+.x...........x.
+.X.x.......x.X.
+.X.X.x...x.X.X.
+.X.X.X.x.X.X.X.
+.X.X.X.x.X.X.X.
+.X.X.x...x.X.X.
+.X.x.......x.X.
+.x...........x.
+......   ......
+ENDMAP
+
+NAME:   minmay_misc_feat_x
+TAGS:   extra luniq_mini
+DEPTH:  D
+MAP
+........    ........
+.xxxx....  ....xxxx.
+...xxxx......xxxx...
+ ....xxxx..xxxx.... 
+  .....xxxxxx.....  
+  .....xxxxxx.....  
+ ....xxxx..xxxx.... 
+...xxxx......xxxx...
+.xxxx....  ....xxxx.
+........    ........
+ENDMAP
+
+NAME:   minmay_misc_feat_secret_circle
+TAGS:   extra luniq_mini
+DEPTH:  D
+SUBST:  X : x.
+SUBST:  Y : x.
+KPROP:  ' = no_rtele_into
+SUBST:  ' = .
+MAP
+....................
+.x................x.
+..xx............xx..
+..x.x..........x.x..
+...x.xx......xx.x...
+....xx.x....x.xx....
+....x.x.xYYx.x.x....
+.....x.xx''xx.x.....
+......xx''''xx......
+......X''''''X......
+......X''''''X......
+......xx''''xx......
+.....x.xx''xx.x.....
+....x.x.xYYx.x.x....
+....xx.x....x.xx....
+...x.xx......xx.x...
+..x.x..........x.x..
+..xx............xx..
+.x................x.
+....................
+ENDMAP
+
+NAME:   minmay_misc_feat_tiny
+TAGS:   extra luniq_mini
+DEPTH:  D
+MAP
+......
+.xx.x.
+.x.xx.
+.xx.x.
+.x.xx.
+......
+ENDMAP
+
 
 #######################################################################
 #
