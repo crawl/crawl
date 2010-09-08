@@ -499,7 +499,7 @@ static void _get_status_lights(std::vector<status_light>& out)
         STATUS_BEHELD, DUR_LIQUID_FLAMES, DUR_MISLED, DUR_POISONING,
         STATUS_SICK, STATUS_ROT, STATUS_NET, STATUS_GLOW, DUR_SWIFTNESS,
         STATUS_SPEED, DUR_DEATH_CHANNEL, DUR_TELEPATHY, DUR_BREATH_WEAPON,
-        DUR_POWERED_BY_DEATH,
+        DUR_POWERED_BY_DEATH, DUR_TRANSFORMATION,
     };
 
     status_info inf;
@@ -1804,8 +1804,8 @@ std::string _status_mut_abilities()
     std::vector<std::string> status;
 
     const int statuses[] = {
-        DUR_PARALYSIS, DUR_PETRIFIED, DUR_SLEEP, DUR_BREATH_WEAPON,
-        STATUS_BEHELD, DUR_LIQUID_FLAMES, DUR_ICY_ARMOUR,
+        DUR_TRANSFORMATION, DUR_PARALYSIS, DUR_PETRIFIED, DUR_SLEEP, 
+        DUR_BREATH_WEAPON, STATUS_BEHELD, DUR_LIQUID_FLAMES, DUR_ICY_ARMOUR,
         DUR_DEFLECT_MISSILES, DUR_REPEL_MISSILES, DUR_PRAYER,
         STATUS_REGENERATION, DUR_DEATHS_DOOR, DUR_STONEMAIL, DUR_STONESKIN,
         DUR_TELEPORT, DUR_DEATH_CHANNEL, DUR_PHASE_SHIFT, DUR_SILENCE,
@@ -1844,9 +1844,6 @@ std::string _status_mut_abilities()
 
     text += comma_separated_line(status.begin(), status.end(), ", ", ", ");
     text += "\n";
-
-    if (you.duration[DUR_TRANSFORMATION])
-        text += transform_desc(true) + "\n";
 
     //----------------------------
     // print mutation information

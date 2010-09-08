@@ -5,6 +5,7 @@
 #include "mutation.h"
 #include "player.h"
 #include "skills2.h"
+#include "transform.h"
 
 // Status defaults for durations that are handled straight-forwardly.
 struct duration_def
@@ -186,6 +187,7 @@ static void _describe_rotting(status_info* inf);
 static void _describe_sickness(status_info* inf);
 static void _describe_speed(status_info* inf);
 static void _describe_poison(status_info* inf);
+static void _describe_transform(status_info* inf);
 
 void fill_status_info(int status, status_info* inf)
 {
@@ -363,6 +365,10 @@ void fill_status_info(int status, status_info* inf)
         inf->long_text = "You have a " + desc + "bond with your blade.";
         break;
     }
+
+    case DUR_TRANSFORMATION:
+        _describe_transform(inf);
+        break;
 
     default:
         if (!found)
@@ -630,4 +636,60 @@ static void _describe_burden(status_info* inf)
         }
         break;
     }
+}
+
+static void _describe_transform(status_info* inf)
+{
+    const bool vampbat = (you.species == SP_VAMPIRE && player_in_bat_form());
+    const bool expire  = dur_expiring(DUR_TRANSFORMATION) && !vampbat;
+
+    switch (you.attribute[ATTR_TRANSFORMATION])
+    {
+    case TRAN_BAT:
+        inf->light_text     = "Bat";
+        inf->short_text     = "bat-form";
+        inf->long_text      = "You are in ";
+        if (vampbat)
+            inf->long_text += "vampire ";
+        inf->long_text     += "bat-form.";
+        break;
+    case TRAN_BLADE_HANDS:
+        inf->light_text = "Blades";
+        inf->short_text = "blade hands";
+        inf->long_text  = "You have blades for hands.";
+        break;
+    case TRAN_DRAGON:
+        inf->light_text = "Dragon";
+        inf->short_text = "dragon-form";
+        inf->long_text  = "You are in dragon-form.";
+        break;
+    case TRAN_ICE_BEAST:
+        inf->light_text = "Ice";
+        inf->short_text = "ice-form";
+        inf->long_text  = "You are an ice creature.";
+        break;
+    case TRAN_LICH:
+        inf->light_text = "Lich";
+        inf->short_text = "lich-form";
+        inf->long_text  = "You are in lich-form.";
+        break;
+    case TRAN_PIG:
+        inf->light_text = "Pig";
+        inf->short_text = "pig-form";
+        inf->long_text  = "You are a filthy swine.";
+        break;
+    case TRAN_SPIDER:
+        inf->light_text = "Spider";
+        inf->short_text = "spider-form";
+        inf->long_text  = "You are in spider-form.";
+        break;
+    case TRAN_STATUE:
+        inf->light_text = "Statue";
+        inf->short_text = "statue-form";
+        inf->long_text  = "You are a statue.";
+        break;
+    }
+
+    inf->light_colour = dur_colour(GREEN, expire);
+    _mark_expiring(inf, expire);
 }
