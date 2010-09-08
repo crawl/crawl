@@ -585,7 +585,8 @@ void view_update_at(const coord_def &pos)
         ? _viewmap_flash_colour()
         : you.flash_colour;
     int cell_colour =
-        flash_colour && env.map_knowledge(pos).monster() == MONS_NO_MONSTER
+        flash_colour &&
+        (env.map_knowledge(pos).monster() == MONS_NO_MONSTER || !you.berserk())
             ? real_colour(flash_colour)
             : g.col;
 
@@ -921,7 +922,8 @@ void viewwindow(bool show_updates)
         {
             if (you.see_cell(gc))
             {
-                if (env.map_knowledge(gc).monster() == MONS_NO_MONSTER)
+                if (env.map_knowledge(gc).monster() == MONS_NO_MONSTER ||
+                    !you.berserk())
                     cell->colour = real_colour(flash_colour);
             }
             else
