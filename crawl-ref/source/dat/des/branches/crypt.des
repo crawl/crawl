@@ -1,9 +1,246 @@
 ##############################################################################
 # crypt.des: Maps for the Crypt.
+# - entry vaults
+# - minivaults
+# - branch end vaults
+##############################################################################
+
+
+##############################################################################
+# Crypt entry vaults
 ##############################################################################
 
 ##############################################################################
+NAME:   dummy_crypt_entry
+WEIGHT: 50
+TAGS:   crypt_entry
+MAP
+O
+ENDMAP
+
+##############################################################################
+NAME:   minmay_crypt_entry_simple_round
+ORIENT: float
+TAGS:   crypt_entry
+MONS:   place:Crypt:1
+MAP
+.........
+..ccccc..
+..c...c..
+.cc.1.cc.
+.c.....c.
+.+.1O1.c.
+.c.....c.
+.cc.1.cc.
+..c...c..
+..ccccc..
+.........
+ENDMAP
+
+##############################################################################
+NAME:   minmay_crypt_entry_simple_box
+ORIENT: float
+TAGS:   crypt_entry
+MONS:   place:Crypt:1
+MAP
+.......
+.cc.cc.
+.c1c1c.
+..cOc..
+.c1c1c.
+.cc.cc.
+.......
+ENDMAP
+
+##############################################################################
+NAME:   minmay_crypt_entry_simple_statues
+ORIENT: float
+TAGS:   crypt_entry
+MONS:   place:Crypt:1
+MAP
+...........
+.x.......x.
+...........
+...GxxxG...
+...xx1xx...
+....1O1x...
+...xx1xx...
+...GxxxG...
+...........
+.x.......x.
+...........
+ENDMAP
+
+##############################################################################
+NAME:   minmay_crypt_entry_simple_sparse
+ORIENT: float
+TAGS:   crypt_entry
+MONS:   place:Crypt:1
+MAP
+...........
+.x...x...x.
+...........
+...x.1.x...
+...........
+.x.1.O.1.x.
+...........
+...x.1.x...
+...........
+.x...x...x.
+...........
+ENDMAP
+
+##############################################################################
+NAME:   minmay_crypt_entry_simple_walls
+ORIENT: float
+TAGS:   crypt_entry
+MONS:   place:Crypt:1
+MAP
+..........
+.xxxxxxxx.
+.x........
+.x1xxxxxx.
+.x......x.
+.x.xxxx1x.
+.x.x....x.
+.x.x.O..x.
+.x.x....x.
+.x.xxxx1x.
+.x......x.
+.x1xxxxxx.
+.x........
+.xxxxxxxx.
+..........
+ENDMAP
+
+##############################################################################
+NAME:   minmay_crypt_entry_simple_corners
+ORIENT: float
+TAGS:   crypt_entry
+MONS:   place:Crypt:1
+MAP
+...........
+.xx.....xx.
+.x1.....1x.
+....x.x....
+...xx.xx...
+.....O.....
+...xx.xx...
+....x.x....
+.x1.....1x.
+.xx.....xx.
+...........
+ENDMAP
+
+##############################################################################
+NAME:   minmay_crypt_entry_simple_plaza
+ORIENT: float
+TAGS:   crypt_entry
+MONS:   place:Crypt:1
+MAP
+......................
+..............xxxxxxx.
+.....G...G...Gx..1..x.
+..............x.....x.
+...........1..+..O.1x.
+..............x.....x.
+.....G...G...Gx..1..x.
+..............xxxxxxx.
+......................
+ENDMAP
+
+##############################################################################
+NAME:   minmay_crypt_entry_skeletal_spiral
+ORIENT: float
+TAGS:   crypt_entry
+MONS:   small skeleton / large skeleton / skeletal warrior
+MAP
+...........
+.xxxxxxxxx.
+.x..1..1.x.
+.x1xxxxx.x.
+.x.x111x1x.
+.x.x1O1x.x.
+.x1x111x1x.
+.x.x.xxx.x.
+.x.x1.1.1x.
+.x1xxxxxxx.
+...........
+ENDMAP
+
+##############################################################################
+NAME:    minmay_crypt_entry_necro_gods
+ORIENT:  float
+WEIGHT:  30
+TAGS:    crypt_entry
+SHUFFLE: AB
+KFEAT:   A = altar_kikubaaqudgha
+KFEAT:   B = altar_yredelemnul
+MAP
+...........
+.G.ccccc.G.
+...c...c...
+.ccc.A.ccc.
+.c.......c.
+.+...O...c.
+.c.......c.
+.ccc.B.ccc.
+...c...c...
+.G.ccccc.G.
+...........
+ENDMAP
+
+##############################################################################
+NAME:    minmay_crypt_entry_nasty_monster
+ORIENT:  float
+TAGS:    crypt_entry
+MONS:    bone dragon w:25 / lich / shadow dragon w:5, curse skull
+SHUFFLE: 1X/2Y
+SUBST:   X=., Y=x 
+MAP
+.........
+.x.....x.
+.xx...xx.
+..x.1.x..
+..x.X.x..
+.xx...xx.
+.x.....x.
+.x..O..x.
+.x.....x.
+.xx...xx.
+..xxxxx..
+.........
+ENDMAP
+
+##############################################################################
+NAME:   minmay_crypt_entry_vampire_x
+ORIENT: float
+TAGS:   crypt_entry
+MONS:   vampire, vampire knight / vampire mage
+SUBST:  V = VVVY
+MAP
+................
+.xxxxx....xxxxx.
+.x...xx..xx...x.
+.x.O..xxxx..1.x.
+.x..2..xx.....x.
+.xx..V....V..xx.
+..xx........xx..
+...xx..cc..xx...
+...xx..cc..xx...
+..xx........xx..
+.xx..V....V..xx.
+.x.....xx.....x.
+.x.1..xxxx..1.x.
+.x...xx..xx.....
+.xxxxx....xxx...
+................
+ENDMAP
+
+
+##############################################################################
 # Crypt minivaults
+##############################################################################
 
 ##############################################################################
 # Dead fish
@@ -216,6 +453,7 @@ ENDMAP
 
 ##############################################################################
 # Crypt ends
+##############################################################################
 
 ##############################################################################
 #       churchlike map with customizeable monster sets
