@@ -45,7 +45,7 @@ static duration_def duration_data[] =
     { DUR_DIVINE_VIGOUR, false,
       0, "", "divinely vigorous", "You are divinely vigorous." },
     { DUR_EXHAUSTED, false,
-      0, "", "exhausted", "You are exhausted." },
+      YELLOW, "Fatig", "exhausted", "You are exhausted." },
     { DUR_FIRE_SHIELD, true,
       BLUE, "RoF", "immune to fire clouds", "" },
     { DUR_ICY_ARMOUR, true,
