@@ -263,7 +263,7 @@ static bool _valid_weapon_swap(const item_def &item)
 // If force is true, don't check weapon inscriptions.
 // (Assuming the player was already prompted for that.)
 bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
-                  bool force, bool show_unwield_msg)
+                  bool force, bool show_unwield_msg, bool show_wield_msg)
 {
     if (inv_count() < 1)
     {
@@ -380,7 +380,8 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     // Go ahead and wield the weapon.
     equip_item(EQ_WEAPON, item_slot, show_weff_messages);
 
-    mpr(new_wpn.name(DESC_INVENTORY_EQUIP).c_str());
+    if (show_wield_msg)
+        mpr(new_wpn.name(DESC_INVENTORY_EQUIP).c_str());
 
     // Warn player about low str/dex or throwing skill.
     if (show_weff_messages)
