@@ -1,50 +1,29 @@
 %%%%
 pick-up
 
-<h>Picking up and dropping items</h>
-
-You will pick up and drop items very often. There are four ways to do this:
-
-* Single items
-* Category shortcuts
-* Regular expressions
-
-Note that selecting an already selected item will deselect it.
-
-
+                   <h>Picking up and dropping items</h>
 <h>Item letters</h>
-
 Pressing an item's letter key will select the item.
 
-
 <h>Regular expressions</h>
-
-By pressing <w>Ctrl-F</w> you can enter a word (which could even be a
-regular expression). All matching items will be selected.
-
+You can press <w>Ctrl-F</w> to enter a word (or a regular expression).
+All matching items will be selected.
 
 <h>Category shortcuts</w>
-
-You can quickly select items by type by pressing
-<w>(</w>         weapons
-<w>)</w>         ammunition
-<w>[</w>         armour
-<w>=</w> or <w>"</w>    jewellery
-<w>!</w>         potions
-<w>?</w>         scrolls
-<w>:</w> or <w>+</w>    books
-<w>/</w>         wands
-<w>%</w>         food
+You can quickly select items by type by pressing:
+<w>(</w>         weapons         <w>=</w> or <w>"</w>    jewellery      <w>:</w> or <w>+</w>    books
+<w>)</w>         ammunition      <w>!</w>         potions        <w>/</w>         wands
+<w>[</w>         armour          <w>?</w>         scrolls        <w>%</w>         food
 <w>&</w>         carrion (corpses, skeletons, useless chunks)
 
-Apart from these, there are the general shortcuts
+Apart from these, there are the general shortcuts:
 <w>-</w>         deselect everything
 <w>,</w>         select everything
 <w>*</w>         invert selection
 
-Note that for dropping, the <w>,</w> and <w>-</w> commands use the
-<w>drop_filter</w> option which narrows the range of items to be (de)selected.
-The default value of the option is useless items.
+Note that for dropping, the <w>,</w> and <w>-</w> commands use the <w>drop_filter</w> option,
+which narrows the range of items to be (de)selected. The default value
+of the option is useless items.
 %%%%
 stash-search.prompt
 
