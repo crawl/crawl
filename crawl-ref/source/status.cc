@@ -558,7 +558,7 @@ static void _describe_airborne(status_info* inf)
     }
     else
     {
-        inf->light_colour = uncancel ? GREEN : BLUE;
+        inf->light_colour = uncancel ? BLUE : MAGENTA;
         inf->light_text   = "Lev";
         inf->short_text   = "levitating";
         inf->long_text    = "You are hovering above the floor.";
