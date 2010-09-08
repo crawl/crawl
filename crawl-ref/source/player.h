@@ -728,6 +728,7 @@ int player_spec_summ(void);
 int player_speed(void);
 int player_ponderousness();
 int player_evokable_levitation();
+int player_evokable_invis();
 
 int player_spell_levels(void);
 

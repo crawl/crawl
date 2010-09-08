@@ -3234,8 +3234,9 @@ void bolt::affect_player_enchantment()
         break;
 
     case BEAM_INVISIBILITY:
-        potion_effect( POT_INVISIBILITY, ench_power );
-        contaminate_player( 1 + random2(2), effect_known );
+        you.attribute[ATTR_INVIS_UNCANCELLABLE] = 1;
+        potion_effect(POT_INVISIBILITY, ench_power);
+        contaminate_player(1 + random2(2), effect_known);
         obvious_effect = true;
         nasty = false;
         nice  = true;

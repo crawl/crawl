@@ -338,8 +338,13 @@ static void _unequip_artefact_effect(const item_def &item, bool *show_msgs=NULL)
         you.duration[DUR_LEVITATION] = 1;
     }
 
-    if (proprt[ARTP_INVISIBLE] != 0 && you.duration[DUR_INVIS] > 1)
+    if (proprt[ARTP_INVISIBLE] != 0
+        && you.duration[DUR_INVIS] > 1
+        && !you.attribute[ATTR_INVIS_UNCANCELLABLE]
+        && !player_evokable_invis())
+    {
         you.duration[DUR_INVIS] = 1;
+    }
 
     if (proprt[ARTP_MAGICAL_POWER])
         calc_mp();
@@ -953,9 +958,13 @@ static void _unequip_armour_effect(item_def& item)
             mpr("You feel less perceptive.");
         break;
 
-    case SPARM_DARKNESS:        // I do not understand this {dlb}
-        if (you.duration[DUR_INVIS])
+    case SPARM_DARKNESS:
+        if (you.duration[DUR_INVIS]
+            && !you.attribute[ATTR_INVIS_UNCANCELLABLE]
+            && !player_evokable_invis())
+        {
             you.duration[DUR_INVIS] = 1;
+        }
         break;
 
     case SPARM_STRENGTH:
@@ -1415,8 +1424,12 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg)
         break;
 
     case RING_INVISIBILITY:
-        if (you.duration[DUR_INVIS])
+        if (you.duration[DUR_INVIS]
+            && !you.attribute[ATTR_INVIS_UNCANCELLABLE]
+            && !player_evokable_invis())
+        {
             you.duration[DUR_INVIS] = 1;
+        }
         break;
 
     case RING_MAGICAL_POWER:

@@ -1462,6 +1462,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_EVOKE_TURN_VISIBLE:
+        ASSERT(!you.attribute[ATTR_INVIS_UNCANCELLABLE]);
         mpr("You feel less transparent.");
         you.duration[DUR_INVIS] = 1;
         break;
@@ -2341,9 +2342,7 @@ std::vector<talent> your_talents(bool check_confused)
     if (wearing_amulet(AMU_RAGE) || scan_artefacts(ARTP_BERSERK))
         _add_talent(talents, ABIL_EVOKE_BERSERK, check_confused);
 
-    if (player_equip( EQ_RINGS, RING_INVISIBILITY )
-        || player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_DARKNESS )
-        || scan_artefacts( ARTP_INVISIBLE ))
+    if (player_evokable_invis() && !you.attribute[ATTR_INVIS_UNCANCELLABLE])
     {
         // Now you can only turn invisibility off if you have an
         // activatable item.  Wands and potions will have to time

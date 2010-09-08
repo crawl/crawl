@@ -178,6 +178,7 @@ enum attribute_type
     ATTR_SHADOWS,              // Lantern of shadows effect.
     ATTR_FRUIT_FOUND,          // Mask of fruit types found.
     ATTR_LEV_UNCANCELLABLE,    // Potion or spell of levitation is in effect.
+    ATTR_INVIS_UNCANCELLABLE,  // Potion/spell/wand of invis is in effect.
     NUM_ATTRIBUTES
 };
 
