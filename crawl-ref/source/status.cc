@@ -97,7 +97,9 @@ static duration_def duration_data[] =
     { DUR_QUAD_DAMAGE, true,
       BLUE, "Quad", "", "" },
     { DUR_SILENCE, true,
-      BLUE, "Sil", "silence", "You radiate silence." }
+      BLUE, "Sil", "silence", "You radiate silence." },
+    { DUR_STEALTH, false,
+      BLUE, "Stlth", "", "" },
 };
 
 static int duration_index[NUM_DURATIONS];
