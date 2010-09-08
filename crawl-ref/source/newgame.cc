@@ -660,7 +660,7 @@ static void _construct_species_menu(const newgame_def* ng,
 
     // Add all the special button entries
     tmp = new TextItem();
-    tmp->set_text("+ - Viable Species");
+    tmp->set_text("+ - Viable species");
     min_coord.x = X_MARGIN;
     min_coord.y = SPECIAL_KEYS_START_Y;
     max_coord.x = min_coord.x + tmp->get_text().size();
