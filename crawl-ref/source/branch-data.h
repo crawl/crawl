@@ -5,6 +5,7 @@
 #ifndef BRANCHDATA_H
 #define BRANCHDATA_H
 
+#include "colour.h"
 #include "enum.h"
 #include "mon-pick.h"
 
@@ -51,7 +52,7 @@ Branch branches[] = {
       DNGN_ENTER_ELVEN_HALLS, DNGN_RETURN_FROM_ELVEN_HALLS,
       "Elven Halls", "the Elven Halls", "Elf",
       NULL,
-      40, true, DARKGREY, LIGHTGREY,
+      40, true, WHITE, ETC_ELVEN_BRICK,
       mons_hallelf_rare, mons_hallelf_level,
       NULL, NULL, NULL, NULL,
       8, 'E', false, true, 0 },
