@@ -2240,8 +2240,11 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_RESIST_POISON, delay, "Your poison resistance expires.");
     _decrement_a_duration(DUR_SLAYING, delay, "You feel less lethal.");
 
-    _decrement_a_duration(DUR_INVIS, delay, "You flicker back into view.",
-                          coinflip(), "You flicker for a moment.");
+    if (_decrement_a_duration(DUR_INVIS, delay, "You flicker back into view.",
+                              coinflip(), "You flicker for a moment."))
+    {
+        you.attribute[ATTR_INVIS_UNCANCELLABLE] = 0;
+    }
 
     _decrement_a_duration(DUR_BARGAIN, delay, "You feel less charismatic.");
     _decrement_a_duration(DUR_CONF, delay, "You feel less confused.");

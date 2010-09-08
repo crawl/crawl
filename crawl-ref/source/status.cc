@@ -315,7 +315,10 @@ void fill_status_info(int status, status_info* inf)
     }
 
     case DUR_INVIS:
-        inf->light_colour = dur_colour(BLUE, dur_expiring(DUR_INVIS));
+        if (you.attribute[ATTR_INVIS_UNCANCELLABLE])
+            inf->light_colour = dur_colour(BLUE, dur_expiring(DUR_INVIS));
+        else
+            inf->light_colour = dur_colour(MAGENTA, dur_expiring(DUR_INVIS));
         inf->light_text   = "Invis";
         inf->short_text   = "invisible";
         if (you.backlit())
