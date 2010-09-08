@@ -3108,21 +3108,6 @@ static int _prompt_ring_to_remove(int new_ring)
     const item_def *left  = you.slot_item(EQ_LEFT_RING, true);
     const item_def *right = you.slot_item(EQ_RIGHT_RING, true);
 
-    if (left->cursed() && right->cursed())
-    {
-        mprf("You're already wearing two cursed rings!");
-        return (-1);
-    }
-    else if (left->cursed() || right->cursed())
-    {
-        const int eqslot = left->cursed() ? EQ_RIGHT_RING : EQ_LEFT_RING;
-
-        if (!check_warning_inscriptions(you.inv[you.equip[eqslot]], OPER_REMOVE))
-            return (-1);
-
-        return (you.equip[eqslot]);
-    }
-
     mesclr();
     mprf("Wearing %s.", you.inv[new_ring].name(DESC_NOCAP_A).c_str());
 
@@ -3154,9 +3139,6 @@ static int _prompt_ring_to_remove(int new_ring)
 
     const int eqslot = (c == lslot || c == '<') ? EQ_LEFT_RING
                                                 : EQ_RIGHT_RING;
-
-    if (!check_warning_inscriptions(you.inv[you.equip[eqslot]], OPER_REMOVE))
-        return (-1);
 
     return (you.equip[eqslot]);
 }
@@ -3288,10 +3270,11 @@ static bool _swap_rings(int ring_slot)
     int unwanted;
 
     // Don't prompt if both rings are of the same type.
-    if (lring->sub_type == rring->sub_type
-        && lring->plus == rring->plus
-        && lring->plus2 == rring->plus2
-        && !is_artefact(*lring) && !is_artefact(*rring))
+    if ((lring->sub_type == rring->sub_type
+         && lring->plus == rring->plus
+         && lring->plus2 == rring->plus2
+         && !is_artefact(*lring) && !is_artefact(*rring)) ||
+        lring->cursed() || rring->cursed())
     {
         if (lring->cursed())
             unwanted = you.equip[EQ_RIGHT_RING];
