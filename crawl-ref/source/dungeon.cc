@@ -4561,12 +4561,19 @@ static coord_def _find_random_grid(int grid, unsigned mask)
     return coord_def(0, 0);
 }
 
+static bool _connect_spotty(const coord_def& from);
+
 static void _connect_vault(const vault_placement &vp)
 {
     std::vector<coord_def> exc = _external_connection_points(vp, vp.exits);
     for (int i = 0, size = exc.size(); i < size; ++i)
     {
         const coord_def &p = exc[i];
+
+        // Try to connect vaults in a spotty fashion in the mines.
+        if (player_in_branch(BRANCH_ORCISH_MINES) && _connect_spotty(p))
+            continue;
+
         const coord_def floor = _find_random_grid(DNGN_FLOOR, MMT_VAULT);
 
         if (!floor.x && !floor.y)
@@ -6476,6 +6483,75 @@ static object_class_type _item_in_shop(shop_type shop_type)
 
     return (OBJ_RANDOM);
 }                               // end item_in_shop()
+
+// Keep seeds away from the borders so we don't end up with a
+// straight wall.
+bool _spotty_seed_ok(const coord_def& p)
+{
+    const int margin = 4;
+    return (p.x >= margin && p.y >= margin 
+            && p.x < GXM - margin && p.y < GYM - margin);
+}
+
+// Connect vault exit "from" to dungeon floor by growing a spotty chamber.
+// This tries to be like _spotty_level, but probably isn't quite.
+// It might be better to aim for a more open connection -- currently
+// it stops pretty much as soon as connectivity is attained.
+bool _connect_spotty(const coord_def& from)
+{
+    std::set<coord_def> flatten;
+    std::set<coord_def> border;
+    std::set<coord_def>::const_iterator it;
+    bool success = false;
+
+    for (adjacent_iterator ai(from); ai; ++ai)
+        if (unforbidden(*ai, MMT_VAULT) && _spotty_seed_ok(*ai))
+            border.insert(*ai);
+
+    while (!success && !border.empty())
+    {
+        coord_def cur;
+        int count = 0;
+        for (it = border.begin(); it != border.end(); ++it)
+            if (one_chance_in(++count))
+                cur = *it;
+        border.erase(border.find(cur));
+
+        // Flatten orthogonal neighbours, and add new neighbours to border.
+        flatten.insert(cur);
+        for (radius_iterator ai(cur, 1, C_POINTY, NULL, true); ai; ++ai)
+        {
+            if (!unforbidden(*ai, MMT_VAULT))
+                continue;
+
+            if (grd(*ai) == DNGN_FLOOR)
+                success = true; // Through, but let's remove the others, too.
+
+            if (grd(*ai) != DNGN_ROCK_WALL
+                || flatten.find(*ai) != flatten.end())
+            {
+                continue;
+            }
+
+            flatten.insert(*ai);
+            for (adjacent_iterator bi(*ai); bi; ++bi)
+            {
+                if (!unforbidden(*bi, MMT_VAULT)
+                    && _spotty_seed_ok(*bi)
+                    && flatten.find(*bi) == flatten.end())
+                {
+                    border.insert(*bi);
+                }
+            }
+        }
+    }
+
+    if (success)
+        for (it = flatten.begin(); it != flatten.end(); ++it)
+            grd(*it) = DNGN_FLOOR;
+
+    return (success);
+}
 
 void spotty_level(bool seeded, int iterations, bool boxy)
 {
