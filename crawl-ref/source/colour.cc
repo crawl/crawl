@@ -47,6 +47,14 @@ bool is_element_colour( int col )
     return ((col & 0x007f) >= ETC_FIRE);
 }
 
+static int _etc_elven_brick(const coord_def& loc)
+{
+    if ((loc.x + loc.y) % 2)
+        return LIGHTGREEN;
+    else
+        return LIGHTBLUE;
+}
+
 int element_colour( int element, bool no_random, const coord_def& loc )
 {
     // Doing this so that we don't have to do recursion here at all
@@ -195,6 +203,10 @@ int element_colour( int element, bool no_random, const coord_def& loc )
               (tmp_rand <  80) ? GREEN :
               (tmp_rand < 100) ? LIGHTBLUE
                                : BLUE;
+        break;
+
+    case ETC_ELVEN_BRICK:
+        ret = _etc_elven_brick(loc);
         break;
 
     case ETC_DWARVEN:
@@ -347,7 +359,7 @@ int str_to_colour( const std::string &str, int default_colour,
         "death", "necro", "unholy", "vehumet", "beogh", "crystal",
         "blood", "smoke", "slime", "jewel", "elven", "dwarven",
         "orcish", "gila", "kraken", "floor", "rock", "stone", "mist",
-        "shimmer_blue", "decay", "silver", "gold", "iron", "bone",
+        "shimmer_blue", "decay", "silver", "gold", "iron", "bone", "elven_brick",
         "random"
     };
 
