@@ -515,12 +515,17 @@ bool mons_is_stationary(const monster* mon)
 // Monsters that are worthless obstacles: not to
 // be attacked by default, but may be cut down to
 // get to target even if coaligned.
+bool mons_class_is_firewood(int mc)
+{
+    return (mons_class_is_stationary(mc)
+            && mons_class_flag(mc, M_NO_EXP_GAIN)
+            && mc != MONS_KRAKEN_TENTACLE
+            && mc != MONS_KRAKEN_CONNECTOR);
+}
+
 bool mons_is_firewood(const monster* mon)
 {
-    return (mons_is_stationary(mon)
-            && mons_class_flag(mon->type, M_NO_EXP_GAIN)
-            && mon->type != MONS_KRAKEN_TENTACLE
-            && mon->type != MONS_KRAKEN_CONNECTOR);
+    return (mons_class_is_firewood(mon->type));
 }
 
 // "body" in a purely grammatical sense.

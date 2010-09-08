@@ -365,6 +365,7 @@ bool mons_class_is_confusable(int mc);
 bool mons_class_is_slowable(int mc);
 bool mons_class_is_stationary(int mc);
 bool mons_is_stationary(const monster* mon);
+bool mons_class_is_firewood(int mc);
 bool mons_is_firewood(const monster* mon);
 bool mons_has_body(const monster* mon);
 
