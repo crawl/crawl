@@ -2983,13 +2983,12 @@ void level_change(bool skip_attribute_increase)
                 if (you.experience_level >= 7)
                 {
                     you.species = random_draconian_player_species();
+                    update_player_symbol();
 #ifdef USE_TILE
                     init_player_doll();
 #endif
-                    _draconian_scale_colour_message();
-#ifdef USE_TILE
                     redraw_screen();
-#endif
+                    _draconian_scale_colour_message();
                 }
             case SP_RED_DRACONIAN:
             case SP_WHITE_DRACONIAN:
