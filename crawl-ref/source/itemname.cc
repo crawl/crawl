@@ -2098,7 +2098,9 @@ public:
 
     virtual std::string get_text(const bool = false) const
     {
-        return std::string(" ") + item->name(DESC_PLAIN, false, true);
+        int flags = item->base_type == OBJ_WANDS ? 0 : ISFLAG_KNOW_PLUSES;
+        return std::string(" ") + item->name(DESC_PLAIN, false, true,
+                                             false, false, flags);
     }
 };
 
@@ -2114,8 +2116,9 @@ static MenuEntry *discoveries_item_mangle(MenuEntry *me)
 bool identified_item_names( const item_def *it1,
                             const item_def *it2 )
 {
-    return it1->name(DESC_PLAIN, false, true, false)
-           < it2->name(DESC_PLAIN, false, true, false);
+    int flags = it1->base_type == OBJ_WANDS ? 0 : ISFLAG_KNOW_PLUSES;
+    return it1->name(DESC_PLAIN, false, true, false, false, flags)
+         < it2->name(DESC_PLAIN, false, true, false, false, flags);
 }
 
 bool check_item_knowledge(bool quiet, bool inverted)
