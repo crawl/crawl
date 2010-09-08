@@ -196,7 +196,7 @@ void weapon_switch(int targ)
 // Look for a butchering implement. If fallback is true,
 // prompt the user if no obvious options exist.
 // Returns whether a weapon was switched.
-static bool _find_butchering_implement(int &butcher_tool)
+static bool _find_butchering_implement(int &butcher_tool, bool gloved_butcher)
 {
     // When berserk, you can't change weapons.  Sanity check!
     if (!can_wield(NULL, true))
@@ -213,9 +213,10 @@ static bool _find_butchering_implement(int &butcher_tool)
             && item_type_known(*wpn)
             && get_weapon_brand(*wpn) == SPWPN_DISTORTION)
         {
-            mprf(MSGCH_WARN,
-                 "You're wielding a weapon of distortion, will not autoswap "
-                 "for butchering.");
+            if (!gloved_butcher)
+                mprf(MSGCH_WARN,
+                    "You're wielding a weapon of distortion, will not "
+                    "autoswap for butchering.");
 
             return (false);
         }
@@ -255,12 +256,15 @@ static bool _find_butchering_implement(int &butcher_tool)
 
     if (!potential_candidate)
     {
-        mpr("You don't carry any weapon you could use for butchering.");
-        if (Hints.hints_left)
+        if (!gloved_butcher)
         {
-            mpr("You should pick up the first knife, dagger, sword or axe "
-                "you find so you can use it to butcher corpses.",
-                MSGCH_TUTORIAL);
+            mpr("You don't carry any weapon you could use for butchering.");
+            if (Hints.hints_left)
+            {
+                mpr("You should pick up the first knife, dagger, sword or axe "
+                    "you find so you can use it to butcher corpses.",
+                    MSGCH_TUTORIAL);
+            }
         }
 
         return (false);
@@ -561,7 +565,8 @@ bool butchery(int which_corpse, bool bottle_blood)
     if (!can_butcher)
     {
         // Try to find a butchering implement.
-        if (!_find_butchering_implement(butcher_tool) && !gloved_butcher)
+        if (!_find_butchering_implement(butcher_tool, gloved_butcher) &&
+            !gloved_butcher)
             return (false);
 
         if (butcher_tool == -1 && gloved_butcher)
