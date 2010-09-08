@@ -69,6 +69,7 @@ public:
     int       player_shield_tohit_penalty;
 
     bool      can_do_unarmed;
+    bool      apply_bleeding; // whether the attack should cause bleeding
 
     // Miscast to cause after special damage is done.  If miscast_level == 0
     // the miscast is discarded if special_damage_message isn't empty.
