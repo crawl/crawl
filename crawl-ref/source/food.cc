@@ -343,10 +343,20 @@ static bool _prepare_butchery(bool can_butcher, bool removed_gloves,
 
     if (wpn_switch)
     {
-        mprf("Switching to %s.",
-             butchering_tool == -1 ? "unarmed" : "a butchering implement");
+        std::string tool;
+        if (butchering_tool == -1)
+        {
+            tool = "unarmed";
+        }
+        else
+        {
+            item_def& new_wpn(you.inv[butchering_tool]);
+            tool = new_wpn.name(DESC_INVENTORY_EQUIP);
+        }
 
-        if (!wield_weapon(true, butchering_tool, false, true))
+        mprf("Switching to %s for butchering.", tool.c_str());
+
+        if (!wield_weapon(true, butchering_tool, false, true, false, false))
             return (false);
     }
 

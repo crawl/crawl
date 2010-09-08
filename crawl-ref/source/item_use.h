@@ -79,7 +79,8 @@ bool can_wield(item_def *weapon, bool say_why = false,
 
 bool wield_weapon(bool auto_wield, int slot = -1,
                   bool show_weff_messages = true, bool force = false,
-                  bool show_unwield_msg = true);
+                  bool show_unwield_msg = true,
+                  bool show_wield_msg = true);
 
 void zap_wand(int slot = -1);
 
