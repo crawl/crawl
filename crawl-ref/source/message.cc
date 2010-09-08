@@ -1077,6 +1077,7 @@ void msgwin_reply(std::string reply)
 {
     msgwin_clear_temporary();
     msgwin_set_temporary(false);
+    reply = replace_all(reply, "<", "<<");
     mpr(_prompt + "<lightgrey>" + reply + "</lightgrey>", MSGCH_PROMPT);
     msgwin.got_input();
 }
@@ -1091,10 +1092,7 @@ int msgwin_get_line(std::string prompt, char *buf, int len,
 {
     msgwin_prompt(prompt);
     int ret = cancelable_get_line(buf, len, mh, keyproc);
-    std::string reply;
-    if (ret == 0)
-        reply = replace_all(buf, "<", "<<");
-    msgwin_reply(reply);
+    msgwin_reply(buf);
     return ret;
 }
 

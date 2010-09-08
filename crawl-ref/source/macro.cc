@@ -937,7 +937,9 @@ void macro_add_query( void )
 
     if (mapref[key].size() > 0)
     {
-        mprf(MSGCH_WARN, "Current Action: %s", vtostr(mapref[key]).c_str());
+        std::string action = vtostr(mapref[key]);
+        action = replace_all(action, "<", "<<");
+        mprf(MSGCH_WARN, "Current Action: %s", action.c_str());
         mpr("Do you wish to (r)edefine, (c)lear, or (a)bort? ", MSGCH_PROMPT);
 
         input = m_getch();
