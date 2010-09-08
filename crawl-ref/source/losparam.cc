@@ -43,7 +43,7 @@ opacity_type opacity_no_trans::operator()(const coord_def& p) const
     opacity_type base = opc_default(p);
 
     dungeon_feature_type f = env.grid(p);
-    if (feat_is_opaque(f) || feat_is_wall(f) || f == DNGN_TREE)
+    if (feat_is_opaque(f) || feat_is_solid(f) || f == DNGN_TREE)
         return OPC_OPAQUE;
     else
         return base;
