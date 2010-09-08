@@ -2,6 +2,7 @@
 
 #include "colour.h"
 
+#include "dgn-height.h"
 #include "env.h"
 #include "libutil.h"
 #include "options.h"
@@ -53,6 +54,18 @@ static int _etc_elven_brick(const coord_def& loc)
         return LIGHTGREEN;
     else
         return LIGHTBLUE;
+}
+
+static int _etc_waves(const coord_def& loc)
+{
+    short height = dgn_height_at(loc);
+    int cycle_point = you.num_turns % 20;
+    int min_height = -90 + 5 * cycle_point,
+        max_height = -80 + 5 * cycle_point;
+    if (height > min_height && height < max_height)
+        return LIGHTCYAN;
+    else
+        return CYAN;
 }
 
 int element_colour( int element, bool no_random, const coord_def& loc )
@@ -281,6 +294,10 @@ int element_colour( int element, bool no_random, const coord_def& loc )
         ret = (tmp_rand < 90) ? WHITE : LIGHTGREY;
         break;
 
+    case ETC_WAVES:
+        ret = _etc_waves(loc);
+        break;
+
     case ETC_RANDOM:
         ret = random_colour();              // always random
         break;
@@ -359,7 +376,7 @@ int str_to_colour( const std::string &str, int default_colour,
         "death", "necro", "unholy", "vehumet", "beogh", "crystal",
         "blood", "smoke", "slime", "jewel", "elven", "dwarven",
         "orcish", "gila", "kraken", "floor", "rock", "stone", "mist",
-        "shimmer_blue", "decay", "silver", "gold", "iron", "bone", "elven_brick",
+        "shimmer_blue", "decay", "silver", "gold", "iron", "bone", "elven_brick", "waves",
         "random"
     };
 

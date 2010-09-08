@@ -46,6 +46,7 @@ enum element_type
     ETC_IRON,           // colour of iron
     ETC_BONE,           // colour of bone
     ETC_ELVEN_BRICK,
+    ETC_WAVES,
     ETC_RANDOM,         // any colour (except BLACK)
 };
 
