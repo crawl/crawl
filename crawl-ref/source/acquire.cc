@@ -1108,12 +1108,14 @@ int acquirement_create_item(object_class_type class_wanted,
 {
     ASSERT(class_wanted != OBJ_RANDOM);
 
-    const bool divine = (agent == GOD_OKAWARU || agent == GOD_XOM || agent == GOD_TROG);
+    const bool divine = (agent == GOD_OKAWARU || agent == GOD_XOM
+                         || agent == GOD_TROG);
     int thing_created = NON_ITEM;
     int quant = 1;
     for (int item_tries = 0; item_tries < 40; item_tries++)
     {
-        int type_wanted = _find_acquirement_subtype(class_wanted, quant, divine, agent);
+        int type_wanted = _find_acquirement_subtype(class_wanted, quant,
+                                                    divine, agent);
 
         // Clobber class_wanted for vampires.
         if (you.species == SP_VAMPIRE && class_wanted == OBJ_FOOD)
@@ -1146,9 +1148,11 @@ int acquirement_create_item(object_class_type class_wanted,
         // jewelry and books, this is not absolute.
         while (!is_artefact(doodad)
                && (doodad.base_type == OBJ_WEAPONS
-                     && you.seen_weapon[doodad.sub_type] & (1<<get_weapon_brand(doodad))
+                     && you.seen_weapon[doodad.sub_type]
+                        & (1<<get_weapon_brand(doodad))
                    || doodad.base_type == OBJ_ARMOUR
-                     && you.seen_armour[doodad.sub_type] & (1<<get_weapon_brand(doodad)))
+                     && you.seen_armour[doodad.sub_type]
+                        & (1<<get_weapon_brand(doodad)))
                && !one_chance_in(5))
         {
             reroll_brand(doodad, MAKE_GOOD_ITEM);
