@@ -2276,9 +2276,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<h>Item types (and common commands)\n",
             true, true, _cmdhelp_textfilter);
 
-    _add_insert_commands(cols, 0, 2, "use special Ability (<w>%!</w> for help)",
-                         CMD_USE_ABILITY, CMD_USE_ABILITY, 0);
-
     _add_insert_commands(cols, 0, "<cyan>)</cyan> : hand weapons (<w>%</w>ield)",
                          CMD_WIELD_WEAPON, 0);
     _add_insert_commands(cols, 0, "<brown>(</brown> : missiles (<w>%</w>uiver, "
