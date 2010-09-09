@@ -580,105 +580,127 @@ static void _check_kill_milestone(const monster* mons,
     }
 }
 
-static void _give_monster_experience(monster* victim,
-                                     int killer_index, int experience,
-                                     bool victim_was_born_friendly)
+static int _calc_monster_experience(monster* victim, killer_type killer, 
+                                    int killer_index)
 {
-    if (invalid_monster_index(killer_index))
+    const int experience = exper_value(victim);
+    const bool no_xp = victim->has_ench(ENCH_ABJ) || !experience;
+    const bool created_friendly = testbits(victim->flags, MF_NO_REWARD);
+
+    if (no_xp || !MON_KILL(killer) || invalid_monster_index(killer_index))
+        return (0);
+
+    monster* mon = &menv[killer_index];
+    if (!mon->alive())
+        return (0);
+
+    if ((created_friendly && mon->friendly())
+        || mons_aligned(mon, victim))
+    {
+        return (0);
+    }
+
+    return (experience);
+}
+
+static void _give_monster_experience(int experience, int killer_index)
+{
+    if (experience <= 0 || invalid_monster_index(killer_index))
         return;
 
     monster* mon = &menv[killer_index];
     if (!mon->alive())
         return;
 
-    if ((!victim_was_born_friendly || !mon->friendly())
-        && !mons_aligned(mon, victim))
+    if (mon->gain_exp(experience))
     {
-        if (mon->gain_exp(experience))
+        if (you.religion != GOD_SHINING_ONE && you.religion != GOD_BEOGH
+            || player_under_penance()
+            || !one_chance_in(3))
         {
-            if (you.religion != GOD_SHINING_ONE && you.religion != GOD_BEOGH
-                || player_under_penance()
-                || !one_chance_in(3))
-            {
-                return;
-            }
+            return;
+        }
 
-            // Randomly bless the follower who gained experience.
-            if (you.religion == GOD_SHINING_ONE
-                    && random2(you.piety) >= piety_breakpoint(0)
-                || you.religion == GOD_BEOGH
-                    && random2(you.piety) >= piety_breakpoint(2))
-            {
-                bless_follower(mon);
-            }
+        // Randomly bless the follower who gained experience.
+        if (you.religion == GOD_SHINING_ONE
+                && random2(you.piety) >= piety_breakpoint(0)
+            || you.religion == GOD_BEOGH
+                && random2(you.piety) >= piety_breakpoint(2))
+        {
+            bless_follower(mon);
         }
     }
 }
 
-static void _give_adjusted_experience(monster* mons, killer_type killer,
-                                      bool pet_kill, int killer_index,
-                                      unsigned int *exp_gain,
-                                      unsigned int *avail_gain)
+static int _calc_player_experience(monster* mons, killer_type killer,
+                                   bool pet_kill, int killer_index)
 {
     const int experience = exper_value(mons);
 
-    const bool created_friendly =
-        testbits(mons->flags, MF_NO_REWARD);
+    const bool created_friendly = testbits(mons->flags, MF_NO_REWARD);
     const bool was_neutral = testbits(mons->flags, MF_WAS_NEUTRAL);
     const bool no_xp = mons->has_ench(ENCH_ABJ) || !experience;
     const bool already_got_half_xp = testbits(mons->flags, MF_GOT_HALF_XP);
     const int half_xp = (experience + 1) / 2;
 
-    bool need_xp_msg = false;
     if (created_friendly || was_neutral || no_xp)
-        ; // No experience if monster was created friendly or summoned.
+        return (0); // No xp if monster was created friendly or summoned.
     else if (YOU_KILL(killer))
     {
-        int old_lev = you.experience_level;
         if (already_got_half_xp)
             // Note: This doesn't happen currently since monsters with
             //       MF_GOT_HALF_XP have always gone through pacification,
             //       hence also have MF_WAS_NEUTRAL. [rob]
-            gain_exp(experience - half_xp, exp_gain, avail_gain);
+            return (experience - half_xp);
         else
-            gain_exp(experience, exp_gain, avail_gain);
-
-        if (old_lev == you.experience_level)
-            need_xp_msg = true;
+            return (experience);
     }
     else if (pet_kill && !already_got_half_xp)
-    {
-        int old_lev = you.experience_level;
-        gain_exp(half_xp, exp_gain, avail_gain);
+        return (half_xp);
+    else
+        return (0);
+}
 
-        if (old_lev == you.experience_level)
-            need_xp_msg = true;
-    }
+static void _give_player_experience(int experience, killer_type killer,
+                                    bool pet_kill, bool was_visible)
+{
+    if (experience <= 0)
+        return;
 
-    // FIXME: Since giant spores get detached from mgrd early
-    // on, we can't tell by this point if they were visible when
-    // they exploded. Rather than bothering to remember this, we
-    // just suppress the message.
-    if (mons->type == MONS_GIANT_SPORE
-        || mons->type == MONS_BALL_LIGHTNING)
-    {
-        need_xp_msg = false;
-    }
+    ASSERT(!crawl_state.game_is_arena());
+
+    unsigned int exp_gain = 0;
+    unsigned int avail_gain = 0;;
+    gain_exp(experience, &exp_gain, &avail_gain);
+
+    kill_category kc =
+            (killer == KILL_YOU || killer == KILL_YOU_MISSILE) ? KC_YOU :
+            (pet_kill)                                         ? KC_FRIENDLY :
+                                                                 KC_OTHER;
+    PlaceInfo& curr_PlaceInfo = you.get_place_info();
+    PlaceInfo  delta;
+
+    delta.mon_kill_num[kc]++;
+    delta.mon_kill_exp       += exp_gain;
+    delta.mon_kill_exp_avail += avail_gain;
+
+    you.global_info += delta;
+    you.global_info.assert_validity();
+
+    curr_PlaceInfo += delta;
+    curr_PlaceInfo.assert_validity();
 
     // Give a message for monsters dying out of sight.
-    if (need_xp_msg
-        && exp_gain > 0
-        && !you.can_see(mons)
-        && !crawl_state.game_is_arena())
-    {
+    if (exp_gain > 0 && !was_visible)
         mpr("You feel a bit more experienced.");
-    }
+}
 
-    if (MON_KILL(killer) && !no_xp)
-    {
-        _give_monster_experience(mons, killer_index, experience,
-                                 created_friendly);
-    }
+static void _give_experience(int player_exp, int monster_exp,
+                             killer_type killer, int killer_index,
+                             bool pet_kill, bool was_visible)
+{
+    _give_player_experience(player_exp, killer, pet_kill, was_visible);
+    _give_monster_experience(monster_exp, killer_index);
 }
 
 static bool _is_pet_kill(killer_type killer, int i)
@@ -1325,6 +1347,8 @@ int monster_die(monster* mons, killer_type killer,
 {
     if (invalid_monster(mons))
         return (-1);
+
+    const bool was_visible = you.can_see(mons);
 
     // If a monster was banished to the Abyss and then killed there,
     // then its death wasn't a banishment.
@@ -2139,38 +2163,21 @@ int monster_die(monster* mons, killer_type killer,
             you.set_duration(DUR_POWERED_BY_DEATH, pbd_dur);
     }
 
-    unsigned int exp_gain = 0, avail_gain = 0;
+    unsigned int player_exp = 0, monster_exp = 0;
     if (!mons_reset)
     {
-        _give_adjusted_experience(mons, killer, pet_kill, killer_index,
-                                  &exp_gain, &avail_gain);
+        player_exp = _calc_player_experience(mons, killer, pet_kill,
+                                             killer_index);
+        monster_exp = _calc_monster_experience(mons, killer, killer_index);
     }
 
     if (!mons_reset && !crawl_state.game_is_arena())
-    {
         you.kills->record_kill(mons, killer, pet_kill);
-
-        kill_category kc =
-            (killer == KILL_YOU || killer == KILL_YOU_MISSILE) ? KC_YOU :
-            (pet_kill)?                                          KC_FRIENDLY :
-                                                                 KC_OTHER;
-
-        PlaceInfo& curr_PlaceInfo = you.get_place_info();
-        PlaceInfo  delta;
-
-        delta.mon_kill_num[kc]++;
-        delta.mon_kill_exp       += exp_gain;
-        delta.mon_kill_exp_avail += avail_gain;
-
-        you.global_info += delta;
-        you.global_info.assert_validity();
-
-        curr_PlaceInfo += delta;
-        curr_PlaceInfo.assert_validity();
-    }
 
     if (fake)
     {
+        _give_experience(player_exp, monster_exp, killer, killer_index,
+                         pet_kill, was_visible);
         crawl_state.dec_mon_acting(mons);
         return (corpse);
     }
@@ -2216,6 +2223,9 @@ int monster_die(monster* mons, killer_type killer,
         view_update_at(mwhere);
         update_screen();
     }
+
+    _give_experience(player_exp, monster_exp, killer, killer_index,
+                     pet_kill, was_visible);
 
     return (corpse);
 }
