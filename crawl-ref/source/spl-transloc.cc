@@ -956,7 +956,8 @@ bool cast_golubrias_passage(const coord_def& where)
         randomized_where = where;
         randomized_where.x += random_range(-2, 2);
         randomized_where.y += random_range(-2, 2);
-    } while((grd(randomized_where) != DNGN_FLOOR ||
+    } while((!in_bounds(randomized_where) ||
+             grd(randomized_where) != DNGN_FLOOR ||
              monster_at(randomized_where) ||
              !you.see_cell(randomized_where) ||
              you.trans_wall_blocking(randomized_where) ||
