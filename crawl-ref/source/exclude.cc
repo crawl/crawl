@@ -238,14 +238,14 @@ void exclude_set::add_exclude_points(travel_exclude& ex)
             exclude_points.insert(*ri);
 }
 
-void exclude_set::update_excluded_points()
+void exclude_set::update_excluded_points(bool recompute_los)
 {
     for (iterator it = exclude_roots.begin(); it != exclude_roots.end(); ++it)
     {
         travel_exclude &ex = it->second;
         if (!ex.uptodate)
         {
-            recompute_excluded_points();
+            recompute_excluded_points(recompute_los);
             return;
         }
     }
@@ -321,7 +321,7 @@ static void _mark_excludes_non_updated(const coord_def &p)
          it != curr_excludes.end(); ++it)
     {
         travel_exclude &ex = it->second;
-        ex.uptodate = ex.uptodate && ex.in_bounds(p);
+        ex.uptodate = ex.uptodate && !ex.in_bounds(p);
     }
 }
 
@@ -344,7 +344,7 @@ void update_exclusion_los(std::vector<coord_def> changed)
     for (unsigned int i = 0; i < changed.size(); ++i)
         _mark_excludes_non_updated(changed[i]);
 
-    curr_excludes.update_excluded_points();
+    curr_excludes.update_excluded_points(true);
 }
 
 bool is_excluded(const coord_def &p, const exclude_set &exc)
