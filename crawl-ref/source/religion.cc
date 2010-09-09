@@ -527,7 +527,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
 
     case GOD_CHEIBRIADOS:
         snprintf(info, INFO_SIZE, "you kill fast things%s",
-                 verbose ? ", relative to your current speed"
+                 verbose ? ", relative to your speed"
                          : "");
         likes.push_back(info);
         break;
