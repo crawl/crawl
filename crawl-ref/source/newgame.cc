@@ -554,9 +554,12 @@ void make_rod(item_def &item, stave_type rod_type, int ncharges)
 }
 
 // Set ng_choice to defaults without overwriting name and game type.
-static void _set_default_choice(newgame_def* ng_choice,
+static void _set_default_choice(newgame_def* ng, newgame_def* ng_choice,
                                 const newgame_def& defaults)
 {
+    // Reset *ng so _resolve_species_job will work properly.
+    ng->clear_character();
+
     const std::string name = ng_choice->name;
     const game_type type   = ng_choice->type;
     *ng_choice = defaults;
@@ -906,7 +909,7 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
             case M_DEFAULT_CHOICE:
                 if (_char_defined(defaults))
                 {
-                    _set_default_choice(ng_choice, defaults);
+                    _set_default_choice(ng, ng_choice, defaults);
                     return;
                 }
                 else
@@ -1272,7 +1275,7 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
             case M_DEFAULT_CHOICE:
                 if (_char_defined(defaults))
                 {
-                    _set_default_choice(ng_choice, defaults);
+                    _set_default_choice(ng, ng_choice, defaults);
                     return;
                 }
                 else
@@ -2959,7 +2962,7 @@ static bool _cmp_map_by_name(const map_def* m1, const map_def* m2)
     return (m1->desc_or_name() < m2->desc_or_name());
 }
 
-static void _prompt_sprint_map(const newgame_def* ng, newgame_def* ng_choice,
+static void _prompt_sprint_map(newgame_def* ng, newgame_def* ng_choice,
                                const newgame_def& defaults,
                                mapref_vector maps)
 {
@@ -3045,7 +3048,7 @@ static void _prompt_sprint_map(const newgame_def* ng, newgame_def* ng_choice,
             list_commands('?');
             return _prompt_sprint_map(ng, ng_choice, defaults, maps);
         case M_DEFAULT_CHOICE:
-            _set_default_choice(ng_choice, defaults);
+            _set_default_choice(ng, ng_choice, defaults);
             return;
         case M_RANDOM:
             // FIXME setting this to "random" is broken
