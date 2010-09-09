@@ -400,7 +400,7 @@ monster_type transform_mons()
     switch(you.attribute[ATTR_TRANSFORMATION])
     {
     case TRAN_SPIDER:
-        return MONS_GIANT_COCKROACH; //uhh...
+        return MONS_SPIDER;
     case TRAN_STATUE:
         return MONS_STATUE;
     case TRAN_ICE_BEAST:
