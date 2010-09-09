@@ -568,6 +568,39 @@ cXX1..!!!..1XXc
    ccccccccc
 ENDMAP
 
+NAME:   orb_two_ways
+TAGS:   orb_chamber
+WEIGHT: 5
+NSUBST: Y = 1:Z / *:.
+MARKER: Z = lua:item_pickup_change_flags { \
+            level_flags="!no_tele_control", item="auto" \
+        }
+KITEM:  Z = Orb of Zot
+KMASK:  YZ1! = no_item_gen
+MONS:   patrolling Orb Guardian
+MAP
+   ccccccccc
+  XXXXXXXXXXX
+cXXXXXX....XXXc
+cXXX1!1.X..1XXc
+ XXX!Y!XXX..XX
+  XX1!1XX..XX
+  XXXXXX..XXX
+ XXXX.....XXXX
+ XXX..X1X..XXX
+ X1..1XXX1..1X
+ ....XXXXX....
+ X1..1XXX1..1X
+ XXX..X1X..XXX
+ XXXX.....XXXX
+  XXXX..XXXXX 
+  XXX..XX1!1X
+ XXX..XXX!Y!XX
+cXXX1..X.1!1XXc
+cXXXX....XXXXXc
+  XXXXXXXXXXX
+   ccccccccc
+ENDMAP
 
 ################################################################
 # For colouring the walls and floors of the first four levels
