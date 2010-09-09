@@ -1871,7 +1871,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
 // If m_succumbed is non-NULL, will be set to the number of monsters that
 // were enchanted. If m_attempted is non-NULL, will be set to the number of
 // monsters that we tried to enchant.
-bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
+void mass_enchantment( enchant_type wh_enchant, int pow, int origin,
                        int *m_succumbed, int *m_attempted )
 {
     bool did_msg = false;
@@ -1921,8 +1921,6 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
 
     if (!did_msg)
         canned_msg(MSG_NOTHING_HAPPENS);
-
-    return (did_msg);
 }
 
 void bolt::apply_bolt_paralysis(monster* mons)

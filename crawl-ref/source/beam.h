@@ -303,8 +303,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
 bool enchant_monster_with_flavour(monster* mon, actor *atk,
                                   beam_type flavour, int powc = 0);
 
-// Return true if messages were generated during the enchantment.
-bool mass_enchantment( enchant_type wh_enchant, int pow, int who,
+void mass_enchantment( enchant_type wh_enchant, int pow, int who,
                        int *m_succumbed = NULL, int *m_attempted = NULL );
 
 bool curare_hits_monster(actor *agent, monster* mons, kill_category who,
