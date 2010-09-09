@@ -439,8 +439,6 @@ LROCKTILE:  wall_zot_magenta
 
 #traps
 SUBST:    C = X:900 c:100 =
-KFEAT:    1 = any trap / w:20 floor
-KMONS:    1 = patrolling Orb Guardian
 KFEAT:    8 = any trap / w:20 floor
 SHUFFLE:  ABab / ^^FF / ^^FF / ^^FF
 SHUFFLE:  Aa / Bb
@@ -448,7 +446,6 @@ KFEAT:    A = any trap / w:30 floor
 KFEAT:    B = any trap / w:10 floor
 SUBST:    a=F, b=6 F
 SUBST:    ^ = ^ .:10
-SUBST:    ! = ^ .:40
 SUBST:    . = .:500 ^
 
 #monsters
@@ -555,16 +552,16 @@ ccccccccccccccc
   XXXXXXXXXXX
  XXXX.....XXXX
  XXX..X1X..XXX
- X1..1XXX1..1X
- ...1XXXXX1...
- X1..1XXX1..1X
+ X....XXX....X
+ ..1.XXXXX.1..
+ X....XXX....X
  XXX..X1X..XXX
  XXXX.....XXXX
   X.XXX.XXX.X 
-  X..1...1..X
- XX1..!!!..1XX
-cX...1!Z!1...Xc
-cXX1..!!!..1XXc
+  X....1....X
+ XX..1!!!1..XX
+cX....!Z!....Xc
+cXX...!!!...XXc
   XXXXXXXXXXX
    ccccccccc
 ENDMAP
@@ -582,23 +579,23 @@ KMONS:  1 = patrolling Orb Guardian
 MAP
    ccccccccc
   XXXXXXXXXXX
-cXXXXXX....XXXc
-cXXX1!1.X..1XXc
+cXXXXX.....XXXc
+cXXX!!!1X...XXc
  XXX!Y!XXX..XX
-  XX1!1XX..XX
+  XX!!!XX..XX
   XXXXXX..XXX
  XXXX.....XXXX
  XXX..X1X..XXX
- X1..1XXX1..1X
+ X1...XXX...1X
  ....XXXXX....
- X1..1XXX1..1X
+ X1...XXX...1X
  XXX..X1X..XXX
  XXXX.....XXXX
   XXXX..XXXXX 
-  XXX..XX1!1X
+  XXX..XX!!!X
  XXX..XXX!Y!XX
-cXXX1..X.1!1XXc
-cXXXX....XXXXXc
+cXXX...X1!!!XXc
+cXXXX.....XXXXc
   XXXXXXXXXXX
    ccccccccc
 ENDMAP
