@@ -1810,7 +1810,8 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
 
 static bool _monster_resists_mass_enchantment(monster* mons,
                                               enchant_type wh_enchant,
-                                              int pow)
+                                              int pow,
+                                              bool* did_msg)
 {
     // Assuming that the only mass charm is control undead.
     if (wh_enchant == ENCH_CHARM)
@@ -1823,9 +1824,11 @@ static bool _monster_resists_mass_enchantment(monster* mons,
 
         if (mons->check_res_magic(pow))
         {
-            simple_monster_message(mons,
-                                   mons_immune_magic(mons)? " is unaffected."
-                                                             : " resists.");
+            if (simple_monster_message(mons, mons_immune_magic(mons)
+                                       ? " is unaffected." : " resists."))
+            {
+                *did_msg = true;
+            }
             return (true);
         }
     }
@@ -1840,9 +1843,11 @@ static bool _monster_resists_mass_enchantment(monster* mons,
 
         if (mons->check_res_magic(pow))
         {
-            simple_monster_message(mons,
-                                   mons_immune_magic(mons)? " is unaffected."
-                                                             : " resists.");
+            if (simple_monster_message(mons, mons_immune_magic(mons)
+                                       ? " is unaffected." : " resists."))
+            {
+                *did_msg = true;
+            }
             return (true);
         }
     }
@@ -1854,7 +1859,8 @@ static bool _monster_resists_mass_enchantment(monster* mons,
     }
     else  // trying to enchant an unnatural creature doesn't work
     {
-        simple_monster_message(mons, " is unaffected.");
+        if (simple_monster_message(mons, " is unaffected."))
+            *did_msg = true;
         return (true);
     }
 
@@ -1868,7 +1874,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
 bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
                        int *m_succumbed, int *m_attempted )
 {
-    bool msg_generated = false;
+    bool did_msg = false;
 
     if (m_succumbed)
         *m_succumbed = 0;
@@ -1887,7 +1893,7 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
         if (m_attempted)
             ++*m_attempted;
 
-        if (_monster_resists_mass_enchantment(*mi, wh_enchant, pow))
+        if (_monster_resists_mass_enchantment(*mi, wh_enchant, pow, &did_msg))
             continue;
 
         if (mi->add_ench(mon_enchant(wh_enchant, 0, kc)))
@@ -1905,7 +1911,7 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
             default:             msg = NULL;                      break;
             }
             if (msg && simple_monster_message(*mi, msg))
-                msg_generated = true;
+                did_msg = true;
 
             // Extra check for fear (monster needs to reevaluate behaviour).
             if (wh_enchant == ENCH_FEAR)
@@ -1913,10 +1919,10 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
         }
     }
 
-    if (!msg_generated)
+    if (!did_msg)
         canned_msg(MSG_NOTHING_HAPPENS);
 
-    return (msg_generated);
+    return (did_msg);
 }
 
 void bolt::apply_bolt_paralysis(monster* mons)
