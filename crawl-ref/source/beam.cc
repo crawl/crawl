@@ -4706,8 +4706,9 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return (MON_AFFECTED);
 
     case BEAM_HEALING:
-        if (YOU_KILL(thrower))
+        if (thrower == KILL_YOU || thrower == KILL_YOU_MISSILE)
         {
+            // No KILL_YOU_CONF, or we get "You heal ..."
             if (cast_healing(5 + damage.roll(), false, mon->pos()) > 0)
                 obvious_effect = true;
             msg_generated = true; // to avoid duplicate "nothing happens"
