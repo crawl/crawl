@@ -600,7 +600,7 @@ bool melee_attack::attack()
                      feat_name.c_str());
             }
         }
-        else if (you.can_see(attacker))
+        else
         {
             // Make sure the monster uses up some energy, even though it
             // didn't actually land a blow.
@@ -611,12 +611,7 @@ bool melee_attack::attack()
                 simple_monster_message(attacker->as_monster(),
                                        " hits something.");
             }
-            else if (!you.can_see(attacker))
-            {
-                mprf("%s hits %s.", defender->name(DESC_CAP_THE).c_str(),
-                     feat_name.c_str());
-            }
-            else
+            else if (you.can_see(attacker))
             {
                 mprf("%s tries to hit %s, but is blocked by the %s.",
                      attacker->name(DESC_CAP_THE).c_str(),
