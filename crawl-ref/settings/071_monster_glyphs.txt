@@ -6,3 +6,5 @@
 
 # small zombies, etc.
 mon_glyph = wight : lightgrey W
+# no spiders in 0.7, but the spider form uses this
+mon_glyph = spider : brown s
