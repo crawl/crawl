@@ -3248,15 +3248,7 @@ int items(int allow_uniques,       // not just true-false,
     default:
         item.base_type = OBJ_GOLD;
         if (force_good)
-        {
-            // New gold acquirement formula from dpeg.
-            // Min=220, Max=5520, Mean=1218, Std=911
-            item.quantity = 10 * (20
-                                  + roll_dice(1, 20)
-                                  + (roll_dice(1, 8)
-                                     * roll_dice(1, 8)
-                                     * roll_dice(1, 8)));
-        }
+            item.quantity = 100 + random2(400);
         else
             item.quantity = 1 + random2avg(19, 2) + random2(item_level);
         break;
