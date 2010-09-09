@@ -435,7 +435,7 @@ static void _draw_ray_glyph(const coord_def &pos, int colour,
         if (mons->alive() && mons->visible_to(&you)
             && !mons_is_unknown_mimic(mons))
         {
-            glych  = get_cell_glyph(env.map_knowledge(pos), pos).ch;
+            glych  = get_cell_glyph(pos).ch;
             colour = mcol;
         }
     }
@@ -736,7 +736,7 @@ void full_describe_view()
             const coord_def c = list_features[i];
             std::string desc = "";
 #ifndef USE_TILE
-            glyph g = get_cell_glyph(env.map_knowledge(c), c);
+            glyph g = get_cell_glyph(c);
             const std::string colour_str = colour_to_str(g.col);
             desc = "(<" + colour_str + ">";
             desc += stringize_glyph(g.ch);
@@ -3604,7 +3604,7 @@ static void _debug_describe_feature_at(const coord_def &where)
 
     mprf(MSGCH_DIAGNOSTICS, "(%d,%d): %s - %s (%d/%s)%s%s%s%s",
          where.x, where.y,
-         stringize_glyph(get_cell_glyph(env.map_knowledge(where)).ch).c_str(),
+         stringize_glyph(get_cell_glyph(where)).ch).c_str(),
          feature_desc.c_str(),
          feat,
          dungeon_feature_name(feat),

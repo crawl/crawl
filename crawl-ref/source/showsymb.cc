@@ -200,6 +200,11 @@ static const unsigned short ripple_table[] =
      BROWN,         // YELLOW       => BROWN
      LIGHTGREY};    // WHITE        => LIGHTGREY
 
+glyph get_cell_glyph(const coord_def& loc, bool only_stationary_monsters, int color_mode)
+{
+    return get_cell_glyph(env.map_knowledge(loc), loc, only_stationary_monsters, color_mode);
+}
+
 glyph get_cell_glyph(const map_cell& cell, const coord_def& loc, bool only_stationary_monsters, int color_mode)
 {
     return get_cell_glyph_with_class(cell, loc, get_cell_show_class(cell, only_stationary_monsters), color_mode);
