@@ -266,9 +266,9 @@ static bool _check_moveto_terrain(const coord_def& p,
 
 bool check_moveto(const coord_def& p, const std::string &move_verb)
 {
-    return (_check_moveto_cloud(p, move_verb)
-            && _check_moveto_trap(p, move_verb)
-            && _check_moveto_terrain(p, move_verb));
+    return (_check_moveto_terrain(p, move_verb)
+            && _check_moveto_cloud(p, move_verb)
+            && _check_moveto_trap(p, move_verb));
 }
 
 void moveto_location_effects(dungeon_feature_type old_feat,
