@@ -432,7 +432,6 @@ PLACE:      Zot:5
 ORIENT:     north
 TAGS:       no_dump
 LFLAGS:     no_tele_control
-SUBVAULT:   Y : orb_chamber
 LFLOORCOL:  magenta
 LROCKCOL:   lightmagenta
 LFLOORTILE: floor_tomb
@@ -462,6 +461,8 @@ SUBST:    ? : KLM
 SUBST:    K = 4:30 5 8 9
 SUBST:    L = 4 5:30 8 9
 SUBST:    M = 4 5 8:30 9
+
+SUBVAULT:   Y : orb_chamber
 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -502,15 +503,15 @@ xxxxxxxxxxxcc..............ccxxxc...............cxxxcc..............ccxxxxxxxxxx
 xxxxxxxxxxxxccccccccccccccccxxxxcccccccc@ccccccccxxxxccccccccccccccccxxxxxxxxxxx
 ENDMAP
 
-NAME:       orb_original
-TAGS:       orb_chamber
+NAME:   orb_original
+TAGS:   orb_chamber
 MARKER: Z = lua:item_pickup_change_flags { \
             level_flags="!no_tele_control", item="auto" \
         }
 KITEM:  Z = Orb of Zot
 KMASK:  Z1! = no_item_gen
 COLOUR: G = magenta
-MONS:   patrolling Orb Guardian
+KMONS:  1 = patrolling Orb Guardian
 MAP
    ccccccccc
   ccccccccccc
@@ -543,7 +544,7 @@ MARKER: Z = lua:item_pickup_change_flags { \
         }
 KITEM:  Z = Orb of Zot
 KMASK:  Z1! = no_item_gen
-MONS:   patrolling Orb Guardian
+KMONS:  1 = patrolling Orb Guardian
 MAP
    ccccccccc
   ccccccccccc
@@ -577,7 +578,7 @@ MARKER: Z = lua:item_pickup_change_flags { \
         }
 KITEM:  Z = Orb of Zot
 KMASK:  YZ1! = no_item_gen
-MONS:   patrolling Orb Guardian
+KMONS:  1 = patrolling Orb Guardian
 MAP
    ccccccccc
   XXXXXXXXXXX
