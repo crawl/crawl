@@ -1067,15 +1067,14 @@ U.U
 U.U
 ENDMAP
 
-# It is currently not possible to place decks, unfortunately.
-#
-#NAME:  nemelex_deck
-#TAGS:  temple_overflow_nemelex_xobeh uniq_altar_nemelex_xobeh
-#KFEAT: _ = altar_nemelex_xobeh
-#ITEM:  _ = plain deck of war
-#MAP
-#_
-#ENDMAP
+NAME:  nemelex_deck
+PLACE: D:1
+TAGS:  temple_overflow_nemelex_xobeh uniq_altar_nemelex_xobeh
+KFEAT: _ = altar_nemelex_xobeh
+KITEM: _ = plain deck
+MAP
+_
+ENDMAP
 
 
 ### Okawaru overflow altars ###################################################
