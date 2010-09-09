@@ -547,10 +547,8 @@ ITEM:     (list of items, separated by comma)
           it clears the "never_decay" property, allowing the item to
           start decaying normally.
 
-
           Randart spell books
           -------------------
-
           You can specify random artefact spell books using:
 
           * "any fixed theme book" will generate a book with a fixed theme
@@ -580,6 +578,15 @@ ITEM:     (list of items, separated by comma)
 
           NOTE: You can place multiple items on the same square by using the
           KITEM directive. See that section for more information.
+
+          Decks
+          -----
+          You can specify decks with like this:
+          "deck", "ornate deck", "deck of war", "legendary deck of wonders"
+
+          Note the following synonyms:
+          common = plain, rare = ornate
+
 
 MONS:     (list of monsters)
           These are used to help place specific monsters at specific places
