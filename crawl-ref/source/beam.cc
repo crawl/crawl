@@ -1904,8 +1904,8 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
             case ENCH_CHARM:     msg = " submits to your will.";  break;
             default:             msg = NULL;                      break;
             }
-            if (msg)
-                msg_generated = simple_monster_message(*mi, msg);
+            if (msg && simple_monster_message(*mi, msg))
+                msg_generated = true;
 
             // Extra check for fear (monster needs to reevaluate behaviour).
             if (wh_enchant == ENCH_FEAR)
