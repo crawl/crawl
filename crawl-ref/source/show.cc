@@ -322,8 +322,6 @@ void show_update_at(const coord_def &gp, bool terrain_only)
     const monster* mons = monster_at(gp);
     if (mons && mons->alive())
         _update_monster(mons);
-
-    set_terrain_visible(gp);
 }
 
 void show_init(bool terrain_only)

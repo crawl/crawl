@@ -65,7 +65,7 @@ public:
                      std::string desc = "",
                      bool vaultexcl = false);
 
-    void update_excluded_points();
+    void update_excluded_points(bool recompute_los = false);
     void recompute_excluded_points(bool recompute_los = false);
 
     travel_exclude* get_exclude_root(const coord_def &p);
