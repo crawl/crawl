@@ -507,7 +507,12 @@ MARKER: Z = lua:item_pickup_change_flags { \
         }
 KITEM:  Z = Orb of Zot
 KMASK:  Z1! = no_item_gen
-COLOUR: G = magenta
+TILE:   m = dngn_zot_pillar
+:           dgn.set_feature_desc_short("translucent rock wall",
+:                                      "crystal pillar")
+:           dgn.set_feature_desc_long("translucent rock wall",
+:                  "This is a pillar of crystal, apparently of a similar " ..
+:                  "material to the rock around.\n")
 KMONS:  1 = patrolling Orb Guardian
 MAP
    ccccccccc
@@ -520,7 +525,7 @@ ccccccccccccccc
  XXX...1...XXX
  XX..1...1..XX
  X1...!!!...1X
- ...1.GZG.1...
+ ...1.mZm.1...
  X1...!!!...1X
  XX..1...1..XX
  XXX...1...XXX
