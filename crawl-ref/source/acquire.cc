@@ -361,6 +361,7 @@ static bool _try_give_plain_armour(item_def &arm)
         arm.plus = max_ench;
     else if (arm.plus < -max_ench)
         arm.plus = -max_ench;
+    item_colour(arm);
 
     ASSERT(arm.is_valid());
     return (true);
