@@ -337,11 +337,11 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     // Book of the Warp
     {SPELL_BANISHMENT,
      SPELL_PHASE_SHIFT,
+     SPELL_GOLUBRIAS_PASSAGE,
      SPELL_WARP_BRAND,
      SPELL_DISPERSAL,
      SPELL_PORTAL,
      SPELL_CONTROLLED_BLINK,
-     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
 
@@ -516,7 +516,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_PASSWALL,
      SPELL_CONTROL_TELEPORT,
      SPELL_FRAGMENTATION,
-     SPELL_NO_SPELL,
+     SPELL_GOLUBRIAS_PASSAGE,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
