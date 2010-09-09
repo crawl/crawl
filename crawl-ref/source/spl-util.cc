@@ -1226,6 +1226,7 @@ bool spell_no_hostile_in_range(spell_type spell, int minRange)
     case SPELL_CONJURE_FLAME:
     case SPELL_DIG:
     case SPELL_PASSWALL:
+    case SPELL_GOLUBRIAS_PASSAGE:
 
     // Airstrike has LOS_RANGE and can go through glass walls.
     case SPELL_AIRSTRIKE:
