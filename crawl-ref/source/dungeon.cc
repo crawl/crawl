@@ -5119,7 +5119,7 @@ retry:
         }
 
         if (props.exists("uncursed"))
-            do_uncurse_item(item);
+            do_uncurse_item(item, false);
         if (props.exists("useful") && (useless_tries++ < 10)
             && is_useless_item(item, false))
         {

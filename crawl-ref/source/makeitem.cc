@@ -3029,7 +3029,7 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
             if (x_chance_in_y(9, 25))        // 36% of such rings {dlb}
             {
                 // make "ring of damage"
-                do_uncurse_item(item);
+                do_uncurse_item(item, false);
                 item.plus   = 0;
                 item.plus2 += 2;
             }
