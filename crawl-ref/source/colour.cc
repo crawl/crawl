@@ -169,6 +169,18 @@ static int _etc_waves(int, const coord_def& loc)
         return CYAN;
 }
 
+static int _etc_tree(int, const coord_def& loc)
+{
+    uint32_t h = loc.x;
+    h+=h<<10; h^=h>>6;
+    h += loc.y;
+    h+=h<<10; h^=h>>6;
+    h+=h<<3; h^=h>>11; h+=h<<15;
+    return (h>>30)                        ? GREEN
+         : player_in_branch(BRANCH_SWAMP) ? BROWN
+         :                                  LIGHTGREEN;
+}
+
 static int _etc_random(int, const coord_def&)
 {
     return random_colour();
@@ -441,6 +453,9 @@ void init_element_colours()
                             ETC_WAVES, _etc_waves
                         ));
     _add_element_colour(new element_colour_calc(
+                            ETC_TREE, _etc_tree
+                        ));
+    _add_element_colour(new element_colour_calc(
                             ETC_RANDOM, _etc_random
                         ));
 }
@@ -529,7 +544,7 @@ int str_to_colour( const std::string &str, int default_colour,
         "death", "necro", "unholy", "vehumet", "beogh", "crystal",
         "blood", "smoke", "slime", "jewel", "elven", "dwarven",
         "orcish", "gila", "kraken", "floor", "rock", "stone", "mist",
-        "shimmer_blue", "decay", "silver", "gold", "iron", "bone", "elven_brick", "waves",
+        "shimmer_blue", "decay", "silver", "gold", "iron", "bone", "elven_brick", "waves", "tree",
         "random"
     };
 

@@ -89,7 +89,7 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
         case DNGN_TREE:
             f.dchar        = DCHAR_TREE;
             f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
-            f.colour       = BLACK; // overridden later
+            f.colour       = ETC_TREE;
             f.minimap      = MF_WALL;
             break;
 
