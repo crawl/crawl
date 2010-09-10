@@ -2001,7 +2001,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         for (sumcount = 0; sumcount < sumcount2; ++sumcount)
         {
             create_monster(
-                mgen_data(RANDOM_MONSTER, SAME_ATTITUDE(mons), mons,
+                mgen_data(RANDOM_MOBILE_MONSTER, SAME_ATTITUDE(mons), mons,
                           5, spell_cast, mons->pos(), mons->foe, 0, god));
         }
         return;

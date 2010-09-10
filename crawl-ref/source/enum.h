@@ -2249,6 +2249,7 @@ enum monster_type                      // (int) menv[].type
     MONS_NO_MONSTER = 1000,
 
     RANDOM_MONSTER = 2000, // used to distinguish between a random monster and using program bugs for error trapping {dlb}
+    RANDOM_MOBILE_MONSTER, // used for monster generation (shadow creatures)
 
     // A random draconian, either base coloured drac or specialised.
     RANDOM_DRACONIAN,
