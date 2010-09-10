@@ -1547,7 +1547,8 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
 
     if (oper == OPER_WIELD // unwielding uses OPER_WIELD too
         && item.base_type == OBJ_WEAPONS
-        && get_weapon_brand(item) == SPWPN_DISTORTION)
+        && get_weapon_brand(item) == SPWPN_DISTORTION
+		&& you.duration[DUR_WEAPON_BRAND] == 0)
     {
         return (true);
     }
