@@ -132,9 +132,16 @@ static int _etc_stone(int, const coord_def& loc)
 static int _etc_elven_brick(int, const coord_def& loc)
 {
     if ((loc.x + loc.y) % 2)
-        return LIGHTGREEN;
+    {
+        return LIGHTGREY;
+    }
     else
-        return LIGHTBLUE;
+    {
+        if ((loc.x / 2 + loc.y / 2) % 2)
+            return LIGHTGREEN;
+        else
+            return LIGHTBLUE;
+    }
 }
 
 static int _etc_waves(int, const coord_def& loc)
