@@ -580,7 +580,7 @@ static void _check_kill_milestone(const monster* mons,
     }
 }
 
-static int _calc_monster_experience(monster* victim, killer_type killer, 
+static int _calc_monster_experience(monster* victim, killer_type killer,
                                     int killer_index)
 {
     const int experience = exper_value(victim);

@@ -1,7 +1,7 @@
 ##############################################################################
 # mini_features.des: This is the place for minivaults without monsters.
 #           So all vaults in this file should have neiter ORIENT nor MONS or
-#           KMONS lines. Exceptions are made for vaults which generally have 
+#           KMONS lines. Exceptions are made for vaults which generally have
 #           no monsters or are supposed to look as if they had no monsters.
 #
 #           Vaults with ORIENT lines are stored in float.des or large.des.
@@ -9,7 +9,7 @@
 #           Maps for the Vault branch, including Vaults:8 are in vaults.des.
 #
 # <<1>> Flavour vaults           (no items, no monsters)
-# <<2>> Inaccessible items   
+# <<2>> Inaccessible items
 # <<3>> Supply closet vaults     (vaults with items and no risk).
 # <<4>> Fog generator vaults
 # <<5>> Classical minivaults     (don't touch)
@@ -962,10 +962,10 @@ MAP
 ........    ........
 .xxxx....  ....xxxx.
 ...xxxx......xxxx...
- ....xxxx..xxxx.... 
-  .....xxxxxx.....  
-  .....xxxxxx.....  
- ....xxxx..xxxx.... 
+ ....xxxx..xxxx....
+  .....xxxxxx.....
+  .....xxxxxx.....
+ ....xxxx..xxxx....
 ...xxxx......xxxx...
 .xxxx....  ....xxxx.
 ........    ........
@@ -1017,7 +1017,7 @@ ENDMAP
 #####################################################################
 #
 # <<2>> Inaccessible items
-#       Various vaults themed around inaccessible items. No monsters, 
+#       Various vaults themed around inaccessible items. No monsters,
 #       but perils (water, lava, traps) are okay.
 #
 #####################################################################
@@ -1252,7 +1252,7 @@ ENDMAP
 
 ####################################################################
 #
-# <<3>> Supply closet vaults 
+# <<3>> Supply closet vaults
 #       (vaults with items and no risk).
 #
 ####################################################################
@@ -1388,7 +1388,7 @@ ENDMAP
 
 ##########################################################################
 #
-# <<4>> Fog generator vaults. 
+# <<4>> Fog generator vaults.
 #       Most of these are very dangerous. But no monsters.
 #
 # Many of these vaults rely on status to halt autoexplore. If a dangerous
