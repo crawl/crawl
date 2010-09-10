@@ -4504,7 +4504,7 @@ static bool _scroll_modify_item(item_def scroll)
     ASSERT(scroll.base_type == OBJ_SCROLLS);
 
     // Get the slot of the scroll just read.
-    int item_slot = scroll.slot;
+    int item_slot = scroll.link;
 
     // Get the slot of the item the scroll is to be used on.
     // Ban the scroll's own slot from the prompt to avoid the stupid situation
