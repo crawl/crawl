@@ -482,7 +482,7 @@ static void _god_greeting_message(bool game_start)
         simple_god_message(" says: Lead the forces of light to victory!");
         break;
     case GOD_KIKUBAAQUDGHA:
-        simple_god_message(" says: Welcome...");
+        simple_god_message(" says: Spread unending torment and darkness!");
         break;
     case GOD_YREDELEMNUL:
         simple_god_message(" says: Carry the black torch! Rouse the idle dead!");
@@ -498,7 +498,7 @@ static void _god_greeting_message(bool game_start)
         simple_god_message(" says: Let it end in hellfire!");
         break;
     case GOD_OKAWARU:
-        simple_god_message(" says: Welcome, disciple.");
+        simple_god_message(" says: Bring me glory in combat!");
         break;
     case GOD_MAKHLEB:
         god_speaks(you.religion, "Blood and souls for Makhleb!");
