@@ -41,6 +41,7 @@
 #include "cio.h"
 #include "cloud.h"
 #include "clua.h"
+#include "colour.h"
 #include "command.h"
 #include "coord.h"
 #include "coordit.h"
@@ -235,6 +236,8 @@ int main(int argc, char *argv[])
 
     // Hardcoded initial keybindings.
     init_keybindings();
+
+    init_element_colours();
 
     // Load in the system environment variables
     get_system_environment();

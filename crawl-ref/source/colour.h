@@ -55,6 +55,7 @@ int str_to_colour(const std::string &str, int default_colour = -1,
 const std::string colour_to_str(uint8_t colour);
 unsigned int str_to_tile_colour(std::string colour);
 
+void init_element_colours();
 uint8_t random_colour();
 uint8_t random_uncommon_colour();
 uint8_t make_low_colour(uint8_t colour);
