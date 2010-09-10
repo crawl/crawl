@@ -1866,7 +1866,8 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_DEATHS_DOOR:
-        cast_deaths_door(powc);
+        if (!cast_deaths_door(powc))
+            return (SPRET_ABORT);
         break;
 
     case SPELL_RING_OF_FLAMES:
