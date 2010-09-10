@@ -531,18 +531,6 @@ int detect_creatures(int pow, bool telepathic)
     return (creatures_found);
 }
 
-static void _maybe_mark_was_cursed(item_def &item)
-{
-    if (Options.autoinscribe_cursed
-        && item.inscription.find("was cursed") == std::string::npos
-        && !item_ident(item, ISFLAG_SEEN_CURSED)
-        && !item_ident(item, ISFLAG_IDENT_MASK))
-    {
-        add_inscription(item, "was cursed");
-    }
-    do_uncurse_item(item);
-}
-
 bool remove_curse(bool suppress_msg)
 {
     bool success = false;
@@ -553,7 +541,7 @@ bool remove_curse(bool suppress_msg)
         && you.weapon()->cursed())
     {
         // Also sets wield_change.
-        _maybe_mark_was_cursed(*you.weapon());
+        do_uncurse_item(*you.weapon());
         success = true;
     }
 
@@ -564,7 +552,7 @@ bool remove_curse(bool suppress_msg)
         // Melded equipment can also get uncursed this way.
         if (you.equip[i] != -1 && you.inv[you.equip[i]].cursed())
         {
-            _maybe_mark_was_cursed(you.inv[you.equip[i]]);
+            do_uncurse_item(you.inv[you.equip[i]]);
             success = true;
         }
     }
