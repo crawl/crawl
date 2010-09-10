@@ -5,9 +5,9 @@
 
 #include "AppHdr.h"
 
-#include "clua.h"
 #include "cluautil.h"
 #include "colour.h"
+#include "dlua.h"
 #include "message.h"
 
 typedef int (*lua_element_colour_calculator)(int, const coord_def&,
@@ -48,20 +48,20 @@ static int next_colour = ETC_FIRST_LUA;
 static int _lua_element_colour(int rand, const coord_def& loc,
                                std::string function)
 {
-    lua_State *ls = clua.state();
+    lua_State *ls = dlua.state();
 
-    if (clua.loadbuffer(function.data(), function.length(),
+    if (dlua.loadbuffer(function.data(), function.length(),
                         "lua colour definition"))
     {
-        mpr(clua.error.c_str(), MSGCH_WARN);
+        mpr(dlua.error.c_str(), MSGCH_WARN);
         return BLACK;
     }
     lua_pushinteger(ls, rand);
     lua_pushinteger(ls, loc.x);
     lua_pushinteger(ls, loc.y);
-    if (!clua.callfn(NULL, 3, 1))
+    if (!dlua.callfn(NULL, 3, 1))
     {
-        mpr(clua.error.c_str(), MSGCH_WARN);
+        mpr(dlua.error.c_str(), MSGCH_WARN);
         return BLACK;
     }
 
