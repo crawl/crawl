@@ -170,7 +170,7 @@ Branch branches[] = {
       DNGN_ENTER_GEHENNA, NUM_FEATURES, // sentinel
       "Gehenna", "Gehenna", "Geh",
       NULL,
-      0, false, DARKGREY, RED,
+      0, false, YELLOW, RED,
       mons_gehenna_rare, mons_gehenna_level,
       NULL, NULL, NULL, NULL,
       0, 'G', true, true, 0 },
@@ -188,7 +188,7 @@ Branch branches[] = {
       DNGN_ENTER_TARTARUS, NUM_FEATURES, // sentinel
       "Tartarus", "Tartarus", "Tar",
       NULL,
-      0, false, DARKGREY, DARKGREY,
+      0, false, MAGENTA, MAGENTA,
       mons_tartarus_rare, mons_tartarus_level,
       NULL, NULL, NULL, NULL,
       0, 'Y', true, true, 0 },
