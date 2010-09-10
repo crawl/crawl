@@ -200,8 +200,10 @@ void add_element_colour(element_colour_calc *colour)
 {
     // or else lookups won't work: we strip high bits (because of colflags)
     ASSERT(colour->type < 128);
-    ASSERT(element_colours.find(colour->type) == element_colours.end());
-    ASSERT(element_colours_str.find(colour->name) == element_colours_str.end());
+    ASSERT(colour->type >= ETC_FIRST_LUA ||
+           element_colours.find(colour->type) == element_colours.end());
+    ASSERT(colour->type >= ETC_FIRST_LUA ||
+           element_colours_str.find(colour->name) == element_colours_str.end());
     element_colours[colour->type] = colour;
     element_colours_str[colour->name] = colour;
 }
