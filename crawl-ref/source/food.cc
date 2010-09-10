@@ -230,7 +230,7 @@ static bool _find_butchering_implement(int &butcher_tool, bool gloved_butcher)
     // Look for a butchering implement in your pack.
     for (int i = 0; i < ENDOFPACK; ++i)
     {
-        item_def& tool(you.inv[i]);
+        item_info tool = get_item_info(you.inv[i]);
         if (tool.defined()
             && tool.base_type == OBJ_WEAPONS
             && can_cut_meat( tool )
@@ -302,11 +302,12 @@ static bool _find_butchering_implement(int &butcher_tool, bool gloved_butcher)
         return (false);
     }
 
-    if (you.inv[item_slot].defined()
-        && you.inv[item_slot].base_type == OBJ_WEAPONS
-        && can_cut_meat(you.inv[item_slot]))
+    item_info tool = get_item_info(you.inv[item_slot]);
+    if (tool.defined()
+        && tool.base_type == OBJ_WEAPONS
+        && can_cut_meat(tool))
     {
-        if (can_wield(&you.inv[item_slot]))
+        if (can_wield(&tool))
         {
             butcher_tool = item_slot;
             return (true);
