@@ -2,7 +2,7 @@
 #define SPL_SELFENCH_H
 
 int allowed_deaths_door_hp(void);
-void cast_deaths_door(int pow);
+bool cast_deaths_door(int pow);
 void extension(int pow);
 void remove_ice_armour();
 void ice_armour(int pow, bool extending);
