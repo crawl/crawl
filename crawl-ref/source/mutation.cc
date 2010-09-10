@@ -802,7 +802,7 @@ static int _handle_conflicting_mutations(mutation_type mutation,
             const mutation_type b = simple_conflict[i][1-j];
             if (mutation == a && you.mutation[b] > 0)
             {
-                delete_mutation(b);
+                delete_mutation(b, true, true);
                 return (1);     // Nothing more to do.
             }
         }
