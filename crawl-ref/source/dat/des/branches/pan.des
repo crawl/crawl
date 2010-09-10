@@ -868,11 +868,15 @@ NAME:   pan_disco_hall
 TAGS:   pan no_rotate
 ORIENT: float
 SUBST:  - = 0:1 / .:10
-COLOUR: .xD = disco
+COLOUR: D = random
+COLOUR: .x = disco
 COLOUR: 0123456789 = disco
 KFEAT:  D = granite_statue
 MARKER: D = lua:portal_desc { desc="weirdly glowing ball", \
             desc_long=("This floating ball radiates with shimmering light.") }
+MARKER: D = lua:props_marker { veto_fragmentation="veto", \
+                               veto_disintegrate="veto", \
+                               veto_shatter="veto" }
 MONS:   col:random name:demonic name_adjective plant
 MONS:   red devil ; demon trident good_item ego:distortion
 MONS:   red devil ; lajatang good_item ego:distortion
