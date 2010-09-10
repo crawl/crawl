@@ -3604,7 +3604,7 @@ static void _debug_describe_feature_at(const coord_def &where)
 
     mprf(MSGCH_DIAGNOSTICS, "(%d,%d): %s - %s (%d/%s)%s%s%s%s",
          where.x, where.y,
-         stringize_glyph(get_cell_glyph(where)).ch).c_str(),
+         stringize_glyph(get_cell_glyph(where).ch).c_str(),
          feature_desc.c_str(),
          feat,
          dungeon_feature_name(feat),
