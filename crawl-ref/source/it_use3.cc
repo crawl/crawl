@@ -734,6 +734,11 @@ static bool _ball_of_energy(void)
     {
         confuse_player(10 + random2(10));
     }
+    else if (use < 8)
+    {
+        mpr("You are mesmerised by a rainbow of scintillating colours!");
+        you.increase_duration(DUR_PARALYSIS, 2 + random2(2));
+    }
     else
     {
         int proportional = (you.magic_points * 100) / you.max_magic_points;
