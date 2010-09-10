@@ -1668,6 +1668,22 @@ LUAFN(_dgn_maps_used_here)
     return clua_gentable(ls, env.level_vaults, dgn_push_vault_placement);
 }
 
+LUAFN(_dgn_vault_at)
+{
+    GETCOORD(c, 1, 2, map_bounds);
+    vault_placement *place = dgn_vault_at(c);
+    if (place)
+    {
+        dgn_push_vault_placement(ls, place);
+    }
+    else
+    {
+        lua_pushnil(ls);
+    }
+
+    return 1;
+}
+
 LUAFN(_dgn_find_marker_position_by_prop)
 {
     const char *prop = luaL_checkstring(ls, 1);
@@ -1947,6 +1963,7 @@ const struct luaL_reg dgn_dlib[] =
 { "map_parameters", _dgn_map_parameters },
 
 { "maps_used_here", _dgn_maps_used_here },
+{ "vault_at", _dgn_vault_at },
 
 { "find_marker_position_by_prop", _dgn_find_marker_position_by_prop },
 { "find_marker_positions_by_prop", _dgn_find_marker_positions_by_prop },
