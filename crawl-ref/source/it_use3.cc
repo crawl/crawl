@@ -737,8 +737,7 @@ static bool _ball_of_energy(void)
     }
     else if (use < 8)
     {
-        mpr("You are mesmerised by a rainbow of scintillating colours!");
-        you.increase_duration(DUR_PARALYSIS, 2 + random2(2));
+        you.paralyse(NULL, 2 + random2(2));
     }
     else
     {
