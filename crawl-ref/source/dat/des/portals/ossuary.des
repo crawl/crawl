@@ -345,7 +345,7 @@ SUBST:   3 = 3 2:1 .:1
 SUBST:   f = ~
 ITEM:    any scroll, any potion
 MONS:    mummy
-MONS:    rat zombie / jackal zombie / quokka zombie / snake zombie / \ 
+MONS:    rat zombie / jackal zombie / quokka zombie / snake zombie / \
          goblin zombie / hobgoblin zombie / kobold zombie
 MONS:    gnoll zombie / orc zombie / hound zombie / big kobold zombie / \
          human zombie / elf zombie / centaur zombie

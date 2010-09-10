@@ -6489,7 +6489,7 @@ static object_class_type _item_in_shop(shop_type shop_type)
 bool _spotty_seed_ok(const coord_def& p)
 {
     const int margin = 4;
-    return (p.x >= margin && p.y >= margin 
+    return (p.x >= margin && p.y >= margin
             && p.x < GXM - margin && p.y < GYM - margin);
 }
 

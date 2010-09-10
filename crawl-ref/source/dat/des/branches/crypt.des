@@ -196,7 +196,7 @@ ORIENT:  float
 TAGS:    crypt_entry
 MONS:    bone dragon w:25 / lich / shadow dragon w:5, curse skull
 SHUFFLE: 1X/2Y
-SUBST:   X=., Y=x 
+SUBST:   X=., Y=x
 MAP
 .........
 .x.....x.

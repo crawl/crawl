@@ -1,6 +1,6 @@
 ##############################################################################
 # mini_monsters.des: This is the place for minivaults with monsters.
-#           So all vaults in this file should have no ORIENT lines but they 
+#           So all vaults in this file should have no ORIENT lines but they
 #           should contain MONS or KMONS lines.
 #
 #           Vaults with ORIENT lines are stored in float.des or large.des.
@@ -887,9 +887,9 @@ MAP
 .1xxAxxBxCCx--xEExEExx. 2
 ..1+--R....xDDx..F---+. 5
 ..1+--R..........F---+. 5 -- 44
-.1xxRxx.xSSSxTTx.xFx+x. 
+.1xxRxx.xSSSxTTx.xFx+x.
 ..+--Q..S---T--T...+1.. 7
-..+--Q..S---T--T...+1.. 7 -- 14 
+..+--Q..S---T--T...+1.. 7 -- 14
 .xxPxx.xxSSxxTxx.xGxx1.
 .+--P..V---U--U..G--+.. 9 -- 53
 .+--P..V---U--U..G--+.. 9
@@ -900,7 +900,7 @@ MAP
 .+---N--xLLx--J--I--+.. 1
 .+---N--M--L--x++x--+.. 11
 .x+++x++x--L--+11+--+.. 6
-.1...1..x++x++x..x++x1. 
+.1...1..x++x++x..x++x1.
 .......................
 ENDMAP
 
@@ -1691,7 +1691,7 @@ ENDMAP
 
 # Ice Spiral II (Lemuel)
 #
-# Wait for the freezing cloud to disappear, then run to the next gap, 
+# Wait for the freezing cloud to disappear, then run to the next gap,
 # then wait. It creates an agreeable sense of tension. -LP
 NAME:    ice_spiral_2
 ORIENT:  float
