@@ -3933,11 +3933,14 @@ bool runrest::check_stop_running()
 // in wall and floor type aren't running stopping points.
 bool runrest::run_should_stop() const
 {
-    if (env.cgrid(you.pos() + pos) != EMPTY_CLOUD)
+    const coord_def targ = you.pos() + pos;
+    const map_cell& tcell = env.map_knowledge(targ);
+
+    if (tcell.cloud() != CLOUD_NONE)
         return (true);
 
-    monster* mon = monster_at(you.pos() + pos);
-    if (mon && !fedhas_passthrough(mon))
+    const monster_info* mon = tcell.monsterinfo();
+    if (mon && !fedhas_passthrough(tcell.monsterinfo()))
         return (true);
 
     for (int i = 0; i < 3; i++)
