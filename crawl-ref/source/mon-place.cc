@@ -454,11 +454,18 @@ static std::vector<monster_type> _find_valid_monster_types(const level_id &place
     return (valid_monster_types);
 }
 
+static bool _is_random_monster(int mt)
+{
+    return (mt == RANDOM_MONSTER || mt == RANDOM_MOBILE_MONSTER
+            || mt == WANDERING_MONSTER);
+}
+
 // Caller must use !invalid_monster_type to check if the return value
 // is a real monster.
 monster_type pick_random_monster(const level_id &place, int power,
                                  int &lev_mons,
-                                 bool *chose_ood_monster)
+                                 bool *chose_ood_monster,
+                                 bool force_mobile)
 {
     bool ood_dummy = false;
     bool *isood = chose_ood_monster? chose_ood_monster : &ood_dummy;
@@ -468,7 +475,7 @@ monster_type pick_random_monster(const level_id &place, int power,
     if (crawl_state.game_is_arena())
     {
         monster_type type = arena_pick_random_monster(place, power, lev_mons);
-        if (type != RANDOM_MONSTER)
+        if (!_is_random_monster(type))
             return (type);
     }
 
@@ -548,7 +555,8 @@ monster_type pick_random_monster(const level_id &place, int power,
             } while ((crawl_state.game_is_arena() &&
                       arena_veto_random_monster(mon_type)) ||
                      (crawl_state.game_is_sprint() &&
-                      sprint_veto_random_abyss_monster(mon_type)));
+                      sprint_veto_random_abyss_monster(mon_type)) ||
+                     (force_mobile && mons_class_is_stationary(mon_type)));
 
             if (count == 2000)
                 return (MONS_PROGRAM_BUG);
@@ -575,8 +583,11 @@ monster_type pick_random_monster(const level_id &place, int power,
         {
             mon_type = valid_monster_types[random2(valid_monster_types.size())];
 
-            if (crawl_state.game_is_arena() && arena_veto_random_monster(mon_type))
+            if (crawl_state.game_is_arena() && arena_veto_random_monster(mon_type)
+                || force_mobile && mons_class_is_stationary(mon_type))
+            {
                 continue;
+            }
 
             level  = mons_level(mon_type, place);
             diff   = level - lev_mons;
@@ -622,7 +633,7 @@ bool can_place_on_trap(int mon_type, trap_type trap)
 
     if (trap == TRAP_SHAFT)
     {
-        if (mon_type == RANDOM_MONSTER)
+        if (_is_random_monster(mon_type))
             return (false);
 
         return (mons_class_flies(mon_type) != FL_NONE
@@ -671,7 +682,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
     }
 
     // (2) Take care of non-draconian random monsters.
-    else if (mon_type == RANDOM_MONSTER)
+    else if (_is_random_monster(mon_type))
     {
         level_id place = level_id::current();
 
@@ -739,6 +750,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             if (you.level_type == LEVEL_PORTAL_VAULT
                 && vault_mon_types.size() > 0)
             {
+                // XXX: not respecting RANDOM_MOBILE_MONSTER currently.
                 int i = choose_random_weighted(vault_mon_weights.begin(),
                                                vault_mon_weights.end());
                 int type = vault_mon_types[i];
@@ -787,7 +799,8 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                 const int original_level = *lev_mons;
                 // Now pick a monster of the given branch and level.
                 mon_type = pick_random_monster(place, *lev_mons, *lev_mons,
-                                               chose_ood_monster);
+                                           chose_ood_monster,
+                                           mon_type == RANDOM_MOBILE_MONSTER);
 
                 // Don't allow monsters too stupid to use stairs (e.g.
                 // non-spectral zombified undead) to be placed near
@@ -811,7 +824,8 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                     ++*lev_mons;
 
                 mon_type = pick_random_monster(place, *lev_mons, *lev_mons,
-                                               chose_ood_monster);
+                                           chose_ood_monster,
+                                           mon_type == RANDOM_MOBILE_MONSTER);
             }
         }
     }
@@ -2783,7 +2797,7 @@ int mons_place(mgen_data mg)
 
     // This gives a slight challenge to the player as they ascend the
     // dungeon with the Orb.
-    if (you.char_direction == GDT_ASCENDING && mg.cls == RANDOM_MONSTER
+    if (you.char_direction == GDT_ASCENDING && _is_random_monster(mg.cls)
         && you.level_type == LEVEL_DUNGEON && !mg.summoned())
     {
 #ifdef DEBUG_MON_CREATION
@@ -2792,7 +2806,7 @@ int mons_place(mgen_data mg)
         mg.cls    = _pick_zot_exit_defender();
         mg.flags |= MG_PERMIT_BANDS;
     }
-    else if (mg.cls == RANDOM_MONSTER)
+    else if (_is_random_monster(mg.cls))
         mg.flags |= MG_PERMIT_BANDS;
 
     // Translate level_type.
@@ -2855,14 +2869,14 @@ int mons_place(mgen_data mg)
 
 static dungeon_feature_type _monster_primary_habitat_feature(int mc)
 {
-    if (mc == RANDOM_MONSTER)
+    if (_is_random_monster(mc))
         return (DNGN_FLOOR);
     return (habitat2grid(mons_class_primary_habitat(mc)));
 }
 
 static dungeon_feature_type _monster_secondary_habitat_feature(int mc)
 {
-    if (mc == RANDOM_MONSTER)
+    if (_is_random_monster(mc))
         return (DNGN_FLOOR);
     return (habitat2grid(mons_class_secondary_habitat(mc)));
 }
@@ -3075,7 +3089,7 @@ int create_monster(mgen_data mg, bool fail_msg)
             monster dummy;
             const monster_type resistless_mon = MONS_HUMAN;
             // If the type isn't known yet assume no resists or anything.
-            dummy.type         = (mg.cls == RANDOM_MONSTER) ? resistless_mon
+            dummy.type         = _is_random_monster(mg.cls) ? resistless_mon
                                                             : mg.cls;
             dummy.base_monster = mg.base_type;
             dummy.god          = mg.god;
@@ -3324,8 +3338,8 @@ void set_vault_mon_list(const std::vector<mons_spec> &list)
         }
         else
         {
-            ASSERT(spec.mid != RANDOM_MONSTER
-                   && spec.monbase != RANDOM_MONSTER);
+            ASSERT(!_is_random_monster(spec.mid)
+                   && !_is_random_monster(spec.monbase));
             type_vec[i] = spec.mid;
             base_vec[i] = spec.monbase;
         }
@@ -3373,8 +3387,8 @@ void get_vault_mon_list(std::vector<mons_spec> &list)
         {
             spec.mid     = type;
             spec.monbase = (monster_type) base;
-            ASSERT(spec.mid != RANDOM_MONSTER
-                   && spec.monbase != RANDOM_MONSTER);
+            ASSERT(!_is_random_monster(spec.mid)
+                   && !_is_random_monster(spec.monbase));
         }
         spec.genweight = weight_vec[i];
 
