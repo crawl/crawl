@@ -12,41 +12,10 @@
 #include <utility>
 
 typedef std::vector< std::pair<int, int> > random_colour_map;
-typedef int (*element_colour_calculator)(int, const coord_def&);
 typedef int (*randomized_element_colour_calculator)(int, const coord_def&,
                                                     random_colour_map);
 
 static int _randomized_element_colour(int, const coord_def&, random_colour_map);
-
-struct element_colour_calc
-{
-    element_type type;
-
-    element_colour_calc(element_type _type,
-                        element_colour_calculator _calc)
-        : type(_type), calc(_calc)
-        {};
-
-    virtual int get(const coord_def& loc = coord_def(), bool non_random = false);
-
-    int get_non_random(const coord_def& loc = coord_def())
-        { return get(loc, true); };
-
-protected:
-    int rand(bool non_random);
-
-    element_colour_calculator calc;
-};
-
-int element_colour_calc::rand(bool non_random)
-{
-    return non_random ? 0 : random2(120);
-}
-
-int element_colour_calc::get(const coord_def& loc, bool non_random)
-{
-    return (*calc)(rand(non_random), loc);
-}
 
 struct random_element_colour_calc : public element_colour_calc
 {
@@ -62,6 +31,16 @@ struct random_element_colour_calc : public element_colour_calc
 protected:
     random_colour_map rand_vals;
 };
+
+int element_colour_calc::rand(bool non_random)
+{
+    return non_random ? 0 : random2(120);
+}
+
+int element_colour_calc::get(const coord_def& loc, bool non_random)
+{
+    return (*calc)(rand(non_random), loc);
+}
 
 int random_element_colour_calc::get(const coord_def& loc, bool non_random)
 {
@@ -209,7 +188,7 @@ static element_colour_calc *_create_random_element_colour_calc(element_type type
     return new random_element_colour_calc(type, rand_vals);
 }
 
-static void _add_element_colour(element_colour_calc *colour)
+void add_element_colour(element_colour_calc *colour)
 {
     ASSERT(element_colours.find(colour->type) == element_colours.end());
     element_colours[colour->type] = colour;
@@ -217,143 +196,143 @@ static void _add_element_colour(element_colour_calc *colour)
 
 void init_element_colours()
 {
-    _add_element_colour(new element_colour_calc(
+    add_element_colour(new element_colour_calc(
                             ETC_FLOOR, _etc_floor
                         ));
-    _add_element_colour(new element_colour_calc(
+    add_element_colour(new element_colour_calc(
                             ETC_ROCK, _etc_rock
                         ));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_FIRE,
                             40,  RED,
                             40,  YELLOW,
                             40,  LIGHTRED,
                         0));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_ICE,
                             40,  LIGHTBLUE,
                             40,  BLUE,
                             40,  WHITE,
                         0));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_EARTH,
                             70,  BROWN,
                             50,  GREEN,
                         0));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_AIR,
                             60,  LIGHTGREY,
                             60,  WHITE,
                         0));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_ELECTRICITY,
                             40,  LIGHTCYAN,
                             40,  LIGHTBLUE,
                             40,  CYAN,
                         0));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_POISON,
                             60,  LIGHTGREEN,
                             60,  GREEN,
                         0));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_WATER,
                             60,  BLUE,
                             60,  CYAN,
                         0));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_MAGIC,
                             30,  LIGHTMAGENTA,
                             30,  LIGHTBLUE,
                             30,  MAGENTA,
                             30,  BLUE,
                         0));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_MUTAGENIC,
                             60,  LIGHTMAGENTA,
                             60,  MAGENTA,
                         0));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_WARP,
                             60,  LIGHTMAGENTA,
                             60,  MAGENTA,
                         0));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_ENCHANT,
                             60,  LIGHTBLUE,
                             60,  BLUE,
                         0));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_HEAL,
                             60,  LIGHTBLUE,
                             60,  YELLOW,
                         0));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_BLOOD,
                             60,  RED,
                             60,  DARKGREY,
                         0));
     // assassin
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_DEATH,
                             80,  DARKGREY,
                             40,  MAGENTA,
                         0));
     // necromancer
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_NECRO,
                             80,  DARKGREY,
                             40,  MAGENTA,
                         0));
     // ie demonology
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_UNHOLY,
                             80,  DARKGREY,
                             40,  RED,
                         0));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_DARK,
                             80,  DARKGREY,
                             40,  LIGHTGREY,
                         0));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_HOLY,
                             60,  YELLOW,
                             60,  WHITE,
                         0));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_VEHUMET,
                             40,  LIGHTRED,
                             40,  LIGHTMAGENTA,
                             40,  LIGHTBLUE,
                         0));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_BEOGH,
                             // plain Orc colour
                             60,  LIGHTRED,
                             // Orcish mines wall/idol colour
                             60,  BROWN,
                         0));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_CRYSTAL,
                             40,  LIGHTGREY,
                             40,  GREEN,
                             40,  LIGHTRED,
                         0));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_SLIME,
                             40,  GREEN,
                             40,  BROWN,
                             40,  LIGHTGREEN,
                         0));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_SMOKE,
                             30,  LIGHTGREY,
                             30,  DARKGREY,
                             30,  LIGHTBLUE,
                             30,  MAGENTA,
                         0));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_JEWEL,
                             12,  WHITE,
                             12,  YELLOW,
@@ -366,28 +345,28 @@ void init_element_colours()
                             12,  GREEN,
                             12,  BLUE,
                         0));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_ELVEN,
                             40,  LIGHTGREEN,
                             40,  GREEN,
                             20,  LIGHTBLUE,
                             20,  BLUE,
                         0));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_DWARVEN,
                             40,  BROWN,
                             40,  LIGHTRED,
                             20,  LIGHTGREY,
                             20,  CYAN,
                         0));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_ORCISH,
                             40,  DARKGREY,
                             40,  RED,
                             20,  BROWN,
                             20,  MAGENTA,
                         0));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_GILA,
                             30,  LIGHTMAGENTA,
                             30,  MAGENTA,
@@ -395,7 +374,7 @@ void init_element_colours()
                             15,  LIGHTRED,
                             15,  RED,
                         0));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_KRAKEN,
                             15,  GREEN,
                             15,  LIGHTGREEN,
@@ -406,56 +385,56 @@ void init_element_colours()
                             15,  MAGENTA,
                             15,  LIGHTMAGENTA,
                         0));
-    _add_element_colour(new element_colour_calc(
+    add_element_colour(new element_colour_calc(
                             ETC_STONE, _etc_stone
                         ));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_MIST,
                             100, CYAN,
                             20,  BLUE,
                         0));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_SHIMMER_BLUE,
                             90,  BLUE,
                             20,  LIGHTBLUE,
                             10,  CYAN,
                         0));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_DECAY,
                             60,  BROWN,
                             60,  GREEN,
                         0));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_SILVER,
                             90,  LIGHTGREY,
                             30,  WHITE,
                         0));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_GOLD,
                             60,  YELLOW,
                             60,  BROWN,
                         0));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_IRON,
                             40,  CYAN,
                             40,  LIGHTGREY,
                             40,  DARKGREY,
                         0));
-    _add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(_create_random_element_colour_calc(
                             ETC_BONE,
                             90,  WHITE,
                             30,  LIGHTGREY,
                         0));
-    _add_element_colour(new element_colour_calc(
+    add_element_colour(new element_colour_calc(
                             ETC_ELVEN_BRICK, _etc_elven_brick
                         ));
-    _add_element_colour(new element_colour_calc(
+    add_element_colour(new element_colour_calc(
                             ETC_WAVES, _etc_waves
                         ));
-    _add_element_colour(new element_colour_calc(
+    add_element_colour(new element_colour_calc(
                             ETC_TREE, _etc_tree
                         ));
-    _add_element_colour(new element_colour_calc(
+    add_element_colour(new element_colour_calc(
                             ETC_RANDOM, _etc_random
                         ));
 }

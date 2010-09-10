@@ -51,12 +51,33 @@ enum element_type
     ETC_RANDOM,         // any colour (except BLACK)
 };
 
+typedef int (*element_colour_calculator)(int, const coord_def&);
+
+struct element_colour_calc
+{
+    element_type type;
+
+    element_colour_calc(element_type _type,
+                        element_colour_calculator _calc)
+        : type(_type), calc(_calc)
+        {};
+
+    virtual int get(const coord_def& loc = coord_def(),
+                    bool non_random = false);
+
+protected:
+    int rand(bool non_random);
+
+    element_colour_calculator calc;
+};
+
 int str_to_colour(const std::string &str, int default_colour = -1,
                   bool accept_number = true);
 const std::string colour_to_str(uint8_t colour);
 unsigned int str_to_tile_colour(std::string colour);
 
 void init_element_colours();
+void add_element_colour(element_colour_calc *colour);
 uint8_t random_colour();
 uint8_t random_uncommon_colour();
 uint8_t make_low_colour(uint8_t colour);
