@@ -106,24 +106,10 @@ bool show_type::is_cleanable_monster() const
     return (cls == SH_MONSTER && !mons_class_is_stationary(mons));
 }
 
-static unsigned short _tree_colour(const coord_def& where)
-{
-    uint32_t h = where.x;
-    h+=h<<10; h^=h>>6;
-    h += where.y;
-    h+=h<<10; h^=h>>6;
-    h+=h<<3; h^=h>>11; h+=h<<15;
-    return (h>>30) ? GREEN :
-           (you.where_are_you == BRANCH_SWAMP) ? BROWN
-                   : LIGHTGREEN;
-}
-
 static void _update_feat_at(const coord_def &gp)
 {
     dungeon_feature_type feat = grid_appearance(gp);
     unsigned colour = env.grid_colours(gp);
-    if (feat == DNGN_TREE && !colour)
-        colour = _tree_colour(gp);
     env.map_knowledge(gp).set_feature(feat, colour);
 
     if (haloed(gp))
