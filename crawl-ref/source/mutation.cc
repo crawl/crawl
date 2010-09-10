@@ -1829,8 +1829,10 @@ bool perma_mutate(mutation_type which_mut, int how_much)
 
     int rc = 1;
     // clear out conflicting mutations
-    while (rc == 1)
+    int count = 0;
+    while (rc == 1 && ++count < 100)
         rc = _handle_conflicting_mutations(which_mut, true);
+    ASSERT(rc == 0);
 
     while (how_much-- > 0)
         if (mutate(which_mut, false, true, false, false, true))
