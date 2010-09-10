@@ -3921,7 +3921,7 @@ void runrest::set_run_check(int index, int dir)
 
 bool runrest::check_stop_running()
 {
-    if (runmode > 0 && runmode != RMODE_START && run_grids_changed())
+    if (runmode > 0 && runmode != RMODE_START && run_should_stop())
     {
         stop();
         return (true);
@@ -3931,7 +3931,7 @@ bool runrest::check_stop_running()
 
 // This function creates "equivalence classes" so that changes
 // in wall and floor type aren't running stopping points.
-bool runrest::run_grids_changed() const
+bool runrest::run_should_stop() const
 {
     if (env.cgrid(you.pos() + pos) != EMPTY_CLOUD)
         return (true);
