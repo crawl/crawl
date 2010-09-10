@@ -72,6 +72,7 @@ itemprop.o \
 items.o \
 jobs.o \
 kills.o \
+l_colour.o \
 l_crawl.o \
 l_debug.o \
 l_dgn.o \

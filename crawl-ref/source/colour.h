@@ -49,6 +49,7 @@ enum element_type
     ETC_WAVES,
     ETC_TREE,
     ETC_RANDOM,         // any colour (except BLACK)
+    ETC_FIRST_LUA = 96, // colour indices have to be <128
 };
 
 typedef int (*element_colour_calculator)(int, const coord_def&);
