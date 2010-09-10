@@ -1084,6 +1084,14 @@ bool fedhas_passthrough(const monster* target)
                 || target->attitude != ATT_HOSTILE));
 }
 
+bool fedhas_passthrough(const monster_info* target)
+{
+    return (target
+            && fedhas_passthrough_class(target->type)
+            && (target->type != MONS_OKLOB_PLANT
+                || target->attitude != ATT_HOSTILE));
+}
+
 // Fedhas worshipers can shoot through non-hostile plants, can a
 // particular beam go through a particular monster?
 bool fedhas_shoot_through(const bolt & beam, const monster* victim)
