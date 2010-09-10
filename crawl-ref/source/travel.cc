@@ -3939,6 +3939,15 @@ bool runrest::run_should_stop() const
     if (tcell.cloud() != CLOUD_NONE)
         return (true);
 
+    if (is_excluded(targ))
+    {
+#ifndef USE_TILE
+        // XXX: Remove this once exclusions are visible.
+        mprf(MSGCH_WARN, "Stopped running for exclusion.");
+#endif
+        return (true);
+    }
+
     const monster_info* mon = tcell.monsterinfo();
     if (mon && !fedhas_passthrough(tcell.monsterinfo()))
         return (true);
