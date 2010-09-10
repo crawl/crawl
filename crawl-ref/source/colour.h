@@ -56,10 +56,11 @@ typedef int (*element_colour_calculator)(int, const coord_def&);
 struct element_colour_calc
 {
     element_type type;
+    std::string name;
 
-    element_colour_calc(element_type _type,
+    element_colour_calc(element_type _type, std::string _name,
                         element_colour_calculator _calc)
-        : type(_type), calc(_calc)
+        : type(_type), name(_name), calc(_calc)
         {};
 
     virtual int get(const coord_def& loc = coord_def(),
