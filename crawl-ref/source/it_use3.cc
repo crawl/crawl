@@ -458,7 +458,7 @@ static bool _ball_of_seeing(void)
     {
         if (you.level_type == LEVEL_LABYRINTH)
             mpr("You see a maze of twisty little passages, all alike.");
-        confuse_player( 10 + random2(10), false );
+        confuse_player(10 + random2(10));
     }
     else if (use < 15 || coinflip())
     {
@@ -732,7 +732,7 @@ static bool _ball_of_energy(void)
     }
     else if (use < 6)
     {
-        confuse_player(10 + random2(10), false);
+        confuse_player(10 + random2(10));
     }
     else
     {
