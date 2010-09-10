@@ -6,7 +6,7 @@ options file (init.txt or .crawlrc) and then macro the '<' key to
 {
 function safe_upstairs()
   if you.branch() == "Lab" then
-     crawl.formatted_mpr("Really leavel this labyrinth?", "prompt")
+     crawl.formatted_mpr("Really leave this labyrinth?", "prompt")
      local res = crawl.getch()
      if string.lower(string.char(res)) == "y" then
        crawl.sendkeys("<")
