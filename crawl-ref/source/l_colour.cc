@@ -10,16 +10,15 @@
 #include "dlua.h"
 #include "message.h"
 
-typedef int (*lua_element_colour_calculator)(int, const coord_def&,
-                                             std::string);
+typedef int (*lua_element_colour_calculator)(int, const coord_def&, lua_datum);
 
 static int _lua_element_colour(int rand, const coord_def& loc,
-                               std::string function);
+                               lua_datum function);
 
 struct lua_element_colour_calc : public element_colour_calc
 {
     lua_element_colour_calc(element_type _type, std::string _name,
-                            std::string _function)
+                            lua_datum _function)
         : element_colour_calc(_type, _name, (element_colour_calculator)_lua_element_colour),
           function(_function)
         {};
@@ -28,7 +27,7 @@ struct lua_element_colour_calc : public element_colour_calc
                     bool non_random = false);
 
 protected:
-    std::string function;
+    lua_datum function;
 };
 
 int lua_element_colour_calc::get(const coord_def& loc, bool non_random)
@@ -46,16 +45,11 @@ int lua_element_colour_calc::get(const coord_def& loc, bool non_random)
 static int next_colour = ETC_FIRST_LUA;
 
 static int _lua_element_colour(int rand, const coord_def& loc,
-                               std::string function)
+                               lua_datum function)
 {
     lua_State *ls = dlua.state();
 
-    if (dlua.loadbuffer(function.data(), function.length(),
-                        "lua colour definition"))
-    {
-        mpr(dlua.error.c_str(), MSGCH_WARN);
-        return BLACK;
-    }
+    function.push();
     lua_pushinteger(ls, rand);
     lua_pushinteger(ls, loc.x);
     lua_pushinteger(ls, loc.y);
@@ -71,21 +65,14 @@ static int _lua_element_colour(int rand, const coord_def& loc,
     return str_to_colour(colour);
 }
 
-static int _string_dumper(lua_State *ls, const void *p, size_t sz, void *ud)
-{
-    std::string *function = (std::string*)ud;
-    *function += std::string((const char *)p, sz);
-    return 0;
-}
-
 LUAFN(l_add_colour)
 {
     const std::string &name = luaL_checkstring(ls, 1);
     if (lua_gettop(ls) != 2 || !lua_isfunction(ls, 2))
         luaL_error(ls, "Expected colour generation function.");
 
-    std::string function;
-    lua_dump(ls, _string_dumper, &function);
+    CLua& vm(CLua::get_vm(ls));
+    lua_datum function(vm, 2);
 
     add_element_colour(
         new lua_element_colour_calc((element_type)(next_colour++),
