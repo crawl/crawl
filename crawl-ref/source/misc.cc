@@ -1963,34 +1963,21 @@ void reveal_secret_door(const coord_def& p)
 {
     ASSERT(grd(p) == DNGN_SECRET_DOOR);
 
-    dungeon_feature_type door = grid_secret_door_appearance(p);
+    const std::string door_open_prompt =
+        env.markers.property_at(p, MAT_ANY, "door_open_prompt");
+
     // Former secret doors become known but are still hidden to monsters
-    // until opened.
-    grd(p) = feat_is_opaque(door) ? DNGN_DETECTED_SECRET_DOOR
-                                  : DNGN_OPEN_DOOR;
+    // until opened. Transparent secret doors are opened to not change
+    // LOS, unless they have a warning prompt.
+    dungeon_feature_type door = grid_secret_door_appearance(p);
+    if (feat_is_opaque(door) || !door_open_prompt.empty())
+        grd(p) = DNGN_DETECTED_SECRET_DOOR;
+    else
+        grd(p) = DNGN_OPEN_DOOR;
+
+    set_terrain_changed(p);
     viewwindow();
     learned_something_new(HINT_FOUND_SECRET_DOOR, p);
-
-    // If a transparent secret door was forced open to preserve LOS,
-    // check if it had an opening prompt.
-    if (grd(p) == DNGN_OPEN_DOOR)
-    {
-        std::string door_open_prompt =
-            env.markers.property_at(p, MAT_ANY, "door_open_prompt");
-
-        if (!door_open_prompt.empty())
-        {
-            mprf("That secret door had a prompt on it:", MSGCH_PROMPT);
-            mprf(MSGCH_PROMPT, "%s", door_open_prompt.c_str());
-
-            if (!is_exclude_root(p))
-            {
-                if (yesno("Put travel exclusion on door? (Y/n)", true, 'y'))
-                    // Zero radius exclusion right on top of door.
-                    set_exclude(p, 0);
-            }
-        }
-    }
 }
 
 // A feeble attempt at Nethack-like completeness for cute messages.
