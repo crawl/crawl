@@ -1992,6 +1992,28 @@ MAP
 ...............
 ENDMAP
 
+NAME:  kb_rosetta
+DEPTH: D:6-, Vault, Elf
+SUBST: x : xcvmnot
+SUBST: X : GItTU
+MAP
+   ...   ...
+  ..x.. ..x..
+ ...xx...xx...
+....xxx.xxx....
+.xxx.xx.xx.xxx.
+..xxx9x.x9xxx..
+ ..xxxx.xxxx..
+  .....X.....
+ ..xxxx.xxxx..
+..xxx9x.x9xxx..
+.xxx.xx.xx.xxx.
+....xxx.xxx....
+ ...xx...xx...
+  ..x.. ..x..
+   ...   ...
+ENDMAP
+
 # Small chamber for a nice item (Eino)
 NAME:   small_chamber_with_monster
 TAGS:   mini_float extra luniq_mini
