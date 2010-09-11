@@ -1016,20 +1016,20 @@ int yred_random_servants(int threshold, bool force_hostile)
     const int temp_rand = random2(std::min(100, threshold));
 
     // undead
-    mon_type = ((temp_rand < 10) ? MONS_WRAITH :           // 10%
-                (temp_rand < 20) ? MONS_WIGHT :            // 10%
-                (temp_rand < 30) ? MONS_FLYING_SKULL :     // 10%
-                (temp_rand < 39) ? MONS_SPECTRAL_WARRIOR : //  9%
-                (temp_rand < 48) ? MONS_ROTTING_HULK :     //  9%
-                (temp_rand < 57) ? MONS_SKELETAL_WARRIOR : //  9%
-                (temp_rand < 65) ? MONS_FREEZING_WRAITH :  //  8%
-                (temp_rand < 73) ? MONS_FLAMING_CORPSE :   //  8%
-                (temp_rand < 80) ? MONS_GHOUL :            //  7%
-                (temp_rand < 86) ? MONS_MUMMY :            //  6%
-                (temp_rand < 91) ? MONS_HUNGRY_GHOST :     //  5%
-                (temp_rand < 95) ? MONS_FLAYED_GHOST :     //  4%
-                (temp_rand < 98) ? MONS_BONE_DRAGON        //  3%
-                                 : MONS_DEATH_COB);        //  2%
+    mon_type = ((temp_rand < 10) ? MONS_WRAITH :             // 10%
+                (temp_rand < 20) ? MONS_WIGHT :              // 10%
+                (temp_rand < 30) ? MONS_FLYING_SKULL :       // 10%
+                (temp_rand < 39) ? MONS_PHANTASMAL_WARRIOR : //  9%
+                (temp_rand < 48) ? MONS_ROTTING_HULK :       //  9%
+                (temp_rand < 57) ? MONS_SKELETAL_WARRIOR :   //  9%
+                (temp_rand < 65) ? MONS_FREEZING_WRAITH :    //  8%
+                (temp_rand < 73) ? MONS_FLAMING_CORPSE :     //  8%
+                (temp_rand < 80) ? MONS_GHOUL :              //  7%
+                (temp_rand < 86) ? MONS_MUMMY :              //  6%
+                (temp_rand < 91) ? MONS_HUNGRY_GHOST :       //  5%
+                (temp_rand < 95) ? MONS_FLAYED_GHOST :       //  4%
+                (temp_rand < 98) ? MONS_BONE_DRAGON          //  3%
+                                 : MONS_DEATH_COB);          //  2%
 
     if (mon_type == MONS_FLYING_SKULL)
         how_many = 2 + random2(4);

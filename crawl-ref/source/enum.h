@@ -1807,7 +1807,7 @@ enum monster_type                      // (int) menv[].type
     MONS_SHADOW_FIEND,
     MONS_WATER_MOCCASIN,
     MONS_CROCODILE,
-    MONS_SPECTRAL_WARRIOR,             //  130
+    MONS_PHANTASMAL_WARRIOR,           //  130
     MONS_PULSATING_LUMP,
     MONS_STORM_DRAGON,
     MONS_YAKTAUR,

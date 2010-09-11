@@ -1315,6 +1315,10 @@ pandemonium lord
 
 Powerful demons inhabiting the endless halls of Pandemonium, each is different, with its own set of strengths and weaknesses.
 %%%%
+phantasmal warrior
+
+A hideous translucent green undead spirit.
+%%%%
 phantom
 
 A transparent man-like undead spirit.
@@ -1567,10 +1571,6 @@ A crazily shifting twist in the fabric of reality.
 spectral thing
 
 A hideous glowing apparition.
-%%%%
-spectral warrior
-
-A hideous translucent green undead spirit.
 %%%%
 sphinx
 

@@ -1232,8 +1232,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_SHADOW_WRAITH;
     case MONS_FREEZING_WRAITH:
         return TILEP_MONS_FREEZING_WRAITH;
-    case MONS_SPECTRAL_WARRIOR:
-        return TILEP_MONS_SPECTRAL_WARRIOR;
+    case MONS_PHANTASMAL_WARRIOR:
+        return TILEP_MONS_PHANTASMAL_WARRIOR;
     case MONS_SPECTRAL_THING:
         return TILEP_MONS_SPECTRAL_LARGE;
 
