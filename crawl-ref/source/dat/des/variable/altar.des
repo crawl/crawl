@@ -1068,7 +1068,6 @@ U.U
 ENDMAP
 
 NAME:  nemelex_deck
-PLACE: D:1
 TAGS:  temple_overflow_nemelex_xobeh uniq_altar_nemelex_xobeh
 KFEAT: _ = altar_nemelex_xobeh
 KITEM: _ = plain deck
