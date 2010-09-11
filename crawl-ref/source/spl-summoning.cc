@@ -1373,7 +1373,7 @@ static void _display_undead_motions(int motions)
     if (motions & DEAD_ARE_SLITHERING)
         motions_list.push_back("slithering");
 
-    //Prevents the message from getting too long and spammy
+    // Prevents the message from getting too long and spammy.
     if (motions_list.size() > 3)
         mpr("The dead have arisen!");
     else
@@ -1458,10 +1458,12 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     if (!force_beh)
         player_angers_monster(&menv[mons]);
 
-    //Bitfield for motions - determines text displayed when animating dead
+    // Bitfield for motions - determines text displayed when animating dead.
     if (mons_class_primary_habitat(zombie_type)    == HT_WATER
         || mons_class_primary_habitat(zombie_type) == HT_LAVA)
+    {
         *motions_r |= DEAD_ARE_SWIMMING;
+    }
     else if (mons_class_flies(zombie_type) == FL_FLY)
         *motions_r |= DEAD_ARE_FLYING;
     else if (mons_class_flies(zombie_type) == FL_LEVITATE)
@@ -1471,7 +1473,9 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
              || mons_genus(zombie_type) == MONS_GUARDIAN_SERPENT
              || mons_genus(zombie_type) == MONS_GIANT_SLUG
              || mons_genus(zombie_type) == MONS_WORM)
+    {
         *motions_r |= DEAD_ARE_SLITHERING;
+    }
     else if (mons_genus(zombie_type)    == MONS_GIANT_FROG
              || mons_genus(zombie_type) == MONS_BLINK_FROG)
         *motions_r |= DEAD_ARE_HOPPING;
