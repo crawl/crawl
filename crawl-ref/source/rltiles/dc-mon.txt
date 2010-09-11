@@ -601,7 +601,7 @@ vampire_mage MONS_VAMPIRE_MAGE
 wraith MONS_WRAITH
 shadow_wraith MONS_SHADOW_WRAITH
 freezing_wraith MONS_FREEZING_WRAITH
-spectral_warrior MONS_SPECTRAL_WARRIOR
+phantasmal_warrior MONS_PHANTASMAL_WARRIOR
 
 %sdir dc-mon
 %rim 0

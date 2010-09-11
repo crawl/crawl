@@ -380,7 +380,7 @@ KFEAT:   ! = ^
 MONS:    plant
 MONS:    wolf / warg / hell hound
 MONS:    nothing
-MONS:    wight w:50 / wraith / shadow wraith / spectral warrior /\
+MONS:    wight w:50 / wraith / shadow wraith / phantasmal warrior /\
          skeletal warrior / flayed ghost
 MONS:    dancing weapon
 MONS:    human simulacrum w:60 / elf simulacrum / ogre simulacrum /\

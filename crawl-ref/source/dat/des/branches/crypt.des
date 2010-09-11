@@ -379,11 +379,11 @@ KFEAT: z = deep_water
 KMASK: z = no_pool_fixup
 KFEAT: T = .
 KITEM: T = * / w:5 |
-KMONS: T = w:25 spectral warrior / spectral dragon / spectral ice dragon / \
+KMONS: T = w:25 phantasmal warrior / spectral dragon / spectral ice dragon / \
            spectral storm dragon
 KFEAT: S = .
 KITEM: S = $ / nothing
-KMONS: S = w:25 spectral warrior / spectral dragon / spectral ice dragon / \
+KMONS: S = w:25 phantasmal warrior / spectral dragon / spectral ice dragon / \
            spectral storm dragon
 MAP
     cccccccccccc
@@ -489,7 +489,7 @@ MONS:   w:20 skeletal warrior / w:40 large skeleton / small skeleton / nothing
 # vampire layout
 : elseif brnd > 4 then
 MONS:   vampire mage
-MONS:   spectral warrior
+MONS:   phantasmal warrior
 MONS:   vampire knight
 MONS:   vampire
 MONS:   skeletal warrior/wraith
@@ -501,10 +501,10 @@ MONS:   vampire / skeletal warrior / large zombie / w:5 small zombie / \
 MONS:   curse skull
 MONS:   crystal golem
 MONS:   lich
-MONS:   spectral warrior
-MONS:   flayed ghost / wraith / freezing wraith / spectral warrior
+MONS:   phantasmal warrior
+MONS:   flayed ghost / wraith / freezing wraith / phantasmal warrior
 MONS:   flying skull
-MONS:   flayed ghost / wraith / freezing wraith / spectral warrior / \
+MONS:   flayed ghost / wraith / freezing wraith / phantasmal warrior / \
         hungry ghost / large zombie / w:5 small zombie / w:5 nothing
 # mummy layout - rare
 : else
@@ -804,7 +804,7 @@ KMONS:  S = large zombie / small zombie / large skeleton / small skeleton
 : else
 KMONS:  Z = curse skull
 KMONS:  Q = spectral iron dragon
-KMONS:  R = spectral warrior
+KMONS:  R = phantasmal warrior
 KMONS:  S = phantom / wraith / freezing wraith / flayed ghost / wight
 : end
 ####### SW monsters (crematory). Either fiery undead or hellish.

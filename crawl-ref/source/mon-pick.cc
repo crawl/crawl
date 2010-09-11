@@ -252,6 +252,7 @@ bool mons_abyss(int mcls)
     case MONS_NECROPHAGE:
     case MONS_NEQOXEC:
     case MONS_ORANGE_DEMON:
+    case MONS_PHANTASMAL_WARRIOR:
     case MONS_PHANTOM:
     case MONS_PIT_FIEND:
     case MONS_RAKSHASA:
@@ -269,7 +270,6 @@ bool mons_abyss(int mcls)
     case MONS_SKELETON_SMALL:
     case MONS_SMOKE_DEMON:
     case MONS_SOUL_EATER:
-    case MONS_SPECTRAL_WARRIOR:
     case MONS_SPINY_WORM:
     case MONS_STONE_GOLEM:
     case MONS_SUN_DEMON:
@@ -433,10 +433,10 @@ int mons_rare_abyss(int mcls)
     case MONS_IRON_GOLEM:
     case MONS_NAGA_MAGE:
     case MONS_NAGA_WARRIOR:
+    case MONS_PHANTASMAL_WARRIOR:
     case MONS_PIT_FIEND:
     case MONS_RED_DEVIL:
     case MONS_SHINING_EYE:
-    case MONS_SPECTRAL_WARRIOR:
     case MONS_SPINY_WORM:
     case MONS_STONE_GOLEM:
     case MONS_TENTACLED_MONSTROSITY:
@@ -508,11 +508,11 @@ bool mons_pan(int mcls)
     case MONS_LICH:
     case MONS_MUMMY:
     case MONS_NECROPHAGE:
+    case MONS_PHANTASMAL_WARRIOR:
     case MONS_PHANTOM:
     case MONS_SHADOW:
     case MONS_SKELETON_LARGE:
     case MONS_SKELETON_SMALL:
-    case MONS_SPECTRAL_WARRIOR:
     case MONS_VAMPIRE:
     case MONS_WIGHT:
     case MONS_WRAITH:
@@ -795,7 +795,7 @@ int mons_standard_level(int mcls)
         return 25;
 
     case MONS_DEEP_ELF_CONJURER:
-    case MONS_SPECTRAL_WARRIOR:
+    case MONS_PHANTASMAL_WARRIOR:
     case MONS_STORM_DRAGON:
         return 26;
 
@@ -1027,10 +1027,10 @@ int mons_standard_rare(int mcls)
     case MONS_GIANT_SNAIL:
     case MONS_ICE_DRAGON:
     case MONS_INSUBSTANTIAL_WISP:
+    case MONS_PHANTASMAL_WARRIOR:
     case MONS_RAKSHASA:
     case MONS_REDBACK:
     case MONS_SHADOW_DRAGON:
-    case MONS_SPECTRAL_WARRIOR:
     case MONS_SPHINX:
     case MONS_STEAM_DRAGON:
     case MONS_STORM_DRAGON:
@@ -2172,7 +2172,7 @@ int mons_crypt_level(int mcls)
 
     case MONS_BONE_DRAGON:
     case MONS_FLAMING_CORPSE:
-    case MONS_SPECTRAL_WARRIOR:
+    case MONS_PHANTASMAL_WARRIOR:
     case MONS_SHADOW_WRAITH:
     case MONS_VAMPIRE_KNIGHT:
     case MONS_VAMPIRE_MAGE:
@@ -2244,7 +2244,7 @@ int mons_crypt_rare(int mcls)
     case MONS_ROTTING_HULK:
         return 17;
 
-    case MONS_SPECTRAL_WARRIOR:
+    case MONS_PHANTASMAL_WARRIOR:
         return 14;
 
     case MONS_FLYING_SKULL:
@@ -2584,9 +2584,9 @@ int mons_dis_level(int mcls)
     case MONS_ICE_DEVIL:
     case MONS_ICE_DRAGON:
     case MONS_LICH:
+    case MONS_PHANTASMAL_WARRIOR:
     case MONS_REAPER:
     case MONS_SOUL_EATER:
-    case MONS_SPECTRAL_WARRIOR:
         mlev += 5;
         break;
 
@@ -2675,9 +2675,9 @@ int mons_dis_rare(int mcls)
     case MONS_HELL_KNIGHT:
     case MONS_IRON_GOLEM:
     case MONS_LICH:
+    case MONS_PHANTASMAL_WARRIOR:
     case MONS_ROTTING_DEVIL:
     case MONS_SOUL_EATER:
-    case MONS_SPECTRAL_WARRIOR:
     case MONS_STONE_GOLEM:
         return 10;
 
@@ -2746,10 +2746,10 @@ int mons_gehenna_level(int mcls)
     case MONS_BONE_DRAGON:
     case MONS_FIEND:
     case MONS_LICH:
+    case MONS_PHANTASMAL_WARRIOR:
     case MONS_PIT_FIEND:
     case MONS_REAPER:
     case MONS_SOUL_EATER:
-    case MONS_SPECTRAL_WARRIOR:
         mlev += 6;
         break;
 
@@ -2820,7 +2820,7 @@ int mons_gehenna_rare(int mcls)
         return 21;
 
     case MONS_HAIRY_DEVIL:
-    case MONS_SPECTRAL_WARRIOR:
+    case MONS_PHANTASMAL_WARRIOR:
         return 20;
 
     case MONS_BONE_DRAGON:
@@ -2883,7 +2883,7 @@ int mons_cocytus_level(int mcls)
     case MONS_HAIRY_DEVIL:
     case MONS_HUNGRY_GHOST:
     case MONS_MUMMY:
-    case MONS_SPECTRAL_WARRIOR:
+    case MONS_PHANTASMAL_WARRIOR:
     case MONS_WRAITH:
         mlev += 4;
         break;
@@ -2966,7 +2966,7 @@ int mons_cocytus_rare(int mcls)
     case MONS_PHANTOM:
         return 25;
 
-    case MONS_SPECTRAL_WARRIOR:
+    case MONS_PHANTASMAL_WARRIOR:
         return 20;
 
     case MONS_SOUL_EATER:
@@ -3027,7 +3027,7 @@ int mons_tartarus_level(int mcls)
     case MONS_HUNGRY_GHOST:
     case MONS_ICE_DEVIL:
     case MONS_MUMMY:
-    case MONS_SPECTRAL_WARRIOR:
+    case MONS_PHANTASMAL_WARRIOR:
     case MONS_TORMENTOR:
     case MONS_SIMULACRUM_LARGE:
     case MONS_SIMULACRUM_SMALL:
@@ -3098,7 +3098,7 @@ int mons_tartarus_rare(int mcls)
     case MONS_SHADOW_DEMON:
         return 50;
 
-    case MONS_SPECTRAL_WARRIOR:
+    case MONS_PHANTASMAL_WARRIOR:
         return 45;
 
     case MONS_VAMPIRE:
