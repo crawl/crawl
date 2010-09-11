@@ -1482,7 +1482,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_FLAYED_GHOST, 'p', RED, "flayed ghost",
-    M_SPEAKS | M_INSUBSTANTIAL,
+    M_INSUBSTANTIAL | M_SPEAKS,
     MR_RES_POISON,
     0, 10, MONS_GHOST, MONS_FLAYED_GHOST, MH_UNDEAD, -4,
     { {AT_HIT, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
