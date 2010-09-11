@@ -26,7 +26,7 @@ Once the primary guardian serpent of a legendary treasure hoard, he was disgrace
 # Uniques
 Agnes
 
-A tall and beautiful warrior, as vain as she is quick. You can't help but notice both her exotic weapon and graceful movements. She searches the dungeon for aesthetically pleasing objects to surround herself with.
+A tall (for her kind) and beautiful warrior, as vain as she is quick. You can't help but notice both her exotic weapon and graceful movements.  She searches the dungeon for aesthetically pleasing objects to surround herself with.
 %%%%
 Antaeus
 
