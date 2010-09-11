@@ -45,6 +45,15 @@ disco_choices = {
             return brightcolours[index]
         end
     end,
+    function (x, y, ballx, bally, turn, rand)
+        local distance = math.floor(math.sqrt((x - ballx)^2 + (y - bally)^2))
+        local index = ((distance + turn) % #colours) + 1
+        if rand > 60 then
+            return colours[index]
+        else
+            return brightcolours[index]
+        end
+    end
 }
 
 colour.add_colour("disco", function(rand, x, y)
