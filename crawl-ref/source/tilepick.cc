@@ -867,6 +867,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_SCORPION;
     case MONS_GIANT_SCORPION:
         return TILEP_MONS_GIANT_SCORPION;
+    case MONS_SPIDER:
+        return TILEP_MONS_SPIDER;
     case MONS_TARANTELLA:
         return TILEP_MONS_TARANTELLA;
     case MONS_JUMPING_SPIDER:
