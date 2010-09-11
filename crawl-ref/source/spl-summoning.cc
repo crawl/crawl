@@ -717,7 +717,7 @@ bool summon_berserker(int pow, god_type god, int spell,
     summon->update_ench(berserk);
     summon->update_ench(abj);
 
-    player_angers_monster(&menv[mons]);
+    player_angers_monster(summon);
     return (true);
 }
 
