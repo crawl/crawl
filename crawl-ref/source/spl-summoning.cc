@@ -1354,12 +1354,12 @@ void equip_undead(const coord_def &a, int corps, int mons, int monnum)
     }
 }
 
-//Displays message when raising dead with Animate Skeleton or Animate Dead
+// Displays message when raising dead with Animate Skeleton or Animate Dead.
 static void _display_undead_motions(int motions)
 {
     std::vector<std::string> motions_list;
 
-    //Check bitfield from _raise_remains for types of corpse(s) being animated
+    // Check bitfield from _raise_remains for types of corpse(s) being animated.
     if (motions & DEAD_ARE_WALKING)
         motions_list.push_back("walking");
     if (motions & DEAD_ARE_HOPPING)
