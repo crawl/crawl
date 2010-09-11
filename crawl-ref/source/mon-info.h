@@ -94,9 +94,9 @@ struct monster_info : public monster_info_base
     : monster_info_base(mi)
     {
         u = mi.u;
-        for(unsigned i = 0; i < 6; ++i)
+        for (unsigned i = 0; i < 6; ++i)
         {
-            if(mi.inv[i].get())
+            if (mi.inv[i].get())
                 inv[i].reset(new item_def(*mi.inv[i]));
         }
     }
@@ -154,9 +154,9 @@ struct monster_info : public monster_info_base
 
     mon_intel_type intel() const
     {
-        if(is(MB_ENSLAVED))
+        if (is(MB_ENSLAVED))
         {
-            if(type == MONS_ABOMINATION_SMALL || type == MONS_ABOMINATION_LARGE)
+            if (type == MONS_ABOMINATION_SMALL || type == MONS_ABOMINATION_LARGE)
                 return (I_NORMAL);
             return mons_class_intel(base_type);
         }
@@ -180,7 +180,7 @@ struct monster_info : public monster_info_base
     int base_speed() const;
     bool can_regenerate() const
     {
-        if(type == MONS_PLAYER_GHOST && u.ghost.species == SP_DEEP_DWARF)
+        if (type == MONS_PLAYER_GHOST && u.ghost.species == SP_DEEP_DWARF)
             return false;
         return mons_class_can_regenerate(type);
     }
