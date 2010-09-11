@@ -949,7 +949,6 @@ bool monster::unequip(item_def &item, int slot, int near, bool force)
     case OBJ_WEAPONS:
     {
         bool give_msg = (slot == MSLOT_WEAPON || mons_wields_two_weapons(this));
-
         unequip_weapon(item, near, give_msg);
         break;
     }
