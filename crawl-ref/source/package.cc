@@ -154,7 +154,11 @@ package::package(const char* file, bool writeable, bool empty)
 package::~package()
 {
     dprintf("package: finalizing\n");
-    ASSERT(!n_users);
+    ASSERT(!n_users || CrawlIsCrashing); // not merely aborted, there are
+        // live pointers to us.  With normal stack unwinding, destructors
+        // will make sure this never happens and this assert is good for
+        // catching missing manual deletes.  The C++ exit handler is the
+        // only place that can be legitimately call things in wrong order.
 
     if (rw && !aborted)
     {
