@@ -1184,7 +1184,7 @@ bool name_zombie(monster* mon, const monster* orig)
     return (name_zombie(mon, orig->type, name));
 }
 
-int downscale_zombie_damage(int damage)
+static int _downscale_zombie_damage(int damage)
 {
     // These are cumulative, of course: {dlb}
     if (damage > 1)
@@ -1199,8 +1199,8 @@ int downscale_zombie_damage(int damage)
     return (damage);
 }
 
-mon_attack_def downscale_zombie_attack(const monster* mons,
-                                       mon_attack_def attk)
+static mon_attack_def _downscale_zombie_attack(const monster* mons,
+                                               mon_attack_def attk)
 {
     switch (attk.type)
     {
@@ -1222,7 +1222,7 @@ mon_attack_def downscale_zombie_attack(const monster* mons,
     else if (attk.flavour != AF_REACH)
         attk.flavour = AF_PLAIN;
 
-    attk.damage = downscale_zombie_damage(attk.damage);
+    attk.damage = _downscale_zombie_damage(attk.damage);
 
     return (attk);
 }
@@ -1295,7 +1295,7 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
     if (mon->type == MONS_SLIME_CREATURE && mon->number > 1)
         attk.damage *= mon->number;
 
-    return (zombified ? downscale_zombie_attack(mon, attk) : attk);
+    return (zombified ? _downscale_zombie_attack(mon, attk) : attk);
 }
 
 int mons_damage(int mc, int rt)
