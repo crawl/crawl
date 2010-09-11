@@ -1692,11 +1692,9 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
 },
 
-// currently a dummy, because tiles currently share the tile for spider form
-// and wolf spiders.  Please handle that before enabling this monster.
 {
     MONS_SPIDER, 's', CYAN, "spider",
-    M_NO_SKELETON | M_NO_POLY_TO,
+    M_NO_SKELETON,
     MR_VUL_POISON,
     250, 10, MONS_SPIDER, MONS_SPIDER, MH_NATURAL, -3,
     { {AT_BITE, AF_POISON_MEDIUM, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
