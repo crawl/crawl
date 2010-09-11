@@ -2573,6 +2573,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_SCORPION;
     case MONS_GIANT_SCORPION:
         return TILE_CORPSE_GIANT_SCORPION;
+    case MONS_SPIDER:
+        return TILE_CORPSE_SPIDER;
     case MONS_TARANTELLA:
         return TILE_CORPSE_TARANTELLA;
     case MONS_JUMPING_SPIDER:
