@@ -76,6 +76,14 @@ static const coord_def mon_compass[8] = {
     coord_def( 1, 1), coord_def(0, 1), coord_def(-1,1), coord_def(-1,0)
 };
 
+static int _compass_idx(const coord_def& mov)
+{
+    for (int i = 0; i < 8; i++)
+        if (mon_compass[i] == mov)
+            return (i);
+    return (-1);
+}
+
 static bool immobile_monster[MAX_MONSTERS];
 
 // A probably needless optimization: convert the C string "just seen" to
@@ -346,7 +354,7 @@ static void _maybe_set_patrol_route(monster* mons)
     }
 }
 
-static void _tweak_wall_mmov()
+static void _tweak_wall_mmov(const coord_def& monpos)
 {
     // The rock worm will try to move along through rock for as long as
     // possible. If the player is walking through a corridor, for example,
@@ -354,58 +362,22 @@ static void _tweak_wall_mmov()
     // leaving the wall.
     // This might cause the rock worm to take detours but it still
     // comes off as smarter than otherwise.
-    if (mmov.x != 0 && mmov.y != 0) // diagonal movement
+
+    int dir = _compass_idx(mmov);
+    ASSERT(dir != -1);
+
+    int count = 0;
+    int choice = dir; // stick with mmov if none are good
+    for (int i = -1; i <= 1; ++i)
     {
-        bool updown    = false;
-        bool leftright = false;
-
-        coord_def t = mons->pos() + coord_def(mmov.x, 0);
-        if (in_bounds(t) && feat_is_rock(grd(t)) && !feat_is_permarock(grd(t)))
-            updown = true;
-
-        t = mons->pos() + coord_def(0, mmov.y);
-        if (in_bounds(t) && feat_is_rock(grd(t)) && !feat_is_permarock(grd(t)))
-            leftright = true;
-
-        if (updown && (!leftright || coinflip()))
-            mmov.y = 0;
-        else if (leftright)
-            mmov.x = 0;
+        const int altdir = (dir + i + 8) % 8;
+        const coord_def t = monpos + mon_compass[altdir];
+        const bool good = in_bounds(t) && feat_is_rock(grd(t))
+                          && !feat_is_permarock(grd(t));
+        if (good && one_chance_in(++count))
+            choice = altdir;
     }
-    else if (mmov.x == 0 && mons->target.x == mons->pos().x)
-    {
-        bool left  = false;
-        bool right = false;
-        coord_def t = mons->pos() + coord_def(-1, mmov.y);
-        if (in_bounds(t) && feat_is_rock(grd(t)) && !feat_is_permarock(grd(t)))
-            left = true;
-
-        t = mons->pos() + coord_def(1, mmov.y);
-        if (in_bounds(t) && feat_is_rock(grd(t)) && !feat_is_permarock(grd(t)))
-            right = true;
-
-        if (left && (!right || coinflip()))
-            mmov.x = -1;
-        else if (right)
-            mmov.x = 1;
-    }
-    else if (mmov.y == 0 && mons->target.y == mons->pos().y)
-    {
-        bool up   = false;
-        bool down = false;
-        coord_def t = mons->pos() + coord_def(mmov.x, -1);
-        if (in_bounds(t) && feat_is_rock(grd(t)) && !feat_is_permarock(grd(t)))
-            up = true;
-
-        t = mons->pos() + coord_def(mmov.x, 1);
-        if (in_bounds(t) && feat_is_rock(grd(t)) && !feat_is_permarock(grd(t)))
-            down = true;
-
-        if (up && (!down || coinflip()))
-            mmov.y = -1;
-        else if (down)
-            mmov.y = 1;
-    }
+    mmov = mon_compass[choice];
 }
 
 //---------------------------------------------------------------
@@ -2962,15 +2934,7 @@ static void _find_good_alternate_move(monster* mons,
 {
     const int current_distance = distance(mons->pos(), mons->target);
 
-    int dir = -1;
-    for (int i = 0; i < 8; i++)
-    {
-        if (mon_compass[i] == mmov)
-        {
-            dir = i;
-            break;
-        }
-    }
+    int dir = _compass_idx(mmov);
 
     // Only handle if the original move is to an adjacent square.
     if (dir == -1)
