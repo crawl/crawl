@@ -494,8 +494,9 @@ static void _handle_movement(monster* mons)
                 _mon_can_move_to_pos(mons, coord_def(count_x-1, count_y-1));
         }
 
-    if (mons_wall_shielded(mons))
-        _tweak_wall_mmov();
+    // Make rock worms prefer wall.
+    if (mons_wall_shielded(mons) && mons->target != mons->pos() + mmov)
+        _tweak_wall_mmov(mons->pos());
 
     // If the monster is moving in your direction, whether to attack or
     // protect you, or towards a monster it intends to attack, check
