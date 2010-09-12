@@ -3105,8 +3105,7 @@ int create_monster(mgen_data mg, bool fail_msg)
             int tries = 0;
             while (tries++ < 50
                    && (!in_bounds(mg.pos)
-                       || mons_avoids_cloud(&dummy, env.cgrid(mg.pos),
-                                            NULL, true)))
+                       || mons_avoids_cloud(&dummy, env.cgrid(mg.pos), true)))
             {
                 mg.pos = find_newmons_square(montype, mg.pos);
             }
@@ -3116,7 +3115,7 @@ int create_monster(mgen_data mg, bool fail_msg)
             const int cloud_num = env.cgrid(mg.pos);
             // Don't place friendly god gift in a damaging cloud created by
             // you if that would anger the god.
-            if (mons_avoids_cloud(&dummy, cloud_num, NULL, true)
+            if (mons_avoids_cloud(&dummy, cloud_num, true)
                 && mg.behaviour == BEH_FRIENDLY
                 && god_hates_attacking_friend(you.religion, &dummy)
                 && YOU_KILL(env.cloud[cloud_num].killer))
