@@ -876,8 +876,13 @@ MONS:    plant, fungus, oklob plant, big fish, bush, toadstool col:random
 KITEM:   d = apple / apricot / orange / pear / grape / strawberry / nothing w:70
 KFEAT:   d = floor
 SUBST:   x = TTPPPPP.
-SHUFFLE: PQR, TU, ..."
-SUBST:   P = 112 , Q = 115, R = 11125
+# Only make "oklob behind bushes" situation possible a bit deeper.
+: if you.absdepth() > 5 then
+SHUFFLE: PQR
+SUBST:   Q = 115, R = 11125
+: end
+SUBST:   P = 112
+SHUFFLE: ...", TU
 SUBST:   T = xt, U = xx
 SUBST:   " = .....6
 COLOUR:  . = green / none
