@@ -817,7 +817,7 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
         // XXX: Neutral monsters are a tangled mess of arbitrary logic.
         // It's not even clear any more what behaviours are intended for
         // neutral monsters and what are merely accidents of the code.
-        if (mon->neutral() && mon->attitude == ATT_NEUTRAL)
+        if (mon->neutral())
         {
             if (mon->asleep())
                 mon->behaviour = BEH_WANDER;
