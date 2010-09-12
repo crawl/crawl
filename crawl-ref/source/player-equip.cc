@@ -819,6 +819,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
 
         case SPARM_SEE_INVISIBLE:
             mpr("You feel perceptive.");
+            autotoggle_autopickup(false);
             break;
 
         case SPARM_DARKNESS:
