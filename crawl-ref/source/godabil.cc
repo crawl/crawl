@@ -912,9 +912,6 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile,
         mon->type = mons_zombie_size(soul_type) == Z_BIG ?
             MONS_ABOMINATION_LARGE : MONS_ABOMINATION_SMALL;
         mon->base_monster = MONS_NO_MONSTER;
-
-        // Drop all of the monster's equipment.
-        monster_drop_things(mon, false);
     }
     else
     {
@@ -922,13 +919,13 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile,
         // adjustments for zombified monsters.
         mon->type = MONS_SPECTRAL_THING;
         mon->base_monster = soul_type;
-
-        // Drop all of the monster's holy equipment, but keep wielding
-        // the rest of it.
-        monster_drop_things(mon, false, is_holy_item);
     }
 
-    // Recreate the monster, based on its changed type above.
+    // For abominations, drop all equipment.  For spectral things, drop
+    // all holy equipment and keep wielding the rest.
+    monster_drop_things(mon, false, twisted ? is_any_item : is_holy_item);
+
+    // Recreate the monster, based on its changed type.
     define_monster(mon);
 
     mon->colour = ETC_UNHOLY;
