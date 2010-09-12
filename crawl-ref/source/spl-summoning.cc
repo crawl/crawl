@@ -1290,9 +1290,9 @@ void equip_undead(const coord_def &a, int corps, int mons, int monnum)
         case OBJ_MISSILES:
             continue;
 
+        // Stupid undead can't use gold.
         case OBJ_GOLD:
-            mslot = MSLOT_GOLD;
-            break;
+            continue;
 
         // Stupid undead can't use wands.
         case OBJ_WANDS:
