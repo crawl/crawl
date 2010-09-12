@@ -1753,14 +1753,14 @@ static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
     case CE_MUTAGEN_RANDOM:
         mpr("This meat tastes really weird.");
         mutate(RANDOM_MUTATION);
-        did_god_conduct( DID_DELIBERATE_MUTATING, 10);
+        did_god_conduct(DID_DELIBERATE_MUTATING, 10);
         xom_is_stimulated(100);
         break;
 
     case CE_MUTAGEN_BAD:
         mpr("This meat tastes *really* weird.");
         give_bad_mutation();
-        did_god_conduct( DID_DELIBERATE_MUTATING, 10);
+        did_god_conduct(DID_DELIBERATE_MUTATING, 10);
         xom_is_stimulated(random2(200));
         break;
 

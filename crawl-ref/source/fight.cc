@@ -715,7 +715,7 @@ static bool _vamp_wants_blood_from_monster(const monster* mon)
     if (!mons_has_blood(mon->type))
         return (false);
 
-    const corpse_effect_type chunk_type = mons_corpse_effect( mon->type );
+    const corpse_effect_type chunk_type = mons_corpse_effect(mon->type);
 
     // Don't drink poisonous or mutagenic blood.
     return (chunk_type == CE_CLEAN || chunk_type == CE_CONTAMINATED
@@ -734,7 +734,7 @@ static bool _player_vampire_draws_blood(const monster* mon, const int damage,
     if (!_vamp_wants_blood_from_monster(mon))
         return (false);
 
-    const corpse_effect_type chunk_type = mons_corpse_effect( mon->type );
+    const corpse_effect_type chunk_type = mons_corpse_effect(mon->type);
 
     // Now print message, need biting unless already done (never for bat form!)
     if (needs_bite_msg && !player_in_bat_form())
