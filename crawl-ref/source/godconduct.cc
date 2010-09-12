@@ -1018,9 +1018,6 @@ void set_attack_conducts(god_conduct_trigger conduct[3], const monster* mon,
         if ((mon->flags & NEW_GIFT_FLAGS) == NEW_GIFT_FLAGS
             && mon->god != GOD_XOM)
         {
-            mprf(MSGCH_ERROR, "Newly created friendly god gift '%s' was hurt "
-                 "by you, shouldn't be possible; please file a bug report.",
-                 mon->name(DESC_PLAIN, true).c_str());
             _first_attack_was_friendly[midx] = true;
         }
         else if (_first_attack_conduct[midx]
