@@ -937,8 +937,22 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile,
     mon->flags |= MF_ENSLAVED_SOUL;
 
     if (twisted)
+    {
         // Mark abominations as undead.
         mon->flags |= MF_HONORARY_UNDEAD;
+    }
+    else
+    {
+        // If the original monster type can wield two weapons, make sure
+        // its spectral thing can as well.  This is needed for e.g.
+        // deep elf blademasters, who otherwise act as plain spectral
+        // elves when equipped.
+        if (mons_class_flag(orig.type, M_TWOWEAPON)
+            && !mons_class_flag(soul_type, M_TWOWEAPON))
+        {
+            mon->flags |= MF_TWOWEAPON;
+        }
+    }
 
     name_zombie(mon, &orig);
 
