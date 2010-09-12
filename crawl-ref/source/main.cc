@@ -2432,11 +2432,18 @@ static void _decrement_durations()
         else
         {
             // Just time out potions/spells/miscasts.
-            if ((you.duration[DUR_LEVITATION] -= delay) <= 0)
+            if (you.attribute[ATTR_LEV_UNCANCELLABLE]
+                && (you.duration[DUR_LEVITATION] -= delay) <= 0)
             {
                 you.attribute[ATTR_LEV_UNCANCELLABLE] = 0;
-                // permanent_levitation() has a hack that requires >1
-                you.duration[DUR_LEVITATION] = 2;
+            }
+
+            if (!you.attribute[ATTR_LEV_UNCANCELLABLE])
+            {
+                // With permanent levitation, keep the duration above
+                // the expiration threshold.
+                you.duration[DUR_LEVITATION]
+                    = 2 * get_expiration_threshold(DUR_LEVITATION);
             }
         }
     }
