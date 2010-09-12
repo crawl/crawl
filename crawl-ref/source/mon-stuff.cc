@@ -256,15 +256,23 @@ bool curse_an_item( bool decay_potions, bool quiet )
     return (true);
 }
 
-void monster_drop_ething(monster* mons, bool mark_item_origins,
-                         int owner_id)
+// The default suitable() function for monster_drop_things().
+bool drop_any_item(const item_def& item)
+{
+    return (true);
+}
+
+void monster_drop_things(monster* mons,
+                          bool mark_item_origins,
+                          bool (*suitable)(const item_def& item),
+                          int owner_id)
 {
     // Drop weapons and missiles last (i.e., on top), so others pick up.
     for (int i = NUM_MONSTER_SLOTS - 1; i >= 0; --i)
     {
         int item = mons->inv[i];
 
-        if (item != NON_ITEM)
+        if (item != NON_ITEM && suitable(mitm[item]))
         {
             const bool summoned_item =
                 testbits(mitm[item].flags, ISFLAG_SUMMONED);
@@ -2191,7 +2199,7 @@ int monster_die(monster* mons, killer_type killer,
 
     const coord_def mwhere = mons->pos();
     if (drop_items)
-        monster_drop_ething(mons, YOU_KILL(killer) || pet_kill);
+        monster_drop_things(mons, YOU_KILL(killer) || pet_kill);
     else
     {
         // Destroy the items belonging to MF_HARD_RESET monsters so they
@@ -2616,7 +2624,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
 
     mons->speed_increment = 67 + random2(6);
 
-    monster_drop_ething(mons);
+    monster_drop_things(mons);
 
     // New monster type might be interesting.
     mark_interesting_monst(mons);
