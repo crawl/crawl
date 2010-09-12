@@ -708,21 +708,29 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             // in 99% of cases - a player can just watch who stepped where
             // and mark the trap on an external paper map.  Not good.
 
+            actor* targ = NULL;
             if (m->wont_attack() || crawl_state.game_is_arena())
-            {
-                MiscastEffect( m, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
-                               3, "the power of Zot" );
-            }
+                targ = m;
             else if (in_sight && one_chance_in(5))
-            {
-                mpr("The power of Zot is invoked against you!");
-                MiscastEffect( &you, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
-                               3, "the power of Zot" );
-            }
-            else if (player_can_hear(this->pos))
+                targ = &you;
+
+            // Give the player a chance to figure out what happened
+            // to their friend.
+            if (player_can_hear(this->pos) && (!targ || !in_sight))
             {
                 mprf(MSGCH_SOUND, "You hear a %s \"Zot\"!",
                      in_sight ? "loud" : "distant");
+            }
+
+            if (targ)
+            {
+                if (in_sight)
+                {
+                    mprf("The power of Zot is invoked against %s!",
+                         targ->name(DESC_NOCAP_THE).c_str());
+                }
+                MiscastEffect(targ, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
+                              3, "the power of Zot");
             }
         }
         break;
