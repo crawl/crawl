@@ -903,8 +903,6 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile,
     // If the monster's held in a net, get it out.
     mons_clear_trapping_net(mon);
 
-    const monster orig = *mon;
-
     if (twisted)
     {
         // Turn the monster into a small or large abomination, based on
@@ -939,8 +937,6 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile,
     if (twisted)
         // Mark abominations as undead.
         mon->flags |= MF_HONORARY_UNDEAD;
-
-    name_zombie(mon, &orig);
 
     mons_make_god_gift(mon, GOD_YREDELEMNUL);
 
