@@ -380,6 +380,8 @@ static void _tweak_wall_mmov(const coord_def& monpos)
     mmov = mon_compass[choice];
 }
 
+typedef FixedArray< bool, 3, 3 > move_array;
+
 //---------------------------------------------------------------
 //
 // handle_movement
@@ -475,7 +477,7 @@ static void _handle_movement(monster* mons)
     }
 
     const coord_def newpos(mons->pos() + mmov);
-    FixedArray < bool, 3, 3 > good_move;
+    move_array good_move;
 
     for (int count_x = 0; count_x < 3; count_x++)
         for (int count_y = 0; count_y < 3; count_y++)
@@ -2931,7 +2933,7 @@ static bool _mon_can_move_to_pos(const monster* mons,
 
 // Uses, and updates the global variable mmov.
 static void _find_good_alternate_move(monster* mons,
-                                      const FixedArray<bool, 3, 3>& good_move)
+                                      const move_array& good_move)
 {
     const int current_distance = distance(mons->pos(), mons->target);
 
@@ -3179,7 +3181,7 @@ static bool _may_cutdown(monster* mons, monster* targ)
 
 static bool _monster_move(monster* mons)
 {
-    FixedArray<bool, 3, 3> good_move;
+    move_array good_move;
 
     const habitat_type habitat = mons_primary_habitat(mons);
     bool deep_water_available = false;
