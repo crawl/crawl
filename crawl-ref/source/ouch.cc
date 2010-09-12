@@ -1347,13 +1347,13 @@ void end_game(scorefile_entry &se)
             if (you.is_undead
                 && you.attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
             {
-                simple_god_message(" rasps: \"You have failed me!"
-                                   " Welcome... oblivion!\"");
+                simple_god_message(" rasps: \"You have failed me! "
+                                   "Welcome... oblivion!\"");
             }
             else
             {
-                simple_god_message(" rasps: \"You have failed me!"
-                                   " Welcome... death!\"");
+                simple_god_message(" rasps: \"You have failed me! "
+                                   "Welcome... death!\"");
             }
             break;
 
