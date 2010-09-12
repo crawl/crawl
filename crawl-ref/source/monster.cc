@@ -28,6 +28,7 @@
 #include "libutil.h"
 #include "misc.h"
 #include "mon-abil.h"
+#include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
@@ -195,6 +196,12 @@ bool monster::wants_submerge() const
     // Don't submerge if we just unsubmerged to shout.
     if (seen_context == "bursts forth shouting")
         return (false);
+
+    if (!mons_is_fleeing(this)
+        && mons_can_move_towards_target(this))
+    {
+        return (false);
+    }
 
     return (!mons_landlubbers_in_reach(this));
 }

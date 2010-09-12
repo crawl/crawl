@@ -354,6 +354,32 @@ static void _maybe_set_patrol_route(monster* mons)
     }
 }
 
+static void _set_mons_move_dir(const monster* mons,
+                               coord_def* dir, coord_def* delta)
+{
+    ASSERT(dir && delta);
+
+    // Some calculations.
+    if (mons_class_flag(mons->type, M_BURROWS) && mons->foe == MHITYOU)
+    {
+        // Boring beetles always move in a straight line in your
+        // direction.
+        *delta = you.pos() - mons->pos();
+    }
+    else
+        *delta = mons->target - mons->pos();
+
+    // Move the monster.
+    *dir = delta->sgn();
+
+    if (mons_is_fleeing(mons) && mons->travel_target != MTRAV_WALL
+        && (!mons->friendly()
+            || mons->target != you.pos()))
+    {
+        *dir *= -1;
+    }
+}
+
 static void _tweak_wall_mmov(const coord_def& monpos)
 {
     // The rock worm will try to move along through rock for as long as
@@ -382,6 +408,49 @@ static void _tweak_wall_mmov(const coord_def& monpos)
 
 typedef FixedArray< bool, 3, 3 > move_array;
 
+static void _fill_good_move(const monster* mons, move_array* good_move)
+{
+    for (int count_x = 0; count_x < 3; count_x++)
+        for (int count_y = 0; count_y < 3; count_y++)
+        {
+            const int targ_x = mons->pos().x + count_x - 1;
+            const int targ_y = mons->pos().y + count_y - 1;
+
+            // Bounds check: don't consider moving out of grid!
+            if (!in_bounds(targ_x, targ_y))
+            {
+                (*good_move)[count_x][count_y] = false;
+                continue;
+            }
+
+            (*good_move)[count_x][count_y] =
+                _mon_can_move_to_pos(mons, coord_def(count_x-1, count_y-1));
+        }
+}
+
+// This only tracks movement, not whether hitting an
+// adjacent monster is a possible move.
+bool mons_can_move_towards_target(const monster* mon)
+{
+    coord_def mov, delta;
+    _set_mons_move_dir(mon, &mov, &delta);
+
+    move_array good_move;
+    _fill_good_move(mon, &good_move);
+
+    int dir = _compass_idx(mov);
+    for (int i = -1; i <= 1; ++i)
+    {
+        const int altdir = (dir + i + 8) % 8;
+        const coord_def p = mon_compass[altdir] + coord_def(1, 1);
+        if (good_move(p))
+            return (true);
+    }
+
+    return (false);
+}
+
+
 //---------------------------------------------------------------
 //
 // handle_movement
@@ -391,8 +460,6 @@ typedef FixedArray< bool, 3, 3 > move_array;
 //---------------------------------------------------------------
 static void _handle_movement(monster* mons)
 {
-    coord_def delta;
-
     _maybe_set_patrol_route(mons);
 
     // Monsters will try to flee out of a sanctuary.
@@ -417,25 +484,8 @@ static void _handle_movement(monster* mons)
         }
     }
 
-    // Some calculations.
-    if (mons_class_flag(mons->type, M_BURROWS) && mons->foe == MHITYOU)
-    {
-        // Boring beetles always move in a straight line in your
-        // direction.
-        delta = you.pos() - mons->pos();
-    }
-    else
-        delta = mons->target - mons->pos();
-
-    // Move the monster.
-    mmov = delta.sgn();
-
-    if (mons_is_fleeing(mons) && mons->travel_target != MTRAV_WALL
-        && (!mons->friendly()
-            || mons->target != you.pos()))
-    {
-        mmov *= -1;
-    }
+    coord_def delta;
+    _set_mons_move_dir(mons, &mmov, &delta);
 
     // Don't allow monsters to enter a sanctuary or attack you inside a
     // sanctuary, even if you're right next to them.
@@ -477,24 +527,9 @@ static void _handle_movement(monster* mons)
     }
 
     const coord_def newpos(mons->pos() + mmov);
+
     move_array good_move;
-
-    for (int count_x = 0; count_x < 3; count_x++)
-        for (int count_y = 0; count_y < 3; count_y++)
-        {
-            const int targ_x = mons->pos().x + count_x - 1;
-            const int targ_y = mons->pos().y + count_y - 1;
-
-            // Bounds check: don't consider moving out of grid!
-            if (!in_bounds(targ_x, targ_y))
-            {
-                good_move[count_x][count_y] = false;
-                continue;
-            }
-
-            good_move[count_x][count_y] =
-                _mon_can_move_to_pos(mons, coord_def(count_x-1, count_y-1));
-        }
+    _fill_good_move(mons, &good_move);
 
     // Make rock worms prefer wall.
     if (mons_wall_shielded(mons) && mons->target != mons->pos() + mmov)
@@ -643,13 +678,13 @@ static void _handle_movement(monster* mons)
             if (!good_move[i][j])
                 continue;
 
-            delta.set(i - 1, j - 1);
-            coord_def tmp = old_pos + delta;
+            coord_def d(i - 1, j - 1);
+            coord_def tmp = old_pos + d;
 
             if (grid_distance(you.pos(), tmp) < old_dist && you.see_cell(tmp))
             {
                 if (one_chance_in(++matches))
-                    mmov = delta;
+                    mmov = d;
                 break;
             }
         }
