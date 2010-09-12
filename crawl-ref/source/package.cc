@@ -120,6 +120,11 @@ package::package(const char* file, bool writeable, bool empty)
         ssize_t res = ::read(fd, &head, sizeof(file_header));
         if (res < 0)
             sysfail("error reading the save file (%s)", file);
+        if (!res || !(head.magic || head.version || head.padding[0]
+                      || head.padding[1] || head.padding[2] || head.start))
+        {
+            fail("The save file (%s) is empty!", file);
+        }
         if (res != sizeof(file_header))
             fail("save file (%s) corrupted -- header truncated", file);
 
