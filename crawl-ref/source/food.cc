@@ -1771,7 +1771,6 @@ static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
         break;
 
     case CE_POISONOUS:
-    case CE_POISON_CONTAM:
         mpr("Yeeuch - this meat is poisonous!");
         if (poison_player(3 + random2(4), "", "poisonous meat"))
             xom_is_stimulated(random2(128));
@@ -1814,6 +1813,7 @@ static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
         do_eat = true;
         break;
 
+    case CE_POISON_CONTAM: // _determine_chunk_effect should never return this
     case CE_MUTAGEN_GOOD:
     case CE_NOCORPSE:
     case CE_RANDOM:
@@ -2738,7 +2738,11 @@ static corpse_effect_type _determine_chunk_effect(corpse_effect_type chunktype,
             chunktype = CE_POISONOUS;
             break;
         }
-        // else fall through
+        else
+        {
+            chunktype = CE_CONTAMINATED;
+            // and fall through
+        }
     case CE_CONTAMINATED:
         switch (player_mutation_level(MUT_SAPROVOROUS))
         {
