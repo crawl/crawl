@@ -1088,16 +1088,6 @@ static void _finish_delay(const delay_queue_item &delay)
                                        " departed soul.");
                 }
 
-                if (you.species == SP_VAMPIRE && delay.type == DELAY_BUTCHER
-                    && mons_has_blood(item.plus) && !food_is_rotten(item)
-                    // Don't give this message if more butchering to follow.
-                    && (you.delay_queue.size() == 1
-                        || you.delay_queue[1].type != DELAY_BUTCHER)
-                    && !you.has_spell(SPELL_SUBLIMATION_OF_BLOOD))
-                {
-                    mpr("What a waste.");
-                }
-
                 const bool was_orc = (mons_species(item.plus) == MONS_ORC);
 
                 if (mons_skeleton(item.plus) && one_chance_in(3))
