@@ -1476,6 +1476,10 @@ static bool _mons_has_path_to_player(const monster* mon, bool want_move = false)
             return (false);
     }
 
+    // Short-cut if it's already adjacent.
+    if (grid_distance(mon->pos(), you.pos()) <= 1)
+        return (true);
+
     // If the monster is awake and knows a path towards the player
     // (even though the player cannot know this) treat it as unsafe.
     if (mon->travel_target == MTRAV_PLAYER)
@@ -1504,6 +1508,7 @@ static bool _mons_has_path_to_player(const monster* mon, bool want_move = false)
 bool mons_can_hurt_player(const monster* mon, const bool want_move)
 {
     // FIXME: This takes into account whether the player knows the map!
+    //        It should, for the purposes of i_feel_safe. [rob]
     // It also always returns true for sleeping monsters, but that's okay
     // for its current purposes. (Travel interruptions and tension.)
     if (_mons_has_path_to_player(mon, want_move))
