@@ -280,8 +280,12 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     if (auto_wield)
     {
-        if (item_slot == you.equip[EQ_WEAPON])
+        if (item_slot == you.equip[EQ_WEAPON]
+            || you.equip[EQ_WEAPON] == -1
+               && !_valid_weapon_swap(you.inv[item_slot]))
+        {
             item_slot = 1;      // backup is 'b'
+        }
 
         if (slot != -1)         // allow external override
             item_slot = slot;
