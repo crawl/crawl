@@ -371,10 +371,6 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
         return (false);
     }
 
-    // Make sure that wielding the weapon won't kill the player.
-    if (!safe_to_remove_or_wear(new_wpn, false))
-        return (false);
-
     // Unwield any old weapon.
     if (you.weapon() && !unwield_item(show_weff_messages))
         return (false);
@@ -537,11 +533,7 @@ void wear_armour(int slot) // slot is for tiles
         return;
 
     // Wear the armour.
-    if (safe_to_remove_or_wear( you.inv[armour_wear_2],
-                                wearing_slot(armour_wear_2) ))
-    {
-        do_wear_armour( armour_wear_2, false );
-    }
+    do_wear_armour(armour_wear_2, false);
 }
 
 static int armour_equip_delay(const item_def &item)
@@ -782,9 +774,6 @@ bool do_wear_armour(int item, bool quiet)
             return (false);
     }
 
-    if (!safe_to_remove_or_wear(invitem, false))
-        return (false);
-
     you.turn_is_over = true;
 
     const int delay = armour_equip_delay(invitem);
@@ -839,7 +828,7 @@ bool takeoff_armour(int item)
         return (false);
     }
 
-    if (!safe_to_remove_or_wear(invitem, true))
+    if (!safe_to_remove(invitem))
         return (false);
 
     bool removed_cloak = false;
@@ -3151,107 +3140,38 @@ static int _prompt_ring_to_remove(int new_ring)
 // Checks whether a to-be-worn or to-be-removed item affects
 // character stats and whether wearing/removing it could be fatal.
 // If so, warns the player, or just returns false if quiet is true.
-bool safe_to_remove_or_wear(const item_def &item, bool remove,
-                            bool quiet)
+bool safe_to_remove(const item_def &item, bool quiet)
 {
-    bool prop_lev = false;
-    bool fatal_liquid = false;
-    dungeon_feature_type gridhere = grd(you.pos());
+    item_info inf = get_item_info(item);
 
-    // Don't warn when putting on an unknown item.
-    if (item.base_type == OBJ_JEWELLERY
-        && item_ident(item, ISFLAG_KNOW_PLUSES))
+    const bool grants_lev =
+         inf.base_type == OBJ_JEWELLERY && inf.sub_type == RING_LEVITATION
+         || inf.base_type == OBJ_ARMOUR && inf.special == SPARM_LEVITATION
+         || is_artefact(inf)
+            && artefact_known_wpn_property(inf, ARTP_LEVITATE);
+
+    // assumes item can't grant levitation twice
+    const bool removing_ends_lev =
+        you.is_levitating()
+        && !you.attribute[ATTR_LEV_UNCANCELLABLE]
+        && (player_evokable_levitation() == 1);
+
+    const dungeon_feature_type feat = grd(you.pos());
+
+    if (grants_lev && removing_ends_lev
+        && (feat == DNGN_LAVA
+            || feat == DNGN_DEEP_WATER && !player_likes_water()))
     {
-        switch (item.sub_type)
-        {
-        case RING_LEVITATION:
-            prop_lev = true;
-            break;
-        default:
-            break;
-        }
-    }
-
-    if (item.base_type == OBJ_ARMOUR && item_type_known(item))
-    {
-        switch (item.special)
-        {
-        case SPARM_LEVITATION:
-            prop_lev = true;
-            break;
-
-        default:
-            break;
-        }
-    }
-
-    if (is_artefact(item))
-    {
-        prop_lev = prop_lev || artefact_known_wpn_property(item, ARTP_LEVITATE);
-
-        if (!remove && artefact_known_wpn_property(item, ARTP_EYESIGHT))
-        {
-            // We might have to turn autopickup back on again.
-            // This is not optimal, in that it could also happen if we do
-            // not know the property (in which case it should become known).
-            autotoggle_autopickup(false);
-        }
-    }
-
-    // If we are levitating and about to remove a levitation-granting item
-    // make sure this doesn't cause us to drown or die to stat loss.
-    if (prop_lev && remove && you.is_levitating())
-    {
-        if (you.species == SP_MERFOLK && feat_is_water(gridhere))
-        {
-            fatal_liquid = false;
-        }
-
-        if (gridhere == DNGN_LAVA
-            || (gridhere == DNGN_DEEP_WATER && !beogh_water_walk()
-                && !you.swimming()))
-        {
-            // We'd fall into water!  See if we would drown.
-            coord_def empty;
-
-            // Check if we'd be able to scramble out.
-            if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE
-                || (carrying_capacity() / 2) <= you.burden
-                || !empty_surrounds(you.pos(), DNGN_FLOOR, 1, false, empty))
-            {
-                fatal_liquid = true;
-            }
-
-            if (gridhere == DNGN_LAVA)
-            {
-                int res = player_res_fire(false);
-
-                if (res <= 0 || (110 / res) >= you.hp)
-                    fatal_liquid = true;
-            }
-        }
-
-        if (you.permanent_levitation()
-            && (item.base_type != OBJ_ARMOUR || item.sub_type != ARM_BOOTS))
-        {
-            fatal_liquid = false; // we won't fall!
-        }
-    }
-
-    if (remove)
-    {
-        if (prop_lev && fatal_liquid)
-        {
-            if (!quiet)
-            {
-                mprf(MSGCH_WARN, "%s this item would be fatal, so you refuse "
-                                 "to do that.",
-                                 (item.base_type == OBJ_WEAPONS ? "Unwielding"
-                                                                : "Removing"));
-            }
+        if (quiet)
             return (false);
+        else
+        {
+            std::string fname = (feat == DNGN_LAVA ? "lava" : "deep water");
+            std::string prompt = "Really remove this item over " + fname + "?";
+            return (yesno(prompt.c_str(), false, 'n'));
         }
     }
+
     return (true);
 }
 
@@ -3299,10 +3219,6 @@ static bool _swap_rings(int ring_slot)
     }
 
     if (!remove_ring(unwanted, false))
-        return (false);
-
-    // Check that the new ring won't kill us.
-    if (!safe_to_remove_or_wear(you.inv[ring_slot], false))
         return (false);
 
     // Put on the new ring.
@@ -3367,20 +3283,12 @@ bool puton_item(int item_slot)
             return (false);
         }
 
-        // Check that the new amulet won't kill us.
-        if (!safe_to_remove_or_wear(item, false))
-            return (false);
-
         // Put on the new amulet.
         start_delay(DELAY_JEWELLERY_ON, 1, item_slot);
 
         // Assume it's going to succeed.
         return (true);
     }
-
-    // Check that it won't kill us.
-    if (!safe_to_remove_or_wear(item, false))
-        return (false);
 
     equipment_type hand_used;
 
@@ -3557,7 +3465,7 @@ bool remove_ring(int slot, bool announce)
     ring_wear_2 = you.equip[hand_used];
 
     // Remove the ring.
-    if (!safe_to_remove_or_wear(you.inv[ring_wear_2], true))
+    if (!safe_to_remove(you.inv[ring_wear_2]))
         return (false);
 
     mprf("You remove %s.", you.inv[ring_wear_2].name(DESC_NOCAP_YOUR).c_str());

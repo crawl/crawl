@@ -445,7 +445,7 @@ bool unwield_item(bool showMsgs)
 
     const bool is_weapon = get_item_slot(item) == EQ_WEAPON;
 
-    if (is_weapon && !safe_to_remove_or_wear(item, true))
+    if (is_weapon && !safe_to_remove(item))
         return (false);
 
     unequip_item(EQ_WEAPON, showMsgs);
