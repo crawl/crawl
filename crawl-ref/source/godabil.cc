@@ -903,6 +903,9 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile,
     // If the monster's held in a net, get it out.
     mons_clear_trapping_net(mon);
 
+    // If the monster has spellcasting or priestly abilities, save them.
+    mon->bind_spell_flags();
+
     const monster orig = *mon;
 
     if (twisted)
@@ -940,6 +943,12 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile,
     }
     else
     {
+        // If the original monster type can use spellcasting or priestly
+        // abilities, make sure its spectral thing can as well.
+        mon->spells = orig.spells;
+        mon->flags |=
+            orig.flags & (MF_SPELLCASTER | MF_ACTUAL_SPELLS | MF_PRIEST);
+
         // If the original monster type can wield two weapons, make sure
         // its spectral thing can as well.  This is needed for e.g.
         // deep elf blademasters, who otherwise act as plain spectral
