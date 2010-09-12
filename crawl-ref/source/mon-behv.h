@@ -39,12 +39,4 @@ void make_mons_leave_level(monster* mon);
 
 bool monster_can_hit_monster(monster* mons, const monster* targ);
 
-bool mons_avoids_cloud(const monster* mons, cloud_type cl_type,
-                       bool placement = false);
-
-// Like the above, but allow a monster to move from one damaging cloud
-// to another.
-bool mons_avoids_cloud(const monster* mons, int cloud_num,
-                       cloud_type *cl_type = NULL, bool placement = false);
-
 #endif

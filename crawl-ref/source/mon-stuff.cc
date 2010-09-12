@@ -3234,7 +3234,7 @@ bool simple_monster_message(const monster* mons, const char *event,
     return (false);
 }
 
-bool mons_avoids_cloud(const monster* mons, cloud_struct cloud,
+bool mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
                        bool placement)
 {
     bool extra_careful = placement;
@@ -3368,21 +3368,12 @@ bool mons_avoids_cloud(const monster* mons, cloud_struct cloud,
 
 // Like the above, but allow a monster to move from one damaging cloud
 // to another, even if they're of different types.
-bool mons_avoids_cloud(const monster* mons, int cloud_num,
-                       cloud_type *cl_type, bool placement)
+bool mons_avoids_cloud(const monster* mons, int cloud_num, bool placement)
 {
     if (cloud_num == EMPTY_CLOUD)
-    {
-        if (cl_type != NULL)
-            *cl_type = CLOUD_NONE;
-
         return (false);
-    }
 
     const cloud_struct &cloud = env.cloud[cloud_num];
-
-    if (cl_type != NULL)
-        *cl_type = cloud.type;
 
     // Is the target cloud okay?
     if (!mons_avoids_cloud(mons, cloud, placement))

@@ -194,4 +194,13 @@ struct bolt;
 void setup_spore_explosion(bolt & beam, const monster& origin);
 void setup_lightning_explosion(bolt & beam, const monster& origin);
 
+bool mons_avoids_cloud(const monster* mons, cloud_type cl_type,
+                       bool placement = false);
+
+// Like the above, but allow a monster to move from one damaging cloud
+// to another.
+bool mons_avoids_cloud(const monster* mons, int cloud_num,
+                       bool placement = false);
+
+
 #endif

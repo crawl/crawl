@@ -1633,12 +1633,8 @@ void handle_monster_move(monster* mons)
     _monster_add_energy(mons);
 
     // Handle clouds on nonmoving monsters.
-    if (mons->speed == 0
-        && env.cgrid(mons->pos()) != EMPTY_CLOUD
-        && !mons->submerged())
-    {
+    if (mons->speed == 0)
         _mons_in_cloud(mons);
-    }
 
     // Apply monster enchantments once for every normal-speed
     // player turn.
@@ -1764,35 +1760,12 @@ void handle_monster_move(monster* mons)
 
         mons->shield_blocks = 0;
 
-        cloud_type cl_type;
         const int  cloud_num   = env.cgrid(mons->pos());
-        const bool avoid_cloud = mons_avoids_cloud(mons, cloud_num,
-                                                   &cl_type);
-        if (cl_type != CLOUD_NONE)
-        {
-            if (avoid_cloud)
-            {
-                if (mons->submerged())
-                {
-                    mons->speed_increment -= entry->energy_usage.swim;
-                    break;
-                }
+        const bool avoid_cloud = mons_avoids_cloud(mons, cloud_num);
 
-                if (mons->type == MONS_NO_MONSTER)
-                {
-                    mons->speed_increment -= entry->energy_usage.move;
-                    break; // problem with vortices
-                }
-            }
-
-            _mons_in_cloud(mons);
-
-            if (mons->type == MONS_NO_MONSTER)
-            {
-                mons->speed_increment = 1;
-                break;
-            }
-        }
+        _mons_in_cloud(mons);
+        if (!mons->alive())
+            break;
 
         slime_wall_damage(mons, speed_to_duration(mons->speed));
         if (!mons->alive())
@@ -2833,10 +2806,8 @@ static bool _mon_can_move_to_pos(const monster* mons,
     if (mons->type == MONS_FIRE_ELEMENTAL || one_chance_in(5))
         no_water = true;
 
-    cloud_type targ_cloud_type;
-    const int  targ_cloud_num = env.cgrid(targ);
-
-    if (mons_avoids_cloud(mons, targ_cloud_num, &targ_cloud_type))
+    const int targ_cloud_num = env.cgrid(targ);
+    if (mons_avoids_cloud(mons, targ_cloud_num))
         return (false);
 
     const bool burrows = mons_class_flag(mons->type, M_BURROWS);
@@ -2887,22 +2858,12 @@ static bool _mon_can_move_to_pos(const monster* mons,
     }
 
     // Water elementals avoid fire and heat.
-    if (mons->type == MONS_WATER_ELEMENTAL
-        && (target_grid == DNGN_LAVA
-            || targ_cloud_type == CLOUD_FIRE
-            || targ_cloud_type == CLOUD_FOREST_FIRE
-            || targ_cloud_type == CLOUD_STEAM))
-    {
+    if (mons->type == MONS_WATER_ELEMENTAL && target_grid == DNGN_LAVA)
         return (false);
-    }
 
     // Fire elementals avoid water and cold.
-    if (mons->type == MONS_FIRE_ELEMENTAL
-        && (feat_is_watery(target_grid)
-            || targ_cloud_type == CLOUD_COLD))
-    {
+    if (mons->type == MONS_FIRE_ELEMENTAL && feat_is_watery(target_grid))
         return (false);
-    }
 
     // Submerged water creatures avoid the shallows where
     // they would be forced to surface. -- bwr
@@ -3557,7 +3518,17 @@ static bool _mephitic_cloud_roll(const monster* mons)
 
 static void _mons_in_cloud(monster* mons)
 {
-    int wc = env.cgrid(mons->pos());
+    // Submerging in water or lava saves from clouds.
+    if (mons->submerged() && env.grid(mons->pos()) != DNGN_FLOOR)
+        return;
+
+    const int wc = env.cgrid(mons->pos());
+    if (wc == EMPTY_CLOUD)
+        return;
+    const cloud_struct& cloud(env.cloud[wc]);
+    if (cloud.type == CLOUD_NONE)
+        return;
+
     int hurted = 0;
     int resist = 0;
     bolt beam;
@@ -3571,7 +3542,6 @@ static void _mons_in_cloud(monster* mons)
         return;
     }
 
-    const cloud_struct &cloud(env.cloud[wc]);
     switch (cloud.type)
     {
     case CLOUD_DEBUGGING:
