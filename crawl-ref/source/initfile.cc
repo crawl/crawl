@@ -601,6 +601,7 @@ void game_options::set_activity_interrupt(const std::string &activity_name,
     eints[AI_FORCE_INTERRUPT] = true;
 }
 
+#if !defined(DGAMELAUNCH) && defined(UNIX)
 static std::string _user_home_dir()
 {
 #ifdef TARGET_OS_WINDOWS
@@ -624,6 +625,7 @@ static std::string _user_home_crawl_subpath(const std::string subpath)
 {
     return _user_home_subpath(catpath(".crawl", subpath));
 }
+#endif
 
 #if defined(SAVE_DIR_PATH) || defined(SHARED_DIR_PATH)
 static std::string _resolve_dir(const char* path, const char* suffix)
