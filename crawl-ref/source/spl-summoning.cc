@@ -1237,10 +1237,6 @@ void equip_undead(const coord_def &a, int corps, int mons, int monnum)
         objl = mitm[objl].link;
     }
 
-    // This handles e.g. spectral things that are Yredelemnul's enslaved
-    // intact souls.
-    const bool smart_undead = mons_intel(mon) >= I_NORMAL;
-
     for (int i = item_list.size() - 1; i >= 0; --i)
     {
         objl = item_list[i];
@@ -1274,7 +1270,7 @@ void equip_undead(const coord_def &a, int corps, int mons, int monnum)
                 mslot = MSLOT_WEAPON;
 
             // Stupid undead can't use ranged weapons.
-            if (smart_undead || !is_range_weapon(item))
+            if (!is_range_weapon(item))
                 break;
 
             continue;
@@ -1292,11 +1288,6 @@ void equip_undead(const coord_def &a, int corps, int mons, int monnum)
 
         // Stupid undead can't use missiles.
         case OBJ_MISSILES:
-            if (smart_undead)
-            {
-                mslot = MSLOT_MISSILE;
-                break;
-            }
             continue;
 
         case OBJ_GOLD:
@@ -1305,38 +1296,18 @@ void equip_undead(const coord_def &a, int corps, int mons, int monnum)
 
         // Stupid undead can't use wands.
         case OBJ_WANDS:
-            if (smart_undead)
-            {
-                mslot = MSLOT_WAND;
-                break;
-            }
             continue;
 
         // Stupid undead can't use scrolls.
         case OBJ_SCROLLS:
-            if (smart_undead)
-            {
-                mslot = MSLOT_SCROLL;
-                break;
-            }
             continue;
 
         // Stupid undead can't use potions.
         case OBJ_POTIONS:
-            if (smart_undead)
-            {
-                mslot = MSLOT_POTION;
-                break;
-            }
             continue;
 
         // Stupid undead can't use miscellaneous objects.
         case OBJ_MISCELLANY:
-            if (smart_undead)
-            {
-                mslot = MSLOT_MISCELLANY;
-                break;
-            }
             continue;
 
         default:
