@@ -899,7 +899,6 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile,
         !unrestricted ? !x_chance_in_y(you.skills[SK_INVOCATIONS] * 20 / 9 + 20,
                                        100)
                       : false;
-    int corps = -1;
 
     // If the monster's held in a net, get it out.
     mons_clear_trapping_net(mon);
@@ -908,22 +907,28 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile,
 
     if (twisted)
     {
+        // Turn the monster into a small or large abomination, based on
+        // its zombie size.
         mon->type = mons_zombie_size(soul_type) == Z_BIG ?
             MONS_ABOMINATION_LARGE : MONS_ABOMINATION_SMALL;
         mon->base_monster = MONS_NO_MONSTER;
+
+        // Drop all of the monster's equipment.
+        monster_drop_things(mon, false);
     }
     else
     {
-        // Drop the monster's corpse, so that it can be properly
-        // re-equipped below.
-        corps = place_monster_corpse(mon, true, true);
+        // Turn the monster into a spectral thing, minus the usual
+        // adjustments for zombified monsters.
+        mon->type = MONS_SPECTRAL_THING;
+        mon->base_monster = soul_type;
+
+        // Drop all of the monster's holy equipment, but keep wielding
+        // the rest of it.
+        monster_drop_things(mon, false, is_holy_item);
     }
 
-    // Drop the monster's equipment.
-    monster_drop_things(mon);
-
-    // Recreate the monster as an abomination, or as itself before
-    // turning it into a spectral thing below.
+    // Recreate the monster, based on its changed type above.
     define_monster(mon);
 
     mon->colour = ETC_UNHOLY;
@@ -934,30 +939,6 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile,
     if (twisted)
         // Mark abominations as undead.
         mon->flags |= MF_HONORARY_UNDEAD;
-    else if (corps != -1)
-    {
-        // If the original monster type can wield two weapons, make sure
-        // its spectral thing can as well.  This is needed for e.g.
-        // deep elf blademasters, who otherwise act as plain spectral
-        // elves when equipped.
-        if (mons_class_flag(mon->type, M_TWOWEAPON)
-            && !mons_class_flag(soul_type, M_TWOWEAPON))
-        {
-            mon->flags |= MF_TWOWEAPON;
-        }
-
-        // Turn the monster into a spectral thing, minus the usual
-        // adjustments for zombified monsters.
-        mon->type = MONS_SPECTRAL_THING;
-        mon->base_monster = soul_type;
-
-        // Re-equip the spectral thing.
-        equip_undead(mon->pos(), corps, mon->mindex(),
-                     mon->base_monster);
-
-        // Destroy the monster's corpse, as it's no longer needed.
-        destroy_item(corps);
-    }
 
     name_zombie(mon, &orig);
 
