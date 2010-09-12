@@ -2279,7 +2279,7 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
 
                 case CE_POISONOUS:
                 case CE_POISON_CONTAM:
-                    make_hungry(food_value / 2, false);
+                    make_hungry(food_value / duration / 2, false);
                     // Always print this message - maybe you lost poison
                     // resistance due to feeding.
                     mpr("Blech - this blood tastes nasty!");
