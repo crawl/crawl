@@ -194,10 +194,11 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
     if (!monster_habitable_grid(fmenv, DNGN_FLOOR))
         return (false);
 
-    // Only friendly monsters, or those actively seeking the
-    // player, will follow up/down stairs.
+    // Only non-wandering friendly monsters or those actively
+    // seeking the player will follow up/down stairs.
     if (!fmenv->friendly()
-        && (!mons_is_seeking(fmenv) || fmenv->foe != MHITYOU))
+          && (!mons_is_seeking(fmenv) || fmenv->foe != MHITYOU)
+        || fmenv->foe == MHITNOT)
     {
         return (false);
     }
