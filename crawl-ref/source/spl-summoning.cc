@@ -1451,8 +1451,20 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
             name_zombie(&menv[mons], monnum, name);
     }
 
+    // If the original monster type can wield two weapons, make sure its
+    // zombie can as well.  This is needed for e.g. deep elf
+    // blademasters, who otherwise act as plain elf zombies when
+    // equipped.
+    if (mons_class_flag(monnum, M_TWOWEAPON)
+        && !mons_class_flag(zombie_type, M_TWOWEAPON))
+    {
+        menv[mons].flags |= MF_TWOWEAPON;
+    }
+
+    // Re-equip the zombie.
     equip_undead(pos, corps, mons, monnum);
 
+    // Destroy the monster's corpse, as it's no longer needed.
     destroy_item(corps);
 
     if (!force_beh)

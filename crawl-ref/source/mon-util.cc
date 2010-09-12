@@ -2303,6 +2303,9 @@ bool mons_class_wields_two_weapons(int mc)
 
 bool mons_wields_two_weapons(const monster* mon)
 {
+    if (testbits(mon->flags, MF_TWOWEAPON))
+        return (true);
+
     return (mons_class_wields_two_weapons(mons_base_type(mon)));
 }
 
