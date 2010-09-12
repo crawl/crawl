@@ -719,7 +719,7 @@ static bool _vamp_wants_blood_from_monster(const monster* mon)
 
     // Don't drink poisonous or mutagenic blood.
     return (chunk_type == CE_CLEAN || chunk_type == CE_CONTAMINATED
-            || chunk_is_poisonous(chunk_type) && player_res_poison());
+            || (chunk_is_poisonous(chunk_type) && player_res_poison()));
 }
 
 // Should life protection protect from this?
