@@ -49,8 +49,7 @@ void drink(int slot = -1);
 
 bool elemental_missile_beam(int launcher_brand, int ammo_brand);
 
-bool safe_to_remove_or_wear(const item_def &item, bool remove,
-                            bool quiet = false);
+bool safe_to_remove(const item_def &item, bool quiet = false);
 
 void examine_object(void);
 
