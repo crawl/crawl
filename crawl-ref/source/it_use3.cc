@@ -914,7 +914,7 @@ bool evoke_item(int slot)
                 canned_msg(MSG_NOTHING_HAPPENS);
             else
             {
-                cast_summon_elemental(100, GOD_NO_GOD, MONS_AIR_ELEMENTAL, 4);
+                cast_summon_elemental(100, GOD_NO_GOD, MONS_AIR_ELEMENTAL, 4, 3);
                 pract = (one_chance_in(5) ? 1 : 0);
                 ident = true;
             }
@@ -925,7 +925,7 @@ bool evoke_item(int slot)
                 canned_msg(MSG_NOTHING_HAPPENS);
             else
             {
-                cast_summon_elemental(100, GOD_NO_GOD, MONS_FIRE_ELEMENTAL, 4);
+                cast_summon_elemental(100, GOD_NO_GOD, MONS_FIRE_ELEMENTAL, 4, 3);
                 pract = (one_chance_in(5) ? 1 : 0);
                 ident = true;
             }
