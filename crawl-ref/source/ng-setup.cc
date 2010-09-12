@@ -899,9 +899,10 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_EARTH_ELEMENTALIST:
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_GEOMANCY);
-        newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_STONE, -1, 20);
+        // stones in switch slot (b)
+        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_STONE, -1, 20);
+        newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_GEOMANCY);
 
         you.skills[SK_TRANSMUTATIONS] = 1;
         you.skills[SK_EARTH_MAGIC]    = 3;
