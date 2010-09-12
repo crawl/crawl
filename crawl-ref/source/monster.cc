@@ -3784,7 +3784,7 @@ bool monster::has_hydra_multi_attack() const
 
 bool monster::has_multitargeting() const
 {
-    if (mons_class_wields_two_weapons(type))
+    if (mons_wields_two_weapons(this))
         return (true);
 
     // Hacky little list for now. evk

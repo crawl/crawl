@@ -3207,7 +3207,7 @@ static std::string _describe_monster_weapon(const monster_info& mi)
         name1 = weap->name(DESC_NOCAP_A, false, false, true,
                            false, ISFLAG_KNOW_CURSE);
     }
-    if (alt && (mons_class_wields_two_weapons(mi.type) || mons_class_wields_two_weapons(mi.base_type)))
+    if (alt && mi.wields_two_weapons)
     {
         name2 = alt->name(DESC_NOCAP_A, false, false, true,
                           false, ISFLAG_KNOW_CURSE);
@@ -3497,7 +3497,7 @@ std::string get_monster_equipment_desc(const monster_info& mi, bool full_desc,
         const item_def* mon_alt = mi.inv[MSLOT_ALT_WEAPON].get();
 
         // _describe_monster_weapon already took care of this
-        if (mons_class_wields_two_weapons(mi.type) || mons_class_wields_two_weapons(mi.base_type))
+        if (mi.wields_two_weapons)
             mon_alt = 0;
 
         bool found_sth    = !weap.empty();

@@ -71,6 +71,7 @@ struct monster_info_base
     std::string description;
     std::string quote;
     flight_type fly;
+    bool wields_two_weapons;
 };
 
 // Monster info used by the pane; precomputes some data
