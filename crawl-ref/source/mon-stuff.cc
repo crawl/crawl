@@ -257,7 +257,7 @@ bool curse_an_item( bool decay_potions, bool quiet )
 }
 
 // The default suitable() function for monster_drop_things().
-bool drop_any_item(const item_def& item)
+bool is_any_item(const item_def& item)
 {
     return (true);
 }
