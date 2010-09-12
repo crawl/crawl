@@ -1181,10 +1181,10 @@ static bool _animatable_remains(const item_def& item)
         && mons_class_can_be_zombified(item.plus));
 }
 
-// Try to equip the skeleton/zombie/spectral thing with the objects it
-// died with.  This excludes items which were dropped by the player onto
-// the corpse, and corpses which were picked up and moved by the player,
-// so the player can't equip their undead slaves with items of their
+// Try to equip the skeleton/zombie with the objects it died with.  This
+// excludes holy items, items which were dropped by the player onto the
+// corpse, and corpses which were picked up and moved by the player, so
+// the player can't equip their undead slaves with items of their
 // choice.
 //
 // The item selection logic has one problem: if a first monster without
