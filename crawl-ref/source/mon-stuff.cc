@@ -259,8 +259,8 @@ bool curse_an_item( bool decay_potions, bool quiet )
 void monster_drop_ething(monster* mons, bool mark_item_origins,
                          int owner_id)
 {
-    // Drop weapons & missiles last (ie on top) so others pick up.
-    for (int i = NUM_MONSTER_SLOTS - 1; i >= 0; i--)
+    // Drop weapons and missiles last (i.e., on top), so others pick up.
+    for (int i = NUM_MONSTER_SLOTS - 1; i >= 0; --i)
     {
         int item = mons->inv[i];
 
@@ -271,7 +271,7 @@ void monster_drop_ething(monster* mons, bool mark_item_origins,
             if (summoned_item)
             {
                 item_was_destroyed(mitm[item], mons->mindex());
-                destroy_item( item );
+                destroy_item(item);
             }
             else
             {
@@ -281,7 +281,8 @@ void monster_drop_ething(monster* mons, bool mark_item_origins,
                 if (mark_item_origins && mitm[item].defined())
                     origin_set_monster(mitm[item], mons);
 
-                // If a monster is swimming, the items are ALREADY underwater
+                // If a monster is swimming, the items are ALREADY
+                // underwater.
                 move_item_to_grid(&item, mons->pos(), mons->swimming());
             }
 
