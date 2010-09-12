@@ -1066,6 +1066,12 @@ static void _place_player_on_stair(level_area_type old_level_type,
     {
         stair_taken = DNGN_EXIT_PORTAL_VAULT;
     }
+    else if (player_in_hell() &&
+             stair_taken >= DNGN_STONE_STAIRS_DOWN_I &&
+             stair_taken <= DNGN_STONE_STAIRS_DOWN_III)
+    {
+        stair_taken = DNGN_ENTER_HELL;
+    }
     else if (stair_taken >= DNGN_STONE_STAIRS_DOWN_I
              && stair_taken <= DNGN_ESCAPE_HATCH_DOWN)
     {
@@ -1098,7 +1104,7 @@ static void _place_player_on_stair(level_area_type old_level_type,
         // Only when entering a hell - when exiting, go back to the
         // entry stair.
         if (player_in_hell())
-            stair_taken = DNGN_STONE_STAIRS_UP_I;
+            stair_taken = DNGN_ENTER_HELL;
     }
     else if (stair_taken == DNGN_EXIT_ABYSS)
     {
