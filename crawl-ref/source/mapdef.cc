@@ -3252,7 +3252,7 @@ void mons_list::parse_mons_spells(mons_spec &spec, const std::string &spells)
                 error = make_stringf("Not a monster spell: '%s'",
                                      spname.c_str());
                 return;
-             }
+            }
             spec.spells[i] = sp;
         }
     }
