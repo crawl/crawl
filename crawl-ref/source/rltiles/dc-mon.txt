@@ -721,6 +721,7 @@ shadow MONS_SHADOW /*' '*/
 phantom MONS_PHANTOM
 ## used for Detect Creatures
 ghost MONS_PLAYER_GHOST
+silent_spectre MONS_SILENT_SPECTRE
 %rim 1
 flayed_ghost MONS_FLAYED_GHOST
 hungry_ghost MONS_HUNGRY_GHOST
