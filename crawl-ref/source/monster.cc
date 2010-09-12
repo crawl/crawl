@@ -6015,7 +6015,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             int8_t old_ench_countdown   = ench_countdown;
 
             if (!fly_died)
-                monster_drop_ething(this, mons_aligned(oppressor, &you));
+                monster_drop_things(this, mons_aligned(oppressor, &you));
 
             type = fly_died ? MONS_SPRIGGAN : MONS_FIREFLY;
             define_monster(this);

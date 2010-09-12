@@ -106,9 +106,12 @@ int dismiss_monsters(std::string pattern);
 
 bool curse_an_item(bool decay_potions, bool quiet = false);
 
-
-void monster_drop_ething(monster* mons, bool mark_item_origins = false,
-                         int owner_id = NON_ITEM);
+bool drop_any_item(const item_def& item);
+void monster_drop_things(
+    monster* mons,
+    bool mark_item_origins = false,
+    bool (*suitable)(const item_def& item) = drop_any_item,
+    int owner_id = NON_ITEM);
 
 bool monster_blink(monster* mons, bool quiet = false);
 

@@ -920,7 +920,7 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile,
     }
 
     // Drop the monster's equipment.
-    monster_drop_ething(mon);
+    monster_drop_things(mon);
 
     // Recreate the monster as an abomination, or as itself before
     // turning it into a spectral thing below.
