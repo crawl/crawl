@@ -222,7 +222,7 @@ Enslave Soul
 
 Mark a living intelligent monster's soul as ripe for the taking. Once the marked monster dies, its soul will be yours.
 
-The enslaved soul will retain at least some of the monster's innate healing ability and faculties, and sometimes even the monster's equipment. However, only a relatively uninjured monster can have its soul marked, and only one soul can be enslaved at a time. Furthermore, both the duration of the mark and the chance that the enslaved soul will remain intact are dependent on Invocations skill.
+The enslaved soul will retain at least some of the monster's innate healing ability and faculties, and sometimes even the monster's equipment and abilities. However, only a relatively uninjured monster can have its soul marked, and only one soul can be enslaved at a time. Furthermore, both the duration of the mark and the chance that the enslaved soul will remain intact are dependent on Invocations skill.
 
 Note that enslaved souls, whether twisted or intact, can follow you beyond the level they were created on.
 %%%%
