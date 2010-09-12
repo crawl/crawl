@@ -397,6 +397,9 @@ static void _launch_game()
     // to dismiss a level-up prompt.
     level_change();
 
+    // Initialise save game so we can recover from crashes on D:1.
+    save_game_state();
+
     cursor_control ccon(!Options.use_fake_player_cursor);
     while (true)
         _input();
