@@ -346,6 +346,68 @@ static void _maybe_set_patrol_route(monster* mons)
     }
 }
 
+static void _tweak_wall_mmov()
+{
+    // The rock worm will try to move along through rock for as long as
+    // possible. If the player is walking through a corridor, for example,
+    // moving along in the wall beside him is much preferable to actually
+    // leaving the wall.
+    // This might cause the rock worm to take detours but it still
+    // comes off as smarter than otherwise.
+    if (mmov.x != 0 && mmov.y != 0) // diagonal movement
+    {
+        bool updown    = false;
+        bool leftright = false;
+
+        coord_def t = mons->pos() + coord_def(mmov.x, 0);
+        if (in_bounds(t) && feat_is_rock(grd(t)) && !feat_is_permarock(grd(t)))
+            updown = true;
+
+        t = mons->pos() + coord_def(0, mmov.y);
+        if (in_bounds(t) && feat_is_rock(grd(t)) && !feat_is_permarock(grd(t)))
+            leftright = true;
+
+        if (updown && (!leftright || coinflip()))
+            mmov.y = 0;
+        else if (leftright)
+            mmov.x = 0;
+    }
+    else if (mmov.x == 0 && mons->target.x == mons->pos().x)
+    {
+        bool left  = false;
+        bool right = false;
+        coord_def t = mons->pos() + coord_def(-1, mmov.y);
+        if (in_bounds(t) && feat_is_rock(grd(t)) && !feat_is_permarock(grd(t)))
+            left = true;
+
+        t = mons->pos() + coord_def(1, mmov.y);
+        if (in_bounds(t) && feat_is_rock(grd(t)) && !feat_is_permarock(grd(t)))
+            right = true;
+
+        if (left && (!right || coinflip()))
+            mmov.x = -1;
+        else if (right)
+            mmov.x = 1;
+    }
+    else if (mmov.y == 0 && mons->target.y == mons->pos().y)
+    {
+        bool up   = false;
+        bool down = false;
+        coord_def t = mons->pos() + coord_def(mmov.x, -1);
+        if (in_bounds(t) && feat_is_rock(grd(t)) && !feat_is_permarock(grd(t)))
+            up = true;
+
+        t = mons->pos() + coord_def(mmov.x, 1);
+        if (in_bounds(t) && feat_is_rock(grd(t)) && !feat_is_permarock(grd(t)))
+            down = true;
+
+        if (up && (!down || coinflip()))
+            mmov.y = -1;
+        else if (down)
+            mmov.y = 1;
+    }
+}
+
 //---------------------------------------------------------------
 //
 // handle_movement
@@ -461,66 +523,7 @@ static void _handle_movement(monster* mons)
         }
 
     if (mons_wall_shielded(mons))
-    {
-        // The rock worm will try to move along through rock for as long as
-        // possible. If the player is walking through a corridor, for example,
-        // moving along in the wall beside him is much preferable to actually
-        // leaving the wall.
-        // This might cause the rock worm to take detours but it still
-        // comes off as smarter than otherwise.
-        if (mmov.x != 0 && mmov.y != 0) // diagonal movement
-        {
-            bool updown    = false;
-            bool leftright = false;
-
-            coord_def t = mons->pos() + coord_def(mmov.x, 0);
-            if (in_bounds(t) && feat_is_rock(grd(t)) && !feat_is_permarock(grd(t)))
-                updown = true;
-
-            t = mons->pos() + coord_def(0, mmov.y);
-            if (in_bounds(t) && feat_is_rock(grd(t)) && !feat_is_permarock(grd(t)))
-                leftright = true;
-
-            if (updown && (!leftright || coinflip()))
-                mmov.y = 0;
-            else if (leftright)
-                mmov.x = 0;
-        }
-        else if (mmov.x == 0 && mons->target.x == mons->pos().x)
-        {
-            bool left  = false;
-            bool right = false;
-            coord_def t = mons->pos() + coord_def(-1, mmov.y);
-            if (in_bounds(t) && feat_is_rock(grd(t)) && !feat_is_permarock(grd(t)))
-                left = true;
-
-            t = mons->pos() + coord_def(1, mmov.y);
-            if (in_bounds(t) && feat_is_rock(grd(t)) && !feat_is_permarock(grd(t)))
-                right = true;
-
-            if (left && (!right || coinflip()))
-                mmov.x = -1;
-            else if (right)
-                mmov.x = 1;
-        }
-        else if (mmov.y == 0 && mons->target.y == mons->pos().y)
-        {
-            bool up   = false;
-            bool down = false;
-            coord_def t = mons->pos() + coord_def(mmov.x, -1);
-            if (in_bounds(t) && feat_is_rock(grd(t)) && !feat_is_permarock(grd(t)))
-                up = true;
-
-            t = mons->pos() + coord_def(mmov.x, 1);
-            if (in_bounds(t) && feat_is_rock(grd(t)) && !feat_is_permarock(grd(t)))
-                down = true;
-
-            if (up && (!down || coinflip()))
-                mmov.y = -1;
-            else if (down)
-                mmov.y = 1;
-        }
-    }
+        _tweak_wall_mmov();
 
     // If the monster is moving in your direction, whether to attack or
     // protect you, or towards a monster it intends to attack, check
