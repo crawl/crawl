@@ -924,10 +924,16 @@ void viewwindow(bool show_updates)
         {
             if (you.see_cell(gc))
             {
+#ifdef USE_TILE
+                cell->colour = real_colour(flash_colour);
+#else
                 monster_type mons = env.map_knowledge(gc).monster();
                 if (mons == MONS_NO_MONSTER || mons_class_is_firewood(mons) ||
                     !you.berserk())
+                {
                     cell->colour = real_colour(flash_colour);
+                }
+#endif
             }
             else
             {
