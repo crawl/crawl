@@ -673,10 +673,8 @@ static int _calc_player_experience(monster* mons, killer_type killer,
 static void _give_player_experience(int experience, killer_type killer,
                                     bool pet_kill, bool was_visible)
 {
-    if (experience <= 0)
+    if (experience <= 0 || crawl_state.game_is_arena())
         return;
-
-    ASSERT(!crawl_state.game_is_arena());
 
     unsigned int exp_gain = 0;
     unsigned int avail_gain = 0;;
