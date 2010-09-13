@@ -643,9 +643,7 @@ static int _acquirement_staff_subtype(const has_vector& already_has)
         break;
     }
 
-    int spell_skills = 0;
-    for (int i = SK_SPELLCASTING; i <= SK_POISON_MAGIC; i++)
-        spell_skills += you.skills[i];
+    int spell_skills = player_spell_skills();
 
     // Increased chance of getting a rod for new or
     // non-spellcasters.  -- bwr
