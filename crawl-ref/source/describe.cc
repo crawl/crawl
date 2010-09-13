@@ -1378,11 +1378,6 @@ static std::string _describe_armour( const item_def &item, bool verbose )
         description += " well.";
     }
 
-    if (verbose && get_armour_slot(item) == EQ_BODY_ARMOUR)
-    {
-        description += "\n\n";
-    }
-
     if (!is_artefact(item))
     {
         const int max_ench = armour_max_enchant(item);
