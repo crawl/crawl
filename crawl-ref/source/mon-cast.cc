@@ -1893,7 +1893,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     ASSERT(!(flags & (SPFLAG_TESTING | SPFLAG_MAPPING)));
 
     // Targeted spells need a valid target.
-    ASSERT(!(flags & SPFLAG_TARGETING_MASK) || in_bounds(pbolt.target));
+    // Wizard-mode cast monster spells may target the boundary (shift-dir).
+    ASSERT(!(flags & SPFLAG_TARGETING_MASK) || map_bounds(pbolt.target));
 #endif
 
     if (do_noise)
