@@ -1619,7 +1619,8 @@ static std::vector<formatted_string> _get_overview_resistances(
     const int rinvi = you.can_see_invisible(calc_unid);
     const int rward = wearing_amulet(AMU_WARDING, calc_unid);
     const int rcons = player_item_conserve(calc_unid);
-    const int rcorr = wearing_amulet(AMU_RESIST_CORROSION, calc_unid) + floor(player_mutation_level(MUT_YELLOW_SCALES) / 3);
+    const int rcorr = wearing_amulet(AMU_RESIST_CORROSION, calc_unid)
+                  + (player_mutation_level(MUT_YELLOW_SCALES) == 3 ? 1 : 0);
     const int rclar = player_mental_clarity(calc_unid);
     snprintf(buf, sizeof buf,
              "%sSee Invis. : %s\n"
