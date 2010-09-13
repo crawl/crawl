@@ -1578,7 +1578,7 @@ A large creature with a human head, the body of a lion, and the wings of a huge 
 %%%%
 spider
 
-An ordinary orb-weaving spider with a white cross on its back. It's not as ridiculously huge as other arachnids in this place, but somehow still as big as a small cat -- and you don't have a shoe that big.
+An ordinary orb-weaving spider with a white cross on its back. It's not as ridiculously huge as other arachnids in this place, but somehow still as big as a small cat - and you don't have a shoe that big.
 %%%%
 spiny frog
 
