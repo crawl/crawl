@@ -5723,6 +5723,7 @@ int player::res_asphyx() const
     case TRAN_LICH:
     case TRAN_STATUE:
         return 1;
+    default:
         break;
     }
 
