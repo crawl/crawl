@@ -3337,11 +3337,14 @@ coord_def dgn_random_point_in_bounds(dungeon_feature_type searchfeat,
     if (tries == -1)
     {
         // Try a quick and dirty random search:
+        int n = 10;
+        if (searchfeat == DNGN_FLOOR)
+            n = 500;
         coord_def chosen = dgn_random_point_in_bounds(searchfeat,
                                                       mapmask,
                                                       adjacent_feat,
                                                       monster_free,
-                                                      10);
+                                                      n);
         if (!chosen.origin())
             return chosen;
 
