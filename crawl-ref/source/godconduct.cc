@@ -1006,8 +1006,6 @@ void god_conduct_turn_start()
     _first_attack_was_friendly.init(false);
 }
 
-#define NEW_GIFT_FLAGS (MF_JUST_SUMMONED | MF_GOD_GIFT)
-
 void set_attack_conducts(god_conduct_trigger conduct[3], const monster* mon,
                          bool known)
 {
@@ -1015,13 +1013,8 @@ void set_attack_conducts(god_conduct_trigger conduct[3], const monster* mon,
 
     if (mon->friendly())
     {
-        if ((mon->flags & NEW_GIFT_FLAGS) == NEW_GIFT_FLAGS
-            && mon->god != GOD_XOM)
-        {
-            _first_attack_was_friendly[midx] = true;
-        }
-        else if (_first_attack_conduct[midx]
-                 || _first_attack_was_friendly[midx])
+        if (_first_attack_conduct[midx]
+            || _first_attack_was_friendly[midx])
         {
             conduct[0].set(DID_ATTACK_FRIEND, 5, known, mon);
             _first_attack_was_friendly[midx] = true;
