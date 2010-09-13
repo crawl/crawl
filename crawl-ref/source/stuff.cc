@@ -698,6 +698,9 @@ void canned_msg(canned_message_type which_message)
     case MSG_MANA_DECREASE:
         mpr("You feel your mana capacity decrease.");
         break;
+    case MSG_TOO_HUNGRY:
+        mpr("You're too hungry.");
+        break;
     }
 }
 

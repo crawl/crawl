@@ -978,7 +978,7 @@ static bool _check_ability_possible(const ability_def& abil,
         // Safety margin for natural hunger, mutations etc.
         if (expected_hunger <= 150)
         {
-            mpr("You're too hungry.");
+            canned_msg(MSG_TOO_HUNGRY);
             return (false);
         }
     }
@@ -1170,7 +1170,7 @@ static bool _activate_talent(const talent& tal)
     if (hungerCheck && !you.is_undead
         && you.hunger_state == HS_STARVING)
     {
-        mpr("You're too hungry.");
+        canned_msg(MSG_TOO_HUNGRY);
         crawl_state.zero_turns_taken();
         return (false);
     }

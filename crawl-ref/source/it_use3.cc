@@ -865,7 +865,7 @@ bool evoke_item(int slot)
             if (item_type_known(item)
                 && !you.is_undead && you.hunger_state == HS_STARVING)
             {
-                mpr("You're too hungry.");
+                canned_msg(MSG_TOO_HUNGRY);
                 return (false);
             }
             else if (you.magic_points < you.max_magic_points

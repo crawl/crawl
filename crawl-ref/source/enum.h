@@ -408,6 +408,7 @@ enum canned_message_type
     MSG_NO_SPELLS,
     MSG_MANA_INCREASE,
     MSG_MANA_DECREASE,
+    MSG_TOO_HUNGRY,
 };
 
 enum char_set_type
