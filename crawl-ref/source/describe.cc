@@ -3936,10 +3936,10 @@ void describe_god( god_type which_god, bool give_title )
                 _print_final_god_abil_desc(which_god, buf,
                                            ABIL_JIYVA_JELLY_PARALYSE);
             }
-            if (you.piety >= piety_breakpoint(2)
+            if (you.piety >= piety_breakpoint(2))
             {
                 cprintf("%s shields you from corrosive effects.\n",
-                        god_name(which_god).c_str(), how);
+                        god_name(which_god).c_str());
             }
         }
         else if (which_god == GOD_FEDHAS)
