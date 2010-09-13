@@ -3146,12 +3146,21 @@ int create_monster(mgen_data mg, bool fail_msg)
 bool empty_surrounds(const coord_def& where, dungeon_feature_type spc_wanted,
                      int radius, bool allow_centre, coord_def& empty)
 {
+    // XXX: A lot of hacks that could be avoided by passing the
+    //      monster generation data through.
+
     // Assume all player summoning originates from player x,y.
+    // XXX: no longer true with Haunt.
     bool playerSummon = (where == you.pos());
+    bool monsterSummon = !playerSummon && actor_at(where);
+
+    // Require LOS and no transparent walls, except for
+    // summoning monsters.
+    los_type los = monsterSummon ? LOS_DEFAULT : LOS_NO_TRANS;
 
     int good_count = 0;
 
-    for (radius_iterator ri(where, radius, true, false, !allow_centre);
+    for (radius_iterator ri(where, radius, C_SQUARE, NULL, !allow_centre);
          ri; ++ri)
     {
         bool success = false;
@@ -3159,8 +3168,7 @@ bool empty_surrounds(const coord_def& where, dungeon_feature_type spc_wanted,
         if (actor_at(*ri))
             continue;
 
-        // Players won't summon out of LOS, or past transparent walls.
-        if (!you.see_cell_no_trans(*ri) && playerSummon)
+        if (!cell_see_cell(where, *ri, los))
             continue;
 
         success =
