@@ -862,8 +862,14 @@ bool evoke_item(int slot)
         }
         else if (item.sub_type == STAFF_CHANNELING)
         {
-            if (you.magic_points < you.max_magic_points
-                && x_chance_in_y(you.skills[SK_EVOCATIONS] + 11, 40))
+            if (item_type_known(item)
+                && !you.is_undead && you.hunger_state == HS_STARVING)
+            {
+                mpr("You're too hungry!");
+                return (false);
+            }
+            else if (you.magic_points < you.max_magic_points
+                     && x_chance_in_y(you.skills[SK_EVOCATIONS] + 11, 40))
             {
                 mpr("You channel some magical energy.");
                 inc_mp( 1 + random2(3), false );
