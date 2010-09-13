@@ -5875,7 +5875,8 @@ bool player::permanent_levitation() const
 bool player::permanent_flight() const
 {
     return (airborne() && wearing_amulet(AMU_CONTROLLED_FLIGHT)
-            && species == SP_KENKU && experience_level >= 15);
+            && species == SP_KENKU && experience_level >= 15
+            && duration[DUR_LEVITATION] > 1);
 }
 
 bool player::light_flight() const

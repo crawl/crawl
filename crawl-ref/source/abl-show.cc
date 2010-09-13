@@ -186,6 +186,7 @@ static const ability_def Ability_List[] =
     { ABIL_SPIT_ACID, "Spit Acid", 0, 0, 125, 0, ABFLAG_NONE },
 
     { ABIL_FLY, "Fly", 3, 0, 100, 0, ABFLAG_NONE },
+    { ABIL_STOP_FLYING, "Stop Flying", 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_HELLFIRE, "Hellfire", 0, 350, 200, 0, ABFLAG_NONE },
     { ABIL_THROW_FLAME, "Throw Flame", 0, 20, 50, 0, ABFLAG_NONE },
     { ABIL_THROW_FROST, "Throw Frost", 0, 20, 50, 0, ABFLAG_NONE },
@@ -643,6 +644,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
 
     case ABIL_EVOKE_TURN_VISIBLE:
     case ABIL_EVOKE_STOP_LEVITATING:
+    case ABIL_STOP_FLYING:
         perfect = true;
         failure = 0;
         break;
@@ -1152,6 +1154,7 @@ static bool _activate_talent(const talent& tal)
     {
         case ABIL_RENOUNCE_RELIGION:
         case ABIL_EVOKE_STOP_LEVITATING:
+        case ABIL_STOP_FLYING:
         case ABIL_EVOKE_TURN_VISIBLE:
         case ABIL_END_TRANSFORMATION:
         case ABIL_DELAYED_FIREBALL:
@@ -1473,6 +1476,11 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_EVOKE_STOP_LEVITATING:
         ASSERT(!you.attribute[ATTR_LEV_UNCANCELLABLE]);
+        mpr("You feel heavy.");
+        you.duration[DUR_LEVITATION] = 1;
+        break;
+
+    case ABIL_STOP_FLYING:
         mpr("You feel heavy.");
         you.duration[DUR_LEVITATION] = 1;
         break;
@@ -2247,6 +2255,12 @@ std::vector<talent> your_talents(bool check_confused)
         {
             _add_talent(talents, ABIL_FLY_II, check_confused);
         }
+    }
+
+    if (you.airborne() && !transform_changed_physiology()
+        && you.species == SP_KENKU && you.experience_level >= 5)
+    {
+        _add_talent(talents, ABIL_STOP_FLYING, check_confused);
     }
 
     // Mutations
