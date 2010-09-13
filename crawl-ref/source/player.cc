@@ -1522,9 +1522,6 @@ int player_res_acid(bool calc_unid, bool items)
             res++;
     }
 
-    if (you.religion == GOD_JIYVA && x_chance_in_y(you.piety, MAX_PIETY))
-        res++;
-
     // mutations:
     if (player_mutation_level(MUT_YELLOW_SCALES) == 3)
         res++;

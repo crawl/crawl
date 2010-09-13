@@ -375,9 +375,6 @@ void _item_corrode(int slot)
         return;
     }
 
-    if (you.religion == GOD_JIYVA && x_chance_in_y(you.piety, MAX_PIETY))
-        return;
-
     int how_rusty = ((item.base_type == OBJ_WEAPONS) ? item.plus2 : item.plus);
     // Already very rusty.
     if (how_rusty < -5)
