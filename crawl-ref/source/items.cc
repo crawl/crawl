@@ -3530,6 +3530,7 @@ bool get_item_by_name(item_def *item, char* specs,
         {
             item->plus  = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
             item->plus2 = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
+            init_rod_mp(*item);
         }
         break;
 
