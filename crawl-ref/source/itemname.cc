@@ -2943,8 +2943,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return (you.religion == GOD_TROG);
 
         case RING_TELEPORT_CONTROL:
-            return (player_control_teleport(true, temp, false)
-                    || crawl_state.game_is_sprint());
+            return (player_control_teleport(true, temp, false));
 
         case RING_TELEPORTATION:
             return (crawl_state.game_is_sprint());
