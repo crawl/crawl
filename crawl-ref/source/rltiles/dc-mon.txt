@@ -164,7 +164,8 @@ elephant_dire MONS_DIRE_ELEPHANT
 elephant_demonic MONS_HELLEPHANT
 %sdir dc-mon/unique
 nellie MONS_NELLIE
-dc-mon/holy/apis MONS_APIS
+%sdir dc-mon/holy
+apis MONS_APIS
 
 ### Elemental monsters
 %sdir dc-mon/nonliving
@@ -402,8 +403,8 @@ rupert MONS_RUPERT
 sigmund MONS_SIGMUND
 terence MONS_TERENCE
 wiglaf MONS_WIGLAF
-%sdir dc-mon
 
+%sdir dc-mon
 human MONS_HUMAN
 hell_knight MONS_HELL_KNIGHT
 necromancer MONS_NECROMANCER
@@ -422,12 +423,13 @@ deformed_human MONS_DEFORMED_HUMAN
 ## From an entry vault
 halfling MONS_HALFLING
 demonspawn MONS_DEMONSPAWN
-holy/paladin MONS_PALADIN
+%sdir dc-mon/holy
+paladin MONS_PALADIN
 
 ## Angels ('A')
 angel MONS_ANGEL
 daeva MONS_DAEVA
-holy/cherub MONS_CHERUB
+cherub MONS_CHERUB
 
 ## Giants ('C')
 %sdir dc-mon/unique
@@ -472,8 +474,9 @@ iron_dragon MONS_IRON_DRAGON
 storm_dragon MONS_STORM_DRAGON
 golden_dragon MONS_GOLDEN_DRAGON
 shadow_dragon MONS_SHADOW_DRAGON
-holy/eastern_dragon MONS_HOLY_DRAGON
 undead/bone_dragon MONS_BONE_DRAGON
+%sdir dc-mon/holy
+eastern_dragon MONS_HOLY_DRAGON
 
 ## Eyes ('G')
 %sdir dc-mon/fungi_plants
@@ -486,9 +489,11 @@ great_orb_of_eyes MONS_GREAT_ORB_OF_EYES
 shining_eye MONS_SHINING_EYE
 eye_of_devastation MONS_EYE_OF_DEVASTATION
 golden_eye MONS_GOLDEN_EYE
-dc-mon/holy/ophan MONS_OPHAN
+%sdir dc-mon/holy
+ophan MONS_OPHAN
 
 ## Hybrids ('H')
+%sdir dc-mon
 hippogriff MONS_HIPPOGRIFF
 minotaur MONS_MINOTAUR
 manticore MONS_MANTICORE
@@ -498,9 +503,9 @@ sphinx MONS_SPHINX
 kenku MONS_KENKU
 %sdir dc-mon/holy
 shedu MONS_SHEDU
-%sdir dc-mon
 
 ## Ice beasts
+%sdir dc-mon
 ice_beast MONS_ICE_BEAST /*'I'*/
 
 ## Jellies ('J')
