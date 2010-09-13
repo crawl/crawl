@@ -1021,7 +1021,7 @@ This rod contains spells designed to repel one's enemies.
 %%%%
 royal jelly
 
-A particularly rich and golden gelatinous thing.
+A particularly rich and golden gelatinous thing. Consuming it will restore lost abilities, in addition to the nutrition it provides.
 # A lump of the magical substance produced by giant bees to be fed to their queens.
 %%%%
 rune of zot
