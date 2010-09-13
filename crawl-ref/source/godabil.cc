@@ -943,8 +943,8 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile,
     }
     else
     {
-        // If the original monster type can use spellcasting or priestly
-        // abilities, make sure its spectral thing can as well.
+        // If the original monster type has spellcasting or priestly
+        // abilities, make sure its spectral thing has them as well.
         mon->spells = orig.spells;
         mon->flags |=
             orig.flags & (MF_SPELLCASTER | MF_ACTUAL_SPELLS | MF_PRIEST);
