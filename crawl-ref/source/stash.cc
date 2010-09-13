@@ -83,6 +83,7 @@ std::string stash_annotate_item(const char *s,
                                 bool exclusive = false)
 {
     std::string text = userdef_annotate_item(s, item, exclusive);
+
     if (item->base_type == OBJ_BOOKS
             && item_type_known(*item)
             && item->sub_type != BOOK_MANUAL
@@ -97,6 +98,14 @@ std::string stash_annotate_item(const char *s,
         text += "\n";
         text += fs.tostring(2, -2);
     }
+
+    // Include singular form (royal jelly vs royal jellies).
+    if (item->quantity > 1)
+    {
+        text += "\n";
+        text += item->name(DESC_BASENAME);
+    }
+
     return text;
 }
 
