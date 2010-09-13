@@ -1155,9 +1155,9 @@ public:
             if (is_bad_food(*food2) && !is_bad_food(*food1))
                 return (true);
 
-            if (Options.prefer_safe_chunks)
+            if (Options.prefer_safe_chunks && !you.is_undead)
             {
-                // Offer non-contaminated chunks first.
+                // Offer contaminated chunks last.
                 if (is_contaminated(*food1) && !is_contaminated(*food2))
                     return (false);
                 if (is_contaminated(*food2) && !is_contaminated(*food1))
@@ -2359,10 +2359,6 @@ bool is_mutagenic(const item_def &food)
 bool is_contaminated(const item_def &food)
 {
     if (food.base_type != OBJ_FOOD && food.base_type != OBJ_CORPSES)
-        return (false);
-
-    // Has no (bad) effect on ghouls.
-    if (you.species == SP_GHOUL)
         return (false);
 
     const corpse_effect_type chunk_type = mons_corpse_effect(food.plus);
