@@ -4328,10 +4328,10 @@ int get_real_mp(bool include_items)
         enp += player_magical_power();
 
     // Analogous to ROBUST/FRAIL
-    enp *= 10 + player_mutation_level(MUT_HIGH_MAGIC)
-              + you.attribute[ATTR_DIVINE_VIGOUR]
-              - player_mutation_level(MUT_LOW_MAGIC);
-    enp /= 10;
+    enp *= 100 + (player_mutation_level(MUT_HIGH_MAGIC) * 10)
+               + (you.attribute[ATTR_DIVINE_VIGOUR] * 5)
+               - (player_mutation_level(MUT_LOW_MAGIC) * 10);
+    enp /= 100;
 
     if (enp > 50)
         enp = 50 + ((enp - 50) / 2);
