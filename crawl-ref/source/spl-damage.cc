@@ -969,7 +969,6 @@ static int _shatter_walls(coord_def where, int pow, int, actor *)
 
 void cast_shatter(int pow)
 {
-    int damage = 0;
     const bool silence = silenced(you.pos());
 
     if (silence)
