@@ -2902,9 +2902,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case AMU_RAGE:
             return (you.is_undead
                         && (you.species != SP_VAMPIRE
-                            || temp && you.hunger_state <= HS_SATIATED)
-                    || you.religion == GOD_TROG && !you.penance[GOD_TROG]
-                        && you.piety >= piety_breakpoint(0));
+                            || temp && you.hunger_state <= HS_SATIATED));
 
         case AMU_THE_GOURMAND:
             return (player_likes_chunks(true)
