@@ -3165,8 +3165,8 @@ enum stat_type
 enum targeting_type
 {
     DIR_NONE,
-    DIR_TARGET,
-    DIR_DIR,
+    DIR_TARGET, // smite targetting
+    DIR_DIR,    // needs a clear line to target
     DIR_TARGET_OBJECT, // New as of 27-August-2009, for item-targeting spells
 };
 
