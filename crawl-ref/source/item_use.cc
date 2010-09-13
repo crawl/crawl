@@ -2640,8 +2640,13 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             dice_mult = dice_mult * 130 / 100;
         }
 
-        if (ammo_brand == SPMSL_STEEL)
+        // Note that branded missile damage goes through defender
+        // resists.
+        if (ammo_brand == SPMSL_STEEL || ammo_brand == SPMSL_FROST
+            || ammo_brand == SPMSL_FLAME)
+        {
             dice_mult = dice_mult * 150 / 100;
+        }
 
         // ID check. Can't ID off teleported projectiles, uh, because
         // it's too weird. Also it messes up the messages.
