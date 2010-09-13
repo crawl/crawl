@@ -35,12 +35,13 @@ enum ability_type
     ABIL_EVOKE_TELEPORTATION,
     ABIL_EVOKE_BLINK,
     ABIL_RECHARGING,                   //   20
-    // 23 - 50 unused
+
     ABIL_EVOKE_TURN_INVISIBLE = 51,    //   51
     ABIL_EVOKE_TURN_VISIBLE,
     ABIL_EVOKE_LEVITATE,
     ABIL_EVOKE_STOP_LEVITATING,
     ABIL_END_TRANSFORMATION,           //   55
+    ABIL_STOP_FLYING,
 
     // Divine abilities
     ABIL_ZIN_SUSTENANCE = 109,              //  109
