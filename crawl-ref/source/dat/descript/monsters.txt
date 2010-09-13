@@ -1576,6 +1576,10 @@ sphinx
 
 A large creature with a human head, the body of a lion, and the wings of a huge bird.
 %%%%
+spider
+
+An ordinary orb-weaving spider with a white cross on its back. It's not as ridiculously huge as other arachnids in this place, but somehow still as big as a small cat -- and you don't have a shoe that big.
+%%%%
 spiny frog
 
 Although slightly smaller than the giant toad, the spiny frog makes up for lack of size by being covered in wickedly barbed spines and spurs.
