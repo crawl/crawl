@@ -3379,13 +3379,11 @@ coord_def dgn_random_point_in_bounds(dungeon_feature_type searchfeat,
 
 static void _place_specific_feature(dungeon_feature_type feat)
 {
-    coord_def c;
-
-    do
-        c = random_in_bounds();
-    while (grd(c) != DNGN_FLOOR || monster_at(c));
-
-    grd(c) = feat;
+    coord_def c = dgn_random_point_in_bounds(DNGN_FLOOR, 0, DNGN_UNSEEN, true);
+    if (in_bounds(c))
+        env.grid(c) = feat;
+    else
+        dgn_veto_level();
 }
 
 static void _place_specific_stair(dungeon_feature_type stair,
