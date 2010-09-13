@@ -1425,7 +1425,7 @@ MARKER: * = lua:fog_machine { cloud_type="flame", \
 COLOUR: n = red
 SUBST:  * = .
 MARKER: G = lua:props_marker { stop_explore = "a scorch-marked granite statue."\
-        , feature_description = "A scorch-marked granite statue." }
+        , feature_description = "scorch-marked granite statue" }
 MAP
 ...........
 .xxxx.xxxx.
@@ -1449,7 +1449,7 @@ MARKER: * = lua:fog_machine { cloud_type="flame", \
 COLOUR: * = red
 SUBST:  * = .
 MARKER: G = lua:props_marker { stop_explore = "a scorch-marked granite statue."\
-        , feature_description = "A scorch-marked granite statue." }
+        , feature_description = "scorch-marked granite statue" }
 MAP
 xxxxxxxxxxxxx
 xxxxxxxxxxxxx
@@ -1619,7 +1619,7 @@ MARKER: f = lua:fog_machine { cloud_type = "flame", \
              pow_min = 2, pow_max = 4, delay = 37, start_clouds = 1, \
              size = 1, walk_dist = 2, spread_rate= 0 }
 MARKER: G = lua:props_marker { stop_explore = "a scorch-marked granite statue."\
-        , feature_description = "A scorch-marked granite statue." }
+        , feature_description = "scorch-marked granite statue" }
 MAP
 .............
 .............
@@ -1653,7 +1653,7 @@ MARKER:  f = lua:fog_machine { cloud_type = "flame", \
              pow_min = 2, pow_max = 8, delay = 79, start_clouds = 1, \
              size = 1, walk_dist = 2, spread_rate= 0 }
 MARKER: G = lua:props_marker { stop_explore = "a scorch-marked granite statue."\
-        , feature_description = "A scorch-marked granite statue." }
+        , feature_description = "scorch-marked granite statue" }
 MAP
 xxxxxxxG@Gxxxxxxx
 x...............x
@@ -1727,7 +1727,7 @@ COLOUR: * = red
 SUBST:  * = .
 SUBST:  $ : $$*|.c
 MARKER: G = lua:props_marker { stop_explore = "a scorch-marked granite statue."\
-        , feature_description = "A scorch-marked granite statue." }
+        , feature_description = "scorch-marked granite statue" }
 MAP
 ccccccccccccccccccccccc
 ccxxx*xxxxx*xxxxx*xxxxc
