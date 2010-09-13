@@ -3696,9 +3696,7 @@ void display_char_status()
 bool player_item_conserve(bool calc_unid)
 {
     return (player_equip(EQ_AMULET, AMU_CONSERVATION, calc_unid)
-            || player_equip_ego_type(EQ_CLOAK, SPARM_PRESERVATION)
-            || (you.religion == GOD_JIYVA
-                && you.piety >= piety_breakpoint(4)));
+            || player_equip_ego_type(EQ_CLOAK, SPARM_PRESERVATION));
 }
 
 int player_mental_clarity(bool calc_unid, bool items)
@@ -3735,9 +3733,7 @@ bool extrinsic_amulet_effect(jewellery_type amulet)
             return (true);
         // else fall-through
     case AMU_CONSERVATION:
-        return (player_equip_ego_type(EQ_CLOAK, SPARM_PRESERVATION) > 0
-                || (you.religion == GOD_JIYVA
-                     && you.piety >= piety_breakpoint(4)));
+        return (player_equip_ego_type(EQ_CLOAK, SPARM_PRESERVATION) > 0);
     case AMU_THE_GOURMAND:
         return (player_mutation_level(MUT_GOURMAND) > 0);
     default:
