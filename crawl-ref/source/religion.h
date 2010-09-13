@@ -24,7 +24,6 @@
 bool is_evil_god(god_type god);
 bool is_good_god(god_type god);
 bool is_chaotic_god(god_type god);
-bool is_priest_god(god_type god);
 
 // Returns true if the god is not present in the current game. This is
 // orthogonal to whether the player can worship the god in question.

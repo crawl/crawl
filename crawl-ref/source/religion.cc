@@ -448,13 +448,6 @@ bool is_chaotic_god(god_type god)
             || god == GOD_JIYVA);
 }
 
-bool is_priest_god(god_type god)
-{
-    return (god == GOD_ZIN
-            || god == GOD_YREDELEMNUL
-            || god == GOD_BEOGH);
-}
-
 bool is_unavailable_god(god_type god)
 {
     return (god == GOD_JIYVA && jiyva_is_dead());
