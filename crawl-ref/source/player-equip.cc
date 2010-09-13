@@ -22,6 +22,7 @@
 #include "religion.h"
 #include "shopping.h"
 #include "skills2.h"
+#include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-miscast.h"
 #include "state.h"
@@ -1098,8 +1099,12 @@ static void _equip_jewellery_effect(item_def &item)
     case RING_SUSTAIN_ABILITIES:
     case RING_SUSTENANCE:
     case RING_SLAYING:
-    case RING_WIZARDRY:
     case RING_TELEPORT_CONTROL:
+        break;
+
+    case RING_WIZARDRY:
+        if (player_spell_skills())
+            ident = ID_KNOWN_TYPE;
         break;
 
     case RING_SEE_INVISIBLE:
