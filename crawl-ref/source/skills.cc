@@ -344,6 +344,8 @@ static void _gain_skill_level(skill_type exsk)
     if (you.weapon() && item_is_staff(*you.weapon()))
         maybe_identify_staff(*you.weapon());
 
+    // TODO: also identify rings of wizardry.
+
     // Ogres -> ogre mages.
     update_player_symbol();
 }

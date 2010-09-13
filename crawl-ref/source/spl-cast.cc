@@ -714,15 +714,21 @@ bool maybe_identify_staff(item_def &item, spell_type spell)
 
     int relevant_skill = 0;
     const bool chance = (spell != SPELL_NO_SPELL);
+    bool id_staff = false;
 
     switch (item.sub_type)
     {
         case STAFF_ENERGY:
             if (!chance) // The staff of energy only autoIDs by chance.
                 return (false);
-            // intentional fall-through
-        case STAFF_WIZARDRY:
             relevant_skill = you.skills[SK_SPELLCASTING];
+            break;
+
+        case STAFF_WIZARDRY:
+            // Staff of wizardry auto-ids if you could know spells
+            // because the interface gives it away anyhow.
+            if (player_spell_skills())
+                id_staff = true;
             break;
 
         case STAFF_FIRE:
@@ -778,8 +784,6 @@ bool maybe_identify_staff(item_def &item, spell_type spell)
                 relevant_skill = you.skills[SK_SUMMONINGS];
             break;
     }
-
-    bool id_staff = false;
 
     if (chance)
     {
