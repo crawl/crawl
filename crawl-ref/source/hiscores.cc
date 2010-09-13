@@ -53,6 +53,7 @@
 #include "shopping.h"
 #include "species.h"
 #include "state.h"
+#include "status.h"
 #include "stuff.h"
 #include "env.h"
 #include "tags.h"
@@ -534,6 +535,7 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     num_runes         = se.num_runes;
     kills             = se.kills;
     maxed_skills      = se.maxed_skills;
+    status_effects    = se.status_effects;
     gold              = se.gold;
     gold_spent        = se.gold_spent;
     gold_found        = se.gold_found;
@@ -714,6 +716,7 @@ void scorefile_entry::init_with_fields()
 
     kills = fields->long_field("kills");
     maxed_skills = fields->str_field("maxskills");
+    status_effects = fields->str_field("status");
 
     gold       = fields->int_field("gold");
     gold_found = fields->int_field("goldfound");
@@ -791,6 +794,8 @@ void scorefile_entry::set_base_xlog_fields() const
     fields->add_field("kills", "%d", kills);
     if (!maxed_skills.empty())
         fields->add_field("maxskills", "%s", maxed_skills.c_str());
+    if (!status_effects.empty())
+        fields->add_field("status", "%s", status_effects.c_str());
 
     fields->add_field("gold", "%d", gold);
     fields->add_field("goldfound", "%d", gold_found);
@@ -1076,6 +1081,7 @@ void scorefile_entry::reset()
     num_runes            = 0;
     kills                = 0L;
     maxed_skills.clear();
+    status_effects.clear();
     gold                 = 0;
     gold_found           = 0;
     gold_spent           = 0;
@@ -1238,6 +1244,29 @@ void scorefile_entry::init(time_t dt)
             if (!maxed_skills.empty())
                 maxed_skills += ",";
             maxed_skills += skill_name(sk);
+        }
+    }
+
+    // Note active status effects.
+    const int statuses[] = {
+        DUR_TRANSFORMATION, DUR_PARALYSIS, DUR_PETRIFIED, DUR_SLEEP,
+        STATUS_BEHELD, DUR_LIQUID_FLAMES, DUR_ICY_ARMOUR, STATUS_BURDEN,
+        DUR_DEFLECT_MISSILES, DUR_REPEL_MISSILES, DUR_PRAYER,
+        STATUS_REGENERATION, DUR_DEATHS_DOOR, DUR_STONEMAIL, DUR_STONESKIN,
+        DUR_TELEPORT, DUR_DEATH_CHANNEL, DUR_PHASE_SHIFT, DUR_SILENCE,
+        DUR_INVIS, DUR_CONF, DUR_DIVINE_VIGOUR, DUR_DIVINE_STAMINA, DUR_BERSERKER,
+        STATUS_AIRBORNE, DUR_POISONING, STATUS_NET, STATUS_SPEED,
+    };
+
+    status_info inf;
+    for (unsigned i = 0; i < ARRAYSZ(statuses); ++i)
+    {
+        fill_status_info(statuses[i], &inf);
+        if (!inf.short_text.empty())
+        {
+             if (!status_effects.empty())
+                 status_effects += ",";
+             status_effects += inf.short_text;
         }
     }
 
