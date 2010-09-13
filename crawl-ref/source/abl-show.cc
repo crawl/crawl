@@ -1086,7 +1086,7 @@ static bool _check_ability_possible(const ability_def& abil,
 
     case ABIL_EVOKE_BERSERK:
     case ABIL_TROG_BERSERK:
-        if (you.hunger_state < HS_SATIATED)
+        if (you.hunger_state < HS_SATIATED && !you.is_undead)
         {
             mpr("You're too hungry to go berserk.");
             return (false);
