@@ -3151,7 +3151,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_GREATER_NAGA, 'N', LIGHTRED, "greater naga",
+    MONS_GREATER_NAGA, 'N', YELLOW, "greater naga",
     M_FIGHTER | M_SPELLCASTER | M_ACTUAL_SPELLS | M_SEE_INVIS | M_WARM_BLOOD
         | M_SPEAKS,
     MR_RES_POISON,
@@ -3164,7 +3164,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_GUARDIAN_SERPENT, 'N', LIGHTGREEN, "guardian serpent",
+    MONS_GUARDIAN_SERPENT, 'S', WHITE, "guardian serpent",
     M_SPELLCASTER | M_SEE_INVIS | M_ACTUAL_SPELLS | M_WARM_BLOOD | M_SPEAKS,
     MR_RES_POISON,
     800, 10, MONS_GUARDIAN_SERPENT, MONS_GUARDIAN_SERPENT, MH_NATURAL, -6,
@@ -3172,7 +3172,7 @@ static monsterentry mondata[] = {
     { 8, 3, 5, 0 },
     6, 14, MST_GUARDIAN_SERPENT, CE_MUTAGEN_RANDOM, Z_BIG, S_SHOUT,
     I_NORMAL, HT_LAND, FL_NONE, 15, DEFAULT_ENERGY,
-    MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_LARGE
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
 },
 
 // ogres ('O')
@@ -3888,7 +3888,7 @@ static monsterentry mondata[] = {
 },
 
 {   // mv: was another lava thing
-    MONS_SALAMANDER, 'S', LIGHTRED, "salamander",
+    MONS_SALAMANDER, 'N', LIGHTRED, "salamander",
     M_FIGHTER | M_WARM_BLOOD | M_SUBMERGES,
     mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
     0, 10, MONS_SALAMANDER, MONS_SALAMANDER, MH_NATURAL, -3,
@@ -5262,7 +5262,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_AIZUL, 'N', LIGHTMAGENTA, "Aizul",
+    MONS_AIZUL, 'S', LIGHTMAGENTA, "Aizul",
     M_SPELLCASTER | M_SEE_INVIS | M_WARM_BLOOD | M_SPEAKS
         | M_ACTUAL_SPELLS | M_UNIQUE,
     MR_RES_POISON,
