@@ -119,7 +119,7 @@ const deck_archetype deck_of_destruction[] = {
     { CARD_HAMMER,  {5, 5, 5} },
     { CARD_SPARK,   {5, 5, 5} },
     { CARD_PAIN,    {5, 5, 5} },
-    { CARD_TORMENT, {5, 5, 5} },
+    { CARD_TORMENT, {1, 3, 5} },
     END_OF_DECK
 };
 
