@@ -1107,7 +1107,7 @@ static bool _check_ability_possible(const ability_def& abil,
         return (true);
 
     case ABIL_EVOKE_TURN_INVISIBLE:     // ring, randarts, darkness items
-        if (you.hunger_state < HS_SATIATED && you.species != SP_VAMPIRE)
+        if (you.hunger_state < HS_SATIATED && !you.is_undead)
         {
             mpr("You're too hungry to turn invisible.");
             return (false);
