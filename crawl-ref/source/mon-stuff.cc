@@ -3752,7 +3752,7 @@ int dismiss_monsters(std::string pattern)
     // is found in the regex (except for fixed arts and unrand arts).
     const bool keep_item = strip_tag(pattern, "keepitem");
 
-    // Dismiss by regex
+    // Dismiss by regex.
     text_pattern tpat(pattern);
     int ndismissed = 0;
     for (monster_iterator mi; mi; ++mi)
@@ -3766,6 +3766,7 @@ int dismiss_monsters(std::string pattern)
             ++ndismissed;
         }
     }
+
     return (ndismissed);
 }
 
@@ -3823,7 +3824,7 @@ bool monster_random_space(monster_type mon, coord_def& target,
     monster dummy;
     dummy.type = mon;
 
-    return monster_random_space(&dummy, target, forbid_sanctuary);
+    return (monster_random_space(&dummy, target, forbid_sanctuary));
 }
 
 void monster_teleport(monster* mons, bool instan, bool silent)
@@ -3843,6 +3844,7 @@ void monster_teleport(monster* mons, bool instan, bool silent)
             mons->add_ench( mon_enchant(ENCH_TP, 0, KC_OTHER,
                                            random_range(20, 30)) );
         }
+
         return;
     }
 
