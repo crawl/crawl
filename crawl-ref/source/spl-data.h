@@ -235,8 +235,8 @@ struct spell_desc
 },
 
 {
-    SPELL_PETRIFY, "Petrify",
-     SPTYP_ENCHANTMENT | SPTYP_EARTH,
+     SPELL_PETRIFY, "Petrify",
+     SPTYP_TRANSMUTATION | SPTYP_EARTH,
      SPFLAG_DIR_OR_TARGET,
      4,
      200,
