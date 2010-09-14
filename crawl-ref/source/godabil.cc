@@ -944,21 +944,17 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile,
     }
     else
     {
+        // If the original monster type has dual-wielding, make sure its
+        // spectral thing has it as well.  This is needed for e.g.
+        // equipped spectral deep elf blademasters.
+        if (mons_class_flag(orig.type, M_TWOWEAPON))
+            mon->flags |= MF_TWOWEAPON;
+
         // If the original monster type has spellcasting or priestly
         // abilities, make sure its spectral thing has them as well.
         mon->spells = orig.spells;
         mon->flags |=
             orig.flags & (MF_SPELLCASTER | MF_ACTUAL_SPELLS | MF_PRIEST);
-
-        // If the original monster type can wield two weapons, make sure
-        // its spectral thing can as well.  This is needed for e.g.
-        // deep elf blademasters, who otherwise act as plain spectral
-        // elves when equipped.
-        if (mons_class_flag(orig.type, M_TWOWEAPON)
-            && !mons_class_flag(soul_type, M_TWOWEAPON))
-        {
-            mon->flags |= MF_TWOWEAPON;
-        }
     }
 
     name_zombie(mon, &orig);

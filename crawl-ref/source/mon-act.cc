@@ -1112,6 +1112,7 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
     ASSERT(slot != NUM_MONSTER_SLOTS);
 
     const bool skilled = mons_class_flag(mons->type, M_FIGHTER);
+    const bool archer  = mons_class_flag(mons->type, M_ARCHER);
 
     mons->lose_energy(EUT_MISSILE);
     const int throw_energy = mons->action_energy(EUT_MISSILE);
@@ -1147,7 +1148,7 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
     ammoDamBonus = item.plus2;
 
     // Archers get a boost from their melee attack.
-    if (mons_class_flag(mons->type, M_ARCHER))
+    if (archer)
     {
         const mon_attack_def attk = mons_attack_spec(mons, 0);
         if (attk.type == AT_SHOOT)
