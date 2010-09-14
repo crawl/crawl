@@ -1721,8 +1721,8 @@ bool cast_twisted_resurrection(int pow, god_type god)
     if (mon == MONS_ABOMINATION_LARGE)
     {
         menv[mons].hit_dice = 8 + total_mass / ((colour == LIGHTRED) ? 500 :
-                                                   (colour == RED)      ? 1000
-                                                                        : 2500);
+                                                (colour == RED)      ? 1000
+                                                                     : 2500);
 
         menv[mons].hit_dice = std::min(30, menv[mons].hit_dice);
 
