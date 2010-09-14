@@ -2916,7 +2916,7 @@ static bool _make_zombie(monster* mon, int corpse_class, int corpse_index,
     if (you.can_see(mon))
     {
         if (you.can_see(zombie))
-            simple_monster_message(mon, " instantly turns into a zombie!");
+            simple_monster_message(mon, " turns into a zombie!");
         else if (last_item != NON_ITEM)
         {
             simple_monster_message(mon, "'s equipment vanishes!");
