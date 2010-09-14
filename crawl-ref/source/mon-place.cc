@@ -1889,10 +1889,13 @@ static void _define_zombie(monster* mon, monster_type ztype, monster_type cs,
     mon->colour       = mons_class_colour(cs);
     mon->speed        = mons_class_zombie_base_speed(mon->base_monster);
 
-    // Turn off all spellcasting flags.
+    // Turn off all melee ability flags except dual-wielding.
+    mon->flags       &= ~(MF_FIGHTER | MF_ARCHER);
+
+    // Turn off all spellcasting and priestly ability flags.
     // Hack - kraken get to keep their spell-like ability.
     if (mon->base_monster != MONS_KRAKEN)
-        mon->flags   &= ~MF_SPELLCASTER & ~MF_ACTUAL_SPELLS & ~MF_PRIEST;
+        mon->flags   &= ~(MF_SPELLCASTER | MF_ACTUAL_SPELLS | MF_PRIEST);
 
     int hp = 0;
     int acmod = 0, evmod = 0;
