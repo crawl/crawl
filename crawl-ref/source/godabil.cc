@@ -903,11 +903,10 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile,
     // If the monster's held in a net, get it out.
     mons_clear_trapping_net(mon);
 
-    // If the monster has melee abilities, save them.
-    mon->bind_melee_flags();
-
-    // If the monster has spellcasting or priestly abilities, save them.
-    mon->bind_spell_flags();
+    // For abominations, drop all of the monster's equipment.  For
+    // spectral things, drop the monster's holy equipment, and keep
+    // wielding the rest.
+    monster_drop_things(mon, false, twisted ? is_any_item : is_holy_item);
 
     const monster orig = *mon;
 
@@ -926,11 +925,6 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile,
         mon->type = MONS_SPECTRAL_THING;
         mon->base_monster = soul_type;
     }
-
-    // For abominations, drop all of the monster's equipment.  For
-    // spectral things, drop the monster's holy equipment, and keep
-    // wielding the rest.
-    monster_drop_things(mon, false, twisted ? is_any_item : is_holy_item);
 
     // Recreate the monster, based on its changed type.
     define_monster(mon);
