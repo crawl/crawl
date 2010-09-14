@@ -478,13 +478,11 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      },
 
     // Book of Stalking
-    {SPELL_STING,
-     SPELL_SURE_BLADE,
-     SPELL_PROJECTED_NOISE,
-     SPELL_POISON_WEAPON,
-     SPELL_MEPHITIC_CLOUD,
+    {SPELL_FULSOME_DISTILLATION,
+     SPELL_EVAPORATE,
+     SPELL_PASSWALL,
      SPELL_PETRIFY,
-     SPELL_INVISIBILITY,
+     SPELL_DIG,
      SPELL_NO_SPELL,
      },
 

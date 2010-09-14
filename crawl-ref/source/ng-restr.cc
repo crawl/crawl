@@ -502,7 +502,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         {
             case SP_HIGH_ELF:
             case SP_MOUNTAIN_DWARF:
-            case SP_DEEP_DWARF:
             case SP_HILL_ORC:
             case SP_CENTAUR:
             case SP_OGRE:
@@ -512,6 +511,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_MUMMY:
             case SP_GHOUL:
             case SP_VAMPIRE:
+            case SP_KENKU:
                 return (CC_RESTRICTED);
             default:
                 return (CC_UNRESTRICTED);

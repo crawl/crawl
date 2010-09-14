@@ -929,17 +929,18 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(2, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
         newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_STALKING);
 
+        newgame_make_item(4, EQ_NONE, OBJ_POTIONS, POT_CONFUSION, -1, 2);
+
         if (player_genus(GENPC_OGREISH) || you.species == SP_TROLL)
             you.inv[0].sub_type = WPN_CLUB;
 
         weap_skill = 1;
-        you.skills[SK_FIGHTING]     = 1;
-        you.skills[SK_POISON_MAGIC] = 1;
-        you.skills[SK_DODGING]      = 2;
-        you.skills[SK_STEALTH]      = 2;
-        you.skills[SK_STABBING]     = 2;
-        you.skills[SK_SPELLCASTING] = 1;
-        you.skills[SK_ENCHANTMENTS] = 1;
+        you.skills[SK_FIGHTING]       = 1;
+        you.skills[SK_DODGING]        = 2;
+        you.skills[SK_STEALTH]        = 2;
+        you.skills[SK_STABBING]       = 2;
+        you.skills[SK_SPELLCASTING]   = 1;
+        you.skills[SK_TRANSMUTATIONS] = 1;
         break;
 
     case JOB_ASSASSIN:
@@ -1311,7 +1312,6 @@ static void _give_basic_spells(job_type which_job)
     case JOB_REAVER:
         which_spell = SPELL_MAGIC_DART;
         break;
-    case JOB_STALKER:
     case JOB_VENOM_MAGE:
         which_spell = SPELL_STING;
         break;
