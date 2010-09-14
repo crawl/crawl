@@ -222,7 +222,7 @@ dissolution cast
 
 @The_monster@ gurgles deeply, a call to fellow slimes.
 
-@The_monster@ says, "The Slime God sees all!"
+@The_monster@ says, "@God@ sees all!"
 %%%%
 gastronok cast
 
