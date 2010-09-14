@@ -1417,7 +1417,6 @@ static bool _item_penetrates_victim(const bolt &beam, const actor *victim,
 static bool _silver_damages_victim(bolt &beam, actor* victim, int &dmg,
                                    std::string &dmg_msg)
 {
-
     int mutated = 0;
 
     // For mutation damage, we want to count innate mutations for
@@ -1443,9 +1442,7 @@ static bool _silver_damages_victim(bolt &beam, actor* victim, int &dmg,
         dmg = (dmg * multiplier) / 100;
     }
     else
-    {
         return (false);
-    }
 
     if (!beam.is_tracer && you.can_see(victim))
        dmg_msg = "The silver sears " + victim->name(DESC_NOCAP_THE) + "!";
