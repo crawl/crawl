@@ -885,20 +885,16 @@ void yred_drain_life(int pow)
     }
 }
 
-void yred_make_enslaved_soul(monster* mon, bool force_hostile,
-                             bool quiet, bool unrestricted)
+void yred_make_enslaved_soul(monster* mon, bool force_hostile)
 {
-    if (!unrestricted)
-        add_daction(DACT_OLD_ENSLAVED_SOULS_POOF);
+    add_daction(DACT_OLD_ENSLAVED_SOULS_POOF);
 
     const monster_type soul_type = mons_species(mon->type);
     const std::string whose =
         you.can_see(mon) ? apostrophise(mon->name(DESC_CAP_THE))
                          : mon->pronoun(PRONOUN_CAP_POSSESSIVE);
     const bool twisted =
-        !unrestricted ? !x_chance_in_y(you.skills[SK_INVOCATIONS] * 20 / 9 + 20,
-                                       100)
-                      : false;
+        !x_chance_in_y(you.skills[SK_INVOCATIONS] * 20 / 9 + 20, 100);
 
     // If the monster's held in a net, get it out.
     mons_clear_trapping_net(mon);
@@ -961,12 +957,9 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile,
     mon->attitude = !force_hostile ? ATT_FRIENDLY : ATT_HOSTILE;
     behaviour_event(mon, ME_ALERT, !force_hostile ? MHITNOT : MHITYOU);
 
-    if (!quiet)
-    {
-        mprf("%s soul %s, and %s.", whose.c_str(),
-             twisted        ? "becomes twisted" : "remains intact",
-             !force_hostile ? "is now yours"    : "fights you");
-    }
+    mprf("%s soul %s, and %s.", whose.c_str(),
+         twisted        ? "becomes twisted" : "remains intact",
+         !force_hostile ? "is now yours"    : "fights you");
 }
 
 bool kiku_receive_corpses(int pow, coord_def where)
