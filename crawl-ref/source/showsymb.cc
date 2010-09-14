@@ -167,7 +167,7 @@ show_class get_cell_show_class(const map_cell& cell, bool only_stationary_monste
             && (!only_stationary_monsters || mons_class_is_stationary(cell.monster())))
         return SH_MONSTER;
 
-    if (cell.cloud() != CLOUD_NONE)
+    if (cell.cloud() != CLOUD_NONE && cell.cloud() != CLOUD_GLOOM)
         return SH_CLOUD;
 
     if (feat_is_trap(cell.feat()) || is_critical_feature(cell.feat()))
@@ -218,6 +218,16 @@ glyph get_cell_glyph_with_class(const map_cell& cell, const coord_def& loc, show
     g.ch = ' ';
     g.col = LIGHTGRAY;
 
+    bool gloom = false;
+    if (cell.cloud() && cell.cloud() == CLOUD_GLOOM)
+    {
+        gloom = true;
+        if (colored)
+            g.col = cell.cloud_colour();
+        else
+            g.col = DARKGREY;
+    }
+
     switch(cls)
     {
     case SH_INVIS_EXPOSED:
@@ -255,6 +265,7 @@ glyph get_cell_glyph_with_class(const map_cell& cell, const coord_def& loc, show
             g.col = cell.cloud_colour();
         else
             g.col = DARKGRAY;
+
         break;
 
     case SH_FEATURE:
@@ -262,7 +273,10 @@ glyph get_cell_glyph_with_class(const map_cell& cell, const coord_def& loc, show
             return g;
 
         show = cell.feat();
-        g.col = _cell_feat_show_colour(cell, colored);
+
+        if (!gloom)
+            g.col = _cell_feat_show_colour(cell, colored);
+
         if (cell.detected_item() || cell.item())
         {
             if (Options.feature_item_brand && is_critical_feature(cell.feat()))
@@ -276,21 +290,25 @@ glyph get_cell_glyph_with_class(const map_cell& cell, const coord_def& loc, show
         if (cell.detected_item())
         {
             show = SHOW_ITEM_DETECTED;
-            g.col = Options.detected_item_colour;
+            if (!gloom)
+                g.col = Options.detected_item_colour;
         }
         else if (cell.item())
         {
             const item_info* eitem = cell.item();
             show = *eitem;
 
-            if (!feat_is_water(cell.feat()))
-                g.col = eitem->colour;
-            else
-                g.col = _cell_feat_show_colour(cell, colored);
+            if (!gloom)
+            {
+                if (!feat_is_water(cell.feat()))
+                    g.col = eitem->colour;
+                else
+                    g.col = _cell_feat_show_colour(cell, colored);
 
-            // monster(mimic)-owned items have link = NON_ITEM+1+midx
-            if (cell.flags & MAP_MORE_ITEMS)
-                g.col |= COLFLAG_ITEM_HEAP;
+                // monster(mimic)-owned items have link = NON_ITEM+1+midx
+                if (cell.flags & MAP_MORE_ITEMS)
+                    g.col |= COLFLAG_ITEM_HEAP;
+            }
         }
         else
             return g;
