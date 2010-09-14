@@ -137,6 +137,12 @@ bool can_wield(item_def *weapon, bool say_reason,
         }
     }
 
+    if (you.body_size(PSIZE_TORSO) < SIZE_LARGE && item_mass(*weapon) >= 300)
+    {
+        SAY(mpr("That's too large and heavy for you to wield."));
+        return (false);
+    }
+
     // All non-weapons only need a shield check.
     if (weapon->base_type != OBJ_WEAPONS)
     {
@@ -147,12 +153,6 @@ bool can_wield(item_def *weapon, bool say_reason,
         }
         else
             return (true);
-    }
-
-    if (you.body_size(PSIZE_TORSO) < SIZE_LARGE && item_mass(*weapon) >= 300)
-    {
-        SAY(mpr("That's too large and heavy for you to wield."));
-        return (false);
     }
 
     // Small species wielding large weapons...
