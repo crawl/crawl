@@ -431,6 +431,7 @@ public:
     bool do_shaft();
     bool has_spell_of_type(unsigned) const;
 
+    void bind_melee_flags();
     void bind_spell_flags();
 
 private:

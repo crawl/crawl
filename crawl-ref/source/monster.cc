@@ -662,6 +662,20 @@ bool monster::has_spell_of_type(unsigned disciplines) const
     return (false);
 }
 
+void monster::bind_melee_flags()
+{
+    // Bind fighter / dual-wielder / archer flags from the base type.
+
+    // Alas, we don't know if the mon is zombified at the moment, if it
+    // is, the flags will be removed later.
+    if (mons_class_flag(type, M_FIGHTER))
+        flags |= MF_FIGHTER;
+    if (mons_class_flag(type, M_TWOWEAPON))
+        flags |= MF_TWOWEAPON;
+    if (mons_class_flag(type, M_ARCHER))
+        flags |= MF_ARCHER;
+}
+
 void monster::bind_spell_flags()
 {
     // Bind spellcaster / priest flags from the base type. These may be

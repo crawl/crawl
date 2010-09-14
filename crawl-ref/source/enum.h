@@ -2305,7 +2305,7 @@ enum monster_flag_type
     MF_INTERESTING        = 0x08,    // Player finds monster interesting
 
     MF_SEEN               = 0x10,    // Player has already seen monster
-    MF_DIVINE_PROTECTION  = 0x20,    // Monster has divine protection.
+    MF_FIGHTER            = 0x20,    // Monster is skilled fighter.
     MF_KNOWN_MIMIC        = 0x40,    // Mimic that has taken a swing at the PC,
                                      // or that the player has inspected with ?
     MF_BANISHED           = 0x80,    // Monster that has been banished.
@@ -2360,6 +2360,7 @@ enum monster_flag_type
     MF_NAME_SPECIES     = 0x20000000, // mname should be used for corpses as well,
                                       // preventing "human corpse of halfling"
     MF_TWOWEAPON        = 0x40000000, // Monster wields two weapons.
+    MF_ARCHER           = 0x80000000, // Monster gets various archery boosts.
     // Note: at least name flags get passed in a 32-bit variable (fill_out_corpse()),
     // and perhaps other flags as well.  Be careful when extending.
 };

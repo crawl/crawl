@@ -1111,8 +1111,8 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
     mon_inv_type slot = get_mon_equip_slot(mons, mitm[msl]);
     ASSERT(slot != NUM_MONSTER_SLOTS);
 
-    const bool skilled = mons_class_flag(mons->type, M_FIGHTER);
-    const bool archer  = mons_class_flag(mons->type, M_ARCHER);
+    const bool skilled = mons->flags & MF_FIGHTER;
+    const bool archer  = mons->flags & MF_ARCHER;
 
     mons->lose_energy(EUT_MISSILE);
     const int throw_energy = mons->action_energy(EUT_MISSILE);
@@ -1499,7 +1499,8 @@ static bool _handle_throw(monster* mons, bolt & beem)
     if (mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT)
         return (false);
 
-    const bool archer = mons_class_flag(mons->type, M_ARCHER);
+    const bool archer = mons->flags & MF_ARCHER;
+
     // Highly-specialised archers are more likely to shoot than talk. (?)
     if (one_chance_in(archer? 9 : 5))
         return (false);
