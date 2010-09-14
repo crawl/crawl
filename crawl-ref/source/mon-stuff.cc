@@ -2562,7 +2562,8 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     mons->god   = god;
 
     mons->flags = flags;
-    // Line above might clear spell flags; restore.
+    // Line above might clear melee and/or spell flags; restore.
+    mons->bind_melee_flags();
     mons->bind_spell_flags();
 
     // Forget various speech/shout Lua functions.

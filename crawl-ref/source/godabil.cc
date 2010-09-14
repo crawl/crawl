@@ -903,6 +903,9 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile,
     // If the monster's held in a net, get it out.
     mons_clear_trapping_net(mon);
 
+    // If the monster has melee abilities, save them.
+    mon->bind_melee_flags();
+
     // If the monster has spellcasting or priestly abilities, save them.
     mon->bind_spell_flags();
 
@@ -944,11 +947,9 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile,
     }
     else
     {
-        // If the original monster type has dual-wielding, make sure its
-        // spectral thing has it as well.  This is needed for e.g.
-        // equipped spectral deep elf blademasters.
-        if (mons_class_flag(orig.type, M_TWOWEAPON))
-            mon->flags |= MF_TWOWEAPON;
+        // If the original monster type has melee abilities, make sure
+        // its spectral thing has them as well.
+        mon->flags |= orig.flags & (MF_FIGHTER | MF_TWOWEAPON | MF_ARCHER);
 
         // If the original monster type has spellcasting or priestly
         // abilities, make sure its spectral thing has them as well.

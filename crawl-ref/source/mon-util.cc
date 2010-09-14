@@ -1712,8 +1712,6 @@ static void _get_spells(mon_spellbook_type& book, monster* mon)
     // (Dumb) special casing to give ogre mages Haste Other. -cao
     if (mon->type == MONS_OGRE_MAGE)
         mon->spells[0] = SPELL_HASTE_OTHER;
-
-    mon->bind_spell_flags();
 }
 
 // Never hand out DARKGREY as a monster colour, even if it is randomly
@@ -1900,8 +1898,11 @@ void define_monster(monster* mons)
     mons->experience = 0L;
     mons->colour     = col;
 
+    mons->bind_melee_flags();
+
     spells = m->sec;
     _get_spells(spells, mons);
+    mons->bind_spell_flags();
 
     // Reset monster enchantments.
     mons->enchantments.clear();
@@ -1921,6 +1922,7 @@ void define_monster(monster* mons)
         ghost.init_random_demon();
         mons->set_ghost(ghost);
         mons->pandemon_init();
+        mons->bind_melee_flags();
         mons->bind_spell_flags();
         break;
     }
@@ -1932,6 +1934,7 @@ void define_monster(monster* mons)
         ghost.init_player_ghost();
         mons->set_ghost(ghost);
         mons->ghost_init();
+        mons->bind_melee_flags();
         mons->bind_spell_flags();
         break;
     }
