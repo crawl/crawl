@@ -26,7 +26,7 @@ void cast_discharge(int pow);
 int disperse_monsters(coord_def where, int pow);
 void cast_dispersal(int pow);
 bool cast_fragmentation(int powc, const dist& spd);
-bool wielding_rocks();
+int wielding_rocks();
 bool cast_sandblast(int powc, bolt &beam);
 
 #endif

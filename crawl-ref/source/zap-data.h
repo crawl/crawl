@@ -893,6 +893,22 @@
 },
 
 {
+    ZAP_LARGE_SANDBLAST,
+    "large rocky blast",
+    50,
+    new dicedef_calculator<3, 4, 1, 3>,
+    new tohit_calculator<13, 1, 10>,
+    BROWN,
+    false,
+    BEAM_FRAG,
+    DCHAR_FIRED_BOLT,
+    true,
+    false,
+    false,
+    3
+},
+
+{
     ZAP_SANDBLAST,
     "rocky blast",
     50,
