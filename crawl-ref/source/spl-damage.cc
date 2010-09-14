@@ -1780,26 +1780,38 @@ bool cast_fragmentation(int pow, const dist& spd)
     return (true);
 }
 
-bool wielding_rocks()
+int wielding_rocks()
 {
-    bool rc = false;
-    if (you.weapon())
-    {
-        const item_def& wpn(*you.weapon());
-        rc = (wpn.base_type == OBJ_MISSILES
-              && (wpn.sub_type == MI_STONE || wpn.sub_type == MI_LARGE_ROCK));
-    }
-    return (rc);
+    const item_def* wpn = you.weapon();
+    if (!wpn || wpn->base_type != OBJ_MISSILES)
+        return (0);
+    else if (wpn->sub_type == MI_STONE)
+        return (1);
+    else if (wpn->sub_type == MI_LARGE_ROCK)
+        return (2);
+    else
+        return (0);
 }
 
 bool cast_sandblast(int pow, bolt &beam)
 {
-    const bool big     = wielding_rocks();
-    const bool success = zapping(big ? ZAP_SANDBLAST
-                                     : ZAP_SMALL_SANDBLAST, pow, beam, true);
+    zap_type zap = ZAP_SMALL_SANDBLAST;
+    switch (wielding_rocks())
+    {
+    case 1:
+        zap = ZAP_SANDBLAST;
+        break;
+    case 2:
+        zap = ZAP_LARGE_SANDBLAST;
+        break;
+    default:
+        break;
+    }
 
-    if (big && success)
-        dec_inv_item_quantity( you.equip[EQ_WEAPON], 1 );
+    const bool success = zapping(zap, pow, beam, true);
+
+    if (success && zap != ZAP_SMALL_SANDBLAST)
+        dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
 
     return (success);
 }
