@@ -4045,9 +4045,9 @@ bool mons_reaped(actor *killer, monster* victim)
     monster* zombie = &menv[midx];
 
     if (you.can_see(victim))
-        simple_monster_message(victim, " turns into a zombie!");
+        mprf("%s turns into a zombie!", victim->name(DESC_CAP_THE).c_str());
     else if (you.can_see(zombie))
-        simple_monster_message(zombie, " appears out of thin air!");
+        mprf("%s appears out of thin air!", zombie->name(DESC_CAP_THE).c_str());
 
     player_angers_monster(zombie);
 
