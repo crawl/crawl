@@ -517,7 +517,7 @@ This spell will electrically charge missiles held by the caster. They will retai
 Silence
 
 This spell eliminates all sound near the caster. This makes reading scrolls, casting spells, praying or yelling in the caster's vicinity impossible. (Applies to caster too, of course.) This spell will not hide your presence, since its oppressive, unnatural effect will almost certainly alert any living creature that something is very wrong.
-Silence starts out with a radius depending on power, which will then shrink, eventually covering only the caster, before the effect times out.
+Silence starts out with a radius depending on power, which will then shrink, eventually covering only the caster, before the effect times out. Some creatures, such as demons, cast magic without speaking and so will be unaffected, and those with innate magical abilities will also still be able to use them.
 %%%%
 Simulacrum
 
