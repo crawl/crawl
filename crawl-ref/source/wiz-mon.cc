@@ -550,7 +550,10 @@ void debug_stethoscope(int mon)
 void wizard_detect_creatures()
 {
     for (monster_iterator mi; mi; ++mi)
+    {
         env.map_knowledge(mi->pos()).set_monster(monster_info(*mi));
+        env.map_knowledge(mi->pos()).set_detected_monster(mi->type);
+    }
 }
 
 // Dismisses all monsters on the level or all monsters that match a user
