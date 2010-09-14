@@ -228,7 +228,7 @@ static bool _valid_weapon_swap(const item_def &item)
     // Some missiles need to be wielded for spells.
     if (item.base_type == OBJ_MISSILES)
     {
-        if (item.sub_type == MI_STONE)
+        if (item.sub_type == MI_STONE || item.sub_type == MI_LARGE_ROCK)
             return (you.has_spell(SPELL_SANDBLAST));
 
         if (item.sub_type == MI_ARROW)
