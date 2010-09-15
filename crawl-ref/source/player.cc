@@ -3423,11 +3423,13 @@ int get_expiration_threshold(duration_type dur)
     case DUR_REPEL_MISSILES:
     case DUR_REGENERATION:
     case DUR_INSULATION:
+    case DUR_RESIST_POISON:
+    case DUR_RESIST_FIRE:
+    case DUR_RESIST_COLD:
     case DUR_STONEMAIL:
     case DUR_SWIFTNESS:
     case DUR_INVIS:
     case DUR_HASTE:
-    // The following are not shown in the status lines.
     case DUR_ICY_ARMOUR:
     case DUR_PHASE_SHIFT:
     case DUR_CONTROL_TELEPORT:
