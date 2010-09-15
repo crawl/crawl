@@ -1783,7 +1783,10 @@ bool direction_chooser::do_main_loop()
         break;
 #endif
 
-    case CMD_TARGET_TOGGLE_BEAM: toggle_beam(); break;
+    case CMD_TARGET_TOGGLE_BEAM:
+        if (!just_looking)
+            toggle_beam();
+        break;
 
     case CMD_TARGET_EXCLUDE:
         if (you.level_type == LEVEL_LABYRINTH
