@@ -2437,7 +2437,7 @@ static void _resolve_god(newgame_def* ng, const newgame_def* ng_choice,
             // Either an invalid combination was passed in through options,
             // or we messed up.
             end(1, false,
-                "Incompatible book specified in options file.");
+                "Incompatible god specified in options file.");
         }
         return;
     }
