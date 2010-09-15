@@ -3000,9 +3000,6 @@ bool monster::is_chaotic() const
 
 bool monster::is_insubstantial() const
 {
-    if (mons_enslaved_twisted_soul(this))
-        return (true);
-
     return (mons_class_flag(type, M_INSUBSTANTIAL));
 }
 

@@ -997,9 +997,7 @@ mon_itemuse_type mons_class_itemuse(int mc)
 
 mon_itemuse_type mons_itemuse(const monster* mon)
 {
-    if (mons_enslaved_twisted_soul(mon))
-        return (MONUSE_OPEN_DOORS);
-    else if (mons_enslaved_intact_soul(mon))
+    if (mons_enslaved_soul(mon))
         return (mons_class_itemuse(mons_zombie_base(mon)));
 
     return (mons_class_itemuse(mon->type));
@@ -1013,9 +1011,7 @@ mon_itemeat_type mons_class_itemeat(int mc)
 
 mon_itemeat_type mons_itemeat(const monster* mon)
 {
-    if (mons_enslaved_twisted_soul(mon))
-        return (MONEAT_NOTHING);
-    else if (mons_enslaved_intact_soul(mon))
+    if (mons_enslaved_soul(mon))
         return (mons_class_itemeat(mons_zombie_base(mon)));
 
     if (mon->has_ench(ENCH_EAT_ITEMS))
@@ -1133,22 +1129,9 @@ bool mons_enslaved_body_and_soul(const monster* mon)
     return (mon->has_ench(ENCH_SOUL_RIPE));
 }
 
-bool mons_enslaved_twisted_soul(const monster* mon)
-{
-    return (testbits(mon->flags, MF_ENSLAVED_SOUL)
-        && (mon->type == MONS_ABOMINATION_SMALL
-            || mon->type == MONS_ABOMINATION_LARGE));
-}
-
-bool mons_enslaved_intact_soul(const monster* mon)
-{
-    return (testbits(mon->flags, MF_ENSLAVED_SOUL)
-        && mon->type == MONS_SPECTRAL_THING);
-}
-
 bool mons_enslaved_soul(const monster* mon)
 {
-    return (mons_enslaved_twisted_soul(mon) || mons_enslaved_intact_soul(mon));
+    return (testbits(mon->flags, MF_ENSLAVED_SOUL));
 }
 
 bool name_zombie(monster* mon, int mc, const std::string mon_name)
@@ -1339,9 +1322,6 @@ flight_type mons_class_flies(int mc)
 
 flight_type mons_flies(const monster* mon, bool randarts)
 {
-    if (mons_enslaved_twisted_soul(mon))
-        return (FL_LEVITATE);
-
     // For dancing weapons, this function can get called before their
     // ghost_demon is created, so check for a NULL ghost. -cao
     if (mons_is_ghost_demon(mon->type) && mon->ghost.get())
@@ -2184,7 +2164,7 @@ int mons_class_zombie_base_speed(int zombie_base_mc)
 
 int mons_base_speed(const monster* mon)
 {
-    if (mons_enslaved_intact_soul(mon))
+    if (mons_enslaved_soul(mon))
         return (mons_class_base_speed(mons_zombie_base(mon)));
 
     return (mons_is_zombified(mon) ? mons_class_zombie_base_speed(mons_zombie_base(mon))
@@ -2199,9 +2179,7 @@ mon_intel_type mons_class_intel(int mc)
 
 mon_intel_type mons_intel(const monster* mon)
 {
-    if (mons_enslaved_twisted_soul(mon))
-        return (I_NORMAL);
-    else if (mons_enslaved_intact_soul(mon))
+    if (mons_enslaved_soul(mon))
         return (mons_class_intel(mons_zombie_base(mon)));
 
     return (mons_class_intel(mon->type));
