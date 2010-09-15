@@ -1279,9 +1279,10 @@ void scorefile_entry::init(time_t dt)
     source_damage    = you.source_damage;
     turn_damage      = you.turn_damage;
 
-    str   = you.strength();
-    intel = you.intel();
-    dex   = you.dex();
+    // Use possibly negative stat values.
+    str   = you.stat(STAT_STR, false);
+    intel = you.stat(STAT_INT, false);
+    dex   = you.stat(STAT_DEX, false);
 
     god = you.religion;
     if (you.religion != GOD_NO_GOD)
