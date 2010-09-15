@@ -2626,6 +2626,9 @@ static void _portal_vault_level(int level_number)
     if (!vault)
         vault = random_map_for_tag(level_name, false);
 
+    if (!vault)
+        vault = find_map_by_name("broken_portal");
+
     if (vault)
     {
         // XXX: This is pretty hackish, I confess.
@@ -2638,16 +2641,10 @@ static void _portal_vault_level(int level_number)
     }
     else
     {
-        _plan_main(level_number, 0);
-        _place_minivaults(level_name, 1, 1, true);
-
-        if (env.level_vaults.empty())
-        {
-            mprf(MSGCH_ERROR, "No maps or tags named '%s'.",
-                 level_name);
-            ASSERT(false);
-            end(-1);
-        }
+        mprf(MSGCH_ERROR, "No maps or tags named '%s', and no backup either.",
+             level_name);
+        ASSERT(false);
+        end(-1);
     }
 
     link_items();
