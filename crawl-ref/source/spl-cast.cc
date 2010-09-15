@@ -1137,7 +1137,8 @@ spret_type your_spells(spell_type spell, int powc,
         const bool needs_path = (!testbits(flags, SPFLAG_GRID)
                                  && !testbits(flags, SPFLAG_TARGET));
 
-        const bool dont_cancel_me = testbits(flags, SPFLAG_HELPFUL);
+        const bool dont_cancel_me = (testbits(flags, SPFLAG_HELPFUL)
+                                     || testbits(flags, SPFLAG_ALLOW_SELF));
 
         const int range = calc_spell_range(spell, powc, false);
 
