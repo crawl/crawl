@@ -2203,12 +2203,8 @@ bool fedhas_evolve_flora()
     return (true);
 }
 
-static int _lugonu_warp_monster(coord_def where, int pow, int, actor *)
+static int _lugonu_warp_monster(monster* mon, int pow)
 {
-    if (!in_bounds(where))
-        return (0);
-
-    monster* mon = monster_at(where);
     if (mon == NULL)
         return (0);
 
@@ -2239,7 +2235,7 @@ static int _lugonu_warp_monster(coord_def where, int pow, int, actor *)
 
 static void _lugonu_warp_area(int pow)
 {
-    apply_area_around_square(_lugonu_warp_monster, you.pos(), pow);
+    apply_monsters_around_square(_lugonu_warp_monster, you.pos(), pow);
 }
 
 void lugonu_bend_space()

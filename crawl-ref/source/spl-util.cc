@@ -525,6 +525,26 @@ int apply_area_around_square(cell_func cf, const coord_def& where, int power,
     return (rv);
 }
 
+// Like apply_area_around_square, but for monsters in those squares,
+// and takes care not to affect monsters twice that change position.
+int apply_monsters_around_square(monster_func mf, const coord_def& where,
+                                  int power)
+{
+    int rv = 0;
+    std::set<const monster*> affected;
+    for (adjacent_iterator ai(where, true); ai; ++ai)
+    {
+        monster* mon = monster_at(*ai);
+        if (mon && affected.find(mon) == affected.end())
+        {
+            rv += mf(mon, power);
+            affected.insert(mon);
+        }
+    }
+
+   return (rv);
+}
+
 // Affect up to max_targs monsters around a point, chosen randomly.
 // Return varies with the function called; return values will be added up.
 int apply_random_around_square(cell_func cf, const coord_def& where,
