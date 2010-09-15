@@ -1019,7 +1019,6 @@ void game_options::reset_options()
     mp_colour.push_back(std::pair<int, int>(50, YELLOW));
     mp_colour.push_back(std::pair<int, int>(25, RED));
     stat_colour.clear();
-    stat_colour.push_back(std::pair<int, int>(1, LIGHTRED));
     stat_colour.push_back(std::pair<int, int>(3, RED));
 
     force_autopickup.clear();
