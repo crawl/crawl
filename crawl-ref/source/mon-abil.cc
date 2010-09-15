@@ -2275,8 +2275,9 @@ void mon_nearby_ability(monster* mons)
     maybe_mons_speaks(mons);
 
     if (monster_can_submerge(mons, grd(mons->pos()))
-        && !mons->caught()             // No submerging while caught.
-        && !you.beheld_by(mons) // No submerging if player entranced.
+        && !mons->caught()         // No submerging while caught.
+        && !mons->asleep()         // No submerging when asleep.
+        && !you.beheld_by(mons)    // No submerging if player entranced.
         && !mons_is_lurking(mons)  // Handled elsewhere.
         && mons->wants_submerge())
     {

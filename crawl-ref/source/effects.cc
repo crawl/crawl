@@ -2514,7 +2514,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
         break;
     }
 
-    bool changed = 0;
+    bool changed = false;
     for  (int i = 0; i < range/x; i++)
     {
         if (mon->behaviour == BEH_SLEEP)
@@ -2522,7 +2522,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
 
         if (coinflip())
         {
-            changed = 1;
+            changed = true;
             if (coinflip())
                 mon->behaviour = BEH_SLEEP;
             else
@@ -2623,6 +2623,14 @@ static void _catchup_monster_moves(monster* mon, int turns)
 
     if (!shift_monster(mon, pos))
         shift_monster(mon, mon->pos());
+
+    // Submerge monsters that fell asleep, as on placement.
+    if (changed && mon->behaviour == BEH_SLEEP
+        && monster_can_submerge(mon, grd(mon->pos()))
+        && !one_chance_in(5))
+    {
+        mon->add_ench(ENCH_SUBMERGED);
+    }
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "moved to (%d, %d)", mon->pos().x, mon->pos().y);
