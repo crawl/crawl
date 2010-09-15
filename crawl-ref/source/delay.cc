@@ -354,6 +354,14 @@ void stop_delay( bool stop_stair_travel )
         }
         break;
 
+    case DELAY_PASSWALL:
+        if (stop_stair_travel)
+        {
+            mpr("Your meditation is interrupted.");
+            _pop_delay();
+        }
+        break;
+
     case DELAY_WEAPON_SWAP:       // one turn... too much trouble
     case DELAY_DROP_ITEM:         // one turn... only used for easy armour drops
     case DELAY_JEWELLERY_ON:      // one turn
