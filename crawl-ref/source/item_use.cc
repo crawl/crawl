@@ -4251,6 +4251,8 @@ static bool _handle_enchant_weapon(enchant_stat_type which_stat,
 
 bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
 {
+    ASSERT(arm.defined() && arm.base_type == OBJ_ARMOUR);
+
     ac_change = 0;
 
     // Cannot be enchanted nor uncursed.
@@ -4583,12 +4585,48 @@ void read_scroll(int slot)
     const scroll_type which_scroll = static_cast<scroll_type>(scroll.sub_type);
     const bool alreadyknown = item_type_known(scroll);
 
-    if (alreadyknown
-        && (which_scroll == SCR_BLINKING || which_scroll == SCR_TELEPORTATION)
-        && item_blocks_teleport(false, false))
+    if (alreadyknown)
     {
-        mpr("You cannot teleport right now.");
-        return;
+        switch (which_scroll)
+        {
+        case SCR_BLINKING:
+        case SCR_TELEPORTATION:
+            if (item_blocks_teleport(false, false))
+            {
+                mpr("You cannot teleport right now.");
+                return;
+            }
+            break;
+
+        case SCR_ENCHANT_ARMOUR:
+            if (!any_items_to_select(OSEL_ENCH_ARM, true))
+                return;
+            break;
+
+        case SCR_ENCHANT_WEAPON_I:
+        case SCR_ENCHANT_WEAPON_II:
+        case SCR_ENCHANT_WEAPON_III:
+        case SCR_VORPALISE_WEAPON:
+            if (!you.weapon())
+            {
+                mpr("You are not wielding a weapon.");
+                return;
+            }
+            break;
+
+        case SCR_IDENTIFY:
+            if (!any_items_to_select(OSEL_UNIDENT, true))
+                return;
+            break;
+
+        case SCR_RECHARGING:
+            if (!any_items_to_select(OSEL_RECHARGE, true))
+                return;
+            break;
+
+        default:
+            break;
+        }
     }
 
     // Ok - now we FINALLY get to read a scroll !!! {dlb}
