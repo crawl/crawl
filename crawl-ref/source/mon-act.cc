@@ -2280,6 +2280,9 @@ static bool _monster_eat_item(monster* mons, bool nearby)
         if (quant >= si->quantity)
             item_was_destroyed(*si, mons->mindex());
 
+        if (is_blood_potion(*si))
+            for (int i = 0; i < quant; ++i)
+                remove_oldest_blood_potion(*si);
         dec_mitm_item_quantity(si.link(), quant);
     }
 
