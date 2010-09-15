@@ -1344,9 +1344,8 @@ void cast_discharge(int pow)
 // Really this is just applying the best of Band/Warp weapon/Warp field
 // into a spell that gives the "make monsters go away" benefit without
 // the insane damage potential. - bwr
-int disperse_monsters(coord_def where, int pow, int, actor *)
+static int _disperse_monster(monster* mon, int pow)
 {
-    monster* mon = monster_at(where);
     if (!mon)
         return (0);
 
@@ -1378,7 +1377,7 @@ int disperse_monsters(coord_def where, int pow, int, actor *)
 
 void cast_dispersal(int pow)
 {
-    if (apply_area_around_square(disperse_monsters, you.pos(), pow) == 0)
+    if (!apply_monsters_around_square(_disperse_monster, you.pos(), pow))
         mpr("The air shimmers briefly around you.");
 }
 
