@@ -134,24 +134,20 @@ bool stinking_cloud( int pow, bolt &beem )
     beem.is_explosion = true;
     beem.aux_source.clear();
 
-    // Don't bother tracing if you're targeting yourself.
-    if (beem.target != you.pos())
-    {
-        // Fire tracer.
-        beem.source            = you.pos();
-        beem.can_see_invis     = you.can_see_invisible();
-        beem.smart_monster     = true;
-        beem.attitude          = ATT_FRIENDLY;
-        beem.friend_info.count = 0;
-        beem.is_tracer         = true;
-        beem.fire();
+    // Fire tracer.
+    beem.source            = you.pos();
+    beem.can_see_invis     = you.can_see_invisible();
+    beem.smart_monster     = true;
+    beem.attitude          = ATT_FRIENDLY;
+    beem.friend_info.count = 0;
+    beem.is_tracer         = true;
+    beem.fire();
 
-        if (beem.beam_cancelled)
-        {
-            // We don't want to fire through friendlies.
-            canned_msg(MSG_OK);
-            return (false);
-        }
+    if (beem.beam_cancelled)
+    {
+        // We don't want to fire through friendlies.
+        canned_msg(MSG_OK);
+        return (false);
     }
 
     // Really fire.
