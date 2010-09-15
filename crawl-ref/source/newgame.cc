@@ -845,7 +845,7 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
     highlighter->init(coord_def(0,0), coord_def(0,0), "highlighter");
     menu.attach_object(highlighter);
 
-    // Did we have a previous background?
+    // Did we have a previous species?
     if (menu.get_active_item() == NULL)
     {
         freeform->activate_first_item();
@@ -1940,7 +1940,7 @@ static bool _prompt_book(const newgame_def* ng, newgame_def* ng_choice,
     highlighter->init(coord_def(0,0), coord_def(0,0), "highlighter");
     menu.attach_object(highlighter);
 
-    // Did we have a previous weapon?
+    // Did we have a previous book?
     if (menu.get_active_item() == NULL)
     {
         freeform->activate_first_item();
@@ -2694,7 +2694,7 @@ static bool _prompt_wand(const newgame_def* ng, newgame_def* ng_choice,
     highlighter->init(coord_def(0,0), coord_def(0,0), "highlighter");
     menu.attach_object(highlighter);
 
-    // Did we have a previous god?
+    // Did we have a previous wand?
     if (menu.get_active_item() == NULL)
     {
         freeform->activate_first_item();
