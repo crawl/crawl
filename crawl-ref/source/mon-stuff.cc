@@ -179,7 +179,7 @@ const item_def &get_mimic_item(const monster* mimic)
 }
 
 // Sets the colour of a mimic to match its description... should be called
-// whenever a mimic is created or teleported. -- bwr
+// whenever a mimic is created or teleported. - bwr
 int get_mimic_colour( const monster* mimic )
 {
     ASSERT(mimic != NULL);
@@ -1413,7 +1413,7 @@ int monster_die(monster* mons, killer_type killer,
     if (mons->type == MONS_SILENT_SPECTRE)
         invalidate_agrid();
 
-    // Clear auto exclusion now the monster is killed -- if we know about it.
+    // Clear auto exclusion now the monster is killed - if we know about it.
     if (mons_near(mons) || wizard)
         remove_auto_exclude(mons);
 
@@ -1598,14 +1598,14 @@ int monster_die(monster* mons, killer_type killer,
                     mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s is %s!",
                          mons->name(DESC_CAP_THE).c_str(),
                          exploded                        ? "blown up" :
-                         _wounded_damaged(mons->type) ? "destroyed"
+                         _wounded_damaged(mons->type)    ? "destroyed"
                                                          : "killed");
                 }
                 else
                 {
                     mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "You %s %s!",
                          exploded                        ? "blow up" :
-                         _wounded_damaged(mons->type) ? "destroy"
+                         _wounded_damaged(mons->type)    ? "destroy"
                                                          : "kill",
                          mons->name(DESC_NOCAP_THE).c_str());
                 }
@@ -1781,9 +1781,9 @@ int monster_die(monster* mons, killer_type killer,
             if (!silent)
             {
                 const char* msg =
-                    exploded                        ? " is blown up!" :
+                    exploded                     ? " is blown up!" :
                     _wounded_damaged(mons->type) ? " is destroyed!"
-                                                    : " dies!";
+                                                 : " dies!";
                 simple_monster_message(mons, msg, MSGCH_MONSTER_DAMAGE,
                                        MDAM_DEAD);
             }
@@ -2081,12 +2081,12 @@ int monster_die(monster* mons, killer_type killer,
 
     if (mons->type == MONS_BORIS && !in_transit)
     {
-        // XXX: Actual blood curse effect for Boris? -- bwr
+        // XXX: Actual blood curse effect for Boris? - bwr
 
         // Now that Boris is dead, he's a valid target for monster
-        // creation again. -- bwr
+        // creation again. - bwr
         you.unique_creatures[mons->type] = false;
-        // And his vault can  be placed again.
+        // And his vault can be placed again.
         you.uniq_map_names.erase("uniq_boris");
     }
     else if (mons_is_kirke(mons)
@@ -2105,8 +2105,8 @@ int monster_die(monster* mons, killer_type killer,
     {
         if (_destroy_tentacles(mons) && !in_transit)
         {
-            mpr("The kraken is slain, and its tentacles slide "
-                "back into the water like the carrion they now are.");
+            mpr("The kraken is slain, and its tentacles slide back "
+                "into the water like the carrion they now are.");
         }
     }
     else if ((mons->type == MONS_KRAKEN_CONNECTOR
@@ -2209,8 +2209,8 @@ int monster_die(monster* mons, killer_type killer,
         && !(mons->flags & MF_KNOWN_MIMIC)
         && mons->is_shapeshifter())
     {
-        simple_monster_message(mons, "'s shape twists and changes "
-                               "as it dies.");
+        simple_monster_message(mons, "'s shape twists and changes as "
+                               "it dies.");
     }
 
     // If we kill an invisible monster reactivate autopickup.
@@ -2279,7 +2279,7 @@ void alert_nearby_monsters(void)
     // intended to wake up monsters, so we're only going to
     // alert monsters that aren't sleeping.  For cases where an
     // event should wake up monsters and alert them, I'd suggest
-    // calling noisy() before calling this function. -- bwr
+    // calling noisy() before calling this function. - bwr
     for (monster_iterator mi(you.get_los()); mi; ++mi)
         if (!mi->asleep())
              behaviour_event(*mi, ME_ALERT, MHITYOU);
@@ -2370,7 +2370,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     // Used to be mons_power, but that just returns hit_dice
     // for the monster class.  By using the current hit dice
     // the player gets the opportunity to use draining more
-    // effectively against shapeshifters. -- bwr
+    // effectively against shapeshifters. - bwr
     source_power = mons->hit_dice;
     relax = 1;
 
@@ -2852,7 +2852,7 @@ static bool _habitat_okay( const monster* mons, dungeon_feature_type targ )
 // Summoning can be used to set up death traps).  If worse comes
 // to worse, at least consider making the Swap spell not work
 // when the player is over lava or water (if the player wants to
-// swap pets to their death, we can let that go). -- bwr
+// swap pets to their death, we can let that go). - bwr
 bool swap_places(monster* mons)
 {
     coord_def loc;
@@ -2936,7 +2936,7 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
     if (!swap && !quiet)
     {
         // Might not be ideal, but it's better than insta-killing
-        // the monster... maybe try for a short blink instead? -- bwr
+        // the monster... maybe try for a short blink instead? - bwr
         simple_monster_message(mons, " resists.");
         // FIXME: AI_HIT_MONSTER isn't ideal.
         interrupt_activity(AI_HIT_MONSTER, mons);
@@ -3217,7 +3217,7 @@ monster* choose_random_monster_on_level(int weight,
 // Note that this function *completely* blocks messaging for monsters
 // distant or invisible to the player ... look elsewhere for a function
 // permitting output of "It" messages for the invisible {dlb}
-// Intentionally avoids info and str_pass now. -- bwr
+// Intentionally avoids info and str_pass now. - bwr
 bool simple_monster_message(const monster* mons, const char *event,
                             msg_channel_type channel,
                             int param,
