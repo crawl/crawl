@@ -22,6 +22,7 @@
 #include "env.h"
 #include "fight.h"
 #include "fprop.h"
+#include "godconduct.h"
 #include "los.h"
 #include "mapmark.h"
 #include "mutation.h"
@@ -212,6 +213,10 @@ static void _spread_fire(const cloud_struct &cloud)
             _place_new_cloud( cloud.type, *ai, random2(30)+25, cloud.whose,
                               cloud.killer, cloud.spread_rate, cloud.colour,
                               cloud.name, cloud.tile );
+            if (cloud.whose == KC_YOU)
+                did_god_conduct(DID_KILL_PLANT, 1);
+            else if (cloud.whose == KC_FRIENDLY)
+                did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1);
         }
 
     }
