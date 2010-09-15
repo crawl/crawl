@@ -2018,9 +2018,9 @@ int monster_die(monster* mons, killer_type killer,
             if (!silent)
             {
                 const char* msg =
-                    exploded                        ? " is blown up!" :
+                    exploded                     ? " is blown up!" :
                     _wounded_damaged(mons->type) ? " is destroyed!"
-                                                    : " dies!";
+                                                 : " dies!";
                 simple_monster_message(mons, msg, MSGCH_MONSTER_DAMAGE,
                                        MDAM_DEAD);
             }
