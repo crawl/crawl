@@ -15,3 +15,5 @@ void elven_twins_unpacify (monster* twin);
 
 bool mons_is_kirke (monster* mons);
 void hogs_to_humans();
+
+void spirit_fades (monster *spirit);

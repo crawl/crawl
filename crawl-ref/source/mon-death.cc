@@ -387,3 +387,20 @@ void elven_twins_unpacify (monster* twin)
 
     behaviour_event(mons, ME_WHACK, MHITYOU, you.pos(), false);
 }
+
+// Spirits
+
+void spirit_fades (monster *spirit)
+{
+
+    if (mons_near(spirit))
+        simple_monster_message(spirit, " fades away with a wail!");
+    else
+        mprf("You hear a distant wailing.");
+
+    const coord_def c = spirit->pos();
+
+    if (spirit->alive())
+        monster_die(spirit, KILL_MISC, NON_MONSTER, true);
+
+}
