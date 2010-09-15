@@ -5399,6 +5399,10 @@ bool melee_attack::do_trample()
                  defender->conj_verb("stumble").c_str());
         }
 
+        // Interrupt stair travel and passwall.
+        if (defender == &you)
+            stop_delay(true);
+
         return true;
     } while (0);
 
