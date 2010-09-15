@@ -2205,7 +2205,9 @@ static void _decrement_durations()
     if (you.duration[DUR_POWERED_BY_DEATH] > 0)
         handle_pbd_corpses(true);
 
-    if (_decrement_a_duration(DUR_SEE_INVISIBLE, delay)
+    if (_decrement_a_duration(DUR_SEE_INVISIBLE, delay, NULL,
+                              coinflip(),
+                              "You feel slightly less perceptive.")
         && !you.can_see_invisible())
     {
         mpr("Your eyesight blurs momentarily.", MSGCH_DURATION);

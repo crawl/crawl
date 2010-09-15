@@ -76,7 +76,7 @@ static duration_def duration_data[] =
       LIGHTBLUE, "rFire", "", "You resist fire." },
     { DUR_SAGE, true,
       BLUE, "Sage", "", "" },
-    { DUR_SEE_INVISIBLE, false,
+    { DUR_SEE_INVISIBLE, true,
       BLUE, "SInv", "", "You can see invisible." },
     { DUR_SLAYING, false,
       0, "", "deadly", "" },
