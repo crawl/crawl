@@ -69,6 +69,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_KOBOLD:
             case SP_SPRIGGAN:
             case SP_NAGA:
+            case SP_OGRE:
             case SP_BASE_DRACONIAN:
             case SP_DEMIGOD:
             case SP_DEMONSPAWN:
@@ -393,6 +394,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_KOBOLD:
             case SP_SPRIGGAN:
             case SP_CENTAUR:
+            case SP_OGRE:
             case SP_TROLL:
             case SP_MINOTAUR:
             case SP_KENKU:
