@@ -174,6 +174,7 @@ protected:
     invtitle_annotator title_annotate;
 };
 
+bool any_items_to_select(int type_expect, bool msg = false);
 
 int prompt_invent_item( const char *prompt,
                         menu_type type,
