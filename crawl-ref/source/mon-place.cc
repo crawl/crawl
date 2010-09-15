@@ -1525,6 +1525,9 @@ static int _place_monster_aux(const mgen_data &mg,
     if (mg.cls == MONS_GLOWING_SHAPESHIFTER)
         mon->add_ench(ENCH_GLOWING_SHAPESHIFTER);
 
+    if (mg.cls == MONS_SPIRIT)
+        mon->add_ench(ENCH_FADING_AWAY);
+
     if (mg.cls == MONS_TOADSTOOL)
     {
         // This enchantment is a timer that counts down until death.

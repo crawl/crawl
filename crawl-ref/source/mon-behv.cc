@@ -757,7 +757,8 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
         // the head, of course, always triggers this code.
         if (event == ME_WHACK
             || ((wontAttack != sourceWontAttack || isSmart)
-                && !mons_is_fleeing(mon) && !mons_is_panicking(mon)))
+                && (!mons_is_fleeing(mon) && !mons_class_flag(mon->type, M_FLEEING))
+                && !mons_is_panicking(mon)))
         {
             // Monster types that you can't gain experience from cannot
             // fight back, so don't bother having them do so.  If you
@@ -830,7 +831,8 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
         // Will alert monster to <src> and turn them
         // against them, unless they have a current foe.
         // It won't turn friends hostile either.
-        if (!mons_is_fleeing(mon) && !mons_is_panicking(mon)
+        if ((!mons_is_fleeing(mon) || mons_class_flag(mon->type, M_FLEEING))
+            && !mons_is_panicking(mon)
             && !mons_is_cornered(mon))
         {
             mon->behaviour = BEH_SEEK;

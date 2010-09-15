@@ -2365,7 +2365,8 @@ bool mons_is_seeking(const monster* m)
 
 bool mons_is_fleeing(const monster* m)
 {
-    return (m->behaviour == BEH_FLEE);
+    return (m->behaviour == BEH_FLEE
+            || mons_class_flag(m->type, M_FLEEING));
 }
 
 bool mons_is_panicking(const monster* m)
