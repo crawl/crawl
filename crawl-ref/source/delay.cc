@@ -1225,7 +1225,15 @@ static void _armour_wear_effects(const int item_slot)
     }
     mprf("You finish putting on %s.", arm.name(DESC_NOCAP_YOUR).c_str());
 
-    if (eq_slot == EQ_SHIELD)
+    if (eq_slot == EQ_BODY_ARMOUR)
+    {
+        if (you.duration[DUR_ICY_ARMOUR] != 0
+            && !is_effectively_light_armour(&arm))
+        {
+            remove_ice_armour();
+        }
+    }
+    else if (eq_slot == EQ_SHIELD)
     {
         if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
             remove_condensation_shield();
