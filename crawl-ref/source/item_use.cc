@@ -89,8 +89,8 @@
 #include "xom.h"
 
 static bool _drink_fountain();
-static bool _handle_enchant_weapon( enchant_stat_type which_stat,
-                                    bool quiet = false, int item_slot = -1 );
+static bool _handle_enchant_weapon(enchant_stat_type which_stat,
+                                   bool quiet = false);
 static bool _handle_enchant_armour( int item_slot = -1 );
 
 static int  _fire_prompt_for_item();
@@ -4142,6 +4142,8 @@ static bool _vorpalise_weapon()
 
 bool enchant_weapon(enchant_stat_type which_stat, bool quiet, item_def &wpn)
 {
+    ASSERT(wpn.defined());
+
     bool to_hit = (which_stat == ENCHANT_TO_HIT);
 
     // Cannot be enchanted nor uncursed.
@@ -4231,21 +4233,17 @@ bool enchant_weapon(enchant_stat_type which_stat, bool quiet, item_def &wpn)
 }
 
 static bool _handle_enchant_weapon(enchant_stat_type which_stat,
-                                   bool quiet, int item_slot)
+                                   bool quiet)
 {
-    if (item_slot == -1)
-        item_slot = you.equip[ EQ_WEAPON ];
+    item_def* item = you.weapon();
 
-    if (item_slot == -1)
+    if (!item)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return (false);
     }
 
-    item_def& wpn(you.inv[item_slot]);
-
-    bool result = enchant_weapon(which_stat, quiet, wpn);
-
+    bool result = enchant_weapon(which_stat, quiet, *item);
     you.wield_change = true;
 
     return result;
