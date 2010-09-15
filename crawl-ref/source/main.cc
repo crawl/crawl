@@ -2207,7 +2207,7 @@ static void _decrement_durations()
 
     if (_decrement_a_duration(DUR_SEE_INVISIBLE, delay, NULL,
                               coinflip(),
-                              "You feel slightly less perceptive.")
+                              "You begin to squint at shadows.")
         && !you.can_see_invisible())
     {
         mpr("Your eyesight blurs momentarily.", MSGCH_DURATION);
