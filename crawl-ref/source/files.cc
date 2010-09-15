@@ -76,6 +76,7 @@
 #include "place.h"
 #include "player.h"
 #include "random.h"
+#include "show.h"
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
@@ -1462,6 +1463,9 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
         link_items();
         _redraw_all();
     }
+
+    // Clear map knowledge stair emphasis.
+    show_update_emphasis();
 
     los_changed();
 

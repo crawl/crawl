@@ -28,6 +28,7 @@
 #ifdef USE_TILE
  #include "tileview.h"
 #endif
+#include "travel.h"
 #include "viewgeom.h"
 #include "viewmap.h"
 
@@ -316,3 +317,21 @@ void show_init(bool terrain_only)
     for (radius_iterator ri(you.get_los()); ri; ++ri)
         show_update_at(*ri, terrain_only);
 }
+
+// Emphasis may change while off-level (precisely, after
+// taking stairs and saving the level, when we reach
+// the next level). This catches up.
+// It should be equivalent to looping over the whole map
+// and setting MAP_EMPHASIZE for any coordinate with
+// emphasise(p) == true, but we optimise a bit.
+void show_update_emphasis()
+{
+   // The only thing that can change is that previously unknown
+   // stairs are now known. (see is_unknown_stair(), emphasise())
+   LevelInfo& level_info = travel_cache.get_level_info(level_id::current());
+   std::vector<stair_info> stairs = level_info.get_stairs();
+   for (unsigned i = 0; i < stairs.size(); ++i)
+       if (stairs[i].destination.is_valid())
+           env.map_knowledge(stairs[i].position).flags &= ~MAP_EMPHASIZE;
+}
+
