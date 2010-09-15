@@ -898,7 +898,7 @@ void bolt::fire_wall_effect()
             if (whose_kill() == KC_YOU)
                 did_god_conduct(DID_KILL_PLANT, 1, effect_known);
             else if (whose_kill() == KC_FRIENDLY)
-                did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1, effect_known, 0);
+                did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1, effect_known);
             place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25,
                         whose_kill(), killer(), 5);
             obvious_effect = true;
