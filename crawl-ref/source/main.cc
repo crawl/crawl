@@ -978,7 +978,7 @@ bool apply_berserk_penalty = false;
 static void _center_cursor()
 {
 #ifndef USE_TILE
-    const coord_def cwhere = grid2view(you.pos());
+    const coord_def cwhere = crawl_view.grid2screen(you.pos());
     cgotoxy(cwhere.x, cwhere.y);
 #endif
 }
