@@ -44,7 +44,7 @@ static void _species_stat_init(species_type which_species)
     // Note: The stats in in this list aren't intended to sum the same
     // for all races.  The fact that Mummies and Ghouls are really low
     // is considered acceptable (Mummies don't have to eat, and Ghouls
-    // are supposed to be a really hard race).  -- bwr
+    // are supposed to be a really hard race). - bwr
     switch (which_species)
     {
     default:                    sb =  6; ib =  6; db =  6;      break;  // 18
@@ -144,7 +144,7 @@ static void _jobs_stat_init(job_type which_job)
     int hp = 0;  // HP base
     int mp = 0;  // MP base
 
-    // Note: Wanderers are correct, they've got a challenging background. -- bwr
+    // Note: Wanderers are correct, they've got a challenging background. - bwr
     switch (which_job)
     {
     case JOB_FIGHTER:           s =  8; i =  0; d =  4; hp = 15; mp = 0; break;
@@ -204,7 +204,7 @@ static void _jobs_stat_init(job_type which_job)
 }
 
 // Make sure no stats are unacceptably low
-// (currently possible only for GhBe -- 1KB)
+// (currently possible only for GhBe - 1KB)
 static void _unfocus_stats()
 {
     int needed;
@@ -1291,7 +1291,7 @@ static void _racialise_starting_equipment()
 
 static void _give_basic_spells(job_type which_job)
 {
-    // Wanderers may or may not already have a spell. -- bwr
+    // Wanderers may or may not already have a spell. - bwr
     if (which_job == JOB_WANDERER)
         return;
 
