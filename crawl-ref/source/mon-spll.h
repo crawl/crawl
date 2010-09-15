@@ -1323,7 +1323,7 @@
       {
        SPELL_VENOM_BOLT,
        SPELL_SLEEP,
-       SPELL_SLEEP,
+       SPELL_NO_SPELL,
        SPELL_POISON_ARROW,
        SPELL_VENOM_BOLT,
        SPELL_BLINK_OTHER
