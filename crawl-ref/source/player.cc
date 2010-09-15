@@ -3434,6 +3434,7 @@ int get_expiration_threshold(duration_type dur)
     case DUR_PHASE_SHIFT:
     case DUR_CONTROL_TELEPORT:
     case DUR_DEATH_CHANNEL:
+    case DUR_SEE_INVISIBLE:
         return (6 * BASELINE_DELAY);
 
     case DUR_LEVITATION:
