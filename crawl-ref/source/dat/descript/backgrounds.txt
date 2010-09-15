@@ -85,7 +85,7 @@ Reavers are versatile, using destructive magics alongside melee fighting.
 %%%%
 Stalker
 
-Stalkers use stealth and transformative magic to approach and subdue their vitims.
+Stalkers use stealth and transformative magic to approach and subdue their victims.
 %%%%
 Summoner
 
