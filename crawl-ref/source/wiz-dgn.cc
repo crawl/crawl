@@ -273,6 +273,7 @@ void wizard_create_portal()
         marker->set_property("feature_description",
                              "wizard portal, dest = " + dst);
         env.markers.add(marker);
+        env.markers.clear_need_activate();
         dungeon_terrain_changed(you.pos(), DNGN_ENTER_PORTAL_VAULT, false);
     }
 }
