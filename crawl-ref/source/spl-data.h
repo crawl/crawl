@@ -327,9 +327,9 @@ struct spell_desc
 },
 
 {
-    SPELL_MEPHITIC_CLOUD, "Mephitic Cloud",
+     SPELL_MEPHITIC_CLOUD, "Mephitic Cloud",
      SPTYP_CONJURATION | SPTYP_POISON | SPTYP_AIR,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_AREA,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_AREA | SPFLAG_ALLOW_SELF,
      3,
      200,
      5, 5,
@@ -537,7 +537,7 @@ struct spell_desc
 {
     SPELL_POISONOUS_CLOUD, "Poisonous Cloud",
      SPTYP_CONJURATION | SPTYP_POISON | SPTYP_AIR,
-     SPFLAG_GRID | SPFLAG_AREA,
+     SPFLAG_GRID | SPFLAG_AREA | SPFLAG_ALLOW_SELF,
      5,
      200,
      6, 6,
@@ -1878,7 +1878,7 @@ struct spell_desc
 {
     SPELL_EVAPORATE, "Evaporate",
      SPTYP_FIRE | SPTYP_TRANSMUTATION,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_AREA,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_AREA | SPFLAG_ALLOW_SELF,
      2,   // XXX: level 2 or 3, what should it be now? -- bwr
      200,
      6, 6,
