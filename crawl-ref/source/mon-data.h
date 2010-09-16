@@ -5063,7 +5063,7 @@ static monsterentry mondata[] = {
     MONS_SERPENT_OF_HELL, 'D', RED, "the Serpent of Hell",
     M_SPELLCASTER | M_SENSE_INVIS | M_UNIQUE,
     MR_RES_POISON,
-    0, 18, MONS_SERPENT_OF_HELL, MONS_SERPENT_OF_HELL, MH_DEMONIC, -13,
+    0, 18, MONS_DRAGON, MONS_DRAGON, MH_DEMONIC, -13,
     { {AT_BITE, AF_PLAIN, 35}, {AT_CLAW, AF_PLAIN, 15},
       {AT_TRAMPLE, AF_PLAIN, 15}, AT_NO_ATK },
     { 20, 4, 4, 0 },
