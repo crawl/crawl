@@ -670,6 +670,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case DID_DEMON_KILLED_BY_UNDEAD_SLAVE:
             switch (you.religion)
             {
+            case GOD_KIKUBAAQUDGHA:
             case GOD_MAKHLEB:
             case GOD_BEOGH:
                 simple_god_message(" accepts your slave's kill.");
