@@ -94,12 +94,6 @@
 
 #include <dirent.h>
 
-#ifndef HAVE_STAT
-#if defined(UNIX) || defined(TARGET_COMPILER_MINGW) || defined(TARGET_OS_DOS)
-#define HAVE_STAT
-#endif
-#endif
-
 static std::vector<SavefileCallback::callback>* _callback_list = NULL;
 
 static void _save_level(const level_id& lid);
@@ -195,11 +189,6 @@ player_save_info read_character_info(package *save)
     return fromfile;
 }
 
-static inline bool _is_good_filename(const std::string &s)
-{
-    return (s != "." && s != "..");
-}
-
 #if defined(TARGET_OS_DOS)
 // Abbreviates a given file name to DOS style "xxxxxx~1.txt".
 // Does not take into account files with differing suffixes or files
@@ -222,48 +211,6 @@ bool get_dos_compatible_file_name(std::string *fname)
     return (true);
 }
 #endif
-
-// Returns the names of all files in the given directory. Note that the
-// filenames returned are relative to the directory.
-std::vector<std::string> get_dir_files(const std::string &dirname)
-{
-    std::vector<std::string> files;
-
-#ifdef TARGET_COMPILER_VC
-    WIN32_FIND_DATA lData;
-    std::string dir = dirname;
-    if (!dir.empty() && dir[dir.length() - 1] != FILE_SEPARATOR)
-        dir += FILE_SEPARATOR;
-    dir += "*";
-    HANDLE hFind = FindFirstFile(dir.c_str(), &lData);
-    if (hFind != INVALID_HANDLE_VALUE)
-    {
-        if (_is_good_filename(lData.cFileName))
-            files.push_back(lData.cFileName);
-        while (FindNextFile(hFind, &lData))
-        {
-            if (_is_good_filename(lData.cFileName))
-                files.push_back(lData.cFileName);
-        }
-        FindClose(hFind);
-    }
-#else // non-MS VC++ compilers
-
-    DIR *dir = opendir(dirname.c_str());
-    if (!dir)
-        return (files);
-
-    while (dirent *entry = readdir(dir))
-    {
-        std::string name = entry->d_name;
-        if (_is_good_filename(name))
-            files.push_back(name);
-    }
-    closedir(dir);
-#endif
-
-    return (files);
-}
 
 // Returns a vector of files (including directories if requested) in
 // the given directory, recursively. All filenames returned are
@@ -433,52 +380,12 @@ void check_newer(const std::string &target,
         action();
 }
 
-bool file_exists(const std::string &name)
-{
-#ifdef HAVE_STAT
-    struct stat st;
-    const int err = ::stat(name.c_str(), &st);
-    return (!err && S_ISREG(st.st_mode));
-#else
-    FILE *f = fopen(name.c_str(), "r");
-    const bool exists = !!f;
-    if (f)
-        fclose(f);
-    return (exists);
-#endif
-}
-
-// Low-tech existence check.
-bool dir_exists(const std::string &dir)
-{
-#ifdef TARGET_OS_WINDOWS
-    DWORD lAttr = GetFileAttributes(dir.c_str());
-    return (lAttr != INVALID_FILE_ATTRIBUTES
-            && (lAttr & FILE_ATTRIBUTE_DIRECTORY));
-#elif defined(HAVE_STAT)
-    struct stat st;
-    const int err = ::stat(dir.c_str(), &st);
-    return (!err && S_ISDIR(st.st_mode));
-#else
-    DIR *d = opendir(dir.c_str());
-    const bool exists = !!d;
-    if (d)
-        closedir(d);
-
-    return (exists);
-#endif
-}
-
 static int _create_directory(const char *dir)
 {
 #if defined(MULTIUSER)
-    return mkdir(dir, SHARED_FILES_CHMOD_PUBLIC | 0111);
-#elif defined(TARGET_OS_DOS)
-    return mkdir(dir, 0755);
-#elif defined(TARGET_COMPILER_VC)
-    return _mkdir(dir);
+    return mkdir_u(dir, SHARED_FILES_CHMOD_PUBLIC | 0111);
 #else
-    return mkdir(dir);
+    return mkdir_u(dir, 0755);
 #endif
 }
 
@@ -979,7 +886,7 @@ public:
         close();
         if (tmp_filename != target_filename)
         {
-            if (rename(tmp_filename.c_str(), target_filename.c_str()))
+            if (rename_u(tmp_filename.c_str(), target_filename.c_str()))
                 end(1, true, "failed to rename %s -> %s",
                     tmp_filename.c_str(), target_filename.c_str());
         }
@@ -991,7 +898,7 @@ public:
         if (!filep)
         {
             filep = (lock? lk_open(filemode, tmp_filename)
-                     : fopen(tmp_filename.c_str(), filemode));
+                     : fopen_u(tmp_filename.c_str(), filemode));
             if (!filep)
                 end(-1, true,
                     "Failed to open \"%s\" (%s; locking:%s)",
@@ -1856,7 +1763,7 @@ bool load_ghost(bool creating_level)
     int minorVersion;
 
     const std::string cha_fil = _make_ghost_filename();
-    FILE *gfile = fopen(cha_fil.c_str(), "rb");
+    FILE *gfile = fopen_u(cha_fil.c_str(), "rb");
 
     if (gfile == NULL)
     {
@@ -1894,7 +1801,7 @@ bool load_ghost(bool creating_level)
         }
 #endif
         fclose(gfile);
-        unlink(cha_fil.c_str());
+        unlink_u(cha_fil.c_str());
         return (false);
     }
 
@@ -1926,7 +1833,7 @@ bool load_ghost(bool creating_level)
 #endif
 
     // Remove bones file - ghosts are hardly permanent.
-    unlink(cha_fil.c_str());
+    unlink_u(cha_fil.c_str());
 
 #ifdef BONES_DIAGNOSTICS
     unsigned long unplaced_ghosts = ghosts.size();
@@ -2275,7 +2182,7 @@ void save_ghost( bool force )
     }
 
     const std::string cha_fil = _make_ghost_filename();
-    FILE *gfile = fopen(cha_fil.c_str(), "rb");
+    FILE *gfile = fopen_u(cha_fil.c_str(), "rb");
 
     // Don't overwrite existing bones!
     if (gfile != NULL)
@@ -2393,7 +2300,7 @@ bool unlock_file_handle( FILE *handle )
 
 FILE *lk_open(const char *mode, const std::string &file)
 {
-    FILE *handle = fopen(file.c_str(), mode);
+    FILE *handle = fopen_u(file.c_str(), mode);
     if (!handle)
         return NULL;
 #ifdef SHARED_FILES_CHMOD_PUBLIC
@@ -2518,8 +2425,8 @@ FILE *fopen_replace(const char *name)
     int fd;
 
     // Stave off symlink attacks.  Races will be handled with O_EXCL.
-    unlink(name);
-    fd = open(name, O_CREAT|O_EXCL|O_WRONLY, 0666);
+    unlink_u(name);
+    fd = open_u(name, O_CREAT|O_EXCL|O_WRONLY, 0666);
     if (fd == -1)
         return 0;
     return fdopen(fd, "w");

@@ -34,6 +34,7 @@
 #include "coord.h"
 #include "random.h"
 #include "state.h"
+#include "syscalls.h"
 #include "tags.h"
 #include "terrain.h"
 
@@ -1096,7 +1097,7 @@ std::string get_descache_path(const std::string &file,
 
 static bool verify_file_version(const std::string &file)
 {
-    FILE *fp = fopen(file.c_str(), "rb");
+    FILE *fp = fopen_u(file.c_str(), "rb");
     if (!fp)
         return (false);
     reader inf(fp);
@@ -1120,7 +1121,7 @@ static bool load_map_index(const std::string &base)
 {
     // If there's a global prelude, load that first.
     {
-        FILE *fp = fopen((base + ".lux").c_str(), "rb");
+        FILE *fp = fopen_u((base + ".lux").c_str(), "rb");
         if (fp)
         {
             reader inf(fp);
@@ -1131,7 +1132,7 @@ static bool load_map_index(const std::string &base)
         }
     }
 
-    FILE* fp = fopen((base + ".idx").c_str(), "rb");
+    FILE* fp = fopen_u((base + ".idx").c_str(), "rb");
     if (!fp)
         end(1, true, "Unable to read %s", (base + ".idx").c_str());
     reader inf(fp);
@@ -1192,11 +1193,11 @@ static void write_map_prelude(const std::string &filebase)
     const std::string luafile = filebase + ".lux";
     if (lc_global_prelude.empty())
     {
-        unlink(luafile.c_str());
+        unlink_u(luafile.c_str());
         return;
     }
 
-    FILE *fp = fopen(luafile.c_str(), "wb");
+    FILE *fp = fopen_u(luafile.c_str(), "wb");
     writer outf(luafile, fp);
     lc_global_prelude.write(outf);
     fclose(fp);
@@ -1205,7 +1206,7 @@ static void write_map_prelude(const std::string &filebase)
 static void write_map_full(const std::string &filebase, size_t vs, size_t ve)
 {
     const std::string cfile = filebase + ".dsc";
-    FILE *fp = fopen(cfile.c_str(), "wb");
+    FILE *fp = fopen_u(cfile.c_str(), "wb");
     if (!fp)
         end(1, true, "Unable to open %s for writing", cfile.c_str());
 
@@ -1219,7 +1220,7 @@ static void write_map_full(const std::string &filebase, size_t vs, size_t ve)
 static void write_map_index(const std::string &filebase, size_t vs, size_t ve)
 {
     const std::string cfile = filebase + ".idx";
-    FILE *fp = fopen(cfile.c_str(), "wb");
+    FILE *fp = fopen_u(cfile.c_str(), "wb");
     if (!fp)
         end(1, true, "Unable to open %s for writing", cfile.c_str());
 
@@ -1260,7 +1261,7 @@ static void parse_maps(const std::string &s)
     if (load_map_cache(s))
         return;
 
-    FILE *dat = fopen(s.c_str(), "r");
+    FILE *dat = fopen_u(s.c_str(), "r");
     if (!dat)
         end(1, true, "Failed to open %s for reading", s.c_str());
 

@@ -12,6 +12,7 @@
 #include "files.h"
 #include "glwrapper.h"
 #include "options.h"
+#include "syscalls.h"
 #include "windowmanager.h"
 
 WindowManager *wm = NULL;
@@ -724,7 +725,7 @@ int SDLWrapper::byte_order()
 SDL_Surface *SDLWrapper::load_image(const char *file) const
 {
     SDL_Surface *surf = NULL;
-    FILE *imgfile = fopen(file, "rb");
+    FILE *imgfile = fopen_u(file, "rb");
     if (imgfile)
     {
         SDL_RWops *rw = SDL_RWFromFP(imgfile, 0);

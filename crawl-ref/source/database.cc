@@ -23,6 +23,7 @@
 #include "libutil.h"
 #include "random.h"
 #include "stuff.h"
+#include "syscalls.h"
 
 // TextDB handles dependency checking the db vs text files, creating the
 // db, loading, and destroying the DB.
@@ -200,7 +201,7 @@ void TextDB::_regenerate_db()
 
     file_lock lock(db_path + ".lk", "wb");
 #ifndef DGL_REWRITE_PROTECT_DB_FILES
-    unlink(full_db_path.c_str());
+    unlink_u(full_db_path.c_str());
 #endif
 
     for (unsigned int i = 0; i < _input_files.size(); i++)

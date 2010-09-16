@@ -1453,7 +1453,7 @@ std::string dgl_timestamp_filename()
 // of a known version.
 bool dgl_unknown_timestamp_file(const std::string &filename)
 {
-    if (FILE *inh = fopen(filename.c_str(), "rb"))
+    if (FILE *inh = fopen_u(filename.c_str(), "rb"))
     {
         reader r(inh);
         const uint32_t file_version = unmarshallInt(r);
@@ -1477,7 +1477,7 @@ FILE *dgl_timestamp_filehandle()
         // First check if there's already a timestamp file. If it exists
         // but has a different version, we cannot safely modify it, so bail.
         if (!dgl_unknown_timestamp_file(filename))
-            timestamp_file = fopen(filename.c_str(), "ab");
+            timestamp_file = fopen_u(filename.c_str(), "ab");
     }
     return timestamp_file;
 }

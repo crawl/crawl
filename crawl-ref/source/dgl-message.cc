@@ -49,7 +49,7 @@ static void _kill_messaging(FILE *mf)
 static void _read_each_message()
 {
     bool say_got_msg = true;
-    FILE *mf = fopen(SysEnv.messagefile.c_str(), "r+");
+    FILE *mf = fopen_u(SysEnv.messagefile.c_str(), "r+");
     if (!mf)
     {
         mprf(MSGCH_ERROR, "Couldn't read %s: %s", SysEnv.messagefile.c_str(),

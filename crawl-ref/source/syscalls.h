@@ -7,15 +7,13 @@
 #ifndef SYSCALLS_H
 #define SYSCALLS_H
 
-#ifdef TARGET_OS_WINDOWS
-# ifdef TARGET_COMPILER_VC
-#  include <direct.h>
-# endif
-# define WIN32_LEAN_AND_MEAN
-# include <windows.h>
-# define rename(foo,bar) !MoveFileEx(foo, bar, MOVEFILE_REPLACE_EXISTING)
-#endif
-
 bool lock_file(int fd, bool write);
+
+int rename_u(const char *oldpath, const char *newpath);
+int unlink_u(const char *pathname);
+int chmod_u(const char *path, mode_t mode);
+FILE *fopen_u(const char *path, const char *mode);
+int mkdir_u(const char *pathname, mode_t mode);
+int open_u(const char *pathname, int flags, mode_t mode);
 
 #endif

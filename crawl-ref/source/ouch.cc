@@ -71,6 +71,7 @@
 #include "transform.h"
 #include "view.h"
 #include "shout.h"
+#include "syscalls.h"
 #include "xom.h"
 
 
@@ -1302,7 +1303,7 @@ static void delete_files()
     you.save->abort();
     delete you.save;
     you.save = 0;
-    unlink((get_savedir_filename(you.your_name, "", "") + SAVE_SUFFIX).c_str());
+    unlink_u((get_savedir_filename(you.your_name, "", "") + SAVE_SUFFIX).c_str());
 }
 
 void end_game(scorefile_entry &se)
