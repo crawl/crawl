@@ -85,6 +85,17 @@ int SQL_DBM::open(const std::string &s)
         if (dbfile.find(".db") != dbfile.length() - 3)
             dbfile += ".db";
 
+/*
+From SQLite's documentation:
+
+# Note to Windows users: The encoding used for the filename argument of
+# sqlite3_open() and sqlite3_open_v2() must be UTF-8, not whatever codepage
+# is currently defined.  Filenames containing international characters must
+# be converted to UTF-8 prior to passing them into sqlite3_open() or
+# sqlite3_open_v2().
+
+... which saves us a lot of trouble.
+*/
 #ifdef ANCIENT_SQLITE
         if (ec( sqlite3_open(
                     dbfile.c_str(), &db

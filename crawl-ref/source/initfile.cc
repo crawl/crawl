@@ -45,6 +45,7 @@
 #include "tags.h"
 #include "travel.h"
 #include "items.h"
+#include "unicode.h"
 #include "view.h"
 #include "viewchar.h"
 
@@ -604,15 +605,18 @@ void game_options::set_activity_interrupt(const std::string &activity_name,
 static std::string _user_home_dir()
 {
 #ifdef TARGET_OS_WINDOWS
-    char home[MAX_PATH];
-    if (SHGetFolderPath(0, CSIDL_APPDATA, 0, 0, home))
-        strcpy(home, "./");
+    wchar_t home[MAX_PATH];
+    if (SHGetFolderPathW(0, CSIDL_APPDATA, 0, 0, home))
+        return "./";
+    else
+        return utf16_to_8(home);
 #else
     const char *home = getenv("HOME");
     if (!home || !*home)
-        home = "./";
+        return "./";
+    else
+        return mb_to_utf8(home);
 #endif
-    return (home);
 }
 
 static std::string _user_home_subpath(const std::string subpath)
@@ -1325,7 +1329,7 @@ std::string read_init_file(bool runscript)
 
     const std::string init_file_name( _find_crawlrc() );
 
-    FILE* f = fopen(init_file_name.c_str(), "r");
+    FILE* f = fopen_u(init_file_name.c_str(), "r");
     if ( f == NULL )
     {
         if (!init_file_name.empty())
@@ -1369,7 +1373,7 @@ newgame_def read_startup_prefs()
 {
 #ifndef DISABLE_STICKY_STARTUP_OPTIONS
     std::string fn = get_prefs_filename();
-    FILE *f = fopen(fn.c_str(), "r");
+    FILE *f = fopen_u(fn.c_str(), "r");
     if (!f)
         return newgame_def();
 
@@ -1441,7 +1445,7 @@ void write_newgame_options_file(const newgame_def& prefs)
     unwind_var<game_type> gt(crawl_state.type, Options.game.type);
 
     std::string fn = get_prefs_filename();
-    FILE *f = fopen(fn.c_str(), "w");
+    FILE *f = fopen_u(fn.c_str(), "w");
     if (!f)
         return;
     write_newgame_options(prefs, f);
@@ -3459,7 +3463,7 @@ void game_options::include(const std::string &rawfilename,
     // Also unwind any aliases defined in included files.
     unwind_var<string_map> unwalias(aliases);
 
-    FILE* f = fopen( include_file.c_str(), "r" );
+    FILE* f = fopen_u(include_file.c_str(), "r");
     if (f)
     {
         FileLineInput fl(f);
@@ -3577,29 +3581,32 @@ static bool arg_seen[num_cmd_ops];
 
 std::string find_executable_path()
 {
-    char tempPath[2048];
-
     // A lot of OSes give ways to find the location of the running app's
     // binary executable. This is useful, because argv[0] can be relative
     // when we really need an absolute path in order to locate the game's
     // resources.
-
-    // Faster than a memset, and counts as a null-terminated string!
-    tempPath[0] = 0;
-
 #if defined ( TARGET_OS_WINDOWS )
-    GetModuleFileName ( NULL, tempPath, sizeof(tempPath) );
+    wchar_t tempPath[MAX_PATH];
+    if (GetModuleFileNameW(NULL, tempPath, MAX_PATH))
+        return utf16_to_8(tempPath);
+    else
+        return "";
 #elif defined ( TARGET_OS_LINUX )
+    char tempPath[2048];
     const ssize_t rsize =
         readlink("/proc/self/exe", tempPath, sizeof(tempPath) - 1);
     if (rsize > 0)
+    {
         tempPath[rsize] = 0;
+        return mb_to_utf8(tempPath);
+    }
+    return "";
 #elif defined ( TARGET_OS_MACOSX )
-    strncpy ( tempPath, NXArgv[0], sizeof(tempPath) );
+    return mb_to_utf8(NXArgv[0]);
 #else
     // We don't know how to find the executable's path on this OS.
+    return "";
 #endif
-    return std::string(tempPath);
 }
 
 static void _print_version()
@@ -3709,7 +3716,7 @@ static void _edit_save(int argc, char **argv)
             const char *file = (argc == 4) ? argv[3] : "chunk";
             FILE *f;
             if (strcmp(file, "-"))
-                f = fopen(file, "wb");
+                f = fopen_u(file, "wb");
             else
                 f = stdout;
             if (!f)
@@ -3733,7 +3740,7 @@ static void _edit_save(int argc, char **argv)
             const char *file = (argc == 4) ? argv[3] : "chunk";
             FILE *f;
             if (strcmp(file, "-"))
-                f = fopen(file, "rb");
+                f = fopen_u(file, "rb");
             else
                 f = stdin;
             if (!f)
@@ -3775,8 +3782,8 @@ static void _edit_save(int argc, char **argv)
                     out.write(buf, s);
             }
             save2.commit();
-            rename((get_savedir_filename(name, "", "") + ".tmp").c_str(),
-                   (get_savedir_filename(name, "", "") + SAVE_SUFFIX).c_str());
+            rename_u((get_savedir_filename(name, "", "") + ".tmp").c_str(),
+                     (get_savedir_filename(name, "", "") + SAVE_SUFFIX).c_str());
         }
     }
     catch (ext_fail_exception &fe)

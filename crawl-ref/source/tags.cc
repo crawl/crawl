@@ -51,6 +51,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "env.h"
+#include "syscalls.h"
 #include "tags.h"
 #ifdef USE_TILE
  #include "tilemcache.h"
@@ -82,7 +83,7 @@ reader::reader(const std::string &filename, int minorVersion)
     : _chunk(0), _pbuf(NULL), _read_offset(0),
       _minorVersion(minorVersion), seen_enums()
 {
-    _file       = fopen(filename.c_str(), "rb");
+    _file       = fopen_u(filename.c_str(), "rb");
     opened_file = !!_file;
 }
 

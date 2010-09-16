@@ -15,6 +15,7 @@
 #include "libutil.h"
 #include "state.h"
 #include "stuff.h"
+#include "syscalls.h"
 
 #include <algorithm>
 
@@ -150,7 +151,7 @@ int CLua::file_write(lua_State *ls)
 FILE *CLua::CLuaSave::get_file()
 {
     if (!handle)
-        handle = fopen(filename, "w");
+        handle = fopen_u(filename, "w");
 
     return (handle);
 }

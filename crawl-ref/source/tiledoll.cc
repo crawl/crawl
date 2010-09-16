@@ -14,6 +14,7 @@
 #include <sys/stat.h>
 
 #include "files.h"
+#include "syscalls.h"
 #include "tilebuf.h"
 #include "tiledef-player.h"
 #include "tilepick-p.h"
@@ -60,7 +61,7 @@ bool save_doll_data(int mode, int num, const dolls_data* dolls)
                             : dollsTxtString.c_str();
 
     FILE *fp = NULL;
-    if ((fp = fopen(dollsTxt, "w+")) != NULL)
+    if ((fp = fopen_u(dollsTxt, "w+")) != NULL)
     {
         fprintf(fp, "MODE=%s\n",
                     (mode == TILEP_MODE_EQUIP)   ? "EQUIP" :
@@ -106,7 +107,7 @@ bool load_doll_data(const char *fn, dolls_data *dolls, int max,
                             : dollsTxtString.c_str();
 
 
-    if ( (fp = fopen(dollsTxt, "r")) == NULL )
+    if ( (fp = fopen_u(dollsTxt, "r")) == NULL )
     {
         // File doesn't exist. By default, use equipment settings.
         *mode = TILEP_MODE_EQUIP;

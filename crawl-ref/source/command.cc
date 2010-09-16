@@ -50,6 +50,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "env.h"
+#include "syscalls.h"
 #include "terrain.h"
 #ifdef USE_TILE
 #include "tilepick.h"
@@ -132,7 +133,7 @@ static void _add_file_to_scroller(FILE* fp, formatted_scroller& m,
 static std::string _get_version_changes(void)
 {
     // Attempts to print "Highlights" of the latest version.
-    FILE* fp = fopen(datafile_path("changelog.txt", false).c_str(), "r");
+    FILE* fp = fopen_u(datafile_path("changelog.txt", false).c_str(), "r");
     if (!fp)
         return "";
 
@@ -228,7 +229,7 @@ static void _print_version(void)
 
     std::string fname = "key_changes.txt";
     // Read in information about changes in comparison to the latest version.
-    FILE* fp = fopen(datafile_path(fname, false).c_str(), "r");
+    FILE* fp = fopen_u(datafile_path(fname, false).c_str(), "r");
 
 #if defined(TARGET_OS_DOS)
     if (!fp)
@@ -243,7 +244,7 @@ static void _print_version(void)
             mprf(MSGCH_DIAGNOSTICS,
                  "Attempting to open file '%s'", fname.c_str());
  #endif
-            fp = fopen(datafile_path(fname, false).c_str(), "r");
+            fp = fopen_u(datafile_path(fname, false).c_str(), "r");
         }
     }
 #endif
@@ -2031,7 +2032,7 @@ static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
         {
             // Attempt to open this file, skip it if unsuccessful.
             std::string fname = canonicalise_file_separator(help_files[i].name);
-            FILE* fp = fopen(datafile_path(fname, false).c_str(), "r");
+            FILE* fp = fopen_u(datafile_path(fname, false).c_str(), "r");
 
 #if defined(TARGET_OS_DOS)
             if (!fp)
@@ -2046,7 +2047,7 @@ static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
                     mprf(MSGCH_DIAGNOSTICS,
                          "Attempting to open file '%s'", fname.c_str());
  #endif
-                    fp = fopen(datafile_path(fname, false).c_str(), "r");
+                    fp = fopen_u(datafile_path(fname, false).c_str(), "r");
                 }
             }
 #endif

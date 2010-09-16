@@ -12,6 +12,7 @@
 #include "macro.h"
 #include "message.h"
 #include "stuff.h"
+#include "unicode.h"
 #include "viewgeom.h"
 
 #include <sstream>
@@ -102,12 +103,12 @@ bool shell_safe(const char *file)
     return (match < 0 || !file[match]);
 }
 
-void play_sound( const char *file )
+void play_sound(const char *file)
 {
 #if defined(WINMM_PLAY_SOUNDS)
     // Check whether file exists, is readable, etc.?
     if (file && *file)
-        sndPlaySound(file, SND_ASYNC | SND_NODEFAULT);
+        sndPlaySoundW(utf8_to_16(file).c_str(), SND_ASYNC | SND_NODEFAULT);
 
 #elif defined(SOUND_PLAY_COMMAND)
     char command[255];
@@ -116,7 +117,7 @@ void play_sound( const char *file )
         && shell_safe(file))
     {
         snprintf(command, sizeof command, SOUND_PLAY_COMMAND, file);
-        system(command);
+        system(utf8_to_mb(command));
     }
 #endif
 }

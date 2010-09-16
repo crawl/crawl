@@ -139,7 +139,7 @@ bool unlock_file_handle( FILE *handle );
 #endif // USE_FILE_LOCKING
 
 #ifdef SHARED_FILES_CHMOD_PRIVATE
-#define DO_CHMOD_PRIVATE(x) chmod( (x), SHARED_FILES_CHMOD_PRIVATE )
+#define DO_CHMOD_PRIVATE(x) chmod_u((x), SHARED_FILES_CHMOD_PRIVATE)
 #else
 #define DO_CHMOD_PRIVATE(x) // empty command
 #endif
