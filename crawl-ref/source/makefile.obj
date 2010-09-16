@@ -204,6 +204,7 @@ terrain.o \
 transform.o \
 traps.o \
 travel.o \
+unicode.o \
 view.o \
 viewchar.o \
 viewgeom.o \
