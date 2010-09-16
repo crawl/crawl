@@ -2995,7 +2995,7 @@ bool monster::is_known_chaotic() const
 
 bool monster::is_chaotic() const
 {
-    return is_shapeshifter() || is_known_chaotic();
+    return (is_shapeshifter() || is_known_chaotic());
 }
 
 bool monster::is_insubstantial() const
