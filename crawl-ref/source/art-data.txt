@@ -535,7 +535,7 @@ MAGIC:   50
 BOOL:    nospell
 DESC:    An adamantine great sword.
 
-NAME:    "Eos"
+NAME:    morningstar "Eos"
 APPEAR:  encrusted morningstar
 OBJ:     OBJ_WEAPONS/WPN_MORNINGSTAR
 PLUS:    +5/+5
