@@ -1809,7 +1809,8 @@ static bool _randart_is_conflicting( const item_def &item,
 {
     if (item.base_type == OBJ_WEAPONS
         && get_weapon_brand(item) == SPWPN_HOLY_WRATH
-        && proprt[ARTP_CURSED] != 0)
+        && (is_demonic(item)
+            || proprt[ARTP_CURSED] != 0))
     {
         return (true);
     }
