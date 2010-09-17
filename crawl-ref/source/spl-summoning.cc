@@ -796,23 +796,15 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
         success = false;
     }
 
-    // See if we can get an mitm for the dancing weapon.
-    const int i = get_item_slot();
-
-    if (i == NON_ITEM)
-        success = false;
-    else if (success)
-    {
-        // Copy item now so that mitm[i] is occupied and doesn't get picked
-        // by get_item_slot() when giving the dancing weapon its item
-        // during create_monster().
-        mitm[i] = *wpn;
-    }
-
-    int mons;
+    int mons = -1;
 
     if (success)
     {
+        item_def cp = *wpn;
+        // Clear temp branding so we don't brand permanently.
+        if (you.duration[DUR_WEAPON_BRAND])
+            set_item_ego_type(cp, OBJ_WEAPONS, SPWPN_NORMAL);
+
         // Cursed weapons become hostile.
         const bool friendly = (!force_hostile && !wpn->cursed());
 
@@ -823,23 +815,17 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
                      you.pos(),
                      MHITYOU,
                      0, god);
+        mg.props[TUKIMA_WEAPON] = cp;
 
         if (force_hostile)
             mg.non_actor_summoner = god_name(god, false);
 
         mons = create_monster(mg);
-
-        if (mons == -1)
-        {
-            mitm[i].clear();
-            success = false;
-        }
+        success = (mons != -1);
     }
 
     if (!success)
     {
-        destroy_item(i);
-
         if (wpn)
         {
             mprf("%s vibrate%s crazily for a second.",
@@ -856,16 +842,6 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
     // effects.
     unwield_item();
 
-    // Copy the unwielded item. Note that the pointer still points at it.
-    mitm[i] = *wpn;
-    mitm[i].quantity = 1;
-    mitm[i].pos.set(-2, -2);
-    mitm[i].link = NON_ITEM + 1 + mons;
-
-    // Mark the weapon as thrown, so that we'll autograb it when the
-    // tango's done.
-    mitm[i].flags |= ISFLAG_THROWN;
-
     mprf("%s dances into the air!", wpn->name(DESC_CAP_YOUR).c_str());
 
     // Find out what our god thinks before killing the item.
@@ -875,22 +851,10 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
 
     wpn->clear();
 
-    monster& dancing_weapon = menv[mons];
-
-    destroy_item(dancing_weapon.inv[MSLOT_WEAPON]);
-    dancing_weapon.inv[MSLOT_WEAPON] = i;
-    burden_change();
-
-    ghost_demon stats;
-    stats.init_dancing_weapon(mitm[i], pow);
-
-    dancing_weapon.set_ghost(stats);
-    dancing_weapon.dancing_weapon_init();
-
     if (why)
     {
         simple_god_message(" booms: How dare you animate that foul thing!");
-        did_god_conduct(why, 10, true, &dancing_weapon);
+        did_god_conduct(why, 10, true, &menv[mons]);
     }
 
     return (true);
