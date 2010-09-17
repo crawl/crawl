@@ -299,6 +299,7 @@ void fill_status_info(int status, status_info* inf)
         else
            inf->long_text += "a soft";
         inf->long_text += "red.";
+        break;
     }
 
     case DUR_FIRE_SHIELD:
