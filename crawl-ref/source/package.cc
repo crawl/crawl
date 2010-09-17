@@ -525,6 +525,14 @@ chunk_writer::chunk_writer(package *parent, const std::string _name)
 {
     ASSERT(parent);
     ASSERT(!parent->aborted);
+
+    /*
+    The save format is currently limited to 4 character names for simplicity
+    (we use 3 max).  If you want to extend this, please implement marshalling
+    of arbitrary strings in {read,write}_directory().
+    */
+    ASSERT(_name.size() <= 4);
+
     dprintf("chunk_writer(%s): starting\n", _name.c_str());
     pkg = parent;
     pkg->n_users++;
