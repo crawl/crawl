@@ -1742,7 +1742,12 @@ static int _place_monster_aux(const mgen_data &mg,
     if (crawl_state.game_is_arena())
         arena_placed_monster(mon);
     else if (!Generating_Level && you.can_see(mon))
+    {
+        // FIXME: This causes "comes into view" messages at the
+        //        wrong time, since code checks for placement
+        //        success before printing messages.
         handle_seen_interrupt(mon);
+    }
 
     return (mon->mindex());
 }
