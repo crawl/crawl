@@ -1567,7 +1567,10 @@ static int _place_monster_aux(const mgen_data &mg,
 
     if (mg.cls == MONS_DANCING_WEAPON)
     {
-        give_item(mon->mindex(), mg.power, summoned);
+        if (mg.props.exists(TUKIMA_WEAPON))
+            give_specific_item(mon, mg.props[TUKIMA_WEAPON].get_item());
+        else
+            give_item(mon->mindex(), mg.power, summoned);
 
         // Dancing weapons *always* have a weapon. Fail to create them
         // otherwise.
@@ -1637,7 +1640,8 @@ static int _place_monster_aux(const mgen_data &mg,
 
     if (summoned)
     {
-        mon->mark_summoned(mg.abjuration_duration, true,
+        mon->mark_summoned(mg.abjuration_duration,
+                           mg.cls != MONS_DANCING_WEAPON,
                            mg.summon_type);
     }
     ASSERT(!invalid_monster_index(mg.foe)

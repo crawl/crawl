@@ -27,7 +27,8 @@
 
 static void _give_monster_item(monster* mon, int thing,
                                bool force_item = false,
-                               bool (monster::*pickupfn)(item_def&, int) = NULL)
+                               bool (monster::*pickupfn)(item_def&, int) = NULL,
+                               bool keep_ident = false)
 {
     if (thing == NON_ITEM || thing == -1)
         return;
@@ -43,7 +44,9 @@ static void _give_monster_item(monster* mon, int thing,
 
     mthing.pos.reset();
     mthing.link = NON_ITEM;
-    unset_ident_flags(mthing, ISFLAG_IDENT_MASK);
+
+    if (!keep_ident)
+        unset_ident_flags(mthing, ISFLAG_IDENT_MASK);
 
     if (mon->undead_or_demonic()
         && (is_blessed(mthing)
@@ -73,6 +76,16 @@ static void _give_monster_item(monster* mon, int thing,
 
     if (!force_item || mthing.colour == BLACK)
         item_colour(mthing);
+}
+
+void give_specific_item(monster* mon, const item_def& tpl)
+{
+    int thing = get_item_slot();
+    if (thing == NON_ITEM)
+        return;
+
+    mitm[thing] = tpl;
+    _give_monster_item(mon, thing, true, NULL, true);
 }
 
 static void _give_scroll(monster* mon, int level)
