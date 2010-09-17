@@ -184,21 +184,21 @@ void hogs_to_humans()
 
 
 // Dowan and Duvessa
-bool mons_is_dowan (monster* mons)
+bool mons_is_dowan(const monster* mons)
 {
     return (mons->type == MONS_DOWAN
             || (mons->props.exists("original_name")
                 && mons->props["original_name"].get_string() == "Dowan"));
 }
 
-bool mons_is_duvessa (monster* mons)
+bool mons_is_duvessa(const monster* mons)
 {
     return (mons->type == MONS_DUVESSA
             || (mons->props.exists("original_name")
                 && mons->props["original_name"].get_string() == "Duvessa"));
 }
 
-bool mons_is_elven_twin (monster* mons)
+bool mons_is_elven_twin(const monster* mons)
 {
     return (mons_is_dowan(mons) || mons_is_duvessa(mons));
 }
