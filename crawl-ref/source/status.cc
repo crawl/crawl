@@ -293,11 +293,11 @@ void fill_status_info(int status, status_info* inf)
         const int low  = 20 * BASELINE_DELAY;
         inf->long_text = "Your hands are glowing ";
         if (dur > high)
-            inf->long_text += "an extremely bright";
+            inf->long_text += "an extremely bright ";
         else if (dur > low)
-            inf->long_text += "bright";
+            inf->long_text += "bright ";
         else
-           inf->long_text += "a soft";
+           inf->long_text += "a soft ";
         inf->long_text += "red.";
         break;
     }
