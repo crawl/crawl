@@ -234,7 +234,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "gain magical power from killing",
       "Vehumet is aiding your destructive magics.",
       "Vehumet is extending the range of your conjurations.",
-      "Vehumet is reducing the cost of your destructive magics.",
+      "Vehumet is reducing the cost of your expensive destructive magics.",
       "" },
     // Okawaru
     { "give your body great, but temporary strength",
