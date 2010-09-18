@@ -162,7 +162,8 @@ void passive_enslavement_convert(monster* mons)
 {
     if (you.are_charming()
         && mons->alive()
-        && is_player_same_species(mons->type, true)
+        && is_player_same_species(mons->type, false)
+        && !transform_changed_physiology(false)
         && mons->foe == MHITYOU
         && !mons->is_summoned()
         && !mons->is_shapeshifter()
@@ -177,8 +178,9 @@ void passive_enslavement_convert(monster* mons)
 
         const int hd = mons->hit_dice;
 
-        if (random2(4 + you.experience_level / 3)
-                 > random2(hd) + hd + random2(5))
+        if (random2(random2(you.experience_level))
+                 > random2(hd) + hd + random2(5)
+            && hd * hd < you.experience_level * 7)
         {
             passive_enslavement_convert_monster(mons);
             stop_running();
