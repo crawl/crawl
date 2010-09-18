@@ -58,7 +58,7 @@ struct spell_desc
     int min_range;
     int max_range;
 
-    // How much louder or quieter the spell is than the default.
+    // Modify spell level for spell noise purposes.
     int noise_mod;
 
     const char  *target_prompt;
@@ -1032,7 +1032,7 @@ int spell_noise(spell_type spell)
 {
     const spell_desc *desc = _seekspell(spell);
 
-    return desc->noise_mod + spell_noise(desc->disciplines, desc->level);
+    return spell_noise(desc->disciplines, desc->level + desc->noise_mod);
 }
 
 int spell_noise(unsigned int disciplines, int level)
