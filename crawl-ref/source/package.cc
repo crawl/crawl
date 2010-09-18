@@ -194,7 +194,7 @@ void package::commit()
     head.magic = htole(PACKAGE_MAGIC);
     head.version = PACKAGE_VERSION;
     memset(&head.padding, 0, sizeof(head.padding));
-    head.start = write_directory();
+    head.start = htole(write_directory());
 #ifdef DO_FSYNC
     // We need a barrier before updating the link to point at the new directory.
     if (fdatasync(fd))
