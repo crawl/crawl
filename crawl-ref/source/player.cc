@@ -466,6 +466,11 @@ bool is_player_same_species(const int mon, bool transform)
     if (you.species == SP_GHOUL)
         return (mons_species(mon) == MONS_GHOUL);
 
+    // Note that these are currently considered to be the same species:
+    // * halflings and humans
+    // * dwarves and deep dwarves
+    // * all elf races
+
     if (you.species == SP_MERFOLK && mons_genus(mon) == MONS_MERMAID)
         return (true);
 
