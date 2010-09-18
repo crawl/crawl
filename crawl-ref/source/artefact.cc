@@ -506,10 +506,6 @@ void artefact_desc_properties( const item_def &item,
         fake_rap = ARTP_EYESIGHT;
         break;
 
-    case RING_CHARM:
-        fake_rap = ARTP_CHARM;
-        break;
-
     case RING_HUNGER:
         fake_rap = ARTP_METABOLISM;
         break;
