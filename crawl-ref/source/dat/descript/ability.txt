@@ -94,10 +94,6 @@ Control Demon
 
 Temporarily enslave a demon.
 %%%%
-Gate Yourself to Pandemonium
-
-Enter the chaotic realm of Pandemonium. Note that getting back might be more difficult.
-%%%%
 Channeling
 
 Regain a small amount of magical energy.
