@@ -510,6 +510,7 @@ KMASK:  Z1! = no_item_gen
 SUBST:  ! = ^ .:40
 SUBST:  . = .:500 ^
 TILE:   m = dngn_zot_pillar
+COLOUR: m = magenta
 :           dgn.set_feature_desc_short("translucent rock wall",
 :                                      "crystal pillar")
 :           dgn.set_feature_desc_long("translucent rock wall",
