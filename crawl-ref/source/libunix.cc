@@ -679,12 +679,6 @@ int putwch(unsigned chr)
 #endif
 }
 
-int window(int x1, int y1, int x2, int y2)
-{
-    x1 = y1 = x2 = y2 = 0;      /* Do something to them.. makes gcc happy :) */
-    return OK;
-}
-
 void put_colour_ch(int colour, unsigned ch)
 {
     if (Options.char_set == CSET_ASCII || Options.char_set == CSET_UNICODE)

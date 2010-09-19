@@ -604,15 +604,6 @@ void cprintf(const char *format, ...)
     va_end(argp);
 }
 
-void window(int x, int y, int lx, int ly)
-{
-    // do nothing
-    UNUSED( x );
-    UNUSED( y );
-    UNUSED( lx );
-    UNUSED( ly );
-}
-
 int wherex(void)
 {
     return cx+1;

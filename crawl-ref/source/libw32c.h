@@ -32,7 +32,6 @@ bool set_buffering(bool value);
 int get_console_string(char *buf, int maxlen);
 void print_timings(void);
 
-void window(int x, int y, int lx, int ly);
 int wherex(void);
 int wherey(void);
 void putch(char c);
