@@ -2644,8 +2644,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
         // Note that branded missile damage goes through defender
         // resists.
-        if (ammo_brand == SPMSL_STEEL || ammo_brand == SPMSL_FROST
-            || ammo_brand == SPMSL_FLAME)
+        if (ammo_brand == SPMSL_STEEL
+            || elemental_missile_beam(bow_brand, ammo_brand))
         {
             dice_mult = dice_mult * 150 / 100;
         }
