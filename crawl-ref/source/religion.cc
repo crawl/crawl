@@ -223,7 +223,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "Kikubaaqudgha is protecting you from unholy torment.",
       "invoke torment by praying over a corpse" },
     // Yredelemnul
-    { "animate {yred_undead}",
+    { "animate {yred_dead}",
       "recall your undead slaves",
       "",
       "drain ambient lifeforce",
@@ -331,7 +331,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "Kikubaaqudgha will no longer protect you from unholy torment.",
       "invoke torment by praying over a corpse" },
     // Yredelemnul
-    { "animate {yred_undead}",
+    { "animate {yred_dead}",
       "recall your undead slaves",
       "",
       "drain ambient lifeforce",
@@ -2342,12 +2342,12 @@ std::string adjust_abil_message(const char *pmsg)
     int pos;
     std::string pm = pmsg;
 
-    if ((pos = pm.find("{yred_undead}")) != -1)
+    if ((pos = pm.find("{yred_dead}")) != -1)
     {
         if (yred_can_animate_dead())
-            pm.replace(pos, 13, "legions of the dead");
+            pm.replace(pos, 11, "legions of the dead");
         else
-            pm.replace(pos, 13, "remains");
+            pm.replace(pos, 11, "remains");
     }
 
     return (pm);
