@@ -190,6 +190,10 @@ The enslaved soul will retain the monster's faculties, equipment and abilities, 
 
 Note that enslaved souls can follow you beyond the level they were created on.
 %%%%
+Animate Remains or Dead
+
+If you get this description, it is a bug.
+%%%%
 # Okawaru
 Might
 
