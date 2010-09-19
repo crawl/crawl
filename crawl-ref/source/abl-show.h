@@ -77,8 +77,8 @@ struct talent
 
 const struct ability_def & get_ability_def( ability_type abil );
 
-const char* ability_name(ability_type ability);
 const std::string make_cost_description(ability_type ability);
+const char* ability_name(ability_type ability);
 std::vector<const char*> get_ability_names();
 int choose_ability_menu(const std::vector<talent>& talents);
 

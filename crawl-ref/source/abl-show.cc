@@ -835,12 +835,17 @@ static talent _get_talent(ability_type ability, bool check_confused)
     return result;
 }
 
+const char* ability_name(ability_type ability)
+{
+    return get_ability_def(ability).name;
+}
+
 std::vector<const char*> get_ability_names()
 {
     std::vector<talent> talents = your_talents(false);
     std::vector<const char*> result;
     for (unsigned int i = 0; i < talents.size(); ++i)
-        result.push_back(get_ability_def(talents[i].which).name);
+        result.push_back(ability_name(talents[i].which));
     return result;
 }
 
@@ -848,7 +853,7 @@ static void _print_talent_description(const talent& tal)
 {
     clrscr();
 
-    const std::string& name = get_ability_def(tal.which).name;
+    const std::string& name = ability_name(tal.which);
 
     // XXX: The suffix is necessary to distinguish between similarly
     // named spells.  Yes, this is a hack.
@@ -2143,11 +2148,6 @@ int choose_ability_menu(const std::vector<talent>& talents)
         else
             return (*(static_cast<int*>(sel[0]->data)));
     }
-}
-
-const char* ability_name(ability_type ability)
-{
-    return get_ability_def(ability).name;
 }
 
 static std::string _describe_talent(const talent& tal)
