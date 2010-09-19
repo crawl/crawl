@@ -333,7 +333,6 @@ static const ability_def Ability_List[] =
     { ABIL_FEDHAS_SPAWN_SPORES, "Reproduction", 4, 0, 100, 0, ABFLAG_NONE},
     { ABIL_FEDHAS_RAIN, "Rain", 4, 0, 150, 4, ABFLAG_NONE},
 
-
     // Cheibriados
     { ABIL_CHEIBRIADOS_PONDEROUSIFY, "Make Ponderous",
       0, 0, 0, 0, ABFLAG_NONE },
