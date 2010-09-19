@@ -2115,7 +2115,7 @@ enum monster_type                      // (int) menv[].type
     MONS_KOMODO_DRAGON,                //  406
 
     MONS_PLAYER_ILLUSION,
-      MONS_UNUSED_408,
+    MONS_HELL_DEMON,
       MONS_UNUSED_409,
       MONS_UNUSED_410,
       MONS_UNUSED_411,
