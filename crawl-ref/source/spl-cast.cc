@@ -186,7 +186,6 @@ static std::string _spell_extra_description(spell_type spell)
     desc << std::setw(14) << spell_power_string(spell)
          << std::setw(16 + tagged_string_tag_length(rangestring)) << rangestring
          << std::setw(12) << spell_hunger_string(spell)
-         << std::setw(14) << spell_noise_string(spell)
          << spell_difficulty(spell);
 
     desc << "</" << colour_to_str(highlight) <<">";
@@ -2028,24 +2027,6 @@ const char* spell_hunger_string(spell_type spell)
 
     return (hunger_descriptions[_breakpoint_rank(hunger, breakpoints,
                                                  ARRAYSZ(breakpoints))]);
-}
-
-std::string spell_noise_string(spell_type spell)
-{
-    const int noise = spell_noise(spell);
-    
-    const char* noise_descriptions[] = {
-        "Silent", "Very quiet", "Quiet", "Slightly noisy", "Somewhat noisy",
-        "Quite noisy", "Very noisy", "Extremely noisy",
-        "Extraordinarily noisy", "Incredibly noisy"
-    };
-
-#ifdef WIZARD
-    if (you.wizard)
-        return make_stringf("%s (%d)", noise_descriptions[noise], noise);
-    else
-#endif
-        return noise_descriptions[noise];
 }
 
 int spell_power_colour(spell_type spell)

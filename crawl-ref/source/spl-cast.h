@@ -79,7 +79,7 @@ std::string spell_power_string(spell_type spell);
 std::string spell_range_string(spell_type spell);
 std::string spell_schools_string(spell_type spell);
 const char* spell_hunger_string(spell_type spell);
-std::string spell_noise_string(spell_type spell);
+
 
 bool is_prevented_teleport(spell_type spell);
 
