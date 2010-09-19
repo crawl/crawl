@@ -92,7 +92,7 @@ At the permanent loss of one magic point restore your Strength, Dexterity and In
 %%%%
 Device Recharging
 
-At the permanent loss of one magic point recharge a wand or rod or enchant a weapon of electrocution.
+At the permanent loss of one magic point recharge a wand or rod.
 %%%%
 Evoke Teleportation
 
