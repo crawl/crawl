@@ -847,6 +847,32 @@ bool yred_injury_mirror(bool actual)
             && (!actual || you.duration[DUR_PRAYER]));
 }
 
+bool yred_can_animate_dead()
+{
+    return (you.piety >= piety_breakpoint(2));
+}
+
+void yred_animate_remains_or_dead()
+{
+    if (yred_can_animate_dead())
+    {
+        mpr("You call on the dead to rise...");
+
+        animate_dead(&you, you.skills[SK_INVOCATIONS] + 1, BEH_FRIENDLY,
+                     MHITYOU, &you, "", GOD_YREDELEMNUL);
+    }
+    else
+    {
+        mpr("You attempt to give life to the dead...");
+
+        if (animate_remains(you.pos(), CORPSE_BODY, BEH_FRIENDLY,
+                            MHITYOU, &you, "", GOD_YREDELEMNUL) < 0)
+        {
+            mpr("There are no remains here to animate!");
+        }
+    }
+}
+
 void yred_drain_life()
 {
     mpr("You draw life from your surroundings.");

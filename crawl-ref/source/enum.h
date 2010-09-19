@@ -60,6 +60,8 @@ enum ability_type
     ABIL_YRED_ANIMATE_DEAD,
     ABIL_YRED_DRAIN_LIFE,
     ABIL_YRED_ENSLAVE_SOUL,
+    // Placeholder for Animate Remains or Animate Dead.
+    ABIL_YRED_ANIMATE_REMAINS_OR_DEAD,
     // 160 - reserved for Vehumet
     ABIL_OKAWARU_MIGHT = 170,               //  170
     // Okawaru no longer heals (JPEG)
