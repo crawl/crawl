@@ -19,14 +19,6 @@ Breathe Fire
 
 Breathe a blast of fire at a targeted monster.
 %%%%
-Enable Demonic Guardian
-
-Allows a demonic guardian to spawn occasionally, maximum of one at a time.
-%%%%
-Disable Demonic Guardian
-
-Prevents a demonic guardian from spawning.
-%%%%
 Breathe Frost
 
 Breathe a blast of frost at a targeted monster.
@@ -82,22 +74,6 @@ Hellfire
 
 Blast your enemies with hellfire.
 %%%%
-Torment
-
-Torment yourself and the monsters around you.
-%%%%
-Raise Dead
-
-Reanimate all corpses and skeletons in your vicinity as followers. Note that zombies and skeletons cannot leave the level they were created on.
-%%%%
-Control Demon
-
-Temporarily enslave a demon.
-%%%%
-Channeling
-
-Regain a small amount of magical energy.
-%%%%
 Throw Flame ability
 
 Throw a blast of flame at a targeted monster.
@@ -105,10 +81,6 @@ Throw a blast of flame at a targeted monster.
 Throw Frost ability
 
 Throw a blast of frost at a targeted monster.
-%%%%
-Bolt of Draining ability
-
-Drain the life force of a targeted monster. This will reduce the experience you'll get from killing it.
 %%%%
 Release Delayed Fireball
 
@@ -121,10 +93,6 @@ At the permanent loss of one magic point restore your Strength, Dexterity and In
 Device Recharging
 
 At the permanent loss of one magic point recharge a wand or rod or enchant a weapon of electrocution.
-%%%%
-Evoke Sense Surroundings
-
-Map your vicinity.
 %%%%
 Evoke Teleportation
 
