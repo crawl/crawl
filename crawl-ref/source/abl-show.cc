@@ -1588,7 +1588,7 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_YRED_ANIMATE_DEAD:
         mpr("You call on the dead to rise...");
 
-        animate_dead(&you, 1 + you.skills[SK_INVOCATIONS], BEH_FRIENDLY,
+        animate_dead(&you, you.skills[SK_INVOCATIONS] + 1, BEH_FRIENDLY,
                      MHITYOU, &you, "", GOD_YREDELEMNUL);
         break;
 
