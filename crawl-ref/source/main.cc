@@ -359,6 +359,38 @@ static void _launch_game()
                     << std::endl;
     }
 
+#if 0
+    // latin, western eur. latin, central eur. latin, cyrillic, greek, runes
+    mpr("Regular: Meow.  Mëôw.  Miał.  Мяу.  Νιαού.  ᛗᛖᛟᚹ.");
+    // hebrew, arabic
+    mpr("RTL:     מיאַו.  مواء.");
+    // devanagari
+    mpr("Complex: म्याऊ.");
+    // japanese, chinese, korean, "fullwidth"
+    mpr("CJK:     ニャー.  喵.  야옹.  Ｍｅｏｗ.");
+    // egyptian hieroglyphics, various mathematical letter-like
+    mpr("Plane 1: 𓏇𓇋𓅱𓃠.  𝕸𝖊𝖔𝖜.  𝕄𝕖𝕠𝕨.  𝓜𝓮𝓸𝔀.  𝑴𝒆𝒐𝒘.");
+#else
+    mpr("Regular: Meow.  "
+                 "M\xc3\xab\xc3\xb4w.  "
+                 "Mia\xc5\x82.  "
+                 "\xd0\x9c\xd1\x8f\xd1\x83.  "
+                 "\xce\x9d\xce\xb9\xce\xb1\xce\xbf\xcf\x8d.  "
+                 "\xe1\x9b\x97\xe1\x9b\x96\xe1\x9b\x9f\xe1\x9a\xb9.");
+    mpr("RTL:     \xd7\x9e\xd7\x99\xd7\x90\xd6\xb7\xd7\x95.  "
+                 "\xd9\x85\xd9\x88\xd8\xa7\xd8\xa1.");
+    mpr("Complex: \xe0\xa4\xae\xe0\xa5\x8d\xe0\xa4\xaf\xe0\xa4\xbe\xe0\xa4\x8a.");
+    mpr("CJK:     \xe3\x83\x8b\xe3\x83\xa3\xe3\x83\xbc.  "
+                 "\xe5\x96\xb5.  "
+                 "\xec\x95\xbc\xec\x98\xb9.  "
+                 "\xef\xbc\xad\xef\xbd\x85\xef\xbd\x8f\xef\xbd\x97.");
+    mpr("Plane 1: \xf0\x93\x8f\x87\xf0\x93\x87\x8b\xf0\x93\x85\xb1\xf0\x93\x83\xa0.  "
+                 "\xf0\x9d\x95\xb8\xf0\x9d\x96\x8a\xf0\x9d\x96\x94\xf0\x9d\x96\x9c.  "
+                 "\xf0\x9d\x95\x84\xf0\x9d\x95\x96\xf0\x9d\x95\xa0\xf0\x9d\x95\xa8.  "
+                 "\xf0\x9d\x93\x9c\xf0\x9d\x93\xae\xf0\x9d\x93\xb8\xf0\x9d\x94\x80.  "
+                 "\xf0\x9d\x91\xb4\xf0\x9d\x92\x86\xf0\x9d\x92\x90\xf0\x9d\x92\x98.");
+#endif
+
 #ifdef USE_TILE
     viewwindow();
 #endif
