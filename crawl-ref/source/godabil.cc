@@ -847,19 +847,15 @@ bool yred_injury_mirror(bool actual)
             && (!actual || you.duration[DUR_PRAYER]));
 }
 
-void yred_drain_life(int pow)
+void yred_drain_life()
 {
     mpr("You draw life from your surroundings.");
-
-    // Incoming power to this function is skill in INVOCATIONS, so
-    // we'll add an assert here to warn anyone who tries to use
-    // this function with spell level power.
-    ASSERT(pow <= 27);
 
     flash_view(DARKGREY);
     more();
     mesclr();
 
+    const int pow = you.skills[SK_INVOCATIONS];
     int hp_gain = 0;
 
     for (monster_iterator mi(you.get_los()); mi; ++mi)

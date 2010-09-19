@@ -1593,7 +1593,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_YRED_DRAIN_LIFE:
-        yred_drain_life(you.skills[SK_INVOCATIONS]);
+        yred_drain_life();
         break;
 
     case ABIL_YRED_ENSLAVE_SOUL:
