@@ -39,7 +39,6 @@ void put_colour_ch(int colour, unsigned ch);
 int translate_keypad(int keyin);
 int wherex(void);
 int wherey(void);
-int window(int x1, int y1, int x2, int y2);
 void puttext(int x, int y, const crawl_view_buffer &vbuf);
 void update_screen(void);
 void clear_to_end_of_line(void);

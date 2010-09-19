@@ -156,11 +156,6 @@ void put_colour_ch(int colour, unsigned ch)
     putwch(ch);
 }
 
-int window(int x1, int y1, int x2, int y2)
-{
-    return 0;
-}
-
 int getch_ck()
 {
     return (tiles.getch_ck());

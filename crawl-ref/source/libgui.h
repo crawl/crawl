@@ -51,8 +51,6 @@ inline void enable_smart_cursor(bool) { }
 inline bool is_smart_cursor_enabled() { return false; }
 
 
-int window(int x1, int y1, int x2, int y2);
-
 extern "C" int getch();
 int getch_ck();
 int clrscr();
