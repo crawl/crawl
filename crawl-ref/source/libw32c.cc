@@ -954,10 +954,4 @@ int get_number_of_cols()
     return (screensize.X);
 }
 
-int ftruncate(int fp, int size)
-{
-    ASSERT(false);              // unimplemented
-    return 0;
-}
-
 #endif /* #if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE) */
