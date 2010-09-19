@@ -35,7 +35,7 @@ void print_timings(void);
 int wherex(void);
 int wherey(void);
 void putch(char c);
-void putwch(unsigned c);
+void putwch(wchar_t c);
 int getch(void);
 int getch_ck(void);
 int kbhit(void);

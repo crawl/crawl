@@ -70,10 +70,11 @@
 #include "options.h"
 #include "state.h"
 #include "stuff.h"
+#include "unicode.h"
 #include "view.h"
 #include "viewgeom.h"
 
-char oldTitle[80];
+wchar_t oldTitle[80];
 
 static HANDLE inbuf = NULL;
 static HANDLE outbuf = NULL;
@@ -98,7 +99,7 @@ static bool w32_smart_cursor = true;
 
 // we can do straight translation of DOS color to win32 console color.
 #define WIN32COLOR(col) (WORD)(col)
-static void writeChar(char c);
+static void writeChar(wchar_t c);
 static void bFlush(void);
 static void _setcursortype_internal(bool curstype);
 
@@ -126,7 +127,7 @@ static DWORD crawlColorData[16] =
 };
  */
 
-void writeChar(char c)
+void writeChar(wchar_t c)
 {
     if (c == '\t')
     {
@@ -158,7 +159,7 @@ void writeChar(char c)
     pci = &screen[SCREENINDEX(cx,cy)];
 
     // is this a no-op?
-    if (pci->Char.AsciiChar != c)
+    if (pci->Char.UnicodeChar != c)
         noop = false;
     else if (pci->Attributes != tc)
         noop = false;
@@ -166,7 +167,7 @@ void writeChar(char c)
     if (!noop)
     {
         // write the info and update the dirty area
-        pci->Char.AsciiChar = c;
+        pci->Char.UnicodeChar = c;
         pci->Attributes = tc;
 
         if (chy < 0)
@@ -213,7 +214,7 @@ void bFlush(void)
     target.Right = chex;
     target.Bottom = chy;
 
-    WriteConsoleOutput(outbuf, screen, screensize, source, &target);
+    WriteConsoleOutputW(outbuf, screen, screensize, source, &target);
 
     chy = -1;
 
@@ -274,20 +275,6 @@ void set_string_input(bool value)
     FlushConsoleInputBuffer( inbuf );
 }
 
-// this apparently only works for Win2K+ and ME+
-
-static void init_colors(char *windowTitle)
-{
-   UNUSED( windowTitle );
-
-   // look up the Crawl shortcut
-
-   // if found, modify the colortable entries in the NT_CONSOLE_PROPS
-   // structure.
-
-   // if not found, quit.
-}
-
 #ifdef TARGET_COMPILER_MINGW
 static void install_sighandlers()
 {
@@ -320,7 +307,7 @@ static void set_w32_screen_size()
     COORD topleft;
     SMALL_RECT used;
     topleft.X = topleft.Y = 0;
-    ::ReadConsoleOutput(outbuf, screen, screensize, topleft, &used);
+    ::ReadConsoleOutputW(outbuf, screen, screensize, topleft, &used);
 }
 
 static void w32_handle_resize_event()
@@ -363,8 +350,9 @@ void init_libw32c(void)
 
     std::string title = CRAWL " " + Version::Long();
 
-    GetConsoleTitle( oldTitle, 78 );
-    SetConsoleTitle( title.c_str() );
+    if (!GetConsoleTitleW(oldTitle, 78))
+        *oldTitle = 0;
+    SetConsoleTitleW(utf8_to_16(title.c_str()).c_str());
 
     // Use the initial Windows setting for cursor size if it exists.
     // TODO: Respect changing cursor size manually while Crawl is running.
@@ -373,8 +361,6 @@ void init_libw32c(void)
 #ifdef TARGET_COMPILER_MINGW
     install_sighandlers();
 #endif
-
-    init_colors(oldTitle);
 
     // by default, set string input to false:  use char-input only
     set_string_input( false );
@@ -435,7 +421,8 @@ void deinit_libw32c(void)
     screen = NULL;
 
     // finally, restore title
-    SetConsoleTitle( oldTitle );
+    if (*oldTitle)
+        SetConsoleTitleW(oldTitle);
 }
 
 void set_cursor_enabled(bool enabled)
@@ -489,7 +476,7 @@ void clrscr(void)
     for (x = 0; x < screensize.X; x++)
         for (y = 0; y < screensize.Y; y++)
         {
-            pci->Char.AsciiChar = ' ';
+            pci->Char.UnicodeChar = ' ';
             pci->Attributes = 0;
             pci++;
         }
@@ -501,7 +488,7 @@ void clrscr(void)
     target.Right = screensize.X - 1;
     target.Bottom = screensize.Y - 1;
 
-    WriteConsoleOutput(outbuf, screen, screensize, source, &target);
+    WriteConsoleOutputW(outbuf, screen, screensize, source, &target);
 
     // reset cursor to 1,1 for convenience
     cgotoxy(1,1);
@@ -569,7 +556,7 @@ static void cprintf_aux(const char *s)
     // early out -- not initted yet
     if (outbuf == NULL)
     {
-        printf("%s", s);
+        printf("%S", utf8_to_16(s).c_str());
         return;
     }
 
@@ -578,10 +565,11 @@ static void cprintf_aux(const char *s)
     set_buffering(true);
 
     // loop through string
-    char *p = (char *)s;
-    while (*p)
+    ucs_t c;
+    while (int taken = utf8towc(&c, s))
     {
-        writeChar(*p++);
+        s += taken;
+        writeChar(c);
     }
 
     // reset buffering
@@ -623,9 +611,11 @@ void putch(char c)
     writeChar(c);
 }
 
-void putwch(unsigned c)
+void putwch(wchar_t c)
 {
-    putch((char) c);
+    if (c == 0)
+        c = ' ';
+    writeChar(c);
 }
 
 // translate virtual keys
