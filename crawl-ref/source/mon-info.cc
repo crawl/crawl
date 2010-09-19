@@ -921,7 +921,7 @@ std::vector<std::string> monster_info::attributes() const
     if (is(MB_BLEEDING))
         v.push_back("bleeding");
     if (is(MB_DEFLECT_MSL))
-        v.push_back("missile deflection");
+        v.push_back("deflecting missiles");
     if (is(MB_PREP_RESURRECT))
         v.push_back("quietly preparing");
     if (is(MB_FADING_AWAY))
