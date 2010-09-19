@@ -1262,7 +1262,7 @@ spret_type your_spells(spell_type spell, int powc,
             const int cont_points = div_rand_round(nastiness, 500);
 
             // miscasts are uncontrolled
-            contaminate_player(cont_points);
+            contaminate_player(cont_points, true);
 
             MiscastEffect(&you, NON_MONSTER, spell, spell_mana(spell),
                           spfail_chance - spfl);
