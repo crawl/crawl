@@ -455,6 +455,7 @@ bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizard_tele)
                 }
                 if (!wizard_tele)
                     contaminate_player(1, true);
+                maybe_id_ring_TC();
                 return (false);
             }
 
