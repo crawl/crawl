@@ -2356,7 +2356,7 @@ std::string adjust_abil_message(const char *pmsg)
 static bool _abil_chg_message(const char *pmsg, const char *youcanmsg)
 {
     if (!*pmsg)
-        return false;
+        return (false);
 
     std::string pm = adjust_abil_message(pmsg);
 
@@ -2367,7 +2367,8 @@ static bool _abil_chg_message(const char *pmsg, const char *youcanmsg)
         god_speaks(you.religion,
                    make_stringf(youcanmsg, pmsg).c_str());
     }
-    return true;
+
+    return (true);
 }
 
 void dock_piety(int piety_loss, int penance)
