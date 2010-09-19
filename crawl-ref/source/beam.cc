@@ -3719,13 +3719,19 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
     if (!apply_dmg_funcs(mon, preac, messages))
         return (false);
 
-    postac = preac - maybe_random2(1 + mon->ac, !is_tracer);
+    postac = preac;
 
-    // Fragmentation has triple AC reduction.
-    if (flavour == BEAM_FRAG)
+    // Hellfire ignores AC.
+    if (flavour != BEAM_HELLFIRE)
     {
         postac -= maybe_random2(1 + mon->ac, !is_tracer);
-        postac -= maybe_random2(1 + mon->ac, !is_tracer);
+
+        // Fragmentation has triple AC reduction.
+        if (flavour == BEAM_FRAG)
+        {
+            postac -= maybe_random2(1 + mon->ac, !is_tracer);
+            postac -= maybe_random2(1 + mon->ac, !is_tracer);
+        }
     }
 
     postac = std::max(postac, 0);
