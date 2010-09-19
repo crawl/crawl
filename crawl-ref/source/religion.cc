@@ -2525,7 +2525,7 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
             redraw_skill(you.your_name, player_title());
 
             if (_abil_chg_message(god_gain_power_messages[you.religion][i],
-                              "You can now %s."))
+                                  "You can now %s."))
             {
                 learned_something_new(HINT_NEW_ABILITY_GOD);
             }
