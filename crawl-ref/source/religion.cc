@@ -2342,22 +2342,6 @@ std::string adjust_abil_message(const char *pmsg)
     int pos;
     std::string pm = pmsg;
 
-    if ((pos = pm.find("{biology}")) != -1)
-    {
-        switch (you.is_undead)
-        {
-        case US_UNDEAD:      // mummies -- time has no meaning!
-            return "";
-        case US_HUNGRY_DEAD: // ghouls
-            pm.replace(pos, 9, "decay");
-            break;
-        case US_SEMI_UNDEAD: // vampires
-        case US_ALIVE:
-            pm.replace(pos, 9, "biology");
-            break;
-        }
-    }
-
     if ((pos = pm.find("{yred_undead}")) != -1)
     {
         if (yred_can_animate_dead())
