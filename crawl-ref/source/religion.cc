@@ -2365,7 +2365,7 @@ static bool _abil_chg_message(const char *pmsg, const char *youcanmsg)
     else
     {
         god_speaks(you.religion,
-                   make_stringf(youcanmsg, pmsg).c_str());
+                   make_stringf(youcanmsg, pm.c_str()).c_str());
     }
 
     return (true);
