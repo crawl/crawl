@@ -2363,12 +2363,23 @@ std::string adjust_abil_message(const char *pmsg, bool allow_upgrades)
     return (pm);
 }
 
-static bool _abil_chg_message(const char *pmsg, const char *youcanmsg)
+static bool _abil_chg_message(const char *pmsg, const char *youcanmsg,
+                              int breakpoint)
 {
     if (!*pmsg)
         return (false);
 
+    // Set piety to the passed-in piety breakpoint value when getting
+    // the ability message.  If we have an ability upgrade, which will
+    // change description based on current piety, and current piety has
+    // gone up more than one breakpoint, this will ensure that all
+    // ability upgrade descriptions display in the proper sequence.
+    int old_piety = you.piety;
+    you.piety = piety_breakpoint(breakpoint);
+
     std::string pm = adjust_abil_message(pmsg);
+
+    you.piety = old_piety;
 
     if (isupper(pmsg[0]))
         god_speaks(you.religion, pm.c_str());
@@ -2536,7 +2547,7 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
             redraw_skill(you.your_name, player_title());
 
             if (_abil_chg_message(god_gain_power_messages[you.religion][i],
-                                  "You can now %s."))
+                                  "You can now %s.", i))
             {
                 learned_something_new(HINT_NEW_ABILITY_GOD);
             }
@@ -2669,7 +2680,7 @@ void lose_piety(int pgn)
                 redraw_skill(you.your_name, player_title());
 
                 _abil_chg_message(god_lose_power_messages[you.religion][i],
-                                  "You can no longer %s.");
+                                  "You can no longer %s.", i);
 
                 if (_need_water_walking() && !beogh_water_walk())
                     fall_into_a_pool(you.pos(), true, grd(you.pos()));
