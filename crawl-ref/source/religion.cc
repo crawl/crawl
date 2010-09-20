@@ -225,7 +225,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Yredelemnul
     { "animate {yred_dead}",
       "recall your undead slaves",
-      "",
+      "#animate {yred_dead}",
       "drain ambient lifeforce",
       "enslave living souls" },
     // Xom
@@ -333,7 +333,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Yredelemnul
     { "animate {yred_dead}",
       "recall your undead slaves",
-      "",
+      "#animate {yred_dead}",
       "drain ambient lifeforce",
       "enslave living souls" },
     // Xom
@@ -2337,10 +2337,20 @@ void religion_turn_end()
     _place_delayed_monsters();
 }
 
-std::string adjust_abil_message(const char *pmsg)
+std::string adjust_abil_message(const char *pmsg, bool allow_upgrades)
 {
-    int pos;
     std::string pm = pmsg;
+
+    // Messages starting with "#" are ability upgrades.
+    if (!pm.empty() && pmsg[0] == '#')
+    {
+        if (allow_upgrades)
+            pm.erase(0, 1);
+        else
+            return ("");
+    }
+
+    int pos;
 
     if ((pos = pm.find("{yred_dead}")) != -1)
     {
