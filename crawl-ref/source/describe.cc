@@ -3335,7 +3335,8 @@ static bool _print_god_abil_desc(int god, int numpower)
     if (!pmsg[0])
         return (false);
 
-    std::string buf = adjust_abil_message(pmsg);
+    // Don't display ability upgrades here.
+    std::string buf = adjust_abil_message(pmsg, false);
     if (buf.empty())
         return (false);
 
