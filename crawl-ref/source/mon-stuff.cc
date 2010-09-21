@@ -2476,7 +2476,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     uint64_t flags =
         mons->flags & ~(MF_INTERESTING | MF_SEEN | MF_ATT_CHANGE_ATTEMPT
                            | MF_WAS_IN_VIEW | MF_BAND_MEMBER
-                           | MF_FAKE_UNDEAD | MF_KNOWN_MIMIC);
+                           | MF_KNOWN_MIMIC);
 
     std::string name;
 
