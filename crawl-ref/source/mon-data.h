@@ -4218,18 +4218,6 @@ static monsterentry mondata[] = {
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
-{ // the alchemist
-    MONS_PARACELSUS, '@', LIGHTBLUE, "Paracelsus",
-    M_WARM_BLOOD | M_NO_REGEN | M_SPELLCASTER | M_SPEAKS | M_UNIQUE,
-    MR_NO_FLAGS,
-    600, 14, MONS_DWARF, MONS_DEEP_DWARF, MH_NATURAL, -8,
-    { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 12, 3, 5, 100 },
-    2, 12, MST_PARACELSUS, CE_CONTAMINATED, Z_SMALL, S_SHOUT,
-    I_HIGH, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
-    MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
-},
-
 {   // dummy, for now
     MONS_DEMONSPAWN, '@', DARKGREY, "demonspawn", // likely to become '6'
     M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
@@ -5621,7 +5609,6 @@ static monsterentry mondata[] = {
 },
 
 // numbers!
-
 {
     MONS_GRINDER, '5', BLUE, "Grinder",
     M_UNIQUE | M_SEE_INVIS | M_SPELLCASTER | M_SPEAKS,
@@ -5648,7 +5635,20 @@ static monsterentry mondata[] = {
     MONUSE_STARTING_EQUIPMENT, MONEAT_NOTHING, SIZE_LARGE
 },
 
-// human uniques ('@')
+{
+    // the alchemist
+    MONS_PARACELSUS, '@', LIGHTBLUE, "Paracelsus",
+    M_WARM_BLOOD | M_NO_REGEN | M_SPELLCASTER | M_SPEAKS | M_UNIQUE,
+    MR_NO_FLAGS,
+    600, 14, MONS_DWARF, MONS_DEEP_DWARF, MH_NATURAL, -8,
+    { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 12, 3, 5, 100 },
+    2, 12, MST_PARACELSUS, CE_CONTAMINATED, Z_SMALL, S_SHOUT,
+    I_HIGH, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
+    MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
+},
+
+// human uniques
 {
     MONS_TERENCE, '@', LIGHTCYAN, "Terence",
     M_UNIQUE | M_WARM_BLOOD | M_SPEAKS,
