@@ -4036,8 +4036,26 @@ static void _builder_items(int level_number, level_area_type level_type, int ite
     {
         for (i = 0; i < items_wanted; i++)
         {
-            items( 1, specif_type, OBJ_RANDOM, false, items_levels, 250,
-                   MMT_NO_ITEM );
+            // porridge in the dwarf hall
+            if (player_in_branch(BRANCH_DWARF_HALL))
+            {
+                const int it = random2(100);
+                if (it == 1)
+                {
+                    items(1, OBJ_POTIONS, POT_PORRIDGE, false, 0, 250,
+                          MMT_NO_ITEM);
+                }
+                else if (it < 10)
+                {
+                    items(1, specif_type, OBJ_RANDOM, false, items_levels, 250,
+                          MMT_NO_ITEM);
+                }
+            }
+            else
+            {
+                items(1, specif_type, OBJ_RANDOM, false, items_levels, 250,
+                      MMT_NO_ITEM);
+            }
         }
 
         // Make sure there's a very good chance of a knife being placed
@@ -4058,14 +4076,6 @@ static void _builder_items(int level_number, level_area_type level_type, int ite
                 mitm[item_no].flags   = 0; // no id, no race/desc, no curse
                 mitm[item_no].special = 0; // no ego type
             }
-        }
-
-        // porridge in the dwarf hall
-        if (player_in_branch( BRANCH_DWARF_HALL )
-            && level_number > 2 && one_chance_in(10))
-        {
-            item_no = items( 0, OBJ_POTIONS, POT_PORRIDGE, false, 0, 250,
-                             MMT_NO_ITEM );
         }
     }
 }
@@ -6068,13 +6078,14 @@ static dungeon_feature_type _pick_an_altar()
             break;
 
         case BRANCH_DWARF_HALL:
-            temp_rand = random2(10); // 50% chance of Okawaru
+            temp_rand = random2(7);
 
             altar_type = ((temp_rand == 0) ? DNGN_ALTAR_KIKUBAAQUDGHA :
                           (temp_rand == 1) ? DNGN_ALTAR_YREDELEMNUL :
-                          (temp_rand == 2) ? DNGN_ALTAR_NEMELEX_XOBEH :
+                          (temp_rand == 2) ? DNGN_ALTAR_MAKHLEB :
                           (temp_rand == 3) ? DNGN_ALTAR_TROG :
-                          (temp_rand == 4) ? DNGN_ALTAR_CHEIBRIADOS
+                          (temp_rand == 4) ? DNGN_ALTAR_CHEIBRIADOS:
+                          (temp_rand == 5) ? DNGN_ALTAR_ELYVILON
                                            : DNGN_ALTAR_OKAWARU);
             break;
 

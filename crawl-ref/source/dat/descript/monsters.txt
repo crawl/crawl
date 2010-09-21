@@ -219,6 +219,10 @@ There was once a human priest named Mennas. He travelled far and wide preaching 
 
 Whether or not this angel is that same Mennas is something of a mystery, as he seems to have difficulty speaking.
 %%%%
+Paracelsus
+
+A powerful alchemist of particular renown for his discovery of the zink, and the beginnings of medicine. His wanderings as an itinerant physician and sometime journeyman miner took him throughout the world, but never could he find a safer replacement for his laudanum. People say he wanders the world in search of one to this day.
+%%%%
 Menkaure
 
 A fair and noble ruler of an ancient and mighty kingdom, mummified after an early death. His faithful priests subsequently infused him with great and powerful magic, seeking to grant him eternal life. Now he is forgotten and reduced to mouldering bandages and dry, brittle bones.
@@ -1228,6 +1232,22 @@ A vile undead creation of the most unholy necromancy, these creatures are made f
 neqoxec
 
 A weirdly shaped demon, pulsing and shifting with mutagenic energies, its belly distended with the devoured brains of its victims.
+%%%%
+nisse
+
+Nisse take care of a lord's home and children and protect them from misfortune, in particular at night, when the housefolk are asleep. Since nisse are thought to be skilled in illusions and sometimes able to become invisible, one is unlikely to get more than brief glimpses of him. Nisse have four fingers, and are hairy all over, with pointed ears. Nisse's eyes glow in the dark.
+%%%%
+witch
+
+A rather eccentric person, dabbling in all sorts of arcanities.
+%%%%
+huldra
+
+Huldra are dangerous seductresses who live in the forest. The Huldra lures men into the forest in order to secure her freedom or sometimes to suck the life out of a man. One of her methods is to appear suddenly out of the rain and mist, friendly and enticing to the point that no man can resist her charms.
+%%%%
+trollkonor
+
+Trollkonor, is a troll’s wife who possesses magical powers. Despite their natural human lineage, they greatly resemble their ugly troll husbands.
 %%%%
 ogre
 

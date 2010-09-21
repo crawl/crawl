@@ -99,8 +99,11 @@ static inline bool _mons_natural_regen_roll(monster* mons)
 // Do natural regeneration for monster.
 static void _monster_regenerate(monster* mons)
 {
-    if (mons->has_ench(ENCH_SICK) || !mons_can_regenerate(mons))
+    if (mons->has_ench(ENCH_SICK) ||
+        (!mons_can_regenerate(mons) && !(mons->has_ench(ENCH_REGENERATION))))
+    {
         return;
+    }
 
     // Non-land creatures out of their element cannot regenerate.
     if (mons_primary_habitat(mons) != HT_LAND
@@ -120,6 +123,8 @@ static void _monster_regenerate(monster* mons)
         || (mons->type == MONS_AIR_ELEMENTAL
             && env.cgrid(mons->pos()) == EMPTY_CLOUD
             && one_chance_in(3))
+
+        || mons->has_ench(ENCH_REGENERATION)
 
         || _mons_natural_regen_roll(mons))
     {
@@ -889,6 +894,344 @@ static bool _handle_scroll(monster* mons)
     return read;
 }
 
+static int _generate_rod_power(monster *mons, int overriding_power = 0)
+{
+    // power is actually 5 + Evocations + 2d(Evocations)
+    // modified by shield and shield skill
+
+    // subsection: evocation skill and shield skill equivalents for monsters
+    int evoc_num = 1;
+    int evoc_den = 1;
+    if (mons->type == MONS_DEEP_DWARF_ARTIFICER)
+    {
+        evoc_num = 2;
+    }
+    int shield_num = 1;
+    int shield_den = 1;
+
+    int shield_base = 1;
+    if (mons->inv[MSLOT_SHIELD] != NON_ITEM)
+    {
+        item_def *shield = mons->mslot_item(MSLOT_SHIELD);
+        switch (shield->sub_type)
+        {
+        case ARM_BUCKLER:
+            shield_base = 5;
+            break;
+        case ARM_SHIELD:
+            shield_base = 3;
+            break;
+        case ARM_LARGE_SHIELD:
+            shield_base = 2;
+            break;
+        default:
+            shield_base = 1;
+        }
+    }
+
+    const int power_base = (mons->hit_dice * evoc_num) / evoc_den;
+    int power            = 5 + power_base + (2 * random2(power_base));
+    if (shield_base > 1)
+    {
+        const int shield_mod = ((power / shield_base) * shield_num) / shield_den;
+        power -= shield_mod;
+    }
+
+    if (overriding_power > 0)
+    power = overriding_power;
+
+    return power;
+}
+
+static bolt& _generate_item_beem(bolt &beem, bolt& from, monster* mons)
+{
+    beem.name         = from.name;
+    beem.beam_source  = mons->mindex();
+    beem.source       = mons->pos();
+    beem.colour       = from.colour;
+    beem.range        = from.range;
+    beem.damage       = from.damage;
+    beem.ench_power   = from.ench_power;
+    beem.hit          = from.hit;
+    beem.glyph        = from.glyph;
+    beem.flavour      = from.flavour;
+    beem.thrower      = from.thrower;
+    beem.is_beam      = from.is_beam;
+    beem.is_explosion = from.is_explosion;
+    return beem;
+}
+
+static void _rod_fired_pre(monster* mons, bool nice_spell)
+{
+    if (!nice_spell)
+        make_mons_stop_fleeing(mons);
+
+    if ((!simple_monster_message(mons, " zaps a rod.")) &&
+        (!silenced(you.pos())) )
+            mpr("You hear a zap.", MSGCH_SOUND);
+}
+
+static bool _rod_fired_post(monster* mons, item_def &rod, int idx, bolt &beem,
+    int rate, bool was_visible)
+{
+    rod.plus -= rate;
+    dprf("rod charge: %d , %d", rod.plus, rod.plus2);
+
+    if (was_visible)
+    {
+        if (!beem.is_enchantment() || beem.obvious_effect)
+            set_ident_type(OBJ_STAVES, mitm[idx].sub_type, ID_KNOWN_TYPE);
+        else
+            set_ident_type(OBJ_STAVES, mitm[idx].sub_type, ID_MON_TRIED_TYPE);
+    }
+
+    mons->lose_energy(EUT_ITEM);
+    return true;
+}
+
+// handle_rod
+// -- implimented as a dependant to handle_wand currently
+// (no wand + rod turns this way)
+// notes:
+// shamelessly repurposing handle_wand code
+// not one word about the name of this function!
+static bool _handle_rod(monster *mons, bolt &beem)
+{
+    const int weapon = mons->inv[MSLOT_WEAPON];
+    item_def &rod(mitm[weapon]);
+
+    // first implemented for deep dwarf artificers
+    if (rod.base_type != OBJ_STAVES)
+        return false;
+
+    // was the player visible when we started?
+    bool was_visible = you.can_see(mons);
+
+    int rate;
+    int overriding_power = 0;
+    bool nice_spell     = false;
+    bool check_validity = true;
+    bool is_direct_effect = false;
+    spell_type mzap     = SPELL_NO_SPELL;
+    switch (rod.sub_type)
+    {
+    case STAFF_STRIKING:
+        if ((rod.plus > 100) && (mons->foe_distance() >= 2))
+        {
+            mzap = SPELL_STRIKING;
+            rate = 100;
+        }
+        break;
+    case STAFF_SMITING:
+        if (rod.plus > 400)
+        {
+            mzap = SPELL_SMITING;
+            overriding_power = 1;
+            nice_spell = true;
+            is_direct_effect = true;
+            rate = 400;
+        }
+        break;
+    case STAFF_DESTRUCTION_I:
+        if (rod.plus > 600)
+        {
+            if (mons->foe_distance() > 2)
+            {
+                mzap = SPELL_FIREBALL;
+                rate = 600;
+            }
+        }
+        else if (rod.plus > 500)
+        {
+            mzap = SPELL_BOLT_OF_FIRE;
+            rate = 500;
+        }
+        else if (rod.plus > 200)
+        {
+            mzap = SPELL_THROW_FLAME;
+            rate = 200;
+        }
+        break;
+    case STAFF_DESTRUCTION_II:
+        if (rod.plus > 700)
+        {
+            if (mons->foe_distance() > 2)
+            {
+                mzap = SPELL_FREEZING_CLOUD;
+                rate = 700;
+            }
+        }
+        else if (rod.plus > 400)
+        {
+            mzap = SPELL_BOLT_OF_COLD;
+            rate = 400;
+        }
+        else if (rod.plus > 200)
+        {
+            mzap = SPELL_THROW_FROST;
+            rate = 200;
+        }
+        break;
+    case STAFF_DESTRUCTION_III:
+        if (rod.plus > 600)
+        {
+            if (mons->foe_distance() > 2)
+                mzap = SPELL_FIREBALL;
+            if (one_chance_in(2))
+                mzap = SPELL_IRON_SHOT;
+            else
+                mzap = SPELL_LIGHTNING_BOLT;
+            rate = 600;
+        }
+        break;
+    case STAFF_DESTRUCTION_IV:
+        if (rod.plus > 1000)
+        {
+            if (one_chance_in(2))
+                mzap = SPELL_BOLT_OF_MAGMA;
+            else
+                mzap = SPELL_BOLT_OF_COLD;
+            rate = 500;
+        }
+        else if (rod.plus > 500)
+        {
+            const int choice = random2(3);
+            switch (choice)
+            {
+            case 0:
+                mzap = SPELL_BOLT_OF_MAGMA;
+                rate = 500;
+                break;
+            case 1:
+                mzap = SPELL_BOLT_OF_COLD;
+                rate = 500;
+                break;
+            default:
+                mzap = SPELL_BOLT_OF_INACCURACY;
+                rate = 300;
+                break;
+            }
+        }
+        else if (rod.plus > 300)
+        {
+            mzap = SPELL_BOLT_OF_INACCURACY;
+            rate = 300;
+        }
+        break;
+    case STAFF_DEMONOLOGY: // ouch
+        if (rod.plus > 500)
+        {
+            mzap = SPELL_SUMMON_DEMON;
+            _rod_fired_pre(mons, nice_spell);
+            dprf("mon-act:_handle_rod():SPELL_SUMMON_DEMON");
+            mons_cast(mons, beem, mzap, false);
+           _rod_fired_post(mons, rod, weapon, beem, 500, was_visible);
+           return true;
+        }
+        else if (rod.plus > 300)
+        {
+            mzap = SPELL_CALL_IMP;
+            _rod_fired_pre(mons, nice_spell);
+            dprf("mon-act:_handle_rod():SPELL_CALL_IMP");
+            mons_cast(mons, beem, mzap, false);
+            _rod_fired_post(mons, rod, weapon, beem, 300, was_visible);
+            return true;
+        }
+        break;
+    case STAFF_VENOM:
+        if (rod.plus > 600)
+        {
+            if (mons->foe_distance() > 2)
+                mzap = SPELL_POISONOUS_CLOUD;
+            else
+                mzap = SPELL_POISON_ARROW;
+            rate = 600;
+        }
+        else if (rod.plus > 500)
+        {
+            mzap = SPELL_VENOM_BOLT;
+            rate = 500;
+        }
+        break;
+    case STAFF_SPELL_SUMMONING:
+        if (rod.plus > 600)
+        {
+            mzap = SPELL_SUMMON_SWARM;
+            _rod_fired_pre(mons, nice_spell);
+            dprf("mon-act:_handle_rod():SPELL_SUMMON_SWARM");
+            mons_cast(mons, beem, mzap, false);
+            _rod_fired_post(mons, rod, weapon, beem, 600, was_visible);
+            return true;
+        }
+        else if (rod.plus > 400)
+        { // could be implemented as a mon-cast.cc spell with this code
+            mzap = SPELL_SUMMON_ELEMENTAL;
+            _rod_fired_pre(mons, nice_spell);
+            dprf("mon-act:_handle_rod():SPELL_SUMMON_ELEMENTAL");
+            const int duration = std::min(2 + mons->hit_dice / 10, 6);
+            const monster_type summon = static_cast<monster_type>(
+                  random_choose(
+                           MONS_EARTH_ELEMENTAL, MONS_FIRE_ELEMENTAL,
+                           MONS_AIR_ELEMENTAL, MONS_WATER_ELEMENTAL,
+                           -1));
+            create_monster(
+                mgen_data::hostile_at(summon, mons->name(DESC_NOCAP_A),
+                true, duration, 0, mons->pos() ));
+            _rod_fired_post(mons, rod, weapon, beem, 400, was_visible);
+            return true;
+       }
+       break;
+    case STAFF_WARDING: // all temporary self-status effects
+    default:
+        return false;
+        break;
+    }
+
+    if (mzap == SPELL_NO_SPELL)
+        return false;
+
+    bool zap = false;
+
+    // set up the beam
+    int power = _generate_rod_power(mons, overriding_power);
+    if (power < 1)
+        power = 1;
+
+    dprf("using rod with power %d", power);
+
+    bolt theBeam      = mons_spells(mons, mzap, power, check_validity);
+    beem = _generate_item_beem(beem, theBeam, mons);
+
+    if (mons->confused())
+    {
+        beem.target = dgn_random_point_from(mons->pos(), LOS_RADIUS);
+        if (beem.target.origin())
+            return (false);
+        zap = true;
+    }
+    else if (!nice_spell)
+    {
+        fire_tracer(mons, beem);
+        zap = mons_should_fire(beem);
+    }
+
+    if (is_direct_effect)
+    {
+        _rod_fired_pre(mons, nice_spell);
+        direct_effect(mons, mzap, beem, &you);
+        return _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
+    }
+    else if (nice_spell || zap)
+    {
+        _rod_fired_pre(mons, nice_spell);
+        beem.is_tracer = false;
+        beem.fire();
+        return _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
+    }
+
+    return false;
+}
+
 //---------------------------------------------------------------
 //
 // handle_wand
@@ -899,6 +1242,16 @@ static bool _handle_scroll(monster* mons)
 //---------------------------------------------------------------
 static bool _handle_wand(monster* mons, bolt &beem)
 {
+   const mon_itemuse_type mons_uses = mons_itemuse(mons);
+   if (( mons_uses == MONUSE_STARTING_EQUIPMENT
+      || mons_uses == MONUSE_WEAPONS_ARMOUR
+      || mons_uses == MONUSE_MAGIC_ITEMS) &&
+      ((mons->inv[MSLOT_WEAPON] != NON_ITEM) &&
+      (mitm[ mons->inv[MSLOT_WEAPON] ].base_type == OBJ_STAVES)))
+   {
+         return _handle_rod(mons, beem);
+   }
+
     // Yes, there is a logic to this ordering {dlb}:
     // FIXME: monsters should be able to use wands
     //        out of sight of the player [rob]
@@ -926,20 +1279,7 @@ static bool _handle_wand(monster* mons, bolt &beem)
     // set up the beam
     int power         = 30 + mons->hit_dice;
     bolt theBeam      = mons_spells(mons, mzap, power);
-
-    beem.name         = theBeam.name;
-    beem.beam_source  = mons->mindex();
-    beem.source       = mons->pos();
-    beem.colour       = theBeam.colour;
-    beem.range        = theBeam.range;
-    beem.damage       = theBeam.damage;
-    beem.ench_power   = theBeam.ench_power;
-    beem.hit          = theBeam.hit;
-    beem.glyph        = theBeam.glyph;
-    beem.flavour      = theBeam.flavour;
-    beem.thrower      = theBeam.thrower;
-    beem.is_beam      = theBeam.is_beam;
-    beem.is_explosion = theBeam.is_explosion;
+    beem = _generate_item_beem(beem, theBeam, mons);
 
 #ifdef HISCORE_WEAPON_DETAIL
     beem.aux_source =

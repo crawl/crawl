@@ -39,6 +39,7 @@
 #include "random.h"
 #include "religion.h"
 #include "shout.h"
+#include "spl-book.h"
 #include "spl-util.h"
 #include "spl-cast.h"
 #include "spl-clouds.h"
@@ -221,9 +222,13 @@ bolt mons_spells( monster* mons, spell_type spell_cast, int power,
     beam.is_beam      = false;
     beam.is_explosion = false;
 
-    // Sandblast is different, and gets range updated later
-    if (spell_cast != SPELL_SANDBLAST)
+     switch (spell_cast)
+     { // add touch or range-setting spells here
+        case SPELL_SANDBLAST:
+            break;
+        default:
         beam.range = spell_range(spell_cast, power, true, false);
+     }
 
     const int drac_type = (mons_genus(mons->type) == MONS_DRACONIAN)
                             ? draco_subspecies(mons) : mons->type;
@@ -232,6 +237,28 @@ bolt mons_spells( monster* mons, spell_type spell_cast, int power,
 
     if (spell_cast == SPELL_DRACONIAN_BREATH)
         real_spell = _draco_type_to_breath(drac_type);
+
+     if (spell_cast == SPELL_EVAPORATE)
+     {
+        int cloud = random2(5);
+        switch (cloud)
+          {
+              case 0:
+                  real_spell = SPELL_MEPHITIC_CLOUD;
+                  break;
+              case 1:
+                  real_spell = SPELL_MIASMA_CLOUD;
+                  break;
+              case 2:
+                  real_spell = SPELL_POISON_CLOUD;
+                  break;
+              case 3:
+                  real_spell = SPELL_FIRE_CLOUD;
+                  break;
+              default:
+                  real_spell = SPELL_STEAM_CLOUD;
+          }
+    }
 
     beam.glyph = dchar_glyph(DCHAR_FIRED_ZAP); // default
     beam.thrower = KILL_MON_MISSILE;
@@ -383,6 +410,15 @@ bolt mons_spells( monster* mons, spell_type spell_cast, int power,
         beam.is_beam  = true;
         break;
 
+    case SPELL_BOLT_OF_INACCURACY:
+        beam.name     = "narrow beam of energy";
+        beam.damage   = calc_dice( 12, 40 + (3 * power)/ 2 );
+        beam.colour   = YELLOW;
+        beam.flavour  = BEAM_ENERGY;
+        beam.hit      = 1;
+        beam.is_beam  = true;
+        break;
+
     case SPELL_PRIMAL_WAVE:
         beam.name     = "great wave of water";
         // Water attack is weaker than the pure elemental damage
@@ -490,6 +526,15 @@ bolt mons_spells( monster* mons, spell_type spell_cast, int power,
         beam.glyph    = dchar_glyph(DCHAR_FIRED_MISSILE);
         beam.flavour  = BEAM_MMISSILE;
         beam.hit      = 22 + power / 20;
+        break;
+
+    case SPELL_STRIKING:
+        beam.name      = "force bolt",
+        beam.damage    = dice_def(1, 5),
+        beam.colour    = BLACK,
+        beam.glyph    = dchar_glyph(DCHAR_FIRED_MISSILE);
+        beam.flavour  = BEAM_MMISSILE;
+        beam.hit      = 8 + power / 10;
         break;
 
     case SPELL_DIG:
@@ -608,14 +653,73 @@ bolt mons_spells( monster* mons, spell_type spell_cast, int power,
         beam.is_beam    = true;
         break;
 
-    case SPELL_MEPHITIC_CLOUD:          // swamp drake, player ghost
-        beam.name     = "foul vapour";
+    case SPELL_MEPHITIC_CLOUD:
+          if (spell_cast == SPELL_EVAPORATE)
+            beam.name     = "potion";
+          else
+            beam.name     = "foul vapour";
         beam.damage   = dice_def(1,0);
         beam.colour   = GREEN;
         // Well, it works, even if the name isn't quite intuitive.
         beam.flavour  = BEAM_POTION_STINKING_CLOUD;
         beam.hit      = 14 + power / 30;
         beam.ench_power = power; // probably meaningless
+        beam.is_explosion = true;
+        beam.is_big_cloud = true;
+        break;
+
+    case SPELL_STEAM_CLOUD:
+          if (spell_cast == SPELL_EVAPORATE)
+            beam.name     = "potion";
+          else
+            beam.name     = "cloud of steam";
+        beam.damage   = dice_def(1,0);
+        beam.colour   = LIGHTGREY;
+        beam.flavour  = BEAM_POTION_STEAM;
+        beam.hit      = 14 + power / 30;
+        beam.ench_power = power;
+        beam.is_explosion = true;
+        beam.is_big_cloud = true;
+        break;
+
+    case SPELL_FIRE_CLOUD:
+          if (spell_cast == SPELL_EVAPORATE)
+            beam.name     = "potion";
+          else
+            beam.name     = "cloud of fire";
+        beam.damage   = dice_def(1,0);
+        beam.colour   = RED;
+        beam.flavour  = BEAM_POTION_FIRE;
+        beam.hit      = 14 + power / 30;
+        beam.ench_power = power;
+        beam.is_explosion = true;
+        beam.is_big_cloud = true;
+        break;
+
+    case SPELL_POISON_CLOUD:
+          if (spell_cast == SPELL_EVAPORATE)
+            beam.name     = "potion";
+          else
+            beam.name     = "cloud of poison";
+        beam.damage   = dice_def(1,0);
+        beam.colour   = LIGHTGREEN;
+        beam.flavour  = BEAM_POTION_POISON;
+        beam.hit      = 14 + power / 30;
+        beam.ench_power = power;
+        beam.is_explosion = true;
+        beam.is_big_cloud = true;
+        break;
+
+    case SPELL_MIASMA_CLOUD:
+          if (spell_cast == SPELL_EVAPORATE)
+            beam.name     = "potion";
+          else
+            beam.name     = "foul vapour";
+        beam.damage   = dice_def(1,0);
+        beam.colour   = DARKGREY;
+        beam.flavour  = BEAM_POTION_MIASMA;
+        beam.hit      = 14 + power / 30;
+        beam.ench_power = power;
         beam.is_explosion = true;
         beam.is_big_cloud = true;
         break;
@@ -847,7 +951,10 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     // fire_tracer, or beam.
     switch (spell_cast)
     {
+    case SPELL_STICKS_TO_SNAKES:
     case SPELL_SUMMON_SMALL_MAMMALS:
+    case SPELL_VAMPIRIC_DRAINING:
+    case SPELL_MIRROR_DAMAGE:
     case SPELL_MAJOR_HEALING:
     case SPELL_VAMPIRE_SUMMON:
     case SPELL_SHADOW_CREATURES:       // summon anything appropriate for level
@@ -872,10 +979,15 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_HAUNT:
     case SPELL_SYMBOL_OF_TORMENT:
     case SPELL_HOLY_WORD:
+    case SPELL_DRAIN_LIFE:
     case SPELL_SUMMON_GREATER_DEMON:
     case SPELL_CANTRIP:
+    case SPELL_BROTHERS_IN_ARMS:
     case SPELL_BERSERKER_RAGE:
+    case SPELL_TROGS_HAND:
+    case SPELL_BURN_SPELLBOOK:
     case SPELL_SWIFTNESS:
+    case SPELL_STONESKIN:
     case SPELL_WATER_ELEMENTALS:
     case SPELL_FIRE_ELEMENTALS:
     case SPELL_AIR_ELEMENTALS:
@@ -900,6 +1012,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_SPECTRAL_ORCS:
     case SPELL_SUMMON_HOLIES:
     case SPELL_SUMMON_GREATER_HOLY:
+    case SPELL_REGENERATION:
         return (true);
     default:
         if (check_validity)
@@ -1055,6 +1168,31 @@ static bool _animate_dead_okay()
         return (false);
 
     return (true);
+}
+
+static bool _monster_already_benefits_from_enchant(monster* mons, spell_type spell)
+{
+    switch (spell)
+    {
+        case SPELL_SWIFTNESS:
+            if (mons->has_ench(ENCH_SWIFT))
+                return false;
+            return true;
+        case SPELL_TROGS_HAND:
+            if (mons->has_ench(ENCH_REGENERATION) && mons->has_ench(ENCH_RAISED_MR))
+                return false;
+            return true;
+        case SPELL_MIRROR_DAMAGE:
+            if (mons->has_ench(ENCH_MIRROR_DAMAGE))
+                return false;
+            return true;
+        case SPELL_STONESKIN:
+            if (mons->has_ench(ENCH_STONESKIN))
+                return false;
+            return true;
+        default:
+            return false;
+    }
 }
 
 //---------------------------------------------------------------
@@ -1316,6 +1454,13 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 {
                     spell_cast = SPELL_NO_SPELL;
                     continue;
+                }
+
+                // No one should spam enchantments
+                if (_monster_already_benefits_from_enchant(mons, spell_cast))
+                {
+                     spell_cast = SPELL_NO_SPELL;
+                     continue;
                 }
 
                 // And Mara shouldn't cast player ghost if he can't
@@ -1864,7 +2009,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     if (_mon_spell_bail_out_early(mons, spell_cast))
         return;
 
-    if (spell_cast == SPELL_CANTRIP)
+    if ((spell_cast == SPELL_CANTRIP)
+        || (spell_cast == SPELL_VAMPIRIC_DRAINING)
+        || (spell_cast == SPELL_MIRROR_DAMAGE)
+        || (spell_cast == SPELL_DRAIN_LIFE))
         do_noise = false;       // Spell itself does the messaging.
 
     if (_los_free_spell(spell_cast) && !spell_is_direct_explosion(spell_cast))
@@ -1922,9 +2070,182 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             simple_monster_message(mons, " is healed.");
         return;
 
+    case SPELL_MIRROR_DAMAGE:
+    {
+        const bool unseen = you.can_see(mons);
+        const msg_channel_type chan = (!unseen? MSGCH_SOUND :
+                                       MSGCH_MONSTER_SPELL);
+        if (!unseen)
+            mons_speaks_msg(mons,
+                            " kneels in prayer and bathed in unholy energy.",
+                            chan, silenced(mons->pos()));
+        int dur = 20;
+        mons->add_ench(mon_enchant(ENCH_MIRROR_DAMAGE, 0, KC_OTHER, dur));
+        mons->paralyse(mons, dur);
+
+        return;
+    }
+    case SPELL_VAMPIRIC_DRAINING:
+    {
+        actor *target = mons->get_foe();
+        if (grid_distance(mons->pos(), target->pos()) > 1)
+            return;
+
+        const bool target_is_you = target->pos() == you.pos();
+        monster* mtarget = mons; // dummy assignment
+        int hp;
+        bool target_is_safe;
+        if (!target_is_you)
+        {
+            mtarget = monster_at(target->pos());
+            hp = you.hp;
+            target_is_safe = you.undead_or_demonic();
+        }
+        else
+        {
+            hp = mtarget->hit_points;
+            target_is_safe = mtarget->undead_or_demonic();
+        }
+
+        int fnum = 5;
+        int fden = 5;
+        if (mons_class_flag(mons->type, M_ACTUAL_SPELLS))
+            fnum = 8;
+        int pow = random2((mons->hit_dice * fnum)/fden);
+        int hp_cost = 3 + random2avg(9, 2) + 1 + pow / 7;
+
+        hp_cost = std::min(hp, hp_cost);
+        hp_cost = std::min(mons->max_hit_points - mons->hit_points, hp_cost);
+
+        const bool unseen = you.can_see(mons);
+
+//      dprf("vamp draining: %d damage, %d healing", hp_cost, hp_cost/2);
+        const msg_channel_type chan = (!unseen? MSGCH_SOUND :
+                                        MSGCH_MONSTER_SPELL);
+        if (!unseen)
+            mons_speaks_msg(mons, " is infused with unholy energy.", chan, silenced(mons->pos()));
+
+        if (target_is_you)
+        {
+            ouch(hp_cost, mons->mindex(), KILLED_BY_BEAM, mons->name(DESC_NOCAP_A).c_str());
+            if (hp_cost > 0)
+            {
+                simple_monster_message(mons, " draws from your life force and is healed!");
+                mons->heal(hp_cost/2);
+            }
+            else
+                simple_monster_message(mons, " draws from your life force.");
+        }
+        else
+        {
+            mtarget->hurt(mons, hp_cost);
+            if (hp_cost > 0)
+            {
+                char msg [256] = {0};
+                sprintf(msg, " draws the life force from %s and is healed!",
+                             mtarget->name(DESC_NOCAP_ITS).c_str());
+                simple_monster_message(mons, msg);
+                if (mtarget->alive())
+                    print_wounds(mtarget);
+
+                mons->heal(hp_cost/2);
+            }
+            else
+            {
+                char msg [256] = {0};
+                sprintf(msg, " draws the life force from %s.",
+                             mtarget->name(DESC_NOCAP_ITS).c_str());
+                simple_monster_message(mons, msg);
+                if (mtarget->alive())
+                    print_wounds(mtarget);
+            }
+        }
+        return;
+    }
+
     case SPELL_BERSERKER_RAGE:
         mons->go_berserk(true);
         return;
+
+    case SPELL_TROGS_HAND:
+    {
+        int dur = 5 + roll_dice(2, (mons->hit_dice * 10) / 3 + 1);
+        if (dur > 100)
+            dur = 100;
+        mons->add_ench(mon_enchant(ENCH_RAISED_MR, 0, KC_OTHER, dur));
+        mons->add_ench(mon_enchant(ENCH_REGENERATION, 0, KC_OTHER, dur));
+        dprf("Trog's Hand cast (dur: %d)", dur);
+        return;
+    }
+
+    case SPELL_BROTHERS_IN_ARMS:
+    {
+        const int power = (mons->hit_dice * 20) + random2(mons->hit_dice * 5) - random2(mons->hit_dice * 5);
+        summon_berserker(power, GOD_TROG, 0, true);
+        return;
+    }
+
+    case SPELL_BURN_SPELLBOOK:
+    {
+        for (stack_iterator si(mons->pos()); si; ++si)
+        {
+            if (si->base_type == OBJ_BOOKS
+                    && si->sub_type != BOOK_MANUAL
+                    && si->sub_type != BOOK_DESTRUCTION)
+            {
+                return;
+            }
+        }
+
+        for (radius_iterator ri(mons->pos(), LOS_RADIUS, true, true, true); ri; ++ri)
+        {
+            const unsigned short cloud = env.cgrid(*ri);
+            if (feat_is_solid(grd(*ri))
+                    || cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE)
+            {
+                continue;
+            }
+
+            int count = 0;
+            int rarity = 0;
+            for (stack_iterator si(*ri); si; ++si)
+            {
+                if (si->base_type != OBJ_BOOKS
+                    || si->sub_type == BOOK_MANUAL
+                    || si->sub_type == BOOK_DESTRUCTION)
+                {
+                    continue;
+                }
+
+                rarity += book_rarity(si->sub_type);
+
+                dprf("Burned book rarity: %d", rarity);
+                destroy_item(si.link());
+                count++;
+            }
+
+            if (count)
+            {
+                if (cloud != EMPTY_CLOUD)
+                {
+                    // Reinforce the cloud.
+                    mpr("The fire roars with new energy!");
+                    const int extra_dur = count + random2(rarity / 2);
+                    env.cloud[cloud].decay += extra_dur * 5;
+                    env.cloud[cloud].set_whose(KC_OTHER);
+                    continue;
+                }
+
+                const int dur = std::min(4 + count + random2(rarity/2), 23);
+                place_cloud(CLOUD_FIRE, *ri, dur, KC_OTHER);
+
+                mprf(MSGCH_GOD, "The book%s burst%s into flames.",
+                    count == 1 ? ""  : "s",
+                    count == 1 ? "s" : "");
+            }
+        }
+        return;
+    }
 
     case SPELL_SWIFTNESS:
         mons->add_ench(ENCH_SWIFT);
@@ -1936,6 +2257,14 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         else
             simple_monster_message(mons, " seems to move somewhat quicker.");
         return;
+
+    case SPELL_STONESKIN:
+    {
+        const int power = (mons->hit_dice * 15) / 10;
+        mons->add_ench(mon_enchant(ENCH_STONESKIN, 0, KC_OTHER,
+                       10 + (2*random2(power)) ));
+        return;
+    }
 
     case SPELL_SILENCE:
         mons->add_ench(ENCH_SILENCE);
@@ -1992,6 +2321,33 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                           5, spell_cast, mons->pos(), mons->foe, 0, god));
         }
         return;
+
+    case SPELL_STICKS_TO_SNAKES:
+    {
+        const int pow = (mons->hit_dice * 15) / 10;
+        int cnt = 1 + random2(1 + pow / 4);
+        monster_type sum;
+        for (int i = 0; i < cnt; i++)
+        {
+            if (random2(mons->hit_dice) > 27
+                || one_chance_in(5 - std::min(4, div_rand_round(pow * 2, 25))))
+            {
+                sum = x_chance_in_y(pow / 3, 100) ? MONS_WATER_MOCCASIN
+                                                  : MONS_SNAKE;
+            }
+            else
+                sum = MONS_SMALL_SNAKE;
+
+            if (create_monster(
+                    mgen_data(sum, SAME_ATTITUDE(mons), mons,
+                              5, spell_cast, mons->pos(), mons->foe,
+                              0, god)) != -1)
+            {
+                i++;
+            }
+        }
+        return;
+    }
 
     case SPELL_SHADOW_CREATURES:       // summon anything appropriate for level
         if (_mons_abjured(mons, monsterNearby))
@@ -2352,6 +2708,53 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_HOLY_WORD:
         holy_word(0, mons->mindex(), mons->pos());
         return;
+
+    case SPELL_DRAIN_LIFE:
+    {
+        const int pow = mons->hit_dice;
+        const bool unseen = you.can_see(mons);
+        if (!unseen)
+        {
+            simple_monster_message(mons, " draws from the surrounding life force.");
+            flash_view(DARKGREY);
+        }
+
+        int hp_gain = 0;
+
+        for (monster_iterator mi(mons->get_los()); mi; ++mi)
+        {
+            if (mi->holiness() != MH_NATURAL
+                || mi->res_negative_energy())
+            {
+                continue;
+            }
+
+            const int hurted = 3 + random2(7) + random2(pow);
+            behaviour_event(*mi, ME_WHACK, MHITYOU, mons->pos());
+            if (!mi->is_summoned())
+                hp_gain += hurted;
+
+            mi->hurt(mons, hurted);
+
+            if (mi->alive())
+                print_wounds(*mi);
+        }
+
+        hp_gain /= 2;
+
+        hp_gain = std::min(pow * 2, hp_gain);
+
+        if (hp_gain)
+        {
+            if (mons->heal(hp_gain))
+            {
+                if (!unseen)
+                    simple_monster_message(mons, " is healed.");
+            }
+        }
+
+        return;
+    }
 
     case SPELL_SUMMON_GREATER_DEMON:
         if (_mons_abjured(mons, monsterNearby))

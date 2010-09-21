@@ -52,6 +52,73 @@
       }
     },
 
+    {  MST_NISSE,
+      {
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_INVISIBILITY,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_DEEP_DWARF_NECROMANCER,
+      {
+       SPELL_PAIN,
+       SPELL_DISPEL_UNDEAD,
+       SPELL_NO_SPELL,
+       SPELL_ANIMATE_DEAD,
+       SPELL_VAMPIRIC_DRAINING, // offense
+       SPELL_VAMPIRIC_DRAINING  // and defensive
+      }
+    },
+
+    {  MST_DEEP_DWARF_UNBORN,
+      {
+       SPELL_SYMBOL_OF_TORMENT,
+       SPELL_DISPEL_UNDEAD,
+       SPELL_MIRROR_DAMAGE,
+       SPELL_ANIMATE_DEAD,
+       SPELL_HAUNT,
+       SPELL_MIRROR_DAMAGE
+      }
+    },
+
+
+    {  MST_BK_TROG,
+      {
+       SPELL_BROTHERS_IN_ARMS,
+       SPELL_NO_SPELL,
+       SPELL_TROGS_HAND,
+       SPELL_BERSERKER_RAGE,
+       SPELL_BURN_SPELLBOOK,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_BK_YREDELEMNUL,
+      {
+       SPELL_NO_SPELL,
+       SPELL_ANIMATE_DEAD,
+       SPELL_SUMMON_UNDEAD, /* cheaper to fake recall and gift with summon spell */
+       SPELL_NO_SPELL,
+       SPELL_DRAIN_LIFE,
+       SPELL_MIRROR_DAMAGE
+      }
+    },
+
+    {  MST_PARACELSUS,
+      {
+       SPELL_EVAPORATE,
+       SPELL_EVAPORATE,
+       SPELL_STONESKIN,
+       SPELL_POLYMORPH_OTHER,
+       SPELL_STICKS_TO_SNAKES,
+       SPELL_STICKS_TO_SNAKES
+      }
+    },
+
     {  MST_GUARDIAN_SERPENT,
       {
        SPELL_TELEPORT_OTHER,
@@ -335,6 +402,61 @@
        SPELL_TELEPORT_OTHER,
        SPELL_FIREBALL,
        SPELL_TELEPORT_OTHER
+      }
+    },
+
+    {  MST_TROLLKONOR,
+      {
+       SPELL_CORONA,
+       SPELL_MINOR_HEALING,
+       SPELL_MINOR_HEALING,
+       SPELL_NO_SPELL,
+       SPELL_AWAKEN_FOREST,
+       SPELL_BLINK
+      }
+    },
+
+    {  MST_HULDRA,
+      {
+       SPELL_VAMPIRIC_DRAINING, // is_unholy
+       SPELL_CONFUSE,
+       SPELL_MINOR_HEALING,
+       SPELL_NO_SPELL,
+       SPELL_MISLEAD,
+       SPELL_BLINK
+      }
+    },
+
+    {  MST_WITCH_I,
+      {
+       SPELL_BOLT_OF_INACCURACY,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_POLYMORPH_OTHER,
+       SPELL_AWAKEN_FOREST,
+       SPELL_BLINK_AWAY
+      }
+    },
+
+    {  MST_WITCH_II, /* evil-type */
+      {
+       SPELL_ISKENDERUNS_MYSTIC_BLAST,
+       SPELL_MEPHITIC_CLOUD,
+       SPELL_NO_SPELL,
+       SPELL_POLYMORPH_OTHER,
+       SPELL_FIREBALL,
+       SPELL_BLINK_AWAY
+      }
+    },
+
+    {  MST_WITCH_III, /* forest-type */
+      {
+       SPELL_SUNRAY, // is_holy
+       SPELL_SUMMON_SMALL_MAMMALS,
+       SPELL_NO_SPELL,
+       SPELL_SUMMON_CANIFORMS,
+       SPELL_AWAKEN_FOREST,
+       SPELL_MISLEAD
       }
     },
 

@@ -163,7 +163,9 @@ void init_mon_name_cache()
                 || mon == MONS_ARMOUR_MIMIC
                 || mon == MONS_SCROLL_MIMIC
                 || mon == MONS_POTION_MIMIC
-                || mon == MONS_MARA_FAKE)
+                || mon == MONS_MARA_FAKE
+                || mon == MONS_EVIL_WITCH
+                || mon == MONS_FOREST_WITCH)
             {
                 // Keep previous entry.
                 continue;
@@ -1617,6 +1619,16 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
         book[1] = MST_NECROMANCER_II;
         break;
 
+    case MONS_DEEP_DWARF_NECROMANCER:
+        book[0] = MST_DEEP_DWARF_NECROMANCER;
+        book[1] = MST_JESSICA;
+        break;
+
+    case MONS_DEEP_DWARF_UNBORN:
+        book[0] = MST_DEEP_DWARF_UNBORN;
+        book[1] = MST_NECROMANCER_I;
+        break;
+
     case MONS_ORC_WIZARD:
     case MONS_DEEP_ELF_SOLDIER:
     case MONS_DEEP_ELF_FIGHTER:
@@ -1635,6 +1647,34 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
         book[2] = MST_WIZARD_III;
         book[3] = MST_WIZARD_IV;
         book[4] = MST_WIZARD_V;
+        break;
+
+    case MONS_WITCH: /* deliberate fallthrough structure */
+        book[0] = MST_WITCH_I;
+    case MONS_EVIL_WITCH:
+        if (mon_type == MONS_EVIL_WITCH)
+            book[0] = MST_WITCH_II;
+    case MONS_FOREST_WITCH:
+        if (mon_type == MONS_FOREST_WITCH)
+            book[0] = MST_WITCH_III;
+
+        book[1] = MST_DEEP_DWARF_NECROMANCER;
+        book[2] = MST_WIZARD_II;
+        book[3] = MST_WIZARD_I;
+        break;
+
+    case MONS_HULDRA:
+        book[0] = MST_HULDRA;
+        book[1] = MST_WITCH_III;
+        book[2] = MST_WIZARD_III;
+        book[3] = MST_WIZARD_V;
+        break;
+
+    case MONS_TROLLKONOR:
+        book[0] = MST_TROLLKONOR;
+        book[1] = MST_WIZARD_II;
+        book[2] = MST_WIZARD_III;
+        book[3] = MST_WIZARD_V;
         break;
 
     case MONS_DRACONIAN_KNIGHT:
@@ -2594,6 +2634,7 @@ bool ms_low_hitpoint_cast( const monster* mon, spell_type monspell )
     bool targ_adj      = false;
     bool targ_sanct    = false;
     bool targ_friendly = false;
+    bool targ_undead   = false;
 
     if (mon->foe == MHITYOU || mon->foe == MHITNOT)
     {
@@ -2601,6 +2642,8 @@ bool ms_low_hitpoint_cast( const monster* mon, spell_type monspell )
             targ_adj = true;
         if (is_sanctuary(you.pos()))
             targ_sanct = true;
+        if (you.undead_or_demonic())
+            targ_undead = true;
     }
     else
     {
@@ -2608,6 +2651,8 @@ bool ms_low_hitpoint_cast( const monster* mon, spell_type monspell )
             targ_adj = true;
         if (is_sanctuary(menv[mon->foe].pos()))
             targ_sanct = true;
+        if (menv[mon->foe].undead_or_demonic())
+            targ_undead = true;
     }
 
     targ_friendly = (mon->foe == MHITYOU
@@ -2624,6 +2669,8 @@ bool ms_low_hitpoint_cast( const monster* mon, spell_type monspell )
     case SPELL_MINOR_HEALING:
     case SPELL_MAJOR_HEALING:
         return true;
+    case SPELL_VAMPIRIC_DRAINING:
+        return !targ_sanct && targ_adj && !targ_friendly && !targ_undead;
     case SPELL_BLINK_AWAY:
     case SPELL_BLINK_RANGE:
         return !targ_friendly;
