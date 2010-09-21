@@ -2320,12 +2320,12 @@ bool mons_atts_aligned(mon_attitude_type fr1, mon_attitude_type fr2)
 
 bool mons_class_wields_two_weapons(int mc)
 {
-    return (mons_class_flag(mc, M_TWOWEAPON));
+    return (mons_class_flag(mc, M_TWO_WEAPONS));
 }
 
 bool mons_wields_two_weapons(const monster* mon)
 {
-    if (testbits(mon->flags, MF_TWOWEAPON))
+    if (testbits(mon->flags, MF_TWO_WEAPONS))
         return (true);
 
     return (mons_class_wields_two_weapons(mons_base_type(mon)));

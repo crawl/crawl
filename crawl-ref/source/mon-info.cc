@@ -261,7 +261,7 @@ monster_info::monster_info(const monster* m, int milev)
     else
         fly = mons_class_flies(type);
 
-    wields_two_weapons = (testbits(m->flags, MF_TWOWEAPON)
+    wields_two_weapons = (testbits(m->flags, MF_TWO_WEAPONS)
                           || mons_class_wields_two_weapons(type)
                           || mons_class_wields_two_weapons(base_type));
 

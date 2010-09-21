@@ -2366,7 +2366,7 @@ enum monster_flag_type
     MF_DEMONIC_GUARDIAN = 0x10000000, // is a demonic_guardian
     MF_NAME_SPECIES     = 0x20000000, // mname should be used for corpses as well,
                                       // preventing "human corpse of halfling"
-    MF_TWOWEAPON        = 0x40000000, // Monster wields two weapons.
+    MF_TWO_WEAPONS      = 0x40000000, // Monster wields two weapons.
     MF_ARCHER           = 0x80000000, // Monster gets various archery boosts.
 #else
     MF_KNOWN_MIMIC        = 0x20,    // Mimic that has taken a swing at the PC,
@@ -2402,7 +2402,7 @@ enum monster_flag_type
     // These are based on the flags in monster class, but can be set for
     // monsters that are not normally fighters.
     MF_FIGHTER            = 0x100000, // Monster is skilled fighter.
-    MF_TWOWEAPON          = 0x200000, // Monster wields two weapons.
+    MF_TWO_WEAPONS        = 0x200000, // Monster wields two weapons.
     MF_ARCHER             = 0x400000, // Monster gets various archery boosts.
     MF_MELEE_MASK         = 0x700000,
 
