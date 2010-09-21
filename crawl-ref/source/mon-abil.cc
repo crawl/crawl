@@ -780,6 +780,7 @@ static bool _slime_split_merge(monster* thing)
 }
 
 // Returns true if you resist the siren's call.
+// -- added equivalency for huldra
 static bool _siren_movement_effect(const monster* mons)
 {
     bool do_resist = (you.attribute[ATTR_HELD] || you.check_res_magic(70)
@@ -2123,6 +2124,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         }
         break;
 
+    case MONS_HULDRA:
     case MONS_MERMAID:
     case MONS_SIREN:
     {
@@ -2185,7 +2187,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
                     already_mesmerised ? "her luring" : "a haunting").c_str(),
                     spl);
 
-                if (mons->type == MONS_SIREN)
+                if ((mons->type == MONS_SIREN) || (mons->type == MONS_HULDRA))
                 {
                     if (_siren_movement_effect(mons))
                     {

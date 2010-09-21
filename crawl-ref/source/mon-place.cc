@@ -2059,6 +2059,20 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         band = BAND_GNOLLS;
         band_size = (coinflip() ? 3 : 2);
         break;
+    case MONS_TROLLKONOR:
+        natural_leader = true;
+        band = BAND_TROLLKONOR;
+        band_size = 1;
+        break;
+    case MONS_DEEP_DWARF_SCION:
+        band = BAND_DEEP_DWARF;
+        band_size = (one_chance_in(5)? 2: 1) + random2(3);
+        break;
+    case MONS_DEEP_DWARF_ARTIFICER:
+    case MONS_DEEP_DWARF_DEATH_KNIGHT:
+        band = BAND_DEEP_DWARF;
+        band_size = 3 + random2(4);
+        break;
     case MONS_GRUM:
         natural_leader = true;
         band = BAND_WAR_DOGS;
@@ -2454,6 +2468,20 @@ static monster_type _band_member(band_type band, int power)
 
     case BAND_GNOLLS:
         mon_type = MONS_GNOLL;
+        break;
+
+    case BAND_TROLLKONOR:
+        mon_type = (power > 11 && one_chance_in(4)) ?
+                   MONS_ROCK_TROLL: MONS_TROLL;
+        break;
+
+    case BAND_DEEP_DWARF:
+        mon_type = static_cast<monster_type>(random_choose_weighted(
+                                           2, MONS_DEEP_DWARF_BERSERKER,
+                                           1, MONS_DEEP_DWARF_DEATH_KNIGHT,
+                                           6, MONS_DEEP_DWARF_NECROMANCER,
+                                          31, MONS_DEEP_DWARF,
+                                           0));
         break;
 
     case BAND_BUMBLEBEES:

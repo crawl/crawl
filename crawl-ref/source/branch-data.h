@@ -220,7 +220,7 @@ Branch branches[] = {
       NULL, NULL, NULL, NULL,
       0, 'N', false, true, 0 },
 
-    { BRANCH_DWARF_HALL, BRANCH_MAIN_DUNGEON, 3, 7, 5, 6, 0, 0,
+    { BRANCH_DWARF_HALL, BRANCH_MAIN_DUNGEON, 5, 7, 5, 6, 0, 0,
       DNGN_ENTER_DWARF_HALL, DNGN_RETURN_FROM_DWARF_HALL,
       "Dwarf Hall", "the Dwarf Hall of Fallen Heroes", "Dwarf",
       NULL,

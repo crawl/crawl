@@ -113,6 +113,10 @@ static uint64_t ench_to_mb(const monster& mons, enchant_type ench)
             return ULL1 << MB_MOSTLY_FADED;
 
         return ULL1 << MB_FADING_AWAY;
+    case ENCH_REGENERATION:
+        return ULL1 << MB_REGENERATION;
+    case ENCH_RAISED_MR:
+        return ULL1 << MB_RAISED_MR;
     default:
         return 0;
     }
