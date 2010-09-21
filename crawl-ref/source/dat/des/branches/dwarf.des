@@ -367,7 +367,7 @@ SUBST:   . = .:92 ~:5 ^:1 %:1 *:1
 SUBST:   q = q:66 ~:33 ^:1
 KFEAT:   q = alarm trap
 MARKER:  + = lua:restrict_door()
-ITEM:    box of beasts / empty ebony casket / casket of three fates
+ITEM:    box of beasts / empty ebony casket
 ITEM:    any weapon
 ITEM:    amulet of faith / ring of wizardry unrand:ring_of_charms w:5 / \
          any jewellery / any weapon ego:holy_wrath / any weapon / \
