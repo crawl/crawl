@@ -2416,7 +2416,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                 menv[tentacle].props["inwards"].get_int() = kraken_index;
                 if (mons->holiness() == MH_UNDEAD)
                 {
-                    menv[tentacle].flags |= MF_HONORARY_UNDEAD;
+                    menv[tentacle].flags |= MF_FAKE_UNDEAD;
                 }
             }
         }

@@ -2330,10 +2330,8 @@ enum monster_flag_type
 
     MF_BAND_MEMBER        = 0x1000,  // Created as a member of a band
     MF_GOT_HALF_XP        = 0x2000,  // Player already got half xp value earlier
-    MF_HONORARY_UNDEAD    = 0x4000,  // Consider this monster to have MH_UNDEAD
-                                     // holiness, regardless of its actual type;
-                                     // currently used for abominations created
-                                     // via Twisted Resurrection
+    MF_FAKE_UNDEAD        = 0x4000,  // Consider this monster to have MH_UNDEAD
+                                     // holiness, regardless of its actual type
     MF_ENSLAVED_SOUL      = 0x8000,  // An undead monster soul enslaved by
                                      // Yredelemnul's power
 
@@ -2386,10 +2384,8 @@ enum monster_flag_type
 
     MF_BAND_MEMBER        = 0x800,   // Created as a member of a band
     MF_GOT_HALF_XP        = 0x1000,  // Player already got half xp value earlier
-    MF_HONORARY_UNDEAD    = 0x2000,  // Consider this monster to have MH_UNDEAD
-                                     // holiness, regardless of its actual type;
-                                     // currently used for abominations created
-                                     // via Twisted Resurrection
+    MF_FAKE_UNDEAD        = 0x2000,  // Consider this monster to have MH_UNDEAD
+                                     // holiness, regardless of its actual type
     MF_ENSLAVED_SOUL      = 0x4000,  // An undead monster soul enslaved by
                                      // Yredelemnul's power
 
