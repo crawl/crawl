@@ -1247,7 +1247,7 @@ Huldra are dangerous seductresses who live in the forest. The Huldra lures men i
 %%%%
 trollkonor
 
-Trollkonor, is a troll’s wife who possesses magical powers. Despite their natural human lineage, they greatly resemble their ugly troll husbands.
+A trollkonor is a troll’s wife who possesses magical powers. Despite their natural human lineage, they greatly resemble their ugly troll husbands.
 %%%%
 ogre
 
