@@ -219,12 +219,14 @@ monster_info::monster_info(const monster* m, int milev)
         colour = mons_class_colour(type);
     }
 
-    if (mons_is_unique(type) || mons_is_unique(base_type))
+    if (mons_is_unique(type))
     {
-        if (type == MONS_LERNAEAN_HYDRA  || base_type == MONS_LERNAEAN_HYDRA ||
-            type == MONS_ROYAL_JELLY     ||
-            type == MONS_SERPENT_OF_HELL || base_type == MONS_SERPENT_OF_HELL)
+        if (type == MONS_LERNAEAN_HYDRA
+            || type == MONS_ROYAL_JELLY
+            || type == MONS_SERPENT_OF_HELL)
+        {
             mb |= ULL1 << MB_NAME_THE;
+        }
         else
             mb |= (ULL1 << MB_NAME_UNQUALIFIED) | (ULL1 << MB_NAME_THE);
     }
