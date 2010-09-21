@@ -1905,7 +1905,7 @@ static void _define_zombie(monster* mon, monster_type ztype, monster_type cs,
 #if TAG_MAJOR_VERSION == 30
     mon->flags       &= ~(MF_FIGHTER | MF_ARCHER);
 #else
-    mon->flags       &= (~MF_MELEE_MASK | MF_TWOWEAPON);
+    mon->flags       &= (~MF_MELEE_MASK | MF_TWO_WEAPONS);
 #endif
 
     // Turn off all spellcasting and priestly ability flags.

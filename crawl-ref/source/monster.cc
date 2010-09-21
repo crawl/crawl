@@ -671,8 +671,8 @@ void monster::bind_melee_flags()
     // is, the flags will be removed later.
     if (mons_class_flag(type, M_FIGHTER))
         flags |= MF_FIGHTER;
-    if (mons_class_flag(type, M_TWOWEAPON))
-        flags |= MF_TWOWEAPON;
+    if (mons_class_flag(type, M_TWO_WEAPONS))
+        flags |= MF_TWO_WEAPONS;
     if (mons_class_flag(type, M_ARCHER))
         flags |= MF_ARCHER;
 }
