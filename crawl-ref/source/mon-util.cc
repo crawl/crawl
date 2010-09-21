@@ -741,7 +741,7 @@ bool mons_is_statue(int mc, bool allow_disintegrate)
 
 bool mons_is_mimic(int mc)
 {
-    return (mons_species(mc) == MONS_GOLD_MIMIC);
+    return (mons_genus(mc) == MONS_GOLD_MIMIC);
 }
 
 bool mons_is_demon(int mc)
