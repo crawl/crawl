@@ -1703,6 +1703,7 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
             break;
         default:
             book[0] = MST_SERPENT_OF_HELL_GEHENNA;
+            break;
         }
         break;
 
