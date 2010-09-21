@@ -148,7 +148,7 @@ bool monster_descriptor(int which_class, mon_desc_type which_descriptor);
 // Return your target, if it still exists and is visible to you.
 monster *get_current_target();
 
-mon_dam_level_type mons_get_damage_level(const monster* );
+mon_dam_level_type mons_get_damage_level(const monster* mons);
 
 std::string get_damage_level_string(monster_type mon_type, mon_dam_level_type mdam);
 
