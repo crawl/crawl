@@ -3999,7 +3999,14 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         break;
 
     case ENCH_STONESKIN:
-        ac = (hit_dice * 15) / 10;
+        {
+            // player gets 2+earth/5
+            const int ac_bonus = hit_dice / 2;
+
+            ac += ac_bonus;
+            // the monster may get drained or level up, we need to store the bonus
+            props["stoneskin_ac"].get_byte() = ac_bonus;
+        }
         break;
 
     case ENCH_SUBMERGED:
@@ -4241,7 +4248,8 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_STONESKIN:
-        ac = (hit_dice * 10) / 15;
+        if (props.exists("stoneskin_ac"))
+            ac -= props["stoneskin_ac"].get_byte();
         break;
 
     case ENCH_PARALYSIS:
