@@ -148,6 +148,9 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     wields_two_weapons = mons_class_wields_two_weapons(type);
     if (!wields_two_weapons)
         wields_two_weapons = mons_class_wields_two_weapons(base_type);
+    no_regen = !mons_class_can_regenerate(type);
+    if (!no_regen)
+        no_regen = !mons_class_can_regenerate(base_type);
     dam = MDAM_OKAY;
     fire_blocker = DNGN_UNSEEN;
 
@@ -264,6 +267,10 @@ monster_info::monster_info(const monster* m, int milev)
     wields_two_weapons = (testbits(m->flags, MF_TWO_WEAPONS)
                           || mons_class_wields_two_weapons(type)
                           || mons_class_wields_two_weapons(base_type));
+
+    no_regen = (testbits(m->flags, MF_NO_REGEN)
+                || !mons_class_can_regenerate(type)
+                || !mons_class_can_regenerate(base_type));
 
     if (m->haloed())
         mb |= ULL1 << MB_HALOED;

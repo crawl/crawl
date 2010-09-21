@@ -2353,7 +2353,7 @@ enum monster_flag_type
     MF_PRIEST             = 0x800000, // Is a priest (divine spells)
                                       // for the conduct.
 
-    MF_GOING_BERSERK      = 0x1000000,// Is about to go berserk!
+    MF_NO_REGEN           = 0x1000000,// This monster cannot regenerate.
 
     MF_NAME_DESCRIPTOR    = 0x2000000,// mname should be treated with normal
                                       // grammar, ie, prevent "You hit red rat"
@@ -2415,7 +2415,7 @@ enum monster_flag_type
                                       // for the conduct.
     MF_SPELL_MASK         = 0x3800000,
 
-    MF_GOING_BERSERK      = 0x4000000,// Is about to go berserk!
+    MF_NO_REGEN           = 0x4000000,// This monster cannot regenerate.
 
     MF_NAME_DESCRIPTOR    = 0x8000000,// mname should be treated with normal
                                       // grammar, ie, prevent "You hit red rat"

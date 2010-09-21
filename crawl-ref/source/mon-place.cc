@@ -1917,6 +1917,12 @@ static void _define_zombie(monster* mon, monster_type ztype, monster_type cs,
         mon->flags   &= ~MF_SPELL_MASK;
 #endif
 
+    // Turn off regeneration if the original monster cannot regenerate.
+    // This is needed for e.g. spectral things of non-regenerating
+    // monsters.
+    if (!mons_class_can_regenerate(mon->base_monster))
+        mon->flags   |= MF_NO_REGEN;
+
     int hp = 0;
     int acmod = 0, evmod = 0;
     switch (cs)

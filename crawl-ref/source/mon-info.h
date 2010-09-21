@@ -77,6 +77,7 @@ struct monster_info_base
     std::string quote;
     flight_type fly;
     bool wields_two_weapons;
+    bool no_regen;
 };
 
 // Monster info used by the pane; precomputes some data
@@ -182,10 +183,7 @@ struct monster_info : public monster_info_base
     int base_speed() const;
     bool can_regenerate() const
     {
-        if (type == MONS_PLAYER_GHOST && u.ghost.species == SP_DEEP_DWARF)
-            return (false);
-
-        return (mons_class_can_regenerate(type));
+        return (!no_regen);
     }
     size_type body_size() const;
 
