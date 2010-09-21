@@ -1508,7 +1508,7 @@ ENDMAP
 ###############################################################################
 
 ###############################################################################
-# Chambers of the Cloud Mage
+# Chambers of the Cloud Mage (by Mu.)
 #
 # TODO: Needs an "ocean of clouds" tiles, and fluffy "cotton wool" cloud tiles.
 #       Most everything else is done, except redescriptions.
@@ -1520,7 +1520,7 @@ wizname = crawl.make_name()
 
 kmons ("    1 = col:silver patrolling wizard name:" .. string.gsub(wizname, " ", "_")
          .. "_the_Cloud_Mage name_replace"
-         .. " name_definite spells:mephitic_cloud;freezing_cloud;poisonous_cloud;"
+         .. " spells:mephitic_cloud;freezing_cloud;poisonous_cloud;"
          .. "airstrike;blink_range;blink_range hd:20 hp:150 ;"
          .. " robe unrand:robe_of_clouds . quick blade ego:electrocution |"
          .. " quick blade ego:freezing | dagger ego:speed | dagger ego:electrocution"
