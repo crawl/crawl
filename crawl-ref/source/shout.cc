@@ -410,7 +410,7 @@ bool noisy(int loudness, const coord_def& where, const char *msg, int who,
     if (silenced(where))
         return (false);
 
-    const int dist = loudness * loudness;
+    const int dist = loudness * loudness + 1;
     const int player_distance = distance( you.pos(), where );
 
     // Message the player.
