@@ -2872,7 +2872,7 @@ bool monster::heal(int amount, bool max_too)
 
 mon_holy_type monster::holiness() const
 {
-    if (testbits(flags, MF_HONORARY_UNDEAD))
+    if (testbits(flags, MF_FAKE_UNDEAD))
         return (MH_UNDEAD);
 
     return (mons_class_holiness(type));
