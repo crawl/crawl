@@ -11,6 +11,7 @@
 #include "areas.h"
 #include "beam.h"
 #include "cio.h"
+#include "colour.h"
 #include "coord.h"
 #include "coordit.h"
 #include "database.h"
@@ -368,6 +369,7 @@ void clear_globals_on_exit()
 {
     clear_rays_on_exit();
     clear_zap_info_on_exit();
+    clear_colours_on_exit();
     dgn_clear_vault_placements(env.level_vaults);
 }
 
