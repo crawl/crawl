@@ -76,7 +76,7 @@ struct monster_info_base
     std::string description;
     std::string quote;
     flight_type fly;
-    bool wields_two_weapons;
+    bool two_weapons;
     bool no_regen;
 };
 

@@ -145,9 +145,9 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     fly = mons_class_flies(type);
     if (fly == FL_NONE)
         fly = mons_class_flies(base_type);
-    wields_two_weapons = mons_class_wields_two_weapons(type);
-    if (!wields_two_weapons)
-        wields_two_weapons = mons_class_wields_two_weapons(base_type);
+    two_weapons = mons_class_wields_two_weapons(type);
+    if (!two_weapons)
+        two_weapons = mons_class_wields_two_weapons(base_type);
     no_regen = !mons_class_can_regenerate(type);
     if (!no_regen)
         no_regen = !mons_class_can_regenerate(base_type);
@@ -264,9 +264,9 @@ monster_info::monster_info(const monster* m, int milev)
     else
         fly = mons_class_flies(type);
 
-    wields_two_weapons = (testbits(m->flags, MF_TWO_WEAPONS)
-                          || mons_class_wields_two_weapons(type)
-                          || mons_class_wields_two_weapons(base_type));
+    two_weapons = (testbits(m->flags, MF_TWO_WEAPONS)
+                   || mons_class_wields_two_weapons(type)
+                   || mons_class_wields_two_weapons(base_type));
 
     no_regen = (testbits(m->flags, MF_NO_REGEN)
                 || !mons_class_can_regenerate(type)
@@ -388,7 +388,7 @@ monster_info::monster_info(const monster* m, int milev)
             else if (attitude == ATT_FRIENDLY)
                 ok = true;
             else if (i == MSLOT_ALT_WEAPON)
-                ok = wields_two_weapons;
+                ok = two_weapons;
             else if (i == MSLOT_MISSILE)
                 ok = false;
             else
