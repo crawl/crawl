@@ -183,8 +183,9 @@ struct monster_info : public monster_info_base
     bool can_regenerate() const
     {
         if (type == MONS_PLAYER_GHOST && u.ghost.species == SP_DEEP_DWARF)
-            return false;
-        return mons_class_can_regenerate(type);
+            return (false);
+
+        return (mons_class_can_regenerate(type));
     }
     size_type body_size() const;
 
