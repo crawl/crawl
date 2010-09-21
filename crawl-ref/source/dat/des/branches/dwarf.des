@@ -1,6 +1,6 @@
 ################################################
 #
-# Dwarf Hall of Fallen Heros
+# Dwarf Hall of Fallen Heroes
 #
 # thematic branch based on Scandanavian folklore
 
@@ -118,7 +118,7 @@ dhfh.hall_setup = function(e, glyph)
         mod = local_util.monster_from_statue(new_monster)
         mod:add_triggerer( local_util.new_trigger("item_pickup") )
     end
-    e.lua_marker("G", portal_desc { desc="granute statue of a fallen hero",
+    e.lua_marker("G", portal_desc { desc="granite statue of a fallen hero",
              desc_long=("A life-size granite statue of a dwarf standing " ..
              "guard in this hall. You can't help but feel like it's" ..
              " watching you.\n"),
