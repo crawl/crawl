@@ -139,12 +139,10 @@ void seen_monsters_react()
         slime_convert(*mi);
         passive_enslavement_convert(*mi);
 
-        // XXX: Probably quite hackish. Allows for monsters going berserk when
-        //      they see the player. Currently only used for Duvessa, see the
-        //      function _elven_twin_dies in mon-stuff.cc.
-        if (mi->flags & MF_GOING_BERSERK)
+        // XXX: Hack for triggering Duvessa's going berserk.
+        if (mi->props.exists("duvessa_berserk"))
         {
-            mi->flags &= ~MF_GOING_BERSERK;
+            mi->props.erase("duvessa_berserk");
             mi->go_berserk(true);
         }
 

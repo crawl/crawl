@@ -289,7 +289,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
             mons->go_berserk(true);
         else
             // She'll go berserk the next time she sees you
-            mons->flags |= MF_GOING_BERSERK;
+            mons->props["duvessa_berserk"] = bool(true);
     }
     else if (found_dowan)
     {
