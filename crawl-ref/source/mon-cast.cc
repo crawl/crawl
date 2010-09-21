@@ -1170,31 +1170,6 @@ static bool _animate_dead_okay()
     return (true);
 }
 
-static bool _monster_already_benefits_from_enchant(monster* mons, spell_type spell)
-{
-    switch (spell)
-    {
-        case SPELL_SWIFTNESS:
-            if (mons->has_ench(ENCH_SWIFT))
-                return false;
-            return true;
-        case SPELL_TROGS_HAND:
-            if (mons->has_ench(ENCH_REGENERATION) && mons->has_ench(ENCH_RAISED_MR))
-                return false;
-            return true;
-        case SPELL_MIRROR_DAMAGE:
-            if (mons->has_ench(ENCH_MIRROR_DAMAGE))
-                return false;
-            return true;
-        case SPELL_STONESKIN:
-            if (mons->has_ench(ENCH_STONESKIN))
-                return false;
-            return true;
-        default:
-            return false;
-    }
-}
-
 //---------------------------------------------------------------
 //
 // handle_spell
@@ -1454,13 +1429,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 {
                     spell_cast = SPELL_NO_SPELL;
                     continue;
-                }
-
-                // No one should spam enchantments
-                if (_monster_already_benefits_from_enchant(mons, spell_cast))
-                {
-                     spell_cast = SPELL_NO_SPELL;
-                     continue;
                 }
 
                 // And Mara shouldn't cast player ghost if he can't
