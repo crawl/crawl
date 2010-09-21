@@ -2809,6 +2809,21 @@ bool ms_waste_of_time( const monster* mon, spell_type monspell )
             ret = true;
         break;
 
+    case SPELL_REGENERATION:
+        if (mon->has_ench(ENCH_REGENERATION))
+            ret = true;
+        break;
+
+    case SPELL_MIRROR_DAMAGE:
+        if (mon->has_ench(ENCH_MIRROR_DAMAGE))
+            ret = true;
+        break;
+
+    case SPELL_STONESKIN:
+        if (mon->has_ench(ENCH_STONESKIN))
+            ret = true;
+        break;
+
     case SPELL_INVISIBILITY:
         if (mon->has_ench(ENCH_INVIS)
             || mon->friendly() && !you.can_see_invisible(false))
