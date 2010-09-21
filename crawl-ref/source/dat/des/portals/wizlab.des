@@ -1559,7 +1559,6 @@ COLOUR:     wW# = silver
 :           dgn.set_feature_desc_long("Floor", "Perhaps it is the humidity, or the constant flow of clouds, but the floor here remains forever damp.\n")
 :           dgn.set_feature_desc_short("wall of green crystal", "wall of white crystal")
 :           dgn.set_feature_desc_short("translucent unnaturally hard rock wall", "wall of transparent white crystal")
-MARKER:     " = lua:portal_desc { desc="sigil-covered floor", desc_long="This area of floor is marked with strange sigils and symbols. You cannot understand them, but for some reason the sight of them makes you tremble.\n" }
 
 epilogue{{
             wizlab_milestone(_G, "The Chambers of " .. wizname .. " the Cloud Mage")
