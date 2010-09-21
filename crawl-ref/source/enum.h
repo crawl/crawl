@@ -2591,7 +2591,7 @@ enum mon_spellbook_type
     MST_ALLIGATOR,
     MST_BORIS,
     MST_FREDERICK,
-    MST_WIGLAF,                        // 180
+    MST_BK_OKAWARU,                    // 180
     MST_SPRIGGAN_DRUID,
     MST_THE_ENCHANTRESS,
     MST_HELLEPHANT,
