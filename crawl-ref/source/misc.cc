@@ -2275,3 +2275,11 @@ void maybe_id_ring_TC()
             }
         }
 }
+
+void make_fake_undead(monster* mon, monster_type undead)
+{
+    mon->flags |= MF_FAKE_UNDEAD;
+
+    if (!mons_class_can_regenerate(undead))
+        mon->flags |= MF_NO_REGEN;
+}

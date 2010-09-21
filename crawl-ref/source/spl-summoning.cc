@@ -1675,7 +1675,7 @@ bool cast_twisted_resurrection(int pow, god_type god)
     }
 
     // Mark this abomination as undead.
-    menv[mons].flags |= MF_FAKE_UNDEAD;
+    make_fake_undead(&menv[mons], mon);
 
     mpr("The heap of corpses melds into an agglomeration of writhing flesh!");
 

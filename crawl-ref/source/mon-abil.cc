@@ -1139,7 +1139,7 @@ static void _establish_connection(int tentacle,
 
             if (main->holiness() == MH_UNDEAD)
             {
-                menv[connect].flags |= MF_FAKE_UNDEAD;
+                make_fake_undead(&menv[connect], main->type);
             }
             if (monster_can_submerge(&menv[connect], env.grid(menv[connect].pos())))
             {

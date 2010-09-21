@@ -1039,7 +1039,7 @@ bool mons_class_can_regenerate(int mc)
 
 bool mons_can_regenerate(const monster* mon)
 {
-    if (mons_is_pghost(mon->type) && mon->ghost->species == SP_DEEP_DWARF)
+    if (testbits(mon->flags, MF_NO_REGEN))
         return (false);
 
     return (mons_class_can_regenerate(mon->type));
@@ -1957,6 +1957,9 @@ void define_monster(monster* mons)
         mons->ghost_init();
         mons->bind_melee_flags();
         mons->bind_spell_flags();
+
+        if (mons->ghost->species == SP_DEEP_DWARF)
+            mons->flags |= MF_NO_REGEN;
         break;
     }
 
