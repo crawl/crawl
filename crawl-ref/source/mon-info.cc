@@ -1029,16 +1029,12 @@ static int serpent_of_hell_colour_to_flavour(uint8_t colour)
     {
     case RED:
         return BRANCH_GEHENNA;
-        break;
     case WHITE:
         return BRANCH_COCYTUS;
-        break;
     case CYAN:
         return BRANCH_DIS;
-        break;
     case MAGENTA:
         return BRANCH_TARTARUS;
-        break;
     default:
         return BRANCH_GEHENNA;
     }
