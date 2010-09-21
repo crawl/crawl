@@ -1518,7 +1518,7 @@
       }
     },
 
-    {  MST_WIGLAF,
+    {  MST_BK_OKAWARU,
       {
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
