@@ -1534,7 +1534,7 @@ bool monster::wants_weapon(const item_def &weap) const
         return (false);
     }
 
-    //deep dwarf artificers
+    // deep dwarf artificers
     if (weap.base_type == OBJ_STAVES
         && type == MONS_DEEP_DWARF_ARTIFICER)
     {
@@ -3478,7 +3478,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
                 || mons_base_type(this) == MONS_DEEP_DWARF_NECROMANCER))
         {
             // Deep Dwarves get to shave _any_ hp loss. Player version:
-            int shave = 1 + random2(2 + random2(1 + this->hit_dice/ 3));
+            int shave = 1 + random2(2 + random2(1 + this->hit_dice / 3));
             dprf("(mon) HP shaved: %d.", shave);
             amount -= shave;
             if (amount <= 0)
