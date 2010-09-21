@@ -1065,12 +1065,7 @@ mon_resist_def monster_info::resists() const
 mon_itemuse_type monster_info::itemuse() const
 {
     if (is(MB_ENSLAVED))
-    {
-        if (type == MONS_SPECTRAL_THING)
-            return mons_class_itemuse(base_type);
-        else
-            return (MONUSE_OPEN_DOORS);
-    }
+        return (mons_class_itemuse(base_type));
 
     return (mons_class_itemuse(type));
 }
@@ -1137,11 +1132,11 @@ int monster_info::res_magic() const
 
 int monster_info::base_speed() const
 {
-    if (is(MB_ENSLAVED) && type == MONS_SPECTRAL_THING)
+    if (is(MB_ENSLAVED))
         return (mons_class_base_speed(base_type));
 
     return (mons_class_is_zombified(type) ? mons_class_zombie_base_speed(base_type)
-                                   : mons_class_base_speed(type));
+                                          : mons_class_base_speed(type));
 }
 
 size_type monster_info::body_size() const

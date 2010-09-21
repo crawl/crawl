@@ -161,13 +161,9 @@ struct monster_info : public monster_info_base
     mon_intel_type intel() const
     {
         if (is(MB_ENSLAVED))
-        {
-            if (type == MONS_ABOMINATION_SMALL || type == MONS_ABOMINATION_LARGE)
-                return (I_NORMAL);
-            return mons_class_intel(base_type);
-        }
+            return (mons_class_intel(base_type));
 
-        return mons_class_intel(type);
+        return (mons_class_intel(type));
     }
 
     const char *pronoun(pronoun_type variant) const
