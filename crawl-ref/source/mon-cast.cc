@@ -1923,6 +1923,54 @@ void mons_cast_spectral_orcs(monster* mons)
     }
 }
 
+static bool _mons_vamp_drain(monster *mons)
+{
+    actor *target = mons->get_foe();
+    if (grid_distance(mons->pos(), target->pos()) > 1)
+        return false;
+
+    if (target->undead_or_demonic())
+        return false;
+
+    int fnum = 5;
+    int fden = 5;
+    if (mons_class_flag(mons->type, M_ACTUAL_SPELLS))
+        fnum = 8;
+    int pow = random2((mons->hit_dice * fnum)/fden);
+    int hp_cost = 3 + random2avg(9, 2) + 1 + pow / 7;
+
+    hp_cost = std::min(hp_cost, target->stat_hp());
+    hp_cost = std::min(hp_cost, mons->max_hit_points - mons->hit_points);
+    if (!hp_cost)
+        return false;
+
+    const bool unseen = you.can_see(mons);
+
+    dprf("vamp draining: %d damage, %d healing", hp_cost, hp_cost/2);
+    if (!unseen)
+        mons_speaks_msg(mons, " is infused with unholy energy.",
+                              MSGCH_MONSTER_SPELL, silenced(mons->pos()));
+
+    if (target->atype() == ACT_PLAYER)
+    {
+        ouch(hp_cost, mons->mindex(), KILLED_BY_BEAM, mons->name(DESC_NOCAP_A).c_str());
+        simple_monster_message(mons, " draws from your life force and is healed!");
+    }
+    else
+    {
+        monster* mtarget = target->as_monster();
+        mtarget->hurt(mons, hp_cost);
+        simple_monster_message(mons, (std::string(" draws the life force from ")
+                                     + mtarget->name(DESC_NOCAP_ITS)
+                                     + " and is healed!").c_str());
+        if (mtarget->alive())
+            print_wounds(mtarget);
+
+        mons->heal(hp_cost/2);
+    }
+    return true;
+}
+
 bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
 {
     // single calculation permissible {dlb}
@@ -2053,83 +2101,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
         return;
     }
+
     case SPELL_VAMPIRIC_DRAINING:
-    {
-        actor *target = mons->get_foe();
-        if (grid_distance(mons->pos(), target->pos()) > 1)
-            return;
-
-        const bool target_is_you = target->pos() == you.pos();
-        monster* mtarget = mons; // dummy assignment
-        int hp;
-        bool target_is_safe;
-        if (!target_is_you)
-        {
-            mtarget = monster_at(target->pos());
-            hp = you.hp;
-            target_is_safe = you.undead_or_demonic();
-        }
-        else
-        {
-            hp = mtarget->hit_points;
-            target_is_safe = mtarget->undead_or_demonic();
-        }
-
-        int fnum = 5;
-        int fden = 5;
-        if (mons_class_flag(mons->type, M_ACTUAL_SPELLS))
-            fnum = 8;
-        int pow = random2((mons->hit_dice * fnum)/fden);
-        int hp_cost = 3 + random2avg(9, 2) + 1 + pow / 7;
-
-        hp_cost = std::min(hp, hp_cost);
-        hp_cost = std::min(mons->max_hit_points - mons->hit_points, hp_cost);
-
-        const bool unseen = you.can_see(mons);
-
-//      dprf("vamp draining: %d damage, %d healing", hp_cost, hp_cost/2);
-        const msg_channel_type chan = (!unseen? MSGCH_SOUND :
-                                        MSGCH_MONSTER_SPELL);
-        if (!unseen)
-            mons_speaks_msg(mons, " is infused with unholy energy.", chan, silenced(mons->pos()));
-
-        if (target_is_you)
-        {
-            ouch(hp_cost, mons->mindex(), KILLED_BY_BEAM, mons->name(DESC_NOCAP_A).c_str());
-            if (hp_cost > 0)
-            {
-                simple_monster_message(mons, " draws from your life force and is healed!");
-                mons->heal(hp_cost/2);
-            }
-            else
-                simple_monster_message(mons, " draws from your life force.");
-        }
-        else
-        {
-            mtarget->hurt(mons, hp_cost);
-            if (hp_cost > 0)
-            {
-                char msg [256] = {0};
-                sprintf(msg, " draws the life force from %s and is healed!",
-                             mtarget->name(DESC_NOCAP_ITS).c_str());
-                simple_monster_message(mons, msg);
-                if (mtarget->alive())
-                    print_wounds(mtarget);
-
-                mons->heal(hp_cost/2);
-            }
-            else
-            {
-                char msg [256] = {0};
-                sprintf(msg, " draws the life force from %s.",
-                             mtarget->name(DESC_NOCAP_ITS).c_str());
-                simple_monster_message(mons, msg);
-                if (mtarget->alive())
-                    print_wounds(mtarget);
-            }
-        }
+        _mons_vamp_drain(mons);
         return;
-    }
 
     case SPELL_BERSERKER_RAGE:
         mons->go_berserk(true);
