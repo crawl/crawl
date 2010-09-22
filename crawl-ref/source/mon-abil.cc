@@ -402,7 +402,8 @@ bool ugly_thing_mutate(monster* ugly, bool proximity)
                 (you_mutate_chance == mon_mutate_chance) ? coinflip()
                                                          : false;
 
-            src = proximity_you ? " from you" : " from its kin";
+            src  = " from ";
+            src += proximity_you ? "you" : "its kin";
 
             success = true;
         }
