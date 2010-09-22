@@ -348,9 +348,10 @@ bool ugly_thing_mutate(monster* ugly, bool proximity)
 
     if (!proximity)
         success = true;
-    else if (one_chance_in(8))
+    else if (one_chance_in(9))
     {
         int you_mutate_chance = 0;
+        int ugly_mutate_chance = 0;
         int mon_mutate_chance = 0;
 
         for (adjacent_iterator ri(ugly->pos()); ri; ++ri)
@@ -359,33 +360,43 @@ bool ugly_thing_mutate(monster* ugly, bool proximity)
                 you_mutate_chance = get_contamination_level();
             else
             {
-                monster* ugly_near = monster_at(*ri);
+                monster* mon_near = monster_at(*ri);
 
-                if (!ugly_near
-                    || (ugly_near->type != MONS_UGLY_THING
-                        && ugly_near->type != MONS_VERY_UGLY_THING))
+                if (!mon_near
+                    || !mons_class_flag(mon_near->type, M_GLOWS_RADIATION))
                 {
                     continue;
                 }
 
-                int i = ugly_near->type == MONS_VERY_UGLY_THING ? 2 : 1;
+                const bool ugly_type =
+                    mon_near->type == MONS_UGLY_THING
+                        || mon_near->type == MONS_VERY_UGLY_THING;
+
+                int i = mon_near->type == MONS_VERY_UGLY_THING ? 3 :
+                        mon_near->type == MONS_UGLY_THING      ? 2
+                                                               : 1;
 
                 for (; i > 0; --i)
                 {
                     if (coinflip())
                     {
-                        mon_mutate_chance++;
-
-                        if (coinflip())
+                        if (ugly_type)
                         {
-                            const uint8_t ugly_colour =
-                                make_low_colour(ugly->colour);
-                            const uint8_t ugly_near_colour =
-                                make_low_colour(ugly_near->colour);
+                            ugly_mutate_chance++;
 
-                            if (ugly_colour != ugly_near_colour)
-                                mon_colour = ugly_near_colour;
+                            if (coinflip())
+                            {
+                                const uint8_t ugly_colour =
+                                    make_low_colour(ugly->colour);
+                                const uint8_t ugly_near_colour =
+                                    make_low_colour(mon_near->colour);
+
+                                if (ugly_colour != ugly_near_colour)
+                                    mon_colour = ugly_near_colour;
+                            }
                         }
+                        else
+                            mon_mutate_chance++;
                     }
                 }
             }
@@ -393,19 +404,37 @@ bool ugly_thing_mutate(monster* ugly, bool proximity)
 
         // The maximum number of monsters that can surround this monster
         // is 8, and the maximum mutation chance from each surrounding
-        // monster is 2, so the maximum mutation value is 16.
-        you_mutate_chance = std::min(16, you_mutate_chance);
-        mon_mutate_chance = std::min(16, mon_mutate_chance);
+        // monster is 3, so the maximum mutation value is 24.
+        you_mutate_chance = std::min(24, you_mutate_chance);
+        ugly_mutate_chance = std::min(24, ugly_mutate_chance);
+        mon_mutate_chance = std::min(24, mon_mutate_chance);
 
-        if (!one_chance_in(you_mutate_chance + mon_mutate_chance + 1))
+        if (!one_chance_in(you_mutate_chance
+                           + ugly_mutate_chance
+                           + mon_mutate_chance
+                           + 1))
         {
-            const bool proximity_you =
-                (you_mutate_chance  > mon_mutate_chance) ? true :
-                (you_mutate_chance == mon_mutate_chance) ? coinflip()
-                                                         : false;
+            int proximity_chance = you_mutate_chance;
+            int proximity_type = 0;
+
+            if (ugly_mutate_chance > proximity_chance
+                || (ugly_mutate_chance == proximity_chance && coinflip()))
+            {
+                proximity_chance = ugly_mutate_chance;
+                proximity_type = 1;
+            }
+
+            if (mon_mutate_chance > proximity_chance
+                || (mon_mutate_chance == proximity_chance && coinflip()))
+            {
+                proximity_chance = mon_mutate_chance;
+                proximity_type = 2;
+            }
 
             src  = " from ";
-            src += proximity_you ? "you" : "its kin";
+            src += proximity_type == 0 ? "you" :
+                   proximity_type == 1 ? "its kin"
+                                       : "its neighbour";
 
             success = true;
         }
