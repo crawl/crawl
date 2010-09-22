@@ -4160,7 +4160,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_DEEP_DWARF_ARTIFICER, '@', YELLOW, "deep dwarf artificer",
-    M_NO_REGEN | M_WARM_BLOOD | M_SPEAKS,
+    M_WARM_BLOOD | M_SPEAKS | M_NO_REGEN,
     MR_NO_FLAGS,
     600, 10, MONS_DWARF, MONS_DEEP_DWARF, MH_NATURAL, -6,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -4172,7 +4172,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_DEEP_DWARF_NECROMANCER, '@', MAGENTA, "deep dwarf necromancer",
-    M_NO_REGEN | M_SPELLCASTER | M_ACTUAL_SPELLS | M_WARM_BLOOD | M_SPEAKS,
+    M_WARM_BLOOD | M_SPELLCASTER | M_ACTUAL_SPELLS | M_SPEAKS | M_NO_REGEN,
     MR_NO_FLAGS,
     600, 10, MONS_DWARF, MONS_DEEP_DWARF, MH_NATURAL, -6,
     { {AT_HIT, AF_PLAIN, 8}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -4208,7 +4208,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_DEEP_DWARF_UNBORN, '@', WHITE, "deep dwarf unborn",
-    M_NO_REGEN | M_SPELLCASTER | M_ACTUAL_SPELLS | M_SPEAKS,
+    M_SPELLCASTER | M_ACTUAL_SPELLS | M_SPEAKS | M_NO_REGEN,
     MR_RES_POISON | MR_RES_COLD,
     600, 14, MONS_DWARF, MONS_DEEP_DWARF, MH_UNDEAD, -8,
     { {AT_HIT, AF_PLAIN, 8}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
