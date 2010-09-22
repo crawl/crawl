@@ -4184,7 +4184,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_DEEP_DWARF_BERSERKER, '@', BROWN, "deep dwarf berserker",
-    M_WARM_BLOOD | M_SPEAKS | M_NO_REGEN,
+    M_WARM_BLOOD | M_SPELLCASTER | M_PRIEST | M_SPEAKS | M_NO_REGEN,
     MR_NO_FLAGS,
     600, 10, MONS_DWARF, MONS_DEEP_DWARF, MH_NATURAL, -6,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -4196,7 +4196,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_DEEP_DWARF_DEATH_KNIGHT, '@', LIGHTBLUE, "deep dwarf death knight",
-    M_WARM_BLOOD | M_SPEAKS | M_NO_REGEN,
+    M_WARM_BLOOD | M_SPELLCASTER | M_PRIEST | M_SPEAKS | M_NO_REGEN,
     MR_NO_FLAGS,
     600, 12, MONS_DWARF, MONS_DEEP_DWARF, MH_NATURAL, -6,
     { {AT_HIT, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
