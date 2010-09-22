@@ -2879,9 +2879,10 @@ static std::string _monster_stat_description(const monster_info& mi)
     if (mons_class_flag(mi.type, M_STATIONARY))
         result << pronoun << " cannot move.\n";
 
+    // Monsters can glow from both light and radiation.
     if (mons_class_flag(mi.type, M_GLOWS_LIGHT))
         result << pronoun << " is outlined in light.\n";
-    else if (mons_class_flag(mi.type, M_GLOWS_RADIATION))
+    if (mons_class_flag(mi.type, M_GLOWS_RADIATION))
         result << pronoun << " is glowing with mutagenic radiation.\n";
 
     // These differ between ghost demon monsters, so would be spoily.
