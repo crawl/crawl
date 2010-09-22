@@ -368,7 +368,9 @@ bool ugly_thing_mutate(monster* ugly, bool proximity)
                     continue;
                 }
 
-                for (int i = 0; i < 2; ++i)
+                int i = ugly_near->type == MONS_VERY_UGLY_THING ? 2 : 1;
+
+                for (; i > 0; --i)
                 {
                     if (coinflip())
                     {
@@ -385,9 +387,6 @@ bool ugly_thing_mutate(monster* ugly, bool proximity)
                                 mon_colour = ugly_near_colour;
                         }
                     }
-
-                    if (ugly_near->type != MONS_VERY_UGLY_THING)
-                        break;
                 }
             }
         }
