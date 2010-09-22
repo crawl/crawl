@@ -75,6 +75,7 @@ struct monster_info_base
     dungeon_feature_type fire_blocker; // TODO: maybe we should store the position instead
     std::string description;
     std::string quote;
+    mon_holy_type holi;
     flight_type fly;
     bool two_weapons;
     bool no_regen;
@@ -143,7 +144,7 @@ struct monster_info : public monster_info_base
 
     inline std::string damage_desc() const
     {
-        return get_damage_level_string(type, dam);
+        return get_damage_level_string(holi, dam);
     }
 
     inline bool neutral() const

@@ -65,7 +65,7 @@
 #include "viewchar.h"
 #include "xom.h"
 
-static bool _wounded_damaged(monster_type mon_type);
+static bool _wounded_damaged(mon_holy_type holi);
 
 static int _make_mimic_item(monster_type type)
 {
@@ -1598,14 +1598,14 @@ int monster_die(monster* mons, killer_type killer,
                     mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s is %s!",
                          mons->name(DESC_CAP_THE).c_str(),
                          exploded                        ? "blown up" :
-                         _wounded_damaged(mons->type)    ? "destroyed"
+                         _wounded_damaged(targ_holy)     ? "destroyed"
                                                          : "killed");
                 }
                 else
                 {
                     mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "You %s %s!",
                          exploded                        ? "blow up" :
-                         _wounded_damaged(mons->type)    ? "destroy"
+                         _wounded_damaged(targ_holy)     ? "destroy"
                                                          : "kill",
                          mons->name(DESC_NOCAP_THE).c_str());
                 }
@@ -1782,7 +1782,7 @@ int monster_die(monster* mons, killer_type killer,
             {
                 const char* msg =
                     exploded                     ? " is blown up!" :
-                    _wounded_damaged(mons->type) ? " is destroyed!"
+                    _wounded_damaged(targ_holy)  ? " is destroyed!"
                                                  : " dies!";
                 simple_monster_message(mons, msg, MSGCH_MONSTER_DAMAGE,
                                        MDAM_DEAD);
@@ -2019,7 +2019,7 @@ int monster_die(monster* mons, killer_type killer,
             {
                 const char* msg =
                     exploded                     ? " is blown up!" :
-                    _wounded_damaged(mons->type) ? " is destroyed!"
+                    _wounded_damaged(targ_holy)  ? " is destroyed!"
                                                  : " dies!";
                 simple_monster_message(mons, msg, MSGCH_MONSTER_DAMAGE,
                                        MDAM_DEAD);
@@ -2966,7 +2966,9 @@ mon_dam_level_type mons_get_damage_level(const monster* mons)
     if (monster_descriptor(mons->type, MDSC_NOMSG_WOUNDS)
         || monster_descriptor(mons->get_mislead_type(), MDSC_NOMSG_WOUNDS)
         || mons_is_unknown_mimic(mons))
+    {
         return MDAM_OKAY;
+    }
 
     if (mons->hit_points <= mons->max_hit_points / 6)
         return MDAM_ALMOST_DEAD;
@@ -2982,13 +2984,15 @@ mon_dam_level_type mons_get_damage_level(const monster* mons)
         return MDAM_OKAY;
 }
 
-std::string get_damage_level_string(monster_type mon_type, mon_dam_level_type mdam)
+std::string get_damage_level_string(mon_holy_type holi,
+                                    mon_dam_level_type mdam)
 {
     std::ostringstream ss;
-    switch(mdam) {
+    switch (mdam)
+    {
     case MDAM_ALMOST_DEAD:
         ss << "almost";
-        ss << (_wounded_damaged(mon_type) ? " destroyed" : " dead");
+        ss << (_wounded_damaged(holi) ? " destroyed" : " dead");
         return ss.str();
     case MDAM_SEVERELY_DAMAGED:
         ss << "severely";
@@ -3007,7 +3011,7 @@ std::string get_damage_level_string(monster_type mon_type, mon_dam_level_type md
         ss << "not";
         break;
     }
-    ss << (_wounded_damaged(mon_type) ? " damaged" : " wounded");
+    ss << (_wounded_damaged(holi) ? " damaged" : " wounded");
     return ss.str();
 }
 
@@ -3029,7 +3033,7 @@ std::string get_wounds_description(const monster* mons, bool colour)
         return "";
 
     mon_dam_level_type dam_level = mons_get_damage_level(mons);
-    std::string desc = get_damage_level_string(mons->type, dam_level);
+    std::string desc = get_damage_level_string(mons->holiness(), dam_level);
     if (colour)
     {
         const int col = channel_to_colour(MSGCH_MONSTER_DAMAGE, dam_level);
@@ -3047,7 +3051,7 @@ void print_wounds(const monster* mons)
         return;
 
     mon_dam_level_type dam_level = mons_get_damage_level(mons);
-    std::string desc = get_damage_level_string(mons->type, dam_level);
+    std::string desc = get_damage_level_string(mons->holiness(), dam_level);
 
     desc.insert(0, " is ");
     desc += ".";
@@ -3057,11 +3061,9 @@ void print_wounds(const monster* mons)
 
 // (true == 'damaged') [constructs, undead, etc.]
 // and (false == 'wounded') [living creatures, etc.] {dlb}
-static bool _wounded_damaged(monster_type mon_type)
+static bool _wounded_damaged(mon_holy_type holi)
 {
     // this schema needs to be abstracted into real categories {dlb}:
-    const mon_holy_type holi = mons_class_holiness(mon_type);
-
     return (holi == MH_UNDEAD || holi == MH_NONLIVING || holi == MH_PLANT);
 }
 
