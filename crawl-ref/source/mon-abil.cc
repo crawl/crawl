@@ -376,9 +376,9 @@ bool ugly_thing_mutate(monster* ugly, bool proximity)
 
                         if (coinflip())
                         {
-                            const int ugly_colour =
+                            const uint8_t ugly_colour =
                                 make_low_colour(ugly->colour);
-                            const int ugly_near_colour =
+                            const uint8_t ugly_near_colour =
                                 make_low_colour(ugly_near->colour);
 
                             if (ugly_colour != ugly_near_colour)
