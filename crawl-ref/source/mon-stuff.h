@@ -150,7 +150,8 @@ monster *get_current_target();
 
 mon_dam_level_type mons_get_damage_level(const monster* mons);
 
-std::string get_damage_level_string(monster_type mon_type, mon_dam_level_type mdam);
+std::string get_damage_level_string(mon_holy_type holi,
+                                    mon_dam_level_type mdam);
 
 void seen_monster(monster* mons);
 

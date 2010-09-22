@@ -142,6 +142,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     base_type = p_base_type;
     number = 0;
     colour = LIGHTGRAY;
+    holi = mons_class_holiness(type);
     fly = mons_class_flies(type);
     if (fly == FL_NONE)
         fly = mons_class_flies(base_type);
@@ -257,6 +258,8 @@ monster_info::monster_info(const monster* m, int milev)
         }
         return;
     }
+
+    holi = m->holiness();
 
     // yes, let's consider randarts too, since flight should be visually obvious
     if (type_known)
@@ -958,7 +961,7 @@ std::string monster_info::wounds_description(bool use_colour) const
     if (dam == MDAM_OKAY)
         return "";
 
-    std::string desc = get_damage_level_string(type, dam);
+    std::string desc = get_damage_level_string(holi, dam);
     if (use_colour)
     {
         const int col = channel_to_colour(MSGCH_MONSTER_DAMAGE, dam);
