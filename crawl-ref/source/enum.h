@@ -1245,6 +1245,7 @@ enum duration_type
     DUR_ICEMAIL_DEPLETED,     // Wait this many turns for full Icemail
     DUR_MISLED,
     DUR_QUAD_DAMAGE,
+    DUR_AFRAID,
 
     NUM_DURATIONS
 };
@@ -1307,6 +1308,7 @@ enum enchant_type
     ENCH_RAISED_MR,
     ENCH_MIRROR_DAMAGE,
     ENCH_STONESKIN,
+    ENCH_FEAR_INSPIRING,
 
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.

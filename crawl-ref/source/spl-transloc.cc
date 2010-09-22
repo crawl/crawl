@@ -121,6 +121,14 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
                 continue;
             }
 
+            monster* fearmonger = you.get_fearmonger(beam.target);
+            if (!wizard_blink && fearmonger)
+            {
+                mprf("You cannot blink closer to %s!",
+                    fearmonger->name(DESC_NOCAP_THE, true).c_str());
+                continue;
+            }
+
             if (grd(beam.target) == DNGN_OPEN_SEA)
             {
                 mesclr();
@@ -464,6 +472,16 @@ bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizard_tele)
             {
                 mprf("You cannot teleport away from %s!",
                      beholder->name(DESC_NOCAP_THE, true).c_str());
+                mpr("Choose another destination (press '.' or delete to select).");
+                more();
+                continue;
+            }
+
+            monster* fearmonger = you.get_fearmonger(pos);
+            if (fearmonger && !wizard_tele)
+            {
+                mprf("You cannot teleport closer to %s!",
+                     fearmonger->name(DESC_NOCAP_THE, true).c_str());
                 mpr("Choose another destination (press '.' or delete to select).");
                 more();
                 continue;

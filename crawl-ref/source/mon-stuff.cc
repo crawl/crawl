@@ -1406,6 +1406,7 @@ int monster_die(monster* mons, killer_type killer,
     mons_clear_trapping_net(mons);
 
     you.remove_beholder(mons);
+    you.remove_fearmonger(mons);
 
     // Monsters haloes should be removed when they die.
     if (mons->holiness() == MH_HOLY)
@@ -2465,6 +2466,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     // changing mons->type, since unbeholding can only happen while
     // the monster is still a mermaid/siren.
     you.remove_beholder(mons);
+    you.remove_fearmonger(mons);
 
     if (mons->type == MONS_KRAKEN)
         _destroy_tentacles(mons);

@@ -4568,7 +4568,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_PETRIFYING: case ENCH_PETRIFIED: case ENCH_SWIFT:
         case ENCH_BATTLE_FRENZY: case ENCH_TEMP_PACIF: case ENCH_SILENCE:
         case ENCH_LOWERED_MR: case ENCH_SOUL_RIPE: case ENCH_BLEED:
-        case ENCH_ANTIMAGIC:
+        case ENCH_ANTIMAGIC: case ENCH_FEAR_INSPIRING:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -4744,6 +4744,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_SOUL_RIPE:
     case ENCH_TIDE:
     case ENCH_ANTIMAGIC:
+    case ENCH_FEAR_INSPIRING:
         decay_enchantment(me);
         break;
 
@@ -6161,7 +6162,7 @@ static const char *enchant_names[] =
     "aquatic_land", "spore_production", "slouch", "swift", "tide",
     "insane", "silenced", "awaken_forest", "exploding", "bleeding",
     "antimagic", "fading_away", "preparing_resurrect", "regen", "magic_res",
-    "mirror_dam", "stoneskin", "buggy",
+    "mirror_dam", "stoneskin", "fear inspiring", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -6267,6 +6268,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_HASTE:
     case ENCH_MIGHT:
     case ENCH_INVIS:
+    case ENCH_FEAR_INSPIRING:
         cturn = 1000 / _mod_speed(25, mons->speed);
         break;
     case ENCH_SILENCE:

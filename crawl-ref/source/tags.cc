@@ -1182,6 +1182,10 @@ static void tag_construct_you(writer &th)
     for (unsigned int k = 0; k < you.beholders.size(); k++)
          marshallShort(th, you.beholders[k]);
 
+    marshallShort(th, you.fearmongers.size());
+    for (unsigned int k = 0; k < you.fearmongers.size(); k++)
+        marshallShort(th, you.fearmongers[k]);
+
     marshallByte(th, you.piety_hysteresis);
 
     you.m_quiver->save(th);
@@ -1757,6 +1761,14 @@ static void tag_read_you(reader &th, int minorVersion)
     count = unmarshallShort(th);
     for (i = 0; i < count; i++)
         you.beholders.push_back(unmarshallShort(th));
+
+    // Also usually empty
+    if (minorVersion >= TAG_MINOR_FEAR)
+    {
+        count = unmarshallShort(th);
+        for (i = 0; i < count; i++)
+            you.fearmongers.push_back(unmarshallShort(th));
+    }
 
     you.piety_hysteresis = unmarshallByte(th);
 
