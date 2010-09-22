@@ -1208,7 +1208,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_LINDWURM, 'l', LIGHTCYAN, "lindwurm",
-    M_WARM_BLOOD | M_SPECIAL_ABILITY,
+    M_WARM_BLOOD | M_SPECIAL_ABILITY | M_GLOWS_LIGHT,
     MR_NO_FLAGS,
     950, 13, MONS_DRAGON, MONS_LINDWURM, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 20}, {AT_CLAW, AF_PLAIN, 10},
