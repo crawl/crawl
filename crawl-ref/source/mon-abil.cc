@@ -391,6 +391,9 @@ bool ugly_thing_mutate(monster* ugly, bool proximity)
             }
         }
 
+        // The maximum number of monsters that can surround this monster
+        // is 8, and the maximum mutation chance from each surrounding
+        // monster is 2, so the maximum mutation value is 16.
         you_mutate_chance = std::min(16, you_mutate_chance);
         mon_mutate_chance = std::min(16, mon_mutate_chance);
 
