@@ -543,6 +543,14 @@ bool player::can_go_berserk(bool intentional, bool potion) const
         return (false);
     }
 
+    if (afraid())
+    {
+        if (verbose)
+            mpr("You are too terrified to rage.");
+
+        return (false);
+    }
+
     if (is_undead
         && (is_undead != US_SEMI_UNDEAD || hunger_state <= HS_SATIATED))
     {

@@ -117,6 +117,8 @@ static uint64_t ench_to_mb(const monster& mons, enchant_type ench)
         return ULL1 << MB_REGENERATION;
     case ENCH_RAISED_MR:
         return ULL1 << MB_RAISED_MR;
+    case ENCH_FEAR_INSPIRING:
+        return ULL1 << MB_FEAR_INSPIRING;
     default:
         return 0;
     }
@@ -944,6 +946,8 @@ std::vector<std::string> monster_info::attributes() const
         v.push_back("slowly fading away");
     if (is(MB_MOSTLY_FADED))
         v.push_back("mostly faded away");
+    if (is(MB_FEAR_INSPIRING))
+        v.push_back("inspiring fear");
     return v;
 }
 

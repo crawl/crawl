@@ -1086,6 +1086,7 @@ static void _input()
     religion_turn_start();
     god_conduct_turn_start();
     you.update_beholders();
+    you.update_fearmongers();
     you.walking = 0;
 
     // Currently only set if Xom accidentally kills the player.
@@ -2294,6 +2295,13 @@ static void _decrement_durations()
                               0, NULL, MSGCH_RECOVERY))
     {
         you.clear_beholders();
+    }
+
+    if (_decrement_a_duration(DUR_AFRAID, delay,
+                              "Your fear fades away.",
+                              0, NULL, MSGCH_RECOVERY))
+    {
+        you.clear_fearmongers();
     }
 
     dec_slow_player(delay);
@@ -3757,6 +3765,11 @@ static void _move_player(coord_def move)
     if (!you.confused())
         beholder = you.get_beholder(targ);
 
+    // You cannot move closer to a fear monger.
+    monster *fmonger = NULL;
+    if (!you.confused())
+        fmonger = you.get_fearmonger(targ);
+
     if (you.running.check_stop_running())
     {
         // [ds] Do we need this? Shouldn't it be false to start with?
@@ -3768,7 +3781,7 @@ static void _move_player(coord_def move)
 
     if (targ_monst && !targ_monst->submerged())
     {
-        if (can_swap_places && !beholder)
+        if (can_swap_places && !beholder && !fmonger)
         {
             if (swap_check(targ_monst, mon_swap_dest))
                 swap = true;
@@ -3794,7 +3807,7 @@ static void _move_player(coord_def move)
         }
     }
 
-    if (!attacking && targ_pass && moving && !beholder)
+    if (!attacking && targ_pass && moving && !beholder && !fmonger)
     {
         if (!you.confused() && !check_moveto(targ))
         {
@@ -3842,6 +3855,12 @@ static void _move_player(coord_def move)
     {
         mprf("You cannot move away from %s!",
             beholder->name(DESC_NOCAP_THE, true).c_str());
+        return;
+    }
+    else if (fmonger && !attacking)
+    {
+        mprf("You cannot move closer to %s!",
+            fmonger->name(DESC_NOCAP_THE, true).c_str());
         return;
     }
 

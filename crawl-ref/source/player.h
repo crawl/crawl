@@ -224,6 +224,9 @@ public:
   // and restored.
   std::vector<int> beholders;
 
+  // monsterss causing fear to the player; see above
+  std::vector<int> fearmongers;
+
   // Delayed level actions.  This array is never trimmed, as usually D:1 won't
   // be loaded again until the very end.
   std::vector<daction_type> dactions;
@@ -369,6 +372,18 @@ public:
     void beholders_check_noise(int loudness);
     void update_beholders();
     void update_beholder(const monster* mon);
+
+    // Dealing with fearmongers. Implemented in fearmonger.cc.
+    void add_fearmonger(const monster* mon);
+    bool afraid() const;
+    bool afraid_of(const monster* mon) const;
+    monster* get_fearmonger(const coord_def &pos) const;
+    monster* get_any_fearmonger() const;
+    void remove_fearmonger(const monster* mon);
+    void clear_fearmongers();
+    void fearmongers_check_noise(int loudness);
+    void update_fearmongers();
+    void update_fearmonger(const monster* mon);
 
     kill_category kill_alignment() const;
 
@@ -590,6 +605,9 @@ public:
 protected:
     void _removed_beholder();
     bool _possible_beholder(const monster* mon) const;
+
+    void _removed_fearmonger();
+    bool _possible_fearmonger(const monster* mon) const;
 };
 
 #ifdef DEBUG_GLOBALS

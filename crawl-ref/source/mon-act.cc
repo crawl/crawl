@@ -2415,6 +2415,7 @@ void handle_monster_move(monster* mons)
                 mons->speed_increment -= non_move_energy;
         }
         you.update_beholder(mons);
+        you.update_fearmonger(mons);
 
         // Reevaluate behaviour, since the monster's surroundings have
         // changed (it may have moved, or died for that matter).  Don't
@@ -2469,6 +2470,7 @@ void handle_monsters()
         {
             // Clear list of mesmerising monsters.
             you.clear_beholders();
+            you.clear_fearmongers();
             break;
         }
     }

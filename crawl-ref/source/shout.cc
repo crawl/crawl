@@ -422,7 +422,10 @@ bool noisy(int loudness, const coord_def& where, const char *msg, int who,
         you.check_awaken(dist - player_distance);
 
         if (!mermaid)
+        {
             you.beholders_check_noise(loudness);
+            you.fearmongers_check_noise(loudness);
+        }
 
         ret = true;
     }

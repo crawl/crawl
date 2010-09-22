@@ -3675,6 +3675,7 @@ void display_char_status()
         DUR_DIVINE_VIGOUR, DUR_DIVINE_STAMINA, DUR_BERSERKER,
         STATUS_AIRBORNE, STATUS_NET, DUR_POISONING, STATUS_SICK,
         STATUS_ROT, STATUS_GLOW, DUR_CONFUSING_TOUCH, DUR_SURE_BLADE,
+        DUR_AFRAID,
     };
 
     status_info inf;
@@ -5124,6 +5125,7 @@ void player::init()
     props.clear();
 
     beholders.clear();
+    fearmongers.clear();
     dactions.clear();
 
 

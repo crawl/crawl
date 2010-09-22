@@ -106,6 +106,8 @@ static duration_def duration_data[] =
       BLUE, "Sil", "silence", "You radiate silence." },
     { DUR_STEALTH, false,
       BLUE, "Stlth", "", "" },
+    { DUR_AFRAID, true,
+      RED, "Fear", "afraid", "You are terrified." },
 };
 
 static int duration_index[NUM_DURATIONS];

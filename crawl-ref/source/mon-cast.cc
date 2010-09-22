@@ -14,8 +14,8 @@
 #include "database.h"
 #include "effects.h"
 #include "env.h"
-#include "fprop.h"
 #include "fight.h"
+#include "fprop.h"
 #include "ghost.h"
 #include "items.h"
 #include "libutil.h"
@@ -978,6 +978,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_HORRIBLE_THINGS:
     case SPELL_HAUNT:
     case SPELL_SYMBOL_OF_TORMENT:
+    case SPELL_CAUSE_FEAR:
     case SPELL_HOLY_WORD:
     case SPELL_DRAIN_LIFE:
     case SPELL_SUMMON_GREATER_DEMON:
@@ -2651,6 +2652,70 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_HOLY_WORD:
         holy_word(0, mons->mindex(), mons->pos());
         return;
+
+    case SPELL_CAUSE_FEAR:
+    {
+        const int pow = std::min(mons->hit_dice * 12, 200);
+        const bool unseen = you.can_see(mons);
+
+        if (monsterNearby)
+        {
+            if (!unseen)
+                simple_monster_message(mons, " radiates an aura of fear!");
+            else
+                mprf("An aura of fear fills the air!");
+
+            flash_view(DARKGREY);
+
+            if (you.check_res_magic(pow))
+                canned_msg(MSG_YOU_RESIST);
+            else
+            {
+                you.add_fearmonger(mons);
+                you.increase_duration(DUR_AFRAID, 10 + random2avg(pow, 4));
+
+                if (!mons->has_ench(ENCH_FEAR_INSPIRING))
+                    mons->add_ench(ENCH_FEAR_INSPIRING);
+            }
+        }
+
+        for (monster_iterator mi(mons->get_los()); mi; ++mi)
+        {
+            if (*mi == mons)
+                continue;
+
+            // Same-aligned intelligent monsters are unaffected, as are magic-immune (regardless).
+            if (mons_intel(*mi) > I_ANIMAL && mons->temp_attitude() == mons->temp_attitude()
+                || mons_immune_magic(*mi))
+            {
+                if (you.can_see(*mi))
+                    simple_monster_message(*mi, mons_immune_magic(mons) ? " is unaffected." : " resists.");
+
+                continue;
+            }
+
+            // Check to see if they can get scared, magic immune already dealt with.
+            if (mi->check_res_magic(pow))
+            {
+                simple_monster_message(*mi, " resists.");
+                continue;
+            }
+
+            // Otherwise, try to scare them.
+            if (mi->add_ench(mon_enchant(ENCH_FEAR, 0, mons->kill_alignment())))
+            {
+                if (!mons->has_ench(ENCH_FEAR_INSPIRING))
+                    mons->add_ench(ENCH_FEAR_INSPIRING);
+
+                if (you.can_see(*mi))
+                    simple_monster_message(*mi, " looks frightened!");
+
+                behaviour_event(*mi, ME_SCARE, mons->kill_alignment() == KC_YOU ? MHITYOU : MHITNOT);
+            }
+        }
+
+        return;
+    }
 
     case SPELL_DRAIN_LIFE:
     {

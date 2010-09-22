@@ -713,6 +713,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool force_full)
     {
         mpr("Walls emerge from the floor!");
         you.update_beholders();
+        you.update_fearmongers();
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);

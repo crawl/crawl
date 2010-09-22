@@ -961,6 +961,9 @@ void viewwindow(bool show_updates)
         else if (you.get_beholder(gc))
             cell->tile_bg |= TILE_FLAG_OOR;
 
+        else if (you.get_fearmonger(gc))
+            cell->tile_bg |= TILE_FLAG_OOR;
+
         tile_apply_properties(gc, &cell->tile_fg, &cell->tile_bg);
 #endif
 
