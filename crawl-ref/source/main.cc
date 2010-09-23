@@ -2704,6 +2704,9 @@ void world_reacts()
         bosses_check(); 
         for (int i = 0; i < SPAWN_SIZE; i++)
         {
+            // Reduce critter frequency for first wave
+            if (you.num_turns<CYCLE_LENGTH && one_chance_in(3)) continue;
+
             if ((you.num_turns % CYCLE_LENGTH > CYCLE_INTERVAL)
                 && x_chance_in_y((you.num_turns % CYCLE_LENGTH), CYCLE_LENGTH*3))
             {
