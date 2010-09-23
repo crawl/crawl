@@ -48,7 +48,7 @@ static void _give_monster_item(monster* mon, int thing,
     if (!keep_ident)
         unset_ident_flags(mthing, ISFLAG_IDENT_MASK);
 
-    if (mon->undead_or_demonic()
+    if ((mon->god == GOD_YREDELEMNUL || mon->undead_or_demonic())
         && (is_blessed(mthing)
             || get_weapon_brand(mthing) == SPWPN_HOLY_WRATH))
     {
