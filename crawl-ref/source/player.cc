@@ -468,7 +468,7 @@ bool is_player_same_species(const int mon, bool transform)
 
     // Genus would include necrophage and rotting hulk.
     if (you.species == SP_GHOUL)
-        return (mons_genus(mon) == MONS_GHOUL);
+        return (mons_species(mon) == MONS_GHOUL);
 
     if (you.species == SP_MERFOLK && mons_genus(mon) == MONS_MERMAID)
         return (true);
