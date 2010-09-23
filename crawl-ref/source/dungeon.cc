@@ -4320,11 +4320,11 @@ bool dgn_place_map(const map_def *mdef,
 
     if (rune_subst == -1 && mdef->has_tag_suffix("_entry"))
         rune_subst = _dgn_find_rune_subst_tags(mdef->tags);
-    if (!game_is_zotdef())
-    {
+//    if (!game_is_zotdef())
+//    {
         did_map = _build_secondary_vault(you.absdepth0, mdef, rune_subst,
                                      clobber, make_no_exits, where);
-    }
+//    }
 
     // Activate any markers within the map.
     if (did_map && !Generating_Level)

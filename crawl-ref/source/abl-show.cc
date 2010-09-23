@@ -1616,15 +1616,15 @@ static bool _do_ability(const ability_def& abil)
         }
 
         // Generate a portal to something.
-        const map_def *mapidx = random_map_for_tag("trowel_portal", false);
+        const map_def *mapidx = random_map_for_tag("zotdef_bazaar", false);
         if (!mapidx)
         {
             mpr("A buggy portal flickers into view, then vanishes.");
         }
         else
         {
-            no_messages n;
-            dgn_place_map(mapidx, false, true, you.pos());
+            //no_messages n;
+            dgn_place_map(mapidx, true, true, you.pos());
             mpr("A mystic portal forms.");
         }
 
@@ -2574,7 +2574,6 @@ static void _pay_ability_costs(const ability_def& abil, int xpcost)
     }
     if (abil.flags & ABFLAG_LEVEL_DRAIN)
     {
-        lose_level();
         lose_level();
     }
 
