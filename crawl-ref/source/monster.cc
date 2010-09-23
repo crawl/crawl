@@ -568,31 +568,31 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
         if (brand == SPWPN_ORC_SLAYING && is_orckind(this))
             return (false);
 
-        // Undead and demonic monsters and monsters that are gifts of
-        // Yredelemnul won't use holy weapons.
+        // Undead and demonic monsters and monsters that are
+        // gifts/worshippers of Yredelemnul won't use holy weapons.
         if ((undead_or_demonic() || god == GOD_YREDELEMNUL)
             && is_holy_item(item))
         {
             return (false);
         }
 
-        // Holy monsters that aren't gifts of chaotic gods and monsters
-        // that are gifts of good gods won't use potentially unholy
-        // weapons.
+        // Holy monsters that aren't gifts/worshippers of chaotic gods
+        // and monsters that are gifts/worshippers of good gods won't
+        // use potentially unholy weapons.
         if (((is_holy() && !is_chaotic_god(god)) || is_good_god(god))
             && is_potentially_unholy_item(item))
         {
             return (false);
         }
 
-        // Holy monsters and monsters that are gifts of good gods won't
-        // use unholy weapons.
+        // Holy monsters and monsters that are gifts/worshippers of good
+        // gods won't use unholy weapons.
         if ((is_holy() || is_good_god(god)) && is_unholy_item(item))
             return (false);
 
-        // Holy monsters that aren't gifts of chaotic gods and monsters
-        // that are gifts of good gods or Fedhas won't use potentially
-        // evil weapons.
+        // Holy monsters that aren't gifts/worshippers of chaotic gods
+        // and monsters that are gifts/worshippers of good gods won't
+        // use potentially evil weapons.
         if (((is_holy() && !is_chaotic_god(god))
                 || is_good_god(god))
             && is_potentially_evil_item(item))
@@ -600,26 +600,30 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
             return (false);
         }
 
-        // Holy monsters and monsters that are gifts of good gods or
-        // Fedhas won't use evil weapons.
+        // Holy monsters and monsters that are gifts/worshippers of good
+        // gods won't use evil weapons.
         if (((is_holy() || is_good_god(god)))
             && is_evil_item(item))
         {
             return (false);
         }
 
+        // Monsters that are gifts/worshippers of Fedhas won't use
+        // corpse-violating weapons.
         if (god == GOD_FEDHAS && is_corpse_violating_item(item))
             return (false);
 
-        // Holy monsters that aren't gifts of chaotic gods and monsters
-        // that are gifts of good gods won't use chaotic weapons.
+        // Holy monsters that aren't gifts/worshippers of chaotic gods
+        // and monsters that are gifts/worshippers of good gods won't
+        // use chaotic weapons.
         if (((is_holy() && !is_chaotic_god(god)) || is_good_god(god))
             && is_chaotic_item(item))
         {
             return (false);
         }
 
-        // Monsters that are gifts of Zin won't use unclean weapons.
+        // Monsters that are gifts/worshippers of Zin won't use unclean
+        // weapons.
         if (god == GOD_ZIN && is_unclean_item(item))
             return (false);
     }
