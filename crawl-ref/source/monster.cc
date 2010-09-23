@@ -568,9 +568,13 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
         if (brand == SPWPN_ORC_SLAYING && is_orckind(this))
             return (false);
 
-        // Undead and demonic monsters won't use holy weapons.
-        if (undead_or_demonic() && is_holy_item(item))
+        // Undead and demonic monsters and monsters that are gifts of
+        // Yredelemnul won't use holy weapons.
+        if ((undead_or_demonic() || god == GOD_YREDELEMNUL)
+            && is_holy_item(item))
+        {
             return (false);
+        }
 
         // Holy monsters that aren't gifts of chaotic gods and monsters
         // that are gifts of good gods won't use potentially unholy
