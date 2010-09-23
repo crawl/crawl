@@ -1935,7 +1935,6 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL
 },
 
-
 {
     MONS_BRAIN_WORM, 'w', LIGHTMAGENTA, "brain worm",
     M_NO_SKELETON | M_SPELLCASTER,
