@@ -43,8 +43,6 @@
 
 monster_type pick_unique(int lev);
 
-monster_type pick_unique(int lev);
-
 static int _fuzz_mons_level(int level)
 {
     if (level>1 && one_chance_in(7))
