@@ -660,6 +660,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'o': wizard_create_spec_object();           break;
     case '%': wizard_create_spec_object_by_name();   break;
     case 'J': jiyva_eat_offlevel_items();            break;
+    case 'W': wizard_god_wrath();                    break;
 
     case 'x':
         you.experience = 1 + exp_needed(2 + you.experience_level);
