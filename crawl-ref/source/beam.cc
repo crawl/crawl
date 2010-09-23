@@ -755,12 +755,7 @@ void bolt::draw(const coord_def& p)
 
 #ifdef USE_TILE
     if (tile_beam == -1)
-    {
-        if (effect_known)
-            tile_beam = tileidx_bolt(*this);
-        else
-            tile_beam = tileidx_zap(ETC_MAGIC);
-    }
+        tile_beam = tileidx_bolt(*this);
 
     if (tile_beam != -1)
         tiles.add_overlay(p, tile_beam);
