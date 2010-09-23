@@ -1600,26 +1600,17 @@ static spret_type _do_cast(spell_type spell, int powc,
     {
         mpr("You attempt to give life to the dead...");
 
-        int count = 0;
-
         for (stack_iterator si(you.pos(), true); si; ++si)
         {
-            if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
+            if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY
+                && mons_skeleton(si->plus))
             {
-                if (mons_skeleton(si->plus))
-                {
-                    // Only convert the top one.
-                    if (count < 1)
-                    {
-                        turn_corpse_into_skeleton_and_chunks(*si);
-                        count++;
-                    }
-                }
+                turn_corpse_into_skeleton_and_chunks(*si);
+                mprf("Before your eyes, flesh is ripped from the corpse!");
+                // Only convert the top one.
+                break;
             }
         }
-
-        if (count > 0)
-            mprf("Before your eyes, flesh is ripped from the corpse!");
 
         if (animate_remains(you.pos(), CORPSE_SKELETON, BEH_FRIENDLY,
                             MHITYOU, &you, "", god) < 0)
