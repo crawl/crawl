@@ -25,7 +25,7 @@ This spell causes the dead to rise up and serve the caster; every corpse within 
 %%%%
 Animate Skeleton
 
-This spell raises an inert skeleton to a state of unlife. Note that skeletons are incapable of leaving the level they were created on.
+This spell raises an inert skeleton to a state of unlife, even if that skeleton is still encased in flesh! Note that skeletons are incapable of leaving the level they were created on.
 %%%%
 Apportation
 
