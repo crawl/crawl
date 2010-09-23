@@ -48,7 +48,7 @@
 // Creates a specific monster by mon type number.
 void wizard_create_spec_monster(void)
 {
-    int mon = debug_prompt_for_int( "Create which monster by number? ", true );
+    int mon = debug_prompt_for_int("Which monster by number? ", true);
 
     if (mon == -1 || (mon >= NUM_MONSTERS
                       && mon != RANDOM_MONSTER
@@ -57,7 +57,7 @@ void wizard_create_spec_monster(void)
                       && mon != RANDOM_NONBASE_DRACONIAN
                       && mon != WANDERING_MONSTER))
     {
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
     }
     else
     {
