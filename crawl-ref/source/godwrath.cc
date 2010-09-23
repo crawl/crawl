@@ -1101,7 +1101,7 @@ static bool _fedhas_retribution()
     return (true);
 }
 
-bool divine_retribution(god_type god, bool no_bonus)
+bool divine_retribution(god_type god, bool no_bonus, bool force)
 {
     ASSERT(god != GOD_NO_GOD);
 
@@ -1111,8 +1111,8 @@ bool divine_retribution(god_type god, bool no_bonus)
     // Good gods don't use divine retribution on their followers, and
     // gods don't use divine retribution on followers of gods they don't
     // hate.
-    if ((god == you.religion && is_good_god(god))
-        || (god != you.religion && !god_hates_your_god(god)))
+    if (!force && ((god == you.religion && is_good_god(god))
+        || (god != you.religion && !god_hates_your_god(god))))
     {
         return (false);
     }
