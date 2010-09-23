@@ -1961,9 +1961,10 @@ static bool _mons_vamp_drain(monster *mons)
     else
     {
         monster* mtarget = target->as_monster();
+        const std::string targname = mtarget->name(DESC_NOCAP_ITS);
         mtarget->hurt(mons, hp_cost);
         simple_monster_message(mons, (std::string(" draws the life force from ")
-                                     + mtarget->name(DESC_NOCAP_ITS)
+                                     + targname
                                      + " and is healed!").c_str());
         if (mtarget->alive())
             print_wounds(mtarget);
