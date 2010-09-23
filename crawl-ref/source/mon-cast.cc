@@ -242,22 +242,23 @@ bolt mons_spells( monster* mons, spell_type spell_cast, int power,
      {
         int cloud = random2(5);
         switch (cloud)
-          {
-              case 0:
-                  real_spell = SPELL_MEPHITIC_CLOUD;
-                  break;
-              case 1:
-                  real_spell = SPELL_MIASMA_CLOUD;
-                  break;
-              case 2:
-                  real_spell = SPELL_POISON_CLOUD;
-                  break;
-              case 3:
-                  real_spell = SPELL_FIRE_CLOUD;
-                  break;
-              default:
-                  real_spell = SPELL_STEAM_CLOUD;
-          }
+        {
+            case 0:
+                real_spell = SPELL_MEPHITIC_CLOUD;
+                break;
+            case 1:
+                real_spell = SPELL_MIASMA_CLOUD;
+                break;
+            case 2:
+                real_spell = SPELL_POISON_CLOUD;
+                break;
+            case 3:
+                real_spell = SPELL_FIRE_CLOUD;
+                break;
+            default:
+                real_spell = SPELL_STEAM_CLOUD;
+                break;
+        }
     }
 
     beam.glyph = dchar_glyph(DCHAR_FIRED_ZAP); // default
