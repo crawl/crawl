@@ -462,7 +462,7 @@ bool is_player_same_species(const int mon, bool transform)
         }
     }
 
-    // Genus would include kobold and nisse.
+    // Genus would include nisse.
     if (you.species == SP_KOBOLD)
         return (mons_genus(mon) == MONS_KOBOLD);
 
