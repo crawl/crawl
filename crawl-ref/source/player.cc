@@ -464,7 +464,10 @@ bool is_player_same_species(const int mon, bool transform)
 
     // Genus would include nisse.
     if (you.species == SP_KOBOLD)
-        return (mons_genus(mon) == MONS_KOBOLD);
+    {
+        return (mons_species(mon) == MONS_KOBOLD
+                || mons_species(mon) == MONS_BIG_KOBOLD);
+    }
 
     // Genus would include necrophage and rotting hulk.
     if (you.species == SP_GHOUL)
