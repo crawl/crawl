@@ -331,29 +331,75 @@ static bool _cheibriados_retribution()
 {
     // time god/slowness theme
     const god_type god = GOD_CHEIBRIADOS;
-    simple_god_message(" bends time around you.", god);
-    switch (random2(5))
-    {
-    case 0:
-    case 1:
-    case 2:
-    case 3:
-        mpr("You lose track of time.");
-        you.put_to_sleep(NULL, 50);
-        break;
 
-    case 4:
-        if (you.duration[DUR_SLOW] < 180 * BASELINE_DELAY)
-        {
-            dec_penance(god, 1);
+    // Chei retribution might only make sense in combat.
+    // We can crib some Xom code for this. {bh}
+    int tension = get_tension(GOD_CHEIBRIADOS);
+    int wrath_value = random2(tension);
+
+    // Determine the level of wrath
+    int wrath_type = 0;
+    if( wrath_value < 2 )     { wrath_type = 0; } 
+    else if( wrath_value < 4 ){ wrath_type = 1; } 
+    else if( wrath_value < 8 ){ wrath_type = 2; }
+    else if( wrath_value < 16){ wrath_type = 3; } 
+    else                      { wrath_type = 4; }
+
+    // Strip away extra speed
+    if(one_chance_in(5 - wrath_type)){
+      dec_haste_player(10000);
+    }
+
+    switch (wrath_type)
+    {
+        // Very high tension wrath
+        case 4:
+          simple_god_message(" adjusts the clock.", god);
+          dec_penance(god, 1 + random2(wrath_type));
+
+          if(one_chance_in(wrath_type - 1)){ break; }
+        // High tension wrath
+        case 3:
+          mpr("You lose track of time.");
+          you.put_to_sleep(NULL, 30 + random2(20));
+          dec_penance(god, 1);
+          if(one_chance_in(wrath_type - 2)){ break; }
+        // Medium tension
+        case 2:
+          if (you.duration[DUR_SLOW] < 180 * BASELINE_DELAY)
+          {
             mpr("You feel the world leave you behind!", MSGCH_WARN);
             you.set_duration(DUR_EXHAUSTED, 200);
             slow_player(100);
-        }
-        break;
+          }
+          
+          if(one_chance_in(wrath_type - 2)){ break; }
+        // Low tension
+        case 1:
+          if(coinflip()){
+            mpr("You can't recall your last meal.");
+            make_hungry(4500, false, false);
+          } else {
+            mpr("Time shudders.");
+            cheibriados_time_step(2+random2(4));
+          }
+          if(one_chance_in(3)){ break; }
+        // No tension wrath.
+        case 0:
+          if(coinflip())
+          {
+            simple_god_message(" makes up for lost time.", god);
+          } else {
+            mpr("You feel time taking its toll.", MSGCH_WARN);
+            rot_hp(random2(3));
+          }
+          if(one_chance_in(wrath_type - 2)){ break; }
+        default:
+          break;
     }
-
-    return (true);
+    
+    dec_penance(god, 1 + random2(wrath_type));
+    return (false);
 }
 
 static bool _makhleb_retribution()
