@@ -1445,7 +1445,7 @@ static monsterentry mondata[] = {
 // Dummy monster, just for the genus.
 {
     MONS_GHOST, 'p', LIGHTGREY, "ghost",
-    M_INSUBSTANTIAL,
+    M_INSUBSTANTIAL | M_NO_POLY_TO,
     MR_RES_POISON,
     0, 0, MONS_GHOST, MONS_GHOST, MH_UNDEAD, 0,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
