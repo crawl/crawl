@@ -42,6 +42,7 @@
 #include "env.h"
 #include "files.h"
 #include "fight.h"
+#include "fineff.h"
 #include "godabil.h"
 #include "hints.h"
 #include "hiscores.h"
@@ -947,23 +948,8 @@ static void _yred_mirrors_injury(int dam, int death_source)
         if (dam <= 0 || invalid_monster_index(death_source))
             return;
 
-        monster* mon = &menv[death_source];
-
-        if (!mon->alive())
-            return;
-
-        simple_god_message(" mirrors your injury!");
-
-#ifndef USE_TILE
-        flash_monster_colour(mon, RED, 200);
-#endif
-
-        mon->hurt(&you, dam);
-
-        if (mon->alive())
-            print_wounds(mon);
-
-        lose_piety(ceil(sqrt((float)dam)));
+        add_final_effect(FINEFF_MIRROR_DAMAGE, &menv[death_source], &you,
+                         coord_def(0, 0), dam);
     }
 }
 

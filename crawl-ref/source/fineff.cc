@@ -6,10 +6,13 @@
  */
 
 #include "AppHdr.h"
+#include <math.h>
 #include "effects.h"
 #include "env.h"
 #include "fineff.h"
 #include "ouch.h"
+#include "religion.h"
+#include "view.h"
 
 void add_final_effect(final_effect_flavour flavour,
                       const actor *attacker,
@@ -79,13 +82,27 @@ void fire_final_effects()
             conduct_electricity(fe.pos, attacker);
             break;
         case FINEFF_MIRROR_DAMAGE:
-	    if (!attacker)
-	        continue;
+            if (!attacker || attacker == defender || !attacker->alive())
+                continue;
             // defender being dead is ok, if we killed them we still suffer
             if (attacker->atype() == ACT_PLAYER)
             {
                 mpr("It reflects your damage back at you!");
                 ouch(fe.x, NON_MONSTER, KILLED_BY_REFLECTION);
+            }
+            else if (defender->atype() == ACT_PLAYER)
+            {
+                simple_god_message(" mirrors your injury!");
+#ifndef USE_TILE
+                flash_monster_colour(attacker->as_monster(), RED, 200);
+#endif
+
+                attacker->hurt(&you, fe.x);
+
+                if (attacker->alive())
+                    print_wounds(attacker->as_monster());
+
+                lose_piety(ceil(sqrt((float)fe.x)));
             }
             else
             {
