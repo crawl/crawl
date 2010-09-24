@@ -2568,11 +2568,11 @@ w:50
 
 @The_monster@ says, "I wanna be an adventurer, not a preacher!"
 
-@The_monster@ says, "What does he need our gold for, anyway?"
+@The_monster@ says, "What does Zin need our gold for, anyway?"
 
-@The_monster@ says, "Something seems a little bit odd about a God who wants you to pay him."
+@The_monster@ says, "Something seems a little bit odd about a God who wants to be paid."
 
-@The_monster@ says, "Most gods give you gifts. Zin asks you to give him gifts. I hate that."
+@The_monster@ says, "Most gods give gifts. Zin asks you to give gifts. I hate that."
 
 @The_monster@ says, "That's really confusing. What's the point of divine satiation if you're not allowed to eat?"
 
@@ -2755,7 +2755,7 @@ w:50
 
 @The_monster@ says, "I heard Trog has abandonment issues."
 
-@The_monster@ says, "I bet his next axe will take you to the Abyss."
+@The_monster@ says, "I bet Trog's next axe will take you to the Abyss."
 
 @The_monster@ says, "I considered Trog, but the aftereffects of berserk scare me."
 
