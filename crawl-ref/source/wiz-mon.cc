@@ -160,7 +160,7 @@ void wizard_create_spec_monster_name()
     }
 
     // FIXME: This is a bit useless, seeing how you cannot set the
-    // ghost's stats, brand or level.
+    // ghost's stats, brand or level, among other things.
     if (mspec.mid == MONS_PLAYER_GHOST)
     {
         unsigned short mid = mgrd(place);
