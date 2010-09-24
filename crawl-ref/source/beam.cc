@@ -2216,7 +2216,7 @@ bool bolt::is_bouncy(dungeon_feature_type feat) const
     }
 
     if ((flavour == BEAM_FIRE || flavour == BEAM_COLD)
-        && feat == DNGN_GREEN_CRYSTAL_WALL )
+        && feat == DNGN_GREEN_CRYSTAL_WALL)
     {
         return (true);
     }
