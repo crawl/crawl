@@ -298,7 +298,7 @@ static monsterentry mondata[] = {
 
 { // dummy, never spawns
     MONS_VAMPIRE_BAT, 'b', DARKGREY, "vampire bat",
-    M_SENSE_INVIS | M_WARM_BLOOD | M_BATTY,
+    M_SENSE_INVIS | M_WARM_BLOOD | M_BATTY | M_NO_POLY_TO,
     MR_NO_FLAGS,
     150, 8, MONS_GIANT_BAT, MONS_VAMPIRE_BAT, MH_NATURAL, -1,
     { {AT_HIT, AF_DRAIN_XP, 3}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
