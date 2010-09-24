@@ -3080,7 +3080,7 @@ VISUAL:@The_monster@ shakes his head.
 @The_monster@ says, "That guy with the scythe is really mean."
 
 w:1
-@The_monster@ says, "Why kind of a name is Fauntleroy?"
+@The_monster@ says, "What kind of a name is Fauntleroy?"
 
 w:1
 @The_monster@ says, "What's the big idea?!"
