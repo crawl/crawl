@@ -4932,7 +4932,7 @@ static monsterentry mondata[] = {
 
 { // always redefined
     MONS_STATUE, '8', LIGHTGREY, "statue",
-    M_STATIONARY | M_SPEAKS | M_ARCHER,
+    M_STATIONARY | M_SPEAKS | M_ARCHER | M_NO_POLY_TO,
     MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC,
     0, 10, MONS_STATUE, MONS_STATUE, MH_NONLIVING, MAG_IMMUNE,
     { {AT_WEAP_ONLY, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
