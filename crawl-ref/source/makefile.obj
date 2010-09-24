@@ -50,6 +50,7 @@ fearmonger.o \
 feature.o \
 fight.o \
 files.o \
+fineff.o \
 food.o \
 format.o \
 fprop.o \
