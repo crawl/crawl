@@ -62,14 +62,6 @@ Fly
 
 Start flying.
 %%%%
-Summon Minor Demon
-
-Summon a minor demon.
-%%%%
-Summon Demon
-
-Summon a greater demon.
-%%%%
 Hellfire
 
 Blast your enemies with hellfire.
