@@ -732,6 +732,10 @@ bool monster::can_use_missile(const item_def &item) const
         return (is_throwable(this, item));
     }
 
+    // Rods are always non-throwable.
+    if (item_is_rod(item))
+        return (false);
+
     // Stones are allowed even without launcher.
     if (item.sub_type == MI_STONE)
         return (true);
