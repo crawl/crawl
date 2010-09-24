@@ -2859,7 +2859,7 @@ w:50
 
 @The_monster@ says, "What is divine providence, anyway? I hate that."
 
-@The_monster@ says, "You'd better watch out. The one of the left looks like he gets lost easily."
+@The_monster@ says, "You'd better watch out. The one on the left looks like he gets lost easily."
 
 @The_monster@ says, "You think you're the Messiah? I met another guy who thought that, too."
 
