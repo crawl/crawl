@@ -264,7 +264,7 @@ ENCHANT:@The_monster@ becomes larger for a moment.
 
 VISUAL SPELL:@The_monster@'s eyes start to glow.
 
-VISUAL SPELL:@The_monster@ tries to paralyze @foe@ with @possessive@ gaze.
+VISUAL SPELL:@The_monster@ tries to paralyse @foe@ with @possessive@ gaze.
 
 @The_monster@ shouts @at_foe@, "You can't withstand my power!"
 
