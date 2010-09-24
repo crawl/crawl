@@ -56,7 +56,7 @@ local_util.monster_from_statue = function(monster)
     local mod = MonsterOnTrigger:new {
         target="auto",
         new_monster="generate_awake " .. monster,
-        message_seen="The grantite statue comes to life!",
+        message_seen="The granite statue comes to life!",
         message_unseen="You hear a distant wail.",
         master_name="statue" .. local_util.statues_idx
     }
