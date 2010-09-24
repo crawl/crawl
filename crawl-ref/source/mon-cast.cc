@@ -2091,13 +2091,9 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_MIRROR_DAMAGE:
     {
-        const bool unseen = you.can_see(mons);
-        const msg_channel_type chan = (!unseen? MSGCH_SOUND :
-                                       MSGCH_MONSTER_SPELL);
-        if (!unseen)
-            mons_speaks_msg(mons,
-                            " kneels in prayer and bathed in unholy energy.",
-                            chan, silenced(mons->pos()));
+        simple_monster_message(mons,
+                               " kneels in prayer and is bathed in unholy energy.",
+                               MSGCH_MONSTER_SPELL);
         int dur = 20;
         mons->add_ench(mon_enchant(ENCH_MIRROR_DAMAGE, 0, KC_OTHER,
                        dur * BASELINE_DELAY));
