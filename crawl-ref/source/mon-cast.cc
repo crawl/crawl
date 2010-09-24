@@ -2098,7 +2098,6 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         mons->add_ench(mon_enchant(ENCH_MIRROR_DAMAGE, 0, KC_OTHER,
                        dur * BASELINE_DELAY));
         mons->paralyse(mons, dur);
-
         return;
     }
 
