@@ -2593,13 +2593,8 @@ void monster::banish(const std::string &)
 
     if (mons_is_projectile(type))
         return;
-    if (!silenced(pos()) && can_speak())
-        simple_monster_message(this, (" screams as " + pronoun(PRONOUN_NOCAP)
-            + " is devoured by a tear in reality.").c_str(),
-            MSGCH_BANISHMENT);
-    else
-        simple_monster_message(this, " is devoured by a tear in reality.",
-            MSGCH_BANISHMENT);
+    simple_monster_message(this, " is devoured by a tear in reality.",
+                           MSGCH_BANISHMENT);
     monster_die(this, KILL_RESET, NON_MONSTER);
 
     place_cloud(CLOUD_TLOC_ENERGY, old_pos, 5 + random2(8), KC_OTHER);
