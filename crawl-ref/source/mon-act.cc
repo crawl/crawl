@@ -24,6 +24,7 @@
 #include "food.h"
 #include "fprop.h"
 #include "fight.h"
+#include "fineff.h"
 #include "godprayer.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -2461,6 +2462,7 @@ void handle_monsters()
         const coord_def oldpos = mi->pos();
 
         handle_monster_move(*mi);
+        fire_final_effects();
 
         if (!invalid_monster(*mi) && mi->pos() != oldpos)
             immobile_monster[mi->mindex()] = true;

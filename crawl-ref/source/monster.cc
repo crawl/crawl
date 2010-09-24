@@ -18,6 +18,7 @@
 #include "directn.h"
 #include "env.h"
 #include "fight.h"
+#include "fineff.h"
 #include "fprop.h"
 #include "ghost.h"
 #include "godabil.h"
@@ -3532,18 +3533,8 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         react_to_damage(agent, amount, flavour);
 
         if (has_ench(ENCH_MIRROR_DAMAGE))
-        {
-            if (agent->atype() == ACT_PLAYER)
-            {
-                mpr("It reflects your damage back at you!");
-                ouch(initial_damage, NON_MONSTER, KILLED_BY_REFLECTION);
-            }
-            else
-            {
-                monster* mon = monster_at(agent->pos());
-                mon->hurt(this, initial_damage, flavour, cleanup_dead);
-            }
-        }
+            add_final_effect(FINEFF_MIRROR_DAMAGE, agent, this,
+                             coord_def(0,0), initial_damage);
     }
 
     if (cleanup_dead && (hit_points <= 0 || hit_dice <= 0) && type != -1)
