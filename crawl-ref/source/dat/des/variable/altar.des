@@ -1617,7 +1617,7 @@ MONS:   angel
 : local za_desc = "A divine agent of Zin, it is a towering winged figure " ..
 :   "with an aura of brilliant white light. This angel's face, though, " ..
 :   "is marked by a scowl, as if its zeal against any real or perceived " ..
-:   "vice overshadowed its goodness.\n"
+:   "vice overshadows its goodness.\n"
 MARKER: 1 = lua:MonPropsMarker:new {speech_key="zin_priest"; description=za_desc}
 DEPTH:  2-27
 MAP
