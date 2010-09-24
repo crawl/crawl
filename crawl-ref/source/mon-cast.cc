@@ -2099,7 +2099,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                             " kneels in prayer and bathed in unholy energy.",
                             chan, silenced(mons->pos()));
         int dur = 20;
-        mons->add_ench(mon_enchant(ENCH_MIRROR_DAMAGE, 0, KC_OTHER, dur));
+        mons->add_ench(mon_enchant(ENCH_MIRROR_DAMAGE, 0, KC_OTHER,
+                       dur * BASELINE_DELAY));
         mons->paralyse(mons, dur);
 
         return;
@@ -2118,9 +2119,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         int dur = 5 + roll_dice(2, (mons->hit_dice * 10) / 3 + 1);
         if (dur > 100)
             dur = 100;
+        dur *= BASELINE_DELAY;
         mons->add_ench(mon_enchant(ENCH_RAISED_MR, 0, KC_OTHER, dur));
         mons->add_ench(mon_enchant(ENCH_REGENERATION, 0, KC_OTHER, dur));
-        dprf("Trog's Hand cast (dur: %d)", dur);
+        dprf("Trog's Hand cast (dur: %d aut)", dur);
         return;
     }
 

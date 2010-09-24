@@ -4572,6 +4572,8 @@ void monster::timeout_enchantments(int levels)
         case ENCH_BATTLE_FRENZY: case ENCH_TEMP_PACIF: case ENCH_SILENCE:
         case ENCH_LOWERED_MR: case ENCH_SOUL_RIPE: case ENCH_BLEED:
         case ENCH_ANTIMAGIC: case ENCH_FEAR_INSPIRING:
+        case ENCH_REGENERATION: case ENCH_RAISED_MR: case ENCH_MIRROR_DAMAGE:
+        case ENCH_STONESKIN:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -4747,6 +4749,10 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_SOUL_RIPE:
     case ENCH_TIDE:
     case ENCH_ANTIMAGIC:
+    case ENCH_REGENERATION:
+    case ENCH_RAISED_MR:
+    case ENCH_MIRROR_DAMAGE:
+    case ENCH_STONESKIN:
     case ENCH_FEAR_INSPIRING:
         decay_enchantment(me);
         break;
@@ -6272,9 +6278,13 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_MIGHT:
     case ENCH_INVIS:
     case ENCH_FEAR_INSPIRING:
+    case ENCH_STONESKIN:
         cturn = 1000 / _mod_speed(25, mons->speed);
         break;
     case ENCH_SILENCE:
+    case ENCH_REGENERATION:
+    case ENCH_RAISED_MR:
+    case ENCH_MIRROR_DAMAGE:
         cturn = 300 / _mod_speed(25, mons->speed);
         break;
     case ENCH_SLOW:
