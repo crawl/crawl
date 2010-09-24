@@ -9,11 +9,13 @@
 #include "effects.h"
 #include "env.h"
 #include "fineff.h"
+#include "ouch.h"
 
 void add_final_effect(final_effect_flavour flavour,
-                      actor *attacker,
-                      actor *defender,
-                      coord_def pos)
+                      const actor *attacker,
+                      const actor *defender,
+                      coord_def pos,
+                      int x)
 {
     final_effect fe;
 
@@ -27,6 +29,7 @@ void add_final_effect(final_effect_flavour flavour,
 
     fe.flavour = flavour;
     fe.pos     = pos;
+    fe.x       = x;
 
     env.final_effects.push_back(fe);
 }
@@ -59,6 +62,22 @@ void fire_final_effects()
             if (you.see_cell(fe.pos))
                 mpr("Electricity arcs through the water!");
             conduct_electricity(fe.pos, attacker);
+            break;
+        case FINEFF_MIRROR_DAMAGE:
+	    if (!attacker)
+	        continue;
+            // defender being dead is ok, if we killed them we still suffer
+            if (attacker->atype() == ACT_PLAYER)
+            {
+                mpr("It reflects your damage back at you!");
+                ouch(fe.x, NON_MONSTER, KILLED_BY_REFLECTION);
+            }
+            else
+            {
+                simple_monster_message(attacker->as_monster(),
+                                       " suffers a backlash!");
+                attacker->hurt(defender, fe.x);
+            }
             break;
         }
     }

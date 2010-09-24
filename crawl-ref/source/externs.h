@@ -767,6 +767,7 @@ struct final_effect
     final_effect_flavour flavour;
     short att, def;
     coord_def pos;
+    int x;
 };
 
 #endif // EXTERNS_H

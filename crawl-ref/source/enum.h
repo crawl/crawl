@@ -3547,6 +3547,7 @@ enum daction_type
 enum final_effect_flavour
 {
     FINEFF_LIGHTNING_DISCHARGE,
+    FINEFF_MIRROR_DAMAGE,
 };
 
 #ifdef USE_TILE
