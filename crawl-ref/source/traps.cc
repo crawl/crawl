@@ -1284,16 +1284,6 @@ item_def trap_def::generate_trap_item()
         set_item_ego_type(item, base, SPWPN_NORMAL);
     }
 
-    // give appropriate racial flag for Dwarf Hall, Orcish Mines
-    // and Elven Halls
-    // should we ever allow properties of dungeon features, we could use that
-    if (you.where_are_you == BRANCH_ORCISH_MINES)
-        set_equip_race( item, ISFLAG_ORCISH );
-    else if (you.where_are_you == BRANCH_ELVEN_HALLS)
-        set_equip_race( item, ISFLAG_ELVEN );
-    else if (you.where_are_you == BRANCH_DWARF_HALL)
-        set_equip_race( item, ISFLAG_DWARVEN );
-
     item_colour(item);
     return item;
 }
