@@ -3544,6 +3544,11 @@ enum daction_type
     NUM_DACTIONS,
 };
 
+enum final_effect_flavour
+{
+    FINEFF_LIGHTNING_DISCHARGE,
+};
+
 #ifdef USE_TILE
 enum screen_mode
 {

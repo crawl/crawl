@@ -39,16 +39,6 @@ enum unchivalric_attack_type
     UCAT_ALLY,
 };
 
-enum attack_final_effect_flavor
-{
-    FINEFF_LIGHTNING_DISCHARGE,
-};
-struct attack_final_effect
-{
-    attack_final_effect_flavor flavor;
-    coord_def location;
-};
-
 struct mon_attack_def;
 
 int effective_stat_bonus( int wepType = -1 );

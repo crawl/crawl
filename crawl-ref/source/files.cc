@@ -1467,6 +1467,8 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // Clear map knowledge stair emphasis.
     show_update_emphasis();
 
+    // Shouldn't happen, but this is too unimportant to assert.
+    env.final_effects.clear();
     los_changed();
 
     // Closes all the gates if you're on the way out.
