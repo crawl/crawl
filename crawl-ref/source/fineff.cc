@@ -31,6 +31,21 @@ void add_final_effect(final_effect_flavour flavour,
     fe.pos     = pos;
     fe.x       = x;
 
+    for (std::vector<final_effect>::iterator fi = env.final_effects.begin();
+         fi != env.final_effects.end();
+         fi++)
+    {
+        if (fi->flavour == fe.flavour
+            && fi->att == fe.att
+            && fi->def == fe.def
+            && fi->pos == fe.pos)
+        {
+            // If there's a non-additive effect, you'd need to handle it here.
+            // Elec discharge is (now) idempotent, so that's ok.
+            fi->x += fe.x;
+            return;
+        }
+    }
     env.final_effects.push_back(fe);
 }
 
