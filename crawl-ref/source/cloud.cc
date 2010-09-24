@@ -1103,7 +1103,7 @@ std::string cloud_name_at_index(int cloudno)
 static const char *_terse_cloud_names[] =
 {
     "?",
-    "flame", "noxious fumes", "freezing vapour", "poison gases",
+    "flame", "noxious fumes", "freezing vapour", "poison gasses",
     "black smoke", "grey smoke", "blue smoke",
     "purple smoke", "translocational energy", "fire",
     "steam", "gloom", "ink", "blessed fire", "foul pestilence", "thin mist",
