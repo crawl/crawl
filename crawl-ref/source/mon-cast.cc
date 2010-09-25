@@ -2731,6 +2731,9 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
         for (monster_iterator mi(mons->get_los()); mi; ++mi)
         {
+            if (*mi == mons)
+                continue;
+
             if (mi->holiness() != MH_NATURAL
                 || mi->res_negative_energy())
             {
