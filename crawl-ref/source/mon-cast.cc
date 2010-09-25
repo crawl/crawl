@@ -1979,6 +1979,63 @@ static bool _mons_vamp_drain(monster *mons)
     return true;
 }
 
+static void _mons_drain_life(monster* mons)
+{
+    const bool unseen = !you.can_see(mons);
+    if (!unseen)
+        simple_monster_message(mons, " draws from the surrounding life force!");
+    else
+        mpr("The surrounding life force dissipates!");
+
+    flash_view_delay(DARKGREY, 300);
+
+    const int pow = mons->hit_dice;
+    const int hurted = 3 + random2(7) + random2(pow);
+    int hp_gain = 0;
+
+    for (actor_iterator ai(mons->get_los()); ai; ++ai)
+    {
+        if (ai->holiness() != MH_NATURAL
+            || ai->res_negative_energy())
+        {
+            continue;
+        }
+
+        if (ai->atype() == ACT_PLAYER)
+        {
+            ouch(hurted, mons->mindex(), KILLED_BY_BEAM, mons->name(DESC_NOCAP_A).c_str());
+
+            simple_monster_message(mons, " draws from your life force!");
+
+            hp_gain += hurted;
+        }
+        else
+        {
+            monster* m = ai->as_monster();
+
+            if (m == mons)
+                continue;
+
+            behaviour_event(m, ME_WHACK, MHITYOU, mons->pos());
+
+            m->hurt(mons, hurted);
+
+            if (m->alive())
+                print_wounds(m);
+
+            if (!m->is_summoned())
+                hp_gain += hurted;
+        }
+    }
+
+    hp_gain /= 2;
+
+    hp_gain = std::min(pow * 2, hp_gain);
+
+    if (hp_gain && mons->heal(hp_gain))
+        simple_monster_message(mons, " is healed.");
+}
+
 bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
 {
     // single calculation permissible {dlb}
@@ -2724,66 +2781,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     }
 
     case SPELL_DRAIN_LIFE:
-    {
-        const int pow = mons->hit_dice;
-        const bool unseen = !you.can_see(mons);
-        if (!unseen)
-            simple_monster_message(mons, " draws from the surrounding life force!");
-        else
-            mpr("The surrounding life force dissipates!");
-
-        flash_view_delay(DARKGREY, 300);
-
-        int hp_gain = 0;
-
-        for (actor_iterator ai(mons->get_los()); ai; ++ai)
-        {
-            if (ai->holiness() != MH_NATURAL
-                || ai->res_negative_energy())
-            {
-                continue;
-            }
-
-            const int hurted = 3 + random2(7) + random2(pow);
-
-            if (ai->atype() == ACT_PLAYER)
-            {
-                ouch(hurted, mons->mindex(), KILLED_BY_BEAM, mons->name(DESC_NOCAP_A).c_str());
-
-                simple_monster_message(mons, " draws from your life force!");
-
-                hp_gain += hurted;
-            }
-            else
-            {
-                monster* m = ai->as_monster();
-
-                if (m == mons)
-                    continue;
-
-                behaviour_event(m, ME_WHACK, MHITYOU, mons->pos());
-                if (!m->is_summoned())
-                    hp_gain += hurted;
-
-                m->hurt(mons, hurted);
-
-                if (m->alive())
-                    print_wounds(m);
-            }
-        }
-
-        hp_gain /= 2;
-
-        hp_gain = std::min(pow * 2, hp_gain);
-
-        if (hp_gain)
-        {
-            if (mons->heal(hp_gain))
-                simple_monster_message(mons, " is healed.");
-        }
-
+        _mons_drain_life(mons);
         return;
-    }
 
     case SPELL_SUMMON_GREATER_DEMON:
         if (_mons_abjured(mons, monsterNearby))
