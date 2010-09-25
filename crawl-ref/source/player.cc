@@ -2729,6 +2729,16 @@ static void _draconian_scale_colour_message()
     }
 }
 
+static void _felid_extra_life()
+{
+    if (you.lives + you.deaths < you.max_level/3 && you.lives < 3)
+    {
+        you.lives++;
+        mpr("Extra life!", MSGCH_INTRINSIC_GAIN);
+    }
+    // Should play the 1UP sound from SMB...
+}
+
 void level_change(bool skip_attribute_increase)
 {
     const bool wiz_cmd = crawl_state.prev_cmd == CMD_WIZARD
@@ -3255,11 +3265,7 @@ void level_change(bool skip_attribute_increase)
                 if (you.experience_level == 6 || you.experience_level == 12)
                     perma_mutate(MUT_SHAGGY_FUR, 1);
 
-                if (you.lives + you.deaths < you.experience_level/3 && you.lives < 3)
-                {
-                    you.lives++;
-                    mpr("Extra life!", MSGCH_INTRINSIC_GAIN);
-                }
+                _felid_extra_life();
                 break;
 
 
@@ -3298,6 +3304,15 @@ void level_change(bool skip_attribute_increase)
         xom_is_stimulated(16);
 
         learned_something_new(HINT_NEW_LEVEL);
+    }
+
+    while (you.experience > exp_needed(you.max_level + 2))
+    {
+        ASSERT(you.experience_level == 27);
+        ASSERT(you.max_level < 127);
+        you.max_level++;
+        if (you.species == SP_CAT)
+            _felid_extra_life();
     }
 
     redraw_skill(you.your_name, player_title());

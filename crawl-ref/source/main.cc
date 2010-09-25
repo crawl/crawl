@@ -669,6 +669,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
 
     case 's':
         you.exp_available = FULL_EXP_POOL;
+        level_change();
         you.redraw_experience = true;
         break;
 
