@@ -1930,10 +1930,9 @@ static bool _mons_vamp_drain(monster *mons)
 {
     actor *target = mons->get_foe();
     if (grid_distance(mons->pos(), target->pos()) > 1)
-        return false;
-
+        return (false);
     if (target->undead_or_demonic())
-        return false;
+        return (false);
 
     int fnum = 5;
     int fden = 5;
@@ -1945,7 +1944,7 @@ static bool _mons_vamp_drain(monster *mons)
     hp_cost = std::min(hp_cost, target->stat_hp());
     hp_cost = std::min(hp_cost, mons->max_hit_points - mons->hit_points);
     if (!hp_cost)
-        return false;
+        return (false);
 
     dprf("vamp draining: %d damage, %d healing", hp_cost, hp_cost/2);
 
@@ -1971,10 +1970,10 @@ static bool _mons_vamp_drain(monster *mons)
                                      + " and is healed!").c_str());
         if (mtarget->alive())
             print_wounds(mtarget);
-
-        mons->heal(hp_cost/2);
+        mons->heal(hp_cost / 2);
     }
-    return true;
+
+    return (true);
 }
 
 static void _mons_drain_life(monster* mons)
