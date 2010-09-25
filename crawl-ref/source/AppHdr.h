@@ -205,7 +205,6 @@
         #include "libw32c.h"
     #endif
     #define CHARACTER_SET           A_ALTCHARSET
-    #define getstr(X,Y)         get_console_string(X,Y)
 
     // NT and better are happy with /; I'm not sure how 9x reacts.
     #define FILE_SEPARATOR '/'

@@ -66,7 +66,6 @@ void sighup_save_and_exit();
 /* Some stuff from curses, to remove compiling warnings.. */
 extern "C"
 {
-    int getstr(char *);
     int getch(void);
     int noecho(void);
     int echo(void);

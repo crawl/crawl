@@ -856,47 +856,6 @@ void delay(int ms)
     Sleep((DWORD)ms);
 }
 
-int get_console_string(char *buf, int maxlen)
-{
-    DWORD nread;
-    // set console input to line mode
-    set_string_input( true );
-
-    // force cursor
-    const bool oldValue = cursor_is_enabled;
-
-    if (w32_smart_cursor)
-        _setcursortype_internal(true);
-
-    // set actual screen color to current color
-    SetConsoleTextAttribute( outbuf, WIN32COLOR(current_color) );
-
-    if (ReadConsole( inbuf, buf, (DWORD)(maxlen-1), &nread, NULL) == 0)
-        fputs("Error in ReadConsole()!", stderr);
-
-    // terminate string, then strip CRLF, replace with \0
-    buf[maxlen-1] = 0;
-    for (unsigned i=(nread<3 ? 0 : nread-3); i<nread; i++)
-    {
-        if (buf[i] == 0x0A || buf[i] == 0x0D)
-        {
-            buf[i] = '\0';
-            break;
-        }
-    }
-
-    // reset console mode - also flushes if player has typed in
-    // too long of a name so we don't get silly garbage on return.
-    set_string_input( false );
-
-    // restore old cursor
-    if (w32_smart_cursor)
-        _setcursortype_internal(oldValue);
-
-    // return # of bytes read
-    return (int)nread;
-}
-
 void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
 {
     const screen_cell_t *cell = vbuf;
