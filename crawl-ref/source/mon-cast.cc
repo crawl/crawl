@@ -2758,10 +2758,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         if (hp_gain)
         {
             if (mons->heal(hp_gain))
-            {
-                if (!unseen)
-                    simple_monster_message(mons, " is healed.");
-            }
+                simple_monster_message(mons, " is healed.");
         }
 
         return;
