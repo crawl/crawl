@@ -5,6 +5,7 @@
 #ifndef BRANCHDATA_H
 #define BRANCHDATA_H
 
+#include "colour.h"
 #include "enum.h"
 #include "mon-pick.h"
 
@@ -51,7 +52,7 @@ Branch branches[] = {
       DNGN_ENTER_ELVEN_HALLS, DNGN_RETURN_FROM_ELVEN_HALLS,
       "Elven Halls", "the Elven Halls", "Elf",
       NULL,
-      40, true, DARKGREY, LIGHTGREY,
+      40, true, WHITE, ETC_ELVEN_BRICK,
       mons_hallelf_rare, mons_hallelf_level,
       NULL, NULL, NULL, NULL,
       8, 'E', false, true, 0 },
@@ -169,7 +170,7 @@ Branch branches[] = {
       DNGN_ENTER_GEHENNA, NUM_FEATURES, // sentinel
       "Gehenna", "Gehenna", "Geh",
       NULL,
-      0, false, DARKGREY, RED,
+      0, false, YELLOW, RED,
       mons_gehenna_rare, mons_gehenna_level,
       NULL, NULL, NULL, NULL,
       0, 'G', true, true, 0 },
@@ -187,7 +188,7 @@ Branch branches[] = {
       DNGN_ENTER_TARTARUS, NUM_FEATURES, // sentinel
       "Tartarus", "Tartarus", "Tar",
       NULL,
-      0, false, DARKGREY, DARKGREY,
+      0, false, MAGENTA, MAGENTA,
       mons_tartarus_rare, mons_tartarus_level,
       NULL, NULL, NULL, NULL,
       0, 'Y', true, true, 0 },
@@ -219,7 +220,7 @@ Branch branches[] = {
       NULL, NULL, NULL, NULL,
       0, 'N', false, true, 0 },
 
-    { BRANCH_DWARF_HALL, BRANCH_MAIN_DUNGEON, 3, 7, 5, 6, 0, 0,
+    { BRANCH_DWARF_HALL, BRANCH_MAIN_DUNGEON, 5, 7, 5, 6, 0, 0,
       DNGN_ENTER_DWARF_HALL, DNGN_RETURN_FROM_DWARF_HALL,
       "Dwarf Hall", "the Dwarf Hall of Fallen Heroes", "Dwarf",
       NULL,

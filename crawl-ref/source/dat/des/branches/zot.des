@@ -44,7 +44,6 @@ xxxxxxx
 xxxxxxx
 ENDMAP
 
-
 ###########################
 # Halls of Wrath
 #
@@ -208,7 +207,6 @@ MAP
 ................
 ENDMAP
 
-
 ###########################
 # Acid trip
 # chance for having all downstairs in the vault is 12.5%
@@ -322,6 +320,39 @@ MAP
      .............
 ENDMAP
 
+######################################
+# This is weird, but in Zot weirdness fits. (nrook)
+NAME: nrook_zot_tub
+DEPTH: Zot
+KFEAT: X = W
+MARKER: X = lua:fog_machine { cloud_type="steam", \
+            pow_min = 2, pow_max = 10, delay = 25, \
+            size = 1, walk_dist = 3, spread_rate= 10 }
+KMONS: M = patrolling pale draconian att:neutral / \
+      patrolling pale draconian scorcher att:neutral w:2 / \
+      patrolling pale draconian caller att:neutral w:2 / \
+      patrolling pale draconian shifter att:neutral w:2 / \
+      patrolling pale draconian annihilator att:neutral w:2 / \
+      patrolling pale draconian knight att:neutral w:2 / \
+      patrolling pale draconian monk att:neutral w:2
+KFEAT: M = W
+KMONS: F = orb of fire att:neutral
+KFEAT: F = W
+MAP
+     @
+xxxxx+xxxxx
+xWWWWWWWWWx
+xWMWWMWWMWx
+xWWXWXWXWWx
+xWWWmmmWWWx
+xWMXmFmXMWx
+xWWWmmmWWWx
+xWWXWXWXWWx
+xWMWWMWWMWx
+xWWWWWWWWWx
+xxxxxxxxxxx
+ENDMAP
+
 ###################################################
 # Minmay's Elemental castle
 # 50% electricity, 25% fire, 25% ice
@@ -401,21 +432,13 @@ PLACE:      Zot:5
 ORIENT:     north
 TAGS:       no_dump
 LFLAGS:     no_tele_control
-MARKER:     Z = lua:item_pickup_change_flags { \
-                level_flags="!no_tele_control", item="auto" \
-            }
 LFLOORCOL:  magenta
 LROCKCOL:   lightmagenta
 LFLOORTILE: floor_tomb
 LROCKTILE:  wall_zot_magenta
-KITEM:      Z = Orb of Zot
-KMASK:      Z = no_item_gen
-COLOUR:     G = magenta
 
 #traps
 SUBST:    C = X:900 c:100 =
-KFEAT:    1 = any trap / w:20 floor
-KMONS:    1 = patrolling Orb Guardian
 KFEAT:    8 = any trap / w:20 floor
 SHUFFLE:  ABab / ^^FF / ^^FF / ^^FF
 SHUFFLE:  Aa / Bb
@@ -423,7 +446,6 @@ KFEAT:    A = any trap / w:30 floor
 KFEAT:    B = any trap / w:10 floor
 SUBST:    a=F, b=6 F
 SUBST:    ^ = ^ .:10
-SUBST:    ! = ^ .:40
 SUBST:    . = .:500 ^
 
 #monsters
@@ -437,32 +459,34 @@ SUBST:    K = 4:30 5 8 9
 SUBST:    L = 4 5:30 8 9
 SUBST:    M = 4 5 8:30 9
 
+SUBVAULT:   Y : orb_chamber
+
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxXXXXXXXXXXXXXXXxxxxxxxxxxxxxxxxxxxxxxxXXXXXXXXXXXXXXXxxxxxxxxxxxxx
-xxxxxxxxxxxXXXX.............XXXXxxxxxxxxxxxxxxxxxXXXX.............XXXXxxxxxxxxxx
-xxxxxxxxxxXX...................XXXxxxxxxxxxxxxxXXX...................XXxxxxxxxxx
-xxxxxxxxxXX..........3...........XXxxxxxxxxxxxXX...........3..........XXxxxxxxxx
-xxxxxxxxxX..8.....................XXXXXXXXXXXXX.....................8..Xxxxxxxxx
-xxxxxxxxxX.......?..?.....8.8.....XXX...1...XXX.....8.8.....?..?.......Xxxxxxxxx
-xxxxxxxxxXX.8...........?.........XX..1...1..XX.........?...........8.XXxxxxxxxx
-xxxxxxxxxxXX......................X1...!!!...1X......................XXxxxxxxxxx
-xxxxxxxxxxxXX.....4....2....8.8......1.GZG.1......8.8....2....4.....XXxxxxxxxxxx
-xxxxxxxxxxXX....?...?.....?...?...X1...!!!...1X...?...?.....?....?...XXxxxxxxxxx
-xxxxxxxxxXX.......?....?..........XX..1...1..XX..........?....2.......XXxxxxxxxx
-xxxxxxxxxX.....8..........8.8.....XXX...1...XXX.....8.8..........8.....Xxxxxxxxx
-xxxxxxxxxX...8....................cXXXXXXXXXXXc....................8...Xxxxxxxxx
-xxxxxxxxxXX.....8.8.8..8.........ccccccccccccccc........8...8.8.8.....XXxxxxxxxx
-xxxxxxxxxxXX...............8...XcccccccccccccccccX...8............8..XXxxxxxxxxx
-xxxxxxxxxxxXX........8..8...XXXXcccccccccccccccccXXXX...8..8........XXxxxxxxxxxx
-xxxxxxxxxxxxXXa111accCCCCCCXXXXXcccccccccccccccccXXXXXCCCCCCccb111bXXxxxxxxxxxxx
-xxxxxxxxxxxcc...............AA1.ccccccccccccccccc.1BB...............ccxxxxxxxxxx
-xxxxxxxxxxcc...8.8..8.8.....cc1...ccccccccccccc...1cc.......8..8.8.8.ccxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxcccccccccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccYYYYYYYYYccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxcccYYYYYYYYYYYcccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxXXXXXXXXXXXXXXXxxxcYYYYYYYYYYYYYYYcxxxXXXXXXXXXXXXXXXxxxxxxxxxxxxx
+xxxxxxxxxxxXXXX.............XXXXcYYYYYYYYYYYYYYYcXXXX.............XXXXxxxxxxxxxx
+xxxxxxxxxxXX...................XXXYYYYYYYYYYYYYXXX...................XXxxxxxxxxx
+xxxxxxxxxXX..........3...........XXYYYYYYYYYYYXX...........3..........XXxxxxxxxx
+xxxxxxxxxX..8.....................XYYYYYYYYYYYX.....................8..Xxxxxxxxx
+xxxxxxxxxX.......?..?.....8.8.....YYYYYYYYYYYYY.....8.8.....?..?.......Xxxxxxxxx
+xxxxxxxxxXX.8...........?.........YYYYYYYYYYYYY.........?...........8.XXxxxxxxxx
+xxxxxxxxxxXX......................YYYYYYYYYYYYY......................XXxxxxxxxxx
+xxxxxxxxxxxXX.....4....2....8.8...YYYYYYYYYYYYY...8.8....2....4.....XXxxxxxxxxxx
+xxxxxxxxxxXX....?...?.....?...?...YYYYYYYYYYYYY...?...?.....?....?...XXxxxxxxxxx
+xxxxxxxxxXX.......?....?..........YYYYYYYYYYYYY..........?....2.......XXxxxxxxxx
+xxxxxxxxxX.....8..........8.8.....YYYYYYYYYYYYY.....8.8..........8.....Xxxxxxxxx
+xxxxxxxxxX...8....................cYYYYYYYYYYYc....................8...Xxxxxxxxx
+xxxxxxxxxXX.....8.8.8..8.........ccYYYYYYYYYYYcc........8...8.8.8.....XXxxxxxxxx
+xxxxxxxxxxXX...............8...XccYYYYYYYYYYYYYccX...8............8..XXxxxxxxxxx
+xxxxxxxxxxxXX........8..8...XXXXcYYYYYYYYYYYYYYYcXXXX...8..8........XXxxxxxxxxxx
+xxxxxxxxxxxxXXa111accCCCCCCXXXXXcYYYYYYYYYYYYYYYcXXXXXCCCCCCccb111bXXxxxxxxxxxxx
+xxxxxxxxxxxcc...............AA1.cccYYYYYYYYYYYccc.1BB...............ccxxxxxxxxxx
+xxxxxxxxxxcc...8.8..8.8.....cc1...ccYYYYYYYYYcc...1cc.......8..8.8.8.ccxxxxxxxxx
 xxxxxxxxxcc.8...8......8.8...ccc...ccccccccccc...ccc...8.8.8..8.......ccxxxxxxxx
 xxxxxxxxxc.8..8....8.8........ccc...............ccc.....8....8..8.8....cxxxxxxxx
 xxxxxxxxxc..8..8.8....8.8.8.5.cxcc.............ccxc.5.8.8.8....8.8...8.cxxxxxxxx
@@ -476,6 +500,117 @@ xxxxxxxxxxxcc..............ccxxxc...............cxxxcc..............ccxxxxxxxxxx
 xxxxxxxxxxxxccccccccccccccccxxxxcccccccc@ccccccccxxxxccccccccccccccccxxxxxxxxxxx
 ENDMAP
 
+NAME:   orb_original
+TAGS:   orb_chamber
+MARKER: Z = lua:item_pickup_change_flags { \
+            level_flags="!no_tele_control", item="auto" \
+        }
+KITEM:  Z = Orb of Zot
+KMASK:  Z1! = no_item_gen
+SUBST:  ! = ^ .:40
+SUBST:  . = .:500 ^
+TILE:   m = dngn_zot_pillar
+COLOUR: m = magenta
+:           dgn.set_feature_desc_short("translucent rock wall",
+:                                      "crystal pillar")
+:           dgn.set_feature_desc_long("translucent rock wall",
+:                  "This is a pillar of crystal, apparently of a similar " ..
+:                  "material to the rock around.\n")
+KMONS:  1 = patrolling Orb Guardian
+MAP
+   ccccccccc
+  ccccccccccc
+ccccccccccccccc
+ccccccccccccccc
+ ccccccccccccc
+  ccccccccccc
+  XXXXXXXXXXX
+ XXX...1...XXX
+ XX..1...1..XX
+ X1...!!!...1X
+ ...1.mZm.1...
+ X1...!!!...1X
+ XX..1...1..XX
+ XXX...1...XXX
+  XXXXXXXXXXX
+  ccccccccccc
+ ccccccccccccc
+ccccccccccccccc
+ccccccccccccccc
+  ccccccccccc
+   ccccccccc
+ENDMAP
+
+NAME:   orb_monky_inset
+TAGS:   orb_chamber
+WEIGHT: 5
+MARKER: Z = lua:item_pickup_change_flags { \
+            level_flags="!no_tele_control", item="auto" \
+        }
+KITEM:  Z = Orb of Zot
+KMASK:  Z1! = no_item_gen
+SUBST:  ! = ^ .:40
+SUBST:  . = .:500 ^
+KMONS:  1 = patrolling Orb Guardian
+MAP
+   ccccccccc
+  ccccccccccc
+ccccccccccccccc
+ccccccccccccccc
+ ccccccccccccc
+  ccccccccccc
+  XXXXXXXXXXX
+ XXXX.....XXXX
+ XXX..X1X..XXX
+ X....XXX....X
+ ..1.XXXXX.1..
+ X....XXX....X
+ XXX..X1X..XXX
+ XXXX.....XXXX
+  X.XXX.XXX.X
+  X....1....X
+ XX..1!!!1..XX
+cX....!Z!....Xc
+cXX...!!!...XXc
+  XXXXXXXXXXX
+   ccccccccc
+ENDMAP
+
+NAME:   orb_two_ways
+TAGS:   orb_chamber
+WEIGHT: 5
+NSUBST: Y = 1:Z / *:.
+MARKER: Z = lua:item_pickup_change_flags { \
+            level_flags="!no_tele_control", item="auto" \
+        }
+KITEM:  Z = Orb of Zot
+KMASK:  YZ1! = no_item_gen
+SUBST:  ! = ^ .:40
+SUBST:  . = .:500 ^
+KMONS:  1 = patrolling Orb Guardian
+MAP
+   ccccccccc
+  XXXXXXXXXXX
+cXXXXX.....XXXc
+cXXX!!!1X...XXc
+ XXX!Y!XXX..XX
+  XX!!!XX..XX
+  XXXXXX..XXX
+ XXXX.....XXXX
+ XXX..X1X..XXX
+ X1...XXX...1X
+ ....XXXXX....
+ X1...XXX...1X
+ XXX..X1X..XXX
+ XXXX.....XXXX
+  XXXX..XXXXX
+  XXX..XX!!!X
+ XXX..XXX!Y!XX
+cXXX...X1!!!XXc
+cXXXX.....XXXXc
+  XXXXXXXXXXX
+   ccccccccc
+ENDMAP
 
 ################################################################
 # For colouring the walls and floors of the first four levels

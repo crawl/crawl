@@ -16,5 +16,7 @@ int portal();
 bool cast_portal_projectile(int pow);
 bool cast_apportation(int powc, const coord_def& where);
 int cast_semi_controlled_blink(int pow);
+bool cast_golubrias_passage(const coord_def& where);
+bool can_cast_golubrias_passage();
 
 #endif

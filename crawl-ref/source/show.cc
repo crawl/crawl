@@ -28,6 +28,7 @@
 #ifdef USE_TILE
  #include "tileview.h"
 #endif
+#include "travel.h"
 #include "viewgeom.h"
 #include "viewmap.h"
 
@@ -106,24 +107,10 @@ bool show_type::is_cleanable_monster() const
     return (cls == SH_MONSTER && !mons_class_is_stationary(mons));
 }
 
-static unsigned short _tree_colour(const coord_def& where)
-{
-    uint32_t h = where.x;
-    h+=h<<10; h^=h>>6;
-    h += where.y;
-    h+=h<<10; h^=h>>6;
-    h+=h<<3; h^=h>>11; h+=h<<15;
-    return (h>>30) ? GREEN :
-           (you.where_are_you == BRANCH_SWAMP) ? BROWN
-                   : LIGHTGREEN;
-}
-
 static void _update_feat_at(const coord_def &gp)
 {
     dungeon_feature_type feat = grid_appearance(gp);
     unsigned colour = env.grid_colours(gp);
-    if (feat == DNGN_TREE && !colour)
-        colour = _tree_colour(gp);
     env.map_knowledge(gp).set_feature(feat, colour);
 
     if (haloed(gp))
@@ -141,6 +128,9 @@ static void _update_feat_at(const coord_def &gp)
     }
 
     if (you.get_beholder(gp))
+        env.map_knowledge(gp).flags |= MAP_WITHHELD;
+
+    if (you.get_fearmonger(gp))
         env.map_knowledge(gp).flags |= MAP_WITHHELD;
 
     if (feat >= DNGN_STONE_STAIRS_DOWN_I
@@ -322,8 +312,6 @@ void show_update_at(const coord_def &gp, bool terrain_only)
     const monster* mons = monster_at(gp);
     if (mons && mons->alive())
         _update_monster(mons);
-
-    set_terrain_visible(gp);
 }
 
 void show_init(bool terrain_only)
@@ -332,3 +320,21 @@ void show_init(bool terrain_only)
     for (radius_iterator ri(you.get_los()); ri; ++ri)
         show_update_at(*ri, terrain_only);
 }
+
+// Emphasis may change while off-level (precisely, after
+// taking stairs and saving the level, when we reach
+// the next level). This catches up.
+// It should be equivalent to looping over the whole map
+// and setting MAP_EMPHASIZE for any coordinate with
+// emphasise(p) == true, but we optimise a bit.
+void show_update_emphasis()
+{
+   // The only thing that can change is that previously unknown
+   // stairs are now known. (see is_unknown_stair(), emphasise())
+   LevelInfo& level_info = travel_cache.get_level_info(level_id::current());
+   std::vector<stair_info> stairs = level_info.get_stairs();
+   for (unsigned i = 0; i < stairs.size(); ++i)
+       if (stairs[i].destination.is_valid())
+           env.map_knowledge(stairs[i].position).flags &= ~MAP_EMPHASIZE;
+}
+

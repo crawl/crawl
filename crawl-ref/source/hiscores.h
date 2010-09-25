@@ -109,6 +109,7 @@ private:
     int         kills;              // number of monsters killed
     std::string maxed_skills;       // comma-separated list of skills
                                     // at level 27
+    std::string status_effects;     // comma-separated list of status effects
     int         gold;               // Remaining gold.
     int         gold_found;         // Gold found.
     int         gold_spent;         // Gold spent shopping.

@@ -163,7 +163,9 @@ void init_mon_name_cache()
                 || mon == MONS_ARMOUR_MIMIC
                 || mon == MONS_SCROLL_MIMIC
                 || mon == MONS_POTION_MIMIC
-                || mon == MONS_MARA_FAKE)
+                || mon == MONS_MARA_FAKE
+                || mon == MONS_EVIL_WITCH
+                || mon == MONS_FOREST_WITCH)
             {
                 // Keep previous entry.
                 continue;
@@ -515,12 +517,17 @@ bool mons_is_stationary(const monster* mon)
 // Monsters that are worthless obstacles: not to
 // be attacked by default, but may be cut down to
 // get to target even if coaligned.
+bool mons_class_is_firewood(int mc)
+{
+    return (mons_class_is_stationary(mc)
+            && mons_class_flag(mc, M_NO_EXP_GAIN)
+            && mc != MONS_KRAKEN_TENTACLE
+            && mc != MONS_KRAKEN_CONNECTOR);
+}
+
 bool mons_is_firewood(const monster* mon)
 {
-    return (mons_is_stationary(mon)
-            && mons_class_flag(mon->type, M_NO_EXP_GAIN)
-            && mon->type != MONS_KRAKEN_TENTACLE
-            && mon->type != MONS_KRAKEN_CONNECTOR);
+    return (mons_class_is_firewood(mon->type));
 }
 
 // "body" in a purely grammatical sense.
@@ -734,7 +741,7 @@ bool mons_is_statue(int mc, bool allow_disintegrate)
 
 bool mons_is_mimic(int mc)
 {
-    return (mons_species(mc) == MONS_GOLD_MIMIC);
+    return (mons_genus(mc) == MONS_GOLD_MIMIC);
 }
 
 bool mons_is_demon(int mc)
@@ -992,9 +999,7 @@ mon_itemuse_type mons_class_itemuse(int mc)
 
 mon_itemuse_type mons_itemuse(const monster* mon)
 {
-    if (mons_enslaved_twisted_soul(mon))
-        return (MONUSE_OPEN_DOORS);
-    else if (mons_enslaved_intact_soul(mon))
+    if (mons_enslaved_soul(mon))
         return (mons_class_itemuse(mons_zombie_base(mon)));
 
     return (mons_class_itemuse(mon->type));
@@ -1008,9 +1013,7 @@ mon_itemeat_type mons_class_itemeat(int mc)
 
 mon_itemeat_type mons_itemeat(const monster* mon)
 {
-    if (mons_enslaved_twisted_soul(mon))
-        return (MONEAT_NOTHING);
-    else if (mons_enslaved_intact_soul(mon))
+    if (mons_enslaved_soul(mon))
         return (mons_class_itemeat(mons_zombie_base(mon)));
 
     if (mon->has_ench(ENCH_EAT_ITEMS))
@@ -1036,7 +1039,7 @@ bool mons_class_can_regenerate(int mc)
 
 bool mons_can_regenerate(const monster* mon)
 {
-    if (mons_is_pghost(mon->type) && mon->ghost->species == SP_DEEP_DWARF)
+    if (testbits(mon->flags, MF_NO_REGEN))
         return (false);
 
     return (mons_class_can_regenerate(mon->type));
@@ -1128,22 +1131,9 @@ bool mons_enslaved_body_and_soul(const monster* mon)
     return (mon->has_ench(ENCH_SOUL_RIPE));
 }
 
-bool mons_enslaved_twisted_soul(const monster* mon)
-{
-    return (testbits(mon->flags, MF_ENSLAVED_SOUL)
-        && (mon->type == MONS_ABOMINATION_SMALL
-            || mon->type == MONS_ABOMINATION_LARGE));
-}
-
-bool mons_enslaved_intact_soul(const monster* mon)
-{
-    return (testbits(mon->flags, MF_ENSLAVED_SOUL)
-        && mon->type == MONS_SPECTRAL_THING);
-}
-
 bool mons_enslaved_soul(const monster* mon)
 {
-    return (mons_enslaved_twisted_soul(mon) || mons_enslaved_intact_soul(mon));
+    return (testbits(mon->flags, MF_ENSLAVED_SOUL));
 }
 
 bool name_zombie(monster* mon, int mc, const std::string mon_name)
@@ -1179,7 +1169,7 @@ bool name_zombie(monster* mon, const monster* orig)
     return (name_zombie(mon, orig->type, name));
 }
 
-int downscale_zombie_damage(int damage)
+static int _downscale_zombie_damage(int damage)
 {
     // These are cumulative, of course: {dlb}
     if (damage > 1)
@@ -1194,8 +1184,8 @@ int downscale_zombie_damage(int damage)
     return (damage);
 }
 
-mon_attack_def downscale_zombie_attack(const monster* mons,
-                                       mon_attack_def attk)
+static mon_attack_def _downscale_zombie_attack(const monster* mons,
+                                               mon_attack_def attk)
 {
     switch (attk.type)
     {
@@ -1217,7 +1207,7 @@ mon_attack_def downscale_zombie_attack(const monster* mons,
     else if (attk.flavour != AF_REACH)
         attk.flavour = AF_PLAIN;
 
-    attk.damage = downscale_zombie_damage(attk.damage);
+    attk.damage = _downscale_zombie_damage(attk.damage);
 
     return (attk);
 }
@@ -1290,7 +1280,7 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
     if (mon->type == MONS_SLIME_CREATURE && mon->number > 1)
         attk.damage *= mon->number;
 
-    return (zombified ? downscale_zombie_attack(mon, attk) : attk);
+    return (zombified ? _downscale_zombie_attack(mon, attk) : attk);
 }
 
 int mons_damage(int mc, int rt)
@@ -1334,9 +1324,6 @@ flight_type mons_class_flies(int mc)
 
 flight_type mons_flies(const monster* mon, bool randarts)
 {
-    if (mons_enslaved_twisted_soul(mon))
-        return (FL_LEVITATE);
-
     // For dancing weapons, this function can get called before their
     // ghost_demon is created, so check for a NULL ghost. -cao
     if (mons_is_ghost_demon(mon->type) && mon->ghost.get())
@@ -1632,6 +1619,16 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
         book[1] = MST_NECROMANCER_II;
         break;
 
+    case MONS_DEEP_DWARF_NECROMANCER:
+        book[0] = MST_DEEP_DWARF_NECROMANCER;
+        book[1] = MST_JESSICA;
+        break;
+
+    case MONS_DEEP_DWARF_UNBORN:
+        book[0] = MST_DEEP_DWARF_UNBORN;
+        book[1] = MST_NECROMANCER_I;
+        break;
+
     case MONS_ORC_WIZARD:
     case MONS_DEEP_ELF_SOLDIER:
     case MONS_DEEP_ELF_FIGHTER:
@@ -1650,6 +1647,34 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
         book[2] = MST_WIZARD_III;
         book[3] = MST_WIZARD_IV;
         book[4] = MST_WIZARD_V;
+        break;
+
+    case MONS_WITCH: /* deliberate fallthrough structure */
+        book[0] = MST_WITCH_I;
+    case MONS_EVIL_WITCH:
+        if (mon_type == MONS_EVIL_WITCH)
+            book[0] = MST_WITCH_II;
+    case MONS_FOREST_WITCH:
+        if (mon_type == MONS_FOREST_WITCH)
+            book[0] = MST_WITCH_III;
+
+        book[1] = MST_DEEP_DWARF_NECROMANCER;
+        book[2] = MST_WIZARD_II;
+        book[3] = MST_WIZARD_I;
+        break;
+
+    case MONS_HULDRA:
+        book[0] = MST_HULDRA;
+        book[1] = MST_WITCH_III;
+        book[2] = MST_WIZARD_III;
+        book[3] = MST_WIZARD_V;
+        break;
+
+    case MONS_TROLLKONOR:
+        book[0] = MST_TROLLKONOR;
+        book[1] = MST_WIZARD_II;
+        book[2] = MST_WIZARD_III;
+        book[3] = MST_WIZARD_V;
         break;
 
     case MONS_DRACONIAN_KNIGHT:
@@ -1678,6 +1703,7 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
             break;
         default:
             book[0] = MST_SERPENT_OF_HELL_GEHENNA;
+            break;
         }
         break;
 
@@ -1707,8 +1733,6 @@ static void _get_spells(mon_spellbook_type& book, monster* mon)
     // (Dumb) special casing to give ogre mages Haste Other. -cao
     if (mon->type == MONS_OGRE_MAGE)
         mon->spells[0] = SPELL_HASTE_OTHER;
-
-    mon->bind_spell_flags();
 }
 
 // Never hand out DARKGREY as a monster colour, even if it is randomly
@@ -1895,8 +1919,11 @@ void define_monster(monster* mons)
     mons->experience = 0L;
     mons->colour     = col;
 
+    mons->bind_melee_flags();
+
     spells = m->sec;
     _get_spells(spells, mons);
+    mons->bind_spell_flags();
 
     // Reset monster enchantments.
     mons->enchantments.clear();
@@ -1916,6 +1943,7 @@ void define_monster(monster* mons)
         ghost.init_random_demon();
         mons->set_ghost(ghost);
         mons->pandemon_init();
+        mons->bind_melee_flags();
         mons->bind_spell_flags();
         break;
     }
@@ -1927,7 +1955,10 @@ void define_monster(monster* mons)
         ghost.init_player_ghost();
         mons->set_ghost(ghost);
         mons->ghost_init();
+        mons->bind_melee_flags();
         mons->bind_spell_flags();
+        if (mons->ghost->species == SP_DEEP_DWARF)
+            mons->flags |= MF_NO_REGEN;
         break;
     }
 
@@ -2176,7 +2207,7 @@ int mons_class_zombie_base_speed(int zombie_base_mc)
 
 int mons_base_speed(const monster* mon)
 {
-    if (mons_enslaved_intact_soul(mon))
+    if (mons_enslaved_soul(mon))
         return (mons_class_base_speed(mons_zombie_base(mon)));
 
     return (mons_is_zombified(mon) ? mons_class_zombie_base_speed(mons_zombie_base(mon))
@@ -2191,9 +2222,7 @@ mon_intel_type mons_class_intel(int mc)
 
 mon_intel_type mons_intel(const monster* mon)
 {
-    if (mons_enslaved_twisted_soul(mon))
-        return (I_NORMAL);
-    else if (mons_enslaved_intact_soul(mon))
+    if (mons_enslaved_soul(mon))
         return (mons_class_intel(mons_zombie_base(mon)));
 
     return (mons_class_intel(mon->type));
@@ -2293,11 +2322,14 @@ bool mons_atts_aligned(mon_attitude_type fr1, mon_attitude_type fr2)
 
 bool mons_class_wields_two_weapons(int mc)
 {
-    return (mons_class_flag(mc, M_TWOWEAPON));
+    return (mons_class_flag(mc, M_TWO_WEAPONS));
 }
 
 bool mons_wields_two_weapons(const monster* mon)
 {
+    if (testbits(mon->flags, MF_TWO_WEAPONS))
+        return (true);
+
     return (mons_class_wields_two_weapons(mons_base_type(mon)));
 }
 
@@ -2354,7 +2386,8 @@ bool mons_is_seeking(const monster* m)
 
 bool mons_is_fleeing(const monster* m)
 {
-    return (m->behaviour == BEH_FLEE);
+    return (m->behaviour == BEH_FLEE
+            || mons_class_flag(m->type, M_FLEEING));
 }
 
 bool mons_is_panicking(const monster* m)
@@ -2604,6 +2637,7 @@ bool ms_low_hitpoint_cast( const monster* mon, spell_type monspell )
     bool targ_adj      = false;
     bool targ_sanct    = false;
     bool targ_friendly = false;
+    bool targ_undead   = false;
 
     if (mon->foe == MHITYOU || mon->foe == MHITNOT)
     {
@@ -2611,6 +2645,8 @@ bool ms_low_hitpoint_cast( const monster* mon, spell_type monspell )
             targ_adj = true;
         if (is_sanctuary(you.pos()))
             targ_sanct = true;
+        if (you.undead_or_demonic())
+            targ_undead = true;
     }
     else
     {
@@ -2618,6 +2654,8 @@ bool ms_low_hitpoint_cast( const monster* mon, spell_type monspell )
             targ_adj = true;
         if (is_sanctuary(menv[mon->foe].pos()))
             targ_sanct = true;
+        if (menv[mon->foe].undead_or_demonic())
+            targ_undead = true;
     }
 
     targ_friendly = (mon->foe == MHITYOU
@@ -2634,6 +2672,8 @@ bool ms_low_hitpoint_cast( const monster* mon, spell_type monspell )
     case SPELL_MINOR_HEALING:
     case SPELL_MAJOR_HEALING:
         return true;
+    case SPELL_VAMPIRIC_DRAINING:
+        return !targ_sanct && targ_adj && !targ_friendly && !targ_undead;
     case SPELL_BLINK_AWAY:
     case SPELL_BLINK_RANGE:
         return !targ_friendly;
@@ -2769,6 +2809,21 @@ bool ms_waste_of_time( const monster* mon, spell_type monspell )
 
     case SPELL_SWIFTNESS:
         if (mon->has_ench(ENCH_SWIFT))
+            ret = true;
+        break;
+
+    case SPELL_REGENERATION:
+        if (mon->has_ench(ENCH_REGENERATION))
+            ret = true;
+        break;
+
+    case SPELL_MIRROR_DAMAGE:
+        if (mon->has_ench(ENCH_MIRROR_DAMAGE))
+            ret = true;
+        break;
+
+    case SPELL_STONESKIN:
+        if (mon->has_ench(ENCH_STONESKIN))
             ret = true;
         break;
 
@@ -3089,7 +3144,13 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
 {
     gender_type gender = GENDER_NEUTER;
 
-    if (mons_genus(mon_type) == MONS_MERMAID || mon_type == MONS_HARPY
+    if (mons_genus(mon_type) == MONS_MERMAID
+        || mon_type == MONS_HARPY
+        || mon_type == MONS_TROLLKONOR
+        || mon_type == MONS_HULDRA
+        || mon_type == MONS_WITCH
+        || mon_type == MONS_EVIL_WITCH
+        || mon_type == MONS_FOREST_WITCH
         || mon_type == MONS_SPHINX)
     {
         gender = GENDER_FEMALE;
@@ -3142,28 +3203,28 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
     switch (variant)
     {
         case PRONOUN_CAP:
-            return ((gender == 0) ? "It" :
-                    (gender == 1) ? "He" : "She");
+            return ((gender == GENDER_NEUTER) ? "It" :
+                    (gender == GENDER_MALE)   ? "He" : "She");
 
         case PRONOUN_NOCAP:
-            return ((gender == 0) ? "it" :
-                    (gender == 1) ? "he" : "she");
+            return ((gender == GENDER_NEUTER) ? "it" :
+                    (gender == GENDER_MALE)   ? "he" : "she");
 
         case PRONOUN_CAP_POSSESSIVE:
-            return ((gender == 0) ? "Its" :
-                    (gender == 1) ? "His" : "Her");
+            return ((gender == GENDER_NEUTER) ? "Its" :
+                    (gender == GENDER_MALE)   ? "His" : "Her");
 
         case PRONOUN_NOCAP_POSSESSIVE:
-            return ((gender == 0) ? "its" :
-                    (gender == 1) ? "his" : "her");
+            return ((gender == GENDER_NEUTER) ? "its" :
+                    (gender == GENDER_MALE)   ? "his" : "her");
 
         case PRONOUN_REFLEXIVE:  // Awkward at start of sentence, always lower.
-            return ((gender == 0) ? "itself"  :
-                    (gender == 1) ? "himself" : "herself");
+            return ((gender == GENDER_NEUTER) ? "itself"  :
+                    (gender == GENDER_MALE)   ? "himself" : "herself");
 
         case PRONOUN_OBJECTIVE:  // Awkward at start of sentence, always lower.
-            return ((gender == 0) ? "it"  :
-                    (gender == 1) ? "him" : "her");
+            return ((gender == GENDER_NEUTER) ? "it"  :
+                    (gender == GENDER_MALE)   ? "him" : "her");
      }
 
     return ("");

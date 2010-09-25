@@ -269,8 +269,6 @@ bool mons_can_be_zombified(const monster* mon);
 bool mons_class_can_use_stairs(int mc);
 bool mons_can_use_stairs(const monster* mon);
 bool mons_enslaved_body_and_soul(const monster* mon);
-bool mons_enslaved_twisted_soul(const monster* mon);
-bool mons_enslaved_intact_soul(const monster* mon);
 bool mons_enslaved_soul(const monster* mon);
 bool name_zombie(monster* mon, int mc, const std::string mon_name);
 bool name_zombie(monster* mon, const monster* orig);
@@ -365,6 +363,7 @@ bool mons_class_is_confusable(int mc);
 bool mons_class_is_slowable(int mc);
 bool mons_class_is_stationary(int mc);
 bool mons_is_stationary(const monster* mon);
+bool mons_class_is_firewood(int mc);
 bool mons_is_firewood(const monster* mon);
 bool mons_has_body(const monster* mon);
 

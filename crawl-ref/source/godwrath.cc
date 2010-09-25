@@ -1101,7 +1101,7 @@ static bool _fedhas_retribution()
     return (true);
 }
 
-bool divine_retribution(god_type god, bool no_bonus)
+bool divine_retribution(god_type god, bool no_bonus, bool force)
 {
     ASSERT(god != GOD_NO_GOD);
 
@@ -1111,8 +1111,8 @@ bool divine_retribution(god_type god, bool no_bonus)
     // Good gods don't use divine retribution on their followers, and
     // gods don't use divine retribution on followers of gods they don't
     // hate.
-    if ((god == you.religion && is_good_god(god))
-        || (god != you.religion && !god_hates_your_god(god)))
+    if (!force && ((god == you.religion && is_good_god(god))
+        || (god != you.religion && !god_hates_your_god(god))))
     {
         return (false);
     }
@@ -1120,7 +1120,6 @@ bool divine_retribution(god_type god, bool no_bonus)
     god_acting gdact(god, true);
 
     bool do_more    = true;
-    bool did_retrib = true;
     switch (god)
     {
     // One in ten chance that Xom might do something good...
@@ -1139,7 +1138,7 @@ bool divine_retribution(god_type god, bool no_bonus)
     case GOD_SIF_MUNA:      do_more = _sif_muna_retribution(); break;
     case GOD_ELYVILON:      do_more = _elyvilon_retribution(); break;
     case GOD_JIYVA:         do_more = _jiyva_retribution(); break;
-    case GOD_FEDHAS:         do_more = _fedhas_retribution(); break;
+    case GOD_FEDHAS:        do_more = _fedhas_retribution(); break;
     case GOD_CHEIBRIADOS:   do_more = _cheibriados_retribution(); break;
 
     default:
@@ -1148,12 +1147,11 @@ bool divine_retribution(god_type god, bool no_bonus)
              god_name(god).c_str());
 #endif
         do_more    = false;
-        did_retrib = false;
-        break;
+        return (false);
     }
 
     if (no_bonus)
-        return (did_retrib);
+        return (true);
 
     // Sometimes divine experiences are overwhelming...
     if (do_more && one_chance_in(5) && you.experience_level < random2(37))
@@ -1179,7 +1177,7 @@ bool divine_retribution(god_type god, bool no_bonus)
     // point...the punishment might have reduced penance further.
     dec_penance(god, 1 + random2(3));
 
-    return (did_retrib);
+    return (true);
 }
 
 bool do_god_revenge(conduct_type thing_done)

@@ -1014,7 +1014,7 @@ void MiscastEffect::_enchantment(int severity)
             _potion_effect(POT_CONFUSION, 10);
             break;
         case 2:
-            contaminate_player(random2avg(19, 3));
+            contaminate_player(random2avg(19, 3), spell != SPELL_NO_SPELL);
             break;
         case 3:
             do
@@ -1182,7 +1182,7 @@ void MiscastEffect::_translocation(int severity)
             send_abyss();
             break;
         case 3:
-            contaminate_player(random2avg(19, 3));
+            contaminate_player(random2avg(19, 3), spell != SPELL_NO_SPELL);
             break;
         }
         break;
@@ -1895,7 +1895,7 @@ void MiscastEffect::_transmutation(int severity)
             _potion_effect(POT_CONFUSION, 10);
             break;
         case 3:
-            contaminate_player(random2avg(19, 3));
+            contaminate_player(random2avg(19, 3), spell != SPELL_NO_SPELL);
             break;
         }
         break;
@@ -1910,10 +1910,11 @@ void MiscastEffect::_transmutation(int severity)
             you_msg = "Your body is flooded with distortional energies!";
             mon_msg = "@The_monster@'s body is flooded with distortional "
                       "energies!";
-            if (_ouch(3 + random2avg(18, 2)) && target->alive())
+            if (_ouch(3 + random2avg(18, 2)) && target->alive()
+                && target->atype() == ACT_PLAYER)
             {
-                if (target->atype() == ACT_PLAYER)
-                    contaminate_player(random2avg(35, 3), false, false, false);
+                contaminate_player(random2avg(35, 3),
+                                   spell != SPELL_NO_SPELL, false);
             }
             break;
 

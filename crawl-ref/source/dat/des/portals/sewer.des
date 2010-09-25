@@ -673,19 +673,19 @@ NAME:   sewer_sea
 TAGS:   sewer no_item_gen no_monster_gen no_rotate no_pool_fixup
 ORIENT: encompass
 MONS:   rat w:3 / grey rat w:1 / nothing w:1, rat / grey rat / green rat
-KMONS:  G = mermaid hd:3 name:malarious name_adjective
-KMONS:  H = siren hd:3 name:sickly name_adjective
+KMONS:  G = mermaid hd:3 name:malarious name_adjective name_descriptor
+KMONS:  H = siren hd:3 name:sickly name_adjective name_descriptor
 KMONS:  hJ = giant newt / small snake / snake / nothing w:2
 KMONS:  g = giant newt / small snake / nothing w:3
-KFEAT:  gS = W
+KFEAT:  gsh = W
 KFEAT:  O = open_sea
-COLOUR: g = lightgreen
+COLOUR: gh = lightgreen
 COLOUR: HJ = blue
-KFEAT:  hGnNsHJ = w
-COLOUR: hG = green
-COLOUR: sS = cyan
-COLOUR: N = lightblue
-KITEM:  M = dart / stone
+KFEAT:  GnHJ = w
+COLOUR: G = green
+COLOUR: s = cyan
+KITEM:  M = potion of levitation q:4
+KITEM:  N = scroll of teleportation q:2
 MARKER: H = lua:MonPropsMarker:new { description="A young woman with a fish tail " .. \
                        "in place of legs. She looks quite sick, but still capable" .. \
                        " of bespelling her audience.\n"}
@@ -709,18 +709,18 @@ OOOnnnnnnnnnnnnnnnnnnnOOOOOOOOOOOOOO                     cccWWW.ccccccccW..c..c
 OOOnnnnnnnnnnnnnJnnnnnOOOOOOOOOOOOOO                     c<AWWWW...1.2...1.cc.c
 OOOnnnnnnnnnnnnnnnnnnnOOOOOOOOOOOOOO                     cccccccccccccccccccc.c
 OOOnnnnnnnnnJnnnscccccccccccccc  cccccccccccccccc ccccccccccwhwwwwwwwWwwwww2..c
-OOOnnnnnnnnnnnns.+.....+...%Wwc  c1.....cc1..1.McccwwWWWgWWWWWWWW..W..WW.Www..c
-OOOnnnnnnnnHnnnW.ccccccc...%*Wc  c.ccccc.c.2..1%cccwWWccccccccccccc11cccc.gwWwcc
-OOOnnnnnnnnnnnsW.ccc.1cc...%*Wc  c2cwwcc.cccc+cccwwwc.c           cccc  cc..WWwc
-OOOnnnnnnnnnJnsW.ccc..cc...|WWc ccwWgcwc.cGgwWWWWWWcc.c                  ccccwhc
-OOOnnnnnnnnnnNsWWccc1.cc<..WwccccwgWccwc.chwgWW..1....c            cccccccccccwc
-OOOnnnnnnnnNNswWWWwc.1ccccccccwwwWW.1cwWWcWWW..2ccccccc            cGwwwwwwwwwwc
-OOOnnnnnnnNsswWWWWWWWsswwswwwhcWW..1ccccWWWW1..cc                  ccccccccccccc
-OOOnnnnnnnnNNshWWWwc..cccccccccW.1.cc  ccW1..ccc
-OOOnnnnnnnnnnNswgccc.2c  cwg2....ccc    cccccc
-OOOnnnnnnnnnnnNswcccc1cc cgWcccccc
-OOOnnnnnnnnnnnnNccccc..ccc.1c
-OOOnnnnnnnnnnnnnNccccc1.1..cc
+OOOnnnnnnnnnnnns.+.....+...%Wwc  c1.....cc$$$.1McccwwWWWgWWWWWWWW..W..WW.Www..c
+OOOnnnnnnnnHnnsW.ccccccc...%*Wc  c.ccccc.c.1.W.NcccwWWccccccccccccc11cccc.gwWwcc
+OOOnnnnnnnnnnnsW.ccc.1cc...%*Wc  c2cwwcc.ccccWcccwwwc.c           cccc  cc..WWwc
+OOOnnnnnnnnnJnsW.ccc..cc...|WWc ccwWgcwc.cGgwWWWWWWcc.c                  ccccwwc
+OOOnnnnnnnnnnssWWccc1.cc<..WwccccwgWccwc.chwgWW..1....c            cccccccccccwc
+OOOnnnnnnnnsssWWWWWc.1ccccccccwwwWW.1cwWWcWWW..2ccccccc            cGwwwwwwwwwwc
+OOOnnnnnnnsssWWWWWWWWsswwswwwhcWW..1ccccWWWW1..cc                  ccccccccccccc
+OOOnnnnnnnnssshWWWWc..cccccccccW.1.cc  ccW1..ccc
+OOOnnnnnnnnnnssWgccc.2c  cwg2....ccc    cccccc
+OOOnnnnnnnnnnnssWcccc1cc cgWcccccc
+OOOnnnnnnnnnnnnsccccc..ccc.1c
+OOOnnnnnnnnnnnnnsccccc1.1..cc
 OOOnnnnnnnnnnnnnnnnnnccccccc
 OOOnnnnnnnnnnnnnnnnnnnOOOOOOOOOOOOOO
 OOOnnnnnnnnnnnnnnnnnnnOOOOOOOOOOOOOO
@@ -734,3 +734,4 @@ OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
 OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
 OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
 ENDMAP
+

@@ -651,6 +651,10 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
 // Choose random nearest monster as a foe.
 void _set_nearest_monster_foe(monster* mon)
 {
+    // These don't look for foes.
+    if (mon->good_neutral() || mon->strict_neutral())
+        return;
+
     const bool friendly = mon->friendly();
     const bool neutral  = mon->neutral();
 
@@ -753,7 +757,8 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
         // the head, of course, always triggers this code.
         if (event == ME_WHACK
             || ((wontAttack != sourceWontAttack || isSmart)
-                && !mons_is_fleeing(mon) && !mons_is_panicking(mon)))
+                && (!mons_is_fleeing(mon) && !mons_class_flag(mon->type, M_FLEEING))
+                && !mons_is_panicking(mon)))
         {
             // Monster types that you can't gain experience from cannot
             // fight back, so don't bother having them do so.  If you
@@ -813,7 +818,7 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
         // XXX: Neutral monsters are a tangled mess of arbitrary logic.
         // It's not even clear any more what behaviours are intended for
         // neutral monsters and what are merely accidents of the code.
-        if (mon->neutral() && mon->attitude == ATT_NEUTRAL)
+        if (mon->neutral())
         {
             if (mon->asleep())
                 mon->behaviour = BEH_WANDER;
@@ -826,7 +831,8 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
         // Will alert monster to <src> and turn them
         // against them, unless they have a current foe.
         // It won't turn friends hostile either.
-        if (!mons_is_fleeing(mon) && !mons_is_panicking(mon)
+        if ((!mons_is_fleeing(mon) || mons_class_flag(mon->type, M_FLEEING))
+            && !mons_is_panicking(mon)
             && !mons_is_cornered(mon))
         {
             mon->behaviour = BEH_SEEK;

@@ -34,7 +34,6 @@ void map_knowledge_forget_mons(const coord_def& c)
 void set_terrain_changed( int x, int y )
 {
     env.map_knowledge[x][y].flags |= MAP_CHANGED_FLAG;
-    env.map_knowledge[x][y].flags &= ~MAP_SEEN_FLAG;
 
     dungeon_events.fire_position_event(DET_FEAT_CHANGE, coord_def(x, y));
 

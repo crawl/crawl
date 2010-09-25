@@ -85,7 +85,7 @@ Reavers are versatile, using destructive magics alongside melee fighting.
 %%%%
 Stalker
 
-Stalkers are ready to stab with robe, cloak and a good weapon. They augment stealth with magic and start with the Sting spell to poison enemies.
+Stalkers use stealth and transformative magic to approach and subdue their victims.
 %%%%
 Summoner
 

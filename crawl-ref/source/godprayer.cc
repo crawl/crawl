@@ -158,7 +158,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
         enchant_weapon(ENCHANT_TO_DAM, true, wpn);
 
     if (is_cursed)
-        do_uncurse_item(wpn);
+        do_uncurse_item(wpn, false);
 
     if (god == GOD_SHINING_ONE)
     {

@@ -196,7 +196,7 @@ void weapon_switch(int targ)
 // Look for a butchering implement. If fallback is true,
 // prompt the user if no obvious options exist.
 // Returns whether a weapon was switched.
-static bool _find_butchering_implement(int &butcher_tool)
+static bool _find_butchering_implement(int &butcher_tool, bool gloved_butcher)
 {
     // When berserk, you can't change weapons.  Sanity check!
     if (!can_wield(NULL, true))
@@ -213,9 +213,10 @@ static bool _find_butchering_implement(int &butcher_tool)
             && item_type_known(*wpn)
             && get_weapon_brand(*wpn) == SPWPN_DISTORTION)
         {
-            mprf(MSGCH_WARN,
-                 "You're wielding a weapon of distortion, will not autoswap "
-                 "for butchering.");
+            if (!gloved_butcher)
+                mprf(MSGCH_WARN,
+                    "You're wielding a weapon of distortion, will not "
+                    "autoswap for butchering.");
 
             return (false);
         }
@@ -229,7 +230,7 @@ static bool _find_butchering_implement(int &butcher_tool)
     // Look for a butchering implement in your pack.
     for (int i = 0; i < ENDOFPACK; ++i)
     {
-        item_def& tool(you.inv[i]);
+        item_info tool = get_item_info(you.inv[i]);
         if (tool.defined()
             && tool.base_type == OBJ_WEAPONS
             && can_cut_meat( tool )
@@ -255,12 +256,15 @@ static bool _find_butchering_implement(int &butcher_tool)
 
     if (!potential_candidate)
     {
-        mpr("You don't carry any weapon you could use for butchering.");
-        if (Hints.hints_left)
+        if (!gloved_butcher)
         {
-            mpr("You should pick up the first knife, dagger, sword or axe "
-                "you find so you can use it to butcher corpses.",
-                MSGCH_TUTORIAL);
+            mpr("You don't carry any weapon you could use for butchering.");
+            if (Hints.hints_left)
+            {
+                mpr("You should pick up the first knife, dagger, sword or axe "
+                    "you find so you can use it to butcher corpses.",
+                    MSGCH_TUTORIAL);
+            }
         }
 
         return (false);
@@ -298,11 +302,12 @@ static bool _find_butchering_implement(int &butcher_tool)
         return (false);
     }
 
-    if (you.inv[item_slot].defined()
-        && you.inv[item_slot].base_type == OBJ_WEAPONS
-        && can_cut_meat(you.inv[item_slot]))
+    item_info tool = get_item_info(you.inv[item_slot]);
+    if (tool.defined()
+        && tool.base_type == OBJ_WEAPONS
+        && can_cut_meat(tool))
     {
-        if (can_wield(&you.inv[item_slot]))
+        if (can_wield(&tool))
         {
             butcher_tool = item_slot;
             return (true);
@@ -343,10 +348,20 @@ static bool _prepare_butchery(bool can_butcher, bool removed_gloves,
 
     if (wpn_switch)
     {
-        mprf("Switching to %s.",
-             butchering_tool == -1 ? "unarmed" : "a butchering implement");
+        std::string tool;
+        if (butchering_tool == -1)
+        {
+            tool = "unarmed";
+        }
+        else
+        {
+            item_def& new_wpn(you.inv[butchering_tool]);
+            tool = new_wpn.name(DESC_INVENTORY_EQUIP);
+        }
 
-        if (!wield_weapon(true, butchering_tool, false, true))
+        mprf("Switching to %s for butchering.", tool.c_str());
+
+        if (!wield_weapon(true, butchering_tool, false, true, false, false))
             return (false);
     }
 
@@ -551,7 +566,8 @@ bool butchery(int which_corpse, bool bottle_blood)
     if (!can_butcher)
     {
         // Try to find a butchering implement.
-        if (!_find_butchering_implement(butcher_tool) && !gloved_butcher)
+        if (!_find_butchering_implement(butcher_tool, gloved_butcher) &&
+            !gloved_butcher)
             return (false);
 
         if (butcher_tool == -1 && gloved_butcher)
@@ -1139,9 +1155,9 @@ public:
             if (is_bad_food(*food2) && !is_bad_food(*food1))
                 return (true);
 
-            if (Options.prefer_safe_chunks)
+            if (Options.prefer_safe_chunks && !you.is_undead)
             {
-                // Offer non-contaminated chunks first.
+                // Offer contaminated chunks last.
                 if (is_contaminated(*food1) && !is_contaminated(*food2))
                     return (false);
                 if (is_contaminated(*food2) && !is_contaminated(*food1))
@@ -1737,14 +1753,14 @@ static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
     case CE_MUTAGEN_RANDOM:
         mpr("This meat tastes really weird.");
         mutate(RANDOM_MUTATION);
-        did_god_conduct( DID_DELIBERATE_MUTATING, 10);
+        did_god_conduct(DID_DELIBERATE_MUTATING, 10);
         xom_is_stimulated(100);
         break;
 
     case CE_MUTAGEN_BAD:
         mpr("This meat tastes *really* weird.");
         give_bad_mutation();
-        did_god_conduct( DID_DELIBERATE_MUTATING, 10);
+        did_god_conduct(DID_DELIBERATE_MUTATING, 10);
         xom_is_stimulated(random2(200));
         break;
 
@@ -1755,7 +1771,6 @@ static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
         break;
 
     case CE_POISONOUS:
-    case CE_POISON_CONTAM:
         mpr("Yeeuch - this meat is poisonous!");
         if (poison_player(3 + random2(4), "", "poisonous meat"))
             xom_is_stimulated(random2(128));
@@ -1798,6 +1813,7 @@ static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
         do_eat = true;
         break;
 
+    case CE_POISON_CONTAM: // _determine_chunk_effect should never return this
     case CE_MUTAGEN_GOOD:
     case CE_NOCORPSE:
     case CE_RANDOM:
@@ -2263,7 +2279,7 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
 
                 case CE_POISONOUS:
                 case CE_POISON_CONTAM:
-                    make_hungry(food_value / 2, false);
+                    make_hungry(food_value / duration / 2, false);
                     // Always print this message - maybe you lost poison
                     // resistance due to feeding.
                     mpr("Blech - this blood tastes nasty!");
@@ -2345,13 +2361,9 @@ bool is_contaminated(const item_def &food)
     if (food.base_type != OBJ_FOOD && food.base_type != OBJ_CORPSES)
         return (false);
 
-    // Has no (bad) effect on ghouls.
-    if (you.species == SP_GHOUL)
-        return (false);
-
     const corpse_effect_type chunk_type = mons_corpse_effect(food.plus);
     return (chunk_type == CE_CONTAMINATED
-            || player_res_poison(false) && chunk_type == CE_POISON_CONTAM);
+            || (player_res_poison(false) && chunk_type == CE_POISON_CONTAM));
 }
 
 // Returns true if a food item (also corpses) will cause rotting.
@@ -2722,7 +2734,11 @@ static corpse_effect_type _determine_chunk_effect(corpse_effect_type chunktype,
             chunktype = CE_POISONOUS;
             break;
         }
-        // else fall through
+        else
+        {
+            chunktype = CE_CONTAMINATED;
+            // and fall through
+        }
     case CE_CONTAMINATED:
         switch (player_mutation_level(MUT_SAPROVOROUS))
         {

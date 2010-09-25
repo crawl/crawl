@@ -2626,6 +2626,9 @@ static void _portal_vault_level(int level_number)
     if (!vault)
         vault = random_map_for_tag(level_name, false);
 
+    if (!vault)
+        vault = find_map_by_name("broken_portal");
+
     if (vault)
     {
         // XXX: This is pretty hackish, I confess.
@@ -2638,16 +2641,10 @@ static void _portal_vault_level(int level_number)
     }
     else
     {
-        _plan_main(level_number, 0);
-        _place_minivaults(level_name, 1, 1, true);
-
-        if (env.level_vaults.empty())
-        {
-            mprf(MSGCH_ERROR, "No maps or tags named '%s'.",
-                 level_name);
-            ASSERT(false);
-            end(-1);
-        }
+        mprf(MSGCH_ERROR, "No maps or tags named '%s', and no backup either.",
+             level_name);
+        ASSERT(false);
+        end(-1);
     }
 
     link_items();
@@ -3337,11 +3334,14 @@ coord_def dgn_random_point_in_bounds(dungeon_feature_type searchfeat,
     if (tries == -1)
     {
         // Try a quick and dirty random search:
+        int n = 10;
+        if (searchfeat == DNGN_FLOOR)
+            n = 500;
         coord_def chosen = dgn_random_point_in_bounds(searchfeat,
                                                       mapmask,
                                                       adjacent_feat,
                                                       monster_free,
-                                                      10);
+                                                      n);
         if (!chosen.origin())
             return chosen;
 
@@ -3376,13 +3376,11 @@ coord_def dgn_random_point_in_bounds(dungeon_feature_type searchfeat,
 
 static void _place_specific_feature(dungeon_feature_type feat)
 {
-    coord_def c;
-
-    do
-        c = random_in_bounds();
-    while (grd(c) != DNGN_FLOOR || monster_at(c));
-
-    grd(c) = feat;
+    coord_def c = dgn_random_point_in_bounds(DNGN_FLOOR, 0, DNGN_UNSEEN, true);
+    if (in_bounds(c))
+        env.grid(c) = feat;
+    else
+        dgn_veto_level();
 }
 
 static void _place_specific_stair(dungeon_feature_type stair,
@@ -4038,8 +4036,26 @@ static void _builder_items(int level_number, level_area_type level_type, int ite
     {
         for (i = 0; i < items_wanted; i++)
         {
-            items( 1, specif_type, OBJ_RANDOM, false, items_levels, 250,
-                   MMT_NO_ITEM );
+            // porridge in the dwarf hall
+            if (player_in_branch(BRANCH_DWARF_HALL))
+            {
+                const int it = random2(100);
+                if (it == 1)
+                {
+                    items(1, OBJ_POTIONS, POT_PORRIDGE, false, 0, 250,
+                          MMT_NO_ITEM);
+                }
+                else if (it < 10)
+                {
+                    items(1, specif_type, OBJ_RANDOM, false, items_levels, 250,
+                          MMT_NO_ITEM);
+                }
+            }
+            else
+            {
+                items(1, specif_type, OBJ_RANDOM, false, items_levels, 250,
+                      MMT_NO_ITEM);
+            }
         }
 
         // Make sure there's a very good chance of a knife being placed
@@ -4060,14 +4076,6 @@ static void _builder_items(int level_number, level_area_type level_type, int ite
                 mitm[item_no].flags   = 0; // no id, no race/desc, no curse
                 mitm[item_no].special = 0; // no ego type
             }
-        }
-
-        // porridge in the dwarf hall
-        if (player_in_branch( BRANCH_DWARF_HALL )
-            && level_number > 2 && one_chance_in(10))
-        {
-            item_no = items( 0, OBJ_POTIONS, POT_PORRIDGE, false, 0, 250,
-                             MMT_NO_ITEM );
         }
     }
 }
@@ -4561,12 +4569,19 @@ static coord_def _find_random_grid(int grid, unsigned mask)
     return coord_def(0, 0);
 }
 
+static bool _connect_spotty(const coord_def& from);
+
 static void _connect_vault(const vault_placement &vp)
 {
     std::vector<coord_def> exc = _external_connection_points(vp, vp.exits);
     for (int i = 0, size = exc.size(); i < size; ++i)
     {
         const coord_def &p = exc[i];
+
+        // Try to connect vaults in a spotty fashion in the mines.
+        if (player_in_branch(BRANCH_ORCISH_MINES) && _connect_spotty(p))
+            continue;
+
         const coord_def floor = _find_random_grid(DNGN_FLOOR, MMT_VAULT);
 
         if (!floor.x && !floor.y)
@@ -5112,7 +5127,7 @@ retry:
         }
 
         if (props.exists("uncursed"))
-            do_uncurse_item(item);
+            do_uncurse_item(item, false);
         if (props.exists("useful") && (useless_tries++ < 10)
             && is_useless_item(item, false))
         {
@@ -6063,13 +6078,14 @@ static dungeon_feature_type _pick_an_altar()
             break;
 
         case BRANCH_DWARF_HALL:
-            temp_rand = random2(10); // 50% chance of Okawaru
+            temp_rand = random2(7);
 
             altar_type = ((temp_rand == 0) ? DNGN_ALTAR_KIKUBAAQUDGHA :
                           (temp_rand == 1) ? DNGN_ALTAR_YREDELEMNUL :
-                          (temp_rand == 2) ? DNGN_ALTAR_NEMELEX_XOBEH :
+                          (temp_rand == 2) ? DNGN_ALTAR_MAKHLEB :
                           (temp_rand == 3) ? DNGN_ALTAR_TROG :
-                          (temp_rand == 4) ? DNGN_ALTAR_CHEIBRIADOS
+                          (temp_rand == 4) ? DNGN_ALTAR_CHEIBRIADOS:
+                          (temp_rand == 5) ? DNGN_ALTAR_ELYVILON
                                            : DNGN_ALTAR_OKAWARU);
             break;
 
@@ -6476,6 +6492,75 @@ static object_class_type _item_in_shop(shop_type shop_type)
 
     return (OBJ_RANDOM);
 }                               // end item_in_shop()
+
+// Keep seeds away from the borders so we don't end up with a
+// straight wall.
+bool _spotty_seed_ok(const coord_def& p)
+{
+    const int margin = 4;
+    return (p.x >= margin && p.y >= margin
+            && p.x < GXM - margin && p.y < GYM - margin);
+}
+
+// Connect vault exit "from" to dungeon floor by growing a spotty chamber.
+// This tries to be like _spotty_level, but probably isn't quite.
+// It might be better to aim for a more open connection -- currently
+// it stops pretty much as soon as connectivity is attained.
+bool _connect_spotty(const coord_def& from)
+{
+    std::set<coord_def> flatten;
+    std::set<coord_def> border;
+    std::set<coord_def>::const_iterator it;
+    bool success = false;
+
+    for (adjacent_iterator ai(from); ai; ++ai)
+        if (unforbidden(*ai, MMT_VAULT) && _spotty_seed_ok(*ai))
+            border.insert(*ai);
+
+    while (!success && !border.empty())
+    {
+        coord_def cur;
+        int count = 0;
+        for (it = border.begin(); it != border.end(); ++it)
+            if (one_chance_in(++count))
+                cur = *it;
+        border.erase(border.find(cur));
+
+        // Flatten orthogonal neighbours, and add new neighbours to border.
+        flatten.insert(cur);
+        for (radius_iterator ai(cur, 1, C_POINTY, NULL, true); ai; ++ai)
+        {
+            if (!unforbidden(*ai, MMT_VAULT))
+                continue;
+
+            if (grd(*ai) == DNGN_FLOOR)
+                success = true; // Through, but let's remove the others, too.
+
+            if (grd(*ai) != DNGN_ROCK_WALL
+                || flatten.find(*ai) != flatten.end())
+            {
+                continue;
+            }
+
+            flatten.insert(*ai);
+            for (adjacent_iterator bi(*ai); bi; ++bi)
+            {
+                if (!unforbidden(*bi, MMT_VAULT)
+                    && _spotty_seed_ok(*bi)
+                    && flatten.find(*bi) == flatten.end())
+                {
+                    border.insert(*bi);
+                }
+            }
+        }
+    }
+
+    if (success)
+        for (it = flatten.begin(); it != flatten.end(); ++it)
+            grd(*it) = DNGN_FLOOR;
+
+    return (success);
+}
 
 void spotty_level(bool seeded, int iterations, bool boxy)
 {
@@ -8089,7 +8174,8 @@ bool place_specific_trap(const coord_def& where, trap_type spec_type)
 
         do
             spec_type = static_cast<trap_type>( random2(NUM_TRAPS) );
-        while (spec_type == forbidden1 || spec_type == forbidden2);
+        while (spec_type == forbidden1 || spec_type == forbidden2 ||
+               spec_type == TRAP_GOLUBRIA);
     }
 
     for (int tcount = 0; tcount < MAX_TRAPS; tcount++)

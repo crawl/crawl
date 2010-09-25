@@ -120,6 +120,11 @@ package::package(const char* file, bool writeable, bool empty)
         ssize_t res = ::read(fd, &head, sizeof(file_header));
         if (res < 0)
             sysfail("error reading the save file (%s)", file);
+        if (!res || !(head.magic || head.version || head.padding[0]
+                      || head.padding[1] || head.padding[2] || head.start))
+        {
+            fail("The save file (%s) is empty!", file);
+        }
         if (res != sizeof(file_header))
             fail("save file (%s) corrupted -- header truncated", file);
 
@@ -154,7 +159,11 @@ package::package(const char* file, bool writeable, bool empty)
 package::~package()
 {
     dprintf("package: finalizing\n");
-    ASSERT(!n_users);
+    ASSERT(!n_users || CrawlIsCrashing); // not merely aborted, there are
+        // live pointers to us.  With normal stack unwinding, destructors
+        // will make sure this never happens and this assert is good for
+        // catching missing manual deletes.  The C++ exit handler is the
+        // only place that can be legitimately call things in wrong order.
 
     if (rw && !aborted)
     {
@@ -185,7 +194,7 @@ void package::commit()
     head.magic = htole(PACKAGE_MAGIC);
     head.version = PACKAGE_VERSION;
     memset(&head.padding, 0, sizeof(head.padding));
-    head.start = write_directory();
+    head.start = htole(write_directory());
 #ifdef DO_FSYNC
     // We need a barrier before updating the link to point at the new directory.
     if (fdatasync(fd))
@@ -516,6 +525,14 @@ chunk_writer::chunk_writer(package *parent, const std::string _name)
 {
     ASSERT(parent);
     ASSERT(!parent->aborted);
+
+    /*
+    The save format is currently limited to 4 character names for simplicity
+    (we use 3 max).  If you want to extend this, please implement marshalling
+    of arbitrary strings in {read,write}_directory().
+    */
+    ASSERT(_name.size() <= 4);
+
     dprintf("chunk_writer(%s): starting\n", _name.c_str());
     pkg = parent;
     pkg->n_users++;

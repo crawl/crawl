@@ -1143,7 +1143,7 @@ static void _get_inv_items_to_show(std::vector<const item_def*> &v,
     }
 }
 
-static bool _any_items_to_select(int selector)
+bool any_items_to_select(int selector, bool msg)
 {
     for (int i = 0; i < ENDOFPACK; i++)
     {
@@ -1152,6 +1152,11 @@ static bool _any_items_to_select(int selector)
         {
             return (true);
         }
+    }
+    if (msg)
+    {
+        mprf(MSGCH_PROMPT, "%s",
+             _no_selectables_message(selector).c_str());
     }
     return (false);
 }
@@ -1547,7 +1552,8 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
 
     if (oper == OPER_WIELD // unwielding uses OPER_WIELD too
         && item.base_type == OBJ_WEAPONS
-        && get_weapon_brand(item) == SPWPN_DISTORTION)
+        && get_weapon_brand(item) == SPWPN_DISTORTION
+        && you.duration[DUR_WEAPON_BRAND] == 0)
     {
         return (true);
     }
@@ -1644,13 +1650,13 @@ int prompt_invent_item( const char *prompt,
                         operation_types oper,
                         bool allow_list_known )
 {
-    if (!_any_items_to_select(type_expect) && type_expect == OSEL_THROWABLE
+    if (!any_items_to_select(type_expect) && type_expect == OSEL_THROWABLE
         && oper == OPER_FIRE && mtype == MT_INVLIST)
     {
         type_expect = OSEL_ANY;
     }
 
-    if (!_any_items_to_select(type_expect) && type_expect != OSEL_WIELD
+    if (!any_items_to_select(type_expect) && type_expect != OSEL_WIELD
         && type_expect != OSEL_BUTCHERY && mtype == MT_INVLIST)
     {
         mprf(MSGCH_PROMPT, "%s",
@@ -1670,7 +1676,7 @@ int prompt_invent_item( const char *prompt,
     {
         need_prompt = need_getch = false;
 
-        if (_any_items_to_select(type_expect))
+        if (any_items_to_select(type_expect))
             keyin = '?';
         else
             keyin = '*';

@@ -45,7 +45,34 @@ enum element_type
     ETC_GOLD,           // colour of gold
     ETC_IRON,           // colour of iron
     ETC_BONE,           // colour of bone
+    ETC_ELVEN_BRICK,    // colour of the walls in the Elven Halls
+    ETC_WAVES,          // cyan, with regularly occurring lightcyan waves
+    ETC_TREE,           // colour of trees
     ETC_RANDOM,         // any colour (except BLACK)
+    ETC_FIRST_LUA = 96, // colour indices have to be <128
+};
+
+typedef int (*element_colour_calculator)(int, const coord_def&);
+
+struct element_colour_calc
+{
+    element_type type;
+    std::string name;
+
+    element_colour_calc(element_type _type, std::string _name,
+                        element_colour_calculator _calc)
+        : type(_type), name(_name), calc(_calc)
+        {};
+
+    virtual int get(const coord_def& loc = coord_def(),
+                    bool non_random = false);
+
+    virtual ~element_colour_calc() {};
+
+protected:
+    int rand(bool non_random);
+
+    element_colour_calculator calc;
 };
 
 int str_to_colour(const std::string &str, int default_colour = -1,
@@ -53,12 +80,16 @@ int str_to_colour(const std::string &str, int default_colour = -1,
 const std::string colour_to_str(uint8_t colour);
 unsigned int str_to_tile_colour(std::string colour);
 
+void init_element_colours();
+void add_element_colour(element_colour_calc *colour);
+void clear_colours_on_exit();
 uint8_t random_colour();
 uint8_t random_uncommon_colour();
 uint8_t make_low_colour(uint8_t colour);
 uint8_t make_high_colour(uint8_t colour);
 bool is_element_colour(int col);
-int  element_colour(int element, bool no_random = false);
+int  element_colour(int element, bool no_random = false,
+                    const coord_def& loc = coord_def());
 
 #if defined(TARGET_OS_WINDOWS) || defined(TARGET_OS_DOS) || defined(USE_TILE)
 unsigned short dos_brand( unsigned short colour,
@@ -66,6 +97,6 @@ unsigned short dos_brand( unsigned short colour,
 #endif
 
 // Applies ETC_ colour substitutions and brands.
-unsigned real_colour(unsigned raw_colour);
+unsigned real_colour(unsigned raw_colour, const coord_def& loc = coord_def());
 
 #endif

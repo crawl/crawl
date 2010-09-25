@@ -504,7 +504,7 @@ static const char *trap_names[] =
     "dart", "arrow", "spear", "axe",
     "teleport", "alarm", "blade",
     "bolt", "net", "zot", "needle",
-    "shaft"
+    "shaft", "passage"
 };
 
 const char *trap_name(trap_type trap)
@@ -881,9 +881,9 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
             }
             break;
         case SPWPN_ANTIMAGIC:
-            description += "It hinders all kind of magic users and even "
-                    "some types of magical creatures by disrupting the "
-                    "flow of magical energy. The wielder is affected as well.";
+            description += "It disrupts the flow of magical energy around "
+                    "spellcasters and certain magical creatures (including "
+                    "the wielder).";
             break;
         }
     }
@@ -1101,10 +1101,10 @@ static std::string _describe_ammo(const item_def &item)
             description += "It is tipped with asphyxiating poison.";
             break;
         case SPMSL_PARALYSIS:
-            description += "It is tipped with a paralyzing poison.";
+            description += "It is tipped with a paralysing substance.";
             break;
         case SPMSL_SLOW:
-            description += "It is coated with a poison that causes slowness of the body.";
+            description += "It is coated with a substance that causes slowness of the body.";
             break;
         case SPMSL_SLEEP:
             description += "It is coated with a fast-acting tranquilizer.";
@@ -1376,11 +1376,6 @@ static std::string _describe_armour( const item_def &item, bool verbose )
                        (race == ISFLAG_ELVEN)   ? "elves"
                                                 : "orcs";
         description += " well.";
-    }
-
-    if (verbose && get_armour_slot(item) == EQ_BODY_ARMOUR)
-    {
-        description += "\n\n";
     }
 
     if (!is_artefact(item))
@@ -2884,9 +2879,10 @@ static std::string _monster_stat_description(const monster_info& mi)
     if (mons_class_flag(mi.type, M_STATIONARY))
         result << pronoun << " cannot move.\n";
 
+    // Monsters can glow from both light and radiation.
     if (mons_class_flag(mi.type, M_GLOWS_LIGHT))
         result << pronoun << " is outlined in light.\n";
-    else if (mons_class_flag(mi.type, M_GLOWS_RADIATION))
+    if (mons_class_flag(mi.type, M_GLOWS_RADIATION))
         result << pronoun << " is glowing with mutagenic radiation.\n";
 
     // These differ between ghost demon monsters, so would be spoily.
@@ -3123,6 +3119,8 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         inf.quote += "\n";
 
 #ifdef DEBUG_DIAGNOSTICS
+    if (mi.pos.origin())
+        return; // not a real monster
     struct monster& mons = *mi.mon();
     const actor *mfoe = mons.get_foe();
     inf.body << "\nMonster foe: "
@@ -3340,7 +3338,8 @@ static bool _print_god_abil_desc(int god, int numpower)
     if (!pmsg[0])
         return (false);
 
-    std::string buf = adjust_abil_message(pmsg);
+    // Don't display ability upgrades here.
+    std::string buf = adjust_abil_message(pmsg, false);
     if (buf.empty())
         return (false);
 
@@ -3936,13 +3935,11 @@ void describe_god( god_type which_god, bool give_title )
                 _print_final_god_abil_desc(which_god, buf,
                                            ABIL_JIYVA_JELLY_PARALYSE);
             }
-            const char *how = (you.piety >= 150) ? "carefully" :
-                              (you.piety >= 100) ? "often" :
-                              (you.piety >=  50) ? "sometimes" :
-                                                   "occasionally";
-
-            cprintf("%s %s shields you from corrosive effects.\n",
-                    god_name(which_god).c_str(), how);
+            if (you.piety >= piety_breakpoint(2))
+            {
+                cprintf("%s shields you from corrosive effects.\n",
+                        god_name(which_god).c_str());
+            }
         }
         else if (which_god == GOD_FEDHAS)
         {

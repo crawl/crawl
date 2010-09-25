@@ -76,6 +76,7 @@
 #include "place.h"
 #include "player.h"
 #include "random.h"
+#include "show.h"
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
@@ -919,7 +920,7 @@ std::string get_prefs_filename()
 #endif
 }
 
-static std::string _get_level_suffix(const level_id& lid)
+std::string get_level_filename(const level_id& lid)
 {
     switch (lid.level_type)
     {
@@ -935,19 +936,6 @@ static std::string _get_level_suffix(const level_id& lid)
     case LEVEL_PORTAL_VAULT:
         return ("ptl");
     }
-}
-
-static std::string _make_filename(std::string prefix, const level_id& lid,
-                                  bool isGhost = false)
-{
-    return get_savedir_filename(prefix, "", _get_level_suffix(lid), isGhost);
-}
-
-std::string make_filename(std::string prefix, int level, branch_type where,
-                          level_area_type ltype, bool isGhost)
-{
-    level_id lid(where, subdungeon_depth(where, level), ltype);
-    return _make_filename(prefix, lid, isGhost);
 }
 
 static void _write_ghost_version(writer &outf)
@@ -1079,6 +1067,12 @@ static void _place_player_on_stair(level_area_type old_level_type,
     {
         stair_taken = DNGN_EXIT_PORTAL_VAULT;
     }
+    else if (player_in_hell() &&
+             stair_taken >= DNGN_STONE_STAIRS_DOWN_I &&
+             stair_taken <= DNGN_STONE_STAIRS_DOWN_III)
+    {
+        stair_taken = DNGN_ENTER_HELL;
+    }
     else if (stair_taken >= DNGN_STONE_STAIRS_DOWN_I
              && stair_taken <= DNGN_ESCAPE_HATCH_DOWN)
     {
@@ -1111,7 +1105,7 @@ static void _place_player_on_stair(level_area_type old_level_type,
         // Only when entering a hell - when exiting, go back to the
         // entry stair.
         if (player_in_hell())
-            stair_taken = DNGN_STONE_STAIRS_UP_I;
+            stair_taken = DNGN_ENTER_HELL;
     }
     else if (stair_taken == DNGN_EXIT_ABYSS)
     {
@@ -1356,7 +1350,7 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     bool just_created_level = false;
 
-    std::string level_name = _get_level_suffix(level_id::current());
+    std::string level_name = get_level_filename(level_id::current());
 
     if (you.level_type == LEVEL_DUNGEON && old_level.level_type == LEVEL_DUNGEON
         || load_mode == LOAD_START_GAME && you.char_direction != GDT_GAME_START)
@@ -1470,6 +1464,11 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
         _redraw_all();
     }
 
+    // Clear map knowledge stair emphasis.
+    show_update_emphasis();
+
+    // Shouldn't happen, but this is too unimportant to assert.
+    env.final_effects.clear();
     los_changed();
 
     // Closes all the gates if you're on the way out.
@@ -1691,7 +1690,7 @@ void _save_level(const level_id& lid)
     // Nail all items to the ground.
     fix_item_coordinates();
 
-    _write_tagged_chunk(_get_level_suffix(lid), TAG_LEVEL);
+    _write_tagged_chunk(get_level_filename(lid), TAG_LEVEL);
 }
 
 #define SAVEFILE(file, savefn) \
@@ -1821,7 +1820,7 @@ static std::string _make_ghost_filename()
     if (you.level_type == LEVEL_PORTAL_VAULT)
         suffix = _make_portal_vault_ghost_suffix();
     else
-        suffix = _get_level_suffix(level_id::current());
+        suffix = get_level_filename(level_id::current());
     return get_bonefile_directory() + "bones." + suffix;
 }
 
@@ -1944,8 +1943,11 @@ bool load_ghost(bool creating_level)
 
         menv[imn].set_ghost(ghosts[0]);
         menv[imn].ghost_init();
+        menv[imn].bind_melee_flags();
         if (menv[imn].has_spells())
             menv[imn].bind_spell_flags();
+        if (menv[imn].ghost->species == SP_DEEP_DWARF)
+            menv[imn].flags |= MF_NO_REGEN;
 
         ghosts.erase(ghosts.begin());
 #ifdef BONES_DIAGNOSTICS

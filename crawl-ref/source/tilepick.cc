@@ -845,6 +845,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_PLAYER_GHOST;
     case MONS_INSUBSTANTIAL_WISP:
         return TILEP_MONS_INSUBSTANTIAL_WISP;
+    case MONS_SILENT_SPECTRE:
+        return TILEP_MONS_SILENT_SPECTRE;
 
     // rodents ('r')
     case MONS_RAT:
@@ -867,6 +869,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_SCORPION;
     case MONS_GIANT_SCORPION:
         return TILEP_MONS_GIANT_SCORPION;
+    case MONS_SPIDER:
+        return TILEP_MONS_SPIDER;
     case MONS_TARANTELLA:
         return TILEP_MONS_TARANTELLA;
     case MONS_JUMPING_SPIDER:
@@ -1232,8 +1236,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_SHADOW_WRAITH;
     case MONS_FREEZING_WRAITH:
         return TILEP_MONS_FREEZING_WRAITH;
-    case MONS_SPECTRAL_WARRIOR:
-        return TILEP_MONS_SPECTRAL_WARRIOR;
+    case MONS_PHANTASMAL_WARRIOR:
+        return TILEP_MONS_PHANTASMAL_WARRIOR;
     case MONS_SPECTRAL_THING:
         return TILEP_MONS_SPECTRAL_LARGE;
 
@@ -2571,6 +2575,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_SCORPION;
     case MONS_GIANT_SCORPION:
         return TILE_CORPSE_GIANT_SCORPION;
+    case MONS_SPIDER:
+        return TILE_CORPSE_SPIDER;
     case MONS_TARANTELLA:
         return TILE_CORPSE_TARANTELLA;
     case MONS_JUMPING_SPIDER:

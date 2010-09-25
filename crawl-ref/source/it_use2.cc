@@ -300,6 +300,9 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         else
             you.increase_duration(DUR_INVIS, random2(pow), 100);
 
+        if (drank_it)
+            you.attribute[ATTR_INVIS_UNCANCELLABLE] = 1;
+
         break;
 
     case POT_PORRIDGE:          // oatmeal - always gluggy white/grey?
@@ -442,7 +445,7 @@ bool unwield_item(bool showMsgs)
 
     const bool is_weapon = get_item_slot(item) == EQ_WEAPON;
 
-    if (is_weapon && !safe_to_remove_or_wear(item, true))
+    if (is_weapon && !safe_to_remove(item))
         return (false);
 
     unequip_item(EQ_WEAPON, showMsgs);

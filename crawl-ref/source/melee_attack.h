@@ -69,6 +69,7 @@ public:
     int       player_shield_tohit_penalty;
 
     bool      can_do_unarmed;
+    bool      apply_bleeding; // whether the attack should cause bleeding
 
     // Miscast to cause after special damage is done.  If miscast_level == 0
     // the miscast is discarded if special_damage_message isn't empty.
@@ -138,8 +139,6 @@ private:
     int  random_chaos_brand();
     void do_miscast();
 
-    std::vector<attack_final_effect> final_effects;
-
     void handle_noise(const coord_def & pos);
 
 private:
@@ -202,7 +201,6 @@ private:
     int  player_calc_base_weapon_damage();
     int  player_calc_base_unarmed_damage();
     void player_exercise_combat_skills();
-    bool player_monattk_final_hit_effects(bool mondied);
     bool player_monattk_hit_effects(bool mondied);
     void player_sustain_passive_damage();
     int  player_staff_damage(int skill);

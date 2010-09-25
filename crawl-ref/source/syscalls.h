@@ -8,7 +8,7 @@
 #define SYSCALLS_H
 
 #ifdef TARGET_OS_WINDOWS
-# ifdef TARGET_COMPILER_VC  
+# ifdef TARGET_COMPILER_VC
 #  include <direct.h>
 # endif
 # define WIN32_LEAN_AND_MEAN

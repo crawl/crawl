@@ -7,6 +7,8 @@
 #ifndef MONACT_H
 #define MONACT_H
 
+bool mons_can_move_towards_target(const monster* mon);
+
 void handle_monsters(void);
 void handle_monster_move(monster* mon);
 

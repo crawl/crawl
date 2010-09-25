@@ -22,6 +22,7 @@
 #include "env.h"
 #include "fight.h"
 #include "fprop.h"
+#include "godconduct.h"
 #include "los.h"
 #include "mapmark.h"
 #include "mutation.h"
@@ -65,7 +66,7 @@ static bool _killer_whose_match(kill_category whose, killer_type killer)
             return (killer == KILL_YOU_MISSILE || killer == KILL_YOU_CONF);
 
         case KC_FRIENDLY:
-            return (killer == KILL_MON_MISSILE || killer == KILL_YOU_CONF 
+            return (killer == KILL_MON_MISSILE || killer == KILL_YOU_CONF
                     || killer == KILL_MON);
 
         case KC_OTHER:
@@ -212,6 +213,10 @@ static void _spread_fire(const cloud_struct &cloud)
             _place_new_cloud( cloud.type, *ai, random2(30)+25, cloud.whose,
                               cloud.killer, cloud.spread_rate, cloud.colour,
                               cloud.name, cloud.tile );
+            if (cloud.whose == KC_YOU)
+                did_god_conduct(DID_KILL_PLANT, 1);
+            else if (cloud.whose == KC_FRIENDLY)
+                did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1);
         }
 
     }
@@ -1098,7 +1103,7 @@ std::string cloud_name_at_index(int cloudno)
 static const char *_terse_cloud_names[] =
 {
     "?",
-    "flame", "noxious fumes", "freezing vapour", "poison gases",
+    "flame", "noxious fumes", "freezing vapour", "poison gasses",
     "black smoke", "grey smoke", "blue smoke",
     "purple smoke", "translocational energy", "fire",
     "steam", "gloom", "ink", "blessed fire", "foul pestilence", "thin mist",
@@ -1112,7 +1117,7 @@ static const char *_verbose_cloud_names[] =
     "black smoke", "grey smoke", "blue smoke",
     "purple smoke", "translocational energy", "roaring flames",
     "a cloud of scalding steam", "a thick gloom", "ink", "blessed fire",
-    "a dark miasma", "thin mist", "seething chaos", "the rain", 
+    "a dark miasma", "thin mist", "seething chaos", "the rain",
     "a mutagenic fog", "magical condensation",
 };
 

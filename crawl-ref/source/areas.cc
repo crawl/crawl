@@ -395,8 +395,10 @@ int player::halo_radius2() const
     if (you.religion == GOD_SHINING_ONE && you.piety >= piety_breakpoint(0)
         && !you.penance[GOD_SHINING_ONE])
     {
-        const int r = std::min(LOS_RADIUS, you.piety / 20);
-        return (r*r);
+        // Preserve the middle of old radii.
+        const int r = you.piety - 10;
+        // The cap is 64, just less than the LOS of 65.
+        return std::min(LOS_RADIUS*LOS_RADIUS, r * r / 400);
     }
 
     return (-1);
@@ -412,7 +414,7 @@ int monster::halo_radius2() const
     switch(type)
     {
     case MONS_SPIRIT:
-        return (1);
+        return (5);
     case MONS_ANGEL:
         return (26);
     case MONS_CHERUB:

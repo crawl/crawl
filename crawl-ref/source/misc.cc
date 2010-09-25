@@ -1477,6 +1477,10 @@ static bool _mons_has_path_to_player(const monster* mon, bool want_move = false)
             return (false);
     }
 
+    // Short-cut if it's already adjacent.
+    if (grid_distance(mon->pos(), you.pos()) <= 1)
+        return (true);
+
     // If the monster is awake and knows a path towards the player
     // (even though the player cannot know this) treat it as unsafe.
     if (mon->travel_target == MTRAV_PLAYER)
@@ -1489,8 +1493,9 @@ static bool _mons_has_path_to_player(const monster* mon, bool want_move = false)
     // known to the player and assuming unknown terrain to be traversable.
     monster_pathfind mp;
     const int range = mons_tracking_range(mon);
+    // Use a large safety margin.  x4 should be ok.
     if (range > 0)
-        mp.set_range(range);
+        mp.set_range(range * 4);
 
     if (mp.init_pathfind(mon, you.pos(), true, false, true))
         return (true);
@@ -1504,6 +1509,7 @@ static bool _mons_has_path_to_player(const monster* mon, bool want_move = false)
 bool mons_can_hurt_player(const monster* mon, const bool want_move)
 {
     // FIXME: This takes into account whether the player knows the map!
+    //        It should, for the purposes of i_feel_safe. [rob]
     // It also always returns true for sleeping monsters, but that's okay
     // for its current purposes. (Travel interruptions and tension.)
     if (_mons_has_path_to_player(mon, want_move))
@@ -1546,11 +1552,7 @@ bool mons_is_safe(const monster* mon, const bool want_move,
                        // Only seen through glass walls or within water?
                        // Assuming that there are no water-only/lava-only
                        // monsters capable of throwing or zapping wands.
-                    || ((!you.see_cell_no_trans(mon->pos())
-                         || mons_class_habitat(mon->type) == HT_WATER
-                         || mons_class_habitat(mon->type) == HT_LAVA
-                         || mons_is_stationary(mon))
-                        && !mons_can_hurt_player(mon, want_move)));
+                    || !mons_can_hurt_player(mon, want_move));
 
 #ifdef CLUA_BINDINGS
     if (consider_user_options)
@@ -2043,34 +2045,21 @@ void reveal_secret_door(const coord_def& p)
 {
     ASSERT(grd(p) == DNGN_SECRET_DOOR);
 
-    dungeon_feature_type door = grid_secret_door_appearance(p);
+    const std::string door_open_prompt =
+        env.markers.property_at(p, MAT_ANY, "door_open_prompt");
+
     // Former secret doors become known but are still hidden to monsters
-    // until opened.
-    grd(p) = feat_is_opaque(door) ? DNGN_DETECTED_SECRET_DOOR
-                                  : DNGN_OPEN_DOOR;
+    // until opened. Transparent secret doors are opened to not change
+    // LOS, unless they have a warning prompt.
+    dungeon_feature_type door = grid_secret_door_appearance(p);
+    if (feat_is_opaque(door) || !door_open_prompt.empty())
+        grd(p) = DNGN_DETECTED_SECRET_DOOR;
+    else
+        grd(p) = DNGN_OPEN_DOOR;
+
+    set_terrain_changed(p);
     viewwindow();
     learned_something_new(HINT_FOUND_SECRET_DOOR, p);
-
-    // If a transparent secret door was forced open to preserve LOS,
-    // check if it had an opening prompt.
-    if (grd(p) == DNGN_OPEN_DOOR)
-    {
-        std::string door_open_prompt =
-            env.markers.property_at(p, MAT_ANY, "door_open_prompt");
-
-        if (!door_open_prompt.empty())
-        {
-            mprf("That secret door had a prompt on it:", MSGCH_PROMPT);
-            mprf(MSGCH_PROMPT, "%s", door_open_prompt.c_str());
-
-            if (!is_exclude_root(p))
-            {
-                if (yesno("Put travel exclusion on door? (Y/n)", true, 'y'))
-                    // Zero radius exclusion right on top of door.
-                    set_exclude(p, 0);
-            }
-        }
-    }
 }
 
 // A feeble attempt at Nethack-like completeness for cute messages.
@@ -2362,4 +2351,12 @@ void maybe_id_ring_TC()
                      ring.name(DESC_INVENTORY_EQUIP).c_str());
             }
         }
+}
+
+void make_fake_undead(monster* mon, monster_type undead)
+{
+    mon->flags |= MF_FAKE_UNDEAD;
+
+    if (!mons_class_can_regenerate(undead))
+        mon->flags |= MF_NO_REGEN;
 }

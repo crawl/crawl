@@ -3901,15 +3901,11 @@ const runrest &runrest::operator = (int newrunmode)
 
 static dungeon_feature_type _base_feat_type( dungeon_feature_type grid )
 {
-    // Don't stop for undiscovered traps:
-    if ((grid >= DNGN_FLOOR_MIN && grid <= DNGN_FLOOR_MAX)
-        || grid == DNGN_UNDISCOVERED_TRAP)
-    {
+    if (grid >= DNGN_FLOOR_MIN && grid <= DNGN_FLOOR_MAX)
         return (DNGN_FLOOR);
-    }
 
-    // Merge walls and secret doors.
-    if (feat_is_wall(grid) || grid == DNGN_SECRET_DOOR)
+    // Merge walls.
+    if (feat_is_wall(grid))
         return (DNGN_ROCK_WALL);
 
     return (grid);
@@ -3919,14 +3915,13 @@ void runrest::set_run_check(int index, int dir)
 {
     run_check[index].delta = Compass[dir];
 
-    const coord_def targ = you.pos() + Compass[dir];
-
-    run_check[index].grid = _base_feat_type( grd(targ) );
+    const coord_def p = you.pos() + Compass[dir];
+    run_check[index].grid = _base_feat_type(env.map_knowledge(p).feat());
 }
 
 bool runrest::check_stop_running()
 {
-    if (runmode > 0 && runmode != RMODE_START && run_grids_changed())
+    if (runmode > 0 && runmode != RMODE_START && run_should_stop())
     {
         stop();
         return (true);
@@ -3934,23 +3929,36 @@ bool runrest::check_stop_running()
     return (false);
 }
 
-// This function creates "equivalence classes" so that undiscovered
-// traps and secret doors aren't running stopping points.
-bool runrest::run_grids_changed() const
+// This function creates "equivalence classes" so that changes
+// in wall and floor type aren't running stopping points.
+bool runrest::run_should_stop() const
 {
-    if (env.cgrid(you.pos() + pos) != EMPTY_CLOUD)
+    const coord_def targ = you.pos() + pos;
+    const map_cell& tcell = env.map_knowledge(targ);
+
+    if (tcell.cloud() != CLOUD_NONE)
         return (true);
 
-    monster* mon = monster_at(you.pos() + pos);
-    if (mon && !fedhas_passthrough(mon))
+    if (is_excluded(targ))
+    {
+#ifndef USE_TILE
+        // XXX: Remove this once exclusions are visible.
+        mprf(MSGCH_WARN, "Stopped running for exclusion.");
+#endif
+        return (true);
+    }
+
+    const monster_info* mon = tcell.monsterinfo();
+    if (mon && !fedhas_passthrough(tcell.monsterinfo()))
         return (true);
 
     for (int i = 0; i < 3; i++)
     {
-        const coord_def targ = you.pos() + run_check[i].delta;
-        const dungeon_feature_type targ_grid = _base_feat_type(grd(targ));
+        const coord_def p = you.pos() + run_check[i].delta;
+        const dungeon_feature_type feat =
+            _base_feat_type(env.map_knowledge(p).feat());
 
-        if (run_check[i].grid != targ_grid)
+        if (run_check[i].grid != feat)
             return (true);
     }
 

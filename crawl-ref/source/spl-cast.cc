@@ -714,15 +714,21 @@ bool maybe_identify_staff(item_def &item, spell_type spell)
 
     int relevant_skill = 0;
     const bool chance = (spell != SPELL_NO_SPELL);
+    bool id_staff = false;
 
     switch (item.sub_type)
     {
         case STAFF_ENERGY:
             if (!chance) // The staff of energy only autoIDs by chance.
                 return (false);
-            // intentional fall-through
-        case STAFF_WIZARDRY:
             relevant_skill = you.skills[SK_SPELLCASTING];
+            break;
+
+        case STAFF_WIZARDRY:
+            // Staff of wizardry auto-ids if you could know spells
+            // because the interface gives it away anyhow.
+            if (player_spell_skills())
+                id_staff = true;
             break;
 
         case STAFF_FIRE:
@@ -778,8 +784,6 @@ bool maybe_identify_staff(item_def &item, spell_type spell)
                 relevant_skill = you.skills[SK_SUMMONINGS];
             break;
     }
-
-    bool id_staff = false;
 
     if (chance)
     {
@@ -1056,6 +1060,13 @@ static bool _spellcasting_aborted(spell_type spell,
         mpr("There aren't any corpses here.");
         return (true);
     }
+
+    if (spell == SPELL_GOLUBRIAS_PASSAGE && !can_cast_golubrias_passage())
+    {
+        mpr("Only one passage may be opened at a time.");
+        return (true);
+    }
+
     return (false);
 }
 
@@ -1126,7 +1137,8 @@ spret_type your_spells(spell_type spell, int powc,
         const bool needs_path = (!testbits(flags, SPFLAG_GRID)
                                  && !testbits(flags, SPFLAG_TARGET));
 
-        const bool dont_cancel_me = testbits(flags, SPFLAG_HELPFUL);
+        const bool dont_cancel_me = (testbits(flags, SPFLAG_HELPFUL)
+                                     || testbits(flags, SPFLAG_ALLOW_SELF));
 
         const int range = calc_spell_range(spell, powc, false);
 
@@ -1250,7 +1262,7 @@ spret_type your_spells(spell_type spell, int powc,
             const int cont_points = div_rand_round(nastiness, 500);
 
             // miscasts are uncontrolled
-            contaminate_player(cont_points);
+            contaminate_player(cont_points, true);
 
             MiscastEffect(&you, NON_MONSTER, spell, spell_mana(spell),
                           spfail_chance - spfl);
@@ -1585,7 +1597,20 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_ANIMATE_SKELETON:
+    {
         mpr("You attempt to give life to the dead...");
+
+        for (stack_iterator si(you.pos(), true); si; ++si)
+        {
+            if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY
+                && mons_skeleton(si->plus))
+            {
+                turn_corpse_into_skeleton_and_chunks(*si);
+                mprf("Before your eyes, flesh is ripped from the corpse!");
+                // Only convert the top one.
+                break;
+            }
+        }
 
         if (animate_remains(you.pos(), CORPSE_SKELETON, BEH_FRIENDLY,
                             MHITYOU, &you, "", god) < 0)
@@ -1593,6 +1618,7 @@ static spret_type _do_cast(spell_type spell, int powc,
             mpr("There is no skeleton here to animate!");
         }
         break;
+    }
 
     case SPELL_ANIMATE_DEAD:
         mpr("You call on the dead to rise...");
@@ -1859,7 +1885,8 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_DEATHS_DOOR:
-        cast_deaths_door(powc);
+        if (!cast_deaths_door(powc))
+            return (SPRET_ABORT);
         break;
 
     case SPELL_RING_OF_FLAMES:
@@ -1956,6 +1983,11 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_FULSOME_DISTILLATION:
         if (!cast_fulsome_distillation(powc, check_range))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_GOLUBRIAS_PASSAGE:
+        if (!cast_golubrias_passage(beam.target))
             return (SPRET_ABORT);
         break;
 

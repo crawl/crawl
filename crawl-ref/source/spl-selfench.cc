@@ -35,7 +35,7 @@ int allowed_deaths_door_hp(void)
     return (hp);
 }
 
-void cast_deaths_door(int pow)
+bool cast_deaths_door(int pow)
 {
     if (you.is_undead)
         mpr("You're already dead!");
@@ -55,9 +55,10 @@ void cast_deaths_door(int pow)
 
         if (you.duration[DUR_DEATHS_DOOR] > 25 * BASELINE_DELAY)
             you.duration[DUR_DEATHS_DOOR] = (23 + random2(5)) * BASELINE_DELAY;
+        return true;
     }
 
-    return;
+    return false;
 }
 
 static bool _know_spell(spell_type spell)

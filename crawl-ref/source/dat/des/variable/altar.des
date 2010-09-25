@@ -876,8 +876,13 @@ MONS:    plant, fungus, oklob plant, big fish, bush, toadstool col:random
 KITEM:   d = apple / apricot / orange / pear / grape / strawberry / nothing w:70
 KFEAT:   d = floor
 SUBST:   x = TTPPPPP.
-SHUFFLE: PQR, TU, ..."
-SUBST:   P = 112 , Q = 115, R = 11125
+# Only make "oklob behind bushes" situation possible a bit deeper.
+: if you.absdepth() > 5 then
+SHUFFLE: PQR
+SUBST:   Q = 115, R = 11125
+: end
+SUBST:   P = 112
+SHUFFLE: ...", TU
 SUBST:   T = xt, U = xx
 SUBST:   " = .....6
 COLOUR:  . = green / none
@@ -1067,15 +1072,13 @@ U.U
 U.U
 ENDMAP
 
-# It is currently not possible to place decks, unfortunately.
-#
-#NAME:  nemelex_deck
-#TAGS:  temple_overflow_nemelex_xobeh uniq_altar_nemelex_xobeh
-#KFEAT: _ = altar_nemelex_xobeh
-#ITEM:  _ = plain deck of war
-#MAP
-#_
-#ENDMAP
+NAME:  nemelex_deck
+TAGS:  temple_overflow_nemelex_xobeh uniq_altar_nemelex_xobeh
+KFEAT: _ = altar_nemelex_xobeh
+KITEM: _ = plain deck
+MAP
+_
+ENDMAP
 
 
 ### Okawaru overflow altars ###################################################
@@ -1453,6 +1456,7 @@ ENDMAP
 ### Xom overflow altars #######################################################
 
 NAME:   tgw_xom
+DEPTH:  !D:1
 TAGS:   no_item_gen no_monster gen temple_overflow_xom uniq_altar_xom
 KFEAT:  _ = altar_xom
 MONS:   orc; club ego:chaos / orc; dagger ego:chaos / orc; spear ego:chaos
@@ -1613,7 +1617,7 @@ MONS:   angel
 : local za_desc = "A divine agent of Zin, it is a towering winged figure " ..
 :   "with an aura of brilliant white light. This angel's face, though, " ..
 :   "is marked by a scowl, as if its zeal against any real or perceived " ..
-:   "vice overshadowed its goodness.\n"
+:   "vice overshadows its goodness.\n"
 MARKER: 1 = lua:MonPropsMarker:new {speech_key="zin_priest"; description=za_desc}
 DEPTH:  2-27
 MAP

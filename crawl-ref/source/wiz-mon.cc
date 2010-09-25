@@ -48,7 +48,7 @@
 // Creates a specific monster by mon type number.
 void wizard_create_spec_monster(void)
 {
-    int mon = debug_prompt_for_int( "Create which monster by number? ", true );
+    int mon = debug_prompt_for_int("Which monster by number? ", true);
 
     if (mon == -1 || (mon >= NUM_MONSTERS
                       && mon != RANDOM_MONSTER
@@ -57,7 +57,7 @@ void wizard_create_spec_monster(void)
                       && mon != RANDOM_NONBASE_DRACONIAN
                       && mon != WANDERING_MONSTER))
     {
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
     }
     else
     {
@@ -160,7 +160,7 @@ void wizard_create_spec_monster_name()
     }
 
     // FIXME: This is a bit useless, seeing how you cannot set the
-    // ghost's stats, brand or level.
+    // ghost's stats, brand or level, among other things.
     if (mspec.mid == MONS_PLAYER_GHOST)
     {
         unsigned short mid = mgrd(place);
@@ -550,7 +550,10 @@ void debug_stethoscope(int mon)
 void wizard_detect_creatures()
 {
     for (monster_iterator mi; mi; ++mi)
+    {
         env.map_knowledge(mi->pos()).set_monster(monster_info(*mi));
+        env.map_knowledge(mi->pos()).set_detected_monster(mi->type);
+    }
 }
 
 // Dismisses all monsters on the level or all monsters that match a user

@@ -361,6 +361,7 @@ static bool _try_give_plain_armour(item_def &arm)
         arm.plus = max_ench;
     else if (arm.plus < -max_ench)
         arm.plus = -max_ench;
+    item_colour(arm);
 
     ASSERT(arm.is_valid());
     return (true);
@@ -642,9 +643,7 @@ static int _acquirement_staff_subtype(const has_vector& already_has)
         break;
     }
 
-    int spell_skills = 0;
-    for (int i = SK_SPELLCASTING; i <= SK_POISON_MAGIC; i++)
-        spell_skills += you.skills[i];
+    int spell_skills = player_spell_skills();
 
     // Increased chance of getting a rod for new or
     // non-spellcasters.  -- bwr
@@ -1108,12 +1107,14 @@ int acquirement_create_item(object_class_type class_wanted,
 {
     ASSERT(class_wanted != OBJ_RANDOM);
 
-    const bool divine = (agent == GOD_OKAWARU || agent == GOD_XOM || agent == GOD_TROG);
+    const bool divine = (agent == GOD_OKAWARU || agent == GOD_XOM
+                         || agent == GOD_TROG);
     int thing_created = NON_ITEM;
     int quant = 1;
     for (int item_tries = 0; item_tries < 40; item_tries++)
     {
-        int type_wanted = _find_acquirement_subtype(class_wanted, quant, divine, agent);
+        int type_wanted = _find_acquirement_subtype(class_wanted, quant,
+                                                    divine, agent);
 
         // Clobber class_wanted for vampires.
         if (you.species == SP_VAMPIRE && class_wanted == OBJ_FOOD)
@@ -1146,9 +1147,11 @@ int acquirement_create_item(object_class_type class_wanted,
         // jewelry and books, this is not absolute.
         while (!is_artefact(doodad)
                && (doodad.base_type == OBJ_WEAPONS
-                     && you.seen_weapon[doodad.sub_type] & (1<<get_weapon_brand(doodad))
+                     && you.seen_weapon[doodad.sub_type]
+                        & (1<<get_weapon_brand(doodad))
                    || doodad.base_type == OBJ_ARMOUR
-                     && you.seen_armour[doodad.sub_type] & (1<<get_weapon_brand(doodad)))
+                     && you.seen_armour[doodad.sub_type]
+                        & (1<<get_weapon_brand(doodad)))
                && !one_chance_in(5))
         {
             reroll_brand(doodad, MAKE_GOOD_ITEM);
@@ -1300,6 +1303,16 @@ int acquirement_create_item(object_class_type class_wanted,
 
     if (class_wanted == OBJ_WANDS)
         thing.plus = std::max((int) thing.plus, 3 + random2(3));
+    else if (class_wanted == OBJ_GOLD)
+    {
+        // New gold acquirement formula from dpeg.
+        // Min=220, Max=5520, Mean=1218, Std=911
+        thing.quantity = 10 * (20
+                                + roll_dice(1, 20)
+                                + (roll_dice(1, 8)
+                                   * roll_dice(1, 8)
+                                   * roll_dice(1, 8)));
+    }
     else if (quant > 1)
         thing.quantity = quant;
 
@@ -1307,7 +1320,7 @@ int acquirement_create_item(object_class_type class_wanted,
         init_stack_blood_potions(thing);
 
     // Remove curse flag from item.
-    do_uncurse_item(thing);
+    do_uncurse_item(thing, false);
 
     if (thing.base_type == OBJ_BOOKS)
     {

@@ -8,6 +8,66 @@
 function pan_lord_warning(e)
   crawl.mpr("You feel a terrible weight on your shoulders! A mighty lord of Pandemonium must reside here.", "warning")
 end
+
+colours = {
+    "magenta", "blue", "cyan", "green",
+    "brown", "red", "lightgrey"
+}
+brightcolours = {
+    "lightmagenta", "lightblue", "lightcyan", "lightgreen",
+    "yellow", "lightred", "white"
+}
+
+disco_choices = {
+    function (x, y, ballx, bally, turn, rand)
+        local index = ((x + turn) % #colours) + 1
+        if rand > 60 then
+            return colours[index]
+        else
+            return brightcolours[index]
+        end
+    end,
+    function (x, y, ballx, bally, turn, rand)
+        local index = ((y + turn) % #colours) + 1
+        if rand > 60 then
+            return colours[index]
+        else
+            return brightcolours[index]
+        end
+    end,
+    function (x, y, ballx, bally, turn, rand)
+        local angle = math.atan2(y - bally, x - ballx)
+        local segment = (math.floor(angle / (2 * math.pi) * (2 * #colours)) + 2 * #colours) % (2 * #colours)
+        local index = (math.floor((segment + turn) / 2) % #colours) + 1
+        if rand > 60 then
+            return colours[index]
+        else
+            return brightcolours[index]
+        end
+    end,
+    function (x, y, ballx, bally, turn, rand)
+        local distance = math.floor(math.sqrt((x - ballx)^2 + (y - bally)^2))
+        local index = ((distance + turn) % #colours) + 1
+        if rand > 60 then
+            return colours[index]
+        else
+            return brightcolours[index]
+        end
+    end
+}
+
+colour.add_colour("disco", function(rand, x, y)
+    local vault = dgn.vault_at(x, y)
+    local ul = vault:pos()
+    local ulx, uly = ul:xy()
+    x, y = x - ulx, y - uly
+
+    local map = vault:map()
+    local ballx, bally = dgn.gly_point(map, "D")
+
+    local cycle = disco_choices[math.floor((you.turns() % (16 * #disco_choices)) / 16) + 1]
+    return cycle(x, y, ballx, bally, you.turns() % 16, rand)
+end)
 }}
 
 ##############################################################################
@@ -428,7 +488,7 @@ LROCKCOL:  darkgrey
 KMONS:     V = patrolling Gloorx Vloq
 MONS:      Executioner, demonic crawler, shadow demon
 KITEM:     O = dark rune of Zot
-SUBST:     d = 1:O / *:.
+NSUBST:    d = 1:O / *:.
 epilogue{{
   crawl.mpr("Shadowy figures dance across your vision.")
   pan_lord_warning(_G)
@@ -817,8 +877,15 @@ NAME:   pan_disco_hall
 TAGS:   pan no_rotate
 ORIENT: float
 SUBST:  - = 0:1 / .:10
-COLOUR: .x = random
-COLOUR: 0123456789 = random
+COLOUR: D = random
+COLOUR: .x = disco
+COLOUR: 0123456789 = disco
+KFEAT:  D = granite_statue
+MARKER: D = lua:portal_desc { desc="weirdly glowing ball", \
+            desc_long=("This floating ball radiates with shimmering light.") }
+MARKER: D = lua:props_marker { veto_fragmentation="veto", \
+                               veto_disintegrate="veto", \
+                               veto_shatter="veto" }
 MONS:   col:random name:demonic name_adjective plant
 MONS:   red devil ; demon trident good_item ego:distortion
 MONS:   red devil ; lajatang good_item ego:distortion
@@ -841,7 +908,7 @@ MAP
    x.x.x.x.x.x.x.x.x.x.x.x..x---------------_....x
 xxxx.........................---------------_..2.x
 x1.x.........................---------------_....x
-@............................---------------_..3.x
+@...........................D---------------_..3.x
 x1.x.........................---------------_....x
 xxxx.........................---------------_..4.x
    x.xxxxxxxxxxxxxxxxxxxxx..x---------------_....x

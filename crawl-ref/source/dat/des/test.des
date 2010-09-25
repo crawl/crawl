@@ -1,0 +1,41 @@
+##############################################################################
+# test.des: this is the place for vaults which are meant for use in the
+#     wizmode only, for testing various things.
+##############################################################################
+
+default-depth: Zot:27
+
+NAME:   feat_test
+WEIGHT: 0
+KFEAT:  d = open_sea
+KFEAT:  1 = altar_zin
+KFEAT:  2 = altar_shining_one
+KFEAT:  3 = altar_kikubaaqudgha
+KFEAT:  4 = altar_yredelemnul
+KFEAT:  5 = altar_xom
+KFEAT:  6 = altar_vehumet
+KFEAT:  7 = altar_okawaru
+KFEAT:  8 = altar_makhleb
+KFEAT:  9 = altar_sif_muna
+KFEAT:  0 = altar_trog
+KFEAT:  B = altar_nemelex_xobeh
+KFEAT:  C = altar_elyvilon
+KFEAT:  D = altar_lugonu
+KFEAT:  E = altar_beogh
+KFEAT:  F = altar_jiyva
+KFEAT:  H = altar_fedhas
+KFEAT:  J = altar_cheibriados
+MAP
+............
+.xXcmnovbat.
+............
+.wWldA......
+............
+.<([{}])>...
+............
+.IGTUVY.....
+............
+.0123456789.
+.BCDEFHJ....
+............
+ENDMAP

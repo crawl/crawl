@@ -24,6 +24,7 @@
 #include "food.h"
 #include "fprop.h"
 #include "fight.h"
+#include "fineff.h"
 #include "godprayer.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -76,6 +77,14 @@ static const coord_def mon_compass[8] = {
     coord_def( 1, 1), coord_def(0, 1), coord_def(-1,1), coord_def(-1,0)
 };
 
+static int _compass_idx(const coord_def& mov)
+{
+    for (int i = 0; i < 8; i++)
+        if (mon_compass[i] == mov)
+            return (i);
+    return (-1);
+}
+
 static bool immobile_monster[MAX_MONSTERS];
 
 // A probably needless optimization: convert the C string "just seen" to
@@ -91,8 +100,11 @@ static inline bool _mons_natural_regen_roll(monster* mons)
 // Do natural regeneration for monster.
 static void _monster_regenerate(monster* mons)
 {
-    if (mons->has_ench(ENCH_SICK) || !mons_can_regenerate(mons))
+    if (mons->has_ench(ENCH_SICK) ||
+        (!mons_can_regenerate(mons) && !(mons->has_ench(ENCH_REGENERATION))))
+    {
         return;
+    }
 
     // Non-land creatures out of their element cannot regenerate.
     if (mons_primary_habitat(mons) != HT_LAND
@@ -112,6 +124,8 @@ static void _monster_regenerate(monster* mons)
         || (mons->type == MONS_AIR_ELEMENTAL
             && env.cgrid(mons->pos()) == EMPTY_CLOUD
             && one_chance_in(3))
+
+        || mons->has_ench(ENCH_REGENERATION)
 
         || _mons_natural_regen_roll(mons))
     {
@@ -346,6 +360,103 @@ static void _maybe_set_patrol_route(monster* mons)
     }
 }
 
+static void _set_mons_move_dir(const monster* mons,
+                               coord_def* dir, coord_def* delta)
+{
+    ASSERT(dir && delta);
+
+    // Some calculations.
+    if (mons_class_flag(mons->type, M_BURROWS) && mons->foe == MHITYOU)
+    {
+        // Boring beetles always move in a straight line in your
+        // direction.
+        *delta = you.pos() - mons->pos();
+    }
+    else
+        *delta = mons->target - mons->pos();
+
+    // Move the monster.
+    *dir = delta->sgn();
+
+    if (mons_is_fleeing(mons) && mons->travel_target != MTRAV_WALL
+        && (!mons->friendly()
+            || mons->target != you.pos()))
+    {
+        *dir *= -1;
+    }
+}
+
+static void _tweak_wall_mmov(const coord_def& monpos)
+{
+    // The rock worm will try to move along through rock for as long as
+    // possible. If the player is walking through a corridor, for example,
+    // moving along in the wall beside him is much preferable to actually
+    // leaving the wall.
+    // This might cause the rock worm to take detours but it still
+    // comes off as smarter than otherwise.
+
+    int dir = _compass_idx(mmov);
+    ASSERT(dir != -1);
+
+    int count = 0;
+    int choice = dir; // stick with mmov if none are good
+    for (int i = -1; i <= 1; ++i)
+    {
+        const int altdir = (dir + i + 8) % 8;
+        const coord_def t = monpos + mon_compass[altdir];
+        const bool good = in_bounds(t) && feat_is_rock(grd(t))
+                          && !feat_is_permarock(grd(t));
+        if (good && one_chance_in(++count))
+            choice = altdir;
+    }
+    mmov = mon_compass[choice];
+}
+
+typedef FixedArray< bool, 3, 3 > move_array;
+
+static void _fill_good_move(const monster* mons, move_array* good_move)
+{
+    for (int count_x = 0; count_x < 3; count_x++)
+        for (int count_y = 0; count_y < 3; count_y++)
+        {
+            const int targ_x = mons->pos().x + count_x - 1;
+            const int targ_y = mons->pos().y + count_y - 1;
+
+            // Bounds check: don't consider moving out of grid!
+            if (!in_bounds(targ_x, targ_y))
+            {
+                (*good_move)[count_x][count_y] = false;
+                continue;
+            }
+
+            (*good_move)[count_x][count_y] =
+                _mon_can_move_to_pos(mons, coord_def(count_x-1, count_y-1));
+        }
+}
+
+// This only tracks movement, not whether hitting an
+// adjacent monster is a possible move.
+bool mons_can_move_towards_target(const monster* mon)
+{
+    coord_def mov, delta;
+    _set_mons_move_dir(mon, &mov, &delta);
+
+    move_array good_move;
+    _fill_good_move(mon, &good_move);
+
+    int dir = _compass_idx(mov);
+    for (int i = -1; i <= 1; ++i)
+    {
+        const int altdir = (dir + i + 8) % 8;
+        const coord_def p = mon_compass[altdir] + coord_def(1, 1);
+        if (good_move(p))
+            return (true);
+    }
+
+    return (false);
+}
+
+
 //---------------------------------------------------------------
 //
 // handle_movement
@@ -355,8 +466,6 @@ static void _maybe_set_patrol_route(monster* mons)
 //---------------------------------------------------------------
 static void _handle_movement(monster* mons)
 {
-    coord_def delta;
-
     _maybe_set_patrol_route(mons);
 
     // Monsters will try to flee out of a sanctuary.
@@ -381,25 +490,8 @@ static void _handle_movement(monster* mons)
         }
     }
 
-    // Some calculations.
-    if (mons_class_flag(mons->type, M_BURROWS) && mons->foe == MHITYOU)
-    {
-        // Boring beetles always move in a straight line in your
-        // direction.
-        delta = you.pos() - mons->pos();
-    }
-    else
-        delta = mons->target - mons->pos();
-
-    // Move the monster.
-    mmov = delta.sgn();
-
-    if (mons_is_fleeing(mons) && mons->travel_target != MTRAV_WALL
-        && (!mons->friendly()
-            || mons->target != you.pos()))
-    {
-        mmov *= -1;
-    }
+    coord_def delta;
+    _set_mons_move_dir(mons, &mmov, &delta);
 
     // Don't allow monsters to enter a sanctuary or attack you inside a
     // sanctuary, even if you're right next to them.
@@ -441,86 +533,13 @@ static void _handle_movement(monster* mons)
     }
 
     const coord_def newpos(mons->pos() + mmov);
-    FixedArray < bool, 3, 3 > good_move;
 
-    for (int count_x = 0; count_x < 3; count_x++)
-        for (int count_y = 0; count_y < 3; count_y++)
-        {
-            const int targ_x = mons->pos().x + count_x - 1;
-            const int targ_y = mons->pos().y + count_y - 1;
+    move_array good_move;
+    _fill_good_move(mons, &good_move);
 
-            // Bounds check: don't consider moving out of grid!
-            if (!in_bounds(targ_x, targ_y))
-            {
-                good_move[count_x][count_y] = false;
-                continue;
-            }
-
-            good_move[count_x][count_y] =
-                _mon_can_move_to_pos(mons, coord_def(count_x-1, count_y-1));
-        }
-
-    if (mons_wall_shielded(mons))
-    {
-        // The rock worm will try to move along through rock for as long as
-        // possible. If the player is walking through a corridor, for example,
-        // moving along in the wall beside him is much preferable to actually
-        // leaving the wall.
-        // This might cause the rock worm to take detours but it still
-        // comes off as smarter than otherwise.
-        if (mmov.x != 0 && mmov.y != 0) // diagonal movement
-        {
-            bool updown    = false;
-            bool leftright = false;
-
-            coord_def t = mons->pos() + coord_def(mmov.x, 0);
-            if (in_bounds(t) && feat_is_rock(grd(t)) && !feat_is_permarock(grd(t)))
-                updown = true;
-
-            t = mons->pos() + coord_def(0, mmov.y);
-            if (in_bounds(t) && feat_is_rock(grd(t)) && !feat_is_permarock(grd(t)))
-                leftright = true;
-
-            if (updown && (!leftright || coinflip()))
-                mmov.y = 0;
-            else if (leftright)
-                mmov.x = 0;
-        }
-        else if (mmov.x == 0 && mons->target.x == mons->pos().x)
-        {
-            bool left  = false;
-            bool right = false;
-            coord_def t = mons->pos() + coord_def(-1, mmov.y);
-            if (in_bounds(t) && feat_is_rock(grd(t)) && !feat_is_permarock(grd(t)))
-                left = true;
-
-            t = mons->pos() + coord_def(1, mmov.y);
-            if (in_bounds(t) && feat_is_rock(grd(t)) && !feat_is_permarock(grd(t)))
-                right = true;
-
-            if (left && (!right || coinflip()))
-                mmov.x = -1;
-            else if (right)
-                mmov.x = 1;
-        }
-        else if (mmov.y == 0 && mons->target.y == mons->pos().y)
-        {
-            bool up   = false;
-            bool down = false;
-            coord_def t = mons->pos() + coord_def(mmov.x, -1);
-            if (in_bounds(t) && feat_is_rock(grd(t)) && !feat_is_permarock(grd(t)))
-                up = true;
-
-            t = mons->pos() + coord_def(mmov.x, 1);
-            if (in_bounds(t) && feat_is_rock(grd(t)) && !feat_is_permarock(grd(t)))
-                down = true;
-
-            if (up && (!down || coinflip()))
-                mmov.y = -1;
-            else if (down)
-                mmov.y = 1;
-        }
-    }
+    // Make rock worms prefer wall.
+    if (mons_wall_shielded(mons) && mons->target != mons->pos() + mmov)
+        _tweak_wall_mmov(mons->pos());
 
     // If the monster is moving in your direction, whether to attack or
     // protect you, or towards a monster it intends to attack, check
@@ -665,13 +684,13 @@ static void _handle_movement(monster* mons)
             if (!good_move[i][j])
                 continue;
 
-            delta.set(i - 1, j - 1);
-            coord_def tmp = old_pos + delta;
+            coord_def d(i - 1, j - 1);
+            coord_def tmp = old_pos + d;
 
             if (grid_distance(you.pos(), tmp) < old_dist && you.see_cell(tmp))
             {
                 if (one_chance_in(++matches))
-                    mmov = delta;
+                    mmov = d;
                 break;
             }
         }
@@ -876,6 +895,344 @@ static bool _handle_scroll(monster* mons)
     return read;
 }
 
+static int _generate_rod_power(monster *mons, int overriding_power = 0)
+{
+    // power is actually 5 + Evocations + 2d(Evocations)
+    // modified by shield and shield skill
+
+    // subsection: evocation skill and shield skill equivalents for monsters
+    int evoc_num = 1;
+    int evoc_den = 1;
+    if (mons->type == MONS_DEEP_DWARF_ARTIFICER)
+    {
+        evoc_num = 2;
+    }
+    int shield_num = 1;
+    int shield_den = 1;
+
+    int shield_base = 1;
+    if (mons->inv[MSLOT_SHIELD] != NON_ITEM)
+    {
+        item_def *shield = mons->mslot_item(MSLOT_SHIELD);
+        switch (shield->sub_type)
+        {
+        case ARM_BUCKLER:
+            shield_base = 5;
+            break;
+        case ARM_SHIELD:
+            shield_base = 3;
+            break;
+        case ARM_LARGE_SHIELD:
+            shield_base = 2;
+            break;
+        default:
+            shield_base = 1;
+        }
+    }
+
+    const int power_base = (mons->hit_dice * evoc_num) / evoc_den;
+    int power            = 5 + power_base + (2 * random2(power_base));
+    if (shield_base > 1)
+    {
+        const int shield_mod = ((power / shield_base) * shield_num) / shield_den;
+        power -= shield_mod;
+    }
+
+    if (overriding_power > 0)
+    power = overriding_power;
+
+    return power;
+}
+
+static bolt& _generate_item_beem(bolt &beem, bolt& from, monster* mons)
+{
+    beem.name         = from.name;
+    beem.beam_source  = mons->mindex();
+    beem.source       = mons->pos();
+    beem.colour       = from.colour;
+    beem.range        = from.range;
+    beem.damage       = from.damage;
+    beem.ench_power   = from.ench_power;
+    beem.hit          = from.hit;
+    beem.glyph        = from.glyph;
+    beem.flavour      = from.flavour;
+    beem.thrower      = from.thrower;
+    beem.is_beam      = from.is_beam;
+    beem.is_explosion = from.is_explosion;
+    return beem;
+}
+
+static void _rod_fired_pre(monster* mons, bool nice_spell)
+{
+    if (!nice_spell)
+        make_mons_stop_fleeing(mons);
+
+    if ((!simple_monster_message(mons, " zaps a rod.")) &&
+        (!silenced(you.pos())) )
+            mpr("You hear a zap.", MSGCH_SOUND);
+}
+
+static bool _rod_fired_post(monster* mons, item_def &rod, int idx, bolt &beem,
+    int rate, bool was_visible)
+{
+    rod.plus -= rate;
+    dprf("rod charge: %d , %d", rod.plus, rod.plus2);
+
+    if (was_visible)
+    {
+        if (!beem.is_enchantment() || beem.obvious_effect)
+            set_ident_type(OBJ_STAVES, mitm[idx].sub_type, ID_KNOWN_TYPE);
+        else
+            set_ident_type(OBJ_STAVES, mitm[idx].sub_type, ID_MON_TRIED_TYPE);
+    }
+
+    mons->lose_energy(EUT_ITEM);
+    return true;
+}
+
+// handle_rod
+// -- implimented as a dependant to handle_wand currently
+// (no wand + rod turns this way)
+// notes:
+// shamelessly repurposing handle_wand code
+// not one word about the name of this function!
+static bool _handle_rod(monster *mons, bolt &beem)
+{
+    const int weapon = mons->inv[MSLOT_WEAPON];
+    item_def &rod(mitm[weapon]);
+
+    // first implemented for deep dwarf artificers
+    if (rod.base_type != OBJ_STAVES)
+        return false;
+
+    // was the player visible when we started?
+    bool was_visible = you.can_see(mons);
+
+    int rate;
+    int overriding_power = 0;
+    bool nice_spell     = false;
+    bool check_validity = true;
+    bool is_direct_effect = false;
+    spell_type mzap     = SPELL_NO_SPELL;
+    switch (rod.sub_type)
+    {
+    case STAFF_STRIKING:
+        if ((rod.plus > 100) && (mons->foe_distance() >= 2))
+        {
+            mzap = SPELL_STRIKING;
+            rate = 100;
+        }
+        break;
+    case STAFF_SMITING:
+        if (rod.plus > 400)
+        {
+            mzap = SPELL_SMITING;
+            overriding_power = 1;
+            nice_spell = true;
+            is_direct_effect = true;
+            rate = 400;
+        }
+        break;
+    case STAFF_DESTRUCTION_I:
+        if (rod.plus > 600)
+        {
+            if (mons->foe_distance() > 2)
+            {
+                mzap = SPELL_FIREBALL;
+                rate = 600;
+            }
+        }
+        else if (rod.plus > 500)
+        {
+            mzap = SPELL_BOLT_OF_FIRE;
+            rate = 500;
+        }
+        else if (rod.plus > 200)
+        {
+            mzap = SPELL_THROW_FLAME;
+            rate = 200;
+        }
+        break;
+    case STAFF_DESTRUCTION_II:
+        if (rod.plus > 700)
+        {
+            if (mons->foe_distance() > 2)
+            {
+                mzap = SPELL_FREEZING_CLOUD;
+                rate = 700;
+            }
+        }
+        else if (rod.plus > 400)
+        {
+            mzap = SPELL_BOLT_OF_COLD;
+            rate = 400;
+        }
+        else if (rod.plus > 200)
+        {
+            mzap = SPELL_THROW_FROST;
+            rate = 200;
+        }
+        break;
+    case STAFF_DESTRUCTION_III:
+        if (rod.plus > 600)
+        {
+            if (mons->foe_distance() > 2)
+                mzap = SPELL_FIREBALL;
+            if (one_chance_in(2))
+                mzap = SPELL_IRON_SHOT;
+            else
+                mzap = SPELL_LIGHTNING_BOLT;
+            rate = 600;
+        }
+        break;
+    case STAFF_DESTRUCTION_IV:
+        if (rod.plus > 1000)
+        {
+            if (one_chance_in(2))
+                mzap = SPELL_BOLT_OF_MAGMA;
+            else
+                mzap = SPELL_BOLT_OF_COLD;
+            rate = 500;
+        }
+        else if (rod.plus > 500)
+        {
+            const int choice = random2(3);
+            switch (choice)
+            {
+            case 0:
+                mzap = SPELL_BOLT_OF_MAGMA;
+                rate = 500;
+                break;
+            case 1:
+                mzap = SPELL_BOLT_OF_COLD;
+                rate = 500;
+                break;
+            default:
+                mzap = SPELL_BOLT_OF_INACCURACY;
+                rate = 300;
+                break;
+            }
+        }
+        else if (rod.plus > 300)
+        {
+            mzap = SPELL_BOLT_OF_INACCURACY;
+            rate = 300;
+        }
+        break;
+    case STAFF_DEMONOLOGY: // ouch
+        if (rod.plus > 500)
+        {
+            mzap = SPELL_SUMMON_DEMON;
+            _rod_fired_pre(mons, nice_spell);
+            dprf("mon-act:_handle_rod():SPELL_SUMMON_DEMON");
+            mons_cast(mons, beem, mzap, false);
+           _rod_fired_post(mons, rod, weapon, beem, 500, was_visible);
+           return true;
+        }
+        else if (rod.plus > 300)
+        {
+            mzap = SPELL_CALL_IMP;
+            _rod_fired_pre(mons, nice_spell);
+            dprf("mon-act:_handle_rod():SPELL_CALL_IMP");
+            mons_cast(mons, beem, mzap, false);
+            _rod_fired_post(mons, rod, weapon, beem, 300, was_visible);
+            return true;
+        }
+        break;
+    case STAFF_VENOM:
+        if (rod.plus > 600)
+        {
+            if (mons->foe_distance() > 2)
+                mzap = SPELL_POISONOUS_CLOUD;
+            else
+                mzap = SPELL_POISON_ARROW;
+            rate = 600;
+        }
+        else if (rod.plus > 500)
+        {
+            mzap = SPELL_VENOM_BOLT;
+            rate = 500;
+        }
+        break;
+    case STAFF_SPELL_SUMMONING:
+        if (rod.plus > 600)
+        {
+            mzap = SPELL_SUMMON_SWARM;
+            _rod_fired_pre(mons, nice_spell);
+            dprf("mon-act:_handle_rod():SPELL_SUMMON_SWARM");
+            mons_cast(mons, beem, mzap, false);
+            _rod_fired_post(mons, rod, weapon, beem, 600, was_visible);
+            return true;
+        }
+        else if (rod.plus > 400)
+        { // could be implemented as a mon-cast.cc spell with this code
+            mzap = SPELL_SUMMON_ELEMENTAL;
+            _rod_fired_pre(mons, nice_spell);
+            dprf("mon-act:_handle_rod():SPELL_SUMMON_ELEMENTAL");
+            const int duration = std::min(2 + mons->hit_dice / 10, 6);
+            const monster_type summon = static_cast<monster_type>(
+                  random_choose(
+                           MONS_EARTH_ELEMENTAL, MONS_FIRE_ELEMENTAL,
+                           MONS_AIR_ELEMENTAL, MONS_WATER_ELEMENTAL,
+                           -1));
+            create_monster(
+                mgen_data::hostile_at(summon, mons->name(DESC_NOCAP_A),
+                true, duration, 0, mons->pos() ));
+            _rod_fired_post(mons, rod, weapon, beem, 400, was_visible);
+            return true;
+       }
+       break;
+    case STAFF_WARDING: // all temporary self-status effects
+    default:
+        return false;
+        break;
+    }
+
+    if (mzap == SPELL_NO_SPELL)
+        return false;
+
+    bool zap = false;
+
+    // set up the beam
+    int power = _generate_rod_power(mons, overriding_power);
+    if (power < 1)
+        power = 1;
+
+    dprf("using rod with power %d", power);
+
+    bolt theBeam      = mons_spells(mons, mzap, power, check_validity);
+    beem = _generate_item_beem(beem, theBeam, mons);
+
+    if (mons->confused())
+    {
+        beem.target = dgn_random_point_from(mons->pos(), LOS_RADIUS);
+        if (beem.target.origin())
+            return (false);
+        zap = true;
+    }
+    else if (!nice_spell)
+    {
+        fire_tracer(mons, beem);
+        zap = mons_should_fire(beem);
+    }
+
+    if (is_direct_effect)
+    {
+        _rod_fired_pre(mons, nice_spell);
+        direct_effect(mons, mzap, beem, &you);
+        return _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
+    }
+    else if (nice_spell || zap)
+    {
+        _rod_fired_pre(mons, nice_spell);
+        beem.is_tracer = false;
+        beem.fire();
+        return _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
+    }
+
+    return false;
+}
+
 //---------------------------------------------------------------
 //
 // handle_wand
@@ -886,6 +1243,16 @@ static bool _handle_scroll(monster* mons)
 //---------------------------------------------------------------
 static bool _handle_wand(monster* mons, bolt &beem)
 {
+   const mon_itemuse_type mons_uses = mons_itemuse(mons);
+   if (( mons_uses == MONUSE_STARTING_EQUIPMENT
+      || mons_uses == MONUSE_WEAPONS_ARMOUR
+      || mons_uses == MONUSE_MAGIC_ITEMS) &&
+      ((mons->inv[MSLOT_WEAPON] != NON_ITEM) &&
+      (mitm[ mons->inv[MSLOT_WEAPON] ].base_type == OBJ_STAVES)))
+   {
+         return _handle_rod(mons, beem);
+   }
+
     // Yes, there is a logic to this ordering {dlb}:
     // FIXME: monsters should be able to use wands
     //        out of sight of the player [rob]
@@ -913,20 +1280,7 @@ static bool _handle_wand(monster* mons, bolt &beem)
     // set up the beam
     int power         = 30 + mons->hit_dice;
     bolt theBeam      = mons_spells(mons, mzap, power);
-
-    beem.name         = theBeam.name;
-    beem.beam_source  = mons->mindex();
-    beem.source       = mons->pos();
-    beem.colour       = theBeam.colour;
-    beem.range        = theBeam.range;
-    beem.damage       = theBeam.damage;
-    beem.ench_power   = theBeam.ench_power;
-    beem.hit          = theBeam.hit;
-    beem.glyph        = theBeam.glyph;
-    beem.flavour      = theBeam.flavour;
-    beem.thrower      = theBeam.thrower;
-    beem.is_beam      = theBeam.is_beam;
-    beem.is_explosion = theBeam.is_explosion;
+    beem = _generate_item_beem(beem, theBeam, mons);
 
 #ifdef HISCORE_WEAPON_DETAIL
     beem.aux_source =
@@ -1098,7 +1452,8 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
     mon_inv_type slot = get_mon_equip_slot(mons, mitm[msl]);
     ASSERT(slot != NUM_MONSTER_SLOTS);
 
-    const bool skilled = mons_class_flag(mons->type, M_FIGHTER);
+    const bool skilled = mons->flags & MF_FIGHTER;
+    const bool archer  = mons->flags & MF_ARCHER;
 
     mons->lose_energy(EUT_MISSILE);
     const int throw_energy = mons->action_energy(EUT_MISSILE);
@@ -1134,7 +1489,7 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
     ammoDamBonus = item.plus2;
 
     // Archers get a boost from their melee attack.
-    if (mons_class_flag(mons->type, M_ARCHER))
+    if (archer)
     {
         const mon_attack_def attk = mons_attack_spec(mons, 0);
         if (attk.type == AT_SHOOT)
@@ -1485,7 +1840,8 @@ static bool _handle_throw(monster* mons, bolt & beem)
     if (mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT)
         return (false);
 
-    const bool archer = mons_class_flag(mons->type, M_ARCHER);
+    const bool archer = mons->flags & MF_ARCHER;
+
     // Highly-specialised archers are more likely to shoot than talk. (?)
     if (one_chance_in(archer? 9 : 5))
         return (false);
@@ -1620,12 +1976,8 @@ void handle_monster_move(monster* mons)
     _monster_add_energy(mons);
 
     // Handle clouds on nonmoving monsters.
-    if (mons->speed == 0
-        && env.cgrid(mons->pos()) != EMPTY_CLOUD
-        && !mons->submerged())
-    {
+    if (mons->speed == 0)
         _mons_in_cloud(mons);
-    }
 
     // Apply monster enchantments once for every normal-speed
     // player turn.
@@ -1751,35 +2103,12 @@ void handle_monster_move(monster* mons)
 
         mons->shield_blocks = 0;
 
-        cloud_type cl_type;
         const int  cloud_num   = env.cgrid(mons->pos());
-        const bool avoid_cloud = mons_avoids_cloud(mons, cloud_num,
-                                                   &cl_type);
-        if (cl_type != CLOUD_NONE)
-        {
-            if (avoid_cloud)
-            {
-                if (mons->submerged())
-                {
-                    mons->speed_increment -= entry->energy_usage.swim;
-                    break;
-                }
+        const bool avoid_cloud = mons_avoids_cloud(mons, cloud_num);
 
-                if (mons->type == MONS_NO_MONSTER)
-                {
-                    mons->speed_increment -= entry->energy_usage.move;
-                    break; // problem with vortices
-                }
-            }
-
-            _mons_in_cloud(mons);
-
-            if (mons->type == MONS_NO_MONSTER)
-            {
-                mons->speed_increment = 1;
-                break;
-            }
-        }
+        _mons_in_cloud(mons);
+        if (!mons->alive())
+            break;
 
         slime_wall_damage(mons, speed_to_duration(mons->speed));
         if (!mons->alive())
@@ -2087,6 +2416,7 @@ void handle_monster_move(monster* mons)
                 mons->speed_increment -= non_move_energy;
         }
         you.update_beholder(mons);
+        you.update_fearmonger(mons);
 
         // Reevaluate behaviour, since the monster's surroundings have
         // changed (it may have moved, or died for that matter).  Don't
@@ -2132,6 +2462,7 @@ void handle_monsters()
         const coord_def oldpos = mi->pos();
 
         handle_monster_move(*mi);
+        fire_final_effects();
 
         if (!invalid_monster(*mi) && mi->pos() != oldpos)
             immobile_monster[mi->mindex()] = true;
@@ -2141,6 +2472,7 @@ void handle_monsters()
         {
             // Clear list of mesmerising monsters.
             you.clear_beholders();
+            you.clear_fearmongers();
             break;
         }
     }
@@ -2292,6 +2624,9 @@ static bool _monster_eat_item(monster* mons, bool nearby)
         if (quant >= si->quantity)
             item_was_destroyed(*si, mons->mindex());
 
+        if (is_blood_potion(*si))
+            for (int i = 0; i < quant; ++i)
+                remove_oldest_blood_potion(*si);
         dec_mitm_item_quantity(si.link(), quant);
     }
 
@@ -2820,10 +3155,8 @@ static bool _mon_can_move_to_pos(const monster* mons,
     if (mons->type == MONS_FIRE_ELEMENTAL || one_chance_in(5))
         no_water = true;
 
-    cloud_type targ_cloud_type;
-    const int  targ_cloud_num = env.cgrid(targ);
-
-    if (mons_avoids_cloud(mons, targ_cloud_num, &targ_cloud_type))
+    const int targ_cloud_num = env.cgrid(targ);
+    if (mons_avoids_cloud(mons, targ_cloud_num))
         return (false);
 
     const bool burrows = mons_class_flag(mons->type, M_BURROWS);
@@ -2874,22 +3207,12 @@ static bool _mon_can_move_to_pos(const monster* mons,
     }
 
     // Water elementals avoid fire and heat.
-    if (mons->type == MONS_WATER_ELEMENTAL
-        && (target_grid == DNGN_LAVA
-            || targ_cloud_type == CLOUD_FIRE
-            || targ_cloud_type == CLOUD_FOREST_FIRE
-            || targ_cloud_type == CLOUD_STEAM))
-    {
+    if (mons->type == MONS_WATER_ELEMENTAL && target_grid == DNGN_LAVA)
         return (false);
-    }
 
     // Fire elementals avoid water and cold.
-    if (mons->type == MONS_FIRE_ELEMENTAL
-        && (feat_is_watery(target_grid)
-            || targ_cloud_type == CLOUD_COLD))
-    {
+    if (mons->type == MONS_FIRE_ELEMENTAL && feat_is_watery(target_grid))
         return (false);
-    }
 
     // Submerged water creatures avoid the shallows where
     // they would be forced to surface. -- bwr
@@ -2955,19 +3278,11 @@ static bool _mon_can_move_to_pos(const monster* mons,
 
 // Uses, and updates the global variable mmov.
 static void _find_good_alternate_move(monster* mons,
-                                      const FixedArray<bool, 3, 3>& good_move)
+                                      const move_array& good_move)
 {
     const int current_distance = distance(mons->pos(), mons->target);
 
-    int dir = -1;
-    for (int i = 0; i < 8; i++)
-    {
-        if (mon_compass[i] == mmov)
-        {
-            dir = i;
-            break;
-        }
-    }
+    int dir = _compass_idx(mmov);
 
     // Only handle if the original move is to an adjacent square.
     if (dir == -1)
@@ -3211,7 +3526,7 @@ static bool _may_cutdown(monster* mons, monster* targ)
 
 static bool _monster_move(monster* mons)
 {
-    FixedArray<bool, 3, 3> good_move;
+    move_array good_move;
 
     const habitat_type habitat = mons_primary_habitat(mons);
     bool deep_water_available = false;
@@ -3552,7 +3867,17 @@ static bool _mephitic_cloud_roll(const monster* mons)
 
 static void _mons_in_cloud(monster* mons)
 {
-    int wc = env.cgrid(mons->pos());
+    // Submerging in water or lava saves from clouds.
+    if (mons->submerged() && env.grid(mons->pos()) != DNGN_FLOOR)
+        return;
+
+    const int wc = env.cgrid(mons->pos());
+    if (wc == EMPTY_CLOUD)
+        return;
+    const cloud_struct& cloud(env.cloud[wc]);
+    if (cloud.type == CLOUD_NONE)
+        return;
+
     int hurted = 0;
     int resist = 0;
     bolt beam;
@@ -3566,7 +3891,6 @@ static void _mons_in_cloud(monster* mons)
         return;
     }
 
-    const cloud_struct &cloud(env.cloud[wc]);
     switch (cloud.type)
     {
     case CLOUD_DEBUGGING:

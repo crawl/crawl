@@ -274,6 +274,7 @@ void init_dungeon_lua()
 {
     lua_stack_cleaner clean(dlua);
 
+    dluaopen_colour(dlua);
     dluaopen_crawl(dlua);
     dluaopen_file(dlua);
     dluaopen_mapgrd(dlua);
