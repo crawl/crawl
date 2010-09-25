@@ -3247,7 +3247,7 @@ static unsigned int _noise_keys(std::vector<std::string>& key_list,
     {
         // A real spell being cast by something with no hands?  Maybe
         // it's a polymorphed spellcaster which kept its original spells.
-        // If so, the cast message for it's new type/species/genus probably
+        // If so, the cast message for its new type/species/genus probably
         // won't look right.
         if (!mons_class_flag(mons->type, M_ACTUAL_SPELLS | M_PRIEST))
         {
