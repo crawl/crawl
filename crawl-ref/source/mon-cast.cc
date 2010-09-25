@@ -1947,11 +1947,9 @@ static bool _mons_vamp_drain(monster *mons)
     if (!hp_cost)
         return false;
 
-    const bool unseen = !you.can_see(mons);
-
     dprf("vamp draining: %d damage, %d healing", hp_cost, hp_cost/2);
 
-    if (!unseen)
+    if (you.can_see(mons))
         simple_monster_message(mons,
                                " is infused with unholy energy.",
                                MSGCH_MONSTER_SPELL);
@@ -1981,8 +1979,7 @@ static bool _mons_vamp_drain(monster *mons)
 
 static void _mons_drain_life(monster* mons)
 {
-    const bool unseen = !you.can_see(mons);
-    if (!unseen)
+    if (you.can_see(mons))
         simple_monster_message(mons, " draws from the surrounding life force!");
     else
         mpr("The surrounding life force dissipates!");
@@ -2719,11 +2716,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_CAUSE_FEAR:
     {
         const int pow = std::min(mons->hit_dice * 12, 200);
-        const bool unseen = !you.can_see(mons);
 
         if (monsterNearby)
         {
-            if (!unseen)
+            if (you.can_see(mons))
                 simple_monster_message(mons, " radiates an aura of fear!");
             else
                 mpr("An aura of fear fills the air!");
