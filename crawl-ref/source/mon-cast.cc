@@ -1946,7 +1946,7 @@ static bool _mons_vamp_drain(monster *mons)
     if (!hp_cost)
         return false;
 
-    const bool unseen = you.can_see(mons);
+    const bool unseen = !you.can_see(mons);
 
     dprf("vamp draining: %d damage, %d healing", hp_cost, hp_cost/2);
     if (!unseen)
@@ -2655,7 +2655,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_CAUSE_FEAR:
     {
         const int pow = std::min(mons->hit_dice * 12, 200);
-        const bool unseen = you.can_see(mons);
+        const bool unseen = !you.can_see(mons);
 
         if (monsterNearby)
         {
@@ -2719,7 +2719,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_DRAIN_LIFE:
     {
         const int pow = mons->hit_dice;
-        const bool unseen = you.can_see(mons);
+        const bool unseen = !you.can_see(mons);
         if (!unseen)
         {
             simple_monster_message(mons, " draws from the surrounding life force.");
