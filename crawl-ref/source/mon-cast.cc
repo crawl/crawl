@@ -1937,7 +1937,7 @@ static bool _mons_vamp_drain(monster *mons)
 
     int fnum = 5;
     int fden = 5;
-    if (mons_class_flag(mons->type, M_ACTUAL_SPELLS))
+    if (mons->is_actual_spellcaster())
         fnum = 8;
     int pow = random2((mons->hit_dice * fnum)/fden);
     int hp_cost = 3 + random2avg(9, 2) + 1 + pow / 7;
