@@ -2721,10 +2721,11 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         const int pow = mons->hit_dice;
         const bool unseen = !you.can_see(mons);
         if (!unseen)
-        {
             simple_monster_message(mons, " draws from the surrounding life force.");
-            flash_view(DARKGREY);
-        }
+        else
+            mprf("The surrounding life force dissipates!");
+
+        flash_view(DARKGREY);
 
         int hp_gain = 0;
 
