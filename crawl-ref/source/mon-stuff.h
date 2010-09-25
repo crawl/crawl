@@ -106,9 +106,12 @@ int dismiss_monsters(std::string pattern);
 
 bool curse_an_item(bool decay_potions, bool quiet = false);
 
-
-void monster_drop_ething(monster* mons, bool mark_item_origins = false,
-                         int owner_id = NON_ITEM);
+bool is_any_item(const item_def& item);
+void monster_drop_things(
+    monster* mons,
+    bool mark_item_origins = false,
+    bool (*suitable)(const item_def& item) = is_any_item,
+    int owner_id = NON_ITEM);
 
 bool monster_blink(monster* mons, bool quiet = false);
 
@@ -145,9 +148,10 @@ bool monster_descriptor(int which_class, mon_desc_type which_descriptor);
 // Return your target, if it still exists and is visible to you.
 monster *get_current_target();
 
-mon_dam_level_type mons_get_damage_level(const monster* );
+mon_dam_level_type mons_get_damage_level(const monster* mons);
 
-std::string get_damage_level_string(monster_type mon_type, mon_dam_level_type mdam);
+std::string get_damage_level_string(mon_holy_type holi,
+                                    mon_dam_level_type mdam);
 
 void seen_monster(monster* mons);
 
@@ -193,5 +197,14 @@ struct bolt;
 
 void setup_spore_explosion(bolt & beam, const monster& origin);
 void setup_lightning_explosion(bolt & beam, const monster& origin);
+
+bool mons_avoids_cloud(const monster* mons, cloud_type cl_type,
+                       bool placement = false);
+
+// Like the above, but allow a monster to move from one damaging cloud
+// to another.
+bool mons_avoids_cloud(const monster* mons, int cloud_num,
+                       bool placement = false);
+
 
 #endif

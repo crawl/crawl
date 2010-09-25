@@ -2399,7 +2399,7 @@ std::string map_def::validate_temple_map()
         {
             temple_tag = replace_all(temple_tag, "_", " ");
 
-            god_type god = string_to_god(temple_tag.c_str(), true);
+            god_type god = str_to_god(temple_tag);
 
             if (god == GOD_NO_GOD)
             {
@@ -3252,7 +3252,7 @@ void mons_list::parse_mons_spells(mons_spec &spec, const std::string &spells)
                 error = make_stringf("Not a monster spell: '%s'",
                                      spname.c_str());
                 return;
-             }
+            }
             spec.spells[i] = sp;
         }
     }
@@ -3712,7 +3712,7 @@ mons_spec mons_list::get_hydra_spec(const std::string &name) const
     }
 
     if (nheads < 1)
-        nheads = MONS_PROGRAM_BUG;  // What can I say? :P
+        nheads = 27;  // What can I say? :P
     else if (nheads > 20)
     {
 #if defined(DEBUG) || defined(DEBUG_DIAGNOSTICS)
@@ -4148,7 +4148,7 @@ static int str_to_ego(item_spec &spec, std::string ego_str)
 int item_list::parse_acquirement_source(const std::string &source)
 {
     const std::string god_name(replace_all_of(source, "_", " "));
-    const god_type god(string_to_god(god_name.c_str(), true));
+    const god_type god(str_to_god(god_name));
     if (god == GOD_NO_GOD)
         error = make_stringf("unknown god name: '%s'", god_name.c_str());
     return (god);
@@ -4272,6 +4272,7 @@ static misc_item_type _deck_type_string_to_subtype(const std::string& s) {
     if (s == "destruction") return MISC_DECK_OF_DESTRUCTION;
     if (s == "dungeons")    return MISC_DECK_OF_DUNGEONS;
     if (s == "summoning")   return MISC_DECK_OF_SUMMONING;
+    if (s == "summonings")  return MISC_DECK_OF_SUMMONING;
     if (s == "wonders")     return MISC_DECK_OF_WONDERS;
     if (s == "punishment")  return MISC_DECK_OF_PUNISHMENT;
     if (s == "war")         return MISC_DECK_OF_WAR;
@@ -4336,8 +4337,17 @@ void item_list::build_deck_spec(std::string s, item_spec* spec)
     word = _get_and_discard_word(&s);
     if (word == "of")
     {
-        spec->sub_type =
-            _deck_type_string_to_subtype(_get_and_discard_word(&s));
+        std::string sub_type_str = _get_and_discard_word(&s);
+        int sub_type =
+            _deck_type_string_to_subtype(sub_type_str);
+
+        if (sub_type == NUM_MISCELLANY)
+        {
+            error = make_stringf("Bad deck type: %s", sub_type_str.c_str());
+            return;
+        }
+
+        spec->sub_type = sub_type;
     }
     else
     {

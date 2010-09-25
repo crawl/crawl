@@ -132,8 +132,8 @@ void MapRegion::pack_buffers()
     int c = (int)Options.tile_window_col;
     float pos_sx = (m_win_start.x - m_min_gx);
     float pos_sy = (m_win_start.y - m_min_gy);
-    float pos_ex = (m_win_end.x - m_min_gx) + 1 / (float)dx;
-    float pos_ey = (m_win_end.y - m_min_gy) + 1 / (float)dy;
+    float pos_ex = (m_win_end.x - m_min_gx) - 1 / (float)dx;
+    float pos_ey = (m_win_end.y - m_min_gy) - 1 / (float)dy;
 
     m_buf_lines.add_square(pos_sx, pos_sy, pos_ex, pos_ey, map_colours[c]);
 }

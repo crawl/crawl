@@ -76,7 +76,6 @@ static spell_type search_order_conj[] = {
 // Order for looking for summonings and self-enchants for the 3rd spell
 // slot.
 static spell_type search_order_third[] = {
-// 0
     SPELL_SYMBOL_OF_TORMENT,
     SPELL_SUMMON_GREATER_DEMON,
     SPELL_SUMMON_HORRIBLE_THINGS,
@@ -87,7 +86,6 @@ static spell_type search_order_third[] = {
     SPELL_SILENCE,
     SPELL_SUMMON_BUTTERFLIES,
     SPELL_SUMMON_SWARM,
-// 10
     SPELL_SUMMON_UGLY_THING,
     SPELL_SWIFTNESS,
     SPELL_SUMMON_ICE_BEAST,
@@ -105,7 +103,6 @@ static spell_type search_order_third[] = {
 // this fails, go through conjurations.  Note: Dig must be in misc2
 // (5th) position to work.
 static spell_type search_order_misc[] = {
-// 0
     SPELL_AGONY,
     SPELL_BANISHMENT,
     SPELL_FREEZING_CLOUD,
@@ -116,7 +113,6 @@ static spell_type search_order_misc[] = {
     SPELL_SLOW,
     SPELL_POLYMORPH_OTHER,
     SPELL_TELEPORT_OTHER,
-// 10
     SPELL_EVAPORATE, // replaced with Mephitic Cloud, though at lower priority
     SPELL_DIG,
     SPELL_CORONA,

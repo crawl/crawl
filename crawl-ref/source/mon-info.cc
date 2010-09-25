@@ -108,6 +108,17 @@ static uint64_t ench_to_mb(const monster& mons, enchant_type ench)
         return ULL1 << MB_POSSESSABLE;
     case ENCH_PREPARING_RESURRECT:
         return ULL1 << MB_PREP_RESURRECT;
+    case ENCH_FADING_AWAY:
+        if ((mons.get_ench(ENCH_FADING_AWAY)).duration < 400) // min dur is 180*20, max dur 230*10
+            return ULL1 << MB_MOSTLY_FADED;
+
+        return ULL1 << MB_FADING_AWAY;
+    case ENCH_REGENERATION:
+        return ULL1 << MB_REGENERATION;
+    case ENCH_RAISED_MR:
+        return ULL1 << MB_RAISED_MR;
+    case ENCH_FEAR_INSPIRING:
+        return ULL1 << MB_FEAR_INSPIRING;
     default:
         return 0;
     }
@@ -133,9 +144,16 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     base_type = p_base_type;
     number = 0;
     colour = LIGHTGRAY;
+    holi = mons_class_holiness(type);
     fly = mons_class_flies(type);
     if (fly == FL_NONE)
         fly = mons_class_flies(base_type);
+    two_weapons = mons_class_wields_two_weapons(type);
+    if (!two_weapons)
+        two_weapons = mons_class_wields_two_weapons(base_type);
+    no_regen = !mons_class_can_regenerate(type);
+    if (!no_regen)
+        no_regen = !mons_class_can_regenerate(base_type);
     dam = MDAM_OKAY;
     fire_blocker = DNGN_UNSEEN;
 
@@ -207,12 +225,14 @@ monster_info::monster_info(const monster* m, int milev)
         colour = mons_class_colour(type);
     }
 
-    if (mons_is_unique(type) || mons_is_unique(base_type))
+    if (mons_is_unique(type))
     {
-        if (type == MONS_LERNAEAN_HYDRA  || base_type == MONS_LERNAEAN_HYDRA ||
-            type == MONS_ROYAL_JELLY     ||
-            type == MONS_SERPENT_OF_HELL || base_type == MONS_SERPENT_OF_HELL)
+        if (type == MONS_LERNAEAN_HYDRA
+            || type == MONS_ROYAL_JELLY
+            || type == MONS_SERPENT_OF_HELL)
+        {
             mb |= ULL1 << MB_NAME_THE;
+        }
         else
             mb |= (ULL1 << MB_NAME_UNQUALIFIED) | (ULL1 << MB_NAME_THE);
     }
@@ -241,11 +261,21 @@ monster_info::monster_info(const monster* m, int milev)
         return;
     }
 
+    holi = m->holiness();
+
     // yes, let's consider randarts too, since flight should be visually obvious
     if (type_known)
         fly = mons_flies(m);
     else
         fly = mons_class_flies(type);
+
+    two_weapons = (testbits(m->flags, MF_TWO_WEAPONS)
+                   || mons_class_wields_two_weapons(type)
+                   || mons_class_wields_two_weapons(base_type));
+
+    no_regen = (testbits(m->flags, MF_NO_REGEN)
+                || !mons_class_can_regenerate(type)
+                || !mons_class_can_regenerate(base_type));
 
     if (m->haloed())
         mb |= ULL1 << MB_HALOED;
@@ -363,7 +393,7 @@ monster_info::monster_info(const monster* m, int milev)
             else if (attitude == ATT_FRIENDLY)
                 ok = true;
             else if (i == MSLOT_ALT_WEAPON)
-                ok = mons_class_wields_two_weapons(type) || mons_class_wields_two_weapons(base_type);
+                ok = two_weapons;
             else if (i == MSLOT_MISSILE)
                 ok = false;
             else
@@ -909,9 +939,15 @@ std::vector<std::string> monster_info::attributes() const
     if (is(MB_BLEEDING))
         v.push_back("bleeding");
     if (is(MB_DEFLECT_MSL))
-        v.push_back("missile deflection");
+        v.push_back("deflecting missiles");
     if (is(MB_PREP_RESURRECT))
         v.push_back("quietly preparing");
+    if (is(MB_FADING_AWAY))
+        v.push_back("slowly fading away");
+    if (is(MB_MOSTLY_FADED))
+        v.push_back("mostly faded away");
+    if (is(MB_FEAR_INSPIRING))
+        v.push_back("inspiring fear");
     return v;
 }
 
@@ -929,7 +965,7 @@ std::string monster_info::wounds_description(bool use_colour) const
     if (dam == MDAM_OKAY)
         return "";
 
-    std::string desc = get_damage_level_string(type, dam);
+    std::string desc = get_damage_level_string(holi, dam);
     if (use_colour)
     {
         const int col = channel_to_colour(MSGCH_MONSTER_DAMAGE, dam);
@@ -1000,16 +1036,12 @@ static int serpent_of_hell_colour_to_flavour(uint8_t colour)
     {
     case RED:
         return BRANCH_GEHENNA;
-        break;
     case WHITE:
         return BRANCH_COCYTUS;
-        break;
     case CYAN:
         return BRANCH_DIS;
-        break;
     case MAGENTA:
         return BRANCH_TARTARUS;
-        break;
     default:
         return BRANCH_GEHENNA;
     }
@@ -1045,12 +1077,7 @@ mon_resist_def monster_info::resists() const
 mon_itemuse_type monster_info::itemuse() const
 {
     if (is(MB_ENSLAVED))
-    {
-        if (type == MONS_SPECTRAL_THING)
-            return mons_class_itemuse(base_type);
-        else
-            return (MONUSE_OPEN_DOORS);
-    }
+        return (mons_class_itemuse(base_type));
 
     return (mons_class_itemuse(type));
 }
@@ -1117,11 +1144,11 @@ int monster_info::res_magic() const
 
 int monster_info::base_speed() const
 {
-    if (is(MB_ENSLAVED) && type == MONS_SPECTRAL_THING)
+    if (is(MB_ENSLAVED))
         return (mons_class_base_speed(base_type));
 
     return (mons_class_is_zombified(type) ? mons_class_zombie_base_speed(base_type)
-                                   : mons_class_base_speed(type));
+                                          : mons_class_base_speed(type));
 }
 
 size_type monster_info::body_size() const

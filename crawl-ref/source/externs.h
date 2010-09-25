@@ -613,7 +613,7 @@ public:
 
 private:
     void set_run_check(int index, int compass_dir);
-    bool run_grids_changed() const;
+    bool run_should_stop() const;
 };
 
 typedef std::vector<delay_queue_item> delay_queue_type;
@@ -760,6 +760,14 @@ struct mon_display
                 unsigned gly = 0, unsigned col = 0,
                 monster_type d = MONS_NO_MONSTER)
        : type(m), glyph(gly), colour(col), detected(d) { }
+};
+
+struct final_effect
+{
+    final_effect_flavour flavour;
+    short att, def;
+    coord_def pos;
+    int x;
 };
 
 #endif // EXTERNS_H

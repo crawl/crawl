@@ -940,7 +940,8 @@ inline bool operator == (const cchar_t &a, const cchar_t &b)
 inline char_info character_at(int y, int x)
 {
     cchar_t c;
-    mvin_wch(y, x, &c);
+    // (void) is to hush an incorrect clang warning.
+    (void)mvin_wch(y, x, &c);
     return (c);
 }
 inline bool valid_char(const cchar_t &c)

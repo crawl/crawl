@@ -83,7 +83,8 @@ monster_type pick_random_monster(const level_id &place,
 monster_type pick_random_monster(const level_id &place,
                                  int power,
                                  int &lev_mons,
-                                 bool *chose_ood_monster);
+                                 bool *chose_ood_monster,
+                                 bool force_mobile = false);
 
 bool player_will_anger_monster(monster_type type, bool *holy = NULL,
                                bool *unholy = NULL, bool *lawful = NULL,

@@ -53,8 +53,11 @@ bool monster::blink_to(const coord_def& dest, bool quiet)
 {
     if (dest == pos())
         return (false);
+
+    const bool jump = type == MONS_JUMPING_SPIDER;
+
     if (!quiet)
-        simple_monster_message(this, " blinks!");
+        simple_monster_message(this, jump ? " leaps!" : " blinks!");
 
     if (!(flags & MF_WAS_IN_VIEW))
         seen_context = "thin air";
@@ -64,8 +67,9 @@ bool monster::blink_to(const coord_def& dest, bool quiet)
         return (false);
 
     // Leave a purple cloud.
-    place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3),
-                kill_alignment());
+    if (!jump)
+        place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3),
+                    kill_alignment());
 
     check_redraw(oldplace);
     apply_location_effects(oldplace);

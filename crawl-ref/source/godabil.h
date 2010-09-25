@@ -40,14 +40,16 @@ bool jiyva_remove_bad_mutation();
 bool beogh_water_walk();
 
 bool yred_injury_mirror(bool actual = true);
-void yred_drain_life(int pow);
-void yred_make_enslaved_soul(monster* mon, bool force_hostile = false,
-                             bool quiet = false, bool unrestricted = false);
+bool yred_can_animate_dead();
+void yred_animate_remains_or_dead();
+void yred_drain_life();
+void yred_make_enslaved_soul(monster* mon, bool force_hostile = false);
 
 bool kiku_receive_corpses(int pow, coord_def where);
 
 bool fedhas_passthrough_class(const monster_type mc);
 bool fedhas_passthrough(const monster* target);
+bool fedhas_passthrough(const monster_info* target);
 bool fedhas_shoot_through(const bolt & beam, const monster* victim);
 int fedhas_fungal_bloom();
 bool fedhas_sunlight();

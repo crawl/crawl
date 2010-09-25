@@ -58,7 +58,7 @@ struct spell_desc
     int min_range;
     int max_range;
 
-    // How much louder or quieter the spell is than the default.
+    // Modify spell level for spell noise purposes.
     int noise_mod;
 
     const char  *target_prompt;
@@ -523,6 +523,26 @@ int apply_area_around_square(cell_func cf, const coord_def& where, int power,
         rv += cf(*ai, power, 0, agent);
 
     return (rv);
+}
+
+// Like apply_area_around_square, but for monsters in those squares,
+// and takes care not to affect monsters twice that change position.
+int apply_monsters_around_square(monster_func mf, const coord_def& where,
+                                  int power)
+{
+    int rv = 0;
+    std::set<const monster*> affected;
+    for (adjacent_iterator ai(where, true); ai; ++ai)
+    {
+        monster* mon = monster_at(*ai);
+        if (mon && affected.find(mon) == affected.end())
+        {
+            rv += mf(mon, power);
+            affected.insert(mon);
+        }
+    }
+
+   return (rv);
 }
 
 // Affect up to max_targs monsters around a point, chosen randomly.
@@ -1012,7 +1032,7 @@ int spell_noise(spell_type spell)
 {
     const spell_desc *desc = _seekspell(spell);
 
-    return desc->noise_mod + spell_noise(desc->disciplines, desc->level);
+    return spell_noise(desc->disciplines, desc->level + desc->noise_mod);
 }
 
 int spell_noise(unsigned int disciplines, int level)
@@ -1226,6 +1246,7 @@ bool spell_no_hostile_in_range(spell_type spell, int minRange)
     case SPELL_CONJURE_FLAME:
     case SPELL_DIG:
     case SPELL_PASSWALL:
+    case SPELL_GOLUBRIAS_PASSAGE:
 
     // Airstrike has LOS_RANGE and can go through glass walls.
     case SPELL_AIRSTRIKE:

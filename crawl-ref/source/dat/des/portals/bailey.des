@@ -163,7 +163,7 @@ end
 default-depth: D:7-16, Orc
 
 NAME:   bailey_entry_dummy
-TAGS:   bailey_entry transparent trowel_portal allow_dup chance_bailey
+TAGS:   bailey_entry transparent trowel_portal chance_bailey
 CHANCE: 5%
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
@@ -806,9 +806,8 @@ KFEAT:  C = altar_beogh
 ITEM:   manual of armour / manual of fighting / manual of shields /\
         good_item bardiche race:orcish / good_item executioner's axe race:orcish
 ITEM:   potion of experience q:2 / scroll of acquirement q:2 /\
-        scroll of enchant armour q:4 / scroll of enchant weapon III q:3
-# XXX: I had "legendary deck of Wonders" here but it does not work. Anybody
-#      can help?
+        scroll of enchant armour q:4 / scroll of enchant weapon III q:3 /\
+        legendary deck of wonders
 SUBST:  d = de|
 : bailey_setup(_G)
 epilogue{{

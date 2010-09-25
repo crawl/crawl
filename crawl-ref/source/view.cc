@@ -137,12 +137,12 @@ void seen_monsters_react()
         good_god_follower_attitude_change(*mi);
         beogh_follower_convert(*mi);
         slime_convert(*mi);
-        // XXX: Probably quite hackish. Allows for monsters going berserk when
-        //      they see the player. Currently only used for Duvessa, see the
-        //      function _elven_twin_dies in mon-stuff.cc.
-        if (mi->flags & MF_GOING_BERSERK)
+        passive_enslavement_convert(*mi);
+
+        // XXX: Hack for triggering Duvessa's going berserk.
+        if (mi->props.exists("duvessa_berserk"))
         {
-            mi->flags &= ~MF_GOING_BERSERK;
+            mi->props.erase("duvessa_berserk");
             mi->go_berserk(true);
         }
 
@@ -504,7 +504,7 @@ std::string screenshot(bool fullscreen)
             int ch =
                   (!map_bounds(gc))             ? 0 :
                   (gc == you.pos())             ? mons_char(you.symbol)
-                                                : get_cell_glyph(env.map_knowledge(gc)).ch;
+                                                : get_cell_glyph(gc).ch;
 
             if (ch && !isprint(ch))
             {
@@ -579,13 +579,16 @@ void view_update_at(const coord_def &pos)
 #ifndef USE_TILE
     if (!env.map_knowledge(pos).visible())
         return;
-    glyph g = get_cell_glyph(env.map_knowledge(pos));
+    glyph g = get_cell_glyph(pos);
 
     int flash_colour = you.flash_colour == BLACK
         ? _viewmap_flash_colour()
         : you.flash_colour;
+    int mons = env.map_knowledge(pos).monster();
     int cell_colour =
-        flash_colour && env.map_knowledge(pos).monster() == MONS_NO_MONSTER
+        flash_colour &&
+        (mons == MONS_NO_MONSTER || mons_class_is_firewood(mons) ||
+         !you.berserk())
             ? real_colour(flash_colour)
             : g.col;
 
@@ -777,7 +780,7 @@ static void _draw_out_of_bounds(screen_cell_t *cell)
 static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc)
 {
     // Outside the env.show area.
-    glyph g = get_cell_glyph(env.map_knowledge(gc));
+    glyph g = get_cell_glyph(gc, Options.clean_map);
     cell->glyph  = g.ch;
     cell->colour = g.col;
 
@@ -817,7 +820,7 @@ static void _draw_los(screen_cell_t *cell,
                       const coord_def &gc, const coord_def &ep,
                       bool anim_updates)
 {
-    glyph g = get_cell_glyph(env.map_knowledge(gc));
+    glyph g = get_cell_glyph(gc);
     cell->glyph  = g.ch;
     cell->colour = g.col;
 
@@ -921,8 +924,16 @@ void viewwindow(bool show_updates)
         {
             if (you.see_cell(gc))
             {
-                if (env.map_knowledge(gc).monster() == MONS_NO_MONSTER)
+#ifdef USE_TILE
+                cell->colour = real_colour(flash_colour);
+#else
+                monster_type mons = env.map_knowledge(gc).monster();
+                if (mons == MONS_NO_MONSTER || mons_class_is_firewood(mons) ||
+                    !you.berserk())
+                {
                     cell->colour = real_colour(flash_colour);
+                }
+#endif
             }
             else
             {
@@ -948,6 +959,9 @@ void viewwindow(bool show_updates)
 #ifdef USE_TILE
         // Grey out grids that cannot be reached due to beholders.
         else if (you.get_beholder(gc))
+            cell->tile_bg |= TILE_FLAG_OOR;
+
+        else if (you.get_fearmonger(gc))
             cell->tile_bg |= TILE_FLAG_OOR;
 
         tile_apply_properties(gc, &cell->tile_fg, &cell->tile_bg);

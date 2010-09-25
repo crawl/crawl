@@ -46,9 +46,11 @@ effects.o \
 errors.o \
 exclude.o \
 exercise.o \
+fearmonger.o \
 feature.o \
 fight.o \
 files.o \
+fineff.o \
 food.o \
 format.o \
 fprop.o \
@@ -72,6 +74,7 @@ itemprop.o \
 items.o \
 jobs.o \
 kills.o \
+l_colour.o \
 l_crawl.o \
 l_debug.o \
 l_dgn.o \
@@ -192,6 +195,7 @@ stairs.o \
 startup.o \
 stash.o \
 state.o \
+status.o \
 store.o \
 stuff.o \
 syscalls.o \

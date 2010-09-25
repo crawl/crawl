@@ -547,10 +547,8 @@ ITEM:     (list of items, separated by comma)
           it clears the "never_decay" property, allowing the item to
           start decaying normally.
 
-
           Randart spell books
           -------------------
-
           You can specify random artefact spell books using:
 
           * "any fixed theme book" will generate a book with a fixed theme
@@ -580,6 +578,15 @@ ITEM:     (list of items, separated by comma)
 
           NOTE: You can place multiple items on the same square by using the
           KITEM directive. See that section for more information.
+
+          Decks
+          -----
+          You can specify decks with like this:
+          "deck", "ornate deck", "deck of war", "legendary deck of wonders"
+
+          Note the following synonyms:
+          common = plain, rare = ornate
+
 
 MONS:     (list of monsters)
           These are used to help place specific monsters at specific places
@@ -903,16 +910,44 @@ COLOUR:   . = green / blue:5 / red / none
           If you apply COLOUR to a glyph and then apply a SUBST,
           the COLOUR will transfer to the resulting transformed glyph.
 
-          There are two types of colour available: base and "elemental".
-          Available base colours are as follows: blue, green, cyan,
-          red, magenta, brown, lightgrey, darkgrey, lightblue, lightgreen,
-          lightcyan, lightred, lightmagenta, yellow and white.
+          There are two types of basic colours available: base and
+          "elemental". Available base colours are as follows: blue, green,
+          cyan, red, magenta, brown, lightgrey, darkgrey, lightblue,
+          lightgreen, lightcyan, lightred, lightmagenta, yellow and white.
 
           Elemental colours are: fire, ice, earth, electricity, air, poison,
           water, magic, mutagenic, warp, enchant, heal, holy, dark, death,
           necro, unholy, vehumet, beogh, crystal, blood, smoke, slime, jewel,
-          elven, dwarven, orcish, gila, mist, shimmer_blue, decay, silver,
-          gold, iron, bone, random. See view.h for comments on each.
+          elven, dwarven, orcish, gila, kraken, floor, rock, stone, mist,
+          shimmer_blue, decay, silver, gold, iron, bone, elven_brick, waves,
+          tree, random. See colour.h for comments on each.
+
+          Elemental colours can be based on both random numbers (for things
+          that repeatedly change colour, such as Xom altars which use
+          "random") and on the map location where they are placed (for
+          example, trees use "tree"), as well as any other part of the global
+          state that is accessible (for example, shallow water in the Shoals
+          uses "waves", which is based on the current turn count and the
+          height map of the map location). The majority of predefined
+          elemental colours are based on random numbers, but you can easily
+          define new colours to suit your maps. In the global prelude, define
+          new colours like this:
+
+          {{
+              colour.add_colour("checkerboard", function(rand, x, y)
+                  if (x + y) % 2 == 0 then
+                      return "red"
+                  else
+                      return "white"
+                  end
+              end)
+          }}
+
+          and then in your map definition, you can use "checkerboard" as a
+          valid colour name. In the colour definition function, 'rand' is a
+          random number between 0 and 119 (chosen randomly each time this
+          function is called), and 'x' and 'y' are the coordinates of the tile
+          that this is supposed to be colouring.
 
           Even more so than base colours, elemental colours should be used
           very, very, very sparingly.

@@ -380,7 +380,7 @@ KFEAT:   ! = ^
 MONS:    plant
 MONS:    wolf / warg / hell hound
 MONS:    nothing
-MONS:    wight w:50 / wraith / shadow wraith / spectral warrior /\
+MONS:    wight w:50 / wraith / shadow wraith / phantasmal warrior /\
          skeletal warrior / flayed ghost
 MONS:    dancing weapon
 MONS:    human simulacrum w:60 / elf simulacrum / ogre simulacrum /\
@@ -1319,4 +1319,80 @@ xXXXXXXXXXXXXXXXXXXX.XXXx
 xXXXXXXXXXXXXXXXXXXXXXXXx
 xXXXXXXXXXXXXXXXXXXXXXXXx
 xxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   minmay_crystal_thing
+TAGS:   no_monster_gen no_item_gen no_pool_fixup
+ORIENT: west
+DEPTH:  D:16-
+MONS:   crystal golem, orange crystal statue
+ITEM:   any staff / any book / any jewellery w:15 / any scroll w:20 / \
+        potion of magic / potion of brilliance / air elemental fan w:1 / \
+        lamp of fire w:1 / stone of earth elementals w:1 / gold w:30
+KFEAT:  _ = altar_sif_muna
+MAP
+            bbbbb
+            bdddb
+            bd1db
+            bdddb
+     bbbbbbbbb.bbbbbbbbb
+     bdddb.........bdddb
+     bd1d....._.....d1db
+     bdddb.........bdddb
+     bbbbbWW.....WWbbbbb
+         bwW.....Wwb
+         bwWW1.1WWwb
+         bwwWW.WWwwb
+         bbwwW.Wwwbb
+          bbwW.Wwbb
+           bwW.Wwb
+           bwW.Wwb
+           bwW.Wwb
+          bbwW.Wwbb
+         bbwwW.Wwwbb
+        bbwwWW.WWwwbb
+       bbwwWW...WWwwbb
+      bbwwWW..W..WWwwbb
+     bbwwWW..WWW..WWwwbb
+    bbwwWW..WWwWW..WWwwbb
+   bbwwWW..WWwwwWW..WWwwbb
+  bbwwWW..WWwwwwwWW..WWwwbb
+ bbwwWW..WWwwbWbwwWW..WWwwbb
+bbwwWW1.WWwwwW2WwwwWW.1WWwwbb
+ bbwwWW..WWwwbWbwwWW..WWwwbb
+  bbwwWW..WWwwwwwWW..WWwwbb
+   bbwwWW..WWwwwWW..WWwwbb
+    bbwwWW..WWwWW..WWwwbb
+     bbwwWW..WWW..WWwwbb
+      bbwwWW..W..WWwwbb
+       bbwwWW...WWwwbb
+        bbwwWW.WWwwbb
+         bbwwW.Wwwbb
+          bbwW.Wwbb
+           bwW.Wwb
+           bwW.Wwb
+           bwW.Wwb
+        bbbbwW.Wwbbbb
+        bwwwwW.Wwwwwb
+        bwWWWW.WWWWwb
+        bwWb.....bWwb
+bbbbbbbbbwW.......Wwbbbbbbbbb
+bwwwwwwwbwW.......Wwbwwwwwwwb
+bwWWWWWwbwW.......WwbwWWWWWwb
+bwWb.bWwbwW.......WwbwWb.bWwb
+bwW.1.WwwwW.......WwwwW.1.Wwb
+bwW...WWWWWb.....bWWWWW...Wwb
+bwW.......................Wwb
+bwW...WWWWWb.....bWWWWW...Wwb
+bwW.1.WwwwW.......WwwwW.1.Wwb
+bwWb.bWwbwW.......WwbwWb.bWwb
+bwWWWWWwbwW.......WwbwWWWWWwb
+bwwwwwwwbwW.......Wwbwwwwwwwb
+bbbbbbbbbWW.......WWbbbbbbbbb
+        xxxx.....xxxxxxxxxxxx
+           xx+++xxxxxxxxxxxxx
+            x................
+            x...............@
+            x................
+            xxxxxxxxxxxxxxxxx
 ENDMAP

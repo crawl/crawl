@@ -34,6 +34,7 @@
 #include "shout.h"
 #include "spl-util.h"
 #include "stuff.h"
+#include "terrain.h"
 #include "transform.h"
 #include "traps.h"
 #include "view.h"
@@ -652,6 +653,9 @@ int airstrike(int pow, const dist &beam)
     bool success = false;
 
     monster* mons = monster_at(beam.target);
+    if (mons && (mons->submerged() ||
+                 (cell_is_solid(beam.target) && mons_wall_shielded(mons))))
+        mons = NULL;
 
     if (mons == NULL)
         canned_msg(MSG_SPELL_FIZZLES);
@@ -965,7 +969,6 @@ static int _shatter_walls(coord_def where, int pow, int, actor *)
 
 void cast_shatter(int pow)
 {
-    int damage = 0;
     const bool silence = silenced(you.pos());
 
     if (silence)
@@ -975,35 +978,6 @@ void cast_shatter(int pow)
         noisy(30, you.pos());
         mpr("The dungeon rumbles!", MSGCH_SOUND);
     }
-
-    switch (you.attribute[ATTR_TRANSFORMATION])
-    {
-    case TRAN_NONE:
-    case TRAN_SPIDER:
-    case TRAN_LICH:
-    case TRAN_DRAGON:
-    case TRAN_BAT:
-        break;
-
-    case TRAN_STATUE:           // full damage
-        damage = 15 + random2avg( (pow / 5), 4 );
-        break;
-
-    case TRAN_ICE_BEAST:        // 1/2 damage
-        damage = 10 + random2avg( (pow / 5), 4 ) / 2;
-        break;
-
-    case TRAN_BLADE_HANDS:      // 2d3 damage
-        mpr("Your scythe-like blades vibrate painfully!");
-        damage = 2 + random2avg(5, 2);
-        break;
-
-    default:
-        mpr("cast_shatter(): unknown transformation in spl-damage.cc");
-    }
-
-    if (damage > 0)
-        ouch(damage, NON_MONSTER, KILLED_BY_TARGETING);
 
     int rad = 3 + (you.skills[SK_EARTH_MAGIC] / 5);
 
@@ -1370,9 +1344,8 @@ void cast_discharge(int pow)
 // Really this is just applying the best of Band/Warp weapon/Warp field
 // into a spell that gives the "make monsters go away" benefit without
 // the insane damage potential. - bwr
-int disperse_monsters(coord_def where, int pow, int, actor *)
+static int _disperse_monster(monster* mon, int pow)
 {
-    monster* mon = monster_at(where);
     if (!mon)
         return (0);
 
@@ -1404,7 +1377,7 @@ int disperse_monsters(coord_def where, int pow, int, actor *)
 
 void cast_dispersal(int pow)
 {
-    if (apply_area_around_square(disperse_monsters, you.pos(), pow) == 0)
+    if (!apply_monsters_around_square(_disperse_monster, you.pos(), pow))
         mpr("The air shimmers briefly around you.");
 }
 
@@ -1806,26 +1779,38 @@ bool cast_fragmentation(int pow, const dist& spd)
     return (true);
 }
 
-bool wielding_rocks()
+int wielding_rocks()
 {
-    bool rc = false;
-    if (you.weapon())
-    {
-        const item_def& wpn(*you.weapon());
-        rc = (wpn.base_type == OBJ_MISSILES
-              && (wpn.sub_type == MI_STONE || wpn.sub_type == MI_LARGE_ROCK));
-    }
-    return (rc);
+    const item_def* wpn = you.weapon();
+    if (!wpn || wpn->base_type != OBJ_MISSILES)
+        return (0);
+    else if (wpn->sub_type == MI_STONE)
+        return (1);
+    else if (wpn->sub_type == MI_LARGE_ROCK)
+        return (2);
+    else
+        return (0);
 }
 
 bool cast_sandblast(int pow, bolt &beam)
 {
-    const bool big     = wielding_rocks();
-    const bool success = zapping(big ? ZAP_SANDBLAST
-                                     : ZAP_SMALL_SANDBLAST, pow, beam, true);
+    zap_type zap = ZAP_SMALL_SANDBLAST;
+    switch (wielding_rocks())
+    {
+    case 1:
+        zap = ZAP_SANDBLAST;
+        break;
+    case 2:
+        zap = ZAP_LARGE_SANDBLAST;
+        break;
+    default:
+        break;
+    }
 
-    if (big && success)
-        dec_inv_item_quantity( you.equip[EQ_WEAPON], 1 );
+    const bool success = zapping(zap, pow, beam, true);
+
+    if (success && zap != ZAP_SMALL_SANDBLAST)
+        dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
 
     return (success);
 }

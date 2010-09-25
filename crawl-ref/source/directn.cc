@@ -435,7 +435,7 @@ static void _draw_ray_glyph(const coord_def &pos, int colour,
         if (mons->alive() && mons->visible_to(&you)
             && !mons_is_unknown_mimic(mons))
         {
-            glych  = get_cell_glyph(env.map_knowledge(pos)).ch;
+            glych  = get_cell_glyph(pos).ch;
             colour = mcol;
         }
     }
@@ -736,7 +736,7 @@ void full_describe_view()
             const coord_def c = list_features[i];
             std::string desc = "";
 #ifndef USE_TILE
-            glyph g = get_cell_glyph(env.map_knowledge(c));
+            glyph g = get_cell_glyph(c);
             const std::string colour_str = colour_to_str(g.col);
             desc = "(<" + colour_str + ">";
             desc += stringize_glyph(g.ch);
@@ -1783,7 +1783,10 @@ bool direction_chooser::do_main_loop()
         break;
 #endif
 
-    case CMD_TARGET_TOGGLE_BEAM: toggle_beam(); break;
+    case CMD_TARGET_TOGGLE_BEAM:
+        if (!just_looking)
+            toggle_beam();
+        break;
 
     case CMD_TARGET_EXCLUDE:
         if (you.level_type == LEVEL_LABYRINTH
@@ -2788,6 +2791,8 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
             return ("teleportation trap");
         case TRAP_ZOT:
             return ("Zot trap");
+        case TRAP_GOLUBRIA:
+            return ("passage of Golubria");
         default:
             error_message_to_player();
             return ("undefined trap");
@@ -3205,7 +3210,7 @@ static std::string _describe_monster_weapon(const monster_info& mi)
         name1 = weap->name(DESC_NOCAP_A, false, false, true,
                            false, ISFLAG_KNOW_CURSE);
     }
-    if (alt && (mons_class_wields_two_weapons(mi.type) || mons_class_wields_two_weapons(mi.base_type)))
+    if (alt && mi.two_weapons)
     {
         name2 = alt->name(DESC_NOCAP_A, false, false, true,
                           false, ISFLAG_KNOW_CURSE);
@@ -3495,7 +3500,7 @@ std::string get_monster_equipment_desc(const monster_info& mi, bool full_desc,
         const item_def* mon_alt = mi.inv[MSLOT_ALT_WEAPON].get();
 
         // _describe_monster_weapon already took care of this
-        if (mons_class_wields_two_weapons(mi.type) || mons_class_wields_two_weapons(mi.base_type))
+        if (mi.two_weapons)
             mon_alt = 0;
 
         bool found_sth    = !weap.empty();
@@ -3602,7 +3607,7 @@ static void _debug_describe_feature_at(const coord_def &where)
 
     mprf(MSGCH_DIAGNOSTICS, "(%d,%d): %s - %s (%d/%s)%s%s%s%s",
          where.x, where.y,
-         stringize_glyph(get_cell_glyph(env.map_knowledge(where)).ch).c_str(),
+         stringize_glyph(get_cell_glyph(where).ch).c_str(),
          feature_desc.c_str(),
          feat,
          dungeon_feature_name(feat),

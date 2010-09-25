@@ -44,7 +44,7 @@ static void _species_stat_init(species_type which_species)
     // Note: The stats in in this list aren't intended to sum the same
     // for all races.  The fact that Mummies and Ghouls are really low
     // is considered acceptable (Mummies don't have to eat, and Ghouls
-    // are supposed to be a really hard race).  -- bwr
+    // are supposed to be a really hard race). - bwr
     switch (which_species)
     {
     default:                    sb =  6; ib =  6; db =  6;      break;  // 18
@@ -146,7 +146,7 @@ static void _jobs_stat_init(job_type which_job)
     int hp = 0;  // HP base
     int mp = 0;  // MP base
 
-    // Note: Wanderers are correct, they've got a challenging background. -- bwr
+    // Note: Wanderers are correct, they've got a challenging background. - bwr
     switch (which_job)
     {
     case JOB_FIGHTER:           s =  8; i =  0; d =  4; hp = 15; mp = 0; break;
@@ -206,7 +206,7 @@ static void _jobs_stat_init(job_type which_job)
 }
 
 // Make sure no stats are unacceptably low
-// (currently possible only for GhBe -- 1KB)
+// (currently possible only for GhBe - 1KB)
 void unfocus_stats()
 {
     int needed;
@@ -909,9 +909,10 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_EARTH_ELEMENTALIST:
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_GEOMANCY);
-        newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_STONE, -1, 20);
+        // stones in switch slot (b)
+        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_STONE, -1, 20);
+        newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_GEOMANCY);
 
         you.skills[SK_TRANSMUTATIONS] = 1;
         you.skills[SK_EARTH_MAGIC]    = 3;
@@ -938,17 +939,18 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(2, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
         newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_STALKING);
 
+        newgame_make_item(4, EQ_NONE, OBJ_POTIONS, POT_CONFUSION, -1, 2);
+
         if (player_genus(GENPC_OGREISH) || you.species == SP_TROLL)
             you.inv[0].sub_type = WPN_CLUB;
 
         weap_skill = 1;
-        you.skills[SK_FIGHTING]     = 1;
-        you.skills[SK_POISON_MAGIC] = 1;
-        you.skills[SK_DODGING]      = 2;
-        you.skills[SK_STEALTH]      = 2;
-        you.skills[SK_STABBING]     = 2;
-        you.skills[SK_SPELLCASTING] = 1;
-        you.skills[SK_ENCHANTMENTS] = 1;
+        you.skills[SK_FIGHTING]       = 1;
+        you.skills[SK_DODGING]        = 2;
+        you.skills[SK_STEALTH]        = 2;
+        you.skills[SK_STABBING]       = 2;
+        you.skills[SK_SPELLCASTING]   = 1;
+        you.skills[SK_TRANSMUTATIONS] = 1;
         break;
 
     case JOB_ASSASSIN:
@@ -1315,7 +1317,7 @@ static void _racialise_starting_equipment()
 
 static void _give_basic_spells(job_type which_job)
 {
-    // Wanderers may or may not already have a spell. -- bwr
+    // Wanderers may or may not already have a spell. - bwr
     if (which_job == JOB_WANDERER)
         return;
 
@@ -1336,7 +1338,6 @@ static void _give_basic_spells(job_type which_job)
     case JOB_REAVER:
         which_spell = SPELL_MAGIC_DART;
         break;
-    case JOB_STALKER:
     case JOB_VENOM_MAGE:
         which_spell = SPELL_STING;
         break;

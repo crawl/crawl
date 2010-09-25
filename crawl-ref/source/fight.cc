@@ -31,6 +31,7 @@
 #include "exercise.h"
 #include "map_knowledge.h"
 #include "feature.h"
+#include "fineff.h"
 #include "fprop.h"
 #include "food.h"
 #include "goditem.h"
@@ -302,8 +303,8 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     shield(NULL), defender_shield(NULL),
     player_body_armour_penalty(0), player_shield_penalty(0),
     player_armour_tohit_penalty(0), player_shield_tohit_penalty(0),
-    can_do_unarmed(false), miscast_level(-1), miscast_type(SPTYP_NONE),
-    miscast_target(NULL), final_effects()
+    can_do_unarmed(false), apply_bleeding(false),
+    miscast_level(-1), miscast_type(SPTYP_NONE), miscast_target(NULL)
 {
     init_attack();
 }
@@ -599,7 +600,7 @@ bool melee_attack::attack()
                      feat_name.c_str());
             }
         }
-        else if (you.can_see(attacker))
+        else
         {
             // Make sure the monster uses up some energy, even though it
             // didn't actually land a blow.
@@ -610,12 +611,7 @@ bool melee_attack::attack()
                 simple_monster_message(attacker->as_monster(),
                                        " hits something.");
             }
-            else if (!you.can_see(attacker))
-            {
-                mprf("%s hits %s.", defender->name(DESC_CAP_THE).c_str(),
-                     feat_name.c_str());
-            }
-            else
+            else if (you.can_see(attacker))
             {
                 mprf("%s tries to hit %s, but is blocked by the %s.",
                      attacker->name(DESC_CAP_THE).c_str(),
@@ -666,6 +662,9 @@ bool melee_attack::attack()
 
         do_miscast();
     }
+
+    // This may invalidate both the attacker and defender.
+    fire_final_effects();
 
     enable_attack_conducts(conducts);
 
@@ -719,11 +718,11 @@ static bool _vamp_wants_blood_from_monster(const monster* mon)
     if (!mons_has_blood(mon->type))
         return (false);
 
-    const corpse_effect_type chunk_type = mons_corpse_effect( mon->type );
+    const corpse_effect_type chunk_type = mons_corpse_effect(mon->type);
 
     // Don't drink poisonous or mutagenic blood.
     return (chunk_type == CE_CLEAN || chunk_type == CE_CONTAMINATED
-            || chunk_is_poisonous(chunk_type) && player_res_poison());
+            || (chunk_is_poisonous(chunk_type) && player_res_poison()));
 }
 
 // Should life protection protect from this?
@@ -738,7 +737,7 @@ static bool _player_vampire_draws_blood(const monster* mon, const int damage,
     if (!_vamp_wants_blood_from_monster(mon))
         return (false);
 
-    const corpse_effect_type chunk_type = mons_corpse_effect( mon->type );
+    const corpse_effect_type chunk_type = mons_corpse_effect(mon->type);
 
     // Now print message, need biting unless already done (never for bat form!)
     if (needs_bite_msg && !player_in_bat_form())
@@ -920,10 +919,12 @@ bool melee_attack::player_attack()
     else
         player_warn_miss();
 
-    if ((did_hit && player_monattk_hit_effects(false))
-        || !defender->alive())
+    if (did_hit)
     {
-        return (true);
+        if (player_monattk_hit_effects(false))
+            return (true);
+        if (!defender->alive())
+            return (true);
     }
 
     const bool did_primary_hit = did_hit;
@@ -936,9 +937,8 @@ bool melee_attack::player_attack()
         print_wounds(defender->as_monster());
 
         const int degree = player_mutation_level(MUT_CLAWS);
-
-        if (defender->can_bleed() && degree > 0)
-            defender->as_monster()->bleed(5 + roll_dice(degree, 3), degree);
+        if (apply_bleeding && defender->can_bleed() && degree > 0)
+            defender->as_monster()->bleed(3 + roll_dice(degree, 3), degree);
     }
 
     return (did_primary_hit || did_hit);
@@ -1321,16 +1321,8 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
     switch(atk)
     {
         case UNAT_PUNCH:
-        {
-            const int degree = player_mutation_level(MUT_CLAWS);
-
-            if (defender->as_monster()->hit_points > 0 && degree > 0
-                && defender->can_bleed())
-            {
-                defender->as_monster()->bleed(3 + roll_dice(degree, 3), degree);
-            }
+            apply_bleeding = true;
             break;
-        }
 
         case UNAT_HEADBUTT:
         {
@@ -2008,29 +2000,6 @@ void melee_attack::player_check_weapon_effects()
     }
 }
 
-// Effects that occur after all other effects, even if the monster is dead.
-// For example, explosions that would hit other creatures, but we want
-// to deal with only one creature at a time, so that's handled last.
-// You probably want to call player_monattk_hit_effects instead, as that
-// function calls this one.
-// Returns true if the combat round should end here.
-bool melee_attack::player_monattk_final_hit_effects(bool mondied)
-{
-    for (unsigned int i = 0; i < final_effects.size(); ++i)
-    {
-        switch (final_effects[i].flavor)
-        {
-        case FINEFF_LIGHTNING_DISCHARGE:
-            if (you.see_cell(final_effects[i].location))
-                mpr("Electricity arcs through the water!");
-            conduct_electricity(final_effects[i].location, attacker);
-            break;
-        }
-    }
-
-    return mondied;
-}
-
 // Returns true if the combat round should end here.
 bool melee_attack::player_monattk_hit_effects(bool mondied)
 {
@@ -2084,7 +2053,7 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     }
 
     if (mondied)
-        return player_monattk_final_hit_effects(true);
+        return (true);
 
     // These effects apply only to monsters that are still alive:
 
@@ -2095,14 +2064,14 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     // Also returns true if the hydra's last head was cut off, in which
     // case nothing more should be done to the hydra.
     if (decapitate_hydra(damage_done))
-        return player_monattk_final_hit_effects(!defender->alive());
+        return (!defender->alive());
 
     // These two (staff damage and damage brand) are mutually exclusive!
     player_apply_staff_damage();
 
     // Returns true if the monster croaked.
     if (!special_damage && apply_damage_brand())
-        return player_monattk_final_hit_effects(true);
+        return (true);
 
     if (!no_damage_message.empty())
     {
@@ -2136,7 +2105,7 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     {
         _monster_die(defender->as_monster(), KILL_YOU, NON_MONSTER);
 
-        return player_monattk_final_hit_effects(true);
+        return (true);
     }
 
     if (stab_attempt && stab_bonus > 0 && weapon
@@ -2152,12 +2121,15 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
         }
     }
 
-    return player_monattk_final_hit_effects(false);
+    return (false);
 }
 
 void melee_attack::_monster_die(monster* mons, killer_type killer,
                                 int killer_index)
 {
+    if (invalid_monster(mons))
+        return; // Already died some other way.
+
     const bool chaos = (damage_brand == SPWPN_CHAOS);
     const bool reaping = (damage_brand == SPWPN_REAPING);
 
@@ -2939,7 +2911,7 @@ static bool _make_zombie(monster* mon, int corpse_class, int corpse_index,
     if (you.can_see(mon))
     {
         if (you.can_see(zombie))
-            simple_monster_message(mon, " instantly turns into a zombie!");
+            simple_monster_message(mon, " turns into a zombie!");
         else if (last_item != NON_ITEM)
         {
             simple_monster_message(mon, "'s equipment vanishes!");
@@ -3259,10 +3231,8 @@ bool melee_attack::apply_damage_brand()
             // resistant, from above, but is it on water?
             if (feat_is_water(grd(pos)))
             {
-                attack_final_effect effect;
-                effect.flavor = FINEFF_LIGHTNING_DISCHARGE;
-                effect.location = pos;
-                final_effects.push_back(effect);
+                add_final_effect(FINEFF_LIGHTNING_DISCHARGE, attacker, defender,
+                                 pos);
             }
         }
 
@@ -4268,6 +4238,7 @@ int melee_attack::player_calc_base_unarmed_damage()
     {
         // Claw damage only applies for bare hands.
         damage += player_mutation_level(MUT_CLAWS) * 2;
+        apply_bleeding = true;
     }
 
     if (player_in_bat_form())
@@ -5250,10 +5221,12 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
     }
 
     case AF_CRUSH:
+    /*
         mprf("%s %s being crushed%s",
              def_name(DESC_CAP_THE).c_str(),
              defender->conj_verb("are").c_str(),
              special_attack_punctuation().c_str());
+    */
         break;
 
     case AF_HOLY:
@@ -5418,6 +5391,10 @@ bool melee_attack::do_trample()
                  def_name(DESC_CAP_THE).c_str(),
                  defender->conj_verb("stumble").c_str());
         }
+
+        // Interrupt stair travel and passwall.
+        if (defender == &you)
+            stop_delay(true);
 
         return true;
     } while (0);

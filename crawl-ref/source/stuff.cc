@@ -11,6 +11,7 @@
 #include "areas.h"
 #include "beam.h"
 #include "cio.h"
+#include "colour.h"
 #include "coord.h"
 #include "coordit.h"
 #include "database.h"
@@ -194,10 +195,11 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
     if (!monster_habitable_grid(fmenv, DNGN_FLOOR))
         return (false);
 
-    // Only friendly monsters, or those actively seeking the
-    // player, will follow up/down stairs.
+    // Only non-wandering friendly monsters or those actively
+    // seeking the player will follow up/down stairs.
     if (!fmenv->friendly()
-        && (!mons_is_seeking(fmenv) || fmenv->foe != MHITYOU))
+          && (!mons_is_seeking(fmenv) || fmenv->foe != MHITYOU)
+        || fmenv->foe == MHITNOT)
     {
         return (false);
     }
@@ -367,6 +369,7 @@ void clear_globals_on_exit()
 {
     clear_rays_on_exit();
     clear_zap_info_on_exit();
+    clear_colours_on_exit();
     dgn_clear_vault_placements(env.level_vaults);
 }
 
@@ -700,6 +703,9 @@ void canned_msg(canned_message_type which_message)
     case MSG_MANA_DECREASE:
         mpr("You feel your mana capacity decrease.");
         break;
+    case MSG_TOO_HUNGRY:
+        mpr("You're too hungry.");
+        break;
     }
 }
 
@@ -989,7 +995,7 @@ void zap_los_monsters(bool items_also)
         {
             int item = igrd(*ri);
 
-            if (item != NON_ITEM && mitm[item].defined() )
+            if (item != NON_ITEM && mitm[item].defined())
                 destroy_item(item);
         }
 

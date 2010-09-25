@@ -1316,7 +1316,7 @@ static void _do_description(std::string key, std::string type,
 
     int width = std::min(80, get_number_of_cols());
 
-    god_type which_god = string_to_god(key.c_str());
+    god_type which_god = str_to_god(key);
     if (which_god != GOD_NO_GOD)
     {
         if (is_good_god(which_god))
@@ -2276,9 +2276,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<h>Item types (and common commands)\n",
             true, true, _cmdhelp_textfilter);
 
-    _add_insert_commands(cols, 0, 2, "use special Ability (<w>%!</w> for help)",
-                         CMD_USE_ABILITY, CMD_USE_ABILITY, 0);
-
     _add_insert_commands(cols, 0, "<cyan>)</cyan> : hand weapons (<w>%</w>ield)",
                          CMD_WIELD_WEAPON, 0);
     _add_insert_commands(cols, 0, "<brown>(</brown> : missiles (<w>%</w>uiver, "
@@ -2670,6 +2667,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>Ctrl-H</w> : set hunger state\n"
                        "<w>X</w>      : make Xom do something now\n"
                        "<w>z</w>      : cast spell by number/name\n"
+                       "<w>W</w>      : god wrath\n"
                        "\n"
                        "<yellow>Monster related commands</yellow>\n"
                        "<w>D</w>      : detect all monsters\n"

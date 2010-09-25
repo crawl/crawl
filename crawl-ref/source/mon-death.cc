@@ -8,9 +8,12 @@
 
 #include "areas.h"
 #include "database.h"
+#include "env.h"
 #include "message.h"
+#include "mgen_data.h"
 #include "mon-behv.h"
 #include "mon-iter.h"
+#include "mon-place.h"
 #include "mon-speak.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
@@ -181,21 +184,21 @@ void hogs_to_humans()
 
 
 // Dowan and Duvessa
-bool mons_is_dowan (monster* mons)
+bool mons_is_dowan(const monster* mons)
 {
     return (mons->type == MONS_DOWAN
             || (mons->props.exists("original_name")
                 && mons->props["original_name"].get_string() == "Dowan"));
 }
 
-bool mons_is_duvessa (monster* mons)
+bool mons_is_duvessa(const monster* mons)
 {
     return (mons->type == MONS_DUVESSA
             || (mons->props.exists("original_name")
                 && mons->props["original_name"].get_string() == "Duvessa"));
 }
 
-bool mons_is_elven_twin (monster* mons)
+bool mons_is_elven_twin(const monster* mons)
 {
     return (mons_is_dowan(mons) || mons_is_duvessa(mons));
 }
@@ -286,7 +289,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
             mons->go_berserk(true);
         else
             // She'll go berserk the next time she sees you
-            mons->flags |= MF_GOING_BERSERK;
+            mons->props["duvessa_berserk"] = bool(true);
     }
     else if (found_dowan)
     {
@@ -386,4 +389,42 @@ void elven_twins_unpacify (monster* twin)
         return;
 
     behaviour_event(mons, ME_WHACK, MHITYOU, you.pos(), false);
+}
+
+// Spirits
+
+void spirit_fades (monster *spirit)
+{
+
+    if (mons_near(spirit))
+        simple_monster_message(spirit, " fades away with a wail!", MSGCH_TALK);
+    else
+        mprf("You hear a distant wailing.", MSGCH_TALK);
+
+    const coord_def c = spirit->pos();
+
+    mgen_data mon = mgen_data(static_cast<monster_type>(random_choose_weighted(
+                        10, MONS_SILVER_STAR, 10, MONS_PHOENIX,
+                        10, MONS_APIS,        5,  MONS_DAEVA,
+                        2,  MONS_HOLY_DRAGON,
+                        // No holy dragons
+                      0)), SAME_ATTITUDE(spirit),
+                      NULL, 0, NULL, c,
+                      spirit->foe, 0);
+
+    if (spirit->alive())
+        monster_die(spirit, KILL_MISC, NON_MONSTER, true);
+
+    int mon_id = create_monster(mon);
+
+    if (mon_id == -1)
+        return;
+
+    monster *new_mon = &menv[mon_id];
+
+    if (mons_near(new_mon))
+        simple_monster_message(new_mon, " seeks to avenge the fallen spirit!", MSGCH_TALK);
+    else
+        mprf("A powerful presence appears to avenge a fallen spirit!", MSGCH_TALK);
+
 }

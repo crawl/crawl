@@ -115,7 +115,7 @@ drop_filter = useless_item
 #
 # drop_mode = (multi | single)
 # pickup_mode = (single | multi | auto:5)
-# drop_filter = skeleton, rotting, corpse
+# drop_filter = skeleton, corpse, useless_item
 # default_friendly_pickup = (none | friend | player | all)
 
 ##### 4-b	Targetting ############################

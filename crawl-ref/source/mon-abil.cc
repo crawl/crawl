@@ -348,9 +348,10 @@ bool ugly_thing_mutate(monster* ugly, bool proximity)
 
     if (!proximity)
         success = true;
-    else if (one_chance_in(8))
+    else if (one_chance_in(9))
     {
         int you_mutate_chance = 0;
+        int ugly_mutate_chance = 0;
         int mon_mutate_chance = 0;
 
         for (adjacent_iterator ri(ugly->pos()); ri; ++ri)
@@ -359,50 +360,81 @@ bool ugly_thing_mutate(monster* ugly, bool proximity)
                 you_mutate_chance = get_contamination_level();
             else
             {
-                monster* ugly_near = monster_at(*ri);
+                monster* mon_near = monster_at(*ri);
 
-                if (!ugly_near
-                    || ugly_near->type != MONS_UGLY_THING
-                        && ugly_near->type != MONS_VERY_UGLY_THING)
+                if (!mon_near
+                    || !mons_class_flag(mon_near->type, M_GLOWS_RADIATION))
                 {
                     continue;
                 }
 
-                for (int i = 0; i < 2; ++i)
+                const bool ugly_type =
+                    mon_near->type == MONS_UGLY_THING
+                        || mon_near->type == MONS_VERY_UGLY_THING;
+
+                int i = mon_near->type == MONS_VERY_UGLY_THING ? 3 :
+                        mon_near->type == MONS_UGLY_THING      ? 2
+                                                               : 1;
+
+                for (; i > 0; --i)
                 {
                     if (coinflip())
                     {
-                        mon_mutate_chance++;
-
-                        if (coinflip())
+                        if (ugly_type)
                         {
-                            const int ugly_colour =
-                                make_low_colour(ugly->colour);
-                            const int ugly_near_colour =
-                                make_low_colour(ugly_near->colour);
+                            ugly_mutate_chance++;
 
-                            if (ugly_colour != ugly_near_colour)
-                                mon_colour = ugly_near_colour;
+                            if (coinflip())
+                            {
+                                const uint8_t ugly_colour =
+                                    make_low_colour(ugly->colour);
+                                const uint8_t ugly_near_colour =
+                                    make_low_colour(mon_near->colour);
+
+                                if (ugly_colour != ugly_near_colour)
+                                    mon_colour = ugly_near_colour;
+                            }
                         }
+                        else
+                            mon_mutate_chance++;
                     }
-
-                    if (ugly_near->type != MONS_VERY_UGLY_THING)
-                        break;
                 }
             }
         }
 
-        you_mutate_chance = std::min(16, you_mutate_chance);
-        mon_mutate_chance = std::min(16, mon_mutate_chance);
+        // The maximum number of monsters that can surround this monster
+        // is 8, and the maximum mutation chance from each surrounding
+        // monster is 3, so the maximum mutation value is 24.
+        you_mutate_chance = std::min(24, you_mutate_chance);
+        ugly_mutate_chance = std::min(24, ugly_mutate_chance);
+        mon_mutate_chance = std::min(24, mon_mutate_chance);
 
-        if (!one_chance_in(you_mutate_chance + mon_mutate_chance + 1))
+        if (!one_chance_in(you_mutate_chance
+                           + ugly_mutate_chance
+                           + mon_mutate_chance
+                           + 1))
         {
-            const bool proximity_you =
-                (you_mutate_chance  > mon_mutate_chance) ? true :
-                (you_mutate_chance == mon_mutate_chance) ? coinflip()
-                                                         : false;
+            int proximity_chance = you_mutate_chance;
+            int proximity_type = 0;
 
-            src = proximity_you ? " from you" : " from its kin";
+            if (ugly_mutate_chance > proximity_chance
+                || (ugly_mutate_chance == proximity_chance && coinflip()))
+            {
+                proximity_chance = ugly_mutate_chance;
+                proximity_type = 1;
+            }
+
+            if (mon_mutate_chance > proximity_chance
+                || (mon_mutate_chance == proximity_chance && coinflip()))
+            {
+                proximity_chance = mon_mutate_chance;
+                proximity_type = 2;
+            }
+
+            src  = " from ";
+            src += proximity_type == 0 ? "you" :
+                   proximity_type == 1 ? "its kin"
+                                       : "its neighbour";
 
             success = true;
         }
@@ -780,6 +812,7 @@ static bool _slime_split_merge(monster* thing)
 }
 
 // Returns true if you resist the siren's call.
+// -- added equivalency for huldra
 static bool _siren_movement_effect(const monster* mons)
 {
     bool do_resist = (you.attribute[ATTR_HELD] || you.check_res_magic(70)
@@ -971,7 +1004,7 @@ static bool _orc_battle_cry(monster* chief)
             // Disabling detailed frenzy announcement because it's so spammy.
             const msg_channel_type channel =
                         chief->friendly() ? MSGCH_MONSTER_ENCHANT
-                                                  : MSGCH_FRIEND_ENCHANT;
+                                          : MSGCH_FRIEND_ENCHANT;
 
             if (!seen_affected.empty())
             {
@@ -1138,7 +1171,7 @@ static void _establish_connection(int tentacle,
 
             if (main->holiness() == MH_UNDEAD)
             {
-                menv[connect].flags |= MF_HONORARY_UNDEAD;
+                make_fake_undead(&menv[connect], main->type);
             }
             if (monster_can_submerge(&menv[connect], env.grid(menv[connect].pos())))
             {
@@ -1749,7 +1782,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
     }
 
     const msg_channel_type spl = (mons->friendly() ? MSGCH_FRIEND_SPELL
-                                                         : MSGCH_MONSTER_SPELL);
+                                                   : MSGCH_MONSTER_SPELL);
 
     spell_type spell = SPELL_NO_SPELL;
 
@@ -2123,6 +2156,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         }
         break;
 
+    case MONS_HULDRA:
     case MONS_MERMAID:
     case MONS_SIREN:
     {
@@ -2185,7 +2219,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
                     already_mesmerised ? "her luring" : "a haunting").c_str(),
                     spl);
 
-                if (mons->type == MONS_SIREN)
+                if ((mons->type == MONS_SIREN) || (mons->type == MONS_HULDRA))
                 {
                     if (_siren_movement_effect(mons))
                     {
@@ -2275,8 +2309,9 @@ void mon_nearby_ability(monster* mons)
     maybe_mons_speaks(mons);
 
     if (monster_can_submerge(mons, grd(mons->pos()))
-        && !mons->caught()             // No submerging while caught.
-        && !you.beheld_by(mons) // No submerging if player entranced.
+        && !mons->caught()         // No submerging while caught.
+        && !mons->asleep()         // No submerging when asleep.
+        && !you.beheld_by(mons)    // No submerging if player entranced.
         && !mons_is_lurking(mons)  // Handled elsewhere.
         && mons->wants_submerge())
     {

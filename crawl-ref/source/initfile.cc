@@ -71,23 +71,6 @@ template<class A, class B> void append_vector(A &dest, const B &src)
     dest.insert( dest.end(), src.begin(), src.end() );
 }
 
-god_type str_to_god(std::string god)
-{
-    if (god.empty())
-        return (GOD_NO_GOD);
-
-    lowercase(god);
-
-    if (god == "random")
-        return (GOD_RANDOM);
-
-    for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
-        if (lowercase_string(god_name(static_cast<god_type>(i))) == god)
-            return (static_cast<god_type>(i));
-
-    return (GOD_NO_GOD);
-}
-
 // Returns -1 if unmatched else returns 0-15.
 static msg_colour_type _str_to_channel_colour(const std::string &str)
 {
@@ -1036,7 +1019,6 @@ void game_options::reset_options()
     mp_colour.push_back(std::pair<int, int>(50, YELLOW));
     mp_colour.push_back(std::pair<int, int>(25, RED));
     stat_colour.clear();
-    stat_colour.push_back(std::pair<int, int>(1, LIGHTRED));
     stat_colour.push_back(std::pair<int, int>(3, RED));
 
     force_autopickup.clear();
@@ -2413,7 +2395,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "religion")
     {
         // Choose god for Chaos Knights or Priests.
-        game.religion = str_to_god(field);
+        game.religion = (field == "random") ? GOD_RANDOM : str_to_god(field);
     }
     BOOL_OPTION_NAMED("fully_random", game.fully_random);
     else if (key == "fire_items_start")
@@ -3590,8 +3572,8 @@ static const char *cmd_ops[] = {
     "sprint-map", "edit-save",
 };
 
-const int num_cmd_ops = CLO_NOPS;
-bool arg_seen[num_cmd_ops];
+static const int num_cmd_ops = CLO_NOPS;
+static bool arg_seen[num_cmd_ops];
 
 std::string find_executable_path()
 {

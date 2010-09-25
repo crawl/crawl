@@ -3024,7 +3024,11 @@ bool item_def::is_valid() const
     if (!defined())
         return (false);
     const int max_sub = get_max_subtype(base_type);
-    return (max_sub == -1 || sub_type < max_sub);
+    if (max_sub != -1 && sub_type >= max_sub)
+        return (false);
+    if (colour == 0)
+        return (false); // No black items.
+    return (true);
 }
 
 // The Orb of Zot and unique runes are considered critical.
@@ -3526,6 +3530,7 @@ bool get_item_by_name(item_def *item, char* specs,
         {
             item->plus  = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
             item->plus2 = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
+            init_rod_mp(*item);
         }
         break;
 

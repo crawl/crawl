@@ -41,6 +41,7 @@
 #include "cio.h"
 #include "cloud.h"
 #include "clua.h"
+#include "colour.h"
 #include "command.h"
 #include "coord.h"
 #include "coordit.h"
@@ -236,6 +237,8 @@ int main(int argc, char *argv[])
     // Hardcoded initial keybindings.
     init_keybindings();
 
+    init_element_colours();
+
     // Load in the system environment variables
     get_system_environment();
 
@@ -394,6 +397,9 @@ static void _launch_game()
     // to dismiss a level-up prompt.
     level_change();
 
+    // Initialise save game so we can recover from crashes on D:1.
+    save_game_state();
+
     cursor_control ccon(!Options.use_fake_player_cursor);
     while (true)
         _input();
@@ -479,7 +485,7 @@ static void _god_greeting_message(bool game_start)
         simple_god_message(" says: Lead the forces of light to victory!");
         break;
     case GOD_KIKUBAAQUDGHA:
-        simple_god_message(" says: Welcome...");
+        simple_god_message(" says: Spread unending torment and darkness!");
         break;
     case GOD_YREDELEMNUL:
         simple_god_message(" says: Carry the black torch! Rouse the idle dead!");
@@ -495,7 +501,7 @@ static void _god_greeting_message(bool game_start)
         simple_god_message(" says: Let it end in hellfire!");
         break;
     case GOD_OKAWARU:
-        simple_god_message(" says: Welcome, disciple.");
+        simple_god_message(" says: Bring me glory in combat!");
         break;
     case GOD_MAKHLEB:
         god_speaks(you.religion, "Blood and souls for Makhleb!");
@@ -654,6 +660,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'o': wizard_create_spec_object();           break;
     case '%': wizard_create_spec_object_by_name();   break;
     case 'J': jiyva_eat_offlevel_items();            break;
+    case 'W': wizard_god_wrath();                    break;
 
     case 'x':
         you.experience = 1 + exp_needed(2 + you.experience_level);
@@ -972,7 +979,7 @@ bool apply_berserk_penalty = false;
 static void _center_cursor()
 {
 #ifndef USE_TILE
-    const coord_def cwhere = grid2view(you.pos());
+    const coord_def cwhere = crawl_view.grid2screen(you.pos());
     cgotoxy(cwhere.x, cwhere.y);
 #endif
 }
@@ -1080,6 +1087,7 @@ static void _input()
     religion_turn_start();
     god_conduct_turn_start();
     you.update_beholders();
+    you.update_fearmongers();
     you.walking = 0;
 
     // Currently only set if Xom accidentally kills the player.
@@ -2179,6 +2187,16 @@ static void _decrement_durations()
                           "You feel conductive.", coinflip(),
                           "You start to feel a little less insulated.");
 
+    _decrement_a_duration(DUR_RESIST_FIRE, delay,
+                          "Your fire resistance expires.", coinflip(),
+                          "You start to feel less resistant to fire.");
+    _decrement_a_duration(DUR_RESIST_COLD, delay,
+                          "Your cold resistance expires.", coinflip(),
+                          "You start to feel less resistant to cold.");
+    _decrement_a_duration(DUR_RESIST_POISON, delay,
+                          "Your poison resistance expires.", coinflip(),
+                          "You start to feel less resistant to poison.");
+
     if (_decrement_a_duration(DUR_STONEMAIL, delay,
                               "Your scaly stone armour disappears.",
                               coinflip(),
@@ -2202,7 +2220,9 @@ static void _decrement_durations()
     if (you.duration[DUR_POWERED_BY_DEATH] > 0)
         handle_pbd_corpses(true);
 
-    if (_decrement_a_duration(DUR_SEE_INVISIBLE, delay)
+    if (_decrement_a_duration(DUR_SEE_INVISIBLE, delay, NULL,
+                              coinflip(),
+                              "You begin to squint at shadows.")
         && !you.can_see_invisible())
     {
         mpr("Your eyesight blurs momentarily.", MSGCH_DURATION);
@@ -2248,13 +2268,13 @@ static void _decrement_durations()
 
     _decrement_a_duration(DUR_SAGE, delay, "You feel less studious.");
     _decrement_a_duration(DUR_STEALTH, delay, "You feel less stealthy.");
-    _decrement_a_duration(DUR_RESIST_FIRE, delay, "Your fire resistance expires.");
-    _decrement_a_duration(DUR_RESIST_COLD, delay, "Your cold resistance expires.");
-    _decrement_a_duration(DUR_RESIST_POISON, delay, "Your poison resistance expires.");
     _decrement_a_duration(DUR_SLAYING, delay, "You feel less lethal.");
 
-    _decrement_a_duration(DUR_INVIS, delay, "You flicker back into view.",
-                          coinflip(), "You flicker for a moment.");
+    if (_decrement_a_duration(DUR_INVIS, delay, "You flicker back into view.",
+                              coinflip(), "You flicker for a moment."))
+    {
+        you.attribute[ATTR_INVIS_UNCANCELLABLE] = 0;
+    }
 
     _decrement_a_duration(DUR_BARGAIN, delay, "You feel less charismatic.");
     _decrement_a_duration(DUR_CONF, delay, "You feel less confused.");
@@ -2289,6 +2309,13 @@ static void _decrement_durations()
                               0, NULL, MSGCH_RECOVERY))
     {
         you.clear_beholders();
+    }
+
+    if (_decrement_a_duration(DUR_AFRAID, delay,
+                              "Your fear fades away.",
+                              0, NULL, MSGCH_RECOVERY))
+    {
+        you.clear_fearmongers();
     }
 
     dec_slow_player(delay);
@@ -2436,11 +2463,18 @@ static void _decrement_durations()
         else
         {
             // Just time out potions/spells/miscasts.
-            if ((you.duration[DUR_LEVITATION] -= delay) <= 0)
+            if (you.attribute[ATTR_LEV_UNCANCELLABLE]
+                && (you.duration[DUR_LEVITATION] -= delay) <= 0)
             {
                 you.attribute[ATTR_LEV_UNCANCELLABLE] = 0;
-                // permanent_levitation() has a hack that requires >1
-                you.duration[DUR_LEVITATION] = 2;
+            }
+
+            if (!you.attribute[ATTR_LEV_UNCANCELLABLE])
+            {
+                // With permanent levitation, keep the duration above
+                // the expiration threshold.
+                you.duration[DUR_LEVITATION]
+                    = 2 * get_expiration_threshold(DUR_LEVITATION);
             }
         }
     }
@@ -2733,6 +2767,20 @@ static void _player_reacts_to_monsters()
     handle_starvation();
 }
 
+static void _update_golubria_traps()
+{
+    std::vector<coord_def> traps = find_golubria_on_level();
+    for (std::vector<coord_def>::const_iterator it = traps.begin(); it != traps.end(); ++it)
+    {
+        trap_def *trap = find_trap(*it);
+        if (trap && trap->type == TRAP_GOLUBRIA)
+        {
+            if (--trap->ammo_qty <= 0)
+                trap->destroy();
+        }
+    }
+}
+
 void world_reacts()
 {
     // All markers should be activated at this point.
@@ -2791,6 +2839,7 @@ void world_reacts()
     handle_time();
     manage_clouds();
     _update_mold();
+    _update_golubria_traps();
 
     if (!crawl_state.game_is_arena())
         _player_reacts_to_monsters();
@@ -3730,6 +3779,11 @@ static void _move_player(coord_def move)
     if (!you.confused())
         beholder = you.get_beholder(targ);
 
+    // You cannot move closer to a fear monger.
+    monster *fmonger = NULL;
+    if (!you.confused())
+        fmonger = you.get_fearmonger(targ);
+
     if (you.running.check_stop_running())
     {
         // [ds] Do we need this? Shouldn't it be false to start with?
@@ -3741,7 +3795,7 @@ static void _move_player(coord_def move)
 
     if (targ_monst && !targ_monst->submerged())
     {
-        if (can_swap_places && !beholder)
+        if (can_swap_places && !beholder && !fmonger)
         {
             if (swap_check(targ_monst, mon_swap_dest))
                 swap = true;
@@ -3767,7 +3821,7 @@ static void _move_player(coord_def move)
         }
     }
 
-    if (!attacking && targ_pass && moving && !beholder)
+    if (!attacking && targ_pass && moving && !beholder && !fmonger)
     {
         if (!you.confused() && !check_moveto(targ))
         {
@@ -3815,6 +3869,12 @@ static void _move_player(coord_def move)
     {
         mprf("You cannot move away from %s!",
             beholder->name(DESC_NOCAP_THE, true).c_str());
+        return;
+    }
+    else if (fmonger && !attacking)
+    {
+        mprf("You cannot move closer to %s!",
+            fmonger->name(DESC_NOCAP_THE, true).c_str());
         return;
     }
 
@@ -4110,7 +4170,7 @@ static void _compile_time_asserts()
     COMPILE_CHECK(SP_VAMPIRE == 30              , c3);
     COMPILE_CHECK(SPELL_DEBUGGING_RAY == 102    , c4);
     COMPILE_CHECK(SPELL_PETRIFY == 154          , c5);
-    COMPILE_CHECK(NUM_SPELLS == 214             , c6);
+    COMPILE_CHECK(NUM_SPELLS == 224             , c6);
 
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
     COMPILE_CHECK(NUM_SPECIES < SP_UNKNOWN      , c7);

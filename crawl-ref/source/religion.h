@@ -24,7 +24,6 @@
 bool is_evil_god(god_type god);
 bool is_good_god(god_type god);
 bool is_chaotic_god(god_type god);
-bool is_priest_god(god_type god);
 
 // Returns true if the god is not present in the current game. This is
 // orthogonal to whether the player can worship the god in question.
@@ -33,7 +32,7 @@ void simple_god_message(const char *event, god_type which_deity = you.religion);
 int piety_breakpoint(int i);
 std::string god_name(god_type which_god, bool long_name = false);
 std::string god_name_jiyva(bool second_name = false);
-god_type string_to_god(const char *name, bool exact = true);
+god_type str_to_god(const std::string name, bool exact = true);
 
 std::string get_god_powers(god_type which_god);
 std::string get_god_likes(god_type which_god, bool verbose = false);
@@ -113,5 +112,5 @@ std::vector<god_type> temple_god_list();
 std::vector<god_type> nontemple_god_list();
 
 extern const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES];
-std::string adjust_abil_message(const char *pmsg);
+std::string adjust_abil_message(const char *pmsg, bool allow_upgrades = true);
 #endif

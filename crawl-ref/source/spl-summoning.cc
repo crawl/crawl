@@ -717,7 +717,7 @@ bool summon_berserker(int pow, god_type god, int spell,
     summon->update_ench(berserk);
     summon->update_ench(abj);
 
-    player_angers_monster(&menv[mons]);
+    player_angers_monster(summon);
     return (true);
 }
 
@@ -796,23 +796,15 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
         success = false;
     }
 
-    // See if we can get an mitm for the dancing weapon.
-    const int i = get_item_slot();
-
-    if (i == NON_ITEM)
-        success = false;
-    else if (success)
-    {
-        // Copy item now so that mitm[i] is occupied and doesn't get picked
-        // by get_item_slot() when giving the dancing weapon its item
-        // during create_monster().
-        mitm[i] = *wpn;
-    }
-
-    int mons;
+    int mons = -1;
 
     if (success)
     {
+        item_def cp = *wpn;
+        // Clear temp branding so we don't brand permanently.
+        if (you.duration[DUR_WEAPON_BRAND])
+            set_item_ego_type(cp, OBJ_WEAPONS, SPWPN_NORMAL);
+
         // Cursed weapons become hostile.
         const bool friendly = (!force_hostile && !wpn->cursed());
 
@@ -823,23 +815,17 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
                      you.pos(),
                      MHITYOU,
                      0, god);
+        mg.props[TUKIMA_WEAPON] = cp;
 
         if (force_hostile)
             mg.non_actor_summoner = god_name(god, false);
 
         mons = create_monster(mg);
-
-        if (mons == -1)
-        {
-            mitm[i].clear();
-            success = false;
-        }
+        success = (mons != -1);
     }
 
     if (!success)
     {
-        destroy_item(i);
-
         if (wpn)
         {
             mprf("%s vibrate%s crazily for a second.",
@@ -856,16 +842,6 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
     // effects.
     unwield_item();
 
-    // Copy the unwielded item. Note that the pointer still points at it.
-    mitm[i] = *wpn;
-    mitm[i].quantity = 1;
-    mitm[i].pos.set(-2, -2);
-    mitm[i].link = NON_ITEM + 1 + mons;
-
-    // Mark the weapon as thrown, so that we'll autograb it when the
-    // tango's done.
-    mitm[i].flags |= ISFLAG_THROWN;
-
     mprf("%s dances into the air!", wpn->name(DESC_CAP_YOUR).c_str());
 
     // Find out what our god thinks before killing the item.
@@ -875,22 +851,10 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
 
     wpn->clear();
 
-    monster& dancing_weapon = menv[mons];
-
-    destroy_item(dancing_weapon.inv[MSLOT_WEAPON]);
-    dancing_weapon.inv[MSLOT_WEAPON] = i;
-    burden_change();
-
-    ghost_demon stats;
-    stats.init_dancing_weapon(mitm[i], pow);
-
-    dancing_weapon.set_ghost(stats);
-    dancing_weapon.dancing_weapon_init();
-
     if (why)
     {
         simple_god_message(" booms: How dare you animate that foul thing!");
-        did_god_conduct(why, 10, true, &dancing_weapon);
+        did_god_conduct(why, 10, true, &menv[mons]);
     }
 
     return (true);
@@ -1094,7 +1058,7 @@ bool cast_shadow_creatures(god_type god)
 
     const int mons =
         create_monster(
-            mgen_data(RANDOM_MONSTER, BEH_FRIENDLY, &you,
+            mgen_data(RANDOM_MOBILE_MONSTER, BEH_FRIENDLY, &you,
                       2, SPELL_SHADOW_CREATURES,
                       you.pos(), MHITYOU,
                       MG_FORCE_BEH, god), false);
@@ -1181,10 +1145,10 @@ static bool _animatable_remains(const item_def& item)
         && mons_class_can_be_zombified(item.plus));
 }
 
-// Try to equip the skeleton/zombie/spectral thing with the objects it
-// died with.  This excludes items which were dropped by the player onto
-// the corpse, and corpses which were picked up and moved by the player,
-// so the player can't equip their undead slaves with items of their
+// Try to equip the skeleton/zombie with the objects it died with.  This
+// excludes holy items, items which were dropped by the player onto the
+// corpse, and corpses which were picked up and moved by the player, so
+// the player can't equip their undead slaves with items of their
 // choice.
 //
 // The item selection logic has one problem: if a first monster without
@@ -1237,10 +1201,6 @@ void equip_undead(const coord_def &a, int corps, int mons, int monnum)
         objl = mitm[objl].link;
     }
 
-    // This handles e.g. spectral things that are Yredelemnul's enslaved
-    // intact souls.
-    const bool smart_undead = mons_intel(mon) >= I_NORMAL;
-
     for (int i = item_list.size() - 1; i >= 0; --i)
     {
         objl = item_list[i];
@@ -1274,7 +1234,7 @@ void equip_undead(const coord_def &a, int corps, int mons, int monnum)
                 mslot = MSLOT_WEAPON;
 
             // Stupid undead can't use ranged weapons.
-            if (smart_undead || !is_range_weapon(item))
+            if (!is_range_weapon(item))
                 break;
 
             continue;
@@ -1292,51 +1252,26 @@ void equip_undead(const coord_def &a, int corps, int mons, int monnum)
 
         // Stupid undead can't use missiles.
         case OBJ_MISSILES:
-            if (smart_undead)
-            {
-                mslot = MSLOT_MISSILE;
-                break;
-            }
             continue;
 
+        // Stupid undead can't use gold.
         case OBJ_GOLD:
-            mslot = MSLOT_GOLD;
-            break;
+            continue;
 
         // Stupid undead can't use wands.
         case OBJ_WANDS:
-            if (smart_undead)
-            {
-                mslot = MSLOT_WAND;
-                break;
-            }
             continue;
 
         // Stupid undead can't use scrolls.
         case OBJ_SCROLLS:
-            if (smart_undead)
-            {
-                mslot = MSLOT_SCROLL;
-                break;
-            }
             continue;
 
         // Stupid undead can't use potions.
         case OBJ_POTIONS:
-            if (smart_undead)
-            {
-                mslot = MSLOT_POTION;
-                break;
-            }
             continue;
 
         // Stupid undead can't use miscellaneous objects.
         case OBJ_MISCELLANY:
-            if (smart_undead)
-            {
-                mslot = MSLOT_MISCELLANY;
-                break;
-            }
             continue;
 
         default:
@@ -1354,12 +1289,12 @@ void equip_undead(const coord_def &a, int corps, int mons, int monnum)
     }
 }
 
-//Displays message when raising dead with Animate Skeleton or Animate Dead
+// Displays message when raising dead with Animate Skeleton or Animate Dead.
 static void _display_undead_motions(int motions)
 {
     std::vector<std::string> motions_list;
 
-    //Check bitfield from _raise_remains for types of corpse(s) being animated
+    // Check bitfield from _raise_remains for types of corpse(s) being animated.
     if (motions & DEAD_ARE_WALKING)
         motions_list.push_back("walking");
     if (motions & DEAD_ARE_HOPPING)
@@ -1373,7 +1308,7 @@ static void _display_undead_motions(int motions)
     if (motions & DEAD_ARE_SLITHERING)
         motions_list.push_back("slithering");
 
-    //Prevents the message from getting too long and spammy
+    // Prevents the message from getting too long and spammy.
     if (motions_list.size() > 3)
         mpr("The dead have arisen!");
     else
@@ -1451,17 +1386,27 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
             name_zombie(&menv[mons], monnum, name);
     }
 
+    // If the original monster type has dual-wielding, make sure its
+    // zombie has it as well.  This is needed for e.g. equipped deep elf
+    // blademaster zombies.
+    if (mons_class_flag(monnum, M_TWO_WEAPONS))
+        menv[mons].flags |= MF_TWO_WEAPONS;
+
+    // Re-equip the zombie.
     equip_undead(pos, corps, mons, monnum);
 
+    // Destroy the monster's corpse, as it's no longer needed.
     destroy_item(corps);
 
     if (!force_beh)
         player_angers_monster(&menv[mons]);
 
-    //Bitfield for motions - determines text displayed when animating dead
+    // Bitfield for motions - determines text displayed when animating dead.
     if (mons_class_primary_habitat(zombie_type)    == HT_WATER
         || mons_class_primary_habitat(zombie_type) == HT_LAVA)
+    {
         *motions_r |= DEAD_ARE_SWIMMING;
+    }
     else if (mons_class_flies(zombie_type) == FL_FLY)
         *motions_r |= DEAD_ARE_FLYING;
     else if (mons_class_flies(zombie_type) == FL_LEVITATE)
@@ -1471,7 +1416,9 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
              || mons_genus(zombie_type) == MONS_GUARDIAN_SERPENT
              || mons_genus(zombie_type) == MONS_GIANT_SLUG
              || mons_genus(zombie_type) == MONS_WORM)
+    {
         *motions_r |= DEAD_ARE_SLITHERING;
+    }
     else if (mons_genus(zombie_type)    == MONS_GIANT_FROG
              || mons_genus(zombie_type) == MONS_BLINK_FROG)
         *motions_r |= DEAD_ARE_HOPPING;
@@ -1515,8 +1462,6 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
             success = _raise_remains(a, si.link(), beha, hitting, as, nas,
                                      god, actual, force_beh, mon_index,
                                      &motions);
-
-
 
             if (actual && success)
             {
@@ -1730,7 +1675,7 @@ bool cast_twisted_resurrection(int pow, god_type god)
     }
 
     // Mark this abomination as undead.
-    menv[mons].flags |= MF_HONORARY_UNDEAD;
+    make_fake_undead(&menv[mons], mon);
 
     mpr("The heap of corpses melds into an agglomeration of writhing flesh!");
 
@@ -1740,8 +1685,8 @@ bool cast_twisted_resurrection(int pow, god_type god)
     if (mon == MONS_ABOMINATION_LARGE)
     {
         menv[mons].hit_dice = 8 + total_mass / ((colour == LIGHTRED) ? 500 :
-                                                   (colour == RED)      ? 1000
-                                                                        : 2500);
+                                                (colour == RED)      ? 1000
+                                                                     : 2500);
 
         menv[mons].hit_dice = std::min(30, menv[mons].hit_dice);
 
@@ -1781,12 +1726,12 @@ bool cast_haunt(int pow, const coord_def& where, god_type god)
     while (to_summon--)
     {
         const int chance = random2(25);
-        monster_type mon = ((chance > 22) ? MONS_PHANTOM :          //  8%
-                            (chance > 20) ? MONS_HUNGRY_GHOST :     //  8%
-                            (chance > 18) ? MONS_FLAYED_GHOST :     //  8%
-                            (chance >  7) ? MONS_WRAITH :           // 44%/40%
-                            (chance >  2) ? MONS_FREEZING_WRAITH    // 20%/16%
-                                          : MONS_SPECTRAL_WARRIOR); // 12%
+        monster_type mon = ((chance > 22) ? MONS_PHANTOM :            //  8%
+                            (chance > 20) ? MONS_HUNGRY_GHOST :       //  8%
+                            (chance > 18) ? MONS_FLAYED_GHOST :       //  8%
+                            (chance >  7) ? MONS_WRAITH :             // 44%/40%
+                            (chance >  2) ? MONS_FREEZING_WRAITH      // 20%/16%
+                                          : MONS_PHANTASMAL_WARRIOR); // 12%
 
         if ((chance == 3 || chance == 8) && you.can_see_invisible())
             mon = MONS_SHADOW_WRAITH;                               //  0%/8%

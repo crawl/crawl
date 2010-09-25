@@ -1021,7 +1021,7 @@ This rod contains spells designed to repel one's enemies.
 %%%%
 royal jelly
 
-A particularly rich and golden gelatinous thing.
+A particularly rich and golden gelatinous thing. Consuming it will restore lost abilities, in addition to the nutrition it provides.
 # A lump of the magical substance produced by giant bees to be fed to their queens.
 %%%%
 rune of zot
@@ -1198,7 +1198,7 @@ A suit made of splints of metal.
 %%%%
 staff of air
 
-This staff increases the power of air spells cast by its wielder. It also protects the wielder from lightning and in turn may shock those struck by it.
+This staff increases the power of air spells cast by its wielder, and insulates him or her from electricity. If the wielder is skilled in both evocations and air magic, they can shock those struck by it.
 %%%%
 staff of channeling
 
@@ -1206,7 +1206,7 @@ This staff allows its caster to channel ambient magical energy for his or her ow
 %%%%
 staff of cold
 
-This staff increases the power of ice spells cast by its wielder, and protects him or her from the effects of cold. It can freeze those struck by it.
+This staff increases the power of ice spells cast by its wielder, and protects him or her from the effects of cold. If the wielder is skilled in evocations, they can freeze those struck by it, dealing even greater damage if they are also skilled in ice magic.
 %%%%
 staff of conjuration
 
@@ -1214,11 +1214,11 @@ This staff increases the power of conjurations cast by its wielder.
 %%%%
 staff of death
 
-This staff increases the power of necromantic spells cast by its wielder. It can cause great pain in those living souls its wielder strikes.
+This staff increases the power of necromantic spells cast by its wielder. If the wielder is skilled in both evocations and necromancy, they can inflict great pain on those living souls they strike.
 %%%%
 staff of earth
 
-This staff increases the power of earth spells cast by its wielder. It can crush those struck by it.
+This staff increases the power of earth spells cast by its wielder. If the wielder is skilled in evocations, it can crush those struck by it, dealing even greater damage if they are also skilled in earth magic.
 %%%%
 staff of enchantment
 
@@ -1230,11 +1230,11 @@ This staff allows its wielder to cast magical spells without hungering as a resu
 %%%%
 staff of fire
 
-This staff increases the power of fire spells cast by its wielder, and protects him or her from the effects of heat and fire. It can burn those struck by it.
+This staff increases the power of fire spells cast by its wielder, and protects him or her from the effects of heat and fire. If the wielder is skilled in evocations, they can burn those struck by it, dealing even greater damage if they are also skilled in fire magic.
 %%%%
 staff of poison
 
-This staff increases the power of poisoning spells cast by its wielder, and protects him or her from the effects of poison. It can poison those struck by it.
+This staff increases the power of poisoning spells cast by its wielder, and protects him or her from the effects of poison. If the wielder is skilled in both evocations and poison magic, they can poison those struck by it.
 %%%%
 staff of power
 

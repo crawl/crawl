@@ -40,6 +40,7 @@
 #include "place.h"
 #include "religion.h"
 #include "skills2.h"
+#include "status.h"
 #include "stuff.h"
 #include "tagstring.h"
 #include "transform.h"
@@ -168,35 +169,6 @@ colour_bar MP_Bar(LIGHTBLUE, BLUE, MAGENTA, DARKGREY);
 // Status display
 // ----------------------------------------------------------------------
 
-static int _bad_ench_colour( int lvl, int orange, int red )
-{
-    if (lvl > red)
-        return (RED);
-    else if (lvl > orange)
-        return (LIGHTRED);
-
-    return (YELLOW);
-}
-
-static int _dur_colour( int running_out_color, bool running_out )
-{
-    if (running_out)
-    {
-        return running_out_color;
-    }
-    else
-    {
-        switch (running_out_color)
-        {
-        case GREEN:     return ( LIGHTGREEN );
-        case BLUE:      return ( LIGHTBLUE );
-        case MAGENTA:   return ( LIGHTMAGENTA );
-        case LIGHTGREY: return ( WHITE );
-        default: return running_out_color;
-        }
-    }
-}
-
 #ifdef DGL_SIMPLE_MESSAGING
 void update_message_status()
 {
@@ -243,40 +215,6 @@ static int _count_digits(int val)
     else if (val > 9)
         return 2;
     return 1;
-}
-
-static const char* _describe_hunger(int& color)
-{
-    const bool vamp = (you.species == SP_VAMPIRE);
-
-    switch (you.hunger_state)
-    {
-        case HS_ENGORGED:
-            color = LIGHTGREEN;
-            return (vamp ? "Alive" : "Engorged");
-        case HS_VERY_FULL:
-            color = GREEN;
-            return ("Very Full");
-        case HS_FULL:
-            color = GREEN;
-            return ("Full");
-        case HS_SATIATED: // normal
-            color = GREEN;
-            return NULL;
-        case HS_HUNGRY:
-            color = YELLOW;
-            return (vamp ? "Thirsty" : "Hungry");
-        case HS_VERY_HUNGRY:
-            color = YELLOW;
-            return (vamp ? "Very Thirsty" : "Very Hungry");
-        case HS_NEAR_STARVING:
-            color = YELLOW;
-            return (vamp ? "Near Bloodless" : "Near Starving");
-        case HS_STARVING:
-        default:
-            color = RED;
-            return (vamp ? "Bloodless" : "Starving");
-    }
 }
 
 static void _print_stats_mp(int x, int y)
@@ -406,7 +344,7 @@ static void _print_stats_ac(int x, int y)
     // AC:
     cgotoxy(x+4, y, GOTO_STAT);
     if (you.duration[DUR_STONEMAIL])
-        textcolor(_dur_colour( BLUE, dur_expiring(DUR_STONEMAIL) ));
+        textcolor(dur_colour( BLUE, dur_expiring(DUR_STONEMAIL) ));
     else if (you.duration[DUR_ICY_ARMOUR] || you.duration[DUR_STONESKIN])
         textcolor( LIGHTBLUE );
     else if (you.duration[DUR_ICEMAIL_DEPLETED] > ICEMAIL_TIME / ICEMAIL_MAX)
@@ -511,9 +449,9 @@ static void _print_stats_qv(int y)
 
 struct status_light
 {
-    status_light(int c, const char* t) : color(c), text(t) {}
+    status_light(int c, std::string t) : color(c), text(t) {}
     int color;
-    const char* text;
+    std::string text;
 };
 
 // The colour scheme for these flags is currently:
@@ -551,218 +489,32 @@ static void _get_status_lights(std::vector<status_light>& out)
     }
 #endif
 
-    switch (you.burden_state)
+    const int statuses[] = {
+        STATUS_BURDEN, STATUS_HUNGER, DUR_PRAYER, DUR_TELEPORT,
+        DUR_DEATHS_DOOR, DUR_QUAD_DAMAGE, DUR_DEFLECT_MISSILES,
+        DUR_REPEL_MISSILES, STATUS_REGENERATION,
+        DUR_RESIST_POISON, DUR_RESIST_COLD, DUR_RESIST_FIRE,
+        DUR_INSULATION, DUR_SEE_INVISIBLE,
+        STATUS_AIRBORNE, DUR_INVIS, DUR_CONTROL_TELEPORT, DUR_SILENCE,
+        DUR_CONFUSING_TOUCH, DUR_BARGAIN, DUR_SAGE, DUR_FIRE_SHIELD,
+        DUR_SLIMIFY, DUR_SURE_BLADE, DUR_CONF, DUR_LOWERED_MR,
+        STATUS_BEHELD, DUR_LIQUID_FLAMES, DUR_MISLED, DUR_POISONING,
+        STATUS_SICK, STATUS_ROT, STATUS_NET, STATUS_GLOW, DUR_SWIFTNESS,
+        STATUS_SPEED, DUR_DEATH_CHANNEL, DUR_TELEPATHY, DUR_STEALTH,
+        DUR_BREATH_WEAPON, DUR_EXHAUSTED, DUR_POWERED_BY_DEATH,
+        DUR_TRANSFORMATION, DUR_AFRAID,
+    };
+
+    status_info inf;
+    for (unsigned i = 0; i < ARRAYSZ(statuses); ++i)
     {
-    case BS_OVERLOADED:
-        out.push_back(status_light(RED, "Overloaded"));
-        break;
-
-    case BS_ENCUMBERED:
-        out.push_back(status_light(LIGHTRED, "Encumbered"));
-        break;
-
-    case BS_UNENCUMBERED:
-        break;
-    }
-
-    {
-        int hunger_color;
-        const char* hunger_text = _describe_hunger(hunger_color);
-        if (hunger_text)
-            out.push_back(status_light(hunger_color, hunger_text));
-    }
-
-    if (you.duration[DUR_PRAYER])
-        out.push_back(status_light(WHITE, "Pray"));  // no end of effect warning
-
-    if (you.duration[DUR_TELEPORT])
-        out.push_back(status_light(LIGHTBLUE, "Tele"));
-
-    if (you.duration[DUR_DEATHS_DOOR])
-    {
-        int color = _dur_colour(LIGHTGREY, dur_expiring(DUR_DEATHS_DOOR));
-        out.push_back(status_light(color, "DDoor"));
-    }
-
-    if (you.duration[DUR_QUAD_DAMAGE])
-    {
-        int color = _dur_colour(BLUE, dur_expiring(DUR_QUAD_DAMAGE));
-        out.push_back(status_light(color, "Quad"));
-    }
-
-    if (you.duration[DUR_DEFLECT_MISSILES])
-    {
-        int color = _dur_colour( MAGENTA, dur_expiring(DUR_DEFLECT_MISSILES) );
-        out.push_back(status_light(color, "DMsl"));
-    }
-    else if (you.duration[DUR_REPEL_MISSILES])
-    {
-        int color = _dur_colour( BLUE, dur_expiring(DUR_REPEL_MISSILES) );
-        out.push_back(status_light(color, "RMsl"));
-    }
-
-    if (you.duration[DUR_REGENERATION])
-    {
-        int color = _dur_colour( BLUE, dur_expiring(DUR_REGENERATION) );
-        out.push_back(status_light(color,
-            you.attribute[ATTR_DIVINE_REGENERATION] ? "Regen MR" : "Regen"));
-    }
-
-    if (you.duration[DUR_INSULATION])
-    {
-        int color = _dur_colour( BLUE, dur_expiring(DUR_INSULATION) );
-        out.push_back(status_light(color, "Ins"));
-    }
-
-    if (you.airborne())
-    {
-        const bool perm     = you.permanent_flight();
-        const bool expiring = (!perm && dur_expiring(DUR_LEVITATION));
-        if (wearing_amulet( AMU_CONTROLLED_FLIGHT ))
+        fill_status_info(statuses[i], &inf);
+        if (!inf.light_text.empty())
         {
-            int color = _dur_colour( you.light_flight()? BLUE : MAGENTA,
-                                      expiring);
-            out.push_back(status_light(color, "Fly"));
-        }
-        else
-        {
-            int color = _dur_colour(you.attribute[ATTR_LEV_UNCANCELLABLE] ?
-                                    GREEN : BLUE, expiring);
-            out.push_back(status_light(color, "Lev"));
+            status_light sl(inf.light_colour, inf.light_text);
+            out.push_back(sl);
         }
     }
-
-    if (you.duration[DUR_INVIS])
-    {
-        int color = _dur_colour( BLUE, dur_expiring(DUR_INVIS) );
-        if (you.backlit())
-            color = DARKGREY;
-        out.push_back(status_light(color, "Invis"));
-    }
-
-    if (you.duration[DUR_CONTROL_TELEPORT])
-    {
-        int color = _dur_colour( MAGENTA, dur_expiring(DUR_CONTROL_TELEPORT) );
-        out.push_back(status_light(color, "cTele"));
-    }
-
-    if (you.duration[DUR_SILENCE])
-    {
-        int color = _dur_colour( BLUE, dur_expiring(DUR_SILENCE) );
-        out.push_back(status_light(color, "Sil"));
-    }
-
-    if (you.duration[DUR_CONFUSING_TOUCH])
-    {
-        int color = _dur_colour( BLUE, dur_expiring(DUR_CONFUSING_TOUCH) );
-        out.push_back(status_light(color, "Touch"));
-    }
-
-    if (you.duration[DUR_BARGAIN])
-    {
-        int color = _dur_colour( BLUE, dur_expiring(DUR_BARGAIN) );
-        out.push_back(status_light(color, "Brgn"));
-    }
-
-    if (you.duration[DUR_SAGE])
-    {
-        int color = _dur_colour( BLUE, dur_expiring(DUR_SAGE) );
-        out.push_back(status_light(color, "Sage"));
-    }
-
-    if (you.duration[DUR_FIRE_SHIELD])
-    {
-        int color = _dur_colour( BLUE, dur_expiring(DUR_FIRE_SHIELD) );
-        out.push_back(status_light(color, "RoF"));
-    }
-
-    if (you.duration[DUR_SLIMIFY])
-    {
-        int color = _dur_colour(GREEN, dur_expiring(DUR_SLIMIFY));
-        out.push_back(status_light(color, "Slime"));
-    }
-
-    if (you.duration[DUR_SURE_BLADE])
-        out.push_back(status_light(BLUE, "Blade"));
-
-    if (you.confused())
-        out.push_back(status_light(RED, "Conf"));
-
-    if (you.duration[DUR_LOWERED_MR])
-        out.push_back(status_light(RED, "-MR"));
-
-    // TODO: Differentiate between mermaids and sirens!
-    if (you.beheld())
-        out.push_back(status_light(RED, "Mesm"));
-
-    if (you.duration[DUR_LIQUID_FLAMES])
-        out.push_back(status_light(RED, "Fire"));
-
-    if (you.duration[DUR_MISLED])
-        out.push_back(status_light(LIGHTMAGENTA, "Misled"));
-
-    if (you.duration[DUR_POISONING])
-    {
-        int color = _bad_ench_colour( you.duration[DUR_POISONING], 5, 10 );
-        out.push_back(status_light(color, "Pois"));
-    }
-
-    if (you.disease)
-    {
-        int color = _bad_ench_colour( you.disease, 40 * BASELINE_DELAY,
-                                      120 * BASELINE_DELAY);
-        out.push_back(status_light(color, "Sick"));
-    }
-
-    if (you.rotting)
-    {
-        int color = _bad_ench_colour( you.rotting, 4, 8 );
-        out.push_back(status_light(color, "Rot"));
-    }
-
-    if (you.attribute[ATTR_HELD])
-        out.push_back(status_light(RED, "Held"));
-
-    const int cont = get_contamination_level();
-    if (cont || you.backlit(false))
-    {
-        int colour = DARKGREY;
-        if (you.backlit(false))
-            colour = LIGHTBLUE;
-        if (cont > 1)
-            colour = _bad_ench_colour(cont, 2, 3);
-
-        out.push_back(status_light(colour, "Glow"));
-    }
-
-    if (you.duration[DUR_SWIFTNESS])
-    {
-        int color = _dur_colour( BLUE, dur_expiring(DUR_SWIFTNESS) );
-        out.push_back(status_light(color, "Swift"));
-    }
-
-    if (you.duration[DUR_SLOW] && !you.duration[DUR_HASTE])
-        out.push_back(status_light(RED, "Slow"));
-    else if (you.duration[DUR_HASTE] && !you.duration[DUR_SLOW])
-    {
-        int color = _dur_colour( BLUE, dur_expiring(DUR_HASTE) );
-        out.push_back(status_light(color, "Fast"));
-    }
-
-    if (you.duration[DUR_DEATH_CHANNEL])
-    {
-        int color = _dur_colour(MAGENTA, dur_expiring(DUR_DEATH_CHANNEL));
-        out.push_back(status_light(color, "DChan"));
-    }
-
-    if (you.duration[DUR_TELEPATHY])
-        out.push_back(status_light(LIGHTBLUE, "Emp"));
-
-    if (you.duration[DUR_BREATH_WEAPON])
-        out.push_back(status_light(YELLOW, "BWpn"));
-
-    if (you.duration[DUR_POWERED_BY_DEATH] && handle_pbd_corpses(false) > 0)
-        out.push_back(status_light(LIGHTMAGENTA, "PbD"));
 }
 
 static void _print_status_lights(int y)
@@ -784,13 +536,13 @@ static void _print_status_lights(int y)
     while (true)
     {
         const int end_x = (wherex() - crawl_view.hudp.x)
-                + (i_light < lights.size() ? strlen(lights[i_light].text)
+                + (i_light < lights.size() ? lights[i_light].text.length()
                                            : 10000);
 
         if (end_x <= crawl_view.hudsz.x)
         {
             textcolor(lights[i_light].color);
-            cprintf("%s", lights[i_light].text);
+            cprintf("%s", lights[i_light].text.c_str());
             if (end_x < crawl_view.hudsz.x)
                 cprintf(" ");
             ++i_light;
@@ -1878,7 +1630,7 @@ static std::vector<formatted_string> _get_overview_resistances(
     const int rinvi = you.can_see_invisible(calc_unid);
     const int rward = wearing_amulet(AMU_WARDING, calc_unid);
     const int rcons = player_item_conserve(calc_unid);
-    const int rcorr = wearing_amulet(AMU_RESIST_CORROSION, calc_unid) + floor(player_mutation_level(MUT_YELLOW_SCALES) / 3);
+    const int rcorr = player_res_acid(calc_unid);
     const int rclar = player_mental_clarity(calc_unid);
     snprintf(buf, sizeof buf,
              "%sSee Invis. : %s\n"
@@ -1937,8 +1689,7 @@ static char _get_overview_screen_results()
 {
     bool calc_unid = false;
     formatted_scroller overview;
-    // Set flags, and don't use easy exit.
-    overview.set_flags(MF_SINGLESELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP, false);
+    overview.set_flags(MF_SINGLESELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP);
     overview.set_more( formatted_string::parse_string(
 #ifdef USE_TILE
                         "<cyan>[ +/L-click : Page down.   - : Page up."
@@ -2025,15 +1776,6 @@ void print_overview_screen()
     }
 }
 
-static std::string _get_expiration_string(duration_type dur, const char* msg)
-{
-    std::string help = msg;
-    if (dur_expiring(dur))
-        help += " (expiring)";
-
-    return (help);
-}
-
 std::string stealth_desc(int stealth)
 {
     std::string prefix =
@@ -2075,229 +1817,30 @@ std::string _status_mut_abilities()
     std::string text = "<w>@:</w> ";
     std::vector<std::string> status;
 
-    // These are not so unreasonable anymore now that the new overview screen
-    // is dumped. When the player dies while paralysed it's important
-    // information. If so, move them to the front. (jpeg)
-    if (you.paralysed())
-        status.push_back("paralysed");
+    const int statuses[] = {
+        DUR_TRANSFORMATION, DUR_PARALYSIS, DUR_PETRIFIED, DUR_SLEEP,
+        STATUS_BURDEN,
+        DUR_BREATH_WEAPON, STATUS_BEHELD, DUR_LIQUID_FLAMES, DUR_ICY_ARMOUR,
+        DUR_DEFLECT_MISSILES, DUR_REPEL_MISSILES, DUR_PRAYER,
+        STATUS_REGENERATION, DUR_DEATHS_DOOR, DUR_STONEMAIL, DUR_STONESKIN,
+        DUR_TELEPORT, DUR_DEATH_CHANNEL, DUR_PHASE_SHIFT, DUR_SILENCE,
+        DUR_INVIS, DUR_CONF, DUR_EXHAUSTED, DUR_MIGHT, DUR_BRILLIANCE,
+        DUR_AGILITY, DUR_DIVINE_VIGOUR, DUR_DIVINE_STAMINA, DUR_BERSERKER,
+        STATUS_AIRBORNE, DUR_BARGAIN, DUR_SLAYING, DUR_SAGE,
+        DUR_MAGIC_SHIELD, DUR_FIRE_SHIELD, DUR_POISONING, STATUS_SICK,
+        STATUS_GLOW, STATUS_ROT, DUR_CONFUSING_TOUCH, DUR_SLIMIFY,
+        DUR_SURE_BLADE, STATUS_NET, STATUS_SPEED, DUR_AFRAID,
+    };
 
-    if (you.petrified())
-        status.push_back("petrified");
-
-    if (you.asleep())
-        status.push_back("sleeping");
-
-    if (you.burden_state == BS_ENCUMBERED)
-        status.push_back("burdened");
-    else if (you.burden_state == BS_OVERLOADED)
-        status.push_back("overloaded");
-
-    if (you.duration[DUR_BREATH_WEAPON])
-        status.push_back("short of breath");
-
-    // TODO: Differentiate between mermaids and sirens!
-    if (you.beheld())
-        status.push_back("mesmerised");
-
-    if (you.duration[DUR_LIQUID_FLAMES])
-        status.push_back("liquid flames");
-
-    if (you.duration[DUR_ICY_ARMOUR])
-        status.push_back(_get_expiration_string(DUR_ICY_ARMOUR, "icy armour"));
-
-    if (you.duration[DUR_DEFLECT_MISSILES])
+    status_info inf;
+    for (unsigned i = 0; i < ARRAYSZ(statuses); ++i)
     {
-        status.push_back(_get_expiration_string(DUR_DEFLECT_MISSILES,
-                                                "deflect missiles"));
+        fill_status_info(statuses[i], &inf);
+        if (!inf.short_text.empty())
+            status.push_back(inf.short_text);
     }
-    else if (you.duration[DUR_REPEL_MISSILES])
-    {
-        status.push_back(_get_expiration_string(DUR_REPEL_MISSILES,
-                                                "repel missiles"));
-    }
-
-    if (you.duration[DUR_PRAYER])
-        status.push_back("praying");
-
-    if (you.disease && !you.duration[DUR_REGENERATION]
-        || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING
-        || player_mutation_level(MUT_SLOW_HEALING) == 3)
-    {
-        status.push_back("non-regenerating");
-    }
-    else if (you.duration[DUR_REGENERATION]
-             || you.species == SP_VAMPIRE && you.hunger_state != HS_SATIATED)
-    {
-        std::string help;
-        if (you.disease)
-            help = "recuperating";
-        else
-            help = "regenerating";
-
-        if (you.species == SP_VAMPIRE && you.hunger_state != HS_SATIATED)
-        {
-            if (you.hunger_state < HS_SATIATED)
-                help += " slowly";
-            else if (you.hunger_state >= HS_FULL)
-                help += " quickly";
-            else if (you.hunger_state == HS_ENGORGED)
-                help += " very quickly";
-        }
-
-        if (dur_expiring(DUR_REGENERATION))
-            help += " (expires)";
-
-        status.push_back(help);
-    }
-
-    if (you.duration[DUR_STONEMAIL])
-    {
-        status.push_back(_get_expiration_string(DUR_STONEMAIL,
-                                                "stone mail"));
-    }
-
-    if (you.duration[DUR_STONESKIN])
-        status.push_back("stone skin");
-
-    if (you.duration[DUR_TELEPORT])
-        status.push_back("about to teleport");
-
-    if (you.duration[DUR_DEATH_CHANNEL])
-    {
-        status.push_back(_get_expiration_string(DUR_DEATH_CHANNEL,
-                                                "death channel"));
-    }
-    if (you.duration[DUR_PHASE_SHIFT])
-        status.push_back(_get_expiration_string(DUR_PHASE_SHIFT, "phasing"));
-
-    if (you.duration[DUR_SILENCE])
-        status.push_back(_get_expiration_string(DUR_SILENCE, "silence"));
-
-    if (you.duration[DUR_INVIS])
-    {
-        std::string status_mes = "invisible";
-        if (you.backlit())
-            status_mes = "invisible (but backlit and visible)";
-
-        status.push_back(_get_expiration_string(DUR_INVIS, status_mes.c_str()));
-    }
-
-    if (you.confused())
-        status.push_back("confused");
-
-    if (you.duration[DUR_EXHAUSTED])
-        status.push_back("exhausted");
-
-    if (you.duration[DUR_MIGHT])
-        status.push_back("mighty");
-
-    if (you.duration[DUR_BRILLIANCE])
-        status.push_back("brilliant");
-
-    if (you.duration[DUR_AGILITY])
-        status.push_back("agile");
-
-    if (you.duration[DUR_DIVINE_VIGOUR])
-        status.push_back("divinely vigorous");
-
-    if (you.duration[DUR_DIVINE_STAMINA])
-        status.push_back("divinely fortified");
-
-    if (you.berserk())
-        status.push_back("berserking");
-
-    if (you.airborne())
-    {
-        std::string help;
-        if (wearing_amulet( AMU_CONTROLLED_FLIGHT ))
-            help += "flying";
-        else
-            help += "levitating";
-
-        if (dur_expiring(DUR_LEVITATION) && !you.permanent_flight())
-            help += " (expires)";
-
-        status.push_back(help);
-    }
-
-    if (you.duration[DUR_BARGAIN])
-        status.push_back(_get_expiration_string(DUR_BARGAIN, "charismatic"));
-
-    if (you.duration[DUR_SLAYING])
-        status.push_back("deadly");
-
-    // DUR_STEALTHY handled in stealth printout
-
-    if (you.duration[DUR_SAGE])
-    {
-        std::string help  = "studying ";
-                    help += skill_name(you.sage_bonus_skill);
-        status.push_back(_get_expiration_string(DUR_SAGE, help.c_str()));
-    }
-
-    if (you.duration[DUR_MAGIC_SHIELD])
-        status.push_back("shielded");
-
-    if (you.duration[DUR_FIRE_SHIELD])
-    {
-        status.push_back(_get_expiration_string(DUR_FIRE_SHIELD,
-                                                "immune to fire clouds"));
-    }
-
-    if (you.duration[DUR_POISONING])
-    {
-        std::string help = (you.duration[DUR_POISONING] > 10) ? "extremely" :
-                           (you.duration[DUR_POISONING] >  5) ? "very" :
-                           (you.duration[DUR_POISONING] >  3) ? "quite"
-                                                              : "mildly";
-                    help += " poisoned";
-
-        status.push_back(help);
-    }
-
-    if (you.disease)
-    {
-        int high = 120 * BASELINE_DELAY;
-        int low  =  40 * BASELINE_DELAY;
-        std::string help = (you.disease > high) ? "badly " :
-                           (you.disease >  low) ? ""
-                                               : "mildly ";
-                    help += "diseased";
-
-        status.push_back(help);
-    }
-
-    const int cont = get_contamination_level();
-    if (cont > 0)
-    {
-        snprintf(info, INFO_SIZE, "%sglowing",
-                 (cont == 1) ? "very slightly " :
-                 (cont == 2) ? "slightly " :
-                 (cont == 3) ? "" :
-                 (cont == 4) ? "moderately " :
-                 (cont == 5) ? "heavily "
-                             : "really heavily ");
-
-        status.push_back(info);
-    }
-
-    if (you.rotting || you.species == SP_GHOUL)
-        status.push_back("rotting");
-
-    if (you.duration[DUR_CONFUSING_TOUCH])
-    {
-        status.push_back(_get_expiration_string(DUR_CONFUSING_TOUCH,
-                                                "confusing touch"));
-    }
-
-    if (you.duration[DUR_SLIMIFY])
-        status.push_back(_get_expiration_string(DUR_SLIMIFY, "slimy"));
-
-    if (you.duration[DUR_SURE_BLADE])
-        status.push_back("bonded with blade");
 
     int move_cost = (player_speed() * player_movement_speed()) / 10;
-
     if (move_cost != 10)
     {
         std::string help = (move_cost <   8) ? "very quick" :
@@ -2308,16 +1851,6 @@ std::string _status_mut_abilities()
         status.push_back(help);
     }
 
-    if (you.duration[DUR_SLOW] && !you.duration[DUR_HASTE])
-        status.push_back("slowed");
-    else if (you.duration[DUR_HASTE] && !you.duration[DUR_SLOW])
-        status.push_back(_get_expiration_string(DUR_HASTE, "hasted"));
-    else if (!you.duration[DUR_HASTE] && you.duration[DUR_SWIFTNESS])
-        status.push_back("swift");
-
-    if (you.attribute[ATTR_HELD])
-        status.push_back("held");
-
     status.push_back(magic_res_adjective(you.res_magic())
                      + " resistant to hostile enchantments");
 
@@ -2325,35 +1858,12 @@ std::string _status_mut_abilities()
     status.push_back(stealth_desc(check_stealth()));
 
     text += comma_separated_line(status.begin(), status.end(), ", ", ", ");
-
-    if (you.duration[DUR_TRANSFORMATION])
-        text += "\n" + transform_desc(true);
-
-/*
-//  Commenting out until this information is actually meaningful. (jpeg)
-    const int to_hit = calc_your_to_hit( false ) * 2;
-
-    snprintf( info, INFO_SIZE,
-          "\n%s in your current equipment.",
-          (to_hit <   1) ? "You are completely incapable of fighting" :
-          (to_hit <   5) ? "Hitting even clumsy monsters is extremely awkward" :
-          (to_hit <  10) ? "Hitting average monsters is awkward" :
-          (to_hit <  15) ? "Hitting average monsters is difficult" :
-          (to_hit <  20) ? "Hitting average monsters is hard" :
-          (to_hit <  30) ? "Very agile monsters are a bit awkward to hit" :
-          (to_hit <  45) ? "Very agile monsters are a bit difficult to hit" :
-          (to_hit <  60) ? "Very agile monsters are a bit hard to hit" :
-          (to_hit < 100) ? "You feel comfortable with your ability to fight"
-                         : "You feel confident with your ability to fight" );
-    text += info;
-*/
-    if (you.duration[DUR_DEATHS_DOOR])
-        text += "\nYou are standing in death's doorway.";
+    text += "\n";
 
     //----------------------------
     // print mutation information
     //----------------------------
-    text += "\n<w>A:</w> ";
+    text += "<w>A:</w> ";
 
     int AC_change  = 0;
     int EV_change  = 0;

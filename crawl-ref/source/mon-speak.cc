@@ -21,7 +21,6 @@
 #include "debug.h"
 #include "dlua.h"
 #include "ghost.h"
-#include "initfile.h"
 #include "libutil.h"
 #include "message.h"
 #include "mon-util.h"

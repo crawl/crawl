@@ -223,9 +223,9 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "Kikubaaqudgha is protecting you from unholy torment.",
       "invoke torment by praying over a corpse" },
     // Yredelemnul
-    { "animate remains",
+    { "animate {yred_dead}",
       "recall your undead slaves",
-      "animate legions of the dead",
+      "#animate {yred_dead}",
       "drain ambient lifeforce",
       "enslave living souls" },
     // Xom
@@ -234,7 +234,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "gain magical power from killing",
       "Vehumet is aiding your destructive magics.",
       "Vehumet is extending the range of your conjurations.",
-      "Vehumet is reducing the cost of your destructive magics.",
+      "Vehumet is reducing the cost of your expensive destructive magics.",
       "" },
     // Okawaru
     { "give your body great, but temporary strength",
@@ -331,9 +331,9 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "Kikubaaqudgha will no longer protect you from unholy torment.",
       "invoke torment by praying over a corpse" },
     // Yredelemnul
-    { "animate remains",
+    { "animate {yred_dead}",
       "recall your undead slaves",
-      "animate legions of the dead",
+      "#animate {yred_dead}",
       "drain ambient lifeforce",
       "enslave living souls" },
     // Xom
@@ -448,13 +448,6 @@ bool is_chaotic_god(god_type god)
             || god == GOD_JIYVA);
 }
 
-bool is_priest_god(god_type god)
-{
-    return (god == GOD_ZIN
-            || god == GOD_YREDELEMNUL
-            || god == GOD_BEOGH);
-}
-
 bool is_unavailable_god(god_type god)
 {
     return (god == GOD_JIYVA && jiyva_is_dead());
@@ -527,7 +520,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
 
     case GOD_CHEIBRIADOS:
         snprintf(info, INFO_SIZE, "you kill fast things%s",
-                 verbose ? ", relative to your current speed"
+                 verbose ? ", relative to your speed"
                          : "");
         likes.push_back(info);
         break;
@@ -1016,20 +1009,20 @@ int yred_random_servants(int threshold, bool force_hostile)
     const int temp_rand = random2(std::min(100, threshold));
 
     // undead
-    mon_type = ((temp_rand < 10) ? MONS_WRAITH :           // 10%
-                (temp_rand < 20) ? MONS_WIGHT :            // 10%
-                (temp_rand < 30) ? MONS_FLYING_SKULL :     // 10%
-                (temp_rand < 39) ? MONS_SPECTRAL_WARRIOR : //  9%
-                (temp_rand < 48) ? MONS_ROTTING_HULK :     //  9%
-                (temp_rand < 57) ? MONS_SKELETAL_WARRIOR : //  9%
-                (temp_rand < 65) ? MONS_FREEZING_WRAITH :  //  8%
-                (temp_rand < 73) ? MONS_FLAMING_CORPSE :   //  8%
-                (temp_rand < 80) ? MONS_GHOUL :            //  7%
-                (temp_rand < 86) ? MONS_MUMMY :            //  6%
-                (temp_rand < 91) ? MONS_HUNGRY_GHOST :     //  5%
-                (temp_rand < 95) ? MONS_FLAYED_GHOST :     //  4%
-                (temp_rand < 98) ? MONS_BONE_DRAGON        //  3%
-                                 : MONS_DEATH_COB);        //  2%
+    mon_type = ((temp_rand < 10) ? MONS_WRAITH :             // 10%
+                (temp_rand < 20) ? MONS_WIGHT :              // 10%
+                (temp_rand < 30) ? MONS_FLYING_SKULL :       // 10%
+                (temp_rand < 39) ? MONS_PHANTASMAL_WARRIOR : //  9%
+                (temp_rand < 48) ? MONS_ROTTING_HULK :       //  9%
+                (temp_rand < 57) ? MONS_SKELETAL_WARRIOR :   //  9%
+                (temp_rand < 65) ? MONS_FREEZING_WRAITH :    //  8%
+                (temp_rand < 73) ? MONS_FLAMING_CORPSE :     //  8%
+                (temp_rand < 80) ? MONS_GHOUL :              //  7%
+                (temp_rand < 86) ? MONS_MUMMY :              //  6%
+                (temp_rand < 91) ? MONS_HUNGRY_GHOST :       //  5%
+                (temp_rand < 95) ? MONS_FLAYED_GHOST :       //  4%
+                (temp_rand < 98) ? MONS_BONE_DRAGON          //  3%
+                                 : MONS_DEATH_COB);          //  2%
 
     if (mon_type == MONS_FLYING_SKULL)
         how_many = 2 + random2(4);
@@ -2275,7 +2268,7 @@ std::string god_name_jiyva(bool second_name)
     return (name);
 }
 
-god_type string_to_god(const char *_name, bool exact)
+god_type str_to_god(const std::string _name, bool exact)
 {
     std::string target(_name);
     trim_string(target);
@@ -2344,44 +2337,59 @@ void religion_turn_end()
     _place_delayed_monsters();
 }
 
-std::string adjust_abil_message(const char *pmsg)
+std::string adjust_abil_message(const char *pmsg, bool allow_upgrades)
 {
-    int pos;
     std::string pm = pmsg;
 
-    if ((pos = pm.find("{biology}")) != -1)
+    // Messages starting with "#" are ability upgrades.
+    if (!pm.empty() && pmsg[0] == '#')
     {
-        switch (you.is_undead)
-        {
-        case US_UNDEAD:      // mummies -- time has no meaning!
-            return "";
-        case US_HUNGRY_DEAD: // ghouls
-            pm.replace(pos, 9, "decay");
-            break;
-        case US_SEMI_UNDEAD: // vampires
-        case US_ALIVE:
-            pm.replace(pos, 9, "biology");
-            break;
-        }
+        if (allow_upgrades)
+            pm.erase(0, 1);
+        else
+            return ("");
     }
+
+    int pos;
+
+    if ((pos = pm.find("{yred_dead}")) != -1)
+    {
+        if (yred_can_animate_dead())
+            pm.replace(pos, 11, "legions of the dead");
+        else
+            pm.replace(pos, 11, "remains");
+    }
+
     return (pm);
 }
 
-static bool _abil_chg_message(const char *pmsg, const char *youcanmsg)
+static bool _abil_chg_message(const char *pmsg, const char *youcanmsg,
+                              int breakpoint)
 {
     if (!*pmsg)
-        return false;
+        return (false);
+
+    // Set piety to the passed-in piety breakpoint value when getting
+    // the ability message.  If we have an ability upgrade, which will
+    // change description based on current piety, and current piety has
+    // gone up more than one breakpoint, this will ensure that all
+    // ability upgrade descriptions display in the proper sequence.
+    int old_piety = you.piety;
+    you.piety = piety_breakpoint(breakpoint);
 
     std::string pm = adjust_abil_message(pmsg);
+
+    you.piety = old_piety;
 
     if (isupper(pmsg[0]))
         god_speaks(you.religion, pm.c_str());
     else
     {
         god_speaks(you.religion,
-                   make_stringf(youcanmsg, pmsg).c_str());
+                   make_stringf(youcanmsg, pm.c_str()).c_str());
     }
-    return true;
+
+    return (true);
 }
 
 void dock_piety(int piety_loss, int penance)
@@ -2539,7 +2547,7 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
             redraw_skill(you.your_name, player_title());
 
             if (_abil_chg_message(god_gain_power_messages[you.religion][i],
-                              "You can now %s."))
+                                  "You can now %s.", i))
             {
                 learned_something_new(HINT_NEW_ABILITY_GOD);
             }
@@ -2672,7 +2680,7 @@ void lose_piety(int pgn)
                 redraw_skill(you.your_name, player_title());
 
                 _abil_chg_message(god_lose_power_messages[you.religion][i],
-                                  "You can no longer %s.");
+                                  "You can no longer %s.", i);
 
                 if (_need_water_walking() && !beogh_water_walk())
                     fall_into_a_pool(you.pos(), true, grd(you.pos()));

@@ -337,11 +337,11 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     // Book of the Warp
     {SPELL_BANISHMENT,
      SPELL_PHASE_SHIFT,
+     SPELL_GOLUBRIAS_PASSAGE,
      SPELL_WARP_BRAND,
      SPELL_DISPERSAL,
      SPELL_PORTAL,
      SPELL_CONTROLLED_BLINK,
-     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
 
@@ -478,13 +478,11 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      },
 
     // Book of Stalking
-    {SPELL_STING,
-     SPELL_SURE_BLADE,
-     SPELL_PROJECTED_NOISE,
-     SPELL_POISON_WEAPON,
-     SPELL_MEPHITIC_CLOUD,
+    {SPELL_FULSOME_DISTILLATION,
+     SPELL_EVAPORATE,
+     SPELL_PASSWALL,
      SPELL_PETRIFY,
-     SPELL_INVISIBILITY,
+     SPELL_DIG,
      SPELL_NO_SPELL,
      },
 
@@ -516,7 +514,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_PASSWALL,
      SPELL_CONTROL_TELEPORT,
      SPELL_FRAGMENTATION,
-     SPELL_NO_SPELL,
+     SPELL_GOLUBRIAS_PASSAGE,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
@@ -767,6 +765,15 @@ spell_type which_spell_in_book(int sbook_type, int spl)
     return spellbook_template_array[sbook_type][spl];
 }                               // end which_spell_in_book()
 
+int player_spell_skills()
+{
+    int sum = 0;
+    for (int i = SK_SPELLCASTING; i <= SK_POISON_MAGIC; i++)
+        sum += you.skills[i];
+
+    return (sum);
+}
+
 // If fs is not NULL, updates will be to the formatted_string instead of
 // the display.
 int spellbook_contents( item_def &book, read_book_action_type action,
@@ -778,16 +785,7 @@ int spellbook_contents( item_def &book, read_book_action_type action,
 
     const int spell_levels = player_spell_levels();
 
-    bool spell_skills = false;
-
-    for (i = SK_SPELLCASTING; i <= SK_POISON_MAGIC; i++)
-    {
-        if (you.skills[i])
-        {
-            spell_skills = true;
-            break;
-        }
-    }
+    bool spell_skills = player_spell_skills();
 
     set_ident_flags( book, ISFLAG_KNOW_TYPE );
 
@@ -1774,14 +1772,7 @@ bool can_learn_spell(bool silent)
         return (false);
     }
 
-    int i;
-    int j = 0;
-
-    for (i = SK_SPELLCASTING; i <= SK_POISON_MAGIC; i++)
-        if (you.skills[i])
-            j++;
-
-    if (j == 0)
+    if (!player_spell_skills())
     {
         if (!silent)
         {

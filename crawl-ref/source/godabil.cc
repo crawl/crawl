@@ -697,18 +697,11 @@ bool trog_burn_spellbooks()
     }
 
     int totalpiety = 0;
+    int totalblocked = 0;
 
     for (radius_iterator ri(you.pos(), LOS_RADIUS, true, true, true); ri; ++ri)
     {
-        // If a grid is blocked, books lying there will be ignored.
-        // Allow bombing of monsters.
         const unsigned short cloud = env.cgrid(*ri);
-        if (feat_is_solid(grd(*ri))
-            || cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE)
-        {
-            continue;
-        }
-
         int count = 0;
         int rarity = 0;
         for (stack_iterator si(*ri); si; ++si)
@@ -717,6 +710,15 @@ bool trog_burn_spellbooks()
                 || si->sub_type == BOOK_MANUAL
                 || si->sub_type == BOOK_DESTRUCTION)
             {
+                continue;
+            }
+
+            // If a grid is blocked, books lying there will be ignored.
+            // Allow bombing of monsters.
+            if (feat_is_solid(grd(*ri))
+                || cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE)
+            {
+                totalblocked++;
                 continue;
             }
 
@@ -761,15 +763,23 @@ bool trog_burn_spellbooks()
         }
     }
 
-    if (!totalpiety)
+    if (totalpiety)
     {
-         mpr("You cannot see a spellbook to ignite!");
-         return (false);
+        simple_god_message(" is delighted!", GOD_TROG);
+        gain_piety(totalpiety);
+    }
+    else if (totalblocked)
+    {
+        if (totalblocked == 1)
+            mpr("The spellbook fails to ignite!");
+        else
+            mpr("The spellbooks fail to ignite!");
+        return (false);
     }
     else
     {
-         simple_god_message(" is delighted!", GOD_TROG);
-         gain_piety(totalpiety);
+        mpr("You cannot see a spellbook to ignite!");
+        return (false);
     }
 
     return (true);
@@ -837,19 +847,41 @@ bool yred_injury_mirror(bool actual)
             && (!actual || you.duration[DUR_PRAYER]));
 }
 
-void yred_drain_life(int pow)
+bool yred_can_animate_dead()
+{
+    return (you.piety >= piety_breakpoint(2));
+}
+
+void yred_animate_remains_or_dead()
+{
+    if (yred_can_animate_dead())
+    {
+        mpr("You call on the dead to rise...");
+
+        animate_dead(&you, you.skills[SK_INVOCATIONS] + 1, BEH_FRIENDLY,
+                     MHITYOU, &you, "", GOD_YREDELEMNUL);
+    }
+    else
+    {
+        mpr("You attempt to give life to the dead...");
+
+        if (animate_remains(you.pos(), CORPSE_BODY, BEH_FRIENDLY,
+                            MHITYOU, &you, "", GOD_YREDELEMNUL) < 0)
+        {
+            mpr("There are no remains here to animate!");
+        }
+    }
+}
+
+void yred_drain_life()
 {
     mpr("You draw life from your surroundings.");
-
-    // Incoming power to this function is skill in INVOCATIONS, so
-    // we'll add an assert here to warn anyone who tries to use
-    // this function with spell level power.
-    ASSERT(pow <= 27);
 
     flash_view(DARKGREY);
     more();
     mesclr();
 
+    const int pow = you.skills[SK_INVOCATIONS];
     int hp_gain = 0;
 
     for (monster_iterator mi(you.get_los()); mi; ++mi)
@@ -885,46 +917,29 @@ void yred_drain_life(int pow)
     }
 }
 
-void yred_make_enslaved_soul(monster* mon, bool force_hostile,
-                             bool quiet, bool unrestricted)
+void yred_make_enslaved_soul(monster* mon, bool force_hostile)
 {
-    if (!unrestricted)
-        add_daction(DACT_OLD_ENSLAVED_SOULS_POOF);
+    add_daction(DACT_OLD_ENSLAVED_SOULS_POOF);
 
-    const int type = mon->type;
-    monster_type soul_type = mons_species(type);
+    const monster_type soul_type = mons_species(mon->type);
     const std::string whose =
         you.can_see(mon) ? apostrophise(mon->name(DESC_CAP_THE))
                          : mon->pronoun(PRONOUN_CAP_POSSESSIVE);
-    const bool twisted =
-        !unrestricted ? !x_chance_in_y(you.skills[SK_INVOCATIONS] * 20 / 9 + 20,
-                                       100)
-                      : false;
-    int corps = -1;
 
     // If the monster's held in a net, get it out.
     mons_clear_trapping_net(mon);
 
+    // Drop the monster's holy equipment, and keep wielding the rest.
+    monster_drop_things(mon, false, is_holy_item);
+
     const monster orig = *mon;
 
-    if (twisted)
-    {
-        mon->type = mons_zombie_size(soul_type) == Z_BIG ?
-            MONS_ABOMINATION_LARGE : MONS_ABOMINATION_SMALL;
-        mon->base_monster = MONS_NO_MONSTER;
-    }
-    else
-    {
-        // Drop the monster's corpse, so that it can be properly
-        // re-equipped below.
-        corps = place_monster_corpse(mon, true, true);
-    }
+    // Turn the monster into a spectral thing, minus the usual
+    // adjustments for zombified monsters.
+    mon->type = MONS_SPECTRAL_THING;
+    mon->base_monster = soul_type;
 
-    // Drop the monster's equipment.
-    monster_drop_ething(mon);
-
-    // Recreate the monster as an abomination, or as itself before
-    // turning it into a spectral thing below.
+    // Recreate the monster as a spectral thing.
     define_monster(mon);
 
     mon->colour = ETC_UNHOLY;
@@ -932,23 +947,16 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile,
     mon->flags |= MF_NO_REWARD;
     mon->flags |= MF_ENSLAVED_SOUL;
 
-    if (twisted)
-        // Mark abominations as undead.
-        mon->flags |= MF_HONORARY_UNDEAD;
-    else if (corps != -1)
-    {
-        // Turn the monster into a spectral thing, minus the usual
-        // adjustments for zombified monsters.
-        mon->type = MONS_SPECTRAL_THING;
-        mon->base_monster = soul_type;
-
-        // Re-equip the spectral thing.
-        equip_undead(mon->pos(), corps, mon->mindex(),
-                     mon->base_monster);
-
-        // Destroy the monster's corpse, as it's no longer needed.
-        destroy_item(corps);
-    }
+    // If the original monster type has melee, spellcasting or priestly
+    // abilities, make sure its spectral thing has them as well.
+#if TAG_MAJOR_VERSION == 30
+    mon->flags |=
+        orig.flags & (MF_FIGHTER | MF_TWO_WEAPONS | MF_ARCHER
+                      | MF_SPELLCASTER | MF_ACTUAL_SPELLS | MF_PRIEST);
+#else
+    mon->flags |= orig.flags & (MF_MELEE_MASK | MF_SPELL_MASK);
+#endif
+    mon->spells = orig.spells;
 
     name_zombie(mon, &orig);
 
@@ -957,12 +965,8 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile,
     mon->attitude = !force_hostile ? ATT_FRIENDLY : ATT_HOSTILE;
     behaviour_event(mon, ME_ALERT, !force_hostile ? MHITNOT : MHITYOU);
 
-    if (!quiet)
-    {
-        mprf("%s soul %s, and %s.", whose.c_str(),
-             twisted        ? "becomes twisted" : "remains intact",
-             !force_hostile ? "is now yours"    : "fights you");
-    }
+    mprf("%s soul %s.", whose.c_str(),
+         !force_hostile ? "is now yours" : "fights you");
 }
 
 bool kiku_receive_corpses(int pow, coord_def where)
@@ -1078,6 +1082,14 @@ bool fedhas_passthrough_class(const monster_type mc)
 // Fedhas allows worshipers to walk on top of stationary plants and
 // fungi.
 bool fedhas_passthrough(const monster* target)
+{
+    return (target
+            && fedhas_passthrough_class(target->type)
+            && (target->type != MONS_OKLOB_PLANT
+                || target->attitude != ATT_HOSTILE));
+}
+
+bool fedhas_passthrough(const monster_info* target)
 {
     return (target
             && fedhas_passthrough_class(target->type)
@@ -2223,12 +2235,8 @@ bool fedhas_evolve_flora()
     return (true);
 }
 
-static int _lugonu_warp_monster(coord_def where, int pow, int, actor *)
+static int _lugonu_warp_monster(monster* mon, int pow)
 {
-    if (!in_bounds(where))
-        return (0);
-
-    monster* mon = monster_at(where);
     if (mon == NULL)
         return (0);
 
@@ -2259,7 +2267,7 @@ static int _lugonu_warp_monster(coord_def where, int pow, int, actor *)
 
 static void _lugonu_warp_area(int pow)
 {
-    apply_area_around_square(_lugonu_warp_monster, you.pos(), pow);
+    apply_monsters_around_square(_lugonu_warp_monster, you.pos(), pow);
 }
 
 void lugonu_bend_space()

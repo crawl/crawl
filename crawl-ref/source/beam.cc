@@ -271,7 +271,7 @@ bool zapping(zap_type ztype, int power, bolt &pbolt,
 // Returns true if the path is considered "safe", and false if there are
 // monsters in the way the player doesn't want to hit.
 // NOTE: Doesn't check for the player being hit by a rebounding lightning bolt.
-bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
+bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
 {
     // Non-controlleable during confusion.
     // (We'll shoot in a different direction anyway.)
@@ -898,7 +898,7 @@ void bolt::fire_wall_effect()
             if (whose_kill() == KC_YOU)
                 did_god_conduct(DID_KILL_PLANT, 1, effect_known);
             else if (whose_kill() == KC_FRIENDLY)
-                did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1, effect_known, 0);
+                did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1, effect_known);
             place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25,
                         whose_kill(), killer(), 5);
             obvious_effect = true;
@@ -1810,7 +1810,8 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
 
 static bool _monster_resists_mass_enchantment(monster* mons,
                                               enchant_type wh_enchant,
-                                              int pow)
+                                              int pow,
+                                              bool* did_msg)
 {
     // Assuming that the only mass charm is control undead.
     if (wh_enchant == ENCH_CHARM)
@@ -1823,9 +1824,11 @@ static bool _monster_resists_mass_enchantment(monster* mons,
 
         if (mons->check_res_magic(pow))
         {
-            simple_monster_message(mons,
-                                   mons_immune_magic(mons)? " is unaffected."
-                                                             : " resists.");
+            if (simple_monster_message(mons, mons_immune_magic(mons)
+                                       ? " is unaffected." : " resists."))
+            {
+                *did_msg = true;
+            }
             return (true);
         }
     }
@@ -1840,9 +1843,11 @@ static bool _monster_resists_mass_enchantment(monster* mons,
 
         if (mons->check_res_magic(pow))
         {
-            simple_monster_message(mons,
-                                   mons_immune_magic(mons)? " is unaffected."
-                                                             : " resists.");
+            if (simple_monster_message(mons, mons_immune_magic(mons)
+                                       ? " is unaffected." : " resists."))
+            {
+                *did_msg = true;
+            }
             return (true);
         }
     }
@@ -1854,7 +1859,8 @@ static bool _monster_resists_mass_enchantment(monster* mons,
     }
     else  // trying to enchant an unnatural creature doesn't work
     {
-        simple_monster_message(mons, " is unaffected.");
+        if (simple_monster_message(mons, " is unaffected."))
+            *did_msg = true;
         return (true);
     }
 
@@ -1865,10 +1871,10 @@ static bool _monster_resists_mass_enchantment(monster* mons,
 // If m_succumbed is non-NULL, will be set to the number of monsters that
 // were enchanted. If m_attempted is non-NULL, will be set to the number of
 // monsters that we tried to enchant.
-bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
+void mass_enchantment( enchant_type wh_enchant, int pow, int origin,
                        int *m_succumbed, int *m_attempted )
 {
-    bool msg_generated = false;
+    bool did_msg = false;
 
     if (m_succumbed)
         *m_succumbed = 0;
@@ -1887,7 +1893,7 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
         if (m_attempted)
             ++*m_attempted;
 
-        if (_monster_resists_mass_enchantment(*mi, wh_enchant, pow))
+        if (_monster_resists_mass_enchantment(*mi, wh_enchant, pow, &did_msg))
             continue;
 
         if (mi->add_ench(mon_enchant(wh_enchant, 0, kc)))
@@ -1904,8 +1910,8 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
             case ENCH_CHARM:     msg = " submits to your will.";  break;
             default:             msg = NULL;                      break;
             }
-            if (msg)
-                msg_generated = simple_monster_message(*mi, msg);
+            if (msg && simple_monster_message(*mi, msg))
+                did_msg = true;
 
             // Extra check for fear (monster needs to reevaluate behaviour).
             if (wh_enchant == ENCH_FEAR)
@@ -1913,10 +1919,8 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
         }
     }
 
-    if (!msg_generated)
+    if (!did_msg)
         canned_msg(MSG_NOTHING_HAPPENS);
-
-    return (msg_generated);
 }
 
 void bolt::apply_bolt_paralysis(monster* mons)
@@ -2212,7 +2216,7 @@ bool bolt::is_bouncy(dungeon_feature_type feat) const
     }
 
     if ((flavour == BEAM_FIRE || flavour == BEAM_COLD)
-        && feat == DNGN_GREEN_CRYSTAL_WALL )
+        && feat == DNGN_GREEN_CRYSTAL_WALL)
     {
         return (true);
     }
@@ -2971,7 +2975,7 @@ void bolt::tracer_affect_player()
     if (YOU_KILL(thrower))
     {
         // Don't ask if we're aiming at ourselves.
-        if (!aimed_at_feet && !dont_stop_player && !harmless_to_player())
+        if (!dont_stop_player && !harmless_to_player())
         {
             if (yesno("That beam is likely to hit you. Continue anyway?",
                       false, 'n'))
@@ -3234,8 +3238,9 @@ void bolt::affect_player_enchantment()
         break;
 
     case BEAM_INVISIBILITY:
-        potion_effect( POT_INVISIBILITY, ench_power );
-        contaminate_player( 1 + random2(2), effect_known );
+        you.attribute[ATTR_INVIS_UNCANCELLABLE] = 1;
+        potion_effect(POT_INVISIBILITY, ench_power);
+        contaminate_player(1 + random2(2), effect_known);
         obvious_effect = true;
         nasty = false;
         nice  = true;
@@ -3714,13 +3719,19 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
     if (!apply_dmg_funcs(mon, preac, messages))
         return (false);
 
-    postac = preac - maybe_random2(1 + mon->ac, !is_tracer);
+    postac = preac;
 
-    // Fragmentation has triple AC reduction.
-    if (flavour == BEAM_FRAG)
+    // Hellfire ignores AC.
+    if (flavour != BEAM_HELLFIRE)
     {
         postac -= maybe_random2(1 + mon->ac, !is_tracer);
-        postac -= maybe_random2(1 + mon->ac, !is_tracer);
+
+        // Fragmentation has triple AC reduction.
+        if (flavour == BEAM_FRAG)
+        {
+            postac -= maybe_random2(1 + mon->ac, !is_tracer);
+            postac -= maybe_random2(1 + mon->ac, !is_tracer);
+        }
     }
 
     postac = std::max(postac, 0);
@@ -4705,8 +4716,9 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return (MON_AFFECTED);
 
     case BEAM_HEALING:
-        if (YOU_KILL(thrower))
+        if (thrower == KILL_YOU || thrower == KILL_YOU_MISSILE)
         {
+            // No KILL_YOU_CONF, or we get "You heal ..."
             if (cast_healing(5 + damage.roll(), false, mon->pos()) > 0)
                 obvious_effect = true;
             msg_generated = true; // to avoid duplicate "nothing happens"

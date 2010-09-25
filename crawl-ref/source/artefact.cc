@@ -200,9 +200,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         // Fedhas forbids necromancy involving corpses, only reaping
         // really applies.
         if (brand == SPWPN_REAPING)
-        {
             return (false);
-        }
         break;
 
     case GOD_CHEIBRIADOS:
@@ -1809,7 +1807,8 @@ static bool _randart_is_conflicting( const item_def &item,
 {
     if (item.base_type == OBJ_WEAPONS
         && get_weapon_brand(item) == SPWPN_HOLY_WRATH
-        && proprt[ARTP_CURSED] != 0)
+        && (is_demonic(item)
+            || proprt[ARTP_CURSED] != 0))
     {
         return (true);
     }

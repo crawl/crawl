@@ -8,6 +8,7 @@
 #include "spl-wpnench.h"
 #include "externs.h"
 
+#include "areas.h"
 #include "artefact.h"
 #include "itemprop.h"
 #include "makeitem.h"
@@ -181,8 +182,14 @@ bool brand_weapon(brand_type which_brand, int power)
     case SPWPN_PAIN:
         // Well, in theory, we could be silenced, but then how are
         // we casting the brand spell?
-        msg += " shrieks in agony.";
-        noisy(15, you.pos());
+        // 1KB: Xom can cast it.  The Blade card currently can't.
+        if (silenced(you.pos()))
+            msg += " writhes in agony.";
+        else
+        {
+            msg += " shrieks in agony.";
+            noisy(15, you.pos());
+        }
         duration_affected = 8;
         // We must repeat the special message here (as there's a side effect.)
         emit_special_message = true;

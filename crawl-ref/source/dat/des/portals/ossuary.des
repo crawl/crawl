@@ -329,6 +329,57 @@ ENDMAP
 # Rare: WEIGHT 20
 ###########################################################
 
+NAME:    minmay_ossuary_two_tombs
+WEIGHT:  20
+ORIENT:  encompass
+TAGS:    ossuary no_item_gen no_monster_gen
+# Loot: between 5 scrolls/potions and 9 scrolls/potions, with some gold.
+# The tomb close to the player is a bit easier than the other one, and is
+# more likely to be the one with less loot, giving weak players a chance.
+SHUFFLE: def$
+NSUBST:  d = 1:1 / *:d
+NSUBST:  e = 1:1 / *:e
+NSUBST:  $ = 1:1 / *:$
+SUBST:   2 = 2 3:1 .:1
+SUBST:   3 = 3 2:1 .:1
+SUBST:   f = ~
+ITEM:    any scroll, any potion
+MONS:    mummy
+MONS:    rat zombie / jackal zombie / quokka zombie / snake zombie / \
+         goblin zombie / hobgoblin zombie / kobold zombie
+MONS:    gnoll zombie / orc zombie / hound zombie / big kobold zombie / \
+         human zombie / elf zombie / centaur zombie
+KFEAT:   ~ = needle trap w:20 / arrow trap / spear trap w:5 / floor w:20
+KFEAT:   f = needle trap w:20 / arrow trap / spear trap w:5 / floor w:20
+: ossuary_setup_features(_G)
+epilogue{{
+ossuary_milestone(_G)
+}}
+MAP
+xxxxxxxxxxxxxxxxxxxxxx
+x........<..A........x
+x....................x
+x......cccccccc......x
+x...cccc3223+ecccc...x
+x~~cc.~~....ceec2cc~~x
+x..c<.ccccc.cccc..+..x
+x~~cc.+dddc...~~2cc~~x
+x..2ccccddc...cccc2..x
+x2.....cccccccc.....2x
+x..2....2.3.2.....2..x
+x..2.....2.3.2....2..x
+x2.....cccccccc.....2x
+x..2cccc3+ffc3cccc2..x
+x~~cc2.2.cccc.c$$cc~~x
+x..+.....~~~~.+$$<c..x
+x~~cc2.2.cccc.c$$cc~~x
+x...cccc3+ffc3cccc...x
+x......cccccccc......x
+x.......2.3.2........x
+x........2.3.2.......x
+xxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
 NAME:    ossuary_crypta
 WEIGHT:  20
 ORIENT:  encompass
@@ -488,6 +539,42 @@ ENDMAP
 ###########################################################
 # Very rare: WEIGHT 10
 ###########################################################
+
+# Players have two choices: they can try to hang back and slowly fight the
+# undead, or they can run to the gold relying on their speed/stealth.
+#
+# The former option is difficult since there's no choke point, whereas the
+# latter option is inherently risky.  Gold averages a bit less than 200.
+#
+# Originally this vault had the monsters behind doors and an alarm trap
+# before the gold, but then I found out that zombies can't open doors anymore.
+NAME:   minmay_ossuary_gauntlet
+WEIGHT: 10
+ORIENT: encompass
+TAGS:   ossuary no_item_gen no_monster_gen
+NSUBST: 1 = 2:1 / *:2
+MONS:   mummy
+MONS:   goblin zombie / hobgoblin zombie / gnoll zombie / big kobold zombie / \
+        orc zombie / human zombie w:2 / elf zombie w:2 / centaur zombie w:2
+: ossuary_setup_features(_G)
+epilogue{{
+ossuary_milestone(_G)
+}}
+MAP
+         ccccccccccccccccc
+         c1c1c1c1c1c1c1c1c
+  ccccc  c...............c
+ cc...cc c...............c   ccccc
+cc.....ccc...............cc cc$$$cc
+c.........................ccc$$$$$c
+c..<.A..................<....$$$$$c
+c.........................ccc$$$$$c
+cc.....ccc...............cc cc$$$cc
+ cc...cc c...............c   ccccc
+  ccccc  c...............c
+         c1c1c1c1c1c1c1c1c
+         ccccccccccccccccc
+ENDMAP
 
 NAME:    ossuary_the_hunt_dpeg
 WEIGHT:  10

@@ -26,7 +26,7 @@ Once the primary guardian serpent of a legendary treasure hoard, he was disgrace
 # Uniques
 Agnes
 
-A tall and beautiful warrior, as vain as she is quick. You can't help but notice both her exotic weapon and graceful movements. She searches the dungeon for aesthetically pleasing objects to surround herself with.
+A tall (for her kind) and beautiful warrior, as vain as she is quick. You can't help but notice both her exotic weapon and graceful movements. She searches the dungeon for aesthetically pleasing objects to surround herself with.
 %%%%
 Antaeus
 
@@ -218,6 +218,10 @@ Mennas
 There was once a human priest named Mennas. He travelled far and wide preaching of Zin to any who would listen, going even so far as to travel into Orcish lands, preaching to orcs about laws and mercy. By all accounts the orcs were not happy with Mennas. They demanded he swear Beogh was the one true god, and when Mennas remained silent they cut out his tongue.
 
 Whether or not this angel is that same Mennas is something of a mystery, as he seems to have difficulty speaking.
+%%%%
+Paracelsus
+
+A powerful alchemist of particular renown for his discovery of the zink, and the beginnings of medicine. His wanderings as an itinerant physician and sometime journeyman miner took him throughout the world, but never could he find a safer replacement for his laudanum. People say he wanders the world in search of one to this day.
 %%%%
 Menkaure
 
@@ -1233,6 +1237,22 @@ neqoxec
 
 A weirdly shaped demon, pulsing and shifting with mutagenic energies, its belly distended with the devoured brains of its victims.
 %%%%
+nisse
+
+Nisse take care of a lord's home and children and protect them from misfortune, in particular at night, when the housefolk are asleep. Since nisse are thought to be skilled in illusions and sometimes able to become invisible, getting more than brief glimpses of one is unlikely. Nisse have four fingers, and are hairy all over, with pointed ears. Their eyes glow in the dark.
+%%%%
+witch
+
+A rather eccentric person, dabbling in all sorts of arcanities.
+%%%%
+huldra
+
+Huldra are dangerous seductresses who live in the forest. The huldra lures men into the forest in order to secure her freedom or sometimes to suck the life out of a man. One of her methods is to appear suddenly out of the rain and mist, friendly and enticing to the point that no man can resist her charms.
+%%%%
+trollkonor
+
+A trollkonor is a troll’s wife who possesses magical powers. Despite their natural human lineage, they greatly resemble their ugly troll husbands.
+%%%%
 ogre
 
 A larger, uglier and fatter relative of orcs and goblins.
@@ -1318,6 +1338,10 @@ A pious, armoured warrior fighting for the forces of good.
 pandemonium lord
 
 Powerful demons inhabiting the endless halls of Pandemonium, each is different, with its own set of strengths and weaknesses.
+%%%%
+phantasmal warrior
+
+A hideous translucent green undead spirit.
 %%%%
 phantom
 
@@ -1572,13 +1596,13 @@ spectral thing
 
 A hideous glowing apparition.
 %%%%
-spectral warrior
-
-A hideous translucent green undead spirit.
-%%%%
 sphinx
 
 A large creature with a human head, the body of a lion, and the wings of a huge bird.
+%%%%
+spider
+
+An ordinary orb-weaving spider with a white cross on its back. It's not as ridiculously huge as other arachnids in this place, but somehow still as big as a small cat - and you don't have a shoe that big.
 %%%%
 spiny frog
 

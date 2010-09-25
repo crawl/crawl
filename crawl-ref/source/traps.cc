@@ -14,8 +14,10 @@
 #include "artefact.h"
 #include "beam.h"
 #include "branch.h"
+#include "cloud.h"
 #include "clua.h"
 #include "coord.h"
+#include "coordit.h"
 #include "delay.h"
 #include "describe.h"
 #include "directn.h"
@@ -115,6 +117,10 @@ void trap_def::prepare_ammo()
         break;
     case TRAP_ALARM:
         this->ammo_qty = 1 + random2(3);
+        break;
+    case TRAP_GOLUBRIA:
+        // really, turns until it vanishes
+        this->ammo_qty = 30 + random2(20);
         break;
     default:
         this->ammo_qty = 0;
@@ -363,6 +369,42 @@ void check_net_will_hold_monster(monster* mons)
         mons->add_ench(ENCH_HELD);
 }
 
+std::vector<coord_def> find_golubria_on_level()
+{
+    std::vector<coord_def> ret;
+    for (rectangle_iterator ri(coord_def(0, 0), coord_def(GXM-1, GYM-1)); ri; ++ri)
+    {
+        trap_def *trap = find_trap(*ri);
+        if (trap && trap->type == TRAP_GOLUBRIA)
+            ret.push_back(*ri);
+    }
+    ASSERT(ret.size() <= 2);
+    return ret;
+}
+
+static bool _find_other_passage_side(coord_def& to)
+{
+    std::vector<coord_def> passages = find_golubria_on_level();
+    if (passages.size() < 2)
+        return false;
+
+    if (to == passages[0])
+    {
+        to = passages[1];
+        return true;
+    }
+    else if (to == passages[1])
+    {
+        to = passages[0];
+        return true;
+    }
+    else
+    {
+        ASSERT(false);
+        return false;
+    }
+}
+
 void trap_def::trigger(actor& triggerer, bool flat_footed)
 {
     const bool you_know = this->is_known();
@@ -373,7 +415,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
     // If set, the trap will be removed at the end of the
     // triggering process.
-    bool trap_destroyed = false;
+    bool trap_destroyed = false, know_trap_destroyed = false;;
 
     monster* m = triggerer.as_monster();
 
@@ -417,6 +459,32 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         this->shoot_ammo(triggerer, trig_knows);
     else switch (this->type)
     {
+    case TRAP_GOLUBRIA: {
+        coord_def to = p;
+        if (_find_other_passage_side(to))
+        {
+            if (you_trigger)
+                mpr("You enter the passage of Golubria.");
+            else
+                simple_monster_message(m, " enters the passage of Golubria.");
+
+            if (triggerer.move_to_pos(to))
+            {
+                if (you_trigger)
+                    place_cloud(CLOUD_TLOC_ENERGY, p, 1 + random2(3), KC_YOU);
+                else
+                    place_cloud(CLOUD_TLOC_ENERGY, p, 1 + random2(3),
+                                m->kill_alignment(), KILL_MON_MISSILE);
+                trap_destroyed = true;
+                know_trap_destroyed = you_trigger;
+            }
+            else
+            {
+                mpr("But it is blocked!");
+            }
+        }
+        break;
+    }
     case TRAP_TELEPORT:
         // Never revealed by monsters.
         // except when it's in sight, it's pretty obvious what happened. -doy
@@ -640,21 +708,29 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             // in 99% of cases - a player can just watch who stepped where
             // and mark the trap on an external paper map.  Not good.
 
+            actor* targ = NULL;
             if (m->wont_attack() || crawl_state.game_is_arena())
-            {
-                MiscastEffect( m, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
-                               3, "the power of Zot" );
-            }
+                targ = m;
             else if (in_sight && one_chance_in(5))
-            {
-                mpr("The power of Zot is invoked against you!");
-                MiscastEffect( &you, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
-                               3, "the power of Zot" );
-            }
-            else if (player_can_hear(this->pos))
+                targ = &you;
+
+            // Give the player a chance to figure out what happened
+            // to their friend.
+            if (player_can_hear(this->pos) && (!targ || !in_sight))
             {
                 mprf(MSGCH_SOUND, "You hear a %s \"Zot\"!",
                      in_sight ? "loud" : "distant");
+            }
+
+            if (targ)
+            {
+                if (in_sight)
+                {
+                    mprf("The power of Zot is invoked against %s!",
+                         targ->name(DESC_NOCAP_THE).c_str());
+                }
+                MiscastEffect(targ, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
+                              3, "the power of Zot");
             }
         }
         break;
@@ -716,7 +792,13 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     }
 
     if (trap_destroyed)
+    {
+        if (know_trap_destroyed)
+        {
+            env.map_knowledge(this->pos).set_feature(DNGN_FLOOR);
+        }
         this->destroy();
+    }
 }
 
 int trap_def::max_damage(const actor& act)
@@ -1202,16 +1284,6 @@ item_def trap_def::generate_trap_item()
         set_item_ego_type(item, base, SPWPN_NORMAL);
     }
 
-    // give appropriate racial flag for Dwarf Hall, Orcish Mines
-    // and Elven Halls
-    // should we ever allow properties of dungeon features, we could use that
-    if (you.where_are_you == BRANCH_ORCISH_MINES)
-        set_equip_race( item, ISFLAG_ORCISH );
-    else if (you.where_are_you == BRANCH_ELVEN_HALLS)
-        set_equip_race( item, ISFLAG_ELVEN );
-    else if (you.where_are_you == BRANCH_DWARF_HALL)
-        set_equip_race( item, ISFLAG_DWARVEN );
-
     item_colour(item);
     return item;
 }
@@ -1367,6 +1439,7 @@ dungeon_feature_type trap_category(trap_type type)
     case TRAP_TELEPORT:
     case TRAP_ALARM:
     case TRAP_ZOT:
+    case TRAP_GOLUBRIA:
         return (DNGN_TRAP_MAGICAL);
 
     case TRAP_DART:

@@ -17,6 +17,7 @@
 
 #include "artefact.h"
 #include "decks.h"
+#include "describe.h"
 #include "food.h"
 #include "invent.h"
 #include "items.h"
@@ -535,8 +536,16 @@ void do_curse_item( item_def &item, bool quiet )
     }
 }
 
-void do_uncurse_item( item_def &item )
+void do_uncurse_item(item_def &item, bool inscribe)
 {
+    if (inscribe && Options.autoinscribe_cursed
+        && item.inscription.find("was cursed") == std::string::npos
+        && !item_ident(item, ISFLAG_SEEN_CURSED)
+        && !item_ident(item, ISFLAG_IDENT_MASK))
+    {
+        add_inscription(item, "was cursed");
+    }
+
     if (in_inventory(item))
     {
         if (you.equip[EQ_WEAPON] == item.link)

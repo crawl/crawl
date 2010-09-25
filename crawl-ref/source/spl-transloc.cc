@@ -15,6 +15,7 @@
 #include "coordit.h"
 #include "delay.h"
 #include "directn.h"
+#include "dungeon.h"
 #include "env.h"
 #include "fprop.h"
 #include "invent.h"
@@ -36,6 +37,7 @@
 #include "stuff.h"
 #include "teleport.h"
 #include "terrain.h"
+#include "traps.h"
 #include "travel.h"
 #include "view.h"
 #include "viewmap.h"
@@ -116,6 +118,14 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
             {
                 mprf("You cannot blink away from %s!",
                     beholder->name(DESC_NOCAP_THE, true).c_str());
+                continue;
+            }
+
+            monster* fearmonger = you.get_fearmonger(beam.target);
+            if (!wizard_blink && fearmonger)
+            {
+                mprf("You cannot blink closer to %s!",
+                    fearmonger->name(DESC_NOCAP_THE, true).c_str());
                 continue;
             }
 
@@ -453,6 +463,7 @@ bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizard_tele)
                 }
                 if (!wizard_tele)
                     contaminate_player(1, true);
+                maybe_id_ring_TC();
                 return (false);
             }
 
@@ -461,6 +472,16 @@ bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizard_tele)
             {
                 mprf("You cannot teleport away from %s!",
                      beholder->name(DESC_NOCAP_THE, true).c_str());
+                mpr("Choose another destination (press '.' or delete to select).");
+                more();
+                continue;
+            }
+
+            monster* fearmonger = you.get_fearmonger(pos);
+            if (fearmonger && !wizard_tele)
+            {
+                mprf("You cannot teleport closer to %s!",
+                     fearmonger->name(DESC_NOCAP_THE, true).c_str());
                 mpr("Choose another destination (press '.' or delete to select).");
                 more();
                 continue;
@@ -935,4 +956,63 @@ int cast_semi_controlled_blink(int pow)
         contaminate_player(1, true);
 
     return (result);
+}
+
+bool can_cast_golubrias_passage()
+{
+    return find_golubria_on_level().size() < 2;
+}
+
+bool cast_golubrias_passage(const coord_def& where)
+{
+    // randomize position a bit to make it not as useful to use on monsters
+    // chasing you, as well as to not give away hidden trap positions
+    int tries = 0;
+    coord_def randomized_where = where;
+    do
+    {
+        tries++;
+        randomized_where = where;
+        randomized_where.x += random_range(-2, 2);
+        randomized_where.y += random_range(-2, 2);
+    } while((!in_bounds(randomized_where) ||
+             grd(randomized_where) != DNGN_FLOOR ||
+             monster_at(randomized_where) ||
+             !you.see_cell(randomized_where) ||
+             you.trans_wall_blocking(randomized_where) ||
+             randomized_where == you.pos()) &&
+            tries < 100);
+
+    if (tries >= 100)
+    {
+        if (you.trans_wall_blocking(randomized_where))
+            mpr("You cannot create a passage on the other side of the transparent wall.");
+        else
+            // XXX: bleh, dumb message
+            mpr("Creating a passage of Golubria requires sufficient empty space.");
+        return false;
+    }
+
+    if (!allow_control_teleport(true) ||
+        testbits(env.pgrid(randomized_where), FPROP_NO_CTELE_INTO))
+    {
+        // lose a turn
+        mpr("A powerful magic interferes with the creation of the passage.");
+        place_cloud(CLOUD_TLOC_ENERGY, randomized_where, 3 + random2(3),
+                    KC_YOU);
+        return true;
+    }
+
+    place_specific_trap(randomized_where, TRAP_GOLUBRIA);
+
+    trap_def *trap = find_trap(randomized_where);
+    if (!trap)
+    {
+        mpr("Something buggy happened.");
+        return false;
+    }
+
+    trap->reveal();
+
+    return true;
 }

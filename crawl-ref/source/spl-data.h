@@ -18,7 +18,6 @@ struct spell_desc
     power_cap,
     min_range, max_range, (-1 if not applicable)
     noise_mod,
-    int noise_mod;
     target_prompt,
     monster spell: needs tracer?,
     monster spell: utility spell?
@@ -236,8 +235,8 @@ struct spell_desc
 },
 
 {
-    SPELL_PETRIFY, "Petrify",
-     SPTYP_ENCHANTMENT | SPTYP_EARTH,
+     SPELL_PETRIFY, "Petrify",
+     SPTYP_TRANSMUTATION | SPTYP_EARTH,
      SPFLAG_DIR_OR_TARGET,
      4,
      200,
@@ -328,9 +327,9 @@ struct spell_desc
 },
 
 {
-    SPELL_MEPHITIC_CLOUD, "Mephitic Cloud",
+     SPELL_MEPHITIC_CLOUD, "Mephitic Cloud",
      SPTYP_CONJURATION | SPTYP_POISON | SPTYP_AIR,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_AREA,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_AREA | SPFLAG_ALLOW_SELF,
      3,
      200,
      5, 5,
@@ -538,7 +537,7 @@ struct spell_desc
 {
     SPELL_POISONOUS_CLOUD, "Poisonous Cloud",
      SPTYP_CONJURATION | SPTYP_POISON | SPTYP_AIR,
-     SPFLAG_GRID | SPFLAG_AREA,
+     SPFLAG_GRID | SPFLAG_AREA | SPFLAG_ALLOW_SELF,
      5,
      200,
      6, 6,
@@ -1879,7 +1878,7 @@ struct spell_desc
 {
     SPELL_EVAPORATE, "Evaporate",
      SPTYP_FIRE | SPTYP_TRANSMUTATION,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_AREA,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_AREA | SPFLAG_ALLOW_SELF,
      2,   // XXX: level 2 or 3, what should it be now? -- bwr
      200,
      6, 6,
@@ -2026,6 +2025,19 @@ struct spell_desc
      6,
      200,
      -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_GOLUBRIAS_PASSAGE, "Passage of Golubria",
+     SPTYP_TRANSLOCATION,
+     SPFLAG_GRID | SPFLAG_NEUTRAL | SPFLAG_NOT_SELF | SPFLAG_ESCAPE,
+     5,
+     0,
+     LOS_RADIUS, LOS_RADIUS,
      0,
      NULL,
      false,
@@ -2673,6 +2685,45 @@ struct spell_desc
 },
 
 {
+    SPELL_BROTHERS_IN_ARMS, "Brothers in Arms",
+     SPTYP_SUMMONING,
+     SPFLAG_MONSTER,
+     6,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_TROGS_HAND, "Trog's Hand",
+    SPTYP_ENCHANTMENT,
+    SPFLAG_MONSTER,
+    3,
+    0,
+    -1, -1,
+    0,
+    NULL,
+    false,
+    false
+},
+
+{
+    SPELL_BURN_SPELLBOOK, "Burn Spellbook",
+    SPTYP_ENCHANTMENT,
+    SPFLAG_AREA,
+    1,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    NULL,
+    false,
+    false
+},
+
+{
     SPELL_SUMMON_SPECTRAL_ORCS, "Summon Spectral Orcs",
      SPTYP_NECROMANCY,
      SPFLAG_MONSTER | SPFLAG_TARGET,
@@ -2799,6 +2850,32 @@ struct spell_desc
      0,
      NULL,
      true,
+     false
+},
+
+{
+    SPELL_MIRROR_DAMAGE, "Mirror Damage",
+     SPTYP_ENCHANTMENT,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL,
+     4,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_DRAIN_LIFE, "Drain Life",
+     SPTYP_NECROMANCY,
+     SPFLAG_AREA,
+     6,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
      false
 },
 

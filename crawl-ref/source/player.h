@@ -227,6 +227,9 @@ public:
   // and restored.
   std::vector<int> beholders;
 
+  // monsterss causing fear to the player; see above
+  std::vector<int> fearmongers;
+
   // Delayed level actions.  This array is never trimmed, as usually D:1 won't
   // be loaded again until the very end.
   std::vector<daction_type> dactions;
@@ -344,6 +347,7 @@ public:
     bool misled() const;
     bool can_see_invisible() const;
     bool can_see_invisible(bool unid, bool transient = true) const;
+    bool are_charming() const;
     bool visible_to(const actor *looker) const;
     bool can_see(const actor* a) const;
 
@@ -371,6 +375,18 @@ public:
     void beholders_check_noise(int loudness);
     void update_beholders();
     void update_beholder(const monster* mon);
+
+    // Dealing with fearmongers. Implemented in fearmonger.cc.
+    void add_fearmonger(const monster* mon);
+    bool afraid() const;
+    bool afraid_of(const monster* mon) const;
+    monster* get_fearmonger(const coord_def &pos) const;
+    monster* get_any_fearmonger() const;
+    void remove_fearmonger(const monster* mon);
+    void clear_fearmongers();
+    void fearmongers_check_noise(int loudness);
+    void update_fearmongers();
+    void update_fearmonger(const monster* mon);
 
     kill_category kill_alignment() const;
 
@@ -592,6 +608,9 @@ public:
 protected:
     void _removed_beholder();
     bool _possible_beholder(const monster* mon) const;
+
+    void _removed_fearmonger();
+    bool _possible_fearmonger(const monster* mon) const;
 };
 
 #ifdef DEBUG_GLOBALS
@@ -731,6 +750,7 @@ int player_spec_summ(void);
 int player_speed(void);
 int player_ponderousness();
 int player_evokable_levitation();
+int player_evokable_invis();
 
 int player_spell_levels(void);
 
@@ -803,11 +823,11 @@ int get_real_hp(bool trans, bool rotted = false);
 int get_real_mp(bool include_items);
 
 int get_contamination_level();
+std::string describe_contamination(int level);
 
 void set_mp(int new_amount, bool max_too);
 
 void contaminate_player(int change, bool controlled = false,
-                        bool status_only = false,
                         bool msg = true);
 
 bool confuse_player(int amount, bool resistable = true);

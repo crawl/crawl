@@ -1293,7 +1293,7 @@ void dump_map(FILE *fp, bool debug, bool dist)
         for (int y = min_y; y <= max_y; ++y)
         {
             for (int x = min_x; x <= max_x; ++x)
-                fputc( get_cell_glyph(env.map_knowledge[x][y]).ch, fp );
+                fputc( get_cell_glyph(coord_def(x, y)).ch, fp );
 
             fputc('\n', fp);
         }
@@ -1357,6 +1357,7 @@ void display_notes()
     formatted_scroller scr;
     scr.set_flags(MF_START_AT_END);
     scr.set_tag("notes");
+    scr.set_highlighter(new MenuHighlighter);
     scr.set_title(new MenuEntry("Turn   | Place   | Note"));
     for (unsigned int i = 0; i < note_list.size(); ++i)
     {

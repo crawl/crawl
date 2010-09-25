@@ -372,6 +372,7 @@ bool check_awaken(monster* mons)
     // You didn't wake the monster!
     if (you.can_see(mons) // to avoid leaking information
         && !mons->wont_attack()
+        && !mons->neutral() // include pacified monsters
         && !mons_class_flag(mons->type, M_NO_EXP_GAIN))
     {
         practise(unnatural_stealthy ? EX_SNEAK_INVIS : EX_SNEAK);
@@ -409,7 +410,7 @@ bool noisy(int loudness, const coord_def& where, const char *msg, int who,
     if (silenced(where))
         return (false);
 
-    const int dist = loudness * loudness;
+    const int dist = loudness * loudness + 1;
     const int player_distance = distance( you.pos(), where );
 
     // Message the player.
@@ -421,7 +422,10 @@ bool noisy(int loudness, const coord_def& where, const char *msg, int who,
         you.check_awaken(dist - player_distance);
 
         if (!mermaid)
+        {
             you.beholders_check_noise(loudness);
+            you.fearmongers_check_noise(loudness);
+        }
 
         ret = true;
     }

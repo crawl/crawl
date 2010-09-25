@@ -238,7 +238,7 @@ bool is_feature(wchar_t feature, const coord_def& where)
             return (false);
         }
     default:
-        return get_cell_glyph(env.map_knowledge(where)).ch == feature;
+        return get_cell_glyph(where).ch == feature;
     }
 }
 
@@ -429,7 +429,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
             }
             else
             {
-                glyph g = get_cell_glyph(env.map_knowledge(c), Options.clean_map, -1);
+                glyph g = get_cell_glyph(c, Options.clean_map, -1);
                 cell->glyph = g.ch;
                 cell->colour = g.col;
 

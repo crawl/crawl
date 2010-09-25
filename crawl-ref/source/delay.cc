@@ -354,6 +354,14 @@ void stop_delay( bool stop_stair_travel )
         }
         break;
 
+    case DELAY_PASSWALL:
+        if (stop_stair_travel)
+        {
+            mpr("Your meditation is interrupted.");
+            _pop_delay();
+        }
+        break;
+
     case DELAY_WEAPON_SWAP:       // one turn... too much trouble
     case DELAY_DROP_ITEM:         // one turn... only used for easy armour drops
     case DELAY_JEWELLERY_ON:      // one turn
@@ -1088,15 +1096,6 @@ static void _finish_delay(const delay_queue_item &delay)
                                        " departed soul.");
                 }
 
-                if (you.species == SP_VAMPIRE && delay.type == DELAY_BUTCHER
-                    && mons_has_blood(item.plus) && !food_is_rotten(item)
-                    // Don't give this message if more butchering to follow.
-                    && (you.delay_queue.size() == 1
-                        || you.delay_queue[1].type != DELAY_BUTCHER))
-                {
-                    mpr("What a waste.");
-                }
-
                 const bool was_orc = (mons_species(item.plus) == MONS_ORC);
 
                 if (mons_skeleton(item.plus) && one_chance_in(3))
@@ -1228,7 +1227,8 @@ static void _armour_wear_effects(const int item_slot)
 
     if (eq_slot == EQ_BODY_ARMOUR)
     {
-        if (you.duration[DUR_ICY_ARMOUR] != 0)
+        if (you.duration[DUR_ICY_ARMOUR] != 0
+            && !is_effectively_light_armour(&arm))
         {
             remove_ice_armour();
         }

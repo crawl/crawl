@@ -50,6 +50,7 @@
 #include "spl-summoning.h"
 #include "state.h"
 #include "stuff.h"
+#include "terrain.h"
 #include "areas.h"
 #include "view.h"
 #include "shout.h"
@@ -224,6 +225,9 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     const int x_distance  = abs(delta.x);
     const int y_distance  = abs(delta.y);
     monster* mons = monster_at(beam.target);
+    // don't allow targeting of submerged trapdoor spiders
+    if (mons && mons->submerged() && feat_is_floor(grd(beam.target)))
+        mons = NULL;
 
     const int x_middle = std::max(beam.target.x, you.pos().x)
                             - (x_distance / 2);
@@ -454,13 +458,14 @@ static bool _ball_of_seeing(void)
     {
         if (you.level_type == LEVEL_LABYRINTH)
             mpr("You see a maze of twisty little passages, all alike.");
-        confuse_player( 10 + random2(10), false );
+        confuse_player(10 + random2(10));
     }
     else if (use < 15 || coinflip())
     {
         mpr("You see nothing.");
     }
-    else if (magic_mapping( 15, 50 + random2( you.skills[SK_EVOCATIONS]), true))
+    else if (magic_mapping(6 + you.skills[SK_EVOCATIONS],
+                           50 + random2(you.skills[SK_EVOCATIONS]), true))
     {
         mpr("You see a map of your surroundings!");
         ret = true;
@@ -728,7 +733,11 @@ static bool _ball_of_energy(void)
     }
     else if (use < 6)
     {
-        confuse_player(10 + random2(10), false);
+        confuse_player(10 + random2(10));
+    }
+    else if (use < 8)
+    {
+        you.paralyse(NULL, 2 + random2(2));
     }
     else
     {
@@ -853,8 +862,14 @@ bool evoke_item(int slot)
         }
         else if (item.sub_type == STAFF_CHANNELING)
         {
-            if (you.magic_points < you.max_magic_points
-                && x_chance_in_y(you.skills[SK_EVOCATIONS] + 11, 40))
+            if (item_type_known(item)
+                && !you.is_undead && you.hunger_state == HS_STARVING)
+            {
+                canned_msg(MSG_TOO_HUNGRY);
+                return (false);
+            }
+            else if (you.magic_points < you.max_magic_points
+                     && x_chance_in_y(you.skills[SK_EVOCATIONS] + 11, 40))
             {
                 mpr("You channel some magical energy.");
                 inc_mp( 1 + random2(3), false );
@@ -905,7 +920,7 @@ bool evoke_item(int slot)
                 canned_msg(MSG_NOTHING_HAPPENS);
             else
             {
-                cast_summon_elemental(100, GOD_NO_GOD, MONS_AIR_ELEMENTAL, 4);
+                cast_summon_elemental(100, GOD_NO_GOD, MONS_AIR_ELEMENTAL, 4, 3);
                 pract = (one_chance_in(5) ? 1 : 0);
                 ident = true;
             }
@@ -916,7 +931,7 @@ bool evoke_item(int slot)
                 canned_msg(MSG_NOTHING_HAPPENS);
             else
             {
-                cast_summon_elemental(100, GOD_NO_GOD, MONS_FIRE_ELEMENTAL, 4);
+                cast_summon_elemental(100, GOD_NO_GOD, MONS_FIRE_ELEMENTAL, 4, 3);
                 pract = (one_chance_in(5) ? 1 : 0);
                 ident = true;
             }
