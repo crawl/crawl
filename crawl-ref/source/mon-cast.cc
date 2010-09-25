@@ -61,6 +61,8 @@ const int MAX_ACTIVE_KRAKEN_TENTACLES = 4;
 
 static bool _valid_mon_spells[NUM_SPELLS];
 
+static bool _mons_drain_life(monster* mons, bool actual = true);
+
 void init_mons_spells()
 {
     monster fake_mon;
@@ -1571,6 +1573,12 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 return (false);
             }
         }
+        // Try to drain life: if nothing is drained, pretend we didn't cast it.
+        else if (spell_cast == SPELL_DRAIN_LIFE)
+        {
+            if (!_mons_drain_life(mons, false))
+                return (false);
+        }
 
         if (mons->type == MONS_BALL_LIGHTNING)
             mons->hit_points = -1;
@@ -1976,14 +1984,17 @@ static bool _mons_vamp_drain(monster *mons)
     return (true);
 }
 
-static void _mons_drain_life(monster* mons)
+static bool _mons_drain_life(monster* mons, bool actual)
 {
-    if (you.can_see(mons))
-        simple_monster_message(mons, " draws from the surrounding life force!");
-    else
-        mpr("The surrounding life force dissipates!");
+    if (actual)
+    {
+        if (you.can_see(mons))
+            simple_monster_message(mons, " draws from the surrounding life force!");
+        else
+            mpr("The surrounding life force dissipates!");
 
-    flash_view_delay(DARKGREY, 300);
+        flash_view_delay(DARKGREY, 300);
+    }
 
     const int pow = mons->hit_dice;
     const int hurted = 3 + random2(7) + random2(pow);
@@ -1999,9 +2010,12 @@ static void _mons_drain_life(monster* mons)
 
         if (ai->atype() == ACT_PLAYER)
         {
-            ouch(hurted, mons->mindex(), KILLED_BY_BEAM, mons->name(DESC_NOCAP_A).c_str());
+            if (actual)
+            {
+                ouch(hurted, mons->mindex(), KILLED_BY_BEAM, mons->name(DESC_NOCAP_A).c_str());
 
-            simple_monster_message(mons, " draws from your life force!");
+                simple_monster_message(mons, " draws from your life force!");
+            }
 
             hp_gain += hurted;
         }
@@ -2012,12 +2026,15 @@ static void _mons_drain_life(monster* mons)
             if (m == mons)
                 continue;
 
-            behaviour_event(m, ME_WHACK, MHITYOU, mons->pos());
+            if (actual)
+            {
+                behaviour_event(m, ME_WHACK, MHITYOU, mons->pos());
 
-            m->hurt(mons, hurted);
+                m->hurt(mons, hurted);
 
-            if (m->alive())
-                print_wounds(m);
+                if (m->alive())
+                    print_wounds(m);
+            }
 
             if (!m->is_summoned())
                 hp_gain += hurted;
@@ -2029,7 +2046,14 @@ static void _mons_drain_life(monster* mons)
     hp_gain = std::min(pow * 2, hp_gain);
 
     if (hp_gain && mons->heal(hp_gain))
-        simple_monster_message(mons, " is healed.");
+    {
+        if (actual)
+            simple_monster_message(mons, " is healed.");
+
+        return (true);
+    }
+
+    return (false);
 }
 
 bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
