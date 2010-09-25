@@ -1154,7 +1154,7 @@ static bool _is_emergency_spell(const monster_spells &msp, int spell)
 
 // Function should return false if friendlies shouldn't animate any dead.
 // Currently, this only happens if the player is in the middle of butchering
-// a corpse (infurating), or if they are less than satiated.  Only applies
+// a corpse (infuriating), or if they are less than satiated.  Only applies
 // to friendly corpse animators. {due}
 static bool _animate_dead_okay()
 {
