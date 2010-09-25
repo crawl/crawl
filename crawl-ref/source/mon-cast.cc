@@ -3619,7 +3619,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
 
     const msg_channel_type chan =
         (unseen              ? MSGCH_SOUND :
-         mons->friendly() ? MSGCH_FRIEND_SPELL
+         mons->friendly()    ? MSGCH_FRIEND_SPELL
                              : MSGCH_MONSTER_SPELL);
 
     if (silent)
