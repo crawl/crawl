@@ -882,6 +882,7 @@ void yred_drain_life()
     mesclr();
 
     const int pow = you.skills[SK_INVOCATIONS];
+    const int hurted = 3 + random2(7) + random2(pow);
     int hp_gain = 0;
 
     for (monster_iterator mi(you.get_los()); mi; ++mi)
@@ -895,15 +896,15 @@ void yred_drain_life()
         mprf("You draw life from %s.",
              mi->name(DESC_NOCAP_THE).c_str());
 
-        const int hurted = 3 + random2(7) + random2(pow);
         behaviour_event(*mi, ME_WHACK, MHITYOU, you.pos());
-        if (!mi->is_summoned())
-            hp_gain += hurted;
 
         mi->hurt(&you, hurted);
 
         if (mi->alive())
             print_wounds(*mi);
+
+        if (!mi->is_summoned())
+            hp_gain += hurted;
     }
 
     hp_gain /= 2;
