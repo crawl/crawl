@@ -391,12 +391,12 @@ bool is_poisoned_item(const item_def& item)
         {
         const int item_brand = get_ammo_brand(item);
         if (item_brand == SPMSL_POISONED || item_brand == SPMSL_CURARE)
-            return (DID_POISON);
+            return (true);
         }
         break;
     case OBJ_STAVES:
         if (item.sub_type == STAFF_POISON)
-            return (DID_POISON);
+            return (true);
         break;
     default:
         break;
