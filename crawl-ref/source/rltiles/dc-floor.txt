@@ -492,3 +492,15 @@ floor/dirt_nw
 floor/dirt_full
 
 floor/tutorial_pad TUTORIAL_PAD
+
+%sdir dc-dngn/floor
+limestone0 FLOOR_LIMESTONE
+limestone1
+limestone2
+limestone3
+limestone4
+limestone5
+limestone6
+limestone7
+limestone8
+limestone9
