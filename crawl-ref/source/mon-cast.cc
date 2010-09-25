@@ -2671,7 +2671,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             else
                 mpr("An aura of fear fills the air!");
 
-            flash_view(DARKGREY);
+            flash_view_delay(DARKGREY, 300);
 
             if (you.check_res_magic(pow))
                 canned_msg(MSG_YOU_RESIST);
@@ -2732,7 +2732,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         else
             mpr("The surrounding life force dissipates!");
 
-        flash_view(DARKGREY);
+        flash_view_delay(DARKGREY, 300);
 
         int hp_gain = 0;
 
