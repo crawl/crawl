@@ -168,10 +168,9 @@ static void _give_potion(monster* mon, int level)
     }
     else if (mons_species(mon->type) == MONS_DEEP_DWARF && one_chance_in(3))
     {
-        const bool big = one_chance_in(2);
-        // This handles initialization of stack timer.
         const int thing_created =
-            items(0, OBJ_POTIONS, big? POT_HEAL_WOUNDS: POT_HEALING, true, level, 0);
+            items(0, OBJ_POTIONS, coinflip() ? POT_HEAL_WOUNDS
+                                             : POT_HEALING, true, level, 0);
 
         if (thing_created == NON_ITEM)
             return;
@@ -179,7 +178,7 @@ static void _give_potion(monster* mon, int level)
         mitm[thing_created].flags = 0;
         _give_monster_item(mon, thing_created);
     }
-        else if (mons_species(mon->type) == MONS_NISSE && one_chance_in(6))
+    else if (mons_species(mon->type) == MONS_NISSE && one_chance_in(6))
     {
         const int thing_created =
             items(0, OBJ_POTIONS, POT_PORRIDGE, true, level, 0);
@@ -221,8 +220,8 @@ static void _give_potion(monster* mon, int level)
 
         mitm[pot].flags = 0;
         _give_monster_item(mon, pot, true,
-                          &monster::pickup_potion);
-     }
+                           &monster::pickup_potion);
+    }
     else if (mons_is_unique(mon->type) && one_chance_in(3))
     {
         const int thing_created =
