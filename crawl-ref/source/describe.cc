@@ -1101,10 +1101,10 @@ static std::string _describe_ammo(const item_def &item)
             description += "It is tipped with asphyxiating poison.";
             break;
         case SPMSL_PARALYSIS:
-            description += "It is tipped with a paralysing poison.";
+            description += "It is tipped with a paralysing substance.";
             break;
         case SPMSL_SLOW:
-            description += "It is coated with a poison that causes slowness of the body.";
+            description += "It is coated with a substance that causes slowness of the body.";
             break;
         case SPMSL_SLEEP:
             description += "It is coated with a fast-acting tranquilizer.";
