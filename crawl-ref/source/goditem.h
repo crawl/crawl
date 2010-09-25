@@ -20,11 +20,11 @@ bool is_holy_discipline(int discipline);
 bool is_evil_discipline(int discipline);
 bool is_holy_spell(spell_type spell, god_type god = GOD_NO_GOD);
 bool is_unholy_spell(spell_type spell, god_type god = GOD_NO_GOD);
+bool is_corpse_violating_spell(spell_type spell, god_type = GOD_NO_GOD);
 bool is_evil_spell(spell_type spell, god_type god = GOD_NO_GOD);
 bool is_unclean_spell(spell_type spell, god_type god = GOD_NO_GOD);
 bool is_chaotic_spell(spell_type spell, god_type god = GOD_NO_GOD);
 bool is_hasty_spell(spell_type spell, god_type god = GOD_NO_GOD);
-bool is_corpse_violating_spell(spell_type spell, god_type = GOD_NO_GOD);
 bool is_any_spell(spell_type spell, god_type god = GOD_NO_GOD);
 bool is_spellbook_type(const item_def& item, bool book_or_rod,
                        bool (*suitable)(spell_type spell, god_type god) =

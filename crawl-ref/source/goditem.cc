@@ -404,6 +404,15 @@ bool is_unholy_spell(spell_type spell, god_type god)
     return (flags & SPFLAG_UNHOLY);
 }
 
+bool is_corpse_violating_spell(spell_type spell, god_type god)
+{
+    UNUSED(god);
+
+    unsigned int flags = get_spell_flags(spell);
+
+    return (flags & SPFLAG_CORPSE_VIOLATING);
+}
+
 bool is_evil_spell(spell_type spell, god_type god)
 {
     UNUSED(god);
@@ -438,15 +447,6 @@ bool is_hasty_spell(spell_type spell, god_type god)
     unsigned int flags = get_spell_flags(spell);
 
     return (flags & SPFLAG_HASTY);
-}
-
-bool is_corpse_violating_spell(spell_type spell, god_type god)
-{
-    UNUSED(god);
-
-    unsigned int flags = get_spell_flags(spell);
-
-    return (flags & SPFLAG_CORPSE_VIOLATING);
 }
 
 // The default suitable() function for is_spellbook_type().
