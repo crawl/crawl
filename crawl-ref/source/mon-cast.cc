@@ -1955,7 +1955,7 @@ static bool _mons_vamp_drain(monster *mons)
                                " is infused with unholy energy.",
                                MSGCH_MONSTER_SPELL);
     else
-        mprf("Unholy energy fills the air!");
+        mpr("Unholy energy fills the air.");
 
     if (target->atype() == ACT_PLAYER)
     {
@@ -2666,7 +2666,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             if (!unseen)
                 simple_monster_message(mons, " radiates an aura of fear!");
             else
-                mprf("An aura of fear fills the air!");
+                mpr("An aura of fear fills the air!");
 
             flash_view(DARKGREY);
 
@@ -2727,7 +2727,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         if (!unseen)
             simple_monster_message(mons, " draws from the surrounding life force.");
         else
-            mprf("The surrounding life force dissipates!");
+            mpr("The surrounding life force dissipates.");
 
         flash_view(DARKGREY);
 
