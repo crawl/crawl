@@ -1949,9 +1949,13 @@ static bool _mons_vamp_drain(monster *mons)
     const bool unseen = !you.can_see(mons);
 
     dprf("vamp draining: %d damage, %d healing", hp_cost, hp_cost/2);
+
     if (!unseen)
-        mons_speaks_msg(mons, " is infused with unholy energy.",
-                              MSGCH_MONSTER_SPELL, silenced(mons->pos()));
+        simple_monster_message(mons,
+                               " is infused with unholy energy.",
+                               MSGCH_MONSTER_SPELL);
+    else
+        mprf("Unholy energy fills the air!");
 
     if (target->atype() == ACT_PLAYER)
     {
