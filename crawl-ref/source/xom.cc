@@ -1263,7 +1263,7 @@ static int _xom_send_allies(int sever, bool debug = false)
     numdemons = std::min(numdemons + 2, 16);
 
     // Limit number of demons by experience level.
-    const int maxdemons = (you.max_level * 3);
+    const int maxdemons = (you.experience_level * 3);
     if (numdemons > maxdemons)
         numdemons = maxdemons;
 
@@ -3359,9 +3359,9 @@ static bool _has_min_animated_weapon_level()
         return (true);
 
     if (_xom_is_bored())
-        return (you.max_level >= 4);
+        return (you.experience_level >= 4);
 
-    return (you.max_level >= 7);
+    return (you.experience_level >= 7);
 }
 
 static int _xom_summon_hostiles(int sever, bool debug = false)
@@ -3406,7 +3406,7 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
         // Limit number of demons by experience level.
         if (!you.penance[GOD_XOM])
         {
-            const int maxdemons = (you.max_level * 2);
+            const int maxdemons = (you.experience_level * 2);
             if (numdemons > maxdemons)
                 numdemons = maxdemons;
         }
@@ -3445,13 +3445,13 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
 
 static bool _has_min_banishment_level()
 {
-    return (you.max_level >= 9);
+    return (you.experience_level >= 9);
 }
 
 // Rolls whether banishment will be averted.
 static bool _will_not_banish()
 {
-    return x_chance_in_y(5, you.max_level);
+    return x_chance_in_y(5, you.experience_level);
 }
 
 // Disallow early banishment and make it much rarer later-on.
