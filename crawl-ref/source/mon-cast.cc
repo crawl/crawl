@@ -2032,11 +2032,13 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     if (_mon_spell_bail_out_early(mons, spell_cast))
         return;
 
-    if ((spell_cast == SPELL_CANTRIP)
-        || (spell_cast == SPELL_VAMPIRIC_DRAINING)
-        || (spell_cast == SPELL_MIRROR_DAMAGE)
-        || (spell_cast == SPELL_DRAIN_LIFE))
+    if (spell_cast == SPELL_CANTRIP)
+        || spell_cast == SPELL_VAMPIRIC_DRAINING
+        || spell_cast == SPELL_MIRROR_DAMAGE
+        || spell_cast == SPELL_DRAIN_LIFE)
+    {
         do_noise = false;       // Spell itself does the messaging.
+    }
 
     if (_los_free_spell(spell_cast) && !spell_is_direct_explosion(spell_cast))
     {
