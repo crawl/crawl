@@ -6,6 +6,7 @@
 #include "AppHdr.h"
 #include "mon-cast.h"
 
+#include "act-iter.h"
 #include "beam.h"
 #include "cloud.h"
 #include "colour.h"
@@ -2727,34 +2728,48 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         const int pow = mons->hit_dice;
         const bool unseen = !you.can_see(mons);
         if (!unseen)
-            simple_monster_message(mons, " draws from the surrounding life force.");
+            simple_monster_message(mons, " draws from the surrounding life force!");
         else
-            mpr("The surrounding life force dissipates.");
+            mpr("The surrounding life force dissipates!");
 
         flash_view(DARKGREY);
 
         int hp_gain = 0;
 
-        for (monster_iterator mi(mons->get_los()); mi; ++mi)
+        for (actor_iterator ai(mons->get_los()); ai; ++ai)
         {
-            if (*mi == mons)
-                continue;
-
-            if (mi->holiness() != MH_NATURAL
-                || mi->res_negative_energy())
+            if (ai->holiness() != MH_NATURAL
+                || ai->res_negative_energy())
             {
                 continue;
             }
 
             const int hurted = 3 + random2(7) + random2(pow);
-            behaviour_event(*mi, ME_WHACK, MHITYOU, mons->pos());
-            if (!mi->is_summoned())
+
+            if (ai->atype() == ACT_PLAYER)
+            {
+                ouch(hurted, mons->mindex(), KILLED_BY_BEAM, mons->name(DESC_NOCAP_A).c_str());
+
+                simple_monster_message(mons, " draws from your life force!");
+
                 hp_gain += hurted;
+            }
+            else
+            {
+                monster* m = ai->as_monster();
 
-            mi->hurt(mons, hurted);
+                if (m == mons)
+                    continue;
 
-            if (mi->alive())
-                print_wounds(*mi);
+                behaviour_event(m, ME_WHACK, MHITYOU, mons->pos());
+                if (!m->is_summoned())
+                    hp_gain += hurted;
+
+                m->hurt(mons, hurted);
+
+                if (m->alive())
+                    print_wounds(m);
+            }
         }
 
         hp_gain /= 2;
