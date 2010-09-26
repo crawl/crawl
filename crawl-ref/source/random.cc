@@ -1,6 +1,5 @@
 #include "AppHdr.h"
 
-#include <stdint.h>
 #include "random.h"
 
 int random_range(int low, int high)

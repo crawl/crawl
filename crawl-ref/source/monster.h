@@ -2,7 +2,6 @@
 #define MONSTER_H
 
 #include "actor.h"
-#include <stdint.h>
 
 const int KRAKEN_TENTACLE_RANGE = 3;
 #define TIDE_CALL_TURN "tide-call-turn"

@@ -9,7 +9,6 @@
 #include "view.h"
 #include "shout.h"
 
-#include <stdint.h>
 #include <string.h>
 #include <cmath>
 #include <sstream>

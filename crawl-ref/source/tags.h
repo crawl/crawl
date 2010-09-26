@@ -8,7 +8,6 @@
 #define TAGS_H
 
 #include <cstdio>
-#include <stdint.h>
 
 #include "tag-version.h"
 #include "package.h"
