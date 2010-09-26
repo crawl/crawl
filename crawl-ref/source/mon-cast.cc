@@ -1934,7 +1934,7 @@ void mons_cast_spectral_orcs(monster* mons)
     }
 }
 
-static bool _mons_vamp_drain(monster *mons)
+static bool _mons_vampiric_drain(monster *mons)
 {
     actor *target = mons->get_foe();
     if (grid_distance(mons->pos(), target->pos()) > 1)
@@ -2186,7 +2186,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     }
 
     case SPELL_VAMPIRIC_DRAINING:
-        _mons_vamp_drain(mons);
+        _mons_vampiric_drain(mons);
         return;
 
     case SPELL_BERSERKER_RAGE:
