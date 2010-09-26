@@ -5,8 +5,6 @@
  *  Written by: Adam Borowski
  */
 
-typedef unsigned int ucs_t;
-
 int wctoutf8(char *d, ucs_t s);
 int utf8towc(ucs_t *d, const char *s);
 #ifdef TARGET_OS_WINDOWS

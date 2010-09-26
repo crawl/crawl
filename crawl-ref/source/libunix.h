@@ -13,12 +13,6 @@
 
 // Emulate Borland C functions not present elsewhere
 
-#ifdef UNICODE_GLYPHS
-typedef unsigned int screen_buffer_t;
-#else
-typedef unsigned short screen_buffer_t;
-#endif
-
 #include <stdio.h>
 
 class crawl_view_buffer;
@@ -28,7 +22,7 @@ int get_number_of_cols();
 
 int getch_ck(void);
 int clrscr(void);
-int cprintf(const char *format,...);
+void cprintf(const char *format,...);
 int gotoxy_sys(int x, int y);
 void fakecursorxy(int x, int y);
 extern "C" char *itoa(int value, char *strptr, int radix);

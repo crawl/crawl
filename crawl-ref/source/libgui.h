@@ -14,8 +14,6 @@
 
 #include "defines.h"
 
-typedef unsigned int screen_buffer_t;
-
 void set_mouse_enabled(bool enabled);
 
 struct coord_def;

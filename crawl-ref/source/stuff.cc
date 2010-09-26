@@ -338,9 +338,6 @@ void cio_init()
 #ifdef USE_TILE
     tiles.resize();
 #endif
-
-    if (Options.char_set == CSET_UNICODE && !crawl_state.unicode_ok)
-        end(1, false, "Unicode glyphs are not available.");
 }
 
 void cio_cleanup()

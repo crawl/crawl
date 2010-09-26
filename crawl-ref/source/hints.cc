@@ -1086,8 +1086,7 @@ void hints_gained_new_skill(int skill)
 
 #ifndef USE_TILE
 // As safely as possible, colourize the passed glyph.
-// Handles quoting "<", MBCS-ing unicode, and
-// making DEC characters safe if not properly printable.
+// Stringizes it and handles quoting "<".
 static std::string _colourize_glyph(int col, unsigned ch)
 {
     glyph g;

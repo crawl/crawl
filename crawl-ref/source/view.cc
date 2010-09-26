@@ -480,7 +480,7 @@ std::string screenshot(bool fullscreen)
 
     // [ds] Screenshots need to be straight ASCII. We will now proceed to force
     // the char and feature tables back to ASCII.
-    FixedVector<unsigned, NUM_DCHAR_TYPES> char_table_bk;
+    FixedVector<ucs_t, NUM_DCHAR_TYPES> char_table_bk;
     char_table_bk = Options.char_table;
 
     init_char_table(CSET_ASCII);

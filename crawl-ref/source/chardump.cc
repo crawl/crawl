@@ -1246,7 +1246,7 @@ static std::string morgue_directory()
 void dump_map(FILE *fp, bool debug, bool dist)
 {
     // Duplicate the screenshot() trick.
-    FixedVector<unsigned, NUM_DCHAR_TYPES> char_table_bk;
+    FixedVector<ucs_t, NUM_DCHAR_TYPES> char_table_bk;
     char_table_bk = Options.char_table;
 
     init_char_table(CSET_ASCII);
