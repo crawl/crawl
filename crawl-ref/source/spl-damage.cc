@@ -557,8 +557,8 @@ bool vampiric_drain(int pow, monster* mons)
     // The practical maximum of this is about 25 (pow @ 100). - bwr
     int hp_gain = 3 + random2avg(9, 2) + random2(pow) / 7;
 
-        hp_gain = std::min(mons->hit_points, hp_gain);
-        hp_gain = std::min(you.hp_max - you.hp, hp_gain);
+    hp_gain = std::min(mons->hit_points, hp_gain);
+    hp_gain = std::min(you.hp_max - you.hp, hp_gain);
 
     if (!hp_gain)
     {
