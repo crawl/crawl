@@ -2028,8 +2028,6 @@ static bool _mons_drain_life(monster* mons, bool actual)
 
             if (actual)
             {
-                behaviour_event(m, ME_WHACK, MHITYOU, mons->pos());
-
                 m->hurt(mons, hurted);
 
                 if (m->alive())
