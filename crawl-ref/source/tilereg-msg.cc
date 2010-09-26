@@ -57,8 +57,8 @@ void MessageRegion::render()
     cprintf("rendering MessageRegion\n");
 #endif
     int idx = -1;
-    unsigned char char_back = 0;
-    unsigned char col_back = 0;
+    ucs_t   char_back = 0;
+    uint8_t col_back = 0;
 
     if (!m_overlay && !m_alt_text.empty())
     {
@@ -85,7 +85,7 @@ void MessageRegion::render()
         bool found = false;
         for (height = my; height > 0; height--)
         {
-            unsigned char *buf = &cbuf[mx * (height - 1)];
+            ucs_t *buf = &cbuf[mx * (height - 1)];
             for (int x = 0; x < mx; x++)
             {
                 if (buf[x] != ' ')

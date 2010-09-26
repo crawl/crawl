@@ -13,6 +13,7 @@
 #include "glwrapper.h"
 #include "tilebuf.h"
 #include "tilefont.h"
+#include "unicode.h"
 
 FontWrapper* FontWrapper::create()
 {
@@ -242,9 +243,18 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
     return success;
 }
 
+// This function should be removed once we can support more than ISO-8859-1.
+ucs_t _fallback_char(ucs_t c)
+{
+    // Weed out characters we can't draw.
+    if (c > 0xFF) // TODO: try to transliterate
+        c = 0xBF; // reversed question mark
+    return c;
+}
+
 void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
-                                     unsigned char *chars,
-                                     unsigned char *colours,
+                                     ucs_t *chars,
+                                     uint8_t *colours,
                                      unsigned int width, unsigned int height,
                                      bool drop_shadow)
 {
@@ -263,9 +273,9 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
     {
         for (unsigned int x = 0; x < width; x++)
         {
-            unsigned char c = chars[i];
-            unsigned char col_bg = colours[i] >> 4;
-            unsigned char col_fg = colours[i] & 0xF;
+            ucs_t c = _fallback_char(chars[i]);
+            uint8_t col_bg = colours[i] >> 4;
+            uint8_t col_fg = colours[i] & 0xF;
 
             if (col_bg != 0)
             {
@@ -504,15 +514,16 @@ void FTFontWrapper::render_string(unsigned int px, unsigned int py,
     unsigned int max_rows = 1;
     unsigned int cols = 0;
     unsigned int max_cols = 0;
-    for (const char *itr = text; *itr; itr++)
+    ucs_t c;
+    for (const char *tp = text; int s = utf8towc(&c, tp); tp += s)
     {
-        cols++;
+        cols++; // TODO: use wcwidth()
         max_cols = std::max(cols, max_cols);
 
         // NOTE: only newlines should be used for tool tips.  Don't use EOL.
-        ASSERT(*itr != '\r');
+        ASSERT(c != '\r');
 
-        if (*itr == '\n')
+        if (c == '\n')
         {
             cols = 0;
             max_rows++;
@@ -520,20 +531,21 @@ void FTFontWrapper::render_string(unsigned int px, unsigned int py,
     }
 
     // Create the text block
-    unsigned char *chars = (unsigned char *)malloc(max_rows * max_cols);
-    unsigned char *colours = (unsigned char *)malloc(max_rows * max_cols);
-    memset(chars, ' ', max_rows * max_cols);
+    ucs_t *chars = (ucs_t*)malloc(max_rows * max_cols * sizeof(ucs_t));
+    uint8_t *colours = (uint8_t*)malloc(max_rows * max_cols);
+    for (unsigned int i = 0; i < max_rows * max_cols; i++)
+        chars[i] = ' ';
     memset(colours, font_colour, max_rows * max_cols);
 
     // Fill the text block
     cols = 0;
     unsigned int rows = 0;
-    for (const char *itr = text; *itr; itr++)
+    for (const char *tp = text; int s = utf8towc(&c, tp); tp += s)
     {
-        chars[cols + rows * max_cols] = *itr;
+        chars[cols + rows * max_cols] = c;
         cols++;
 
-        if (*itr == '\n')
+        if (c == '\n')
         {
             cols = 0;
             rows++;
@@ -594,9 +606,11 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
                           const std::string &str, const VColour &col,
                           float orig_x)
 {
-    for (unsigned int i = 0; i < str.size(); i++)
+    const char *sp = str.c_str();
+    ucs_t c;
+    while(int s = utf8towc(&c, sp))
     {
-        char c = str[i];
+        sp += s;
         if (c == '\n')
         {
             x = orig_x;
@@ -637,8 +651,9 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
 }
 
 void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
-                          unsigned char c, const VColour &col)
+                          ucs_t c, const VColour &col)
 {
+    c = _fallback_char(c);
     if (!m_glyphs[c].renderable)
     {
         x += m_glyphs[c].advance;

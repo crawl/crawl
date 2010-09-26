@@ -38,9 +38,8 @@ void _setcursortype(int curstype);
 void textbackground(int bg);
 void textcolor(int col);
 int putch(unsigned char chr);
-int putwch(unsigned chr);
-void put_colour_ch(int colour, unsigned ch);
-void writeWChar(unsigned char *ch);
+int putwch(ucs_t chr);
+void put_colour_ch(int colour, ucs_t ch);
 
 #define textattr(x) textcolor(x)
 void set_cursor_enabled(bool enabled);

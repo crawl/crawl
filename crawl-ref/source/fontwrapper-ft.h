@@ -26,7 +26,7 @@ public:
 
     // render just text
     virtual void render_textblock(unsigned int x, unsigned int y,
-                                  unsigned char *chars, unsigned char *colours,
+                                  ucs_t *chars, uint8_t *colours,
                                   unsigned int width, unsigned int height,
                                   bool drop_shadow = false);
 
@@ -46,7 +46,7 @@ public:
                        const std::string &s, const VColour &c);
     virtual void store(FontBuffer &buf, float &x, float &y,
                        const formatted_string &fs);
-    virtual void store(FontBuffer &buf, float &x, float &y, unsigned char c,
+    virtual void store(FontBuffer &buf, float &x, float &y, ucs_t c,
                        const VColour &col);
 
     virtual unsigned int char_width() const;

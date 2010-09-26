@@ -11,6 +11,7 @@
 #include "tilereg-text.h"
 
 #include "tilefont.h"
+#include "unicode.h"
 
 int TextRegion::print_x;
 int TextRegion::print_y;
@@ -41,8 +42,8 @@ void TextRegion::on_resize()
     delete[] abuf;
 
     int size = mx * my;
-    cbuf = new unsigned char[size];
-    abuf = new unsigned char[size];
+    cbuf = new ucs_t[size];
+    abuf = new uint8_t[size];
 
     for (int i = 0; i < size; i++)
     {
@@ -62,16 +63,16 @@ void TextRegion::adjust_region(int *x1, int *x2, int y)
     *x2 = *x2 + 1;
 }
 
-void TextRegion::addstr(char *buffer)
+void TextRegion::addstr(const char *buffer)
 {
-    char buf2[1024];
-    int len = strlen(buffer);
+    ucs_t buf2[1024], c;
 
     int j = 0;
 
-    for (int i = 0; i < len + 1; i++)
+    int clen;
+    do
     {
-        char c = buffer[i];
+        buffer += clen = utf8towc(&c, buffer);
         bool newline = false;
 
         if (c == '\r')
@@ -82,10 +83,14 @@ void TextRegion::addstr(char *buffer)
             c = 0;
             newline = true;
         }
+        // TODO: use wcwidth() to handle widths!=1:
+        // *  2 for CJK chars -- add a zero-width blank?
+        // *  0 for combining characters -- would need extra support
+        // * -1 for non-printable stuff -- assert or ignore
         buf2[j] = c;
         j++;
 
-        if (c == 0)
+        if (c == 0 || j == ARRAYSZ(buf2))
         {
             if (j-1 != 0)
                 addstr_aux(buf2, j - 1); // draw it
@@ -99,12 +104,12 @@ void TextRegion::addstr(char *buffer)
                     scroll();
             }
         }
-    }
+    } while(clen);
     if (cursor_flag)
         cgotoxy(print_x+1, print_y+1);
 }
 
-void TextRegion::addstr_aux(char *buffer, int len)
+void TextRegion::addstr_aux(const ucs_t *buffer, int len)
 {
     int x = print_x - cx_ofs;
     int y = print_y - cy_ofs;
@@ -137,17 +142,12 @@ void TextRegion::clear_to_end_of_line()
     }
 }
 
-void TextRegion::putch(unsigned char ch)
+void TextRegion::putwch(ucs_t ch)
 {
     // special case: check for '0' char: map to space
     if (ch == 0)
         ch = ' ';
-    addstr_aux((char *)&ch, 1);
-}
-
-void TextRegion::writeWChar(unsigned char *ch)
-{
-    addstr_aux((char *)ch, 2);
+    addstr_aux(&ch, 1);
 }
 
 void TextRegion::textcolor(int color)
@@ -219,8 +219,8 @@ void TextRegion::render()
     {
         int idx = cursor_x + mx * cursor_y;
 
-        unsigned char char_back = cbuf[idx];
-        unsigned char col_back  = abuf[idx];
+        ucs_t   char_back = cbuf[idx];
+        uint8_t col_back  = abuf[idx];
 
         cbuf[idx] = '_';
         abuf[idx] = WHITE;
