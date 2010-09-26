@@ -2043,9 +2043,9 @@ static bool _mons_drain_life(monster* mons, bool actual)
 
     hp_gain = std::min(pow * 2, hp_gain);
 
-    if (hp_gain && mons->heal(hp_gain))
+    if (hp_gain)
     {
-        if (actual)
+        if (actual && mons->heal(hp_gain))
             simple_monster_message(mons, " is healed.");
 
         return (true);
