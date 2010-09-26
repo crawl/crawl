@@ -509,10 +509,6 @@ static void _handle_movement(monster* mons)
     if (!in_bounds_y(s.y))
         mmov.y = 0;
 
-    // Now quit if we can't move.
-    if (mmov.origin())
-        return;
-
     if (delta.rdist() > 3)
     {
         // Reproduced here is some semi-legacy code that makes monsters
@@ -531,6 +527,10 @@ static void _handle_movement(monster* mons)
         if (abs(delta.y) > abs(delta.x) && coinflip())
             mmov.x = 0;
     }
+
+    // Now quit if we can't move.
+    if (mmov.origin())
+        return;
 
     const coord_def newpos(mons->pos() + mmov);
 
