@@ -3987,6 +3987,8 @@ mon_body_shape get_mon_shape(const int type)
             return (MON_SHAPE_HUMANOID);
         }
         break;
+    case 'q': // dwarves
+        return (MON_SHAPE_HUMANOID);
     case 'r': // rodents
         return (MON_SHAPE_QUADRUPED);
     case 's': // arachnids and centipedes/cockroaches
