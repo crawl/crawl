@@ -1408,12 +1408,6 @@ int monster_die(monster* mons, killer_type killer,
     you.remove_beholder(mons);
     you.remove_fearmonger(mons);
 
-    // Monsters haloes should be removed when they die.
-    if (mons->holiness() == MH_HOLY)
-        invalidate_agrid();
-    if (mons->type == MONS_SILENT_SPECTRE)
-        invalidate_agrid();
-
     // Clear auto exclusion now the monster is killed - if we know about it.
     if (mons_near(mons) || wizard)
         remove_auto_exclude(mons);
@@ -2195,6 +2189,13 @@ int monster_die(monster* mons, killer_type killer,
 
     if (crawl_state.game_is_arena())
         arena_monster_died(mons, killer, killer_index, silent, corpse);
+
+    // Monsters haloes should be removed when they die.
+    if (mons->holiness() == MH_HOLY)
+        invalidate_agrid();
+    // Likewise silence
+    if (mons->type == MONS_SILENT_SPECTRE)
+        invalidate_agrid();
 
     const coord_def mwhere = mons->pos();
     if (drop_items)
