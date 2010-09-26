@@ -887,6 +887,10 @@ A hybrid; human from the chest up, with a scaly, muscular torso trailing off lik
 
 It looks strong and aggressive.
 %%%%
+greater wraith
+
+An ancient skeletal apparition, sheathed in a cloud of mist. Its form glows white-hot with debilitating energy.
+%%%%
 Green Death
 
 A bloated form covered in oozing sores and exhaling clouds of lethal poison.
