@@ -18,7 +18,6 @@
 #include "species.h"
 
 #include <vector>
-#include <stdint.h>
 
 #ifdef USE_TILE
 #include "tiledoll.h"

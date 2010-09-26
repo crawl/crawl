@@ -20,6 +20,7 @@
 #define APPHDR_H
 
 #include "platform.h"
+#include <stdint.h>
 
 #ifdef TARGET_COMPILER_VC
 /* Disable warning about:

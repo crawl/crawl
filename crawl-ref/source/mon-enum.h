@@ -9,7 +9,6 @@
 #define MON_ENUM_H
 
 #include "tag-version.h"
-#include <stdint.h>
 
 enum corpse_effect_type
 {
