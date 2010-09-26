@@ -2554,6 +2554,11 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     case MONS_ORC_HIGH_PRIEST:
         return TILE_CORPSE_ORC;
 
+    // dwarves ('q')
+    case MONS_DWARF:
+    case MONS_DEEP_DWARF:
+        return TILE_CORPSE_DWARF;
+
     // rodents ('r')
     case MONS_RAT:
         return TILE_CORPSE_RAT;
@@ -2836,9 +2841,6 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_SHAPESHIFTER;
     case MONS_GLOWING_SHAPESHIFTER:
         return TILE_CORPSE_GLOWING_SHAPESHIFTER;
-
-    case MONS_DWARF:
-        return TILE_CORPSE_DWARF;
 
     default:
         return TILE_ERROR;
