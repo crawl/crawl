@@ -69,21 +69,14 @@ void gui_init_view_params(crawl_view_geometry &geom)
 int putch(unsigned char chr)
 {
     // object's method
-    TextRegion::text_mode->putch(chr);
+    TextRegion::text_mode->putwch(chr);
     return 0;
 }
 
-int putwch(unsigned chr)
+int putwch(ucs_t chr)
 {
-    // No unicode support.
-    putch(static_cast<unsigned char>(chr));
+    TextRegion::text_mode->putwch(chr);
     return 0;
-}
-
-void writeWChar(unsigned char *ch)
-{
-    // object's method
-    TextRegion::text_mode->writeWChar(ch);
 }
 
 void clear_to_end_of_line()
@@ -150,7 +143,7 @@ int get_number_of_cols()
     return tiles.get_number_of_cols();
 }
 
-void put_colour_ch(int colour, unsigned ch)
+void put_colour_ch(int colour, ucs_t ch)
 {
     textcolor(colour);
     putwch(ch);
