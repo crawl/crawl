@@ -2066,23 +2066,25 @@ bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
     case SPELL_ANIMATE_DEAD:
         // see special handling in mon-stuff::handle_spell() {dlb}
         if (mons->friendly() && !_animate_dead_okay())
-            return true;
+            return (true);
         break;
 
     case SPELL_CHAIN_LIGHTNING:
     case SPELL_SYMBOL_OF_TORMENT:
     case SPELL_HOLY_WORD:
-        if (!monsterNearby ||
+        if (!monsterNearby
             // friendly holies don't care if you are friendly
-            (mons->friendly() && spell_cast != SPELL_HOLY_WORD))
-            return true;
+            || (mons->friendly() && spell_cast != SPELL_HOLY_WORD))
+        {
+            return (true);
+        }
         break;
 
     default:
         break;
     }
 
-    return false;
+    return (false);
 }
 
 void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
