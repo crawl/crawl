@@ -96,10 +96,6 @@ static const char *features[] = {
 #ifdef DGL_MILESTONES
     "Milestones",
 #endif
-
-#ifdef UNICODE_GLYPHS
-    "Unicode glyphs",
-#endif
 };
 
 static std::string _get_version_information(void)

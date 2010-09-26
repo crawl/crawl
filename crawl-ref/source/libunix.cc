@@ -35,6 +35,7 @@
 #include "files.h"
 #include "state.h"
 #include "stuff.h"
+#include "unicode.h"
 #include "view.h"
 #include "viewgeom.h"
 
@@ -43,12 +44,9 @@
 #include <sys/resource.h>
 #endif
 
-#ifdef UNICODE_GLYPHS
 #include <wchar.h>
 #include <locale.h>
 #include <langinfo.h>
-#endif
-
 #include <termios.h>
 
 static struct termios def_term;
@@ -84,7 +82,6 @@ static int   Current_Colour = COLOR_PAIR(BG_COL * 8 + FG_COL);
 
 static int curs_fg_attr(int col);
 static int curs_bg_attr(int col);
-static int waddstr_with_altcharset(WINDOW* w, const char* s);
 
 static bool cursor_is_enabled = true;
 
@@ -163,27 +160,6 @@ static void setup_colour_pairs( void )
     init_pair(63, COLOR_BLACK, Options.background_colour);
 }
 
-#ifdef UNICODE_GLYPHS
-static std::string unix_glyph2string(unsigned gly)
-{
-    char buf[50];  // Overkill, I know.
-    wchar_t wcbuf[2];
-    wcbuf[0] = gly;
-    wcbuf[1] = 0;
-    if (wcstombs(buf, wcbuf, sizeof buf) != (size_t) -1)
-        return (buf);
-
-    return std::string(1, gly);
-}
-
-static int unix_multibyte_strlen(const std::string &s)
-{
-    const char *cs = s.c_str();
-    size_t len = mbsrtowcs(NULL, &cs, 0, NULL);
-    return (len == (size_t) -1? s.length() : len);
-}
-#endif
-
 static void unix_handle_terminal_resize();
 
 static void termio_init()
@@ -204,16 +180,7 @@ static void termio_init()
 
     tcsetattr(0, TCSAFLUSH, &game_term);
 
-    crawl_state.unicode_ok = false;
-#ifdef UNICODE_GLYPHS
-    if (setlocale(LC_ALL, UNICODE_LOCALE)
-        && !strcmp(nl_langinfo(CODESET), "UTF-8"))
-    {
-        crawl_state.unicode_ok       = true;
-        crawl_state.glyph2strfn      = unix_glyph2string;
-        crawl_state.multibyte_strlen = unix_multibyte_strlen;
-    }
-#endif
+    setlocale(LC_ALL, "");
 
     crawl_state.terminal_resize_handler = unix_handle_terminal_resize;
 }
@@ -603,9 +570,8 @@ extern "C" char *itoa(int value, char *strptr, int radix)
     return strptr;
 }
 
-int cprintf(const char *format,...)
+void cprintf(const char *format, ...)
 {
-    int i;
     char buffer[2048];          // One full screen if no control seq...
 
     va_list argp;
@@ -613,49 +579,14 @@ int cprintf(const char *format,...)
     va_start(argp, format);
     vsnprintf(buffer, sizeof(buffer), format, argp);
     va_end(argp);
-    i = waddstr_with_altcharset(stdscr, buffer);
-    return (i);
-}
 
-// Wrapper around curses waddstr(); handles switching to the alt charset
-// when necessary, and performing the funny DEC translation.
-// Returns a curses success value.
-static int waddstr_with_altcharset(WINDOW* w, const char* str)
-{
-    int ret = OK;
-    if (Options.char_set == CSET_ASCII || Options.char_set == CSET_UNICODE)
+    ucs_t c;
+    char *bp = buffer;
+    while(int s = utf8towc(&c, bp))
     {
-        // In ascii, we don't expect any high-bit chars.
-        // In Unicode, str is UTF-8 and we shouldn't touch anything.
-        ret = waddstr(w, str);
+        bp += s;
+        putwch(c);
     }
-    else
-    {
-        // Otherwise, high bit indicates alternate charset.
-        // DEC line-drawing chars don't have the high bit, so
-        // we map them into 0xE0 and above.
-        const bool bDEC = (Options.char_set == CSET_DEC);
-        const char* begin = str;
-
-        while (true)
-        {
-            const char* end = begin;
-            // Output a range of normal characters (the common case)
-            while (*end && (unsigned char)*end <= 127) ++end;
-            if (end-begin) ret = waddnstr(w, begin, end-begin);
-
-            // Then a single high-bit character
-            chtype c = (unsigned char)*end;
-            if (c == 0)
-                break;
-            else if (bDEC && c >= 0xE0)
-                ret = waddch(w, (c & 0x7F) | A_ALTCHARSET);
-            else // if (*end > 127)
-                ret = waddch(w, c | A_ALTCHARSET);
-            begin = end+1;
-        }
-    }
-    return ret;
 }
 
 int putch(unsigned char chr)
@@ -666,41 +597,17 @@ int putch(unsigned char chr)
     return (addch(chr));
 }
 
-int putwch(unsigned chr)
+int putwch(ucs_t chr)
 {
-#ifdef UNICODE_GLYPHS
-    if (chr <= 127 || Options.char_set != CSET_UNICODE)
-        return (putch(chr));
-
     wchar_t c = chr;
+    // TODO: recognize unsupported characters and try to transliterate
     return (addnwstr(&c, 1));
-#else
-    return (putch(static_cast<unsigned char>(chr)));
-#endif
 }
 
-void put_colour_ch(int colour, unsigned ch)
+void put_colour_ch(int colour, ucs_t ch)
 {
-    if (Options.char_set == CSET_ASCII || Options.char_set == CSET_UNICODE)
-    {
-        // Unicode can't or-in curses attributes; but it also doesn't have
-        // to fool around with altcharset
-        textattr(colour);
-        putwch(ch);
-    }
-    else
-    {
-        const unsigned oldch = ch;
-        if (oldch & 0x80) ch |= A_ALTCHARSET;
-        // Shift the DEC line drawing set
-        if (oldch >= 0xE0 && Options.char_set == CSET_DEC)
-            ch ^= 0x80;
-        textattr(colour);
-
-        // putch truncates ch to a byte, so don't use it.
-        if ((ch & 0x7f) == 0) ch |= ' ';
-        addch(ch);
-    }
+    textattr(colour);
+    putwch(ch);
 }
 
 void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
@@ -925,7 +832,6 @@ int gotoxy_sys(int x, int y)
     return (move(y - 1, x - 1));
 }
 
-#ifdef UNICODE_GLYPHS
 typedef cchar_t char_info;
 inline bool operator == (const cchar_t &a, const cchar_t &b)
 {
@@ -962,37 +868,8 @@ static void flip_colour(cchar_t &ch)
     }
 
     const int newpair = (fg * 8 + bg);
-    ch.attr = COLOR_PAIR(newpair) | (ch.attr & A_ALTCHARSET);
+    ch.attr = COLOR_PAIR(newpair);
 }
-#else // ! UNICODE_GLYPHS
-typedef unsigned long char_info;
-#define character_at(y,x)    mvinch(y,x)
-#define valid_char(x) (x)
-#define write_char_at(y,x,c) mvaddch(y, x, c)
-
-#define char_info_character(c) ((c) & A_CHARTEXT)
-#define char_info_colour(c)    ((c) & A_COLOR)
-#define char_info_attributes(c) ((c) & A_ATTRIBUTES)
-
-static void flip_colour(char_info &ch)
-{
-    const unsigned colour = char_info_colour(ch);
-    const int pair        = PAIR_NUMBER(colour);
-
-    int fg     = pair & 7;
-    int bg     = (pair >> 3) & 7;
-
-    if (pair == 63)
-    {
-        fg    = COLOR_WHITE;
-        bg    = COLOR_BLACK;
-    }
-
-    const int newpair = (fg * 8 + bg);
-    ch = (char_info_character(ch) | COLOR_PAIR(newpair) |
-          (char_info_attributes(ch) & A_ALTCHARSET));
-}
-#endif
 
 static char_info oldch, oldmangledch;
 static int faked_x = -1, faked_y;

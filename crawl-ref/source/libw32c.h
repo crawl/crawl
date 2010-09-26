@@ -7,8 +7,6 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-typedef unsigned short screen_buffer_t;
-
 class crawl_view_buffer;
 
 void init_libw32c(void);

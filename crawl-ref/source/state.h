@@ -62,14 +62,10 @@ struct game_state
     std::vector<std::string> tests_selected; // Tests to be run.
     std::vector<std::string> script_args;    // Arguments to scripts.
 
-    bool unicode_ok;        // Is unicode support available?
-
     bool show_more_prompt;  // Set to false to disable --more-- prompts.
 
     std::string sprint_map; // Sprint map set on command line, if any.
 
-    std::string (*glyph2strfn)(unsigned glyph);
-    int  (*multibyte_strlen)(const std::string &s);
     void (*terminal_resize_handler)();
     void (*terminal_resize_check)();
 

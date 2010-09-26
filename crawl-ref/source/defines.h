@@ -27,6 +27,7 @@
     #endif
 #endif
 
+typedef uint32_t ucs_t;
 
 // max size of inventory array {dlb}:
 #define ENDOFPACK 52
