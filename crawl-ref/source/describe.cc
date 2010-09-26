@@ -2554,6 +2554,8 @@ static void _append_spell_stats(const spell_type spell,
     description += spell_range_string(spell);
     description += "\nHunger: ";
     description += spell_hunger_string(spell);
+    description += "\nNoise : ";
+    description += spell_noise_string(spell);
 }
 
 // Returns true if you can memorise the spell.

@@ -186,6 +186,7 @@ static std::string _spell_extra_description(spell_type spell)
     desc << std::setw(14) << spell_power_string(spell)
          << std::setw(16 + tagged_string_tag_length(rangestring)) << rangestring
          << std::setw(12) << spell_hunger_string(spell)
+         << std::setw(14) << spell_noise_string(spell)
          << spell_difficulty(spell);
 
     desc << "</" << colour_to_str(highlight) <<">";
@@ -2046,6 +2047,81 @@ const char* spell_hunger_string(spell_type spell)
 
     return (hunger_descriptions[_breakpoint_rank(hunger, breakpoints,
                                                  ARRAYSZ(breakpoints))]);
+}
+
+std::string spell_noise_string(spell_type spell)
+{
+    const int casting_noise = spell_noise(spell);
+    int effect_noise;
+
+    switch (spell)
+    //When the noise can vary, we're most interested in the worst case.
+    {
+    // Clouds
+    case SPELL_POISONOUS_CLOUD:
+    case SPELL_FREEZING_CLOUD:
+    case SPELL_CONJURE_FLAME:
+        effect_noise = 2;
+        break;
+
+    case SPELL_AIRSTRIKE:
+        effect_noise = 4;
+        break;
+
+    case SPELL_IOOD:
+        effect_noise = 7;
+        break;
+
+    // Small explosions.
+    case SPELL_MEPHITIC_CLOUD:
+    case SPELL_EVAPORATE:
+    case SPELL_FIREBALL:
+    case SPELL_DELAYED_FIREBALL:
+    case SPELL_HELLFIRE_BURST:
+        effect_noise = 15;
+        break;
+
+    // Medium explosions
+    case SPELL_FRAGMENTATION:   //LRD most often do small and medium explosions
+        effect_noise = 20;      //and sometimes big ones with green crystal
+        break;
+
+    // Big explosions
+    case SPELL_FIRE_STORM:  //The storms make medium or big explosions
+    case SPELL_ICE_STORM:
+    case SPELL_LIGHTNING_BOLT:
+    case SPELL_CHAIN_LIGHTNING:
+    case SPELL_CONJURE_BALL_LIGHTNING:
+        effect_noise = 25;
+        break;
+
+    case SPELL_SHATTER:
+    case SPELL_PROJECTED_NOISE:
+        effect_noise = 30;
+        break;
+
+    default:
+        effect_noise = 0;
+    }
+
+    const int noise = std::max(casting_noise, effect_noise);
+
+    const char* noise_descriptions[] = {
+        "Silent", "Almost silent", "Quiet", "A bit loud", "Loud", "Very loud",
+        "Extremely loud", "Deafening"
+    };
+
+    const int breakpoints[] = { 1, 2, 4, 8, 15, 20, 30 };
+
+    const char* desc = noise_descriptions[_breakpoint_rank(noise, breakpoints,
+                                                ARRAYSZ(breakpoints))];
+
+#ifdef WIZARD
+    if (you.wizard)
+        return make_stringf("%s (%d)", desc, noise);
+    else
+#endif
+        return desc;
 }
 
 int spell_power_colour(spell_type spell)
