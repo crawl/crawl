@@ -1346,7 +1346,8 @@ A magical device which induces confusion and bewilderment in a target creature.
 %%%%
 wand of digging
 
-A magical device which drills tunnels through unworked rock.
+A magical device which forms tunnels through unworked rock by liquefying it.
+
 %%%%
 wand of disintegration
 

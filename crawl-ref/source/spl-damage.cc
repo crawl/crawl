@@ -672,6 +672,7 @@ int airstrike(int pow, const dist &beam)
 
             mprf("The air twists around and strikes %s!",
                  mons->name(DESC_NOCAP_THE).c_str());
+            noisy(4, beam.target);
 
             behaviour_event(mons, ME_ANNOY, MHITYOU);
             if (mons_is_mimic(mons->type))
