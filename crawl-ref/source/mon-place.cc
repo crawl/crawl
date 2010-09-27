@@ -2269,6 +2269,11 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         band_size = 2 + random2(3);
         break;
 
+    case MONS_WIGHT:
+        band = BAND_WIGHTS;
+        band_size = 2 + random2(3);
+        break;
+
     case MONS_SKELETAL_WARRIOR:
         band = BAND_SKELETAL_WARRIORS;
         band_size = 2 + random2(3);
@@ -2674,6 +2679,9 @@ static monster_type _band_member(band_type band, int power)
         break;
     case BAND_BLINK_FROGS:
         mon_type = MONS_BLINK_FROG;
+        break;
+    case BAND_WIGHTS:
+        mon_type = MONS_WIGHT;
         break;
     case BAND_SKELETAL_WARRIORS:
         mon_type = MONS_SKELETAL_WARRIOR;
