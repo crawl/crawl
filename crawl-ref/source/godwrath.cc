@@ -337,6 +337,8 @@ static bool _cheibriados_retribution()
     int tension = get_tension(GOD_CHEIBRIADOS);
     int wrath_value = random2(tension);
 
+    bool glammer = false;
+
     // Determine the level of wrath
     int wrath_type = 0;
     if( wrath_value < 2 )     { wrath_type = 0; } 
@@ -350,13 +352,18 @@ static bool _cheibriados_retribution()
       dec_haste_player(10000);
     }
 
+    // Chance to be overwhelmed by the divine experience
+    if(one_chance_in(5 - wrath_type)){
+          glammer = true;
+    }
+
     switch (wrath_type)
     {
         // Very high tension wrath
         case 4:
           simple_god_message(" adjusts the clock.", god);
-          dec_penance(god, 1 + random2(wrath_type));
-
+          MiscastEffect(&you, -god, SPTYP_RANDOM, 8, 90,
+                        "the meddling of Cheibriados");
           if(one_chance_in(wrath_type - 1)){ break; }
         // High tension wrath
         case 3:
@@ -376,30 +383,25 @@ static bool _cheibriados_retribution()
           if(one_chance_in(wrath_type - 2)){ break; }
         // Low tension
         case 1:
-          if(coinflip()){
-            mpr("You can't recall your last meal.");
-            make_hungry(4500, false, false);
-          } else {
-            mpr("Time shudders.");
-            cheibriados_time_step(2+random2(4));
-          }
+          mpr("Time shudders.");
+          cheibriados_time_step(2+random2(4));
           if(one_chance_in(3)){ break; }
         // No tension wrath.
         case 0:
-          if(coinflip())
-          {
+          if(curse_an_item(true, false)){  
             simple_god_message(" makes up for lost time.", god);
           } else {
-            mpr("You feel time taking its toll.", MSGCH_WARN);
-            rot_hp(random2(3));
+            glammer = true;
           }
-          if(one_chance_in(wrath_type - 2)){ break; }
+
         default:
           break;
     }
     
-    dec_penance(god, 1 + random2(wrath_type));
-    return (false);
+    if(wrath_type > 2){
+      dec_penance(god, 1 + random2(wrath_type));
+    }
+    return (glammer);
 }
 
 static bool _makhleb_retribution()
