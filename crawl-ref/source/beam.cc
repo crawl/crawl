@@ -830,12 +830,16 @@ void bolt::digging_wall_effect()
 
         if (!msg_generated)
         {
-            if (!silenced(you.pos()))
-            {
-                mpr("You hear a grinding noise.", MSGCH_SOUND);
-                obvious_effect = true;
-            }
-
+            std::string wall;
+            if (feat == DNGN_SLIMY_WALL)
+                wall = "slime";
+            else if (you.level_type == LEVEL_PANDEMONIUM)
+                wall = "weird stuff";
+            else
+                wall = "rock";
+            mprf("The %s liquefies and sinks out of sight.", wall.c_str());
+            // This is silent.
+            obvious_effect = true;
             msg_generated = true;
         }
     }

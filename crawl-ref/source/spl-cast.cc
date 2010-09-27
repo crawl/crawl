@@ -1186,12 +1186,10 @@ spret_type your_spells(spell_type spell, int powc,
                                       : GOD_NO_GOD;
 
     const int  loudness        = spell_noise(spell);
-    const bool sound_at_caster = !(flags & SPFLAG_TARGETING_MASK);
 
     // Make some noise if it's actually the player casting.
-    // NOTE: zappy() sets up noise for beams.
     if (god == GOD_NO_GOD)
-        noisy(sound_at_caster ? loudness : 1, you.pos());
+        noisy(loudness, you.pos());
 
     if (allow_fail)
     {
