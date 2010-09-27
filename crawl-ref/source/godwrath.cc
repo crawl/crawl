@@ -341,66 +341,65 @@ static bool _cheibriados_retribution()
 
     // Determine the level of wrath
     int wrath_type = 0;
-    if( wrath_value < 2 )     { wrath_type = 0; } 
-    else if( wrath_value < 4 ){ wrath_type = 1; } 
-    else if( wrath_value < 8 ){ wrath_type = 2; }
-    else if( wrath_value < 16){ wrath_type = 3; } 
-    else                      { wrath_type = 4; }
+    if (wrath_value < 2)       { wrath_type = 0; }
+    else if (wrath_value < 4)  { wrath_type = 1; }
+    else if (wrath_value < 8)  { wrath_type = 2; }
+    else if (wrath_value < 16) { wrath_type = 3; }
+    else                       { wrath_type = 4; }
 
     // Strip away extra speed
-    if(one_chance_in(5 - wrath_type)){
-      dec_haste_player(10000);
-    }
+    if (one_chance_in(5 - wrath_type))
+        dec_haste_player(10000);
 
     // Chance to be overwhelmed by the divine experience
-    if(one_chance_in(5 - wrath_type)){
-          glammer = true;
-    }
+    if (one_chance_in(5 - wrath_type))
+        glammer = true;
 
-    switch (wrath_type)
+    switch(wrath_type)
     {
-        // Very high tension wrath
-        case 4:
-          simple_god_message(" adjusts the clock.", god);
-          MiscastEffect(&you, -god, SPTYP_RANDOM, 8, 90,
-                        "the meddling of Cheibriados");
-          if(one_chance_in(wrath_type - 1)){ break; }
-        // High tension wrath
-        case 3:
-          mpr("You lose track of time.");
-          you.put_to_sleep(NULL, 30 + random2(20));
-          dec_penance(god, 1);
-          if(one_chance_in(wrath_type - 2)){ break; }
-        // Medium tension
-        case 2:
-          if (you.duration[DUR_SLOW] < 180 * BASELINE_DELAY)
-          {
+    // Very high tension wrath
+    case 4:
+        simple_god_message(" adjusts the clock.", god);
+        MiscastEffect(&you, -god, SPTYP_RANDOM, 8, 90,
+                      "the meddling of Cheibriados");
+        if (one_chance_in(wrath_type - 1))
+            break;
+    // High tension wrath
+    case 3:
+        mpr("You lose track of time.");
+        you.put_to_sleep(NULL, 30 + random2(20));
+        dec_penance(god, 1);
+        if(one_chance_in(wrath_type - 2)){ break; }
+    // Medium tension
+    case 2:
+        if (you.duration[DUR_SLOW] < 180 * BASELINE_DELAY)
+        {
             mpr("You feel the world leave you behind!", MSGCH_WARN);
             you.set_duration(DUR_EXHAUSTED, 200);
             slow_player(100);
-          }
-          
-          if(one_chance_in(wrath_type - 2)){ break; }
-        // Low tension
-        case 1:
-          mpr("Time shudders.");
-          cheibriados_time_step(2+random2(4));
-          if(one_chance_in(3)){ break; }
-        // No tension wrath.
-        case 0:
-          if(curse_an_item(true, false)){  
-            simple_god_message(" makes up for lost time.", god);
-          } else {
-            glammer = true;
-          }
+        }
 
-        default:
-          break;
+        if (one_chance_in(wrath_type - 2))
+            break;
+    // Low tension
+    case 1:
+        mpr("Time shudders.");
+        cheibriados_time_step(2+random2(4));
+        if (one_chance_in(3))
+            break;
+    // No tension wrath.
+    case 0:
+        if (curse_an_item(true, false))
+            simple_god_message(" makes up for lost time.", god);
+        else
+            glammer = true;
+
+    default:
+        break;
     }
-    
-    if(wrath_type > 2){
-      dec_penance(god, 1 + random2(wrath_type));
-    }
+
+    if (wrath_type > 2)
+        dec_penance(god, 1 + random2(wrath_type));
     return (glammer);
 }
 
