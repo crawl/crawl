@@ -513,13 +513,13 @@ bool mons_pan(int mcls)
     case MONS_SHADOW:
     case MONS_SKELETON_LARGE:
     case MONS_SKELETON_SMALL:
+    case MONS_SIMULACRUM_LARGE:
+    case MONS_SIMULACRUM_SMALL:
     case MONS_VAMPIRE:
     case MONS_WIGHT:
     case MONS_WRAITH:
     case MONS_ZOMBIE_LARGE:
     case MONS_ZOMBIE_SMALL:
-    case MONS_SIMULACRUM_LARGE:
-    case MONS_SIMULACRUM_SMALL:
     // "things"
     case MONS_ABOMINATION_LARGE:
     case MONS_ABOMINATION_SMALL:
@@ -541,7 +541,7 @@ bool mons_pan(int mcls)
     case MONS_STONE_GOLEM:
     case MONS_TOENAIL_GOLEM:
     case MONS_WOOD_GOLEM:
-    // dragon(s)
+    // dragons
     case MONS_MOTTLED_DRAGON:
     // elementals
     case MONS_AIR_ELEMENTAL:
