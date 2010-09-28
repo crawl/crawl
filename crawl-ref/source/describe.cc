@@ -2537,23 +2537,32 @@ void inscribe_item(item_def &item, bool msgwin)
 }
 
 static void _append_spell_stats(const spell_type spell,
-                                std::string &description)
+                                std::string &description,
+                                bool rod)
 {
-    const std::string schools = spell_schools_string(spell);
-    snprintf(info, INFO_SIZE,
-             "\nLevel: %d        School%s:  %s    (%s)",
-             spell_difficulty(spell),
-             schools.find("/") != std::string::npos ? "s" : "",
-             schools.c_str(),
-             failure_rate_to_string(spell_fail(spell)));
+    if (rod)
+    {
+        snprintf(info, INFO_SIZE,
+                 "\nLevel: %d",
+                 spell_difficulty(spell));
+    }
+    else
+    {
+        const std::string schools = spell_schools_string(spell);
+        snprintf(info, INFO_SIZE,
+                 "\nLevel: %d        School%s:  %s    (%s)",
+                 spell_difficulty(spell),
+                 schools.find("/") != std::string::npos ? "s" : "",
+                 schools.c_str(),
+                 failure_rate_to_string(spell_fail(spell)));
+    }
     description += info;
-
     description += "\n\nPower : ";
-    description += spell_power_string(spell);
+    description += spell_power_string(spell, rod);
     description += "\nRange : ";
-    description += spell_range_string(spell);
+    description += spell_range_string(spell, rod);
     description += "\nHunger: ";
-    description += spell_hunger_string(spell);
+    description += spell_hunger_string(spell, rod);
     description += "\nNoise : ";
     description += spell_noise_string(spell);
 }
@@ -2603,7 +2612,8 @@ static bool _get_spell_description(const spell_type spell,
     if (crawl_state.player_is_dead())
         return (false);
 
-    _append_spell_stats(spell, description);
+    bool rod = item && item->base_type == OBJ_STAVES;
+    _append_spell_stats(spell, description, rod);
 
     bool undead = false;
     if (you_cannot_memorise(spell, undead))

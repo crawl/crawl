@@ -2021,8 +2021,8 @@ int staff_spell( int staff )
     item_def& istaff(you.inv[staff]);
     // Spell staves are mostly for the benefit of non-spellcasters, so we're
     // not going to involve INT or Spellcasting skills for power. -- bwr
-    int powc = (5 + you.skills[SK_EVOCATIONS]
-                 + roll_dice( 2, you.skills[SK_EVOCATIONS] ));
+    int variable_power = (5 + you.skills[SK_EVOCATIONS]
+                    + roll_dice( 2, you.skills[SK_EVOCATIONS] ));
 
     if (!item_is_rod(istaff))
     {
@@ -2077,24 +2077,18 @@ int staff_spell( int staff )
 
     const spell_type spell = which_spell_in_book( istaff, idx );
     const int mana = spell_mana( spell ) * ROD_CHARGE_MULT;
-    const int diff = spell_difficulty( spell );
 
-    int food = spell_hunger(spell);
+    // We also need a fixed power for range calculation
+    int fixed_power = calc_spell_power(spell, false, false, true, true);
+
+    int food = spell_hunger(spell, true);
 
     // For now player_energy() is always 0, because you've got to
     // be wielding the rod...
     if (you.is_undead == US_UNDEAD || player_energy() > 0)
-    {
         food = 0;
-    }
     else
-    {
-        food -= 10 * you.skills[SK_EVOCATIONS];
-        if (food < diff * 5)
-            food = diff * 5;
-
         food = calc_hunger(food);
-    }
 
     if (food && (you.hunger_state == HS_STARVING || you.hunger <= food)
         && !you.is_undead)
@@ -2122,7 +2116,8 @@ int staff_spell( int staff )
         mpr("Something interferes with your magic!");
     }
     // All checks passed, we can cast the spell.
-    else if (your_spells(spell, powc, false) == SPRET_ABORT)
+    else if (your_spells(spell, variable_power, false, false, fixed_power)
+            == SPRET_ABORT)
     {
         crawl_state.zero_turns_taken();
         return (-1);
