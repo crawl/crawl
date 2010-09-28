@@ -4334,7 +4334,7 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL
 },
 
-// Demonic tentacle things
+// Demonic tentacle things.
 {
     MONS_DEMONIC_TENTACLE, 'w', BLACK, "demonic tentacle",
     M_NO_POLY_TO | M_STATIONARY,
@@ -4358,9 +4358,6 @@ static monsterentry mondata[] = {
     I_ANIMAL, HT_AMPHIBIOUS, FL_NONE, 18, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
 },
-
-
-
 
 // minor demons: imps, etc. ('5')
 // note: these things regenerate
