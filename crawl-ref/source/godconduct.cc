@@ -711,7 +711,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             {
                 simple_god_message(" accepts your collateral kill.");
                 retval = true;
-
                 piety_denom = level + 10;
                 piety_change = piety_denom - 6;
             }
