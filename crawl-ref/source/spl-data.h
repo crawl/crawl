@@ -8,6 +8,21 @@
 #ifndef SPLDATA_H
 #define SPLDATA_H
 
+/*
+struct spell_desc
+{
+    enum, spell name,
+    spell schools,
+    flags,
+    level,
+    power_cap,
+    min_range, max_range, (-1 if not applicable)
+    noise_mod,
+    target_prompt,
+    monster spell: needs tracer?,
+    monster spell: utility spell?
+}
+*/
 
 {
     SPELL_TELEPORT_SELF, "Teleport Self",
@@ -220,8 +235,8 @@
 },
 
 {
-    SPELL_PETRIFY, "Petrify",
-     SPTYP_ENCHANTMENT | SPTYP_EARTH,
+     SPELL_PETRIFY, "Petrify",
+     SPTYP_TRANSMUTATION | SPTYP_EARTH,
      SPFLAG_DIR_OR_TARGET,
      4,
      200,
@@ -312,9 +327,9 @@
 },
 
 {
-    SPELL_MEPHITIC_CLOUD, "Mephitic Cloud",
+     SPELL_MEPHITIC_CLOUD, "Mephitic Cloud",
      SPTYP_CONJURATION | SPTYP_POISON | SPTYP_AIR,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_AREA,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_AREA | SPFLAG_ALLOW_SELF,
      3,
      200,
      5, 5,
@@ -522,7 +537,7 @@
 {
     SPELL_POISONOUS_CLOUD, "Poisonous Cloud",
      SPTYP_CONJURATION | SPTYP_POISON | SPTYP_AIR,
-     SPFLAG_GRID | SPFLAG_AREA,
+     SPFLAG_GRID | SPFLAG_AREA | SPFLAG_ALLOW_SELF,
      5,
      200,
      6, 6,
@@ -757,7 +772,7 @@
 {
     SPELL_VAMPIRIC_DRAINING, "Vampiric Draining",
      SPTYP_NECROMANCY,
-     SPFLAG_DIR | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
      3,
      200,
      1, 1,
@@ -809,7 +824,7 @@
 {
     SPELL_FREEZE, "Freeze",
      SPTYP_ICE,
-     SPFLAG_DIR | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
      1,
      25,
      1, 1,
@@ -1629,7 +1644,7 @@
 {
      SPELL_PASSWALL, "Passwall",
      SPTYP_TRANSMUTATION | SPTYP_EARTH,
-     SPFLAG_DIR | SPFLAG_ESCAPE,
+     SPFLAG_DIR | SPFLAG_ESCAPE | SPFLAG_NOT_SELF,
      3,
      200,
      1, 1,
@@ -1876,7 +1891,7 @@
 {
     SPELL_EVAPORATE, "Evaporate",
      SPTYP_FIRE | SPTYP_TRANSMUTATION,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_AREA,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_AREA | SPFLAG_ALLOW_SELF,
      2,   // XXX: level 2 or 3, what should it be now? -- bwr
      200,
      6, 6,
@@ -2023,6 +2038,19 @@
      6,
      200,
      -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_GOLUBRIAS_PASSAGE, "Passage of Golubria",
+     SPTYP_TRANSLOCATION,
+     SPFLAG_GRID | SPFLAG_NEUTRAL | SPFLAG_NOT_SELF | SPFLAG_ESCAPE,
+     5,
+     0,
+     LOS_RADIUS, LOS_RADIUS,
      0,
      NULL,
      false,
@@ -2660,6 +2688,201 @@
     SPELL_SUMMON_CANIFORMS, "Summon Caniforms",
      SPTYP_SUMMONING,
      SPFLAG_MONSTER,
+     6,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_BROTHERS_IN_ARMS, "Brothers in Arms",
+     SPTYP_SUMMONING,
+     SPFLAG_MONSTER,
+     6,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_TROGS_HAND, "Trog's Hand",
+    SPTYP_ENCHANTMENT,
+    SPFLAG_MONSTER,
+    3,
+    0,
+    -1, -1,
+    0,
+    NULL,
+    false,
+    false
+},
+
+{
+    SPELL_BURN_SPELLBOOK, "Burn Spellbook",
+    SPTYP_ENCHANTMENT,
+    SPFLAG_AREA,
+    1,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    NULL,
+    false,
+    false
+},
+
+{
+    SPELL_SUMMON_SPECTRAL_ORCS, "Summon Spectral Orcs",
+     SPTYP_NECROMANCY,
+     SPFLAG_MONSTER | SPFLAG_TARGET,
+     4,
+     0,
+     LOS_RADIUS, LOS_RADIUS,
+     1,
+     NULL,
+     false,
+     false,
+},
+
+{
+    SPELL_RESURRECT, "Resurrection",
+     SPTYP_HOLY,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_HELPFUL,
+     6,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_LIGHT_BEAM, "Light Beam",
+     SPTYP_CONJURATION | SPTYP_HOLY,
+     SPFLAG_DIR_OR_TARGET,
+     6,
+     200,
+     6, 6,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_SUMMON_HOLIES, "Summon Holies",
+     SPTYP_SUMMONING | SPTYP_HOLY,
+     SPFLAG_MONSTER,
+     5,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_SUMMON_GREATER_HOLY, "Summon Greater Holy",
+     SPTYP_SUMMONING | SPTYP_HOLY,
+     SPFLAG_MONSTER,
+     9,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_HOLY_WORD, "Holy Word",
+     SPTYP_HOLY,
+     SPFLAG_AREA,
+     6,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_HEAL_OTHER, "Heal Other",
+     SPTYP_HOLY,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL,
+     6,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_SACRIFICE, "Sacrifice",
+     SPTYP_HOLY,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_HELPFUL,
+     6,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_HOLY_FLAMES, "Holy Flames",
+     SPTYP_HOLY,
+     SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
+     7,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_HOLY_BREATH, "Holy Breath",
+     SPTYP_CONJURATION | SPTYP_HOLY,
+     SPFLAG_GRID | SPFLAG_AREA,
+     5,
+     200,
+     6, 6,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_MIRROR_DAMAGE, "Mirror Damage",
+     SPTYP_ENCHANTMENT,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL,
+     4,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_DRAIN_LIFE, "Drain Life",
+     SPTYP_NECROMANCY,
+     SPFLAG_AREA,
      6,
      0,
      -1, -1,

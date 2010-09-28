@@ -17,11 +17,12 @@ enum corpse_effect_type
     CE_CLEAN,           //    1
     CE_CONTAMINATED,    //    2
     CE_POISONOUS,       //    3
-    CE_HCL,             //    4
-    CE_MUTAGEN_RANDOM,  //    5
-    CE_MUTAGEN_GOOD,    //    6 - may be worth implementing {dlb}
-    CE_MUTAGEN_BAD,     //    7 - may be worth implementing {dlb}
-    CE_RANDOM,          //    8 - not used, but may be worth implementing {dlb}
+    CE_POISON_CONTAM,   //    4
+    CE_HCL,             //    5
+    CE_MUTAGEN_RANDOM,  //    6
+    CE_MUTAGEN_GOOD,    //    7 - may be worth implementing {dlb}
+    CE_MUTAGEN_BAD,     //    8 - may be worth implementing {dlb}
+    CE_RANDOM,          //    9 - not used, but may be worth implementing {dlb}
     CE_ROTTEN = 50,     //   50 - must remain at 50 for now {dlb}
 };
 
@@ -96,9 +97,10 @@ enum mon_attack_flavour
     AF_STEAL_FOOD,
     AF_CRUSH,
     AF_REACH,
+    AF_HOLY,
 };
 
-// Non-spell "summoning" types to give to monsters::mark_summoned(), or
+// Non-spell "summoning" types to give to monster::mark_summoned(), or
 // as the fourth parameter of mgen_data's constructor.
 //
 // Negative values since spells are non-negative.
@@ -165,7 +167,7 @@ enum mon_resist_flags
 
     // resistances
     // Notes:
-    // - negative energy is mostly handled via monsters::res_negative_energy()
+    // - negative energy is mostly handled via monster::res_negative_energy()
     MR_RES_ELEC          = (1<< 0),
     MR_RES_POISON        = (1<< 1),
     MR_RES_FIRE          = (1<< 2),

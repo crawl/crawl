@@ -8,7 +8,7 @@
 
 #include "enum.h"
 
-class monsters;
+class monster;
 struct ait_hp_loss;
 
 enum activity_interrupt_payload_type
@@ -42,7 +42,7 @@ struct activity_interrupt_data
         : apt(AIP_STRING), data(s.c_str()), context()
     {
     }
-    activity_interrupt_data(const monsters *m, const std::string &ctx = "")
+    activity_interrupt_data(const monster* m, const std::string &ctx = "")
         : apt(AIP_MONSTER), data(m), context(ctx)
     {
     }

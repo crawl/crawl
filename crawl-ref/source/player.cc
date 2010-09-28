@@ -1,4 +1,4 @@
- /*
+/*
  *  File:       player.cc
  *  Summary:    Player related functions.
  *  Written by: Linley Henzell
@@ -29,21 +29,23 @@
 #include "directn.h"
 #include "effects.h"
 #include "env.h"
-#include "map_knowledge.h"
+#include "errors.h"
+#include "exercise.h"
 #include "fight.h"
-#include "food.h"
 #include "godabil.h"
-#include "goditem.h"
+#include "godconduct.h"
 #include "godpassive.h"
+#include "hints.h"
 #include "hiscores.h"
+#include "it_use2.h"
+#include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
-#include "item_use.h"
-#include "it_use2.h"
 #include "kills.h"
 #include "libutil.h"
 #include "macro.h"
+#include "map_knowledge.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-util.h"
@@ -57,18 +59,19 @@
 #include "quiver.h"
 #include "random.h"
 #include "religion.h"
-#include "godconduct.h"
 #include "shopping.h"
+#include "shout.h"
 #include "skills.h"
 #include "skills2.h"
 #include "species.h"
-#include "spells1.h"
-#include "spells3.h"
-#include "spells4.h"
+#include "spl-other.h"
+#include "spl-selfench.h"
+#include "spl-transloc.h"
 #include "spl-util.h"
 #include "sprint.h"
 #include "stairs.h"
 #include "state.h"
+#include "status.h"
 #include "stuff.h"
 #include "tagstring.h"
 #include "terrain.h"
@@ -78,9 +81,7 @@
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
-#include "hints.h"
 #include "view.h"
-#include "shout.h"
 #include "viewgeom.h"
 #include "xom.h"
 
@@ -121,7 +122,8 @@ static void _moveto_maybe_repel_stairs()
     }
 }
 
-static bool _check_moveto_cloud(const coord_def& p)
+static bool _check_moveto_cloud(const coord_def& p,
+                                const std::string &move_verb)
 {
     const int cloud = env.cgrid(p);
     if (cloud != EMPTY_CLOUD && !you.confused())
@@ -133,7 +135,8 @@ static bool _check_moveto_cloud(const coord_def& p)
                 || ctype != env.cloud[ env.cgrid(you.pos()) ].type))
         {
             std::string prompt = make_stringf(
-                                    "Really step into that cloud of %s?",
+                                    "Really %s into that cloud of %s?",
+                                    move_verb.c_str(),
                                     cloud_name_at_index(cloud).c_str());
 
             if (!yesno(prompt.c_str(), false, 'n'))
@@ -146,7 +149,7 @@ static bool _check_moveto_cloud(const coord_def& p)
     return (true);
 }
 
-static bool _check_moveto_trap(const coord_def& p)
+static bool _check_moveto_trap(const coord_def& p, const std::string &move_verb)
 {
     // If we're walking along, give a chance to avoid traps.
     const dungeon_feature_type new_grid = env.grid(p);
@@ -165,13 +168,14 @@ static bool _check_moveto_trap(const coord_def& p)
             viewwindow();
 
             mprf(MSGCH_WARN,
-                 "Wait a moment, %s! Do you really want to step there?",
-                 you.your_name.c_str());
+                 "Wait a moment, %s! Do you really want to %s there?",
+                 you.your_name.c_str(),
+                 move_verb.c_str());
 
             if (!you.running.is_any_travel())
                 more();
 
-            exercise(SK_TRAPS_DOORS, 3);
+            practise(EX_TRAP_PASSIVE);
             print_stats();
             return (false);
         }
@@ -186,7 +190,11 @@ static bool _check_moveto_trap(const coord_def& p)
         const trap_type type = get_trap_type(p);
         if (type == TRAP_ZOT)
         {
-            if (!yes_or_no("Do you really want to step into the Zot trap"))
+            std::string prompt = make_stringf(
+                "Do you really want to %s into the Zot trap",
+                move_verb.c_str()
+            );
+            if (!yes_or_no(prompt.c_str()))
             {
                 canned_msg(MSG_OK);
                 return (false);
@@ -210,13 +218,15 @@ static bool _check_moveto_trap(const coord_def& p)
              // Prompt for any trap where you might not have enough hp
              // as defined in init.txt (see trapwalk.lua)
              if (type != TRAP_SHAFT // Known shafts aren't traps
+                 && type != TRAP_GOLUBRIA // don't need a warning here
                  && (new_grid != DNGN_TRAP_MECHANICAL
                  || !clua.callbooleanfn(false, "ch_cross_trap",
                                         "s", trap_name_at(p))))
 #endif
         {
             std::string prompt = make_stringf(
-                "Really step %s that %s?",
+                "Really %s %s that %s?",
+                move_verb.c_str(),
                 (type == TRAP_ALARM) ? "onto" : "into",
                 feature_description(new_grid, type,
                                     "", DESC_BASENAME,
@@ -232,7 +242,8 @@ static bool _check_moveto_trap(const coord_def& p)
     return (true);
 }
 
-static bool _check_moveto_dangerous(const coord_def& p)
+static bool _check_moveto_dangerous(const coord_def& p,
+                                    const std::string move_verb)
 {
     if (you.can_swim() && feat_is_water(env.grid(p))
         || !is_feat_dangerous(env.grid(p)))
@@ -244,20 +255,21 @@ static bool _check_moveto_dangerous(const coord_def& p)
     return (false);
 }
 
-static bool _check_moveto_terrain(const coord_def& p)
+static bool _check_moveto_terrain(const coord_def& p,
+                                  const std::string &move_verb)
 {
     // Only consider terrain if player is not levitating.
     if (you.airborne())
         return (true);
 
-    return (_check_moveto_dangerous(p));
+    return (_check_moveto_dangerous(p, move_verb));
 }
 
-bool check_moveto(const coord_def& p)
+bool check_moveto(const coord_def& p, const std::string &move_verb)
 {
-    return (_check_moveto_cloud(p)
-            && _check_moveto_trap(p)
-            && _check_moveto_terrain(p));
+    return (_check_moveto_terrain(p, move_verb)
+            && _check_moveto_cloud(p, move_verb)
+            && _check_moveto_trap(p, move_verb));
 }
 
 void moveto_location_effects(dungeon_feature_type old_feat,
@@ -440,7 +452,7 @@ bool is_player_same_species(const int mon, bool transform)
             return (mons_species(mon) == MONS_LICH);
         // Compare with monster *genus*.
         case TRAN_SPIDER:
-            return (mons_genus(mon) == MONS_WOLF_SPIDER);
+            return (mons_genus(mon) == MONS_SPIDER);
         case TRAN_DRAGON:
             return (mons_genus(mon) == MONS_DRAGON); // Includes all drakes.
         case TRAN_PIG:
@@ -450,6 +462,13 @@ bool is_player_same_species(const int mon, bool transform)
         }
     }
 
+    // Genus would include nisse.
+    if (you.species == SP_KOBOLD)
+    {
+        return (mons_species(mon) == MONS_KOBOLD
+                || mons_species(mon) == MONS_BIG_KOBOLD);
+    }
+
     // Genus would include necrophage and rotting hulk.
     if (you.species == SP_GHOUL)
         return (mons_species(mon) == MONS_GHOUL);
@@ -457,11 +476,27 @@ bool is_player_same_species(const int mon, bool transform)
     if (you.species == SP_MERFOLK && mons_genus(mon) == MONS_MERMAID)
         return (true);
 
-    return (mons_genus(mon) == mons_genus(player_mons()));
+    // Note that these are currently considered to be the same species:
+    // * halflings and humans
+    // * dwarves and deep dwarves
+    // * all elf races
+    return (mons_genus(mon) == mons_genus(player_mons(false)));
 }
 
-monster_type player_mons()
+void update_player_symbol()
 {
+    you.symbol = Options.show_player_species ? player_mons() : transform_mons();
+}
+
+monster_type player_mons(bool transform)
+{
+    if (transform)
+    {
+        monster_type mons = transform_mons();
+        if (mons != MONS_PLAYER)
+            return mons;
+    }
+
     switch (you.species)
     {
     case SP_HUMAN:
@@ -533,7 +568,7 @@ monster_type player_mons()
     case SP_VAMPIRE:
         return MONS_VAMPIRE;
     case SP_DEEP_DWARF:
-        return MONS_DWARF; // until/if DD monsters are added
+        return MONS_DEEP_DWARF;
     case SP_ELF:
     case SP_HILL_DWARF:
     case SP_OGRE_MAGE:
@@ -638,7 +673,7 @@ bool you_can_wear(int eq, bool special_armour)
 bool player_has_feet()
 {
     if (you.species == SP_NAGA
-        || player_genus(GENPC_DRACONIAN))
+        || (you.species == SP_MERFOLK && you.swimming()))
     {
         return (false);
     }
@@ -1045,10 +1080,24 @@ bool player_equip_unrand(int unrand_index)
     return (false);
 }
 
+int player_evokable_levitation()
+{
+    return player_equip(EQ_RINGS, RING_LEVITATION)
+           + player_equip_ego_type(EQ_BOOTS, SPARM_LEVITATION)
+           + scan_artefacts(ARTP_LEVITATE);
+}
+
+int player_evokable_invis()
+{
+    return (player_equip(EQ_RINGS, RING_INVISIBILITY)
+            + player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_DARKNESS)
+            + scan_artefacts(ARTP_INVISIBLE));
+}
+
 // Given an adjacent monster, returns true if the player can hit it (the
 // monster should not be submerged, or be submerged in shallow water if
 // the player has a polearm).
-bool player_can_hit_monster(const monsters *mon)
+bool player_can_hit_monster(const monster* mon)
 {
     if (!mon->submerged())
         return (true);
@@ -1484,11 +1533,9 @@ int player_res_acid(bool calc_unid, bool items)
             res++;
     }
 
-    if (you.religion == GOD_JIYVA && x_chance_in_y(you.piety, MAX_PIETY))
-        res++;
-
     // mutations:
-    res += floor(player_mutation_level(MUT_YELLOW_SCALES) / 3);
+    if (player_mutation_level(MUT_YELLOW_SCALES) == 3)
+        res++;
 
     return (res);
 }
@@ -2107,9 +2154,7 @@ int player_size_adjusted_body_armour_evasion_penalty(int scale)
 
     const int size = you.body_size(PSIZE_BODY);
 
-    const int size_bonus_factor =
-        (size < SIZE_SMALL || size > SIZE_LARGE)?
-        (size - SIZE_MEDIUM) * scale / 4 : 0;
+    const int size_bonus_factor = (size - SIZE_MEDIUM) * scale / 4;
 
     const int size_adjusted_penalty =
         std::max(0,
@@ -2547,7 +2592,7 @@ int burden_change(void)
 }
 
 // force is true for forget_map command on level map.
-void forget_map(unsigned char chance_forgotten, bool force)
+void forget_map(int chance_forgotten, bool force)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -2603,7 +2648,7 @@ void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
         // Bonus skill training from Sage.
         you.exp_available =
             (exp_gained * you.sage_bonus_degree) / 100 + exp_gained / 2;
-        exercise(you.sage_bonus_skill, 20);
+        practise(EX_SAGE, you.sage_bonus_skill);
         you.exp_available = old_avail;
         exp_gained /= 2;
     }
@@ -2955,13 +3000,12 @@ void level_change(bool skip_attribute_increase)
                 if (you.experience_level >= 7)
                 {
                     you.species = random_draconian_player_species();
+                    update_player_symbol();
 #ifdef USE_TILE
                     init_player_doll();
 #endif
-                    _draconian_scale_colour_message();
-#ifdef USE_TILE
                     redraw_screen();
-#endif
+                    _draconian_scale_colour_message();
                 }
             case SP_RED_DRACONIAN:
             case SP_WHITE_DRACONIAN:
@@ -3184,9 +3228,6 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_MERFOLK:
-                if (you.experience_level % 3)
-                    hp_adjust++;
-
                 if (!(you.experience_level % 5))
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
@@ -3354,8 +3395,10 @@ int check_stealth(void)
     // a personal silence spell would naturally be different, but this
     // silence radiates for a distance and prevents monster spellcasting,
     // which pretty much gives away the stealth game.
+    // this penalty is dependent on the actual amount of ambient noise
+    // in the level -doy
     if (you.duration[DUR_SILENCE])
-        stealth -= 50;
+        stealth -= 50 + current_level_ambient_noise();
 
     // Mutations.
     stealth += 25 * player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
@@ -3363,26 +3406,12 @@ int check_stealth(void)
     if (player_mutation_level(MUT_TRANSLUCENT_SKIN) > 1)
         stealth += 20 * (player_mutation_level(MUT_TRANSLUCENT_SKIN) - 1);
 
+    // it's easier to be stealthy when there's a lot of background noise
+    stealth += 2 * current_level_ambient_noise();
+
     stealth = std::max(0, stealth);
 
     return (stealth);
-}
-
-static const char *_get_rotting_how()
-{
-    ASSERT(you.rotting > 0 || you.species == SP_GHOUL);
-
-    if (you.rotting > 15)
-        return (" before your eyes");
-    if (you.rotting > 8)
-        return (" away quickly");
-    if (you.rotting > 4)
-        return (" badly");
-
-    if (you.species == SP_GHOUL)
-        return (" faster than usual");
-
-    return ("");
 }
 
 // Returns the medium duration value which is usually announced by a special
@@ -3405,15 +3434,18 @@ int get_expiration_threshold(duration_type dur)
     case DUR_REPEL_MISSILES:
     case DUR_REGENERATION:
     case DUR_INSULATION:
+    case DUR_RESIST_POISON:
+    case DUR_RESIST_FIRE:
+    case DUR_RESIST_COLD:
     case DUR_STONEMAIL:
     case DUR_SWIFTNESS:
     case DUR_INVIS:
     case DUR_HASTE:
-    // The following are not shown in the status lines.
     case DUR_ICY_ARMOUR:
     case DUR_PHASE_SHIFT:
     case DUR_CONTROL_TELEPORT:
     case DUR_DEATH_CHANNEL:
+    case DUR_SEE_INVISIBLE:
         return (6 * BASELINE_DELAY);
 
     case DUR_LEVITATION:
@@ -3507,200 +3539,6 @@ static void _display_vampire_status()
     {
         msg += comma_separated_line(attrib.begin(), attrib.end());
         mpr(msg.c_str());
-    }
-}
-
-// Durations and similar temporary status effects.
-static void _display_durations()
-{
-    if (you.duration[DUR_SAGE])
-    {
-        std::string msg  = "You are studying ";
-                    msg += skill_name(you.sage_bonus_skill);
-                    msg += ".";
-        _output_expiring_message(DUR_SAGE, msg.c_str());
-    }
-
-    _output_expiring_message(DUR_BARGAIN, "You get a bargain in shops.");
-
-    if (you.duration[DUR_BREATH_WEAPON])
-        mpr("You are short of breath.");
-
-    if (you.duration[DUR_LIQUID_FLAMES])
-        mpr("You are covered in liquid flames.");
-
-    if (you.duration[DUR_FIRE_SHIELD])
-    {
-        _output_expiring_message(DUR_FIRE_SHIELD,
-                                 "You are surrounded by a ring of flames.");
-        _output_expiring_message(DUR_FIRE_SHIELD,
-                                 "You are immune to clouds of flame.");
-    }
-
-    _output_expiring_message(DUR_ICY_ARMOUR,
-                             "You are protected by an icy armour.");
-
-    _output_expiring_message(DUR_REPEL_MISSILES,
-                             "You are protected from missiles.");
-
-    _output_expiring_message(DUR_DEFLECT_MISSILES, "You deflect missiles.");
-
-    if (you.duration[DUR_PRAYER])
-        mpr("You are praying.");
-
-    // Disease and regen influence each other.
-    if (you.disease)
-    {
-        if (!you.duration[DUR_REGENERATION])
-            mpr("You are sick.");
-        else
-        {
-            _output_expiring_message(DUR_REGENERATION,
-                                     "recuperating from your illness");
-        }
-    }
-    else
-    {
-        bool no_heal =
-            (you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING)
-            || (player_mutation_level(MUT_SLOW_HEALING) == 3);
-
-        if (!no_heal)
-            _output_expiring_message(DUR_REGENERATION, "regenerating");
-    }
-
-    _output_expiring_message(DUR_SWIFTNESS, "You can move swiftly.");
-
-    _output_expiring_message(DUR_INSULATION, "You are insulated.");
-
-    _output_expiring_message(DUR_STONEMAIL,
-                             "You are covered in scales of stone.");
-
-    if (you.duration[DUR_CONTROLLED_FLIGHT])
-        mpr("You can control your flight.");
-
-    if (you.duration[DUR_TELEPORT])
-        mpr("You are about to teleport.");
-
-    _output_expiring_message(DUR_CONTROL_TELEPORT,
-                             "You can control teleportation.");
-
-    _output_expiring_message(DUR_DEATH_CHANNEL, "You are channeling the dead.");
-
-    _output_expiring_message(DUR_PHASE_SHIFT,
-                             "You are out of phase with the material plane.");
-
-    _output_expiring_message(DUR_SILENCE, "You radiate silence.");
-
-    if (you.duration[DUR_STONESKIN])
-        mpr("Your skin is tough as stone.");
-
-    if (you.duration[DUR_SEE_INVISIBLE])
-        mpr("You can see invisible.");
-
-    std::string invis_mes = "You are invisible";
-    if (you.backlit())
-        invis_mes += " (but backlit and visible).";
-    else
-        invis_mes += ".";
-
-    _output_expiring_message(DUR_INVIS, invis_mes.c_str());
-
-    if (you.confused())
-        mpr("You are confused.");
-
-    // TODO: Distinguish between mermaids and sirens!
-    if (you.beheld())
-        mpr("You are mesmerised.");
-
-    // How exactly did you get to show the status?
-    if (you.paralysed())
-        mpr("You are paralysed.");
-    if (you.petrified())
-        mpr("You are petrified.");
-    if (you.asleep())
-        mpr("You are asleep.");
-
-    if (you.duration[DUR_EXHAUSTED])
-        mpr("You are exhausted.");
-
-    if (you.duration[DUR_SLOW] && you.duration[DUR_HASTE])
-        mpr("You are under both slowing and hasting effects.");
-    else if (you.duration[DUR_SLOW])
-        mpr("Your actions are slowed.");
-    else if (you.duration[DUR_HASTE])
-        _output_expiring_message(DUR_HASTE, "Your actions are hasted.");
-
-    if (you.duration[DUR_MIGHT])
-        mpr("You are mighty.");
-    if (you.duration[DUR_BRILLIANCE])
-        mpr("You are brilliant.");
-    if (you.duration[DUR_AGILITY])
-        mpr("You are agile.");
-
-    if (you.duration[DUR_DIVINE_VIGOUR])
-        mpr("You are divinely vigorous.");
-
-    if (you.duration[DUR_DIVINE_STAMINA])
-        mpr("You are divinely fortified.");
-
-    if (you.berserk())
-        mpr("You are possessed by a berserker rage.");
-
-    if (you.airborne())
-    {
-        const bool expires = dur_expiring(DUR_LEVITATION)
-                             && !you.permanent_flight();
-
-        mprf(expires ? MSGCH_WARN : MSGCH_PLAIN,
-             "%sYou are hovering above the floor.",
-             expires ? "Expiring: " : "");
-    }
-
-    if (you.attribute[ATTR_HELD])
-        mpr("You are held in a net.");
-
-    if (you.duration[DUR_POISONING])
-    {
-        mprf("You are %s poisoned.",
-             (you.duration[DUR_POISONING] > 10) ? "extremely" :
-             (you.duration[DUR_POISONING] > 5)  ? "very" :
-             (you.duration[DUR_POISONING] > 3)  ? "quite"
-                                                : "mildly" );
-    }
-
-    if (you.disease)
-    {
-        int high = 120 * BASELINE_DELAY;
-        int low  =  40 * BASELINE_DELAY;
-        mprf("You are %sdiseased.",
-             (you.disease > high) ? "badly " :
-             (you.disease >  low) ? ""
-                                 : "mildly ");
-    }
-
-    if (you.rotting || you.species == SP_GHOUL)
-        mprf("Your flesh is rotting%s.", _get_rotting_how());
-
-    // Prints a contamination message.
-    contaminate_player(0, false, true);
-
-    if (you.duration[DUR_CONFUSING_TOUCH])
-    {
-        int hi = 40 * BASELINE_DELAY;
-        int low = 20 * BASELINE_DELAY;
-        mprf("Your hands are glowing %s red.",
-             (you.duration[DUR_CONFUSING_TOUCH] > hi) ? "an extremely bright" :
-             (you.duration[DUR_CONFUSING_TOUCH] > low) ? "bright"
-                                                      : "a soft");
-    }
-
-    if (you.duration[DUR_SURE_BLADE])
-    {
-        mprf("You have a %sbond with your blade.",
-             (you.duration[DUR_SURE_BLADE] > 15 * BASELINE_DELAY) ? "strong " :
-             (you.duration[DUR_SURE_BLADE] >  5 * BASELINE_DELAY) ? ""
-                                                 : "weak ");
     }
 }
 
@@ -3829,22 +3667,30 @@ void display_char_status()
     if (you.species == SP_VAMPIRE)
         _display_vampire_status();
 
-    if (you.duration[DUR_TRANSFORMATION] > 0)
-        mpr(transform_desc(false));
+    static int statuses[] = {
+        DUR_TRANSFORMATION, STATUS_BURDEN, DUR_SAGE, DUR_BARGAIN,
+        DUR_BREATH_WEAPON, DUR_LIQUID_FLAMES, DUR_FIRE_SHIELD, DUR_ICY_ARMOUR,
+        DUR_REPEL_MISSILES, DUR_DEFLECT_MISSILES, DUR_PRAYER,
+        STATUS_REGENERATION, DUR_SWIFTNESS, DUR_RESIST_POISON,
+        DUR_RESIST_COLD, DUR_RESIST_FIRE, DUR_INSULATION, DUR_STONEMAIL,
+        DUR_TELEPORT, DUR_CONTROL_TELEPORT,
+        DUR_DEATH_CHANNEL, DUR_PHASE_SHIFT, DUR_SILENCE, DUR_STONESKIN,
+        DUR_SEE_INVISIBLE, DUR_INVIS, DUR_CONF, STATUS_BEHELD,
+        DUR_PARALYSIS, DUR_PETRIFIED, DUR_SLEEP, DUR_EXHAUSTED,
+        STATUS_SPEED, DUR_MIGHT, DUR_BRILLIANCE, DUR_AGILITY,
+        DUR_DIVINE_VIGOUR, DUR_DIVINE_STAMINA, DUR_BERSERKER,
+        STATUS_AIRBORNE, STATUS_NET, DUR_POISONING, STATUS_SICK,
+        STATUS_ROT, STATUS_GLOW, DUR_CONFUSING_TOUCH, DUR_SURE_BLADE,
+        DUR_AFRAID,
+    };
 
-    if (you.burden_state == BS_ENCUMBERED)
-        mpr("You are burdened.");
-    else if (you.burden_state == BS_OVERLOADED)
-        mpr("You are overloaded with stuff.");
-    else if (you.species == SP_KENKU && you.flight_mode() == FL_FLY)
+    status_info inf;
+    for (unsigned i = 0; i < ARRAYSZ(statuses); ++i)
     {
-        if (you.travelling_light())
-            mpr("Your small burden allows quick flight.");
-        else
-            mpr("Your heavy burden is slowing your flight.");
+        fill_status_info(statuses[i], &inf);
+        if (!inf.long_text.empty())
+            mpr(inf.long_text);
     }
-
-    _display_durations();
 
     _display_movement_speed();
     _display_tohit();
@@ -3862,9 +3708,7 @@ void display_char_status()
 bool player_item_conserve(bool calc_unid)
 {
     return (player_equip(EQ_AMULET, AMU_CONSERVATION, calc_unid)
-            || player_equip_ego_type(EQ_CLOAK, SPARM_PRESERVATION)
-            || (you.religion == GOD_JIYVA
-                && you.piety >= piety_breakpoint(4)));
+            || player_equip_ego_type(EQ_CLOAK, SPARM_PRESERVATION));
 }
 
 int player_mental_clarity(bool calc_unid, bool items)
@@ -3901,9 +3745,7 @@ bool extrinsic_amulet_effect(jewellery_type amulet)
             return (true);
         // else fall-through
     case AMU_CONSERVATION:
-        return (player_equip_ego_type(EQ_CLOAK, SPARM_PRESERVATION) > 0
-                || (you.religion == GOD_JIYVA
-                     && you.piety >= piety_breakpoint(4)));
+        return (player_equip_ego_type(EQ_CLOAK, SPARM_PRESERVATION) > 0);
     case AMU_THE_GOURMAND:
         return (player_mutation_level(MUT_GOURMAND) > 0);
     default:
@@ -4048,7 +3890,7 @@ unsigned int exp_needed(int lev)
 }
 
 // returns bonuses from rings of slaying, etc.
-int slaying_bonus(char which_affected, bool ranged)
+int slaying_bonus(weapon_property_type which_affected, bool ranged)
 {
     int ret = 0;
 
@@ -4501,13 +4343,16 @@ int get_real_mp(bool include_items)
         enp += player_magical_power();
 
     // Analogous to ROBUST/FRAIL
-    enp *= 10 + player_mutation_level(MUT_HIGH_MAGIC)
-              + you.attribute[ATTR_DIVINE_VIGOUR]
-              - player_mutation_level(MUT_LOW_MAGIC);
-    enp /= 10;
+    enp *= 100 + (player_mutation_level(MUT_HIGH_MAGIC) * 10)
+               + (you.attribute[ATTR_DIVINE_VIGOUR] * 5)
+               - (player_mutation_level(MUT_LOW_MAGIC) * 10);
+    enp /= 100;
 
     if (enp > 50)
         enp = 50 + ((enp - 50) / 2);
+
+    if (include_items && player_equip_ego_type(EQ_WEAPON, SPWPN_ANTIMAGIC))
+        enp /= 3;
 
     enp = std::max(enp, 0);
 
@@ -4519,99 +4364,84 @@ int get_contamination_level()
     const int glow = you.magic_contamination;
 
     if (glow > 60)
-        return (glow / 20 + 2);
+        return (glow / 20 + 3);
     if (glow > 40)
-        return (4);
+        return (5);
     if (glow > 25)
-        return (3);
+        return (4);
     if (glow > 15)
-        return (2);
+        return (3);
     if (glow > 5)
+        return (2);
+    if (glow > 0)
         return (1);
 
     return (0);
 }
 
+std::string describe_contamination(int cont)
+{
+    if (cont > 5)
+        return ("You are engulfed in a nimbus of crackling magics!");
+    else if (cont == 5)
+        return ("Your entire body has taken on an eerie glow!");
+    else if (cont > 1)
+    {
+        return (make_stringf("You are %s with residual magics%s",
+                   (cont == 4) ? "practically glowing" :
+                   (cont == 3) ? "heavily infused" :
+                   (cont == 2) ? "contaminated"
+                                    : "lightly contaminated",
+                   (cont == 4) ? "!" : "."));
+    }
+    else if (cont == 1)
+        return ("You are very lightly contaminated with residual magic.");
+    else
+        return ("");
+}
+
 // controlled is true if the player actively did something to cause
 // contamination (such as drink a known potion of resistance),
 // status_only is true only for the status output
-void contaminate_player(int change, bool controlled, bool status_only)
+void contaminate_player(int change, bool controlled, bool msg)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (status_only && !you.magic_contamination)
-        return;
-
-    // get current contamination level
     int old_amount = you.magic_contamination;
     int old_level  = get_contamination_level();
     int new_level  = 0;
-#ifdef DEBUG_DIAGNOSTICS
-    if (change > 0 || (change < 0 && you.magic_contamination))
-    {
-        mprf(MSGCH_DIAGNOSTICS, "change: %d  radiation: %d",
-             change, change + you.magic_contamination );
-    }
-#endif
 
-    // make the change
-    if (change + you.magic_contamination < 0)
-        you.magic_contamination = 0;
-    else
-    {
-        if (change + you.magic_contamination > 250)
-            you.magic_contamination = 250;
-        else
-            you.magic_contamination += change;
-    }
+    you.magic_contamination =
+        std::max(0, std::min(250, you.magic_contamination + change));
 
-    // figure out new level
     new_level = get_contamination_level();
 
-    if (status_only || (new_level >= 1 && old_level == 0)
-        || (old_amount == 0 && you.magic_contamination > 0))
+    if (you.magic_contamination != old_amount)
+        dprf("change: %d  radiation: %d", change, you.magic_contamination);
+
+    if (msg && new_level >= 1 && old_level <= 1 && new_level != old_level)
+        mpr(describe_contamination(new_level));
+    else if (msg && new_level != old_level)
     {
-        if (new_level > 3)
-        {
-            mpr( (new_level == 4) ?
-                 "Your entire body has taken on an eerie glow!" :
-                 "You are engulfed in a nimbus of crackling magics!");
-        }
-        else if (new_level == 0 && old_amount == 0
-                 && you.magic_contamination > 0)
-        {
-            mpr("You are very lightly contaminated with residual magic.");
-        }
+        if (old_level == 1 && new_level == 0)
+            mpr("Your magical contamination has completely faded away.");
         else
         {
-            mprf("You are %s with residual magics%s",
-                 (new_level == 3) ? "practically glowing" :
-                 (new_level == 2) ? "heavily infused" :
-                 (new_level == 1) ? "contaminated"
-                                  : "lightly contaminated",
-                 (new_level == 3) ? "!" : ".");
+            mprf((change > 0) ? MSGCH_WARN : MSGCH_RECOVERY,
+                 "You feel %s contaminated with magical energies.",
+                 (change > 0) ? "more" : "less");
         }
-    }
-    else if (new_level != old_level)
-    {
-        mprf((change > 0) ? MSGCH_WARN : MSGCH_RECOVERY,
-             "You feel %s contaminated with magical energies.",
-             (change > 0) ? "more" : "less" );
 
         if (change > 0)
             xom_is_stimulated(new_level * 32);
 
-        if (new_level == 0 && you.duration[DUR_INVIS] && !you.backlit())
+        if (old_level > 1 && new_level <= 1
+            && you.duration[DUR_INVIS] && !you.backlit())
         {
             mpr("You fade completely from view now that you are no longer "
                 "glowing from magical contamination.");
         }
     }
-    else if (old_level == 0 && old_amount > 0 && you.magic_contamination == 0)
-        mpr("Your magical contamination has completely faded away.");
-
-    if (status_only)
-        return;
 
     if (you.magic_contamination > 0)
         learned_something_new(HINT_GLOWING);
@@ -4620,7 +4450,7 @@ void contaminate_player(int change, bool controlled, bool status_only)
     if (you.religion == GOD_ZIN)
     {
         // Whenever the glow status is first reached, give a warning message.
-        if (old_level < 1 && new_level >= 1)
+        if (old_level < 1 && new_level == 1)
             did_god_conduct(DID_CAUSE_GLOWING, 0, false);
         // If the player actively did something to increase glowing,
         // Zin is displeased.
@@ -4647,6 +4477,7 @@ bool confuse_player(int amount, bool resistable)
             item_def* const amu = you.slot_item(EQ_AMULET, false);
             if (!item_ident(*amu, ISFLAG_KNOW_TYPE))
             {
+                set_ident_type(amu->base_type, amu->sub_type, ID_KNOWN_TYPE);
                 set_ident_flags(*amu, ISFLAG_KNOW_TYPE);
                 mprf("You are wearing: %s",
                      amu->name(DESC_INVENTORY_EQUIP).c_str());
@@ -4958,7 +4789,7 @@ void dec_exhaust_player(int delay)
     }
 }
 
-bool haste_player(int turns)
+bool haste_player(int turns, bool rageext)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -4980,7 +4811,7 @@ bool haste_player(int turns)
         mpr("You feel yourself speed up.");
     else if (you.duration[DUR_HASTE] > threshold * BASELINE_DELAY)
         mpr("You already have as much speed as you can handle.");
-    else
+    else if (!rageext)
     {
         mpr("You feel as though your hastened speed will last longer.");
         contaminate_player(1, true); // always deliberate
@@ -5089,13 +4920,11 @@ void levitate_player(int pow)
 int count_worn_ego(int which_ego)
 {
     int result = 0;
-    for (int slot = EQ_MIN_ARMOUR; slot <= EQ_MAX_ARMOUR; ++slot)
+    for (int eq = EQ_MIN_ARMOUR; eq <= EQ_MAX_ARMOUR; ++eq)
     {
-        if (you.equip[slot] != -1
-            && get_armour_ego_type(you.inv[you.equip[slot]]) == which_ego)
-        {
+        const item_def* item = you.slot_item(static_cast<equipment_type>(eq));
+        if (item && get_armour_ego_type(*item) == which_ego)
             result++;
-        }
     }
 
     return (result);
@@ -5172,6 +5001,7 @@ void player::init()
     stat_loss.init(0);
     base_stats.init(0);
     stat_zero.init(0);
+    stat_zero_cause.init("");
     last_chosen        = STAT_RANDOM;
 
     hunger          = 6000;
@@ -5301,6 +5131,7 @@ void player::init()
     props.clear();
 
     beholders.clear();
+    fearmongers.clear();
     dactions.clear();
 
 
@@ -5424,6 +5255,13 @@ player::~player()
 {
     delete kills;
     delete m_quiver;
+    if (CrawlIsCrashing && save)
+    {
+        save->abort();
+        delete save;
+        save = 0;
+    }
+    ASSERT(!save); // the save file should be closed or deleted
 }
 
 bool player::is_levitating() const
@@ -5588,13 +5426,7 @@ void player::shield_block_succeeded(actor *foe)
     actor::shield_block_succeeded(foe);
 
     shield_blocks++;
-    if (coinflip())
-        exercise(SK_SHIELDS, 1);
-}
-
-void player::exercise(skill_type sk, int qty)
-{
-    ::exercise(sk, qty);
+    practise(EX_SHIELD_BLOCK);
 }
 
 int player::skill(skill_type sk, bool bump) const
@@ -5901,6 +5733,7 @@ int player::res_asphyx() const
     case TRAN_LICH:
     case TRAN_STATUE:
         return 1;
+    default:
         break;
     }
 
@@ -5958,16 +5791,13 @@ int player::res_magic() const
 
     switch (species)
     {
-    case SP_MOUNTAIN_DWARF:
-    case SP_HILL_ORC:
-        rm = experience_level * 2;
-        break;
     default:
         rm = experience_level * 3;
         break;
     case SP_HIGH_ELF:
     case SP_SLUDGE_ELF:
     case SP_DEEP_ELF:
+    case SP_MOUNTAIN_DWARF:
     case SP_VAMPIRE:
     case SP_DEMIGOD:
     case SP_OGRE:
@@ -6056,7 +5886,8 @@ bool player::permanent_levitation() const
 bool player::permanent_flight() const
 {
     return (airborne() && wearing_amulet(AMU_CONTROLLED_FLIGHT)
-            && species == SP_KENKU && experience_level >= 15);
+            && species == SP_KENKU && experience_level >= 15
+            && duration[DUR_LEVITATION] > 1);
 }
 
 bool player::light_flight() const
@@ -6119,7 +5950,7 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
     // We ignore cleanup_dead here.
     if (agent->atype() == ACT_MONSTER)
     {
-        const monsters *mon = agent->as_monster();
+        const monster* mon = agent->as_monster();
         ouch(amount, mon->mindex(),
              KILLED_BY_MONSTER, "", mon->visible_to(&you));
     }
@@ -6209,6 +6040,10 @@ void player::paralyse(actor *who, int str)
     if (stasis_blocks_effect(true, true, "%s gives you a mild electric shock."))
         return;
 
+    if (!(who && who->as_monster() && who->as_monster()->type == MONS_RED_WASP) &&
+        duration[DUR_PARALYSIS])
+        return;
+
     int &paralysis(duration[DUR_PARALYSIS]);
 
     mprf("You %s the ability to move!",
@@ -6279,6 +6114,10 @@ int player::has_talons(bool allow_tran) const
         if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
             return (0);
     }
+
+    // XXX: Do merfolk in water belong under allow_tran?
+    if (you.species == SP_MERFOLK && you.swimming())
+        return (0);
 
     return (player_mutation_level(MUT_TALONS));
 }
@@ -6461,6 +6300,11 @@ bool player::can_see_invisible() const
     return (can_see_invisible(true));
 }
 
+bool player::are_charming() const
+{
+    return player_equip(EQ_RINGS, RING_CHARM, true);
+}
+
 bool player::invisible() const
 {
     return (duration[DUR_INVIS] && !backlit());
@@ -6479,7 +6323,7 @@ bool player::visible_to(const actor *looker) const
     if (this == looker)
         return (can_see_invisible() || !invisible());
 
-    const monsters* mon = looker->as_monster();
+    const monster* mon = looker->as_monster();
     return (!invisible()
             || in_water()
             || mon->can_see_invisible()
@@ -6489,7 +6333,7 @@ bool player::visible_to(const actor *looker) const
 
 bool player::backlit(bool check_haloed, bool self_halo) const
 {
-    if (get_contamination_level() > 0 || duration[DUR_CORONA]
+    if (get_contamination_level() > 1 || duration[DUR_CORONA]
         || duration[DUR_LIQUID_FLAMES] || duration[DUR_QUAD_DAMAGE])
     {
         return (true);
@@ -6640,7 +6484,7 @@ void player::put_to_sleep(actor*, int power)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (duration[DUR_SLEEP])
+    if (!can_sleep())
         return;
 
     mpr("You fall asleep!");

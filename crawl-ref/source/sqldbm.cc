@@ -85,11 +85,16 @@ int SQL_DBM::open(const std::string &s)
         if (dbfile.find(".db") != dbfile.length() - 3)
             dbfile += ".db";
 
+#ifdef ANCIENT_SQLITE
+        if (ec( sqlite3_open(
+                    dbfile.c_str(), &db
+#else
         if (ec( sqlite3_open_v2(
                     dbfile.c_str(), &db,
                     readonly? SQLITE_OPEN_READONLY :
                     (SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE),
                     NULL
+#endif
                     ) ) != SQLITE_OK)
         {
             const std::string saveerr = error;
@@ -294,7 +299,11 @@ int SQL_DBM::prepare_query(sqlite3_stmt **q, const char *sql)
         finalise_query(q);
 
     const char *query_tail;
+#ifdef ANCIENT_SQLITE
+    return ec(sqlite3_prepare(db, sql, -1, q, &query_tail));
+#else
     return ec(sqlite3_prepare_v2(db, sql, -1, q, &query_tail));
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////

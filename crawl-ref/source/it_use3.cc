@@ -23,6 +23,7 @@
 #include "directn.h"
 #include "effects.h"
 #include "env.h"
+#include "exercise.h"
 #include "fight.h"
 #include "food.h"
 #include "invent.h"
@@ -43,12 +44,13 @@
 #include "godconduct.h"
 #include "skills.h"
 #include "skills2.h"
-#include "spells1.h"
-#include "spells2.h"
 #include "spl-book.h"
 #include "spl-cast.h"
+#include "spl-clouds.h"
+#include "spl-summoning.h"
 #include "state.h"
 #include "stuff.h"
+#include "terrain.h"
 #include "areas.h"
 #include "view.h"
 #include "shout.h"
@@ -222,7 +224,10 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     const coord_def delta = beam.target - you.pos();
     const int x_distance  = abs(delta.x);
     const int y_distance  = abs(delta.y);
-    monsters* mons = monster_at(beam.target);
+    monster* mons = monster_at(beam.target);
+    // don't allow targeting of submerged trapdoor spiders
+    if (mons && mons->submerged() && feat_is_floor(grd(beam.target)))
+        mons = NULL;
 
     const int x_middle = std::max(beam.target.x, you.pos().x)
                             - (x_distance / 2);
@@ -286,7 +291,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         if (success)
         {
             // Monster might have died or gone away.
-            if (monsters* m = monster_at(beam.target))
+            if (monster* m = monster_at(beam.target))
                 if (mons_is_mimic(m->type))
                     mimic_alert(m);
         }
@@ -302,7 +307,11 @@ static bool _evoke_horn_of_geryon(item_def &item)
     // Note: This assumes that the Vestibule has not been changed.
     bool rc = false;
 
-    if (player_in_branch( BRANCH_VESTIBULE_OF_HELL ))
+    if (silenced(you.pos())) {
+        mpr("You can't produce a sound!");
+        return false;
+    }
+    else if (player_in_branch( BRANCH_VESTIBULE_OF_HELL ))
     {
         mpr("You produce a weird and mournful sound.");
 
@@ -361,18 +370,18 @@ static bool _efreet_flask(int slot)
 
     mpr("You open the flask...");
 
-    const int monster =
+    const int mons =
         create_monster(
             mgen_data(MONS_EFREET,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                       &you, 0, 0, you.pos(),
                       MHITYOU, MG_FORCE_BEH));
 
-    if (monster != -1)
+    if (mons != -1)
     {
         mpr("...and a huge efreet comes out.");
 
-        if (player_angers_monster(&menv[monster]))
+        if (player_angers_monster(&menv[mons]))
             friendly = false;
 
         if (silenced(you.pos()))
@@ -437,11 +446,11 @@ static bool _ball_of_seeing(void)
 
     if (use < 2)
     {
-        lose_stat( STAT_INT, 1, false, "using a ball of seeing");
+        lose_stat(STAT_INT, 1, false, "using a ball of seeing");
     }
     else if (use < 5 && enough_mp(1, true))
     {
-        mpr("You feel power drain from you!");
+        mpr("You feel your power drain away!");
         set_mp(0, false);
         // if you're out of mana, the switch chain falls through to confusion
     }
@@ -449,13 +458,14 @@ static bool _ball_of_seeing(void)
     {
         if (you.level_type == LEVEL_LABYRINTH)
             mpr("You see a maze of twisty little passages, all alike.");
-        confuse_player( 10 + random2(10), false );
+        confuse_player(10 + random2(10));
     }
     else if (use < 15 || coinflip())
     {
         mpr("You see nothing.");
     }
-    else if (magic_mapping( 15, 50 + random2( you.skills[SK_EVOCATIONS]), true))
+    else if (magic_mapping(6 + you.skills[SK_EVOCATIONS],
+                           50 + random2(you.skills[SK_EVOCATIONS]), true))
     {
         mpr("You see a map of your surroundings!");
         ret = true;
@@ -542,7 +552,7 @@ void tome_of_power(int slot)
     }
 
     mpr("You find yourself reciting the magical words!");
-    exercise( SK_EVOCATIONS, 1 );
+    practise(EX_WILL_READ_TOME);
 
     if (x_chance_in_y(7, 50))
     {
@@ -631,7 +641,7 @@ void skill_manual(int slot)
 
     mprf("You read about %s.", skill_name(skill));
 
-    exercise(skill, 500);
+    practise(EX_READ_MANUAL, skill);
 
     if (--manual.plus2 <= 0)
     {
@@ -713,16 +723,21 @@ static bool _ball_of_energy(void)
 
     if (use < 2)
     {
-        lose_stat(STAT_INT, 1, false, "using a ball of energy");
+        const int loss = roll_dice(1, 2 * you.max_intel() / 3);
+        lose_stat(STAT_INT, loss, false, "using a ball of energy");
     }
     else if (use < 4 && enough_mp(1, true))
     {
-        mpr( "You feel your power drain away!" );
-        set_mp( 0, false );
+        mpr("You feel your power drain away!");
+        set_mp(0, false);
     }
     else if (use < 6)
     {
-        confuse_player( 10 + random2(10), false );
+        confuse_player(10 + random2(10));
+    }
+    else if (use < 8)
+    {
+        you.paralyse(NULL, 2 + random2(2));
     }
     else
     {
@@ -731,13 +746,13 @@ static bool _ball_of_energy(void)
         if (random2avg(77 - you.skills[SK_EVOCATIONS] * 2, 4) > proportional
             || one_chance_in(25))
         {
-            mpr( "You feel your power drain away!" );
-            set_mp( 0, false );
+            mpr("You feel your power drain away!");
+            set_mp(0, false);
         }
         else
         {
-            mpr( "You are suffused with power!" );
-            inc_mp( 6 + roll_dice( 2, you.skills[SK_EVOCATIONS] ), false );
+            mpr("You are suffused with power!");
+            inc_mp(6 + roll_dice(2, you.skills[SK_EVOCATIONS]), false);
 
             ret = true;
         }
@@ -847,8 +862,14 @@ bool evoke_item(int slot)
         }
         else if (item.sub_type == STAFF_CHANNELING)
         {
-            if (you.magic_points < you.max_magic_points
-                && x_chance_in_y(you.skills[SK_EVOCATIONS] + 11, 40))
+            if (item_type_known(item)
+                && !you.is_undead && you.hunger_state == HS_STARVING)
+            {
+                canned_msg(MSG_TOO_HUNGRY);
+                return (false);
+            }
+            else if (you.magic_points < you.max_magic_points
+                     && x_chance_in_y(you.skills[SK_EVOCATIONS] + 11, 40))
             {
                 mpr("You channel some magical energy.");
                 inc_mp( 1 + random2(3), false );
@@ -899,7 +920,7 @@ bool evoke_item(int slot)
                 canned_msg(MSG_NOTHING_HAPPENS);
             else
             {
-                cast_summon_elemental(100, GOD_NO_GOD, MONS_AIR_ELEMENTAL, 4);
+                cast_summon_elemental(100, GOD_NO_GOD, MONS_AIR_ELEMENTAL, 4, 3);
                 pract = (one_chance_in(5) ? 1 : 0);
                 ident = true;
             }
@@ -910,7 +931,7 @@ bool evoke_item(int slot)
                 canned_msg(MSG_NOTHING_HAPPENS);
             else
             {
-                cast_summon_elemental(100, GOD_NO_GOD, MONS_FIRE_ELEMENTAL, 4);
+                cast_summon_elemental(100, GOD_NO_GOD, MONS_FIRE_ELEMENTAL, 4, 3);
                 pract = (one_chance_in(5) ? 1 : 0);
                 ident = true;
             }
@@ -974,7 +995,7 @@ bool evoke_item(int slot)
     if (!did_work)
         canned_msg(MSG_NOTHING_HAPPENS);
     else if (pract > 0)
-        exercise( SK_EVOCATIONS, pract );
+        practise(EX_DID_EVOKE_ITEM, pract);
 
     if (ident && !item_type_known(item))
     {

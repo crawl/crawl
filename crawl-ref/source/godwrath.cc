@@ -34,11 +34,12 @@
 #include "ouch.h"
 #include "player-stats.h"
 #include "religion.h"
-#include "spells1.h"
-#include "spells2.h"
-#include "spells3.h"
-#include "spells4.h"
-#include "spl-mis.h"
+#include "spl-clouds.h"
+#include "spl-goditem.h"
+#include "spl-miscast.h"
+#include "spl-selfench.h"
+#include "spl-summoning.h"
+#include "spl-transloc.h"
 #include "stash.h"
 #include "state.h"
 #include "transform.h"
@@ -330,29 +331,76 @@ static bool _cheibriados_retribution()
 {
     // time god/slowness theme
     const god_type god = GOD_CHEIBRIADOS;
-    simple_god_message(" bends time around you.", god);
-    switch (random2(5))
+
+    // Chei retribution might only make sense in combat.
+    // We can crib some Xom code for this. {bh}
+    int tension = get_tension(GOD_CHEIBRIADOS);
+    int wrath_value = random2(tension);
+
+    bool glammer = false;
+
+    // Determine the level of wrath
+    int wrath_type = 0;
+    if (wrath_value < 2)       { wrath_type = 0; }
+    else if (wrath_value < 4)  { wrath_type = 1; }
+    else if (wrath_value < 8)  { wrath_type = 2; }
+    else if (wrath_value < 16) { wrath_type = 3; }
+    else                       { wrath_type = 4; }
+
+    // Strip away extra speed
+    if (one_chance_in(5 - wrath_type))
+        dec_haste_player(10000);
+
+    // Chance to be overwhelmed by the divine experience
+    if (one_chance_in(5 - wrath_type))
+        glammer = true;
+
+    switch(wrath_type)
     {
-    case 0:
-    case 1:
-    case 2:
+    // Very high tension wrath
+    case 4:
+        simple_god_message(" adjusts the clock.", god);
+        MiscastEffect(&you, -god, SPTYP_RANDOM, 8, 90,
+                      "the meddling of Cheibriados");
+        if (one_chance_in(wrath_type - 1))
+            break;
+    // High tension wrath
     case 3:
         mpr("You lose track of time.");
-        you.put_to_sleep(NULL, 50);
-        break;
-
-    case 4:
+        you.put_to_sleep(NULL, 30 + random2(20));
+        dec_penance(god, 1);
+        if(one_chance_in(wrath_type - 2)){ break; }
+    // Medium tension
+    case 2:
         if (you.duration[DUR_SLOW] < 180 * BASELINE_DELAY)
         {
-            dec_penance(god, 1);
             mpr("You feel the world leave you behind!", MSGCH_WARN);
             you.set_duration(DUR_EXHAUSTED, 200);
             slow_player(100);
         }
+
+        if (one_chance_in(wrath_type - 2))
+            break;
+    // Low tension
+    case 1:
+        mpr("Time shudders.");
+        cheibriados_time_step(2+random2(4));
+        if (one_chance_in(3))
+            break;
+    // No tension wrath.
+    case 0:
+        if (curse_an_item(true, false))
+            simple_god_message(" makes up for lost time.", god);
+        else
+            glammer = true;
+
+    default:
         break;
     }
 
-    return (true);
+    if (wrath_type > 2)
+        dec_penance(god, 1 + random2(wrath_type));
+    return (glammer);
 }
 
 static bool _makhleb_retribution()
@@ -891,7 +939,7 @@ static bool _jiyva_retribution()
     {
         int tries = 0;
         bool found_one = false;
-        monsters *mon;
+        monster* mon;
 
         while (tries < 10)
         {
@@ -1100,7 +1148,7 @@ static bool _fedhas_retribution()
     return (true);
 }
 
-bool divine_retribution(god_type god, bool no_bonus)
+bool divine_retribution(god_type god, bool no_bonus, bool force)
 {
     ASSERT(god != GOD_NO_GOD);
 
@@ -1110,8 +1158,8 @@ bool divine_retribution(god_type god, bool no_bonus)
     // Good gods don't use divine retribution on their followers, and
     // gods don't use divine retribution on followers of gods they don't
     // hate.
-    if ((god == you.religion && is_good_god(god))
-        || (god != you.religion && !god_hates_your_god(god)))
+    if (!force && ((god == you.religion && is_good_god(god))
+        || (god != you.religion && !god_hates_your_god(god))))
     {
         return (false);
     }
@@ -1119,7 +1167,6 @@ bool divine_retribution(god_type god, bool no_bonus)
     god_acting gdact(god, true);
 
     bool do_more    = true;
-    bool did_retrib = true;
     switch (god)
     {
     // One in ten chance that Xom might do something good...
@@ -1138,7 +1185,7 @@ bool divine_retribution(god_type god, bool no_bonus)
     case GOD_SIF_MUNA:      do_more = _sif_muna_retribution(); break;
     case GOD_ELYVILON:      do_more = _elyvilon_retribution(); break;
     case GOD_JIYVA:         do_more = _jiyva_retribution(); break;
-    case GOD_FEDHAS:         do_more = _fedhas_retribution(); break;
+    case GOD_FEDHAS:        do_more = _fedhas_retribution(); break;
     case GOD_CHEIBRIADOS:   do_more = _cheibriados_retribution(); break;
 
     default:
@@ -1147,12 +1194,11 @@ bool divine_retribution(god_type god, bool no_bonus)
              god_name(god).c_str());
 #endif
         do_more    = false;
-        did_retrib = false;
-        break;
+        return (false);
     }
 
     if (no_bonus)
-        return (did_retrib);
+        return (true);
 
     // Sometimes divine experiences are overwhelming...
     if (do_more && one_chance_in(5) && you.experience_level < random2(37))
@@ -1178,7 +1224,7 @@ bool divine_retribution(god_type god, bool no_bonus)
     // point...the punishment might have reduced penance further.
     dec_penance(god, 1 + random2(3));
 
-    return (did_retrib);
+    return (true);
 }
 
 bool do_god_revenge(conduct_type thing_done)

@@ -23,7 +23,6 @@
 #include "initfile.h"
 #include "itemname.h"
 #include "items.h"
-#include "jobs.h"
 #include "lev-pand.h"
 #include "macro.h"
 #include "maps.h"
@@ -34,7 +33,6 @@
 #include "mon-util.h"
 #include "mutation.h"
 #include "newgame.h"
-#include "ng-init.h"
 #include "ng-input.h"
 #include "ng-setup.h"
 #include "notes.h"
@@ -46,12 +44,12 @@
 #include "stairs.h"
 #include "startup.h"
 #include "state.h"
+#include "status.h"
 #include "stuff.h"
 #include "terrain.h"
 #ifdef USE_TILE
  #include "tileview.h"
 #endif
-#include "transform.h"
 #include "view.h"
 #include "viewchar.h"
 
@@ -77,6 +75,7 @@ static void _initialize()
     init_spell_descs();        // This needs to be way up top. {dlb}
     init_zap_index();
     init_mut_index();
+    init_duration_index();
     init_mon_name_cache();
     init_mons_spells();
 
@@ -265,7 +264,7 @@ static void _post_init(bool newc)
 
     tiles.resize();
 #endif
-    you.symbol = transform_mons();
+    update_player_symbol();
 
     draw_border();
     new_level();

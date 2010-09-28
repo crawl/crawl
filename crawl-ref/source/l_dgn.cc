@@ -753,7 +753,7 @@ static int dgn_lfloorcol(lua_State *ls)
 
             return (0);
         }
-        map->floor_colour = (unsigned char) colour;
+        map->floor_colour = colour;
     }
     PLUARET(string, colour_to_str(map->floor_colour).c_str());
 }
@@ -787,7 +787,7 @@ static int dgn_lrockcol(lua_State *ls)
             return (0);
         }
 
-        map->rock_colour = (unsigned char) colour;
+        map->rock_colour = colour;
     }
     PLUARET(string, colour_to_str(map->rock_colour).c_str());
 }
@@ -830,7 +830,7 @@ static int dgn_change_floor_colour(lua_State *ls)
     const int colour = _lua_colour(ls, 1, BLACK);
     const bool update_now = _lua_boolean(ls, 2, false);
 
-    env.floor_colour = (unsigned char) colour;
+    env.floor_colour = colour;
 
     if (crawl_state.need_save && update_now)
         viewwindow();
@@ -842,7 +842,7 @@ static int dgn_change_rock_colour(lua_State *ls)
     const int colour = _lua_colour(ls, 1, BLACK);
     const bool update_now = _lua_boolean(ls, 2, false);
 
-    env.rock_colour = (unsigned char) colour;
+    env.rock_colour = colour;
 
     if (crawl_state.need_save && update_now)
         viewwindow();
@@ -1668,6 +1668,22 @@ LUAFN(_dgn_maps_used_here)
     return clua_gentable(ls, env.level_vaults, dgn_push_vault_placement);
 }
 
+LUAFN(_dgn_vault_at)
+{
+    GETCOORD(c, 1, 2, map_bounds);
+    vault_placement *place = dgn_vault_at(c);
+    if (place)
+    {
+        dgn_push_vault_placement(ls, place);
+    }
+    else
+    {
+        lua_pushnil(ls);
+    }
+
+    return 1;
+}
+
 LUAFN(_dgn_find_marker_position_by_prop)
 {
     const char *prop = luaL_checkstring(ls, 1);
@@ -1851,7 +1867,7 @@ LUAFN(dgn_fill_grd_area)
 
 LUAFN(dgn_apply_tide)
 {
-    shoals_apply_tides(0, true);
+    shoals_apply_tides(0, true, true);
     return (0);
 }
 
@@ -1947,6 +1963,7 @@ const struct luaL_reg dgn_dlib[] =
 { "map_parameters", _dgn_map_parameters },
 
 { "maps_used_here", _dgn_maps_used_here },
+{ "vault_at", _dgn_vault_at },
 
 { "find_marker_position_by_prop", _dgn_find_marker_position_by_prop },
 { "find_marker_positions_by_prop", _dgn_find_marker_positions_by_prop },
@@ -2031,7 +2048,7 @@ static void _dgn_register_metatables(lua_State *ls)
     clua_register_metatable(ls,
                             VAULT_PLACEMENT_METATABLE,
                             dgn_vaultplacement_ops,
-                            lua_object_gc<vault_placement*>);
+                            lua_object_gc<vault_placement>);
 }
 
 void dluaopen_dgn(lua_State *ls)

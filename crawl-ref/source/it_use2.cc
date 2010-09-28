@@ -18,26 +18,19 @@
 #include "effects.h"
 #include "env.h"
 #include "food.h"
-#include "godpassive.h"
+#include "godconduct.h"
+#include "hints.h"
 #include "item_use.h"
-#include "itemname.h"
 #include "itemprop.h"
-#include "los.h"
 #include "misc.h"
 #include "mutation.h"
 #include "player.h"
 #include "player-equip.h"
 #include "player-stats.h"
-#include "religion.h"
-#include "godconduct.h"
-#include "skills2.h"
-#include "spells2.h"
-#include "spl-mis.h"
-#include "spl-util.h"
+#include "spl-miscast.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "transform.h"
-#include "hints.h"
 #include "xom.h"
 
 // From an actual potion, pow == 40 -- bwr
@@ -246,9 +239,9 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
                  (pot_eff == POT_POISON) ? "very" : "extremely" );
 
             if (pot_eff == POT_POISON)
-                poison_player(1 + random2avg(5, 2), "a potion of poison");
+                poison_player(1 + random2avg(5, 2), "", "a potion of poison");
             else
-                poison_player(3 + random2avg(13, 2), "a potion of strong poison");
+                poison_player(3 + random2avg(13, 2), "", "a potion of strong poison");
             xom_is_stimulated(128 / xom_factor);
         }
         break;
@@ -283,7 +276,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
             return (true);
         }
 
-        if (get_contamination_level() > 0)
+        if (get_contamination_level() > 1)
         {
             mprf(MSGCH_DURATION,
                  "You become %stransparent, but the glow from your "
@@ -306,6 +299,9 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
             you.set_duration(DUR_INVIS, 15 + random2(pow), 100);
         else
             you.increase_duration(DUR_INVIS, random2(pow), 100);
+
+        if (drank_it)
+            you.attribute[ATTR_INVIS_UNCANCELLABLE] = 1;
 
         break;
 
@@ -343,10 +339,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         if (you.species == SP_VAMPIRE)
             mpr("Blech - this tastes like water.");
         else
-        {
             mpr("This tastes like water.");
-            lessen_hunger(20, true);
-        }
         break;
 
     case POT_EXPERIENCE:
@@ -452,7 +445,7 @@ bool unwield_item(bool showMsgs)
 
     const bool is_weapon = get_item_slot(item) == EQ_WEAPON;
 
-    if (is_weapon && !safe_to_remove_or_wear(item, true))
+    if (is_weapon && !safe_to_remove(item))
         return (false);
 
     unequip_item(EQ_WEAPON, showMsgs);

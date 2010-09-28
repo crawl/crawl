@@ -12,6 +12,7 @@
 #include "clua.h"
 #include "command.h"
 #include "coord.h"
+#include "coordit.h"
 #include "describe.h"
 #include "directn.h"
 #include "food.h"
@@ -82,6 +83,7 @@ std::string stash_annotate_item(const char *s,
                                 bool exclusive = false)
 {
     std::string text = userdef_annotate_item(s, item, exclusive);
+
     if (item->base_type == OBJ_BOOKS
             && item_type_known(*item)
             && item->sub_type != BOOK_MANUAL
@@ -96,6 +98,14 @@ std::string stash_annotate_item(const char *s,
         text += "\n";
         text += fs.tostring(2, -2);
     }
+
+    // Include singular form (royal jelly vs royal jellies).
+    if (item->quantity > 1)
+    {
+        text += "\n";
+        text += item->name(DESC_BASENAME);
+    }
+
     return text;
 }
 
@@ -189,8 +199,8 @@ Stash::Stash(int xp, int yp) : enabled(true), items()
         xp = you.pos().x;
         yp = you.pos().y;
     }
-    x = (unsigned char) xp;
-    y = (unsigned char) yp;
+    x = xp;
+    y = yp;
     abspos = GXM * (int) y + x;
 
     update();
@@ -220,7 +230,7 @@ void Stash::filter(const std::string &str)
 {
     std::string base = str;
 
-    unsigned char subc = 255;
+    uint8_t       subc = 255;
     std::string   subs = "";
     std::string::size_type cpos = base.find(":", 0);
     if (cpos != std::string::npos)
@@ -249,7 +259,7 @@ void Stash::filter(const std::string &str)
     }
 }
 
-void Stash::filter(object_class_type base, unsigned char sub)
+void Stash::filter(object_class_type base, uint8_t sub)
 {
     item_def item;
     item.base_type = base;
@@ -319,7 +329,7 @@ bool Stash::is_boring_feature(dungeon_feature_type feature)
 
 static bool _grid_has_mimic_item(const coord_def& pos)
 {
-    const monsters *mon = monster_at(pos);
+    const monster* mon = monster_at(pos);
     return (mon && mons_is_unknown_mimic(mon));
 }
 
@@ -816,8 +826,7 @@ void Stash::save(writer& outf) const
     marshallByte(outf, trap);
 
     // Note: Enabled save value is inverted logic, so that it defaults to true
-    marshallByte(outf,
-        (unsigned char) ((verified? 1 : 0) | (!enabled? 2 : 0)) );
+    marshallByte(outf, ((verified? 1 : 0) | (!enabled? 2 : 0)) );
 
     // And dump the items individually. We don't bother saving fields we're
     // not interested in (and don't anticipate being interested in).
@@ -833,12 +842,10 @@ void Stash::load(reader& inf)
     x = unmarshallByte(inf);
     y = unmarshallByte(inf);
 
-    feat =  static_cast<dungeon_feature_type>(
-                static_cast<unsigned char>( unmarshallByte(inf) ));
-    trap =  static_cast<trap_type>(
-                static_cast<unsigned char>( unmarshallByte(inf) ));
+    feat =  static_cast<dungeon_feature_type>(unmarshallUByte(inf));
+    trap =  static_cast<trap_type>(unmarshallUByte(inf));
 
-    unsigned char flags = unmarshallByte(inf);
+    uint8_t flags = unmarshallUByte(inf);
     verified = (flags & 1) != 0;
 
     // Note: Enabled save value is inverted so it defaults to true.
@@ -1586,26 +1593,22 @@ void StashTracker::update_visible_stashes(
 
     LevelStashes *lev = find_current_level();
     coord_def c;
-    for (c.y = crawl_view.glos1.y; c.y <= crawl_view.glos2.y; ++c.y)
-        for (c.x = crawl_view.glos1.x; c.x <= crawl_view.glos2.x; ++c.x)
+    for (radius_iterator ri(you.get_los()); ri; ++ri)
+    {
+        const dungeon_feature_type feat = grd(*ri);
+        if ((!lev || !lev->update_stash(*ri))
+            && mode == ST_AGGRESSIVE
+            && (_grid_has_perceived_item(*ri)
+                || !Stash::is_boring_feature(feat)))
         {
-            if (!in_bounds(c) || !you.see_cell(c))
-                continue;
-
-            const dungeon_feature_type grid = grd(c);
-            if ((!lev || !lev->update_stash(c))
-                && mode == ST_AGGRESSIVE
-                && (_grid_has_perceived_item(c)
-                    || !Stash::is_boring_feature(grid)))
-            {
-                if (!lev)
-                    lev = &get_current_level();
-                lev->add_stash(c.x, c.y);
-            }
-
-            if (grid == DNGN_ENTER_SHOP)
-                get_shop(c);
+            if (!lev)
+                lev = &get_current_level();
+            lev->add_stash(ri->x, ri->y);
         }
+
+        if (feat == DNGN_ENTER_SHOP)
+            get_shop(*ri);
+    }
 
     if (lev && !lev->stash_count())
         remove_level();

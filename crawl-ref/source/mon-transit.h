@@ -13,14 +13,14 @@
 
 struct follower
 {
-    monsters mons;
+    monster mons;
     FixedVector<item_def, NUM_MONSTER_SLOTS> items;
 
     follower() : mons(), items() { }
-    follower(const monsters &m);
+    follower(const monster& m);
     bool place(bool near_player = false);
     void load_mons_items();
-    void restore_mons_items(monsters &m);
+    void restore_mons_items(monster& m);
 };
 
 typedef std::list<follower> m_transit_list;
@@ -35,7 +35,7 @@ extern items_in_transit    transiting_items;
 void transit_lists_clear();
 
 m_transit_list *get_transit_list(const level_id &where);
-void add_monster_to_transit(const level_id &dest, const monsters &m);
+void add_monster_to_transit(const level_id &dest, const monster& m);
 void add_item_to_transit(const level_id &dest, const item_def &i);
 
 // Places (some of the) monsters eligible to be placed on this level.

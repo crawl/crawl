@@ -16,14 +16,14 @@
 std::string apostrophise(const std::string &name);
 std::string apostrophise_fixup(const std::string &sentence);
 
-class monsters;
+class monster;
 class reader;
 class writer;
 
 // Not intended for external use!
 struct kill_monster_desc
 {
-    kill_monster_desc(const monsters *);
+    kill_monster_desc(const monster* );
     kill_monster_desc() { }
 
     void save(writer&) const;
@@ -53,7 +53,7 @@ struct kill_monster_desc
 class kill_def
 {
 public:
-    kill_def(const monsters *mon);
+    kill_def(const monster* mon);
     kill_def() : kills(0), exp(0)
     {
         // This object just says to the world that it's uninitialised
@@ -62,7 +62,7 @@ public:
     void save(writer&) const;
     void load(reader&);
 
-    void add_kill(const monsters *mon, unsigned short place);
+    void add_kill(const monster* mon, unsigned short place);
     void add_place(unsigned short place, bool force = false);
 
     void merge(const kill_def &k, bool unique_monster);
@@ -84,7 +84,7 @@ private:
 class kill_ghost
 {
 public:
-    kill_ghost(const monsters *mon);
+    kill_ghost(const monster* mon);
     kill_ghost() { }
 
     void save(writer&) const;
@@ -135,7 +135,7 @@ struct kill_exp
 class Kills
 {
 public:
-    void record_kill(const monsters *mon);
+    void record_kill(const monster* mon);
     void merge(const Kills &k);
 
     bool empty() const;
@@ -143,7 +143,7 @@ public:
     void load(reader&);
 
     int get_kills(std::vector<kill_exp> &v) const;
-    int num_kills(const monsters *mon) const;
+    int num_kills(const monster* mon) const;
 private:
     typedef std::map<kill_monster_desc,
                      kill_def,
@@ -153,7 +153,7 @@ private:
     kill_map    kills;
     ghost_vec   ghosts;
 
-    void record_ghost_kill(const monsters *mon);
+    void record_ghost_kill(const monster* mon);
 };
 
 class KillMaster
@@ -163,16 +163,16 @@ public:
     KillMaster(const KillMaster& other);
     ~KillMaster();
 
-    void record_kill(const monsters *mon, int killer, bool ispet);
+    void record_kill(const monster* mon, int killer, bool ispet);
 
     bool empty() const;
     void save(writer&) const;
     void load(reader&);
 
     // Number of kills, by category.
-    int num_kills(const monsters *mon, kill_category cat) const;
+    int num_kills(const monster* mon, kill_category cat) const;
     // Number of kills, any category.
-    int num_kills(const monsters *mon) const;
+    int num_kills(const monster* mon) const;
 
     int total_kills() const;
 

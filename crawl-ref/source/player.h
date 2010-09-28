@@ -12,6 +12,7 @@
 #include "beam.h"
 #include "quiver.h"
 #include "itemprop-enum.h"
+#include "package.h"
 #include "place-info.h"
 
 #include "species.h"
@@ -51,22 +52,23 @@ public:
   int base_magic_points;      // temporary max MP loss? (currently unused)
   int base_magic_points2;     // base MPs from levels and potions of magic
 
-  FixedVector<char, NUM_STATS> stat_loss;
-  FixedVector<char, NUM_STATS> base_stats;
+  FixedVector<int8_t, NUM_STATS> stat_loss;
+  FixedVector<int8_t, NUM_STATS> base_stats;
   FixedVector<int, NUM_STATS> stat_zero;
+  FixedVector<std::string, NUM_STATS> stat_zero_cause;
   stat_type last_chosen;
 
   int hunger;
-  char hunger_state;
   int disease;
-  char max_level;
-  unsigned char hit_points_regeneration;
-  unsigned char magic_points_regeneration;
+  uint8_t hunger_state;
+  uint8_t max_level;
+  uint8_t hit_points_regeneration;
+  uint8_t magic_points_regeneration;
   unsigned int experience;
   int experience_level;
   int gold;
 
-  FixedVector<signed char, NUM_EQUIP> equip;
+  FixedVector<int8_t, NUM_EQUIP> equip;
   FixedVector<bool, NUM_EQUIP> melded;
   unsigned short unrand_reacts;
 
@@ -78,7 +80,7 @@ public:
   int burden;
   burden_state_type burden_state;
   FixedVector<spell_type, 25> spells;
-  char spell_no;
+  uint8_t spell_no;
   game_direction_type char_direction;
   bool opened_zot;
   bool royal_jelly_dead;
@@ -93,7 +95,7 @@ public:
   int berserk_penalty;                // penalty for moving while berserk
 
   FixedVector<int, NUM_ATTRIBUTES> attribute;
-  FixedVector<unsigned char, NUM_AMMO> quiver; // default items for quiver
+  FixedVector<uint8_t, NUM_AMMO> quiver; // default items for quiver
   FixedVector<int, NUM_OBJECT_CLASSES> sacrifice_value;
 
   undead_state_type is_undead;
@@ -106,10 +108,10 @@ public:
   bool xray_vision;
 #endif
 
-  FixedVector<unsigned char, 50>  skills;
+  FixedVector<uint8_t, 50>  skills;
   FixedVector<bool, 50>  practise_skill;
   FixedVector<unsigned int, 50>   skill_points;
-  FixedVector<unsigned char, 50>  skill_order;
+  FixedVector<uint8_t, 50>  skill_order;
 
   skill_type sage_bonus_skill;  // If Sage is in effect, which skill it affects.
   int sage_bonus_degree;        // How much bonus XP to give in that skill.
@@ -118,7 +120,7 @@ public:
   int  total_skill_points;
   int  exp_available;
 
-  FixedArray<unsigned char, 6, 50> item_description;
+  FixedArray<uint8_t, 6, 50> item_description;
   FixedVector<unique_item_status_type, MAX_UNRANDARTS> unique_items;
   FixedVector<bool, NUM_MONSTERS> unique_creatures;
 
@@ -160,19 +162,19 @@ public:
 
   branch_type where_are_you;
 
-  FixedVector<unsigned char, 30> branch_stairs;
+  FixedVector<uint8_t, 30> branch_stairs;
 
   god_type religion;
   std::string second_god_name; // Random second name of Jiyva
-  unsigned char piety;
-  unsigned char piety_hysteresis;       // amount of stored-up docking
-  unsigned char gift_timeout;
-  FixedVector<unsigned char, MAX_NUM_GODS>  penance;
-  FixedVector<unsigned char, MAX_NUM_GODS>  worshipped;
-  FixedVector<short,         MAX_NUM_GODS>  num_gifts;
+  uint8_t piety;
+  uint8_t piety_hysteresis;       // amount of stored-up docking
+  uint8_t gift_timeout;
+  FixedVector<uint8_t, MAX_NUM_GODS>  penance;
+  FixedVector<uint8_t, MAX_NUM_GODS>  worshipped;
+  FixedVector<short,   MAX_NUM_GODS>  num_gifts;
 
-  FixedVector<unsigned char, NUM_MUTATIONS> mutation;
-  FixedVector<unsigned char, NUM_MUTATIONS> innate_mutations;
+  FixedVector<uint8_t, NUM_MUTATIONS> mutation;
+  FixedVector<uint8_t, NUM_MUTATIONS> innate_mutations;
 
   struct demon_trait
   {
@@ -182,18 +184,18 @@ public:
 
   std::vector<demon_trait> demonic_traits;
 
-  unsigned char magic_contamination;
+  int magic_contamination;
 
   FixedVector<bool, NUM_FIXED_BOOKS> had_book;
   FixedVector<bool, NUM_SPELLS>      seen_spell;
   FixedVector<uint32_t, NUM_WEAPONS> seen_weapon;
   FixedVector<uint32_t, NUM_ARMOURS> seen_armour;
 
-  unsigned char normal_vision;        // how far the species gets to see
-  unsigned char current_vision;       // current sight radius (cells)
+  uint8_t normal_vision;        // how far the species gets to see
+  uint8_t current_vision;       // current sight radius (cells)
 
   branch_type   hell_branch;          // which branch the player goes to on hell exit
-  unsigned char hell_exit;            // which level player goes to on hell exit
+  uint8_t       hell_exit;            // which level player goes to on hell exit
 
   int           real_time;            // real time played (in seconds)
   int           num_turns;            // number of turns taken
@@ -221,6 +223,9 @@ public:
   // monsters mesmerising player; should be protected, but needs to be saved
   // and restored.
   std::vector<int> beholders;
+
+  // monsterss causing fear to the player; see above
+  std::vector<int> fearmongers;
 
   // Delayed level actions.  This array is never trimmed, as usually D:1 won't
   // be loaded again until the very end.
@@ -263,7 +268,7 @@ public:
   bool redraw_armour_class;
   bool redraw_evasion;
 
-  unsigned char flash_colour;
+  uint8_t flash_colour;
 
   int time_taken;
 
@@ -282,6 +287,10 @@ public:
   int         escaped_death_cause;
   std::string escaped_death_aux;
 
+  int turn_damage;   // cumulative damage per turn
+  int damage_source; // death source of last damage done to player
+  int source_damage; // cumulative damage for you.damage_source
+
   // When other levels are loaded (e.g. viewing), is the player on this level?
   bool on_current_level;
 
@@ -289,6 +298,9 @@ public:
   // 0 = no, 1 = cardinal move, 2 = diagonal move
   int walking;
 
+
+  // The save file itself.
+  package *save;
 
 protected:
     FixedVector<PlaceInfo, NUM_BRANCHES>             branch_info;
@@ -314,14 +326,14 @@ public:
 
     void reset_prev_move();
 
-    char stat(stat_type stat, bool nonneg=true) const;
-    char strength() const;
-    char intel() const;
-    char dex() const;
-    char max_stat(stat_type stat) const;
-    char max_strength() const;
-    char max_intel() const;
-    char max_dex() const;
+    int8_t stat(stat_type stat, bool nonneg=true) const;
+    int8_t strength() const;
+    int8_t intel() const;
+    int8_t dex() const;
+    int8_t max_stat(stat_type stat) const;
+    int8_t max_strength() const;
+    int8_t max_intel() const;
+    int8_t max_dex() const;
 
     bool in_water() const;
     bool can_swim(bool permanently = false) const;
@@ -332,6 +344,7 @@ public:
     bool misled() const;
     bool can_see_invisible() const;
     bool can_see_invisible(bool unid, bool transient = true) const;
+    bool are_charming() const;
     bool visible_to(const actor *looker) const;
     bool can_see(const actor* a) const;
 
@@ -349,16 +362,28 @@ public:
     bool travelling_light() const;
 
     // Dealing with beholders. Implemented in behold.cc.
-    void add_beholder(const monsters *mon);
+    void add_beholder(const monster* mon);
     bool beheld() const;
-    bool beheld_by(const monsters *mon) const;
-    monsters* get_beholder(const coord_def &pos) const;
-    monsters* get_any_beholder() const;
-    void remove_beholder(const monsters *mon);
+    bool beheld_by(const monster* mon) const;
+    monster* get_beholder(const coord_def &pos) const;
+    monster* get_any_beholder() const;
+    void remove_beholder(const monster* mon);
     void clear_beholders();
     void beholders_check_noise(int loudness);
     void update_beholders();
-    void update_beholder(const monsters *mon);
+    void update_beholder(const monster* mon);
+
+    // Dealing with fearmongers. Implemented in fearmonger.cc.
+    void add_fearmonger(const monster* mon);
+    bool afraid() const;
+    bool afraid_of(const monster* mon) const;
+    monster* get_fearmonger(const coord_def &pos) const;
+    monster* get_any_fearmonger() const;
+    void remove_fearmonger(const monster* mon);
+    void clear_fearmongers();
+    void fearmongers_check_noise(int loudness);
+    void update_fearmongers();
+    void update_fearmonger(const monster* mon);
 
     kill_category kill_alignment() const;
 
@@ -377,9 +402,9 @@ public:
     int mindex() const;
     int       get_experience_level() const;
     actor_type atype() const { return ACT_PLAYER; }
-    monsters* as_monster() { return NULL; }
+    monster* as_monster() { return NULL; }
     player* as_player() { return this; }
-    const monsters* as_monster() const { return NULL; }
+    const monster* as_monster() const { return NULL; }
     const player* as_player() const { return this; }
 
     god_type  deity() const;
@@ -538,7 +563,6 @@ public:
     void shield_block_succeeded(actor *foe);
 
     bool wearing_light_armour(bool with_skill = false) const;
-    void exercise(skill_type skill, int qty);
     int  skill(skill_type skill, bool skill_bump = false) const;
 
     bool do_shaft();
@@ -554,6 +578,7 @@ public:
                               level_area_type level_type2) const;
     PlaceInfo& get_place_info(branch_type branch) const;
     PlaceInfo& get_place_info(level_area_type level_type2) const;
+    void clear_place_info();
 
     void goto_place(const level_id &level);
 
@@ -579,7 +604,10 @@ public:
 
 protected:
     void _removed_beholder();
-    bool _possible_beholder(const monsters *mon) const;
+    bool _possible_beholder(const monster* mon) const;
+
+    void _removed_fearmonger();
+    bool _possible_fearmonger(const monster* mon) const;
 };
 
 #ifdef DEBUG_GLOBALS
@@ -609,7 +637,7 @@ struct player_save_info
     std::string short_desc() const;
 };
 
-class monsters;
+class monster;
 struct item_def;
 
 // Helper. Use move_player_to_grid or player::apply_location_effects instead.
@@ -617,7 +645,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
                              bool stepped=false, bool allow_shift=true,
                              const coord_def& old_pos=coord_def());
 
-bool check_moveto(const coord_def& p);
+bool check_moveto(const coord_def& p, const std::string &move_verb = "step");
 void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift);
 
 bool player_in_mappable_area(void);
@@ -629,7 +657,7 @@ bool berserk_check_wielded_weapon(void);
 int player_equip( equipment_type slot, int sub_type, bool calc_unid = true );
 int player_equip_ego_type( int slot, int sub_type );
 bool player_equip_unrand( int unrand_index );
-bool player_can_hit_monster(const monsters *mon);
+bool player_can_hit_monster(const monster* mon);
 
 bool player_is_shapechanged(void);
 
@@ -718,6 +746,8 @@ int player_spec_summ(void);
 
 int player_speed(void);
 int player_ponderousness();
+int player_evokable_levitation();
+int player_evokable_invis();
 
 int player_spell_levels(void);
 
@@ -728,7 +758,7 @@ int player_teleport(bool calc_unid = true);
 bool items_give_ability(const int slot, artefact_prop_type abil);
 int scan_artefacts(artefact_prop_type which_property, bool calc_unid = true);
 
-int slaying_bonus(char which_affected, bool ranged = false);
+int slaying_bonus(weapon_property_type which_affected, bool ranged = false);
 
 unsigned int exp_needed(int lev);
 
@@ -736,7 +766,7 @@ int get_expiration_threshold(duration_type dur);
 bool dur_expiring(duration_type dur);
 void display_char_status(void);
 
-void forget_map(unsigned char chance_forgotten = 100, bool force = false);
+void forget_map(int chance_forgotten = 100, bool force = false);
 
 void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = NULL,
               unsigned int* actual_avail_gain = NULL);
@@ -754,7 +784,8 @@ void level_change(bool skip_attribute_increase = false);
 bool player_genus( genus_type which_genus,
                    species_type species = SP_UNKNOWN );
 bool is_player_same_species( const int mon, bool = false );
-monster_type player_mons();
+monster_type player_mons(bool transform = true);
+void update_player_symbol();
 
 bool you_can_wear( int eq, bool special_armour = false );
 bool player_has_feet(void);
@@ -789,11 +820,12 @@ int get_real_hp(bool trans, bool rotted = false);
 int get_real_mp(bool include_items);
 
 int get_contamination_level();
+std::string describe_contamination(int level);
 
 void set_mp(int new_amount, bool max_too);
 
 void contaminate_player(int change, bool controlled = false,
-                        bool status_only = false);
+                        bool msg = true);
 
 bool confuse_player(int amount, bool resistable = true);
 
@@ -811,7 +843,7 @@ bool slow_player(int turns);
 void dec_slow_player(int delay);
 void dec_exhaust_player(int delay);
 
-bool haste_player(int turns);
+bool haste_player(int turns, bool rageext = false);
 void dec_haste_player(int delay);
 void levitate_player(int pow);
 

@@ -26,7 +26,6 @@
 #include "exclude.h"
 #include "food.h"
 #include "godabil.h"
-#include "godpassive.h"
 #include "invent.h"
 #include "items.h"
 #include "itemname.h"
@@ -44,13 +43,12 @@
 #include "output.h"
 #include "player.h"
 #include "player-equip.h"
-#include "player-stats.h"
 #include "random.h"
 #include "religion.h"
 #include "godconduct.h"
-#include "spells1.h"
-#include "spells4.h"
+#include "spl-other.h"
 #include "spl-util.h"
+#include "spl-selfench.h"
 #include "stairs.h"
 #include "stash.h"
 #include "state.h"
@@ -352,6 +350,14 @@ void stop_delay( bool stop_stair_travel )
             mprf("You stop %s the stairs.",
                  delay.type == DELAY_ASCENDING_STAIRS ? "ascending"
                                                       : "descending");
+            _pop_delay();
+        }
+        break;
+
+    case DELAY_PASSWALL:
+        if (stop_stair_travel)
+        {
+            mpr("Your meditation is interrupted.");
             _pop_delay();
         }
         break;
@@ -1014,7 +1020,7 @@ static void _finish_delay(const delay_queue_item &delay)
             }
 
             // Move any monsters out of the way.
-            monsters *m = monster_at(pass);
+            monster* m = monster_at(pass);
             if (m)
             {
                 // One square, a few squares, anywhere...
@@ -1088,15 +1094,6 @@ static void _finish_delay(const delay_queue_item &delay)
                 {
                     simple_god_message(" expects more respect for this"
                                        " departed soul.");
-                }
-
-                if (you.species == SP_VAMPIRE && delay.type == DELAY_BUTCHER
-                    && mons_has_blood(item.plus) && !food_is_rotten(item)
-                    // Don't give this message if more butchering to follow.
-                    && (you.delay_queue.size() == 1
-                        || you.delay_queue[1].type != DELAY_BUTCHER))
-                {
-                    mpr("What a waste.");
                 }
 
                 const bool was_orc = (mons_species(item.plus) == MONS_ORC);
@@ -1230,7 +1227,8 @@ static void _armour_wear_effects(const int item_slot)
 
     if (eq_slot == EQ_BODY_ARMOUR)
     {
-        if (you.duration[DUR_ICY_ARMOUR] != 0)
+        if (you.duration[DUR_ICY_ARMOUR] != 0
+            && !is_effectively_light_armour(&arm))
         {
             remove_ice_armour();
         }
@@ -1466,7 +1464,7 @@ inline static void _monster_warning(activity_interrupt_type ai,
     if (!delay_is_run(atype) && !_is_butcher_delay(atype))
         return;
 
-    const monsters* mon = static_cast<const monsters*>(at.data);
+    const monster* mon = static_cast<const monster* >(at.data);
     if (!you.can_see(mon))
         return;
     if (at.context == "already seen" || at.context == "uncharm")
@@ -1535,7 +1533,7 @@ inline static void _monster_warning(activity_interrupt_type ai,
                     + " is" + mweap + ".";
         }
         mpr(text, MSGCH_WARN);
-        const_cast<monsters*>(mon)->seen_context = "just seen";
+        const_cast<monster* >(mon)->seen_context = "just seen";
     }
 
     if (Hints.hints_left)
@@ -1580,7 +1578,7 @@ bool interrupt_activity( activity_interrupt_type ai,
     const interrupt_block block_recursive_interrupts;
     if (ai == AI_HIT_MONSTER || ai == AI_MONSTER_ATTACKS)
     {
-        const monsters* mon = static_cast<const monsters*>(at.data);
+        const monster* mon = static_cast<const monster* >(at.data);
         if (mon && !mon->visible_to(&you) && !mon->submerged())
             autotoggle_autopickup(true);
     }

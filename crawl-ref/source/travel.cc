@@ -39,9 +39,6 @@
 #include "mon-util.h"
 #include "mon-stuff.h"
 #include "options.h"
-#ifdef USE_TILE
- #include "output.h"
-#endif
 #include "place.h"
 #include "player.h"
 #include "stash.h"
@@ -122,15 +119,16 @@ travel_distance_grid_t travel_point_distance;
 // Apply slime wall checks when checking if squares are travelsafe.
 bool g_Slime_Wall_Check = true;
 
-static unsigned char curr_waypoints[GXM][GYM];
+static uint8_t curr_waypoints[GXM][GYM];
 static FixedArray< map_cell, GXM, GYM >  mapshadow;
 
-const signed char TRAVERSABLE = 1;
-const signed char IMPASSABLE  = 0;
-const signed char FORBIDDEN   = -1;
+const int8_t TRAVERSABLE = 1;
+const int8_t IMPASSABLE  = 0;
+const int8_t FORBIDDEN   = -1;
 
 // Map of terrain types that are traversable.
-static signed char traversable_terrain[256];
+// Should be [NUM_FEATURES], but we're paranoid here.
+static int8_t traversable_terrain[256];
 
 /*
  * Warn if interlevel travel is going to take you outside levels in
@@ -271,7 +269,7 @@ const char *run_mode_name(int runmode)
                                             : "");
 }
 
-unsigned char is_waypoint(const coord_def &p)
+uint8_t is_waypoint(const coord_def &p)
 {
     if (!can_travel_interlevel())
         return 0;
@@ -289,7 +287,7 @@ inline bool is_stash(const LevelStashes *ls, const coord_def& p)
 
 static bool _is_monster_blocked(const coord_def& c)
 {
-    const monsters *mons = monster_at(c);
+    const monster* mons = monster_at(c);
     return (mons
             && mons->visible_to(&you)
             && mons_is_stationary(mons)
@@ -431,7 +429,7 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile)
 // safe.
 static bool _is_safe_move(const coord_def& c)
 {
-    if (const monsters *mon = monster_at(c))
+    if (const monster* mon = monster_at(c))
     {
         // Stop before wasting energy on plants and fungi,
         // unless worshipping Fedhas.
@@ -462,10 +460,10 @@ static bool _is_safe_move(const coord_def& c)
     return (!is_damaging_cloud(ctype, true));
 }
 
-static void _set_pass_feature(unsigned char grid, signed char pass)
+static void _set_pass_feature(dungeon_feature_type grid, signed char pass)
 {
-    if (traversable_terrain[(unsigned) grid] != FORBIDDEN)
-        traversable_terrain[(unsigned) grid] = pass;
+    if (traversable_terrain[grid] != FORBIDDEN)
+        traversable_terrain[grid] = pass;
 }
 
 // Sets traversable terrain based on the character's role and whether or not he
@@ -475,16 +473,15 @@ void init_travel_terrain_check(bool check_race_equip)
     if (check_race_equip)
     {
         // Swimmers get deep water.
-        signed char water = (player_likes_water(true) ? TRAVERSABLE
-                                                      : IMPASSABLE);
+        int8_t water = (player_likes_water(true) ? TRAVERSABLE : IMPASSABLE);
 
         // If the player has overridden deep water already, we'll respect that.
         _set_pass_feature(DNGN_DEEP_WATER, water);
 
         // Permanently levitating players can cross most hostile terrain.
-        const signed char trav = (you.permanent_levitation()
-                                  || you.permanent_flight() ? TRAVERSABLE
-                                                            : IMPASSABLE);
+        const int8_t trav = (you.permanent_levitation()
+                             || you.permanent_flight() ? TRAVERSABLE
+                                                       : IMPASSABLE);
 
         if (water != TRAVERSABLE)
             _set_pass_feature(DNGN_DEEP_WATER, trav);
@@ -607,7 +604,7 @@ inline static void _check_interesting_square(const coord_def pos,
 {
     if (ES_item || ES_greedy || ES_glow || ES_art || ES_rune)
     {
-        if (const monsters *mons = monster_at(pos))
+        if (const monster* mons = monster_at(pos))
         {
             if (mons_is_unknown_mimic(mons))
                 ed.found_item(pos, get_mimic_item(mons));
@@ -890,9 +887,9 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
 // Don't call travel() if you.running >= 0.
 command_type travel()
 {
-    char holdx, holdy;
-    char *move_x = &holdx;
-    char *move_y = &holdy;
+    int holdx, holdy;
+    int *move_x = &holdx;
+    int *move_y = &holdy;
     holdx = holdy = 0;
 
     command_type result = CMD_NO_CMD;
@@ -1092,7 +1089,7 @@ command_type travel()
     return direction_to_command( *move_x, *move_y );
 }
 
-command_type direction_to_command( char x, char y )
+command_type direction_to_command( int x, int y )
 {
     if ( x == -1 && y == -1 ) return CMD_MOVE_UP_LEFT;
     if ( x == -1 && y ==  0 ) return CMD_MOVE_LEFT;
@@ -1162,7 +1159,7 @@ static bool _is_greed_inducing_square(const LevelStashes *ls,
     if (ls && ls->needs_visit(c))
         return (true);
 
-    if (const monsters *mons = monster_at(c))
+    if (const monster* mons = monster_at(c))
     {
         if (mons_is_unknown_mimic(mons) && mons_was_seen(mons))
             if (item_needs_autopickup(get_mimic_item(mons)))
@@ -1665,7 +1662,7 @@ bool travel_pathfind::path_examine_point(const coord_def &c)
 // Try to avoid to let travel (including autoexplore) move the player right
 // next to a lurking (previously unseen) monster.
 void find_travel_pos(const coord_def& youpos,
-                     char *move_x, char *move_y,
+                     int *move_x, int *move_y,
                      std::vector<coord_def>* features)
 {
     travel_pathfind tp;
@@ -1905,7 +1902,7 @@ std::string get_trans_travel_dest(const travel_target &target,
 
 // Returns the level on the given branch that's closest to the player's
 // current location.
-static int _get_nearest_level_depth(unsigned char branch)
+static int _get_nearest_level_depth(uint8_t branch)
 {
     int depth = 1;
 
@@ -2178,6 +2175,9 @@ level_id find_down_level(level_id curr)
 
 level_id find_deepest_explored(level_id curr)
 {
+    ASSERT(curr.branch != NUM_BRANCHES
+           && curr.level_type == LEVEL_DUNGEON);
+
     for (int i = branches[curr.branch].depth; i > 0; --i)
     {
         const level_id lid(curr.branch, i);
@@ -2307,9 +2307,9 @@ static travel_target _prompt_travel_depth(const level_id &id,
     }
 }
 
-bool travel_kill_monster(const monsters * monster)
+bool travel_kill_monster(const monster* mons)
 {
-    if (monster->type != MONS_TOADSTOOL)
+    if (mons->type != MONS_TOADSTOOL)
         return (false);
 
     if (!wielded_weapon_check(you.weapon(), true))
@@ -3435,7 +3435,7 @@ void LevelInfo::clear_distances()
         stairs[i].clear_distance();
 }
 
-bool LevelInfo::is_known_branch(unsigned char branch) const
+bool LevelInfo::is_known_branch(uint8_t branch) const
 {
     for (int i = 0, count = stairs.size(); i < count; ++i)
         if (stairs[i].destination.id.branch == branch)
@@ -3472,7 +3472,7 @@ void LevelInfo::save(writer& outf) const
         marshallShort(outf, da_counters[i]);
 }
 
-void LevelInfo::load(reader& inf, char minorVersion)
+void LevelInfo::load(reader& inf, int minorVersion)
 {
     stairs.clear();
     int stair_count = unmarshallShort(inf);
@@ -3556,7 +3556,7 @@ void TravelCache::list_waypoints() const
         mpr(line.c_str());
 }
 
-unsigned char TravelCache::is_waypoint(const level_pos &lp) const
+uint8_t TravelCache::is_waypoint(const level_pos &lp) const
 {
     for (int i = 0; i < TRAVEL_WAYPOINT_COUNT; ++i)
         if (lp == waypoints[i])
@@ -3574,7 +3574,7 @@ void TravelCache::update_waypoints() const
     for (lp.pos.x = 1; lp.pos.x < GXM; ++lp.pos.x)
         for (lp.pos.y = 1; lp.pos.y < GYM; ++lp.pos.y)
         {
-            unsigned char wpc = is_waypoint(lp);
+            uint8_t wpc = is_waypoint(lp);
             if (wpc)
                 curr_waypoints[lp.pos.x][lp.pos.y] = wpc;
         }
@@ -3708,7 +3708,7 @@ void TravelCache::clear_distances()
         i->second.clear_distances();
 }
 
-bool TravelCache::is_known_branch(unsigned char branch) const
+bool TravelCache::is_known_branch(uint8_t branch) const
 {
     std::map<level_id, LevelInfo>::const_iterator i = levels.begin();
     for ( ; i != levels.end(); ++i)
@@ -3738,13 +3738,13 @@ void TravelCache::save(writer& outf) const
         waypoints[wp].save(outf);
 }
 
-void TravelCache::load(reader& inf, char minorVersion)
+void TravelCache::load(reader& inf, int minorVersion)
 {
     levels.clear();
 
     // Check version. If not compatible, we just ignore the file altogether.
-    unsigned char major = unmarshallByte(inf),
-                  minor = unmarshallByte(inf);
+    int major = unmarshallByte(inf),
+        minor = unmarshallByte(inf);
     if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION)
         return;
 
@@ -3901,15 +3901,11 @@ const runrest &runrest::operator = (int newrunmode)
 
 static dungeon_feature_type _base_feat_type( dungeon_feature_type grid )
 {
-    // Don't stop for undiscovered traps:
-    if ((grid >= DNGN_FLOOR_MIN && grid <= DNGN_FLOOR_MAX)
-        || grid == DNGN_UNDISCOVERED_TRAP)
-    {
+    if (grid >= DNGN_FLOOR_MIN && grid <= DNGN_FLOOR_MAX)
         return (DNGN_FLOOR);
-    }
 
-    // Merge walls and secret doors.
-    if (feat_is_wall(grid) || grid == DNGN_SECRET_DOOR)
+    // Merge walls.
+    if (feat_is_wall(grid))
         return (DNGN_ROCK_WALL);
 
     return (grid);
@@ -3919,14 +3915,13 @@ void runrest::set_run_check(int index, int dir)
 {
     run_check[index].delta = Compass[dir];
 
-    const coord_def targ = you.pos() + Compass[dir];
-
-    run_check[index].grid = _base_feat_type( grd(targ) );
+    const coord_def p = you.pos() + Compass[dir];
+    run_check[index].grid = _base_feat_type(env.map_knowledge(p).feat());
 }
 
 bool runrest::check_stop_running()
 {
-    if (runmode > 0 && runmode != RMODE_START && run_grids_changed())
+    if (runmode > 0 && runmode != RMODE_START && run_should_stop())
     {
         stop();
         return (true);
@@ -3934,23 +3929,36 @@ bool runrest::check_stop_running()
     return (false);
 }
 
-// This function creates "equivalence classes" so that undiscovered
-// traps and secret doors aren't running stopping points.
-bool runrest::run_grids_changed() const
+// This function creates "equivalence classes" so that changes
+// in wall and floor type aren't running stopping points.
+bool runrest::run_should_stop() const
 {
-    if (env.cgrid(you.pos() + pos) != EMPTY_CLOUD)
+    const coord_def targ = you.pos() + pos;
+    const map_cell& tcell = env.map_knowledge(targ);
+
+    if (tcell.cloud() != CLOUD_NONE)
         return (true);
 
-    monsters * mon = monster_at(you.pos() + pos);
-    if (mon && !fedhas_passthrough(mon))
+    if (is_excluded(targ))
+    {
+#ifndef USE_TILE
+        // XXX: Remove this once exclusions are visible.
+        mprf(MSGCH_WARN, "Stopped running for exclusion.");
+#endif
+        return (true);
+    }
+
+    const monster_info* mon = tcell.monsterinfo();
+    if (mon && !fedhas_passthrough(tcell.monsterinfo()))
         return (true);
 
     for (int i = 0; i < 3; i++)
     {
-        const coord_def targ = you.pos() + run_check[i].delta;
-        const dungeon_feature_type targ_grid = _base_feat_type(grd(targ));
+        const coord_def p = you.pos() + run_check[i].delta;
+        const dungeon_feature_type feat =
+            _base_feat_type(env.map_knowledge(p).feat());
 
-        if (run_check[i].grid != targ_grid)
+        if (run_check[i].grid != feat)
             return (true);
     }
 

@@ -4,6 +4,10 @@
 #include "mgen_enum.h"
 #include "player.h"
 
+// Hash key for passing a weapon to be given to
+// a dancing weapon.
+const std::string TUKIMA_WEAPON = "tukima-weapon";
+
 // A structure with all the data needed to whip up a new monster.
 struct mgen_data
 {

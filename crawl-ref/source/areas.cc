@@ -205,7 +205,7 @@ void create_sanctuary(const coord_def& center, int time)
     int       trap_count  = 0;
     int       scare_count = 0;
     int       cloud_count = 0;
-    monsters *seen_mon    = NULL;
+    monster* seen_mon    = NULL;
 
     int shape = random2(4);
     for (radius_iterator ri(center, radius, C_POINTY); ri; ++ri)
@@ -257,7 +257,7 @@ void create_sanctuary(const coord_def& center, int time)
         // Scare all attacking monsters inside sanctuary, and make
         // all friendly monsters inside sanctuary stop attacking and
         // move towards the player.
-        if (monsters* mon = monster_at(pos))
+        if (monster* mon = monster_at(pos))
         {
             if (mon->friendly())
             {
@@ -350,8 +350,11 @@ int player::silence_radius2() const
     return (_silence_range(you.duration[DUR_SILENCE]));
 }
 
-int monsters::silence_radius2() const
+int monster::silence_radius2() const
 {
+    if (type == MONS_SILENT_SPECTRE)
+        return 150;
+
     if (!has_ench(ENCH_SILENCE))
         return (-1);
     const int dur = get_ench(ENCH_SILENCE).duration;
@@ -392,18 +395,49 @@ int player::halo_radius2() const
     if (you.religion == GOD_SHINING_ONE && you.piety >= piety_breakpoint(0)
         && !you.penance[GOD_SHINING_ONE])
     {
-        const int r = std::min(LOS_RADIUS, you.piety / 20);
-        return (r*r);
+        // Preserve the middle of old radii.
+        const int r = you.piety - 10;
+        // The cap is 64, just less than the LOS of 65.
+        return std::min(LOS_RADIUS*LOS_RADIUS, r * r / 400);
     }
 
     return (-1);
 }
 
-int monsters::halo_radius2() const
+int monster::halo_radius2() const
 {
-    // Angels and Daevas are haloed.
-    if (holiness() == MH_HOLY)
-        return (2*2);
-    else
+    if (holiness() != MH_HOLY)
         return (-1);
+    // The values here depend on 1. power, 2. sentience.  Thus, high-ranked
+    // sentient celestials have really big haloes, while holy animals get
+    // small ones.
+    switch(type)
+    {
+    case MONS_SPIRIT:
+        return (5);
+    case MONS_ANGEL:
+        return (26);
+    case MONS_CHERUB:
+        return (29);
+    case MONS_DAEVA:
+        return (32);
+    case MONS_HOLY_DRAGON:
+        return (5);
+    case MONS_OPHAN:
+        return (64); // highest rank among sentient ones
+    case MONS_PHOENIX:
+        return (10);
+    case MONS_SHEDU:
+        return (10);
+    case MONS_APIS:
+        return (4);
+    case MONS_PALADIN:
+        return (4);  // mere humans
+    case MONS_BLESSED_TOE:
+        return (17);
+    case MONS_SILVER_STAR:
+        return (40); // dumb but with an immense power
+    default:
+        return (4);
+    }
 }

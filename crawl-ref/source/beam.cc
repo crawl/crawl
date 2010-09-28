@@ -33,6 +33,7 @@
 #include "effects.h"
 #include "env.h"
 #include "enum.h"
+#include "exercise.h"
 #include "godabil.h"
 #include "map_knowledge.h"
 #include "fprop.h"
@@ -59,9 +60,10 @@
 #include "religion.h"
 #include "godconduct.h"
 #include "skills.h"
-#include "spells1.h"
-#include "spells3.h"
-#include "spells4.h"
+#include "spl-clouds.h"
+#include "spl-goditem.h"
+#include "spl-monench.h"
+#include "spl-transloc.h"
 #include "state.h"
 #include "stuff.h"
 #include "teleport.h"
@@ -84,7 +86,7 @@
                                     // from remaining range
 
 // Helper functions (some of these should probably be public).
-static void _ench_animation(int flavour, const monsters *mon = NULL,
+static void _ench_animation(int flavour, const monster* mon = NULL,
                             bool force = false);
 static void _zappy(zap_type z_type, int power, bolt &pbolt);
 static beam_type _chaos_beam_flavour();
@@ -139,7 +141,7 @@ kill_category bolt::whose_kill() const
             return (KC_FRIENDLY);
         if (!invalid_monster_index(beam_source))
         {
-            const monsters *mon = &menv[beam_source];
+            const monster* mon = &menv[beam_source];
             if (mon->friendly())
                 return (KC_FRIENDLY);
         }
@@ -149,7 +151,7 @@ kill_category bolt::whose_kill() const
 
 // A simple animated flash from Rupert Smith (expanded to be more
 // generic).
-static void _zap_animation(int colour, const monsters *mon = NULL,
+static void _zap_animation(int colour, const monster* mon = NULL,
                            bool force = false)
 {
     coord_def p = you.pos();
@@ -167,7 +169,7 @@ static void _zap_animation(int colour, const monsters *mon = NULL,
 
     const coord_def drawp = grid2view(p);
 
-    if (in_los_bounds(drawp))
+    if (in_los_bounds_v(drawp))
     {
         // Default to whatever colour magic is today.
         if (colour == -1)
@@ -177,7 +179,7 @@ static void _zap_animation(int colour, const monsters *mon = NULL,
         tiles.add_overlay(p, tileidx_zap(colour));
 #else
         view_update();
-        cgotoxy(drawp.x, drawp.y, GOTO_CRT);
+        cgotoxy(drawp.x, drawp.y, GOTO_DNGN);
         put_colour_ch(colour, dchar_glyph(DCHAR_FIRED_ZAP));
 #endif
 
@@ -196,7 +198,7 @@ static void _zap_animation(int colour, const monsters *mon = NULL,
 }
 
 // Special front function for zap_animation to interpret enchantment flavours.
-static void _ench_animation(int flavour, const monsters *mon, bool force)
+static void _ench_animation(int flavour, const monster* mon, bool force)
 {
     element_type elem;
     switch (flavour)
@@ -269,7 +271,7 @@ bool zapping(zap_type ztype, int power, bolt &pbolt,
 // Returns true if the path is considered "safe", and false if there are
 // monsters in the way the player doesn't want to hit.
 // NOTE: Doesn't check for the player being hit by a rebounding lightning bolt.
-bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
+bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
 {
     // Non-controlleable during confusion.
     // (We'll shoot in a different direction anyway.)
@@ -670,7 +672,7 @@ void bolt::initialise_fire()
     if (!seen && you.see_cell(source) && range > 0 && visible() )
     {
         seen = true;
-        const monsters* mon = monster_at(source);
+        const monster* mon = monster_at(source);
 
         if (flavour != BEAM_VISUAL
             && !is_tracer
@@ -748,7 +750,7 @@ void bolt::draw(const coord_def& p)
 
     const coord_def drawpos = grid2view(p);
 
-    if (!in_los_bounds(drawpos))
+    if (!in_los_bounds_v(drawpos))
         return;
 
 #ifdef USE_TILE
@@ -763,7 +765,7 @@ void bolt::draw(const coord_def& p)
     if (tile_beam != -1)
         tiles.add_overlay(p, tile_beam);
 #else
-    cgotoxy(drawpos.x, drawpos.y);
+    cgotoxy(drawpos.x, drawpos.y, GOTO_DNGN);
     put_colour_ch(colour == BLACK ? random_colour()
                                   : element_colour(colour),
                   glyph);
@@ -896,7 +898,7 @@ void bolt::fire_wall_effect()
             if (whose_kill() == KC_YOU)
                 did_god_conduct(DID_KILL_PLANT, 1, effect_known);
             else if (whose_kill() == KC_FRIENDLY)
-                did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1, effect_known, 0);
+                did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1, effect_known);
             place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25,
                         whose_kill(), killer(), 5);
             obvious_effect = true;
@@ -949,11 +951,11 @@ static bool _nuke_wall_msg(dungeon_feature_type feat, const coord_def& p)
     case DNGN_ORCISH_IDOL:
         if (hear)
         {
-            chan = MSGCH_SOUND;
             if (see)
                 msg = "You hear a hideous screaming!";
             else
                 msg = "The idol screams as its substance crumbles away!";
+            chan = MSGCH_SOUND;
         }
         else if (see)
             msg = "The idol twists and shakes as its substance crumbles away!";
@@ -1034,8 +1036,18 @@ void bolt::nuke_wall_effect()
 
     obvious_effect = _nuke_wall_msg(feat, pos());
 
-    if (feat == DNGN_ORCISH_IDOL && beam_source == NON_MONSTER)
-        did_god_conduct(DID_DESTROY_ORCISH_IDOL, 8);
+    if (feat == DNGN_ORCISH_IDOL)
+    {
+        if (beam_source == NON_MONSTER)
+            did_god_conduct(DID_DESTROY_ORCISH_IDOL, 8);
+    }
+    else if (feat == DNGN_TREE)
+    {
+        if (whose_kill() == KC_YOU)
+            did_god_conduct(DID_KILL_PLANT, 1);
+        else if (whose_kill() == KC_FRIENDLY)
+            did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1, effect_known, 0);
+    }
 
     finish_beam();
 }
@@ -1116,7 +1128,7 @@ bool bolt::hit_wall()
         // is blocked, even though its line of sight isn't blocked.  Give
         // a warning about this fact.
         std::string prompt = "Your line of fire to ";
-        const monsters* mon = monster_at(target);
+        const monster* mon = monster_at(target);
 
         if (mon && mon->observable())
             prompt += mon->name(DESC_NOCAP_THE);
@@ -1223,7 +1235,7 @@ void bolt::affect_cell()
     // affected the player on this square. -cao
     const bool still_wall = (was_solid && old_pos == pos());
     if ((!hit_player || is_beam || is_explosion) && !still_wall)
-        if (monsters* m = monster_at(pos()))
+        if (monster* m = monster_at(pos()))
             if (can_affect_actor(m))
                 affect_monster(m);
 
@@ -1447,7 +1459,7 @@ void bolt::do_fire()
         // Allow friendlies to react to projectiles, except when in
         // sanctuary when pet_target can only be explicitly changed by
         // the player.
-        const monsters *mon = &menv[beam_source];
+        const monster* mon = &menv[beam_source];
         if (foe_info.hurt > 0 && !mon->wont_attack() && !crawl_state.game_is_arena()
             && you.pet_target == MHITNOT && env.sanctuary_time <= 0)
         {
@@ -1463,7 +1475,7 @@ void bolt::do_fire()
 
 // Returns damage taken by a monster from a "flavoured" (fire, ice, etc.)
 // attack -- damage from clouds and branded weapons handled elsewhere.
-int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
+int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
                           bool doFlavouredEffects)
 {
     // If we're not doing flavoured effects, must be preliminary
@@ -1477,17 +1489,17 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
     case BEAM_FIRE:
     case BEAM_STEAM:
         hurted = resist_adjust_damage(
-                    monster,
+                    mons,
                     pbolt.flavour,
-                    (pbolt.flavour == BEAM_FIRE) ? monster->res_fire()
-                                                 : monster->res_steam(),
+                    (pbolt.flavour == BEAM_FIRE) ? mons->res_fire()
+                                                 : mons->res_steam(),
                     hurted, true);
 
         if (!hurted)
         {
             if (doFlavouredEffects)
             {
-                simple_monster_message(monster,
+                simple_monster_message(mons,
                                        (original > 0) ? " completely resists."
                                                       : " appears unharmed.");
             }
@@ -1495,41 +1507,41 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         else if (original > hurted)
         {
             if (doFlavouredEffects)
-                simple_monster_message(monster, " resists.");
+                simple_monster_message(mons, " resists.");
         }
         else if (original < hurted && doFlavouredEffects)
         {
-            if (monster->is_icy())
-                simple_monster_message(monster, " melts!");
-            else if (monster->type == MONS_BUSH)
-                simple_monster_message(monster, " is on fire!");
+            if (mons->is_icy())
+                simple_monster_message(mons, " melts!");
+            else if (mons->type == MONS_BUSH)
+                simple_monster_message(mons, " is on fire!");
             else if (pbolt.flavour == BEAM_FIRE)
-                simple_monster_message(monster, " is burned terribly!");
+                simple_monster_message(mons, " is burned terribly!");
             else
-                simple_monster_message(monster, " is scalded terribly!");
+                simple_monster_message(mons, " is scalded terribly!");
         }
         break;
 
     case BEAM_WATER:
-        hurted = resist_adjust_damage(monster, pbolt.flavour,
-                                      monster->res_asphyx(),
+        hurted = resist_adjust_damage(mons, pbolt.flavour,
+                                      mons->res_asphyx(),
                                       hurted, true);
         if (doFlavouredEffects)
         {
             if (!hurted)
-                simple_monster_message(monster, " shrugs off the wave.");
+                simple_monster_message(mons, " shrugs off the wave.");
         }
         break;
 
     case BEAM_COLD:
-        hurted = resist_adjust_damage(monster, pbolt.flavour,
-                                      monster->res_cold(),
+        hurted = resist_adjust_damage(mons, pbolt.flavour,
+                                      mons->res_cold(),
                                       hurted, true);
         if (!hurted)
         {
             if (doFlavouredEffects)
             {
-                simple_monster_message(monster,
+                simple_monster_message(mons,
                                        (original > 0) ? " completely resists."
                                                       : " appears unharmed.");
             }
@@ -1537,24 +1549,24 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         else if (original > hurted)
         {
             if (doFlavouredEffects)
-                simple_monster_message(monster, " resists.");
+                simple_monster_message(mons, " resists.");
         }
         else if (original < hurted)
         {
             if (doFlavouredEffects)
-                simple_monster_message(monster, " is frozen!");
+                simple_monster_message(mons, " is frozen!");
         }
         break;
 
     case BEAM_ELECTRICITY:
-        hurted = resist_adjust_damage(monster, pbolt.flavour,
-                                      monster->res_elec(),
+        hurted = resist_adjust_damage(mons, pbolt.flavour,
+                                      mons->res_elec(),
                                       hurted, true);
         if (!hurted)
         {
             if (doFlavouredEffects)
             {
-                simple_monster_message(monster,
+                simple_monster_message(mons,
                                        (original > 0) ? " completely resists."
                                                       : " appears unharmed.");
             }
@@ -1563,71 +1575,71 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
 
     case BEAM_ACID:
     {
-        const int res = monster->res_acid();
-        hurted = resist_adjust_damage(monster, pbolt.flavour,
+        const int res = mons->res_acid();
+        hurted = resist_adjust_damage(mons, pbolt.flavour,
                                       res, hurted, true);
         if (!hurted)
         {
             if (doFlavouredEffects)
             {
-                simple_monster_message(monster,
+                simple_monster_message(mons,
                                        (original > 0) ? " completely resists."
                                                       : " appears unharmed.");
             }
         }
         else if (res <= 0 && doFlavouredEffects)
         {
-            corrode_monster(monster);
+            corrode_monster(mons);
         }
         break;
     }
 
     case BEAM_POISON:
     {
-        int res = monster->res_poison();
-        hurted  = resist_adjust_damage(monster, pbolt.flavour, res,
+        int res = mons->res_poison();
+        hurted  = resist_adjust_damage(mons, pbolt.flavour, res,
                                        hurted, true);
         if (!hurted && res > 0)
         {
             if (doFlavouredEffects)
             {
-                simple_monster_message(monster,
+                simple_monster_message(mons,
                                        (original > 0) ? " completely resists."
                                                       : " appears unharmed.");
             }
         }
         else if (res <= 0 && doFlavouredEffects && !one_chance_in(3))
-            poison_monster(monster, pbolt.whose_kill());
+            poison_monster(mons, pbolt.whose_kill());
 
         break;
     }
 
     case BEAM_POISON_ARROW:
-        hurted = resist_adjust_damage(monster, pbolt.flavour,
-                                      monster->res_poison(),
+        hurted = resist_adjust_damage(mons, pbolt.flavour,
+                                      mons->res_poison(),
                                       hurted);
         if (hurted < original)
         {
             if (doFlavouredEffects)
             {
-                simple_monster_message(monster, " partially resists.");
+                simple_monster_message(mons, " partially resists.");
 
                 // Poison arrow can poison any living thing regardless of
                 // poison resistance. - bwr
-                if (mons_has_lifeforce(monster))
-                    poison_monster(monster, pbolt.whose_kill(), 2, true);
+                if (mons_has_lifeforce(mons))
+                    poison_monster(mons, pbolt.whose_kill(), 2, true);
             }
         }
         else if (doFlavouredEffects)
-            poison_monster(monster, pbolt.whose_kill(), 4);
+            poison_monster(mons, pbolt.whose_kill(), 4);
 
         break;
 
     case BEAM_NEG:
-        if (monster->res_negative_energy() == 3)
+        if (mons->res_negative_energy() == 3)
         {
             if (doFlavouredEffects)
-                simple_monster_message(monster, " completely resists.");
+                simple_monster_message(mons, " completely resists.");
 
             hurted = 0;
         }
@@ -1637,10 +1649,10 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
             if (!doFlavouredEffects)
                 return (hurted);
 
-            if (monster->observable())
+            if (mons->observable())
                 pbolt.obvious_effect = true;
 
-            monster->drain_exp(pbolt.agent());
+            mons->drain_exp(pbolt.agent());
 
             if (YOU_KILL(pbolt.thrower))
                 did_god_conduct(DID_NECROMANCY, 2, pbolt.effect_known);
@@ -1648,10 +1660,10 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         break;
 
     case BEAM_MIASMA:
-        if (monster->res_rotting())
+        if (mons->res_rotting())
         {
             if (doFlavouredEffects)
-                simple_monster_message(monster, " completely resists.");
+                simple_monster_message(mons, " completely resists.");
 
             hurted = 0;
         }
@@ -1661,7 +1673,7 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
             if (!doFlavouredEffects)
                 return (hurted);
 
-            miasma_monster(monster, pbolt.whose_kill());
+            miasma_monster(mons, pbolt.whose_kill());
 
             if (YOU_KILL(pbolt.thrower))
                 did_god_conduct(DID_UNCLEAN, 2, pbolt.effect_known);
@@ -1671,7 +1683,7 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
     case BEAM_HOLY:
     {
         // Cleansing flame.
-        const int rhe = monster->res_holy_energy(pbolt.agent());
+        const int rhe = mons->res_holy_energy(pbolt.agent());
         if (rhe > 0)
             hurted = 0;
         else if (rhe == 0)
@@ -1681,7 +1693,7 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
 
         if (doFlavouredEffects)
         {
-            simple_monster_message(monster,
+            simple_monster_message(mons,
                                    hurted == 0 ? " appears unharmed."
                                                : " writhes in agony!");
         }
@@ -1691,76 +1703,69 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
     case BEAM_ICE:
         // ice - about 50% of damage is cold, other 50% is impact and
         // can't be resisted (except by AC, of course)
-        hurted = resist_adjust_damage(monster, pbolt.flavour,
-                                      monster->res_cold(), hurted,
+        hurted = resist_adjust_damage(mons, pbolt.flavour,
+                                      mons->res_cold(), hurted,
                                       true);
         if (hurted < original)
         {
             if (doFlavouredEffects)
-                simple_monster_message(monster, " partially resists.");
+                simple_monster_message(mons, " partially resists.");
         }
         else if (hurted > original)
         {
             if (doFlavouredEffects)
-                simple_monster_message(monster, " is frozen!");
+                simple_monster_message(mons, " is frozen!");
         }
         break;
 
     case BEAM_LAVA:
-        hurted = resist_adjust_damage(monster, pbolt.flavour,
-                                      monster->res_fire(), hurted, true);
+        hurted = resist_adjust_damage(mons, pbolt.flavour,
+                                      mons->res_fire(), hurted, true);
 
         if (hurted < original)
         {
             if (doFlavouredEffects)
-                simple_monster_message(monster, " partially resists.");
+                simple_monster_message(mons, " partially resists.");
         }
         else if (hurted > original)
         {
-            if (monster->is_icy())
+            if (mons->is_icy())
             {
                 if (doFlavouredEffects)
-                    simple_monster_message(monster, " melts!");
+                    simple_monster_message(mons, " melts!");
             }
             else
             {
                 if (doFlavouredEffects)
-                    simple_monster_message(monster, " is burned terribly!");
+                    simple_monster_message(mons, " is burned terribly!");
             }
         }
         break;
 
     case BEAM_HELLFIRE:
-        resist = monster->res_fire();
-        if (resist > 2)
+        resist = mons->res_hellfire();
+        if (resist > 0)
         {
             if (doFlavouredEffects)
             {
-                simple_monster_message(monster,
+                simple_monster_message(mons,
                                        (original > 0) ? " completely resists."
                                                       : " appears unharmed.");
             }
 
             hurted = 0;
         }
-        else if (resist > 0)
-        {
-            if (doFlavouredEffects)
-                simple_monster_message(monster, " partially resists.");
-
-            hurted /= 2;
-        }
         else if (resist < 0)
         {
-            if (monster->is_icy())
+            if (mons->is_icy())
             {
                 if (doFlavouredEffects)
-                    simple_monster_message(monster, " melts!");
+                    simple_monster_message(mons, " melts!");
             }
             else
             {
                 if (doFlavouredEffects)
-                    simple_monster_message(monster, " is burned terribly!");
+                    simple_monster_message(mons, " is burned terribly!");
             }
 
             hurted *= 12;       // hellfire
@@ -1769,30 +1774,30 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         break;
 
     case BEAM_LIGHT:
-        if (monster->invisible())
+        if (mons->invisible())
             hurted = 0;
-        else if (mons_genus(monster->type) == MONS_VAMPIRE)
+        else if (mons_genus(mons->type) == MONS_VAMPIRE)
             hurted += hurted / 2;
         if (!hurted)
         {
             if (doFlavouredEffects)
             {
                 if (original > 0)
-                    simple_monster_message(monster,"appears unharmed.");
-                else if (monster->observable())
+                    simple_monster_message(mons, "appears unharmed.");
+                else if (mons->observable())
                     mprf("The beam of light passes harmlessly through %s.",
-                         monster->name(DESC_NOCAP_THE, true).c_str());
+                         mons->name(DESC_NOCAP_THE, true).c_str());
             }
         }
         else if (original < hurted)
         {
             if (doFlavouredEffects)
-                simple_monster_message(monster, " is burned terribly!");
+                simple_monster_message(mons, " is burned terribly!");
         }
         break;
 
     case BEAM_SPORE:
-        if (monster->type == MONS_BALLISTOMYCETE)
+        if (mons->type == MONS_BALLISTOMYCETE)
             hurted = 0;
         break;
 
@@ -1803,53 +1808,59 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
     return (hurted);
 }
 
-static bool _monster_resists_mass_enchantment(monsters *monster,
+static bool _monster_resists_mass_enchantment(monster* mons,
                                               enchant_type wh_enchant,
-                                              int pow)
+                                              int pow,
+                                              bool* did_msg)
 {
     // Assuming that the only mass charm is control undead.
     if (wh_enchant == ENCH_CHARM)
     {
-        if (monster->friendly())
+        if (mons->friendly())
             return (true);
 
-        if (monster->holiness() != MH_UNDEAD)
+        if (mons->holiness() != MH_UNDEAD)
             return (true);
 
-        if (monster->check_res_magic(pow))
+        if (mons->check_res_magic(pow))
         {
-            simple_monster_message(monster,
-                                   mons_immune_magic(monster)? " is unaffected."
-                                                             : " resists.");
+            if (simple_monster_message(mons, mons_immune_magic(mons)
+                                       ? " is unaffected." : " resists."))
+            {
+                *did_msg = true;
+            }
             return (true);
         }
     }
     else if (wh_enchant == ENCH_CONFUSION
-             || monster->holiness() == MH_NATURAL)
+             || mons->holiness() == MH_NATURAL)
     {
         if (wh_enchant == ENCH_CONFUSION
-            && !mons_class_is_confusable(monster->type))
+            && !mons_class_is_confusable(mons->type))
         {
             return (true);
         }
 
-        if (monster->check_res_magic(pow))
+        if (mons->check_res_magic(pow))
         {
-            simple_monster_message(monster,
-                                   mons_immune_magic(monster)? " is unaffected."
-                                                             : " resists.");
+            if (simple_monster_message(mons, mons_immune_magic(mons)
+                                       ? " is unaffected." : " resists."))
+            {
+                *did_msg = true;
+            }
             return (true);
         }
     }
     // Mass enchantments around lots of plants/fungi shouldn't cause a flood
     // of "is unaffected" messages. --Eino
-    else if (mons_is_firewood(monster))
+    else if (mons_is_firewood(mons))
     {
-        return(true);
+        return (true);
     }
     else  // trying to enchant an unnatural creature doesn't work
     {
-        simple_monster_message(monster, " is unaffected.");
+        if (simple_monster_message(mons, " is unaffected."))
+            *did_msg = true;
         return (true);
     }
 
@@ -1860,10 +1871,10 @@ static bool _monster_resists_mass_enchantment(monsters *monster,
 // If m_succumbed is non-NULL, will be set to the number of monsters that
 // were enchanted. If m_attempted is non-NULL, will be set to the number of
 // monsters that we tried to enchant.
-bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
+void mass_enchantment( enchant_type wh_enchant, int pow, int origin,
                        int *m_succumbed, int *m_attempted )
 {
-    bool msg_generated = false;
+    bool did_msg = false;
 
     if (m_succumbed)
         *m_succumbed = 0;
@@ -1882,7 +1893,7 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
         if (m_attempted)
             ++*m_attempted;
 
-        if (_monster_resists_mass_enchantment(*mi, wh_enchant, pow))
+        if (_monster_resists_mass_enchantment(*mi, wh_enchant, pow, &did_msg))
             continue;
 
         if (mi->add_ench(mon_enchant(wh_enchant, 0, kc)))
@@ -1899,8 +1910,8 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
             case ENCH_CHARM:     msg = " submits to your will.";  break;
             default:             msg = NULL;                      break;
             }
-            if (msg)
-                msg_generated = simple_monster_message(*mi, msg);
+            if (msg && simple_monster_message(*mi, msg))
+                did_msg = true;
 
             // Extra check for fear (monster needs to reevaluate behaviour).
             if (wh_enchant == ENCH_FEAR)
@@ -1908,23 +1919,21 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
         }
     }
 
-    if (!msg_generated)
+    if (!did_msg)
         canned_msg(MSG_NOTHING_HAPPENS);
-
-    return (msg_generated);
 }
 
-void bolt::apply_bolt_paralysis(monsters *monster)
+void bolt::apply_bolt_paralysis(monster* mons)
 {
-    if (!monster->paralysed()
-        && monster->add_ench(ENCH_PARALYSIS)
-        && (!monster->petrified()
-            || monster->has_ench(ENCH_PETRIFYING)))
+    if (!mons->paralysed()
+        && mons->add_ench(ENCH_PARALYSIS)
+        && (!mons->petrified()
+            || mons->has_ench(ENCH_PETRIFYING)))
     {
-        if (simple_monster_message(monster, " suddenly stops moving!"))
+        if (simple_monster_message(mons, " suddenly stops moving!"))
             obvious_effect = true;
 
-        mons_check_pool(monster, monster->pos(), killer(), beam_source);
+        mons_check_pool(mons, mons->pos(), killer(), beam_source);
     }
 }
 
@@ -1933,60 +1942,60 @@ void bolt::apply_bolt_paralysis(monsters *monster)
 // out it remains properly petrified (no movement or actions). The second
 // part is similar to paralysis, except that insubstantial monsters can't be
 // affected and that stabbing damage is drastically reduced.
-void bolt::apply_bolt_petrify(monsters *monster)
+void bolt::apply_bolt_petrify(monster* mons)
 {
-    int petrifying = monster->has_ench(ENCH_PETRIFYING);
-    if (monster->petrified())
+    int petrifying = mons->has_ench(ENCH_PETRIFYING);
+    if (mons->petrified())
     {
         // If the petrifying is not yet finished, we can force it to happen
         // right away by casting again. Otherwise, the spell has no further
         // effect.
         if (petrifying > 0)
         {
-            monster->del_ench(ENCH_PETRIFYING, true);
-            if (!monster->has_ench(ENCH_PARALYSIS)
-                && simple_monster_message(monster, " stops moving altogether!"))
+            mons->del_ench(ENCH_PETRIFYING, true);
+            if (!mons->has_ench(ENCH_PARALYSIS)
+                && simple_monster_message(mons, " stops moving altogether!"))
             {
                 obvious_effect = true;
             }
         }
     }
-    else if (monster->add_ench(ENCH_PETRIFIED)
-             && !monster->has_ench(ENCH_PARALYSIS))
+    else if (mons->add_ench(ENCH_PETRIFIED)
+             && !mons->has_ench(ENCH_PARALYSIS))
     {
         // Add both the petrifying and the petrified enchantment. The former
         // will run out sooner and result in plain petrification behaviour.
-        monster->add_ench(ENCH_PETRIFYING);
-        if (simple_monster_message(monster, " is moving more slowly."))
+        mons->add_ench(ENCH_PETRIFYING);
+        if (simple_monster_message(mons, " is moving more slowly."))
             obvious_effect = true;
 
-        mons_check_pool(monster, monster->pos(), killer(), beam_source);
+        mons_check_pool(mons, mons->pos(), killer(), beam_source);
     }
 }
 
-bool curare_hits_monster(actor *agent, monsters *monster, kill_category who,
+bool curare_hits_monster(actor *agent, monster* mons, kill_category who,
                          int levels)
 {
-    poison_monster(monster, who, levels, false);
+    poison_monster(mons, who, levels, false);
 
     int hurted = 0;
 
-    if (!monster->res_asphyx())
+    if (!mons->res_asphyx())
     {
         hurted = roll_dice(2, 6);
 
         // Note that the hurtage is halved by poison resistance.
-        if (monster->res_poison() > 0)
+        if (mons->res_poison() > 0)
             hurted /= 2;
 
         if (hurted)
         {
-            simple_monster_message(monster, " convulses.");
-            monster->hurt(agent, hurted, BEAM_POISON);
+            simple_monster_message(mons, " convulses.");
+            mons->hurt(agent, hurted, BEAM_POISON);
         }
 
-        if (monster->alive())
-            enchant_monster_with_flavour(monster, agent, BEAM_SLOW);
+        if (mons->alive())
+            enchant_monster_with_flavour(mons, agent, BEAM_SLOW);
     }
 
     // Deities take notice.
@@ -1997,29 +2006,29 @@ bool curare_hits_monster(actor *agent, monsters *monster, kill_category who,
 }
 
 // Actually poisons a monster (with message).
-bool poison_monster(monsters *monster, kill_category who, int levels,
+bool poison_monster(monster* mons, kill_category who, int levels,
                     bool force, bool verbose)
 {
-    if (!monster->alive())
+    if (!mons->alive())
         return (false);
 
-    if ((!force && monster->res_poison() > 0) || levels <= 0)
+    if ((!force && mons->res_poison() > 0) || levels <= 0)
         return (false);
 
-    const mon_enchant old_pois = monster->get_ench(ENCH_POISON);
-    monster->add_ench(mon_enchant(ENCH_POISON, levels, who));
-    const mon_enchant new_pois = monster->get_ench(ENCH_POISON);
+    const mon_enchant old_pois = mons->get_ench(ENCH_POISON);
+    mons->add_ench(mon_enchant(ENCH_POISON, levels, who));
+    const mon_enchant new_pois = mons->get_ench(ENCH_POISON);
 
     // Actually do the poisoning.  The order is important here.
     if (new_pois.degree > old_pois.degree)
     {
         if (verbose)
         {
-            simple_monster_message(monster,
+            simple_monster_message(mons,
                                    old_pois.degree > 0 ? " looks even sicker."
                                                        : " is poisoned.");
         }
-        behaviour_event(monster, ME_ANNOY, (who == KC_YOU) ? MHITYOU : MHITNOT);
+        behaviour_event(mons, ME_ANNOY, (who == KC_YOU) ? MHITYOU : MHITNOT);
     }
 
     // Finally, take care of deity preferences.
@@ -2031,21 +2040,21 @@ bool poison_monster(monsters *monster, kill_category who, int levels,
 
 // Actually poisons, rots, and/or slows a monster with miasma (with
 // message).
-bool miasma_monster(monsters *monster, kill_category who)
+bool miasma_monster(monster* mons, kill_category who)
 {
-    if (!monster->alive())
+    if (!mons->alive())
         return (false);
 
-    if (monster->res_rotting())
+    if (mons->res_rotting())
         return (false);
 
-    bool success = poison_monster(monster, who);
+    bool success = poison_monster(mons, who);
 
-    if (monster->max_hit_points > 4 && coinflip())
+    if (mons->max_hit_points > 4 && coinflip())
     {
-        monster->max_hit_points--;
-        monster->hit_points = std::min(monster->max_hit_points,
-                                       monster->hit_points);
+        mons->max_hit_points--;
+        mons->hit_points = std::min(mons->max_hit_points,
+                                       mons->hit_points);
         success = true;
     }
 
@@ -2053,7 +2062,7 @@ bool miasma_monster(monsters *monster, kill_category who)
     {
         bolt beam;
         beam.flavour = BEAM_SLOW;
-        beam.apply_enchantment_to_monster(monster);
+        beam.apply_enchantment_to_monster(mons);
         success = true;
     }
 
@@ -2061,25 +2070,25 @@ bool miasma_monster(monsters *monster, kill_category who)
 }
 
 // Actually napalms a monster (with message).
-bool napalm_monster(monsters *monster, kill_category who, int levels,
+bool napalm_monster(monster* mons, kill_category who, int levels,
                     bool verbose)
 {
-    if (!monster->alive())
+    if (!mons->alive())
         return (false);
 
-    if (monster->res_sticky_flame() || levels <= 0)
+    if (mons->res_sticky_flame() || levels <= 0)
         return (false);
 
-    const mon_enchant old_flame = monster->get_ench(ENCH_STICKY_FLAME);
-    monster->add_ench(mon_enchant(ENCH_STICKY_FLAME, levels, who));
-    const mon_enchant new_flame = monster->get_ench(ENCH_STICKY_FLAME);
+    const mon_enchant old_flame = mons->get_ench(ENCH_STICKY_FLAME);
+    mons->add_ench(mon_enchant(ENCH_STICKY_FLAME, levels, who));
+    const mon_enchant new_flame = mons->get_ench(ENCH_STICKY_FLAME);
 
     // Actually do the napalming.  The order is important here.
     if (new_flame.degree > old_flame.degree)
     {
         if (verbose)
-            simple_monster_message(monster, " is covered in liquid flames!");
-        behaviour_event(monster, ME_WHACK, who == KC_YOU ? MHITYOU : MHITNOT);
+            simple_monster_message(mons, " is covered in liquid flames!");
+        behaviour_event(mons, ME_WHACK, who == KC_YOU ? MHITYOU : MHITNOT);
     }
 
     return (new_flame.degree > old_flame.degree);
@@ -2093,15 +2102,15 @@ bool napalm_monster(monsters *monster, kill_category who, int levels,
 //
 //  Note that beam properties must be set, as the tracer will take them
 //  into account, as well as the monster's intelligence.
-void fire_tracer(const monsters *monster, bolt &pbolt, bool explode_only)
+void fire_tracer(const monster* mons, bolt &pbolt, bool explode_only)
 {
     // Don't fiddle with any input parameters other than tracer stuff!
     pbolt.is_tracer     = true;
-    pbolt.source        = monster->pos();
-    pbolt.beam_source   = monster->mindex();
-    pbolt.can_see_invis = monster->can_see_invisible();
-    pbolt.smart_monster = (mons_intel(monster) >= I_NORMAL);
-    pbolt.attitude      = mons_attitude(monster);
+    pbolt.source        = mons->pos();
+    pbolt.beam_source   = mons->mindex();
+    pbolt.can_see_invis = mons->can_see_invisible();
+    pbolt.smart_monster = (mons_intel(mons) >= I_NORMAL);
+    pbolt.attitude      = mons_attitude(mons);
 
     // Init tracer variables.
     pbolt.foe_info.reset();
@@ -2120,7 +2129,7 @@ void fire_tracer(const monsters *monster, bolt &pbolt, bool explode_only)
         // summoned, but they're hostile and would love nothing better
         // than to nuke the player and his minions.
         if (mons_att_wont_attack(pbolt.attitude)
-            && !mons_att_wont_attack(monster->attitude))
+            && !mons_att_wont_attack(mons->attitude))
         {
             pbolt.foe_ratio = 25;
         }
@@ -2141,7 +2150,7 @@ void fire_tracer(const monsters *monster, bolt &pbolt, bool explode_only)
 // When a mimic is hit by a ranged attack, it teleports away (the slow
 // way) and changes its appearance - the appearance change is in
 // monster_teleport() in mon-stuff.cc.
-void mimic_alert(monsters *mimic)
+void mimic_alert(monster* mimic)
 {
     if (!mimic->alive())
         return;
@@ -2207,7 +2216,7 @@ bool bolt::is_bouncy(dungeon_feature_type feat) const
     }
 
     if ((flavour == BEAM_FIRE || flavour == BEAM_COLD)
-        && feat == DNGN_GREEN_CRYSTAL_WALL )
+        && feat == DNGN_GREEN_CRYSTAL_WALL)
     {
         return (true);
     }
@@ -2315,6 +2324,9 @@ void bolt::affect_endpoint()
     if (name == "blast of poison")
         big_cloud(CLOUD_POISON, whose_kill(), killer(), pos(), 0, 7+random2(5));
 
+    if (origin_spell == SPELL_HOLY_BREATH)
+        big_cloud(CLOUD_HOLY_FLAMES, whose_kill(), killer(), pos(), 0, 7+random2(5));
+
     if (name == "foul vapour")
     {
         // death drake; swamp drakes handled earlier
@@ -2359,7 +2371,7 @@ void bolt::drop_object()
     {
         if (item->sub_type == MI_THROWING_NET)
         {
-            monsters* m = monster_at(pos());
+            monster* m = monster_at(pos());
             // Player or monster at position is caught in net.
             if (you.pos() == pos() && you.attribute[ATTR_HELD]
                 || m && m->caught())
@@ -2558,6 +2570,9 @@ void bolt::affect_place_clouds()
     if (name == "blast of poison")
         place_cloud(CLOUD_POISON, p, random2(4) + 2, whose_kill(), killer());
 
+    if (origin_spell == SPELL_HOLY_BREATH)
+        place_cloud(CLOUD_HOLY_FLAMES, p, random2(4) + 2, whose_kill(), killer());
+
     // Fire/cold over water/lava
     if (feat == DNGN_LAVA && flavour == BEAM_COLD
         || feat_is_watery(feat) && is_fiery())
@@ -2691,7 +2706,7 @@ void bolt::affect_place_explosion_clouds()
 // A little helper function to handle the calling of ouch()...
 void bolt::internal_ouch(int dam)
 {
-    monsters *monst = NULL;
+    monster* monst = NULL;
     if (!invalid_monster_index(beam_source) && menv[beam_source].type != -1)
         monst = &menv[beam_source];
 
@@ -2749,7 +2764,7 @@ bool bolt::fuzz_invis_tracer()
     if (beam_src != MHITNOT && beam_src != MHITYOU)
     {
         // Monsters that can sense invisible
-        const monsters *mon = &menv[beam_src];
+        const monster* mon = &menv[beam_src];
         if (mons_sense_invis(mon))
             return (dist == 0);
     }
@@ -2813,7 +2828,7 @@ std::string bolt::zapper() const
         return menv[beam_src].name(DESC_PLAIN);
 }
 
-bool bolt::is_harmless(const monsters *mon) const
+bool bolt::is_harmless(const monster* mon) const
 {
     // For enchantments, this is already handled in nasty_to().
     if (is_enchantment())
@@ -2938,7 +2953,7 @@ void bolt::reflect()
 
     if (pos() == you.pos())
         reflector = NON_MONSTER;
-    else if (monsters* m = monster_at(pos()))
+    else if (monster* m = monster_at(pos()))
         reflector = m->mindex();
     else
     {
@@ -2960,7 +2975,7 @@ void bolt::tracer_affect_player()
     if (YOU_KILL(thrower))
     {
         // Don't ask if we're aiming at ourselves.
-        if (!aimed_at_feet && !dont_stop_player && !harmless_to_player())
+        if (!dont_stop_player && !harmless_to_player())
         {
             if (yesno("That beam is likely to hit you. Continue anyway?",
                       false, 'n'))
@@ -3058,8 +3073,8 @@ bool bolt::misses_player()
         train_shields_more = true;
     }
 
-    if (!aimed_at_feet && coinflip())
-        you.check_train_dodging();
+    if (!aimed_at_feet)
+        practise(EX_BEAM_MAY_HIT);
 
     defer_rand r;
     bool miss = true;
@@ -3108,14 +3123,18 @@ bool bolt::misses_player()
         miss = false;
     }
 
-    if (coinflip() && train_shields_more)
-        exercise(SK_SHIELDS, one_chance_in(3) ? 1 : 0);
+    if (train_shields_more)
+        practise(EX_SHIELD_BEAM_FAIL);
 
     return (miss);
 }
 
 void bolt::affect_player_enchantment()
 {
+    // boost paralysis odds a bit, since chain paralysis from beams was removed
+    if (flavour == BEAM_PARALYSIS)
+        ench_power = ench_power * 6 / 5;
+
     if (flavour != BEAM_POLYMORPH && has_saving_throw()
         && you.check_res_magic(ench_power))
     {
@@ -3125,7 +3144,7 @@ void bolt::affect_player_enchantment()
         bool need_msg = true;
         if (thrower != KILL_YOU_MISSILE && !invalid_monster_index(beam_source))
         {
-            monsters *mon = &menv[beam_source];
+            monster* mon = &menv[beam_source];
             if (!mon->observable())
             {
                 mpr("Something tries to affect you, but you resist.");
@@ -3219,8 +3238,9 @@ void bolt::affect_player_enchantment()
         break;
 
     case BEAM_INVISIBILITY:
-        potion_effect( POT_INVISIBILITY, ench_power );
-        contaminate_player( 1 + random2(2), effect_known );
+        you.attribute[ATTR_INVIS_UNCANCELLABLE] = 1;
+        potion_effect(POT_INVISIBILITY, ench_power);
+        contaminate_player(1 + random2(2), effect_known);
         obvious_effect = true;
         nasty = false;
         nice  = true;
@@ -3490,8 +3510,7 @@ void bolt::affect_player()
          "Player damage: rolled=%d; after AC=%d", roll, hurted );
 #endif
 
-    if (one_chance_in(4))
-        you.check_train_armour();
+    practise(EX_BEAM_WILL_HIT);
 
     bool was_affected = false;
     int  old_hp       = you.hp;
@@ -3625,7 +3644,7 @@ int bolt::beam_source_as_target() const
                                     : MHITYOU);
 }
 
-void bolt::update_hurt_or_helped(monsters *mon)
+void bolt::update_hurt_or_helped(monster* mon)
 {
     if (!mons_atts_aligned(attitude, mons_attitude(mon)))
     {
@@ -3660,7 +3679,7 @@ void bolt::update_hurt_or_helped(monsters *mon)
     }
 }
 
-void bolt::tracer_enchantment_affect_monster(monsters* mon)
+void bolt::tracer_enchantment_affect_monster(monster* mon)
 {
     // Update friend or foe encountered.
     if (!mons_atts_aligned(attitude, mons_attitude(mon)))
@@ -3683,7 +3702,7 @@ void bolt::tracer_enchantment_affect_monster(monsters* mon)
 }
 
 // Return false if we should skip handling this monster.
-bool bolt::determine_damage(monsters* mon, int& preac, int& postac, int& final,
+bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
                             std::vector<std::string>& messages)
 {
     // preac: damage before AC modifier
@@ -3700,13 +3719,19 @@ bool bolt::determine_damage(monsters* mon, int& preac, int& postac, int& final,
     if (!apply_dmg_funcs(mon, preac, messages))
         return (false);
 
-    postac = preac - maybe_random2(1 + mon->ac, !is_tracer);
+    postac = preac;
 
-    // Fragmentation has triple AC reduction.
-    if (flavour == BEAM_FRAG)
+    // Hellfire ignores AC.
+    if (flavour != BEAM_HELLFIRE)
     {
         postac -= maybe_random2(1 + mon->ac, !is_tracer);
-        postac -= maybe_random2(1 + mon->ac, !is_tracer);
+
+        // Fragmentation has triple AC reduction.
+        if (flavour == BEAM_FRAG)
+        {
+            postac -= maybe_random2(1 + mon->ac, !is_tracer);
+            postac -= maybe_random2(1 + mon->ac, !is_tracer);
+        }
     }
 
     postac = std::max(postac, 0);
@@ -3723,7 +3748,7 @@ bool bolt::determine_damage(monsters* mon, int& preac, int& postac, int& final,
     return (true);
 }
 
-void bolt::handle_stop_attack_prompt(monsters* mon)
+void bolt::handle_stop_attack_prompt(monster* mon)
 {
     if ((thrower == KILL_YOU_MISSILE || thrower == KILL_YOU)
         && !is_harmless(mon))
@@ -3731,7 +3756,8 @@ void bolt::handle_stop_attack_prompt(monsters* mon)
         if (friend_info.count == 1 && !friend_info.dont_stop
             || foe_info.count == 1 && !foe_info.dont_stop)
         {
-            if (stop_attack_prompt(mon, true, target))
+            const bool autohit_first = (hit == AUTOMATIC_HIT);
+            if (stop_attack_prompt(mon, true, target, autohit_first))
             {
                 beam_cancelled = true;
                 finish_beam();
@@ -3747,7 +3773,7 @@ void bolt::handle_stop_attack_prompt(monsters* mon)
     }
 }
 
-void bolt::tracer_nonenchantment_affect_monster(monsters* mon)
+void bolt::tracer_nonenchantment_affect_monster(monster* mon)
 {
     std::vector<std::string> messages;
     int preac, post, final;
@@ -3796,7 +3822,7 @@ void bolt::tracer_nonenchantment_affect_monster(monsters* mon)
     extra_range_used += range_used_on_hit(mon);
 }
 
-void bolt::tracer_affect_monster(monsters* mon)
+void bolt::tracer_affect_monster(monster* mon)
 {
     // Ignore unseen monsters.
     if (!agent() || !mon->visible_to(agent()))
@@ -3825,7 +3851,7 @@ void bolt::tracer_affect_monster(monsters* mon)
         tracer_nonenchantment_affect_monster(mon);
 }
 
-void bolt::enchantment_affect_monster(monsters* mon)
+void bolt::enchantment_affect_monster(monster* mon)
 {
     god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
@@ -3899,7 +3925,7 @@ void bolt::enchantment_affect_monster(monsters* mon)
     extra_range_used += range_used_on_hit(mon);
 }
 
-void bolt::monster_post_hit(monsters* mon, int dmg)
+void bolt::monster_post_hit(monster* mon, int dmg)
 {
     if (YOU_KILL(thrower) && mons_near(mon))
         print_wounds(mon);
@@ -3958,7 +3984,7 @@ void bolt::water_hits_actor(actor *act)
 }
 
 // Return true if the block succeeded (including reflections.)
-bool bolt::attempt_block(monsters* mon)
+bool bolt::attempt_block(monster* mon)
 {
     const int shield_block = mon->shield_bonus();
     bool rc = false;
@@ -3999,7 +4025,7 @@ bool bolt::attempt_block(monsters* mon)
     return (rc);
 }
 
-bool bolt::handle_statue_disintegration(monsters* mon)
+bool bolt::handle_statue_disintegration(monster* mon)
 {
     bool rc = false;
     if ((flavour == BEAM_DISINTEGRATION || flavour == BEAM_NUKE)
@@ -4032,7 +4058,7 @@ bool bolt::handle_statue_disintegration(monsters* mon)
     return (rc);
 }
 
-void bolt::affect_monster(monsters* mon)
+void bolt::affect_monster(monster* mon)
 {
     // Don't hit dead monsters.
     if (!mon->alive())
@@ -4319,7 +4345,7 @@ void bolt::affect_monster(monsters* mon)
     }
 
     int      corpse = -1;
-    monsters orig   = *mon;
+    monster  orig   = *mon;
 
     if (mon->alive())
         monster_post_hit(mon, final);
@@ -4385,7 +4411,7 @@ bool bolt::has_saving_throw() const
     }
 }
 
-static bool _ench_flavour_affects_monster(beam_type flavour, const monsters* mon)
+static bool _ench_flavour_affects_monster(beam_type flavour, const monster* mon)
 {
     bool rc = true;
     switch (flavour)
@@ -4435,7 +4461,7 @@ static bool _ench_flavour_affects_monster(beam_type flavour, const monsters* mon
     return rc;
 }
 
-bool enchant_monster_with_flavour(monsters* mon, actor *foe,
+bool enchant_monster_with_flavour(monster* mon, actor *foe,
                                   beam_type flavour, int powc)
 {
     bolt dummy;
@@ -4446,7 +4472,7 @@ bool enchant_monster_with_flavour(monsters* mon, actor *foe,
     return dummy.obvious_effect;
 }
 
-mon_resist_type bolt::try_enchant_monster(monsters *mon)
+mon_resist_type bolt::try_enchant_monster(monster* mon)
 {
     // Early out if the enchantment is meaningless.
     if (!_ench_flavour_affects_monster(flavour, mon))
@@ -4477,7 +4503,7 @@ mon_resist_type bolt::try_enchant_monster(monsters *mon)
     return (apply_enchantment_to_monster(mon));
 }
 
-mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
+mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 {
     // Gigantic-switches-R-Us
     switch (flavour)
@@ -4690,8 +4716,9 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         return (MON_AFFECTED);
 
     case BEAM_HEALING:
-        if (YOU_KILL(thrower))
+        if (thrower == KILL_YOU || thrower == KILL_YOU_MISSILE)
         {
+            // No KILL_YOU_CONF, or we get "You heal ..."
             if (cast_healing(5 + damage.roll(), false, mon->pos()) > 0)
                 obvious_effect = true;
             msg_generated = true; // to avoid duplicate "nothing happens"
@@ -4805,7 +4832,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         if (mons_is_ghost_demon(mon->type))
             return (MON_UNAFFECTED);
 
-        monsters orig_mon(*mon);
+        monster orig_mon(*mon);
         if (monster_polymorph(mon, (mon->holiness() == MH_DEMONIC ?
                                         MONS_HELL_HOG : MONS_HOG)))
         {
@@ -4813,6 +4840,9 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
 
             // Don't restore items to monster if it reverts.
             orig_mon.inv = mon->inv;
+
+            // monsters can't cast spells in hog form either -doy
+            mon->spells.clear();
 
             // For monster reverting to original form.
             mon->props[ORIG_MONSTER_KEY] = orig_mon;
@@ -5225,13 +5255,13 @@ void bolt::explosion_draw_cell(const coord_def& p)
     {
         const coord_def drawpos = grid2view(p);
 #ifdef USE_TILE
-        if (in_los_bounds(drawpos))
+        if (in_los_bounds_v(drawpos))
             tiles.add_overlay(p, tileidx_bolt(*this));
 #else
         // bounds check
-        if (in_los_bounds(drawpos))
+        if (in_los_bounds_v(drawpos))
         {
-            cgotoxy(drawpos.x, drawpos.y, GOTO_CRT);
+            cgotoxy(drawpos.x, drawpos.y, GOTO_DNGN);
             put_colour_ch(colour == BLACK ? random_colour() : colour,
                           dchar_glyph(DCHAR_EXPLOSION));
         }
@@ -5329,7 +5359,7 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
 // Only enchantments should need the actual monster type
 // to determine this; non-enchantments are pretty
 // straightforward.
-bool bolt::nasty_to(const monsters *mon) const
+bool bolt::nasty_to(const monster* mon) const
 {
     // Cleansing flame.
     if (flavour == BEAM_HOLY)
@@ -5384,7 +5414,7 @@ bool bolt::nasty_to(const monsters *mon) const
 // Return true if the bolt is considered nice by mon.
 // This is not the inverse of nasty_to(): the bolt needs to be
 // actively positive.
-bool bolt::nice_to(const monsters *mon) const
+bool bolt::nice_to(const monster* mon) const
 {
     // Polymorphing a (very) ugly thing will mutate it into a different
     // (very) ugly thing.
@@ -5642,6 +5672,8 @@ std::string beam_type_name(beam_type type)
     case BEAM_DEVOUR_FOOD:          return ("devour food");
     case BEAM_GLOOM:                return ("gloom");
     case BEAM_INK:                  return ("ink");
+    case BEAM_HOLY_FLAME:           return ("cleansing flame");
+    case BEAM_HOLY_LIGHT:           return ("holy light");
 
     case NUM_BEAMS:                 DEBUGSTR("invalid beam type");
                                     return ("INVALID");

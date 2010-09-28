@@ -26,7 +26,7 @@ Once the primary guardian serpent of a legendary treasure hoard, he was disgrace
 # Uniques
 Agnes
 
-A tall and beautiful warrior, as vain as she is quick. You can't help but notice both her exotic weapon and graceful movements. She searches the dungeon for aesthetically pleasing objects to surround herself with.
+A tall (for her kind) and beautiful warrior, as vain as she is quick. You can't help but notice both her exotic weapon and graceful movements. She searches the dungeon for aesthetically pleasing objects to surround herself with.
 %%%%
 Antaeus
 
@@ -66,7 +66,7 @@ The lord of the Iron City of Dis.
 %%%%
 Dissolution
 
-The Pits of Slime used to be a thriving civilization, and Dissolution was the prophet of their god. When the city was overtaken by its current residents, only Dissolution survived, for he alone turned faithfully to the Slime God. Dissolution become a tremendous mass of acidic ooze, yet retained his intelligence. He is filled with hatred for anything that can hold a form.
+The Pits of Slime used to be a thriving civilization, and Dissolution was the prophet of their god. When the city was overtaken by its current residents, only Dissolution survived, for he alone turned faithfully to the Slime God. Dissolution became a tremendous mass of acidic ooze, yet retained his intelligence. He is filled with hatred for anything that can hold a form.
 %%%%
 Donald
 {{
@@ -86,10 +86,6 @@ return descript
 Dowan
 
 A beautiful but vain elf with an aptitude for magic and little else. His skills are the perfect complement of his twin sister Duvessa's fighting prowess.
-%%%%
-Duane
-
-A mercenary whose only significant trait is his unusually large ears. He was hired to guard something (or possibly someone), but who or what that is, he can't tell you. If he did, he'd have to kill you. In fact, he'd like to just kill you anyway.
 %%%%
 Duvessa
 
@@ -124,10 +120,6 @@ An apprentice summoner with a flowing moustache. He has funny ideas about honour
 Frances
 
 A stout warrior who once bested a powerful lord of Pandemonium in combat, gaining control over the demon's realm and thanes. The battle left her with a deep facial scar, one that she carries as a badge of honour rather than a symbol of shame.
-%%%%
-Francis
-
-A wizened spellcaster.
 %%%%
 Frederick
 
@@ -225,7 +217,11 @@ Mennas
 
 There was once a human priest named Mennas. He travelled far and wide preaching of Zin to any who would listen, going even so far as to travel into Orcish lands, preaching to orcs about laws and mercy. By all accounts the orcs were not happy with Mennas. They demanded he swear Beogh was the one true god, and when Mennas remained silent they cut out his tongue.
 
-Quite whether or not this angel is that same Mennas is something of a mystery, as he seems to have difficulty speaking.
+Whether or not this angel is that same Mennas is something of a mystery, as he seems to have difficulty speaking.
+%%%%
+Paracelsus
+
+A powerful alchemist of particular renown for his discovery of zinc and the beginnings of medicine. His wanderings as an itinerant physician and sometime journeyman miner took him throughout the world, but never could he find a safer replacement for his laudanum. People say he wanders the world in search of one to this day.
 %%%%
 Menkaure
 
@@ -254,10 +250,6 @@ A black centaur warrior with a malicious look in the eyes.
 Nikola
 
 A brilliant scientist obsessed with electricity. In his attempts to perfect his electric golem, he was involved in a terrible accident, and now phases in and out of reality.
-%%%%
-Norbert
-
-A skilled warrior, looking to further develop his reputation as a great slayer of monsters. Be warned: he defines 'monster' rather more liberally than most dictionaries.
 %%%%
 Norris
 
@@ -297,10 +289,6 @@ Saint Roka
 
 A mighty warlord. Some orcs even say he is the Chosen One of Beogh.
 %%%%
-Serpent of Hell
-
-A huge red glowing dragon, burning with hellfire.
-%%%%
 Sigmund
 
 The bane of all young adventurers, Sigmund combines delusions of greatness with nasty tactics.
@@ -334,7 +322,7 @@ else
 end
 }}
 %%%%
-Wayne
+Wiglaf
 
 A fat dwarf wearing a stupid-looking hat.
 {{
@@ -382,6 +370,10 @@ ant larva
 
 A baby ant. Isn't it cute?
 %%%%
+apis
+
+A placid, sacred bull of Elyvilon. Beware, evildoers, as surely it will turn on you!
+%%%%
 azure jelly
 
 A frosty blob of bright blue cytoplasm.
@@ -404,7 +396,7 @@ A huge and very powerful demon, wreathed in fire and shadows.
 %%%%
 bear
 
-A common cave bear.
+A common cave bear. If provoked, it may become angry!
 %%%%
 beast
 
@@ -420,7 +412,7 @@ An unusually large kobold.
 %%%%
 black bear
 
-A small black bear.
+A small black bear. If provoked, it may become angry!
 %%%%
 black draconian
 
@@ -429,6 +421,10 @@ Before you stands a draconian.
 black mamba
 
 A large tropical snake with the deadliest of all venoms.
+%%%%
+blessed toe
+
+All that remains of a pious Saint. It shines with a divine light.
 %%%%
 blink frog
 
@@ -493,6 +489,10 @@ A hybrid with the torso of a human atop the body of a large horse. It looks stro
 Chaos spawn
 
 A being of pure chaos, its form is constantly shifting, growing and then losing eyes, mouths, claws and tentacles.
+%%%%
+cherub
+
+A powerful angel, with several faces and multiple pairs of wings. It is a follower of the Good Gods.
 %%%%
 clay golem
 
@@ -887,6 +887,10 @@ A hybrid; human from the chest up, with a scaly, muscular torso trailing off lik
 
 It looks strong and aggressive.
 %%%%
+greater wraith
+
+An ancient skeletal apparition, sheathed in a cloud of mist. Its form glows white-hot with debilitating energy.
+%%%%
 Green Death
 
 A bloated form covered in oozing sores and exhaling clouds of lethal poison.
@@ -909,7 +913,7 @@ A large creature with the hindquarters of a lion and the wings, head and talons 
 %%%%
 grizzly bear
 
-A large, nasty bear with grey fur.
+A large, nasty bear with grey fur. If provoked, it may become angry!
 %%%%
 guardian mummy
 
@@ -972,6 +976,10 @@ A larger and even uglier goblin, with an even worse temper to match. Many foolis
 hog
 
 A large, fat and very ugly pig.
+%%%%
+holy dragon
+
+A dragon imbued with the power of the Gods, it breathes blessed fire and claws with the sear of holy wrath.
 %%%%
 hound
 
@@ -1229,6 +1237,22 @@ neqoxec
 
 A weirdly shaped demon, pulsing and shifting with mutagenic energies, its belly distended with the devoured brains of its victims.
 %%%%
+nisse
+
+Nisse take care of a lord's home and children and protect them from misfortune, in particular at night, when the housefolk are asleep. Since nisse are thought to be skilled in illusions and sometimes able to become invisible, getting more than brief glimpses of one is unlikely. Nisse have four fingers, and are hairy all over, with pointed ears. Their eyes glow in the dark.
+%%%%
+witch
+
+A rather eccentric person, dabbling in all sorts of arcanities.
+%%%%
+huldra
+
+Huldra are dangerous seductresses who live in the forest. The huldra lures men into the forest in order to secure her freedom or sometimes to suck the life out of a man. One of her methods is to appear suddenly out of the rain and mist, friendly and enticing to the point that no man can resist her charms.
+%%%%
+trollkonor
+
+A trollkonor is a troll’s wife who possesses magical powers. Despite their natural human lineage, they greatly resemble their ugly troll husbands.
+%%%%
 ogre
 
 A larger, uglier and fatter relative of orcs and goblins.
@@ -1244,6 +1268,10 @@ A vicious plant, dripping with vitriol.
 ooze
 
 A disgusting glob of grey sludge.
+%%%%
+ophan
+
+This strange creature consits of a wheel nested inside another, both of these covered in eyes, and a strange flame flickering across its surface.
 %%%%
 orange crystal statue
 
@@ -1303,13 +1331,25 @@ pale draconian
 
 Before you stands a draconian.
 %%%%
+paladin
+
+A pious, armoured warrior fighting for the forces of good.
+%%%%
 pandemonium lord
 
 Powerful demons inhabiting the endless halls of Pandemonium, each is different, with its own set of strengths and weaknesses.
 %%%%
+phantasmal warrior
+
+A hideous translucent green undead spirit.
+%%%%
 phantom
 
 A transparent man-like undead spirit.
+%%%%
+phoenix
+
+A bird of myth and legend, said to die in flames and be reborn from the ashes.
 %%%%
 pile of gold coins
 
@@ -1329,7 +1369,7 @@ The apparition of an unfortunate adventurer.
 %%%%
 polar bear
 
-A large and very strong bear covered in glistening white fur.
+A large and very strong bear covered in glistening white fur. If provoked, it may become angry!
 %%%%
 program bug
 
@@ -1462,6 +1502,10 @@ shapeshifter
 
 A disturbing creature with the power to change its form. It is very rarely observed alive in its natural state.
 %%%%
+shedu
+
+A divine guardians that travels always as a pair, it has the ability to resurrect its mate from death.
+%%%%
 sheep
 
 A stupid woolly animal, with murder in its eyes. It looks surprised.
@@ -1469,6 +1513,14 @@ A stupid woolly animal, with murder in its eyes. It looks surprised.
 shining eye
 
 A huge and strangely deformed eyeball, pulsating with energy. Beauty is certainly nowhere to be found in this beholder.
+%%%%
+silent spectre
+
+The bane of wizards, these terrible spirits bring an unearthly silence to the area around them.
+%%%%
+silver star
+
+An orb of divine energy pulsating with blinding light.
 %%%%
 silver statue
 
@@ -1544,13 +1596,13 @@ spectral thing
 
 A hideous glowing apparition.
 %%%%
-spectral warrior
-
-A hideous translucent green undead spirit.
-%%%%
 sphinx
 
 A large creature with a human head, the body of a lion, and the wings of a huge bird.
+%%%%
+spider
+
+An ordinary orb-weaving spider with a white cross on its back. It's not as ridiculously huge as other arachnids in this place, but somehow still as big as a small cat - and you don't have a shoe that big.
 %%%%
 spiny frog
 
@@ -1559,6 +1611,10 @@ Although slightly smaller than the giant toad, the spiny frog makes up for lack 
 spiny worm
 
 A great black worm, its many-segmented body covered in spiky plates of chitinous armour. Acidic venom drips from its toothy maw.
+%%%%
+spirit
+
+The soul of a holy creature, reft from its body. It is a timid creature, but as something divine, is sure to be protected.
 %%%%
 spriggan
 

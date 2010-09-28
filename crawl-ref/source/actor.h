@@ -19,9 +19,9 @@ public:
     virtual int       mindex() const = 0;
     virtual actor_type atype() const = 0;
 
-    virtual monsters* as_monster() = 0;
+    virtual monster* as_monster() = 0;
     virtual player* as_player() = 0;
-    virtual const monsters* as_monster() const = 0;
+    virtual const monster* as_monster() const = 0;
     virtual const player* as_player() const = 0;
 
     virtual kill_category kill_alignment() const = 0;
@@ -188,18 +188,14 @@ public:
     virtual void expose_to_element(beam_type element, int strength = 0) = 0;
     virtual void drain_stat(stat_type stat, int amount, actor* attacker) { }
     virtual bool can_hibernate(bool holi_only = false) const;
+    virtual bool can_sleep() const;
     virtual void hibernate(int power = 0) = 0;
     virtual void check_awaken(int disturbance) = 0;
-
-    virtual bool check_train_armour(int amount = 1);
-    virtual bool check_train_dodging(int amount = 1);
 
     virtual int  skill(skill_type sk, bool skill_bump = false) const
     {
         return (0);
     }
-
-    virtual void exercise(skill_type sk, int qty) { }
 
     virtual int stat_hp() const = 0;
     virtual int stat_maxhp() const = 0;

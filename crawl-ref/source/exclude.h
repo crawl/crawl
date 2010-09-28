@@ -3,9 +3,9 @@
 
 #include "los_def.h"
 
-bool need_auto_exclude(const monsters *mon, bool sleepy = false);
-void set_auto_exclude(const monsters *mon);
-void remove_auto_exclude(const monsters *mon, bool sleepy = false);
+bool need_auto_exclude(const monster* mon, bool sleepy = false);
+void set_auto_exclude(const monster* mon);
+void remove_auto_exclude(const monster* mon, bool sleepy = false);
 
 void init_exclusion_los();
 void update_exclusion_los(std::vector<coord_def> changed);
@@ -65,7 +65,7 @@ public:
                      std::string desc = "",
                      bool vaultexcl = false);
 
-    void update_excluded_points();
+    void update_excluded_points(bool recompute_los = false);
     void recompute_excluded_points(bool recompute_los = false);
 
     travel_exclude* get_exclude_root(const coord_def &p);
@@ -100,6 +100,6 @@ bool is_excluded(const coord_def &p, const exclude_set &exc = curr_excludes);
 class writer;
 class reader;
 void marshallExcludes(writer& outf, const exclude_set& excludes);
-void unmarshallExcludes(reader& inf, char minorVersion, exclude_set& excludes);
+void unmarshallExcludes(reader& inf, int minorVersion, exclude_set& excludes);
 
 #endif

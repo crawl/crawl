@@ -19,14 +19,6 @@ Breathe Fire
 
 Breathe a blast of fire at a targeted monster.
 %%%%
-Enable Demonic Guardian
-
-Allows a demonic guardian to spawn occasionally, maximum of one at a time.
-%%%%
-Disable Demonic Guardian
-
-Prevents a demonic guardian from spawning.
-%%%%
 Breathe Frost
 
 Breathe a blast of frost at a targeted monster.
@@ -70,37 +62,9 @@ Fly
 
 Start flying.
 %%%%
-Summon Minor Demon
-
-Summon a minor demon.
-%%%%
-Summon Demon
-
-Summon a greater demon.
-%%%%
 Hellfire
 
 Blast your enemies with hellfire.
-%%%%
-Torment
-
-Torment yourself and the monsters around you.
-%%%%
-Raise Dead
-
-Reanimate all corpses and skeletons in your vicinity as followers. Note that zombies and skeletons cannot leave the level they were created on.
-%%%%
-Control Demon
-
-Temporarily enslave a demon.
-%%%%
-Gate Yourself to Pandemonium
-
-Enter the chaotic realm of Pandemonium. Note that getting back might be more difficult.
-%%%%
-Channeling
-
-Regain a small amount of magical energy.
 %%%%
 Throw Flame ability
 
@@ -109,10 +73,6 @@ Throw a blast of flame at a targeted monster.
 Throw Frost ability
 
 Throw a blast of frost at a targeted monster.
-%%%%
-Bolt of Draining ability
-
-Drain the life force of a targeted monster. This will reduce the experience you'll get from killing it.
 %%%%
 Release Delayed Fireball
 
@@ -124,11 +84,7 @@ At the permanent loss of one magic point restore your Strength, Dexterity and In
 %%%%
 Device Recharging
 
-At the permanent loss of one magic point recharge a wand or rod or enchant a weapon of electrocution.
-%%%%
-Evoke Sense Surroundings
-
-Map your vicinity.
+At the permanent loss of one magic point recharge a wand or rod.
 %%%%
 Evoke Teleportation
 
@@ -220,11 +176,15 @@ Heal hit points by draining the life force of the living monsters surrounding yo
 %%%%
 Enslave Soul
 
-Mark a monster's living soul as ripe for the taking. Once the marked monster dies, its soul will be yours.
+Mark a living intelligent monster's soul as ripe for the taking. Once the marked monster dies, its soul will be yours.
 
-The soul will retain at least some of the monster's innate healing ability and faculties, and sometimes even the monster's equipment. However, only a relatively uninjured monster can have its soul marked, and only one soul can be enslaved at a time. Furthermore, both the duration of the mark and the chance that the enslaved soul will remain intact are dependent on Invocations skill.
+The enslaved soul will retain the monster's faculties, equipment and abilities, as well as some of its innate healing. However, only a relatively uninjured monster can have its soul marked, and only one soul can be enslaved at a time. Furthermore, the duration of the mark is dependent on Invocations skill.
 
-Note that enslaved souls, whether twisted or intact, can follow you beyond the level they were created on.
+Note that enslaved souls can follow you beyond the level they were created on.
+%%%%
+Animate Remains or Dead
+
+If you get this description, it is a bug.
 %%%%
 # Okawaru
 Might
@@ -285,7 +245,7 @@ Destroy all weapons on the ground. In order to prevent a weapon from being accid
 %%%%
 Lesser Healing
 
-Depending on your Invocations skill, heal a creature other than you by a small amount. Using this ability on hostile monsters will try to make them neutral. This works best on animals, worse on humanoids of your species, still worse on other humanoids, and worst of all on demons and undead. The chance for successful pacification depends on the healing power.
+Depending on your Invocations skill, heal a creature other than you by a small amount. Using this ability on hostile monsters will try to make them neutral. This works best on animals, worse on humanoids of your species, still worse on other humanoids, and worst of all on demons and undead. Mindless creatures cannot be pacified, and no monster can be pacified while it is asleep. The chance for successful pacification depends on the healing power.
 
 Whether the pacification succeeds or not, the invested food and magic point are lost. If it does succeed, the monster is healed and you gain half the monster's experience value and possibly some piety. Otherwise, the monster is unaffected and you gain nothing.
 
@@ -301,7 +261,7 @@ Purge your body of bad effects such as sickness, poisoning, slowness, confusion 
 %%%%
 Greater Healing
 
-Depending on your Invocations skill, heal a creature other than you by a moderate amount. Using this ability on hostile monsters will try to make them neutral. This works best on animals, worse on humanoids of your species, still worse on other humanoids, and worst of all on demons and undead. The chance for successful pacification depends on the healing power, so it is significantly better than using Lesser Healing.
+Depending on your Invocations skill, heal a creature other than you by a moderate amount. Using this ability on hostile monsters will try to make them neutral. This works best on animals, worse on humanoids of your species, still worse on other humanoids, and worst of all on demons and undead. Mindless creatures cannot be pacified, and no monster can be pacified while it is asleep.   The chance for successful pacification depends on the healing power, so it is significantly better than using Lesser Healing.
 
 Whether the pacification succeeds or not, the invested food, piety and magic points are lost. If it does succeed, the monster is healed and you gain half the monster's experience value and possibly some piety. Otherwise, the monster is unaffected and you gain nothing.
 

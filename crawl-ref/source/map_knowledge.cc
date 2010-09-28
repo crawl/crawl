@@ -147,7 +147,8 @@ void set_terrain_seen( int x, int y )
     cell->flags |= MAP_SEEN_FLAG;
 
 #ifdef USE_TILE
-    tiles.update_minimap(x, y);
+    coord_def pos(x, y);
+    tiles.update_minimap(pos);
 #endif
 }
 

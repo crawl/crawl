@@ -14,11 +14,14 @@
 #include "artefact.h"
 #include "beam.h"
 #include "branch.h"
+#include "cloud.h"
 #include "clua.h"
 #include "coord.h"
+#include "coordit.h"
 #include "delay.h"
 #include "describe.h"
 #include "directn.h"
+#include "exercise.h"
 #include "map_knowledge.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -33,7 +36,7 @@
 #include "ouch.h"
 #include "player.h"
 #include "skills.h"
-#include "spl-mis.h"
+#include "spl-miscast.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
@@ -115,6 +118,10 @@ void trap_def::prepare_ammo()
     case TRAP_ALARM:
         this->ammo_qty = 1 + random2(3);
         break;
+    case TRAP_GOLUBRIA:
+        // really, turns until it vanishes
+        this->ammo_qty = 30 + random2(20);
+        break;
     default:
         this->ammo_qty = 0;
         break;
@@ -156,8 +163,8 @@ bool trap_def::is_known(const actor* act) const
         return (player_knows);
     else if (act->atype() == ACT_MONSTER)
     {
-        const monsters* monster = act->as_monster();
-        const int intel = mons_intel(monster);
+        const monster* mons = act->as_monster();
+        const int intel = mons_intel(mons);
 
         // Smarter trap handling for intelligent monsters
         // * monsters native to a branch can be assumed to know the trap
@@ -174,14 +181,14 @@ bool trap_def::is_known(const actor* act) const
             // * Allied zombies won't fall through shafts. (No herding!)
             // * Highly intelligent monsters never fall through shafts.
             return (intel >= I_HIGH
-                    || intel > I_PLANT && mons_is_native_in_branch(monster)
-                    || player_knows && monster->wont_attack());
+                    || intel > I_PLANT && mons_is_native_in_branch(mons)
+                    || player_knows && mons->wont_attack());
         }
         else
         {
             return (intel >= I_NORMAL
-                    && (mons_is_native_in_branch(monster)
-                        || player_knows && monster->wont_attack()
+                    && (mons_is_native_in_branch(mons)
+                        || player_knows && mons->wont_attack()
                         || intel >= I_HIGH && one_chance_in(3)));
         }
     }
@@ -246,7 +253,7 @@ void mark_net_trapping(const coord_def& where)
     }
 }
 
-void monster_caught_in_net(monsters *mon, bolt &pbolt)
+void monster_caught_in_net(monster* mon, bolt &pbolt)
 {
     if (mon->body_size(PSIZE_BODY) >= SIZE_GIANT)
         return;
@@ -320,7 +327,7 @@ bool player_caught_in_net()
     return (false);
 }
 
-void check_net_will_hold_monster(monsters *mons)
+void check_net_will_hold_monster(monster* mons)
 {
     if (mons->body_size(PSIZE_BODY) >= SIZE_GIANT)
     {
@@ -362,6 +369,42 @@ void check_net_will_hold_monster(monsters *mons)
         mons->add_ench(ENCH_HELD);
 }
 
+std::vector<coord_def> find_golubria_on_level()
+{
+    std::vector<coord_def> ret;
+    for (rectangle_iterator ri(coord_def(0, 0), coord_def(GXM-1, GYM-1)); ri; ++ri)
+    {
+        trap_def *trap = find_trap(*ri);
+        if (trap && trap->type == TRAP_GOLUBRIA)
+            ret.push_back(*ri);
+    }
+    ASSERT(ret.size() <= 2);
+    return ret;
+}
+
+static bool _find_other_passage_side(coord_def& to)
+{
+    std::vector<coord_def> passages = find_golubria_on_level();
+    if (passages.size() < 2)
+        return false;
+
+    if (to == passages[0])
+    {
+        to = passages[1];
+        return true;
+    }
+    else if (to == passages[1])
+    {
+        to = passages[0];
+        return true;
+    }
+    else
+    {
+        ASSERT(false);
+        return false;
+    }
+}
+
 void trap_def::trigger(actor& triggerer, bool flat_footed)
 {
     const bool you_know = this->is_known();
@@ -372,9 +415,9 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
     // If set, the trap will be removed at the end of the
     // triggering process.
-    bool trap_destroyed = false;
+    bool trap_destroyed = false, know_trap_destroyed = false;;
 
-    monsters* m = triggerer.as_monster();
+    monster* m = triggerer.as_monster();
 
     // Smarter monsters and those native to the level will simply
     // side-step known shafts. Unless they are already looking for
@@ -416,9 +459,36 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         this->shoot_ammo(triggerer, trig_knows);
     else switch (this->type)
     {
+    case TRAP_GOLUBRIA: {
+        coord_def to = p;
+        if (_find_other_passage_side(to))
+        {
+            if (you_trigger)
+                mpr("You enter the passage of Golubria.");
+            else
+                simple_monster_message(m, " enters the passage of Golubria.");
+
+            if (triggerer.move_to_pos(to))
+            {
+                if (you_trigger)
+                    place_cloud(CLOUD_TLOC_ENERGY, p, 1 + random2(3), KC_YOU);
+                else
+                    place_cloud(CLOUD_TLOC_ENERGY, p, 1 + random2(3),
+                                m->kill_alignment(), KILL_MON_MISSILE);
+                trap_destroyed = true;
+                know_trap_destroyed = you_trigger;
+            }
+            else
+            {
+                mpr("But it is blocked!");
+            }
+        }
+        break;
+    }
     case TRAP_TELEPORT:
         // Never revealed by monsters.
-        if (!you_trigger && !you_know)
+        // except when it's in sight, it's pretty obvious what happened. -doy
+        if (!you_trigger && !you_know && !in_sight)
             this->hide();
         triggerer.teleport(true);
         break;
@@ -474,7 +544,8 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 mpr("A huge blade swings out and slices into you!");
                 const int damage = (you.absdepth0 * 2) + random2avg(29, 2)
                     - random2(1 + you.armour_class());
-                ouch(damage, NON_MONSTER, KILLED_BY_TRAP, "blade");
+                std::string n = name(DESC_NOCAP_A) + " trap";
+                ouch(damage, NON_MONSTER, KILLED_BY_TRAP, n.c_str());
                 bleed_onto_floor(you.pos(), MONS_PLAYER, damage, true);
             }
         }
@@ -637,21 +708,29 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             // in 99% of cases - a player can just watch who stepped where
             // and mark the trap on an external paper map.  Not good.
 
+            actor* targ = NULL;
             if (m->wont_attack() || crawl_state.game_is_arena())
-            {
-                MiscastEffect( m, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
-                               3, "the power of Zot" );
-            }
+                targ = m;
             else if (in_sight && one_chance_in(5))
-            {
-                mpr("The power of Zot is invoked against you!");
-                MiscastEffect( &you, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
-                               3, "the power of Zot" );
-            }
-            else if (player_can_hear(this->pos))
+                targ = &you;
+
+            // Give the player a chance to figure out what happened
+            // to their friend.
+            if (player_can_hear(this->pos) && (!targ || !in_sight))
             {
                 mprf(MSGCH_SOUND, "You hear a %s \"Zot\"!",
                      in_sight ? "loud" : "distant");
+            }
+
+            if (targ)
+            {
+                if (in_sight)
+                {
+                    mprf("The power of Zot is invoked against %s!",
+                         targ->name(DESC_NOCAP_THE).c_str());
+                }
+                MiscastEffect(targ, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
+                              3, "the power of Zot");
             }
         }
         break;
@@ -709,11 +788,17 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         // Exercise T&D if the trap revealed itself, but not if it ran
         // out of ammo.
         if (!you_know && this->type != TRAP_UNASSIGNED && this->is_known())
-            exercise(SK_TRAPS_DOORS, ((coinflip()) ? 2 : 1));
+            practise(EX_TRAP_TRIGGER);
     }
 
     if (trap_destroyed)
+    {
+        if (know_trap_destroyed)
+        {
+            env.map_knowledge(this->pos).set_feature(DNGN_FLOOR);
+        }
         this->destroy();
+    }
 }
 
 int trap_def::max_damage(const actor& act)
@@ -866,7 +951,7 @@ void disarm_trap(const coord_def& where)
     {
         mpr("You failed to disarm the trap.");
         if (random2(you.dex()) > 5 + random2(5 + you.absdepth0))
-            exercise(SK_TRAPS_DOORS, 1 + random2(you.absdepth0 / 5));
+            practise(EX_TRAP_DISARM_FAIL, you.absdepth0);
         else
         {
             if (trap.type == TRAP_NET && trap.pos != you.pos())
@@ -880,15 +965,14 @@ void disarm_trap(const coord_def& where)
             else
                 trap.trigger(you, true);
 
-            if (coinflip())
-                exercise(SK_TRAPS_DOORS, 1);
+            practise(EX_TRAP_DISARM_TRIGGER);
         }
     }
     else
     {
         mpr("You have disarmed the trap.");
         trap.disarm();
-        exercise(SK_TRAPS_DOORS, 1 + random2(5) + (you.absdepth0/5));
+        practise(EX_TRAP_DISARM, you.absdepth0);
     }
 }
 
@@ -896,7 +980,7 @@ void disarm_trap(const coord_def& where)
 // This doesn't actually have any effect (yet).
 // Do not expect gratitude for this!
 // ----------------------------------
-void remove_net_from(monsters *mon)
+void remove_net_from(monster* mon)
 {
     you.turn_is_over = true;
 
@@ -945,8 +1029,7 @@ void remove_net_from(monsters *mon)
                 mpr("You fail to remove the net.");
         }
 
-        if (random2(you.dex()) > 5 + random2( 2*mon->body_size(PSIZE_BODY) ))
-            exercise(SK_TRAPS_DOORS, 1 + random2(mon->body_size(PSIZE_BODY)/2));
+        practise(EX_REMOVE_NET);
         return;
     }
 
@@ -1201,13 +1284,6 @@ item_def trap_def::generate_trap_item()
         set_item_ego_type(item, base, SPWPN_NORMAL);
     }
 
-    // give appropriate racial flag for Orcish Mines and Elven Halls
-    // should we ever allow properties of dungeon features, we could use that
-    if (you.where_are_you == BRANCH_ORCISH_MINES)
-        set_equip_race( item, ISFLAG_ORCISH );
-    else if (you.where_are_you == BRANCH_ELVEN_HALLS)
-        set_equip_race( item, ISFLAG_ELVEN );
-
     item_colour(item);
     return item;
 }
@@ -1263,8 +1339,8 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
 
             // Check for shield blocking.
             // Exercise only if the trap was unknown (to prevent scumming.)
-            if (!was_known && player_shield_class() && coinflip())
-                exercise(SK_SHIELDS, 1);
+            if (!was_known && player_shield_class())
+                practise(EX_SHIELD_TRAP);
 
             const int con_block = random2(20 + you.shield_block_penalty());
             const int pro_block = you.shield_bonus();
@@ -1296,12 +1372,13 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
                     msg += "hits you!";
                     mpr(msg.c_str());
 
+                    std::string n = name(DESC_NOCAP_A) + " trap";
+
                     // Needle traps can poison.
                     if (poison)
-                        poison_player(1 + random2(3), "a needle trap");
+                        poison_player(1 + random2(3), "", n);
 
-                    ouch(damage_taken, NON_MONSTER, KILLED_BY_TRAP,
-                         shot.name(DESC_PLAIN).c_str());
+                    ouch(damage_taken, NON_MONSTER, KILLED_BY_TRAP, n.c_str());
                 }
                 else            // trap dodged
                 {
@@ -1310,8 +1387,8 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
                 }
 
                 // Exercise only if the trap was unknown (to prevent scumming.)
-                if (!was_known && coinflip())
-                    you.check_train_dodging();
+                if (!was_known)
+                    practise(EX_DODGE_TRAP);
             }
         }
         else if (act.atype() == ACT_MONSTER)
@@ -1362,6 +1439,7 @@ dungeon_feature_type trap_category(trap_type type)
     case TRAP_TELEPORT:
     case TRAP_ALARM:
     case TRAP_ZOT:
+    case TRAP_GOLUBRIA:
         return (DNGN_TRAP_MAGICAL);
 
     case TRAP_DART:

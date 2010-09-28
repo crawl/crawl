@@ -32,7 +32,8 @@ function ch_item_wieldable(it)
     end
 
     if spells["Sublimation of Blood"]
-            and string.find( it.name("a"), " potions? of blood")
+            and (string.find( it.name("a"), " potions? of blood") or
+                 string.find( it.name("a"), " potions? of coagulated blood"))
     then
         return true
     end

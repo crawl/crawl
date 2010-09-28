@@ -17,6 +17,7 @@
 #include "externs.h"
 
 #include "abl-show.h"
+#include "acquire.h"
 #include "artefact.h"
 #include "beam.h"
 #include "cio.h"
@@ -31,19 +32,18 @@
 #include "directn.h"
 #include "effects.h"
 #include "env.h"
+#include "exercise.h"
 #include "map_knowledge.h"
 #include "fight.h"
 #include "food.h"
 #include "godabil.h"
 #include "goditem.h"
-#include "godpassive.h"
 #include "invent.h"
 #include "it_use2.h"
 #include "it_use3.h"
 #include "items.h"
 #include "itemname.h"
 #include "itemprop.h"
-#include "los.h"
 #include "macro.h"
 #include "message.h"
 #include "misc.h"
@@ -60,20 +60,20 @@
 #include "ouch.h"
 #include "player.h"
 #include "player-equip.h"
-#include "player-stats.h"
 #include "quiver.h"
 #include "religion.h"
 #include "godconduct.h"
 #include "shopping.h"
 #include "skills.h"
 #include "skills2.h"
-#include "spells1.h"
-#include "spells2.h"
-#include "spells3.h"
-#include "spells4.h"
 #include "spl-book.h"
 #include "spl-cast.h"
-#include "spl-mis.h"
+#include "spl-clouds.h"
+#include "spl-damage.h"
+#include "spl-goditem.h"
+#include "spl-miscast.h"
+#include "spl-selfench.h"
+#include "spl-transloc.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
@@ -89,8 +89,8 @@
 #include "xom.h"
 
 static bool _drink_fountain();
-static bool _handle_enchant_weapon( enchant_stat_type which_stat,
-                                    bool quiet = false, int item_slot = -1 );
+static bool _handle_enchant_weapon(enchant_stat_type which_stat,
+                                   bool quiet = false);
 static bool _handle_enchant_armour( int item_slot = -1 );
 
 static int  _fire_prompt_for_item();
@@ -137,6 +137,17 @@ bool can_wield(item_def *weapon, bool say_reason,
         }
     }
 
+    // Only ogres and trolls can wield giant clubs (>= 30 aum)
+    // and large rocks (60 aum).
+    if (you.body_size(PSIZE_TORSO) < SIZE_LARGE
+                      && (item_mass(*weapon) >= 500
+                          || weapon->base_type == OBJ_WEAPONS
+                             && item_mass(*weapon) >= 300))
+    {
+        SAY(mpr("That's too large and heavy for you to wield."));
+        return (false);
+    }
+
     // All non-weapons only need a shield check.
     if (weapon->base_type != OBJ_WEAPONS)
     {
@@ -147,12 +158,6 @@ bool can_wield(item_def *weapon, bool say_reason,
         }
         else
             return (true);
-    }
-
-    if (you.body_size(PSIZE_TORSO) < SIZE_LARGE && item_mass(*weapon) >= 300)
-    {
-        SAY(mpr("That's too large and heavy for you to wield."));
-        return (false);
     }
 
     // Small species wielding large weapons...
@@ -228,7 +233,7 @@ static bool _valid_weapon_swap(const item_def &item)
     // Some missiles need to be wielded for spells.
     if (item.base_type == OBJ_MISSILES)
     {
-        if (item.sub_type == MI_STONE)
+        if (item.sub_type == MI_STONE || item.sub_type == MI_LARGE_ROCK)
             return (you.has_spell(SPELL_SANDBLAST));
 
         if (item.sub_type == MI_ARROW)
@@ -263,7 +268,7 @@ static bool _valid_weapon_swap(const item_def &item)
 // If force is true, don't check weapon inscriptions.
 // (Assuming the player was already prompted for that.)
 bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
-                  bool force, bool show_unwield_msg)
+                  bool force, bool show_unwield_msg, bool show_wield_msg)
 {
     if (inv_count() < 1)
     {
@@ -280,8 +285,12 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     if (auto_wield)
     {
-        if (item_slot == you.equip[EQ_WEAPON])
+        if (item_slot == you.equip[EQ_WEAPON]
+            || you.equip[EQ_WEAPON] == -1
+               && !_valid_weapon_swap(you.inv[item_slot]))
+        {
             item_slot = 1;      // backup is 'b'
+        }
 
         if (slot != -1)         // allow external override
             item_slot = slot;
@@ -367,10 +376,6 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
         return (false);
     }
 
-    // Make sure that wielding the weapon won't kill the player.
-    if (!safe_to_remove_or_wear(new_wpn, false))
-        return (false);
-
     // Unwield any old weapon.
     if (you.weapon() && !unwield_item(show_weff_messages))
         return (false);
@@ -380,7 +385,8 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     // Go ahead and wield the weapon.
     equip_item(EQ_WEAPON, item_slot, show_weff_messages);
 
-    mpr(new_wpn.name(DESC_INVENTORY_EQUIP).c_str());
+    if (show_wield_msg)
+        mpr(new_wpn.name(DESC_INVENTORY_EQUIP).c_str());
 
     // Warn player about low str/dex or throwing skill.
     if (show_weff_messages)
@@ -532,11 +538,7 @@ void wear_armour(int slot) // slot is for tiles
         return;
 
     // Wear the armour.
-    if (safe_to_remove_or_wear( you.inv[armour_wear_2],
-                                wearing_slot(armour_wear_2) ))
-    {
-        do_wear_armour( armour_wear_2, false );
-    }
+    do_wear_armour(armour_wear_2, false);
 }
 
 static int armour_equip_delay(const item_def &item)
@@ -631,8 +633,8 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return (false);
         }
 
-        if (!ignore_temporary && you.swimming()
-            && you.species == SP_MERFOLK)
+        if (!ignore_temporary
+            && you.species == SP_MERFOLK && you.swimming())
         {
             if (verbose)
                mpr("You don't currently have feet!");
@@ -777,9 +779,6 @@ bool do_wear_armour(int item, bool quiet)
             return (false);
     }
 
-    if (!safe_to_remove_or_wear(invitem, false))
-        return (false);
-
     you.turn_is_over = true;
 
     const int delay = armour_equip_delay(invitem);
@@ -834,7 +833,7 @@ bool takeoff_armour(int item)
         return (false);
     }
 
-    if (!safe_to_remove_or_wear(invitem, true))
+    if (!safe_to_remove(invitem))
         return (false);
 
     bool removed_cloak = false;
@@ -1423,7 +1422,6 @@ static bool _item_penetrates_victim(const bolt &beam, const actor *victim,
 static bool _silver_damages_victim(bolt &beam, actor* victim, int &dmg,
                                    std::string &dmg_msg)
 {
-
     int mutated = 0;
 
     // For mutation damage, we want to count innate mutations for
@@ -1449,9 +1447,7 @@ static bool _silver_damages_victim(bolt &beam, actor* victim, int &dmg,
         dmg = (dmg * multiplier) / 100;
     }
     else
-    {
         return (false);
-    }
 
     if (!beam.is_tracer && you.can_see(victim))
        dmg_msg = "The silver sears " + victim->name(DESC_NOCAP_THE) + "!";
@@ -1537,7 +1533,7 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
     }
     else
     {
-        monsters *mon = victim->as_monster();
+        monster* mon = victim->as_monster();
 
         if (!(mon->flags & MF_WAS_IN_VIEW))
             mon->seen_context = "thin air";
@@ -1656,7 +1652,7 @@ static bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
     if (!agent || agent->atype() == ACT_MONSTER || beam.reflections > 0)
         return (true);
 
-    monsters* mons = victim->as_monster();
+    monster* mons = victim->as_monster();
 
     const int skill = you.skills[SK_THROWING];
     const item_def* wp = agent->weapon();
@@ -1809,7 +1805,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         // But not for Nessos.
         if (agent->atype() == ACT_MONSTER)
         {
-            const monsters* mon = static_cast<const monsters*>(agent);
+            const monster* mon = static_cast<const monster* >(agent);
             if (mon->type != MONS_NESSOS)
                 bow_brand = SPWPN_NORMAL;
         }
@@ -1841,7 +1837,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     }
     else
     {
-        const monsters *mon = agent->as_monster();
+        const monster* mon = agent->as_monster();
 
         beam.attitude      = mons_attitude(mon);
         beam.beam_source   = mon->mindex();
@@ -2555,6 +2551,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             }
         }
 
+        practise(EX_WILL_LAUNCH, launcher_skill);
+
         // Removed 2 random2(2)s from each of the learning curves, but
         // left slings because they're hard enough to develop without
         // a good source of shot in the dungeon.
@@ -2562,10 +2560,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         {
         case SK_SLINGS:
         {
-            // Slings are really easy to learn because they're not
-            // really all that good, and it's harder to get ammo anyway.
-            exercise(SK_SLINGS, 1 + random2avg(3, 2));
-
             // Sling bullets are designed for slinging and easier to aim.
             if (wepType == MI_SLING_BULLET)
                 baseHit += 4;
@@ -2592,7 +2586,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         // comes from dexterity.  (Dex bonus here as well as below.)
         case SK_THROWING:
             baseHit -= 2;
-            exercise(SK_THROWING, (coinflip()? 2 : 1));
             exHitBonus += (effSkill * 3) / 2 + you.dex() / 2;
 
             // No extra damage for blowguns.
@@ -2606,7 +2599,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         case SK_BOWS:
         {
             baseHit -= 3;
-            exercise(SK_BOWS, (coinflip()? 2 : 1));
             exHitBonus += (effSkill * 2);
 
             // Strength is good if you're using a nice bow.
@@ -2631,7 +2623,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             // Crossbows are easy for unskilled people.
 
         case SK_CROSSBOWS:
-            exercise(SK_CROSSBOWS, (coinflip()? 2 : 1));
             baseHit++;
             exHitBonus += (3 * effSkill) / 2 + 6;
             // exDamBonus += effSkill * 2 / 3 + 4;
@@ -2651,8 +2642,13 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             dice_mult = dice_mult * 130 / 100;
         }
 
-        if (ammo_brand == SPMSL_STEEL)
+        // Note that branded missile damage goes through defender
+        // resists.
+        if (ammo_brand == SPMSL_STEEL
+            || elemental_missile_beam(bow_brand, ammo_brand))
+        {
             dice_mult = dice_mult * 150 / 100;
+        }
 
         // ID check. Can't ID off teleported projectiles, uh, because
         // it's too weird. Also it messes up the messages.
@@ -2818,9 +2814,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 // Darts also using throwing skills, now.
                 exHitBonus += skill_bump(SK_THROWING);
                 exDamBonus += you.skills[SK_THROWING] * 3 / 5;
-
-                // exercise skills
-                exercise(SK_THROWING, 1 + random2avg(3, 2));
                 break;
 
             case MI_JAVELIN:
@@ -2834,9 +2827,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
                 // High dex helps damage a bit, too (aim for weak spots).
                 exDamBonus = stat_adjust(exDamBonus, you.dex(), 20, 150, 100);
-
-                // Javelins train throwing quickly.
-                exercise(SK_THROWING, 1 + coinflip());
                 break;
 
             case MI_THROWING_NET:
@@ -2850,19 +2840,18 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 exHitBonus += (skill_bump(SK_THROWING) * 7 / 2);
                 // Adjust for strength and dex.
                 exHitBonus = dex_adjust_thrown_tohit(exHitBonus);
-
-                // Nets train throwing.
-                exercise(SK_THROWING, 1);
                 break;
             }
 
             if (ammo_brand == SPMSL_STEEL)
                 dice_mult = dice_mult * 150 / 100;
-        }
 
-        // exercise skill
-        if (coinflip())
-            exercise(SK_THROWING, 1);
+            practise(EX_WILL_THROW_MSL, wepType);
+        }
+        else
+        {
+            practise(EX_WILL_THROW_WEAPON);
+        }
 
         // ID check
         if (!teleport
@@ -2898,8 +2887,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     }
     else // LRET_FUMBLED
     {
-        if (one_chance_in(20))
-            exercise(SK_THROWING, 1);
+        practise(EX_WILL_THROW_OTHER);
 
         exHitBonus = you.dex() / 4;
     }
@@ -3121,12 +3109,6 @@ static int _prompt_ring_to_remove(int new_ring)
     const item_def *left  = you.slot_item(EQ_LEFT_RING, true);
     const item_def *right = you.slot_item(EQ_RIGHT_RING, true);
 
-    if (left->cursed() && right->cursed())
-    {
-        mprf("You're already wearing two cursed rings!");
-        return (-1);
-    }
-
     mesclr();
     mprf("Wearing %s.", you.inv[new_ring].name(DESC_NOCAP_A).c_str());
 
@@ -3159,116 +3141,44 @@ static int _prompt_ring_to_remove(int new_ring)
     const int eqslot = (c == lslot || c == '<') ? EQ_LEFT_RING
                                                 : EQ_RIGHT_RING;
 
-    if (!check_warning_inscriptions(you.inv[you.equip[eqslot]], OPER_REMOVE))
-        return (-1);
-
     return (you.equip[eqslot]);
 }
 
 // Checks whether a to-be-worn or to-be-removed item affects
 // character stats and whether wearing/removing it could be fatal.
 // If so, warns the player, or just returns false if quiet is true.
-bool safe_to_remove_or_wear(const item_def &item, bool remove,
-                            bool quiet)
+bool safe_to_remove(const item_def &item, bool quiet)
 {
-    bool prop_lev = false;
-    bool fatal_liquid = false;
-    dungeon_feature_type gridhere = grd(you.pos());
+    item_info inf = get_item_info(item);
 
-    // Don't warn when putting on an unknown item.
-    if (item.base_type == OBJ_JEWELLERY
-        && item_ident(item, ISFLAG_KNOW_PLUSES))
+    const bool grants_lev =
+         inf.base_type == OBJ_JEWELLERY && inf.sub_type == RING_LEVITATION
+         || inf.base_type == OBJ_ARMOUR && inf.special == SPARM_LEVITATION
+         || is_artefact(inf)
+            && artefact_known_wpn_property(inf, ARTP_LEVITATE);
+
+    // assumes item can't grant levitation twice
+    const bool removing_ends_lev =
+        you.is_levitating()
+        && !you.attribute[ATTR_LEV_UNCANCELLABLE]
+        && (player_evokable_levitation() == 1);
+
+    const dungeon_feature_type feat = grd(you.pos());
+
+    if (grants_lev && removing_ends_lev
+        && (feat == DNGN_LAVA
+            || feat == DNGN_DEEP_WATER && !player_likes_water()))
     {
-        switch (item.sub_type)
-        {
-        case RING_LEVITATION:
-            prop_lev = true;
-            break;
-        default:
-            break;
-        }
-    }
-
-    if (item.base_type == OBJ_ARMOUR && item_type_known(item))
-    {
-        switch (item.special)
-        {
-        case SPARM_LEVITATION:
-            prop_lev = true;
-            break;
-
-        default:
-            break;
-        }
-    }
-
-    if (is_artefact(item))
-    {
-        prop_lev = prop_lev || artefact_known_wpn_property(item, ARTP_LEVITATE);
-
-        if (!remove && artefact_known_wpn_property(item, ARTP_EYESIGHT))
-        {
-            // We might have to turn autopickup back on again.
-            // This is not optimal, in that it could also happen if we do
-            // not know the property (in which case it should become known).
-            autotoggle_autopickup(false);
-        }
-    }
-
-    // If we are levitating and about to remove a levitation-granting item
-    // make sure this doesn't cause us to drown or die to stat loss.
-    if (prop_lev && remove && you.is_levitating())
-    {
-        if (you.species == SP_MERFOLK && feat_is_water(gridhere))
-        {
-            fatal_liquid = false;
-        }
-
-        if (gridhere == DNGN_LAVA
-            || (gridhere == DNGN_DEEP_WATER && !beogh_water_walk()
-                && !you.swimming()))
-        {
-            // We'd fall into water!  See if we would drown.
-            coord_def empty;
-
-            // Check if we'd be able to scramble out.
-            if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE
-                || (carrying_capacity() / 2) <= you.burden
-                || !empty_surrounds(you.pos(), DNGN_FLOOR, 1, false, empty))
-            {
-                fatal_liquid = true;
-            }
-
-            if (gridhere == DNGN_LAVA)
-            {
-                int res = player_res_fire(false);
-
-                if (res <= 0 || (110 / res) >= you.hp)
-                    fatal_liquid = true;
-            }
-        }
-
-        if (you.permanent_levitation()
-            && (item.base_type != OBJ_ARMOUR || item.sub_type != ARM_BOOTS))
-        {
-            fatal_liquid = false; // we won't fall!
-        }
-    }
-
-    if (remove)
-    {
-        if (prop_lev && fatal_liquid)
-        {
-            if (!quiet)
-            {
-                mprf(MSGCH_WARN, "%s this item would be fatal, so you refuse "
-                                 "to do that.",
-                                 (item.base_type == OBJ_WEAPONS ? "Unwielding"
-                                                                : "Removing"));
-            }
+        if (quiet)
             return (false);
+        else
+        {
+            std::string fname = (feat == DNGN_LAVA ? "lava" : "deep water");
+            std::string prompt = "Really remove this item over " + fname + "?";
+            return (yesno(prompt.c_str(), false, 'n'));
         }
     }
+
     return (true);
 }
 
@@ -3292,10 +3202,11 @@ static bool _swap_rings(int ring_slot)
     int unwanted;
 
     // Don't prompt if both rings are of the same type.
-    if (lring->sub_type == rring->sub_type
-        && lring->plus == rring->plus
-        && lring->plus2 == rring->plus2
-        && !is_artefact(*lring) && !is_artefact(*rring))
+    if ((lring->sub_type == rring->sub_type
+         && lring->plus == rring->plus
+         && lring->plus2 == rring->plus2
+         && !is_artefact(*lring) && !is_artefact(*rring)) ||
+        lring->cursed() || rring->cursed())
     {
         if (lring->cursed())
             unwanted = you.equip[EQ_RIGHT_RING];
@@ -3315,10 +3226,6 @@ static bool _swap_rings(int ring_slot)
     }
 
     if (!remove_ring(unwanted, false))
-        return (false);
-
-    // Check that the new ring won't kill us.
-    if (!safe_to_remove_or_wear(you.inv[ring_slot], false))
         return (false);
 
     // Put on the new ring.
@@ -3383,20 +3290,12 @@ bool puton_item(int item_slot)
             return (false);
         }
 
-        // Check that the new amulet won't kill us.
-        if (!safe_to_remove_or_wear(item, false))
-            return (false);
-
         // Put on the new amulet.
         start_delay(DELAY_JEWELLERY_ON, 1, item_slot);
 
         // Assume it's going to succeed.
         return (true);
     }
-
-    // Check that it won't kill us.
-    if (!safe_to_remove_or_wear(item, false))
-        return (false);
 
     equipment_type hand_used;
 
@@ -3573,7 +3472,7 @@ bool remove_ring(int slot, bool announce)
     ring_wear_2 = you.equip[hand_used];
 
     // Remove the ring.
-    if (!safe_to_remove_or_wear(you.inv[ring_wear_2], true))
+    if (!safe_to_remove(you.inv[ring_wear_2]))
         return (false);
 
     mprf("You remove %s.", you.inv[ring_wear_2].name(DESC_NOCAP_YOUR).c_str());
@@ -3606,7 +3505,7 @@ static bool _dont_use_invis()
         mpr("You can't turn invisible.");
         return (true);
     }
-    else if (get_contamination_level() > 0
+    else if (get_contamination_level() > 1
              && !yesno("Invisibility will do you no good right now; "
                        "use anyway?", false, 'n'))
     {
@@ -3858,7 +3757,7 @@ void zap_wand(int slot)
         set_ident_flags(wand, ISFLAG_KNOW_PLUSES);
     }
 
-    exercise(SK_EVOCATIONS, 1);
+    practise(EX_DID_ZAP_WAND);
     alert_nearby_monsters();
 
     if (!alreadyknown && !alreadytried && risky)
@@ -4243,6 +4142,8 @@ static bool _vorpalise_weapon()
 
 bool enchant_weapon(enchant_stat_type which_stat, bool quiet, item_def &wpn)
 {
+    ASSERT(wpn.defined());
+
     bool to_hit = (which_stat == ENCHANT_TO_HIT);
 
     // Cannot be enchanted nor uncursed.
@@ -4332,21 +4233,17 @@ bool enchant_weapon(enchant_stat_type which_stat, bool quiet, item_def &wpn)
 }
 
 static bool _handle_enchant_weapon(enchant_stat_type which_stat,
-                                   bool quiet, int item_slot)
+                                   bool quiet)
 {
-    if (item_slot == -1)
-        item_slot = you.equip[ EQ_WEAPON ];
+    item_def* item = you.weapon();
 
-    if (item_slot == -1)
+    if (!item)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return (false);
     }
 
-    item_def& wpn(you.inv[item_slot]);
-
-    bool result = enchant_weapon(which_stat, quiet, wpn);
-
+    bool result = enchant_weapon(which_stat, quiet, *item);
     you.wield_change = true;
 
     return result;
@@ -4354,6 +4251,8 @@ static bool _handle_enchant_weapon(enchant_stat_type which_stat,
 
 bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
 {
+    ASSERT(arm.defined() && arm.base_type == OBJ_ARMOUR);
+
     ac_change = 0;
 
     // Cannot be enchanted nor uncursed.
@@ -4382,8 +4281,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
         hide2armour(arm);
         ac_change = property(arm, PARM_AC) - ac_change;
 
-        if (is_cursed)
-            do_uncurse_item(arm);
+        do_uncurse_item(arm);
 
         // No additional enchantment.
         return (true);
@@ -4427,9 +4325,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
 
     arm.plus++;
     ac_change++;
-
-    if (is_cursed)
-        do_uncurse_item(arm);
+    do_uncurse_item(arm);
 
     return (true);
 }
@@ -4527,7 +4423,7 @@ static bool _scroll_modify_item(item_def scroll)
     ASSERT(scroll.base_type == OBJ_SCROLLS);
 
     // Get the slot of the scroll just read.
-    int item_slot = scroll.slot;
+    int item_slot = scroll.link;
 
     // Get the slot of the item the scroll is to be used on.
     // Ban the scroll's own slot from the prompt to avoid the stupid situation
@@ -4554,9 +4450,7 @@ static bool _scroll_modify_item(item_def scroll)
     case SCR_RECHARGING:
         if (item_is_rechargeable(item, false, true))
         {
-            // Might still fail on highly enchanted weapons of electrocution.
-            // (If so, already prints the "Nothing happens" message.)
-            if (recharge_wand(item_slot))
+            if (recharge_wand(item_slot, false))
                 return (true);
             return (false);
         }
@@ -4607,7 +4501,7 @@ static void _vulnerability_scroll()
     // Go over all creatures in LOS.
     for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
     {
-        if (monsters* mon = monster_at(*ri))
+        if (monster* mon = monster_at(*ri))
         {
             // Dispel all magical enchantments.
             for (unsigned int i = 0; i < ARRAYSZ(lost_enchantments); ++i)
@@ -4686,6 +4580,53 @@ void read_scroll(int slot)
         return;
     }
 
+    const scroll_type which_scroll = static_cast<scroll_type>(scroll.sub_type);
+    const bool alreadyknown = item_type_known(scroll);
+
+    if (alreadyknown)
+    {
+        switch (which_scroll)
+        {
+        case SCR_BLINKING:
+        case SCR_TELEPORTATION:
+            if (item_blocks_teleport(false, false))
+            {
+                mpr("You cannot teleport right now.");
+                return;
+            }
+            break;
+
+        case SCR_ENCHANT_ARMOUR:
+            if (!any_items_to_select(OSEL_ENCH_ARM, true))
+                return;
+            break;
+
+        case SCR_ENCHANT_WEAPON_I:
+        case SCR_ENCHANT_WEAPON_II:
+        case SCR_ENCHANT_WEAPON_III:
+        case SCR_VORPALISE_WEAPON:
+            if (!you.weapon())
+            {
+                mpr("You are not wielding a weapon.");
+                return;
+            }
+            break;
+
+        case SCR_IDENTIFY:
+            if (!any_items_to_select(OSEL_UNIDENT, true))
+                return;
+            break;
+
+        case SCR_RECHARGING:
+            if (!any_items_to_select(OSEL_RECHARGE, true))
+                return;
+            break;
+
+        default:
+            break;
+        }
+    }
+
     // Ok - now we FINALLY get to read a scroll !!! {dlb}
     you.turn_is_over = true;
 
@@ -4696,18 +4637,6 @@ void read_scroll(int slot)
         mpr((player_mutation_level(MUT_BLURRY_VISION) == 3 && one_chance_in(3))
                         ? "This scroll appears to be blank."
                         : "The writing blurs in front of your eyes.");
-        return;
-    }
-
-    // Decrement and handle inventory if any scroll other than paper {dlb}:
-    const scroll_type which_scroll = static_cast<scroll_type>(scroll.sub_type);
-    const bool alreadyknown = item_type_known(scroll);
-
-    if (alreadyknown
-        && (which_scroll == SCR_BLINKING || which_scroll == SCR_TELEPORTATION)
-        && item_blocks_teleport(false, false))
-    {
-        mpr("You cannot teleport right now.");
         return;
     }
 
@@ -4730,8 +4659,7 @@ void read_scroll(int slot)
             return;
         }
 
-        if (!you.skills[SK_SPELLCASTING])
-            exercise(SK_SPELLCASTING, (coinflip()? 2 : 1));
+        practise(EX_WILL_READ_SCROLL);
     }
 
     // It is the exception, not the rule, that the scroll will not
@@ -4791,14 +4719,14 @@ void read_scroll(int slot)
 
     case SCR_SUMMONING:
     {
-        const int monster = create_monster(
-                                mgen_data(MONS_ABOMINATION_SMALL, BEH_FRIENDLY,
-                                          &you, 0, 0, you.pos(), MHITYOU,
-                                          MG_FORCE_BEH));
-        if (monster != -1)
+        const int mons = create_monster(
+                            mgen_data(MONS_ABOMINATION_SMALL, BEH_FRIENDLY,
+                                      &you, 0, 0, you.pos(), MHITYOU,
+                                      MG_FORCE_BEH));
+        if (mons != -1)
         {
             mpr("A horrible Thing appears!");
-            player_angers_monster(&menv[monster]);
+            player_angers_monster(&menv[mons]);
         }
         else
         {
@@ -5116,8 +5044,12 @@ bool stasis_blocks_effect(bool calc_unid,
         }
 
         // In all cases, the amulet auto-ids if requested.
-        if (amulet && identify)
+        if (amulet && get_ident_type(*amulet) != ID_KNOWN_TYPE && identify)
+        {
             set_ident_type(*amulet, ID_KNOWN_TYPE);
+            mprf("You are wearing: %s",
+                  amulet->name(DESC_INVENTORY_EQUIP).c_str());
+        }
         return (true);
     }
     return (false);

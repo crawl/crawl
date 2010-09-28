@@ -98,7 +98,7 @@ enum LOSSelect
 };
 
 #ifdef WIZARD
-static void _wizard_make_friendly(monsters* m);
+static void _wizard_make_friendly(monster* m);
 #endif
 static void _describe_feature(const coord_def& where, bool oos);
 static void _describe_cell(const coord_def& where, bool in_range = true);
@@ -119,14 +119,14 @@ static bool _find_mlist( const coord_def& where, int mode, bool need_path,
                          int range );
 #endif
 
-static char _find_square_wrapper(coord_def &mfp, char direction,
+static bool _find_square_wrapper(coord_def &mfp, int direction,
                                  bool (*find_targ)(const coord_def&, int,
                                                    bool, int),
                                  bool need_path, int mode,
                                  int range, bool wrap,
                                  int los = LOS_ANY);
 
-static char _find_square(coord_def &mfp, int direction,
+static bool _find_square(coord_def &mfp, int direction,
                          bool (*find_targ)(const coord_def&, int, bool, int),
                          bool need_path, int mode, int range,
                          bool wrap, int los = LOS_ANY);
@@ -142,7 +142,7 @@ static void _debug_describe_feature_at(const coord_def &where);
 #endif
 
 #ifdef WIZARD
-static void _wizard_make_friendly(monsters* m)
+static void _wizard_make_friendly(monster* m)
 {
     if (m == NULL)
         return;
@@ -326,9 +326,9 @@ actor* direction_chooser::targeted_actor() const
         return targeted_monster();
 }
 
-monsters* direction_chooser::targeted_monster() const
+monster* direction_chooser::targeted_monster() const
 {
-    monsters* m = monster_at(target());
+    monster* m = monster_at(target());
     if (m && you.can_see(m) && !mons_is_unknown_mimic(m))
         return m;
     else
@@ -342,7 +342,7 @@ std::string direction_chooser::build_targeting_hint_string() const
     // Hint for 'p' - previous target, and for 'f' - current cell, if
     // applicable.
     const actor*    f_target = targeted_actor();
-    const monsters* p_target = get_current_target();
+    const monster* p_target = get_current_target();
 
     if (f_target && f_target == p_target)
     {
@@ -430,17 +430,17 @@ void direction_chooser::describe_cell() const
 static void _draw_ray_glyph(const coord_def &pos, int colour,
                             int glych, int mcol, bool in_range)
 {
-    if (const monsters *mons = monster_at(pos))
+    if (const monster* mons = monster_at(pos))
     {
         if (mons->alive() && mons->visible_to(&you)
             && !mons_is_unknown_mimic(mons))
         {
-            glych  = get_cell_glyph(env.map_knowledge(pos)).ch;
+            glych  = get_cell_glyph(pos).ch;
             colour = mcol;
         }
     }
     const coord_def vp = grid2view(pos);
-    cgotoxy(vp.x, vp.y, GOTO_CRT);
+    cgotoxy(vp.x, vp.y, GOTO_DNGN);
     textcolor(real_colour(colour));
     putch(glych);
 }
@@ -448,7 +448,7 @@ static void _draw_ray_glyph(const coord_def &pos, int colour,
 
 // Unseen monsters in shallow water show a "strange disturbance".
 // (Unless flying!)
-static bool _mon_exposed_in_water(const monsters *mon)
+static bool _mon_exposed_in_water(const monster* mon)
 {
     if (!mon)
         return (false);
@@ -459,7 +459,7 @@ static bool _mon_exposed_in_water(const monsters *mon)
             && !mons_flies(mon));
 }
 
-static bool _mon_exposed_in_cloud(const monsters *mon)
+static bool _mon_exposed_in_cloud(const monster* mon)
 {
     if (!mon)
         return (false);
@@ -470,7 +470,7 @@ static bool _mon_exposed_in_cloud(const monsters *mon)
             && !mon->is_insubstantial());
 }
 
-static bool _mon_exposed(const monsters* mon)
+static bool _mon_exposed(const monster* mon)
 {
     return (_mon_exposed_in_water(mon) || _mon_exposed_in_cloud(mon));
 }
@@ -556,7 +556,7 @@ void full_describe_view()
             list_features.push_back(*ri);
         }
 
-        const monsters *mon = monster_at(*ri);
+        const monster* mon = monster_at(*ri);
         const bool unknown_mimic = (mon && mons_is_unknown_mimic(mon));
 
         if (unknown_mimic)      // It'll be on top.
@@ -736,7 +736,7 @@ void full_describe_view()
             const coord_def c = list_features[i];
             std::string desc = "";
 #ifndef USE_TILE
-            glyph g = get_cell_glyph(env.map_knowledge(c));
+            glyph g = get_cell_glyph(c);
             const std::string colour_str = colour_to_str(g.col);
             desc = "(<" + colour_str + ">";
             desc += stringize_glyph(g.ch);
@@ -777,7 +777,7 @@ void full_describe_view()
         if (quant == 1)
         {
             // Get selected monster.
-            monsters* m = static_cast<monsters*>(sel[0]->data);
+            monster* m = static_cast<monster* >(sel[0]->data);
 
 #ifdef USE_TILE
             // Highlight selected monster on the screen.
@@ -1072,7 +1072,7 @@ coord_def direction_chooser::find_default_target() const
         // Try to find an enemy monster.
 
         // First try to pick our previous target.
-        const monsters *mon_target = get_current_target();
+        const monster* mon_target = get_current_target();
         if (mon_target != NULL
             && (mode != TARG_EVOLVABLE_PLANTS
                     && mons_attitude(mon_target) == ATT_HOSTILE
@@ -1151,7 +1151,7 @@ void direction_chooser::draw_beam_if_needed()
     }
 
     // We shouldn't ever get a beam to an out-of-LOS target.
-    ASSERT(in_los(target()));
+    ASSERT(you.see_cell(target()));
 
     // Work with a copy in order not to mangle anything.
     ray_def ray = beam;
@@ -1161,7 +1161,7 @@ void direction_chooser::draw_beam_if_needed()
     for (; ray.pos() != target(); ray.advance())
     {
         const coord_def p = ray.pos();
-        ASSERT(in_los(p));
+        ASSERT(you.see_cell(p));
 
         if (p == you.pos())
             continue;
@@ -1239,7 +1239,7 @@ void direction_chooser::update_previous_target() const
     you.prev_grd_targ.reset();
 
     // Maybe we should except just_looking here?
-    const monsters* m = monster_at(target());
+    const monster* m = monster_at(target());
     if (m && you.can_see(m))
         you.prev_targ = m->mindex();
     else if (looking_at_you())
@@ -1256,7 +1256,7 @@ bool direction_chooser::select(bool allow_out_of_range, bool endpoint)
         return false;
     }
 
-    const monsters* m = monster_at(target());
+    const monster* m = monster_at(target());
     moves.isEndpoint = endpoint || (m && _mon_exposed(m));
     moves.isValid  = true;
     moves.isTarget = true;
@@ -1352,7 +1352,7 @@ static void _push_back_if_nonempty(const std::string& str,
 void direction_chooser::print_target_monster_description(bool &did_cloud) const
 {
     // Do we see anything?
-    const monsters* mon = monster_at(target());
+    const monster* mon = monster_at(target());
     if (mon == NULL || mons_is_unknown_mimic(mon))
         return;
 
@@ -1521,7 +1521,7 @@ void direction_chooser::toggle_beam()
 
 bool direction_chooser::select_previous_target()
 {
-    if (const monsters* mon_target = get_current_target())
+    if (const monster* mon_target = get_current_target())
     {
         // We have all the information we need.
         moves.isValid  = true;
@@ -1567,7 +1567,7 @@ void direction_chooser::handle_wizard_command(command_type key_command,
     if (!you.wizard)
         return;
 
-    monsters* const m = monster_at(target());
+    monster* const m = monster_at(target());
     std::string marker_result = "";
 
     // These commands do something even if there's no monster there.
@@ -1682,7 +1682,7 @@ void direction_chooser::do_redraws()
 
     if (need_cursor_redraw || Options.use_fake_cursor)
     {
-        cursorxy(grid2view(target()));
+        cursorxy(crawl_view.grid2screen(target()));
         need_cursor_redraw = false;
     }
 }
@@ -1783,7 +1783,10 @@ bool direction_chooser::do_main_loop()
         break;
 #endif
 
-    case CMD_TARGET_TOGGLE_BEAM: toggle_beam(); break;
+    case CMD_TARGET_TOGGLE_BEAM:
+        if (!just_looking)
+            toggle_beam();
+        break;
 
     case CMD_TARGET_EXCLUDE:
         if (you.level_type == LEVEL_LABYRINTH
@@ -1864,7 +1867,7 @@ bool direction_chooser::do_main_loop()
     }
 
     // Don't allow going out of bounds.
-    if (!in_viewport_bounds(grid2view(target())))
+    if (!crawl_view.in_viewport_g(target()))
         set_target(old_target);
 
     if (loop_done)
@@ -1980,7 +1983,7 @@ std::string get_terse_square_desc(const coord_def &gc)
     }
     else if (monster_at(gc) && you.can_see(monster_at(gc)))
     {
-        const monsters& mons = *monster_at(gc);
+        const monster& mons = *monster_at(gc);
 
         if (mons_is_mimic(mons.type) && !(mons.flags & MF_KNOWN_MIMIC))
             desc = get_mimic_item(&mons).name(DESC_PLAIN);
@@ -2015,7 +2018,7 @@ void get_square_desc(const coord_def &c, describe_info &inf,
     if (!you.see_cell(c))
         return;
 
-    const monsters* mons = monster_at(c);
+    const monster* mons = monster_at(c);
     const int oid = you.visible_igrd(c);
 
     if (mons && mons->visible_to(&you))
@@ -2068,7 +2071,7 @@ void full_describe_square(const coord_def &c)
     if (!you.see_cell(c))
         return;
 
-    const monsters* mons = monster_at(c);
+    const monster* mons = monster_at(c);
     const int oid = you.visible_igrd(c);
 
     if (mons && mons->visible_to(&you))
@@ -2140,28 +2143,7 @@ static void _describe_oos_square(const coord_def& where)
 #endif
 }
 
-bool in_vlos(int x, int y)
-{
-    return in_vlos(coord_def(x,y));
-}
-
-bool in_vlos(const coord_def &pos)
-{
-    return (in_los_bounds(pos) && env.map_knowledge(view2grid(pos)).visible()
-                                   || pos == grid2view(you.pos()));
-}
-
-bool in_los(int x, int y)
-{
-    return in_los(coord_def(x,y));
-}
-
-bool in_los(const coord_def& pos)
-{
-    return (in_vlos(grid2view(pos)));
-}
-
-static bool _mons_is_valid_target(const monsters *mon, int mode, int range)
+static bool _mons_is_valid_target(const monster* mon, int mode, int range)
 {
     // Monster types that you can't gain experience from don't count as
     // monsters.
@@ -2204,10 +2186,10 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
     if (static_cast<int>(mlist.size()) <= idx)
         return (false);
 
-    if (!_is_target_in_range(where, range) || !in_los(where))
+    if (!_is_target_in_range(where, range) || !you.see_cell(where))
         return (false);
 
-    const monsters* mon = monster_at(where);
+    const monster* mon = monster_at(where);
     if (mon == NULL)
         return (false);
 
@@ -2233,8 +2215,8 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
     if (need_path && _blocked_ray(mon->pos()))
         return (false);
 
-    const monsters *monl = mlist[real_idx].mon();
-    extern mon_attitude_type mons_attitude(const monsters *m);
+    const monster* monl = mlist[real_idx].mon();
+    extern mon_attitude_type mons_attitude(const monster* m);
 
     if (mons_attitude(mon) != mlist[idx].attitude)
         return (false);
@@ -2259,15 +2241,15 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
 }
 #endif
 
-static bool _find_fprop_unoccupied(const coord_def & where, int mode, bool need_path,
-                          int range = -1)
+static bool _find_fprop_unoccupied(const coord_def & where, int mode,
+                                   bool need_path, int range = -1)
 {
     // Don't target out of range.
     if (!_is_target_in_range(where, range))
         return (false);
 
-    monsters * mon = monster_at(where);
-    if (mon || !in_los(where))
+    monster* mon = monster_at(where);
+    if (mon || !you.see_cell(where))
         return (false);
 
     // Monster in LOS but only via glass walls, so no direct path.
@@ -2302,10 +2284,10 @@ static bool _find_monster( const coord_def& where, int mode, bool need_path,
     if (!_is_target_in_range(where, range))
         return (false);
 
-    const monsters* mon = monster_at(where);
+    const monster* mon = monster_at(where);
 
     // No monster or outside LOS.
-    if (mon == NULL || !in_los(where))
+    if (mon == NULL || !you.see_cell(where))
         return (false);
 
     // Monster in LOS but only via glass walls, so no direct path.
@@ -2343,7 +2325,7 @@ static bool _find_feature( const coord_def& where, int mode,
                            bool /* need_path */, int /* range */)
 {
     // The stair need not be in LOS if the square is mapped.
-    if (!in_los(where) && !env.map_knowledge(where).seen())
+    if (!you.see_cell(where) && !env.map_knowledge(where).seen())
         return (false);
 
     return is_feature(mode, where);
@@ -2409,16 +2391,6 @@ static int _next_los(int dir, int los, bool wrap)
     return (los);
 }
 
-bool in_viewport_bounds(int x, int y)
-{
-    return crawl_view.in_view_viewport(coord_def(x, y));
-}
-
-bool in_los_bounds(const coord_def& p)
-{
-    return crawl_view.in_view_los(p);
-}
-
 //---------------------------------------------------------------
 //
 // find_square
@@ -2430,7 +2402,7 @@ bool in_los_bounds(const coord_def& p)
 // is -1, goes backwards.
 //
 //---------------------------------------------------------------
-static char _find_square(coord_def &mfp, int direction,
+static bool _find_square(coord_def &mfp, int direction,
                          bool (*find_targ)(const coord_def& wh, int mode,
                                            bool need_path, int range),
                          bool need_path, int mode, int range, bool wrap,
@@ -2446,11 +2418,11 @@ static char _find_square(coord_def &mfp, int direction,
     int i, j;
 
     if (los == LOS_NONE)
-        return (0);
+        return (false);
 
     if (los == LOS_FLIPVH || los == LOS_FLIPHV)
     {
-        if (in_los_bounds(mfp))
+        if (in_los_bounds_v(mfp))
         {
             // We've been told to flip between visible/hidden, so we
             // need to find what we're currently on.
@@ -2496,7 +2468,7 @@ static char _find_square(coord_def &mfp, int direction,
         {
             mfp = vyou;
             if (find_targ(you.pos(), mode, need_path, range))
-                return (1);
+                return (true);
             return (_find_square(mfp, direction,
                                  find_targ, need_path, mode, range, false,
                                  _next_los(direction, los, wrap)));
@@ -2615,20 +2587,21 @@ static char _find_square(coord_def &mfp, int direction,
 
         const int targ_x = you.pos().x + temp_xps - ctrx;
         const int targ_y = you.pos().y + temp_yps - ctry;
+        const coord_def targ(targ_x, targ_y);
 
-        if (!crawl_view.in_grid_viewport(coord_def(targ_x, targ_y)))
+        if (!crawl_view.in_viewport_g(targ))
             continue;
 
-        if (!in_bounds(targ_x, targ_y))
+        if (!in_bounds(targ))
             continue;
 
-        if ((onlyVis || onlyHidden) && onlyVis != in_los(targ_x, targ_y))
+        if ((onlyVis || onlyHidden) && onlyVis != you.see_cell(targ))
             continue;
 
-        if (find_targ(coord_def(targ_x, targ_y), mode, need_path, range))
+        if (find_targ(targ, mode, need_path, range))
         {
             mfp.set(temp_xps, temp_yps);
-            return (1);
+            return (true);
         }
     }
 
@@ -2640,14 +2613,14 @@ static char _find_square(coord_def &mfp, int direction,
 // XXX Unbelievably hacky. And to think that my goal was to clean up the code.
 // Identical to find_square, except that mfp is in grid coordinates
 // rather than view coordinates.
-static char _find_square_wrapper(coord_def& mfp, char direction,
+static bool _find_square_wrapper(coord_def& mfp, int direction,
                                  bool (*find_targ)(const coord_def& where, int mode,
                                                    bool need_path, int range),
                                  bool need_path, int mode, int range,
                                  bool wrap, int los )
 {
     mfp = grid2view(mfp);
-    const char r =  _find_square(mfp, direction, find_targ, need_path,
+    const bool r =  _find_square(mfp, direction, find_targ, need_path,
                                  mode, range, wrap, los);
     mfp = view2grid(mfp);
     return r;
@@ -2818,6 +2791,8 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
             return ("teleportation trap");
         case TRAP_ZOT:
             return ("Zot trap");
+        case TRAP_GOLUBRIA:
+            return ("passage of Golubria");
         default:
             error_message_to_player();
             return ("undefined trap");
@@ -2888,8 +2863,6 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
     case DNGN_STONE_STAIRS_UP_I:
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
-        if (player_in_hell())
-            return ("gateway back to the Vestibule of Hell");
         return ("stone staircase leading up");
     case DNGN_ENTER_HELL:
         return ("gateway to Hell");
@@ -2927,6 +2900,8 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return ("gate leading out of Pandemonium");
     case DNGN_TRANSIT_PANDEMONIUM:
         return ("gate leading to another region of Pandemonium");
+    case DNGN_ENTER_DWARF_HALL:
+        return ("staircase to the Dwarf Hall of Fallen Heroes");
     case DNGN_ENTER_ORCISH_MINES:
         return ("staircase to the Orcish Mines");
     case DNGN_ENTER_HIVE:
@@ -2961,10 +2936,9 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return ("gate leading to a distant place");
     case DNGN_EXIT_PORTAL_VAULT:
         return ("gate leading back to the Dungeon");
-
     case DNGN_TEMP_PORTAL:
         return ("portal to somewhere");
-
+    case DNGN_RETURN_FROM_DWARF_HALL:
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_HIVE:
     case DNGN_RETURN_FROM_LAIR:
@@ -3238,7 +3212,7 @@ static std::string _describe_monster_weapon(const monster_info& mi)
         name1 = weap->name(DESC_NOCAP_A, false, false, true,
                            false, ISFLAG_KNOW_CURSE);
     }
-    if (alt && (mons_class_wields_two_weapons(mi.type) || mons_class_wields_two_weapons(mi.base_type)))
+    if (alt && mi.two_weapons)
     {
         name2 = alt->name(DESC_NOCAP_A, false, false, true,
                           false, ISFLAG_KNOW_CURSE);
@@ -3528,7 +3502,7 @@ std::string get_monster_equipment_desc(const monster_info& mi, bool full_desc,
         const item_def* mon_alt = mi.inv[MSLOT_ALT_WEAPON].get();
 
         // _describe_monster_weapon already took care of this
-        if (mons_class_wields_two_weapons(mi.type) || mons_class_wields_two_weapons(mi.base_type))
+        if (mi.two_weapons)
             mon_alt = 0;
 
         bool found_sth    = !weap.empty();
@@ -3635,7 +3609,7 @@ static void _debug_describe_feature_at(const coord_def &where)
 
     mprf(MSGCH_DIAGNOSTICS, "(%d,%d): %s - %s (%d/%s)%s%s%s%s",
          where.x, where.y,
-         stringize_glyph(get_cell_glyph(env.map_knowledge(where)).ch).c_str(),
+         stringize_glyph(get_cell_glyph(where).ch).c_str(),
          feature_desc.c_str(),
          feat,
          dungeon_feature_name(feat),
@@ -3657,7 +3631,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
     if (where == you.pos() && !crawl_state.arena_suspended)
         mpr("You.", MSGCH_EXAMINE_FILTER);
 
-    if (const monsters* mon = monster_at(where))
+    if (const monster* mon = monster_at(where))
     {
         if (_mon_exposed_in_water(mon))
         {

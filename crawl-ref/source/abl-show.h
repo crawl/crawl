@@ -64,7 +64,7 @@ struct ability_def
     scaling_cost        hp_cost;        // hit point cost of ability
     unsigned int        food_cost;      // + rand2avg( food_cost, 2 )
     generic_cost        piety_cost;     // + random2( (piety_cost + 1) / 2 + 1 )
-    unsigned int        flags;          // used for additonal cost notices
+    unsigned int        flags;          // used for additional cost notices
 };
 
 struct talent
@@ -77,8 +77,8 @@ struct talent
 
 const struct ability_def & get_ability_def( ability_type abil );
 
-const char* ability_name(ability_type ability);
 const std::string make_cost_description(ability_type ability);
+const char* ability_name(ability_type ability);
 std::vector<const char*> get_ability_names();
 int choose_ability_menu(const std::vector<talent>& talents);
 

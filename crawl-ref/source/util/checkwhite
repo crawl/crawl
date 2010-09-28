@@ -1,0 +1,25 @@
+#!/usr/bin/perl -w
+
+open FLIST, "git ls-files|" or die "Can't run git ls-files";
+
+while(<FLIST>)
+{
+    chomp;
+    next unless -f $_;
+    next if /\.(png|ttf|ico|icns|fig|tex|eps|pdf|txt)$/i;
+    next if /\.(sln|vim|pbxproj|vsprops|plist)$/i;
+    next if /\.(rb|pl)$/i;
+    next if /Makefile/i;
+    next if /vcproj/;
+    next if /\.(lex|tab)\./;
+    next if !/\./;
+    undef local $/;
+    open F, "<$_" or die "Can't open $_";
+    my $cont=<F>;
+    close F;
+
+    print "newline: $_\n" unless $cont =~ /\n$/s;
+    print "tab: $_\n" if $cont =~ /\t/s;
+    print "spaces at eol: $_\n" if $cont =~ / \n/s;
+}
+close FLIST;

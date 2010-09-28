@@ -8,6 +8,66 @@
 function pan_lord_warning(e)
   crawl.mpr("You feel a terrible weight on your shoulders! A mighty lord of Pandemonium must reside here.", "warning")
 end
+
+colours = {
+    "magenta", "blue", "cyan", "green",
+    "brown", "red", "lightgrey"
+}
+brightcolours = {
+    "lightmagenta", "lightblue", "lightcyan", "lightgreen",
+    "yellow", "lightred", "white"
+}
+
+disco_choices = {
+    function (x, y, ballx, bally, turn, rand)
+        local index = ((x + turn) % #colours) + 1
+        if rand > 60 then
+            return colours[index]
+        else
+            return brightcolours[index]
+        end
+    end,
+    function (x, y, ballx, bally, turn, rand)
+        local index = ((y + turn) % #colours) + 1
+        if rand > 60 then
+            return colours[index]
+        else
+            return brightcolours[index]
+        end
+    end,
+    function (x, y, ballx, bally, turn, rand)
+        local angle = math.atan2(y - bally, x - ballx)
+        local segment = (math.floor(angle / (2 * math.pi) * (2 * #colours)) + 2 * #colours) % (2 * #colours)
+        local index = (math.floor((segment + turn) / 2) % #colours) + 1
+        if rand > 60 then
+            return colours[index]
+        else
+            return brightcolours[index]
+        end
+    end,
+    function (x, y, ballx, bally, turn, rand)
+        local distance = math.floor(math.sqrt((x - ballx)^2 + (y - bally)^2))
+        local index = ((distance + turn) % #colours) + 1
+        if rand > 60 then
+            return colours[index]
+        else
+            return brightcolours[index]
+        end
+    end
+}
+
+colour.add_colour("disco", function(rand, x, y)
+    local vault = dgn.vault_at(x, y)
+    local ul = vault:pos()
+    local ulx, uly = ul:xy()
+    x, y = x - ulx, y - uly
+
+    local map = vault:map()
+    local ballx, bally = dgn.gly_point(map, "D")
+
+    local cycle = disco_choices[math.floor((you.turns() % (16 * #disco_choices)) / 16) + 1]
+    return cycle(x, y, ballx, bally, you.turns() % 16, rand)
+end)
 }}
 
 ##############################################################################
@@ -21,7 +81,7 @@ end
 ##############################################################################
 
 ###########################################################################
-# mnoleg.
+# Mnoleg
 #
 NAME:      mnoleg
 TAGS:      mnoleg
@@ -69,8 +129,65 @@ x..............................xxxx
 xxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+NAME:      mnoleg_2_st
+TAGS:      mnoleg
+ORIENT:    southwest
+LFLOORCOL: yellow
+LROCKCOL:  red
+KMONS:     M = patrolling Mnoleg
+MONS:      neqoxec, patrolling cacodemon, patrolling tormentor
+MONS:      blue death, large abomination, shining eye
+KMONS:     w = brain worm
+KMONS:     u = very ugly thing
+KMONS:     U = ugly thing
+KMONS:     X = tentacled monstrosity
+KITEM:     O = glowing rune of Zot
+NSUBST:    q = 4:u / *:.
+NSUBST:    e = 4:u / *:.
+NSUBST:    p = 6:u / *:.
+epilogue{{
+  crawl.mpr("The air here is shimmering with an eerie glow.")
+  pan_lord_warning(_G)
+  crawl.mark_milestone("br.enter", "entered the realm of Mnoleg.")
+}}
+MAP
+xxxxxxxxxxxxxxxxxxxxxx@xxxxxxxx
+xc...........................cx
+xc..ccccccc..c..c.c.c.c.c.c.ccx
+xc...ccccc..ccc..c...w.w...c.cx
+xc.c1.ccc.1ccccc..c.1.6.1.c..cx
+xc.cc..c..ccccccc..c.w.w.c...cx
+xc.ccc...ccccccccc..c.1.c..c.cx
+xc.cccc...ccccccccc..c.c..cc.cx
+xc.cc.cc...ccccccccc..c..ccc.cx
+xc1ccqqcc..1ccccccccc...cccc1cx
+xc.ccqqqcc...ccccccccc1ccccc.cx
+xc.ccqqq..c...ccccc.2ccccccc.cx
+xc.ccqq...cc...ccc....c...c..cx
+xc.cc......cc...c...cc.....cccx
+xc.ccU......cc.....cc..151..ccx
+xc..cc6...eeecc.1.ccc..5X5..ccx
+xc...ccU.eeecc...ccccc.151.cccx
+xcc.1.cceeecc...cc..ccc...ccccx
+xccc...ccecc...cc....cccccccccx
+xc.cc...ccc...cc......ccccccccx
+xcp.cc...c..........2..cccccccx
+xc.pp.c.....c...1.......ccccccx
+xcppppcc.1.cc............cccccx
+xc.ppppcc.cc..............ccccx
+xcpwpp.pccc....1...M....4..cccx
+xc..w.wccc.................cccx
+xcw...cccc..2.........5....cccx
+xc..wcccccc..........cc5...cccx
+xc..cccccccc.....3..5cOc5.ccccx
+xc.cccccccccc........5cc.cccccx
+xccccccccccccc........5.ccccccx
+xcccccccccccccccccccccccccccccx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
 #######################################################################
-# lom_lobon
+# Lom Lobon
 #
 NAME:      lom_lobon
 TAGS:      lom_lobon
@@ -119,10 +236,86 @@ xxxxxxxxxxxxxxxxxxxxxxxxxwwwwwww......................xxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...@.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+NAME:      lom_lobon_2_st
+TAGS:      lom_lobon no_pool_fixup
+ORIENT:    northwest
+LFLOORCOL: lightgrey
+LROCKCOL:  white
+KITEM:     O = magical rune of zot
+KMONS:     L = patrolling Lom Lobon
+MONS:      blue death, green death
+MONS:      wizard, white draconian annihilator / purple draconian annihilator /\
+           black draconian annihilator
+MONS:      giant orange brain
+MONS:      sixfirhy
+SHUFFLE:   Od / If / Kq / Ue
+SUBST:     I:|, U:|, K:|
+SUBST:     k = 1223333334444666665
+NSUBST:    B = 1:. / *:b
+NSUBST:    ' = 1:+ / *:v
+NSUBST:    " = 1:+ / *:v
+NSUBST:    - = 1:+ / *:v
+NSUBST:    _ = 1:+ / *:v
+NSUBST:    d = 1:1 / *:.
+NSUBST:    f = 1:2 / *:.
+NSUBST:    e = 1:4 / *:.
+NSUBST:    q = 1:5 / *:.
+epilogue{{
+  crawl.mpr("You sense a powerful magical presence. It is not pleased.")
+  pan_lord_warning(_G)
+  crawl.mark_milestone("br.enter", "entered the realm of Lom Lobon.")
+}}
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxwxxwwwwwwwxxxxxxxwwwwwwwwwxxxxxxxxxxxx
+xxxxxxxxwxwwwwbbbbbbbwwxxwwwbbbbbbbwwwxxxxxxxxxxx
+xxxxxxxwwwwwbbbb...bbbbwwwbbbb...bbbbwwwxxwxxxxxx
+xxxxwxxwwwwbb....k....bbwbb....k....bbwwwwwwxxxxx
+xxxwwwwwwwbb...........bbb...........bbwwwwwwxxxx
+xxxwwwwwwbb...wwwwwww.......wwwwwww...bbwwwwxxxxx
+xxxxwwwwbb...wwwwwwwww.....wwwwwwwww...bbwwwwxxxx
+xxwwwwwbb...wwbbbbbbbww...wwbbbbbbbww...bbwwwwxxx
+xxxwwwbb...wwbbwwwwwbbw...wbbwwwwwbbww...bbwwwxxx
+xxxwwbb...wwbbwwwwwwwbb...bbwwwwwwwbbww...bbwwwxx
+xxwwbb...wwbbwww...wwwbbBbbwww...wwwbbww...bbwxxx
+xwwwbb..wwbbwww.vvv.www...www.vvv.wwwbbww..bbwwxx
+xxwbb...wwbwww.v"d"v.ww.3.ww.v'f'v.wwwbww...bbwwx
+xxwbb.k.wwbwww.vdOdv.ww...ww.vfIfv.wwwbww.k.bbwwx
+xwwbb...wwbwww.v"d"v.ww...ww.v'f'v.wwwbww...bbwxx
+xxwwbb..wwbbwww.vvv.www...www.vvv.wwwbbww..bbwxxx
+xxwwbb...wwbbwww...w.ww...ww.w...wwwbbww...bbwxxx
+xwwwwbb...wwbbwwwwwww.w...w.wwwwwwwbbww...bbwwxxx
+xxxwwwbb...wwbbwwwwwww.....wwwwwwwbbww...bbwwxxxx
+xxxxwwwbb.....b...................b.....bbwwwwxxx
+xxxwwwwwb.....B.3.......L.......3.B.....bwwwwwxxx
+xxxwwwwbb.....b...................b.....bbwwwwwxx
+xxwwwwbb...wwbbwwwwwww.....wwwwwwwbbww...bbwwwxxx
+xwwwwbb...wwbbwwwwwww.w...w.wwwwwwwbbww...bbwwwxx
+xxwwbb...wwbbwww...w.ww...ww.w...wwwbbww...bbwwxx
+xxwwbb..wwbbwww.vvv.www...www.vvv.wwwbbww..bbwwxx
+xwwbb...wwbwww.v-q-v.ww...ww.v_e_v.wwwbww...bbwwx
+xwwbb.k.wwbwww.vqKqv.ww...ww.veUev.wwwbww.k.bbwxx
+xxwbb...wwbwww.v-q-v.ww.3.ww.v_e_v.wwwbww...bbwwx
+xxxwbb..wwbbwww.vvv.www...www.vvv.wwwbbww..bbwwxx
+xxwwbb...wwbbwww...wwwbbBbbwww...wwwbbww...bbwwxx
+xxxxwbb...wwbbwwwwwwwbb...bbwwwwwwwbbww...bbwwwxx
+xxxxwwbb...wwbbwwwwwbbw...wbbwwwwwbbww...bbwwwxxx
+xxxxxwwbb...wwbbbbbbbww...wwbbbbbbbww...bbwwwwxxx
+xxxxwwwwbb...wwwwwwwww.....wwwwwwwww...4...wwwxxx
+xxxwwwwwwbb...wwwwwww.......wwwwwww...b.....wwwxx
+xxxxwwwwwwbb...........bbb...........bb.......wxx
+xxxxxxwwwwwbb....k....bbwbb....k....bbw....6....x
+xxxxxxwxwwwwbbbb...bbbbwwwbbbb...bbbbwww......6..
+xxxxxxxxxwwwwwbbbbbbbwwwwwwwbbbbbbbwwwwww.6......
+xxxxxxxxxwxwwwwwwwwwwwwwxxxwwwwwwwwwwxxxw........
+xxxxxxxxxxxxxxxxwwxxxxxxxxxxxxxxwwxwxxxxxx.......
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..@..
+ENDMAP
+
 #############################################################################
-# cerebov
+# Cerebov
 #
-# you might not want to teleport too much on this level - unless you can
+# You might not want to teleport too much on this level - unless you can
 # reliably teleport away again.
 #
 NAME:      cerebov
@@ -180,6 +373,66 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ...............@...............xxxx
 ENDMAP
 
+NAME:      cerebov_2_st
+TAGS:      cerebov
+ORIENT:    north
+LFLOORCOL: red
+LROCKCOL:  red
+KITEM:     O = fiery rune of zot
+KMONS:     V = patrolling Cerebov
+MONS:      patrolling Balrug, patrolling Pit Fiend
+MONS:      red devil, sun demon, imp, efreet
+SHUFFLE:   O2 / aA / bB / cC
+SUBST:     a:|, b:|, c:|
+SUBST:     A:1, B:1, C:1
+SUBST:     k = 33334551, n = 11266663444
+KPROP:     |2$"abcABC = no_tele_into
+KFEAT:     " = floor
+epilogue{{
+  crawl.mpr("Searing heat pours from the floors and walls of this place.")
+  pan_lord_warning(_G)
+  crawl.mark_milestone("br.enter", "entered the realm of Cerebov.")
+}}
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx...........................................................................xx
+xx...........................................................................xx
+xx..................................5.....5..................................xx
+xx....................vvvvv............5............vvvvv....................xx
+xx....................v...v.......vvv.....vvv.......v...v....................xx
+xx....................v.n.v.......vvv.v.v.vvv.......v.n.v....................xx
+xx....................v...vvvvvvvvvvv.....vvvvvvvvvvv...v....................xx
+xx.................vvvvv.vv.......vvvvv.vvvvv.......vv.vvvvv.................xx
+xx..........vvvvvvvv........vvvvv.vvvvv.vvvvv.vvvvv........vvvvvvvv..........xx
+xx.......vvvv........vvv.vvvv.......v.....v.......vvvv.vvv........vvvv.......xx
+xx......vv....vvvvvvvv..............vvv.vvv..............vvvvvvvv....vv......xx
+xx.....vv..vvvv................5......v.v......5................vvvv..vv.....xx
+xx.....v..vvvvv.vvvvvvvvvvv.........................vvvvvvvvvvv.vvvvv..v.....xx
+xx.....v.vvvvvv.v$$$"B"|||v.........................v|||"C"$$$v.vvvvvv.v.....xx
+xx.....v.vvvvvv.v$$$"""|||v.........................v|||"""$$$v.vvvvvv.v.....xx
+xx.....v.vv3vvv.v$$$"""||bv..........1...1..........vc||"""$$$v.vvv3vv.v.....xx
+xx.....v.vv.vvv.vvvvv+vvvvvk.......................kvvvvv+vvvvv.vvv.vv.v.....xx
+xx.....v...............................V...............................v.....xx
+xx.....v.vv.vvv.vvvvv+vvvvvk.......................kvvvvv+vvvvv.vvv.vv.v.....xx
+xx.....v.vv3vvv.v|||"""$$$v..........1...1..........v$$$"""|||v.vvv3vv.v.....xx
+xx.....v.vvvvvv.v|||"""$$$v.........................v$$$"""|||v.vvvvvv.v.....xx
+xx.....v.vvvvvv.vO||"2"$$$v.........................v$$$"A"||av.vvvvvv.v.....xx
+xx.....v..vvvvv.vvvvvvvvvvv.........................vvvvvvvvvvv.vvvvv..v.....xx
+xx.....vv..vvvv................5......v.v......5................vvvv..vv.....xx
+xx......vv....vvvvvvvv..............vvv.vvv..............vvvvvvvv....vv......xx
+xx.......vvvv........vvv.vvvv.......v.....v.......vvvv.vvv........vvvv.......xx
+xx..........vvvvvvvv........vvvvv.vvvvv.vvvvv.vvvvv........vvvvvvvv..........xx
+xx.................vvvvv.vv.......vvvvv.vvvvv.......vv.vvvvv.................xx
+xx....................v...vvvvvvvvvvv.....vvvvvvvvvvv...v....................xx
+xx....................v.n.v.......vvv.v.v.vvv.......v.n.v....................xx
+xx....................v...v.......vvv.....vvv.......v...v....................xx
+xx....................vvvvv............5............vvvvv....................xx
+xx..................................5.....5..................................xx
+xx...........................................................................xx
+xx....................................@@@....................................xx
+ENDMAP
+
 ##############################################################################
 # Gloorx Vloq
 #
@@ -225,6 +478,54 @@ xxxx..............................x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:      gloorx_vloq_2_st
+TAGS:      gloorx_vloq
+ORIENT:    southeast
+LFLOORCOL: darkgrey
+LROCKCOL:  darkgrey
+KMONS:     V = patrolling Gloorx Vloq
+MONS:      Executioner, demonic crawler, shadow demon
+KITEM:     O = dark rune of Zot
+NSUBST:    d = 1:O / *:.
+epilogue{{
+  crawl.mpr("Shadowy figures dance across your vision.")
+  pan_lord_warning(_G)
+  crawl.mark_milestone("br.enter", "entered the realm of Gloorx Vloq.")
+}}
+MAP
+xxxxxxxxxxxxxxxxxx.@.xxxxxxxxxxxxxxxxxx
+xxxxx.............................xxxxx
+xxxx...xxx.x.xxx.x.x.x.xxx.x.xxx...xxxx
+xxx....xxx2x.xxx.x.x.x.xxx.x2xxx....xxx
+xx.................3.................xx
+x..1..ccccccccccccccccccccccccccc..1..x
+xx...xcxxxxxxxxxxxxxxxxxxxxxxxxxcx...xx
+x.x.x.cx.x3x.x.xdxdxdxdx.x.x3x.xc.x.x.x
+x..x..cxx.x.x.x.xdxdxdx.x.x.x.xxc..x..x
+x.x.x.cx.x.x.x.x.xxxxx.x.x.x.x.xc.x.x.x
+xx.2.xcxx.x.x.x.x3...3x.x.x.x.xxcx.2.xx
+x.x.x.cx.x.x.x.x.x...x.x.x.x.x.xc.x.x.x
+x..x..cxx.x.x.x.x.....x.x.x.x.xxc..x..x
+x.x.x.cx.x.x1x.x.x...x.x.x1x.x.xc.x.x.x
+xx.3.xcxx.x.x.x.x.....x.x.x.x.xxcx.3.xx
+x.x.x.cx.x.x.x.x.x.V.x.x.x.x.x.xc.x.x.x
+x..x..cxx.x.x.x.x.....x.x.x.x.xxc..x..x
+x.x.x.cx1x.x.x.x.x...x.x.x.x.x1xc.x.x.x
+xx.2.xcxx.x.x.x.x.....x.x.x.x.xxcx.2.xx
+x.x.x.cx.x.x.x.x.x...x.x.x.x.x.xc.x.x.x
+x..x..cxx.x.x.x.x3...3x.x.x.x.xxc..x..x
+x.x.x.cx.x.x.x.x.x...x.x.x.x.x.xc.x.x.x
+xx...xccx.x.x.x.x.....x.x.x.x.xccx...xx
+xxx.x.xccx.x.x.x.x...x.x.x.x.xccx.x.xxx
+xxxx....ccc1x.x.x.....x.x.x1ccc....xxxx
+xxxxx.....cccc.x.x...x.x.cccc.....xxxxx
+xxxxxxx......ccccx...xcccc......xxxxxxx
+xxxxxxxxx.......cc===cc.......xxxxxxxxx
+xxxxxxxxxxxx.......1.......xxxxxxxxxxxx
+xxxxxxxxxxxxxxx.........xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 
@@ -576,8 +877,15 @@ NAME:   pan_disco_hall
 TAGS:   pan no_rotate
 ORIENT: float
 SUBST:  - = 0:1 / .:10
-COLOUR: .x = random
-COLOUR: 0123456789 = random
+COLOUR: D = random
+COLOUR: .x = disco
+COLOUR: 0123456789 = disco
+KFEAT:  D = granite_statue
+MARKER: D = lua:portal_desc { desc="weirdly glowing ball", \
+            desc_long=("This floating ball radiates with shimmering light.") }
+MARKER: D = lua:props_marker { veto_fragmentation="veto", \
+                               veto_disintegrate="veto", \
+                               veto_shatter="veto" }
 MONS:   col:random name:demonic name_adjective plant
 MONS:   red devil ; demon trident good_item ego:distortion
 MONS:   red devil ; lajatang good_item ego:distortion
@@ -600,7 +908,7 @@ MAP
    x.x.x.x.x.x.x.x.x.x.x.x..x---------------_....x
 xxxx.........................---------------_..2.x
 x1.x.........................---------------_....x
-@............................---------------_..3.x
+@...........................D---------------_..3.x
 x1.x.........................---------------_....x
 xxxx.........................---------------_..4.x
    x.xxxxxxxxxxxxxxxxxxxxx..x---------------_....x

@@ -23,7 +23,7 @@ function sewer_portal(e)
 "visitors, left to collect dust in the damp caverns. You have an uncanny "..
 "feeling that the drain will fall apart rather soon."
 
-  local timeout_turns = crawl.random_range(1500, 2000)
+  local timeout_turns = crawl.random_range(2700, 3300)
 
   local messager =
     timed_msg {
@@ -159,13 +159,17 @@ ENDMAP
 # The actual portal vaults #####################################
 default-depth:
 
+### KOBOLDS ################################################################
+
+# Sewers with kobold settlements. Combined weight 50.
+
 ############################################################################
 # Sewer with a small kobold camp, potion treasure and Ely/Zin altar.
-# The easiest one, so most probable.
+# Easier than sewer_minmay_treatment, so more probably.
 #
 NAME:     sewer_kobolds
 TAGS:     sewer no_item_gen no_monster_gen no_pool_fixup
-WEIGHT:   50
+WEIGHT:   35
 ORIENT:   encompass
 : if crawl.one_chance_in(12) then
 SUBST:    C=c, X=w, V=W, v=w, *=f
@@ -236,14 +240,79 @@ xx?.?xxx....yYy.x
 ENDMAP
 
 ############################################################################
+# Water treatment center, staffed by kobolds
+#
+NAME:   sewer_minmay_treatment
+TAGS:   sewer no_item_gen no_monster_gen no_pool_fixup
+WEIGHT: 15
+ORIENT: encompass
+MONS:   grey rat / rat w:2 / green rat w:1
+MONS:   kobold / big kobold w:1
+MONS:   small snake / snake w:5 / giant newt w:2 / ooze w:1
+SUBST:   y : yyyyyyW., Y : YYYYYYWw
+SUBST:   y = W., Y = Ww
+ITEM:   any potion / any scroll / any armour w:2 / any weapon w:2
+: sewer_setup(_G)
+: dgn.set_feature_desc_short("translucent stone wall",
+: "large window")
+: dgn.set_feature_desc_long("translucent stone wall",
+: "A window embedded in the side of an enormous metal pipe, allowing "..
+: "observation of the water flowing inside.")
+KFEAT:  C = deep_water
+epilogue{{
+sewer_milestone(_G)
+}}
+MAP
+vvvvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvvvv
+vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
+vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
+vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
+vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
+vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
+vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
+vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
+vwwvvvvvvvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvvvvvvvCCv
+vwwnddv..vxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..v..vddnCCv
+vwwnd2.2.v..3.xxxxxxx11111xxxxxxx11xxxxxx...3...v.2.2dnCCv
+vwwvv.2..+......xxxx..11....xxxx11111xxx........+..2.vvCCv
+vwwnd2.2.v......3.....xxx.........11...........3v.2.2dnCCv
+vwwnddv..vyyy..........xxx...3...xx......3....yyv..vddnCCv
+vwwvvvvvvvYYyy..xx.....xx.......3xxxx......xxyyYvvvvvvvCCv
+vwwwwwwwwwwYYyyxxxx.....3.........xx....yyxxYYYYwcwcCcCCCv
+vwwwwwwwwwwwYYYYYYxxyyyyyy.........yyyyyyYYYYwwwcwcwcCCCCv
+vwwwwwwwwwwwwwwwwYYYYYYYYyyyyyyyyyyyYYYYYYwwwwwwwcwcCcCCCv
+vwwwwwwwwwwwwwwwwwwwwwwwYYYYYYWYYYYYYwwwwwwwwwwwcwcwcCCCCv
+vwwwwwwwwwwwwwwwwwwwwwwwwwYYYWYYYYYwwwwwwwwwwwwwwcwcCcCCCv
+vwwwwwwwwwwwwwwwwwwwwwwwwYYyyyyyyyYYYYwwwwwwwwwwcwcwcCCCCv
+vwwvvvvvvvwwwwwYYYYYYYYYYYyy.....yyyyYYYYwwwwwwwvvvvvvvCCv
+vwwnd.v..vYYYYYYyyyyyyyyyyy........yyyyyYYYYYYYYv..v.dnCCv
+vwwn.....vyyyyyyy......................yyyyyyyyyv.....nCCv
+vwwvv222.+......................................+.222vvCCv
+vwwn.....v...........xx.........................v.....nCCv
+vwwnd.v..vx....1...xxxxx.......xx...............v..v.dnCCv
+vwwvvvvvvvxxxx111xxxxxx...xx..xxxxx...1..xxx..xxvvvvvvvCCv
+vwwvxxxxxxxxxxxxxxxxx<..xxxxx..xxxxxx111xxxxxxxxxxxxxxvCCv
+vwwvxxxxxxxxxxxxxxxxxxxxxxxxxx..AxxxxxxxxxxxxxxxxxxxxxvCCv
+vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
+vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
+vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
+vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
+vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
+vvvvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvvvv
+ENDMAP
+
+### FROGS ##################################################################
+
+# Combined weight 30.
+
+############################################################################
 # Two fairly watery vaults with (usually) two giant frogs in the end.
-# More rare.
 # Loot are good items, and often a scroll of blinking.
 #
 NAME:     sewer_frog_island_01
 TAGS:     sewer no_item_gen no_monster_gen no_pool_fixup
 ORIENT:   encompass
-WEIGHT:   15
+WEIGHT:   10
 SUBST:    - = WWW.
 SHUFFLE:  |d
 ITEM:     scroll of teleportation w:2 / scroll of blinking / \
@@ -296,7 +365,7 @@ ENDMAP
 NAME:     sewer_frog_island_02
 TAGS:     sewer no_item_gen no_monster_gen no_pool_fixup
 ORIENT:   encompass
-WEIGHT:   15
+WEIGHT:   10
 NSUBST:   ! = 2:! / *:w
 SUBST:    - = WWWW.
 KMONS:    W = giant newt / small snake / snake w:2 / jelly w:1 / \
@@ -345,13 +414,78 @@ cc---cc---c---.------w!cc---cc---c
 ENDMAP
 
 ############################################################################
-# The next two have a big, bad monster guarding some pretty good, if random
-# treasure.
+# Sewer in the shape of the letter W. Sort of. Frogs at the end.
 #
+# Harder than the two other frog maps. Frogs are guaranteed, exit isn't
+# reachable when frogs come to sight, and loot isn't handed out as a way
+# to handle them.
+NAME:    sewer_minmay_w
+TAGS:    sewer no_item_gen no_monster_gen no_pool_fixup
+WEIGHT:  10
+ORIENT:  encompass
+SHUFFLE: de
+MONS:    grey rat / rat w:5 / green rat w:1
+MONS:    small snake / snake w:5 / giant newt w:2 / ooze w:1
+MONS:    giant frog
+ITEM:    potion of healing / potion of heal wounds / potion of might /\
+         potion of magic / potion of speed w:5 / potion of brilliance w:5 /\
+         potion of cure mutation w:2 / potion of experience w:1
+ITEM:    scroll of teleportation / scroll of blinking w:5 /\
+         scroll of fear w:5 / scroll of magic mapping /\
+         scroll of recharging / scroll of fog /\
+         scroll of enchant armour w:3 / scroll of enchant weapon III w:1
+SUBST:   y : yyyyyyW., Y : YYYYYYWw
+SUBST:   y = W., Y = Ww
+SUBST:   c = c x:1
+: sewer_setup(_G)
+epilogue{{
+sewer_milestone(_G)
+}}
+MAP
+xxxxxxxxxxxxxxxxxxxxxxccccccxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxcccc2..2ccccxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxccc..........cccxxxxxxxxxxxxxxxxx
+xccccccxxxxxxxxxcc..............ccxxxxcccccccccccx
+cc....ccxxxxxxxcc................ccxxxcdedcc3..3cc
+c......cxxxxxxxc.1.1.1.2cc2.......cxxxce<e+2..2.2c
+c..<A..cxxxxxxcc1.1.1.cccc+c......ccxxcdedc.2..2.c
+c......cxxxxxxc1.1.1.ccxcddcc......cxxccccc2.2..2c
+cyyyyyycxxxxxxcyyyyyycxxcddccyyyyyycxxxxxxcyyyyyyc
+cYYWYYYcxxxxxxcYYWYYYcxxcccccYYYYWYcxxxxxxcYYWYYYc
+cwYWYYwcxxxxxxcwYWYwwcxxxxxxcwwwYWYcxxxxxxcYYWYwYc
+cwYYWYwcxxxxxxcwYWYYwcxxxxxxcwwYYWYcxxxxxxcwYWYYwc
+cwwYWYwcxxxxxxcwwYWYwcxxxxxxcwYYWYYcxxxxxxcwYWWYwc
+cwwYWYwcxxxxxxcwwYWYYcxxxxxxcYWWYYwcxxxxxxcwYYWYYc
+cwYYWYwcxxxxxxcwwYYWYcxxxxxxcWYYYwwcxxxxxxcwwYWWYc
+cwYWYYwcxxxxxxcwwwYWYcxxxxxxcWWYYYwcxxxxxxcwwYYWYc
+cwYWYwwcxxxxxxcwwwYYWcxxxxxxcYWyWYYcxxxxxxcwwwYWYc
+cwYWYwwcxxxxxxcwwwwYWcxxxxxxcWyyyyWcxxxxxxcwwYYWYc
+cwYWYYwcxxxxxxcwwwwYWcxxxxxxcyy%%yycxxxxxxcwwYWWYc
+cwYYWYwcxxxxxxcwwwYYWcxxxxxxcWyyyyWcxxxxxxcwwYWYYc
+cwwYWYwcxxxxxxcwwwYWYcxxxxxxcYWWYWYcxxxxxxcwYYWYwc
+cwwYWYwcxxxxxxcwwYYWYcxxxxxxcYYYWYYcxxxxxxcwYWWYwc
+cwwYWYwcxxxxxxcwwYWYYcxxxxxxcwYWYYwcxxxxxxcwYWYYwc
+cwwYWYwcxxxxxxcwYYWYwcxxxxxxcwYWYYwcxxxxxxcYYWYwYc
+cYYYWYYcxxxxxxcwYWYwwcxxxxxxcYYYWYYcxxcccccYYWYYYc
+cyyyyyycxxxxxxcyyyyyycxxxxxxcyyyyyycxxceeccyyyyyyc
+c1.1.1.ccxxxxcc......cxxxxxxc1.1.1.ccxceecc......c
+cc1.1.1.cccccc......ccxxxxxxcc1.1.1.cccc+c......cc
+xc........cc........cxxxxxxxxc.1.1.1.2cc2.......cx
+xcc................ccxxxxxxxxcc.1.1.1..........ccx
+xxcc..............ccxxxxxxxxxxcc...2.2..2.2...ccxx
+xxxccc..........cccxxxxxxxxxxxxccc..........cccxxx
+xxxxxcccc2..2ccccxxxxxxxxxxxxxxxxcccc2..2ccccxxxxx
+xxxxxxxxccccccxxxxxxxxxxxxxxxxxxxxxxccccccxxxxxxxx
+ENDMAP
+
+## BIG BADDIE (Purgy) ######################################################
+
+# Threat is mostly a single larger creature, often Purgy. Combined weight 20.
+
 NAME:     sewer_big_baddie
 TAGS:     sewer no_item_gen no_monster_gen
 ORIENT:   encompass
-WEIGHT:   5
+WEIGHT:   10
 : sewer_setup(_G)
 SUBST:    2 = 23
 KMONS:    2 = crocodile
@@ -390,12 +524,12 @@ ENDMAP
 
 ###############################################################################
 # Another one with a big bad monster. Likely to be a giant slug, which hits
-# slightly harder than the crocodile, but is much slower. On land, that is.
+# slightly harder than the crocodile, but is much slower.
 #
 NAME:   sewer_the_slug
 TAGS:   sewer no_item_gen no_monster_gen no_pool_fixup
 ORIENT: encompass
-WEIGHT: 5
+WEIGHT: 10
 SUBST:  - = WW...
 MONS:   kobold, jackal
 SUBST:  3 = 334
@@ -444,6 +578,10 @@ cccc.......ccccc
   c....c1.1.cxxxx
   ccccccccccc
 ENDMAP
+
+### OTHER #####################################################################
+
+# Other sorts of Sewer maps, each weighted 10. (Total 20).
 
 ###############################################################################
 # If you can get to the middle, there are four doors to try; two will give you
@@ -535,19 +673,19 @@ NAME:   sewer_sea
 TAGS:   sewer no_item_gen no_monster_gen no_rotate no_pool_fixup
 ORIENT: encompass
 MONS:   rat w:3 / grey rat w:1 / nothing w:1, rat / grey rat / green rat
-KMONS:  G = mermaid hd:3 name:malarious name_adjective
-KMONS:  H = siren hd:3 name:sickly name_adjective
+KMONS:  G = mermaid hd:3 name:malarious name_adjective name_descriptor
+KMONS:  H = siren hd:3 name:sickly name_adjective name_descriptor
 KMONS:  hJ = giant newt / small snake / snake / nothing w:2
 KMONS:  g = giant newt / small snake / nothing w:3
-KFEAT:  gS = W
+KFEAT:  gsh = W
 KFEAT:  O = open_sea
-COLOUR: g = lightgreen
+COLOUR: gh = lightgreen
 COLOUR: HJ = blue
-KFEAT:  hGnNsHJ = w
-COLOUR: hG = green
-COLOUR: sS = cyan
-COLOUR: N = lightblue
-KITEM:  M = dart / stone
+KFEAT:  GnHJ = w
+COLOUR: G = green
+COLOUR: s = cyan
+KITEM:  M = potion of levitation q:4
+KITEM:  N = scroll of teleportation q:2
 MARKER: H = lua:MonPropsMarker:new { description="A young woman with a fish tail " .. \
                        "in place of legs. She looks quite sick, but still capable" .. \
                        " of bespelling her audience.\n"}
@@ -571,18 +709,18 @@ OOOnnnnnnnnnnnnnnnnnnnOOOOOOOOOOOOOO                     cccWWW.ccccccccW..c..c
 OOOnnnnnnnnnnnnnJnnnnnOOOOOOOOOOOOOO                     c<AWWWW...1.2...1.cc.c
 OOOnnnnnnnnnnnnnnnnnnnOOOOOOOOOOOOOO                     cccccccccccccccccccc.c
 OOOnnnnnnnnnJnnnscccccccccccccc  cccccccccccccccc ccccccccccwhwwwwwwwWwwwww2..c
-OOOnnnnnnnnnnnns.+.....+...%Wwc  c1.....cc1..1.McccwwWWWgWWWWWWWW..W..WW.Www..c
-OOOnnnnnnnnHnnnW.ccccccc...%*Wc  c.ccccc.c.2..1%cccwWWccccccccccccc11cccc.gwWwcc
-OOOnnnnnnnnnnnsW.ccc.1cc...%*Wc  c2cwwcc.cccc+cccwwwc.c           cccc  cc..WWwc
-OOOnnnnnnnnnJnsW.ccc..cc...|WWc ccwWgcwc.cGgwWWWWWWcc.c                  ccccwhc
-OOOnnnnnnnnnnNsWWccc1.cc<..WwccccwgWccwc.chwgWW..1....c            cccccccccccwc
-OOOnnnnnnnnNNswWWWwc.1ccccccccwwwWW.1cwWWcWWW..2ccccccc            cGwwwwwwwwwwc
-OOOnnnnnnnNsswWWWWWWWsswwswwwhcWW..1ccccWWWW1..cc                  ccccccccccccc
-OOOnnnnnnnnNNshWWWwc..cccccccccW.1.cc  ccW1..ccc
-OOOnnnnnnnnnnNswgccc.2c  cwg2....ccc    cccccc
-OOOnnnnnnnnnnnNswcccc1cc cgWcccccc
-OOOnnnnnnnnnnnnNccccc..ccc.1c
-OOOnnnnnnnnnnnnnNccccc1.1..cc
+OOOnnnnnnnnnnnns.+.....+...%Wwc  c1.....cc$$$.1McccwwWWWgWWWWWWWW..W..WW.Www..c
+OOOnnnnnnnnHnnsW.ccccccc...%*Wc  c.ccccc.c.1.W.NcccwWWccccccccccccc11cccc.gwWwcc
+OOOnnnnnnnnnnnsW.ccc.1cc...%*Wc  c2cwwcc.ccccWcccwwwc.c           cccc  cc..WWwc
+OOOnnnnnnnnnJnsW.ccc..cc...|WWc ccwWgcwc.cGgwWWWWWWcc.c                  ccccwwc
+OOOnnnnnnnnnnssWWccc1.cc<..WwccccwgWccwc.chwgWW..1....c            cccccccccccwc
+OOOnnnnnnnnsssWWWWWc.1ccccccccwwwWW.1cwWWcWWW..2ccccccc            cGwwwwwwwwwwc
+OOOnnnnnnnsssWWWWWWWWsswwswwwhcWW..1ccccWWWW1..cc                  ccccccccccccc
+OOOnnnnnnnnssshWWWWc..cccccccccW.1.cc  ccW1..ccc
+OOOnnnnnnnnnnssWgccc.2c  cwg2....ccc    cccccc
+OOOnnnnnnnnnnnssWcccc1cc cgWcccccc
+OOOnnnnnnnnnnnnsccccc..ccc.1c
+OOOnnnnnnnnnnnnnsccccc1.1..cc
 OOOnnnnnnnnnnnnnnnnnnccccccc
 OOOnnnnnnnnnnnnnnnnnnnOOOOOOOOOOOOOO
 OOOnnnnnnnnnnnnnnnnnnnOOOOOOOOOOOOOO
@@ -597,126 +735,3 @@ OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
 OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
 ENDMAP
 
-############################################################################
-# Sewer in the shape of the letter W. Sort of.
-#
-NAME:    sewer_minmay_w
-TAGS:    sewer no_item_gen no_monster_gen no_pool_fixup
-WEIGHT:  30
-ORIENT:  encompass
-SHUFFLE: de
-MONS:    grey rat / rat w:5 / green rat w:1
-MONS:    small snake / snake w:5 / giant newt w:2 / ooze w:1
-MONS:    giant frog
-ITEM:    potion of healing / potion of heal wounds / potion of might /\
-         potion of magic / potion of speed w:5 / potion of brilliance w:5 /\
-         potion of cure mutation w:2 / potion of experience w:1
-ITEM:    scroll of teleportation / scroll of blinking w:5 /\
-         scroll of fear w:5 / scroll of magic mapping /\
-         scroll of recharging / scroll of fog /\
-         scroll of enchant armour w:3 / scroll of enchant weapon III w:1
-SUBST:   y : yyyyyyW., Y : YYYYYYWw
-SUBST:   y = W., Y = Ww
-SUBST:   c = c x:1
-: sewer_setup(_G)
-epilogue{{
-sewer_milestone(_G)
-}}
-MAP
-xxxxxxxxxxxxxxxxxxxxxxccccccxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxcccc2..2ccccxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxccc..........cccxxxxxxxxxxxxxxxxx
-xccccccxxxxxxxxxcc..............ccxxxxcccccccccccx
-cc....ccxxxxxxxcc................ccxxxcdedcc3..3cc
-c......cxxxxxxxc.1.1.1.2cc2.......cxxxce<e+2..2.2c
-c..<A..cxxxxxxcc1.1.1.cccc+c......ccxxcdedc.2..2.c
-c......cxxxxxxc1.1.1.ccxcddcc......cxxccccc2.2..2c
-cyyyyyycxxxxxxcyyyyyycxxcddccyyyyyycxxxxxxcyyyyyyc
-cYYWYYYcxxxxxxcYYWYYYcxxcccccYYYYWYcxxxxxxcYYWYYYc
-cwYWYYwcxxxxxxcwYWYwwcxxxxxxcwwwYWYcxxxxxxcYYWYwYc
-cwYYWYwcxxxxxxcwYWYYwcxxxxxxcwwYYWYcxxxxxxcwYWYYwc
-cwwYWYwcxxxxxxcwwYWYwcxxxxxxcwYYWYYcxxxxxxcwYWWYwc
-cwwYWYwcxxxxxxcwwYWYYcxxxxxxcYWWYYwcxxxxxxcwYYWYYc
-cwYYWYwcxxxxxxcwwYYWYcxxxxxxcWYYYwwcxxxxxxcwwYWWYc
-cwYWYYwcxxxxxxcwwwYWYcxxxxxxcWWYYYwcxxxxxxcwwYYWYc
-cwYWYwwcxxxxxxcwwwYYWcxxxxxxcYWyWYYcxxxxxxcwwwYWYc
-cwYWYwwcxxxxxxcwwwwYWcxxxxxxcWyyyyWcxxxxxxcwwYYWYc
-cwYWYYwcxxxxxxcwwwwYWcxxxxxxcyy%%yycxxxxxxcwwYWWYc
-cwYYWYwcxxxxxxcwwwYYWcxxxxxxcWyyyyWcxxxxxxcwwYWYYc
-cwwYWYwcxxxxxxcwwwYWYcxxxxxxcYWWYWYcxxxxxxcwYYWYwc
-cwwYWYwcxxxxxxcwwYYWYcxxxxxxcYYYWYYcxxxxxxcwYWWYwc
-cwwYWYwcxxxxxxcwwYWYYcxxxxxxcwYWYYwcxxxxxxcwYWYYwc
-cwwYWYwcxxxxxxcwYYWYwcxxxxxxcwYWYYwcxxxxxxcYYWYwYc
-cYYYWYYcxxxxxxcwYWYwwcxxxxxxcYYYWYYcxxcccccYYWYYYc
-cyyyyyycxxxxxxcyyyyyycxxxxxxcyyyyyycxxceeccyyyyyyc
-c1.1.1.ccxxxxcc......cxxxxxxc1.1.1.ccxceecc......c
-cc1.1.1.cccccc......ccxxxxxxcc1.1.1.cccc+c......cc
-xc........cc........cxxxxxxxxc.1.1.1.2cc2.......cx
-xcc................ccxxxxxxxxcc.1.1.1..........ccx
-xxcc..............ccxxxxxxxxxxcc...2.2..2.2...ccxx
-xxxccc..........cccxxxxxxxxxxxxccc..........cccxxx
-xxxxxcccc2..2ccccxxxxxxxxxxxxxxxxcccc2..2ccccxxxxx
-xxxxxxxxccccccxxxxxxxxxxxxxxxxxxxxxxccccccxxxxxxxx
-ENDMAP
-
-############################################################################
-# Water treatment center, staffed by kobolds
-#
-NAME:   sewer_minmay_treatment
-TAGS:   sewer no_item_gen no_monster_gen no_pool_fixup
-WEIGHT: 20
-ORIENT: encompass
-MONS:   grey rat / rat w:2 / green rat w:1
-MONS:   kobold / big kobold w:1
-MONS:   small snake / snake w:5 / giant newt w:2 / ooze w:1
-SUBST:   y : yyyyyyW., Y : YYYYYYWw
-SUBST:   y = W., Y = Ww
-ITEM:   any potion / any scroll / any armour w:2 / any weapon w:2
-: sewer_setup(_G)
-: dgn.set_feature_desc_short("translucent stone wall",
-: "large window")
-: dgn.set_feature_desc_long("translucent stone wall",
-: "A window embedded in the side of an enormous metal pipe, allowing "..
-: "observation of the water flowing inside.")
-KFEAT:  C = deep_water
-epilogue{{
-sewer_milestone(_G)
-}}
-MAP
-vvvvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvvvv
-vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
-vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
-vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
-vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
-vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
-vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
-vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
-vwwvvvvvvvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvvvvvvvCCv
-vwwnddv..vxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..v..vddnCCv
-vwwnd2.2.v..3.xxxxxxx11111xxxxxxx11xxxxxx...3...v.2.2dnCCv
-vwwvv.2..+......xxxx..11....xxxx11111xxx........+..2.vvCCv
-vwwnd2.2.v......3.....xxx.........11...........3v.2.2dnCCv
-vwwnddv..vyyy..........xxx...3...xx......3....yyv..vddnCCv
-vwwvvvvvvvYYyy..xx.....xx.......3xxxx......xxyyYvvvvvvvCCv
-vwwwwwwwwwwYYyyxxxx.....3.........xx....yyxxYYYYwcwcCcCCCv
-vwwwwwwwwwwwYYYYYYxxyyyyyy.........yyyyyyYYYYwwwcwcwcCCCCv
-vwwwwwwwwwwwwwwwwYYYYYYYYyyyyyyyyyyyYYYYYYwwwwwwwcwcCcCCCv
-vwwwwwwwwwwwwwwwwwwwwwwwYYYYYYWYYYYYYwwwwwwwwwwwcwcwcCCCCv
-vwwwwwwwwwwwwwwwwwwwwwwwwwYYYWYYYYYwwwwwwwwwwwwwwcwcCcCCCv
-vwwwwwwwwwwwwwwwwwwwwwwwwYYyyyyyyyYYYYwwwwwwwwwwcwcwcCCCCv
-vwwvvvvvvvwwwwwYYYYYYYYYYYyy.....yyyyYYYYwwwwwwwvvvvvvvCCv
-vwwnd.v..vYYYYYYyyyyyyyyyyy........yyyyyYYYYYYYYv..v.dnCCv
-vwwn.....vyyyyyyy......................yyyyyyyyyv.....nCCv
-vwwvv222.+......................................+.222vvCCv
-vwwn.....v...........xx.........................v.....nCCv
-vwwnd.v..vx....1...xxxxx.......xx...............v..v.dnCCv
-vwwvvvvvvvxxxx111xxxxxx...xx..xxxxx...1..xxx..xxvvvvvvvCCv
-vwwvxxxxxxxxxxxxxxxxx<..xxxxx..xxxxxx111xxxxxxxxxxxxxxvCCv
-vwwvxxxxxxxxxxxxxxxxxxxxxxxxxx..AxxxxxxxxxxxxxxxxxxxxxvCCv
-vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
-vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
-vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
-vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
-vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
-vvvvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvvvv
-ENDMAP

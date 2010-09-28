@@ -34,7 +34,7 @@
 #include "player.h"
 #include "random.h"
 #include "religion.h"
-#include "spells3.h"
+#include "spl-transloc.h"
 #include "stuff.h"
 #include "env.h"
 #ifdef USE_TILE
@@ -155,6 +155,7 @@ bool feat_is_travelable_stair(dungeon_feature_type feat)
     case DNGN_ENTER_GEHENNA:
     case DNGN_ENTER_COCYTUS:
     case DNGN_ENTER_TARTARUS:
+    case DNGN_ENTER_DWARF_HALL:
     case DNGN_ENTER_ORCISH_MINES:
     case DNGN_ENTER_HIVE:
     case DNGN_ENTER_LAIR:
@@ -169,6 +170,7 @@ bool feat_is_travelable_stair(dungeon_feature_type feat)
     case DNGN_ENTER_TOMB:
     case DNGN_ENTER_SWAMP:
     case DNGN_ENTER_SHOALS:
+    case DNGN_RETURN_FROM_DWARF_HALL:
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_HIVE:
     case DNGN_RETURN_FROM_LAIR:
@@ -251,6 +253,7 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
     case DNGN_ESCAPE_HATCH_UP:
+    case DNGN_RETURN_FROM_DWARF_HALL:
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_HIVE:
     case DNGN_RETURN_FROM_LAIR:
@@ -286,6 +289,7 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_EXIT_PANDEMONIUM:
     case DNGN_TRANSIT_PANDEMONIUM:
+    case DNGN_ENTER_DWARF_HALL:
     case DNGN_ENTER_ORCISH_MINES:
     case DNGN_ENTER_HIVE:
     case DNGN_ENTER_LAIR:
@@ -797,7 +801,7 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
 
     if (move_monster)
     {
-        if (monsters *mon = monster_at(src))
+        if (monster* mon = monster_at(src))
         {
             mon->moveto(dst);
             mgrd(dst) = mgrd(src);
@@ -869,7 +873,7 @@ static void _dgn_check_terrain_items(const coord_def &pos, bool preserve_items)
 
 static void _dgn_check_terrain_monsters(const coord_def &pos)
 {
-    if (monsters* m = monster_at(pos))
+    if (monster* m = monster_at(pos))
         m->apply_location_effects(pos);
 }
 
@@ -918,7 +922,7 @@ static void _dgn_check_terrain_player(const coord_def pos)
         // If the monster can't stay submerged in the new terrain and
         // there aren't any adjacent squares where it can stay
         // submerged then move it.
-        monsters* mon = monster_at(pos);
+        monster* mon = monster_at(pos);
         if (mon && !mon->submerged())
             monster_teleport(mon, true, false);
         move_player_to_grid(pos, false, true);
@@ -982,7 +986,7 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
     std::string orig_actor, dest_actor;
     if (orig_pos == you.pos())
         orig_actor = "you";
-    else if (const monsters *m = monster_at(orig_pos))
+    else if (const monster* m = monster_at(orig_pos))
     {
         if (you.can_see(m))
             orig_actor = m->name(DESC_NOCAP_THE);
@@ -990,7 +994,7 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
 
     if (dest_pos == you.pos())
         dest_actor = "you";
-    else if (const monsters *m = monster_at(dest_pos))
+    else if (const monster* m = monster_at(dest_pos))
     {
         if (you.can_see(m))
             dest_actor = m->name(DESC_NOCAP_THE);
@@ -1274,7 +1278,7 @@ bool slide_feature_over(const coord_def &src, coord_def prefered_dest,
 
 // Returns true if we manage to scramble free.
 bool fall_into_a_pool( const coord_def& entry, bool allow_shift,
-                       unsigned char terrain )
+                       dungeon_feature_type terrain )
 {
     bool escape = false;
     coord_def empty;
@@ -1505,20 +1509,20 @@ const char *dngn_feature_names[] =
 "enter_tartarus", "enter_abyss", "exit_abyss", "stone_arch",
 "enter_pandemonium", "exit_pandemonium", "transit_pandemonium",
 "", "", "", "builder_special_wall", "builder_special_floor", "",
-"", "", "enter_orcish_mines", "enter_hive", "enter_lair",
+"", "", "enter_dwarf_hall", "enter_orcish_mines", "enter_hive", "enter_lair",
 "enter_slime_pits", "enter_vaults", "enter_crypt",
 "enter_hall_of_blades", "enter_zot", "enter_temple",
 "enter_snake_pit", "enter_elven_halls", "enter_tomb",
 "enter_swamp", "enter_shoals", "enter_reserved_2",
-"enter_reserved_3", "enter_reserved_4", "", "", "",
-"return_from_orcish_mines", "return_from_hive",
+"enter_reserved_3", "enter_reserved_4", "", "",
+"return_from_dwarf_hall", "return_from_orcish_mines", "return_from_hive",
 "return_from_lair", "return_from_slime_pits",
 "return_from_vaults", "return_from_crypt",
 "return_from_hall_of_blades", "return_from_zot",
 "return_from_temple", "return_from_snake_pit",
 "return_from_elven_halls", "return_from_tomb",
 "return_from_swamp", "return_from_shoals", "return_reserved_2",
-"return_reserved_3", "return_reserved_4", "", "", "", "", "", "",
+"return_reserved_3", "return_reserved_4", "", "", "", "", "",
 "", "", "", "", "", "", "", "enter_portal_vault", "exit_portal_vault",
 "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
 "", "", "altar_zin", "altar_shining_one", "altar_kikubaaqudgha",

@@ -20,6 +20,7 @@
 # Similar options for reverting later changes:
 # include                 = 052_monster_glyphs.txt
 # include                 = 060_monster_glyphs.txt
+# include                 = 071_monster_glyphs.txt
 
 # Crawl Init file
 #
@@ -62,7 +63,7 @@
 # weapon = (short sword | hand axe | spear | mace | trident | random)
 # book = (fire | ice | summ | random)
 # wand = (enslavement | confusion | magic darts | frost | flame | striking | random)
-# chaos_knight = (Xom | Makhleb | random)
+# chaos_knight = (Xom | Makhleb | Lugonu | random)
 # priest       = (Zin | Yredelemnul | Beogh | random)
 # species = (Human |...| Vampire | random)
 # job     = (Fighter |...| Wanderer | random)
@@ -114,7 +115,7 @@ drop_filter = useless_item
 #
 # drop_mode = (multi | single)
 # pickup_mode = (single | multi | auto:5)
-# drop_filter = skeleton, rotting, corpse
+# drop_filter = skeleton, corpse, useless_item
 # default_friendly_pickup = (none | friend | player | all)
 
 ##### 4-b	Targetting ############################
@@ -327,6 +328,10 @@ force_more_message = You have reached level
 force_more_message = Your scales start
 force_more_message = You fall through a shaft
 force_more_message = You are starting to lose your buoyancy
+
+# Announcements of timed portal vaults (bazaar, labyrinths):
+force_more_message = interdimensional caravan
+force_more_message = distant snort
 
 ##### 4-k	Firing Commands #######################
 #

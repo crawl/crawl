@@ -65,6 +65,7 @@ void weapon_acid(int acid_strength);
 class actor;
 int actor_to_death_source(const actor* agent);
 
+void reset_damage_counters();
 void ouch(int dam, int death_source, kill_method_type death_type,
           const char *aux = NULL, bool see_source = true,
           const char *death_source_name = NULL);

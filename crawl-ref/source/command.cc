@@ -867,8 +867,8 @@ help_file help_files[] = {
 
 static bool _compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
 {
-    monsters *a = static_cast<monsters*>( entry_a->data );
-    monsters *b = static_cast<monsters*>( entry_b->data );
+    monster* a = static_cast<monster* >( entry_a->data );
+    monster* b = static_cast<monster* >( entry_b->data );
 
     if (a->type == b->type)
         return (false);
@@ -882,8 +882,8 @@ static bool _compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
 // levels are equal, or by name if both level and hitdice are equal.
 static bool _compare_mon_toughness(MenuEntry *entry_a, MenuEntry* entry_b)
 {
-    monsters *a = static_cast<monsters*>( entry_a->data );
-    monsters *b = static_cast<monsters*>( entry_b->data );
+    monster* a = static_cast<monster* >( entry_a->data );
+    monster* b = static_cast<monster* >( entry_b->data );
 
     if (a->type == b->type)
         return (false);
@@ -994,7 +994,7 @@ static std::vector<std::string> _get_desc_keys(std::string regex,
     return (all_matches);
 }
 
-static std::vector<std::string> _get_monster_keys(unsigned char showchar)
+static std::vector<std::string> _get_monster_keys(wchar_t showchar)
 {
     std::vector<std::string> mon_keys;
 
@@ -1316,7 +1316,7 @@ static void _do_description(std::string key, std::string type,
 
     int width = std::min(80, get_number_of_cols());
 
-    god_type which_god = string_to_god(key.c_str());
+    god_type which_god = str_to_god(key);
     if (which_god != GOD_NO_GOD)
     {
         if (is_good_god(which_god))
@@ -1724,7 +1724,7 @@ static void _find_description(bool *again, std::string *error_inout)
                        MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING,
                        doing_mons, text_only);
     desc_menu.set_tag("description");
-    std::list<monsters> monster_list;
+    std::list<monster> monster_list;
     std::list<item_def> item_list;
     for (unsigned int i = 0, size = key_list.size(); i < size; i++)
     {
@@ -1737,7 +1737,7 @@ static void _find_description(bool *again, std::string *error_inout)
         {
             // Create and store fake monsters, so the menu code will
             // have something valid to refer to.
-            monsters     fake_mon;
+            monster     fake_mon;
             monster_type m_type = get_monster_by_name(str, true);
 
             // Not worth the effort handling the item; also, it would
@@ -1822,7 +1822,7 @@ static void _find_description(bool *again, std::string *error_inout)
 
             if (doing_mons)
             {
-                monsters* mon = (monsters*) sel[0]->data;
+                monster* mon = (monster* ) sel[0]->data;
                 key = mons_type_name(mon->type, DESC_PLAIN);
             }
             else if (doing_features)
@@ -2276,9 +2276,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<h>Item types (and common commands)\n",
             true, true, _cmdhelp_textfilter);
 
-    _add_insert_commands(cols, 0, 2, "use special Ability (<w>%!</w> for help)",
-                         CMD_USE_ABILITY, CMD_USE_ABILITY, 0);
-
     _add_insert_commands(cols, 0, "<cyan>)</cyan> : hand weapons (<w>%</w>ield)",
                          CMD_WIELD_WEAPON, 0);
     _add_insert_commands(cols, 0, "<brown>(</brown> : missiles (<w>%</w>uiver, "
@@ -2517,7 +2514,7 @@ static void _add_formatted_hints_help(column_composer &cols)
                          CMD_EVOKE, 0);
 
     std::string item_types = "<lightcyan>";
-    item_types += static_cast<char>(get_item_symbol(SHOW_ITEM_BOOK));
+    item_types += stringize_glyph(get_item_symbol(SHOW_ITEM_BOOK));
     item_types +=
         "</lightcyan> : books (<w>%</w>ead, <w>%</w>emorise, <w>%</w>ap, <w>%</w>ap)";
     _add_insert_commands(cols, 0, item_types,
@@ -2525,7 +2522,7 @@ static void _add_formatted_hints_help(column_composer &cols)
                          CMD_FORCE_CAST_SPELL, 0);
 
     item_types = "<brown>";
-    item_types += static_cast<char>(get_item_symbol(SHOW_ITEM_STAVE));
+    item_types += stringize_glyph(get_item_symbol(SHOW_ITEM_STAVE));
     item_types +=
         "</brown> : staves and rods (<w>%</w>ield and e<w>%</w>oke)";
     _add_insert_commands(cols, 0, item_types,
@@ -2670,6 +2667,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>Ctrl-H</w> : set hunger state\n"
                        "<w>X</w>      : make Xom do something now\n"
                        "<w>z</w>      : cast spell by number/name\n"
+                       "<w>W</w>      : god wrath\n"
                        "\n"
                        "<yellow>Monster related commands</yellow>\n"
                        "<w>D</w>      : detect all monsters\n"

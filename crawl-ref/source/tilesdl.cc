@@ -7,9 +7,6 @@
 #include "coord.h"
 #include "directn.h"
 #include "env.h"
-#include "food.h"
-#include "itemname.h"
-#include "itemprop.h"
 #include "files.h"
 #include "glwrapper.h"
 #include "libutil.h"
@@ -19,8 +16,6 @@
 #include "mon-util.h"
 #include "options.h"
 #include "player.h"
-#include "spl-book.h"
-#include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
 #include "tiledef-dngn.h"
@@ -1034,60 +1029,83 @@ void TilesFramework::redraw()
     m_last_tick_redraw = wm->get_ticks();
 }
 
-void TilesFramework::update_minimap(const coord_def &gc)
+static map_feature get_cell_map_feature(const map_cell& cell)
 {
-    if (!player_in_mappable_area())
-        return;
-
-    show_type object = env.map_knowledge(gc).object;
-    map_feature f = (object.cls == SH_MONSTER) ? MF_MONS_HOSTILE :
-        get_feature_def(object).minimap;
-
-    if (f == MF_SKIP)
-        f = get_feature_def(grd(gc)).minimap;
-    ASSERT(f < MF_MAX);
-
-    tiles.update_minimap(gc, f);
-}
-
-void TilesFramework::update_minimap(const coord_def &gc, map_feature f)
-{
-    if (!player_in_mappable_area())
-        return;
-
-    if (!crawl_state.game_is_arena() && gc == you.pos() && you.on_current_level)
-        f = MF_PLAYER;
-    else if (monster_at(gc) && f == MF_MONS_HOSTILE)
+    map_feature mf = MF_SKIP;
+    if (cell.invisible_monster())
+        mf = MF_MONS_HOSTILE;
+    else if (cell.monster() != MONS_NO_MONSTER)
     {
-        const monsters *mon = monster_at(gc);
-        if (mon->friendly())
-            f = MF_MONS_FRIENDLY;
-        else if (mon->good_neutral())
-            f = MF_MONS_PEACEFUL;
-        else if (mon->neutral())
-            f = MF_MONS_NEUTRAL;
-        else if (mons_class_flag(mon->type, M_NO_EXP_GAIN))
-            f = MF_MONS_NO_EXP;
-    }
-    else if (f == MF_FLOOR || f == MF_MAP_FLOOR || f == MF_WATER)
-    {
-        if (is_exclude_root(gc))
-            f = MF_EXCL_ROOT;
-        else if (is_excluded(gc))
-            f = MF_EXCL;
-    }
-
-    if (f == MF_WALL || f == MF_FLOOR)
-    {
-        if (env.map_knowledge(gc).known() && !env.map_knowledge(gc).seen()
-            || env.map_knowledge(gc).detected_item()
-            || env.map_knowledge(gc).detected_mons())
+        switch (cell.monsterinfo() ? cell.monsterinfo()->attitude : ATT_HOSTILE)
         {
-            f = (f == MF_WALL) ? MF_MAP_WALL : MF_MAP_FLOOR;
+        case ATT_FRIENDLY:
+            mf = MF_MONS_FRIENDLY;
+            break;
+        case ATT_GOOD_NEUTRAL:
+            mf = MF_MONS_PEACEFUL;
+            break;
+        case ATT_NEUTRAL:
+        case ATT_STRICT_NEUTRAL:
+            mf = MF_MONS_NEUTRAL;
+            break;
+        case ATT_HOSTILE:
+        default:
+            if (mons_class_flag(cell.monster(), M_NO_EXP_GAIN))
+                mf = MF_MONS_NO_EXP;
+            else
+                mf = MF_MONS_HOSTILE;
+            break;
+        }
+    }
+    else if (cell.cloud())
+    {
+        show_type show;
+        show.cls = SH_CLOUD;
+        mf = get_feature_def(show).minimap;
+    }
+
+    if (mf == MF_SKIP && cell.item())
+        mf = get_feature_def(*cell.item()).minimap;
+    if (mf == MF_SKIP)
+        mf = get_feature_def(cell.feat()).minimap;
+    if (mf == MF_SKIP)
+        mf = MF_UNSEEN;
+
+    if (mf == MF_WALL || mf == MF_FLOOR)
+    {
+        if (cell.known() && !cell.seen()
+            || cell.detected_item()
+            || cell.detected_monster())
+        {
+            mf = (mf == MF_WALL) ? MF_MAP_WALL : MF_MAP_FLOOR;
         }
     }
 
-    m_region_map->set(gc, f);
+    return mf;
+}
+
+void TilesFramework::update_minimap(const coord_def& gc)
+{
+    if (!player_in_mappable_area())
+        return;
+
+    map_feature mf;
+
+    if (!crawl_state.game_is_arena() && gc == you.pos() && you.on_current_level)
+        mf = MF_PLAYER;
+    else
+        mf = get_cell_map_feature(env.map_knowledge(gc));
+
+    // XXX: map_cell show have exclusion info
+    if (mf == MF_FLOOR || mf == MF_MAP_FLOOR || mf == MF_WATER)
+    {
+        if (is_exclude_root(gc))
+            mf = MF_EXCL_ROOT;
+        else if (is_excluded(gc))
+            mf = MF_EXCL;
+    }
+
+    m_region_map->set(gc, mf);
 }
 
 void TilesFramework::clear_minimap()
@@ -1131,7 +1149,7 @@ void TilesFramework::add_text_tag(text_tag_type type, const std::string &tag,
     m_region_tile->add_text_tag(type, tag, gc);
 }
 
-void TilesFramework::add_text_tag(text_tag_type type, const monsters* mon)
+void TilesFramework::add_text_tag(text_tag_type type, const monster* mon)
 {
     // HACK.  Names cover up pan demons in a weird way.
     if (mon->type == MONS_PANDEMONIUM_DEMON)

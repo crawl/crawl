@@ -297,7 +297,7 @@ SHUFFLE:  l.
 MARKER: a = lua:fog_machine { \
              pow_min = 2, pow_max = 4, delay = 3, \
              size = 4, walk_dist = 8, spread_rate= -1, \
-             cloud_type= "poison gases" }
+             cloud_type= "poison gasses" }
 MAP
   lllllll
  lllllllll

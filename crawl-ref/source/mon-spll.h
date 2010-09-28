@@ -52,6 +52,73 @@
       }
     },
 
+    {  MST_NISSE,
+      {
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_INVISIBILITY,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_DEEP_DWARF_NECROMANCER,
+      {
+       SPELL_PAIN,
+       SPELL_DISPEL_UNDEAD,
+       SPELL_NO_SPELL,
+       SPELL_ANIMATE_DEAD,
+       SPELL_VAMPIRIC_DRAINING, // offense
+       SPELL_VAMPIRIC_DRAINING  // and defensive
+      }
+    },
+
+    {  MST_DEEP_DWARF_UNBORN,
+      {
+       SPELL_SYMBOL_OF_TORMENT,
+       SPELL_DISPEL_UNDEAD,
+       SPELL_MIRROR_DAMAGE,
+       SPELL_ANIMATE_DEAD,
+       SPELL_HAUNT,
+       SPELL_MIRROR_DAMAGE
+      }
+    },
+
+
+    {  MST_BK_TROG,
+      {
+       SPELL_BROTHERS_IN_ARMS,
+       SPELL_NO_SPELL,
+       SPELL_TROGS_HAND,
+       SPELL_BERSERKER_RAGE,
+       SPELL_BURN_SPELLBOOK,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_BK_YREDELEMNUL,
+      {
+       SPELL_NO_SPELL,
+       SPELL_ANIMATE_DEAD,
+       SPELL_SUMMON_UNDEAD, /* cheaper to fake recall and gift with summon spell */
+       SPELL_NO_SPELL,
+       SPELL_DRAIN_LIFE,
+       SPELL_MIRROR_DAMAGE
+      }
+    },
+
+    {  MST_PARACELSUS,
+      {
+       SPELL_EVAPORATE,
+       SPELL_EVAPORATE,
+       SPELL_STONESKIN,
+       SPELL_POLYMORPH_OTHER,
+       SPELL_STICKS_TO_SNAKES,
+       SPELL_STICKS_TO_SNAKES
+      }
+    },
+
     {  MST_GUARDIAN_SERPENT,
       {
        SPELL_TELEPORT_OTHER,
@@ -335,6 +402,61 @@
        SPELL_TELEPORT_OTHER,
        SPELL_FIREBALL,
        SPELL_TELEPORT_OTHER
+      }
+    },
+
+    {  MST_TROLLKONOR,
+      {
+       SPELL_CORONA,
+       SPELL_MINOR_HEALING,
+       SPELL_MINOR_HEALING,
+       SPELL_NO_SPELL,
+       SPELL_AWAKEN_FOREST,
+       SPELL_BLINK
+      }
+    },
+
+    {  MST_HULDRA,
+      {
+       SPELL_VAMPIRIC_DRAINING, // is_unholy
+       SPELL_CONFUSE,
+       SPELL_MINOR_HEALING,
+       SPELL_NO_SPELL,
+       SPELL_MISLEAD,
+       SPELL_BLINK
+      }
+    },
+
+    {  MST_WITCH_I,
+      {
+       SPELL_BOLT_OF_INACCURACY,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_POLYMORPH_OTHER,
+       SPELL_AWAKEN_FOREST,
+       SPELL_BLINK_AWAY
+      }
+    },
+
+    {  MST_WITCH_II, /* evil-type */
+      {
+       SPELL_ISKENDERUNS_MYSTIC_BLAST,
+       SPELL_MEPHITIC_CLOUD,
+       SPELL_NO_SPELL,
+       SPELL_POLYMORPH_OTHER,
+       SPELL_FIREBALL,
+       SPELL_BLINK_AWAY
+      }
+    },
+
+    {  MST_WITCH_III, /* forest-type */
+      {
+       SPELL_SUNRAY, // is_holy
+       SPELL_SUMMON_SMALL_MAMMALS,
+       SPELL_NO_SPELL,
+       SPELL_SUMMON_CANIFORMS,
+       SPELL_AWAKEN_FOREST,
+       SPELL_MISLEAD
       }
     },
 
@@ -822,13 +944,46 @@
       }
     },
 
-    {  MST_SERPENT_OF_HELL,
+    {  MST_SERPENT_OF_HELL_GEHENNA,
       {
        SPELL_HELLFIRE,
-       SPELL_HELLFIRE,
+       SPELL_FIRE_BREATH,
        SPELL_NO_SPELL,
        SPELL_HELLFIRE,
-       SPELL_HELLFIRE,
+       SPELL_FIRE_BREATH,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_SERPENT_OF_HELL_COCYTUS,
+      {
+       SPELL_FREEZING_CLOUD,
+       SPELL_COLD_BREATH,
+       SPELL_NO_SPELL,
+       SPELL_FREEZING_CLOUD,
+       SPELL_COLD_BREATH,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_SERPENT_OF_HELL_DIS,
+      {
+       SPELL_METAL_SPLINTERS,
+       SPELL_QUICKSILVER_BOLT,
+       SPELL_NO_SPELL,
+       SPELL_METAL_SPLINTERS,
+       SPELL_QUICKSILVER_BOLT,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_SERPENT_OF_HELL_TARTARUS,
+      {
+       SPELL_BOLT_OF_DRAINING,
+       SPELL_MIASMA,
+       SPELL_NO_SPELL,
+       SPELL_BOLT_OF_DRAINING,
+       SPELL_MIASMA,
        SPELL_NO_SPELL
       }
     },
@@ -1146,8 +1301,8 @@
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_INVISIBILITY,
+       SPELL_SWIFTNESS,
        SPELL_BLINK,
-       SPELL_NO_SPELL,
        SPELL_TELEPORT_SELF,
       }
     },
@@ -1290,7 +1445,7 @@
       {
        SPELL_VENOM_BOLT,
        SPELL_SLEEP,
-       SPELL_SLEEP,
+       SPELL_NO_SPELL,
        SPELL_POISON_ARROW,
        SPELL_VENOM_BOLT,
        SPELL_BLINK_OTHER
@@ -1322,8 +1477,8 @@
     {  MST_MARA,
       {
        SPELL_MISLEAD,
-       SPELL_FAKE_MARA_SUMMON,
        SPELL_BOLT_OF_FIRE,
+       SPELL_FAKE_MARA_SUMMON,
        SPELL_SUMMON_ILLUSION,
        SPELL_PAIN,
        SPELL_TELEPORT_SELF
@@ -1333,8 +1488,8 @@
     {  MST_MARA_FAKE,
       {
        SPELL_MISLEAD,
-       SPELL_NO_SPELL,
        SPELL_BOLT_OF_FIRE,
+       SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_PAIN,
        SPELL_TELEPORT_SELF
@@ -1363,7 +1518,7 @@
       }
     },
 
-    {  MST_WAYNE,
+    {  MST_BK_OKAWARU,
       {
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
@@ -1451,6 +1606,17 @@
       }
     },
 
+    {  MST_NERGALLE,
+      {
+       SPELL_BOLT_OF_DRAINING,
+       SPELL_SUMMON_SPECTRAL_ORCS,
+       SPELL_NO_SPELL,
+       SPELL_DISPEL_UNDEAD,
+       SPELL_HASTE_OTHER,
+       SPELL_TELEPORT_SELF
+      }
+    },
+
     {  MST_JUMPING_SPIDER,
       {
        SPELL_BLINK_CLOSE,
@@ -1459,6 +1625,50 @@
        SPELL_BLINK_CLOSE,
        SPELL_BLINK_CLOSE,
        SPELL_BLINK_AWAY
+      }
+    },
+
+    {  MST_HOLY_DRAGON,
+      {
+       SPELL_HOLY_BREATH,
+       SPELL_HOLY_BREATH,
+       SPELL_NO_SPELL,
+       SPELL_HOLY_BREATH,
+       SPELL_HOLY_BREATH,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_BLESSED_TOE,
+      {
+       SPELL_SUMMON_HOLIES,
+       SPELL_SUMMON_HOLIES,
+       SPELL_HEAL_OTHER,
+       SPELL_HOLY_WORD,
+       SPELL_SUMMON_HOLIES,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_SPIRIT,
+      {
+       SPELL_BLINK_AWAY,
+       SPELL_BLINK_AWAY,
+       SPELL_BLINK_AWAY,
+       SPELL_BLINK_AWAY,
+       SPELL_BLINK_AWAY,
+       SPELL_BLINK_AWAY
+      }
+    },
+
+    {  MST_OPHAN,
+      {
+       SPELL_BOLT_OF_FIRE,
+       SPELL_HOLY_FLAMES,
+       SPELL_NO_SPELL,
+       SPELL_BOLT_OF_FIRE,
+       SPELL_HOLY_FLAMES,
+       SPELL_NO_SPELL
       }
     },
 

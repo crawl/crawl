@@ -46,3 +46,32 @@
    fun:newterm
    fun:initscr
 }
+
+# glibc has an O(1) memory leak in getpwuid() that's harmless since the
+# memory is reused in subsequent calls.  Such kind of memory is supposed
+# to be freed when ran under memory debuggers, but it currently isn't.
+# Bug entry: http://sourceware.org/bugzilla/show_bug.cgi?id=2314
+{
+   libc_pwuid_once_leak
+   Memcheck:Leak
+   fun:malloc
+   fun:nss_parse_service_list
+   fun:__nss_database_lookup
+   obj:*
+   obj:*
+   fun:getpwuid_r@@GLIBC_2.2.5
+   fun:getpwuid
+}
+
+# Zlib examines the data past the end of the buffer by design to reduce
+# the number of boundary checks.  This doesn't have any external effects.
+# http://www.zlib.net/zlib_faq.html#faq36
+# "Even though the code was correct, versions 1.2.4 and later was changed
+# to not stimulate these checkers."
+{
+   zlib_lookhead_optimization
+   Memcheck:Cond
+   fun:longest_match
+   fun:deflate_slow
+   fun:deflate
+}

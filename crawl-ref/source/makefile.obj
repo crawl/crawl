@@ -1,5 +1,6 @@
 OBJECTS = \
 abl-show.o \
+acquire.o \
 abyss.o \
 act-iter.o \
 actor-los.o \
@@ -42,10 +43,14 @@ directn.o \
 dlua.o \
 dungeon.o \
 effects.o \
+errors.o \
 exclude.o \
+exercise.o \
+fearmonger.o \
 feature.o \
 fight.o \
 files.o \
+fineff.o \
 food.o \
 format.o \
 fprop.o \
@@ -69,6 +74,7 @@ itemprop.o \
 items.o \
 jobs.o \
 kills.o \
+l_colour.o \
 l_crawl.o \
 l_debug.o \
 l_dgn.o \
@@ -147,6 +153,7 @@ ng-wanderer.o \
 notes.o \
 ouch.o \
 output.o \
+package.o \
 pattern.o \
 place-info.o \
 place.o \
@@ -168,14 +175,19 @@ showsymb.o \
 skills.o \
 skills2.o \
 species.o \
-spells1.o \
-spells2.o \
-spells3.o \
-spells4.o \
 spl-book.o \
 spl-cast.o \
-spl-mis.o \
+spl-clouds.o \
+spl-damage.o \
+spl-goditem.o \
+spl-miscast.o \
+spl-monench.o \
+spl-other.o \
+spl-selfench.o \
+spl-summoning.o \
+spl-transloc.o \
 spl-util.o \
+spl-wpnench.o \
 spl-zap.o \
 sprint.o \
 sqldbm.o \
@@ -183,8 +195,10 @@ stairs.o \
 startup.o \
 stash.o \
 state.o \
+status.o \
 store.o \
 stuff.o \
+syscalls.o \
 tags.o \
 tagstring.o \
 teleport.o \

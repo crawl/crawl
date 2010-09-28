@@ -15,7 +15,6 @@
 #include "dungeon.h"
 #include "env.h"
 #include "files.h"
-#include "initfile.h"
 #include "godwrath.h"
 #include "libutil.h"
 #include "los.h"
@@ -25,6 +24,7 @@
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "place.h"
+#include "religion.h"
 #include "stairs.h"
 #ifdef USE_TILE
  #include "tileview.h"
@@ -202,7 +202,7 @@ LUAFN(debug_dismiss_adjacent)
 {
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
     {
-        monsters* mon = monster_at(*ai);
+        monster* mon = monster_at(*ai);
 
         if (mon)
         {
@@ -223,7 +223,7 @@ LUAFN(debug_god_wrath)
         return (luaL_argerror(ls, 1, err.c_str()));
     }
 
-    god_type god = str_to_god(god_name);
+    god_type god = strcmp(god_name, "random") ? str_to_god(god_name) : GOD_RANDOM;
     if (god == GOD_NO_GOD)
     {
         std::string err = make_stringf("'%s' matches no god.", god_name);

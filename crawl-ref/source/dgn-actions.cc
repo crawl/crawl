@@ -42,7 +42,7 @@ static const char *daction_names[] =
     "remove Jiyva altars",
 };
 
-static bool _mons_matches_counter(const monsters *mon, daction_type act)
+static bool _mons_matches_counter(const monster* mon, daction_type act)
 {
     if (!mon || !mon->alive())
         return (false);

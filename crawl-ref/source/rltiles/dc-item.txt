@@ -156,6 +156,9 @@ i-flaming BRAND_FLAME
 i-freezing BRAND_FROST
 i-vampiricism BRAND_VAMPIRICISM
 i-pain BRAND_PAIN
+%rim 1
+i-antimagic BRAND_ANTIMAGIC
+%rim 0
 i-distortion BRAND_DISTORTION
 i-reaching BRAND_REACHING
 i-returning BRAND_RETURNING

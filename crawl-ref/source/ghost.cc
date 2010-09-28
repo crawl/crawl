@@ -24,7 +24,6 @@
 #include "spl-cast.h"
 #include "mon-util.h"
 #include "mon-transit.h"
-#include "place.h"
 #include "player.h"
 #include "religion.h"
 
@@ -77,7 +76,6 @@ static spell_type search_order_conj[] = {
 // Order for looking for summonings and self-enchants for the 3rd spell
 // slot.
 static spell_type search_order_third[] = {
-// 0
     SPELL_SYMBOL_OF_TORMENT,
     SPELL_SUMMON_GREATER_DEMON,
     SPELL_SUMMON_HORRIBLE_THINGS,
@@ -88,7 +86,6 @@ static spell_type search_order_third[] = {
     SPELL_SILENCE,
     SPELL_SUMMON_BUTTERFLIES,
     SPELL_SUMMON_SWARM,
-// 10
     SPELL_SUMMON_UGLY_THING,
     SPELL_SWIFTNESS,
     SPELL_SUMMON_ICE_BEAST,
@@ -107,7 +104,6 @@ static spell_type search_order_third[] = {
 // this fails, go through conjurations.  Note: Dig must be in misc2
 // (5th) position to work.
 static spell_type search_order_misc[] = {
-// 0
     SPELL_AGONY,
     SPELL_BANISHMENT,
     SPELL_FREEZING_CLOUD,
@@ -118,7 +114,6 @@ static spell_type search_order_misc[] = {
     SPELL_SLOW,
     SPELL_POLYMORPH_OTHER,
     SPELL_TELEPORT_OTHER,
-// 10
     SPELL_EVAPORATE, // replaced with Mephitic Cloud, though at lower priority
     SPELL_DIG,
     SPELL_CORONA,
@@ -426,10 +421,10 @@ void ghost_demon::init_player_ghost()
     add_spells();
 }
 
-static unsigned char _ugly_thing_assign_colour(unsigned char force_colour,
-                                               unsigned char force_not_colour)
+static uint8_t _ugly_thing_assign_colour(uint8_t force_colour,
+                                         uint8_t force_not_colour)
 {
-    unsigned char colour;
+    uint8_t colour;
 
     if (force_colour != BLACK)
         colour = force_colour;
@@ -465,7 +460,7 @@ static mon_attack_flavour _very_ugly_thing_flavour_upgrade(mon_attack_flavour u_
 
     return (u_att_flav);
 }
-mon_attack_flavour ugly_thing_colour_to_flavour(unsigned char u_colour)
+mon_attack_flavour ugly_thing_colour_to_flavour(uint8_t u_colour)
 {
     mon_attack_flavour u_att_flav = AF_PLAIN;
 
@@ -505,7 +500,7 @@ mon_attack_flavour ugly_thing_colour_to_flavour(unsigned char u_colour)
 }
 
 void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
-                                  unsigned char force_colour)
+                                  uint8_t force_colour)
 {
     // Movement speed: 11, the same as in mon-data.h.
     speed = 11;
@@ -867,7 +862,7 @@ void ghost_demon::find_transiting_ghosts(
         {
             if (i->mons.type == MONS_PLAYER_GHOST)
             {
-                const monsters &m = i->mons;
+                const monster& m = i->mons;
                 if (m.ghost.get())
                 {
                     announce_ghost(*m.ghost);
@@ -914,6 +909,7 @@ int ghost_demon::n_extra_ghosts()
         // areas at this depth, such as portal vaults.
         if (subdepth < 9 && you.where_are_you == BRANCH_MAIN_DUNGEON
             || subdepth < 2 && you.where_are_you == BRANCH_LAIR
+            || subdepth < 3 && you.where_are_you == BRANCH_DWARF_HALL
             || subdepth < 2 && you.where_are_you == BRANCH_ORCISH_MINES)
         {
             return (0);

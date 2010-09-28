@@ -25,7 +25,7 @@
 #include "hints.h"
 #include "view.h"
 
-static bool _mon_needs_auto_exclude(const monsters *mon, bool sleepy = false)
+static bool _mon_needs_auto_exclude(const monster* mon, bool sleepy = false)
 {
     if (mons_is_stationary(mon))
     {
@@ -41,7 +41,7 @@ static bool _mon_needs_auto_exclude(const monsters *mon, bool sleepy = false)
 }
 
 // Check whether a given monster is listed in the auto_exclude option.
-bool need_auto_exclude(const monsters *mon, bool sleepy)
+bool need_auto_exclude(const monster* mon, bool sleepy)
 {
     // This only works if the name is lowercased.
     std::string name = mon->name(DESC_BASENAME,
@@ -63,7 +63,7 @@ bool need_auto_exclude(const monsters *mon, bool sleepy)
 
 // If the monster is in the auto_exclude list, automatically set an
 // exclusion.
-void set_auto_exclude(const monsters *mon)
+void set_auto_exclude(const monster* mon)
 {
     if (need_auto_exclude(mon) && !is_exclude_root(mon->pos()))
     {
@@ -87,7 +87,7 @@ void set_auto_exclude(const monsters *mon)
 
 // Clear auto exclusion if the monster is killed or wakes up with the
 // player in sight. If sleepy is true, stationary monsters are ignored.
-void remove_auto_exclude(const monsters *mon, bool sleepy)
+void remove_auto_exclude(const monster* mon, bool sleepy)
 {
     if (need_auto_exclude(mon, sleepy))
     {
@@ -238,14 +238,14 @@ void exclude_set::add_exclude_points(travel_exclude& ex)
             exclude_points.insert(*ri);
 }
 
-void exclude_set::update_excluded_points()
+void exclude_set::update_excluded_points(bool recompute_los)
 {
     for (iterator it = exclude_roots.begin(); it != exclude_roots.end(); ++it)
     {
         travel_exclude &ex = it->second;
         if (!ex.uptodate)
         {
-            recompute_excluded_points();
+            recompute_excluded_points(recompute_los);
             return;
         }
     }
@@ -321,7 +321,7 @@ static void _mark_excludes_non_updated(const coord_def &p)
          it != curr_excludes.end(); ++it)
     {
         travel_exclude &ex = it->second;
-        ex.uptodate = ex.uptodate && ex.in_bounds(p);
+        ex.uptodate = ex.uptodate && !ex.in_bounds(p);
     }
 }
 
@@ -344,7 +344,7 @@ void update_exclusion_los(std::vector<coord_def> changed)
     for (unsigned int i = 0; i < changed.size(); ++i)
         _mark_excludes_non_updated(changed[i]);
 
-    curr_excludes.update_excluded_points();
+    curr_excludes.update_excluded_points(true);
 }
 
 bool is_excluded(const coord_def &p, const exclude_set &exc)
@@ -524,7 +524,7 @@ void maybe_remove_autoexclusion(const coord_def &p)
         if (!exc->autoex)
             return;
 
-        const monsters *m = monster_at(p);
+        const monster* m = monster_at(p);
         if (!m || !you.can_see(m)
             || m->attitude != ATT_HOSTILE
                 && m->type != MONS_HYPERACTIVE_BALLISTOMYCETE
@@ -633,7 +633,7 @@ void marshallExcludes(writer& outf, const exclude_set& excludes)
     }
 }
 
-void unmarshallExcludes(reader& inf, char minorVersion, exclude_set &excludes)
+void unmarshallExcludes(reader& inf, int minorVersion, exclude_set &excludes)
 {
     excludes.clear();
     int nexcludes = unmarshallShort(inf);

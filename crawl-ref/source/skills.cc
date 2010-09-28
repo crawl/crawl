@@ -23,7 +23,6 @@
 #include "spl-cast.h"
 #include "sprint.h"
 #include "state.h"
-#include "transform.h"
 
 
 // MAX_COST_LIMIT is the maximum XP amount it will cost to raise a skill
@@ -345,8 +344,10 @@ static void _gain_skill_level(skill_type exsk)
     if (you.weapon() && item_is_staff(*you.weapon()))
         maybe_identify_staff(*you.weapon());
 
+    // TODO: also identify rings of wizardry.
+
     // Ogres -> ogre mages.
-    you.symbol = transform_mons();
+    update_player_symbol();
 }
 
 static int _exercise2(int exski)
