@@ -950,13 +950,7 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
 
     // If the original monster type has melee, spellcasting or priestly
     // abilities, make sure its spectral thing has them as well.
-#if TAG_MAJOR_VERSION == 30
-    mon->flags |=
-        orig.flags & (MF_FIGHTER | MF_TWO_WEAPONS | MF_ARCHER
-                      | MF_SPELLCASTER | MF_ACTUAL_SPELLS | MF_PRIEST);
-#else
     mon->flags |= orig.flags & (MF_MELEE_MASK | MF_SPELL_MASK);
-#endif
     mon->spells = orig.spells;
 
     name_zombie(mon, &orig);
