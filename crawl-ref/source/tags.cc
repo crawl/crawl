@@ -1762,13 +1762,10 @@ static void tag_read_you(reader &th, int minorVersion)
     for (i = 0; i < count; i++)
         you.beholders.push_back(unmarshallShort(th));
 
-    // Also usually empty
-    if (minorVersion >= TAG_MINOR_FEAR)
-    {
-        count = unmarshallShort(th);
-        for (i = 0; i < count; i++)
-            you.fearmongers.push_back(unmarshallShort(th));
-    }
+    // Also usually empty.
+    count = unmarshallShort(th);
+    for (i = 0; i < count; i++)
+        you.fearmongers.push_back(unmarshallShort(th));
 
     you.piety_hysteresis = unmarshallByte(th);
 

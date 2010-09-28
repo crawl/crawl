@@ -1686,11 +1686,7 @@ enum targ_mode_type
 // NOTE: Changing this order will break saves!
 enum monster_type                      // (int) menv[].type
 {
-#if TAG_MAJOR_VERSION == 30
-    MONS_GIANT_ANT,                    //    0
-#else
     MONS_PROGRAM_BUG,                  //    0
-#endif
     MONS_GIANT_BAT,
     MONS_CENTAUR,
     MONS_RED_DEVIL,
@@ -1944,11 +1940,7 @@ enum monster_type                      // (int) menv[].type
     MONS_GARGOYLE,
     MONS_METAL_GARGOYLE,
     MONS_MOLTEN_GARGOYLE,
-#if TAG_MAJOR_VERSION == 30
-    MONS_PROGRAM_BUG,                  //  250
-#else
     MONS_GIANT_ANT,                    //  250
-#endif
 // BCR - begin first batch of uniques.
     MONS_MNOLEG,
     MONS_LOM_LOBON,
@@ -2320,62 +2312,6 @@ enum monster_flag_type
     MF_INTERESTING        = 0x08,    // Player finds monster interesting
 
     MF_SEEN               = 0x10,    // Player has already seen monster
-#if TAG_MAJOR_VERSION == 30
-    MF_FIGHTER            = 0x20,    // Monster is skilled fighter.
-    MF_KNOWN_MIMIC        = 0x40,    // Mimic that has taken a swing at the PC,
-                                     // or that the player has inspected with ?
-    MF_BANISHED           = 0x80,    // Monster that has been banished.
-
-    MF_HARD_RESET         = 0x100,   // Summoned, should not drop gear on reset
-    MF_WAS_NEUTRAL        = 0x200,   // mirror to CREATED_FRIENDLY for neutrals
-    MF_ATT_CHANGE_ATTEMPT = 0x400,   // Saw player and attitude changed (or
-                                     // not); currently used for holy beings
-                                     // (good god worshippers -> neutral)
-                                     // orcs (Beogh worshippers -> friendly),
-                                     // and slimes (Jiyva worshippers -> neutral)
-    MF_WAS_IN_VIEW        = 0x800,   // Was in view during previous turn.
-
-    MF_BAND_MEMBER        = 0x1000,  // Created as a member of a band
-    MF_GOT_HALF_XP        = 0x2000,  // Player already got half xp value earlier
-    MF_FAKE_UNDEAD        = 0x4000,  // Consider this monster to have MH_UNDEAD
-                                     // holiness, regardless of its actual type
-    MF_ENSLAVED_SOUL      = 0x8000,  // An undead monster soul enslaved by
-                                     // Yredelemnul's power
-
-    MF_NAME_SUFFIX        = 0x10000, // mname is a suffix.
-    MF_NAME_ADJECTIVE     = 0x20000, // mname is an adjective.
-                                     // between it and the monster type name.
-    MF_NAME_REPLACE       = 0x30000, // mname entirely replaces normal monster
-                                     // name.
-    MF_NAME_MASK          = 0x30000,
-    MF_GOD_GIFT           = 0x40000, // Is a god gift.
-    MF_FLEEING_FROM_SANCTUARY = 0x80000, // Is running away from player sanctuary
-    MF_EXPLODE_KILL       = 0x100000, // Is being killed with disintegration
-
-    // These are based on the flags in monster class, but can be set for
-    // monsters that are not normally spellcasters (in vaults).
-    MF_SPELLCASTER        = 0x200000,
-    MF_ACTUAL_SPELLS      = 0x400000, // Can use spells and is a spellcaster for
-                                      // Trog purposes.
-    MF_PRIEST             = 0x800000, // Is a priest (divine spells)
-                                      // for the conduct.
-
-    MF_NO_REGEN           = 0x1000000,// This monster cannot regenerate.
-
-    MF_NAME_DESCRIPTOR    = 0x2000000,// mname should be treated with normal
-                                      // grammar, ie, prevent "You hit red rat"
-                                      // and other such constructs.
-    MF_NAME_DEFINITE      = 0x4000000,// give this monster the definite "the"
-                                      // article, instead of the indefinite "a"
-                                      // article.
-    MF_INTERLEVEL_FOLLOWER = 0x8000000,// will travel with the player regardless
-                                       // of where the monster is at on the level
-    MF_DEMONIC_GUARDIAN = 0x10000000, // is a demonic_guardian
-    MF_NAME_SPECIES     = 0x20000000, // mname should be used for corpses as well,
-                                      // preventing "human corpse of halfling"
-    MF_TWO_WEAPONS      = 0x40000000, // Monster wields two weapons.
-    MF_ARCHER           = 0x80000000, // Monster gets various archery boosts.
-#else
     MF_KNOWN_MIMIC        = 0x20,    // Mimic that has taken a swing at the PC,
                                      // or that the player has inspected with ?
     MF_BANISHED           = 0x40,    // Monster that has been banished.
@@ -2435,7 +2371,6 @@ enum monster_flag_type
     MF_DEMONIC_GUARDIAN    = 0x40000000,// is a demonic_guardian
     MF_NAME_SPECIES        = 0x80000000,// mname should be used for corpses as well,
                                       // preventing "human corpse of halfling"
-#endif
     // Note: at least name flags get passed in a 32-bit variable (fill_out_corpse()),
     // and perhaps other flags as well.  Be careful when extending.
 };
