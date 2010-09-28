@@ -4155,9 +4155,11 @@ static void _compile_time_asserts()
     COMPILE_CHECK(SK_UNARMED_COMBAT == 17       , c1);
     COMPILE_CHECK(SK_EVOCATIONS == 38           , c2);
     COMPILE_CHECK(SP_VAMPIRE == 30              , c3);
-    COMPILE_CHECK(SPELL_DEBUGGING_RAY == 102    , c4);
-    COMPILE_CHECK(SPELL_PETRIFY == 154          , c5);
+#if TAG_MAJOR_VERSION == 31
     COMPILE_CHECK(NUM_SPELLS == 225             , c6);
+#else
+    COMPILE_CHECK(NUM_SPELLS == 224             , c6);
+#endif
 
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
     COMPILE_CHECK(NUM_SPECIES < SP_UNKNOWN      , c7);

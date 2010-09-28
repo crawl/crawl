@@ -319,6 +319,7 @@ enum scroll_type
     SCR_HOLY_WORD,
     SCR_VULNERABILITY,
     SCR_SILENCE,                       //   25
+    SCR_AMNESIA,
     NUM_SCROLLS
 };
 

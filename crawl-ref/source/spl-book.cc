@@ -181,12 +181,12 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
 
     // Book of Enchantments (fourth one)
     {SPELL_LEVITATION,
-     SPELL_SELECTIVE_AMNESIA,
      SPELL_SEE_INVISIBLE,
      SPELL_CAUSE_FEAR,
      SPELL_EXTENSION,
      SPELL_DEFLECT_MISSILES,
      SPELL_HASTE,
+     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
 
@@ -423,11 +423,11 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      },
 
     // Book of Wizardry
-    {SPELL_SELECTIVE_AMNESIA,
-     SPELL_SUMMON_ELEMENTAL,
+    {SPELL_SUMMON_ELEMENTAL,
      SPELL_TELEPORT_SELF,
      SPELL_FIREBALL,
      SPELL_HASTE,
+     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -1424,8 +1424,6 @@ static bool _get_mem_list(spell_list &mem_spells,
     unsigned int num_low_levels = 0;
     unsigned int num_memable    = 0;
 
-    bool amnesia = false;
-
     for (spells_to_books::iterator i = book_hash.begin();
          i != book_hash.end(); ++i)
     {
@@ -1448,24 +1446,12 @@ static bool _get_mem_list(spell_list &mem_spells,
             else if (avail_slots < spell_levels_required(spell))
                 num_low_levels++;
             else
-            {
-                if (spell == SPELL_SELECTIVE_AMNESIA)
-                    amnesia = true;
                 num_memable++;
-            }
         }
     }
 
-    // You can always memorise selective amnesia.
     if (num_memable > 0 && you.spell_no >= 21)
     {
-        if (amnesia)
-        {
-            mem_spells.clear();
-            mem_spells.push_back(SPELL_SELECTIVE_AMNESIA);
-            return (true);
-        }
-
         if (!just_check)
             mpr("Your head is already too full of spells!");
         return (false);
@@ -1871,7 +1857,7 @@ static bool _learn_spell_checks(spell_type specspell)
         return (false);
     }
 
-    if (you.spell_no >= 21 && specspell != SPELL_SELECTIVE_AMNESIA)
+    if (you.spell_no >= 21)
     {
         mpr("Your head is already too full of spells!");
         return (false);

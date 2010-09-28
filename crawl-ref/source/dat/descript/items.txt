@@ -1048,6 +1048,10 @@ scroll of acquirement
 
 This wonderful scroll causes the creation of a valuable item to appear before the reader. It is especially treasured by specialist magicians, as they can use it to obtain the powerful spells of their specialty.
 %%%%
+scroll of amnesia
+
+This scroll allows its reader to selectively erase one spell from memory to recapture the magical energy bound up with it.
+%%%%
 scroll of blinking
 
 This scroll allows its reader to teleport a short distance, with precise control. Be wary that controlled teleports will cause the subject to become contaminated with magical energy.

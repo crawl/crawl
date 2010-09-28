@@ -633,6 +633,7 @@ static const char* scroll_type_name(int scrolltype)
     case SCR_HOLY_WORD:          return "holy word";
     case SCR_VULNERABILITY:      return "vulnerability";
     case SCR_SILENCE:            return "silence";
+    case SCR_AMNESIA:            return "amnesia";
     default:                     return "bugginess";
     }
 }
