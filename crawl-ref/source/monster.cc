@@ -5146,8 +5146,48 @@ void monster::apply_enchantment(const mon_enchant &me)
         }
 
     }
+    break;
+
+    case ENCH_PORTAL_TIMER:
+    {
+        if (decay_enchantment(me))
+        {
+            coord_def base_position = this->props["base_position"].get_coord();
+            // Do a thing.
+            if (you.see_cell(base_position))
+            {
+                mprf("The portal closes, %s is severed", name(DESC_NOCAP_THE).c_str());
+            }
+
+            if (env.grid(base_position) == DNGN_TEMP_PORTAL)
+            {
+                env.grid(base_position) = DNGN_FLOOR;
+            }
+
+            env.pgrid(base_position) |= FPROP_BLOODY;
+            add_ench(ENCH_SEVERED);
+        }
+    }
+    break;
+
+    case ENCH_SEVERED:
+    {
+        simple_monster_message(this, " writhes!");
+        coord_def base_position = props["base_position"].get_coord();
+        dungeon_feature_type ftype = env.grid(base_position);
+        if (feat_has_solid_floor(ftype)
+            && !feat_is_watery(ftype))
+        {
+            env.pgrid(base_position) |= FPROP_BLOODY;
+        }
+        // We don't have a reasonable agent to give.
+        // Don't clean up the monster in order to credit properly.
+        //hurt(NULL, dam, BEAM_NAPALM, false);
+        hurt(NULL, 20);
+    }
 
     break;
+
     case ENCH_GLOWING_SHAPESHIFTER: // This ench never runs out!
         // Number of actions is fine for shapeshifters.  Don't change
         // shape while taking the stairs because monster_polymorph() has
@@ -6071,7 +6111,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             && mons_base_type(&menv[number]) == MONS_KRAKEN_TENTACLE)
         {
 
-            // If we aare going to die, monster_die hook will handle
+            // If we are going to die, monster_die hook will handle
             // purging the tentacle.
             if (hit_points < menv[number].hit_points
                 && this->hit_points > 0)
@@ -6084,6 +6124,27 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                 if (invalid_monster(this))
                 {
                     type = MONS_KRAKEN_CONNECTOR;
+                    hit_points = -1;
+                }
+            }
+        }
+    }
+    else if (type == MONS_DEMONIC_TENTACLE_SEGMENT)
+    {
+        //mprf("in tentacle damage pass");
+        if (!invalid_monster_index(number)
+            && mons_base_type(&menv[number]) == MONS_DEMONIC_TENTACLE)
+        {
+            if (hit_points < menv[number].hit_points)
+            {
+                int pass_damage = menv[number].hit_points -  hit_points;
+                menv[number].hurt(oppressor, pass_damage, flavour);
+
+                // We could be removed, undo this or certain post-hit
+                // effects will cry.
+                if (invalid_monster(this))
+                {
+                    type = MONS_DEMONIC_TENTACLE_SEGMENT;
                     hit_points = -1;
                 }
             }
@@ -6170,8 +6231,8 @@ static const char *enchant_names[] =
     "petrified", "lowered_mr", "soul_ripe", "slowly_dying", "eat_items",
     "aquatic_land", "spore_production", "slouch", "swift", "tide",
     "insane", "silenced", "awaken_forest", "exploding", "bleeding",
-    "antimagic", "fading_away", "preparing_resurrect", "regen", "magic_res",
-    "mirror_dam", "stoneskin", "fear inspiring", "buggy",
+    "tethered", "severed", "antimagic", "fading_away", "preparing_resurrect", "regen", 
+    "magic_res", "mirror_dam", "stoneskin", "fear inspiring", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -6348,6 +6409,10 @@ int mon_enchant::calc_duration(const monster* mons,
 
     case ENCH_EXPLODING:
         return (random_range(3,7) * 10);
+
+    case ENCH_PORTAL_TIMER:
+        cturn = 30 * 10 / _mod_speed(10, mons->speed);
+        break;
 
     case ENCH_ABJ:
         if (deg >= 6)

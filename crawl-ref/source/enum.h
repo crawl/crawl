@@ -1139,6 +1139,7 @@ enum dungeon_feature_type
     // Portals to various places unknown.
     DNGN_ENTER_PORTAL_VAULT = 160,
     DNGN_EXIT_PORTAL_VAULT,
+    DNGN_TEMP_PORTAL,
 
     // Order of altars must match order of gods (god_type)
     DNGN_ALTAR_FIRST_GOD = 180,        // 180
@@ -1301,6 +1302,8 @@ enum enchant_type
     ENCH_AWAKEN_FOREST,
     ENCH_EXPLODING,
     ENCH_BLEED,
+    ENCH_PORTAL_TIMER,
+    ENCH_SEVERED,
     ENCH_ANTIMAGIC,
     ENCH_FADING_AWAY,
     ENCH_PREPARING_RESURRECT,
@@ -2218,7 +2221,9 @@ enum monster_type                      // (int) menv[].type
     MONS_GIANT_SCORPION,
     MONS_GHOST_MOTH,
     MONS_JUMPING_SPIDER,
-    MONS_TARANTELLA,                   // 492
+    MONS_DEMONIC_TENTACLE,
+    MONS_DEMONIC_TENTACLE_SEGMENT,
+    MONS_TARANTELLA,
     MONS_SILENT_SPECTRE,
     // Dwarf Hall monsters
     MONS_WITCH,
@@ -3234,6 +3239,7 @@ enum spell_type
     SPELL_POISON_CLOUD,
     SPELL_FIRE_CLOUD,
     SPELL_STEAM_CLOUD,
+    SPELL_MALIGN_GATEWAY,
 
     NUM_SPELLS
 };

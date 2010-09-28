@@ -1595,6 +1595,9 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_SUMMON_HORRIBLE_THINGS:
         cast_summon_horrible_things(powc, god);
         break;
+    case SPELL_MALIGN_GATEWAY:
+        cast_malign_gateway(&you, powc, god);
+        break;
 
     case SPELL_ANIMATE_SKELETON:
     {

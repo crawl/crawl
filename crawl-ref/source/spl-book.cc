@@ -559,7 +559,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_SUMMON_DEMON,
      SPELL_DEMONIC_HORDE,
      SPELL_SUMMON_GREATER_DEMON,
-     SPELL_NO_SPELL,
+     SPELL_MALIGN_GATEWAY,
      SPELL_NO_SPELL,
      },
 

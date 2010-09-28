@@ -94,6 +94,7 @@ static spell_type search_order_third[] = {
     SPELL_SUMMON_SCORPIONS,
     SPELL_CALL_IMP,
     SPELL_SUMMON_SMALL_MAMMALS,
+    SPELL_MALIGN_GATEWAY,
     SPELL_CONTROLLED_BLINK,
     SPELL_BLINK,
     SPELL_NO_SPELL,                        // end search
@@ -297,10 +298,13 @@ void ghost_demon::init_random_demon()
         if (one_chance_in(10))
             spells[2] = SPELL_SUMMON_EYEBALLS;
 
+
         if (one_chance_in(20))
             spells[3] = SPELL_SUMMON_GREATER_DEMON;
         if (one_chance_in(20))
             spells[3] = SPELL_SUMMON_DEMON;
+        if (one_chance_in(20))
+            spells[3] = SPELL_MALIGN_GATEWAY;
 
         // At least they can summon demons.
         if (spells[3] == SPELL_NO_SPELL)

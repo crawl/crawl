@@ -680,6 +680,19 @@ struct spell_desc
 },
 
 {
+    SPELL_MALIGN_GATEWAY, "Malign Gateway",
+     SPTYP_SUMMONING | SPTYP_TRANSLOCATION,
+     SPFLAG_UNHOLY | SPFLAG_BATTLE | SPFLAG_CHAOTIC,
+     6,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_ENSLAVEMENT, "Enslavement",
      SPTYP_ENCHANTMENT,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
