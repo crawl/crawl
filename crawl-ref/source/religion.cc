@@ -3159,6 +3159,17 @@ bool player_can_join_god(god_type which_god)
     return (true);
 }
 
+bool transformed_player_can_join_god(god_type which_god)
+{
+    if ((is_good_god(which_god) || which_god == GOD_FEDHAS)
+        && you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
+    {
+        return (false);
+    }
+
+    return (true);
+}
+
 // Identify any interesting equipment when the player signs up with a
 // new Service Pro^W^Wdeity.
 void god_welcome_identify_gear()
@@ -3192,7 +3203,7 @@ void god_pitch(god_type which_god)
         if (which_god == GOD_SIF_MUNA)
             simple_god_message(" does not accept worship from the ignorant!",
                                which_god);
-        else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
+        else if (transformed_player_can_join_god(which_god))
             simple_god_message(" says: How dare you come in such a loathsome form!",
                                which_god);
         else
