@@ -65,7 +65,6 @@ invisibility INVISIBILITY
 mass_confusion MASS_CONFUSION
 projected_noise PROJECTED_NOISE
 see_invisible SEE_INVISIBLE
-selective_amnesia SELECTIVE_AMNESIA
 slow SLOW
 sure_blade SURE_BLADE
 tame_beasts TAME_BEASTS

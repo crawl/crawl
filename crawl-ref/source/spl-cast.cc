@@ -1867,6 +1867,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     // other
+#if TAG_MAJOR_VERSION == 31
     case SPELL_SELECTIVE_AMNESIA:
         crawl_state.cant_cmd_repeat("You can't repeat selective amnesia.");
 
@@ -1875,6 +1876,7 @@ static spret_type _do_cast(spell_type spell, int powc,
             return (SPRET_ABORT);
         break;
 
+#endif
     case SPELL_EXTENSION:
         extension(powc);
         break;

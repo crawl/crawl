@@ -1709,6 +1709,7 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
             case SCR_RECHARGING:
+            case SCR_AMNESIA:
                 valued += 50;
                 break;
 

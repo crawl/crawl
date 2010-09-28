@@ -4622,6 +4622,14 @@ void read_scroll(int slot)
                 return;
             break;
 
+        case SCR_AMNESIA:
+            if (you.spell_no == 0)
+            {
+                canned_msg(MSG_NO_SPELLS);
+                return;
+            }
+            break;
+
         default:
             break;
         }
@@ -4955,6 +4963,16 @@ void read_scroll(int slot)
 
     case SCR_VULNERABILITY:
         _vulnerability_scroll();
+        break;
+
+    case SCR_AMNESIA:
+        if (you.spell_no == 0)
+        {
+            canned_msg(MSG_NOTHING_HAPPENS);
+            id_the_scroll = false;
+        }
+        else
+            cast_selective_amnesia(false);
         break;
 
     default:
