@@ -411,53 +411,62 @@ int spell_fail(spell_type spell)
 
 
 int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
-                     bool cap_power)
+                     bool cap_power, bool rod)
 {
-    // When checking failure rates, wizardry is handled after the various
-    // stepping calulations.
-    int power = (you.skills[SK_SPELLCASTING] / 2)
-                 + (fail_rate_check? 0 : player_mag_abil(false));
-    int enhanced = 0;
-
-    unsigned int disciplines = get_spell_disciplines( spell );
-
-    //jmf: evil evil evil -- exclude HOLY bit
-    disciplines &= (~SPTYP_HOLY);
-
-    int skillcount = count_bits( disciplines );
-    if (skillcount)
+    int power;
+    if (rod) {
+        // This is only the average of the power. It's used for display and
+        // calculating range. The real power is randomized in staff_spell()
+        power = (5 + you.skills[SK_EVOCATIONS] * 2);
+    }
+    else
     {
-        for (int ndx = 0; ndx <= SPTYP_LAST_EXPONENT; ndx++)
+        // When checking failure rates, wizardry is handled after the various
+        // stepping calulations.
+        power = (you.skills[SK_SPELLCASTING] / 2)
+                     + (fail_rate_check? 0 : player_mag_abil(false));
+        int enhanced = 0;
+
+        unsigned int disciplines = get_spell_disciplines( spell );
+
+        //jmf: evil evil evil -- exclude HOLY bit
+        disciplines &= (~SPTYP_HOLY);
+
+        int skillcount = count_bits( disciplines );
+        if (skillcount)
         {
-            unsigned int bit = (1 << ndx);
-            if (disciplines & bit)
-                power += (you.skills[spell_type2skill(bit)] * 2) / skillcount;
+            for (int ndx = 0; ndx <= SPTYP_LAST_EXPONENT; ndx++)
+            {
+                unsigned int bit = (1 << ndx);
+                if (disciplines & bit)
+                    power += (you.skills[spell_type2skill(bit)] * 2) / skillcount;
+            }
         }
-    }
 
-    if (apply_intel)
-        power = (power * you.intel()) / 10;
+        if (apply_intel)
+            power = (power * you.intel()) / 10;
 
-    // [dshaligram] Enhancers don't affect fail rates any more, only spell
-    // power. Note that this does not affect Vehumet's boost in castability.
-    if (!fail_rate_check)
-        enhanced = spell_enhancement( disciplines );
+        // [dshaligram] Enhancers don't affect fail rates any more, only spell
+        // power. Note that this does not affect Vehumet's boost in castability.
+        if (!fail_rate_check)
+            enhanced = spell_enhancement( disciplines );
 
-    if (enhanced > 0)
-    {
-        for (int i = 0; i < enhanced; i++)
+        if (enhanced > 0)
         {
-            power *= 15;
-            power /= 10;
+            for (int i = 0; i < enhanced; i++)
+            {
+                power *= 15;
+                power /= 10;
+            }
         }
-    }
-    else if (enhanced < 0)
-    {
-        for (int i = enhanced; i < 0; i++)
-            power /= 2;
-    }
+        else if (enhanced < 0)
+        {
+            for (int i = enhanced; i < 0; i++)
+                power /= 2;
+        }
 
-    power = stepdown_value( power, 50, 50, 150, 200 );
+        power = stepdown_value( power, 50, 50, 150, 200 );
+    }
 
     const int cap = spell_power_cap(spell);
     if (cap > 0 && cap_power)
@@ -1078,7 +1087,7 @@ static bool _spellcasting_aborted(spell_type spell,
 // effects might also land us here.
 // Others are currently unused or unimplemented.
 spret_type your_spells(spell_type spell, int powc,
-                       bool allow_fail, bool check_range)
+                       bool allow_fail, bool check_range, int range_power)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -1087,6 +1096,10 @@ spret_type your_spells(spell_type spell, int powc,
     dist spd;
     bolt beam;
     beam.origin_spell = spell;
+
+    if (range_power == 0)
+        range_power = powc;
+
 
     // [dshaligram] Any action that depends on the spellcasting attempt to have
     // succeeded must be performed after the switch().
@@ -1141,7 +1154,7 @@ spret_type your_spells(spell_type spell, int powc,
         const bool dont_cancel_me = (testbits(flags, SPFLAG_HELPFUL)
                                      || testbits(flags, SPFLAG_ALLOW_SELF));
 
-        const int range = calc_spell_range(spell, powc, false);
+        const int range = calc_spell_range(spell, range_power, false);
 
         std::string title = "Casting: <white>";
         title += spell_title(spell);
@@ -2028,12 +2041,12 @@ static unsigned int _breakpoint_rank(int val, const int breakpoints[],
     return result;
 }
 
-const char* spell_hunger_string(spell_type spell)
+const char* spell_hunger_string(spell_type spell, bool rod)
 {
     if (you.is_undead == US_UNDEAD)
         return ("N/A");
 
-    const int hunger = spell_hunger(spell);
+    const int hunger = spell_hunger(spell, rod);
 
     // Spell hunger is "Fruit" if casting the spell five times costs at
     // most one "Fruit".
@@ -2146,34 +2159,34 @@ static int _power_to_barcount( int power )
     return (_breakpoint_rank(power, breakpoints, ARRAYSZ(breakpoints)) + 1);
 }
 
-int spell_power_bars( spell_type spell )
+int spell_power_bars( spell_type spell, bool rod )
 {
     const int cap = spell_power_cap(spell);
     if (cap == 0)
         return -1;
-    const int power = std::min(calc_spell_power(spell, true), cap);
+    const int power = std::min(calc_spell_power(spell, true, false, false, rod), cap);
     return _power_to_barcount(power);
 }
 
 #ifdef WIZARD
-static std::string _wizard_spell_power_numeric_string(spell_type spell)
+static std::string _wizard_spell_power_numeric_string(spell_type spell, bool rod)
 {
     const int cap = spell_power_cap(spell);
     if (cap == 0)
         return "N/A";
-    const int power = std::min(calc_spell_power(spell, true), cap);
+    const int power = std::min(calc_spell_power(spell, true, false, false, rod), cap);
     return make_stringf("%d (%d)", power, cap);
 }
 #endif
 
-std::string spell_power_string(spell_type spell)
+std::string spell_power_string(spell_type spell, bool rod)
 {
 #ifdef WIZARD
     if (you.wizard)
-        return _wizard_spell_power_numeric_string(spell);
+        return _wizard_spell_power_numeric_string(spell, rod);
 #endif
 
-    const int numbars = spell_power_bars(spell);
+    const int numbars = spell_power_bars(spell, rod);
     const int capbars = _power_to_barcount(spell_power_cap(spell));
     ASSERT(numbars <= capbars);
     if (numbars < 0)
@@ -2182,19 +2195,19 @@ std::string spell_power_string(spell_type spell)
         return std::string(numbars, '#') + std::string(capbars - numbars, '.');
 }
 
-int calc_spell_range(spell_type spell, int power, bool real_cast)
+int calc_spell_range(spell_type spell, int power, bool real_cast, bool rod)
 {
     if (power == 0)
-        power = calc_spell_power(spell, true);
+        power = calc_spell_power(spell, true, false, false, rod);
     const int range = spell_range(spell, power, real_cast);
 
     return (range);
 }
 
-std::string spell_range_string(spell_type spell)
+std::string spell_range_string(spell_type spell, bool rod)
 {
     const int cap      = spell_power_cap(spell);
-    const int range    = calc_spell_range(spell);
+    const int range    = calc_spell_range(spell, 0, false, rod);
     const int maxrange = spell_range(spell, cap, false);
 
     if (range < 0)

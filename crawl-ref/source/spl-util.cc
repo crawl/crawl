@@ -312,7 +312,7 @@ bool del_spell_from_memory_by_slot( int slot )
 }
 
 
-int spell_hunger(spell_type which_spell)
+int spell_hunger(spell_type which_spell, bool rod)
 {
     const int level = spell_difficulty(which_spell);
 
@@ -327,7 +327,13 @@ int spell_hunger(spell_type which_spell)
     else
         hunger = (basehunger[0] * level * level) / 4;
 
-    hunger -= you.intel() * you.skills[SK_SPELLCASTING];
+    if (rod)
+    {
+        hunger -= 10 * you.skills[SK_EVOCATIONS];
+        hunger = std::max(hunger, level * 5);
+    }
+    else
+        hunger -= you.intel() * you.skills[SK_SPELLCASTING];
 
     if (hunger < 0)
         hunger = 0;
