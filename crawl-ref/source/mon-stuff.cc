@@ -1262,7 +1262,8 @@ void mons_relocated(monster* mons)
 
         for (monster_iterator mit; mit; ++mit)
         {
-            if (mit->number == base_id && mit->type == MONS_DEMONIC_TENTACLE_SEGMENT)
+            if (mit->type == MONS_DEMONIC_TENTACLE_SEGMENT
+                && (int) mit->number == base_id)
             {
                 monster_die(*mit, KILL_RESET, -1, true, false);
             }
