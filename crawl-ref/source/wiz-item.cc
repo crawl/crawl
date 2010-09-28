@@ -10,6 +10,7 @@
 
 #include <errno.h>
 
+#include "acquire.h"
 #include "artefact.h"
 #include "coordit.h"
 #include "message.h"
@@ -22,7 +23,6 @@
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
-#include "it_use2.h"
 #include "invent.h"
 #include "makeitem.h"
 #include "mapdef.h"
@@ -203,7 +203,7 @@ void wizard_create_spec_object()
             mon = MONS_DRACONIAN;
         }
 
-        monsters dummy;
+        monster dummy;
         dummy.type = mon;
 
         if (mons_genus(mon) == MONS_HYDRA)
@@ -312,7 +312,7 @@ const char* _prop_name[ARTP_NUM_PROPERTIES] = {
 #define ARTP_VAL_POS  1
 #define ARTP_VAL_ANY  2
 
-char _prop_type[ARTP_NUM_PROPERTIES] = {
+int8_t _prop_type[ARTP_NUM_PROPERTIES] = {
     ARTP_VAL_POS,  //BRAND
     ARTP_VAL_ANY,  //AC
     ARTP_VAL_ANY,  //EVASION
@@ -663,6 +663,11 @@ void wizard_make_object_randart()
             return;
         }
 
+        // need to trim before the object changes, or else the old properties
+        // won't be removed
+        if (Options.autoinscribe_artefacts)
+            trim_randart_inscrip(item);
+
         item.special = 0;
         item.flags  &= ~ISFLAG_RANDART;
         item.props.clear();
@@ -673,7 +678,7 @@ void wizard_make_object_randart()
     char name[80];
     if (!cancelable_get_line(name, sizeof( name )) && name[0])
     {
-        god_type god = string_to_god(name, false);
+        god_type god = str_to_god(name, false);
         if (god == GOD_NO_GOD)
            mpr("No such god, leaving item origin alone.");
         else

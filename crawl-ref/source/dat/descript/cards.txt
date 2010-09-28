@@ -59,7 +59,7 @@ It is usually found in decks of changes, defence and war.
 %%%%
 Battlelust card
 
-This card makes your more powerful in physical combat.
+This card makes you more powerful in physical combat.
 It is usually found in decks of changes, defence and war.
 %%%%
 Metamorphosis card
@@ -110,7 +110,7 @@ It is usually found in decks of changes and wonders.
 %%%%
 the Helix card
 
-This cards changes your mutations. Higher power levels make the change more likely to be beneficial.
+This card changes your mutations. Higher power levels make the change more likely to be beneficial.
 It is usually found in decks of changes and wonders.
 %%%%
 the Sage card

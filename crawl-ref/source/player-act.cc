@@ -485,7 +485,7 @@ void player::attacking(actor *other)
 
     if (other && other->atype() == ACT_MONSTER)
     {
-        const monsters *mon = other->as_monster();
+        const monster* mon = other->as_monster();
         if (!mon->friendly() && !mon->neutral())
             pet_target = mon->mindex();
     }
@@ -540,6 +540,14 @@ bool player::can_go_berserk(bool intentional, bool potion) const
         if (verbose)
             mpr("You are too mesmerised to rage.");
         // or else they won't notice -- no message here
+        return (false);
+    }
+
+    if (afraid())
+    {
+        if (verbose)
+            mpr("You are too terrified to rage.");
+
         return (false);
     }
 

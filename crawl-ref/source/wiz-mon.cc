@@ -24,24 +24,23 @@
 #include "jobs.h"
 #include "macro.h"
 #include "map_knowledge.h"
-#include "message.h"
-#include "mon-place.h"
-#include "terrain.h"
-#include "mgen_data.h"
 #include "mapdef.h"
+#include "message.h"
+#include "mgen_data.h"
+#include "mon-iter.h"
 #include "mon-pathfind.h"
+#include "mon-place.h"
 #include "mon-speak.h"
 #include "mon-stuff.h"
-#include "mon-iter.h"
 #include "mon-util.h"
 #include "output.h"
 #include "religion.h"
 #include "shout.h"
 #include "showsymb.h"
-#include "spells2.h"
-#include "spl-mis.h"
+#include "spl-miscast.h"
 #include "spl-util.h"
 #include "stuff.h"
+#include "terrain.h"
 #include "view.h"
 #include "viewmap.h"
 
@@ -49,7 +48,7 @@
 // Creates a specific monster by mon type number.
 void wizard_create_spec_monster(void)
 {
-    int mon = debug_prompt_for_int( "Create which monster by number? ", true );
+    int mon = debug_prompt_for_int("Which monster by number? ", true);
 
     if (mon == -1 || (mon >= NUM_MONSTERS
                       && mon != RANDOM_MONSTER
@@ -58,7 +57,7 @@ void wizard_create_spec_monster(void)
                       && mon != RANDOM_NONBASE_DRACONIAN
                       && mon != WANDERING_MONSTER))
     {
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
     }
     else
     {
@@ -161,7 +160,7 @@ void wizard_create_spec_monster_name()
     }
 
     // FIXME: This is a bit useless, seeing how you cannot set the
-    // ghost's stats, brand or level.
+    // ghost's stats, brand or level, among other things.
     if (mspec.mid == MONS_PLAYER_GHOST)
     {
         unsigned short mid = mgrd(place);
@@ -185,7 +184,7 @@ void wizard_create_spec_monster_name()
             return;
         }
 
-        monsters    &mon = menv[mid];
+        monster    &mon = menv[mid];
         ghost_demon ghost;
 
         ghost.name = "John Doe";
@@ -228,8 +227,8 @@ void wizard_create_spec_monster_name()
 
 static bool _sort_monster_list(int a, int b)
 {
-    const monsters* m1 = &menv[a];
-    const monsters* m2 = &menv[b];
+    const monster* m1 = &menv[a];
+    const monster* m2 = &menv[b];
 
     if (m1->alive() != m2->alive())
         return m1->alive();
@@ -277,7 +276,7 @@ void debug_list_monsters()
         if (invalid_monster_index(idx))
             continue;
 
-        const monsters *mi(&menv[idx]);
+        const monster* mi(&menv[idx]);
         if (!mi->alive())
             continue;
 
@@ -440,7 +439,7 @@ void debug_stethoscope(int mon)
         i = mgrd(stethpos);
     }
 
-    monsters& mons(menv[i]);
+    monster& mons(menv[i]);
 
     // Print type of monster.
     mprf(MSGCH_DIAGNOSTICS, "%s (id #%d; type=%d loc=(%d,%d) align=%s)",
@@ -551,7 +550,10 @@ void debug_stethoscope(int mon)
 void wizard_detect_creatures()
 {
     for (monster_iterator mi; mi; ++mi)
+    {
         env.map_knowledge(mi->pos()).set_monster(monster_info(*mi));
+        env.map_knowledge(mi->pos()).set_detected_monster(mi->type);
+    }
 }
 
 // Dismisses all monsters on the level or all monsters that match a user
@@ -577,7 +579,7 @@ void wizard_dismiss_all_monsters(bool force_all)
         autotoggle_autopickup(false);
 }
 
-void debug_make_monster_shout(monsters* mon)
+void debug_make_monster_shout(monster* mon)
 {
     mpr("Make the monster (S)hout or (T)alk? ", MSGCH_PROMPT);
 
@@ -633,12 +635,12 @@ void debug_make_monster_shout(monsters* mon)
     mpr("== Done ==");
 }
 
-static bool _force_suitable(const monsters *mon)
+static bool _force_suitable(const monster* mon)
 {
     return (mon->alive());
 }
 
-void wizard_apply_monster_blessing(monsters* mon)
+void wizard_apply_monster_blessing(monster* mon)
 {
     mpr("Apply blessing of (B)eogh, The (S)hining One, or (R)andomly? ",
         MSGCH_PROMPT);
@@ -661,7 +663,7 @@ void wizard_apply_monster_blessing(monsters* mon)
         mprf("%s won't bless this monster for you!", god_name(god).c_str());
 }
 
-void wizard_give_monster_item(monsters *mon)
+void wizard_give_monster_item(monster* mon)
 {
     mon_itemuse_type item_use = mons_itemuse(mon);
     if (item_use < MONUSE_STARTING_EQUIPMENT)
@@ -900,10 +902,10 @@ static void _move_monster(const coord_def& where, int mid1)
     if (!moves.isValid || !in_bounds(moves.target))
         return;
 
-    monsters* mon1 = &menv[mid1];
+    monster* mon1 = &menv[mid1];
 
     const int mid2 = mgrd(moves.target);
-    monsters* mon2 = monster_at(moves.target);
+    monster* mon2 = monster_at(moves.target);
 
     mon1->moveto(moves.target);
     mgrd(moves.target) = mid1;
@@ -951,7 +953,7 @@ void wizard_move_player_or_monster(const coord_def& where)
     already_moving = false;
 }
 
-void wizard_make_monster_summoned(monsters* mon)
+void wizard_make_monster_summoned(monster* mon)
 {
     int summon_type = 0;
     if (mon->is_summoned(NULL, &summon_type) || summon_type != 0)
@@ -1027,7 +1029,7 @@ void wizard_make_monster_summoned(monsters* mon)
     mpr("Monster is now summoned.");
 }
 
-void wizard_polymorph_monster(monsters* mon)
+void wizard_polymorph_monster(monster* mon)
 {
     monster_type old_type =  mon->type;
     monster_type type     = debug_prompt_for_monster();
@@ -1092,7 +1094,7 @@ void debug_pathfind(int mid)
         return;
     }
 
-    monsters &mon = menv[mid];
+    monster& mon = menv[mid];
     mprf("Attempting to calculate a path from (%d, %d) to (%d, %d)...",
          mon.pos().x, mon.pos().y, dest.x, dest.y);
     monster_pathfind mp;

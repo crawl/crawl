@@ -164,6 +164,7 @@ ifdef CROSSHOST
 	CONFIGURE_FLAGS += --host=$(CROSSHOST)
 	BUILD_LUA = yes
 	BUILD_SQLITE = yes
+	BUILD_ZLIB = YesPlease
 
 	# If needed, override uname_S so we get the appropriate
 	# things compiled.
@@ -183,6 +184,7 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 	NO_NCURSES = YesPlease
 	NEED_LIBW32C = YesPlease
 	BUILD_PCRE = YesPlease
+	BUILD_ZLIB = YesPlease
 	DEFINES_L += -DWINMM_PLAY_SOUNDS
 	EXTRA_LIBS += -lwinmm
 	ifdef TILES
@@ -191,7 +193,6 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 		BUILD_SDL = YesPlease
 		BUILD_SDLIMAGE = YesPlease
 		BUILD_LIBPNG = YesPlease
-		BUILD_ZLIB = YesPlease
 	endif
 endif
 ifeq ($(uname_S),DOS)
@@ -209,13 +210,13 @@ ifeq ($(uname_S),Darwin)
 	LIBNCURSES_IS_UNICODE = Yes
 	NO_PKGCONFIG = Yes
 	BUILD_SQLITE = YesPlease
+	BUILD_ZLIB = YesPlease
 	ifdef TILES
 		EXTRA_LIBS += -framework AppKit -framework AudioUnit -framework Carbon -framework IOKit -framework OpenGL contrib/install/lib/libSDLmain.a
 		BUILD_FREETYPE = YesPlease
 		BUILD_SDL = YesPlease
 		BUILD_SDLIMAGE = YesPlease
 		BUILD_LIBPNG = YesPlease
-		BUILD_ZLIB = YesPlease
 	endif
 endif
 ifdef USE_LUAJIT
@@ -228,11 +229,6 @@ ifneq (,$(findstring CYGWIN,$(uname_S)))
 	GAME = crawl.exe
 	NO_RDYNAMIC = YesPlease
 	BUILD_PCRE = YesPlease
-endif
-ifeq (,$(findstring .exe,$(GAME)))
-	DEFINES += -DUSE_TAR
-else
-	DEFINES += -DUSE_ZIP
 endif
 
 ifdef BUILD_ALL
@@ -458,12 +454,21 @@ ifndef BUILD_LUA
 endif
 
 ifndef BUILD_SQLITE
-  ifeq ($(shell grep -q sqlite3_prepare_v2 $(SQLITE_INCLUDE_DIR)/sqlite3.h 2>/dev/null && echo yes),yes)
+  ifeq ($(shell grep -q sqlite3_prepare $(SQLITE_INCLUDE_DIR)/sqlite3.h 2>/dev/null && echo yes),yes)
     INCLUDES_L += -I$(SQLITE_INCLUDE_DIR)
     LIBS += $(SQLITE_LIB)
+    ifneq ($(shell grep -q sqlite3_prepare_v2 $(SQLITE_INCLUDE_DIR)/sqlite3.h 2>/dev/null && echo yes),yes)
+      DEFINES_L += -DANCIENT_SQLITE
+    endif
   else
     BUILD_SQLITE = yes
   endif
+endif
+
+ifndef BUILD_ZLIB
+  LIBS += -lz
+else
+  LIBS += $(LIBZ)
 endif
 
 RLTILES = rltiles

@@ -56,11 +56,11 @@ std::string weird_smell();
 
 std::string weird_sound();
 
-bool mons_can_hurt_player(const monsters *mon, const bool want_move = false);
-bool mons_is_safe(const monsters *mon, const bool want_move = false,
+bool mons_can_hurt_player(const monster* mon, const bool want_move = false);
+bool mons_is_safe(const monster* mon, const bool want_move = false,
                   const bool consider_user_options = true);
 
-std::vector<monsters*> get_nearby_monsters(bool want_move = false,
+std::vector<monster* > get_nearby_monsters(bool want_move = false,
                                            bool just_check = false,
                                            bool dangerous_only = false,
                                            bool consider_user_options = true,
@@ -98,13 +98,15 @@ void reveal_secret_door(const coord_def& p);
 
 std::string your_hand(bool plural);
 
-bool stop_attack_prompt(const monsters *mon, bool beam_attack,
-                        coord_def beam_target);
+bool stop_attack_prompt(const monster* mon, bool beam_attack,
+                        coord_def beam_target, bool autohit_first = false);
 
 bool is_orckind(const actor *act);
 
 bool is_dragonkind(const actor *act);
-void swap_with_monster(monsters *mon_to_swap);
+void swap_with_monster(monster* mon_to_swap);
 
 void maybe_id_ring_TC();
+
+void make_fake_undead(monster* mon, monster_type undead);
 #endif

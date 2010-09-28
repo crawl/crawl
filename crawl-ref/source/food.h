@@ -63,6 +63,7 @@ bool check_amu_the_gourmand(bool reqid);
 bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
                 bool reqid = false, bool check_hunger = true);
 
+bool chunk_is_poisonous(int chunktype);
 void eat_floor_item(int item_link);
 
 int eat_from_floor(bool skip_chunks = true);

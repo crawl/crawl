@@ -30,20 +30,18 @@
 
 #include "abyss.h"
 #include "areas.h"
-#include "branch.h"
-#include "chardump.h"
 #include "clua.h"
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
 #include "database.h"
 #include "delay.h"
-#include "dgn-overview.h"
 #include "dgn-shoals.h"
 #include "directn.h"
 #include "dgnevent.h"
 #include "directn.h"
 #include "env.h"
+#include "exercise.h"
 #include "fight.h"
 #include "files.h"
 #include "flood_find.h"
@@ -56,7 +54,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
-#include "lev-pand.h"
+#include "kills.h"
 #include "libutil.h"
 #include "macro.h"
 #include "makeitem.h"
@@ -69,8 +67,6 @@
 #include "mon-util.h"
 #include "mon-stuff.h"
 #include "ouch.h"
-#include "output.h"
-#include "place.h"
 #include "player.h"
 #include "player-stats.h"
 #include "random.h"
@@ -79,12 +75,9 @@
 #include "shopping.h"
 #include "skills.h"
 #include "skills2.h"
-#include "spells1.h"
-#include "spells3.h"
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
-#include "tagstring.h"
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
@@ -93,7 +86,6 @@
 #include "view.h"
 #include "viewgeom.h"
 #include "shout.h"
-#include "viewchar.h"
 #include "xom.h"
 
 static void _create_monster_hide(const item_def corpse)
@@ -567,6 +559,8 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
                                 == ID_KNOWN_TYPE;
 
     _potion_stack_changed_message(blood, coag_count, "coagulate%s");
+
+    request_autoinscribe();
 
     // Identify both blood and coagulated blood, if necessary.
     if (!knew_blood)
@@ -1167,7 +1161,7 @@ void bleed_onto_floor(const coord_def& where, monster_type montype,
 
     if (montype != NUM_MONSTERS && montype != MONS_PLAYER)
     {
-        monsters m;
+        monster m;
         m.type = montype;
         if (!m.can_bleed())
             return;
@@ -1300,7 +1294,7 @@ void search_around(bool only_adjacent)
             {
                 mpr("You found a secret door!");
                 reveal_secret_door(*ri);
-                exercise(SK_TRAPS_DOORS, (coinflip() ? 2 : 1));
+                practise(EX_FOUND_SECRET_DOOR);
             }
             else if (grd(*ri) == DNGN_UNDISCOVERED_TRAP
                      && x_chance_in_y(effective + 1, 17))
@@ -1311,7 +1305,7 @@ void search_around(bool only_adjacent)
                     ptrap->reveal();
                     mpr("You found a trap!");
                     learned_something_new(HINT_SEEN_TRAP, *ri);
-                    exercise(SK_TRAPS_DOORS, (coinflip() ? 2 : 1));
+                    practise(EX_TRAP_FOUND);
                 }
                 else
                 {
@@ -1465,7 +1459,7 @@ bool go_berserk(bool intentional, bool potion)
 
 // Returns true if the monster has a path to the player, or it has to be
 // assumed that this is the case.
-static bool _mons_has_path_to_player(const monsters *mon, bool want_move = false)
+static bool _mons_has_path_to_player(const monster* mon, bool want_move = false)
 {
     // Don't consider sleeping monsters safe, in case the player would
     // rather retreat and try another path for maximum stabbing chances.
@@ -1482,6 +1476,10 @@ static bool _mons_has_path_to_player(const monsters *mon, bool want_move = false
             return (false);
     }
 
+    // Short-cut if it's already adjacent.
+    if (grid_distance(mon->pos(), you.pos()) <= 1)
+        return (true);
+
     // If the monster is awake and knows a path towards the player
     // (even though the player cannot know this) treat it as unsafe.
     if (mon->travel_target == MTRAV_PLAYER)
@@ -1494,8 +1492,9 @@ static bool _mons_has_path_to_player(const monsters *mon, bool want_move = false
     // known to the player and assuming unknown terrain to be traversable.
     monster_pathfind mp;
     const int range = mons_tracking_range(mon);
+    // Use a large safety margin.  x4 should be ok.
     if (range > 0)
-        mp.set_range(range);
+        mp.set_range(range * 4);
 
     if (mp.init_pathfind(mon, you.pos(), true, false, true))
         return (true);
@@ -1506,9 +1505,10 @@ static bool _mons_has_path_to_player(const monsters *mon, bool want_move = false
     return (false);
 }
 
-bool mons_can_hurt_player(const monsters *mon, const bool want_move)
+bool mons_can_hurt_player(const monster* mon, const bool want_move)
 {
     // FIXME: This takes into account whether the player knows the map!
+    //        It should, for the purposes of i_feel_safe. [rob]
     // It also always returns true for sleeping monsters, but that's okay
     // for its current purposes. (Travel interruptions and tension.)
     if (_mons_has_path_to_player(mon, want_move))
@@ -1531,7 +1531,7 @@ bool mons_can_hurt_player(const monsters *mon, const bool want_move)
     return (false);
 }
 
-bool mons_is_safe(const monsters *mon, const bool want_move,
+bool mons_is_safe(const monster* mon, const bool want_move,
                   const bool consider_user_options)
 {
     if (mons_is_unknown_mimic(mon))
@@ -1551,11 +1551,7 @@ bool mons_is_safe(const monsters *mon, const bool want_move,
                        // Only seen through glass walls or within water?
                        // Assuming that there are no water-only/lava-only
                        // monsters capable of throwing or zapping wands.
-                    || ((!you.see_cell_no_trans(mon->pos())
-                         || mons_class_habitat(mon->type) == HT_WATER
-                         || mons_class_habitat(mon->type) == HT_LAVA
-                         || mons_is_stationary(mon))
-                        && !mons_can_hurt_player(mon, want_move)));
+                    || !mons_can_hurt_player(mon, want_move));
 
 #ifdef CLUA_BINDINGS
     if (consider_user_options)
@@ -1591,7 +1587,7 @@ bool mons_is_safe(const monsters *mon, const bool want_move,
 // require_visible Require that monsters be visible to the player
 // range           search radius (defaults: LOS)
 //
-std::vector<monsters*> get_nearby_monsters(bool want_move,
+std::vector<monster* > get_nearby_monsters(bool want_move,
                                            bool just_check,
                                            bool dangerous_only,
                                            bool consider_user_options,
@@ -1603,12 +1599,12 @@ std::vector<monsters*> get_nearby_monsters(bool want_move,
     if (range == -1)
         range = LOS_RADIUS;
 
-    std::vector<monsters*> mons;
+    std::vector<monster* > mons;
 
     // Sweep every visible square within range.
     for (radius_iterator ri(you.pos(), range); ri; ++ri)
     {
-        if (monsters* mon = monster_at(*ri))
+        if (monster* mon = monster_at(*ri))
         {
             if (mon->alive()
                 && (!require_visible || mon->visible_to(&you))
@@ -1663,14 +1659,14 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
     }
 
     // Monster check.
-    std::vector<monsters*> visible =
+    std::vector<monster* > visible =
         get_nearby_monsters(want_move, !announce, true, true, true, range);
 
     // Announce the presence of monsters (Eidolos).
     std::string msg;
     if (visible.size() == 1)
     {
-        const monsters &m = *visible[0];
+        const monster& m = *visible[0];
         const std::string monname = mons_is_mimic(m.type)
                                   ? "A mimic"
                                   : m.name(DESC_CAP_A);
@@ -1772,7 +1768,7 @@ static void _drop_tomb(const coord_def& pos, bool premature)
 {
     int count = 0;
 
-    monsters* mon = monster_at(pos);
+    monster* mon = monster_at(pos);
     // Don't wander on duty!
     if (mon)
         mon->behaviour = BEH_SEEK;
@@ -1822,15 +1818,15 @@ void timeout_tombs(int duration)
         cmark->duration -= duration;
 
         // Tombs without monsters in them disappear early.
-        monsters *mon_entombed = monster_at(cmark->pos);
+        monster* mon_entombed = monster_at(cmark->pos);
         if (cmark->duration <= 0 || !mon_entombed)
         {
             _drop_tomb(cmark->pos, !mon_entombed);
 
-            monsters *mon_src =
+            monster* mon_src =
                 !invalid_monster_index(cmark->source) ? &menv[cmark->source]
                                                       : NULL;
-            monsters *mon_targ =
+            monster* mon_targ =
                 !invalid_monster_index(cmark->target) ? &menv[cmark->target]
                                                       : NULL;
 
@@ -1932,7 +1928,8 @@ void run_environment_effects()
     }
 
     run_corruption_effects(you.time_taken);
-    shoals_apply_tides(div_rand_round(you.time_taken, 10));
+    shoals_apply_tides(div_rand_round(you.time_taken, BASELINE_DELAY),
+                       false, true);
     timeout_tombs(you.time_taken);
 }
 
@@ -1971,34 +1968,21 @@ void reveal_secret_door(const coord_def& p)
 {
     ASSERT(grd(p) == DNGN_SECRET_DOOR);
 
-    dungeon_feature_type door = grid_secret_door_appearance(p);
+    const std::string door_open_prompt =
+        env.markers.property_at(p, MAT_ANY, "door_open_prompt");
+
     // Former secret doors become known but are still hidden to monsters
-    // until opened.
-    grd(p) = feat_is_opaque(door) ? DNGN_DETECTED_SECRET_DOOR
-                                  : DNGN_OPEN_DOOR;
+    // until opened. Transparent secret doors are opened to not change
+    // LOS, unless they have a warning prompt.
+    dungeon_feature_type door = grid_secret_door_appearance(p);
+    if (feat_is_opaque(door) || !door_open_prompt.empty())
+        grd(p) = DNGN_DETECTED_SECRET_DOOR;
+    else
+        grd(p) = DNGN_OPEN_DOOR;
+
+    set_terrain_changed(p);
     viewwindow();
     learned_something_new(HINT_FOUND_SECRET_DOOR, p);
-
-    // If a transparent secret door was forced open to preserve LOS,
-    // check if it had an opening prompt.
-    if (grd(p) == DNGN_OPEN_DOOR)
-    {
-        std::string door_open_prompt =
-            env.markers.property_at(p, MAT_ANY, "door_open_prompt");
-
-        if (!door_open_prompt.empty())
-        {
-            mprf("That secret door had a prompt on it:", MSGCH_PROMPT);
-            mprf(MSGCH_PROMPT, "%s", door_open_prompt.c_str());
-
-            if (!is_exclude_root(p))
-            {
-                if (yesno("Put travel exclusion on door? (Y/n)", true, 'y'))
-                    // Zero radius exclusion right on top of door.
-                    set_exclude(p, 0);
-            }
-        }
-    }
 }
 
 // A feeble attempt at Nethack-like completeness for cute messages.
@@ -2009,7 +1993,7 @@ std::string your_hand(bool plural)
     switch (you.attribute[ATTR_TRANSFORMATION])
     {
     default:
-        mpr("ERROR: unknown transformation in your_hand() (spells4.cc)",
+        mpr("ERROR: unknown transformation in your_hand() (misc.cc)",
             MSGCH_ERROR);
     case TRAN_NONE:
     case TRAN_STATUE:
@@ -2038,8 +2022,8 @@ std::string your_hand(bool plural)
     return result;
 }
 
-bool stop_attack_prompt(const monsters *mon, bool beam_attack,
-                        coord_def beam_target)
+bool stop_attack_prompt(const monster* mon, bool beam_attack,
+                        coord_def beam_target, bool autohit_first)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -2064,6 +2048,10 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
     if (isFriendly)
     {
         // Listed in the form: "your rat", "Blork the orc".
+        std::string mon_name = mon->name(DESC_PLAIN);
+        mon_name = std::string("your ") +
+                   (you.religion == GOD_OKAWARU ? "ally the " : "") +
+                   mon_name;
         std::string verb = "";
         bool need_mon_name = true;
         if (beam_attack)
@@ -2074,7 +2062,10 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
             else if (you.pos() < beam_target && beam_target < mon->pos()
                      || you.pos() > beam_target && beam_target > mon->pos())
             {
-                verb += "in " + mon->name(DESC_NOCAP_THE) + "'s direction";
+                if (autohit_first)
+                    return (false);
+
+                verb += "in " + apostrophise(mon_name) + " direction";
                 need_mon_name = false;
             }
             else
@@ -2084,7 +2075,7 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
             verb = "attack ";
 
         if (need_mon_name)
-            verb += mon->name(DESC_NOCAP_THE);
+            verb += mon_name;
 
         snprintf(info, INFO_SIZE, "Really %s%s?",
                  verb.c_str(),
@@ -2132,7 +2123,7 @@ bool is_orckind(const actor *act)
 
     if (act->atype() == ACT_MONSTER)
     {
-        const monsters* mon = act->as_monster();
+        const monster* mon = act->as_monster();
         if (mons_is_zombified(mon)
             && mons_genus(mon->base_monster) == MONS_ORC)
         {
@@ -2160,7 +2151,7 @@ bool is_dragonkind(const actor *act)
         return (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON);
 
     // Else the actor is a monster.
-    const monsters* mon = act->as_monster();
+    const monster* mon = act->as_monster();
 
     if (mon->type == MONS_SERPENT_OF_HELL)
         return (true);
@@ -2182,9 +2173,9 @@ bool is_dragonkind(const actor *act)
 }
 
 // Make the player swap positions with a given monster.
-void swap_with_monster(monsters *mon_to_swap)
+void swap_with_monster(monster* mon_to_swap)
 {
-    monsters& mon(*mon_to_swap);
+    monster& mon(*mon_to_swap);
     ASSERT(mon.alive());
     const coord_def newpos = mon.pos();
 
@@ -2283,4 +2274,12 @@ void maybe_id_ring_TC()
                      ring.name(DESC_INVENTORY_EQUIP).c_str());
             }
         }
+}
+
+void make_fake_undead(monster* mon, monster_type undead)
+{
+    mon->flags |= MF_FAKE_UNDEAD;
+
+    if (!mons_class_can_regenerate(undead))
+        mon->flags |= MF_NO_REGEN;
 }

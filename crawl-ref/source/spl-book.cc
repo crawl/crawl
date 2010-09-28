@@ -36,7 +36,7 @@
 #include "player.h"
 #include "religion.h"
 #include "spl-cast.h"
-#include "spl-mis.h"
+#include "spl-miscast.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
@@ -337,11 +337,11 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     // Book of the Warp
     {SPELL_BANISHMENT,
      SPELL_PHASE_SHIFT,
+     SPELL_GOLUBRIAS_PASSAGE,
      SPELL_WARP_BRAND,
      SPELL_DISPERSAL,
      SPELL_PORTAL,
      SPELL_CONTROLLED_BLINK,
-     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
 
@@ -438,10 +438,10 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_ISKENDERUNS_MYSTIC_BLAST,
      SPELL_TELEPORT_OTHER,
      SPELL_VENOM_BOLT,
+     SPELL_POISONOUS_CLOUD,
      SPELL_IRON_SHOT,
      SPELL_INVISIBILITY,
      SPELL_MASS_CONFUSION,
-     SPELL_POISONOUS_CLOUD,
      },
 
     // Book of Cantrips
@@ -478,13 +478,11 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      },
 
     // Book of Stalking
-    {SPELL_STING,
-     SPELL_SURE_BLADE,
-     SPELL_PROJECTED_NOISE,
-     SPELL_POISON_WEAPON,
-     SPELL_MEPHITIC_CLOUD,
+    {SPELL_FULSOME_DISTILLATION,
+     SPELL_EVAPORATE,
+     SPELL_PASSWALL,
      SPELL_PETRIFY,
-     SPELL_INVISIBILITY,
+     SPELL_DIG,
      SPELL_NO_SPELL,
      },
 
@@ -516,7 +514,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_PASSWALL,
      SPELL_CONTROL_TELEPORT,
      SPELL_FRAGMENTATION,
-     SPELL_NO_SPELL,
+     SPELL_GOLUBRIAS_PASSAGE,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
@@ -735,8 +733,8 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     // Rod of venom
     {SPELL_CURE_POISON,
      SPELL_VENOM_BOLT,
-     SPELL_POISON_ARROW,
      SPELL_POISONOUS_CLOUD,
+     SPELL_POISON_ARROW,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -767,6 +765,15 @@ spell_type which_spell_in_book(int sbook_type, int spl)
     return spellbook_template_array[sbook_type][spl];
 }                               // end which_spell_in_book()
 
+int player_spell_skills()
+{
+    int sum = 0;
+    for (int i = SK_SPELLCASTING; i <= SK_POISON_MAGIC; i++)
+        sum += you.skills[i];
+
+    return (sum);
+}
+
 // If fs is not NULL, updates will be to the formatted_string instead of
 // the display.
 int spellbook_contents( item_def &book, read_book_action_type action,
@@ -778,16 +785,7 @@ int spellbook_contents( item_def &book, read_book_action_type action,
 
     const int spell_levels = player_spell_levels();
 
-    bool spell_skills = false;
-
-    for (i = SK_SPELLCASTING; i <= SK_POISON_MAGIC; i++)
-    {
-        if (you.skills[i])
-        {
-            spell_skills = true;
-            break;
-        }
-    }
+    bool spell_skills = player_spell_skills();
 
     set_ident_flags( book, ISFLAG_KNOW_TYPE );
 
@@ -919,7 +917,7 @@ int spellbook_contents( item_def &book, read_book_action_type action,
 
 //jmf: was in shopping.cc
 // Rarity 100 is reserved for unused books.
-int book_rarity(unsigned char which_book)
+int book_rarity(uint8_t which_book)
 {
     switch (which_book)
     {
@@ -1009,7 +1007,7 @@ int book_rarity(unsigned char which_book)
     }
 }
 
-static unsigned char _lowest_rarity[NUM_SPELLS];
+static uint8_t _lowest_rarity[NUM_SPELLS];
 
 void init_spell_rarities()
 {
@@ -1528,10 +1526,42 @@ bool has_spells_to_memorise(bool silent, int current_spell)
                          silent, (spell_type) current_spell);
 }
 
+static int _failure_rate_to_group( int fail )
+{
+    return (fail == 100) ? 100 :
+           (fail > 77)   ?  78 :
+           (fail > 71)   ?  72 :
+           (fail > 64)   ?  65 :
+           (fail > 59)   ?  60 :
+           (fail > 50)   ?  51 :
+           (fail > 40)   ?  41 :
+           (fail > 35)   ?  36 :
+           (fail > 28)   ?  29 :
+           (fail > 22)   ?  23 :
+           (fail >  0)   ?   1 : 0;
+}
+
 static bool _sort_mem_spells(spell_type a, spell_type b)
 {
-    if (spell_fail(a) != spell_fail(b))
-        return (spell_fail(a) < spell_fail(b));
+    // List spells we can memorize right away first.
+    if (player_spell_levels() >= spell_levels_required(a)
+        && player_spell_levels() < spell_levels_required(b))
+    {
+        return (true);
+    }
+    else if (player_spell_levels() < spell_levels_required(a)
+             && player_spell_levels() >= spell_levels_required(b))
+    {
+        return (false);
+    }
+
+    // Don't sort by failure rate beyond what the player can see in the
+    // success descriptions.
+    const int fail_rate_a = _failure_rate_to_group(spell_fail(a));
+    const int fail_rate_b = _failure_rate_to_group(spell_fail(b));
+    if (fail_rate_a != fail_rate_b)
+        return (fail_rate_a < fail_rate_b);
+
     if (spell_difficulty(a) != spell_difficulty(b))
         return (spell_difficulty(a) < spell_difficulty(b));
 
@@ -1577,14 +1607,22 @@ static spell_type _choose_mem_spell(spell_list &spells,
     const bool text_only = true;
 #endif
 
-    Menu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
+    ToggleableMenu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
                     | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING,
-                    "", text_only);
+                    text_only);
 #ifdef USE_TILE
+    // [enne] Hack.  Use a separate title, so the column headers are aligned.
+    spell_menu.set_title(
+        new MenuEntry(" Your Spells - Memorisation  (toggle to descriptions with '!')",
+            MEL_TITLE));
+
+    spell_menu.set_title(
+        new MenuEntry(" Your Spells - Descriptions  (toggle to memorisation with '!')",
+            MEL_TITLE), false);
+
     {
-        // [enne] - Hack.  Make title an item so that it's aligned.
         MenuEntry* me =
-            new MenuEntry("    Spells                         Type          "
+            new MenuEntry("     Spells                        Type          "
                           "                Success  Level",
                 MEL_ITEM);
         me->colour = BLUE;
@@ -1592,13 +1630,21 @@ static spell_type _choose_mem_spell(spell_list &spells,
     }
 #else
     spell_menu.set_title(
-        new MenuEntry("     Spells                        Type          "
+        new MenuEntry("     Spells (Memorisation)         Type          "
                       "                Success  Level",
             MEL_TITLE));
+
+    spell_menu.set_title(
+        new MenuEntry("     Spells (Description)          Type          "
+                      "                Success  Level",
+            MEL_TITLE), false);
 #endif
 
     spell_menu.set_highlighter(NULL);
     spell_menu.set_tag("spell");
+
+    spell_menu.action_cycle = Menu::CYCLE_TOGGLE;
+    spell_menu.menu_action  = Menu::ACT_EXECUTE;
 
     std::string more_str = make_stringf("<lightgreen>%d spell level%s left"
                                         "<lightgreen>",
@@ -1621,6 +1667,11 @@ static spell_type _choose_mem_spell(spell_list &spells,
                                  num_race,
                                  num_race > 1 ? "s" : "");
     }
+
+#ifndef USE_TILE
+    // Tiles menus get this information in the title.
+    more_str += "   Toggle display with '<w>!</w>'";
+#endif
 
     spell_menu.set_more(formatted_string::parse_string(more_str));
 
@@ -1662,7 +1713,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
         desc << std::setw(30) << spell_title(spell);
         desc << spell_schools_string(spell);
 
-        int so_far = desc.str().length() - ( name_length_by_colour(colour)+2);
+        int so_far = desc.str().length() - (colour_to_str(colour).length()+2);
         if (so_far < 60)
             desc << std::string(60 - so_far, ' ');
 
@@ -1671,8 +1722,9 @@ static spell_type _choose_mem_spell(spell_list &spells,
 
         desc << "</" << colour_to_str(colour) << ">";
 
-        MenuEntry* me = new MenuEntry(desc.str(), MEL_ITEM, 1,
-                                      index_to_letter(i % 52));
+        MenuEntry* me =
+            new MenuEntry(desc.str(), MEL_ITEM, 1,
+                          index_to_letter(i % 52));
 
 #ifdef USE_TILE
         me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
@@ -1697,7 +1749,10 @@ static spell_type _choose_mem_spell(spell_list &spells,
         const spell_type spell = *static_cast<spell_type*>(sel[0]->data);
         ASSERT(is_valid_spell(spell));
 
-        return (spell);
+        if (spell_menu.menu_action == Menu::ACT_EXAMINE)
+            describe_spell(spell);
+        else
+            return (spell);
     }
 }
 
@@ -1717,14 +1772,7 @@ bool can_learn_spell(bool silent)
         return (false);
     }
 
-    int i;
-    int j = 0;
-
-    for (i = SK_SPELLCASTING; i <= SK_POISON_MAGIC; i++)
-        if (you.skills[i])
-            j++;
-
-    if (j == 0)
+    if (!player_spell_skills())
     {
         if (!silent)
         {

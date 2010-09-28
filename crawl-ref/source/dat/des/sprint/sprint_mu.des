@@ -1,0 +1,1536 @@
+###############################################################################
+# sprint.des - vaults for the Dungeon Sprint variant
+#
+# These vaults should always have PLACE: D:1 and TAGS: entry. No other dungeon
+# levels will be generated in Dungeon Sprint.
+#
+# Note that at the start of the game, the dungeon builder removes all monsters
+# in view of the player. Zero experience monsters like plants are exempt.
+###############################################################################
+
+: require("clua/sprint.lua")
+
+##############################################################################
+# Main sprint map, making use of subvaults (by Mu.)
+#
+NAME:   dungeon_sprint_mu
+DESC:   Sprint III: "The Ten Rune Challenge"
+TAGS:   sprint no_item_gen no_trap_gen no_monster_gen no_pool_fixup no_rotate no_hmirror no_vmirror
+ORIENT: encompass
+FLAGS:  no_rotate no_hmirror no_vmirror
+SHUFFLE:  hnw
+SHUFFLE:  NI
+SHUFFLE:  CR
+SUBVAULT: E : sprint_mu_entry
+SUBVAULT: T : sprint_mu_temple
+SUBVAULT: 1 : sprint_mu_d1
+SUBVAULT: 2 : sprint_mu_d2
+SUBVAULT: 3 : sprint_mu_d3
+SUBVAULT: O : sprint_mu_orc
+SUBVAULT: F : sprint_mu_elf
+SUBVAULT: H : sprint_mu_hive
+SUBVAULT: L : sprint_mu_lair
+SUBVAULT: V : sprint_mu_vaults
+SUBVAULT: M : sprint_mu_slime
+SUBVAULT: w : sprint_mu_swamp
+SUBVAULT: h : sprint_mu_shoals
+SUBVAULT: n : sprint_mu_snake
+SUBVAULT: B : sprint_mu_blade
+SUBVAULT: Y : sprint_mu_crypt
+SUBVAULT: U : sprint_mu_tomb
+SUBVAULT: G : sprint_mu_vestibule
+SUBVAULT: N : sprint_mu_gehenna
+SUBVAULT: I : sprint_mu_dis
+SUBVAULT: R : sprint_mu_tartarus
+SUBVAULT: C : sprint_mu_cocytus
+SUBVAULT: Z : sprint_mu_zot
+SUBST:    hnw = x
+SUBST:    123 = x
+SUBST:    ETOF = x
+SUBST:    HLVM = x
+SUBST:    BYUG = x
+SUBST:    NIRCZ = x
+
+MAP
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XEEEEEEEEEEEEEEEEETTTTTTTTTTTOOOOOOOOOOOFFFFFFFFFFFFFFFFFFFFVVVVVVVVVVVVVVVVVVVX
+XEEEEEEEEEEEEEEEEETTTTTTTTTTTOOOOOOOOOOOFFFFFFFFFFFFFFFFFFFFVVVVVVVVVVVVVVVVVVVX
+XEEEEEEEEEEEEEEEEETTTTTTTTTTTOOOOOOOOOOOFFFFFFFFFFFFFFFFFFFFVVVVVVVVVVVVVVVVVVVX
+XEEEEEEEEEEEEEEEEETTTTTTTTTTTOOOOOOOOOOOFFFFFFFFFFFFFFFFFFFFVVVVVVVVVVVVVVVVVVVX
+XEEEEEEEEEEEEEEEEETTTTTTTTTTTOOOOOOOOOOOFFFFFFFFFFFFFFFFFFFFVVVVVVVVVVVVVVVVVVVX
+XEEEEEEEEEEEEEEEEETTTTTTTTTTTOOOOOOOOOOOFFFFFFFFFFFFFFFFFFFFVVVVVVVVVVVVVVVVVVVX
+XEEEEEEEEEEEEEEEEETTTTTTTTTTTOOOOOOOOOOOFFFFFFFFFFFFFFFFFFFFVVVVVVVVVVVVVVVVVVVX
+XEEEEEEEEEEEEEEEEETTTTTTTTTTT1111111111111111111111HHHHHHHHHVVVVVVVVVVVVVVVVVVVX
+XEEEEEEEEEEEEEEEEETTTTTTTTTTT1111111111111111111111HHHHHHHHHVVVVVVVVVVVVVVVVVVVX
+XEEEEEEEEEEEEEEEEETTTTTTTTTTT1111111111111111111111HHHHHHHHHVVVVVVVVVVVVVVVVVVVX
+XEEEEEEEEEEEEEEEEETTTTTTTTTTT1111111111111111111111HHHHHHHHHVVVVVVVVVVVVVVVVVVVX
+XEEEEEEEEEEEEEEEEETTTTTTTTTTT1111111111111111111111HHHHHHHHHVVVVVVVVVVVVVVVVVVVX
+XLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL11111111HHHHHHHHHVVVVVVVVVVVVVVVVVVVX
+XLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL11111111HHHHHHHHHVVVVVVVVVVVVVVVVVVVX
+XLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL11111111HHHHHHHHHVVVVVVVVVVVVVVVVVVVX
+XLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL11111111HHHHHHHHHVVVVVVVVVVVVVVVVVVVX
+XLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL22222222222222222VVVVVVVVVVVVVVVVVVVX
+XLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL22222222222222222VVVVVVVVVVVVVVVVVVVX
+XLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL22222222222222222VVVVVVVVVVVVVVVVVVVX
+XLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL22222222222222222VVVVVVVVVVVVVVVVVVVX
+XLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL22222222222222222VVVVVVVVVVVVVVVVVVVX
+XLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL22222222222222222VVVVVVVVVVVVVVVVVVVX
+XLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL22222222222222222VVVVVVVVVVVVVVVVVVVX
+XLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL22222222222222222VVVVVVVVVVVVVVVVVVVX
+XLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL22222222222222222VVVVVVVVVVVVVVVVVVVX
+XMMMMMMMMMMMMMMnnnnnnnnnnnnnnhhhhhhhhhhhhhh22222222222222222VVVVVVVVVVVVVVVVVVVX
+XMMMMMMMMMMMMMMnnnnnnnnnnnnnnhhhhhhhhhhhhhh22222222222222222VVVVVVVVVVVVVVVVVVVX
+XMMMMMMMMMMMMMMnnnnnnnnnnnnnnhhhhhhhhhhhhhh22222222222222222VVVVVVVVVVVVVVVVVVVX
+XMMMMMMMMMMMMMMnnnnnnnnnnnnnnhhhhhhhhhhhhhh22222222222222222VVVVVVVVVVVVVVVVVVVX
+XMMMMMMMMMMMMMMnnnnnnnnnnnnnnhhhhhhhhhhhhhh22222222222222222BBBBBBVVVVVVVVVVVVVX
+XMMMMMMMMMMMMMMnnnnnnnnnnnnnnhhhhhhhhhhhhhh22222222222222222BBBBBBVVVVVVVVVVVVVX
+XMMMMMMMMMMMMMMnnnnnnnnnnnnnnhhhhhhhhhhhhhh22222222222222222BBBBBBVVVVVVVVVVVVVX
+XMMMMMMMMMMMMMMnnnnnnnnnnnnnnhhhhhhhhhhhhhh22222222222222222BBBBBBVVVVVVVVVVVVVX
+XMMMMMMMMMMMMMMnnnnnnnnnnnnnnhhhhhhhhhhhhhh22222222222222222BBBBBBVVVVVVVVVVVVVX
+XMMMMMMMMMMMMMMnnnnnnnnnnnnnnhhhhhhhhhhhhhh22222222222222222BBBBBBVVVVVVVVVVVVVX
+XMMMMMMMMMMMMMMnnnnnnnnnnnnnnhhhhhhhhhhhhhh22222222222222222BBBBBBVVVVVVVVVVVVVX
+XMMMMMMMMMMMMMMnnnnnnnnnnnnnnhhhhhhhhhhhhhh22222222222222222BBBBBBVVVVVVVVVVVVVX
+XMMMMMMMMMMMMMMnnnnnnnnnnnnnnhhhhhhhhhhhhhh22222222222222222YYYYYYYYYYYYYYYYYYYX
+XMMMMMMMMMMMMMMnnnnnnnnnnnnnnhhhhhhhhhhhhhh22222222222222222YYYYYYYYYYYYYYYYYYYX
+XMMMMMMMMMMMMMMnnnnnnnnnnnnnnhhhhhhhhhhhhhh22222222222222222YYYYYYYYYYYYYYYYYYYX
+XMMMMMMMMMMMMMMnnnnnnnnnnnnnnhhhhhhhhhhhhhh22222222222222222YYYYYYYYYYYYYYYYYYYX
+XNNNNNNNNNNNNNNIIIIIIIIIIIIII3333333333333333333333333333333YYYYYYYYYYYYYYYYYYYX
+XNNNNNNNNNNNNNNIIIIIIIIIIIIII3333333333333333333333333333333YYYYYYYYYYYYYYYYYYYX
+XNNNNNNNNNNNNNNIIIIIIIIIIIIII3333333333333333333333333333333YYYYYYYYYYYYYYYYYYYX
+XNNNNNNNNNNNNNNIIIIIIIIIIIIII3333333333333333333333333333333UUUUUUUUUUUUUUUUUUUX
+XNNNNNNNNNNNNNNIIIIIIIIIIIIII3333333333333333333333333333333UUUUUUUUUUUUUUUUUUUX
+XNNNNNNNNNNNNNNIIIIIIIIIIIIII3333333333333333333333333333333UUUUUUUUUUUUUUUUUUUX
+XNNNNNNNNNNNNNNIIIIIIIIIIIIII3333333333333333333333333333333UUUUUUUUUUUUUUUUUUUX
+XNNNNNNNNNNNNNNIIIIIIIIIIIIII3333333333333333333333333333333UUUUUUUUUUUUUUUUUUUX
+XNNNNNNNNNNNNNNIIIIIIIIIIIIII3333333333333333333333333333333UUUUUUUUUUUUUUUUUUUX
+XNNNNNNNNNNNNNNIIIIIIIIIIIIII3333333333333333333333333333333UUUUUUUUUUUUUUUUUUUX
+XNNNNNNNNNNNNNNIIIIIIIIIIIIII3333333333333333333333333333333UUUUUUUUUUUUUUUUUUUX
+XGGGGGGGGGGGGGGGGGGGGGGGGGGGG3333333333333333333333333333333UUUUUUUUUUUUUUUUUUUX
+XGGGGGGGGGGGGGGGGGGGGGGGGGGGG3333333333333333333333333333333UUUUUUUUUUUUUUUUUUUX
+XGGGGGGGGGGGGGGGGGGGGGGGGGGGG3333333333333333333333333333333UUUUUUUUUUUUUUUUUUUX
+XGGGGGGGGGGGGGGGGGGGGGGGGGGGG3333333333333333333333333333333UUUUUUUUUUUUUUUUUUUX
+XGGGGGGGGGGGGGGGGGGGGGGGGGGGG3333333333333333333333333333333ZZZZZZZZZZZZZZZZZZZX
+XRRRRRRRRRRRRRRCCCCCCCCCCCCCC3333333333333333333333333333333ZZZZZZZZZZZZZZZZZZZX
+XRRRRRRRRRRRRRRCCCCCCCCCCCCCC3333333333333333333333333333333ZZZZZZZZZZZZZZZZZZZX
+XRRRRRRRRRRRRRRCCCCCCCCCCCCCC3333333333333333333333333333333ZZZZZZZZZZZZZZZZZZZX
+XRRRRRRRRRRRRRRCCCCCCCCCCCCCC3333333333333333333333333333333ZZZZZZZZZZZZZZZZZZZX
+XRRRRRRRRRRRRRRCCCCCCCCCCCCCC3333333333333333333333333333333ZZZZZZZZZZZZZZZZZZZX
+XRRRRRRRRRRRRRRCCCCCCCCCCCCCC3333333333333333333333333333333ZZZZZZZZZZZZZZZZZZZX
+XRRRRRRRRRRRRRRCCCCCCCCCCCCCC3333333333333333333333333333333ZZZZZZZZZZZZZZZZZZZX
+XRRRRRRRRRRRRRRCCCCCCCCCCCCCC3333333333333333333333333333333ZZZZZZZZZZZZZZZZZZZX
+XRRRRRRRRRRRRRRCCCCCCCCCCCCCC3333333333333333333333333333333ZZZZZZZZZZZZZZZZZZZX
+XRRRRRRRRRRRRRRCCCCCCCCCCCCCC3333333333333333333333333333333ZZZZZZZZZZZZZZZZZZZX
+XRRRRRRRRRRRRRRCCCCCCCCCCCCCC3333333333333333333333333333333ZZZZZZZZZZZZZZZZZZZX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ENDMAP
+
+##############################################################################
+#
+# SUBVAULTS
+# NOTE: All subvaults supply their own TOP and LEFT walls, and assume they have
+# their RIGHT and BOTTOM walls, except in the instances where they don't do this.
+#
+# If you aren't sure which walls to supply, your best bet is to just keep things
+# consistent with the original subvaults. In places where the original subvaults
+# are themselves inconsistent, do whatever feels right at the time.
+#
+# If we all wish real hard maybe the dungeon wont fall apart on us.
+#
+##############################################################################
+# Entries
+#
+# Entry 1, Forest
+NAME: sprint_mu_entry_forest
+TAGS: sprint_mu_entry no_rotate no_hmirror no_vmirror no_dup
+MONS: patrolling ooze / patrolling grey rat
+MONS: patrolling giant mite / patrolling grey rat / patrolling jessica
+MONS: patrolling phantom hd:2 / patrolling wolf hd:2 / patrolling scorpion / \
+      patrolling crazy yiuf
+MONS: patrolling human hd:2 hp:35 / patrolling elf hd:2 hp:30
+KITEM: * = potion of levitation q:2 / potion of levitation q:1 / any potion, \
+ potion of cure mutation q:2 / potion of cure mutation q:1 / any potion, \
+ meat ration / bread ration / royal jelly / honeycomb / choko, \
+ scroll of remove curse q:2 / scroll of remove curse q:1 / any scroll, \
+ scroll of identify q:2 / scroll of identify q:1 / any scroll, \
+ scroll of torment / scroll of holy word / scroll of immolation, \
+ potion of mutation / potion of decay / potion of strong poison
+SUBST: T = t.
+
+MAP
+[<x*$=...TTttttt.
+{.x*$x..3.TTtttt.
+x+xxxx....TTtttT.
+.....x....WTtttT.
+1...1x...WWTTTTT.
+....%x..WWWWTTTT.
+xxxx+x..WwwWWWTT.
+%....x.WWwWWW....
+.2.2.x.WwWWW.....
+.....x.WWW....4..
++xxxxx...........
+.................
+ENDMAP
+
+##############################################################################
+# Entry 2, Cave
+NAME: sprint_mu_entry_cave
+TAGS: sprint_mu_entry no_rotate no_hmirror no_vmirror no_dup
+MONS: patrolling ooze / patrolling grey rat
+MONS: patrolling giant mite / patrolling grey rat / patrolling jessica
+MONS: patrolling phantom hd:2 / patrolling wolf hd:2 / patrolling scorpion / \
+      patrolling crazy yiuf
+MONS: patrolling human hd:2 hp:35 / patrolling elf hd:2 hp:30
+KITEM: * = potion of levitation q:2 / potion of levitation q:1 / any potion, \
+ potion of cure mutation q:2 / potion of cure mutation q:1 / any potion, \
+ meat ration / bread ration / royal jelly / honeycomb / choko, \
+ scroll of remove curse q:2 / scroll of remove curse q:1 / any scroll, \
+ scroll of identify q:2 / scroll of identify q:1 / any scroll, \
+ scroll of torment / scroll of holy word / scroll of immolation, \
+ potion of mutation / potion of decay / potion of strong poison
+
+MAP
+[{<x%..xxxxxxxxx.
+...x......xxxxx..
+..xx.......x**x..
+xx.xx.xx..2x$$x..
+xx.xx.xxx..xx=x..
+x.xxxx.xx..xxx.4.
+.xxx1.xx..xxxx...
+x.....xx..xxx....
+xxx..xx2..xx.....
+xx1.xx....x......
+x..xxx..xx.x..3..
+x%.xxx..xxxxx....
+ENDMAP
+
+##############################################################################
+# Temples
+#
+# Temple 1, Rooms
+NAME: sprint_mu_temple_rooms
+TAGS: sprint_mu_temple no_rotate no_hmirror no_vmirror no_dup
+KFEAT: E = altar_elyvilon
+KFEAT: 1 = altar_shining_one
+KFEAT: Z = altar_zin
+KMONS: e = patrolling deep elf priest ; long sword ego:holy_wrath
+KITEM: e = potion of healing / potion of heal wounds / potion of cure mutation
+KFEAT: O = altar_okawaru
+KFEAT: T = altar_trog
+KMONS: o = patrolling human ; potion of might
+KITEM: o = any armour
+KMONS: t = patrolling human ; potion of berserk rage
+KITEM: t = any weapon
+KFEAT: C = altar_cheibriados
+KFEAT: F = altar_fedhas
+KFEAT: Y = altar_yredelemnul
+KMONS: Y = patrolling necromancer hd:3
+KMONS: y = patrolling ghoul
+KITEM: y = any wand / gold
+NSUBST: f = 1:f / *:W
+KFEAT: f = fountain_blue
+KFEAT: W = fountain_blue
+KMONS: W = water elemental hd:4
+KFEAT: V = altar_vehumet
+KFEAT: S = altar_sif_muna
+KFEAT: K = altar_kikubaaqudgha
+KMONS: s = patrolling wizard hd:3
+KITEM: s = any book
+KMONS: 5 = patrolling kobold demonologist hd:2
+KITEM: 5 = any book / gold
+KFEAT: N = altar_nemelex_xobeh
+KITEM: N = any misc
+KFEAT: X = altar_xom
+KFEAT: M = altar_makhleb
+KMONS: l = patrolling spatial vortex
+KFEAT: ? = altar_jiyva / w:5 altar_lugonu / w:25 floor
+KMONS: m = chaos spawn
+KMONS: j = patrolling jelly
+MARKER:  X = lua:fog_machine { \
+                 pow_max = 10, delay_min = 10, delay_max = 40, \
+                 size = 1, size_buildup_amnt = 5, \
+                 size_buildup_time = 25, cloud_type = "seething chaos" \
+             }
+KITEM: * = royal jelly
+COLOUR: # = yellow
+KFEAT: # = closed_door
+: lua_marker('#', props_marker {
+:           door_description_suffix=" to the Ecumenical Temple",
+:           })
+MARKER: # = lua:restrict_door()
+SUBST: x = c
+
+MAP
+xxxxxxxxxxx
+xE1ZxOToxCF
+xe..x..txyY
+xxx+x+xxx+x
+x..........
+#.f........
+x...xxxxxx+
+x.f.xllxm..
+x...xN.x...
+x+xxxX?x...
+x.s5xM.x..*
+xVSKx..+..j
+ENDMAP
+
+##############################################################################
+# D1's
+#
+# D1_1, horror grid
+NAME: sprint_mu_d1_horrors
+TAGS: sprint_mu_d1 no_rotate no_hmirror no_vmirror no_dup
+MONS: Erica / Harold / Snorg
+MONS: centaur
+MONS: centaur warrior
+MONS: unseen horror
+KMONS: 6 = patrolling stone golem hd:8 hp:100
+SUBST: 5 = 4...
+COLOUR: # = yellow
+KFEAT: # = closed_door
+: lua_marker('#', props_marker {
+:           door_description_suffix=" to the Orcish Mines",
+:           })
+MARKER: # = lua:restrict_door()
+COLOUR: & = yellow
+KFEAT: & = closed_door
+: lua_marker('&', props_marker {
+:           door_description_suffix=" to the Lair of Beasts",
+:           })
+MARKER: & = lua:restrict_door()
+MARKER:  ! = lua:fog_machine { \
+                 pow_max = 10, delay_min = 10, delay_max = 40, \
+                 size = 1, size_buildup_amnt = 5, \
+                 size_buildup_time = 25, cloud_type = "black smoke" \
+             }
+
+MAP
+x#xxxxxxxxxxxxcccccccc
+x..WWW+.c.+...+.x.x.x.
+x.cWWWc.c.c...cx.x.x.x
++.c.!.c.c.c2..c.x.x.x.
+x.c.1.c.6.c32.cx.x.x5x
+              c.x.x.x.
+              cx.x.x.x
+              &.x4x.x.
+              cx.x.x.x
+ENDMAP
+
+##############################################################################
+# D1_2, spiderweb
+NAME: sprint_mu_d1_spiders
+TAGS: sprint_mu_d1 no_rotate no_hmirror no_vmirror no_dup
+MONS: two-headed ogre hd:3 hp:40
+MONS: hill giant hd:5 hp:68
+MONS: Erolcha
+MONS: trapdoor spider, redback
+KFEAT: ~ = net trap
+NSUBST: ^ = 2:4 / 1:5 / 10:~ / *:.
+COLOUR: # = yellow
+KFEAT: # = closed_door
+: lua_marker('#', props_marker {
+:           door_description_suffix=" to the Orcish Mines",
+:           })
+MARKER: # = lua:restrict_door()
+COLOUR: & = yellow
+KFEAT: & = closed_door
+: lua_marker('&', props_marker {
+:           door_description_suffix=" to the Lair of Beasts",
+:           })
+MARKER: & = lua:restrict_door()
+
+MAP
+x#xxxxxxxxxxxxxxxxxxxx
+x....x1x1x2....x^^^^^^
+xx.x.1x.xx.xxx.x^^^^^^
++xx.x.x.xx.x2.xx^^^^^^
+x...x..x..xx.3+^^^^^^^
+              x^^^^^^^
+              x^^^^^^^
+              &^^^^^^^
+              x^^^^^^^
+ENDMAP
+
+##############################################################################
+# Orcs
+#
+# Orc 1, the legion
+NAME: sprint_mu_orc_legion
+TAGS: sprint_mu_orc no_rotate no_hmirror no_vmirror no_dup
+MONS: orc, orc wizard, orc priest, orc warrior
+MONS: orc knight, orc sorcerer, orc high priest, orc warlord
+NSUBST: r = 1:B / 2:! / 1:s / *:r
+KFEAT: s = any shop
+SUBST: B = Brrrrrrrrr
+KFEAT: B = altar_beogh
+SUBST: R = xxxx$$
+SUBST: r = xxx$$
+SUBST: $ = $$$$$$$$$$$$$$!
+KITEM: ! = acquire gold
+SUBST: . = $.
+SUBST: 1 = 111234
+SUBST: 2 = 2226
+SUBST: 3 = 3337
+SUBST: 4 = 4445
+SUBST: 5 = 5558
+
+MAP
+xRRRRRRRRRR
+xrrrrrrrr..
+x..111111.R
+x..111111rR
+x..111111rR
+x.rrrrrrrrR
+x.RRRRRRRRR
+ENDMAP
+
+##############################################################################
+# Elfs
+#
+# Elf 1, gauntlet
+NAME: sprint_mu_elf_gauntlet
+TAGS: sprint_mu_elf no_rotate no_hmirror no_vmirror no_dup
+MONS: deep elf knight / deep elf priest / deep elf summoner / deep elf conjurer
+MONS: deep elf annihilator ; robe ego:poison_resistance | robe ego:resistance | robe /\
+      deep elf demonologist ; robe ego:poison_resistance | robe ego:cold_resistance | robe /\
+      w:5 deep elf conjurer ; robe ego:poison_resistance | robe ego:cold_resistance | robe
+MONS: deep elf death mage ; robe ego:poison_resistance | robe ego:cold_resistance | robe /\
+      deep elf high priest ; robe ego:poison_resistance | robe ego:cold_resistance | robe
+MONS: deep elf blademaster ; chain mail ego:cold_resistance /\
+      deep elf master archer ; chain mail ego:poison_resistance . longbow . q:30 arrow
+NSUBST: $ = 1:b / 1:s / *:|
+: acq_on_sight(_G, 'b', {"book","book","wand"})
+: acq_on_sight(_G, 's', {"staff","jewellery","jewellery"})
+KITEM: | = superb_item, superb_item, superb_item, gold
+KFEAT: b = floor
+COLOUR: # = yellow
+KFEAT: # = closed_door
+: lua_marker('#', props_marker {
+:           door_description_suffix=" to the Elven Halls",
+:           })
+MARKER: # = lua:restrict_door()
+
+MAP
+cccccccccccccccccccc
+#.m...cc22..+3...$$c
+c.m.11ccwwwwcc..cc$c
+c.m1..www.......4c$c
+c.m.11ccwwwwcc..cc$c
+c.+...cc22..+3...$$c
+cccccccccccccccccccc
+ENDMAP
+
+##############################################################################
+# Hives
+#
+# Hive 1, Nellie
+NAME: sprint_mu_hive_nellie
+TAGS: sprint_mu_hive no_rotate no_hmirror no_vmirror no_dup
+KMONS: 1 = killer bee
+KITEM: 1 = honeycomb / w:2 royal jelly / w:4 nothing
+KMONS: 2 = queen bee
+KITEM: 2 = royal jelly
+KMONS: 3 = generate_awake Nellie
+KITEM: 3 = demonic rune of zot
+: acq_on_sight(_G, '3', {"food","misc","wand"})
+NSUBST: 1 = 1:2 / *:1
+COLOUR: # = yellow
+KFEAT: # = closed_door
+: lua_marker('#', props_marker {
+:           door_description_suffix=" to the Hive",
+:           })
+MARKER: # = lua:restrict_door()
+
+MAP
+aaaaaaaaa
+#111Wwa3a
+a111Wwaaa
+a111Wwwwa
+a111WWWWa
+a1111111a
+a1111111a
+a1111111a
+aaaaaaaaa
+ENDMAP
+
+##############################################################################
+# Lairs
+#
+# Lair 1, fedhas
+NAME: sprint_mu_lair_fedhas
+TAGS: sprint_mu_lair no_rotate no_hmirror no_vmirror no_dup
+KMONS: P = plant / w:1 giant spore
+KMONS: p = plant
+KMONS: 1 = patrolling wandering mushroom
+KMONS: 2 = komodo dragon
+KMONS: 3 = spiny frog
+KMONS: 4 = fire drake
+KMONS: 5 = swamp drake
+KMONS: v = blink frog
+KFEAT: v = shallow_water
+NSUBST: ! = 5:v
+SUBST: ! = WWwwww.
+SUBST: " = WWWWWW.
+KFEAT: ? = shallow_water / deep_water w:20 / floor w:5
+KMONS: 7 = elephant
+KMONS: 6 = dire elephant
+KMONS: 8 = gastronok
+KITEM: 8 = any potion, any potion, any potion, gold, any, any
+KMONS: a = patrolling rupert
+KMONS: b = death yak
+KMONS: f = blink frog
+KMONS: d = black mamba
+KMONS: e = azure jelly
+KMONS: g = spiny worm
+KMONS: A = lindwurm
+KMONS: h = redback
+KMONS: i = hydra
+KMONS: j = patrolling spriggan ; blowgun . q:5 needle ego:sleep | \
+ q:5 needle ego:paralysis | q:5 needle ego:wrath
+KMONS: k = patrolling spriggan druid
+KMONS: q = electric eel
+KFEAT: q = deep_water
+KMONS: r = hydra simulacrum / dragon simulacrum / grizzly bear simulacrum /\
+ wolf simulacrum / black mamba simulacrum
+KITEM: r = any, any, any, any, any, superb_item / w:1 wand of fire /\
+ w:1 wand of disintegration
+KITEM: % = strawberry q:6 / banana q:2 / apricot q:3
+KFEAT: _ = altar_fedhas
+KMONS: s = patrolling maud
+KMONS: u = death drake
+MARKER:  ? = lua:fog_machine { \
+                 pow_max = 10, delay_min = 10, delay_max = 40, \
+                 size = 1, size_buildup_amnt = 5, \
+                 size_buildup_time = 25, cloud_type = "thin mist" \
+             }
+MARKER:  * = lua:fog_machine { \
+                 pow_max = 10, delay_min = 10, delay_max = 40, \
+                 size = 1, size_buildup_amnt = 5, \
+                 size_buildup_time = 25, cloud_type = "freezing vapour" \
+             }
+KFEAT: ~ = closed_door
+MARKER: ~ = lua:restrict_door({ \
+            door_open_prompt="This door is covered in warnings. Open " .. \
+                             "it anyway?", \
+            door_description_prefix="warning scrawled " \
+         })
+
+MAP
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+X.7.+!!!!!!!"!tt.....ttttWWW.1.1...1WWW...
+X.7px"!!!!!"!"tt.wwww+tt+twwwwwwwwwwwwttP.
+X.ppx!"!!?"!!!"+...54x3Wttttttttttttttttpp
+X.6px!!"!"!!!!tttttttx23tttttttttttttttttt
+X.68x!!!"!!!!!tttttttxxx+ttttttttttttttttt
+Xxx+xxxx=xxxxxxxtttttttthxx..xxWWWWWw.icrr
+X...........a...tttttg..xxhxx.xWWWWw..icrr
+Xx~xxxxxxxxxxxxx+ttttt.xxAxxhxx+WWqwwxxcc+
+X...xWp.b........ttttt..x.xx...xWw......*.
+X...~WW.fbxxxxxxxxttttt.xx.xx.sxw..=xxxccc
+Xee.xWWW..bf....dpptttt.xx.xxxxx...x....jk
+Xee.xWWWWpfbpp...dptttg....xxu.....xttt%_j
+ENDMAP
+
+##############################################################################
+# Slimes
+#
+# Slime 1, circle
+NAME: sprint_mu_slime_circle
+TAGS: sprint_mu_slime no_rotate no_hmirror no_vmirror no_dup
+MONS: the royal jelly, shining eye, giant eyeball, acid blob, azure jelly
+SHUFFLE: 234
+SUBST: 4 = 45
+KFEAT: M = slimy_wall
+KFEAT: _ = altar_jiyva
+KITEM: ! = slimy rune of zot
+SUBST: $ = ||*
+COLOUR: # = yellow
+KFEAT: # = closed_door
+: lua_marker('#', props_marker {
+:           door_description_suffix=" to the Pits of Slime",
+:           })
+MARKER: # = lua:restrict_door()
+
+
+MAP
+x#xxxxxxxxxxxx
+xx.MMMMMMMMMMx
+MMM.M...MMMMMx
+MMM.......MMMx
+MM.........MMx
+M3...mmm...3Mx
+M4..mm$mm..4Mx
+MM..m$!$m..MMx
+M2..mm$mm..2Mx
+M2...mmm...2Mx
+MM.........MMx
+MMM.......MMMx
+MMMMM._1MMMMMx
+MMMMMMMMMMMMMx
+xxxxxxxxxxxxxx
+xxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Snakes
+#
+# Snake 1, twists
+NAME: sprint_mu_snake_twists
+TAGS: sprint_mu_snake no_rotate no_hmirror no_vmirror no_dup
+MONS: guardian serpent, naga warrior, greater naga, naga
+MONS: snake, water moccasin, black mamba
+KMONS: 8 = anaconda
+SUBST: 5 = 5..
+SUBST: 5 = 5678
+KFEAT: A = antique armour shop / antique weapon shop
+KFEAT: B = book shop / jewellery shop / wand shop
+KFEAT: C = distillery shop / food shop / scroll shop
+NSUBST: * = 1:A / 1:B / 1:C
+KITEM: $ = serpentine rune of zot
+COLOUR: #c = yellow
+KFEAT: # = closed_door
+: lua_marker('#', props_marker {
+:           door_description_suffix=" to the Snake Pit",
+:           })
+MARKER: # = lua:restrict_door()
+
+MAP
+x#xxxxxxxxxxxx
+c..55555555.cc
+c..55555555..c
+ccccccccccc..c
+cc.55555555..c
+c..55555555.cc
+c..ccccccccccc
+c..55555555.cc
+cc.55555555..c
+ccccccccccc..c
+cc.24........c
+c*.34.......cc
+c*.ccccccccccc
+c*..........$c
+cc..........1c
+cccccccccccccc
+ENDMAP
+
+##############################################################################
+# Shoals
+#
+# Shoals 1, archipelago
+NAME: sprint_mu_shoals_archi
+TAGS: sprint_mu_shoals no_rotate no_hmirror no_vmirror no_dup
+MONS: Polyphemus, sheep, sea snake, Ilsuiw, merfolk javelineer
+KITEM: $ = barnacled rune of zot
+KFEAT: A = antique armour shop / antique weapon shop
+KFEAT: B = book shop / jewellery shop / wand shop
+KFEAT: C = distillery shop / food shop / scroll shop
+NSUBST: * = 1:A / 1:B / 1:C
+MARKER: X = lua:portal_desc { desc="Open sea?", \
+            desc_long="Though it exists in stark defiance of every conventional"\
+                .." rule of physics and geometry you know to be true, there"\
+                .." can be no denying that here, in this tiny room, is a vast"\
+                .." and terrible sea of impossible size.\n\nEither that or it's"\
+                .." a blue wall."}
+COLOUR: X = blue
+COLOUR: # = yellow
+KFEAT: # = closed_door
+: lua_marker('#', props_marker {
+:           door_description_suffix=" to the Shoals",
+:           })
+MARKER: # = lua:restrict_door()
+MAP
+x#xxxxxxxxxxxx
+XWWwwwwwwwwwwX
+XwwWwwwwwwwwwX
+Xwww.2wwwww..X
+Xww.21.WWW..3X
+Xwww.2wwwww..X
+Xwwwwwwwwww..X
+XwWWWWWwwWwW.X
+X..WwwwWWwWwwX
+X...wwwwwwwwwX
+X.4..WWwWWww.X
+X...wwwWwwW.*X
+X.wwwwwwwww.*X
+Xwwwwwwwwww.*X
+X$WWWWWWWW..5X
+XXXXXXXXXXXXXX
+ENDMAP
+
+##############################################################################
+# Shoals 2, Kraken!
+NAME: sprint_mu_shoals_kraken
+TAGS: sprint_mu_shoals no_rotate no_hmirror no_vmirror no_dup
+MONS: snapping turtle, alligator snapping turtle
+MONS: plant, fungus
+KMONS: ! = kraken
+KFEAT: ! = deep_water
+KMONS: ? = shark
+KFEAT: ? = deep_water
+SUBST: 1 = 12
+SUBST: p = 34.
+NSUBST: w = 3:? / *:w
+KITEM: $ = barnacled rune of zot
+KFEAT: A = antique armour shop / antique weapon shop
+KFEAT: B = book shop / jewellery shop / wand shop
+KFEAT: C = distillery shop / food shop / scroll shop
+NSUBST: * = 1:A / 1:B / 1:C
+MARKER: X = lua:portal_desc { desc="Open sea?", \
+            desc_long="Though it exists in stark defiance of every conventional"\
+                .." rule of physics and geometry you know to be true, there"\
+                .." can be no denying that here, in this tiny room, is a vast"\
+                .." and terrible sea of impossible size.\n\nEither that or it's"\
+                .." a blue wall."}
+COLOUR: X = blue
+COLOUR: # = yellow
+KFEAT: # = closed_door
+: lua_marker('#', props_marker {
+:           door_description_suffix=" to the Shoals",
+:           })
+MARKER: # = lua:restrict_door()
+
+MAP
+x#xxxxxxxxxxxx
+X..........ppX
+Xwwp......pwwX
+Xwwwpp..ppwwwX
+Xwwwww..wwwwwX
+XwwwwWwwWwwwwX
+XwwwWwwwwWwwwX
+XwwWwwwwwwWwwX
+XwWwwww!wwwWwX
+XWwwwwwwwwwwWX
+XwWwwwwwwwwWwX
+XwwWwwwwwwWwwX
+XwwwWwwwwWwwwX
+Xwww.1..1.wwwX
+Xww.1**$*1.wwX
+XXXXXXXXXXXXXX
+ENDMAP
+
+##############################################################################
+# Swamps
+#
+# Swamp 1, forest cave
+NAME: sprint_mu_swamp_cave
+TAGS: sprint_mu_swamp no_rotate no_hmirror no_vmirror no_dup
+
+: local swamprnd = crawl.random2(4)
+: if swamprnd == 0 then
+MONS: swamp drake, swamp dragon, hydra, the Lernaean hydra
+MARKER:  ! = lua:fog_machine { \
+                 pow_max = 3, delay_min = 5, delay_max = 5, \
+                 size = 1, size_buildup_amnt = 3, \
+                 size_buildup_time = 5, cloud_type = "thin mist" \
+             }
+: elseif swamprnd == 1 then
+MONS: death drake, swamp dragon skeleton, hydra, spectral hydra
+MARKER:  ! = lua:fog_machine { \
+                 pow_max = 3, delay_min = 5, delay_max = 5, \
+                 size = 1, size_buildup_amnt = 3, \
+                 size_buildup_time = 5, cloud_type = "foul pestilence" \
+             }
+COLOUR: t = darkgrey, w:8 lightgrey
+: elseif swamprnd == 2 then
+MONS: swamp drake simulacrum, ice dragon, hydra, hydra simulacrum
+MARKER:  ! = lua:fog_machine { \
+                 pow_max = 3, delay_min = 5, delay_max = 5, \
+                 size = 1, size_buildup_amnt = 3, \
+                 size_buildup_time = 5, cloud_type = "freezing vapour" \
+             }
+: else
+MONS: fire drake, dragon, hydra, Xtahua
+MARKER:  ! = lua:fog_machine { \
+                 pow_max = 3, delay_min = 5, delay_max = 5, \
+                 size = 1, size_buildup_amnt = 3, \
+                 size_buildup_time = 5, cloud_type = "flame" \
+             }
+: end
+KMONS: p = plant
+SUBST: . = ...W
+SUBST: W = WWWW......p2
+KFEAT: ! = deep_water
+KFEAT: A = antique armour shop / antique weapon shop
+KFEAT: B = book shop / jewellery shop / wand shop
+KFEAT: C = distillery shop / food shop / scroll shop
+NSUBST: * = 1:A / 1:B / 1:C
+KITEM: $ = decaying rune of zot
+COLOUR: # = yellow
+KFEAT: # = closed_door
+: lua_marker('#', props_marker {
+:           door_description_suffix=" to the Swamp",
+:           })
+MARKER: # = lua:restrict_door()
+MAP
+x#xxxxxxxxxxxx
+x.tttttttttttt
+xt.ttttttttttt
+xt.tttcccccctt
+xtt.ttc...$ctt
+xt.tttc3..4ctt
+xt.tttc....ctt
+xt.1ttc...cctt
+xtt.ttWccccttt
+xttt.ttWWWWWtt
+xtt.WttttttWtt
+xt.WWWWWWWWWtt
+xt.WWWWW!WWWtt
+xt1tWWWWWWWWtt
+xtttttttt***tt
+xttttttttttttt
+ENDMAP
+
+##############################################################################
+# D2's
+#
+# D2_1, wish-granting genie
+NAME: sprint_mu_d2_genie
+TAGS: sprint_mu_d2 no_rotate no_hmirror no_vmirror no_dup
+MONS: yaktaur / yaktaur captain, giant eyeball, orc priest / \
+ orc high priest hd:5 hp:70
+MONS: spriggan defender hd:5 hp:55 ; dagger
+MONS: silver statue / orange crystal statue
+MONS: crystal golem hd:10 hp:130, skeletal warrior
+KMONS: 2 = giant eyeball
+KITEM: 2 = q:10 scroll of identify
+KMONS: P = plant
+SUBST: P = PPPPPPPPP.
+
+: local d2rnd = crawl.random2(4)
+: if d2rnd == 0 then
+KMONS: a = patrolling Sigmund hd:15 hp:100 \
+ spells:bolt_of_fire;confuse;invisibility;iskenderun's_mystic_blast \
+ ; scythe ego:distortion
+KMONS: b = patrolling Edmund hp:150 ; great mace ego:freezing \
+ . blowgun . needle ego:curare q:7
+: elseif d2rnd == 1 then
+KMONS: a = patrolling Dowan hd:15 hp:100 \
+ spells:bolt_of_cold;corona;blink_range;bolt_of_fire;haste_other;minor_healing \
+ ; morningstar ego:distortion
+KMONS: b = patrolling Duvessa hp:150 ; great sword ego:freezing \
+ . blowgun . needle ego:curare q:7
+: elseif d2rnd == 2 then
+KMONS: a = patrolling Jozef hd:15 hp:100 \
+ spells:poison_arrow;teleport_other;.;minor_healing;slow \
+ ; dire flail ego:distortion
+KMONS: b = patrolling Joseph hd:5 hp:150 ; ankus ego:freezing \
+ . blowgun . needle ego:curare q:7
+: else
+# changed Francis to Wiglaf for now
+KMONS: a = patrolling Wiglaf hp:100 ; war axe ego:holy_wrath
+KMONS: b = patrolling Frances hp:150 ; war axe ego:holy_wrath \
+ . blowgun . needle ego:curare q:7
+:end
+KITEM: & = lamp of fire, scroll of acquirement, scroll of acquirement / \
+  w:15 scroll of torment, scroll of acquirement / w:25 scroll of torment
+NSUBST: L = 1:& / *:l
+KMONS: A = patrolling Azrael
+KITEM: " = any weapon, any armour, any wand, gold, strawberry
+
+MARKER:  ! = lua:fog_machine { \
+                pow_max = 15, delay_min = 100, delay_max = 150, \
+                size = 1, size_buildup_amnt = 29, \
+                size_buildup_time = 1000, cloud_type = "foul pestilence" }
+
+MARKER:  ? = lua:fog_machine { \
+                pow_max = 25, delay_min = 100, delay_max = 150, \
+                size = 1, size_buildup_amnt = 29, \
+                size_buildup_time = 1000, cloud_type = "grey smoke" }
+SUBST: G : GtTUVY
+SUBST: Y : TUY
+KFEAT: i = antique weapon shop
+KFEAT: d = antique armour shop
+KFEAT: e = wand shop
+KFEAT: f = book shop
+KFEAT: g = food shop
+KFEAT: h = jewellery shop
+KFEAT: j = distillery shop
+KFEAT: k = scroll shop
+KFEAT: * = any shop
+NSUBST: * = 1:i / 1:d / 1:e / 1:f / 1:g / 1:h / 1:j / 1:k / *:*
+COLOUR: Z = shimmer_blue
+KFEAT:  Z = closed_door
+MARKER: Z = lua:props_marker({ \
+            door_description_prefix="flickering ", \
+            door_description_suffix=" to a bazaar", \
+            door_description_noun="gateway", \
+         })
+KFEAT: # = closed_door
+KFEAT: ~ = closed_door
+MARKER: # = lua:restrict_door()
+MARKER: ~ = lua:restrict_door()
+MARKER: Z = lua:restrict_door()
+
+MAP
+xx#xxxxxxxxxxxxxx
+x...+.llllccL.lll
+x...x.llllcLAlcll
+xa.bx.clllccLccll
+xxxxx.c1lllccclll
+x3PPP.cccllllllll
+x.3PPPc2m1lllllll
+x..3PPc~cccllllll
+x...3Pc...c1lllll
+x+ccccc.!.cccllcc
+x.....+...+7c1cc.
+x.xxxxxxxxxxccc..
+x.x"PP........+..
+x.xPP.44..xxxxxxx
+x.xP..44xxx$*YY*$
+x.x...xxx5x$*YY*$
+x.x.xxx...x$****$
+x.x+x...?.x$****$
+x.x.......x$....$
+x.x.......xxxZZxx
+x.........x.G..G.
+ccccccccc.x......
+c6c6c6c6c........
+c................
+c................
+ENDMAP
+
+##############################################################################
+# Vaults
+#
+# Vaults 1, butterflies
+NAME: sprint_mu_vaults_butterflies
+TAGS: sprint_mu_vaults no_rotate no_hmirror no_vmirror no_dup
+MONS: centaur warrior, lich, shadow dragon, ogre mage
+MONS: vault guard ; short sword ego:electrocution | long sword ego:flaming |\
+      dire flail ego:vampiricism | war axe ego:freezing | spear ego:vorpal |\
+      great mace ego:pain | great sword ego:venom .\
+      chain mail ego:poison_resistance | chain mail ego:cold_resistance |\
+      scale mail ego:poison_resistance | scale mail ego:cold_resistance |\
+      plate mail ego:fire_resistance . large shield ego:reflection |\
+      shield ego:protection | large shield ego:positive_energy
+MONS: stone giant / shadow dragon / quicksilver dragon / golden dragon /\
+      titan / fire giant / frost giant
+MONS: skeletal warrior
+KMONS: 8 = silver statue
+KMONS: f = butterfly
+KMONS: U = Norris ; ankus ego:vorpal . large shield ego:reflection / \
+           Frederick ; trident ego:freezing . large shield ego:reflection
+KMONS: C = generate_awake Chuck
+KMONS: k = yaktaur captain ; crossbow ego:chaos . bolt
+KMONS: b = bush
+KMONS: D = dragon
+NSUBST: $ = 1:1 / *:|
+NSUBST: D = 1:D / *:*
+NSUBST: a = 1:+ / *:v
+KFEAT: - = axe trap
+NSUBST: - = 3:- / *:.
+MARKER:  ! = lua:fog_machine { \
+                pow_max = 25, delay_min = 100, delay_max = 150, \
+                size = 1, size_buildup_amnt = 29, \
+                size_buildup_time = 1000, cloud_type = "grey smoke" }
+SUBST: x = cn.
+NSUBST: A = 1:+ / *:v
+SUBST: $ = $*
+SUBST: * = *|
+SUBST: | = |||$
+SUBST: f = f..
+NSUBST: . = 15:M / *:.
+KMONS: M = very ugly thing / slime creature / glowing shapeshifter
+KITEM: % = silver rune of zot
+KITEM: " = ring of levitation, potion of levitation q:3, scroll of acquirement, \
+ wand of disintegration / wand of fire, acquire gold, ring of protection from fire
+
+COLOUR: #~^ = yellow
+KFEAT: # = closed_door
+KFEAT: ~ = closed_door
+KFEAT: ^ = closed_door
+: lua_marker('#', props_marker {
+:           door_description_suffix=" to the Vaults",
+:           })
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to the Hall of Blades",
+:           })
+: lua_marker('^', props_marker {
+:           door_description_suffix=" to the Crypt",
+:           })
+MARKER: # = lua:restrict_door()
+MARKER: ~ = lua:restrict_door()
+MARKER: ^ = lua:restrict_door()
+
+MAP
+vvvvvvvvvvvvvvvvvvv
+v|*%..655fff+.WwWWv
+v|*$..655fffvWWWWWv
+v|*$..655fffv.wwwwv
+v|*$.7655fffv.Www8v
+v|*$.7655fffvWwwwWv
+v|*$..655fffv.W...v
+v|*$..655fffv.....v
+v|"$..655fffv.....v
+vvvvvvvvvvvvvvvvv+v
+v...2...+.........v
+v.vvvvvvv.......!.v
+v.......v.......3.v
+vvvvvvv.v.!.....4.v
+v.......v.......3.v
+vAvAvAvAvvvvvvvvvvv
+v.x.x.x.v*******wCv
+vx.x.x.xvwwwwwwwwwv
+v.x.x.x.v.........v
+vx.x.x.xv...!.....v
+vUx.x.x.+.........v
+vvvvvvvvvvvvvvvv+vv
+v$..v$..vD.v......v
+v...v...v..v..bbb.v
+vv+vvv+vv..v..bkb.v
+v.......+..a..bbb.v
+v.vvvvv.vvvv......v
+#.v1..+.vD.a......v
+vvvvvvv.+..v......v
+      v.vvvv......v
+      v.v..v......v
+      v.+..v......v
+      v.v..v......v
+      v.v..a.....-v
+      ~.v..v....--v
+      v.vD.v...---v
+      vvvvvvvvvvv^v
+ENDMAP
+
+##############################################################################
+# Blades
+#
+# Blade 1, basic
+NAME: sprint_mu_blade_basic
+TAGS: sprint_mu_blade no_rotate no_hmirror no_vmirror no_dup
+MONS: dancing weapon
+: acq_on_sight(_G, '$', {"weapon","weapon"});
+KFEAT: $ = floor
+
+MAP
+c.....
+c..c..
+c.c1c.
+c....1
+c1....
+c.c1c.
+c..c..
+c$....
+ENDMAP
+
+##############################################################################
+# Crypts
+#
+# Crypt 1, chambers
+NAME: sprint_mu_crypt_chambers
+TAGS: sprint_mu_crypt no_rotate no_hmirror no_vmirror no_dup
+KMONS: 1 = patrolling vampire knight
+KMONS: 2 = patrolling skeletal warrior
+KMONS: 3 = patrolling bone dragon
+KMONS: 4 = patrolling necromancer
+KMONS: 5 = patrolling guardian mummy
+KMONS: 6 = patrolling large zombie
+KMONS: 7 = patrolling large simulacrum
+SUBST: 1 = 1122334455667
+KITEM: 1234567 = star_item / nothing
+KFEAT: ^ = zot trap
+KFEAT: - = axe trap / needle trap / net trap / blade trap / bolt trap
+NSUBST: ~ = 1:^ / 10:- / *:.
+SUBST: + = +==
+SUBST: ! = +
+
+MAP
+ccccccccccccccccc.c
+c1c1c1c1c1c1c1c1c.c
+c+c+c+c+c+c+c+c+c!c
+c~~~~~~~~~~~~~~~~~c
+c~~~~~~~~~~~~~~~~~c
+c+c+c+c+c+c+c+c+c+c
+c1c1c1c1c1c1c1c1c1c
+ENDMAP
+
+##############################################################################
+# Crypt 2, fortress
+NAME: sprint_mu_crypt_fortress
+TAGS: sprint_mu_crypt no_rotate no_hmirror no_vmirror no_dup
+MONS: patrolling iron golem, patrolling necromancer
+MONS: patrolling hell knight, patrolling skeletal warrior
+KMONS: 5 = lich
+KITEM: 5 = star_item, star_item, star_item, star_item, star_item, star_item
+KFEAT: - = axe trap / needle trap / net trap / blade trap / bolt trap
+NSUBST: . = 6:- / *:.
+
+MAP
+vvvvvvvvvvvvvvvvv.v
+v.....+...2v41vww.v
+v.vvvvvv...v..vww.v
+v33.+..vv..v..+...v
+v33.v...vv.+..vww.v
+vvvvv....vvv..vww.v
+v.........5v..vww.v
+ENDMAP
+
+##############################################################################
+# Crypt 3, Revenge of the Return of the Lich Under Glass 2: Revenge Harder
+NAME: sprint_mu_crypt_lich
+TAGS: sprint_mu_crypt no_rotate no_hmirror no_vmirror no_dup
+MONS: ancient lich, skeletal warrior
+KFEAT: - = axe trap / needle trap / net trap / blade trap / bolt trap
+NSUBST: . = 10:- / *:.
+SUBST: : = .
+
+MAP
+ccccccccccccccccc.c
+c||.m1m........c..c
+c**.mmm.....22.+..c
+c**.........22.+..c
+c||............c..c
+cccccccccccccccc..c
+c:::::::::::::::::c
+ENDMAP
+
+##############################################################################
+# Tombs
+#
+# Tomb 1, spiral
+NAME: sprint_mu_tomb_spiral
+TAGS: sprint_mu_tomb no_rotate no_hmirror no_vmirror no_dup
+MONS: patrolling greater mummy, patrolling mummy priest
+MONS: patrolling guardian mummy, patrolling sphinx
+KFEAT: - = axe trap / needle trap / net trap / blade trap / bolt trap /\
+    spear trap / zot trap
+SUBST: . = -----.................332
+KITEM: $ = golden rune of zot
+KITEM: ? = scroll of acquirement q:5
+COLOUR: X = lightgrey
+COLOUR: # = yellow
+KFEAT: # = closed_door
+: lua_marker('#', props_marker {
+:           door_description_suffix=" to the Tomb of the Ancients",
+:           })
+MARKER: # = lua:restrict_door()
+MAP
+X#XXXXXXXXXXXXXXXXX
+X..c..............c
+X..c..............c
+X..c..cccccccccc..c
+X..c..c.332.||?c..c
+X..c..c.3321|||c..c
+X..c..c.3321|||c..c
+X44c..c.332.$||c..c
+X..c..c+cccccccc..c
+X..c..c...........c
+X..+..c...........c
+Xcccccccccccccccccc
+ENDMAP
+
+##############################################################################
+# D3's
+#
+# D3_1, branching
+NAME:  sprint_mu_d3_branching
+TAGS:  sprint_mu_d3 no_rotate no_hmirror no_vmirror no_dup
+KMONS: a = col:red generate_awake statue name:elemental name_adjective hp:50 \
+ spells:summon_fire_elementals;cantrip
+MARKER: a = lua:MonPropsMarker:new {description="An ornate statue of an orc holding a torch aloft. " \
+        .. "The air around it shimmers.\n"}
+KMONS: H = col:blue generate_awake statue name:elemental name_adjective hp:50 \
+ spells:summon_water_elementals;cantrip
+MARKER: H = lua:MonPropsMarker:new {description="A smooth statue of a mermaid bathing in a fountain. " \
+        .. "It glistens softly.\n"}
+KMONS: O = col:brown generate_awake statue name:elemental name_adjective hp:70 \
+ spells:summon_earth_elementals;cantrip
+MARKER: O = lua:MonPropsMarker:new {description="A plain statue of a dwarf wielding a pickaxe. " \
+        .. "It looks incredibly heavy.\n"}
+KMONS: d = col:lightgrey generate_awake statue name:elemental name_adjective hp:25 \
+ spells:summon_air_elementals;cantrip
+MARKER: d = lua:MonPropsMarker:new {description="A delicate statue of a kenku gliding through the air.  " \
+        .. "It looks quite insubstantial.\n"}
+KMONS: e = col:gold skeletal warrior name:ancient_champion name_replace \
+       name_descriptor spells:venom_bolt;.;haste;haunt;.;. actual_spells \
+       ; plate mail ego:fire_resistance | plate mail ego:cold_resistance . \
+       battleaxe ego:vorpal | battleaxe ego:pain | \
+       w:3 executioner's axe ego:vorpal
+MARKER: e = lua:MonPropsMarker:new {description="The unfathomably ancient " \
+        .. "skeleton of a humanoid creature. It has hundreds of golden sigils " \
+        .. "etched onto its bones, and pulses with terrible, unholy power.\n"}
+KITEM: e = superb_item, superb_item
+KMONS: p = plant
+KMONS: 1 = patrolling vampire knight
+KMONS: 2 = patrolling mara
+KMONS: 3 = molten gargoyle
+KMONS: 4 = patrolling titanic slime creature
+KMONS: 5 = generate_awake curse skull
+KMONS: f = skeletal warrior ; longbow ego:flame . arrow q:30
+KMONS: 6 = shadow wraith
+KMONS: g = ball lightning / giant spore
+KMONS: 7 = patrolling storm dragon
+KMONS: 8 = patrolling nikola
+KMONS: A = col:magenta plant / w:2 deep elf blademaster
+KMONS: B = col:lightmagenta plant
+SUBST: A = AAB
+KFEAT: AB = zot trap w:2 / floor
+KMONS: i = patrolling giant eyeball
+KMONS: j = patrolling golden eye
+KMONS: k = patrolling shining eye
+KMONS: m = patrolling giant orange brain
+KMONS: o = patrolling yellow draconian
+KMONS: q = generate_awake yellow wasp / generate_awake red wasp
+KMONS: r = hydra simulacrum / golden dragon zombie / spectral iron dragon / \
+ iron troll simulacrum / anaconda zombie / anaconda simulacrum / stone giant skeleton /\
+ titan zombie
+KMONS: s = boris
+KMONS: t = col:white generate_awake statue name:pristine name_adjective hp:100 ; crossbow . bolt q:50 ego:silver
+MARKER: t = lua:MonPropsMarker:new {description="An immaculately sculpted statue of an archer.\n"}
+KMONS: u = Mennas
+KMONS: y = generate_awake roxanne
+KMONS: z = oklob plant
+KFEAT: ! = wand shop / armour shop / distillery shop / food shop
+KITEM: $ = any food / wand of disintegration w:2 / potion of healing / star_item
+KMONS: C = patrolling ice devil
+KMONS: D = patrolling beast
+KMONS: E = patrolling sun demon
+KMONS: F = patrolling soul eater
+KMONS: G = iron troll simulacrum hd:20
+KMONS: I = patrolling vault guard / patrolling orc knight / patrolling draconian knight /\
+ patrolling deep elf knight
+KITEM: % = quad damage
+KFEAT: % = known zot trap
+KFEAT: J = deep_water
+SUBST: J = Jh
+KFEAT: h = deep_water
+KMONS: h = electric eel
+KMONS: K = executioner
+KMONS: M = patrolling yaktaur ; longbow . arrow ego:dispersal q:10
+KMONS: N = patrolling nessos
+KFEAT: ^ = net trap
+KFEAT: " = floor
+COLOUR: " = yellow
+MARKER: L = lua:fog_machine { \
+                 pow_max = 10, delay_min = 10, delay_max = 40, \
+                 size = 1, size_buildup_amnt = 5, \
+                 size_buildup_time = 25, cloud_type = "freezing vapour" \
+             }
+COLOUR: # = red
+KFEAT: # = closed_door
+MARKER: # = lua:props_marker({ \
+            door_description_suffix=" to Hell", \
+            door_description_noun="gateway", \
+         })
+MARKER: # = lua:restrict_door()
+MAP
+vvvvvvvvvvvvvvvvv+vvvvvvvvvvvvv
+vtW....Wtvrrsvvv...vvevllllllvv
+vW..""..Wvrrrvv.....vv=v3llpln1
+v..".."..v=vvv..a.H..vvv...pln.
+v.."u."..=...+.......+.......2.
+v..".."..v=vvv..O.d..vvvvv.pln.
+vW..""..WvWWWvv.....vv^^.vvpln1
+vtW....Wtv=v=vvv...vvv^v..vv+vv
+vvvv++vvvvrvrvvvv+vvvv4vv.vv...
+v$$=.....v=vvvvv.www+v^vv.vvvv.
+vvvvvvvv.v$$=!!v.ww.v^^vv......
+vC.Fvvvv.vvvv!!v.ww.vvvcccc+ccc
+vD.Evvv...vvvzzv.6w.vgg+WT...J8
+#...+...y...+..+..WW+ggcWW.J.J7
+vE.Dvvv...vvv..vwww.vggc.J.J.J.
+vF.Cvvvv.vv!v..vff5.vggc...J...
+vvvvvvvv.v.Gv..vvvv+vvvcccc+ccc
+v......v+v+nv..v.v.v.v.v.v.v.v.
+v.I.I..v.+..+..+v.vqv.vqv.vqv.v
+v..I...v.vvvv..v.v.v.v.v.v.v.v.
+v.I.I..+.vKvvvvvvvvXXXXXXXXXXXX
+v......vvv.v..L....X...o+AAAAX.
+v.bnb..v...v.......X....XAAAAX.
+v.b%n..+...+.......+....XAAAAX.
+v.bbb..v...v.....MMX....XAAAAX.
+v......vvv=v.....MNX....XAAAAX.
+vvvvvvvv$..vvvvvvvvXijkmXAAAA+.
+ENDMAP
+
+##############################################################################
+# Vestibules
+#
+# Vestibule 1, basic
+NAME: sprint_mu_vestibule_basic
+TAGS: sprint_mu_vestibule no_rotate no_hmirror no_vmirror no_dup
+MONS: patrolling Geryon, yaktaur, yaktaur captain, stone giant
+MAP
+............................
+..........222.4.............
+..........2321..............
+..........222.4.............
+............................
+ENDMAP
+
+##############################################################################
+# Dis
+#
+# Dis 1, the iron giant
+NAME: sprint_mu_dis_giant
+TAGS: sprint_mu_dis no_rotate no_hmirror no_vmirror no_dup
+MONS: patrolling iron elemental
+MONS: patrolling the iron giant ; giant club unrand:skullcrusher
+MONS: iron dragon, iron devil, patrolling pit fiend, metal gargoyle, iron golem
+KMONS: & = dispater
+KITEM: * = superb_item, superb_item, superb_item
+KITEM: ? = star_item, star_item, scroll of enchant armour q:4
+: acq_on_sight(_G, '$', {"armour","armour"})
+KITEM: % = iron rune of zot
+KFEAT: ^ = blade trap
+NSUBST: ^ = 1:. / *:^
+SUBST: . = ......^
+COLOUR: # = cyan
+KFEAT: # = closed_door
+MARKER: # = lua:props_marker({ \
+            door_description_suffix=" to the Iron City of Dis", \
+            door_description_noun="gateway", \
+         })
+MARKER: # = lua:restrict_door()
+MAP
+vvvvvvvvvvvvvv
+v.+34v.......v
+v.v44+..vvvv+v
+v.vvvv..v....v
+v.v5?vv+v5...v
+v.v1$v7.v5..*v
+v.+..v..v&**%v
+vvvvvv++vvvvvv
+vv6v6v12v6v6vv
+v............v
+vvvvvv#vvvvvvv
+ENDMAP
+
+##############################################################################
+# Gehenna
+#
+# Gehenna 1, hellfire
+NAME: sprint_mu_gehenna_hellfire
+TAGS: sprint_mu_gehenna no_rotate no_hmirror no_vmirror no_dup
+KMONS: 1 = patrolling the serpent of hell
+KFEAT: 1 = lava
+KMONS: 2 = hellion
+KMONS: 3 = fiend
+NSUBST: l = 1:1 / *:l
+KITEM: % = obsidian rune of zot
+KITEM: $ = superb_item, any, any
+KITEM: ? = superb_item, superb_item, scroll of enchant weapon III q:4
+: acq_on_sight(_G, '!', {"weapon","weapon"})
+MARKER:  G = lua:fog_machine { \
+                pow_max = 25, delay_min = 100, delay_max = 150, \
+                size = 1, size_buildup_amnt = 29, \
+                size_buildup_time = 1000, cloud_type = "flame" }
+COLOUR: #vG = red
+KFEAT: # = closed_door
+MARKER: # = lua:props_marker({ \
+            door_description_suffix=" to Gehenna", \
+            door_description_noun="gateway", \
+         })
+MARKER: # = lua:restrict_door()
+MAP
+vvvvvvvvvvvvvv
+vl.$$2$$2$!?%v
+vll..322.vvvov
+vllll.22.llllv
+v.llllllllll.v
+v.llllllllll.v
+v...llllll...v
+v.....ll.....v
+v............v
+vG..........Gv
+vvvvvv#vvvvvvv
+ENDMAP
+
+
+
+##############################################################################
+# Cocytus
+#
+# Cocytus 1, islands
+NAME: sprint_mu_cocytus_islands
+TAGS: sprint_mu_cocytus no_rotate no_hmirror no_vmirror no_dup
+KMONS: 1 = patrolling Antaeus ; large shield ego:reflection
+KMONS: 2 = patrolling ice fiend
+KMONS: 3 = kraken simulacrum
+KFEAT: 3 = deep_water
+NSUBST: w = 3:3 / *:w
+NSUBST: 2 = 1:1 / 1:! /*:2
+NSUBST: a = 1:+ / *:c
+NSUBST: b = 1:+ / *:c
+NSUBST: d = 1:+ / *:c
+NSUBST: e = 1:+ / *:c
+NSUBST: f = 1:+ / *:c
+NSUBST: g = 1:+ / *:c
+KITEM: 1 = icy rune of zot
+KITEM: 2 = superb_item, star_item
+KMONS: ! = patrolling ice fiend
+KITEM: ! = potion of resistance q:3, potion of agility q:3, cloak ego:preservation, \
+  wand of hasting
+COLOUR: #c = lightcyan
+KFEAT: # = closed_door
+MARKER: # = lua:props_marker({ \
+            door_description_suffix=" to the freezing wastes of Cocytus", \
+            door_description_noun="gateway", \
+         })
+MARKER: # = lua:restrict_door()
+
+MAP
+ccccccc#cccccc
+ccccwwwwwwwwwc
+cc2awcdcwwcgcc
+ccacwd2dwwg2cc
+cwwwwcdcwwcgcc
+cwwwwwwwwwwwwc
+cwwwwcecwwwwwc
+ccbcwe2ewwcfcc
+cc2bwcecwwf2cc
+ccccwwwwwwcccc
+cccccccccccccc
+ENDMAP
+
+
+##############################################################################
+# Tartarus
+#
+# Tartarus 1, statrot
+NAME: sprint_mu_tartarus_statrot
+TAGS: sprint_mu_tartarus no_rotate no_hmirror no_vmirror no_dup
+KMONS: 1 = patrolling Khufu / patrolling Murray / patrolling Ereshkigal
+KMONS: 2 = patrolling guardian mummy
+KMONS: 3 = patrolling quasit
+KMONS: 4 = patrolling shadow
+KMONS: 5 = patrolling greater mummy
+KMONS: 6 = orange crystal statue
+KMONS: 7 = rotting hulk
+KMONS: & = gloorx vloq
+NSUBST: & = 1:& / 1:.
+KITEM: 1 = bone rune of zot
+KMONS: % = patrolling greater mummy
+KITEM: % = superb_item, superb_item, star_item, star_item, any, any
+KMONS: ? = patrolling greater mummy
+KITEM: ? = potion of healing q:2, potion of heal wounds q:3, wand of healing
+COLOUR: # = darkgrey
+COLOUR: c = lightgrey
+KFEAT: # = closed_door
+MARKER: # = lua:props_marker({ \
+        door_description_suffix=" to the decaying netherworld of Tartarus", \
+        door_description_noun="gateway", \
+        })
+MARKER: # = lua:restrict_door()
+SUBST: . = ..........2233445
+MARKER: ! = lua:fog_machine { \
+                pow_max = 1000, delay_min = 1, delay_max = 1, \
+                size = 1000, size_buildup_amnt = 111, \
+                size_buildup_time = 1, cloud_type = "gloom" }
+MAP
+ccccccc#cccccc
+c!..c....c..!c
+c.&.=..!.=.&.c
+c...c....c...c
+cc+cccccccc+cc
+cc.....!....cc
+cc=ccccccccccc
+c...c7443322%c
+c.!.=74!33!21c
+c6..c7443322?c
+cccccccccccccc
+ENDMAP
+
+##############################################################################
+# Zot. 'MurrayDrop' code shamelessly stolen from sprint2. Thanks Chapayev!
+#
+# Zot
+NAME: sprint_mu_zot1
+TAGS: sprint_mu_zot no_rotate no_hmirror no_vmirror no_dup
+KMONS: T = col:magenta statue name:zot n_adj \
+        spells:summon_eyeballs;polymorph_other;haste;shadow_creatures;\
+        summon_small_mammals;summon_eyeballs hd:30 hp:300
+MARKER: T = lua:MonPropsMarker:new {description="This statue is profoundly " \
+        .. "disturbing.\n"}
+MARKER: T = lua:fog_machine { \
+        pow_max = 15, delay_min = 100, delay_max = 150, \
+        size = 1, size_buildup_amnt = 29, \
+        size_buildup_time = 1000, cloud_type = "mutagenic fog" }
+KFEAT: T = zot trap
+KMONS: * = orb of fire
+MONS: Tiamat, yellow draconian caller / yellow draconian shifter
+MONS: white draconian scorcher
+MARKER: i = lua:fog_machine { \
+        pow_max = 10, delay_min = 100, delay_max = 150, \
+        size = 1, size_buildup_amnt = 15, \
+        size_buildup_time = 1000, cloud_type = "freezing vapour" }
+MONS: patrolling storm dragon / patrolling electric golem
+MONS: red draconian zealot
+KMONS: 7 = patrolling fire giant
+KMONS: 8 = patrolling frost giant
+KMONS: L = patrolling ancient lich
+KMONS: g = patrolling orb guardian
+KMONS: y = patrolling moth of wrath
+KITEM: % = stone of earth elementals
+{{
+lua_marker("A", portal_desc { spawn_spot = 1 })
+
+function mons_gen (data, triggerable, triggerer, marker, ev)
+    function spawn_zombie (x, y, spec)
+        local mons = dgn.create_monster(x, y, spec)
+        crawl.mpr("You hear a whooshing noise from somewhere close by.")
+        return mons
+    end
+
+    if data.awoke == true then
+        return
+    end
+    local graves = dgn.find_marker_positions_by_prop("spawn_spot", 1)
+    for _, pos in ipairs(graves) do
+        local niceguy = spawn_zombie(pos.x, pos.y, "generate_awake pandemonium lord")
+    end
+
+    data.awoke = true
+end
+
+local mons_gen_marker = TriggerableFunction:new {
+    data = {
+        awoke = 0
+    },
+    func = mons_gen,
+    repeated = true,
+    props = {listen_to_slaves = true, only_at_slave = true }
+    }
+mons_gen_marker:add_triggerer(DgnTriggerer:new {
+    type = "player_move" })
+lua_marker("e", mons_gen_marker) }}
+SUBST: A = ^
+NSUBST: a = 1:= / *:X
+KFEAT: - = zot trap
+NSUBST: ^ = 3:- / *:.
+KMONS: k = killer klown
+KMONS: A = plant col:magenta
+KMONS: B = plant col:lightmagenta
+SUBST: p = AAB
+COLOUR: =X = lightmagenta
+KITEM: $ = orb of zot
+KFEAT: # = closed_door
+KFEAT: ~ = closed_door
+COLOUR: # = magenta
+MARKER: # = lua:props_marker({ \
+        door_description_suffix=" to the Realm of Zot", \
+        door_description_noun="gate", \
+        veto_reason="You need three runes to open the Realm of Zot!", \
+        veto_shatter="veto", veto_disintegrate="veto", veto_fragmentation="veto" \
+        })
+MARKER: # = lua:lock_door {}
+MARKER: # = lua:restrict_door {}
+MARKER: ~ = lua:props_marker({ \
+        door_description_prefix="magically reinforced ", \
+        veto_shatter="veto", veto_disintegrate="veto", veto_fragmentation="veto", door_restrict="veto" \
+        })
+KPROP: =X#kp+^ag78yL45il%3x21*To$. = no_rtele_into
+MAP
+XXXXXXXXXXXXXXXXXXX
+X.+^^^AX..+...X...X
+X.X^^^^X.XX.i.X.T.X
+XkX^^^^X55XlllX...X
+XpXaaaaXX4XlllX.X.X
+XpX....X..X...X*X.X
+#pX.gg.X.XX3%3X.X.X
+XXX.78.X..XXxXX.X.X
+X.+..y.XX.X...X.XeX
+X.XXXXXX..X212X.X~X
+X.....L=.XX...=.o$X
+XXXXXXXXXXXXXXXXXXX
+ENDMAP

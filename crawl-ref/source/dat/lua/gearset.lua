@@ -86,20 +86,22 @@ function rememberkit()
 end
 
 function write_array(f, arr, aname)
-    file.write(f, aname .. " = { ")
+    local res = aname .. " = { "
     for i, v in ipairs(arr) do
-        file.write(f, v .. ", ")
+        res = res .. v .. ", "
     end
-    file.write(f, "}\n")
+    return res .. "}\n"
 end
 
-function gearset_save(file)
+function gearset_save()
+    local res = ""
     if g_kit_travel then
-        write_array(file, g_kit_travel, "g_kit_travel")
+        res = res .. write_array(g_kit_travel, "g_kit_travel")
     end
     if g_kit_battle then
-        write_array(file, g_kit_battle, "g_kit_battle")
+        res = res .. write_array(g_kit_battle, "g_kit_battle")
     end
+    return res
 end
 
 function matchkit(kit1, kit2)

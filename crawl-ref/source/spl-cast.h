@@ -39,6 +39,8 @@ enum spflag_type
     SPFLAG_NOISY                = 0x100000,      // makes noise, even if innate
     SPFLAG_TESTING              = 0x200000,      // a testing/debugging spell
     SPFLAG_CORPSE_VIOLATING     = 0x400000,      // Conduct violation for Fedhas
+    SPFLAG_ALLOW_SELF           = 0x800000,      // Not helpful, but may want to
+                                                 // target self
 };
 
 enum spret_type
@@ -59,8 +61,6 @@ int calc_spell_power(spell_type spell, bool apply_intel,
 int calc_spell_range(spell_type spell, int power = 0,
                      bool real_cast = false);
 int spell_enhancement( unsigned int typeflags );
-
-void exercise_spell(spell_type spell_ex, bool spc, bool divide);
 
 bool cast_a_spell( bool check_range, spell_type spell = SPELL_NO_SPELL );
 

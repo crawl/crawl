@@ -11,8 +11,6 @@
 #include "coordit.h"
 #include "database.h"
 #include "env.h"
-#include "files.h"
-#include "godabil.h"
 #include "goditem.h"
 #include "itemprop.h"
 #include "message.h"
@@ -27,12 +25,13 @@
 #include "state.h"
 #include "stuff.h"
 #include "travel.h"
+#include "transform.h"
 
-static void _jiyva_convert_slime(monsters* slime);
-static void _fedhas_neutralise_plant(monsters *plant);
+static void _jiyva_convert_slime(monster* slime);
+static void _fedhas_neutralise_plant(monster* plant);
 
 
-void good_god_follower_attitude_change(monsters *monster)
+void good_god_follower_attitude_change(monster* mons)
 {
     if (you.undead_or_demonic() || crawl_state.game_is_arena())
         return;
@@ -40,14 +39,14 @@ void good_god_follower_attitude_change(monsters *monster)
     // For followers of good gods, decide whether holy beings will be
     // good neutral towards you.
     if (is_good_god(you.religion)
-        && monster->foe == MHITYOU
-        && monster->is_holy()
-        && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)
-        && !monster->wont_attack()
-        && you.visible_to(monster) && !monster->asleep()
-        && !mons_is_confused(monster) && !monster->paralysed())
+        && mons->foe == MHITYOU
+        && mons->is_holy()
+        && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT)
+        && !mons->wont_attack()
+        && you.visible_to(mons) && !mons->asleep()
+        && !mons_is_confused(mons) && !mons->paralysed())
     {
-        monster->flags |= MF_ATT_CHANGE_ATTEMPT;
+        mons->flags |= MF_ATT_CHANGE_ATTEMPT;
 
         if (x_chance_in_y(you.piety, MAX_PIETY) && !you.penance[you.religion])
         {
@@ -58,39 +57,39 @@ void good_god_follower_attitude_change(monsters *monster)
                     || is_evil_item(*wpn))
                 && coinflip()) // 50% chance of conversion failing
             {
-                msg::stream << monster->name(DESC_CAP_THE)
+                msg::stream << mons->name(DESC_CAP_THE)
                             << " glares at your weapon."
                             << std::endl;
-                good_god_holy_fail_attitude_change(monster);
+                good_god_holy_fail_attitude_change(mons);
                 return;
             }
-            good_god_holy_attitude_change(monster);
+            good_god_holy_attitude_change(mons);
             stop_running();
         }
         else
-            good_god_holy_fail_attitude_change(monster);
+            good_god_holy_fail_attitude_change(mons);
     }
 }
 
-void beogh_follower_convert(monsters *monster, bool orc_hit)
+void beogh_follower_convert(monster* mons, bool orc_hit)
 {
     if (you.species != SP_HILL_ORC || crawl_state.game_is_arena())
         return;
 
     // For followers of Beogh, decide whether orcs will join you.
     if (you.religion == GOD_BEOGH
-        && monster->foe == MHITYOU
-        && mons_species(monster->type) == MONS_ORC
-        && !monster->is_summoned()
-        && !monster->is_shapeshifter()
-        && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)
-        && !monster->friendly()
-        && you.visible_to(monster) && !monster->asleep()
-        && !mons_is_confused(monster) && !monster->paralysed())
+        && mons->foe == MHITYOU
+        && mons_species(mons->type) == MONS_ORC
+        && !mons->is_summoned()
+        && !mons->is_shapeshifter()
+        && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT)
+        && !mons->friendly()
+        && you.visible_to(mons) && !mons->asleep()
+        && !mons_is_confused(mons) && !mons->paralysed())
     {
-        monster->flags |= MF_ATT_CHANGE_ATTEMPT;
+        mons->flags |= MF_ATT_CHANGE_ATTEMPT;
 
-        const int hd = monster->hit_dice;
+        const int hd = mons->hit_dice;
 
         if (you.piety >= piety_breakpoint(2) && !player_under_penance()
             && random2(you.piety / 15) + random2(4 + you.experience_level / 3)
@@ -101,49 +100,120 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
                 && get_weapon_brand(*you.weapon()) == SPWPN_ORC_SLAYING
                 && coinflip()) // 50% chance of conversion failing
             {
-                msg::stream << monster->name(DESC_CAP_THE)
+                msg::stream << mons->name(DESC_CAP_THE)
                             << " flinches from your weapon."
                             << std::endl;
                 return;
             }
-            beogh_convert_orc(monster, orc_hit);
+            beogh_convert_orc(mons, orc_hit);
             stop_running();
         }
     }
 }
 
-void slime_convert(monsters* monster)
+void slime_convert(monster* mons)
 {
-    if (you.religion == GOD_JIYVA && mons_is_slime(monster)
-        && !monster->is_summoned()
-        && !monster->is_shapeshifter()
-        && !monster->neutral()
-        && !monster->friendly()
-        && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)
-        && you.visible_to(monster) && !monster->asleep()
-        && !mons_is_confused(monster) && !monster->paralysed())
+    if (you.religion == GOD_JIYVA && mons_is_slime(mons)
+        && !mons->is_summoned()
+        && !mons->is_shapeshifter()
+        && !mons->neutral()
+        && !mons->friendly()
+        && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT)
+        && you.visible_to(mons) && !mons->asleep()
+        && !mons_is_confused(mons) && !mons->paralysed())
     {
-        monster->flags |= MF_ATT_CHANGE_ATTEMPT;
+        mons->flags |= MF_ATT_CHANGE_ATTEMPT;
         if (!player_under_penance())
         {
-            _jiyva_convert_slime(monster);
+            _jiyva_convert_slime(mons);
             stop_running();
         }
     }
 }
 
-void fedhas_neutralise(monsters* monster)
+void fedhas_neutralise(monster* mons)
 {
     if (you.religion == GOD_FEDHAS
-        && monster->attitude == ATT_HOSTILE
-        && fedhas_neutralises(monster)
-        && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)
+        && mons->attitude == ATT_HOSTILE
+        && fedhas_neutralises(mons)
+        && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT)
         && !player_under_penance())
     {
-        _fedhas_neutralise_plant(monster);
-        monster->flags |= MF_ATT_CHANGE_ATTEMPT;
-        del_exclude(monster->pos());
+        _fedhas_neutralise_plant(mons);
+        mons->flags |= MF_ATT_CHANGE_ATTEMPT;
+        del_exclude(mons->pos());
     }
+}
+
+static void _print_charm_converted_speech(const std::string key,
+                                          monster *mon,
+                                          msg_channel_type channel)
+{
+    std::string msg = getSpeakString("charm_converted_" + key);
+
+    if (!msg.empty())
+    {
+        msg = do_mon_str_replacements(msg, mon);
+        mpr(msg.c_str(), channel);
+    }
+}
+
+void passive_enslavement_convert(monster* mons)
+{
+    if (you.are_charming()
+        && mons->alive()
+        && is_player_same_species(mons->type, false)
+        && !transform_changed_physiology(false)
+        && mons->foe == MHITYOU
+        && !mons->is_summoned()
+        && !mons->is_shapeshifter()
+        && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT)
+        && !mons->friendly()
+        && you.visible_to(mons)
+        && !mons->asleep()
+        && !mons_is_confused(mons)
+        && !mons->paralysed())
+    {
+        mons->flags |= MF_ATT_CHANGE_ATTEMPT;
+
+        const int hd = mons->hit_dice;
+
+        if (random2(random2(you.experience_level))
+                 > random2(hd) + hd + random2(5)
+            && hd * hd < you.experience_level * 7)
+        {
+            passive_enslavement_convert_monster(mons);
+            stop_running();
+        }
+    }
+}
+
+// enslavement for RING_CHARM
+void passive_enslavement_convert_monster(monster* mons)
+{
+    if (one_chance_in(1 + mons->hit_dice * mons->hit_dice))
+    {
+        _print_charm_converted_speech("reaction_sight", mons,
+                                      MSGCH_FRIEND_ENCHANT);
+        if (!one_chance_in(3))
+            _print_charm_converted_speech("speech_sight", mons, MSGCH_TALK);
+
+        mons->attitude = ATT_FRIENDLY;
+
+        // The monster is not really *created* friendly, but should it
+        // become hostile later on, it won't count as a good kill.
+        mons->flags |= MF_NO_REWARD;
+
+        if (mons->is_patrolling())
+           // Make monster stop patrolling and forget their patrol point,
+           // they're supposed to follow you now.
+           mons->patrol_point = coord_def(0, 0);
+    }
+    else
+        mons->add_ench(ENCH_CHARM);
+
+    behaviour_event(mons, ME_ALERT, MHITNOT);
+    mons_att_changed(mons);
 }
 
 // Make summoned (temporary) god gifts disappear on penance or when
@@ -180,15 +250,15 @@ bool yred_slaves_abandon_you()
 
     for (radius_iterator ri(you.pos(), 9); ri; ++ri)
     {
-        monsters *monster = monster_at(*ri);
-        if (monster == NULL)
+        monster* mons = monster_at(*ri);
+        if (mons == NULL)
             continue;
 
-        if (is_yred_undead_slave(monster))
+        if (is_yred_undead_slave(mons))
         {
             num_slaves++;
 
-            const int hd = monster->hit_dice;
+            const int hd = mons->hit_dice;
 
             // During penance, followers get a saving throw.
             if (random2((you.piety - you.penance[GOD_YREDELEMNUL]) / 18)
@@ -198,10 +268,10 @@ bool yred_slaves_abandon_you()
                 continue;
             }
 
-            monster->attitude = ATT_HOSTILE;
-            behaviour_event(monster, ME_ALERT, MHITYOU);
+            mons->attitude = ATT_HOSTILE;
+            behaviour_event(mons, ME_ALERT, MHITYOU);
             // For now CREATED_FRIENDLY stays.
-            mons_att_changed(monster);
+            mons_att_changed(mons);
 
             num_reclaim++;
         }
@@ -231,22 +301,22 @@ bool beogh_followers_abandon_you()
 
     for (radius_iterator ri(you.pos(), 9); ri; ++ri)
     {
-        monsters *monster = monster_at(*ri);
-        if (monster == NULL)
+        monster* mons = monster_at(*ri);
+        if (mons == NULL)
             continue;
 
         // Note that orc high priests' summons are gifts of Beogh,
         // so we can't use is_orcish_follower() here.
-        if (mons_is_god_gift(monster, GOD_BEOGH))
+        if (mons_is_god_gift(mons, GOD_BEOGH))
         {
             num_followers++;
 
-            if (you.visible_to(monster)
-                && !monster->asleep()
-                && !mons_is_confused(monster)
-                && !monster->cannot_act())
+            if (you.visible_to(mons)
+                && !mons->asleep()
+                && !mons_is_confused(mons)
+                && !mons->cannot_act())
             {
-                const int hd = monster->hit_dice;
+                const int hd = mons->hit_dice;
 
                 // During penance, followers get a saving throw.
                 if (random2((you.piety - you.penance[GOD_BEOGH]) / 18)
@@ -256,12 +326,12 @@ bool beogh_followers_abandon_you()
                     continue;
                 }
 
-                monster->attitude = ATT_HOSTILE;
-                behaviour_event(monster, ME_ALERT, MHITYOU);
+                mons->attitude = ATT_HOSTILE;
+                behaviour_event(mons, ME_ALERT, MHITYOU);
                 // For now CREATED_FRIENDLY stays.
-                mons_att_changed(monster);
+                mons_att_changed(mons);
 
-                if (you.can_see(monster))
+                if (you.can_see(mons))
                     num_reconvert++; // Only visible ones.
 
                 reconvert = true;
@@ -296,7 +366,7 @@ bool beogh_followers_abandon_you()
 
 static void _print_good_god_holy_being_speech(bool neutral,
                                               const std::string key,
-                                              monsters *mon,
+                                              monster* mon,
                                               msg_channel_type channel)
 {
     std::string full_key = "good_god_";
@@ -316,7 +386,7 @@ static void _print_good_god_holy_being_speech(bool neutral,
 
 // Holy monsters may turn good neutral when encountering followers of
 // the good gods, and be made worshippers of TSO if necessary.
-void good_god_holy_attitude_change(monsters *holy)
+void good_god_holy_attitude_change(monster* holy)
 {
     ASSERT(holy->is_holy());
 
@@ -346,7 +416,7 @@ void good_god_holy_attitude_change(monsters *holy)
     mons_att_changed(holy);
 }
 
-void good_god_holy_fail_attitude_change(monsters *holy)
+void good_god_holy_fail_attitude_change(monster* holy)
 {
     ASSERT(holy->is_holy());
 
@@ -362,7 +432,7 @@ void good_god_holy_fail_attitude_change(monsters *holy)
 }
 
 static void _print_converted_orc_speech(const std::string key,
-                                        monsters *mon,
+                                        monster* mon,
                                         msg_channel_type channel)
 {
     std::string msg = getSpeakString("beogh_converted_orc_" + key);
@@ -376,7 +446,7 @@ static void _print_converted_orc_speech(const std::string key,
 
 // Orcs may turn friendly when encountering followers of Beogh, and be
 // made gifts of Beogh.
-void beogh_convert_orc(monsters *orc, bool emergency,
+void beogh_convert_orc(monster* orc, bool emergency,
                        bool converted_by_follower)
 {
     ASSERT(mons_species(orc->type) == MONS_ORC);
@@ -438,7 +508,7 @@ void beogh_convert_orc(monsters *orc, bool emergency,
     mons_att_changed(orc);
 }
 
-static void _fedhas_neutralise_plant(monsters *plant)
+static void _fedhas_neutralise_plant(monster* plant)
 {
     if (!plant
         || !fedhas_neutralises(plant)
@@ -453,7 +523,7 @@ static void _fedhas_neutralise_plant(monsters *plant)
     mons_att_changed(plant);
 }
 
-static void _jiyva_convert_slime(monsters* slime)
+static void _jiyva_convert_slime(monster* slime)
 {
     ASSERT(mons_is_slime(slime));
 

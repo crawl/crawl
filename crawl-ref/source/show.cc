@@ -28,6 +28,7 @@
 #ifdef USE_TILE
  #include "tileview.h"
 #endif
+#include "travel.h"
 #include "viewgeom.h"
 #include "viewmap.h"
 
@@ -106,24 +107,10 @@ bool show_type::is_cleanable_monster() const
     return (cls == SH_MONSTER && !mons_class_is_stationary(mons));
 }
 
-static unsigned short _tree_colour(const coord_def& where)
-{
-    uint32_t h = where.x;
-    h+=h<<10; h^=h>>6;
-    h += where.y;
-    h+=h<<10; h^=h>>6;
-    h+=h<<3; h^=h>>11; h+=h<<15;
-    return (h>>30) ? GREEN :
-           (you.where_are_you == BRANCH_SWAMP) ? BROWN
-                   : LIGHTGREEN;
-}
-
 static void _update_feat_at(const coord_def &gp)
 {
     dungeon_feature_type feat = grid_appearance(gp);
     unsigned colour = env.grid_colours(gp);
-    if (feat == DNGN_TREE && !colour)
-        colour = _tree_colour(gp);
     env.map_knowledge(gp).set_feature(feat, colour);
 
     if (haloed(gp))
@@ -143,6 +130,9 @@ static void _update_feat_at(const coord_def &gp)
     if (you.get_beholder(gp))
         env.map_knowledge(gp).flags |= MAP_WITHHELD;
 
+    if (you.get_fearmonger(gp))
+        env.map_knowledge(gp).flags |= MAP_WITHHELD;
+
     if (feat >= DNGN_STONE_STAIRS_DOWN_I
                             && feat <= DNGN_ESCAPE_HATCH_UP
                             && is_exclude_root(gp))
@@ -157,6 +147,9 @@ static void _update_feat_at(const coord_def &gp)
         if (glowing_mold(gp))
             env.map_knowledge(gp).flags |= MAP_GLOWING_MOLDY;
     }
+
+    if (slime_wall_neighbour(gp))
+        env.map_knowledge(gp).flags |= MAP_CORRODING;
 
     if (emphasise(gp))
         env.map_knowledge(gp).flags |= MAP_EMPHASIZE;
@@ -198,7 +191,7 @@ static void _update_item_at(const coord_def &gp)
     const item_def *eitem;
     bool more_items = false;
     // Check for mimics.
-    const monsters* m = monster_at(gp);
+    const monster* m = monster_at(gp);
     if (m && mons_is_unknown_mimic(m))
         eitem = &get_mimic_item(m);
     else if (you.visible_igrd(gp) != NON_ITEM)
@@ -215,10 +208,10 @@ static void _update_item_at(const coord_def &gp)
     env.map_knowledge(gp).set_item(get_item_info(*eitem), more_items);
 
 #ifdef USE_TILE
-    if (feat_is_stair(feat))
-        tile_place_item_marker(ep, *eitem);
+    if (feat_is_stair(env.grid(gp)))
+        tile_place_item_marker(grid2show(gp), *eitem);
     else
-        tile_place_item(ep, *eitem);
+        tile_place_item(grid2show(gp), *eitem);
 #endif
 }
 
@@ -226,36 +219,36 @@ static void _update_cloud(int cloudno)
 {
     const coord_def gp = env.cloud[cloudno].pos;
     cloud_type cloud = env.cloud[cloudno].type;
-    env.map_knowledge(gp).set_cloud(cloud);
+    env.map_knowledge(gp).set_cloud(cloud, get_cloud_colour(cloudno));
 
 #ifdef USE_TILE
     tile_place_cloud(gp, env.cloud[cloudno]);
 #endif
 }
 
-static void _check_monster_pos(const monsters* monster)
+static void _check_monster_pos(const monster* mons)
 {
-    int s = monster->mindex();
-    ASSERT(mgrd(monster->pos()) == s);
+    int s = mons->mindex();
+    ASSERT(mgrd(mons->pos()) == s);
 
     // [rob] The following in case asserts aren't enabled.
-    // [enne] - It's possible that mgrd and monster->x/y are out of
+    // [enne] - It's possible that mgrd and mons->x/y are out of
     // sync because they are updated separately.  If we can see this
     // monster, then make sure that the mgrd is set correctly.
-    if (mgrd(monster->pos()) != s)
+    if (mgrd(mons->pos()) != s)
     {
         // If this mprf triggers for you, please note any special
         // circumstances so we can track down where this is coming
         // from.
         mprf(MSGCH_ERROR, "monster %s (%d) at (%d, %d) was "
              "improperly placed.  Updating mgrd.",
-             monster->name(DESC_PLAIN, true).c_str(), s,
-             monster->pos().x, monster->pos().y);
-        mgrd(monster->pos()) = s;
+             mons->name(DESC_PLAIN, true).c_str(), s,
+             mons->pos().x, mons->pos().y);
+        mgrd(mons->pos()) = s;
     }
 }
 
-static void _update_monster(const monsters* mons)
+static void _update_monster(const monster* mons)
 {
     _check_monster_pos(mons);
 
@@ -294,7 +287,7 @@ static void _update_monster(const monsters* mons)
 
 void show_update_at(const coord_def &gp, bool terrain_only)
 {
-    env.map_knowledge(gp).clear();
+    env.map_knowledge(gp).clear_data();
 
     // The sequence is grid, items, clouds, monsters.
     _update_feat_at(gp);
@@ -316,11 +309,9 @@ void show_update_at(const coord_def &gp, bool terrain_only)
         _update_cloud(cloud);
     }
 
-    const monsters *mons = monster_at(gp);
+    const monster* mons = monster_at(gp);
     if (mons && mons->alive())
         _update_monster(mons);
-
-    set_terrain_visible(gp);
 }
 
 void show_init(bool terrain_only)
@@ -329,3 +320,21 @@ void show_init(bool terrain_only)
     for (radius_iterator ri(you.get_los()); ri; ++ri)
         show_update_at(*ri, terrain_only);
 }
+
+// Emphasis may change while off-level (precisely, after
+// taking stairs and saving the level, when we reach
+// the next level). This catches up.
+// It should be equivalent to looping over the whole map
+// and setting MAP_EMPHASIZE for any coordinate with
+// emphasise(p) == true, but we optimise a bit.
+void show_update_emphasis()
+{
+   // The only thing that can change is that previously unknown
+   // stairs are now known. (see is_unknown_stair(), emphasise())
+   LevelInfo& level_info = travel_cache.get_level_info(level_id::current());
+   std::vector<stair_info> stairs = level_info.get_stairs();
+   for (unsigned i = 0; i < stairs.size(); ++i)
+       if (stairs[i].destination.is_valid())
+           env.map_knowledge(stairs[i].position).flags &= ~MAP_EMPHASIZE;
+}
+

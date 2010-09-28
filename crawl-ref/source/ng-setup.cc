@@ -44,7 +44,7 @@ static void _species_stat_init(species_type which_species)
     // Note: The stats in in this list aren't intended to sum the same
     // for all races.  The fact that Mummies and Ghouls are really low
     // is considered acceptable (Mummies don't have to eat, and Ghouls
-    // are supposed to be a really hard race).  -- bwr
+    // are supposed to be a really hard race). - bwr
     switch (which_species)
     {
     default:                    sb =  6; ib =  6; db =  6;      break;  // 18
@@ -144,7 +144,7 @@ static void _jobs_stat_init(job_type which_job)
     int hp = 0;  // HP base
     int mp = 0;  // MP base
 
-    // Note: Wanderers are correct, they've got a challenging background. -- bwr
+    // Note: Wanderers are correct, they've got a challenging background. - bwr
     switch (which_job)
     {
     case JOB_FIGHTER:           s =  8; i =  0; d =  4; hp = 15; mp = 0; break;
@@ -156,7 +156,7 @@ static void _jobs_stat_init(job_type which_job)
     case JOB_CHAOS_KNIGHT:      s =  4; i =  4; d =  4; hp = 13; mp = 1; break;
 
     case JOB_REAVER:            s =  5; i =  5; d =  2; hp = 13; mp = 1; break;
-    case JOB_HEALER:            s =  5; i =  5; d =  2; hp = 13; mp = 1; break;
+    case JOB_HEALER:            s =  5; i =  5; d =  2; hp = 13; mp = 2; break;
     case JOB_PRIEST:            s =  5; i =  4; d =  3; hp = 12; mp = 1; break;
 
     case JOB_ASSASSIN:          s =  3; i =  3; d =  6; hp = 12; mp = 0; break;
@@ -204,7 +204,7 @@ static void _jobs_stat_init(job_type which_job)
 }
 
 // Make sure no stats are unacceptably low
-// (currently possible only for GhBe -- 1KB)
+// (currently possible only for GhBe - 1KB)
 static void _unfocus_stats()
 {
     int needed;
@@ -642,14 +642,13 @@ static void _give_items_skills(const newgame_def& ng)
         you.religion = GOD_ELYVILON;
         you.piety = 55;
 
-        you.equip[EQ_WEAPON] = -1; // Healers fight unarmed.
+        you.equip[EQ_WEAPON] = -1;
 
         newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         newgame_make_item(1, EQ_NONE, OBJ_POTIONS, POT_HEALING);
         newgame_make_item(2, EQ_NONE, OBJ_POTIONS, POT_HEAL_WOUNDS);
 
         you.skills[SK_FIGHTING]       = 2;
-        you.skills[SK_UNARMED_COMBAT] = 3;
         you.skills[SK_DODGING]        = 1;
         you.skills[SK_INVOCATIONS]    = 4;
         break;
@@ -900,9 +899,10 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_EARTH_ELEMENTALIST:
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_GEOMANCY);
-        newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_STONE, -1, 20);
+        // stones in switch slot (b)
+        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_STONE, -1, 20);
+        newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_GEOMANCY);
 
         you.skills[SK_TRANSMUTATIONS] = 1;
         you.skills[SK_EARTH_MAGIC]    = 3;
@@ -929,17 +929,18 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(2, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
         newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_STALKING);
 
+        newgame_make_item(4, EQ_NONE, OBJ_POTIONS, POT_CONFUSION, -1, 2);
+
         if (player_genus(GENPC_OGREISH) || you.species == SP_TROLL)
             you.inv[0].sub_type = WPN_CLUB;
 
         weap_skill = 1;
-        you.skills[SK_FIGHTING]     = 1;
-        you.skills[SK_POISON_MAGIC] = 1;
-        you.skills[SK_DODGING]      = 2;
-        you.skills[SK_STEALTH]      = 2;
-        you.skills[SK_STABBING]     = 2;
-        you.skills[SK_SPELLCASTING] = 1;
-        you.skills[SK_ENCHANTMENTS] = 1;
+        you.skills[SK_FIGHTING]       = 1;
+        you.skills[SK_DODGING]        = 2;
+        you.skills[SK_STEALTH]        = 2;
+        you.skills[SK_STABBING]       = 2;
+        you.skills[SK_SPELLCASTING]   = 1;
+        you.skills[SK_TRANSMUTATIONS] = 1;
         break;
 
     case JOB_ASSASSIN:
@@ -1104,7 +1105,6 @@ static void _give_items_skills(const newgame_def& ng)
     // Deep Dwarves get healing potions and wand of healing (3).
     if (you.species == SP_DEEP_DWARF)
     {
-        newgame_make_item(-1, EQ_NONE, OBJ_POTIONS, POT_HEALING, -1, 2);
         newgame_make_item(-1, EQ_NONE, OBJ_POTIONS, POT_HEAL_WOUNDS, -1, 2);
         newgame_make_item(-1, EQ_NONE, OBJ_WANDS, WAND_HEALING, -1, 1, 3);
     }
@@ -1221,8 +1221,12 @@ static void _give_starting_food()
     }
 
     // Give another one for hungry species.
-    if (player_mutation_level(MUT_FAST_METABOLISM))
+    // And healers, to give pacifists a better chance. [rob]
+    if (player_mutation_level(MUT_FAST_METABOLISM)
+        || you.char_class == JOB_HEALER)
+    {
         item.quantity = 2;
+    }
 
     const int slot = find_free_slot(item);
     you.inv[slot]  = item;       // will ASSERT if couldn't find free slot
@@ -1264,8 +1268,7 @@ static void _racialise_starting_equipment()
         {
             // Don't change object type modifier unless it starts plain.
             if ((you.inv[i].base_type == OBJ_ARMOUR
-                    || you.inv[i].base_type == OBJ_WEAPONS
-                    || you.inv[i].base_type == OBJ_MISSILES)
+                    || you.inv[i].base_type == OBJ_WEAPONS)
                 && get_equip_race(you.inv[i]) == ISFLAG_NO_RACE)
             {
                 // Now add appropriate species type mod.
@@ -1288,7 +1291,7 @@ static void _racialise_starting_equipment()
 
 static void _give_basic_spells(job_type which_job)
 {
-    // Wanderers may or may not already have a spell. -- bwr
+    // Wanderers may or may not already have a spell. - bwr
     if (which_job == JOB_WANDERER)
         return;
 
@@ -1309,7 +1312,6 @@ static void _give_basic_spells(job_type which_job)
     case JOB_REAVER:
         which_spell = SPELL_MAGIC_DART;
         break;
-    case JOB_STALKER:
     case JOB_VENOM_MAGE:
         which_spell = SPELL_STING;
         break;
@@ -1639,6 +1641,10 @@ static void _setup_generic(const newgame_def& ng)
 
     // Generate the second name of Jiyva
     fix_up_jiyva_name();
+
+    // Create the save file.
+    you.save = new package((get_savedir_filename(you.your_name, "", "")
+                            + SAVE_SUFFIX).c_str(), true, true);
 
     // Pretend that a savefile was just loaded, in order to
     // get things setup properly.

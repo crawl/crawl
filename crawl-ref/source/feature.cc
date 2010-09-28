@@ -89,7 +89,7 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
         case DNGN_TREE:
             f.dchar        = DCHAR_TREE;
             f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
-            f.colour       = BLACK; // overridden later
+            f.colour       = ETC_TREE;
             f.minimap      = MF_WALL;
             break;
 
@@ -396,6 +396,7 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap     = MF_STAIR_BRANCH;
             break;
 
+        case DNGN_ENTER_DWARF_HALL:
         case DNGN_ENTER_ORCISH_MINES:
         case DNGN_ENTER_HIVE:
         case DNGN_ENTER_LAIR:
@@ -426,6 +427,7 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap     = MF_STAIR_BRANCH;
             break;
 
+        case DNGN_RETURN_FROM_DWARF_HALL:
         case DNGN_RETURN_FROM_ORCISH_MINES:
         case DNGN_RETURN_FROM_HIVE:
         case DNGN_RETURN_FROM_LAIR:

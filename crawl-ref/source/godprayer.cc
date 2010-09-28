@@ -158,7 +158,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
         enchant_weapon(ENCHANT_TO_DAM, true, wpn);
 
     if (is_cursed)
-        do_uncurse_item(wpn);
+        do_uncurse_item(wpn, false);
 
     if (god == GOD_SHINING_ONE)
     {
@@ -574,11 +574,6 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item)
     {
         switch (you.religion)
         {
-        case GOD_SHINING_ONE:
-            gain_piety(1);
-            relative_piety_gain = PIETY_SOME;
-            break;
-
         case GOD_BEOGH:
         {
             const int item_orig = item.orig_monnum - 1;
@@ -817,8 +812,6 @@ void offer_items()
         // sacrifices.
         else if (god_likes_fresh_corpses(you.religion))
             simple_god_message(" only cares about fresh corpses!");
-        else if (you.religion == GOD_SHINING_ONE)
-            simple_god_message(" only cares about unholy and evil items!");
         else if (you.religion == GOD_BEOGH)
             simple_god_message(" only cares about orcish remains!");
         else if (you.religion == GOD_NEMELEX_XOBEH)

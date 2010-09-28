@@ -29,7 +29,7 @@ private:
 actor* actor_at(const coord_def& c);
 
 bool fall_into_a_pool( const coord_def& entry, bool allow_shift,
-                       unsigned char terrain );
+                       dungeon_feature_type terrain );
 
 bool cell_is_solid(int x, int y);
 bool cell_is_solid(const coord_def &c);

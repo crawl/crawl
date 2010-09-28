@@ -20,7 +20,7 @@ enum read_book_action_type
     RBOOK_READ_SPELL,
 };
 
-int  book_rarity(unsigned char which_book);
+int  book_rarity(uint8_t which_book);
 int  spell_rarity(spell_type which_spell);
 void init_spell_rarities();
 
@@ -35,6 +35,7 @@ int read_book( item_def &item, read_book_action_type action );
 
 bool player_can_memorise(const item_def &book);
 bool can_learn_spell(bool silent = false);
+int player_spell_skills();
 bool learn_spell();
 bool learn_spell(spell_type spell, int book = NUM_BOOKS,
                  bool is_safest_book = true);

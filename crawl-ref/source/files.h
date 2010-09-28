@@ -104,7 +104,7 @@ void save_game(bool leave_game, const char *bye = NULL);
 // Save game without exiting (used when changing levels).
 void save_game_state();
 
-bool get_save_version(FILE *file, char &major, char &minor);
+bool get_save_version(reader &file, int &major, int &minor);
 
 bool save_exists(const std::string& name);
 void restore_game(const std::string& name);
@@ -127,8 +127,7 @@ public:
 void save_ghost( bool force = false );
 bool load_ghost( bool creating_level );
 
-std::string make_filename(std::string prefix, int level, branch_type branch,
-                          level_area_type lt, bool isGhost );
+std::string get_level_filename(const level_id& lid);
 
 FILE *lk_open(const char *mode, const std::string &file);
 void lk_close(FILE *handle, const char *mode, const std::string &file);

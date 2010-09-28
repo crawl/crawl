@@ -94,6 +94,7 @@ enum brand_type // equivalent to (you.inv[].special or mitm[].special) % 30
     SPWPN_FROST,   // ranged, only
     SPWPN_VAMPIRICISM,
     SPWPN_PAIN,
+    SPWPN_ANTIMAGIC,
     SPWPN_DISTORTION,
     SPWPN_REACHING,
     SPWPN_RETURNING,
@@ -177,10 +178,13 @@ enum jewellery_type
     RING_PROTECTION_FROM_MAGIC,        //   20
     RING_FIRE,
     RING_ICE,
-    RING_TELEPORT_CONTROL,             //   23
+    RING_TELEPORT_CONTROL,
 
     NUM_RINGS,                         //   24, keep as last ring; can overlap
                                        //   safely with first amulet.
+    // RINGS after num_rings are for unique types for artefacts
+    //   (no non-artefact version).
+    RING_CHARM,                        //   25
 
     AMU_FIRST_AMULET = 35,
     AMU_RAGE = AMU_FIRST_AMULET,       //   35
@@ -281,6 +285,9 @@ enum rune_type
     RUNE_LOM_LOBON,
     RUNE_CEREBOV,
     RUNE_GLOORX_VLOQ,
+
+    RUNE_SPIDER_NEST,
+    RUNE_FOREST,
     NUM_RUNE_TYPES             // should always be last
 };
 

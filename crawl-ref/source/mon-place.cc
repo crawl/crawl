@@ -24,7 +24,6 @@
 #include "options.h"
 #include "ghost.h"
 #include "lev-pand.h"
-#include "libutil.h"
 #include "message.h"
 #include "mislead.h"
 #include "mon-behv.h"
@@ -80,7 +79,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                                           int *lev_mons,
                                           bool *chose_ood_monster);
 
-static void _define_zombie(monsters* mon, monster_type ztype, monster_type cs,
+static void _define_zombie(monster* mon, monster_type ztype, monster_type cs,
                            int power, coord_def pos);
 static monster_type _band_member(band_type band, int power);
 static band_type _choose_band(int mon_type, int power, int &band_size,
@@ -130,7 +129,7 @@ bool feat_compatible(dungeon_feature_type feat_wanted,
 //
 // If you have an actual monster, use this instead of the overloaded function
 // that uses only the monster class to make decisions.
-bool monster_habitable_grid(const monsters *mon,
+bool monster_habitable_grid(const monster* mon,
                             dungeon_feature_type actual_grid)
 {
     // Zombified monsters enjoy the same habitat as their original.
@@ -210,7 +209,7 @@ bool monster_habitable_grid(monster_type mt,
 }
 
 // Returns true if the monster can submerge in the given grid.
-bool monster_can_submerge(const monsters *mon, dungeon_feature_type feat)
+bool monster_can_submerge(const monster* mon, dungeon_feature_type feat)
 {
     if (testbits(env.pgrid(mon->pos()), FPROP_NO_SUBMERGE))
         return (false);
@@ -338,7 +337,10 @@ static void _hell_spawn_random_monsters()
 // one_chance_in(value) checks with the new x_chance_in_y(5, value). (jpeg)
 void spawn_random_monsters()
 {
-    if (crawl_state.game_is_arena())
+    if (crawl_state.game_is_arena() ||
+        (crawl_state.game_is_sprint() &&
+         you.level_type == LEVEL_DUNGEON &&
+         you.char_direction == GDT_DESCENDING))
         return;
 
 #ifdef DEBUG_MON_CREATION
@@ -452,11 +454,18 @@ static std::vector<monster_type> _find_valid_monster_types(const level_id &place
     return (valid_monster_types);
 }
 
+static bool _is_random_monster(int mt)
+{
+    return (mt == RANDOM_MONSTER || mt == RANDOM_MOBILE_MONSTER
+            || mt == WANDERING_MONSTER);
+}
+
 // Caller must use !invalid_monster_type to check if the return value
 // is a real monster.
 monster_type pick_random_monster(const level_id &place, int power,
                                  int &lev_mons,
-                                 bool *chose_ood_monster)
+                                 bool *chose_ood_monster,
+                                 bool force_mobile)
 {
     bool ood_dummy = false;
     bool *isood = chose_ood_monster? chose_ood_monster : &ood_dummy;
@@ -466,7 +475,7 @@ monster_type pick_random_monster(const level_id &place, int power,
     if (crawl_state.game_is_arena())
     {
         monster_type type = arena_pick_random_monster(place, power, lev_mons);
-        if (type != RANDOM_MONSTER)
+        if (!_is_random_monster(type))
             return (type);
     }
 
@@ -546,7 +555,8 @@ monster_type pick_random_monster(const level_id &place, int power,
             } while ((crawl_state.game_is_arena() &&
                       arena_veto_random_monster(mon_type)) ||
                      (crawl_state.game_is_sprint() &&
-                      sprint_veto_random_abyss_monster(mon_type)));
+                      sprint_veto_random_abyss_monster(mon_type)) ||
+                     (force_mobile && mons_class_is_stationary(mon_type)));
 
             if (count == 2000)
                 return (MONS_PROGRAM_BUG);
@@ -573,8 +583,11 @@ monster_type pick_random_monster(const level_id &place, int power,
         {
             mon_type = valid_monster_types[random2(valid_monster_types.size())];
 
-            if (crawl_state.game_is_arena() && arena_veto_random_monster(mon_type))
+            if (crawl_state.game_is_arena() && arena_veto_random_monster(mon_type)
+                || force_mobile && mons_class_is_stationary(mon_type))
+            {
                 continue;
+            }
 
             level  = mons_level(mon_type, place);
             diff   = level - lev_mons;
@@ -620,7 +633,7 @@ bool can_place_on_trap(int mon_type, trap_type trap)
 
     if (trap == TRAP_SHAFT)
     {
-        if (mon_type == RANDOM_MONSTER)
+        if (_is_random_monster(mon_type))
             return (false);
 
         return (mons_class_flies(mon_type) != FL_NONE
@@ -669,7 +682,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
     }
 
     // (2) Take care of non-draconian random monsters.
-    else if (mon_type == RANDOM_MONSTER)
+    else if (_is_random_monster(mon_type))
     {
         level_id place = level_id::current();
 
@@ -737,6 +750,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             if (you.level_type == LEVEL_PORTAL_VAULT
                 && vault_mon_types.size() > 0)
             {
+                // XXX: not respecting RANDOM_MOBILE_MONSTER currently.
                 int i = choose_random_weighted(vault_mon_weights.begin(),
                                                vault_mon_weights.end());
                 int type = vault_mon_types[i];
@@ -785,7 +799,8 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                 const int original_level = *lev_mons;
                 // Now pick a monster of the given branch and level.
                 mon_type = pick_random_monster(place, *lev_mons, *lev_mons,
-                                               chose_ood_monster);
+                                           chose_ood_monster,
+                                           mon_type == RANDOM_MOBILE_MONSTER);
 
                 // Don't allow monsters too stupid to use stairs (e.g.
                 // non-spectral zombified undead) to be placed near
@@ -809,7 +824,8 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                     ++*lev_mons;
 
                 mon_type = pick_random_monster(place, *lev_mons, *lev_mons,
-                                               chose_ood_monster);
+                                           chose_ood_monster,
+                                           mon_type == RANDOM_MOBILE_MONSTER);
             }
         }
     }
@@ -1017,7 +1033,7 @@ int place_monster(mgen_data mg, bool force_pos)
     band_monsters[0] = mg.cls;
 
     // The (very) ugly thing band colour.
-    static unsigned char ugly_colour = BLACK;
+    static uint8_t ugly_colour = BLACK;
 
     if (create_band)
     {
@@ -1175,7 +1191,7 @@ int place_monster(mgen_data mg, bool force_pos)
     if (id == -1)
         return (-1);
 
-    monsters *mon = &menv[id];
+    monster* mon = &menv[id];
     if (mg.needs_patrol_point()
         || (mon->type == MONS_ALLIGATOR
             && !testbits(mon->flags, MF_BAND_MEMBER)))
@@ -1267,8 +1283,9 @@ int place_monster(mgen_data mg, bool force_pos)
         {
             menv[band_id].flags |= MF_BAND_MEMBER;
             // Priestly band leaders should have an entourage of the
-            // same religion.
-            if (priest)
+            // same religion, unless members of that entourage already
+            // have a different one.
+            if (priest && menv[band_id].god == GOD_NO_GOD)
                 menv[band_id].god = mon->god;
 
             if (mon->type == MONS_PIKEL)
@@ -1286,7 +1303,7 @@ int place_monster(mgen_data mg, bool force_pos)
     return (id);
 }
 
-monsters* get_free_monster()
+monster* get_free_monster()
 {
     for (int i = 0; i < MAX_MONSTERS; ++i)
         if (env.mons[i].type == MONS_NO_MONSTER)
@@ -1298,7 +1315,7 @@ monsters* get_free_monster()
     return (NULL);
 }
 
-void mons_add_blame(monsters *mon, const std::string &blame_string)
+void mons_add_blame(monster* mon, const std::string &blame_string)
 {
     const bool exists = mon->props.exists("blame");
     CrawlStoreValue& blame = mon->props["blame"];
@@ -1323,7 +1340,7 @@ static int _place_monster_aux(const mgen_data &mg,
 
     const monsterentry *m_ent = get_monster_data(mg.cls);
 
-    monsters* mon = get_free_monster();
+    monster* mon = get_free_monster();
     if (!mon)
         return (-1);
 
@@ -1389,6 +1406,10 @@ static int _place_monster_aux(const mgen_data &mg,
         }
     }
 
+    if (mg.props.exists("serpent_of_hell_flavour"))
+        mon->props["serpent_of_hell_flavour"] =
+            mg.props["serpent_of_hell_flavour"].get_int();
+
     // Generate a brand shiny new monster, or zombie.
     if (mons_class_is_zombified(mg.cls))
         _define_zombie(mon, mg.base_type, mg.cls, mg.power, fpos);
@@ -1404,7 +1425,14 @@ static int _place_monster_aux(const mgen_data &mg,
     // Not a god gift, give priestly monsters a god.
     else if (mons_class_flag(mg.cls, M_PRIEST))
     {
-        if (mg.cls == MONS_WAYNE)
+        // Deep dwarf berserkers belong to Trog.
+        if (mg.cls == MONS_DEEP_DWARF_BERSERKER)
+            mon->god = GOD_TROG;
+        // Deep dwarf death knights belong to Yredelemnul.
+        else if (mg.cls == MONS_DEEP_DWARF_DEATH_KNIGHT)
+            mon->god = GOD_YREDELEMNUL;
+        // Wiglaf belongs to Okawaru.
+        else if (mg.cls == MONS_WIGLAF)
             mon->god = GOD_OKAWARU;
         else
         {
@@ -1453,6 +1481,8 @@ static int _place_monster_aux(const mgen_data &mg,
 
     // Holy monsters need their halo!
     if (mon->holiness() == MH_HOLY)
+        invalidate_agrid(true);
+    if (mg.cls == MONS_SILENT_SPECTRE)
         invalidate_agrid(true);
 
     // If the caller requested a specific colour for this monster, apply
@@ -1503,6 +1533,9 @@ static int _place_monster_aux(const mgen_data &mg,
     if (mg.cls == MONS_GLOWING_SHAPESHIFTER)
         mon->add_ench(ENCH_GLOWING_SHAPESHIFTER);
 
+    if (mg.cls == MONS_SPIRIT)
+        mon->add_ench(ENCH_FADING_AWAY);
+
     if (mg.cls == MONS_TOADSTOOL)
     {
         // This enchantment is a timer that counts down until death.
@@ -1542,7 +1575,10 @@ static int _place_monster_aux(const mgen_data &mg,
 
     if (mg.cls == MONS_DANCING_WEAPON)
     {
-        give_item(mon->mindex(), mg.power, summoned);
+        if (mg.props.exists(TUKIMA_WEAPON))
+            give_specific_item(mon, mg.props[TUKIMA_WEAPON].get_item());
+        else
+            give_item(mon->mindex(), mg.power, summoned);
 
         // Dancing weapons *always* have a weapon. Fail to create them
         // otherwise.
@@ -1562,7 +1598,7 @@ static int _place_monster_aux(const mgen_data &mg,
         give_item(mon->mindex(), mg.power, summoned);
         // Give these monsters a second weapon. - bwr
         if (mons_class_wields_two_weapons(mg.cls))
-            give_item(mon->mindex(), mg.power, summoned);
+            give_weapon(mon->mindex(), mg.power, summoned);
 
         unwind_var<int> save_speedinc(mon->speed_increment);
         mon->wield_melee_weapon(false);
@@ -1612,9 +1648,16 @@ static int _place_monster_aux(const mgen_data &mg,
 
     if (summoned)
     {
-        mon->mark_summoned(mg.abjuration_duration, true,
+        // Instead of looking for dancing weapons, look for Tukima's dance.
+        // Dancing weapons can be created with shadow creatures. {due}
+        bool mark_items = mg.summon_type != SPELL_TUKIMAS_DANCE;
+
+        mon->mark_summoned(mg.abjuration_duration,
+                           mark_items,
                            mg.summon_type);
     }
+    ASSERT(!invalid_monster_index(mg.foe)
+           || mg.foe == MHITYOU || mg.foe == MHITNOT);
     mon->foe = mg.foe;
 
     std::string blame_prefix;
@@ -1629,7 +1672,7 @@ static int _place_monster_aux(const mgen_data &mg,
 
         if (mg.summoner != NULL && mg.summoner->alive()
             && mg.summoner->atype() == ACT_MONSTER
-            && static_cast<const monsters*>(mg.summoner)->type == MONS_MARA)
+            && static_cast<const monster* >(mg.summoner)->type == MONS_MARA)
         {
                 blame_prefix = "woven by ";
         }
@@ -1662,7 +1705,7 @@ static int _place_monster_aux(const mgen_data &mg,
         }
         else
         {
-            monsters* sum = mg.summoner->as_monster();
+            monster* sum = mg.summoner->as_monster();
             mons_add_blame(mon, (blame_prefix
                                  + sum->full_name(DESC_NOCAP_A, true)));
             if (sum->props.exists("blame"))
@@ -1690,7 +1733,7 @@ static int _place_monster_aux(const mgen_data &mg,
     else if (mon->type == MONS_DANCING_WEAPON)
     {
         ghost_demon ghost;
-        // We can't use monsters::weapon here because it wants to look
+        // We can't use monster::weapon here because it wants to look
         // at attack types, which are in the ghost structure we're
         // building.
         ASSERT(mon->mslot_item(MSLOT_WEAPON));
@@ -1711,7 +1754,12 @@ static int _place_monster_aux(const mgen_data &mg,
     if (crawl_state.game_is_arena())
         arena_placed_monster(mon);
     else if (!Generating_Level && you.can_see(mon))
+    {
+        // FIXME: This causes "comes into view" messages at the
+        //        wrong time, since code checks for placement
+        //        success before printing messages.
         handle_seen_interrupt(mon);
+    }
 
     return (mon->mindex());
 }
@@ -1841,7 +1889,7 @@ monster_type pick_local_zombifiable_monster(int power, bool hack_hd,
     }
 }
 
-static void _define_zombie(monsters* mon, monster_type ztype, monster_type cs,
+static void _define_zombie(monster* mon, monster_type ztype, monster_type cs,
                            int power, coord_def pos)
 {
     ASSERT(mons_class_is_zombified(cs));
@@ -1865,10 +1913,27 @@ static void _define_zombie(monsters* mon, monster_type ztype, monster_type cs,
     mon->colour       = mons_class_colour(cs);
     mon->speed        = mons_class_zombie_base_speed(mon->base_monster);
 
-    // Turn off all spellcasting flags.
+    // Turn off all melee ability flags except dual-wielding.
+#if TAG_MAJOR_VERSION == 30
+    mon->flags       &= ~(MF_FIGHTER | MF_ARCHER);
+#else
+    mon->flags       &= (~MF_MELEE_MASK | MF_TWO_WEAPONS);
+#endif
+
+    // Turn off all spellcasting and priestly ability flags.
     // Hack - kraken get to keep their spell-like ability.
     if (mon->base_monster != MONS_KRAKEN)
-        mon->flags   &= ~MF_SPELLCASTER & ~MF_ACTUAL_SPELLS & ~MF_PRIEST;
+#if TAG_MAJOR_VERSION == 30
+        mon->flags   &= ~(MF_SPELLCASTER | MF_ACTUAL_SPELLS | MF_PRIEST);
+#else
+        mon->flags   &= ~MF_SPELL_MASK;
+#endif
+
+    // Turn off regeneration if the original monster cannot regenerate.
+    // This is needed for e.g. spectral things of non-regenerating
+    // monsters.
+    if (!mons_class_can_regenerate(mon->base_monster))
+        mon->flags   |= MF_NO_REGEN;
 
     int hp = 0;
     int acmod = 0, evmod = 0;
@@ -2011,6 +2076,20 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
     case MONS_GNOLL:
         band = BAND_GNOLLS;
         band_size = (coinflip() ? 3 : 2);
+        break;
+    case MONS_TROLLKONOR:
+        natural_leader = true;
+        band = BAND_TROLLKONOR;
+        band_size = 1;
+        break;
+    case MONS_DEEP_DWARF_SCION:
+        band = BAND_DEEP_DWARF;
+        band_size = (one_chance_in(5)? 2: 1) + random2(3);
+        break;
+    case MONS_DEEP_DWARF_ARTIFICER:
+    case MONS_DEEP_DWARF_DEATH_KNIGHT:
+        band = BAND_DEEP_DWARF;
+        band_size = 3 + random2(4);
         break;
     case MONS_GRUM:
         natural_leader = true;
@@ -2190,6 +2269,11 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         band_size = 2 + random2(3);
         break;
 
+    case MONS_WIGHT:
+        band = BAND_WIGHTS;
+        band_size = 2 + random2(3);
+        break;
+
     case MONS_SKELETAL_WARRIOR:
         band = BAND_SKELETAL_WARRIORS;
         band_size = 2 + random2(3);
@@ -2311,6 +2395,11 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         band = BAND_MERFOLK_IMPALER;
         band_size = random_range(3, 5);
         break;
+
+    case MONS_ELEPHANT:
+        band = BAND_ELEPHANT;
+        band_size = 2 + random2(4);
+        break;
     } // end switch
 
     if (band != BAND_NO_BAND && band_size == 0)
@@ -2402,6 +2491,20 @@ static monster_type _band_member(band_type band, int power)
 
     case BAND_GNOLLS:
         mon_type = MONS_GNOLL;
+        break;
+
+    case BAND_TROLLKONOR:
+        mon_type = (power > 11 && one_chance_in(4)) ?
+                   MONS_ROCK_TROLL: MONS_TROLL;
+        break;
+
+    case BAND_DEEP_DWARF:
+        mon_type = static_cast<monster_type>(random_choose_weighted(
+                                           2, MONS_DEEP_DWARF_BERSERKER,
+                                           1, MONS_DEEP_DWARF_DEATH_KNIGHT,
+                                           6, MONS_DEEP_DWARF_NECROMANCER,
+                                          31, MONS_DEEP_DWARF,
+                                           0));
         break;
 
     case BAND_BUMBLEBEES:
@@ -2577,6 +2680,9 @@ static monster_type _band_member(band_type band, int power)
     case BAND_BLINK_FROGS:
         mon_type = MONS_BLINK_FROG;
         break;
+    case BAND_WIGHTS:
+        mon_type = MONS_WIGHT;
+        break;
     case BAND_SKELETAL_WARRIORS:
         mon_type = MONS_SKELETAL_WARRIOR;
         break;
@@ -2647,6 +2753,10 @@ static monster_type _band_member(band_type band, int power)
         mon_type = MONS_MERFOLK;
         break;
 
+    case BAND_ELEPHANT:
+        mon_type = MONS_ELEPHANT;
+        break;
+
     default:
         break;
     }
@@ -2659,7 +2769,7 @@ static int _ood_limit()
     return Options.ood_interesting;
 }
 
-void mark_interesting_monst(monsters* monster, beh_type behaviour)
+void mark_interesting_monst(monster* mons, beh_type behaviour)
 {
     if (crawl_state.game_is_arena())
         return;
@@ -2667,36 +2777,37 @@ void mark_interesting_monst(monsters* monster, beh_type behaviour)
     bool interesting = false;
 
     // Unique monsters are always intersting
-    if (mons_is_unique(monster->type))
+    if (mons_is_unique(mons->type))
         interesting = true;
     // If it's never going to attack us, then not interesting
     else if (behaviour == BEH_FRIENDLY)
         interesting = false;
     // Jellies are never interesting to Jiyva.
-    else if (monster->type == MONS_JELLY && you.religion == GOD_JIYVA)
+    else if (mons->type == MONS_JELLY && you.religion == GOD_JIYVA)
         interesting = false;
     else if (you.where_are_you == BRANCH_MAIN_DUNGEON
              && you.level_type == LEVEL_DUNGEON
-             && mons_level(monster->type) >= you.absdepth0 + _ood_limit()
-             && mons_level(monster->type) < 99
-             && !(monster->type >= MONS_EARTH_ELEMENTAL
-                  && monster->type <= MONS_AIR_ELEMENTAL)
-             && !mons_class_flag( monster->type, M_NO_EXP_GAIN ))
+             && mons_level(mons->type) >= you.absdepth0 + _ood_limit()
+             && mons_level(mons->type) < 99
+             && !(mons->type >= MONS_EARTH_ELEMENTAL
+                  && mons->type <= MONS_AIR_ELEMENTAL)
+             && !mons_class_flag( mons->type, M_NO_EXP_GAIN ))
     {
         interesting = true;
     }
     else if ((you.level_type == LEVEL_DUNGEON
                 || you.level_type == LEVEL_ABYSS)
-             && mons_rarity(monster->type) <= Options.rare_interesting
-             && monster->hit_dice > 2 // Don't note the really low-hd monsters.
-             && mons_rarity(monster->type) > 0)
+             && mons_rarity(mons->type) <= Options.rare_interesting
+             && mons->hit_dice > 2 // Don't note the really low-hd monsters.
+             && !mons_class_flag(mons->type, M_NO_EXP_GAIN)
+             && mons_rarity(mons->type) > 0)
     {
         interesting = true;
     }
     // Don't waste time on moname() if user isn't using this option
     else if (Options.note_monsters.size() > 0)
     {
-        const std::string iname = mons_type_name(monster->type, DESC_NOCAP_A);
+        const std::string iname = mons_type_name(mons->type, DESC_NOCAP_A);
         for (unsigned i = 0; i < Options.note_monsters.size(); ++i)
         {
             if (Options.note_monsters[i].matches(iname))
@@ -2708,7 +2819,7 @@ void mark_interesting_monst(monsters* monster, beh_type behaviour)
     }
 
     if (interesting)
-        monster->flags |= MF_INTERESTING;
+        mons->flags |= MF_INTERESTING;
 }
 
 // PUBLIC FUNCTION -- mons_place().
@@ -2763,7 +2874,7 @@ int mons_place(mgen_data mg)
 
     // This gives a slight challenge to the player as they ascend the
     // dungeon with the Orb.
-    if (you.char_direction == GDT_ASCENDING && mg.cls == RANDOM_MONSTER
+    if (you.char_direction == GDT_ASCENDING && _is_random_monster(mg.cls)
         && you.level_type == LEVEL_DUNGEON && !mg.summoned())
     {
 #ifdef DEBUG_MON_CREATION
@@ -2772,7 +2883,7 @@ int mons_place(mgen_data mg)
         mg.cls    = _pick_zot_exit_defender();
         mg.flags |= MG_PERMIT_BANDS;
     }
-    else if (mg.cls == RANDOM_MONSTER)
+    else if (_is_random_monster(mg.cls))
         mg.flags |= MG_PERMIT_BANDS;
 
     // Translate level_type.
@@ -2800,7 +2911,7 @@ int mons_place(mgen_data mg)
 
     dprf("Created a %s.", menv[mid].base_name(DESC_PLAIN, true).c_str());
 
-    monsters *creation = &menv[mid];
+    monster* creation = &menv[mid];
 
     // Look at special cases: CHARMED, FRIENDLY, NEUTRAL, GOOD_NEUTRAL,
     // HOSTILE.
@@ -2835,14 +2946,14 @@ int mons_place(mgen_data mg)
 
 static dungeon_feature_type _monster_primary_habitat_feature(int mc)
 {
-    if (mc == RANDOM_MONSTER)
+    if (_is_random_monster(mc))
         return (DNGN_FLOOR);
     return (habitat2grid(mons_class_primary_habitat(mc)));
 }
 
 static dungeon_feature_type _monster_secondary_habitat_feature(int mc)
 {
-    if (mc == RANDOM_MONSTER)
+    if (_is_random_monster(mc))
         return (DNGN_FLOOR);
     return (habitat2grid(mons_class_secondary_habitat(mc)));
 }
@@ -2963,14 +3074,14 @@ bool player_will_anger_monster(monster_type type, bool *holy,
                                bool *unholy, bool *lawful,
                                bool *antimagical)
 {
-    monsters dummy;
+    monster dummy;
     dummy.type = type;
 
     return (player_will_anger_monster(&dummy, holy, unholy, lawful,
                                       antimagical));
 }
 
-bool player_will_anger_monster(monsters *mon, bool *holy,
+bool player_will_anger_monster(monster* mon, bool *holy,
                                bool *unholy, bool *lawful,
                                bool *antimagical)
 {
@@ -2995,7 +3106,7 @@ bool player_will_anger_monster(monsters *mon, bool *holy,
     return (isHoly || isUnholy || isLawful || isAntimagical);
 }
 
-bool player_angers_monster(monsters *mon)
+bool player_angers_monster(monster* mon)
 {
     bool holy;
     bool unholy;
@@ -3052,10 +3163,10 @@ int create_monster(mgen_data mg, bool fail_msg)
         // directly in harm's way.
         if (mg.god != GOD_NO_GOD && mg.god != GOD_XOM)
         {
-            monsters dummy;
+            monster dummy;
             const monster_type resistless_mon = MONS_HUMAN;
             // If the type isn't known yet assume no resists or anything.
-            dummy.type         = (mg.cls == RANDOM_MONSTER) ? resistless_mon
+            dummy.type         = _is_random_monster(mg.cls) ? resistless_mon
                                                             : mg.cls;
             dummy.base_monster = mg.base_type;
             dummy.god          = mg.god;
@@ -3071,8 +3182,7 @@ int create_monster(mgen_data mg, bool fail_msg)
             int tries = 0;
             while (tries++ < 50
                    && (!in_bounds(mg.pos)
-                       || mons_avoids_cloud(&dummy, env.cgrid(mg.pos),
-                                            NULL, true)))
+                       || mons_avoids_cloud(&dummy, env.cgrid(mg.pos), true)))
             {
                 mg.pos = find_newmons_square(montype, mg.pos);
             }
@@ -3082,7 +3192,7 @@ int create_monster(mgen_data mg, bool fail_msg)
             const int cloud_num = env.cgrid(mg.pos);
             // Don't place friendly god gift in a damaging cloud created by
             // you if that would anger the god.
-            if (mons_avoids_cloud(&dummy, cloud_num, NULL, true)
+            if (mons_avoids_cloud(&dummy, cloud_num, true)
                 && mg.behaviour == BEH_FRIENDLY
                 && god_hates_attacking_friend(you.religion, &dummy)
                 && YOU_KILL(env.cloud[cloud_num].killer))
@@ -3113,12 +3223,21 @@ int create_monster(mgen_data mg, bool fail_msg)
 bool empty_surrounds(const coord_def& where, dungeon_feature_type spc_wanted,
                      int radius, bool allow_centre, coord_def& empty)
 {
+    // XXX: A lot of hacks that could be avoided by passing the
+    //      monster generation data through.
+
     // Assume all player summoning originates from player x,y.
+    // XXX: no longer true with Haunt.
     bool playerSummon = (where == you.pos());
+    bool monsterSummon = !playerSummon && actor_at(where);
+
+    // Require LOS and no transparent walls, except for
+    // summoning monsters.
+    los_type los = monsterSummon ? LOS_DEFAULT : LOS_NO_TRANS;
 
     int good_count = 0;
 
-    for (radius_iterator ri(where, radius, true, false, !allow_centre);
+    for (radius_iterator ri(where, radius, C_SQUARE, NULL, !allow_centre);
          ri; ++ri)
     {
         bool success = false;
@@ -3126,8 +3245,7 @@ bool empty_surrounds(const coord_def& where, dungeon_feature_type spc_wanted,
         if (actor_at(*ri))
             continue;
 
-        // Players won't summon out of LOS, or past transparent walls.
-        if (!you.see_cell_no_trans(*ri) && playerSummon)
+        if (!cell_see_cell(where, *ri, los))
             continue;
 
         success =
@@ -3211,7 +3329,7 @@ monster_type summon_any_holy_being(holy_being_class_type hbct)
     switch (hbct)
     {
     case HOLY_BEING_WARRIOR:
-        mon = coinflip() ? MONS_DAEVA : MONS_ANGEL;
+        mon = coinflip() ? MONS_DAEVA : MONS_CHERUB;
         break;
 
     default:
@@ -3304,8 +3422,8 @@ void set_vault_mon_list(const std::vector<mons_spec> &list)
         }
         else
         {
-            ASSERT(spec.mid != RANDOM_MONSTER
-                   && spec.monbase != RANDOM_MONSTER);
+            ASSERT(!_is_random_monster(spec.mid)
+                   && !_is_random_monster(spec.monbase));
             type_vec[i] = spec.mid;
             base_vec[i] = spec.monbase;
         }
@@ -3353,8 +3471,8 @@ void get_vault_mon_list(std::vector<mons_spec> &list)
         {
             spec.mid     = type;
             spec.monbase = (monster_type) base;
-            ASSERT(spec.mid != RANDOM_MONSTER
-                   && spec.monbase != RANDOM_MONSTER);
+            ASSERT(!_is_random_monster(spec.mid)
+                   && !_is_random_monster(spec.monbase));
         }
         spec.genweight = weight_vec[i];
 

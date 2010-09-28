@@ -45,6 +45,7 @@ lees_rapid_deconstruction LEES_RAPID_DECONSTRUCTION
 lehudibs_crystal_spear LEHUDIBS_CRYSTAL_SPEAR
 maxwells_silver_hammer MAXWELLS_SILVER_HAMMER
 passwall PASSWALL
+petrify PETRIFY
 sandblast SANDBLAST
 shatter SHATTER
 statue_form STATUE_FORM
@@ -62,7 +63,6 @@ extension EXTENSION
 haste HASTE
 invisibility INVISIBILITY
 mass_confusion MASS_CONFUSION
-petrify PETRIFY
 projected_noise PROJECTED_NOISE
 see_invisible SEE_INVISIBLE
 selective_amnesia SELECTIVE_AMNESIA

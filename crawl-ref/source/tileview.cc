@@ -10,7 +10,6 @@
 #include "fprop.h"
 #include "items.h"
 #include "kills.h"
-#include "libutil.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "options.h"
@@ -145,6 +144,7 @@ void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
         flv.floor = TILE_FLOOR_VINES;
         return;
 
+    case BRANCH_DWARF_HALL:
     case BRANCH_ELVEN_HALLS:
     case BRANCH_HALL_OF_BLADES:
         flv.wall  = TILE_WALL_HALL;
@@ -631,12 +631,12 @@ void tile_place_item_marker(const coord_def &gc, const item_def &item)
 }
 
 // Called from show_def::_update_monster() in show.cc
-void tile_place_monster(const coord_def &gc, const monsters *mon)
+void tile_place_monster(const coord_def &gc, const monster* mon)
 {
     if (!mon)
         return;
 
-    const coord_def ep = view2show(grid2view(gc));
+    const coord_def ep = grid2show(gc);
 
     tileidx_t t = tileidx_monster(mon);
     tileidx_t t0   = t & TILE_FLAG_MASK;
@@ -703,10 +703,11 @@ void tile_place_monster(const coord_def &gc, const monsters *mon)
 
 void tile_place_cloud(const coord_def &gc, const cloud_struct &cl)
 {
+    const coord_def ep = grid2show(gc);
     // In the Shoals, ink is handled differently. (jpeg)
     // I'm not sure it is even possible anywhere else, but just to be safe...
     if (cl.type != CLOUD_INK || !player_in_branch(BRANCH_SHOALS))
-        env.tile_fg(gc) = tileidx_cloud(cl);
+        env.tile_fg(ep) = tileidx_cloud(cl);
 }
 
 unsigned int num_tile_rays = 0;
@@ -726,7 +727,7 @@ void tile_place_ray(const coord_def &gc, bool in_range)
     if (num_tile_rays < tile_ray_vec.size() - 1)
     {
         tile_ray_vec[num_tile_rays].in_range = in_range;
-        tile_ray_vec[num_tile_rays++].ep = view2show(grid2view(gc));
+        tile_ray_vec[num_tile_rays++].ep = grid2show(gc);
     }
 }
 
@@ -924,7 +925,7 @@ void tile_apply_properties(const coord_def &gc, tileidx_t *fg,
     bool print_blood = true;
     if (haloed(gc))
     {
-        monsters *mon = monster_at(gc);
+        monster* mon = monster_at(gc);
         if (you.see_cell(gc) && mon)
         {
             if (!mons_class_flag(mon->type, M_NO_EXP_GAIN)

@@ -8,9 +8,9 @@
 #define MAP_SEEN_FLAG           0x02
 #define MAP_CHANGED_FLAG        0x04 // FIXME: this doesn't belong here
 #define MAP_DETECTED_MONSTER    0x08
-#define MAP_INVISIBLE_MONSTER    0x10
+#define MAP_INVISIBLE_MONSTER   0x10
 #define MAP_DETECTED_ITEM       0x20
-#define MAP_VISIBLE_FLAG            0x40
+#define MAP_VISIBLE_FLAG        0x40
 #define MAP_GRID_KNOWN          0xFF
 
 #define MAP_EMPHASIZE 0x100
@@ -34,9 +34,10 @@
  */
 struct map_cell
 {
-    unsigned short flags;   // Flags describing the mappedness of this square.
+    uint32_t flags;   // Flags describing the mappedness of this square.
 
-    map_cell() : flags(0), _feat(DNGN_UNSEEN), _feat_colour(0), _item(0), _cloud(CLOUD_NONE)
+    map_cell() : flags(0), _feat(DNGN_UNSEEN), _feat_colour(0),
+                 _item(0), _cloud(CLOUD_NONE), _cloud_colour(0)
     {
         memset(&_mons, 0, sizeof(_mons));
     }
@@ -44,23 +45,45 @@ struct map_cell
     map_cell(const map_cell& c)
     {
         memcpy(this, &c, sizeof(map_cell));
-        if(!(flags & MAP_DETECTED_MONSTER) && _mons.info)
+        if (!(flags & MAP_DETECTED_MONSTER) && _mons.info)
             _mons.info = new monster_info(*_mons.info);
-        if(_item)
+        if (_item)
             _item = new item_info(*_item);
     }
 
     ~map_cell()
     {
-        if(!(flags & MAP_DETECTED_MONSTER) && _mons.info)
+        if (!(flags & MAP_DETECTED_MONSTER) && _mons.info)
             delete _mons.info;
-        if(_item)
+        if (_item)
             delete _item;
+    }
+
+    map_cell& operator=(const map_cell& c)
+    {
+        if (!(flags & MAP_DETECTED_MONSTER) && _mons.info)
+            delete _mons.info;
+        if (_item)
+            delete _item;
+        memcpy(this, &c, sizeof(map_cell));
+        if (!(flags & MAP_DETECTED_MONSTER) && _mons.info)
+            _mons.info = new monster_info(*_mons.info);
+        if (_item)
+            _item = new item_info(*_item);
+         return (*this);
     }
 
     void clear()
     {
-            *this = map_cell();
+        *this = map_cell();
+    }
+
+    // Clear prior to show update. Need to retain at least "seen" flag.
+    void clear_data()
+    {
+        const uint8_t f = flags & MAP_SEEN_FLAG;
+        clear();
+        flags = f;
     }
 
     dungeon_feature_type feat() const
@@ -93,7 +116,7 @@ struct map_cell
     {
         clear_item();
         _item = new item_info(ii);
-        if(more_items)
+        if (more_items)
             flags |= MAP_MORE_ITEMS;
     }
 
@@ -105,7 +128,7 @@ struct map_cell
 
     void clear_item()
     {
-        if(_item)
+        if (_item)
         {
             delete _item;
             _item = 0;
@@ -115,9 +138,9 @@ struct map_cell
 
     monster_type monster() const
     {
-        if(flags & MAP_DETECTED_MONSTER)
+        if (flags & MAP_DETECTED_MONSTER)
             return _mons.detected;
-        else if(_mons.info)
+        else if (_mons.info)
             return _mons.info->type;
         else
             return MONS_NO_MONSTER;
@@ -125,7 +148,7 @@ struct map_cell
 
     monster_info* monsterinfo() const
     {
-        if(flags & MAP_DETECTED_MONSTER)
+        if (flags & MAP_DETECTED_MONSTER)
             return 0;
         else
             return _mons.info;
@@ -162,7 +185,7 @@ struct map_cell
 
     void clear_monster()
     {
-        if(!(flags & MAP_DETECTED_MONSTER) && _mons.info)
+        if (!(flags & MAP_DETECTED_MONSTER) && _mons.info)
             delete _mons.info;
         flags &= ~(MAP_DETECTED_MONSTER | MAP_INVISIBLE_MONSTER);
         memset(&_mons, 0, sizeof(_mons));
@@ -173,9 +196,15 @@ struct map_cell
         return _cloud;
     }
 
-    void set_cloud(cloud_type ncloud)
+    unsigned cloud_colour() const
+    {
+        return _cloud_colour;
+    }
+
+    void set_cloud(cloud_type ncloud, unsigned colour = 0)
     {
         _cloud = ncloud;
+        _cloud_colour = colour;
     }
 
     bool known() const
@@ -205,7 +234,7 @@ struct map_cell
 
 private:
     dungeon_feature_type _feat;
-    unsigned char _feat_colour;
+    uint8_t _feat_colour;
     item_info* _item;
     union
     {
@@ -213,6 +242,7 @@ private:
         monster_type detected;
     } _mons;
     cloud_type _cloud;
+    uint8_t _cloud_colour;
 };
 
 void set_terrain_mapped( int x, int y );

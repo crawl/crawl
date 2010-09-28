@@ -115,11 +115,15 @@ void debug_dump_levgen()
     else
     {
         const CrawlHashTable &vaults = props[LEVEL_VAULTS_KEY].get_table();
-        CrawlHashTable::const_iterator i = vaults.begin();
+        // const_iterator asserts if the table has hash_map == NULL
+        if (!vaults.empty())
+        {
+            CrawlHashTable::const_iterator i = vaults.begin();
 
-        for (; i != vaults.end(); ++i)
-            mprf("    %s: %s", i->first.c_str(),
-                 i->second.get_string().c_str());
+            for (; i != vaults.end(); ++i)
+                mprf("    %s: %s", i->first.c_str(),
+                     i->second.get_string().c_str());
+        }
     }
     mpr("");
 }
@@ -137,7 +141,7 @@ std::string debug_coord_str(const coord_def &pos)
                         !in_bounds(pos) ? " <OoB>" : "");
 }
 
-std::string debug_mon_str(const monsters* mon)
+std::string debug_mon_str(const monster* mon)
 {
     const int midx = mon->mindex();
     if (invalid_monster_index(midx))
@@ -150,7 +154,7 @@ std::string debug_mon_str(const monsters* mon)
     return (out);
 }
 
-void debug_dump_mon(const monsters* mon, bool recurse)
+void debug_dump_mon(const monster* mon, bool recurse)
 {
     const int midx = mon->mindex();
     if (invalid_monster_index(midx) || invalid_monster_type(mon->type))

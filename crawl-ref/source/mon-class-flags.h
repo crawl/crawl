@@ -82,7 +82,7 @@ const uint64_t M_ARCHER            = 1<<23;
 const uint64_t M_INSUBSTANTIAL     = 1<<24;
 
 // wields two weapons at once
-const uint64_t M_TWOWEAPON         = 1<<25;
+const uint64_t M_TWO_WEAPONS       = 1<<25;
 
 // XXX: eventually make these spells?
 const uint64_t M_SPECIAL_ABILITY   = 1<<26;
@@ -113,4 +113,12 @@ const uint64_t M_PHASE_SHIFT       = (uint64_t)1<<33;
 // not a valid polymorph target (but can be polymorphed)
 const uint64_t M_NO_POLY_TO        = (uint64_t)1<<34;
 
+// has special abilities coded as spells which are entirely non-magical
+const uint64_t M_FAKE_SPELLS       = (uint64_t)1<<35;
+
+// always leaves a corpse
+const uint64_t M_ALWAYS_CORPSE     = (uint64_t)1<<36;
+
+// is constantly "fleeing"
+const uint64_t M_FLEEING           = (uint64_t)1<<37;
 #endif

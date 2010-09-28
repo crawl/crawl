@@ -31,6 +31,7 @@
 
 #include "abl-show.h"
 #include "abyss.h"
+#include "acquire.h"
 #include "areas.h"
 #include "artefact.h"
 #include "arena.h"
@@ -40,13 +41,12 @@
 #include "cio.h"
 #include "cloud.h"
 #include "clua.h"
+#include "colour.h"
 #include "command.h"
 #include "coord.h"
 #include "coordit.h"
-#include "ctest.h"
 #include "crash.h"
 #include "database.h"
-#include "dbg-maps.h"
 #include "dbg-scan.h"
 #include "debug.h"
 #include "delay.h"
@@ -58,6 +58,7 @@
 #include "dungeon.h"
 #include "effects.h"
 #include "env.h"
+#include "errors.h"
 #include "map_knowledge.h"
 #include "fprop.h"
 #include "fight.h"
@@ -74,8 +75,6 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
-#include "lev-pand.h"
-#include "los.h"
 #include "luaterp.h"
 #include "macro.h"
 #include "makeitem.h"
@@ -90,8 +89,6 @@
 #include "mon-transit.h"
 #include "mon-util.h"
 #include "mutation.h"
-#include "newgame.h"
-#include "ng-init.h"
 #include "notes.h"
 #include "options.h"
 #include "ouch.h"
@@ -106,12 +103,13 @@
 #include "skills.h"
 #include "skills2.h"
 #include "species.h"
-#include "spells1.h"
-#include "spells2.h"
-#include "spells3.h"
-#include "spells4.h"
 #include "spl-book.h"
 #include "spl-cast.h"
+#include "spl-clouds.h"
+#include "spl-goditem.h"
+#include "spl-other.h"
+#include "spl-selfench.h"
+#include "spl-transloc.h"
 #include "spl-util.h"
 #include "stairs.h"
 #include "stash.h"
@@ -239,6 +237,8 @@ int main(int argc, char *argv[])
     // Hardcoded initial keybindings.
     init_keybindings();
 
+    init_element_colours();
+
     // Load in the system environment variables
     get_system_environment();
 
@@ -295,7 +295,10 @@ static void _reset_game()
     you.init();
     StashTrack = StashTracker();
     travel_cache = TravelCache();
+    you.clear_place_info();
     overview_clear();
+    clear_message_window();
+    note_list.clear();
     msg::deinitialise_mpr_streams();
 
 #ifdef USE_TILE
@@ -320,6 +323,16 @@ static void _launch_game_loop()
         {
             game_ended = true;
             _reset_game();
+        }
+        catch (ext_fail_exception &fe)
+        {
+            print_error_screen(fe.msg.c_str());
+            end(1, false, fe.msg.c_str());
+        }
+        catch(short_read_exception &E)
+        {
+            print_error_screen("Error: truncation inside the save file.\n");
+            end(1, false, "Error: truncation inside the save file.\n");
         }
     } while (Options.restart_after_game
              && game_ended
@@ -383,6 +396,9 @@ static void _launch_game()
     // can happen if Crawl sees SIGHUP while it is waiting for the player
     // to dismiss a level-up prompt.
     level_change();
+
+    // Initialise save game so we can recover from crashes on D:1.
+    save_game_state();
 
     cursor_control ccon(!Options.use_fake_player_cursor);
     while (true)
@@ -469,7 +485,7 @@ static void _god_greeting_message(bool game_start)
         simple_god_message(" says: Lead the forces of light to victory!");
         break;
     case GOD_KIKUBAAQUDGHA:
-        simple_god_message(" says: Welcome...");
+        simple_god_message(" says: Spread unending torment and darkness!");
         break;
     case GOD_YREDELEMNUL:
         simple_god_message(" says: Carry the black torch! Rouse the idle dead!");
@@ -485,7 +501,7 @@ static void _god_greeting_message(bool game_start)
         simple_god_message(" says: Let it end in hellfire!");
         break;
     case GOD_OKAWARU:
-        simple_god_message(" says: Welcome, disciple.");
+        simple_god_message(" says: Bring me glory in combat!");
         break;
     case GOD_MAKHLEB:
         god_speaks(you.religion, "Blood and souls for Makhleb!");
@@ -644,6 +660,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'o': wizard_create_spec_object();           break;
     case '%': wizard_create_spec_object_by_name();   break;
     case 'J': jiyva_eat_offlevel_items();            break;
+    case 'W': wizard_god_wrath();                    break;
 
     case 'x':
         you.experience = 1 + exp_needed(2 + you.experience_level);
@@ -962,7 +979,7 @@ bool apply_berserk_penalty = false;
 static void _center_cursor()
 {
 #ifndef USE_TILE
-    const coord_def cwhere = grid2view(you.pos());
+    const coord_def cwhere = crawl_view.grid2screen(you.pos());
     cgotoxy(cwhere.x, cwhere.y);
 #endif
 }
@@ -1070,10 +1087,13 @@ static void _input()
     religion_turn_start();
     god_conduct_turn_start();
     you.update_beholders();
+    you.update_fearmongers();
     you.walking = 0;
 
     // Currently only set if Xom accidentally kills the player.
     you.reset_escaped_death();
+
+    reset_damage_counters();
 
     if (crawl_state.is_replaying_keys() && crawl_state.is_repeating_cmd()
         && kbhit())
@@ -1225,7 +1245,7 @@ static bool _stairs_check_mesmerised()
 {
     if (you.beheld() && !you.confused())
     {
-        const monsters* beholder = you.get_any_beholder();
+        const monster* beholder = you.get_any_beholder();
         mprf("You cannot move away from %s!",
              beholder->name(DESC_NOCAP_THE, true).c_str());
         return (true);
@@ -1535,7 +1555,7 @@ static void _do_rest()
 {
     if (you.hunger_state == HS_STARVING && !you_min_hunger())
     {
-        mpr("You are too hungry to rest.");
+        mpr("You're too hungry to rest.");
         return;
     }
 
@@ -1816,7 +1836,7 @@ void process_command(command_type cmd)
         // Mouse commands.
     case CMD_MOUSE_MOVE:
     {
-        const coord_def dest = view2grid(crawl_view.mousep);
+        const coord_def dest = crawl_view.screen2grid(crawl_view.mousep);
         if (in_bounds(dest))
             terse_describe_square(dest);
         break;
@@ -1828,9 +1848,9 @@ void process_command(command_type cmd)
         // CMD_MOUSE_TRAVEL and get rid of CMD_MOUSE_CLICK and
         // CMD_MOUSE_MOVE.
         c_mouse_event cme = get_mouse_event();
-        if (cme && crawl_view.in_view_viewport(cme.pos))
+        if (cme && crawl_view.in_viewport_s(cme.pos))
         {
-            const coord_def dest = view2grid(cme.pos);
+            const coord_def dest = crawl_view.screen2grid(cme.pos);
             if (cme.left_clicked())
             {
                 if (in_bounds(dest))
@@ -2154,6 +2174,16 @@ static void _decrement_durations()
                           "You feel conductive.", coinflip(),
                           "You start to feel a little less insulated.");
 
+    _decrement_a_duration(DUR_RESIST_FIRE, delay,
+                          "Your fire resistance expires.", coinflip(),
+                          "You start to feel less resistant to fire.");
+    _decrement_a_duration(DUR_RESIST_COLD, delay,
+                          "Your cold resistance expires.", coinflip(),
+                          "You start to feel less resistant to cold.");
+    _decrement_a_duration(DUR_RESIST_POISON, delay,
+                          "Your poison resistance expires.", coinflip(),
+                          "You start to feel less resistant to poison.");
+
     if (_decrement_a_duration(DUR_STONEMAIL, delay,
                               "Your scaly stone armour disappears.",
                               coinflip(),
@@ -2177,7 +2207,9 @@ static void _decrement_durations()
     if (you.duration[DUR_POWERED_BY_DEATH] > 0)
         handle_pbd_corpses(true);
 
-    if (_decrement_a_duration(DUR_SEE_INVISIBLE, delay)
+    if (_decrement_a_duration(DUR_SEE_INVISIBLE, delay, NULL,
+                              coinflip(),
+                              "You begin to squint at shadows.")
         && !you.can_see_invisible())
     {
         mpr("Your eyesight blurs momentarily.", MSGCH_DURATION);
@@ -2223,13 +2255,13 @@ static void _decrement_durations()
 
     _decrement_a_duration(DUR_SAGE, delay, "You feel less studious.");
     _decrement_a_duration(DUR_STEALTH, delay, "You feel less stealthy.");
-    _decrement_a_duration(DUR_RESIST_FIRE, delay, "Your fire resistance expires.");
-    _decrement_a_duration(DUR_RESIST_COLD, delay, "Your cold resistance expires.");
-    _decrement_a_duration(DUR_RESIST_POISON, delay, "Your poison resistance expires.");
     _decrement_a_duration(DUR_SLAYING, delay, "You feel less lethal.");
 
-    _decrement_a_duration(DUR_INVIS, delay, "You flicker back into view.",
-                          coinflip(), "You flicker for a moment.");
+    if (_decrement_a_duration(DUR_INVIS, delay, "You flicker back into view.",
+                              coinflip(), "You flicker for a moment."))
+    {
+        you.attribute[ATTR_INVIS_UNCANCELLABLE] = 0;
+    }
 
     _decrement_a_duration(DUR_BARGAIN, delay, "You feel less charismatic.");
     _decrement_a_duration(DUR_CONF, delay, "You feel less confused.");
@@ -2264,6 +2296,13 @@ static void _decrement_durations()
                               0, NULL, MSGCH_RECOVERY))
     {
         you.clear_beholders();
+    }
+
+    if (_decrement_a_duration(DUR_AFRAID, delay,
+                              "Your fear fades away.",
+                              0, NULL, MSGCH_RECOVERY))
+    {
+        you.clear_fearmongers();
     }
 
     dec_slow_player(delay);
@@ -2411,11 +2450,18 @@ static void _decrement_durations()
         else
         {
             // Just time out potions/spells/miscasts.
-            if ((you.duration[DUR_LEVITATION] -= delay) <= 0)
+            if (you.attribute[ATTR_LEV_UNCANCELLABLE]
+                && (you.duration[DUR_LEVITATION] -= delay) <= 0)
             {
                 you.attribute[ATTR_LEV_UNCANCELLABLE] = 0;
-                // permanent_levitation() has a hack that requires >1
-                you.duration[DUR_LEVITATION] = 2;
+            }
+
+            if (!you.attribute[ATTR_LEV_UNCANCELLABLE])
+            {
+                // With permanent levitation, keep the duration above
+                // the expiration threshold.
+                you.duration[DUR_LEVITATION]
+                    = 2 * get_expiration_threshold(DUR_LEVITATION);
             }
         }
     }
@@ -2560,7 +2606,7 @@ static void _regenerate_hp_and_mp(int delay)
         return;
 
     ASSERT(tmp >= 0 && tmp < 100);
-    you.hit_points_regeneration = static_cast<unsigned char>(tmp);
+    you.hit_points_regeneration = tmp;
 
     // XXX: Doing the same as the above, although overflow isn't an
     // issue with magic point regeneration, yet. -- bwr
@@ -2579,7 +2625,7 @@ static void _regenerate_hp_and_mp(int delay)
     }
 
     ASSERT(tmp >= 0 && tmp < 100);
-    you.magic_points_regeneration = static_cast<unsigned char>(tmp);
+    you.magic_points_regeneration = tmp;
 }
 
 static void _update_mold_state(const coord_def & pos)
@@ -2708,6 +2754,20 @@ static void _player_reacts_to_monsters()
     handle_starvation();
 }
 
+static void _update_golubria_traps()
+{
+    std::vector<coord_def> traps = find_golubria_on_level();
+    for (std::vector<coord_def>::const_iterator it = traps.begin(); it != traps.end(); ++it)
+    {
+        trap_def *trap = find_trap(*it);
+        if (trap && trap->type == TRAP_GOLUBRIA)
+        {
+            if (--trap->ammo_qty <= 0)
+                trap->destroy();
+        }
+    }
+}
+
 void world_reacts()
 {
     // All markers should be activated at this point.
@@ -2766,6 +2826,7 @@ void world_reacts()
     handle_time();
     manage_clouds();
     _update_mold();
+    _update_golubria_traps();
 
     if (!crawl_state.game_is_arena())
         _player_reacts_to_monsters();
@@ -2877,10 +2938,38 @@ static int _check_adjacent(dungeon_feature_type feat, coord_def& delta)
 {
     int num = 0;
 
-    for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
+    std::vector<coord_def> doors;
+    for (adjacent_iterator ai(you.pos(), true); ai; ++ai)
     {
         if (grd(*ai) == feat)
         {
+            // Specialcase doors to take into account gates.
+            if (feat_is_door(feat))
+            {
+                bool found_door = false;
+                for (unsigned int i = 0; i < doors.size(); ++i)
+                {
+                    if (doors[i] == *ai)
+                    {
+                        found_door = true;
+                        break;
+                    }
+                }
+
+                // Already included in a gate, skip this door.
+                if (found_door)
+                    continue;
+
+                // Check if it's part of a gate. If so, remember all its doors.
+                std::set<coord_def> all_door;
+                find_connected_identical(*ai, grd(*ai), all_door);
+                for (std::set<coord_def>::const_iterator dc = all_door.begin();
+                     dc != all_door.end(); ++dc)
+                {
+                     doors.push_back(*dc);
+                }
+            }
+
             num++;
             delta = *ai - you.pos();
         }
@@ -2894,7 +2983,7 @@ static int _check_adjacent(dungeon_feature_type feat, coord_def& delta)
 static bool _untrap_target(const coord_def move, bool check_confused)
 {
     const coord_def target = you.pos() + move;
-    monsters* mon = monster_at(target);
+    monster* mon = monster_at(target);
     if (mon && player_can_hit_monster(mon))
     {
         if (mon->caught() && mon->friendly()
@@ -3373,7 +3462,7 @@ static void _close_door(coord_def move)
              i != all_door.end(); ++i)
         {
             const coord_def& dc = *i;
-            if (monsters* mon = monster_at(dc))
+            if (monster* mon = monster_at(dc))
             {
                 // Need to make sure that turn_is_over is set if
                 // creature is invisible.
@@ -3541,20 +3630,21 @@ static void _do_berserk_no_combat_penalty(void)
             break;
         }
 
-        // I do these three separately, because the might and
+        const int hasted_base_delay = BASELINE_DELAY / 2;
+        int berserk_delay_penalty = you.berserk_penalty * hasted_base_delay;
+        // Do these three separately, because the might and
         // haste counters can be different.
-        int berserk_delay_penalty = you.berserk_penalty * BASELINE_DELAY;
         you.duration[DUR_BERSERKER] -= berserk_delay_penalty;
-        if (you.duration[DUR_BERSERKER] < 1)
-            you.duration[DUR_BERSERKER] = 1;
+        if (you.duration[DUR_BERSERKER] < hasted_base_delay)
+            you.duration[DUR_BERSERKER] = hasted_base_delay;
 
         you.duration[DUR_MIGHT] -= berserk_delay_penalty;
-        if (you.duration[DUR_MIGHT] < 1)
-            you.duration[DUR_MIGHT] = 1;
+        if (you.duration[DUR_MIGHT] < hasted_base_delay)
+            you.duration[DUR_MIGHT] = hasted_base_delay;
 
         you.duration[DUR_HASTE] -= berserk_delay_penalty;
-        if (you.duration[DUR_HASTE] < 1)
-            you.duration[DUR_HASTE] = 1;
+        if (you.duration[DUR_HASTE] < hasted_base_delay)
+            you.duration[DUR_HASTE] = hasted_base_delay;
     }
     return;
 }                               // end do_berserk_no_combat_penalty()
@@ -3636,7 +3726,7 @@ static void _move_player(coord_def move)
         return;
 
     const dungeon_feature_type targ_grid = grd(targ);
-    monsters *targ_monst = monster_at(targ);
+    monster* targ_monst = monster_at(targ);
     if (fedhas_passthrough(targ_monst))
     {
         // Moving on a plant takes 1.5 x normal move delay. We
@@ -3645,7 +3735,7 @@ static void _move_player(coord_def move)
         // on the message spam).
         you.time_taken = div_rand_round(you.time_taken * 3, 2);
 
-        monsters * current = monster_at(you.pos());
+        monster* current = monster_at(you.pos());
         if (!current || !fedhas_passthrough(current))
         {
             // Probably need better messages. -cao
@@ -3672,9 +3762,14 @@ static void _move_player(coord_def move)
 
     // You cannot move away from a mermaid but you CAN fight monsters on
     // neighbouring squares.
-    monsters *beholder = NULL;
+    monster* beholder = NULL;
     if (!you.confused())
         beholder = you.get_beholder(targ);
+
+    // You cannot move closer to a fear monger.
+    monster *fmonger = NULL;
+    if (!you.confused())
+        fmonger = you.get_fearmonger(targ);
 
     if (you.running.check_stop_running())
     {
@@ -3687,7 +3782,7 @@ static void _move_player(coord_def move)
 
     if (targ_monst && !targ_monst->submerged())
     {
-        if (can_swap_places && !beholder)
+        if (can_swap_places && !beholder && !fmonger)
         {
             if (swap_check(targ_monst, mon_swap_dest))
                 swap = true;
@@ -3713,7 +3808,7 @@ static void _move_player(coord_def move)
         }
     }
 
-    if (!attacking && targ_pass && moving && !beholder)
+    if (!attacking && targ_pass && moving && !beholder && !fmonger)
     {
         if (!you.confused() && !check_moveto(targ))
         {
@@ -3761,6 +3856,12 @@ static void _move_player(coord_def move)
     {
         mprf("You cannot move away from %s!",
             beholder->name(DESC_NOCAP_THE, true).c_str());
+        return;
+    }
+    else if (fmonger && !attacking)
+    {
+        mprf("You cannot move closer to %s!",
+            fmonger->name(DESC_NOCAP_THE, true).c_str());
         return;
     }
 
@@ -4056,7 +4157,7 @@ static void _compile_time_asserts()
     COMPILE_CHECK(SP_VAMPIRE == 30              , c3);
     COMPILE_CHECK(SPELL_DEBUGGING_RAY == 102    , c4);
     COMPILE_CHECK(SPELL_PETRIFY == 154          , c5);
-    COMPILE_CHECK(NUM_SPELLS == 205             , c6);
+    COMPILE_CHECK(NUM_SPELLS == 225             , c6);
 
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
     COMPILE_CHECK(NUM_SPECIES < SP_UNKNOWN      , c7);
@@ -4078,6 +4179,8 @@ static void _compile_time_asserts()
     COMPILE_CHECK(sizeof(float) == sizeof(int32_t), c15);
     COMPILE_CHECK(sizeof(feature_property_type) <= sizeof(terrain_property_t), c16);
     COMPILE_CHECK(sizeof(level_flag_type) <= sizeof(int32_t), c17);
+    // Travel cache, traversable_terrain.
+    COMPILE_CHECK(NUM_FEATURES <= 256, c18);
 
     // Also some runtime stuff; I don't know if the order of branches[]
     // needs to match the enum, but it currently does.

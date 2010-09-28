@@ -6,6 +6,7 @@
 #include "env.h"
 #include "itemprop.h"
 #include "los.h"
+#include "mon-death.h"
 #include "player.h"
 #include "random.h"
 #include "state.h"
@@ -24,7 +25,10 @@ bool actor::has_equipped(equipment_type eq, int sub_type) const
 
 bool actor::will_trigger_shaft() const
 {
-    return (!airborne() && total_weight() > 0 && is_valid_shaft_level());
+    return (!airborne() && total_weight() > 0 && is_valid_shaft_level()
+            // let's pretend that they always make their saving roll
+            && !(atype() == ACT_MONSTER
+                 && mons_is_elven_twin(static_cast<const monster* >(this))));
 }
 
 level_id actor::shaft_dest(bool known = false) const
@@ -87,7 +91,7 @@ bool actor::check_res_magic(int power)
     // value because mrs = hd * 2 * 3 for most monsters, and the weak, low
     // level monsters have been adjusted so that the "3" is typically a 1.
     // There are some notable one hd monsters that shouldn't fall under this,
-    // so we do < 6, instead of <= 6...  or checking monster->hit_dice.  The
+    // so we do < 6, instead of <= 6...  or checking mons->hit_dice.  The
     // goal here is to make the first level easier for these classes and give
     // them a better shot at getting to level two or three and spells that can
     // help them out (or building a level or two of their base skill so they
@@ -124,7 +128,7 @@ bool actor::can_hibernate(bool holi_only) const
     if (!holi_only)
     {
         // The monster is berserk or already asleep.
-        if (berserk() || asleep())
+        if (!can_sleep())
             return (false);
 
         // The monster is cold-resistant and can't be hibernated.
@@ -133,13 +137,21 @@ bool actor::can_hibernate(bool holi_only) const
 
         // The monster has slept recently.
         if (atype() == ACT_MONSTER
-            && static_cast<const monsters*>(this)->has_ench(ENCH_SLEEP_WARY))
+            && static_cast<const monster* >(this)->has_ench(ENCH_SLEEP_WARY))
         {
             return (false);
         }
     }
 
     return (true);
+}
+
+bool actor::can_sleep() const
+{
+    const mon_holy_type holi = holiness();
+    if (holi == MH_UNDEAD || holi == MH_NONLIVING || holi == MH_PLANT)
+        return (false);
+    return !(berserk() || asleep());
 }
 
 void actor::shield_block_succeeded(actor *foe)
@@ -185,34 +197,6 @@ int actor::body_weight(bool base) const
         end(0);
         return (0);
     }
-}
-
-bool actor::check_train_armour(int amount)
-{
-    if (const item_def *armour = slot_item(EQ_BODY_ARMOUR, false))
-    {
-        // XXX: animal skin; should be a better way to get at that.
-        const int mass_base = 100;
-        const int mass = std::max(item_mass(*armour) - mass_base, 0);
-        if (x_chance_in_y(mass, 50 * skill(SK_ARMOUR)))
-        {
-            this->exercise(SK_ARMOUR, amount);
-            return (true);
-        }
-    }
-    return (false);
-}
-
-bool actor::check_train_dodging(int amount)
-{
-    const item_def *armour = slot_item(EQ_BODY_ARMOUR, false);
-    const int mass = armour? item_mass(*armour) : 0;
-    if (!x_chance_in_y(mass, 800))
-    {
-        this->exercise(SK_DODGING, amount);
-        return (true);
-    }
-    return (false);
 }
 
 kill_category actor_kill_alignment(const actor *act)

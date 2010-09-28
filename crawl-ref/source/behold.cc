@@ -19,7 +19,7 @@
 #include "areas.h"
 
 // Add a monster to the list of beholders.
-void player::add_beholder(const monsters* mon)
+void player::add_beholder(const monster* mon)
 {
     if (is_sanctuary(you.pos()))
     {
@@ -58,7 +58,7 @@ bool player::beheld() const
 }
 
 // Whether player is mesmerised by the given monster.
-bool player::beheld_by(const monsters* mon) const
+bool player::beheld_by(const monster* mon) const
 {
     for (unsigned int i = 0; i < beholders.size(); i++)
         if (beholders[i] == mon->mindex())
@@ -68,11 +68,11 @@ bool player::beheld_by(const monsters* mon) const
 
 // Checks whether a beholder keeps you from moving to
 // target, and returns one if it exists.
-monsters* player::get_beholder(const coord_def &target) const
+monster* player::get_beholder(const coord_def &target) const
 {
     for (unsigned int i = 0; i < beholders.size(); i++)
     {
-        monsters *mon = &menv[beholders[i]];
+        monster* mon = &menv[beholders[i]];
         const int olddist = grid_distance(pos(), mon->pos());
         const int newdist = grid_distance(target, mon->pos());
 
@@ -82,7 +82,7 @@ monsters* player::get_beholder(const coord_def &target) const
     return (NULL);
 }
 
-monsters* player::get_any_beholder() const
+monster* player::get_any_beholder() const
 {
     if (beholders.size() > 0)
         return (&menv[beholders[0]]);
@@ -91,7 +91,7 @@ monsters* player::get_any_beholder() const
 }
 
 // Removes a monster from the list of beholders if present.
-void player::remove_beholder(const monsters *mon)
+void player::remove_beholder(const monster* mon)
 {
     for (unsigned int i = 0; i < beholders.size(); i++)
         if (beholders[i] == mon->mindex())
@@ -121,7 +121,7 @@ void player::beholders_check_noise(int loudness)
     }
 }
 
-static void _removed_beholder_msg(const monsters* mon)
+static void _removed_beholder_msg(const monster* mon)
 {
     if (!mon->alive() || mons_genus(mon->type) != MONS_MERMAID
         || mon->submerged() || !you.see_cell(mon->pos()))
@@ -165,7 +165,7 @@ void player::update_beholders()
     bool removed = false;
     for (int i = beholders.size() - 1; i >= 0; i--)
     {
-        const monsters* mon = &menv[beholders[i]];
+        const monster* mon = &menv[beholders[i]];
         if (!_possible_beholder(mon))
         {
             beholders.erase(beholders.begin() + i);
@@ -178,7 +178,7 @@ void player::update_beholders()
 }
 
 // Update a single beholder.
-void player::update_beholder(const monsters *mon)
+void player::update_beholder(const monster* mon)
 {
     if (_possible_beholder(mon))
         return;
@@ -207,7 +207,7 @@ void player::_removed_beholder()
 
 // Helper function that checks whether the given monster is a possible
 // beholder.
-bool player::_possible_beholder(const monsters *mon) const
+bool player::_possible_beholder(const monster* mon) const
 {
     if (crawl_state.game_is_arena())
         return (false);

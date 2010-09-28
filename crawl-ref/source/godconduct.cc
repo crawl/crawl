@@ -16,18 +16,18 @@
 // god_conduct_trigger
 
 god_conduct_trigger::god_conduct_trigger(
-    conduct_type c, int pg, bool kn, const monsters *vict)
+    conduct_type c, int pg, bool kn, const monster* vict)
   : conduct(c), pgain(pg), known(kn), enabled(true), victim(NULL)
 {
     if (vict)
     {
-        victim.reset(new monsters);
+        victim.reset(new monster);
         *(victim.get()) = *vict;
     }
 }
 
 void god_conduct_trigger::set(conduct_type c, int pg, bool kn,
-                              const monsters *vict)
+                              const monster* vict)
 {
     conduct = c;
     pgain = pg;
@@ -35,7 +35,7 @@ void god_conduct_trigger::set(conduct_type c, int pg, bool kn,
     victim.reset(NULL);
     if (vict)
     {
-        victim.reset(new monsters);
+        victim.reset(new monster);
         *victim.get() = *vict;
     }
 }
@@ -49,7 +49,7 @@ god_conduct_trigger::~god_conduct_trigger()
 // This function is the merger of done_good() and naughty().
 // Returns true if god was interested (good or bad) in conduct.
 bool did_god_conduct(conduct_type thing_done, int level, bool known,
-                     const monsters *victim)
+                     const monster* victim)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -670,6 +670,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case DID_DEMON_KILLED_BY_UNDEAD_SLAVE:
             switch (you.religion)
             {
+            case GOD_KIKUBAAQUDGHA:
             case GOD_MAKHLEB:
             case GOD_BEOGH:
                 simple_god_message(" accepts your slave's kill.");
@@ -815,11 +816,25 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 if (thing_done == DID_CAUSE_GLOWING)
                 {
                     static long last_glowing_lecture = -1L;
-                    if (last_glowing_lecture != you.num_turns)
+                    if (!level)
                     {
-                        simple_god_message(" does not appreciate the mutagenic "
-                                           "glow surrounding you!");
+                        simple_god_message(" is not enthusiastic about the "
+                                           "mutagenic glow surrounding you.");
+                    }
+                    else if (last_glowing_lecture != you.num_turns)
+                    {
                         last_glowing_lecture = you.num_turns;
+                        if (get_contamination_level() == 1)
+                        {
+                            // Increase contamination within gray glow.
+                            simple_god_message(" does not appreciate the extra "
+                                               "mutagenic glow.");
+                        }
+                        else
+                        {
+                            simple_god_message(" does not appreciate the "
+                                               "mutagenic glow surrounding you!");
+                        }
                     }
                 }
 
@@ -1006,25 +1021,15 @@ void god_conduct_turn_start()
     _first_attack_was_friendly.init(false);
 }
 
-#define NEW_GIFT_FLAGS (MF_JUST_SUMMONED | MF_GOD_GIFT)
-
-void set_attack_conducts(god_conduct_trigger conduct[3], const monsters *mon,
+void set_attack_conducts(god_conduct_trigger conduct[3], const monster* mon,
                          bool known)
 {
     const unsigned int midx = mon->mindex();
 
     if (mon->friendly())
     {
-        if ((mon->flags & NEW_GIFT_FLAGS) == NEW_GIFT_FLAGS
-            && mon->god != GOD_XOM)
-        {
-            mprf(MSGCH_ERROR, "Newly created friendly god gift '%s' was hurt "
-                 "by you, shouldn't be possible; please file a bug report.",
-                 mon->name(DESC_PLAIN, true).c_str());
-            _first_attack_was_friendly[midx] = true;
-        }
-        else if (_first_attack_conduct[midx]
-                 || _first_attack_was_friendly[midx])
+        if (_first_attack_conduct[midx]
+            || _first_attack_was_friendly[midx])
         {
             conduct[0].set(DID_ATTACK_FRIEND, 5, known, mon);
             _first_attack_was_friendly[midx] = true;

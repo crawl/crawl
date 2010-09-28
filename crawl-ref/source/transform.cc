@@ -21,7 +21,6 @@
 #include "item_use.h"
 #include "itemprop.h"
 #include "items.h"
-#include "options.h"
 #include "output.h"
 #include "player.h"
 #include "player-equip.h"
@@ -401,7 +400,7 @@ monster_type transform_mons()
     switch(you.attribute[ATTR_TRANSFORMATION])
     {
     case TRAN_SPIDER:
-        return MONS_GIANT_COCKROACH; //uhh...
+        return MONS_SPIDER;
     case TRAN_STATUE:
         return MONS_STATUE;
     case TRAN_ICE_BEAST:
@@ -416,8 +415,6 @@ monster_type transform_mons()
         return MONS_HOG;
     case TRAN_BLADE_HANDS:
     case TRAN_NONE:
-        if (Options.show_player_species)
-            return player_mons();
         return MONS_PLAYER;
     }
     ASSERT(!"unknown transformation");
@@ -637,7 +634,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
     // Update your status.
     you.attribute[ATTR_TRANSFORMATION] = which_trans;
     you.set_duration(DUR_TRANSFORMATION, dur);
-    you.symbol = transform_mons();
+    update_player_symbol();
 
     burden_change();
 
@@ -726,8 +723,6 @@ void untransform(bool skip_wielding, bool skip_move)
     you.redraw_armour_class = true;
     you.wield_change        = true;
 
-    you.symbol = MONS_PLAYER;
-
     // Must be unset first or else infinite loops might result. -- bwr
     const transformation_type old_form =
         static_cast<transformation_type>(you.attribute[ ATTR_TRANSFORMATION ]);
@@ -737,6 +732,7 @@ void untransform(bool skip_wielding, bool skip_move)
 
     you.attribute[ATTR_TRANSFORMATION] = TRAN_NONE;
     you.duration[DUR_TRANSFORMATION]   = 0;
+    update_player_symbol();
 
     burden_change();
 
@@ -939,49 +935,4 @@ bool transform_changed_physiology( bool phys_scales )
             && (!phys_scales
                 || (you.attribute[ATTR_TRANSFORMATION] != TRAN_LICH
                     && you.attribute[ATTR_TRANSFORMATION] != TRAN_STATUE)));
-}
-
-std::string transform_desc(bool expire_pre)
-{
-    std::string text;
-
-    switch (you.attribute[ATTR_TRANSFORMATION])
-    {
-    case TRAN_SPIDER:
-        text = "You are in spider-form.";
-        break;
-    case TRAN_BAT:
-        text = "You are in ";
-        if (you.species == SP_VAMPIRE)
-            text += "vampire ";
-        text += "bat-form.";
-        break;
-    case TRAN_BLADE_HANDS:
-        text = "You have blades for hands.";
-        break;
-    case TRAN_STATUE:
-        text = "You are a statue.";
-        break;
-    case TRAN_ICE_BEAST:
-        text = "You are an ice creature.";
-        break;
-    case TRAN_DRAGON:
-        text = "You are in dragon-form.";
-        break;
-    case TRAN_LICH:
-        text = "You are in lich-form.";
-        break;
-   case TRAN_PIG:
-        text += "You are a filthy swine.";
-        break;
-    }
-
-    if ((you.species != SP_VAMPIRE || !player_in_bat_form())
-        && dur_expiring(DUR_TRANSFORMATION))
-    {
-        text = expire_pre ? "Expiring :  " + text
-                          : text + " (Expiring.)";
-    }
-
-    return (text);
 }

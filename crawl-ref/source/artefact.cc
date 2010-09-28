@@ -200,9 +200,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         // Fedhas forbids necromancy involving corpses, only reaping
         // really applies.
         if (brand == SPWPN_REAPING)
-        {
             return (false);
-        }
         break;
 
     case GOD_CHEIBRIADOS:
@@ -722,7 +720,7 @@ void static _get_randart_properties(const item_def &item,
 
     if (aclass == OBJ_WEAPONS) // Only weapons get brands, of course.
     {
-        proprt[ARTP_BRAND] = SPWPN_FLAMING + random2(15);        // brand
+        proprt[ARTP_BRAND] = SPWPN_FLAMING + random2(16);        // brand
 
         if (one_chance_in(6))
             proprt[ARTP_BRAND] = SPWPN_FLAMING + random2(2);
@@ -1629,8 +1627,7 @@ static unrandart_entry *_seekunrandart( const item_def &item )
     return get_unrand_entry(item.special);
 }
 
-int find_okay_unrandart(unsigned char aclass, unsigned char atype,
-                        unrand_special_type specialness, bool in_abyss)
+int find_okay_unrandart(uint8_t aclass, uint8_t atype, bool in_abyss)
 {
     int ret = -1;
 
@@ -1667,12 +1664,6 @@ int find_okay_unrandart(unsigned char aclass, unsigned char atype,
             continue;
         }
 
-        if (specialness != UNRANDSPEC_EITHER
-            && specialness != get_unrand_specialness(index))
-        {
-            continue;
-        }
-
         count++;
 
         if (one_chance_in(count))
@@ -1680,23 +1671,6 @@ int find_okay_unrandart(unsigned char aclass, unsigned char atype,
     }
 
     return (ret);
-}
-
-unrand_special_type get_unrand_specialness(int unrand_index)
-{
-    if (unrand_index < UNRAND_START || unrand_index > UNRAND_LAST)
-        return (UNRANDSPEC_NORMAL);
-
-    if (unranddata[unrand_index].flags & UNRAND_FLAG_SPECIAL)
-        return (UNRANDSPEC_SPECIAL);
-
-    return (UNRANDSPEC_NORMAL);
-}
-
-unrand_special_type get_unrand_specialness(const item_def &item)
-{
-    ASSERT(is_unrandom_artefact(item));
-    return get_unrand_specialness(item.special);
 }
 
 int get_unrandart_num( const char *name )
@@ -1833,7 +1807,8 @@ static bool _randart_is_conflicting( const item_def &item,
 {
     if (item.base_type == OBJ_WEAPONS
         && get_weapon_brand(item) == SPWPN_HOLY_WRATH
-        && proprt[ARTP_CURSED] != 0)
+        && (is_demonic(item)
+            || proprt[ARTP_CURSED] != 0))
     {
         return (true);
     }

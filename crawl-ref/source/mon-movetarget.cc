@@ -24,7 +24,7 @@
 // find a path, so we won't need to calculate again.
 // Should there be a direct path to the target for a monster thus marked, it
 // will still be able to come nearer (and the mark will then be cleared).
-static void _mark_neighbours_target_unreachable(monsters *mon)
+static void _mark_neighbours_target_unreachable(monster* mon)
 {
     // Highly intelligent monsters are perfectly capable of pathfinding
     // and don't need their neighbour's advice.
@@ -46,7 +46,7 @@ static void _mark_neighbours_target_unreachable(monsters *mon)
         if (!mon->see_cell(*ri))
             continue;
 
-        monsters* const m = monster_at(*ri);
+        monster* const m = monster_at(*ri);
         if (m == NULL)
             continue;
 
@@ -69,7 +69,7 @@ static void _mark_neighbours_target_unreachable(monsters *mon)
     }
 }
 
-static void _set_no_path_found(monsters *mon)
+static void _set_no_path_found(monster* mon)
 {
 #ifdef DEBUG_PATHFIND
     mpr("No path found!");
@@ -80,7 +80,7 @@ static void _set_no_path_found(monsters *mon)
     _mark_neighbours_target_unreachable(mon);
 }
 
-static bool _target_is_unreachable(monsters *mon)
+static bool _target_is_unreachable(monster* mon)
 {
     return (mon->travel_target == MTRAV_UNREACHABLE
             || mon->travel_target == MTRAV_KNOWN_UNREACHABLE);
@@ -92,7 +92,7 @@ static bool _target_is_unreachable(monsters *mon)
 // Check whether there's an unobstructed path to the player (in sight!),
 // either by using an existing travel_path or calculating a new one.
 // Returns true if no further handling necessary, else false.
-bool try_pathfind(monsters *mon, const dungeon_feature_type can_move)
+bool try_pathfind(monster* mon, const dungeon_feature_type can_move)
 {
     // Just because we can *see* the player, that doesn't mean
     // we can actually get there.
@@ -237,7 +237,7 @@ static bool _is_level_exit(const coord_def& pos)
 }
 
 // Returns true if a monster left the level.
-bool pacified_leave_level(monsters *mon, std::vector<level_exit> e,
+bool pacified_leave_level(monster* mon, std::vector<level_exit> e,
                           int e_index)
 {
     // If a pacified monster is leaving the level, and has reached an
@@ -271,7 +271,7 @@ static int _count_water_neighbours(coord_def p)
 
 // Pick the nearest water grid that is surrounded by the most
 // water squares within LoS.
-bool find_siren_water_target(monsters *mon)
+bool find_siren_water_target(monster* mon)
 {
     ASSERT(mon->type == MONS_SIREN);
 
@@ -385,7 +385,7 @@ bool find_siren_water_target(monsters *mon)
     return (false);
 }
 
-bool find_wall_target(monsters *mon)
+bool find_wall_target(monster* mon)
 {
     ASSERT(mons_wall_shielded(mon));
 
@@ -476,7 +476,7 @@ bool find_wall_target(monsters *mon)
 }
 
 // Returns true if further handling neeeded.
-static bool _handle_monster_travelling(monsters *mon,
+static bool _handle_monster_travelling(monster* mon,
                                        const dungeon_feature_type can_move)
 {
 #ifdef DEBUG_PATHFIND
@@ -587,7 +587,7 @@ static bool _handle_monster_travelling(monsters *mon,
     return (false);
 }
 
-static bool _choose_random_patrol_target_grid(monsters *mon)
+static bool _choose_random_patrol_target_grid(monster* mon)
 {
     const int intel = mons_intel(mon);
 
@@ -702,7 +702,7 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
 
     return (count_grids);
 }// Returns true if further handling neeeded.
-static bool _handle_monster_patrolling(monsters *mon)
+static bool _handle_monster_patrolling(monster* mon)
 {
     if (!_choose_random_patrol_target_grid(mon))
     {
@@ -782,7 +782,7 @@ static bool _handle_monster_patrolling(monsters *mon)
     return (false);
 }
 
-void set_random_target(monsters* mon)
+void set_random_target(monster* mon)
 {
     mon->target = random_in_bounds(); // If we don't find anything better.
     for (int tries = 0; tries < 150; ++tries)
@@ -800,7 +800,7 @@ void set_random_target(monsters* mon)
     }
 }
 
-void check_wander_target(monsters *mon, bool isPacified,
+void check_wander_target(monster* mon, bool isPacified,
                          dungeon_feature_type can_move)
 {
     // default wander behaviour
@@ -849,7 +849,7 @@ static void _find_all_level_exits(std::vector<level_exit> &e)
     }
 }
 
-int mons_find_nearest_level_exit(const monsters *mon,
+int mons_find_nearest_level_exit(const monster* mon,
                                  std::vector<level_exit> &e,
                                  bool reset)
 {
@@ -884,7 +884,7 @@ int mons_find_nearest_level_exit(const monsters *mon,
     return (retval);
 }
 
-void set_random_slime_target(monsters* mon)
+void set_random_slime_target(monster* mon)
 {
     // Strictly neutral slimes will go for the nearest item.
     const coord_def pos = mon->pos();

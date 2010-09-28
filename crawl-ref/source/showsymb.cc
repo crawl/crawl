@@ -31,6 +31,9 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell, bool colored)
     unsigned short colour = BLACK;
     const feature_def &fdef = get_feature_def(feat);
 
+    // These aren't shown mossy/bloody/slimy.
+    const bool norecolour = is_critical_feature(feat) || feat_is_trap(feat);
+
     if (!colored)
     {
         if (cell.flags & MAP_EMPHASIZE)
@@ -64,11 +67,11 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell, bool colored)
                 colour = LIGHTGREY; // 1/12
         }
     }
-    else if (cell.flags & MAP_BLOODY && !is_critical_feature(feat) && !feat_is_trap(feat))
+    else if (cell.flags & MAP_BLOODY && !norecolour)
         colour = RED;
-    else if (cell.flags & MAP_MOLDY && !is_critical_feature(feat) && !feat_is_trap(feat))
+    else if (cell.flags & MAP_MOLDY && !norecolour)
         colour = (cell.flags & MAP_GLOWING_MOLDY) ? LIGHTRED : LIGHTGREEN;
-    else if (cell.flags & MAP_CORRODING)
+    else if (cell.flags & MAP_CORRODING && !norecolour)
         colour = LIGHTGREEN;
     else if (cell.feat_colour())
         colour = cell.feat_colour();
@@ -83,9 +86,10 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell, bool colored)
         }
     }
 
-    // TODO: should be a feat_is_whatever(feat)
-    if (feat >= DNGN_FLOOR_MIN && feat <= DNGN_FLOOR_MAX
-        || feat == DNGN_UNDISCOVERED_TRAP)
+    if (feat == DNGN_SHALLOW_WATER && player_in_branch(BRANCH_SHOALS))
+        colour = ETC_WAVES;
+
+    if (feat >= DNGN_FLOOR_MIN && feat <= DNGN_FLOOR_MAX)
     {
         if (cell.flags & MAP_HALOED)
         {
@@ -145,7 +149,7 @@ static int _get_mons_colour(const monster_info& mi)
     }
 
     // Backlit monsters are fuzzy and override brands.
-    if (!crawl_state.game_is_arena() && 
+    if (!crawl_state.game_is_arena() &&
         !you.can_see_invisible() && mi.is(MB_INVISIBLE))
     {
         col = DARKGREY;
@@ -163,7 +167,7 @@ show_class get_cell_show_class(const map_cell& cell, bool only_stationary_monste
             && (!only_stationary_monsters || mons_class_is_stationary(cell.monster())))
         return SH_MONSTER;
 
-    if (cell.cloud() != CLOUD_NONE)
+    if (cell.cloud() != CLOUD_NONE && cell.cloud() != CLOUD_GLOOM)
         return SH_CLOUD;
 
     if (feat_is_trap(cell.feat()) || is_critical_feature(cell.feat()))
@@ -196,18 +200,33 @@ static const unsigned short ripple_table[] =
      BROWN,         // YELLOW       => BROWN
      LIGHTGREY};    // WHITE        => LIGHTGREY
 
-glyph get_cell_glyph(const map_cell& cell, bool only_stationary_monsters, int color_mode)
+glyph get_cell_glyph(const coord_def& loc, bool only_stationary_monsters, int color_mode)
 {
-    return get_cell_glyph_with_class(cell, get_cell_show_class(cell, only_stationary_monsters), color_mode);
+    return get_cell_glyph(env.map_knowledge(loc), loc, only_stationary_monsters, color_mode);
 }
 
-glyph get_cell_glyph_with_class(const map_cell& cell, show_class cls, int color_mode)
+glyph get_cell_glyph(const map_cell& cell, const coord_def& loc, bool only_stationary_monsters, int color_mode)
+{
+    return get_cell_glyph_with_class(cell, loc, get_cell_show_class(cell, only_stationary_monsters), color_mode);
+}
+
+glyph get_cell_glyph_with_class(const map_cell& cell, const coord_def& loc, show_class cls, int color_mode)
 {
     bool colored = color_mode == 0 ? cell.visible() : (color_mode > 0);
     glyph g;
     show_type show;
     g.ch = ' ';
     g.col = LIGHTGRAY;
+
+    bool gloom = false;
+    if (cell.cloud() && cell.cloud() == CLOUD_GLOOM)
+    {
+        gloom = true;
+        if (colored)
+            g.col = cell.cloud_colour();
+        else
+            g.col = DARKGREY;
+    }
 
     switch(cls)
     {
@@ -217,7 +236,7 @@ glyph get_cell_glyph_with_class(const map_cell& cell, show_class cls, int color_
 
         show.cls = SH_INVIS_EXPOSED;
         if (cell.cloud() != CLOUD_NONE)
-            g.col = get_cloud_colour(cell.cloud());
+            g.col = cell.cloud_colour();
         else
             g.col = ripple_table[cell.feat_colour() & 0xf];
         break;
@@ -243,9 +262,10 @@ glyph get_cell_glyph_with_class(const map_cell& cell, show_class cls, int color_
 
         show.cls = SH_CLOUD;
         if (colored)
-            g.col = get_cloud_colour(cell.cloud());
+            g.col = cell.cloud_colour();
         else
             g.col = DARKGRAY;
+
         break;
 
     case SH_FEATURE:
@@ -253,7 +273,10 @@ glyph get_cell_glyph_with_class(const map_cell& cell, show_class cls, int color_
             return g;
 
         show = cell.feat();
-        g.col = _cell_feat_show_colour(cell, colored);
+
+        if (!gloom)
+            g.col = _cell_feat_show_colour(cell, colored);
+
         if (cell.detected_item() || cell.item())
         {
             if (Options.feature_item_brand && is_critical_feature(cell.feat()))
@@ -267,21 +290,25 @@ glyph get_cell_glyph_with_class(const map_cell& cell, show_class cls, int color_
         if (cell.detected_item())
         {
             show = SHOW_ITEM_DETECTED;
-            g.col = Options.detected_item_colour;
+            if (!gloom)
+                g.col = Options.detected_item_colour;
         }
         else if (cell.item())
         {
             const item_info* eitem = cell.item();
             show = *eitem;
 
-            if (!feat_is_water(cell.feat()))
-                g.col = eitem->colour;
-            else
-                g.col = _cell_feat_show_colour(cell, colored);
+            if (!gloom)
+            {
+                if (!feat_is_water(cell.feat()))
+                    g.col = eitem->colour;
+                else
+                    g.col = _cell_feat_show_colour(cell, colored);
 
-            // monster(mimic)-owned items have link = NON_ITEM+1+midx
-            if (cell.flags & MAP_MORE_ITEMS)
-                g.col |= COLFLAG_ITEM_HEAP;
+                // monster(mimic)-owned items have link = NON_ITEM+1+midx
+                if (cell.flags & MAP_MORE_ITEMS)
+                    g.col |= COLFLAG_ITEM_HEAP;
+            }
         }
         else
             return g;
@@ -302,17 +329,17 @@ glyph get_cell_glyph_with_class(const map_cell& cell, show_class cls, int color_
     }
 
     if (g.col)
-        g.col = real_colour(g.col);
+        g.col = real_colour(g.col, loc);
 
     return g;
 }
 
-unsigned get_feat_symbol(dungeon_feature_type feat)
+wchar_t get_feat_symbol(dungeon_feature_type feat)
 {
     return (get_feature_def(feat).symbol);
 }
 
-unsigned get_item_symbol(show_item_type it)
+wchar_t get_item_symbol(show_item_type it)
 {
     return (get_feature_def(show_type(it)).symbol);
 }

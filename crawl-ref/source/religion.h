@@ -24,7 +24,6 @@
 bool is_evil_god(god_type god);
 bool is_good_god(god_type god);
 bool is_chaotic_god(god_type god);
-bool is_priest_god(god_type god);
 
 // Returns true if the god is not present in the current game. This is
 // orthogonal to whether the player can worship the god in question.
@@ -33,7 +32,7 @@ void simple_god_message(const char *event, god_type which_deity = you.religion);
 int piety_breakpoint(int i);
 std::string god_name(god_type which_god, bool long_name = false);
 std::string god_name_jiyva(bool second_name = false);
-god_type string_to_god(const char *name, bool exact = true);
+god_type str_to_god(const std::string name, bool exact = true);
 
 std::string get_god_powers(god_type which_god);
 std::string get_god_likes(god_type which_god, bool verbose = false);
@@ -51,7 +50,7 @@ void god_speaks(god_type god, const char *mesg);
 void lose_piety(int pgn);
 void handle_god_time(void);
 int god_colour(god_type god);
-char god_message_altar_colour(god_type god);
+uint8_t god_message_altar_colour(god_type god);
 bool player_can_join_god(god_type which_god);
 void god_pitch(god_type which_god);
 int piety_rank(int piety = -1);
@@ -61,37 +60,37 @@ bool god_hates_your_god(god_type god,
 std::string god_hates_your_god_reaction(god_type god,
                                         god_type your_god = you.religion);
 bool god_hates_cannibalism(god_type god);
-bool god_hates_killing(god_type god, const monsters* mon);
+bool god_hates_killing(god_type god, const monster* mon);
 bool god_likes_fresh_corpses(god_type god);
 bool god_likes_butchery(god_type god);
 bool god_likes_spell(spell_type spell, god_type god);
 bool god_hates_spell(spell_type spell, god_type god);
 harm_protection_type god_protects_from_harm(god_type god, bool actual = true);
 bool jiyva_is_dead();
-bool fedhas_protects(const monsters * target);
+bool fedhas_protects(const monster* target);
 bool fedhas_protects_species(int mc);
-bool fedhas_neutralises(const monsters * target);
+bool fedhas_neutralises(const monster* target);
 void print_sacrifice_message(god_type, const item_def &,
                              piety_gain_t, bool = false);
 void nemelex_death_message();
 
-bool tso_unchivalric_attack_safe_monster(const monsters *mon);
+bool tso_unchivalric_attack_safe_monster(const monster* mon);
 
-void mons_make_god_gift(monsters *mon, god_type god = you.religion);
-bool mons_is_god_gift(const monsters *mon, god_type god = you.religion);
+void mons_make_god_gift(monster* mon, god_type god = you.religion);
+bool mons_is_god_gift(const monster* mon, god_type god = you.religion);
 
 int yred_random_servants(int threshold, bool force_hostile = false);
-bool is_undead_slave(const monsters* mon);
-bool is_yred_undead_slave(const monsters* mon);
-bool is_orcish_follower(const monsters* mon);
-bool is_fellow_slime(const monsters* mon);
-bool is_neutral_plant(const monsters* mon);
-bool is_good_lawful_follower(const monsters* mon);
-bool is_good_follower(const monsters* mon);
-bool is_follower(const monsters* mon);
-bool bless_follower(monsters *follower = NULL,
+bool is_undead_slave(const monster* mon);
+bool is_yred_undead_slave(const monster* mon);
+bool is_orcish_follower(const monster* mon);
+bool is_fellow_slime(const monster* mon);
+bool is_neutral_plant(const monster* mon);
+bool is_good_lawful_follower(const monster* mon);
+bool is_good_follower(const monster* mon);
+bool is_follower(const monster* mon);
+bool bless_follower(monster* follower = NULL,
                     god_type god = you.religion,
-                    bool (*suitable)(const monsters* mon) = is_follower,
+                    bool (*suitable)(const monster* mon) = is_follower,
                     bool force = false);
 
 bool god_hates_attacking_friend(god_type god, const actor *fr);
@@ -105,7 +104,7 @@ void religion_turn_start();
 void religion_turn_end();
 
 int get_tension(god_type god = you.religion);
-int get_monster_tension(const monsters *mons, god_type god = you.religion);
+int get_monster_tension(const monster* mons, god_type god = you.religion);
 
 bool do_god_gift(bool prayed_for = false, bool forced = false);
 
@@ -113,5 +112,5 @@ std::vector<god_type> temple_god_list();
 std::vector<god_type> nontemple_god_list();
 
 extern const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES];
-std::string adjust_abil_message(const char *pmsg);
+std::string adjust_abil_message(const char *pmsg, bool allow_upgrades = true);
 #endif

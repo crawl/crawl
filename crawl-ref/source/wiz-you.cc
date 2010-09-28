@@ -13,6 +13,7 @@
 #include "dbg-util.h"
 #include "food.h"
 #include "godprayer.h"
+#include "godwrath.h"
 #include "libutil.h"
 #include "message.h"
 #include "mutation.h"
@@ -28,7 +29,6 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "terrain.h"
-#include "transform.h"
 #include "view.h"
 #include "xom.h"
 
@@ -83,7 +83,7 @@ void wizard_change_species( void )
     you.is_undead = get_undead_state(sp);
 
     // Change permanent mutations, but preserve non-permanent ones.
-    unsigned char prev_muts[NUM_MUTATIONS];
+    uint8_t prev_muts[NUM_MUTATIONS];
     for (i = 0; i < NUM_MUTATIONS; ++i)
     {
         if (you.innate_mutations[i] > 0)
@@ -149,7 +149,7 @@ void wizard_change_species( void )
         break;
     }
 
-    you.symbol = transform_mons();
+    update_player_symbol();
 #ifdef USE_TILE
     init_player_doll();
 #endif
@@ -739,6 +739,7 @@ static const char* dur_names[] =
     "icemail depleted",
     "misled",
     "quad damage",
+    "afraid",
 };
 
 void wizard_edit_durations( void )
@@ -927,3 +928,15 @@ void wizard_toggle_xray_vision()
     viewwindow(true);
 }
 
+void wizard_god_wrath()
+{
+    if (you.religion == GOD_NO_GOD)
+    {
+        mpr("You suffer the terrible wrath of No God.");
+        return;
+    }
+
+    if (!divine_retribution(you.religion, true, true))
+        // Currently only dead Jiyva.
+        mpr("You're not eligible for wrath.");
+}

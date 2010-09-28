@@ -117,7 +117,7 @@ void debug_item_scan( void )
 
         strlcpy(name, mitm[i].name(DESC_PLAIN).c_str(), sizeof(name));
 
-        const monsters* mon = mitm[i].holding_monster();
+        const monster* mon = mitm[i].holding_monster();
 
         // Don't check (-1, -1) player items or (-2, -2) monster items
         // (except to make sure that the monster is alive).
@@ -210,18 +210,18 @@ void debug_item_scan( void )
     // Quickly scan monsters for "program bug"s.
     for (i = 0; i < MAX_MONSTERS; ++i)
     {
-        const monsters& monster = menv[i];
+        const monster& mons = menv[i];
 
-        if (monster.type == MONS_NO_MONSTER)
+        if (mons.type == MONS_NO_MONSTER)
             continue;
 
-        if (monster.name(DESC_PLAIN, true).find("questionable") !=
+        if (mons.name(DESC_PLAIN, true).find("questionable") !=
             std::string::npos)
         {
             mprf(MSGCH_ERROR, "Program bug detected!");
             mprf(MSGCH_ERROR,
                  "Buggy monster detected: monster #%d; position (%d,%d)",
-                 i, monster.pos().x, monster.pos().y);
+                 i, mons.pos().x, mons.pos().y);
         }
     }
 }
@@ -290,7 +290,7 @@ void debug_mons_scan()
                 continue;
             }
 
-            const monsters *m = &menv[mons];
+            const monster* m = &menv[mons];
             const coord_def pos(x, y);
             if (m->pos() != pos)
             {
@@ -324,7 +324,7 @@ void debug_mons_scan()
     {
         is_floating[i] = false;
 
-        const monsters *m = &menv[i];
+        const monster* m = &menv[i];
         if (!m->alive())
             continue;
 
@@ -352,7 +352,7 @@ void debug_mons_scan()
                 if (i == j)
                     continue;
 
-                const monsters *m2 = &menv[j];
+                const monster* m2 = &menv[j];
 
                 if (m2->pos() != m->pos())
                     continue;
@@ -399,7 +399,7 @@ void debug_mons_scan()
                 continue;
             }
 
-            const monsters* holder = item.holding_monster();
+            const monster* holder = item.holding_monster();
 
             if (holder == NULL)
             {
@@ -471,7 +471,7 @@ void debug_mons_scan()
     for (unsigned int i = 0; i < floating_mons.size(); ++i)
     {
         const int       idx = floating_mons[i];
-        const monsters* mon = &menv[idx];
+        const monster* mon = &menv[idx];
         std::vector<std::string> vaults = _in_vaults(mon->pos());
 
         std::string str =
@@ -494,7 +494,7 @@ void debug_mons_scan()
     {
         const coord_def pos = bogus_pos[i];
         const int       idx = bogus_idx[i];
-        const monsters* mon = &menv[idx];
+        const monster* mon = &menv[idx];
 
         std::string str =
             make_stringf("Bogus mgrd (%d, %d) pointing to %s",

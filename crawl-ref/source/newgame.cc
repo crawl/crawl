@@ -20,7 +20,6 @@
 #include "makeitem.h"
 #include "maps.h"
 #include "menu.h"
-#include "ng-init.h"
 #include "ng-input.h"
 #include "ng-restr.h"
 #include "options.h"
@@ -555,9 +554,12 @@ void make_rod(item_def &item, stave_type rod_type, int ncharges)
 }
 
 // Set ng_choice to defaults without overwriting name and game type.
-static void _set_default_choice(newgame_def* ng_choice,
+static void _set_default_choice(newgame_def* ng, newgame_def* ng_choice,
                                 const newgame_def& defaults)
 {
+    // Reset *ng so _resolve_species_job will work properly.
+    ng->clear_character();
+
     const std::string name = ng_choice->name;
     const game_type type   = ng_choice->type;
     *ng_choice = defaults;
@@ -661,7 +663,7 @@ static void _construct_species_menu(const newgame_def* ng,
 
     // Add all the special button entries
     tmp = new TextItem();
-    tmp->set_text("+ - Viable Species");
+    tmp->set_text("+ - Viable species");
     min_coord.x = X_MARGIN;
     min_coord.y = SPECIAL_KEYS_START_Y;
     max_coord.x = min_coord.x + tmp->get_text().size();
@@ -843,7 +845,7 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
     highlighter->init(coord_def(0,0), coord_def(0,0), "highlighter");
     menu.attach_object(highlighter);
 
-    // Did we have a previous background?
+    // Did we have a previous species?
     if (menu.get_active_item() == NULL)
     {
         freeform->activate_first_item();
@@ -907,7 +909,7 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
             case M_DEFAULT_CHOICE:
                 if (_char_defined(defaults))
                 {
-                    _set_default_choice(ng_choice, defaults);
+                    _set_default_choice(ng, ng_choice, defaults);
                     return;
                 }
                 else
@@ -1273,7 +1275,7 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
             case M_DEFAULT_CHOICE:
                 if (_char_defined(defaults))
                 {
-                    _set_default_choice(ng_choice, defaults);
+                    _set_default_choice(ng, ng_choice, defaults);
                     return;
                 }
                 else
@@ -1938,7 +1940,7 @@ static bool _prompt_book(const newgame_def* ng, newgame_def* ng_choice,
     highlighter->init(coord_def(0,0), coord_def(0,0), "highlighter");
     menu.attach_object(highlighter);
 
-    // Did we have a previous weapon?
+    // Did we have a previous book?
     if (menu.get_active_item() == NULL)
     {
         freeform->activate_first_item();
@@ -2261,7 +2263,7 @@ static void _construct_god_menu(const god_type& defgod,
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
-    // Only add tab entry if we have a previous book choice
+    // Only add tab entry if we have a previous god choice
     if (defgod != GOD_NO_GOD)
     {
         tmp = new TextItem();
@@ -2272,7 +2274,7 @@ static void _construct_god_menu(const god_type& defgod,
                 defgod == GOD_VIABLE ? "Viable" :
                 god_name(defgod);
 
-        // Adjust the end marker to aling the - because
+        // Adjust the end marker to align the - because
         // Tab text is longer by 2
         tmp = new TextItem();
         tmp->set_text(text);
@@ -2285,7 +2287,7 @@ static void _construct_god_menu(const god_type& defgod,
         tmp->add_hotkey('\t');
         tmp->set_id(M_DEFAULT_CHOICE);
         tmp->set_highlight_colour(LIGHTGRAY);
-        tmp->set_description_text("Select your previous book choice");
+        tmp->set_description_text("Select your previous god choice");
         menu->attach_item(tmp);
         tmp->set_visible(true);
     }
@@ -2435,7 +2437,7 @@ static void _resolve_god(newgame_def* ng, const newgame_def* ng_choice,
             // Either an invalid combination was passed in through options,
             // or we messed up.
             end(1, false,
-                "Incompatible book specified in options file.");
+                "Incompatible god specified in options file.");
         }
         return;
     }
@@ -2692,7 +2694,7 @@ static bool _prompt_wand(const newgame_def* ng, newgame_def* ng_choice,
     highlighter->init(coord_def(0,0), coord_def(0,0), "highlighter");
     menu.attach_object(highlighter);
 
-    // Did we have a previous god?
+    // Did we have a previous wand?
     if (menu.get_active_item() == NULL)
     {
         freeform->activate_first_item();
@@ -2960,7 +2962,7 @@ static bool _cmp_map_by_name(const map_def* m1, const map_def* m2)
     return (m1->desc_or_name() < m2->desc_or_name());
 }
 
-static void _prompt_sprint_map(const newgame_def* ng, newgame_def* ng_choice,
+static void _prompt_sprint_map(newgame_def* ng, newgame_def* ng_choice,
                                const newgame_def& defaults,
                                mapref_vector maps)
 {
@@ -3046,7 +3048,7 @@ static void _prompt_sprint_map(const newgame_def* ng, newgame_def* ng_choice,
             list_commands('?');
             return _prompt_sprint_map(ng, ng_choice, defaults, maps);
         case M_DEFAULT_CHOICE:
-            _set_default_choice(ng_choice, defaults);
+            _set_default_choice(ng, ng_choice, defaults);
             return;
         case M_RANDOM:
             // FIXME setting this to "random" is broken

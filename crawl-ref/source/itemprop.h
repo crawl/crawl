@@ -18,7 +18,7 @@ void init_properties(void);
 bool item_known_cursed( const item_def &item );
 bool item_known_uncursed( const item_def &item );
 void do_curse_item( item_def &item, bool quiet = true );
-void do_uncurse_item( item_def &item );
+void do_uncurse_item(item_def &item, bool inscribe = true);
 
 // stationary:
 void set_item_stationary( item_def &item );
@@ -175,7 +175,7 @@ std::string item_base_name(const item_def &item);
 std::string item_base_name (object_class_type type, int sub_type);
 std::string food_type_name (const item_def &item);
 std::string food_type_name (int sub_type);
-const char* weapon_base_name(unsigned char subtype);
+const char* weapon_base_name(uint8_t subtype);
 
 void seen_item(const item_def &item);
 #endif

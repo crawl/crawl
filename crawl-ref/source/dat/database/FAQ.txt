@@ -84,7 +84,7 @@ How can I avoid dying all the time? Can you give me some playing tips?
 %%%%
 A:survival
 
-A: If you've got trouble even reaching the Temple, you might want to try out the tutorial for some general playing hints. (To do this, press 'Ctrl-T' in the character selection menu.)
+A: If you've got trouble even reaching the Temple, you might want to try out the hints mode for some general playing hints.
 
 Also, there are easy playing combinations and more challenging ones (marked in dark grey on the selection screen). If you are new to Crawl, sticking to the easier ones is advisable. In general, treat each new monster you meet with utmost caution and keep an eye on your hit points and magic.
 
@@ -262,7 +262,7 @@ Is there a way for me to play the new version before it is released?
 %%%%
 A:beta
 
-A: There certainly is! You can play "trunk" (what will eventually become the next version) online on http://crawl.develz.org, or you can download Windows binaries from the same site. Note that trunk may be buggy, and that some changes may invalidate your saved games. If that doesn't bother you, go ahead and play!
+A: There certainly is! You can play "trunk" (what will eventually become the next version) online on http://crawl.develz.org, or you can download Windows and Mac binaries from the same site. Note that trunk may be buggy, and that some changes may invalidate your saved games. If that doesn't bother you, go ahead and play!
 
 Be sure to leave some feedback/suggestions/bug reports on the Mantis tracker: http://crawl.develz.org/mantis/, and Mantis wiki: http://crawl.develz.org/wiki/doku.php?id=start
 

@@ -1,0 +1,20 @@
+For players who are prone to leave labyrinths without picking up the 
+loot, here is a way to avoid that: put the following snippet in your
+options file (init.txt or .crawlrc) and then macro the '<' key to
+ ===safe_upstairs (do it in-game by pressing '~' or Ctrl-D).
+
+{
+function safe_upstairs()
+  if you.branch() == "Lab" then
+     crawl.formatted_mpr("Really leave this labyrinth?", "prompt")
+     local res = crawl.getch()
+     if string.lower(string.char(res)) == "y" then
+       crawl.sendkeys("<")
+     end
+  else
+     crawl.sendkeys("<")
+  end
+end
+}
+
+######################################################################

@@ -49,12 +49,15 @@ bool player::blink_to(const coord_def& dest, bool quiet)
     return (true);
 }
 
-bool monsters::blink_to(const coord_def& dest, bool quiet)
+bool monster::blink_to(const coord_def& dest, bool quiet)
 {
     if (dest == pos())
         return (false);
+
+    const bool jump = type == MONS_JUMPING_SPIDER;
+
     if (!quiet)
-        simple_monster_message(this, " blinks!");
+        simple_monster_message(this, jump ? " leaps!" : " blinks!");
 
     if (!(flags & MF_WAS_IN_VIEW))
         seen_context = "thin air";
@@ -64,8 +67,9 @@ bool monsters::blink_to(const coord_def& dest, bool quiet)
         return (false);
 
     // Leave a purple cloud.
-    place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3),
-                kill_alignment());
+    if (!jump)
+        place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3),
+                    kill_alignment());
 
     check_redraw(oldplace);
     apply_location_effects(oldplace);
@@ -128,7 +132,7 @@ void blink_other_close(actor* victim, const coord_def &target)
 }
 
 // Blink the monster away from its foe.
-void blink_away(monsters* mon)
+void blink_away(monster* mon)
 {
     actor* foe = mon->get_foe();
     if (!foe || !mon->can_see(foe))
@@ -144,7 +148,7 @@ void blink_away(monsters* mon)
 }
 
 // Blink the monster within range but at distance to its foe.
-void blink_range(monsters* mon)
+void blink_range(monster* mon)
 {
     actor* foe = mon->get_foe();
     if (!foe || !mon->can_see(foe))
@@ -160,7 +164,7 @@ void blink_range(monsters* mon)
 }
 
 // Blink the monster close to its foe.
-void blink_close(monsters* mon)
+void blink_close(monster* mon)
 {
     actor* foe = mon->get_foe();
     if (!foe || !mon->can_see(foe))

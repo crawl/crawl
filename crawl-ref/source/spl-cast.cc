@@ -17,12 +17,12 @@
 #include "areas.h"
 #include "beam.h"
 #include "colour.h"
-#include "coord.h"
 #include "coordit.h"
 #include "describe.h"
 #include "directn.h"
 #include "effects.h"
 #include "env.h"
+#include "exercise.h"
 #include "food.h"
 #include "format.h"
 #include "godabil.h"
@@ -30,7 +30,6 @@
 #include "goditem.h"
 #include "hints.h"
 #include "invent.h"
-#include "it_use2.h"
 #include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -51,14 +50,18 @@
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
-#include "skills2.h"
-#include "spells1.h"
-#include "spells2.h"
-#include "spells3.h"
-#include "spells4.h"
 #include "spl-book.h"
-#include "spl-mis.h"
+#include "spl-clouds.h"
+#include "spl-damage.h"
+#include "spl-goditem.h"
+#include "spl-miscast.h"
+#include "spl-monench.h"
+#include "spl-other.h"
+#include "spl-selfench.h"
+#include "spl-summoning.h"
+#include "spl-transloc.h"
 #include "spl-util.h"
+#include "spl-wpnench.h"
 #include "spl-zap.h"
 #include "sprint.h"
 #include "state.h"
@@ -154,7 +157,7 @@ static std::string _spell_base_description(spell_type spell)
     // spell schools
     desc << spell_schools_string(spell);
 
-    const int so_far = desc.str().length() - (name_length_by_colour(highlight)+2);
+    const int so_far = desc.str().length() - (colour_to_str(highlight).length()+2);
     if (so_far < 60)
         desc << std::string(60 - so_far, ' ');
 
@@ -673,7 +676,8 @@ bool cast_a_spell(bool check_range, spell_type spell)
             return (false);
         }
 
-        exercise_spell( spell, true, cast_result == SPRET_SUCCESS );
+        practise(cast_result == SPRET_SUCCESS ? EX_DID_CAST : EX_DID_MISCAST,
+                 spell);
         did_god_conduct( DID_SPELL_CASTING, 1 + random2(5) );
     }
 
@@ -710,15 +714,21 @@ bool maybe_identify_staff(item_def &item, spell_type spell)
 
     int relevant_skill = 0;
     const bool chance = (spell != SPELL_NO_SPELL);
+    bool id_staff = false;
 
     switch (item.sub_type)
     {
         case STAFF_ENERGY:
             if (!chance) // The staff of energy only autoIDs by chance.
                 return (false);
-            // intentional fall-through
-        case STAFF_WIZARDRY:
             relevant_skill = you.skills[SK_SPELLCASTING];
+            break;
+
+        case STAFF_WIZARDRY:
+            // Staff of wizardry auto-ids if you could know spells
+            // because the interface gives it away anyhow.
+            if (player_spell_skills())
+                id_staff = true;
             break;
 
         case STAFF_FIRE:
@@ -774,8 +784,6 @@ bool maybe_identify_staff(item_def &item, spell_type spell)
                 relevant_skill = you.skills[SK_SUMMONINGS];
             break;
     }
-
-    bool id_staff = false;
 
     if (chance)
     {
@@ -879,7 +887,7 @@ bool is_prevented_teleport(spell_type spell)
     return ((spell == SPELL_BLINK
            || spell == SPELL_CONTROLLED_BLINK
            || spell == SPELL_TELEPORT_SELF)
-           && scan_artefacts(ARTP_PREVENT_TELEPORTATION, false));
+           && item_blocks_teleport(false, false));
 }
 
 bool spell_is_uncastable(spell_type spell, std::string &msg)
@@ -925,7 +933,7 @@ static void _try_monster_cast(spell_type spell, int powc,
         return;
     }
 
-    monsters* mon = get_free_monster();
+    monster* mon = get_free_monster();
     if (!mon)
     {
         mpr("Couldn't try casting monster spell because there is "
@@ -1052,6 +1060,13 @@ static bool _spellcasting_aborted(spell_type spell,
         mpr("There aren't any corpses here.");
         return (true);
     }
+
+    if (spell == SPELL_GOLUBRIAS_PASSAGE && !can_cast_golubrias_passage())
+    {
+        mpr("Only one passage may be opened at a time.");
+        return (true);
+    }
+
     return (false);
 }
 
@@ -1122,7 +1137,8 @@ spret_type your_spells(spell_type spell, int powc,
         const bool needs_path = (!testbits(flags, SPFLAG_GRID)
                                  && !testbits(flags, SPFLAG_TARGET));
 
-        const bool dont_cancel_me = testbits(flags, SPFLAG_HELPFUL);
+        const bool dont_cancel_me = (testbits(flags, SPFLAG_HELPFUL)
+                                     || testbits(flags, SPFLAG_ALLOW_SELF));
 
         const int range = calc_spell_range(spell, powc, false);
 
@@ -1246,7 +1262,7 @@ spret_type your_spells(spell_type spell, int powc,
             const int cont_points = div_rand_round(nastiness, 500);
 
             // miscasts are uncontrolled
-            contaminate_player(cont_points);
+            contaminate_player(cont_points, true);
 
             MiscastEffect(&you, NON_MONSTER, spell, spell_mana(spell),
                           spfail_chance - spfl);
@@ -1284,8 +1300,10 @@ spret_type your_spells(spell_type spell, int powc,
 #endif
 
         if (is_valid_spell(spell))
+        {
             mprf(MSGCH_ERROR, "Spell '%s' is not a player castable spell.",
                 spell_title(spell));
+        }
         else
             mpr("Invalid spell!", MSGCH_ERROR);
 
@@ -1339,13 +1357,15 @@ static spret_type _do_cast(spell_type spell, int powc,
     {
     // spells using burn_freeze()
     case SPELL_FREEZE:
+    {
         if (!burn_freeze(powc, _spell_to_beam_type(spell),
-                         monster_at(you.pos() + spd.delta)))
+                         monster_at(spd.isTarget ? beam.target
+                                                 : you.pos() + spd.delta)))
         {
             return (SPRET_ABORT);
         }
         break;
-
+    }
     case SPELL_SANDBLAST:
         if (!cast_sandblast(powc, beam))
             return (SPRET_ABORT);
@@ -1357,7 +1377,12 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_VAMPIRIC_DRAINING:
-        vampiric_drain(powc, spd);
+        if (!vampiric_drain(powc,
+                            monster_at(spd.isTarget ? beam.target
+                                                    : you.pos() + spd.delta)))
+        {
+            return (SPRET_ABORT);
+        }
         break;
 
     case SPELL_IOOD:
@@ -1380,6 +1405,10 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_POISONOUS_CLOUD:
         cast_big_c(powc, CLOUD_POISON, KC_YOU, beam);
+        break;
+
+    case SPELL_HOLY_BREATH:
+        cast_big_c(powc, CLOUD_HOLY_FLAMES, KC_YOU, beam);
         break;
 
     case SPELL_FREEZING_CLOUD:
@@ -1571,7 +1600,20 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_ANIMATE_SKELETON:
+    {
         mpr("You attempt to give life to the dead...");
+
+        for (stack_iterator si(you.pos(), true); si; ++si)
+        {
+            if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY
+                && mons_skeleton(si->plus))
+            {
+                turn_corpse_into_skeleton_and_chunks(*si);
+                mprf("Before your eyes, flesh is ripped from the corpse!");
+                // Only convert the top one.
+                break;
+            }
+        }
 
         if (animate_remains(you.pos(), CORPSE_SKELETON, BEH_FRIENDLY,
                             MHITYOU, &you, "", god) < 0)
@@ -1579,6 +1621,7 @@ static spret_type _do_cast(spell_type spell, int powc,
             mpr("There is no skeleton here to animate!");
         }
         break;
+    }
 
     case SPELL_ANIMATE_DEAD:
         mpr("You call on the dead to rise...");
@@ -1804,7 +1847,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_STONEMAIL:
-        stone_scales(powc);
+        stonemail(powc);
         break;
 
     case SPELL_CONDENSATION_SHIELD:
@@ -1845,7 +1888,8 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_DEATHS_DOOR:
-        cast_deaths_door(powc);
+        if (!cast_deaths_door(powc))
+            return (SPRET_ABORT);
         break;
 
     case SPELL_RING_OF_FLAMES:
@@ -1945,85 +1989,16 @@ static spret_type _do_cast(spell_type spell, int powc,
             return (SPRET_ABORT);
         break;
 
+    case SPELL_GOLUBRIAS_PASSAGE:
+        if (!cast_golubrias_passage(beam.target))
+            return (SPRET_ABORT);
+        break;
+
     default:
         return (SPRET_NONE);
     }
 
     return (SPRET_SUCCESS);
-}
-
-void exercise_spell(spell_type spell, bool spc, bool success)
-{
-    // (!success) reduces skill increase for miscast spells
-    int skill;
-    int exer = 0;
-    int workout = 0;
-
-    unsigned int disciplines = get_spell_disciplines(spell);
-
-    //jmf: evil evil evil -- exclude HOLY bit
-    disciplines &= (~SPTYP_HOLY);
-
-    int skillcount = count_bits( disciplines );
-
-    if (!success)
-        skillcount += 4 + random2(10);
-
-    const int diff = spell_difficulty(spell);
-
-    // Fill all disciplines into a vector, then shuffle the vector, and
-    // exercise skills in that random order. That way, small xp pools
-    // don't always train exclusively the first skill.
-    std::vector<int> disc;
-    for (int ndx = 0; ndx <= SPTYP_LAST_EXPONENT; ndx++)
-    {
-        if (!spell_typematch( spell, 1 << ndx ))
-            continue;
-
-        disc.push_back(ndx);
-    }
-    std::random_shuffle(disc.begin(), disc.end());
-
-    for (unsigned int k = 0; k < disc.size(); ++k)
-    {
-        int ndx = disc[k];
-        skill = spell_type2skill( 1 << ndx );
-        workout = (random2(1 + diff) / skillcount);
-
-        if (!one_chance_in(5))
-            workout++;       // most recently, this was an automatic add {dlb}
-
-        const int exercise_amount = exercise( skill, workout );
-        exer      += exercise_amount;
-    }
-
-    /* ******************************************************************
-       Other recent formulae for the above:
-
-       * workout = random2(spell_difficulty(spell_ex)
-       * (10 + (spell_difficulty(spell_ex) * 2 )) / 10 / spellsy + 1);
-
-       * workout = spell_difficulty(spell_ex)
-       * (15 + spell_difficulty(spell_ex)) / 15 / spellsy;
-
-       spellcasting had also been generally exercised at the same time
-       ****************************************************************** */
-
-    if (spc)
-    {
-        const int exercise_amount =
-            exercise(SK_SPELLCASTING, one_chance_in(3) ? 1
-                            : random2(1 + random2(diff)));
-        exer      += exercise_amount;
-    }
-
-    // Avoid doubly rewarding spell practise in sprint
-    // (by inflated XP and inflated piety gain)
-    if (crawl_state.game_is_sprint())
-        exer = sprint_modify_exp_inverse(exer);
-
-    if (exer)
-        did_god_conduct(DID_SPELL_PRACTISE, exer);
 }
 
 const char* failure_rate_to_string( int fail )

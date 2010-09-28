@@ -23,5 +23,6 @@ void wizard_set_stats( void );
 void wizard_edit_durations( void );
 void wizard_get_god_gift ();
 void wizard_toggle_xray_vision();
+void wizard_god_wrath();
 
 #endif

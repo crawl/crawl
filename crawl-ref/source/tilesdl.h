@@ -32,6 +32,8 @@ class DollEditRegion;
 class StatRegion;
 class MessageRegion;
 
+struct map_cell;
+
 enum key_mod
 {
     MOD_NONE  = 0x0,
@@ -99,7 +101,6 @@ public:
     int get_number_of_cols();
 
     void update_minimap(const coord_def &gc);
-    void update_minimap(const coord_def &gc, map_feature f);
     void clear_minimap();
     void update_minimap_bounds();
     void toggle_inventory_display();
@@ -113,7 +114,7 @@ public:
     void clear_text_tags(text_tag_type type);
     void add_text_tag(text_tag_type type, const std::string &tag,
                       const coord_def &gc);
-    void add_text_tag(text_tag_type type, const monsters* mon);
+    void add_text_tag(text_tag_type type, const monster* mon);
 
     bool initialise_items();
 

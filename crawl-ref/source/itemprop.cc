@@ -17,11 +17,11 @@
 
 #include "artefact.h"
 #include "decks.h"
+#include "describe.h"
 #include "food.h"
 #include "invent.h"
 #include "items.h"
 #include "itemprop.h"
-#include "macro.h"
 #include "mon-util.h"
 #include "mon-stuff.h"
 #include "notes.h"
@@ -413,8 +413,8 @@ static food_def Food_prop[NUM_FOODS] =
     { FOOD_BEEF_JERKY,   "beef jerky",    800,   100,  -250,  20, 1, FFL_NONE },
 
     { FOOD_BREAD_RATION, "bread ration", 4400, -1500,   750,  80, 4, FFL_NONE },
-    { FOOD_SNOZZCUMBER,  "snozzcumber",  1500,  -500,   500,  50, 1, FFL_NONE },
 
+    { FOOD_SNOZZCUMBER,  "snozzcumber",  1500,  -500,   500,  50, 1, FFL_FRUIT},
     { FOOD_ORANGE,       "orange",       1000,  -350,   400,  20, 1, FFL_FRUIT},
     { FOOD_BANANA,       "banana",       1000,  -350,   400,  20, 1, FFL_FRUIT},
     { FOOD_LEMON,        "lemon",        1000,  -350,   400,  20, 1, FFL_FRUIT},
@@ -536,12 +536,24 @@ void do_curse_item( item_def &item, bool quiet )
     }
 }
 
-void do_uncurse_item( item_def &item )
+void do_uncurse_item(item_def &item, bool inscribe)
 {
-    if (in_inventory(item) && you.equip[EQ_WEAPON] == item.link)
+    if (inscribe && Options.autoinscribe_cursed
+        && item.inscription.find("was cursed") == std::string::npos
+        && !item_ident(item, ISFLAG_SEEN_CURSED)
+        && !item_ident(item, ISFLAG_IDENT_MASK))
     {
-        // Redraw the weapon.
-        you.wield_change = true;
+        add_inscription(item, "was cursed");
+    }
+
+    if (in_inventory(item))
+    {
+        if (you.equip[EQ_WEAPON] == item.link)
+        {
+            // Redraw the weapon.
+            you.wield_change = true;
+        }
+        item.flags |= ISFLAG_KNOW_CURSE;
     }
     item.flags &= (~ISFLAG_CURSED);
     item.flags &= (~ISFLAG_SEEN_CURSED);
@@ -649,8 +661,13 @@ unsigned long full_ident_mask( const item_def& item )
     case OBJ_ORBS:
     case OBJ_SCROLLS:
     case OBJ_POTIONS:
-    case OBJ_STAVES:
         flagset = ISFLAG_KNOW_TYPE;
+        break;
+    case OBJ_STAVES:
+        if (item_is_rod(item))
+            flagset = ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PLUSES;
+        else
+            flagset = ISFLAG_KNOW_TYPE;
         break;
     case OBJ_WANDS:
         flagset = (ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PLUSES);
@@ -672,7 +689,7 @@ unsigned long full_ident_mask( const item_def& item )
         break;
     }
 
-    if (item_type_known(item.base_type, item.sub_type))
+    if (item_type_known(item.base_type, item.sub_type) && !is_artefact(item))
         flagset &= (~ISFLAG_KNOW_TYPE);
 
     if (is_artefact(item))
@@ -1190,8 +1207,9 @@ bool is_enchantable_weapon(const item_def &wpn, bool uncurse, bool first)
         return (false);
 
     // Blowguns don't have any to-dam.
+    // but they can be uncursed. -doy
     if (!first && wpn.base_type == OBJ_WEAPONS && wpn.sub_type == WPN_BLOWGUN)
-        return (false);
+        return (uncurse && wpn.cursed());
 
     // Artefacts or highly enchanted weapons cannot be enchanted,
     // only uncursed.
@@ -2577,7 +2595,7 @@ std::string food_type_name (int sub_type)
     return (Food_prop[Food_index[sub_type]].name);
 }
 
-const char* weapon_base_name(unsigned char subtype)
+const char* weapon_base_name(uint8_t subtype)
 {
     return Weapon_prop[Weapon_index[subtype]].name;
 }

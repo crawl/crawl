@@ -28,7 +28,7 @@ public:
     void merge_killer(kill_category who);
     void cap_degree();
 
-    void set_duration(const monsters *mons, const mon_enchant *exist);
+    void set_duration(const monster* mons, const mon_enchant *exist);
 
     bool operator < (const mon_enchant &other) const
     {
@@ -45,22 +45,22 @@ public:
     mon_enchant operator + (const mon_enchant &other) const;
 
 private:
-    int modded_speed(const monsters *mons, int hdplus) const;
-    int calc_duration(const monsters *mons, const mon_enchant *added) const;
+    int modded_speed(const monster* mons, int hdplus) const;
+    int calc_duration(const monster* mons, const mon_enchant *added) const;
 };
 
 typedef std::map<enchant_type, mon_enchant> mon_enchant_list;
 
 struct monsterentry;
 
-class monsters : public actor
+class monster : public actor
 {
 public:
-    monsters();
-    monsters(const monsters &other);
-    ~monsters();
+    monster();
+    monster(const monster& other);
+    ~monster();
 
-    monsters &operator = (const monsters &other);
+    monster& operator = (const monster& other);
     void reset();
 
 public:
@@ -85,7 +85,7 @@ public:
     mon_attitude_type attitude;
     beh_type behaviour;
     unsigned short foe;
-    char ench_countdown;
+    int8_t ench_countdown;
     mon_enchant_list enchantments;
     uint64_t flags;                    // bitfield of boolean flags
 
@@ -203,7 +203,7 @@ public:
     void pandemon_init();
     void dancing_weapon_init();
     void uglything_init(bool only_mutate = false);
-    void uglything_mutate(unsigned char force_colour = BLACK);
+    void uglything_mutate(uint8_t force_colour = BLACK);
     void uglything_upgrade();
     void destroy_inventory();
     void load_spells(mon_spellbook_type spellbook);
@@ -319,6 +319,7 @@ public:
     bool is_known_chaotic() const;
     bool is_chaotic() const;
     bool is_insubstantial() const;
+    int res_hellfire() const;
     int res_fire() const;
     int res_steam() const;
     int res_cold() const;
@@ -413,9 +414,9 @@ public:
     int shield_bypass_ability(int tohit) const;
 
     actor_type atype() const { return ACT_MONSTER; }
-    monsters* as_monster() { return this; }
+    monster* as_monster() { return this; }
     player* as_player() { return NULL; }
-    const monsters* as_monster() const { return this; }
+    const monster* as_monster() const { return this; }
     const player* as_player() const { return NULL; }
 
     // Hacks, with a capital H.
@@ -430,10 +431,11 @@ public:
     bool do_shaft();
     bool has_spell_of_type(unsigned) const;
 
+    void bind_melee_flags();
     void bind_spell_flags();
 
 private:
-    void init_with(const monsters &mons);
+    void init_with(const monster& mons);
     void swap_slots(mon_inv_type a, mon_inv_type b);
     bool need_message(int &near) const;
     bool level_up();

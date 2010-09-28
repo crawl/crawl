@@ -52,6 +52,5 @@ bool transform_allows_wearing_item(const item_def& item);
 bool transform_allows_wielding(transformation_type transform);
 
 void transformation_expiration_warning();
-std::string transform_desc(bool expire_pre);
 
 #endif

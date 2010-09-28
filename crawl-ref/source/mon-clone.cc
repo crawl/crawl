@@ -30,14 +30,14 @@
 const std::string clone_master_key = "mcloneorig";
 const std::string clone_slave_key  = "mclonedupe";
 
-static std::string _monster_clone_id_for(monsters *mons)
+static std::string _monster_clone_id_for(monster* mons)
 {
     return make_stringf("%s%d",
                         mons->name(DESC_PLAIN, true).c_str(),
                         you.num_turns);
 }
 
-static bool _monster_clone_exists(monsters *mons)
+static bool _monster_clone_exists(monster* mons)
 {
     if (!mons->props.exists(clone_master_key))
         return (false);
@@ -45,7 +45,7 @@ static bool _monster_clone_exists(monsters *mons)
     const std::string clone_id = mons->props[clone_master_key].get_string();
     for (monster_iterator mi; mi; ++mi)
     {
-        monsters *thing(*mi);
+        monster* thing(*mi);
         if (thing->props.exists(clone_slave_key)
             && thing->props[clone_slave_key].get_string() == clone_id)
             return (true);
@@ -53,14 +53,14 @@ static bool _monster_clone_exists(monsters *mons)
     return (false);
 }
 
-bool mons_is_illusion(monsters *mons)
+bool mons_is_illusion(monster* mons)
 {
     return (mons->type == MONS_PLAYER_ILLUSION
             || mons->type == MONS_MARA_FAKE
             || mons->props.exists(clone_slave_key));
 }
 
-bool mons_is_illusion_cloneable(monsters *mons)
+bool mons_is_illusion_cloneable(monster* mons)
 {
     return (!mons_is_illusion(mons) && !_monster_clone_exists(mons));
 }
@@ -88,8 +88,8 @@ bool actor_is_illusion_cloneable(actor *target)
     }
 }
 
-static void _mons_summon_monster_illusion(monsters *caster,
-                                          monsters *foe)
+static void _mons_summon_monster_illusion(monster* caster,
+                                          monster* foe)
 {
     // If the monster's clone is still kicking around, don't clone it again.
     if (!mons_is_illusion_cloneable(foe))
@@ -109,7 +109,7 @@ static void _mons_summon_monster_illusion(monsters *caster,
     if (clone_idx != NON_MONSTER)
     {
         const std::string clone_id = _monster_clone_id_for(foe);
-        monsters *clone = &menv[clone_idx];
+        monster* clone = &menv[clone_idx];
         clone->props[clone_slave_key] = clone_id;
         foe->props[clone_master_key] = clone_id;
         mons_add_blame(clone,
@@ -173,7 +173,7 @@ enchant_type player_duration_to_mons_enchantment(duration_type dur)
     }
 }
 
-static void _mons_load_player_enchantments(monsters *creator, monsters *target)
+static void _mons_load_player_enchantments(monster* creator, monster* target)
 {
     for (int i = 0; i < NUM_DURATIONS; ++i)
     {
@@ -192,7 +192,7 @@ static void _mons_load_player_enchantments(monsters *creator, monsters *target)
     }
 }
 
-void mons_summon_illusion_from(monsters *monster, actor *foe,
+void mons_summon_illusion_from(monster* mons, actor *foe,
                                spell_type spell_cast)
 {
     if (foe->atype() == ACT_PLAYER)
@@ -200,29 +200,29 @@ void mons_summon_illusion_from(monsters *monster, actor *foe,
         ASSERT(foe == &you);
         const int midx =
             create_monster(
-                mgen_data(MONS_PLAYER_ILLUSION, SAME_ATTITUDE(monster), monster,
-                          6, spell_cast, monster->pos(), monster->foe, 0));
+                mgen_data(MONS_PLAYER_ILLUSION, SAME_ATTITUDE(mons), mons,
+                          6, spell_cast, mons->pos(), mons->foe, 0));
         if (midx != -1)
         {
             mpr("There is a horrible, sudden wrenching feeling in your soul!",
                 MSGCH_WARN);
 
-            monsters *clone = &menv[midx];
+            monster* clone = &menv[midx];
             // Change type from player ghost.
             clone->type = MONS_PLAYER_ILLUSION;
             _init_player_illusion_properties(
                 get_monster_data(MONS_PLAYER_ILLUSION));
-            _mons_load_player_enchantments(monster, clone);
+            _mons_load_player_enchantments(mons, clone);
         }
     }
     else
     {
-        monsters *mfoe = foe->as_monster();
-        _mons_summon_monster_illusion(monster, mfoe);
+        monster* mfoe = foe->as_monster();
+        _mons_summon_monster_illusion(mons, mfoe);
     }
 }
 
-bool mons_clonable(const monsters* mon, bool needs_adjacent)
+bool mons_clonable(const monster* mon, bool needs_adjacent)
 {
     // No uniques or ghost demon monsters.  Also, figuring out the name
     // for the clone of a named monster isn't worth it.
@@ -268,11 +268,11 @@ bool mons_clonable(const monsters* mon, bool needs_adjacent)
     return (true);
 }
 
-int clone_mons(const monsters* orig, bool quiet, bool* obvious,
+int clone_mons(const monster* orig, bool quiet, bool* obvious,
                coord_def pos)
 {
     // Is there an open slot in menv?
-    monsters* mons = get_free_monster();
+    monster* mons = get_free_monster();
 
     if (!mons)
         return (NON_MONSTER);

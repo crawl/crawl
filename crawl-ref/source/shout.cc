@@ -7,11 +7,13 @@
 
 #include "shout.h"
 
+#include "branch.h"
 #include "cluautil.h"
 #include "coord.h"
 #include "database.h"
 #include "dlua.h"
 #include "env.h"
+#include "exercise.h"
 #include "ghost.h"
 #include "jobs.h"
 #include "libutil.h"
@@ -37,30 +39,30 @@
 
 extern int stealth;             // defined in main.cc
 
-void handle_monster_shouts(monsters* monster, bool force)
+void handle_monster_shouts(monster* mons, bool force)
 {
     if (!force && x_chance_in_y(you.skills[SK_STEALTH], 30))
         return;
 
     // Friendly or neutral monsters don't shout.
-    if (!force && (monster->friendly() || monster->neutral()))
+    if (!force && (mons->friendly() || mons->neutral()))
         return;
 
     // Get it once, since monster might be S_RANDOM, in which case
     // mons_shouts() will return a different value every time.
     // Demon lords will insult you as a greeting, but later we'll
     // choose a random verb and loudness for them.
-    shout_type  s_type = mons_shouts(monster->type, false);
+    shout_type  s_type = mons_shouts(mons->type, false);
 
     // Silent monsters can give noiseless "visual shouts" if the
     // player can see them, in which case silence isn't checked for.
-    if (s_type == S_SILENT && !monster->visible_to(&you)
-        || s_type != S_SILENT && !player_can_hear(monster->pos()))
+    if (s_type == S_SILENT && !mons->visible_to(&you)
+        || s_type != S_SILENT && !player_can_hear(mons->pos()))
     {
         return;
     }
 
-    mon_acting mact(monster);
+    mon_acting mact(mons);
 
     std::string default_msg_key = "";
 
@@ -124,18 +126,18 @@ void handle_monster_shouts(monsters* monster, bool force)
     // Now that we have the message key, get a random verb and noise level
     // for pandemonium lords.
     if (s_type == S_DEMON_TAUNT)
-        s_type = mons_shouts(monster->type, true);
+        s_type = mons_shouts(mons->type, true);
 
     std::string msg, suffix;
-    std::string key = mons_type_name(monster->type, DESC_PLAIN);
+    std::string key = mons_type_name(mons->type, DESC_PLAIN);
 
     // Pandemonium demons have random names, so use "pandemonium lord"
-    if (monster->type == MONS_PANDEMONIUM_DEMON)
+    if (mons->type == MONS_PANDEMONIUM_DEMON)
         key = "pandemonium lord";
     // Search for player ghost shout by the ghost's job.
-    else if (monster->type == MONS_PLAYER_GHOST)
+    else if (mons->type == MONS_PLAYER_GHOST)
     {
-        const ghost_demon &ghost = *(monster->ghost);
+        const ghost_demon &ghost = *(mons->ghost);
         std::string ghost_job    = get_job_name(ghost.job);
 
         key = ghost_job + " player ghost";
@@ -145,24 +147,24 @@ void handle_monster_shouts(monsters* monster, bool force)
 
     // Tries to find an entry for "name seen" or "name unseen",
     // and if no such entry exists then looks simply for "name".
-    // We don't use "you.can_see(monster)" here since that would return
+    // We don't use "you.can_see(mons)" here since that would return
     // false for submerged monsters, but submerged monsters will be forced
     // to surface before they shout, thus removing that source of
     // non-visibility.
-    if (you.can_see(monster))
+    if (you.can_see(mons))
         suffix = " seen";
     else
         suffix = " unseen";
 
-    if (monster->props.exists("shout_func"))
+    if (mons->props.exists("shout_func"))
     {
         lua_stack_cleaner clean(dlua);
 
-        dlua_chunk &chunk = monster->props["shout_func"];
+        dlua_chunk &chunk = mons->props["shout_func"];
 
         if (!chunk.load(dlua))
         {
-            push_monster(dlua, monster);
+            push_monster(dlua, mons);
             clua_pushcxxstring(dlua, suffix);
             dlua.callfn(NULL, 2, 1);
             dlua.fnreturns(">s", &msg);
@@ -178,7 +180,7 @@ void handle_monster_shouts(monsters* monster, bool force)
         {
             mprf(MSGCH_ERROR,
                  "Lua shout function for monster '%s' didn't load: %s",
-                 monster->full_name(DESC_PLAIN).c_str(),
+                 mons->full_name(DESC_PLAIN).c_str(),
                  dlua.error.c_str());
         }
     }
@@ -190,7 +192,7 @@ void handle_monster_shouts(monsters* monster, bool force)
         msg = getShoutString(default_msg_key, suffix);
     else if (msg.empty())
     {
-        char mchar = mons_base_char(monster->type);
+        char mchar = mons_base_char(mons->type);
 
         // See if there's a shout for all monsters using the
         // same glyph/symbol
@@ -253,67 +255,67 @@ void handle_monster_shouts(monsters* monster, bool force)
             channel = MSGCH_SOUND;
 
         // Monster must come up from being submerged if it wants to shout.
-        if (monster->submerged())
+        if (mons->submerged())
         {
-            if (!monster->del_ench(ENCH_SUBMERGED))
+            if (!mons->del_ench(ENCH_SUBMERGED))
             {
                 // Couldn't unsubmerge.
                 return;
             }
 
-            if (you.can_see(monster))
+            if (you.can_see(mons))
             {
-                if (monster->type == MONS_AIR_ELEMENTAL)
-                    monster->seen_context = "thin air";
-                else if (monster->type == MONS_TRAPDOOR_SPIDER)
-                    monster->seen_context = "leaps out";
-                else if (!monster_habitable_grid(monster, DNGN_FLOOR))
-                    monster->seen_context = "bursts forth shouting";
+                if (mons->type == MONS_AIR_ELEMENTAL)
+                    mons->seen_context = "thin air";
+                else if (mons->type == MONS_TRAPDOOR_SPIDER)
+                    mons->seen_context = "leaps out";
+                else if (!monster_habitable_grid(mons, DNGN_FLOOR))
+                    mons->seen_context = "bursts forth shouting";
                 else
-                    monster->seen_context = "surfaces";
+                    mons->seen_context = "surfaces";
 
                 // Give interrupt message before shout message.
-                handle_seen_interrupt(monster);
+                handle_seen_interrupt(mons);
             }
         }
 
-        if (channel != MSGCH_TALK_VISUAL || you.can_see(monster))
+        if (channel != MSGCH_TALK_VISUAL || you.can_see(mons))
         {
-            msg = do_mon_str_replacements(msg, monster, s_type);
+            msg = do_mon_str_replacements(msg, mons, s_type);
             msg::streams(channel) << msg << std::endl;
 
             // Otherwise it can move away with no feedback.
-            if (you.can_see(monster))
+            if (you.can_see(mons))
             {
-                if (!(monster->flags & MF_WAS_IN_VIEW))
-                    handle_seen_interrupt(monster);
-                seen_monster(monster);
+                if (!(mons->flags & MF_WAS_IN_VIEW))
+                    handle_seen_interrupt(mons);
+                seen_monster(mons);
             }
         }
     }
 
     const int  noise_level = get_shout_noise_level(s_type);
-    const bool heard       = noisy(noise_level, monster->pos(), monster->mindex());
+    const bool heard       = noisy(noise_level, mons->pos(), mons->mindex());
 
-    if (Hints.hints_left && (heard || you.can_see(monster)))
-        learned_something_new(HINT_MONSTER_SHOUT, monster->pos());
+    if (Hints.hints_left && (heard || you.can_see(mons)))
+        learned_something_new(HINT_MONSTER_SHOUT, mons->pos());
 }
 
-void force_monster_shout(monsters* monster)
+void force_monster_shout(monster* mons)
 {
-    handle_monster_shouts(monster, true);
+    handle_monster_shouts(mons, true);
 }
 
-bool check_awaken(monsters* monster)
+bool check_awaken(monster* mons)
 {
     // Usually redundant because we iterate over player LOS,
     // but e.g. for you.xray_vision.
-    if (!monster->see_cell(you.pos()))
+    if (!mons->see_cell(you.pos()))
         return (false);
 
     // Monsters put to sleep by ensorcelled hibernation will sleep
     // at least one turn.
-    if (monster->has_ench(ENCH_SLEEPY))
+    if (mons->has_ench(ENCH_SLEEPY))
         return (false);
 
     // Berserkers aren't really concerned about stealth.
@@ -321,8 +323,8 @@ bool check_awaken(monsters* monster)
         return (true);
 
     // I assume that creatures who can sense invisible are very perceptive.
-    int mons_perc = 10 + (mons_intel(monster) * 4) + monster->hit_dice
-                       + mons_sense_invis(monster) * 5;
+    int mons_perc = 10 + (mons_intel(mons) * 4) + mons->hit_dice
+                       + mons_sense_invis(mons) * 5;
 
     bool unnatural_stealthy = false; // "stealthy" only because of invisibility?
 
@@ -330,21 +332,21 @@ bool check_awaken(monsters* monster)
     // still actively on guard for the player, even if they can't see you.
     // Give them a large bonus -- handle_behaviour() will nuke 'foe' after
     // a while, removing this bonus.
-    if (mons_is_wandering(monster) && monster->foe == MHITYOU)
+    if (mons_is_wandering(mons) && mons->foe == MHITYOU)
         mons_perc += 15;
 
-    if (!you.visible_to(monster))
+    if (!you.visible_to(mons))
     {
         mons_perc -= 75;
         unnatural_stealthy = true;
     }
 
-    if (monster->asleep())
+    if (mons->asleep())
     {
-        if (monster->holiness() == MH_NATURAL)
+        if (mons->holiness() == MH_NATURAL)
         {
             // Monster is "hibernating"... reduce chance of waking.
-            if (monster->has_ench(ENCH_SLEEP_WARY))
+            if (mons->has_ench(ENCH_SLEEP_WARY))
                 mons_perc -= 10;
         }
         else // unnatural creature
@@ -358,7 +360,7 @@ bool check_awaken(monsters* monster)
 
     // If you've been tagged with Corona or are Glowing, the glow
     // makes you extremely unstealthy.
-    if (you.backlit() && you.visible_to(monster))
+    if (you.backlit() && you.visible_to(mons))
         mons_perc += 50;
 
     if (mons_perc < 0)
@@ -367,19 +369,13 @@ bool check_awaken(monsters* monster)
     if (x_chance_in_y(mons_perc + 1, stealth))
         return (true); // Oops, the monster wakes up!
 
-    const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, false);
-    const int armour_mass = body_armour? item_mass(*body_armour) : 0;
     // You didn't wake the monster!
-    if (!x_chance_in_y(armour_mass, 1000)
-        && you.can_see(monster) // to avoid leaking information
-        && you.burden_state == BS_UNENCUMBERED
-        && !you.attribute[ATTR_SHADOWS]
-        && !monster->wont_attack()
-        && !mons_class_flag(monster->type, M_NO_EXP_GAIN)
-            // If invisible, training happens much more rarely.
-        && (!unnatural_stealthy && one_chance_in(25) || one_chance_in(100)))
+    if (you.can_see(mons) // to avoid leaking information
+        && !mons->wont_attack()
+        && !mons->neutral() // include pacified monsters
+        && !mons_class_flag(mons->type, M_NO_EXP_GAIN))
     {
-        exercise(SK_STEALTH, 1);
+        practise(unnatural_stealthy ? EX_SNEAK_INVIS : EX_SNEAK);
     }
 
     return (false);
@@ -394,6 +390,15 @@ bool noisy(int loudness, const coord_def& where, const char *msg, int who,
 {
     bool ret = false;
 
+    // high ambient noise makes sounds harder to hear
+    int ambient = current_level_ambient_noise();
+    if (ambient < 0) {
+        loudness += random2avg(abs(ambient), 3);
+    }
+    else {
+        loudness -= random2avg(abs(ambient), 3);
+    }
+
     if (loudness <= 0)
         return (false);
 
@@ -405,7 +410,7 @@ bool noisy(int loudness, const coord_def& where, const char *msg, int who,
     if (silenced(where))
         return (false);
 
-    const int dist = loudness * loudness;
+    const int dist = loudness * loudness + 1;
     const int player_distance = distance( you.pos(), where );
 
     // Message the player.
@@ -417,7 +422,10 @@ bool noisy(int loudness, const coord_def& where, const char *msg, int who,
         you.check_awaken(dist - player_distance);
 
         if (!mermaid)
+        {
             you.beholders_check_noise(loudness);
+            you.fearmongers_check_noise(loudness);
+        }
 
         ret = true;
     }

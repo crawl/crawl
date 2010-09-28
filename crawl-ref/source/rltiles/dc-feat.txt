@@ -50,6 +50,8 @@ dngn_orcish_idol DNGN_ORCISH_IDOL
 dngn_granite_statue DNGN_GRANITE_STATUE
 elephant_statue DNGN_ELEPHANT_STATUE
 crumbled_column DNGN_CRUMBLED_COLUMN
+granite_stump DNGN_GRANITE_STUMP
+zot_pillar DNGN_ZOT_PILLAR
 
 ## Features only used in certain minivaults
 %sdir dc-dngn/vaults
@@ -303,12 +305,14 @@ dngn_altar_zin DNGN_ALTAR_ZIN
 dngn_altar_shining_one DNGN_ALTAR_SHINING_ONE
 dngn_altar_kikubaaqudgha DNGN_ALTAR_KIKUBAAQUDGHA
 dngn_altar_yredelemnul DNGN_ALTAR_YREDELEMNUL
-dngn_altar_xom_blue DNGN_ALTAR_XOM
-dngn_altar_xom_green
-dngn_altar_xom_pink
-dngn_altar_xom_red
-dngn_altar_xom_turquoise
-dngn_altar_xom_yellow
+dngn_altar_xom0 DNGN_ALTAR_XOM
+dngn_altar_xom1
+dngn_altar_xom2
+dngn_altar_xom3
+dngn_altar_xom4
+dngn_altar_xom5
+dngn_altar_xom6
+dngn_altar_xom7
 dngn_altar_vehumet DNGN_ALTAR_VEHUMET
 dngn_altar_okawaru DNGN_ALTAR_OKAWARU
 dngn_altar_makhleb_flame1 DNGN_ALTAR_MAKHLEB

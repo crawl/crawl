@@ -7,8 +7,10 @@
 #ifndef MONACT_H
 #define MONACT_H
 
+bool mons_can_move_towards_target(const monster* mon);
+
 void handle_monsters(void);
-void handle_monster_move(monsters* mon);
+void handle_monster_move(monster* mon);
 
 #define ENERGY_SUBMERGE(entry) (std::max(entry->energy_usage.swim / 2, 1))
 

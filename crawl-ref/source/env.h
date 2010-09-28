@@ -17,11 +17,11 @@ typedef std::vector<vault_placement*> vault_placement_refv;
 
 struct crawl_environment
 {
-    unsigned char rock_colour;
-    unsigned char floor_colour;
+    uint8_t rock_colour;
+    uint8_t floor_colour;
 
     FixedVector< item_def, MAX_ITEMS >       item;  // item list
-    FixedVector< monsters, MAX_MONSTERS >    mons;  // monster list
+    FixedVector< monster, MAX_MONSTERS >    mons;  // monster list
 
     feature_grid                             grid;  // terrain grid
     FixedArray<terrain_property_t, GXM, GYM> pgrid; // terrain properties
@@ -97,6 +97,9 @@ struct crawl_environment
     coord_def sanctuary_pos;
     int sanctuary_time;
     int forest_awoken_until;
+
+    // Temp stuff.
+    std::vector<final_effect> final_effects;
 };
 
 #ifdef DEBUG_GLOBALS

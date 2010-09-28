@@ -41,7 +41,7 @@
 #include "tileview.h"
 #endif
 
-
+#ifndef USE_TILE
 static unsigned _get_travel_colour(const coord_def& p)
 {
 #ifdef WIZARD
@@ -59,7 +59,9 @@ static unsigned _get_travel_colour(const coord_def& p)
            dist < 0?                    Options.tc_dangerous        :
                                         Options.tc_disconnected;
 }
+#endif
 
+#ifndef USE_TILE
 static bool _travel_colour_override(const coord_def& p)
 {
     if (is_waypoint(p) || travel_point_distance[p.x][p.y] == PD_EXCLUDED)
@@ -89,14 +91,14 @@ static bool _travel_colour_override(const coord_def& p)
     else
         return false;
 }
+#endif
 
-
-unsigned get_sightmap_char(dungeon_feature_type feat)
+wchar_t get_sightmap_char(dungeon_feature_type feat)
 {
     return (get_feature_def(feat).symbol);
 }
 
-unsigned get_magicmap_char(dungeon_feature_type feat)
+wchar_t get_magicmap_char(dungeon_feature_type feat)
 {
     return (get_feature_def(feat).magic_symbol);
 }
@@ -109,7 +111,7 @@ unsigned get_magicmap_char(dungeon_feature_type feat)
 // 3. '^' for traps
 // 4. '_' for altars
 // 5. Anything else will look for the exact same character in the level map.
-bool is_feature(int feature, const coord_def& where)
+bool is_feature(wchar_t feature, const coord_def& where)
 {
     if (!env.map_knowledge(where).known() && !you.see_cell(where))
         return (false);
@@ -181,6 +183,7 @@ bool is_feature(int feature, const coord_def& where)
         case DNGN_STONE_STAIRS_UP_I:
         case DNGN_STONE_STAIRS_UP_II:
         case DNGN_STONE_STAIRS_UP_III:
+        case DNGN_RETURN_FROM_DWARF_HALL:
         case DNGN_RETURN_FROM_ORCISH_MINES:
         case DNGN_RETURN_FROM_HIVE:
         case DNGN_RETURN_FROM_LAIR:
@@ -206,6 +209,7 @@ bool is_feature(int feature, const coord_def& where)
         case DNGN_STONE_STAIRS_DOWN_I:
         case DNGN_STONE_STAIRS_DOWN_II:
         case DNGN_STONE_STAIRS_DOWN_III:
+        case DNGN_ENTER_DWARF_HALL:
         case DNGN_ENTER_ORCISH_MINES:
         case DNGN_ENTER_HIVE:
         case DNGN_ENTER_LAIR:
@@ -234,7 +238,7 @@ bool is_feature(int feature, const coord_def& where)
             return (false);
         }
     default:
-        return get_cell_glyph(env.map_knowledge(where)).ch == (unsigned) feature;
+        return get_cell_glyph(where).ch == feature;
     }
 }
 
@@ -246,13 +250,9 @@ static bool _is_feature_fudged(int feature, const coord_def& where)
     if (is_feature(feature, where))
         return (true);
 
-    // 'grid' can fit in an unsigned char, but making this a short shuts up
-    // warnings about out-of-range case values.
-    short grid = grd(where);
-
     if (feature == '<')
     {
-        switch (grid)
+        switch (grd(where))
         {
         case DNGN_EXIT_HELL:
         case DNGN_EXIT_PORTAL_VAULT:
@@ -266,7 +266,7 @@ static bool _is_feature_fudged(int feature, const coord_def& where)
     }
     else if (feature == '>')
     {
-        switch (grid)
+        switch (grd(where))
         {
         case DNGN_ENTER_DIS:
         case DNGN_ENTER_GEHENNA:
@@ -344,7 +344,7 @@ static int _find_feature(int feature, int curs_x, int curs_y,
 }
 
 void find_features(const std::vector<coord_def>& features,
-                   unsigned char feature, std::vector<coord_def> *found)
+                   wchar_t feature, std::vector<coord_def> *found)
 {
     for (unsigned feat = 0; feat < features.size(); ++feat)
     {
@@ -429,7 +429,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
             }
             else
             {
-                glyph g = get_cell_glyph(env.map_knowledge(c), Options.clean_map, -1);
+                glyph g = get_cell_glyph(c, Options.clean_map, -1);
                 cell->glyph = g.ch;
                 cell->colour = g.col;
 
@@ -452,8 +452,8 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
                 if (Options.show_waypoints)
                 {
                     // XXX: This is a horrible hack.
-                    screen_buffer_t bc = cell->glyph;
-                    unsigned char ch = is_waypoint(c);
+                    wchar_t bc = cell->glyph;
+                    uint8_t ch = is_waypoint(c);
                     if (ch && (bc == get_sightmap_char(DNGN_FLOOR)
                                || bc == get_magicmap_char(DNGN_FLOOR)))
                     {
@@ -648,6 +648,9 @@ public:
 
 static level_pos _stair_dest(const coord_def& p, command_type dir)
 {
+    if (!in_bounds(p))
+        return (level_pos());
+
     if (feat_stair_direction(env.map_knowledge(p).feat()) != dir)
         return (level_pos());
 

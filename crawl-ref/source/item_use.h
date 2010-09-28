@@ -49,8 +49,7 @@ void drink(int slot = -1);
 
 bool elemental_missile_beam(int launcher_brand, int ammo_brand);
 
-bool safe_to_remove_or_wear(const item_def &item, bool remove,
-                            bool quiet = false);
+bool safe_to_remove(const item_def &item, bool quiet = false);
 
 void examine_object(void);
 
@@ -79,7 +78,8 @@ bool can_wield(item_def *weapon, bool say_why = false,
 
 bool wield_weapon(bool auto_wield, int slot = -1,
                   bool show_weff_messages = true, bool force = false,
-                  bool show_unwield_msg = true);
+                  bool show_unwield_msg = true,
+                  bool show_wield_msg = true);
 
 void zap_wand(int slot = -1);
 

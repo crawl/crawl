@@ -16,10 +16,9 @@ msc = $danger:clumsily bash
 msc = $danger:goes berserk!
 
 msc = $item_dmg:acid corrodes
-msc = $item_dmg:you are carrying w.* destroyed
-msc = $item_dmg:you are carrying catche?s? fire
-msc = $item_dmg:you are carrying freezes? and shatters?
-msc = $item_dmg:Some of your food is covered with spores
+msc = $item_dmg:catch(es)? fire
+msc = $item_dmg:freezes? and shatters?
+msc = $item_dmg:covered with spores
 
 # Less urgent, but still significant messages
 #

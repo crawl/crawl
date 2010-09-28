@@ -32,7 +32,7 @@
 #include "options.h"
 #include "random.h"
 #include "religion.h"
-#include "spl-mis.h"
+#include "spl-miscast.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
@@ -49,7 +49,7 @@
 
 const int MAX_KRAKEN_TENTACLE_DIST = 12;
 
-static bool _slime_split_merge(monsters *thing);
+static bool _slime_split_merge(monster* thing);
 
 struct position_node
 {
@@ -338,19 +338,20 @@ void search_dungeon(const coord_def & start,
     }
 }
 
-bool ugly_thing_mutate(monsters *ugly, bool proximity)
+bool ugly_thing_mutate(monster* ugly, bool proximity)
 {
     bool success = false;
 
     std::string src = "";
 
-    unsigned char mon_colour = BLACK;
+    uint8_t mon_colour = BLACK;
 
     if (!proximity)
         success = true;
-    else if (one_chance_in(8))
+    else if (one_chance_in(9))
     {
         int you_mutate_chance = 0;
+        int ugly_mutate_chance = 0;
         int mon_mutate_chance = 0;
 
         for (adjacent_iterator ri(ugly->pos()); ri; ++ri)
@@ -359,50 +360,81 @@ bool ugly_thing_mutate(monsters *ugly, bool proximity)
                 you_mutate_chance = get_contamination_level();
             else
             {
-                monsters *ugly_near = monster_at(*ri);
+                monster* mon_near = monster_at(*ri);
 
-                if (!ugly_near
-                    || ugly_near->type != MONS_UGLY_THING
-                        && ugly_near->type != MONS_VERY_UGLY_THING)
+                if (!mon_near
+                    || !mons_class_flag(mon_near->type, M_GLOWS_RADIATION))
                 {
                     continue;
                 }
 
-                for (int i = 0; i < 2; ++i)
+                const bool ugly_type =
+                    mon_near->type == MONS_UGLY_THING
+                        || mon_near->type == MONS_VERY_UGLY_THING;
+
+                int i = mon_near->type == MONS_VERY_UGLY_THING ? 3 :
+                        mon_near->type == MONS_UGLY_THING      ? 2
+                                                               : 1;
+
+                for (; i > 0; --i)
                 {
                     if (coinflip())
                     {
-                        mon_mutate_chance++;
-
-                        if (coinflip())
+                        if (ugly_type)
                         {
-                            const int ugly_colour =
-                                make_low_colour(ugly->colour);
-                            const int ugly_near_colour =
-                                make_low_colour(ugly_near->colour);
+                            ugly_mutate_chance++;
 
-                            if (ugly_colour != ugly_near_colour)
-                                mon_colour = ugly_near_colour;
+                            if (coinflip())
+                            {
+                                const uint8_t ugly_colour =
+                                    make_low_colour(ugly->colour);
+                                const uint8_t ugly_near_colour =
+                                    make_low_colour(mon_near->colour);
+
+                                if (ugly_colour != ugly_near_colour)
+                                    mon_colour = ugly_near_colour;
+                            }
                         }
+                        else
+                            mon_mutate_chance++;
                     }
-
-                    if (ugly_near->type != MONS_VERY_UGLY_THING)
-                        break;
                 }
             }
         }
 
-        you_mutate_chance = std::min(16, you_mutate_chance);
-        mon_mutate_chance = std::min(16, mon_mutate_chance);
+        // The maximum number of monsters that can surround this monster
+        // is 8, and the maximum mutation chance from each surrounding
+        // monster is 3, so the maximum mutation value is 24.
+        you_mutate_chance = std::min(24, you_mutate_chance);
+        ugly_mutate_chance = std::min(24, ugly_mutate_chance);
+        mon_mutate_chance = std::min(24, mon_mutate_chance);
 
-        if (!one_chance_in(you_mutate_chance + mon_mutate_chance + 1))
+        if (!one_chance_in(you_mutate_chance
+                           + ugly_mutate_chance
+                           + mon_mutate_chance
+                           + 1))
         {
-            const bool proximity_you =
-                (you_mutate_chance  > mon_mutate_chance) ? true :
-                (you_mutate_chance == mon_mutate_chance) ? coinflip()
-                                                         : false;
+            int proximity_chance = you_mutate_chance;
+            int proximity_type = 0;
 
-            src = proximity_you ? " from you" : " from its kin";
+            if (ugly_mutate_chance > proximity_chance
+                || (ugly_mutate_chance == proximity_chance && coinflip()))
+            {
+                proximity_chance = ugly_mutate_chance;
+                proximity_type = 1;
+            }
+
+            if (mon_mutate_chance > proximity_chance
+                || (mon_mutate_chance == proximity_chance && coinflip()))
+            {
+                proximity_chance = mon_mutate_chance;
+                proximity_type = 2;
+            }
+
+            src  = " from ";
+            src += proximity_type == 0 ? "you" :
+                   proximity_type == 1 ? "its kin"
+                                       : "its neighbour";
 
             success = true;
         }
@@ -424,7 +456,7 @@ bool ugly_thing_mutate(monsters *ugly, bool proximity)
 
 // Inflict any enchantments the parent slime has on its offspring,
 // leaving durations unchanged, I guess. -cao
-static void _split_ench_durations(monsters *initial_slime, monsters *split_off)
+static void _split_ench_durations(monster* initial_slime, monster* split_off)
 {
     mon_enchant_list::iterator i;
 
@@ -438,7 +470,7 @@ static void _split_ench_durations(monsters *initial_slime, monsters *split_off)
 
 // What to do about any enchantments these two slimes may have?  For
 // now, we are averaging the durations. -cao
-static void _merge_ench_durations(monsters *initial_slime, monsters *merge_to)
+static void _merge_ench_durations(monster* initial_slime, monster* merge_to)
 {
     mon_enchant_list::iterator i;
 
@@ -482,7 +514,7 @@ static void _merge_ench_durations(monsters *initial_slime, monsters *merge_to)
 }
 
 // Calculate slime creature hp based on how many are merged.
-static void _stats_from_blob_count(monsters *slime, float max_per_blob,
+static void _stats_from_blob_count(monster* slime, float max_per_blob,
                                    float current_per_blob)
 {
     slime->max_hit_points = (int)(slime->number * max_per_blob);
@@ -491,7 +523,7 @@ static void _stats_from_blob_count(monsters *slime, float max_per_blob,
 
 // Create a new slime creature at 'target', and split 'thing''s hp and
 // merge count with the new monster.
-static bool _do_split(monsters *thing, coord_def & target)
+static bool _do_split(monster* thing, coord_def & target)
 {
     // Create a new slime.
     int slime_idx = create_monster(mgen_data(MONS_SLIME_CREATURE,
@@ -506,7 +538,7 @@ static bool _do_split(monsters *thing, coord_def & target)
     if (slime_idx == -1)
         return (false);
 
-    monsters *new_slime = &env.mons[slime_idx];
+    monster* new_slime = &env.mons[slime_idx];
 
     if (!new_slime)
         return (false);
@@ -541,7 +573,7 @@ static bool _do_split(monsters *thing, coord_def & target)
 
 // Actually merge two slime creature, pooling their hp, etc.
 // initial_slime is the one that gets killed off by this process.
-static bool _do_merge(monsters *initial_slime, monsters *merge_to)
+static bool _do_merge(monster* initial_slime, monster* merge_to)
 {
     // Combine enchantment durations.
     _merge_ench_durations(initial_slime, merge_to);
@@ -617,14 +649,14 @@ static bool _do_merge(monsters *initial_slime, monsters *merge_to)
 }
 
 // Slime creatures can split but not merge under these conditions.
-static bool _unoccupied_slime(monsters *thing)
+static bool _unoccupied_slime(monster* thing)
 {
      return (thing->asleep() || mons_is_wandering(thing)
              || thing->foe == MHITNOT);
 }
 
 // Slime creatures cannot split or merge under these conditions.
-static bool _disabled_slime(monsters *thing)
+static bool _disabled_slime(monster* thing)
 {
     return (!thing
             || mons_is_fleeing(thing)
@@ -639,7 +671,7 @@ static bool _disabled_slime(monsters *thing)
 // onto that slime would reduce the distance to the original slime's
 // target, and there are no empty squares that would also reduce the
 // distance to the target.
-static bool _slime_merge(monsters *thing)
+static bool _slime_merge(monster* thing)
 {
     if (!thing || _disabled_slime(thing) || _unoccupied_slime(thing))
         return (false);
@@ -651,7 +683,7 @@ static bool _slime_merge(monsters *thing)
 
     int target_distance = grid_distance(thing->target, thing->pos());
 
-    monsters * merge_target = NULL;
+    monster* merge_target = NULL;
     // Check for adjacent slime creatures.
     for (int i = 0; i < 8; ++i)
     {
@@ -673,7 +705,7 @@ static bool _slime_merge(monsters *thing)
 
         // Is there a slime creature on this square we can consider
         // merging with?
-        monsters *other_thing = monster_at(target);
+        monster* other_thing = monster_at(target);
         if (!merge_target
             && other_thing
             && other_thing->type == MONS_SLIME_CREATURE
@@ -707,7 +739,7 @@ static bool _slime_can_spawn(const coord_def target)
 
 // See if slime creature 'thing' can split, and carry out the split if
 // we can find a square to place the new slime creature on.
-static bool _slime_split(monsters *thing)
+static bool _slime_split(monster* thing)
 {
     if (!thing || thing->number <= 1
         || coinflip() // Don't make splitting quite so reliable. (jpeg)
@@ -763,7 +795,7 @@ static bool _slime_split(monsters *thing)
 }
 
 // See if a given slime creature can split or merge.
-static bool _slime_split_merge(monsters *thing)
+static bool _slime_split_merge(monster* thing)
 {
     // No merging/splitting shapeshifters.
     if (!thing
@@ -780,7 +812,8 @@ static bool _slime_split_merge(monsters *thing)
 }
 
 // Returns true if you resist the siren's call.
-static bool _siren_movement_effect(const monsters *monster)
+// -- added equivalency for huldra
+static bool _siren_movement_effect(const monster* mons)
 {
     bool do_resist = (you.attribute[ATTR_HELD] || you.check_res_magic(70)
                       || you.cannot_act() || you.asleep());
@@ -788,13 +821,13 @@ static bool _siren_movement_effect(const monsters *monster)
     if (!do_resist)
     {
         coord_def dir(coord_def(0,0));
-        if (monster->pos().x < you.pos().x)
+        if (mons->pos().x < you.pos().x)
             dir.x = -1;
-        else if (monster->pos().x > you.pos().x)
+        else if (mons->pos().x > you.pos().x)
             dir.x = 1;
-        if (monster->pos().y < you.pos().y)
+        if (mons->pos().y < you.pos().y)
             dir.y = -1;
-        else if (monster->pos().y > you.pos().y)
+        else if (mons->pos().y > you.pos().y)
             dir.y = 1;
 
         const coord_def newpos = you.pos() + dir;
@@ -807,7 +840,7 @@ static bool _siren_movement_effect(const monsters *monster)
         else
         {
             bool swapping = false;
-            monsters *mon = monster_at(newpos);
+            monster* mon = monster_at(newpos);
             if (mon)
             {
                 coord_def swapdest;
@@ -861,7 +894,7 @@ static bool _siren_movement_effect(const monsters *monster)
     return (do_resist);
 }
 
-static bool _silver_statue_effects(monsters *mons)
+static bool _silver_statue_effects(monster* mons)
 {
     actor *foe = mons->get_foe();
     if (foe && mons->can_see(foe) && !one_chance_in(3))
@@ -880,7 +913,7 @@ static bool _silver_statue_effects(monsters *mons)
     return (false);
 }
 
-static bool _orange_statue_effects(monsters *mons)
+static bool _orange_statue_effects(monster* mons)
 {
     actor *foe = mons->get_foe();
     if (foe && mons->can_see(foe) && !one_chance_in(3))
@@ -905,7 +938,7 @@ static bool _orange_statue_effects(monsters *mons)
     return (false);
 }
 
-static bool _orc_battle_cry(monsters *chief)
+static bool _orc_battle_cry(monster* chief)
 {
     const actor *foe = chief->get_foe();
     int affected = 0;
@@ -917,7 +950,7 @@ static bool _orc_battle_cry(monsters *chief)
         && coinflip())
     {
         const int level = chief->hit_dice > 12? 2 : 1;
-        std::vector<monsters*> seen_affected;
+        std::vector<monster* > seen_affected;
         for (monster_iterator mi(chief); mi; ++mi)
         {
             if (*mi != chief
@@ -971,7 +1004,7 @@ static bool _orc_battle_cry(monsters *chief)
             // Disabling detailed frenzy announcement because it's so spammy.
             const msg_channel_type channel =
                         chief->friendly() ? MSGCH_MONSTER_ENCHANT
-                                                  : MSGCH_FRIEND_ENCHANT;
+                                          : MSGCH_FRIEND_ENCHANT;
 
             if (!seen_affected.empty())
             {
@@ -1006,7 +1039,7 @@ static bool _orc_battle_cry(monsters *chief)
     return (false);
 }
 
-static bool _make_monster_angry(const monsters *mon, monsters *targ)
+static bool _make_monster_angry(const monster* mon, monster* targ)
 {
     if (mon->friendly() != targ->friendly())
         return (false);
@@ -1020,7 +1053,7 @@ static bool _make_monster_angry(const monsters *mon, monsters *targ)
         victim = you.pos();
     else if (targ->foe != MHITNOT)
     {
-        const monsters *vmons = &menv[targ->foe];
+        const monster* vmons = &menv[targ->foe];
         if (!vmons->alive())
             return (false);
         victim = vmons->pos();
@@ -1047,7 +1080,7 @@ static bool _make_monster_angry(const monsters *mon, monsters *targ)
     return (true);
 }
 
-static bool _moth_incite_monsters(const monsters *mon)
+static bool _moth_incite_monsters(const monster* mon)
 {
     if (is_sanctuary(you.pos()) || is_sanctuary(mon->pos()))
         return false;
@@ -1073,10 +1106,10 @@ static bool _moth_incite_monsters(const monsters *mon)
     return (false);
 }
 
-static inline void _mons_cast_abil(monsters *monster, bolt &pbolt,
+static inline void _mons_cast_abil(monster* mons, bolt &pbolt,
                                    spell_type spell_cast)
 {
-    mons_cast(monster, pbolt, spell_cast, true, true);
+    mons_cast(mons, pbolt, spell_cast, true, true);
 }
 
 static void _establish_connection(int tentacle,
@@ -1100,7 +1133,7 @@ static void _establish_connection(int tentacle,
         return;
     }
 
-    monsters * main = &env.mons[head];
+    monster* main = &env.mons[head];
 
     // No base monster case (demonic tentacles)
     if (!monster_at(last->pos))
@@ -1122,7 +1155,7 @@ static void _establish_connection(int tentacle,
             menv[connect].props["outwards"].get_int() = -1;
             if (main->holiness() == MH_UNDEAD)
             {
-                menv[connect].flags |= MF_HONORARY_UNDEAD;
+                menv[connect].flags |= MF_FAKE_UNDEAD;
             }
             menv[connect].max_hit_points = menv[tentacle].max_hit_points;
             menv[connect].hit_points = menv[tentacle].hit_points;
@@ -1133,7 +1166,7 @@ static void _establish_connection(int tentacle,
     {
 
         // Last monster we visited or placed
-        monsters * last_mon = monster_at(last->pos);
+        monster* last_mon = monster_at(last->pos);
         if (!last_mon)
         {
             // Should be something there, what to do if there isn't?
@@ -1143,12 +1176,12 @@ static void _establish_connection(int tentacle,
         int last_mon_idx = last_mon->mindex();
 
         // Monster at the current square, should be the end of the line if there
-        monsters * current_monster = monster_at(current->pos);
-        if (current_monster)
+        monster* current_mons = monster_at(current->pos);
+        if (current_mons)
         {
             // Todo verify current monster type
-            menv[current_monster->mindex()].props["inwards"].get_int() = last_mon_idx;
-            menv[last_mon_idx].props["outwards"].get_int() = current_monster->mindex();
+            menv[current_mons->mindex()].props["inwards"].get_int() = last_mon_idx;
+            menv[last_mon_idx].props["outwards"].get_int() = current_mons->mindex();
             break;
         }
 
@@ -1173,7 +1206,7 @@ static void _establish_connection(int tentacle,
 
             if (main->holiness() == MH_UNDEAD)
             {
-                menv[connect].flags |= MF_HONORARY_UNDEAD;
+                make_fake_undead(&menv[connect], main->type);
             }
             if (monster_can_submerge(&menv[connect], env.grid(menv[connect].pos())))
             {
@@ -1197,7 +1230,7 @@ struct tentacle_attack_constraints
     std::vector<coord_def> * target_positions;
 
     std::map<coord_def, std::set<int> > * connection_constraints;
-    monsters * base_monster;
+    monster *base_monster;
     int max_string_distance;
     int connect_idx[8];
 
@@ -1249,7 +1282,7 @@ struct tentacle_attack_constraints
             else
             {
                 actor * act_at = actor_at(temp.pos);
-                monsters * mons_at = monster_at(temp.pos);
+                monster* mons_at = monster_at(temp.pos);
 
                 if (!act_at)
                 {
@@ -1334,7 +1367,7 @@ struct tentacle_connect_constraints
 {
     std::map<coord_def, std::set<int> > * connection_constraints;
 
-    monsters * base_monster;
+    monster* base_monster;
 
     tentacle_connect_constraints()
     {
@@ -1426,7 +1459,7 @@ struct target_monster
 
     bool operator() (const coord_def & pos)
     {
-        monsters * temp = monster_at(pos);
+        monster* temp = monster_at(pos);
         if (!temp || temp->mindex() != target_mindex)
             return (false);
         return (true);
@@ -1452,13 +1485,7 @@ struct multi_target
 };
 
 // returns pathfinding success/failure
-/*bool tentacle_pathfind(monsters * kraken, monsters * tentacle,
-                       std::vector<coord_def> & target_positions,
-                       coord_def & new_position,
-                       std::map<coord_def, std::set<int> > & connect_data,
-                       int total_length)
-*/
-bool tentacle_pathfind(monsters * tentacle,
+bool tentacle_pathfind(monster* tentacle,
                        tentacle_attack_constraints & attack_constraints,
                        coord_def & new_position,
                        std::vector<coord_def> & target_positions,
@@ -1588,7 +1615,7 @@ void collect_tentacles(int headnum, std::vector<monster_iterator> & tentacles)
 }
 
 void purge_connectors(int tentacle_idx,
-                      bool (*valid_mons)(monsters *))
+                      bool (*valid_mons)(monster*))
 {
     for (monster_iterator mi; mi; ++mi)
     {
@@ -1612,19 +1639,19 @@ void purge_connectors(int tentacle_idx,
 struct complicated_sight_check
 {
     coord_def base_position;
-    bool operator()(monsters * mons, actor * test)
+    bool operator()(monster* mons, actor * test)
     {
         return (test->visible_to(mons) && cell_see_cell(base_position, test->pos()));
     }
 };
 
-static bool _basic_sight_check(monsters * mons, actor * test)
+static bool _basic_sight_check(monster* mons, actor * test)
 {
     return (mons->can_see(test ));
 }
 
 template<typename T>
-void collect_foe_positions(monsters * mons, std::vector<coord_def> & foe_positions,
+void collect_foe_positions(monster* mons, std::vector<coord_def> & foe_positions,
                            T & sight_check)
 {
     coord_def foe_pos(-1, -1);
@@ -1637,7 +1664,7 @@ void collect_foe_positions(monsters * mons, std::vector<coord_def> & foe_positio
 
     for (monster_iterator mi; mi; ++mi)
     {
-        monsters * test = &menv[mi->mindex()];
+        monster* test = &menv[mi->mindex()];
         if (!mons_is_firewood(test)
             && !mons_aligned(test, mons)
             && test->pos() != foe_pos
@@ -1648,14 +1675,14 @@ void collect_foe_positions(monsters * mons, std::vector<coord_def> & foe_positio
     }
 }
 
-bool valid_kraken_connection(monsters * mons)
+bool valid_kraken_connection(monster* mons)
 {
     return (mons->type == MONS_KRAKEN_CONNECTOR
             || mons->type == MONS_KRAKEN_TENTACLE
             || mons_base_type(mons) == MONS_KRAKEN);
 }
 
-bool valid_demonic_connection(monsters * mons)
+bool valid_demonic_connection(monster* mons)
 {
     return (mons->mons_species() == MONS_DEMONIC_TENTACLE_SEGMENT);
 }
@@ -1665,13 +1692,13 @@ bool valid_demonic_connection(monsters * mons)
 //
 // move_kraken_tentacle should check retract pos, it could potentially
 // give the kraken head's position as a retract pos.
-int collect_connection_data(monsters * start_monster,
-                            bool (*valid_segment_type)(monsters *),
+int collect_connection_data(monster* start_monster,
+                            bool (*valid_segment_type)(monster*),
                             std::map<coord_def, std::set<int> > & connection_data,
                             coord_def & retract_pos)
 {
     int current_count = 0;
-    monsters * current_mon = start_monster;
+    monster* current_mon = start_monster;
     retract_pos.x = -1;
     retract_pos.y = -1;
     bool retract_found = false;
@@ -1716,7 +1743,7 @@ int collect_connection_data(monsters * start_monster,
 
 
 
-void move_demon_tentacle(monsters * tentacle)
+void move_demon_tentacle(monster* tentacle)
 {
     if (!tentacle
         || tentacle->type != MONS_DEMONIC_TENTACLE)
@@ -1849,7 +1876,7 @@ void move_demon_tentacle(monsters * tentacle)
         if (blocking_actor)
         {
             tentacle->target = new_pos;
-            monsters * mtemp = monster_at(new_pos);
+            monster* mtemp = monster_at(new_pos);
             if (mtemp)
             {
                 tentacle->foe = mtemp->mindex();
@@ -1901,7 +1928,7 @@ void move_demon_tentacle(monsters * tentacle)
 
 
 
-void move_kraken_tentacles(monsters * kraken)
+void move_kraken_tentacles(monster* kraken)
 {
     if (mons_base_type(kraken) != MONS_KRAKEN
         || kraken->asleep())
@@ -1933,7 +1960,7 @@ void move_kraken_tentacles(monsters * kraken)
     // Move each tentacle in turn
     for (unsigned i=0;i<tentacles.size();i++)
     {
-        monsters * tentacle = monster_at(tentacles[i]->pos());
+        monster* tentacle = monster_at(tentacles[i]->pos());
 
         if (!tentacle)
         {
@@ -1946,7 +1973,7 @@ void move_kraken_tentacles(monsters * kraken)
 
 //        connect_costs.kraken = kraken;
 
-        monsters * current_mon = tentacle;
+        monster* current_mon = tentacle;
         int current_count = 0;
         bool retract_found = false;
         coord_def retract_pos(-1, -1);
@@ -2033,7 +2060,7 @@ void move_kraken_tentacles(monsters * kraken)
         if (blocking_actor)
         {
             tentacle->target = new_pos;
-            monsters * mtemp = monster_at(new_pos);
+            monster* mtemp = monster_at(new_pos);
             if (mtemp)
             {
                 tentacle->foe = mtemp->mindex();
@@ -2085,23 +2112,23 @@ void move_kraken_tentacles(monsters * kraken)
 // mon_special_ability
 //
 //---------------------------------------------------------------
-bool mon_special_ability(monsters *monster, bolt & beem)
+bool mon_special_ability(monster* mons, bolt & beem)
 {
     bool used = false;
 
-    const monster_type mclass = (mons_genus( monster->type ) == MONS_DRACONIAN)
-                                  ? draco_subspecies( monster )
-                                  : static_cast<monster_type>( monster->type );
+    const monster_type mclass = (mons_genus(mons->type) == MONS_DRACONIAN)
+                                  ? draco_subspecies(mons)
+                                  : static_cast<monster_type>(mons->type);
 
     // Slime creatures can split while out of sight.
-    if ((!monster->near_foe() || monster->asleep() || monster->submerged())
-         && monster->type != MONS_SLIME_CREATURE)
+    if ((!mons->near_foe() || mons->asleep() || mons->submerged())
+         && mons->type != MONS_SLIME_CREATURE)
     {
         return (false);
     }
 
-    const msg_channel_type spl = (monster->friendly() ? MSGCH_FRIEND_SPELL
-                                                         : MSGCH_MONSTER_SPELL);
+    const msg_channel_type spl = (mons->friendly() ? MSGCH_FRIEND_SPELL
+                                                   : MSGCH_MONSTER_SPELL);
 
     spell_type spell = SPELL_NO_SPELL;
 
@@ -2113,61 +2140,61 @@ bool mon_special_ability(monsters *monster, bolt & beem)
         // A (very) ugly thing's proximity to you if you're glowing, or
         // to others of its kind, can mutate it into a different (very)
         // ugly thing.
-        used = ugly_thing_mutate(monster, true);
+        used = ugly_thing_mutate(mons, true);
         break;
 
     case MONS_SLIME_CREATURE:
         // Slime creatures may split or merge depending on the
         // situation.
-        used = _slime_split_merge(monster);
-        if (!monster->alive())
+        used = _slime_split_merge(mons);
+        if (!mons->alive())
             return (true);
         break;
 
     case MONS_ORC_KNIGHT:
     case MONS_ORC_WARLORD:
     case MONS_SAINT_ROKA:
-        if (is_sanctuary(monster->pos()))
+        if (is_sanctuary(mons->pos()))
             break;
 
-        used = _orc_battle_cry(monster);
+        used = _orc_battle_cry(mons);
         break;
 
     case MONS_ORANGE_STATUE:
-        if (player_or_mon_in_sanct(monster))
+        if (player_or_mon_in_sanct(mons))
             break;
 
-        used = _orange_statue_effects(monster);
+        used = _orange_statue_effects(mons);
         break;
 
     case MONS_SILVER_STATUE:
-        if (player_or_mon_in_sanct(monster))
+        if (player_or_mon_in_sanct(mons))
             break;
 
-        used = _silver_statue_effects(monster);
+        used = _silver_statue_effects(mons);
         break;
 
     case MONS_BALL_LIGHTNING:
-        if (is_sanctuary(monster->pos()))
+        if (is_sanctuary(mons->pos()))
             break;
 
-        if (monster->attitude == ATT_HOSTILE
-            && distance(you.pos(), monster->pos()) <= 5)
+        if (mons->attitude == ATT_HOSTILE
+            && distance(you.pos(), mons->pos()) <= 5)
         {
-            monster->hit_points = -1;
+            mons->hit_points = -1;
             used = true;
             break;
         }
 
-        c = circle_def(monster->pos(), 4, C_CIRCLE);
+        c = circle_def(mons->pos(), 4, C_CIRCLE);
         for (monster_iterator targ(&c); targ; ++targ)
         {
-            if (mons_aligned(monster, *targ))
+            if (mons_aligned(mons, *targ))
                 continue;
 
-            if (monster->can_see(*targ) && !feat_is_solid(grd(targ->pos())))
+            if (mons->can_see(*targ) && !feat_is_solid(grd(targ->pos())))
             {
-                monster->hit_points = -1;
+                mons->hit_points = -1;
                 used = true;
                 break;
             }
@@ -2175,10 +2202,10 @@ bool mon_special_ability(monsters *monster, bolt & beem)
         break;
 
     case MONS_LAVA_SNAKE:
-        if (monster->has_ench(ENCH_CONFUSION))
+        if (mons->has_ench(ENCH_CONFUSION))
             break;
 
-        if (!you.visible_to(monster))
+        if (!you.visible_to(mons))
             break;
 
         if (coinflip())
@@ -2193,27 +2220,27 @@ bool mon_special_ability(monsters *monster, bolt & beem)
         beem.colour      = RED;
         beem.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
         beem.flavour     = BEAM_LAVA;
-        beem.beam_source = monster->mindex();
+        beem.beam_source = mons->mindex();
         beem.thrower     = KILL_MON;
 
         // Fire tracer.
-        fire_tracer(monster, beem);
+        fire_tracer(mons, beem);
 
         // Good idea?
         if (mons_should_fire(beem))
         {
-            make_mons_stop_fleeing(monster);
-            simple_monster_message(monster, " spits lava!");
+            make_mons_stop_fleeing(mons);
+            simple_monster_message(mons, " spits lava!");
             beem.fire();
             used = true;
         }
         break;
 
     case MONS_ELECTRIC_EEL:
-        if (monster->has_ench(ENCH_CONFUSION))
+        if (mons->has_ench(ENCH_CONFUSION))
             break;
 
-        if (!you.visible_to(monster))
+        if (!you.visible_to(mons))
             break;
 
         if (coinflip())
@@ -2228,18 +2255,18 @@ bool mon_special_ability(monsters *monster, bolt & beem)
         beem.colour      = LIGHTCYAN;
         beem.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
         beem.flavour     = BEAM_ELECTRICITY;
-        beem.beam_source = monster->mindex();
+        beem.beam_source = mons->mindex();
         beem.thrower     = KILL_MON;
         beem.is_beam     = true;
 
         // Fire tracer.
-        fire_tracer(monster, beem);
+        fire_tracer(mons, beem);
 
         // Good idea?
         if (mons_should_fire(beem))
         {
-            make_mons_stop_fleeing(monster);
-            simple_monster_message(monster,
+            make_mons_stop_fleeing(mons);
+            simple_monster_message(mons,
                                    " shoots out a bolt of electricity!");
             beem.fire();
             used = true;
@@ -2250,29 +2277,29 @@ bool mon_special_ability(monsters *monster, bolt & beem)
     case MONS_OKLOB_PLANT:
     case MONS_YELLOW_DRACONIAN:
     {
-        if (monster->has_ench(ENCH_CONFUSION))
+        if (mons->has_ench(ENCH_CONFUSION))
             break;
 
-        if (player_or_mon_in_sanct(monster))
+        if (player_or_mon_in_sanct(mons))
             break;
 
         bool spit = one_chance_in(3);
-        if (monster->type == MONS_OKLOB_PLANT)
-            spit = x_chance_in_y(monster->hit_dice, 30);
+        if (mons->type == MONS_OKLOB_PLANT)
+            spit = x_chance_in_y(mons->hit_dice, 30);
 
         if (spit)
         {
             spell = SPELL_ACID_SPLASH;
-            setup_mons_cast(monster, beem, spell);
+            setup_mons_cast(mons, beem, spell);
 
             // Fire tracer.
-            fire_tracer(monster, beem);
+            fire_tracer(mons, beem);
 
             // Good idea?
             if (mons_should_fire(beem))
             {
-                make_mons_stop_fleeing(monster);
-                _mons_cast_abil(monster, beem, spell);
+                make_mons_stop_fleeing(mons);
+                _mons_cast_abil(mons, beem, spell);
                 used = true;
             }
         }
@@ -2281,26 +2308,26 @@ bool mon_special_ability(monsters *monster, bolt & beem)
 
     case MONS_MOTH_OF_WRATH:
         if (one_chance_in(3))
-            used = _moth_incite_monsters(monster);
+            used = _moth_incite_monsters(mons);
         break;
 
     case MONS_SNORG:
-        if (monster->has_ench(ENCH_CONFUSION))
+        if (mons->has_ench(ENCH_CONFUSION))
             break;
 
-        if (monster->foe == MHITNOT
-            || monster->foe == MHITYOU && monster->friendly())
+        if (mons->foe == MHITNOT
+            || mons->foe == MHITYOU && mons->friendly())
         {
             break;
         }
 
         // There's a 5% chance of Snorg spontaneously going berserk that
         // increases to 20% once he is wounded.
-        if (monster->hit_points == monster->max_hit_points && !one_chance_in(4))
+        if (mons->hit_points == mons->max_hit_points && !one_chance_in(4))
             break;
 
         if (one_chance_in(5))
-            monster->go_berserk(true);
+            mons->go_berserk(true);
         break;
 
     case MONS_PIT_FIEND:
@@ -2308,10 +2335,10 @@ bool mon_special_ability(monsters *monster, bolt & beem)
             break;
         // deliberate fall through
     case MONS_FIEND:
-        if (monster->has_ench(ENCH_CONFUSION))
+        if (mons->has_ench(ENCH_CONFUSION))
             break;
 
-        if (player_or_mon_in_sanct(monster))
+        if (player_or_mon_in_sanct(mons))
             break;
 
         // Friendly fiends won't use torment, preferring hellfire
@@ -2330,11 +2357,11 @@ bool mon_special_ability(monsters *monster, bolt & beem)
             switch (random2(4))
             {
             case 0:
-                if (!monster->friendly())
+                if (!mons->friendly())
                 {
-                    make_mons_stop_fleeing(monster);
+                    make_mons_stop_fleeing(mons);
                     spell_cast = SPELL_SYMBOL_OF_TORMENT;
-                    _mons_cast_abil(monster, beem, spell_cast);
+                    _mons_cast_abil(mons, beem, spell_cast);
                     used = true;
                     break;
                 }
@@ -2343,17 +2370,17 @@ bool mon_special_ability(monsters *monster, bolt & beem)
             case 2:
             case 3:
                 spell_cast = SPELL_HELLFIRE;
-                setup_mons_cast(monster, beem, spell_cast);
+                setup_mons_cast(mons, beem, spell_cast);
 
                 // Fire tracer.
-                fire_tracer(monster, beem);
+                fire_tracer(mons, beem);
 
                 // Good idea?
                 if (mons_should_fire(beem))
                 {
-                    make_mons_stop_fleeing(monster);
+                    make_mons_stop_fleeing(mons);
 
-                    _mons_cast_abil(monster, beem, spell_cast);
+                    _mons_cast_abil(mons, beem, spell_cast);
                     used = true;
                 }
                 break;
@@ -2370,20 +2397,20 @@ bool mon_special_ability(monsters *monster, bolt & beem)
     case MONS_MARA:
     case MONS_MARA_FAKE:
     case MONS_GOLDEN_EYE:
-        if (one_chance_in(7) || monster->caught() && one_chance_in(3))
-            used = monster_blink(monster);
+        if (one_chance_in(7) || mons->caught() && one_chance_in(3))
+            used = monster_blink(mons);
         break;
 
     case MONS_MANTICORE:
-        if (monster->has_ench(ENCH_CONFUSION))
+        if (mons->has_ench(ENCH_CONFUSION))
             break;
 
-        if (!you.visible_to(monster))
+        if (!you.visible_to(mons))
             break;
 
         // The fewer spikes the manticore has left, the less
         // likely it will use them.
-        if (random2(16) >= static_cast<int>(monster->number))
+        if (random2(16) >= static_cast<int>(mons->number))
             break;
 
         // Do the throwing right here, since the beam is so
@@ -2395,7 +2422,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
         beem.range       = 6;
         beem.hit         = 14;
         beem.damage      = dice_def( 2, 10 );
-        beem.beam_source = monster->mindex();
+        beem.beam_source = mons->mindex();
         beem.glyph       = dchar_glyph(DCHAR_FIRED_MISSILE);
         beem.colour      = LIGHTGREY;
         beem.flavour     = BEAM_MISSILE;
@@ -2403,23 +2430,23 @@ bool mon_special_ability(monsters *monster, bolt & beem)
         beem.is_beam     = false;
 
         // Fire tracer.
-        fire_tracer(monster, beem);
+        fire_tracer(mons, beem);
 
         // Good idea?
         if (mons_should_fire(beem))
         {
-            make_mons_stop_fleeing(monster);
-            simple_monster_message(monster, " flicks its tail!");
+            make_mons_stop_fleeing(mons);
+            simple_monster_message(mons, " flicks its tail!");
             beem.fire();
             used = true;
             // Decrement # of volleys left.
-            monster->number--;
+            mons->number--;
         }
         break;
 
     case MONS_PLAYER_GHOST:
     {
-        const ghost_demon &ghost = *(monster->ghost);
+        const ghost_demon &ghost = *(mons->ghost);
 
         if (ghost.species < SP_RED_DRACONIAN
             || ghost.species == SP_GREY_DRACONIAN
@@ -2451,30 +2478,31 @@ bool mon_special_ability(monsters *monster, bolt & beem)
         if (spell == SPELL_NO_SPELL)
             spell = SPELL_FIRE_BREATH;
 
-        if (monster->has_ench(ENCH_CONFUSION))
+        if (mons->has_ench(ENCH_CONFUSION))
             break;
 
-        if (!you.visible_to(monster))
+        if (!you.visible_to(mons))
             break;
 
-        if (monster->type != MONS_HELL_HOUND && x_chance_in_y(3, 13)
+        if (mons->type != MONS_HELL_HOUND && x_chance_in_y(3, 13)
             || one_chance_in(10))
         {
-            setup_mons_cast(monster, beem, spell);
+            setup_mons_cast(mons, beem, spell);
 
             // Fire tracer.
-            fire_tracer(monster, beem);
+            fire_tracer(mons, beem);
 
             // Good idea?
             if (mons_should_fire(beem))
             {
-                make_mons_stop_fleeing(monster);
-                _mons_cast_abil(monster, beem, spell);
+                make_mons_stop_fleeing(mons);
+                _mons_cast_abil(mons, beem, spell);
                 used = true;
             }
         }
         break;
 
+    case MONS_HULDRA:
     case MONS_MERMAID:
     case MONS_SIREN:
     {
@@ -2497,11 +2525,11 @@ bool mon_special_ability(monsters *monster, bolt & beem)
 
         // Won't sing if either of you silenced, or it's friendly,
         // confused, fleeing, or leaving the level.
-        if (monster->has_ench(ENCH_CONFUSION)
-            || mons_is_fleeing(monster)
-            || monster->pacified()
-            || monster->friendly()
-            || !player_can_hear(monster->pos()))
+        if (mons->has_ench(ENCH_CONFUSION)
+            || mons_is_fleeing(mons)
+            || mons->pacified()
+            || mons->friendly()
+            || !player_can_hear(mons->pos()))
         {
             break;
         }
@@ -2515,31 +2543,31 @@ bool mon_special_ability(monsters *monster, bolt & beem)
             break;
 
         // A wounded invisible mermaid is less likely to give away her position.
-        if (monster->invisible()
-            && monster->hit_points <= monster->max_hit_points / 2
+        if (mons->invisible()
+            && mons->hit_points <= mons->max_hit_points / 2
             && !one_chance_in(3))
         {
             break;
         }
 
-        bool already_mesmerised = you.beheld_by(monster);
+        bool already_mesmerised = you.beheld_by(mons);
 
         if (one_chance_in(5)
-            || monster->foe == MHITYOU && !already_mesmerised && coinflip())
+            || mons->foe == MHITYOU && !already_mesmerised && coinflip())
         {
-            noisy(LOS_RADIUS, monster->pos(), monster->mindex(), true);
+            noisy(LOS_RADIUS, mons->pos(), mons->mindex(), true);
 
             bool did_resist = false;
-            if (you.can_see(monster))
+            if (you.can_see(mons))
             {
-                simple_monster_message(monster,
+                simple_monster_message(mons,
                     make_stringf(" chants %s song.",
                     already_mesmerised ? "her luring" : "a haunting").c_str(),
                     spl);
 
-                if (monster->type == MONS_SIREN)
+                if ((mons->type == MONS_SIREN) || (mons->type == MONS_HULDRA))
                 {
-                    if (_siren_movement_effect(monster))
+                    if (_siren_movement_effect(mons))
                     {
                         canned_msg(MSG_YOU_RESIST); // flavour only
                         did_resist = true;
@@ -2577,7 +2605,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
                 break;
             }
 
-            you.add_beholder(monster);
+            you.add_beholder(mons);
 
             used = true;
         }
@@ -2589,19 +2617,20 @@ bool mon_special_ability(monsters *monster, bolt & beem)
     }
 
     if (used)
-        monster->lose_energy(EUT_SPECIAL);
+        mons->lose_energy(EUT_SPECIAL);
 
     return (used);
 }
 
 // Combines code for eyeball-type monsters, etc. to reduce clutter.
-static bool _eyeball_will_use_ability(monsters *monster)
+static bool _eyeball_will_use_ability(monster* mons)
 {
     return (coinflip()
-        && !mons_is_wandering(monster)
-        && !mons_is_fleeing(monster)
-        && !monster->pacified()
-        && !player_or_mon_in_sanct(monster));
+        && !mons_is_confused(mons)
+        && !mons_is_wandering(mons)
+        && !mons_is_fleeing(mons)
+        && !mons->pacified()
+        && !player_or_mon_in_sanct(mons));
 }
 
 //---------------------------------------------------------------
@@ -2612,47 +2641,48 @@ static bool _eyeball_will_use_ability(monsters *monster)
 // next to the player.
 //
 //---------------------------------------------------------------
-void mon_nearby_ability(monsters *monster)
+void mon_nearby_ability(monster* mons)
 {
-    actor *foe = monster->get_foe();
+    actor *foe = mons->get_foe();
     if (!foe
-        || !monster->can_see(foe)
-        || monster->asleep()
-        || monster->submerged())
+        || !mons->can_see(foe)
+        || mons->asleep()
+        || mons->submerged())
     {
         return;
     }
 
-    maybe_mons_speaks(monster);
+    maybe_mons_speaks(mons);
 
-    if (monster_can_submerge(monster, grd(monster->pos()))
-        && !monster->caught()             // No submerging while caught.
-        && !you.beheld_by(monster) // No submerging if player entranced.
-        && !mons_is_lurking(monster)  // Handled elsewhere.
-        && monster->wants_submerge())
+    if (monster_can_submerge(mons, grd(mons->pos()))
+        && !mons->caught()         // No submerging while caught.
+        && !mons->asleep()         // No submerging when asleep.
+        && !you.beheld_by(mons)    // No submerging if player entranced.
+        && !mons_is_lurking(mons)  // Handled elsewhere.
+        && mons->wants_submerge())
     {
-        monsterentry* entry = get_monster_data(monster->type);
+        monsterentry* entry = get_monster_data(mons->type);
 
-        monster->add_ench(ENCH_SUBMERGED);
-        monster->speed_increment -= ENERGY_SUBMERGE(entry);
+        mons->add_ench(ENCH_SUBMERGED);
+        mons->speed_increment -= ENERGY_SUBMERGE(entry);
         return;
     }
 
-    switch (monster->type)
+    switch (mons->type)
     {
     case MONS_SPATIAL_VORTEX:
     case MONS_KILLER_KLOWN:
         // Choose random colour.
-        monster->colour = random_colour();
+        mons->colour = random_colour();
         break;
 
     case MONS_GOLDEN_EYE:
-        if (_eyeball_will_use_ability(monster))
+        if (_eyeball_will_use_ability(mons))
         {
-            const bool can_see = you.can_see(monster);
+            const bool can_see = you.can_see(mons);
             if (can_see && you.can_see(foe))
                 mprf("%s blinks at %s.",
-                     monster->name(DESC_CAP_THE).c_str(),
+                     mons->name(DESC_CAP_THE).c_str(),
                      foe->name(DESC_NOCAP_THE).c_str());
 
             int confuse_power = 2 + random2(3);
@@ -2660,29 +2690,29 @@ void mon_nearby_ability(monsters *monster)
             if (foe->atype() == ACT_PLAYER && !can_see)
                 mpr("You feel you are being watched by something.");
 
-            if (foe->check_res_magic((monster->hit_dice * 5) * confuse_power))
+            if (foe->check_res_magic((mons->hit_dice * 5) * confuse_power))
             {
                 if (foe->atype() == ACT_PLAYER)
                     canned_msg(MSG_YOU_RESIST);
                 else if (foe->atype() == ACT_MONSTER)
                 {
-                    const monsters *foe_mons = foe->as_monster();
+                    const monster* foe_mons = foe->as_monster();
                     simple_monster_message(foe_mons, mons_resist_string(foe_mons));
                 }
                 break;
             }
 
-            foe->confuse(monster, 2 + random2(3));
+            foe->confuse(mons, 2 + random2(3));
         }
         break;
 
     case MONS_GIANT_EYEBALL:
-        if (_eyeball_will_use_ability(monster))
+        if (_eyeball_will_use_ability(mons))
         {
-            const bool can_see = you.can_see(monster);
+            const bool can_see = you.can_see(mons);
             if (can_see && you.can_see(foe))
                 mprf("%s stares at %s.",
-                     monster->name(DESC_CAP_THE).c_str(),
+                     mons->name(DESC_CAP_THE).c_str(),
                      foe->name(DESC_NOCAP_THE).c_str());
 
             if (foe->atype() == ACT_PLAYER && !can_see)
@@ -2690,34 +2720,34 @@ void mon_nearby_ability(monsters *monster)
 
             // Subtly different from old paralysis behaviour, but
             // it'll do.
-            foe->paralyse(monster, 2 + random2(3));
+            foe->paralyse(mons, 2 + random2(3));
         }
         break;
 
     case MONS_EYE_OF_DRAINING:
     case MONS_GHOST_MOTH:
-        if (_eyeball_will_use_ability(monster) && foe->atype() == ACT_PLAYER)
+        if (_eyeball_will_use_ability(mons) && foe->atype() == ACT_PLAYER)
         {
-            if (you.can_see(monster))
-                simple_monster_message(monster, " stares at you.");
+            if (you.can_see(mons))
+                simple_monster_message(mons, " stares at you.");
             else
                 mpr("You feel you are being watched by something.");
 
             int mp = std::min(5 + random2avg(13, 3), you.magic_points);
             dec_mp(mp);
 
-            monster->heal(mp, true); // heh heh {dlb}
+            mons->heal(mp, true); // heh heh {dlb}
         }
         break;
 
     case MONS_AIR_ELEMENTAL:
         if (one_chance_in(5))
-            monster->add_ench(ENCH_SUBMERGED);
+            mons->add_ench(ENCH_SUBMERGED);
         break;
 
     case MONS_PANDEMONIUM_DEMON:
-        if (monster->ghost->cycle_colours)
-            monster->colour = random_colour();
+        if (mons->ghost->cycle_colours)
+            mons->colour = random_colour();
         break;
 
     default:
@@ -2727,22 +2757,22 @@ void mon_nearby_ability(monsters *monster)
 
 // When giant spores move maybe place a ballistomycete on the they move
 // off of.
-void ballisto_on_move(monsters * monster, const coord_def & position)
+void ballisto_on_move(monster* mons, const coord_def & position)
 {
-    if (monster->type == MONS_GIANT_SPORE
-        && !monster->is_summoned())
+    if (mons->type == MONS_GIANT_SPORE
+        && !mons->is_summoned())
     {
-        dungeon_feature_type ftype = env.grid(monster->pos());
+        dungeon_feature_type ftype = env.grid(mons->pos());
 
         if (ftype >= DNGN_FLOOR_MIN && ftype <= DNGN_FLOOR_MAX)
-            env.pgrid(monster->pos()) |= FPROP_MOLD;
+            env.pgrid(mons->pos()) |= FPROP_MOLD;
 
         // The number field is used as a cooldown timer for this behavior.
-        if (monster->number <= 0)
+        if (mons->number <= 0)
         {
             if (one_chance_in(4))
             {
-                beh_type attitude = actual_same_attitude(*monster);
+                beh_type attitude = actual_same_attitude(*mons);
                 int rc = create_monster(mgen_data(MONS_BALLISTOMYCETE,
                                                   attitude,
                                                   NULL,
@@ -2760,12 +2790,12 @@ void ballisto_on_move(monsters * monster, const coord_def & position)
                         mprf("A ballistomycete grows in the wake of the spore.");
                 }
 
-                monster->number = 40;
+                mons->number = 40;
             }
         }
         else
         {
-            monster->number--;
+            mons->number--;
         }
 
     }
@@ -2773,7 +2803,7 @@ void ballisto_on_move(monsters * monster, const coord_def & position)
 
 static bool _ballisto_at(const coord_def & target)
 {
-    monsters * mons = monster_at(target);
+    monster* mons = monster_at(target);
     return (mons && mons ->type == MONS_BALLISTOMYCETE
             && mons->alive());
 }
@@ -2791,12 +2821,12 @@ bool _mold_connected(const coord_def & target)
 
 // If 'monster' is a ballistomycete or spore, activate some number of
 // ballistomycetes on the level.
-void activate_ballistomycetes(monsters * monster, const coord_def & origin,
+void activate_ballistomycetes(monster* mons, const coord_def & origin,
                               bool player_kill)
 {
-    if (!monster || monster->is_summoned()
-                 || monster->mons_species() != MONS_BALLISTOMYCETE
-                    && monster->type != MONS_GIANT_SPORE)
+    if (!mons || mons->is_summoned()
+              || mons->mons_species() != MONS_BALLISTOMYCETE
+                 && mons->type != MONS_GIANT_SPORE)
     {
         return;
     }
@@ -2805,19 +2835,19 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
     // other ballisto. If it was an active ballisto we will distribute
     // its count to others on the level.
     int activation_count = 1;
-    if (monster->type == MONS_BALLISTOMYCETE)
-        activation_count += monster->number;
-    if (monster->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
+    if (mons->type == MONS_BALLISTOMYCETE)
+        activation_count += mons->number;
+    if (mons->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
         activation_count = 0;
 
     int non_activable_count = 0;
     int ballisto_count = 0;
 
-    bool any_friendly = monster->attitude == ATT_FRIENDLY;
+    bool any_friendly = mons->attitude == ATT_FRIENDLY;
     bool fedhas_mode  = false;
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->mindex() != monster->mindex() && mi->alive())
+        if (mi->mindex() != mons->mindex() && mi->alive())
         {
             if (mi->type == MONS_BALLISTOMYCETE)
                 ballisto_count++;
@@ -2844,7 +2874,7 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
         if (non_activable_count == 0
             && ballisto_count == 0
             && any_friendly
-            && monster->type == MONS_BALLISTOMYCETE)
+            && mons->type == MONS_BALLISTOMYCETE)
         {
             mprf("Your fungal colony was destroyed.");
             dock_piety(5, 0);
@@ -2865,7 +2895,7 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
             && !fedhas_mode
             && non_activable_count == 0
             && ballisto_count == 0
-            && monster->attitude == ATT_HOSTILE)
+            && mons->attitude == ATT_HOSTILE)
         {
             mprf("Having destroyed the fungal colony, you feel a bit more "
                  "experienced.");
@@ -2896,7 +2926,7 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
     {
         index = i % candidates.size();
 
-        monsters * spawner = monster_at(candidates[index]->pos);
+        monster* spawner = monster_at(candidates[index]->pos);
 
         // This may be the players position, in which case we don't
         // have to mess with spore production on anything

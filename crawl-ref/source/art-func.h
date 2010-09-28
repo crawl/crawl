@@ -21,18 +21,18 @@
 
 #define ART_FUNC_H
 
-#include "cloud.h"    // For storm's bow rain
-#include "effects.h"  // For Sceptre of Torment tormenting
-#include "env.h"      // For storm bow env.cgrid
-#include "food.h"     // For evokes
-#include "godconduct.h" // did_god_conduct.
-#include "mgen_data.h" // For Sceptre of Asmodeus evoke
-#include "mon-place.h" // For Sceptre of Asmodeus evoke
-#include "mon-stuff.h" // For Scythe of Curses cursing items
-#include "spells3.h"  // For Zonguldrok animating dead
-#include "spl-cast.h" // For evokes
-#include "spl-mis.h"  // For Staff of Wucad Mu miscasts
-#include "terrain.h"  // For storm bow.
+#include "cloud.h"         // For storm bow's and robe of clouds' rain
+#include "effects.h"       // For Sceptre of Torment tormenting
+#include "env.h"           // For storm bow env.cgrid
+#include "food.h"          // For evokes
+#include "godconduct.h"    // did_god_conduct.
+#include "mgen_data.h"     // For Sceptre of Asmodeus evoke
+#include "mon-place.h"     // For Sceptre of Asmodeus evoke
+#include "mon-stuff.h"     // For Scythe of Curses cursing items
+#include "spl-cast.h"      // For evokes
+#include "spl-miscast.h"   // For Staff of Wucad Mu miscasts
+#include "spl-summoning.h" // For Zonguldrok animating dead
+#include "terrain.h"       // For storm bow.
 
 /*******************
  * Helper functions.

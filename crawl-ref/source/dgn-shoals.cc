@@ -76,7 +76,7 @@ enum tide_direction
 };
 
 static tide_direction _shoals_tide_direction;
-static monsters *tide_caller = NULL;
+static monster* tide_caller = NULL;
 static coord_def tide_caller_pos;
 static long tide_called_turns = 0L;
 static int tide_called_peak = 0;
@@ -101,6 +101,8 @@ static int _shoals_feature_height(dungeon_feature_type feat)
 {
     switch (feat)
     {
+    case DNGN_STONE_WALL:
+        return SHT_STONE;
     case DNGN_FLOOR:
         return SHT_FLOOR;
     case DNGN_SHALLOW_WATER:
@@ -108,6 +110,20 @@ static int _shoals_feature_height(dungeon_feature_type feat)
     case DNGN_DEEP_WATER:
         return SHT_SHALLOW_WATER - 1;
     default:
+        return feat_is_solid(feat)? SHT_ROCK : SHT_FLOOR;
+    }
+}
+
+static int _shoals_feature_sequence_number(dungeon_feature_type feat)
+{
+    switch (feat)
+    {
+    case DNGN_SHALLOW_WATER:
+        return 1;
+    case DNGN_DEEP_WATER:
+        return 2;
+    default:
+    case DNGN_FLOOR:
         return 0;
     }
 }
@@ -675,7 +691,8 @@ void dgn_build_shoals_level(int level_number)
     env.level_layout_type   = "shoals";
 
     const int shoals_depth = level_id::current().depth - 1;
-    dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, DNGN_OPEN_SEA);
+    if (you.level_type != LEVEL_LABYRINTH && you.level_type != LEVEL_PORTAL_VAULT)
+        dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, DNGN_OPEN_SEA);
     _shoals_init_heights();
     _shoals_init_islands(shoals_depth);
     _shoals_cliffs();
@@ -708,7 +725,7 @@ void shoals_postprocess_level()
             continue;
 
         const dungeon_feature_type feat(grd(c));
-        if (!_shoals_tide_susceptible_feat(feat))
+        if (!_shoals_tide_susceptible_feat(feat) && !feat_is_solid(feat))
             continue;
 
         const dungeon_feature_type expected_feat(_shoals_feature_at(c));
@@ -720,7 +737,7 @@ void shoals_postprocess_level()
 
     // Apply tide now, since the tide is likely to be nonzero unless
     // this is Shoals:1
-    shoals_apply_tides(0, true);
+    shoals_apply_tides(0, true, false);
 }
 
 static void _shoals_run_tide(int &tide, int &acc)
@@ -804,7 +821,7 @@ static bool _shoals_tide_sweep_actors_clear(coord_def c)
 
     if (victim->atype() == ACT_MONSTER)
     {
-        const monsters *mvictim = victim->as_monster();
+        const monster* mvictim = victim->as_monster();
         // Plants and statues cannot be moved away; the tide cannot
         // drown them.
         if (mons_class_is_stationary(mvictim->type))
@@ -837,20 +854,25 @@ static void _shoals_tide_wash_blood_away_at(coord_def c)
     env.pgrid(c) &= ~FPROP_BLOODY;
 }
 
-static void _shoals_apply_tide_feature_at(coord_def c,
-                                          dungeon_feature_type feat)
+static dungeon_feature_type _shoals_apply_tide_feature_at(
+    coord_def c,
+    dungeon_feature_type feat)
 {
     if (feat == DNGN_DEEP_WATER && !_shoals_tide_sweep_clear(c))
         feat = DNGN_SHALLOW_WATER;
 
     const dungeon_feature_type current_feat = grd(c);
+
+    // Return DNGN_UNSEEN if the feature isn't changed.
     if (feat == current_feat)
-        return;
+        return (DNGN_UNSEEN);
 
     if (Generating_Level)
         grd(c) = feat;
     else
         dungeon_terrain_changed(c, feat, true, false, true);
+
+    return (feat);
 }
 
 // Determines if the tide is rising or falling based on before and
@@ -866,7 +888,7 @@ static tide_direction _shoals_feature_tide_height_change(
     return height_delta < 0? TIDE_RISING : TIDE_FALLING;
 }
 
-static void _shoals_apply_tide_at(coord_def c, int tide)
+static void _shoals_apply_tide_at(coord_def c, int tide, bool incremental_tide)
 {
     if (is_tide_immune(c))
         return;
@@ -879,6 +901,17 @@ static void _shoals_apply_tide_at(coord_def c, int tide)
         newfeat = DNGN_FLOOR;
     const dungeon_feature_type oldfeat = grd(c);
 
+    // If the tide is affecting squares incrementally, never go
+    // straight from floor -> deep water or vice versa, always force
+    // an intermediate shallow water step.
+    if (incremental_tide)
+    {
+        const int oldfeat_seq = _shoals_feature_sequence_number(oldfeat);
+        const int newfeat_seq = _shoals_feature_sequence_number(newfeat);
+        if (std::abs(oldfeat_seq - newfeat_seq) >= 2)
+            newfeat = DNGN_SHALLOW_WATER;
+    }
+
     if (oldfeat == newfeat
         || (_shoals_feature_tide_height_change(oldfeat, newfeat) !=
             _shoals_tide_direction))
@@ -886,7 +919,18 @@ static void _shoals_apply_tide_at(coord_def c, int tide)
         return;
     }
 
-    _shoals_apply_tide_feature_at(c, newfeat);
+    const dungeon_feature_type final_feature =
+        _shoals_apply_tide_feature_at(c, newfeat);
+
+    if (incremental_tide
+        && final_feature == DNGN_DEEP_WATER
+        && c == you.pos()
+        && you.airborne()
+        && !you.permanent_levitation()
+        && !you.permanent_flight())
+    {
+        mprf(MSGCH_WARN, "The tide rushes in under you.");
+    }
 }
 
 static int _shoals_tide_at(coord_def pos, int base_tide)
@@ -911,7 +955,7 @@ static std::vector<coord_def> _shoals_extra_tide_seeds()
     return find_marker_positions_by_prop("tide_seed");
 }
 
-static void _shoals_apply_tide(int tide)
+static void _shoals_apply_tide(int tide, bool incremental_tide)
 {
     std::vector<coord_def> pages[2];
     int current_page = 0;
@@ -942,7 +986,8 @@ static void _shoals_apply_tide(int tide)
             const bool was_wet(_shoals_tide_passable_feat(herefeat));
             seen_points(c) = true;
             if (_shoals_tide_susceptible_feat(herefeat))
-                _shoals_apply_tide_at(c, _shoals_tide_at(c, tide));
+                _shoals_apply_tide_at(c, _shoals_tide_at(c, tide),
+                                      incremental_tide);
 
             const bool is_wet(feat_is_water(grd(c)));
 
@@ -999,7 +1044,7 @@ static void _shoals_init_tide()
     }
 }
 
-static monsters *_shoals_find_tide_caller()
+static monster* _shoals_find_tide_caller()
 {
     for (monster_iterator mi; mi; ++mi)
         if (mi->has_ench(ENCH_TIDE))
@@ -1007,7 +1052,7 @@ static monsters *_shoals_find_tide_caller()
     return NULL;
 }
 
-void shoals_apply_tides(long turns_elapsed, bool force)
+void shoals_apply_tides(long turns_elapsed, bool force, bool incremental_tide)
 {
     if (!player_in_branch(BRANCH_SHOALS)
         || (!turns_elapsed && !force)
@@ -1034,7 +1079,7 @@ void shoals_apply_tides(long turns_elapsed, bool force)
     if (turns_elapsed > TIDE_UNIT * 2)
         turns_elapsed = turns_elapsed % TIDE_UNIT + TIDE_UNIT;
 
-    unwind_var<monsters*> tide_caller_unwind(tide_caller,
+    unwind_var<monster* > tide_caller_unwind(tide_caller,
                                              _shoals_find_tide_caller());
     if (tide_caller)
     {
@@ -1064,11 +1109,11 @@ void shoals_apply_tides(long turns_elapsed, bool force)
     {
         _shoals_tide_direction =
             tide > old_tide ? TIDE_RISING : TIDE_FALLING;
-        _shoals_apply_tide(tide / TIDE_MULTIPLIER);
+        _shoals_apply_tide(tide / TIDE_MULTIPLIER, incremental_tide);
     }
 }
 
-void shoals_release_tide(monsters *mons)
+void shoals_release_tide(monster* mons)
 {
     if (player_in_branch(BRANCH_SHOALS))
     {
@@ -1079,7 +1124,7 @@ void shoals_release_tide(monsters *mons)
             if (you.see_cell(mons->pos()))
                 flash_view_delay(ETC_WATER, 150);
         }
-        shoals_apply_tides(0, true);
+        shoals_apply_tides(0, true, true);
     }
 }
 
@@ -1103,7 +1148,7 @@ static void _shoals_force_tide(CrawlHashTable &props, int increment)
     tide = std::min(HIGH_TIDE, std::max(LOW_TIDE, tide));
     props[PROPS_SHOALS_TIDE_KEY] = short(tide);
     _shoals_tide_direction = increment > 0 ? TIDE_RISING : TIDE_FALLING;
-    _shoals_apply_tide(tide / TIDE_MULTIPLIER);
+    _shoals_apply_tide(tide / TIDE_MULTIPLIER, false);
 }
 
 void wizard_mod_tide()

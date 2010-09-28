@@ -22,11 +22,11 @@ struct coord_def;
 struct level_pos;
 class  level_id;
 class  dlua_chunk;
-class  monsters;
+class monster;
 
-typedef unsigned char hash_size;
-typedef unsigned char vec_size;
-typedef unsigned char store_flags;
+typedef uint8_t hash_size;
+typedef uint8_t vec_size;
+typedef uint8_t store_flags;
 
 #define VEC_MAX_SIZE  255
 #define HASH_MAX_SIZE 255
@@ -98,7 +98,7 @@ public:
     CrawlStoreValue(const CrawlVector &val);
     CrawlStoreValue(const level_id &val);
     CrawlStoreValue(const level_pos &val);
-    CrawlStoreValue(const monsters &val);
+    CrawlStoreValue(const monster& val);
     CrawlStoreValue(const dlua_chunk &val);
 
     CrawlStoreValue &operator = (const CrawlStoreValue &other);
@@ -133,7 +133,7 @@ public:
     item_def       &get_item();
     level_id       &get_level_id();
     level_pos      &get_level_pos();
-    monsters       &get_monster();
+    monster        &get_monster();
     dlua_chunk     &get_lua();
 
     bool           get_bool()      const;
@@ -149,7 +149,7 @@ public:
     const CrawlHashTable& get_table()  const;
     const CrawlVector&    get_vector() const;
     const item_def&       get_item()   const;
-    const monsters&       get_monster() const;
+    const monster&       get_monster() const;
     const dlua_chunk&     get_lua() const;
 
 #if 0
@@ -196,7 +196,7 @@ public:
     operator item_def&();
     operator level_id&();
     operator level_pos&();
-    operator monsters&();
+    operator monster& ();
     operator dlua_chunk&();
 
     operator bool()        const;
@@ -223,7 +223,7 @@ public:
     CrawlStoreValue &operator = (const item_def &val);
     CrawlStoreValue &operator = (const level_id &val);
     CrawlStoreValue &operator = (const level_pos &val);
-    CrawlStoreValue &operator = (const monsters &val);
+    CrawlStoreValue &operator = (const monster& val);
     CrawlStoreValue &operator = (const dlua_chunk &val);
 
     // Misc operators

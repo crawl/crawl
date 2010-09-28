@@ -29,9 +29,9 @@
 #include "view.h"
 #include "shout.h"
 
-static void _set_nearest_monster_foe(monsters *monster);
+static void _set_nearest_monster_foe(monster* mons);
 
-static void _guess_invis_foe_pos(monsters *mon)
+static void _guess_invis_foe_pos(monster* mon)
 {
     const actor* foe          = mon->get_foe();
     const int    guess_radius = mons_sense_invis(mon) ? 3 : 2;
@@ -54,16 +54,16 @@ static void _guess_invis_foe_pos(monsters *mon)
         mon->target = dgn_random_point_from(mon->pos(), guess_radius);
 }
 
-static void _mon_check_foe_invalid(monsters *mon)
+static void _mon_check_foe_invalid(monster* mon)
 {
     if (mon->foe != MHITNOT && mon->foe != MHITYOU)
     {
         if (actor *foe = mon->get_foe())
         {
-            const monsters *foe_monster = foe->as_monster();
-            if (foe_monster->alive()
-                && (mon->friendly() != foe_monster->friendly()
-                    || mon->neutral() != foe_monster->neutral()))
+            const monster* foe_mons = foe->as_monster();
+            if (foe_mons->alive()
+                && (mon->friendly() != foe_mons->friendly()
+                    || mon->neutral() != foe_mons->neutral()))
             {
                 return;
             }
@@ -86,7 +86,7 @@ static void _mon_check_foe_invalid(monsters *mon)
 // the monster has a spell or special/nearby ability which isn't
 // affected by the wall.
 //---------------------------------------------------------------
-void handle_behaviour(monsters *mon)
+void handle_behaviour(monster* mon)
 {
     // Test spawners should always be BEH_SEEK against a foe, since
     // their only purpose is to spew out monsters for testing
@@ -260,7 +260,7 @@ void handle_behaviour(monsters *mon)
 
         if (mon->foe == MHITYOU)
         {
-            // monsters::get_foe returns NULL for friendly monsters with
+            // monster::get_foe returns NULL for friendly monsters with
             // foe == MHITYOU, so make afoe point to the player here.
             // -cao
             afoe = &you;
@@ -618,7 +618,7 @@ void handle_behaviour(monsters *mon)
     }
 }
 
-static bool _mons_check_foe(monsters *mon, const coord_def& p,
+static bool _mons_check_foe(monster* mon, const coord_def& p,
                             bool friendly, bool neutral)
 {
     if (!in_bounds(p))
@@ -632,7 +632,7 @@ static bool _mons_check_foe(monsters *mon, const coord_def& p,
         return (false);
     }
 
-    if (monsters *foe = monster_at(p))
+    if (monster* foe = monster_at(p))
     {
         if (foe != mon
             && mon->can_see(foe)
@@ -649,8 +649,12 @@ static bool _mons_check_foe(monsters *mon, const coord_def& p,
 }
 
 // Choose random nearest monster as a foe.
-void _set_nearest_monster_foe(monsters *mon)
+void _set_nearest_monster_foe(monster* mon)
 {
+    // These don't look for foes.
+    if (mon->good_neutral() || mon->strict_neutral())
+        return;
+
     const bool friendly = mon->friendly();
     const bool neutral  = mon->neutral();
 
@@ -684,7 +688,7 @@ void _set_nearest_monster_foe(monsters *mon)
 // 2. Call handle_behaviour to re-evaluate AI state and target x, y
 //
 //-----------------------------------------------------------------
-void behaviour_event(monsters *mon, mon_event_type event, int src,
+void behaviour_event(monster* mon, mon_event_type event, int src,
                      coord_def src_pos, bool allow_shout)
 {
     if (!mon->alive())
@@ -753,7 +757,8 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
         // the head, of course, always triggers this code.
         if (event == ME_WHACK
             || ((wontAttack != sourceWontAttack || isSmart)
-                && !mons_is_fleeing(mon) && !mons_is_panicking(mon)))
+                && (!mons_is_fleeing(mon) && !mons_class_flag(mon->type, M_FLEEING))
+                && !mons_is_panicking(mon)))
         {
             // Monster types that you can't gain experience from cannot
             // fight back, so don't bother having them do so.  If you
@@ -813,7 +818,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
         // XXX: Neutral monsters are a tangled mess of arbitrary logic.
         // It's not even clear any more what behaviours are intended for
         // neutral monsters and what are merely accidents of the code.
-        if (mon->neutral() && mon->attitude == ATT_NEUTRAL)
+        if (mon->neutral())
         {
             if (mon->asleep())
                 mon->behaviour = BEH_WANDER;
@@ -826,7 +831,8 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
         // Will alert monster to <src> and turn them
         // against them, unless they have a current foe.
         // It won't turn friends hostile either.
-        if (!mons_is_fleeing(mon) && !mons_is_panicking(mon)
+        if ((!mons_is_fleeing(mon) || mons_class_flag(mon->type, M_FLEEING))
+            && !mons_is_panicking(mon)
             && !mons_is_cornered(mon))
         {
             mon->behaviour = BEH_SEEK;
@@ -983,7 +989,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
            || mon->foe != MHITYOU && mon->target != you.pos());
 }
 
-void make_mons_stop_fleeing(monsters *mon)
+void make_mons_stop_fleeing(monster* mon)
 {
     if (mons_is_fleeing(mon))
         behaviour_event(mon, ME_CORNERED);

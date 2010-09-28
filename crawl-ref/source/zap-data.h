@@ -425,7 +425,7 @@
 {
     ZAP_BONE_SHARDS,
     "spray of bone shards",
-    // Incoming power is highly dependent on mass (see spells3.cc).
+    // Incoming power is highly dependent on mass (see spl-damage.cc).
     // Basic function is power * 15 + mass...  with the largest
     // available mass (3000) we get a power of 4500 at a power
     // level of 100 (for 3d29).
@@ -893,6 +893,22 @@
 },
 
 {
+    ZAP_LARGE_SANDBLAST,
+    "large rocky blast",
+    50,
+    new dicedef_calculator<3, 4, 1, 3>,
+    new tohit_calculator<13, 1, 10>,
+    BROWN,
+    false,
+    BEAM_FRAG,
+    DCHAR_FIRED_BOLT,
+    true,
+    false,
+    false,
+    3
+},
+
+{
     ZAP_SANDBLAST,
     "rocky blast",
     50,
@@ -1035,6 +1051,38 @@
     true,
     false,
     6 // XXX: Less noise because it's poison?
+},
+
+{
+    ZAP_LIGHT_BEAM,
+    "beam of light",
+    200,
+    new calcdice_calculator<3, 11, 1, 3>,
+    new tohit_calculator<10, 1, 25>,
+    ETC_HOLY,
+    false,
+    BEAM_HOLY_LIGHT,
+    DCHAR_FIRED_ZAP,
+    true,
+    true,
+    false,
+    6
+},
+
+{
+    ZAP_HOLY_BREATH,
+    "holy breath",
+    50,
+    new dicedef_calculator<3, 2, 1, 6>,
+    new tohit_calculator<6, 1, 6>,
+    ETC_HOLY,
+    false,
+    BEAM_HOLY_FLAME,
+    DCHAR_FIRED_ZAP,
+    true,
+    true,
+    false,
+    0 // Explosion does the noise.
 },
 
 #endif

@@ -6,8 +6,8 @@ bool noisy(int loudness, const coord_def& where, int who,
 bool noisy(int loudness, const coord_def& where, const char *msg = NULL,
            int who = -1, bool mermaid = false);
 void blood_smell( int strength, const coord_def& where);
-void handle_monster_shouts(monsters* monster, bool force = false);
-void force_monster_shout(monsters* monster);
-bool check_awaken(monsters* monster);
+void handle_monster_shouts(monster* mons, bool force = false);
+void force_monster_shout(monster* mons);
+bool check_awaken(monster* mons);
 
 #endif
