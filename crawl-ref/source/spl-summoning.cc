@@ -1073,6 +1073,44 @@ bool cast_shadow_creatures(god_type god)
     return (false);
 }
 
+bool cast_malign_gateway(actor * caster, int pow, god_type god)
+{
+    unsigned compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
+    std::random_shuffle(compass_idx, compass_idx + 8);
+
+    for (unsigned i = 0; i < 8; ++i)
+    {
+        coord_def test = caster->pos() + Compass[compass_idx[i]];
+        if (in_bounds(test)
+            //&& monster_habitable_grid(MONS_DEMONIC_TENTACLE, env.grid(test))
+            && env.grid(test) == DNGN_FLOOR
+            && !actor_at(test))
+        {
+            int tentacle_idx = create_monster(mgen_data(MONS_DEMONIC_TENTACLE,
+                                                        caster->atype() == ACT_PLAYER ? BEH_FRIENDLY : attitude_creation_behavior(caster->as_monster()->attitude),
+                                                        caster,
+                                                        0,
+                                                        0,
+                                                        test,
+                                                        MHITNOT,
+                                                        MG_FORCE_PLACE,
+                                                        god));
+
+            if (tentacle_idx >= 0)
+            {
+                menv[tentacle_idx].flags |= MF_NO_REWARD;
+                menv[tentacle_idx].add_ench(ENCH_PORTAL_TIMER);
+                env.grid(menv[tentacle_idx].pos()) = DNGN_TEMP_PORTAL;
+                menv[tentacle_idx].props["base_position"].get_coord()
+                                    = menv[tentacle_idx].pos();
+                return (true);
+            }
+        }
+    }
+    return (false);
+}
+
+
 bool cast_summon_horrible_things(int pow, god_type god)
 {
     if (one_chance_in(3))
