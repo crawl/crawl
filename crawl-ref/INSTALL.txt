@@ -47,13 +47,13 @@ of version 0.3:
 - Microsoft Windows NT/2000/XP. The game will also run on Windows 9X and ME. DOS
   binaries can also be compiled on Windows NT+.
 
-The only supported compiler is gcc (available on almost all Unixes, and as djgpp
-for DOS, and MinGW for Windows).
+The only officially supported compiler is gcc (available on almost all Unixes,
+and as djgpp for DOS, and MinGW for Windows).
 
-Other platforms are unsupported, but you should be able to build Crawl on pretty
-much any operating system with a modern C++ compiler (full support for the
-standard C++ library, in particular <string>, the collection classes and
-<algorithm> is necessary) and the curses library.
+On other platforms, your mileage may wary, but you should be able to build
+Crawl on pretty much any operating system with a modern C++ compiler (full
+support for the standard C++ library, in particular <string>, the collection
+classes and <algorithm> is necessary) and the curses library.
 
 
 Source Code Checkout
