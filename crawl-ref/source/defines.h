@@ -190,6 +190,8 @@ const int MAX_SEC_ENCHANT = 2;
 // The time (in aut) for a staff of power to decay 1 mp.
 #define POWER_DECAY 50
 
+const int MAX_KNOWN_SPELLS = 21;
+
 const int INVALID_ABSDEPTH = -1000;
 
 const int DEPTH_ABYSS = 51;

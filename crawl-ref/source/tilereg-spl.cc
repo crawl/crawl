@@ -147,14 +147,9 @@ bool SpellRegion::update_alt_text(std::string &alt)
     return (true);
 }
 
-static int _get_max_spells()
-{
-    return (21);
-}
-
 int SpellRegion::get_max_slots()
 {
-    return (_get_max_spells());
+    return (MAX_KNOWN_SPELLS);
 }
 
 void SpellRegion::pack_buffers()
