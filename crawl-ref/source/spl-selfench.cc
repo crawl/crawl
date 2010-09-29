@@ -422,7 +422,7 @@ void cast_teleport_control(int power)
                           "You feel in control.");
 }
 
-bool cast_selective_amnesia(bool force)
+bool cast_selective_amnesia()
 {
     if (you.spell_no == 0)
     {
@@ -462,24 +462,14 @@ bool cast_selective_amnesia(bool force)
         return (false);
     }
 
-    if (!force
-        && random2(you.skills[SK_SPELLCASTING])
-           < random2(spell_difficulty(spell)))
-    {
-        mpr("Oops! This spell sure is a blunt instrument.");
-        forget_map(20 + random2(50));
-    }
-    else
-    {
-        const int ep_gain = spell_mana(spell);
-        del_spell_from_memory_by_slot(slot);
+    const int ep_gain = spell_mana(spell);
+    del_spell_from_memory_by_slot(slot);
 
-        if (ep_gain > 0)
-        {
-            inc_mp(ep_gain, false);
-            mpr("The spell releases its latent energy back to you as "
-                "it unravels.");
-        }
+    if (ep_gain > 0)
+    {
+        inc_mp(ep_gain, false);
+        mpr("The spell releases its latent energy back to you as "
+            "it unravels.");
     }
 
     return (true);

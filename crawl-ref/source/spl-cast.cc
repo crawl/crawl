@@ -1884,7 +1884,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         crawl_state.cant_cmd_repeat("You can't repeat selective amnesia.");
 
         // Sif Muna power calls with true
-        if (!cast_selective_amnesia(false))
+        if (!cast_selective_amnesia())
             return (SPRET_ABORT);
         break;
 
