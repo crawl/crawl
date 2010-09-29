@@ -3489,7 +3489,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             && ::mons_species(mons_base_type(this)) == MONS_DEEP_DWARF)
         {
             // Deep Dwarves get to shave _any_ hp loss. Player version:
-            int shave = 1 + random2(2 + random2(1 + this->hit_dice / 3));
+            int shave = 1 + random2(2 + random2(1 + hit_dice / 3));
             dprf("(mon) HP shaved: %d.", shave);
             amount -= shave;
             if (amount <= 0)
@@ -3534,7 +3534,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
 
         if (has_ench(ENCH_MIRROR_DAMAGE))
             add_final_effect(FINEFF_MIRROR_DAMAGE, agent, this,
-                             coord_def(0,0), initial_damage);
+                             coord_def(0, 0), initial_damage);
     }
 
     if (cleanup_dead && (hit_points <= 0 || hit_dice <= 0) && type != -1)
