@@ -1415,6 +1415,12 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
 
     const int monnum = item.orig_monnum - 1;
 
+    // If the original monster type has dual-wielding, make sure its
+    // zombie has it as well.  This is needed for e.g. equipped deep elf
+    // blademaster zombies.
+    if (mons_class_flag(monnum, M_TWO_WEAPONS))
+        menv[mons].flags |= MF_TWO_WEAPONS;
+
     if (is_named_corpse(item))
     {
         uint64_t name_type = 0;
@@ -1423,12 +1429,6 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
         if (name_type == 0 || (name_type & MF_NAME_MASK) == MF_NAME_REPLACE)
             name_zombie(&menv[mons], monnum, name);
     }
-
-    // If the original monster type has dual-wielding, make sure its
-    // zombie has it as well.  This is needed for e.g. equipped deep elf
-    // blademaster zombies.
-    if (mons_class_flag(monnum, M_TWO_WEAPONS))
-        menv[mons].flags |= MF_TWO_WEAPONS;
 
     // Re-equip the zombie.
     equip_undead(pos, corps, mons, monnum);
