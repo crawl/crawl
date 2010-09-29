@@ -40,12 +40,11 @@ Building Dungeon Crawl Stone Soup
 ---------------------------------
 
 Crawl Stone Soup is known to compile successfully on the following platforms
-as of version 0.3:
+as of version 0.8:
 
 - Any Unix with a recent gcc (and g++), GNU make and libncurses, including
-  Linux and Mac OS X.  "Recent" is defined as gcc 3.3 or newer.
-- Microsoft Windows NT/2000/XP. The game will also run on Windows 9X and ME.
-  DOS binaries can also be compiled on Windows NT+.
+  Linux and Mac OS X.  "Recent" is defined as gcc 4.1 or newer.
+- Microsoft Windows NT/2000/XP.
 
 The only officially supported compiler is gcc (available on almost all
 Unixes, and as djgpp for DOS, and MinGW for Windows).
@@ -55,17 +54,22 @@ Crawl on pretty much any operating system with a modern C++ compiler (full
 support for the standard C++ library, in particular <string>, the collection
 classes and <algorithm> is necessary) and the curses library.
 
+Windows 9X and ME are no longer supported but you may probably build for
+them with relatively minor changes.  We also used to support DOS in the past
+and the remnants of DOS code are still present, but getting them to work may
+require a substantial effort.  If you have any success, please let us know!
+
 
 Source Code Checkout
 --------------------
 
 If you don't already have the source code downloaded (in the form of a .zip
-or .tbz2 file), you can obtain the latest source code from Git.  MinGW users
-can obtain Git by installing msysgit (described in the MinGW section).
+or .tar.bz2 file), you can obtain the latest source code from Git.  MinGW
+users can obtain Git by installing msysgit (described in the MinGW section).
 Linux users can just install the 'git' or 'git-core' package with whatever
-package manager they use.  Note that there is another package called 'git'
-going around which stands for 'GNU interactive tools'.  This is not what you
-want.
+package manager they use.  Note that there used to be another package called
+'git' (now 'gnuit') going around which stands for 'GNU interactive tools'.
+This is not what you want.
 
 Once you have Git installed, you just need to do:
 
@@ -186,11 +190,6 @@ Building:
   appropriate directories.  This is not necessary if only one user is going
   to play Crawl.
 
-* Edit AppHdr.h and check that SAVE_PACKAGE_CMD and LOAD_UNPACKAGE_CMD are
-  set correctly for your system.  If you do not want your saves packaged in
-  a zip archive, it's safe to comment out SAVE_PACKAGE_CMD and
-  LOAD_UNPACKAGE_CMD.
-
 * If you're installing Crawl for multiple users, run 'make install' as root.
   Crawl will be copied into the directory specified by 'prefix' (see above).
   The save and data directories will be created if necessary, and the level
@@ -293,8 +292,8 @@ Building on Windows (cygwin)
 * Follow the Linux build instructions to build Crawl.
 
 
-Building for DOS (djgpp)
-------------------------
+Building for DOS (djgpp) -- unsupported!
+----------------------------------------
 
 * Install djgpp from http://www.delorie.com/djgpp/. Don't forget to include
   C++ support when the Zip picker asks for what you want.  You may also have
