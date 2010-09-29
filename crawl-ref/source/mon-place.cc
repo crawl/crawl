@@ -1952,7 +1952,7 @@ static void _define_zombie(monster* mon, monster_type ztype, monster_type cs,
         // Simulacra aren't tough, but you can create piles of them. - bwr
         hp    = hit_points(mon->hit_dice, 1, 4);
         acmod = -2;
-        acmod = -5;
+        evmod = -5;
         break;
 
     case MONS_SPECTRAL_THING:
