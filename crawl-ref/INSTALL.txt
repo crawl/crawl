@@ -271,6 +271,10 @@ Windows NT/2k/XP system (the binary will run on 9x), or build a DOS binary.
 * When the process finishes, you should be able to run crawl right from the
   source directory by typing './crawl'
 
+* If you get a message about missing SDL.h even though you do have contribs
+  installed, your version of msys may suffer from a bug that has been fixed
+  since.  Please either update msys, or delete /mingw/bin/sdl-config so it
+  won't interfere with the copy shipped with Crawl.
 
 Building on Windows (cygwin)
 ----------------------------
