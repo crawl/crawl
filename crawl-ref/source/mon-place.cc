@@ -1928,7 +1928,9 @@ static void _define_zombie(monster* mon, monster_type ztype, monster_type cs,
         mon->flags   |= MF_NO_REGEN;
 
     int hp = 0;
-    int acmod = 0, evmod = 0;
+    int acmod = 0;
+    int evmod = 0;
+
     switch (cs)
     {
     case MONS_ZOMBIE_SMALL:
@@ -1964,9 +1966,10 @@ static void _define_zombie(monster* mon, monster_type ztype, monster_type cs,
         break;
     }
 
-    mon->hit_points = mon->max_hit_points = hp;
-    mon->ac         = std::max(mon->ac + acmod, 0);
-    mon->ev         = std::max(mon->ev + evmod, 0);
+    mon->max_hit_points = hp;
+    mon->hit_points     = mon->max_hit_points;
+    mon->ac             = std::max(mon->ac + acmod, 0);
+    mon->ev             = std::max(mon->ev + evmod, 0);
 }
 
 static band_type _choose_band(int mon_type, int power, int &band_size,
