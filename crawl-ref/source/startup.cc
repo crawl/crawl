@@ -269,9 +269,7 @@ static void _post_init(bool newc)
     draw_border();
     new_level();
     update_turn_count();
-
-    // Set vision radius to player's current vision.
-    set_los_radius(you.current_vision);
+    update_vision_range();
     init_exclusion_los();
 
     trackers_init_new_level(false);

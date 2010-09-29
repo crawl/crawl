@@ -786,6 +786,7 @@ bool player_genus( genus_type which_genus,
 bool is_player_same_species( const int mon, bool = false );
 monster_type player_mons(bool transform = true);
 void update_player_symbol();
+void update_vision_range();
 
 bool you_can_wear( int eq, bool special_armour = false );
 bool player_has_feet(void);

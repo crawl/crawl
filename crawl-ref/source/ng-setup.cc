@@ -1558,8 +1558,7 @@ static void _setup_generic(const newgame_def& ng)
 
     // Before we get into the inventory init, set light radius based
     // on species vision. Currently, all species see out to 8 squares.
-    you.normal_vision  = LOS_RADIUS;
-    you.current_vision = LOS_RADIUS;
+    update_vision_range();
 
     _jobs_stat_init( you.char_class );
     _give_last_paycheck( you.char_class );

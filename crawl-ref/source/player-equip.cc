@@ -385,9 +385,8 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
             if (showMsgs)
                 mpr("The area is filled with flickering shadows.");
 
-            you.current_vision -= 2;
-            set_los_radius(you.current_vision);
             you.attribute[ATTR_SHADOWS] = 1;
+            update_vision_range();
         }
         else if (item.sub_type == MISC_HORN_OF_GERYON)
             set_ident_flags(item, ISFLAG_IDENT_MASK);
@@ -682,9 +681,8 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs)
     if (item.base_type == OBJ_MISCELLANY
         && item.sub_type == MISC_LANTERN_OF_SHADOWS )
     {
-        you.current_vision += 2;
-        set_los_radius(you.current_vision);
         you.attribute[ATTR_SHADOWS] = 0;
+        update_vision_range();
     }
     else if (item.base_type == OBJ_WEAPONS)
     {
