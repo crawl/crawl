@@ -4974,7 +4974,7 @@ void read_scroll(int slot)
             id_the_scroll = false;
         }
         else
-            cast_selective_amnesia(false);
+            cast_selective_amnesia();
         break;
 
     default:
