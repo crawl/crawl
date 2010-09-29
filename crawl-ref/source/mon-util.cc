@@ -1416,7 +1416,7 @@ int exper_value(const monster* mon)
 
     // These four are the original arguments.
     const int mc          = mon->type;
-    const int mhd         = mon->hit_dice;
+    const int hd          = mon->hit_dice;
     int maxhp             = mon->max_hit_points;
 
     // Hacks to make merged slime creatures not worth so much exp.  We
@@ -1441,9 +1441,9 @@ int exper_value(const monster* mon)
     // code can't see, so inflate their XP a bit.  Ice statues and Roxanne
     // get plenty of XP for their spells.
     if (mc == MONS_ORANGE_STATUE || mc == MONS_SILVER_STATUE)
-        return (mhd * 15);
+        return (hd * 15);
 
-    x_val = (16 + maxhp) * (mhd * mhd) / 10;
+    x_val = (16 + maxhp) * (hd * hd) / 10;
 
     // Let's calculate a simple difficulty modifier. - bwr
     int diff = 0;
