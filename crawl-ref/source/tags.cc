@@ -1137,8 +1137,10 @@ static void tag_construct_you(writer &th)
         marshallShort(th, you.num_gifts[i]);
 
     marshallByte(th, you.gift_timeout);
+#if TAG_MAJOR_VERSION == 31
     marshallByte(th, you.normal_vision);
     marshallByte(th, you.current_vision);
+#endif
     marshallByte(th, you.hell_exit);
     marshallByte(th, you.hell_branch);
 
@@ -1728,8 +1730,11 @@ static void tag_read_you(reader &th, int minorVersion)
 
     you.gift_timeout   = unmarshallByte(th);
 
+#if TAG_MAJOR_VERSION == 31
     you.normal_vision  = unmarshallByte(th);
     you.current_vision = unmarshallByte(th);
+    // it will be recalculated in startup.c:_post_init() anyway
+#endif
     you.hell_exit      = unmarshallByte(th);
     you.hell_branch = static_cast<branch_type>( unmarshallByte(th) );
 
