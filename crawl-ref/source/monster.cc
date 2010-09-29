@@ -3659,7 +3659,6 @@ void monster::dancing_weapon_init()
 {
     hit_dice        = ghost->xl;
     max_hit_points  = ghost->max_hp;
-
     hit_points      = max_hit_points;
     ac              = ghost->ac;
     ev              = ghost->ev;
