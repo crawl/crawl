@@ -28,35 +28,35 @@ Lawrence Ramsey, Robert Vollmert, Enne Walker) would like to thank:
 We'd also like to thank members of the Dungeon Crawl community who have
 contributed to Dungeon Crawl Stone Soup:
 
-Warwick Allison              Chris Hamons              Yuuma Oohara
-Juha Arpiainen               R. Dan Henry              Pedro
-John 'Poor Yurik' Attea      Brendan Hickey            Arlen Phillips
-Roy Axenov                   Benoit Hudson             Lemuel Pitkin
-Max Bane                     Sylvia 'Onia' Hörnke      Derek Ray
-Bill Beher                   Iainuki                   Remsleep
-Alexander Beisig             Ilyak                     Will Rogers
-Stu Black                    Matthew Ince              David Rose
-Erik Inge Bolsø              Mitsuhiro Itakura         Risto Saarelma
-Peter Borgmann               Mikko Juola               Sebastian Salman
-Daniel Mark Brownrigg        Jarmo Kielosto            Brett Scarborough
-Trent W. Buck                Kornel Kisielewicz        Robert Shimmin
-Joe Buzzelli                 Daniel Klein              Sigurd
-Terje Bø                     Ilkka Koskela             Edgar Simo
-Henry Cipolla                Vambola Kotkas            Alex Smith
-Aaron Curtis                 Ryan Kusnery              Solf
-Denzi                        Jukka Kuusisto            Michael Spang
-Mike Drinen                  Maciej Lapinski           Johan Strandell
-Kieron Dunbar                Jordan Lewis              Roman Sêk
-Micha Elsner                 Icy Lich                  Matthew Tadd
-Christopher Evenstar         Markus Maier              William Tanksley, Jr.
-Brett Foster                 Arien Malec               Jared 'Twinge' Tinney
-Chris Galardi                Paul Maloney              Matt Titus
-Ben Goetter                  Andrew Minton             Steven Wheeler
-Rob Grant                    Shawn M Moore             Thomas Willem
-John Greenberg               Eva Myers                 Evan Williams
-GreyKnight                   Wille Mäntylä             Jeremey Wilson
-Joshua Gross                 Erkki Nurmi               Yelve Yakut
-Brian Haase                  Mattias Nyberg            Zooko
-Shayne Halvorson             nyra
-Sophie Hamilton              Dylan O'Donnell
+Warwick Allison              Chris Hamons              Dylan O'Donnell
+Juha Arpiainen               R. Dan Henry              Yuuma Oohara
+John 'Poor Yurik' Attea      Brendan Hickey            Pedro
+Roy Axenov                   Benoit Hudson             Arlen Phillips
+Max Bane                     Sylvia 'Onia' Hörnke      Lemuel Pitkin
+Bill Beher                   Iainuki                   Derek Ray
+Alexander Beisig             Ilyak                     Remsleep
+Stu Black                    Matthew Ince              Will Rogers
+Erik Inge Bolsø              Mitsuhiro Itakura         David Rose
+Peter Borgmann               Mikko Juola               Risto Saarelma
+Daniel Mark Brownrigg        Jarmo Kielosto            Sebastian Salman
+Trent W. Buck                Kornel Kisielewicz        Brett Scarborough
+Joe Buzzelli                 Daniel Klein              Robert Shimmin
+Terje Bø                     Ilkka Koskela             Sigurd
+Henry Cipolla                Vambola Kotkas            Edgar Simo
+Aaron Curtis                 Ryan Kusnery              Alex Smith
+Denzi                        Jukka Kuusisto            Solf
+Mike Drinen                  Raphaël Langella          Michael Spang
+Kieron Dunbar                Maciej Lapinski           Johan Strandell
+Micha Elsner                 Jordan Lewis              Roman Sêk
+Christopher Evenstar         Icy Lich                  Matthew Tadd
+Brett Foster                 Markus Maier              William Tanksley, Jr.
+Chris Galardi                Arien Malec               Jared 'Twinge' Tinney
+Ben Goetter                  Paul Maloney              Matt Titus
+Rob Grant                    Andrew Minton             Steven Wheeler
+John Greenberg               Shawn M Moore             Thomas Willem
+GreyKnight                   Eva Myers                 Evan Williams
+Joshua Gross                 Wille Mäntylä             Jeremey Wilson
+Brian Haase                  Erkki Nurmi               Yelve Yakut
+Shayne Halvorson             Mattias Nyberg            Zooko
+Sophie Hamilton              nyra
 
