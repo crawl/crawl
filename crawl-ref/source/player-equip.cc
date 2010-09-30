@@ -381,6 +381,8 @@ static void _equip_weapon_use_warning(const item_def& item)
         mpr("You really shouldn't be using a chaotic item like this.");
     else if (is_hasty_item(item) && you.religion == GOD_CHEIBRIADOS)
         mpr("You really shouldn't be using a fast item like this.");
+    else if (is_poisoned_item(item) && you.religion == GOD_SHINING_ONE)
+        mpr("You really shouldn't be using a poisoned item like this.");
 }
 
 // Provide a function for handling initial wielding of 'special'
