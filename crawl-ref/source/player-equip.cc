@@ -442,6 +442,8 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
                 mpr("You really shouldn't be using a holy item like this.");
             else if (is_unholy_item(item) && is_good_god(you.religion))
                 mpr("You really shouldn't be using an unholy item like this.");
+            else if (is_corpse_violating_item(item) && you.religion == GOD_FEDHAS)
+                mpr("You really shouldn't be using a corpse-violating item like this.");
             else if (is_evil_item(item) && is_good_god(you.religion))
                 mpr("You really shouldn't be using an evil item like this.");
             else if (is_unclean_item(item) && you.religion == GOD_ZIN)
