@@ -881,6 +881,7 @@ void monster::equip(item_def &item, int slot, int near)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
+    case OBJ_STAVES:
     {
         bool give_msg = (slot == MSLOT_WEAPON || mons_wields_two_weapons(this));
         equip_weapon(item, near, give_msg);

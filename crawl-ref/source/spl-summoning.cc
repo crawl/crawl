@@ -1262,6 +1262,7 @@ void equip_undead(const coord_def &a, int corps, int mons, int monnum)
         switch (item.base_type)
         {
         case OBJ_WEAPONS:
+        case OBJ_STAVES:
         {
             const bool weapon = mon->inv[MSLOT_WEAPON] != NON_ITEM;
             const bool alt_weapon = mon->inv[MSLOT_ALT_WEAPON] != NON_ITEM;
