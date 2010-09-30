@@ -531,8 +531,8 @@ bool elyvilon_destroy_weapons()
     for (stack_iterator si(you.pos(), true); si; ++si)
     {
         item_def& item(*si);
-        if (item.base_type != OBJ_WEAPONS
-                && item.base_type != OBJ_MISSILES
+        if ((item.base_type != OBJ_WEAPONS
+                && item.base_type != OBJ_MISSILES)
             || item_is_stationary(item)) // Held in a net?
         {
             continue;
