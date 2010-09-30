@@ -17,11 +17,21 @@ while(<FLIST>)
     next if !/\./;
     undef local $/;
     open F, "<$_" or die "Can't open $_";
-    my $cont=<F>;
+    my $file = $_;
+    my $cont=$_=<F>;
     close F;
 
-    print "newline at eof: $_\n" unless $cont =~ /$nl$/s;
-    print "tab: $_\n" if $cont =~ /\t/s;
-    print "spaces at eol: $_\n" if $cont =~ / $nl/s;
+    $_.=$nl, print "missing newline at eof: $file\n" unless /$nl$/s;
+    print "extra newlines at eof: $file\n" if s/$nl+$nl$/$nl/s;
+    # not correct: 4 spaces,tab should become 8 not 12 spaces
+    print "tab: $file\n" if s/\t/        /sg;
+    print "spaces at eol: $file\n" if s/ +$nl/$nl/sg;
+
+    if ($_ ne $cont)
+    {
+        open F, ">$file" or die;
+        print F;
+        close F;
+    }
 }
 close FLIST;
