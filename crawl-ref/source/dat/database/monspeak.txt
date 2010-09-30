@@ -1036,7 +1036,7 @@ Crossbows player ghost
 
 @_generic_ranged_@
 
-@The_monster@ @_reload_adj_@ reloads its weapon.
+@The_monster@ @_reloads_adj_@ its weapon.
 
 %%%%
 Throwing player ghost
@@ -1310,11 +1310,11 @@ _generic_ranged_
 You feel something passing dangerously close to your head. @player_only@
 
 %%%%
-_reload_adj_
+_reloads_adj_
 
-struggles to
+struggles to reload
 
-effortlessly
+effortlessly reloads
 
 %%%%
 _misc_item_
