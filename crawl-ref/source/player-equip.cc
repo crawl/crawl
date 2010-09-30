@@ -365,6 +365,24 @@ static void _unequip_artefact_effect(const item_def &item, bool *show_msgs=NULL)
     }
 }
 
+static void _equip_weapon_use_warning(const item_def& item)
+{
+    if (is_holy_item(item) && you.religion == GOD_YREDELEMNUL)
+        mpr("You really shouldn't be using a holy item like this.");
+    else if (is_unholy_item(item) && is_good_god(you.religion))
+        mpr("You really shouldn't be using an unholy item like this.");
+    else if (is_corpse_violating_item(item) && you.religion == GOD_FEDHAS)
+        mpr("You really shouldn't be using a corpse-violating item like this.");
+    else if (is_evil_item(item) && is_good_god(you.religion))
+        mpr("You really shouldn't be using an evil item like this.");
+    else if (is_unclean_item(item) && you.religion == GOD_ZIN)
+        mpr("You really shouldn't be using an unclean item like this.");
+    else if (is_chaotic_item(item) && you.religion == GOD_ZIN)
+        mpr("You really shouldn't be using a chaotic item like this.");
+    else if (is_hasty_item(item) && you.religion == GOD_CHEIBRIADOS)
+        mpr("You really shouldn't be using a fast item like this.");
+}
+
 // Provide a function for handling initial wielding of 'special'
 // weapons, or those whose function is annoying to reproduce in
 // other places *cough* auto-butchering *cough*.    {gdl}
@@ -437,22 +455,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
     case OBJ_WEAPONS:
     {
         if (showMsgs)
-        {
-            if (is_holy_item(item) && you.religion == GOD_YREDELEMNUL)
-                mpr("You really shouldn't be using a holy item like this.");
-            else if (is_unholy_item(item) && is_good_god(you.religion))
-                mpr("You really shouldn't be using an unholy item like this.");
-            else if (is_corpse_violating_item(item) && you.religion == GOD_FEDHAS)
-                mpr("You really shouldn't be using a corpse-violating item like this.");
-            else if (is_evil_item(item) && is_good_god(you.religion))
-                mpr("You really shouldn't be using an evil item like this.");
-            else if (is_unclean_item(item) && you.religion == GOD_ZIN)
-                mpr("You really shouldn't be using an unclean item like this.");
-            else if (is_chaotic_item(item) && you.religion == GOD_ZIN)
-                mpr("You really shouldn't be using a chaotic item like this.");
-            else if (is_hasty_item(item) && you.religion == GOD_CHEIBRIADOS)
-                mpr("You really shouldn't be using a fast item like this.");
-        }
+            _equip_weapon_use_warning(item);
 
         // Call unrandart equip func before item is identified.
         if (artefact)
