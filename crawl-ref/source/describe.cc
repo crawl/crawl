@@ -2357,8 +2357,8 @@ bool describe_item( item_def &item, bool allow_inscribe, bool shopping )
 
             if (can_memorise && !crawl_state.player_is_dead())
             {
-                cprintf("Select a spell to read its description or to "
-                        "memorise it.");
+                cprintf("Select a spell to read its description, to "
+                        "memorise it or to forget it.");
             }
             else
                 cprintf("Select a spell to read its description.");
@@ -2567,8 +2567,9 @@ static void _append_spell_stats(const spell_type spell,
     description += spell_noise_string(spell);
 }
 
-// Returns true if you can memorise the spell.
-static bool _get_spell_description(const spell_type spell,
+// Returns BOOK_MEM if you can memorise the spell BOOK_FORGET if you can
+// forget it and BOOK_NEITHER if you can do neither
+static int _get_spell_description(const spell_type spell,
                                    std::string &description,
                                    const item_def* item = NULL)
 {
@@ -2610,7 +2611,7 @@ static bool _get_spell_description(const spell_type spell,
         description += "This spell will have no effect right now.\n";
 
     if (crawl_state.player_is_dead())
-        return (false);
+        return (BOOK_NEITHER);
 
     bool rod = item && item->base_type == OBJ_STAVES;
     _append_spell_stats(spell, description, rod);
@@ -2621,15 +2622,22 @@ static bool _get_spell_description(const spell_type spell,
         description += "\n\n";
         description += desc_cannot_memorise_reason(undead);
     }
-    else if (item && item->base_type == OBJ_BOOKS && !you.has_spell(spell)
-             && in_inventory(*item) && player_can_memorise_from_spellbook(*item))
-    {
-        description += "\n\n";
-        description += "(M)emorise this spell.";
-        return (true);
-    }
+    if (item && item->base_type == OBJ_BOOKS && in_inventory(*item))
+        if(you.has_spell(spell))
+        {
+            description += "\n\n";
+            description += "(F)orget this spell.";
+            return (BOOK_FORGET);
+        }
+        else if (player_can_memorise_from_spellbook(*item)
+                 && !you_cannot_memorise(spell, undead))
+        {
+            description += "\n\n";
+            description += "(M)emorise this spell.";
+            return (BOOK_MEM);
+        }
 
-    return (false);
+    return(BOOK_NEITHER);
 }
 
 void get_spell_desc(const spell_type spell, describe_info &inf)
@@ -2649,7 +2657,7 @@ void get_spell_desc(const spell_type spell, describe_info &inf)
 void describe_spell(spell_type spelled, const item_def* item)
 {
     std::string desc;
-    bool can_mem = _get_spell_description(spelled, desc, item);
+    int mem_or_forget = _get_spell_description(spelled, desc, item);
     print_description(desc);
 
     mouse_control mc(MOUSE_MODE_MORE);
@@ -2658,10 +2666,17 @@ void describe_spell(spell_type spelled, const item_def* item)
     if ((ch = getchm()) == 0)
         ch = getchm();
 
-    if (can_mem && toupper(ch) == 'M')
+    if (mem_or_forget == BOOK_MEM && toupper(ch) == 'M')
     {
         redraw_screen();
         if (!learn_spell(spelled, item->sub_type, false) || !you.turn_is_over)
+            more();
+        redraw_screen();
+    }
+    else if (mem_or_forget == BOOK_FORGET && toupper(ch) == 'F')
+    {
+        redraw_screen();
+        if (!forget_spell_from_book(spelled, item) || !you.turn_is_over)
             more();
         redraw_screen();
     }
