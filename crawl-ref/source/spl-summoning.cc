@@ -1400,8 +1400,12 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
                                                        : MONS_SKELETON_LARGE;
     }
 
+    const int monnum = item.orig_monnum - 1;
+
+    // Use the original monster type as the zombified type here, to get
+    // the proper stats from it.
     mgen_data mg(mon, beha, as, 0, 0, pos, hitting, MG_FORCE_BEH, god,
-                 zombie_type, number);
+                 static_cast<monster_type>(monnum), number);
 
     mg.non_actor_summoner = nas;
 
@@ -1412,12 +1416,6 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
 
     if (mons == -1)
         return (false);
-
-    const int monnum = item.orig_monnum - 1;
-
-    // Use the original monster type as the zombified type here, to get
-    // the proper stats from it.
-    define_zombie(&menv[mons], static_cast<monster_type>(monnum), mon, true);
 
     if (is_named_corpse(item))
     {
@@ -1607,23 +1605,21 @@ bool cast_simulacrum(int pow, god_type god)
 
         for (int i = 0; i < how_many; ++i)
         {
+            // Use the original monster type as the zombified type here,
+            // to get the proper stats from it.
             const int mons =
                 create_monster(
                     mgen_data(mon, BEH_FRIENDLY, &you,
                               6, SPELL_SIMULACRUM,
                               you.pos(), MHITYOU,
-                              MG_FORCE_BEH, god, sim_type));
+                              MG_FORCE_BEH, god,
+                              static_cast<monster_type>(monnum)));
 
             if (mons != -1)
             {
                 count++;
 
                 dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
-
-                // Use the original monster type as the zombified type
-                // here, to get the proper stats from it.
-                define_zombie(&menv[mons], static_cast<monster_type>(monnum),
-                              mon, true);
 
                 player_angers_monster(&menv[mons]);
             }
