@@ -2009,11 +2009,7 @@ static bool _mons_drain_life(monster* mons, bool actual)
         if (ai->atype() == ACT_PLAYER)
         {
             if (actual)
-            {
                 ouch(hurted, mons->mindex(), KILLED_BY_BEAM, mons->name(DESC_NOCAP_A).c_str());
-
-                simple_monster_message(mons, " draws from your life force!");
-            }
 
             hp_gain += hurted;
         }
