@@ -5674,6 +5674,11 @@ bool player::is_chaotic() const
     return (false);
 }
 
+bool player::is_artificial() const
+{
+    return (false);
+}
+
 // This is a stub. Makes checking for silver damage a little cleaner.
 bool player::is_insubstantial() const
 {

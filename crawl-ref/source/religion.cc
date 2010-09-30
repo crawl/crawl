@@ -651,6 +651,16 @@ std::string get_god_likes(god_type which_god, bool verbose)
 
     switch (which_god)
     {
+    case GOD_YREDELEMNUL:
+        likes.push_back("you or your undead slaves kill artificial beings");
+        break;
+
+    default:
+        break;
+    }
+
+    switch (which_god)
+    {
     case GOD_MAKHLEB: case GOD_LUGONU:
         likes.push_back("you or your allies kill holy beings");
         break;
@@ -3144,6 +3154,9 @@ bool player_can_join_god(god_type which_god)
         return (false);
 
     if (is_good_god(which_god) && you.undead_or_demonic())
+        return (false);
+
+    if (which_god == GOD_YREDELEMNUL && you.is_artificial())
         return (false);
 
     if (which_god == GOD_BEOGH && you.species != SP_HILL_ORC)

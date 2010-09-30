@@ -812,6 +812,9 @@ enum conduct_type
     DID_UNCLEAN_KILLED_BY_SERVANT,        // Zin
     DID_CHAOTIC_KILLED_BY_SERVANT,        // Zin
     DID_ATTACK_IN_SANCTUARY,              // Zin
+    DID_KILL_ARTIFICIAL,                  // Yredelemnul
+    DID_ARTIFICIAL_KILLED_BY_UNDEAD_SLAVE,// Yredelemnul
+    DID_ARTIFICIAL_KILLED_BY_SERVANT,     // Yredelemnul
 
     NUM_CONDUCTS
 };
