@@ -1917,6 +1917,7 @@ void mons_cast_spectral_orcs(monster* mons)
 
             // which base type this orc is pretending to be for
             // gear purposes
+            orc->base_monster = mon;
             orc->number = (int) mon;
 
             give_item(created, you.absdepth0, true, true);
