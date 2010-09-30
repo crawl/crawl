@@ -1974,11 +1974,6 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
     mon->hit_points     = mon->max_hit_points;
     mon->ac             = std::max(mon->ac + acmod, 0);
     mon->ev             = std::max(mon->ev + evmod, 0);
-
-    // Set the base type to the original type to retain appropriate
-    // stats, unless the monster is a unique.
-    if (!mons_is_unique(ztype))
-        mon->base_monster = ztype;
 }
 
 static band_type _choose_band(int mon_type, int power, int &band_size,
