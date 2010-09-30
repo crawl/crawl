@@ -3158,9 +3158,9 @@ void level_change(bool skip_attribute_increase)
             if (you.experience_level == 23)
                 mpr("Your Zot abilities now extend through invoking Sage effects.", MSGCH_INTRINSIC_GAIN);
             if (you.experience_level == 24)
-                mpr("Your Zot abilities now extend through the making of blade traps.", MSGCH_INTRINSIC_GAIN);
-            if (you.experience_level == 25)
                 mpr("Your Zot abilities now extend through acquirement.", MSGCH_INTRINSIC_GAIN);
+            if (you.experience_level == 25)
+                mpr("Your Zot abilities now extend through the making of blade traps.", MSGCH_INTRINSIC_GAIN);
             if (you.experience_level == 26)
                 mpr("Your Zot abilities now extend through the making of curse skulls.", MSGCH_INTRINSIC_GAIN);
             if (you.experience_level == 27)
