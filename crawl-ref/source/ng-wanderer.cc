@@ -963,5 +963,3 @@ void create_wanderer(void)
 
     _wanderer_cover_equip_holes(equip_slot);
 }
-
-

@@ -9,4 +9,3 @@
 std::string colour_string(std::string in, int col);
 
 #endif
-

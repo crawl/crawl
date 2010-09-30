@@ -298,5 +298,3 @@ bool write_png(const char *filename, tile_colour *pixels,
 
     return (true);
 }
-
-

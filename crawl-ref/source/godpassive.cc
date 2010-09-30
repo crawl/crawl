@@ -163,4 +163,3 @@ void jiyva_eat_offlevel_items()
         }
     }
 }
-

@@ -111,5 +111,3 @@ short mon_resist_def::get_resist_level(mon_resist_flags res_type) const
     default:             return (0);
     }
 }
-
-

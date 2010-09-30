@@ -6235,7 +6235,7 @@ static const char *enchant_names[] =
     "petrified", "lowered_mr", "soul_ripe", "slowly_dying", "eat_items",
     "aquatic_land", "spore_production", "slouch", "swift", "tide",
     "insane", "silenced", "awaken_forest", "exploding", "bleeding",
-    "tethered", "severed", "antimagic", "fading_away", "preparing_resurrect", "regen", 
+    "tethered", "severed", "antimagic", "fading_away", "preparing_resurrect", "regen",
     "magic_res", "mirror_dam", "stoneskin", "fear inspiring", "buggy",
 };
 
@@ -6461,4 +6461,3 @@ void mon_enchant::set_duration(const monster* mons, const mon_enchant *added)
     if (duration > maxduration)
         maxduration = duration;
 }
-

@@ -25,4 +25,3 @@ T* random_choose_weighted(std::vector<std::pair<T, int> >& choices)
 }
 
 #endif
-

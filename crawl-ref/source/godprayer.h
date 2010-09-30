@@ -17,4 +17,3 @@ piety_gain_t sacrifice_item_stack(const item_def& item);
 void offer_items();
 
 #endif
-

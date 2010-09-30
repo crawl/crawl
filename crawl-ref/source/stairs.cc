@@ -911,7 +911,7 @@ void down_stairs(dungeon_feature_type force_stair,
         && player_in_branch( BRANCH_VESTIBULE_OF_HELL ))
     {
         // Down stairs in vestibule are one-way!
-        // This doesn't make any sense. Why would there be any down stairs 
+        // This doesn't make any sense. Why would there be any down stairs
         // in the Vestibule? {due, 9/2010}
         mpr("A mysterious force prevents you from descending the staircase.");
         return;
