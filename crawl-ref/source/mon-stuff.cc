@@ -1366,6 +1366,33 @@ static std::string _killer_type_name(killer_type killer)
     return("");
 }
 
+static void _make_spectral_thing(monster* mons, bool quiet)
+{
+    if (mons->holiness() == MH_NATURAL && mons_can_be_zombified(mons))
+    {
+        const monster_type spectre_type = mons_species(mons->type);
+
+        // Don't allow 0-headed hydras to become spectral hydras.
+        if (spectre_type != MONS_HYDRA || mons->number != 0)
+        {
+            const int spectre =
+                create_monster(
+                    mgen_data(MONS_SPECTRAL_THING, BEH_FRIENDLY, &you,
+                        0, 0, mons->pos(), MHITYOU,
+                        0, static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]),
+                        spectre_type, mons->number));
+
+            if (spectre != -1)
+            {
+                if (!quiet)
+                    mpr("A glowing mist starts to gather...");
+
+                name_zombie(&menv[spectre], mons);
+            }
+        }
+    }
+}
+
 // Returns the slot of a possibly generated corpse or -1.
 int monster_die(monster* mons, killer_type killer,
                 int killer_index, bool silent, bool wizard, bool fake)
@@ -1761,30 +1788,9 @@ int monster_die(monster* mons, killer_type killer,
             }
 
             if (you.duration[DUR_DEATH_CHANNEL]
-                && mons->holiness() == MH_NATURAL
-                && mons_can_be_zombified(mons)
                 && gives_xp)
             {
-                const monster_type spectre_type = mons_species(mons->type);
-
-                // Don't allow 0-headed hydras to become spectral hydras.
-                if (spectre_type != MONS_HYDRA || mons->number != 0)
-                {
-                    const int spectre =
-                        create_monster(
-                            mgen_data(MONS_SPECTRAL_THING, BEH_FRIENDLY, &you,
-                                0, 0, mons->pos(), MHITYOU,
-                                0, static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]),
-                                spectre_type, mons->number));
-
-                    if (spectre != -1)
-                    {
-                        if (death_message)
-                            mpr("A glowing mist starts to gather...");
-
-                        name_zombie(&menv[spectre], mons);
-                    }
-                }
+                _make_spectral_thing(mons, !death_message);
             }
             break;
         }
