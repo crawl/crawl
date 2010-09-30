@@ -172,6 +172,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
 // The four numerical fields are: MP, HP, food, and piety.
 // Note:  food_cost  = val + random2avg( val, 2 )
 //        piety_cost = val + random2( (val + 1) / 2 + 1 );
+//        hp cost is in per-mil of maxhp (i.e. 20 = 2% of hp, rounded up)
 static const ability_def Ability_List[] =
 {
     // NON_ABILITY should always come first
@@ -387,7 +388,7 @@ static const ability_def Ability_List[] =
     { ABIL_MAKE_ACQUIREMENT, "Acquirement", 0, 0, 0, 0, ABFLAG_LEVEL_DRAIN, 0 },
     { ABIL_MAKE_WATER, "Make water", 0, 0, 0, 0, ABFLAG_NONE, 10 },
     { ABIL_MAKE_ELECTRIC_EEL, "Make electric eel", 0, 0, 0, 0, ABFLAG_NONE, 100},
-    { ABIL_MAKE_BAZAAR, "Make bazaar", 0, 0, 0, 0, ABFLAG_NONE, 100 },
+    { ABIL_MAKE_BAZAAR, "Make bazaar", 0, 30, 0, 0, ABFLAG_PERMANENT_HP, 100 },
     { ABIL_MAKE_ALTAR, "Make altar", 0, 0, 0, 0, ABFLAG_NONE, 2 },
     { ABIL_MAKE_GRENADES, "Make grenades", 0, 0, 0, 0, ABFLAG_NONE, 2 },
     { ABIL_MAKE_SAGE, "Sage", 0, 0, 300, 0,  ABFLAG_INSTANT, 0 },
@@ -1564,6 +1565,11 @@ static bool _do_ability(const ability_def& abil)
         break; // //
 
     case ABIL_MAKE_TELEPORT_TRAP:
+        if (you.pos().distance_from(orb_position())<10) 
+        {
+            mpr("Radiation from the Orb interferes with the trap's magic!");
+            return false;
+        }
         if (!create_trap(TRAP_TELEPORT)) return false;
         break; // //
 
@@ -2536,14 +2542,14 @@ static void _pay_ability_costs(const ability_def& abil, int xpcost)
     {
         dec_mp( abil.mp_cost );
         if (abil.flags & ABFLAG_PERMANENT_MP)
-            rot_mp(1);
+            rot_mp(abil.mp_cost);
     }
 
     if (abil.hp_cost)
     {
         dec_hp( hp_cost, false );
         if (abil.flags & ABFLAG_PERMANENT_HP)
-            rot_hp(1);
+            rot_hp(hp_cost);
     }
 
     if (xpcost)
@@ -2574,7 +2580,8 @@ static void _pay_ability_costs(const ability_def& abil, int xpcost)
     }
     if (abil.flags & ABFLAG_LEVEL_DRAIN)
     {
-        lose_level();
+        lose_level();   // takes you back to 1xp before the current level
+        lose_level();   // so need to do this twice.
     }
 
 
@@ -2756,9 +2763,9 @@ std::vector<talent> your_talents(bool check_confused)
         if (you.experience_level >= 23)
             _add_talent(talents, ABIL_MAKE_SAGE, check_confused);
         if (you.experience_level >= 24)
-            _add_talent(talents, ABIL_MAKE_BLADE_TRAP, check_confused);
-        if (you.experience_level >= 25)
             _add_talent(talents, ABIL_MAKE_ACQUIREMENT, check_confused);
+        if (you.experience_level >= 25)
+            _add_talent(talents, ABIL_MAKE_BLADE_TRAP, check_confused);
         if (you.experience_level >= 26)
             _add_talent(talents, ABIL_MAKE_CURSE_SKULL, check_confused);
         if (you.experience_level >= 27)

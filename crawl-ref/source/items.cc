@@ -145,6 +145,22 @@ static bool _item_ok_to_clean(int item)
     return (true);
 }
 
+static bool _item_preferred_to_clean(int item)
+{
+    // Preferably clean "normal" weapons and ammo
+    if (mitm[item].base_type == OBJ_WEAPONS 
+        && mitm[item].plus == 0 && mitm[item].plus2 == 0 
+        && !is_artefact(mitm[item]))
+        return (true);
+
+    if (mitm[item].base_type == OBJ_MISSILES
+        && mitm[item].plus == 0 && mitm[item].plus2 == 0 
+        && !is_artefact(mitm[item]))
+        return (true);
+
+    return (false);
+}
+
 // Returns index number of first available space, or NON_ITEM for
 // unsuccessful cleanup (should be exceedingly rare!)
 static int _cull_items(void)
@@ -164,31 +180,41 @@ static int _cull_items(void)
     //  7. uniques weapons are moved to the abyss
     //  8. randarts are simply lost
     //  9. unrandarts are 'destroyed', but may be generated again
+    // 10. Remove +0 weapons and ammo first, only removing others if this fails.
 
     int first_cleaned = NON_ITEM;
 
     // 2. Avoid shops by avoiding (0,5..9).
     // 3. Avoid monster inventory by iterating over the dungeon grid.
-    for (rectangle_iterator ri(1); ri; ++ri)
+
+    // 10. Remove +0 weapons and ammo first, only removing others if this fails.
+    // Loop twice. First iteration, get rid of uninteresting stuff. Second
+    // iteration, get rid of anything non-essential
+    for (int remove_all=0; remove_all<2 && first_cleaned==NON_ITEM; remove_all++)
     {
-        if (grid_distance( you.pos(), *ri ) <= 9)
-            continue;
-
-        for (stack_iterator si(*ri); si; ++si)
+        for (rectangle_iterator ri(1); ri; ++ri)
         {
-            if (_item_ok_to_clean(si->index()) && x_chance_in_y(15, 100))
+            if (grid_distance( you.pos(), *ri ) <= 9)
+                continue;
+
+            for (stack_iterator si(*ri); si; ++si)
             {
-                if (is_unrandom_artefact(*si))
+                if (_item_ok_to_clean(si->index()) 
+                    && (remove_all || _item_preferred_to_clean(si->index()))    
+                    && x_chance_in_y(15, 100))
                 {
-                    // 7. Move uniques to abyss.
-                    set_unique_item_status(*si, UNIQ_LOST_IN_ABYSS);
+                    if (is_unrandom_artefact(*si))
+                    {
+                        // 7. Move uniques to abyss.
+                        set_unique_item_status(*si, UNIQ_LOST_IN_ABYSS);
+                    }
+
+                    if (first_cleaned == NON_ITEM)
+                        first_cleaned = si->index();
+
+                    // POOF!
+                    destroy_item( si->index() );
                 }
-
-                if (first_cleaned == NON_ITEM)
-                    first_cleaned = si->index();
-
-                // POOF!
-                destroy_item( si->index() );
             }
         }
     }
