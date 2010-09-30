@@ -3953,6 +3953,20 @@ void describe_god( god_type which_god, bool give_title )
                 cprintf("%s shields you from corrosive effects.\n",
                         god_name(which_god).c_str());
             }
+            if (you.piety >= piety_breakpoint(1))
+            {
+                std::string slurp = "You gain nutrition";
+
+                if (you.piety >= piety_breakpoint(4))
+                    slurp += ", power and health";
+                else if (you.piety >= piety_breakpoint(3))
+                     slurp += " and power";
+
+                slurp += " when your fellow slimes consume items.\n";
+
+                cprintf("%s", slurp.c_str());
+            }
+
         }
         else if (which_god == GOD_FEDHAS)
         {

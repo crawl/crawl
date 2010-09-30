@@ -2087,7 +2087,7 @@ bool do_god_gift(bool prayed_for, bool forced)
                 if (_jiyva_mutate())
                 {
                     _inc_gift_timeout(15 + roll_dice(2, 4));
-                    you.num_gifts[you.religion]++;
+                    //num_gifts is used for tracking the Slime:6 walls
                     take_note(Note(NOTE_GOD_GIFT, you.religion));
                 }
                 else
@@ -2616,6 +2616,16 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
                 case GOD_LUGONU:
                     simple_god_message(" will now corrupt your weapon at an altar... once.");
                     break;
+                case GOD_JIYVA:
+                    simple_god_message(" will now unseal the treasures of the Slime Pits.");
+                    dlua.callfn("dgn_set_persistent_var", "sb", "fix_slime_vaults", true);
+                    // If we're on Slime:6, pretend we just entered the level
+                   // in order to bring down the vault walls.
+                   if (level_id::current() == level_id(BRANCH_SLIME_PITS, 6))
+                       dungeon_events.fire_event(DET_ENTERED_LEVEL);
+
+                   you.num_gifts[you.religion]++;
+                   break;
                 default:
                     break;
             }
@@ -3375,15 +3385,6 @@ void god_pitch(god_type which_god)
     // Complimentary jelly upon joining.
     if (you.religion == GOD_JIYVA)
     {
-        if (you.worshipped[GOD_JIYVA] == 1)
-        {
-            dlua.callfn("dgn_set_persistent_var", "sb",
-                        "fix_slime_vaults", true);
-            // If we're on Slime:6, pretend we just entered the level
-            // in order to bring down the vault walls.
-            if (level_id::current() == level_id(BRANCH_SLIME_PITS, 6))
-                dungeon_events.fire_event(DET_ENTERED_LEVEL);
-        }
 
         if (!_has_jelly())
         {
