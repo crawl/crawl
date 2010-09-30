@@ -25,6 +25,7 @@
 #include "fprop.h"
 #include "fight.h"
 #include "fineff.h"
+#include "godpassive.h"
 #include "godprayer.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -2570,6 +2571,9 @@ static bool _monster_eat_item(monster* mons, bool nearby)
     bool eaten_net = false;
     bool death_ooze_ate_good = false;
     bool death_ooze_ate_corpse = false;
+    bool shown_msg = false;
+    piety_gain_t gain = PIETY_NONE;
+    int js = JS_NONE;
 
     // Jellies can swim, so don't check water
     for (stack_iterator si(mons->pos());
@@ -2621,9 +2625,16 @@ static bool _monster_eat_item(monster* mons, bool nearby)
             eaten++;
         }
 
+        if(eaten && !shown_msg && player_can_hear(mons->pos()))
+        {
+            mprf(MSGCH_SOUND, "You hear a%s slurping noise.",
+                 nearby ? "" : " distant");
+            shown_msg = true;
+        }
+
         if (you.religion == GOD_JIYVA)
         {
-            const piety_gain_t gain = sacrifice_item_stack(*si);
+            gain = sacrifice_item_stack(*si, &js);
             if (gain > PIETY_NONE)
                 simple_god_message(" appreciates your sacrifice.");
         }
@@ -2653,10 +2664,14 @@ static bool _monster_eat_item(monster* mons, bool nearby)
                                                mons->max_hit_points);
         }
 
-        if (player_can_hear(mons->pos()))
+        if (js != JS_NONE)
         {
-            mprf(MSGCH_SOUND, "You hear a%s slurping noise.",
-                 nearby ? "" : " distant");
+            if (js & JS_FOOD)
+                mpr("You feel a little less hungry.");
+            if (js & JS_MP)
+                mpr("You feel your power returning.");
+            if (js & JS_HP)
+                mpr("You feel a little better.");
         }
 
         if (death_ooze_ate_corpse)
