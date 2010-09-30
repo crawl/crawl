@@ -79,8 +79,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                                           int *lev_mons,
                                           bool *chose_ood_monster);
 
-static void _define_zombie(monster* mon, monster_type ztype, monster_type cs,
-                           int power, coord_def pos);
+static void _define_zombie(monster* mon, monster_type ztype, monster_type cs);
 static monster_type _band_member(band_type band, int power);
 static band_type _choose_band(int mon_type, int power, int &band_size,
                               bool& natural_leader);
@@ -1412,7 +1411,17 @@ static int _place_monster_aux(const mgen_data &mg,
 
     // Generate a brand shiny new monster, or zombie.
     if (mons_class_is_zombified(mg.cls))
-        _define_zombie(mon, mg.base_type, mg.cls, mg.power, fpos);
+    {
+        monster_type ztype = mg.base_type;
+
+        if (ztype == MONS_NO_MONSTER)
+        {
+            ztype = pick_local_zombifiable_monster(mg.power, true, mg.cls,
+                                                   fpos);
+        }
+
+        _define_zombie(mon, ztype, mg.cls);
+    }
     else
         define_monster(mon);
 
@@ -1889,16 +1898,12 @@ monster_type pick_local_zombifiable_monster(int power, bool hack_hd,
     }
 }
 
-static void _define_zombie(monster* mon, monster_type ztype, monster_type cs,
-                           int power, coord_def pos)
+static void _define_zombie(monster* mon, monster_type ztype, monster_type cs)
 {
+    ASSERT(ztype != MONS_NO_MONSTER);
     ASSERT(mons_class_is_zombified(cs));
 
-    monster_type base;
-    if (ztype == MONS_NO_MONSTER)
-        base = pick_local_zombifiable_monster(power, true, cs, pos);
-    else
-        base = mons_species(ztype);
+    monster_type base = mons_species(ztype);
 
     ASSERT(zombie_class_size(cs) == Z_NOZOMBIE
            || zombie_class_size(cs) == mons_zombie_size(base));
