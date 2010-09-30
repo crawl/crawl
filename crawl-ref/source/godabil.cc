@@ -936,7 +936,7 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
 
     // Use the original monster type as the zombified type here, to get
     // the proper stats from it.
-    define_zombie(mon, mon->type, MONS_SPECTRAL_THING, true);
+    define_zombie(mon, mon->type, MONS_SPECTRAL_THING);
 
     mon->colour = ETC_UNHOLY;
     mon->speed  = mons_class_base_speed(mon->base_monster);

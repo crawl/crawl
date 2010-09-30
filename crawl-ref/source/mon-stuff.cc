@@ -1375,22 +1375,19 @@ static void _make_spectral_thing(monster* mons, bool quiet)
         // Don't allow 0-headed hydras to become spectral hydras.
         if (spectre_type != MONS_HYDRA || mons->number != 0)
         {
+            // Use the original monster type as the zombified type here,
+            // to get the proper stats from it.
             const int spectre =
                 create_monster(
                     mgen_data(MONS_SPECTRAL_THING, BEH_FRIENDLY, &you,
                         0, 0, mons->pos(), MHITYOU,
                         0, static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]),
-                        spectre_type, mons->number));
+                        mons->type, mons->number));
 
             if (spectre != -1)
             {
                 if (!quiet)
                     mpr("A glowing mist starts to gather...");
-
-                // Use the original monster type as the zombified type
-                // here, to get the proper stats from it.
-                define_zombie(&menv[spectre], mons->type, MONS_SPECTRAL_THING,
-                              true);
 
                 name_zombie(&menv[spectre], mons);
             }

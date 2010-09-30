@@ -1894,12 +1894,22 @@ void mons_cast_spectral_orcs(monster* mons)
     const int abj = 3;
     monster* orc;
 
+    monster_type mon = MONS_ORC;
+    if (coinflip())
+        mon = MONS_ORC_WARRIOR;
+    else if (one_chance_in(3))
+        mon = MONS_ORC_KNIGHT;
+    else if (one_chance_in(10))
+        mon = MONS_ORC_WARLORD;
+
     for (int i = random2(3) + 1; i > 0; --i)
     {
+        // Use the original monster type as the zombified type here, to
+        // get the proper stats from it.
         created = create_monster(
                   mgen_data(MONS_SPECTRAL_THING, SAME_ATTITUDE(mons), mons,
                           abj, SPELL_SUMMON_SPECTRAL_ORCS, fpos, mons->foe, 0,
-                          GOD_BEOGH, MONS_ORC));
+                          GOD_BEOGH, mon));
 
         if (created != -1)
         {
@@ -1907,22 +1917,7 @@ void mons_cast_spectral_orcs(monster* mons)
 
             // which base type this orc is pretending to be for
             // gear purposes
-            orc->number = MONS_ORC;
-
-            if (coinflip())
-                orc->number = MONS_ORC_WARRIOR;
-            else if (one_chance_in(3))
-                orc->number = MONS_ORC_KNIGHT;
-            else if (one_chance_in(10))
-                orc->number = MONS_ORC_WARLORD;
-
-            if (orc->number != MONS_ORC)
-            {
-                // Use the original monster type as the zombified type
-                // here, to get the proper stats from it.
-                define_zombie(orc, static_cast<monster_type>(orc->number),
-                              MONS_SPECTRAL_THING, true);
-            }
+            orc->number = (int) mon;
 
             give_item(created, you.absdepth0, true, true);
             // set gear as summoned

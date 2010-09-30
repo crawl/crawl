@@ -1897,8 +1897,7 @@ monster_type pick_local_zombifiable_monster(int power, bool hack_hd,
     }
 }
 
-void define_zombie(monster* mon, monster_type ztype, monster_type cs,
-                   bool force_ztype)
+void define_zombie(monster* mon, monster_type ztype, monster_type cs)
 {
     ASSERT(ztype != MONS_NO_MONSTER);
     ASSERT(mons_class_is_zombified(cs));
@@ -1908,10 +1907,8 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs,
     ASSERT(zombie_class_size(cs) == Z_NOZOMBIE
            || zombie_class_size(cs) == mons_zombie_size(base));
 
-    // Set type to the base type to calculate appropriate stats.  If
-    // force_ztype is true, set type to the original type to calculate
-    // more appropriate stats.
-    mon->type = force_ztype ? ztype : base;
+    // Set type to the original type to calculate appropriate stats.
+    mon->type = ztype;
     define_monster(mon);
 
     mon->type         = cs;
@@ -1978,9 +1975,9 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs,
     mon->ac             = std::max(mon->ac + acmod, 0);
     mon->ev             = std::max(mon->ev + evmod, 0);
 
-    // If force_ztype is true, set the base type to the original type to
-    // retain more appropriate stats, unless the monster is a unique.
-    if (force_ztype && !mons_is_unique(ztype))
+    // Set the base type to the original type to retain appropriate
+    // stats, unless the monster is a unique.
+    if (!mons_is_unique(ztype))
         mon->base_monster = ztype;
 }
 
