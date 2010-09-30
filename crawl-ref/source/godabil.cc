@@ -944,6 +944,7 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
     define_monster(mon);
 
     mon->colour = ETC_UNHOLY;
+    mon->speed  = mons_class_base_speed(mon->base_monster);
 
     mon->flags |= MF_NO_REWARD;
     mon->flags |= MF_ENSLAVED_SOUL;
