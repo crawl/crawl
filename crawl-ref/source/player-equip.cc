@@ -452,7 +452,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
                 mpr("You really shouldn't be using a fast item like this.");
         }
 
-        // Call unrandrt equip func before item is identified.
+        // Call unrandart equip func before item is identified.
         if (artefact)
             _equip_artefact_effect(item, &showMsgs);
 
