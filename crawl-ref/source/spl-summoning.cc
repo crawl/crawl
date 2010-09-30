@@ -1415,11 +1415,9 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
 
     const int monnum = item.orig_monnum - 1;
 
-    // If the original monster type has dual-wielding, make sure its
-    // zombie has it as well.  This is needed for e.g. equipped deep elf
-    // blademaster zombies.
-    if (mons_class_flag(monnum, M_TWO_WEAPONS))
-        menv[mons].flags |= MF_TWO_WEAPONS;
+    // Use the original monster type as the zombified type here, to get
+    // the proper stats from it.
+    define_zombie(&menv[mons], static_cast<monster_type>(monnum), mon, true);
 
     if (is_named_corpse(item))
     {
@@ -1605,6 +1603,8 @@ bool cast_simulacrum(int pow, god_type god)
         int how_many = std::min(8, 4 + random2(pow) / 20);
         how_many = std::min<int>(how_many, weapon->quantity);
 
+        const int monnum = weapon->orig_monnum - 1;
+
         for (int i = 0; i < how_many; ++i)
         {
             const int mons =
@@ -1619,6 +1619,11 @@ bool cast_simulacrum(int pow, god_type god)
                 count++;
 
                 dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
+
+                // Use the original monster type as the zombified type
+                // here, to get the proper stats from it.
+                define_zombie(&menv[mons], static_cast<monster_type>(monnum),
+                              mon, true);
 
                 player_angers_monster(&menv[mons]);
             }

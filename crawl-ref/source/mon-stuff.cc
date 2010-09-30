@@ -1387,6 +1387,11 @@ static void _make_spectral_thing(monster* mons, bool quiet)
                 if (!quiet)
                     mpr("A glowing mist starts to gather...");
 
+                // Use the original monster type as the zombified type
+                // here, to get the proper stats from it.
+                define_zombie(&menv[spectre], mons->type, MONS_SPECTRAL_THING,
+                              true);
+
                 name_zombie(&menv[spectre], mons);
             }
         }

@@ -79,7 +79,6 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                                           int *lev_mons,
                                           bool *chose_ood_monster);
 
-static void _define_zombie(monster* mon, monster_type ztype, monster_type cs);
 static monster_type _band_member(band_type band, int power);
 static band_type _choose_band(int mon_type, int power, int &band_size,
                               bool& natural_leader);
@@ -1420,7 +1419,7 @@ static int _place_monster_aux(const mgen_data &mg,
                                                    fpos);
         }
 
-        _define_zombie(mon, ztype, mg.cls);
+        define_zombie(mon, ztype, mg.cls);
     }
     else
         define_monster(mon);
@@ -1898,7 +1897,8 @@ monster_type pick_local_zombifiable_monster(int power, bool hack_hd,
     }
 }
 
-static void _define_zombie(monster* mon, monster_type ztype, monster_type cs)
+void define_zombie(monster* mon, monster_type ztype, monster_type cs,
+                   bool force_ztype)
 {
     ASSERT(ztype != MONS_NO_MONSTER);
     ASSERT(mons_class_is_zombified(cs));
@@ -1908,8 +1908,10 @@ static void _define_zombie(monster* mon, monster_type ztype, monster_type cs)
     ASSERT(zombie_class_size(cs) == Z_NOZOMBIE
            || zombie_class_size(cs) == mons_zombie_size(base));
 
-    // Set type to the base type to calculate appropriate stats.
-    mon->type = base;
+    // Set type to the base type to calculate appropriate stats.  If
+    // force_ztype is true, set type to the original type to calculate
+    // more appropriate stats.
+    mon->type = force_ztype ? ztype : base;
     define_monster(mon);
 
     mon->type         = cs;
@@ -1975,6 +1977,11 @@ static void _define_zombie(monster* mon, monster_type ztype, monster_type cs)
     mon->hit_points     = mon->max_hit_points;
     mon->ac             = std::max(mon->ac + acmod, 0);
     mon->ev             = std::max(mon->ev + evmod, 0);
+
+    // If force_ztype is true, set the base type to the original type to
+    // retain more appropriate stats, unless the monster is a unique.
+    if (force_ztype && !mons_is_unique(ztype))
+        mon->base_monster = ztype;
 }
 
 static band_type _choose_band(int mon_type, int power, int &band_size,
