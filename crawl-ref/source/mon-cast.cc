@@ -1962,16 +1962,15 @@ static bool _mons_vampiric_drain(monster *mons)
     {
         ouch(hp_cost, mons->mindex(), KILLED_BY_BEAM, mons->name(DESC_NOCAP_A).c_str());
         simple_monster_message(mons,
-                               " draws from your life force and is healed!");
+                               " draws life force from you and is healed!");
     }
     else
     {
         monster* mtarget = target->as_monster();
-        const std::string targname = mtarget->name(DESC_NOCAP_ITS);
+        const std::string targname = mtarget->name(DESC_NOCAP_THE);
         mtarget->hurt(mons, hp_cost);
-        simple_monster_message(mons, (std::string(" draws the life force from ")
-                                     + targname
-                                     + " and is healed!").c_str());
+        simple_monster_message(mons,
+                               make_stringf(" draws life force from %s and is healed!", targname.c_str()).c_str());
         if (mtarget->alive())
             print_wounds(mtarget);
         mons->heal(hp_cost / 2);
