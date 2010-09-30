@@ -1950,16 +1950,19 @@ static bool _mons_vampiric_drain(monster *mons)
     dprf("vamp draining: %d damage, %d healing", hp_cost, hp_cost/2);
 
     if (you.can_see(mons))
+    {
         simple_monster_message(mons,
                                " is infused with unholy energy.",
                                MSGCH_MONSTER_SPELL);
+    }
     else
         mpr("Unholy energy fills the air.");
 
     if (target->atype() == ACT_PLAYER)
     {
         ouch(hp_cost, mons->mindex(), KILLED_BY_BEAM, mons->name(DESC_NOCAP_A).c_str());
-        simple_monster_message(mons, " draws from your life force and is healed!");
+        simple_monster_message(mons,
+                               " draws from your life force and is healed!");
     }
     else
     {
@@ -1982,7 +1985,10 @@ static bool _mons_drain_life(monster* mons, bool actual)
     if (actual)
     {
         if (you.can_see(mons))
-            simple_monster_message(mons, " draws from the surrounding life force!");
+        {
+            simple_monster_message(mons,
+                                   " draws from the surrounding life force!");
+        }
         else
             mpr("The surrounding life force dissipates!");
 
