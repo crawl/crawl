@@ -455,4 +455,3 @@ bool unwield_item(bool showMsgs)
 
     return (true);
 }
-

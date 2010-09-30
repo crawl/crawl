@@ -16,4 +16,3 @@ void new_level();
 int runes_in_pack(std::vector<int> &runes);
 
 #endif
-

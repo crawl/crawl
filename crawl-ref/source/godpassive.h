@@ -27,4 +27,3 @@ void che_handle_change(che_change_type ct, int diff);
 void jiyva_eat_offlevel_items();
 
 #endif
-

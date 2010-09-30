@@ -958,4 +958,3 @@ void los_changed()
     invalidate_los();
     _handle_los_change();
 }
-

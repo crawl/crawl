@@ -168,4 +168,3 @@ void tile_page::add_variation(int var_idx, int base_idx, int colour)
 
     m_tiles[base_idx]->add_variation(colour, var_idx);
 }
-
