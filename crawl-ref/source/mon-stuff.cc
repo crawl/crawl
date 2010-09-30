@@ -1741,6 +1741,13 @@ int monster_die(monster* mons, killer_type killer,
                                     true, mons);
                 }
 
+                // Yredelemnul hates artificial beings.
+                if (mons->is_artificial())
+                {
+                    did_god_conduct(DID_KILL_ARTIFICIAL, mons->hit_dice,
+                                    true, mons);
+                }
+
                 // Holy kills are always noticed.
                 if (mons->is_holy())
                 {
@@ -1911,6 +1918,14 @@ int monster_die(monster* mons, killer_type killer,
                             notice |= did_god_conduct(DID_CHAOTIC_KILLED_BY_SERVANT,
                                                       mons->hit_dice);
                         }
+
+                        if (mons->is_artificial())
+                        {
+                            notice |= did_god_conduct(
+                                          !confused ? DID_ARTIFICIAL_KILLED_BY_UNDEAD_SLAVE :
+                                                      DID_ARTIFICIAL_KILLED_BY_SERVANT,
+                                          mons->hit_dice);
+                        }
                     }
                     // Yes, we are splitting undead pets from the others
                     // as a way to focus Necromancy vs. Summoning
@@ -1960,6 +1975,12 @@ int monster_die(monster* mons, killer_type killer,
                     if (mons->is_chaotic())
                     {
                         notice |= did_god_conduct(DID_CHAOTIC_KILLED_BY_SERVANT,
+                                                  mons->hit_dice);
+                    }
+
+                    if (mons->is_artificial())
+                    {
+                        notice |= did_god_conduct(DID_ARTIFICIAL_KILLED_BY_SERVANT,
                                                   mons->hit_dice);
                     }
                 }

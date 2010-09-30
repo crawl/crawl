@@ -3019,6 +3019,11 @@ bool monster::is_chaotic() const
     return (is_shapeshifter() || is_known_chaotic());
 }
 
+bool monster::is_artificial() const
+{
+    return (mons_class_flag(type, M_ARTIFICIAL));
+}
+
 bool monster::is_insubstantial() const
 {
     return (mons_class_flag(type, M_INSUBSTANTIAL));

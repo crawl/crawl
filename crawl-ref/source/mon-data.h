@@ -4836,7 +4836,7 @@ static monsterentry mondata[] = {
 // golems ('8')
 {
     MONS_CLAY_GOLEM, '8', BROWN, "clay golem",
-    M_SEE_INVIS,
+    M_SEE_INVIS | M_ARTIFICIAL,
     mrd(MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC, 3),
     0, 10, MONS_CLAY_GOLEM, MONS_CLAY_GOLEM, MH_NONLIVING, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 11}, {AT_HIT, AF_PLAIN, 11}, AT_NO_ATK, AT_NO_ATK },
@@ -4848,7 +4848,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_WOOD_GOLEM, '8', YELLOW, "wood golem",
-    M_NO_FLAGS,
+    M_ARTIFICIAL,
     MR_RES_POISON | MR_VUL_FIRE | MR_RES_COLD | MR_RES_ELEC,
     0, 10, MONS_CLAY_GOLEM, MONS_WOOD_GOLEM, MH_NONLIVING, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -4860,7 +4860,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_STONE_GOLEM, '8', LIGHTGREY, "stone golem",
-    M_NO_FLAGS,
+    M_ARTIFICIAL,
     mrd(MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC, 3),
     0, 10, MONS_CLAY_GOLEM, MONS_STONE_GOLEM, MH_NONLIVING, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 28}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -4872,7 +4872,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_IRON_GOLEM, '8', CYAN, "iron golem",
-    M_SEE_INVIS,
+    M_ARTIFICIAL,
     mrd(MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC, 3),
     0, 10, MONS_CLAY_GOLEM, MONS_IRON_GOLEM, MH_NONLIVING, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 35}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -4884,7 +4884,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_CRYSTAL_GOLEM, '8', GREEN, "crystal golem",
-    M_SEE_INVIS | M_SPEAKS,
+    M_SEE_INVIS | M_SPEAKS | M_ARTIFICIAL,
     mrd(MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC, 3),
     0, 10, MONS_CLAY_GOLEM, MONS_CRYSTAL_GOLEM, MH_NONLIVING, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 40}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -4896,7 +4896,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_TOENAIL_GOLEM, '8', RED, "toenail golem",
-    M_NO_FLAGS,
+    M_ARTIFICIAL,
     MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC,
     0, 10, MONS_CLAY_GOLEM, MONS_TOENAIL_GOLEM, MH_NONLIVING, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 13}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -4908,7 +4908,8 @@ static monsterentry mondata[] = {
 
 {
     MONS_ELECTRIC_GOLEM, '8', LIGHTCYAN, "electric golem",
-    M_SPELLCASTER | M_SEE_INVIS | M_INSUBSTANTIAL | M_GLOWS_LIGHT | M_SPEAKS,
+    M_SPELLCASTER | M_SEE_INVIS | M_INSUBSTANTIAL | M_GLOWS_LIGHT | M_SPEAKS
+        | M_ARTIFICIAL,
     mrd(MR_RES_ELEC | MR_RES_POISON, 3) | MR_RES_FIRE | MR_RES_COLD,
     0, 10, MONS_CLAY_GOLEM, MONS_ELECTRIC_GOLEM, MH_NONLIVING, -8,
     { {AT_HIT, AF_ELEC, 15}, {AT_HIT, AF_ELEC, 15}, {AT_HIT, AF_PLAIN, 15},
@@ -4983,7 +4984,7 @@ static monsterentry mondata[] = {
 // gargoyles ('9')
 {
     MONS_GARGOYLE, '9', LIGHTGREY, "gargoyle",
-    M_NO_FLAGS,
+    M_ARTIFICIAL,
     MR_RES_POISON | MR_RES_ELEC,
     0, 26, MONS_GARGOYLE, MONS_GARGOYLE, MH_NONLIVING, -6,
     { {AT_BITE, AF_PLAIN, 10}, {AT_CLAW, AF_PLAIN, 6}, {AT_CLAW, AF_PLAIN, 6},
@@ -4996,7 +4997,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_METAL_GARGOYLE, '9', CYAN, "metal gargoyle",
-    M_NO_FLAGS,
+    M_ARTIFICIAL,
     MR_RES_POISON | MR_RES_ELEC,
     0, 18, MONS_GARGOYLE, MONS_METAL_GARGOYLE, MH_NONLIVING, -6,
     { {AT_BITE, AF_PLAIN, 19}, {AT_CLAW, AF_PLAIN, 10},
@@ -5009,7 +5010,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_MOLTEN_GARGOYLE, '9', RED, "molten gargoyle",
-    M_NO_FLAGS,
+    M_ARTIFICIAL,
     MR_RES_POISON | MR_RES_ELEC | mrd(MR_RES_FIRE, 3),
     0, 18, MONS_GARGOYLE, MONS_MOLTEN_GARGOYLE, MH_NONLIVING, -6,
     { {AT_BITE, AF_FIRE, 12}, {AT_CLAW, AF_PLAIN, 8}, {AT_CLAW, AF_PLAIN, 8},
