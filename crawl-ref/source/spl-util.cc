@@ -311,6 +311,25 @@ bool del_spell_from_memory_by_slot( int slot )
     return (true);
 }
 
+bool del_spell_from_memory( spell_type spell )
+{
+    int i,j;
+
+    for (i = 0; i < you.spell_no; i++)
+        if (you.spells[i] == spell)
+        {
+            you.spells[i] = SPELL_NO_SPELL;
+            break;
+        }
+
+    for (j = 0; j < 52; j++)
+        if (you.spell_letter_table[j] == i)
+            you.spell_letter_table[j] = -1;
+
+    you.spell_no--;
+
+    return (true);
+}
 
 int spell_hunger(spell_type which_spell, bool rod)
 {

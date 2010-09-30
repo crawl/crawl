@@ -886,8 +886,8 @@ int spellbook_contents( item_def &book, read_book_action_type action,
             && item_type_known(book)
             && player_can_memorise_from_spellbook(book))
         {
-            out.cprintf( "Select a spell to read its description or to "
-                         "memorise it.\n" );
+            out.cprintf( "Select a spell to read its description, to "
+                         "memorise it or to forget it.\n" );
         }
         else
             out.cprintf( "Select a spell to read its description.\n" );
@@ -1993,6 +1993,31 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
     you.turn_is_over = true;
 
     did_god_conduct( DID_SPELL_CASTING, 2 + random2(5) );
+
+    return (true);
+}
+
+bool forget_spell_from_book(spell_type spell, const item_def* book)
+{
+    std::string prompt;
+
+    prompt += make_stringf("Forgetting %s from %s will destroy the book! "
+                           "Are you sure?",
+                           spell_title(spell),
+                           book->name(DESC_NOCAP_THE).c_str());
+
+    // Deactivate choice from tile inventory.
+    mouse_control mc(MOUSE_MODE_MORE);
+    if (!yesno(prompt.c_str(), false, 'n'))
+    {
+        canned_msg( MSG_OK );
+        return (false);
+    }
+    mprf("As you tear out the page describing %s, the book crumbles to dust.",
+        spell_title(spell));
+    del_spell_from_memory(spell);
+    dec_inv_item_quantity(book->link, 1);
+    you.turn_is_over = true;
 
     return (true);
 }
