@@ -2,6 +2,8 @@
 
 open FLIST, "git ls-files|" or die "Can't run git ls-files";
 
+my $nl = ($^O eq 'msys') ? "\r\n" : "\n";
+
 while(<FLIST>)
 {
     chomp;
@@ -18,8 +20,8 @@ while(<FLIST>)
     my $cont=<F>;
     close F;
 
-    print "newline: $_\n" unless $cont =~ /\n$/s;
+    print "newline at eof: $_\n" unless $cont =~ /$nl$/s;
     print "tab: $_\n" if $cont =~ /\t/s;
-    print "spaces at eol: $_\n" if $cont =~ / \n/s;
+    print "spaces at eol: $_\n" if $cont =~ / $nl/s;
 }
 close FLIST;
