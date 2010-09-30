@@ -1891,9 +1891,7 @@ void mons_cast_spectral_orcs(monster* mons)
     }
 
     int created;
-    int hp;
     const int abj = 3;
-    monsterentry *m;
     monster* orc;
 
     for (int i = random2(3) + 1; i > 0; --i)
@@ -1920,12 +1918,10 @@ void mons_cast_spectral_orcs(monster* mons)
 
             if (orc->number != MONS_ORC)
             {
-                m = get_monster_data(orc->number);
-                orc->hit_dice = m->hpdice[0];
-                hp = hit_points(m->hpdice[0], m->hpdice[1], m->hpdice[2]);
-                orc->hit_points = hp;
-                orc->max_hit_points = hp;
-                orc->base_monster = (monster_type) orc->number;
+                // Use the original monster type as the zombified type
+                // here, to get the proper stats from it.
+                define_zombie(orc, static_cast<monster_type>(orc->number),
+                              MONS_SPECTRAL_THING, true);
             }
 
             give_item(created, you.absdepth0, true, true);

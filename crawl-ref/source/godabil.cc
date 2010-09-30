@@ -922,7 +922,6 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
 {
     add_daction(DACT_OLD_ENSLAVED_SOULS_POOF);
 
-    const monster_type soul_type = mons_species(mon->type);
     const std::string whose =
         you.can_see(mon) ? apostrophise(mon->name(DESC_CAP_THE))
                          : mon->pronoun(PRONOUN_CAP_POSSESSIVE);
@@ -935,13 +934,9 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
 
     const monster orig = *mon;
 
-    // Turn the monster into a spectral thing, minus the usual
-    // adjustments for zombified monsters.
-    mon->type = MONS_SPECTRAL_THING;
-    mon->base_monster = soul_type;
-
-    // Recreate the monster as a spectral thing.
-    define_monster(mon);
+    // Use the original monster type as the zombified type here, to get
+    // the proper stats from it.
+    define_zombie(mon, mon->type, MONS_SPECTRAL_THING, true);
 
     mon->colour = ETC_UNHOLY;
     mon->speed  = mons_class_base_speed(mon->base_monster);
