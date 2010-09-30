@@ -1934,7 +1934,7 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs,
     if (!mons_class_can_regenerate(mon->base_monster))
         mon->flags   |= MF_NO_REGEN;
 
-    int hp = 0;
+    int hp    = 0;
     int acmod = 0;
     int evmod = 0;
 
