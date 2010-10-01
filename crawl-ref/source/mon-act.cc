@@ -1238,8 +1238,8 @@ static bool _handle_rod(monster *mons, bolt &beem)
 //
 // handle_wand
 //
-// Give the monster a chance to zap a wand. Returns true if the
-// monster zapped.
+// Give the monster a chance to zap a wand or rod. Returns true
+// if the monster zapped.
 //
 //---------------------------------------------------------------
 static bool _handle_wand(monster* mons, bolt &beem)
