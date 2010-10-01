@@ -1462,18 +1462,18 @@ static int _place_monster_aux(const mgen_data &mg,
             }
         }
     }
-    // 1 out of 7 non-priestly orcs are unbelievers.
-    else if (mons_genus(mg.cls) == MONS_ORC)
-    {
-        if (!one_chance_in(7))
-            mon->god = GOD_BEOGH;
-    }
     // The royal jelly belongs to Jiyva.
     else if (mg.cls == MONS_ROYAL_JELLY)
         mon->god = GOD_JIYVA;
     // Mennas belongs to Zin.
     else if (mg.cls == MONS_MENNAS)
         mon->god = GOD_ZIN;
+    // 1 out of 7 non-priestly orcs are unbelievers.
+    else if (mons_genus(mg.cls) == MONS_ORC)
+    {
+        if (!one_chance_in(7))
+            mon->god = GOD_BEOGH;
+    }
     // Angels (other than Mennas) and Daevas belong to TSO, but 1 out of
     // 7 in the Abyss are adopted by Xom.
     else if (mons_class_holiness(mg.cls) == MH_HOLY)
