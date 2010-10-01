@@ -719,6 +719,13 @@ static bool _handle_potion(monster* mons, bolt & beem)
         return (false);
     }
 
+    if (mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT)
+        return (false);
+
+    // Make sure the item actually is a potion.
+    if (mitm[mons->inv[MSLOT_POTION]].base_type != OBJ_POTIONS)
+        return (false);
+
     bool rc = false;
 
     const int potion_idx = mons->inv[MSLOT_POTION];
@@ -816,6 +823,9 @@ static bool _handle_scroll(monster* mons)
     {
         return (false);
     }
+
+    if (mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT)
+        return (false);
 
     // Make sure the item actually is a scroll.
     if (mitm[mons->inv[MSLOT_SCROLL]].base_type != OBJ_SCROLLS)
@@ -1002,7 +1012,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
     const int weapon = mons->inv[MSLOT_WEAPON];
     item_def &rod(mitm[weapon]);
 
-    // first implemented for deep dwarf artificers
+    // Make sure the item actually is a rod.
     if (!item_is_rod(rod))
         return (false);
 
@@ -1263,11 +1273,16 @@ static bool _handle_wand(monster* mons, bolt &beem)
     {
         return (_handle_rod(mons, beem));
     }
-    else if (mons->inv[MSLOT_WAND] == NON_ITEM
-            || mitm[mons->inv[MSLOT_WAND]].plus <= 0)
+
+    if (mons->inv[MSLOT_WAND] == NON_ITEM
+        || mitm[mons->inv[MSLOT_WAND]].plus <= 0)
     {
         return (false);
     }
+
+    // Make sure the item actually is a wand.
+    if (mitm[mons->inv[MSLOT_WAND]].base_type != OBJ_WANDS)
+        return (false);
 
     bool niceWand    = false;
     bool zap         = false;
