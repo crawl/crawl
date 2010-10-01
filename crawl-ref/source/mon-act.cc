@@ -2565,6 +2565,10 @@ static bool _monster_eat_item(monster* mons, bool nearby)
     if (mons->friendly() && you.religion != GOD_JIYVA)
         return (false);
 
+    // Off-limit squares are off-limit.
+    if (testbits(env.pgrid(mons->pos()), FPROP_NO_JIYVA))
+        return (false);
+
     int hps_changed = 0;
     int max_eat = roll_dice(1, 10);
     int eaten = 0;

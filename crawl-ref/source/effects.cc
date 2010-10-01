@@ -2404,7 +2404,8 @@ void handle_time()
             while (grd(newpos) != DNGN_FLOOR
                        && grd(newpos) != DNGN_SHALLOW_WATER
                    || monster_at(newpos)
-                   || env.cgrid(newpos) != EMPTY_CLOUD);
+                   || env.cgrid(newpos) != EMPTY_CLOUD
+                   || testbits(env.pgrid(newpos), FPROP_NO_JIYVA));
 
             mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, 0, 0, 0, newpos,
                          MHITNOT, 0, GOD_JIYVA);
