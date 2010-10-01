@@ -796,7 +796,6 @@ void wizard_give_monster_item(monster* mon)
         return;
     }
 
-    // Shouldn't we be using MONUSE_MAGIC_ITEMS?
     if (item_use == MONUSE_STARTING_EQUIPMENT
         && !mons_is_unique(mon->type))
     {
