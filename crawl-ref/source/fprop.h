@@ -23,6 +23,8 @@ enum feature_property_type
     FPROP_NO_SUBMERGE   = (1 << 11),
     FPROP_MOLD          = (1 << 12),
     FPROP_GLOW_MOLD     = (1 << 13),
+    // Immune to spawning jellies and off-level eating.
+    FPROP_NO_JIYVA      = (1 << 14),
 };
 
 

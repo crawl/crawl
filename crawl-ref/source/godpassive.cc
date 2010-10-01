@@ -8,6 +8,7 @@
 #include "env.h"
 #include "files.h"
 #include "food.h"
+#include "fprop.h"
 #include "godprayer.h"
 #include "items.h"
 #include "mon-stuff.h"
@@ -143,7 +144,7 @@ void jiyva_eat_offlevel_items()
 
             const coord_def p = random_in_bounds();
 
-            if (igrd(p) == NON_ITEM)
+            if (igrd(p) == NON_ITEM || testbits(env.pgrid(p), FPROP_NO_JIYVA))
                 continue;
 
             for (stack_iterator si(p); si; ++si)
