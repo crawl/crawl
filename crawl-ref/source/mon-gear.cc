@@ -121,9 +121,9 @@ static void _give_scroll(monster* mon, int level)
 
 static void _give_wand(monster* mon, int level)
 {
-
     if (mons_is_unique(mon->type) && !mons_class_flag(mon->type, M_NO_WAND)
-        && (one_chance_in(5)) || (mon->type == MONS_MAURICE && one_chance_in(3)))
+        && (one_chance_in(5)
+            || (mon->type == MONS_MAURICE && one_chance_in(3))))
     {
         const int idx = items(0, OBJ_WANDS, OBJ_RANDOM, true, level, 0);
 
