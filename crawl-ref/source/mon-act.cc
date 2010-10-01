@@ -1249,20 +1249,22 @@ static bool _handle_wand(monster* mons, bolt &beem)
     //        out of sight of the player [rob]
     if (!mons_near(mons)
         || mons->asleep()
-        || mons->has_ench(ENCH_SUBMERGED))
+        || mons->has_ench(ENCH_SUBMERGED)
+        || coinflip())
     {
         return (false);
     }
 
-    if (mons_itemuse(mons) >= MONUSE_STARTING_EQUIPMENT
-       && mons->inv[MSLOT_WEAPON] != NON_ITEM
+    if (mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT)
+        return (false);
+
+    if (mons->inv[MSLOT_WEAPON] != NON_ITEM
        && item_is_rod(mitm[mons->inv[MSLOT_WEAPON]]))
     {
         return (_handle_rod(mons, beem));
     }
     else if (mons->inv[MSLOT_WAND] == NON_ITEM
-            || mitm[mons->inv[MSLOT_WAND]].plus <= 0
-            || coinflip())
+            || mitm[mons->inv[MSLOT_WAND]].plus <= 0)
     {
         return (false);
     }
