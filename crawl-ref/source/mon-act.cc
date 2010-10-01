@@ -992,7 +992,7 @@ static bool _rod_fired_post(monster* mons, item_def &rod, int idx, bolt &beem,
 }
 
 // handle_rod
-// -- implimented as a dependant to handle_wand currently
+// -- implimented as a dependent to handle_wand currently
 // (no wand + rod turns this way)
 // notes:
 // shamelessly repurposing handle_wand code
