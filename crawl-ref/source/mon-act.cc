@@ -1245,13 +1245,13 @@ static bool _handle_rod(monster *mons, bolt &beem)
 static bool _handle_wand(monster* mons, bolt &beem)
 {
    const mon_itemuse_type mons_uses = mons_itemuse(mons);
-   if (( mons_uses == MONUSE_STARTING_EQUIPMENT
-      || mons_uses == MONUSE_WEAPONS_ARMOUR
-      || mons_uses == MONUSE_MAGIC_ITEMS) &&
-      ((mons->inv[MSLOT_WEAPON] != NON_ITEM) &&
-      (mitm[ mons->inv[MSLOT_WEAPON] ].base_type == OBJ_STAVES)))
+   if ((mons_uses == MONUSE_STARTING_EQUIPMENT
+              || mons_uses == MONUSE_WEAPONS_ARMOUR
+              || mons_uses == MONUSE_MAGIC_ITEMS)
+          && (mons->inv[MSLOT_WEAPON] != NON_ITEM
+              && (mitm[mons->inv[MSLOT_WEAPON]].base_type == OBJ_STAVES)))
    {
-         return _handle_rod(mons, beem);
+         return (_handle_rod(mons, beem));
    }
 
     // Yes, there is a logic to this ordering {dlb}:
