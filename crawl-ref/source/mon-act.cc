@@ -1003,8 +1003,8 @@ static bool _handle_rod(monster *mons, bolt &beem)
     item_def &rod(mitm[weapon]);
 
     // first implemented for deep dwarf artificers
-    if (rod.base_type != OBJ_STAVES)
-        return false;
+    if (!item_is_rod(rod))
+        return (false);
 
     // was the player visible when we started?
     bool was_visible = you.can_see(mons);
@@ -1244,23 +1244,25 @@ static bool _handle_rod(monster *mons, bolt &beem)
 //---------------------------------------------------------------
 static bool _handle_wand(monster* mons, bolt &beem)
 {
-   const mon_itemuse_type mons_uses = mons_itemuse(mons);
-   if (mons_uses >= MONUSE_STARTING_EQUIPMENT
-      && mons->inv[MSLOT_WEAPON] != NON_ITEM
-      && mitm[mons->inv[MSLOT_WEAPON]].base_type == OBJ_STAVES)
-   {
-         return (_handle_rod(mons, beem));
-   }
-
     // Yes, there is a logic to this ordering {dlb}:
-    // FIXME: monsters should be able to use wands
+    // FIXME: monsters should be able to use wands or rods
     //        out of sight of the player [rob]
     if (!mons_near(mons)
         || mons->asleep()
-        || mons->has_ench(ENCH_SUBMERGED)
-        || mons->inv[MSLOT_WAND] == NON_ITEM
-        || mitm[mons->inv[MSLOT_WAND]].plus <= 0
-        || coinflip())
+        || mons->has_ench(ENCH_SUBMERGED))
+    {
+        return (false);
+    }
+
+    if (mons_itemuse(mons) >= MONUSE_STARTING_EQUIPMENT
+       && mons->inv[MSLOT_WEAPON] != NON_ITEM
+       && item_is_rod(mitm[mons->inv[MSLOT_WEAPON]]))
+    {
+        return (_handle_rod(mons, beem));
+    }
+    else if (mons->inv[MSLOT_WAND] == NON_ITEM
+            || mitm[mons->inv[MSLOT_WAND]].plus <= 0
+            || coinflip())
     {
         return (false);
     }
