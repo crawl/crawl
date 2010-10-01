@@ -117,14 +117,13 @@
      MONUSE_NOTHING,
      MONUSE_OPEN_DOORS,
      MONUSE_STARTING_EQUIPMENT,
-     MONUSE_WEAPONS_ARMOUR,
-     MONUSE_MAGIC_ITEMS
+     MONUSE_WEAPONS_ARMOUR
 
     From MONUSE_STARTING_EQUIPMENT on, monsters are capable of handling
     items.  Contrary to what one might expect, MONUSE_WEAPONS_ARMOUR
     also means a monster is capable of using wands and will also pick
     them up, something that those with MONUSE_STARTING_EQUIPMENT won't
-    do.  MONUSE_MAGIC_ITEMS is currently never used anywhere.
+    do.
 
    gmon_eat explanation:
      MONEAT_ITEMS,
@@ -1254,7 +1253,7 @@ static monsterentry mondata[] = {
     // Impalers prefer light armour, and are dodging experts.
     0, 18, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT,
     I_NORMAL, HT_AMPHIBIOUS, FL_NONE, 10, ATTACK_ENERGY(6) | SWIM_ENERGY(6),
-    MONUSE_MAGIC_ITEMS, MONEAT_NOTHING, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
 {
@@ -1266,7 +1265,7 @@ static monsterentry mondata[] = {
     { 13, 5, 2, 0 },
     0, 14, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT,
     I_NORMAL, HT_AMPHIBIOUS, FL_NONE, 10, SWIM_ENERGY(6),
-    MONUSE_MAGIC_ITEMS, MONEAT_NOTHING, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
 {
@@ -1278,7 +1277,7 @@ static monsterentry mondata[] = {
     { 15, 3, 3, 0 },
     0, 12, MST_MERFOLK_AQUAMANCER, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT,
     I_NORMAL, HT_AMPHIBIOUS, FL_NONE, 10, SWIM_ENERGY(6),
-    MONUSE_MAGIC_ITEMS, MONEAT_NOTHING, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
 {
@@ -1567,7 +1566,7 @@ static monsterentry mondata[] = {
     { 4, 2, 3, 0 },
     0, 10, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT,
     I_HIGH /*uh huh, sure sure*/, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
-    MONUSE_MAGIC_ITEMS, MONEAT_NOTHING, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
 // dwarves ('q')
