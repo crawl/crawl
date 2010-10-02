@@ -1900,7 +1900,7 @@ monster_type pick_local_zombifiable_monster(int power, bool hack_hd,
     }
 }
 
-static void _roll_zombie_hp(monster* mon)
+void roll_zombie_hp(monster* mon)
 {
     ASSERT(mons_class_is_zombified(mon->type));
 
@@ -2013,7 +2013,7 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
     if (!mons_class_can_regenerate(mon->base_monster))
         mon->flags   |= MF_NO_REGEN;
 
-    _roll_zombie_hp(mon);
+    roll_zombie_hp(mon);
     _roll_zombie_ac_ev(mon);
 }
 

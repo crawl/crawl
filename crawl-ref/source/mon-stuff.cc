@@ -366,7 +366,8 @@ monster_type fill_out_corpse(const monster* mons,
 
     if (mons)
     {
-        corpse.props[MONSTER_NUMBER] = short(mons->number);
+        corpse.props[MONSTER_HIT_DICE] = short(mons->hit_dice);
+        corpse.props[MONSTER_NUMBER]   = short(mons->number);
     }
 
     corpse.colour = mons_class_colour(corpse_class);
@@ -1392,6 +1393,15 @@ static void _make_spectral_thing(monster* mons, bool quiet)
         {
             if (!quiet)
                 mpr("A glowing mist starts to gather...");
+
+            // If the original monster has been drained or levelled up,
+            // its HD might be different from its class HD, in which
+            // case its HP should be rerolled to match.
+            if (menv[spectre].hit_dice != mons->hit_dice)
+            {
+                menv[spectre].hit_dice = std::max(mons->hit_dice, 1);
+                roll_zombie_hp(&menv[spectre]);
+            }
 
             name_zombie(&menv[spectre], mons);
         }

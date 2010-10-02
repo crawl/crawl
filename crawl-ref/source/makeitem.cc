@@ -3320,6 +3320,10 @@ static bool _item_corpse_def(monster_type mons, item_def &item,
     else if (ispec.base_type == OBJ_FOOD && ispec.sub_type == FOOD_CHUNK)
         turn_corpse_into_chunks(item, false, false);
 
+    if (ispec.props.exists(MONSTER_HIT_DICE))
+        item.props[MONSTER_HIT_DICE].get_short() =
+            ispec.props[MONSTER_HIT_DICE].get_short();
+
     // Hydra heads:
     if (ispec.plus2)
         item.props[MONSTER_NUMBER].get_short() = ispec.plus2;
