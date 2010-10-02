@@ -1382,7 +1382,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     {
         if (you.see_cell(pos))
         {
-            mprf("The zero-headed hydra %s sways and immediately collapses!",
+            mprf("The headless hydra %s sways and immediately collapses!",
                  item.sub_type == CORPSE_BODY ? "corpse" : "skeleton");
         }
         return (false);
