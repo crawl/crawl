@@ -1878,7 +1878,8 @@ void define_monster(monster* mons)
         ev += random2(5) - 2;
         break;
 
-    case MONS_SERPENT_OF_HELL: {
+    case MONS_SERPENT_OF_HELL:
+    {
         int &flavour = mons->props["serpent_of_hell_flavour"].get_int();
         if (!flavour)
             flavour = player_in_hell() ? you.where_are_you : BRANCH_GEHENNA;
