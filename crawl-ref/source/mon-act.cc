@@ -25,6 +25,7 @@
 #include "fprop.h"
 #include "fight.h"
 #include "fineff.h"
+#include "godpassive.h"
 #include "godprayer.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -509,10 +510,6 @@ static void _handle_movement(monster* mons)
     if (!in_bounds_y(s.y))
         mmov.y = 0;
 
-    // Now quit if we can't move.
-    if (mmov.origin())
-        return;
-
     if (delta.rdist() > 3)
     {
         // Reproduced here is some semi-legacy code that makes monsters
@@ -531,6 +528,10 @@ static void _handle_movement(monster* mons)
         if (abs(delta.y) > abs(delta.x) && coinflip())
             mmov.x = 0;
     }
+
+    // Now quit if we can't move.
+    if (mmov.origin())
+        return;
 
     const coord_def newpos(mons->pos() + mmov);
 
@@ -718,6 +719,13 @@ static bool _handle_potion(monster* mons, bolt & beem)
         return (false);
     }
 
+    if (mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT)
+        return (false);
+
+    // Make sure the item actually is a potion.
+    if (mitm[mons->inv[MSLOT_POTION]].base_type != OBJ_POTIONS)
+        return (false);
+
     bool rc = false;
 
     const int potion_idx = mons->inv[MSLOT_POTION];
@@ -815,6 +823,9 @@ static bool _handle_scroll(monster* mons)
     {
         return (false);
     }
+
+    if (mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT)
+        return (false);
 
     // Make sure the item actually is a scroll.
     if (mitm[mons->inv[MSLOT_SCROLL]].base_type != OBJ_SCROLLS)
@@ -991,7 +1002,7 @@ static bool _rod_fired_post(monster* mons, item_def &rod, int idx, bolt &beem,
 }
 
 // handle_rod
-// -- implimented as a dependant to handle_wand currently
+// -- implimented as a dependent to handle_wand currently
 // (no wand + rod turns this way)
 // notes:
 // shamelessly repurposing handle_wand code
@@ -1001,9 +1012,9 @@ static bool _handle_rod(monster *mons, bolt &beem)
     const int weapon = mons->inv[MSLOT_WEAPON];
     item_def &rod(mitm[weapon]);
 
-    // first implemented for deep dwarf artificers
-    if (rod.base_type != OBJ_STAVES)
-        return false;
+    // Make sure the item actually is a rod.
+    if (!item_is_rod(rod))
+        return (false);
 
     // was the player visible when we started?
     bool was_visible = you.can_see(mons);
@@ -1237,34 +1248,41 @@ static bool _handle_rod(monster *mons, bolt &beem)
 //
 // handle_wand
 //
-// Give the monster a chance to zap a wand. Returns true if the
-// monster zapped.
+// Give the monster a chance to zap a wand or rod. Returns true
+// if the monster zapped.
 //
 //---------------------------------------------------------------
 static bool _handle_wand(monster* mons, bolt &beem)
 {
-   const mon_itemuse_type mons_uses = mons_itemuse(mons);
-   if (( mons_uses == MONUSE_STARTING_EQUIPMENT
-      || mons_uses == MONUSE_WEAPONS_ARMOUR
-      || mons_uses == MONUSE_MAGIC_ITEMS) &&
-      ((mons->inv[MSLOT_WEAPON] != NON_ITEM) &&
-      (mitm[ mons->inv[MSLOT_WEAPON] ].base_type == OBJ_STAVES)))
-   {
-         return _handle_rod(mons, beem);
-   }
-
     // Yes, there is a logic to this ordering {dlb}:
-    // FIXME: monsters should be able to use wands
+    // FIXME: monsters should be able to use wands or rods
     //        out of sight of the player [rob]
     if (!mons_near(mons)
         || mons->asleep()
         || mons->has_ench(ENCH_SUBMERGED)
-        || mons->inv[MSLOT_WAND] == NON_ITEM
-        || mitm[mons->inv[MSLOT_WAND]].plus <= 0
         || coinflip())
     {
         return (false);
     }
+
+    if (mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT)
+        return (false);
+
+    if (mons->inv[MSLOT_WEAPON] != NON_ITEM
+       && item_is_rod(mitm[mons->inv[MSLOT_WEAPON]]))
+    {
+        return (_handle_rod(mons, beem));
+    }
+
+    if (mons->inv[MSLOT_WAND] == NON_ITEM
+        || mitm[mons->inv[MSLOT_WAND]].plus <= 0)
+    {
+        return (false);
+    }
+
+    // Make sure the item actually is a wand.
+    if (mitm[mons->inv[MSLOT_WAND]].base_type != OBJ_WANDS)
+        return (false);
 
     bool niceWand    = false;
     bool zap         = false;
@@ -2036,8 +2054,15 @@ void handle_monster_move(monster* mons)
     coord_def old_pos = mons->pos();
 
     coord_def kraken_last_update = mons->pos();
+    bool just_once = true;
     while (mons->has_action_energy())
     {
+        if (just_once)
+        {
+            move_demon_tentacle(mons);
+            just_once = false;
+        }
+
         // The continues & breaks are WRT this.
         if (!mons->alive())
             break;
@@ -2557,12 +2582,19 @@ static bool _monster_eat_item(monster* mons, bool nearby)
     if (mons->friendly() && you.religion != GOD_JIYVA)
         return (false);
 
+    // Off-limit squares are off-limit.
+    if (testbits(env.pgrid(mons->pos()), FPROP_NO_JIYVA))
+        return (false);
+
     int hps_changed = 0;
     int max_eat = roll_dice(1, 10);
     int eaten = 0;
     bool eaten_net = false;
     bool death_ooze_ate_good = false;
     bool death_ooze_ate_corpse = false;
+    bool shown_msg = false;
+    piety_gain_t gain = PIETY_NONE;
+    int js = JS_NONE;
 
     // Jellies can swim, so don't check water
     for (stack_iterator si(mons->pos());
@@ -2614,9 +2646,16 @@ static bool _monster_eat_item(monster* mons, bool nearby)
             eaten++;
         }
 
+        if(eaten && !shown_msg && player_can_hear(mons->pos()))
+        {
+            mprf(MSGCH_SOUND, "You hear a%s slurping noise.",
+                 nearby ? "" : " distant");
+            shown_msg = true;
+        }
+
         if (you.religion == GOD_JIYVA)
         {
-            const piety_gain_t gain = sacrifice_item_stack(*si);
+            gain = sacrifice_item_stack(*si, &js);
             if (gain > PIETY_NONE)
                 simple_god_message(" appreciates your sacrifice.");
         }
@@ -2646,10 +2685,14 @@ static bool _monster_eat_item(monster* mons, bool nearby)
                                                mons->max_hit_points);
         }
 
-        if (player_can_hear(mons->pos()))
+        if (js != JS_NONE)
         {
-            mprf(MSGCH_SOUND, "You hear a%s slurping noise.",
-                 nearby ? "" : " distant");
+            if (js & JS_FOOD)
+                mpr("You feel a little less hungry.");
+            if (js & JS_MP)
+                mpr("You feel your power returning.");
+            if (js & JS_HP)
+                mpr("You feel a little better.");
         }
 
         if (death_ooze_ate_corpse)

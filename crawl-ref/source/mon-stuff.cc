@@ -366,7 +366,8 @@ monster_type fill_out_corpse(const monster* mons,
 
     if (mons)
     {
-        corpse.props[MONSTER_NUMBER] = short(mons->number);
+        corpse.props[MONSTER_HIT_DICE] = short(mons->hit_dice);
+        corpse.props[MONSTER_NUMBER]   = short(mons->number);
     }
 
     corpse.colour = mons_class_colour(corpse_class);
@@ -1252,6 +1253,24 @@ void mons_relocated(monster* mons)
             monster_die(&menv[base_id], KILL_RESET, -1, true, false);
         }
     }
+    else if (mons->type == MONS_DEMONIC_TENTACLE
+             || mons->type == MONS_DEMONIC_TENTACLE_SEGMENT)
+    {
+        int base_id = mons->type == MONS_DEMONIC_TENTACLE
+                      ? mons->mindex() : mons->number;
+
+        monster_die(&menv[base_id], KILL_RESET, -1, true, false);
+
+        for (monster_iterator mit; mit; ++mit)
+        {
+            if (mit->type == MONS_DEMONIC_TENTACLE_SEGMENT
+                && (int) mit->number == base_id)
+            {
+                monster_die(*mit, KILL_RESET, -1, true, false);
+            }
+        }
+
+    }
 }
 
 static int _destroy_tentacle(int tentacle_idx, monster* origin)
@@ -1348,6 +1367,47 @@ static std::string _killer_type_name(killer_type killer)
     return("");
 }
 
+static void _make_spectral_thing(monster* mons, bool quiet)
+{
+    if (mons->holiness() == MH_NATURAL && mons_can_be_zombified(mons))
+    {
+        const monster_type spectre_type = mons_species(mons->type);
+
+        // Headless hydras cannot be made spectral hydras, sorry.
+        if (spectre_type == MONS_HYDRA && mons->number == 0)
+        {
+            mprf("A glowing mist gathers momentarily, then fades.");
+            return;
+        }
+
+        // Use the original monster type as the zombified type here, to
+        // get the proper stats from it.
+        const int spectre =
+            create_monster(
+                mgen_data(MONS_SPECTRAL_THING, BEH_FRIENDLY, &you,
+                    0, 0, mons->pos(), MHITYOU,
+                    0, static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]),
+                    mons->type, mons->number));
+
+        if (spectre != -1)
+        {
+            if (!quiet)
+                mpr("A glowing mist starts to gather...");
+
+            // If the original monster has been drained or levelled up,
+            // its HD might be different from its class HD, in which
+            // case its HP should be rerolled to match.
+            if (menv[spectre].hit_dice != mons->hit_dice)
+            {
+                menv[spectre].hit_dice = std::max(mons->hit_dice, 1);
+                roll_zombie_hp(&menv[spectre]);
+            }
+
+            name_zombie(&menv[spectre], mons);
+        }
+    }
+}
+
 // Returns the slot of a possibly generated corpse or -1.
 int monster_die(monster* mons, killer_type killer,
                 int killer_index, bool silent, bool wizard, bool fake)
@@ -1407,12 +1467,6 @@ int monster_die(monster* mons, killer_type killer,
 
     you.remove_beholder(mons);
     you.remove_fearmonger(mons);
-
-    // Monsters haloes should be removed when they die.
-    if (mons->holiness() == MH_HOLY)
-        invalidate_agrid();
-    if (mons->type == MONS_SILENT_SPECTRE)
-        invalidate_agrid();
 
     // Clear auto exclusion now the monster is killed - if we know about it.
     if (mons_near(mons) || wizard)
@@ -1697,6 +1751,13 @@ int monster_die(monster* mons, killer_type killer,
                                     true, mons);
                 }
 
+                // Yredelemnul hates artificial beings.
+                if (mons->is_artificial())
+                {
+                    did_god_conduct(DID_KILL_ARTIFICIAL, mons->hit_dice,
+                                    true, mons);
+                }
+
                 // Holy kills are always noticed.
                 if (mons->is_holy())
                 {
@@ -1749,30 +1810,9 @@ int monster_die(monster* mons, killer_type killer,
             }
 
             if (you.duration[DUR_DEATH_CHANNEL]
-                && mons->holiness() == MH_NATURAL
-                && mons_can_be_zombified(mons)
                 && gives_xp)
             {
-                const monster_type spectre_type = mons_species(mons->type);
-
-                // Don't allow 0-headed hydras to become spectral hydras.
-                if (spectre_type != MONS_HYDRA || mons->number != 0)
-                {
-                    const int spectre =
-                        create_monster(
-                            mgen_data(MONS_SPECTRAL_THING, BEH_FRIENDLY, &you,
-                                0, 0, mons->pos(), MHITYOU,
-                                0, static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]),
-                                spectre_type, mons->number));
-
-                    if (spectre != -1)
-                    {
-                        if (death_message)
-                            mpr("A glowing mist starts to gather...");
-
-                        name_zombie(&menv[spectre], mons);
-                    }
-                }
+                _make_spectral_thing(mons, !death_message);
             }
             break;
         }
@@ -1888,6 +1928,14 @@ int monster_die(monster* mons, killer_type killer,
                             notice |= did_god_conduct(DID_CHAOTIC_KILLED_BY_SERVANT,
                                                       mons->hit_dice);
                         }
+
+                        if (mons->is_artificial())
+                        {
+                            notice |= did_god_conduct(
+                                          !confused ? DID_ARTIFICIAL_KILLED_BY_UNDEAD_SLAVE :
+                                                      DID_ARTIFICIAL_KILLED_BY_SERVANT,
+                                          mons->hit_dice);
+                        }
                     }
                     // Yes, we are splitting undead pets from the others
                     // as a way to focus Necromancy vs. Summoning
@@ -1937,6 +1985,12 @@ int monster_die(monster* mons, killer_type killer,
                     if (mons->is_chaotic())
                     {
                         notice |= did_god_conduct(DID_CHAOTIC_KILLED_BY_SERVANT,
+                                                  mons->hit_dice);
+                    }
+
+                    if (mons->is_artificial())
+                    {
+                        notice |= did_god_conduct(DID_ARTIFICIAL_KILLED_BY_SERVANT,
                                                   mons->hit_dice);
                     }
                 }
@@ -2122,6 +2176,38 @@ int monster_die(monster* mons, killer_type killer,
         }
 
     }
+    else if (mons->type == MONS_DEMONIC_TENTACLE)
+    {
+        for (monster_iterator mit; mit; ++mit)
+        {
+            if (mit->alive()
+                && mit->type == MONS_DEMONIC_TENTACLE_SEGMENT
+                && mit->number == unsigned(mons->mindex()))
+            {
+                monster_die(*mit, KILL_MISC, NON_MONSTER, true);
+            }
+        }
+        if (mons->has_ench(ENCH_PORTAL_TIMER))
+        {
+            coord_def base_pos = mons->props["base_position"].get_coord();
+
+            if (env.grid(base_pos) == DNGN_TEMP_PORTAL)
+            {
+                env.grid(base_pos) = DNGN_FLOOR;
+            }
+        }
+    }
+    else if (mons->type == MONS_DEMONIC_TENTACLE_SEGMENT
+             && killer != KILL_MISC)
+    {
+        if (!invalid_monster_index(mons->number)
+             && mons_base_type(&menv[mons->number]) == MONS_DEMONIC_TENTACLE
+             && menv[mons->number].alive())
+        {
+            monster_die(&menv[mons->number], killer, killer_index, silent,
+                        wizard, fake);
+        }
+    }
     else if (mons_is_elven_twin(mons) && mons_near(mons))
     {
         elven_twin_died(mons, in_transit, killer, killer_index);
@@ -2195,6 +2281,13 @@ int monster_die(monster* mons, killer_type killer,
 
     if (crawl_state.game_is_arena())
         arena_monster_died(mons, killer, killer_index, silent, corpse);
+
+    // Monsters haloes should be removed when they die.
+    if (mons->holiness() == MH_HOLY)
+        invalidate_agrid();
+    // Likewise silence
+    if (mons->type == MONS_SILENT_SPECTRE)
+        invalidate_agrid();
 
     const coord_def mwhere = mons->pos();
     if (drop_items)
@@ -4089,10 +4182,11 @@ beh_type actual_same_attitude(const monster& base)
 // temporarily.
 void mons_att_changed(monster* mon)
 {
+    const mon_attitude_type att = mon->temp_attitude();
+
     if (mons_base_type(mon) == MONS_KRAKEN)
     {
         const int headnum = mon->mindex();
-        const mon_attitude_type att = mon->temp_attitude();
 
         for (monster_iterator mi; mi; ++mi)
             if (mi->type == MONS_KRAKEN_TENTACLE
@@ -4108,6 +4202,17 @@ void mons_att_changed(monster* mon)
                     }
                 }
             }
+    }
+    if (mon->type == MONS_DEMONIC_TENTACLE_SEGMENT
+        || mon->type == MONS_DEMONIC_TENTACLE)
+    {
+        int base_idx = mon->type == MONS_DEMONIC_TENTACLE ? mon->mindex() : mon->number;
+
+        menv[base_idx].attitude = att;
+        for (monster_iterator mi; mi; ++mi)
+        {
+            mi->attitude = att;
+        }
     }
 }
 

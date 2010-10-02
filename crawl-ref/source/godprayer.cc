@@ -12,6 +12,7 @@
 #include "food.h"
 #include "fprop.h"
 #include "godabil.h"
+#include "godpassive.h"
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
@@ -555,7 +556,8 @@ static void _give_sac_group_feedback(int which)
 
 // God effects of sacrificing one item from a stack (e.g., a weapon, one
 // out of 20 arrows, etc.).  Does not modify the actual item in any way.
-static piety_gain_t _sacrifice_one_item_noncount(const item_def& item)
+static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
+       int *js)
 {
     piety_gain_t relative_piety_gain = PIETY_NONE;
 
@@ -664,6 +666,8 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item)
             gain_piety(stepped, 50);
             relative_piety_gain = (piety_gain_t)std::min(2,
                                     div_rand_round(stepped, 50));
+            jiyva_slurp_bonus(div_rand_round(stepped, 50), js);
+            break;
         }
 
         default:
@@ -674,12 +678,12 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item)
     return (relative_piety_gain);
 }
 
-piety_gain_t sacrifice_item_stack(const item_def& item)
+piety_gain_t sacrifice_item_stack(const item_def& item, int *js)
 {
     piety_gain_t relative_gain = PIETY_NONE;
     for (int j = 0; j < item.quantity; ++j)
     {
-        const piety_gain_t gain = _sacrifice_one_item_noncount(item);
+        const piety_gain_t gain = _sacrifice_one_item_noncount(item, js);
 
         // Update piety gain if necessary.
         if (gain != PIETY_NONE)

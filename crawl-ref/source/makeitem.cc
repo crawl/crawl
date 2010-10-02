@@ -2761,8 +2761,8 @@ static void _generate_scroll_item(item_def& item, int force_type,
             // total weight: 10000
             item.sub_type = random_choose_weighted(
                 1797, SCR_IDENTIFY,
-                1305, SCR_REMOVE_CURSE,
-                 642, SCR_DETECT_CURSE,
+                1105, SCR_REMOVE_CURSE,
+                 511, SCR_DETECT_CURSE,
                  331, SCR_FEAR,
                  331, SCR_MAGIC_MAPPING,
                  331, SCR_FOG,
@@ -2774,6 +2774,7 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  331, SCR_ENCHANT_ARMOUR,
                  331, SCR_ENCHANT_WEAPON_I,
                  331, SCR_ENCHANT_WEAPON_II,
+                 331, SCR_AMNESIA,
 
                  // Don't create ?oImmolation at low levels (encourage read-ID).
                  331, (item_level < 4 ? SCR_TELEPORTATION : SCR_IMMOLATION),
@@ -2850,7 +2851,7 @@ static void _generate_book_item(item_def& item, int allow_uniques,
             item.sub_type = random2(NUM_FIXED_BOOKS);
 
             if (book_rarity(item.sub_type) != 100
-                && one_chance_in(10))
+                && one_chance_in(25))
             {
                 item.sub_type = coinflip() ? BOOK_WIZARDRY : BOOK_POWER;
             }
@@ -3318,6 +3319,10 @@ static bool _item_corpse_def(monster_type mons, item_def &item,
         turn_corpse_into_skeleton(item);
     else if (ispec.base_type == OBJ_FOOD && ispec.sub_type == FOOD_CHUNK)
         turn_corpse_into_chunks(item, false, false);
+
+    if (ispec.props.exists(MONSTER_HIT_DICE))
+        item.props[MONSTER_HIT_DICE].get_short() =
+            ispec.props[MONSTER_HIT_DICE].get_short();
 
     // Hydra heads:
     if (ispec.plus2)

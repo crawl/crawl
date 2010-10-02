@@ -7,6 +7,8 @@
 #include "defines.h"
 #include "env.h"
 #include "files.h"
+#include "food.h"
+#include "fprop.h"
 #include "godprayer.h"
 #include "items.h"
 #include "mon-stuff.h"
@@ -142,7 +144,7 @@ void jiyva_eat_offlevel_items()
 
             const coord_def p = random_in_bounds();
 
-            if (igrd(p) == NON_ITEM)
+            if (igrd(p) == NON_ITEM || testbits(env.pgrid(p), FPROP_NO_JIYVA))
                 continue;
 
             for (stack_iterator si(p); si; ++si)
@@ -156,6 +158,9 @@ void jiyva_eat_offlevel_items()
                 dprf("Eating %s on %s",
                      si->name(DESC_PLAIN).c_str(), lid.describe().c_str());
 
+                // Needs a message now to explain possible hp or mp
+                // gain from jiyva_slurp_bonus()
+                mpr("You hear a distant slurping noise.");
                 sacrifice_item_stack(*si);
                 destroy_item(si.link());
             }
@@ -164,3 +169,32 @@ void jiyva_eat_offlevel_items()
     }
 }
 
+void jiyva_slurp_bonus(int item_value, int *js)
+{
+    if (you.penance[GOD_JIYVA])
+        return;
+
+    if (you.piety >= piety_breakpoint(1)
+        && x_chance_in_y(you.piety, MAX_PIETY))
+    {
+        //same as a sultana
+        lessen_hunger(70, true);
+        *js |= JS_FOOD;
+    }
+
+    if (you.piety >= piety_breakpoint(3)
+        && x_chance_in_y(you.piety, MAX_PIETY)
+        && you.magic_points < you.max_magic_points)
+    {
+         inc_mp(std::max(random2(item_value), 1), false);
+         *js |= JS_MP;
+     }
+
+    if (you.piety >= piety_breakpoint(4)
+        && x_chance_in_y(you.piety, MAX_PIETY)
+        && you.hp < you.hp_max)
+    {
+         inc_hp(std::max(random2(item_value), 1), false);
+         *js |= JS_HP;
+     }
+}

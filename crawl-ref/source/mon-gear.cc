@@ -48,7 +48,7 @@ static void _give_monster_item(monster* mon, int thing,
     if (!keep_ident)
         unset_ident_flags(mthing, ISFLAG_IDENT_MASK);
 
-    if ((mon->god == GOD_YREDELEMNUL || mon->undead_or_demonic())
+    if ((mon->undead_or_demonic() || mon->god == GOD_YREDELEMNUL)
         && (is_blessed(mthing)
             || get_weapon_brand(mthing) == SPWPN_HOLY_WRATH))
     {
@@ -121,9 +121,9 @@ static void _give_scroll(monster* mon, int level)
 
 static void _give_wand(monster* mon, int level)
 {
-
     if (mons_is_unique(mon->type) && !mons_class_flag(mon->type, M_NO_WAND)
-        && (one_chance_in(5)) || (mon->type == MONS_MAURICE && one_chance_in(3)))
+        && (one_chance_in(5)
+            || (mon->type == MONS_MAURICE && one_chance_in(3))))
     {
         const int idx = items(0, OBJ_WANDS, OBJ_RANDOM, true, level, 0);
 
@@ -168,10 +168,9 @@ static void _give_potion(monster* mon, int level)
     }
     else if (mons_species(mon->type) == MONS_DEEP_DWARF && one_chance_in(3))
     {
-        const bool big = one_chance_in(2);
-        // This handles initialization of stack timer.
         const int thing_created =
-            items(0, OBJ_POTIONS, big? POT_HEAL_WOUNDS: POT_HEALING, true, level, 0);
+            items(0, OBJ_POTIONS, coinflip() ? POT_HEAL_WOUNDS
+                                             : POT_HEALING, true, level, 0);
 
         if (thing_created == NON_ITEM)
             return;
@@ -179,7 +178,7 @@ static void _give_potion(monster* mon, int level)
         mitm[thing_created].flags = 0;
         _give_monster_item(mon, thing_created);
     }
-        else if (mons_species(mon->type) == MONS_NISSE && one_chance_in(6))
+    else if (mons_species(mon->type) == MONS_NISSE && one_chance_in(6))
     {
         const int thing_created =
             items(0, OBJ_POTIONS, POT_PORRIDGE, true, level, 0);
@@ -221,8 +220,8 @@ static void _give_potion(monster* mon, int level)
 
         mitm[pot].flags = 0;
         _give_monster_item(mon, pot, true,
-                          &monster::pickup_potion);
-     }
+                           &monster::pickup_potion);
+    }
     else if (mons_is_unique(mon->type) && one_chance_in(3))
     {
         const int thing_created =

@@ -755,12 +755,7 @@ void bolt::draw(const coord_def& p)
 
 #ifdef USE_TILE
     if (tile_beam == -1)
-    {
-        if (effect_known)
-            tile_beam = tileidx_bolt(*this);
-        else
-            tile_beam = tileidx_zap(ETC_MAGIC);
-    }
+        tile_beam = tileidx_bolt(*this);
 
     if (tile_beam != -1)
         tiles.add_overlay(p, tile_beam);
@@ -830,12 +825,16 @@ void bolt::digging_wall_effect()
 
         if (!msg_generated)
         {
-            if (!silenced(you.pos()))
-            {
-                mpr("You hear a grinding noise.", MSGCH_SOUND);
-                obvious_effect = true;
-            }
-
+            std::string wall;
+            if (feat == DNGN_SLIMY_WALL)
+                wall = "slime";
+            else if (you.level_type == LEVEL_PANDEMONIUM)
+                wall = "weird stuff";
+            else
+                wall = "rock";
+            mprf("The %s liquefies and sinks out of sight.", wall.c_str());
+            // This is silent.
+            obvious_effect = true;
             msg_generated = true;
         }
     }
@@ -1414,6 +1413,7 @@ void bolt::do_fire()
         // the cell.
         draw(pos());
 
+        noise_generated = false;
         ray.advance();
     }
 
@@ -2291,6 +2291,12 @@ void bolt::affect_endpoint()
 
     if (is_tracer)
         return;
+
+    if (!is_explosion && !noise_generated)
+    {
+        noisy(loudness, pos(), beam_source);
+        noise_generated = true;
+    }
 
     if (origin_spell == SPELL_PRIMAL_WAVE) // &&coinflip()
     {
@@ -4279,8 +4285,11 @@ void bolt::affect_monster(monster* mon)
         conducts[0].enabled = false;
     }
 
-    if (!is_explosion)
+    if (!is_explosion && !noise_generated)
+    {
         heard = noisy(loudness, pos(), beam_source) || heard;
+        noise_generated = true;
+    }
 
     if (!mon->alive())
         return;
@@ -5457,12 +5466,12 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
                obvious_effect(false), seen(false), heard(false),
                path_taken(), extra_range_used(0), is_tracer(false),
                aimed_at_feet(false), msg_generated(false),
-               passed_target(false), in_explosion_phase(false),
-               smart_monster(false), can_see_invis(false),
-               attitude(ATT_HOSTILE), foe_ratio(0), chose_ray(false),
-               beam_cancelled(false), dont_stop_player(false),
-               bounces(false), bounce_pos(), reflections(0),
-               reflector(-1), auto_hit(false)
+               noise_generated(false), passed_target(false),
+               in_explosion_phase(false), smart_monster(false),
+               can_see_invis(false), attitude(ATT_HOSTILE), foe_ratio(0),
+               chose_ray(false), beam_cancelled(false),
+               dont_stop_player(false), bounces(false), bounce_pos(),
+               reflections(0), reflector(-1), auto_hit(false)
 {
 }
 

@@ -1215,14 +1215,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         break;
 
     case MUT_NIGHTSTALKER:
-        // If we already have at least one level of the mutation, we're
-        // about to go to either level 2 or 3, so we need an LOS
-        // reduction.
-        if (player_mutation_level(mutat))
-        {
-            you.current_vision -= 2;
-            set_los_radius(you.current_vision);
-        }
+        update_vision_range();
         break;
 
     default:
@@ -1295,14 +1288,7 @@ static bool _delete_single_mutation_level(mutation_type mutat)
         break;
 
     case MUT_NIGHTSTALKER:
-        // If we already have more than one level of the mutation, we're
-        // about to go to either level 2 or 1, so we need an LOS
-        // increase.
-        if (player_mutation_level(mutat) > 1)
-        {
-            you.current_vision += 2;
-            set_los_radius(you.current_vision);
-        }
+        update_vision_range();
         break;
 
     default:

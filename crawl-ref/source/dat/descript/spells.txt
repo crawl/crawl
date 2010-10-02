@@ -190,7 +190,7 @@ This spell reveals traps in the caster's vicinity.
 %%%%
 Dig
 
-This spell digs a tunnel through unworked rock.
+This spell forms tunnels through unworked rock by liquefying it.
 %%%%
 Disintegrate
 
@@ -487,10 +487,6 @@ This spell creates a short blast of high-velocity particles. It works best when 
 See Invisible
 
 This spell enables the caster to perceive things that are shielded from ordinary sight.
-%%%%
-Selective Amnesia
-
-This spell allows the caster to selectively erase one spell from memory to recapture the magical energy bound up with it.
 %%%%
 Shadow Creatures
 

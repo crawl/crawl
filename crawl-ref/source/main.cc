@@ -1071,6 +1071,23 @@ static void _update_place_info()
     curr_PlaceInfo.assert_validity();
 }
 
+void _update_diag_counters()
+{
+    diag_counter_t act = DC_OTHER;
+
+    if (you.walking == 1)
+        act = DC_WALK_ORTHO;
+    else if (you.walking == 2)
+        act = DC_WALK_DIAG;
+    else if (!apply_berserk_penalty) // a fancy name for "attacking"
+        act = DC_FIGHT;
+
+    bool ae = (you.running == RMODE_EXPLORE)
+              || (you.running == RMODE_EXPLORE_GREEDY);
+    you.dcounters[0][ae][act]++;
+    you.dcounters[1][ae][act]+=you.time_taken;
+}
+
 //
 //  This function handles the player's input. It's called from main(),
 //  from inside an endless loop.
@@ -3916,6 +3933,7 @@ static void _move_player(coord_def move)
     {
         did_god_conduct(DID_HASTY, 1, true);
     }
+    _update_diag_counters();
 }
 
 
@@ -4169,9 +4187,11 @@ static void _compile_time_asserts()
     COMPILE_CHECK(SK_UNARMED_COMBAT == 17       , c1);
     COMPILE_CHECK(SK_EVOCATIONS == 38           , c2);
     COMPILE_CHECK(SP_VAMPIRE == 30              , c3);
-    COMPILE_CHECK(SPELL_DEBUGGING_RAY == 102    , c4);
-    COMPILE_CHECK(SPELL_PETRIFY == 154          , c5);
+#if TAG_MAJOR_VERSION == 31
+    COMPILE_CHECK(NUM_SPELLS == 225             , c6);
+#else
     COMPILE_CHECK(NUM_SPELLS == 224             , c6);
+#endif
 
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
     COMPILE_CHECK(NUM_SPECIES < SP_UNKNOWN      , c7);

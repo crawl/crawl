@@ -1073,6 +1073,44 @@ bool cast_shadow_creatures(god_type god)
     return (false);
 }
 
+bool cast_malign_gateway(actor * caster, int pow, god_type god)
+{
+    unsigned compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
+    std::random_shuffle(compass_idx, compass_idx + 8);
+
+    for (unsigned i = 0; i < 8; ++i)
+    {
+        coord_def test = caster->pos() + Compass[compass_idx[i]];
+        if (in_bounds(test)
+            //&& monster_habitable_grid(MONS_DEMONIC_TENTACLE, env.grid(test))
+            && env.grid(test) == DNGN_FLOOR
+            && !actor_at(test))
+        {
+            int tentacle_idx = create_monster(mgen_data(MONS_DEMONIC_TENTACLE,
+                                                        caster->atype() == ACT_PLAYER ? BEH_FRIENDLY : attitude_creation_behavior(caster->as_monster()->attitude),
+                                                        caster,
+                                                        0,
+                                                        0,
+                                                        test,
+                                                        MHITNOT,
+                                                        MG_FORCE_PLACE,
+                                                        god));
+
+            if (tentacle_idx >= 0)
+            {
+                menv[tentacle_idx].flags |= MF_NO_REWARD;
+                menv[tentacle_idx].add_ench(ENCH_PORTAL_TIMER);
+                env.grid(menv[tentacle_idx].pos()) = DNGN_TEMP_PORTAL;
+                menv[tentacle_idx].props["base_position"].get_coord()
+                                    = menv[tentacle_idx].pos();
+                return (true);
+            }
+        }
+    }
+    return (false);
+}
+
+
 bool cast_summon_horrible_things(int pow, god_type god)
 {
     if (one_chance_in(3))
@@ -1224,6 +1262,7 @@ void equip_undead(const coord_def &a, int corps, int mons, int monnum)
         switch (item.base_type)
         {
         case OBJ_WEAPONS:
+        case OBJ_STAVES:
         {
             const bool weapon = mon->inv[MSLOT_WEAPON] != NON_ITEM;
             const bool alt_weapon = mon->inv[MSLOT_ALT_WEAPON] != NON_ITEM;
@@ -1335,6 +1374,8 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     const monster_type zombie_type =
         static_cast<monster_type>(item.plus);
 
+    const int hd     = (item.props.exists(MONSTER_HIT_DICE)) ?
+                           item.props[MONSTER_HIT_DICE].get_short() : 0;
     const int number = (item.props.exists(MONSTER_NUMBER)) ?
                            item.props[MONSTER_NUMBER].get_short() : 0;
 
@@ -1343,8 +1384,8 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     {
         if (you.see_cell(pos))
         {
-            mpr("The zero-headed hydra corpse sways and immediately "
-                "collapses!");
+            mprf("The headless hydra %s sways and immediately collapses!",
+                 item.sub_type == CORPSE_BODY ? "corpse" : "skeleton");
         }
         return (false);
     }
@@ -1362,8 +1403,12 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
                                                        : MONS_SKELETON_LARGE;
     }
 
+    const int monnum = item.orig_monnum - 1;
+
+    // Use the original monster type as the zombified type here, to get
+    // the proper stats from it.
     mgen_data mg(mon, beha, as, 0, 0, pos, hitting, MG_FORCE_BEH, god,
-                 zombie_type, number);
+                 static_cast<monster_type>(monnum), number);
 
     mg.non_actor_summoner = nas;
 
@@ -1375,7 +1420,14 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     if (mons == -1)
         return (false);
 
-    const int monnum = item.orig_monnum - 1;
+    // If the original monster has been drained or levelled up, its HD
+    // might be different from its class HD, in which case its HP should
+    // be rerolled to match.
+    if (menv[mons].hit_dice != hd)
+    {
+        menv[mons].hit_dice = std::max(hd, 1);
+        roll_zombie_hp(&menv[mons]);
+    }
 
     if (is_named_corpse(item))
     {
@@ -1385,12 +1437,6 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
         if (name_type == 0 || (name_type & MF_NAME_MASK) == MF_NAME_REPLACE)
             name_zombie(&menv[mons], monnum, name);
     }
-
-    // If the original monster type has dual-wielding, make sure its
-    // zombie has it as well.  This is needed for e.g. equipped deep elf
-    // blademaster zombies.
-    if (mons_class_flag(monnum, M_TWO_WEAPONS))
-        menv[mons].flags |= MF_TWO_WEAPONS;
 
     // Re-equip the zombie.
     equip_undead(pos, corps, mons, monnum);
@@ -1552,29 +1598,34 @@ bool cast_simulacrum(int pow, god_type god)
             || (weapon->base_type == OBJ_FOOD
                 && weapon->sub_type == FOOD_CHUNK)))
     {
-        const monster_type type = static_cast<monster_type>(weapon->plus);
+        const monster_type sim_type = static_cast<monster_type>(weapon->plus);
 
-        if (!mons_class_can_be_zombified(type))
+        if (!mons_class_can_be_zombified(sim_type))
         {
             canned_msg(MSG_NOTHING_HAPPENS);
             return (false);
         }
 
-        const monster_type sim_type = mons_zombie_size(type) == Z_BIG ?
+        const monster_type mon = mons_zombie_size(sim_type) == Z_BIG ?
             MONS_SIMULACRUM_LARGE : MONS_SIMULACRUM_SMALL;
 
         // Can't create more than the available chunks.
         int how_many = std::min(8, 4 + random2(pow) / 20);
         how_many = std::min<int>(how_many, weapon->quantity);
 
+        const int monnum = weapon->orig_monnum - 1;
+
         for (int i = 0; i < how_many; ++i)
         {
+            // Use the original monster type as the zombified type here,
+            // to get the proper stats from it.
             const int mons =
                 create_monster(
-                    mgen_data(sim_type, BEH_FRIENDLY, &you,
+                    mgen_data(mon, BEH_FRIENDLY, &you,
                               6, SPELL_SIMULACRUM,
                               you.pos(), MHITYOU,
-                              MG_FORCE_BEH, god, type));
+                              MG_FORCE_BEH, god,
+                              static_cast<monster_type>(monnum)));
 
             if (mons != -1)
             {

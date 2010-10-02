@@ -403,7 +403,7 @@
     true,
     false,
     false,
-    4 // XXX: Would sticky flame really be this noisy?
+    1
 },
 
 {

@@ -614,6 +614,11 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
         if (god == GOD_FEDHAS && is_corpse_violating_item(item))
             return (false);
 
+        // Monsters that are gifts/worshippers of Zin won't use unclean
+        // weapons.
+        if (god == GOD_ZIN && is_unclean_item(item))
+            return (false);
+
         // Holy monsters that aren't gifts/worshippers of chaotic gods
         // and monsters that are gifts/worshippers of good gods won't
         // use chaotic weapons.
@@ -623,9 +628,9 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
             return (false);
         }
 
-        // Monsters that are gifts/worshippers of Zin won't use unclean
+        // Monsters that are gifts/worshippers of TSO won't use poisoned
         // weapons.
-        if (god == GOD_ZIN && is_unclean_item(item))
+        if (god == GOD_SHINING_ONE && is_poisoned_item(item))
             return (false);
     }
 
@@ -876,6 +881,7 @@ void monster::equip(item_def &item, int slot, int near)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
+    case OBJ_STAVES:
     {
         bool give_msg = (slot == MSLOT_WEAPON || mons_wields_two_weapons(this));
         equip_weapon(item, near, give_msg);
@@ -3014,6 +3020,11 @@ bool monster::is_chaotic() const
     return (is_shapeshifter() || is_known_chaotic());
 }
 
+bool monster::is_artificial() const
+{
+    return (mons_class_flag(type, M_ARTIFICIAL));
+}
+
 bool monster::is_insubstantial() const
 {
     return (mons_class_flag(type, M_INSUBSTANTIAL));
@@ -3484,7 +3495,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             && ::mons_species(mons_base_type(this)) == MONS_DEEP_DWARF)
         {
             // Deep Dwarves get to shave _any_ hp loss. Player version:
-            int shave = 1 + random2(2 + random2(1 + this->hit_dice / 3));
+            int shave = 1 + random2(2 + random2(1 + hit_dice / 3));
             dprf("(mon) HP shaved: %d.", shave);
             amount -= shave;
             if (amount <= 0)
@@ -3529,7 +3540,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
 
         if (has_ench(ENCH_MIRROR_DAMAGE))
             add_final_effect(FINEFF_MIRROR_DAMAGE, agent, this,
-                             coord_def(0,0), initial_damage);
+                             coord_def(0, 0), initial_damage);
     }
 
     if (cleanup_dead && (hit_points <= 0 || hit_dice <= 0) && type != -1)
@@ -3654,7 +3665,6 @@ void monster::dancing_weapon_init()
 {
     hit_dice        = ghost->xl;
     max_hit_points  = ghost->max_hp;
-
     hit_points      = max_hit_points;
     ac              = ghost->ac;
     ev              = ghost->ev;
@@ -5141,8 +5151,48 @@ void monster::apply_enchantment(const mon_enchant &me)
         }
 
     }
+    break;
+
+    case ENCH_PORTAL_TIMER:
+    {
+        if (decay_enchantment(me))
+        {
+            coord_def base_position = this->props["base_position"].get_coord();
+            // Do a thing.
+            if (you.see_cell(base_position))
+            {
+                mprf("The portal closes, %s is severed", name(DESC_NOCAP_THE).c_str());
+            }
+
+            if (env.grid(base_position) == DNGN_TEMP_PORTAL)
+            {
+                env.grid(base_position) = DNGN_FLOOR;
+            }
+
+            env.pgrid(base_position) |= FPROP_BLOODY;
+            add_ench(ENCH_SEVERED);
+        }
+    }
+    break;
+
+    case ENCH_SEVERED:
+    {
+        simple_monster_message(this, " writhes!");
+        coord_def base_position = props["base_position"].get_coord();
+        dungeon_feature_type ftype = env.grid(base_position);
+        if (feat_has_solid_floor(ftype)
+            && !feat_is_watery(ftype))
+        {
+            env.pgrid(base_position) |= FPROP_BLOODY;
+        }
+        // We don't have a reasonable agent to give.
+        // Don't clean up the monster in order to credit properly.
+        //hurt(NULL, dam, BEAM_NAPALM, false);
+        hurt(NULL, 20);
+    }
 
     break;
+
     case ENCH_GLOWING_SHAPESHIFTER: // This ench never runs out!
         // Number of actions is fine for shapeshifters.  Don't change
         // shape while taking the stairs because monster_polymorph() has
@@ -6066,7 +6116,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             && mons_base_type(&menv[number]) == MONS_KRAKEN_TENTACLE)
         {
 
-            // If we aare going to die, monster_die hook will handle
+            // If we are going to die, monster_die hook will handle
             // purging the tentacle.
             if (hit_points < menv[number].hit_points
                 && this->hit_points > 0)
@@ -6079,6 +6129,27 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                 if (invalid_monster(this))
                 {
                     type = MONS_KRAKEN_CONNECTOR;
+                    hit_points = -1;
+                }
+            }
+        }
+    }
+    else if (type == MONS_DEMONIC_TENTACLE_SEGMENT)
+    {
+        //mprf("in tentacle damage pass");
+        if (!invalid_monster_index(number)
+            && mons_base_type(&menv[number]) == MONS_DEMONIC_TENTACLE)
+        {
+            if (hit_points < menv[number].hit_points)
+            {
+                int pass_damage = menv[number].hit_points -  hit_points;
+                menv[number].hurt(oppressor, pass_damage, flavour);
+
+                // We could be removed, undo this or certain post-hit
+                // effects will cry.
+                if (invalid_monster(this))
+                {
+                    type = MONS_DEMONIC_TENTACLE_SEGMENT;
                     hit_points = -1;
                 }
             }
@@ -6165,8 +6236,8 @@ static const char *enchant_names[] =
     "petrified", "lowered_mr", "soul_ripe", "slowly_dying", "eat_items",
     "aquatic_land", "spore_production", "slouch", "swift", "tide",
     "insane", "silenced", "awaken_forest", "exploding", "bleeding",
-    "antimagic", "fading_away", "preparing_resurrect", "regen", "magic_res",
-    "mirror_dam", "stoneskin", "fear inspiring", "buggy",
+    "tethered", "severed", "antimagic", "fading_away", "preparing_resurrect", "regen",
+    "magic_res", "mirror_dam", "stoneskin", "fear inspiring", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -6344,6 +6415,10 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_EXPLODING:
         return (random_range(3,7) * 10);
 
+    case ENCH_PORTAL_TIMER:
+        cturn = 30 * 10 / _mod_speed(10, mons->speed);
+        break;
+
     case ENCH_ABJ:
         if (deg >= 6)
             cturn = 1000 / _mod_speed(10, mons->speed);
@@ -6387,4 +6462,3 @@ void mon_enchant::set_duration(const monster* mons, const mon_enchant *added)
     if (duration > maxduration)
         maxduration = duration;
 }
-

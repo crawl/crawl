@@ -4,4 +4,3 @@
 void create_wanderer();
 
 #endif
-

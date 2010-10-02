@@ -33,6 +33,7 @@
 #include "terrain.h"
 #include "transform.h"
 #include "viewchar.h"
+#include "shout.h"
 
 // Returns whether the spell was actually cast.
 bool conjure_flame(int pow, const coord_def& where)
@@ -113,7 +114,9 @@ bool conjure_flame(int pow, const coord_def& where)
     {
         const int durat = std::min(5 + (random2(pow)/2) + (random2(pow)/2), 23);
         place_cloud(CLOUD_FIRE, where, durat, KC_YOU);
+        mpr("The fire roars!");
     }
+    noisy(2, where);
 
     return (true);
 }
@@ -160,6 +163,7 @@ bool stinking_cloud( int pow, bolt &beem )
 int cast_big_c(int pow, cloud_type cty, kill_category whose, bolt &beam)
 {
     big_cloud( cty, whose, beam.target, pow, 8 + random2(3), -1 );
+    noisy(2, beam.target);
     return (1);
 }
 

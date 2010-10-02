@@ -67,6 +67,8 @@ feature_property_type str_to_fprop(const std::string &str)
         return (FPROP_NO_TIDE);
     if (str == "no_submerge")
         return (FPROP_NO_SUBMERGE);
+    if (str == "no_jiyva")
+        return (FPROP_NO_JIYVA);
 
     return (FPROP_NONE);
 }

@@ -365,6 +365,26 @@ static void _unequip_artefact_effect(const item_def &item, bool *show_msgs=NULL)
     }
 }
 
+static void _equip_weapon_use_warning(const item_def& item)
+{
+    if (is_holy_item(item) && you.religion == GOD_YREDELEMNUL)
+        mpr("You really shouldn't be using a holy item like this.");
+    else if (is_unholy_item(item) && is_good_god(you.religion))
+        mpr("You really shouldn't be using an unholy item like this.");
+    else if (is_corpse_violating_item(item) && you.religion == GOD_FEDHAS)
+        mpr("You really shouldn't be using a corpse-violating item like this.");
+    else if (is_evil_item(item) && is_good_god(you.religion))
+        mpr("You really shouldn't be using an evil item like this.");
+    else if (is_unclean_item(item) && you.religion == GOD_ZIN)
+        mpr("You really shouldn't be using an unclean item like this.");
+    else if (is_chaotic_item(item) && you.religion == GOD_ZIN)
+        mpr("You really shouldn't be using a chaotic item like this.");
+    else if (is_hasty_item(item) && you.religion == GOD_CHEIBRIADOS)
+        mpr("You really shouldn't be using a fast item like this.");
+    else if (is_poisoned_item(item) && you.religion == GOD_SHINING_ONE)
+        mpr("You really shouldn't be using a poisoned item like this.");
+}
+
 // Provide a function for handling initial wielding of 'special'
 // weapons, or those whose function is annoying to reproduce in
 // other places *cough* auto-butchering *cough*.    {gdl}
@@ -385,9 +405,8 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
             if (showMsgs)
                 mpr("The area is filled with flickering shadows.");
 
-            you.current_vision -= 2;
-            set_los_radius(you.current_vision);
             you.attribute[ATTR_SHADOWS] = 1;
+            update_vision_range();
         }
         else if (item.sub_type == MISC_HORN_OF_GERYON)
             set_ident_flags(item, ISFLAG_IDENT_MASK);
@@ -396,6 +415,9 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
 
     case OBJ_STAVES:
     {
+        if (showMsgs)
+            _equip_weapon_use_warning(item);
+
         if (item.sub_type == STAFF_POWER)
         {
             int mp = item.special - you.elapsed_time / POWER_DECAY;
@@ -438,20 +460,9 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
     case OBJ_WEAPONS:
     {
         if (showMsgs)
-        {
-            if (is_holy_item(item) && you.religion == GOD_YREDELEMNUL)
-                mpr("You really shouldn't be using a holy item like this.");
-            else if (is_unholy_item(item) && is_good_god(you.religion))
-                mpr("You really shouldn't be using an unholy item like this.");
-            else if (is_evil_item(item) && is_good_god(you.religion))
-                mpr("You really shouldn't be using an evil item like this.");
-            else if (is_chaotic_item(item) && you.religion == GOD_ZIN)
-                mpr("You really shouldn't be using a chaotic item like this.");
-            else if (is_hasty_item(item) && you.religion == GOD_CHEIBRIADOS)
-                mpr("You really shouldn't be using a fast item like this.");
-        }
+            _equip_weapon_use_warning(item);
 
-        // Call unrandrt equip func before item is identified.
+        // Call unrandart equip func before item is identified.
         if (artefact)
             _equip_artefact_effect(item, &showMsgs);
 
@@ -682,9 +693,8 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs)
     if (item.base_type == OBJ_MISCELLANY
         && item.sub_type == MISC_LANTERN_OF_SHADOWS )
     {
-        you.current_vision += 2;
-        set_los_radius(you.current_vision);
         you.attribute[ATTR_SHADOWS] = 0;
+        update_vision_range();
     }
     else if (item.base_type == OBJ_WEAPONS)
     {

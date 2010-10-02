@@ -147,18 +147,9 @@ bool SpellRegion::update_alt_text(std::string &alt)
     return (true);
 }
 
-static int _get_max_spells()
-{
-    int max_spells = 21;
-    if (you.has_spell(SPELL_SELECTIVE_AMNESIA))
-        max_spells++;
-
-    return (max_spells);
-}
-
 int SpellRegion::get_max_slots()
 {
-    return (_get_max_spells());
+    return (MAX_KNOWN_SPELLS);
 }
 
 void SpellRegion::pack_buffers()

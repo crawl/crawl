@@ -585,6 +585,22 @@ monster_type player_mons(bool transform)
     return MONS_PROGRAM_BUG;
 }
 
+void update_vision_range()
+{
+    you.normal_vision = LOS_RADIUS;
+    you.current_vision = you.normal_vision;
+
+    // Nightstalker gives 0/-2/-4.
+    if (player_mutation_level(MUT_NIGHTSTALKER) > 1)
+        you.current_vision -= player_mutation_level(MUT_NIGHTSTALKER)*2 - 2;
+
+    // Lantern of shadows.
+    if (you.attribute[ATTR_SHADOWS])
+        you.current_vision -= 2;
+
+    set_los_radius(you.current_vision);
+}
+
 // Checks whether the player's current species can use
 // use (usually wear) a given piece of equipment.
 // Note that EQ_BODY_ARMOUR and EQ_HELMET only check
@@ -5712,6 +5728,11 @@ bool player::is_evil() const
 // gods should probably be checked in the non-existing player::is_unclean,
 // which could be used for something Zin-related (such as a priestly monster).
 bool player::is_chaotic() const
+{
+    return (false);
+}
+
+bool player::is_artificial() const
 {
     return (false);
 }

@@ -59,9 +59,11 @@ MONS:    great orb of eyes / nothing
 SUBST:   ' : ' .:1,  ' : ' x:1,  ' = .x
 SUBST:   " : " .:3,  " = .c
 NSUBST:  P = O / *|
-KMASK:   | = no_monster_gen
+KMASK:   |O* = no_monster_gen
+KPROP:   |O* = no_jiyva
 KFEAT:   Z = altar_jiyva
 KITEM:   O = slimy rune of Zot
+KITEM:   * = star_item
 SHUFFLE: ([{
 LFLAGS:  no_tele_control
 
@@ -94,7 +96,7 @@ local function fixup_slime_vaults(data, triggerable, triggerer, marker, ev)
   dgn.change_level_flags("!no_tele_control")
 
   local to_feat
-  if you.god() == "Jiyva" then
+  if you.god() == "Jiyva" and you.piety() > 160 then
     to_feat = "floor"
   else
     to_feat = "clear_rock_wall"
@@ -103,7 +105,7 @@ local function fixup_slime_vaults(data, triggerable, triggerer, marker, ev)
   local seen = dgn.seen_replace_feat("stone_wall", to_feat)
         seen = dgn.seen_replace_feat("clear_stone_wall", to_feat) or seen
 
-  if you.god() == "Jiyva" then
+  if you.god() == "Jiyva" and you.piety() > 160 then
     if you.silenced() then
         crawl.mpr("An unexplained breeze blows through the dungeon.", "god")
     else
@@ -116,6 +118,13 @@ local function fixup_slime_vaults(data, triggerable, triggerer, marker, ev)
     else
         crawl.mpr("You feel a strange vibration for a moment.",
                   "monster_enchant")
+    end
+  end
+
+  local gxm, gym = dgn.max_bounds()
+  for p in iter.rect_iterator(dgn.point(1, 1), dgn.point(gxm-1, gym-1)) do
+    if dgn.fprop_at(p.x, p.y, "no_jiyva") then
+      dgn.fprop_changed(p.x, p.y, "no_jiyva")
     end
   end
 

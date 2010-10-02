@@ -2954,6 +2954,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     pbolt.is_beam   = false;
     pbolt.is_tracer = false;
 
+    pbolt.loudness = int(sqrt(item_mass(item))/3 + 0.5);
+
     // Mark this item as thrown if it's a missile, so that we'll pick it up
     // when we walk over it.
     if (wepClass == OBJ_MISSILES || wepClass == OBJ_WEAPONS)
@@ -4647,6 +4649,14 @@ void read_scroll(int slot)
                 return;
             break;
 
+        case SCR_AMNESIA:
+            if (you.spell_no == 0)
+            {
+                canned_msg(MSG_NO_SPELLS);
+                return;
+            }
+            break;
+
         default:
             break;
         }
@@ -4980,6 +4990,16 @@ void read_scroll(int slot)
 
     case SCR_VULNERABILITY:
         _vulnerability_scroll();
+        break;
+
+    case SCR_AMNESIA:
+        if (you.spell_no == 0)
+        {
+            canned_msg(MSG_NOTHING_HAPPENS);
+            id_the_scroll = false;
+        }
+        else
+            cast_selective_amnesia();
         break;
 
     default:
