@@ -1271,7 +1271,7 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
     if (attk.flavour == AF_DRAIN_STAT)
     {
         mon_attack_flavour flavours[] =
-            {AF_DRAIN_STR, AF_DRAIN_DEX, AF_DRAIN_INT};
+            {AF_DRAIN_STR, AF_DRAIN_INT, AF_DRAIN_DEX};
 
         attk.flavour = RANDOM_ELEMENT(flavours);
     }
