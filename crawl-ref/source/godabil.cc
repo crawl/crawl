@@ -939,6 +939,15 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
     // the proper stats from it.
     define_zombie(mon, mon->type, MONS_SPECTRAL_THING);
 
+    // If the original monster has been drained or levelled up, its HD
+    // might be different from its class HD, in which case its HP should
+    // be rerolled to match.
+    if (mon->hit_dice != orig.hit_dice)
+    {
+        mon->hit_dice = std::max(orig.hit_dice, 1);
+        roll_zombie_hp(mon);
+    }
+
     mon->colour = ETC_UNHOLY;
     mon->speed  = mons_class_base_speed(mon->base_monster);
 

@@ -1374,6 +1374,8 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     const monster_type zombie_type =
         static_cast<monster_type>(item.plus);
 
+    const int hd     = (item.props.exists(MONSTER_HIT_DICE)) ?
+                           item.props[MONSTER_HIT_DICE].get_short() : 0;
     const int number = (item.props.exists(MONSTER_NUMBER)) ?
                            item.props[MONSTER_NUMBER].get_short() : 0;
 
@@ -1417,6 +1419,15 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
 
     if (mons == -1)
         return (false);
+
+    // If the original monster has been drained or levelled up, its HD
+    // might be different from its class HD, in which case its HP should
+    // be rerolled to match.
+    if (menv[mons].hit_dice != hd)
+    {
+        menv[mons].hit_dice = std::max(hd, 1);
+        roll_zombie_hp(&menv[mons]);
+    }
 
     if (is_named_corpse(item))
     {
