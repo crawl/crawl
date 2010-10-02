@@ -1168,7 +1168,7 @@ unarmed_attack_type melee_attack::player_aux_choose_baseattack()
         && (baseattack == UNAT_HEADBUTT
             || baseattack == UNAT_KICK
             || _vamp_wants_blood_from_monster(defender->as_monster())
-               && x_chance_in_y(2, 3)))
+               && !one_chance_in(3)))
     {
         baseattack = UNAT_BITE;
     }
