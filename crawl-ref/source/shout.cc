@@ -390,6 +390,8 @@ bool noisy(int loudness, const coord_def& where, const char *msg, int who,
 {
     bool ret = false;
 
+    dprf("Noise %d at pos(%d,%d)", loudness, where.x, where.y);
+
     // high ambient noise makes sounds harder to hear
     int ambient = current_level_ambient_noise();
     if (ambient < 0) {

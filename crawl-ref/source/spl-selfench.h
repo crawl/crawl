@@ -19,7 +19,7 @@ void cast_insulation(int power);
 
 void cast_resist_poison(int power);
 void cast_teleport_control(int power);
-bool cast_selective_amnesia(bool force);
+bool cast_selective_amnesia();
 void cast_see_invisible(int pow);
 void cast_silence(int pow);
 

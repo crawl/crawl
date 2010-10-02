@@ -894,6 +894,8 @@ void set_random_slime_target(monster* mon)
         // XXX: an iterator that spirals out would be nice.
         if (!in_bounds(*ri) || distance(pos, *ri) >= mindist)
             continue;
+        if (testbits(env.pgrid(*ri), FPROP_NO_JIYVA))
+            continue;
         for (stack_iterator si(*ri); si; ++si)
         {
             item_def& item(*si);

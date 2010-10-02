@@ -651,6 +651,16 @@ std::string get_god_likes(god_type which_god, bool verbose)
 
     switch (which_god)
     {
+    case GOD_YREDELEMNUL:
+        likes.push_back("you or your undead slaves kill artificial beings");
+        break;
+
+    default:
+        break;
+    }
+
+    switch (which_god)
+    {
     case GOD_MAKHLEB: case GOD_LUGONU:
         likes.push_back("you or your allies kill holy beings");
         break;
@@ -2077,7 +2087,7 @@ bool do_god_gift(bool prayed_for, bool forced)
                 if (_jiyva_mutate())
                 {
                     _inc_gift_timeout(15 + roll_dice(2, 4));
-                    you.num_gifts[you.religion]++;
+                    //num_gifts is used for tracking the Slime:6 walls
                     take_note(Note(NOTE_GOD_GIFT, you.religion));
                 }
                 else
@@ -2606,6 +2616,16 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
                 case GOD_LUGONU:
                     simple_god_message(" will now corrupt your weapon at an altar... once.");
                     break;
+                case GOD_JIYVA:
+                    simple_god_message(" will now unseal the treasures of the Slime Pits.");
+                    dlua.callfn("dgn_set_persistent_var", "sb", "fix_slime_vaults", true);
+                    // If we're on Slime:6, pretend we just entered the level
+                   // in order to bring down the vault walls.
+                   if (level_id::current() == level_id(BRANCH_SLIME_PITS, 6))
+                       dungeon_events.fire_event(DET_ENTERED_LEVEL);
+
+                   you.num_gifts[you.religion]++;
+                   break;
                 default:
                     break;
             }
@@ -3146,6 +3166,9 @@ bool player_can_join_god(god_type which_god)
     if (is_good_god(which_god) && you.undead_or_demonic())
         return (false);
 
+    if (which_god == GOD_YREDELEMNUL && you.is_artificial())
+        return (false);
+
     if (which_god == GOD_BEOGH && you.species != SP_HILL_ORC)
         return (false);
 
@@ -3155,6 +3178,17 @@ bool player_can_join_god(god_type which_god)
 
     if (which_god == GOD_SIF_MUNA && !you.spell_no)
         return (false);
+
+    return (true);
+}
+
+bool transformed_player_can_join_god(god_type which_god)
+{
+    if ((is_good_god(which_god) || which_god == GOD_FEDHAS)
+        && you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
+    {
+        return (false);
+    }
 
     return (true);
 }
@@ -3194,7 +3228,7 @@ void god_pitch(god_type which_god)
         if (which_god == GOD_SIF_MUNA)
             simple_god_message(" does not accept worship from the ignorant!",
                                which_god);
-        else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
+        else if (transformed_player_can_join_god(which_god))
             simple_god_message(" says: How dare you come in such a loathsome form!",
                                which_god);
         else
@@ -3353,15 +3387,6 @@ void god_pitch(god_type which_god)
     // Complimentary jelly upon joining.
     if (you.religion == GOD_JIYVA)
     {
-        if (you.worshipped[GOD_JIYVA] == 1)
-        {
-            dlua.callfn("dgn_set_persistent_var", "sb",
-                        "fix_slime_vaults", true);
-            // If we're on Slime:6, pretend we just entered the level
-            // in order to bring down the vault walls.
-            if (level_id::current() == level_id(BRANCH_SLIME_PITS, 6))
-                dungeon_events.fire_event(DET_ENTERED_LEVEL);
-        }
 
         if (!_has_jelly())
         {

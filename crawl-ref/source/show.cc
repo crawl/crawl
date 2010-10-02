@@ -337,4 +337,3 @@ void show_update_emphasis()
        if (stairs[i].destination.is_valid())
            env.map_knowledge(stairs[i].position).flags &= ~MAP_EMPHASIZE;
 }
-

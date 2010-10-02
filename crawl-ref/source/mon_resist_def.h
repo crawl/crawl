@@ -46,4 +46,3 @@ inline mon_resist_def operator | (int a, const mon_resist_def &b)
 typedef mon_resist_def mrd;
 
 #endif
-

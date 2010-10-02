@@ -1723,7 +1723,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_SIF_MUNA_FORGET_SPELL:
-        if (!cast_selective_amnesia(true))
+        if (!cast_selective_amnesia())
             return (false);
         break;
 

@@ -1168,7 +1168,7 @@ unarmed_attack_type melee_attack::player_aux_choose_baseattack()
         && (baseattack == UNAT_HEADBUTT
             || baseattack == UNAT_KICK
             || _vamp_wants_blood_from_monster(defender->as_monster())
-               && x_chance_in_y(2, 3)))
+               && !one_chance_in(3)))
     {
         baseattack = UNAT_BITE;
     }
@@ -4542,7 +4542,9 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
     if (attacker->id() == MONS_KILLER_KLOWN && attk.type == AT_HIT)
         return (RANDOM_ELEMENT(klown_attack));
 
-    if (attacker->id() == MONS_KRAKEN_TENTACLE && attk.type == AT_TENTACLE_SLAP)
+    if ((attacker->id() == MONS_KRAKEN_TENTACLE
+           || attacker->id() == MONS_DEMONIC_TENTACLE)
+         && attk.type == AT_TENTACLE_SLAP)
         return ("slap");
 
     static const char *attack_types[] =

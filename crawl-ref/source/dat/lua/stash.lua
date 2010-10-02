@@ -71,4 +71,3 @@ end
 
 --- If you want dumps (.lst files) to be annotated, uncomment this line:
 -- ch_stash_dump_annotate_item = ch_stash_search_annotate_item
-

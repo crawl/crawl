@@ -24,6 +24,16 @@
 #include "tiledoll.h"
 #endif
 
+enum diag_counter_t
+{
+    DC_OTHER,
+    DC_WALK_ORTHO,
+    DC_WALK_DIAG,
+    DC_FIGHT,
+    DC_REST,
+    NUM_DC
+};
+
 class player : public actor
 {
 public:
@@ -233,6 +243,8 @@ public:
   // Delayed level actions.  This array is never trimmed, as usually D:1 won't
   // be loaded again until the very end.
   std::vector<daction_type> dactions;
+  // [time (vs turn)][autoexploring][]
+  FixedVector<int, NUM_DC> dcounters[2][2];
 
 
   // Non-saved UI state:
@@ -506,6 +518,7 @@ public:
     bool is_unholy() const;
     bool is_evil() const;
     bool is_chaotic() const;
+    bool is_artificial() const;
     bool is_insubstantial() const;
     int res_acid() const;
     int res_fire() const;
@@ -789,6 +802,7 @@ bool player_genus( genus_type which_genus,
 bool is_player_same_species( const int mon, bool = false );
 monster_type player_mons(bool transform = true);
 void update_player_symbol();
+void update_vision_range();
 
 bool you_can_wear( int eq, bool special_armour = false );
 bool player_has_feet(void);

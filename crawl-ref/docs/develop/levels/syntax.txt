@@ -1186,6 +1186,7 @@ KPROP:    x = bloody
           * "no_tele_into": Combines the above no_rtele_into and no_ctele_into
              in one flag, and disallows both random and controlled teleports.
           * "no_tide": Shoals tides will not affect this square.
+          * "no_jiyva": No spawning jellies, no off-level eating.
 
 KITEM:    ? = potion of healing / potion of restore abilities
           KITEM: places the specified item at all occurrences of the

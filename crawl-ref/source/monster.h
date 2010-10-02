@@ -318,6 +318,7 @@ public:
     bool is_unclean() const;
     bool is_known_chaotic() const;
     bool is_chaotic() const;
+    bool is_artificial() const;
     bool is_insubstantial() const;
     int res_hellfire() const;
     int res_fire() const;

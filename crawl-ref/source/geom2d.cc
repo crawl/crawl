@@ -170,4 +170,3 @@ vector degree_to_vector(double d)
 }
 
 }
-

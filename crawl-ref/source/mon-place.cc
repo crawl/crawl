@@ -79,8 +79,6 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                                           int *lev_mons,
                                           bool *chose_ood_monster);
 
-static void _define_zombie(monster* mon, monster_type ztype, monster_type cs,
-                           int power, coord_def pos);
 static monster_type _band_member(band_type band, int power);
 static band_type _choose_band(int mon_type, int power, int &band_size,
                               bool& natural_leader);
@@ -1283,8 +1281,9 @@ int place_monster(mgen_data mg, bool force_pos)
         {
             menv[band_id].flags |= MF_BAND_MEMBER;
             // Priestly band leaders should have an entourage of the
-            // same religion.
-            if (priest)
+            // same religion, unless members of that entourage already
+            // have a different one.
+            if (priest && menv[band_id].god == GOD_NO_GOD)
                 menv[band_id].god = mon->god;
 
             if (mon->type == MONS_PIKEL)
@@ -1411,7 +1410,17 @@ static int _place_monster_aux(const mgen_data &mg,
 
     // Generate a brand shiny new monster, or zombie.
     if (mons_class_is_zombified(mg.cls))
-        _define_zombie(mon, mg.base_type, mg.cls, mg.power, fpos);
+    {
+        monster_type ztype = mg.base_type;
+
+        if (ztype == MONS_NO_MONSTER)
+        {
+            ztype = pick_local_zombifiable_monster(mg.power, true, mg.cls,
+                                                   fpos);
+        }
+
+        define_zombie(mon, ztype, mg.cls);
+    }
     else
         define_monster(mon);
 
@@ -1453,17 +1462,20 @@ static int _place_monster_aux(const mgen_data &mg,
             }
         }
     }
+    // The royal jelly belongs to Jiyva.
+    else if (mg.cls == MONS_ROYAL_JELLY)
+        mon->god = GOD_JIYVA;
+    // Mennas belongs to Zin.
+    else if (mg.cls == MONS_MENNAS)
+        mon->god = GOD_ZIN;
     // 1 out of 7 non-priestly orcs are unbelievers.
     else if (mons_genus(mg.cls) == MONS_ORC)
     {
         if (!one_chance_in(7))
             mon->god = GOD_BEOGH;
     }
-    // The royal jelly belongs to Jiyva.
-    else if (mg.cls == MONS_ROYAL_JELLY)
-        mon->god = GOD_JIYVA;
-    // Angels and Daevas belong to TSO, but 1 out of 7 in the Abyss are
-    // adopted by Xom.
+    // Angels (other than Mennas) and Daevas belong to TSO, but 1 out of
+    // 7 in the Abyss are adopted by Xom.
     else if (mons_class_holiness(mg.cls) == MH_HOLY)
     {
         if (mg.level_type != LEVEL_ABYSS || !one_chance_in(7))
@@ -1647,8 +1659,12 @@ static int _place_monster_aux(const mgen_data &mg,
 
     if (summoned)
     {
+        // Instead of looking for dancing weapons, look for Tukima's dance.
+        // Dancing weapons can be created with shadow creatures. {due}
+        bool mark_items = mg.summon_type != SPELL_TUKIMAS_DANCE;
+
         mon->mark_summoned(mg.abjuration_duration,
-                           mg.cls != MONS_DANCING_WEAPON,
+                           mark_items,
                            mg.summon_type);
     }
     ASSERT(!invalid_monster_index(mg.foe)
@@ -1884,66 +1900,60 @@ monster_type pick_local_zombifiable_monster(int power, bool hack_hd,
     }
 }
 
-static void _define_zombie(monster* mon, monster_type ztype, monster_type cs,
-                           int power, coord_def pos)
+void roll_zombie_hp(monster* mon)
 {
-    ASSERT(mons_class_is_zombified(cs));
-
-    monster_type base;
-    if (ztype == MONS_NO_MONSTER)
-        base = pick_local_zombifiable_monster(power, true, cs, pos);
-    else
-        base = mons_species(ztype);
-
-    ASSERT(zombie_class_size(cs) == Z_NOZOMBIE
-           || zombie_class_size(cs) == mons_zombie_size(base));
-
-    // Set type to the base type to calculate appropriate stats.
-    mon->type = base;
-    define_monster(mon);
-
-    mon->type         = cs;
-    mon->base_monster = base;
-
-    mon->colour       = mons_class_colour(cs);
-    mon->speed        = mons_class_zombie_base_speed(mon->base_monster);
-
-    // Turn off all melee ability flags except dual-wielding.
-#if TAG_MAJOR_VERSION == 30
-    mon->flags       &= ~(MF_FIGHTER | MF_ARCHER);
-#else
-    mon->flags       &= (~MF_MELEE_MASK | MF_TWO_WEAPONS);
-#endif
-
-    // Turn off all spellcasting and priestly ability flags.
-    // Hack - kraken get to keep their spell-like ability.
-    if (mon->base_monster != MONS_KRAKEN)
-#if TAG_MAJOR_VERSION == 30
-        mon->flags   &= ~(MF_SPELLCASTER | MF_ACTUAL_SPELLS | MF_PRIEST);
-#else
-        mon->flags   &= ~MF_SPELL_MASK;
-#endif
-
-    // Turn off regeneration if the original monster cannot regenerate.
-    // This is needed for e.g. spectral things of non-regenerating
-    // monsters.
-    if (!mons_class_can_regenerate(mon->base_monster))
-        mon->flags   |= MF_NO_REGEN;
+    ASSERT(mons_class_is_zombified(mon->type));
 
     int hp = 0;
-    int acmod = 0, evmod = 0;
-    switch (cs)
+
+    switch (mon->type)
     {
     case MONS_ZOMBIE_SMALL:
     case MONS_ZOMBIE_LARGE:
-        hp    = hit_points(mon->hit_dice, 6, 5);
+        hp = hit_points(mon->hit_dice, 6, 5);
+        break;
+
+    case MONS_SKELETON_SMALL:
+    case MONS_SKELETON_LARGE:
+        hp = hit_points(mon->hit_dice, 5, 4);
+        break;
+
+    case MONS_SIMULACRUM_SMALL:
+    case MONS_SIMULACRUM_LARGE:
+        // Simulacra aren't tough, but you can create piles of them. - bwr
+        hp = hit_points(mon->hit_dice, 1, 4);
+        break;
+
+    case MONS_SPECTRAL_THING:
+        hp = hit_points(mon->hit_dice, 4, 4);
+        break;
+
+    default:
+        ASSERT(false);
+        break;
+    }
+
+    mon->max_hit_points = std::max(hp, 1);
+    mon->hit_points     = mon->max_hit_points;
+}
+
+static void _roll_zombie_ac_ev(monster* mon)
+{
+    ASSERT(mons_class_is_zombified(mon->type));
+
+    int acmod = 0;
+    int evmod = 0;
+
+    switch (mon->type)
+    {
+    case MONS_ZOMBIE_SMALL:
+    case MONS_ZOMBIE_LARGE:
         acmod = -2;
         evmod = -5;
         break;
 
     case MONS_SKELETON_SMALL:
     case MONS_SKELETON_LARGE:
-        hp    = hit_points(mon->hit_dice, 5, 4);
         acmod = -6;
         evmod = -7;
         break;
@@ -1951,13 +1961,11 @@ static void _define_zombie(monster* mon, monster_type ztype, monster_type cs,
     case MONS_SIMULACRUM_SMALL:
     case MONS_SIMULACRUM_LARGE:
         // Simulacra aren't tough, but you can create piles of them. - bwr
-        hp    = hit_points(mon->hit_dice, 1, 4);
         acmod = -2;
-        acmod = -5;
+        evmod = -5;
         break;
 
     case MONS_SPECTRAL_THING:
-        hp    = hit_points(mon->hit_dice, 4, 4);
         acmod = +2;
         evmod = -5;
         break;
@@ -1967,9 +1975,46 @@ static void _define_zombie(monster* mon, monster_type ztype, monster_type cs,
         break;
     }
 
-    mon->hit_points = mon->max_hit_points = hp;
-    mon->ac         = std::max(mon->ac + acmod, 0);
-    mon->ev         = std::max(mon->ev + evmod, 0);
+    mon->ac = std::max(mon->ac + acmod, 0);
+    mon->ev = std::max(mon->ev + evmod, 0);
+}
+
+void define_zombie(monster* mon, monster_type ztype, monster_type cs)
+{
+    ASSERT(ztype != MONS_NO_MONSTER);
+    ASSERT(mons_class_is_zombified(cs));
+
+    monster_type base = mons_species(ztype);
+
+    ASSERT(zombie_class_size(cs) == Z_NOZOMBIE
+           || zombie_class_size(cs) == mons_zombie_size(base));
+
+    // Set type to the original type to calculate appropriate stats.
+    mon->type = ztype;
+    define_monster(mon);
+
+    mon->type         = cs;
+    mon->base_monster = base;
+
+    mon->colour       = mons_class_colour(mon->type);
+    mon->speed        = mons_class_zombie_base_speed(mon->base_monster);
+
+    // Turn off all melee ability flags except dual-wielding.
+    mon->flags       &= (~MF_MELEE_MASK | MF_TWO_WEAPONS);
+
+    // Turn off all spellcasting and priestly ability flags.
+    // Hack - kraken get to keep their spell-like ability.
+    if (mon->base_monster != MONS_KRAKEN)
+        mon->flags   &= ~MF_SPELL_MASK;
+
+    // Turn off regeneration if the base monster cannot regenerate.
+    // This is needed for e.g. spectral things of non-regenerating
+    // monsters.
+    if (!mons_class_can_regenerate(mon->base_monster))
+        mon->flags   |= MF_NO_REGEN;
+
+    roll_zombie_hp(mon);
+    _roll_zombie_ac_ev(mon);
 }
 
 static band_type _choose_band(int mon_type, int power, int &band_size,
@@ -2261,6 +2306,11 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
 
     case MONS_BLINK_FROG:
         band = BAND_BLINK_FROGS;
+        band_size = 2 + random2(3);
+        break;
+
+    case MONS_WIGHT:
+        band = BAND_WIGHTS;
         band_size = 2 + random2(3);
         break;
 
@@ -2669,6 +2719,9 @@ static monster_type _band_member(band_type band, int power)
         break;
     case BAND_BLINK_FROGS:
         mon_type = MONS_BLINK_FROG;
+        break;
+    case BAND_WIGHTS:
+        mon_type = MONS_WIGHT;
         break;
     case BAND_SKELETAL_WARRIORS:
         mon_type = MONS_SKELETAL_WARRIOR;

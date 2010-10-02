@@ -481,6 +481,17 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
+        case DID_KILL_ARTIFICIAL:
+            if (you.religion == GOD_YREDELEMNUL
+                && !god_hates_attacking_friend(you.religion, victim))
+            {
+                simple_god_message(" accepts your kill.");
+                retval = true;
+                piety_denom = level + 18;
+                piety_change = piety_denom - 3;
+            }
+            break;
+
         // Note that holy deaths are special, they are always noticed...
         // If you or any friendly kills one, you'll get the credit or
         // the blame.
@@ -711,7 +722,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             {
                 simple_god_message(" accepts your collateral kill.");
                 retval = true;
-
                 piety_denom = level + 10;
                 piety_change = piety_denom - 6;
             }
@@ -727,6 +737,21 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 piety_denom = level + 10;
                 piety_change = piety_denom - 6;
             }
+            break;
+
+        case DID_ARTIFICIAL_KILLED_BY_UNDEAD_SLAVE:
+            if (you.religion == GOD_YREDELEMNUL)
+            {
+                simple_god_message(" accepts your slave's kill.");
+                retval = true;
+                piety_denom = level + 18;
+                piety_change = piety_denom - 3;
+            }
+            break;
+
+        // Currently used only when confused undead kill artificial
+        // beings, which Yredelemnul doesn't care about.
+        case DID_ARTIFICIAL_KILLED_BY_SERVANT:
             break;
 
         case DID_SPELL_MEMORISE:
@@ -980,7 +1005,9 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Create Life", "Kill Slime", "Kill Plant", "Servant Kill Plant",
                 "Was Hasty", "Gluttony", "Corpse Violation",
                 "Souled Friend Died", "Servant Kill Unclean",
-                "Servant Kill Chaotic", "Attack In Sanctuary"
+                "Servant Kill Chaotic", "Attack In Sanctuary",
+                "Kill Artificial", "Undead Slave Kill Artificial",
+                "Servant Kill Artificial"
             };
 
             COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS, c1);

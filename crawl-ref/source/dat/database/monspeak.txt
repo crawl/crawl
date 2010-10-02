@@ -759,11 +759,11 @@ VISUAL:@The_monster@ smiles happily.
 %%%%
 _friendly_humanoid_rare_
 
-@The_monster@ says, "Never gonna give you up."
+@The_monster@ says, "I will never give you up."
 
-@The_monster@ says, "Never gonna let you down."
+@The_monster@ says, "I will never let you down."
 
-@The_monster@ says, "Never gonna run around and desert you."
+@The_monster@ says, "I will never run around and desert you."
 
 VISUAL:@The_monster@ looks friendly.
 ## END friendly humanoid ##
@@ -1036,7 +1036,7 @@ Crossbows player ghost
 
 @_generic_ranged_@
 
-@The_monster@ @_reload_adj_@ reloads its weapon.
+@The_monster@ @_reloads_adj_@ its weapon.
 
 %%%%
 Throwing player ghost
@@ -1310,11 +1310,11 @@ _generic_ranged_
 You feel something passing dangerously close to your head. @player_only@
 
 %%%%
-_reload_adj_
+_reloads_adj_
 
-struggles to
+struggles to reload
 
-effortlessly
+effortlessly reloads
 
 %%%%
 _misc_item_

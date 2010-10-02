@@ -1137,8 +1137,10 @@ static void tag_construct_you(writer &th)
         marshallShort(th, you.num_gifts[i]);
 
     marshallByte(th, you.gift_timeout);
+#if TAG_MAJOR_VERSION == 31
     marshallByte(th, you.normal_vision);
     marshallByte(th, you.current_vision);
+#endif
     marshallByte(th, you.hell_exit);
     marshallByte(th, you.hell_branch);
 
@@ -1201,6 +1203,13 @@ static void tag_construct_you(writer &th)
     marshallString(th, revision);
 
     you.props.write(th);
+#if TAG_MAJOR_VERSION == 31
+    marshallByte(th, NUM_DC);
+    for (int t = 0; t < 2; t++)
+        for (int ae = 0; ae < 2; ae++)
+            for (i = 0; i < NUM_DC; i++)
+                marshallInt(th, you.dcounters[t][ae][i]);
+#endif
 }
 
 static void tag_construct_you_items(writer &th)
@@ -1727,8 +1736,11 @@ static void tag_read_you(reader &th, int minorVersion)
 
     you.gift_timeout   = unmarshallByte(th);
 
+#if TAG_MAJOR_VERSION == 31
     you.normal_vision  = unmarshallByte(th);
     you.current_vision = unmarshallByte(th);
+    // it will be recalculated in startup.c:_post_init() anyway
+#endif
     you.hell_exit      = unmarshallByte(th);
     you.hell_branch = static_cast<branch_type>( unmarshallByte(th) );
 
@@ -1761,13 +1773,10 @@ static void tag_read_you(reader &th, int minorVersion)
     for (i = 0; i < count; i++)
         you.beholders.push_back(unmarshallShort(th));
 
-    // Also usually empty
-    if (minorVersion >= TAG_MINOR_FEAR)
-    {
-        count = unmarshallShort(th);
-        for (i = 0; i < count; i++)
-            you.fearmongers.push_back(unmarshallShort(th));
-    }
+    // Also usually empty.
+    count = unmarshallShort(th);
+    for (i = 0; i < count; i++)
+        you.fearmongers.push_back(unmarshallShort(th));
 
     you.piety_hysteresis = unmarshallByte(th);
 
@@ -1784,6 +1793,17 @@ static void tag_read_you(reader &th, int minorVersion)
 
     you.props.clear();
     you.props.read(th);
+#if TAG_MAJOR_VERSION == 31
+    if (minorVersion >= TAG_MINOR_DIAG_COUNTERS)
+    {
+        count = unmarshallByte(th);
+        ASSERT(count <= NUM_DC);
+        for (int t = 0; t < 2; t++)
+            for (int ae = 0; ae < 2; ae++)
+                for (i = 0; i < count; i++)
+                    you.dcounters[t][ae][i] = unmarshallInt(th);
+    }
+#endif
 }
 
 static void tag_read_you_items(reader &th, int minorVersion)

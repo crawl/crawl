@@ -2554,6 +2554,11 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     case MONS_ORC_HIGH_PRIEST:
         return TILE_CORPSE_ORC;
 
+    // dwarves ('q')
+    case MONS_DWARF:
+    case MONS_DEEP_DWARF:
+        return TILE_CORPSE_DWARF;
+
     // rodents ('r')
     case MONS_RAT:
         return TILE_CORPSE_RAT;
@@ -2836,9 +2841,6 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_SHAPESHIFTER;
     case MONS_GLOWING_SHAPESHIFTER:
         return TILE_CORPSE_GLOWING_SHAPESHIFTER;
-
-    case MONS_DWARF:
-        return TILE_CORPSE_DWARF;
 
     default:
         return TILE_ERROR;
@@ -3496,7 +3498,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_CONFUSE:                  return TILEG_CONFUSE;
     case SPELL_SLOW:                     return TILEG_SLOW;
     case SPELL_TUKIMAS_DANCE:            return TILEG_TUKIMAS_DANCE;
-    case SPELL_SELECTIVE_AMNESIA:        return TILEG_SELECTIVE_AMNESIA;
     case SPELL_ENSLAVEMENT:              return TILEG_ENSLAVEMENT;
     case SPELL_SEE_INVISIBLE:            return TILEG_SEE_INVISIBLE;
     case SPELL_PETRIFY:                  return TILEG_PETRIFY;

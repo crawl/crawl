@@ -181,12 +181,12 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
 
     // Book of Enchantments (fourth one)
     {SPELL_LEVITATION,
-     SPELL_SELECTIVE_AMNESIA,
      SPELL_SEE_INVISIBLE,
      SPELL_CAUSE_FEAR,
      SPELL_EXTENSION,
      SPELL_DEFLECT_MISSILES,
      SPELL_HASTE,
+     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
 
@@ -423,11 +423,11 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      },
 
     // Book of Wizardry
-    {SPELL_SELECTIVE_AMNESIA,
-     SPELL_SUMMON_ELEMENTAL,
+    {SPELL_SUMMON_ELEMENTAL,
      SPELL_TELEPORT_SELF,
      SPELL_FIREBALL,
      SPELL_HASTE,
+     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -559,7 +559,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_SUMMON_DEMON,
      SPELL_DEMONIC_HORDE,
      SPELL_SUMMON_GREATER_DEMON,
-     SPELL_NO_SPELL,
+     SPELL_MALIGN_GATEWAY,
      SPELL_NO_SPELL,
      },
 
@@ -1424,8 +1424,6 @@ static bool _get_mem_list(spell_list &mem_spells,
     unsigned int num_low_levels = 0;
     unsigned int num_memable    = 0;
 
-    bool amnesia = false;
-
     for (spells_to_books::iterator i = book_hash.begin();
          i != book_hash.end(); ++i)
     {
@@ -1448,24 +1446,12 @@ static bool _get_mem_list(spell_list &mem_spells,
             else if (avail_slots < spell_levels_required(spell))
                 num_low_levels++;
             else
-            {
-                if (spell == SPELL_SELECTIVE_AMNESIA)
-                    amnesia = true;
                 num_memable++;
-            }
         }
     }
 
-    // You can always memorise selective amnesia.
-    if (num_memable > 0 && you.spell_no >= 21)
+    if (num_memable > 0 && you.spell_no >= MAX_KNOWN_SPELLS)
     {
-        if (amnesia)
-        {
-            mem_spells.clear();
-            mem_spells.push_back(SPELL_SELECTIVE_AMNESIA);
-            return (true);
-        }
-
         if (!just_check)
             mpr("Your head is already too full of spells!");
         return (false);
@@ -1871,7 +1857,7 @@ static bool _learn_spell_checks(spell_type specspell)
         return (false);
     }
 
-    if (you.spell_no >= 21 && specspell != SPELL_SELECTIVE_AMNESIA)
+    if (you.spell_no >= MAX_KNOWN_SPELLS)
     {
         mpr("Your head is already too full of spells!");
         return (false);
@@ -2035,8 +2021,8 @@ int staff_spell( int staff )
     item_def& istaff(you.inv[staff]);
     // Spell staves are mostly for the benefit of non-spellcasters, so we're
     // not going to involve INT or Spellcasting skills for power. -- bwr
-    int powc = (5 + you.skills[SK_EVOCATIONS]
-                 + roll_dice( 2, you.skills[SK_EVOCATIONS] ));
+    int variable_power = (5 + you.skills[SK_EVOCATIONS]
+                    + roll_dice( 2, you.skills[SK_EVOCATIONS] ));
 
     if (!item_is_rod(istaff))
     {
@@ -2091,24 +2077,18 @@ int staff_spell( int staff )
 
     const spell_type spell = which_spell_in_book( istaff, idx );
     const int mana = spell_mana( spell ) * ROD_CHARGE_MULT;
-    const int diff = spell_difficulty( spell );
 
-    int food = spell_hunger(spell);
+    // We also need a fixed power for range calculation
+    int fixed_power = calc_spell_power(spell, false, false, true, true);
+
+    int food = spell_hunger(spell, true);
 
     // For now player_energy() is always 0, because you've got to
     // be wielding the rod...
     if (you.is_undead == US_UNDEAD || player_energy() > 0)
-    {
         food = 0;
-    }
     else
-    {
-        food -= 10 * you.skills[SK_EVOCATIONS];
-        if (food < diff * 5)
-            food = diff * 5;
-
         food = calc_hunger(food);
-    }
 
     if (food && (you.hunger_state == HS_STARVING || you.hunger <= food)
         && !you.is_undead)
@@ -2136,7 +2116,8 @@ int staff_spell( int staff )
         mpr("Something interferes with your magic!");
     }
     // All checks passed, we can cast the spell.
-    else if (your_spells(spell, powc, false) == SPRET_ABORT)
+    else if (your_spells(spell, variable_power, false, false, fixed_power)
+            == SPRET_ABORT)
     {
         crawl_state.zero_turns_taken();
         return (-1);

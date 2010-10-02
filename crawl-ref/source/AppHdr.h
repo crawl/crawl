@@ -48,8 +48,7 @@
 
 // Uncomment to prevent Crawl from looking for a list of saves when
 // asking the player to enter a name. This can speed up startup
-// considerably if you have a lot of saves lying around (even more so
-// if the saves are zipped).
+// considerably if you have a lot of saves lying around.
 //
 // #define DISABLE_SAVEGAME_LISTS
 

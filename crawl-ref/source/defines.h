@@ -190,6 +190,8 @@ const int MAX_SEC_ENCHANT = 2;
 // The time (in aut) for a staff of power to decay 1 mp.
 #define POWER_DECAY 50
 
+const int MAX_KNOWN_SPELLS = 21;
+
 const int INVALID_ABSDEPTH = -1000;
 
 const int DEPTH_ABYSS = 51;
@@ -286,6 +288,7 @@ enum CHAR_ATTRIBUTES
 #define ARRAYSZ(x) (sizeof(x) / sizeof(x[0]))
 #define RANDOM_ELEMENT(x) (x[random2(ARRAYSZ(x))])
 
+const char * const MONSTER_HIT_DICE = "monster-hit-dice";
 const char * const MONSTER_NUMBER = "monster-number";
 const char * const CORPSE_NEVER_DECAYS = "corpse-no-decay";
 

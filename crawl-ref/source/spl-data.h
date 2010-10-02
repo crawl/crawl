@@ -135,7 +135,7 @@ struct spell_desc
      4,
      200,
      LOS_RADIUS, LOS_RADIUS,
-     0,
+     -4, // Dig needs to be silent for stalker
      NULL,
      false,
      true
@@ -404,6 +404,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 31
 {
     SPELL_SELECTIVE_AMNESIA, "Selective Amnesia",
      SPTYP_ENCHANTMENT,
@@ -416,6 +417,7 @@ struct spell_desc
      false,
      true
 },
+#endif
 
 {
     SPELL_MASS_CONFUSION, "Mass Confusion",
@@ -502,7 +504,7 @@ struct spell_desc
      6,
      200,
      6, 6,
-     0,
+     -3, //the beam is silent
      NULL,
      true,
      false
@@ -671,6 +673,19 @@ struct spell_desc
      SPTYP_SUMMONING,
      SPFLAG_UNHOLY | SPFLAG_BATTLE | SPFLAG_CHAOTIC,
      8,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_MALIGN_GATEWAY, "Malign Gateway",
+     SPTYP_SUMMONING | SPTYP_TRANSLOCATION,
+     SPFLAG_UNHOLY | SPFLAG_BATTLE | SPFLAG_CHAOTIC,
+     6,
      200,
      -1, -1,
      0,
@@ -1713,7 +1728,7 @@ struct spell_desc
      2,
      56,
      LOS_RADIUS, LOS_RADIUS,
-     0,
+     -2, //putting a monster to sleep should be silent
      NULL,
      true,
      false
@@ -1726,7 +1741,7 @@ struct spell_desc
      7,
      200,
      -1, -1,
-     0,
+     -7,//putting a monster to sleep should be silent
      NULL,
      false,
      false

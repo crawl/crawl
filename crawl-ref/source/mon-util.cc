@@ -1271,7 +1271,7 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
     if (attk.flavour == AF_DRAIN_STAT)
     {
         mon_attack_flavour flavours[] =
-            {AF_DRAIN_STR, AF_DRAIN_DEX, AF_DRAIN_INT};
+            {AF_DRAIN_STR, AF_DRAIN_INT, AF_DRAIN_DEX};
 
         attk.flavour = RANDOM_ELEMENT(flavours);
     }
@@ -1416,7 +1416,7 @@ int exper_value(const monster* mon)
 
     // These four are the original arguments.
     const int mc          = mon->type;
-    const int mhd         = mon->hit_dice;
+    const int hd          = mon->hit_dice;
     int maxhp             = mon->max_hit_points;
 
     // Hacks to make merged slime creatures not worth so much exp.  We
@@ -1441,9 +1441,9 @@ int exper_value(const monster* mon)
     // code can't see, so inflate their XP a bit.  Ice statues and Roxanne
     // get plenty of XP for their spells.
     if (mc == MONS_ORANGE_STATUE || mc == MONS_SILVER_STATUE)
-        return (mhd * 15);
+        return (hd * 15);
 
-    x_val = (16 + maxhp) * (mhd * mhd) / 10;
+    x_val = (16 + maxhp) * (hd * hd) / 10;
 
     // Let's calculate a simple difficulty modifier. - bwr
     int diff = 0;
@@ -1878,7 +1878,8 @@ void define_monster(monster* mons)
         ev += random2(5) - 2;
         break;
 
-    case MONS_SERPENT_OF_HELL: {
+    case MONS_SERPENT_OF_HELL:
+    {
         int &flavour = mons->props["serpent_of_hell_flavour"].get_int();
         if (!flavour)
             flavour = player_in_hell() ? you.where_are_you : BRANCH_GEHENNA;
@@ -3987,6 +3988,8 @@ mon_body_shape get_mon_shape(const int type)
             return (MON_SHAPE_HUMANOID);
         }
         break;
+    case 'q': // dwarves
+        return (MON_SHAPE_HUMANOID);
     case 'r': // rodents
         return (MON_SHAPE_QUADRUPED);
     case 's': // arachnids and centipedes/cockroaches
