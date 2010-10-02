@@ -1900,6 +1900,85 @@ monster_type pick_local_zombifiable_monster(int power, bool hack_hd,
     }
 }
 
+static void _roll_zombie_hp(monster* mon)
+{
+    ASSERT(mons_class_is_zombified(mon->type));
+
+    int hp = 0;
+
+    switch (mon->type)
+    {
+    case MONS_ZOMBIE_SMALL:
+    case MONS_ZOMBIE_LARGE:
+        hp = hit_points(mon->hit_dice, 6, 5);
+        break;
+
+    case MONS_SKELETON_SMALL:
+    case MONS_SKELETON_LARGE:
+        hp = hit_points(mon->hit_dice, 5, 4);
+        break;
+
+    case MONS_SIMULACRUM_SMALL:
+    case MONS_SIMULACRUM_LARGE:
+        // Simulacra aren't tough, but you can create piles of them. - bwr
+        hp = hit_points(mon->hit_dice, 1, 4);
+        break;
+
+    case MONS_SPECTRAL_THING:
+        hp = hit_points(mon->hit_dice, 4, 4);
+        break;
+
+    default:
+        ASSERT(false);
+        break;
+    }
+
+    mon->max_hit_points = std::max(hp, 1);
+    mon->hit_points     = mon->max_hit_points;
+}
+
+static void _roll_zombie_ac_ev(monster* mon)
+{
+    ASSERT(mons_class_is_zombified(mon->type));
+
+    int acmod = 0;
+    int evmod = 0;
+
+    switch (mon->type)
+    {
+    case MONS_ZOMBIE_SMALL:
+    case MONS_ZOMBIE_LARGE:
+        acmod = -2;
+        evmod = -5;
+        break;
+
+    case MONS_SKELETON_SMALL:
+    case MONS_SKELETON_LARGE:
+        acmod = -6;
+        evmod = -7;
+        break;
+
+    case MONS_SIMULACRUM_SMALL:
+    case MONS_SIMULACRUM_LARGE:
+        // Simulacra aren't tough, but you can create piles of them. - bwr
+        acmod = -2;
+        evmod = -5;
+        break;
+
+    case MONS_SPECTRAL_THING:
+        acmod = +2;
+        evmod = -5;
+        break;
+
+    default:
+        ASSERT(false);
+        break;
+    }
+
+    mon->ac = std::max(mon->ac + acmod, 0);
+    mon->ev = std::max(mon->ev + evmod, 0);
+}
+
 void define_zombie(monster* mon, monster_type ztype, monster_type cs)
 {
     ASSERT(ztype != MONS_NO_MONSTER);
@@ -1934,49 +2013,8 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
     if (!mons_class_can_regenerate(mon->base_monster))
         mon->flags   |= MF_NO_REGEN;
 
-    int hp    = 0;
-    int acmod = 0;
-    int evmod = 0;
-
-    switch (cs)
-    {
-    case MONS_ZOMBIE_SMALL:
-    case MONS_ZOMBIE_LARGE:
-        hp    = hit_points(mon->hit_dice, 6, 5);
-        acmod = -2;
-        evmod = -5;
-        break;
-
-    case MONS_SKELETON_SMALL:
-    case MONS_SKELETON_LARGE:
-        hp    = hit_points(mon->hit_dice, 5, 4);
-        acmod = -6;
-        evmod = -7;
-        break;
-
-    case MONS_SIMULACRUM_SMALL:
-    case MONS_SIMULACRUM_LARGE:
-        // Simulacra aren't tough, but you can create piles of them. - bwr
-        hp    = hit_points(mon->hit_dice, 1, 4);
-        acmod = -2;
-        evmod = -5;
-        break;
-
-    case MONS_SPECTRAL_THING:
-        hp    = hit_points(mon->hit_dice, 4, 4);
-        acmod = +2;
-        evmod = -5;
-        break;
-
-    default:
-        ASSERT(false);
-        break;
-    }
-
-    mon->max_hit_points = hp;
-    mon->hit_points     = mon->max_hit_points;
-    mon->ac             = std::max(mon->ac + acmod, 0);
-    mon->ev             = std::max(mon->ev + evmod, 0);
+    _roll_zombie_hp(mon);
+    _roll_zombie_ac_ev(mon);
 }
 
 static band_type _choose_band(int mon_type, int power, int &band_size,
