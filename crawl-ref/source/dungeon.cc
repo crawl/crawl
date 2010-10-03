@@ -5353,6 +5353,7 @@ int dgn_place_monster(mons_spec &mspec,
         mg.base_type = mspec.monbase;
         mg.number    = mspec.number;
         mg.colour    = mspec.colour;
+        mg.god       = mspec.god;
         mg.mname     = mspec.monname;
         mg.hd        = mspec.hd;
         mg.hp        = mspec.hp;
@@ -5416,9 +5417,6 @@ int dgn_place_monster(mons_spec &mspec,
             // These are applied earlier to prevent issues with renamed monsters
             // and "<monster> comes into view" (see delay.cc:_monster_warning).
             //mons.flags |= mspec.extra_monster_flags;
-
-            // Set the god now so that the monster isn't marked as a god gift.
-            mons.god = mspec.god;
             if (mons.is_priest() && mons.god == GOD_NO_GOD)
                 mons.god = GOD_NAMELESS;
         }
