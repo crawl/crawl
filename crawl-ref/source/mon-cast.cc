@@ -1917,7 +1917,11 @@ void mons_cast_spectral_orcs(monster* mons)
 
             // set which base type this orc is pretending to be for gear
             // purposes
-            orc->base_monster = mon;
+            if (mon != MONS_ORC)
+            {
+                orc->mname = mons_type_name(mon, DESC_PLAIN);
+                orc->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR;
+            }
             orc->number = (int) mon;
 
             // give gear using the base type
