@@ -5353,7 +5353,10 @@ int dgn_place_monster(mons_spec &mspec,
         mg.base_type = mspec.monbase;
         mg.number    = mspec.number;
         mg.colour    = mspec.colour;
-        mg.god       = mspec.god;
+
+        if (mspec.god != GOD_NO_GOD)
+            mg.god   = mspec.god;
+
         mg.mname     = mspec.monname;
         mg.hd        = mspec.hd;
         mg.hp        = mspec.hp;
