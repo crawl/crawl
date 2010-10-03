@@ -3457,6 +3457,18 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             }
         }
 
+        std::string mongod = strip_tag_prefix(mon_str, "god:");
+        if (!mongod.empty())
+        {
+            mspec.god = str_to_god(mongod);
+            if (mspec.god == GOD_NO_GOD)
+            {
+                error = make_stringf("bad monster god: \"%s\"",
+                                     mongod.c_str());
+                return (slot);
+            }
+        }
+
         std::string tile = strip_tag_prefix(mon_str, "tile:");
 #ifdef USE_TILE
         if (!tile.empty())
