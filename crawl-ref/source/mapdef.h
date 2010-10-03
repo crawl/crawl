@@ -615,22 +615,22 @@ private:
 class mons_spec
 {
  public:
-    int  mid;
+    int mid;
     level_id place;
     monster_type monbase;     // Base monster for zombies and dracs.
     mon_attitude_type attitude;
-    int  number;              // Head count for hydras, etc.
-    int  quantity;            // Number of monsters (usually 1).
-    int  genweight, mlevel;
+    int number;               // Head count for hydras, etc.
+    int quantity;             // Number of monsters (usually 1).
+    int genweight, mlevel;
     bool fix_mons;
     bool generate_awake;
     bool patrolling;
     bool band;
-    int  colour;
-    int  hd;
-    int  hp;
-    int  abjuration_duration;
-    int  summon_type;
+    int colour;
+    int hd;
+    int hp;
+    int abjuration_duration;
+    int summon_type;
 
     item_list items;
     std::string monname;
