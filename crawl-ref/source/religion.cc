@@ -3385,7 +3385,6 @@ void god_pitch(god_type which_god)
     // Complimentary jelly upon joining.
     if (you.religion == GOD_JIYVA)
     {
-
         if (!_has_jelly())
         {
             monster_type mon = MONS_JELLY;
