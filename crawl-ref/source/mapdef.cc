@@ -2409,7 +2409,7 @@ std::string map_def::validate_temple_map()
 
             // Assume that specialized single-god temples are set up
             // properly.
-            return("");
+            return ("");
         }
         else
         {
