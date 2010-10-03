@@ -1915,12 +1915,14 @@ void mons_cast_spectral_orcs(monster* mons)
         {
             orc = &menv[created];
 
-            // which base type this orc is pretending to be for
-            // gear purposes
+            // set which base type this orc is pretending to be for gear
+            // purposes
             orc->base_monster = mon;
             orc->number = (int) mon;
 
+            // give gear using the base type
             give_item(created, you.absdepth0, true, true);
+
             // set gear as summoned
             orc->mark_summoned(abj, true, SPELL_SUMMON_SPECTRAL_ORCS);
         }
