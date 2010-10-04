@@ -2288,6 +2288,8 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_MISLED, delay, "Your thoughts are your own once more.");
     _decrement_a_duration(DUR_QUAD_DAMAGE, delay, NULL, 0,
                           "Quad Damage is wearing off.");
+    _decrement_a_duration(DUR_MIRROR_DAMAGE, delay,
+                          "Your dark mirror aura disappears.");
 
     if (you.duration[DUR_PARALYSIS] || you.petrified())
     {

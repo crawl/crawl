@@ -845,7 +845,7 @@ bool yred_injury_mirror(bool actual)
 {
     return (you.religion == GOD_YREDELEMNUL && !player_under_penance()
             && you.piety >= piety_breakpoint(1)
-            && (!actual || you.duration[DUR_PRAYER]));
+            && (!actual || you.duration[DUR_MIRROR_DAMAGE]));
 }
 
 bool yred_can_animate_dead()

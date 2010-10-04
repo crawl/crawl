@@ -112,7 +112,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       ABIL_NON_ABILITY, ABIL_NON_ABILITY },
     // Yredelemnul
     { ABIL_YRED_ANIMATE_REMAINS_OR_DEAD, ABIL_YRED_RECALL_UNDEAD_SLAVES,
-      ABIL_NON_ABILITY, ABIL_YRED_DRAIN_LIFE, ABIL_YRED_ENSLAVE_SOUL },
+      ABIL_YRED_INJURY_MIRROR, ABIL_YRED_DRAIN_LIFE, ABIL_YRED_ENSLAVE_SOUL },
     // Xom
     { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
       ABIL_NON_ABILITY },
@@ -734,6 +734,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
         failure = 160 - you.piety;      // starts at 60%
         break;
 
+    case ABIL_YRED_INJURY_MIRROR:
     case ABIL_YRED_ANIMATE_REMAINS:
     case ABIL_YRED_ANIMATE_DEAD:
         invoc = true;
@@ -1594,7 +1595,11 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_YRED_INJURY_MIRROR:
-        // Activated via prayer elsewhere.
+        mprf("You %s in prayer and are bathed in unholy energy.",
+              (you.species == SP_NAGA) ? "coil"
+                                       : "kneel");
+        you.duration[DUR_MIRROR_DAMAGE] = 9 * BASELINE_DELAY
+                     + random2avg(you.piety * BASELINE_DELAY, 2) / 10;
         break;
 
     case ABIL_YRED_ANIMATE_REMAINS:

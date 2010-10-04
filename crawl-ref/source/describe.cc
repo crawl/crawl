@@ -3942,17 +3942,6 @@ void describe_god( god_type which_god, bool give_title )
             _print_final_god_abil_desc(which_god, buf,
                                        ABIL_ELYVILON_DESTROY_WEAPONS);
         }
-        else if (which_god == GOD_YREDELEMNUL)
-        {
-            if (yred_injury_mirror(false))
-            {
-                have_any = true;
-                std::string buf = god_name(which_god);
-                buf += " mirrors your injuries on your foes during prayer.";
-                _print_final_god_abil_desc(which_god, buf,
-                                           ABIL_YRED_INJURY_MIRROR);
-            }
-        }
         else if (which_god == GOD_JIYVA)
         {
             if (jiyva_can_paralyse_jellies())
