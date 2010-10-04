@@ -2058,7 +2058,7 @@ static int _player_armour_racial_bonus(const item_def& item)
     const unsigned long armour_race = get_equip_race(item);
 
     // get the armour race value that corresponds to the character's race:
-    const unsigned long racial_type
+    const iflags_t racial_type
                             = ((player_genus(GENPC_DWARVEN)) ? ISFLAG_DWARVEN :
                                (player_genus(GENPC_ELVEN))   ? ISFLAG_ELVEN :
                                (you.species == SP_HILL_ORC)  ? ISFLAG_ORCISH
@@ -2379,11 +2379,11 @@ int player_body_armour_racial_spellcasting_bonus(const int scale)
     if (!body_armour)
         return (0);
 
-    const unsigned long armour_race = get_equip_race(*body_armour);
+    const iflags_t armour_race = get_equip_race(*body_armour);
 
     // Get the armour race value that corresponds to the character's
     // race:
-    const unsigned long player_race
+    const iflags_t player_race
                             = ((player_genus(GENPC_DWARVEN)) ? ISFLAG_DWARVEN :
                                (player_genus(GENPC_ELVEN))   ? ISFLAG_ELVEN :
                                (you.species == SP_HILL_ORC)  ? ISFLAG_ORCISH
@@ -2649,7 +2649,7 @@ void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
     if (player_equip_ego_type( EQ_BODY_ARMOUR, SPARM_ARCHMAGI ))
         exp_gained = div_rand_round( exp_gained, 4 );
 
-    const unsigned long old_exp   = you.experience;
+    const unsigned int  old_exp   = you.experience;
     const int           old_avail = you.exp_available;
 
     dprf("gain_exp: %d", exp_gained );
@@ -3825,7 +3825,7 @@ unsigned int exp_needed(int lev)
 {
     lev--;
 
-    unsigned long level = 0;
+    unsigned int level = 0;
 
     // Basic plan:
     // Section 1: levels  1- 5, second derivative goes 10-10-20-30.

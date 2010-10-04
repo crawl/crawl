@@ -699,7 +699,7 @@ bool Stash::matches_search(const std::string &prefix,
     return !!res.matches;
 }
 
-void Stash::_update_corpses(long rot_time)
+void Stash::_update_corpses(int rot_time)
 {
     for (int i = items.size() - 1; i >= 0; i--)
     {
@@ -708,7 +708,7 @@ void Stash::_update_corpses(long rot_time)
         if (!_is_rottable(item))
             continue;
 
-        long new_rot = static_cast<long>(item.plus2) - rot_time;
+        int new_rot = static_cast<int>(item.plus2) - rot_time;
 
         if (new_rot <= _min_rot(item))
         {
@@ -891,7 +891,7 @@ void ShopInfo::add_item(const item_def &sitem, unsigned price)
 
 std::string ShopInfo::shop_item_name(const shop_item &si) const
 {
-    const unsigned long oldflags = si.item.flags;
+    const iflags_t oldflags = si.item.flags;
 
     if (shoptype_identifies_stock(static_cast<shop_type>(this->shoptype)))
         const_cast<shop_item&>(si).item.flags |= ISFLAG_IDENT_MASK;
@@ -906,7 +906,7 @@ std::string ShopInfo::shop_item_desc(const shop_item &si) const
 {
     std::string desc;
 
-    const unsigned long oldflags = si.item.flags;
+    const iflags_t oldflags = si.item.flags;
 
     if (shoptype_identifies_stock(static_cast<shop_type>(this->shoptype)))
         const_cast<shop_item&>(si).item.flags |= ISFLAG_IDENT_MASK;
@@ -930,7 +930,7 @@ std::string ShopInfo::shop_item_desc(const shop_item &si) const
 
 void ShopInfo::describe_shop_item(const shop_item &si) const
 {
-    const unsigned long oldflags = si.item.flags;
+    const iflags_t oldflags = si.item.flags;
 
     if (shoptype_identifies_stock(static_cast<shop_type>(this->shoptype)))
         const_cast<shop_item&>(si).item.flags |= ISFLAG_IDENT_MASK
@@ -1380,7 +1380,7 @@ void LevelStashes::get_matching_stashes(
     }
 }
 
-void LevelStashes::_update_corpses(long rot_time)
+void LevelStashes::_update_corpses(int rot_time)
 {
     for (stashes_t::iterator iter = m_stashes.begin();
             iter != m_stashes.end(); iter++)
@@ -2008,7 +2008,7 @@ void StashTracker::update_corpses()
     if (you.elapsed_time - last_corpse_update < 20)
         return;
 
-    const long rot_time = (you.elapsed_time - last_corpse_update) / 20;
+    const int rot_time = (you.elapsed_time - last_corpse_update) / 20;
 
     last_corpse_update = you.elapsed_time;
 

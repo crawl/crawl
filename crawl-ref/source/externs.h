@@ -492,6 +492,12 @@ struct level_pos
 
 class monster;
 
+// We are not 64 bits clean here yet since many places still pass (or store!)
+// it as 32 bits or, worse, longs.  I considered setting this as uint32_t,
+// however, since free bits are exhausted, it's very likely we'll have to
+// extend this in the future, so this should be easier than undoing the change.
+typedef uint32_t iflags_t;
+
 struct item_def
 {
     object_class_type base_type:8; // basic class (ie OBJ_WEAPON)
@@ -502,7 +508,7 @@ struct item_def
     uint8_t        colour;         // item colour
     uint8_t        rnd;            // random number, used for tile choice
     short          quantity;       // number of items
-    uint64_t       flags;          // item status flags
+    iflags_t       flags;          // item status flags
 
     coord_def pos;     // for inventory items == (-1, -1)
     short  link;       // link to next item;  for inventory items = slot
@@ -527,7 +533,7 @@ public:
                      bool terse = false, bool ident = false,
                      bool with_inscription = true,
                      bool quantity_in_words = false,
-                     unsigned long ignore_flags = 0x0) const;
+                     iflags_t ignore_flags = 0x0) const;
     bool has_spells() const;
     bool cursed() const;
     int book_number() const;
@@ -567,7 +573,7 @@ public:
 private:
     std::string name_aux(description_level_type desc,
                          bool terse, bool ident,
-                         unsigned long ignore_flags) const;
+                         iflags_t ignore_flags) const;
 };
 
 typedef item_def item_info;

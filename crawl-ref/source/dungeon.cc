@@ -592,12 +592,12 @@ static void _dgn_map_colour_fixup()
     dgn_colour_grid.reset(NULL);
 }
 
-bool set_level_flags(unsigned long flags, bool silent)
+bool set_level_flags(uint32_t flags, bool silent)
 {
     bool could_control = allow_control_teleport(true);
     bool could_map     = player_in_mappable_area();
 
-    unsigned long old_flags = env.level_flags;
+    uint32_t old_flags = env.level_flags;
     env.level_flags |= flags;
 
     bool can_control = allow_control_teleport(true);
@@ -618,12 +618,12 @@ bool set_level_flags(unsigned long flags, bool silent)
     return (old_flags != env.level_flags);
 }
 
-bool unset_level_flags(unsigned long flags, bool silent)
+bool unset_level_flags(uint32_t flags, bool silent)
 {
     bool could_control = allow_control_teleport(true);
     bool could_map     = player_in_mappable_area();
 
-    unsigned long old_flags = env.level_flags;
+    iflags_t old_flags = env.level_flags;
     env.level_flags &= ~flags;
 
     bool can_control = allow_control_teleport(true);

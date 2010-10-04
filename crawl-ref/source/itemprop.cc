@@ -582,12 +582,12 @@ bool item_is_stationary( const item_def &item )
 //
 // Item identification status:
 //
-bool item_ident( const item_def &item, unsigned long flags )
+bool item_ident(const item_def &item, iflags_t flags)
 {
     return ((item.flags & flags) == flags);
 }
 
-void set_ident_flags( item_def &item, unsigned long flags )
+void set_ident_flags(item_def &item, iflags_t flags)
 {
     preserve_quiver_slots p;
     if ((item.flags & flags) != flags)
@@ -634,7 +634,7 @@ void set_ident_flags( item_def &item, unsigned long flags )
     }
 }
 
-void unset_ident_flags( item_def &item, unsigned long flags )
+void unset_ident_flags(item_def &item, iflags_t flags)
 {
     preserve_quiver_slots p;
     item.flags &= (~flags);
@@ -642,9 +642,9 @@ void unset_ident_flags( item_def &item, unsigned long flags )
 
 // Returns the mask of interesting identify bits for this item
 // (e.g., scrolls don't have know-cursedness).
-unsigned long full_ident_mask( const item_def& item )
+iflags_t full_ident_mask( const item_def& item )
 {
-    unsigned long flagset = ISFLAG_IDENT_MASK;
+    iflags_t flagset = ISFLAG_IDENT_MASK;
     switch (item.base_type)
     {
     case OBJ_FOOD:
@@ -706,17 +706,17 @@ bool fully_identified( const item_def& item )
 //
 // Equipment race and description:
 //
-unsigned long get_equip_race( const item_def &item )
+iflags_t get_equip_race( const item_def &item )
 {
     return (item.flags & ISFLAG_RACIAL_MASK);
 }
 
-unsigned long get_equip_desc( const item_def &item )
+iflags_t get_equip_desc( const item_def &item )
 {
     return (item.flags & ISFLAG_COSMETIC_MASK);
 }
 
-void set_equip_race( item_def &item, unsigned long flags )
+void set_equip_race(item_def &item, iflags_t flags)
 {
     ASSERT( (flags & ~ISFLAG_RACIAL_MASK) == 0 );
 
@@ -850,7 +850,7 @@ void set_equip_race( item_def &item, unsigned long flags )
     item.flags |= flags;
 }
 
-void set_equip_desc( item_def &item, unsigned long flags )
+void set_equip_desc(item_def &item, iflags_t flags)
 {
     ASSERT( (flags & ~ISFLAG_COSMETIC_MASK) == 0 );
 
