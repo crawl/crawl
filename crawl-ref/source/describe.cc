@@ -4068,8 +4068,7 @@ std::string get_skill_description(int skill, bool need_title)
             unarmed_attacks.push_back("kick with your hooves");
         else if (player_mutation_level(MUT_TALONS))
             unarmed_attacks.push_back("claw with your talons");
-        else if (you.species != SP_NAGA
-                 && (you.species != SP_MERFOLK || !you.swimming()))
+        else if (you.species != SP_NAGA && !you.fishtail)
         {
             unarmed_attacks.push_back("deliver a kick");
         }

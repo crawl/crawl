@@ -26,8 +26,13 @@ enum transformation_type
     NUM_TRANSFORMATIONS                // must remain last member {dlb}
 };
 
-bool transformation_can_wield(transformation_type trans);
+bool transform_can_wield(transformation_type trans);
+bool transform_can_wield();
 bool transform_can_butcher_barehanded(transformation_type tt);
+bool transform_can_fly(transformation_type trans);
+bool transform_can_fly();
+bool transform_can_swim(transformation_type trans);
+bool transform_can_swim();
 
 // skip_move: don't make player re-enter current cell
 void untransform(bool skip_wielding = false, bool skip_move = false);

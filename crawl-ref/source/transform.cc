@@ -35,11 +35,41 @@
 
 static void _extra_hp(int amount_extra);
 
-bool transformation_can_wield(transformation_type trans)
+bool transform_can_wield(transformation_type trans)
 {
     return (trans == TRAN_NONE
             || trans == TRAN_STATUE
             || trans == TRAN_LICH);
+}
+
+bool transform_can_wield()
+{
+    return (transform_can_wield(static_cast<transformation_type>(
+                                you.attribute[ATTR_TRANSFORMATION])));
+}
+
+bool transform_can_fly(transformation_type trans)
+{
+    return (trans == TRAN_DRAGON || trans == TRAN_BAT);
+}
+
+bool transform_can_fly()
+{
+    return (transform_can_fly(static_cast<transformation_type>(
+                              you.attribute[ATTR_TRANSFORMATION])));
+}
+
+bool transform_can_swim(transformation_type trans)
+{
+    return(trans == TRAN_ICE_BEAST
+           || you.species == SP_MERFOLK
+              && (trans == TRAN_NONE || trans == TRAN_BLADE_HANDS));
+}
+
+bool transform_can_swim()
+{
+    return (transform_can_swim(static_cast<transformation_type>(
+                               you.attribute[ATTR_TRANSFORMATION])));
 }
 
 bool transform_allows_wearing_item(const item_def& item)
@@ -118,7 +148,7 @@ static std::set<equipment_type>
 _init_equipment_removal(transformation_type trans)
 {
     std::set<equipment_type> result;
-    if (!transformation_can_wield(trans) && you.weapon())
+    if (!transform_can_wield(trans) && you.weapon())
         result.insert(EQ_WEAPON);
 
     // Liches can't wield holy weapons.
@@ -390,6 +420,7 @@ static bool _abort_or_fizzle(bool just_check)
     if (!just_check && you.turn_is_over)
     {
         canned_msg(MSG_SPELL_FIZZLES);
+        move_player_to_grid(you.pos(), false, true);
         return (true); // pay the necessary costs
     }
     return (false); // SPRET_ABORT
@@ -428,6 +459,12 @@ monster_type transform_mons()
 bool transform(int pow, transformation_type which_trans, bool force,
                bool just_check)
 {
+    transformation_type previous_trans = static_cast<transformation_type>(
+                                         you.attribute[ATTR_TRANSFORMATION]);
+    bool was_swimming = you.swimming();
+    const flight_type was_flying = you.flight_mode();
+
+
     if (!force && crawl_state.is_god_acting())
         force = true;
 
@@ -439,22 +476,28 @@ bool transform(int pow, transformation_type which_trans, bool force,
         return (false);
     }
 
-    if (you.species == SP_MERFOLK && you.swimming()
-        && which_trans != TRAN_DRAGON && which_trans != TRAN_BAT)
+    dungeon_feature_type feat = env.grid(you.pos());
+
+    if (feat == DNGN_DEEP_WATER && you.swimming()
+        && !transform_can_fly(which_trans) && !transform_can_swim(which_trans))
     {
-        // This might be overkill, but it's okay because obviously
-        // whatever magical ability that lets them walk on land is
-        // removed when they're in water (in this case, their natural
-        // form is completely over-riding any other... goes well with
-        // the forced transform when entering water)... but merfolk can
-        // transform into flying forms.
         if (!force)
-            mpr("You cannot transform out of your normal form while in water.");
+            mpr("You would drown in your new form.");
+        return (false);
+    }
+
+    if ((feat == DNGN_DEEP_WATER && !transform_can_swim(which_trans)
+         || feat == DNGN_LAVA)
+         && transform_can_fly() && !transform_can_fly(which_trans))
+    {
+        if (!force)
+            mprf("You would %s in your new form.",
+                 feat == DNGN_DEEP_WATER ? "drown" : "burn");
         return (false);
     }
 
     // This must occur before the untransform() and the is_undead check.
-    if (you.attribute[ATTR_TRANSFORMATION] == which_trans)
+    if (previous_trans == which_trans)
     {
         if (you.duration[DUR_TRANSFORMATION] < 100 * BASELINE_DELAY)
         {
@@ -481,7 +524,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
     // equipment). Ideally, untransforming should cost a turn but nothing
     // else (as does the "End Transformation" ability). As it is, you
     // pay with mana and hunger if you already untransformed.
-    if (!just_check && you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
+    if (!just_check && previous_trans != TRAN_NONE)
     {
         bool skip_wielding = false;
         switch (which_trans)
@@ -494,7 +537,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
             break;
         }
         // Skip wielding weapon if it gets unwielded again right away.
-        untransform(skip_wielding);
+        untransform(skip_wielding, true);
     }
 
     // Catch some conditions which prevent transformation.
@@ -527,14 +570,24 @@ bool transform(int pow, transformation_type which_trans, bool force,
 
     int str = 0, dex = 0, xhp = 0, dur = 0;
     const char* tran_name = "buggy";
-    const char* msg = "You transform into something buggy!";
+    std::string msg;
+
+    if (was_swimming && transform_can_fly(which_trans))
+        msg = "You fly out of the water as you turn into ";
+    else if (transform_can_fly(previous_trans)
+             && transform_can_swim(which_trans)
+             && feat_is_water(grd(you.pos())))
+        msg = "As you dive into the water, you turn into ";
+    else
+        msg = "You turn into ";
+
     switch (which_trans)
     {
     case TRAN_SPIDER:
         tran_name = "spider";
         dex       = 5;
         dur       = std::min(10 + random2(pow) + random2(pow), 60);
-        msg       = "You turn into a venomous arachnid creature.";
+        msg      += "a venomous arachnid creature.";
         break;
 
     case TRAN_BLADE_HANDS:
@@ -552,14 +605,14 @@ bool transform(int pow, transformation_type which_trans, bool force,
         if (player_genus(GENPC_DWARVEN) && one_chance_in(10))
             msg = "You inwardly fear your resemblance to a lawn ornament.";
         else
-            msg = "You turn into a living statue of rough stone.";
+            msg += "a living statue of rough stone.";
         break;
 
     case TRAN_ICE_BEAST:
         tran_name = "ice beast";
         xhp       = 12;
         dur       = std::min(30 + random2(pow) + random2(pow), 100);
-        msg       = "You turn into a creature of crystalline ice.";
+        msg      += "a creature of crystalline ice.";
         break;
 
     case TRAN_DRAGON:
@@ -567,13 +620,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         str       = 10;
         xhp       = 16;
         dur       = std::min(20 + random2(pow) + random2(pow), 100);
-        if (you.species == SP_MERFOLK && you.swimming())
-        {
-            msg = "You fly out of the water as you turn into "
-                  "a fearsome dragon!";
-        }
-        else
-            msg = "You turn into a fearsome dragon!";
+        msg      += "a fearsome dragon!";
         break;
 
     case TRAN_LICH:
@@ -589,9 +636,9 @@ bool transform(int pow, transformation_type which_trans, bool force,
         dex       = 5;
         dur       = std::min(20 + random2(pow) + random2(pow), 100);
         if (you.species == SP_VAMPIRE)
-            msg = "You turn into a vampire bat.";
+            msg += "a vampire bat.";
         else
-            msg = "You turn into a bat.";
+            msg += "a bat.";
         break;
 
     case TRAN_PIG:
@@ -604,6 +651,8 @@ bool transform(int pow, transformation_type which_trans, bool force,
     case TRAN_NONE:
     case NUM_TRANSFORMATIONS:
         break;
+    default:
+        msg += "something buggy!";
     }
 
     // If we're just pretending return now.
@@ -617,6 +666,8 @@ bool transform(int pow, transformation_type which_trans, bool force,
     you.redraw_evasion      = true;
     you.redraw_armour_class = true;
     you.wield_change        = true;
+    if (which_trans != TRAN_BLADE_HANDS)
+        you.fishtail = false;
 
     // Most transformations conflict with stone skin.
     if (which_trans != TRAN_NONE
@@ -707,6 +758,15 @@ bool transform(int pow, transformation_type which_trans, bool force,
     if (you.species != SP_VAMPIRE || which_trans != TRAN_BAT)
         transformation_expiration_warning();
 
+    // Re-check terrain now that be may no longer be swimming or flying.
+    if (was_flying && you.flight_mode() == FL_NONE
+                   || feat_is_water(grd(you.pos()))
+                      && which_trans == TRAN_BLADE_HANDS
+                      && you.species == SP_MERFOLK)
+    {
+        move_player_to_grid(you.pos(), false, true);
+    }
+
     return (true);
 }
 
@@ -786,11 +846,6 @@ void untransform(bool skip_wielding, bool skip_move)
             you.duration[DUR_ICY_ARMOUR] = 1;
 
         hp_downscale = 12;
-
-        // Re-enter the terrain, it might kill us.
-        if (!skip_move && feat_is_water(grd(you.pos())))
-            move_player_to_grid(you.pos(), false, true);
-
         break;
 
     case TRAN_DRAGON:
@@ -817,9 +872,14 @@ void untransform(bool skip_wielding, bool skip_move)
 
     _unmeld_equipment(melded);
 
-    // Re-check terrain now that be may no longer be flying.
-    if (!skip_move && old_flight && you.flight_mode() == FL_NONE)
+    // Re-check terrain now that be may no longer be swimming or flying.
+    if (!skip_move && (old_flight && you.flight_mode() == FL_NONE
+                       || (feat_is_water(grd(you.pos()))
+                           && (old_form == TRAN_ICE_BEAST
+                               || you.species == SP_MERFOLK))))
+    {
         move_player_to_grid(you.pos(), false, true);
+    }
 
     if (transform_can_butcher_barehanded(old_form))
         stop_butcher_delay();

@@ -397,7 +397,7 @@ std::string player::foot_name(bool plural, bool *can_plural) const
             str         = "underbelly";
             *can_plural = false;
         }
-        else if (species == SP_MERFOLK && swimming())
+        else if (fishtail)
         {
             str         = "tail";
             *can_plural = false;

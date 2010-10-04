@@ -95,6 +95,7 @@ public:
   bool opened_zot;
   bool royal_jelly_dead;
   bool transform_uncancellable;
+  bool fishtail; // Merfolk fishtail transformation
 
   unsigned short pet_target;
 

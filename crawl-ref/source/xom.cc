@@ -2666,12 +2666,8 @@ static void _xom_zero_miscast()
         messages.push_back("Your eyebrows wriggle.");
     }
 
-    if (you.species != SP_NAGA
-        && (you.species != SP_MERFOLK || !you.swimming())
-        && !you.airborne())
-    {
+    if (you.species != SP_NAGA && !you.fishtail && !you.airborne())
         messages.push_back("You do an impromptu tapdance.");
-    }
 
     ///////////////////////////
     // Equipment related stuff.

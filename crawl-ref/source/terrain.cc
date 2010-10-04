@@ -1283,7 +1283,9 @@ bool fall_into_a_pool( const coord_def& entry, bool allow_shift,
     bool escape = false;
     coord_def empty;
 
-    if (you.species == SP_MERFOLK && terrain == DNGN_DEEP_WATER)
+    if (you.species == SP_MERFOLK && terrain == DNGN_DEEP_WATER
+        && you.attribute[ATTR_TRANSFORMATION] != TRAN_ICE_BEAST
+        && !you.transform_uncancellable)
     {
         // These can happen when we enter deep water directly -- bwr
         merfolk_start_swimming();
