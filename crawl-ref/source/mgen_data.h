@@ -103,7 +103,7 @@ struct mgen_data
 
     // These flags will be appended to the monster's flags after placement.
     // These flags are MF_XXX, rather than MG_XXX flags.
-    uint64_t extra_flags;
+    uint64_t        extra_flags;
 
     // XXX: Rather hackish.
     std::string     mname;
