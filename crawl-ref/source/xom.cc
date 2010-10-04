@@ -576,7 +576,7 @@ static int _xom_makes_you_cast_random_spell(int sever, int tension,
         take_note(Note(NOTE_XOM_EFFECT, you.piety, tension, "magic mapping"),
                   true);
 
-        const int power = stepdown_value( sever, 10, 10, 40, 45 );
+        const int power = stepdown_value(sever, 10, 10, 40, 45);
         magic_mapping(5 + power, 50 + random2avg(power * 2, 2), false);
 
         return (XOM_GOOD_MAPPING);
@@ -4212,7 +4212,7 @@ bool xom_saves_your_life(const int dam, const int death_source,
 
     // Ideally, this should contain the death cause but that is too much
     // trouble for now.
-    take_note( Note(NOTE_XOM_REVIVAL) );
+    take_note(Note(NOTE_XOM_REVIVAL));
 
     // Make sure Xom doesn't get bored within the next couple of turns.
     if (you.gift_timeout < 10)
@@ -4305,7 +4305,7 @@ void debug_xom_effects()
 
     if (N == 0)
     {
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
         return;
     }
 
