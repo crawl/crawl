@@ -1290,7 +1290,8 @@ static int _create_plant(coord_def & target, int hp_adjust = 0)
                                       0,
                                       target,
                                       MHITNOT,
-                                      MG_FORCE_PLACE, GOD_FEDHAS));
+                                      MG_FORCE_PLACE,
+                                      GOD_FEDHAS));
 
 
     if (plant != -1)
@@ -1839,7 +1840,8 @@ int fedhas_rain(const coord_def &target)
                                       0,
                                       *rad,
                                       MHITNOT,
-                                      MG_FORCE_PLACE, GOD_FEDHAS));
+                                      MG_FORCE_PLACE,
+                                      GOD_FEDHAS));
 
                 if (plant != -1)
                     spawned_count++;
