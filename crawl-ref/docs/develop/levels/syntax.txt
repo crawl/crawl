@@ -632,6 +632,14 @@ MONS:     (list of monsters)
           never be used, but it can be useful for customised vault monsters
           if an alternate tile exists. In ASCII mode, this will do nothing.
 
+          You can set the monster's god using the "god:" specifier as
+          follows:
+              MONS: angel god:Zin
+
+          If the monster is to be a gift of the specified god, this should
+          be suffixed with "god_gift" (without the quotes):
+              MONS: angel god:Zin god_gift
+
           You can set the monster's faction by specifying "att:" one of:
 
           * att:hostile -- the default
