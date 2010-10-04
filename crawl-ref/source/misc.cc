@@ -1321,17 +1321,25 @@ void search_around(bool only_adjacent)
 
 void merfolk_start_swimming(bool stepped)
 {
-    if (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
-        untransform(false, true); // We're already entering the water.
+    if (you.fishtail)
+        return;
 
-    if (stepped)
+    if (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE
+        && you.attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS)
+    {
+        mpr("You quickly transform back into your natural form.");
+        untransform(false, true); // We're already entering the water.
+    }
+    else if (stepped)
         mpr("Your legs become a tail as you enter the water.");
     else
         mpr("Your legs become a tail as you dive into the water.");
 
+    you.fishtail = true;
     remove_one_equip(EQ_BOOTS);
     you.redraw_evasion = true;
 
+// FIXME: player doll isn't updated properly when player flies out of water
 #ifdef USE_TILE
     init_player_doll();
 #endif
@@ -1339,6 +1347,9 @@ void merfolk_start_swimming(bool stepped)
 
 void merfolk_stop_swimming()
 {
+    if (!you.fishtail)
+        return;
+    you.fishtail = false;
     unmeld_one_equip(EQ_BOOTS);
     you.redraw_evasion = true;
 

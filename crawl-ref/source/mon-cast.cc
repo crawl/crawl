@@ -1838,8 +1838,7 @@ static void _do_high_level_summon(monster* mons, bool monsterNearby,
 // Returns true if a message referring to the player's legs makes sense.
 static bool _legs_msg_applicable()
 {
-    return (you.species != SP_NAGA
-            && (you.species != SP_MERFOLK || !you.swimming()));
+    return (you.species != SP_NAGA && !you.fishtail);
 }
 
 void mons_cast_haunt(monster* mons)

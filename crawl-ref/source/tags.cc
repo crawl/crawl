@@ -1028,6 +1028,9 @@ static void tag_construct_you(writer &th)
     marshallShort(th, you.hp);
 
     marshallShort(th, you.hunger);
+#if TAG_MAJOR_VERSION > 31
+    marshallBoolean(th, you.fishtail);
+#endif
 
     // how many you.equip?
     marshallByte(th, NUM_EQUIP);
@@ -1602,6 +1605,9 @@ static void tag_read_you(reader &th, int minorVersion)
 
     you.hp              = unmarshallShort(th);
     you.hunger          = unmarshallShort(th);
+#if TAG_MAJOR_VERSION > 31
+    you.fishtail        = unmarshallBoolean(th);
+#endif
 
     // How many you.equip?
     count = unmarshallByte(th);
