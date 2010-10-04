@@ -25,7 +25,6 @@
 #include "misc.h"
 #include "mon-place.h"
 #include "terrain.h"
-#include "mgen_data.h"
 #include "state.h"
 #include "travel.h"
 #include "view.h"
