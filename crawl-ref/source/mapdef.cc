@@ -3460,11 +3460,14 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         std::string mongod = strip_tag_prefix(mon_str, "god:");
         if (!mongod.empty())
         {
-            mspec.god = str_to_god(mongod);
+            const std::string god_name(replace_all_of(mongod, "_", " "));
+
+            mspec.god = str_to_god(god_name);
+
             if (mspec.god == GOD_NO_GOD)
             {
                 error = make_stringf("bad monster god: \"%s\"",
-                                     mongod.c_str());
+                                     god_name.c_str());
                 return (slot);
             }
 
