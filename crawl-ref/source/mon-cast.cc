@@ -1908,8 +1908,8 @@ void mons_cast_spectral_orcs(monster* mons)
         // get the proper stats from it.
         created = create_monster(
                   mgen_data(MONS_SPECTRAL_THING, SAME_ATTITUDE(mons), mons,
-                          abj, SPELL_SUMMON_SPECTRAL_ORCS, fpos, mons->foe, 0,
-                          mons->god, mon));
+                          abj, SPELL_SUMMON_SPECTRAL_ORCS, fpos, mons->foe,
+                          0, mons->god, mon));
 
         if (created != -1)
         {
