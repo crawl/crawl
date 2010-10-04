@@ -1250,6 +1250,7 @@ enum duration_type
     DUR_MISLED,
     DUR_QUAD_DAMAGE,
     DUR_AFRAID,
+    DUR_MIRROR_DAMAGE,
 
     NUM_DURATIONS
 };

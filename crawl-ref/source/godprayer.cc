@@ -99,9 +99,6 @@ bool god_accepts_prayer(god_type god)
     case GOD_KIKUBAAQUDGHA:
         return (you.piety >= piety_breakpoint(4));
 
-    case GOD_YREDELEMNUL:
-        return (yred_injury_mirror(false));
-
     case GOD_JIYVA:
         return (jiyva_can_paralyse_jellies());
 
