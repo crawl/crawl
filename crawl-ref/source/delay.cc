@@ -305,12 +305,13 @@ void stop_delay( bool stop_stair_travel )
 
         item_def &item = (delay.parm1 ? you.inv[delay.parm2]
                                       : mitm[delay.parm2]);
-        monster_type montype = static_cast<monster_type>(item.plus);
-        const bool was_orc = (mons_species(montype) == MONS_ORC);
+
+        const bool was_orc = (mons_species(item.plus) == MONS_ORC);
 
         mpr("All blood oozes out of the corpse!");
 
-        bleed_onto_floor(you.pos(), montype, delay.duration, false);
+        bleed_onto_floor(you.pos(), static_cast<monster_type>(item.plus),
+                         delay.duration, false);
 
         if (mons_skeleton(item.plus) && one_chance_in(3))
             turn_corpse_into_skeleton(item);
