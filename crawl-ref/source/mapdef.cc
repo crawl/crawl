@@ -3467,6 +3467,9 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
                                      mongod.c_str());
                 return (slot);
             }
+
+            if (strip_tag(mon_str, "god_gift"))
+                mspec.god_gift = true;
         }
 
         std::string tile = strip_tag_prefix(mon_str, "tile:");

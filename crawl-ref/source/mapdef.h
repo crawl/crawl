@@ -627,7 +627,10 @@ class mons_spec
     bool patrolling;
     bool band;
     int colour;
+
+    bool god_gift;
     god_type god;
+
     int hd;
     int hp;
     int abjuration_duration;
@@ -651,9 +654,10 @@ class mons_spec
         : mid(id), place(), monbase(base), attitude(ATT_HOSTILE), number(num),
           quantity(1), genweight(gw), mlevel(ml), fix_mons(_fixmons),
           generate_awake(awaken), patrolling(false), band(false),
-          colour(BLACK), god(GOD_NO_GOD), hd(0), hp(0), abjuration_duration(0),
-          summon_type(0), items(), monname(""), non_actor_summoner(""),
-          explicit_spells(false), spells(), extra_monster_flags(0L), props()
+          colour(BLACK), god_gift(false), god(GOD_NO_GOD), hd(0), hp(0),
+          abjuration_duration(0), summon_type(0), items(), monname(""),
+          non_actor_summoner(""), explicit_spells(false), spells(),
+          extra_monster_flags(0L), props()
     {
     }
 };
