@@ -58,7 +58,7 @@ struct mgen_data
     unsigned short  foe;
 
     // Generation flags from mgen_flag_type.
-    unsigned        flags;
+    uint32_t        flags;
 
     // What god the monster worships, if any.  Used for monsters that
     // are god gifts, to indicate which god sent them, and by priest
@@ -122,7 +122,7 @@ struct mgen_data
               int st = 0,
               const coord_def &p = coord_def(-1, -1),
               unsigned short mfoe = MHITNOT,
-              unsigned genflags = 0,
+              uint32_t genflags = 0,
               god_type which_god = GOD_NO_GOD,
               monster_type base = MONS_NO_MONSTER,
               int monnumber = 0,
@@ -170,7 +170,7 @@ struct mgen_data
                                 int abj = 0,
                                 int st = 0,
                                 const coord_def &p = coord_def(-1, -1),
-                                unsigned genflags = 0,
+                                uint32_t genflags = 0,
                                 god_type ngod = GOD_NO_GOD,
                                 monster_type base = MONS_NO_MONSTER)
 
