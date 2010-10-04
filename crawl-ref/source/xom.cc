@@ -1148,8 +1148,11 @@ static int _xom_do_potion(bool debug = false)
                               POT_RESTORE_ABILITIES, POT_INVISIBILITY,
                               POT_BERSERK_RAGE, POT_EXPERIENCE, -1));
 
-        if (pot == POT_EXPERIENCE && !one_chance_in(6))
+        if ((pot == POT_RESTORE_ABILITIES || pot == POT_EXPERIENCE)
+            && !one_chance_in(6))
+        {
             pot = POT_BERSERK_RAGE;
+        }
 
         bool has_effect = true;
         // Don't pick something that won't have an effect.
