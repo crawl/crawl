@@ -5427,6 +5427,13 @@ int dgn_place_monster(mons_spec &mspec,
             // and "<monster> comes into view" (see delay.cc:_monster_warning).
             //mons.flags |= mspec.extra_monster_flags;
 
+            // Monsters with gods set by the spec aren't god gifts
+            // unless they have the "god_gift" tag.  place_monster(),
+            // by default, marks any monsters with gods as god gifts,
+            // so unmark them here.
+            if (mspec.god != GOD_NO_GOD && !mspec.god_gift)
+                mons.flags &= ~MF_GOD_GIFT;
+
             if (mons.is_priest() && mons.god == GOD_NO_GOD)
                 mons.god = GOD_NAMELESS;
         }
