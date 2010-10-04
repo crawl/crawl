@@ -1569,7 +1569,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 return (false);
 
             if (!animate_dead(mons, 100, SAME_ATTITUDE(mons),
-                             mons->foe, mons, "", god, false))
+                              mons->foe, mons, "", god, false))
             {
                 return (false);
             }
