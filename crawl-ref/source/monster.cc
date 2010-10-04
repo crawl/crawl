@@ -6169,9 +6169,9 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         {
             bool fly_died = coinflip();
             int old_hp                = hit_points;
-            unsigned long old_flags   = flags;
+            uint64_t old_flags        = flags;
             mon_enchant_list old_ench = enchantments;
-            int8_t old_ench_countdown   = ench_countdown;
+            int8_t old_ench_countdown = ench_countdown;
 
             if (!fly_died)
                 monster_drop_things(this, mons_aligned(oppressor, &you));

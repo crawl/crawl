@@ -960,7 +960,7 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
             description += "\nDemonspawn deal slightly more damage with it.";
         else if (get_equip_race(item) != ISFLAG_NO_RACE)
         {
-            unsigned long race = get_equip_race(item);
+            iflags_t race = get_equip_race(item);
 
             if (race == ISFLAG_DWARVEN)
                 description += "\nIt is well-crafted, durable, and resistant "
@@ -1172,7 +1172,7 @@ static std::string _describe_ammo(const item_def &item)
 
         if (can_throw)
         {
-            unsigned long race = get_equip_race(item);
+            iflags_t race = get_equip_race(item);
 
             description += "It is more deadly when thrown by ";
             description += (race == ISFLAG_DWARVEN) ? "dwarves" :
@@ -1358,7 +1358,7 @@ static std::string _describe_armour( const item_def &item, bool verbose )
         // Randart armour can't be racial.
         description += "\n";
 
-        unsigned long race = get_equip_race(item);
+        iflags_t race = get_equip_race(item);
 
         if (race == ISFLAG_DWARVEN)
             description += "\nIt is well-crafted, durable, and resistant to "

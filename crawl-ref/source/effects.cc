@@ -1242,7 +1242,7 @@ bool forget_inventory(bool quiet)
         if (!item.defined() || item_is_equipped(item))
             continue;
 
-        unsigned long orig_flags = item.flags;
+        iflags_t orig_flags = item.flags;
 
         unset_ident_flags(item, ISFLAG_KNOW_CURSE);
 
@@ -1989,7 +1989,7 @@ static bool _food_item_needs_time_check(item_def &item)
 
 #define ROTTING_WARNED_KEY "rotting_warned"
 
-static void _rot_inventory_food(long time_delta)
+static void _rot_inventory_food(int time_delta)
 {
     // Update all of the corpses and food chunks in the player's
     // inventory. {should be moved elsewhere - dlb}
@@ -2645,7 +2645,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
 // Update the level when the player returns to it.
 //
 //---------------------------------------------------------------
-void update_level(long elapsedTime)
+void update_level(int elapsedTime)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -3219,12 +3219,12 @@ static void _maybe_spawn_mushroom(item_def & corpse, int rot_time)
 // Update all of the corpses and food chunks on the floor.
 //
 //---------------------------------------------------------------
-void update_corpses(long elapsedTime)
+void update_corpses(int elapsedTime)
 {
     if (elapsedTime <= 0)
         return;
 
-    const long rot_time = elapsedTime / 20;
+    const int rot_time = elapsedTime / 20;
 
     for (int c = 0; c < MAX_ITEMS; ++c)
     {
@@ -3279,12 +3279,12 @@ void update_corpses(long elapsedTime)
     }
 }
 
-static void _recharge_rod( item_def &rod, long aut, bool in_inv )
+static void _recharge_rod( item_def &rod, int aut, bool in_inv )
 {
     if (!item_is_rod(rod) || rod.plus >= rod.plus2)
         return;
 
-    long rate = 4 + short(rod.props["rod_enchantment"]);
+    int rate = 4 + short(rod.props["rod_enchantment"]);
 
     rate *= (10 + skill_bump( SK_EVOCATIONS ));
     rate *= aut;
@@ -3314,7 +3314,7 @@ static void _recharge_rod( item_def &rod, long aut, bool in_inv )
     return;
 }
 
-void recharge_rods(long aut, bool level_only)
+void recharge_rods(int aut, bool level_only)
 {
     if (!level_only)
     {

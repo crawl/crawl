@@ -398,7 +398,7 @@ void set_unique_item_status( int art, unique_item_status_type status )
     you.unique_items[art - UNRAND_START] = status;
 }
 
-static long _calc_seed( const item_def &item )
+static uint32_t _calc_seed( const item_def &item )
 {
     return (item.special & RANDART_SEED_MASK);
 }
@@ -702,7 +702,7 @@ void static _get_randart_properties(const item_def &item,
     const int atype = item.sub_type;
     int power_level = 0;
 
-    const long seed = _calc_seed(item);
+    const uint32_t seed = _calc_seed(item);
     rng_save_excursion exc;
     seed_rng(seed);
 
@@ -1480,7 +1480,7 @@ std::string artefact_name(const item_def &item, bool appearance)
         return (item_type_known(item) ? unrand->name : unrand->unid_name);
     }
 
-    const long seed = _calc_seed( item );
+    const uint32_t seed = _calc_seed( item );
 
     std::string lookup;
     std::string result;

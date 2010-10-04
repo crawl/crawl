@@ -78,7 +78,7 @@ enum tide_direction
 static tide_direction _shoals_tide_direction;
 static monster* tide_caller = NULL;
 static coord_def tide_caller_pos;
-static long tide_called_turns = 0L;
+static int tide_called_turns = 0;
 static int tide_called_peak = 0;
 static int shoals_plant_quota = 0;
 
@@ -1052,7 +1052,7 @@ static monster* _shoals_find_tide_caller()
     return NULL;
 }
 
-void shoals_apply_tides(long turns_elapsed, bool force, bool incremental_tide)
+void shoals_apply_tides(int turns_elapsed, bool force, bool incremental_tide)
 {
     if (!player_in_branch(BRANCH_SHOALS)
         || (!turns_elapsed && !force)
@@ -1068,9 +1068,9 @@ void shoals_apply_tides(long turns_elapsed, bool force, bool incremental_tide)
     // has been updating the tide.
     if (turns_elapsed > 1)
     {
-        const long last_updated_time =
+        const int last_updated_time =
             props[PROPS_SHOALS_TIDE_UPDATE_TIME].get_int();
-        const long turn_delta = (you.elapsed_time - last_updated_time) / 10;
+        const int turn_delta = (you.elapsed_time - last_updated_time) / 10;
         turns_elapsed = std::min(turns_elapsed, turn_delta);
     }
 

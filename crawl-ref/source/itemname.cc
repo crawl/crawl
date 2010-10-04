@@ -74,7 +74,7 @@ std::string item_def::name(description_level_type descrip,
                            bool terse, bool ident,
                            bool with_inscription,
                            bool quantity_in_words,
-                           unsigned long ignore_flags) const
+                           iflags_t ignore_flags) const
 {
     if (crawl_state.game_is_arena())
     {
@@ -116,7 +116,9 @@ std::string item_def::name(description_level_type descrip,
     if (terse && descrip != DESC_DBNAME)
         descrip = DESC_PLAIN;
 
-    long corpse_flags;
+    // note: only the 32 lower bits of monste flags are passed,
+    // as we don't have support for 64 bit props
+    iflags_t corpse_flags;
 
     if (base_type == OBJ_CORPSES && is_named_corpse(*this)
         && !(((corpse_flags = props[CORPSE_NAME_TYPE_KEY].get_int())
@@ -1173,7 +1175,7 @@ static void output_with_sign(std::ostream& os, int val)
 // the game screen.
 std::string item_def::name_aux(description_level_type desc,
                                bool terse, bool ident,
-                               unsigned long ignore_flags) const
+                               iflags_t ignore_flags) const
 {
     // Shortcuts
     const int item_typ   = sub_type;
