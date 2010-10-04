@@ -2494,7 +2494,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                           mons->colour, you.absdepth0, PROX_CLOSE_TO_PLAYER,
                           you.level_type));
 
-            if (tentacle >= 0)
+            if (tentacle != -1)
             {
                 created_count++;
                 menv[tentacle].props["inwards"].get_int() = kraken_index;
