@@ -1145,14 +1145,11 @@ static int _xom_do_potion(bool debug = false)
         pot = static_cast<potion_type>(
                 random_choose(POT_HEALING, POT_HEAL_WOUNDS, POT_MAGIC,
                               POT_SPEED, POT_MIGHT, POT_AGILITY, POT_BRILLIANCE,
-                              POT_RESTORE_ABILITIES, POT_INVISIBILITY,
-                              POT_BERSERK_RAGE, POT_EXPERIENCE, -1));
+                              POT_INVISIBILITY, POT_BERSERK_RAGE,
+                              POT_EXPERIENCE, -1));
 
-        if ((pot == POT_RESTORE_ABILITIES || pot == POT_EXPERIENCE)
-            && !one_chance_in(6))
-        {
+        if (pot == POT_EXPERIENCE && !one_chance_in(6))
             pot = POT_BERSERK_RAGE;
-        }
 
         bool has_effect = true;
         // Don't pick something that won't have an effect.
@@ -1173,15 +1170,6 @@ static int _xom_do_potion(bool debug = false)
         case POT_MAGIC:
             if (you.magic_points == you.max_magic_points)
                 has_effect = false;
-            break;
-        case POT_RESTORE_ABILITIES:
-            if (!you.duration[DUR_BREATH_WEAPON]
-                && you.strength() == you.max_strength()
-                && you.intel() == you.max_intel()
-                && you.dex() == you.max_dex())
-            {
-                has_effect = false;
-            }
             break;
         case POT_BERSERK_RAGE:
             if (!you.can_go_berserk(false))
@@ -1214,7 +1202,6 @@ static int _xom_do_potion(bool debug = false)
     case POT_MIGHT:         potion_msg += "(might)"; break;
     case POT_AGILITY:       potion_msg += "(agility)"; break;
     case POT_BRILLIANCE:    potion_msg += "(brilliance)"; break;
-    case POT_RESTORE_ABILITIES: potion_msg += "(restore abilities)"; break;
     case POT_INVISIBILITY:  potion_msg += "(invisibility)"; break;
     case POT_BERSERK_RAGE:  potion_msg += "(berserk)"; break;
     case POT_EXPERIENCE:    potion_msg += "(experience)"; break;
