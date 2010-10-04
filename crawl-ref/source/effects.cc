@@ -1322,9 +1322,10 @@ bool vitrify_area(int radius)
 
 static void _hell_effects()
 {
-    if (is_sanctuary(you.pos()))
+    if ((you.religion == GOD_ZIN && x_chance_in_y(you.piety, MAX_PIETY))
+        || is_sanctuary(you.pos()))
     {
-        mpr("Zin's power protects you from Hell's scourges!", MSGCH_GOD);
+        mpr("Zin's power protects you from the chaos of Hell!", MSGCH_GOD);
         return;
     }
 
