@@ -160,7 +160,7 @@ static void _place_pool(dungeon_feature_type pool_type, uint8_t pool_x1,
 static void _many_pools(dungeon_feature_type pool_type);
 static bool _join_the_dots_rigorous(const coord_def &from,
                                     const coord_def &to,
-                                    unsigned mapmask,
+                                    uint32_t mapmask,
                                     bool early_exit = false);
 
 static void _build_river(dungeon_feature_type river_type); //mv
@@ -3296,7 +3296,7 @@ coord_def dgn_random_point_in_margin(int margin)
 
 static inline bool _point_matches_feat(coord_def c,
                                        dungeon_feature_type searchfeat,
-                                       unsigned mapmask,
+                                       uint32_t mapmask,
                                        dungeon_feature_type adjacent_feat,
                                        bool monster_free)
 {
@@ -3326,7 +3326,7 @@ static inline bool _point_matches_feat(coord_def c,
 // returns coord_def(0,0)
 //
 coord_def dgn_random_point_in_bounds(dungeon_feature_type searchfeat,
-                                     unsigned mapmask,
+                                     uint32_t mapmask,
                                      dungeon_feature_type adjacent_feat,
                                      bool monster_free,
                                      int tries)
@@ -5788,7 +5788,7 @@ void dgn_replace_area(int sx, int sy, int ex, int ey,
 
 void dgn_replace_area( const coord_def& p1, const coord_def& p2,
                        dungeon_feature_type replace,
-                       dungeon_feature_type feature, unsigned mapmask,
+                       dungeon_feature_type feature, uint32_t mapmask,
                        bool needs_update)
 {
     for (rectangle_iterator ri(p1, p2); ri; ++ri)
@@ -5833,7 +5833,7 @@ struct coord_comparator
 
 typedef std::set<coord_def, coord_comparator> coord_set;
 
-static void _jtd_init_surrounds(coord_set &coords, unsigned mapmask,
+static void _jtd_init_surrounds(coord_set &coords, uint32_t mapmask,
                                 const coord_def &c)
 {
     for (int yi = -1; yi <= 1; ++yi)
@@ -5856,7 +5856,7 @@ static void _jtd_init_surrounds(coord_set &coords, unsigned mapmask,
 
 static bool _join_the_dots_pathfind(coord_set &coords,
                                     const coord_def &from, const coord_def &to,
-                                    unsigned mapmask, bool early_exit)
+                                    uint32_t mapmask, bool early_exit)
 {
     coord_def curr = from;
     while (true)
@@ -5896,7 +5896,7 @@ static bool _join_the_dots_pathfind(coord_set &coords,
 
 static bool _join_the_dots_rigorous(const coord_def &from,
                                     const coord_def &to,
-                                    unsigned mapmask,
+                                    uint32_t mapmask,
                                     bool early_exit)
 {
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
@@ -5910,7 +5910,7 @@ static bool _join_the_dots_rigorous(const coord_def &from,
 }
 
 bool join_the_dots(const coord_def &from, const coord_def &to,
-                   unsigned mapmask, bool early_exit)
+                   uint32_t mapmask, bool early_exit)
 {
     if (from == to || !in_bounds(from))
         return (true);

@@ -211,7 +211,7 @@ bool dgn_has_adjacent_feat(coord_def c, dungeon_feature_type feat);
 coord_def dgn_random_point_in_margin(int margin);
 coord_def dgn_random_point_in_bounds(
     dungeon_feature_type searchfeat,
-    unsigned mapmask = MMT_VAULT,
+    uint32_t mapmask = MMT_VAULT,
     dungeon_feature_type adjacent = DNGN_UNSEEN,
     bool monster_free = false,
     int tries = 1500);
