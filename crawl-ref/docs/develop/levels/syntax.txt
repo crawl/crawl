@@ -699,8 +699,8 @@ MONS:     (list of monsters)
           can be used to force a monster to have no items whatsoever:
               MONS: orc; nothing
 
-          Items given to an orc or an elf will be made orcish or elven
-          unless the item's race type is explicitly set otherwise.
+          Items given to an orc, dwarf or elf will be made orcish, dwarven
+          or elven unless the item's race type is explicitly set otherwise.
 
           Limitations: If an item in the item list has alternatives,
           there's no way to force all monsters dervied from that monster
