@@ -2150,7 +2150,7 @@ bool give_monster_proper_name(monster* mon, bool orcs_only)
     // don't bless non-orcs, and normally don't bless plain orcs, either.
     if (orcs_only)
     {
-        if (mons_species(mon->type) != MONS_ORC
+        if (mons_genus(mon->type) != MONS_ORC
             || mon->type == MONS_ORC && !one_chance_in(8))
         {
             return (false);

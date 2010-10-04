@@ -79,7 +79,7 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
     // For followers of Beogh, decide whether orcs will join you.
     if (you.religion == GOD_BEOGH
         && mons->foe == MHITYOU
-        && mons_species(mons->type) == MONS_ORC
+        && mons_genus(mons->type) == MONS_ORC
         && !mons->is_summoned()
         && !mons->is_shapeshifter()
         && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT)
@@ -449,7 +449,7 @@ static void _print_converted_orc_speech(const std::string key,
 void beogh_convert_orc(monster* orc, bool emergency,
                        bool converted_by_follower)
 {
-    ASSERT(mons_species(orc->type) == MONS_ORC);
+    ASSERT(mons_genus(orc->type) == MONS_ORC);
 
     if (you.can_see(orc)) // show reaction
     {

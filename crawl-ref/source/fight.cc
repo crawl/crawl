@@ -840,7 +840,7 @@ bool melee_attack::player_attack()
 
         bool hit_woke_orc = false;
         if (you.religion == GOD_BEOGH
-            && defender->mons_species() == MONS_ORC
+            && mons_genus(defender->mons_species()) == MONS_ORC
             && !defender->is_summoned()
             && !defender->as_monster()->is_shapeshifter()
             && !player_under_penance() && you.piety >= piety_breakpoint(2)
@@ -4420,7 +4420,7 @@ int melee_attack::mons_calc_damage(const mon_attack_def &attk)
         damage += random2( damage_max );
 
         if (get_equip_race(*weapon) == ISFLAG_ORCISH
-            && attacker->mons_species() == MONS_ORC
+            && mons_genus(attacker->mons_species()) == MONS_ORC
             && coinflip())
         {
             damage++;

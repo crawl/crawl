@@ -1297,7 +1297,7 @@ bool is_yred_undead_slave(const monster* mon)
 
 bool is_orcish_follower(const monster* mon)
 {
-    return (mon->alive() && mons_species(mon->type) == MONS_ORC
+    return (mon->alive() && mons_genus(mon->type) == MONS_ORC
             && mon->attitude == ATT_FRIENDLY
             && mons_is_god_gift(mon, GOD_BEOGH));
 }
@@ -3142,7 +3142,7 @@ bool god_likes_item(god_type god, const item_def& item)
 
     case GOD_BEOGH:
         return (item.base_type == OBJ_CORPSES
-                   && mons_species(item.plus) == MONS_ORC);
+                   && mons_genus(item.plus) == MONS_ORC);
 
     case GOD_NEMELEX_XOBEH:
         return (!is_deck(item)
