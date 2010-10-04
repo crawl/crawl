@@ -1043,6 +1043,7 @@ static bool _fedhas_retribution()
             simple_god_message(" produces spores.", GOD_FEDHAS);
             break;
         }
+
     case 1:
     {
         // Elemental miscast effects.
@@ -1068,7 +1069,11 @@ static bool _fedhas_retribution()
                       random2avg(88, 3), "the enmity of Fedhas Madash");
         break;
     }
+
     case 2:
+    {
+        bool success = false;
+
         // We are going to spawn some oklobs but first we need to find
         // out a little about the situation.
         std::vector<std::vector<coord_def> > radius_points;
@@ -1113,6 +1118,9 @@ static bool _fedhas_retribution()
                        1, radius_points[0].size(),
                        seen_count);
 
+            if (seen_count > 0)
+                success = true;
+
             temp.cls = MONS_OKLOB_PLANT;
 
             place_ring(radius_points[max_idx],
@@ -1120,6 +1128,9 @@ static bool _fedhas_retribution()
                        temp,
                        random_range(3, 8), 1,
                        seen_count);
+
+            if (seen_count > 0)
+                success = true;
         }
         // Otherwise we do something with the nearest neighbors
         // (assuming the player isn't already surrounded).
@@ -1139,13 +1150,21 @@ static bool _fedhas_retribution()
                 temp.cls = coinflip() ?
                            MONS_WANDERING_MUSHROOM : MONS_OKLOB_PLANT;
 
-                create_monster(temp,false);
+                if (create_monster(temp, false) != -1)
+                    success = true;
             }
+        }
 
+        if (success)
+        {
             god_speaks(god, "Plants grow around you in an ominous manner.");
             return (false);
         }
+
+        break;
     }
+    }
+
     return (true);
 }
 
