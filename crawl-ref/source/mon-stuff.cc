@@ -2839,7 +2839,6 @@ bool mon_can_be_slimified(monster* mons)
 
 void slimify_monster(monster* mon, bool hostile)
 {
-
     if (mon->holiness() == MH_UNDEAD)
         monster_polymorph(mon, MONS_DEATH_OOZE);
     else
