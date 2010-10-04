@@ -2585,6 +2585,8 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_REPEL_STAIRS_MOVE, 1);
     _decrement_a_duration(DUR_REPEL_STAIRS_CLIMB, 1);
 
+    _decrement_a_duration(DUR_COLOUR_SMOKE_TRAIL, 1);
+
     if (_decrement_a_duration(DUR_SCRYING, delay,
                               "Your astral sight fades away."))
     {
@@ -3869,7 +3871,14 @@ static void _move_player(coord_def move)
         }
 
         if (swap)
+        {
             swap_places(targ_monst, mon_swap_dest);
+        }
+        else if (you.duration[DUR_COLOUR_SMOKE_TRAIL])
+        {
+            check_place_cloud(CLOUD_MAGIC_TRAIL, you.pos(),
+                random_range(3, 10), KC_OTHER, 0, ETC_RANDOM);
+        }
 
         you.time_taken *= player_movement_speed();
         you.time_taken /= 10;

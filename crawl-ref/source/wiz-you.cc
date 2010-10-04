@@ -734,6 +734,7 @@ static const char* dur_names[] =
     "lowered mr",
     "repel stairs move",
     "repel stairs climb",
+    "coloured smoke trail",
     "slimify",
     "time step",
     "icemail depleted",
