@@ -1089,14 +1089,15 @@ static bool _fedhas_retribution()
             }
         }
 
-        mgen_data temp(MONS_OKLOB_PLANT,
-                       BEH_HOSTILE, 0, 0, 0,
-                       coord_def(),
-                       MHITNOT,
-                       MG_FORCE_PLACE,
-                       GOD_FEDHAS);
-
-        temp.non_actor_summoner = "the enmity of Fedhas Madash";
+        mgen_data temp =
+            mgen_data::hostile_at(MONS_OKLOB_PLANT,
+                                  "the enmity of Fedhas Madash",
+                                  false,
+                                  0,
+                                  0,
+                                  coord_def(-1, -1),
+                                  MG_FORCE_PLACE,
+                                  GOD_FEDHAS);
 
         // If we have a lot of space to work with we can do something
         // flashy.
