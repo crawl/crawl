@@ -5187,6 +5187,8 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
 
     if (mons_genus(mid) == MONS_ORC)
         racial = MAKE_ITEM_ORCISH;
+    else if (mons_genus(mid) == MONS_DWARF)
+        racial = MAKE_ITEM_DWARVEN;
     else if (mons_genus(mid) == MONS_ELF)
         racial = MAKE_ITEM_ELVEN;
 
@@ -5215,8 +5217,10 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
         if (spec.race == MAKE_ITEM_RANDOM_RACE)
         {
             // But don't automatically give elves elven boots or
-            // elven cloaks.
-            if (racial != MAKE_ITEM_ELVEN || spec.base_type != OBJ_ARMOUR
+            // elven cloaks, or the same for dwarves.
+            if ((racial != MAKE_ITEM_ELVEN
+                    && racial != MAKE_ITEM_DWARVEN)
+                || spec.base_type != OBJ_ARMOUR
                 || (spec.sub_type != ARM_CLOAK
                     && spec.sub_type != ARM_BOOTS))
             {
