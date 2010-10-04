@@ -1603,7 +1603,7 @@ static void tag_read_you(reader &th, int minorVersion)
 
     you.hp              = unmarshallShort(th);
     you.hunger          = unmarshallShort(th);
-#if TAG_MAJOR_VERSION > 31
+#if TAG_MAJOR_VERSION == 31
     if (minorVersion >= TAG_MINOR_FISHTAIL)
 #endif
     you.fishtail        = unmarshallBoolean(th);
