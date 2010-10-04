@@ -485,11 +485,6 @@ void beogh_convert_orc(monster* orc, bool emergency,
     // become hostile later on, it won't count as a good kill.
     orc->flags |= MF_NO_REWARD;
 
-    // Prevent assertion if the orc was previously worshipping a
-    // different god, rather than already worshipping Beogh or being an
-    // atheist.
-    orc->god = GOD_NO_GOD;
-
     mons_make_god_gift(orc, GOD_BEOGH);
 
     if (orc->is_patrolling())
@@ -554,15 +549,7 @@ static void _jiyva_convert_slime(monster* slime)
              slime->name(DESC_CAP_THE).c_str());
     }
 
-    // Prevent assertion if the slime was previously worshipping a
-    // different god, rather than already worshipping Jiyva or being an
-    // atheist.
-    slime->god = GOD_NO_GOD;
-
-    // Don't trigger an assert in mons_make_god_gift
-    if (testbits(slime->flags, MF_GOD_GIFT))
-        slime->flags &= ~MF_GOD_GIFT;
-
     mons_make_god_gift(slime, GOD_JIYVA);
+
     mons_att_changed(slime);
 }
