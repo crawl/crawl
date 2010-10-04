@@ -5404,22 +5404,29 @@ int dgn_place_monster(mons_spec &mspec,
         if (mspec.props.exists("serpent_of_hell_flavour"))
             mg.props["serpent_of_hell_flavour"] =
                 mspec.props["serpent_of_hell_flavour"].get_int();
+
         const int mindex = place_monster(mg, true);
         if (mindex != -1)
         {
             monster& mons(menv[mindex]);
+
             if (!mspec.items.empty())
                 _dgn_give_mon_spec_items(mspec, mindex, mid, monster_level);
+
             if (mspec.explicit_spells)
                 mons.spells = mspec.spells;
+
             if (mspec.props.exists("monster_tile"))
                 mons.props["monster_tile"] =
                     mspec.props["monster_tile"].get_short();
+
             if (mspec.props.exists("always_corpse"))
                 mons.props["always_corpse"] = true;
+
             // These are applied earlier to prevent issues with renamed monsters
             // and "<monster> comes into view" (see delay.cc:_monster_warning).
             //mons.flags |= mspec.extra_monster_flags;
+
             if (mons.is_priest() && mons.god == GOD_NO_GOD)
                 mons.god = GOD_NAMELESS;
         }
