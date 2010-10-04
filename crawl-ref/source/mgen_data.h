@@ -122,7 +122,7 @@ struct mgen_data
               int st = 0,
               const coord_def &p = coord_def(-1, -1),
               unsigned short mfoe = MHITNOT,
-              unsigned monflags = 0,
+              unsigned genflags = 0,
               god_type which_god = GOD_NO_GOD,
               monster_type base = MONS_NO_MONSTER,
               int monnumber = 0,
@@ -131,16 +131,16 @@ struct mgen_data
               proximity_type prox = PROX_ANYWHERE,
               level_area_type ltype = you.level_type,
               int mhd = 0, int mhp = 0,
-              uint64_t mflags = 0,
+              uint64_t extflags = 0,
               std::string monname = "",
               std::string nas = "")
 
         : cls(mt), base_type(base), behaviour(beh), summoner(sner),
           abjuration_duration(abj), summon_type(st), pos(p),
-          preferred_grid_feature(DNGN_UNSEEN), foe(mfoe), flags(monflags),
+          preferred_grid_feature(DNGN_UNSEEN), foe(mfoe), flags(genflags),
           god(which_god), number(monnumber), colour(moncolour),
           power(monpower), proximity(prox), level_type(ltype), map_mask(0),
-          hd(mhd), hp(mhp), extra_flags(mflags), mname(monname),
+          hd(mhd), hp(mhp), extra_flags(extflags), mname(monname),
           non_actor_summoner(nas), props()
     {
         ASSERT(summon_type == 0 || (abj >= 1 && abj <= 6)
@@ -159,9 +159,9 @@ struct mgen_data
 
     static mgen_data sleeper_at(monster_type what,
                                 const coord_def &where,
-                                unsigned nflags = 0)
+                                unsigned genflags = 0)
     {
-        return mgen_data(what, BEH_SLEEP, 0, 0, 0, where, MHITNOT, nflags);
+        return mgen_data(what, BEH_SLEEP, 0, 0, 0, where, MHITNOT, genflags);
     }
 
     static mgen_data hostile_at(monster_type mt,
@@ -170,14 +170,14 @@ struct mgen_data
                                 int abj = 0,
                                 int st = 0,
                                 const coord_def &p = coord_def(-1, -1),
-                                unsigned monflags = 0,
+                                unsigned genflags = 0,
                                 god_type ngod = GOD_NO_GOD,
                                 monster_type base = MONS_NO_MONSTER)
 
     {
         return mgen_data(mt, BEH_HOSTILE, 0, abj, st, p,
                          alert ? MHITYOU : MHITNOT,
-                         monflags, ngod, base, 0, BLACK, you.absdepth0,
+                         genflags, ngod, base, 0, BLACK, you.absdepth0,
                          PROX_ANYWHERE, you.level_type, 0, 0, 0, "", nsummoner);
     }
 };
