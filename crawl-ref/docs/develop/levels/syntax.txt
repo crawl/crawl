@@ -640,6 +640,9 @@ MONS:     (list of monsters)
           be suffixed with "god_gift" (without the quotes):
               MONS: angel god:Zin god_gift
 
+          Note that the monster will not be considered a god gift unless
+          god_gift is explicitly set.
+
           You can set the monster's faction by specifying "att:" one of:
 
           * att:hostile -- the default
