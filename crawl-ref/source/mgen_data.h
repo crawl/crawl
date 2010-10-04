@@ -170,7 +170,7 @@ struct mgen_data
                                 int abj = 0,
                                 int st = 0,
                                 const coord_def &p = coord_def(-1, -1),
-                                uint64_t monflags = 0,
+                                unsigned monflags = 0,
                                 god_type ngod = GOD_NO_GOD,
                                 monster_type base = MONS_NO_MONSTER)
 
