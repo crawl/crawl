@@ -587,8 +587,7 @@ static int _randart_add_one_property( const item_def &item,
 
     const bool negench = one_chance_in(4);
 
-    const artefact_prop_type artprops[] = { ARTP_AC, ARTP_EVASION,
-                                            ARTP_STRENGTH, ARTP_INTELLIGENCE,
+    const artefact_prop_type artprops[] = { ARTP_STRENGTH, ARTP_INTELLIGENCE,
                                             ARTP_DEXTERITY };
 
     do
@@ -600,26 +599,6 @@ static int _randart_add_one_property( const item_def &item,
 
         switch (prop)
         {
-        case ARTP_AC:
-            if (cl == OBJ_ARMOUR
-                || cl == OBJ_JEWELLERY && ty == RING_PROTECTION)
-            {
-                continue;
-            }
-            _randart_propset(proprt, ARTP_AC,
-                             1 + random2(3) + random2(3) + random2(3),
-                             negench);
-            break;
-
-        case ARTP_EVASION:
-            if (cl == OBJ_JEWELLERY && ty == RING_EVASION)
-                continue;
-
-            _randart_propset(proprt, ARTP_EVASION,
-                             1 + random2(3) + random2(3) + random2(3),
-                             negench);
-            break;
-
         case ARTP_STRENGTH:
             if (cl == OBJ_JEWELLERY && ty == RING_STRENGTH)
                 continue;
@@ -654,7 +633,7 @@ static int _randart_add_one_property( const item_def &item,
 }
 
 // An artefact will pass this check if it has any non-stat properties, and
-// also if it has enough stat (AC, EV, Str, Dex, Int, Acc, Dam) properties.
+// also if it has enough stat (Str, Dex, Int, Acc, Dam) properties.
 // Returns how many (more) stat properties we need to add.
 static int _need_bonus_stat_props( const artefact_properties_t &proprt )
 {
@@ -819,33 +798,7 @@ void static _get_randart_properties(const item_def &item,
 
     if (!one_chance_in(5))
     {
-        // AC mod - not for armours or rings of protection.
-        if (one_chance_in(4 + power_level)
-            && aclass != OBJ_ARMOUR
-            && (aclass != OBJ_JEWELLERY || atype != RING_PROTECTION))
-        {
-            proprt[ARTP_AC] = 1 + random2(3) + random2(3) + random2(3);
-            power_level++;
-            if (one_chance_in(4))
-            {
-                proprt[ARTP_AC] -= 1 + random2(3) + random2(3) + random2(3);
-                power_level--;
-            }
-        }
-
-        // EV mod - not for rings of evasion.
-        if (one_chance_in(4 + power_level)
-            && (aclass != OBJ_JEWELLERY || atype != RING_EVASION))
-        {
-            proprt[ARTP_EVASION] = 1 + random2(3) + random2(3) + random2(3);
-            power_level++;
-            if (one_chance_in(4))
-            {
-                proprt[ARTP_EVASION] -= 1 + random2(3) + random2(3)
-                    + random2(3);
-                power_level--;
-            }
-        }
+        // TODO: compensate for the removal of +AC/+EV
 
         // Str mod - not for rings of strength.
         if (one_chance_in(4 + power_level)
