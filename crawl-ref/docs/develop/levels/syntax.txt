@@ -634,11 +634,11 @@ MONS:     (list of monsters)
 
           You can set the monster's god using the "god:" specifier as
           follows:
-              MONS: angel god:Zin
+              MONS: orc god:the_shining_one
 
           If the monster is to be a gift of the specified god, this should
           be suffixed with "god_gift" (without the quotes):
-              MONS: angel god:Zin god_gift
+              MONS: orc god:the_shining_one god_gift
 
           Note that the monster will not be considered a god gift unless
           god_gift is explicitly set.
