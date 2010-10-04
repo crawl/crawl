@@ -1968,7 +1968,8 @@ int fedhas_corpse_spores(beh_type behavior, bool interactive)
                                           0,
                                           positions[i]->pos,
                                           MHITNOT,
-                                          MG_FORCE_PLACE));
+                                          MG_FORCE_PLACE,
+                                          GOD_FEDHAS));
 
         if (rc != -1)
         {
