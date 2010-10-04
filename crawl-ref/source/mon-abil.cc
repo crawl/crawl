@@ -954,7 +954,7 @@ static bool _orc_battle_cry(monster* chief)
         for (monster_iterator mi(chief); mi; ++mi)
         {
             if (*mi != chief
-                && mons_species(mi->type) == MONS_ORC
+                && mons_genus(mi->type) == MONS_ORC
                 && mons_aligned(chief, *mi)
                 && mi->hit_dice < chief->hit_dice
                 && !mi->berserk()

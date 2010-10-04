@@ -715,7 +715,7 @@ bool cast_bone_shards(int power, bolt &beam)
 
     bool success = false;
 
-    const bool was_orc = (mons_species(you.weapon()->plus) == MONS_ORC);
+    const bool was_orc = (mons_genus(you.weapon()->plus) == MONS_ORC);
 
     if (you.weapon()->sub_type != CORPSE_SKELETON)
     {

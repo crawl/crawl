@@ -1662,7 +1662,7 @@ bool cast_twisted_resurrection(int pow, god_type god)
         {
             total_mass += mons_weight(si->plus);
             how_many_corpses++;
-            if (mons_species(si->plus) == MONS_ORC)
+            if (mons_genus(si->plus) == MONS_ORC)
                 how_many_orcs++;
             if (food_is_rotten(*si))
                 rotted++;

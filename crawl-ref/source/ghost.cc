@@ -203,9 +203,9 @@ void ghost_demon::init_random_demon()
         }
         while (brand == SPWPN_HOLY_WRATH
                || (brand == SPWPN_ORC_SLAYING
-                   && you.mons_species() != MONS_ORC)
+                   && mons_genus(you.mons_species()) != MONS_ORC)
                || (brand == SPWPN_DRAGON_SLAYING
-                   && you.mons_species() != MONS_DRACONIAN)
+                   && mons_genus(you.mons_species()) != MONS_DRACONIAN)
                || brand == SPWPN_PROTECTION
                || brand == SPWPN_FLAME
                || brand == SPWPN_FROST);

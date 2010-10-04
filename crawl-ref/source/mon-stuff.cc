@@ -334,7 +334,7 @@ monster_type fill_out_corpse(const monster* mons,
             corpse_class = mons_zombie_base(mons);
         }
 
-        if (mons && corpse_class == MONS_DRACONIAN)
+        if (mons && mons_genus(mtype) == MONS_DRACONIAN)
         {
             if (mons->type == MONS_TIAMAT)
                 corpse_class = MONS_DRACONIAN;
@@ -825,7 +825,7 @@ static bool _beogh_forcibly_convert_orc(monster* mons, killer_type killer,
                                         int i)
 {
     if (you.religion == GOD_BEOGH
-        && mons_species(mons->type) == MONS_ORC
+        && mons_genus(mons->type) == MONS_ORC
         && !mons->is_summoned() && !mons->is_shapeshifter()
         && !player_under_penance() && you.piety >= piety_breakpoint(2)
         && mons_near(mons) && !mons_is_god_gift(mons))
@@ -2607,8 +2607,8 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     const god_type god =
         (player_will_anger_monster(real_targetc)
             || (you.religion == GOD_BEOGH
-                && mons_species(real_targetc) != MONS_ORC)) ? GOD_NO_GOD
-                                                            : mons->god;
+                && mons_genus(real_targetc) != MONS_ORC)) ? GOD_NO_GOD
+                                                          : mons->god;
 
     if (god == GOD_NO_GOD)
         flags &= ~MF_GOD_GIFT;

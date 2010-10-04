@@ -3876,7 +3876,7 @@ void bolt::enchantment_affect_monster(monster* mon)
             set_attack_conducts(conducts, mon, you.can_see(mon));
 
             if (you.religion == GOD_BEOGH
-                && mons_species(mon->type) == MONS_ORC
+                && mons_genus(mon->type) == MONS_ORC
                 && mon->asleep() && !player_under_penance()
                 && you.piety >= piety_breakpoint(2) && mons_near(mon))
             {
@@ -4198,7 +4198,7 @@ void bolt::affect_monster(monster* mon)
             set_attack_conducts(conducts, mon, !okay);
         }
 
-        if (you.religion == GOD_BEOGH && mons_species(mon->type) == MONS_ORC
+        if (you.religion == GOD_BEOGH && mons_genus(mon->type) == MONS_ORC
             && mon->asleep() && YOU_KILL(thrower)
             && !player_under_penance() && you.piety >= piety_breakpoint(2)
             && mons_near(mon))

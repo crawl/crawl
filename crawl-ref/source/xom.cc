@@ -983,7 +983,7 @@ static bool _choose_chaos_upgrade(const monster* mon)
 
     // Beogh presumably doesn't want Xom messing with his orcs, even if
     // it would give them a better weapon.
-    if (mons_species(mon->type) == MONS_ORC
+    if (mons_genus(mon->type) == MONS_ORC
         && (mon->is_priest() || coinflip()))
     {
         return (false);
