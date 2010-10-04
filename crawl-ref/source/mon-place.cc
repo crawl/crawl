@@ -1425,6 +1425,10 @@ static int _place_monster_aux(const mgen_data &mg,
         define_monster(mon);
 
     // Is it a god gift?
+    //
+    // FIXME: A monster with a god specified by a vault (as opposed to
+    // one specified in an mgen_data instance) will have mg.god set, but
+    // should not have this flag set.  See mapdef.cc:parse_mons_spec().
     if (mg.god != GOD_NO_GOD)
     {
         mon->god    = mg.god;
