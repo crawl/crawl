@@ -122,7 +122,7 @@ struct mgen_data
               int st = 0,
               const coord_def &p = coord_def(-1, -1),
               unsigned short mfoe = MHITNOT,
-              uint64_t monflags = 0,
+              unsigned monflags = 0,
               god_type which_god = GOD_NO_GOD,
               monster_type base = MONS_NO_MONSTER,
               int monnumber = 0,
