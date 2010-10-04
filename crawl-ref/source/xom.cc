@@ -3300,6 +3300,22 @@ static int _xom_repel_stairs(bool debug = false)
     return (XOM_BAD_STAIRS);
 }
 
+static int _xom_colour_smoke_trail(bool debug = false)
+{
+    if (you.duration[DUR_COLOUR_SMOKE_TRAIL])
+    {
+        return (XOM_DID_NOTHING);
+    }
+
+    if (debug)
+        return (XOM_BAD_COLOUR_SMOKE_TRAIL);
+
+    you.duration[DUR_COLOUR_SMOKE_TRAIL] = random_range(60, 120);
+    const std::string speech = _get_xom_speech("colour smoke trail");
+    god_speaks(GOD_XOM, speech.c_str());
+    return (XOM_BAD_COLOUR_SMOKE_TRAIL);
+}
+
 static int _xom_draining_torment_effect(int sever, bool debug = false)
 {
     const std::string speech = _get_xom_speech("draining or torment");
@@ -3536,6 +3552,8 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
             done = _xom_miscast(0, nasty, debug);
         else if (!nasty && x_chance_in_y(4, sever))
             done = _xom_miscast(1, nasty, debug);
+        else if (!nasty && tension <= 0 && x_chance_in_y(4, sever))
+            done = _xom_colour_smoke_trail(debug);
         // It's pointless to confuse player if there's no danger nearby.
         else if (tension > 0 && x_chance_in_y(5, sever))
         {
@@ -4250,8 +4268,9 @@ static const std::string _xom_effect_to_name(int effect)
         "mutation", "permanent ally", "lightning", "change scenery",
         "snakes to sticks",
         // bad acts
-        "nothing", "miscast (pseudo)", "miscast (minor)", "miscast (major)",
-        "miscast (nasty)", "stat loss", "teleportation", "swap weapons",
+        "nothing", "coloured smoke trail", "miscast (pseudo)",
+        "miscast (minor)", "miscast (major)", "miscast (nasty)",
+        "stat loss", "teleportation", "swap weapons",
         "chaos upgrade", "mutation", "polymorph", "repel stairs", "confusion",
         "draining", "torment", "animate weapon", "summon demons",
         "banishment (pseudo)", "banishment"

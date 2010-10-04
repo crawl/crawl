@@ -871,6 +871,8 @@ void levitate_player(int pow);
 
 void dec_disease_player(int delay);
 
+void dec_color_smoke_trail();
+
 bool player_weapon_wielded();
 
 // Determines if the given grid is dangerous for the player to enter.
