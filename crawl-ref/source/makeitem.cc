@@ -3104,7 +3104,7 @@ int items(int allow_uniques,       // not just true-false,
           int item_level,          // level of the item, can differ from global
           int item_race,           // weapon / armour racial categories
                                    // item_race also gives type of rune!
-          unsigned mapmask,
+          uint32_t mapmask,
           int force_ego,           // desired ego/brand
           int agent)               // acquirement agent, if not -1
 {
