@@ -708,12 +708,8 @@ static talent _get_talent(ability_type ability, bool check_confused)
 
     // destroying stuff doesn't train anything
     case ABIL_ELYVILON_DESTROY_WEAPONS:
-    case ABIL_FEDHAS_FUNGAL_BLOOM:
-        invoc = true;
-        failure = 0;
-        break;
-
     case ABIL_TROG_BURN_SPELLBOOKS:
+    case ABIL_FEDHAS_FUNGAL_BLOOM:
         invoc = true;
         failure = 0;
         break;
