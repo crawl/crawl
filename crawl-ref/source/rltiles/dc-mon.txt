@@ -64,7 +64,7 @@ orange_rat MONS_ORANGE_RAT
 giant_centipede MONS_GIANT_CENTIPEDE
 giant_mite MONS_GIANT_MITE
 scorpion MONS_SCORPION
-giant_scorpion MONS_GIANT_SCORPION
+emperor_scorpion MONS_EMPEROR_SCORPION
 spider MONS_SPIDER
 tarantella MONS_TARANTELLA
 jumping_spider MONS_JUMPING_SPIDER

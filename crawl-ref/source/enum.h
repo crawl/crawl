@@ -2214,7 +2214,7 @@ enum monster_type                      // (int) menv[].type
     MONS_IRON_GIANT,
     MONS_NELLIE,
     MONS_IRON_ELEMENTAL,
-    MONS_GIANT_SCORPION,
+    MONS_EMPEROR_SCORPION,
     MONS_GHOST_MOTH,
     MONS_JUMPING_SPIDER,
     MONS_DEMONIC_TENTACLE,
