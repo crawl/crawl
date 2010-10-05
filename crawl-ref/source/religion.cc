@@ -333,7 +333,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Yredelemnul
     { "animate {yred_dead}",
       "recall your undead slaves",
-      "#animate {yred_dead}",
+      "[animate {yred_dead} or ]mirror your injuries on your foes",
       "drain ambient lifeforce",
       "enslave living souls" },
     // Xom
