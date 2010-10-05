@@ -1595,6 +1595,12 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_YRED_INJURY_MIRROR:
+        if (yred_injury_mirror())
+        {
+            mpr("You already have a dark mirror aura!");
+            return (false);
+        }
+
         mprf("You %s in prayer and are bathed in unholy energy.",
              (you.species == SP_NAGA) ? "coil"
                                       : "kneel");
