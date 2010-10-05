@@ -706,7 +706,8 @@ static talent _get_talent(ability_type ability, bool check_confused)
         failure = 30 - (you.piety / 20) - (6 * you.skills[SK_INVOCATIONS]);
         break;
 
-    // destroying/ponderousifying stuff doesn't train anything
+    // These don't train anything.
+    case ABIL_ZIN_CURE_ALL_MUTATIONS:
     case ABIL_ELYVILON_DESTROY_WEAPONS:
     case ABIL_TROG_BURN_SPELLBOOKS:
     case ABIL_FEDHAS_FUNGAL_BLOOM:
