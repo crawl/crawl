@@ -3346,12 +3346,15 @@ static bool _print_final_god_abil_desc(int god, const std::string &final_msg,
 
     std::ostringstream buf;
     buf << final_msg;
+
     const std::string cost = "(" + make_cost_description(abil) + ")";
+
     if (cost != "(None)")
     {
         const int spacesleft = 79 - buf.str().length();
         buf << std::setw(spacesleft) << cost;
     }
+
     cprintf("%s\n", buf.str().c_str());
 
     return (true);
