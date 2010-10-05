@@ -711,6 +711,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_TROG_BURN_SPELLBOOKS:
     case ABIL_FEDHAS_FUNGAL_BLOOM:
         invoc = true;
+        perfect = true;
         failure = 0;
         break;
 
