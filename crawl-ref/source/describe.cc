@@ -3627,7 +3627,6 @@ static int _piety_level()
             (you.piety >=  30) ? 2 :
             (you.piety >    5) ? 1
                                : 0 );
-
 }
 
 std::string god_title(god_type which_god, species_type which_species)
