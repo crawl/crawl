@@ -844,7 +844,7 @@ bool jiyva_remove_bad_mutation()
 bool yred_injury_mirror(bool actual)
 {
     return (you.religion == GOD_YREDELEMNUL && !player_under_penance()
-            && you.piety >= piety_breakpoint(1)
+            && you.piety >= piety_breakpoint(2)
             && (!actual || you.duration[DUR_MIRROR_DAMAGE]));
 }
 
