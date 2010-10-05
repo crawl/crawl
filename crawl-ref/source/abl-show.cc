@@ -112,7 +112,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       ABIL_NON_ABILITY, ABIL_NON_ABILITY },
     // Yredelemnul
     { ABIL_YRED_ANIMATE_REMAINS_OR_DEAD, ABIL_YRED_RECALL_UNDEAD_SLAVES,
-      ABIL_YRED_INJURY_MIRROR, ABIL_YRED_DRAIN_LIFE, ABIL_YRED_ENSLAVE_SOUL },
+      ABIL_NON_ABILITY, ABIL_YRED_DRAIN_LIFE, ABIL_YRED_ENSLAVE_SOUL },
     // Xom
     { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
       ABIL_NON_ABILITY },
@@ -2345,6 +2345,12 @@ std::vector<talent> your_talents(bool check_confused)
                                     ABIL_ELYVILON_GREATER_HEALING_SELF,
                                     check_confused);
                     }
+                    else if (abil == ABIL_YRED_RECALL_UNDEAD_SLAVES)
+                    {
+                        _add_talent(talents,
+                                    ABIL_YRED_INJURY_MIRROR,
+                                    check_confused);
+                    }
                 }
             }
         }
@@ -2526,6 +2532,15 @@ void set_god_ability_slots()
                                             'a' + num++);
                 }
             }
+            else if (you.religion == GOD_YREDELEMNUL)
+            {
+                if (god_abilities[you.religion][i]
+                        == ABIL_YRED_RECALL_UNDEAD_SLAVES)
+                {
+                    _set_god_ability_helper(ABIL_YRED_INJURY_MIRROR,
+                                            'a' + num++);
+                }
+            }
         }
     }
 }
@@ -2540,8 +2555,10 @@ static int _find_ability_slot(ability_type which_ability)
 
     // No requested slot, find new one and make it preferred.
 
-    // Skip over a-e (invocations), or a-g for Elyvilon.
-    const int first_slot = (you.religion == GOD_ELYVILON ? 7 : 5);
+    // Skip over a-e (invocations), a-g for Elyvilon, or a-f for Yredelemnul.
+    const int first_slot = you.religion == GOD_ELYVILON    ? 7 :
+                           you.religion == GOD_YREDELEMNUL ? 6
+                                                           : 5;
     for (int slot = first_slot; slot < 52; ++slot)
     {
         if (you.ability_letter_table[slot] == ABIL_NON_ABILITY)
