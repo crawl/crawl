@@ -416,14 +416,6 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     }
 };
 
-static void _replace(std::string& s,
-                     const std::string &find,
-                     const std::string &repl);
-
-static void _erase_between(std::string& s,
-                           const std::string &left,
-                           const std::string &right);
-
 typedef void (*delayed_callback)(const mgen_data &mg, int &midx, int placed);
 
 static void _delayed_monster(const mgen_data &mg,
@@ -2355,6 +2347,32 @@ void religion_turn_end()
     _place_delayed_monsters();
 }
 
+static void _replace(std::string& s,
+                     const std::string &find,
+                     const std::string &repl)
+{
+    std::string::size_type start = 0;
+    std::string::size_type found;
+
+    while ((found = s.find(find, start)) != std::string::npos)
+    {
+        s.replace( found, find.length(), repl );
+        start = found + repl.length();
+    }
+}
+
+static void _erase_between(std::string& s,
+                           const std::string &left,
+                           const std::string &right)
+{
+    std::string::size_type left_pos;
+    std::string::size_type right_pos;
+
+    while ((left_pos = s.find(left)) != std::string::npos
+           && (right_pos = s.find(right, left_pos + left.size())) != std::string::npos)
+        s.erase(s.begin() + left_pos, s.begin() + right_pos + right.size());
+}
+
 std::string adjust_abil_message(const char *pmsg, bool allow_upgrades)
 {
     std::string pm = pmsg;
@@ -2998,32 +3016,6 @@ void excommunication(god_type new_god)
     // Evil hack.
     learned_something_new(HINT_EXCOMMUNICATE,
                           coord_def((int)new_god, old_piety));
-}
-
-static void _replace(std::string& s,
-                     const std::string &find,
-                     const std::string &repl)
-{
-    std::string::size_type start = 0;
-    std::string::size_type found;
-
-    while ((found = s.find(find, start)) != std::string::npos)
-    {
-        s.replace( found, find.length(), repl );
-        start = found + repl.length();
-    }
-}
-
-static void _erase_between(std::string& s,
-                           const std::string &left,
-                           const std::string &right)
-{
-    std::string::size_type left_pos;
-    std::string::size_type right_pos;
-
-    while ((left_pos = s.find(left)) != std::string::npos
-           && (right_pos = s.find(right, left_pos + left.size())) != std::string::npos)
-        s.erase(s.begin() + left_pos, s.begin() + right_pos + right.size());
 }
 
 static std::string _sacrifice_message(std::string msg,
