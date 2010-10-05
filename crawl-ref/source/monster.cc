@@ -682,7 +682,7 @@ void monster::bind_melee_flags()
     // Bind fighter / dual-wielder / archer flags from the base type.
 
     // Alas, we don't know if the mon is zombified at the moment, if it
-    // is, the flags will be removed later.
+    // is, the flags (other than dual-wielder) will be removed later.
     if (mons_class_flag(type, M_FIGHTER))
         flags |= MF_FIGHTER;
     if (mons_class_flag(type, M_TWO_WEAPONS))
