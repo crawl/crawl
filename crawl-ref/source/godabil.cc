@@ -841,11 +841,11 @@ bool jiyva_remove_bad_mutation()
     return (true);
 }
 
-bool yred_injury_mirror(bool actual)
+bool yred_injury_mirror()
 {
     return (you.religion == GOD_YREDELEMNUL && !player_under_penance()
             && you.piety >= piety_breakpoint(2)
-            && (!actual || you.duration[DUR_MIRROR_DAMAGE]));
+            && you.duration[DUR_MIRROR_DAMAGE]);
 }
 
 bool yred_can_animate_dead()
