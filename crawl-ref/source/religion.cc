@@ -224,7 +224,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "invoke torment by praying over a corpse" },
     // Yredelemnul
     { "animate {yred_dead}",
-      "recall your undead slaves and mirror injuries on foes",
+      "recall your undead slaves and mirror injuries on your foes",
       "[animate {yred_dead}]",
       "drain ambient lifeforce",
       "enslave living souls" },
@@ -332,7 +332,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "invoke torment by praying over a corpse" },
     // Yredelemnul
     { "animate {yred_dead}",
-      "recall your undead slaves and mirror injuries on foes",
+      "recall your undead slaves and mirror injuries on your foes",
       "[animate {yred_dead}]",
       "drain ambient lifeforce",
       "enslave living souls" },
