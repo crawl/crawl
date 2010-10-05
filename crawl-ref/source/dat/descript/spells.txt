@@ -595,7 +595,7 @@ This spell calls forth a beast of ice to serve the caster.
 %%%%
 Summon Scorpions
 
-This spell summons one or more giant scorpions (some of which may not be bound to the caster's service).
+This spell summons one or more emperor scorpions (some of which may not be bound to the caster's service).
 %%%%
 Summon Small Mammals
 
