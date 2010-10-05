@@ -706,10 +706,11 @@ static talent _get_talent(ability_type ability, bool check_confused)
         failure = 30 - (you.piety / 20) - (6 * you.skills[SK_INVOCATIONS]);
         break;
 
-    // destroying stuff doesn't train anything
+    // destroying/ponderousifying stuff doesn't train anything
     case ABIL_ELYVILON_DESTROY_WEAPONS:
     case ABIL_TROG_BURN_SPELLBOOKS:
     case ABIL_FEDHAS_FUNGAL_BLOOM:
+    case ABIL_CHEIBRIADOS_PONDEROUSIFY:
         invoc = true;
         perfect = true;
         failure = 0;
@@ -832,7 +833,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
         failure = 50 - (you.piety / 20) - (5 * you.skills[SK_EVOCATIONS]);
         break;
 
-    case ABIL_CHEIBRIADOS_PONDEROUSIFY:
     case ABIL_RENOUNCE_RELIGION:
         invoc = true;
         perfect = true;
