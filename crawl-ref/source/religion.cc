@@ -225,7 +225,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Yredelemnul
     { "animate {yred_dead}",
       "recall your undead slaves",
-      "#animate {yred_dead}",
+      "[animate {yred_dead} and ]mirror your injuries on your foes",
       "drain ambient lifeforce",
       "enslave living souls" },
     // Xom
@@ -415,6 +415,14 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "step out of the time flow"
     }
 };
+
+static void _replace(std::string& s,
+                     const std::string &find,
+                     const std::string &repl);
+
+static void _erase_between(std::string& s,
+                           const std::string &left,
+                           const std::string &right);
 
 typedef void (*delayed_callback)(const mgen_data &mg, int &midx, int placed);
 
@@ -2351,14 +2359,14 @@ std::string adjust_abil_message(const char *pmsg, bool allow_upgrades)
 {
     std::string pm = pmsg;
 
-    // Messages starting with "#" are ability upgrades.
-    if (!pm.empty() && pmsg[0] == '#')
+    // Message portions in [] sections are ability upgrades.
+    if (allow_upgrades)
     {
-        if (allow_upgrades)
-            pm.erase(0, 1);
-        else
-            return ("");
+        _replace(pm, "[", "");
+        _replace(pm, "]", "");
     }
+    else
+        _erase_between(pm, "[", "]");
 
     int pos;
 
