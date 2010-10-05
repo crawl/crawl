@@ -3347,7 +3347,16 @@ static bool _print_final_god_abil_desc(int god, const std::string &final_msg,
     std::ostringstream buf;
     buf << final_msg;
 
-    const std::string cost = "(" + make_cost_description(abil) + ")";
+    // For ability slots that give more than one ability, display
+    // "Various" instead of the cost of the first ability.
+    // XXX: There should be a better way to do this!
+    const std::string cost =
+        "(" +
+              ((abil == ABIL_ELYVILON_LESSER_HEALING_OTHERS
+                || abil == ABIL_ELYVILON_GREATER_HEALING_OTHERS
+                || abil == ABIL_YRED_RECALL_UNDEAD_SLAVES) ?
+                    "Various" : make_cost_description(abil))
+            + ")";
 
     if (cost != "(None)")
     {
