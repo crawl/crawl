@@ -850,7 +850,8 @@ bool yred_injury_mirror(bool actual)
 
 bool yred_can_animate_dead()
 {
-    return (you.piety >= piety_breakpoint(2));
+    return (you.religion == GOD_YREDELEMNUL && !player_under_penance()
+            && you.piety >= piety_breakpoint(2));
 }
 
 void yred_animate_remains_or_dead()
