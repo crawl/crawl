@@ -2356,7 +2356,9 @@ std::vector<talent> your_talents(bool check_confused)
             && !you.num_gifts[GOD_ZIN]
             && you.piety > 160)
         {
-            _add_talent(talents, ABIL_ZIN_CURE_ALL_MUTATIONS, check_confused);
+            _add_talent(talents,
+                        ABIL_ZIN_CURE_ALL_MUTATIONS,
+                        check_confused);
         }
     }
 
