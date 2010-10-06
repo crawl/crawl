@@ -1201,13 +1201,15 @@ std::string cloud_struct::cloud_name(const std::string &defname) const
                                cloud_type_name(type, false));
 }
 
-void cloud_struct::announce_actor_engulfed(const actor *act) const
+void cloud_struct::announce_actor_engulfed(const actor *act,
+                                           bool beneficial) const
 {
     if (you.can_see(act))
     {
-        mprf("%s %s engulfed in %s.",
+        mprf("%s %s in %s.",
              act->name(DESC_CAP_THE).c_str(),
-             act->conj_verb("are").c_str(),
+             beneficial ? act->conj_verb("bask").c_str()
+                        : (act->conj_verb("are") + " engulfed").c_str(),
              cloud_name().c_str());
     }
 }

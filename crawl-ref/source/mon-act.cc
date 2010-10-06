@@ -4061,7 +4061,7 @@ static void _mons_in_cloud(monster* mons)
         break;
 
     case CLOUD_HOLY_FLAMES:
-        cloud.announce_actor_engulfed(mons);
+        cloud.announce_actor_engulfed(mons, mons->is_holy());
 
         if (mons->is_holy())
             resist = 3;

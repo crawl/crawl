@@ -290,7 +290,8 @@ struct cloud_struct
     void set_killer(killer_type _killer);
 
     std::string cloud_name(const std::string &default_name = "") const;
-    void announce_actor_engulfed(const actor *engulfee) const;
+    void announce_actor_engulfed(const actor *engulfee,
+                                 bool beneficial = false) const;
 
     static kill_category killer_to_whose(killer_type killer);
     static killer_type   whose_to_killer(kill_category whose);
