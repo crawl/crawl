@@ -3975,7 +3975,7 @@ static monsterentry mondata[] = {
 // lava monsters
 {
     MONS_LAVA_WORM, 'w', RED, "lava worm",
-    M_NO_FLAGS | M_SUBMERGES,
+    M_NO_SKELETON | M_SUBMERGES,
     mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
     0, 6, MONS_LAVA_WORM, MONS_LAVA_WORM, MH_NATURAL, -3,
     { {AT_BITE, AF_FIRE, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
