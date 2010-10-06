@@ -747,12 +747,7 @@ static bool _summon_holy_being_wrapper(int pow, god_type god, int spell,
     summon->flags |= MF_ATT_CHANGE_ATTEMPT;
 
     if (!quiet)
-    {
-        mprf("You are momentarily dazzled by a brilliant %slight.",
-             (mon == MONS_DAEVA) ? "golden " :
-             (mon == MONS_ANGEL) ? "white "
-                                 : "");
-    }
+        mpr("You are momentarily dazzled by a brilliant light.");
 
     player_angers_monster(&menv[mons]);
     return (true);
