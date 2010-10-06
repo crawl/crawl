@@ -586,7 +586,13 @@ chunk_writer::~chunk_writer()
     ASSERT(pkg->n_users > 0);
     pkg->n_users--;
     if (pkg->aborted)
+    {
+#ifdef USE_ZLIB
+        // ignore errors, they're not relevant anymore
+        deflateEnd(&zs);
+#endif
         return;
+    }
 
 #ifdef USE_ZLIB
     zs.avail_in = 0;
