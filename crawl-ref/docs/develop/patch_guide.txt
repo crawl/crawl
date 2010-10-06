@@ -45,8 +45,9 @@ Main steps
 
 4.) Compile again to test your changes.
 
-5.) Once everything works as it should, you should make a local commit (or
-    several), and use git format-patch to produce easily appliable patches:
+5.) Once everything works as it should, run util/checkwhite to fix a few
+    formatting problems. Now, you should make a local commit (or several), and
+    use git format-patch to produce easily appliable patches:
     git format-patch -n
 
     Where n is the number of commits you made. Each is made into a separate
