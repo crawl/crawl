@@ -93,6 +93,7 @@ package::package(const char* file, bool writeable, bool empty)
 {
     dprintf("package: initializing file=\"%s\" rw=%d\n", file, writeable);
     ASSERT(writeable || !empty);
+    filename = file;
     rw = writeable;
 
     if (empty)
@@ -173,9 +174,10 @@ package::~package()
     }
 
     // all errors here should be cached write errors
-    if (close(fd) && !aborted)
-        sysfail(rw ? "write error while saving"
-                   : "can't close the save I've just read???");
+    if (fd != -1)
+        if (close(fd) && !aborted)
+            sysfail(rw ? "write error while saving"
+                       : "can't close the save I've just read???");
     dprintf("package: closed\n");
 }
 
@@ -517,6 +519,14 @@ void package::abort()
     // this point are ignored (assuming we already failed).  All writes since
     // the last commit() are lost.
     aborted = true;
+}
+
+void package::unlink()
+{
+    abort();
+    close(fd);
+    fd = -1;
+    ::unlink(filename.c_str());
 }
 
 
