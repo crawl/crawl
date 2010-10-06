@@ -969,7 +969,7 @@ void in_a_cloud()
         break;
 
     case CLOUD_HOLY_FLAMES:
-        mprf("You are engulfed in %s!", !name.empty() ? name.c_str() : "blessed fire");
+        cloud.announce_actor_engulfed(&you);
 
         // Stats are the same for fire, except resists are based on holiness.
         // Damage is reduced if you are holy, increased if you are evil/unholy.
