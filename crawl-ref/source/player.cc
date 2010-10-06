@@ -306,11 +306,14 @@ void moveto_location_effects(dungeon_feature_type old_feat,
                 merfolk_stop_swimming();
         }
 
-        if (new_grid == DNGN_SHALLOW_WATER && !player_likes_water())
-        {
-            if (!stepped)
+        if(feat_is_water(new_grid) && !stepped)
+            if (player_likes_water())
+                noisy(4, you.pos(), "Floosh!");
+            else
                 noisy(8, you.pos(), "Splash!");
 
+        if (new_grid == DNGN_SHALLOW_WATER && !player_likes_water())
+        {
             you.time_taken *= 13 + random2(8);
             you.time_taken /= 10;
 
