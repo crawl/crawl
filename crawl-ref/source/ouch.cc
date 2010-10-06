@@ -1285,10 +1285,9 @@ static std::string morgue_name(time_t when_crawl_got_even)
 // Delete save files on game end.
 static void delete_files()
 {
-    you.save->abort();
+    you.save->unlink();
     delete you.save;
     you.save = 0;
-    unlink((get_savedir_filename(you.your_name, "", "") + SAVE_SUFFIX).c_str());
 }
 
 void end_game(scorefile_entry &se)

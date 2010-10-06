@@ -72,7 +72,9 @@ public:
     bool has_chunk(const std::string name);
     std::vector<std::string> list_chunks();
     void abort();
+    void unlink();
 private:
+    std::string filename;
     bool rw;
     int fd;
     len_t file_len;
