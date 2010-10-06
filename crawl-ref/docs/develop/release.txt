@@ -108,23 +108,15 @@ for those the list begins with step 2.
     See https://sourceforge.net/apps/trac/sourceforge/wiki/Release%20files%20for%20download
     for some more detailed explanations.
 
+    Also, paste the changelog into a newly created 0.X.txt, and upload it
+    into the folder as well.
+
 10. Update the homepage
-    sftp username,crawl-ref@frs.sourceforge.net
-    >cd htdocs
-    >get index.html
-
-    Paste the changelog into a newly created 0.X.txt
-    Modify index.html to update the version number (the link will always point
-    to the most recent release) and add a new news item. For the latter, use
-    <a href="0.X.txt">text</a> as a link to the change log.
-
-    >put index.html
-    >put 0.X.txt
-
-    Check http://crawl-ref.sourceforge.net/ to see whether everything looks ok.
+    Modify the Downloads page over at 
+    http://crawl.develz.org/wordpress/downloads/ as necessary.
 
 11. Announce the release
-    Post a release announcement to rec.games.roguelike.misc and
+    Post a release announcement to the CDO blog, rec.games.roguelike.misc and
     rec.games.roguelike.announce. Also send an email over crawl-ref-discuss.
     If you want you can also write a news item on Sourceforge.
 
