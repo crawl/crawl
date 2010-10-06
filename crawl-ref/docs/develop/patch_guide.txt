@@ -56,7 +56,7 @@ Main steps
     http://crawl.develz.org/mantis/main_page.php
 
     Here it is immensely helpful if you give a summary of what the patch is
-    about. If you created it in response to a bug report or feature request,
+    about. If you created it in response to a bug report or an "Implementable",
     mention the id, and you might also want to post a reply in said item
     pointing out your new patch. Please also mention the revision/version you
     used for patching, e.g. 0.6 or 1d611744b (the first 7 or 8 characters
