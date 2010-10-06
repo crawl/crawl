@@ -154,10 +154,6 @@ xxxxxxxxxxxxxxxxxxxxWW..WWxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-# The next two maps have the ghost moths behind doors and warnings, since
-# they're a bit OOD for the Lair portal vaults. No doors and warnings will be
-# in the Spider branch proper!
-
 ###############################################################################
 # Layout: Octagonal rooms.
 # Foes:   A ghost moth and trapdoor spiders.
@@ -171,15 +167,9 @@ WEIGHT: 5
 epilogue{{
 spiders_nest_milestone(_G)
 }}
-MONS:    trapdoor spider, ghost moth
-SUBST:   * = **d
-ITEM:    piece of ambrosia
-SHUFFLE: <A
-MARKER: + = lua:restrict_door({ \
-            door_open_prompt="This door is covered in warnings. Open " .. \
-                             "it anyway?", \
-            door_description_prefix="warning scrawled " \
-         })
+MONS:   trapdoor spider, ghost moth
+SUBST:  * = **d
+ITEM:   piece of ambrosia
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxx$$$$xxxxxxxxx$$$$xxxxxxxxx$$$$xxxxx
@@ -187,18 +177,14 @@ xxxx......xxxxxxx......xxxxxxx......xxxx
 xxx........xxxxx........xxxxx........xxx
 xx..........xxx..........xxx..........xx
 x*..1........x............x...........*x
-x|..1..............................2..|x
-x|..1..............................1..|x
+x|..1..............<...............2..|x
+x|..1..............A...............1..|x
 x*..1........x............x...........*x
 xx..........xxx..........xxx..........xx
 xxx........xxxxx........xxxxx........xxx
 xxxx......xxxxxxx......xxxxxxx......xxxx
 xxxxx$$$$xxxxxxxxx$$$$xxxxxxxxx$$$$xxxxx
-xxxxxxxxxxxxxxxxxxx++xxxxxxxxxxxxxxxxxxx
-                 x....x
-                 x.<A.x
-                 x....x
-                 xxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ###############################################################################
@@ -216,19 +202,9 @@ spiders_nest_milestone(_G)
 }}
 MONS:   ghost moth, tarantella
 ITEM:   piece of ambrosia
-MARKER: + = lua:restrict_door({ \
-            door_open_prompt="This door is covered in warnings. Open " .. \
-                             "it anyway?", \
-            door_description_prefix="warning scrawled " \
-         })
-SHUFFLE: <A
 MAP
-    xxxxxx
-    x....x
-    x.<A.x
-    x....x
-xxxxxx++xxxxxx
-xxxxx....xxxxx
+xxxxxxxxxxxxxx
+xxxxx.<A.xxxxx
 xxxx......xxxx
 xxx........xxx
 xx....WW....xx
