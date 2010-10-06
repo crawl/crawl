@@ -103,7 +103,10 @@ package::package(const char* file, bool writeable, bool empty)
             sysfail("can't create save file (%s)", file);
 
         if (!lock_file(fd, true))
+        {
+            close(fd);
             sysfail("failed to lock newly created save (%s)", file);
+        }
 
         dirty = true;
         file_len = sizeof(file_header);
@@ -114,46 +117,61 @@ package::package(const char* file, bool writeable, bool empty)
         if (fd == -1)
             sysfail("can't open save file (%s)", file);
 
-        if (!lock_file(fd, writeable))
-            fail("Another game is already in progress using this save!");
-
-        file_header head;
-        ssize_t res = ::read(fd, &head, sizeof(file_header));
-        if (res < 0)
-            sysfail("error reading the save file (%s)", file);
-        if (!res || !(head.magic || head.version || head.padding[0]
-                      || head.padding[1] || head.padding[2] || head.start))
+        try
         {
-            fail("The save file (%s) is empty!", file);
+            if (!lock_file(fd, writeable))
+                fail("Another game is already in progress using this save!");
+
+            load();
         }
-        if (res != sizeof(file_header))
-            fail("save file (%s) corrupted -- header truncated", file);
-
-        if (htole(head.magic) != PACKAGE_MAGIC)
-            fail("save file (%s) corrupted -- not a DCSS save file", file);
-        if (head.version != PACKAGE_VERSION)
-            fail("save file (%s) uses an unknown format %u", file, head.version);
-        off_t len = lseek(fd, 0, SEEK_END);
-        if (len == -1)
-            sysfail("save file (%s) is not seekable", file);
-        file_len = len;
-        read_directory(htole(head.start));
-
-        if (writeable)
+        catch (std::exception &e)
         {
-            free_blocks[sizeof(file_header)] = file_len - sizeof(file_header);
+            close(fd);
+            throw;
+        }
+    }
+}
 
-            for(directory_t::iterator ch = directory.begin();
-                ch != directory.end(); ch++)
-            {
-                trace_chunk(ch->second);
-            }
+void package::load()
+{
+    file_header head;
+    ssize_t res = ::read(fd, &head, sizeof(file_header));
+    if (res < 0)
+        sysfail("error reading the save file (%s)", filename.c_str());
+    if (!res || !(head.magic || head.version || head.padding[0]
+                  || head.padding[1] || head.padding[2] || head.start))
+    {
+        fail("The save file (%s) is empty!", filename.c_str());
+    }
+    if (res != sizeof(file_header))
+        fail("save file (%s) corrupted -- header truncated", filename.c_str());
+
+    if (htole(head.magic) != PACKAGE_MAGIC)
+        fail("save file (%s) corrupted -- not a DCSS save file",
+             filename.c_str());
+    if (head.version != PACKAGE_VERSION)
+        fail("save file (%s) uses an unknown format %u", filename.c_str(),
+              head.version);
+    off_t len = lseek(fd, 0, SEEK_END);
+    if (len == -1)
+        sysfail("save file (%s) is not seekable", filename.c_str());
+    file_len = len;
+    read_directory(htole(head.start));
+
+    if (rw)
+    {
+        free_blocks[sizeof(file_header)] = file_len - sizeof(file_header);
+
+        for(directory_t::iterator ch = directory.begin();
+            ch != directory.end(); ch++)
+        {
+            trace_chunk(ch->second);
+        }
 #ifdef COSTLY_ASSERTS
-            // any inconsitency in the save is guaranteed to be already found
-            // by this time -- this checks only for internal bugs
-            fsck();
+        // any inconsitency in the save is guaranteed to be already found
+        // by this time -- this checks only for internal bugs
+        fsck();
 #endif
-        }
     }
 }
 

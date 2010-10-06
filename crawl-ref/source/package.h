@@ -96,6 +96,7 @@ private:
     void fsck();
     void read_directory(len_t start);
     void trace_chunk(len_t start);
+    void load();
     friend class chunk_writer;
     friend class chunk_reader;
 };
