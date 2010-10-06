@@ -10,8 +10,6 @@ Guarantees:
   the exact state it had at the last commit().
 
 Caveats/issues:
-* Before the first commit, the save is "not a valid DCSS save file",
-  how should we handle this?
 * Benchmarked on random chunks of size 2^random2(X) * frandom(1),
   naive reusing of the first slab of free space produces less waste than
   best fit.  I don't fully understand why, but for now, let's use that.
