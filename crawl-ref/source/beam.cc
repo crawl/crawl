@@ -4970,7 +4970,7 @@ void bolt::refine_for_explosion()
                + " explodes!";
 
         seeMsg  = tmp.c_str();
-        hearMsg = "You hear an explosion.";
+        hearMsg = "You hear an explosion!";
 
         glyph   = dchar_glyph(DCHAR_FIRED_BURST);
     }
@@ -4978,7 +4978,7 @@ void bolt::refine_for_explosion()
     if (name.find("hellfire") != std::string::npos)
     {
         seeMsg  = "The hellfire explodes!";
-        hearMsg = "You hear a strangely unpleasant explosion.";
+        hearMsg = "You hear a strangely unpleasant explosion!";
 
         glyph   = dchar_glyph(DCHAR_FIRED_BURST);
         flavour = BEAM_HELLFIRE;
@@ -4987,7 +4987,7 @@ void bolt::refine_for_explosion()
     if (name == "fireball")
     {
         seeMsg  = "The fireball explodes!";
-        hearMsg = "You hear an explosion.";
+        hearMsg = "You hear an explosion!";
 
         glyph   = dchar_glyph(DCHAR_FIRED_BURST);
         flavour = BEAM_FIRE;
@@ -5008,8 +5008,8 @@ void bolt::refine_for_explosion()
 
     if (name == "orb of energy")
     {
-        seeMsg  = "The orb of energy explodes.";
-        hearMsg = "You hear an explosion.";
+        seeMsg  = "The orb of energy explodes!";
+        hearMsg = "You hear an explosion!";
     }
 
     if (name == "metal orb")
@@ -5036,14 +5036,14 @@ void bolt::refine_for_explosion()
 
     if (name == "stinking cloud")
     {
-        seeMsg     = "The beam expands into a vile cloud!";
-        hearMsg    = "You hear a gentle \'poof\'.";
+        seeMsg     = "The beam explodes into a vile cloud!";
+        hearMsg    = "You hear a loud \'bang\'!";
     }
 
     if (name == "foul vapour")
     {
-        seeMsg     = "The ball expands into a vile cloud!";
-        hearMsg    = "You hear a gentle \'poof\'.";
+        seeMsg     = "The ball explodes into a vile cloud!";
+        hearMsg    = "You hear a loud \'bang\'!";
         if (!is_tracer)
             name = "stinking cloud";
     }
