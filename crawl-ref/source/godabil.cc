@@ -739,6 +739,7 @@ bool trog_burn_spellbooks()
                 totalpiety++;
 
             dprf("Burned book rarity: %d", rarity);
+            destroy_spellbook(*si);
             destroy_item(si.link());
             count++;
         }

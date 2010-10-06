@@ -2016,6 +2016,7 @@ bool forget_spell_from_book(spell_type spell, const item_def* book)
     mprf("As you tear out the page describing %s, the book crumbles to dust.",
         spell_title(spell));
     del_spell_from_memory(spell);
+    destroy_spellbook(*book);
     dec_inv_item_quantity(book->link, 1);
     you.turn_is_over = true;
 
@@ -3208,4 +3209,24 @@ bool is_dangerous_spellbook(const item_def &book)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
     return is_dangerous_spellbook(book.sub_type);
+}
+
+void destroy_spellbook(const item_def &book)
+{
+    int j, maxlevel = 0;
+    for (j = 0; j < SPELLBOOK_SIZE; j++)
+    {
+        spell_type stype = which_spell_in_book(book, j);
+        if (stype == SPELL_NO_SPELL)
+            continue;
+        maxlevel = std::max(maxlevel, spell_difficulty(stype));
+    }
+
+    god_type god;
+    // The known boolean is being used to double penance when the destroyed
+    // book is a gift of Sif Muna or it contains its name in its title
+    did_god_conduct(DID_DESTROY_SPELLBOOK, maxlevel + 5,
+                    origin_is_god_gift(book, &god) && god == GOD_SIF_MUNA
+                    || book.name(DESC_PLAIN).find("Sif Muna")
+                       != std::string::npos);
 }

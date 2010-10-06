@@ -765,6 +765,10 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
         dislikes.push_back("you use necromancy on corpses, chunks or skeletons");
         break;
 
+    case GOD_SIF_MUNA:
+        dislikes.push_back("you destroy spellbooks");
+        break;
+
     default:
         break;
     }
