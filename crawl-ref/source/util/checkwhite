@@ -2,8 +2,6 @@
 
 open FLIST, "git ls-files|" or die "Can't run git ls-files";
 
-my $nl = ($^O eq 'msys') ? "\r\n" : "\n";
-
 while(<FLIST>)
 {
     chomp;
@@ -21,11 +19,10 @@ while(<FLIST>)
     my $cont=$_=<F>;
     close F;
 
-    $_.=$nl, print "missing newline at eof: $file\n" unless /$nl$/s;
-    print "extra newlines at eof: $file\n" if s/$nl+$nl$/$nl/s;
-    # not correct: 4 spaces,tab should become 8 not 12 spaces
-    print "tab: $file\n" if s/\t/        /sg;
-    print "spaces at eol: $file\n" if s/ +$nl/$nl/sg;
+    $_.="\n", print "missing newline at eof: $file\n" unless /\n$/s;
+    print "extra newlines at eof: $file\n" if s/\n+\n$/\n/s;
+    print "tab: $file\n" if s/\t/    /sg;
+    print "spaces at eol: $file\n" if s/ +\n/\n/sg;
 
     if ($_ ne $cont)
     {
