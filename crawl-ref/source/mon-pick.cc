@@ -2647,7 +2647,6 @@ int mons_hallzot_rare(int mcls)
         return 40;
     case MONS_SHADOW_DRAGON:
     case MONS_GHOST_MOTH:
-    case MONS_DEATH_DRAKE:
         return 30;
     case MONS_GUARDIAN_MUMMY:
     case MONS_ELECTRIC_GOLEM:
