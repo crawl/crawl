@@ -3226,7 +3226,7 @@ void god_pitch(god_type which_god)
         if (which_god == GOD_SIF_MUNA)
             simple_god_message(" does not accept worship from the ignorant!",
                                which_god);
-        else if (transformed_player_can_join_god(which_god))
+        else if (!transformed_player_can_join_god(which_god))
             simple_god_message(" says: How dare you come in such a loathsome form!",
                                which_god);
         else
