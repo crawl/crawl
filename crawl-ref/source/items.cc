@@ -1829,6 +1829,12 @@ bool copy_item_to_grid( const item_def &item, const coord_def& p,
 
     if (feat_destroys_item(grd(p), item, !silenced(p) && !silent))
     {
+        if (item.base_type == OBJ_BOOKS && item.sub_type != BOOK_MANUAL
+            && item.sub_type != BOOK_DESTRUCTION)
+        {
+            destroy_spellbook(item);
+        }
+
         item_was_destroyed(item, NON_MONSTER);
 
         return (true);

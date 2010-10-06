@@ -75,4 +75,6 @@ bool book_has_title(const item_def &book);
 
 bool is_dangerous_spellbook(const item_def &book);
 bool is_dangerous_spellbook(const int book_type);
+
+void destroy_spellbook(const item_def &book);
 #endif

@@ -2626,7 +2626,9 @@ static int _get_spell_description(const spell_type spell,
         if(you.has_spell(spell))
         {
             description += "\n\n";
-            description += "(F)orget this spell.";
+            description += "(F)orget this spell by destroying the book.";
+            if (you.religion == GOD_SIF_MUNA)
+                description +="\nSif Muna frowns upon the destroying of books.";
             return (BOOK_FORGET);
         }
         else if (player_can_memorise_from_spellbook(*item)

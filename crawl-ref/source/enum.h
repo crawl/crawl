@@ -815,6 +815,7 @@ enum conduct_type
     DID_KILL_ARTIFICIAL,                  // Yredelemnul
     DID_ARTIFICIAL_KILLED_BY_UNDEAD_SLAVE,// Yredelemnul
     DID_ARTIFICIAL_KILLED_BY_SERVANT,     // Yredelemnul
+    DID_DESTROY_SPELLBOOK,                // Sif Muna
 
     NUM_CONDUCTS
 };

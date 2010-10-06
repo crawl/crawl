@@ -964,6 +964,14 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 retval = true;
             }
             break;
+        case DID_DESTROY_SPELLBOOK:
+            if (you.religion == GOD_SIF_MUNA)
+            {
+                piety_change = -level;
+                penance = level * (known ? 2 : 1);
+                retval = true;
+            }
+            break;
 
         case DID_NOTHING:
         case DID_STABBING:                          // unused
@@ -1007,7 +1015,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Souled Friend Died", "Servant Kill Unclean",
                 "Servant Kill Chaotic", "Attack In Sanctuary",
                 "Kill Artificial", "Undead Slave Kill Artificial",
-                "Servant Kill Artificial"
+                "Servant Kill Artificial", "Destroy Spellbook"
             };
 
             COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS, c1);
