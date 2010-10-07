@@ -2134,7 +2134,15 @@ static void _describe_oos_square(const coord_def& where)
     mpr("You can't see that place.", MSGCH_EXAMINE_FILTER);
 
     if (!in_bounds(where) || !env.map_knowledge(where).seen())
+    {
+#ifdef DEBUG_DIAGNOSTICS
+        if (!in_bounds(where))
+            dprf("(out of bounds)");
+        else
+            dprf("(map: %x)", env.map_knowledge(where).flags);
+#endif
         return;
+    }
 
     describe_stash(where);
     _describe_feature(where, true);
@@ -3607,7 +3615,7 @@ static void _debug_describe_feature_at(const coord_def &where)
                              vp.size.x, vp.size.y);
     }
 
-    mprf(MSGCH_DIAGNOSTICS, "(%d,%d): %s - %s (%d/%s)%s%s%s%s",
+    mprf(MSGCH_DIAGNOSTICS, "(%d,%d): %s - %s (%d/%s)%s%s%s%s map: %x",
          where.x, where.y,
          stringize_glyph(get_cell_glyph(where).ch).c_str(),
          feature_desc.c_str(),
@@ -3616,7 +3624,8 @@ static void _debug_describe_feature_at(const coord_def &where)
          marker.c_str(),
          traveldest.c_str(),
          height_desc.c_str(),
-         vault.c_str());
+         vault.c_str(),
+         env.map_knowledge(where).flags);
 }
 #endif
 
