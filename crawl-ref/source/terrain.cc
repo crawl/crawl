@@ -318,7 +318,7 @@ bool feat_is_opaque(dungeon_feature_type feat)
 
 bool feat_is_solid(dungeon_feature_type feat)
 {
-    return (feat <= DNGN_MAXSOLID);
+    return (feat == DNGN_TEMP_PORTAL || feat <= DNGN_MAXSOLID);
 }
 
 bool cell_is_solid(int x, int y)

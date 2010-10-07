@@ -3860,6 +3860,15 @@ static void _move_player(coord_def move)
         _open_door(move.x, move.y, false);
         you.prev_move = move;
     }
+    if (!targ_pass && grd(targ) == DNGN_TEMP_PORTAL)
+    {
+        you.prev_move = move;
+        move.reset();
+        you.turn_is_over = true;
+
+        entered_malign_portal(&you);
+        return;
+    }
     else if (!targ_pass && !attacking)
     {
         if (grd(targ) == DNGN_OPEN_SEA)

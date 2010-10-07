@@ -75,6 +75,7 @@ bool there_are_monsters_nearby(bool dangerous_only = false,
                                bool consider_user_options = false);
 
 void timeout_tombs(int duration);
+void timeout_malign_gateways(int duration);
 
 void setup_environment_effects();
 
@@ -109,4 +110,6 @@ void swap_with_monster(monster* mon_to_swap);
 void maybe_id_ring_TC();
 
 void make_fake_undead(monster* mon, monster_type undead);
+
+void entered_malign_portal(actor* act);
 #endif
