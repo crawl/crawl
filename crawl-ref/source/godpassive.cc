@@ -241,3 +241,20 @@ int ash_bondage_level()
     }
     return bonus;
 }
+
+void ash_check_bondage()
+{
+    int new_level = ash_bondage_level();
+    if (new_level == you.bondage_level)
+        return;
+
+    if (new_level > you.bondage_level)
+        mprf(MSGCH_GOD, "You feel %s bound.",
+             (new_level == 1) ? "slightly" :
+             (new_level == 2) ? "seriously" :
+             (new_level == 3) ? "completely" :
+                                "boggily");
+    else
+        mprf(MSGCH_GOD, "You feel less bound.");
+    you.bondage_level = new_level;
+}

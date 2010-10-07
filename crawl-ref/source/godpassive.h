@@ -37,5 +37,6 @@ void che_handle_change(che_change_type ct, int diff);
 void jiyva_eat_offlevel_items();
 void jiyva_slurp_bonus(int item_value, int *js);
 int ash_bondage_level();
+void ash_check_bondage();
 
 #endif
