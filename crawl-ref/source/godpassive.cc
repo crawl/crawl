@@ -198,3 +198,46 @@ void jiyva_slurp_bonus(int item_value, int *js)
          *js |= JS_HP;
      }
 }
+
+enum eq_type
+{
+    ET_WEAPON,
+    ET_ARMOUR,
+    ET_JEWELS,
+    NUM_ET
+};
+
+int ash_bondage_level()
+{
+    if (you.religion != GOD_ASHENZARI)
+        return (0);
+
+    int cursed[NUM_ET] = {0}, slots[NUM_ET] = {0};
+
+    for (int i = EQ_WEAPON; i < NUM_EQUIP; i++)
+    {
+        eq_type s;
+        if (i == EQ_WEAPON)
+            s = ET_WEAPON;
+        else if (i <= EQ_MAX_ARMOUR)
+            s = ET_ARMOUR;
+        else
+            s = ET_JEWELS;
+
+        // transformed away slots are still considered to be possibly bound
+        if (you_can_wear(i, true))
+        {
+            slots[s]++;
+            if (you.equip[i] != -1 && you.inv[you.equip[i]].cursed())
+                cursed[s]++;
+        }
+    }
+
+    int bonus = 0;
+    for (int s = ET_WEAPON; s < NUM_ET; s++)
+    {
+        if (cursed[s] > slots[s] / 2)
+            bonus++;
+    }
+    return bonus;
+}

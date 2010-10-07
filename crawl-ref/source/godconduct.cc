@@ -3,6 +3,7 @@
 #include "godconduct.h"
 
 #include "fight.h"
+#include "godpassive.h"
 #include "godwrath.h"
 #include "monster.h"
 #include "mon-util.h"
@@ -973,6 +974,18 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
+        case DID_EXPLORATION:
+            if (you.religion == GOD_ASHENZARI)
+            {
+                // levels: x1, x2, x5, x6
+                piety_change = ash_bondage_level() + 1;
+                if (piety_change > 2)
+                    piety_change += 2;
+                piety_denom = 1000;
+                retval = true;
+            }
+            break;
+
         case DID_NOTHING:
         case DID_STABBING:                          // unused
         case DID_STIMULANTS:                        // unused
@@ -980,10 +993,13 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case DID_CREATE_LIFE:                       // unused
         case DID_SPELL_NONUTILITY:                  // unused
         case DID_DEDICATED_BUTCHERY:                // unused
-        case DID_EXPLORATION:
         case NUM_CONDUCTS:
             break;
         }
+
+#ifdef DEBUG_DIAGNOSTICS
+        int old_piety = you.piety;
+#endif
 
         if (piety_change > 0)
             gain_piety(piety_change, piety_denom);
@@ -991,7 +1007,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             dock_piety(div_rand_round(-piety_change, piety_denom), penance);
 
 #ifdef DEBUG_DIAGNOSTICS
-        if (retval)
+        // don't announce exploration piety unless you actually got a boost
+        if (retval && (thing_done != DID_EXPLORATION || old_piety != you.piety))
         {
             static const char *conducts[] =
             {
