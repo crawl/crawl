@@ -433,7 +433,7 @@ mace_of_variability MACE_OF_VARIABILITY
 mace_of_brilliance MACE_OF_BRILLIANCE
 undeadhunter UNDEADHUNTER
 eos EOS
-serpent_scourge SERPENT_SCOURGE
+snakebite SNAKEBITE
 ## polearms
 trident_octopus_king TRIDENT_OCTOPUS_KING
 glaive_of_prune GLAIVE_OF_PRUNE
