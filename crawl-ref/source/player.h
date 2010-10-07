@@ -112,12 +112,6 @@ public:
   undead_state_type is_undead;
 
   int  friendly_pickup;       // pickup setting for allies
-#if defined(WIZARD) || defined(DEBUG)
-  // If set to true, then any call to ouch() which would cuase the player
-  // to die automatically returns without ending the game.
-  bool never_die;
-#endif
-  bool xray_vision;
 
   FixedVector<uint8_t, 50>  skills;
   FixedVector<bool, 50>  practise_skill;
@@ -261,6 +255,12 @@ public:
   delay_queue_type delay_queue;       // pending actions
 
   time_t        start_time;           // start time of session
+#if defined(WIZARD) || defined(DEBUG)
+  // If set to true, then any call to ouch() which would cuase the player
+  // to die automatically returns without ending the game.
+  bool never_die;
+#endif
+  bool xray_vision;
 
 
   // Volatile (same-turn) state:
