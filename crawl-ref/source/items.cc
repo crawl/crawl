@@ -1471,6 +1471,16 @@ static void _got_item(item_def& item, int quant)
             you.attribute[ATTR_ABYSSAL_RUNES] += quant;
         else
             you.attribute[ATTR_DEMONIC_RUNES] += quant;
+
+        if (you.religion == GOD_ASHENZARI)
+        {
+            mprf(MSGCH_GOD, "You learn the power of this rune.");
+            // Important!  This should _not_ be scaled by bondage level, as
+            // otherwise people would curse just before picking up.
+            for (int i = 0; i < 10; i++)
+                // do this in pieces because of the high piety taper
+                gain_piety(1, 1);
+        }
     }
 
     item.flags |= ISFLAG_BEEN_IN_INV;
