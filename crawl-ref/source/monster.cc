@@ -1271,7 +1271,7 @@ static bool _is_signature_weapon(monster* mons, const item_def &weapon)
         return (false);
 
     if (mons->type == MONS_CHERUB || mons->type == MONS_ANGEL)
-        return (weapon.sub_type == WPN_HOLY_SCOURGE);
+        return (weapon.sub_type == WPN_SACRED_SCOURGE);
 
     if (mons->type == MONS_DAEVA)
         return (weapon.sub_type == WPN_EUDEMON_BLADE);

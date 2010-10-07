@@ -514,8 +514,8 @@ morningstar2 MORNINGSTAR
 eveningstar EVENINGSTAR
 large_mace LARGE_MACE
 black_whip BLACK_WHIP
-holy_scourge1 HOLY_SCOURGE
-holy_scourge2 HOLY_SCOURGE2
+sacred_scourge1 SACRED_SCOURGE
+sacred_scourge2 SACRED_SCOURGE2
 hammer3 HAMMER
 hammer HAMMER1
 hammer2 HAMMER2
