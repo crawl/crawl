@@ -639,11 +639,6 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
     if (power > 150)
         power = 150;
 
-    resists.poison = 1;
-    resists.fire = 1;
-    resists.cold = 1;
-    resists.elec = 1;
-
     colour = weapon.colour;
     fly = FL_LEVITATE;
 
