@@ -3620,7 +3620,7 @@ const char *divine_title[NUM_GODS][8] =
 
     // Ashenzari -- divination theme
     {"Star-crossed",       "Cursed",                "Initiated",                "Seer",
-     "Soothsayer",         "Oracle",                "Illuminatus",              "Omniescent"},
+     "Soothsayer",         "Oracle",                "Illuminatus",              "Omniscient"},
 #if 0
     // blue_anna's Romanian variant for Ashenzari
     {"Impostură",          "Impressionabil",        "Clar-văzător",             "Ghicitor",
