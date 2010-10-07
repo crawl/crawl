@@ -21,7 +21,7 @@ while(<FLIST>)
 
     $_.="\n", print "missing newline at eof: $file\n" unless /\n$/s;
     print "extra newlines at eof: $file\n" if s/\n+\n$/\n/s;
-    print "tab: $file\n" if s/\t/    /sg;
+    print "tab: $file\n" if s/ {0,7}\t/        /sg;
     print "spaces at eol: $file\n" if s/ +\n/\n/sg;
 
     if ($_ ne $cont)
