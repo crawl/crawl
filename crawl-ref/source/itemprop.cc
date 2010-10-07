@@ -195,7 +195,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_DEMON_WHIP,        "demon whip",         12,  1, 11,  30,  2,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLASHING, 2 },
-    { WPN_HOLY_SCOURGE,      "holy scourge",       13,  0, 11,  30,  2,
+    { WPN_SACRED_SCOURGE,    "sacred scourge",     13,  0, 11,  30,  2,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLASHING, 0 },
     { WPN_SPIKED_FLAIL,      "spiked flail",       12, -2, 16, 190,  8,
@@ -1341,7 +1341,7 @@ int weapon_rarity( int w_type )
     case WPN_BLESSED_DOUBLE_SWORD:
     case WPN_BLESSED_GREAT_SWORD:
     case WPN_BLESSED_TRIPLE_SWORD:
-    case WPN_HOLY_SCOURGE:
+    case WPN_SACRED_SCOURGE:
     case WPN_TRISHULA:
         // Zero value weapons must be placed specially -- see make_item() {dlb}
         return (0);
@@ -1449,7 +1449,7 @@ hands_reqd_type hands_reqd( const item_def &item, size_type size )
         if (!is_range_weapon(item)
             && item.sub_type != WPN_WHIP
             && item.sub_type != WPN_DEMON_WHIP
-            && item.sub_type != WPN_HOLY_SCOURGE)
+            && item.sub_type != WPN_SACRED_SCOURGE)
         {
             fit = cmp_weapon_size(item, size);
 
@@ -1531,7 +1531,7 @@ bool is_blessed(const item_def &item)
         case WPN_BLESSED_DOUBLE_SWORD:
         case WPN_BLESSED_GREAT_SWORD:
         case WPN_BLESSED_TRIPLE_SWORD:
-        case WPN_HOLY_SCOURGE:
+        case WPN_SACRED_SCOURGE:
         case WPN_TRISHULA:
             return (true);
 
@@ -1548,7 +1548,7 @@ bool is_blessed_convertible(const item_def &item)
     return (!is_artefact(item)
             && (item.base_type == OBJ_WEAPONS
                 && (is_demonic(item)
-                    || item.sub_type == WPN_HOLY_SCOURGE
+                    || item.sub_type == WPN_SACRED_SCOURGE
                     || item.sub_type == WPN_TRISHULA
                     || weapon_skill(item) == SK_LONG_BLADES)));
 }
@@ -1616,7 +1616,7 @@ bool convert2good(item_def &item, bool allow_blessed)
         if (!allow_blessed)
             item.sub_type = WPN_WHIP;
         else
-            item.sub_type = WPN_HOLY_SCOURGE;
+            item.sub_type = WPN_SACRED_SCOURGE;
         break;
 
     case WPN_DEMON_TRIDENT:
@@ -1675,7 +1675,7 @@ bool convert2bad(item_def &item)
         item.sub_type = WPN_TRIPLE_SWORD;
         break;
 
-    case WPN_HOLY_SCOURGE:
+    case WPN_SACRED_SCOURGE:
         item.sub_type = WPN_DEMON_WHIP;
         break;
 

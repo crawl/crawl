@@ -579,10 +579,6 @@ helmet
 
 A piece of metal headgear.
 %%%%
-holy scourge
-
-A blessed weapon, woven by the saints in Heaven and hated by the unholy. It is a favoured weapon of the Shining One's servants.
-%%%%
 honeycomb
 
 A lump of the delicious honeycomb made by giant bees.
@@ -1031,6 +1027,10 @@ A talisman which allows entry into Zot's domain.
 sabre
 
 A sword with a medium length slashing blade.
+%%%%
+sacred scourge
+
+A blessed weapon, woven by the saints in Heaven and hated by the unholy. It is a favoured weapon of the Shining One's servants.
 %%%%
 sausage
 

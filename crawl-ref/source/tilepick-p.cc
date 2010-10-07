@@ -93,7 +93,7 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_ANKUS:             return TILEP_HAND1_MACE;
     case WPN_WHIP:              return TILEP_HAND1_WHIP;
     case WPN_DEMON_WHIP:        return TILEP_HAND1_BLACK_WHIP;
-    case WPN_HOLY_SCOURGE:      return TILEP_HAND1_HOLY_SCOURGE;
+    case WPN_SACRED_SCOURGE:    return TILEP_HAND1_SACRED_SCOURGE;
 
     // Edge
     case WPN_KNIFE:                return TILEP_HAND1_DAGGER_SLANT;

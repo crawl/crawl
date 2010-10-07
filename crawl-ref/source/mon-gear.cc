@@ -891,7 +891,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.base_type = OBJ_WEAPONS;
         item.colour    = YELLOW;       // forced by force_item above {dlb}
 
-        item.sub_type  = (one_chance_in(4) ? WPN_HOLY_SCOURGE
+        item.sub_type  = (one_chance_in(4) ? WPN_SACRED_SCOURGE
                                            : WPN_WHIP);
 
         set_equip_desc(item, ISFLAG_GLOWING);
