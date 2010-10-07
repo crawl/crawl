@@ -2831,6 +2831,8 @@ bool is_useless_item(const item_def &item, bool temp)
             return (true);
         case SCR_TELEPORTATION:
             return (crawl_state.game_is_sprint());
+        case SCR_AMNESIA:
+            return(you.religion == GOD_TROG);
         default:
             return (false);
         }
@@ -2885,6 +2887,9 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_INVISIBILITY:
             // If you're Corona'd or a TSO-ite, this is always useless.
             return (temp ? you.backlit(true) : you.haloed());
+
+        case POT_BRILLIANCE:
+            return(you.religion == GOD_TROG);
         }
 
         return (false);
