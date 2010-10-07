@@ -3235,13 +3235,7 @@ static int _noise_level(const monster* mons, spell_type spell,
         if (mons_genus(mons->type) == MONS_DRAGON)
             noise = get_shout_noise_level(S_ROAR);
         else
-        {
-            // Noise for targeted spells happens at where the spell hits,
-            // rather than where the spell is cast. zappy() sets up the
-            // noise for beams.
-            noise = (flags & SPFLAG_TARGETING_MASK)
-                ? 1 : spell_noise(spell);
-        }
+            noise = spell_noise(spell);
     }
     return noise;
 }
