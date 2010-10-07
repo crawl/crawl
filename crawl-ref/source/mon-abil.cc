@@ -1503,6 +1503,7 @@ bool tentacle_pathfind(monster* tentacle,
     temp.pos = tentacle->pos();
 
     std::map<coord_def, std::set<int> >::iterator probe = attack_constraints.connection_constraints->find(temp.pos);
+    ASSERT(probe != attack_constraints.connection_constraints->end());
     temp.connect_level = 0;
     while (probe->second.find(temp.connect_level + 1 ) != probe->second.end())
         temp.connect_level++;
