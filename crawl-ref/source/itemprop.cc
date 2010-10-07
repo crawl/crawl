@@ -19,6 +19,7 @@
 #include "decks.h"
 #include "describe.h"
 #include "food.h"
+#include "godpassive.h"
 #include "invent.h"
 #include "items.h"
 #include "itemprop.h"
@@ -531,6 +532,7 @@ void do_curse_item( item_def &item, bool quiet )
                 // Redraw the weapon.
                 you.wield_change = true;
             }
+            ash_check_bondage();
         }
         xom_is_stimulated(amusement);
     }
@@ -557,6 +559,8 @@ void do_uncurse_item(item_def &item, bool inscribe)
     }
     item.flags &= (~ISFLAG_CURSED);
     item.flags &= (~ISFLAG_SEEN_CURSED);
+
+    ash_check_bondage();
 }
 
 // Is item stationary (cannot be picked up)?

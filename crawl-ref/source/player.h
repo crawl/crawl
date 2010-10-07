@@ -261,6 +261,7 @@ public:
   bool never_die;
 #endif
   bool xray_vision;
+  int bondage_level;  // how much an Ash worshipper is into bondage
 
 
   // Volatile (same-turn) state:
