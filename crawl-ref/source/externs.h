@@ -103,6 +103,8 @@ template <typename Z> inline Z sgn(Z x)
     return (x < 0 ? -1 : (x > 0 ? 1 : 0));
 }
 
+inline int dist_range(int x) { return x*x + 1; };
+
 struct coord_def
 {
     int         x;

@@ -305,7 +305,14 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "",
       "inflict damage to those overly hasty",
       "step out of the time flow"
-    }
+    },
+    // Ashenzari
+    { "",
+      "",
+      "",
+      "scry through walls",
+      ""
+    },
 };
 
 const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
@@ -413,7 +420,14 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "",
       "inflict damage to those overly hasty",
       "step out of the time flow"
-    }
+    },
+    // Ashenzari
+    { "",
+      "",
+      "",
+      "scry through walls",
+      ""
+    },
 };
 
 typedef void (*delayed_callback)(const mgen_data &mg, int &midx, int placed);

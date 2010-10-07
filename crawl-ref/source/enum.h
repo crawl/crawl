@@ -110,6 +110,7 @@ enum ability_type
     ABIL_CHEIBRIADOS_TIME_STEP,             // 250
     ABIL_CHEIBRIADOS_TIME_BEND,
     ABIL_CHEIBRIADOS_SLOUCH,
+    ABIL_ASHENZARI_SCRYING,
 
     // Vampire abilities
     ABIL_TRAN_BAT = 260,
@@ -1254,6 +1255,7 @@ enum duration_type
     DUR_QUAD_DAMAGE,
     DUR_AFRAID,
     DUR_MIRROR_DAMAGE,
+    DUR_SCRYING,
 
     NUM_DURATIONS
 };

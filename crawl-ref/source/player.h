@@ -116,8 +116,8 @@ public:
   // If set to true, then any call to ouch() which would cuase the player
   // to die automatically returns without ending the game.
   bool never_die;
-  bool xray_vision;
 #endif
+  bool xray_vision;
 
   FixedVector<uint8_t, 50>  skills;
   FixedVector<bool, 50>  practise_skill;
