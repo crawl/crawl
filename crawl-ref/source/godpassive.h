@@ -36,5 +36,6 @@ int che_boost(che_boost_type bt, int level = che_boost_level());
 void che_handle_change(che_change_type ct, int diff);
 void jiyva_eat_offlevel_items();
 void jiyva_slurp_bonus(int item_value, int *js);
+int ash_bondage_level();
 
 #endif
