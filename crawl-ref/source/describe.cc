@@ -3616,7 +3616,16 @@ const char *divine_title[NUM_GODS][8] =
 
     // Cheibriados -- slow theme
     {"Unwound %s",         "Timekeeper",            "Righteous Timekeeper",     "Chronographer",
-     "Splendid Chronographer", "Chronicler",        "Eternal Chronicler",       "Ticktocktomancer"}
+     "Splendid Chronographer", "Chronicler",        "Eternal Chronicler",       "Ticktocktomancer"},
+
+    // Ashenzari -- divination theme
+    {"Star-crossed",       "Cursed",                "Initiated",                "Seer",
+     "Soothsayer",         "Oracle",                "Illuminatus",              "Omniescent"},
+#if 0
+    // blue_anna's Romanian variant for Ashenzari
+    {"Impostură",          "Impressionabil",        "Clar-văzător",             "Ghicitor",
+     "Medium",             "Proroc",                "Oracol",                   "Profet"},
+#endif
 };
 
 static int _piety_level()

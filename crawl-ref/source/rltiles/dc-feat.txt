@@ -351,6 +351,7 @@ dngn_altar_cheibriados_06
 dngn_altar_cheibriados_04
 dngn_altar_cheibriados_03
 dngn_altar_cheibriados_02
+dngn_altar DNGN_ALTAR_ASHENZARI
 
 %sdir dc-dngn
 dngn_blue_fountain DNGN_FOUNTAIN DNGN_BLUE_FOUNTAIN

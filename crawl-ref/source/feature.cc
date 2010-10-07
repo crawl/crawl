@@ -609,6 +609,15 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap     = MF_FEATURE;
             break;
 
+        case DNGN_ALTAR_ASHENZARI:
+            f.colour      = LIGHTRED;
+            f.dchar       = DCHAR_ALTAR;
+            f.flags      |= FFT_NOTABLE;
+            f.map_colour  = DARKGREY;
+            f.seen_colour = LIGHTRED;
+            f.minimap     = MF_FEATURE;
+            break;
+
         case DNGN_FOUNTAIN_BLUE:
             f.colour  = BLUE;
             f.dchar   = DCHAR_FOUNTAIN;
