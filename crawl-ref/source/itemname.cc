@@ -2888,8 +2888,6 @@ bool is_useless_item(const item_def &item, bool temp)
             // If you're Corona'd or a TSO-ite, this is always useless.
             return (temp ? you.backlit(true) : you.haloed());
 
-        case POT_BRILLIANCE:
-            return(you.religion == GOD_TROG);
         }
 
         return (false);
