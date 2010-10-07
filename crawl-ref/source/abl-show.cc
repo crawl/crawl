@@ -154,6 +154,9 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     // Cheibriados
     { ABIL_NON_ABILITY, ABIL_CHEIBRIADOS_TIME_BEND, ABIL_NON_ABILITY,
       ABIL_CHEIBRIADOS_SLOUCH, ABIL_CHEIBRIADOS_TIME_STEP },
+    // Ashenzari
+    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
+      ABIL_ASHENZARI_SCRYING, ABIL_NON_ABILITY },
 };
 
 // The description screen was way out of date with the actual costs.
@@ -343,6 +346,10 @@ static const ability_def Ability_List[] =
     { ABIL_CHEIBRIADOS_SLOUCH, "Slouch", 5, 0, 100, 8, ABFLAG_NONE },
     { ABIL_CHEIBRIADOS_TIME_STEP, "Step From Time",
       10, 0, 200, 10, ABFLAG_NONE },
+
+    // Ashenzari
+    { ABIL_ASHENZARI_SCRYING, "Scrying",
+      4, 0, 50, generic_cost::range(5, 6), ABFLAG_NONE },
 
     { ABIL_HARM_PROTECTION, "Protection From Harm", 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_HARM_PROTECTION_II, "Reliable Protection From Harm",
@@ -768,6 +775,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
     case ABIL_CHEIBRIADOS_TIME_BEND:
+    case ABIL_ASHENZARI_SCRYING:
         invoc = true;
         failure = 50 - (you.piety / 20) - (you.skills[SK_INVOCATIONS] * 4);
         break;
@@ -2011,6 +2019,16 @@ static bool _do_ability(const ability_def& abil)
         mpr("You can feel time thicken.");
         dprf("your speed is %d", player_movement_speed());
         cheibriados_slouch(0);
+        break;
+
+    case ABIL_ASHENZARI_SCRYING:
+        if (you.duration[DUR_SCRYING])
+            mpr("You extend your astral sight.");
+        else
+            mpr("You gain astral sight.");
+        you.duration[DUR_SCRYING] = 100 + random2avg(you.skills[SK_INVOCATIONS]
+                                                     * 40, 2);
+        you.xray_vision = true;
         break;
 
 

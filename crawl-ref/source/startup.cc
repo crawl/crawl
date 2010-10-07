@@ -270,6 +270,7 @@ static void _post_init(bool newc)
     new_level();
     update_turn_count();
     update_vision_range();
+    you.xray_vision = !!you.duration[DUR_SCRYING];
     init_exclusion_los();
 
     trackers_init_new_level(false);

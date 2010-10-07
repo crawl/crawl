@@ -3701,7 +3701,7 @@ void display_char_status()
         DUR_DIVINE_VIGOUR, DUR_DIVINE_STAMINA, DUR_BERSERKER,
         STATUS_AIRBORNE, STATUS_NET, DUR_POISONING, STATUS_SICK,
         STATUS_ROT, STATUS_GLOW, DUR_CONFUSING_TOUCH, DUR_SURE_BLADE,
-        DUR_AFRAID, DUR_MIRROR_DAMAGE,
+        DUR_AFRAID, DUR_MIRROR_DAMAGE, DUR_SCRYING,
     };
 
     status_info inf;
@@ -5069,8 +5069,8 @@ void player::init()
     friendly_pickup = 0;
 #if defined(WIZARD) || defined(DEBUG)
     never_die = false;
-    xray_vision = false;
 #endif
+    xray_vision = false;
 
     skills.init(0);
     practise_skill.init(true);

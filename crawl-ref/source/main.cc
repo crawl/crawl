@@ -2565,6 +2565,12 @@ static void _decrement_durations()
 
     _decrement_a_duration(DUR_REPEL_STAIRS_MOVE, 1);
     _decrement_a_duration(DUR_REPEL_STAIRS_CLIMB, 1);
+
+    if (_decrement_a_duration(DUR_SCRYING, delay,
+                              "Your astral sight fades away."))
+    {
+        you.xray_vision = false;
+    }
 }
 
 static void _check_banished()
