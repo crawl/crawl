@@ -60,6 +60,7 @@
 #include "makeitem.h"
 #include "mapmark.h"
 #include "message.h"
+#include "mgen_data.h"
 #include "mon-place.h"
 #include "mon-pathfind.h"
 #include "mon-info.h"
@@ -75,6 +76,7 @@
 #include "shopping.h"
 #include "skills.h"
 #include "skills2.h"
+#include "spl-clouds.h"
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
@@ -1812,6 +1814,56 @@ static void _drop_tomb(const coord_def& pos, bool premature)
     }
 }
 
+void timeout_malign_gateways (int duration)
+{
+    if (!duration)
+        return;
+
+    std::vector<map_marker*> markers = env.markers.get_all(MAT_MALIGN);
+
+    for (int i = 0, size = markers.size(); i < size; ++i)
+    {
+        map_marker *mark = markers[i];
+        if (mark->get_type() != MAT_MALIGN)
+            continue;
+
+        map_malign_gateway_marker *mmark = dynamic_cast<map_malign_gateway_marker*>(mark);
+        mmark->duration -= duration;
+
+        if (mmark->duration > 0)
+        {
+            big_cloud(CLOUD_TLOC_ENERGY, KC_OTHER, mmark->pos, 10+random2(10), 8+random2(5));
+        }
+        else
+        {
+            bool is_player = mmark->is_player;
+            actor* caster = mmark->caster;
+            if (caster == NULL)
+                caster = &you;
+
+            int tentacle_idx = create_monster(mgen_data(MONS_DEMONIC_TENTACLE,
+                                                        (is_player) ? BEH_FRIENDLY : attitude_creation_behavior(mmark->caster->attitude),
+                                                        caster,
+                                                        0,
+                                                        0,
+                                                        mmark->pos,
+                                                        MHITNOT,
+                                                        MG_FORCE_PLACE,
+                                                        mmark->god));
+
+            if (tentacle_idx >= 0)
+            {
+                menv[tentacle_idx].flags |= MF_NO_REWARD;
+                menv[tentacle_idx].add_ench(ENCH_PORTAL_TIMER);
+                menv[tentacle_idx].props["base_position"].get_coord()
+                                    = menv[tentacle_idx].pos();
+            }
+
+            env.markers.remove(mmark);
+        }
+    }
+}
+
 void timeout_tombs(int duration)
 {
     if (!duration)
@@ -1942,6 +1994,7 @@ void run_environment_effects()
     shoals_apply_tides(div_rand_round(you.time_taken, BASELINE_DELAY),
                        false, true);
     timeout_tombs(you.time_taken);
+    timeout_malign_gateways(you.time_taken);
 }
 
 coord_def pick_adjacent_free_square(const coord_def& p)
@@ -2293,4 +2346,18 @@ void make_fake_undead(monster* mon, monster_type undead)
 
     if (!mons_class_can_regenerate(undead))
         mon->flags |= MF_NO_REGEN;
+}
+
+void entered_malign_portal(actor* act)
+{
+    if (you.can_see(act))
+        mprf("The portal repels %s painfully!", (act->atype() == ACT_PLAYER) ? "you" : act->name(DESC_NOCAP_THE).c_str());
+
+    act->blink(false);
+    if (act->atype() == ACT_PLAYER)
+        ouch(roll_dice(1, 4), NON_MONSTER, KILLED_BY_WILD_MAGIC, "a malign gateway");
+    else
+        act->hurt(NULL, roll_dice(1, 4));
+
+    return;
 }

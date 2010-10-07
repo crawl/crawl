@@ -121,6 +121,28 @@ public:
     int duration, source, target;
 };
 
+class map_malign_gateway_marker : public map_marker
+{
+public:
+    map_malign_gateway_marker (const coord_def& pos = coord_def(0, 0),
+                    int dur = 0, bool ip = false, monster* mon = NULL,
+                    god_type gd = GOD_NO_GOD, int pow = 0);
+
+    void write (writer &) const;
+    void read (reader &);
+    map_marker *clone() const;
+    std::string debug_describe() const;
+
+    static map_marker *read(reader &, map_marker_type);
+
+public:
+    int duration;
+    bool is_player;
+    monster* caster;
+    god_type god;
+    int power;
+};
+
 // A marker powered by Lua.
 class map_lua_marker : public map_marker, public dgn_event_listener
 {

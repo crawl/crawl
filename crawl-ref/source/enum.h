@@ -1627,6 +1627,7 @@ enum map_marker_type
     MAT_CORRUPTION_NEXUS,
     MAT_WIZ_PROPS,
     MAT_TOMB,
+    MAT_MALIGN,
     NUM_MAP_MARKER_TYPES,
     MAT_ANY,
 };

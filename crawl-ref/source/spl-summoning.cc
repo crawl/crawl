@@ -24,6 +24,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "it_use2.h"
+#include "mapmark.h"
 #include "message.h"
 #include "mgen_data.h"
 #include "misc.h"
@@ -1081,25 +1082,17 @@ bool cast_malign_gateway(actor * caster, int pow, god_type god)
             && env.grid(test) == DNGN_FLOOR
             && !actor_at(test))
         {
-            int tentacle_idx = create_monster(mgen_data(MONS_DEMONIC_TENTACLE,
-                                                        caster->atype() == ACT_PLAYER ? BEH_FRIENDLY : attitude_creation_behavior(caster->as_monster()->attitude),
-                                                        caster,
-                                                        0,
-                                                        0,
-                                                        test,
-                                                        MHITNOT,
-                                                        MG_FORCE_PLACE,
-                                                        god));
+            const int malign_gateway_duration = BASELINE_DELAY * (random2(5) + 5);
+            env.markers.add(new map_malign_gateway_marker(test,
+                                                malign_gateway_duration,
+                                                caster->atype() == ACT_PLAYER,
+                                                caster->atype() == ACT_PLAYER ? NULL : caster->as_monster(),
+                                                god,
+                                                pow));
+            env.markers.clear_need_activate();
+            env.grid(test) = DNGN_TEMP_PORTAL;
 
-            if (tentacle_idx >= 0)
-            {
-                menv[tentacle_idx].flags |= MF_NO_REWARD;
-                menv[tentacle_idx].add_ench(ENCH_PORTAL_TIMER);
-                env.grid(menv[tentacle_idx].pos()) = DNGN_TEMP_PORTAL;
-                menv[tentacle_idx].props["base_position"].get_coord()
-                                    = menv[tentacle_idx].pos();
-                return (true);
-            }
+            return (true);
         }
     }
     return (false);
