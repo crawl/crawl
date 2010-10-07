@@ -3003,6 +3003,8 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return ("blossoming altar of Fedhas");
     case DNGN_ALTAR_CHEIBRIADOS:
         return ("snail-covered altar of Cheibriados");
+    case DNGN_ALTAR_ASHENZARI:
+        return ("shattered altar of Ashenzari");
 
     case DNGN_FOUNTAIN_BLUE:
         return ("fountain of clear blue water");

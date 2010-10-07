@@ -525,6 +525,12 @@ std::string get_god_likes(god_type which_god, bool verbose)
         likes.push_back(info);
         break;
 
+    case GOD_ASHENZARI:
+        snprintf(info, INFO_SIZE, "you explore the world (preferably while "
+                                  "bound by curses)");
+        likes.push_back(info);
+        break;
+
     default:
         break;
     }
@@ -2268,6 +2274,8 @@ std::string god_name(god_type which_god, bool long_name)
             return (one_chance_in(3) ? RANDOM_ELEMENT(xom_names)
                     : "Xom of Chaos");
         }
+    case GOD_ASHENZARI:
+        return long_name ? "Ashenzari the Shackled" : "Ashenzari";
     case NUM_GODS: return "Buggy";
     }
     return ("");
@@ -3687,6 +3695,11 @@ void handle_god_time()
             // avoid the error message below.
             break;
 
+        case GOD_ASHENZARI:
+            if (one_chance_in(25))
+                lose_piety(1);
+            break;
+
         default:
             DEBUGSTR("Bad god, no bishop!");
             return;
@@ -3723,6 +3736,7 @@ int god_colour(god_type god) // mv - added
     case GOD_TROG:
     case GOD_BEOGH:
     case GOD_LUGONU:
+    case GOD_ASHENZARI:
         return (LIGHTRED);
 
     case GOD_XOM:

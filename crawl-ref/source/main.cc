@@ -530,6 +530,9 @@ static void _god_greeting_message(bool game_start)
     case GOD_CHEIBRIADOS:
         simple_god_message(" says: Take it easy.");
         break;
+    case GOD_ASHENZARI:
+        simple_god_message(" says: Partake of my vision. Partake of my curse.");
+        break;
 
     case GOD_NO_GOD:
     case NUM_GODS:
