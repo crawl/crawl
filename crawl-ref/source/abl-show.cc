@@ -735,7 +735,8 @@ static talent _get_talent(ability_type ability, bool check_confused)
         failure = 80 - you.piety;       // starts at 30%
         break;
 
-    case ABIL_TROG_BROTHERS_IN_ARMS:       // piety >= 100
+    case ABIL_TROG_BROTHERS_IN_ARMS:    // piety >= 100
+    case ABIL_ASHENZARI_SCRYING:
         invoc = true;
         failure = 160 - you.piety;      // starts at 60%
         break;
@@ -775,7 +776,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
     case ABIL_CHEIBRIADOS_TIME_BEND:
-    case ABIL_ASHENZARI_SCRYING:
         invoc = true;
         failure = 50 - (you.piety / 20) - (you.skills[SK_INVOCATIONS] * 4);
         break;
@@ -2026,8 +2026,7 @@ static bool _do_ability(const ability_def& abil)
             mpr("You extend your astral sight.");
         else
             mpr("You gain astral sight.");
-        you.duration[DUR_SCRYING] = 100 + random2avg(you.skills[SK_INVOCATIONS]
-                                                     * 40, 2);
+        you.duration[DUR_SCRYING] = 100 + random2avg(you.piety * 2, 2);
         you.xray_vision = true;
         break;
 
