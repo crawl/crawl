@@ -197,25 +197,25 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
         " slowly dissolve% into ooze.",
         " dissolve% into ooze.",
         " disappear% with a satisfied slurp.",
-    }
+    },
     // Fedhas
     {
         " & slowly absorbed by the ecosystem.",
         " & absorbed by the ecosystem.",
         " & instantly absorbed by the ecosystem.",
-    }
+    },
     // Cheibriados (slow god, so better sacrifices are slower)
     {
         " freeze% in place and instantly disappear%.",
         " freeze% in place and disappear%.",
         " freeze% in place and slowly fade%.",
-    }
+    },
     // Ashenzari
     {
         " flicker% black and shatter%.",
         " pulsate% black and shatter%.",
         " & swallowed by blackness and shatter%.",
-    }
+    },
 };
 
 const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
