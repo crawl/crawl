@@ -429,19 +429,6 @@ static std::string _get_unseen_branches()
         missing_lair_branch = -1;
     }
 
-    bool found_portals[NUM_PORTALS] = { 0 };
-    /* see if we've found portals to hell, pan, the abyss */
-    for (int cur_portal = PORTAL_NONE; cur_portal < NUM_PORTALS; ++cur_portal)
-    {
-        portal_map_type::const_iterator ci_portals;
-        for ( ci_portals = portals_present.begin();
-              ci_portals != portals_present.end();
-              ++ci_portals )
-        {
-            found_portals[ci_portals->second] = true;
-        }
-    }
-
     for (int i = BRANCH_FIRST_NON_DUNGEON; i < NUM_BRANCHES; i++)
     {
         const branch_type branch = branches[i].id;
@@ -449,7 +436,7 @@ static std::string _get_unseen_branches()
         if (i == missing_lair_branch)
             continue;
 
-        if (i == BRANCH_VESTIBULE_OF_HELL && found_portals[PORTAL_HELL])
+        if (i == BRANCH_VESTIBULE_OF_HELL)
             continue;
 
         if (i == BRANCH_FOREST || i == BRANCH_SPIDER_NEST
@@ -491,25 +478,6 @@ static std::string _get_unseen_branches()
                         // Each branch entry takes up 20 spaces
                         : std::string(20 + 21 - strlen(buffer), ' ');
             }
-        }
-    }
-
-    /* not actual branches, have to hardcode this stuff here */
-    if (find_deepest_explored(level_id(BRANCH_MAIN_DUNGEON, 0)).depth >= 21)
-    {
-        if (!found_portals[PORTAL_PANDEMONIUM])
-        {
-            disp += "<darkgrey>   Pan: D:21-27</darkgrey>";
-            num_printed_branches++;
-            disp += (num_printed_branches % 4) == 0
-                ? "\n" : "     ";
-        }
-        if (!found_portals[PORTAL_ABYSS])
-        {
-            disp += "<darkgrey> Abyss: D:21-27</darkgrey>";
-            num_printed_branches++;
-            disp += (num_printed_branches % 4) == 0
-                ? "\n" : "     ";
         }
     }
 
