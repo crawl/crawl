@@ -1290,6 +1290,11 @@ static bool _prompt_dangerous_portal(dungeon_feature_type ftype)
         return yesno("If you enter this portal you will not be able to return "
                      "immediately. Continue?", false, 'n');
 
+    case DNGN_TEMP_PORTAL:
+        return yesno("Are you sure you wish to approach this portal? There's no "
+                     "telling what its forces would wreak upon your fragile "
+                     "self.", false, 'n');
+
     default:
         return (true);
     }
@@ -3866,8 +3871,11 @@ static void _move_player(coord_def move)
         _open_door(move.x, move.y, false);
         you.prev_move = move;
     }
-    if (!targ_pass && grd(targ) == DNGN_TEMP_PORTAL)
+    if (!targ_pass && grd(targ) == DNGN_TEMP_PORTAL && !attacking)
     {
+        if (!_prompt_dangerous_portal(grd(targ)))
+            return;
+
         you.prev_move = move;
         move.reset();
         you.turn_is_over = true;
