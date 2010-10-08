@@ -1057,16 +1057,16 @@ static bool _get_kraken_head(monster& mon)
     // For kraken connectors, find the associated tentacle.
     if (mon.type == MONS_KRAKEN_CONNECTOR)
     {
-        if (invalid_monster_index(mon.number)))
+        if (invalid_monster_index(mon.number))
             return (false);
 
         mon = menv[mon.number];
     }
 
     // For kraken tentacles, find the associated head.
-    if (mon.type == MONS_KRAKEN_TENTACLE
+    if (mon.type == MONS_KRAKEN_TENTACLE)
     {
-        if (invalid_monster_index(mon.number)))
+        if (invalid_monster_index(mon.number))
             return (false);
 
         mon = menv[mon.number];
