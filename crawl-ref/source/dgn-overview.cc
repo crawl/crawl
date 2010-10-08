@@ -595,7 +595,17 @@ static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
         if (num_printed % 5 == 0)
             disp += "\n";
         else
-            disp += std::string(17 - god_name(god, false).length(), ' ');
+	    // manually aligning the god columns: five whitespaces between columns
+	    switch (num_printed % 5)
+	    {
+	    case 1: disp += std::string(14 - god_name(god, false).length(), ' ');
+	            break;
+	    case 2: disp += std::string(18 - god_name(god, false).length(), ' ');
+	            break;
+	    case 3: disp += std::string(13 - god_name(god, false).length(), ' ');
+	            break;
+	    case 4: disp += std::string(16 - god_name(god, false).length(), ' ');
+            }
     }
 
     if (num_printed > 0 && num_printed % 5 != 0)
