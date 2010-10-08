@@ -327,7 +327,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Ashenzari
     { "",
       "",
-      "",
+      "Ashenzari augments your vision.",
       "scry through walls",
       ""
     },
@@ -442,7 +442,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Ashenzari
     { "",
       "",
-      "",
+      "Ashenzari no longer augments your vision.",
       "scry through walls",
       ""
     },
@@ -930,6 +930,12 @@ void dec_penance(god_type god, int val)
             {
                 mpr("Your divine halo returns!");
                 invalidate_agrid(true);
+            }
+            else if (god == GOD_ASHENZARI && you.religion == god
+                && you.piety >= piety_breakpoint(2))
+            {
+                mpr("Your vision regains its divine sight.");
+                autotoggle_autopickup(false);
             }
 
             // When you've worked through all your penance, you get
@@ -2632,11 +2638,11 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
                 learned_something_new(HINT_NEW_ABILITY_GOD);
             }
 
-            if (you.religion == GOD_SHINING_ONE)
-            {
-                if (i == 0)
-                    mpr("A divine halo surrounds you!");
-            }
+            if (you.religion == GOD_SHINING_ONE && i == 0)
+                mpr("A divine halo surrounds you!");
+
+            if (you.religion == GOD_ASHENZARI && i == 2)
+                autotoggle_autopickup(false);
 
             // When you gain a piety level, you get another chance to
             // make hostile holy beings good neutral.

@@ -6312,6 +6312,12 @@ bool player::can_see_invisible(bool calc_unid, bool transient) const
     if (artefacts > 0)
         si += artefacts;
 
+    if (you.religion == GOD_ASHENZARI && you.piety >= piety_breakpoint(2)
+        && !player_under_penance())
+    {
+        si++;
+    }
+
     if (si > 1)
         si = 1;
 
