@@ -224,6 +224,15 @@ int ash_bondage_level()
         else
             s = ET_JEWELS;
 
+        // kittehs don't obey hoomie rules!
+        if (you.species == SP_CAT)
+        {
+            if (i >= EQ_LEFT_RING)
+                s = (eq_type)(i - EQ_LEFT_RING);
+            else
+                ASSERT(!you_can_wear(i, true));
+        }
+
         // transformed away slots are still considered to be possibly bound
         if (you_can_wear(i, true))
         {
