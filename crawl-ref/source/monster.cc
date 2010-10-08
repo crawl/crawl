@@ -3166,21 +3166,26 @@ int monster::res_elec() const
 int monster::res_asphyx() const
 {
     int res = get_mons_resists(this).asphyx;
+
     const mon_holy_type holi = holiness();
+
     if (undead_or_demonic()
         || holi == MH_NONLIVING
         || holi == MH_PLANT)
     {
         res += 1;
     }
+
     return (res);
 }
 
 int monster::res_water_drowning() const
 {
     const int res = res_asphyx();
+
     if (res)
         return (res);
+
     switch (mons_habitat(this))
     {
     case HT_WATER:
