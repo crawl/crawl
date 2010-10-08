@@ -253,7 +253,7 @@ void ash_check_bondage()
              (new_level == 1) ? "slightly" :
              (new_level == 2) ? "seriously" :
              (new_level == 3) ? "completely" :
-                                "boggily");
+                                "buggily");
     else
         mprf(MSGCH_GOD, "You feel less bound.");
     you.bondage_level = new_level;
