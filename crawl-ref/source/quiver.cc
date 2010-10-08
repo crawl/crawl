@@ -150,6 +150,25 @@ static bool _wielded_slot_no_quiver(int slot)
                 || you.skills[SK_THROWING] == 0));
 }
 
+void quiver_item(int slot)
+{
+    const item_def item = you.inv[slot];
+    ASSERT(item.defined());
+
+    ammo_t t = AMMO_THROW;
+    const item_def *weapon = you.weapon();
+    if (weapon && item.launched_by(*weapon))
+        t = _get_weapon_ammo_type(weapon);
+
+    you.m_quiver->set_quiver(you.inv[slot], t);
+    mprf("Quivering %s for %s.", you.inv[slot].name(DESC_INVENTORY).c_str(),
+         t == AMMO_THROW    ? "throwing" :
+         t == AMMO_BLOWGUN  ? "blowguns" :
+         t == AMMO_SLING    ? "slings" :
+         t == AMMO_BOW      ? "bows" :
+                              "crossbows");
+}
+
 void choose_item_for_quiver()
 {
     int slot = prompt_invent_item("Quiver which item? (- for none, * to show all)",
@@ -191,22 +210,7 @@ void choose_item_for_quiver()
             }
         }
     }
-
-    const item_def item = you.inv[slot];
-    ASSERT(item.defined());
-
-    ammo_t t = AMMO_THROW;
-    const item_def *weapon = you.weapon();
-    if (weapon && item.launched_by(*weapon))
-        t = _get_weapon_ammo_type(weapon);
-
-    you.m_quiver->set_quiver(you.inv[slot], t);
-    mprf("Quivering %s for %s.", you.inv[slot].name(DESC_INVENTORY).c_str(),
-         t == AMMO_THROW    ? "throwing" :
-         t == AMMO_BLOWGUN  ? "blowguns" :
-         t == AMMO_SLING    ? "slings" :
-         t == AMMO_BOW      ? "bows" :
-                              "crossbows");
+    quiver_item(slot);
 }
 
 // Notification that item was fired with 'f'.

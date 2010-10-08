@@ -77,7 +77,7 @@ class preserve_quiver_slots
     int m_last_used_of_type[NUM_AMMO];
 };
 
-
+void quiver_item(int slot);
 void choose_item_for_quiver(void);
 
 #endif

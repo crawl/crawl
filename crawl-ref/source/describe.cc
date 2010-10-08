@@ -31,6 +31,7 @@
 #include "godabil.h"
 #include "goditem.h"
 #include "invent.h"
+#include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -42,6 +43,7 @@
 #include "mon-util.h"
 #include "output.h"
 #include "player.h"
+#include "quiver.h"
 #include "random.h"
 #include "religion.h"
 #include "rng.h"
@@ -2260,9 +2262,26 @@ void get_item_desc(const item_def &item, describe_info &inf, bool terse)
 }
 
 // Returns true if spells can be shown to player.
-static bool _show_item_description(const item_def &item)
+bool _can_show_spells(const item_def &item)
 {
-    const unsigned int lineWidth = get_number_of_cols()  - 1;
+    return (item.has_spells()
+            && (item.base_type != OBJ_BOOKS || item_type_known(item)
+                || player_can_memorise_from_spellbook(item)));
+}
+
+void _show_spells(const item_def &item)
+{
+    formatted_string fs;
+    item_def dup = item;
+    spellbook_contents(dup, item.base_type == OBJ_BOOKS ? RBOOK_READ_SPELL
+                                                        : RBOOK_USE_STAFF,
+                       &fs);
+    fs.display(2, -2);
+}
+
+static void _show_item_description(const item_def &item)
+{
+    const unsigned int lineWidth = get_number_of_cols() - 1;
     const          int height    = get_number_of_lines();
 
     std::string desc =
@@ -2275,30 +2294,14 @@ static bool _show_item_description(const item_def &item)
     // by putting the quotes into a separate DB and treating them as
     // a suffix that can be ignored by print_description().
     if (height - num_lines <= 2)
-        desc = get_item_description(item, 1, false, true);
+        desc = get_item_description(item, true, false, true);
 
     print_description(desc);
     if (Hints.hints_left)
         hints_describe_item(item);
 
-    if (item.has_spells())
-    {
-        if (item.base_type == OBJ_BOOKS && !item_type_known(item)
-            && !player_can_memorise_from_spellbook( item ))
-        {
-            return (false);
-        }
-
-        formatted_string fs;
-        item_def dup = item;
-        spellbook_contents( dup, item.base_type == OBJ_BOOKS ? RBOOK_READ_SPELL
-                                                             : RBOOK_USE_STAFF,
-                            &fs );
-        fs.display(2, -2);
-        return (true);
-    }
-
-    return (false);
+    if (_can_show_spells(item))
+      _show_spells(item);
 }
 
 static bool _describe_spells(const item_def &item)
@@ -2321,6 +2324,233 @@ static bool _describe_spells(const item_def &item)
     return (true);
 }
 
+bool _can_memorise( item_def &item )
+{
+    return (item.base_type == OBJ_BOOKS && in_inventory(item)
+            && player_can_memorise_from_spellbook(item));
+}
+
+void _update_inscription( item_def &item )
+{
+    if (item.base_type == OBJ_BOOKS && in_inventory(item)
+        && !_can_memorise(item))
+    {
+        inscribe_book_highlevel(item);
+    }
+}
+
+bool _describe_spellbook( item_def &item )
+{
+    while (true)
+    {
+        // Memorised spell while reading a spellbook.
+        if (already_learning_spell(-1))
+            return (false);
+
+        _show_item_description(item);
+        _update_inscription(item);
+
+        cgotoxy(1, wherey());
+        textcolor(LIGHTGREY);
+
+        if (_can_memorise(item) && !crawl_state.player_is_dead())
+        {
+            cprintf("Select a spell to read its description, to "
+                    "memorise it or to forget it.");
+        }
+        else
+            cprintf("Select a spell to read its description.");
+
+        if (_describe_spells(item))
+            continue;
+
+        return true;
+    }
+}
+
+
+// it takes a key and a list of commands and it returns
+// the command from the list which corresponds to the key
+command_type _get_action( int key, std::vector<command_type> actions)
+{
+    //FIXME: there must be a more efficient way to set up this static map.
+    std::map<command_type, int> act_key;
+    act_key[CMD_WIELD_WEAPON]       = 'w';
+    act_key[CMD_WEAPON_SWAP]        = 'u';
+    act_key[CMD_QUIVER_ITEM]        = 'q';
+    act_key[CMD_WEAR_ARMOUR]        = 'w';
+    act_key[CMD_REMOVE_ARMOUR]      = 't';
+    act_key[CMD_EVOKE]              = 'v';
+    act_key[CMD_EAT]                = 'e';
+    act_key[CMD_READ]               = 'r';
+    act_key[CMD_WEAR_JEWELLERY]     = 'p';
+    act_key[CMD_REMOVE_JEWELLERY]   = 'r';
+    act_key[CMD_QUAFF]              = 'q';
+    act_key[CMD_DROP]               = 'd';
+    act_key[CMD_INSCRIBE_ITEM]      = 'i';
+
+    for (std::vector<command_type>::const_iterator at = actions.begin();
+         at < actions.end(); ++at)
+    {
+        if (key == act_key[*at])
+            return *at;
+    }
+    return CMD_NO_CMD;
+}
+
+//---------------------------------------------------------------
+//
+// _actions_prompt
+//
+// print a list of actions to be performed on the item
+bool _actions_prompt( item_def &item, bool allow_inscribe)
+{
+    std::string prompt = "You can ";
+    int keyin;
+    std::vector<command_type> actions;
+    switch(item.base_type)
+    {
+    case OBJ_WEAPONS:
+    case OBJ_STAVES:
+        if (item_is_equipped(item))
+            actions.push_back(CMD_WEAPON_SWAP); // no unwield command
+        else
+        {
+            actions.push_back(CMD_WIELD_WEAPON);
+            if (is_throwable(&you, item))
+                actions.push_back(CMD_QUIVER_ITEM);
+        }
+        break;
+    case OBJ_MISSILES:
+        actions.push_back(CMD_QUIVER_ITEM);
+        break;
+    case OBJ_ARMOUR:
+        if (item_is_equipped(item))
+            actions.push_back(CMD_REMOVE_ARMOUR);
+        else
+            actions.push_back(CMD_WEAR_ARMOUR);
+        break;
+    case OBJ_WANDS:
+        actions.push_back(CMD_EVOKE);
+        break;
+    case OBJ_FOOD:
+        actions.push_back(CMD_EAT);
+        break;
+    case OBJ_SCROLLS:
+    case OBJ_BOOKS: // only unknown ones
+        actions.push_back(CMD_READ);
+        break;
+    case OBJ_JEWELLERY:
+        if (item_is_equipped(item))
+            actions.push_back(CMD_REMOVE_JEWELLERY);
+        else
+            actions.push_back(CMD_WEAR_JEWELLERY);
+        break;
+    case OBJ_POTIONS:
+        actions.push_back(CMD_QUAFF);
+        break;
+    }
+    actions.push_back(CMD_DROP);
+
+    if (allow_inscribe && wherey() <= get_number_of_lines() - 2)
+        actions.push_back(CMD_INSCRIBE_ITEM);
+
+    //FIXME: there must be a more efficient way to set up this static map.
+    std::map<command_type, std::string> act_str;
+    act_str[CMD_WIELD_WEAPON]       = "(w)ield";
+    act_str[CMD_WEAPON_SWAP]        = "(u)nwield";
+    act_str[CMD_QUIVER_ITEM]        = "(q)uiver";
+    act_str[CMD_WEAR_ARMOUR]        = "(w)ear";
+    act_str[CMD_REMOVE_ARMOUR]      = "(t)ake off";
+    act_str[CMD_EVOKE]              = "e(v)oke";
+    act_str[CMD_EAT]                = "(e)at";
+    act_str[CMD_READ]               = "(r)ead";
+    act_str[CMD_WEAR_JEWELLERY]     = "(p)ut on";
+    act_str[CMD_REMOVE_JEWELLERY]   = "(r)emove";
+    act_str[CMD_QUAFF]              = "(q)uaff";
+    act_str[CMD_DROP]               = "(d)rop";
+    act_str[CMD_INSCRIBE_ITEM]      = "(i)nscribe";
+
+    for (std::vector<command_type>::const_iterator at = actions.begin();
+         at < actions.end(); ++at)
+    {
+        prompt += act_str[*at];
+        if (at < actions.end() - 2)
+            prompt += ", ";
+        else if (at == actions.end() - 2)
+            prompt += " or ";
+    }
+    prompt += " the " + item.name(DESC_BASENAME) + ".";
+    prompt = "<cyan>" + prompt + "</cyan>";
+    formatted_string::parse_string(prompt).display();
+
+    keyin = tolower(getch_ck());
+    command_type action = _get_action(keyin, actions);
+    int slot = letter_to_index(item.slot);
+
+    switch (action)
+    {
+    case CMD_WIELD_WEAPON:
+        redraw_screen();
+        wield_weapon(true, slot);
+        return false;
+    case CMD_WEAPON_SWAP:
+        redraw_screen();
+        wield_weapon(true, PROMPT_GOT_SPECIAL); // unwield
+        return false;
+    case CMD_QUIVER_ITEM:
+        redraw_screen();
+        quiver_item(slot);
+        return false;
+    case CMD_WEAR_ARMOUR:
+        redraw_screen();
+        wear_armour(slot);
+        return false;
+    case CMD_REMOVE_ARMOUR:
+        redraw_screen();
+        takeoff_armour(slot);
+        return false;
+    case CMD_EVOKE:
+        redraw_screen();
+        zap_wand(slot);
+        return false;
+    case CMD_EAT:
+        redraw_screen();
+        eat_inventory_item(slot);
+        return false;
+    case CMD_READ:
+        read_scroll(slot);
+        if (item.base_type == OBJ_BOOKS)
+            return true; // We stay in the inventory to see the book content.
+        else
+        {
+            redraw_screen();
+            return false;
+        }
+    case CMD_WEAR_JEWELLERY:
+        redraw_screen();
+        puton_ring(slot);
+        return false;
+    case CMD_REMOVE_JEWELLERY:
+        redraw_screen();
+        remove_ring(slot, true);
+        return false;
+    case CMD_QUAFF:
+        redraw_screen();
+        drink(slot);
+        return false;
+    case CMD_DROP:
+        redraw_screen();
+        drop_item(slot, you.inv[slot].quantity);
+        return false;
+    case CMD_INSCRIBE_ITEM:
+        inscribe_item(item, false);
+    case CMD_NO_CMD:
+    default:
+        return true;
+    }
+}
+
 //---------------------------------------------------------------
 //
 // describe_item
@@ -2333,53 +2563,20 @@ bool describe_item( item_def &item, bool allow_inscribe, bool shopping )
     if (!item.defined())
         return (true);
 
-    while (true)
-    {
-        // Memorised spell while reading a spellbook.
-        if (already_learning_spell(-1))
-            return (false);
+    if (_can_show_spells(item))
+      return _describe_spellbook(item);
 
-        const bool spells_shown = _show_item_description(item);
-        const bool real_book    = (item.base_type == OBJ_BOOKS
-                                   && in_inventory(item));
-
-        bool can_memorise = false;
-        if (real_book)
-            can_memorise = player_can_memorise_from_spellbook(item);
-
-        if (real_book && !can_memorise)
-            inscribe_book_highlevel(item);
-
-        if (spells_shown)
-        {
-            cgotoxy(1, wherey());
-            textcolor(LIGHTGREY);
-
-            if (can_memorise && !crawl_state.player_is_dead())
-            {
-                cprintf("Select a spell to read its description, to "
-                        "memorise it or to forget it.");
-            }
-            else
-                cprintf("Select a spell to read its description.");
-
-            if (_describe_spells(item))
-                continue;
-            return (true);
-        }
-        break;
-    }
+    _show_item_description(item);
+    _update_inscription(item);
 
     // Don't ask if there aren't enough rows left
-    if (allow_inscribe && wherey() <= get_number_of_lines() - 3)
+    if (wherey() <= get_number_of_lines() - 2)
     {
         cgotoxy(1, wherey() + 2);
-        inscribe_item(item, false);
+        return _actions_prompt(item, allow_inscribe);
     }
     else
-    {
         wait_for_keypress();
-    }
 
     return (true);
 }
@@ -2415,68 +2612,57 @@ void inscribe_item(item_def &item, bool msgwin)
 
     std::string prompt;
     int keyin;
-    bool did_prompt = false;
 
-    // Don't prompt for whether to inscribe in the first place if the
-    // player is using '{' - unless autoinscribing or clearing an
-    // existing inscription become an option.
-    if (!msgwin || need_autoinscribe || is_inscribed)
-    {
-        if (!is_inscribed)
-            prompt = "Press (i) to inscribe";
-        else
-            prompt = "Press (i) to add to or (r) to replace the inscription";
+    // Don't prompt for whether to inscribe in the first place unless
+    // autoinscribing or clearing an existing inscription become an option.
+    if (need_autoinscribe && !is_inscribed)
+        prompt = "You can (i)nscribe or (a)utoinscribe.";
+    else if (!need_autoinscribe && is_inscribed)
+        prompt = "You can (a)dd to, (r)eplace or (c)lear the inscription.";
+    else if (need_autoinscribe && is_inscribed)
+        prompt = "You can (a)dd to, (r)eplace, (c)lear the inscription "
+                 "or (A)utoinscribe.";
 
-        if (need_autoinscribe || is_inscribed)
-        {
-            if (!need_autoinscribe || !is_inscribed)
-                prompt += ", or ";
-            else
-                prompt += ", ";
-
-            if (need_autoinscribe)
-            {
-                prompt += "(a) to autoinscribe";
-                if (is_inscribed)
-                    prompt += ", or ";
-            }
-            if (is_inscribed)
-                prompt += "(c) to clear it";
-        }
-        prompt += ".";
-
+    if (prompt != "")
         if (msgwin)
             mpr(prompt.c_str(), MSGCH_PROMPT);
         else
         {
-            prompt = "<cyan>" + prompt + "</cyan>";
+            prompt = "\n<cyan>" + prompt + "</cyan>";
             formatted_string::parse_string(prompt).display();
 
             if (Hints.hints_left && wherey() <= get_number_of_lines() - 5)
                 hints_inscription_info(need_autoinscribe, prompt);
         }
-        did_prompt = true;
-    }
 
-    keyin = (did_prompt ? tolower(getch_ck()) : 'i');
+    keyin = (prompt != "" ? getch_ck() : 'i');
+    if (keyin != 'A')
+        keyin = tolower(keyin);
     switch (keyin)
     {
     case 'c':
         item.inscription.clear();
         break;
-    case 'a':
+    case 'A':
         if (need_autoinscribe)
         {
             add_autoinscription(item, ainscrip);
             break;
         }
         // If autoinscription is impossible, prompt for an inscription instead.
+    case 'a':
+        if (!is_inscribed)
+        {
+            add_autoinscription(item, ainscrip);
+            break;
+        }
+        // If it is inscribed, prompt for an inscription instead.
     case 'i':
     case 'r':
     {
         if (!is_inscribed)
             prompt = "Inscribe with what? ";
-        else if (keyin == 'i')
+        else if (keyin == 'i' || keyin == 'a' || keyin == 'A')
             prompt = "Add what to inscription? ";
         else
             prompt = "Replace inscription with what? ";
