@@ -5131,6 +5131,7 @@ void player::init()
 
     real_time        = 0;
     num_turns        = 0;
+    exploration      = 0;
 
     last_view_update = 0;
 

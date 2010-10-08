@@ -981,7 +981,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 piety_change = ash_bondage_level() * 2;
                 if (!piety_change)
                     piety_change = 1;
-                piety_denom = 1000;
+                piety_change *= 16; // base gain per dungeon level
+                piety_denom = level;
                 retval = true;
             }
             break;

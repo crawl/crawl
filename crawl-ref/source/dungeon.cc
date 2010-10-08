@@ -251,6 +251,7 @@ static void _dgn_set_floor_colours();
 static bool _fixup_interlevel_connectivity();
 
 void dgn_postprocess_level();
+static void _calc_density();
 
 //////////////////////////////////////////////////////////////////////////
 // Static data
@@ -446,6 +447,7 @@ static bool _build_level_vetoable(int level_number, level_area_type level_type,
 void dgn_postprocess_level()
 {
     shoals_postprocess_level();
+    _calc_density();
 }
 
 void level_welcome_messages()
@@ -1281,6 +1283,7 @@ void dgn_reset_level(bool enable_random_maps)
     else
         // No random monsters in Labyrinths and portal vaualts.
         env.spawn_random_rate = 0;
+    env.density = 0;
 
     env.floor_colour = BLACK;
     env.rock_colour  = BLACK;
@@ -9402,4 +9405,28 @@ unwind_vault_placement_mask::unwind_vault_placement_mask(const map_mask *mask)
 unwind_vault_placement_mask::~unwind_vault_placement_mask()
 {
     Vault_Placement_Mask = oldmask;
+}
+
+
+// mark all unexplorable squares, count the rest
+static void _calc_density()
+{
+    int open = 0;
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        // If for some reason a level gets modified afterwards, dug-out
+        // places in unmodified parts should not suddenly become explorable.
+        if (!testbits(env.pgrid(*ri), FPROP_SEEN_OR_NOEXP))
+            for (adjacent_iterator ai(*ri, false); ai; ++ai)
+                if (grd(*ai) >= DNGN_MINITEM)
+                {
+                    open++;
+                    goto out;
+                }
+        env.pgrid(*ri) |= FPROP_SEEN_OR_NOEXP;
+    out:;
+    }
+
+    dprf("Level density: %d", open);
+    env.density = open;
 }
