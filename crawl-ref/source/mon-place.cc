@@ -187,6 +187,14 @@ bool monster_habitable_grid(monster_type mt,
     if (mt == MONS_FIRE_ELEMENTAL && feat_is_watery(actual_grid))
         return (false);
 
+    if (actual_grid == DNGN_TEMP_PORTAL)
+    {
+        if (mt == MONS_DEMONIC_TENTACLE || mt == MONS_DEMONIC_TENTACLE_SEGMENT)
+            return (true);
+        else
+            return (false);
+    }
+
     if (feat_compatible(feat_preferred, actual_grid)
         || (feat_nonpreferred != feat_preferred
             && feat_compatible(feat_nonpreferred, actual_grid)))
