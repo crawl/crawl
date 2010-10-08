@@ -494,6 +494,8 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_VAMPIRE;
     case SP_DEEP_DWARF:
         return TILEP_BASE_DEEP_DWARF;
+    case SP_CAT:
+        return TILEP_BASE_FELID;
     default:
         return TILEP_BASE_HUMAN;
     }
@@ -871,6 +873,20 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
              && doll.parts[TILEP_PART_BASE] <= TILEP_BASE_DRACONIAN_LAST)
     {
         flag[TILEP_PART_HAIR] = flag[TILEP_PART_HELM] = TILEP_FLAG_HIDE;
+    }
+    else if (is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_FELID))
+    {
+        flag[TILEP_PART_CLOAK] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_BOOTS] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_LEG]   = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_BODY]  = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_ARM]   = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_HAND1] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_HAND2] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_HELM]  = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_HAIR]  = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_BEARD] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_SHADOW]= TILEP_FLAG_HIDE;
     }
 }
 
