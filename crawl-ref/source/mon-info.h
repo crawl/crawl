@@ -59,7 +59,7 @@ enum monster_info_flags
     MB_NAME_THE, // The foo does....
     MB_FADING_AWAY,
     MB_MOSTLY_FADED,
-    MB_FEAR_INSPIRING
+    MB_FEAR_INSPIRING,
 };
 
 struct monster_info_base
