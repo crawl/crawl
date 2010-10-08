@@ -277,6 +277,15 @@ const mon_resist_def &get_mons_class_resists(int mc)
     return (me ? me->resists : get_monster_data(MONS_PROGRAM_BUG)->resists);
 }
 
+static mon_resist_def fake_undead_resists()
+{
+    mon_resist_def res;
+
+    res.poison = 1;
+
+    return res;
+}
+
 mon_resist_def serpent_of_hell_resists(int flavour)
 {
     mon_resist_def res;
@@ -323,6 +332,9 @@ mon_resist_def get_mons_resists(const monster* mon)
         if (draco_species != mon->type)
             resists |= get_mons_class_resists(draco_species);
     }
+
+    if (testbits(mon->flags, MF_FAKE_UNDEAD))
+        resists |= fake_undead_resists();
 
     if (mon->type == MONS_SERPENT_OF_HELL)
         resists |= serpent_of_hell_resists(mon);
