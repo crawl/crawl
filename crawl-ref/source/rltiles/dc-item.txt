@@ -40,7 +40,7 @@ hammer2
 ankus WPN_ANKUS
 bullwhip WPN_WHIP
 %rim 0
-holy_scourge WPN_HOLY_SCOURGE
+sacred_scourge WPN_SACRED_SCOURGE
 trishula WPN_TRISHULA
 %rim 1
 demon_whip WPN_DEMON_WHIP

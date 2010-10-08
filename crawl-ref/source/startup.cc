@@ -19,6 +19,7 @@
 #include "exclude.h"
 #include "files.h"
 #include "food.h"
+#include "godpassive.h"
 #include "hints.h"
 #include "initfile.h"
 #include "itemname.h"
@@ -270,7 +271,9 @@ static void _post_init(bool newc)
     new_level();
     update_turn_count();
     update_vision_range();
+    you.xray_vision = !!you.duration[DUR_SCRYING];
     init_exclusion_los();
+    you.bondage_level = ash_bondage_level();
 
     trackers_init_new_level(false);
 

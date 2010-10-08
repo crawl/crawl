@@ -27,6 +27,13 @@ enum item_description_type
     NUM_IDESC
 };
 
+enum book_mem_or_forget
+{
+    BOOK_MEM,
+    BOOK_FORGET,
+    BOOK_NEITHER
+};
+
 struct describe_info
 {
     std::ostringstream body;

@@ -154,6 +154,9 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     // Cheibriados
     { ABIL_NON_ABILITY, ABIL_CHEIBRIADOS_TIME_BEND, ABIL_NON_ABILITY,
       ABIL_CHEIBRIADOS_SLOUCH, ABIL_CHEIBRIADOS_TIME_STEP },
+    // Ashenzari
+    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
+      ABIL_ASHENZARI_SCRYING, ABIL_NON_ABILITY },
 };
 
 // The description screen was way out of date with the actual costs.
@@ -343,6 +346,10 @@ static const ability_def Ability_List[] =
     { ABIL_CHEIBRIADOS_SLOUCH, "Slouch", 5, 0, 100, 8, ABFLAG_NONE },
     { ABIL_CHEIBRIADOS_TIME_STEP, "Step From Time",
       10, 0, 200, 10, ABFLAG_NONE },
+
+    // Ashenzari
+    { ABIL_ASHENZARI_SCRYING, "Scrying",
+      4, 0, 50, generic_cost::range(5, 6), ABFLAG_NONE },
 
     { ABIL_HARM_PROTECTION, "Protection From Harm", 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_HARM_PROTECTION_II, "Reliable Protection From Harm",
@@ -706,15 +713,14 @@ static talent _get_talent(ability_type ability, bool check_confused)
         failure = 30 - (you.piety / 20) - (6 * you.skills[SK_INVOCATIONS]);
         break;
 
-    // destroying stuff doesn't train anything
+    // These don't train anything.
+    case ABIL_ZIN_CURE_ALL_MUTATIONS:
     case ABIL_ELYVILON_DESTROY_WEAPONS:
-    case ABIL_FEDHAS_FUNGAL_BLOOM:
-        invoc = true;
-        failure = 0;
-        break;
-
     case ABIL_TROG_BURN_SPELLBOOKS:
+    case ABIL_FEDHAS_FUNGAL_BLOOM:
+    case ABIL_CHEIBRIADOS_PONDEROUSIFY:
         invoc = true;
+        perfect = true;
         failure = 0;
         break;
 
@@ -729,11 +735,13 @@ static talent _get_talent(ability_type ability, bool check_confused)
         failure = 80 - you.piety;       // starts at 30%
         break;
 
-    case ABIL_TROG_BROTHERS_IN_ARMS:       // piety >= 100
+    case ABIL_TROG_BROTHERS_IN_ARMS:    // piety >= 100
+    case ABIL_ASHENZARI_SCRYING:
         invoc = true;
         failure = 160 - you.piety;      // starts at 60%
         break;
 
+    case ABIL_YRED_INJURY_MIRROR:
     case ABIL_YRED_ANIMATE_REMAINS:
     case ABIL_YRED_ANIMATE_DEAD:
         invoc = true;
@@ -834,7 +842,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
         failure = 50 - (you.piety / 20) - (5 * you.skills[SK_EVOCATIONS]);
         break;
 
-    case ABIL_CHEIBRIADOS_PONDEROUSIFY:
     case ABIL_RENOUNCE_RELIGION:
         invoc = true;
         perfect = true;
@@ -1594,7 +1601,17 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_YRED_INJURY_MIRROR:
-        // Activated via prayer elsewhere.
+        if (yred_injury_mirror())
+        {
+            mpr("You already have a dark mirror aura!");
+            return (false);
+        }
+
+        mprf("You %s in prayer and are bathed in unholy energy.",
+             (you.species == SP_NAGA) ? "coil"
+                                      : "kneel");
+        you.duration[DUR_MIRROR_DAMAGE] = 9 * BASELINE_DELAY
+                     + random2avg(you.piety * BASELINE_DELAY, 2) / 10;
         break;
 
     case ABIL_YRED_ANIMATE_REMAINS:
@@ -2004,6 +2021,15 @@ static bool _do_ability(const ability_def& abil)
         cheibriados_slouch(0);
         break;
 
+    case ABIL_ASHENZARI_SCRYING:
+        if (you.duration[DUR_SCRYING])
+            mpr("You extend your astral sight.");
+        else
+            mpr("You gain astral sight.");
+        you.duration[DUR_SCRYING] = 100 + random2avg(you.piety * 2, 2);
+        you.xray_vision = true;
+        break;
+
 
     case ABIL_RENOUNCE_RELIGION:
         if (yesno("Really renounce your faith, foregoing its fabulous benefits?",
@@ -2334,6 +2360,12 @@ std::vector<talent> your_talents(bool check_confused)
                                     ABIL_ELYVILON_GREATER_HEALING_SELF,
                                     check_confused);
                     }
+                    else if (abil == ABIL_YRED_RECALL_UNDEAD_SLAVES)
+                    {
+                        _add_talent(talents,
+                                    ABIL_YRED_INJURY_MIRROR,
+                                    check_confused);
+                    }
                 }
             }
         }
@@ -2342,7 +2374,9 @@ std::vector<talent> your_talents(bool check_confused)
             && !you.num_gifts[GOD_ZIN]
             && you.piety > 160)
         {
-            _add_talent(talents, ABIL_ZIN_CURE_ALL_MUTATIONS, check_confused);
+            _add_talent(talents,
+                        ABIL_ZIN_CURE_ALL_MUTATIONS,
+                        check_confused);
         }
     }
 
@@ -2515,6 +2549,15 @@ void set_god_ability_slots()
                                             'a' + num++);
                 }
             }
+            else if (you.religion == GOD_YREDELEMNUL)
+            {
+                if (god_abilities[you.religion][i]
+                        == ABIL_YRED_RECALL_UNDEAD_SLAVES)
+                {
+                    _set_god_ability_helper(ABIL_YRED_INJURY_MIRROR,
+                                            'a' + num++);
+                }
+            }
         }
     }
 }
@@ -2529,8 +2572,10 @@ static int _find_ability_slot(ability_type which_ability)
 
     // No requested slot, find new one and make it preferred.
 
-    // Skip over a-e (invocations), or a-g for Elyvilon.
-    const int first_slot = (you.religion == GOD_ELYVILON ? 7 : 5);
+    // Skip over a-e (invocations), a-g for Elyvilon, or a-f for Yredelemnul.
+    const int first_slot = you.religion == GOD_ELYVILON    ? 7 :
+                           you.religion == GOD_YREDELEMNUL ? 6
+                                                           : 5;
     for (int slot = first_slot; slot < 52; ++slot)
     {
         if (you.ability_letter_table[slot] == ABIL_NON_ABILITY)

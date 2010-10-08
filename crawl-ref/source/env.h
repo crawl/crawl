@@ -97,6 +97,7 @@ struct crawl_environment
     coord_def sanctuary_pos;
     int sanctuary_time;
     int forest_awoken_until;
+    int density;
 
     // Temp stuff.
     std::vector<final_effect> final_effects;

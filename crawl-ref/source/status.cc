@@ -108,6 +108,11 @@ static duration_def duration_data[] =
       BLUE, "Stlth", "", "" },
     { DUR_AFRAID, true,
       RED, "Fear", "afraid", "You are terrified." },
+    { DUR_MIRROR_DAMAGE, false,
+      WHITE, "Mirror", "injury mirror", "You mirror injuries." },
+    { DUR_SCRYING, false,
+      LIGHTBLUE, "Scry", "scrying",
+      "Your astral vision lets you see through walls." },
 };
 
 static int duration_index[NUM_DURATIONS];

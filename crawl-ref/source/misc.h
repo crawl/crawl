@@ -8,6 +8,7 @@
 #define MISC_H
 
 #include "externs.h"
+#include "mapmark.h"
 
 struct bolt;
 class dist;
@@ -76,6 +77,10 @@ bool there_are_monsters_nearby(bool dangerous_only = false,
 
 void timeout_tombs(int duration);
 
+int count_malign_gateways ();
+std::vector<map_malign_gateway_marker*> get_malign_gateways ();
+void timeout_malign_gateways(int duration);
+
 void setup_environment_effects();
 
 // Lava smokes, swamp water mists.
@@ -111,4 +116,6 @@ void swap_with_monster(monster* mon_to_swap);
 void maybe_id_ring_TC();
 
 void make_fake_undead(monster* mon, monster_type undead);
+
+void entered_malign_portal(actor* act);
 #endif

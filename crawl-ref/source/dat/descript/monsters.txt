@@ -611,6 +611,14 @@ demonic crawler
 
 A long and bloated body, supported by dozens of short legs and topped with an evil-looking head.
 %%%%
+demonic tentacle
+
+This immense, batrachian appendage of some thankfully unseen creature drips with ichor and is tipped with a single, terrible-looking claw.
+%%%%
+demonic tentacle segment
+
+Part of an immense, batrachian appendage. It thrashes and pulsates like no other living thing.
+%%%%
 demonspawn
 
 This fellow looks mostly like a human, yet you sense something evil about him.
@@ -837,7 +845,7 @@ giant orange brain
 
 A huge wrinkled brain, floating just off the floor. Every now and then it seems to pulsate.
 %%%%
-giant scorpion
+emperor scorpion
 
 A bigger and deadlier relative of the deadly dungeon scorpion.
 %%%%

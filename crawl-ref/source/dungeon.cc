@@ -160,7 +160,7 @@ static void _place_pool(dungeon_feature_type pool_type, uint8_t pool_x1,
 static void _many_pools(dungeon_feature_type pool_type);
 static bool _join_the_dots_rigorous(const coord_def &from,
                                     const coord_def &to,
-                                    unsigned mapmask,
+                                    uint32_t mapmask,
                                     bool early_exit = false);
 
 static void _build_river(dungeon_feature_type river_type); //mv
@@ -251,6 +251,7 @@ static void _dgn_set_floor_colours();
 static bool _fixup_interlevel_connectivity();
 
 void dgn_postprocess_level();
+static void _calc_density();
 
 //////////////////////////////////////////////////////////////////////////
 // Static data
@@ -446,6 +447,7 @@ static bool _build_level_vetoable(int level_number, level_area_type level_type,
 void dgn_postprocess_level()
 {
     shoals_postprocess_level();
+    _calc_density();
 }
 
 void level_welcome_messages()
@@ -592,12 +594,12 @@ static void _dgn_map_colour_fixup()
     dgn_colour_grid.reset(NULL);
 }
 
-bool set_level_flags(unsigned long flags, bool silent)
+bool set_level_flags(uint32_t flags, bool silent)
 {
     bool could_control = allow_control_teleport(true);
     bool could_map     = player_in_mappable_area();
 
-    unsigned long old_flags = env.level_flags;
+    uint32_t old_flags = env.level_flags;
     env.level_flags |= flags;
 
     bool can_control = allow_control_teleport(true);
@@ -618,12 +620,12 @@ bool set_level_flags(unsigned long flags, bool silent)
     return (old_flags != env.level_flags);
 }
 
-bool unset_level_flags(unsigned long flags, bool silent)
+bool unset_level_flags(uint32_t flags, bool silent)
 {
     bool could_control = allow_control_teleport(true);
     bool could_map     = player_in_mappable_area();
 
-    unsigned long old_flags = env.level_flags;
+    iflags_t old_flags = env.level_flags;
     env.level_flags &= ~flags;
 
     bool can_control = allow_control_teleport(true);
@@ -1281,6 +1283,7 @@ void dgn_reset_level(bool enable_random_maps)
     else
         // No random monsters in Labyrinths and portal vaualts.
         env.spawn_random_rate = 0;
+    env.density = 0;
 
     env.floor_colour = BLACK;
     env.rock_colour  = BLACK;
@@ -3296,7 +3299,7 @@ coord_def dgn_random_point_in_margin(int margin)
 
 static inline bool _point_matches_feat(coord_def c,
                                        dungeon_feature_type searchfeat,
-                                       unsigned mapmask,
+                                       uint32_t mapmask,
                                        dungeon_feature_type adjacent_feat,
                                        bool monster_free)
 {
@@ -3326,7 +3329,7 @@ static inline bool _point_matches_feat(coord_def c,
 // returns coord_def(0,0)
 //
 coord_def dgn_random_point_in_bounds(dungeon_feature_type searchfeat,
-                                     unsigned mapmask,
+                                     uint32_t mapmask,
                                      dungeon_feature_type adjacent_feat,
                                      bool monster_free,
                                      int tries)
@@ -5187,6 +5190,8 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
 
     if (mons_genus(mid) == MONS_ORC)
         racial = MAKE_ITEM_ORCISH;
+    else if (mons_genus(mid) == MONS_DWARF)
+        racial = MAKE_ITEM_DWARVEN;
     else if (mons_genus(mid) == MONS_ELF)
         racial = MAKE_ITEM_ELVEN;
 
@@ -5215,8 +5220,10 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
         if (spec.race == MAKE_ITEM_RANDOM_RACE)
         {
             // But don't automatically give elves elven boots or
-            // elven cloaks.
-            if (racial != MAKE_ITEM_ELVEN || spec.base_type != OBJ_ARMOUR
+            // elven cloaks, or the same for dwarves.
+            if ((racial != MAKE_ITEM_ELVEN
+                    && racial != MAKE_ITEM_DWARVEN)
+                || spec.base_type != OBJ_ARMOUR
                 || (spec.sub_type != ARM_CLOAK
                     && spec.sub_type != ARM_BOOTS))
             {
@@ -5353,6 +5360,10 @@ int dgn_place_monster(mons_spec &mspec,
         mg.base_type = mspec.monbase;
         mg.number    = mspec.number;
         mg.colour    = mspec.colour;
+
+        if (mspec.god != GOD_NO_GOD)
+            mg.god   = mspec.god;
+
         mg.mname     = mspec.monname;
         mg.hd        = mspec.hd;
         mg.hp        = mspec.hp;
@@ -5400,22 +5411,36 @@ int dgn_place_monster(mons_spec &mspec,
         if (mspec.props.exists("serpent_of_hell_flavour"))
             mg.props["serpent_of_hell_flavour"] =
                 mspec.props["serpent_of_hell_flavour"].get_int();
+
         const int mindex = place_monster(mg, true);
         if (mindex != -1)
         {
             monster& mons(menv[mindex]);
+
             if (!mspec.items.empty())
                 _dgn_give_mon_spec_items(mspec, mindex, mid, monster_level);
+
             if (mspec.explicit_spells)
                 mons.spells = mspec.spells;
+
             if (mspec.props.exists("monster_tile"))
                 mons.props["monster_tile"] =
                     mspec.props["monster_tile"].get_short();
+
             if (mspec.props.exists("always_corpse"))
                 mons.props["always_corpse"] = true;
+
             // These are applied earlier to prevent issues with renamed monsters
             // and "<monster> comes into view" (see delay.cc:_monster_warning).
             //mons.flags |= mspec.extra_monster_flags;
+
+            // Monsters with gods set by the spec aren't god gifts
+            // unless they have the "god_gift" tag.  place_monster(),
+            // by default, marks any monsters with gods as god gifts,
+            // so unmark them here.
+            if (mspec.god != GOD_NO_GOD && !mspec.god_gift)
+                mons.flags &= ~MF_GOD_GIFT;
+
             if (mons.is_priest() && mons.god == GOD_NO_GOD)
                 mons.god = GOD_NAMELESS;
         }
@@ -5766,7 +5791,7 @@ void dgn_replace_area(int sx, int sy, int ex, int ey,
 
 void dgn_replace_area( const coord_def& p1, const coord_def& p2,
                        dungeon_feature_type replace,
-                       dungeon_feature_type feature, unsigned mapmask,
+                       dungeon_feature_type feature, uint32_t mapmask,
                        bool needs_update)
 {
     for (rectangle_iterator ri(p1, p2); ri; ++ri)
@@ -5811,7 +5836,7 @@ struct coord_comparator
 
 typedef std::set<coord_def, coord_comparator> coord_set;
 
-static void _jtd_init_surrounds(coord_set &coords, unsigned mapmask,
+static void _jtd_init_surrounds(coord_set &coords, uint32_t mapmask,
                                 const coord_def &c)
 {
     for (int yi = -1; yi <= 1; ++yi)
@@ -5834,7 +5859,7 @@ static void _jtd_init_surrounds(coord_set &coords, unsigned mapmask,
 
 static bool _join_the_dots_pathfind(coord_set &coords,
                                     const coord_def &from, const coord_def &to,
-                                    unsigned mapmask, bool early_exit)
+                                    uint32_t mapmask, bool early_exit)
 {
     coord_def curr = from;
     while (true)
@@ -5874,7 +5899,7 @@ static bool _join_the_dots_pathfind(coord_set &coords,
 
 static bool _join_the_dots_rigorous(const coord_def &from,
                                     const coord_def &to,
-                                    unsigned mapmask,
+                                    uint32_t mapmask,
                                     bool early_exit)
 {
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
@@ -5888,7 +5913,7 @@ static bool _join_the_dots_rigorous(const coord_def &from,
 }
 
 bool join_the_dots(const coord_def &from, const coord_def &to,
-                   unsigned mapmask, bool early_exit)
+                   uint32_t mapmask, bool early_exit)
 {
     if (from == to || !in_bounds(from))
         return (true);
@@ -9380,4 +9405,28 @@ unwind_vault_placement_mask::unwind_vault_placement_mask(const map_mask *mask)
 unwind_vault_placement_mask::~unwind_vault_placement_mask()
 {
     Vault_Placement_Mask = oldmask;
+}
+
+
+// mark all unexplorable squares, count the rest
+static void _calc_density()
+{
+    int open = 0;
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        // If for some reason a level gets modified afterwards, dug-out
+        // places in unmodified parts should not suddenly become explorable.
+        if (!testbits(env.pgrid(*ri), FPROP_SEEN_OR_NOEXP))
+            for (adjacent_iterator ai(*ri, false); ai; ++ai)
+                if (grd(*ai) >= DNGN_MINITEM)
+                {
+                    open++;
+                    goto out;
+                }
+        env.pgrid(*ri) |= FPROP_SEEN_OR_NOEXP;
+    out:;
+    }
+
+    dprf("Level density: %d", open);
+    env.density = open;
 }

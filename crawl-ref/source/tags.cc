@@ -1028,6 +1028,7 @@ static void tag_construct_you(writer &th)
     marshallShort(th, you.dead ? 0 : you.hp);
 
     marshallShort(th, you.hunger);
+    marshallBoolean(th, you.fishtail);
 
     // how many you.equip?
     marshallByte(th, NUM_EQUIP);
@@ -1163,8 +1164,9 @@ static void tag_construct_you(writer &th)
         you.start_time = now;
     }
 
-    marshallInt( th, you.real_time );
-    marshallInt( th, you.num_turns );
+    marshallInt(th, you.real_time);
+    marshallInt(th, you.num_turns);
+    marshallInt(th, you.exploration);
 
     marshallShort(th, you.magic_contamination);
 
@@ -1601,6 +1603,10 @@ static void tag_read_you(reader &th, int minorVersion)
 
     you.hp              = unmarshallShort(th);
     you.hunger          = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 31
+    if (minorVersion >= TAG_MINOR_FISHTAIL)
+#endif
+    you.fishtail        = unmarshallBoolean(th);
 
     // How many you.equip?
     count = unmarshallByte(th);
@@ -1753,6 +1759,10 @@ static void tag_read_you(reader &th, int minorVersion)
 
     you.real_time  = unmarshallInt(th);
     you.num_turns  = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 31
+    if (minorVersion >= TAG_MINOR_DENSITY)
+#endif
+    you.exploration = unmarshallInt(th);
 
     you.magic_contamination = unmarshallShort(th);
 
@@ -2136,6 +2146,7 @@ static void tag_construct_level(writer &th)
 
     marshallInt(th, env.forest_awoken_until);
     marshall_level_vault_data(th);
+    marshallInt(th, env.density);
 }
 
 void marshallItem(writer &th, const item_def &item)
@@ -2727,6 +2738,12 @@ static void tag_read_level( reader &th, int minorVersion )
 
     env.forest_awoken_until = unmarshallInt(th);
     unmarshall_level_vault_data(th);
+#if TAG_MAJOR_VERSION == 31
+    if (minorVersion < TAG_MINOR_DENSITY)
+        env.density = 0;
+    else
+#endif
+    env.density = unmarshallInt(th);
 }
 
 static void tag_read_level_items(reader &th, int minorVersion)

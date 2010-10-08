@@ -647,7 +647,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         }
 
         if (!ignore_temporary
-            && you.species == SP_MERFOLK && you.swimming())
+            && you.fishtail)
         {
             if (verbose)
                mpr("You don't currently have feet!");
@@ -1183,14 +1183,8 @@ static bool _fire_warn_if_impossible()
         return (true);
     }
 
-    // FIXME: merge this into transform_can_equip_slot()
-    const int trans = you.attribute[ATTR_TRANSFORMATION];
     // If you can't wield it, you can't throw it.
-    if (trans == TRAN_SPIDER
-        || trans == TRAN_BLADE_HANDS
-        || trans == TRAN_ICE_BEAST
-        || trans == TRAN_DRAGON
-        || trans == TRAN_BAT)
+    if (!transform_can_wield())
     {
         canned_msg(MSG_PRESENT_FORM);
         return (true);

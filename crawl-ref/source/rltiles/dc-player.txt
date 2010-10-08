@@ -433,7 +433,7 @@ mace_of_variability MACE_OF_VARIABILITY
 mace_of_brilliance MACE_OF_BRILLIANCE
 undeadhunter UNDEADHUNTER
 eos EOS
-serpent_scourge SERPENT_SCOURGE
+snakebite SNAKEBITE
 ## polearms
 trident_octopus_king TRIDENT_OCTOPUS_KING
 glaive_of_prune GLAIVE_OF_PRUNE
@@ -514,8 +514,8 @@ morningstar2 MORNINGSTAR
 eveningstar EVENINGSTAR
 large_mace LARGE_MACE
 black_whip BLACK_WHIP
-holy_scourge1 HOLY_SCOURGE
-holy_scourge2 HOLY_SCOURGE2
+sacred_scourge1 SACRED_SCOURGE
+sacred_scourge2 SACRED_SCOURGE2
 hammer3 HAMMER
 hammer HAMMER1
 hammer2 HAMMER2

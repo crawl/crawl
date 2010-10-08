@@ -9,7 +9,9 @@ enum tag_minor_version
 {
     TAG_MINOR_RESET        = 0, // Minor tags were reset
     TAG_MINOR_DIAG_COUNTERS= 1, // Counters for diag/ortho moves.
-    TAG_MINOR_VERSION      = 1, // Current version.  (Keep equal to max.)
+    TAG_MINOR_FISHTAIL     = 2, // Merfolk's tail state.
+    TAG_MINOR_DENSITY      = 3, // Count of level's explorable area.
+    TAG_MINOR_VERSION      = 3, // Current version.  (Keep equal to max.)
 };
 
 #endif

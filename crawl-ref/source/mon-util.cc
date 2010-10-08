@@ -1118,7 +1118,9 @@ bool mons_can_be_zombified(const monster* mon)
 bool mons_class_can_use_stairs(int mc)
 {
     return ((!mons_class_is_zombified(mc) || mc == MONS_SPECTRAL_THING)
-            && mc != MONS_KRAKEN_TENTACLE);
+            && mc != MONS_KRAKEN_TENTACLE
+            && mc != MONS_SILENT_SPECTRE
+            && mc != MONS_PLAYER_GHOST);
 }
 
 bool mons_can_use_stairs(const monster* mon)
@@ -2148,7 +2150,7 @@ bool give_monster_proper_name(monster* mon, bool orcs_only)
     // don't bless non-orcs, and normally don't bless plain orcs, either.
     if (orcs_only)
     {
-        if (mons_species(mon->type) != MONS_ORC
+        if (mons_genus(mon->type) != MONS_ORC
             || mon->type == MONS_ORC && !one_chance_in(8))
         {
             return (false);

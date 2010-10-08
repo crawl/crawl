@@ -26,17 +26,17 @@ void remove_item_stationary( item_def &item );
 bool item_is_stationary( const item_def &item );
 
 // ident:
-bool item_ident( const item_def &item, unsigned long flags );
-void set_ident_flags( item_def &item, unsigned long flags );
-void unset_ident_flags( item_def &item, unsigned long flags );
+bool item_ident( const item_def &item, iflags_t flags );
+void set_ident_flags( item_def &item, iflags_t flags );
+void unset_ident_flags( item_def &item, iflags_t flags );
 bool fully_identified( const item_def &item );
-unsigned long full_ident_mask( const item_def& item );
+iflags_t full_ident_mask( const item_def& item );
 
 // racial item and item descriptions:
-void set_equip_race( item_def &item, unsigned long flags );
-void set_equip_desc( item_def &item, unsigned long flags );
-unsigned long get_equip_race( const item_def &item );
-unsigned long get_equip_desc( const item_def &item );
+void set_equip_race( item_def &item, iflags_t flags );
+void set_equip_desc( item_def &item, iflags_t flags );
+iflags_t get_equip_race( const item_def &item );
+iflags_t get_equip_desc( const item_def &item );
 
 // helmet functions:
 void  set_helmet_desc( item_def &item, short flags );

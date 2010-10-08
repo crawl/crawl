@@ -95,6 +95,7 @@ public:
   bool opened_zot;
   bool royal_jelly_dead;
   bool transform_uncancellable;
+  bool fishtail; // Merfolk fishtail transformation
 
   unsigned short pet_target;
 
@@ -111,12 +112,6 @@ public:
   undead_state_type is_undead;
 
   int  friendly_pickup;       // pickup setting for allies
-#if defined(WIZARD) || defined(DEBUG)
-  // If set to true, then any call to ouch() which would cuase the player
-  // to die automatically returns without ending the game.
-  bool never_die;
-  bool xray_vision;
-#endif
   bool dead; // ... but pending revival
   int lives;
   int deaths;
@@ -212,6 +207,7 @@ public:
 
   int           real_time;            // real time played (in seconds)
   int           num_turns;            // number of turns taken
+  int           exploration;          // levels explored (16.16 bit real number)
 
   int           last_view_update;     // what turn was the view last updated?
 
@@ -263,6 +259,13 @@ public:
   delay_queue_type delay_queue;       // pending actions
 
   time_t        start_time;           // start time of session
+#if defined(WIZARD) || defined(DEBUG)
+  // If set to true, then any call to ouch() which would cuase the player
+  // to die automatically returns without ending the game.
+  bool never_die;
+#endif
+  bool xray_vision;
+  int bondage_level;  // how much an Ash worshipper is into bondage
 
 
   // Volatile (same-turn) state:

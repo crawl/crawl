@@ -250,8 +250,10 @@ static bool _check_moveto_dangerous(const coord_def& p,
     {
         return (true);
     }
-
-    canned_msg(MSG_UNTHINKING_ACT);
+    else if (you.species == SP_MERFOLK && feat_is_water(env.grid(p)))
+        mpr("You cannot swim in your current form.");
+    else
+        canned_msg(MSG_UNTHINKING_ACT);
     return (false);
 }
 
@@ -293,22 +295,25 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     {
         if (you.species == SP_MERFOLK)
         {
-            if (feat_is_water(new_grid) && !feat_is_water(old_feat))
+            if (feat_is_water(new_grid) // We're entering water
+                // We're not transformed, or with a form compatible with tail
+                && (you.attribute[ATTR_TRANSFORMATION] == TRAN_NONE
+                    || you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS))
             {
-                merfolk_start_swimming();
+                merfolk_start_swimming(stepped);
             }
-            else if (!feat_is_water(new_grid) && feat_is_water(old_feat)
-                     && !is_feat_dangerous(new_grid))
-            {
+            else if (!feat_is_water(new_grid) && !is_feat_dangerous(new_grid))
                 merfolk_stop_swimming();
-            }
         }
+
+        if(feat_is_water(new_grid) && !stepped)
+            if (player_likes_water())
+                noisy(4, you.pos(), "Floosh!");
+            else
+                noisy(8, you.pos(), "Splash!");
 
         if (new_grid == DNGN_SHALLOW_WATER && !player_likes_water())
         {
-            if (!stepped)
-                noisy(8, you.pos(), "Splash!");
-
             you.time_taken *= 13 + random2(8);
             you.time_taken /= 10;
 
@@ -693,9 +698,7 @@ bool you_can_wear(int eq, bool special_armour)
 
 bool player_has_feet()
 {
-    if (you.species == SP_NAGA
-        || you.species == SP_CAT
-        || (you.species == SP_MERFOLK && you.swimming()))
+    if (you.species == SP_NAGA || you.species == SP_CAT || you.fishtail)
     {
         return (false);
     }
@@ -770,7 +773,7 @@ bool you_tran_can_wear(int eq, bool check_mutation)
             return (false);
 
         if (eq == EQ_BOOTS
-            && (you.swimming() && you.species == SP_MERFOLK
+            && (you.fishtail
                 || player_mutation_level(MUT_HOOVES) >= 3
                 || player_mutation_level(MUT_TALONS) >= 3))
         {
@@ -1965,7 +1968,7 @@ int player_movement_speed(bool ignore_burden)
         mv = 5; // but allowed minimum is six
     else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_PIG)
         mv = 7;
-    else if (you.swimming() && you.species == SP_MERFOLK)
+    else if (you.fishtail)
         mv = 6;
 
     // armour
@@ -2064,7 +2067,7 @@ static int _player_armour_racial_bonus(const item_def& item)
     const unsigned long armour_race = get_equip_race(item);
 
     // get the armour race value that corresponds to the character's race:
-    const unsigned long racial_type
+    const iflags_t racial_type
                             = ((player_genus(GENPC_DWARVEN)) ? ISFLAG_DWARVEN :
                                (player_genus(GENPC_ELVEN))   ? ISFLAG_ELVEN :
                                (you.species == SP_HILL_ORC)  ? ISFLAG_ORCISH
@@ -2286,7 +2289,7 @@ int player_scale_evasion(const int prescaled_ev, const int scale)
     {
     case SP_MERFOLK:
         // Merfolk get an evasion bonus in water.
-        if (you.swimming())
+        if (you.fishtail)
         {
             const int ev_bonus =
                 std::min(9 * scale,
@@ -2385,11 +2388,11 @@ int player_body_armour_racial_spellcasting_bonus(const int scale)
     if (!body_armour)
         return (0);
 
-    const unsigned long armour_race = get_equip_race(*body_armour);
+    const iflags_t armour_race = get_equip_race(*body_armour);
 
     // Get the armour race value that corresponds to the character's
     // race:
-    const unsigned long player_race
+    const iflags_t player_race
                             = ((player_genus(GENPC_DWARVEN)) ? ISFLAG_DWARVEN :
                                (player_genus(GENPC_ELVEN))   ? ISFLAG_ELVEN :
                                (you.species == SP_HILL_ORC)  ? ISFLAG_ORCISH
@@ -2655,7 +2658,7 @@ void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
     if (player_equip_ego_type( EQ_BODY_ARMOUR, SPARM_ARCHMAGI ))
         exp_gained = div_rand_round( exp_gained, 4 );
 
-    const unsigned long old_exp   = you.experience;
+    const unsigned int  old_exp   = you.experience;
     const int           old_avail = you.exp_available;
 
     dprf("gain_exp: %d", exp_gained );
@@ -3446,7 +3449,7 @@ int check_stealth(void)
     else if (you.in_water())
     {
         // Merfolk can sneak up on monsters underwater -- bwr
-        if (you.species == SP_MERFOLK)
+        if (you.fishtail)
             stealth += 50;
         else if ( !you.can_swim() && !you.extra_balanced() )
             stealth /= 2;       // splashy-splashy
@@ -3746,7 +3749,7 @@ void display_char_status()
         DUR_DIVINE_VIGOUR, DUR_DIVINE_STAMINA, DUR_BERSERKER,
         STATUS_AIRBORNE, STATUS_NET, DUR_POISONING, STATUS_SICK,
         STATUS_ROT, STATUS_GLOW, DUR_CONFUSING_TOUCH, DUR_SURE_BLADE,
-        DUR_AFRAID,
+        DUR_AFRAID, DUR_MIRROR_DAMAGE, DUR_SCRYING,
     };
 
     status_info inf;
@@ -3875,7 +3878,7 @@ unsigned int exp_needed(int lev)
 {
     lev--;
 
-    unsigned long level = 0;
+    unsigned int level = 0;
 
     // Basic plan:
     // Section 1: levels  1- 5, second derivative goes 10-10-20-30.
@@ -4954,7 +4957,13 @@ void levitate_player(int pow)
          "You feel %s buoyant.", standing ? "very" : "more");
 
     if (standing)
-        mpr("You gently float upwards from the floor.");
+        if (you.fishtail)
+        {
+            mpr("Your tail turns into legs as you levitate out of the water.");
+            merfolk_stop_swimming();
+        }
+        else
+            mpr("You gently float upwards from the floor.");
 
     // Amulet of Controlled Flight can auto-ID.
     if (!you.duration[DUR_LEVITATION]
@@ -4972,13 +4981,6 @@ void levitate_player(int pow)
     }
 
     you.increase_duration(DUR_LEVITATION, 25 + random2(pow), 100);
-
-    // Merfolk boots unmeld if levitation takes us out of water.
-    if (standing && you.species == SP_MERFOLK
-        && feat_is_water(grd(you.pos())))
-    {
-        unmeld_one_equip(EQ_BOOTS);
-    }
 
     burden_change();
 }
@@ -5099,6 +5101,7 @@ void player::init()
     opened_zot      = false;
     royal_jelly_dead = false;
     transform_uncancellable = false;
+    fishtail = false;
 
     pet_target      = MHITNOT;
 
@@ -5117,11 +5120,11 @@ void player::init()
     friendly_pickup = 0;
 #if defined(WIZARD) || defined(DEBUG)
     never_die = false;
-    xray_vision = false;
 #endif
     dead = false;
     lives = 0;
     deaths = 0;
+    xray_vision = false;
 
     skills.init(0);
     practise_skill.init(true);
@@ -5182,6 +5185,7 @@ void player::init()
 
     real_time        = 0;
     num_turns        = 0;
+    exploration      = 0;
 
     last_view_update = 0;
 
@@ -5350,9 +5354,7 @@ bool player::can_swim(bool permanently) const
 {
     // Transforming could be fatal if it would cause unequipment of
     // stat-boosting boots or heavy armour.
-    return (species == SP_MERFOLK
-            || (!permanently
-                && you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST));
+    return ((species == SP_MERFOLK || !permanently) && transform_can_swim());
 }
 
 int player::visible_igrd(const coord_def &where) const
@@ -6200,7 +6202,7 @@ int player::has_talons(bool allow_tran) const
     }
 
     // XXX: Do merfolk in water belong under allow_tran?
-    if (you.species == SP_MERFOLK && you.swimming())
+    if (you.fishtail)
         return (0);
 
     return (player_mutation_level(MUT_TALONS));
@@ -6263,7 +6265,7 @@ int player::has_tail(bool allow_tran) const
 
     // XXX: Do merfolk in water belong under allow_tran?
     if (player_genus(GENPC_DRACONIAN)
-        || you.species == SP_MERFOLK && you.swimming()
+        || you.fishtail
         || player_mutation_level(MUT_STINGER))
     {
         return (1);
@@ -6372,6 +6374,12 @@ bool player::can_see_invisible(bool calc_unid, bool transient) const
 
     if (artefacts > 0)
         si += artefacts;
+
+    if (you.religion == GOD_ASHENZARI && you.piety >= piety_breakpoint(2)
+        && !player_under_penance())
+    {
+        si++;
+    }
 
     if (si > 1)
         si = 1;

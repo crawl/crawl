@@ -173,6 +173,7 @@ $user =~ s/homelesspete/Twinge/;
 $user =~ s/yobbobandana/yobbo/;
 $user =~ s/burnhamrobertp/Cryp71c/;
 $user =~ s/^muu+$/Mu/i;
+$user =~ s/raphael.langella/galehar/;
 
 $rev = substr($commit, 0, 12);
 

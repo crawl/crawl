@@ -1613,7 +1613,7 @@ TAGS:   no_item_gen no_monster_gen temple_overflow_zin
 KFEAT:  _ = altar_zin
 COLOUR: G = lightgray
 COLOUR: c = white
-MONS:   angel
+MONS:   angel god:zin
 : local za_desc = "A divine agent of Zin, it is a towering winged figure " ..
 :   "with an aura of brilliant white light. This angel's face, though, " ..
 :   "is marked by a scowl, as if its zeal against any real or perceived " ..

@@ -72,7 +72,9 @@ public:
     bool has_chunk(const std::string name);
     std::vector<std::string> list_chunks();
     void abort();
+    void unlink();
 private:
+    std::string filename;
     bool rw;
     int fd;
     len_t file_len;
@@ -94,6 +96,7 @@ private:
     void fsck();
     void read_directory(len_t start);
     void trace_chunk(len_t start);
+    void load();
     friend class chunk_writer;
     friend class chunk_reader;
 };

@@ -358,6 +358,10 @@ Magic Dart
 
 This spell hurls a small bolt of magical energy. It never misses.
 %%%%
+Malign Gateway
+
+This spell tears a gash in reality, creating a self-sustained but thankfully temporary portal to an unknown, tainted otherworld. Which dastardly denizens of this place might choose to poke their tentacled appendages through, nobody knows, but certainly nobody would want to be nearby when it happens.
+%%%%
 Mass Confusion
 
 This spell causes confusion in all who gaze upon the caster.
@@ -595,7 +599,7 @@ This spell calls forth a beast of ice to serve the caster.
 %%%%
 Summon Scorpions
 
-This spell summons one or more giant scorpions (some of which may not be bound to the caster's service).
+This spell summons one or more scorpions (some of which may not be bound to the caster's service).
 %%%%
 Summon Small Mammals
 

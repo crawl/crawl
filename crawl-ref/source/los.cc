@@ -690,11 +690,7 @@ dungeon_feature_type ray_blocker(const coord_def& source,
     ray_def ray;
     if (!find_ray(source, target, ray, opc_default))
     {
-#ifdef WIZARD
         ASSERT (you.xray_vision);
-#else
-        ASSERT (false);
-#endif
         return (NUM_FEATURES);
     }
 

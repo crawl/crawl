@@ -2409,7 +2409,7 @@ std::string map_def::validate_temple_map()
 
             // Assume that specialized single-god temples are set up
             // properly.
-            return("");
+            return ("");
         }
         else
         {
@@ -3455,6 +3455,24 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
                     return (slot);
                 }
             }
+        }
+
+        std::string mongod = strip_tag_prefix(mon_str, "god:");
+        if (!mongod.empty())
+        {
+            const std::string god_name(replace_all_of(mongod, "_", " "));
+
+            mspec.god = str_to_god(god_name);
+
+            if (mspec.god == GOD_NO_GOD)
+            {
+                error = make_stringf("bad monster god: \"%s\"",
+                                     god_name.c_str());
+                return (slot);
+            }
+
+            if (strip_tag(mon_str, "god_gift"))
+                mspec.god_gift = true;
         }
 
         std::string tile = strip_tag_prefix(mon_str, "tile:");

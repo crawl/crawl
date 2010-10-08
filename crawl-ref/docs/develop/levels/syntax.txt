@@ -632,6 +632,17 @@ MONS:     (list of monsters)
           never be used, but it can be useful for customised vault monsters
           if an alternate tile exists. In ASCII mode, this will do nothing.
 
+          You can set the monster's god using the "god:" specifier as
+          follows:
+              MONS: orc god:the_shining_one
+
+          If the monster is to be a gift of the specified god, this should
+          be suffixed with "god_gift" (without the quotes):
+              MONS: orc god:the_shining_one god_gift
+
+          Note that the monster will not be considered a god gift unless
+          god_gift is explicitly set.
+
           You can set the monster's faction by specifying "att:" one of:
 
           * att:hostile -- the default
@@ -688,8 +699,8 @@ MONS:     (list of monsters)
           can be used to force a monster to have no items whatsoever:
               MONS: orc; nothing
 
-          Items given to an orc or an elf will be made orcish or elven
-          unless the item's race type is explicitly set otherwise.
+          Items given to an orc, dwarf or elf will be made orcish, dwarven
+          or elven unless the item's race type is explicitly set otherwise.
 
           Limitations: If an item in the item list has alternatives,
           there's no way to force all monsters dervied from that monster

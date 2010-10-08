@@ -391,14 +391,15 @@ void cast_fly(int power)
 
     if (!was_levitating)
     {
-        if (you.light_flight())
+        if (you.fishtail)
+        {
+            mpr("Your tail turns into legs as you fly out of the water.");
+            merfolk_stop_swimming();
+        }
+        else if (you.light_flight())
             mpr("You swoop lightly up into the air.");
         else
             mpr("You fly up into the air.");
-
-        // Merfolk boots unmeld if flight takes us out of water.
-        if (you.species == SP_MERFOLK && feat_is_water(grd(you.pos())))
-            unmeld_one_equip(EQ_BOOTS);
     }
     else
         mpr("You feel more buoyant.");

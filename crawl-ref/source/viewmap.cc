@@ -147,6 +147,7 @@ bool is_feature(wchar_t feature, const coord_def& where)
         case DNGN_ALTAR_JIYVA:
         case DNGN_ALTAR_FEDHAS:
         case DNGN_ALTAR_CHEIBRIADOS:
+        case DNGN_ALTAR_ASHENZARI:
             return (true);
         default:
             return (false);

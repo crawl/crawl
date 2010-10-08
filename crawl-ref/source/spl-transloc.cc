@@ -37,6 +37,7 @@
 #include "stuff.h"
 #include "teleport.h"
 #include "terrain.h"
+#include "transform.h"
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
@@ -312,8 +313,11 @@ static bool _cell_vetoes_teleport (const coord_def cell, bool  check_monsters = 
         return (false);
 
     case DNGN_DEEP_WATER:
-        if (you.species == SP_MERFOLK)
+        if (you.species == SP_MERFOLK && (transform_can_swim()
+                                          || !you.transform_uncancellable))
+        {
             return (false);
+        }
         else
             return (true);
 

@@ -886,8 +886,8 @@ int spellbook_contents( item_def &book, read_book_action_type action,
             && item_type_known(book)
             && player_can_memorise_from_spellbook(book))
         {
-            out.cprintf( "Select a spell to read its description or to "
-                         "memorise it.\n" );
+            out.cprintf( "Select a spell to read its description, to "
+                         "memorise it or to forget it.\n" );
         }
         else
             out.cprintf( "Select a spell to read its description.\n" );
@@ -1993,6 +1993,32 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
     you.turn_is_over = true;
 
     did_god_conduct( DID_SPELL_CASTING, 2 + random2(5) );
+
+    return (true);
+}
+
+bool forget_spell_from_book(spell_type spell, const item_def* book)
+{
+    std::string prompt;
+
+    prompt += make_stringf("Forgetting %s from %s will destroy the book! "
+                           "Are you sure?",
+                           spell_title(spell),
+                           book->name(DESC_NOCAP_THE).c_str());
+
+    // Deactivate choice from tile inventory.
+    mouse_control mc(MOUSE_MODE_MORE);
+    if (!yesno(prompt.c_str(), false, 'n'))
+    {
+        canned_msg( MSG_OK );
+        return (false);
+    }
+    mprf("As you tear out the page describing %s, the book crumbles to dust.",
+        spell_title(spell));
+    del_spell_from_memory(spell);
+    destroy_spellbook(*book);
+    dec_inv_item_quantity(book->link, 1);
+    you.turn_is_over = true;
 
     return (true);
 }
@@ -3183,4 +3209,24 @@ bool is_dangerous_spellbook(const item_def &book)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
     return is_dangerous_spellbook(book.sub_type);
+}
+
+void destroy_spellbook(const item_def &book)
+{
+    int j, maxlevel = 0;
+    for (j = 0; j < SPELLBOOK_SIZE; j++)
+    {
+        spell_type stype = which_spell_in_book(book, j);
+        if (stype == SPELL_NO_SPELL)
+            continue;
+        maxlevel = std::max(maxlevel, spell_difficulty(stype));
+    }
+
+    god_type god;
+    // The known boolean is being used to double penance when the destroyed
+    // book is a gift of Sif Muna or it contains its name in its title
+    did_god_conduct(DID_DESTROY_SPELLBOOK, maxlevel + 5,
+                    origin_is_god_gift(book, &god) && god == GOD_SIF_MUNA
+                    || book.name(DESC_PLAIN).find("Sif Muna")
+                       != std::string::npos);
 }

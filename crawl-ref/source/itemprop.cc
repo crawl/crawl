@@ -19,6 +19,7 @@
 #include "decks.h"
 #include "describe.h"
 #include "food.h"
+#include "godpassive.h"
 #include "invent.h"
 #include "items.h"
 #include "itemprop.h"
@@ -195,7 +196,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_DEMON_WHIP,        "demon whip",         12,  1, 11,  30,  2,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLASHING, 2 },
-    { WPN_HOLY_SCOURGE,      "holy scourge",       13,  0, 11,  30,  2,
+    { WPN_SACRED_SCOURGE,    "sacred scourge",     13,  0, 11,  30,  2,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLASHING, 0 },
     { WPN_SPIKED_FLAIL,      "spiked flail",       12, -2, 16, 190,  8,
@@ -531,6 +532,7 @@ void do_curse_item( item_def &item, bool quiet )
                 // Redraw the weapon.
                 you.wield_change = true;
             }
+            ash_check_bondage();
         }
         xom_is_stimulated(amusement);
     }
@@ -557,6 +559,8 @@ void do_uncurse_item(item_def &item, bool inscribe)
     }
     item.flags &= (~ISFLAG_CURSED);
     item.flags &= (~ISFLAG_SEEN_CURSED);
+
+    ash_check_bondage();
 }
 
 // Is item stationary (cannot be picked up)?
@@ -582,12 +586,12 @@ bool item_is_stationary( const item_def &item )
 //
 // Item identification status:
 //
-bool item_ident( const item_def &item, unsigned long flags )
+bool item_ident(const item_def &item, iflags_t flags)
 {
     return ((item.flags & flags) == flags);
 }
 
-void set_ident_flags( item_def &item, unsigned long flags )
+void set_ident_flags(item_def &item, iflags_t flags)
 {
     preserve_quiver_slots p;
     if ((item.flags & flags) != flags)
@@ -634,7 +638,7 @@ void set_ident_flags( item_def &item, unsigned long flags )
     }
 }
 
-void unset_ident_flags( item_def &item, unsigned long flags )
+void unset_ident_flags(item_def &item, iflags_t flags)
 {
     preserve_quiver_slots p;
     item.flags &= (~flags);
@@ -642,9 +646,9 @@ void unset_ident_flags( item_def &item, unsigned long flags )
 
 // Returns the mask of interesting identify bits for this item
 // (e.g., scrolls don't have know-cursedness).
-unsigned long full_ident_mask( const item_def& item )
+iflags_t full_ident_mask( const item_def& item )
 {
-    unsigned long flagset = ISFLAG_IDENT_MASK;
+    iflags_t flagset = ISFLAG_IDENT_MASK;
     switch (item.base_type)
     {
     case OBJ_FOOD:
@@ -706,17 +710,17 @@ bool fully_identified( const item_def& item )
 //
 // Equipment race and description:
 //
-unsigned long get_equip_race( const item_def &item )
+iflags_t get_equip_race( const item_def &item )
 {
     return (item.flags & ISFLAG_RACIAL_MASK);
 }
 
-unsigned long get_equip_desc( const item_def &item )
+iflags_t get_equip_desc( const item_def &item )
 {
     return (item.flags & ISFLAG_COSMETIC_MASK);
 }
 
-void set_equip_race( item_def &item, unsigned long flags )
+void set_equip_race(item_def &item, iflags_t flags)
 {
     ASSERT( (flags & ~ISFLAG_RACIAL_MASK) == 0 );
 
@@ -850,7 +854,7 @@ void set_equip_race( item_def &item, unsigned long flags )
     item.flags |= flags;
 }
 
-void set_equip_desc( item_def &item, unsigned long flags )
+void set_equip_desc(item_def &item, iflags_t flags)
 {
     ASSERT( (flags & ~ISFLAG_COSMETIC_MASK) == 0 );
 
@@ -1341,7 +1345,7 @@ int weapon_rarity( int w_type )
     case WPN_BLESSED_DOUBLE_SWORD:
     case WPN_BLESSED_GREAT_SWORD:
     case WPN_BLESSED_TRIPLE_SWORD:
-    case WPN_HOLY_SCOURGE:
+    case WPN_SACRED_SCOURGE:
     case WPN_TRISHULA:
         // Zero value weapons must be placed specially -- see make_item() {dlb}
         return (0);
@@ -1449,7 +1453,7 @@ hands_reqd_type hands_reqd( const item_def &item, size_type size )
         if (!is_range_weapon(item)
             && item.sub_type != WPN_WHIP
             && item.sub_type != WPN_DEMON_WHIP
-            && item.sub_type != WPN_HOLY_SCOURGE)
+            && item.sub_type != WPN_SACRED_SCOURGE)
         {
             fit = cmp_weapon_size(item, size);
 
@@ -1531,7 +1535,7 @@ bool is_blessed(const item_def &item)
         case WPN_BLESSED_DOUBLE_SWORD:
         case WPN_BLESSED_GREAT_SWORD:
         case WPN_BLESSED_TRIPLE_SWORD:
-        case WPN_HOLY_SCOURGE:
+        case WPN_SACRED_SCOURGE:
         case WPN_TRISHULA:
             return (true);
 
@@ -1548,7 +1552,7 @@ bool is_blessed_convertible(const item_def &item)
     return (!is_artefact(item)
             && (item.base_type == OBJ_WEAPONS
                 && (is_demonic(item)
-                    || item.sub_type == WPN_HOLY_SCOURGE
+                    || item.sub_type == WPN_SACRED_SCOURGE
                     || item.sub_type == WPN_TRISHULA
                     || weapon_skill(item) == SK_LONG_BLADES)));
 }
@@ -1616,7 +1620,7 @@ bool convert2good(item_def &item, bool allow_blessed)
         if (!allow_blessed)
             item.sub_type = WPN_WHIP;
         else
-            item.sub_type = WPN_HOLY_SCOURGE;
+            item.sub_type = WPN_SACRED_SCOURGE;
         break;
 
     case WPN_DEMON_TRIDENT:
@@ -1675,7 +1679,7 @@ bool convert2bad(item_def &item)
         item.sub_type = WPN_TRIPLE_SWORD;
         break;
 
-    case WPN_HOLY_SCOURGE:
+    case WPN_SACRED_SCOURGE:
         item.sub_type = WPN_DEMON_WHIP;
         break;
 
