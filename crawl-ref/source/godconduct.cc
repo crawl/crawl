@@ -977,10 +977,10 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case DID_EXPLORATION:
             if (you.religion == GOD_ASHENZARI)
             {
-                // levels: x1, x2, x5, x6
-                piety_change = ash_bondage_level() + 1;
-                if (piety_change > 2)
-                    piety_change += 2;
+                // levels: x1, x2, x4, x6
+                piety_change = ash_bondage_level() * 2;
+                if (!piety_change)
+                    piety_change = 1;
                 piety_denom = 1000;
                 retval = true;
             }
