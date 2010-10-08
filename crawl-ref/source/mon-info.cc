@@ -287,8 +287,11 @@ monster_info::monster_info(const monster* m, int milev)
     dam = mons_get_damage_level(m);
 
     // If no messages about wounds, don't display damage level either.
-    if (monster_descriptor(type, MDSC_NOMSG_WOUNDS) || monster_descriptor(m->type, MDSC_NOMSG_WOUNDS))
+    if (monster_descriptor(type, MDSC_NOMSG_WOUNDS)
+        || monster_descriptor(m->type, MDSC_NOMSG_WOUNDS))
+    {
         dam = MDAM_OKAY;
+    }
 
     if (mons_behaviour_perceptible(m))
     {
