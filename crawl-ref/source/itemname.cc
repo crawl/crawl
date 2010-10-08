@@ -2832,7 +2832,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case SCR_TELEPORTATION:
             return (crawl_state.game_is_sprint());
         case SCR_AMNESIA:
-            return(you.religion == GOD_TROG);
+            return (you.religion == GOD_TROG);
         default:
             return (false);
         }
