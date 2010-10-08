@@ -26,7 +26,7 @@ enum feature_property_type
     // Immune to spawning jellies and off-level eating.
     FPROP_NO_JIYVA      = (1 << 14),
     // Permanent, unlike map memory.
-    FPROP_SEEN          = (1 << 15),
+    FPROP_SEEN_OR_NOEXP = (1 << 15),
 };
 
 
