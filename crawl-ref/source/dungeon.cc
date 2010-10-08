@@ -1281,7 +1281,7 @@ void dgn_reset_level(bool enable_random_maps)
         env.spawn_random_rate = 50;
     }
     else
-        // No random monsters in Labyrinths and portal vaualts.
+        // No random monsters in Labyrinths and portal vaults.
         env.spawn_random_rate = 0;
     env.density = 0;
 
