@@ -98,6 +98,14 @@ vampire_f VAMPIRE
 vampire_m
 deep_dwarf_m DEEP_DWARF
 deep_dwarf_f
+%sdir player/felids
+%rim 0
+cat1 FELID
+cat2
+cat3
+cat4
+cat5
+%sdir player/base
 %end_ctg
 
 ###SHADOW
