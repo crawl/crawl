@@ -257,6 +257,8 @@ int mons_real_base_speed(int mc);
 
 bool mons_class_can_regenerate(int mc);
 bool mons_can_regenerate(const monster* mon);
+bool mons_class_can_display_wounds(int mc);
+bool mons_can_display_wounds(const monster* mon);
 zombie_size_type zombie_class_size(monster_type cs);
 int mons_zombie_size(int mc);
 monster_type mons_zombie_base(const monster* mon);

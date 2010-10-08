@@ -926,7 +926,7 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
             tileset.push_back(tile_def(TILE_MASK_DEEP_WATER_MURKY, TEX_DEFAULT));
     }
 
-    if (!monster_descriptor(m->type, MDSC_NOMSG_WOUNDS))
+    if (mons_can_display_wounds(m))
     {
         std::string damage_desc;
         mon_dam_level_type damage_level = mons_get_damage_level(m);
