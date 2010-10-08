@@ -1057,13 +1057,6 @@ mon_resist_def monster_info::resists() const
 
     mon_resist_def resist = get_mons_class_resists(type);
 
-    if (type == MONS_SERPENT_OF_HELL)
-    {
-        resist |= serpent_of_hell_resists(
-            serpent_of_hell_colour_to_flavour(colour)
-        );
-    }
-
     if (mons_genus(type) == MONS_DRACONIAN && type != MONS_DRACONIAN
         || type == MONS_TIAMAT)
     {
@@ -1071,6 +1064,14 @@ mon_resist_def monster_info::resists() const
         if (draco_species != type)
             resist |= get_mons_class_resists(draco_species);
     }
+
+    if (type == MONS_SERPENT_OF_HELL)
+    {
+        resist |= serpent_of_hell_resists(
+            serpent_of_hell_colour_to_flavour(colour)
+        );
+    }
+
     return (resist);
 }
 
