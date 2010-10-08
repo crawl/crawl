@@ -2351,13 +2351,13 @@ void make_fake_undead(monster* mon, monster_type undead)
 void entered_malign_portal(actor* act)
 {
     if (you.can_see(act))
-        mprf("The portal repels %s painfully!", (act->atype() == ACT_PLAYER) ? "you" : act->name(DESC_NOCAP_THE).c_str());
+        mprf("The portal repels %s, its terrible forces doing untold damage!", (act->atype() == ACT_PLAYER) ? "you" : act->name(DESC_NOCAP_THE).c_str());
 
     act->blink(false);
     if (act->atype() == ACT_PLAYER)
-        ouch(roll_dice(1, 4), NON_MONSTER, KILLED_BY_WILD_MAGIC, "a malign gateway");
+        ouch(roll_dice(2, 4), NON_MONSTER, KILLED_BY_WILD_MAGIC, "a malign gateway");
     else
-        act->hurt(NULL, roll_dice(1, 4));
+        act->hurt(NULL, roll_dice(2, 4));
 
     return;
 }

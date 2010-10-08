@@ -269,6 +269,7 @@ dngn_enter_labyrinth DNGN_ENTER_LABYRINTH
 dngn_enter_pandemonium DNGN_ENTER_PANDEMONIUM
 dngn_portal DNGN_PORTAL
 dngn_portal_rotated
+dngn_starry_portal DNGN_STARRY_PORTAL
 %rim 1
 dngn_transit_pandemonium DNGN_TRANSIT_PANDEMONIUM
 %rim 0
