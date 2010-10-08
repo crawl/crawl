@@ -5161,7 +5161,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             // Do a thing.
             if (you.see_cell(base_position))
             {
-                mprf("The portal closes, %s is severed", name(DESC_NOCAP_THE).c_str());
+                mprf("The portal closes; %s is severed.", name(DESC_NOCAP_THE).c_str());
             }
 
             if (env.grid(base_position) == DNGN_TEMP_PORTAL)
