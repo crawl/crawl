@@ -615,7 +615,7 @@ std::string map_tomb_marker::debug_describe() const
 map_malign_gateway_marker::map_malign_gateway_marker(const coord_def &p,
                                  int dur, bool ip, monster* mon, god_type gd,
                                  int pow)
-    : map_marker(MAT_MALIGN, p), duration(dur), is_player(ip), caster(mon), 
+    : map_marker(MAT_MALIGN, p), duration(dur), is_player(ip), caster(mon),
       god(gd), power(pow)
 {
 }
