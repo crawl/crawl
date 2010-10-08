@@ -3200,7 +3200,7 @@ int monster::res_poison() const
 {
     int u = get_mons_resists(this).poison;
 
-    if (holiness() == MH_UNDEAD)
+    if (holiness() == MH_UNDEAD && u == 0)
         u += 1;
 
     if (mons_itemuse(this) >= MONUSE_STARTING_EQUIPMENT)

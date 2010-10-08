@@ -1057,12 +1057,8 @@ mon_resist_def monster_info::resists() const
 
     mon_resist_def resist = get_mons_class_resists(type);
 
-    if (holi == MH_UNDEAD)
-    {
-        mon_resist_def undead;
-        undead.poison = 1;
-        resist |= undead;
-    }
+    if (holi == MH_UNDEAD && resist.poison == 0)
+        resist.poison++;
 
     if (mons_genus(type) == MONS_DRACONIAN && type != MONS_DRACONIAN
         || type == MONS_TIAMAT)
