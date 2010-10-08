@@ -35,6 +35,7 @@
 #include "mon-util.h"
 #include "player-stats.h"
 #include "religion.h"
+#include "shout.h"
 #include "stuff.h"
 #include "teleport.h"
 #include "terrain.h"
@@ -1069,6 +1070,11 @@ bool cast_shadow_creatures(god_type god)
     return (false);
 }
 
+bool can_cast_malign_gateway()
+{
+    return count_malign_gateways() < 1;
+}
+
 bool cast_malign_gateway(actor * caster, int pow, god_type god)
 {
     unsigned compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
@@ -1078,7 +1084,6 @@ bool cast_malign_gateway(actor * caster, int pow, god_type god)
     {
         coord_def test = caster->pos() + Compass[compass_idx[i]];
         if (in_bounds(test)
-            //&& monster_habitable_grid(MONS_DEMONIC_TENTACLE, env.grid(test))
             && env.grid(test) == DNGN_FLOOR
             && !actor_at(test))
         {
@@ -1091,6 +1096,9 @@ bool cast_malign_gateway(actor * caster, int pow, god_type god)
                                                 pow));
             env.markers.clear_need_activate();
             env.grid(test) = DNGN_TEMP_PORTAL;
+
+            noisy(10, test);
+            mprf("The dungeon shakes and a horrible noise fills the air as a portal to some otherworldly place is opened!");
 
             return (true);
         }

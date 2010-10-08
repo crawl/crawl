@@ -685,7 +685,7 @@ struct spell_desc
     SPELL_MALIGN_GATEWAY, "Malign Gateway",
      SPTYP_SUMMONING | SPTYP_TRANSLOCATION,
      SPFLAG_UNHOLY | SPFLAG_BATTLE | SPFLAG_CHAOTIC,
-     6,
+     7,
      200,
      -1, -1,
      0,

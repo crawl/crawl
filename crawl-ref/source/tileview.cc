@@ -791,6 +791,9 @@ static bool _suppress_blood(const coord_def pos)
     if (feat_stair_direction(feat) != CMD_NO_CMD)
         return (true);
 
+    if (feat == DNGN_TEMP_PORTAL)
+        return (true);
+
     const trap_def *trap = find_trap(pos);
     if (trap && trap->type == TRAP_SHAFT && trap->is_known())
         return (true);

@@ -8,6 +8,7 @@
 #define MISC_H
 
 #include "externs.h"
+#include "mapmark.h"
 
 struct bolt;
 class dist;
@@ -75,6 +76,9 @@ bool there_are_monsters_nearby(bool dangerous_only = false,
                                bool consider_user_options = false);
 
 void timeout_tombs(int duration);
+
+int count_malign_gateways ();
+std::vector<map_malign_gateway_marker*> get_malign_gateways ();
 void timeout_malign_gateways(int duration);
 
 void setup_environment_effects();

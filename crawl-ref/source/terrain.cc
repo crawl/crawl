@@ -733,7 +733,8 @@ static bool _dgn_shift_item(const coord_def &pos, item_def &item)
 bool is_critical_feature(dungeon_feature_type feat)
 {
     return (feat_stair_direction(feat) != CMD_NO_CMD
-            || feat_altar_god(feat) != GOD_NO_GOD);
+            || feat_altar_god(feat) != GOD_NO_GOD
+            || feat == DNGN_TEMP_PORTAL);
 }
 
 static bool _is_feature_shift_target(const coord_def &pos, void*)

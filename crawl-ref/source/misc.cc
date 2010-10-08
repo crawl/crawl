@@ -1814,13 +1814,16 @@ static void _drop_tomb(const coord_def& pos, bool premature)
     }
 }
 
-void timeout_malign_gateways (int duration)
+int count_malign_gateways ()
 {
-    if (!duration)
-        return;
+    return get_malign_gateways().size();
+}
+
+std::vector<map_malign_gateway_marker*> get_malign_gateways ()
+{
+    std::vector<map_malign_gateway_marker*> mm_markers;
 
     std::vector<map_marker*> markers = env.markers.get_all(MAT_MALIGN);
-
     for (int i = 0, size = markers.size(); i < size; ++i)
     {
         map_marker *mark = markers[i];
@@ -1828,11 +1831,29 @@ void timeout_malign_gateways (int duration)
             continue;
 
         map_malign_gateway_marker *mmark = dynamic_cast<map_malign_gateway_marker*>(mark);
+
+        mm_markers.push_back(mmark);
+    }
+
+    return mm_markers;
+}
+
+void timeout_malign_gateways (int duration)
+{
+    if (!duration)
+        return;
+
+    std::vector<map_malign_gateway_marker*> markers = get_malign_gateways();
+
+    for (int i = 0, size = markers.size(); i < size; ++i)
+    {
+        map_malign_gateway_marker *mmark = markers[i];
+
         mmark->duration -= duration;
 
         if (mmark->duration > 0)
         {
-            big_cloud(CLOUD_TLOC_ENERGY, KC_OTHER, mmark->pos, 10+random2(10), 8+random2(5));
+            big_cloud(CLOUD_TLOC_ENERGY, KC_OTHER, mmark->pos, 3+random2(10), 2+random2(5));
         }
         else
         {

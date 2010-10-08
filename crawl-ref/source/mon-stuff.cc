@@ -1621,6 +1621,18 @@ int monster_die(monster* mons, killer_type killer,
                 killer = KILL_RESET;
         }
     }
+    else if (mons->type == MONS_DEMONIC_TENTACLE)
+    {
+        if (!silent && !mons_reset && !mons->has_ench(ENCH_SEVERED))
+        {
+            mpr("With a roar, the tentacle is hauled back through the portal!",
+                MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+            silent = true;
+        }
+
+        if (killer == KILL_RESET)
+            killer = KILL_DISMISSED;
+    }
 
     const bool death_message = !silent && !did_death_message
                                && mons_near(mons)
