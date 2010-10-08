@@ -1086,6 +1086,14 @@ mon_resist_def monster_info::resists() const
     return (resist);
 }
 
+mon_intel_type monster_info::intel() const
+{
+    if (is(MB_ENSLAVED))
+        return (mons_class_intel(base_type));
+
+    return (mons_class_intel(type));
+}
+
 mon_itemuse_type monster_info::itemuse() const
 {
     if (is(MB_ENSLAVED))
