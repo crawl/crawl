@@ -161,14 +161,6 @@ struct monster_info : public monster_info_base
 
     std::vector<std::string> attributes() const;
 
-    mon_intel_type intel() const
-    {
-        if (is(MB_ENSLAVED))
-            return (mons_class_intel(base_type));
-
-        return (mons_class_intel(type));
-    }
-
     const char *pronoun(pronoun_type variant) const
     {
         return (mons_pronoun(static_cast<monster_type>(type), variant, true));
@@ -179,6 +171,7 @@ struct monster_info : public monster_info_base
 
     monster_type draco_subspecies() const;
     mon_resist_def resists() const;
+    mon_intel_type intel() const;
     mon_itemuse_type itemuse() const;
     int randarts(artefact_prop_type ra_prop) const;
     int res_magic() const;
