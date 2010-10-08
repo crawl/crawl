@@ -42,11 +42,11 @@
        MH_HOLY       - irritates some gods when killed, immunity from
                         holy wrath weapons
        MH_NATURAL    - baseline monster type
-       MH_UNDEAD     - immunity from draining, pain, torment; extra
-                        damage from holy wrath/disruption; affected by
-                        repel undead and holy word
-       MH_DEMONIC    - similar to undead, but repel undead effects are
-                        ignored - *no* automatic hellfire resistance
+       MH_UNDEAD     - immunity from draining, pain, torment; resistance
+                        to poison; extra damage from holy wrath;
+                        affected by holy word
+       MH_DEMONIC    - similar to undead, but no poison resistance and
+                        *no* automatic hellfire resistance
        MH_NONLIVING  - golems and other constructs
        MH_PLANT      - plants
 
