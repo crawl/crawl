@@ -682,7 +682,7 @@ void monster::bind_melee_flags()
     // Bind fighter / dual-wielder / archer flags from the base type.
 
     // Alas, we don't know if the mon is zombified at the moment, if it
-    // is, the flags will be removed later.
+    // is, the flags (other than dual-wielder) will be removed later.
     if (mons_class_flag(type, M_FIGHTER))
         flags |= MF_FIGHTER;
     if (mons_class_flag(type, M_TWO_WEAPONS))
@@ -1270,8 +1270,8 @@ static bool _is_signature_weapon(monster* mons, const item_def &weapon)
     if (weapon.base_type != OBJ_WEAPONS)
         return (false);
 
-    if (mons->type == MONS_CHERUB || mons->type == MONS_ANGEL)
-        return (weapon.sub_type == WPN_HOLY_SCOURGE);
+    if (mons->type == MONS_ANGEL || mons->type == MONS_CHERUB)
+        return (weapon.sub_type == WPN_SACRED_SCOURGE);
 
     if (mons->type == MONS_DAEVA)
         return (weapon.sub_type == WPN_EUDEMON_BLADE);
@@ -3166,21 +3166,26 @@ int monster::res_elec() const
 int monster::res_asphyx() const
 {
     int res = get_mons_resists(this).asphyx;
+
     const mon_holy_type holi = holiness();
+
     if (undead_or_demonic()
         || holi == MH_NONLIVING
         || holi == MH_PLANT)
     {
         res += 1;
     }
+
     return (res);
 }
 
 int monster::res_water_drowning() const
 {
     const int res = res_asphyx();
+
     if (res)
         return (res);
+
     switch (mons_habitat(this))
     {
     case HT_WATER:
@@ -3194,6 +3199,9 @@ int monster::res_water_drowning() const
 int monster::res_poison() const
 {
     int u = get_mons_resists(this).poison;
+
+    if (holiness() == MH_UNDEAD && u == 0)
+        u += 1;
 
     if (mons_itemuse(this) >= MONUSE_STARTING_EQUIPMENT)
     {
@@ -5161,7 +5169,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             // Do a thing.
             if (you.see_cell(base_position))
             {
-                mprf("The portal closes, %s is severed", name(DESC_NOCAP_THE).c_str());
+                mprf("The portal closes; %s is severed.", name(DESC_NOCAP_THE).c_str());
             }
 
             if (env.grid(base_position) == DNGN_TEMP_PORTAL)
@@ -5171,6 +5179,10 @@ void monster::apply_enchantment(const mon_enchant &me)
 
             env.pgrid(base_position) |= FPROP_BLOODY;
             add_ench(ENCH_SEVERED);
+
+            // Severed tentacles immediately become "hostile" (or insane)
+            this->attitude = ATT_HOSTILE;
+            behaviour_event(this, ME_ALERT, MHITYOU);
         }
     }
     break;
@@ -6169,9 +6181,9 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         {
             bool fly_died = coinflip();
             int old_hp                = hit_points;
-            unsigned long old_flags   = flags;
+            uint64_t old_flags        = flags;
             mon_enchant_list old_ench = enchantments;
-            int8_t old_ench_countdown   = ench_countdown;
+            int8_t old_ench_countdown = ench_countdown;
 
             if (!fly_died)
                 monster_drop_things(this, mons_aligned(oppressor, &you));

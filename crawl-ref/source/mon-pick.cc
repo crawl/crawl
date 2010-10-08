@@ -2077,7 +2077,7 @@ int mons_spidernest_level(int mcls)
         mlev += 3;
         break;
 
-    case MONS_GIANT_SCORPION:
+    case MONS_EMPEROR_SCORPION:
     case MONS_JUMPING_SPIDER:
         mlev += 4;
         break;
@@ -2121,7 +2121,7 @@ int mons_spidernest_rare(int mcls)
     case MONS_BORING_BEETLE:
     case MONS_BOULDER_BEETLE:
     case MONS_GIANT_CENTIPEDE:
-    case MONS_GIANT_SCORPION:
+    case MONS_EMPEROR_SCORPION:
         return 15;
 
     case MONS_JUMPING_SPIDER:
@@ -2587,6 +2587,7 @@ int mons_hallzot_level(int mcls)
     case MONS_STORM_DRAGON:
     case MONS_CURSE_TOE:
     case MONS_ORB_GUARDIAN:
+    case MONS_GHOST_MOTH:
         mlev += 5;
         break;
     case MONS_DEATH_COB:
@@ -2645,7 +2646,7 @@ int mons_hallzot_rare(int mcls)
     case MONS_ICE_DRAGON:
         return 40;
     case MONS_SHADOW_DRAGON:
-    case MONS_DEATH_DRAKE:
+    case MONS_GHOST_MOTH:
         return 30;
     case MONS_GUARDIAN_MUMMY:
     case MONS_ELECTRIC_GOLEM:

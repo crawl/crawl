@@ -587,6 +587,9 @@ static void _generate_area(const map_mask &abyss_genlevel_mask,
     _abyss_create_items(abyss_genlevel_mask, placed_abyssal_rune, use_vaults);
     generate_random_blood_spatter_on_level(&abyss_genlevel_mask);
     setup_environment_effects();
+
+    // Abyss has a constant density.
+    env.density = 0;
 }
 
 class xom_abyss_feature_amusement_check

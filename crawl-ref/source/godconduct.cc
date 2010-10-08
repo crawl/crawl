@@ -3,6 +3,7 @@
 #include "godconduct.h"
 
 #include "fight.h"
+#include "godpassive.h"
 #include "godwrath.h"
 #include "monster.h"
 #include "mon-util.h"
@@ -964,6 +965,27 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 retval = true;
             }
             break;
+        case DID_DESTROY_SPELLBOOK:
+            if (you.religion == GOD_SIF_MUNA)
+            {
+                piety_change = -level;
+                penance = level * (known ? 2 : 1);
+                retval = true;
+            }
+            break;
+
+        case DID_EXPLORATION:
+            if (you.religion == GOD_ASHENZARI)
+            {
+                // levels: x1, x2, x4, x6
+                piety_change = ash_bondage_level() * 2;
+                if (!piety_change)
+                    piety_change = 1;
+                piety_change *= 16; // base gain per dungeon level
+                piety_denom = level;
+                retval = true;
+            }
+            break;
 
         case DID_NOTHING:
         case DID_STABBING:                          // unused
@@ -976,13 +998,18 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
         }
 
+#ifdef DEBUG_DIAGNOSTICS
+        int old_piety = you.piety;
+#endif
+
         if (piety_change > 0)
             gain_piety(piety_change, piety_denom);
         else
             dock_piety(div_rand_round(-piety_change, piety_denom), penance);
 
 #ifdef DEBUG_DIAGNOSTICS
-        if (retval)
+        // don't announce exploration piety unless you actually got a boost
+        if (retval && (thing_done != DID_EXPLORATION || old_piety != you.piety))
         {
             static const char *conducts[] =
             {
@@ -1007,7 +1034,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Souled Friend Died", "Servant Kill Unclean",
                 "Servant Kill Chaotic", "Attack In Sanctuary",
                 "Kill Artificial", "Undead Slave Kill Artificial",
-                "Servant Kill Artificial"
+                "Servant Kill Artificial", "Destroy Spellbook",
+                "Exploration",
             };
 
             COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS, c1);

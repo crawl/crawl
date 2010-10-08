@@ -287,8 +287,11 @@ monster_info::monster_info(const monster* m, int milev)
     dam = mons_get_damage_level(m);
 
     // If no messages about wounds, don't display damage level either.
-    if (monster_descriptor(type, MDSC_NOMSG_WOUNDS) || monster_descriptor(m->type, MDSC_NOMSG_WOUNDS))
+    if (monster_descriptor(type, MDSC_NOMSG_WOUNDS)
+        || monster_descriptor(m->type, MDSC_NOMSG_WOUNDS))
+    {
         dam = MDAM_OKAY;
+    }
 
     if (mons_behaviour_perceptible(m))
     {
@@ -1057,12 +1060,8 @@ mon_resist_def monster_info::resists() const
 
     mon_resist_def resist = get_mons_class_resists(type);
 
-    if (type == MONS_SERPENT_OF_HELL)
-    {
-        resist |= serpent_of_hell_resists(
-            serpent_of_hell_colour_to_flavour(colour)
-        );
-    }
+    if (holi == MH_UNDEAD && resist.poison == 0)
+        resist.poison++;
 
     if (mons_genus(type) == MONS_DRACONIAN && type != MONS_DRACONIAN
         || type == MONS_TIAMAT)
@@ -1071,6 +1070,14 @@ mon_resist_def monster_info::resists() const
         if (draco_species != type)
             resist |= get_mons_class_resists(draco_species);
     }
+
+    if (type == MONS_SERPENT_OF_HELL)
+    {
+        resist |= serpent_of_hell_resists(
+            serpent_of_hell_colour_to_flavour(colour)
+        );
+    }
+
     return (resist);
 }
 

@@ -305,12 +305,13 @@ void stop_delay( bool stop_stair_travel )
 
         item_def &item = (delay.parm1 ? you.inv[delay.parm2]
                                       : mitm[delay.parm2]);
-        monster_type montype = static_cast<monster_type>(item.plus);
-        const bool was_orc = (mons_species(montype) == MONS_ORC);
+
+        const bool was_orc = (mons_genus(item.plus) == MONS_ORC);
 
         mpr("All blood oozes out of the corpse!");
 
-        bleed_onto_floor(you.pos(), montype, delay.duration, false);
+        bleed_onto_floor(you.pos(), static_cast<monster_type>(item.plus),
+                         delay.duration, false);
 
         if (mons_skeleton(item.plus) && one_chance_in(3))
             turn_corpse_into_skeleton(item);
@@ -387,7 +388,7 @@ void stop_butcher_delay()
 
 void maybe_clear_weapon_swap()
 {
-    if (transformation_can_wield(static_cast<transformation_type>(
+    if (transform_can_wield(static_cast<transformation_type>(
                                     you.attribute[ATTR_TRANSFORMATION])))
     {
         you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
@@ -961,7 +962,7 @@ static void _finish_delay(const delay_queue_item &delay)
         item_def &item = (delay.parm1 ? you.inv[delay.parm2]
                                       : mitm[delay.parm2]);
 
-        const bool was_orc = (mons_species(item.plus) == MONS_ORC);
+        const bool was_orc = (mons_genus(item.plus) == MONS_ORC);
 
         vampire_nutrition_per_turn(item, 1);
 
@@ -1064,7 +1065,7 @@ static void _finish_delay(const delay_queue_item &delay)
             {
                 mpr("You finish bottling this corpse's blood.");
 
-                const bool was_orc = (mons_species(item.plus) == MONS_ORC);
+                const bool was_orc = (mons_genus(item.plus) == MONS_ORC);
 
                 if (mons_skeleton(item.plus) && one_chance_in(3))
                     turn_corpse_into_skeleton_and_blood_potions(item);
@@ -1096,7 +1097,7 @@ static void _finish_delay(const delay_queue_item &delay)
                                        " departed soul.");
                 }
 
-                const bool was_orc = (mons_species(item.plus) == MONS_ORC);
+                const bool was_orc = (mons_genus(item.plus) == MONS_ORC);
 
                 if (mons_skeleton(item.plus) && one_chance_in(3))
                     turn_corpse_into_skeleton_and_chunks(item);

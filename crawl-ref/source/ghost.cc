@@ -203,9 +203,9 @@ void ghost_demon::init_random_demon()
         }
         while (brand == SPWPN_HOLY_WRATH
                || (brand == SPWPN_ORC_SLAYING
-                   && you.mons_species() != MONS_ORC)
+                   && mons_genus(you.mons_species()) != MONS_ORC)
                || (brand == SPWPN_DRAGON_SLAYING
-                   && you.mons_species() != MONS_DRACONIAN)
+                   && mons_genus(you.mons_species()) != MONS_DRACONIAN)
                || brand == SPWPN_PROTECTION
                || brand == SPWPN_FLAME
                || brand == SPWPN_FROST);
@@ -638,11 +638,6 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
 
     if (power > 150)
         power = 150;
-
-    resists.poison = 1;
-    resists.fire = 1;
-    resists.cold = 1;
-    resists.elec = 1;
 
     colour = weapon.colour;
     fly = FL_LEVITATE;

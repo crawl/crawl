@@ -25,7 +25,6 @@
 #include "misc.h"
 #include "mon-place.h"
 #include "terrain.h"
-#include "mgen_data.h"
 #include "state.h"
 #include "travel.h"
 #include "view.h"
@@ -183,8 +182,7 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
     if (fmenv == NULL)
         return (false);
 
-    if (fmenv->type == MONS_PLAYER_GHOST
-        || !fmenv->alive()
+    if (!fmenv->alive()
         || fmenv->speed_increment < 50
         || fmenv->incapacitated()
         || mons_is_stationary(fmenv))

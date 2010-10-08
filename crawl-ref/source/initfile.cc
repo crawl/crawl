@@ -3775,6 +3775,7 @@ static void _edit_save(int argc, char **argv)
                     out.write(buf, s);
             }
             save2.commit();
+            save.unlink();
             rename((get_savedir_filename(name, "", "") + ".tmp").c_str(),
                    (get_savedir_filename(name, "", "") + SAVE_SUFFIX).c_str());
         }

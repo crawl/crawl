@@ -6,10 +6,10 @@ is valued, wanted, and appreciated, and indeed, is what Stone Soup thrives on.
 Development communication channels
 ----------------------------------
 
-The official development channels of are the mailing lists crawl-ref-discuss
-and crawl-ref-devel on SourceForge. Additionally, a Mantis issue tracker and
-a Dokuwiki wiki are used at http://crawl.develz.org/mantis/, and there is an
-IRC channel, ##crawl-dev, on Freenode.
+The official development channel is the mailing lists crawl-ref-discuss on
+SourceForge. Additionally, a Mantis issue tracker and a Dokuwiki wiki are
+used at http://crawl.develz.org/mantis/, and there is an IRC channel,
+##crawl-dev, on Freenode.
 
 Mailing lists
 -------------
@@ -20,14 +20,11 @@ the archives can be read freely. For new posters there's a moderation
 process where the first posts are approved to be not spam/otherwise
 inappropriate before the e-mail address is approved.
 
-crawl-ref-devel is a closed list for team personnel decisions, primarily the
-proposal and voting for giving out commit rights and access to this list.
-
 There are also two other non-discussion mailing lists: crawl-ref-commits
 and crawl-ref-builds. crawl-ref-commits generates automatic summary
 messages of code changes, and can and should be used for reviewing commits.
 Commit messages also document development and decisions. People with new 
-commit access will be on moderation on c-r-c, but that their messages will be
+commit access will be on moderation on c-r-c, but their messages will be
 approved and they will be added to the list when the administrator(s) get
 around to it.
 
@@ -35,31 +32,44 @@ The replies to commit mails should be posted to crawl-ref-discuss.
 crawl-ref-builds generates automatic summary messages from Crawl BuildBot.
 Again, the replies should go to crawl-ref-discuss.
 
-The mailing lists archives can be browsed, and the lists themselves joined at
+There is a deprecated mailing list called crawl-ref-devel. It has been used
+e.g. for deciding about granting commit rights. Currently, e-mails
+directly to devteam members are used instead. They are sometimes used for
+other decisions as well.
+
+The mailing list archives can be browsed, and the lists themselves joined at
 http://sourceforge.net/mail/?group_id=143991
 
 The CDO tracker and wiki
 ------------------------
 
-The Mantis issue tracker is used to track bug reports, feature requests,
-graphic, vault and code patches and support requests. Wiki is used to leave
-feedback, discuss new and overhauled features ("brainstorm") and otherwise
-store and edit content and documentation as necessary. The general workflow
-is to iterate ideas and feedback over in the wiki, and then post readily
-implementable proposals on the tracker. Small items can be posted to the
-tracker directly.
-
-To report issues or post comments to the tracker, or to edit the wiki, you
-need to register. The tracker and wiki can be browsed without logging in.
-Please search the tracker and wiki for similar items and duplicates before
-submitting a new item.
+The Mantis issue tracker is used to track bug reports and to post code,
+graphics and vault submissions (patches). It is also used by the developers
+to publish and track "Implementables" - desired features, that will not
+immediately be implemented by a devteam member. If you are looking for
+something to code, you can check the tracker for bug reports and
+implementables, announce you are working on them, and submit patches when
+ready.
 
 Developers can assign issues to themselves or other developers. Self-assignment
 is used if the developer is working on the issue. Assigning to someone else is
 used if something's in their area of expertise or assigner wants their opinion.
 Either way, the reason for changing the assignment should be mentioned in the
-message. When closing, good ideas (often from comments) should be saved to
-other (possibly new) FRs, or to the wiki.
+message.
+
+The wiki is used to leave feedback, make and discuss features suggestions,
+and otherwise store and edit content and documentation as necessary.
+The general workflow is to iterate ideas and feedback over in the wiki. After
+a conclusion is reached, a devteam member may either commit the appropriate
+changes to the codebase, or posts an Implementable on the tracker for patchers.
+Not all the ripe ideas from the wiki are posted as Implementables, so it's ok
+to work on such ideas and submit patches. It may be best to ask the mailing
+list or the irc channel in such a case.
+
+To report issues or post comments to the tracker, or to edit the wiki, you
+need to register. The tracker and wiki can be browsed without logging in.
+Please search the tracker and wiki for similar items and duplicates before
+submitting a new item.
 
 IRC
 ---
@@ -77,15 +87,17 @@ Developers often discuss what they are working on on the channel and request
 comments before commits. Therefore the channel is logged to archive
 discussion and decisions made there.
 
+The archive can be found at http://tozt.net/crawl/
+
 Development team structure and decision policy
 ----------------------------------------------
 
 The development team consists of a large variety of people: all have
 commit access, and administrators have the ability to grant commit
 access to new people. As mentioned in the section on mailing lists,
-this is usually discussed privately on the crawl-ref-devel mailing
-list. Administrators will make final design decisions where necessary,
-or where there is confusion or debate. All participation is welcomed
+this is usually discussed privately in emails between devteam members.
+Administrators will make final design decisions where necessary, or
+where there is confusion or debate. All participation is welcomed
 and encouraged.
 
 From time to time there will be tensions or even clashes among developers.
@@ -115,9 +127,8 @@ demand replies.
 Stone Soup welcomes participating in the development. The difference between
 someone with commit access and someone without is that the former can add
 their changes to code (and other files, such as documentation, vaults, tiles
-and so on) directly. Those without need to submit patches to either to the
-mailing list, the patch tracker in the SourceForge page, or to developers on
-##crawl-dev.
+and so on) directly. Those without need to submit patches to the Mantis
+tracker.
 
 See docs/develop/patch_guide.txt for details.
 
@@ -130,9 +141,10 @@ Soup.
 Giving commit rights to people
 ------------------------------
 
-A member of the crawl-ref-devel list may suggest on it that commit rights are
-given to a contributor. As other members agree (or there are no objections),
-commit rights are usually given, and this is then announced.
+A development team member may suggest to others in a private e-mail that
+commit rights are given to a contributor. As other members agree (or there
+are no objections), commit rights are usually given, and this is then
+announced.
 
 Generally, if a contributor supplies a substantial amount of patches of good
 quality (i.e. patches don't break things, don't need cleaning up before

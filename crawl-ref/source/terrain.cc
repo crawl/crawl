@@ -733,7 +733,8 @@ static bool _dgn_shift_item(const coord_def &pos, item_def &item)
 bool is_critical_feature(dungeon_feature_type feat)
 {
     return (feat_stair_direction(feat) != CMD_NO_CMD
-            || feat_altar_god(feat) != GOD_NO_GOD);
+            || feat_altar_god(feat) != GOD_NO_GOD
+            || feat == DNGN_TEMP_PORTAL);
 }
 
 static bool _is_feature_shift_target(const coord_def &pos, void*)
@@ -1283,7 +1284,9 @@ bool fall_into_a_pool( const coord_def& entry, bool allow_shift,
     bool escape = false;
     coord_def empty;
 
-    if (you.species == SP_MERFOLK && terrain == DNGN_DEEP_WATER)
+    if (you.species == SP_MERFOLK && terrain == DNGN_DEEP_WATER
+        && (!transform_can_swim() || !you.fishtail)
+        && !you.transform_uncancellable)
     {
         // These can happen when we enter deep water directly -- bwr
         merfolk_start_swimming();
@@ -1529,7 +1532,8 @@ const char *dngn_feature_names[] =
 "altar_yredelemnul", "altar_xom", "altar_vehumet",
 "altar_okawaru", "altar_makhleb", "altar_sif_muna", "altar_trog",
 "altar_nemelex_xobeh", "altar_elyvilon", "altar_lugonu",
-"altar_beogh", "altar_jiyva", "altar_fedhas", "altar_cheibriados", "", "", "",
+"altar_beogh", "altar_jiyva", "altar_fedhas", "altar_cheibriados",
+"altar_ashenzari", "", "",
 "fountain_blue", "fountain_sparkling", "fountain_blood",
 "dry_fountain_blue", "dry_fountain_sparkling", "dry_fountain_blood",
 "permadry_fountain", "abandoned_shop"

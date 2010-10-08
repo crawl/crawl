@@ -187,6 +187,14 @@ bool monster_habitable_grid(monster_type mt,
     if (mt == MONS_FIRE_ELEMENTAL && feat_is_watery(actual_grid))
         return (false);
 
+    if (actual_grid == DNGN_TEMP_PORTAL)
+    {
+        if (mt == MONS_DEMONIC_TENTACLE || mt == MONS_DEMONIC_TENTACLE_SEGMENT)
+            return (true);
+        else
+            return (false);
+    }
+
     if (feat_compatible(feat_preferred, actual_grid)
         || (feat_nonpreferred != feat_preferred
             && feat_compatible(feat_nonpreferred, actual_grid)))
@@ -1778,6 +1786,7 @@ static int _place_monster_aux(const mgen_data &mg,
 monster_type pick_random_zombie()
 {
     static std::vector<monster_type> zombifiable;
+
     if (zombifiable.empty())
     {
         for (int i = 0; i < NUM_MONSTERS; ++i)
@@ -1786,17 +1795,18 @@ monster_type pick_random_zombie()
                 continue;
 
             const monster_type mcls = static_cast<monster_type>(i);
+
             if (!mons_zombie_size(mcls) || mons_is_unique(mcls))
                 continue;
 
             zombifiable.push_back(mcls);
         }
     }
+
     return (zombifiable[random2(zombifiable.size())]);
 }
 
-// Check base monster class against zombie type and position
-// if set.
+// Check base monster class against zombie type and position if set.
 static bool _good_zombie(monster_type base, monster_type cs,
                          const coord_def& pos)
 {
@@ -1815,8 +1825,8 @@ static bool _good_zombie(monster_type base, monster_type cs,
         return (false);
     }
 
-    // Size must match, but you can make a spectral thing out
-    // of anything.
+    // Size must match, but you can make a spectral thing out of
+    // anything.
     if (cs != MONS_SPECTRAL_THING
         && mons_zombie_size(base) != zombie_class_size(cs))
     {

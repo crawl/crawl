@@ -211,7 +211,7 @@ bool dgn_has_adjacent_feat(coord_def c, dungeon_feature_type feat);
 coord_def dgn_random_point_in_margin(int margin);
 coord_def dgn_random_point_in_bounds(
     dungeon_feature_type searchfeat,
-    unsigned mapmask = MMT_VAULT,
+    uint32_t mapmask = MMT_VAULT,
     dungeon_feature_type adjacent = DNGN_UNSEEN,
     bool monster_free = false,
     int tries = 1500);
@@ -272,8 +272,8 @@ void dgn_place_multiple_items(item_list &list,
                               const coord_def& where,
                               int level);
 
-bool set_level_flags(unsigned long flags, bool silent = false);
-bool unset_level_flags(unsigned long flags, bool silent = false);
+bool set_level_flags(uint32_t flags, bool silent = false);
+bool unset_level_flags(uint32_t flags, bool silent = false);
 
 void dgn_set_lt_callback(std::string level_type_name,
                          std::string callback_name);

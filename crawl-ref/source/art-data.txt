@@ -688,13 +688,13 @@ TILE_EQ: undeadhunter
 BRAND:   SPWPN_HOLY_WRATH
 BOOL:    life
 
-NAME:    whip "Serpent-Scourge"
+NAME:    whip "Snakebite"
 APPEAR:  forked whip
 OBJ:     OBJ_WEAPONS/WPN_WHIP
 PLUS:    +5/+10
 COLOUR:  DARKGREY
-TILE:    urand_serpent_scourge
-TILE_EQ: serpent_scourge
+TILE:    urand_snakebite
+TILE_EQ: snakebite
 BRAND:   SPWPN_VENOM
 BOOL:    poison, tilerim
 DESC_ID: A double-ended whip made from the cured hides of the Lair of Beasts'

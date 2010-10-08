@@ -10,8 +10,6 @@ Guarantees:
   the exact state it had at the last commit().
 
 Caveats/issues:
-* Before the first commit, the save is "not a valid DCSS save file",
-  how should we handle this?
 * Benchmarked on random chunks of size 2^random2(X) * frandom(1),
   naive reusing of the first slab of free space produces less waste than
   best fit.  I don't fully understand why, but for now, let's use that.
@@ -93,6 +91,7 @@ package::package(const char* file, bool writeable, bool empty)
 {
     dprintf("package: initializing file=\"%s\" rw=%d\n", file, writeable);
     ASSERT(writeable || !empty);
+    filename = file;
     rw = writeable;
 
     if (empty)
@@ -102,7 +101,10 @@ package::package(const char* file, bool writeable, bool empty)
             sysfail("can't create save file (%s)", file);
 
         if (!lock_file(fd, true))
+        {
+            close(fd);
             sysfail("failed to lock newly created save (%s)", file);
+        }
 
         dirty = true;
         file_len = sizeof(file_header);
@@ -113,46 +115,61 @@ package::package(const char* file, bool writeable, bool empty)
         if (fd == -1)
             sysfail("can't open save file (%s)", file);
 
-        if (!lock_file(fd, writeable))
-            fail("Another game is already in progress using this save!");
-
-        file_header head;
-        ssize_t res = ::read(fd, &head, sizeof(file_header));
-        if (res < 0)
-            sysfail("error reading the save file (%s)", file);
-        if (!res || !(head.magic || head.version || head.padding[0]
-                      || head.padding[1] || head.padding[2] || head.start))
+        try
         {
-            fail("The save file (%s) is empty!", file);
+            if (!lock_file(fd, writeable))
+                fail("Another game is already in progress using this save!");
+
+            load();
         }
-        if (res != sizeof(file_header))
-            fail("save file (%s) corrupted -- header truncated", file);
-
-        if (htole(head.magic) != PACKAGE_MAGIC)
-            fail("save file (%s) corrupted -- not a DCSS save file", file);
-        if (head.version != PACKAGE_VERSION)
-            fail("save file (%s) uses an unknown format %u", file, head.version);
-        off_t len = lseek(fd, 0, SEEK_END);
-        if (len == -1)
-            sysfail("save file (%s) is not seekable", file);
-        file_len = len;
-        read_directory(htole(head.start));
-
-        if (writeable)
+        catch (std::exception &e)
         {
-            free_blocks[sizeof(file_header)] = file_len - sizeof(file_header);
+            close(fd);
+            throw;
+        }
+    }
+}
 
-            for(directory_t::iterator ch = directory.begin();
-                ch != directory.end(); ch++)
-            {
-                trace_chunk(ch->second);
-            }
+void package::load()
+{
+    file_header head;
+    ssize_t res = ::read(fd, &head, sizeof(file_header));
+    if (res < 0)
+        sysfail("error reading the save file (%s)", filename.c_str());
+    if (!res || !(head.magic || head.version || head.padding[0]
+                  || head.padding[1] || head.padding[2] || head.start))
+    {
+        fail("The save file (%s) is empty!", filename.c_str());
+    }
+    if (res != sizeof(file_header))
+        fail("save file (%s) corrupted -- header truncated", filename.c_str());
+
+    if (htole(head.magic) != PACKAGE_MAGIC)
+        fail("save file (%s) corrupted -- not a DCSS save file",
+             filename.c_str());
+    if (head.version != PACKAGE_VERSION)
+        fail("save file (%s) uses an unknown format %u", filename.c_str(),
+              head.version);
+    off_t len = lseek(fd, 0, SEEK_END);
+    if (len == -1)
+        sysfail("save file (%s) is not seekable", filename.c_str());
+    file_len = len;
+    read_directory(htole(head.start));
+
+    if (rw)
+    {
+        free_blocks[sizeof(file_header)] = file_len - sizeof(file_header);
+
+        for(directory_t::iterator ch = directory.begin();
+            ch != directory.end(); ch++)
+        {
+            trace_chunk(ch->second);
+        }
 #ifdef COSTLY_ASSERTS
-            // any inconsitency in the save is guaranteed to be already found
-            // by this time -- this checks only for internal bugs
-            fsck();
+        // any inconsitency in the save is guaranteed to be already found
+        // by this time -- this checks only for internal bugs
+        fsck();
 #endif
-        }
     }
 }
 
@@ -173,9 +190,10 @@ package::~package()
     }
 
     // all errors here should be cached write errors
-    if (close(fd) && !aborted)
-        sysfail(rw ? "write error while saving"
-                   : "can't close the save I've just read???");
+    if (fd != -1)
+        if (close(fd) && !aborted)
+            sysfail(rw ? "write error while saving"
+                       : "can't close the save I've just read???");
     dprintf("package: closed\n");
 }
 
@@ -519,6 +537,14 @@ void package::abort()
     aborted = true;
 }
 
+void package::unlink()
+{
+    abort();
+    close(fd);
+    fd = -1;
+    ::unlink(filename.c_str());
+}
+
 
 chunk_writer::chunk_writer(package *parent, const std::string _name)
     : first_block(0), cur_block(0), block_len(0)
@@ -558,7 +584,13 @@ chunk_writer::~chunk_writer()
     ASSERT(pkg->n_users > 0);
     pkg->n_users--;
     if (pkg->aborted)
+    {
+#ifdef USE_ZLIB
+        // ignore errors, they're not relevant anymore
+        deflateEnd(&zs);
+#endif
         return;
+    }
 
 #ifdef USE_ZLIB
     zs.avail_in = 0;

@@ -1,3 +1,18 @@
+******************************************************************************
+* IMPORTANT: Due to the on-going relicensing, we ask for all future          *
+* contributions you submit to be dual licensed under the old Crawl license   *
+* and the GNU General Public License version 2 or higher.                    *
+*                                                                            *
+* Note that if you prefer some other license, anything that is GPL           *
+* compatible (ie, nearly all Free Software licenses) can satisfy the second  *
+* requirement.  For the time being, though, you need to allow the old Crawl  *
+* license as well as it doesn't allow mixing with code under any license     *
+* other than itself.                                                         *
+*                                                                            *
+* Also, you are encouraged to put tile graphics into the Public Domain / CC0 *
+* so they can be contributed back to the rltiles project.  This is merely    *
+* a request, tiles contributions under the regular dual licensing are fine.  *
+******************************************************************************
 
                         Crawl General Public Licence
 

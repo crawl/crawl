@@ -197,7 +197,25 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
         " slowly dissolve% into ooze.",
         " dissolve% into ooze.",
         " disappear% with a satisfied slurp.",
-    }
+    },
+    // Fedhas
+    {
+        " & slowly absorbed by the ecosystem.",
+        " & absorbed by the ecosystem.",
+        " & instantly absorbed by the ecosystem.",
+    },
+    // Cheibriados (slow god, so better sacrifices are slower)
+    {
+        " freeze% in place and instantly disappear%.",
+        " freeze% in place and disappear%.",
+        " freeze% in place and slowly fade%.",
+    },
+    // Ashenzari
+    {
+        " flicker% black and shatter%.",
+        " pulsate% black and shatter%.",
+        " & swallowed by blackness and shatter%.",
+    },
 };
 
 const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
@@ -224,8 +242,8 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "invoke torment by praying over a corpse" },
     // Yredelemnul
     { "animate {yred_dead}",
-      "recall your undead slaves",
-      "#animate {yred_dead}",
+      "recall your undead slaves and mirror injuries on your foes",
+      "[animate {yred_dead}]",
       "drain ambient lifeforce",
       "enslave living souls" },
     // Xom
@@ -305,7 +323,14 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "",
       "inflict damage to those overly hasty",
       "step out of the time flow"
-    }
+    },
+    // Ashenzari
+    { "",
+      "",
+      "Ashenzari augments your vision.",
+      "scry through walls",
+      ""
+    },
 };
 
 const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
@@ -332,8 +357,8 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "invoke torment by praying over a corpse" },
     // Yredelemnul
     { "animate {yred_dead}",
-      "recall your undead slaves",
-      "#animate {yred_dead}",
+      "recall your undead slaves and mirror injuries on your foes",
+      "[animate {yred_dead}]",
       "drain ambient lifeforce",
       "enslave living souls" },
     // Xom
@@ -413,7 +438,14 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "",
       "inflict damage to those overly hasty",
       "step out of the time flow"
-    }
+    },
+    // Ashenzari
+    { "",
+      "",
+      "Ashenzari no longer augments your vision.",
+      "scry through walls",
+      ""
+    },
 };
 
 typedef void (*delayed_callback)(const mgen_data &mg, int &midx, int placed);
@@ -522,6 +554,12 @@ std::string get_god_likes(god_type which_god, bool verbose)
         snprintf(info, INFO_SIZE, "you kill fast things%s",
                  verbose ? ", relative to your speed"
                          : "");
+        likes.push_back(info);
+        break;
+
+    case GOD_ASHENZARI:
+        snprintf(info, INFO_SIZE, "you explore the world (preferably while "
+                                  "bound by curses)");
         likes.push_back(info);
         break;
 
@@ -765,6 +803,10 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
         dislikes.push_back("you use necromancy on corpses, chunks or skeletons");
         break;
 
+    case GOD_SIF_MUNA:
+        dislikes.push_back("you destroy spellbooks");
+        break;
+
     default:
         break;
     }
@@ -888,6 +930,12 @@ void dec_penance(god_type god, int val)
             {
                 mpr("Your divine halo returns!");
                 invalidate_agrid(true);
+            }
+            else if (god == GOD_ASHENZARI && you.religion == god
+                && you.piety >= piety_breakpoint(2))
+            {
+                mpr("Your vision regains its divine sight.");
+                autotoggle_autopickup(false);
             }
 
             // When you've worked through all your penance, you get
@@ -1297,7 +1345,7 @@ bool is_yred_undead_slave(const monster* mon)
 
 bool is_orcish_follower(const monster* mon)
 {
-    return (mon->alive() && mons_species(mon->type) == MONS_ORC
+    return (mon->alive() && mons_genus(mon->type) == MONS_ORC
             && mon->attitude == ATT_FRIENDLY
             && mons_is_god_gift(mon, GOD_BEOGH));
 }
@@ -2264,6 +2312,8 @@ std::string god_name(god_type which_god, bool long_name)
             return (one_chance_in(3) ? RANDOM_ELEMENT(xom_names)
                     : "Xom of Chaos");
         }
+    case GOD_ASHENZARI:
+        return long_name ? "Ashenzari the Shackled" : "Ashenzari";
     case NUM_GODS: return "Buggy";
     }
     return ("");
@@ -2347,18 +2397,44 @@ void religion_turn_end()
     _place_delayed_monsters();
 }
 
+static void _replace(std::string& s,
+                     const std::string &find,
+                     const std::string &repl)
+{
+    std::string::size_type start = 0;
+    std::string::size_type found;
+
+    while ((found = s.find(find, start)) != std::string::npos)
+    {
+        s.replace( found, find.length(), repl );
+        start = found + repl.length();
+    }
+}
+
+static void _erase_between(std::string& s,
+                           const std::string &left,
+                           const std::string &right)
+{
+    std::string::size_type left_pos;
+    std::string::size_type right_pos;
+
+    while ((left_pos = s.find(left)) != std::string::npos
+           && (right_pos = s.find(right, left_pos + left.size())) != std::string::npos)
+        s.erase(s.begin() + left_pos, s.begin() + right_pos + right.size());
+}
+
 std::string adjust_abil_message(const char *pmsg, bool allow_upgrades)
 {
     std::string pm = pmsg;
 
-    // Messages starting with "#" are ability upgrades.
-    if (!pm.empty() && pmsg[0] == '#')
+    // Message portions in [] sections are ability upgrades.
+    if (allow_upgrades)
     {
-        if (allow_upgrades)
-            pm.erase(0, 1);
-        else
-            return ("");
+        _replace(pm, "[", "");
+        _replace(pm, "]", "");
     }
+    else
+        _erase_between(pm, "[", "]");
 
     int pos;
 
@@ -2562,11 +2638,11 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
                 learned_something_new(HINT_NEW_ABILITY_GOD);
             }
 
-            if (you.religion == GOD_SHINING_ONE)
-            {
-                if (i == 0)
-                    mpr("A divine halo surrounds you!");
-            }
+            if (you.religion == GOD_SHINING_ONE && i == 0)
+                mpr("A divine halo surrounds you!");
+
+            if (you.religion == GOD_ASHENZARI && i == 2)
+                autotoggle_autopickup(false);
 
             // When you gain a piety level, you get another chance to
             // make hostile holy beings good neutral.
@@ -2992,32 +3068,6 @@ void excommunication(god_type new_god)
                           coord_def((int)new_god, old_piety));
 }
 
-static void _replace(std::string& s,
-                     const std::string &find,
-                     const std::string &repl)
-{
-    std::string::size_type start = 0;
-    std::string::size_type found;
-
-    while ((found = s.find(find, start)) != std::string::npos)
-    {
-        s.replace( found, find.length(), repl );
-        start = found + repl.length();
-    }
-}
-
-static void _erase_between(std::string& s,
-                           const std::string &left,
-                           const std::string &right)
-{
-    std::string::size_type left_pos;
-    std::string::size_type right_pos;
-
-    while ((left_pos = s.find(left)) != std::string::npos
-           && (right_pos = s.find(right, left_pos + left.size())) != std::string::npos)
-        s.erase(s.begin() + left_pos, s.begin() + right_pos + right.size());
-}
-
 static std::string _sacrifice_message(std::string msg,
                                       const std::string& itname,
                                       bool glowing, bool plural,
@@ -3142,7 +3192,7 @@ bool god_likes_item(god_type god, const item_def& item)
 
     case GOD_BEOGH:
         return (item.base_type == OBJ_CORPSES
-                   && mons_species(item.plus) == MONS_ORC);
+                   && mons_genus(item.plus) == MONS_ORC);
 
     case GOD_NEMELEX_XOBEH:
         return (!is_deck(item)
@@ -3228,7 +3278,7 @@ void god_pitch(god_type which_god)
         if (which_god == GOD_SIF_MUNA)
             simple_god_message(" does not accept worship from the ignorant!",
                                which_god);
-        else if (transformed_player_can_join_god(which_god))
+        else if (!transformed_player_can_join_god(which_god))
             simple_god_message(" says: How dare you come in such a loathsome form!",
                                which_god);
         else
@@ -3387,7 +3437,6 @@ void god_pitch(god_type which_god)
     // Complimentary jelly upon joining.
     if (you.religion == GOD_JIYVA)
     {
-
         if (!_has_jelly())
         {
             monster_type mon = MONS_JELLY;
@@ -3686,6 +3735,11 @@ void handle_god_time()
             // avoid the error message below.
             break;
 
+        case GOD_ASHENZARI:
+            if (one_chance_in(25))
+                lose_piety(1);
+            break;
+
         default:
             DEBUGSTR("Bad god, no bishop!");
             return;
@@ -3722,6 +3776,7 @@ int god_colour(god_type god) // mv - added
     case GOD_TROG:
     case GOD_BEOGH:
     case GOD_LUGONU:
+    case GOD_ASHENZARI:
         return (LIGHTRED);
 
     case GOD_XOM:

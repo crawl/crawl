@@ -128,7 +128,7 @@ int player::get_experience_level() const
 
 bool player::can_pass_through_feat(dungeon_feature_type grid) const
 {
-    return !feat_is_solid(grid);
+    return !feat_is_solid(grid) && grid != DNGN_TEMP_PORTAL;
 }
 
 bool player::is_habitable_feat(dungeon_feature_type actual_grid) const
@@ -399,7 +399,7 @@ std::string player::foot_name(bool plural, bool *can_plural) const
             str         = "underbelly";
             *can_plural = false;
         }
-        else if (species == SP_MERFOLK && swimming())
+        else if (fishtail)
         {
             str         = "tail";
             *can_plural = false;

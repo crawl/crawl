@@ -34,8 +34,8 @@ struct Branch
     int depth;
     int startdepth;             // which level of the parent branch,
                                 // 1 for first level
-    unsigned long branch_flags;
-    unsigned long default_level_flags;
+    uint32_t branch_flags;
+    uint32_t default_level_flags;
     dungeon_feature_type entry_stairs;
     dungeon_feature_type exit_stairs;
     const char* shortname;      // "Slime Pits"
@@ -77,10 +77,10 @@ int current_level_ambient_noise();
 const char *level_area_type_name(int level_type);
 level_area_type str_to_level_area_type(const std::string &s);
 
-bool set_branch_flags(unsigned long flags, bool silent = false,
+bool set_branch_flags(uint32_t flags, bool silent = false,
                       branch_type branch = NUM_BRANCHES);
-bool unset_branch_flags(unsigned long flags, bool silent = false,
+bool unset_branch_flags(uint32_t flags, bool silent = false,
                         branch_type branch = NUM_BRANCHES);
-unsigned long get_branch_flags(branch_type branch = NUM_BRANCHES);
+uint32_t get_branch_flags(branch_type branch = NUM_BRANCHES);
 
 #endif

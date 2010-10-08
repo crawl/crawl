@@ -281,6 +281,8 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_ENTER_PORTAL_VAULT:
     case DNGN_EXIT_PORTAL_VAULT:
         return TILE_DNGN_PORTAL;
+    case DNGN_TEMP_PORTAL:
+        return TILE_DNGN_STARRY_PORTAL;
 
     // altars
     case DNGN_ALTAR_ZIN:
@@ -317,6 +319,8 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_ALTAR_FEDHAS;
     case DNGN_ALTAR_CHEIBRIADOS:
         return TILE_DNGN_ALTAR_CHEIBRIADOS;
+    case DNGN_ALTAR_ASHENZARI:
+        return TILE_DNGN_ALTAR_ASHENZARI;
     case DNGN_FOUNTAIN_BLUE:
         return TILE_DNGN_BLUE_FOUNTAIN;
     case DNGN_FOUNTAIN_SPARKLING:
@@ -867,8 +871,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_GIANT_CENTIPEDE;
     case MONS_SCORPION:
         return TILEP_MONS_SCORPION;
-    case MONS_GIANT_SCORPION:
-        return TILEP_MONS_GIANT_SCORPION;
+    case MONS_EMPEROR_SCORPION:
+        return TILEP_MONS_EMPEROR_SCORPION;
     case MONS_SPIDER:
         return TILEP_MONS_SPIDER;
     case MONS_TARANTELLA:
@@ -2041,8 +2045,8 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_DEMON_WHIP:
         return TILE_WPN_DEMON_WHIP;
 
-    case WPN_HOLY_SCOURGE:
-        return TILE_WPN_HOLY_SCOURGE;
+    case WPN_SACRED_SCOURGE:
+        return TILE_WPN_SACRED_SCOURGE;
 
     case WPN_DEMON_TRIDENT:
         return TILE_WPN_DEMON_TRIDENT;
@@ -2578,8 +2582,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_GIANT_CENTIPEDE;
     case MONS_SCORPION:
         return TILE_CORPSE_SCORPION;
-    case MONS_GIANT_SCORPION:
-        return TILE_CORPSE_GIANT_SCORPION;
+    case MONS_EMPEROR_SCORPION:
+        return TILE_CORPSE_EMPEROR_SCORPION;
     case MONS_SPIDER:
         return TILE_CORPSE_SPIDER;
     case MONS_TARANTELLA:

@@ -74,10 +74,10 @@ void change_labyrinth(bool msg = false);
 
 bool forget_inventory(bool quiet = false);
 bool vitrify_area(int radius);
-void update_corpses(long elapsedTime);
-void update_level(long elapsedTime);
+void update_corpses(int elapsedTime);
+void update_level(int elapsedTime);
 void handle_time();
-void recharge_rods(long aut, bool floor_only);
+void recharge_rods(int aut, bool floor_only);
 
 void slime_wall_damage(actor* act, int delay);
 

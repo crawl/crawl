@@ -960,7 +960,7 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
             description += "\nDemonspawn deal slightly more damage with it.";
         else if (get_equip_race(item) != ISFLAG_NO_RACE)
         {
-            unsigned long race = get_equip_race(item);
+            iflags_t race = get_equip_race(item);
 
             if (race == ISFLAG_DWARVEN)
                 description += "\nIt is well-crafted, durable, and resistant "
@@ -1172,7 +1172,7 @@ static std::string _describe_ammo(const item_def &item)
 
         if (can_throw)
         {
-            unsigned long race = get_equip_race(item);
+            iflags_t race = get_equip_race(item);
 
             description += "It is more deadly when thrown by ";
             description += (race == ISFLAG_DWARVEN) ? "dwarves" :
@@ -1358,7 +1358,7 @@ static std::string _describe_armour( const item_def &item, bool verbose )
         // Randart armour can't be racial.
         description += "\n";
 
-        unsigned long race = get_equip_race(item);
+        iflags_t race = get_equip_race(item);
 
         if (race == ISFLAG_DWARVEN)
             description += "\nIt is well-crafted, durable, and resistant to "
@@ -2357,8 +2357,8 @@ bool describe_item( item_def &item, bool allow_inscribe, bool shopping )
 
             if (can_memorise && !crawl_state.player_is_dead())
             {
-                cprintf("Select a spell to read its description or to "
-                        "memorise it.");
+                cprintf("Select a spell to read its description, to "
+                        "memorise it or to forget it.");
             }
             else
                 cprintf("Select a spell to read its description.");
@@ -2567,8 +2567,9 @@ static void _append_spell_stats(const spell_type spell,
     description += spell_noise_string(spell);
 }
 
-// Returns true if you can memorise the spell.
-static bool _get_spell_description(const spell_type spell,
+// Returns BOOK_MEM if you can memorise the spell BOOK_FORGET if you can
+// forget it and BOOK_NEITHER if you can do neither
+static int _get_spell_description(const spell_type spell,
                                    std::string &description,
                                    const item_def* item = NULL)
 {
@@ -2610,7 +2611,7 @@ static bool _get_spell_description(const spell_type spell,
         description += "This spell will have no effect right now.\n";
 
     if (crawl_state.player_is_dead())
-        return (false);
+        return (BOOK_NEITHER);
 
     bool rod = item && item->base_type == OBJ_STAVES;
     _append_spell_stats(spell, description, rod);
@@ -2621,15 +2622,24 @@ static bool _get_spell_description(const spell_type spell,
         description += "\n\n";
         description += desc_cannot_memorise_reason(undead);
     }
-    else if (item && item->base_type == OBJ_BOOKS && !you.has_spell(spell)
-             && in_inventory(*item) && player_can_memorise_from_spellbook(*item))
-    {
-        description += "\n\n";
-        description += "(M)emorise this spell.";
-        return (true);
-    }
+    if (item && item->base_type == OBJ_BOOKS && in_inventory(*item))
+        if(you.has_spell(spell))
+        {
+            description += "\n\n";
+            description += "(F)orget this spell by destroying the book.";
+            if (you.religion == GOD_SIF_MUNA)
+                description +="\nSif Muna frowns upon the destroying of books.";
+            return (BOOK_FORGET);
+        }
+        else if (player_can_memorise_from_spellbook(*item)
+                 && !you_cannot_memorise(spell, undead))
+        {
+            description += "\n\n";
+            description += "(M)emorise this spell.";
+            return (BOOK_MEM);
+        }
 
-    return (false);
+    return(BOOK_NEITHER);
 }
 
 void get_spell_desc(const spell_type spell, describe_info &inf)
@@ -2649,7 +2659,7 @@ void get_spell_desc(const spell_type spell, describe_info &inf)
 void describe_spell(spell_type spelled, const item_def* item)
 {
     std::string desc;
-    bool can_mem = _get_spell_description(spelled, desc, item);
+    int mem_or_forget = _get_spell_description(spelled, desc, item);
     print_description(desc);
 
     mouse_control mc(MOUSE_MODE_MORE);
@@ -2658,10 +2668,17 @@ void describe_spell(spell_type spelled, const item_def* item)
     if ((ch = getchm()) == 0)
         ch = getchm();
 
-    if (can_mem && toupper(ch) == 'M')
+    if (mem_or_forget == BOOK_MEM && toupper(ch) == 'M')
     {
         redraw_screen();
         if (!learn_spell(spelled, item->sub_type, false) || !you.turn_is_over)
+            more();
+        redraw_screen();
+    }
+    else if (mem_or_forget == BOOK_FORGET && toupper(ch) == 'F')
+    {
+        redraw_screen();
+        if (!forget_spell_from_book(spelled, item) || !you.turn_is_over)
             more();
         redraw_screen();
     }
@@ -3331,12 +3348,23 @@ static bool _print_final_god_abil_desc(int god, const std::string &final_msg,
 
     std::ostringstream buf;
     buf << final_msg;
-    const std::string cost = "(" + make_cost_description(abil) + ")";
+
+    // For ability slots that give more than one ability, display
+    // "Various" instead of the cost of the first ability.
+    const std::string cost =
+        "(" +
+              ((abil == ABIL_ELYVILON_LESSER_HEALING_OTHERS
+                || abil == ABIL_ELYVILON_GREATER_HEALING_OTHERS
+                || abil == ABIL_YRED_RECALL_UNDEAD_SLAVES) ?
+                    "Various" : make_cost_description(abil))
+            + ")";
+
     if (cost != "(None)")
     {
         const int spacesleft = 79 - buf.str().length();
         buf << std::setw(spacesleft) << cost;
     }
+
     cprintf("%s\n", buf.str().c_str());
 
     return (true);
@@ -3588,7 +3616,16 @@ const char *divine_title[NUM_GODS][8] =
 
     // Cheibriados -- slow theme
     {"Unwound %s",         "Timekeeper",            "Righteous Timekeeper",     "Chronographer",
-     "Splendid Chronographer", "Chronicler",        "Eternal Chronicler",       "Ticktocktomancer"}
+     "Splendid Chronographer", "Chronicler",        "Eternal Chronicler",       "Ticktocktomancer"},
+
+    // Ashenzari -- divination theme
+    {"Star-crossed",       "Cursed",                "Initiated",                "Seer",
+     "Soothsayer",         "Oracle",                "Illuminatus",              "Omniscient"},
+#if 0
+    // blue_anna's Romanian variant for Ashenzari
+    {"Impostură",          "Impressionabil",        "Clar-văzător",             "Ghicitor",
+     "Medium",             "Proroc",                "Oracol",                   "Profet"},
+#endif
 };
 
 static int _piety_level()
@@ -3601,7 +3638,6 @@ static int _piety_level()
             (you.piety >=  30) ? 2 :
             (you.piety >    5) ? 1
                                : 0 );
-
 }
 
 std::string god_title(god_type which_god, species_type which_species)
@@ -3927,17 +3963,6 @@ void describe_god( god_type which_god, bool give_title )
             _print_final_god_abil_desc(which_god, buf,
                                        ABIL_ELYVILON_DESTROY_WEAPONS);
         }
-        else if (which_god == GOD_YREDELEMNUL)
-        {
-            if (yred_injury_mirror(false))
-            {
-                have_any = true;
-                std::string buf = god_name(which_god);
-                buf += " mirrors your injuries on your foes during prayer.";
-                _print_final_god_abil_desc(which_god, buf,
-                                           ABIL_YRED_INJURY_MIRROR);
-            }
-        }
         else if (which_god == GOD_JIYVA)
         {
             if (jiyva_can_paralyse_jellies())
@@ -4065,7 +4090,7 @@ std::string get_skill_description(int skill, bool need_title)
         else if (player_mutation_level(MUT_TALONS))
             unarmed_attacks.push_back("claw with your talons");
         else if (you.species != SP_NAGA && you.species != SP_CAT
-                 && (you.species != SP_MERFOLK || !you.swimming()))
+                 && !you.fishtail)
         {
             unarmed_attacks.push_back("deliver a kick");
         }

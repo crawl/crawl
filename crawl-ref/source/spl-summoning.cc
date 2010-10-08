@@ -24,6 +24,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "it_use2.h"
+#include "mapmark.h"
 #include "message.h"
 #include "mgen_data.h"
 #include "misc.h"
@@ -34,6 +35,7 @@
 #include "mon-util.h"
 #include "player-stats.h"
 #include "religion.h"
+#include "shout.h"
 #include "stuff.h"
 #include "teleport.h"
 #include "terrain.h"
@@ -747,12 +749,7 @@ static bool _summon_holy_being_wrapper(int pow, god_type god, int spell,
     summon->flags |= MF_ATT_CHANGE_ATTEMPT;
 
     if (!quiet)
-    {
-        mprf("You are momentarily dazzled by a brilliant %slight.",
-             (mon == MONS_DAEVA) ? "golden " :
-             (mon == MONS_ANGEL) ? "white "
-                                 : "");
-    }
+        mpr("You are momentarily dazzled by a brilliant light.");
 
     player_angers_monster(&menv[mons]);
     return (true);
@@ -1073,6 +1070,11 @@ bool cast_shadow_creatures(god_type god)
     return (false);
 }
 
+bool can_cast_malign_gateway()
+{
+    return count_malign_gateways() < 1;
+}
+
 bool cast_malign_gateway(actor * caster, int pow, god_type god)
 {
     unsigned compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
@@ -1082,29 +1084,23 @@ bool cast_malign_gateway(actor * caster, int pow, god_type god)
     {
         coord_def test = caster->pos() + Compass[compass_idx[i]];
         if (in_bounds(test)
-            //&& monster_habitable_grid(MONS_DEMONIC_TENTACLE, env.grid(test))
             && env.grid(test) == DNGN_FLOOR
             && !actor_at(test))
         {
-            int tentacle_idx = create_monster(mgen_data(MONS_DEMONIC_TENTACLE,
-                                                        caster->atype() == ACT_PLAYER ? BEH_FRIENDLY : attitude_creation_behavior(caster->as_monster()->attitude),
-                                                        caster,
-                                                        0,
-                                                        0,
-                                                        test,
-                                                        MHITNOT,
-                                                        MG_FORCE_PLACE,
-                                                        god));
+            const int malign_gateway_duration = BASELINE_DELAY * (random2(5) + 5);
+            env.markers.add(new map_malign_gateway_marker(test,
+                                                malign_gateway_duration,
+                                                caster->atype() == ACT_PLAYER,
+                                                caster->atype() == ACT_PLAYER ? NULL : caster->as_monster(),
+                                                god,
+                                                pow));
+            env.markers.clear_need_activate();
+            env.grid(test) = DNGN_TEMP_PORTAL;
 
-            if (tentacle_idx >= 0)
-            {
-                menv[tentacle_idx].flags |= MF_NO_REWARD;
-                menv[tentacle_idx].add_ench(ENCH_PORTAL_TIMER);
-                env.grid(menv[tentacle_idx].pos()) = DNGN_TEMP_PORTAL;
-                menv[tentacle_idx].props["base_position"].get_coord()
-                                    = menv[tentacle_idx].pos();
-                return (true);
-            }
+            noisy(10, test);
+            mprf("The dungeon shakes and a horrible noise fills the air as a portal to some otherworldly place is opened!");
+
+            return (true);
         }
     }
     return (false);
@@ -1662,7 +1658,7 @@ bool cast_twisted_resurrection(int pow, god_type god)
         {
             total_mass += mons_weight(si->plus);
             how_many_corpses++;
-            if (mons_species(si->plus) == MONS_ORC)
+            if (mons_genus(si->plus) == MONS_ORC)
                 how_many_orcs++;
             if (food_is_rotten(*si))
                 rotted++;

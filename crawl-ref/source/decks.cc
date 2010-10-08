@@ -2505,7 +2505,7 @@ static void _crusade_card(int power, deck_rarity_type rarity)
                     // count this as a recruitment.
                     if (is_good_god(you.religion)
                         || you.religion == GOD_BEOGH
-                            && mons_species(mi->type) == MONS_ORC
+                            && mons_genus(mi->type) == MONS_ORC
                             && !mi->is_summoned()
                             && !mi->is_shapeshifter())
                     {

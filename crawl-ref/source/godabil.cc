@@ -739,6 +739,7 @@ bool trog_burn_spellbooks()
                 totalpiety++;
 
             dprf("Burned book rarity: %d", rarity);
+            destroy_spellbook(*si);
             destroy_item(si.link());
             count++;
         }
@@ -841,16 +842,17 @@ bool jiyva_remove_bad_mutation()
     return (true);
 }
 
-bool yred_injury_mirror(bool actual)
+bool yred_injury_mirror()
 {
     return (you.religion == GOD_YREDELEMNUL && !player_under_penance()
             && you.piety >= piety_breakpoint(1)
-            && (!actual || you.duration[DUR_PRAYER]));
+            && you.duration[DUR_MIRROR_DAMAGE]);
 }
 
 bool yred_can_animate_dead()
 {
-    return (you.piety >= piety_breakpoint(2));
+    return (you.religion == GOD_YREDELEMNUL && !player_under_penance()
+            && you.piety >= piety_breakpoint(2));
 }
 
 void yred_animate_remains_or_dead()
@@ -1290,7 +1292,8 @@ static int _create_plant(coord_def & target, int hp_adjust = 0)
                                       0,
                                       target,
                                       MHITNOT,
-                                      MG_FORCE_PLACE, GOD_FEDHAS));
+                                      MG_FORCE_PLACE,
+                                      GOD_FEDHAS));
 
 
     if (plant != -1)
@@ -1839,7 +1842,8 @@ int fedhas_rain(const coord_def &target)
                                       0,
                                       *rad,
                                       MHITNOT,
-                                      MG_FORCE_PLACE, GOD_FEDHAS));
+                                      MG_FORCE_PLACE,
+                                      GOD_FEDHAS));
 
                 if (plant != -1)
                     spawned_count++;
@@ -1968,7 +1972,8 @@ int fedhas_corpse_spores(beh_type behavior, bool interactive)
                                           0,
                                           positions[i]->pos,
                                           MHITNOT,
-                                          MG_FORCE_PLACE));
+                                          MG_FORCE_PLACE,
+                                          GOD_FEDHAS));
 
         if (rc != -1)
         {

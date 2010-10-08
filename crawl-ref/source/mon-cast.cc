@@ -1569,7 +1569,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 return (false);
 
             if (!animate_dead(mons, 100, SAME_ATTITUDE(mons),
-                             mons->foe, mons, "", god, false))
+                              mons->foe, mons, "", god, false))
             {
                 return (false);
             }
@@ -1838,8 +1838,7 @@ static void _do_high_level_summon(monster* mons, bool monsterNearby,
 // Returns true if a message referring to the player's legs makes sense.
 static bool _legs_msg_applicable()
 {
-    return (you.species != SP_NAGA
-            && (you.species != SP_MERFOLK || !you.swimming()));
+    return (you.species != SP_NAGA && !you.fishtail);
 }
 
 void mons_cast_haunt(monster* mons)
@@ -1908,19 +1907,25 @@ void mons_cast_spectral_orcs(monster* mons)
         // get the proper stats from it.
         created = create_monster(
                   mgen_data(MONS_SPECTRAL_THING, SAME_ATTITUDE(mons), mons,
-                          abj, SPELL_SUMMON_SPECTRAL_ORCS, fpos, mons->foe, 0,
-                          GOD_BEOGH, mon));
+                          abj, SPELL_SUMMON_SPECTRAL_ORCS, fpos, mons->foe,
+                          0, mons->god, mon));
 
         if (created != -1)
         {
             orc = &menv[created];
 
-            // which base type this orc is pretending to be for
-            // gear purposes
-            orc->base_monster = mon;
+            // set which base type this orc is pretending to be for gear
+            // purposes
+            if (mon != MONS_ORC)
+            {
+                orc->mname = mons_type_name(mon, DESC_PLAIN);
+                orc->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR;
+            }
             orc->number = (int) mon;
 
+            // give gear using the base type
             give_item(created, you.absdepth0, true, true);
+
             // set gear as summoned
             orc->mark_summoned(abj, true, SPELL_SUMMON_SPECTRAL_ORCS);
         }
@@ -2488,7 +2493,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                           mons->colour, you.absdepth0, PROX_CLOSE_TO_PLAYER,
                           you.level_type));
 
-            if (tentacle >= 0)
+            if (tentacle != -1)
             {
                 created_count++;
                 menv[tentacle].props["inwards"].get_int() = kraken_index;
@@ -3230,13 +3235,7 @@ static int _noise_level(const monster* mons, spell_type spell,
         if (mons_genus(mons->type) == MONS_DRAGON)
             noise = get_shout_noise_level(S_ROAR);
         else
-        {
-            // Noise for targeted spells happens at where the spell hits,
-            // rather than where the spell is cast. zappy() sets up the
-            // noise for beams.
-            noise = (flags & SPFLAG_TARGETING_MASK)
-                ? 1 : spell_noise(spell);
-        }
+            noise = spell_noise(spell);
     }
     return noise;
 }

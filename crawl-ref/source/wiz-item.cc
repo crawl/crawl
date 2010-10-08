@@ -20,6 +20,7 @@
 #include "dungeon.h"
 #include "effects.h"
 #include "env.h"
+#include "godpassive.h"
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
@@ -538,6 +539,9 @@ void wizard_tweak_object(void)
             you.inv[item].flags = new_val;
         else
             ASSERT(!"unhandled keyin");
+
+        // cursedness might have changed
+        ash_check_bondage();
     }
 }
 

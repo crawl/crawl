@@ -374,6 +374,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
             mpr( "You feel refreshed." );
         break;
     }
+
     case POT_BERSERK_RAGE:
         if (you.species == SP_VAMPIRE && you.hunger_state <= HS_SATIATED)
         {

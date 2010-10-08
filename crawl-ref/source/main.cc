@@ -530,6 +530,9 @@ static void _god_greeting_message(bool game_start)
     case GOD_CHEIBRIADOS:
         simple_god_message(" says: Take it easy.");
         break;
+    case GOD_ASHENZARI:
+        simple_god_message(" says: Partake of my vision. Partake of my curse.");
+        break;
 
     case GOD_NO_GOD:
     case NUM_GODS:
@@ -1294,6 +1297,11 @@ static bool _prompt_dangerous_portal(dungeon_feature_type ftype)
     case DNGN_ENTER_ABYSS:
         return yesno("If you enter this portal you will not be able to return "
                      "immediately. Continue?", false, 'n');
+
+    case DNGN_TEMP_PORTAL:
+        return yesno("Are you sure you wish to approach this portal? There's no "
+                     "telling what its forces would wreak upon your fragile "
+                     "self.", false, 'n');
 
     default:
         return (true);
@@ -2302,6 +2310,8 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_MISLED, delay, "Your thoughts are your own once more.");
     _decrement_a_duration(DUR_QUAD_DAMAGE, delay, NULL, 0,
                           "Quad Damage is wearing off.");
+    _decrement_a_duration(DUR_MIRROR_DAMAGE, delay,
+                          "Your dark mirror aura disappears.");
 
     if (you.duration[DUR_PARALYSIS] || you.petrified())
     {
@@ -2574,6 +2584,12 @@ static void _decrement_durations()
 
     _decrement_a_duration(DUR_REPEL_STAIRS_MOVE, 1);
     _decrement_a_duration(DUR_REPEL_STAIRS_CLIMB, 1);
+
+    if (_decrement_a_duration(DUR_SCRYING, delay,
+                              "Your astral sight fades away."))
+    {
+        you.xray_vision = false;
+    }
 }
 
 static void _check_banished()
@@ -3868,6 +3884,18 @@ static void _move_player(coord_def move)
     {
         _open_door(move.x, move.y, false);
         you.prev_move = move;
+    }
+    if (!targ_pass && grd(targ) == DNGN_TEMP_PORTAL && !attacking)
+    {
+        if (!_prompt_dangerous_portal(grd(targ)))
+            return;
+
+        you.prev_move = move;
+        move.reset();
+        you.turn_is_over = true;
+
+        entered_malign_portal(&you);
+        return;
     }
     else if (!targ_pass && !attacking)
     {

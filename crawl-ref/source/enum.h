@@ -110,6 +110,7 @@ enum ability_type
     ABIL_CHEIBRIADOS_TIME_STEP,             // 250
     ABIL_CHEIBRIADOS_TIME_BEND,
     ABIL_CHEIBRIADOS_SLOUCH,
+    ABIL_ASHENZARI_SCRYING,
 
     // Vampire abilities
     ABIL_TRAN_BAT = 260,
@@ -815,6 +816,8 @@ enum conduct_type
     DID_KILL_ARTIFICIAL,                  // Yredelemnul
     DID_ARTIFICIAL_KILLED_BY_UNDEAD_SLAVE,// Yredelemnul
     DID_ARTIFICIAL_KILLED_BY_SERVANT,     // Yredelemnul
+    DID_DESTROY_SPELLBOOK,                // Sif Muna
+    DID_EXPLORATION,                      // Ashenzari, wrath timers
 
     NUM_CONDUCTS
 };
@@ -1163,7 +1166,8 @@ enum dungeon_feature_type
     DNGN_ALTAR_JIYVA,
     DNGN_ALTAR_FEDHAS,
     DNGN_ALTAR_CHEIBRIADOS,
-    DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_CHEIBRIADOS,
+    DNGN_ALTAR_ASHENZARI,
+    DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_ASHENZARI,
 
     DNGN_FOUNTAIN_BLUE = 200,          //  200
     DNGN_FOUNTAIN_SPARKLING,           // aka 'Magic Fountain' {dlb}
@@ -1250,6 +1254,8 @@ enum duration_type
     DUR_MISLED,
     DUR_QUAD_DAMAGE,
     DUR_AFRAID,
+    DUR_MIRROR_DAMAGE,
+    DUR_SCRYING,
 
     NUM_DURATIONS
 };
@@ -1414,6 +1420,7 @@ enum god_type
     GOD_JIYVA,
     GOD_FEDHAS,
     GOD_CHEIBRIADOS,
+    GOD_ASHENZARI,
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,
@@ -1622,6 +1629,7 @@ enum map_marker_type
     MAT_CORRUPTION_NEXUS,
     MAT_WIZ_PROPS,
     MAT_TOMB,
+    MAT_MALIGN,
     NUM_MAP_MARKER_TYPES,
     MAT_ANY,
 };
@@ -2213,7 +2221,7 @@ enum monster_type                      // (int) menv[].type
     MONS_IRON_GIANT,
     MONS_NELLIE,
     MONS_IRON_ELEMENTAL,
-    MONS_GIANT_SCORPION,
+    MONS_EMPEROR_SCORPION,
     MONS_GHOST_MOTH,
     MONS_JUMPING_SPIDER,
     MONS_DEMONIC_TENTACLE,
