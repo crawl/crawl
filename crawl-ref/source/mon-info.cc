@@ -188,6 +188,7 @@ monster_info::monster_info(const monster* m, int milev)
         attitude = ATT_GOOD_NEUTRAL;
 
     bool type_known = false;
+    bool nomsg_wounds = false;
 
     // CHANGE: now friendly fake Rakshasas/Maras are known (before you could still tell by equipment)
     if (m->props.exists("mislead_as") && you.misled())
@@ -207,6 +208,12 @@ monster_info::monster_info(const monster* m, int milev)
         base_type = m->base_monster;
         if (base_type == MONS_NO_MONSTER)
             base_type = type;
+
+        if (!mons_can_display_wounds(m)
+            || !mons_class_can_display_wounds(type))
+        {
+            nomsg_wounds = true;
+        }
 
         // these use number for internal information
         if (type == MONS_MANTICORE
@@ -292,11 +299,8 @@ monster_info::monster_info(const monster* m, int milev)
     dam = mons_get_damage_level(m);
 
     // If no messages about wounds, don't display damage level either.
-    if (monster_descriptor(type, MDSC_NOMSG_WOUNDS)
-        || monster_descriptor(m->type, MDSC_NOMSG_WOUNDS))
-    {
+    if (nomsg_wounds)
         dam = MDAM_OKAY;
-    }
 
     if (mons_behaviour_perceptible(m))
     {

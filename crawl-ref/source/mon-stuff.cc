@@ -3068,8 +3068,8 @@ bool monster_can_hit_monster(monster* mons, const monster* targ)
 
 mon_dam_level_type mons_get_damage_level(const monster* mons)
 {
-    if (monster_descriptor(mons->type, MDSC_NOMSG_WOUNDS)
-        || monster_descriptor(mons->get_mislead_type(), MDSC_NOMSG_WOUNDS)
+    if (!mons_can_display_wounds(mons)
+        || !mons_class_can_display_wounds(mons->get_mislead_type())
         || mons_is_unknown_mimic(mons))
     {
         return MDAM_OKAY;
@@ -3134,7 +3134,7 @@ std::string get_wounds_description(const monster* mons, bool colour)
     if (!mons->alive() || mons->hit_points == mons->max_hit_points)
         return "";
 
-    if (monster_descriptor(mons->type, MDSC_NOMSG_WOUNDS))
+    if (!mons_can_display_wounds(mons))
         return "";
 
     mon_dam_level_type dam_level = mons_get_damage_level(mons);
@@ -3152,7 +3152,7 @@ void print_wounds(const monster* mons)
     if (!mons->alive() || mons->hit_points == mons->max_hit_points)
         return;
 
-    if (monster_descriptor(mons->type, MDSC_NOMSG_WOUNDS))
+    if (!mons_can_display_wounds(mons))
         return;
 
     mon_dam_level_type dam_level = mons_get_damage_level(mons);

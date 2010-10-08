@@ -1045,6 +1045,32 @@ bool mons_can_regenerate(const monster* mon)
     return (mons_class_can_regenerate(mon->type));
 }
 
+bool mons_class_can_display_wounds(int mc)
+{
+    return (!monster_descriptor(mc, MDSC_NOMSG_WOUNDS));
+}
+
+bool mons_can_display_wounds(const monster* mon)
+{
+    monster newmon = *mon;
+
+    // For kraken connectors, find the associated tentacle.
+    if (newmon.type == MONS_KRAKEN_CONNECTOR
+        && !invalid_monster_index(newmon.number))
+    {
+        newmon = menv[newmon.number];
+    }
+
+    // For kraken tentacles, find the associated head.
+    if (newmon.type == MONS_KRAKEN_TENTACLE
+        && !invalid_monster_index(newmon.number))
+    {
+        newmon = menv[newmon.number];
+    }
+
+    return (mons_class_can_display_wounds(newmon.type));
+}
+
 // Size based on zombie class.
 zombie_size_type zombie_class_size(monster_type cs)
 {
