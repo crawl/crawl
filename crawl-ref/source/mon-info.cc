@@ -211,7 +211,8 @@ monster_info::monster_info(const monster* m, int milev)
         // these use number for internal information
         if (type == MONS_MANTICORE
             || type == MONS_KRAKEN_TENTACLE
-            || type == MONS_KRAKEN_CONNECTOR)
+            || type == MONS_KRAKEN_CONNECTOR
+            || type == MONS_DEMONIC_TENTACLE_SEGMENT)
         {
             number = 0;
         }
