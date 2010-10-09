@@ -190,6 +190,14 @@ int get_mimic_colour( const monster* mimic )
 // Monster curses a random player inventory item.
 bool curse_an_item( bool decay_potions, bool quiet )
 {
+    // allowing these would enable mummy scumming
+    if (you.religion == GOD_ASHENZARI)
+    {
+        if (!quiet)
+            simple_god_message(" absorbs the curse.");
+        return false;
+    }
+
     int count = 0;
     int item  = ENDOFPACK;
 
