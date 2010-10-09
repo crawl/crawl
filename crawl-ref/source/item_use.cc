@@ -3534,7 +3534,7 @@ void zap_wand(int slot)
 {
     if (you.species == SP_CAT)
     {
-        mpr("You have no means to grasp a wand firm enough.");
+        mpr("You have no means to grasp a wand firmly enough.");
         return;
     }
 
