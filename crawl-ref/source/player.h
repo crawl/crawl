@@ -583,6 +583,7 @@ public:
 
     bool wearing_light_armour(bool with_skill = false) const;
     int  skill(skill_type skill, bool skill_bump = false) const;
+    int  traps_skill() const;
 
     bool do_shaft();
 

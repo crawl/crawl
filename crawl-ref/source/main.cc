@@ -2723,7 +2723,7 @@ static void _update_mold()
 static void _player_reacts()
 {
     if (!you.cannot_act() && !player_mutation_level(MUT_BLURRY_VISION)
-        && x_chance_in_y(you.skills[SK_TRAPS_DOORS], 50))
+        && x_chance_in_y(you.traps_skill(), 50))
     {
         search_around(false); // Check nonadjacent squares too.
     }

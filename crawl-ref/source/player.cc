@@ -156,7 +156,7 @@ static bool _check_moveto_trap(const coord_def& p, const std::string &move_verb)
     if (new_grid == DNGN_UNDISCOVERED_TRAP)
     {
         const int skill =
-            (4 + you.skills[SK_TRAPS_DOORS]
+            (4 + you.traps_skill()
              + player_mutation_level(MUT_ACUTE_VISION)
              - 2 * player_mutation_level(MUT_BLURRY_VISION));
 
@@ -5513,6 +5513,17 @@ void player::shield_block_succeeded(actor *foe)
 int player::skill(skill_type sk, bool bump) const
 {
     return (bump? skill_bump(sk) : skills[sk]);
+}
+
+// only for purposes of detection, not disarming
+int player::traps_skill() const
+{
+    int val = skills[SK_TRAPS_DOORS];
+
+    if (you.religion == GOD_ASHENZARI && !player_under_penance())
+        val += you.piety / 15;
+
+    return val;
 }
 
 int player_icemail_armour_class()
