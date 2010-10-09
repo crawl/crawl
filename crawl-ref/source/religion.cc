@@ -212,9 +212,9 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
     },
     // Ashenzari
     {
-        " flicker% black and shatter%.",
-        " pulsate% black and shatter%.",
-        " & swallowed by blackness and shatter%.",
+        " flicker% black.",
+        " pulsate% black.", // unused
+        " pulsate% black.", // unused
     },
 };
 
@@ -3167,7 +3167,7 @@ bool god_likes_items(god_type god)
 
     switch (god)
     {
-    case GOD_ZIN: case GOD_BEOGH: case GOD_NEMELEX_XOBEH:
+    case GOD_ZIN: case GOD_BEOGH: case GOD_NEMELEX_XOBEH: case GOD_ASHENZARI:
         return (true);
 
     case GOD_NO_GOD: case NUM_GODS: case GOD_RANDOM: case GOD_NAMELESS:
@@ -3207,6 +3207,10 @@ bool god_likes_item(god_type god, const item_def& item)
                 && (item.base_type != OBJ_MISCELLANY
                     || item.sub_type != MISC_HORN_OF_GERYON
                     || item.plus2));
+
+    case GOD_ASHENZARI:
+        return (item.base_type == OBJ_SCROLLS
+                && item.sub_type == SCR_REMOVE_CURSE);
 
     default:
         return (false);

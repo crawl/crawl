@@ -104,6 +104,7 @@ bool god_accepts_prayer(god_type god)
 
     case GOD_BEOGH:
     case GOD_NEMELEX_XOBEH:
+    case GOD_ASHENZARI:
         return (true);
 
     default:
@@ -426,6 +427,7 @@ void pray()
         || you.religion == GOD_BEOGH
         || you.religion == GOD_NEMELEX_XOBEH
         || you.religion == GOD_JIYVA
+        || you.religion == GOD_ASHENZARI
         || god_likes_fresh_corpses(you.religion))
     {
         you.duration[DUR_PRAYER] = 1;
@@ -436,11 +438,13 @@ void pray()
         you.duration[DUR_PRAYER] = 20;
     }
 
-    // Gods who like fresh corpses, Kikuites, Beoghites and Nemelexites
-    // offer the items they're standing on.
+    // Gods who like fresh corpses, Kikuites, Beoghites, Nemelexites and
+    // Ashenzariites offer the items they're standing on.
     if (altar_god == GOD_NO_GOD
         && (god_likes_fresh_corpses(you.religion)
-            || you.religion == GOD_BEOGH || you.religion == GOD_NEMELEX_XOBEH))
+            || you.religion == GOD_BEOGH
+            || you.religion == GOD_NEMELEX_XOBEH
+            || you.religion == GOD_ASHENZARI))
     {
         offer_items();
     }
@@ -549,6 +553,24 @@ static void _give_sac_group_feedback(int which)
     };
     mprf(MSGCH_GOD, "A symbol of %s coalesces before you, then vanishes.",
          names[which]);
+}
+
+static void _ashenzari_sac_scroll(const item_def& item)
+{
+    int scr = (you.species == SP_CAT) ? SCR_CURSE_JEWELLERY :
+              random_choose(SCR_CURSE_WEAPON, SCR_CURSE_ARMOUR,
+                            SCR_CURSE_JEWELLERY, -1);
+    int it = items(0, OBJ_SCROLLS, scr, true, 0, MAKE_ITEM_NO_RACE,
+                   0, 0, GOD_ASHENZARI);
+    if (it == NON_ITEM)
+    {
+        mpr("You feel the world is against you.");
+        return;
+    }
+
+    mitm[it].quantity = 1;
+    if (!move_item_to_grid(&it, you.pos(), true))
+        destroy_item(it, true); // can't happen
 }
 
 // God effects of sacrificing one item from a stack (e.g., a weapon, one
@@ -666,6 +688,10 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
             jiyva_slurp_bonus(div_rand_round(stepped, 50), js);
             break;
         }
+
+        case GOD_ASHENZARI:
+            _ashenzari_sac_scroll(item);
+            break;
 
         default:
             break;
@@ -820,5 +846,7 @@ void offer_items()
                 simple_god_message(" does not care about gold!");
             else
                 simple_god_message(" expects you to use your decks, not offer them!");
+        else if (you.religion == GOD_ASHENZARI)
+            simple_god_message(" can corrupt only scrolls of remove curse.");
     }
 }
