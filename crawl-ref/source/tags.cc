@@ -1025,7 +1025,7 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.entry_cause_god);
 
     marshallInt(th, you.disease);
-    marshallShort(th, you.hp);
+    marshallShort(th, you.dead ? 0 : you.hp);
 
     marshallShort(th, you.hunger);
     marshallBoolean(th, you.fishtail);
@@ -1173,9 +1173,8 @@ static void tag_construct_you(writer &th)
     marshallShort(th, you.transit_stair);
     marshallByte(th, you.entering_level);
 
-    // Reserved space for unknown porpoises.
-    marshallByte(th, 0);
-    marshallByte(th, 0);
+    marshallByte(th, you.deaths);
+    marshallByte(th, you.lives);
 
     marshallInt(th, you.dactions.size());
     for (unsigned int k = 0; k < you.dactions.size(); k++)
@@ -1770,9 +1769,9 @@ static void tag_read_you(reader &th, int minorVersion)
     you.transit_stair  = static_cast<dungeon_feature_type>(unmarshallShort(th));
     you.entering_level = unmarshallByte(th);
 
-    // Reserved space for unknown porpoises.
-    unmarshallByte(th);
-    unmarshallByte(th);
+    you.deaths = unmarshallByte(th);
+    you.lives = unmarshallByte(th);
+    you.dead = !you.hp;
 
     int n_dact = unmarshallInt(th);
     you.dactions.resize(n_dact, NUM_DACTIONS);

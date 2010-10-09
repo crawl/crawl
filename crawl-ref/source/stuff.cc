@@ -681,7 +681,10 @@ void canned_msg(canned_message_type which_message)
         crawl_state.cancel_cmd_repeat();
         break;
     case MSG_EMPTY_HANDED:
-        mpr("You are now empty-handed.");
+        if (you.species == SP_CAT)
+            mpr("Your mouth is now empty.");
+        else
+            mpr("You are now empty-handed.");
         break;
     case MSG_YOU_BLINK:
         mpr("You blink.");

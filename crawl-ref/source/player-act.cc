@@ -292,6 +292,8 @@ bool player::can_wield(const item_def& item, bool ignore_curse,
 bool player::could_wield(const item_def &item, bool ignore_brand,
                          bool /* ignore_transform */) const
 {
+    if (species == SP_CAT)
+        return (false);
     if (body_size(PSIZE_TORSO) < SIZE_LARGE && item_mass(item) >= 300)
         return (false);
 

@@ -1817,6 +1817,29 @@ at fighting and much better at conjurations, summonings, necromancy and
 invocations. Note that unlike Demigods, they can take on gods, although
 not all will accept them.
 
+Felids
+------
+Felids are a breed of cats that have been granted sentience. Originally
+they were witches' familiars that were magically augmented to provide help
+for their masters' rituals, yet many have abandoned, outlived, or, in at
+least one case, ripped to shreds their former masters and went out into
+the world.
+
+While fully capable of using speech and most forms of magic, Felids are
+at a serious disadvantage due to their inability to use armour orweapons,
+or even grasping items well enough to throw a dart or point a wand. They
+can use their mouths and paws for simple manipulation like uncorking
+a bottle or unrolling a scroll. As all cats, Felids are incapable of
+thriving on vegetable food, and need meat to survive.
+
+Their agility and stealth is legendary, as is their ability to get to
+hard to reach places. They move faster than most races, but don't run
+as fast as horses or Spriggans. Felids advance in levels very slowly,
+and are not very gifted in directly damaging magic, but make good
+summoners, enchanters or transmuters.
+
+The tale of a felid who had nine lives isn't far from truth, as well.
+
 The Undead
 ----------
 As creatures brought back from beyond the grave, the undead are

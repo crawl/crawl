@@ -1794,7 +1794,8 @@ int melee_attack::player_weapon_type_modify(int damage)
     // has a non-weapon in hand. - bwr
     // Exception: vampire bats only bite to allow for drawing blood.
     if (damage < HIT_WEAK
-        && (you.species != SP_VAMPIRE || !player_in_bat_form()))
+        && (you.species != SP_VAMPIRE || !player_in_bat_form())
+        && you.species != SP_CAT)
     {
         if (weap_type != WPN_UNKNOWN)
             attack_verb = "hit";
@@ -1813,13 +1814,17 @@ int melee_attack::player_weapon_type_modify(int damage)
         case TRAN_SPIDER:
         case TRAN_BAT:
         case TRAN_PIG:
-            if (damage < HIT_STRONG)
+            if (damage < HIT_WEAK)
+                attack_verb = "hit";
+            else if (damage < HIT_STRONG)
                 attack_verb = "bite";
             else
                 attack_verb = "maul";
             break;
         case TRAN_BLADE_HANDS:
-            if (damage < HIT_MED)
+            if (damage < HIT_WEAK)
+                attack_verb = "hit";
+            else if (damage < HIT_MED)
                 attack_verb = "slash";
             else if (damage < HIT_STRONG)
                 attack_verb = "slice";
@@ -1830,7 +1835,9 @@ int melee_attack::player_weapon_type_modify(int damage)
         case TRAN_LICH:
             if (you.has_usable_claws())
             {
-                if (damage < HIT_MED)
+                if (damage < HIT_WEAK)
+                    attack_verb = "scratch";
+                else if (damage < HIT_MED)
                     attack_verb = "claw";
                 else if (damage < HIT_STRONG)
                     attack_verb = "mangle";
@@ -1840,13 +1847,17 @@ int melee_attack::player_weapon_type_modify(int damage)
             }
             // or fall-through
         case TRAN_ICE_BEAST:
-            if (damage < HIT_MED)
+            if (damage < HIT_WEAK)
+                attack_verb = "hit";
+            else if (damage < HIT_MED)
                 attack_verb = "punch";
             else
                 attack_verb = "pummel";
             break;
         case TRAN_DRAGON:
-            if (damage < HIT_MED)
+            if (damage < HIT_WEAK)
+                attack_verb = "hit";
+            else if (damage < HIT_MED)
                 attack_verb = "claw";
             else if (damage < HIT_STRONG)
                 attack_verb = "bite";
@@ -1939,7 +1950,9 @@ int melee_attack::player_weapon_type_modify(int damage)
     case -1: // unarmed
         if (you.damage_type() == DVORP_CLAWING)
         {
-            if (damage < HIT_MED)
+            if (damage < HIT_WEAK)
+                attack_verb = "scratch";
+            else if (damage < HIT_MED)
                 attack_verb = "claw";
             else if (damage < HIT_STRONG)
                 attack_verb = "mangle";
@@ -6242,7 +6255,8 @@ static void stab_message(actor *defender, int stab_bonus)
     case 6:     // big melee, monster surrounded/not paying attention
         if (coinflip())
         {
-            mprf( "You strike %s from a blind spot!",
+            mprf( "You %s %s from a blind spot!",
+                  (you.species == SP_CAT) ? "pounce on" : "strike",
                   defender->name(DESC_NOCAP_THE).c_str() );
         }
         else
@@ -6259,12 +6273,19 @@ static void stab_message(actor *defender, int stab_bonus)
         }
         else
         {
-            mprf( "You strike %s from behind!",
+            mprf( "You %s %s from behind!",
+                  (you.species == SP_CAT) ? "pounce on" : "strike",
                   defender->name(DESC_NOCAP_THE).c_str() );
         }
         break;
     case 2:
     case 1:
+        if (you.species == SP_CAT && coinflip())
+        {
+            mprf("You pounce on the unaware %s!",
+                 defender->name(DESC_PLAIN).c_str());
+            break;
+        }
         mprf( "%s fails to defend %s.",
               defender->name(DESC_CAP_THE).c_str(),
               defender->pronoun(PRONOUN_REFLEXIVE).c_str() );

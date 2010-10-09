@@ -311,6 +311,13 @@ formatted_string describe_mutations()
         have_any = true;
         break;
 
+    case SP_CAT:
+        result += "You cannot wear armour.\n";
+        result += "You are incapable of any advanced item manipulation.\n";
+        result += "Your paws have sharp claws.\n";
+        have_any = true;
+        break;
+
     default:
         break;
     }
@@ -903,6 +910,10 @@ static bool _physiology_mutation_conflict(mutation_type mutat)
     {
         return (true);
     }
+
+    // Already innate, and unlike trolls/ghouls, no increases for you!
+    if (mutat == MUT_CLAWS && you.species == SP_CAT)
+        return (true);
 
     equipment_type eq_type = EQ_NONE;
 
