@@ -2671,7 +2671,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "\n"
                        "<yellow>Monster related commands</yellow>\n"
                        "<w>D</w>      : detect all monsters\n"
-                       "<w>G</w>      : banish all monsters\n"
+                       "<w>G</w>      : dismiss all monsters\n"
                        "<w>m</w>/<w>M</w>    : create monster by number/name\n"
                        "<w>\"</w>      : list monsters\n"
                        "\n"
