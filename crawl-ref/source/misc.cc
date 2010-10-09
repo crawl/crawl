@@ -1857,30 +1857,42 @@ void timeout_malign_gateways (int duration)
         }
         else
         {
-            bool is_player = mmark->is_player;
-            actor* caster = mmark->caster;
-            if (caster == NULL)
-                caster = &you;
-
-            int tentacle_idx = create_monster(mgen_data(MONS_DEMONIC_TENTACLE,
-                                                        (is_player) ? BEH_FRIENDLY : attitude_creation_behavior(mmark->caster->attitude),
-                                                        caster,
-                                                        0,
-                                                        0,
-                                                        mmark->pos,
-                                                        MHITNOT,
-                                                        MG_FORCE_PLACE,
-                                                        mmark->god));
-
-            if (tentacle_idx >= 0)
+            monster* mons = monster_at(mmark->pos);
+            if (mmark->monster_summoned && !mons)
             {
-                menv[tentacle_idx].flags |= MF_NO_REWARD;
-                menv[tentacle_idx].add_ench(ENCH_PORTAL_TIMER);
-                menv[tentacle_idx].props["base_position"].get_coord()
-                                    = menv[tentacle_idx].pos();
-            }
+                // The marker hangs around until later.
+                if (env.grid(mmark->pos) == DNGN_TEMP_PORTAL)
+                    env.grid(mmark->pos) = DNGN_FLOOR;
 
-            env.markers.remove(mmark);
+                env.markers.remove(mmark);
+            }
+            else if (!mmark->monster_summoned && !mons)
+            {
+                bool is_player = mmark->is_player;
+                actor* caster = mmark->caster;
+                if (caster == NULL)
+                    caster = &you;
+
+                int tentacle_idx = create_monster(mgen_data(MONS_DEMONIC_TENTACLE,
+                                                            (is_player) ? BEH_FRIENDLY : attitude_creation_behavior(mmark->caster->attitude),
+                                                            caster,
+                                                            0,
+                                                            0,
+                                                            mmark->pos,
+                                                            MHITNOT,
+                                                            MG_FORCE_PLACE,
+                                                            mmark->god));
+
+                if (tentacle_idx >= 0)
+                {
+                    menv[tentacle_idx].flags |= MF_NO_REWARD;
+                    menv[tentacle_idx].add_ench(ENCH_PORTAL_TIMER);
+                    menv[tentacle_idx].props["base_position"].get_coord()
+                                        = menv[tentacle_idx].pos();
+
+                    mmark->monster_summoned = true;
+                }
+            }
         }
     }
 }
