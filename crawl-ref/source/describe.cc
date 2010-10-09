@@ -36,6 +36,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "jobs.h"
+#include "kills.h" // for apostrophise() -- wut?
 #include "macro.h"
 #include "menu.h"
 #include "message.h"
@@ -4190,6 +4191,16 @@ void describe_god( god_type which_god, bool give_title )
                                        "You can walk through plants, "
                                        "and fire through allied plants.",
                                        ABIL_NON_ABILITY);
+        }
+        else if (which_god == GOD_ASHENZARI)
+        {
+            have_any = true;
+
+            _print_final_god_abil_desc(which_god,
+                    std::string("You can pray to share some of ")
+                    + apostrophise(god_name(which_god))
+                    + " curse upon scrolls that usually remove them.",
+                    ABIL_NON_ABILITY);
         }
 
         // mv: No abilities (except divine protection) under penance
