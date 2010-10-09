@@ -1888,8 +1888,11 @@ void timeout_malign_gateways (int duration)
                 {
                     menv[tentacle_idx].flags |= MF_NO_REWARD;
                     menv[tentacle_idx].add_ench(ENCH_PORTAL_TIMER);
+                    mon_enchant kduration = mon_enchant(ENCH_PORTAL_PACIFIED, 4,
+                                        KC_YOU, (random2avg(mmark->power, 6)-random2(4))*10);
                     menv[tentacle_idx].props["base_position"].get_coord()
                                         = menv[tentacle_idx].pos();
+                    menv[tentacle_idx].add_ench(kduration);
 
                     mmark->monster_summoned = true;
                 }

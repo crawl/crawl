@@ -5187,6 +5187,31 @@ void monster::apply_enchantment(const mon_enchant &me)
     }
     break;
 
+    case ENCH_PORTAL_PACIFIED:
+    {
+        if (decay_enchantment(me))
+        {
+            if (this->has_ench(ENCH_SEVERED))
+                break;
+
+            if (!this->friendly())
+                break;
+
+            if (!silenced(you.pos()))
+            {
+                if (you.can_see(this))
+                    simple_monster_message(this, " suddenly becomes enraged!");
+                else
+                    mpr("You hear a distant and violent thrashing sound.");
+            }
+
+            this->attitude = ATT_HOSTILE;
+            behaviour_event(this, ME_ALERT, MHITYOU);
+        }
+    }
+    break;
+
+
     case ENCH_SEVERED:
     {
         simple_monster_message(this, " writhes!");
@@ -6249,7 +6274,8 @@ static const char *enchant_names[] =
     "aquatic_land", "spore_production", "slouch", "swift", "tide",
     "insane", "silenced", "awaken_forest", "exploding", "bleeding",
     "tethered", "severed", "antimagic", "fading_away", "preparing_resurrect", "regen",
-    "magic_res", "mirror_dam", "stoneskin", "fear inspiring", "buggy",
+    "magic_res", "mirror_dam", "stoneskin", "fear inspiring", "temporarily pacified",
+    "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -6426,6 +6452,10 @@ int mon_enchant::calc_duration(const monster* mons,
 
     case ENCH_EXPLODING:
         return (random_range(3,7) * 10);
+
+    case ENCH_PORTAL_PACIFIED:
+        // Must be set by spell.
+        return (0);
 
     case ENCH_PORTAL_TIMER:
         cturn = 30 * 10 / _mod_speed(10, mons->speed);

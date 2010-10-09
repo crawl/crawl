@@ -1321,6 +1321,7 @@ enum enchant_type
     ENCH_MIRROR_DAMAGE,
     ENCH_STONESKIN,
     ENCH_FEAR_INSPIRING,
+    ENCH_PORTAL_PACIFIED,
 
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
