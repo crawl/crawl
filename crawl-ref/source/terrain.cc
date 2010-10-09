@@ -55,6 +55,17 @@ actor* actor_at(const coord_def& c)
     return (monster_at(c));
 }
 
+int count_neighbours_with_func (const coord_def& c, bool (*checker)(dungeon_feature_type))
+{
+    int count = 0;
+    for (adjacent_iterator ai(c); ai; ++ai)
+    {
+        if (checker(grd(*ai)))
+            count++;
+    }
+    return count;
+}
+
 bool feat_is_wall(dungeon_feature_type feat)
 {
     return (feat >= DNGN_MINWALL && feat <= DNGN_MAXWALL);

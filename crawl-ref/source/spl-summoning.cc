@@ -1086,29 +1086,43 @@ bool cast_malign_gateway(actor * caster, int pow, god_type god)
 
     for (unsigned i = 0; i < 8; ++i)
     {
-        coord_def delta = Compass[compass_idx[i]] + (2+random2(2));
-        coord_def test = caster->pos() + delta;
-        dprf("Trying %d,%d: %d floor.", test.x, test.y, count_neighbours(test, DNGN_FLOOR));
-        if (in_bounds(test)
-            && env.grid(test) == DNGN_FLOOR
-            && !actor_at(test)
-            && count_neighbours(test, DNGN_FLOOR) >= 9)
+        coord_def delta = Compass[compass_idx[i]];
+        coord_def test = coord_def(-1, -1);
+
+        bool found_spot = false;
+        int tries = 8;
+
+        for (int t = 0; t < tries; t++)
         {
-            const int malign_gateway_duration = BASELINE_DELAY * (random2(5) + 5);
-            env.markers.add(new map_malign_gateway_marker(test,
-                                                malign_gateway_duration,
-                                                caster->atype() == ACT_PLAYER,
-                                                caster->atype() == ACT_PLAYER ? NULL : caster->as_monster(),
-                                                god,
-                                                pow));
-            env.markers.clear_need_activate();
-            env.grid(test) = DNGN_TEMP_PORTAL;
+            test = caster->pos() + (delta * (2+t+random2(4)));
+            if (!in_bounds(test) || env.grid(test) != DNGN_FLOOR
+                || actor_at(test) || count_neighbours_with_func(test, &feat_is_solid) != 0
+                || !caster->see_cell(test))
+            {
+                continue;
+            }
 
-            point = test;
-            success = true;
-
+            found_spot = true;
             break;
         }
+
+        if (!found_spot)
+            continue;
+
+        const int malign_gateway_duration = BASELINE_DELAY * (random2(5) + 5);
+        env.markers.add(new map_malign_gateway_marker(test,
+                                            malign_gateway_duration,
+                                            caster->atype() == ACT_PLAYER,
+                                            caster->atype() == ACT_PLAYER ? NULL : caster->as_monster(),
+                                            god,
+                                            pow));
+        env.markers.clear_need_activate();
+        env.grid(test) = DNGN_TEMP_PORTAL;
+
+        point = test;
+        success = true;
+
+        break;
     }
 
     if (success)
