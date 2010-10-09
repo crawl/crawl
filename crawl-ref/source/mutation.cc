@@ -1938,10 +1938,14 @@ void check_demonic_guardian()
 
 void check_antennae_detect()
 {
-    // we're already here, so the player has at least 1 level of Antennae
-    const int radius = player_mutation_level(MUT_ANTENNAE) == 1 ? 3 : 5;
+    int radius = player_mutation_level(MUT_ANTENNAE) * 2 - 1;
+    if (you.religion == GOD_ASHENZARI && !player_under_penance())
+        radius = std::max(radius, you.piety / 20);
+    if (radius <= 0)
+        return;
+    radius = std::min(radius, LOS_RADIUS);
 
-    for (radius_iterator ri(you.pos(), radius, C_SQUARE); ri; ++ri)
+    for (radius_iterator ri(you.pos(), radius, C_ROUND); ri; ++ri)
     {
         const monster* mon = monster_at(*ri);
         if (!mon)
