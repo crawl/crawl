@@ -206,15 +206,15 @@ monster_info::monster_info(const monster* m, int milev)
 
     if (type_known)
     {
-        base_type = m->base_monster;
-        if (base_type == MONS_NO_MONSTER)
-            base_type = type;
-
         if (!mons_can_display_wounds(m)
             || !mons_class_can_display_wounds(type))
         {
             nomsg_wounds = true;
         }
+
+        base_type = m->base_monster;
+        if (base_type == MONS_NO_MONSTER)
+            base_type = type;
 
         // these use number for internal information
         if (type == MONS_MANTICORE
