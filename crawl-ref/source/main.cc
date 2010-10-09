@@ -2795,8 +2795,12 @@ static void _player_reacts_to_monsters()
     if (you.duration[DUR_FIRE_SHIELD] > 0)
         manage_fire_shield(you.time_taken);
 
+    // penance checked there (as you can have antennae too)
     if (player_mutation_level(MUT_ANTENNAE) || you.religion == GOD_ASHENZARI)
         check_antennae_detect();
+
+    if (you.religion == GOD_ASHENZARI && !player_under_penance())
+        detect_items(-1);
 
     handle_starvation();
 }

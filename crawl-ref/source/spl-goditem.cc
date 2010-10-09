@@ -408,18 +408,28 @@ int detect_traps(int pow)
     return reveal_traps(range);
 }
 
+// pow -1 for passive
 int detect_items(int pow)
 {
     int items_found = 0;
-    const int map_radius = 8 + random2(8) + pow;
+    int map_radius;
+    if (pow >= 0)
+        map_radius = 8 + random2(8) + pow;
+    else
+    {
+        ASSERT(you.religion == GOD_ASHENZARI);
+        map_radius = std::min(you.piety / 20, LOS_RADIUS);
+        if (map_radius <= 0)
+            return 0;
+    }
 
-    for (radius_iterator ri(you.pos(), map_radius, C_SQUARE); ri; ++ri)
+    for (radius_iterator ri(you.pos(), map_radius, C_ROUND); ri; ++ri)
     {
         // Don't expose new dug out areas:
         // Note: assumptions are being made here about how
         // terrain can change (eg it used to be solid, and
         // thus item free).
-        if (env.map_knowledge(*ri).changed())
+        if (pow != -1 && env.map_knowledge(*ri).changed())
             continue;
 
         if (igrd(*ri) != NON_ITEM
