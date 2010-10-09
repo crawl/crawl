@@ -1449,6 +1449,14 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                     continue;
                 }
 
+                // Monsters are limited casting it, too.
+                if (spell_cast == SPELL_MALIGN_GATEWAY
+                    && count_malign_gateways() >= 1)
+                {
+                    spell_cast = SPELL_NO_SPELL;
+                    continue;
+                }
+
                 // beam-type spells requiring tracers
                 if (spell_needs_tracer(spell_cast))
                 {
