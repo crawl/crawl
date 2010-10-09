@@ -25,7 +25,6 @@
 #include "ghost.h"
 #include "goditem.h"
 #include "itemname.h"
-#include "kills.h"
 #include "libutil.h"
 #include "mapmark.h"
 #include "mislead.h"

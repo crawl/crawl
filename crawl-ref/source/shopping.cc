@@ -26,7 +26,7 @@
 #include "items.h"
 #include "itemname.h"
 #include "itemprop.h"
-#include "kills.h"
+#include "libutil.h"
 #include "macro.h"
 #include "menu.h"
 #include "notes.h"
