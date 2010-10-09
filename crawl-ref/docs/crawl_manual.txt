@@ -941,9 +941,9 @@ difficult. Dwarves get a larger bonus without the magical hampering.
 In general, Orcs do better with gear from their own kin; this applies to
 weapons, as well as to armours.
 
-Elven body armour does not hamper spellcasting as other armours of the
-same type would. Elven cloaks and boots are particularly useful to those
-who wish to be stealthy. An Elf does even a bit better when wearing
+Elven body armour does not hamper spellcasting as much as other armours
+of the same type would. Elven cloaks and boots are particularly useful
+to those who wish to be stealthy. An Elf does a bit better when wearing
 armour or weapons of his own kind.
 
 Centaurs and Nagas have uniquely shaped bodies. With luck, however, a
