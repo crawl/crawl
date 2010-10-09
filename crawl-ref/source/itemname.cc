@@ -1774,6 +1774,14 @@ std::string item_def::name_aux(description_level_type desc,
         break;
 
     case OBJ_STAVES:
+        if (know_curse && !terse)
+        {
+            if (cursed())
+                buff << "cursed ";
+            else if (Options.show_uncursed && !know_pluses)
+                buff << "uncursed ";
+        }
+
         if (!know_type)
         {
             if (!basename)

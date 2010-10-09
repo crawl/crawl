@@ -117,7 +117,8 @@ bool can_wield(item_def *weapon, bool say_reason,
 
     if (!ignore_temporary_disability
         && you.weapon()
-        && you.weapon()->base_type == OBJ_WEAPONS
+        && (you.weapon()->base_type == OBJ_WEAPONS
+           || you.weapon()->base_type == OBJ_STAVES)
         && you.weapon()->cursed())
     {
         SAY(mpr("You can't unwield your weapon to draw a new one!"));
@@ -1160,7 +1161,8 @@ static int _fire_prompt_for_item()
 static bool _fire_validate_item(int slot, std::string &err)
 {
     if (slot == you.equip[EQ_WEAPON]
-        && you.inv[slot].base_type == OBJ_WEAPONS
+        && (you.inv[slot].base_type == OBJ_WEAPONS
+            || you.inv[slot].base_type == OBJ_STAVES)
         && you.inv[slot].cursed())
     {
         err = "That weapon is stuck to your hand!";
@@ -4794,6 +4796,7 @@ void read_scroll(int slot)
     case SCR_CURSE_WEAPON:
         if (!you.weapon()
             || you.weapon()->base_type != OBJ_WEAPONS
+               && you.weapon()->base_type != OBJ_STAVES
             || you.weapon()->cursed())
         {
             canned_msg(MSG_NOTHING_HAPPENS);
@@ -4825,6 +4828,7 @@ void read_scroll(int slot)
             const bool is_cursed = wpn.cursed();
 
             if (wpn.base_type != OBJ_WEAPONS && wpn.base_type != OBJ_MISSILES
+                && wpn.base_type != OBJ_STAVES
                 || !is_cursed
                    && !is_enchantable_weapon(wpn, true, true)
                    && !is_enchantable_weapon(wpn, true, false))

@@ -719,7 +719,8 @@ void wizard_make_object_randart()
 // Returns whether an item of this type can be cursed.
 static bool _item_type_can_be_cursed(int type)
 {
-    return (type == OBJ_WEAPONS || type == OBJ_ARMOUR || type == OBJ_JEWELLERY);
+    return (type == OBJ_WEAPONS || type == OBJ_ARMOUR || type == OBJ_JEWELLERY
+            || type == OBJ_STAVES);
 }
 
 void wizard_uncurse_item()
