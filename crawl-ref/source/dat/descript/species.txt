@@ -25,7 +25,7 @@ Draconians are versatile hybrids. They mature when reaching level 7 and develop 
 %%%%
 Felid
 
-These cats possess sentience, but are unable of advanced item manipulation or the use of armour or weapons.
+These cats possess sentience, but are incapable of advanced item manipulation or the use of armour or weapons.
 %%%%
 Ghoul
 
