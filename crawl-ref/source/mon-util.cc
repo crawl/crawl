@@ -4265,3 +4265,14 @@ int get_dist_to_nearest_monster()
     }
     return (minRange);
 }
+
+bool mons_is_tentacle (int mc)
+{
+    return (mc == MONS_KRAKEN_TENTACLE || mc == MONS_KRAKEN_CONNECTOR
+            || mc == MONS_ELDRITCH_TENTACLE || mc == MONS_ELDRITCH_TENTACLE_SEGMENT);
+}
+
+bool mons_is_tentacle (const monster* mons)
+{
+    return mons_is_tentacle(mons->type);
+}
