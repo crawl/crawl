@@ -138,6 +138,7 @@ public:
 public:
     int duration;
     bool is_player;
+    bool monster_summoned;
     monster* caster;
     god_type god;
     int power;

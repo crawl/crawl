@@ -615,8 +615,8 @@ std::string map_tomb_marker::debug_describe() const
 map_malign_gateway_marker::map_malign_gateway_marker(const coord_def &p,
                                  int dur, bool ip, monster* mon, god_type gd,
                                  int pow)
-    : map_marker(MAT_MALIGN, p), duration(dur), is_player(ip), caster(mon),
-      god(gd), power(pow)
+    : map_marker(MAT_MALIGN, p), duration(dur), is_player(ip), monster_summoned(false),
+      caster(mon), god(gd), power(pow)
 {
 }
 
@@ -625,6 +625,7 @@ void map_malign_gateway_marker::write(writer &out) const
     map_marker::write(out);
     marshallShort(out, duration);
     marshallBoolean(out, is_player);
+    marshallBoolean(out, monster_summoned);
     if (!is_player)
         marshallMonster(out, *caster);
     marshallByte(out, god);
@@ -636,6 +637,17 @@ void map_malign_gateway_marker::read(reader &in)
     map_marker::read(in);
     duration  = unmarshallShort(in);
     is_player = unmarshallBoolean(in);
+
+#if TAG_MAJOR_VERSION == 31
+    int minorVersion = in.getMinorVersion();
+    if (minorVersion < TAG_MINOR_MALIGN)
+        monster_summoned = unmarshallBoolean(in);
+    else
+        monster_summoned = true;
+#else
+    monster_summoned = unmarshallBoolean(in);
+#endif
+
     if (!is_player)
         unmarshallMonster(in, *caster);
     else
