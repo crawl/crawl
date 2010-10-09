@@ -77,6 +77,7 @@ struct monster_info_base
     std::string description;
     std::string quote;
     mon_holy_type holi;
+    mon_intel_type mintel;
     flight_type fly;
     bool two_weapons;
     bool no_regen;
@@ -171,7 +172,12 @@ struct monster_info : public monster_info_base
 
     monster_type draco_subspecies() const;
     mon_resist_def resists() const;
-    mon_intel_type intel() const;
+
+    mon_intel_type intel() const
+    {
+        return (mintel);
+    }
+
     mon_itemuse_type itemuse() const;
     int randarts(artefact_prop_type ra_prop) const;
     int res_magic() const;

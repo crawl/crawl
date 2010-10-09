@@ -145,6 +145,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     number = 0;
     colour = LIGHTGRAY;
     holi = mons_class_holiness(type);
+    mintel = mons_class_intel(type);
     fly = mons_class_flies(type);
     if (fly == FL_NONE)
         fly = mons_class_flies(base_type);
@@ -274,6 +275,8 @@ monster_info::monster_info(const monster* m, int milev)
     }
 
     holi = m->holiness();
+
+    mintel = mons_intel(m);
 
     // yes, let's consider randarts too, since flight should be visually obvious
     if (type_known)
@@ -1088,14 +1091,6 @@ mon_resist_def monster_info::resists() const
     }
 
     return (resist);
-}
-
-mon_intel_type monster_info::intel() const
-{
-    if (is(MB_ENSLAVED))
-        return (mons_class_intel(base_type));
-
-    return (mons_class_intel(type));
 }
 
 mon_itemuse_type monster_info::itemuse() const
