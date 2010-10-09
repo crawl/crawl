@@ -1703,6 +1703,9 @@ static int _place_monster_aux(const mgen_data &mg,
     else
     {
         blame_prefix = "created by ";
+
+        if (mg.cls == MONS_ELDRITCH_TENTACLE || mg.cls == MONS_ELDRITCH_TENTACLE_SEGMENT)
+            blame_prefix = "called by ";
     }
 
     if (!mg.non_actor_summoner.empty())
