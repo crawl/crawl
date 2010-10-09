@@ -459,7 +459,8 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
             set_ident_type(item, ID_KNOWN_TYPE);
             set_ident_flags(item, ISFLAG_EQ_WEAPON_MASK);
         }
-        else maybe_identify_staff(item);
+        else
+            maybe_identify_staff(item);
 
         // Automatically identify rods; you can do this by wielding and then
         // evoking them, so do it automatically instead. We don't need to give
