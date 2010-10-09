@@ -3733,9 +3733,14 @@ bool player_item_conserve(bool calc_unid)
 
 int player_mental_clarity(bool calc_unid, bool items)
 {
-    const int ret = (3 * player_equip(EQ_AMULET, AMU_CLARITY, calc_unid)
-                       * items)
-                     + player_mutation_level(MUT_CLARITY);
+    int ret = 3 * player_equip(EQ_AMULET, AMU_CLARITY, calc_unid) * items
+              + player_mutation_level(MUT_CLARITY);
+
+    if (you.religion == GOD_ASHENZARI && you.piety >= piety_breakpoint(4)
+        && !player_under_penance())
+    {
+        ret++;
+    }
 
     return ((ret > 3) ? 3 : ret);
 }
