@@ -4107,9 +4107,9 @@ void describe_god( god_type which_god, bool give_title )
             if (zin_sustenance(false))
             {
                 have_any = true;
-                std::string buf = "Praying to ";
-                buf += god_name(which_god);
-                buf += " will provide sustenance if starving.";
+                std::string buf = "Praying to "
+                                  + god_name(which_god)
+                                  + " will provide sustenance if starving.";
                 _print_final_god_abil_desc(which_god, buf,
                                            ABIL_ZIN_SUSTENANCE);
             }
@@ -4135,18 +4135,18 @@ void describe_god( god_type which_god, bool give_title )
         else if (which_god == GOD_TROG)
         {
             have_any = true;
-            std::string buf = "You can call upon ";
-            buf += god_name(which_god);
-            buf += " to burn spellbooks in your surroundings.";
+            std::string buf = "You can call upon "
+                              + god_name(which_god)
+                              + " to burn spellbooks in your surroundings.";
             _print_final_god_abil_desc(which_god, buf,
                                        ABIL_TROG_BURN_SPELLBOOKS);
         }
         else if (which_god == GOD_ELYVILON)
         {
             have_any = true;
-            std::string buf = "You can destroy weapons on the ground in ";
-            buf += god_name(which_god);
-            buf += "'s name.";
+            std::string buf = "You can destroy weapons on the ground in "
+                              + apostrophise(god_name(which_god))
+                              + " name.";
             _print_final_god_abil_desc(which_god, buf,
                                        ABIL_ELYVILON_DESTROY_WEAPONS);
         }
@@ -4155,52 +4155,50 @@ void describe_god( god_type which_god, bool give_title )
             if (jiyva_can_paralyse_jellies())
             {
                 have_any = true;
-                std::string buf = "Your slimes' item consumption is ";
-                buf += "temporarily halted under prayer.";
-                _print_final_god_abil_desc(which_god, buf,
+                _print_final_god_abil_desc(which_god,
+                                           "Your slimes' item consumption is "
+                                           "temporarily halted under prayer.",
                                            ABIL_JIYVA_JELLY_PARALYSE);
             }
             if (you.piety >= piety_breakpoint(2))
             {
+                have_any = true;
                 cprintf("%s shields you from corrosive effects.\n",
                         god_name(which_god).c_str());
             }
             if (you.piety >= piety_breakpoint(1))
             {
-                std::string slurp = "You gain nutrition";
-
+                have_any = true;
+                std::string buf = "You gain nutrition";
                 if (you.piety >= piety_breakpoint(4))
-                    slurp += ", power and health";
+                    buf += ", power and health";
                 else if (you.piety >= piety_breakpoint(3))
-                     slurp += " and power";
-
-                slurp += " when your fellow slimes consume items.\n";
-
-                cprintf("%s", slurp.c_str());
+                    buf += " and power";
+                buf += " when your fellow slimes consume items.\n";
+                _print_final_god_abil_desc(which_god, buf,
+                                           ABIL_NON_ABILITY);
             }
-
         }
         else if (which_god == GOD_FEDHAS)
         {
             have_any = true;
-
-            std::string buf = "You can speed up decomposition.";
-            _print_final_god_abil_desc(which_god, buf,
+            _print_final_god_abil_desc(which_god,
+                                       "You can speed up decomposition.",
                                        ABIL_FEDHAS_FUNGAL_BLOOM);
             _print_final_god_abil_desc(which_god,
-                                       "You can walk through plants, "
-                                       "and fire through allied plants.",
+                                       "You can walk through plants and "
+                                       "fire through allied plants.",
                                        ABIL_NON_ABILITY);
         }
         else if (which_god == GOD_ASHENZARI)
         {
             have_any = true;
-
-            _print_final_god_abil_desc(which_god,
-                    std::string("You can pray to share some of ")
-                    + apostrophise(god_name(which_god))
-                    + " curse upon scrolls that usually remove them.",
-                    ABIL_NON_ABILITY);
+            std::string buf = "You can pray to share some of "
+                              + apostrophise(god_name(which_god))
+                              + " curse upon scrolls that usually remove "
+                                "them.";
+            _print_final_god_abil_desc(which_god, buf,
+                                       ABIL_NON_ABILITY);
         }
 
         // mv: No abilities (except divine protection) under penance
