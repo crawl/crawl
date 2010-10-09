@@ -4193,7 +4193,7 @@ void describe_god( god_type which_god, bool give_title )
         else if (which_god == GOD_ASHENZARI)
         {
             have_any = true;
-            std::string buf = "You can pray to share some of "
+            std::string buf = "You can pray to bestow "
                               + apostrophise(god_name(which_god))
                               + " curse upon scrolls that usually remove "
                                 "them.";
