@@ -641,12 +641,10 @@ void map_malign_gateway_marker::read(reader &in)
 #if TAG_MAJOR_VERSION == 31
     int minorVersion = in.getMinorVersion();
     if (minorVersion < TAG_MINOR_MALIGN)
-        monster_summoned = unmarshallBoolean(in);
-    else
         monster_summoned = true;
-#else
-    monster_summoned = unmarshallBoolean(in);
+    else
 #endif
+    monster_summoned = unmarshallBoolean(in);
 
     if (!is_player)
         unmarshallMonster(in, *caster);
