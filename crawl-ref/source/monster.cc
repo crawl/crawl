@@ -6146,11 +6146,11 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             }
         }
     }
-    else if (type == MONS_DEMONIC_TENTACLE_SEGMENT)
+    else if (type == MONS_ELDRITCH_TENTACLE_SEGMENT)
     {
         //mprf("in tentacle damage pass");
         if (!invalid_monster_index(number)
-            && mons_base_type(&menv[number]) == MONS_DEMONIC_TENTACLE)
+            && mons_base_type(&menv[number]) == MONS_ELDRITCH_TENTACLE)
         {
             if (hit_points < menv[number].hit_points)
             {
@@ -6161,7 +6161,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                 // effects will cry.
                 if (invalid_monster(this))
                 {
-                    type = MONS_DEMONIC_TENTACLE_SEGMENT;
+                    type = MONS_ELDRITCH_TENTACLE_SEGMENT;
                     hit_points = -1;
                 }
             }

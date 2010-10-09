@@ -1873,7 +1873,7 @@ void timeout_malign_gateways (int duration)
                 if (caster == NULL)
                     caster = &you;
 
-                int tentacle_idx = create_monster(mgen_data(MONS_DEMONIC_TENTACLE,
+                int tentacle_idx = create_monster(mgen_data(MONS_ELDRITCH_TENTACLE,
                                                             (is_player) ? BEH_FRIENDLY : attitude_creation_behavior(mmark->caster->attitude),
                                                             caster,
                                                             0,

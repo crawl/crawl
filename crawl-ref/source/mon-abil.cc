@@ -1685,7 +1685,7 @@ bool valid_kraken_connection(monster* mons)
 
 bool valid_demonic_connection(monster* mons)
 {
-    return (mons->mons_species() == MONS_DEMONIC_TENTACLE_SEGMENT);
+    return (mons->mons_species() == MONS_ELDRITCH_TENTACLE_SEGMENT);
 }
 
 // Return value is a retract position for the tentacle or -1, -1 if no
@@ -1747,7 +1747,7 @@ int collect_connection_data(monster* start_monster,
 void move_demon_tentacle(monster* tentacle)
 {
     if (!tentacle
-        || tentacle->type != MONS_DEMONIC_TENTACLE)
+        || tentacle->type != MONS_ELDRITCH_TENTACLE)
     {
         return;
     }
@@ -1906,7 +1906,7 @@ void move_demon_tentacle(monster* tentacle)
     bool connected = try_tentacle_connect(new_pos, base_position,
                                           tentacle_idx, tentacle_idx,
                                           connect_costs,
-                                          MONS_DEMONIC_TENTACLE_SEGMENT);
+                                          MONS_ELDRITCH_TENTACLE_SEGMENT);
 
     if (!connected)
     {
