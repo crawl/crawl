@@ -1077,6 +1077,15 @@ bool can_cast_malign_gateway()
 
 bool cast_malign_gateway(actor * caster, int pow, god_type god)
 {
+    if (one_chance_in(3) && caster->atype() == ACT_PLAYER)
+    {
+        // if someone deletes the db, no message is ok
+        mpr(getMiscString("SHT_int_loss").c_str());
+        // Messages the same as for SHT, as they are currently (10/10) generic.
+        lose_stat(STAT_INT, 1, true, "opening a malign portal");
+        // Since sustAbil no longer helps here, this can't fail anymore -- 1KB
+    }
+
     unsigned compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
     std::random_shuffle(compass_idx, compass_idx + 8);
 
@@ -1098,7 +1107,7 @@ bool cast_malign_gateway(actor * caster, int pow, god_type god)
             env.grid(test) = DNGN_TEMP_PORTAL;
 
             noisy(10, test);
-            mprf("The dungeon shakes and a horrible noise fills the air as a portal to some otherworldly place is opened!");
+            mpr("The dungeon shakes, a horrible noise fills the air, and a portal to some otherworldly place is opened!", MSGCH_WARN);
 
             return (true);
         }
