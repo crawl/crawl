@@ -219,7 +219,7 @@ monster_info::monster_info(const monster* m, int milev)
         if (type == MONS_MANTICORE
             || type == MONS_KRAKEN_TENTACLE
             || type == MONS_KRAKEN_CONNECTOR
-            || type == MONS_DEMONIC_TENTACLE_SEGMENT)
+            || type == MONS_ELDRITCH_TENTACLE_SEGMENT)
         {
             number = 0;
         }

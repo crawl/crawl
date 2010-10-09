@@ -1253,17 +1253,17 @@ void mons_relocated(monster* mons)
             monster_die(&menv[base_id], KILL_RESET, -1, true, false);
         }
     }
-    else if (mons->type == MONS_DEMONIC_TENTACLE
-             || mons->type == MONS_DEMONIC_TENTACLE_SEGMENT)
+    else if (mons->type == MONS_ELDRITCH_TENTACLE
+             || mons->type == MONS_ELDRITCH_TENTACLE_SEGMENT)
     {
-        int base_id = mons->type == MONS_DEMONIC_TENTACLE
+        int base_id = mons->type == MONS_ELDRITCH_TENTACLE
                       ? mons->mindex() : mons->number;
 
         monster_die(&menv[base_id], KILL_RESET, -1, true, false);
 
         for (monster_iterator mit; mit; ++mit)
         {
-            if (mit->type == MONS_DEMONIC_TENTACLE_SEGMENT
+            if (mit->type == MONS_ELDRITCH_TENTACLE_SEGMENT
                 && (int) mit->number == base_id)
             {
                 monster_die(*mit, KILL_RESET, -1, true, false);
@@ -1621,7 +1621,7 @@ int monster_die(monster* mons, killer_type killer,
                 killer = KILL_RESET;
         }
     }
-    else if (mons->type == MONS_DEMONIC_TENTACLE)
+    else if (mons->type == MONS_ELDRITCH_TENTACLE)
     {
         if (!silent && !mons_reset && !mons->has_ench(ENCH_SEVERED))
         {
@@ -2188,12 +2188,12 @@ int monster_die(monster* mons, killer_type killer,
         }
 
     }
-    else if (mons->type == MONS_DEMONIC_TENTACLE)
+    else if (mons->type == MONS_ELDRITCH_TENTACLE)
     {
         for (monster_iterator mit; mit; ++mit)
         {
             if (mit->alive()
-                && mit->type == MONS_DEMONIC_TENTACLE_SEGMENT
+                && mit->type == MONS_ELDRITCH_TENTACLE_SEGMENT
                 && mit->number == unsigned(mons->mindex()))
             {
                 monster_die(*mit, KILL_MISC, NON_MONSTER, true);
@@ -2209,11 +2209,11 @@ int monster_die(monster* mons, killer_type killer,
             }
         }
     }
-    else if (mons->type == MONS_DEMONIC_TENTACLE_SEGMENT
+    else if (mons->type == MONS_ELDRITCH_TENTACLE_SEGMENT
              && killer != KILL_MISC)
     {
         if (!invalid_monster_index(mons->number)
-             && mons_base_type(&menv[mons->number]) == MONS_DEMONIC_TENTACLE
+             && mons_base_type(&menv[mons->number]) == MONS_ELDRITCH_TENTACLE
              && menv[mons->number].alive())
         {
             monster_die(&menv[mons->number], killer, killer_index, silent,
@@ -4214,10 +4214,10 @@ void mons_att_changed(monster* mon)
                 }
             }
     }
-    if (mon->type == MONS_DEMONIC_TENTACLE_SEGMENT
-        || mon->type == MONS_DEMONIC_TENTACLE)
+    if (mon->type == MONS_ELDRITCH_TENTACLE_SEGMENT
+        || mon->type == MONS_ELDRITCH_TENTACLE)
     {
-        int base_idx = mon->type == MONS_DEMONIC_TENTACLE ? mon->mindex() : mon->number;
+        int base_idx = mon->type == MONS_ELDRITCH_TENTACLE ? mon->mindex() : mon->number;
 
         menv[base_idx].attitude = att;
         for (monster_iterator mi; mi; ++mi)

@@ -189,7 +189,7 @@ bool monster_habitable_grid(monster_type mt,
 
     if (actual_grid == DNGN_TEMP_PORTAL)
     {
-        if (mt == MONS_DEMONIC_TENTACLE || mt == MONS_DEMONIC_TENTACLE_SEGMENT)
+        if (mt == MONS_ELDRITCH_TENTACLE || mt == MONS_ELDRITCH_TENTACLE_SEGMENT)
             return (true);
         else
             return (false);

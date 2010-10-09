@@ -4530,7 +4530,7 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
         return (RANDOM_ELEMENT(klown_attack));
 
     if ((attacker->id() == MONS_KRAKEN_TENTACLE
-           || attacker->id() == MONS_DEMONIC_TENTACLE)
+           || attacker->id() == MONS_ELDRITCH_TENTACLE)
          && attk.type == AT_TENTACLE_SLAP)
         return ("slap");
 
