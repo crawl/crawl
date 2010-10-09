@@ -213,8 +213,8 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
     // Ashenzari
     {
         " flicker% black.",
-        " pulsate% black.", // unused
-        " pulsate% black.", // unused
+        " pulsate% black.",          // unused
+        " strongly pulsate% black.", // unused
     },
 };
 
