@@ -2272,7 +2272,11 @@ mon_intel_type mons_intel(const monster* mon)
     if (mons_enslaved_soul(mon))
         return (mons_class_intel(mons_zombie_base(mon)));
 
-    return (mons_class_intel(mon->type));
+    monster newmon = *mon;
+
+    _get_kraken_head(newmon);
+
+    return (mons_class_intel(newmon.type));
 }
 
 habitat_type mons_class_habitat(int mc)
