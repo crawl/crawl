@@ -957,6 +957,18 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
+{   // a dummy monster for recolouring
+    MONS_FELID, 'h', DARKGREY, "felid",
+    M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
+    MR_NO_FLAGS,
+    200, 10, MONS_FELID, MONS_FELID, MH_NATURAL, -6,
+    { {AT_CLAW, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 5, 2, 3, 0 },
+    2, 18, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_HISS,
+    I_HIGH, HT_LAND, FL_NONE, 11, DEFAULT_ENERGY,
+    MONUSE_STARTING_EQUIPMENT, MONEAT_NOTHING, SIZE_TINY
+},
+
 // spriggans ('i')
 {
     MONS_SPRIGGAN, 'i', LIGHTGREY, "spriggan",

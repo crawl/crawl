@@ -1846,6 +1846,12 @@ static void _helm_card(int power, deck_rarity_type rarity)
 
 static void _blade_card(int power, deck_rarity_type rarity)
 {
+    if (you.species == SP_CAT)
+    {
+        mpr("You feel like a smilodon for a moment.");
+        return;
+    }
+
     // Pause before jumping to the list.
     if (Options.auto_list)
         more();

@@ -3266,7 +3266,9 @@ void god_welcome_identify_gear()
 void god_pitch(god_type which_god)
 {
     mprf("You %s the altar of %s.",
-         you.species == SP_NAGA ? "coil in front of"
+         you.species == SP_NAGA ? "coil in front of" :
+         // < TGWi> you curl up on the altar and go to sleep
+         you.species == SP_CAT  ? "sit before"
                                 : "kneel at",
          god_name(which_god).c_str());
     more();

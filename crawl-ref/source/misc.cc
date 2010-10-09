@@ -67,6 +67,7 @@
 #include "mon-iter.h"
 #include "mon-util.h"
 #include "mon-stuff.h"
+#include "ng-setup.h"
 #include "ouch.h"
 #include "player.h"
 #include "player-stats.h"
@@ -1942,6 +1943,82 @@ void timeout_tombs(int duration)
             env.markers.remove(cmark);
         }
     }
+}
+
+void bring_to_safety()
+{
+    coord_def best_pos, pos;
+    double min_threat = 1e38;
+    int tries = 0;
+
+    // Up to 100 valid spots, but don't lock up when there's none.  This can happen
+    // on tiny Zig/portal rooms with a bad summon storm and you in cloud / over water.
+    while (tries < 100000 && min_threat > 0)
+    {
+        pos.x = random2(GXM);
+        pos.y = random2(GYM);
+        if (!in_bounds(pos) || grd(pos) != DNGN_FLOOR || env.cgrid(pos) != EMPTY_CLOUD)
+        {
+            tries++;
+            continue;
+        }
+
+        bool junk;
+        double gen_threat = 0.0, hi_threat = 0.0;
+        monster_threat_values(&gen_threat, &hi_threat, &junk);
+        const double threat = gen_threat * hi_threat;
+
+        if (threat < min_threat)
+        {
+            best_pos = pos;
+            min_threat = threat;
+        }
+        tries += 1000;
+    }
+
+    if (min_threat != 1e38)
+        you.moveto(best_pos);
+}
+
+// This includes ALL afflictions, unlike wizard/Xom revive.
+void revive()
+{
+    you.disease = 0;
+    you.magic_contamination = 0;
+    set_hunger(6000, true);
+    restore_stat(STAT_ALL, 0, true);
+    you.rotting = 0;
+
+    you.attribute[ATTR_WAS_SILENCED] = 0;
+    you.attribute[ATTR_DIVINE_REGENERATION] = 0;
+    you.attribute[ATTR_DELAYED_FIREBALL] = 0;
+    clear_trapping_net();
+    you.attribute[ATTR_DIVINE_VIGOUR] = 0;
+    you.attribute[ATTR_DIVINE_STAMINA] = 0;
+    you.attribute[ATTR_DIVINE_SHIELD] = 0;
+    if (you.duration[DUR_WEAPON_BRAND])
+        set_item_ego_type(*you.weapon(), OBJ_WEAPONS, SPWPN_NORMAL);
+    if (you.attribute[ATTR_TRANSFORMATION])
+        untransform();
+    you.clear_beholders();
+
+    for(int dur = 0; dur < NUM_DURATIONS; dur++)
+        if (dur != DUR_GOURMAND && dur != DUR_PIETY_POOL)
+            you.duration[dur] = 0;
+
+    // Stat death that wasn't cleared might be:
+    // * permanent (focus card): our fix is spot on
+    // * long-term (mutation): we induce some penalty, ok
+    // * short-term (-stat item): could be done better...
+    unfocus_stats();
+    you.stat_zero.init(0);
+
+    unrot_hp(9999);
+    set_hp(9999, false);
+    set_mp(9999, false);
+    you.dead = false;
+
+    mpr("You rejoin the land of the living...");
 }
 
 ////////////////////////////////////////////////////////////////////////////

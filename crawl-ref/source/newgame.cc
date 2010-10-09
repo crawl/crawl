@@ -520,6 +520,9 @@ int start_to_book(int firstbook, int booktype)
         case SBT_COLD:
             return (BOOK_CONJURATIONS_II);
 
+        case SP_CAT:
+            dec_max_hp(3);
+
         default:
             return (-1);
         }
@@ -1690,6 +1693,10 @@ static void _resolve_weapon(newgame_def* ng, newgame_def* ng_choice,
 static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
                            const newgame_def& defaults)
 {
+    // No weapon use at all.  The actual item will be removed later.
+    if (ng->species == SP_CAT)
+        return (true);
+
     switch (ng->job)
     {
     case JOB_FIGHTER:

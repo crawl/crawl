@@ -35,7 +35,9 @@ static species_type species_order[] = {
     SP_DEMIGOD,        SP_DEMONSPAWN,
     // undead species
     SP_MUMMY,          SP_GHOUL,
-    SP_VAMPIRE
+    SP_VAMPIRE,
+    // not humanoid at all
+    SP_CAT
 };
 
 species_type random_draconian_player_species()
@@ -58,6 +60,7 @@ static const char * Species_Abbrev_List[NUM_SPECIES] =
       // the draconians
       "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr",
       "Ce", "DG", "Sp", "Mi", "DS", "Gh", "Ke", "Mf", "Vp", "DD",
+      "Fe",
       // placeholders
       "El", "HD", "OM", "GE", "Gn" };
 
@@ -243,6 +246,7 @@ std::string species_name(species_type speci, bool genus, bool adj)
         case SP_GHOUL:      res = (adj ? "Ghoulish"   : "Ghoul");      break;
         case SP_MERFOLK:    res = (adj ? "Merfolkian" : "Merfolk");    break;
         case SP_VAMPIRE:    res = (adj ? "Vampiric"   : "Vampire");    break;
+        case SP_CAT:        res = (adj ? "Feline"     : "Felid");      break;
         default:            res = (adj ? "Yakish"     : "Yak");        break;
         }
     }
@@ -255,6 +259,8 @@ int species_has_claws(species_type species)
         return (3);
     if (species == SP_GHOUL)
         return (1);
+    if (species == SP_CAT)
+        return (3);
     return (0);
 }
 
@@ -311,6 +317,8 @@ size_type species_size(species_type species, size_part_type psize)
         return (SIZE_SMALL);
     case SP_SPRIGGAN:
         return (SIZE_LITTLE);
+    case SP_CAT:
+        return (SIZE_TINY);
 
     default:
         return (SIZE_MEDIUM);

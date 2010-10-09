@@ -88,6 +88,8 @@ static void _species_stat_init(species_type which_species)
     case SP_MOTTLED_DRACONIAN:
     case SP_PALE_DRACONIAN:
     case SP_BASE_DRACONIAN:     sb =  9; ib =  6; db =  2;      break;  // 17
+
+    case SP_CAT:                sb =  2; ib =  7; db =  9;      break;  // 18
     }
 
     you.base_stats[STAT_STR] = sb + 2;
@@ -205,7 +207,7 @@ static void _jobs_stat_init(job_type which_job)
 
 // Make sure no stats are unacceptably low
 // (currently possible only for GhBe - 1KB)
-static void _unfocus_stats()
+void unfocus_stats()
 {
     int needed;
 
@@ -302,6 +304,14 @@ void give_basic_mutations(species_type speci)
     case SP_VAMPIRE:
         you.mutation[MUT_FANGS]        = 3;
         you.mutation[MUT_ACUTE_VISION] = 1;
+        break;
+    case SP_CAT:
+        you.mutation[MUT_FANGS]           = 3;
+        you.mutation[MUT_SHAGGY_FUR]      = 1;
+        you.mutation[MUT_ACUTE_VISION]    = 1;
+        you.mutation[MUT_FAST]            = 1;
+        you.mutation[MUT_CARNIVOROUS]     = 3;
+        you.mutation[MUT_SLOW_METABOLISM] = 2;
         break;
     default:
         break;
@@ -1117,6 +1127,19 @@ static void _give_items_skills(const newgame_def& ng)
             you.skills[weapon_skill(*you.weapon())] = weap_skill;
     }
 
+    if (you.species == SP_CAT)
+    {
+        for (int i = SK_SHORT_BLADES; i <= SK_CROSSBOWS; i++)
+        {
+            you.skills[SK_UNARMED_COMBAT] += you.skills[i];
+            you.skills[i] = 0;
+        }
+        you.skills[SK_DODGING] += you.skills[SK_ARMOUR];
+        you.skills[SK_ARMOUR] = 0;
+        you.skills[SK_THROWING] = 0;
+        you.skills[SK_SHIELDS] = 0;
+    }
+
     init_skill_order();
 
     if (you.religion != GOD_NO_GOD)
@@ -1212,7 +1235,8 @@ static void _give_starting_food()
     {
         item.base_type = OBJ_FOOD;
         if (you.species == SP_HILL_ORC || you.species == SP_KOBOLD
-            || player_genus(GENPC_OGREISH) || you.species == SP_TROLL)
+            || player_genus(GENPC_OGREISH) || you.species == SP_TROLL
+            || you.species == SP_CAT)
         {
             item.sub_type = FOOD_MEAT_RATION;
         }
@@ -1266,8 +1290,10 @@ static void _racialise_starting_equipment()
     {
         if (you.inv[i].defined())
         {
+            if (is_useless_item(you.inv[i]))
+                _newgame_clear_item(i);
             // Don't change object type modifier unless it starts plain.
-            if ((you.inv[i].base_type == OBJ_ARMOUR
+            else if ((you.inv[i].base_type == OBJ_ARMOUR
                     || you.inv[i].base_type == OBJ_WEAPONS)
                 && get_equip_race(you.inv[i]) == ISFLAG_NO_RACE)
             {
@@ -1563,7 +1589,7 @@ static void _setup_generic(const newgame_def& ng)
     _jobs_stat_init( you.char_class );
     _give_last_paycheck( you.char_class );
 
-    _unfocus_stats();
+    unfocus_stats();
 
     // Needs to be done before handing out food.
     give_basic_mutations(you.species);

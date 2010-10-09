@@ -672,6 +672,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
 
     case 's':
         you.exp_available = FULL_EXP_POOL;
+        level_change();
         you.redraw_experience = true;
         break;
 
@@ -1115,6 +1116,13 @@ static void _input()
 
     reset_damage_counters();
 
+    if (you.dead)
+    {
+        revive();
+        bring_to_safety();
+        redraw_screen();
+    }
+
     if (crawl_state.is_replaying_keys() && crawl_state.is_repeating_cmd()
         && kbhit())
     {
@@ -1538,6 +1546,12 @@ static void _do_look_around()
 
 static void _do_remove_armour()
 {
+    if (you.species == SP_CAT)
+    {
+        mpr("You can't remove your fur, sorry.");
+        return;
+    }
+
     if (!player_can_handle_equipment())
     {
         mpr("You can't wear or remove anything in your present form.");

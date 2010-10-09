@@ -1910,7 +1910,7 @@ enum monster_type                      // (int) menv[].type
 
     MONS_HYPERACTIVE_BALLISTOMYCETE,
     MONS_HALFLING,              // for recolouring only.  And let's remove them!
-    MONS_FELID,                 // reserved.  Miaow!
+    MONS_FELID,                 // for recolouring only.  Miaow!
     MONS_SPIDER,                // for recolouring, for now.
       MONS_UNUSED_211,
       MONS_UNUSED_212,
@@ -2945,6 +2945,7 @@ enum species_type
     SP_MERFOLK,
     SP_VAMPIRE,
     SP_DEEP_DWARF,
+    SP_CAT,
     SP_ELF,                            // (placeholder)
     SP_HILL_DWARF,                     // (placeholder)
     SP_OGRE_MAGE,                      // (placeholder)

@@ -137,6 +137,13 @@ bool can_wield(item_def *weapon, bool say_reason,
         }
     }
 
+    if (you.species == SP_CAT && (weapon->base_type == OBJ_WEAPONS
+          || weapon->base_type == OBJ_STAVES))
+    {
+        SAY(mpr("You can't use weapons."));
+        return (false);
+    }
+
     // Only ogres and trolls can wield giant clubs (>= 30 aum)
     // and large rocks (60 aum).
     if (you.body_size(PSIZE_TORSO) < SIZE_LARGE
@@ -221,7 +228,7 @@ static bool _valid_weapon_swap(const item_def &item)
 {
     // Weapons and staves are valid weapons.
     if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES)
-        return (true);
+        return (you.species != SP_CAT);
 
     // Some misc. items need to be wielded to be evoked.
     if (is_deck(item) || item.base_type == OBJ_MISCELLANY
@@ -359,7 +366,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             you.time_taken /= 10;
         }
         else
-            mpr("You are already empty-handed.");
+            canned_msg(MSG_EMPTY_HANDED);
 
         return (true);
     }
@@ -524,6 +531,12 @@ static bool cloak_is_being_removed( void )
 //---------------------------------------------------------------
 void wear_armour(int slot) // slot is for tiles
 {
+    if (you.species == SP_CAT)
+    {
+        mpr("You can't wear anything.");
+        return;
+    }
+
     if (!player_can_handle_equipment())
     {
         mpr("You can't wear anything in your present form.");
@@ -558,7 +571,7 @@ static int armour_equip_delay(const item_def &item)
 bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 {
     const object_class_type base_type = item.base_type;
-    if (base_type != OBJ_ARMOUR)
+    if (base_type != OBJ_ARMOUR || you.species == SP_CAT)
     {
         if (verbose)
            mpr("You can't wear that.");
@@ -1164,6 +1177,12 @@ static bool _fire_validate_item(int slot, std::string &err)
 // Returns true if warning is given.
 static bool _fire_warn_if_impossible()
 {
+    if (you.species == SP_CAT)
+    {
+        mpr("You can't grasp things well enough to throw them.");
+        return (true);
+    }
+
     // If you can't wield it, you can't throw it.
     if (!transform_can_wield())
     {
@@ -3513,6 +3532,12 @@ static bool _dont_use_invis()
 
 void zap_wand(int slot)
 {
+    if (you.species == SP_CAT)
+    {
+        mpr("You have no means to grasp a wand firm enough.");
+        return;
+    }
+
     if (!player_can_handle_equipment())
     {
         canned_msg(MSG_PRESENT_FORM);

@@ -4275,7 +4275,8 @@ std::string get_skill_description(int skill, bool need_title)
             unarmed_attacks.push_back("kick with your hooves");
         else if (player_mutation_level(MUT_TALONS))
             unarmed_attacks.push_back("claw with your talons");
-        else if (you.species != SP_NAGA && !you.fishtail)
+        else if (you.species != SP_NAGA && you.species != SP_CAT
+                 && !you.fishtail)
         {
             unarmed_attacks.push_back("deliver a kick");
         }
@@ -4283,7 +4284,9 @@ std::string get_skill_description(int skill, bool need_title)
         if (you.has_usable_pseudopods())
             unarmed_attacks.push_back("slap with your pseudopods");
 
-        if (!you.weapon())
+        if (you.species == SP_CAT)
+            unarmed_attacks.push_back("use your claws");
+        else if (!you.weapon())
             unarmed_attacks.push_back("throw a punch");
         else if (you.has_usable_offhand())
             unarmed_attacks.push_back("punch with your free hand");

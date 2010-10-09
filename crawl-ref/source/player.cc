@@ -574,6 +574,8 @@ monster_type player_mons(bool transform)
         return MONS_VAMPIRE;
     case SP_DEEP_DWARF:
         return MONS_DEEP_DWARF;
+    case SP_CAT:
+        return MONS_FELID;
     case SP_ELF:
     case SP_HILL_DWARF:
     case SP_OGRE_MAGE:
@@ -614,6 +616,9 @@ void update_vision_range()
 // ---------------------------------------------------
 bool you_can_wear(int eq, bool special_armour)
 {
+    if (you.species == SP_CAT)
+        return (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET);
+
     switch (eq)
     {
     case EQ_LEFT_RING:
@@ -693,7 +698,7 @@ bool you_can_wear(int eq, bool special_armour)
 
 bool player_has_feet()
 {
-    if (you.species == SP_NAGA || you.fishtail)
+    if (you.species == SP_NAGA || you.species == SP_CAT || you.fishtail)
     {
         return (false);
     }
@@ -2743,6 +2748,16 @@ static void _draconian_scale_colour_message()
     }
 }
 
+static void _felid_extra_life()
+{
+    if (you.lives + you.deaths < you.max_level/3 && you.lives < 2)
+    {
+        you.lives++;
+        mpr("Extra life!", MSGCH_INTRINSIC_GAIN);
+    }
+    // Should play the 1UP sound from SMB...
+}
+
 void level_change(bool skip_attribute_increase)
 {
     const bool wiz_cmd = crawl_state.prev_cmd == CMD_WIZARD
@@ -3252,6 +3267,27 @@ void level_change(bool skip_attribute_increase)
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
 
+            case SP_CAT:
+                hp_adjust--;
+                hp_adjust--;
+
+                if (you.experience_level % 2)
+                    mp_adjust++;
+
+                if (!(you.experience_level % 5))
+                {
+                    modify_stat((coinflip() ? STAT_INT
+                                            : STAT_DEX), 1, false,
+                                "level gain");
+                }
+
+                if (you.experience_level == 6 || you.experience_level == 12)
+                    perma_mutate(MUT_SHAGGY_FUR, 1);
+
+                _felid_extra_life();
+                break;
+
+
             default:
                 break;
             }
@@ -3287,6 +3323,15 @@ void level_change(bool skip_attribute_increase)
         xom_is_stimulated(16);
 
         learned_something_new(HINT_NEW_LEVEL);
+    }
+
+    while (you.experience > exp_needed(you.max_level + 2))
+    {
+        ASSERT(you.experience_level == 27);
+        ASSERT(you.max_level < 127);
+        you.max_level++;
+        if (you.species == SP_CAT)
+            _felid_extra_life();
     }
 
     redraw_skill(you.your_name, player_title());
@@ -3348,6 +3393,7 @@ int check_stealth(void)
             case SP_KOBOLD:
             case SP_SPRIGGAN:
             case SP_NAGA:       // not small but very good at stealth
+            case SP_CAT:
                 stealth += (you.skills[SK_STEALTH] * 18);
                 break;
             default:
@@ -3408,6 +3454,8 @@ int check_stealth(void)
         else if ( !you.can_swim() && !you.extra_balanced() )
             stealth /= 2;       // splashy-splashy
     }
+    else if (you.species == SP_CAT && !you.attribute[ATTR_TRANSFORMATION])
+        stealth += 20;  // paws
 
     // Radiating silence is the negative complement of shouting all the
     // time... a sudden change from background noise to no noise is going
@@ -3817,6 +3865,7 @@ static int _species_exp_mod(species_type species)
         case SP_CENTAUR:
         case SP_MINOTAUR:
         case SP_MUMMY:
+        case SP_CAT:
             return 14;
         case SP_HIGH_ELF:
         case SP_VAMPIRE:
@@ -4944,11 +4993,13 @@ void levitate_player(int pow)
 int count_worn_ego(int which_ego)
 {
     int result = 0;
-    for (int eq = EQ_MIN_ARMOUR; eq <= EQ_MAX_ARMOUR; ++eq)
+    for (int slot = EQ_MIN_ARMOUR; slot <= EQ_MAX_ARMOUR; ++slot)
     {
-        const item_def* item = you.slot_item(static_cast<equipment_type>(eq));
-        if (item && get_armour_ego_type(*item) == which_ego)
+        if (you.equip[slot] != -1
+            && get_armour_ego_type(you.inv[you.equip[slot]]) == which_ego)
+        {
             result++;
+        }
     }
 
     return (result);
@@ -5075,6 +5126,9 @@ void player::init()
 #if defined(WIZARD) || defined(DEBUG)
     never_die = false;
 #endif
+    dead = false;
+    lives = 0;
+    deaths = 0;
     xray_vision = false;
 
     skills.init(0);
@@ -5355,7 +5409,10 @@ std::string player::shout_verb() const
         return "squeak";
     case TRAN_PIG:
         return "squeal";
-    default: // depends on SCREAM mutation
+    default:
+        if (you.species == SP_CAT)
+            return coinflip() ? "meow" : "yowl";
+        // depends on SCREAM mutation
         int level = player_mutation_level(MUT_SCREAM);
         if (level <= 1)
             return "shout";
@@ -5837,6 +5894,7 @@ int player::res_magic() const
         break;
     case SP_PURPLE_DRACONIAN:
     case SP_DEEP_DWARF:
+    case SP_CAT:
         rm = experience_level * 6;
         break;
     case SP_SPRIGGAN:
@@ -6126,6 +6184,10 @@ int player::has_claws(bool allow_tran) const
             return (0);
         }
     }
+
+    // the mutation does only hands, not paws
+    if (you.species == SP_CAT)
+        return (true);
 
     return (player_mutation_level(MUT_CLAWS));
 }

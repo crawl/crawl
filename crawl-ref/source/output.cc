@@ -1537,17 +1537,28 @@ static std::vector<formatted_string> _get_overview_stats()
         godpowers = _wiz_god_powers();
 #endif
 
+    char lives[40];
+    if (you.species == SP_CAT)
+    {
+        snprintf(lives, sizeof(lives), "Lives: %d, deaths: %d",
+                 you.lives, you.deaths);
+    }
+    else
+        lives[0] = 0;
+
     int xp_needed = (exp_needed(you.experience_level + 2) - you.experience) + 1;
     snprintf(buf, sizeof buf,
              "Exp: %d/%u (%d)%s\n"
              "God: %s\n"
-             "Spells: %2d memorised, %2d level%s left\n",
+             "Spells: %2d memorised, %2d level%s left\n"
+             "%s",
              you.experience_level, you.experience, you.exp_available,
              (you.experience_level < 27?
               make_stringf(", need: %d", xp_needed).c_str() : ""),
              godpowers.c_str(),
              you.spell_no, player_spell_levels(),
-             (player_spell_levels() == 1) ? "" : "s");
+             (player_spell_levels() == 1) ? "" : "s",
+             lives);
     cols1.add_formatted(3, buf, false);
 
     return cols1.formatted_lines();

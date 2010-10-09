@@ -112,6 +112,9 @@ public:
   undead_state_type is_undead;
 
   int  friendly_pickup;       // pickup setting for allies
+  bool dead; // ... but pending revival
+  int lives;
+  int deaths;
 
   FixedVector<uint8_t, 50>  skills;
   FixedVector<bool, 50>  practise_skill;

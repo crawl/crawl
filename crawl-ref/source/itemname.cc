@@ -239,8 +239,10 @@ std::string item_def::name(description_level_type descrip,
                 case EQ_WEAPON:
                     if (this->base_type == OBJ_WEAPONS || item_is_staff(*this))
                         buff << " (weapon)";
-                    else
+                    else if (you.species != SP_CAT)
                         buff << " (in hand)";
+                    else
+                        buff << " (in mouth)";
                     break;
                 case EQ_CLOAK:
                 case EQ_HELMET:
@@ -251,10 +253,12 @@ std::string item_def::name(description_level_type descrip,
                     buff << " (worn)";
                     break;
                 case EQ_LEFT_RING:
-                    buff << " (left hand)";
+                    buff << (you.species != SP_CAT ? " (left hand)"
+                                                   : " (left paw)");
                     break;
                 case EQ_RIGHT_RING:
-                    buff << " (right hand)";
+                    buff << (you.species != SP_CAT ? " (right hand)"
+                                                   : " (right paw)");
                     break;
                 case EQ_AMULET:
                     buff << " (around neck)";
@@ -2774,6 +2778,9 @@ bool is_useless_item(const item_def &item, bool temp)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
+        if (you.species == SP_CAT)
+            return (true);
+
         if (!you.could_wield(item, true)
             && !is_throwable(&you, item))
         {
@@ -2798,6 +2805,9 @@ bool is_useless_item(const item_def &item, bool temp)
         return (false);
 
     case OBJ_MISSILES:
+        if (you.species == SP_CAT)
+            return (true);
+
         // These are the same checks as in is_throwable(), except that
         // we don't take launchers into account.
         switch (item.sub_type)
@@ -2833,10 +2843,13 @@ bool is_useless_item(const item_def &item, bool temp)
             return (crawl_state.game_is_sprint());
         case SCR_AMNESIA:
             return (you.religion == GOD_TROG);
+        case SCR_RECHARGING:
+            return (you.species == SP_CAT);
         default:
             return (false);
         }
     case OBJ_WANDS:
+        // Cats can't use wands, but they're dangerous when on the floor.
         return (item.plus2 == ZAPCOUNT_EMPTY)
                || item_ident(item, ISFLAG_KNOW_PLUSES) && !item.plus;
 
@@ -2962,6 +2975,8 @@ bool is_useless_item(const item_def &item, bool temp)
         }
 
     case OBJ_STAVES:
+        if (you.species == SP_CAT)
+            return (true);
         if (you.religion == GOD_TROG && !item_is_rod(item))
             return (true);
         break;

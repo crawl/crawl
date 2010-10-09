@@ -91,7 +91,7 @@ const char *skills[50][6] =
     {"Stabbing",       "Miscreant",     "Blackguard",      "Backstabber",     "Cutthroat",      "Politician"},
     {"Shields",        "Shield-Bearer", "Hoplite",         "Blocker",         "Peltast",        "@Adj@ Barricade"},
     {"Traps & Doors",  "Scout",         "Disarmer",        "Vigilant",        "Perceptive",     "Dungeon Master"},
-    // STR based fighters, for DEX/martial arts titles see below
+    // STR based fighters, for DEX/martial arts titles see below.  Felids get their own cathegory, too.
     {"Unarmed Combat", "Ruffian",       "Grappler",        "Brawler",         "Wrestler",       "@Weight@weight Champion"},
 
     {NULL},
@@ -135,6 +135,8 @@ const char *skills[50][6] =
 
 const char *martial_arts_titles[6] =
     {"Unarmed Combat", "Insei", "Martial Artist", "Black Belt", "Sensei", "Grand Master"};
+const char *claw_and_tooth_titles[6] =
+    {"Unarmed Combat", "Scratcher", "Gouger", "Ripper", "Eviscerator", "Sabretooth"};
 
 struct species_skill_aptitude
 {
@@ -1246,6 +1248,40 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_DEEP_DWARF,      SK_POISON_MAGIC,   -2),
     APT(SP_DEEP_DWARF,      SK_INVOCATIONS,     2),
     APT(SP_DEEP_DWARF,      SK_EVOCATIONS,      3),
+
+    // SP_CAT
+    APT(SP_CAT,             SK_FIGHTING,        0),
+    APT(SP_CAT,             SK_SHORT_BLADES,    0),
+    APT(SP_CAT,             SK_LONG_BLADES,     0),
+    APT(SP_CAT,             SK_AXES,            0),
+    APT(SP_CAT,             SK_MACES_FLAILS,    0),
+    APT(SP_CAT,             SK_POLEARMS,        0),
+    APT(SP_CAT,             SK_STAVES,          0),
+    APT(SP_CAT,             SK_SLINGS,          0),
+    APT(SP_CAT,             SK_BOWS,            0),
+    APT(SP_CAT,             SK_CROSSBOWS,       0),
+    APT(SP_CAT,             SK_THROWING,        0),
+    APT(SP_CAT,             SK_ARMOUR,          0),
+    APT(SP_CAT,             SK_DODGING,         2),
+    APT(SP_CAT,             SK_STEALTH,         2),
+    APT(SP_CAT,             SK_STABBING,        3),
+    APT(SP_CAT,             SK_SHIELDS,         0),
+    APT(SP_CAT,             SK_TRAPS_DOORS,     2),
+    APT(SP_CAT,             SK_UNARMED_COMBAT,  1),
+    APT(SP_CAT,             SK_SPELLCASTING,    0),
+    APT(SP_CAT,             SK_CONJURATIONS,   -1),
+    APT(SP_CAT,             SK_ENCHANTMENTS,    2),
+    APT(SP_CAT,             SK_SUMMONINGS,      1),
+    APT(SP_CAT,             SK_NECROMANCY,      0),
+    APT(SP_CAT,             SK_TRANSLOCATIONS,  4),
+    APT(SP_CAT,             SK_TRANSMUTATIONS,  1),
+    APT(SP_CAT,             SK_FIRE_MAGIC,     -1),
+    APT(SP_CAT,             SK_ICE_MAGIC,      -1),
+    APT(SP_CAT,             SK_AIR_MAGIC,      -1),
+    APT(SP_CAT,             SK_EARTH_MAGIC,    -1),
+    APT(SP_CAT,             SK_POISON_MAGIC,   -1),
+    APT(SP_CAT,             SK_INVOCATIONS,    -1),
+    APT(SP_CAT,             SK_EVOCATIONS,     -1),
 };
 
 // Traditionally, Spellcasting and In/Evocations formed the exceptions here:
@@ -1561,18 +1597,22 @@ static std::string _stk_adj_cap()
 
 static std::string _stk_genus_cap()
 {
+    if (Skill_Species == SP_CAT)
+        return "Cat";
     return species_name(Skill_Species, true, false);
 }
 
 static std::string _stk_genus_nocap()
 {
-    std::string s = species_name(Skill_Species, true, false);
+    std::string s = _stk_genus_cap();
     return (lowercase(s));
 }
 
 static std::string _stk_genus_short_cap()
 {
-    return (Skill_Species == SP_DEMIGOD ? "God" : _stk_genus_cap());
+    return (Skill_Species == SP_DEMIGOD ? "God" :
+            Skill_Species == SP_CAT     ? "Cat" :
+            _stk_genus_cap());
 }
 
 static std::string _stk_walker()
@@ -1609,6 +1649,9 @@ static std::string _stk_weight()
 
     case SP_SPRIGGAN:
         return "Fly";
+
+    case SP_CAT:
+        return "Bacteria"; // not used
     }
 }
 
@@ -1690,6 +1733,11 @@ std::string skill_title_by_rank( uint8_t best_skill, uint8_t skill_rank,
         switch (best_skill)
         {
         case SK_UNARMED_COMBAT:
+            if (species == SP_CAT)
+            {
+                result = claw_and_tooth_titles[skill_rank];
+                break;
+            }
             result = (dex >= str) ? martial_arts_titles[skill_rank]
                                   : skills[best_skill][skill_rank];
 

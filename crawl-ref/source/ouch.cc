@@ -36,6 +36,7 @@
 #include "artefact.h"
 #include "beam.h"
 #include "chardump.h"
+#include "coord.h"
 #include "delay.h"
 #include "dgnevent.h"
 #include "effects.h"
@@ -1008,6 +1009,31 @@ static void _maybe_spawn_jellies(int dam, const char* aux,
     }
 }
 
+void _place_player_corpse(bool explode)
+{
+    if (!in_bounds(you.pos()))
+        return;
+
+    item_def corpse;
+    if (fill_out_corpse(0, player_mons(), corpse) == MONS_NO_MONSTER)
+        return;
+
+    if (explode && explode_corpse(corpse, you.pos()))
+        return;
+
+    int o = get_item_slot();
+    if (o == NON_ITEM)
+    {
+        item_was_destroyed(corpse);
+        return;
+    }
+
+    corpse.props[MONSTER_HIT_DICE].get_short() = you.experience_level;
+    mitm[o] = corpse;
+
+    move_item_to_grid(&o, you.pos(), !you.in_water());
+}
+
 
 #if defined(WIZARD) || defined(DEBUG)
 static void _wizard_restore_life()
@@ -1040,6 +1066,9 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     if (you.duration[DUR_TIME_STEP])
         return;
 
+    if (you.dead) // ... but eligible for revival
+        return;
+
     if (dam != INSTANT_DEATH && you.species == SP_DEEP_DWARF)
     {
         // Deep Dwarves get to shave _any_ hp loss.
@@ -1056,9 +1085,12 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     if (dam > 0)
         you.check_awaken(500);
 
+    const bool non_death = death_type == KILLED_BY_QUITTING
+        || death_type == KILLED_BY_WINNING
+        || death_type == KILLED_BY_LEAVING;
+
     if (you.duration[DUR_DEATHS_DOOR] && death_type != KILLED_BY_LAVA
-        && death_type != KILLED_BY_WATER && death_type != KILLED_BY_QUITTING
-        && death_type != KILLED_BY_WINNING && death_type != KILLED_BY_LEAVING)
+        && death_type != KILLED_BY_WATER && !non_death)
     {
         return;
     }
@@ -1198,9 +1230,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
                        death_source_name);
 
 #ifdef WIZARD
-    if (death_type != KILLED_BY_QUITTING
-        && death_type != KILLED_BY_WINNING
-        && death_type != KILLED_BY_LEAVING)
+    if (!non_death)
     {
         if (crawl_state.test || you.wizard)
         {
@@ -1231,12 +1261,22 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 #endif  // WIZARD
 
     // Okay, so you're dead.
-    crawl_state.need_save       = false;
-    crawl_state.updating_scores = true;
-
     take_note(Note( NOTE_DEATH, you.hp, you.hp_max,
                     se.death_description(scorefile_entry::DDV_NORMAL).c_str()),
               true);
+    if (you.lives && !non_death)
+    {
+        you.deaths++;
+        you.lives--;
+        you.dead = true;
+
+        _place_player_corpse(death_type == KILLED_BY_DISINT);
+        return;
+    }
+
+    // The game's over.
+    crawl_state.need_save       = false;
+    crawl_state.updating_scores = true;
 
     // Prevent bogus notes.
     activate_notes(false);
@@ -1254,13 +1294,8 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         hiscores_new_entry(se);
         logfile_new_entry(se);
 
-        if (!crawl_state.game_is_tutorial()
-            && death_type != KILLED_BY_LEAVING
-            && death_type != KILLED_BY_WINNING
-            && death_type != KILLED_BY_QUITTING)
-        {
+        if (!non_death && !crawl_state.game_is_tutorial())
             save_ghost();
-        }
     }
 #endif
 
