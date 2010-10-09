@@ -329,7 +329,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "",
       "Ashenzari augments your vision.",
       "scry through walls",
-      ""
+      "Ashenzari helps you think straight."
     },
 };
 
@@ -444,7 +444,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "",
       "Ashenzari no longer augments your vision.",
       "scry through walls",
-      ""
+      "Ashenzari no longer helps you think straight."
     },
 };
 
@@ -2643,6 +2643,11 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
 
             if (you.religion == GOD_ASHENZARI && i == 2)
                 autotoggle_autopickup(false);
+
+            // Inconsistent with donning amulets, but matches the message
+            // better and is not abusable.
+            if (you.religion == GOD_ASHENZARI && i == 4)
+                you.duration[DUR_CONF] = 0;
 
             // When you gain a piety level, you get another chance to
             // make hostile holy beings good neutral.
