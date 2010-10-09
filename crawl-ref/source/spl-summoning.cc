@@ -14,6 +14,7 @@
 #include "database.h"
 #include "delay.h"
 #include "directn.h"
+#include "dungeon.h"
 #include "env.h"
 #include "food.h"
 #include "fprop.h"
@@ -1077,24 +1078,21 @@ bool can_cast_malign_gateway()
 
 bool cast_malign_gateway(actor * caster, int pow, god_type god)
 {
-    if (one_chance_in(3) && caster->atype() == ACT_PLAYER)
-    {
-        // if someone deletes the db, no message is ok
-        mpr(getMiscString("SHT_int_loss").c_str());
-        // Messages the same as for SHT, as they are currently (10/10) generic.
-        lose_stat(STAT_INT, 1, true, "opening a malign portal");
-        // Since sustAbil no longer helps here, this can't fail anymore -- 1KB
-    }
+    bool success = false;
+    coord_def point = coord_def(0, 0);
 
     unsigned compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
     std::random_shuffle(compass_idx, compass_idx + 8);
 
     for (unsigned i = 0; i < 8; ++i)
     {
-        coord_def test = caster->pos() + Compass[compass_idx[i]];
+        coord_def delta = Compass[compass_idx[i]] + (2+random2(2));
+        coord_def test = caster->pos() + delta;
+        dprf("Trying %d,%d: %d floor.", test.x, test.y, count_neighbours(test, DNGN_FLOOR));
         if (in_bounds(test)
             && env.grid(test) == DNGN_FLOOR
-            && !actor_at(test))
+            && !actor_at(test)
+            && count_neighbours(test, DNGN_FLOOR) >= 9)
         {
             const int malign_gateway_duration = BASELINE_DELAY * (random2(5) + 5);
             env.markers.add(new map_malign_gateway_marker(test,
@@ -1106,13 +1104,34 @@ bool cast_malign_gateway(actor * caster, int pow, god_type god)
             env.markers.clear_need_activate();
             env.grid(test) = DNGN_TEMP_PORTAL;
 
-            noisy(10, test);
-            mpr("The dungeon shakes, a horrible noise fills the air, and a portal to some otherworldly place is opened!", MSGCH_WARN);
+            point = test;
+            success = true;
 
-            return (true);
+            break;
         }
     }
-    return (false);
+
+    if (success)
+    {
+        noisy(10, point);
+        mpr("The dungeon shakes, a horrible noise fills the air, and a portal to some otherworldly place is opened!", MSGCH_WARN);
+
+        if (one_chance_in(3) && caster->atype() == ACT_PLAYER)
+        {
+            // if someone deletes the db, no message is ok
+            mpr(getMiscString("SHT_int_loss").c_str());
+            // Messages the same as for SHT, as they are currently (10/10) generic.
+            lose_stat(STAT_INT, 1, true, "opening a malign portal");
+            // Since sustAbil no longer helps here, this can't fail anymore -- 1KB
+        }
+    }
+    else if (caster->atype() == ACT_PLAYER)
+    {
+        // We don't care if monsters fail to cast it.
+        mpr("Such a gateway cannot be opened in such a cramped space!");
+    }
+
+    return (success);
 }
 
 
