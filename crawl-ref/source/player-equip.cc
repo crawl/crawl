@@ -441,6 +441,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
         if (showMsgs)
             _equip_weapon_use_warning(item);
 
+        set_ident_flags(item, ISFLAG_KNOW_CURSE);
         if (item.sub_type == STAFF_POWER)
         {
             int mp = item.special - you.elapsed_time / POWER_DECAY;
@@ -458,12 +459,8 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
             set_ident_type(item, ID_KNOWN_TYPE);
             set_ident_flags(item, ISFLAG_EQ_WEAPON_MASK);
         }
-        else if (!maybe_identify_staff(item))
-        {
-            // Give curse status when wielded.
-            // Right now that's always "uncursed". -- bwr
-            set_ident_flags(item, ISFLAG_KNOW_CURSE);
-        }
+        else maybe_identify_staff(item);
+
         // Automatically identify rods; you can do this by wielding and then
         // evoking them, so do it automatically instead. We don't need to give
         // a message either, as the game will do that automatically. {due}
