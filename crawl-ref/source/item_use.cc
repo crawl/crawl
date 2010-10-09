@@ -4924,11 +4924,17 @@ void read_scroll(int slot)
         break;
 
     case SCR_CURSE_ARMOUR:
+    case SCR_CURSE_JEWELLERY:
     {
         // make sure there's something to curse first
         int count = 0;
         int affected = EQ_WEAPON;
-        for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
+        int min_type, max_type;
+        if (which_scroll == SCR_CURSE_ARMOUR)
+            min_type = EQ_MIN_ARMOUR, max_type = EQ_MAX_ARMOUR;
+        else
+            min_type = EQ_LEFT_RING, max_type = EQ_AMULET;
+        for (int i = min_type; i <= max_type; i++)
         {
             if (you.equip[i] != -1 && !you.inv[you.equip[i]].cursed())
             {

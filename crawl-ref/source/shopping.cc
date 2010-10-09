@@ -1748,6 +1748,7 @@ unsigned int item_value(item_def item, bool ident)
 
             case SCR_CURSE_ARMOUR:
             case SCR_CURSE_WEAPON:
+            case SCR_CURSE_JEWELLERY:
             case SCR_PAPER:
             case SCR_IMMOLATION:
                 valued++;
