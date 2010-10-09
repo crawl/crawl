@@ -155,6 +155,8 @@ static bool _snakable_missile(const item_def& item)
 
 static bool _snakable_weapon(const item_def& item)
 {
+    if (item.base_type == OBJ_STAVES)
+        return true;
     return (item.base_type == OBJ_WEAPONS
            && (item.sub_type == WPN_CLUB
             || item.sub_type == WPN_SPEAR
