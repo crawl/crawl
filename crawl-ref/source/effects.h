@@ -72,7 +72,6 @@ void cleansing_flame(int pow, int caster, coord_def where,
 
 void change_labyrinth(bool msg = false);
 
-bool forget_inventory(bool quiet = false);
 bool vitrify_area(int radius);
 void update_corpses(int elapsedTime);
 void update_level(int elapsedTime);
