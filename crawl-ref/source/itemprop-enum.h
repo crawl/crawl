@@ -320,6 +320,7 @@ enum scroll_type
     SCR_VULNERABILITY,
     SCR_SILENCE,                       //   25
     SCR_AMNESIA,
+    SCR_CURSE_JEWELLERY,
     NUM_SCROLLS
 };
 

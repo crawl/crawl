@@ -626,6 +626,7 @@ static const char* scroll_type_name(int scrolltype)
     case SCR_RANDOM_USELESSNESS: return "random uselessness";
     case SCR_CURSE_WEAPON:       return "curse weapon";
     case SCR_CURSE_ARMOUR:       return "curse armour";
+    case SCR_CURSE_JEWELLERY:    return "curse jewellery";
     case SCR_IMMOLATION:         return "immolation";
     case SCR_BLINKING:           return "blinking";
     case SCR_PAPER:              return "paper";
@@ -2645,8 +2646,9 @@ bool is_bad_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case SCR_CURSE_ARMOUR:
+        case SCR_CURSE_JEWELLERY:
         case SCR_CURSE_WEAPON:
-            return (true);
+            return (you.religion != GOD_ASHENZARI);
         case SCR_SUMMONING:
             // Summoning will always produce hostile monsters if you
             // worship a good god. (Use temp to allow autopickup to
@@ -2844,6 +2846,8 @@ bool is_useless_item(const item_def &item, bool temp)
         case SCR_AMNESIA:
             return (you.religion == GOD_TROG);
         case SCR_RECHARGING:
+        case SCR_CURSE_WEAPON: // for non-Ashenzari, already handled
+        case SCR_CURSE_ARMOUR:
             return (you.species == SP_CAT);
         default:
             return (false);

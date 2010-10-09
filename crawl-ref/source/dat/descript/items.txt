@@ -1060,6 +1060,10 @@ scroll of curse armour
 
 This scroll places a curse on a piece of armour.
 %%%%
+scroll of curse jewellery
+
+This scroll places a curse on an amulet or a ring.
+%%%%
 scroll of curse weapon
 
 This scroll places a curse on a weapon.
