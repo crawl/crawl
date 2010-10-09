@@ -1066,8 +1066,8 @@ mon_resist_def monster_info::resists() const
 {
     if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING)
     {
-        return ugly_thing_resists(type == MONS_VERY_UGLY_THING,
-                                  ugly_thing_colour_to_flavour(colour));
+        return (ugly_thing_resists(type == MONS_VERY_UGLY_THING,
+                                   ugly_thing_colour_to_flavour(colour)));
     }
 
     mon_resist_def resist = get_mons_class_resists(type);
