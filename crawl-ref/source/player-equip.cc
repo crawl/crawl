@@ -387,6 +387,27 @@ static void _equip_weapon_use_warning(const item_def& item)
         mpr("You really shouldn't be using a poisoned item like this.");
 }
 
+
+void _wield_cursed(item_def& item, bool known_cursed)
+{
+    if (!item.cursed())
+        return;
+    mpr("It sticks to your hand!");
+    int amusement = 16;
+    if (!known_cursed)
+    {
+        amusement *= 2;
+        god_type god;
+        if (origin_is_god_gift(item, &god) && god == GOD_XOM)
+            amusement *= 2;
+    }
+    const int wpn_skill = weapon_skill(item.base_type, item.sub_type);
+    if (wpn_skill != SK_FIGHTING && you.skills[wpn_skill] == 0)
+        amusement *= 2;
+
+    xom_is_stimulated(amusement);
+}
+
 // Provide a function for handling initial wielding of 'special'
 // weapons, or those whose function is annoying to reproduce in
 // other places *cough* auto-butchering *cough*.    {gdl}
@@ -456,6 +477,8 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
             if (!item_ident( item, ISFLAG_KNOW_PLUSES))
                 set_ident_flags( item, ISFLAG_KNOW_PLUSES );
         }
+
+        _wield_cursed(item, known_cursed);
         break;
     }
 
@@ -653,24 +676,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
             }
         }
 
-        if (item.cursed())
-        {
-            mpr("It sticks to your hand!");
-            int amusement = 16;
-            if (!known_cursed && !known_recurser)
-            {
-                amusement *= 2;
-                god_type god;
-                if (origin_is_god_gift(item, &god) && god == GOD_XOM)
-                    amusement *= 2;
-            }
-            const int wpn_skill = weapon_skill(item.base_type, item.sub_type);
-            if (wpn_skill != SK_FIGHTING && you.skills[wpn_skill] == 0)
-                amusement *= 2;
-
-            xom_is_stimulated(amusement);
-        }
-
+        _wield_cursed(item, known_cursed || known_recurser);
         break;
     }
     default:

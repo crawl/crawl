@@ -537,7 +537,8 @@ bool remove_curse(bool suppress_msg)
 
     // Only cursed *weapons* in hand count as cursed. - bwr
     if (you.weapon()
-        && you.weapon()->base_type == OBJ_WEAPONS
+        && (you.weapon()->base_type == OBJ_WEAPONS
+            || you.weapon()->base_type == OBJ_STAVES)
         && you.weapon()->cursed())
     {
         // Also sets wield_change.
