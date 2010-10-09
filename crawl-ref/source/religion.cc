@@ -52,7 +52,7 @@
 #include "itemprop.h"
 #include "item_use.h"
 #include "items.h"
-#include "kills.h"
+#include "libutil.h"
 #include "macro.h"
 #include "makeitem.h"
 #include "message.h"

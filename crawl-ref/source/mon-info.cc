@@ -24,7 +24,6 @@
 #include "stuff.h"
 #include "ghost.h"
 #include "skills2.h"
-#include "kills.h"
 #include "message.h"
 #include "tagstring.h"
 #include "artefact.h"

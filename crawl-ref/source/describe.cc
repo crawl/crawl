@@ -36,7 +36,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "jobs.h"
-#include "kills.h" // for apostrophise() -- wut?
+#include "libutil.h"
 #include "macro.h"
 #include "menu.h"
 #include "message.h"

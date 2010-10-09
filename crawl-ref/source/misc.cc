@@ -54,7 +54,6 @@
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
-#include "kills.h"
 #include "libutil.h"
 #include "macro.h"
 #include "makeitem.h"

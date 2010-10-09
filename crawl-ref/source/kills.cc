@@ -397,27 +397,6 @@ kill_def::kill_def(const monster* mon) : kills(0), exp(0)
     add_kill(mon, get_packed_place());
 }
 
-std::string apostrophise(const std::string &name)
-{
-    if (name.empty())
-        return (name);
-
-    if (name == "it" || name == "It")
-        return (name + "s");
-
-    const char lastc = name[name.length() - 1];
-    return (name + (lastc == 's' ? "'" : "'s"));
-}
-
-std::string apostrophise_fixup(const std::string &msg)
-{
-    if (msg.empty())
-        return (msg);
-
-    // XXX: This is rather hackish.
-    return (replace_all(msg, "s's", "s'"));
-}
-
 // For monster names ending with these suffixes, we pluralise directly without
 // attempting to use the "of" rule. For instance:
 //
