@@ -1071,6 +1071,7 @@ bool mons_can_regenerate(const monster* mon)
 static bool _get_kraken_head(monster& mon)
 {
     if (mon.type != MONS_KRAKEN
+        && mon.base_monster != MONS_KRAKEN
         && mon.type != MONS_KRAKEN_CONNECTOR
         && mon.type != MONS_KRAKEN_TENTACLE)
     {
