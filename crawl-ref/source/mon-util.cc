@@ -1791,7 +1791,7 @@ uint8_t random_monster_colour()
     return (col);
 }
 
-// Aboimations
+// Abominations.
 uint8_t random_large_abomination_colour()
 {
     uint8_t col = MAGENTA;
