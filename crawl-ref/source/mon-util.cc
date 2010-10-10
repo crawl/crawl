@@ -1812,7 +1812,7 @@ uint8_t random_small_abomination_colour()
 {
     uint8_t col = MAGENTA;
     // Restricted colours:
-    //  MAGENTA = unseen horrors
+    //  MAGENTA = unseen horror
     //  RED, LIGHTRED, BROWN = used for twisted resurrection
     while (col == MAGENTA || col == BROWN || col == RED || col == LIGHTRED)
     {
