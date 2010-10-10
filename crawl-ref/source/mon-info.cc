@@ -1033,6 +1033,8 @@ monster_type monster_info::draco_subspecies() const
             return MONS_MOTTLED_DRACONIAN;
         case SP_PALE_DRACONIAN:
             return MONS_PALE_DRACONIAN;
+        case SP_GREY_DRACONIAN:
+            return MONS_GREY_DRACONIAN;
         default:
             return MONS_DRACONIAN;
         }
