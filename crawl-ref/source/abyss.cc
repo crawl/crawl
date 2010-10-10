@@ -606,7 +606,7 @@ private:
         // mapping flags are not set on such levels.
         for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
             if (grd(*ri) == DNGN_EXIT_ABYSS && env.map_knowledge(*ri).seen())
-                nearness = std::min(nearness, grid_distance(you.pos(), *ri));
+                nearness = std::min(nearness, distance(you.pos(), *ri));
 
         return (nearness);
     }
@@ -622,7 +622,7 @@ private:
                 for (stack_iterator si(*ri); si; ++si)
                     if (item_is_rune(*si, RUNE_ABYSSAL))
                         nearness = std::min(nearness,
-                                            grid_distance(you.pos(),*ri));
+                                            distance(you.pos(),*ri));
             }
         }
         return (nearness);

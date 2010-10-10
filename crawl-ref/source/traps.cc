@@ -847,7 +847,7 @@ int reveal_traps(const int range)
         if (!trap.active())
             continue;
 
-        if (grid_distance(you.pos(), trap.pos) < range && !trap.is_known())
+        if (distance(you.pos(), trap.pos) < dist_range(range) && !trap.is_known())
         {
             traps_found++;
             trap.reveal();

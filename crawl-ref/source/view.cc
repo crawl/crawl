@@ -323,8 +323,8 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     }
 
     // now gradually weaker with distance:
-    const int pfar     = (map_radius * 7) / 10;
-    const int very_far = (map_radius * 9) / 10;
+    const int pfar     = dist_range((map_radius * 7) / 10);
+    const int very_far = dist_range((map_radius * 9) / 10);
 
     bool did_map = false;
     int  num_altars        = 0;
@@ -345,7 +345,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         {
             int threshold = proportion;
 
-            const int dist = grid_distance( you.pos(), *ri );
+            const int dist = distance( you.pos(), *ri );
 
             if (dist > very_far)
                 threshold = threshold / 3;

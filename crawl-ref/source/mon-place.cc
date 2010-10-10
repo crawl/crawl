@@ -1123,7 +1123,7 @@ int place_monster(mgen_data mg, bool force_pos)
             switch (mg.proximity)
             {
             case PROX_ANYWHERE:
-                if (grid_distance( you.pos(), mg.pos ) < 2 + random2(3))
+                if (distance( you.pos(), mg.pos ) < dist_range(2 + random2(3)))
                     proxOK = false;
                 break;
 

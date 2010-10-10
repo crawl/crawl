@@ -39,8 +39,8 @@
 bool conjure_flame(int pow, const coord_def& where)
 {
     // FIXME: This would be better handled by a flag to enforce max range.
-    if (grid_distance(where, you.pos()) > spell_range(SPELL_CONJURE_FLAME,
-                                                      pow, true)
+    if (distance(where, you.pos()) > dist_range(spell_range(SPELL_CONJURE_FLAME,
+                                                      pow, true))
         || !in_bounds(where))
     {
         mpr("That's too far away.");

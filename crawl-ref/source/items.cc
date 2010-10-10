@@ -170,7 +170,7 @@ static int _cull_items(void)
     // 3. Avoid monster inventory by iterating over the dungeon grid.
     for (rectangle_iterator ri(1); ri; ++ri)
     {
-        if (grid_distance( you.pos(), *ri ) <= 9)
+        if (distance( you.pos(), *ri ) <= dist_range(9))
             continue;
 
         for (stack_iterator si(*ri); si; ++si)
