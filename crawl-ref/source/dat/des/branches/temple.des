@@ -1891,7 +1891,7 @@ ENDMAP
 # 15 gods
 NAME:    mini_greek_temple
 PLACE:   Temple
-WEIGHT:  10
+WEIGHT:  30
 TAGS:    no_rotate
 ORIENT:  encompass
 SHUFFLE: {([
@@ -1914,43 +1914,6 @@ tttttt.....................t...''G'c"""""""""""cttt.....tttt
 ttttttttt..1.....2...t.........''''+"B"B"B"B"B"ctt...t....tt
 tttttttt.....[.................''G'c"""""""""""ct...ttt..ttt
 ttttttttt...................1..''''c"B"B"B"B"B"ct..tttt.tttt
-ttttttttttttttt....2....t......''G'c"""""""""""ct....t..tttt
-ttttttttttttttttt..............''ccccccccccccccct.......2ttt
-tttttttttttttttttt..........t.........t......ttt......2ttttt
-ttttttttttttttttttttt...............................22tttttt
-ttttttttttttttttttttttt............t..........t....ttttttttt
-tttttttttttttttttttttttttttt...........t.........ttttttttttt
-ttttttttttttttttttttttttttttttt..............ttttttttttttttt
-tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
-tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
-ENDMAP
-
-# 12 gods
-NAME:    mini_greek_temple_variant
-PLACE:   Temple
-WEIGHT:  10
-TAGS:    no_rotate
-ORIENT:  encompass
-SHUFFLE: {([
-NSUBST:  . = 15:1 / 12:2 / 2:t / *:.
-SUBST:   ' = .
-COLOUR:  " : darkgrey w:3 / white w:1 / none
-SUBST:   " = .
-MONS:    plant, bush
-MAP
-tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
-tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
-tttttttttttt....1111tttttttttttttttttttttttttttttttttttttttt
-tttttttt.........1111....tttttttttttt.........tttttttttttttt
-tttt.......................1tttttt.......t.........ttttttttt
-tt.........2........t..........''''''...............2222tttt
-tt.....{..21...t...............''ccccccccccccccc.....22.tttt
-ttt...........ttt.......(......''G'c"""""""""""ctt..t..ttttt
-tttt......2....................''''c""B"B"B"B""ctt......tttt
-tttttt.....................t...''G'c"""""""""""cttt.....tttt
-ttttttttt..1.....2...t.........''''+""B"B"B"B""ctt...t....tt
-tttttttt.....[.................''G'c"""""""""""ct...ttt..ttt
-ttttttttt...................1..''''c""B"B"B"B""ct..tttt.tttt
 ttttttttttttttt....2....t......''G'c"""""""""""ct....t..tttt
 ttttttttttttttttt..............''ccccccccccccccct.......2ttt
 tttttttttttttttttt..........t.........t......ttt......2ttttt
