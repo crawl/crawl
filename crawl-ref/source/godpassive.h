@@ -38,5 +38,7 @@ void jiyva_eat_offlevel_items();
 void jiyva_slurp_bonus(int item_value, int *js);
 int ash_bondage_level();
 void ash_check_bondage();
+bool ash_id_item(item_def& item, bool silent = true);
+void ash_id_inventory();
 
 #endif

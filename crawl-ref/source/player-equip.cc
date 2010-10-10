@@ -46,6 +46,8 @@ void equip_item(equipment_type slot, int item_slot, bool msg)
 
     _equip_effect(slot, item_slot, false, msg);
     ash_check_bondage();
+    if (you.equip[slot] != -1 && you.inv[you.equip[slot]].cursed())
+        ash_id_inventory();
 }
 
 // Clear an equipment slot (possibly melded).
@@ -1334,6 +1336,8 @@ static void _equip_jewellery_effect(item_def &item)
         }
         break;
 
+    // When making a jewel type auto-id, please update Ashenzari's list
+    // in godpassive.cc as well.
     }
 
     // Artefacts have completely different appearance than base types
