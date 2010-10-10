@@ -1815,7 +1815,7 @@ uint8_t random_small_abomination_colour()
     //  RED, LIGHTRED, BROWN = used for twisted resurrection
     do
         col = random_monster_colour();
-    while (col == MAGENTA || col == BROWN || col == RED || col == LIGHTRED);
+    while (col == MAGENTA || col == RED || col == LIGHTRED || col == BROWN);
 
     return (col);
 }
