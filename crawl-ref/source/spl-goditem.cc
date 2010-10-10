@@ -111,6 +111,7 @@ static bool _mons_hostile(const monster* mon)
 // Returns 0, if monster can be pacified but the attempt failed.
 // Returns 1, if monster is pacified.
 // Returns -1, if monster can never be pacified.
+// Returns -2, if monster can currently not be pacified (asleep)
 static int _can_pacify_monster(const monster* mon, const int healed)
 {
     if (you.religion != GOD_ELYVILON)
@@ -142,7 +143,7 @@ static int _can_pacify_monster(const monster* mon, const int healed)
         return (-1);
 
     if (mon->asleep()) // not aware of what is happening
-        return (0);
+        return (-2);
 
     const int factor = (mons_intel(mon) <= I_ANIMAL)       ? 3 : // animals
                        (is_player_same_species(mon->type)) ? 2   // same species
@@ -231,6 +232,9 @@ static int _healing_spell(int healed, bool divine_ability,
         if (can_pacify == 0)
             canned_msg(MSG_NOTHING_HAPPENS);
         else
+          if (can_pacify == -2)
+            mpr("You cannot pacify this monster while it is sleeping!");
+          else
             mpr("You cannot pacify this monster!");
         return (0);
     }
