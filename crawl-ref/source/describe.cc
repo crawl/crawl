@@ -22,6 +22,7 @@
 #include "abl-show.h"
 #include "artefact.h"
 #include "cio.h"
+#include "clua.h"
 #include "debug.h"
 #include "decks.h"
 #include "delay.h"
@@ -2457,6 +2458,11 @@ bool _actions_prompt( item_def &item, bool allow_inscribe)
         actions.push_back(CMD_QUAFF);
         break;
     }
+#if defined(CLUA_BINDINGS)
+    if(clua.callbooleanfn(false, "ch_item_wieldable", "i", &item))
+        actions.push_back(CMD_WIELD_WEAPON);
+#endif
+
     actions.push_back(CMD_DROP);
 
     if (allow_inscribe && wherey() <= get_number_of_lines() - 2)
