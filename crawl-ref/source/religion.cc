@@ -1224,7 +1224,7 @@ static bool _give_nemelex_gift(bool forced = false)
 
     // Nemelex will give at least one gift early.
     if (forced
-        || !you.num_gifts[GOD_NEMELEX_XOBEH]
+        || !you.num_total_gifts[GOD_NEMELEX_XOBEH]
            && x_chance_in_y(you.piety + 1, piety_breakpoint(1))
         || one_chance_in(3) && x_chance_in_y(you.piety + 1, MAX_PIETY)
            && !you.attribute[ATTR_CARD_COUNTDOWN])
@@ -1294,7 +1294,8 @@ static bool _give_nemelex_gift(bool forced = false)
 
             you.attribute[ATTR_CARD_COUNTDOWN] = 10;
             _inc_gift_timeout(5 + random2avg(9, 2));
-            you.num_gifts[you.religion]++;
+            you.num_current_gifts[you.religion]++;
+            you.num_total_gifts[you.religion]++;
             take_note(Note(NOTE_GOD_GIFT, you.religion));
         }
         return (true);
@@ -1957,7 +1958,8 @@ static void _delayed_gift_callback(const mgen_data &mg, int &midx,
     viewwindow();
     more();
     _inc_gift_timeout(4 + random2avg(7, 2));
-    you.num_gifts[you.religion]++;
+    you.num_current_gifts[you.religion]++;
+    you.num_total_gifts[you.religion]++;
     take_note(Note(NOTE_GOD_GIFT, you.religion));
 }
 
@@ -2023,7 +2025,8 @@ bool do_god_gift(bool prayed_for, bool forced)
     god_acting gdact;
 
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_GIFTS)
-    int old_gifts = you.num_gifts[you.religion];
+    int old_num_current_gifts = you.num_current_gifts[you.religion];
+    int old_num_total_gifts = you.num_total_gifts[you.religion];
 #endif
 
     bool success = false;
@@ -2088,7 +2091,8 @@ bool do_god_gift(bool prayed_for, bool forced)
                     more();
 
                     _inc_gift_timeout(30 + random2avg(19, 2));
-                    you.num_gifts[you.religion]++;
+                    you.num_current_gifts[you.religion]++;
+                    you.num_total_gifts[you.religion]++;
                     take_note(Note(NOTE_GOD_GIFT, you.religion));
                 }
                 break;
@@ -2103,7 +2107,8 @@ bool do_god_gift(bool prayed_for, bool forced)
                     more();
 
                     _inc_gift_timeout(4 + roll_dice(2, 4));
-                    you.num_gifts[you.religion]++;
+                    you.num_current_gifts[you.religion]++;
+                    you.num_total_gifts[you.religion]++;
                     take_note(Note(NOTE_GOD_GIFT, you.religion));
                 }
                 break;
@@ -2137,7 +2142,7 @@ bool do_god_gift(bool prayed_for, bool forced)
                 if (_jiyva_mutate())
                 {
                     _inc_gift_timeout(15 + roll_dice(2, 4));
-                    //num_gifts is used for tracking the Slime:6 walls
+                    //num_total_gifts is used for tracking the Slime:6 walls
                     take_note(Note(NOTE_GOD_GIFT, you.religion));
                 }
                 else
@@ -2235,13 +2240,15 @@ bool do_god_gift(bool prayed_for, bool forced)
                     simple_god_message(" grants you a gift!");
                     more();
 
-                    // HACK: you.num_gifts keeps track of Necronomicon
-                    // and weapon blessing for Kiku, so don't increase
-                    // it.  Also, timeouts are meaningless for Kiku. evk
+                    // HACK: you.num_total_gifts keeps track of
+                    // Necronomicon and weapon blessing for Kiku, so
+                    // don't increase it.  Also, timeouts are
+                    // meaningless for Kiku. evk
                     if (you.religion != GOD_KIKUBAAQUDGHA)
                     {
                         _inc_gift_timeout(40 + random2avg(19, 2));
-                        you.num_gifts[you.religion]++;
+                        you.num_current_gifts[you.religion]++;
+                        you.num_total_gifts[you.religion]++;
                     }
                     take_note(Note(NOTE_GOD_GIFT, you.religion));
                 }
@@ -2255,10 +2262,15 @@ bool do_god_gift(bool prayed_for, bool forced)
     }                           // End of gift giving.
 
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_GIFTS)
-    if (old_gifts < you.num_gifts[you.religion])
+    if (old_num_current_gifts < you.num_current_gifts[you.religion])
+    {
+        mprf(MSGCH_DIAGNOSTICS, "Current number of gifts from this god: %d",
+             you.num_current_gifts[you.religion]);
+    }
+    if (old_num_total_gifts < you.num_total_gifts[you.religion])
     {
         mprf(MSGCH_DIAGNOSTICS, "Total number of gifts from this god: %d",
-             you.num_gifts[you.religion]);
+             you.num_total_gifts[you.religion]);
     }
 #endif
     return (success);
@@ -2683,7 +2695,7 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
         // In case the best skill is Invocations, redraw the god title.
         redraw_skill(you.your_name, player_title());
 
-        if (!you.num_gifts[you.religion])
+        if (!you.num_total_gifts[you.religion])
         {
             switch (you.religion)
             {
@@ -2707,7 +2719,8 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
                    if (level_id::current() == level_id(BRANCH_SLIME_PITS, 6))
                        dungeon_events.fire_event(DET_ENTERED_LEVEL);
 
-                   you.num_gifts[you.religion]++;
+                   you.num_current_gifts[you.religion]++;
+                   you.num_total_gifts[you.religion]++;
                    break;
                 default:
                     break;
@@ -2753,7 +2766,7 @@ void lose_piety(int pgn)
     if (!player_under_penance() && you.piety != old_piety)
     {
         if (you.piety <= 160 && old_piety > 160
-            && !you.num_gifts[you.religion])
+            && !you.num_total_gifts[you.religion])
         {
             // In case the best skill is Invocations, redraw the god
             // title.
@@ -2856,6 +2869,8 @@ void excommunication(god_type new_god)
     you.duration[DUR_PIETY_POOL] = 0; // your loss
     you.piety = 0;
     you.piety_hysteresis = 0;
+
+    you.num_current_gifts[old_god] = 0;
 
     che_handle_change(CB_PIETY, piety_rank() - old_piety_rank);
 

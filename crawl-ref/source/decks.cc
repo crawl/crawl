@@ -3133,6 +3133,6 @@ void nemelex_shuffle_decks()
 
     // Wildly inaccurate, but of similar quality as the old code which
     // was triggered by the presence of any deck anywhere.
-    if (you.num_gifts[GOD_NEMELEX_XOBEH])
+    if (you.num_total_gifts[GOD_NEMELEX_XOBEH])
         god_speaks(GOD_NEMELEX_XOBEH, "You hear Nemelex Xobeh chuckle.");
 }

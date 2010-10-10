@@ -5169,7 +5169,8 @@ void player::init()
     gift_timeout     = 0;
     penance.init(0);
     worshipped.init(0);
-    num_gifts.init(0);
+    num_current_gifts.init(0);
+    num_total_gifts.init(0);
 
     mutation.init(0);
     innate_mutations.init(0);
