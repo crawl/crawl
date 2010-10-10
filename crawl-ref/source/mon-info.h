@@ -81,6 +81,7 @@ struct monster_info_base
     flight_type fly;
     bool two_weapons;
     bool no_regen;
+    mon_resist_def mresists;
 };
 
 // Monster info used by the pane; precomputes some data
@@ -171,13 +172,15 @@ struct monster_info : public monster_info_base
     std::string wounds_description(bool colour = false) const;
 
     monster_type draco_subspecies() const;
-    mon_resist_def resists() const;
 
     mon_intel_type intel() const
     {
         return (mintel);
     }
-
+    mon_resist_def resists() const
+    {
+        return (mresists);
+    }
     mon_itemuse_type itemuse() const;
     int randarts(artefact_prop_type ra_prop) const;
     int res_magic() const;
