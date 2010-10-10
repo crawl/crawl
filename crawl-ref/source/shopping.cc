@@ -2118,13 +2118,87 @@ std::string shop_name(const coord_def& where, bool add_stop)
     return (name);
 }
 
+std::string shop_type_name (shop_type type)
+{
+    switch (type)
+    {
+        case SHOP_WEAPON_ANTIQUE:
+            return("Antique Weapon");
+        case SHOP_ARMOUR_ANTIQUE:
+            return("Antique Armour");
+        case SHOP_WEAPON:
+            return("Weapon");
+        case SHOP_ARMOUR:
+            return("Armour");
+        case SHOP_JEWELLERY:
+            return("Jewellery");
+        case SHOP_WAND:
+            return("Magical Wand");
+        case SHOP_BOOK:
+            return("Book");
+        case SHOP_FOOD:
+            return("Food");
+        case SHOP_SCROLL:
+            return("Magic Scroll");
+        case SHOP_GENERAL_ANTIQUE:
+            return("Assorted Antiques");
+        case SHOP_DISTILLERY:
+            return("Distillery");
+        case SHOP_GENERAL:
+            return("General Store");
+        default:
+            return ("Bug");
+    }
+}
+
+std::string shop_type_suffix (shop_type type, const coord_def &where)
+{
+    if (type == SHOP_GENERAL
+        || type == SHOP_GENERAL_ANTIQUE
+        || type == SHOP_DISTILLERY)
+    {
+        return ("");
+    }
+
+    const char* suffixnames[] = {"Shoppe", "Boutique", "Emporium", "Shop"};
+    const int temp = (where.x + where.y) % 4;
+
+    return std::string(suffixnames[temp]);
+}
+
 std::string shop_name(const coord_def& where)
 {
     const shop_struct *cshop = get_shop(where);
 
-    // paranoia
+    bool mimic = false;
+
+    // paranoia and shop mimics
     if (grd(where) != DNGN_ENTER_SHOP)
+    {
+        if (monster_at(where))
+        {
+            monster* mmimic = monster_at(where);
+            if (mons_is_feat_mimic(mmimic->type))
+            {
+                mimic = true;
+                if (mmimic->props.exists("shop_name"))
+                    return mmimic->props["shop_name"].get_string();
+
+                // Otherwise we need to make a random name.
+                shop_type type = static_cast<shop_type>(SHOP_WEAPON+random2(NUM_SHOPS-1));
+                std::string shop_owner = apostrophise(make_name(random_int(), false));
+                std::string sh_name = shop_owner + " " + shop_type_name(type);
+                std::string sh_suffix = shop_type_suffix(type, where);
+                if (!sh_suffix.empty())
+                    sh_name += " " + sh_suffix;
+
+                mmimic->props["shop_name"] = sh_name;
+                return (sh_name);
+            }
+        }
+
         return ("");
+    }
 
     if (!cshop)
     {
@@ -2140,34 +2214,11 @@ std::string shop_name(const coord_def& where)
 
     std::string sh_name = apostrophise(make_name(seed, false)) + " ";
 
-    if (type == SHOP_WEAPON_ANTIQUE || type == SHOP_ARMOUR_ANTIQUE)
-        sh_name += "Antique ";
+    sh_name += shop_type_name(type);
 
-    sh_name +=
-        (type == SHOP_WEAPON
-         || type == SHOP_WEAPON_ANTIQUE) ? "Weapon" :
-        (type == SHOP_ARMOUR
-         || type == SHOP_ARMOUR_ANTIQUE) ? "Armour" :
-
-        (type == SHOP_JEWELLERY)         ? "Jewellery" :
-        (type == SHOP_WAND)              ? "Magical Wand" :
-        (type == SHOP_BOOK)              ? "Book" :
-        (type == SHOP_FOOD)              ? "Food" :
-        (type == SHOP_SCROLL)            ? "Magic Scroll" :
-        (type == SHOP_GENERAL_ANTIQUE)   ? "Assorted Antiques" :
-        (type == SHOP_DISTILLERY)        ? "Distillery" :
-        (type == SHOP_GENERAL)           ? "General Store"
-                                         : "Bug";
-
-    if (type != SHOP_GENERAL
-        && type != SHOP_GENERAL_ANTIQUE
-        && type != SHOP_DISTILLERY)
-    {
-        const char* suffixnames[] = {"Shoppe", "Boutique", "Emporium", "Shop"};
-        const int temp = (where.x + where.y) % 4;
-        sh_name += ' ';
-        sh_name += suffixnames[temp];
-    }
+    std::string sh_suffix = shop_type_suffix(type, where);
+    if (!sh_suffix.empty())
+        sh_name += " " + sh_suffix;
 
     return (sh_name);
 }

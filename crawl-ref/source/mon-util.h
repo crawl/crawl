@@ -222,6 +222,10 @@ int mons_unusable_items(const monster* mon);
 mon_holy_type mons_class_holiness(int mc);
 
 bool mons_is_mimic( int mc );
+bool mons_is_item_mimic(int mc);
+bool mons_is_feat_mimic(int mc);
+
+
 bool mons_is_statue( int mc, bool allow_disintegrate = false );
 bool mons_is_demon( int mc );
 bool mons_is_draconian( int mc );

@@ -2160,7 +2160,7 @@ void mimic_alert(monster* mimic)
 
     // If we got here, we at least got a resists message, if not
     // a full wounds printing. Thus, might as well id the mimic.
-    if (mimic->has_ench(ENCH_TP))
+    if (mimic->has_ench(ENCH_TP) || mons_is_feat_mimic(mimic->type))
     {
         if (should_id)
             mimic->flags |= MF_KNOWN_MIMIC;

@@ -1401,7 +1401,7 @@ static int _place_monster_aux(const mgen_data &mg,
         return (-1);
     }
 
-    if (mons_is_mimic(mg.cls))
+    if (mons_is_item_mimic(mg.cls))
     {
         // Mimics who mimic thin air get the axe.
         if (!give_mimic_item(mon))

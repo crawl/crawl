@@ -2260,6 +2260,21 @@ enum monster_type                      // (int) menv[].type
     MONS_APIS,
     MONS_HOLY_DRAGON,
 
+    // New mimics
+    MONS_DOOR_MIMIC,
+    MONS_PORTAL_MIMIC,
+    MONS_TRAP_MIMIC,
+    MONS_STAIR_MIMIC,
+    MONS_SHOP_MIMIC,
+    MONS_FOUNTAIN_MIMIC,
+
+    // And some new new monsters for good measure
+    MONS_BOG_MUMMY,
+    MONS_FIRECRAB,
+    MONS_SKY_BEAST,
+    MONS_LABORATORY_RAT,
+    MONS_PORCUPINE,
+
     // Testing monsters
     MONS_TEST_SPAWNER,
 
@@ -2564,6 +2579,7 @@ enum mon_spellbook_type
     MST_SPIRIT,                        // 200
     MST_PALADIN,
     MST_HOLY_DRAGON,
+    MST_BOG_MUMMY,
 
     MST_TEST_SPAWNER = 205,
     NUM_MSTYPES,

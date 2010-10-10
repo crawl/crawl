@@ -162,6 +162,12 @@ void init_mon_name_cache()
                 || mon == MONS_ARMOUR_MIMIC
                 || mon == MONS_SCROLL_MIMIC
                 || mon == MONS_POTION_MIMIC
+                || mon == MONS_DOOR_MIMIC
+                || mon == MONS_PORTAL_MIMIC
+                || mon == MONS_SHOP_MIMIC
+                || mon == MONS_STAIR_MIMIC
+                || mon == MONS_TRAP_MIMIC
+                || mon == MONS_FOUNTAIN_MIMIC
                 || mon == MONS_MARA_FAKE
                 || mon == MONS_EVIL_WITCH
                 || mon == MONS_FOREST_WITCH)
@@ -510,7 +516,8 @@ bool mons_class_is_stationary(int mc)
 
 bool mons_is_stationary(const monster* mon)
 {
-    return (mons_class_is_stationary(mon->type));
+    return (mons_class_is_stationary(mon->type)
+            || mons_is_feat_mimic(mon->type) && mons_is_unknown_mimic(mon));
 }
 
 // Monsters that are worthless obstacles: not to
@@ -740,7 +747,17 @@ bool mons_is_statue(int mc, bool allow_disintegrate)
 
 bool mons_is_mimic(int mc)
 {
+    return (mons_is_item_mimic(mc) || mons_is_feat_mimic(mc));
+}
+
+bool mons_is_item_mimic(int mc)
+{
     return (mons_genus(mc) == MONS_GOLD_MIMIC);
+}
+
+bool mons_is_feat_mimic(int mc)
+{
+    return (mons_genus(mc) == MONS_DOOR_MIMIC);
 }
 
 bool mons_is_demon(int mc)
@@ -1962,7 +1979,7 @@ void define_monster(monster* mons)
     }
 
     default:
-        if (mons_is_mimic(mcls))
+        if (mons_is_item_mimic(mcls))
             col = get_mimic_colour(mons);
         break;
     }

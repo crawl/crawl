@@ -881,6 +881,10 @@ trap_type get_trap_type(const coord_def& pos)
 {
     if (trap_def* ptrap = find_trap(pos))
         return (ptrap->type);
+
+    if (feature_mimic_at(pos))
+        return (TRAP_BLADE);
+
     return (TRAP_UNASSIGNED);
 }
 
