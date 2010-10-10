@@ -32,6 +32,7 @@
 #include "effects.h"
 #include "env.h"
 #include "food.h"
+#include "godpassive.h"
 #include "godprayer.h"
 #include "hiscores.h"
 #include "invent.h"
@@ -1657,6 +1658,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     if (!item.slot)
         item.slot = index_to_letter(item.link);
 
+    ash_id_item(item);
     note_inscribe_item(item);
 
     item.quantity = quant_got;

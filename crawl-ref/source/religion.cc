@@ -2661,13 +2661,18 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
             if (you.religion == GOD_SHINING_ONE && i == 0)
                 mpr("A divine halo surrounds you!");
 
-            if (you.religion == GOD_ASHENZARI && i == 2)
-                autotoggle_autopickup(false);
+            if (you.religion == GOD_ASHENZARI)
+            {
+                if (i == 2)
+                    autotoggle_autopickup(false);
 
-            // Inconsistent with donning amulets, but matches the message
-            // better and is not abusable.
-            if (you.religion == GOD_ASHENZARI && i == 4)
-                you.duration[DUR_CONF] = 0;
+                // Inconsistent with donning amulets, but matches the message
+                // better and is not abusable.
+                if (i == 4)
+                    you.duration[DUR_CONF] = 0;
+
+                ash_id_inventory();
+            }
 
             // When you gain a piety level, you get another chance to
             // make hostile holy beings good neutral.

@@ -533,6 +533,7 @@ void do_curse_item( item_def &item, bool quiet )
                 you.wield_change = true;
             }
             ash_check_bondage();
+            ash_id_inventory();
         }
         xom_is_stimulated(amusement);
     }

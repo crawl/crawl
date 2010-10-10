@@ -11,10 +11,13 @@
 #include "fprop.h"
 #include "godprayer.h"
 #include "items.h"
+#include "itemname.h"
+#include "itemprop.h"
 #include "mon-stuff.h"
 #include "player.h"
 #include "player-stats.h"
 #include "religion.h"
+#include "spl-book.h"
 #include "state.h"
 #include "stuff.h"
 
@@ -266,4 +269,127 @@ void ash_check_bondage()
     else
         mprf(MSGCH_GOD, "You feel less bound.");
     you.bondage_level = new_level;
+}
+
+static bool _is_slot_cursed(equipment_type eq)
+{
+    const item_def *worn = you.slot_item(eq, true);
+    if (!worn || !worn->cursed())
+        return false;
+
+    if (eq == EQ_WEAPON)
+        return worn->base_type == OBJ_WEAPONS || worn->base_type == OBJ_STAVES;
+    return true;
+}
+
+static bool _jewel_auto_id(const item_def& item)
+{
+    if (item.base_type != OBJ_JEWELLERY)
+        return false;
+
+    // Yay, such lists tend to get out of sync very fast...
+    // Fortunately, this one doesn't have to be too accurate.
+    switch(item.sub_type)
+    {
+    case RING_REGENERATION:
+        return (player_mutation_level(MUT_SLOW_HEALING) < 3);
+    case RING_PROTECTION:
+    case RING_EVASION:
+    case RING_STRENGTH:
+    case RING_DEXTERITY:
+    case RING_INTELLIGENCE:
+        return !!item.plus;
+    case AMU_FAITH:
+        return (you.religion != GOD_NO_GOD);
+    case RING_WIZARDRY:
+        return !!player_spell_skills();
+    case RING_INVISIBILITY:
+    case RING_TELEPORTATION:
+    case RING_MAGICAL_POWER:
+    case RING_LEVITATION:
+    case RING_CHARM:
+    case AMU_RAGE:
+    case AMU_GUARDIAN_SPIRIT:
+        return true;
+    default:
+        return false;
+    }
+}
+
+bool ash_id_item(item_def& item, bool silent)
+{
+    if (you.religion != GOD_ASHENZARI)
+        return false;
+
+    iflags_t old_ided = item.flags & ISFLAG_IDENT_MASK;
+    iflags_t ided = ISFLAG_KNOW_CURSE;
+
+    if (item.base_type == OBJ_WEAPONS
+        || item.base_type == OBJ_ARMOUR
+        || item_is_rod(item))
+    {
+        ided |= ISFLAG_KNOW_PROPERTIES | ISFLAG_KNOW_TYPE;
+    }
+
+    if (_jewel_auto_id(item))
+    {
+        ided |= ISFLAG_EQ_JEWELLERY_MASK;
+    }
+
+    if (item.base_type == OBJ_ARMOUR
+        && you.piety >= piety_breakpoint(0)
+        && _is_slot_cursed(get_armour_slot(item)))
+    {
+        // Armour would id the pluses when worn, unlike weapons.
+        ided |= ISFLAG_KNOW_PLUSES;
+    }
+
+    if ((item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES)
+        && you.piety >= piety_breakpoint(1)
+        && _is_slot_cursed(EQ_WEAPON))
+    {
+        ided |= ISFLAG_KNOW_PLUSES;
+    }
+
+    if (item.base_type == OBJ_JEWELLERY
+        && you.piety >= piety_breakpoint(1)
+        && (jewellery_is_amulet(item) ?
+             _is_slot_cursed(EQ_AMULET) :
+             (_is_slot_cursed(EQ_LEFT_RING) && _is_slot_cursed(EQ_RIGHT_RING))
+           ))
+    {
+        ided |= ISFLAG_EQ_JEWELLERY_MASK;
+    }
+
+    if (ided & ~old_ided)
+    {
+        if (ided & ISFLAG_KNOW_TYPE)
+            set_ident_type(item, ID_KNOWN_TYPE);
+        set_ident_flags(item, ided);
+
+        if (&item == you.weapon())
+            you.wield_change = true;
+
+        if (!silent)
+            mpr(item.name(DESC_INVENTORY_EQUIP).c_str());
+
+        seen_item(item);
+        return true;
+    }
+
+    // nothing new
+    return false;
+}
+
+void ash_id_inventory()
+{
+    if (you.religion != GOD_ASHENZARI)
+        return;
+
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        item_def& item = you.inv[i];
+        if (item.defined())
+            ash_id_item(item, false);
+    }
 }
