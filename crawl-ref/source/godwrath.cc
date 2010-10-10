@@ -525,7 +525,7 @@ static bool _yredelemnul_retribution()
                         count++;
                 }
                 else
-                    count += yred_random_servants(100, true);
+                    count += yred_random_servants(0, true);
             }
 
             simple_god_message(count > 1 ? " sends servants to punish you." :

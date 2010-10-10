@@ -93,6 +93,8 @@
 
 #define PIETY_HYSTERESIS_LIMIT 1
 
+#define MIN_YRED_SERVANT_THRESHOLD 3
+
 // Item offering messages for the gods:
 // & is replaced by "is" or "are" as appropriate for the item.
 // % is replaced by "s" or "" as appropriate.
@@ -1060,30 +1062,26 @@ static void _inc_gift_timeout(int val)
         you.gift_timeout += val;
 }
 
-int yred_random_servants(int threshold, bool force_hostile)
+int yred_random_servants(unsigned int threshold, bool force_hostile)
 {
-    monster_type mon_type;
-    int how_many = 1;
-    const int temp_rand = random2(std::min(100, threshold));
+    // These are sorted in order of power.
+    static monster_type yred_servants[] =
+    {
+        MONS_MUMMY, MONS_WIGHT, MONS_GHOUL, MONS_FLYING_SKULL,
+        MONS_HUNGRY_GHOST, MONS_WRAITH, MONS_ROTTING_HULK,
+        MONS_FREEZING_WRAITH, MONS_PHANTASMAL_WARRIOR, MONS_FLAMING_CORPSE,
+        MONS_FLAYED_GHOST, MONS_SKELETAL_WARRIOR, MONS_DEATH_COB,
+        MONS_BONE_DRAGON
+    };
 
-    // undead
-    mon_type = ((temp_rand < 10) ? MONS_WRAITH :             // 10%
-                (temp_rand < 20) ? MONS_WIGHT :              // 10%
-                (temp_rand < 30) ? MONS_FLYING_SKULL :       // 10%
-                (temp_rand < 39) ? MONS_PHANTASMAL_WARRIOR : //  9%
-                (temp_rand < 48) ? MONS_ROTTING_HULK :       //  9%
-                (temp_rand < 57) ? MONS_SKELETAL_WARRIOR :   //  9%
-                (temp_rand < 65) ? MONS_FREEZING_WRAITH :    //  8%
-                (temp_rand < 73) ? MONS_FLAMING_CORPSE :     //  8%
-                (temp_rand < 80) ? MONS_GHOUL :              //  7%
-                (temp_rand < 86) ? MONS_MUMMY :              //  6%
-                (temp_rand < 91) ? MONS_HUNGRY_GHOST :       //  5%
-                (temp_rand < 95) ? MONS_FLAYED_GHOST :       //  4%
-                (temp_rand < 98) ? MONS_BONE_DRAGON          //  3%
-                                 : MONS_DEATH_COB);          //  2%
+    if (threshold == 0)
+        threshold = ARRAYSZ(yred_servants);
+    else
+        threshold = std::min(ARRAYSZ(yred_servants), threshold);
 
-    if (mon_type == MONS_FLYING_SKULL)
-        how_many = 2 + random2(4);
+    monster_type mon_type = yred_servants[random2(threshold)];
+    int how_many = (mon_type == MONS_FLYING_SKULL) ? 2 + random2(4)
+                                                   : 1;
 
     mgen_data mg(mon_type, !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
                  !force_hostile ? &you : 0, 0, 0, you.pos(), MHITYOU, 0,
@@ -2121,9 +2119,8 @@ bool do_god_gift(bool prayed_for, bool forced)
                 || (random2(you.piety) >= piety_breakpoint(2)
                     && one_chance_in(4)))
             {
-                // The maximum threshold occurs at piety_breakpoint(5).
-                int threshold = (you.piety - piety_breakpoint(2)) * 20 / 9;
-                yred_random_servants(threshold);
+                yred_random_servants(MIN_YRED_SERVANT_THRESHOLD
+                                     + you.num_current_gifts[you.religion]);
 
                 _delayed_monster_done(" grants you @an@ undead servant@s@!",
                                       "", _delayed_gift_callback);
