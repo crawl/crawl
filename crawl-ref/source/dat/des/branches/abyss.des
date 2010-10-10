@@ -44,7 +44,7 @@ SUBST:   ' = .
 COLOUR:  " : white w:5 / none
 SUBST:   " = .
 MONS:    plant, bush
-SHUFFLE: ABCDEFHIJKLMNO
+SHUFFLE: ABCDEFHIJKLMNOP
 KFEAT:   A = altar_makhleb
 KFEAT:   B = altar_xom
 KFEAT:   C = altar_zin
@@ -59,13 +59,14 @@ KFEAT:   L = altar_nemelex_xobeh
 KFEAT:   M = altar_elyvilon
 KFEAT:   N = altar_fedhas
 KFEAT:   O = altar_cheibriados
+KFEAT:   P = altar_ashenzari
 MAP
 ''''''...............
 ''ccccccccccccccc....
 ''G'c"""""""""""ctt..
 ''''c"A"B"C"D"E"ctt..
 ''G'c"""""""""""cttt.
-''''+"""F"H"I"J"ctt..
+''''+"P"F"H"I"J"ctt..
 ''G'c"""""""""""ct...
 ''''c"K"L"M"N"O"ct..t
 ''G'c"""""""""""ct...
