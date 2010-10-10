@@ -70,7 +70,7 @@ void setup_fire_storm(const actor *source, int pow, bolt &beam)
 
 bool cast_fire_storm(int pow, bolt &beam)
 {
-    if (grid_distance(beam.target, beam.source) > beam.range)
+    if (distance(beam.target, beam.source) > dist_range(beam.range))
         return (false);
 
     setup_fire_storm(&you, pow, beam);
