@@ -89,7 +89,7 @@ static int _tame_beast_monsters(coord_def where, int pow, int, actor *)
         return 0;
 
     // 50% bonus for dogs
-    if (mons->type == MONS_HOUND || mons->type == MONS_WAR_DOG )
+    if (mons->type == MONS_HOUND || mons->type == MONS_WAR_DOG)
         pow += (pow / 2);
 
     if (you.species == SP_HILL_ORC && mons->type == MONS_WARG)
