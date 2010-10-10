@@ -2110,9 +2110,11 @@ bool do_god_gift(bool prayed_for, bool forced)
             }
             break;
         }
+
         case GOD_YREDELEMNUL:
             if (forced
-                || (random2(you.piety) >= piety_breakpoint(2) && one_chance_in(4)))
+                || (random2(you.piety) >= piety_breakpoint(2)
+                    && one_chance_in(4)))
             {
                 // The maximum threshold occurs at piety_breakpoint(5).
                 int threshold = (you.piety - piety_breakpoint(2)) * 20 / 9;
