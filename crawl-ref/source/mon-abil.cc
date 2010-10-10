@@ -1155,7 +1155,7 @@ static void _establish_connection(int tentacle,
             menv[connect].props["outwards"].get_int() = -1;
             if (main->holiness() == MH_UNDEAD)
             {
-                menv[connect].flags |= MF_FAKE_UNDEAD;
+                make_fake_undead(&menv[connect], main->type);
             }
             menv[connect].max_hit_points = menv[tentacle].max_hit_points;
             menv[connect].hit_points = menv[tentacle].hit_points;
