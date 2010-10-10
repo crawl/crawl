@@ -177,18 +177,22 @@ struct monster_info : public monster_info_base
     {
         return (mintel);
     }
+
     mon_resist_def resists() const
     {
         return (mresists);
     }
+
     mon_itemuse_type itemuse() const;
     int randarts(artefact_prop_type ra_prop) const;
     int res_magic() const;
     int base_speed() const;
+
     bool can_regenerate() const
     {
         return (!no_regen);
     }
+
     size_type body_size() const;
 
 protected:
