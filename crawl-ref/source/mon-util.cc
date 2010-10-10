@@ -325,8 +325,8 @@ mon_resist_def get_mons_resists(const monster* mon)
     // they're undead created by misc.cc:make_fake_undead(), they might
     // have at least one level already, in which case they shouldn't get
     // any more.
-    if (holiness() == MH_UNDEAD)
-        u = std::max(u, 1);
+    if (mon->holiness() == MH_UNDEAD)
+        resists.poison = std::max(static_cast<int>(resists.poison), 1);
 
     if (mons_genus(mon->type) == MONS_DRACONIAN && mon->type != MONS_DRACONIAN
         || mon->type == MONS_TIAMAT)
