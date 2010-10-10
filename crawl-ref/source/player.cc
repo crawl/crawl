@@ -307,12 +307,13 @@ void moveto_location_effects(dungeon_feature_type old_feat,
         }
 
         if (feat_is_water(new_grid) && !stepped)
-            if (player_likes_water())
+            if (player_likes_water() && you.species != SP_GREY_DRACONIAN)
                 noisy(4, you.pos(), "Floosh!");
             else
                 noisy(8, you.pos(), "Splash!");
 
-        if (new_grid == DNGN_SHALLOW_WATER && !player_likes_water())
+        if (new_grid == DNGN_SHALLOW_WATER && (!player_likes_water() ||
+            you.species == SP_GREY_DRACONIAN))
         {
             you.time_taken *= 13 + random2(8);
             you.time_taken /= 10;
@@ -325,6 +326,15 @@ void moveto_location_effects(dungeon_feature_type old_feat,
                 if (you.invisible())
                     mpr("... and don't expect to remain undetected.");
             }
+        }
+        
+        if (new_grid == DNGN_DEEP_WATER && you.species == SP_GREY_DRACONIAN)
+        {
+            you.time_taken *= 13 + random2(8);
+            you.time_taken /= 10;
+            
+            if (old_feat != DNGN_DEEP_WATER)
+                mpr("You sink to the bottom.");
         }
     }
 
@@ -2636,10 +2646,12 @@ static void _draconian_scale_colour_message()
     case SP_RED_DRACONIAN:
         mpr("Your scales start taking on a fiery red colour.",
             MSGCH_INTRINSIC_GAIN);
+        perma_mutate(MUT_HEAT_RESISTANCE, 1);
         break;
     case SP_WHITE_DRACONIAN:
         mpr("Your scales start taking on an icy white colour.",
             MSGCH_INTRINSIC_GAIN);
+        perma_mutate(MUT_COLD_RESISTANCE, 1);    
         break;
     case SP_GREEN_DRACONIAN:
         mpr("Your scales start taking on a green colour.",
@@ -2658,6 +2670,7 @@ static void _draconian_scale_colour_message()
     case SP_BLACK_DRACONIAN:
         mpr("Your scales start turning black.",
             MSGCH_INTRINSIC_GAIN);
+        perma_mutate(MUT_SHOCK_RESISTANCE, 1);
         break;
     case SP_PURPLE_DRACONIAN:
         mpr("Your scales start taking on a rich purple colour.",
@@ -2978,59 +2991,42 @@ void level_change(bool skip_attribute_increase)
             case SP_WHITE_DRACONIAN:
             case SP_GREEN_DRACONIAN:
             case SP_YELLOW_DRACONIAN:
-            // Grey is handled later.
             case SP_BLACK_DRACONIAN:
             case SP_PURPLE_DRACONIAN:
             case SP_MOTTLED_DRACONIAN:
             case SP_PALE_DRACONIAN:
+            case SP_GREY_DRACONIAN:
+                if (!(you.experience_level % 3))
+                    hp_adjust++;
+
+                  if (!(you.experience_level % 3))
+                {
+                    mpr("Your scales feel tougher.", MSGCH_INTRINSIC_GAIN);
+                    you.redraw_armour_class = true;
+                }
+                
+                if (!(you.experience_level % 4) && you.experience_level > 7)
+                {
+                    modify_stat(STAT_RANDOM, 1, false, "level gain");
+                }
+                
                 if (you.experience_level == 14)
                 {
                     switch (you.species)
                     {
-                    case SP_RED_DRACONIAN:
-                        perma_mutate(MUT_HEAT_RESISTANCE, 1);
-                        break;
-                    case SP_WHITE_DRACONIAN:
-                        perma_mutate(MUT_COLD_RESISTANCE, 1);
-                        break;
-                    default:
-                        break;
-                    }
+                        case SP_BLACK_DRACONIAN:
+                             perma_mutate(MUT_BIG_WINGS, 1);
+                             break;
+                        case SP_GREEN_DRACONIAN:
+                             perma_mutate(MUT_STINGER, 1);
+                             break;
+                        case SP_YELLOW_DRACONIAN:
+                             perma_mutate(MUT_ACIDIC_BITE, 1);
+                             break;
+                        default:
+                             break;     
+                    }          
                 }
-                else if (you.species == SP_BLACK_DRACONIAN
-                         && you.experience_level == 18)
-                {
-                    perma_mutate(MUT_SHOCK_RESISTANCE, 1);
-                }
-                else if (you.species == SP_GREY_DRACONIAN
-                         && you.experience_level == 7)
-                {
-                    modify_stat(STAT_RANDOM, 1, false, "level gain");
-                }
-
-                if (!(you.experience_level % 3))
-                    hp_adjust++;
-
-                if (!(you.experience_level % 4) && you.experience_level > 7)
-                {
-                    mpr("Your scales feel tougher.", MSGCH_INTRINSIC_GAIN);
-                    you.redraw_armour_class = true;
-                    modify_stat(STAT_RANDOM, 1, false, "level gain");
-                }
-                break;
-
-            case SP_GREY_DRACONIAN:
-                if (!(you.experience_level % 3))
-                    hp_adjust+=2;
-
-                if (!(you.experience_level % 2))
-                {
-                    mpr("Your scales feel tougher.", MSGCH_INTRINSIC_GAIN);
-                    you.redraw_armour_class = true;
-                }
-
-                if (!(you.experience_level % 3)) // and levels 4, 7 while immature
-                    modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
 
             case SP_CENTAUR:
@@ -3293,7 +3289,7 @@ int check_stealth(void)
 
     if (you.skills[SK_STEALTH])
     {
-        if (player_genus(GENPC_DRACONIAN))
+        if (player_genus(GENPC_DRACONIAN) && you.species != SP_GREY_DRACONIAN)
             stealth += (you.skills[SK_STEALTH] * 12);
         else
         {
@@ -3324,6 +3320,7 @@ int check_stealth(void)
             case SP_HALFLING:
             case SP_KOBOLD:
             case SP_SPRIGGAN:
+            case SP_GREY_DRACONIAN:
             case SP_NAGA:       // not small but very good at stealth
             case SP_CAT:
                 stealth += (you.skills[SK_STEALTH] * 18);
@@ -5292,13 +5289,15 @@ bool player::can_swim(bool permanently) const
 {
     // Transforming could be fatal if it would cause unequipment of
     // stat-boosting boots or heavy armour.
-    return ((species == SP_MERFOLK || !permanently) && transform_can_swim());
+    return ((species == SP_MERFOLK || species == SP_GREY_DRACONIAN) ||
+             (!permanently && transform_can_swim()));
 }
 
 int player::visible_igrd(const coord_def &where) const
 {
     if (grd(where) == DNGN_LAVA
-        || (grd(where) == DNGN_DEEP_WATER && species != SP_MERFOLK))
+        || (grd(where) == DNGN_DEEP_WATER && 
+        !(species == SP_MERFOLK || species == SP_GREY_DRACONIAN)))
     {
         return (NON_ITEM);
     }
@@ -5533,12 +5532,7 @@ int player::armour_class() const
         //jmf: only give:
         if (player_genus(GENPC_DRACONIAN))
         {
-            if (experience_level < 8)
-                AC += 200;
-            else if (species == SP_GREY_DRACONIAN)
-                AC += 100 + 100 * (experience_level - 4) / 2;  // max 12
-            else
-                AC += 100 + (100 * experience_level / 4);      // max 7
+           AC += 300 + 100 * (you.experience_level / 3);  // max 12
         }
         else
         {
@@ -5755,7 +5749,7 @@ int player::res_water_drowning() const
 int player::res_asphyx() const
 {
     // The undead are immune to asphyxiation, or so we'll assume.
-    if (is_undead)
+    if (is_undead || you.species == SP_GREY_DRACONIAN)
         return 1;
 
     switch (attribute[ATTR_TRANSFORMATION])
@@ -6207,10 +6201,6 @@ int player::has_tail(bool allow_tran) const
             return (0);
         }
     }
-
-
-    if (you.species == SP_GREY_DRACONIAN)
-        return (2);
 
     // XXX: Do merfolk in water belong under allow_tran?
     if (player_genus(GENPC_DRACONIAN)
