@@ -1077,7 +1077,10 @@ int yred_random_servants(unsigned int threshold, bool force_hostile)
     if (threshold == 0)
         threshold = ARRAYSZ(yred_servants);
     else
-        threshold = std::min((unsigned int)ARRAYSZ(yred_servants), threshold);
+    {
+        threshold = std::min(static_cast<unsigned int>(ARRAYSZ(yred_servants)),
+                             threshold);
+    }
 
     monster_type mon_type = yred_servants[random2(threshold)];
     int how_many = (mon_type == MONS_FLYING_SKULL) ? 2 + random2(4)
