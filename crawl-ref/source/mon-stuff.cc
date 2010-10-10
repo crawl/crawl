@@ -157,7 +157,7 @@ static int _make_mimic_item(monster_type type)
 
 const item_def *give_mimic_item(monster* mimic)
 {
-    ASSERT(mimic != NULL && mons_is_mimic(mimic->type));
+    ASSERT(mimic != NULL && mons_is_item_mimic(mimic->type));
 
     mimic->destroy_inventory();
     int it = _make_mimic_item(mimic->type);
@@ -171,11 +171,44 @@ const item_def *give_mimic_item(monster* mimic)
 
 const item_def &get_mimic_item(const monster* mimic)
 {
-    ASSERT(mimic != NULL && mons_is_mimic(mimic->type));
+    ASSERT(mimic != NULL && mons_is_item_mimic(mimic->type));
 
     ASSERT(mimic->inv[MSLOT_MISCELLANY] != NON_ITEM);
 
     return (mitm[mimic->inv[MSLOT_MISCELLANY]]);
+}
+
+dungeon_feature_type get_mimic_feat (const monster* mimic)
+{
+    switch (mimic->type)
+    {
+        case MONS_DOOR_MIMIC:
+            return (DNGN_CLOSED_DOOR);
+        case MONS_PORTAL_MIMIC:
+            return (DNGN_ENTER_PORTAL_VAULT);
+        case MONS_TRAP_MIMIC:
+            return (DNGN_TRAP_MECHANICAL);
+        case MONS_STAIR_MIMIC:
+            return (DNGN_STONE_STAIRS_DOWN_I);
+        case MONS_SHOP_MIMIC:
+            return (DNGN_ENTER_SHOP);
+        case MONS_FOUNTAIN_MIMIC:
+            return (DNGN_FOUNTAIN_BLUE);
+        default:
+            ASSERT(false);
+            break;
+    }
+
+    return (DNGN_UNSEEN);
+}
+
+bool feature_mimic_at (const coord_def &c)
+{
+    const monster* mons = monster_at(c);
+    if (mons != NULL)
+        return mons_is_feat_mimic(mons->type);
+
+    return (false);
 }
 
 // Sets the colour of a mimic to match its description... should be called
@@ -184,7 +217,10 @@ int get_mimic_colour( const monster* mimic )
 {
     ASSERT(mimic != NULL);
 
-    return (get_mimic_item(mimic).colour);
+    if (mons_is_item_mimic(mimic->type))
+        return (get_mimic_item(mimic).colour);
+    else
+        return (mimic->colour);
 }
 
 // Monster curses a random player inventory item.

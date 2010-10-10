@@ -2125,9 +2125,15 @@ static std::string _get_feature_description_wide(int feat)
 
 void get_feature_desc(const coord_def &pos, describe_info &inf)
 {
-    const dungeon_feature_type feat = grd(pos);
+    dungeon_feature_type feat = grd(pos);
+    if (monster_at(pos))
+    {
+        const monster* mons = monster_at(pos);
+        if (mons_is_feat_mimic(mons->type))
+            feat = get_mimic_feat(mons);
+    }
     std::string desc      = feature_description(pos, false, DESC_CAP_A, false);
-    std::string db_name   = grd(pos) == DNGN_ENTER_SHOP ? "A shop" : desc;
+    std::string db_name   = feat == DNGN_ENTER_SHOP ? "A shop" : desc;
     std::string long_desc = getLongDescription(db_name);
 
     inf.body << desc;
@@ -3157,7 +3163,18 @@ static std::string _monster_stat_description(const monster_info& mi)
         "as big as a dragon",
     };
 
-    if (sizes[mi.body_size()])
+    const char *mimic_sizes[6]= {
+        "as big as a fountain",
+        "as big as a shop",
+        "as big as a staircase",
+        "as big as a trap",
+        "as big as a portal",
+        "as big as a door",
+    };
+
+    if (mons_is_feat_mimic(mi.type))
+        result << pronoun << " is " << mimic_sizes[MONS_FOUNTAIN_MIMIC-mi.type] << ".\n";
+    else if (sizes[mi.body_size()])
         result << pronoun << " is " << sizes[mi.body_size()] << ".\n";
 
     return (result.str());

@@ -560,7 +560,12 @@ void full_describe_view()
         const bool unknown_mimic = (mon && mons_is_unknown_mimic(mon));
 
         if (unknown_mimic)      // It'll be on top.
-            list_items.push_back(get_mimic_item(mon));
+        {
+            if (mons_is_item_mimic(mon->type))
+                list_items.push_back(get_mimic_item(mon));
+            else if (mons_is_feat_mimic(mon->type))
+                list_features.push_back(*ri);
+        }
 
         const int oid = you.visible_igrd(*ri);
         if (oid == NON_ITEM)
@@ -2077,7 +2082,12 @@ void full_describe_square(const coord_def &c)
     if (mons && mons->visible_to(&you))
     {
         if (mons_is_unknown_mimic(mons))
-            describe_item(const_cast<item_def&>(get_mimic_item(mons)));
+        {
+            if (mons_is_item_mimic(mons->type))
+                describe_item(const_cast<item_def&>(get_mimic_item(mons)));
+            else
+                describe_feature_wide(c);
+        }
         else
         {
             monster_info mi(mons);
@@ -3122,6 +3132,20 @@ std::string feature_description(const coord_def& where, bool covering,
     }
 
     dungeon_feature_type grid = grd(where);
+    bool mimic = false;
+
+    if (feature_mimic_at(where))
+    {
+        grid = get_mimic_feat(monster_at(where));
+        mimic = true;
+    }
+
+    if (feat_is_closed_door(grid) && mimic)
+    {
+        return thing_do_grammar(dtype, add_stop, false, "closed door");
+    }
+
+
     if (grid == DNGN_SECRET_DOOR)
         grid = grid_secret_door_appearance(where);
 

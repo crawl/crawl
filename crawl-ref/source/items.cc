@@ -1935,7 +1935,7 @@ const item_def* top_item_at(const coord_def& where, bool allow_mimic_item)
     if (allow_mimic_item)
     {
         const monster* mon = monster_at(where);
-        if (mon && mons_is_unknown_mimic(mon))
+        if (mon && mons_is_unknown_mimic(mon) && mons_is_item_mimic(mon->type))
             return &get_mimic_item(mon);
     }
 

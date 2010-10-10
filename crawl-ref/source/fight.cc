@@ -4569,7 +4569,9 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
         "gore",
         "constrict",
         "trample",
-        "trunk-slap"
+        "trunk-slap",
+        "snap closed at",
+        "splash"
     };
 
     ASSERT(attk.type <
@@ -5526,6 +5528,8 @@ void melee_attack::mons_perform_attack_rounds()
             case AT_KICK:
             case AT_CLAW:
             case AT_GORE:
+            case AT_SNAP:
+            case AT_SPLASH:
                 noise_factor = 125;
                 break;
 
