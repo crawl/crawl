@@ -1791,6 +1791,37 @@ uint8_t random_monster_colour()
     return (col);
 }
 
+// Aboimations
+uint8_t random_large_abomination_colour()
+{
+    uint8_t col = MAGENTA;
+    // Restricted colours:
+    //  MAGENTA = orb guardian
+    //  GREEN = tentacled monstrosity
+    //  RED, LIGHTRED, BROWN = used for twisted resurrection
+    while (col == MAGENTA || col == GREEN || col == RED || col == LIGHTRED
+           || col == BROWN)
+    {
+        col = random_monster_colour();
+    }
+
+    return (col);
+}
+
+uint8_t random_small_abomination_colour()
+{
+    uint8_t col = MAGENTA;
+    // Restricted colours:
+    //  MAGENTA = unseen horrors
+    //  RED, LIGHTRED, BROWN = used for twisted resurrection
+    while (col == MAGENTA || col == BROWN || col == RED || col == LIGHTRED)
+    {
+        col = random_monster_colour();
+    }
+
+    return (col);
+}
+
 static int _serpent_of_hell_color(const monster* mon)
 {
     switch (mon->props["serpent_of_hell_flavour"].get_int())
@@ -1839,7 +1870,7 @@ void define_monster(monster* mons)
         hd = 4 + random2(4);
         ac = 3 + random2(7);
         ev = 7 + random2(6);
-        col = random_monster_colour();
+        col = random_small_abomination_colour();
         break;
 
     case MONS_ZOMBIE_SMALL:
@@ -1850,7 +1881,7 @@ void define_monster(monster* mons)
         hd = 8 + random2(4);
         ac = 5 + random2avg(9, 2);
         ev = 3 + random2(5);
-        col = random_monster_colour();
+        col = random_large_abomination_colour();
         break;
 
     case MONS_ZOMBIE_LARGE:

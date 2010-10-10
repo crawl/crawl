@@ -2105,6 +2105,7 @@ static monsterentry mondata[] = {
 },
 
 {
+    // Coloured with mon-util.cc:random_small_abomination_colour.
     MONS_ABOMINATION_SMALL, 'x', BLACK, "small abomination",
     M_NO_FLAGS,
     MR_RES_POISON,
@@ -3719,6 +3720,7 @@ static monsterentry mondata[] = {
 
 // large abominations ('X')
 {
+    // coloured with mon-util.cc:random_large_abomination_colour.
     MONS_ABOMINATION_LARGE, 'X', BLACK, "large abomination",
     M_NO_FLAGS,
     MR_RES_POISON,
