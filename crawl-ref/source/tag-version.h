@@ -12,7 +12,8 @@ enum tag_minor_version
     TAG_MINOR_FISHTAIL     = 2, // Merfolk's tail state.
     TAG_MINOR_DENSITY      = 3, // Count of level's explorable area.
     TAG_MINOR_MALIGN       = 4, // Keep malign gateway markers around for longer.
-    TAG_MINOR_VERSION      = 4, // Current version.  (Keep equal to max.)
+    TAG_MINOR_GOD_GIFTS    = 5, // Track current as well as total god gifts.
+    TAG_MINOR_VERSION      = 5, // Current version.  (Keep equal to max.)
 };
 
 #endif

@@ -1135,7 +1135,9 @@ static void tag_construct_you(writer &th)
 
     // what is the extent of divine generosity?
     for (i = 0; i < MAX_NUM_GODS; i++)
-        marshallShort(th, you.num_gifts[i]);
+        marshallShort(th, you.num_current_gifts[i]);
+    for (i = 0; i < MAX_NUM_GODS; i++)
+        marshallShort(th, you.num_total_gifts[i]);
 
     marshallByte(th, you.gift_timeout);
 #if TAG_MAJOR_VERSION == 31
@@ -1737,8 +1739,17 @@ static void tag_read_you(reader &th, int minorVersion)
     for (i = 0; i < count; i++)
         you.worshipped[i] = unmarshallByte(th);
 
+#if TAG_MAJOR_VERSION == 31
+    if (minorVersion >= TAG_MINOR_GOD_GIFTS)
+    {
+#endif
     for (i = 0; i < count; i++)
-        you.num_gifts[i] = unmarshallShort(th);
+        you.num_current_gifts[i] = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 31
+    }
+#endif
+    for (i = 0; i < count; i++)
+        you.num_total_gifts[i] = unmarshallShort(th);
 
     you.gift_timeout   = unmarshallByte(th);
 

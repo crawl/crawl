@@ -2372,7 +2372,7 @@ std::vector<talent> your_talents(bool check_confused)
         }
 
         if (you.religion == GOD_ZIN
-            && !you.num_gifts[GOD_ZIN]
+            && !you.num_total_gifts[GOD_ZIN]
             && you.piety > 160)
         {
             _add_talent(talents,

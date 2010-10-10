@@ -181,7 +181,8 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     }
 
     you.wield_change = true;
-    you.num_gifts[god]++;
+    you.num_current_gifts[god]++;
+    you.num_total_gifts[god]++;
     std::string desc  = old_name + " ";
             desc += (god == GOD_SHINING_ONE   ? "blessed by the Shining One" :
                      god == GOD_LUGONU        ? "corrupted by Lugonu" :
@@ -243,7 +244,7 @@ static bool _altar_prayer()
     // TSO blesses weapons with holy wrath, and long blades and demon
     // whips specially.
     if (you.religion == GOD_SHINING_ONE
-        && !you.num_gifts[GOD_SHINING_ONE]
+        && !you.num_total_gifts[GOD_SHINING_ONE]
         && !player_under_penance()
         && you.piety > 160)
     {
@@ -260,7 +261,7 @@ static bool _altar_prayer()
 
     // Lugonu blesses weapons with distortion.
     if (you.religion == GOD_LUGONU
-        && !you.num_gifts[GOD_LUGONU]
+        && !you.num_total_gifts[GOD_LUGONU]
         && !player_under_penance()
         && you.piety > 160)
     {
@@ -272,7 +273,7 @@ static bool _altar_prayer()
 
     // Kikubaaqudgha blesses weapons with pain, or gives you a Necronomicon.
     if (you.religion == GOD_KIKUBAAQUDGHA
-        && !you.num_gifts[GOD_KIKUBAAQUDGHA]
+        && !you.num_total_gifts[GOD_KIKUBAAQUDGHA]
         && !player_under_penance()
         && you.piety > 160)
     {
@@ -313,7 +314,8 @@ static bool _altar_prayer()
                 simple_god_message(" grants you a gift!");
                 more();
 
-                you.num_gifts[you.religion]++;
+                you.num_current_gifts[you.religion]++;
+                you.num_total_gifts[you.religion]++;
                 did_bless = true;
                 take_note(Note(NOTE_GOD_GIFT, you.religion));
                 mitm[thing_created].inscription = "god gift";

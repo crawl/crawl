@@ -179,7 +179,8 @@ public:
   uint8_t gift_timeout;
   FixedVector<uint8_t, MAX_NUM_GODS>  penance;
   FixedVector<uint8_t, MAX_NUM_GODS>  worshipped;
-  FixedVector<short,   MAX_NUM_GODS>  num_gifts;
+  FixedVector<short,   MAX_NUM_GODS>  num_current_gifts;
+  FixedVector<short,   MAX_NUM_GODS>  num_total_gifts;
 
   FixedVector<uint8_t, NUM_MUTATIONS> mutation;
   FixedVector<uint8_t, NUM_MUTATIONS> innate_mutations;
