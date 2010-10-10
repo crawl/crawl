@@ -3203,13 +3203,6 @@ int monster::res_poison() const
 {
     int u = get_mons_resists(this).poison;
 
-    // Undead get one level of poison resistance.  Don't just add it;
-    // if they're undead created by misc.cc:make_fake_undead(), they
-    // might have at least one level already, in which case they
-    // shouldn't get any more.
-    if (holiness() == MH_UNDEAD)
-        u = std::max(u, 1);
-
     if (mons_itemuse(this) >= MONUSE_STARTING_EQUIPMENT)
     {
         u += scan_mon_inv_randarts(this, ARTP_POISON);
