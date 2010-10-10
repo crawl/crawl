@@ -93,8 +93,6 @@
 
 #define PIETY_HYSTERESIS_LIMIT 1
 
-#define MIN_YRED_SERVANT_THRESHOLD 3
-
 // Item offering messages for the gods:
 // & is replaced by "is" or "are" as appropriate for the item.
 // % is replaced by "s" or "" as appropriate.
@@ -1062,27 +1060,30 @@ static void _inc_gift_timeout(int val)
         you.gift_timeout += val;
 }
 
+// These are sorted in order of power.
+static monster_type _yred_servants[] =
+{
+    MONS_MUMMY, MONS_WIGHT, MONS_GHOUL, MONS_FLYING_SKULL, MONS_HUNGRY_GHOST,
+    MONS_WRAITH, MONS_ROTTING_HULK, MONS_FREEZING_WRAITH,
+    MONS_PHANTASMAL_WARRIOR, MONS_FLAMING_CORPSE, MONS_FLAYED_GHOST,
+    MONS_SKELETAL_WARRIOR, MONS_DEATH_COB, MONS_BONE_DRAGON
+};
+
+#define MIN_YRED_SERVANT_THRESHOLD 3
+#define MAX_YRED_SERVANT_THRESHOLD ARRAYSZ(_yred_servants)
+
 int yred_random_servants(unsigned int threshold, bool force_hostile)
 {
-    // These are sorted in order of power.
-    static monster_type yred_servants[] =
-    {
-        MONS_MUMMY, MONS_WIGHT, MONS_GHOUL, MONS_FLYING_SKULL,
-        MONS_HUNGRY_GHOST, MONS_WRAITH, MONS_ROTTING_HULK,
-        MONS_FREEZING_WRAITH, MONS_PHANTASMAL_WARRIOR, MONS_FLAMING_CORPSE,
-        MONS_FLAYED_GHOST, MONS_SKELETAL_WARRIOR, MONS_DEATH_COB,
-        MONS_BONE_DRAGON
-    };
-
     if (threshold == 0)
-        threshold = ARRAYSZ(yred_servants);
+        threshold = ARRAYSZ(_yred_servants);
     else
     {
-        threshold = std::min(static_cast<unsigned int>(ARRAYSZ(yred_servants)),
-                             threshold);
+        threshold =
+            std::min(static_cast<unsigned int>(ARRAYSZ(_yred_servants)),
+                     threshold);
     }
 
-    monster_type mon_type = yred_servants[random2(threshold)];
+    monster_type mon_type = _yred_servants[random2(threshold)];
     int how_many = (mon_type == MONS_FLYING_SKULL) ? 2 + random2(4)
                                                    : 1;
 
@@ -2122,8 +2123,11 @@ bool do_god_gift(bool prayed_for, bool forced)
                 || (random2(you.piety) >= piety_breakpoint(2)
                     && one_chance_in(4)))
             {
-                yred_random_servants(MIN_YRED_SERVANT_THRESHOLD
-                                     + you.num_current_gifts[you.religion]);
+                unsigned int threshold = MIN_YRED_SERVANT_THRESHOLD
+                                         + you.num_current_gifts[you.religion];
+                threshold = std::min(threshold,
+                    static_cast<unsigned int>(MAX_YRED_SERVANT_THRESHOLD));
+                yred_random_servants(threshold);
 
                 _delayed_monster_done(" grants you @an@ undead servant@s@!",
                                       "", _delayed_gift_callback);
