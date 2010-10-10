@@ -2620,4 +2620,8 @@ void seen_item(const item_def &item)
         if (item.base_type == OBJ_ARMOUR)
             you.seen_armour[item.sub_type] |= 1 << SP_UNKNOWN_BRAND;
     }
+
+    // major hack.  Deconstify should be safe here, but it's still repulsive.
+    if (you.religion == GOD_ASHENZARI)
+        ((item_def*)&item)->flags |= ISFLAG_KNOW_CURSE;
 }
