@@ -1288,6 +1288,9 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
     if (you.species == SP_DEEP_DWARF && spell == SPELL_REGENERATION)
         rc = true;
 
+    if (you.species == SP_CAT && spell == SPELL_CALL_CANINE_FAMILIAR)
+        rc = true;
+
     return (rc);
 }
 
