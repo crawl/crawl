@@ -2125,6 +2125,8 @@ bool do_god_gift(bool prayed_for, bool forced)
             {
                 unsigned int threshold = MIN_YRED_SERVANT_THRESHOLD
                                          + you.num_current_gifts[you.religion];
+                threshold = std::max(threshold,
+                    static_cast<unsigned int>(MIN_YRED_SERVANT_THRESHOLD));
                 threshold = std::min(threshold,
                     static_cast<unsigned int>(MAX_YRED_SERVANT_THRESHOLD));
                 yred_random_servants(threshold);
