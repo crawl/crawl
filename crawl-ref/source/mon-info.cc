@@ -154,6 +154,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     no_regen = !mons_class_can_regenerate(type);
     if (!no_regen)
         no_regen = !mons_class_can_regenerate(base_type);
+    mresists = get_mons_class_resists(type);
     dam = MDAM_OKAY;
     fire_blocker = DNGN_UNSEEN;
 
@@ -290,6 +291,8 @@ monster_info::monster_info(const monster* m, int milev)
     no_regen = (testbits(m->flags, MF_NO_REGEN)
                 || !mons_class_can_regenerate(type)
                 || !mons_class_can_regenerate(base_type));
+
+    mresists = get_mons_resists(m);
 
     if (m->haloed())
         mb |= ULL1 << MB_HALOED;
@@ -1041,59 +1044,6 @@ monster_type monster_info::draco_subspecies() const
         ret = static_cast<monster_type>(base_type);
 
     return (ret);
-}
-
-// XXX: ick ick ick
-static int serpent_of_hell_colour_to_flavour(uint8_t colour)
-{
-    switch (colour)
-    {
-    case RED:
-        return BRANCH_GEHENNA;
-    case WHITE:
-        return BRANCH_COCYTUS;
-    case CYAN:
-        return BRANCH_DIS;
-    case MAGENTA:
-        return BRANCH_TARTARUS;
-    default:
-        return BRANCH_GEHENNA;
-    }
-}
-
-mon_resist_def monster_info::resists() const
-{
-    if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING)
-    {
-        return (ugly_thing_resists(type == MONS_VERY_UGLY_THING,
-                                   ugly_thing_colour_to_flavour(colour)));
-    }
-
-    mon_resist_def resist = get_mons_class_resists(type);
-
-    // Undead get one level of poison resistance.  Don't just add it; if
-    // they're undead created by misc.cc:make_fake_undead(), they might
-    // have at least one level already, in which case they shouldn't get
-    // any more.
-    if (holi == MH_UNDEAD)
-        resist.poison = std::max(static_cast<int>(resist.poison), 1);
-
-    if (mons_genus(type) == MONS_DRACONIAN && type != MONS_DRACONIAN
-        || type == MONS_TIAMAT)
-    {
-        monster_type draco_species = draco_subspecies();
-        if (draco_species != type)
-            resist |= get_mons_class_resists(draco_species);
-    }
-
-    if (type == MONS_SERPENT_OF_HELL)
-    {
-        resist |= serpent_of_hell_resists(
-            serpent_of_hell_colour_to_flavour(colour)
-        );
-    }
-
-    return (resist);
 }
 
 mon_itemuse_type monster_info::itemuse() const

@@ -276,6 +276,37 @@ void init_monster_symbols()
     monster_symbols[MONS_POTION_MIMIC].glyph = dchar_glyph(DCHAR_ITEM_POTION);
 }
 
+static bool _get_kraken_head(monster& mon)
+{
+    if (mon.type != MONS_KRAKEN
+        && mon.base_monster != MONS_KRAKEN
+        && mon.type != MONS_KRAKEN_CONNECTOR
+        && mon.type != MONS_KRAKEN_TENTACLE)
+    {
+        return (false);
+    }
+
+    // For kraken connectors, find the associated tentacle.
+    if (mon.type == MONS_KRAKEN_CONNECTOR)
+    {
+        if (invalid_monster_index(mon.number))
+            return (false);
+
+        mon = menv[mon.number];
+    }
+
+    // For kraken tentacles, find the associated head.
+    if (mon.type == MONS_KRAKEN_TENTACLE)
+    {
+        if (invalid_monster_index(mon.number))
+            return (false);
+
+        mon = menv[mon.number];
+    }
+
+    return (true);
+}
+
 const mon_resist_def &get_mons_class_resists(int mc)
 {
     const monsterentry *me = get_monster_data(mc);
@@ -313,31 +344,37 @@ static mon_resist_def serpent_of_hell_resists(const monster* mon)
 
 mon_resist_def get_mons_resists(const monster* mon)
 {
+    monster newmon = *mon;
+
+    _get_kraken_head(newmon);
+
     mon_resist_def resists;
-    if (mons_is_ghost_demon(mon->type))
-        resists = mon->ghost->resists;
+
+    if (mons_is_ghost_demon(newmon.type))
+        resists = newmon.ghost->resists;
     else
         resists = mon_resist_def();
 
-    resists |= get_mons_class_resists(mon->type);
+    resists |= get_mons_class_resists(newmon.type);
 
     // Undead get one level of poison resistance.  Don't just add it; if
     // they're undead created by misc.cc:make_fake_undead(), they might
     // have at least one level already, in which case they shouldn't get
     // any more.
-    if (mon->holiness() == MH_UNDEAD)
+    if (newmon.holiness() == MH_UNDEAD)
         resists.poison = std::max(static_cast<int>(resists.poison), 1);
 
-    if (mons_genus(mon->type) == MONS_DRACONIAN && mon->type != MONS_DRACONIAN
-        || mon->type == MONS_TIAMAT)
+    if (mons_genus(newmon.type) == MONS_DRACONIAN
+        && newmon.type != MONS_DRACONIAN
+            || newmon.type == MONS_TIAMAT)
     {
-        monster_type draco_species = draco_subspecies(mon);
-        if (draco_species != mon->type)
+        monster_type draco_species = draco_subspecies(&newmon);
+        if (draco_species != newmon.type)
             resists |= get_mons_class_resists(draco_species);
     }
 
-    if (mon->type == MONS_SERPENT_OF_HELL)
-        resists |= serpent_of_hell_resists(mon);
+    if (newmon.type == MONS_SERPENT_OF_HELL)
+        resists |= serpent_of_hell_resists(&newmon);
 
     return (resists);
 }
@@ -1066,37 +1103,6 @@ bool mons_can_regenerate(const monster* mon)
         return (false);
 
     return (mons_class_can_regenerate(mon->type));
-}
-
-static bool _get_kraken_head(monster& mon)
-{
-    if (mon.type != MONS_KRAKEN
-        && mon.base_monster != MONS_KRAKEN
-        && mon.type != MONS_KRAKEN_CONNECTOR
-        && mon.type != MONS_KRAKEN_TENTACLE)
-    {
-        return (false);
-    }
-
-    // For kraken connectors, find the associated tentacle.
-    if (mon.type == MONS_KRAKEN_CONNECTOR)
-    {
-        if (invalid_monster_index(mon.number))
-            return (false);
-
-        mon = menv[mon.number];
-    }
-
-    // For kraken tentacles, find the associated head.
-    if (mon.type == MONS_KRAKEN_TENTACLE)
-    {
-        if (invalid_monster_index(mon.number))
-            return (false);
-
-        mon = menv[mon.number];
-    }
-
-    return (true);
 }
 
 bool mons_class_can_display_wounds(int mc)
