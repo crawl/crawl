@@ -232,10 +232,13 @@ static int _healing_spell(int healed, bool divine_ability,
         if (can_pacify == 0)
             canned_msg(MSG_NOTHING_HAPPENS);
         else
-          if (can_pacify == -2)
-            mpr("You cannot pacify this monster while it is sleeping!");
-          else
-            mpr("You cannot pacify this monster!");
+            if (can_pacify == -2)
+            {
+                mprf("You cannot pacify this monster while %s is sleeping!",
+                     mons->pronoun(PRONOUN_NOCAP).c_str());
+            }
+            else
+                mpr("You cannot pacify this monster!");
         return (0);
     }
 
