@@ -1071,10 +1071,10 @@ mon_resist_def monster_info::resists() const
 
     mon_resist_def resist = get_mons_class_resists(type);
 
-    // Undead get one level of poison resistance.  Don't just add it;
-    // if they're undead created by misc.cc:make_fake_undead(), they
-    // might have at least one level already, in which case they
-    // shouldn't get any more.
+    // Undead get one level of poison resistance.  Don't just add it; if
+    // they're undead created by misc.cc:make_fake_undead(), they might
+    // have at least one level already, in which case they shouldn't get
+    // any more.
     if (holi == MH_UNDEAD)
         resist.poison = std::max(static_cast<int>(resist.poison), 1);
 
