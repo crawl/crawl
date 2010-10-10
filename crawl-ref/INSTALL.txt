@@ -139,12 +139,23 @@ not need to use "make install".  A simple "make" will build Crawl in the
 source directory, where you can run it as "./crawl".
 
 
-Prerequisites:
+Prerequisites (Debian):
+
+On Debian-based systems (Ubuntu, Mepis, Xandros, ...), you can get all
+dependencies by typing the following as root/sudo:
+apt-get install build-essential libncursesw5-dev bison flex liblua5.1-0-dev  \
+  libsqlite3-dev pkg-config libsdl-image1.2-dev libsdl1.2-dev libsqlite3-dev \
+  libfreetype6-dev
+(the last five are needed only for tiles builds).  This is the complete set,
+with it you don't have a need for the bundled "contribs".
+
+
+Prerequisites (other systems):
 
 GNU gcc and g++, GNU make, libncurses or libcurses. You need the development
 headers for ncurses - they may not be installed by default on some Unixes.
 
-For tile builds, you need FreeDesktop's pkg-config.
+For tile builds, you need FreeDesktop's pkg-config and X11 headers.
 
 flex and bison are optional but highly recommended. Recent versions of byacc
 are also fine (edit your makefile appropriately).
