@@ -15,4 +15,6 @@ void up_stairs(dungeon_feature_type force_stair = DNGN_UNSEEN,
 void new_level();
 int runes_in_pack(std::vector<int> &runes);
 
+dungeon_feature_type random_stair ();
+dungeon_feature_type random_branch_stair ();
 #endif
