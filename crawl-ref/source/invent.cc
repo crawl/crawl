@@ -476,6 +476,8 @@ static std::string _no_selectables_message(int item_selector)
         return("You aren't carrying any fruit.");
     case OSEL_PONDER_ARM:
         return("You aren't carrying any armour which can be made ponderous.");
+    case OSEL_CURSED_WORN:
+        return("None of your equipped items are cursed.");
     }
 
     return("You aren't carrying any such object.");
@@ -1107,6 +1109,13 @@ static bool _item_class_selected(const item_def &i, int selector)
 
         return (false);
     }
+
+    case OSEL_CURSED_WORN:
+        return (i.cursed() && item_is_equipped(i)
+                && (&i != you.weapon()
+                    || i.base_type == OBJ_WEAPONS
+                    || i.base_type == OBJ_STAVES));
+
     default:
         return (false);
     }

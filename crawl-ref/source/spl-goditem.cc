@@ -548,8 +548,41 @@ int detect_creatures(int pow, bool telepathic)
     return (creatures_found);
 }
 
-bool remove_curse(bool suppress_msg)
+bool _selectively_remove_curse()
 {
+    bool used = false;
+
+    while(1)
+    {
+        int item_slot = prompt_invent_item("Uncurse which item?", MT_INVLIST,
+                                           OSEL_CURSED_WORN, true, true, false);
+        if (prompt_failed(item_slot))
+            return used;
+
+        item_def& item(you.inv[item_slot]);
+
+        if (!item.cursed()
+            || !item_is_equipped(item)
+            || &item == you.weapon()
+               && (item.base_type == OBJ_WEAPONS
+                || item.base_type == OBJ_STAVES))
+        {
+            mpr("Choose a cursed equipped item, or Esc to abort.");
+            if (Options.auto_list)
+                more();
+            continue;
+        }
+
+        do_uncurse_item(item);
+        used = true;
+    }
+}
+
+bool remove_curse()
+{
+    if (you.religion == GOD_ASHENZARI)
+        return _selectively_remove_curse();
+
     bool success = false;
 
     // Only cursed *weapons* in hand count as cursed. - bwr
@@ -575,13 +608,10 @@ bool remove_curse(bool suppress_msg)
         }
     }
 
-    if (!suppress_msg)
-    {
-        if (success)
-            mpr("You feel as if something is helping you.");
-        else
-            canned_msg(MSG_NOTHING_HAPPENS);
-    }
+    if (success)
+        mpr("You feel as if something is helping you.");
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
 
     return (success);
 }
