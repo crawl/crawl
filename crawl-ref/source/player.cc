@@ -306,7 +306,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
                 merfolk_stop_swimming();
         }
 
-        if(feat_is_water(new_grid) && !stepped)
+        if (feat_is_water(new_grid) && !stepped)
             if (player_likes_water())
                 noisy(4, you.pos(), "Floosh!");
             else
