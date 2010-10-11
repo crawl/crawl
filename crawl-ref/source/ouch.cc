@@ -1270,6 +1270,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         you.lives--;
         you.dead = true;
 
+        stop_delay(true);
         _place_player_corpse(death_type == KILLED_BY_DISINT);
         return;
     }
