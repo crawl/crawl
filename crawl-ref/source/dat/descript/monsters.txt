@@ -1697,8 +1697,7 @@ A small but greatly-feared spider whose venom causes even resistant victims to b
 %%%%
 tentacle
 
-This mighty tentacle is a part of a kraken.
-Any damage dealt to it hurts the whole creature.
+This mighty tentacle is a part of a kraken. Any damage dealt to it hurts the whole creature.
 %%%%
 tentacled monstrosity
 
