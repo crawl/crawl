@@ -92,7 +92,7 @@ void mons_cast_mislead(monster* mons)
 
     // We deal with pointless misleads in the right place now.
 
-    if (wearing_amulet(AMU_CLARITY) || you.religion == GOD_ASHENZARI)
+    if (player_mental_clarity(true))
     {
         mpr("Your vision blurs momentarily.");
         return;
