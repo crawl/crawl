@@ -79,6 +79,7 @@ struct monster_info_base
     mon_holy_type holi;
     mon_intel_type mintel;
     mon_resist_def mresists;
+    mon_itemuse_type mitemuse;
     flight_type fly;
     bool two_weapons;
     bool no_regen;
@@ -183,7 +184,11 @@ struct monster_info : public monster_info_base
         return (mresists);
     }
 
-    mon_itemuse_type itemuse() const;
+    mon_itemuse_type itemuse() const
+    {
+        return (mitemuse);
+    }
+
     int randarts(artefact_prop_type ra_prop) const;
     int res_magic() const;
     int base_speed() const;
