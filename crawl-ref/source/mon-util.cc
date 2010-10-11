@@ -1099,10 +1099,14 @@ bool mons_class_can_regenerate(int mc)
 
 bool mons_can_regenerate(const monster* mon)
 {
-    if (testbits(mon->flags, MF_NO_REGEN))
+    monster newmon = *mon;
+
+    _get_kraken_head(newmon);
+
+    if (testbits(newmon.flags, MF_NO_REGEN))
         return (false);
 
-    return (mons_class_can_regenerate(mon->type));
+    return (mons_class_can_regenerate(newmon.type));
 }
 
 bool mons_class_can_display_wounds(int mc)
