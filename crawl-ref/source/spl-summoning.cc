@@ -1097,7 +1097,8 @@ bool cast_malign_gateway(actor * caster, int pow, god_type god)
         for (int t = 0; t < tries; t++)
         {
             test = caster->pos() + (delta * (2+t+random2(4)));
-            if (!in_bounds(test) || env.grid(test) != DNGN_FLOOR
+            if (!in_bounds(test) || !(env.grid(test) == DNGN_FLOOR
+                                       || env.grid(test) == DNGN_SHALLOW_WATER)
                 || actor_at(test) || count_neighbours_with_func(test, &feat_is_solid) != 0
                 || !caster->see_cell(test))
             {
