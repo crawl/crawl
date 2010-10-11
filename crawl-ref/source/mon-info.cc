@@ -290,7 +290,7 @@ monster_info::monster_info(const monster* m, int milev)
 
     holi = m->holiness();
 
-    // don't give away mindless fake rakshasas and the like
+    // don't give away mindlessness of monsters you're misled about
     if (type_known)
         mintel = mons_intel(m);
     else
