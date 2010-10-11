@@ -147,6 +147,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     mintel = mons_class_intel(type);
     mresists = get_mons_class_resists(type);
     mitemuse = mons_class_itemuse(type);
+    mbase_speed = mons_class_base_speed(type);
     fly = mons_class_flies(type);
     if (fly == FL_NONE)
         fly = mons_class_flies(base_type);
@@ -282,6 +283,8 @@ monster_info::monster_info(const monster* m, int milev)
     mresists = get_mons_resists(m);
 
     mitemuse = mons_itemuse(m);
+
+    mbase_speed = mons_base_speed(m);
 
     // yes, let's consider randarts too, since flight should be visually obvious
     if (type_known)
@@ -1105,15 +1108,6 @@ int monster_info::res_magic() const
         mr /= 2;
 
     return (mr);
-}
-
-int monster_info::base_speed() const
-{
-    if (is(MB_ENSLAVED))
-        return (mons_class_base_speed(base_type));
-
-    return (mons_class_is_zombified(type) ? mons_class_zombie_base_speed(base_type)
-                                          : mons_class_base_speed(type));
 }
 
 size_type monster_info::body_size() const
