@@ -237,10 +237,10 @@ int ash_bondage_level()
         }
 
         // transformed away slots are still considered to be possibly bound
-        if (you_can_wear(i, true))
+        if (you.equip[i] != -1)
         {
             slots[s]++;
-            if (you.equip[i] != -1 && you.inv[you.equip[i]].cursed())
+            if (you.inv[you.equip[i]].cursed())
                 cursed[s]++;
         }
     }
