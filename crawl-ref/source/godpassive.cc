@@ -240,8 +240,14 @@ int ash_bondage_level()
         if (you.equip[i] != -1)
         {
             slots[s]++;
-            if (you.inv[you.equip[i]].cursed())
+            const item_def& item = you.inv[you.equip[i]];
+            if (item.cursed()
+                && (i != EQ_WEAPON
+                    || item.base_type == OBJ_WEAPONS
+                    || item.base_type == OBJ_STAVES))
+            {
                 cursed[s]++;
+            }
         }
     }
 
