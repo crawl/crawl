@@ -1155,7 +1155,7 @@ static void _establish_connection(int tentacle,
             menv[connect].props["outwards"].get_int() = -1;
 
             if (main->holiness() == MH_UNDEAD)
-                make_fake_undead(&menv[connect], main->type);
+                menv[connect].flags |= MF_FAKE_UNDEAD;
 
             menv[connect].max_hit_points = menv[tentacle].max_hit_points;
             menv[connect].hit_points = menv[tentacle].hit_points;
@@ -1205,7 +1205,7 @@ static void _establish_connection(int tentacle,
                 menv[last_mon_idx].props["outwards"].get_int() = connect;
 
             if (main->holiness() == MH_UNDEAD)
-                make_fake_undead(&menv[connect], main->type);
+                menv[connect].flags |= MF_FAKE_UNDEAD;
 
             if (monster_can_submerge(&menv[connect], env.grid(menv[connect].pos())))
                 menv[connect].add_ench(ENCH_SUBMERGED);

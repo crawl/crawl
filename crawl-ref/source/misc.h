@@ -115,7 +115,5 @@ void swap_with_monster(monster* mon_to_swap);
 
 void maybe_id_ring_TC();
 
-void make_fake_undead(monster* mon, monster_type undead);
-
 void entered_malign_portal(actor* act);
 #endif
