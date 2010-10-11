@@ -31,6 +31,9 @@ wolf MONS_WOLF
 hell_hound MONS_HELL_HOUND
 hog MONS_HOG
 hell_hog MONS_HELL_HOG
+%sdir player/felids
+cat4 MONS_FELID
+%sdir dc-mon/animals
 
 ## Bees ('k')
 killer_bee MONS_KILLER_BEE
