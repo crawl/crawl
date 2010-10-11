@@ -1919,7 +1919,9 @@ bool item_is_evokable(const item_def &item, bool known, bool all_wands,
         return (false);
 
     case OBJ_MISCELLANY:
-        if (is_deck(item))
+        if (item.sub_type != MISC_LANTERN_OF_SHADOWS
+            && item.sub_type != MISC_EMPTY_EBONY_CASKET
+            && item.sub_type != MISC_RUNE_OF_ZOT)
         {
             if (!wielded)
             {
@@ -1930,12 +1932,6 @@ bool item_is_evokable(const item_def &item, bool known, bool all_wands,
             return (true);
         }
 
-        if (item.sub_type != MISC_LANTERN_OF_SHADOWS
-            && item.sub_type != MISC_EMPTY_EBONY_CASKET
-            && item.sub_type != MISC_RUNE_OF_ZOT)
-        {
-            return (true);
-        }
         // else fall through
     default:
         if (msg)
