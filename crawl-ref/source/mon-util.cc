@@ -1195,6 +1195,7 @@ bool mons_class_can_use_stairs(int mc)
 {
     return ((!mons_class_is_zombified(mc) || mc == MONS_SPECTRAL_THING)
             && mc != MONS_KRAKEN_TENTACLE
+            && mc != MONS_KRAKEN_CONNECTOR
             && mc != MONS_SILENT_SPECTRE
             && mc != MONS_PLAYER_GHOST);
 }
