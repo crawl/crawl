@@ -4334,7 +4334,7 @@ static monsterentry mondata[] = {
 
 // Feature mimics.
 {
-    MONS_DOOR_MIMIC, '+', LIGHTGRAY, "mimic",
+    MONS_DOOR_MIMIC, '+', LIGHTGRAY, "door mimic",
     M_FIGHTER,
     MR_RES_POISON | MR_RES_ELEC | MR_RES_FIRE | MR_RES_COLD,
     0, 13, MONS_DOOR_MIMIC, MONS_DOOR_MIMIC, MH_NONLIVING, -3,
@@ -4347,7 +4347,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_PORTAL_MIMIC, '\\', ETC_SHIMMER_BLUE, "mimic",
+    MONS_PORTAL_MIMIC, '\\', ETC_SHIMMER_BLUE, "portal mimic",
     M_FIGHTER,
     MR_RES_POISON | MR_RES_ELEC | MR_RES_FIRE | MR_RES_COLD,
     0, 13, MONS_DOOR_MIMIC, MONS_PORTAL_MIMIC, MH_NONLIVING, -3,
@@ -4360,7 +4360,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_TRAP_MIMIC, '^', LIGHTCYAN, "mimic",
+    MONS_TRAP_MIMIC, '^', LIGHTCYAN, "trap mimic",
     M_FIGHTER,
     MR_RES_POISON | MR_RES_ELEC | MR_RES_FIRE | MR_RES_COLD,
     0, 13, MONS_DOOR_MIMIC, MONS_TRAP_MIMIC, MH_NONLIVING, -3,
@@ -4373,7 +4373,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_STAIR_MIMIC, '>', LIGHTGRAY, "mimic",
+    MONS_STAIR_MIMIC, '>', LIGHTGRAY, "stair mimic",
     M_FIGHTER,
     MR_RES_POISON | MR_RES_ELEC | MR_RES_FIRE | MR_RES_COLD,
     0, 13, MONS_DOOR_MIMIC, MONS_STAIR_MIMIC, MH_NONLIVING, -3,
@@ -4386,7 +4386,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_SHOP_MIMIC, '\\', YELLOW, "mimic",
+    MONS_SHOP_MIMIC, '\\', YELLOW, "shop mimic",
     M_FIGHTER,
     MR_RES_POISON | MR_RES_ELEC | MR_RES_FIRE | MR_RES_COLD,
     0, 13, MONS_DOOR_MIMIC, MONS_SHOP_MIMIC, MH_NONLIVING, -3,
@@ -4399,7 +4399,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_FOUNTAIN_MIMIC, '}', ETC_SHIMMER_BLUE, "mimic",
+    MONS_FOUNTAIN_MIMIC, '}', ETC_SHIMMER_BLUE, "fountain mimic",
     M_FIGHTER,
     MR_RES_POISON | MR_RES_ELEC | MR_RES_FIRE | MR_RES_COLD,
     0, 13, MONS_DOOR_MIMIC, MONS_FOUNTAIN_MIMIC, MH_NONLIVING, -3,
