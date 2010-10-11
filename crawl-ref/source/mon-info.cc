@@ -290,7 +290,11 @@ monster_info::monster_info(const monster* m, int milev)
 
     holi = m->holiness();
 
-    mintel = mons_intel(m);
+    // don't give away mindless fake rakshasas and the like
+    if (type_known)
+        mintel = mons_intel(m);
+    else
+        mintel = mons_class_intel(type);
 
     mresists = get_mons_resists(m);
 
@@ -298,7 +302,7 @@ monster_info::monster_info(const monster* m, int milev)
 
     mbase_speed = mons_base_speed(m);
 
-    // yes, let's consider randarts too, since flight should be visually obvious
+    // consider randarts too, since flight should be visually obvious
     if (type_known)
         fly = mons_flies(m);
     else
