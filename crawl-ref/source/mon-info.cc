@@ -146,6 +146,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     holi = mons_class_holiness(type);
     mintel = mons_class_intel(type);
     mresists = get_mons_class_resists(type);
+    mitemuse = mons_class_itemuse(type);
     fly = mons_class_flies(type);
     if (fly == FL_NONE)
         fly = mons_class_flies(base_type);
@@ -279,6 +280,8 @@ monster_info::monster_info(const monster* m, int milev)
     mintel = mons_intel(m);
 
     mresists = get_mons_resists(m);
+
+    mitemuse = mons_itemuse(m);
 
     // yes, let's consider randarts too, since flight should be visually obvious
     if (type_known)
@@ -1042,14 +1045,6 @@ monster_type monster_info::draco_subspecies() const
         ret = static_cast<monster_type>(base_type);
 
     return (ret);
-}
-
-mon_itemuse_type monster_info::itemuse() const
-{
-    if (is(MB_ENSLAVED))
-        return (mons_class_itemuse(base_type));
-
-    return (mons_class_itemuse(type));
 }
 
 int monster_info::randarts(artefact_prop_type ra_prop) const
