@@ -727,6 +727,7 @@ void game_options::reset_options()
     default_friendly_pickup = FRIENDLY_PICKUP_FRIEND;
 
     show_gold_turns = false;
+    show_real_turns = false;
     show_beam       = true;
 
     game = newgame_def();
@@ -2444,6 +2445,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 #endif
 #endif
     else BOOL_OPTION(show_gold_turns);
+    else BOOL_OPTION(show_real_turns);
 #ifndef USE_TILE
     else BOOL_OPTION(show_beam);
 #endif
