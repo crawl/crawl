@@ -2068,6 +2068,10 @@ bool do_god_gift(bool prayed_for, bool forced)
             if (!feat_has_solid_floor(grd(you.pos())))
                 break;
 
+            // Should gift catnip instead.
+            if (you.species == SP_CAT)
+                break;
+
             const bool need_missiles = _need_missile_gift(forced);
 
             if (forced && (!need_missiles || one_chance_in(4))
