@@ -21,23 +21,23 @@
 
 bool unsuitable_misled_monster(monster_type mons)
 {
-    return (mons_is_unique(mons) || mons_is_mimic(mons)
+    return (mons_is_unique(mons)
+            || mons_is_mimic(mons)
+            || mons_is_ghost_demon(mons)
             || mons_class_is_stationary(mons)
+            || mons_class_is_zombified(mons)
+            || mons_class_is_tentacle(mons)
             || mons_genus(mons) == MONS_DRACONIAN
-            || mons_is_pghost(mons)
-            || mons == MONS_DANCING_WEAPON || mons == MONS_UGLY_THING
-            || mons == MONS_VERY_UGLY_THING || mons == MONS_ZOMBIE_SMALL
-            || mons == MONS_ZOMBIE_LARGE || mons == MONS_SKELETON_SMALL
-            || mons == MONS_SKELETON_LARGE || mons == MONS_SIMULACRUM_SMALL
-            || mons == MONS_SIMULACRUM_LARGE || mons == MONS_SPECTRAL_THING
-            || mons == MONS_SLIME_CREATURE || mons == MONS_BALLISTOMYCETE
-            || mons == MONS_SHAPESHIFTER || mons == MONS_PANDEMONIUM_DEMON
-            || mons == MONS_KILLER_KLOWN || mons == MONS_KRAKEN
-            || mons == MONS_KRAKEN_TENTACLE || mons == MONS_HYDRA
-            || mons == MONS_KRAKEN_CONNECTOR
-            || mons == MONS_GIANT_BAT
+            || mons == MONS_MANTICORE
+            || mons == MONS_SLIME_CREATURE
+            || mons == MONS_HYDRA
+            || mons == MONS_KRAKEN
+            || mons == MONS_BALLISTOMYCETE
+            || mons == MONS_HYPERACTIVE_BALLISTOMYCETE
+            || mons == MONS_SHAPESHIFTER
             || mons == MONS_GLOWING_SHAPESHIFTER
-);
+            || mons == MONS_KILLER_KLOWN
+            || mons == MONS_GIANT_BAT);
 }
 
 monster_type get_misled_monster(monster* mons)
