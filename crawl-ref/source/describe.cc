@@ -4216,6 +4216,9 @@ void describe_god( god_type which_god, bool give_title )
         else if (which_god == GOD_ASHENZARI)
         {
             have_any = true;
+            _print_final_god_abil_desc(which_god,
+                "You are provided with a bounty of information.",
+                ABIL_NON_ABILITY);
             std::string buf = "You can pray to bestow "
                               + apostrophise(god_name(which_god))
                               + " curse upon scrolls that usually remove "
