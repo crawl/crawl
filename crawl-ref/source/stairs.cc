@@ -1346,3 +1346,26 @@ void new_level(void)
     whereis_record();
 #endif
 }
+
+// Returns a hatch or stair (up or down)
+dungeon_feature_type random_stair ()
+{
+    return (static_cast<dungeon_feature_type>(
+        DNGN_STONE_STAIRS_DOWN_I+random2(
+            DNGN_ESCAPE_HATCH_UP-DNGN_STONE_STAIRS_DOWN_I+1)));
+}
+
+// Returns a random branch entry stair.
+dungeon_feature_type random_branch_stair ()
+{
+    dungeon_feature_type stair;
+    do
+    {
+        stair = static_cast<dungeon_feature_type>(
+            DNGN_ENTER_FIRST_BRANCH+random2(
+                DNGN_ENTER_LAST_BRANCH-DNGN_ENTER_FIRST_BRANCH+1));
+    }
+    while (stair == DNGN_ENTER_ZOT);
+
+    return (stair);
+}
