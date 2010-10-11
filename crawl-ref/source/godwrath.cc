@@ -369,7 +369,8 @@ static bool _cheibriados_retribution()
         mpr("You lose track of time.");
         you.put_to_sleep(NULL, 30 + random2(20));
         dec_penance(god, 1);
-        if (one_chance_in(wrath_type - 2)){ break; }
+        if (one_chance_in(wrath_type - 2))
+            break;
     // Medium tension
     case 2:
         if (you.duration[DUR_SLOW] < 180 * BASELINE_DELAY)
