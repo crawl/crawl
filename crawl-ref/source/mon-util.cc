@@ -278,8 +278,7 @@ void init_monster_symbols()
 
 static bool _get_kraken_head(monster& mon)
 {
-    if (mon.type != MONS_KRAKEN
-        && mon.base_monster != MONS_KRAKEN
+    if (mons_base_type(&mon) != MONS_KRAKEN
         && mon.type != MONS_KRAKEN_CONNECTOR
         && mon.type != MONS_KRAKEN_TENTACLE)
     {
