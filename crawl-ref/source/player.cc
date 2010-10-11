@@ -495,99 +495,31 @@ void update_player_symbol()
 
 monster_type player_mons(bool transform)
 {
+    monster_type mons;
+
     if (transform)
     {
-        monster_type mons = transform_mons();
+        mons = transform_mons();
         if (mons != MONS_PLAYER)
-            return mons;
+            return (mons);
     }
 
-    switch (you.species)
+    mons = player_species_to_mons_species(you.species);
+
+    if (mons == MONS_ORC)
     {
-    case SP_HUMAN:
-        return MONS_HUMAN;
-    case SP_HIGH_ELF:
-    case SP_DEEP_ELF:
-    case SP_SLUDGE_ELF:
-        return MONS_ELF;
-    case SP_MOUNTAIN_DWARF:
-        return MONS_DWARF;
-    case SP_HALFLING:
-        return MONS_HALFLING;
-    case SP_HILL_ORC:
         if (you.religion == GOD_BEOGH)
-            return you.piety >= piety_breakpoint(4) ? MONS_ORC_HIGH_PRIEST
-                                                    : MONS_ORC_PRIEST;
-        return MONS_ORC;
-    case SP_KOBOLD:
-        return MONS_KOBOLD;
-    case SP_MUMMY:
-        return MONS_MUMMY;
-    case SP_NAGA:
-        return MONS_NAGA;
-    case SP_OGRE:
-        {
-            skill_type sk = best_skill(SK_FIGHTING, NUM_SKILLS - 1);
-            if (sk >= SK_SPELLCASTING && sk < SK_INVOCATIONS)
-                return MONS_OGRE_MAGE;
-        }
-        return MONS_OGRE;
-    case SP_TROLL:
-        return MONS_TROLL;
-    case SP_RED_DRACONIAN:
-        return MONS_RED_DRACONIAN;
-    case SP_WHITE_DRACONIAN:
-        return MONS_WHITE_DRACONIAN;
-    case SP_GREEN_DRACONIAN:
-        return MONS_GREEN_DRACONIAN;
-    case SP_YELLOW_DRACONIAN:
-        return MONS_YELLOW_DRACONIAN;
-    case SP_GREY_DRACONIAN:
-        return MONS_GREY_DRACONIAN;
-    case SP_BLACK_DRACONIAN:
-        return MONS_BLACK_DRACONIAN;
-    case SP_PURPLE_DRACONIAN:
-        return MONS_PURPLE_DRACONIAN;
-    case SP_MOTTLED_DRACONIAN:
-        return MONS_MOTTLED_DRACONIAN;
-    case SP_PALE_DRACONIAN:
-        return MONS_PALE_DRACONIAN;
-    case SP_BASE_DRACONIAN:
-        return MONS_DRACONIAN;
-    case SP_CENTAUR:
-        return MONS_CENTAUR;
-    case SP_DEMIGOD:
-        return MONS_DEMIGOD;
-    case SP_SPRIGGAN:
-        return MONS_SPRIGGAN;
-    case SP_MINOTAUR:
-        return MONS_MINOTAUR;
-    case SP_DEMONSPAWN:
-        return MONS_DEMONSPAWN;
-    case SP_GHOUL:
-        return MONS_GHOUL;
-    case SP_KENKU:
-        return MONS_KENKU;
-    case SP_MERFOLK:
-        return MONS_MERFOLK;
-    case SP_VAMPIRE:
-        return MONS_VAMPIRE;
-    case SP_DEEP_DWARF:
-        return MONS_DEEP_DWARF;
-    case SP_CAT:
-        return MONS_FELID;
-    case SP_ELF:
-    case SP_HILL_DWARF:
-    case SP_OGRE_MAGE:
-    case SP_GREY_ELF:
-    case SP_GNOME:
-    case NUM_SPECIES:
-    case SP_UNKNOWN:
-    case SP_RANDOM:
-    case SP_VIABLE:
-        ASSERT(!"player of an invalid species");
+            mons = (you.piety >= piety_breakpoint(4)) ? MONS_ORC_HIGH_PRIEST
+                                                      : MONS_ORC_PRIEST;
     }
-    return MONS_PROGRAM_BUG;
+    else if (mons == MONS_OGRE)
+    {
+        const skill_type sk = best_skill(SK_FIGHTING, NUM_SKILLS - 1);
+        if (sk >= SK_SPELLCASTING && sk < SK_INVOCATIONS)
+            mons = MONS_OGRE_MAGE;
+    }
+
+    return (mons);
 }
 
 void update_vision_range()

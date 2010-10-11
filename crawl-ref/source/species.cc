@@ -325,6 +325,89 @@ size_type species_size(species_type species, size_part_type psize)
     }
 }
 
+monster_type player_species_to_mons_species(species_type species)
+{
+    switch (species)
+    {
+    case SP_HUMAN:
+        return (MONS_HUMAN);
+    case SP_HIGH_ELF:
+    case SP_DEEP_ELF:
+    case SP_SLUDGE_ELF:
+        return (MONS_ELF);
+    case SP_MOUNTAIN_DWARF:
+        return (MONS_DWARF);
+    case SP_HALFLING:
+        return (MONS_HALFLING);
+    case SP_HILL_ORC:
+        return (MONS_ORC);
+    case SP_KOBOLD:
+        return (MONS_KOBOLD);
+    case SP_MUMMY:
+        return (MONS_MUMMY);
+    case SP_NAGA:
+        return (MONS_NAGA);
+    case SP_OGRE:
+        return (MONS_OGRE);
+    case SP_TROLL:
+        return (MONS_TROLL);
+    case SP_RED_DRACONIAN:
+        return (MONS_RED_DRACONIAN);
+    case SP_WHITE_DRACONIAN:
+        return (MONS_WHITE_DRACONIAN);
+    case SP_GREEN_DRACONIAN:
+        return (MONS_GREEN_DRACONIAN);
+    case SP_YELLOW_DRACONIAN:
+        return (MONS_YELLOW_DRACONIAN);
+    case SP_GREY_DRACONIAN:
+        return (MONS_GREY_DRACONIAN);
+    case SP_BLACK_DRACONIAN:
+        return (MONS_BLACK_DRACONIAN);
+    case SP_PURPLE_DRACONIAN:
+        return (MONS_PURPLE_DRACONIAN);
+    case SP_MOTTLED_DRACONIAN:
+        return (MONS_MOTTLED_DRACONIAN);
+    case SP_PALE_DRACONIAN:
+        return (MONS_PALE_DRACONIAN);
+    case SP_BASE_DRACONIAN:
+        return (MONS_DRACONIAN);
+    case SP_CENTAUR:
+        return (MONS_CENTAUR);
+    case SP_DEMIGOD:
+        return (MONS_DEMIGOD);
+    case SP_SPRIGGAN:
+        return (MONS_SPRIGGAN);
+    case SP_MINOTAUR:
+        return (MONS_MINOTAUR);
+    case SP_DEMONSPAWN:
+        return (MONS_DEMONSPAWN);
+    case SP_GHOUL:
+        return (MONS_GHOUL);
+    case SP_KENKU:
+        return (MONS_KENKU);
+    case SP_MERFOLK:
+        return (MONS_MERFOLK);
+    case SP_VAMPIRE:
+        return (MONS_VAMPIRE);
+    case SP_DEEP_DWARF:
+        return (MONS_DEEP_DWARF);
+    case SP_CAT:
+        return (MONS_FELID);
+    case SP_ELF:
+    case SP_HILL_DWARF:
+    case SP_OGRE_MAGE:
+    case SP_GREY_ELF:
+    case SP_GNOME:
+    case NUM_SPECIES:
+    case SP_UNKNOWN:
+    case SP_RANDOM:
+    case SP_VIABLE:
+        ASSERT(!"player of an invalid species");
+    default:
+        return (MONS_PROGRAM_BUG);
+    }
+}
+
 bool is_valid_species(species_type species)
 {
     return (species >= 0 && species < NUM_SPECIES);
