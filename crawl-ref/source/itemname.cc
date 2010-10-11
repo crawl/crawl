@@ -2857,6 +2857,8 @@ bool is_useless_item(const item_def &item, bool temp)
         case SCR_CURSE_WEAPON: // for non-Ashenzari, already handled
         case SCR_CURSE_ARMOUR:
             return (you.species == SP_CAT);
+        case SCR_DETECT_CURSE:
+            return (you.religion == GOD_ASHENZARI);
         default:
             return (false);
         }
