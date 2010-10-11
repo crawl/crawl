@@ -32,6 +32,9 @@ wolf CORPSE_WOLF
 hog CORPSE_HOG
 hell_hound CORPSE_HELL_HOUND
 hell_hog CORPSE_HELL_HOG
+%sdir player/felids
+cat1 CORPSE_FELID
+%sdir dc-mon/animals
 
 ## Bees ('k')
 %back dc-misc/blood_green
