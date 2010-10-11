@@ -284,13 +284,9 @@ monster_info::monster_info(const monster* m, int milev)
     else
         fly = mons_class_flies(type);
 
-    two_weapons = (testbits(m->flags, MF_TWO_WEAPONS)
-                   || mons_class_wields_two_weapons(type)
-                   || mons_class_wields_two_weapons(base_type));
+    two_weapons = mons_wields_two_weapons(m);
 
-    no_regen = (testbits(m->flags, MF_NO_REGEN)
-                || !mons_class_can_regenerate(type)
-                || !mons_class_can_regenerate(base_type));
+    no_regen = !mons_can_regenerate(m);
 
     mresists = get_mons_resists(m);
 
