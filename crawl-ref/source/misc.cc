@@ -1960,7 +1960,11 @@ void bring_to_safety()
     {
         pos.x = random2(GXM);
         pos.y = random2(GYM);
-        if (!in_bounds(pos) || grd(pos) != DNGN_FLOOR || env.cgrid(pos) != EMPTY_CLOUD)
+        if (!in_bounds(pos)
+            || grd(pos) != DNGN_FLOOR
+            || env.cgrid(pos) != EMPTY_CLOUD
+            || crawl_state.game_is_sprint()
+               && distance(pos, you.pos()) > dist_range(10))
         {
             tries++;
             continue;
