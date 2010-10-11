@@ -145,6 +145,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     colour = LIGHTGRAY;
     holi = mons_class_holiness(type);
     mintel = mons_class_intel(type);
+    mresists = get_mons_class_resists(type);
     fly = mons_class_flies(type);
     if (fly == FL_NONE)
         fly = mons_class_flies(base_type);
@@ -154,7 +155,6 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     no_regen = !mons_class_can_regenerate(type);
     if (!no_regen)
         no_regen = !mons_class_can_regenerate(base_type);
-    mresists = get_mons_class_resists(type);
     dam = MDAM_OKAY;
     fire_blocker = DNGN_UNSEEN;
 
@@ -278,6 +278,8 @@ monster_info::monster_info(const monster* m, int milev)
 
     mintel = mons_intel(m);
 
+    mresists = get_mons_resists(m);
+
     // yes, let's consider randarts too, since flight should be visually obvious
     if (type_known)
         fly = mons_flies(m);
@@ -287,8 +289,6 @@ monster_info::monster_info(const monster* m, int milev)
     two_weapons = mons_wields_two_weapons(m);
 
     no_regen = !mons_can_regenerate(m);
-
-    mresists = get_mons_resists(m);
 
     if (m->haloed())
         mb |= ULL1 << MB_HALOED;

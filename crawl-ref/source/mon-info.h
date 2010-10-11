@@ -78,10 +78,10 @@ struct monster_info_base
     std::string quote;
     mon_holy_type holi;
     mon_intel_type mintel;
+    mon_resist_def mresists;
     flight_type fly;
     bool two_weapons;
     bool no_regen;
-    mon_resist_def mresists;
 };
 
 // Monster info used by the pane; precomputes some data
