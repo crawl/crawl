@@ -3104,8 +3104,11 @@ static std::string _monster_stat_description(const monster_info& mi)
         }
     }
 
-    if (mons_class_flag(mi.type, M_STATIONARY) && !mons_is_tentacle(mi.type))
+    if (mons_class_flag(mi.type, M_STATIONARY)
+        && !mons_class_is_tentacle(mi.type))
+    {
         result << pronoun << " cannot move.\n";
+    }
 
     // Monsters can glow from both light and radiation.
     if (mons_class_flag(mi.type, M_GLOWS_LIGHT))

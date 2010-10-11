@@ -432,7 +432,7 @@ bool player_or_mon_in_sanct(const monster* mons);
 
 int get_dist_to_nearest_monster();
 
-bool mons_is_tentacle (const monster* mons);
-bool mons_is_tentacle (int mc);
+bool mons_class_is_tentacle(int mc);
+bool mons_is_tentacle(const monster* mon);
 
 #endif
