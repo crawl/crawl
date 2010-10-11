@@ -3293,6 +3293,15 @@ void god_welcome_identify_gear()
         flash_view_delay(god_colour(you.religion), 300);
         set_ident_type(*amulet, ID_KNOWN_TYPE);
     }
+
+    if (you.religion == GOD_ASHENZARI)
+    {
+        set_ident_type(OBJ_SCROLLS, SCR_REMOVE_CURSE, ID_KNOWN_TYPE);
+        set_ident_type(OBJ_SCROLLS, SCR_CURSE_WEAPON, ID_KNOWN_TYPE);
+        set_ident_type(OBJ_SCROLLS, SCR_CURSE_ARMOUR, ID_KNOWN_TYPE);
+        set_ident_type(OBJ_SCROLLS, SCR_CURSE_JEWELLERY, ID_KNOWN_TYPE);
+        ash_id_inventory();
+    }
 }
 
 void god_pitch(god_type which_god)
