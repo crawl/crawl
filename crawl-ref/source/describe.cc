@@ -2986,14 +2986,14 @@ static std::string _describe_draconian(const monster_info& mi)
     {
         const std::string drac_col = _describe_draconian_colour(subsp);
         if (!drac_col.empty())
-            description += "  " + drac_col;
+            description += " " + drac_col;
     }
 
     if (subsp != mi.type)
     {
         const std::string drac_role = _describe_draconian_role(mi.type);
         if (!drac_role.empty())
-            description += "  " + drac_role;
+            description += " " + drac_role;
     }
 
     return (description);
