@@ -296,11 +296,19 @@ monster_info::monster_info(const monster* m, int milev)
     else
         mintel = mons_class_intel(type);
 
-    mresists = get_mons_resists(m);
+    // don't give away resistances of monsters you're misled about
+    if (type_known)
+        mresists = get_mons_resists(m);
+    else
+        mresists = get_mons_class_resists(type);
 
     mitemuse = mons_itemuse(m);
 
-    mbase_speed = mons_base_speed(m);
+    // don't give away base speed of monsters you're misled about
+    if (type_known)
+        mbase_speed = mons_base_speed(m);
+    else
+        mbase_speed = mons_class_base_speed(type);
 
     // consider randarts too, since flight should be visually obvious
     if (type_known)
@@ -310,7 +318,11 @@ monster_info::monster_info(const monster* m, int milev)
 
     two_weapons = mons_wields_two_weapons(m);
 
-    no_regen = !mons_can_regenerate(m);
+    // don't give away regeneration of monsters you're misled about
+    if (type_known)
+        no_regen = !mons_can_regenerate(m);
+    else
+        no_regen = !mons_class_can_regenerate(type);
 
     if (m->haloed())
         mb |= ULL1 << MB_HALOED;
