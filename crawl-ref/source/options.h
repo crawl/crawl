@@ -94,6 +94,7 @@ public:
     int         default_friendly_pickup;
 
     bool        show_gold_turns; // Show gold and turns in HUD.
+    bool        show_real_turns; // Show real turns instead of actions.
     bool        show_beam;       // Show targeting beam by default.
 
     uint32_t    autopickups;     // items to autopickup
