@@ -1224,6 +1224,18 @@ bool spell_is_useless(spell_type spell, bool transient)
         if (you.can_see_invisible(false, false))
             return (true);
         break;
+    // weapon branding is useless
+    case SPELL_TUKIMAS_VORPAL_BLADE:
+    case SPELL_FIRE_BRAND:
+    case SPELL_FREEZING_AURA:
+    case SPELL_LETHAL_INFUSION:
+    case SPELL_WARP_BRAND:
+    case SPELL_EXCRUCIATING_WOUNDS:
+    // could be useful if it didn't require wielding
+    case SPELL_TUKIMAS_DANCE:
+        if (you.species == SP_CAT)
+            return (true);
+        break;
     default:
         break; // quash unhandled constants warnings
     }
