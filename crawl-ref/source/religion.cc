@@ -3296,6 +3296,12 @@ void god_welcome_identify_gear()
 
     if (you.religion == GOD_ASHENZARI)
     {
+        // Seemingly redundant with ash_id_inventory(), but we don't want to
+        // announce items where the only new information is their cursedness.
+        for (int i = 0; i < ENDOFPACK; i++)
+            if (you.inv[i].defined())
+                you.inv[i].flags |= ISFLAG_KNOW_CURSE;
+
         set_ident_type(OBJ_SCROLLS, SCR_REMOVE_CURSE, ID_KNOWN_TYPE);
         set_ident_type(OBJ_SCROLLS, SCR_CURSE_WEAPON, ID_KNOWN_TYPE);
         set_ident_type(OBJ_SCROLLS, SCR_CURSE_ARMOUR, ID_KNOWN_TYPE);
