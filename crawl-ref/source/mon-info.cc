@@ -1047,31 +1047,7 @@ monster_type monster_info::draco_subspecies() const
     }
 
     if (type == MONS_PLAYER_ILLUSION)
-    {
-        switch (u.ghost.species)
-        {
-        case SP_RED_DRACONIAN:
-            return MONS_RED_DRACONIAN;
-        case SP_WHITE_DRACONIAN:
-            return MONS_WHITE_DRACONIAN;
-        case SP_GREEN_DRACONIAN:
-            return MONS_GREEN_DRACONIAN;
-        case SP_YELLOW_DRACONIAN:
-            return MONS_YELLOW_DRACONIAN;
-        case SP_BLACK_DRACONIAN:
-            return MONS_BLACK_DRACONIAN;
-        case SP_PURPLE_DRACONIAN:
-            return MONS_PURPLE_DRACONIAN;
-        case SP_MOTTLED_DRACONIAN:
-            return MONS_MOTTLED_DRACONIAN;
-        case SP_PALE_DRACONIAN:
-            return MONS_PALE_DRACONIAN;
-        case SP_GREY_DRACONIAN:
-            return MONS_GREY_DRACONIAN;
-        default:
-            return MONS_DRACONIAN;
-        }
-    }
+        return (player_species_to_mons_species(u.ghost.species));
 
     monster_type ret = mons_species(type);
 
