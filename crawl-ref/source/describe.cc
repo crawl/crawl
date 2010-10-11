@@ -2471,7 +2471,7 @@ bool _actions_prompt( item_def &item, bool allow_inscribe)
 
     actions.push_back(CMD_DROP);
 
-    if (allow_inscribe && wherey() <= get_number_of_lines() - 2)
+    if (allow_inscribe)
         actions.push_back(CMD_INSCRIBE_ITEM);
 
     //FIXME: there must be a more efficient way to set up this static map.
@@ -2600,6 +2600,18 @@ bool describe_item( item_def &item, bool allow_inscribe, bool shopping )
     return (true);
 }
 
+void _safe_newline()
+{
+    if(wherey() == get_number_of_lines())
+    {
+        cgotoxy(1, wherey());
+        formatted_string::parse_string(std::string(80, ' ')).display();
+        cgotoxy(1, wherey());
+    }
+    else
+        formatted_string::parse_string("\n").display();
+}
+
 // There are currently two ways to inscribe an item:
 // * using the inscribe command ('{') -> msgwin = true
 // * from the inventory when viewing an item -> msgwin = false
@@ -2647,7 +2659,8 @@ void inscribe_item(item_def &item, bool msgwin)
             mpr(prompt.c_str(), MSGCH_PROMPT);
         else
         {
-            prompt = "\n<cyan>" + prompt + "</cyan>";
+            _safe_newline();
+            prompt = "<cyan>" + prompt + "</cyan>";
             formatted_string::parse_string(prompt).display();
 
             if (Hints.hints_left && wherey() <= get_number_of_lines() - 5)
@@ -2692,7 +2705,8 @@ void inscribe_item(item_def &item, bool msgwin)
             ret = msgwin_get_line(prompt, buf, sizeof buf);
         else
         {
-            prompt = "\n<cyan>" + prompt + "</cyan>";
+            _safe_newline();
+            prompt = "<cyan>" + prompt + "</cyan>";
             formatted_string::parse_string(prompt).display();
             ret = cancelable_get_line(buf, sizeof buf);
         }
