@@ -359,8 +359,11 @@ monster_info::monster_info(const monster* m, int milev)
                 mb |= ULL1 << MB_WANDERING;
         }
         // TODO: is this ever needed?
-        else if (m->foe == MHITNOT && !mons_is_batty(m) && m->attitude == ATT_HOSTILE)
+        else if (m->foe == MHITNOT && !mons_is_batty(m)
+                 && m->attitude == ATT_HOSTILE)
+        {
             mb |= ULL1 << MB_UNAWARE;
+        }
     }
 
     for (mon_enchant_list::const_iterator e = m->enchantments.begin();
