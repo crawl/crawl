@@ -760,7 +760,7 @@ A potion which can send one into an incoherent rage.
 %%%%
 potion of blood
 
-A potion containing the essence of life. Vital for all living creatures, as well as some undead ones.
+A potion containing the essence of life. It is vital for all living creatures, as well as some undead ones. It can also provide nutrition for those capable of eating meat.
 %%%%
 potion of brilliance
 
@@ -768,7 +768,7 @@ A magic potion which greatly increases the intelligence and magical power of one
 %%%%
 potion of coagulated blood
 
-A potion containing the essence of life. Vital for all living creatures, as well as some undead ones. The blood within won't be palatable much longer.
+A potion containing the essence of life. It is vital for all living creatures, as well as some undead ones. It can also provide nutrition for those capable of eating meat. The blood within won't be palatable much longer.
 %%%%
 potion of confusion
 
