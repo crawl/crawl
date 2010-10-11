@@ -1995,7 +1995,7 @@ enum monster_type                      // (int) menv[].type
     MONS_EROLCHA,
     MONS_DONALD,
     MONS_URUG,
-    MONS_UNUSED_UNIQUE,                //  290
+      MONS_UNUSED_UNIQUE,              //  290
     MONS_JOSEPH,
     MONS_SNORG, // was Anita - Snorg is correct 16jan2000 {dlb}
     MONS_ERICA,
