@@ -36,6 +36,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "it_use3.h"
 #include "jobs.h"
 #include "libutil.h"
 #include "macro.h"
@@ -2420,6 +2421,11 @@ bool _actions_prompt( item_def &item, bool allow_inscribe)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:
+    case OBJ_MISCELLANY:
+        if (item.sub_type == MISC_EMPTY_EBONY_CASKET
+            || item.sub_type == MISC_RUNE_OF_ZOT)
+                break;
+
         if (item_is_equipped(item))
             actions.push_back(CMD_WEAPON_SWAP); // no unwield command
         else
@@ -2437,9 +2443,6 @@ bool _actions_prompt( item_def &item, bool allow_inscribe)
             actions.push_back(CMD_REMOVE_ARMOUR);
         else
             actions.push_back(CMD_WEAR_ARMOUR);
-        break;
-    case OBJ_WANDS:
-        actions.push_back(CMD_EVOKE);
         break;
     case OBJ_FOOD:
         actions.push_back(CMD_EAT);
@@ -2462,6 +2465,9 @@ bool _actions_prompt( item_def &item, bool allow_inscribe)
     if(clua.callbooleanfn(false, "ch_item_wieldable", "i", &item))
         actions.push_back(CMD_WIELD_WEAPON);
 #endif
+
+    if(item_is_evokable(item))
+        actions.push_back(CMD_EVOKE);
 
     actions.push_back(CMD_DROP);
 
@@ -2525,7 +2531,7 @@ bool _actions_prompt( item_def &item, bool allow_inscribe)
         return false;
     case CMD_EVOKE:
         redraw_screen();
-        zap_wand(slot);
+        evoke_item(slot);
         return false;
     case CMD_EAT:
         redraw_screen();
