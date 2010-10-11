@@ -2462,11 +2462,11 @@ bool _actions_prompt( item_def &item, bool allow_inscribe)
         break;
     }
 #if defined(CLUA_BINDINGS)
-    if(clua.callbooleanfn(false, "ch_item_wieldable", "i", &item))
+    if (clua.callbooleanfn(false, "ch_item_wieldable", "i", &item))
         actions.push_back(CMD_WIELD_WEAPON);
 #endif
 
-    if(item_is_evokable(item))
+    if (item_is_evokable(item))
         actions.push_back(CMD_EVOKE);
 
     actions.push_back(CMD_DROP);
@@ -2602,7 +2602,7 @@ bool describe_item( item_def &item, bool allow_inscribe, bool shopping )
 
 void _safe_newline()
 {
-    if(wherey() == get_number_of_lines())
+    if (wherey() == get_number_of_lines())
     {
         cgotoxy(1, wherey());
         formatted_string::parse_string(std::string(80, ' ')).display();
@@ -2842,7 +2842,7 @@ static int _get_spell_description(const spell_type spell,
         description += desc_cannot_memorise_reason(undead);
     }
     if (item && item->base_type == OBJ_BOOKS && in_inventory(*item))
-        if(you.has_spell(spell))
+        if (you.has_spell(spell))
         {
             description += "\n\n";
             description += "(F)orget this spell by destroying the book.";

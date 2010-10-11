@@ -159,7 +159,7 @@ inline void process_description(T &proc, const describe_info &inf)
         // There is a default 1 line addition for some reason.
         num_lines = body_lines + 1;
     }
-    else if(body_lines + num_lines + 2 <= height)
+    else if (body_lines + num_lines + 2 <= height)
     {
         desc = inf.title + "\n\n";
         desc += inf.body.str();

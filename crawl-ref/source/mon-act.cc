@@ -2646,7 +2646,7 @@ static bool _monster_eat_item(monster* mons, bool nearby)
             eaten++;
         }
 
-        if(eaten && !shown_msg && player_can_hear(mons->pos()))
+        if (eaten && !shown_msg && player_can_hear(mons->pos()))
         {
             mprf(MSGCH_SOUND, "You hear a%s slurping noise.",
                  nearby ? "" : " distant");
