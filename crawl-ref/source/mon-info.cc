@@ -139,25 +139,37 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     mb = 0;
     attitude = ATT_HOSTILE;
     pos = coord_def(0, 0);
+
     type = p_type;
     base_type = p_base_type;
+
     number = 0;
     colour = LIGHTGRAY;
+
     holi = mons_class_holiness(type);
+
     mintel = mons_class_intel(type);
+
     mresists = get_mons_class_resists(type);
+
     mitemuse = mons_class_itemuse(type);
+
     mbase_speed = mons_class_base_speed(type);
+
     fly = mons_class_flies(type);
     if (fly == FL_NONE)
         fly = mons_class_flies(base_type);
+
     two_weapons = mons_class_wields_two_weapons(type);
     if (!two_weapons)
         two_weapons = mons_class_wields_two_weapons(base_type);
+
     no_regen = !mons_class_can_regenerate(type);
     if (!no_regen)
         no_regen = !mons_class_can_regenerate(base_type);
+
     dam = MDAM_OKAY;
+
     fire_blocker = DNGN_UNSEEN;
 
     if (mons_is_pghost(type))
