@@ -887,11 +887,6 @@ trap_type get_trap_type(const coord_def& pos)
         monster *mimic = monster_at(pos);
         if (mimic->props.exists("trap_type"))
             return static_cast<trap_type>(mimic->props["trap_type"].get_short());
-
-        trap_type trap = random_trap(DNGN_TRAP_MECHANICAL);
-        mimic->props["trap_type"] = trap;
-
-        return (trap);
     }
 
     return (TRAP_UNASSIGNED);

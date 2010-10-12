@@ -23,7 +23,9 @@
 #include "externs.h"
 #include "options.h"
 #include "ghost.h"
+#include "itemname.h"
 #include "lev-pand.h"
+#include "libutil.h"
 #include "message.h"
 #include "mislead.h"
 #include "mon-behv.h"
@@ -35,6 +37,7 @@
 #include "player.h"
 #include "random.h"
 #include "religion.h"
+#include "shopping.h"
 #include "sprint.h"
 #include "state.h"
 #include "stuff.h"
@@ -1409,6 +1412,47 @@ static int _place_monster_aux(const mgen_data &mg,
             mon->reset();
             mgrd(fpos) = NON_MONSTER;
             return (-1);
+        }
+    }
+    else if (mons_is_feat_mimic(mg.cls))
+    {
+        switch (mg.cls)
+        {
+            case MONS_DOOR_MIMIC:
+                break;
+
+            case MONS_PORTAL_MIMIC:
+                break;
+
+            case MONS_TRAP_MIMIC:
+                mon->props["trap_type"] = random_trap(DNGN_TRAP_MECHANICAL);
+                break;
+
+            // Needs a more complicated block.
+            case MONS_SHOP_MIMIC:
+            {
+                // Otherwise we need to make a random name.
+                shop_type type = static_cast<shop_type>(SHOP_WEAPON+random2(NUM_SHOPS-1));
+
+                std::string sh_name = apostrophise(make_name(random_int(), false)) +
+                        " " + shop_type_name(type);
+                std::string sh_suffix = shop_type_suffix(type, fpos);
+                if (!sh_suffix.empty())
+                    sh_name += " " + sh_suffix;
+
+                mon->props["shop_name"] = sh_name;
+                mon->props["shop_type"] = type;
+                break;
+            }
+
+            case MONS_STAIR_MIMIC:
+                break;
+
+            case MONS_FOUNTAIN_MIMIC:
+                break;
+
+            default:
+                break;
         }
     }
 
