@@ -498,6 +498,10 @@ clay golem
 
 A huge animated clay statue.
 %%%%
+connector
+
+Part of the mighty tentacle of a kraken. Any damage dealt to it hurts the whole creature.
+%%%%
 crocodile
 
 A crocodile with great crunching jaws.
