@@ -2884,6 +2884,7 @@ void excommunication(god_type new_god)
     you.duration[DUR_PIETY_POOL] = 0; // your loss
     you.piety = 0;
     you.piety_hysteresis = 0;
+    you.bondage_level = 0;
 
     you.num_current_gifts[old_god] = 0;
 
@@ -3412,6 +3413,7 @@ void god_pitch(god_type which_god)
     }
 
     god_welcome_identify_gear();
+    ash_check_bondage();
 
     // When you start worshipping a good god, you make all non-hostile
     // unholy and evil beings hostile; when you start worshipping Zin,
