@@ -4511,8 +4511,8 @@ static void _vulnerability_scroll()
     {
         if (monster* mon = monster_at(*ri))
         {
-			debuff_monster(mon);
-			
+                        debuff_monster(mon);
+
             // If relevant, monsters have their MR halved.
             if (!mons_immune_magic(mon))
                 mon->add_ench(lowered_mr);

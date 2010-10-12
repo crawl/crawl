@@ -1368,11 +1368,11 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_BREATHE_STICKY_FLAME:
     case ABIL_BREATHE_STEAM:
     case ABIL_BREATHE_MEPHITIC:
-        beam.range = _calc_breath_ability_range(abil.ability);    
+        beam.range = _calc_breath_ability_range(abil.ability);
         if (!spell_direction(abild, beam))
             return (false);
-            
-    case ABIL_BREATHE_LIGHTNING: // not targeted        
+
+    case ABIL_BREATHE_LIGHTNING: // not targeted
 
         switch (abil.ability)
         {
@@ -1441,14 +1441,14 @@ static bool _do_ability(const ability_def& abil)
                 return (false);
             }
             break;
-            
+
         case ABIL_BREATHE_MEPHITIC:
              if (!zapping(ZAP_BREATHE_MEPHITIC, you.experience_level, beam, true,
                           "You exhale a blast of noxious fumes."))
              {
                  return (false);
              }
-             break;                 
+             break;
 
         default:
             break;
@@ -1459,7 +1459,7 @@ static bool _do_ability(const ability_def& abil)
 
         if (abil.ability == ABIL_BREATHE_STEAM)
             you.duration[DUR_BREATH_WEAPON] /= 2;
-        
+
         break;
 
     case ABIL_EVOKE_BLINK:      // randarts

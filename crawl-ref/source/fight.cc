@@ -1345,7 +1345,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
             }
 
             break;
-        }               
+        }
 
         default:
             break;
@@ -1379,14 +1379,14 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         {
             _player_vampire_draws_blood(defender->as_monster(), damage_done);
         }
-        
-        if (atk == UNAT_TAILSLAP && you.species == SP_GREY_DRACONIAN && 
+
+        if (atk == UNAT_TAILSLAP && you.species == SP_GREY_DRACONIAN &&
             grd(you.pos()) == DNGN_DEEP_WATER &&
             feat_is_water(grd(defender->as_monster()->pos())))
         {
             do_trample();
         }
-                     
+
     }
     else // no damage was done
     {

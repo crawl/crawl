@@ -2345,12 +2345,12 @@ void bolt::affect_endpoint()
         big_cloud(CLOUD_COLD, whose_kill(), killer(), pos(),
                   random_range(10, 15), 9);
     }
-    
+
     if ((name == "fiery breath" && you.species == SP_RED_DRACONIAN) ||
          name == "searing blast") // monster and player red draconian breath abilities
     {
         place_cloud(CLOUD_FIRE, pos(), 5 + random2(5), whose_kill(), killer());
-    }     
+    }
 }
 
 bool bolt::stop_at_target() const
@@ -2610,9 +2610,9 @@ void bolt::affect_place_clouds()
 
     if (name == "poison gas")
         place_cloud(CLOUD_POISON, p, random2(4) + 3, whose_kill(), killer());
-        
+
     if (name == "blast of choking fumes")
-       place_cloud(CLOUD_STINK, p, random2(4) + 3, whose_kill(), killer());    
+       place_cloud(CLOUD_STINK, p, random2(4) + 3, whose_kill(), killer());
 
 }
 
@@ -3652,7 +3652,7 @@ void bolt::affect_player()
 
     if ((flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE)
          || (name == "chilling blast" && you.airborne()))
-        beam_hits_actor(&you); 
+        beam_hits_actor(&you);
 }
 
 int bolt::beam_source_as_target() const
@@ -3959,7 +3959,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     {
         const int levels = std::min(4, 1 + random2(mon->hit_dice) / 2);
         napalm_monster(mon, whose_kill(), levels);
-        
+
         if (name == "splash of liquid fire")
         {
             // the breath weapon can splash to adjacent monsters
@@ -3967,13 +3967,13 @@ void bolt::monster_post_hit(monster* mon, int dmg)
             {
                 if (grid_distance(you.pos(), mi->pos()) == 1 &&
                     grid_distance(mon->pos(), mi->pos()) == 1)
-                {   
+                {
                     mprf("The sticky flame splashes onto %s!",
-                         mi->name(DESC_NOCAP_THE).c_str()); 
+                         mi->name(DESC_NOCAP_THE).c_str());
                     napalm_monster(*mi, whose_kill(), levels);
                 }
             }
-        }       
+        }
     }
 
     bool wake_mimic = true;
@@ -4004,15 +4004,15 @@ void bolt::monster_post_hit(monster* mon, int dmg)
 
     if ((flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE) ||
           (name == "freezing breath" && mon->flight_mode() == FL_FLY))
-        beam_hits_actor(mon);           
+        beam_hits_actor(mon);
 }
 
 void bolt::beam_hits_actor(actor *act)
 {
     const coord_def oldpos(act->pos());
-    
+
     const bool drac_breath = (name == "freezing breath" || name == "chilling blast");
-    
+
     if (knockback_actor(act))
     {
         if (you.can_see(act))
@@ -4022,7 +4022,7 @@ void bolt::beam_hits_actor(actor *act)
                 mprf("%s %s blown backwards by the freezing wind.",
                      act->name(DESC_CAP_THE).c_str(),
                      act->conj_verb("are").c_str());
-                knockback_actor(act);     
+                knockback_actor(act);
             }
             else
             {
