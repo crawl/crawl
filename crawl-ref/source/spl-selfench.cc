@@ -18,6 +18,7 @@
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"
+#include "religion.h"
 #include "spl-cast.h"
 #include "spl-other.h"
 #include "spl-util.h"
