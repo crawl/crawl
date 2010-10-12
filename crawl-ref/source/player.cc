@@ -327,12 +327,12 @@ void moveto_location_effects(dungeon_feature_type old_feat,
                     mpr("... and don't expect to remain undetected.");
             }
         }
-        
+
         if (new_grid == DNGN_DEEP_WATER && you.species == SP_GREY_DRACONIAN)
         {
             you.time_taken *= 13 + random2(8);
             you.time_taken /= 10;
-            
+
             if (old_feat != DNGN_DEEP_WATER)
                 mpr("You sink to the bottom.");
         }
@@ -2651,7 +2651,7 @@ static void _draconian_scale_colour_message()
     case SP_WHITE_DRACONIAN:
         mpr("Your scales start taking on an icy white colour.",
             MSGCH_INTRINSIC_GAIN);
-        perma_mutate(MUT_COLD_RESISTANCE, 1);    
+        perma_mutate(MUT_COLD_RESISTANCE, 1);
         break;
     case SP_GREEN_DRACONIAN:
         mpr("Your scales start taking on a green colour.",
@@ -3004,12 +3004,12 @@ void level_change(bool skip_attribute_increase)
                     mpr("Your scales feel tougher.", MSGCH_INTRINSIC_GAIN);
                     you.redraw_armour_class = true;
                 }
-                
+
                 if (!(you.experience_level % 4) && you.experience_level > 7)
                 {
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
                 }
-                
+
                 if (you.experience_level == 14)
                 {
                     switch (you.species)
@@ -3024,8 +3024,8 @@ void level_change(bool skip_attribute_increase)
                              perma_mutate(MUT_ACIDIC_BITE, 1);
                              break;
                         default:
-                             break;     
-                    }          
+                             break;
+                    }
                 }
                 break;
 
@@ -5296,8 +5296,8 @@ bool player::can_swim(bool permanently) const
 int player::visible_igrd(const coord_def &where) const
 {
     if (grd(where) == DNGN_LAVA
-        || (grd(where) == DNGN_DEEP_WATER && 
-        !(species == SP_MERFOLK || species == SP_GREY_DRACONIAN)))
+        || (grd(where) == DNGN_DEEP_WATER
+            && !(species == SP_MERFOLK || species == SP_GREY_DRACONIAN)))
     {
         return (NON_ITEM);
     }
