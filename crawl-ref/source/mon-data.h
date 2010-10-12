@@ -2189,7 +2189,7 @@ static monsterentry mondata[] = {
     // XXX: Will be Z_SMALL, but is Z_NOZOMBIE until code for zombie
     // spawns is no longer based on zombie size.
     0, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT,
-    I_HIGH, HT_LAND, FL_FLY, 12, DEFAULT_ENERGY,
+    I_INSECT, HT_LAND, FL_FLY, 12, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL
 },
 
