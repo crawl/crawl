@@ -508,7 +508,7 @@ bool _disc_of_storms(bool drac_breath = false)
 
             const zap_type which_zap = RANDOM_ELEMENT(types);
 
-            beam.range = (drac_breath) ? you.experience_level / 3 + 5 : 
+            beam.range = (drac_breath) ? you.experience_level / 3 + 5 :
                                          you.skills[SK_EVOCATIONS]/3 + 5; // 5--14
             beam.source = you.pos();
             beam.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
