@@ -2067,7 +2067,9 @@ their tracheae quite effectively.
 
 Stalkers:
 ---------
-The Stalker is an Assassin who has trained in the use of poison magic.
+The Stalker is an Assassin who practices alchemy to prepare dangerous
+potions to use against his or her enemies. They also have means to pass
+through walls to catch foes unaware.
 
 Assassins:
 ----------
