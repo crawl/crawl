@@ -1407,7 +1407,7 @@ static bool _do_ability(const ability_def& abil)
             break;
 
         case ABIL_BREATHE_LIGHTNING:
-            _disc_of_storms(true);
+            disc_of_storms(true);
             break;
 
         case ABIL_SPIT_ACID:
