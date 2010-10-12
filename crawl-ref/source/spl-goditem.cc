@@ -564,8 +564,8 @@ bool _selectively_remove_curse()
         if (!item.cursed()
             || !item_is_equipped(item)
             || &item == you.weapon()
-               && (item.base_type == OBJ_WEAPONS
-                || item.base_type == OBJ_STAVES))
+               && item.base_type != OBJ_WEAPONS
+               && item.base_type != OBJ_STAVES)
         {
             mpr("Choose a cursed equipped item, or Esc to abort.");
             if (Options.auto_list)
