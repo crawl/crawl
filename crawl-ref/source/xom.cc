@@ -3303,16 +3303,16 @@ static int _xom_repel_stairs(bool debug = false)
 static int _xom_colour_smoke_trail(bool debug = false)
 {
     if (you.duration[DUR_COLOUR_SMOKE_TRAIL])
-    {
         return (XOM_DID_NOTHING);
-    }
 
     if (debug)
         return (XOM_BAD_COLOUR_SMOKE_TRAIL);
 
     you.duration[DUR_COLOUR_SMOKE_TRAIL] = random_range(60, 120);
+
     const std::string speech = _get_xom_speech("colour smoke trail");
     god_speaks(GOD_XOM, speech.c_str());
+
     return (XOM_BAD_COLOUR_SMOKE_TRAIL);
 }
 

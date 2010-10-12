@@ -3871,9 +3871,7 @@ static void _move_player(coord_def move)
         }
 
         if (swap)
-        {
             swap_places(targ_monst, mon_swap_dest);
-        }
         else if (you.duration[DUR_COLOUR_SMOKE_TRAIL])
         {
             check_place_cloud(CLOUD_MAGIC_TRAIL, you.pos(),
