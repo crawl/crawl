@@ -915,6 +915,10 @@ green rat
 
 A very large rat, with hair and skin of a most peculiar green colour.
 %%%%
+grey draconian
+
+Before you stands a scale-covered humanoid with a reptilian tail and small wings.
+%%%%
 grey rat
 
 A very large grey rat.
