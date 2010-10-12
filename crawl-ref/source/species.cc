@@ -260,7 +260,7 @@ int species_has_claws(species_type species)
     if (species == SP_GHOUL)
         return (1);
     if (species == SP_CAT)
-        return (3);
+        return (1);
     return (0);
 }
 
