@@ -1718,7 +1718,7 @@ static char _get_overview_screen_results()
         std::vector<formatted_string> blines =
             _get_overview_resistances(equip_chars, calc_unid);
 
-        for (unsigned int i = 0; i < blines.size(); ++i )
+        for (unsigned int i = 0; i < blines.size(); ++i)
         {
             // Kind of a hack -- we don't really care what items these
             // hotkeys go to.  So just pick the first few.
