@@ -2,9 +2,11 @@
 
 #include "godpassive.h"
 
+#include "artefact.h"
 #include "branch.h"
 #include "coord.h"
 #include "defines.h"
+#include "describe.h"
 #include "env.h"
 #include "files.h"
 #include "food.h"
@@ -14,6 +16,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "mon-stuff.h"
+#include "options.h"
 #include "player.h"
 #include "player-stats.h"
 #include "religion.h"
@@ -372,6 +375,8 @@ bool ash_id_item(item_def& item, bool silent)
         if (ided & ISFLAG_KNOW_TYPE)
             set_ident_type(item, ID_KNOWN_TYPE);
         set_ident_flags(item, ided);
+        if (Options.autoinscribe_artefacts && is_artefact(item))
+            add_autoinscription(item, artefact_auto_inscription(item));
 
         if (&item == you.weapon())
             you.wield_change = true;
