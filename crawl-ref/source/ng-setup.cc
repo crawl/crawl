@@ -1189,6 +1189,10 @@ static void _give_species_bonus_hp()
             dec_max_hp(2);
             break;
 
+        case SP_CAT:
+            dec_max_hp(3);
+            break;
+
         default:
             break;
         }

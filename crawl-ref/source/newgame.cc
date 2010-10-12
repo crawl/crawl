@@ -520,9 +520,6 @@ int start_to_book(int firstbook, int booktype)
         case SBT_COLD:
             return (BOOK_CONJURATIONS_II);
 
-        case SP_CAT:
-            dec_max_hp(3);
-
         default:
             return (-1);
         }
