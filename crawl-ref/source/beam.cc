@@ -2345,6 +2345,12 @@ void bolt::affect_endpoint()
         big_cloud(CLOUD_COLD, whose_kill(), killer(), pos(),
                   random_range(10, 15), 9);
     }
+    
+    if ((name == "fiery breath" && you.species == SP_RED_DRACONIAN) ||
+         name == "searing blast") // monster and player red draconian breath abilities
+    {
+        place_cloud(CLOUD_FIRE, pos(), 5 + random2(5), whose_kill(), killer());
+    }     
 }
 
 bool bolt::stop_at_target() const
@@ -2604,6 +2610,9 @@ void bolt::affect_place_clouds()
 
     if (name == "poison gas")
         place_cloud(CLOUD_POISON, p, random2(4) + 3, whose_kill(), killer());
+        
+    if (name == "blast of choking fumes")
+       place_cloud(CLOUD_STINK, p, random2(4) + 3, whose_kill(), killer());    
 
 }
 
@@ -3500,7 +3509,7 @@ void bolt::affect_player()
     int armour_damage_reduction = random2( 1 + you.armour_class() );
     if (flavour == BEAM_ELECTRICITY)
         armour_damage_reduction /= 2;
-    else if (flavour == BEAM_HELLFIRE)
+    else if (flavour == BEAM_HELLFIRE || name == "chilling blast")
         armour_damage_reduction = 0;
     hurted -= armour_damage_reduction;
 
@@ -3603,6 +3612,9 @@ void bolt::affect_player()
             expose_player_to_element(BEAM_SPORE, burn_power);
     }
 
+    if (origin_spell == SPELL_QUICKSILVER_BOLT)
+        antimagic();
+
     dprf("Damage: %d", hurted );
 
     was_affected = apply_hit_funcs(&you, hurted) || was_affected;
@@ -3638,8 +3650,9 @@ void bolt::affect_player()
 
     extra_range_used += range_used_on_hit(&you);
 
-    if (flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE)
-        water_hits_actor(&you);
+    if ((flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE)
+         || (name == "chilling blast" && you.airborne()))
+        beam_hits_actor(&you); 
 }
 
 int bolt::beam_source_as_target() const
@@ -3728,7 +3741,7 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
     postac = preac;
 
     // Hellfire ignores AC.
-    if (flavour != BEAM_HELLFIRE)
+    if (flavour != BEAM_HELLFIRE && name != "freezing breath")
     {
         postac -= maybe_random2(1 + mon->ac, !is_tracer);
 
@@ -3942,10 +3955,25 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         behaviour_event(mon, ME_ANNOY, beam_source_as_target());
 
     // Sticky flame.
-    if (name == "sticky flame")
+    if (name == "sticky flame" || name == "splash of liquid fire")
     {
         const int levels = std::min(4, 1 + random2(mon->hit_dice) / 2);
         napalm_monster(mon, whose_kill(), levels);
+        
+        if (name == "splash of liquid fire")
+        {
+            // the breath weapon can splash to adjacent monsters
+            for (monster_iterator mi(you.get_los()); mi; ++mi)
+            {
+                if (grid_distance(you.pos(), mi->pos()) == 1 &&
+                    grid_distance(mon->pos(), mi->pos()) == 1)
+                {   
+                    mprf("The sticky flame splashes onto %s!",
+                         mi->name(DESC_NOCAP_THE).c_str()); 
+                    napalm_monster(*mi, whose_kill(), levels);
+                }
+            }
+        }       
     }
 
     bool wake_mimic = true;
@@ -3966,25 +3994,44 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         }
     }
 
+    if (name == "bolt of energy") // purple draconian breath
+        debuff_monster(mon);
+
     if (wake_mimic && mons_is_mimic(mon->type))
         mimic_alert(mon);
     else if (dmg)
         beogh_follower_convert(mon, true);
 
-    if (flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE)
-        water_hits_actor(mon);
+    if ((flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE) ||
+          (name == "freezing breath" && mon->flight_mode() == FL_FLY))
+        beam_hits_actor(mon);           
 }
 
-void bolt::water_hits_actor(actor *act)
+void bolt::beam_hits_actor(actor *act)
 {
     const coord_def oldpos(act->pos());
+    
+    const bool drac_breath = (name == "freezing breath" || name == "chilling blast");
+    
     if (knockback_actor(act))
     {
         if (you.can_see(act))
-            mprf("%s %s knocked back by the %s.",
-                 act->name(DESC_CAP_THE).c_str(),
-                 act->conj_verb("are").c_str(),
-                 this->name.c_str());
+        {
+            if (drac_breath)
+            {
+                mprf("%s %s blown backwards by the freezing wind.",
+                     act->name(DESC_CAP_THE).c_str(),
+                     act->conj_verb("are").c_str());
+                knockback_actor(act);     
+            }
+            else
+            {
+                mprf("%s %s knocked back by the %s.",
+                     act->name(DESC_CAP_THE).c_str(),
+                     act->conj_verb("are").c_str(),
+                     this->name.c_str());
+            }
+        }
         act->apply_location_effects(oldpos, killer(), beam_source);
     }
 }

@@ -62,7 +62,7 @@ bool transform_can_fly()
 bool transform_can_swim(transformation_type trans)
 {
     return(trans == TRAN_ICE_BEAST
-           || you.species == SP_MERFOLK
+           || you.species == SP_GREY_DRACONIAN || you.species == SP_MERFOLK
               && (trans == TRAN_NONE || trans == TRAN_BLADE_HANDS));
 }
 

@@ -2981,6 +2981,19 @@ void corrode_monster(monster* mons)
             }
         }
     }
+    else if (one_chance_in(3) && !(has_shield || has_armour)
+             && mons->holiness() == MH_NATURAL &&
+             !(mons->res_acid() || mons_is_slime(mons)))
+    {
+		mons->add_ench(mon_enchant(ENCH_BLEED, 1, KC_OTHER, (1 + random2(5))*10));
+		
+		if (you.can_see(mons))
+		{
+			mprf("%s writhes in agony as %s flesh is eaten away!", 
+			     mons->name(DESC_CAP_THE).c_str(),
+			     mons->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str());
+	    }
+	}
 }
 
 static bool _habitat_okay( const monster* mons, dungeon_feature_type targ )
@@ -4360,4 +4373,27 @@ void forest_damage(const actor *mon)
                 break;
             }
     }
+}
+
+void debuff_monster(monster* mon)
+{
+	// List of magical enchantments which will be dispelled.
+    const enchant_type lost_enchantments[] = {
+        ENCH_SLOW,
+        ENCH_HASTE,
+        ENCH_SWIFT,
+        ENCH_MIGHT,
+        ENCH_FEAR,
+        ENCH_CONFUSION,
+        ENCH_INVIS,
+        ENCH_CORONA,
+        ENCH_CHARM,
+        ENCH_PARALYSIS,
+        ENCH_PETRIFYING,
+        ENCH_PETRIFIED
+    };
+    
+     // Dispel all magical enchantments.
+     for (unsigned int i = 0; i < ARRAYSZ(lost_enchantments); ++i)
+          mon->del_ench(lost_enchantments[i], true, true);
 }

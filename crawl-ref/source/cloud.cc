@@ -815,7 +815,7 @@ void in_a_cloud()
     case CLOUD_STINK:
         cloud.announce_actor_engulfed(&you);
 
-        if (player_res_poison())
+        if (player_res_poison() || you.species == SP_GREY_DRACONIAN)
             break;
 
         hurted += (random2(3) * you.time_taken) / 10;
@@ -1025,8 +1025,10 @@ bool is_damaging_cloud(cloud_type type, bool temp)
     // Takes into account what the player can *know* and what s/he can
     // also expect to be the case a few turns later (ignores spells).
     case CLOUD_STINK:
+         if (you.species == SP_GREY_DRACONIAN)
+             return (false);
     case CLOUD_POISON:
-        return (!player_res_poison(false, temp));
+        return !(player_res_poison(false, temp));
     case CLOUD_STEAM:
         return (player_res_steam(false, temp) <= 0);
     case CLOUD_MIASMA:

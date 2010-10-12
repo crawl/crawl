@@ -4504,22 +4504,6 @@ static void _vulnerability_scroll()
     // First cast antimagic on yourself.
     antimagic();
 
-    // List of magical enchantments which will be dispelled.
-    const enchant_type lost_enchantments[] = {
-        ENCH_SLOW,
-        ENCH_HASTE,
-        ENCH_SWIFT,
-        ENCH_MIGHT,
-        ENCH_FEAR,
-        ENCH_CONFUSION,
-        ENCH_INVIS,
-        ENCH_CORONA,
-        ENCH_CHARM,
-        ENCH_PARALYSIS,
-        ENCH_PETRIFYING,
-        ENCH_PETRIFIED
-    };
-
     mon_enchant lowered_mr(ENCH_LOWERED_MR, 1, KC_YOU, 40);
 
     // Go over all creatures in LOS.
@@ -4527,10 +4511,8 @@ static void _vulnerability_scroll()
     {
         if (monster* mon = monster_at(*ri))
         {
-            // Dispel all magical enchantments.
-            for (unsigned int i = 0; i < ARRAYSZ(lost_enchantments); ++i)
-                mon->del_ench(lost_enchantments[i], true, true);
-
+			debuff_monster(mon);
+			
             // If relevant, monsters have their MR halved.
             if (!mons_immune_magic(mon))
                 mon->add_ench(lowered_mr);

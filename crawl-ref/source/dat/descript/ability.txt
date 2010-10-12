@@ -17,7 +17,7 @@ Randomly translocate a short distance.
 %%%%
 Breathe Fire
 
-Breathe a blast of fire at a targeted monster.
+Breathe a blast of fire at a targeted monster, possibly leaving fire clouds in its wake.
 %%%%
 Breathe Frost
 
@@ -29,19 +29,23 @@ Breathe a blast of poison gas at a targeted monster.
 %%%%
 Breathe Lightning
 
-Breathe a blast of lightning at a targeted monster.
+Release a great discharge of electricity causing an uncontrollable lightning storm.
 %%%%
 Breathe Power
 
-Breathe a blast of power at a targeted monster.
+Breathe a blast of power at a targeted monster, possibly removing some of its enchantments.
 %%%%
 Breathe Sticky Flame
 
-Breathe a blast of sticky flame at a targeted monster. As the name suggests, sticky flame will stick around, so the monster may be covered in flames for several rounds until they eventually go out.
+Breathe a blast of sticky flame at a targeted monster. As the name suggests, sticky flame will stick around, so the monster may be covered in flames for several rounds until they eventually go out. It may splash on impact.
 %%%%
 Breathe Steam
 
 Breathe a jet of steam at a targeted monster.
+%%%%
+Breathe Noxious Fumes
+
+Breathe a blast of noxious fumes at a targeted monster.
 %%%%
 Bat Form
 

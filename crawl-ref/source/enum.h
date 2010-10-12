@@ -42,6 +42,7 @@ enum ability_type
     ABIL_EVOKE_STOP_LEVITATING,
     ABIL_END_TRANSFORMATION,           //   55
     ABIL_STOP_FLYING,
+    ABIL_BREATHE_MEPHITIC,
 
     // Divine abilities
     ABIL_ZIN_SUSTENANCE = 109,              //  109
@@ -3463,6 +3464,7 @@ enum zap_type
     ZAP_LIGHT_BEAM,
     ZAP_HOLY_FLAMES,
     ZAP_HOLY_BREATH,
+    ZAP_BREATHE_MEPHITIC,
 
     NUM_ZAPS
 };

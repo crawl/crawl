@@ -31,6 +31,7 @@
 #include "godabil.h"
 #include "item_use.h"
 #include "it_use2.h"
+#include "it_use3.h"
 #include "macro.h"
 #include "message.h"
 #include "menu.h"
@@ -177,6 +178,7 @@ static const ability_def Ability_List[] =
     { ABIL_BREATHE_FIRE, "Breathe Fire", 0, 0, 125, 0, ABFLAG_BREATH },
     { ABIL_BREATHE_FROST, "Breathe Frost", 0, 0, 125, 0, ABFLAG_BREATH },
     { ABIL_BREATHE_POISON, "Breathe Poison Gas", 0, 0, 125, 0, ABFLAG_BREATH },
+    { ABIL_BREATHE_MEPHITIC, "Breathe Noxious Fumes", 0, 0, 125, 0, ABFLAG_BREATH},
     { ABIL_BREATHE_LIGHTNING, "Breathe Lightning",
       0, 0, 125, 0, ABFLAG_BREATH },
     { ABIL_BREATHE_POWER, "Breathe Power", 0, 0, 125, 0, ABFLAG_BREATH },
@@ -598,6 +600,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_BREATHE_LIGHTNING:
     case ABIL_BREATHE_POWER:
     case ABIL_BREATHE_STICKY_FLAME:
+    case ABIL_BREATHE_MEPHITIC:
         failure = 30 - you.experience_level;
 
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
@@ -1106,6 +1109,7 @@ static bool _check_ability_possible(const ability_def& abil,
     case ABIL_BREATHE_POWER:
     case ABIL_BREATHE_STICKY_FLAME:
     case ABIL_BREATHE_STEAM:
+    case ABIL_BREATHE_MEPHITIC:
         if (you.duration[DUR_BREATH_WEAPON])
         {
             canned_msg(MSG_CANNOT_DO_YET);
@@ -1265,8 +1269,9 @@ static int _calc_breath_ability_range(ability_type ability)
     case ABIL_BREATHE_LIGHTNING:    return 8;
     case ABIL_SPIT_ACID:            return 8;
     case ABIL_BREATHE_POWER:        return 8;
-    case ABIL_BREATHE_STICKY_FLAME: return 5;
+    case ABIL_BREATHE_STICKY_FLAME: return 1;
     case ABIL_BREATHE_STEAM:        return 7;
+    case ABIL_BREATHE_MEPHITIC:     return 7;
     default:
         ASSERT(!"Bad breath type!");
         break;
@@ -1358,14 +1363,16 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_BREATHE_FIRE:
     case ABIL_BREATHE_FROST:
     case ABIL_BREATHE_POISON:
-    case ABIL_BREATHE_LIGHTNING:
     case ABIL_SPIT_ACID:
     case ABIL_BREATHE_POWER:
     case ABIL_BREATHE_STICKY_FLAME:
     case ABIL_BREATHE_STEAM:
-        beam.range = _calc_breath_ability_range(abil.ability);
+    case ABIL_BREATHE_MEPHITIC:
+        beam.range = _calc_breath_ability_range(abil.ability);    
         if (!spell_direction(abild, beam))
             return (false);
+            
+    case ABIL_BREATHE_LIGHTNING: // not targeted        
 
         switch (abil.ability)
         {
@@ -1400,11 +1407,7 @@ static bool _do_ability(const ability_def& abil)
             break;
 
         case ABIL_BREATHE_LIGHTNING:
-            if (!zapping(ZAP_LIGHTNING, (you.experience_level * 2), beam, true,
-                         "You spit a bolt of lightning."))
-            {
-                return (false);
-            }
+            _disc_of_storms(true);
             break;
 
         case ABIL_SPIT_ACID:
@@ -1424,7 +1427,7 @@ static bool _do_ability(const ability_def& abil)
             break;
 
         case ABIL_BREATHE_STICKY_FLAME:
-            if (!zapping(ZAP_STICKY_FLAME, you.experience_level, beam, true,
+            if (!zapping(ZAP_BREATHE_STICKY_FLAME, you.experience_level, beam, true,
                          "You spit a glob of burning liquid."))
             {
                 return (false);
@@ -1438,19 +1441,25 @@ static bool _do_ability(const ability_def& abil)
                 return (false);
             }
             break;
+            
+        case ABIL_BREATHE_MEPHITIC:
+             if (!zapping(ZAP_BREATHE_MEPHITIC, you.experience_level, beam, true,
+                          "You exhale a blast of noxious fumes."))
+             {
+                 return (false);
+             }
+             break;                 
 
         default:
             break;
         }
 
-        if (abil.ability != ABIL_SPIT_ACID)
-        {
-            you.increase_duration(DUR_BREATH_WEAPON,
-                      3 + random2(4) + random2(30 - you.experience_level) / 2);
+        you.increase_duration(DUR_BREATH_WEAPON,
+                      3 + random2(10) + random2(30 - you.experience_level));
 
-            if (abil.ability == ABIL_BREATHE_STEAM)
-                you.duration[DUR_BREATH_WEAPON] /= 2;
-        }
+        if (abil.ability == ABIL_BREATHE_STEAM)
+            you.duration[DUR_BREATH_WEAPON] /= 2;
+        
         break;
 
     case ABIL_EVOKE_BLINK:      // randarts
@@ -2242,7 +2251,7 @@ std::vector<talent> your_talents(bool check_confused)
         ability_type ability = ABIL_NON_ABILITY;
         switch (you.species)
         {
-        case SP_GREEN_DRACONIAN:   ability = ABIL_BREATHE_POISON;       break;
+        case SP_GREEN_DRACONIAN:   ability = ABIL_BREATHE_MEPHITIC;     break;
         case SP_RED_DRACONIAN:     ability = ABIL_BREATHE_FIRE;         break;
         case SP_WHITE_DRACONIAN:   ability = ABIL_BREATHE_FROST;        break;
         case SP_YELLOW_DRACONIAN:  ability = ABIL_SPIT_ACID;            break;

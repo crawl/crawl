@@ -1911,11 +1911,11 @@ std::string _status_mut_abilities()
           break;
 
       case SP_GREY_DRACONIAN:
-          mutations.push_back("spiky tail");
+          mutations.push_back("unbreathing");
           break;
 
       case SP_GREEN_DRACONIAN:
-          mutations.push_back("breathe poison");
+          mutations.push_back("breathe noxious fumes");
           break;
 
       case SP_RED_DRACONIAN:
