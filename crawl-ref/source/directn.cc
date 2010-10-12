@@ -3133,16 +3133,21 @@ std::string feature_description(const coord_def& where, bool covering,
 
     dungeon_feature_type grid = grd(where);
     bool mimic = false;
+    monster* mimic_mons = NULL;
 
     if (feature_mimic_at(where))
     {
-        grid = get_mimic_feat(monster_at(where));
+        mimic_mons = monster_at(where);
+        grid = get_mimic_feat(mimic_mons);
         mimic = true;
     }
 
-    if (feat_is_closed_door(grid) && mimic)
+    if (mimic)
     {
-        return thing_do_grammar(dtype, add_stop, false, "closed door");
+        if (feat_is_closed_door(grid))
+            return thing_do_grammar(dtype, add_stop, false, "closed door");
+        if (grid == DNGN_ENTER_PORTAL_VAULT)
+            return (thing_do_grammar(dtype,add_stop, false, mimic_mons->props["portal_desc"].get_string()));
     }
 
 

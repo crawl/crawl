@@ -2128,11 +2128,15 @@ static std::string _get_feature_description_wide(int feat)
 void get_feature_desc(const coord_def &pos, describe_info &inf)
 {
     dungeon_feature_type feat = grd(pos);
+    bool mimic = false;
+    monster* mimic_mons = NULL;
+
     if (monster_at(pos))
     {
-        const monster* mons = monster_at(pos);
-        if (mons_is_feat_mimic(mons->type))
-            feat = get_mimic_feat(mons);
+        mimic_mons = monster_at(pos);
+        mimic = true;
+        if (mons_is_feat_mimic(mimic_mons->type))
+            feat = get_mimic_feat(mimic_mons);
     }
     std::string desc      = feature_description(pos, false, DESC_CAP_A, false);
     std::string db_name   = feat == DNGN_ENTER_SHOP ? "A shop" : desc;
@@ -2165,7 +2169,7 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
         custom_desc = true;
     }
 
-    if (feat == DNGN_ENTER_PORTAL_VAULT && !custom_desc)
+    if (feat == DNGN_ENTER_PORTAL_VAULT && !custom_desc && !mimic)
     {
         long_desc = "UNDESCRIBED PORTAL VAULT ENTRANCE.";
         custom_desc = true;
