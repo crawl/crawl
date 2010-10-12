@@ -62,6 +62,7 @@
 #include "godconduct.h"
 #include "shopping.h"
 #include "skills.h"
+#include "species.h"
 #include "spl-clouds.h"
 #include "spl-miscast.h"
 #include "spl-summoning.h"
@@ -936,7 +937,7 @@ bool melee_attack::player_attack()
     {
         print_wounds(defender->as_monster());
 
-        const int degree = player_mutation_level(MUT_CLAWS);
+        const int degree = you.has_claws();
         if (apply_bleeding && defender->can_bleed() && degree > 0)
             defender->as_monster()->bleed(3 + roll_dice(degree, 3), degree);
     }
@@ -1032,7 +1033,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
         else if (you.has_usable_claws())
         {
             aux_verb = "claw";
-            aux_damage += roll_dice(player_mutation_level(MUT_CLAWS), 3);
+            aux_damage += roll_dice(you.has_claws(), 3);
         }
 
         break;
@@ -3934,7 +3935,7 @@ int melee_attack::player_to_hit(bool random_factor)
     }
     else
     {                       // ...you must be unarmed
-        your_to_hit += you.innate_mutations[MUT_CLAWS] ? 4 : 2;
+        your_to_hit += species_has_claws(you.species) ? 4 : 2;
 
         your_to_hit += maybe_random2(1 + you.skills[SK_UNARMED_COMBAT],
                                      random_factor);
@@ -4245,7 +4246,7 @@ int melee_attack::player_calc_base_unarmed_damage()
     else if (you.has_usable_claws(false))
     {
         // Claw damage only applies for bare hands.
-        damage += player_mutation_level(MUT_CLAWS) * 2;
+        damage += you.has_claws(false) * 2;
         apply_bleeding = true;
     }
 
