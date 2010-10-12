@@ -245,6 +245,8 @@ int SDLWrapper::init(coord_def *m_windowsz)
 
     video_info = SDL_GetVideoInfo();
 
+    _desktop_width = video_info->current_w;
+
     SDL_EnableUNICODE(true);
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
@@ -310,6 +312,11 @@ int SDLWrapper::screen_width() const
 int SDLWrapper::screen_height() const
 {
     return (video_info->current_h);
+}
+
+int SDLWrapper::desktop_width() const
+{
+    return (_desktop_width);
 }
 
 void SDLWrapper::set_window_title(const char *title)

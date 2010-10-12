@@ -364,6 +364,7 @@ public:
     int         tile_window_height;
     int         tile_map_pixels;
     bool        tile_force_overlay;
+    bool        tile_align_at_top;
     // display settings
     int         tile_update_rate;
     int         tile_runrest_rate;
