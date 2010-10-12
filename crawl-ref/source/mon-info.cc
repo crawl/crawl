@@ -1026,26 +1026,6 @@ std::string monster_info::wounds_description(bool use_colour) const
 
 monster_type monster_info::draco_subspecies() const
 {
-    if (type == MONS_TIAMAT)
-    {
-        switch (colour)
-        {
-        case RED:
-            return (MONS_RED_DRACONIAN);
-        case WHITE:
-            return (MONS_WHITE_DRACONIAN);
-        case BLUE:  // black
-        case DARKGREY:
-            return (MONS_BLACK_DRACONIAN);
-        case GREEN:
-            return (MONS_GREEN_DRACONIAN);
-        case MAGENTA:
-            return (MONS_PURPLE_DRACONIAN);
-        default:
-            break;
-        }
-    }
-
     if (type == MONS_PLAYER_ILLUSION)
         return (player_species_to_mons_species(u.ghost.species));
 
