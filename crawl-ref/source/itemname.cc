@@ -2867,7 +2867,9 @@ bool is_useless_item(const item_def &item, bool temp)
             return (false);
         }
     case OBJ_WANDS:
-        // Cats can't use wands, but they're dangerous when on the floor.
+        if (you.species == SP_CAT)
+            return (true);
+
         return (item.plus2 == ZAPCOUNT_EMPTY)
                || item_ident(item, ISFLAG_KNOW_PLUSES) && !item.plus;
 
