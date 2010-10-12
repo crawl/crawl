@@ -244,6 +244,13 @@ void extension(int pow)
         you.increase_duration(DUR_TRANSFORMATION, random2(pow), 100,
                               "Your transformation has been extended.");
 
+        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH
+            && is_good_god(you.religion))
+        {
+            // possible with Xom or a card
+            excommunication();
+        }
+
         // Give a warning if it won't last long enough for the
         // timeout messages.
         transformation_expiration_warning();
