@@ -883,17 +883,8 @@ monster_type mons_detected_base(monster_type mc)
 
 monster_type draco_subspecies(const monster* mon)
 {
-    ASSERT(mons_genus(mon->type) == MONS_DRACONIAN);
-
-    if (mon->type == MONS_PLAYER_ILLUSION)
-        return (player_species_to_mons_species(mon->ghost->species));
-
-    monster_type ret = mons_species(mon->type);
-
-    if (ret == MONS_DRACONIAN && mon->type != MONS_DRACONIAN)
-        ret = static_cast<monster_type>(mon->base_monster);
-
-    return (ret);
+    monster_info mi(mon, MILEV_NAME);
+    return mi.draco_subspecies();
 }
 
 int get_shout_noise_level(const shout_type shout)
