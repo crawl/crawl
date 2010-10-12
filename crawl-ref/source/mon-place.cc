@@ -1633,9 +1633,16 @@ static int _place_monster_aux(const mgen_data &mg,
         case MONS_STAIR_MIMIC:
             break;
 
+        // Just needs a selection of random fountains.
         case MONS_FOUNTAIN_MIMIC:
+        {
+            dungeon_feature_type fount = static_cast<dungeon_feature_type>(
+                DNGN_FOUNTAIN_BLUE+random2(DNGN_PERMADRY_FOUNTAIN-DNGN_FOUNTAIN_BLUE));
+            const feature_def fount_d = get_feature_def(fount);
+            mon->props["fountain_type"] = static_cast<short>(fount);
+            mon->colour = fount_d.colour;
             break;
-
+        }
         default:
             break;
         }
