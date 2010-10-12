@@ -1376,14 +1376,15 @@ void end_game(scorefile_entry &se)
             break;
 
         case GOD_YREDELEMNUL:
-            if (se.get_death_type() != KILLED_BY_DISINT
-                && se.get_death_type() != KILLED_BY_LAVA
-                && !you.is_undead)
+            if (you.is_undead)
+                simple_god_message(" claims you as an undead slave.");
+            else if (se.get_death_type() != KILLED_BY_DISINT
+                     && se.get_death_type() != KILLED_BY_LAVA)
             {
                 mpr("Your body rises from the dead as a mindless zombie.",
                     MSGCH_GOD);
             }
-            // No message if the corpse is lost.
+            // No message if you're not undead and your corpse is lost.
             break;
 
         default:
