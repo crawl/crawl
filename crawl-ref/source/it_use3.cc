@@ -816,7 +816,8 @@ bool evoke_item(int slot)
         return (false);
 
     if (item.base_type == OBJ_MISCELLANY && you.equip[EQ_WEAPON] != slot)
-        wield_weapon(true, slot);
+        if (!wield_weapon(true, slot))
+            return (false);
 
     bool wielded = (you.equip[EQ_WEAPON] == slot);
 
