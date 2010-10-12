@@ -3291,7 +3291,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     case MONS_DRACONIAN_MONK:
     case MONS_DRACONIAN_KNIGHT:
     {
-        inf.body << "\n" << _describe_draconian(mi);
+        inf.body << "\n" << _describe_draconian(mi) << "\n";
         break;
     }
 
