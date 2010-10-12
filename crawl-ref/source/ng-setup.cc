@@ -525,7 +525,7 @@ static void _give_items_skills(const newgame_def& ng)
 
         // WEAPONS
         if (you.has_claws())
-            you.equip[EQ_WEAPON] = -1; // Trolls/Ghouls fight unarmed.
+            you.equip[EQ_WEAPON] = -1; // Trolls/Ghouls/Felids fight unarmed.
         else
         {
             // Species skilled with maces/flails get one, the others axes.
