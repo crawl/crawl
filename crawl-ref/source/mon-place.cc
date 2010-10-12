@@ -1577,66 +1577,67 @@ static int _place_monster_aux(const mgen_data &mg,
     {
         switch (mg.cls)
         {
-            case MONS_DOOR_MIMIC:
-                break;
+        case MONS_DOOR_MIMIC:
+            // Requires no initialisation.
+            break;
 
-            case MONS_PORTAL_MIMIC:
+        case MONS_PORTAL_MIMIC:
+        {
+            if (coinflip())
             {
-                if (coinflip())
-                {
-                    const char *portals[3] = {
-                        "gateway to a bazaar",
-                        "glowing drain",
-                        "sand-covered staircase",
-                    };
+                const char *portals[3] = {
+                    "gateway to a bazaar",
+                    "glowing drain",
+                    "sand-covered staircase",
+                };
 
-                    int colors[3] = {
-                        ETC_SHIMMER_BLUE,
-                        LIGHTGREEN,
-                        BROWN
-                    };
+                int colors[3] = {
+                    ETC_SHIMMER_BLUE,
+                    LIGHTGREEN,
+                    BROWN
+                };
 
-                    int portal_choice = random2(3);
+                int portal_choice = random2(3);
 
-                    mon->props["portal_desc"] = std::string(portals[portal_choice]);
-                    mon->colour = colors[portal_choice];
-                }
-                else
-                {
-                    mon->colour = CYAN;
-                }
-                break;
+                mon->props["portal_desc"] = std::string(portals[portal_choice]);
+                mon->colour = colors[portal_choice];
             }
-
-            case MONS_TRAP_MIMIC:
-                mon->props["trap_type"] = random_trap(DNGN_TRAP_MECHANICAL);
-                break;
-
-            // Needs a more complicated block.
-            case MONS_SHOP_MIMIC:
+            else
             {
-                // Otherwise we need to make a random name.
-                shop_type type = static_cast<shop_type>(SHOP_WEAPON+random2(NUM_SHOPS-1));
-
-                std::string sh_name = apostrophise(make_name(random_int(), false)) +
-                        " " + shop_type_name(type);
-                std::string sh_suffix = shop_type_suffix(type, fpos);
-                if (!sh_suffix.empty())
-                    sh_name += " " + sh_suffix;
-
-                mon->props["shop_name"] = sh_name;
-                mon->props["shop_type"] = type;
-                break;
+                mon->colour = CYAN;
             }
+            break;
+        }
 
-            case MONS_STAIR_MIMIC:
-                break;
+        case MONS_TRAP_MIMIC:
+            mon->props["trap_type"] = random_trap(DNGN_TRAP_MECHANICAL);
+            break;
 
-            case MONS_FOUNTAIN_MIMIC:
-                break;
+        // Needs a more complicated block.
+        case MONS_SHOP_MIMIC:
+        {
+            // Otherwise we need to make a random name.
+            shop_type type = static_cast<shop_type>(SHOP_WEAPON+random2(NUM_SHOPS-1));
 
-            default:
-                break;
+            std::string sh_name = apostrophise(make_name(random_int(), false)) +
+                    " " + shop_type_name(type);
+            std::string sh_suffix = shop_type_suffix(type, fpos);
+            if (!sh_suffix.empty())
+                sh_name += " " + sh_suffix;
+
+            mon->props["shop_name"] = sh_name;
+            mon->props["shop_type"] = type;
+            break;
+        }
+
+        case MONS_STAIR_MIMIC:
+            break;
+
+        case MONS_FOUNTAIN_MIMIC:
+            break;
+
+        default:
+            break;
         }
     }
 
