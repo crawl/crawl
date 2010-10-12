@@ -3330,6 +3330,15 @@ int check_stealth(void)
                 break;
             }
         }
+        
+        if (new_grid == DNGN_DEEP_WATER && you.species == SP_GREY_DRACONIAN)
+        {
+            you.time_taken *= 13 + random2(8);
+            you.time_taken /= 10;
+            
+            if (old_feat != DNGN_DEEP_WATER)
+                mpr("You sink to the bottom.");
+        }
     }
 
     if (you.burden_state > BS_UNENCUMBERED)

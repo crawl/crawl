@@ -235,7 +235,7 @@ formatted_string describe_mutations()
         break;
 
     case SP_GREY_DRACONIAN:
-        result += "Your tail is studded with spikes.\n";
+        result += "You do not need to breathe.\n";
         have_any = true;
         break;
 
@@ -346,10 +346,7 @@ formatted_string describe_mutations()
         // weapons and carrying capacity.
         result += "Your body does not fit into most forms of armour.\n";
 
-        int ac = (you.experience_level < 8) ? 2 :
-                 (you.species == SP_GREY_DRACONIAN)
-                     ? (you.experience_level - 4) / 2 + 1 :
-                       you.experience_level / 4 + 1;
+        int ac = 3 + (you.experience_level / 3);
         std::ostringstream num;
         num << ac;
         result += "Your scales are hard (AC +" + num.str() + ").\n";

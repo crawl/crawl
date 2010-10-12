@@ -5273,7 +5273,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_BLEED:
     {
         // 3, 6, 9% of current hp
-        int dam = random2((1 + hit_points)*(me.degree * 3)/100);
+        int dam = div_rand_round(random2((1 + hit_points)*(me.degree * 3)),100);
 
         if (dam < hit_points)
         {

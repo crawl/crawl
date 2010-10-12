@@ -130,7 +130,7 @@ static spell_type _draco_type_to_breath(int drac_type)
     case MONS_MOTTLED_DRACONIAN: return SPELL_STICKY_FLAME_SPLASH;
     case MONS_YELLOW_DRACONIAN:  return SPELL_ACID_SPLASH;
     case MONS_GREEN_DRACONIAN:   return SPELL_POISONOUS_CLOUD;
-    case MONS_PURPLE_DRACONIAN:  return SPELL_ISKENDERUNS_MYSTIC_BLAST;
+    case MONS_PURPLE_DRACONIAN:  return SPELL_QUICKSILVER_BOLT;
     case MONS_RED_DRACONIAN:     return SPELL_FIRE_BREATH;
     case MONS_WHITE_DRACONIAN:   return SPELL_COLD_BREATH;
     case MONS_GREY_DRACONIAN:    return SPELL_NO_SPELL;
@@ -738,11 +738,11 @@ bolt mons_spells( monster* mons, spell_type spell_cast, int power,
         beam.is_big_cloud = true;
         break;
 
-    case SPELL_QUICKSILVER_BOLT:   // Quicksilver dragon
+    case SPELL_QUICKSILVER_BOLT:   // Quicksilver dragon and purple draconian
         beam.colour     = random_colour();
         beam.name       = "bolt of energy";
         beam.short_name = "energy";
-        beam.damage     = dice_def( 3, 25 );
+        beam.damage     = dice_def( 3, 20 );
         beam.hit        = 16 + power / 25;
         beam.flavour    = BEAM_MMISSILE;
         break;

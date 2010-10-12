@@ -249,7 +249,7 @@ public:
     void affect_place_explosion_clouds();
     void affect_endpoint();
 
-    void water_hits_actor(actor *act);
+    void beam_hits_actor(actor *act);
 
     // Stuff when a monster or player is hit.
     void affect_player_enchantment();

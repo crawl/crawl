@@ -478,23 +478,27 @@ static bool _ball_of_seeing(void)
     return (ret);
 }
 
-static bool _disc_of_storms(void)
+bool _disc_of_storms(bool drac_breath = false)
 {
     const int fail_rate = (30 - you.skills[SK_EVOCATIONS]);
     bool rc = false;
+    int power;
 
-    if (player_res_electricity() || x_chance_in_y(fail_rate, 100))
+    if ((player_res_electricity() || x_chance_in_y(fail_rate, 100))
+         && !drac_breath)
         canned_msg(MSG_NOTHING_HAPPENS);
-    else if (x_chance_in_y(fail_rate, 100))
+    else if (x_chance_in_y(fail_rate, 100) && !drac_breath)
         mpr("The disc glows for a moment, then fades.");
-    else if (x_chance_in_y(fail_rate, 100))
+    else if (x_chance_in_y(fail_rate, 100) && !drac_breath)
         mpr("Little bolts of electricity crackle over the disc.");
     else
     {
-        mpr("The disc erupts in an explosion of electricity!");
+        if (!drac_breath)
+         mpr("The disc erupts in an explosion of electricity!");
         rc = true;
 
-        const int disc_count = roll_dice(2, 1 + you.skills[SK_EVOCATIONS] / 7);
+        const int disc_count = (drac_breath) ? roll_dice(2, 1 + you.experience_level / 7) :
+                                roll_dice(2, 1 + you.skills[SK_EVOCATIONS] / 7);
 
         for (int i = 0; i < disc_count; ++i)
         {
@@ -504,15 +508,18 @@ static bool _disc_of_storms(void)
 
             const zap_type which_zap = RANDOM_ELEMENT(types);
 
-            beam.range = you.skills[SK_EVOCATIONS]/3 + 5; // 5--14
+            beam.range = (drac_breath) ? you.experience_level / 3 + 5 : 
+                                         you.skills[SK_EVOCATIONS]/3 + 5; // 5--14
             beam.source = you.pos();
             beam.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
-
+            power = (drac_breath) ? 25 + you.experience_level : 30 + you.skills[SK_EVOCATIONS] * 2;
             // Non-controlleable, so no player tracer.
-            zapping(which_zap, 30 + you.skills[SK_EVOCATIONS] * 2, beam);
+            zapping(which_zap, power, beam);
 
         }
 
+        if (!drac_breath)
+        {
         for (radius_iterator ri(you.pos(), LOS_RADIUS, false); ri; ++ri)
         {
             if (grd(*ri) < DNGN_MAXWALL)
@@ -523,7 +530,7 @@ static bool _disc_of_storms(void)
                             random2(you.skills[SK_EVOCATIONS]), KC_YOU);
         }
     }
-
+}
     return (rc);
 }
 

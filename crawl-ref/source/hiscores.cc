@@ -1807,7 +1807,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
     case KILLED_BY_STUPIDITY:
         if (terse)
             desc += "stupidity";
-        else if (_species_is_undead(race))
+        else if (_species_is_undead(race) || race == SP_GREY_DRACONIAN)
             desc += "Forgot to exist";
         else
             desc += "Forgot to breathe";
