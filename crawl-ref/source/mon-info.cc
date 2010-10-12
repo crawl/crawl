@@ -1026,6 +1026,8 @@ std::string monster_info::wounds_description(bool use_colour) const
 
 monster_type monster_info::draco_subspecies() const
 {
+    ASSERT(mons_genus(type) == MONS_DRACONIAN);
+
     if (type == MONS_PLAYER_ILLUSION)
         return (player_species_to_mons_species(u.ghost.species));
 
