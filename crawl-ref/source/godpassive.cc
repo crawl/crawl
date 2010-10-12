@@ -213,7 +213,7 @@ enum eq_type
     NUM_ET
 };
 
-int ash_bondage_level()
+int ash_bondage_level(int type_only)
 {
     if (you.religion != GOD_ASHENZARI)
         return (0);
@@ -257,6 +257,8 @@ int ash_bondage_level()
     int bonus = 0;
     for (int s = ET_WEAPON; s < NUM_ET; s++)
     {
+        if (type_only && s+1 != type_only)
+            continue;
         if (cursed[s] > slots[s] / 2)
             bonus++;
     }
