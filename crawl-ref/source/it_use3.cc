@@ -478,7 +478,7 @@ static bool _ball_of_seeing(void)
     return (ret);
 }
 
-bool _disc_of_storms(bool drac_breath = false)
+bool disc_of_storms(bool drac_breath)
 {
     const int fail_rate = (30 - you.skills[SK_EVOCATIONS]);
     bool rc = false;
@@ -978,7 +978,7 @@ bool evoke_item(int slot)
             break;
 
         case MISC_DISC_OF_STORMS:
-            if (_disc_of_storms())
+            if (disc_of_storms())
                 pract = (coinflip() ? 2 : 1), ident = true;
             break;
 
