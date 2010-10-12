@@ -416,7 +416,7 @@ A small black bear. If provoked, it may become angry!
 %%%%
 black draconian
 
-Before you stands a draconian.
+Before you stands a scale-covered humanoid with a reptilian tail and small wings.
 %%%%
 black mamba
 
@@ -909,7 +909,7 @@ A bloated form covered in oozing sores and exhaling clouds of lethal poison.
 %%%%
 green draconian
 
-Before you stands a draconian.
+Before you stands a scale-covered humanoid with a reptilian tail and small wings.
 %%%%
 green rat
 
@@ -1207,7 +1207,7 @@ A huge moth, as violent as it is hairy.
 %%%%
 mottled draconian
 
-Before you stands a draconian.
+Before you stands a scale-covered humanoid with a reptilian tail and small wings.
 %%%%
 mottled dragon
 
@@ -1341,7 +1341,7 @@ While orcs are generally quite stupid, occasionally one develops an aptitude for
 %%%%
 pale draconian
 
-Before you stands a draconian.
+Before you stands a scale-covered humanoid with a reptilian tail and small wings.
 %%%%
 paladin
 
@@ -1393,7 +1393,7 @@ A revolting glob of writhing flesh.
 %%%%
 purple draconian
 
-Before you stands a draconian.
+Before you stands a scale-covered humanoid with a reptilian tail and small wings.
 %%%%
 quasit
 
@@ -1433,7 +1433,7 @@ A muscular demon covered in spikes and horns. Two short wings sprout from its sh
 %%%%
 red draconian
 
-Before you stands a draconian.
+Before you stands a scale-covered humanoid with a reptilian tail and small wings.
 %%%%
 red wasp
 
@@ -1793,7 +1793,7 @@ A largish venomous brown snake. It usually lives near water, and is an able swim
 %%%%
 white draconian
 
-Before you stands a draconian.
+Before you stands a scale-covered humanoid with a reptilian tail and small wings.
 %%%%
 white imp
 
@@ -1845,7 +1845,7 @@ Like a centaur, but half yak. It looks very strong and aggressive.
 %%%%
 yellow draconian
 
-Before you stands a draconian.
+Before you stands a scale-covered humanoid with a reptilian tail and small wings.
 %%%%
 yellow wasp
 
