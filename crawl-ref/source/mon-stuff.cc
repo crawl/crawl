@@ -185,7 +185,10 @@ dungeon_feature_type get_mimic_feat (const monster* mimic)
         case MONS_DOOR_MIMIC:
             return (DNGN_CLOSED_DOOR);
         case MONS_PORTAL_MIMIC:
-            return (DNGN_ENTER_PORTAL_VAULT);
+            if (mimic->props.exists("portal_desc"))
+                return (DNGN_ENTER_PORTAL_VAULT);
+            else
+                return (DNGN_ENTER_LABYRINTH);
         case MONS_TRAP_MIMIC:
             return (DNGN_TRAP_MECHANICAL);
         case MONS_STAIR_MIMIC:
