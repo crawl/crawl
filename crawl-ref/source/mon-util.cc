@@ -28,6 +28,7 @@
 #include "libutil.h"
 #include "mapmark.h"
 #include "mislead.h"
+#include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-clone.h"
 #include "mon-death.h"
@@ -883,26 +884,6 @@ monster_type mons_detected_base(monster_type mc)
 monster_type draco_subspecies(const monster* mon)
 {
     ASSERT(mons_genus(mon->type) == MONS_DRACONIAN);
-
-    if (mon->type == MONS_TIAMAT)
-    {
-        switch (mon->colour)
-        {
-        case RED:
-            return (MONS_RED_DRACONIAN);
-        case WHITE:
-            return (MONS_WHITE_DRACONIAN);
-        case BLUE:  // black
-        case DARKGREY:
-            return (MONS_BLACK_DRACONIAN);
-        case GREEN:
-            return (MONS_GREEN_DRACONIAN);
-        case MAGENTA:
-            return (MONS_PURPLE_DRACONIAN);
-        default:
-            break;
-        }
-    }
 
     if (mon->type == MONS_PLAYER_ILLUSION)
         return (player_species_to_mons_species(mon->ghost->species));
@@ -1953,6 +1934,13 @@ void define_monster(monster* mons)
         while (drac_colour_incompatible(mcls, monbase));
         break;
     }
+
+    case MONS_TIAMAT:
+        // Initialise to a random draconian type.
+        draconian_change_colour(mons);
+        monbase = mons->base_monster;
+        col = mons->colour;
+        break;
 
     case MONS_DRACONIAN:
     case MONS_ELF:

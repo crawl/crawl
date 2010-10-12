@@ -2140,10 +2140,7 @@ void handle_monster_move(monster* mons)
             break;
 
         if (mons->type == MONS_TIAMAT && one_chance_in(3))
-        {
-            const int cols[] = { RED, WHITE, DARKGREY, GREEN, MAGENTA };
-            mons->colour = RANDOM_ELEMENT(cols);
-        }
+            draconian_change_colour(mons);
 
         _monster_regenerate(mons);
 

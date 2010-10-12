@@ -13,6 +13,8 @@ struct bolt;
 bool mon_special_ability(monster* mons, bolt & beem);
 void mon_nearby_ability(monster* mons);
 
+void draconian_change_colour(monster* drac);
+
 bool ugly_thing_mutate(monster* ugly, bool proximity = false);
 
 void ballisto_on_move(monster* mons, const coord_def & pos);

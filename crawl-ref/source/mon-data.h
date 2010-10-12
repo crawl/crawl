@@ -5310,7 +5310,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_TIAMAT, 'd', MAGENTA, "Tiamat",
+    MONS_TIAMAT, 'd', BLACK, "Tiamat",
     M_UNIQUE | M_SEE_INVIS | M_COLD_BLOOD | M_SPEAKS,
     MR_RES_POISON,
     900, 10, MONS_DRACONIAN, MONS_DRACONIAN, MH_NATURAL, -5,
