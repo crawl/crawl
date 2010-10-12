@@ -2170,31 +2170,14 @@ std::string shop_name(const coord_def& where)
 {
     const shop_struct *cshop = get_shop(where);
 
-    bool mimic = false;
-
     // paranoia and shop mimics
     if (grd(where) != DNGN_ENTER_SHOP)
     {
         if (monster_at(where))
         {
             monster* mmimic = monster_at(where);
-            if (mons_is_feat_mimic(mmimic->type))
-            {
-                mimic = true;
-                if (mmimic->props.exists("shop_name"))
-                    return mmimic->props["shop_name"].get_string();
-
-                // Otherwise we need to make a random name.
-                shop_type type = static_cast<shop_type>(SHOP_WEAPON+random2(NUM_SHOPS-1));
-                std::string shop_owner = apostrophise(make_name(random_int(), false));
-                std::string sh_name = shop_owner + " " + shop_type_name(type);
-                std::string sh_suffix = shop_type_suffix(type, where);
-                if (!sh_suffix.empty())
-                    sh_name += " " + sh_suffix;
-
-                mmimic->props["shop_name"] = sh_name;
-                return (sh_name);
-            }
+            if (mons_is_feat_mimic(mmimic->type) && mmimic->props.exists("shop_name"))
+                return mmimic->props["shop_name"].get_string();
         }
 
         return ("");
