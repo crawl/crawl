@@ -719,6 +719,7 @@ int max_cloud_damage(cloud_type cl_type, int power)
         break;
 
     case CLOUD_STINK:
+        // If you don't have to breathe, unaffected.
         if (player_res_poison() || you.species == SP_GREY_DRACONIAN)
             return (0);
 
@@ -814,7 +815,7 @@ void in_a_cloud()
 
     case CLOUD_STINK:
         cloud.announce_actor_engulfed(&you);
-
+        // If you don't have to breathe, unaffected.
         if (player_res_poison() || you.species == SP_GREY_DRACONIAN)
             break;
 
@@ -865,7 +866,6 @@ void in_a_cloud()
         break;
 
     case CLOUD_POISON:
-        // If you don't have to breathe, unaffected
         cloud.announce_actor_engulfed(&you);
         if (!player_res_poison())
         {

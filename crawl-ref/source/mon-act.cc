@@ -3961,6 +3961,7 @@ static void _mons_in_cloud(monster* mons)
 
     case CLOUD_STINK:
         cloud.announce_actor_engulfed(mons);
+        // If you don't have to breathe, unaffected.
         if (mons->res_poison() > 0
             || (mons_genus(mons->type) == MONS_DRACONIAN
                 && draco_subspecies(mons) == MONS_GREY_DRACONIAN))
