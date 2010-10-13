@@ -375,6 +375,14 @@ void add_autoinscription( item_def &item, std::string ainscrip)
     add_inscription(item, ainscrip);
 }
 
+void add_autoinscription( item_def &item)
+{
+    // Remove previous randart inscription.
+    trim_randart_inscrip(item);
+
+    add_inscription(item, artefact_auto_inscription(item));
+}
+
 void add_inscription(item_def &item, std::string inscrip)
 {
     if (!item.inscription.empty())
@@ -2390,7 +2398,7 @@ static command_type _get_action( int key, std::vector<command_type> actions)
     //FIXME: there must be a more efficient way to set up this static map.
     std::map<command_type, int> act_key;
     act_key[CMD_WIELD_WEAPON]       = 'w';
-    act_key[CMD_WEAPON_SWAP]        = 'u';
+    act_key[CMD_WEAPON_SWAP]        = 'u'; //unwield
     act_key[CMD_QUIVER_ITEM]        = 'q';
     act_key[CMD_WEAR_ARMOUR]        = 'w';
     act_key[CMD_REMOVE_ARMOUR]      = 't';
@@ -2402,6 +2410,7 @@ static command_type _get_action( int key, std::vector<command_type> actions)
     act_key[CMD_QUAFF]              = 'q';
     act_key[CMD_DROP]               = 'd';
     act_key[CMD_INSCRIBE_ITEM]      = 'i';
+    act_key[CMD_MAKE_NOTE]          = 'a'; //autoinscribe
 
     for (std::vector<command_type>::const_iterator at = actions.begin();
          at < actions.end(); ++at)
@@ -2410,6 +2419,22 @@ static command_type _get_action( int key, std::vector<command_type> actions)
             return *at;
     }
     return CMD_NO_CMD;
+}
+
+bool _need_autoinscribe (item_def &item)
+{
+    // Only allow autoinscription if we don't have all the text already.
+    if (is_artefact(item))
+    {
+        std::string ainscrip = artefact_auto_inscription(item);
+        if (!ainscrip.empty()
+            && (item.inscription.empty()
+                || item.inscription.find(ainscrip) == std::string::npos))
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 //---------------------------------------------------------------
@@ -2481,6 +2506,9 @@ static bool _actions_prompt( item_def &item, bool allow_inscribe)
     if (allow_inscribe)
         actions.push_back(CMD_INSCRIBE_ITEM);
 
+    if(_need_autoinscribe(item))
+        actions.push_back(CMD_MAKE_NOTE); //autoinscribe
+
     //FIXME: there must be a more efficient way to set up this static map.
     std::map<command_type, std::string> act_str;
     act_str[CMD_WIELD_WEAPON]       = "(w)ield";
@@ -2496,6 +2524,7 @@ static bool _actions_prompt( item_def &item, bool allow_inscribe)
     act_str[CMD_QUAFF]              = "(q)uaff";
     act_str[CMD_DROP]               = "(d)rop";
     act_str[CMD_INSCRIBE_ITEM]      = "(i)nscribe";
+    act_str[CMD_MAKE_NOTE]          = "(a)utoinscribe";
 
     for (std::vector<command_type>::const_iterator at = actions.begin();
          at < actions.end(); ++at)
@@ -2571,10 +2600,15 @@ static bool _actions_prompt( item_def &item, bool allow_inscribe)
         return false;
     case CMD_INSCRIBE_ITEM:
         inscribe_item(item, false);
+        break;
+    case CMD_MAKE_NOTE:
+        add_autoinscription(item);
+        break;
     case CMD_NO_CMD:
     default:
         return true;
     }
+    return true;
 }
 
 //---------------------------------------------------------------
@@ -2632,22 +2666,8 @@ void inscribe_item(item_def &item, bool msgwin)
         mpr(item.name(DESC_INVENTORY).c_str(), MSGCH_EQUIPMENT);
 
     const bool is_inscribed = !item.inscription.empty();
-    std::string ainscrip;
 
-    // Only allow autoinscription if we don't have all the text
-    // already.
-    bool need_autoinscribe = false;
-    if (is_artefact(item))
-    {
-        ainscrip = artefact_auto_inscription(item);
-        if (!ainscrip.empty()
-            && (!is_inscribed
-                || item.inscription.find(ainscrip) == std::string::npos))
-        {
-            need_autoinscribe = true;
-        }
-    }
-
+    bool need_autoinscribe = _need_autoinscribe(item);
     std::string prompt;
     int keyin;
 
@@ -2685,14 +2705,14 @@ void inscribe_item(item_def &item, bool msgwin)
     case 'A':
         if (need_autoinscribe)
         {
-            add_autoinscription(item, ainscrip);
+            add_autoinscription(item);
             break;
         }
         // If autoinscription is impossible, prompt for an inscription instead.
     case 'a':
         if (!is_inscribed)
         {
-            add_autoinscription(item, ainscrip);
+            add_autoinscription(item);
             break;
         }
         // If it is inscribed, prompt for an inscription instead.
