@@ -529,19 +529,6 @@ int start_to_book(int firstbook, int booktype)
     }
 }
 
-int claws_level(species_type sp)
-{
-    switch (sp)
-    {
-    case SP_GHOUL:
-        return 1;
-    case SP_TROLL:
-        return 3;
-    default:
-        return 0;
-    }
-}
-
 void make_rod(item_def &item, stave_type rod_type, int ncharges)
 {
     item.base_type = OBJ_STAVES;
@@ -1615,7 +1602,7 @@ static std::vector<weapon_choice> _get_weapons(const newgame_def* ng)
         switch (wp.first)
         {
         case WPN_UNARMED:
-            if (ng->job == JOB_GLADIATOR || !claws_level(ng->species))
+            if (ng->job == JOB_GLADIATOR || !species_has_claws(ng->species))
                 continue;
             break;
         case WPN_SPEAR:

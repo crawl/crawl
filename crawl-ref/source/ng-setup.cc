@@ -318,7 +318,7 @@ void give_basic_mutations(species_type speci)
 
     // Some mutations out-sourced because they're
     // relevant during character choice.
-    you.mutation[MUT_CLAWS] = claws_level(speci);
+    you.mutation[MUT_CLAWS] = species_has_claws(speci, true);
 
     // Starting mutations are unremovable.
     for (int i = 0; i < NUM_MUTATIONS; ++i)
