@@ -292,7 +292,6 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_TOUGH_SKIN]      = 2;
         you.mutation[MUT_REGENERATION]    = 2;
         you.mutation[MUT_FAST_METABOLISM] = 3;
-        you.mutation[MUT_CLAWS]           = 3;
         you.mutation[MUT_SAPROVOROUS]     = 2;
         you.mutation[MUT_GOURMAND]        = 1;
         you.mutation[MUT_SHAGGY_FUR]      = 1;
