@@ -1074,7 +1074,7 @@ static void _update_place_info()
     curr_PlaceInfo.assert_validity();
 }
 
-void _update_diag_counters()
+static void _update_diag_counters()
 {
     diag_counter_t act = DC_OTHER;
 

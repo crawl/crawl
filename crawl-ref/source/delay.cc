@@ -79,6 +79,7 @@ static void _xom_check_corpse_waste();
 static void _handle_run_delays(const delay_queue_item &delay);
 static void _handle_macro_delay();
 static void _finish_delay(const delay_queue_item &delay);
+static const char *_activity_interrupt_name(activity_interrupt_type ai);
 
 static int _zin_recite_to_monsters(coord_def where, int pow, int, actor *)
 {
@@ -1387,7 +1388,7 @@ static maybe_bool _userdef_interrupt_activity(const delay_queue_item &idelay,
     if (!ls || ai == AI_FORCE_INTERRUPT)
         return (B_TRUE);
 
-    const char *interrupt_name = activity_interrupt_name(ai);
+    const char *interrupt_name = _activity_interrupt_name(ai);
     const char *act_name = delay_name(delay);
 
     bool ran = clua.callfn("c_interrupt_activity", "1:ssA",
@@ -1592,7 +1593,7 @@ bool interrupt_activity( activity_interrupt_type ai,
     if (delay == DELAY_NOT_DELAYED)
         return (false);
 
-    dprf("Activity interrupt: %s", activity_interrupt_name(ai));
+    dprf("Activity interrupt: %s", _activity_interrupt_name(ai));
 
     // First try to stop the current delay.
     const delay_queue_item &item = you.delay_queue.front();
@@ -1649,7 +1650,7 @@ static const char *activity_interrupt_names[] =
     "monster", "monster_attack", "teleport", "hit_monster"
 };
 
-const char *activity_interrupt_name(activity_interrupt_type ai)
+static const char *_activity_interrupt_name(activity_interrupt_type ai)
 {
     ASSERT( sizeof(activity_interrupt_names)
             / sizeof(*activity_interrupt_names) == NUM_AINTERRUPTS );

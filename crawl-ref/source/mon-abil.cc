@@ -2848,7 +2848,7 @@ static bool _player_at(const coord_def & target)
     return (you.pos() == target);
 }
 
-bool _mold_connected(const coord_def & target)
+static bool _mold_connected(const coord_def & target)
 {
     return (is_moldy(target) || _ballisto_at(target));
 }

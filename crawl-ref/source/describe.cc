@@ -2276,14 +2276,14 @@ void get_item_desc(const item_def &item, describe_info &inf, bool terse)
 }
 
 // Returns true if spells can be shown to player.
-bool _can_show_spells(const item_def &item)
+static bool _can_show_spells(const item_def &item)
 {
     return (item.has_spells()
             && (item.base_type != OBJ_BOOKS || item_type_known(item)
                 || player_can_memorise_from_spellbook(item)));
 }
 
-void _show_spells(const item_def &item)
+static void _show_spells(const item_def &item)
 {
     formatted_string fs;
     item_def dup = item;
@@ -2338,13 +2338,13 @@ static bool _describe_spells(const item_def &item)
     return (true);
 }
 
-bool _can_memorise( item_def &item )
+static bool _can_memorise(item_def &item)
 {
     return (item.base_type == OBJ_BOOKS && in_inventory(item)
             && player_can_memorise_from_spellbook(item));
 }
 
-void _update_inscription( item_def &item )
+static void _update_inscription(item_def &item)
 {
     if (item.base_type == OBJ_BOOKS && in_inventory(item)
         && !_can_memorise(item))
@@ -2353,7 +2353,7 @@ void _update_inscription( item_def &item )
     }
 }
 
-bool _describe_spellbook( item_def &item )
+static bool _describe_spellbook(item_def &item)
 {
     while (true)
     {
@@ -2385,7 +2385,7 @@ bool _describe_spellbook( item_def &item )
 
 // it takes a key and a list of commands and it returns
 // the command from the list which corresponds to the key
-command_type _get_action( int key, std::vector<command_type> actions)
+static command_type _get_action( int key, std::vector<command_type> actions)
 {
     //FIXME: there must be a more efficient way to set up this static map.
     std::map<command_type, int> act_key;
@@ -2417,7 +2417,7 @@ command_type _get_action( int key, std::vector<command_type> actions)
 // _actions_prompt
 //
 // print a list of actions to be performed on the item
-bool _actions_prompt( item_def &item, bool allow_inscribe)
+static bool _actions_prompt( item_def &item, bool allow_inscribe)
 {
     std::string prompt = "You can ";
     int keyin;
@@ -2605,7 +2605,7 @@ bool describe_item( item_def &item, bool allow_inscribe, bool shopping )
     return (true);
 }
 
-void _safe_newline()
+static void _safe_newline()
 {
     if (wherey() == get_number_of_lines())
     {

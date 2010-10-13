@@ -2061,7 +2061,7 @@ static bool _mons_drain_life(monster* mons, bool actual)
     return (false);
 }
 
-bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
+static bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
 {
     // single calculation permissible {dlb}
     bool monsterNearby = mons_near(mons);

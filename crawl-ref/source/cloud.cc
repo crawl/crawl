@@ -36,7 +36,7 @@
 #include "tiledef-main.h"
 #endif
 
-int actual_spread_rate(cloud_type type, int spread_rate)
+static int _actual_spread_rate(cloud_type type, int spread_rate)
 {
     if (spread_rate >= 0)
         return spread_rate;
@@ -505,7 +505,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
             return;
     }
 
-    const int spread_rate = actual_spread_rate(cl_type, _spread_rate);
+    const int spread_rate = _actual_spread_rate(cl_type, _spread_rate);
 
     // Too many clouds.
     if (env.cloud_no >= MAX_CLOUDS)

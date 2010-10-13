@@ -390,7 +390,7 @@ static void _equip_weapon_use_warning(const item_def& item)
 }
 
 
-void _wield_cursed(item_def& item, bool known_cursed)
+static void _wield_cursed(item_def& item, bool known_cursed)
 {
     if (!item.cursed())
         return;
