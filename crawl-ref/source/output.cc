@@ -1912,6 +1912,10 @@ std::string _status_mut_abilities()
           }
           break;
 
+      case SP_CAT:
+          mutations.push_back("paw claws");
+          break;
+
       case SP_GREY_DRACONIAN:
           mutations.push_back("unbreathing");
           break;
@@ -1958,6 +1962,12 @@ std::string _status_mut_abilities()
         || player_genus(GENPC_DRACONIAN) || you.species == SP_SPRIGGAN)
     {
         mutations.push_back("unfitting armour");
+    }
+
+    if (you.species == SP_CAT)
+    {
+        mutations.push_back("no armour");
+        mutations.push_back("no advanced items");
     }
 
     if (beogh_water_walk())
