@@ -719,7 +719,7 @@ int max_cloud_damage(cloud_type cl_type, int power)
         break;
 
     case CLOUD_STINK:
-        if (player_res_poison())
+        if (player_res_poison() || you.species == SP_GREY_DRACONIAN)
             return (0);
 
         dam += 2 * speed / 10;
