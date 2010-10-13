@@ -2386,20 +2386,6 @@ int count_neighbours(int x, int y, dungeon_feature_type feat)
     return count_feature_in_box(x-1, y-1, x+2, y+2, feat);
 }
 
-static void _connected_flood(int margin, int i, int j, bool taken[GXM][GYM])
-{
-    if (i < margin || i >= GXM - margin || j < margin || j >= GYM - margin
-        || taken[i][j])
-    {
-        return;
-    }
-
-    taken[i][j] = true;
-    for (int idelta = -1; idelta <= 1; ++idelta)
-        for (int jdelta = -1; jdelta <= 1; ++jdelta)
-            _connected_flood(margin, i + idelta, j + jdelta, taken);
-}
-
 // Gives water which is next to ground/shallow water a chance of being
 // shallow. Checks each water space.
 static void _prepare_water( int level_number )
