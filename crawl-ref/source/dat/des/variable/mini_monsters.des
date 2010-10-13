@@ -1506,7 +1506,7 @@ ENDMAP
 NAME:    statue_in_the_mist_lemuel
 TAGS:    extra luniq_mini
 MONS:    orange crystal statue / silver statue / ice statue
-DEPTH:   9-
+DEPTH:   D:9-, Orc, Elf, Vault, Snake, Swamp
 MARKER:  G = lua:fog_machine { cloud_type= "grey smoke", \
              pow_min = 10, pow_max = 20, delay_min = 15, delay_max = 35, \
              size = 3, walk_dist = 2, spread_rate= 25 }
