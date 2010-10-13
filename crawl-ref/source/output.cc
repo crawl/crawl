@@ -1903,7 +1903,13 @@ std::string _status_mut_abilities()
           break;
 
       case SP_MUMMY:
-          mutations.push_back("in touch with death");
+          if (you.experience_level > 12)
+          {
+              std::string help = "in touch with death";
+              if (you.experience_level > 25)
+                  help = "strongly " + help;
+              mutations.push_back(help);
+          }
           break;
 
       case SP_GREY_DRACONIAN:
