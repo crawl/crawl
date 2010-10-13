@@ -2465,6 +2465,8 @@ static bool _actions_prompt( item_def &item, bool allow_inscribe)
     case OBJ_POTIONS:
         actions.push_back(CMD_QUAFF);
         break;
+    default:
+        ;
     }
 #if defined(CLUA_BINDINGS)
     if (clua.callbooleanfn(false, "ch_item_wieldable", "i", &item))
