@@ -1902,10 +1902,6 @@ std::string _status_mut_abilities()
           }
           break;
 
-      case SP_VAMPIRE:
-          if (you.experience_level < 13 || you.hunger_state >= HS_SATIATED)
-              break;
-          // else fall-through
       case SP_MUMMY:
           mutations.push_back("in touch with death");
           break;
