@@ -19,7 +19,7 @@
 #include "sprint.h"
 #include "state.h"
 
-skill_type _abil_skill(ability_type abil)
+static skill_type _abil_skill(ability_type abil)
 {
     switch (abil)
     {
@@ -88,7 +88,7 @@ skill_type _abil_skill(ability_type abil)
     }
 }
 
-int _abil_degree(ability_type abil)
+static int _abil_degree(ability_type abil)
 {
     switch (abil)
     {

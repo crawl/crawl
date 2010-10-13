@@ -1009,7 +1009,7 @@ static void _maybe_spawn_jellies(int dam, const char* aux,
     }
 }
 
-void _place_player_corpse(bool explode)
+static void _place_player_corpse(bool explode)
 {
     if (!in_bounds(you.pos()))
         return;

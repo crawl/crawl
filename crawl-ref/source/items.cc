@@ -554,19 +554,6 @@ void lose_item_stack( const coord_def& where )
     igrd(where) = NON_ITEM;
 }
 
-void destroy_item_stack( int x, int y, int cause )
-{
-    for (stack_iterator si(coord_def(x,y)); si; ++si)
-    {
-        if (si ->defined()) // FIXME is this check necessary?
-        {
-            item_was_destroyed( *si, cause);
-            si->clear();
-        }
-    }
-    igrd[x][y] = NON_ITEM;
-}
-
 static bool _invisible_to_player( const item_def& item )
 {
     return strstr(item.inscription.c_str(), "=k") != 0;

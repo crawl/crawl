@@ -548,7 +548,7 @@ int detect_creatures(int pow, bool telepathic)
     return (creatures_found);
 }
 
-bool _selectively_remove_curse()
+static bool _selectively_remove_curse()
 {
     bool used = false;
 
