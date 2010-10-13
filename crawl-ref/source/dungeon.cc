@@ -2815,13 +2815,14 @@ static void _place_minivaults(const std::string &tag, int lo, int hi,
         if ((vault = random_map_for_place(level_id::current(), true)))
             _build_secondary_vault(you.absdepth0, vault);
 
+        int tries = 0;
         do
         {
             vault = random_map_in_depth(level_id::current(), true);
             if (vault)
                 _build_secondary_vault(you.absdepth0, vault);
-        }
-        while (vault && vault->has_tag("extra"));
+        } // if ALL maps eligible are "extra" but fail to place, we'd be screwed
+        while (vault && vault->has_tag("extra") && tries++ < 10000);
     }
 }
 
