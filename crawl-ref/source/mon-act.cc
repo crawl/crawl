@@ -3961,8 +3961,11 @@ static void _mons_in_cloud(monster* mons)
 
     case CLOUD_STINK:
         cloud.announce_actor_engulfed(mons);
-        if (mons->res_poison() > 0)
+        if ((mons->res_poison() > 0
+            || draco_subspecies(mons) == MONS_GREY_DRACONIAN))
+        {
             return;
+        }
 
         beam.flavour = BEAM_CONFUSION;
         beam.thrower = cloud.killer;
