@@ -307,10 +307,12 @@ void moveto_location_effects(dungeon_feature_type old_feat,
         }
 
         if (feat_is_water(new_grid) && !stepped)
+        {
             if (player_likes_water() && you.species != SP_GREY_DRACONIAN)
                 noisy(4, you.pos(), "Floosh!");
             else
                 noisy(8, you.pos(), "Splash!");
+        }
 
         if (new_grid == DNGN_SHALLOW_WATER
             && (!player_likes_water() || you.species == SP_GREY_DRACONIAN))
@@ -5301,12 +5303,12 @@ int player::visible_igrd(const coord_def &where) const
 {
     if (grd(where) == DNGN_LAVA
         || (grd(where) == DNGN_DEEP_WATER
-            && !(species == SP_MERFOLK || species == SP_GREY_DRACONIAN)))
+            && species != SP_MERFOLK && species != SP_GREY_DRACONIAN))
     {
         return (NON_ITEM);
     }
 
-    return igrd(where);
+    return (igrd(where));
 }
 
 bool player::has_spell(spell_type spell) const
