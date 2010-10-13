@@ -1028,7 +1028,7 @@ bool is_damaging_cloud(cloud_type type, bool temp)
          if (you.species == SP_GREY_DRACONIAN)
              return (false);
     case CLOUD_POISON:
-        return !(player_res_poison(false, temp));
+        return (!player_res_poison(false, temp));
     case CLOUD_STEAM:
         return (player_res_steam(false, temp) <= 0);
     case CLOUD_MIASMA:
