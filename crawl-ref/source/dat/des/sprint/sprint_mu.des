@@ -226,6 +226,7 @@ KFEAT: Y = altar_yredelemnul
 KMONS: Y = patrolling necromancer hd:3
 KMONS: y = patrolling ghoul
 KITEM: y = any wand / gold
+KFEAT: y = altar_ashenzari
 NSUBST: f = 1:f / *:W
 KFEAT: f = fountain_blue
 KFEAT: W = fountain_blue
