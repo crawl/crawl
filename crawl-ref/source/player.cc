@@ -312,8 +312,8 @@ void moveto_location_effects(dungeon_feature_type old_feat,
             else
                 noisy(8, you.pos(), "Splash!");
 
-        if (new_grid == DNGN_SHALLOW_WATER && (!player_likes_water() ||
-            you.species == SP_GREY_DRACONIAN))
+        if (new_grid == DNGN_SHALLOW_WATER
+            && (!player_likes_water() || you.species == SP_GREY_DRACONIAN))
         {
             you.time_taken *= 13 + random2(8);
             you.time_taken /= 10;
@@ -5293,8 +5293,8 @@ bool player::can_swim(bool permanently) const
 {
     // Transforming could be fatal if it would cause unequipment of
     // stat-boosting boots or heavy armour.
-    return ((species == SP_MERFOLK || species == SP_GREY_DRACONIAN) ||
-             (!permanently && transform_can_swim()));
+    return ((species == SP_MERFOLK || species == SP_GREY_DRACONIAN)
+             || (!permanently && transform_can_swim()));
 }
 
 int player::visible_igrd(const coord_def &where) const
