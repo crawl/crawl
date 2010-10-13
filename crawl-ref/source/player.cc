@@ -5746,8 +5746,8 @@ int player::res_elec() const
 
 int player::res_water_drowning() const
 {
-    return (res_asphyx() ||
-            (you.species == SP_MERFOLK && !transform_changed_physiology()));
+    return (res_asphyx()
+            || (you.species == SP_MERFOLK && !transform_changed_physiology()));
 }
 
 int player::res_asphyx() const
