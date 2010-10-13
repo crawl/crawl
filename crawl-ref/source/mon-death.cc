@@ -409,7 +409,7 @@ void spirit_fades (monster *spirit)
                         2,  MONS_HOLY_DRAGON,
                         // No holy dragons
                       0)), SAME_ATTITUDE(spirit),
-                      NULL, 0, NULL, c,
+                      NULL, 0, 0, c,
                       spirit->foe, 0);
 
     if (spirit->alive())
