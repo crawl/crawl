@@ -6127,9 +6127,8 @@ int player::has_claws(bool allow_tran) const
         }
     }
 
-    // the mutation does only hands, not paws
-    if (you.species == SP_CAT)
-        return (1);
+    if (int c = species_has_claws(you.species))
+        return (c);
 
     return (player_mutation_level(MUT_CLAWS));
 }

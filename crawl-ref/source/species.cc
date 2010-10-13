@@ -253,14 +253,19 @@ std::string species_name(species_type speci, bool genus, bool adj)
     return res;
 }
 
-int species_has_claws(species_type species)
+int species_has_claws(species_type species, bool mut_level)
 {
     if (species == SP_TROLL)
         return (3);
+
     if (species == SP_GHOUL)
         return (1);
-    if (species == SP_CAT)
+
+    // Felid claws don't count as a claws mutation.  The claws mutation
+    // does only hands, not paws.
+    if (species == SP_CAT && !mut_level)
         return (1);
+
     return (0);
 }
 
