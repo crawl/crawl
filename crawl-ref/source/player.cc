@@ -324,7 +324,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
                      (stepped ? "enter" : "fall into"));
                 mpr("Moving in this stuff is going to be slow.");
                 if (you.invisible())
-                    mpr("... and don't expect to remain undetected.");
+                    mpr("...and don't expect to remain undetected.");
             }
         }
 
