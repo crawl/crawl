@@ -4838,7 +4838,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
         if (!mon->has_ench(ENCH_INVIS) && mon->add_ench(ENCH_INVIS))
         {
-            // A casting of invisibility erases backlight.
+            // A casting of invisibility erases corona.
             mon->del_ench(ENCH_CORONA);
 
             // Can't use simple_monster_message() here, since it checks
