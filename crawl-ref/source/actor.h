@@ -261,6 +261,7 @@ public:
     virtual int halo_radius2() const = 0;
     // Squared silence radius.
     virtual int silence_radius2() const = 0;
+    virtual bool glows_naturally() const = 0;
 
     virtual bool petrified() const = 0;
 

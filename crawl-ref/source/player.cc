@@ -6379,12 +6379,17 @@ bool player::backlit(bool check_haloed, bool self_halo) const
     return (false);
 }
 
+bool player::glows_naturally() const
+{
+    return (false);
+}
+
 // This is the imperative version.
 void player::backlight()
 {
     if (!duration[DUR_INVIS])
     {
-        if (duration[DUR_CORONA])
+        if (duration[DUR_CORONA] || you.glows_naturally())
             mpr("You glow brighter.");
         else
             mpr("You are outlined in light.");

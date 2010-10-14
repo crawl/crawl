@@ -3518,7 +3518,7 @@ static bool _dont_use_invis()
     if (!you.backlit())
         return (false);
 
-    if (you.haloed())
+    if (you.haloed() || you.glows_naturally())
     {
         mpr("You can't turn invisible.");
         return (true);

@@ -2858,7 +2858,7 @@ bool ms_waste_of_time( const monster* mon, spell_type monspell )
         break;
 
     case SPELL_CORONA:
-        ret = (!foe || foe->backlit());
+        ret = (!foe || foe->backlit() || foe->glows_naturally());
         break;
 
     case SPELL_BERSERKER_RAGE:
@@ -2898,6 +2898,7 @@ bool ms_waste_of_time( const monster* mon, spell_type monspell )
 
     case SPELL_INVISIBILITY:
         if (mon->has_ench(ENCH_INVIS)
+            || mon->glows_naturally()
             || mon->friendly() && !you.can_see_invisible(false))
         {
             ret = true;
