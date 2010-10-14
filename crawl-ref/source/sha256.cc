@@ -46,11 +46,11 @@ const u32 k[] = {
    0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
    0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2 };
 
-#define LSHIFT(value, bits) ( ((value) << (bits)) & 0xfffffffe )
-#define RSHIFT(value, bits) ( ((value) >> (bits)) & 0x7fffffff )
+#define LSHIFT(value, bits) (((value) << (bits)) & 0xfffffffe)
+#define RSHIFT(value, bits) (((value) >> (bits)) & 0x7fffffff)
 
-#define LROTATE(value, bits) ( LSHIFT(value, bits) | RSHIFT(value, (sizeof(value) << 3) - (bits)) )
-#define RROTATE(value, bits) ( RSHIFT(value, bits) | LSHIFT(value, (sizeof(value) << 3) - (bits)) )
+#define LROTATE(value, bits) (LSHIFT(value, bits) | RSHIFT(value, (sizeof(value) << 3) - (bits)))
+#define RROTATE(value, bits) (RSHIFT(value, bits) | LSHIFT(value, (sizeof(value) << 3) - (bits)))
 
 #define STORE64H(x, y)                                                                     \
    { (y)[0] = (unsigned char)(((x)>>56)&255); (y)[1] = (unsigned char)(((x)>>48)&255);     \

@@ -240,7 +240,7 @@ static bool _sort_monster_list(int a, int b)
         if (!m1->alive() || !m2->alive())
             return (false);
 
-        return ( m1->name(DESC_PLAIN, true) < m2->name(DESC_PLAIN, true) );
+        return (m1->name(DESC_PLAIN, true) < m2->name(DESC_PLAIN, true));
     }
 
     const unsigned glyph1 = mons_char(m1->type);
@@ -427,12 +427,12 @@ void debug_stethoscope(int mon)
         {
             mprf(MSGCH_DIAGNOSTICS, "cloud type: %d delay: %d",
                  env.cloud[ env.cgrid(stethpos) ].type,
-                 env.cloud[ env.cgrid(stethpos) ].decay );
+                 env.cloud[ env.cgrid(stethpos) ].decay);
         }
 
         if (!monster_at(stethpos))
         {
-            mprf(MSGCH_DIAGNOSTICS, "item grid = %d", igrd(stethpos) );
+            mprf(MSGCH_DIAGNOSTICS, "item grid = %d", igrd(stethpos));
             return;
         }
 
@@ -450,7 +450,7 @@ void debug_stethoscope(int mon)
           (mons.attitude == ATT_NEUTRAL)        ? "neutral" :
           (mons.attitude == ATT_GOOD_NEUTRAL)   ? "good neutral":
           (mons.attitude == ATT_STRICT_NEUTRAL) ? "strictly neutral"
-                                                : "unknown alignment") );
+                                                : "unknown alignment"));
 
     // Print stats and other info.
     mprf(MSGCH_DIAGNOSTICS,
@@ -465,7 +465,7 @@ void debug_stethoscope(int mon)
          mons.base_monster != MONS_NO_MONSTER ? " base=" : "",
          mons.base_monster != MONS_NO_MONSTER ?
          get_monster_data(mons.base_monster)->name : "",
-         mons.number, mons.flags );
+         mons.number, mons.flags);
 
     // Print habitat and behaviour information.
     const habitat_type hab = mons_habitat(&mons);
@@ -494,7 +494,7 @@ void debug_stethoscope(int mon)
          mons.foe,
          mons.foe_memory,
          mons.target.x, mons.target.y,
-         god_name(mons.god).c_str() );
+         god_name(mons.god).c_str());
 
     // Print resistances.
     mprf(MSGCH_DIAGNOSTICS, "resist: fire=%d cold=%d elec=%d pois=%d neg=%d "
@@ -568,7 +568,7 @@ void wizard_dismiss_all_monsters(bool force_all)
 
         if (!validline)
         {
-            canned_msg( MSG_OK );
+            canned_msg(MSG_OK);
             return;
         }
     }
@@ -588,7 +588,7 @@ void debug_make_monster_shout(monster* mon)
 
     if (type != 's' && type != 't')
     {
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
         return;
     }
 
@@ -596,7 +596,7 @@ void debug_make_monster_shout(monster* mon)
 
     if (num_times <= 0)
     {
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
         return;
     }
 
@@ -650,7 +650,7 @@ void wizard_apply_monster_blessing(monster* mon)
 
     if (type != 'b' && type != 's' && type != 'r')
     {
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
         return;
     }
     god_type god = GOD_NO_GOD;
@@ -672,8 +672,8 @@ void wizard_give_monster_item(monster* mon)
         return;
     }
 
-    int player_slot = prompt_invent_item( "Give which item to monster?",
-                                          MT_DROP, -1 );
+    int player_slot = prompt_invent_item("Give which item to monster?",
+                                          MT_DROP, -1);
 
     if (player_slot == PROMPT_ABORT)
         return;
@@ -965,7 +965,7 @@ void wizard_make_monster_summoned(monster* mon)
 
     if (dur < 1 || dur > 6)
     {
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
         return;
     }
 
@@ -979,7 +979,7 @@ void wizard_make_monster_summoned(monster* mon)
 
     if (!(choice >= 'a' && choice <= 'g') && choice != 'm' && choice != 's')
     {
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
         return;
     }
 
@@ -1005,7 +1005,7 @@ void wizard_make_monster_summoned(monster* mon)
 
             if (specs[0] == '\0')
             {
-                canned_msg( MSG_OK );
+                canned_msg(MSG_OK);
                 return;
             }
 
@@ -1035,7 +1035,7 @@ void wizard_polymorph_monster(monster* mon)
 
     if (type == NUM_MONSTERS)
     {
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
         return;
     }
 
@@ -1139,7 +1139,7 @@ static void _miscast_screen_update()
 #endif
 }
 
-void debug_miscast( int target_index )
+void debug_miscast(int target_index)
 {
     crawl_state.cancel_cmd_repeat();
 
@@ -1211,7 +1211,7 @@ void debug_miscast( int target_index )
         mprf("Miscasting school %s.", spelltype_long_name(school));
 
     if (spell != SPELL_NO_SPELL)
-        mpr("Enter spell_power,spell_failure: ", MSGCH_PROMPT );
+        mpr("Enter spell_power,spell_failure: ", MSGCH_PROMPT);
     else
     {
         mpr("Enter miscast_level or spell_power,spell_failure: ",

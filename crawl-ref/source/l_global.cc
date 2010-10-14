@@ -39,7 +39,7 @@ static int lua_pmatch(lua_State *ls)
         checkcase = lua_toboolean(ls, 3);
 
     text_pattern &tp = get_text_pattern(pattern, checkcase);
-    lua_pushboolean( ls, tp.matches(text) );
+    lua_pushboolean(ls, tp.matches(text));
     return (1);
 }
 

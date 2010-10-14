@@ -676,9 +676,9 @@ bool player_in_level_area(level_area_type area);
 bool player_in_hell(void);
 
 bool berserk_check_wielded_weapon(void);
-int player_equip( equipment_type slot, int sub_type, bool calc_unid = true );
-int player_equip_ego_type( int slot, int sub_type );
-bool player_equip_unrand( int unrand_index );
+int player_equip(equipment_type slot, int sub_type, bool calc_unid = true);
+int player_equip_ego_type(int slot, int sub_type);
+bool player_equip_unrand(int unrand_index);
 bool player_can_hit_monster(const monster* mon);
 
 bool player_is_shapechanged(void);
@@ -803,18 +803,18 @@ inline bool player_can_handle_equipment()
 
 void level_change(bool skip_attribute_increase = false);
 
-bool player_genus( genus_type which_genus,
-                   species_type species = SP_UNKNOWN );
-bool is_player_same_species( const int mon, bool = false );
+bool player_genus(genus_type which_genus,
+                   species_type species = SP_UNKNOWN);
+bool is_player_same_species(const int mon, bool = false);
 monster_type player_mons(bool transform = true);
 void update_player_symbol();
 void update_vision_range();
 
-bool you_can_wear( int eq, bool special_armour = false );
+bool you_can_wear(int eq, bool special_armour = false);
 bool player_has_feet(void);
-bool player_wearing_slot( int eq );
+bool player_wearing_slot(int eq);
 bool you_tran_can_wear(const item_def &item);
-bool you_tran_can_wear( int eq, bool check_mutation = false );
+bool you_tran_can_wear(int eq, bool check_mutation = false);
 
 bool enough_hp(int minimum, bool suppress_msg);
 bool enough_mp(int minimum, bool suppress_msg, bool include_items = true);
@@ -830,11 +830,11 @@ void unrot_hp(int hp_recovered);
 int player_rotted();
 void rot_mp(int mp_loss);
 
-void inc_max_hp( int hp_gain );
-void dec_max_hp( int hp_loss );
+void inc_max_hp(int hp_gain);
+void dec_max_hp(int hp_loss);
 
-void inc_max_mp( int mp_gain );
-void dec_max_mp( int mp_loss );
+void inc_max_mp(int mp_gain);
+void dec_max_mp(int mp_loss);
 
 void deflate_hp(int new_level, bool floor);
 void set_hp(int new_amount, bool max_too);

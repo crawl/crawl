@@ -85,7 +85,7 @@ int unmangle_direction_keys(int keyin, KeymapContext keymap,
             117, 145, 118, 115, 76, 116, 119, 141, 132
         };
         keyin = getchm(keymap);
-        for (int j = 0; j < 9; ++j )
+        for (int j = 0; j < 9; ++j)
         {
             if (keyin == DOSidiocy[j])
             {
@@ -153,7 +153,7 @@ void cursorxy(int x, int y)
 
 // cprintf that stops outputting when wrapped
 // Conceptually very similar to wrapcprintf()
-int nowrapcprintf( int wrapcol, const char *s, ... )
+int nowrapcprintf(int wrapcol, const char *s, ...)
 {
     char buf[1000]; // Hard max
 
@@ -164,7 +164,7 @@ int nowrapcprintf( int wrapcol, const char *s, ... )
     va_end(args);
 
     // Sanity checking to prevent buffer overflows
-    const int maxlen = std::min( std::max( wrapcol + 1 - wherex(), 0 ), len );
+    const int maxlen = std::min(std::max(wrapcol + 1 - wherex(), 0), len);
 
     // Force the string to terminate at maxlen
     buf[maxlen] = 0;
@@ -175,7 +175,7 @@ int nowrapcprintf( int wrapcol, const char *s, ... )
 
 // convenience wrapper (hah) for nowrapcprintf
 // FIXME: should pass off to nowrapcprintf() instead of doing it manually
-int nowrap_eol_cprintf( const char *s, ... )
+int nowrap_eol_cprintf(const char *s, ...)
 {
     const int wrapcol = get_number_of_cols() - 1;
     char buf[1000]; // Hard max
@@ -187,7 +187,7 @@ int nowrap_eol_cprintf( const char *s, ... )
     va_end(args);
 
     // Sanity checking to prevent buffer overflows
-    const int maxlen = std::min( std::max( wrapcol + 1 - wherex(), 0 ), len );
+    const int maxlen = std::min(std::max(wrapcol + 1 - wherex(), 0), len);
 
     // Force the string to terminate at maxlen
     buf[maxlen] = 0;
@@ -197,7 +197,7 @@ int nowrap_eol_cprintf( const char *s, ... )
 }
 
 // cprintf that knows how to wrap down lines (primitive, but what the heck)
-int wrapcprintf( int wrapcol, const char *s, ... )
+int wrapcprintf(int wrapcol, const char *s, ...)
 {
     char buf[1000]; // Hard max
     va_list args;
@@ -442,7 +442,7 @@ void line_reader::backspace()
 
         cursorto(pos);
         buffer[length] = 0;
-        wrapcprintf( wrapcol, "%s ", cur );
+        wrapcprintf(wrapcol, "%s ", cur);
         cursorto(pos);
     }
 }
@@ -532,7 +532,7 @@ int line_reader::process_key(int ch)
         {
             length = pos;
             buffer[length] = 0;
-            wrapcprintf( wrapcol, "%*s", erase, "" );
+            wrapcprintf(wrapcol, "%*s", erase, "");
             cursorto(pos);
         }
         break;
@@ -550,7 +550,7 @@ int line_reader::process_key(int ch)
 
             cursorto(pos);
             buffer[length] = 0;
-            wrapcprintf( wrapcol, "%s ", cur );
+            wrapcprintf(wrapcol, "%s ", cur);
             cursorto(pos);
         }
         break;

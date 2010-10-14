@@ -75,7 +75,7 @@ static coord_def mmov;
 
 static const coord_def mon_compass[8] = {
     coord_def(-1,-1), coord_def(0,-1), coord_def(1,-1), coord_def(1,0),
-    coord_def( 1, 1), coord_def(0, 1), coord_def(-1,1), coord_def(-1,0)
+    coord_def(1, 1), coord_def(0, 1), coord_def(-1,1), coord_def(-1,0)
 };
 
 static int _compass_idx(const coord_def& mov)
@@ -218,9 +218,9 @@ static void _swim_or_move_energy(monster* mon)
     const dungeon_feature_type feat = grd(mon->pos());
 
     // FIXME: Replace check with mons_is_swimming()?
-    mon->lose_energy( (feat >= DNGN_LAVA && feat <= DNGN_SHALLOW_WATER
+    mon->lose_energy((feat >= DNGN_LAVA && feat <= DNGN_SHALLOW_WATER
                        && !mon->airborne()) ? EUT_SWIM
-                                            : EUT_MOVE );
+                                            : EUT_MOVE);
 }
 
 // Check up to eight grids in the given direction for whether there's a
@@ -979,7 +979,7 @@ static void _rod_fired_pre(monster* mons, bool nice_spell)
         make_mons_stop_fleeing(mons);
 
     if ((!simple_monster_message(mons, " zaps a rod.")) &&
-        (!silenced(you.pos())) )
+        (!silenced(you.pos())))
             mpr("You hear a zap.", MSGCH_SOUND);
 }
 
@@ -1188,7 +1188,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
                            -1));
             create_monster(
                 mgen_data::hostile_at(summon, mons->name(DESC_NOCAP_A),
-                true, duration, 0, mons->pos() ));
+                true, duration, 0, mons->pos()));
             _rod_fired_post(mons, rod, weapon, beem, 400, was_visible);
             return true;
        }
@@ -1984,7 +1984,7 @@ void handle_monster_move(monster* mons)
     fedhas_neutralise(mons);
 
     // Monster just summoned (or just took stairs), skip this action.
-    if (testbits( mons->flags, MF_JUST_SUMMONED ))
+    if (testbits(mons->flags, MF_JUST_SUMMONED))
     {
         mons->flags &= ~MF_JUST_SUMMONED;
         return;
@@ -2361,7 +2361,7 @@ void handle_monster_move(monster* mons)
                 ASSERT(!crawl_state.game_is_arena());
 
                 if (!mons_att_wont_attack(mons->attitude)
-                    && !mons->has_ench(ENCH_CHARM) )
+                    && !mons->has_ench(ENCH_CHARM))
                 {
                     // If it steps into you, cancel other targets.
                     mons->foe = MHITYOU;
@@ -2530,10 +2530,10 @@ static bool _jelly_divide(monster* parent)
     // First, find a suitable spot for the child {dlb}:
     for (adjacent_iterator ai(parent->pos()); ai; ++ai)
         if (actor_at(*ai) == NULL && parent->can_pass_through(*ai))
-            if ( one_chance_in(++num_spots) )
+            if (one_chance_in(++num_spots))
                 child_spot = *ai;
 
-    if ( num_spots == 0 )
+    if (num_spots == 0)
         return (false);
 
     // Now that we have a spot, find a monster slot {dlb}:
@@ -2695,9 +2695,9 @@ static bool _monster_eat_item(monster* mons, bool nearby)
 
         if (death_ooze_ate_corpse)
         {
-            place_cloud ( CLOUD_MIASMA, mons->pos(),
+            place_cloud (CLOUD_MIASMA, mons->pos(),
                           4 + random2(5), mons->kill_alignment(),
-                          KILL_MON_MISSILE );
+                          KILL_MON_MISSILE);
         }
 
         if (death_ooze_ate_good)
@@ -3408,7 +3408,7 @@ static void _jelly_grows(monster* mons)
     _jelly_divide(mons);
 }
 
-static bool _monster_swaps_places( monster* mon, const coord_def& delta )
+static bool _monster_swaps_places(monster* mon, const coord_def& delta)
 {
     if (delta.origin())
         return (false);
@@ -3504,7 +3504,7 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
             if (!you.can_see(mons))
             {
                 mpr("The door mysteriously vanishes.");
-                interrupt_activity( AI_FORCE_INTERRUPT );
+                interrupt_activity(AI_FORCE_INTERRUPT);
             }
             else
                 simple_monster_message(mons, " eats the door!");
@@ -3829,7 +3829,7 @@ static bool _monster_move(monster* mons)
 #ifdef DEBUG_DIAGNOSTICS
                 mprf(MSGCH_DIAGNOSTICS,
                      "%s is skipping movement in order to follow.",
-                     mons->name(DESC_CAP_THE).c_str(), true );
+                     mons->name(DESC_CAP_THE).c_str(), true);
 #endif
             }
         }
@@ -3857,17 +3857,17 @@ static bool _monster_move(monster* mons)
         if (mons_genus(mons->type) == MONS_EFREET
             || mons->type == MONS_FIRE_ELEMENTAL)
         {
-            place_cloud( CLOUD_FIRE, mons->pos(),
+            place_cloud(CLOUD_FIRE, mons->pos(),
                          2 + random2(4), mons->kill_alignment(),
-                         KILL_MON_MISSILE );
+                         KILL_MON_MISSILE);
         }
 
         if (mons->type == MONS_ROTTING_DEVIL
             || mons->type == MONS_CURSE_TOE)
         {
-            place_cloud( CLOUD_MIASMA, mons->pos(),
+            place_cloud(CLOUD_MIASMA, mons->pos(),
                          2 + random2(3), mons->kill_alignment(),
-                         KILL_MON_MISSILE );
+                         KILL_MON_MISSILE);
         }
 
         // Commented out, but left in as an example of gloom. {due}
@@ -3926,7 +3926,7 @@ static void _mons_in_cloud(monster* mons)
     const int speed = ((mons->speed > 0) ? mons->speed : 10);
     bool wake = false;
 
-    if (mons_is_mimic( mons->type ))
+    if (mons_is_mimic(mons->type))
     {
         mimic_alert(mons);
         return;
@@ -4072,10 +4072,10 @@ static void _mons_in_cloud(monster* mons)
             resist = -1;
 
         hurted +=
-            resist_adjust_damage( mons,
+            resist_adjust_damage(mons,
                                   BEAM_HOLY_FLAME,
                                   resist,
-                                  ((random2avg(16, 3) + 6) * 10) / speed );
+                                  ((random2avg(16, 3) + 6) * 10) / speed);
 
         dprf("Pain: %d, resist: %d", hurted, resist);
 

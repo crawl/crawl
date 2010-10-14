@@ -894,9 +894,9 @@ bool mons_speaks_msg(monster* mons, const std::string &msg,
 
         // Except for VISUAL, none of the above influence these.
         if (line == "__YOU_RESIST" && (!silence || param == "VISUAL"))
-            canned_msg( MSG_YOU_RESIST );
+            canned_msg(MSG_YOU_RESIST);
         else if (line == "__NOTHING_HAPPENS" && (!silence || param == "VISUAL"))
-            canned_msg( MSG_NOTHING_HAPPENS );
+            canned_msg(MSG_NOTHING_HAPPENS);
         else if (line == "__MORE" && (!silence || param == "VISUAL"))
             more();
         else if (msg_type == MSGCH_TALK_VISUAL && !you.can_see(mons))

@@ -1082,13 +1082,13 @@ int monster_info::res_magic() const
 
     // ego armour resistance
     if (inv[MSLOT_ARMOUR].get()
-        && get_armour_ego_type(*inv[MSLOT_ARMOUR]) == SPARM_MAGIC_RESISTANCE )
+        && get_armour_ego_type(*inv[MSLOT_ARMOUR]) == SPARM_MAGIC_RESISTANCE)
     {
         mr += 30;
     }
 
     if (inv[MSLOT_SHIELD].get()
-        && get_armour_ego_type(*inv[MSLOT_SHIELD]) == SPARM_MAGIC_RESISTANCE )
+        && get_armour_ego_type(*inv[MSLOT_SHIELD]) == SPARM_MAGIC_RESISTANCE)
     {
         mr += 30;
     }
@@ -1133,7 +1133,7 @@ void get_monster_info(std::vector<monster_info>& mons)
 
     for (unsigned int i = 0; i < visible.size(); i++)
     {
-        if (!mons_class_flag( visible[i]->type, M_NO_EXP_GAIN )
+        if (!mons_class_flag(visible[i]->type, M_NO_EXP_GAIN)
             || visible[i]->type == MONS_KRAKEN_TENTACLE
             || visible[i]->type == MONS_BALLISTOMYCETE
                 && visible[i]->number > 0)

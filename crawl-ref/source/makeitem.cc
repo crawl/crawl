@@ -95,7 +95,7 @@ static int _newwave_weapon_colour(const item_def &item)
     const bool item_runed = itname.find(" runed ") != std::string::npos;
     const bool heav_runed = itname.find(" heavily ") != std::string::npos;
 
-    if ( is_random_artefact(item) && (!item_runed || heav_runed) )
+    if (is_random_artefact(item) && (!item_runed || heav_runed))
         return _exciting_colour();
 
     if (is_range_weapon(item))
@@ -2030,8 +2030,8 @@ static void _generate_missile_item(item_def& item, int force_type,
 
     if (!no_brand)
     {
-        set_item_ego_type( item, OBJ_MISSILES,
-                           _determine_missile_brand(item, item_level) );
+        set_item_ego_type(item, OBJ_MISSILES,
+                           _determine_missile_brand(item, item_level));
     }
 
     // Reduced quantity if special.
@@ -2042,7 +2042,7 @@ static void _generate_missile_item(item_def& item, int force_type,
     {
         item.quantity = random_range(2, 8);
     }
-    else if (get_ammo_brand( item ) != SPMSL_NORMAL)
+    else if (get_ammo_brand(item) != SPMSL_NORMAL)
         item.quantity = 1 + random2(9) + random2(12) + random2(12);
     else
         item.quantity = 1 + random2(9) + random2(12) + random2(12) + random2(15);
@@ -2557,7 +2557,7 @@ static monster_type _choose_random_monster_corpse()
 
 static int _random_wand_subtype()
 {
-    int rc = random2( NUM_WANDS );
+    int rc = random2(NUM_WANDS);
 
     // Adjusted distribution here -- bwr
     // Wands used to be uniform (5.26% each)
@@ -2569,7 +2569,7 @@ static int _random_wand_subtype()
     if (rc == WAND_INVISIBILITY || rc == WAND_HASTING || rc == WAND_HEALING
         || (rc == WAND_FIREBALL || rc == WAND_TELEPORTATION) && coinflip())
     {
-        rc = random2( NUM_WANDS );
+        rc = random2(NUM_WANDS);
     }
     return rc;
 }
@@ -2618,7 +2618,7 @@ static void _generate_food_item(item_def& item, int force_quant, int force_type)
     // Determine sub_type:
     if (force_type == OBJ_RANDOM)
     {
-        item.sub_type = random_choose_weighted( 250, FOOD_MEAT_RATION,
+        item.sub_type = random_choose_weighted(250, FOOD_MEAT_RATION,
                                                 300, FOOD_BREAD_RATION,
                                                 100, FOOD_PEAR,
                                                 100, FOOD_APPLE,
@@ -2696,7 +2696,7 @@ static void _generate_potion_item(item_def& item, int force_type,
         do
         {
             // total weight is NOT 10000
-            stype = random_choose_weighted( 2815, POT_HEALING,
+            stype = random_choose_weighted(2815, POT_HEALING,
                                             1407, POT_HEAL_WOUNDS,
                                              900, POT_RESTORE_ABILITIES,
                                              648, POT_POISON,
@@ -2908,7 +2908,7 @@ static void _generate_book_item(item_def& item, int allow_uniques,
         make_book_theme_randart(item, 0, 0, 5 + coinflip(), 20);
     else if (item.sub_type == BOOK_RANDART_LEVEL)
     {
-        int max_level  = std::min( 9, std::max(1, item_level / 3) );
+        int max_level  = std::min(9, std::max(1, item_level / 3));
         int spl_level  = random_range(1, max_level);
         int max_spells = 5 + spl_level/3;
         make_book_level_randart(item, spl_level, max_spells);
@@ -3019,7 +3019,7 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
     if (item.plus < 0)
         do_curse_item(item);
 
-    if (item.sub_type == RING_SLAYING ) // requires plus2 too
+    if (item.sub_type == RING_SLAYING) // requires plus2 too
     {
         if (item.cursed() && !one_chance_in(20))
             item.plus2 = -1 - random2avg(6, 2);
@@ -3078,7 +3078,7 @@ static void _generate_misc_item(item_def& item, int force_type, int item_race)
             item.sub_type = MISC_BOX_OF_BEASTS;
     }
 
-    if ( is_deck(item) )
+    if (is_deck(item))
     {
         item.plus = 4 + random2(10);
         item.special = random_deck_rarity();
@@ -3145,7 +3145,7 @@ int items(int allow_uniques,       // not just true-false,
     {
         ASSERT(force_type == OBJ_RANDOM);
         item.base_type = static_cast<object_class_type>(
-            random_choose_weighted(  5, OBJ_STAVES,
+            random_choose_weighted(5, OBJ_STAVES,
                                     15, OBJ_BOOKS,
                                     25, OBJ_JEWELLERY,
                                     35, OBJ_WANDS,

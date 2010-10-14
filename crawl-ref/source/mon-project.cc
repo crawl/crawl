@@ -42,7 +42,7 @@ bool cast_iood(actor *caster, int pow, bolt *beam)
     {
         mind = mons_place(mgen_data(MONS_ORB_OF_DESTRUCTION,
                 (caster->atype() == ACT_PLAYER) ? BEH_FRIENDLY :
-                    ((monster* )caster)->friendly() ? BEH_FRIENDLY : BEH_HOSTILE,
+                    ((monster*)caster)->friendly() ? BEH_FRIENDLY : BEH_HOSTILE,
                 caster,
                 0,
                 SPELL_IOOD,
@@ -70,7 +70,7 @@ bool cast_iood(actor *caster, int pow, bolt *beam)
     mon.props["iood_vx"].get_float() = beam->ray.r.dir.x;
     mon.props["iood_vy"].get_float() = beam->ray.r.dir.y;
     mon.props["iood_kc"].get_byte() = (caster->atype() == ACT_PLAYER) ? KC_YOU :
-            ((monster* )caster)->friendly() ? KC_FRIENDLY : KC_OTHER;
+            ((monster*)caster)->friendly() ? KC_FRIENDLY : KC_OTHER;
     mon.props["iood_pow"].get_short() = pow;
     mon.flags &= ~MF_JUST_SUMMONED;
     mon.props["iood_caster"].get_string() = caster->as_monster()
@@ -300,7 +300,7 @@ move_again:
         }
 
         monster* mons = (victim && victim->atype() == ACT_MONSTER) ?
-            (monster* ) victim : 0;
+            (monster*) victim : 0;
 
         if (mons && mons_is_projectile(victim->id()))
         {

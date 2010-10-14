@@ -507,7 +507,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
 
     case MONS_TERENCE:
         item.base_type = OBJ_WEAPONS;
-        item.sub_type  = random_choose_weighted( 30, WPN_FLAIL,
+        item.sub_type  = random_choose_weighted(30, WPN_FLAIL,
                                                  20, WPN_HAND_AXE,
                                                  20, WPN_SHORT_SWORD,
                                                  20, WPN_MACE,
@@ -881,7 +881,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.plus      = random2(5);
         item.plus2     = random2(5);
         item.colour    = RED;  // forced by force_item above {dlb}
-        set_item_ego_type( item, OBJ_WEAPONS, SPWPN_FLAMING );
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING);
         break;
 
     case MONS_ANGEL:
@@ -1000,7 +1000,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.sub_type  = WPN_GREAT_SWORD;
         item.plus      = 0;
         item.plus2     = 0;
-        set_item_ego_type( item, OBJ_WEAPONS, SPWPN_FLAMING );
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING);
 
         item.colour = random_choose_weighted(3, CYAN,
                                              4, DARKGREY,
@@ -1016,7 +1016,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.sub_type  = WPN_BATTLEAXE;
         item.plus      = 0;
         item.plus2     = 0;
-        set_item_ego_type( item, OBJ_WEAPONS, SPWPN_FREEZING );
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FREEZING);
 
         // forced by force_item above {dlb}
         item.colour = (one_chance_in(3) ? WHITE : CYAN);
@@ -1250,7 +1250,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     if (item.base_type == OBJ_UNASSIGNED)
         return (item_race);
 
-    if (!force_item && mons_is_unique( mon->type ))
+    if (!force_item && mons_is_unique(mon->type))
     {
         if (x_chance_in_y(10 + mon->hit_dice, 100))
             level = MAKE_GOOD_ITEM;
@@ -1277,7 +1277,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         mitm[thing_created] = item;
 
     item_def &i = mitm[thing_created];
-    if ( melee_only && (i.base_type != OBJ_WEAPONS || is_range_weapon(i)))
+    if (melee_only && (i.base_type != OBJ_WEAPONS || is_range_weapon(i)))
     {
         destroy_item(thing_created);
         return (item_race);
@@ -1329,7 +1329,7 @@ static void _give_ammo(monster* mon, int level,
                                   got_curare_roll(level) ? SPMSL_CURARE
                                                          : SPMSL_POISONED);
 
-                if (get_ammo_brand( mitm[thing_created] ) == SPMSL_CURARE)
+                if (get_ammo_brand(mitm[thing_created]) == SPMSL_CURARE)
                     mitm[thing_created].quantity = random_range(2, 8);
             }
         }
@@ -1862,7 +1862,7 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_CENTAUR_WARRIOR:
     case MONS_YAKTAUR:
     case MONS_YAKTAUR_CAPTAIN:
-        if ( one_chance_in( mon->type == MONS_CENTAUR              ? 1000 :
+        if (one_chance_in(mon->type == MONS_CENTAUR              ? 1000 :
                             mon->type == MONS_CENTAUR_WARRIOR      ?  500 :
                             mon->type == MONS_YAKTAUR              ?  300
                          /* mon->type == MONS_YAKTAUR_CAPTAIN ? */ :  200))
@@ -1878,10 +1878,10 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_NAGA_MAGE:
     case MONS_NAGA_WARRIOR:
     case MONS_GREATER_NAGA:
-        if ( one_chance_in( mon->type == MONS_NAGA         ?  800 :
+        if (one_chance_in(mon->type == MONS_NAGA         ?  800 :
                             mon->type == MONS_NAGA_WARRIOR ?  300 :
                             mon->type == MONS_NAGA_MAGE    ?  200
-                                                           :  100 ))
+                                                           :  100))
         {
             item_race      = MAKE_ITEM_NO_RACE;
             item.base_type = OBJ_ARMOUR;

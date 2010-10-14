@@ -170,8 +170,8 @@ void game_state::zero_turns_taken()
     cancel_cmd_repeat();
 }
 
-bool interrupt_cmd_repeat( activity_interrupt_type ai,
-                           const activity_interrupt_data &at )
+bool interrupt_cmd_repeat(activity_interrupt_type ai,
+                           const activity_interrupt_data &at)
 {
     if (crawl_state.cmd_repeat_start)
         return (false);
@@ -221,7 +221,7 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
         if (Hints.hints_left)
             hints_monster_seen(*mon);
 #else
-        formatted_string fs( channel_to_colour(MSGCH_WARN) );
+        formatted_string fs(channel_to_colour(MSGCH_WARN));
         fs.cprintf("%s (", mon->name(DESC_PLAIN, true).c_str());
         monster_info mi(mon);
         fs.add_glyph(get_mons_glyph(mi));

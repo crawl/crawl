@@ -25,7 +25,7 @@ void clear_to_end_of_line();
 void gotoxy_sys(int x, int y);
 void textcolor(int c);
 void textattr(int c);
-void cprintf( const char *format, ... );
+void cprintf(const char *format, ...);
 // void cprintf(const char *s);
 void set_string_input(bool value);
 bool set_buffering(bool value);

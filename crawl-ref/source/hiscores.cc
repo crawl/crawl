@@ -99,7 +99,7 @@ std::string log_file_name()
     return (Options.shared_dir + "logfile" + crawl_state.game_type_qualifier());
 }
 
-void hiscores_new_entry( const scorefile_entry &ne )
+void hiscores_new_entry(const scorefile_entry &ne)
 {
     unwind_bool score_update(crawl_state.updating_scores, true);
 
@@ -182,7 +182,7 @@ void hiscores_new_entry( const scorefile_entry &ne )
     _hs_close(scores, "a+", score_file_name());
 }
 
-void logfile_new_entry( const scorefile_entry &ne )
+void logfile_new_entry(const scorefile_entry &ne)
 {
     unwind_bool logfile_update(crawl_state.updating_scores, true);
 
@@ -209,16 +209,16 @@ static void _hiscores_print_entry(const scorefile_entry &se,
 {
     char buf[INFO_SIZE];
     // print position (tracked implicitly by order score file)
-    snprintf( buf, sizeof buf, "%3d.", index + 1 );
+    snprintf(buf, sizeof buf, "%3d.", index + 1);
 
     pf("%s", buf);
 
     std::string entry;
     // format the entry
     if (format == SCORE_TERSE)
-        entry = hiscores_format_single( se );
+        entry = hiscores_format_single(se);
     else
-        entry = hiscores_format_single_long( se, (format == SCORE_VERBOSE) );
+        entry = hiscores_format_single_long(se, (format == SCORE_VERBOSE));
 
     entry += "\n";
     pf("%s", entry.c_str());
@@ -233,7 +233,7 @@ void hiscores_print_all(int display_count, int format)
     if (scores == NULL)
     {
         // will only happen from command line
-        puts( "No scores." );
+        puts("No scores.");
         return;
     }
 
@@ -249,12 +249,12 @@ void hiscores_print_all(int display_count, int format)
             _hiscores_print_entry(se, entry, format, printf);
     }
 
-    _hs_close( scores, "r", score_file_name() );
+    _hs_close(scores, "r", score_file_name());
 }
 
 // Displays high scores using curses. For output to the console, use
 // hiscores_print_all.
-void hiscores_print_list( int display_count, int format )
+void hiscores_print_list(int display_count, int format)
 {
     unwind_bool scorefile_display(crawl_state.updating_scores, true);
 
@@ -273,13 +273,13 @@ void hiscores_print_list( int display_count, int format )
     for (i = 0; i < SCORE_FILE_ENTRIES; i++)
     {
         hs_list[i].reset(new scorefile_entry);
-        if (_hs_read( scores, *hs_list[i] ) == false)
+        if (_hs_read(scores, *hs_list[i]) == false)
             break;
     }
     total_entries = i;
 
     // close off
-    _hs_close( scores, "r", score_file_name() );
+    _hs_close(scores, "r", score_file_name());
 
     textcolor(LIGHTGREY);
 
@@ -307,13 +307,13 @@ void hiscores_print_list( int display_count, int format )
 }
 
 // Trying to supply an appropriate verb for the attack type. -- bwr
-static const char *_range_type_verb( const char *const aux )
+static const char *_range_type_verb(const char *const aux)
 {
-    if (strncmp( aux, "Shot ", 5 ) == 0)                // launched
+    if (strncmp(aux, "Shot ", 5) == 0)                // launched
         return ("shot");
     else if (aux[0] == 0                                // unknown
-             || strncmp( aux, "Hit ", 4 ) == 0          // thrown
-             || strncmp( aux, "volley ", 7 ) == 0)      // manticore spikes
+             || strncmp(aux, "Hit ", 4) == 0          // thrown
+             || strncmp(aux, "volley ", 7) == 0)      // manticore spikes
     {
         return ("hit from afar");
     }
@@ -326,27 +326,27 @@ std::string hiscores_format_single(const scorefile_entry &se)
     return se.hiscore_line(scorefile_entry::DDV_ONELINE);
 }
 
-static bool _hiscore_same_day( time_t t1, time_t t2 )
+static bool _hiscore_same_day(time_t t1, time_t t2)
 {
-    struct tm *d1  = TIME_FN( &t1 );
+    struct tm *d1  = TIME_FN(&t1);
     const int year = d1->tm_year;
     const int mon  = d1->tm_mon;
     const int day  = d1->tm_mday;
 
-    struct tm *d2  = TIME_FN( &t2 );
+    struct tm *d2  = TIME_FN(&t2);
 
     return (d2->tm_mday == day && d2->tm_mon == mon && d2->tm_year == year);
 }
 
-static void _hiscore_date_string( time_t time, char buff[INFO_SIZE] )
+static void _hiscore_date_string(time_t time, char buff[INFO_SIZE])
 {
-    struct tm *date = TIME_FN( &time );
+    struct tm *date = TIME_FN(&time);
 
     const char *mons[12] = { "Jan", "Feb", "Mar", "Apr", "May", "June",
                              "July", "Aug", "Sept", "Oct", "Nov", "Dec" };
 
-    snprintf( buff, INFO_SIZE, "%s %d, %d", mons[date->tm_mon],
-              date->tm_mday, date->tm_year + 1900 );
+    snprintf(buff, INFO_SIZE, "%s %d, %d", mons[date->tm_mon],
+              date->tm_mday, date->tm_year + 1900);
 }
 
 static std::string _hiscore_newline_string()
@@ -354,32 +354,32 @@ static std::string _hiscore_newline_string()
     return ("\n             ");
 }
 
-std::string hiscores_format_single_long( const scorefile_entry &se,
-                                         bool verbose )
+std::string hiscores_format_single_long(const scorefile_entry &se,
+                                         bool verbose)
 {
-    return se.hiscore_line( verbose ? scorefile_entry::DDV_VERBOSE
-                                    : scorefile_entry::DDV_NORMAL );
+    return se.hiscore_line(verbose ? scorefile_entry::DDV_VERBOSE
+                                    : scorefile_entry::DDV_NORMAL);
 }
 
 // --------------------------------------------------------------------------
 // BEGIN private functions
 // --------------------------------------------------------------------------
 
-FILE *_hs_open( const char *mode, const std::string &scores )
+FILE *_hs_open(const char *mode, const std::string &scores)
 {
     // allow reading from standard input
-    if ( scores == "-" )
+    if (scores == "-")
         return stdin;
 
-    return lk_open( mode, scores );
+    return lk_open(mode, scores);
 }
 
-void _hs_close( FILE *handle, const char *mode, const std::string &scores )
+void _hs_close(FILE *handle, const char *mode, const std::string &scores)
 {
     lk_close(handle, mode, scores);
 }
 
-bool _hs_read( FILE *scores, scorefile_entry &dest )
+bool _hs_read(FILE *scores, scorefile_entry &dest)
 {
     char inbuf[1300];
     if (!scores || feof(scores))
@@ -394,7 +394,7 @@ bool _hs_read( FILE *scores, scorefile_entry &dest )
     return (dest.parse(inbuf));
 }
 
-static int _val_char( char digit )
+static int _val_char(char digit)
 {
     return (digit - '0');
 }
@@ -406,20 +406,20 @@ static time_t _parse_time(const std::string &st)
     if (st.length() < 15)
         return (static_cast<time_t>(0));
 
-    date.tm_year  =   _val_char( st[0] ) * 1000 + _val_char( st[1] ) * 100
-                    + _val_char( st[2] ) *   10 + _val_char( st[3] ) - 1900;
+    date.tm_year  =   _val_char(st[0]) * 1000 + _val_char(st[1]) * 100
+                    + _val_char(st[2]) *   10 + _val_char(st[3]) - 1900;
 
-    date.tm_mon   = _val_char( st[4] )  * 10 + _val_char( st[5] );
-    date.tm_mday  = _val_char( st[6] )  * 10 + _val_char( st[7] );
-    date.tm_hour  = _val_char( st[8] )  * 10 + _val_char( st[9] );
-    date.tm_min   = _val_char( st[10] ) * 10 + _val_char( st[11] );
-    date.tm_sec   = _val_char( st[12] ) * 10 + _val_char( st[13] );
+    date.tm_mon   = _val_char(st[4])  * 10 + _val_char(st[5]);
+    date.tm_mday  = _val_char(st[6])  * 10 + _val_char(st[7]);
+    date.tm_hour  = _val_char(st[8])  * 10 + _val_char(st[9]);
+    date.tm_min   = _val_char(st[10]) * 10 + _val_char(st[11]);
+    date.tm_sec   = _val_char(st[12]) * 10 + _val_char(st[13]);
     date.tm_isdst = (st[14] == 'D');
 
-    return (mktime( &date ));
+    return (mktime(&date));
 }
 
-static void _hs_write( FILE *scores, scorefile_entry &se )
+static void _hs_write(FILE *scores, scorefile_entry &se)
 {
     fprintf(scores, "%s", se.raw_string().c_str());
 }
@@ -937,18 +937,18 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             if (you.hp <= 0)
             {
 #ifdef HISCORE_WEAPON_DETAIL
-                set_ident_flags( mitm[mons->inv[MSLOT_WEAPON]],
-                                 ISFLAG_IDENT_MASK );
+                set_ident_flags(mitm[mons->inv[MSLOT_WEAPON]],
+                                 ISFLAG_IDENT_MASK);
 #else
                 // changing this to ignore the pluses to keep it short
-                unset_ident_flags( mitm[mons->inv[MSLOT_WEAPON]],
-                                   ISFLAG_IDENT_MASK );
+                unset_ident_flags(mitm[mons->inv[MSLOT_WEAPON]],
+                                   ISFLAG_IDENT_MASK);
 
-                set_ident_flags( mitm[mons->inv[MSLOT_WEAPON]],
-                                 ISFLAG_KNOW_TYPE );
+                set_ident_flags(mitm[mons->inv[MSLOT_WEAPON]],
+                                 ISFLAG_KNOW_TYPE);
 
                 // clear "runed" description text to make shorter yet
-                set_equip_desc( mitm[mons->inv[MSLOT_WEAPON]], 0 );
+                set_equip_desc(mitm[mons->inv[MSLOT_WEAPON]], 0);
 #endif
             }
 
@@ -1180,7 +1180,7 @@ void scorefile_entry::init(time_t dt)
         if (you.inv[d].defined())
         {
             if (calc_item_values)
-                points += item_value( you.inv[d], true );
+                points += item_value(you.inv[d], true);
 
             if (you.inv[d].base_type == OBJ_MISCELLANY
                 && you.inv[d].sub_type == MISC_RUNE_OF_ZOT)
@@ -1388,8 +1388,8 @@ std::string scorefile_entry::death_source_desc() const
 std::string scorefile_entry::damage_string(bool terse) const
 {
     char scratch[50];
-    snprintf( scratch, sizeof scratch, "(%d%s)", damage,
-                       terse? "" : " damage" );
+    snprintf(scratch, sizeof scratch, "(%d%s)", damage,
+                       terse? "" : " damage");
     return (scratch);
 }
 
@@ -1472,7 +1472,7 @@ void scorefile_entry::fixup_char_name()
     {
         race_class_name = make_stringf("%s%s",
                                        is_valid_species(race) ?
-                                           get_species_abbrev( race ) : "??",
+                                           get_species_abbrev(race) : "??",
                                        _job_abbrev(job));
     }
 }
@@ -1483,8 +1483,8 @@ std::string scorefile_entry::single_cdesc() const
     if (scname.length() > 10)
         scname = scname.substr(0, 10);
 
-    return make_stringf( "%8d %-10s %s-%02d%s", points, scname.c_str(),
-                         race_class_name.c_str(), lvl, (wiz_mode == 1) ? "W" : "" );
+    return make_stringf("%8d %-10s %s-%02d%s", points, scname.c_str(),
+                         race_class_name.c_str(), lvl, (wiz_mode == 1) ? "W" : "");
 }
 
 
@@ -1517,29 +1517,29 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
     // Please excuse the following bit of mess in the name of flavour ;)
     if (verbose)
     {
-        snprintf( buf, HIGHSCORE_SIZE, "%8d %s the %s (level %d",
+        snprintf(buf, HIGHSCORE_SIZE, "%8d %s the %s (level %d",
                   points, name.c_str(),
-                  skill_title( best_skill, best_skill_lvl,
-                               race, str, dex, god ).c_str(), lvl );
+                  skill_title(best_skill, best_skill_lvl,
+                               race, str, dex, god).c_str(), lvl);
         desc = buf;
     }
     else
     {
-        snprintf( buf, HIGHSCORE_SIZE, "%8d %s the %s %s (level %d",
+        snprintf(buf, HIGHSCORE_SIZE, "%8d %s the %s %s (level %d",
                   points, name.c_str(),
                   species_name(static_cast<species_type>(race)).c_str(),
-                  _job_name(job), lvl );
+                  _job_name(job), lvl);
         desc = buf;
     }
 
     if (final_max_max_hp > 0)  // as the other two may be negative
     {
-        snprintf( scratch, INFO_SIZE, ", %d/%d", final_hp, final_max_hp );
+        snprintf(scratch, INFO_SIZE, ", %d/%d", final_hp, final_max_hp);
         desc += scratch;
 
         if (final_max_hp < final_max_max_hp)
         {
-            snprintf( scratch, INFO_SIZE, " (%d)", final_max_max_hp );
+            snprintf(scratch, INFO_SIZE, " (%d)", final_max_max_hp);
             desc += scratch;
         }
 
@@ -1561,7 +1561,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
         if (birth_time > 0)
         {
             desc += " on ";
-            _hiscore_date_string( birth_time, scratch );
+            _hiscore_date_string(birth_time, scratch);
             desc += scratch;
         }
 
@@ -1572,8 +1572,8 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
         {
             if (god == GOD_XOM)
             {
-                snprintf( scratch, INFO_SIZE, "Was a %sPlaything of Xom.",
-                                   (lvl >= 20) ? "Favourite " : "" );
+                snprintf(scratch, INFO_SIZE, "Was a %sPlaything of Xom.",
+                                   (lvl >= 20) ? "Favourite " : "");
 
                 desc += scratch;
                 desc += _hiscore_newline_string();
@@ -1582,7 +1582,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
             {
                 // Not exactly the same as the religion screen, but
                 // good enough to fill this slot for now.
-                snprintf( scratch, INFO_SIZE, "Was %s of %s%s",
+                snprintf(scratch, INFO_SIZE, "Was %s of %s%s",
                              (piety >  160) ? "the Champion" :
                              (piety >= 120) ? "a High Priest" :
                              (piety >= 100) ? "an Elder" :
@@ -1591,7 +1591,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
                              (piety >=  30) ? "a Follower"
                                             : "an Initiate",
                           god_name(god).c_str(),
-                             (penance > 0) ? " (penitent)." : "." );
+                             (penance > 0) ? " (penitent)." : ".");
 
                 desc += scratch;
                 desc += _hiscore_newline_string();
@@ -1638,10 +1638,10 @@ std::string scorefile_entry::death_place(death_desc_verbosity verbosity) const
         place += make_stringf(" (%s)", mapdesc.c_str());
 
     if (verbose && death_time
-        && !_hiscore_same_day( birth_time, death_time ))
+        && !_hiscore_same_day(birth_time, death_time))
     {
         place += " on ";
-        _hiscore_date_string( death_time, scratch );
+        _hiscore_date_string(death_time, scratch);
         place += scratch;
     }
 
@@ -1724,9 +1724,9 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
             desc += terse? "cloud" : "Engulfed by a cloud";
         else
         {
-            snprintf( scratch, sizeof(scratch), "%scloud of %s",
+            snprintf(scratch, sizeof(scratch), "%scloud of %s",
                       terse? "" : "Engulfed by a ",
-                      auxkilldata.c_str() );
+                      auxkilldata.c_str());
             desc += scratch;
         }
         needs_damage = true;
@@ -1736,8 +1736,8 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         if (oneline || semiverbose)
         {
             // keeping this short to leave room for the deep elf spellcasters:
-            snprintf( scratch, sizeof(scratch), "%s by ",
-                      _range_type_verb( auxkilldata.c_str() ) );
+            snprintf(scratch, sizeof(scratch), "%s by ",
+                      _range_type_verb(auxkilldata.c_str()));
             desc += scratch;
             desc += death_source_desc();
 
@@ -1751,7 +1751,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
                     desc += make_stringf(" (%s)", beam.c_str());
             }
         }
-        else if (isupper( auxkilldata[0] ))  // already made (ie shot arrows)
+        else if (isupper(auxkilldata[0]))  // already made (ie shot arrows)
         {
             // If terse we have to parse the information from the string.
             // Darn it to heck.
@@ -1763,8 +1763,8 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
             // "by" is used for priest attacks where the effect is indirect
             // in verbose format we have another line for the monster
             needs_called_by_monster_line = true;
-            snprintf( scratch, sizeof(scratch), "Killed %s",
-                      auxkilldata.c_str() );
+            snprintf(scratch, sizeof(scratch), "Killed %s",
+                      auxkilldata.c_str());
             desc += scratch;
         }
         else
@@ -1885,9 +1885,9 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
             else
             {
                 // A lot of sources for this case... some have "by" already.
-                snprintf( scratch, sizeof(scratch), "Killed %s%s",
+                snprintf(scratch, sizeof(scratch), "Killed %s%s",
                           (auxkilldata.find("by ") != 0) ? "by " : "",
-                          auxkilldata.c_str() );
+                          auxkilldata.c_str());
                 desc += scratch;
             }
         }
@@ -2117,24 +2117,24 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
             {
                 desc += _hiscore_newline_string();
 
-                snprintf( scratch, INFO_SIZE, "... %s %d rune%s",
+                snprintf(scratch, INFO_SIZE, "... %s %d rune%s",
                          (death_type == KILLED_BY_WINNING) ? "and" : "with",
-                          num_runes, (num_runes > 1) ? "s" : "" );
+                          num_runes, (num_runes > 1) ? "s" : "");
                 desc += scratch;
 
                 if (!semiverbose && num_diff_runes > 1)
                 {
-                    snprintf( scratch, INFO_SIZE, " (of %d types)",
-                             num_diff_runes );
+                    snprintf(scratch, INFO_SIZE, " (of %d types)",
+                             num_diff_runes);
                     desc += scratch;
                 }
 
                 if (!semiverbose
                     && death_time > 0
-                    && !_hiscore_same_day( birth_time, death_time ))
+                    && !_hiscore_same_day(birth_time, death_time))
                 {
                     desc += " on ";
-                    _hiscore_date_string( death_time, scratch );
+                    _hiscore_date_string(death_time, scratch);
                     desc += scratch;
                 }
 
@@ -2167,7 +2167,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
                 {
                     if (auxkilldata == "angry trees")
                         desc += "... awoken ";
-                    else desc += (is_vowel( auxkilldata[0] )) ? "... with an "
+                    else desc += (is_vowel(auxkilldata[0])) ? "... with an "
                         : "... with a ";
                     desc += auxkilldata;
                     desc += _hiscore_newline_string();
@@ -2176,8 +2176,8 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
             }
             else if (needs_called_by_monster_line)
             {
-                snprintf( scratch, sizeof(scratch), "... invoked by %s",
-                          death_source_name.c_str() );
+                snprintf(scratch, sizeof(scratch), "... invoked by %s",
+                          death_source_name.c_str());
                 desc += scratch;
                 desc += _hiscore_newline_string();
                 needs_damage = true;
@@ -2279,14 +2279,14 @@ std::vector<std::string> xlog_split_fields(const std::string &s)
     std::string::size_type start = 0, end = 0;
     std::vector<std::string> fs;
 
-    for ( ; (end = _xlog_next_separator(s, start)) != std::string::npos;
-          start = end + 1  )
+    for (; (end = _xlog_next_separator(s, start)) != std::string::npos;
+          start = end + 1)
     {
-        fs.push_back( s.substr(start, end - start) );
+        fs.push_back(s.substr(start, end - start));
     }
 
     if (start < s.length())
-        fs.push_back( s.substr(start) );
+        fs.push_back(s.substr(start));
 
     return (fs);
 }
@@ -2304,7 +2304,7 @@ void xlog_fields::init(const std::string &line)
         fields.push_back(
             std::pair<std::string, std::string>(
                 field.substr(0, st),
-                xlog_unescape(field.substr(st + 1)) ) );
+                xlog_unescape(field.substr(st + 1))));
     }
 
     map_fields();
@@ -2331,7 +2331,7 @@ void xlog_fields::add_field(const std::string &key,
     std::string buf = vmake_stringf(format, args);
     va_end(args);
 
-    fields.push_back( std::pair<std::string, std::string>( key, buf ) );
+    fields.push_back(std::pair<std::string, std::string>(key, buf));
     fieldmap[key] = buf;
 }
 

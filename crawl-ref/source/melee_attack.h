@@ -126,9 +126,9 @@ private:
     void splash_defender_with_acid(int strength);
     void splash_monster_with_acid(int strength);
     bool decapitate_hydra(int damage_done, int damage_type = -1);
-    bool chop_hydra_head( int damage_done,
+    bool chop_hydra_head(int damage_done,
                           int dam_type,
-                          int wpn_brand );
+                          int wpn_brand);
 
     // Returns true if the defender is banished.
     bool distortion_affects_defender();

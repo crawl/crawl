@@ -91,7 +91,7 @@ uint8_t make_high_colour(uint8_t colour)
 }
 
 // returns if a colour is one of the special element colours (ie not regular)
-bool is_element_colour( int col )
+bool is_element_colour(int col)
 {
     // stripping any COLFLAGS (just in case)
     return ((col & 0x007f) >= ETC_FIRE);
@@ -395,13 +395,13 @@ void init_element_colours()
                         0));
     add_element_colour(new element_colour_calc(
                             ETC_FLOOR, "floor", _etc_floor
-                         ));
+                       ));
     add_element_colour(new element_colour_calc(
                             ETC_ROCK, "rock", _etc_rock
-                         ));
+                       ));
     add_element_colour(new element_colour_calc(
                             ETC_STONE, "stone", _etc_stone
-                         ));
+                       ));
     add_element_colour(_create_random_element_colour_calc(
                             ETC_MIST, "mist",
                             100, CYAN,
@@ -441,16 +441,16 @@ void init_element_colours()
                         0));
     add_element_colour(new element_colour_calc(
                             ETC_ELVEN_BRICK, "elven_brick", _etc_elven_brick
-                         ));
+                       ));
     add_element_colour(new element_colour_calc(
                             ETC_WAVES, "waves", _etc_waves
-                         ));
+                       ));
     add_element_colour(new element_colour_calc(
                             ETC_TREE, "tree", _etc_tree
-                         ));
+                       ));
     add_element_colour(new element_colour_calc(
                             ETC_RANDOM, "random", _etc_random
-                         ));
+                       ));
 }
 
 void clear_colours_on_exit()
@@ -462,10 +462,10 @@ void clear_colours_on_exit()
     element_colours_str.clear();
 }
 
-int element_colour( int element, bool no_random, const coord_def& loc )
+int element_colour(int element, bool no_random, const coord_def& loc)
 {
     // pass regular colours through for safety.
-    if (!is_element_colour( element ))
+    if (!is_element_colour(element))
         return (element);
 
     // Strip COLFLAGs just in case.
@@ -527,15 +527,15 @@ const std::string cols[16] =
 
 const std::string colour_to_str(uint8_t colour)
 {
-    if ( colour >= 16 )
+    if (colour >= 16)
         return "lightgrey";
     else
         return cols[colour];
 }
 
 // Returns -1 if unmatched else returns 0-15.
-int str_to_colour( const std::string &str, int default_colour,
-                   bool accept_number )
+int str_to_colour(const std::string &str, int default_colour,
+                   bool accept_number)
 {
     int ret;
 
@@ -640,7 +640,7 @@ static unsigned short _dos_hilite_brand(unsigned short colour,
     return (colour);
 }
 
-unsigned short dos_brand( unsigned short colour,
+unsigned short dos_brand(unsigned short colour,
                           unsigned brand)
 {
     if ((brand & CHATTR_ATTRMASK) == CHATTR_NORMAL)
@@ -688,8 +688,8 @@ unsigned real_colour(unsigned raw_colour, const coord_def& loc)
     const int colflags = raw_colour & 0xFF00;
 
     // Evaluate any elemental colours to guarantee vanilla colour is returned
-    if (is_element_colour( raw_colour ))
-        raw_colour = colflags | element_colour( raw_colour, false, loc );
+    if (is_element_colour(raw_colour))
+        raw_colour = colflags | element_colour(raw_colour, false, loc);
 
 #if defined(TARGET_OS_WINDOWS) || defined(TARGET_OS_DOS) || defined(USE_TILE)
     if (colflags)

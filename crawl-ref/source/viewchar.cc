@@ -78,7 +78,7 @@ dungeon_char_type dchar_by_name(const std::string &name)
     return (NUM_DCHAR_TYPES);
 }
 
-void init_char_table( char_set_type set )
+void init_char_table(char_set_type set)
 {
     for (int i = 0; i < NUM_DCHAR_TYPES; i++)
     {

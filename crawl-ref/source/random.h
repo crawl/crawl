@@ -7,8 +7,8 @@
 #include <vector>
 
 bool coinflip();
-int div_rand_round( int num, int den );
-int div_round_up( int num, int den );
+int div_rand_round(int num, int den);
+int div_round_up(int num, int den);
 bool one_chance_in(int a_million);
 bool x_chance_in_y(int x, int y);
 int random2(int max);

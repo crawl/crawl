@@ -66,10 +66,10 @@ namespace msg
     // again, can be improved
     int mpr_stream_buf::overflow(int c)
     {
-        if ( muted )
+        if (muted)
             return 0;
 
-        if ( c == '\n' )
+        if (c == '\n')
         {
             // null-terminate and print the string
             internal_buf[internal_count] = 0;
@@ -83,7 +83,7 @@ namespace msg
         else
             internal_buf[internal_count++] = c;
 
-        if ( internal_count + 3 > INTERNAL_LENGTH )
+        if (internal_count + 3 > INTERNAL_LENGTH)
         {
             mpr("oops, hit overflow", MSGCH_ERROR);
             internal_count = 0;

@@ -157,11 +157,11 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs=NULL,
 {
 #define unknown_proprt(prop) (proprt[(prop)] && !known[(prop)])
 
-    ASSERT( is_artefact( item ) );
+    ASSERT(is_artefact(item));
 
     // Call unrandart equip function first, so that it can modify the
     // artefact's properties before they're applied.
-    if (is_unrandom_artefact( item ))
+    if (is_unrandom_artefact(item))
     {
         const unrandart_entry *entry = get_unrand_entry(item.special);
 
@@ -180,7 +180,7 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs=NULL,
 
     artefact_properties_t  proprt;
     artefact_known_props_t known;
-    artefact_wpn_properties( item, proprt, known );
+    artefact_wpn_properties(item, proprt, known);
 
     // Only give property messages for previously unknown properties.
     if (proprt[ARTP_AC])
@@ -220,9 +220,9 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs=NULL,
 
     // Modify ability scores.
     // Output result even when identified (because of potential fatality).
-    notify_stat_change( STAT_STR,     proprt[ARTP_STRENGTH],     false, item );
-    notify_stat_change( STAT_INT, proprt[ARTP_INTELLIGENCE], false, item );
-    notify_stat_change( STAT_DEX,    proprt[ARTP_DEXTERITY],    false, item );
+    notify_stat_change(STAT_STR,     proprt[ARTP_STRENGTH],     false, item);
+    notify_stat_change(STAT_INT, proprt[ARTP_INTELLIGENCE], false, item);
+    notify_stat_change(STAT_DEX,    proprt[ARTP_DEXTERITY],    false, item);
 
     const artefact_prop_type stat_props[3] =
         {ARTP_STRENGTH, ARTP_INTELLIGENCE, ARTP_DEXTERITY};
@@ -260,7 +260,7 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs=NULL,
     if (!unmeld && !item.cursed() && proprt[ARTP_CURSED] > 0
          && one_chance_in(proprt[ARTP_CURSED]))
     {
-        do_curse_item( item, false );
+        do_curse_item(item, false);
         artefact_wpn_learn_prop(item, ARTP_CURSED);
     }
 
@@ -285,11 +285,11 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs=NULL,
 
 static void _unequip_artefact_effect(const item_def &item, bool *show_msgs=NULL)
 {
-    ASSERT( is_artefact( item ) );
+    ASSERT(is_artefact(item));
 
     artefact_properties_t proprt;
     artefact_known_props_t known;
-    artefact_wpn_properties( item, proprt, known );
+    artefact_wpn_properties(item, proprt, known);
 
     if (proprt[ARTP_AC])
     {
@@ -471,11 +471,11 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
         {
             if (!item_type_known(item))
             {
-                set_ident_type( OBJ_STAVES, item.sub_type, ID_KNOWN_TYPE );
-                set_ident_flags( item, ISFLAG_KNOW_TYPE );
+                set_ident_type(OBJ_STAVES, item.sub_type, ID_KNOWN_TYPE);
+                set_ident_flags(item, ISFLAG_KNOW_TYPE);
             }
-            if (!item_ident( item, ISFLAG_KNOW_PLUSES))
-                set_ident_flags( item, ISFLAG_KNOW_PLUSES );
+            if (!item_ident(item, ISFLAG_KNOW_PLUSES))
+                set_ident_flags(item, ISFLAG_KNOW_PLUSES);
         }
 
         _wield_cursed(item, known_cursed);
@@ -699,14 +699,14 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs)
         _unequip_artefact_effect(item, &showMsgs);
 
     if (item.base_type == OBJ_MISCELLANY
-        && item.sub_type == MISC_LANTERN_OF_SHADOWS )
+        && item.sub_type == MISC_LANTERN_OF_SHADOWS)
     {
         you.attribute[ATTR_SHADOWS] = 0;
         update_vision_range();
     }
     else if (item.base_type == OBJ_WEAPONS)
     {
-        const int brand = get_weapon_brand( item );
+        const int brand = get_weapon_brand(item);
 
         if (brand != SPWPN_NORMAL)
         {
@@ -815,7 +815,7 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs)
 static void _equip_armour_effect(item_def& arm, bool unmeld)
 {
     const bool known_cursed = item_known_cursed(arm);
-    int ego = get_armour_ego_type( arm );
+    int ego = get_armour_ego_type(arm);
     if (ego != SPARM_NORMAL)
     {
         switch (ego)

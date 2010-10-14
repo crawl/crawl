@@ -40,7 +40,7 @@ int getchm(KeymapContext context, int (*rgetch)() = NULL);
 
 int getch_with_command_macros(void);  // keymaps and macros (ie for commands)
 
-void flush_input_buffer( int reason );
+void flush_input_buffer(int reason);
 
 void macro_add_query();
 void macro_init();

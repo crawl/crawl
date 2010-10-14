@@ -230,13 +230,13 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         if (player_res_poison())
         {
             mprf("You feel %s nauseous.",
-                 (pot_eff == POT_POISON) ? "slightly" : "quite" );
+                 (pot_eff == POT_POISON) ? "slightly" : "quite");
         }
         else
         {
             mprf(MSGCH_WARN,
                  "That liquid tasted %s nasty...",
-                 (pot_eff == POT_POISON) ? "very" : "extremely" );
+                 (pot_eff == POT_POISON) ? "very" : "extremely");
 
             if (pot_eff == POT_POISON)
                 poison_player(1 + random2avg(5, 2), "", "a potion of poison");
@@ -253,8 +253,8 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
 
     case POT_PARALYSIS:
         you.paralyse(NULL,
-                     (2 + random2( 6 + you.duration[DUR_PARALYSIS]
-                                       / BASELINE_DELAY )) / factor);
+                     (2 + random2(6 + you.duration[DUR_PARALYSIS]
+                                       / BASELINE_DELAY)) / factor);
         xom_is_stimulated(64 / xom_factor);
         break;
 
@@ -370,7 +370,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
 
         // Give a message if no message otherwise.
         if (!restore_stat(STAT_ALL, 0, false) && nothing_happens)
-            mpr( "You feel refreshed." );
+            mpr("You feel refreshed.");
         break;
     }
 

@@ -172,7 +172,7 @@ formatted_string describe_mutations()
 
     // center title
     int offset = 39 - strlen(mut_title) / 2;
-    if ( offset < 0 ) offset = 0;
+    if (offset < 0) offset = 0;
 
     result += std::string(offset, ' ');
 

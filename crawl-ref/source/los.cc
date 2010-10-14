@@ -342,7 +342,7 @@ static std::vector<int> _find_minimal_cellrays()
 
             bool erased = false;
             for (min_it = min.begin();
-                 min_it != min.end() && !dup; )
+                 min_it != min.end() && !dup;)
             {
                 switch(_compare_cellrays(*min_it, c))
                 {
@@ -450,12 +450,12 @@ static void _create_blockrays()
     smoke_rays = new bit_array(n_min_rays);
 
 #ifdef DEBUG_DIAGNOSTICS
-    mprf( MSGCH_DIAGNOSTICS, "Cellrays: %d Fullrays: %u Minimal cellrays: %u",
-          n_cellrays, fullrays.size(), n_min_rays );
+    mprf(MSGCH_DIAGNOSTICS, "Cellrays: %d Fullrays: %u Minimal cellrays: %u",
+          n_cellrays, fullrays.size(), n_min_rays);
 #endif
 }
 
-static int _gcd( int x, int y )
+static int _gcd(int x, int y)
 {
     int tmp;
     while (y != 0)
@@ -468,8 +468,8 @@ static int _gcd( int x, int y )
     return x;
 }
 
-bool complexity_lt( const std::pair<int,int>& lhs,
-                    const std::pair<int,int>& rhs )
+bool complexity_lt(const std::pair<int,int>& lhs,
+                    const std::pair<int,int>& rhs)
 {
     return lhs.first * lhs.second < rhs.first * rhs.second;
 }
@@ -512,7 +512,7 @@ static void raycast()
         const int xangle = xyangles[i].first;
         const int yangle = xyangles[i].second;
 
-        for (int intercept = 1; intercept < LOS_INTERCEPT_MULT*yangle; ++intercept )
+        for (int intercept = 1; intercept < LOS_INTERCEPT_MULT*yangle; ++intercept)
         {
             double xstart = ((double)intercept) / (LOS_INTERCEPT_MULT*yangle);
             double ystart = 0.5;

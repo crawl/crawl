@@ -92,7 +92,7 @@ int  element_colour(int element, bool no_random = false,
                     const coord_def& loc = coord_def());
 
 #if defined(TARGET_OS_WINDOWS) || defined(TARGET_OS_DOS) || defined(USE_TILE)
-unsigned short dos_brand( unsigned short colour,
+unsigned short dos_brand(unsigned short colour,
                           unsigned brand = CHATTR_REVERSE);
 #endif
 

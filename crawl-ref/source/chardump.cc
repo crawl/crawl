@@ -662,12 +662,12 @@ static void _sdump_screenshot(dump_params &par)
 static void _sdump_notes(dump_params &par)
 {
     std::string &text(par.text);
-    if ( note_list.empty() )
+    if (note_list.empty())
         return;
 
     text += "\nNotes\nTurn   | Place   | Note\n";
     text += "--------------------------------------------------------------\n";
-    for ( unsigned i = 0; i < note_list.size(); ++i )
+    for (unsigned i = 0; i < note_list.size(); ++i)
     {
         text += note_list[i].describe();
         text += "\n";
@@ -749,14 +749,14 @@ static bool _dump_item_origin(const item_def &item, int value)
         return (true);
     }
     if (fs(IODS_EGO_ARMOUR) && item.base_type == OBJ_ARMOUR
-        && item_type_known( item ))
+        && item_type_known(item))
     {
-        const int spec_ench = get_armour_ego_type( item );
+        const int spec_ench = get_armour_ego_type(item);
         return (spec_ench != SPARM_NORMAL);
     }
 
     if (fs(IODS_EGO_WEAPON) && item.base_type == OBJ_WEAPONS
-        && item_type_known( item ))
+        && item_type_known(item))
     {
         return (get_weapon_brand(item) != SPWPN_NORMAL);
     }
@@ -789,7 +789,7 @@ static bool _dump_item_origin(const item_def &item, int value)
     if (refpr == -1)
         return (false);
     if (value == -1)
-        value = item_value( item, false );
+        value = item_value(item, false);
     return (value >= refpr);
 #undef fs
 }
@@ -871,8 +871,8 @@ static void _sdump_inventory(dump_params &par)
                         {
                             text += " (";
 
-                            itoa( ival = item_value( you.inv[j], true ),
-                                  tmp_quant, 10 );
+                            itoa(ival = item_value(you.inv[j], true),
+                                  tmp_quant, 10);
 
                             text += tmp_quant;
                             text += " gold)";
@@ -884,13 +884,13 @@ static void _sdump_inventory(dump_params &par)
                             text += "\n" "   (" + origin_desc(you.inv[j]) + ")";
                         }
 
-                        if (is_dumpable_artefact( you.inv[j], false )
+                        if (is_dumpable_artefact(you.inv[j], false)
                             || Options.dump_book_spells
                                && you.inv[j].base_type == OBJ_BOOKS)
                         {
-                            text2 = get_item_description( you.inv[j],
+                            text2 = get_item_description(you.inv[j],
                                                           false,
-                                                          true );
+                                                          true);
 
                             text += munge_description(text2);
                         }
@@ -921,7 +921,7 @@ static void _sdump_skills(dump_params &par)
     else
         text += " You have ";
 
-    itoa( you.exp_available, tmp_quant, 10 );
+    itoa(you.exp_available, tmp_quant, 10);
     text += tmp_quant;
     text += " experience left.";
 
@@ -1000,7 +1000,7 @@ static void _sdump_spells(dump_params &par)
             text += "You had ";
         else
             text += "You have ";
-        itoa( spell_levels, tmp_quant, 10 );
+        itoa(spell_levels, tmp_quant, 10);
         text += tmp_quant;
         text += " spell levels left.";
     }
@@ -1023,8 +1023,8 @@ static void _sdump_spells(dump_params &par)
 
         for (int j = 0; j < 52; j++)
         {
-            const char letter = index_to_letter( j );
-            const spell_type spell  = get_spell_by_letter( letter );
+            const char letter = index_to_letter(j);
+            const spell_type spell  = get_spell_by_letter(letter);
 
             if (spell != SPELL_NO_SPELL)
             {
@@ -1032,9 +1032,9 @@ static void _sdump_spells(dump_params &par)
 
                 spell_line += letter;
                 spell_line += " - ";
-                spell_line += spell_title( spell );
+                spell_line += spell_title(spell);
 
-                if ( spell_line.length() > 24 )
+                if (spell_line.length() > 24)
                     spell_line = spell_line.substr(0, 24);
 
                 for (int i = spell_line.length(); i < 26; i++)
@@ -1044,7 +1044,7 @@ static void _sdump_spells(dump_params &par)
 
                 for (int i = 0; spell_type_index[i] != 0; i++)
                 {
-                    if (spell_typematch( spell, spell_type_index[i] ))
+                    if (spell_typematch(spell, spell_type_index[i]))
                     {
                         spell_line += spell_type_shortname(spell_type_index[i],
                                                            already);
@@ -1052,12 +1052,12 @@ static void _sdump_spells(dump_params &par)
                     }
                 }
 
-                for (int i = spell_line.length(); i < 41; ++i )
+                for (int i = spell_line.length(); i < 41; ++i)
                     spell_line += ' ';
 
                 spell_line += spell_power_string(spell);
 
-                for (int i = spell_line.length(); i < 54; ++i )
+                for (int i = spell_line.length(); i < 54; ++i)
                     spell_line += ' ';
 
                 spell_line += failure_rate_to_string(spell_fail(spell));
@@ -1065,7 +1065,7 @@ static void _sdump_spells(dump_params &par)
                 for (int i = spell_line.length(); i < 66; i++)
                     spell_line += ' ';
 
-                itoa(spell_difficulty(spell), tmp_quant, 10 );
+                itoa(spell_difficulty(spell), tmp_quant, 10);
                 spell_line += tmp_quant;
 
                 for (int i = spell_line.length(); i < 71; i++)
@@ -1194,7 +1194,7 @@ static void _sdump_hiscore(dump_params &par)
     if (!par.se)
         return;
 
-    std::string hiscore = hiscores_format_single_long( *(par.se), true );
+    std::string hiscore = hiscores_format_single_long(*(par.se), true);
     trim_string(hiscore);
     par.text += hiscore;
     par.text += "\n\n";
@@ -1214,7 +1214,7 @@ static void _sdump_vault_list(dump_params &par)
 #ifdef WIZARD
         || you.wizard
 #endif
-       )
+     )
     {
         par.text += "Vault maps used:\n\n";
         par.text += dump_vault_maps();
@@ -1313,7 +1313,7 @@ void dump_map(FILE *fp, bool debug, bool dist)
         for (int y = min_y; y <= max_y; ++y)
         {
             for (int x = min_x; x <= max_x; ++x)
-                fputc( get_cell_glyph(coord_def(x, y)).ch, fp );
+                fputc(get_cell_glyph(coord_def(x, y)).ch, fp);
 
             fputc('\n', fp);
         }

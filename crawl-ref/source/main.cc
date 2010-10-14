@@ -1699,23 +1699,23 @@ void process_command(command_type cmd)
 #endif
 
         // Movement and running commands.
-    case CMD_OPEN_DOOR_UP_RIGHT:   _open_door( 1, -1); break;
-    case CMD_OPEN_DOOR_UP:         _open_door( 0, -1); break;
+    case CMD_OPEN_DOOR_UP_RIGHT:   _open_door(1, -1); break;
+    case CMD_OPEN_DOOR_UP:         _open_door(0, -1); break;
     case CMD_OPEN_DOOR_UP_LEFT:    _open_door(-1, -1); break;
-    case CMD_OPEN_DOOR_RIGHT:      _open_door( 1,  0); break;
-    case CMD_OPEN_DOOR_DOWN_RIGHT: _open_door( 1,  1); break;
-    case CMD_OPEN_DOOR_DOWN:       _open_door( 0,  1); break;
+    case CMD_OPEN_DOOR_RIGHT:      _open_door(1,  0); break;
+    case CMD_OPEN_DOOR_DOWN_RIGHT: _open_door(1,  1); break;
+    case CMD_OPEN_DOOR_DOWN:       _open_door(0,  1); break;
     case CMD_OPEN_DOOR_DOWN_LEFT:  _open_door(-1,  1); break;
     case CMD_OPEN_DOOR_LEFT:       _open_door(-1,  0); break;
 
     case CMD_MOVE_DOWN_LEFT:  _move_player(-1,  1); break;
-    case CMD_MOVE_DOWN:       _move_player( 0,  1); break;
-    case CMD_MOVE_UP_RIGHT:   _move_player( 1, -1); break;
-    case CMD_MOVE_UP:         _move_player( 0, -1); break;
+    case CMD_MOVE_DOWN:       _move_player(0,  1); break;
+    case CMD_MOVE_UP_RIGHT:   _move_player(1, -1); break;
+    case CMD_MOVE_UP:         _move_player(0, -1); break;
     case CMD_MOVE_UP_LEFT:    _move_player(-1, -1); break;
     case CMD_MOVE_LEFT:       _move_player(-1,  0); break;
-    case CMD_MOVE_DOWN_RIGHT: _move_player( 1,  1); break;
-    case CMD_MOVE_RIGHT:      _move_player( 1,  0); break;
+    case CMD_MOVE_DOWN_RIGHT: _move_player(1,  1); break;
+    case CMD_MOVE_RIGHT:      _move_player(1,  0); break;
 
     case CMD_RUN_DOWN_LEFT: _start_running(RDIR_DOWN_LEFT, RMODE_START); break;
     case CMD_RUN_DOWN:      _start_running(RDIR_DOWN, RMODE_START);      break;
@@ -2712,7 +2712,7 @@ static void _update_mold()
                 // A threshold greater than 5, less than 8 on distance
                 // matches the blast of a radius 2 explosion.
                 int range = distance(mon_it->pos(), *rad_it);
-                if (range < 6 && is_moldy(*rad_it) )
+                if (range < 6 && is_moldy(*rad_it))
                 {
                     env.pgrid(*rad_it) |= FPROP_MOLD;
                     env.pgrid(*rad_it) |= FPROP_GLOW_MOLD;

@@ -335,7 +335,7 @@ void marshallShort(std::vector<unsigned char>& buf, short data)
     CHECK_INITIALIZED(data);
     COMPILE_CHECK(sizeof(data) == 2, c1);
     buf.push_back((unsigned char) ((data & 0xFF00) >> 8));
-    buf.push_back((unsigned char) ((data & 0x00FF)     ));
+    buf.push_back((unsigned char) ((data & 0x00FF)   ));
 }
 
 // Marshall 2 byte short in network order.
@@ -363,7 +363,7 @@ void marshallInt(std::vector<unsigned char>& buf, int32_t data)
     buf.push_back((unsigned char) ((data & 0xFF000000) >> 24));
     buf.push_back((unsigned char) ((data & 0x00FF0000) >> 16));
     buf.push_back((unsigned char) ((data & 0x0000FF00) >>  8));
-    buf.push_back((unsigned char) ((data & 0x000000FF)      ));
+    buf.push_back((unsigned char) ((data & 0x000000FF)    ));
 }
 
 // Marshall 4 byte int in network order.
@@ -444,16 +444,16 @@ int64_t unmarshallSigned(reader& th)
 template<typename T>
 void marshall_as_long(writer& th, const T& t)
 {
-    marshallInt( th, static_cast<long>(t) );
+    marshallInt(th, static_cast<long>(t));
 }
 
 template <typename data>
 void marshallSet(writer &th, const std::set<data> &s,
                  void (*marshall)(writer &, const data &))
 {
-    marshallInt( th, s.size() );
+    marshallInt(th, s.size());
     typename std::set<data>::const_iterator i = s.begin();
-    for ( ; i != s.end(); ++i)
+    for (; i != s.end(); ++i)
         marshall(th, *i);
 }
 
@@ -462,7 +462,7 @@ void marshallMap(writer &th, const std::map<key,value>& data,
                  void (*key_marshall)(writer&, const key&),
                  void (*value_marshall)(writer&, const value&))
 {
-    marshallInt( th, data.size() );
+    marshallInt(th, data.size());
     typename std::map<key,value>::const_iterator ci;
     for (ci = data.begin(); ci != data.end(); ++ci)
     {
@@ -476,7 +476,7 @@ static void marshall_iterator(writer &th, T_iter beg, T_iter end,
                               T_marshall_t T_marshall)
 {
     marshallInt(th, std::distance(beg, end));
-    while ( beg != end )
+    while (beg != end)
     {
         T_marshall(th, *beg);
         ++beg;
@@ -490,7 +490,7 @@ static void unmarshall_vector(reader& th, std::vector<T>& vec,
     vec.clear();
     const int num_to_read = unmarshallInt(th);
     for (int i = 0; i < num_to_read; ++i)
-        vec.push_back( T_unmarshall(th) );
+        vec.push_back(T_unmarshall(th));
 }
 
 template <typename T_container, typename T_inserter, typename T_unmarshall>
@@ -504,15 +504,15 @@ static void unmarshall_container(reader &th, T_container &container,
 }
 
 // XXX: Redundant with level_id.save()/load().
-void marshall_level_id( writer& th, const level_id& id )
+void marshall_level_id(writer& th, const level_id& id)
 {
-    marshallByte(th, id.branch );
-    marshallInt(th, id.depth );
+    marshallByte(th, id.branch);
+    marshallInt(th, id.depth);
     marshallByte(th, id.level_type);
 }
 
 // XXX: Redundant with level_pos.save()/load().
-void marshall_level_pos( writer& th, const level_pos& lpos )
+void marshall_level_pos(writer& th, const level_pos& lpos)
 {
     marshallInt(th, lpos.pos.x);
     marshallInt(th, lpos.pos.y);
@@ -532,7 +532,7 @@ void unmarshallSet(reader &th, set &dset,
 template<typename key, typename value, typename map>
 void unmarshallMap(reader& th, map& data,
                    key   (*key_unmarshall)  (reader&),
-                   value (*value_unmarshall)(reader&) )
+                   value (*value_unmarshall)(reader&))
 {
     int i, len = unmarshallInt(th);
     key k;
@@ -545,12 +545,12 @@ void unmarshallMap(reader& th, map& data,
 }
 
 template<typename T>
-T unmarshall_long_as( reader& th )
+T unmarshall_long_as(reader& th)
 {
     return static_cast<T>(unmarshallInt(th));
 }
 
-level_id unmarshall_level_id( reader& th )
+level_id unmarshall_level_id(reader& th)
 {
     level_id id;
     id.branch     = static_cast<branch_type>(unmarshallByte(th));
@@ -559,7 +559,7 @@ level_id unmarshall_level_id( reader& th )
     return (id);
 }
 
-level_pos unmarshall_level_pos( reader& th )
+level_pos unmarshall_level_pos(reader& th)
 {
     level_pos lpos;
     lpos.pos.x = unmarshallInt(th);
@@ -742,20 +742,20 @@ bool unmarshallBoolean(reader &th)
 }
 
 // Saving the date as a string so we're not reliant on a particular epoch.
-std::string make_date_string( time_t in_date )
+std::string make_date_string(time_t in_date)
 {
     if (in_date <= 0)
     {
         return ("");
     }
 
-    struct tm *date = TIME_FN( &in_date );
+    struct tm *date = TIME_FN(&in_date);
 
     return make_stringf(
               "%4d%02d%02d%02d%02d%02d%s",
               date->tm_year + 1900, date->tm_mon, date->tm_mday,
               date->tm_hour, date->tm_min, date->tm_sec,
-              ((date->tm_isdst > 0) ? "D" : "S") );
+              ((date->tm_isdst > 0) ? "D" : "S"));
 }
 
 void marshallEnumVal(writer& wr, const enum_info *ei, int val)
@@ -792,8 +792,8 @@ void marshallEnumVal(writer& wr, const enum_info *ei, int val)
 
     if (ews.used.find(val) == ews.used.end())
     {
-        ASSERT( ews.names.find(val) != ews.names.end() );
-        marshallString( wr, ews.names[val] );
+        ASSERT(ews.names.find(val) != ews.names.end());
+        marshallString(wr, ews.names[val]);
 
         ews.used.insert(val);
     }
@@ -848,7 +848,7 @@ int unmarshallEnumVal(reader& rd, const enum_info *ei)
     if (ers.mapping.find(raw) != ers.mapping.end())
         return ers.mapping[raw];
 
-    ASSERT( rd.getMinorVersion() >= ei->non_historical_first );
+    ASSERT(rd.getMinorVersion() >= ei->non_historical_first);
 
     std::string name = unmarshallString(rd);
 
@@ -864,7 +864,7 @@ int unmarshallEnumVal(reader& rd, const enum_info *ei)
     return ers.mapping[raw];
 }
 
-static int get_val_from_string( const char *ptr, int len )
+static int get_val_from_string(const char *ptr, int len)
 {
     int ret = 0;
     int pow = 1;
@@ -878,20 +878,20 @@ static int get_val_from_string( const char *ptr, int len )
     return (ret);
 }
 
-time_t parse_date_string( char buff[20] )
+time_t parse_date_string(char buff[20])
 {
     struct tm date;
 
-    date.tm_year = get_val_from_string( &buff[0],  4 ) - 1900;
-    date.tm_mon  = get_val_from_string( &buff[4],  2 );
-    date.tm_mday = get_val_from_string( &buff[6],  2 );
-    date.tm_hour = get_val_from_string( &buff[8],  2 );
-    date.tm_min  = get_val_from_string( &buff[10], 2 );
-    date.tm_sec  = get_val_from_string( &buff[12], 2 );
+    date.tm_year = get_val_from_string(&buff[0],  4) - 1900;
+    date.tm_mon  = get_val_from_string(&buff[4],  2);
+    date.tm_mday = get_val_from_string(&buff[6],  2);
+    date.tm_hour = get_val_from_string(&buff[8],  2);
+    date.tm_min  = get_val_from_string(&buff[10], 2);
+    date.tm_sec  = get_val_from_string(&buff[12], 2);
 
     date.tm_isdst = (buff[14] == 'D');
 
-    return (mktime( &date ));
+    return (mktime(&date));
 }
 
 // Write a tagged chunk of data to the FILE*.
@@ -1077,11 +1077,11 @@ static void tag_construct_you(writer &th)
 
     marshallByte(th, 52);
     for (i = 0; i < 52; i++)
-        marshallByte( th, you.spell_letter_table[i] );
+        marshallByte(th, you.spell_letter_table[i]);
 
     marshallByte(th, 52);
     for (i = 0; i < 52; i++)
-        marshallShort( th, you.ability_letter_table[i] );
+        marshallShort(th, you.ability_letter_table[i]);
 
     // how many skills?
     marshallByte(th, 50);
@@ -1152,7 +1152,7 @@ static void tag_construct_you(writer &th)
 
 
     // time of game start
-    marshallString(th, make_date_string( you.birth_time ).c_str(), 20);
+    marshallString(th, make_date_string(you.birth_time).c_str(), 20);
 
     // real_time == -1 means game was started before this feature.
     if (you.real_time != -1)
@@ -1364,23 +1364,23 @@ static void unmarshall_follower(reader &th, follower &f)
 
 static void marshall_follower_list(writer &th, const m_transit_list &mlist)
 {
-    marshallShort( th, mlist.size() );
+    marshallShort(th, mlist.size());
 
     for (m_transit_list::const_iterator mi = mlist.begin();
          mi != mlist.end(); ++mi)
     {
-        marshall_follower( th, *mi );
+        marshall_follower(th, *mi);
     }
 }
 
 static void marshall_item_list(writer &th, const i_transit_list &ilist)
 {
-    marshallShort( th, ilist.size() );
+    marshallShort(th, ilist.size());
 
     for (i_transit_list::const_iterator ii = ilist.begin();
          ii != ilist.end(); ++ii)
     {
-        marshallItem( th, *ii );
+        marshallItem(th, *ii);
     }
 }
 
@@ -1534,19 +1534,19 @@ static void unmarshall_level_vault_data(reader &th)
 
 static void tag_construct_lost_monsters(writer &th)
 {
-    marshallMap( th, the_lost_ones, marshall_level_id,
-                 marshall_follower_list );
+    marshallMap(th, the_lost_ones, marshall_level_id,
+                 marshall_follower_list);
 }
 
 static void tag_construct_lost_items(writer &th)
 {
-    marshallMap( th, transiting_items, marshall_level_id,
-                 marshall_item_list );
+    marshallMap(th, transiting_items, marshall_level_id,
+                 marshall_item_list);
 }
 
 static void tag_construct_game_state(writer &th)
 {
-    marshallByte( th, crawl_state.type );
+    marshallByte(th, crawl_state.type);
 }
 
 static void tag_read_char(reader &th, int minorVersion)
@@ -1576,7 +1576,7 @@ static void tag_read_you(reader &th, int minorVersion)
     you.pet_target        = unmarshallShort(th);
 
     you.max_level         = unmarshallByte(th);
-    you.where_are_you     = static_cast<branch_type>( unmarshallByte(th) );
+    you.where_are_you     = static_cast<branch_type>(unmarshallByte(th));
     you.char_direction    = static_cast<game_direction_type>(unmarshallByte(th));
 
     you.opened_zot = unmarshallBoolean(th);
@@ -1591,7 +1591,7 @@ static void tag_read_you(reader &th, int minorVersion)
     you.berserk_penalty   = unmarshallByte(th);
     you.sage_bonus_skill  = static_cast<skill_type>(unmarshallShort(th));
     you.sage_bonus_degree = unmarshallInt(th);
-    you.level_type        = static_cast<level_area_type>( unmarshallByte(th) );
+    you.level_type        = static_cast<level_area_type>(unmarshallByte(th));
     you.level_type_name   = unmarshallString(th);
 
     you.level_type_name_abbrev = unmarshallString(th);
@@ -1599,8 +1599,8 @@ static void tag_read_you(reader &th, int minorVersion)
     you.level_type_tag         = unmarshallString(th);
     you.level_type_ext         = unmarshallString(th);
 
-    you.entry_cause     = static_cast<entry_cause_type>( unmarshallByte(th) );
-    you.entry_cause_god = static_cast<god_type>( unmarshallByte(th) );
+    you.entry_cause     = static_cast<entry_cause_type>(unmarshallByte(th));
+    you.entry_cause_god = static_cast<god_type>(unmarshallByte(th));
     you.disease         = unmarshallInt(th);
 
     you.hp              = unmarshallShort(th);
@@ -1759,14 +1759,14 @@ static void tag_read_you(reader &th, int minorVersion)
     // it will be recalculated in startup.c:_post_init() anyway
 #endif
     you.hell_exit      = unmarshallByte(th);
-    you.hell_branch = static_cast<branch_type>( unmarshallByte(th) );
+    you.hell_branch = static_cast<branch_type>(unmarshallByte(th));
 
     // elapsed time
     you.elapsed_time   = unmarshallInt(th);
 
     // time of character creation
-    unmarshallCString( th, buff, 20 );
-    you.birth_time = parse_date_string( buff );
+    unmarshallCString(th, buff, 20);
+    you.birth_time = parse_date_string(buff);
 
     you.real_time  = unmarshallInt(th);
     you.num_turns  = unmarshallInt(th);
@@ -2399,9 +2399,9 @@ static void marshall_mon_enchant(writer &th, const mon_enchant &me)
 static mon_enchant unmarshall_mon_enchant(reader &th)
 {
     mon_enchant me;
-    me.ench        = static_cast<enchant_type>( unmarshallShort(th) );
+    me.ench        = static_cast<enchant_type>(unmarshallShort(th));
     me.degree      = unmarshallShort(th);
-    me.who         = static_cast<kill_category>( unmarshallShort(th) );
+    me.who         = static_cast<kill_category>(unmarshallShort(th));
     me.duration    = unmarshallShort(th);
     me.maxduration = unmarshallShort(th);
     return (me);
@@ -2642,7 +2642,7 @@ void tag_construct_level_tiles(writer &th)
 #endif
 }
 
-static void tag_read_level( reader &th, int minorVersion )
+static void tag_read_level(reader &th, int minorVersion)
 {
 
     env.floor_colour = unmarshallUByte(th);
@@ -2850,7 +2850,7 @@ void unmarshallMonster(reader &th, monster& m)
 
     unmarshallSpells(th, m.spells);
 
-    m.god      = static_cast<god_type>( unmarshallByte(th) );
+    m.god      = static_cast<god_type>(unmarshallByte(th));
     m.attitude = static_cast<mon_attitude_type>(unmarshallByte(th));
     m.foe      = unmarshallShort(th);
 
@@ -2875,7 +2875,7 @@ static void tag_read_level_monsters(reader &th, int minorVersion)
     count = unmarshallByte(th);
     ASSERT(count >= 0);
     for (i = 0; i < count && i < MAX_MONS_ALLOC; ++i)
-        env.mons_alloc[i] = static_cast<monster_type>( unmarshallShort(th) );
+        env.mons_alloc[i] = static_cast<monster_type>(unmarshallShort(th));
     for (i = MAX_MONS_ALLOC; i < count; ++i)
         unmarshallShort(th);
     for (i = count; i < MAX_MONS_ALLOC; ++i)
@@ -3073,7 +3073,7 @@ static void marshallSpells(writer &th, const monster_spells &spells)
 static void unmarshallSpells(reader &th, monster_spells &spells)
 {
     for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
-        spells[j] = static_cast<spell_type>( unmarshallShort(th) );
+        spells[j] = static_cast<spell_type>(unmarshallShort(th));
 }
 
 static void marshallGhost(writer &th, const ghost_demon &ghost)
@@ -3111,10 +3111,10 @@ static ghost_demon unmarshallGhost(reader &th, int minorVersion)
     ghost_demon ghost;
 
     ghost.name             = unmarshallString(th, 20);
-    ghost.species          = static_cast<species_type>( unmarshallShort(th) );
-    ghost.job              = static_cast<job_type>( unmarshallShort(th) );
-    ghost.religion         = static_cast<god_type>( unmarshallByte(th) );
-    ghost.best_skill       = static_cast<skill_type>( unmarshallShort(th) );
+    ghost.species          = static_cast<species_type>(unmarshallShort(th));
+    ghost.job              = static_cast<job_type>(unmarshallShort(th));
+    ghost.religion         = static_cast<god_type>(unmarshallByte(th));
+    ghost.best_skill       = static_cast<skill_type>(unmarshallShort(th));
     ghost.best_skill_level = unmarshallShort(th);
     ghost.xl               = unmarshallShort(th);
     ghost.max_hp           = unmarshallShort(th);
@@ -3123,10 +3123,10 @@ static ghost_demon unmarshallGhost(reader &th, int minorVersion)
     ghost.damage           = unmarshallShort(th);
     ghost.speed            = unmarshallShort(th);
     ghost.see_invis        = unmarshallByte(th);
-    ghost.brand            = static_cast<brand_type>( unmarshallShort(th) );
+    ghost.brand            = static_cast<brand_type>(unmarshallShort(th));
 
-    ghost.att_type = static_cast<mon_attack_type>( unmarshallShort(th) );
-    ghost.att_flav = static_cast<mon_attack_flavour>( unmarshallShort(th) );
+    ghost.att_type = static_cast<mon_attack_type>(unmarshallShort(th));
+    ghost.att_flav = static_cast<mon_attack_flavour>(unmarshallShort(th));
 
     unmarshallResists(th, ghost.resists, minorVersion);
 
@@ -3134,7 +3134,7 @@ static ghost_demon unmarshallGhost(reader &th, int minorVersion)
     ghost.cycle_colours    = unmarshallByte(th);
     ghost.colour           = unmarshallByte(th);
 
-    ghost.fly              = static_cast<flight_type>( unmarshallShort(th) );
+    ghost.fly              = static_cast<flight_type>(unmarshallShort(th));
 
     unmarshallSpells(th, ghost.spells);
 

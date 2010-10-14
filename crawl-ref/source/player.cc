@@ -193,7 +193,7 @@ static bool _check_moveto_trap(const coord_def& p, const std::string &move_verb)
             std::string prompt = make_stringf(
                 "Do you really want to %s into the Zot trap",
                 move_verb.c_str()
-            );
+          );
             if (!yes_or_no(prompt.c_str()))
             {
                 canned_msg(MSG_OK);
@@ -1089,7 +1089,7 @@ int player_teleport(bool calc_unid)
     int tp = 0;
 
     // rings
-    tp += 8 * player_equip( EQ_RINGS, RING_TELEPORTATION, calc_unid );
+    tp += 8 * player_equip(EQ_RINGS, RING_TELEPORTATION, calc_unid);
 
     // mutations
     tp += player_mutation_level(MUT_TELEPORT) * 3;
@@ -1298,7 +1298,7 @@ int player_spell_levels(void)
 
     // Fireball is free for characters with delayed fireball
     if (fireball && delayed_fireball)
-        sl += spell_difficulty( SPELL_FIREBALL );
+        sl += spell_difficulty(SPELL_FIREBALL);
 
     // Note: This can happen because of level drain.  Maybe we should
     // force random spells out when that happens. -- bwr
@@ -1323,26 +1323,26 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
     if (items)
     {
         // rings of fire resistance/fire
-        rf += player_equip( EQ_RINGS, RING_PROTECTION_FROM_FIRE, calc_unid );
-        rf += player_equip( EQ_RINGS, RING_FIRE, calc_unid );
+        rf += player_equip(EQ_RINGS, RING_PROTECTION_FROM_FIRE, calc_unid);
+        rf += player_equip(EQ_RINGS, RING_FIRE, calc_unid);
 
         // rings of ice
-        rf -= player_equip( EQ_RINGS, RING_ICE, calc_unid );
+        rf -= player_equip(EQ_RINGS, RING_ICE, calc_unid);
 
         // Staves
-        rf += player_equip( EQ_STAFF, STAFF_FIRE, calc_unid );
+        rf += player_equip(EQ_STAFF, STAFF_FIRE, calc_unid);
 
         // body armour:
-        rf += 2 * player_equip( EQ_BODY_ARMOUR, ARM_DRAGON_ARMOUR );
-        rf += player_equip( EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_ARMOUR );
-        rf -= player_equip( EQ_BODY_ARMOUR, ARM_ICE_DRAGON_ARMOUR );
-        rf += 2 * player_equip( EQ_BODY_ARMOUR, ARM_DRAGON_HIDE );
-        rf += player_equip( EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_HIDE );
-        rf -= player_equip( EQ_BODY_ARMOUR, ARM_ICE_DRAGON_HIDE );
+        rf += 2 * player_equip(EQ_BODY_ARMOUR, ARM_DRAGON_ARMOUR);
+        rf += player_equip(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_ARMOUR);
+        rf -= player_equip(EQ_BODY_ARMOUR, ARM_ICE_DRAGON_ARMOUR);
+        rf += 2 * player_equip(EQ_BODY_ARMOUR, ARM_DRAGON_HIDE);
+        rf += player_equip(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_HIDE);
+        rf -= player_equip(EQ_BODY_ARMOUR, ARM_ICE_DRAGON_HIDE);
 
         // ego armours
-        rf += player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_FIRE_RESISTANCE );
-        rf += player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_RESISTANCE );
+        rf += player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_FIRE_RESISTANCE);
+        rf += player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_RESISTANCE);
 
         // randart weapons:
         rf += scan_artefacts(ARTP_FIRE, calc_unid);
@@ -1443,26 +1443,26 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
     if (items)
     {
         // rings of cold resistance/ice
-        rc += player_equip( EQ_RINGS, RING_PROTECTION_FROM_COLD, calc_unid );
-        rc += player_equip( EQ_RINGS, RING_ICE, calc_unid );
+        rc += player_equip(EQ_RINGS, RING_PROTECTION_FROM_COLD, calc_unid);
+        rc += player_equip(EQ_RINGS, RING_ICE, calc_unid);
 
         // rings of fire
-        rc -= player_equip( EQ_RINGS, RING_FIRE, calc_unid );
+        rc -= player_equip(EQ_RINGS, RING_FIRE, calc_unid);
 
         // Staves
-        rc += player_equip( EQ_STAFF, STAFF_COLD, calc_unid );
+        rc += player_equip(EQ_STAFF, STAFF_COLD, calc_unid);
 
         // body armour:
-        rc += 2 * player_equip( EQ_BODY_ARMOUR, ARM_ICE_DRAGON_ARMOUR );
-        rc += player_equip( EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_ARMOUR );
-        rc -= player_equip( EQ_BODY_ARMOUR, ARM_DRAGON_ARMOUR );
-        rc += 2 * player_equip( EQ_BODY_ARMOUR, ARM_ICE_DRAGON_HIDE );
-        rc += player_equip( EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_HIDE );
-        rc -= player_equip( EQ_BODY_ARMOUR, ARM_DRAGON_HIDE );
+        rc += 2 * player_equip(EQ_BODY_ARMOUR, ARM_ICE_DRAGON_ARMOUR);
+        rc += player_equip(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_ARMOUR);
+        rc -= player_equip(EQ_BODY_ARMOUR, ARM_DRAGON_ARMOUR);
+        rc += 2 * player_equip(EQ_BODY_ARMOUR, ARM_ICE_DRAGON_HIDE);
+        rc += player_equip(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_HIDE);
+        rc -= player_equip(EQ_BODY_ARMOUR, ARM_DRAGON_HIDE);
 
         // ego armours
-        rc += player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_COLD_RESISTANCE );
-        rc += player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_RESISTANCE );
+        rc += player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_COLD_RESISTANCE);
+        rc += player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_RESISTANCE);
 
         // randart weapons:
         rc += scan_artefacts(ARTP_COLD, calc_unid);
@@ -1553,11 +1553,11 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
     if (items)
     {
         // staff
-        re += player_equip( EQ_STAFF, STAFF_AIR, calc_unid );
+        re += player_equip(EQ_STAFF, STAFF_AIR, calc_unid);
 
         // body armour:
-        re += player_equip( EQ_BODY_ARMOUR, ARM_STORM_DRAGON_ARMOUR );
-        re += player_equip( EQ_BODY_ARMOUR, ARM_STORM_DRAGON_HIDE );
+        re += player_equip(EQ_BODY_ARMOUR, ARM_STORM_DRAGON_ARMOUR);
+        re += player_equip(EQ_BODY_ARMOUR, ARM_STORM_DRAGON_HIDE);
 
         // randart weapons:
         re += scan_artefacts(ARTP_ELECTRICITY, calc_unid);
@@ -1597,19 +1597,19 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
     if (items)
     {
         // rings of poison resistance
-        rp += player_equip( EQ_RINGS, RING_POISON_RESISTANCE, calc_unid );
+        rp += player_equip(EQ_RINGS, RING_POISON_RESISTANCE, calc_unid);
 
         // Staves
-        rp += player_equip( EQ_STAFF, STAFF_POISON, calc_unid );
+        rp += player_equip(EQ_STAFF, STAFF_POISON, calc_unid);
 
         // ego armour:
-        rp += player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_POISON_RESISTANCE );
+        rp += player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_POISON_RESISTANCE);
 
         // body armour:
-        rp += player_equip( EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_ARMOUR );
-        rp += player_equip( EQ_BODY_ARMOUR, ARM_SWAMP_DRAGON_ARMOUR );
-        rp += player_equip( EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_HIDE );
-        rp += player_equip( EQ_BODY_ARMOUR, ARM_SWAMP_DRAGON_HIDE );
+        rp += player_equip(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_ARMOUR);
+        rp += player_equip(EQ_BODY_ARMOUR, ARM_SWAMP_DRAGON_ARMOUR);
+        rp += player_equip(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_HIDE);
+        rp += player_equip(EQ_BODY_ARMOUR, ARM_SWAMP_DRAGON_HIDE);
 
         // randart weapons:
         rp += scan_artefacts(ARTP_POISON, calc_unid);
@@ -1670,10 +1670,10 @@ int player_spec_death()
     int sd = 0;
 
     // Staves
-    sd += player_equip( EQ_STAFF, STAFF_DEATH );
+    sd += player_equip(EQ_STAFF, STAFF_DEATH);
 
     // body armour:
-    if (player_equip_ego_type( EQ_BODY_ARMOUR, SPARM_ARCHMAGI ))
+    if (player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI))
         sd++;
 
     // species:
@@ -1694,7 +1694,7 @@ int player_spec_death()
 
 int player_spec_holy()
 {
-    //if ( you.char_class == JOB_PRIEST || you.char_class == JOB_PALADIN )
+    //if (you.char_class == JOB_PRIEST || you.char_class == JOB_PALADIN)
     //  return 1;
     return 0;
 }
@@ -1704,10 +1704,10 @@ int player_spec_fire()
     int sf = 0;
 
     // staves:
-    sf += player_equip( EQ_STAFF, STAFF_FIRE );
+    sf += player_equip(EQ_STAFF, STAFF_FIRE);
 
     // rings of fire:
-    sf += player_equip( EQ_RINGS, RING_FIRE );
+    sf += player_equip(EQ_RINGS, RING_FIRE);
 
     if (you.duration[DUR_FIRE_SHIELD])
         sf++;
@@ -1724,10 +1724,10 @@ int player_spec_cold()
     int sc = 0;
 
     // staves:
-    sc += player_equip( EQ_STAFF, STAFF_COLD );
+    sc += player_equip(EQ_STAFF, STAFF_COLD);
 
     // rings of ice:
-    sc += player_equip( EQ_RINGS, RING_ICE );
+    sc += player_equip(EQ_RINGS, RING_ICE);
 
     return sc;
 }
@@ -1737,7 +1737,7 @@ int player_spec_earth()
     int se = 0;
 
     // Staves
-    se += player_equip( EQ_STAFF, STAFF_EARTH );
+    se += player_equip(EQ_STAFF, STAFF_EARTH);
 
     return se;
 }
@@ -1747,7 +1747,7 @@ int player_spec_air()
     int sa = 0;
 
     // Staves
-    sa += player_equip( EQ_STAFF, STAFF_AIR );
+    sa += player_equip(EQ_STAFF, STAFF_AIR);
 
     return sa;
 }
@@ -1757,10 +1757,10 @@ int player_spec_conj()
     int sc = 0;
 
     // Staves
-    sc += player_equip( EQ_STAFF, STAFF_CONJURATION );
+    sc += player_equip(EQ_STAFF, STAFF_CONJURATION);
 
     // armour of the Archmagi
-    if (player_equip_ego_type( EQ_BODY_ARMOUR, SPARM_ARCHMAGI ))
+    if (player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI))
         sc++;
 
     return sc;
@@ -1771,10 +1771,10 @@ int player_spec_ench()
     int se = 0;
 
     // Staves
-    se += player_equip( EQ_STAFF, STAFF_ENCHANTMENT );
+    se += player_equip(EQ_STAFF, STAFF_ENCHANTMENT);
 
     // armour of the Archmagi
-    if (player_equip_ego_type( EQ_BODY_ARMOUR, SPARM_ARCHMAGI ))
+    if (player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI))
         se++;
 
     return se;
@@ -1785,10 +1785,10 @@ int player_spec_summ()
     int ss = 0;
 
     // Staves
-    ss += player_equip( EQ_STAFF, STAFF_SUMMONING );
+    ss += player_equip(EQ_STAFF, STAFF_SUMMONING);
 
     // armour of the Archmagi
-    if (player_equip_ego_type( EQ_BODY_ARMOUR, SPARM_ARCHMAGI ))
+    if (player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI))
         ss++;
 
     return ss;
@@ -1799,7 +1799,7 @@ int player_spec_poison()
     int sp = 0;
 
     // Staves
-    sp += player_equip( EQ_STAFF, STAFF_POISON );
+    sp += player_equip(EQ_STAFF, STAFF_POISON);
 
     if (player_equip_unrand(UNRAND_OLGREB))
         sp++;
@@ -1812,7 +1812,7 @@ int player_energy()
     int pe = 0;
 
     // Staves
-    pe += player_equip( EQ_STAFF, STAFF_ENERGY );
+    pe += player_equip(EQ_STAFF, STAFF_ENERGY);
 
     return pe;
 }
@@ -2507,11 +2507,11 @@ int burden_change(void)
         if (you.inv[bu].quantity < 1)
             continue;
 
-        you.burden += item_mass( you.inv[bu] ) * you.inv[bu].quantity;
+        you.burden += item_mass(you.inv[bu]) * you.inv[bu].quantity;
     }
 
     you.burden_state = BS_UNENCUMBERED;
-    set_redraw_status( REDRAW_BURDEN );
+    set_redraw_status(REDRAW_BURDEN);
     you.redraw_evasion = true;
 
     // changed the burdened levels to match the change to max_carried
@@ -2547,7 +2547,7 @@ int burden_change(void)
     // Stop travel if we get burdened (as from potions of might/levitation
     // wearing off).
     if (you.burden_state > old_burdenstate)
-        interrupt_activity( AI_BURDEN_CHANGE );
+        interrupt_activity(AI_BURDEN_CHANGE);
 
     const bool is_flying_light = you.light_flight();
 
@@ -2591,7 +2591,7 @@ void forget_map(int chance_forgotten, bool force)
 #endif
 }
 
-void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
+void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
                unsigned int* actual_avail_gain)
 {
     if (crawl_state.game_is_arena())
@@ -2602,13 +2602,13 @@ void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
     if (you.religion == GOD_ASHENZARI && you.piety > piety_breakpoint(0))
         exp_gained = div_rand_round(exp_gained * (8 + ash_bondage_level()), 8);
 
-    if (player_equip_ego_type( EQ_BODY_ARMOUR, SPARM_ARCHMAGI ))
-        exp_gained = div_rand_round( exp_gained, 4 );
+    if (player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI))
+        exp_gained = div_rand_round(exp_gained, 4);
 
     const unsigned int  old_exp   = you.experience;
     const int           old_avail = you.exp_available;
 
-    dprf("gain_exp: %d", exp_gained );
+    dprf("gain_exp: %d", exp_gained);
 
     if (you.experience + exp_gained > (unsigned int)MAX_EXP_TOTAL)
         you.experience = MAX_EXP_TOTAL;
@@ -3370,13 +3370,13 @@ int check_stealth(void)
             stealth += 20;
     }
 
-    if ( you.duration[DUR_STEALTH] )
+    if (you.duration[DUR_STEALTH])
         stealth += 80;
 
     if (you.duration[DUR_AGILITY])
         stealth += 50;
 
-    stealth += scan_artefacts( ARTP_STEALTH );
+    stealth += scan_artefacts(ARTP_STEALTH);
 
     if (you.airborne())
         stealth += 10;
@@ -3385,7 +3385,7 @@ int check_stealth(void)
         // Merfolk can sneak up on monsters underwater -- bwr
         if (you.fishtail)
             stealth += 50;
-        else if ( !you.can_swim() && !you.extra_balanced() )
+        else if (!you.can_swim() && !you.extra_balanced())
             stealth /= 2;       // splashy-splashy
     }
     else if (you.species == SP_CAT && !you.attribute[ATTR_TRANSFORMATION])
@@ -3555,7 +3555,7 @@ static void _display_movement_speed()
     const bool fly    = (you.flight_mode() == FL_FLY);
     const bool swift  = (you.duration[DUR_SWIFTNESS] > 0);
 
-    mprf( "Your %s speed is %s%s%s.",
+    mprf("Your %s speed is %s%s%s.",
           // order is important for these:
           (swim)    ? "swimming" :
           (water)   ? "wading" :
@@ -3574,7 +3574,7 @@ static void _display_movement_speed()
           (move_cost <  10) ? "quick" :
           (move_cost == 10) ? "average" :
           (move_cost <  13) ? "slow"
-                            : "very slow" );
+                            : "very slow");
 }
 
 static void _display_tohit()
@@ -3599,7 +3599,7 @@ static void _display_tohit()
          (to_hit <  45) ? "Very agile monsters are a bit difficult to hit" :
          (to_hit <  60) ? "Very agile monsters are a bit hard to hit" :
          (to_hit < 100) ? "You feel comfortable with your ability to fight"
-                        : "You feel confident with your ability to fight" );
+                        : "You feel confident with your ability to fight");
 */
 }
 
@@ -3904,14 +3904,14 @@ int slaying_bonus(weapon_property_type which_affected, bool ranged)
 
     if (which_affected == PWPN_HIT)
     {
-        ret += player_equip( EQ_RINGS_PLUS, RING_SLAYING );
+        ret += player_equip(EQ_RINGS_PLUS, RING_SLAYING);
         ret += scan_artefacts(ARTP_ACCURACY);
         if (player_equip_ego_type(EQ_GLOVES, SPARM_ARCHERY))
             ret += ranged ? 5 : -1;
     }
     else if (which_affected == PWPN_DAMAGE)
     {
-        ret += player_equip( EQ_RINGS_PLUS2, RING_SLAYING );
+        ret += player_equip(EQ_RINGS_PLUS2, RING_SLAYING);
         ret += scan_artefacts(ARTP_DAMAGE);
         if (player_equip_ego_type(EQ_GLOVES, SPARM_ARCHERY))
             ret += ranged ? 3 : -1;
@@ -3955,7 +3955,7 @@ bool items_give_ability(const int slot, artefact_prop_type abil)
         }
 
         // other items are not evokable
-        if (!is_artefact( you.inv[ eq ] ))
+        if (!is_artefact(you.inv[ eq ]))
             continue;
 
         if (artefact_wpn_property(you.inv[ eq ], abil))
@@ -3984,7 +3984,7 @@ int scan_artefacts(artefact_prop_type which_property, bool calc_unid)
         if (i == EQ_WEAPON && you.inv[ eq ].base_type != OBJ_WEAPONS)
             continue;
 
-        if (!is_artefact( you.inv[ eq ] ))
+        if (!is_artefact(you.inv[ eq ]))
             continue;
 
         // Ignore unidentified items [TileCrawl dump enhancements].
@@ -3994,7 +3994,7 @@ int scan_artefacts(artefact_prop_type which_property, bool calc_unid)
             continue;
         }
 
-        retval += artefact_wpn_property( you.inv[ eq ], which_property );
+        retval += artefact_wpn_property(you.inv[ eq ], which_property);
     }
 
     return (retval);
@@ -4039,7 +4039,7 @@ void dec_mp(int mp_loss)
         && you.magic_points < (you.max_magic_points
                                * Options.magic_point_warning) / 100)
     {
-        mpr( "* * * LOW MAGIC WARNING * * *", MSGCH_DANGER );
+        mpr("* * * LOW MAGIC WARNING * * *", MSGCH_DANGER);
     }
 
     take_note(Note(NOTE_MP_CHANGE, you.magic_points, you.max_magic_points));
@@ -4133,7 +4133,7 @@ void inc_hp(int hp_gain, bool max_too)
     you.hp += hp_gain;
 
     if (max_too)
-        inc_max_hp( hp_gain );
+        inc_max_hp(hp_gain);
 
     if (you.hp > you.hp_max)
         you.hp = you.hp_max;
@@ -4180,7 +4180,7 @@ void rot_mp(int mp_loss)
     you.redraw_magic_points = true;
 }
 
-void inc_max_hp( int hp_gain )
+void inc_max_hp(int hp_gain)
 {
     you.base_hp2 += hp_gain;
     calc_hp();
@@ -4189,7 +4189,7 @@ void inc_max_hp( int hp_gain )
     you.redraw_hit_points = true;
 }
 
-void dec_max_hp( int hp_loss )
+void dec_max_hp(int hp_loss)
 {
     you.base_hp2 -= hp_loss;
     calc_hp();
@@ -4198,7 +4198,7 @@ void dec_max_hp( int hp_loss )
     you.redraw_hit_points = true;
 }
 
-void inc_max_mp( int mp_gain )
+void inc_max_mp(int mp_gain)
 {
     you.base_magic_points2 += mp_gain;
     calc_mp();
@@ -4207,7 +4207,7 @@ void inc_max_mp( int mp_gain )
     you.redraw_magic_points = true;
 }
 
-void dec_max_mp( int mp_loss )
+void dec_max_mp(int mp_loss)
 {
     you.base_magic_points2 -= mp_loss;
     calc_mp();
@@ -5487,7 +5487,7 @@ int player::armour_class() const
             continue;
 
         const item_def& item   = inv[equip[eq]];
-        const int ac_value     = property(item, PARM_AC ) * 100;
+        const int ac_value     = property(item, PARM_AC) * 100;
         const int racial_bonus = _player_armour_racial_bonus(item);
 
         // [ds] effectively: ac_value * (22 + Arm) / 22, where Arm =
@@ -5502,12 +5502,12 @@ int player::armour_class() const
             AC -= ac_value / 2;
     }
 
-    AC += player_equip( EQ_RINGS_PLUS, RING_PROTECTION ) * 100;
+    AC += player_equip(EQ_RINGS_PLUS, RING_PROTECTION) * 100;
 
-    if (player_equip_ego_type( EQ_WEAPON, SPWPN_PROTECTION ))
+    if (player_equip_ego_type(EQ_WEAPON, SPWPN_PROTECTION))
         AC += 500;
 
-    if (player_equip_ego_type( EQ_SHIELD, SPARM_PROTECTION ))
+    if (player_equip_ego_type(EQ_SHIELD, SPARM_PROTECTION))
         AC += 300;
 
     AC += scan_artefacts(ARTP_AC) * 100;
@@ -6294,10 +6294,10 @@ bool player::can_see_invisible(bool calc_unid, bool transient) const
 
     int si = 0;
 
-    si += player_equip( EQ_RINGS, RING_SEE_INVISIBLE, calc_unid );
+    si += player_equip(EQ_RINGS, RING_SEE_INVISIBLE, calc_unid);
 
     // armour: (checks head armour only)
-    si += player_equip_ego_type( EQ_HELMET, SPARM_SEE_INVISIBLE );
+    si += player_equip_ego_type(EQ_HELMET, SPARM_SEE_INVISIBLE);
 
     if (player_mutation_level(MUT_ACUTE_VISION) > 0)
         si += player_mutation_level(MUT_ACUTE_VISION);

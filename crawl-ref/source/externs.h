@@ -110,7 +110,7 @@ struct coord_def
     int         x;
     int         y;
 
-    explicit coord_def( int x_in = 0, int y_in = 0 ) : x(x_in), y(y_in) { }
+    explicit coord_def(int x_in = 0, int y_in = 0) : x(x_in), y(y_in) { }
 
     void set(int xi, int yi)
     {
@@ -396,19 +396,19 @@ public:
         return (*this);
     }
 
-    bool operator == ( const level_id &id ) const
+    bool operator == (const level_id &id) const
     {
         return (level_type == id.level_type
                 && (level_type != LEVEL_DUNGEON
                     || (branch == id.branch && depth == id.depth)));
     }
 
-    bool operator != ( const level_id &id ) const
+    bool operator != (const level_id &id) const
     {
         return !operator == (id);
     }
 
-    bool operator <( const level_id &id ) const
+    bool operator <(const level_id &id) const
     {
         if (level_type != id.level_type)
             return (level_type < id.level_type);
@@ -419,12 +419,12 @@ public:
         return (branch < id.branch) || (branch==id.branch && depth < id.depth);
     }
 
-    bool operator == ( const branch_type _branch ) const
+    bool operator == (const branch_type _branch) const
     {
         return (branch == _branch && level_type == LEVEL_DUNGEON);
     }
 
-    bool operator != ( const branch_type _branch  ) const
+    bool operator != (const branch_type _branch) const
     {
         return !operator == (_branch);
     }
@@ -458,17 +458,17 @@ struct level_pos
     // Returns the level_pos of where the player is standing.
     static level_pos current();
 
-    bool operator == ( const level_pos &lp ) const
+    bool operator == (const level_pos &lp) const
     {
         return id == lp.id && pos == lp.pos;
     }
 
-    bool operator != ( const level_pos &lp ) const
+    bool operator != (const level_pos &lp) const
     {
         return id != lp.id || pos != lp.pos;
     }
 
-    bool operator <  ( const level_pos &lp ) const
+    bool operator <  (const level_pos &lp) const
     {
         return (id < lp.id) || (id == lp.id && pos < lp.pos);
     }
@@ -478,7 +478,7 @@ struct level_pos
         return id.depth > -1 && pos.x != -1 && pos.y != -1;
     }
 
-    bool is_on( const level_id _id)
+    bool is_on(const level_id _id)
     {
         return id == _id;
     }
@@ -686,14 +686,14 @@ struct message_filter
     int             channel;        // Use -1 to match any channel.
     text_pattern    pattern;        // Empty pattern matches any message
 
-    message_filter( int ch, const std::string &s )
+    message_filter(int ch, const std::string &s)
         : channel(ch), pattern(s)
     {
     }
 
-    message_filter( const std::string &s ) : channel(-1), pattern(s) { }
+    message_filter(const std::string &s) : channel(-1), pattern(s) { }
 
-    bool is_filtered( int ch, const std::string &s ) const {
+    bool is_filtered(int ch, const std::string &s) const {
         bool channel_match = ch == channel || channel == -1;
         if (!channel_match || pattern.empty())
             return channel_match;

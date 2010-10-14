@@ -224,7 +224,7 @@ bool feature_mimic_at (const coord_def &c)
 
 // Sets the colour of a mimic to match its description... should be called
 // whenever a mimic is created or teleported. - bwr
-int get_mimic_colour( const monster* mimic )
+int get_mimic_colour(const monster* mimic)
 {
     ASSERT(mimic != NULL);
 
@@ -235,7 +235,7 @@ int get_mimic_colour( const monster* mimic )
 }
 
 // Monster curses a random player inventory item.
-bool curse_an_item( bool decay_potions, bool quiet )
+bool curse_an_item(bool decay_potions, bool quiet)
 {
     // allowing these would enable mummy scumming
     if (you.religion == GOD_ASHENZARI)
@@ -279,7 +279,7 @@ bool curse_an_item( bool decay_potions, bool quiet )
 
             // Item is valid for cursing, so we'll give it a chance.
             count++;
-            if (one_chance_in( count ))
+            if (one_chance_in(count))
                 item = i;
         }
     }
@@ -308,7 +308,7 @@ bool curse_an_item( bool decay_potions, bool quiet )
     }
     else
     {
-        do_curse_item( you.inv[item], false );
+        do_curse_item(you.inv[item], false);
     }
 
     return (true);
@@ -1345,7 +1345,7 @@ static int _destroy_tentacle(int tentacle_idx, monster* origin)
     {
         if (mi->type == MONS_KRAKEN_CONNECTOR
             && (int)mi->number == tentacle_idx
-            && mi->mindex() != origin->mindex() )
+            && mi->mindex() != origin->mindex())
         {
             if (mons_near(*mi))
                 seen++;
@@ -1495,7 +1495,7 @@ int monster_die(monster* mons, killer_type killer,
 
     crawl_state.inc_mon_acting(mons);
 
-    ASSERT(!( YOU_KILL(killer) && crawl_state.game_is_arena() ));
+    ASSERT(!(YOU_KILL(killer) && crawl_state.game_is_arena()));
 
     if (mons->props.exists("monster_dies_lua_key"))
     {
@@ -1579,7 +1579,7 @@ int monster_die(monster* mons, killer_type killer,
         if (you.religion == GOD_TROG
             && !player_under_penance() && you.piety > random2(1000))
         {
-            const int bonus = (3 + random2avg( 10, 2 )) / 2;
+            const int bonus = (3 + random2avg(10, 2)) / 2;
 
             you.increase_duration(DUR_BERSERKER, bonus);
             you.increase_duration(DUR_MIGHT, bonus);
@@ -2498,8 +2498,8 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
     return (monster_habitable_grid(new_mclass, current_tile));
 }
 
-static bool _is_poly_power_unsuitable( poly_power_type power,
-                                       int src_pow, int tgt_pow, int relax )
+static bool _is_poly_power_unsuitable(poly_power_type power,
+                                       int src_pow, int tgt_pow, int relax)
 {
     switch (power)
     {
@@ -2904,7 +2904,7 @@ bool mon_can_be_slimified(monster* mons)
             && !mons->is_insubstantial()
             && (holi == MH_UNDEAD
                  || holi == MH_NATURAL && !mons_is_slime(mons))
-            );
+          );
 }
 
 void slimify_monster(monster* mon, bool hostile)
@@ -3007,7 +3007,7 @@ void corrode_monster(monster* mons)
         }
 }
 
-static bool _habitat_okay( const monster* mons, dungeon_feature_type targ )
+static bool _habitat_okay(const monster* mons, dungeon_feature_type targ)
 {
     return (monster_habitable_grid(mons, targ));
 }
@@ -3917,7 +3917,7 @@ static void _vanish_orig_eq(monster* mons)
             || !item.inscription.empty()
             || is_unrandom_artefact(item)
             || (item.flags & (ISFLAG_DROPPED | ISFLAG_THROWN | ISFLAG_NOTED_GET
-                              | ISFLAG_BEEN_IN_INV) ) )
+                              | ISFLAG_BEEN_IN_INV)))
         {
             continue;
         }
@@ -4020,8 +4020,8 @@ void monster_teleport(monster* mons, bool instan, bool silent)
             if (!silent)
                 simple_monster_message(mons, " looks slightly unstable.");
 
-            mons->add_ench( mon_enchant(ENCH_TP, 0, KC_OTHER,
-                                           random_range(20, 30)) );
+            mons->add_ench(mon_enchant(ENCH_TP, 0, KC_OTHER,
+                                           random_range(20, 30)));
         }
 
         return;

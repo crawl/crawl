@@ -30,9 +30,9 @@ inline bool show_bounds(const coord_def &p)
             && p.y >= 0 && p.y < ENV_SHOW_DIAMETER);
 }
 
-int grid_distance( const coord_def& p1, const coord_def& p2 );
-int distance( const coord_def& p1, const coord_def& p2 );
-bool adjacent( const coord_def& p1, const coord_def& p2 );
+int grid_distance(const coord_def& p1, const coord_def& p2);
+int distance(const coord_def& p1, const coord_def& p2);
+bool adjacent(const coord_def& p1, const coord_def& p2);
 
 // Conversion between different coordinate systems.
 // XXX: collect all of these here?

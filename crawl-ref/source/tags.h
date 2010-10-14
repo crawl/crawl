@@ -123,17 +123,17 @@ private:
     friend void marshallEnumVal(writer&, const enum_info*, int);
 };
 
-void marshallByte    (writer &, int8_t );
-void marshallShort   (writer &, int16_t );
-void marshallInt     (writer &, int32_t );
-void marshallFloat   (writer &, float );
-void marshallUByte   (writer &, uint8_t );
-void marshallBoolean (writer &, bool );
+void marshallByte    (writer &, int8_t);
+void marshallShort   (writer &, int16_t);
+void marshallInt     (writer &, int32_t);
+void marshallFloat   (writer &, float);
+void marshallUByte   (writer &, uint8_t);
+void marshallBoolean (writer &, bool);
 void marshallString  (writer &, const std::string &, int maxSize = 0);
 void marshallString4 (writer &, const std::string &);
 void marshallCoord   (writer &, const coord_def &);
 void marshallItem    (writer &, const item_def &);
-void marshallMonster (writer &, const monster& );
+void marshallMonster (writer &, const monster&);
 void marshallMonsterInfo (writer &, const monster_info &);
 void marshallMapCell (writer &, const map_cell &);
 
@@ -237,7 +237,7 @@ void tag_write(tag_type tagID, writer &outf);
 
 int write2(FILE * file, const void *buffer, unsigned int count);
 int read2(FILE * file, void *buffer, unsigned int count);
-std::string make_date_string( time_t in_date );
-time_t parse_date_string( char[20] );
+std::string make_date_string(time_t in_date);
+time_t parse_date_string(char[20]);
 
 #endif // TAGS_H

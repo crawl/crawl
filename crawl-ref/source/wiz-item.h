@@ -18,6 +18,6 @@ void wizard_identify_pack();
 void wizard_unidentify_pack();
 void wizard_draw_card();
 
-void debug_item_statistics( void );
+void debug_item_statistics(void);
 
 #endif

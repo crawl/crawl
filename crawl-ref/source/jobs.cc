@@ -62,8 +62,8 @@ int get_job_index_by_abbrev(const char *abbrev)
     {
         job = jobs_order[i];
 
-        if (tolower( abbrev[0] ) == tolower( Job_Abbrev_List[job][0] )
-            && tolower( abbrev[1] ) == tolower( Job_Abbrev_List[job][1] ))
+        if (tolower(abbrev[0]) == tolower(Job_Abbrev_List[job][0])
+            && tolower(abbrev[1]) == tolower(Job_Abbrev_List[job][1]))
         {
             return i;
         }
@@ -112,10 +112,10 @@ int get_job_index_by_name(const char *name)
     {
         job = jobs_order[i];
 
-        strncpy( lowered_job, Job_Name_List[job], sizeof( lowered_job ) );
-        strlwr( lowered_job );
+        strncpy(lowered_job, Job_Name_List[job], sizeof(lowered_job));
+        strlwr(lowered_job);
 
-        ptr = strstr( lowered_job, lowered_buff );
+        ptr = strstr(lowered_job, lowered_buff);
         if (ptr != NULL)
         {
             cl = i;
@@ -127,7 +127,7 @@ int get_job_index_by_name(const char *name)
     return (cl);
 }
 
-const char *get_job_name( int which_job )
+const char *get_job_name(int which_job)
 {
     ASSERT(which_job >= 0 && which_job < NUM_JOBS);
 

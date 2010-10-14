@@ -84,15 +84,15 @@ inline void mprnojoin(std::string text, msg_channel_type channel=MSGCH_PLAIN,
 }
 
 // 4.1-style mpr, currently named mprf for minimal disruption.
-void mprf( msg_channel_type channel, int param, const char *format, ... );
-void mprf( msg_channel_type channel, const char *format, ... );
-void mprf( const char *format, ... );
+void mprf(msg_channel_type channel, int param, const char *format, ...);
+void mprf(msg_channel_type channel, const char *format, ...);
+void mprf(const char *format, ...);
 
 // Yay for C89 and lack of variadic #defines...
 #ifdef DEBUG_DIAGNOSTICS
-void dprf( const char *format, ... );
+void dprf(const char *format, ...);
 #else
-static inline void dprf( const char *format, ... ) {}
+static inline void dprf(const char *format, ...) {}
 #endif
 
 #endif

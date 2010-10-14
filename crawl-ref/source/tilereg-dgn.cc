@@ -514,7 +514,7 @@ static item_def* _get_evokable_item(const actor* target)
     if (sel.empty())
         return (NULL);
 
-    return ( const_cast<item_def*>(sel[0].item) );
+    return (const_cast<item_def*>(sel[0].item));
 }
 
 static bool _evoke_item_on_target(actor* target)
@@ -610,7 +610,7 @@ static bool _cast_spell_on_target(actor* target)
 
     if (spell_mana(spell) > you.magic_points)
     {
-        mpr( "You don't have enough mana to cast that spell.");
+        mpr("You don't have enough mana to cast that spell.");
         return (true);
     }
 

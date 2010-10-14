@@ -122,7 +122,7 @@ static int l_you_spells(lua_State *ls)
     int index = 0;
     for (int i = 0; i < 52; ++i)
     {
-        const spell_type spell = get_spell_by_letter( index_to_letter(i) );
+        const spell_type spell = get_spell_by_letter(index_to_letter(i));
         if (spell == SPELL_NO_SPELL)
             continue;
 
@@ -150,7 +150,7 @@ static int you_can_consume_corpses(lua_State *ls)
     lua_pushboolean(ls,
                     can_ingest(OBJ_FOOD, FOOD_CHUNK, true, false, false)
                     || can_ingest(OBJ_CORPSES, CORPSE_BODY, true, false, false)
-                    );
+                  );
     return (1);
 }
 
@@ -308,7 +308,7 @@ static int _you_gold(lua_State *ls)
     {
         const int new_gold = luaL_checkint(ls, 1);
         const int old_gold = you.gold;
-        you.set_gold( std::max(new_gold, 0) );
+        you.set_gold(std::max(new_gold, 0));
         if (new_gold > old_gold)
             you.attribute[ATTR_GOLD_FOUND] += new_gold - old_gold;
         else if (old_gold > new_gold)

@@ -178,12 +178,12 @@ static bool _DISPATER_evoke(item_def *item, int* pract, bool* did_work,
 
     mpr("You feel the staff feeding on your energy!");
 
-    dec_hp( 5 + random2avg(19, 2), false, "Staff of Dispater" );
-    dec_mp( 2 + random2avg(5, 2) );
+    dec_hp(5 + random2avg(19, 2), false, "Staff of Dispater");
+    dec_mp(2 + random2avg(5, 2));
     make_hungry(100, false, true);
 
     int power = you.skills[SK_EVOCATIONS] * 8;
-    your_spells( SPELL_HELLFIRE, power, false );
+    your_spells(SPELL_HELLFIRE, power, false);
 
     *pract    = (coinflip() ? 2 : 1);
     *did_work = true;
@@ -230,7 +230,7 @@ static void _OLGREB_world_reacts(item_def *item)
 static bool _OLGREB_evoke(item_def *item, int* pract, bool* did_work,
                           bool* unevokable)
 {
-    if (!enough_mp( 4, true ) || you.skills[SK_EVOCATIONS] < random2(6))
+    if (!enough_mp(4, true) || you.skills[SK_EVOCATIONS] < random2(6))
         return (false);
 
     dec_mp(4);
@@ -240,10 +240,10 @@ static bool _OLGREB_evoke(item_def *item, int* pract, bool* did_work,
 
     int power = 10 + you.skills[SK_EVOCATIONS] * 8;
 
-    your_spells( SPELL_OLGREBS_TOXIC_RADIANCE, power, false );
+    your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, power, false);
 
     if (x_chance_in_y(you.skills[SK_EVOCATIONS] + 1, 10))
-        your_spells( SPELL_VENOM_BOLT, power, false );
+        your_spells(SPELL_VENOM_BOLT, power, false);
 
     return (false);
 }
@@ -252,7 +252,7 @@ static bool _OLGREB_evoke(item_def *item, int* pract, bool* did_work,
 
 static void _power_pluses(item_def *item)
 {
-    item->plus  = stepdown_value( -4 + (you.hp / 5), 4, 4, 4, 20 );
+    item->plus  = stepdown_value(-4 + (you.hp / 5), 4, 4, 4, 20);
     item->plus2 = item->plus;
 }
 
@@ -395,7 +395,7 @@ static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
 
     mpr("Magical energy flows into your mind!");
 
-    inc_mp( 3 + random2(5) + you.skills[SK_EVOCATIONS] / 3, false );
+    inc_mp(3 + random2(5) + you.skills[SK_EVOCATIONS] / 3, false);
     make_hungry(50, false, true);
 
     *pract    = 1;
@@ -486,7 +486,7 @@ static void _STORM_BOW_world_reacts(item_def *item)
 
     for (radius_iterator ri(you.pos(), 2); ri; ++ri)
         if (!cell_is_solid(*ri) && env.cgrid(*ri) == EMPTY_CLOUD && one_chance_in(5))
-            place_cloud( CLOUD_RAIN, *ri, random2(20), KC_OTHER, 3);
+            place_cloud(CLOUD_RAIN, *ri, random2(20), KC_OTHER, 3);
 }
 
 ///////////////////////////////////////////////////
@@ -519,7 +519,7 @@ static void _RCLOUDS_world_reacts(item_def *item)
         if (!cell_is_solid(*ri) && env.cgrid(*ri) == EMPTY_CLOUD
                 && one_chance_in(20))
         {
-            place_cloud( cloud, *ri, random2(10), KC_OTHER, 1);
+            place_cloud(cloud, *ri, random2(10), KC_OTHER, 1);
         }
 }
 

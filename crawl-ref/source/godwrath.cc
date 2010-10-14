@@ -604,7 +604,7 @@ static bool _trog_retribution()
             if (!you.duration[DUR_PARALYSIS])
             {
                 dec_penance(god, 3);
-                mpr( "You suddenly pass out!", MSGCH_WARN );
+                mpr("You suddenly pass out!", MSGCH_WARN);
                 you.duration[DUR_PARALYSIS] = 2 + random2(6);
             }
             break;
@@ -614,7 +614,7 @@ static bool _trog_retribution()
             if (you.duration[DUR_SLOW] < 180 * BASELINE_DELAY)
             {
                 dec_penance(god, 1);
-                mpr( "You suddenly feel exhausted!", MSGCH_WARN );
+                mpr("You suddenly feel exhausted!", MSGCH_WARN);
                 you.set_duration(DUR_EXHAUSTED, 200);
                 slow_player(100);
             }
@@ -1226,15 +1226,15 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     {
         if (coinflip())
         {
-            mpr( "The divine experience confuses you!", MSGCH_WARN);
+            mpr("The divine experience confuses you!", MSGCH_WARN);
             confuse_player(3 + random2(10));
         }
         else
         {
             if (you.duration[DUR_SLOW] < 180 * BASELINE_DELAY)
             {
-                mpr( "The divine experience leaves you feeling exhausted!",
-                     MSGCH_WARN );
+                mpr("The divine experience leaves you feeling exhausted!",
+                     MSGCH_WARN);
 
                 slow_player(random2(20));
             }

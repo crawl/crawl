@@ -72,8 +72,8 @@ int get_species_index_by_abbrev(const char *abbrev)
     {
         const int sp = species_order[i];
 
-        if (tolower( abbrev[0] ) == tolower( Species_Abbrev_List[sp][0] )
-            && tolower( abbrev[1] ) == tolower( Species_Abbrev_List[sp][1] ))
+        if (tolower(abbrev[0]) == tolower(Species_Abbrev_List[sp][0])
+            && tolower(abbrev[1]) == tolower(Species_Abbrev_List[sp][1]))
         {
             return (i);
         }

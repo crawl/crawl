@@ -30,7 +30,7 @@
 // If !nonneg, then it returns an integer, and 0 on fail
 //
 //---------------------------------------------------------------
-int debug_prompt_for_int( const char *prompt, bool nonneg )
+int debug_prompt_for_int(const char *prompt, bool nonneg)
 {
     char specs[80];
 
@@ -40,7 +40,7 @@ int debug_prompt_for_int( const char *prompt, bool nonneg )
         return (nonneg ? -1 : 0);
 
     char *end;
-    int   ret = strtol( specs, &end, 10 );
+    int   ret = strtol(specs, &end, 10);
 
     if (ret < 0 && nonneg || ret == 0 && end == specs)
         ret = (nonneg ? -1 : 0);
@@ -367,9 +367,9 @@ int debug_prompt_for_skill(const char *prompt)
             continue;
 
         char sk_name[80];
-        strncpy( sk_name, skill_name(i), sizeof( sk_name ) );
+        strncpy(sk_name, skill_name(i), sizeof(sk_name));
 
-        char *ptr = strstr( strlwr(sk_name), strlwr(specs) );
+        char *ptr = strstr(strlwr(sk_name), strlwr(specs));
         if (ptr != NULL)
         {
             if (ptr == sk_name && strlen(specs) > 0)

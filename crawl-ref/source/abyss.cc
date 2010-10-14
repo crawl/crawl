@@ -126,16 +126,16 @@ void generate_abyss()
     if (you.char_direction == GDT_GAME_START)
     {
         grd(ABYSS_CENTRE) = DNGN_ALTAR_LUGONU;
-        _place_feature_near( ABYSS_CENTRE, LOS_RADIUS + 2,
-                             DNGN_FLOOR, DNGN_EXIT_ABYSS, 50, true );
+        _place_feature_near(ABYSS_CENTRE, LOS_RADIUS + 2,
+                             DNGN_FLOOR, DNGN_EXIT_ABYSS, 50, true);
     }
     else
     {
         grd(ABYSS_CENTRE) = DNGN_FLOOR;
         if (one_chance_in(5))
         {
-            _place_feature_near( ABYSS_CENTRE, LOS_RADIUS,
-                                 DNGN_FLOOR, DNGN_ALTAR_LUGONU, 50 );
+            _place_feature_near(ABYSS_CENTRE, LOS_RADIUS,
+                                 DNGN_FLOOR, DNGN_ALTAR_LUGONU, 50);
         }
     }
 }
@@ -303,7 +303,7 @@ static bool _abyss_place_rune(const map_mask &abyss_genlevel_mask,
             mitm[thing_created].plus = RUNE_ABYSSAL;
             item_colour(mitm[thing_created]);
         }
-        move_item_to_grid( &thing_created, chosen_spot );
+        move_item_to_grid(&thing_created, chosen_spot);
         return (thing_created != NON_ITEM);
     }
 
@@ -336,7 +336,7 @@ static int _abyss_create_items(const map_mask &abyss_genlevel_mask,
     }
     else if (you.char_direction == GDT_GAME_START)
     {
-        num_items   = 3 + roll_dice( 3, 11 );
+        num_items   = 3 + roll_dice(3, 11);
         items_level = 0;
     }
 
@@ -383,7 +383,7 @@ static int _abyss_create_items(const map_mask &abyss_genlevel_mask,
         {
             int thing_created = items(1, OBJ_RANDOM, OBJ_RANDOM,
                                       true, items_level, 250);
-            move_item_to_grid( &thing_created, place );
+            move_item_to_grid(&thing_created, place);
             if (thing_created != NON_ITEM)
                 items_placed++;
         }
@@ -663,7 +663,7 @@ public:
 static void _abyss_lose_monster(monster& mons)
 {
     if (mons.needs_transit())
-        mons.set_transit( level_id(LEVEL_ABYSS) );
+        mons.set_transit(level_id(LEVEL_ABYSS));
 
     mons.destroy_inventory();
     mons.reset();
@@ -994,7 +994,7 @@ static void _abyss_generate_new_area()
     map_mask abyss_genlevel_mask(false);
     _abyss_wipe_unmasked_area(abyss_genlevel_mask);
     dgn_erase_unused_vault_placements();
-    ASSERT( env.cloud_no == 0 );
+    ASSERT(env.cloud_no == 0);
 
     you.moveto(ABYSS_CENTRE);
     abyss_genlevel_mask.init(true);
@@ -1002,8 +1002,8 @@ static void _abyss_generate_new_area()
     grd(you.pos()) = DNGN_FLOOR;
     if (one_chance_in(5))
     {
-        _place_feature_near( you.pos(), LOS_RADIUS,
-                             DNGN_FLOOR, DNGN_ALTAR_LUGONU, 50 );
+        _place_feature_near(you.pos(), LOS_RADIUS,
+                             DNGN_FLOOR, DNGN_ALTAR_LUGONU, 50);
     }
 
     los_changed();
@@ -1038,7 +1038,7 @@ static bool _abyss_teleport_within_level()
     return (false);
 }
 
-void abyss_teleport( bool new_area )
+void abyss_teleport(bool new_area)
 {
     xom_abyss_feature_amusement_check xomcheck;
 
@@ -1121,8 +1121,8 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
     {
         const int offsetX = random2avg(4, 3) + random2(3);
         const int offsetY = random2avg(4, 3) + random2(3);
-        const coord_def p( pos.x + (coinflip()? offsetX : -offsetX),
-                           pos.y + (coinflip()? offsetY : -offsetY) );
+        const coord_def p(pos.x + (coinflip()? offsetX : -offsetX),
+                           pos.y + (coinflip()? offsetY : -offsetY));
         if (!in_bounds(p) || actor_at(p)
             || !feat_compatible(DNGN_FLOOR, grd(p)))
         {
@@ -1241,7 +1241,7 @@ static bool _is_crowded_square(const coord_def &c)
 static bool _is_sealed_square(const coord_def &c)
 {
     for (adjacent_iterator ai(c); ai; ++ai)
-        if ( !feat_is_opaque(grd(*ai)) )
+        if (!feat_is_opaque(grd(*ai)))
             return (false);
 
     return (true);

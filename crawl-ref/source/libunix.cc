@@ -88,7 +88,7 @@ static int waddstr_with_altcharset(WINDOW* w, const char* s);
 
 static bool cursor_is_enabled = true;
 
-static unsigned int convert_to_curses_attr( int chattr )
+static unsigned int convert_to_curses_attr(int chattr)
 {
     switch (chattr & CHATTR_ATTRMASK)
     {
@@ -102,13 +102,13 @@ static unsigned int convert_to_curses_attr( int chattr )
     }
 }
 
-static inline short macro_colour( short col )
+static inline short macro_colour(short col)
 {
     return (Options.colour[ col ]);
 }
 
 // Translate DOS colors to curses.
-static short translate_colour( short col )
+static short translate_colour(short col)
 {
     switch (col)
     {
@@ -149,14 +149,14 @@ static short translate_colour( short col )
     }
 }
 
-static void setup_colour_pairs( void )
+static void setup_colour_pairs(void)
 {
     short i, j;
 
     for (i = 0; i < 8; i++)
         for (j = 0; j < 8; j++)
         {
-            if (( i > 0 ) || ( j > 0 ))
+            if ((i > 0) || (j > 0))
                 init_pair(i * 8 + j, j, i);
         }
 
@@ -341,7 +341,7 @@ static void handle_hangup(int)
     // hangup signal.
     alarm(HANGUP_KILL_DELAY_SECONDS);
 
-    interrupt_activity( AI_FORCE_INTERRUPT );
+    interrupt_activity(AI_FORCE_INTERRUPT);
 
 #ifdef USE_TILE
     // XXX: Will a tiles build ever need to handle the HUP signal?
@@ -400,7 +400,7 @@ static void unix_handle_terminal_resize()
     unixcurses_startup();
 }
 
-static void unixcurses_defkeys( void )
+static void unixcurses_defkeys(void)
 {
 #ifdef NCURSES_VERSION
     // keypad 0-9 (only if the "application mode" was successfully initialised)
@@ -470,7 +470,7 @@ int unixcurses_get_vi_key(int keyin)
 #define KPADAPP "\033[?1051l\033[?1052l\033[?1060l\033[?1061h"
 #define KPADCUR "\033[?1051l\033[?1052l\033[?1060l\033[?1061l"
 
-void unixcurses_startup( void )
+void unixcurses_startup(void)
 {
     termio_init();
 
@@ -736,15 +736,15 @@ void update_screen(void)
 
 void clear_to_end_of_line(void)
 {
-    textcolor( LIGHTGREY );
-    textbackground( BLACK );
+    textcolor(LIGHTGREY);
+    textbackground(BLACK);
     clrtoeol();
 }
 
 void clear_to_end_of_screen(void)
 {
-    textcolor( LIGHTGREY );
-    textbackground( BLACK );
+    textcolor(LIGHTGREY);
+    textbackground(BLACK);
     clrtobot();
 }
 
@@ -762,8 +762,8 @@ int clrscr()
 {
     int retval;
 
-    textcolor( LIGHTGREY );
-    textbackground( BLACK );
+    textcolor(LIGHTGREY);
+    textbackground(BLACK);
     retval = clear();
 #ifdef DGAMELAUNCH
     printf("%s", DGL_CLEAR_SCREEN);
@@ -807,9 +807,9 @@ static int curs_fg_attr(int col)
     short fg, bg;
 
     FG_COL = col & 0x00ff;
-    fg = translate_colour( macro_colour( FG_COL ) );
-    bg = translate_colour( BG_COL == BLACK ? Options.background_colour
-                                           : BG_COL );
+    fg = translate_colour(macro_colour(FG_COL));
+    bg = translate_colour(BG_COL == BLACK ? Options.background_colour
+                                           : BG_COL);
 
     // calculate which curses flags we need...
     unsigned int flags = 0;
@@ -818,12 +818,12 @@ static int curs_fg_attr(int col)
     unsigned brand = get_brand(col);
     if (brand != CHATTR_NORMAL)
     {
-        flags |= convert_to_curses_attr( brand );
+        flags |= convert_to_curses_attr(brand);
 
         if ((brand & CHATTR_ATTRMASK) == CHATTR_HILITE)
         {
             bg = translate_colour(
-                    macro_colour( (brand & CHATTR_COLMASK) >> 8 ));
+                    macro_colour((brand & CHATTR_COLMASK) >> 8));
 
             if (fg == bg)
                 fg = COLOR_BLACK;
@@ -857,12 +857,12 @@ static int curs_fg_attr(int col)
     // figure out which colour pair we want
     const int pair = (fg == 0 && bg == 0) ? 63 : (bg * 8 + fg);
 
-    return ( COLOR_PAIR(pair) | flags );
+    return (COLOR_PAIR(pair) | flags);
 }
 
 void textcolor(int col)
 {
-    (void)attrset( Current_Colour = curs_fg_attr(col) );
+    (void)attrset(Current_Colour = curs_fg_attr(col));
 }
 
 static int curs_bg_attr(int col)
@@ -870,9 +870,9 @@ static int curs_bg_attr(int col)
     short fg, bg;
 
     BG_COL = col & 0x00ff;
-    fg = translate_colour( macro_colour( FG_COL ) );
-    bg = translate_colour( BG_COL == BLACK ? Options.background_colour
-                                           : BG_COL );
+    fg = translate_colour(macro_colour(FG_COL));
+    bg = translate_colour(BG_COL == BLACK ? Options.background_colour
+                                           : BG_COL);
 
     unsigned int flags = 0;
 
@@ -880,7 +880,7 @@ static int curs_bg_attr(int col)
     unsigned brand = get_brand(col);
     if (brand != CHATTR_NORMAL)
     {
-        flags |= convert_to_curses_attr( brand );
+        flags |= convert_to_curses_attr(brand);
 
         if ((brand & CHATTR_ATTRMASK) == CHATTR_HILITE)
         {
@@ -917,12 +917,12 @@ static int curs_bg_attr(int col)
     // figure out which colour pair we want
     const int pair = (fg == 0 && bg == 0) ? 63 : (bg * 8 + fg);
 
-    return ( COLOR_PAIR(pair) | flags );
+    return (COLOR_PAIR(pair) | flags);
 }
 
 void textbackground(int col)
 {
-    (void)attrset( Current_Colour = curs_bg_attr(col) );
+    (void)attrset(Current_Colour = curs_bg_attr(col));
 }
 
 
@@ -1019,7 +1019,7 @@ void fakecursorxy(int x, int y)
     faked_x = x - 1;
     faked_y = y - 1;
     flip_colour(c);
-    write_char_at( y - 1, x - 1, oldmangledch = c);
+    write_char_at(y - 1, x - 1, oldmangledch = c);
     move(y - 1, x - 1);
 }
 
@@ -1040,11 +1040,11 @@ int wherey()
     return (y + 1);
 }
 
-void delay( unsigned long time )
+void delay(unsigned long time)
 {
     refresh();
     if (time)
-        usleep( time * 1000 );
+        usleep(time * 1000);
 }
 
 
