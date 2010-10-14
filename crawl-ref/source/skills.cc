@@ -37,14 +37,14 @@
 #define MAX_COST_LIMIT           250
 #define MAX_SPENDING_LIMIT       250
 
-static int _exercise2( int exsk );
+static int _exercise2(int exsk);
 
 // These values were calculated by running a simulation of gaining skills.
 // The goal is to try and match the old cost system which used the player's
 // experience level (which has a number of problems) so things shouldn't
 // seem too different to the player... but we still try to err on the
 // high side for the lower levels. -- bwr
-int skill_cost_needed( int level )
+int skill_cost_needed(int level)
 {
     // The average starting skill total is actually lower, but
     // some classes get about 2200, and they would probably be
@@ -74,7 +74,7 @@ int skill_cost_needed( int level )
     return (ret);
 }
 
-void calc_total_skill_points( void )
+void calc_total_skill_points(void)
 {
     int i;
 
@@ -96,7 +96,7 @@ void calc_total_skill_points( void )
 
 // skill_cost_level makes skills more expensive for more experienced characters
 // skill_level      makes higher skills more expensive
-static int _calc_skill_cost( int skill_cost_level, int skill_level )
+static int _calc_skill_cost(int skill_cost_level, int skill_level)
 {
     int ret = 1 + skill_level;
 

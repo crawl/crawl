@@ -30,9 +30,9 @@ typedef struct CPSProcessSerNum
     UInt32      hi;
 } CPSProcessSerNum;
 
-extern OSErr    CPSGetCurrentProcess( CPSProcessSerNum *psn);
-extern OSErr    CPSEnableForegroundOperation( CPSProcessSerNum *psn, UInt32 _arg2, UInt32 _arg3, UInt32 _arg4, UInt32 _arg5);
-extern OSErr    CPSSetFrontProcess( CPSProcessSerNum *psn);
+extern OSErr    CPSGetCurrentProcess(CPSProcessSerNum *psn);
+extern OSErr    CPSEnableForegroundOperation(CPSProcessSerNum *psn, UInt32 _arg2, UInt32 _arg3, UInt32 _arg4, UInt32 _arg5);
+extern OSErr    CPSSetFrontProcess(CPSProcessSerNum *psn);
 
 #endif /* SDL_USE_CPS */
 
@@ -92,7 +92,7 @@ static NSString *getApplicationName(void)
         if (CFURLGetFileSystemRepresentation(url2, true, (UInt8 *)parentdir,
                                              MAXPATHLEN))
         {
-            assert ( chdir (parentdir) == 0 );   /* chdir to the binary app's parent */
+            assert (chdir (parentdir) == 0);   /* chdir to the binary app's parent */
         }
         CFRelease(url);
         CFRelease(url2);
@@ -359,7 +359,7 @@ int main (int argc, char **argv)
 {
     /* Copy the arguments into a global variable */
     /* This is passed if we are launched by double-clicking */
-    if ( argc >= 2 && strncmp (argv[1], "-psn", 4) == 0 )
+    if (argc >= 2 && strncmp (argv[1], "-psn", 4) == 0)
     {
         gArgv = (char **) SDL_malloc(sizeof (char *) * 2);
         gArgv[0] = argv[0];

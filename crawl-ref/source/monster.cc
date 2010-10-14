@@ -862,7 +862,7 @@ void monster::equip_armour(item_def &item, int near)
     const equipment_type eq = get_armour_slot(item);
     if (eq != EQ_SHIELD)
     {
-        ac += property( item, PARM_AC );
+        ac += property(item, PARM_AC);
 
         const int armour_plus = item.plus;
         ASSERT(abs(armour_plus) < 20);
@@ -871,7 +871,7 @@ void monster::equip_armour(item_def &item, int near)
     }
 
     // Shields can affect evasion.
-    ev += property( item, PARM_EVASION ) / 2;
+    ev += property(item, PARM_EVASION) / 2;
     if (ev < 1)
         ev = 1;   // This *shouldn't* happen.
 }
@@ -964,7 +964,7 @@ void monster::unequip_armour(item_def &item, int near)
     const equipment_type eq = get_armour_slot(item);
     if (eq != EQ_SHIELD)
     {
-        ac -= property( item, PARM_AC );
+        ac -= property(item, PARM_AC);
 
         const int armour_plus = item.plus;
         ASSERT(abs(armour_plus) < 20);
@@ -972,7 +972,7 @@ void monster::unequip_armour(item_def &item, int near)
             ac -= armour_plus;
     }
 
-    ev -= property( item, PARM_EVASION ) / 2;
+    ev -= property(item, PARM_EVASION) / 2;
     if (ev < 1)
         ev = 1;   // This *shouldn't* happen.
 }
@@ -1101,7 +1101,7 @@ bool monster::pickup(item_def &item, int slot, int near, bool force_merge)
                 pos());
 
             pickup_message(item, near);
-            inc_mitm_item_quantity( inv[slot], item.quantity );
+            inc_mitm_item_quantity(inv[slot], item.quantity);
             merge_item_stacks(item, dest);
             destroy_item(item.index());
             equip(item, slot, near);
@@ -2084,7 +2084,7 @@ static std::string _invalid_monster_str(monster_type type)
     monster_type new_type;
     for (i = 0; true; i++)
     {
-        new_type = (monster_type) ( ((int) type) - i);
+        new_type = (monster_type) (((int) type) - i);
 
         if (invalid_monster_type(new_type))
             continue;
@@ -3786,7 +3786,7 @@ void monster::destroy_inventory()
     {
         if (inv[j] != NON_ITEM)
         {
-            destroy_item( inv[j] );
+            destroy_item(inv[j]);
             inv[j] = NON_ITEM;
         }
     }
@@ -3824,8 +3824,8 @@ void monster::load_spells(mon_spellbook_type book)
         return;
 
 #ifdef DEBUG_DIAGNOSTICS
-    mprf( MSGCH_DIAGNOSTICS, "%s: loading spellbook #%d",
-          name(DESC_PLAIN).c_str(), static_cast<int>(book) );
+    mprf(MSGCH_DIAGNOSTICS, "%s: loading spellbook #%d",
+          name(DESC_PLAIN).c_str(), static_cast<int>(book));
 #endif
 
     if (book == MST_GHOST)
@@ -3848,8 +3848,8 @@ void monster::load_spells(mon_spellbook_type book)
     {
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
         {
-            mprf( MSGCH_DIAGNOSTICS, "Spell #%d: %d (%s)",
-                  i, spells[i], spell_title(spells[i]) );
+            mprf(MSGCH_DIAGNOSTICS, "Spell #%d: %d (%s)",
+                  i, spells[i], spell_title(spells[i]));
         }
     }
 #endif
@@ -4463,15 +4463,15 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                 if (type == MONS_AIR_ELEMENTAL)
                 {
                     mprf("%s forms itself from the air!",
-                         name(DESC_CAP_A, true).c_str() );
+                         name(DESC_CAP_A, true).c_str());
                 }
                 else if (type == MONS_TRAPDOOR_SPIDER)
                 {
                     mprf("%s leaps out from its hiding place under the floor!",
-                         name(DESC_CAP_A, true).c_str() );
+                         name(DESC_CAP_A, true).c_str());
                 }
                 else if (crawl_state.game_is_arena())
-                    mprf("%s surfaces.", name(DESC_CAP_A, true).c_str() );
+                    mprf("%s surfaces.", name(DESC_CAP_A, true).c_str());
             }
         }
         else if (mons_near(this)
@@ -4668,7 +4668,7 @@ std::string monster::describe_enchantments() const
 }
 
 // Used to adjust time durations in calc_duration() for monster speed.
-static inline int _mod_speed( int val, int speed )
+static inline int _mod_speed(int val, int speed)
 {
     if (!speed)
         speed = 10;
@@ -5300,9 +5300,9 @@ void monster::apply_enchantment(const mon_enchant &me)
 
 void monster::mark_summoned(int longevity, bool mark_items, int summon_type)
 {
-    add_ench( mon_enchant(ENCH_ABJ, longevity) );
+    add_ench(mon_enchant(ENCH_ABJ, longevity));
     if (summon_type != 0)
-        add_ench( mon_enchant(ENCH_SUMMON, summon_type, KC_OTHER, INT_MAX) );
+        add_ench(mon_enchant(ENCH_SUMMON, summon_type, KC_OTHER, INT_MAX));
 
     if (mark_items)
     {
@@ -5698,16 +5698,16 @@ void monster::apply_location_effects(const coord_def &oldpos,
         dungeon_events.fire_position_event(DET_MONSTER_MOVED, pos());
 
     if (alive() && mons_habitat(this) == HT_WATER
-        && !feat_is_watery( grd(pos()) ) && !has_ench(ENCH_AQUATIC_LAND))
+        && !feat_is_watery(grd(pos())) && !has_ench(ENCH_AQUATIC_LAND))
     {
         add_ench(ENCH_AQUATIC_LAND);
     }
 
     if (alive() && has_ench(ENCH_AQUATIC_LAND))
     {
-        if (!feat_is_watery( grd(pos()) ))
+        if (!feat_is_watery(grd(pos())))
             simple_monster_message(this, " flops around on dry land!");
-        else if (!feat_is_watery( grd(oldpos) ))
+        else if (!feat_is_watery(grd(oldpos)))
         {
             simple_monster_message(this, " dives back into the water!");
             del_ench(ENCH_AQUATIC_LAND);

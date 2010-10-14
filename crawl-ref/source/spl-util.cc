@@ -243,11 +243,11 @@ spschool_flag_type school_by_name(std::string name)
    return SPTYP_NONE;
 }
 
-int get_spell_slot_by_letter( char letter )
+int get_spell_slot_by_letter(char letter)
 {
-    ASSERT( isaalpha( letter ) );
+    ASSERT(isaalpha(letter));
 
-    const int index = letter_to_index( letter );
+    const int index = letter_to_index(letter);
 
     if (you.spell_letter_table[ index ] == -1)
         return (-1);
@@ -255,16 +255,16 @@ int get_spell_slot_by_letter( char letter )
     return (you.spell_letter_table[index]);
 }
 
-spell_type get_spell_by_letter( char letter )
+spell_type get_spell_by_letter(char letter)
 {
-    ASSERT( isaalpha( letter ) );
+    ASSERT(isaalpha(letter));
 
-    const int slot = get_spell_slot_by_letter( letter );
+    const int slot = get_spell_slot_by_letter(letter);
 
     return ((slot == -1) ? SPELL_NO_SPELL : you.spells[slot]);
 }
 
-bool add_spell_to_memory( spell_type spell )
+bool add_spell_to_memory(spell_type spell)
 {
     int i, j;
 
@@ -293,7 +293,7 @@ bool add_spell_to_memory( spell_type spell )
     return (true);
 }
 
-bool del_spell_from_memory_by_slot( int slot )
+bool del_spell_from_memory_by_slot(int slot)
 {
     int j;
 
@@ -311,7 +311,7 @@ bool del_spell_from_memory_by_slot( int slot )
     return (true);
 }
 
-bool del_spell_from_memory( spell_type spell )
+bool del_spell_from_memory(spell_type spell)
 {
     int i,j;
 
@@ -435,14 +435,14 @@ int spell_difficulty(spell_type which_spell)
     return (_seekspell(which_spell)->level);
 }
 
-int spell_levels_required( spell_type which_spell )
+int spell_levels_required(spell_type which_spell)
 {
-    int levels = spell_difficulty( which_spell );
+    int levels = spell_difficulty(which_spell);
 
     if (which_spell == SPELL_DELAYED_FIREBALL
         && you.has_spell(SPELL_FIREBALL))
     {
-        levels -= spell_difficulty( SPELL_FIREBALL );
+        levels -= spell_difficulty(SPELL_FIREBALL);
     }
     else if (which_spell == SPELL_FIREBALL
             && you.has_spell(SPELL_DELAYED_FIREBALL))
@@ -453,12 +453,12 @@ int spell_levels_required( spell_type which_spell )
     return (levels);
 }
 
-unsigned int get_spell_flags( spell_type which_spell )
+unsigned int get_spell_flags(spell_type which_spell)
 {
     return (_seekspell(which_spell)->flags);
 }
 
-const char *get_spell_target_prompt( spell_type which_spell )
+const char *get_spell_target_prompt(spell_type which_spell)
 {
     return (_seekspell(which_spell)->target_prompt);
 }
@@ -492,7 +492,7 @@ bool disciplines_conflict(unsigned int disc1, unsigned int disc2)
 {
     const unsigned int combined = disc1 | disc2;
 
-    return (   (combined & SPTYP_EARTH) && (combined & SPTYP_AIR)
+    return ((combined & SPTYP_EARTH) && (combined & SPTYP_AIR)
             || (combined & SPTYP_FIRE)  && (combined & SPTYP_ICE)
             || (combined & SPTYP_HOLY)  && (combined & SPTYP_NECROMANCY));
 }
@@ -733,7 +733,7 @@ int apply_area_within_radius(cell_func cf, const coord_def& where,
 // We really need some sort of a queue structure, since ideally I'd like
 // to do a (shallow) breadth-first-search of the dungeon floor.
 // This ought to work okay for small clouds.
-void apply_area_cloud( cloud_func func, const coord_def& where,
+void apply_area_cloud(cloud_func func, const coord_def& where,
                        int pow, int number, cloud_type ctype,
                        kill_category whose, killer_type killer,
                        int spread_rate, int colour, std::string name,
@@ -758,14 +758,14 @@ void apply_area_cloud( cloud_func func, const coord_def& where,
 
     int* const arrs[2] = { compass_order_orth, compass_order_diag };
 
-    for ( int m = 0; m < 2; ++m )
+    for (int m = 0; m < 2; ++m)
     {
         // Randomise, but do orthogonals first and diagonals later.
-        std::random_shuffle( arrs[m], arrs[m] + 4 );
-        for ( int i = 0; i < 4 && number; ++i )
+        std::random_shuffle(arrs[m], arrs[m] + 4);
+        for (int i = 0; i < 4 && number; ++i)
         {
             const int aux = arrs[m][i];
-            if ( _cloud_helper(func, where + Compass[aux],
+            if (_cloud_helper(func, where + Compass[aux],
                                pow, spread_rate, ctype, whose, killer, colour,
                                name, tile))
             {
@@ -778,7 +778,7 @@ void apply_area_cloud( cloud_func func, const coord_def& where,
 
     // Get a random permutation.
     int perm[8];
-    for ( int i = 0; i < 8; ++i )
+    for (int i = 0; i < 8; ++i)
         perm[i] = i;
     std::random_shuffle(perm, perm+8);
     for (int i = 0; i < 8 && number; i++)
@@ -801,12 +801,12 @@ void apply_area_cloud( cloud_func func, const coord_def& where,
 // Return false if the user canceled, true otherwise.
 // FIXME: this should accept a direction_chooser_args directly rather
 // than move the arguments into one.
-bool spell_direction( dist &spelld, bolt &pbolt,
+bool spell_direction(dist &spelld, bolt &pbolt,
                       targeting_type restrict, targ_mode_type mode,
                       int range,
                       bool needs_path, bool may_target_monster,
                       bool may_target_self, const char *target_prefix,
-                      const char* top_prompt, bool cancel_at_self )
+                      const char* top_prompt, bool cancel_at_self)
 {
     if (range < 1)
         range = (pbolt.range < 1) ? LOS_RADIUS : pbolt.range;
@@ -840,7 +840,7 @@ bool spell_direction( dist &spelld, bolt &pbolt,
     return (true);
 }
 
-const char* spelltype_short_name( int which_spelltype )
+const char* spelltype_short_name(int which_spelltype)
 {
     switch (which_spelltype)
     {
@@ -877,7 +877,7 @@ const char* spelltype_short_name( int which_spelltype )
     }
 }
 
-const char* spelltype_long_name( int which_spelltype )
+const char* spelltype_long_name(int which_spelltype)
 {
     switch (which_spelltype)
     {
@@ -935,7 +935,7 @@ int spell_type2skill(unsigned int spelltype)
     case SPTYP_DIVINATION:
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "spell_type2skill: called with spelltype %u",
-             spelltype );
+             spelltype);
 #endif
         return (-1);
     }
@@ -1124,7 +1124,7 @@ spell_type zap_type_to_spell(zap_type zap)
 
 bool spell_is_empowered(spell_type spell)
 {
-    if ( (you.religion == GOD_VEHUMET)
+    if ((you.religion == GOD_VEHUMET)
         && vehumet_supports_spell(spell)
         && piety_rank() > 2)
     {
@@ -1190,7 +1190,7 @@ bool spell_is_useless(spell_type spell, bool transient)
     case SPELL_BLINK:
     case SPELL_CONTROLLED_BLINK:
     case SPELL_TELEPORT_SELF:
-        if (item_blocks_teleport(false, false) )
+        if (item_blocks_teleport(false, false))
             return true;
         break;
     case SPELL_SWIFTNESS:

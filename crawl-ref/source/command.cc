@@ -145,7 +145,7 @@ static std::string _get_version_changes(void)
         // Remove trailing spaces.
         for (int i = strlen(buf) - 1; i >= 0; i++)
         {
-            if (isspace( buf[i] ))
+            if (isspace(buf[i]))
                 buf[i] = 0;
             else
                 break;
@@ -213,7 +213,7 @@ static void _print_version(void)
 
     // FIXME: Allow for hiding Page down when at the end of the listing, ditto
     // for page up at start of listing.
-    cmd_version.set_more( formatted_string::parse_string(
+    cmd_version.set_more(formatted_string::parse_string(
 #ifdef USE_TILE
                               "<cyan>[ +/L-click : Page down.   - : Page up."
                               "           Esc/R-click exits.]"));
@@ -257,7 +257,7 @@ static void _print_version(void)
             // Remove trailing spaces.
             for (int i = strlen(buf) - 1; i >= 0; i++)
             {
-                if (isspace( buf[i] ))
+                if (isspace(buf[i]))
                     buf[i] = 0;
                 else
                     break;
@@ -326,10 +326,10 @@ void swap_inv_slots(int from_slot, int to_slot, bool verbose)
 
     if (verbose)
     {
-        mpr( you.inv[to_slot].name(DESC_INVENTORY_EQUIP).c_str() );
+        mpr(you.inv[to_slot].name(DESC_INVENTORY_EQUIP).c_str());
 
         if (you.inv[from_slot].defined())
-            mpr( you.inv[from_slot].name(DESC_INVENTORY_EQUIP).c_str() );
+            mpr(you.inv[from_slot].name(DESC_INVENTORY_EQUIP).c_str());
     }
 
     if (to_slot == you.equip[EQ_WEAPON] || from_slot == you.equip[EQ_WEAPON])
@@ -399,8 +399,8 @@ static void _adjust_spells(void)
     }
 
     const int input_1 = keyin;
-    const int index_1 = letter_to_index( input_1 );
-    spell_type spell  = get_spell_by_letter( input_1 );
+    const int index_1 = letter_to_index(input_1);
+    spell_type spell  = get_spell_by_letter(input_1);
 
     if (spell == SPELL_NO_SPELL)
     {
@@ -409,7 +409,7 @@ static void _adjust_spells(void)
     }
 
     // Print targeted spell.
-    mprf( "%c - %s", keyin, spell_title( spell ) );
+    mprf("%c - %s", keyin, spell_title(spell));
 
     // Select target slot.
     keyin = 0;
@@ -419,7 +419,7 @@ static void _adjust_spells(void)
         keyin = get_ch();
         if (key_is_escape(keyin))
         {
-            canned_msg( MSG_OK );
+            canned_msg(MSG_OK);
             return;
         }
         if (keyin == '?' || keyin == '*')
@@ -438,10 +438,10 @@ static void _adjust_spells(void)
     mprf("%c - %s", input_2, spell_title(get_spell_by_letter(input_2)));
 
     // print out other spell if one was involved (now at input_1)
-    spell = get_spell_by_letter( input_1 );
+    spell = get_spell_by_letter(input_1);
 
     if (spell != SPELL_NO_SPELL)
-        mprf("%c - %s", input_1, spell_title(spell) );
+        mprf("%c - %s", input_1, spell_title(spell));
 }
 
 static void _adjust_ability(void)
@@ -587,7 +587,7 @@ void list_armour()
         if (colour == MSGCOL_BLACK)
             colour = menu_colour(estr.str(), "", "equip");
 
-        mpr( estr.str().c_str(), MSGCH_EQUIPMENT, colour);
+        mpr(estr.str().c_str(), MSGCH_EQUIPMENT, colour);
     }
 }
 
@@ -627,7 +627,7 @@ void list_jewellery(void)
         if (colour == MSGCOL_BLACK)
             colour = menu_colour(jstr.str(), "", "equip");
 
-        mpr( jstr.str().c_str(), MSGCH_EQUIPMENT, colour);
+        mpr(jstr.str().c_str(), MSGCH_EQUIPMENT, colour);
     }
 }
 
@@ -867,8 +867,8 @@ help_file help_files[] = {
 
 static bool _compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
 {
-    monster* a = static_cast<monster* >( entry_a->data );
-    monster* b = static_cast<monster* >( entry_b->data );
+    monster* a = static_cast<monster* >(entry_a->data);
+    monster* b = static_cast<monster* >(entry_b->data);
 
     if (a->type == b->type)
         return (false);
@@ -882,8 +882,8 @@ static bool _compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
 // levels are equal, or by name if both level and hitdice are equal.
 static bool _compare_mon_toughness(MenuEntry *entry_a, MenuEntry* entry_b)
 {
-    monster* a = static_cast<monster* >( entry_a->data );
-    monster* b = static_cast<monster* >( entry_b->data );
+    monster* a = static_cast<monster* >(entry_a->data);
+    monster* b = static_cast<monster* >(entry_b->data);
 
     if (a->type == b->type)
         return (false);
@@ -903,7 +903,7 @@ static bool _compare_mon_toughness(MenuEntry *entry_a, MenuEntry* entry_b)
 class DescMenu : public Menu
 {
 public:
-    DescMenu( int _flags, bool _show_mon, bool _text_only)
+    DescMenu(int _flags, bool _show_mon, bool _text_only)
         : Menu(_flags, "", _text_only), sort_alpha(true),
           showing_monsters(_show_mon)
         {
@@ -1227,12 +1227,12 @@ static bool _append_books(std::string &desc, item_def &item, std::string key)
 
     for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
     {
-        if (spell_typematch( type, 1 << i ))
+        if (spell_typematch(type, 1 << i))
         {
             if (already)
                 desc += "/" ;
 
-            desc += spelltype_long_name( 1 << i );
+            desc += spelltype_long_name(1 << i);
             already = true;
         }
     }
@@ -1241,7 +1241,7 @@ static bool _append_books(std::string &desc, item_def &item, std::string key)
 
     desc += "\nLevel:      ";
     char sval[3];
-    itoa( spell_difficulty( type ), sval, 10 );
+    itoa(spell_difficulty(type), sval, 10);
     desc += sval;
 
     bool undead = false;
@@ -1806,7 +1806,7 @@ static void _find_description(bool *again, std::string *error_inout)
     {
         std::vector<MenuEntry*> sel = desc_menu.show();
         redraw_screen();
-        if ( sel.empty() )
+        if (sel.empty())
         {
             if (doing_mons && desc_menu.getkey() == CONTROL('S'))
                 desc_menu.toggle_sorting();
@@ -1822,7 +1822,7 @@ static void _find_description(bool *again, std::string *error_inout)
 
             if (doing_mons)
             {
-                monster* mon = (monster* ) sel[0]->data;
+                monster* mon = (monster*) sel[0]->data;
                 key = mons_type_name(mon->type, DESC_PLAIN);
             }
             else if (doing_features)
@@ -1945,7 +1945,7 @@ static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
 
     // FIXME: Allow for hiding Page down when at the end of the listing, ditto
     // for page up at start of listing.
-    cmd_help.set_more( formatted_string::parse_string(
+    cmd_help.set_more(formatted_string::parse_string(
 #ifdef USE_TILE
                             "<cyan>[ +/L-click : Page down.   - : Page up."
                             "           Esc/R-click exits.]"));
@@ -2023,7 +2023,7 @@ static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
     }
 
     for (unsigned i = 0; i < lines.size(); ++i)
-        cmd_help.add_item_formatted_string(lines[i], (i == 0 ? '?' : 0) );
+        cmd_help.add_item_formatted_string(lines[i], (i == 0 ? '?' : 0));
 
     if (with_manual)
     {
@@ -2076,7 +2076,7 @@ static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
     return cmd_help.getkey();
 }
 
-void show_specific_help( const std::string &help )
+void show_specific_help(const std::string &help)
 {
     std::vector<std::string> lines = split_string("\n", help, false, true);
     std::vector<formatted_string> formatted_lines;
@@ -2091,12 +2091,12 @@ void show_specific_help( const std::string &help )
 
 void show_levelmap_help()
 {
-    show_specific_help( getHelpString("level-map") );
+    show_specific_help(getHelpString("level-map"));
 }
 
 void show_pickup_menu_help()
 {
-    show_specific_help( getHelpString("pick-up") );
+    show_specific_help(getHelpString("pick-up"));
 }
 
 void show_targeting_help()
@@ -2111,22 +2111,22 @@ void show_targeting_help()
 }
 void show_interlevel_travel_branch_help()
 {
-    show_specific_help( getHelpString("interlevel-travel.branch.prompt") );
+    show_specific_help(getHelpString("interlevel-travel.branch.prompt"));
 }
 
 void show_interlevel_travel_depth_help()
 {
-    show_specific_help( getHelpString("interlevel-travel.depth.prompt") );
+    show_specific_help(getHelpString("interlevel-travel.depth.prompt"));
 }
 
 void show_stash_search_help()
 {
-    show_specific_help( getHelpString("stash-search.prompt") );
+    show_specific_help(getHelpString("stash-search.prompt"));
 }
 
 void show_butchering_help()
 {
-    show_specific_help( getHelpString("butchering") );
+    show_specific_help(getHelpString("butchering"));
 }
 
 static void _add_command(column_composer &cols, const int column,
@@ -2424,7 +2424,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 1, CMD_QUAFF, "Quaff a potion", 2);
     _add_command(cols, 1, CMD_READ, "Read a scroll or book", 2);
     _add_command(cols, 1, CMD_MEMORISE_SPELL, "Memorise a spell from a book", 2);
-    _add_command(cols, 1, CMD_WIELD_WEAPON, "Wield an item ( <w>-</w> for none)", 2);
+    _add_command(cols, 1, CMD_WIELD_WEAPON, "Wield an item (<w>-</w> for none)", 2);
     _add_command(cols, 1, CMD_WEAPON_SWAP, "wield item a, or switch to b", 2);
 
     _add_insert_commands(cols, 1, "    (use <w>%</w> to assign slots)",

@@ -669,7 +669,7 @@ void bolt::initialise_fire()
     message_cache.clear();
 
     // seen might be set by caller to supress this.
-    if (!seen && you.see_cell(source) && range > 0 && visible() )
+    if (!seen && you.see_cell(source) && range > 0 && visible())
     {
         seen = true;
         const monster* mon = monster_at(source);
@@ -698,7 +698,7 @@ void bolt::initialise_fire()
     }
 
 #ifdef DEBUG_DIAGNOSTICS
-    mprf( MSGCH_DIAGNOSTICS, "%s%s%s [%s] (%d,%d) to (%d,%d): "
+    mprf(MSGCH_DIAGNOSTICS, "%s%s%s [%s] (%d,%d) to (%d,%d): "
           "gl=%d col=%d flav=%d hit=%d dam=%dd%d range=%d",
           (is_beam) ? "beam" : "missile",
           (is_explosion) ? "*" :
@@ -1114,7 +1114,7 @@ bool bolt::need_regress() const
 bool bolt::hit_wall()
 {
     const dungeon_feature_type feat = grd(pos());
-    ASSERT( feat_is_solid(feat) );
+    ASSERT(feat_is_solid(feat));
 
     if (is_tracer && YOU_KILL(thrower) && in_bounds(target) && !passed_target
         && pos() != target  && pos() != source && foe_info.count == 0
@@ -1258,7 +1258,7 @@ bool bolt::apply_dmg_funcs(actor* victim, int &dmg,
     {
         std::string dmg_msg;
 
-        if ( (*damage_funcs[i])(*this, victim, dmg, dmg_msg) )
+        if ((*damage_funcs[i])(*this, victim, dmg, dmg_msg))
             return (false);
         if (!dmg_msg.empty())
             messages.push_back(dmg_msg);
@@ -1871,8 +1871,8 @@ static bool _monster_resists_mass_enchantment(monster* mons,
 // If m_succumbed is non-NULL, will be set to the number of monsters that
 // were enchanted. If m_attempted is non-NULL, will be set to the number of
 // monsters that we tried to enchant.
-void mass_enchantment( enchant_type wh_enchant, int pow, int origin,
-                       int *m_succumbed, int *m_attempted )
+void mass_enchantment(enchant_type wh_enchant, int pow, int origin,
+                       int *m_succumbed, int *m_attempted)
 {
     bool did_msg = false;
 
@@ -2169,7 +2169,7 @@ void mimic_alert(monster* mimic)
     }
 
     const bool instant_tele = !one_chance_in(3);
-    monster_teleport( mimic, instant_tele );
+    monster_teleport(mimic, instant_tele);
 
     // At least for this short while, we know it's a mimic.
     if (!instant_tele && should_id)
@@ -2360,7 +2360,7 @@ bool bolt::stop_at_target() const
 
 void bolt::drop_object()
 {
-    ASSERT( item != NULL && item->defined() );
+    ASSERT(item != NULL && item->defined());
 
     // Conditions: beam is missile and not tracer.
     if (is_tracer || !was_missile)
@@ -2680,7 +2680,7 @@ void bolt::affect_place_explosion_clouds()
     if (name == "stinking cloud")
     {
         const int duration =  1 + random2(4) + random2((ench_power / 50) + 1);
-        place_cloud( CLOUD_STINK, p, duration, whose_kill(), killer() );
+        place_cloud(CLOUD_STINK, p, duration, whose_kill(), killer());
     }
 
     if (name == "great blast of fire")
@@ -2690,7 +2690,7 @@ void bolt::affect_place_explosion_clouds()
         if (duration > 20)
             duration = 20 + random2(4);
 
-        place_cloud( CLOUD_FIRE, p, duration, whose_kill(), killer() );
+        place_cloud(CLOUD_FIRE, p, duration, whose_kill(), killer());
 
         if (grd(p) == DNGN_FLOOR && !monster_at(p) && one_chance_in(4))
         {
@@ -2785,7 +2785,7 @@ bool bolt::fuzz_invis_tracer()
     }
 
     // Apply fuzz now.
-    coord_def fuzz( random_range(-2, 2), random_range(-2, 2) );
+    coord_def fuzz(random_range(-2, 2), random_range(-2, 2));
     coord_def newtarget = target + fuzz;
 
     if (in_bounds(newtarget))
@@ -3069,15 +3069,15 @@ bool bolt::misses_player()
         {
             if (is_reflectable(you.shield()))
             {
-                mprf( "Your %s reflects the %s!",
+                mprf("Your %s reflects the %s!",
                       you.shield()->name(DESC_PLAIN).c_str(),
-                      name.c_str() );
+                      name.c_str());
                 ident_reflector(you.shield());
                 reflect();
             }
             else
             {
-                mprf( "You block the %s.", name.c_str() );
+                mprf("You block the %s.", name.c_str());
                 finish_beam();
             }
             you.shield_block_succeeded(agent());
@@ -3218,37 +3218,37 @@ void bolt::affect_player_enchantment()
         break;
 
     case BEAM_SLOW:
-        potion_effect( POT_SLOWING, ench_power );
+        potion_effect(POT_SLOWING, ench_power);
         obvious_effect = true;
         break;
 
     case BEAM_HASTE:
-        potion_effect( POT_SPEED, ench_power, false, effect_known );
-        contaminate_player( 1, effect_known );
+        potion_effect(POT_SPEED, ench_power, false, effect_known);
+        contaminate_player(1, effect_known);
         obvious_effect = true;
         nasty = false;
         nice  = true;
         break;
 
     case BEAM_HEALING:
-        potion_effect( POT_HEAL_WOUNDS, ench_power );
+        potion_effect(POT_HEAL_WOUNDS, ench_power);
         obvious_effect = true;
         nasty = false;
         nice  = true;
         break;
 
     case BEAM_PARALYSIS:
-        potion_effect( POT_PARALYSIS, ench_power );
+        potion_effect(POT_PARALYSIS, ench_power);
         obvious_effect = true;
         break;
 
     case BEAM_PETRIFY:
-        you.petrify( agent(), ench_power );
+        you.petrify(agent(), ench_power);
         obvious_effect = true;
         break;
 
     case BEAM_CONFUSION:
-        potion_effect( POT_CONFUSION, ench_power );
+        potion_effect(POT_CONFUSION, ench_power);
         obvious_effect = true;
         break;
 
@@ -3286,7 +3286,7 @@ void bolt::affect_player_enchantment()
         break;
 
     case BEAM_CHARM:
-        potion_effect( POT_CONFUSION, ench_power );
+        potion_effect(POT_CONFUSION, ench_power);
         obvious_effect = true;
         break;     // enslavement - confusion?
 
@@ -3391,12 +3391,12 @@ void bolt::affect_player_enchantment()
         break;
 
     case BEAM_BERSERK:
-        potion_effect( POT_BERSERK_RAGE, ench_power );
+        potion_effect(POT_BERSERK_RAGE, ench_power);
         obvious_effect = true;
         break;
 
     case BEAM_MIGHT:
-        potion_effect( POT_MIGHT, ench_power );
+        potion_effect(POT_MIGHT, ench_power);
         obvious_effect = true;
         break;
 
@@ -3506,7 +3506,7 @@ void bolt::affect_player()
     std::vector<std::string> messages;
     apply_dmg_funcs(&you, hurted, messages);
 
-    int armour_damage_reduction = random2( 1 + you.armour_class() );
+    int armour_damage_reduction = random2(1 + you.armour_class());
     if (flavour == BEAM_ELECTRICITY)
         armour_damage_reduction /= 2;
     else if (flavour == BEAM_HELLFIRE || name == "chilling blast")
@@ -3516,13 +3516,13 @@ void bolt::affect_player()
     // shrapnel has triple AC reduction
     if (flavour == BEAM_FRAG)
     {
-        hurted -= random2( 1 + you.armour_class() );
-        hurted -= random2( 1 + you.armour_class() );
+        hurted -= random2(1 + you.armour_class());
+        hurted -= random2(1 + you.armour_class());
     }
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
-         "Player damage: rolled=%d; after AC=%d", roll, hurted );
+         "Player damage: rolled=%d; after AC=%d", roll, hurted);
 #endif
 
     practise(EX_BEAM_WILL_HIT);
@@ -3552,7 +3552,7 @@ void bolt::affect_player()
 
     // Confusion effect for spore explosions
     if (flavour == BEAM_SPORE && hurted && you.holiness() != MH_UNDEAD)
-        potion_effect( POT_CONFUSION, 1);
+        potion_effect(POT_CONFUSION, 1);
 
     // handling of missiles
     if (item && item->base_type == OBJ_MISSILES)
@@ -3615,7 +3615,7 @@ void bolt::affect_player()
     if (origin_spell == SPELL_QUICKSILVER_BOLT)
         antimagic();
 
-    dprf("Damage: %d", hurted );
+    dprf("Damage: %d", hurted);
 
     was_affected = apply_hit_funcs(&you, hurted) || was_affected;
 
@@ -4948,7 +4948,7 @@ int bolt::range_used_on_hit(const actor* victim) const
         return (used);
 
     for (unsigned int i = 0; i < range_funcs.size(); ++i)
-        if ( (*range_funcs[i])(*this, victim, used) )
+        if ((*range_funcs[i])(*this, victim, used))
             break;
 
     return (used);
@@ -5138,7 +5138,7 @@ static sweep_type _radial_sweep(int r)
     sweep_type::value_type work;
 
     // Center first.
-    work.push_back( coord_def(0,0) );
+    work.push_back(coord_def(0,0));
     result.push_back(work);
 
     for (int rad = 1; rad <= r; ++rad)
@@ -5150,12 +5150,12 @@ static sweep_type _radial_sweep(int r)
             // Don't put the corners in twice!
             if (d != rad && d != -rad)
             {
-                work.push_back( coord_def(-rad, d) );
-                work.push_back( coord_def(+rad, d) );
+                work.push_back(coord_def(-rad, d));
+                work.push_back(coord_def(+rad, d));
             }
 
-            work.push_back( coord_def(d, -rad) );
-            work.push_back( coord_def(d, +rad) );
+            work.push_back(coord_def(d, -rad));
+            work.push_back(coord_def(d, +rad));
         }
         result.push_back(work);
     }

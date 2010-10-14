@@ -258,27 +258,27 @@ void set_string_input(bool value)
         outmodes = 0;
     }
 
-    if ( SetConsoleMode( inbuf, inmodes ) == 0)
+    if (SetConsoleMode(inbuf, inmodes) == 0)
     {
         fputs("Error initialising console input mode.", stderr);
         exit(0);
     }
 
-    if ( SetConsoleMode( outbuf, outmodes ) == 0)
+    if (SetConsoleMode(outbuf, outmodes) == 0)
     {
         fputs("Error initialising console output mode.", stderr);
         exit(0);
     }
 
     // now flush it
-    FlushConsoleInputBuffer( inbuf );
+    FlushConsoleInputBuffer(inbuf);
 }
 
 // this apparently only works for Win2K+ and ME+
 
 static void init_colors(char *windowTitle)
 {
-   UNUSED( windowTitle );
+   UNUSED(windowTitle);
 
    // look up the Crawl shortcut
 
@@ -352,8 +352,8 @@ static void w32_term_resizer()
 
 void init_libw32c(void)
 {
-    inbuf = GetStdHandle( STD_INPUT_HANDLE );
-    outbuf = GetStdHandle( STD_OUTPUT_HANDLE );
+    inbuf = GetStdHandle(STD_INPUT_HANDLE);
+    outbuf = GetStdHandle(STD_OUTPUT_HANDLE);
 
     if (inbuf == INVALID_HANDLE_VALUE || outbuf == INVALID_HANDLE_VALUE)
     {
@@ -363,12 +363,12 @@ void init_libw32c(void)
 
     std::string title = CRAWL " " + Version::Long();
 
-    GetConsoleTitle( oldTitle, 78 );
-    SetConsoleTitle( title.c_str() );
+    GetConsoleTitle(oldTitle, 78);
+    SetConsoleTitle(title.c_str());
 
     // Use the initial Windows setting for cursor size if it exists.
     // TODO: Respect changing cursor size manually while Crawl is running.
-    have_initial_cci = GetConsoleCursorInfo( outbuf, &initial_cci );
+    have_initial_cci = GetConsoleCursorInfo(outbuf, &initial_cci);
 
 #ifdef TARGET_COMPILER_MINGW
     install_sighandlers();
@@ -377,7 +377,7 @@ void init_libw32c(void)
     init_colors(oldTitle);
 
     // by default, set string input to false:  use char-input only
-    set_string_input( false );
+    set_string_input(false);
 
     // set up screen size
     set_w32_screen_size();
@@ -435,7 +435,7 @@ void deinit_libw32c(void)
     screen = NULL;
 
     // finally, restore title
-    SetConsoleTitle( oldTitle );
+    SetConsoleTitle(oldTitle);
 }
 
 void set_cursor_enabled(bool enabled)
@@ -461,7 +461,7 @@ void _setcursortype_internal(bool curstype)
 
     cci.bVisible = curstype? TRUE : FALSE;
     cursor_is_enabled = curstype;
-    SetConsoleCursorInfo( outbuf, &cci );
+    SetConsoleCursorInfo(outbuf, &cci);
 
     // now, if we just changed from NOCURSOR to CURSOR,
     // actually move screen cursor
@@ -596,7 +596,7 @@ void cprintf(const char *format, ...)
     va_list argp;
     char buffer[4096]; // one could hope it's enough
 
-    va_start( argp, format );
+    va_start(argp, format);
 
     vsnprintf(buffer, sizeof(buffer), format, argp);
     cprintf_aux(buffer);
@@ -607,10 +607,10 @@ void cprintf(const char *format, ...)
 void window(int x, int y, int lx, int ly)
 {
     // do nothing
-    UNUSED( x );
-    UNUSED( y );
-    UNUSED( lx );
-    UNUSED( ly );
+    UNUSED(x);
+    UNUSED(y);
+    UNUSED(lx);
+    UNUSED(ly);
 }
 
 int wherex(void)
@@ -658,7 +658,7 @@ static int ck_tr[] =
     // 2, 10, 14, 8, 0, 12, 25, 11, 21 ,
 };
 
-static int key_to_command( int keyin )
+static int key_to_command(int keyin)
 {
     if (keyin >= CK_UP && keyin <= CK_CTRL_PGDN)
         return ck_tr[ keyin - CK_UP ];
@@ -669,7 +669,7 @@ static int key_to_command( int keyin )
     return keyin;
 }
 
-int vk_translate( WORD VirtCode, CHAR c, DWORD cKeys)
+int vk_translate(WORD VirtCode, CHAR c, DWORD cKeys)
 {
     bool shftDown = false;
     bool ctrlDown = false;
@@ -801,7 +801,7 @@ int getch_ck(void)
     bool waiting_for_event = true;
     while (waiting_for_event)
     {
-        if (ReadConsoleInput( inbuf, &ir, 1, &nread) == 0)
+        if (ReadConsoleInput(inbuf, &ir, 1, &nread) == 0)
             fputs("Error in ReadConsoleInput()!", stderr);
         if (nread > 0)
         {
@@ -813,9 +813,9 @@ int getch_ck(void)
                 // ignore if it is a 'key up' - we only want 'key down'
                 if (kr->bKeyDown)
                 {
-                    key = vk_translate( kr->wVirtualKeyCode,
+                    key = vk_translate(kr->wVirtualKeyCode,
                                         kr->uChar.AsciiChar,
-                                        kr->dwControlKeyState );
+                                        kr->dwControlKeyState);
                     if (key > 0)
                     {
                         repeat_count = kr->wRepeatCount - 1;
@@ -847,7 +847,7 @@ int getch_ck(void)
 int getch(void)
 {
     int c = getch_ck();
-    return key_to_command( c );
+    return key_to_command(c);
 }
 
 int kbhit()
@@ -879,7 +879,7 @@ int get_console_string(char *buf, int maxlen)
 {
     DWORD nread;
     // set console input to line mode
-    set_string_input( true );
+    set_string_input(true);
 
     // force cursor
     const bool oldValue = cursor_is_enabled;
@@ -888,9 +888,9 @@ int get_console_string(char *buf, int maxlen)
         _setcursortype_internal(true);
 
     // set actual screen color to current color
-    SetConsoleTextAttribute( outbuf, WIN32COLOR(current_color) );
+    SetConsoleTextAttribute(outbuf, WIN32COLOR(current_color));
 
-    if (ReadConsole( inbuf, buf, (DWORD)(maxlen-1), &nread, NULL) == 0)
+    if (ReadConsole(inbuf, buf, (DWORD)(maxlen-1), &nread, NULL) == 0)
         fputs("Error in ReadConsole()!", stderr);
 
     // terminate string, then strip CRLF, replace with \0
@@ -906,7 +906,7 @@ int get_console_string(char *buf, int maxlen)
 
     // reset console mode - also flushes if player has typed in
     // too long of a name so we don't get silly garbage on return.
-    set_string_input( false );
+    set_string_input(false);
 
     // restore old cursor
     if (w32_smart_cursor)
@@ -939,7 +939,7 @@ void update_screen()
     bFlush();
 }
 
-bool set_buffering( bool value )
+bool set_buffering(bool value)
 {
     bool oldValue = buffering;
 

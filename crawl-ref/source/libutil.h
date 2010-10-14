@@ -122,9 +122,9 @@ int count_occurrences(const std::string &text, const std::string &searchfor);
 
 void play_sound(const char *file);
 
-std::string &trim_string( std::string &str );
-std::string &trim_string_right( std::string &str );
-std::string trimmed_string( std::string s );
+std::string &trim_string(std::string &str);
+std::string &trim_string_right(std::string &str);
+std::string trimmed_string(std::string s);
 
 inline bool starts_with(const std::string &s, const std::string &prefix)
 {
@@ -187,7 +187,7 @@ std::string comma_separated_line(Z start, Z end,
 }
 
 #ifdef NEED_USLEEP
-void usleep( unsigned long time );
+void usleep(unsigned long time);
 #endif
 
 #ifndef USE_TILE

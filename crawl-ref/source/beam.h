@@ -242,7 +242,7 @@ public:
     void affect_cell();
     void affect_wall();
     void affect_actor(actor *act);
-    void affect_monster( monster* m );
+    void affect_monster(monster* m);
     void affect_player();
     void affect_ground();
     void affect_place_clouds();
@@ -304,8 +304,8 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
 bool enchant_monster_with_flavour(monster* mon, actor *atk,
                                   beam_type flavour, int powc = 0);
 
-void mass_enchantment( enchant_type wh_enchant, int pow, int who,
-                       int *m_succumbed = NULL, int *m_attempted = NULL );
+void mass_enchantment(enchant_type wh_enchant, int pow, int who,
+                       int *m_succumbed = NULL, int *m_attempted = NULL);
 
 bool curare_hits_monster(actor *agent, monster* mons, kill_category who,
                          int levels = 1);
@@ -314,9 +314,9 @@ bool poison_monster(monster* mons, kill_category who, int levels = 1,
 bool miasma_monster(monster* mons, kill_category who);
 bool napalm_monster(monster* mons, kill_category who, int levels = 1,
                     bool verbose = true);
-void fire_tracer( const monster* mons, struct bolt &pbolt,
-                  bool explode_only = false );
-void mimic_alert( monster* mimic );
+void fire_tracer(const monster* mons, struct bolt &pbolt,
+                  bool explode_only = false);
+void mimic_alert(monster* mimic);
 bool zapping(zap_type ztype, int power, bolt &pbolt,
              bool needs_tracer = false, const char* msg = NULL);
 bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range = 0);

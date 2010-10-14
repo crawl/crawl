@@ -159,7 +159,7 @@ struct simple_connect
 
 struct coord_wrapper
 {
-    coord_wrapper( int (*input) (const coord_def & pos))
+    coord_wrapper(int (*input) (const coord_def & pos))
     {
         test = input;
     }
@@ -1356,7 +1356,7 @@ struct tentacle_attack_constraints
                 {
                     if (probe->second.find(connect_level) != probe->second.end())
                     {
-                        while (probe->second.find(connect_level + 1) != probe->second.end() )
+                        while (probe->second.find(connect_level + 1) != probe->second.end())
                         {
                             connect_level++;
                         }
@@ -1539,7 +1539,7 @@ bool tentacle_pathfind(monster* tentacle,
     std::map<coord_def, std::set<int> >::iterator probe = attack_constraints.connection_constraints->find(temp.pos);
     ASSERT(probe != attack_constraints.connection_constraints->end());
     temp.connect_level = 0;
-    while (probe->second.find(temp.connect_level + 1 ) != probe->second.end())
+    while (probe->second.find(temp.connect_level + 1) != probe->second.end())
         temp.connect_level++;
 
     temp.departure = false;
@@ -1682,7 +1682,7 @@ struct complicated_sight_check
 
 static bool _basic_sight_check(monster* mons, actor * test)
 {
-    return (mons->can_see(test ));
+    return (mons->can_see(test));
 }
 
 template<typename T>
@@ -1879,7 +1879,7 @@ void move_demon_tentacle(monster* tentacle)
             int escalated = 0;
             std::map<coord_def, std::set<int> >::iterator probe = connection_data.find(test);
 
-            while (probe->second.find(escalated + 1) != probe->second.end() )
+            while (probe->second.find(escalated + 1) != probe->second.end())
                 escalated++;
 
 
@@ -1980,7 +1980,7 @@ void move_kraken_tentacles(monster* kraken)
     //if (!kraken->near_foe())
     if (foe_positions.empty()
         || kraken->behaviour == BEH_FLEE
-        || kraken->behaviour == BEH_WANDER )
+        || kraken->behaviour == BEH_WANDER)
     {
         no_foe = true;
     }
@@ -2285,7 +2285,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         beem.name        = "bolt of electricity";
         beem.aux_source  = "bolt of electricity";
         beem.range       = 8;
-        beem.damage      = dice_def( 3, 6 );
+        beem.damage      = dice_def(3, 6);
         beem.hit         = 50;
         beem.colour      = LIGHTCYAN;
         beem.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -2456,7 +2456,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         beem.aux_source  = "volley of spikes";
         beem.range       = 6;
         beem.hit         = 14;
-        beem.damage      = dice_def( 2, 10 );
+        beem.damage      = dice_def(2, 10);
         beem.beam_source = mons->mindex();
         beem.glyph       = dchar_glyph(DCHAR_FIRED_MISSILE);
         beem.colour      = LIGHTGREY;
@@ -2898,7 +2898,7 @@ void activate_ballistomycetes(monster* mons, const coord_def & origin,
     }
 
     bool exhaustive = true;
-    bool (*valid_target)(const coord_def & ) = _ballisto_at;
+    bool (*valid_target)(const coord_def &) = _ballisto_at;
     bool (*connecting_square) (const coord_def &) = _mold_connected;
 
     std::set<position_node> visited;

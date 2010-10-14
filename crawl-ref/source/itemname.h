@@ -88,26 +88,26 @@ enum
     NDSC_BOOK_SEC  = 8,
 };
 
-bool is_vowel( const char chr );
-int property( const item_def &item, int prop_type );
+bool is_vowel(const char chr);
+int property(const item_def &item, int prop_type);
 
 const char* racial_description_string(const item_def& item, bool terse = false);
 
 bool check_item_knowledge(bool quiet = false, bool inverted = false);
 
-std::string quant_name( const item_def &item, int quant,
-                        description_level_type des, bool terse = false );
+std::string quant_name(const item_def &item, int quant,
+                        description_level_type des, bool terse = false);
 
-bool item_type_known( const item_def &item );
-bool item_type_unknown( const item_def &item );
-bool item_type_known( const object_class_type base_type, const int sub_type );
-bool item_type_tried( const item_def &item );
+bool item_type_known(const item_def &item);
+bool item_type_unknown(const item_def &item);
+bool item_type_known(const object_class_type base_type, const int sub_type);
+bool item_type_tried(const item_def &item);
 
-bool is_interesting_item( const item_def& item );
-bool is_emergency_item( const item_def& item );
+bool is_interesting_item(const item_def& item);
+bool is_emergency_item(const item_def& item);
 bool is_good_item(const item_def &item);
 bool is_bad_item(const item_def &item, bool temp = false);
-bool is_dangerous_item( const item_def& item, bool temp = false);
+bool is_dangerous_item(const item_def& item, bool temp = false);
 bool is_useless_item(const item_def &item, bool temp = false);
 
 std::string make_name(uint32_t seed, bool all_caps, int maxlen = -1,
@@ -125,9 +125,9 @@ id_arr& get_typeid_array();
 item_type_id_state_type get_ident_type(const item_def &item);
 item_type_id_state_type get_ident_type(object_class_type basetype,
                                        int subtype);
-void set_ident_type( item_def &item, item_type_id_state_type setting,
+void set_ident_type(item_def &item, item_type_id_state_type setting,
                      bool force = false);
-void set_ident_type( object_class_type basetype, int subtype,
+void set_ident_type(object_class_type basetype, int subtype,
                      item_type_id_state_type setting, bool force = false);
 
 std::string menu_colour_item_prefix(const item_def &item, bool temp = true);

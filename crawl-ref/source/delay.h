@@ -64,8 +64,8 @@ struct ait_hp_loss
     ait_hp_loss(int _hp, int _ht) : hp(_hp), hurt_type(_ht) { }
 };
 
-void start_delay( delay_type type, int turns, int parm1 = 0, int parm2 = 0 );
-void stop_delay( bool stop_stair_travel = false );
+void start_delay(delay_type type, int turns, int parm1 = 0, int parm2 = 0);
+void stop_delay(bool stop_stair_travel = false);
 bool you_are_delayed();
 delay_type current_delay_action();
 void handle_delay();
@@ -91,7 +91,7 @@ const char *delay_name(int delay);
 delay_type get_delay(const std::string &);
 
 void autotoggle_autopickup(bool off);
-bool interrupt_activity( activity_interrupt_type ai,
+bool interrupt_activity(activity_interrupt_type ai,
                          const activity_interrupt_data &a
-                            = activity_interrupt_data() );
+                            = activity_interrupt_data());
 #endif

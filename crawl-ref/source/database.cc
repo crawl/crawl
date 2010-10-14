@@ -57,7 +57,7 @@ static void _store_text_db(const std::string &in, const std::string &out);
 
 static TextDB AllDBs[] =
 {
-    TextDB( "descriptions",
+    TextDB("descriptions",
             "descript/features.txt",
             "descript/items.txt",
             "descript/unident.txt",
@@ -70,12 +70,12 @@ static TextDB AllDBs[] =
             "descript/cards.txt",
             NULL),
 
-    TextDB( "gamestart",
+    TextDB("gamestart",
             "descript/species.txt",
             "descript/backgrounds.txt",
             NULL),
 
-    TextDB( "randart",
+    TextDB("randart",
             "database/randname.txt",
             "database/rand_wpn.txt", // mostly weapons
             "database/rand_arm.txt", // mostly armour
@@ -85,7 +85,7 @@ static TextDB AllDBs[] =
             "database/monname.txt",  // orcish names for Beogh to choose from
             NULL),
 
-    TextDB( "speak",
+    TextDB("speak",
             "database/monspeak.txt", // monster speech
             "database/monspell.txt", // monster spellcasting speech
             "database/wpnnoise.txt", // noisy weapon speech
@@ -93,24 +93,24 @@ static TextDB AllDBs[] =
             "database/godspeak.txt", // god speech
             NULL),
 
-    TextDB( "shout",
+    TextDB("shout",
             "database/shout.txt",
             "database/insult.txt",   // imp/demon taunts, again
             NULL),
 
-    TextDB( "misc",
+    TextDB("misc",
             "database/miscname.txt", // names for miscellaneous things
             NULL),
 
-    TextDB( "quotes",
+    TextDB("quotes",
             "database/quotes.txt",   // quotes for items and monsters
             NULL),
 
-    TextDB( "help",               // database for outsourced help texts
+    TextDB("help",               // database for outsourced help texts
             "database/help.txt",
             NULL),
 
-    TextDB( "FAQ",                // database for Frequently Asked Questions
+    TextDB("FAQ",                // database for Frequently Asked Questions
             "database/FAQ.txt",
             NULL),
 };
@@ -148,7 +148,7 @@ TextDB::TextDB(const char* db_name, ...)
             break;
 
         // probably forgot the terminating 0
-        ASSERT( strstr(input_file, ".txt") != 0 );
+        ASSERT(strstr(input_file, ".txt") != 0);
         _input_files.push_back(input_file);
     }
     va_end(args);

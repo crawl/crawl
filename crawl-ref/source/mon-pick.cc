@@ -1276,8 +1276,8 @@ int mons_dwarf_rare(int mcls)
 
     const int mlev = mons_dwarf_level(mcls);
     const int diff = mlev - you.absdepth0;
-    if ( ((diff > soft_until) or ((diff < 0) and (abs(diff) > sharp_before)) and
-         ((soft_until > 0) or (sharp_before > 0))) or (diff >= 0) )
+    if (((diff > soft_until) or ((diff < 0) and (abs(diff) > sharp_before)) and
+         ((soft_until > 0) or (sharp_before > 0))) or (diff >= 0))
     {
         sharp_curve = true; // its a shadow-reuse, sorry :(
     }
@@ -1287,7 +1287,7 @@ int mons_dwarf_rare(int mcls)
     if (sharp_curve)
     { // fake integer sqroot
         int i=0;
-        while( (i*i) <= rarity )
+        while((i*i) <= rarity)
             i+=1;
         rarity = i;
     }

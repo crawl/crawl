@@ -269,7 +269,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         if ((beam.target.x == you.pos().x || beam.target.y == you.pos().y)
             && monster_at(middle))
         {
-            const int skill = weapon_skill( wpn.base_type, wpn.sub_type );
+            const int skill = weapon_skill(wpn.base_type, wpn.sub_type);
 
             if (x_chance_in_y(5 + (3 * skill), 40))
             {
@@ -311,7 +311,7 @@ static bool _evoke_horn_of_geryon(item_def &item)
         mpr("You can't produce a sound!");
         return false;
     }
-    else if (player_in_branch( BRANCH_VESTIBULE_OF_HELL ))
+    else if (player_in_branch(BRANCH_VESTIBULE_OF_HELL))
     {
         mpr("You produce a weird and mournful sound.");
 
@@ -415,20 +415,20 @@ static bool _check_crystal_ball(int subtype, bool known)
 {
     if (you.intel() <= 1)
     {
-        mpr( "You lack the intelligence to focus on the shapes in the ball." );
+        mpr("You lack the intelligence to focus on the shapes in the ball.");
         return (false);
     }
 
     if (you.confused())
     {
-        mpr( "You are unable to concentrate on the shapes in the ball." );
+        mpr("You are unable to concentrate on the shapes in the ball.");
         return (false);
     }
 
     if (subtype == MISC_CRYSTAL_BALL_OF_ENERGY && known
         && (you.magic_points == you.max_magic_points))
     {
-        mpr( "With no energy to recover, the crystal ball of energy is "
+        mpr("With no energy to recover, the crystal ball of energy is "
              "presently useless to you.");
         return (false);
     }
@@ -537,7 +537,7 @@ bool disc_of_storms(bool drac_breath)
 void tome_of_power(int slot)
 {
     int powc = 5 + you.skills[SK_EVOCATIONS]
-                 + roll_dice( 5, you.skills[SK_EVOCATIONS] );
+                 + roll_dice(5, you.skills[SK_EVOCATIONS]);
 
     msg::stream << "The book opens to a page covered in "
                 << weird_writing() << '.' << std::endl;
@@ -564,8 +564,8 @@ void tome_of_power(int slot)
     if (x_chance_in_y(7, 50))
     {
         mpr("A cloud of weird smoke pours from the book's pages!");
-        big_cloud( random_smoke_type(), KC_YOU,
-                   you.pos(), 20, 10 + random2(8) );
+        big_cloud(random_smoke_type(), KC_YOU,
+                   you.pos(), 20, 10 + random2(8));
         xom_is_stimulated(16);
     }
     else if (x_chance_in_y(2, 43))
@@ -631,7 +631,7 @@ void tome_of_power(int slot)
              (temp_rand >  0) ? SPELL_THROW_FROST
                               : SPELL_MAGIC_DART);
 
-        your_spells( spell_casted, powc, false );
+        your_spells(spell_casted, powc, false);
     }
 }
 
@@ -643,7 +643,7 @@ void skill_manual(int slot)
     item_def& manual(you.inv[slot]);
     const bool known = item_type_known(manual);
     if (!known)
-        set_ident_flags( manual, ISFLAG_KNOW_TYPE );
+        set_ident_flags(manual, ISFLAG_KNOW_TYPE);
     const int skill = manual.plus;
 
     mprf("You read about %s.", skill_name(skill));
@@ -653,7 +653,7 @@ void skill_manual(int slot)
     if (--manual.plus2 <= 0)
     {
         mpr("The manual crumbles into dust.");
-        dec_inv_item_quantity( slot, 1 );
+        dec_inv_item_quantity(slot, 1);
     }
     else
         mpr("The manual looks somewhat more worn.");
@@ -796,10 +796,10 @@ bool evoke_item(int slot)
 
     if (slot == -1)
     {
-        slot = prompt_invent_item( "Evoke which item? (* to show all)",
+        slot = prompt_invent_item("Evoke which item? (* to show all)",
                                    MT_INVLIST,
                                    OSEL_EVOKABLE, true, true, true, 0, -1,
-                                   NULL, OPER_EVOKE );
+                                   NULL, OPER_EVOKE);
 
         if (prompt_failed(slot))
             return (false);
@@ -861,9 +861,9 @@ bool evoke_item(int slot)
     case OBJ_STAVES:
         ASSERT(wielded);
 
-        if (item_is_rod( item ))
+        if (item_is_rod(item))
         {
-            pract = staff_spell( slot );
+            pract = staff_spell(slot);
             // [ds] Early exit, no turns are lost.
             if (pract == -1)
                 return (false);
@@ -882,7 +882,7 @@ bool evoke_item(int slot)
                      && x_chance_in_y(you.skills[SK_EVOCATIONS] + 11, 40))
             {
                 mpr("You channel some magical energy.");
-                inc_mp( 1 + random2(3), false );
+                inc_mp(1 + random2(3), false);
                 make_hungry(50, false, true);
                 pract = 1;
                 did_work = true;
@@ -1009,8 +1009,8 @@ bool evoke_item(int slot)
 
     if (ident && !item_type_known(item))
     {
-        set_ident_type( item.base_type, item.sub_type, ID_KNOWN_TYPE );
-        set_ident_flags( item, ISFLAG_KNOW_TYPE );
+        set_ident_type(item.base_type, item.sub_type, ID_KNOWN_TYPE);
+        set_ident_flags(item, ISFLAG_KNOW_TYPE);
 
         mprf("You are wielding %s.",
              item.name(DESC_NOCAP_A).c_str());

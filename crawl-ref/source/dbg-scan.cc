@@ -22,19 +22,19 @@
 
 #define DEBUG_ITEM_SCAN
 #ifdef DEBUG_ITEM_SCAN
-static void _dump_item( const char *name, int num, const item_def &item )
+static void _dump_item(const char *name, int num, const item_def &item)
 {
     mpr(name, MSGCH_ERROR);
 
     mprf("    item #%d:  base: %d; sub: %d; plus: %d; plus2: %d; special: %d",
          num, item.base_type, item.sub_type,
-         item.plus, item.plus2, item.special );
+         item.plus, item.plus2, item.special);
 
     mprf("    quant: %d; colour: %d; ident: 0x%08"PRIx64"; ident_type: %d",
          item.quantity, item.colour, item.flags,
-         get_ident_type( item ) );
+         get_ident_type(item));
 
-    mprf("    x: %d; y: %d; link: %d", item.pos.x, item.pos.y, item.link );
+    mprf("    x: %d; y: %d; link: %d", item.pos.x, item.pos.y, item.link);
 
     crawl_state.cancel_cmd_repeat();
 }
@@ -44,7 +44,7 @@ static void _dump_item( const char *name, int num, const item_def &item )
 // debug_item_scan
 //
 //---------------------------------------------------------------
-void debug_item_scan( void )
+void debug_item_scan(void)
 {
     int   i;
     char  name[256];
@@ -85,7 +85,7 @@ void debug_item_scan( void )
             {
                 mprf(MSGCH_ERROR, "Linked invalid item at (%d,%d)!",
                      ri->x, ri->y);
-                _dump_item( mitm[obj].name(DESC_PLAIN).c_str(), obj, mitm[obj] );
+                _dump_item(mitm[obj].name(DESC_PLAIN).c_str(), obj, mitm[obj]);
             }
 
             // Check that item knows what stack it's in.
@@ -93,8 +93,8 @@ void debug_item_scan( void )
             {
                 mprf(MSGCH_ERROR,"Item position incorrect at (%d,%d)!",
                      ri->x, ri->y);
-                _dump_item( mitm[obj].name(DESC_PLAIN).c_str(),
-                            obj, mitm[obj] );
+                _dump_item(mitm[obj].name(DESC_PLAIN).c_str(),
+                            obj, mitm[obj]);
             }
 
             // If we run into a premarked item we're in real trouble,
@@ -124,17 +124,17 @@ void debug_item_scan( void )
         if (mitm[i].pos.origin())
         {
             mpr("Unlinked temporary item:", MSGCH_ERROR);
-            _dump_item( name, i, mitm[i] );
+            _dump_item(name, i, mitm[i]);
         }
         else if (mon != NULL && mon->type == MONS_NO_MONSTER)
         {
             mpr("Unlinked item held by dead monster:", MSGCH_ERROR);
-            _dump_item( name, i, mitm[i] );
+            _dump_item(name, i, mitm[i]);
         }
         else if ((mitm[i].pos.x > 0 || mitm[i].pos.y > 0) && !visited[i])
         {
             mpr("Unlinked item:", MSGCH_ERROR);
-            _dump_item( name, i, mitm[i] );
+            _dump_item(name, i, mitm[i]);
 
             if (!in_bounds(mitm[i].pos))
             {
@@ -144,7 +144,7 @@ void debug_item_scan( void )
             else
             {
                 mprf("igrd(%d,%d) = %d",
-                     mitm[i].pos.x, mitm[i].pos.y, igrd( mitm[i].pos ));
+                     mitm[i].pos.x, mitm[i].pos.y, igrd(mitm[i].pos));
             }
 
             // Let's check to see if it's an errant monster object:
@@ -172,38 +172,38 @@ void debug_item_scan( void )
         //   -- items described as buggy (typically adjectives out of range)
         //      (note: covers buggy, bugginess, buggily, whatever else)
         //
-        if (strstr( name, "questionable" ) != NULL
-            || strstr( name, "eggplant" ) != NULL
-            || strstr( name, "bola" ) != NULL
-            || strstr( name, "bugg" ) != NULL)
+        if (strstr(name, "questionable") != NULL
+            || strstr(name, "eggplant") != NULL
+            || strstr(name, "bola") != NULL
+            || strstr(name, "bugg") != NULL)
         {
             mpr("Bad item:", MSGCH_ERROR);
-            _dump_item( name, i, mitm[i] );
+            _dump_item(name, i, mitm[i]);
         }
         else if ((mitm[i].base_type == OBJ_WEAPONS
                     && (abs(mitm[i].plus) > 30
                         || abs(mitm[i].plus2) > 30
-                        || !is_artefact( mitm[i] )
+                        || !is_artefact(mitm[i])
                            && mitm[i].special >= NUM_SPECIAL_WEAPONS))
 
                  || (mitm[i].base_type == OBJ_MISSILES
                      && (abs(mitm[i].plus) > 25
-                         || !is_artefact( mitm[i] )
+                         || !is_artefact(mitm[i])
                             && mitm[i].special >= NUM_SPECIAL_MISSILES))
 
                  || (mitm[i].base_type == OBJ_ARMOUR
                      && (abs(mitm[i].plus) > 25
-                         || !is_artefact( mitm[i] )
+                         || !is_artefact(mitm[i])
                             && mitm[i].special >= NUM_SPECIAL_ARMOURS)))
         {
             mpr("Bad plus or special value:", MSGCH_ERROR);
-            _dump_item( name, i, mitm[i] );
+            _dump_item(name, i, mitm[i]);
         }
         else if (mitm[i].flags & ISFLAG_SUMMONED
                  && in_bounds(mitm[i].pos))
         {
             mpr("Summoned item on floor:", MSGCH_ERROR);
-            _dump_item( name, i, mitm[i] );
+            _dump_item(name, i, mitm[i]);
         }
     }
 
@@ -409,8 +409,8 @@ void debug_mons_scan()
                                  "item (midx = %d)",
                      m->full_name(DESC_PLAIN, true).c_str(),
                      pos.x, pos.y, i);
-                _dump_item( item.name(DESC_PLAIN, false, true).c_str(),
-                            idx, item );
+                _dump_item(item.name(DESC_PLAIN, false, true).c_str(),
+                            idx, item);
                 continue;
             }
 

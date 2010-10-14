@@ -168,10 +168,10 @@ void wizard_create_spec_object()
     }
     else if (class_wanted == OBJ_GOLD)
     {
-        int amount = debug_prompt_for_int( "How much gold? ", true );
+        int amount = debug_prompt_for_int("How much gold? ", true);
         if (amount <= 0)
         {
-            canned_msg( MSG_OK );
+            canned_msg(MSG_OK);
             return;
         }
 
@@ -238,7 +238,7 @@ void wizard_create_spec_object()
 
         if (specs[0] == '\0')
         {
-            canned_msg( MSG_OK );
+            canned_msg(MSG_OK);
             return;
         }
 
@@ -259,9 +259,9 @@ void wizard_create_spec_object()
 
     // Deck colour (which control rarity) already set.
     if (!is_deck(mitm[thing_created]))
-        item_colour( mitm[thing_created] );
+        item_colour(mitm[thing_created]);
 
-    move_item_to_grid( &thing_created, you.pos() );
+    move_item_to_grid(&thing_created, you.pos());
 
     if (thing_created != NON_ITEM)
     {
@@ -392,7 +392,7 @@ static void _tweak_randart(item_def &item)
 
     mpr("Change which field? ", MSGCH_PROMPT);
 
-    char     keyin = tolower( get_ch() );
+    char     keyin = tolower(get_ch());
     unsigned int  choice;
 
     if (isaalpha(keyin))
@@ -452,7 +452,7 @@ void wizard_tweak_object(void)
     int item = prompt_invent_item("Tweak which item? ", MT_INVLIST, -1);
     if (item == PROMPT_ABORT)
     {
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
         return;
     }
 
@@ -482,7 +482,7 @@ void wizard_tweak_object(void)
 
             mpr("Which field? ", MSGCH_PROMPT);
 
-            keyin = tolower( get_ch() );
+            keyin = tolower(get_ch());
 
             if (keyin == 'a')
                 old_val = you.inv[item].plus;
@@ -497,7 +497,7 @@ void wizard_tweak_object(void)
             else if (key_is_escape(keyin) || keyin == ' '
                     || keyin == '\r' || keyin == '\n')
             {
-                canned_msg( MSG_OK );
+                canned_msg(MSG_OK);
                 return;
             }
 
@@ -547,7 +547,7 @@ void wizard_tweak_object(void)
 }
 
 // Returns whether an item of this type can be an artefact.
-static bool _item_type_can_be_artefact( int type)
+static bool _item_type_can_be_artefact(int type)
 {
     return (type == OBJ_WEAPONS || type == OBJ_ARMOUR || type == OBJ_JEWELLERY
             || type == OBJ_BOOKS);
@@ -572,7 +572,7 @@ static bool _make_book_randart(item_def &book)
 
 void wizard_value_artefact()
 {
-    int i = prompt_invent_item( "Value of which artefact?", MT_INVLIST, -1 );
+    int i = prompt_invent_item("Value of which artefact?", MT_INVLIST, -1);
 
     if (!prompt_failed(i))
     {
@@ -632,8 +632,8 @@ void wizard_create_all_artefacts()
 
 void wizard_make_object_randart()
 {
-    int i = prompt_invent_item( "Make an artefact out of which item?",
-                                MT_INVLIST, -1 );
+    int i = prompt_invent_item("Make an artefact out of which item?",
+                                MT_INVLIST, -1);
 
     if (prompt_failed(i))
         return;
@@ -681,7 +681,7 @@ void wizard_make_object_randart()
     mpr("Fake item as gift from which god (ENTER to leave alone): ",
         MSGCH_PROMPT);
     char name[80];
-    if (!cancelable_get_line(name, sizeof( name )) && name[0])
+    if (!cancelable_get_line(name, sizeof(name)) && name[0])
     {
         god_type god = str_to_god(name, false);
         if (god == GOD_NO_GOD)
@@ -830,7 +830,7 @@ void wizard_list_items()
         if (item.link != NON_ITEM)
         {
             mprf("(%2d,%2d): %s", item.pos.x, item.pos.y,
-                 item.name(DESC_PLAIN, false, false, false).c_str() );
+                 item.name(DESC_PLAIN, false, false, false).c_str());
         }
     }
 
@@ -871,8 +871,8 @@ static void _debug_acquirement_stats(FILE *ostat)
         MSGCH_PROMPT);
 
     object_class_type type;
-    const int keyin = tolower( get_ch() );
-    switch ( keyin )
+    const int keyin = tolower(get_ch());
+    switch (keyin)
     {
     case 'a': type = OBJ_WEAPONS;    break;
     case 'b': type = OBJ_ARMOUR;     break;
@@ -883,7 +883,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     case 'g': type = OBJ_MISCELLANY; break;
     case 'h': type = OBJ_FOOD;       break;
     default:
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
         return;
     }
 
@@ -891,7 +891,7 @@ static void _debug_acquirement_stats(FILE *ostat)
 
     if (num_itrs == 0)
     {
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
         return;
     }
 
@@ -1290,12 +1290,12 @@ static void _debug_acquirement_stats(FILE *ostat)
 
 static void _debug_rap_stats(FILE *ostat)
 {
-    int i = prompt_invent_item( "Generate randart stats on which item?",
-                                MT_INVLIST, -1 );
+    int i = prompt_invent_item("Generate randart stats on which item?",
+                                MT_INVLIST, -1);
 
     if (i == PROMPT_ABORT)
     {
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
         return;
     }
 
@@ -1383,7 +1383,7 @@ static void _debug_rap_stats(FILE *ostat)
 
         // Generate proprt once and hand it off to randart_is_bad(),
         // so that randart_is_bad() doesn't generate it a second time.
-        artefact_wpn_properties( item, proprt );
+        artefact_wpn_properties(item, proprt);
         if (randart_is_bad(item, proprt))
         {
             bad_randarts++;
@@ -1510,7 +1510,7 @@ static void _debug_rap_stats(FILE *ostat)
     mpr("Results written into 'items.stat'.");
 }
 
-void debug_item_statistics( void )
+void debug_item_statistics(void)
 {
     FILE *ostat = fopen("items.stat", "a");
 
@@ -1522,13 +1522,13 @@ void debug_item_statistics( void )
 
     mpr("Generate stats for: [a] acquirement [b] randart properties");
 
-    const int keyin = tolower( get_ch() );
-    switch ( keyin )
+    const int keyin = tolower(get_ch());
+    switch (keyin)
     {
     case 'a': _debug_acquirement_stats(ostat); break;
     case 'b': _debug_rap_stats(ostat);
     default:
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
         break;
     }
 
@@ -1549,12 +1549,12 @@ void wizard_draw_card()
     lowercase(wanted);
 
     bool found_card = false;
-    for ( int i = 0; i < NUM_CARDS; ++i )
+    for (int i = 0; i < NUM_CARDS; ++i)
     {
         const card_type c = static_cast<card_type>(i);
         std::string card = card_name(c);
         lowercase(card);
-        if ( card.find(wanted) != std::string::npos )
+        if (card.find(wanted) != std::string::npos)
         {
             card_effect(c, DECK_RARITY_LEGENDARY);
             found_card = true;

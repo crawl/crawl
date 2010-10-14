@@ -293,8 +293,8 @@ static std::string _replace_name_parts(const std::string name_in,
         {
             const branch_type branch =
                      static_cast<branch_type>(random2(BRANCH_TARTARUS));
-            place = place_name( get_packed_place(branch, 1, LEVEL_DUNGEON),
-                                true, false );
+            place = place_name(get_packed_place(branch, 1, LEVEL_DUNGEON),
+                                true, false);
         }
         if (!place.empty())
             name = replace_all(name, "@branch_name@", place);
@@ -338,9 +338,9 @@ static unrandart_entry unranddata[] = {
 #include "art-data.h"
 };
 
-static unrandart_entry *_seekunrandart( const item_def &item );
+static unrandart_entry *_seekunrandart(const item_def &item);
 
-bool is_known_artefact( const item_def &item )
+bool is_known_artefact(const item_def &item)
 {
     if (!item_type_known(item))
         return (false);
@@ -348,24 +348,24 @@ bool is_known_artefact( const item_def &item )
     return (is_artefact(item));
 }
 
-bool is_artefact( const item_def &item )
+bool is_artefact(const item_def &item)
 {
     return (item.flags & ISFLAG_ARTEFACT_MASK);
 }
 
 // returns true is item is a pure randart
-bool is_random_artefact( const item_def &item )
+bool is_random_artefact(const item_def &item)
 {
     return (item.flags & ISFLAG_RANDART);
 }
 
 // returns true if item in an unrandart
-bool is_unrandom_artefact( const item_def &item )
+bool is_unrandom_artefact(const item_def &item)
 {
     return (item.flags & ISFLAG_UNRANDART);
 }
 
-bool is_special_unrandom_artefact( const item_def &item )
+bool is_special_unrandom_artefact(const item_def &item)
 {
     return (item.flags & ISFLAG_UNRANDART
             && (_seekunrandart(item)->flags & UNRAND_FLAG_SPECIAL));
@@ -379,31 +379,31 @@ unique_item_status_type get_unique_item_status(const item_def& item)
     return (UNIQ_NOT_EXISTS);
 }
 
-unique_item_status_type get_unique_item_status( int art )
+unique_item_status_type get_unique_item_status(int art)
 {
     ASSERT(art > UNRAND_START && art < UNRAND_LAST);
     return (you.unique_items[art - UNRAND_START]);
 }
 
 void set_unique_item_status(const item_def& item,
-                            unique_item_status_type status )
+                            unique_item_status_type status)
 {
     if (item.flags & ISFLAG_UNRANDART)
         set_unique_item_status(item.special, status);
 }
 
-void set_unique_item_status( int art, unique_item_status_type status )
+void set_unique_item_status(int art, unique_item_status_type status)
 {
     ASSERT(art > UNRAND_START && art < UNRAND_LAST);
     you.unique_items[art - UNRAND_START] = status;
 }
 
-static uint32_t _calc_seed( const item_def &item )
+static uint32_t _calc_seed(const item_def &item)
 {
     return (item.special & RANDART_SEED_MASK);
 }
 
-void artefact_desc_properties( const item_def &item,
+void artefact_desc_properties(const item_def &item,
                               artefact_properties_t &proprt,
                               artefact_known_props_t &known,
                               bool force_fake_props)
@@ -412,9 +412,9 @@ void artefact_desc_properties( const item_def &item,
     if (item.base_type == OBJ_BOOKS)
         return;
 
-    artefact_wpn_properties( item, proprt, known);
+    artefact_wpn_properties(item, proprt, known);
 
-    if (!force_fake_props && item_ident( item, ISFLAG_KNOW_PROPERTIES ))
+    if (!force_fake_props && item_ident(item, ISFLAG_KNOW_PROPERTIES))
         return;
 
     // Only jewellery need fake randart properties.
@@ -457,8 +457,8 @@ void artefact_desc_properties( const item_def &item,
     {
         proprt[fake_rap] += fake_plus;
 
-        if (item_ident( item, ISFLAG_KNOW_PROPERTIES )
-            || item_ident( item, ISFLAG_KNOW_TYPE ))
+        if (item_ident(item, ISFLAG_KNOW_PROPERTIES)
+            || item_ident(item, ISFLAG_KNOW_TYPE))
         {
             known[fake_rap] = true;
         }
@@ -557,8 +557,8 @@ void artefact_desc_properties( const item_def &item,
     if (fake_rap2 != ARTP_NUM_PROPERTIES && fake_plus2 != 0)
         proprt[fake_rap2] += fake_plus2;
 
-    if (item_ident( item, ISFLAG_KNOW_PROPERTIES )
-        || item_ident( item, ISFLAG_KNOW_TYPE ))
+    if (item_ident(item, ISFLAG_KNOW_PROPERTIES)
+        || item_ident(item, ISFLAG_KNOW_TYPE))
     {
         if (fake_rap != ARTP_NUM_PROPERTIES && proprt[fake_rap] != 0)
             known[fake_rap] = true;
@@ -568,18 +568,18 @@ void artefact_desc_properties( const item_def &item,
     }
 }
 
-inline static void _randart_propset( artefact_properties_t &p,
+inline static void _randart_propset(artefact_properties_t &p,
                                      artefact_prop_type pt,
                                      int value,
-                                     bool neg )
+                                     bool neg)
 {
     // This shouldn't be called with 0, else no property gets added after all.
     ASSERT(value != 0);
     p[pt] = (neg? -value : value);
 }
 
-static int _randart_add_one_property( const item_def &item,
-                                      artefact_properties_t &proprt )
+static int _randart_add_one_property(const item_def &item,
+                                      artefact_properties_t &proprt)
 {
     // This function assumes that at least some properties are still possible.
     const object_class_type cl = item.base_type;
@@ -635,7 +635,7 @@ static int _randart_add_one_property( const item_def &item,
 // An artefact will pass this check if it has any non-stat properties, and
 // also if it has enough stat (Str, Dex, Int, Acc, Dam) properties.
 // Returns how many (more) stat properties we need to add.
-static int _need_bonus_stat_props( const artefact_properties_t &proprt )
+static int _need_bonus_stat_props(const artefact_properties_t &proprt)
 {
     int num_stats   = 0;
     int num_acc_dam = 0;
@@ -1199,13 +1199,13 @@ static bool _init_artefact_book(item_def &book)
 
 static bool _init_artefact_properties(item_def &item)
 {
-    ASSERT( is_artefact( item ) );
+    ASSERT(is_artefact(item));
 
     CrawlVector &rap = item.props[ARTEFACT_PROPS_KEY].get_vector();
     for (vec_size i = 0; i < ART_PROPERTIES; i++)
         rap[i] = static_cast<short>(0);
 
-    if (is_unrandom_artefact( item ))
+    if (is_unrandom_artefact(item))
     {
         const unrandart_entry *unrand = _seekunrandart(item);
 
@@ -1234,21 +1234,21 @@ static bool _init_artefact_properties(item_def &item)
     return (true);
 }
 
-void artefact_wpn_properties( const item_def &item,
+void artefact_wpn_properties(const item_def &item,
                              artefact_properties_t  &proprt,
                              artefact_known_props_t &known)
 {
-    ASSERT( is_artefact( item ) );
-    ASSERT( item.props.exists( KNOWN_PROPS_KEY ) );
+    ASSERT(is_artefact(item));
+    ASSERT(item.props.exists(KNOWN_PROPS_KEY));
 
     const CrawlStoreValue &_val = item.props[KNOWN_PROPS_KEY];
-    ASSERT( _val.get_type() == SV_VEC );
+    ASSERT(_val.get_type() == SV_VEC);
     const CrawlVector &known_vec = _val.get_vector();
-    ASSERT( known_vec.get_type()     == SV_BOOL );
-    ASSERT( known_vec.size()         == ART_PROPERTIES);
-    ASSERT( known_vec.get_max_size() == ART_PROPERTIES);
+    ASSERT(known_vec.get_type()     == SV_BOOL);
+    ASSERT(known_vec.size()         == ART_PROPERTIES);
+    ASSERT(known_vec.get_max_size() == ART_PROPERTIES);
 
-    if (item_ident( item, ISFLAG_KNOW_PROPERTIES ))
+    if (item_ident(item, ISFLAG_KNOW_PROPERTIES))
     {
         for (vec_size i = 0; i < ART_PROPERTIES; i++)
             known[i] = static_cast<bool>(true);
@@ -1259,18 +1259,18 @@ void artefact_wpn_properties( const item_def &item,
             known[i] = known_vec[i];
     }
 
-    if (item.props.exists( ARTEFACT_PROPS_KEY ))
+    if (item.props.exists(ARTEFACT_PROPS_KEY))
     {
         const CrawlVector &rap_vec =
             item.props[ARTEFACT_PROPS_KEY].get_vector();
-        ASSERT( rap_vec.get_type()     == SV_SHORT );
-        ASSERT( rap_vec.size()         == ART_PROPERTIES);
-        ASSERT( rap_vec.get_max_size() == ART_PROPERTIES);
+        ASSERT(rap_vec.get_type()     == SV_SHORT);
+        ASSERT(rap_vec.size()         == ART_PROPERTIES);
+        ASSERT(rap_vec.get_max_size() == ART_PROPERTIES);
 
         for (vec_size i = 0; i < ART_PROPERTIES; i++)
             proprt[i] = rap_vec[i].get_short();
     }
-    else if (is_unrandom_artefact( item ))
+    else if (is_unrandom_artefact(item))
     {
         const unrandart_entry *unrand = _seekunrandart(item);
 
@@ -1284,49 +1284,49 @@ void artefact_wpn_properties( const item_def &item,
 }
 
 
-void artefact_wpn_properties( const item_def &item,
-                              artefact_properties_t &proprt )
+void artefact_wpn_properties(const item_def &item,
+                              artefact_properties_t &proprt)
 {
     artefact_known_props_t known;
 
     artefact_wpn_properties(item, proprt, known);
 }
 
-int artefact_wpn_property( const item_def &item, artefact_prop_type prop,
-                           bool &_known )
+int artefact_wpn_property(const item_def &item, artefact_prop_type prop,
+                           bool &_known)
 {
     artefact_properties_t  proprt;
     artefact_known_props_t known;
 
-    artefact_wpn_properties( item, proprt, known );
+    artefact_wpn_properties(item, proprt, known);
 
     _known = known[prop];
 
-    return ( proprt[prop] );
+    return (proprt[prop]);
 }
 
-int artefact_wpn_property( const item_def &item, artefact_prop_type prop )
+int artefact_wpn_property(const item_def &item, artefact_prop_type prop)
 {
     bool known;
 
-    return artefact_wpn_property( item, prop, known );
+    return artefact_wpn_property(item, prop, known);
 }
 
-int artefact_known_wpn_property( const item_def &item,
-                                 artefact_prop_type prop )
+int artefact_known_wpn_property(const item_def &item,
+                                 artefact_prop_type prop)
 {
     artefact_properties_t  proprt;
     artefact_known_props_t known;
 
-    artefact_wpn_properties( item, proprt, known );
+    artefact_wpn_properties(item, proprt, known);
 
     if (known[prop])
-        return ( proprt[prop] );
+        return (proprt[prop]);
     else
         return (0);
 }
 
-static int _artefact_num_props( const artefact_properties_t &proprt )
+static int _artefact_num_props(const artefact_properties_t &proprt)
 {
     int num = 0;
 
@@ -1338,29 +1338,29 @@ static int _artefact_num_props( const artefact_properties_t &proprt )
     return num;
 }
 
-void artefact_wpn_learn_prop( item_def &item, artefact_prop_type prop )
+void artefact_wpn_learn_prop(item_def &item, artefact_prop_type prop)
 {
-    ASSERT( is_artefact( item ) );
-    ASSERT( item.props.exists( KNOWN_PROPS_KEY ) );
+    ASSERT(is_artefact(item));
+    ASSERT(item.props.exists(KNOWN_PROPS_KEY));
     CrawlStoreValue &_val = item.props[KNOWN_PROPS_KEY];
-    ASSERT( _val.get_type() == SV_VEC );
+    ASSERT(_val.get_type() == SV_VEC);
     CrawlVector &known_vec = _val.get_vector();
-    ASSERT( known_vec.get_type()     == SV_BOOL );
-    ASSERT( known_vec.size()         == ART_PROPERTIES);
-    ASSERT( known_vec.get_max_size() == ART_PROPERTIES);
+    ASSERT(known_vec.get_type()     == SV_BOOL);
+    ASSERT(known_vec.size()         == ART_PROPERTIES);
+    ASSERT(known_vec.get_max_size() == ART_PROPERTIES);
 
-    if (item_ident( item, ISFLAG_KNOW_PROPERTIES ))
+    if (item_ident(item, ISFLAG_KNOW_PROPERTIES))
         return;
 
     known_vec[prop] = static_cast<bool>(true);
     if (Options.autoinscribe_artefacts)
-        add_autoinscription( item, artefact_auto_inscription(item));
+        add_autoinscription(item, artefact_auto_inscription(item));
 }
 
-bool artefact_wpn_known_prop( const item_def &item, artefact_prop_type prop )
+bool artefact_wpn_known_prop(const item_def &item, artefact_prop_type prop)
 {
     bool known;
-    artefact_wpn_property( item, prop, known );
+    artefact_wpn_property(item, prop, known);
     return known;
 }
 
@@ -1389,7 +1389,7 @@ static std::string _get_artefact_type(const item_def &item,
     }
 }
 
-static bool _pick_db_name( const item_def &item )
+static bool _pick_db_name(const item_def &item)
 {
     switch (item.base_type)
     {
@@ -1427,13 +1427,13 @@ std::string artefact_name(const item_def &item, bool appearance)
            || item.base_type == OBJ_JEWELLERY
            || item.base_type == OBJ_BOOKS);
 
-    if (is_unrandom_artefact( item ))
+    if (is_unrandom_artefact(item))
     {
-        const unrandart_entry *unrand = _seekunrandart( item );
+        const unrandart_entry *unrand = _seekunrandart(item);
         return (item_type_known(item) ? unrand->name : unrand->unid_name);
     }
 
-    const uint32_t seed = _calc_seed( item );
+    const uint32_t seed = _calc_seed(item);
 
     std::string lookup;
     std::string result;
@@ -1462,7 +1462,7 @@ std::string artefact_name(const item_def &item, bool appearance)
     lookup += _get_artefact_type(item, appearance);
 
     rng_save_excursion rng_state;
-    seed_rng( seed );
+    seed_rng(seed);
 
     if (appearance)
     {
@@ -1529,9 +1529,9 @@ std::string artefact_name(const item_def &item, bool appearance)
     return result;
 }
 
-std::string get_artefact_name( const item_def &item, bool force_known )
+std::string get_artefact_name(const item_def &item, bool force_known)
 {
-    ASSERT( is_artefact( item ) );
+    ASSERT(is_artefact(item));
 
     if (item_type_known(item) || force_known)
     {
@@ -1546,17 +1546,17 @@ std::string get_artefact_name( const item_def &item, bool force_known )
     return artefact_name(item, false);
 }
 
-void set_artefact_name( item_def &item, const std::string &name )
+void set_artefact_name(item_def &item, const std::string &name)
 {
-    ASSERT( is_artefact( item ));
-    ASSERT( !name.empty() );
+    ASSERT(is_artefact(item));
+    ASSERT(!name.empty());
     item.props[ARTEFACT_NAME_KEY].get_string() = name;
 }
 
-void set_artefact_appearance( item_def &item, const std::string &appear )
+void set_artefact_appearance(item_def &item, const std::string &appear)
 {
-    ASSERT( is_artefact( item ));
-    ASSERT( !appear.empty() );
+    ASSERT(is_artefact(item));
+    ASSERT(!appear.empty());
     item.props[ARTEFACT_APPEAR_KEY].get_string() = appear;
 }
 
@@ -1575,7 +1575,7 @@ unrandart_entry* get_unrand_entry(int unrand_index)
         return &unranddata[unrand_index];
 }
 
-static unrandart_entry *_seekunrandart( const item_def &item )
+static unrandart_entry *_seekunrandart(const item_def &item)
 {
     return get_unrand_entry(item.special);
 }
@@ -1626,7 +1626,7 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, bool in_abyss)
     return (ret);
 }
 
-int get_unrandart_num( const char *name )
+int get_unrandart_num(const char *name)
 {
     std::string quoted = "\"";
     quoted += name;
@@ -1645,8 +1645,8 @@ int get_unrandart_num( const char *name )
     return SPWPN_NORMAL;
 }
 
-static bool _randart_is_redundant( const item_def &item,
-                                   artefact_properties_t &proprt )
+static bool _randart_is_redundant(const item_def &item,
+                                   artefact_properties_t &proprt)
 {
     if (item.base_type != OBJ_JEWELLERY)
         return (false);
@@ -1755,8 +1755,8 @@ static bool _randart_is_redundant( const item_def &item,
     return (false);
 }
 
-static bool _randart_is_conflicting( const item_def &item,
-                                     artefact_properties_t &proprt )
+static bool _randart_is_conflicting(const item_def &item,
+                                     artefact_properties_t &proprt)
 {
     if (item.base_type == OBJ_WEAPONS
         && get_weapon_brand(item) == SPWPN_HOLY_WRATH
@@ -1816,32 +1816,32 @@ static bool _randart_is_conflicting( const item_def &item,
     return (false);
 }
 
-bool randart_is_bad( const item_def &item, artefact_properties_t &proprt )
+bool randart_is_bad(const item_def &item, artefact_properties_t &proprt)
 {
     if (item.base_type == OBJ_BOOKS)
         return (false);
 
-    if (_artefact_num_props( proprt ) == 0)
+    if (_artefact_num_props(proprt) == 0)
         return (true);
 
     // Weapons must have a brand and at least one other property.
     if (item.base_type == OBJ_WEAPONS
         && (proprt[ARTP_BRAND] == SPWPN_NORMAL
-            || _artefact_num_props( proprt ) < 2))
+            || _artefact_num_props(proprt) < 2))
     {
         return (true);
     }
 
-    return (_randart_is_redundant( item, proprt )
-            || _randart_is_conflicting( item, proprt ));
+    return (_randart_is_redundant(item, proprt)
+            || _randart_is_conflicting(item, proprt));
 }
 
-bool randart_is_bad( const item_def &item )
+bool randart_is_bad(const item_def &item)
 {
     artefact_properties_t proprt;
-    artefact_wpn_properties( item, proprt );
+    artefact_wpn_properties(item, proprt);
 
-    return randart_is_bad( item, proprt);
+    return randart_is_bad(item, proprt);
 }
 
 static void _artefact_setup_prop_vectors(item_def &item)
@@ -1857,7 +1857,7 @@ static void _artefact_setup_prop_vectors(item_def &item)
     for (vec_size i = 0; i < ART_PROPERTIES; i++)
         rap[i].get_short() = 0;
 
-    if (!item.props.exists( KNOWN_PROPS_KEY ))
+    if (!item.props.exists(KNOWN_PROPS_KEY))
     {
         props[KNOWN_PROPS_KEY].new_vector(SV_BOOL).resize(ART_PROPERTIES);
         CrawlVector &known = item.props[KNOWN_PROPS_KEY].get_vector();
@@ -1874,7 +1874,7 @@ void artefact_set_name(item_def &item, const std::string &name)
 
 // If force_mundane is true, normally mundane items are forced to
 // nevertheless become artefacts.
-bool make_item_randart( item_def &item, bool force_mundane )
+bool make_item_randart(item_def &item, bool force_mundane)
 {
     if (item.base_type != OBJ_WEAPONS
         && item.base_type != OBJ_ARMOUR
@@ -1937,7 +1937,7 @@ bool make_item_randart( item_def &item, bool force_mundane )
         artefact_set_name(item, artefact_name(item, false));
 
     // get artefact appearance
-    if (item.props.exists( ARTEFACT_APPEAR_KEY ))
+    if (item.props.exists(ARTEFACT_APPEAR_KEY))
         ASSERT(item.props[ARTEFACT_APPEAR_KEY].get_type() == SV_STR);
     else
         item.props[ARTEFACT_APPEAR_KEY].get_string() =
@@ -1983,7 +1983,7 @@ static void _make_faerie_armour(item_def &item)
     item.plus = 2 + random2(5);
 }
 
-bool make_item_unrandart( item_def &item, int unrand_index )
+bool make_item_unrandart(item_def &item, int unrand_index)
 {
     ASSERT(unrand_index > UNRAND_START);
     ASSERT(unrand_index < (UNRAND_START + NO_UNRANDARTS));
@@ -2002,14 +2002,14 @@ bool make_item_unrandart( item_def &item, int unrand_index )
     _init_artefact_properties(item);
 
     if (unrand->prpty[ARTP_CURSED] != 0)
-        do_curse_item( item );
+        do_curse_item(item);
 
     // get true artefact name
-    ASSERT(!item.props.exists( ARTEFACT_NAME_KEY ));
+    ASSERT(!item.props.exists(ARTEFACT_NAME_KEY));
     item.props[ARTEFACT_NAME_KEY].get_string() = unrand->name;
 
     // get artefact appearance
-    ASSERT(!item.props.exists( ARTEFACT_APPEAR_KEY ));
+    ASSERT(!item.props.exists(ARTEFACT_APPEAR_KEY));
     item.props[ARTEFACT_APPEAR_KEY].get_string() = unrand->unid_name;
 
     set_unique_item_status(unrand_index, UNIQ_EXISTS);
@@ -2025,11 +2025,11 @@ bool make_item_unrandart( item_def &item, int unrand_index )
     return (true);
 }
 
-const char *unrandart_descrip( int which_descrip, const item_def &item )
+const char *unrandart_descrip(int which_descrip, const item_def &item)
 {
     // Eventually it would be great to have randomly generated descriptions
     // for randarts.
-    const unrandart_entry *unrand = _seekunrandart( item );
+    const unrandart_entry *unrand = _seekunrandart(item);
 
     return ((which_descrip == 0) ? unrand->desc :
             (which_descrip == 1) ? unrand->desc_id :
@@ -2039,13 +2039,13 @@ const char *unrandart_descrip( int which_descrip, const item_def &item )
 
 void artefact_clear_properties(item_def &item)
 {
-    ASSERT( is_artefact( item ) );
-    ASSERT( item.props.exists( ARTEFACT_PROPS_KEY ) );
+    ASSERT(is_artefact(item));
+    ASSERT(item.props.exists(ARTEFACT_PROPS_KEY));
 
     CrawlVector &rap_vec = item.props[ARTEFACT_PROPS_KEY].get_vector();
-    ASSERT( rap_vec.get_type()     == SV_SHORT );
-    ASSERT( rap_vec.size()         == ART_PROPERTIES);
-    ASSERT( rap_vec.get_max_size() == ART_PROPERTIES);
+    ASSERT(rap_vec.get_type()     == SV_SHORT);
+    ASSERT(rap_vec.size()         == ART_PROPERTIES);
+    ASSERT(rap_vec.get_max_size() == ART_PROPERTIES);
 
     for (vec_size i = 0; i < ART_PROPERTIES; i++)
         rap_vec[i].get_short() = 0;
@@ -2055,13 +2055,13 @@ void artefact_clear_properties(item_def &item)
 void artefact_merge_properties(item_def &item,
                                const artefact_properties_t &proprt)
 {
-    ASSERT( is_artefact( item ) );
-    ASSERT( item.props.exists( ARTEFACT_PROPS_KEY ) );
+    ASSERT(is_artefact(item));
+    ASSERT(item.props.exists(ARTEFACT_PROPS_KEY));
 
     CrawlVector &rap_vec = item.props[ARTEFACT_PROPS_KEY].get_vector();
-    ASSERT( rap_vec.get_type()     == SV_SHORT );
-    ASSERT( rap_vec.size()         == ART_PROPERTIES);
-    ASSERT( rap_vec.get_max_size() == ART_PROPERTIES);
+    ASSERT(rap_vec.get_type()     == SV_SHORT);
+    ASSERT(rap_vec.size()         == ART_PROPERTIES);
+    ASSERT(rap_vec.get_max_size() == ART_PROPERTIES);
 
     for (vec_size i = 0; i < ART_PROPERTIES; i++)
     {
@@ -2078,17 +2078,17 @@ void artefact_set_properties(item_def &item,
     artefact_merge_properties(item, proprt);
 }
 
-void artefact_set_property( item_def          &item,
+void artefact_set_property(item_def          &item,
                             artefact_prop_type prop,
-                            int                val )
+                            int                val)
 {
-    ASSERT( is_artefact( item ) );
-    ASSERT( item.props.exists( ARTEFACT_PROPS_KEY ) );
+    ASSERT(is_artefact(item));
+    ASSERT(item.props.exists(ARTEFACT_PROPS_KEY));
 
     CrawlVector &rap_vec = item.props[ARTEFACT_PROPS_KEY].get_vector();
-    ASSERT( rap_vec.get_type()     == SV_SHORT );
-    ASSERT( rap_vec.size()         == ART_PROPERTIES);
-    ASSERT( rap_vec.get_max_size() == ART_PROPERTIES);
+    ASSERT(rap_vec.get_type()     == SV_SHORT);
+    ASSERT(rap_vec.size()         == ART_PROPERTIES);
+    ASSERT(rap_vec.get_max_size() == ART_PROPERTIES);
 
     rap_vec[prop].get_short() = val;
 }

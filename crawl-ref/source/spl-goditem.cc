@@ -68,7 +68,7 @@ void identify(int power, int item_slot)
         set_ident_type(item, ID_KNOWN_TYPE);
         set_ident_flags(item, ISFLAG_IDENT_MASK);
         if (Options.autoinscribe_artefacts && is_artefact(item))
-            add_autoinscription( item, artefact_auto_inscription(item));
+            add_autoinscription(item, artefact_auto_inscription(item));
 
         // For scrolls, now id the scroll, unless already known.
         if (power == -1
@@ -392,7 +392,7 @@ void cast_detect_secret_doors(int pow)
 {
     int found = 0;
 
-    for (radius_iterator ri(you.get_los()); ri; ++ri )
+    for (radius_iterator ri(you.get_los()); ri; ++ri)
         if (grd(*ri) == DNGN_SECRET_DOOR && random2(pow) > random2(15))
         {
             reveal_secret_door(*ri);
@@ -847,9 +847,9 @@ void stonemail(int pow)
     else
     {
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE)
-            mpr( "Your stone body feels more resilient." );
+            mpr("Your stone body feels more resilient.");
         else
-            mpr( "A set of stone scales covers your body!" );
+            mpr("A set of stone scales covers your body!");
 
         you.redraw_evasion = true;
         you.redraw_armour_class = true;

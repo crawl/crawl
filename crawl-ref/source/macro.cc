@@ -239,13 +239,13 @@ static void buf2keyseq(const char *buff, keyseq &k)
     {
         int index = userfunc_getindex(buff + 3);
         if (index != -1)
-            k.push_back( USERFUNCBASE - index );
+            k.push_back(USERFUNCBASE - index);
     }
     else
     {
-        const int len = strlen( buff );
+        const int len = strlen(buff);
         for (int i = 0; i < len; i++)
-            k.push_back( buff[i] );
+            k.push_back(buff[i]);
     }
 }
 
@@ -280,7 +280,7 @@ static int read_key_code(std::string s)
  *   \{x40} produces 64 (hexadecimal code)
  *   \{!more} or \{!m} disables -more- prompt until the end of the macro.
  */
-static keyseq parse_keyseq( std::string s )
+static keyseq parse_keyseq(std::string s)
 {
     int state = 0;
     keyseq v;
@@ -352,7 +352,7 @@ static keyseq parse_keyseq( std::string s )
  * Serialises a key sequence into a string of the format described
  * above.
  */
-static std::string vtostr( const keyseq &seq )
+static std::string vtostr(const keyseq &seq)
 {
     std::ostringstream s;
 
@@ -377,7 +377,7 @@ static std::string vtostr( const keyseq &seq )
             else
             {
                 char buff[20];
-                snprintf( buff, sizeof(buff), "\\{%d}", *i );
+                snprintf(buff, sizeof(buff), "\\{%d}", *i);
                 s << buff;
             }
         }
@@ -393,7 +393,7 @@ static std::string vtostr( const keyseq &seq )
 /*
  * Add a macro (suprise, suprise).
  */
-static void macro_add( macromap &mapref, keyseq key, keyseq action )
+static void macro_add(macromap &mapref, keyseq key, keyseq action)
 {
     mapref[key] = action;
 }
@@ -401,9 +401,9 @@ static void macro_add( macromap &mapref, keyseq key, keyseq action )
 /*
  * Remove a macro.
  */
-static void macro_del( macromap &mapref, keyseq key )
+static void macro_del(macromap &mapref, keyseq key)
 {
-    mapref.erase( key );
+    mapref.erase(key);
 }
 
 static void _register_expanded_keys(int num, bool reverse);
@@ -780,7 +780,7 @@ int getch_with_command_macros()
  * Flush the buffer.  Later we'll probably want to give the player options
  * as to when this happens (ex. always before command input, casting failed).
  */
-void flush_input_buffer( int reason )
+void flush_input_buffer(int reason)
 {
     ASSERT(reason != FLUSH_KEY_REPLAY_CANCEL
            || crawl_state.is_replaying_keys() || crawl_state.cmd_repeat_start);
@@ -858,7 +858,7 @@ static void _input_action_text(keyseq* action)
     *action = parse_keyseq(buff);
 }
 
-void macro_add_query( void )
+void macro_add_query(void)
 {
     int input;
     bool keymap = false;
@@ -871,7 +871,7 @@ void macro_add_query( void )
         "(s)ave? ",
         MSGCH_PROMPT);
     input = m_getch();
-    int low = tolower( input );
+    int low = tolower(input);
 
     if (low == 'k')
     {
@@ -911,7 +911,7 @@ void macro_add_query( void )
     }
     else
     {
-        mpr( "Aborting." );
+        mpr("Aborting.");
         return;
     }
 
@@ -944,16 +944,16 @@ void macro_add_query( void )
 
         input = m_getch();
 
-        input = tolower( input );
+        input = tolower(input);
         if (input == 'a' || key_is_escape(input))
         {
-            mpr( "Aborting." );
+            mpr("Aborting.");
             return;
         }
         else if (input == 'c')
         {
-            mpr( "Cleared." );
-            macro_del( mapref, key );
+            mpr("Cleared.");
+            macro_del(mapref, key);
             crawl_state.unsaved_macros = true;
             return;
         }
@@ -1002,7 +1002,7 @@ static void _read_macros_from(const char* filename)
         }
         else if (s.length() >= 3 && s[0] == 'K' && s[2] == ':')
         {
-            keymc  = KeymapContext( KMC_DEFAULT + s[1] - '0' );
+            keymc  = KeymapContext(KMC_DEFAULT + s[1] - '0');
             if (keymc >= KMC_DEFAULT && keymc < KMC_CONTEXT_COUNT)
             {
                 key    = parse_keyseq(s.substr(3));
@@ -1017,7 +1017,7 @@ static void _read_macros_from(const char* filename)
         else if (s.substr(0, 2) == "A:")
         {
             action = parse_keyseq(s.substr(2));
-            macro_add( (keymap ? Keymaps[keymc] : Macros), key, action );
+            macro_add((keymap ? Keymaps[keymc] : Macros), key, action);
         }
     }
 }

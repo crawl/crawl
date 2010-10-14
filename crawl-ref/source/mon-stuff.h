@@ -57,7 +57,7 @@ struct level_exit
 
 const item_def *give_mimic_item(monster* mimic);
 const item_def &get_mimic_item(const monster* mimic);
-int  get_mimic_colour( const monster* mimic );
+int  get_mimic_colour(const monster* mimic);
 dungeon_feature_type get_mimic_feat (const monster* mimic);
 bool feature_mimic_at (const coord_def &c);
 

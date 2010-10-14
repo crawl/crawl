@@ -123,7 +123,7 @@ static dungeon_feature_type _find_appropriate_stairs(bool down)
     return DNGN_UNSEEN;
 }
 
-void wizard_place_stairs( bool down )
+void wizard_place_stairs(bool down)
 {
     dungeon_feature_type stairs = _find_appropriate_stairs(down);
 
@@ -135,7 +135,7 @@ void wizard_place_stairs( bool down )
 
 // Try to find and use stairs already in the portal vault level,
 // since this might be a multi-level portal vault like a ziggurat.
-static bool _take_portal_vault_stairs( const bool down )
+static bool _take_portal_vault_stairs(const bool down)
 {
     ASSERT(you.level_type == LEVEL_PORTAL_VAULT);
 
@@ -166,7 +166,7 @@ static bool _take_portal_vault_stairs( const bool down )
     return (true);
 }
 
-void wizard_level_travel( bool down )
+void wizard_level_travel(bool down)
 {
     if (you.level_type == LEVEL_PORTAL_VAULT)
         if (_take_portal_vault_stairs(down))
@@ -251,7 +251,7 @@ void wizard_create_portal()
     char specs[256];
     if (cancelable_get_line(specs, sizeof(specs)))
     {
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
         return;
     }
 
@@ -409,9 +409,9 @@ void wizard_list_branches()
 
         mprf(MSGCH_DIAGNOSTICS, "%u on D:%u (%s)", temples.size(),
              i + 1,
-             comma_separated_line( god_names.begin(),
-                                   god_names.end() ).c_str()
-            );
+             comma_separated_line(god_names.begin(),
+                                   god_names.end()).c_str()
+          );
     }
 }
 
@@ -428,7 +428,7 @@ void wizard_map_level()
     {
         if (!yesno("Force level to be mappable?", true, 'n'))
         {
-            canned_msg( MSG_OK );
+            canned_msg(MSG_OK);
             return;
         }
 

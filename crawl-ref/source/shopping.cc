@@ -44,9 +44,9 @@ ShoppingList shopping_list;
 
 static bool _in_shop_now = false;
 
-static bool _purchase( int shop, int item_got, int cost, bool id);
+static bool _purchase(int shop, int item_got, int cost, bool id);
 
-static void _shop_print( const char *shoppy, int line )
+static void _shop_print(const char *shoppy, int line)
 {
     cgotoxy(1, line + 19, GOTO_CRT);
     cprintf("%s", shoppy);
@@ -114,7 +114,7 @@ static std::string _purchase_keys(const std::string &s)
         list += (last = s[i]);
     }
 
-    list += _hyphenated_suffix( s[s.length() - 1], last );
+    list += _hyphenated_suffix(s[s.length() - 1], last);
     list += "</w>";
     return (list);
 }
@@ -219,11 +219,11 @@ static int _shop_get_item_value(const item_def& item, int greed, bool id,
     return result;
 }
 
-static std::string _shop_print_stock( const std::vector<int>& stock,
+static std::string _shop_print_stock(const std::vector<int>& stock,
                                       const std::vector<bool>& selected,
                                       const std::vector<bool>& in_list,
                                       const shop_struct& shop,
-                                      int total_cost )
+                                      int total_cost)
 {
     ShopInfo &si  = StashTrack.get_shop(shop.pos);
     const bool id = shoptype_identifies_stock(shop.type);
@@ -320,7 +320,7 @@ static int _count_identical(const std::vector<int>& stock,
 //  For the ? key, the text should read:
 //  [!] switch to examination mode
 //  [!] switch to selection mode
-static bool _in_a_shop( int shopidx, int &num_in_list )
+static bool _in_a_shop(int shopidx, int &num_in_list)
 {
     const shop_struct& shop = env.shop[shopidx];
 
@@ -466,8 +466,8 @@ static bool _in_a_shop( int shopidx, int &num_in_list )
         if (first)
         {
             first = false;
-            snprintf( info, INFO_SIZE, "%s What would you like to do? ",
-                      hello.c_str() );
+            snprintf(info, INFO_SIZE, "%s What would you like to do? ",
+                      hello.c_str());
         }
         else
             snprintf(info, INFO_SIZE, "What would you like to do? ");
@@ -533,7 +533,7 @@ static bool _in_a_shop( int shopidx, int &num_in_list )
                 snprintf(info, INFO_SIZE, "Purchase for %d gold? (y/n) ",
                          total_purchase);
 
-                if ( _shop_yesno(info, 'n') )
+                if (_shop_yesno(info, 'n'))
                 {
                     int num_items = 0, outside_items = 0, quant;
                     for (int i = to_buy.size() - 1; i >= 0; --i)
@@ -581,10 +581,10 @@ static bool _in_a_shop( int shopidx, int &num_in_list )
 
                     if (outside_items)
                     {
-                        mprf( "I'll put %s outside for you.",
+                        mprf("I'll put %s outside for you.",
                               num_items == 1             ? "it" :
                               num_items == outside_items ? "them"
-                                                         : "part of them" );
+                                                         : "part of them");
                     }
                     bought_something = true;
                 }
@@ -658,7 +658,7 @@ static bool _in_a_shop( int shopidx, int &num_in_list )
         else
         {
             key = tolower(key) - 'a';
-            if (key >= static_cast<int>(stock.size()) )
+            if (key >= static_cast<int>(stock.size()))
             {
                 _shop_print("No such item.", 1);
                 _shop_more();
@@ -694,8 +694,8 @@ static bool _in_a_shop( int shopidx, int &num_in_list )
                 {
                     if (gp_value > you.gold)
                     {
-                        if ( _shop_yesno("Remove from shopping list? (y/N)",
-                                         'n') )
+                        if (_shop_yesno("Remove from shopping list? (y/N)",
+                                         'n'))
                         {
                             shopping_list.del_thing(item);
                             in_list[key]  = false;
@@ -705,8 +705,8 @@ static bool _in_a_shop( int shopidx, int &num_in_list )
                     }
                     else
                     {
-                        if ( _shop_yesno("Remove item from shopping list and "
-                                         "buy it? (Y/n)",  'y') )
+                        if (_shop_yesno("Remove item from shopping list and "
+                                         "buy it? (Y/n)",  'y'))
                         {
                             shopping_list.del_thing(item);
                             in_list[key] = false;
@@ -739,7 +739,7 @@ bool shoptype_identifies_stock(shop_type type)
             && type != SHOP_GENERAL_ANTIQUE);
 }
 
-static bool _purchase( int shop, int item_got, int cost, bool id )
+static bool _purchase(int shop, int item_got, int cost, bool id)
 {
     you.del_gold(cost);
 
@@ -759,12 +759,12 @@ static bool _purchase( int shop, int item_got, int cost, bool id )
 
     const int quant = item.quantity;
     // Note that item will be invalidated if num == item.quantity.
-    const int num = move_item_to_player( item_got, item.quantity, true );
+    const int num = move_item_to_player(item_got, item.quantity, true);
 
     // Shopkeepers will now place goods you can't carry outside the shop.
     if (num < quant)
     {
-        move_item_to_grid( &item_got, env.shop[shop].pos );
+        move_item_to_grid(&item_got, env.shop[shop].pos);
         return (false);
     }
     return (true);
@@ -776,13 +776,13 @@ static bool _purchase( int shop, int item_got, int cost, bool id )
 // be returning just over 30 right now.  Note that this isn't used
 // as a multiple, its used in the old ring way: 7 * ret is added to
 // the price of the artefact. -- bwr
-int artefact_value( const item_def &item )
+int artefact_value(const item_def &item)
 {
-    ASSERT( is_artefact( item ) );
+    ASSERT(is_artefact(item));
 
     int ret = 10;
     artefact_properties_t prop;
-    artefact_wpn_properties( item, prop );
+    artefact_wpn_properties(item, prop);
 
     // Brands are already accounted for via existing ego checks
 
@@ -2056,7 +2056,7 @@ void shop()
     }
 
     // Quick out, if no inventory
-    if ( _shop_get_stock(i).empty() )
+    if (_shop_get_stock(i).empty())
     {
         const shop_struct& shop = env.shop[i];
         mprf("%s appears to be closed.", shop_name(shop.pos).c_str());
@@ -2191,9 +2191,9 @@ std::string shop_name(const coord_def& where)
 
     const shop_type type = cshop->type;
 
-    uint32_t seed = static_cast<uint32_t>( cshop->keeper_name[0] )
-        | (static_cast<uint32_t>( cshop->keeper_name[1] ) << 8)
-        | (static_cast<uint32_t>( cshop->keeper_name[1] ) << 16);
+    uint32_t seed = static_cast<uint32_t>(cshop->keeper_name[0])
+        | (static_cast<uint32_t>(cshop->keeper_name[1]) << 8)
+        | (static_cast<uint32_t>(cshop->keeper_name[1]) << 16);
 
     std::string sh_name = apostrophise(make_name(seed, false)) + " ";
 
@@ -2529,7 +2529,7 @@ int ShoppingList::size() const
         return (0);
     }
 
-    return ( list->size() );
+    return (list->size());
 }
 
 bool ShoppingList::items_are_same(const item_def& item_a,
@@ -2725,8 +2725,8 @@ void ShoppingList::display()
                                         you.gold);
     shopmenu.set_more(formatted_string::parse_string(more_str));
 
-    shopmenu.set_flags( MF_SINGLESELECT | MF_ALWAYS_SHOW_MORE
-                        | MF_ALLOW_FORMATTING );
+    shopmenu.set_flags(MF_SINGLESELECT | MF_ALWAYS_SHOW_MORE
+                        | MF_ALLOW_FORMATTING);
 
     fill_out_menu(shopmenu);
 
@@ -2769,7 +2769,7 @@ void ShoppingList::display()
             if (is_item)
             {
                 const item_def &item = get_thing_item(*thing);
-                describe_item( const_cast<item_def&>(item) );
+                describe_item(const_cast<item_def&>(item));
             }
             else // not an item, so we only stored a description.
             {

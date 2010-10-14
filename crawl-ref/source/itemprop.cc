@@ -469,17 +469,17 @@ void init_properties()
 //
 // Item cursed status functions:
 //
-bool item_known_cursed( const item_def &item )
+bool item_known_cursed(const item_def &item)
 {
     return ((item.flags & ISFLAG_KNOW_CURSE) && (item.flags & ISFLAG_CURSED));
 }
 
-bool item_known_uncursed( const item_def &item )
+bool item_known_uncursed(const item_def &item)
 {
     return ((item.flags & ISFLAG_KNOW_CURSE) && !(item.flags & ISFLAG_CURSED));
 }
 
-void do_curse_item( item_def &item, bool quiet )
+void do_curse_item(item_def &item, bool quiet)
 {
     // Already cursed?
     if (item.flags & ISFLAG_CURSED)
@@ -565,19 +565,19 @@ void do_uncurse_item(item_def &item, bool inscribe)
 }
 
 // Is item stationary (cannot be picked up)?
-void set_item_stationary( item_def &item )
+void set_item_stationary(item_def &item)
 {
     if (item.base_type == OBJ_MISSILES && item.sub_type == MI_THROWING_NET)
         item.plus2 = 1;
 }
 
-void remove_item_stationary( item_def &item )
+void remove_item_stationary(item_def &item)
 {
     if (item.base_type == OBJ_MISSILES && item.sub_type == MI_THROWING_NET)
         item.plus2 = 0;
 }
 
-bool item_is_stationary( const item_def &item )
+bool item_is_stationary(const item_def &item)
 {
     return (item.base_type == OBJ_MISSILES
             && item.sub_type == MI_THROWING_NET
@@ -647,7 +647,7 @@ void unset_ident_flags(item_def &item, iflags_t flags)
 
 // Returns the mask of interesting identify bits for this item
 // (e.g., scrolls don't have know-cursedness).
-iflags_t full_ident_mask( const item_def& item )
+iflags_t full_ident_mask(const item_def& item)
 {
     iflags_t flagset = ISFLAG_IDENT_MASK;
     switch (item.base_type)
@@ -703,7 +703,7 @@ iflags_t full_ident_mask( const item_def& item )
     return flagset;
 }
 
-bool fully_identified( const item_def& item )
+bool fully_identified(const item_def& item)
 {
     return item_ident(item, full_ident_mask(item));
 }
@@ -711,19 +711,19 @@ bool fully_identified( const item_def& item )
 //
 // Equipment race and description:
 //
-iflags_t get_equip_race( const item_def &item )
+iflags_t get_equip_race(const item_def &item)
 {
     return (item.flags & ISFLAG_RACIAL_MASK);
 }
 
-iflags_t get_equip_desc( const item_def &item )
+iflags_t get_equip_desc(const item_def &item)
 {
     return (item.flags & ISFLAG_COSMETIC_MASK);
 }
 
 void set_equip_race(item_def &item, iflags_t flags)
 {
-    ASSERT( (flags & ~ISFLAG_RACIAL_MASK) == 0 );
+    ASSERT((flags & ~ISFLAG_RACIAL_MASK) == 0);
 
     // first check for base-sub pairs that can't ever have racial types
     switch (item.base_type)
@@ -857,7 +857,7 @@ void set_equip_race(item_def &item, iflags_t flags)
 
 void set_equip_desc(item_def &item, iflags_t flags)
 {
-    ASSERT( (flags & ~ISFLAG_COSMETIC_MASK) == 0 );
+    ASSERT((flags & ~ISFLAG_COSMETIC_MASK) == 0);
 
     item.flags &= ~ISFLAG_COSMETIC_MASK; // delete previous
     item.flags |= flags;
@@ -866,16 +866,16 @@ void set_equip_desc(item_def &item, iflags_t flags)
 //
 // These functions handle the description and subtypes for helmets/caps.
 //
-short get_helmet_desc( const item_def &item )
+short get_helmet_desc(const item_def &item)
 {
-    ASSERT( is_helmet(item) );
+    ASSERT(is_helmet(item));
 
     return item.plus2;
 }
 
-void set_helmet_desc( item_def &item, helmet_desc_type type )
+void set_helmet_desc(item_def &item, helmet_desc_type type)
 {
-    ASSERT( is_helmet(item) );
+    ASSERT(is_helmet(item));
 
     if (!is_hard_helmet(item) && type > THELM_DESC_MAX_SOFT)
         type = THELM_DESC_PLAIN;
@@ -893,9 +893,9 @@ bool is_hard_helmet(const item_def &item)
     return (item.base_type == OBJ_ARMOUR && item.sub_type == ARM_HELMET);
 }
 
-void set_helmet_random_desc( item_def &item )
+void set_helmet_random_desc(item_def &item)
 {
-    ASSERT( is_helmet(item) );
+    ASSERT(is_helmet(item));
 
     if (is_hard_helmet(item))
         item.plus2 = random2(THELM_NUM_DESCS);
@@ -903,16 +903,16 @@ void set_helmet_random_desc( item_def &item )
         item.plus2 = random2(THELM_DESC_MAX_SOFT + 1);
 }
 
-short get_gloves_desc( const item_def &item )
+short get_gloves_desc(const item_def &item)
 {
-    ASSERT( item.base_type == OBJ_ARMOUR && item.sub_type == ARM_GLOVES );
+    ASSERT(item.base_type == OBJ_ARMOUR && item.sub_type == ARM_GLOVES);
 
     return item.plus2;
 }
 
-void set_gloves_random_desc( item_def &item )
+void set_gloves_random_desc(item_def &item)
 {
-    ASSERT( item.base_type == OBJ_ARMOUR && item.sub_type == ARM_GLOVES );
+    ASSERT(item.base_type == OBJ_ARMOUR && item.sub_type == ARM_GLOVES);
 
     item.plus2 = coinflip() ? TGLOV_DESC_GLOVES : TGLOV_DESC_GAUNTLETS;
     if (get_armour_ego_type(item) == SPARM_ARCHERY)
@@ -922,7 +922,7 @@ void set_gloves_random_desc( item_def &item )
 //
 // Ego item functions:
 //
-bool set_item_ego_type( item_def &item, int item_type, int ego_type )
+bool set_item_ego_type(item_def &item, int item_type, int ego_type)
 {
     if (item.base_type == item_type && !is_artefact(item))
     {
@@ -933,7 +933,7 @@ bool set_item_ego_type( item_def &item, int item_type, int ego_type )
     return (false);
 }
 
-int get_weapon_brand( const item_def &item )
+int get_weapon_brand(const item_def &item)
 {
     // Weapon ego types are "brands", so we do the randart lookup here.
 
@@ -941,8 +941,8 @@ int get_weapon_brand( const item_def &item )
     if (item.base_type != OBJ_WEAPONS)
         return (SPWPN_NORMAL);
 
-    if (is_artefact( item ))
-        return (artefact_wpn_property( item, ARTP_BRAND ));
+    if (is_artefact(item))
+        return (artefact_wpn_property(item, ARTP_BRAND));
 
     return (item.special);
 }
@@ -962,29 +962,29 @@ bool missile_brand_obvious(special_missile_type brand)
 special_missile_type get_ammo_brand(const item_def &item)
 {
     // No artefact arrows yet. -- bwr
-    if (item.base_type != OBJ_MISSILES || is_artefact( item ))
+    if (item.base_type != OBJ_MISSILES || is_artefact(item))
         return (SPMSL_NORMAL);
 
     return (static_cast<special_missile_type>(item.special));
 }
 
-special_armour_type get_armour_ego_type( const item_def &item )
+special_armour_type get_armour_ego_type(const item_def &item)
 {
     // Armour ego types are "brands", so we do the randart lookup here.
     if (item.base_type != OBJ_ARMOUR)
         return (SPARM_NORMAL);
 
-    if (is_artefact( item ))
+    if (is_artefact(item))
     {
         return (static_cast<special_armour_type>(
-                    artefact_wpn_property( item, ARTP_BRAND )));
+                    artefact_wpn_property(item, ARTP_BRAND)));
     }
 
     return (static_cast<special_armour_type>(item.special));
 }
 
 // Armour information and checking functions.
-bool hide2armour( item_def &item )
+bool hide2armour(item_def &item)
 {
     if (item.base_type != OBJ_ARMOUR)
         return (false);
@@ -1031,11 +1031,11 @@ bool hide2armour( item_def &item )
 }
 
 // Return the enchantment limit of a piece of armour.
-int armour_max_enchant( const item_def &item )
+int armour_max_enchant(const item_def &item)
 {
-    ASSERT( item.base_type == OBJ_ARMOUR );
+    ASSERT(item.base_type == OBJ_ARMOUR);
 
-    const int eq_slot = get_armour_slot( item );
+    const int eq_slot = get_armour_slot(item);
 
     int max_plus = MAX_SEC_ENCHANT;
     if (eq_slot == EQ_BODY_ARMOUR || item.sub_type == ARM_CENTAUR_BARDING
@@ -1053,9 +1053,9 @@ int armour_max_enchant( const item_def &item )
 }
 
 // Doesn't include animal skin (only skins we can make and enchant).
-bool armour_is_hide( const item_def &item, bool inc_made )
+bool armour_is_hide(const item_def &item, bool inc_made)
 {
-    ASSERT( item.base_type == OBJ_ARMOUR );
+    ASSERT(item.base_type == OBJ_ARMOUR);
 
     switch (item.sub_type)
     {
@@ -1086,43 +1086,43 @@ bool armour_is_hide( const item_def &item, bool inc_made )
     return (false);
 }
 
-equipment_type get_armour_slot( const item_def &item )
+equipment_type get_armour_slot(const item_def &item)
 {
-    ASSERT( item.base_type == OBJ_ARMOUR );
+    ASSERT(item.base_type == OBJ_ARMOUR);
 
     return (Armour_prop[ Armour_index[item.sub_type] ].slot);
 }
 
-equipment_type get_armour_slot( armour_type arm )
+equipment_type get_armour_slot(armour_type arm)
 {
     return (Armour_prop[ Armour_index[arm] ].slot);
 }
 
-bool jewellery_is_amulet( const item_def &item )
+bool jewellery_is_amulet(const item_def &item)
 {
-    ASSERT( item.base_type == OBJ_JEWELLERY );
+    ASSERT(item.base_type == OBJ_JEWELLERY);
 
     return (item.sub_type >= AMU_RAGE);
 }
 
-bool jewellery_is_amulet( int sub_type )
+bool jewellery_is_amulet(int sub_type)
 {
     return (sub_type >= AMU_RAGE);
 }
 
 // Returns the basic light status of an armour, ignoring things like the
 // elven bonus... you probably want is_light_armour() most times.
-bool base_armour_is_light( const item_def &item )
+bool base_armour_is_light(const item_def &item)
 {
-    ASSERT( item.base_type == OBJ_ARMOUR );
+    ASSERT(item.base_type == OBJ_ARMOUR);
 
     return (Armour_prop[ Armour_index[item.sub_type] ].light);
 }
 
 // Returns number of sizes off (0 if fitting).
-int fit_armour_size( const item_def &item, size_type size )
+int fit_armour_size(const item_def &item, size_type size)
 {
-    ASSERT( item.base_type == OBJ_ARMOUR );
+    ASSERT(item.base_type == OBJ_ARMOUR);
 
     const size_type min = Armour_prop[ Armour_index[item.sub_type] ].fit_min;
     const size_type max = Armour_prop[ Armour_index[item.sub_type] ].fit_max;
@@ -1136,11 +1136,11 @@ int fit_armour_size( const item_def &item, size_type size )
 }
 
 // Returns true if armour fits size (shape needs additional verification).
-bool check_armour_size( const item_def &item, size_type size )
+bool check_armour_size(const item_def &item, size_type size)
 {
-    ASSERT( item.base_type == OBJ_ARMOUR );
+    ASSERT(item.base_type == OBJ_ARMOUR);
 
-    return (fit_armour_size( item, size ) == 0);
+    return (fit_armour_size(item, size) == 0);
 }
 
 // Returns whether a wand or rod can be charged.
@@ -1255,7 +1255,7 @@ bool is_enchantable_armour(const item_def &arm, bool uncurse, bool unknown)
 
     // If we don't know the plusses, assume enchanting is possible.
     if (unknown && !is_known_artefact(arm)
-        && !item_ident(arm, ISFLAG_KNOW_PLUSES ))
+        && !item_ident(arm, ISFLAG_KNOW_PLUSES))
     {
         return (true);
     }
@@ -1274,7 +1274,7 @@ bool is_enchantable_armour(const item_def &arm, bool uncurse, bool unknown)
 
 // Checks how rare a weapon is. Many of these have special routines for
 // placement, especially those with a rarity of zero. Chance is out of 10.
-int weapon_rarity( int w_type )
+int weapon_rarity(int w_type)
 {
     switch (w_type)
     {
@@ -1422,7 +1422,7 @@ hands_reqd_type hands_reqd(object_class_type base_type, int sub_type,
 }
 
 // Give hands required to wield weapon for a torso of "size".
-hands_reqd_type hands_reqd( const item_def &item, size_type size )
+hands_reqd_type hands_reqd(const item_def &item, size_type size)
 {
     int         ret = HANDS_ONE;
     int         fit;
@@ -1491,7 +1491,7 @@ hands_reqd_type hands_reqd( const item_def &item, size_type size )
     case OBJ_ARMOUR:    // Bardings and body armours are unwieldy.
         if (item.sub_type == ARM_NAGA_BARDING
             || item.sub_type == ARM_CENTAUR_BARDING
-            || get_armour_slot( item ) == EQ_BODY_ARMOUR)
+            || get_armour_slot(item) == EQ_BODY_ARMOUR)
         {
             ret = HANDS_TWO;
         }
@@ -1506,7 +1506,7 @@ hands_reqd_type hands_reqd( const item_def &item, size_type size )
     else if (ret < HANDS_ONE)
         ret = HANDS_ONE;
 
-    return (static_cast< hands_reqd_type >( ret ));
+    return (static_cast< hands_reqd_type >(ret));
 }
 
 bool is_demonic(const item_def &item)
@@ -1698,7 +1698,7 @@ bool convert2bad(item_def &item)
     return (true);
 }
 
-int weapon_str_weight( const item_def &wpn )
+int weapon_str_weight(const item_def &wpn)
 {
     ASSERT (wpn.base_type == OBJ_WEAPONS || wpn.base_type == OBJ_STAVES);
 
@@ -1708,17 +1708,17 @@ int weapon_str_weight( const item_def &wpn )
     return (Weapon_prop[ Weapon_index[wpn.sub_type] ].str_weight);
 }
 
-int weapon_dex_weight( const item_def &wpn )
+int weapon_dex_weight(const item_def &wpn)
 {
-    return (10 - weapon_str_weight( wpn ));
+    return (10 - weapon_str_weight(wpn));
 }
 
 // Returns melee skill of item.
-skill_type weapon_skill( const item_def &item )
+skill_type weapon_skill(const item_def &item)
 {
-    if (item.base_type == OBJ_WEAPONS && !is_range_weapon( item ))
+    if (item.base_type == OBJ_WEAPONS && !is_range_weapon(item))
         return (Weapon_prop[ Weapon_index[item.sub_type] ].skill);
-    else if (item_is_rod( item ))
+    else if (item_is_rod(item))
         return (SK_MACES_FLAILS); // Rods are short and stubby
     else if (item.base_type == OBJ_STAVES)
         return (SK_STAVES);
@@ -1728,20 +1728,20 @@ skill_type weapon_skill( const item_def &item )
 }
 
 // Front function for the above when we don't have a physical item to check.
-skill_type weapon_skill( object_class_type wclass, int wtype )
+skill_type weapon_skill(object_class_type wclass, int wtype)
 {
     item_def    wpn;
 
     wpn.base_type = wclass;
     wpn.sub_type = wtype;
 
-    return (weapon_skill( wpn ));
+    return (weapon_skill(wpn));
 }
 
 // Returns range skill of the item.
-skill_type range_skill( const item_def &item )
+skill_type range_skill(const item_def &item)
 {
-    if (item.base_type == OBJ_WEAPONS && is_range_weapon( item ))
+    if (item.base_type == OBJ_WEAPONS && is_range_weapon(item))
         return (Weapon_prop[ Weapon_index[item.sub_type] ].skill);
     else if (item.base_type == OBJ_MISSILES)
     {
@@ -1757,36 +1757,36 @@ skill_type range_skill( const item_def &item )
 }
 
 // Front function for the above when we don't have a physical item to check.
-skill_type range_skill( object_class_type wclass, int wtype )
+skill_type range_skill(object_class_type wclass, int wtype)
 {
     item_def    wpn;
 
     wpn.base_type = wclass;
     wpn.sub_type = wtype;
 
-    return (range_skill( wpn ));
+    return (range_skill(wpn));
 }
 
 
 // Calculate the bonus to melee EV for using "wpn", with "skill" and "dex"
 // to protect a body of size "body".
-int weapon_ev_bonus( const item_def &wpn, int skill, size_type body, int dex,
-                     bool hide_hidden )
+int weapon_ev_bonus(const item_def &wpn, int skill, size_type body, int dex,
+                     bool hide_hidden)
 {
-    ASSERT( wpn.base_type == OBJ_WEAPONS || wpn.base_type == OBJ_STAVES );
+    ASSERT(wpn.base_type == OBJ_WEAPONS || wpn.base_type == OBJ_STAVES);
 
     int ret = 0;
 
     // Note: ret currently measured in halves (see skill factor).
     if (wpn.sub_type == WPN_WHIP || wpn.sub_type == WPN_DEMON_WHIP)
         ret = 3 + (dex / 5);
-    else if (weapon_skill( wpn ) == SK_POLEARMS)
+    else if (weapon_skill(wpn) == SK_POLEARMS)
         ret = 2 + (dex / 5);
 
     // Weapons of reaching are naturally a bit longer/flexier.
-    if (!hide_hidden || item_type_known( wpn ))
+    if (!hide_hidden || item_type_known(wpn))
     {
-        if (get_weapon_brand( wpn ) == SPWPN_REACHING)
+        if (get_weapon_brand(wpn) == SPWPN_REACHING)
             ret += 1;
     }
 
@@ -1813,7 +1813,7 @@ int weapon_ev_bonus( const item_def &wpn, int skill, size_type body, int dex,
     return ((ret > 0) ? ret : 0);
 }
 
-static size_type weapon_size( const item_def &item )
+static size_type weapon_size(const item_def &item)
 {
     ASSERT (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES);
 
@@ -1824,19 +1824,19 @@ static size_type weapon_size( const item_def &item )
 }
 
 // Returns number of sizes off.
-int cmp_weapon_size( const item_def &item, size_type size )
+int cmp_weapon_size(const item_def &item, size_type size)
 {
-    ASSERT( item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES );
+    ASSERT(item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES);
 
-    return (weapon_size( item ) - size);
+    return (weapon_size(item) - size);
 }
 
 // Returns number of sizes away from being a usable weapon.
-int fit_weapon_wieldable_size( const item_def &item, size_type size )
+int fit_weapon_wieldable_size(const item_def &item, size_type size)
 {
-    ASSERT( item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES );
+    ASSERT(item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES);
 
-    const int fit = cmp_weapon_size( item, size );
+    const int fit = cmp_weapon_size(item, size);
 
     return ((fit < -2) ? fit + 2 :
             (fit >  1) ? fit - 1 : 0);
@@ -1844,9 +1844,9 @@ int fit_weapon_wieldable_size( const item_def &item, size_type size )
 
 // Returns number of sizes away from being throwable... the window
 // is currently [size - 5, size - 1].
-int fit_item_throwable_size( const item_def &item, size_type size )
+int fit_item_throwable_size(const item_def &item, size_type size)
 {
-    int ret = item_size( item ) - size;
+    int ret = item_size(item) - size;
 
     return ((ret >= 0) ? ret + 1 :
             (ret > -6) ? 0
@@ -1854,15 +1854,15 @@ int fit_item_throwable_size( const item_def &item, size_type size )
 }
 
 // Returns true if weapon is usable as a weapon.
-bool check_weapon_wieldable_size( const item_def &item, size_type size )
+bool check_weapon_wieldable_size(const item_def &item, size_type size)
 {
-    ASSERT( item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES );
+    ASSERT(item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES);
 
     // Staves are currently wieldable for everyone just to be nice.
     if (item.base_type == OBJ_STAVES || weapon_skill(item) == SK_STAVES)
         return (true);
 
-    int fit = fit_weapon_wieldable_size( item, size );
+    int fit = fit_weapon_wieldable_size(item, size);
 
     // Adjust fit for size.
     if (size < SIZE_SMALL && fit > 0)
@@ -1978,12 +1978,12 @@ launch_retval is_launched(const actor *actor, const item_def *launcher,
 //
 // Staff/rod functions:
 //
-bool item_is_rod( const item_def &item )
+bool item_is_rod(const item_def &item)
 {
     return (item.base_type == OBJ_STAVES && item.sub_type >= STAFF_FIRST_ROD);
 }
 
-bool item_is_staff( const item_def &item )
+bool item_is_staff(const item_def &item)
 {
     return (item.base_type == OBJ_STAVES && !item_is_rod(item));
 }
@@ -2020,7 +2020,7 @@ bool item_is_corpse(const item_def &item)
 // Ring functions:
 
 // Returns number of pluses on jewellery (always none for amulets yet).
-int ring_has_pluses( const item_def &item )
+int ring_has_pluses(const item_def &item)
 {
     ASSERT (item.base_type == OBJ_JEWELLERY);
 
@@ -2049,7 +2049,7 @@ int ring_has_pluses( const item_def &item )
 
 // Returns true if having two rings of the same type on at the same
 // has more effect than just having one on.
-bool ring_has_stackable_effect( const item_def &item )
+bool ring_has_stackable_effect(const item_def &item)
 {
     ASSERT (item.base_type == OBJ_JEWELLERY);
     ASSERT (!jewellery_is_amulet(item));
@@ -2087,7 +2087,7 @@ bool food_is_meat(const item_def &item)
     return (Food_prop[Food_index[item.sub_type]].carn_mod > 0);
 }
 
-bool food_is_veg( const item_def &item )
+bool food_is_veg(const item_def &item)
 {
     ASSERT(item.defined() && item.base_type == OBJ_FOOD);
     return (Food_prop[Food_index[item.sub_type]].herb_mod > 0);
@@ -2258,7 +2258,7 @@ bool gives_ability(const item_def &item)
 
     // Check for evokable randart properties.
     for (int rap = ARTP_INVISIBLE; rap <= ARTP_BERSERK; rap++)
-        if (artefact_wpn_property( item, static_cast<artefact_prop_type>(rap) ))
+        if (artefact_wpn_property(item, static_cast<artefact_prop_type>(rap)))
             return (true);
 
     return (false);
@@ -2326,7 +2326,7 @@ bool gives_resistance(const item_def &item)
         if (rap == ARTP_MAGIC || rap >= ARTP_INVISIBLE)
             continue;
 
-        if (artefact_wpn_property( item, static_cast<artefact_prop_type>(rap) ))
+        if (artefact_wpn_property(item, static_cast<artefact_prop_type>(rap)))
             return (true);
     }
 
@@ -2346,7 +2346,7 @@ int item_mass(const item_def &item)
     case OBJ_ARMOUR:
         unit_mass = Armour_prop[ Armour_index[item.sub_type] ].mass;
 
-        if (get_equip_race( item ) == ISFLAG_ELVEN)
+        if (get_equip_race(item) == ISFLAG_ELVEN)
         {
             const int reduc = (unit_mass >= 25) ? unit_mass / 5 : 5;
 
@@ -2409,7 +2409,7 @@ int item_mass(const item_def &item)
         break;
 
     case OBJ_MISCELLANY:
-        if ( is_deck(item) )
+        if (is_deck(item))
         {
             unit_mass = 50;
             break;
@@ -2430,7 +2430,7 @@ int item_mass(const item_def &item)
         break;
 
     case OBJ_CORPSES:
-        unit_mass = mons_weight( item.plus );
+        unit_mass = mons_weight(item.plus);
 
         if (item.sub_type == CORPSE_SKELETON)
             unit_mass /= 10;

@@ -85,29 +85,29 @@ struct unrandart_entry
                        bool* unevokable);
 };
 
-bool is_known_artefact( const item_def &item );
-bool is_artefact( const item_def &item );
-bool is_random_artefact( const item_def &item );
-bool is_unrandom_artefact( const item_def &item );
-bool is_special_unrandom_artefact( const item_def &item );
+bool is_known_artefact(const item_def &item);
+bool is_artefact(const item_def &item);
+bool is_random_artefact(const item_def &item);
+bool is_unrandom_artefact(const item_def &item);
+bool is_special_unrandom_artefact(const item_def &item);
 
 void artefact_fixup_props(item_def &item);
 
 unique_item_status_type get_unique_item_status(const item_def& item);
 unique_item_status_type get_unique_item_status(int unrand_index);
 void set_unique_item_status(const item_def& item,
-                            unique_item_status_type status );
+                            unique_item_status_type status);
 void set_unique_item_status(int unrand_index,
-                            unique_item_status_type status );
+                            unique_item_status_type status);
 
-std::string get_artefact_name( const item_def &item, bool force_known = false );
+std::string get_artefact_name(const item_def &item, bool force_known = false);
 
-void set_artefact_name( item_def &item, const std::string &name );
-void set_artefact_appearance( item_def &item, const std::string &appear );
+void set_artefact_name(item_def &item, const std::string &name);
+void set_artefact_appearance(item_def &item, const std::string &appear);
 
-std::string artefact_name( const item_def &item, bool appearance = false );
+std::string artefact_name(const item_def &item, bool appearance = false);
 
-const char *unrandart_descrip( int which_descrip, const item_def &item );
+const char *unrandart_descrip(int which_descrip, const item_def &item);
 
 int find_okay_unrandart(uint8_t aclass, uint8_t atype = OBJ_RANDOM,
                         bool in_abyss = false);
@@ -115,46 +115,46 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype = OBJ_RANDOM,
 typedef FixedVector< int, ART_PROPERTIES >  artefact_properties_t;
 typedef FixedVector< bool, ART_PROPERTIES > artefact_known_props_t;
 
-void artefact_desc_properties( const item_def        &item,
+void artefact_desc_properties(const item_def        &item,
                               artefact_properties_t &proprt,
                               artefact_known_props_t &known,
                               bool force_fake_props = false);
 
-void artefact_wpn_properties( const item_def       &item,
+void artefact_wpn_properties(const item_def       &item,
                              artefact_properties_t &proprt,
-                             artefact_known_props_t &known );
+                             artefact_known_props_t &known);
 
-void artefact_wpn_properties( const item_def &item,
-                             artefact_properties_t &proprt );
+void artefact_wpn_properties(const item_def &item,
+                             artefact_properties_t &proprt);
 
-int artefact_wpn_property( const item_def &item, artefact_prop_type prop,
-                          bool &known );
+int artefact_wpn_property(const item_def &item, artefact_prop_type prop,
+                          bool &known);
 
-int artefact_wpn_property( const item_def &item, artefact_prop_type prop );
+int artefact_wpn_property(const item_def &item, artefact_prop_type prop);
 
-int artefact_known_wpn_property( const item_def &item,
-                                 artefact_prop_type prop );
+int artefact_known_wpn_property(const item_def &item,
+                                 artefact_prop_type prop);
 
-void artefact_wpn_learn_prop( item_def &item, artefact_prop_type prop );
-bool artefact_wpn_known_prop( const item_def &item, artefact_prop_type prop );
+void artefact_wpn_learn_prop(item_def &item, artefact_prop_type prop);
+bool artefact_wpn_known_prop(const item_def &item, artefact_prop_type prop);
 
-bool make_item_randart( item_def &item, bool force_mundane = false );
-bool make_item_unrandart( item_def &item, int unrand_index );
+bool make_item_randart(item_def &item, bool force_mundane = false);
+bool make_item_unrandart(item_def &item, int unrand_index);
 
-bool randart_is_bad( const item_def &item );
-bool randart_is_bad( const item_def &item, artefact_properties_t &proprt );
+bool randart_is_bad(const item_def &item);
+bool randart_is_bad(const item_def &item, artefact_properties_t &proprt);
 
 int find_unrandart_index(const item_def& artefact);
 
 unrandart_entry* get_unrand_entry(int unrand_index);
 
-void artefact_set_properties( item_def              &item,
-                              const artefact_properties_t &proprt );
-void artefact_set_property( item_def           &item,
+void artefact_set_properties(item_def              &item,
+                              const artefact_properties_t &proprt);
+void artefact_set_property(item_def           &item,
                             artefact_prop_type  prop,
-                            int                 val );
+                            int                 val);
 
-int get_unrandart_num( const char *name );
+int get_unrandart_num(const char *name);
 
 void cheibriados_make_item_ponderous(item_def &item);
 

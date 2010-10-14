@@ -1134,7 +1134,7 @@ static bool _need_missile_gift(bool forced)
     const int best_missile_skill = best_skill(SK_SLINGS, SK_THROWING);
     const item_def *launcher = _find_missile_launcher(best_missile_skill);
     return ((forced || you.piety > 80
-                       && random2( you.piety ) > 70
+                       && random2(you.piety) > 70
                        && one_chance_in(8))
             && you.skills[ best_missile_skill ] >= 8
             && (launcher || best_missile_skill == SK_THROWING));
@@ -1248,9 +1248,9 @@ static bool _give_nemelex_gift(bool forced = false)
 #if defined(DEBUG_GIFTS) || defined(DEBUG_CARDS)
         _show_pure_deck_chances();
 #endif
-        int thing_created = items( 1, OBJ_MISCELLANY, gift_type,
+        int thing_created = items(1, OBJ_MISCELLANY, gift_type,
                                    true, 1, MAKE_ITEM_RANDOM_RACE,
-                                   0, 0, GOD_NEMELEX_XOBEH );
+                                   0, 0, GOD_NEMELEX_XOBEH);
 
         move_item_to_grid(&thing_created, you.pos(), true);
 
@@ -2236,7 +2236,7 @@ bool do_god_gift(bool prayed_for, bool forced)
                     // reason.
                     mark_had_book(gift);
 
-                    move_item_to_grid( &thing_created, you.pos(), true );
+                    move_item_to_grid(&thing_created, you.pos(), true);
 
                     if (thing_created != NON_ITEM)
                     {
@@ -2430,7 +2430,7 @@ static void _replace(std::string& s,
 
     while ((found = s.find(find, start)) != std::string::npos)
     {
-        s.replace( found, find.length(), repl );
+        s.replace(found, find.length(), repl);
         start = found + repl.length();
     }
 }
@@ -3204,7 +3204,7 @@ bool god_likes_items(god_type god)
         return (true);
 
     case GOD_NO_GOD: case NUM_GODS: case GOD_RANDOM: case GOD_NAMELESS:
-        mprf(MSGCH_ERROR, "Bad god, no biscuit! %d", static_cast<int>(god) );
+        mprf(MSGCH_ERROR, "Bad god, no biscuit! %d", static_cast<int>(god));
 
     default:
         return (false);

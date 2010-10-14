@@ -747,21 +747,21 @@ spell_type which_spell_in_book(const item_def &book, int spl)
     ASSERT(book.base_type == OBJ_BOOKS || book.base_type == OBJ_STAVES);
 
     const CrawlHashTable &props = book.props;
-    if (!props.exists( SPELL_LIST_KEY ))
+    if (!props.exists(SPELL_LIST_KEY))
         return which_spell_in_book(book.book_number(), spl);
 
     const CrawlVector &spells = props[SPELL_LIST_KEY].get_vector();
 
-    ASSERT( spells.get_type() == SV_INT );
-    ASSERT( spells.size() == SPELLBOOK_SIZE );
+    ASSERT(spells.get_type() == SV_INT);
+    ASSERT(spells.size() == SPELLBOOK_SIZE);
 
     return static_cast<spell_type>(spells[spl].get_int());
 }
 
 spell_type which_spell_in_book(int sbook_type, int spl)
 {
-    ASSERT( sbook_type >= 0 );
-    ASSERT( sbook_type < static_cast<int>(NUMBER_SPELLBOOKS) );
+    ASSERT(sbook_type >= 0);
+    ASSERT(sbook_type < static_cast<int>(NUMBER_SPELLBOOKS));
     return spellbook_template_array[sbook_type][spl];
 }                               // end which_spell_in_book()
 
@@ -776,8 +776,8 @@ int player_spell_skills()
 
 // If fs is not NULL, updates will be to the formatted_string instead of
 // the display.
-int spellbook_contents( item_def &book, read_book_action_type action,
-                        formatted_string *fs )
+int spellbook_contents(item_def &book, read_book_action_type action,
+                        formatted_string *fs)
 {
     int spelcount = 0;
     int i, j;
@@ -787,14 +787,14 @@ int spellbook_contents( item_def &book, read_book_action_type action,
 
     bool spell_skills = player_spell_skills();
 
-    set_ident_flags( book, ISFLAG_KNOW_TYPE );
+    set_ident_flags(book, ISFLAG_KNOW_TYPE);
 
     formatted_string out;
     out.textcolor(LIGHTGREY);
 
-    out.cprintf( "%s", book.name(DESC_CAP_THE).c_str() );
+    out.cprintf("%s", book.name(DESC_CAP_THE).c_str());
 
-    out.cprintf( "\n\n Spells                             Type                      Level\n" );
+    out.cprintf("\n\n Spells                             Type                      Level\n");
 
     for (j = 0; j < SPELLBOOK_SIZE; j++)
     {
@@ -804,8 +804,8 @@ int spellbook_contents( item_def &book, read_book_action_type action,
 
         out.cprintf(" ");
 
-        const int level_diff = spell_difficulty( stype );
-        const int levels_req = spell_levels_required( stype );
+        const int level_diff = spell_difficulty(stype);
+        const int levels_req = spell_levels_required(stype);
 
         int colour = DARKGREY;
         if (action == RBOOK_USE_STAFF)
@@ -835,7 +835,7 @@ int spellbook_contents( item_def &book, read_book_action_type action,
                 colour = spell_highlight_by_utility(stype);
         }
 
-        out.textcolor( colour );
+        out.textcolor(colour);
 
         char strng[2];
         strng[0] = index_to_letter(spelcount);
@@ -878,7 +878,7 @@ int spellbook_contents( item_def &book, read_book_action_type action,
     switch (action)
     {
     case RBOOK_USE_STAFF:
-        out.cprintf( "Select a spell to cast.\n" );
+        out.cprintf("Select a spell to cast.\n");
         break;
 
     case RBOOK_READ_SPELL:
@@ -886,11 +886,11 @@ int spellbook_contents( item_def &book, read_book_action_type action,
             && item_type_known(book)
             && player_can_memorise_from_spellbook(book))
         {
-            out.cprintf( "Select a spell to read its description, to "
-                         "memorise it or to forget it.\n" );
+            out.cprintf("Select a spell to read its description, to "
+                         "memorise it or to forget it.\n");
         }
         else
-            out.cprintf( "Select a spell to read its description.\n" );
+            out.cprintf("Select a spell to read its description.\n");
         break;
 
     default:
@@ -1059,24 +1059,24 @@ int spell_rarity(spell_type which_spell)
     return (rarity);
 }
 
-bool is_valid_spell_in_book( const item_def &book, int spell )
+bool is_valid_spell_in_book(const item_def &book, int spell)
 {
     return which_spell_in_book(book, spell) != SPELL_NO_SPELL;
 }
 
-bool is_valid_spell_in_book( int splbook, int spell )
+bool is_valid_spell_in_book(int splbook, int spell)
 {
     return which_spell_in_book(splbook, spell) != SPELL_NO_SPELL;
 }
 
 // Returns false if the player cannot memorise from the book,
 // and true otherwise. -- bwr
-bool player_can_memorise_from_spellbook( const item_def &book )
+bool player_can_memorise_from_spellbook(const item_def &book)
 {
     if (book.base_type != OBJ_BOOKS)
         return (true);
 
-    if (book.props.exists( SPELL_LIST_KEY ))
+    if (book.props.exists(SPELL_LIST_KEY))
         return (true);
 
     if ((book.sub_type == BOOK_ANNIHILATIONS
@@ -1130,7 +1130,7 @@ void mark_had_book(const item_def &book)
         }
     }
 
-    if (!book.props.exists( SPELL_LIST_KEY ))
+    if (!book.props.exists(SPELL_LIST_KEY))
         mark_had_book(book.book_number());
 }
 
@@ -1165,12 +1165,12 @@ void inscribe_book_highlevel(item_def &book)
     }
 }
 
-int read_book( item_def &book, read_book_action_type action )
+int read_book(item_def &book, read_book_action_type action)
 {
     if (book.base_type == OBJ_BOOKS && !item_type_known(book)
         && !player_can_memorise_from_spellbook(book))
     {
-        mpr( "This book is beyond your current level of understanding." );
+        mpr("This book is beyond your current level of understanding.");
         more();
 
         inscribe_book_highlevel(book);
@@ -1178,7 +1178,7 @@ int read_book( item_def &book, read_book_action_type action )
     }
 
     // Remember that this function is called from staff spells as well.
-    const int keyin = spellbook_contents( book, action );
+    const int keyin = spellbook_contents(book, action);
 
     if (book.base_type == OBJ_BOOKS)
         mark_had_book(book);
@@ -1189,8 +1189,8 @@ int read_book( item_def &book, read_book_action_type action )
     // Put special book effects in another function which can be called
     // from memorise as well.
 
-    set_ident_flags( book, ISFLAG_KNOW_TYPE );
-    set_ident_flags( book, ISFLAG_IDENT_MASK);
+    set_ident_flags(book, ISFLAG_KNOW_TYPE);
+    set_ident_flags(book, ISFLAG_IDENT_MASK);
 
     return (keyin);
 }
@@ -1519,7 +1519,7 @@ bool has_spells_to_memorise(bool silent, int current_spell)
                          silent, (spell_type) current_spell);
 }
 
-static int _failure_rate_to_group( int fail )
+static int _failure_rate_to_group(int fail)
 {
     return (fail == 100) ? 100 :
            (fail > 77)   ?  78 :
@@ -1810,7 +1810,7 @@ bool learn_spell()
 
     if (specspell == SPELL_NO_SPELL)
     {
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
         return (false);
     }
 
@@ -1915,7 +1915,7 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
         mouse_control mc(MOUSE_MODE_MORE);
         if (!yesno(prompt.c_str(), false, 'n'))
         {
-            canned_msg( MSG_OK );
+            canned_msg(MSG_OK);
             return (false);
         }
     }
@@ -1947,7 +1947,7 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
     mouse_control mc(MOUSE_MODE_MORE);
     if (!yesno(info, true, 'n', false))
     {
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
         return (false);
     }
 
@@ -1967,23 +1967,23 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
         if (book == BOOK_NECRONOMICON)
         {
             mpr("The pages of the Necronomicon glow with a dark malevolence...");
-            MiscastEffect( &you, MISC_KNOWN_MISCAST, SPTYP_NECROMANCY,
+            MiscastEffect(&you, MISC_KNOWN_MISCAST, SPTYP_NECROMANCY,
                            8, random2avg(88, 3),
-                           "reading the Necronomicon" );
+                           "reading the Necronomicon");
         }
         else if (book == BOOK_DEMONOLOGY)
         {
             mpr("This book does not appreciate being disturbed by one of your ineptitude!");
-            MiscastEffect( &you, MISC_KNOWN_MISCAST, SPTYP_SUMMONING,
+            MiscastEffect(&you, MISC_KNOWN_MISCAST, SPTYP_SUMMONING,
                            7, random2avg(88, 3),
-                           "reading the book of Demonology" );
+                           "reading the book of Demonology");
         }
         else if (book == BOOK_ANNIHILATIONS)
         {
             mpr("This book does not appreciate being disturbed by one of your ineptitude!");
-            MiscastEffect( &you, MISC_KNOWN_MISCAST, SPTYP_CONJURATION,
+            MiscastEffect(&you, MISC_KNOWN_MISCAST, SPTYP_CONJURATION,
                            8, random2avg(88, 3),
-                           "reading the book of Annihilations" );
+                           "reading the book of Annihilations");
         }
 
 #ifdef WIZARD
@@ -1996,10 +1996,10 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
 #endif
     }
 
-    start_delay( DELAY_MEMORISE, spell_difficulty( specspell ), specspell );
+    start_delay(DELAY_MEMORISE, spell_difficulty(specspell), specspell);
     you.turn_is_over = true;
 
-    did_god_conduct( DID_SPELL_CASTING, 2 + random2(5) );
+    did_god_conduct(DID_SPELL_CASTING, 2 + random2(5));
 
     return (true);
 }
@@ -2017,7 +2017,7 @@ bool forget_spell_from_book(spell_type spell, const item_def* book)
     mouse_control mc(MOUSE_MODE_MORE);
     if (!yesno(prompt.c_str(), false, 'n'))
     {
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
         return (false);
     }
     mprf("As you tear out the page describing %s, the book crumbles to dust.",
@@ -2049,13 +2049,13 @@ int count_staff_spells(const item_def &item, bool need_id)
     return (nspel);
 }
 
-int staff_spell( int staff )
+int staff_spell(int staff)
 {
     item_def& istaff(you.inv[staff]);
     // Spell staves are mostly for the benefit of non-spellcasters, so we're
     // not going to involve INT or Spellcasting skills for power. -- bwr
     int variable_power = (5 + you.skills[SK_EVOCATIONS]
-                    + roll_dice( 2, you.skills[SK_EVOCATIONS] ));
+                    + roll_dice(2, you.skills[SK_EVOCATIONS]));
 
     if (!item_is_rod(istaff))
     {
@@ -2081,26 +2081,26 @@ int staff_spell( int staff )
     {
         mprf(MSGCH_PROMPT,
              "Evoke which spell from the rod ([a-%c] spell [?*] list)? ",
-             'a' + num_spells - 1 );
+             'a' + num_spells - 1);
 
         // Note that auto_list is ignored here.
         keyin = get_ch();
 
         if (keyin == '?' || keyin == '*')
         {
-            keyin = read_book( you.inv[staff], RBOOK_USE_STAFF );
+            keyin = read_book(you.inv[staff], RBOOK_USE_STAFF);
             // [ds] read_book sets turn_is_over.
             you.turn_is_over = false;
         }
     }
 
-    if ( !isaalpha(keyin) )
+    if (!isaalpha(keyin))
     {
         canned_msg(MSG_HUH);
         return -1;
     }
 
-    const int idx = letter_to_index( keyin );
+    const int idx = letter_to_index(keyin);
 
     if ((idx >= SPELLBOOK_SIZE) || !is_valid_spell_in_book(istaff, idx))
     {
@@ -2108,8 +2108,8 @@ int staff_spell( int staff )
         return -1;
     }
 
-    const spell_type spell = which_spell_in_book( istaff, idx );
-    const int mana = spell_mana( spell ) * ROD_CHARGE_MULT;
+    const spell_type spell = which_spell_in_book(istaff, idx);
+    const int mana = spell_mana(spell) * ROD_CHARGE_MULT;
 
     // We also need a fixed power for range calculation
     int fixed_power = calc_spell_power(spell, false, false, true, true);
@@ -2161,7 +2161,7 @@ int staff_spell( int staff )
     you.wield_change = true;
     you.turn_is_over = true;
 
-    return (roll_dice( 1, 1 + spell_difficulty(spell) / 2 ));
+    return (roll_dice(1, 1 + spell_difficulty(spell) / 2));
 }
 
 static bool _compare_spells(spell_type a, spell_type b)
@@ -2939,7 +2939,7 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
             continue;
 
         for (int k = 0; k <= SPTYP_LAST_EXPONENT; k++)
-            if (spell_typematch( chosen_spells[i], 1 << k ))
+            if (spell_typematch(chosen_spells[i], 1 << k))
                 count[k]++;
     }
 
@@ -3006,7 +3006,7 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
             lowest_level = diff;
 
         if (all_spells_disc1 && is_valid_spell(chosen_spells[i])
-            && !spell_typematch( chosen_spells[i], disc1 ))
+            && !spell_typematch(chosen_spells[i], disc1))
         {
             all_spells_disc1 = false;
         }

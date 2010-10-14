@@ -1289,8 +1289,8 @@ bool slide_feature_over(const coord_def &src, coord_def prefered_dest,
 }
 
 // Returns true if we manage to scramble free.
-bool fall_into_a_pool( const coord_def& entry, bool allow_shift,
-                       dungeon_feature_type terrain )
+bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
+                       dungeon_feature_type terrain)
 {
     bool escape = false;
     coord_def empty;
@@ -1322,17 +1322,17 @@ bool fall_into_a_pool( const coord_def& entry, bool allow_shift,
 
         if (resist <= 0)
         {
-            mpr( "The lava burns you to a cinder!" );
+            mpr("The lava burns you to a cinder!");
             ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_LAVA);
         }
         else
         {
             // should boost # of bangs per damage in the future {dlb}
-            mpr( "The lava burns you!" );
+            mpr("The lava burns you!");
             ouch((10 + roll_dice(2, 50)) / resist, NON_MONSTER, KILLED_BY_LAVA);
         }
 
-        expose_player_to_element( BEAM_LAVA, 14 );
+        expose_player_to_element(BEAM_LAVA, 14);
     }
 
     // a distinction between stepping and falling from you.duration[DUR_LEVITATION]
@@ -1371,10 +1371,10 @@ bool fall_into_a_pool( const coord_def& entry, bool allow_shift,
         if (in_bounds(empty) && !is_feat_dangerous(grd(empty)))
         {
             mpr("You manage to scramble free!");
-            move_player_to_grid( empty, false, false);
+            move_player_to_grid(empty, false, false);
 
             if (terrain == DNGN_LAVA)
-                expose_player_to_element( BEAM_LAVA, 14 );
+                expose_player_to_element(BEAM_LAVA, 14);
 
             return (true);
         }

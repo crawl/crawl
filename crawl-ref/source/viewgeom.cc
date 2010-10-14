@@ -49,17 +49,17 @@ class _layout
     {
 #ifndef USE_TILE
         // Check that all the panes fit in the view.
-        ASSERT( (viewp+viewsz - termp).x <= termsz.x );
-        ASSERT( (viewp+viewsz - termp).y <= termsz.y );
+        ASSERT((viewp+viewsz - termp).x <= termsz.x);
+        ASSERT((viewp+viewsz - termp).y <= termsz.y);
 
-        ASSERT( (hudp+hudsz - termp).x <= termsz.x );
-        ASSERT( (hudp+hudsz - termp).y <= termsz.y );
+        ASSERT((hudp+hudsz - termp).x <= termsz.x);
+        ASSERT((hudp+hudsz - termp).y <= termsz.y);
 
-        ASSERT( (msgp+msgsz - termp).x <= termsz.x );
-        ASSERT( (msgp+msgsz - termp).y <= termsz.y );
+        ASSERT((msgp+msgsz - termp).x <= termsz.x);
+        ASSERT((msgp+msgsz - termp).y <= termsz.y);
 
-        ASSERT( (mlistp+mlistsz-termp).x <= termsz.x );
-        ASSERT( (mlistp+mlistsz-termp).y <= termsz.y );
+        ASSERT((mlistp+mlistsz-termp).x <= termsz.x);
+        ASSERT((mlistp+mlistsz-termp).y <= termsz.y);
 #endif
     }
  public:
@@ -366,7 +366,7 @@ void crawl_view_geometry::set_player_at(const coord_def &c, bool centre)
 
 void crawl_view_geometry::init_geometry()
 {
-    termsz = coord_def( get_number_of_cols(), get_number_of_lines() );
+    termsz = coord_def(get_number_of_cols(), get_number_of_lines());
     hudsz  = coord_def(HUD_WIDTH,
                        HUD_HEIGHT + (Options.show_gold_turns ? 1 : 0));
 

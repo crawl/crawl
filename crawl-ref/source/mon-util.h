@@ -91,7 +91,7 @@ public:
 
     mon_energy_usage operator | (const mon_energy_usage &o) const
     {
-        return mon_energy_usage( combine(move, o.move),
+        return mon_energy_usage(combine(move, o.move),
                                  combine(swim, o.swim),
                                  combine(attack, o.attack),
                                  combine(missile, o.missile),
@@ -99,7 +99,7 @@ public:
                                  combine(special, o.special),
                                  combine(item, o.item),
                                  combine(pickup_percent, o.pickup_percent,
-                                         100) );
+                                         100));
     }
 private:
     int8_t combine(int8_t a, int8_t b, int8_t def = 10) const {
@@ -207,7 +207,7 @@ int hit_points(int hit_dice, int min_hp, int rand_hp);
 
 int mons_class_hit_dice(int mc);
 
-bool mons_immune_magic( const monster* mon );
+bool mons_immune_magic(const monster* mon);
 const char* mons_resist_string(const monster* mon);
 
 int mons_damage(int mc, int rt);
@@ -221,14 +221,14 @@ int mons_unusable_items(const monster* mon);
 
 mon_holy_type mons_class_holiness(int mc);
 
-bool mons_is_mimic( int mc );
+bool mons_is_mimic(int mc);
 bool mons_is_item_mimic(int mc);
 bool mons_is_feat_mimic(int mc);
 
 
-bool mons_is_statue( int mc, bool allow_disintegrate = false );
-bool mons_is_demon( int mc );
-bool mons_is_draconian( int mc );
+bool mons_is_statue(int mc, bool allow_disintegrate = false);
+bool mons_is_demon(int mc);
+bool mons_is_draconian(int mc);
 bool mons_is_conjured(int mc);
 
 bool mons_class_wields_two_weapons(int mc);
@@ -374,7 +374,7 @@ bool mons_is_firewood(const monster* mon);
 bool mons_has_body(const monster* mon);
 
 int cheibriados_monster_player_speed_delta(const monster* mon);
-bool cheibriados_thinks_mons_is_fast( const monster* mon );
+bool cheibriados_thinks_mons_is_fast(const monster* mon);
 bool mons_is_projectile(int mc);
 bool mons_has_blood(int mc);
 

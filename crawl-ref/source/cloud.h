@@ -30,33 +30,33 @@ cloud_type random_smoke_type();
 
 cloud_type cloud_type_at(const coord_def &pos);
 
-void delete_cloud( int cloud );
+void delete_cloud(int cloud);
 void delete_cloud_at(coord_def p);
-void move_cloud( int cloud, const coord_def& newpos );
+void move_cloud(int cloud, const coord_def& newpos);
 void move_cloud_to(coord_def src, coord_def dest);
 
-void check_place_cloud( cloud_type cl_type, const coord_def& p, int lifetime,
+void check_place_cloud(cloud_type cl_type, const coord_def& p, int lifetime,
                         kill_category whose, int spread_rate = -1,
                         int colour = -1, std::string name = "",
                         std::string tile = "");
-void check_place_cloud( cloud_type cl_type, const coord_def& p, int lifetime,
+void check_place_cloud(cloud_type cl_type, const coord_def& p, int lifetime,
                         killer_type killer, int spread_rate = -1,
                         int colour = -1, std::string name = "",
                         std::string tile = "");
-void check_place_cloud( cloud_type cl_type, const coord_def& p, int lifetime,
+void check_place_cloud(cloud_type cl_type, const coord_def& p, int lifetime,
                         kill_category whose, killer_type killer,
                         int spread_rate = -1,
                         int colour = -1, std::string name = "",
                         std::string tile = "");
-void place_cloud( cloud_type cl_type, const coord_def& ctarget,
+void place_cloud(cloud_type cl_type, const coord_def& ctarget,
                   int cl_range, kill_category whose, int spread_rate = -1,
                   int colour = -1, std::string name = "",
                   std::string tile = "");
-void place_cloud( cloud_type cl_type, const coord_def& ctarget,
+void place_cloud(cloud_type cl_type, const coord_def& ctarget,
                   int cl_range, killer_type killer, int spread_rate = -1,
                   int colour = -1, std::string name = "",
                   std::string tile = "");
-void place_cloud( cloud_type cl_type, const coord_def& ctarget,
+void place_cloud(cloud_type cl_type, const coord_def& ctarget,
                   int cl_range, kill_category whose, killer_type killer,
                   int spread_rate = -1, int colour = -1, std::string name = "",
                   std::string tile = "");

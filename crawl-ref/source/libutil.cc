@@ -102,7 +102,7 @@ bool shell_safe(const char *file)
     return (match < 0 || !file[match]);
 }
 
-void play_sound( const char *file )
+void play_sound(const char *file)
 {
 #if defined(WINMM_PLAY_SOUNDS)
     // Check whether file exists, is readable, etc.?
@@ -611,7 +611,7 @@ std::string replace_all(std::string s,
 
     while ((found = s.find(find, start)) != std::string::npos)
     {
-        s.replace( found, find.length(), repl );
+        s.replace(found, find.length(), repl);
         start = found + repl.length();
     }
 
@@ -629,7 +629,7 @@ std::string replace_all_of(std::string s,
 
     while ((found = s.find_first_of(tofind, start)) != std::string::npos)
     {
-        s.replace( found, 1, replacement );
+        s.replace(found, 1, replacement);
         start = found + replacement.length();
     }
 
@@ -650,28 +650,28 @@ int count_occurrences(const std::string &text, const std::string &s)
     return (nfound);
 }
 
-std::string trimmed_string( std::string s )
+std::string trimmed_string(std::string s)
 {
     trim_string(s);
     return (s);
 }
 
 // also used with macros
-std::string &trim_string( std::string &str )
+std::string &trim_string(std::string &str)
 {
-    str.erase( 0, str.find_first_not_of( " \t\n\r" ) );
-    str.erase( str.find_last_not_of( " \t\n\r" ) + 1 );
+    str.erase(0, str.find_first_not_of(" \t\n\r"));
+    str.erase(str.find_last_not_of(" \t\n\r") + 1);
 
     return (str);
 }
 
-std::string &trim_string_right( std::string &str )
+std::string &trim_string_right(std::string &str)
 {
-    str.erase( str.find_last_not_of( " \t\n\r" ) + 1 );
+    str.erase(str.find_last_not_of(" \t\n\r") + 1);
     return (str);
 }
 
-static void add_segment( std::vector<std::string> &segs,
+static void add_segment(std::vector<std::string> &segs,
                          std::string s,
                          bool trim,
                          bool accept_empty)
@@ -683,7 +683,7 @@ static void add_segment( std::vector<std::string> &segs,
         segs.push_back(s);
 }
 
-std::vector<std::string> split_string( const std::string &sep,
+std::vector<std::string> split_string(const std::string &sep,
                                        std::string s,
                                        bool trim_segments,
                                        bool accept_empty_segments,

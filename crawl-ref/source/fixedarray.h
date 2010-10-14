@@ -69,7 +69,7 @@ public:
     }
 
     void init(const TYPE& def) {
-        for ( int i = 0; i < WIDTH; ++i )
+        for (int i = 0; i < WIDTH; ++i)
             mData[i].init(def);
     }
 

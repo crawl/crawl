@@ -48,17 +48,17 @@ void opening_screen(void)
     msg += "\n";
 
     formatted_string::parse_string(msg).display();
-    textcolor( LIGHTGREY );
+    textcolor(LIGHTGREY);
 }
 
 static void _show_name_prompt(int where)
 {
     cgotoxy(1, where);
-    textcolor( CYAN );
+    textcolor(CYAN);
 
     cprintf("\nWhat is your name today? ");
 
-    textcolor( LIGHTGREY );
+    textcolor(LIGHTGREY);
 }
 
 bool is_good_name(const std::string& name, bool blankOK, bool verbose)
@@ -168,10 +168,10 @@ bool validate_player_name(const std::string &name, bool verbose)
         {
             if (verbose)
             {
-                cprintf( "\n"
+                cprintf("\n"
                         "Alpha-numerics, spaces, dashes, periods "
                         "and underscores only, please."
-                        "\n" );
+                        "\n");
             }
             return (false);
         }

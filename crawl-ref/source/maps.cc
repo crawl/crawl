@@ -84,7 +84,7 @@ dgn_map_parameters::dgn_map_parameters(const string_vector &parameters)
 
 // Make sure that vault_n, where n is a number, is a vault which can be put
 // anywhere, while other vault names are for specific level ranges, etc.
-int vault_main( vault_placement &place, const map_def *vault,
+int vault_main(vault_placement &place, const map_def *vault,
                 bool check_place)
 {
 #ifdef DEBUG_DIAGNOSTICS
@@ -99,7 +99,7 @@ int vault_main( vault_placement &place, const map_def *vault,
     // level, except for branch entry vaults where dungeon.cc just
     // rejects the vault and places a vanilla entry.
 
-    return (write_vault( const_cast<map_def&>(*vault), place, check_place ));
+    return (write_vault(const_cast<map_def&>(*vault), place, check_place));
 }
 
 static int write_vault(map_def &mdef,
@@ -425,8 +425,8 @@ static coord_def _find_minivault_place(
     // Find a target area which can be safely overwritten.
     for (int tries = 0; tries < 600; ++tries)
     {
-        coord_def v1(random_range( margin, GXM - margin - place.size.x ),
-                     random_range( margin, GYM - margin - place.size.y ));
+        coord_def v1(random_range(margin, GXM - margin - place.size.x),
+                     random_range(margin, GYM - margin - place.size.y));
 
         if (check_place && !map_place_valid(place.map, v1, place.size))
         {
@@ -546,7 +546,7 @@ static int apply_vault_definition(
 template <typename I>
 static bool map_has_no_tags(const map_def &map, I begin, I end)
 {
-    for ( ; begin != end; ++begin)
+    for (; begin != end; ++begin)
         if (map.has_tag(*begin))
             return (false);
 
@@ -1127,7 +1127,7 @@ static bool load_map_index(const std::string &base)
             lc_global_prelude.read(inf);
             fclose(fp);
 
-            global_preludes.push_back( lc_global_prelude );
+            global_preludes.push_back(lc_global_prelude);
         }
     }
 
@@ -1140,7 +1140,7 @@ static bool load_map_index(const std::string &base)
     (void) unmarshallInt(inf);
     const int nmaps = unmarshallShort(inf);
     const int nexist = vdefs.size();
-    vdefs.resize( nexist + nmaps, map_def() );
+    vdefs.resize(nexist + nmaps, map_def());
     for (int i = 0; i < nmaps; ++i)
     {
         map_def &vdef(vdefs[nexist + i]);
@@ -1274,13 +1274,13 @@ static void parse_maps(const std::string &s)
     yyparse();
     fclose(dat);
 
-    global_preludes.push_back( lc_global_prelude );
+    global_preludes.push_back(lc_global_prelude);
     write_map_cache(s, file_start, vdefs.size());
 }
 
 void read_map(const std::string &file)
 {
-    parse_maps( lc_desfile = datafile_path(file) );
+    parse_maps(lc_desfile = datafile_path(file));
     // Clean up cached environments.
     dlua.callfn("dgn_flush_map_environments", 0, 0);
     // Force GC to prevent heap from swelling unnecessarily.
@@ -1312,12 +1312,12 @@ void reread_maps()
     read_maps();
 }
 
-void add_parsed_map( const map_def &md )
+void add_parsed_map(const map_def &md)
 {
     map_def map = md;
 
     map.fixup();
-    vdefs.push_back( map );
+    vdefs.push_back(map);
 }
 
 void run_map_preludes()

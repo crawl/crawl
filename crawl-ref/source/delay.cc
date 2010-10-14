@@ -123,21 +123,21 @@ static int _push_delay(const delay_queue_item &delay)
     for (delay_queue_type::iterator i = you.delay_queue.begin();
          i != you.delay_queue.end(); ++i)
     {
-        if (_is_parent_delay( i->type ))
+        if (_is_parent_delay(i->type))
         {
             size_t pos = i - you.delay_queue.begin();
             you.delay_queue.insert(i, delay);
             return (pos);
         }
     }
-    you.delay_queue.push_back( delay );
+    you.delay_queue.push_back(delay);
     return (you.delay_queue.size() - 1);
 }
 
 static void _pop_delay()
 {
     if (!you.delay_queue.empty())
-        you.delay_queue.erase( you.delay_queue.begin() );
+        you.delay_queue.erase(you.delay_queue.begin());
 }
 
 static int delays_cleared[NUM_DELAYS];
@@ -163,7 +163,7 @@ static void _clear_pending_delays()
     }
 }
 
-void start_delay( delay_type type, int turns, int parm1, int parm2 )
+void start_delay(delay_type type, int turns, int parm1, int parm2)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -191,12 +191,12 @@ void start_delay( delay_type type, int turns, int parm1, int parm2 )
             _finish_delay(delay);
         return;
     }
-    _push_delay( delay );
+    _push_delay(delay);
 }
 
 static void _maybe_interrupt_swap();
 
-void stop_delay( bool stop_stair_travel )
+void stop_delay(bool stop_stair_travel)
 {
     if (you.delay_queue.empty())
         return;
@@ -515,12 +515,12 @@ static void _maybe_interrupt_swap()
     }
 }
 
-bool you_are_delayed( void )
+bool you_are_delayed(void)
 {
     return (!you.delay_queue.empty());
 }
 
-delay_type current_delay_action( void )
+delay_type current_delay_action(void)
 {
     return (you_are_delayed() ? you.delay_queue.front().type
                               : DELAY_NOT_DELAYED);
@@ -790,7 +790,7 @@ void handle_delay()
                && items_for_multidrop[0].slot != PROMPT_GOT_SPECIAL
                && !you.inv[items_for_multidrop[0].slot].defined())
         {
-            items_for_multidrop.erase( items_for_multidrop.begin() );
+            items_for_multidrop.erase(items_for_multidrop.begin());
         }
 
         if (items_for_multidrop.empty())
@@ -817,7 +817,7 @@ void handle_delay()
     {
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Delay type: %d (%s), duration: %d",
-             delay.type, delay_name(delay.type), delay.duration );
+             delay.type, delay_name(delay.type), delay.duration);
 #endif
         // delay.duration-- *must* be done before multidrop, because
         // multidrop is now a parent delay, which means other delays
@@ -1156,12 +1156,12 @@ static void _finish_delay(const delay_queue_item &delay)
         if (delay.parm1 == you.equip[EQ_WEAPON])
         {
             unwield_item();
-            canned_msg( MSG_EMPTY_HANDED );
+            canned_msg(MSG_EMPTY_HANDED);
         }
 
-        if (!copy_item_to_grid( you.inv[ delay.parm1 ],
+        if (!copy_item_to_grid(you.inv[ delay.parm1 ],
                                 you.pos(), delay.parm2,
-                                true ))
+                                true))
         {
             mpr("Too many items on this level, not dropping the item.");
         }
@@ -1169,7 +1169,7 @@ static void _finish_delay(const delay_queue_item &delay)
         {
             mprf("You drop %s.", quant_name(you.inv[delay.parm1], delay.parm2,
                                             DESC_NOCAP_A).c_str());
-            dec_inv_item_quantity( delay.parm1, delay.parm2 );
+            dec_inv_item_quantity(delay.parm1, delay.parm2);
         }
         break;
 
@@ -1223,7 +1223,7 @@ static void _armour_wear_effects(const int item_slot)
     if (!was_known)
     {
         if (Options.autoinscribe_artefacts && is_artefact(arm))
-            add_autoinscription( arm, artefact_auto_inscription(arm));
+            add_autoinscription(arm, artefact_auto_inscription(arm));
     }
     mprf("You finish putting on %s.", arm.name(DESC_NOCAP_YOUR).c_str());
 
@@ -1276,7 +1276,7 @@ static command_type _get_running_command()
     else if (Options.travel_delay > 0)
         delay(Options.travel_delay);
 
-    return direction_to_command( you.running.pos.x, you.running.pos.y );
+    return direction_to_command(you.running.pos.x, you.running.pos.y);
 }
 
 static void _handle_run_delays(const delay_queue_item &delay)
@@ -1571,8 +1571,8 @@ void autotoggle_autopickup(bool off)
 }
 
 // Returns true if any activity was stopped. Not reentrant.
-bool interrupt_activity( activity_interrupt_type ai,
-                         const activity_interrupt_data &at )
+bool interrupt_activity(activity_interrupt_type ai,
+                         const activity_interrupt_data &at)
 {
     if (interrupt_block::blocked())
         return (false);
@@ -1652,8 +1652,8 @@ static const char *activity_interrupt_names[] =
 
 static const char *_activity_interrupt_name(activity_interrupt_type ai)
 {
-    ASSERT( sizeof(activity_interrupt_names)
-            / sizeof(*activity_interrupt_names) == NUM_AINTERRUPTS );
+    ASSERT(sizeof(activity_interrupt_names)
+            / sizeof(*activity_interrupt_names) == NUM_AINTERRUPTS);
 
     if (ai == NUM_AINTERRUPTS)
         return ("");
@@ -1663,8 +1663,8 @@ static const char *_activity_interrupt_name(activity_interrupt_type ai)
 
 activity_interrupt_type get_activity_interrupt(const std::string &name)
 {
-    ASSERT( sizeof(activity_interrupt_names)
-            / sizeof(*activity_interrupt_names) == NUM_AINTERRUPTS );
+    ASSERT(sizeof(activity_interrupt_names)
+            / sizeof(*activity_interrupt_names) == NUM_AINTERRUPTS);
 
     for (int i = 0; i < NUM_AINTERRUPTS; ++i)
         if (name == activity_interrupt_names[i])
@@ -1686,7 +1686,7 @@ static const char *delay_names[] =
 // name must be lowercased already!
 delay_type get_delay(const std::string &name)
 {
-    ASSERT( sizeof(delay_names) / sizeof(*delay_names) == NUM_DELAYS );
+    ASSERT(sizeof(delay_names) / sizeof(*delay_names) == NUM_DELAYS);
 
     for (int i = 0; i < NUM_DELAYS; ++i)
     {
@@ -1712,7 +1712,7 @@ delay_type get_delay(const std::string &name)
 
 const char *delay_name(int delay)
 {
-    ASSERT( sizeof(delay_names) / sizeof(*delay_names) == NUM_DELAYS );
+    ASSERT(sizeof(delay_names) / sizeof(*delay_names) == NUM_DELAYS);
 
     if (delay < 0 || delay >= NUM_DELAYS)
         return ("");

@@ -413,13 +413,13 @@ bool noisy(int loudness, const coord_def& where, const char *msg, int who,
         return (false);
 
     const int dist = loudness * loudness + 1;
-    const int player_distance = distance( you.pos(), where );
+    const int player_distance = distance(you.pos(), where);
 
     // Message the player.
-    if (player_distance <= dist && player_can_hear( where ))
+    if (player_distance <= dist && player_can_hear(where))
     {
         if (msg)
-            mpr( msg, MSGCH_SOUND );
+            mpr(msg, MSGCH_SOUND);
 
         you.check_awaken(dist - player_distance);
 

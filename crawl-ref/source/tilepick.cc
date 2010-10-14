@@ -2979,7 +2979,7 @@ tileidx_t tileidx_item(const item_def &item)
     switch (clas)
     {
     case OBJ_WEAPONS:
-        if (is_unrandom_artefact( item ))
+        if (is_unrandom_artefact(item))
             return _tileidx_unrand_artefact(find_unrandart_index(item));
         else
             return _tileidx_weapon(item);
@@ -2988,14 +2988,14 @@ tileidx_t tileidx_item(const item_def &item)
         return _tileidx_missile(item);
 
     case OBJ_ARMOUR:
-        if (is_unrandom_artefact( item ))
+        if (is_unrandom_artefact(item))
             return _tileidx_unrand_artefact(find_unrandart_index(item));
         else
             return _tileidx_armour(item);
 
     case OBJ_WANDS:
         if (id[ IDTYPE_WANDS ][type] == ID_KNOWN_TYPE
-            ||  (item.flags &ISFLAG_KNOW_TYPE ))
+            ||  (item.flags &ISFLAG_KNOW_TYPE))
         {
             return TILE_WAND_ID_FIRST + type;
         }
@@ -3007,7 +3007,7 @@ tileidx_t tileidx_item(const item_def &item)
 
     case OBJ_SCROLLS:
         if (id[ IDTYPE_SCROLLS ][type] == ID_KNOWN_TYPE
-            ||  (item.flags &ISFLAG_KNOW_TYPE ))
+            ||  (item.flags &ISFLAG_KNOW_TYPE))
         {
             return TILE_SCR_ID_FIRST + type;
         }
@@ -3017,11 +3017,11 @@ tileidx_t tileidx_item(const item_def &item)
         return TILE_GOLD;
 
     case OBJ_JEWELLERY:
-        if (is_unrandom_artefact( item ))
+        if (is_unrandom_artefact(item))
             return _tileidx_unrand_artefact(find_unrandart_index(item));
         else if (type < NUM_RINGS)
         {
-            if (is_random_artefact( item ))
+            if (is_random_artefact(item))
                 return TILE_RING_RANDOM_OFFSET + colour - 1;
             else if (id[ IDTYPE_JEWELLERY][type] == ID_KNOWN_TYPE
                      || (item.flags & ISFLAG_KNOW_TYPE))
@@ -3035,7 +3035,7 @@ tileidx_t tileidx_item(const item_def &item)
         }
         else
         {
-            if (is_random_artefact( item ))
+            if (is_random_artefact(item))
                 return TILE_AMU_RANDOM_OFFSET + colour - 1;
             else if (id[ IDTYPE_JEWELLERY][type] == ID_KNOWN_TYPE
                      || (item.flags & ISFLAG_KNOW_TYPE))
@@ -3050,7 +3050,7 @@ tileidx_t tileidx_item(const item_def &item)
 
     case OBJ_POTIONS:
         if (id[ IDTYPE_POTIONS ][type] == ID_KNOWN_TYPE
-            ||  (item.flags &ISFLAG_KNOW_TYPE ))
+            ||  (item.flags &ISFLAG_KNOW_TYPE))
         {
             return TILE_POT_ID_FIRST + type;
         }
@@ -3084,7 +3084,7 @@ tileidx_t tileidx_item(const item_def &item)
         if (item_is_rod(item))
         {
             if (id[IDTYPE_STAVES][type] == ID_KNOWN_TYPE
-                ||  (item.flags & ISFLAG_KNOW_TYPE ))
+                ||  (item.flags & ISFLAG_KNOW_TYPE))
             {
                 return TILE_ROD_ID_FIRST + type - STAFF_SMITING;
             }
@@ -3095,7 +3095,7 @@ tileidx_t tileidx_item(const item_def &item)
         else
         {
             if (id[IDTYPE_STAVES][type] == ID_KNOWN_TYPE
-                ||  (item.flags & ISFLAG_KNOW_TYPE ))
+                ||  (item.flags & ISFLAG_KNOW_TYPE))
             {
                 return TILE_STAFF_ID_FIRST + type;
             }
@@ -3781,7 +3781,7 @@ tileidx_t tileidx_unseen_flag(const coord_def &gc)
                 && !env.map_knowledge(gc).seen()
              || env.map_knowledge(gc).detected_item()
              || env.map_knowledge(gc).detected_monster()
-             )
+           )
     {
         return (TILE_FLAG_MM_UNSEEN);
     }

@@ -68,20 +68,20 @@ template <class T>
 inline static T *clua_get_lightuserdata(lua_State *ls, int ndx)
 {
     return (lua_islightuserdata(ls, ndx))?
-            static_cast<T *>( lua_touserdata(ls, ndx) )
+            static_cast<T *>(lua_touserdata(ls, ndx))
           : NULL;
 }
 
 template <class T>
 inline static T *clua_get_userdata(lua_State *ls, const char *mt, int ndx = 1)
 {
-    return static_cast<T*>( luaL_checkudata( ls, ndx, mt ) );
+    return static_cast<T*>(luaL_checkudata(ls, ndx, mt));
 }
 
 template <class T>
 static int lua_object_gc(lua_State *ls)
 {
-    T **pptr = static_cast<T**>( lua_touserdata(ls, 1) );
+    T **pptr = static_cast<T**>(lua_touserdata(ls, 1));
     if (pptr)
         delete *pptr;
     return (0);
@@ -90,10 +90,10 @@ static int lua_object_gc(lua_State *ls)
 template <class T> T *clua_new_userdata(
         lua_State *ls, const char *mt)
 {
-    void *udata = lua_newuserdata( ls, sizeof(T) );
+    void *udata = lua_newuserdata(ls, sizeof(T));
     luaL_getmetatable(ls, mt);
     lua_setmetatable(ls, -2);
-    return static_cast<T*>( udata );
+    return static_cast<T*>(udata);
 }
 
 template <typename T>
@@ -150,7 +150,7 @@ void push_item(lua_State *ls, item_def *item);
     c.x = luaL_checkint(ls, p1);                          \
     c.y = luaL_checkint(ls, p2);                          \
     if (!boundfn(c))                                        \
-        luaL_error(                                             \
+        luaL_error(                                          \
             ls,                                                 \
             make_stringf("Point (%d,%d) is out of bounds",      \
                          c.x, c.y).c_str());                    \

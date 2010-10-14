@@ -24,8 +24,8 @@ class stack_iterator : public std::iterator<std::forward_iterator_tag,
                                             item_def>
 {
 public:
-    explicit stack_iterator( const coord_def& pos, bool accessible = false );
-    explicit stack_iterator( int start_link );
+    explicit stack_iterator(const coord_def& pos, bool accessible = false);
+    explicit stack_iterator(int start_link);
 
     operator bool() const;
     item_def& operator *() const;
@@ -41,9 +41,9 @@ private:
 
 int stepdown_value(int base_value, int stepping, int first_step,
                    int last_step, int ceiling_value);
-int stat_mult( int stat_level, int value, int div = 20, int shift = 3 );
-int stat_div( int stat_level, int value, int div = 20, int shift = 3 );
-int skill_bump( int skill );
+int stat_mult(int stat_level, int value, int div = 20, int shift = 3);
+int stat_div(int stat_level, int value, int div = 20, int shift = 3);
+int skill_bump(int skill);
 unsigned char get_ch();
 
 void cio_init();
@@ -59,17 +59,17 @@ void redraw_screen();
 
 void canned_msg(canned_message_type which_message);
 
-bool yes_or_no( const char* fmt, ... );
+bool yes_or_no(const char* fmt, ...);
 typedef std::map<int, int> explicit_keymap;
-bool yesno( const char * str, bool safe = true, int safeanswer = 0,
+bool yesno(const char * str, bool safe = true, int safeanswer = 0,
             bool clear_after = true, bool interrupt_delays = true,
             bool noprompt = false,
             const explicit_keymap *map = NULL,
             GotoRegion = GOTO_MSG);
 
-int yesnoquit( const char* str, bool safe = true, int safeanswer = 0,
+int yesnoquit(const char* str, bool safe = true, int safeanswer = 0,
                bool allow_all = false, bool clear_after = true,
-               char alt_yes = 'Y', char alt_yes2 = 'Y' );
+               char alt_yes = 'Y', char alt_yes2 = 'Y');
 
 bool player_can_hear(const coord_def& p, int hear_distance = 999);
 

@@ -144,7 +144,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
                 // Grid in los, no problem.
                 break;
             }
-            else if (you.trans_wall_blocking( beam.target ))
+            else if (you.trans_wall_blocking(beam.target))
             {
                 // Wizard blink can move past translucent walls.
                 if (wizard_blink)
@@ -172,7 +172,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
         }
         else if (you.level_type == LEVEL_ABYSS && !wizard_blink)
         {
-            abyss_teleport( false );
+            abyss_teleport(false);
             if (you.pet_target != MHITYOU)
                 you.pet_target = MHITNOT;
         }
@@ -184,7 +184,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
 
             // Controlling teleport contaminates the player. -- bwr
             if (!wizard_blink)
-                contaminate_player( 1, true );
+                contaminate_player(1, true);
 
 
             if (!wizard_blink && you.duration[DUR_CONDENSATION_SHIELD] > 0)
@@ -396,7 +396,7 @@ bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizard_tele)
 
     // After this point, we're guaranteed to teleport. Kill the appropriate
     // delays.
-    interrupt_activity( AI_TELEPORT );
+    interrupt_activity(AI_TELEPORT);
 
     // Update what we can see at the current location as well as its stash,
     // in case something happened in the exact turn that we teleported
@@ -409,7 +409,7 @@ bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizard_tele)
 
     if (you.level_type == LEVEL_ABYSS)
     {
-        abyss_teleport( new_abyss_area );
+        abyss_teleport(new_abyss_area);
         if (you.pet_target != MHITYOU)
             you.pet_target = MHITNOT;
 
@@ -453,7 +453,7 @@ bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizard_tele)
             }
 #endif
 
-            dprf("Target square (%d,%d)", pos.x, pos.y );
+            dprf("Target square (%d,%d)", pos.x, pos.y);
 
             if (!chose || pos == you.pos())
             {
@@ -722,7 +722,7 @@ int portal()
     while (dir_sign == 0)
     {
         const int keyin = getch();
-        switch ( keyin )
+        switch (keyin)
         {
         case '<':
             if (lid.depth == 1)
@@ -786,7 +786,7 @@ bool cast_portal_projectile(int pow)
     }
 
     // Can't use portal through walls. (That'd be just too cheap!)
-    if (you.trans_wall_blocking( target.target ))
+    if (you.trans_wall_blocking(target.target))
     {
         mpr("A translucent wall is in the way.");
         return (false);
@@ -796,7 +796,7 @@ bool cast_portal_projectile(int pow)
         return (false);
 
     bolt beam;
-    throw_it( beam, item, true, random2(pow/4), &target );
+    throw_it(beam, item, true, random2(pow/4), &target);
 
     return (true);
 }
@@ -844,7 +844,7 @@ bool cast_apportation(int pow, const coord_def& where)
     // Protect the player from destroying the item.
     if (feat_destroys_item(grd(you.pos()), item))
     {
-        mpr( "That would be silly while over this terrain!" );
+        mpr("That would be silly while over this terrain!");
         return (false);
     }
 
@@ -899,7 +899,7 @@ static int _quadrant_blink(coord_def where, int pow, int, actor *)
 
     if (you.level_type == LEVEL_ABYSS)
     {
-        abyss_teleport( false );
+        abyss_teleport(false);
         if (you.pet_target != MHITYOU)
             you.pet_target = MHITNOT;
         return (1);

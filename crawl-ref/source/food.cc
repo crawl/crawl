@@ -80,7 +80,7 @@ void make_hungry(int hunger_amount, bool suppress_msg,
         return;
 
 #ifdef DEBUG_DIAGNOSTICS
-    set_redraw_status( REDRAW_HUNGER );
+    set_redraw_status(REDRAW_HUNGER);
 #endif
 
     you.hunger -= hunger_amount;
@@ -92,7 +92,7 @@ void make_hungry(int hunger_amount, bool suppress_msg,
     bool state_message = food_change();
 
     if (!suppress_msg && !state_message)
-        _describe_food_change( -hunger_amount );
+        _describe_food_change(-hunger_amount);
 }
 
 void lessen_hunger(int satiated_amount, bool suppress_msg)
@@ -141,7 +141,7 @@ void weapon_switch(int targ)
         if (!you.weapon())
             return;
 
-        mpr( "You switch back to your bare hands." );
+        mpr("You switch back to your bare hands.");
     }
     else
     {
@@ -207,7 +207,7 @@ static bool _find_butchering_implement(int &butcher_tool, bool gloved_butcher)
     if (const item_def *wpn = you.weapon())
     {
         // Otherwise we wouldn't be here.
-        ASSERT(!can_cut_meat( *wpn ));
+        ASSERT(!can_cut_meat(*wpn));
 
         if (wpn->base_type == OBJ_WEAPONS
             && item_type_known(*wpn)
@@ -233,8 +233,8 @@ static bool _find_butchering_implement(int &butcher_tool, bool gloved_butcher)
         item_info tool = get_item_info(you.inv[i]);
         if (tool.defined()
             && tool.base_type == OBJ_WEAPONS
-            && can_cut_meat( tool )
-            && can_wield( &tool )
+            && can_cut_meat(tool)
+            && can_wield(&tool)
             // Don't even suggest autocursing items.
             // Note that unknown autocursing is OK.
             && (!is_artefact(tool)
@@ -759,8 +759,8 @@ bool prompt_eat_inventory_item(int slot)
         }
     }
 
-    if (!can_ingest( you.inv[which_inventory_slot].base_type,
-                     you.inv[which_inventory_slot].sub_type, false ))
+    if (!can_ingest(you.inv[which_inventory_slot].base_type,
+                     you.inv[which_inventory_slot].sub_type, false))
     {
         return (false);
     }
@@ -1083,7 +1083,7 @@ void eat_inventory_item(int which_inventory_slot)
         _eating(food.base_type, food.sub_type);
 
     you.turn_is_over = true;
-    dec_inv_item_quantity( which_inventory_slot, 1 );
+    dec_inv_item_quantity(which_inventory_slot, 1);
 }
 
 void eat_floor_item(int item_link)
@@ -1113,11 +1113,11 @@ void eat_floor_item(int item_link)
                    intel);
     }
     else
-        _eating( food.base_type, food.sub_type );
+        _eating(food.base_type, food.sub_type);
 
     you.turn_is_over = true;
 
-    dec_mitm_item_quantity( item_link, 1 );
+    dec_mitm_item_quantity(item_link, 1);
 }
 
 // Returns which of two food items is older (true for first, else false).
@@ -1186,7 +1186,7 @@ int eat_from_floor(bool skip_chunks)
     bool found_valid = false;
 
     std::vector<item_def *> food_items;
-    for (stack_iterator si(you.pos(), true); si; ++si )
+    for (stack_iterator si(you.pos(), true); si; ++si)
     {
         if (you.species == SP_VAMPIRE)
         {
@@ -1315,7 +1315,7 @@ int eat_from_floor(bool skip_chunks)
                 if (can_ingest(wonteat.base_type, wonteat.sub_type, false))
                 {
                     mprf(MSGCH_DIAGNOSTICS, "Error: Can eat %s after all?",
-                         wonteat.name(DESC_PLAIN).c_str() );
+                         wonteat.name(DESC_PLAIN).c_str());
                 }
             }
             else // Several different food items.
@@ -1455,7 +1455,7 @@ bool eat_from_inventory()
                 if (can_ingest(wonteat->base_type, wonteat->sub_type, false))
                 {
                     mprf(MSGCH_DIAGNOSTICS, "Error: Can eat %s after all?",
-                         wonteat->name(DESC_PLAIN).c_str() );
+                         wonteat->name(DESC_PLAIN).c_str());
                 }
             }
             else // Several different food items.
@@ -2189,7 +2189,7 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
     // Duration depends on corpse weight.
     const int max_chunks = get_max_corpse_chunks(mons_type);
     int chunk_amount     = 1 + max_chunks/3;
-        chunk_amount     = stepdown_value( chunk_amount, 6, 6, 12, 12 );
+        chunk_amount     = stepdown_value(chunk_amount, 6, 6, 12, 12);
 
     // Add 1 for the artificial extra call at the start of draining.
     const int duration   = 1 + chunk_amount;
