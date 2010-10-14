@@ -2667,7 +2667,7 @@ void inscribe_item(item_def &item, bool msgwin)
 
     const bool is_inscribed = !item.inscription.empty();
 
-    bool need_autoinscribe = _need_autoinscribe(item);
+    bool need_autoinscribe = _need_autoinscribe(item) && msgwin;
     std::string prompt;
     int keyin;
 
