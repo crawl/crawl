@@ -270,8 +270,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
             // effect anyway.
             mpr("You briefly turn translucent.");
 
-            // And also cancel backlight (for whatever good that will
-            // do).
+            // And also cancel corona (for whatever good that will do).
             you.duration[DUR_CORONA] = 0;
             return (true);
         }
@@ -291,7 +290,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
             MSGCH_DURATION);
         }
 
-        // Invisibility cancels backlight.
+        // Invisibility cancels corona.
         you.duration[DUR_CORONA] = 0;
 
         // Now multiple invisiblity casts aren't as good. -- bwr
