@@ -344,7 +344,7 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
 // string, rather than the return value of artefact_auto_inscription(),
 // in case more information about the randart has been learned since
 // the last auto-inscription.
-void trim_randart_inscrip( item_def& item )
+void trim_randart_inscrip(item_def& item)
 {
     std::vector<std::string> propnames = _randart_propnames(item);
 
@@ -356,7 +356,7 @@ void trim_randart_inscrip( item_def& item )
     trim_string(item.inscription);
 }
 
-std::string artefact_auto_inscription( const item_def& item )
+std::string artefact_auto_inscription(const item_def& item)
 {
     if (item.base_type == OBJ_BOOKS)
         return ("");
@@ -367,7 +367,7 @@ std::string artefact_auto_inscription( const item_def& item )
                                  " ", " "));
 }
 
-void add_autoinscription( item_def &item, std::string ainscrip)
+void add_autoinscription(item_def &item, std::string ainscrip)
 {
     // Remove previous randart inscription.
     trim_randart_inscrip(item);
@@ -375,7 +375,7 @@ void add_autoinscription( item_def &item, std::string ainscrip)
     add_inscription(item, ainscrip);
 }
 
-void add_autoinscription( item_def &item)
+void add_autoinscription(item_def &item)
 {
     // Remove previous randart inscription.
     trim_randart_inscrip(item);
@@ -403,7 +403,7 @@ struct property_descriptor
     bool is_graded_resist;
 };
 
-static std::string _randart_descrip( const item_def &item )
+static std::string _randart_descrip(const item_def &item)
 {
     std::string description;
 
@@ -2506,7 +2506,7 @@ static bool _actions_prompt( item_def &item, bool allow_inscribe)
     if (allow_inscribe)
         actions.push_back(CMD_INSCRIBE_ITEM);
 
-    if(_need_autoinscribe(item))
+    if (_need_autoinscribe(item))
         actions.push_back(CMD_MAKE_NOTE); //autoinscribe
 
     //FIXME: there must be a more efficient way to set up this static map.
