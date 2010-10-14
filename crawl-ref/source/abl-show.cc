@@ -189,7 +189,7 @@ static const ability_def Ability_List[] =
     { ABIL_TRAN_BAT, "Bat Form", 2, 0, 0, 0, ABFLAG_NONE },
     { ABIL_BOTTLE_BLOOD, "Bottle Blood", 0, 0, 0, 0, ABFLAG_NONE }, // no costs
 
-    { ABIL_SPIT_ACID, "Spit Acid", 0, 0, 125, 0, ABFLAG_NONE },
+    { ABIL_SPIT_ACID, "Spit Acid", 0, 0, 125, 0, ABFLAG_BREATH },
 
     { ABIL_FLY, "Fly", 3, 0, 100, 0, ABFLAG_NONE },
     { ABIL_STOP_FLYING, "Stop Flying", 0, 0, 0, 0, ABFLAG_NONE },
@@ -1107,6 +1107,7 @@ static bool _check_ability_possible(const ability_def& abil,
     case ABIL_BREATHE_FROST:
     case ABIL_BREATHE_POISON:
     case ABIL_BREATHE_LIGHTNING:
+    case ABIL_SPIT_ACID:
     case ABIL_BREATHE_POWER:
     case ABIL_BREATHE_STICKY_FLAME:
     case ABIL_BREATHE_STEAM:
