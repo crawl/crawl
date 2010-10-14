@@ -588,7 +588,7 @@ bool mons_has_body(const monster* mon)
         || mon->type == MONS_CURSE_TOE
         || mon->type == MONS_DANCING_WEAPON)
     {
-        return false;
+        return (false);
     }
 
     switch (mons_base_char(mon->type))
@@ -599,10 +599,10 @@ bool mons_has_body(const monster* mon)
     case '*':
     case '%':
     case 'J':
-        return false;
+        return (false);
     }
 
-    return true;
+    return (true);
 }
 
 // Difference in speed between monster and the player for Cheibriados'
