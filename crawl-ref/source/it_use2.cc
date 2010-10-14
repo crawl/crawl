@@ -286,8 +286,8 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         else
         {
             mpr(!you.duration[DUR_INVIS] ? "You fade into invisibility!"
-                                       : "You fade further into invisibility.",
-            MSGCH_DURATION);
+                                         : "You fade further into invisibility.",
+                MSGCH_DURATION);
         }
 
         // Invisibility cancels corona.
