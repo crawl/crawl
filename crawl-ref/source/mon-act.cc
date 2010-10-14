@@ -1353,6 +1353,7 @@ static bool _handle_wand(monster* mons, bolt &beem)
     case WAND_INVISIBILITY:
         if (!mons->has_ench(ENCH_INVIS)
             && !mons->has_ench(ENCH_SUBMERGED)
+            && !mons->glows_naturally()
             && (!mons->friendly() || you.can_see_invisible(false)))
         {
             beem.target = mons->pos();

@@ -2748,6 +2748,12 @@ bool monster::backlit(bool check_haloed, bool self_halo) const
     return (false);
 }
 
+bool monster::glows_naturally() const
+{
+    return (mons_class_flag(type, M_GLOWS_LIGHT)
+            || mons_class_flag(type, M_GLOWS_RADIATION));
+}
+
 bool monster::caught() const
 {
     return (has_ench(ENCH_HELD));

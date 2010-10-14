@@ -264,10 +264,10 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         break;
 
     case POT_INVISIBILITY:
-        if (you.haloed())
+        if (you.haloed() || you.glows_naturally())
         {
-            // You can't turn invisible while haloed, but identify the
-            // effect anyway.
+            // You can't turn invisible while haloed or glowing
+            // naturally, but identify the effect anyway.
             mpr("You briefly turn translucent.");
 
             // And also cancel corona (for whatever good that will do).
