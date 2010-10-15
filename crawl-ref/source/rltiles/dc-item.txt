@@ -537,7 +537,6 @@ i-torment SCR_TORMENT
 i-random_uselessness SCR_RANDOM_USELESSNESS
 i-curse_weapon SCR_CURSE_WEAPON
 i-curse_armour SCR_CURSE_ARMOUR
-i-curse-jewellery SCR_CURSE_JEWELLERY
 i-immolation SCR_IMMOLATION
 i-blinking SCR_BLINKING
 item/scroll/blank_paper SCR_PAPER
@@ -551,7 +550,8 @@ i-enchant-weapon3 SCR_ENCHANT_WEAPON_III
 i-holy_word SCR_HOLY_WORD
 i-vulnerability SCR_VULNERABILITY
 i-silence SCR_SILENCE
-i-amnesia SCR_AMNESIA SCR_ID_LAST
+i-amnesia SCR_AMNESIA
+i-curse-jewellery SCR_CURSE_JEWELLERY SCR_ID_LAST
 %back none
 
 ##################OBJ_JEWELLERY
