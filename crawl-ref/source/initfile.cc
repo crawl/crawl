@@ -3693,7 +3693,11 @@ static void _edit_save(int argc, char **argv)
 
     try
     {
-        package save((get_savedir_filename(name, "", "") + SAVE_SUFFIX).c_str(), rw);
+        std::string filename = name;
+        // Check for the exact filename first, then go by char name.
+        if (!file_exists(filename))
+            filename = get_savedir_filename(filename, "", "") + SAVE_SUFFIX;
+        package save(filename.c_str(), rw);
 
         if (cmd == ES_LS)
         {
