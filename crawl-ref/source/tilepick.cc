@@ -1140,6 +1140,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_BIG_KOBOLD;
     case MONS_KOBOLD_DEMONOLOGIST:
         return TILEP_MONS_KOBOLD_DEMONOLOGIST;
+    case MONS_NISSE:
+        return TILEP_MONS_NISSE;
 
     // liches ('L')
     case MONS_LICH:
@@ -1530,6 +1532,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_SPRIGGAN_DEFENDER;
     case MONS_THE_ENCHANTRESS:
         return TILEP_MONS_THE_ENCHANTRESS;
+    case MONS_AGNES:
+        return TILEP_MONS_AGNES;
 
     // slug ('j')
     case MONS_GASTRONOK:
@@ -1660,8 +1664,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_HAROLD;
     case MONS_JOZEF:
         return TILEP_MONS_JOZEF;
-    case MONS_AGNES:
-        return TILEP_MONS_AGNES;
     case MONS_MAUD:
         return TILEP_MONS_MAUD;
     case MONS_LOUISE:
@@ -2758,6 +2760,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_KOBOLD;
     case MONS_BIG_KOBOLD:
         return TILE_CORPSE_BIG_KOBOLD;
+    case MONS_NISSE:
+        return TILE_CORPSE_NISSE;
 
     // nagas ('N')
     case MONS_NAGA:
