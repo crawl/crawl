@@ -2497,6 +2497,15 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     unmarshallUnsigned(th, mi.number);
     unmarshallUnsigned(th, mi.colour);
     unmarshallUnsigned(th, mi.attitude);
+#if TAG_MAJOR_VERSION == 31
+    if (th.getMinorVersion() < TAG_MINOR_ATT_SWAP)
+    {
+        if (mi.attitude == ATT_GOOD_NEUTRAL)
+            mi.attitude = ATT_STRICT_NEUTRAL;
+        else if (mi.attitude == ATT_STRICT_NEUTRAL)
+            mi.attitude = ATT_GOOD_NEUTRAL;
+    }
+#endif
     unmarshallUnsigned(th, mi.dam);
     unmarshallUnsigned(th, mi.fire_blocker);
     mi.description = unmarshallString(th);
@@ -2852,6 +2861,15 @@ void unmarshallMonster(reader &th, monster& m)
 
     m.god      = static_cast<god_type>(unmarshallByte(th));
     m.attitude = static_cast<mon_attitude_type>(unmarshallByte(th));
+#if TAG_MAJOR_VERSION == 31
+    if (th.getMinorVersion() < TAG_MINOR_ATT_SWAP)
+    {
+        if (m.attitude == ATT_GOOD_NEUTRAL)
+            m.attitude = ATT_STRICT_NEUTRAL;
+        else if (m.attitude == ATT_STRICT_NEUTRAL)
+            m.attitude = ATT_GOOD_NEUTRAL;
+    }
+#endif
     m.foe      = unmarshallShort(th);
 
     if (mons_is_ghost_demon(m.type))
