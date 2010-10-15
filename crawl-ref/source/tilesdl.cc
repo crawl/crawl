@@ -300,7 +300,7 @@ bool TilesFramework::initialise()
     m_screen_height = wm->screen_height();
 
 #ifdef TARGET_OS_WINDOWS
-    if(Options.tile_align_at_top)
+    if (Options.tile_align_at_top)
     {
         int delta_x = (wm->desktop_width() - m_screen_width) / 2;
         SDL_SysWMinfo i;

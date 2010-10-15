@@ -151,7 +151,7 @@ sub finish_art
         {
             $artefact->{BRAND} = "SPWPN_NORMAL";
         }
-        elsif($type eq "OBJ_ARMOUR")
+        elsif ($type eq "OBJ_ARMOUR")
         {
             $artefact->{BRAND} = "SPARM_NORMAL";
         }
@@ -201,15 +201,15 @@ sub finish_art
             {
                 $artefact->{$field} = "";
             }
-            elsif($type eq "num" || $type eq "bool")
+            elsif ($type eq "num" || $type eq "bool")
             {
                 $artefact->{$field} = "0";
             }
-            elsif($type eq "enum")
+            elsif ($type eq "enum")
             {
                 error($artefact, "No enumeration for field '$field'");
             }
-            elsif($type eq "func")
+            elsif ($type eq "func")
             {
                 $artefact->{$field} = "NULL";
             }
@@ -357,7 +357,7 @@ sub process_line
         $artefact->{base_type} = $parts[0];
         $artefact->{sub_type}  = $parts[1];
     }
-    elsif($field eq "PLUS")
+    elsif ($field eq "PLUS")
     {
         my @parts = split(m!/!, $value);
 
@@ -512,7 +512,7 @@ sub art_to_str
                 $indent++;
                 $str .= "\n" . (" " x ($indent * 4));
             }
-            elsif($part eq "}")
+            elsif ($part eq "}")
             {
                 $indent--;
                 $str .= "\n" . (" " x ($indent * 4)) . "},";
