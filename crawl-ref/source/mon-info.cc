@@ -143,10 +143,10 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     type = p_type;
     base_type = p_base_type;
 
-    draco_type = type;
+    draco_type = mons_species(type) == MONS_DRACONIAN ? MONS_DRACONIAN : type;
 
     number = 0;
-    colour = LIGHTGRAY;
+    colour = mons_class_colour(type);
 
     holi = mons_class_holiness(type);
 
