@@ -222,10 +222,8 @@ monster_info::monster_info(const monster* m, int milev)
 
     if (type_known)
     {
-        if (mons_genus(type) == MONS_DRACONIAN)
-            draco_type = ::draco_subspecies(m);
-        else
-            draco_type = type;
+        draco_type =
+            mons_genus(type) == MONS_DRACONIAN ? ::draco_subspecies(m) : type;
 
         if (!mons_can_display_wounds(m)
             || !mons_class_can_display_wounds(type))
