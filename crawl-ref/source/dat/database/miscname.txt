@@ -4,8 +4,6 @@
 # miscname.txt: lookup miscellaneous names
 #
 # This file contains a list of names for miscellaneous things.
-# This is currently only used for colours, writing types,
-# smells and sounds.
 ######################################################
 %%%%
 # Any word other than "glowing" itself will work here.
@@ -231,6 +229,51 @@ You have a brief vision of a great black cyclopean cityscape with towering stygi
 Your vision is obscured by outlandish glyphs which seem to writhe squamously and alter their shape.
 
 You feel inexorably dogged by some nameless and implacable gloom.
+#-----------
+
+You reel in agony as your mind is raked by horrors beyond mortal ken.
+
+Your mind is seduced by sublime insanity as you glimpse through the portal into the nether beyond.
+
+You cackle madly at the sight of the eldritch monstrosity.
+
+You are seized by madness!
+
+Attempting to comprehend the unknowable depths of infinity takes a toll on your sanity.
+
+Your thoughts are inescapably tormented by a ceaseless, buzzing drone.
+
+Your mind collapses in madness at the sight of this blasphemy against creation!
+
+Your mind briefly shatters, though you barely manage to hold yourself together.
+
+You feel your tenuous grasp on sanity beginning to erode.
+
+Penetrating whispers of deepest heresy ceaselessly assail your thoughts.
+
+Your mind aches with revulsion at the sight of the undulating horrors you have wrought.
+
+For but a moment your mind is laid bare before the towering infinitude of the unimaginable.
+
+Your skull pulses and throbs as words spoken in an unspeakable tongue drift across your psyche.
+
+A thin, monotonous whinny from outside of time grows ever louder in your ears.
+
+Shapeless horrors persist on the edge of your vision, drawing ever closer.
+
+You are overcome with an inexorable feeling of implacable gloom.
+
+Coherent, reasonable thoughts seem alien to you.
+
+Tendrils of madness seep and wend into the darkest crevices of your mind.
+
+You struggle to grasp the nature of the incomprehensible forces at work.
+
+Nightmarish fiends assault your waking thoughts!
+
+Seething terrors besiege your sanity!
+
+Lucidity slithers from your feeble grasp.
 %%%%
 welcome_spam
 

@@ -51,6 +51,8 @@ bool cast_demonic_horde(int pow, god_type god = GOD_NO_GOD);
 bool cast_summon_greater_demon(int pow, god_type god = GOD_NO_GOD);
 bool cast_shadow_creatures(god_type god = GOD_NO_GOD);
 bool cast_summon_horrible_things(int pow, god_type god = GOD_NO_GOD);
+bool can_cast_malign_gateway();
+bool cast_malign_gateway(actor * caster, int pow, god_type god = GOD_NO_GOD);
 
 void equip_undead(const coord_def &a, int corps, int monster, int monnum);
 int animate_remains(const coord_def &a, corpse_type class_allowed,

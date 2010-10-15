@@ -264,14 +264,13 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         break;
 
     case POT_INVISIBILITY:
-        if (you.haloed())
+        if (you.haloed() || you.glows_naturally())
         {
-            // You can't turn invisible while haloed, but identify the
-            // effect anyway.
+            // You can't turn invisible while haloed or glowing
+            // naturally, but identify the effect anyway.
             mpr("You briefly turn translucent.");
 
-            // And also cancel backlight (for whatever good that will
-            // do).
+            // And also cancel corona (for whatever good that will do).
             you.duration[DUR_CORONA] = 0;
             return (true);
         }
@@ -287,11 +286,11 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         else
         {
             mpr(!you.duration[DUR_INVIS] ? "You fade into invisibility!"
-                                       : "You fade further into invisibility.",
-            MSGCH_DURATION);
+                                         : "You fade further into invisibility.",
+                MSGCH_DURATION);
         }
 
-        // Invisibility cancels backlight.
+        // Invisibility cancels corona.
         you.duration[DUR_CORONA] = 0;
 
         // Now multiple invisiblity casts aren't as good. -- bwr
@@ -374,6 +373,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
             mpr( "You feel refreshed." );
         break;
     }
+
     case POT_BERSERK_RAGE:
         if (you.species == SP_VAMPIRE && you.hunger_state <= HS_SATIATED)
         {
@@ -455,4 +455,3 @@ bool unwield_item(bool showMsgs)
 
     return (true);
 }
-

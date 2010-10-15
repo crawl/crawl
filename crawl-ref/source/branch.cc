@@ -140,8 +140,7 @@ level_area_type str_to_level_area_type(const std::string &s)
     return (LEVEL_DUNGEON);
 }
 
-bool set_branch_flags(unsigned long flags, bool silent,
-                      branch_type branch)
+bool set_branch_flags(uint32_t flags, bool silent, branch_type branch)
 {
     if (branch == NUM_BRANCHES)
         branch = you.where_are_you;
@@ -149,7 +148,7 @@ bool set_branch_flags(unsigned long flags, bool silent,
     bool could_control = allow_control_teleport(true);
     bool could_map     = player_in_mappable_area();
 
-    unsigned long old_flags = branches[branch].branch_flags;
+    uint32_t old_flags = branches[branch].branch_flags;
     branches[branch].branch_flags |= flags;
 
     bool can_control = allow_control_teleport(true);
@@ -172,8 +171,7 @@ bool set_branch_flags(unsigned long flags, bool silent,
     return (old_flags != branches[branch].branch_flags);
 }
 
-bool unset_branch_flags(unsigned long flags, bool silent,
-                        branch_type branch)
+bool unset_branch_flags(uint32_t flags, bool silent, branch_type branch)
 {
     if (branch == NUM_BRANCHES)
         branch = you.where_are_you;
@@ -181,7 +179,7 @@ bool unset_branch_flags(unsigned long flags, bool silent,
     const bool could_control = allow_control_teleport(true);
     const bool could_map     = player_in_mappable_area();
 
-    unsigned long old_flags = branches[branch].branch_flags;
+    uint32_t old_flags = branches[branch].branch_flags;
     branches[branch].branch_flags &= ~flags;
 
     const bool can_control = allow_control_teleport(true);
@@ -206,7 +204,7 @@ bool unset_branch_flags(unsigned long flags, bool silent,
     return (old_flags != branches[branch].branch_flags);
 }
 
-unsigned long get_branch_flags(branch_type branch)
+uint32_t get_branch_flags(branch_type branch)
 {
     if (branch == NUM_BRANCHES)
     {

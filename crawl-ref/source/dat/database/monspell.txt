@@ -210,7 +210,7 @@ Frances cast
 
 @The_monster@ screams a word of power!
 %%%%
-gastronok cast targeted
+Gastronok cast targeted
 
 @The_monster@ looks at @target@ while chanting.
 
@@ -218,13 +218,13 @@ gastronok cast targeted
 
 @The_monster@ casts a spell at @target@.
 %%%%
-dissolution cast
+Dissolution cast
 
 @The_monster@ gurgles deeply, a call to fellow slimes.
 
 @The_monster@ says, "@God@ sees all!"
 %%%%
-gastronok cast
+Gastronok cast
 
 @The_monster@'s eyestalks quiver as @pronoun@ mumbles some strange words.
 

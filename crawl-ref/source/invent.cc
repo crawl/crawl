@@ -476,6 +476,8 @@ static std::string _no_selectables_message(int item_selector)
         return("You aren't carrying any fruit.");
     case OSEL_PONDER_ARM:
         return("You aren't carrying any armour which can be made ponderous.");
+    case OSEL_CURSED_WORN:
+        return("None of your equipped items are cursed.");
     }
 
     return("You aren't carrying any such object.");
@@ -1107,6 +1109,13 @@ static bool _item_class_selected(const item_def &i, int selector)
 
         return (false);
     }
+
+    case OSEL_CURSED_WORN:
+        return (i.cursed() && item_is_equipped(i)
+                && (&i != you.weapon()
+                    || i.base_type == OBJ_WEAPONS
+                    || i.base_type == OBJ_STAVES));
+
     default:
         return (false);
     }
@@ -1910,23 +1919,13 @@ bool item_is_evokable(const item_def &item, bool known, bool all_wands,
         return (false);
 
     case OBJ_MISCELLANY:
-        if (is_deck(item))
-        {
-            if (!wielded)
-            {
-                if (msg)
-                    mpr("That item can only be evoked when wielded.");
-                return (false);
-            }
-            return (true);
-        }
-
         if (item.sub_type != MISC_LANTERN_OF_SHADOWS
             && item.sub_type != MISC_EMPTY_EBONY_CASKET
             && item.sub_type != MISC_RUNE_OF_ZOT)
         {
             return (true);
         }
+
         // else fall through
     default:
         if (msg)

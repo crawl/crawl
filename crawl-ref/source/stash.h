@@ -93,7 +93,7 @@ public:
     static bool is_filtered(const item_def &item);
 
 private:
-    void _update_corpses(long rot_time);
+    void _update_corpses(int rot_time);
     void add_item(const item_def &item, bool add_to_front = false);
 
 private:
@@ -264,7 +264,7 @@ public:
 
  private:
     int _num_enabled_stashes() const;
-    void _update_corpses(long rot_time);
+    void _update_corpses(int rot_time);
 
  private:
     typedef std::map<int, Stash>  stashes_t;
@@ -350,7 +350,7 @@ private:
     typedef std::map<level_id, LevelStashes> stash_levels_t;
     stash_levels_t levels;
 
-    long last_corpse_update;
+    int last_corpse_update;
 
     friend class ST_ItemIterator;
 };

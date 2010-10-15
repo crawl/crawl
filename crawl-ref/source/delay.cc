@@ -79,6 +79,7 @@ static void _xom_check_corpse_waste();
 static void _handle_run_delays(const delay_queue_item &delay);
 static void _handle_macro_delay();
 static void _finish_delay(const delay_queue_item &delay);
+static const char *_activity_interrupt_name(activity_interrupt_type ai);
 
 static int _zin_recite_to_monsters(coord_def where, int pow, int, actor *)
 {
@@ -305,12 +306,13 @@ void stop_delay( bool stop_stair_travel )
 
         item_def &item = (delay.parm1 ? you.inv[delay.parm2]
                                       : mitm[delay.parm2]);
-        monster_type montype = static_cast<monster_type>(item.plus);
-        const bool was_orc = (mons_species(montype) == MONS_ORC);
+
+        const bool was_orc = (mons_genus(item.plus) == MONS_ORC);
 
         mpr("All blood oozes out of the corpse!");
 
-        bleed_onto_floor(you.pos(), montype, delay.duration, false);
+        bleed_onto_floor(you.pos(), static_cast<monster_type>(item.plus),
+                         delay.duration, false);
 
         if (mons_skeleton(item.plus) && one_chance_in(3))
             turn_corpse_into_skeleton(item);
@@ -387,7 +389,7 @@ void stop_butcher_delay()
 
 void maybe_clear_weapon_swap()
 {
-    if (transformation_can_wield(static_cast<transformation_type>(
+    if (transform_can_wield(static_cast<transformation_type>(
                                     you.attribute[ATTR_TRANSFORMATION])))
     {
         you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
@@ -961,7 +963,7 @@ static void _finish_delay(const delay_queue_item &delay)
         item_def &item = (delay.parm1 ? you.inv[delay.parm2]
                                       : mitm[delay.parm2]);
 
-        const bool was_orc = (mons_species(item.plus) == MONS_ORC);
+        const bool was_orc = (mons_genus(item.plus) == MONS_ORC);
 
         vampire_nutrition_per_turn(item, 1);
 
@@ -1064,7 +1066,7 @@ static void _finish_delay(const delay_queue_item &delay)
             {
                 mpr("You finish bottling this corpse's blood.");
 
-                const bool was_orc = (mons_species(item.plus) == MONS_ORC);
+                const bool was_orc = (mons_genus(item.plus) == MONS_ORC);
 
                 if (mons_skeleton(item.plus) && one_chance_in(3))
                     turn_corpse_into_skeleton_and_blood_potions(item);
@@ -1096,7 +1098,7 @@ static void _finish_delay(const delay_queue_item &delay)
                                        " departed soul.");
                 }
 
-                const bool was_orc = (mons_species(item.plus) == MONS_ORC);
+                const bool was_orc = (mons_genus(item.plus) == MONS_ORC);
 
                 if (mons_skeleton(item.plus) && one_chance_in(3))
                     turn_corpse_into_skeleton_and_chunks(item);
@@ -1386,7 +1388,7 @@ static maybe_bool _userdef_interrupt_activity(const delay_queue_item &idelay,
     if (!ls || ai == AI_FORCE_INTERRUPT)
         return (B_TRUE);
 
-    const char *interrupt_name = activity_interrupt_name(ai);
+    const char *interrupt_name = _activity_interrupt_name(ai);
     const char *act_name = delay_name(delay);
 
     bool ran = clua.callfn("c_interrupt_activity", "1:ssA",
@@ -1591,7 +1593,7 @@ bool interrupt_activity( activity_interrupt_type ai,
     if (delay == DELAY_NOT_DELAYED)
         return (false);
 
-    dprf("Activity interrupt: %s", activity_interrupt_name(ai));
+    dprf("Activity interrupt: %s", _activity_interrupt_name(ai));
 
     // First try to stop the current delay.
     const delay_queue_item &item = you.delay_queue.front();
@@ -1648,7 +1650,7 @@ static const char *activity_interrupt_names[] =
     "monster", "monster_attack", "teleport", "hit_monster"
 };
 
-const char *activity_interrupt_name(activity_interrupt_type ai)
+static const char *_activity_interrupt_name(activity_interrupt_type ai)
 {
     ASSERT( sizeof(activity_interrupt_names)
             / sizeof(*activity_interrupt_names) == NUM_AINTERRUPTS );

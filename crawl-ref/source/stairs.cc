@@ -906,11 +906,13 @@ void down_stairs(dungeon_feature_type force_stair,
         return;
     }
 
-    if (stair_find >= DNGN_ENTER_LABYRINTH
+    if (stair_find > DNGN_ENTER_LABYRINTH
         && stair_find <= DNGN_ESCAPE_HATCH_DOWN
         && player_in_branch( BRANCH_VESTIBULE_OF_HELL ))
     {
         // Down stairs in vestibule are one-way!
+        // This doesn't make any sense. Why would there be any down stairs
+        // in the Vestibule? {due, 9/2010}
         mpr("A mysterious force prevents you from descending the staircase.");
         return;
     }
@@ -1307,6 +1309,7 @@ void down_stairs(dungeon_feature_type force_stair,
 
     // Clear list of beholding monsters.
     you.clear_beholders();
+    you.clear_fearmongers();
 
     if (!allow_control_teleport(true))
         mpr("You sense a powerful magical force warping space.", MSGCH_WARN);
@@ -1342,4 +1345,27 @@ void new_level(void)
 #ifdef DGL_WHEREIS
     whereis_record();
 #endif
+}
+
+// Returns a hatch or stair (up or down)
+dungeon_feature_type random_stair ()
+{
+    return (static_cast<dungeon_feature_type>(
+        DNGN_STONE_STAIRS_DOWN_I+random2(
+            DNGN_ESCAPE_HATCH_UP-DNGN_STONE_STAIRS_DOWN_I+1)));
+}
+
+// Returns a random branch entry stair.
+dungeon_feature_type random_branch_stair ()
+{
+    dungeon_feature_type stair;
+    do
+    {
+        stair = static_cast<dungeon_feature_type>(
+            DNGN_ENTER_FIRST_BRANCH+random2(
+                DNGN_ENTER_LAST_BRANCH-DNGN_ENTER_FIRST_BRANCH+1));
+    }
+    while (stair == DNGN_ENTER_ZOT);
+
+    return (stair);
 }

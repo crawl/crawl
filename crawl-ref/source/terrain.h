@@ -28,6 +28,8 @@ private:
 
 actor* actor_at(const coord_def& c);
 
+int count_neighbours_with_func (const coord_def& c, bool (*checker)(dungeon_feature_type));
+
 bool fall_into_a_pool( const coord_def& entry, bool allow_shift,
                        dungeon_feature_type terrain );
 

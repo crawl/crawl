@@ -120,6 +120,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_OGRE:
             case SP_TROLL:
             case SP_KENKU:
+            case SP_CAT:
                 return (CC_RESTRICTED);
             default:
                 return (CC_UNRESTRICTED);
@@ -141,6 +142,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_KENKU:
             case SP_GHOUL:
             case SP_VAMPIRE:
+            case SP_CAT:
                 return (CC_RESTRICTED);
             default:
                 return (CC_UNRESTRICTED);
@@ -222,6 +224,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_MUMMY:
             case SP_GHOUL:
             case SP_VAMPIRE:
+            case SP_CAT:
                 return (CC_RESTRICTED);
             default:
                 return (CC_UNRESTRICTED);
@@ -242,6 +245,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_OGRE:
             case SP_MINOTAUR:
             case SP_GHOUL:
+            case SP_CAT:
                 return (CC_RESTRICTED);
             default:
                 return (CC_UNRESTRICTED);
@@ -260,6 +264,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_MINOTAUR:
             case SP_GHOUL:
             case SP_VAMPIRE:
+            case SP_CAT:
                 return (CC_RESTRICTED);
             default:
                 return (CC_UNRESTRICTED);
@@ -349,6 +354,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_MUMMY:
             case SP_GHOUL:
             case SP_VAMPIRE:
+            case SP_CAT:
                 return (CC_RESTRICTED);
             default:
                 return (CC_UNRESTRICTED);
@@ -377,6 +383,8 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_TROLL:
             case SP_VAMPIRE:
                 return (CC_RESTRICTED);
+            case SP_CAT:
+                return (CC_BANNED);
             default:
                 return (CC_UNRESTRICTED);
         }
@@ -419,6 +427,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_MINOTAUR:
             case SP_GHOUL:
             case SP_VAMPIRE:
+            case SP_CAT:
                 return (CC_RESTRICTED);
             default:
                 return (CC_UNRESTRICTED);
@@ -437,6 +446,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_MINOTAUR:
             case SP_GHOUL:
             case SP_VAMPIRE:
+            case SP_CAT:
                 return (CC_RESTRICTED);
             default:
                 return (CC_UNRESTRICTED);
@@ -455,6 +465,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_MUMMY:
             case SP_GHOUL:
             case SP_VAMPIRE:
+            case SP_CAT:
                 return (CC_RESTRICTED);
             default:
                 return (CC_UNRESTRICTED);
@@ -476,6 +487,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_BASE_DRACONIAN:
             case SP_GHOUL:
             case SP_VAMPIRE:
+            case SP_CAT:
                 return (CC_RESTRICTED);
             default:
                 return (CC_UNRESTRICTED);
@@ -494,6 +506,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_MINOTAUR:
             case SP_GHOUL:
             case SP_VAMPIRE:
+            case SP_CAT:
                 return (CC_RESTRICTED);
             default:
                 return (CC_UNRESTRICTED);
@@ -549,6 +562,8 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_GHOUL:
             case SP_VAMPIRE:
                 return (CC_RESTRICTED);
+            case SP_CAT:
+                return (CC_BANNED);
             default:
                 return (CC_UNRESTRICTED);
         }
@@ -563,6 +578,8 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_MUMMY:
             case SP_GHOUL:
                 return (CC_RESTRICTED);
+            case SP_CAT:
+                return (CC_BANNED);
             default:
                 return (CC_UNRESTRICTED);
         }

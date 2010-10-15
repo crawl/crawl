@@ -76,7 +76,6 @@ static spell_type search_order_conj[] = {
 // Order for looking for summonings and self-enchants for the 3rd spell
 // slot.
 static spell_type search_order_third[] = {
-// 0
     SPELL_SYMBOL_OF_TORMENT,
     SPELL_SUMMON_GREATER_DEMON,
     SPELL_SUMMON_HORRIBLE_THINGS,
@@ -87,7 +86,6 @@ static spell_type search_order_third[] = {
     SPELL_SILENCE,
     SPELL_SUMMON_BUTTERFLIES,
     SPELL_SUMMON_SWARM,
-// 10
     SPELL_SUMMON_UGLY_THING,
     SPELL_SWIFTNESS,
     SPELL_SUMMON_ICE_BEAST,
@@ -96,6 +94,7 @@ static spell_type search_order_third[] = {
     SPELL_SUMMON_SCORPIONS,
     SPELL_CALL_IMP,
     SPELL_SUMMON_SMALL_MAMMALS,
+    SPELL_MALIGN_GATEWAY,
     SPELL_CONTROLLED_BLINK,
     SPELL_BLINK,
     SPELL_NO_SPELL,                        // end search
@@ -105,7 +104,6 @@ static spell_type search_order_third[] = {
 // this fails, go through conjurations.  Note: Dig must be in misc2
 // (5th) position to work.
 static spell_type search_order_misc[] = {
-// 0
     SPELL_AGONY,
     SPELL_BANISHMENT,
     SPELL_FREEZING_CLOUD,
@@ -116,7 +114,6 @@ static spell_type search_order_misc[] = {
     SPELL_SLOW,
     SPELL_POLYMORPH_OTHER,
     SPELL_TELEPORT_OTHER,
-// 10
     SPELL_EVAPORATE, // replaced with Mephitic Cloud, though at lower priority
     SPELL_DIG,
     SPELL_CORONA,
@@ -206,9 +203,9 @@ void ghost_demon::init_random_demon()
         }
         while (brand == SPWPN_HOLY_WRATH
                || (brand == SPWPN_ORC_SLAYING
-                   && you.mons_species() != MONS_ORC)
+                   && mons_genus(you.mons_species()) != MONS_ORC)
                || (brand == SPWPN_DRAGON_SLAYING
-                   && you.mons_species() != MONS_DRACONIAN)
+                   && mons_genus(you.mons_species()) != MONS_DRACONIAN)
                || brand == SPWPN_PROTECTION
                || brand == SPWPN_FLAME
                || brand == SPWPN_FROST);
@@ -301,10 +298,13 @@ void ghost_demon::init_random_demon()
         if (one_chance_in(10))
             spells[2] = SPELL_SUMMON_EYEBALLS;
 
+
         if (one_chance_in(20))
             spells[3] = SPELL_SUMMON_GREATER_DEMON;
         if (one_chance_in(20))
             spells[3] = SPELL_SUMMON_DEMON;
+        if (one_chance_in(20))
+            spells[3] = SPELL_MALIGN_GATEWAY;
 
         // At least they can summon demons.
         if (spells[3] == SPELL_NO_SPELL)
@@ -638,11 +638,6 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
 
     if (power > 150)
         power = 150;
-
-    resists.poison = 1;
-    resists.fire = 1;
-    resists.cold = 1;
-    resists.elec = 1;
 
     colour = weapon.colour;
     fly = FL_LEVITATE;

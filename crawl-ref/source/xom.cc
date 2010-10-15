@@ -31,7 +31,6 @@
 #include "item_use.h" // for safe_to_remove_or_wear()
 #include "itemprop.h"
 #include "items.h"
-#include "kills.h"
 #include "libutil.h"
 #include "los.h"
 #include "makeitem.h"
@@ -576,7 +575,7 @@ static int _xom_makes_you_cast_random_spell(int sever, int tension,
         take_note(Note(NOTE_XOM_EFFECT, you.piety, tension, "magic mapping"),
                   true);
 
-        const int power = stepdown_value( sever, 10, 10, 40, 45 );
+        const int power = stepdown_value(sever, 10, 10, 40, 45);
         magic_mapping(5 + power, 50 + random2avg(power * 2, 2), false);
 
         return (XOM_GOOD_MAPPING);
@@ -983,7 +982,7 @@ static bool _choose_chaos_upgrade(const monster* mon)
 
     // Beogh presumably doesn't want Xom messing with his orcs, even if
     // it would give them a better weapon.
-    if (mons_species(mon->type) == MONS_ORC
+    if (mons_genus(mon->type) == MONS_ORC
         && (mon->is_priest() || coinflip()))
     {
         return (false);
@@ -1263,7 +1262,7 @@ static int _xom_send_allies(int sever, bool debug = false)
     numdemons = std::min(numdemons + 2, 16);
 
     // Limit number of demons by experience level.
-    const int maxdemons = (you.max_level * 3);
+    const int maxdemons = (you.experience_level * 3);
     if (numdemons > maxdemons)
         numdemons = maxdemons;
 
@@ -2666,12 +2665,8 @@ static void _xom_zero_miscast()
         messages.push_back("Your eyebrows wriggle.");
     }
 
-    if (you.species != SP_NAGA
-        && (you.species != SP_MERFOLK || !you.swimming())
-        && !you.airborne())
-    {
+    if (you.species != SP_NAGA && !you.fishtail && !you.airborne())
         messages.push_back("You do an impromptu tapdance.");
-    }
 
     ///////////////////////////
     // Equipment related stuff.
@@ -3305,6 +3300,22 @@ static int _xom_repel_stairs(bool debug = false)
     return (XOM_BAD_STAIRS);
 }
 
+static int _xom_colour_smoke_trail(bool debug = false)
+{
+    if (you.duration[DUR_COLOUR_SMOKE_TRAIL])
+        return (XOM_DID_NOTHING);
+
+    if (debug)
+        return (XOM_BAD_COLOUR_SMOKE_TRAIL);
+
+    you.duration[DUR_COLOUR_SMOKE_TRAIL] = random_range(60, 120);
+
+    const std::string speech = _get_xom_speech("colour smoke trail");
+    god_speaks(GOD_XOM, speech.c_str());
+
+    return (XOM_BAD_COLOUR_SMOKE_TRAIL);
+}
+
 static int _xom_draining_torment_effect(int sever, bool debug = false)
 {
     const std::string speech = _get_xom_speech("draining or torment");
@@ -3359,9 +3370,9 @@ static bool _has_min_animated_weapon_level()
         return (true);
 
     if (_xom_is_bored())
-        return (you.max_level >= 4);
+        return (you.experience_level >= 4);
 
-    return (you.max_level >= 7);
+    return (you.experience_level >= 7);
 }
 
 static int _xom_summon_hostiles(int sever, bool debug = false)
@@ -3406,7 +3417,7 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
         // Limit number of demons by experience level.
         if (!you.penance[GOD_XOM])
         {
-            const int maxdemons = (you.max_level * 2);
+            const int maxdemons = (you.experience_level * 2);
             if (numdemons > maxdemons)
                 numdemons = maxdemons;
         }
@@ -3445,13 +3456,13 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
 
 static bool _has_min_banishment_level()
 {
-    return (you.max_level >= 9);
+    return (you.experience_level >= 9);
 }
 
 // Rolls whether banishment will be averted.
 static bool _will_not_banish()
 {
-    return x_chance_in_y(5, you.max_level);
+    return x_chance_in_y(5, you.experience_level);
 }
 
 // Disallow early banishment and make it much rarer later-on.
@@ -3541,6 +3552,8 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
             done = _xom_miscast(0, nasty, debug);
         else if (!nasty && x_chance_in_y(4, sever))
             done = _xom_miscast(1, nasty, debug);
+        else if (!nasty && tension <= 0 && x_chance_in_y(4, sever))
+            done = _xom_colour_smoke_trail(debug);
         // It's pointless to confuse player if there's no danger nearby.
         else if (tension > 0 && x_chance_in_y(5, sever))
         {
@@ -4212,7 +4225,7 @@ bool xom_saves_your_life(const int dam, const int death_source,
 
     // Ideally, this should contain the death cause but that is too much
     // trouble for now.
-    take_note( Note(NOTE_XOM_REVIVAL) );
+    take_note(Note(NOTE_XOM_REVIVAL));
 
     // Make sure Xom doesn't get bored within the next couple of turns.
     if (you.gift_timeout < 10)
@@ -4255,8 +4268,9 @@ static const std::string _xom_effect_to_name(int effect)
         "mutation", "permanent ally", "lightning", "change scenery",
         "snakes to sticks",
         // bad acts
-        "nothing", "miscast (pseudo)", "miscast (minor)", "miscast (major)",
-        "miscast (nasty)", "stat loss", "teleportation", "swap weapons",
+        "nothing", "coloured smoke trail", "miscast (pseudo)",
+        "miscast (minor)", "miscast (major)", "miscast (nasty)",
+        "stat loss", "teleportation", "swap weapons",
         "chaos upgrade", "mutation", "polymorph", "repel stairs", "confusion",
         "draining", "torment", "animate weapon", "summon demons",
         "banishment (pseudo)", "banishment"
@@ -4305,7 +4319,7 @@ void debug_xom_effects()
 
     if (N == 0)
     {
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
         return;
     }
 

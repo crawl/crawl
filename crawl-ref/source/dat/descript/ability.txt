@@ -17,15 +17,7 @@ Randomly translocate a short distance.
 %%%%
 Breathe Fire
 
-Breathe a blast of fire at a targeted monster.
-%%%%
-Enable Demonic Guardian
-
-Allows a demonic guardian to spawn occasionally, maximum of one at a time.
-%%%%
-Disable Demonic Guardian
-
-Prevents a demonic guardian from spawning.
+Breathe a blast of fire at a targeted monster, possibly leaving fire clouds in its wake.
 %%%%
 Breathe Frost
 
@@ -37,19 +29,23 @@ Breathe a blast of poison gas at a targeted monster.
 %%%%
 Breathe Lightning
 
-Breathe a blast of lightning at a targeted monster.
+Release a great discharge of electricity causing an uncontrollable lightning storm.
 %%%%
 Breathe Power
 
-Breathe a blast of power at a targeted monster.
+Breathe a blast of power at a targeted monster, possibly removing some of its enchantments.
 %%%%
 Breathe Sticky Flame
 
-Breathe a blast of sticky flame at a targeted monster. As the name suggests, sticky flame will stick around, so the monster may be covered in flames for several rounds until they eventually go out.
+Breathe a blast of sticky flame at a targeted monster. As the name suggests, sticky flame will stick around, so the monster may be covered in flames for several rounds until they eventually go out. It may splash on impact.
 %%%%
 Breathe Steam
 
 Breathe a jet of steam at a targeted monster.
+%%%%
+Breathe Noxious Fumes
+
+Breathe a blast of noxious fumes at a targeted monster.
 %%%%
 Bat Form
 
@@ -70,37 +66,9 @@ Fly
 
 Start flying.
 %%%%
-Summon Minor Demon
-
-Summon a minor demon.
-%%%%
-Summon Demon
-
-Summon a greater demon.
-%%%%
 Hellfire
 
 Blast your enemies with hellfire.
-%%%%
-Torment
-
-Torment yourself and the monsters around you.
-%%%%
-Raise Dead
-
-Reanimate all corpses and skeletons in your vicinity as followers. Note that zombies and skeletons cannot leave the level they were created on.
-%%%%
-Control Demon
-
-Temporarily enslave a demon.
-%%%%
-Gate Yourself to Pandemonium
-
-Enter the chaotic realm of Pandemonium. Note that getting back might be more difficult.
-%%%%
-Channeling
-
-Regain a small amount of magical energy.
 %%%%
 Throw Flame ability
 
@@ -109,10 +77,6 @@ Throw a blast of flame at a targeted monster.
 Throw Frost ability
 
 Throw a blast of frost at a targeted monster.
-%%%%
-Bolt of Draining ability
-
-Drain the life force of a targeted monster. This will reduce the experience you'll get from killing it.
 %%%%
 Release Delayed Fireball
 
@@ -124,11 +88,7 @@ At the permanent loss of one magic point restore your Strength, Dexterity and In
 %%%%
 Device Recharging
 
-At the permanent loss of one magic point recharge a wand or rod or enchant a weapon of electrocution.
-%%%%
-Evoke Sense Surroundings
-
-Map your vicinity.
+At the permanent loss of one magic point recharge a wand or rod.
 %%%%
 Evoke Teleportation
 
@@ -226,6 +186,10 @@ The enslaved soul will retain the monster's faculties, equipment and abilities, 
 
 Note that enslaved souls can follow you beyond the level they were created on.
 %%%%
+Animate Remains or Dead
+
+If you get this description, it is a bug.
+%%%%
 # Okawaru
 Might
 
@@ -285,7 +249,7 @@ Destroy all weapons on the ground. In order to prevent a weapon from being accid
 %%%%
 Lesser Healing
 
-Depending on your Invocations skill, heal a creature other than you by a small amount. Using this ability on hostile monsters will try to make them neutral. This works best on animals, worse on humanoids of your species, still worse on other humanoids, and worst of all on demons and undead. The chance for successful pacification depends on the healing power.
+Depending on your Invocations skill, heal a creature other than you by a small amount. Using this ability on hostile monsters will try to make them neutral. This works best on animals, worse on humanoids of your species, still worse on other humanoids, and worst of all on demons and undead. Mindless creatures cannot be pacified, and no monster can be pacified while it is asleep. The chance for successful pacification depends on the healing power.
 
 Whether the pacification succeeds or not, the invested food and magic point are lost. If it does succeed, the monster is healed and you gain half the monster's experience value and possibly some piety. Otherwise, the monster is unaffected and you gain nothing.
 
@@ -301,7 +265,7 @@ Purge your body of bad effects such as sickness, poisoning, slowness, confusion 
 %%%%
 Greater Healing
 
-Depending on your Invocations skill, heal a creature other than you by a moderate amount. Using this ability on hostile monsters will try to make them neutral. This works best on animals, worse on humanoids of your species, still worse on other humanoids, and worst of all on demons and undead. The chance for successful pacification depends on the healing power, so it is significantly better than using Lesser Healing.
+Depending on your Invocations skill, heal a creature other than you by a moderate amount. Using this ability on hostile monsters will try to make them neutral. This works best on animals, worse on humanoids of your species, still worse on other humanoids, and worst of all on demons and undead. Mindless creatures cannot be pacified, and no monster can be pacified while it is asleep.   The chance for successful pacification depends on the healing power, so it is significantly better than using Lesser Healing.
 
 Whether the pacification succeeds or not, the invested food, piety and magic points are lost. If it does succeed, the monster is healed and you gain half the monster's experience value and possibly some piety. Otherwise, the monster is unaffected and you gain nothing.
 

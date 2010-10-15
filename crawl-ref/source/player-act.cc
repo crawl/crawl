@@ -128,7 +128,7 @@ int player::get_experience_level() const
 
 bool player::can_pass_through_feat(dungeon_feature_type grid) const
 {
-    return !feat_is_solid(grid);
+    return !feat_is_solid(grid) && grid != DNGN_TEMP_PORTAL;
 }
 
 bool player::is_habitable_feat(dungeon_feature_type actual_grid) const
@@ -292,6 +292,8 @@ bool player::can_wield(const item_def& item, bool ignore_curse,
 bool player::could_wield(const item_def &item, bool ignore_brand,
                          bool /* ignore_transform */) const
 {
+    if (species == SP_CAT)
+        return (false);
     if (body_size(PSIZE_TORSO) < SIZE_LARGE && item_mass(item) >= 300)
         return (false);
 
@@ -397,7 +399,7 @@ std::string player::foot_name(bool plural, bool *can_plural) const
             str         = "underbelly";
             *can_plural = false;
         }
-        else if (species == SP_MERFOLK && swimming())
+        else if (fishtail)
         {
             str         = "tail";
             *can_plural = false;
@@ -540,6 +542,14 @@ bool player::can_go_berserk(bool intentional, bool potion) const
         if (verbose)
             mpr("You are too mesmerised to rage.");
         // or else they won't notice -- no message here
+        return (false);
+    }
+
+    if (afraid())
+    {
+        if (verbose)
+            mpr("You are too terrified to rage.");
+
         return (false);
     }
 

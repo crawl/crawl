@@ -31,6 +31,9 @@ wolf MONS_WOLF
 hell_hound MONS_HELL_HOUND
 hog MONS_HOG
 hell_hog MONS_HELL_HOG
+%sdir player/felids
+cat4 MONS_FELID
+%sdir dc-mon/animals
 
 ## Bees ('k')
 killer_bee MONS_KILLER_BEE
@@ -64,7 +67,7 @@ orange_rat MONS_ORANGE_RAT
 giant_centipede MONS_GIANT_CENTIPEDE
 giant_mite MONS_GIANT_MITE
 scorpion MONS_SCORPION
-giant_scorpion MONS_GIANT_SCORPION
+emperor_scorpion MONS_EMPEROR_SCORPION
 spider MONS_SPIDER
 tarantella MONS_TARANTELLA
 jumping_spider MONS_JUMPING_SPIDER

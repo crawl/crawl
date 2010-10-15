@@ -37,7 +37,8 @@ enum areaprop_flag
     APROP_HALO        = (1 << 3),
 };
 
-typedef FixedArray<unsigned long, GXM, GYM> propgrid_t;
+// currently, only 4 of 32 bits are used, but meh...
+typedef FixedArray<uint32_t, GXM, GYM> propgrid_t;
 
 static propgrid_t _agrid;
 static bool _agrid_valid = false;

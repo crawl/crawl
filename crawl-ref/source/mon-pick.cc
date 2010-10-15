@@ -513,13 +513,13 @@ bool mons_pan(int mcls)
     case MONS_SHADOW:
     case MONS_SKELETON_LARGE:
     case MONS_SKELETON_SMALL:
+    case MONS_SIMULACRUM_LARGE:
+    case MONS_SIMULACRUM_SMALL:
     case MONS_VAMPIRE:
     case MONS_WIGHT:
     case MONS_WRAITH:
     case MONS_ZOMBIE_LARGE:
     case MONS_ZOMBIE_SMALL:
-    case MONS_SIMULACRUM_LARGE:
-    case MONS_SIMULACRUM_SMALL:
     // "things"
     case MONS_ABOMINATION_LARGE:
     case MONS_ABOMINATION_SMALL:
@@ -541,7 +541,7 @@ bool mons_pan(int mcls)
     case MONS_STONE_GOLEM:
     case MONS_TOENAIL_GOLEM:
     case MONS_WOOD_GOLEM:
-    // dragon(s)
+    // dragons
     case MONS_MOTTLED_DRAGON:
     // elementals
     case MONS_AIR_ELEMENTAL:
@@ -1123,6 +1123,64 @@ int mons_dwarf_level(int mcls)
 
     switch (mcls)
     {
+    case MONS_DEEP_DWARF:
+    case MONS_DEEP_DWARF_SCION:
+    case MONS_WRAITH:
+    case MONS_ORANGE_RAT:
+    case MONS_GIANT_CENTIPEDE:
+    case MONS_WAR_DOG:
+        mlev++;
+        break;
+
+    case MONS_DEEP_DWARF_NECROMANCER:
+    case MONS_NISSE:
+    case MONS_SHAPESHIFTER:
+        mlev += 2;
+        break;
+
+    case MONS_DEEP_DWARF_ARTIFICER:
+    case MONS_ELF:
+    case MONS_TROLL:
+    case MONS_NECROPHAGE:
+    case MONS_GHOUL:
+    case MONS_REDBACK:
+        mlev += 3;
+        break;
+
+    case MONS_DEEP_DWARF_BERSERKER:
+    case MONS_DEEP_DWARF_DEATH_KNIGHT:
+    case MONS_WOLF_SPIDER:
+    case MONS_TROLLKONOR:
+    case MONS_WITCH:
+    case MONS_FOREST_WITCH:
+    case MONS_EVIL_WITCH:
+    case MONS_HULDRA:
+    case MONS_NECROMANCER:
+        mlev += 4;
+        break;
+
+    case MONS_DEEP_DWARF_UNBORN:
+    case MONS_SHADOW_WRAITH:
+    case MONS_ROCK_TROLL:
+    case MONS_GLOWING_SHAPESHIFTER:
+        mlev += 5;
+        break;
+
+    // OOD monsters
+    case MONS_PHANTASMAL_WARRIOR:
+    case MONS_GREATER_WRAITH:
+    case MONS_DEEP_TROLL:
+        mlev += 7;
+        break;
+    case MONS_IRON_TROLL:
+        mlev += 9;
+        break;
+    case MONS_FIRE_GIANT:
+    case MONS_FROST_GIANT:
+    case MONS_STONE_GIANT:
+        mlev += 11;
+        break;
+
     default:
         mlev += 99;
         break;
@@ -1133,12 +1191,108 @@ int mons_dwarf_level(int mcls)
 
 int mons_dwarf_rare(int mcls)
 {
+    int rarity;
+    int sharp_before; // cutoff applied on levels shallower by <= than
+    int soft_until;   // cutoff artificially applied on levels deeper by >= than
+    bool sharp_curve = false;
+    bool soft_curve  = false;
+
     switch (mcls)
     {
+    case MONS_DEEP_DWARF_NECROMANCER:
+        rarity = 210;
+        break;
+    case MONS_DEEP_DWARF_SCION:
+        soft_until = 1;
+    case MONS_DEEP_DWARF_ARTIFICER:
+        rarity = 205;
+        break;
+    case MONS_DEEP_DWARF:
+        rarity = 200;
+        break;
+    case MONS_DEEP_DWARF_UNBORN:
+        rarity = 108;
+        break;
+    /* BEGIN - OOD monsters */
+    case MONS_PHANTASMAL_WARRIOR:
+    case MONS_GREATER_WRAITH:
+    case MONS_DEEP_TROLL:
+    case MONS_IRON_TROLL:
+    case MONS_FIRE_GIANT:
+    case MONS_FROST_GIANT:
+    case MONS_STONE_GIANT:
+    /* END - OOD monsters */
+    case MONS_DEEP_DWARF_BERSERKER:
+    case MONS_DEEP_DWARF_DEATH_KNIGHT:
+        rarity = 100;
+        break;
+    case MONS_NISSE:
+    case MONS_WRAITH:
+        rarity = 80;
+        break;
+    case MONS_ELF:
+        rarity = 50;
+        break;
+    case MONS_HULDRA:
+        sharp_before = 2;
+    case MONS_WAR_DOG:
+        rarity = 40;
+        break;
+    case MONS_TROLLKONOR:
+        soft_curve = true;
+    case MONS_TROLL:
+    case MONS_WITCH:
+    case MONS_EVIL_WITCH:
+        rarity = 30;
+        break;
+    case MONS_SHAPESHIFTER:
+        sharp_curve = true;
+    case MONS_ROCK_TROLL:
+    case MONS_SHADOW_WRAITH:
+        rarity = 15;
+        break;
+    case MONS_GIANT_CENTIPEDE:
+    case MONS_WOLF_SPIDER:
+    case MONS_REDBACK:
+        soft_curve = true;
+    case MONS_NECROMANCER:
+        rarity = 10;
+        break;
+    case MONS_ORANGE_RAT:
+        soft_curve = true;
+    case MONS_FOREST_WITCH:
+    case MONS_NECROPHAGE:
+    case MONS_GHOUL:
+    case MONS_GLOWING_SHAPESHIFTER:
+        rarity = 5;
+        break;
 
     default:
         return 0;
     }
+
+    if (soft_curve)
+        return rarity;
+
+    const int mlev = mons_dwarf_level(mcls);
+    const int diff = mlev - you.absdepth0;
+    if ( ((diff > soft_until) or ((diff < 0) and (abs(diff) > sharp_before)) and
+         ((soft_until > 0) or (sharp_before > 0))) or (diff >= 0) )
+    {
+        sharp_curve = true; // its a shadow-reuse, sorry :(
+    }
+
+    // by default, this section makes rarity much higher for placing monsters
+    // above their level
+    if (sharp_curve)
+    { // fake integer sqroot
+        int i=0;
+        while( (i*i) <= rarity )
+            i+=1;
+        rarity = i;
+    }
+
+    return rarity;
 }
 
 // The Orcish Mines
@@ -1923,7 +2077,7 @@ int mons_spidernest_level(int mcls)
         mlev += 3;
         break;
 
-    case MONS_GIANT_SCORPION:
+    case MONS_EMPEROR_SCORPION:
     case MONS_JUMPING_SPIDER:
         mlev += 4;
         break;
@@ -1967,7 +2121,7 @@ int mons_spidernest_rare(int mcls)
     case MONS_BORING_BEETLE:
     case MONS_BOULDER_BEETLE:
     case MONS_GIANT_CENTIPEDE:
-    case MONS_GIANT_SCORPION:
+    case MONS_EMPEROR_SCORPION:
         return 15;
 
     case MONS_JUMPING_SPIDER:
@@ -2433,6 +2587,7 @@ int mons_hallzot_level(int mcls)
     case MONS_STORM_DRAGON:
     case MONS_CURSE_TOE:
     case MONS_ORB_GUARDIAN:
+    case MONS_GHOST_MOTH:
         mlev += 5;
         break;
     case MONS_DEATH_COB:
@@ -2491,7 +2646,7 @@ int mons_hallzot_rare(int mcls)
     case MONS_ICE_DRAGON:
         return 40;
     case MONS_SHADOW_DRAGON:
-    case MONS_DEATH_DRAKE:
+    case MONS_GHOST_MOTH:
         return 30;
     case MONS_GUARDIAN_MUMMY:
     case MONS_ELECTRIC_GOLEM:

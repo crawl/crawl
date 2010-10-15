@@ -20,6 +20,7 @@
 #include "dungeon.h"
 #include "effects.h"
 #include "env.h"
+#include "godpassive.h"
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
@@ -538,6 +539,10 @@ void wizard_tweak_object(void)
             you.inv[item].flags = new_val;
         else
             ASSERT(!"unhandled keyin");
+
+        // cursedness might have changed
+        ash_check_bondage();
+        ash_id_inventory();
     }
 }
 
@@ -715,7 +720,8 @@ void wizard_make_object_randart()
 // Returns whether an item of this type can be cursed.
 static bool _item_type_can_be_cursed(int type)
 {
-    return (type == OBJ_WEAPONS || type == OBJ_ARMOUR || type == OBJ_JEWELLERY);
+    return (type == OBJ_WEAPONS || type == OBJ_ARMOUR || type == OBJ_JEWELLERY
+            || type == OBJ_STAVES);
 }
 
 void wizard_uncurse_item()

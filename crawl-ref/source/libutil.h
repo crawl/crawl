@@ -91,6 +91,8 @@ std::string pluralise(
     const std::string &name,
     const char *stock_plural_quals[] = standard_plural_qualifiers,
     const char *no_of[] = NULL);
+std::string apostrophise(const std::string &name);
+std::string apostrophise_fixup(const std::string &msg);
 
 std::string number_in_words(unsigned number, int pow = 0);
 std::string number_to_string(unsigned number, bool in_words = false);

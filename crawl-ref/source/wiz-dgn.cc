@@ -686,7 +686,7 @@ static int _debug_time_explore()
 
     unwind_var<int> es(Options.explore_stop, 0);
 
-    const long start = you.num_turns;
+    const int start = you.num_turns;
     while (you_are_delayed())
     {
         you.turn_is_over = false;

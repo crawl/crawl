@@ -66,8 +66,8 @@ The contents of this text are:
 4-j     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, clear_messages, show_more, small_more,
-                show_inventory_weights, show_gold_turns, show_beam,
-                item_stack_summary_minimum, list_rotten,
+                show_inventory_weights, show_gold_turns, show_real_turns,
+                show_beam, item_stack_summary_minimum, list_rotten,
                 mlist_min_height, msg_min_height, msg_max_height,
                 messages_at_top,
                 mlist_allow_alternate_layout, mlist_targetting, classic_hud,
@@ -1313,6 +1313,10 @@ show_inventory_weights = false
 show_gold_turns = false
         If set to true, this option adds an extra line to the stat area
         to display the current gold and turn counters.
+
+show_real_turns = false
+        If set to true, the turn counter in the stat area will display absolute
+        turns instead of player turns.
 
 show_beam = true
         When performing actions such as throwing or zapping, you can

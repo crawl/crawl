@@ -403,7 +403,7 @@
     true,
     false,
     false,
-    4 // XXX: Would sticky flame really be this noisy?
+    1
 },
 
 {
@@ -632,7 +632,7 @@
     true,
     true,
     false,
-    6
+    7
 },
 
 
@@ -1083,6 +1083,38 @@
     true,
     false,
     0 // Explosion does the noise.
+},
+
+{
+    ZAP_BREATHE_STICKY_FLAME, // same data as spell but has different effects on hit
+    "splash of liquid fire",
+    100,
+    new dicedef_calculator<2, 3, 1, 12>,
+    new tohit_calculator<11, 1, 10>,
+    RED,
+    false,
+    BEAM_FIRE,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+    false,
+    1
+},
+
+{
+    ZAP_BREATHE_MEPHITIC,
+    "blast of choking fumes",
+    50,
+    new dicedef_calculator<3, 2, 1, 6>,
+    new tohit_calculator<6, 1, 6>,
+    GREEN,
+    false,
+    BEAM_POTION_STINKING_CLOUD,
+    DCHAR_FIRED_ZAP,
+    true,
+    true,
+    false,
+    0
 },
 
 #endif

@@ -31,6 +31,7 @@
 #include "godabil.h"
 #include "item_use.h"
 #include "it_use2.h"
+#include "it_use3.h"
 #include "macro.h"
 #include "message.h"
 #include "menu.h"
@@ -111,8 +112,8 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_KIKU_RECEIVE_CORPSES, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
       ABIL_NON_ABILITY, ABIL_NON_ABILITY },
     // Yredelemnul
-    { ABIL_YRED_ANIMATE_REMAINS, ABIL_YRED_RECALL_UNDEAD_SLAVES,
-      ABIL_YRED_ANIMATE_DEAD, ABIL_YRED_DRAIN_LIFE, ABIL_YRED_ENSLAVE_SOUL },
+    { ABIL_YRED_ANIMATE_REMAINS_OR_DEAD, ABIL_YRED_RECALL_UNDEAD_SLAVES,
+      ABIL_NON_ABILITY, ABIL_YRED_DRAIN_LIFE, ABIL_YRED_ENSLAVE_SOUL },
     // Xom
     { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
       ABIL_NON_ABILITY },
@@ -154,6 +155,9 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     // Cheibriados
     { ABIL_NON_ABILITY, ABIL_CHEIBRIADOS_TIME_BEND, ABIL_NON_ABILITY,
       ABIL_CHEIBRIADOS_SLOUCH, ABIL_CHEIBRIADOS_TIME_STEP },
+    // Ashenzari
+    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
+      ABIL_ASHENZARI_SCRYING, ABIL_NON_ABILITY },
 };
 
 // The description screen was way out of date with the actual costs.
@@ -174,6 +178,8 @@ static const ability_def Ability_List[] =
     { ABIL_BREATHE_FIRE, "Breathe Fire", 0, 0, 125, 0, ABFLAG_BREATH },
     { ABIL_BREATHE_FROST, "Breathe Frost", 0, 0, 125, 0, ABFLAG_BREATH },
     { ABIL_BREATHE_POISON, "Breathe Poison Gas", 0, 0, 125, 0, ABFLAG_BREATH },
+    { ABIL_BREATHE_MEPHITIC, "Breathe Noxious Fumes",
+      0, 0, 125, 0, ABFLAG_BREATH },
     { ABIL_BREATHE_LIGHTNING, "Breathe Lightning",
       0, 0, 125, 0, ABFLAG_BREATH },
     { ABIL_BREATHE_POWER, "Breathe Power", 0, 0, 125, 0, ABFLAG_BREATH },
@@ -183,7 +189,7 @@ static const ability_def Ability_List[] =
     { ABIL_TRAN_BAT, "Bat Form", 2, 0, 0, 0, ABFLAG_NONE },
     { ABIL_BOTTLE_BLOOD, "Bottle Blood", 0, 0, 0, 0, ABFLAG_NONE }, // no costs
 
-    { ABIL_SPIT_ACID, "Spit Acid", 0, 0, 125, 0, ABFLAG_NONE },
+    { ABIL_SPIT_ACID, "Spit Acid", 0, 0, 125, 0, ABFLAG_BREATH },
 
     { ABIL_FLY, "Fly", 3, 0, 100, 0, ABFLAG_NONE },
     { ABIL_STOP_FLYING, "Stop Flying", 0, 0, 0, 0, ABFLAG_NONE },
@@ -243,12 +249,15 @@ static const ability_def Ability_List[] =
 
     // Yredelemnul
     { ABIL_YRED_INJURY_MIRROR, "Injury Mirror", 0, 0, 0, 0, ABFLAG_PIETY },
-    { ABIL_YRED_ANIMATE_REMAINS, "Animate Remains", 1, 0, 100, 0, ABFLAG_NONE },
+    { ABIL_YRED_ANIMATE_REMAINS, "Animate Remains", 2, 0, 100, 0, ABFLAG_NONE },
     { ABIL_YRED_RECALL_UNDEAD_SLAVES, "Recall Undead Slaves",
       2, 0, 50, 0, ABFLAG_NONE },
-    { ABIL_YRED_ANIMATE_DEAD, "Animate Dead", 3, 0, 100, 1, ABFLAG_NONE },
+    { ABIL_YRED_ANIMATE_DEAD, "Animate Dead", 2, 0, 100, 0, ABFLAG_NONE },
     { ABIL_YRED_DRAIN_LIFE, "Drain Life", 6, 0, 200, 2, ABFLAG_NONE },
     { ABIL_YRED_ENSLAVE_SOUL, "Enslave Soul", 8, 0, 150, 4, ABFLAG_NONE },
+    // Placeholder for Animate Remains or Animate Dead.
+    { ABIL_YRED_ANIMATE_REMAINS_OR_DEAD, "Animate Remains or Dead",
+      2, 0, 100, 0, ABFLAG_NONE },
 
     // Okawaru
     { ABIL_OKAWARU_MIGHT, "Might", 2, 0, 50, 1, ABFLAG_NONE },
@@ -333,7 +342,6 @@ static const ability_def Ability_List[] =
     { ABIL_FEDHAS_SPAWN_SPORES, "Reproduction", 4, 0, 100, 0, ABFLAG_NONE},
     { ABIL_FEDHAS_RAIN, "Rain", 4, 0, 150, 4, ABFLAG_NONE},
 
-
     // Cheibriados
     { ABIL_CHEIBRIADOS_PONDEROUSIFY, "Make Ponderous",
       0, 0, 0, 0, ABFLAG_NONE },
@@ -341,6 +349,10 @@ static const ability_def Ability_List[] =
     { ABIL_CHEIBRIADOS_SLOUCH, "Slouch", 5, 0, 100, 8, ABFLAG_NONE },
     { ABIL_CHEIBRIADOS_TIME_STEP, "Step From Time",
       10, 0, 200, 10, ABFLAG_NONE },
+
+    // Ashenzari
+    { ABIL_ASHENZARI_SCRYING, "Scrying",
+      4, 0, 50, generic_cost::range(5, 6), ABFLAG_NONE },
 
     { ABIL_HARM_PROTECTION, "Protection From Harm", 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_HARM_PROTECTION_II, "Reliable Protection From Harm",
@@ -506,12 +518,30 @@ const std::string make_cost_description(ability_type ability)
     return (ret.str());
 }
 
+static ability_type _fixup_ability(ability_type ability)
+{
+    switch (ability)
+    {
+    case ABIL_YRED_ANIMATE_REMAINS_OR_DEAD:
+        // Placeholder for Animate Remains or Animate Dead.
+        if (yred_can_animate_dead())
+            return (ABIL_YRED_ANIMATE_DEAD);
+        else
+            return (ABIL_YRED_ANIMATE_REMAINS);
+
+    default:
+        return (ability);
+    }
+}
+
 static talent _get_talent(ability_type ability, bool check_confused)
 {
     ASSERT(ability != ABIL_NON_ABILITY);
 
     talent result;
-    result.which = ability;
+    // Only replace placeholder abilities here, so that the replaced
+    // abilities keep the same slots if they change.
+    result.which = _fixup_ability(ability);
 
     int failure = 0;
     bool perfect = false;  // is perfect
@@ -571,6 +601,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_BREATHE_LIGHTNING:
     case ABIL_BREATHE_POWER:
     case ABIL_BREATHE_STICKY_FLAME:
+    case ABIL_BREATHE_MEPHITIC:
         failure = 30 - you.experience_level;
 
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
@@ -686,15 +717,14 @@ static talent _get_talent(ability_type ability, bool check_confused)
         failure = 30 - (you.piety / 20) - (6 * you.skills[SK_INVOCATIONS]);
         break;
 
-    // destroying stuff doesn't train anything
+    // These don't train anything.
+    case ABIL_ZIN_CURE_ALL_MUTATIONS:
     case ABIL_ELYVILON_DESTROY_WEAPONS:
-    case ABIL_FEDHAS_FUNGAL_BLOOM:
-        invoc = true;
-        failure = 0;
-        break;
-
     case ABIL_TROG_BURN_SPELLBOOKS:
+    case ABIL_FEDHAS_FUNGAL_BLOOM:
+    case ABIL_CHEIBRIADOS_PONDEROUSIFY:
         invoc = true;
+        perfect = true;
         failure = 0;
         break;
 
@@ -709,14 +739,22 @@ static talent _get_talent(ability_type ability, bool check_confused)
         failure = 80 - you.piety;       // starts at 30%
         break;
 
-    case ABIL_TROG_BROTHERS_IN_ARMS:       // piety >= 100
+    case ABIL_TROG_BROTHERS_IN_ARMS:    // piety >= 100
+    case ABIL_ASHENZARI_SCRYING:
         invoc = true;
         failure = 160 - you.piety;      // starts at 60%
         break;
 
+    case ABIL_YRED_INJURY_MIRROR:
     case ABIL_YRED_ANIMATE_REMAINS:
+    case ABIL_YRED_ANIMATE_DEAD:
         invoc = true;
-        failure = 40 - (you.piety / 20) - (3 * you.skills[SK_INVOCATIONS]);
+        failure = 40 - (you.piety / 20) - (4 * you.skills[SK_INVOCATIONS]);
+        break;
+
+    // Placeholder for Animate Remains or Animate Dead.
+    case ABIL_YRED_ANIMATE_REMAINS_OR_DEAD:
+        invoc = true;
         break;
 
     case ABIL_ZIN_VITALISATION:
@@ -725,7 +763,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
     case ABIL_SIF_MUNA_FORGET_SPELL:
     case ABIL_KIKU_RECEIVE_CORPSES:
-    case ABIL_YRED_ANIMATE_DEAD:
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
     case ABIL_ELYVILON_GREATER_HEALING_SELF:
     case ABIL_ELYVILON_GREATER_HEALING_OTHERS:
@@ -809,7 +846,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
         failure = 50 - (you.piety / 20) - (5 * you.skills[SK_EVOCATIONS]);
         break;
 
-    case ABIL_CHEIBRIADOS_PONDEROUSIFY:
     case ABIL_RENOUNCE_RELIGION:
         invoc = true;
         perfect = true;
@@ -836,12 +872,17 @@ static talent _get_talent(ability_type ability, bool check_confused)
     return result;
 }
 
+const char* ability_name(ability_type ability)
+{
+    return get_ability_def(ability).name;
+}
+
 std::vector<const char*> get_ability_names()
 {
     std::vector<talent> talents = your_talents(false);
     std::vector<const char*> result;
     for (unsigned int i = 0; i < talents.size(); ++i)
-        result.push_back(get_ability_def(talents[i].which).name);
+        result.push_back(ability_name(talents[i].which));
     return result;
 }
 
@@ -849,7 +890,7 @@ static void _print_talent_description(const talent& tal)
 {
     clrscr();
 
-    const std::string& name = get_ability_def(tal.which).name;
+    const std::string& name = ability_name(tal.which);
 
     // XXX: The suffix is necessary to distinguish between similarly
     // named spells.  Yes, this is a hack.
@@ -1066,9 +1107,11 @@ static bool _check_ability_possible(const ability_def& abil,
     case ABIL_BREATHE_FROST:
     case ABIL_BREATHE_POISON:
     case ABIL_BREATHE_LIGHTNING:
+    case ABIL_SPIT_ACID:
     case ABIL_BREATHE_POWER:
     case ABIL_BREATHE_STICKY_FLAME:
     case ABIL_BREATHE_STEAM:
+    case ABIL_BREATHE_MEPHITIC:
         if (you.duration[DUR_BREATH_WEAPON])
         {
             canned_msg(MSG_CANNOT_DO_YET);
@@ -1228,8 +1271,9 @@ static int _calc_breath_ability_range(ability_type ability)
     case ABIL_BREATHE_LIGHTNING:    return 8;
     case ABIL_SPIT_ACID:            return 8;
     case ABIL_BREATHE_POWER:        return 8;
-    case ABIL_BREATHE_STICKY_FLAME: return 5;
+    case ABIL_BREATHE_STICKY_FLAME: return 1;
     case ABIL_BREATHE_STEAM:        return 7;
+    case ABIL_BREATHE_MEPHITIC:     return 7;
     default:
         ASSERT(!"Bad breath type!");
         break;
@@ -1321,14 +1365,16 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_BREATHE_FIRE:
     case ABIL_BREATHE_FROST:
     case ABIL_BREATHE_POISON:
-    case ABIL_BREATHE_LIGHTNING:
     case ABIL_SPIT_ACID:
     case ABIL_BREATHE_POWER:
     case ABIL_BREATHE_STICKY_FLAME:
     case ABIL_BREATHE_STEAM:
+    case ABIL_BREATHE_MEPHITIC:
         beam.range = _calc_breath_ability_range(abil.ability);
         if (!spell_direction(abild, beam))
             return (false);
+
+    case ABIL_BREATHE_LIGHTNING: // not targeted
 
         switch (abil.ability)
         {
@@ -1363,11 +1409,7 @@ static bool _do_ability(const ability_def& abil)
             break;
 
         case ABIL_BREATHE_LIGHTNING:
-            if (!zapping(ZAP_LIGHTNING, (you.experience_level * 2), beam, true,
-                         "You spit a bolt of lightning."))
-            {
-                return (false);
-            }
+            disc_of_storms(true);
             break;
 
         case ABIL_SPIT_ACID:
@@ -1387,7 +1429,7 @@ static bool _do_ability(const ability_def& abil)
             break;
 
         case ABIL_BREATHE_STICKY_FLAME:
-            if (!zapping(ZAP_STICKY_FLAME, you.experience_level, beam, true,
+            if (!zapping(ZAP_BREATHE_STICKY_FLAME, you.experience_level, beam, true,
                          "You spit a glob of burning liquid."))
             {
                 return (false);
@@ -1402,18 +1444,24 @@ static bool _do_ability(const ability_def& abil)
             }
             break;
 
+        case ABIL_BREATHE_MEPHITIC:
+             if (!zapping(ZAP_BREATHE_MEPHITIC, you.experience_level, beam, true,
+                          "You exhale a blast of noxious fumes."))
+             {
+                 return (false);
+             }
+             break;
+
         default:
             break;
         }
 
-        if (abil.ability != ABIL_SPIT_ACID)
-        {
-            you.increase_duration(DUR_BREATH_WEAPON,
-                      3 + random2(4) + random2(30 - you.experience_level) / 2);
+        you.increase_duration(DUR_BREATH_WEAPON,
+                      3 + random2(10) + random2(30 - you.experience_level));
 
-            if (abil.ability == ABIL_BREATHE_STEAM)
-                you.duration[DUR_BREATH_WEAPON] /= 2;
-        }
+        if (abil.ability == ABIL_BREATHE_STEAM)
+            you.duration[DUR_BREATH_WEAPON] /= 2;
+
         break;
 
     case ABIL_EVOKE_BLINK:      // randarts
@@ -1564,32 +1612,31 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_YRED_INJURY_MIRROR:
-        // Activated via prayer elsewhere.
+        if (yred_injury_mirror())
+        {
+            mpr("You already have a dark mirror aura!");
+            return (false);
+        }
+
+        mprf("You %s in prayer and are bathed in unholy energy.",
+             you.species == SP_NAGA ? "coil" :
+             you.species == SP_CAT  ? "sit"
+                                    : "kneel");
+        you.duration[DUR_MIRROR_DAMAGE] = 9 * BASELINE_DELAY
+                     + random2avg(you.piety * BASELINE_DELAY, 2) / 10;
         break;
 
     case ABIL_YRED_ANIMATE_REMAINS:
-        mpr("You attempt to give life to the dead...");
-
-        if (animate_remains(you.pos(), CORPSE_BODY, BEH_FRIENDLY,
-                            MHITYOU, &you, "", GOD_YREDELEMNUL) < 0)
-        {
-            mpr("There are no remains here to animate!");
-        }
+    case ABIL_YRED_ANIMATE_DEAD:
+        yred_animate_remains_or_dead();
         break;
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
         recall(1);
         break;
 
-    case ABIL_YRED_ANIMATE_DEAD:
-        mpr("You call on the dead to rise...");
-
-        animate_dead(&you, 1 + you.skills[SK_INVOCATIONS], BEH_FRIENDLY,
-                     MHITYOU, &you, "", GOD_YREDELEMNUL);
-        break;
-
     case ABIL_YRED_DRAIN_LIFE:
-        yred_drain_life(you.skills[SK_INVOCATIONS]);
+        yred_drain_life();
         break;
 
     case ABIL_YRED_ENSLAVE_SOUL:
@@ -1705,7 +1752,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_SIF_MUNA_FORGET_SPELL:
-        if (!cast_selective_amnesia(true))
+        if (!cast_selective_amnesia())
             return (false);
         break;
 
@@ -1986,6 +2033,15 @@ static bool _do_ability(const ability_def& abil)
         cheibriados_slouch(0);
         break;
 
+    case ABIL_ASHENZARI_SCRYING:
+        if (you.duration[DUR_SCRYING])
+            mpr("You extend your astral sight.");
+        else
+            mpr("You gain astral sight.");
+        you.duration[DUR_SCRYING] = 100 + random2avg(you.piety * 2, 2);
+        you.xray_vision = true;
+        break;
+
 
     case ABIL_RENOUNCE_RELIGION:
         if (yesno("Really renounce your faith, foregoing its fabulous benefits?",
@@ -2146,11 +2202,6 @@ int choose_ability_menu(const std::vector<talent>& talents)
     }
 }
 
-const char* ability_name(ability_type ability)
-{
-    return get_ability_def(ability).name;
-}
-
 static std::string _describe_talent(const talent& tal)
 {
     ASSERT( tal.which != ABIL_NON_ABILITY );
@@ -2202,7 +2253,7 @@ std::vector<talent> your_talents(bool check_confused)
         ability_type ability = ABIL_NON_ABILITY;
         switch (you.species)
         {
-        case SP_GREEN_DRACONIAN:   ability = ABIL_BREATHE_POISON;       break;
+        case SP_GREEN_DRACONIAN:   ability = ABIL_BREATHE_MEPHITIC;     break;
         case SP_RED_DRACONIAN:     ability = ABIL_BREATHE_FIRE;         break;
         case SP_WHITE_DRACONIAN:   ability = ABIL_BREATHE_FROST;        break;
         case SP_YELLOW_DRACONIAN:  ability = ABIL_SPIT_ACID;            break;
@@ -2321,15 +2372,23 @@ std::vector<talent> your_talents(bool check_confused)
                                     ABIL_ELYVILON_GREATER_HEALING_SELF,
                                     check_confused);
                     }
+                    else if (abil == ABIL_YRED_RECALL_UNDEAD_SLAVES)
+                    {
+                        _add_talent(talents,
+                                    ABIL_YRED_INJURY_MIRROR,
+                                    check_confused);
+                    }
                 }
             }
         }
 
         if (you.religion == GOD_ZIN
-            && !you.num_gifts[GOD_ZIN]
+            && !you.num_total_gifts[GOD_ZIN]
             && you.piety > 160)
         {
-            _add_talent(talents, ABIL_ZIN_CURE_ALL_MUTATIONS, check_confused);
+            _add_talent(talents,
+                        ABIL_ZIN_CURE_ALL_MUTATIONS,
+                        check_confused);
         }
     }
 
@@ -2502,6 +2561,15 @@ void set_god_ability_slots()
                                             'a' + num++);
                 }
             }
+            else if (you.religion == GOD_YREDELEMNUL)
+            {
+                if (god_abilities[you.religion][i]
+                        == ABIL_YRED_RECALL_UNDEAD_SLAVES)
+                {
+                    _set_god_ability_helper(ABIL_YRED_INJURY_MIRROR,
+                                            'a' + num++);
+                }
+            }
         }
     }
 }
@@ -2516,8 +2584,10 @@ static int _find_ability_slot(ability_type which_ability)
 
     // No requested slot, find new one and make it preferred.
 
-    // Skip over a-e (invocations), or a-g for Elyvilon.
-    const int first_slot = (you.religion == GOD_ELYVILON ? 7 : 5);
+    // Skip over a-e (invocations), a-g for Elyvilon, or a-f for Yredelemnul.
+    const int first_slot = you.religion == GOD_ELYVILON    ? 7 :
+                           you.religion == GOD_YREDELEMNUL ? 6
+                                                           : 5;
     for (int slot = first_slot; slot < 52; ++slot)
     {
         if (you.ability_letter_table[slot] == ABIL_NON_ABILITY)

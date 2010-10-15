@@ -3,6 +3,7 @@
 #include "godconduct.h"
 
 #include "fight.h"
+#include "godpassive.h"
 #include "godwrath.h"
 #include "monster.h"
 #include "mon-util.h"
@@ -481,6 +482,17 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
+        case DID_KILL_ARTIFICIAL:
+            if (you.religion == GOD_YREDELEMNUL
+                && !god_hates_attacking_friend(you.religion, victim))
+            {
+                simple_god_message(" accepts your kill.");
+                retval = true;
+                piety_denom = level + 18;
+                piety_change = piety_denom - 3;
+            }
+            break;
+
         // Note that holy deaths are special, they are always noticed...
         // If you or any friendly kills one, you'll get the credit or
         // the blame.
@@ -711,7 +723,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             {
                 simple_god_message(" accepts your collateral kill.");
                 retval = true;
-
                 piety_denom = level + 10;
                 piety_change = piety_denom - 6;
             }
@@ -727,6 +738,21 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 piety_denom = level + 10;
                 piety_change = piety_denom - 6;
             }
+            break;
+
+        case DID_ARTIFICIAL_KILLED_BY_UNDEAD_SLAVE:
+            if (you.religion == GOD_YREDELEMNUL)
+            {
+                simple_god_message(" accepts your slave's kill.");
+                retval = true;
+                piety_denom = level + 18;
+                piety_change = piety_denom - 3;
+            }
+            break;
+
+        // Currently used only when confused undead kill artificial
+        // beings, which Yredelemnul doesn't care about.
+        case DID_ARTIFICIAL_KILLED_BY_SERVANT:
             break;
 
         case DID_SPELL_MEMORISE:
@@ -816,11 +842,25 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 if (thing_done == DID_CAUSE_GLOWING)
                 {
                     static long last_glowing_lecture = -1L;
-                    if (last_glowing_lecture != you.num_turns)
+                    if (!level)
                     {
-                        simple_god_message(" does not appreciate the mutagenic "
-                                           "glow surrounding you!");
+                        simple_god_message(" is not enthusiastic about the "
+                                           "mutagenic glow surrounding you.");
+                    }
+                    else if (last_glowing_lecture != you.num_turns)
+                    {
                         last_glowing_lecture = you.num_turns;
+                        if (get_contamination_level() == 1)
+                        {
+                            // Increase contamination within gray glow.
+                            simple_god_message(" does not appreciate the extra "
+                                               "mutagenic glow.");
+                        }
+                        else
+                        {
+                            simple_god_message(" does not appreciate the "
+                                               "mutagenic glow surrounding you!");
+                        }
                     }
                 }
 
@@ -925,6 +965,27 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 retval = true;
             }
             break;
+        case DID_DESTROY_SPELLBOOK:
+            if (you.religion == GOD_SIF_MUNA)
+            {
+                piety_change = -level;
+                penance = level * (known ? 2 : 1);
+                retval = true;
+            }
+            break;
+
+        case DID_EXPLORATION:
+            if (you.religion == GOD_ASHENZARI)
+            {
+                // levels: x1, x2, x4, x6
+                piety_change = ash_bondage_level() * 2;
+                if (!piety_change)
+                    piety_change = 1;
+                piety_change *= 8; // base gain per dungeon level
+                piety_denom = level;
+                retval = true;
+            }
+            break;
 
         case DID_NOTHING:
         case DID_STABBING:                          // unused
@@ -937,13 +998,18 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
         }
 
+#ifdef DEBUG_DIAGNOSTICS
+        int old_piety = you.piety;
+#endif
+
         if (piety_change > 0)
             gain_piety(piety_change, piety_denom);
         else
             dock_piety(div_rand_round(-piety_change, piety_denom), penance);
 
 #ifdef DEBUG_DIAGNOSTICS
-        if (retval)
+        // don't announce exploration piety unless you actually got a boost
+        if (retval && (thing_done != DID_EXPLORATION || old_piety != you.piety))
         {
             static const char *conducts[] =
             {
@@ -966,7 +1032,10 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Create Life", "Kill Slime", "Kill Plant", "Servant Kill Plant",
                 "Was Hasty", "Gluttony", "Corpse Violation",
                 "Souled Friend Died", "Servant Kill Unclean",
-                "Servant Kill Chaotic", "Attack In Sanctuary"
+                "Servant Kill Chaotic", "Attack In Sanctuary",
+                "Kill Artificial", "Undead Slave Kill Artificial",
+                "Servant Kill Artificial", "Destroy Spellbook",
+                "Exploration",
             };
 
             COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS, c1);

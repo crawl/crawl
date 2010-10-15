@@ -13,5 +13,6 @@ void good_god_holy_attitude_change(monster* holy);
 void good_god_holy_fail_attitude_change(monster* holy);
 void beogh_convert_orc(monster* orc, bool emergency,
                        bool converted_by_follower = false);
-
+void passive_enslavement_convert(monster* mons);
+void passive_enslavement_convert_monster(monster* mons);
 #endif

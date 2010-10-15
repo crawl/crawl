@@ -219,6 +219,10 @@ There was once a human priest named Mennas. He travelled far and wide preaching 
 
 Whether or not this angel is that same Mennas is something of a mystery, as he seems to have difficulty speaking.
 %%%%
+Paracelsus
+
+A powerful alchemist of particular renown for his discovery of zinc and the beginnings of medicine. His wanderings as an itinerant physician and sometime journeyman miner took him throughout the world, but never could he find a safer replacement for his laudanum. People say he wanders the world in search of one to this day.
+%%%%
 Menkaure
 
 A fair and noble ruler of an ancient and mighty kingdom, mummified after an early death. His faithful priests subsequently infused him with great and powerful magic, seeking to grant him eternal life. Now he is forgotten and reduced to mouldering bandages and dry, brittle bones.
@@ -412,7 +416,7 @@ A small black bear. If provoked, it may become angry!
 %%%%
 black draconian
 
-Before you stands a draconian.
+Before you stands a scale-covered humanoid with a reptilian tail and small wings.
 %%%%
 black mamba
 
@@ -663,6 +667,14 @@ efreet
 
 A huge and muscular figure engulfed in a cloud of searing flame.
 %%%%
+eldritch tentacle
+
+This immense, batrachian appendage of some thankfully unseen creature drips with ichor and is tipped with a single, terrible-looking claw.
+%%%%
+eldritch tentacle segment
+
+Part of an immense, batrachian appendage. It thrashes and pulsates like no other living thing.
+%%%%
 electric golem
 
 An animated figure made completely of electricity.
@@ -700,6 +712,10 @@ A huge eyeball, encased in a levitating globe of incandescent energy.
 eye of draining
 
 These hovering horrors are especially loathed by wizards.
+%%%%
+felid
+
+This feline has been given sentience with magic. It uses the gift of speech to demand milk, treats and catnip.
 %%%%
 fiend
 
@@ -829,7 +845,7 @@ giant orange brain
 
 A huge wrinkled brain, floating just off the floor. Every now and then it seems to pulsate.
 %%%%
-giant scorpion
+emperor scorpion
 
 A bigger and deadlier relative of the deadly dungeon scorpion.
 %%%%
@@ -883,17 +899,25 @@ A hybrid; human from the chest up, with a scaly, muscular torso trailing off lik
 
 It looks strong and aggressive.
 %%%%
+greater wraith
+
+An ancient skeletal apparition, sheathed in a cloud of mist. Its form glows white-hot with debilitating energy.
+%%%%
 Green Death
 
 A bloated form covered in oozing sores and exhaling clouds of lethal poison.
 %%%%
 green draconian
 
-Before you stands a draconian.
+Before you stands a scale-covered humanoid with a reptilian tail and small wings.
 %%%%
 green rat
 
 A very large rat, with hair and skin of a most peculiar green colour.
+%%%%
+grey draconian
+
+Before you stands a scale-covered humanoid with a reptilian tail and small wings.
 %%%%
 grey rat
 
@@ -1187,7 +1211,7 @@ A huge moth, as violent as it is hairy.
 %%%%
 mottled draconian
 
-Before you stands a draconian.
+Before you stands a scale-covered humanoid with a reptilian tail and small wings.
 %%%%
 mottled dragon
 
@@ -1228,6 +1252,22 @@ A vile undead creation of the most unholy necromancy, these creatures are made f
 neqoxec
 
 A weirdly shaped demon, pulsing and shifting with mutagenic energies, its belly distended with the devoured brains of its victims.
+%%%%
+nisse
+
+Nisse take care of a lord's home and children and protect them from misfortune, in particular at night, when the housefolk are asleep. Since nisse are thought to be skilled in illusions and sometimes able to become invisible, getting more than brief glimpses of one is unlikely. Nisse have four fingers, and are hairy all over, with pointed ears. Their eyes glow in the dark.
+%%%%
+witch
+
+A rather eccentric person, dabbling in all sorts of arcanities.
+%%%%
+huldra
+
+Huldra are dangerous seductresses who live in the forest. The huldra lures men into the forest in order to secure her freedom or sometimes to suck the life out of a man. One of her methods is to appear suddenly out of the rain and mist, friendly and enticing to the point that no man can resist her charms.
+%%%%
+trollkonor
+
+A trollkonor is a troll’s wife who possesses magical powers. Despite their natural human lineage, they greatly resemble their ugly troll husbands.
 %%%%
 ogre
 
@@ -1305,7 +1345,7 @@ While orcs are generally quite stupid, occasionally one develops an aptitude for
 %%%%
 pale draconian
 
-Before you stands a draconian.
+Before you stands a scale-covered humanoid with a reptilian tail and small wings.
 %%%%
 paladin
 
@@ -1357,7 +1397,7 @@ A revolting glob of writhing flesh.
 %%%%
 purple draconian
 
-Before you stands a draconian.
+Before you stands a scale-covered humanoid with a reptilian tail and small wings.
 %%%%
 quasit
 
@@ -1397,7 +1437,7 @@ A muscular demon covered in spikes and horns. Two short wings sprout from its sh
 %%%%
 red draconian
 
-Before you stands a draconian.
+Before you stands a scale-covered humanoid with a reptilian tail and small wings.
 %%%%
 red wasp
 
@@ -1661,8 +1701,11 @@ A small but greatly-feared spider whose venom causes even resistant victims to b
 %%%%
 tentacle
 
-This mighty tentacle is a part of a kraken.
-Any damage dealt to it hurts the whole creature.
+This mighty tentacle is a part of a kraken. Any damage dealt to it hurts the whole creature.
+%%%%
+tentacle segment
+
+Part of the mighty tentacle of a kraken. Any damage dealt to it hurts the whole creature.
 %%%%
 tentacled monstrosity
 
@@ -1758,7 +1801,7 @@ A largish venomous brown snake. It usually lives near water, and is an able swim
 %%%%
 white draconian
 
-Before you stands a draconian.
+Before you stands a scale-covered humanoid with a reptilian tail and small wings.
 %%%%
 white imp
 
@@ -1810,7 +1853,7 @@ Like a centaur, but half yak. It looks very strong and aggressive.
 %%%%
 yellow draconian
 
-Before you stands a draconian.
+Before you stands a scale-covered humanoid with a reptilian tail and small wings.
 %%%%
 yellow wasp
 

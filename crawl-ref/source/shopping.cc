@@ -26,7 +26,7 @@
 #include "items.h"
 #include "itemname.h"
 #include "itemprop.h"
-#include "kills.h"
+#include "libutil.h"
 #include "macro.h"
 #include "menu.h"
 #include "notes.h"
@@ -1016,7 +1016,7 @@ unsigned int item_value(item_def item, bool ident)
         case WPN_BLESSED_DOUBLE_SWORD:
         case WPN_BLESSED_GREAT_SWORD:
         case WPN_BLESSED_TRIPLE_SWORD:
-        case WPN_HOLY_SCOURGE:
+        case WPN_SACRED_SCOURGE:
         case WPN_TRISHULA:
         case WPN_LAJATANG:
             valued += 200;
@@ -1709,6 +1709,7 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
             case SCR_RECHARGING:
+            case SCR_AMNESIA:
                 valued += 50;
                 break;
 
@@ -1747,6 +1748,7 @@ unsigned int item_value(item_def item, bool ident)
 
             case SCR_CURSE_ARMOUR:
             case SCR_CURSE_WEAPON:
+            case SCR_CURSE_JEWELLERY:
             case SCR_PAPER:
             case SCR_IMMOLATION:
                 valued++;
@@ -2116,13 +2118,70 @@ std::string shop_name(const coord_def& where, bool add_stop)
     return (name);
 }
 
+std::string shop_type_name (shop_type type)
+{
+    switch (type)
+    {
+        case SHOP_WEAPON_ANTIQUE:
+            return("Antique Weapon");
+        case SHOP_ARMOUR_ANTIQUE:
+            return("Antique Armour");
+        case SHOP_WEAPON:
+            return("Weapon");
+        case SHOP_ARMOUR:
+            return("Armour");
+        case SHOP_JEWELLERY:
+            return("Jewellery");
+        case SHOP_WAND:
+            return("Magical Wand");
+        case SHOP_BOOK:
+            return("Book");
+        case SHOP_FOOD:
+            return("Food");
+        case SHOP_SCROLL:
+            return("Magic Scroll");
+        case SHOP_GENERAL_ANTIQUE:
+            return("Assorted Antiques");
+        case SHOP_DISTILLERY:
+            return("Distillery");
+        case SHOP_GENERAL:
+            return("General Store");
+        default:
+            return ("Bug");
+    }
+}
+
+std::string shop_type_suffix (shop_type type, const coord_def &where)
+{
+    if (type == SHOP_GENERAL
+        || type == SHOP_GENERAL_ANTIQUE
+        || type == SHOP_DISTILLERY)
+    {
+        return ("");
+    }
+
+    const char* suffixnames[] = {"Shoppe", "Boutique", "Emporium", "Shop"};
+    const int temp = (where.x + where.y) % 4;
+
+    return std::string(suffixnames[temp]);
+}
+
 std::string shop_name(const coord_def& where)
 {
     const shop_struct *cshop = get_shop(where);
 
-    // paranoia
+    // paranoia and shop mimics
     if (grd(where) != DNGN_ENTER_SHOP)
+    {
+        if (monster_at(where))
+        {
+            monster* mmimic = monster_at(where);
+            if (mons_is_feat_mimic(mmimic->type) && mmimic->props.exists("shop_name"))
+                return mmimic->props["shop_name"].get_string();
+        }
+
         return ("");
+    }
 
     if (!cshop)
     {
@@ -2138,34 +2197,11 @@ std::string shop_name(const coord_def& where)
 
     std::string sh_name = apostrophise(make_name(seed, false)) + " ";
 
-    if (type == SHOP_WEAPON_ANTIQUE || type == SHOP_ARMOUR_ANTIQUE)
-        sh_name += "Antique ";
+    sh_name += shop_type_name(type);
 
-    sh_name +=
-        (type == SHOP_WEAPON
-         || type == SHOP_WEAPON_ANTIQUE) ? "Weapon" :
-        (type == SHOP_ARMOUR
-         || type == SHOP_ARMOUR_ANTIQUE) ? "Armour" :
-
-        (type == SHOP_JEWELLERY)         ? "Jewellery" :
-        (type == SHOP_WAND)              ? "Magical Wand" :
-        (type == SHOP_BOOK)              ? "Book" :
-        (type == SHOP_FOOD)              ? "Food" :
-        (type == SHOP_SCROLL)            ? "Magic Scroll" :
-        (type == SHOP_GENERAL_ANTIQUE)   ? "Assorted Antiques" :
-        (type == SHOP_DISTILLERY)        ? "Distillery" :
-        (type == SHOP_GENERAL)           ? "General Store"
-                                         : "Bug";
-
-    if (type != SHOP_GENERAL
-        && type != SHOP_GENERAL_ANTIQUE
-        && type != SHOP_DISTILLERY)
-    {
-        const char* suffixnames[] = {"Shoppe", "Boutique", "Emporium", "Shop"};
-        const int temp = (where.x + where.y) % 4;
-        sh_name += ' ';
-        sh_name += suffixnames[temp];
-    }
+    std::string sh_suffix = shop_type_suffix(type, where);
+    if (!sh_suffix.empty())
+        sh_name += " " + sh_suffix;
 
     return (sh_name);
 }

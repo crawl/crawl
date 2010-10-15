@@ -46,6 +46,7 @@
 
 #ifdef TARGET_OS_WINDOWS
 
+#include <SDL_syswm.h>
 #include <windows.h>
 // WINAPI defines these, but we are already using them in
 // wm_event_type enum,
@@ -297,6 +298,20 @@ bool TilesFramework::initialise()
     // Copy over constants that need to have been set by the wrapper
     m_screen_width = wm->screen_width();
     m_screen_height = wm->screen_height();
+
+#ifdef TARGET_OS_WINDOWS
+    if(Options.tile_align_at_top)
+    {
+        int delta_x = (wm->desktop_width() - m_screen_width) / 2;
+        SDL_SysWMinfo i;
+        SDL_VERSION( &i.version );
+        if ( SDL_GetWMInfo ( &i) )
+        {
+            HWND hwnd = i.window;
+            SetWindowPos( hwnd, HWND_TOP, delta_x, 0, 0, 0, SWP_NOSIZE );
+        }
+    }
+#endif
 
     GLStateManager::init();
 

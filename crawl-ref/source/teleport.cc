@@ -219,9 +219,15 @@ bool random_near_space(const coord_def& origin, coord_def& target,
         if (target == origin)
             continue;
 
+        dungeon_feature_type limit = DNGN_SHALLOW_WATER;
+        if (you.permanent_flight() || you.permanent_levitation())
+            limit = DNGN_LAVA;
+        else if (player_likes_water(true))
+            limit = DNGN_DEEP_WATER;
+
         if (!in_bounds(target)
             || restrict_los && !you.see_cell(target)
-            || grd(target) < DNGN_SHALLOW_WATER
+            || grd(target) < limit
             || actor_at(target)
             || !allow_adjacent && distance(origin, target) <= 2
             || forbid_sanctuary && is_sanctuary(target))

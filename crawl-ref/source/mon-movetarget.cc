@@ -178,13 +178,13 @@ bool try_pathfind(monster* mon, const dungeon_feature_type can_move)
     }
 
     // Use pathfinding to find a (new) path to the player.
-    const int dist = grid_distance(mon->pos(), you.pos());
+    const int dist = distance(mon->pos(), you.pos());
 
 #ifdef DEBUG_PATHFIND
     mprf("Need to calculate a path... (dist = %d)", dist);
 #endif
     const int range = mons_tracking_range(mon);
-    if (range > 0 && dist > range)
+    if (range > 0 && dist > dist_range(range))
     {
         mon->travel_target = MTRAV_UNREACHABLE;
 #ifdef DEBUG_PATHFIND
@@ -246,7 +246,7 @@ bool pacified_leave_level(monster* mon, std::vector<level_exit> e,
     // player, make it leave the level.
     if (_is_level_exit(mon->pos())
         || (e_index != -1 && mon->pos() == e[e_index].target)
-        || grid_distance(mon->pos(), you.pos()) >= LOS_RADIUS * 4)
+        || distance(mon->pos(), you.pos()) >= dist_range(LOS_RADIUS * 4))
     {
         make_mons_leave_level(mon);
         return (true);
@@ -600,7 +600,7 @@ static bool _choose_random_patrol_target_grid(monster* mon)
         return (true);
 
     // If there's no chance we'll find the patrol point, quit right away.
-    if (grid_distance(mon->pos(), mon->patrol_point) > 2 * LOS_RADIUS)
+    if (distance(mon->pos(), mon->patrol_point) > dist_range(2 * LOS_RADIUS))
         return (false);
 
     // Can the monster see the patrol point from its current position?
@@ -864,7 +864,7 @@ int mons_find_nearest_level_exit(const monster* mon,
         if (e[i].unreachable)
             continue;
 
-        int dist = grid_distance(mon->pos(), e[i].target);
+        int dist = distance(mon->pos(), e[i].target);
 
         if (old_dist == -1 || old_dist >= dist)
         {
@@ -893,6 +893,8 @@ void set_random_slime_target(monster* mon)
     {
         // XXX: an iterator that spirals out would be nice.
         if (!in_bounds(*ri) || distance(pos, *ri) >= mindist)
+            continue;
+        if (testbits(env.pgrid(*ri), FPROP_NO_JIYVA))
             continue;
         for (stack_iterator si(*ri); si; ++si)
         {

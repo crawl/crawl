@@ -17,9 +17,9 @@ enum band_type
     BAND_JACKALS,
     BAND_HELL_KNIGHTS,
     BAND_ORC_HIGH_PRIEST,
-    BAND_GNOLLS,                // 14
-    // 15
-    BAND_BUMBLEBEES             = 16,
+    BAND_GNOLLS,
+    BAND_WIGHTS,                // 15
+    BAND_BUMBLEBEES,
     BAND_CENTAURS,
     BAND_YAKTAURS,
     BAND_INSUBSTANTIAL_WISPS,
@@ -62,6 +62,8 @@ enum band_type
     BAND_MERFOLK_JAVELINEER,
     BAND_ALLIGATOR,
     BAND_ELEPHANT,
+    BAND_TROLLKONOR,
+    BAND_DEEP_DWARF,
     NUM_BANDS                   // always last
 };
 

@@ -390,6 +390,8 @@ bool noisy(int loudness, const coord_def& where, const char *msg, int who,
 {
     bool ret = false;
 
+    dprf("Noise %d at pos(%d,%d)", loudness, where.x, where.y);
+
     // high ambient noise makes sounds harder to hear
     int ambient = current_level_ambient_noise();
     if (ambient < 0) {
@@ -410,7 +412,7 @@ bool noisy(int loudness, const coord_def& where, const char *msg, int who,
     if (silenced(where))
         return (false);
 
-    const int dist = loudness * loudness;
+    const int dist = loudness * loudness + 1;
     const int player_distance = distance( you.pos(), where );
 
     // Message the player.
@@ -422,7 +424,10 @@ bool noisy(int loudness, const coord_def& where, const char *msg, int who,
         you.check_awaken(dist - player_distance);
 
         if (!mermaid)
+        {
             you.beholders_check_noise(loudness);
+            you.fearmongers_check_noise(loudness);
+        }
 
         ret = true;
     }

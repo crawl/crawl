@@ -54,18 +54,19 @@
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
-#include "kills.h"
 #include "libutil.h"
 #include "macro.h"
 #include "makeitem.h"
 #include "mapmark.h"
 #include "message.h"
+#include "mgen_data.h"
 #include "mon-place.h"
 #include "mon-pathfind.h"
 #include "mon-info.h"
 #include "mon-iter.h"
 #include "mon-util.h"
 #include "mon-stuff.h"
+#include "ng-setup.h"
 #include "ouch.h"
 #include "player.h"
 #include "player-stats.h"
@@ -75,6 +76,7 @@
 #include "shopping.h"
 #include "skills.h"
 #include "skills2.h"
+#include "spl-clouds.h"
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
@@ -1266,9 +1268,10 @@ void search_around(bool only_adjacent)
 {
     ASSERT(!crawl_state.game_is_arena());
 
+    const int skill = you.traps_skill();
     // Traps and doors stepdown skill:
     // skill/(2x-1) for squares at distance x
-    int max_dist = (you.skills[SK_TRAPS_DOORS] + 1) / 2;
+    int max_dist = (skill + 1) / 2;
     if (max_dist > 5)
         max_dist = 5;
     if (only_adjacent && max_dist > 1 || max_dist < 1)
@@ -1288,7 +1291,7 @@ void search_around(bool only_adjacent)
                 ++dist;
 
             // Making this harsher by removing the old +1...
-            int effective = you.skills[SK_TRAPS_DOORS] / (2*dist - 1);
+            int effective = skill / (2*dist - 1);
 
             if (grd(*ri) == DNGN_SECRET_DOOR && x_chance_in_y(effective+1, 17))
             {
@@ -1321,17 +1324,25 @@ void search_around(bool only_adjacent)
 
 void merfolk_start_swimming(bool stepped)
 {
-    if (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
-        untransform(false, true); // We're already entering the water.
+    if (you.fishtail)
+        return;
 
-    if (stepped)
+    if (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE
+        && you.attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS)
+    {
+        mpr("You quickly transform back into your natural form.");
+        untransform(false, true); // We're already entering the water.
+    }
+    else if (stepped)
         mpr("Your legs become a tail as you enter the water.");
     else
         mpr("Your legs become a tail as you dive into the water.");
 
+    you.fishtail = true;
     remove_one_equip(EQ_BOOTS);
     you.redraw_evasion = true;
 
+// FIXME: player doll isn't updated properly when player flies out of water
 #ifdef USE_TILE
     init_player_doll();
 #endif
@@ -1339,6 +1350,9 @@ void merfolk_start_swimming(bool stepped)
 
 void merfolk_stop_swimming()
 {
+    if (!you.fishtail)
+        return;
+    you.fishtail = false;
     unmeld_one_equip(EQ_BOOTS);
     you.redraw_evasion = true;
 
@@ -1801,6 +1815,92 @@ static void _drop_tomb(const coord_def& pos, bool premature)
     }
 }
 
+int count_malign_gateways ()
+{
+    return get_malign_gateways().size();
+}
+
+std::vector<map_malign_gateway_marker*> get_malign_gateways ()
+{
+    std::vector<map_malign_gateway_marker*> mm_markers;
+
+    std::vector<map_marker*> markers = env.markers.get_all(MAT_MALIGN);
+    for (int i = 0, size = markers.size(); i < size; ++i)
+    {
+        map_marker *mark = markers[i];
+        if (mark->get_type() != MAT_MALIGN)
+            continue;
+
+        map_malign_gateway_marker *mmark = dynamic_cast<map_malign_gateway_marker*>(mark);
+
+        mm_markers.push_back(mmark);
+    }
+
+    return mm_markers;
+}
+
+void timeout_malign_gateways (int duration)
+{
+    if (!duration)
+        return;
+
+    std::vector<map_malign_gateway_marker*> markers = get_malign_gateways();
+
+    for (int i = 0, size = markers.size(); i < size; ++i)
+    {
+        map_malign_gateway_marker *mmark = markers[i];
+
+        mmark->duration -= duration;
+
+        if (mmark->duration > 0)
+        {
+            big_cloud(CLOUD_TLOC_ENERGY, KC_OTHER, mmark->pos, 3+random2(10), 2+random2(5));
+        }
+        else
+        {
+            monster* mons = monster_at(mmark->pos);
+            if (mmark->monster_summoned && !mons)
+            {
+                // The marker hangs around until later.
+                if (env.grid(mmark->pos) == DNGN_TEMP_PORTAL)
+                    env.grid(mmark->pos) = DNGN_FLOOR;
+
+                env.markers.remove(mmark);
+            }
+            else if (!mmark->monster_summoned && !mons)
+            {
+                bool is_player = mmark->is_player;
+                actor* caster = mmark->caster;
+                if (caster == NULL)
+                    caster = &you;
+
+                int tentacle_idx = create_monster(mgen_data(MONS_ELDRITCH_TENTACLE,
+                                                            (is_player) ? BEH_FRIENDLY : attitude_creation_behavior(mmark->caster->attitude),
+                                                            caster,
+                                                            0,
+                                                            0,
+                                                            mmark->pos,
+                                                            MHITNOT,
+                                                            MG_FORCE_PLACE,
+                                                            mmark->god));
+
+                if (tentacle_idx >= 0)
+                {
+                    menv[tentacle_idx].flags |= MF_NO_REWARD;
+                    menv[tentacle_idx].add_ench(ENCH_PORTAL_TIMER);
+                    mon_enchant kduration = mon_enchant(ENCH_PORTAL_PACIFIED, 4,
+                                        KC_YOU, (random2avg(mmark->power, 6)-random2(4))*10);
+                    menv[tentacle_idx].props["base_position"].get_coord()
+                                        = menv[tentacle_idx].pos();
+                    menv[tentacle_idx].add_ench(kduration);
+
+                    mmark->monster_summoned = true;
+                }
+            }
+        }
+    }
+}
+
 void timeout_tombs(int duration)
 {
     if (!duration)
@@ -1846,6 +1946,86 @@ void timeout_tombs(int duration)
             env.markers.remove(cmark);
         }
     }
+}
+
+void bring_to_safety()
+{
+    coord_def best_pos, pos;
+    double min_threat = 1e38;
+    int tries = 0;
+
+    // Up to 100 valid spots, but don't lock up when there's none.  This can happen
+    // on tiny Zig/portal rooms with a bad summon storm and you in cloud / over water.
+    while (tries < 100000 && min_threat > 0)
+    {
+        pos.x = random2(GXM);
+        pos.y = random2(GYM);
+        if (!in_bounds(pos)
+            || grd(pos) != DNGN_FLOOR
+            || env.cgrid(pos) != EMPTY_CLOUD
+            || crawl_state.game_is_sprint()
+               && distance(pos, you.pos()) > dist_range(10))
+        {
+            tries++;
+            continue;
+        }
+
+        bool junk;
+        double gen_threat = 0.0, hi_threat = 0.0;
+        monster_threat_values(&gen_threat, &hi_threat, &junk);
+        const double threat = gen_threat * hi_threat;
+
+        if (threat < min_threat)
+        {
+            best_pos = pos;
+            min_threat = threat;
+        }
+        tries += 1000;
+    }
+
+    if (min_threat != 1e38)
+        you.moveto(best_pos);
+}
+
+// This includes ALL afflictions, unlike wizard/Xom revive.
+void revive()
+{
+    you.disease = 0;
+    you.magic_contamination = 0;
+    set_hunger(6000, true);
+    restore_stat(STAT_ALL, 0, true);
+    you.rotting = 0;
+
+    you.attribute[ATTR_WAS_SILENCED] = 0;
+    you.attribute[ATTR_DIVINE_REGENERATION] = 0;
+    you.attribute[ATTR_DELAYED_FIREBALL] = 0;
+    clear_trapping_net();
+    you.attribute[ATTR_DIVINE_VIGOUR] = 0;
+    you.attribute[ATTR_DIVINE_STAMINA] = 0;
+    you.attribute[ATTR_DIVINE_SHIELD] = 0;
+    if (you.duration[DUR_WEAPON_BRAND])
+        set_item_ego_type(*you.weapon(), OBJ_WEAPONS, SPWPN_NORMAL);
+    if (you.attribute[ATTR_TRANSFORMATION])
+        untransform();
+    you.clear_beholders();
+
+    for(int dur = 0; dur < NUM_DURATIONS; dur++)
+        if (dur != DUR_GOURMAND && dur != DUR_PIETY_POOL)
+            you.duration[dur] = 0;
+
+    // Stat death that wasn't cleared might be:
+    // * permanent (focus card): our fix is spot on
+    // * long-term (mutation): we induce some penalty, ok
+    // * short-term (-stat item): could be done better...
+    unfocus_stats();
+    you.stat_zero.init(0);
+
+    unrot_hp(9999);
+    set_hp(9999, false);
+    set_mp(9999, false);
+    you.dead = false;
+
+    mpr("You rejoin the land of the living...");
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -1931,6 +2111,7 @@ void run_environment_effects()
     shoals_apply_tides(div_rand_round(you.time_taken, BASELINE_DELAY),
                        false, true);
     timeout_tombs(you.time_taken);
+    timeout_malign_gateways(you.time_taken);
 }
 
 coord_def pick_adjacent_free_square(const coord_def& p)
@@ -2274,4 +2455,18 @@ void maybe_id_ring_TC()
                      ring.name(DESC_INVENTORY_EQUIP).c_str());
             }
         }
+}
+
+void entered_malign_portal(actor* act)
+{
+    if (you.can_see(act))
+        mprf("The portal repels %s, its terrible forces doing untold damage!", (act->atype() == ACT_PLAYER) ? "you" : act->name(DESC_NOCAP_THE).c_str());
+
+    act->blink(false);
+    if (act->atype() == ACT_PLAYER)
+        ouch(roll_dice(2, 4), NON_MONSTER, KILLED_BY_WILD_MAGIC, "a malign gateway");
+    else
+        act->hurt(NULL, roll_dice(2, 4));
+
+    return;
 }

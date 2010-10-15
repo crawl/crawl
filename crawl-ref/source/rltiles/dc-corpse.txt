@@ -32,6 +32,9 @@ wolf CORPSE_WOLF
 hog CORPSE_HOG
 hell_hound CORPSE_HELL_HOUND
 hell_hog CORPSE_HELL_HOG
+%sdir player/felids
+cat1 CORPSE_FELID
+%sdir dc-mon/animals
 
 ## Bees ('k')
 %back dc-misc/blood_green
@@ -67,7 +70,7 @@ orange_rat CORPSE_ORANGE_RAT
 giant_centipede CORPSE_GIANT_CENTIPEDE
 giant_mite CORPSE_GIANT_MITE
 scorpion CORPSE_SCORPION
-giant_scorpion CORPSE_GIANT_SCORPION
+emperor_scorpion CORPSE_EMPEROR_SCORPION
 spider CORPSE_SPIDER
 tarantella CORPSE_TARANTELLA
 jumping_spider CORPSE_JUMPING_SPIDER
@@ -187,6 +190,9 @@ rotting_hulk CORPSE_ROTTING_HULK
 %sdir dc-mon
 orc CORPSE_ORC
 
+## Dwarves ('q')
+unique/wiglaf CORPSE_DWARF
+
 ## Ugly things ('u')
 %sdir dc-mon/demons
 ugly_thing CORPSE_UGLY_THING
@@ -274,7 +280,6 @@ iron_troll CORPSE_IRON_TROLL
 deep_troll CORPSE_DEEP_TROLL
 
 ## Human shaped ('@')
-unique/wiglaf CORPSE_DWARF
 human CORPSE_HUMAN
 %back dc-misc/blood_green
 shapeshifter CORPSE_SHAPESHIFTER

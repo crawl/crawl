@@ -26,10 +26,8 @@ bool player::see_cell(const coord_def &p) const
 {
     if (crawl_state.game_is_arena() && this == &you)
         return (true);
-#ifdef WIZARD
     else if (xray_vision)
-        return (grid_distance(pos(), p) <= LOS_MAX_RANGE);
-#endif
+        return ((pos() - p).abs() <= dist_range(you.current_vision));
     return (actor::see_cell(p));
 }
 
@@ -63,14 +61,12 @@ const los_base* player::get_los()
                        circle_def(LOS_MAX_RANGE, C_SQUARE));
         return (&los);
     }
-#ifdef WIZARD
     else if (xray_vision)
     {
         los = los_glob(pos(), LOS_ARENA,
-                       circle_def(LOS_MAX_RANGE, C_SQUARE));
+                       circle_def(you.current_vision, C_ROUND));
         return (&los);
     }
-#endif
     else
         return (actor::get_los());
 }
@@ -85,10 +81,8 @@ bool player::can_see(const actor* a) const
 {
     if (crawl_state.game_is_arena() || crawl_state.arena_suspended)
         return (see_cell(a->pos()));
-#ifdef WIZARD
     else if (xray_vision)
         return(see_cell(a->pos()));
-#endif
     else
         return (actor::can_see(a));
 }

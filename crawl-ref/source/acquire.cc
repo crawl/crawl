@@ -1302,7 +1302,7 @@ int acquirement_create_item(object_class_type class_wanted,
     ASSERT(thing.is_valid());
 
     if (class_wanted == OBJ_WANDS)
-        thing.plus = std::max((int) thing.plus, 3 + random2(3));
+        thing.plus = std::max(static_cast<int>(thing.plus), 3 + random2(3));
     else if (class_wanted == OBJ_GOLD)
     {
         // New gold acquirement formula from dpeg.
@@ -1320,7 +1320,8 @@ int acquirement_create_item(object_class_type class_wanted,
         init_stack_blood_potions(thing);
 
     // Remove curse flag from item.
-    do_uncurse_item(thing, false);
+    if (you.religion != GOD_ASHENZARI)
+        do_uncurse_item(thing, false);
 
     if (thing.base_type == OBJ_BOOKS)
     {

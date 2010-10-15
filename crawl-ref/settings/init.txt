@@ -252,6 +252,7 @@ sort_menus = inv: true : equipped, freshness, charged
 # messages_at_top              = true
 # mlist_targetting             = true
 # show_gold_turns              = true
+# show_real_turns              = true
 
 # clear_messages             = true
 # small_more                 = true

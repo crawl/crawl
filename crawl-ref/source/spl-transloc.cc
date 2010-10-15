@@ -37,6 +37,7 @@
 #include "stuff.h"
 #include "teleport.h"
 #include "terrain.h"
+#include "transform.h"
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
@@ -118,6 +119,14 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
             {
                 mprf("You cannot blink away from %s!",
                     beholder->name(DESC_NOCAP_THE, true).c_str());
+                continue;
+            }
+
+            monster* fearmonger = you.get_fearmonger(beam.target);
+            if (!wizard_blink && fearmonger)
+            {
+                mprf("You cannot blink closer to %s!",
+                    fearmonger->name(DESC_NOCAP_THE, true).c_str());
                 continue;
             }
 
@@ -304,8 +313,11 @@ static bool _cell_vetoes_teleport (const coord_def cell, bool  check_monsters = 
         return (false);
 
     case DNGN_DEEP_WATER:
-        if (you.species == SP_MERFOLK)
+        if (you.species == SP_MERFOLK && (transform_can_swim()
+                                          || !you.transform_uncancellable))
+        {
             return (false);
+        }
         else
             return (true);
 
@@ -455,6 +467,7 @@ bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizard_tele)
                 }
                 if (!wizard_tele)
                     contaminate_player(1, true);
+                maybe_id_ring_TC();
                 return (false);
             }
 
@@ -463,6 +476,16 @@ bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizard_tele)
             {
                 mprf("You cannot teleport away from %s!",
                      beholder->name(DESC_NOCAP_THE, true).c_str());
+                mpr("Choose another destination (press '.' or delete to select).");
+                more();
+                continue;
+            }
+
+            monster* fearmonger = you.get_fearmonger(pos);
+            if (fearmonger && !wizard_tele)
+            {
+                mprf("You cannot teleport closer to %s!",
+                     fearmonger->name(DESC_NOCAP_THE, true).c_str());
                 mpr("Choose another destination (press '.' or delete to select).");
                 more();
                 continue;

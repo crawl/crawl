@@ -1255,7 +1255,8 @@ void scorefile_entry::init(time_t dt)
         STATUS_REGENERATION, DUR_DEATHS_DOOR, DUR_STONEMAIL, DUR_STONESKIN,
         DUR_TELEPORT, DUR_DEATH_CHANNEL, DUR_PHASE_SHIFT, DUR_SILENCE,
         DUR_INVIS, DUR_CONF, DUR_DIVINE_VIGOUR, DUR_DIVINE_STAMINA, DUR_BERSERKER,
-        STATUS_AIRBORNE, DUR_POISONING, STATUS_NET, STATUS_SPEED,
+        STATUS_AIRBORNE, DUR_POISONING, STATUS_NET, STATUS_SPEED, DUR_AFRAID,
+        DUR_MIRROR_DAMAGE, DUR_SCRYING,
     };
 
     status_info inf;
@@ -1806,7 +1807,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
     case KILLED_BY_STUPIDITY:
         if (terse)
             desc += "stupidity";
-        else if (_species_is_undead(race))
+        else if (_species_is_undead(race) || race == SP_GREY_DRACONIAN)
             desc += "Forgot to exist";
         else
             desc += "Forgot to breathe";

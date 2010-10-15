@@ -194,7 +194,7 @@ struct los_ray : public ray_def
 
     coord_def operator[](unsigned int i)
     {
-        ASSERT(0 <= i && i < length);
+        ASSERT(i < length);
         return ray_coords[start+i];
     }
 };
@@ -240,7 +240,7 @@ struct cellray
     // XXX: Currently ray/cellray[0] is the first point outside the origin.
     coord_def operator[](unsigned int i)
     {
-        ASSERT(0 <= i && i <= end);
+        ASSERT(i <= end);
         return ray_coords[ray.start+i];
     }
 
@@ -591,7 +591,7 @@ static bool _find_ray_se(const coord_def& target, ray_def& ray,
 #endif
 
     unsigned int start = cycle ? ray.cycle_idx + 1 : 0;
-    ASSERT(0 <= start && start <= min.size());
+    ASSERT(start <= min.size());
 
     int blocked = OPC_OPAQUE;
     for (unsigned int i = start;
@@ -690,11 +690,7 @@ dungeon_feature_type ray_blocker(const coord_def& source,
     ray_def ray;
     if (!find_ray(source, target, ray, opc_default))
     {
-#ifdef WIZARD
         ASSERT (you.xray_vision);
-#else
-        ASSERT (false);
-#endif
         return (NUM_FEATURES);
     }
 
@@ -958,4 +954,3 @@ void los_changed()
     invalidate_los();
     _handle_los_change();
 }
-

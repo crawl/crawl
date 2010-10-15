@@ -135,7 +135,7 @@ struct spell_desc
      4,
      200,
      LOS_RADIUS, LOS_RADIUS,
-     0,
+     -4, // Dig needs to be silent for stalker
      NULL,
      false,
      true
@@ -404,6 +404,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 31
 {
     SPELL_SELECTIVE_AMNESIA, "Selective Amnesia",
      SPTYP_ENCHANTMENT,
@@ -416,6 +417,7 @@ struct spell_desc
      false,
      true
 },
+#endif
 
 {
     SPELL_MASS_CONFUSION, "Mass Confusion",
@@ -502,7 +504,7 @@ struct spell_desc
      6,
      200,
      6, 6,
-     0,
+     -3, //the beam is silent
      NULL,
      true,
      false
@@ -671,6 +673,19 @@ struct spell_desc
      SPTYP_SUMMONING,
      SPFLAG_UNHOLY | SPFLAG_BATTLE | SPFLAG_CHAOTIC,
      8,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_MALIGN_GATEWAY, "Malign Gateway",
+     SPTYP_SUMMONING | SPTYP_TRANSLOCATION,
+     SPFLAG_UNHOLY | SPFLAG_BATTLE | SPFLAG_CHAOTIC,
+     7,
      200,
      -1, -1,
      0,
@@ -1713,7 +1728,7 @@ struct spell_desc
      2,
      56,
      LOS_RADIUS, LOS_RADIUS,
-     0,
+     -2, //putting a monster to sleep should be silent
      NULL,
      true,
      false
@@ -1726,7 +1741,7 @@ struct spell_desc
      7,
      200,
      -1, -1,
-     0,
+     -7,//putting a monster to sleep should be silent
      NULL,
      false,
      false
@@ -2685,6 +2700,45 @@ struct spell_desc
 },
 
 {
+    SPELL_BROTHERS_IN_ARMS, "Brothers in Arms",
+     SPTYP_SUMMONING,
+     SPFLAG_MONSTER,
+     6,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_TROGS_HAND, "Trog's Hand",
+    SPTYP_ENCHANTMENT,
+    SPFLAG_MONSTER,
+    3,
+    0,
+    -1, -1,
+    0,
+    NULL,
+    false,
+    false
+},
+
+{
+    SPELL_BURN_SPELLBOOK, "Burn Spellbook",
+    SPTYP_ENCHANTMENT,
+    SPFLAG_AREA,
+    1,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    NULL,
+    false,
+    false
+},
+
+{
     SPELL_SUMMON_SPECTRAL_ORCS, "Summon Spectral Orcs",
      SPTYP_NECROMANCY,
      SPFLAG_MONSTER | SPFLAG_TARGET,
@@ -2811,6 +2865,32 @@ struct spell_desc
      0,
      NULL,
      true,
+     false
+},
+
+{
+    SPELL_MIRROR_DAMAGE, "Mirror Damage",
+     SPTYP_ENCHANTMENT,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL,
+     4,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_DRAIN_LIFE, "Drain Life",
+     SPTYP_NECROMANCY,
+     SPFLAG_AREA,
+     6,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
      false
 },
 

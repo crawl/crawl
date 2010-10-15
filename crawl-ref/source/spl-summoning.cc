@@ -14,6 +14,7 @@
 #include "database.h"
 #include "delay.h"
 #include "directn.h"
+#include "dungeon.h"
 #include "env.h"
 #include "food.h"
 #include "fprop.h"
@@ -24,6 +25,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "it_use2.h"
+#include "mapmark.h"
 #include "message.h"
 #include "mgen_data.h"
 #include "misc.h"
@@ -34,6 +36,7 @@
 #include "mon-util.h"
 #include "player-stats.h"
 #include "religion.h"
+#include "shout.h"
 #include "stuff.h"
 #include "teleport.h"
 #include "terrain.h"
@@ -152,6 +155,8 @@ static bool _snakable_missile(const item_def& item)
 
 static bool _snakable_weapon(const item_def& item)
 {
+    if (item.base_type == OBJ_STAVES)
+        return true;
     return (item.base_type == OBJ_WEAPONS
            && (item.sub_type == WPN_CLUB
             || item.sub_type == WPN_SPEAR
@@ -747,12 +752,7 @@ static bool _summon_holy_being_wrapper(int pow, god_type god, int spell,
     summon->flags |= MF_ATT_CHANGE_ATTEMPT;
 
     if (!quiet)
-    {
-        mprf("You are momentarily dazzled by a brilliant %slight.",
-             (mon == MONS_DAEVA) ? "golden " :
-             (mon == MONS_ANGEL) ? "white "
-                                 : "");
-    }
+        mpr("You are momentarily dazzled by a brilliant light.");
 
     player_angers_monster(&menv[mons]);
     return (true);
@@ -796,23 +796,15 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
         success = false;
     }
 
-    // See if we can get an mitm for the dancing weapon.
-    const int i = get_item_slot();
-
-    if (i == NON_ITEM)
-        success = false;
-    else if (success)
-    {
-        // Copy item now so that mitm[i] is occupied and doesn't get picked
-        // by get_item_slot() when giving the dancing weapon its item
-        // during create_monster().
-        mitm[i] = *wpn;
-    }
-
-    int mons;
+    int mons = -1;
 
     if (success)
     {
+        item_def cp = *wpn;
+        // Clear temp branding so we don't brand permanently.
+        if (you.duration[DUR_WEAPON_BRAND])
+            set_item_ego_type(cp, OBJ_WEAPONS, SPWPN_NORMAL);
+
         // Cursed weapons become hostile.
         const bool friendly = (!force_hostile && !wpn->cursed());
 
@@ -823,23 +815,17 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
                      you.pos(),
                      MHITYOU,
                      0, god);
+        mg.props[TUKIMA_WEAPON] = cp;
 
         if (force_hostile)
             mg.non_actor_summoner = god_name(god, false);
 
         mons = create_monster(mg);
-
-        if (mons == -1)
-        {
-            mitm[i].clear();
-            success = false;
-        }
+        success = (mons != -1);
     }
 
     if (!success)
     {
-        destroy_item(i);
-
         if (wpn)
         {
             mprf("%s vibrate%s crazily for a second.",
@@ -856,16 +842,6 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
     // effects.
     unwield_item();
 
-    // Copy the unwielded item. Note that the pointer still points at it.
-    mitm[i] = *wpn;
-    mitm[i].quantity = 1;
-    mitm[i].pos.set(-2, -2);
-    mitm[i].link = NON_ITEM + 1 + mons;
-
-    // Mark the weapon as thrown, so that we'll autograb it when the
-    // tango's done.
-    mitm[i].flags |= ISFLAG_THROWN;
-
     mprf("%s dances into the air!", wpn->name(DESC_CAP_YOUR).c_str());
 
     // Find out what our god thinks before killing the item.
@@ -875,22 +851,10 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
 
     wpn->clear();
 
-    monster& dancing_weapon = menv[mons];
-
-    destroy_item(dancing_weapon.inv[MSLOT_WEAPON]);
-    dancing_weapon.inv[MSLOT_WEAPON] = i;
-    burden_change();
-
-    ghost_demon stats;
-    stats.init_dancing_weapon(mitm[i], pow);
-
-    dancing_weapon.set_ghost(stats);
-    dancing_weapon.dancing_weapon_init();
-
     if (why)
     {
         simple_god_message(" booms: How dare you animate that foul thing!");
-        did_god_conduct(why, 10, true, &dancing_weapon);
+        did_god_conduct(why, 10, true, &menv[mons]);
     }
 
     return (true);
@@ -1109,6 +1073,85 @@ bool cast_shadow_creatures(god_type god)
     return (false);
 }
 
+bool can_cast_malign_gateway()
+{
+    return count_malign_gateways() < 1;
+}
+
+bool cast_malign_gateway(actor * caster, int pow, god_type god)
+{
+    bool success = false;
+    coord_def point = coord_def(0, 0);
+
+    unsigned compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
+    std::random_shuffle(compass_idx, compass_idx + 8);
+
+    for (unsigned i = 0; i < 8; ++i)
+    {
+        coord_def delta = Compass[compass_idx[i]];
+        coord_def test = coord_def(-1, -1);
+
+        bool found_spot = false;
+        int tries = 8;
+
+        for (int t = 0; t < tries; t++)
+        {
+            test = caster->pos() + (delta * (2+t+random2(4)));
+            if (!in_bounds(test) || !(env.grid(test) == DNGN_FLOOR
+                                       || env.grid(test) == DNGN_SHALLOW_WATER)
+                || actor_at(test) || count_neighbours_with_func(test, &feat_is_solid) != 0
+                || !caster->see_cell(test))
+            {
+                continue;
+            }
+
+            found_spot = true;
+            break;
+        }
+
+        if (!found_spot)
+            continue;
+
+        const int malign_gateway_duration = BASELINE_DELAY * (random2(5) + 5);
+        env.markers.add(new map_malign_gateway_marker(test,
+                                            malign_gateway_duration,
+                                            caster->atype() == ACT_PLAYER,
+                                            caster->atype() == ACT_PLAYER ? NULL : caster->as_monster(),
+                                            god,
+                                            pow));
+        env.markers.clear_need_activate();
+        env.grid(test) = DNGN_TEMP_PORTAL;
+
+        point = test;
+        success = true;
+
+        break;
+    }
+
+    if (success)
+    {
+        noisy(10, point);
+        mpr("The dungeon shakes, a horrible noise fills the air, and a portal to some otherworldly place is opened!", MSGCH_WARN);
+
+        if (one_chance_in(3) && caster->atype() == ACT_PLAYER)
+        {
+            // if someone deletes the db, no message is ok
+            mpr(getMiscString("SHT_int_loss").c_str());
+            // Messages the same as for SHT, as they are currently (10/10) generic.
+            lose_stat(STAT_INT, 1, true, "opening a malign portal");
+            // Since sustAbil no longer helps here, this can't fail anymore -- 1KB
+        }
+    }
+    else if (caster->atype() == ACT_PLAYER)
+    {
+        // We don't care if monsters fail to cast it.
+        mpr("Such a gateway cannot be opened in such a cramped space!");
+    }
+
+    return (success);
+}
+
+
 bool cast_summon_horrible_things(int pow, god_type god)
 {
     if (one_chance_in(3))
@@ -1260,6 +1303,7 @@ void equip_undead(const coord_def &a, int corps, int mons, int monnum)
         switch (item.base_type)
         {
         case OBJ_WEAPONS:
+        case OBJ_STAVES:
         {
             const bool weapon = mon->inv[MSLOT_WEAPON] != NON_ITEM;
             const bool alt_weapon = mon->inv[MSLOT_ALT_WEAPON] != NON_ITEM;
@@ -1371,6 +1415,8 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     const monster_type zombie_type =
         static_cast<monster_type>(item.plus);
 
+    const int hd     = (item.props.exists(MONSTER_HIT_DICE)) ?
+                           item.props[MONSTER_HIT_DICE].get_short() : 0;
     const int number = (item.props.exists(MONSTER_NUMBER)) ?
                            item.props[MONSTER_NUMBER].get_short() : 0;
 
@@ -1379,8 +1425,8 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     {
         if (you.see_cell(pos))
         {
-            mpr("The zero-headed hydra corpse sways and immediately "
-                "collapses!");
+            mprf("The headless hydra %s sways and immediately collapses!",
+                 item.sub_type == CORPSE_BODY ? "corpse" : "skeleton");
         }
         return (false);
     }
@@ -1398,8 +1444,12 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
                                                        : MONS_SKELETON_LARGE;
     }
 
+    const int monnum = item.orig_monnum - 1;
+
+    // Use the original monster type as the zombified type here, to get
+    // the proper stats from it.
     mgen_data mg(mon, beha, as, 0, 0, pos, hitting, MG_FORCE_BEH, god,
-                 zombie_type, number);
+                 static_cast<monster_type>(monnum), number);
 
     mg.non_actor_summoner = nas;
 
@@ -1411,7 +1461,14 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     if (mons == -1)
         return (false);
 
-    const int monnum = item.orig_monnum - 1;
+    // If the original monster has been drained or levelled up, its HD
+    // might be different from its class HD, in which case its HP should
+    // be rerolled to match.
+    if (menv[mons].hit_dice != hd)
+    {
+        menv[mons].hit_dice = std::max(hd, 1);
+        roll_zombie_hp(&menv[mons]);
+    }
 
     if (is_named_corpse(item))
     {
@@ -1421,12 +1478,6 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
         if (name_type == 0 || (name_type & MF_NAME_MASK) == MF_NAME_REPLACE)
             name_zombie(&menv[mons], monnum, name);
     }
-
-    // If the original monster type has dual-wielding, make sure its
-    // zombie has it as well.  This is needed for e.g. equipped deep elf
-    // blademaster zombies.
-    if (mons_class_flag(monnum, M_TWOWEAPON))
-        menv[mons].flags |= MF_TWOWEAPON;
 
     // Re-equip the zombie.
     equip_undead(pos, corps, mons, monnum);
@@ -1588,29 +1639,34 @@ bool cast_simulacrum(int pow, god_type god)
             || (weapon->base_type == OBJ_FOOD
                 && weapon->sub_type == FOOD_CHUNK)))
     {
-        const monster_type type = static_cast<monster_type>(weapon->plus);
+        const monster_type sim_type = static_cast<monster_type>(weapon->plus);
 
-        if (!mons_class_can_be_zombified(type))
+        if (!mons_class_can_be_zombified(sim_type))
         {
             canned_msg(MSG_NOTHING_HAPPENS);
             return (false);
         }
 
-        const monster_type sim_type = mons_zombie_size(type) == Z_BIG ?
+        const monster_type mon = mons_zombie_size(sim_type) == Z_BIG ?
             MONS_SIMULACRUM_LARGE : MONS_SIMULACRUM_SMALL;
 
         // Can't create more than the available chunks.
         int how_many = std::min(8, 4 + random2(pow) / 20);
         how_many = std::min<int>(how_many, weapon->quantity);
 
+        const int monnum = weapon->orig_monnum - 1;
+
         for (int i = 0; i < how_many; ++i)
         {
+            // Use the original monster type as the zombified type here,
+            // to get the proper stats from it.
             const int mons =
                 create_monster(
-                    mgen_data(sim_type, BEH_FRIENDLY, &you,
+                    mgen_data(mon, BEH_FRIENDLY, &you,
                               6, SPELL_SIMULACRUM,
                               you.pos(), MHITYOU,
-                              MG_FORCE_BEH, god, type));
+                              MG_FORCE_BEH, god,
+                              static_cast<monster_type>(monnum)));
 
             if (mons != -1)
             {
@@ -1647,7 +1703,7 @@ bool cast_twisted_resurrection(int pow, god_type god)
         {
             total_mass += mons_weight(si->plus);
             how_many_corpses++;
-            if (mons_species(si->plus) == MONS_ORC)
+            if (mons_genus(si->plus) == MONS_ORC)
                 how_many_orcs++;
             if (food_is_rotten(*si))
                 rotted++;
@@ -1711,7 +1767,7 @@ bool cast_twisted_resurrection(int pow, god_type god)
     }
 
     // Mark this abomination as undead.
-    menv[mons].flags |= MF_HONORARY_UNDEAD;
+    menv[mons].flags |= MF_FAKE_UNDEAD;
 
     mpr("The heap of corpses melds into an agglomeration of writhing flesh!");
 

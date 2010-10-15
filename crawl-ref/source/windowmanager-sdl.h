@@ -41,6 +41,7 @@ public:
     virtual void swap_buffers();
     virtual int screen_width() const;
     virtual int screen_height() const;
+    virtual int desktop_width() const;
 
     // Texture loading
     virtual bool load_texture(GenericTexture *tex, const char *filename,
@@ -55,6 +56,7 @@ protected:
 
     SDL_Surface *m_context;
     const SDL_VideoInfo* video_info;
+    int _desktop_width;
 };
 
 #endif // USE_SDL

@@ -246,6 +246,8 @@ int SDLWrapper::init(coord_def *m_windowsz)
 
     video_info = SDL_GetVideoInfo();
 
+    _desktop_width = video_info->current_w;
+
     SDL_EnableUNICODE(true);
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
@@ -276,12 +278,7 @@ int SDLWrapper::init(coord_def *m_windowsz)
         flags |= SDL_FULLSCREEN;
     }
 
-    if (Options.tile_window_width && Options.tile_window_height)
-    {
-        m_windowsz->x = Options.tile_window_width;
-        m_windowsz->y = Options.tile_window_height;
-    }
-    else if (flags & SDL_FULLSCREEN)
+    if (flags & SDL_FULLSCREEN)
     {
         // By default, fill the whole screen.
         m_windowsz->x = video_info->current_w;
@@ -289,8 +286,12 @@ int SDLWrapper::init(coord_def *m_windowsz)
     }
     else
     {
-        m_windowsz->x = std::max(800, video_info->current_w  - 90);
-        m_windowsz->y = std::max(480, video_info->current_h - 90);
+        int x = Options.tile_window_width;
+        int y = Options.tile_window_height;
+        x = (x > 0) ? x : video_info->current_w + x;
+        y = (y > 0) ? y : video_info->current_h + y;
+        m_windowsz->x = std::max(800, x);
+        m_windowsz->y = std::max(480, y);
     }
 
     m_context = SDL_SetVideoMode(m_windowsz->x, m_windowsz->y, 0, flags);
@@ -311,6 +312,11 @@ int SDLWrapper::screen_width() const
 int SDLWrapper::screen_height() const
 {
     return (video_info->current_h);
+}
+
+int SDLWrapper::desktop_width() const
+{
+    return (_desktop_width);
 }
 
 void SDLWrapper::set_window_title(const char *title)

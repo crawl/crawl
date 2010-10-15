@@ -35,7 +35,9 @@ static species_type species_order[] = {
     SP_DEMIGOD,        SP_DEMONSPAWN,
     // undead species
     SP_MUMMY,          SP_GHOUL,
-    SP_VAMPIRE
+    SP_VAMPIRE,
+    // not humanoid at all
+    SP_CAT
 };
 
 species_type random_draconian_player_species()
@@ -58,6 +60,7 @@ static const char * Species_Abbrev_List[NUM_SPECIES] =
       // the draconians
       "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr",
       "Ce", "DG", "Sp", "Mi", "DS", "Gh", "Ke", "Mf", "Vp", "DD",
+      "Fe",
       // placeholders
       "El", "HD", "OM", "GE", "Gn" };
 
@@ -243,18 +246,26 @@ std::string species_name(species_type speci, bool genus, bool adj)
         case SP_GHOUL:      res = (adj ? "Ghoulish"   : "Ghoul");      break;
         case SP_MERFOLK:    res = (adj ? "Merfolkian" : "Merfolk");    break;
         case SP_VAMPIRE:    res = (adj ? "Vampiric"   : "Vampire");    break;
+        case SP_CAT:        res = (adj ? "Feline"     : "Felid");      break;
         default:            res = (adj ? "Yakish"     : "Yak");        break;
         }
     }
     return res;
 }
 
-int species_has_claws(species_type species)
+int species_has_claws(species_type species, bool mut_level)
 {
     if (species == SP_TROLL)
         return (3);
+
     if (species == SP_GHOUL)
         return (1);
+
+    // Felid claws don't count as a claws mutation.  The claws mutation
+    // does only hands, not paws.
+    if (species == SP_CAT && !mut_level)
+        return (1);
+
     return (0);
 }
 
@@ -311,9 +322,94 @@ size_type species_size(species_type species, size_part_type psize)
         return (SIZE_SMALL);
     case SP_SPRIGGAN:
         return (SIZE_LITTLE);
+    case SP_CAT:
+        return (SIZE_TINY);
 
     default:
         return (SIZE_MEDIUM);
+    }
+}
+
+monster_type player_species_to_mons_species(species_type species)
+{
+    switch (species)
+    {
+    case SP_HUMAN:
+        return (MONS_HUMAN);
+    case SP_HIGH_ELF:
+    case SP_DEEP_ELF:
+    case SP_SLUDGE_ELF:
+        return (MONS_ELF);
+    case SP_MOUNTAIN_DWARF:
+        return (MONS_DWARF);
+    case SP_HALFLING:
+        return (MONS_HALFLING);
+    case SP_HILL_ORC:
+        return (MONS_ORC);
+    case SP_KOBOLD:
+        return (MONS_KOBOLD);
+    case SP_MUMMY:
+        return (MONS_MUMMY);
+    case SP_NAGA:
+        return (MONS_NAGA);
+    case SP_OGRE:
+        return (MONS_OGRE);
+    case SP_TROLL:
+        return (MONS_TROLL);
+    case SP_RED_DRACONIAN:
+        return (MONS_RED_DRACONIAN);
+    case SP_WHITE_DRACONIAN:
+        return (MONS_WHITE_DRACONIAN);
+    case SP_GREEN_DRACONIAN:
+        return (MONS_GREEN_DRACONIAN);
+    case SP_YELLOW_DRACONIAN:
+        return (MONS_YELLOW_DRACONIAN);
+    case SP_GREY_DRACONIAN:
+        return (MONS_GREY_DRACONIAN);
+    case SP_BLACK_DRACONIAN:
+        return (MONS_BLACK_DRACONIAN);
+    case SP_PURPLE_DRACONIAN:
+        return (MONS_PURPLE_DRACONIAN);
+    case SP_MOTTLED_DRACONIAN:
+        return (MONS_MOTTLED_DRACONIAN);
+    case SP_PALE_DRACONIAN:
+        return (MONS_PALE_DRACONIAN);
+    case SP_BASE_DRACONIAN:
+        return (MONS_DRACONIAN);
+    case SP_CENTAUR:
+        return (MONS_CENTAUR);
+    case SP_DEMIGOD:
+        return (MONS_DEMIGOD);
+    case SP_SPRIGGAN:
+        return (MONS_SPRIGGAN);
+    case SP_MINOTAUR:
+        return (MONS_MINOTAUR);
+    case SP_DEMONSPAWN:
+        return (MONS_DEMONSPAWN);
+    case SP_GHOUL:
+        return (MONS_GHOUL);
+    case SP_KENKU:
+        return (MONS_KENKU);
+    case SP_MERFOLK:
+        return (MONS_MERFOLK);
+    case SP_VAMPIRE:
+        return (MONS_VAMPIRE);
+    case SP_DEEP_DWARF:
+        return (MONS_DEEP_DWARF);
+    case SP_CAT:
+        return (MONS_FELID);
+    case SP_ELF:
+    case SP_HILL_DWARF:
+    case SP_OGRE_MAGE:
+    case SP_GREY_ELF:
+    case SP_GNOME:
+    case NUM_SPECIES:
+    case SP_UNKNOWN:
+    case SP_RANDOM:
+    case SP_VIABLE:
+        ASSERT(!"player of an invalid species");
+    default:
+        return (MONS_PROGRAM_BUG);
     }
 }
 

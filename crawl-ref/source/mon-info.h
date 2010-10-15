@@ -47,6 +47,9 @@ enum monster_info_flags
     MB_BLEEDING,
     MB_DEFLECT_MSL,
     MB_PREP_RESURRECT,
+    MB_REGENERATION,
+    MB_RAISED_MR,
+    MB_MIRROR_DAMAGE,
     MB_SAFE,
     MB_UNSAFE,
     MB_NAME_SUFFIX, // [art] rat foo does...
@@ -55,7 +58,8 @@ enum monster_info_flags
     MB_NAME_UNQUALIFIED, // Foo does...
     MB_NAME_THE, // The foo does....
     MB_FADING_AWAY,
-    MB_MOSTLY_FADED
+    MB_MOSTLY_FADED,
+    MB_FEAR_INSPIRING,
 };
 
 struct monster_info_base
@@ -72,8 +76,14 @@ struct monster_info_base
     dungeon_feature_type fire_blocker; // TODO: maybe we should store the position instead
     std::string description;
     std::string quote;
+    mon_holy_type holi;
+    mon_intel_type mintel;
+    mon_resist_def mresists;
+    mon_itemuse_type mitemuse;
+    int mbase_speed;
     flight_type fly;
-    bool wields_two_weapons;
+    bool two_weapons;
+    bool no_regen;
 };
 
 // Monster info used by the pane; precomputes some data
@@ -139,7 +149,7 @@ struct monster_info : public monster_info_base
 
     inline std::string damage_desc() const
     {
-        return get_damage_level_string(type, dam);
+        return get_damage_level_string(holi, dam);
     }
 
     inline bool neutral() const
@@ -155,18 +165,6 @@ struct monster_info : public monster_info_base
 
     std::vector<std::string> attributes() const;
 
-    mon_intel_type intel() const
-    {
-        if (is(MB_ENSLAVED))
-        {
-            if (type == MONS_ABOMINATION_SMALL || type == MONS_ABOMINATION_LARGE)
-                return (I_NORMAL);
-            return mons_class_intel(base_type);
-        }
-
-        return mons_class_intel(type);
-    }
-
     const char *pronoun(pronoun_type variant) const
     {
         return (mons_pronoun(static_cast<monster_type>(type), variant, true));
@@ -176,17 +174,35 @@ struct monster_info : public monster_info_base
     std::string wounds_description(bool colour = false) const;
 
     monster_type draco_subspecies() const;
-    mon_resist_def resists() const;
-    mon_itemuse_type itemuse() const;
+
+    mon_intel_type intel() const
+    {
+        return (mintel);
+    }
+
+    mon_resist_def resists() const
+    {
+        return (mresists);
+    }
+
+    mon_itemuse_type itemuse() const
+    {
+        return (mitemuse);
+    }
+
     int randarts(artefact_prop_type ra_prop) const;
     int res_magic() const;
-    int base_speed() const;
+
+    int base_speed() const
+    {
+        return (mbase_speed);
+    }
+
     bool can_regenerate() const
     {
-        if (type == MONS_PLAYER_GHOST && u.ghost.species == SP_DEEP_DWARF)
-            return false;
-        return mons_class_can_regenerate(type);
+        return (!no_regen);
     }
+
     size_type body_size() const;
 
 protected:

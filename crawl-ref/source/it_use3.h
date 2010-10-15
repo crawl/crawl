@@ -17,5 +17,6 @@ bool evoke_item(int slot = -1);
 void noisy_equipment();
 void shadow_lantern_effect();
 void unrand_reacts();
+bool disc_of_storms(bool drac_breath = false);
 
 #endif

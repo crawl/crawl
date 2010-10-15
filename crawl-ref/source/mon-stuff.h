@@ -58,6 +58,8 @@ struct level_exit
 const item_def *give_mimic_item(monster* mimic);
 const item_def &get_mimic_item(const monster* mimic);
 int  get_mimic_colour( const monster* mimic );
+dungeon_feature_type get_mimic_feat (const monster* mimic);
+bool feature_mimic_at (const coord_def &c);
 
 void alert_nearby_monsters(void);
 
@@ -148,9 +150,10 @@ bool monster_descriptor(int which_class, mon_desc_type which_descriptor);
 // Return your target, if it still exists and is visible to you.
 monster *get_current_target();
 
-mon_dam_level_type mons_get_damage_level(const monster* );
+mon_dam_level_type mons_get_damage_level(const monster* mons);
 
-std::string get_damage_level_string(monster_type mon_type, mon_dam_level_type mdam);
+std::string get_damage_level_string(mon_holy_type holi,
+                                    mon_dam_level_type mdam);
 
 void seen_monster(monster* mons);
 
@@ -205,5 +208,6 @@ bool mons_avoids_cloud(const monster* mons, cloud_type cl_type,
 bool mons_avoids_cloud(const monster* mons, int cloud_num,
                        bool placement = false);
 
+void debuff_monster(monster* mons);
 
 #endif

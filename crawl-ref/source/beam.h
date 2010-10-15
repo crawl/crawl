@@ -132,6 +132,7 @@ struct bolt
     bool        is_tracer;       // is this a tracer?
     bool        aimed_at_feet;   // this was aimed at self!
     bool        msg_generated;   // an appropriate msg was already mpr'd
+    bool        noise_generated; // a noise has already been generated at this pos
     bool        passed_target;   // Beam progressed beyond target.
     bool     in_explosion_phase; // explosion phase (as opposed to beam phase)
     bool        smart_monster;   // tracer firer can guess at other mons. resists?
@@ -248,7 +249,7 @@ public:
     void affect_place_explosion_clouds();
     void affect_endpoint();
 
-    void water_hits_actor(actor *act);
+    void beam_hits_actor(actor *act);
 
     // Stuff when a monster or player is hit.
     void affect_player_enchantment();

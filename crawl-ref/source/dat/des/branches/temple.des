@@ -875,7 +875,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-# Three leaves temple (David Ploog). 3 x 4 = 12 gods.
+# Three leaves temple (David Ploog). 3 x 5 = 15 gods.
 
 NAME:   three_leaves__temple
 PLACE:  Temple
@@ -890,15 +890,15 @@ xxxxxbb....bbxxxxxxxxxxxbb....bbxxxx
 xxxxbb......bbbxxxxxxxbbb......bbxxx
 xxxbb.....B...bbxxxxxbb...B.....bbxx
 xxbb..B........bbbxbbb........B..bbx
-xxbb.............bbb.............bbx
-xbb....B....B.....b.....B....B....bb
-xbb............{.....[............bb
+xxbb.........B...bbb...B.........bbx
+xbb....B..........b..........B....bb
+xbb........B...{.....[...B........bb
 xxbbbbbbbb........b........bbbbbbbbx
 xxxxxxxxxbbbbbbbb...bbbbbbbbxxxxxxxx
 xxxxxxxxxxxxxxxbb.(.bbxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxbb.....bbxxxxxxxxxxxxx
-xxxxxxxxxxxxxbb.......bbxxxxxxxxxxxx
-xxxxxxxxxxxxbb....B....bbxxxxxxxxxxx
+xxxxxxxxxxxxxbb..B.B..bbxxxxxxxxxxxx
+xxxxxxxxxxxxbb.........bbxxxxxxxxxxx
 xxxxxxxxxxxbb...........bbxxxxxxxxxx
 xxxxxxxxxxbb....B...B....bbxxxxxxxxx
 xxxxxxxxxbb.......B.......bbxxxxxxxx
@@ -1802,7 +1802,7 @@ xx...x...x.x...x.x.x.x.x...x.x...x...xx
             xxxxx     xxxxx
 ENDMAP
 
-# 14 gods
+# 15 gods
 NAME:    temple_eino_rhombus_b
 PLACE:   Temple
 TAGS:    no_rotate
@@ -1837,10 +1837,14 @@ xx..x.x..x.x..x.x..x..x.x..x.x..x.x..xx
       xx....x...x..x..x...x....xx
        xx..x..B..x...x..B..x..xx
         xx..x...x..x..x...x..xx
-         xx..x.x..xxx..x.x..xx
-          xx..x..xx xx..x..xx
-           xx...xx   xx...xx
-            xxxxx     xxxxx
+         xx..x.x..x.x..x.x..xx
+          xx..x..x...x..x..xx
+           xx...x..B..x...xx
+            xx...x...x...xx
+             xx...x.x...xx
+              xx...x...xx
+               xx.....xx
+                xxxxxxx
 ENDMAP
 
 # 12 gods
@@ -1884,10 +1888,10 @@ xx...x..x.x..x.x..x.x..x...xx
        xxxxx     xxxxx
 ENDMAP
 
-# 14 gods
+# 15 gods
 NAME:    mini_greek_temple
 PLACE:   Temple
-WEIGHT:  10
+WEIGHT:  30
 TAGS:    no_rotate
 ORIENT:  encompass
 SHUFFLE: {([
@@ -1907,46 +1911,9 @@ tt.....{..21...t...............''ccccccccccccccc.....22.tttt
 ttt...........ttt.......(......''G'c"""""""""""ctt..t..ttttt
 tttt......2....................''''c"B"B"B"B"B"ctt......tttt
 tttttt.....................t...''G'c"""""""""""cttt.....tttt
-ttttttttt..1.....2...t.........''''+"""B"B"B"B"ctt...t....tt
+ttttttttt..1.....2...t.........''''+"B"B"B"B"B"ctt...t....tt
 tttttttt.....[.................''G'c"""""""""""ct...ttt..ttt
 ttttttttt...................1..''''c"B"B"B"B"B"ct..tttt.tttt
-ttttttttttttttt....2....t......''G'c"""""""""""ct....t..tttt
-ttttttttttttttttt..............''ccccccccccccccct.......2ttt
-tttttttttttttttttt..........t.........t......ttt......2ttttt
-ttttttttttttttttttttt...............................22tttttt
-ttttttttttttttttttttttt............t..........t....ttttttttt
-tttttttttttttttttttttttttttt...........t.........ttttttttttt
-ttttttttttttttttttttttttttttttt..............ttttttttttttttt
-tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
-tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
-ENDMAP
-
-# 12 gods
-NAME:    mini_greek_temple_variant
-PLACE:   Temple
-WEIGHT:  10
-TAGS:    no_rotate
-ORIENT:  encompass
-SHUFFLE: {([
-NSUBST:  . = 15:1 / 12:2 / 2:t / *:.
-SUBST:   ' = .
-COLOUR:  " : darkgrey w:3 / white w:1 / none
-SUBST:   " = .
-MONS:    plant, bush
-MAP
-tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
-tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
-tttttttttttt....1111tttttttttttttttttttttttttttttttttttttttt
-tttttttt.........1111....tttttttttttt.........tttttttttttttt
-tttt.......................1tttttt.......t.........ttttttttt
-tt.........2........t..........''''''...............2222tttt
-tt.....{..21...t...............''ccccccccccccccc.....22.tttt
-ttt...........ttt.......(......''G'c"""""""""""ctt..t..ttttt
-tttt......2....................''''c""B"B"B"B""ctt......tttt
-tttttt.....................t...''G'c"""""""""""cttt.....tttt
-ttttttttt..1.....2...t.........''''+""B"B"B"B""ctt...t....tt
-tttttttt.....[.................''G'c"""""""""""ct...ttt..ttt
-ttttttttt...................1..''''c""B"B"B"B""ct..tttt.tttt
 ttttttttttttttt....2....t......''G'c"""""""""""ct....t..tttt
 ttttttttttttttttt..............''ccccccccccccccct.......2ttt
 tttttttttttttttttt..........t.........t......ttt......2ttttt
@@ -2092,7 +2059,7 @@ cc...........ccc...........cc
      ccccc         ccccc
 ENDMAP
 
-# 12 gods
+# 15 gods
 NAME:    temple_minmay_crystal_snake
 TAGS:    no_rotate
 PLACE:   Temple
@@ -2117,19 +2084,19 @@ bb...bbb...bb     bb...bb
             b..B.....B..b
             bb...bbb...bb
              bb.bb bb.bb
-        bbb   b.b   bbb
-       bb.bb bb.bb
-      bb...bbb...bb
-      b..[.....B..b
-      bb...bbb...bb
-       bb.bb bb.bb
-        b.b   bbb   bbb
-       bb.bb       bb.bb
-      bb...bb     bb...bb
-      b..B..b     b..{..b
-      bb...bb     bb...bb
-       bb.bb       bb.bb
-        b.b   bbb   b.b
+        bbb   b.b   bbb   bbb   bbb
+       bb.bb bb.bb       bb.bb bb.bb
+      bb...bbb...bb     bb...bbb...bb
+      b..[.....B..b     b..B.....B..b
+      bb...bbb...bb     bb...bbb...bb
+       bb.bb bb.bb       bb.bb bb.bb
+        b.b   bbb   bbb   b.b   bbb
+       bb.bb       bb.bb bb.bb
+      bb...bb     bb...bbb...bb
+      b..B..b     b..{.....B..b
+      bb...bb     bb...bbb...bb
+       bb.bb       bb.bb bb.bb
+        b.b   bbb   b.b   bbb
        bb.bb bb.bb bb.bb
       bb...bbb...bbb...bb
       b..B.....B.....B..b

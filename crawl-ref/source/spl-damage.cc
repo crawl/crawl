@@ -70,7 +70,7 @@ void setup_fire_storm(const actor *source, int pow, bolt &beam)
 
 bool cast_fire_storm(int pow, bolt &beam)
 {
-    if (grid_distance(beam.target, beam.source) > beam.range)
+    if (distance(beam.target, beam.source) > dist_range(beam.range))
         return (false);
 
     setup_fire_storm(&you, pow, beam);
@@ -557,8 +557,8 @@ bool vampiric_drain(int pow, monster* mons)
     // The practical maximum of this is about 25 (pow @ 100). - bwr
     int hp_gain = 3 + random2avg(9, 2) + random2(pow) / 7;
 
-        hp_gain = std::min(mons->hit_points, hp_gain);
-        hp_gain = std::min(you.hp_max - you.hp, hp_gain);
+    hp_gain = std::min(mons->hit_points, hp_gain);
+    hp_gain = std::min(you.hp_max - you.hp, hp_gain);
 
     if (!hp_gain)
     {
@@ -672,6 +672,7 @@ int airstrike(int pow, const dist &beam)
 
             mprf("The air twists around and strikes %s!",
                  mons->name(DESC_NOCAP_THE).c_str());
+            noisy(4, beam.target);
 
             behaviour_event(mons, ME_ANNOY, MHITYOU);
             if (mons_is_mimic(mons->type))
@@ -714,7 +715,7 @@ bool cast_bone_shards(int power, bolt &beam)
 
     bool success = false;
 
-    const bool was_orc = (mons_species(you.weapon()->plus) == MONS_ORC);
+    const bool was_orc = (mons_genus(you.weapon()->plus) == MONS_ORC);
 
     if (you.weapon()->sub_type != CORPSE_SKELETON)
     {

@@ -139,6 +139,10 @@ A one-way gate to the infinite horrors of the Abyss
 
 A one-way gate to a demon-haunted realm, riven by chaos, its very substance impermanent and whimsical, filled with creatures out of nightmare.
 %%%%
+A portal to somewhere
+
+A gash-like tear in reality that looks into some terrifying, starry otherworld. Thankfully, the magic that opened this portal prevents its vacuum from consuming and swallowing everything in sight.
+%%%%
 A rock wall
 
 This wall consists of simple rock.
@@ -154,6 +158,10 @@ You can make out a staircase leading downwards into a small tomb. Sand surrounds
 A shaft
 
 A deep hole. Who knows where you might end up if you were to fall through it?
+%%%%
+A shattered altar of Ashenzari
+
+This crystal altar shattered to pieces when Ashenzari was cursed centuries ago. But still, there is power here: a dark aura holds the shards in mid-explosion, suspended in time and space much like the god they herald.
 %%%%
 A shimmering altar of Xom
 

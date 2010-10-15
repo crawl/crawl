@@ -13,9 +13,6 @@
 #include <stdio.h>
 #include "enum.h"
 
-std::string apostrophise(const std::string &name);
-std::string apostrophise_fixup(const std::string &sentence);
-
 class monster;
 class reader;
 class writer;

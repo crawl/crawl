@@ -45,8 +45,9 @@ Main steps
 
 4.) Compile again to test your changes.
 
-5.) Once everything works as it should, you should make a local commit (or
-    several), and use git format-patch to produce easily appliable patches:
+5.) Once everything works as it should, run util/checkwhite to fix a few
+    formatting problems. Now, you should make a local commit (or several), and
+    use git format-patch to produce easily appliable patches:
     git format-patch -n
 
     Where n is the number of commits you made. Each is made into a separate
@@ -56,7 +57,7 @@ Main steps
     http://crawl.develz.org/mantis/main_page.php
 
     Here it is immensely helpful if you give a summary of what the patch is
-    about. If you created it in response to a bug report or feature request,
+    about. If you created it in response to a bug report or an "Implementable",
     mention the id, and you might also want to post a reply in said item
     pointing out your new patch. Please also mention the revision/version you
     used for patching, e.g. 0.6 or 1d611744b (the first 7 or 8 characters

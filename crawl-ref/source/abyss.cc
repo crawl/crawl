@@ -587,30 +587,31 @@ static void _generate_area(const map_mask &abyss_genlevel_mask,
     _abyss_create_items(abyss_genlevel_mask, placed_abyssal_rune, use_vaults);
     generate_random_blood_spatter_on_level(&abyss_genlevel_mask);
     setup_environment_effects();
+
+    // Abyss has a constant density.
+    env.density = 0;
 }
 
 class xom_abyss_feature_amusement_check
 {
 private:
-    int exit_was_near;
-    int rune_was_near;
+    bool exit_was_near;
+    bool rune_was_near;
 
 private:
-    int abyss_exit_nearness() const
+    bool abyss_exit_nearness() const
     {
-        int nearness = INFINITE_DISTANCE;
         // env.map_knowledge().known() doesn't work on unmappable levels because
         // mapping flags are not set on such levels.
         for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
             if (grd(*ri) == DNGN_EXIT_ABYSS && env.map_knowledge(*ri).seen())
-                nearness = std::min(nearness, grid_distance(you.pos(), *ri));
+                return true;
 
-        return (nearness);
+        return false;
     }
 
-    int abyss_rune_nearness() const
+    bool abyss_rune_nearness() const
     {
-        int nearness = INFINITE_DISTANCE;
         // See above comment about env.map_knowledge().known().
         for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
         {
@@ -618,11 +619,10 @@ private:
             {
                 for (stack_iterator si(*ri); si; ++si)
                     if (item_is_rune(*si, RUNE_ABYSSAL))
-                        nearness = std::min(nearness,
-                                            grid_distance(you.pos(),*ri));
+                        return true;
             }
         }
-        return (nearness);
+        return false;
     }
 
 public:
@@ -641,23 +641,19 @@ public:
         // Update known terrain
         viewwindow();
 
-        const int exit_is_near = abyss_exit_nearness();
-        const int rune_is_near = abyss_rune_nearness();
+        const bool exit_is_near = abyss_exit_nearness();
+        const bool rune_is_near = abyss_rune_nearness();
 
-        if (exit_was_near < INFINITE_DISTANCE
-            && exit_is_near == INFINITE_DISTANCE
-            || rune_was_near < INFINITE_DISTANCE
-            && rune_is_near == INFINITE_DISTANCE
+        if (exit_was_near && !exit_is_near
+            || rune_was_near && !rune_is_near
             && you.attribute[ATTR_ABYSSAL_RUNES] == 0)
         {
             xom_is_stimulated(255, "Xom snickers loudly.", true);
         }
 
-        if (rune_was_near == INFINITE_DISTANCE
-            && rune_is_near < INFINITE_DISTANCE
+        if (!rune_was_near && rune_is_near
             && you.attribute[ATTR_ABYSSAL_RUNES] == 0
-            || exit_was_near == INFINITE_DISTANCE
-            && exit_is_near < INFINITE_DISTANCE)
+            || !exit_was_near && exit_is_near)
         {
             xom_is_stimulated(255);
         }

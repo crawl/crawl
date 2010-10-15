@@ -1026,9 +1026,10 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.entry_cause_god);
 
     marshallInt(th, you.disease);
-    marshallShort(th, you.hp);
+    marshallShort(th, you.dead ? 0 : you.hp);
 
     marshallShort(th, you.hunger);
+    marshallBoolean(th, you.fishtail);
 
     // how many you.equip?
     marshallByte(th, NUM_EQUIP);
@@ -1135,11 +1136,15 @@ static void tag_construct_you(writer &th)
 
     // what is the extent of divine generosity?
     for (i = 0; i < MAX_NUM_GODS; i++)
-        marshallShort(th, you.num_gifts[i]);
+        marshallShort(th, you.num_current_gifts[i]);
+    for (i = 0; i < MAX_NUM_GODS; i++)
+        marshallShort(th, you.num_total_gifts[i]);
 
     marshallByte(th, you.gift_timeout);
+#if TAG_MAJOR_VERSION == 31
     marshallByte(th, you.normal_vision);
     marshallByte(th, you.current_vision);
+#endif
     marshallByte(th, you.hell_exit);
     marshallByte(th, you.hell_branch);
 
@@ -1162,17 +1167,17 @@ static void tag_construct_you(writer &th)
         you.start_time = now;
     }
 
-    marshallInt( th, you.real_time );
-    marshallInt( th, you.num_turns );
+    marshallInt(th, you.real_time);
+    marshallInt(th, you.num_turns);
+    marshallInt(th, you.exploration);
 
     marshallShort(th, you.magic_contamination);
 
     marshallShort(th, you.transit_stair);
     marshallByte(th, you.entering_level);
 
-    // Reserved space for unknown porpoises.
-    marshallByte(th, 0);
-    marshallByte(th, 0);
+    marshallByte(th, you.deaths);
+    marshallByte(th, you.lives);
 
     marshallInt(th, you.dactions.size());
     for (unsigned int k = 0; k < you.dactions.size(); k++)
@@ -1182,6 +1187,10 @@ static void tag_construct_you(writer &th)
     marshallShort(th, you.beholders.size());
     for (unsigned int k = 0; k < you.beholders.size(); k++)
          marshallShort(th, you.beholders[k]);
+
+    marshallShort(th, you.fearmongers.size());
+    for (unsigned int k = 0; k < you.fearmongers.size(); k++)
+        marshallShort(th, you.fearmongers[k]);
 
     marshallByte(th, you.piety_hysteresis);
 
@@ -1199,6 +1208,13 @@ static void tag_construct_you(writer &th)
     marshallString(th, revision);
 
     you.props.write(th);
+#if TAG_MAJOR_VERSION == 31
+    marshallByte(th, NUM_DC);
+    for (int t = 0; t < 2; t++)
+        for (int ae = 0; ae < 2; ae++)
+            for (i = 0; i < NUM_DC; i++)
+                marshallInt(th, you.dcounters[t][ae][i]);
+#endif
 }
 
 static void tag_construct_you_items(writer &th)
@@ -1590,6 +1606,10 @@ static void tag_read_you(reader &th, int minorVersion)
 
     you.hp              = unmarshallShort(th);
     you.hunger          = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 31
+    if (minorVersion >= TAG_MINOR_FISHTAIL)
+#endif
+    you.fishtail        = unmarshallBoolean(th);
 
     // How many you.equip?
     count = unmarshallByte(th);
@@ -1720,13 +1740,25 @@ static void tag_read_you(reader &th, int minorVersion)
     for (i = 0; i < count; i++)
         you.worshipped[i] = unmarshallByte(th);
 
+#if TAG_MAJOR_VERSION == 31
+    if (minorVersion >= TAG_MINOR_GOD_GIFTS)
+    {
+#endif
     for (i = 0; i < count; i++)
-        you.num_gifts[i] = unmarshallShort(th);
+        you.num_current_gifts[i] = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 31
+    }
+#endif
+    for (i = 0; i < count; i++)
+        you.num_total_gifts[i] = unmarshallShort(th);
 
     you.gift_timeout   = unmarshallByte(th);
 
+#if TAG_MAJOR_VERSION == 31
     you.normal_vision  = unmarshallByte(th);
     you.current_vision = unmarshallByte(th);
+    // it will be recalculated in startup.c:_post_init() anyway
+#endif
     you.hell_exit      = unmarshallByte(th);
     you.hell_branch = static_cast<branch_type>( unmarshallByte(th) );
 
@@ -1739,15 +1771,19 @@ static void tag_read_you(reader &th, int minorVersion)
 
     you.real_time  = unmarshallInt(th);
     you.num_turns  = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 31
+    if (minorVersion >= TAG_MINOR_DENSITY)
+#endif
+    you.exploration = unmarshallInt(th);
 
     you.magic_contamination = unmarshallShort(th);
 
     you.transit_stair  = static_cast<dungeon_feature_type>(unmarshallShort(th));
     you.entering_level = unmarshallByte(th);
 
-    // Reserved space for unknown porpoises.
-    unmarshallByte(th);
-    unmarshallByte(th);
+    you.deaths = unmarshallByte(th);
+    you.lives = unmarshallByte(th);
+    you.dead = !you.hp;
 
     int n_dact = unmarshallInt(th);
     you.dactions.resize(n_dact, NUM_DACTIONS);
@@ -1758,6 +1794,11 @@ static void tag_read_you(reader &th, int minorVersion)
     count = unmarshallShort(th);
     for (i = 0; i < count; i++)
         you.beholders.push_back(unmarshallShort(th));
+
+    // Also usually empty.
+    count = unmarshallShort(th);
+    for (i = 0; i < count; i++)
+        you.fearmongers.push_back(unmarshallShort(th));
 
     you.piety_hysteresis = unmarshallByte(th);
 
@@ -1774,6 +1815,17 @@ static void tag_read_you(reader &th, int minorVersion)
 
     you.props.clear();
     you.props.read(th);
+#if TAG_MAJOR_VERSION == 31
+    if (minorVersion >= TAG_MINOR_DIAG_COUNTERS)
+    {
+        count = unmarshallByte(th);
+        ASSERT(count <= NUM_DC);
+        for (int t = 0; t < 2; t++)
+            for (int ae = 0; ae < 2; ae++)
+                for (i = 0; i < count; i++)
+                    you.dcounters[t][ae][i] = unmarshallInt(th);
+    }
+#endif
 }
 
 static void tag_read_you_items(reader &th, int minorVersion)
@@ -2106,6 +2158,7 @@ static void tag_construct_level(writer &th)
 
     marshallInt(th, env.forest_awoken_until);
     marshall_level_vault_data(th);
+    marshallInt(th, env.density);
 }
 
 void marshallItem(writer &th, const item_def &item)
@@ -2697,6 +2750,12 @@ static void tag_read_level( reader &th, int minorVersion )
 
     env.forest_awoken_until = unmarshallInt(th);
     unmarshall_level_vault_data(th);
+#if TAG_MAJOR_VERSION == 31
+    if (minorVersion < TAG_MINOR_DENSITY)
+        env.density = 0;
+    else
+#endif
+    env.density = unmarshallInt(th);
 }
 
 static void tag_read_level_items(reader &th, int minorVersion)

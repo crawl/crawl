@@ -23,6 +23,10 @@ Draconian
 
 Draconians are versatile hybrids. They mature when reaching level 7 and develop a colour.
 %%%%
+Felid
+
+These cats possess sentience, but are incapable of advanced item manipulation or the use of armour or weapons.
+%%%%
 Ghoul
 
 An undead, damned to rot eternally. They are always looking for rotten food to eat, hacking away with their claws.

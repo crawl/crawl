@@ -31,6 +31,7 @@
 #include "exercise.h"
 #include "map_knowledge.h"
 #include "feature.h"
+#include "fineff.h"
 #include "fprop.h"
 #include "food.h"
 #include "goditem.h"
@@ -39,7 +40,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "item_use.h"
-#include "kills.h"
+#include "libutil.h"
 #include "macro.h"
 #include "makeitem.h"
 #include "message.h"
@@ -61,6 +62,7 @@
 #include "godconduct.h"
 #include "shopping.h"
 #include "skills.h"
+#include "species.h"
 #include "spl-clouds.h"
 #include "spl-miscast.h"
 #include "spl-summoning.h"
@@ -303,8 +305,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     player_body_armour_penalty(0), player_shield_penalty(0),
     player_armour_tohit_penalty(0), player_shield_tohit_penalty(0),
     can_do_unarmed(false), apply_bleeding(false),
-    miscast_level(-1), miscast_type(SPTYP_NONE), miscast_target(NULL),
-    final_effects()
+    miscast_level(-1), miscast_type(SPTYP_NONE), miscast_target(NULL)
 {
     init_attack();
 }
@@ -663,6 +664,9 @@ bool melee_attack::attack()
         do_miscast();
     }
 
+    // This may invalidate both the attacker and defender.
+    fire_final_effects();
+
     enable_attack_conducts(conducts);
 
     return (retval);
@@ -837,7 +841,7 @@ bool melee_attack::player_attack()
 
         bool hit_woke_orc = false;
         if (you.religion == GOD_BEOGH
-            && defender->mons_species() == MONS_ORC
+            && mons_genus(defender->mons_species()) == MONS_ORC
             && !defender->is_summoned()
             && !defender->as_monster()->is_shapeshifter()
             && !player_under_penance() && you.piety >= piety_breakpoint(2)
@@ -916,10 +920,12 @@ bool melee_attack::player_attack()
     else
         player_warn_miss();
 
-    if ((did_hit && player_monattk_hit_effects(false))
-        || !defender->alive())
+    if (did_hit)
     {
-        return (true);
+        if (player_monattk_hit_effects(false))
+            return (true);
+        if (!defender->alive())
+            return (true);
     }
 
     const bool did_primary_hit = did_hit;
@@ -931,7 +937,7 @@ bool melee_attack::player_attack()
     {
         print_wounds(defender->as_monster());
 
-        const int degree = player_mutation_level(MUT_CLAWS);
+        const int degree = you.has_claws();
         if (apply_bleeding && defender->can_bleed() && degree > 0)
             defender->as_monster()->bleed(3 + roll_dice(degree, 3), degree);
     }
@@ -1027,7 +1033,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
         else if (you.has_usable_claws())
         {
             aux_verb = "claw";
-            aux_damage += roll_dice(player_mutation_level(MUT_CLAWS), 3);
+            aux_damage += roll_dice(you.has_claws(), 3);
         }
 
         break;
@@ -1163,7 +1169,7 @@ unarmed_attack_type melee_attack::player_aux_choose_baseattack()
         && (baseattack == UNAT_HEADBUTT
             || baseattack == UNAT_KICK
             || _vamp_wants_blood_from_monster(defender->as_monster())
-               && x_chance_in_y(2, 3)))
+               && !one_chance_in(3)))
     {
         baseattack = UNAT_BITE;
     }
@@ -1374,6 +1380,14 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         {
             _player_vampire_draws_blood(defender->as_monster(), damage_done);
         }
+
+        if (atk == UNAT_TAILSLAP && you.species == SP_GREY_DRACONIAN &&
+            grd(you.pos()) == DNGN_DEEP_WATER &&
+            feat_is_water(grd(defender->as_monster()->pos())))
+        {
+            do_trample();
+        }
+
     }
     else // no damage was done
     {
@@ -1789,7 +1803,8 @@ int melee_attack::player_weapon_type_modify(int damage)
     // has a non-weapon in hand. - bwr
     // Exception: vampire bats only bite to allow for drawing blood.
     if (damage < HIT_WEAK
-        && (you.species != SP_VAMPIRE || !player_in_bat_form()))
+        && (you.species != SP_VAMPIRE || !player_in_bat_form())
+        && you.species != SP_CAT)
     {
         if (weap_type != WPN_UNKNOWN)
             attack_verb = "hit";
@@ -1808,13 +1823,17 @@ int melee_attack::player_weapon_type_modify(int damage)
         case TRAN_SPIDER:
         case TRAN_BAT:
         case TRAN_PIG:
-            if (damage < HIT_STRONG)
+            if (damage < HIT_WEAK)
+                attack_verb = "hit";
+            else if (damage < HIT_STRONG)
                 attack_verb = "bite";
             else
                 attack_verb = "maul";
             break;
         case TRAN_BLADE_HANDS:
-            if (damage < HIT_MED)
+            if (damage < HIT_WEAK)
+                attack_verb = "hit";
+            else if (damage < HIT_MED)
                 attack_verb = "slash";
             else if (damage < HIT_STRONG)
                 attack_verb = "slice";
@@ -1825,7 +1844,9 @@ int melee_attack::player_weapon_type_modify(int damage)
         case TRAN_LICH:
             if (you.has_usable_claws())
             {
-                if (damage < HIT_MED)
+                if (damage < HIT_WEAK)
+                    attack_verb = "scratch";
+                else if (damage < HIT_MED)
                     attack_verb = "claw";
                 else if (damage < HIT_STRONG)
                     attack_verb = "mangle";
@@ -1835,13 +1856,17 @@ int melee_attack::player_weapon_type_modify(int damage)
             }
             // or fall-through
         case TRAN_ICE_BEAST:
-            if (damage < HIT_MED)
+            if (damage < HIT_WEAK)
+                attack_verb = "hit";
+            else if (damage < HIT_MED)
                 attack_verb = "punch";
             else
                 attack_verb = "pummel";
             break;
         case TRAN_DRAGON:
-            if (damage < HIT_MED)
+            if (damage < HIT_WEAK)
+                attack_verb = "hit";
+            else if (damage < HIT_MED)
                 attack_verb = "claw";
             else if (damage < HIT_STRONG)
                 attack_verb = "bite";
@@ -1934,7 +1959,9 @@ int melee_attack::player_weapon_type_modify(int damage)
     case -1: // unarmed
         if (you.damage_type() == DVORP_CLAWING)
         {
-            if (damage < HIT_MED)
+            if (damage < HIT_WEAK)
+                attack_verb = "scratch";
+            else if (damage < HIT_MED)
                 attack_verb = "claw";
             else if (damage < HIT_STRONG)
                 attack_verb = "mangle";
@@ -1980,29 +2007,6 @@ void melee_attack::player_check_weapon_effects()
             did_god_conduct(DID_HASTY, 1);
         }
     }
-}
-
-// Effects that occur after all other effects, even if the monster is dead.
-// For example, explosions that would hit other creatures, but we want
-// to deal with only one creature at a time, so that's handled last.
-// You probably want to call player_monattk_hit_effects instead, as that
-// function calls this one.
-// Returns true if the combat round should end here.
-bool melee_attack::player_monattk_final_hit_effects(bool mondied)
-{
-    for (unsigned int i = 0; i < final_effects.size(); ++i)
-    {
-        switch (final_effects[i].flavor)
-        {
-        case FINEFF_LIGHTNING_DISCHARGE:
-            if (you.see_cell(final_effects[i].location))
-                mpr("Electricity arcs through the water!");
-            conduct_electricity(final_effects[i].location, attacker);
-            break;
-        }
-    }
-
-    return mondied;
 }
 
 // Returns true if the combat round should end here.
@@ -2058,7 +2062,7 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     }
 
     if (mondied)
-        return player_monattk_final_hit_effects(true);
+        return (true);
 
     // These effects apply only to monsters that are still alive:
 
@@ -2069,14 +2073,14 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     // Also returns true if the hydra's last head was cut off, in which
     // case nothing more should be done to the hydra.
     if (decapitate_hydra(damage_done))
-        return player_monattk_final_hit_effects(!defender->alive());
+        return (!defender->alive());
 
     // These two (staff damage and damage brand) are mutually exclusive!
     player_apply_staff_damage();
 
     // Returns true if the monster croaked.
     if (!special_damage && apply_damage_brand())
-        return player_monattk_final_hit_effects(true);
+        return (true);
 
     if (!no_damage_message.empty())
     {
@@ -2110,7 +2114,7 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     {
         _monster_die(defender->as_monster(), KILL_YOU, NON_MONSTER);
 
-        return player_monattk_final_hit_effects(true);
+        return (true);
     }
 
     if (stab_attempt && stab_bonus > 0 && weapon
@@ -2126,7 +2130,7 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
         }
     }
 
-    return player_monattk_final_hit_effects(false);
+    return (false);
 }
 
 void melee_attack::_monster_die(monster* mons, killer_type killer,
@@ -3236,10 +3240,8 @@ bool melee_attack::apply_damage_brand()
             // resistant, from above, but is it on water?
             if (feat_is_water(grd(pos)))
             {
-                attack_final_effect effect;
-                effect.flavor = FINEFF_LIGHTNING_DISCHARGE;
-                effect.location = pos;
-                final_effects.push_back(effect);
+                add_final_effect(FINEFF_LIGHTNING_DISCHARGE, attacker, defender,
+                                 pos);
             }
         }
 
@@ -3933,7 +3935,7 @@ int melee_attack::player_to_hit(bool random_factor)
     }
     else
     {                       // ...you must be unarmed
-        your_to_hit += you.innate_mutations[MUT_CLAWS] ? 4 : 2;
+        your_to_hit += species_has_claws(you.species) ? 4 : 2;
 
         your_to_hit += maybe_random2(1 + you.skills[SK_UNARMED_COMBAT],
                                      random_factor);
@@ -4244,7 +4246,7 @@ int melee_attack::player_calc_base_unarmed_damage()
     else if (you.has_usable_claws(false))
     {
         // Claw damage only applies for bare hands.
-        damage += player_mutation_level(MUT_CLAWS) * 2;
+        damage += you.has_claws(false) * 2;
         apply_bleeding = true;
     }
 
@@ -4440,7 +4442,7 @@ int melee_attack::mons_calc_damage(const mon_attack_def &attk)
         damage += random2( damage_max );
 
         if (get_equip_race(*weapon) == ISFLAG_ORCISH
-            && attacker->mons_species() == MONS_ORC
+            && mons_genus(attacker->mons_species()) == MONS_ORC
             && coinflip())
         {
             damage++;
@@ -4549,7 +4551,9 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
     if (attacker->id() == MONS_KILLER_KLOWN && attk.type == AT_HIT)
         return (RANDOM_ELEMENT(klown_attack));
 
-    if (attacker->id() == MONS_KRAKEN_TENTACLE && attk.type == AT_TENTACLE_SLAP)
+    if ((attacker->id() == MONS_KRAKEN_TENTACLE
+           || attacker->id() == MONS_ELDRITCH_TENTACLE)
+         && attk.type == AT_TENTACLE_SLAP)
         return ("slap");
 
     static const char *attack_types[] =
@@ -4574,7 +4578,9 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
         "gore",
         "constrict",
         "trample",
-        "trunk-slap"
+        "trunk-slap",
+        "snap closed at",
+        "splash"
     };
 
     ASSERT(attk.type <
@@ -5379,7 +5385,7 @@ bool melee_attack::do_trample()
         coord_def new_pos = defender->pos() + defender->pos() - attacker->pos();
 
         // need a valid tile
-        if (grd(new_pos) < DNGN_SHALLOW_WATER)
+        if (grd(new_pos) < DNGN_SHALLOW_WATER && !defender->is_habitable(new_pos))
             break;
 
         // don't trample into a monster - or do we want to cause a chain
@@ -5531,6 +5537,8 @@ void melee_attack::mons_perform_attack_rounds()
             case AT_KICK:
             case AT_CLAW:
             case AT_GORE:
+            case AT_SNAP:
+            case AT_SPLASH:
                 noise_factor = 125;
                 break;
 
@@ -6260,7 +6268,8 @@ static void stab_message(actor *defender, int stab_bonus)
     case 6:     // big melee, monster surrounded/not paying attention
         if (coinflip())
         {
-            mprf( "You strike %s from a blind spot!",
+            mprf( "You %s %s from a blind spot!",
+                  (you.species == SP_CAT) ? "pounce on" : "strike",
                   defender->name(DESC_NOCAP_THE).c_str() );
         }
         else
@@ -6277,12 +6286,19 @@ static void stab_message(actor *defender, int stab_bonus)
         }
         else
         {
-            mprf( "You strike %s from behind!",
+            mprf( "You %s %s from behind!",
+                  (you.species == SP_CAT) ? "pounce on" : "strike",
                   defender->name(DESC_NOCAP_THE).c_str() );
         }
         break;
     case 2:
     case 1:
+        if (you.species == SP_CAT && coinflip())
+        {
+            mprf("You pounce on the unaware %s!",
+                 defender->name(DESC_PLAIN).c_str());
+            break;
+        }
         mprf( "%s fails to defend %s.",
               defender->name(DESC_CAP_THE).c_str(),
               defender->pronoun(PRONOUN_REFLEXIVE).c_str() );

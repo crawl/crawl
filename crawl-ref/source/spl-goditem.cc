@@ -111,6 +111,7 @@ static bool _mons_hostile(const monster* mon)
 // Returns 0, if monster can be pacified but the attempt failed.
 // Returns 1, if monster is pacified.
 // Returns -1, if monster can never be pacified.
+// Returns -2, if monster can currently not be pacified (asleep)
 static int _can_pacify_monster(const monster* mon, const int healed)
 {
     if (you.religion != GOD_ELYVILON)
@@ -142,7 +143,7 @@ static int _can_pacify_monster(const monster* mon, const int healed)
         return (-1);
 
     if (mon->asleep()) // not aware of what is happening
-        return (0);
+        return (-2);
 
     const int factor = (mons_intel(mon) <= I_ANIMAL)       ? 3 : // animals
                        (is_player_same_species(mon->type)) ? 2   // same species
@@ -231,7 +232,13 @@ static int _healing_spell(int healed, bool divine_ability,
         if (can_pacify == 0)
             canned_msg(MSG_NOTHING_HAPPENS);
         else
-            mpr("You cannot pacify this monster!");
+            if (can_pacify == -2)
+            {
+                mprf("You cannot pacify this monster while %s is sleeping!",
+                     mons->pronoun(PRONOUN_NOCAP).c_str());
+            }
+            else
+                mpr("You cannot pacify this monster!");
         return (0);
     }
 
@@ -408,18 +415,28 @@ int detect_traps(int pow)
     return reveal_traps(range);
 }
 
+// pow -1 for passive
 int detect_items(int pow)
 {
     int items_found = 0;
-    const int map_radius = 8 + random2(8) + pow;
+    int map_radius;
+    if (pow >= 0)
+        map_radius = 8 + random2(8) + pow;
+    else
+    {
+        ASSERT(you.religion == GOD_ASHENZARI);
+        map_radius = std::min(you.piety / 20, LOS_RADIUS);
+        if (map_radius <= 0)
+            return 0;
+    }
 
-    for (radius_iterator ri(you.pos(), map_radius, C_SQUARE); ri; ++ri)
+    for (radius_iterator ri(you.pos(), map_radius, C_ROUND); ri; ++ri)
     {
         // Don't expose new dug out areas:
         // Note: assumptions are being made here about how
         // terrain can change (eg it used to be solid, and
         // thus item free).
-        if (env.map_knowledge(*ri).changed())
+        if (pow != -1 && env.map_knowledge(*ri).changed())
             continue;
 
         if (igrd(*ri) != NON_ITEM
@@ -531,13 +548,47 @@ int detect_creatures(int pow, bool telepathic)
     return (creatures_found);
 }
 
-bool remove_curse(bool suppress_msg)
+static bool _selectively_remove_curse()
 {
+    bool used = false;
+
+    while(1)
+    {
+        int item_slot = prompt_invent_item("Uncurse which item?", MT_INVLIST,
+                                           OSEL_CURSED_WORN, true, true, false);
+        if (prompt_failed(item_slot))
+            return used;
+
+        item_def& item(you.inv[item_slot]);
+
+        if (!item.cursed()
+            || !item_is_equipped(item)
+            || &item == you.weapon()
+               && item.base_type != OBJ_WEAPONS
+               && item.base_type != OBJ_STAVES)
+        {
+            mpr("Choose a cursed equipped item, or Esc to abort.");
+            if (Options.auto_list)
+                more();
+            continue;
+        }
+
+        do_uncurse_item(item);
+        used = true;
+    }
+}
+
+bool remove_curse()
+{
+    if (you.religion == GOD_ASHENZARI)
+        return _selectively_remove_curse();
+
     bool success = false;
 
     // Only cursed *weapons* in hand count as cursed. - bwr
     if (you.weapon()
-        && you.weapon()->base_type == OBJ_WEAPONS
+        && (you.weapon()->base_type == OBJ_WEAPONS
+            || you.weapon()->base_type == OBJ_STAVES)
         && you.weapon()->cursed())
     {
         // Also sets wield_change.
@@ -557,13 +608,10 @@ bool remove_curse(bool suppress_msg)
         }
     }
 
-    if (!suppress_msg)
-    {
-        if (success)
-            mpr("You feel as if something is helping you.");
-        else
-            canned_msg(MSG_NOTHING_HAPPENS);
-    }
+    if (success)
+        mpr("You feel as if something is helping you.");
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
 
     return (success);
 }
@@ -713,6 +761,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool force_full)
     {
         mpr("Walls emerge from the floor!");
         you.update_beholders();
+        you.update_fearmongers();
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);

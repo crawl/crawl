@@ -317,6 +317,7 @@ public:
     bool is_unclean() const;
     bool is_known_chaotic() const;
     bool is_chaotic() const;
+    bool is_artificial() const;
     bool is_insubstantial() const;
     int res_hellfire() const;
     int res_fire() const;
@@ -355,6 +356,7 @@ public:
     bool backlit(bool check_haloed = true, bool self_halo = true) const;
     int halo_radius2() const;
     int silence_radius2() const;
+    bool glows_naturally() const;
     bool petrified() const;
     bool petrifying() const;
 

@@ -1230,60 +1230,6 @@ void yell(bool force)
     noisy(10, you.pos());
 }
 
-bool forget_inventory(bool quiet)
-{
-    ASSERT(!crawl_state.game_is_arena());
-
-    int items_forgotten = 0;
-
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        item_def& item(you.inv[i]);
-        if (!item.defined() || item_is_equipped(item))
-            continue;
-
-        unsigned long orig_flags = item.flags;
-
-        unset_ident_flags(item, ISFLAG_KNOW_CURSE);
-
-        // Don't forget times used or uses left for wands or decks.
-        if (item.base_type != OBJ_WANDS && item.base_type != OBJ_MISCELLANY)
-            unset_ident_flags(item, ISFLAG_KNOW_PLUSES);
-
-        if (!is_artefact(item))
-        {
-            switch (item.base_type)
-            {
-            case OBJ_WEAPONS:
-            case OBJ_ARMOUR:
-            case OBJ_BOOKS:
-            case OBJ_STAVES:
-            case OBJ_MISCELLANY:
-                // Don't forget identity of decks if the player has
-                // used any of its cards, or knows how many are left.
-                if (!is_deck(item) || item.plus2 == 0)
-                    unset_ident_flags(item, ISFLAG_KNOW_TYPE);
-                break;
-
-            default:
-                break;
-            }
-        }
-        // Non-jewellery artefacts can easily be re-identified by
-        // equipping them.
-        else if (item.base_type != OBJ_JEWELLERY)
-            unset_ident_flags(item, ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PROPERTIES);
-
-        if (item.flags != orig_flags)
-            items_forgotten++;
-    }
-
-    if (items_forgotten > 0)
-        mpr("Wait, did you forget something?");
-
-    return (items_forgotten > 0);
-}
-
 inline static dungeon_feature_type _vitrified_feature(dungeon_feature_type feat)
 {
     switch (feat)
@@ -1322,9 +1268,10 @@ bool vitrify_area(int radius)
 
 static void _hell_effects()
 {
-    if (is_sanctuary(you.pos()))
+    if ((you.religion == GOD_ZIN && x_chance_in_y(you.piety, MAX_PIETY))
+        || is_sanctuary(you.pos()))
     {
-        mpr("Zin's power protects you from Hell's scourges!", MSGCH_GOD);
+        mpr("Zin's power protects you from the chaos of Hell!", MSGCH_GOD);
         return;
     }
 
@@ -1989,7 +1936,7 @@ static bool _food_item_needs_time_check(item_def &item)
 
 #define ROTTING_WARNED_KEY "rotting_warned"
 
-static void _rot_inventory_food(long time_delta)
+static void _rot_inventory_food(int time_delta)
 {
     // Update all of the corpses and food chunks in the player's
     // inventory. {should be moved elsewhere - dlb}
@@ -2404,7 +2351,8 @@ void handle_time()
             while (grd(newpos) != DNGN_FLOOR
                        && grd(newpos) != DNGN_SHALLOW_WATER
                    || monster_at(newpos)
-                   || env.cgrid(newpos) != EMPTY_CLOUD);
+                   || env.cgrid(newpos) != EMPTY_CLOUD
+                   || testbits(env.pgrid(newpos), FPROP_NO_JIYVA));
 
             mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, 0, 0, 0, newpos,
                          MHITNOT, 0, GOD_JIYVA);
@@ -2644,7 +2592,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
 // Update the level when the player returns to it.
 //
 //---------------------------------------------------------------
-void update_level(long elapsedTime)
+void update_level(int elapsedTime)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -3218,12 +3166,12 @@ static void _maybe_spawn_mushroom(item_def & corpse, int rot_time)
 // Update all of the corpses and food chunks on the floor.
 //
 //---------------------------------------------------------------
-void update_corpses(long elapsedTime)
+void update_corpses(int elapsedTime)
 {
     if (elapsedTime <= 0)
         return;
 
-    const long rot_time = elapsedTime / 20;
+    const int rot_time = elapsedTime / 20;
 
     for (int c = 0; c < MAX_ITEMS; ++c)
     {
@@ -3278,12 +3226,12 @@ void update_corpses(long elapsedTime)
     }
 }
 
-static void _recharge_rod( item_def &rod, long aut, bool in_inv )
+static void _recharge_rod( item_def &rod, int aut, bool in_inv )
 {
     if (!item_is_rod(rod) || rod.plus >= rod.plus2)
         return;
 
-    long rate = 4 + short(rod.props["rod_enchantment"]);
+    int rate = 4 + short(rod.props["rod_enchantment"]);
 
     rate *= (10 + skill_bump( SK_EVOCATIONS ));
     rate *= aut;
@@ -3313,7 +3261,7 @@ static void _recharge_rod( item_def &rod, long aut, bool in_inv )
     return;
 }
 
-void recharge_rods(long aut, bool level_only)
+void recharge_rods(int aut, bool level_only)
 {
     if (!level_only)
     {

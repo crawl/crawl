@@ -32,6 +32,7 @@
 #include "effects.h"
 #include "env.h"
 #include "food.h"
+#include "godpassive.h"
 #include "godprayer.h"
 #include "hiscores.h"
 #include "invent.h"
@@ -170,7 +171,7 @@ static int _cull_items(void)
     // 3. Avoid monster inventory by iterating over the dungeon grid.
     for (rectangle_iterator ri(1); ri; ++ri)
     {
-        if (grid_distance( you.pos(), *ri ) <= 9)
+        if (distance( you.pos(), *ri ) <= dist_range(9))
             continue;
 
         for (stack_iterator si(*ri); si; ++si)
@@ -553,19 +554,6 @@ void lose_item_stack( const coord_def& where )
     igrd(where) = NON_ITEM;
 }
 
-void destroy_item_stack( int x, int y, int cause )
-{
-    for (stack_iterator si(coord_def(x,y)); si; ++si)
-    {
-        if (si ->defined()) // FIXME is this check necessary?
-        {
-            item_was_destroyed( *si, cause);
-            si->clear();
-        }
-    }
-    igrd[x][y] = NON_ITEM;
-}
-
 static bool _invisible_to_player( const item_def& item )
 {
     return strstr(item.inscription.c_str(), "=k") != 0;
@@ -780,7 +768,7 @@ static void _pickup_menu(int item_link)
 
                 int num_to_take = selected[i].quantity;
                 const bool take_all = (num_to_take == mitm[j].quantity);
-                unsigned long oldflags = mitm[j].flags;
+                iflags_t oldflags = mitm[j].flags;
                 mitm[j].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
                 int result = move_item_to_player( j, num_to_take );
 
@@ -1121,7 +1109,7 @@ bool pickup_single_item(int link, int qty)
     if (qty < 1 || qty > mitm[link].quantity)
         qty = mitm[link].quantity;
 
-    unsigned long oldflags = mitm[link].flags;
+    iflags_t oldflags = mitm[link].flags;
     mitm[link].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
     int num = move_item_to_player( link, qty );
     if (mitm[link].defined())
@@ -1216,7 +1204,7 @@ void pickup()
             if (keyin == 'y' || keyin == 'a')
             {
                 int num_to_take = mitm[o].quantity;
-                const unsigned long old_flags(mitm[o].flags);
+                const iflags_t old_flags(mitm[o].flags);
                 mitm[o].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
                 int result = move_item_to_player( o, num_to_take );
 
@@ -1262,10 +1250,10 @@ bool is_stackable_item( const item_def &item )
     return (false);
 }
 
-unsigned long ident_flags(const item_def &item)
+iflags_t ident_flags(const item_def &item)
 {
-    const unsigned long identmask = full_ident_mask(item);
-    unsigned long flags = item.flags & identmask;
+    const iflags_t identmask = full_ident_mask(item);
+    iflags_t flags = item.flags & identmask;
 
     if ((identmask & ISFLAG_KNOW_TYPE) && item_type_known(item))
         flags |= ISFLAG_KNOW_TYPE;
@@ -1471,6 +1459,16 @@ static void _got_item(item_def& item, int quant)
             you.attribute[ATTR_ABYSSAL_RUNES] += quant;
         else
             you.attribute[ATTR_DEMONIC_RUNES] += quant;
+
+        if (you.religion == GOD_ASHENZARI)
+        {
+            mprf(MSGCH_GOD, "You learn the power of this rune.");
+            // Important!  This should _not_ be scaled by bondage level, as
+            // otherwise people would curse just before picking up.
+            for (int i = 0; i < 10; i++)
+                // do this in pieces because of the high piety taper
+                gain_piety(1, 1);
+        }
     }
 
     item.flags |= ISFLAG_BEEN_IN_INV;
@@ -1647,6 +1645,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     if (!item.slot)
         item.slot = index_to_letter(item.link);
 
+    ash_id_item(item);
     note_inscribe_item(item);
 
     item.quantity = quant_got;
@@ -1829,6 +1828,12 @@ bool copy_item_to_grid( const item_def &item, const coord_def& p,
 
     if (feat_destroys_item(grd(p), item, !silenced(p) && !silent))
     {
+        if (item.base_type == OBJ_BOOKS && item.sub_type != BOOK_MANUAL
+            && item.sub_type != BOOK_DESTRUCTION)
+        {
+            destroy_spellbook(item);
+        }
+
         item_was_destroyed(item, NON_MONSTER);
 
         return (true);
@@ -1919,7 +1924,7 @@ const item_def* top_item_at(const coord_def& where, bool allow_mimic_item)
     if (allow_mimic_item)
     {
         const monster* mon = monster_at(where);
-        if (mon && mons_is_unknown_mimic(mon))
+        if (mon && mons_is_unknown_mimic(mon) && mons_is_item_mimic(mon->type))
             return &get_mimic_item(mon);
     }
 
@@ -2679,7 +2684,7 @@ static void _do_autopickup()
             const bool interesting_pickup
                 = _interesting_explore_pickup(mitm[o]);
 
-            const unsigned long iflags(mitm[o].flags);
+            const iflags_t iflags(mitm[o].flags);
             mitm[o].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
 
             const int result = move_item_to_player(o, num_to_take);

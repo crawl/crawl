@@ -14,6 +14,7 @@
 #include "areas.h"
 #include "arena.h"
 #include "branch.h"
+#include "colour.h"
 #include "coord.h"
 #include "coordit.h"
 #include "directn.h"
@@ -23,7 +24,9 @@
 #include "externs.h"
 #include "options.h"
 #include "ghost.h"
+#include "itemname.h"
 #include "lev-pand.h"
+#include "libutil.h"
 #include "message.h"
 #include "mislead.h"
 #include "mon-behv.h"
@@ -35,6 +38,7 @@
 #include "player.h"
 #include "random.h"
 #include "religion.h"
+#include "shopping.h"
 #include "sprint.h"
 #include "state.h"
 #include "stuff.h"
@@ -79,8 +83,6 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                                           int *lev_mons,
                                           bool *chose_ood_monster);
 
-static void _define_zombie(monster* mon, monster_type ztype, monster_type cs,
-                           int power, coord_def pos);
 static monster_type _band_member(band_type band, int power);
 static band_type _choose_band(int mon_type, int power, int &band_size,
                               bool& natural_leader);
@@ -188,6 +190,14 @@ bool monster_habitable_grid(monster_type mt,
     // is generally considered compatible with shallow water.
     if (mt == MONS_FIRE_ELEMENTAL && feat_is_watery(actual_grid))
         return (false);
+
+    if (actual_grid == DNGN_TEMP_PORTAL)
+    {
+        if (mt == MONS_ELDRITCH_TENTACLE || mt == MONS_ELDRITCH_TENTACLE_SEGMENT)
+            return (true);
+        else
+            return (false);
+    }
 
     if (feat_compatible(feat_preferred, actual_grid)
         || (feat_nonpreferred != feat_preferred
@@ -1117,7 +1127,7 @@ int place_monster(mgen_data mg, bool force_pos)
             switch (mg.proximity)
             {
             case PROX_ANYWHERE:
-                if (grid_distance( you.pos(), mg.pos ) < 2 + random2(3))
+                if (distance( you.pos(), mg.pos ) < dist_range(2 + random2(3)))
                     proxOK = false;
                 break;
 
@@ -1283,8 +1293,9 @@ int place_monster(mgen_data mg, bool force_pos)
         {
             menv[band_id].flags |= MF_BAND_MEMBER;
             // Priestly band leaders should have an entourage of the
-            // same religion.
-            if (priest)
+            // same religion, unless members of that entourage already
+            // have a different one.
+            if (priest && menv[band_id].god == GOD_NO_GOD)
                 menv[band_id].god = mon->god;
 
             if (mon->type == MONS_PIKEL)
@@ -1394,7 +1405,7 @@ static int _place_monster_aux(const mgen_data &mg,
         return (-1);
     }
 
-    if (mons_is_mimic(mg.cls))
+    if (mons_is_item_mimic(mg.cls))
     {
         // Mimics who mimic thin air get the axe.
         if (!give_mimic_item(mon))
@@ -1411,7 +1422,17 @@ static int _place_monster_aux(const mgen_data &mg,
 
     // Generate a brand shiny new monster, or zombie.
     if (mons_class_is_zombified(mg.cls))
-        _define_zombie(mon, mg.base_type, mg.cls, mg.power, fpos);
+    {
+        monster_type ztype = mg.base_type;
+
+        if (ztype == MONS_NO_MONSTER)
+        {
+            ztype = pick_local_zombifiable_monster(mg.power, true, mg.cls,
+                                                   fpos);
+        }
+
+        define_zombie(mon, ztype, mg.cls);
+    }
     else
         define_monster(mon);
 
@@ -1424,7 +1445,14 @@ static int _place_monster_aux(const mgen_data &mg,
     // Not a god gift, give priestly monsters a god.
     else if (mons_class_flag(mg.cls, M_PRIEST))
     {
-        if (mg.cls == MONS_WIGLAF)
+        // Deep dwarf berserkers belong to Trog.
+        if (mg.cls == MONS_DEEP_DWARF_BERSERKER)
+            mon->god = GOD_TROG;
+        // Deep dwarf death knights belong to Yredelemnul.
+        else if (mg.cls == MONS_DEEP_DWARF_DEATH_KNIGHT)
+            mon->god = GOD_YREDELEMNUL;
+        // Wiglaf belongs to Okawaru.
+        else if (mg.cls == MONS_WIGLAF)
             mon->god = GOD_OKAWARU;
         else
         {
@@ -1446,17 +1474,20 @@ static int _place_monster_aux(const mgen_data &mg,
             }
         }
     }
+    // The royal jelly belongs to Jiyva.
+    else if (mg.cls == MONS_ROYAL_JELLY)
+        mon->god = GOD_JIYVA;
+    // Mennas belongs to Zin.
+    else if (mg.cls == MONS_MENNAS)
+        mon->god = GOD_ZIN;
     // 1 out of 7 non-priestly orcs are unbelievers.
     else if (mons_genus(mg.cls) == MONS_ORC)
     {
         if (!one_chance_in(7))
             mon->god = GOD_BEOGH;
     }
-    // The royal jelly belongs to Jiyva.
-    else if (mg.cls == MONS_ROYAL_JELLY)
-        mon->god = GOD_JIYVA;
-    // Angels and Daevas belong to TSO, but 1 out of 7 in the Abyss are
-    // adopted by Xom.
+    // Angels (other than Mennas) and Daevas belong to TSO, but 1 out of
+    // 7 in the Abyss are adopted by Xom.
     else if (mons_class_holiness(mg.cls) == MH_HOLY)
     {
         if (mg.level_type != LEVEL_ABYSS || !one_chance_in(7))
@@ -1542,6 +1573,83 @@ static int _place_monster_aux(const mgen_data &mg,
         mon->add_ench(ENCH_EXPLODING);
     }
 
+    if (mons_is_feat_mimic(mg.cls))
+    {
+        switch (mg.cls)
+        {
+        case MONS_DOOR_MIMIC:
+            // Requires no initialisation.
+            break;
+
+        case MONS_PORTAL_MIMIC:
+        {
+            if (coinflip())
+            {
+                const char *portals[3] = {
+                    "gateway to a bazaar",
+                    "glowing drain",
+                    "sand-covered staircase",
+                };
+
+                int colors[3] = {
+                    ETC_SHIMMER_BLUE,
+                    LIGHTGREEN,
+                    BROWN
+                };
+
+                int portal_choice = random2(3);
+
+                mon->props["portal_desc"] = std::string(portals[portal_choice]);
+                mon->colour = colors[portal_choice];
+            }
+            else
+            {
+                mon->colour = CYAN;
+            }
+            break;
+        }
+
+        case MONS_TRAP_MIMIC:
+            mon->props["trap_type"] = random_trap(DNGN_TRAP_MECHANICAL);
+            break;
+
+        // Needs a more complicated block.
+        case MONS_SHOP_MIMIC:
+        {
+            // Otherwise we need to make a random name.
+            shop_type type = static_cast<shop_type>(SHOP_WEAPON+random2(NUM_SHOPS-1));
+
+            std::string sh_name = apostrophise(make_name(random_int(), false)) +
+                    " " + shop_type_name(type);
+            std::string sh_suffix = shop_type_suffix(type, fpos);
+            if (!sh_suffix.empty())
+                sh_name += " " + sh_suffix;
+
+            mon->props["shop_name"] = sh_name;
+            mon->props["shop_type"] = type;
+            break;
+        }
+
+        case MONS_STAIR_MIMIC:
+            break;
+
+        // Just needs a selection of random fountains.
+        case MONS_FOUNTAIN_MIMIC:
+        {
+            dungeon_feature_type fount = static_cast<dungeon_feature_type>(
+                DNGN_FOUNTAIN_BLUE+random2(DNGN_PERMADRY_FOUNTAIN-DNGN_FOUNTAIN_BLUE));
+            const feature_def fount_d = get_feature_def(fount);
+            mon->props["fountain_type"] = static_cast<short>(fount);
+            mon->colour = fount_d.colour;
+            break;
+        }
+        default:
+            break;
+        }
+    }
+
+
+
     if (!crawl_state.game_is_arena() && you.misled())
         update_mislead_monster(mon);
 
@@ -1567,7 +1675,10 @@ static int _place_monster_aux(const mgen_data &mg,
 
     if (mg.cls == MONS_DANCING_WEAPON)
     {
-        give_item(mon->mindex(), mg.power, summoned);
+        if (mg.props.exists(TUKIMA_WEAPON))
+            give_specific_item(mon, mg.props[TUKIMA_WEAPON].get_item());
+        else
+            give_item(mon->mindex(), mg.power, summoned);
 
         // Dancing weapons *always* have a weapon. Fail to create them
         // otherwise.
@@ -1637,7 +1748,12 @@ static int _place_monster_aux(const mgen_data &mg,
 
     if (summoned)
     {
-        mon->mark_summoned(mg.abjuration_duration, true,
+        // Instead of looking for dancing weapons, look for Tukima's dance.
+        // Dancing weapons can be created with shadow creatures. {due}
+        bool mark_items = mg.summon_type != SPELL_TUKIMAS_DANCE;
+
+        mon->mark_summoned(mg.abjuration_duration,
+                           mark_items,
                            mg.summon_type);
     }
     ASSERT(!invalid_monster_index(mg.foe)
@@ -1668,6 +1784,9 @@ static int _place_monster_aux(const mgen_data &mg,
     else
     {
         blame_prefix = "created by ";
+
+        if (mg.cls == MONS_ELDRITCH_TENTACLE || mg.cls == MONS_ELDRITCH_TENTACLE_SEGMENT)
+            blame_prefix = "called by ";
     }
 
     if (!mg.non_actor_summoner.empty())
@@ -1738,7 +1857,12 @@ static int _place_monster_aux(const mgen_data &mg,
     if (crawl_state.game_is_arena())
         arena_placed_monster(mon);
     else if (!Generating_Level && you.can_see(mon))
+    {
+        // FIXME: This causes "comes into view" messages at the
+        //        wrong time, since code checks for placement
+        //        success before printing messages.
         handle_seen_interrupt(mon);
+    }
 
     return (mon->mindex());
 }
@@ -1746,6 +1870,7 @@ static int _place_monster_aux(const mgen_data &mg,
 monster_type pick_random_zombie()
 {
     static std::vector<monster_type> zombifiable;
+
     if (zombifiable.empty())
     {
         for (int i = 0; i < NUM_MONSTERS; ++i)
@@ -1754,17 +1879,18 @@ monster_type pick_random_zombie()
                 continue;
 
             const monster_type mcls = static_cast<monster_type>(i);
+
             if (!mons_zombie_size(mcls) || mons_is_unique(mcls))
                 continue;
 
             zombifiable.push_back(mcls);
         }
     }
+
     return (zombifiable[random2(zombifiable.size())]);
 }
 
-// Check base monster class against zombie type and position
-// if set.
+// Check base monster class against zombie type and position if set.
 static bool _good_zombie(monster_type base, monster_type cs,
                          const coord_def& pos)
 {
@@ -1783,8 +1909,8 @@ static bool _good_zombie(monster_type base, monster_type cs,
         return (false);
     }
 
-    // Size must match, but you can make a spectral thing out
-    // of anything.
+    // Size must match, but you can make a spectral thing out of
+    // anything.
     if (cs != MONS_SPECTRAL_THING
         && mons_zombie_size(base) != zombie_class_size(cs))
     {
@@ -1868,60 +1994,60 @@ monster_type pick_local_zombifiable_monster(int power, bool hack_hd,
     }
 }
 
-static void _define_zombie(monster* mon, monster_type ztype, monster_type cs,
-                           int power, coord_def pos)
+void roll_zombie_hp(monster* mon)
 {
-    ASSERT(mons_class_is_zombified(cs));
-
-    monster_type base;
-    if (ztype == MONS_NO_MONSTER)
-        base = pick_local_zombifiable_monster(power, true, cs, pos);
-    else
-        base = mons_species(ztype);
-
-    ASSERT(zombie_class_size(cs) == Z_NOZOMBIE
-           || zombie_class_size(cs) == mons_zombie_size(base));
-
-    // Set type to the base type to calculate appropriate stats.
-    mon->type = base;
-    define_monster(mon);
-
-    mon->type         = cs;
-    mon->base_monster = base;
-
-    mon->colour       = mons_class_colour(cs);
-    mon->speed        = mons_class_zombie_base_speed(mon->base_monster);
-
-    // Turn off all melee ability flags except dual-wielding.
-#if TAG_MAJOR_VERSION == 30
-    mon->flags       &= ~(MF_FIGHTER | MF_ARCHER);
-#else
-    mon->flags       &= (~MF_MELEE_MASK | MF_TWOWEAPON);
-#endif
-
-    // Turn off all spellcasting and priestly ability flags.
-    // Hack - kraken get to keep their spell-like ability.
-    if (mon->base_monster != MONS_KRAKEN)
-#if TAG_MAJOR_VERSION == 30
-        mon->flags   &= ~(MF_SPELLCASTER | MF_ACTUAL_SPELLS | MF_PRIEST);
-#else
-        mon->flags   &= ~MF_SPELL_MASK;
-#endif
+    ASSERT(mons_class_is_zombified(mon->type));
 
     int hp = 0;
-    int acmod = 0, evmod = 0;
-    switch (cs)
+
+    switch (mon->type)
     {
     case MONS_ZOMBIE_SMALL:
     case MONS_ZOMBIE_LARGE:
-        hp    = hit_points(mon->hit_dice, 6, 5);
+        hp = hit_points(mon->hit_dice, 6, 5);
+        break;
+
+    case MONS_SKELETON_SMALL:
+    case MONS_SKELETON_LARGE:
+        hp = hit_points(mon->hit_dice, 5, 4);
+        break;
+
+    case MONS_SIMULACRUM_SMALL:
+    case MONS_SIMULACRUM_LARGE:
+        // Simulacra aren't tough, but you can create piles of them. - bwr
+        hp = hit_points(mon->hit_dice, 1, 4);
+        break;
+
+    case MONS_SPECTRAL_THING:
+        hp = hit_points(mon->hit_dice, 4, 4);
+        break;
+
+    default:
+        ASSERT(false);
+        break;
+    }
+
+    mon->max_hit_points = std::max(hp, 1);
+    mon->hit_points     = mon->max_hit_points;
+}
+
+static void _roll_zombie_ac_ev(monster* mon)
+{
+    ASSERT(mons_class_is_zombified(mon->type));
+
+    int acmod = 0;
+    int evmod = 0;
+
+    switch (mon->type)
+    {
+    case MONS_ZOMBIE_SMALL:
+    case MONS_ZOMBIE_LARGE:
         acmod = -2;
         evmod = -5;
         break;
 
     case MONS_SKELETON_SMALL:
     case MONS_SKELETON_LARGE:
-        hp    = hit_points(mon->hit_dice, 5, 4);
         acmod = -6;
         evmod = -7;
         break;
@@ -1929,13 +2055,11 @@ static void _define_zombie(monster* mon, monster_type ztype, monster_type cs,
     case MONS_SIMULACRUM_SMALL:
     case MONS_SIMULACRUM_LARGE:
         // Simulacra aren't tough, but you can create piles of them. - bwr
-        hp    = hit_points(mon->hit_dice, 1, 4);
         acmod = -2;
-        acmod = -5;
+        evmod = -5;
         break;
 
     case MONS_SPECTRAL_THING:
-        hp    = hit_points(mon->hit_dice, 4, 4);
         acmod = +2;
         evmod = -5;
         break;
@@ -1945,9 +2069,46 @@ static void _define_zombie(monster* mon, monster_type ztype, monster_type cs,
         break;
     }
 
-    mon->hit_points = mon->max_hit_points = hp;
-    mon->ac         = std::max(mon->ac + acmod, 0);
-    mon->ev         = std::max(mon->ev + evmod, 0);
+    mon->ac = std::max(mon->ac + acmod, 0);
+    mon->ev = std::max(mon->ev + evmod, 0);
+}
+
+void define_zombie(monster* mon, monster_type ztype, monster_type cs)
+{
+    ASSERT(ztype != MONS_NO_MONSTER);
+    ASSERT(mons_class_is_zombified(cs));
+
+    monster_type base = mons_species(ztype);
+
+    ASSERT(zombie_class_size(cs) == Z_NOZOMBIE
+           || zombie_class_size(cs) == mons_zombie_size(base));
+
+    // Set type to the original type to calculate appropriate stats.
+    mon->type = ztype;
+    define_monster(mon);
+
+    mon->type         = cs;
+    mon->base_monster = base;
+
+    mon->colour       = mons_class_colour(mon->type);
+    mon->speed        = mons_class_zombie_base_speed(mon->base_monster);
+
+    // Turn off all melee ability flags except dual-wielding.
+    mon->flags       &= (~MF_MELEE_MASK | MF_TWO_WEAPONS);
+
+    // Turn off all spellcasting and priestly ability flags.
+    // Hack - kraken get to keep their spell-like ability.
+    if (mon->base_monster != MONS_KRAKEN)
+        mon->flags   &= ~MF_SPELL_MASK;
+
+    // Turn off regeneration if the base monster cannot regenerate.
+    // This is needed for e.g. spectral things of non-regenerating
+    // monsters.
+    if (!mons_class_can_regenerate(mon->base_monster))
+        mon->flags   |= MF_NO_REGEN;
+
+    roll_zombie_hp(mon);
+    _roll_zombie_ac_ev(mon);
 }
 
 static band_type _choose_band(int mon_type, int power, int &band_size,
@@ -2049,6 +2210,20 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
     case MONS_GNOLL:
         band = BAND_GNOLLS;
         band_size = (coinflip() ? 3 : 2);
+        break;
+    case MONS_TROLLKONOR:
+        natural_leader = true;
+        band = BAND_TROLLKONOR;
+        band_size = 1;
+        break;
+    case MONS_DEEP_DWARF_SCION:
+        band = BAND_DEEP_DWARF;
+        band_size = (one_chance_in(5)? 2: 1) + random2(3);
+        break;
+    case MONS_DEEP_DWARF_ARTIFICER:
+    case MONS_DEEP_DWARF_DEATH_KNIGHT:
+        band = BAND_DEEP_DWARF;
+        band_size = 3 + random2(4);
         break;
     case MONS_GRUM:
         natural_leader = true;
@@ -2225,6 +2400,11 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
 
     case MONS_BLINK_FROG:
         band = BAND_BLINK_FROGS;
+        band_size = 2 + random2(3);
+        break;
+
+    case MONS_WIGHT:
+        band = BAND_WIGHTS;
         band_size = 2 + random2(3);
         break;
 
@@ -2447,6 +2627,20 @@ static monster_type _band_member(band_type band, int power)
         mon_type = MONS_GNOLL;
         break;
 
+    case BAND_TROLLKONOR:
+        mon_type = (power > 11 && one_chance_in(4)) ?
+                   MONS_ROCK_TROLL: MONS_TROLL;
+        break;
+
+    case BAND_DEEP_DWARF:
+        mon_type = static_cast<monster_type>(random_choose_weighted(
+                                           2, MONS_DEEP_DWARF_BERSERKER,
+                                           1, MONS_DEEP_DWARF_DEATH_KNIGHT,
+                                           6, MONS_DEEP_DWARF_NECROMANCER,
+                                          31, MONS_DEEP_DWARF,
+                                           0));
+        break;
+
     case BAND_BUMBLEBEES:
         mon_type = MONS_BUMBLEBEE;
         break;
@@ -2619,6 +2813,9 @@ static monster_type _band_member(band_type band, int power)
         break;
     case BAND_BLINK_FROGS:
         mon_type = MONS_BLINK_FROG;
+        break;
+    case BAND_WIGHTS:
+        mon_type = MONS_WIGHT;
         break;
     case BAND_SKELETAL_WARRIORS:
         mon_type = MONS_SKELETAL_WARRIOR;

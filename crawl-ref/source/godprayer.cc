@@ -12,6 +12,7 @@
 #include "food.h"
 #include "fprop.h"
 #include "godabil.h"
+#include "godpassive.h"
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
@@ -98,14 +99,12 @@ bool god_accepts_prayer(god_type god)
     case GOD_KIKUBAAQUDGHA:
         return (you.piety >= piety_breakpoint(4));
 
-    case GOD_YREDELEMNUL:
-        return (yred_injury_mirror(false));
-
     case GOD_JIYVA:
         return (jiyva_can_paralyse_jellies());
 
     case GOD_BEOGH:
     case GOD_NEMELEX_XOBEH:
+    case GOD_ASHENZARI:
         return (true);
 
     default:
@@ -182,7 +181,8 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     }
 
     you.wield_change = true;
-    you.num_gifts[god]++;
+    you.num_current_gifts[god]++;
+    you.num_total_gifts[god]++;
     std::string desc  = old_name + " ";
             desc += (god == GOD_SHINING_ONE   ? "blessed by the Shining One" :
                      god == GOD_LUGONU        ? "corrupted by Lugonu" :
@@ -244,7 +244,7 @@ static bool _altar_prayer()
     // TSO blesses weapons with holy wrath, and long blades and demon
     // whips specially.
     if (you.religion == GOD_SHINING_ONE
-        && !you.num_gifts[GOD_SHINING_ONE]
+        && !you.num_total_gifts[GOD_SHINING_ONE]
         && !player_under_penance()
         && you.piety > 160)
     {
@@ -261,7 +261,7 @@ static bool _altar_prayer()
 
     // Lugonu blesses weapons with distortion.
     if (you.religion == GOD_LUGONU
-        && !you.num_gifts[GOD_LUGONU]
+        && !you.num_total_gifts[GOD_LUGONU]
         && !player_under_penance()
         && you.piety > 160)
     {
@@ -273,7 +273,7 @@ static bool _altar_prayer()
 
     // Kikubaaqudgha blesses weapons with pain, or gives you a Necronomicon.
     if (you.religion == GOD_KIKUBAAQUDGHA
-        && !you.num_gifts[GOD_KIKUBAAQUDGHA]
+        && !you.num_total_gifts[GOD_KIKUBAAQUDGHA]
         && !player_under_penance()
         && you.piety > 160)
     {
@@ -314,7 +314,8 @@ static bool _altar_prayer()
                 simple_god_message(" grants you a gift!");
                 more();
 
-                you.num_gifts[you.religion]++;
+                you.num_current_gifts[you.religion]++;
+                you.num_total_gifts[you.religion]++;
                 did_bless = true;
                 take_note(Note(NOTE_GOD_GIFT, you.religion));
                 mitm[thing_created].inscription = "god gift";
@@ -428,6 +429,7 @@ void pray()
         || you.religion == GOD_BEOGH
         || you.religion == GOD_NEMELEX_XOBEH
         || you.religion == GOD_JIYVA
+        || you.religion == GOD_ASHENZARI
         || god_likes_fresh_corpses(you.religion))
     {
         you.duration[DUR_PRAYER] = 1;
@@ -438,11 +440,13 @@ void pray()
         you.duration[DUR_PRAYER] = 20;
     }
 
-    // Gods who like fresh corpses, Kikuites, Beoghites and Nemelexites
-    // offer the items they're standing on.
+    // Gods who like fresh corpses, Kikuites, Beoghites, Nemelexites and
+    // Ashenzariites offer the items they're standing on.
     if (altar_god == GOD_NO_GOD
         && (god_likes_fresh_corpses(you.religion)
-            || you.religion == GOD_BEOGH || you.religion == GOD_NEMELEX_XOBEH))
+            || you.religion == GOD_BEOGH
+            || you.religion == GOD_NEMELEX_XOBEH
+            || you.religion == GOD_ASHENZARI))
     {
         offer_items();
     }
@@ -553,9 +557,28 @@ static void _give_sac_group_feedback(int which)
          names[which]);
 }
 
+static void _ashenzari_sac_scroll(const item_def& item)
+{
+    int scr = (you.species == SP_CAT) ? SCR_CURSE_JEWELLERY :
+              random_choose(SCR_CURSE_WEAPON, SCR_CURSE_ARMOUR,
+                            SCR_CURSE_JEWELLERY, -1);
+    int it = items(0, OBJ_SCROLLS, scr, true, 0, MAKE_ITEM_NO_RACE,
+                   0, 0, GOD_ASHENZARI);
+    if (it == NON_ITEM)
+    {
+        mpr("You feel the world is against you.");
+        return;
+    }
+
+    mitm[it].quantity = 1;
+    if (!move_item_to_grid(&it, you.pos(), true))
+        destroy_item(it, true); // can't happen
+}
+
 // God effects of sacrificing one item from a stack (e.g., a weapon, one
 // out of 20 arrows, etc.).  Does not modify the actual item in any way.
-static piety_gain_t _sacrifice_one_item_noncount(const item_def& item)
+static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
+       int *js)
 {
     piety_gain_t relative_piety_gain = PIETY_NONE;
 
@@ -664,7 +687,13 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item)
             gain_piety(stepped, 50);
             relative_piety_gain = (piety_gain_t)std::min(2,
                                     div_rand_round(stepped, 50));
+            jiyva_slurp_bonus(div_rand_round(stepped, 50), js);
+            break;
         }
+
+        case GOD_ASHENZARI:
+            _ashenzari_sac_scroll(item);
+            break;
 
         default:
             break;
@@ -674,12 +703,12 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item)
     return (relative_piety_gain);
 }
 
-piety_gain_t sacrifice_item_stack(const item_def& item)
+piety_gain_t sacrifice_item_stack(const item_def& item, int *js)
 {
     piety_gain_t relative_gain = PIETY_NONE;
     for (int j = 0; j < item.quantity; ++j)
     {
-        const piety_gain_t gain = _sacrifice_one_item_noncount(item);
+        const piety_gain_t gain = _sacrifice_one_item_noncount(item, js);
 
         // Update piety gain if necessary.
         if (gain != PIETY_NONE)
@@ -819,5 +848,7 @@ void offer_items()
                 simple_god_message(" does not care about gold!");
             else
                 simple_god_message(" expects you to use your decks, not offer them!");
+        else if (you.religion == GOD_ASHENZARI)
+            simple_god_message(" can corrupt only scrolls of remove curse.");
     }
 }

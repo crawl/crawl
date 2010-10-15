@@ -2048,7 +2048,7 @@ static void _dgn_register_metatables(lua_State *ls)
     clua_register_metatable(ls,
                             VAULT_PLACEMENT_METATABLE,
                             dgn_vaultplacement_ops,
-                            lua_object_gc<vault_placement*>);
+                            lua_object_gc<vault_placement>);
 }
 
 void dluaopen_dgn(lua_State *ls)

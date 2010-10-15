@@ -42,6 +42,7 @@ enum ability_type
     ABIL_EVOKE_STOP_LEVITATING,
     ABIL_END_TRANSFORMATION,           //   55
     ABIL_STOP_FLYING,
+    ABIL_BREATHE_MEPHITIC,
 
     // Divine abilities
     ABIL_ZIN_SUSTENANCE = 109,              //  109
@@ -60,6 +61,8 @@ enum ability_type
     ABIL_YRED_ANIMATE_DEAD,
     ABIL_YRED_DRAIN_LIFE,
     ABIL_YRED_ENSLAVE_SOUL,
+    // Placeholder for Animate Remains or Animate Dead.
+    ABIL_YRED_ANIMATE_REMAINS_OR_DEAD,
     // 160 - reserved for Vehumet
     ABIL_OKAWARU_MIGHT = 170,               //  170
     // Okawaru no longer heals (JPEG)
@@ -108,6 +111,7 @@ enum ability_type
     ABIL_CHEIBRIADOS_TIME_STEP,             // 250
     ABIL_CHEIBRIADOS_TIME_BEND,
     ABIL_CHEIBRIADOS_SLOUCH,
+    ABIL_ASHENZARI_SCRYING,
 
     // Vampire abilities
     ABIL_TRAN_BAT = 260,
@@ -810,6 +814,11 @@ enum conduct_type
     DID_UNCLEAN_KILLED_BY_SERVANT,        // Zin
     DID_CHAOTIC_KILLED_BY_SERVANT,        // Zin
     DID_ATTACK_IN_SANCTUARY,              // Zin
+    DID_KILL_ARTIFICIAL,                  // Yredelemnul
+    DID_ARTIFICIAL_KILLED_BY_UNDEAD_SLAVE,// Yredelemnul
+    DID_ARTIFICIAL_KILLED_BY_SERVANT,     // Yredelemnul
+    DID_DESTROY_SPELLBOOK,                // Sif Muna
+    DID_EXPLORATION,                      // Ashenzari, wrath timers
 
     NUM_CONDUCTS
 };
@@ -1137,6 +1146,7 @@ enum dungeon_feature_type
     // Portals to various places unknown.
     DNGN_ENTER_PORTAL_VAULT = 160,
     DNGN_EXIT_PORTAL_VAULT,
+    DNGN_TEMP_PORTAL,
 
     // Order of altars must match order of gods (god_type)
     DNGN_ALTAR_FIRST_GOD = 180,        // 180
@@ -1157,7 +1167,8 @@ enum dungeon_feature_type
     DNGN_ALTAR_JIYVA,
     DNGN_ALTAR_FEDHAS,
     DNGN_ALTAR_CHEIBRIADOS,
-    DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_CHEIBRIADOS,
+    DNGN_ALTAR_ASHENZARI,
+    DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_ASHENZARI,
 
     DNGN_FOUNTAIN_BLUE = 200,          //  200
     DNGN_FOUNTAIN_SPARKLING,           // aka 'Magic Fountain' {dlb}
@@ -1238,11 +1249,15 @@ enum duration_type
     DUR_LOWERED_MR,
     DUR_REPEL_STAIRS_MOVE,
     DUR_REPEL_STAIRS_CLIMB,
+    DUR_COLOUR_SMOKE_TRAIL,
     DUR_SLIMIFY,
     DUR_TIME_STEP,
     DUR_ICEMAIL_DEPLETED,     // Wait this many turns for full Icemail
     DUR_MISLED,
     DUR_QUAD_DAMAGE,
+    DUR_AFRAID,
+    DUR_MIRROR_DAMAGE,
+    DUR_SCRYING,
 
     NUM_DURATIONS
 };
@@ -1298,9 +1313,17 @@ enum enchant_type
     ENCH_AWAKEN_FOREST,
     ENCH_EXPLODING,
     ENCH_BLEED,
+    ENCH_PORTAL_TIMER,
+    ENCH_SEVERED,
     ENCH_ANTIMAGIC,
     ENCH_FADING_AWAY,
     ENCH_PREPARING_RESURRECT,
+    ENCH_REGENERATION,
+    ENCH_RAISED_MR,
+    ENCH_MIRROR_DAMAGE,
+    ENCH_STONESKIN,
+    ENCH_FEAR_INSPIRING,
+    ENCH_PORTAL_PACIFIED,
 
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
@@ -1400,6 +1423,7 @@ enum god_type
     GOD_JIYVA,
     GOD_FEDHAS,
     GOD_CHEIBRIADOS,
+    GOD_ASHENZARI,
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,
@@ -1608,6 +1632,7 @@ enum map_marker_type
     MAT_CORRUPTION_NEXUS,
     MAT_WIZ_PROPS,
     MAT_TOMB,
+    MAT_MALIGN,
     NUM_MAP_MARKER_TYPES,
     MAT_ANY,
 };
@@ -1675,11 +1700,7 @@ enum targ_mode_type
 // NOTE: Changing this order will break saves!
 enum monster_type                      // (int) menv[].type
 {
-#if TAG_MAJOR_VERSION == 30
-    MONS_GIANT_ANT,                    //    0
-#else
     MONS_PROGRAM_BUG,                  //    0
-#endif
     MONS_GIANT_BAT,
     MONS_CENTAUR,
     MONS_RED_DEVIL,
@@ -1892,7 +1913,7 @@ enum monster_type                      // (int) menv[].type
 
     MONS_HYPERACTIVE_BALLISTOMYCETE,
     MONS_HALFLING,              // for recolouring only.  And let's remove them!
-    MONS_FELID,                 // reserved.  Miaow!
+    MONS_FELID,                 // for recolouring only.  Miaow!
     MONS_SPIDER,                // for recolouring, for now.
       MONS_UNUSED_211,
       MONS_UNUSED_212,
@@ -1933,11 +1954,7 @@ enum monster_type                      // (int) menv[].type
     MONS_GARGOYLE,
     MONS_METAL_GARGOYLE,
     MONS_MOLTEN_GARGOYLE,
-#if TAG_MAJOR_VERSION == 30
-    MONS_PROGRAM_BUG,                  //  250
-#else
     MONS_GIANT_ANT,                    //  250
-#endif
 // BCR - begin first batch of uniques.
     MONS_MNOLEG,
     MONS_LOM_LOBON,
@@ -1947,7 +1964,7 @@ enum monster_type                      // (int) menv[].type
       MONS_UNUSED_256,
       MONS_UNUSED_257,
       MONS_UNUSED_258,
-      MONS_UNUSED_259,
+    MONS_PARACELSUS,
 // BCR - End first batch of uniques.
     MONS_NAGA_MAGE,                    //  260
     MONS_NAGA_WARRIOR,
@@ -1980,7 +1997,7 @@ enum monster_type                      // (int) menv[].type
     MONS_EROLCHA,
     MONS_DONALD,
     MONS_URUG,
-    MONS_UNUSED_UNIQUE,                //  290
+      MONS_UNUSED_UNIQUE,              //  290
     MONS_JOSEPH,
     MONS_SNORG, // was Anita - Snorg is correct 16jan2000 {dlb}
     MONS_ERICA,
@@ -2032,14 +2049,15 @@ enum monster_type                      // (int) menv[].type
 
     MONS_DEEP_ELF_BLADEMASTER,
     MONS_DEEP_ELF_MASTER_ARCHER,
+
     MONS_DEEP_DWARF,
-      MONS_UNUSED_331,
-      MONS_UNUSED_332,
-      MONS_UNUSED_333,
-      MONS_UNUSED_334,
-      MONS_UNUSED_335,
-      MONS_UNUSED_336,
-      MONS_UNUSED_337,
+    MONS_DEEP_DWARF_SCION,
+    MONS_DEEP_DWARF_ARTIFICER,
+    MONS_DEEP_DWARF_NECROMANCER,
+    MONS_DEEP_DWARF_BERSERKER,
+    MONS_DEEP_DWARF_DEATH_KNIGHT,
+    MONS_DEEP_DWARF_UNBORN,
+    MONS_NISSE,
       MONS_UNUSED_338,
       MONS_UNUSED_339,
 
@@ -2115,7 +2133,7 @@ enum monster_type                      // (int) menv[].type
     MONS_KOMODO_DRAGON,                //  406
 
     MONS_PLAYER_ILLUSION,
-      MONS_UNUSED_408,
+    MONS_HELL_DEMON,
       MONS_UNUSED_409,
       MONS_UNUSED_410,
       MONS_UNUSED_411,
@@ -2206,17 +2224,20 @@ enum monster_type                      // (int) menv[].type
     MONS_IRON_GIANT,
     MONS_NELLIE,
     MONS_IRON_ELEMENTAL,
-    MONS_GIANT_SCORPION,
+    MONS_EMPEROR_SCORPION,
     MONS_GHOST_MOTH,
     MONS_JUMPING_SPIDER,
-    MONS_TARANTELLA,                   // 492
+    MONS_ELDRITCH_TENTACLE,
+    MONS_ELDRITCH_TENTACLE_SEGMENT,
+    MONS_TARANTELLA,
     MONS_SILENT_SPECTRE,
-      MONS_UNUSED_494,
-      MONS_UNUSED_495,
-      MONS_UNUSED_496,
-      MONS_UNUSED_497,
-      MONS_UNUSED_498,
-      MONS_UNUSED_499,
+    // Dwarf Hall monsters
+    MONS_WITCH,
+    MONS_EVIL_WITCH,
+    MONS_FOREST_WITCH,
+    MONS_HULDRA,
+    MONS_TROLLKONOR,
+    MONS_GREATER_WRAITH,
 
     // Spriggans:
     MONS_SPRIGGAN,
@@ -2240,6 +2261,21 @@ enum monster_type                      // (int) menv[].type
     MONS_PALADIN,
     MONS_APIS,
     MONS_HOLY_DRAGON,
+
+    // New mimics
+    MONS_DOOR_MIMIC,
+    MONS_PORTAL_MIMIC,
+    MONS_TRAP_MIMIC,
+    MONS_STAIR_MIMIC,
+    MONS_SHOP_MIMIC,
+    MONS_FOUNTAIN_MIMIC,
+
+    // And some new new monsters for good measure
+    MONS_BOG_MUMMY,
+    MONS_FIRECRAB,
+    MONS_SKY_BEAST,
+    MONS_LABORATORY_RAT,
+    MONS_PORCUPINE,
 
     // Testing monsters
     MONS_TEST_SPAWNER,
@@ -2305,64 +2341,6 @@ enum monster_flag_type
     MF_INTERESTING        = 0x08,    // Player finds monster interesting
 
     MF_SEEN               = 0x10,    // Player has already seen monster
-#if TAG_MAJOR_VERSION == 30
-    MF_FIGHTER            = 0x20,    // Monster is skilled fighter.
-    MF_KNOWN_MIMIC        = 0x40,    // Mimic that has taken a swing at the PC,
-                                     // or that the player has inspected with ?
-    MF_BANISHED           = 0x80,    // Monster that has been banished.
-
-    MF_HARD_RESET         = 0x100,   // Summoned, should not drop gear on reset
-    MF_WAS_NEUTRAL        = 0x200,   // mirror to CREATED_FRIENDLY for neutrals
-    MF_ATT_CHANGE_ATTEMPT = 0x400,   // Saw player and attitude changed (or
-                                     // not); currently used for holy beings
-                                     // (good god worshippers -> neutral)
-                                     // orcs (Beogh worshippers -> friendly),
-                                     // and slimes (Jiyva worshippers -> neutral)
-    MF_WAS_IN_VIEW        = 0x800,   // Was in view during previous turn.
-
-    MF_BAND_MEMBER        = 0x1000,  // Created as a member of a band
-    MF_GOT_HALF_XP        = 0x2000,  // Player already got half xp value earlier
-    MF_HONORARY_UNDEAD    = 0x4000,  // Consider this monster to have MH_UNDEAD
-                                     // holiness, regardless of its actual type;
-                                     // currently used for abominations created
-                                     // via Twisted Resurrection
-    MF_ENSLAVED_SOUL      = 0x8000,  // An undead monster soul enslaved by
-                                     // Yredelemnul's power
-
-    MF_NAME_SUFFIX        = 0x10000, // mname is a suffix.
-    MF_NAME_ADJECTIVE     = 0x20000, // mname is an adjective.
-                                     // between it and the monster type name.
-    MF_NAME_REPLACE       = 0x30000, // mname entirely replaces normal monster
-                                     // name.
-    MF_NAME_MASK          = 0x30000,
-    MF_GOD_GIFT           = 0x40000, // Is a god gift.
-    MF_FLEEING_FROM_SANCTUARY = 0x80000, // Is running away from player sanctuary
-    MF_EXPLODE_KILL       = 0x100000, // Is being killed with disintegration
-
-    // These are based on the flags in monster class, but can be set for
-    // monsters that are not normally spellcasters (in vaults).
-    MF_SPELLCASTER        = 0x200000,
-    MF_ACTUAL_SPELLS      = 0x400000, // Can use spells and is a spellcaster for
-                                      // Trog purposes.
-    MF_PRIEST             = 0x800000, // Is a priest (divine spells)
-                                      // for the conduct.
-
-    MF_GOING_BERSERK      = 0x1000000,// Is about to go berserk!
-
-    MF_NAME_DESCRIPTOR    = 0x2000000,// mname should be treated with normal
-                                      // grammar, ie, prevent "You hit red rat"
-                                      // and other such constructs.
-    MF_NAME_DEFINITE      = 0x4000000,// give this monster the definite "the"
-                                      // article, instead of the indefinite "a"
-                                      // article.
-    MF_INTERLEVEL_FOLLOWER = 0x8000000,// will travel with the player regardless
-                                       // of where the monster is at on the level
-    MF_DEMONIC_GUARDIAN = 0x10000000, // is a demonic_guardian
-    MF_NAME_SPECIES     = 0x20000000, // mname should be used for corpses as well,
-                                      // preventing "human corpse of halfling"
-    MF_TWOWEAPON        = 0x40000000, // Monster wields two weapons.
-    MF_ARCHER           = 0x80000000, // Monster gets various archery boosts.
-#else
     MF_KNOWN_MIMIC        = 0x20,    // Mimic that has taken a swing at the PC,
                                      // or that the player has inspected with ?
     MF_BANISHED           = 0x40,    // Monster that has been banished.
@@ -2378,10 +2356,8 @@ enum monster_flag_type
 
     MF_BAND_MEMBER        = 0x800,   // Created as a member of a band
     MF_GOT_HALF_XP        = 0x1000,  // Player already got half xp value earlier
-    MF_HONORARY_UNDEAD    = 0x2000,  // Consider this monster to have MH_UNDEAD
-                                     // holiness, regardless of its actual type;
-                                     // currently used for abominations created
-                                     // via Twisted Resurrection
+    MF_FAKE_UNDEAD        = 0x2000,  // Consider this monster to have MH_UNDEAD
+                                     // holiness, regardless of its actual type
     MF_ENSLAVED_SOUL      = 0x4000,  // An undead monster soul enslaved by
                                      // Yredelemnul's power
 
@@ -2398,7 +2374,7 @@ enum monster_flag_type
     // These are based on the flags in monster class, but can be set for
     // monsters that are not normally fighters.
     MF_FIGHTER            = 0x100000, // Monster is skilled fighter.
-    MF_TWOWEAPON          = 0x200000, // Monster wields two weapons.
+    MF_TWO_WEAPONS        = 0x200000, // Monster wields two weapons.
     MF_ARCHER             = 0x400000, // Monster gets various archery boosts.
     MF_MELEE_MASK         = 0x700000,
 
@@ -2411,7 +2387,7 @@ enum monster_flag_type
                                       // for the conduct.
     MF_SPELL_MASK         = 0x3800000,
 
-    MF_GOING_BERSERK      = 0x4000000,// Is about to go berserk!
+    MF_NO_REGEN           = 0x4000000,// This monster cannot regenerate.
 
     MF_NAME_DESCRIPTOR    = 0x8000000,// mname should be treated with normal
                                       // grammar, ie, prevent "You hit red rat"
@@ -2424,7 +2400,6 @@ enum monster_flag_type
     MF_DEMONIC_GUARDIAN    = 0x40000000,// is a demonic_guardian
     MF_NAME_SPECIES        = 0x80000000,// mname should be used for corpses as well,
                                       // preventing "human corpse of halfling"
-#endif
     // Note: at least name flags get passed in a 32-bit variable (fill_out_corpse()),
     // and perhaps other flags as well.  Be careful when extending.
 };
@@ -2452,6 +2427,12 @@ enum mon_spellbook_type
     MST_ORC_WIZARD_I     = 0,
     MST_ORC_WIZARD_II,
     MST_ORC_WIZARD_III,
+    MST_NISSE,
+    MST_DEEP_DWARF_NECROMANCER,
+    MST_DEEP_DWARF_UNBORN,
+    MST_BK_TROG,
+    MST_BK_YREDELEMNUL,
+    MST_PARACELSUS,
     MST_GUARDIAN_SERPENT    = 10,
     MST_LICH_I           = 20,
     MST_LICH_II,
@@ -2479,7 +2460,12 @@ enum mon_spellbook_type
     MST_WIZARD_III,
     MST_WIZARD_IV,
     MST_WIZARD_V,
-    MST_ORC_PRIEST       = 80,
+    MST_TROLLKONOR,
+    MST_HULDRA,
+    MST_WITCH_I,
+    MST_WITCH_II,
+    MST_WITCH_III,
+    MST_ORC_PRIEST,                    //  80
     MST_ORC_HIGH_PRIEST,
     MST_MOTTLED_DRAGON,
     MST_ICE_FIEND,
@@ -2572,7 +2558,7 @@ enum mon_spellbook_type
     MST_ALLIGATOR,
     MST_BORIS,
     MST_FREDERICK,
-    MST_WIGLAF,                        // 180
+    MST_BK_OKAWARU,                    // 180
     MST_SPRIGGAN_DRUID,
     MST_THE_ENCHANTRESS,
     MST_HELLEPHANT,
@@ -2595,6 +2581,7 @@ enum mon_spellbook_type
     MST_SPIRIT,                        // 200
     MST_PALADIN,
     MST_HOLY_DRAGON,
+    MST_BOG_MUMMY,
 
     MST_TEST_SPAWNER = 205,
     NUM_MSTYPES,
@@ -2977,6 +2964,7 @@ enum species_type
     SP_MERFOLK,
     SP_VAMPIRE,
     SP_DEEP_DWARF,
+    SP_CAT,
     SP_ELF,                            // (placeholder)
     SP_HILL_DWARF,                     // (placeholder)
     SP_OGRE_MAGE,                      // (placeholder)
@@ -3023,7 +3011,9 @@ enum spell_type
     SPELL_MINOR_HEALING,
     SPELL_MAJOR_HEALING,
     SPELL_DEATHS_DOOR,
+#if TAG_MAJOR_VERSION == 31
     SPELL_SELECTIVE_AMNESIA,
+#endif
     SPELL_MASS_CONFUSION,
     SPELL_SMITING,
     SPELL_SUMMON_SMALL_MAMMALS,
@@ -3208,6 +3198,16 @@ enum spell_type
     SPELL_SACRIFICE,
     SPELL_HOLY_FLAMES,
     SPELL_HOLY_BREATH,
+    SPELL_BURN_SPELLBOOK,
+    SPELL_TROGS_HAND,
+    SPELL_BROTHERS_IN_ARMS,
+    SPELL_MIRROR_DAMAGE,
+    SPELL_DRAIN_LIFE,
+    SPELL_MIASMA_CLOUD,
+    SPELL_POISON_CLOUD,
+    SPELL_FIRE_CLOUD,
+    SPELL_STEAM_CLOUD,
+    SPELL_MALIGN_GATEWAY,
 
     NUM_SPELLS
 };
@@ -3464,6 +3464,7 @@ enum zap_type
     ZAP_LIGHT_BEAM,
     ZAP_HOLY_FLAMES,
     ZAP_HOLY_BREATH,
+    ZAP_BREATHE_MEPHITIC,
 
     NUM_ZAPS
 };
@@ -3516,6 +3517,12 @@ enum daction_type
     DACT_REAUTOMAP,
     DACT_REMOVE_JIYVA_ALTARS,
     NUM_DACTIONS,
+};
+
+enum final_effect_flavour
+{
+    FINEFF_LIGHTNING_DISCHARGE,
+    FINEFF_MIRROR_DAMAGE,
 };
 
 #ifdef USE_TILE

@@ -560,7 +560,12 @@ void full_describe_view()
         const bool unknown_mimic = (mon && mons_is_unknown_mimic(mon));
 
         if (unknown_mimic)      // It'll be on top.
-            list_items.push_back(get_mimic_item(mon));
+        {
+            if (mons_is_item_mimic(mon->type))
+                list_items.push_back(get_mimic_item(mon));
+            else if (mons_is_feat_mimic(mon->type))
+                list_features.push_back(*ri);
+        }
 
         const int oid = you.visible_igrd(*ri);
         if (oid == NON_ITEM)
@@ -2077,7 +2082,12 @@ void full_describe_square(const coord_def &c)
     if (mons && mons->visible_to(&you))
     {
         if (mons_is_unknown_mimic(mons))
-            describe_item(const_cast<item_def&>(get_mimic_item(mons)));
+        {
+            if (mons_is_item_mimic(mons->type))
+                describe_item(const_cast<item_def&>(get_mimic_item(mons)));
+            else
+                describe_feature_wide(c);
+        }
         else
         {
             monster_info mi(mons);
@@ -2134,7 +2144,15 @@ static void _describe_oos_square(const coord_def& where)
     mpr("You can't see that place.", MSGCH_EXAMINE_FILTER);
 
     if (!in_bounds(where) || !env.map_knowledge(where).seen())
+    {
+#ifdef DEBUG_DIAGNOSTICS
+        if (!in_bounds(where))
+            dprf("(out of bounds)");
+        else
+            dprf("(map: %x)", env.map_knowledge(where).flags);
+#endif
         return;
+    }
 
     describe_stash(where);
     _describe_feature(where, true);
@@ -2936,6 +2954,8 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return ("gate leading to a distant place");
     case DNGN_EXIT_PORTAL_VAULT:
         return ("gate leading back to the Dungeon");
+    case DNGN_TEMP_PORTAL:
+        return ("portal to somewhere");
     case DNGN_RETURN_FROM_DWARF_HALL:
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_HIVE:
@@ -2993,6 +3013,8 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return ("blossoming altar of Fedhas");
     case DNGN_ALTAR_CHEIBRIADOS:
         return ("snail-covered altar of Cheibriados");
+    case DNGN_ALTAR_ASHENZARI:
+        return ("shattered altar of Ashenzari");
 
     case DNGN_FOUNTAIN_BLUE:
         return ("fountain of clear blue water");
@@ -3110,6 +3132,25 @@ std::string feature_description(const coord_def& where, bool covering,
     }
 
     dungeon_feature_type grid = grd(where);
+    bool mimic = false;
+    monster* mimic_mons = NULL;
+
+    if (feature_mimic_at(where))
+    {
+        mimic_mons = monster_at(where);
+        grid = get_mimic_feat(mimic_mons);
+        mimic = true;
+    }
+
+    if (mimic)
+    {
+        if (feat_is_closed_door(grid))
+            return thing_do_grammar(dtype, add_stop, false, "closed door");
+        if (grid == DNGN_ENTER_PORTAL_VAULT)
+            return (thing_do_grammar(dtype,add_stop, false, mimic_mons->props["portal_desc"].get_string()));
+    }
+
+
     if (grid == DNGN_SECRET_DOOR)
         grid = grid_secret_door_appearance(where);
 
@@ -3210,7 +3251,7 @@ static std::string _describe_monster_weapon(const monster_info& mi)
         name1 = weap->name(DESC_NOCAP_A, false, false, true,
                            false, ISFLAG_KNOW_CURSE);
     }
-    if (alt && mi.wields_two_weapons)
+    if (alt && mi.two_weapons)
     {
         name2 = alt->name(DESC_NOCAP_A, false, false, true,
                           false, ISFLAG_KNOW_CURSE);
@@ -3500,7 +3541,7 @@ std::string get_monster_equipment_desc(const monster_info& mi, bool full_desc,
         const item_def* mon_alt = mi.inv[MSLOT_ALT_WEAPON].get();
 
         // _describe_monster_weapon already took care of this
-        if (mi.wields_two_weapons)
+        if (mi.two_weapons)
             mon_alt = 0;
 
         bool found_sth    = !weap.empty();
@@ -3605,7 +3646,7 @@ static void _debug_describe_feature_at(const coord_def &where)
                              vp.size.x, vp.size.y);
     }
 
-    mprf(MSGCH_DIAGNOSTICS, "(%d,%d): %s - %s (%d/%s)%s%s%s%s",
+    mprf(MSGCH_DIAGNOSTICS, "(%d,%d): %s - %s (%d/%s)%s%s%s%s map: %x",
          where.x, where.y,
          stringize_glyph(get_cell_glyph(where).ch).c_str(),
          feature_desc.c_str(),
@@ -3614,7 +3655,8 @@ static void _debug_describe_feature_at(const coord_def &where)
          marker.c_str(),
          traveldest.c_str(),
          height_desc.c_str(),
-         vault.c_str());
+         vault.c_str(),
+         env.map_knowledge(where).flags);
 }
 #endif
 

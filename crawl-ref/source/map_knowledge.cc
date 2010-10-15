@@ -95,9 +95,19 @@ static void _automap_from( int x, int y, int mutated )
                       true, true, coord_def(x,y));
 }
 
-void reautomap_level( )
+static int _map_quality()
 {
     int passive = player_mutation_level(MUT_PASSIVE_MAPPING);
+    // the explanation of this 51 vs max_piety of 200 is left as
+    // an exercise to the reader
+    if (you.religion == GOD_ASHENZARI && !player_under_penance())
+        passive = std::max(passive, you.piety / 51);
+    return passive;
+}
+
+void reautomap_level( )
+{
+    int passive = _map_quality();
 
     for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
         for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
@@ -115,7 +125,7 @@ void set_terrain_seen( int x, int y )
     // map knowledge gets wiped each turn.
     if (!(cell->flags & MAP_SEEN_FLAG) && player_in_mappable_area())
     {
-        _automap_from(x, y, player_mutation_level(MUT_PASSIVE_MAPPING));
+        _automap_from(x, y, _map_quality());
 
         const bool boring = !is_notable_terrain(feat)
             // A portal deeper into the Zigguart is boring.

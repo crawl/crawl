@@ -938,15 +938,13 @@ corrode easily. All species get a bonus when wearing Dwarven armours
 at the expense that these mails make spellcasting slightly more
 difficult. Dwarves get a larger bonus without the magical hampering.
 
-Orcish (cross)bows do a bit more damage with Orcish arrows/bolts. In
-general, Orcs do better with gear from their own kin; this applies to
+In general, Orcs do better with gear from their own kin; this applies to
 weapons, as well as to armours.
 
-Elven body armour does not hamper spellcasting as other armours of the
-same type would. Elven cloaks and boots are particularly useful to those
-who wish to be stealthy. Elven bows are more effective when used in
-conjunction with Elven arrows. An Elf does even a bit better when
-wearing armour or weapons of his own kind.
+Elven body armour does not hamper spellcasting as much as other armours
+of the same type would. Elven cloaks and boots are particularly useful
+to those who wish to be stealthy. An Elf does a bit better when wearing
+armour or weapons of his own kind.
 
 Centaurs and Nagas have uniquely shaped bodies. With luck, however, a
 character of these species might find a Centaur or Naga barding. Note
@@ -1817,6 +1815,29 @@ at fighting and much better at conjurations, summonings, necromancy and
 invocations. Note that unlike Demigods, they can take on gods, although
 not all will accept them.
 
+Felids
+------
+Felids are a breed of cats that have been granted sentience. Originally
+they were witches' familiars that were magically augmented to provide
+help for their masters' rituals, yet many have abandoned, outlived, or,
+in at least one case, ripped to shreds their former masters and gone out
+into the world.
+
+While fully capable of using speech and most forms of magic, Felids are
+at a serious disadvantage due to their inability to use armour or
+weapons, or even grasping items well enough to throw a dart or point a
+wand. They can use their mouths and paws for simple manipulation like
+uncorking a bottle or unrolling a scroll. Like all cats, Felids are
+incapable of thriving on vegetable food, and need meat to survive.
+
+Their agility and stealth are legendary, as is their ability to get to
+hard to reach places. They move faster than most races, but don't run as
+fast as horses or Spriggans. Felids advance in levels very slowly, and
+are not very gifted in directly damaging magic, but make good summoners,
+enchanters or transmuters.
+
+The tale of a Felid who had nine lives isn't far from truth, as well.
+
 The Undead
 ----------
 As creatures brought back from beyond the grave, the undead are
@@ -2046,7 +2067,9 @@ their tracheae quite effectively.
 
 Stalkers:
 ---------
-The Stalker is an Assassin who has trained in the use of poison magic.
+The Stalker is an Assassin who practices alchemy to prepare dangerous
+potions to use against his or her enemies. They also have means to pass
+through walls to catch foes unaware.
 
 Assassins:
 ----------
