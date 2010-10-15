@@ -49,8 +49,8 @@ int m_getch();
 int unmangle_direction_keys(int keyin, KeymapContext keymap = KMC_DEFAULT,
                             bool fake_ctrl = true, bool fake_shift = true);
 
-int nowrapcprintf( int wrapcol, const char *s, ... );
-int nowrap_eol_cprintf( const char *s, ... );
+int nowrapcprintf(int wrapcol, const char *s, ...);
+int nowrap_eol_cprintf(const char *s, ...);
 
 // Returns zero if user entered text and pressed Enter, otherwise returns the
 // key pressed that caused the exit, usually Escape.
@@ -58,10 +58,10 @@ int nowrap_eol_cprintf( const char *s, ... );
 // If keyproc is provided, it must return 1 for normal processing, 0 to exit
 // normally (pretend the user pressed Enter), or -1 to exit as if the user
 // pressed Escape
-int cancelable_get_line( char *buf,
+int cancelable_get_line(char *buf,
                          int len,
                          input_history *mh = NULL,
-                         int (*keyproc)(int &c) = NULL );
+                         int (*keyproc)(int &c) = NULL);
 
 // Do not use this templated function directly.  Use the macro below instead.
 template<int> static int cancelable_get_line_autohist_temp(char *buf, int len)

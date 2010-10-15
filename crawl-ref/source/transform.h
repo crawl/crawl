@@ -47,7 +47,7 @@ void remove_one_equip(equipment_type eq, bool meld = true,
                       bool mutation = false);
 void unmeld_one_equip(equipment_type eq);
 
-bool transform_changed_physiology( bool phys_scales = false );
+bool transform_changed_physiology(bool phys_scales = false);
 bool transform_allows_wearing_item(const item_def& item,
                                    transformation_type transform);
 monster_type transform_mons();

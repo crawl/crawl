@@ -285,7 +285,7 @@ static void _update_monster(const monster* mons)
             (is_opaque_cloud(env.cgrid(gp))
                  && !mons->submerged()
                  && !mons->is_insubstantial())
-           )
+         )
             env.map_knowledge(gp).set_invisible_monster();
         return;
     }

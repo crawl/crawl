@@ -56,14 +56,14 @@ void seed_rng(long seed)
 
 void seed_rng()
 {
-    unsigned long seed = time( NULL );
+    unsigned long seed = time(NULL);
 #ifdef USE_MORE_SECURE_SEED
 
     /* (at least) 256-bit wide seed */
     unsigned long seed_key[8];
 
     struct tms  buf;
-    seed += times( &buf ) + getpid();
+    seed += times(&buf) + getpid();
     seed_key[0] = seed;
 
     /* Try opening from various system provided (hopefully) CSPRNGs */
@@ -88,7 +88,7 @@ void seed_rng()
 }
 
 // MT19937 -- see mt19937ar.cc for details
-unsigned long random_int( void )
+unsigned long random_int(void)
 {
 #ifndef MORE_HARDENED_PRNG
     return (genrand_int32());

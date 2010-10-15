@@ -48,8 +48,8 @@ bool cast_deaths_door(int pow)
         mpr("You seem to hear sand running through an hourglass...",
             MSGCH_SOUND);
 
-        set_hp( allowed_deaths_door_hp(), false );
-        deflate_hp( you.hp_max, false );
+        set_hp(allowed_deaths_door_hp(), false);
+        deflate_hp(you.hp_max, false);
 
         you.set_duration(DUR_DEATHS_DOOR, 10 + random2avg(13, 3)
                                            + (random2(pow) / 10));
@@ -282,7 +282,7 @@ void extension(int pow)
         cast_deaths_door(pow);   // just for the fail message
 
     if (contamination)
-        contaminate_player( contamination, true );
+        contaminate_player(contamination, true);
 }
 
 void remove_ice_armour()
@@ -311,13 +311,13 @@ void ice_armour(int pow, bool extending)
     }
 
     if (you.duration[DUR_ICY_ARMOUR])
-        mpr( "Your icy armour thickens." );
+        mpr("Your icy armour thickens.");
     else
     {
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST)
-            mpr( "Your icy body feels more resilient." );
+            mpr("Your icy body feels more resilient.");
         else
-            mpr( "A film of ice covers your body!" );
+            mpr("A film of ice covers your body!");
 
         you.redraw_armour_class = true;
     }
@@ -328,7 +328,7 @@ void ice_armour(int pow, bool extending)
 
 void missile_prot(int pow)
 {
-    you.increase_duration(DUR_REPEL_MISSILES, 8 + roll_dice( 2, pow ), 100,
+    you.increase_duration(DUR_REPEL_MISSILES, 8 + roll_dice(2, pow), 100,
                           "You feel protected from missiles.");
 }
 
@@ -376,7 +376,7 @@ void cast_swiftness(int power)
 
     if (!you.duration[DUR_SWIFTNESS] && player_movement_speed() <= 6)
     {
-        mpr( "You can't move any more quickly." );
+        mpr("You can't move any more quickly.");
         return;
     }
 

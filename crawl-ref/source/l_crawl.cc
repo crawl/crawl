@@ -102,7 +102,7 @@ LUAFN(crawl_stderr)
 LUAWRAP(crawl_delay, delay(luaL_checkint(ls, 1)))
 LUAWRAP(crawl_more, more())
 LUAWRAP(crawl_flush_prev_message, flush_prev_message())
-LUAWRAP(crawl_mesclr, mesclr( lua_isboolean(ls, 1) ? lua_toboolean(ls, 1) : false))
+LUAWRAP(crawl_mesclr, mesclr(lua_isboolean(ls, 1) ? lua_toboolean(ls, 1) : false))
 LUAWRAP(crawl_redraw_screen, redraw_screen())
 
 static int crawl_set_more_autoclear(lua_State *ls)
@@ -112,7 +112,7 @@ static int crawl_set_more_autoclear(lua_State *ls)
         luaL_argerror(ls, 1, "needs a boolean argument");
         return (0);
     }
-    set_more_autoclear( lua_toboolean(ls, 1) );
+    set_more_autoclear(lua_toboolean(ls, 1));
 
     return (0);
 }
@@ -181,7 +181,7 @@ static void crawl_sendkeys_proc(lua_State *ls, int argi)
         if (!keys)
             return;
 
-        for ( ; *keys; ++keys)
+        for (; *keys; ++keys)
             macro_sendkeys_end_add_expanded(*keys);
     }
     else if (lua_istable(ls, argi))
@@ -408,10 +408,10 @@ static int crawl_message_filter(lua_State *ls)
 
     int num = lua_isnumber(ls, 2)? luaL_checkint(ls, 2) : -1;
     message_filter **mf =
-            clua_new_userdata< message_filter* >( ls, MESSF_METATABLE );
+            clua_new_userdata< message_filter* >(ls, MESSF_METATABLE);
     if (mf)
     {
-        *mf = new message_filter( num, pattern );
+        *mf = new message_filter(num, pattern);
         return (1);
     }
     return (0);
@@ -493,18 +493,18 @@ static int crawl_article_a(lua_State *ls)
 }
 
 LUARET1(crawl_game_started, boolean, crawl_state.need_save)
-LUARET1(crawl_random2, number, random2( luaL_checkint(ls, 1) ))
-LUARET1(crawl_one_chance_in, boolean, one_chance_in( luaL_checkint(ls, 1) ))
+LUARET1(crawl_random2, number, random2(luaL_checkint(ls, 1)))
+LUARET1(crawl_one_chance_in, boolean, one_chance_in(luaL_checkint(ls, 1)))
 LUARET1(crawl_random2avg, number,
-        random2avg( luaL_checkint(ls, 1), luaL_checkint(ls, 2) ))
+        random2avg(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
 LUARET1(crawl_random_range, number,
-        random_range( luaL_checkint(ls, 1), luaL_checkint(ls, 2),
-                      lua_isnumber(ls, 3)? luaL_checkint(ls, 3) : 1 ))
+        random_range(luaL_checkint(ls, 1), luaL_checkint(ls, 2),
+                      lua_isnumber(ls, 3)? luaL_checkint(ls, 3) : 1))
 LUARET1(crawl_coinflip, boolean, coinflip())
 LUARET1(crawl_roll_dice, number,
         lua_gettop(ls) == 1
-        ? roll_dice( 1, luaL_checkint(ls, 1) )
-        : roll_dice( luaL_checkint(ls, 1), luaL_checkint(ls, 2) ))
+        ? roll_dice(1, luaL_checkint(ls, 1))
+        : roll_dice(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
 
 static int crawl_is_tiles(lua_State *ls)
 {

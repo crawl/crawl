@@ -172,8 +172,8 @@ void level_range::write(writer& outf) const
 
 void level_range::read(reader& inf)
 {
-    level_type = static_cast<level_area_type>( unmarshallShort(inf) );
-    branch     = static_cast<branch_type>( unmarshallShort(inf) );
+    level_type = static_cast<level_area_type>(unmarshallShort(inf));
+    branch     = static_cast<branch_type>(unmarshallShort(inf));
     shallowest = unmarshallShort(inf);
     deepest    = unmarshallShort(inf);
     deny       = unmarshallByte(inf);
@@ -654,16 +654,16 @@ std::string map_lines::parse_glyph_replacements(std::string s,
         if (is.length() > 2 && is[1] == ':')
         {
             const int glych = is[0];
-            int weight = atoi( is.substr(2).c_str() );
+            int weight = atoi(is.substr(2).c_str());
             if (weight < 1)
                 weight = 10;
 
-            gly.push_back( glyph_weighted_replacement_t(glych, weight) );
+            gly.push_back(glyph_weighted_replacement_t(glych, weight));
         }
         else
         {
             for (int c = 0, cs = is.length(); c < cs; ++c)
-                gly.push_back( glyph_weighted_replacement_t(is[c], 10) );
+                gly.push_back(glyph_weighted_replacement_t(is[c], 10));
         }
     }
 
@@ -1376,7 +1376,7 @@ std::string map_lines::shuffle(std::string s)
     // Inefficient brute-force shuffle.
     while (!s.empty())
     {
-        const int c = random2( s.length() );
+        const int c = random2(s.length());
         result += s[c];
         s.erase(c, 1);
     }
@@ -1412,7 +1412,7 @@ void map_lines::normalise(char fillch)
     {
         std::string &s = lines[i];
         if (static_cast<int>(s.length()) < map_width)
-            s += std::string( map_width - s.length(), fillch );
+            s += std::string(map_width - s.length(), fillch);
     }
 }
 
@@ -1446,7 +1446,7 @@ void map_lines::rotate(bool clockwise)
     if (overlay.get())
     {
         std::auto_ptr<overlay_matrix> new_overlay(
-            new overlay_matrix( lines.size(), map_width ) );
+            new overlay_matrix(lines.size(), map_width));
         for (int i = xs, y = 0; i != xe; i += xi, ++y)
             for (int j = ys, x = 0; j != ye; j += yi, ++x)
                 (*new_overlay)(x, y) = (*overlay)(i, j);
@@ -1517,8 +1517,8 @@ void map_lines::vmirror()
     {
         for (int i = 0; i < midpoint; ++i)
             for (int j = 0, wide = width(); j < wide; ++j)
-                std::swap( (*overlay)(j, i),
-                           (*overlay)(j, vsize - 1 - i) );
+                std::swap((*overlay)(j, i),
+                           (*overlay)(j, vsize - 1 - i));
     }
 
     vmirror_markers();
@@ -1543,8 +1543,8 @@ void map_lines::hmirror()
     {
         for (int i = 0, vsize = lines.size(); i < vsize; ++i)
             for (int j = 0; j < midpoint; ++j)
-                std::swap( (*overlay)(j, i),
-                           (*overlay)(map_width - 1 - j, i) );
+                std::swap((*overlay)(j, i),
+                           (*overlay)(map_width - 1 - j, i));
     }
 
     hmirror_markers();
@@ -1772,7 +1772,7 @@ bool map_lines::fill_zone(travel_distance_grid_t &tpd, const coord_def &start,
     std::list<coord_def> points[2];
     int cur = 0;
 
-    for (points[cur].push_back(start); !points[cur].empty(); )
+    for (points[cur].push_back(start); !points[cur].empty();)
     {
         for (std::list<coord_def>::const_iterator i = points[cur].begin();
              i != points[cur].end(); ++i)
@@ -2224,10 +2224,10 @@ void map_def::read_index(reader& inf)
     unmarshallString4(inf, name);
     unmarshallString4(inf, place_loaded_from.filename);
     place_loaded_from.lineno   = unmarshallInt(inf);
-    orient       = static_cast<map_section_type>( unmarshallShort(inf) );
+    orient       = static_cast<map_section_type>(unmarshallShort(inf));
     // XXX: Hack. See the comment in l_dgn.cc.
     border_fill_type =
-        static_cast<dungeon_feature_type>( unmarshallShort(inf) );
+        static_cast<dungeon_feature_type>(unmarshallShort(inf));
     chance_priority = unmarshallInt(inf);
     chance       = unmarshallInt(inf);
     weight       = unmarshallInt(inf);
@@ -2413,7 +2413,7 @@ std::string map_def::validate_temple_map()
         }
         else
         {
-            if ( ( (unsigned long) num ) != altars.size() )
+            if (((unsigned long) num) != altars.size())
             {
                 return make_stringf("Temple should contain %u altars, but "
                                     "has %d.", altars.size(), num);
@@ -2666,26 +2666,26 @@ coord_def map_def::dock_pos(map_section_type norient) const
     switch (norient)
     {
     case MAP_NORTH:
-        return coord_def( (GXM - map.width()) / 2, minborder );
+        return coord_def((GXM - map.width()) / 2, minborder);
     case MAP_SOUTH:
-        return coord_def( (GXM - map.width()) / 2,
-                          GYM - minborder - map.height() );
+        return coord_def((GXM - map.width()) / 2,
+                          GYM - minborder - map.height());
     case MAP_EAST:
-        return coord_def( GXM - minborder - map.width(),
-                          (GYM - map.height()) / 2 );
+        return coord_def(GXM - minborder - map.width(),
+                          (GYM - map.height()) / 2);
     case MAP_WEST:
-        return coord_def( minborder,
-                          (GYM - map.height()) / 2 );
+        return coord_def(minborder,
+                          (GYM - map.height()) / 2);
     case MAP_NORTHEAST:
-        return coord_def( GXM - minborder - map.width(), minborder );
+        return coord_def(GXM - minborder - map.width(), minborder);
     case MAP_NORTHWEST:
-        return coord_def( minborder, minborder );
+        return coord_def(minborder, minborder);
     case MAP_SOUTHEAST:
-        return coord_def( GXM - minborder - map.width(),
-                          GYM - minborder - map.height() );
+        return coord_def(GXM - minborder - map.width(),
+                          GYM - minborder - map.height());
     case MAP_SOUTHWEST:
-        return coord_def( minborder,
-                          GYM - minborder - map.height() );
+        return coord_def(minborder,
+                          GYM - minborder - map.height());
     default:
         return coord_def(-1, -1);
     }
@@ -3629,7 +3629,7 @@ std::string mons_list::add_mons(const std::string &s, bool fix)
         pick_monster(slotmons);
     }
 
-    mons.push_back( slotmons );
+    mons.push_back(slotmons);
 
     return (error);
 }
@@ -3851,8 +3851,8 @@ mons_spec mons_list::mons_by_name(std::string name) const
 {
     lowercase(name);
 
-    name = replace_all_of( name, "_", " " );
-    name = replace_all( name, "random", "any" );
+    name = replace_all_of(name, "_", " ");
+    name = replace_all(name, "random", "any");
 
     if (name == "nothing")
         return (-1);
@@ -4798,10 +4798,10 @@ item_list::item_spec_slot item_list::parse_item_spec(std::string spec)
     item_spec_slot list;
 
     list.fix_slot = strip_tag(spec, "fix_slot");
-    std::vector<std::string> specifiers = split_string( "/", spec );
+    std::vector<std::string> specifiers = split_string("/", spec);
 
     for (unsigned i = 0; i < specifiers.size() && error.empty(); ++i)
-        list.ilist.push_back( parse_single_spec(specifiers[i]) );
+        list.ilist.push_back(parse_single_spec(specifiers[i]));
 
     return (list);
 }
@@ -5039,9 +5039,9 @@ void keyed_mapspec::parse_features(const std::string &s)
         feature_spec_list feats = parse_feature(spec);
         if (!err.empty())
             return;
-        feat.feats.insert( feat.feats.end(),
+        feat.feats.insert(feat.feats.end(),
                            feats.begin(),
-                           feats.end() );
+                           feats.end());
     }
 }
 
@@ -5090,20 +5090,20 @@ feature_spec_list keyed_mapspec::parse_feature(const std::string &str)
     {
         feature_spec fsp(-1, weight);
         fsp.glyph = s[0];
-        list.push_back( fsp );
+        list.push_back(fsp);
         return (list);
     }
 
     if (s.find("trap") != std::string::npos)
     {
-        list.push_back( parse_trap(s, weight) );
+        list.push_back(parse_trap(s, weight));
         return (list);
     }
 
     if (s.find("shop") != std::string::npos
         || s.find("store") != std::string::npos)
     {
-        list.push_back( parse_shop(s, weight) );
+        list.push_back(parse_shop(s, weight));
         return (list);
     }
 
@@ -5112,7 +5112,7 @@ feature_spec_list keyed_mapspec::parse_feature(const std::string &str)
         err = make_stringf("no features matching \"%s\"",
                            str.c_str());
     else
-        list.push_back( feature_spec( ftype, weight ) );
+        list.push_back(feature_spec(ftype, weight));
 
     return (list);
 }
@@ -5244,7 +5244,7 @@ feature_spec feature_slot::get_feat(int def_glyph)
     if (fix_slot)
     {
         feats.clear();
-        feats.push_back( chosen_feat );
+        feats.push_back(chosen_feat);
     }
     return (chosen_feat);
 }

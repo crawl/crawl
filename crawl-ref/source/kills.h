@@ -20,7 +20,7 @@ class writer;
 // Not intended for external use!
 struct kill_monster_desc
 {
-    kill_monster_desc(const monster* );
+    kill_monster_desc(const monster*);
     kill_monster_desc() { }
 
     void save(writer&) const;
@@ -123,7 +123,7 @@ struct kill_exp
     }
 
     // operator< is implemented for a descending sort.
-    bool operator < ( const kill_exp &b) const
+    bool operator < (const kill_exp &b) const
     {
         return exp == b.exp? (base_name < b.base_name) : (exp > b.exp);
     }

@@ -355,7 +355,7 @@ void find_features(const std::vector<coord_def>& features,
     }
 }
 
-static int _find_feature( const std::vector<coord_def>& features,
+static int _find_feature(const std::vector<coord_def>& features,
                           int feature, int curs_x, int curs_y,
                           int start_x, int start_y,
                           int ignore_count,

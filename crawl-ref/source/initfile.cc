@@ -54,9 +54,9 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <shlwapi.h>
-#elif defined ( __APPLE__ )
+#elif defined (__APPLE__)
 extern char **NXArgv;
-#elif defined ( __linux__ )
+#elif defined (__linux__)
 #include <unistd.h>
 #endif
 
@@ -69,7 +69,7 @@ const static int   obj_syms_len = 16;
 
 template<class A, class B> void append_vector(A &dest, const B &src)
 {
-    dest.insert( dest.end(), src.begin(), src.end() );
+    dest.insert(dest.end(), src.begin(), src.end());
 }
 
 // Returns -1 if unmatched else returns 0-15.
@@ -105,7 +105,7 @@ static const std::string message_channel_names[ NUM_MESSAGE_CHANNELS ] =
 };
 
 // returns -1 if unmatched else returns 0--(NUM_MESSAGE_CHANNELS-1)
-int str_to_channel( const std::string &str )
+int str_to_channel(const std::string &str)
 {
     int ret;
 
@@ -118,7 +118,7 @@ int str_to_channel( const std::string &str )
     return (ret == NUM_MESSAGE_CHANNELS ? -1 : ret);
 }
 
-std::string channel_to_str( int channel )
+std::string channel_to_str(int channel)
 {
     if (channel < 0 || channel >= NUM_MESSAGE_CHANNELS)
         return "";
@@ -164,7 +164,7 @@ static weapon_type _str_to_weapon(const std::string &str)
     return (WPN_UNKNOWN);
 }
 
-static std::string _weapon_to_str( int weapon )
+static std::string _weapon_to_str(int weapon)
 {
     switch (weapon)
     {
@@ -230,7 +230,7 @@ int str_to_summon_type (const std::string &str)
     return (spell_by_name(str));
 }
 
-static std::string _wand_to_str( int weapon )
+static std::string _wand_to_str(int weapon)
 {
     switch (weapon)
     {
@@ -252,7 +252,7 @@ static std::string _wand_to_str( int weapon )
     }
 }
 
-static fire_type _str_to_fire_types( const std::string &str )
+static fire_type _str_to_fire_types(const std::string &str)
 {
     if (str == "launcher")
         return (FIRE_LAUNCHER);
@@ -370,12 +370,12 @@ static job_type _str_to_job(const std::string &str)
         job = get_job_by_name(str.c_str());
 
     if (job == JOB_UNKNOWN)
-        fprintf( stderr, "Unknown background choice: %s\n", str.c_str() );
+        fprintf(stderr, "Unknown background choice: %s\n", str.c_str());
 
     return (job);
 }
 
-static bool _read_bool( const std::string &field, bool def_value )
+static bool _read_bool(const std::string &field, bool def_value)
 {
     bool ret = def_value;
 
@@ -391,7 +391,7 @@ static bool _read_bool( const std::string &field, bool def_value )
 // read a value which can be either a boolean (in which case return
 // 0 for true, -1 for false), or a string of the form PREFIX:NUMBER
 // (e.g., auto:7), in which case return NUMBER as an int.
-static int _read_bool_or_number( const std::string &field, int def_value,
+static int _read_bool_or_number(const std::string &field, int def_value,
                                  const std::string& num_prefix)
 {
     int ret = def_value;
@@ -402,7 +402,7 @@ static int _read_bool_or_number( const std::string &field, int def_value,
     if (field == "false" || field == "0" || field == "no")
         ret = -1;
 
-    if ( field.find(num_prefix) == 0 )
+    if (field.find(num_prefix) == 0)
         ret = atoi(field.c_str() + num_prefix.size());
 
     return (ret);
@@ -474,7 +474,7 @@ void game_options::new_dump_fields(const std::string &text, bool add)
             {
                 if (dump_order[i] == fields[f])
                 {
-                    dump_order.erase( dump_order.begin() + i );
+                    dump_order.erase(dump_order.begin() + i);
                     break;
                 }
             }
@@ -516,7 +516,7 @@ void game_options::set_default_activity_interrupts()
     };
 
     for (int i = 0; default_activity_interrupts[i]; ++i)
-        read_option_line( default_activity_interrupts[i], false );
+        read_option_line(default_activity_interrupts[i], false);
 }
 
 void game_options::clear_activity_interrupts(
@@ -532,7 +532,7 @@ void game_options::set_activity_interrupt(
 {
     if (interrupt.find(interrupt_prefix) == 0)
     {
-        std::string delay_name = interrupt.substr( interrupt_prefix.length() );
+        std::string delay_name = interrupt.substr(interrupt_prefix.length());
         delay_type delay = get_delay(delay_name);
         if (delay == NUM_DELAYS)
         {
@@ -1329,10 +1329,10 @@ std::string read_init_file(bool runscript)
         Options.read_option_line(SysEnv.extra_opts_first[i], true);
     }
 
-    const std::string init_file_name( _find_crawlrc() );
+    const std::string init_file_name(_find_crawlrc());
 
     FILE* f = fopen_u(init_file_name.c_str(), "r");
-    if ( f == NULL )
+    if (f == NULL)
     {
         if (!init_file_name.empty())
             return make_stringf("(\"%s\" is not readable)",
@@ -1511,7 +1511,7 @@ void game_options::read_options(InitLineInput &il, bool runscript,
         std::string str = s;
         line++;
 
-        trim_string( str );
+        trim_string(str);
 
         // This is to make some efficient comments
         if ((str.empty() || str[0] == '#') && !inscriptcond && !inscriptblock)
@@ -1527,7 +1527,7 @@ void game_options::read_options(InitLineInput &il, bool runscript,
                 // If we're in the middle of an option block, close it.
                 if (!luacond.empty() && l_init)
                 {
-                    luacond.add(line - 1, "]] )");
+                    luacond.add(line - 1, "]])");
                     l_init = false;
                 }
                 luacond.add(line, str);
@@ -1540,7 +1540,7 @@ void game_options::read_options(InitLineInput &il, bool runscript,
             isconditional = true;
             inscriptcond  = true;
 
-            str = str.substr( str.find("L<") == 0? 2 : 1 );
+            str = str.substr(str.find("L<") == 0? 2 : 1);
             // Is this a one-liner?
             if (!str.empty() && str[ str.length() - 1 ] == '>')
             {
@@ -1553,7 +1553,7 @@ void game_options::read_options(InitLineInput &il, bool runscript,
                 // If we're in the middle of an option block, close it.
                 if (!luacond.empty() && l_init)
                 {
-                    luacond.add(line - 1, "]] )");
+                    luacond.add(line - 1, "]])");
                     l_init = false;
                 }
                 luacond.add(line, str);
@@ -1584,7 +1584,7 @@ void game_options::read_options(InitLineInput &il, bool runscript,
             luacode.set_file(filename);
 
             // Strip leading Lua[
-            str = str.substr( str.find("Lua{") == 0? 4 : 1 );
+            str = str.substr(str.find("Lua{") == 0? 4 : 1);
 
             if (!str.empty() && str.find("}") == str.length() - 1)
             {
@@ -1633,7 +1633,7 @@ void game_options::read_options(InitLineInput &il, bool runscript,
         {
             if (!l_init)
             {
-                luacond.add(line, "crawl.setopt( [[");
+                luacond.add(line, "crawl.setopt([[");
                 l_init = true;
             }
 
@@ -1648,7 +1648,7 @@ void game_options::read_options(InitLineInput &il, bool runscript,
     if (runscript && !luacond.empty())
     {
         if (l_init)
-            luacond.add(line, "]] )");
+            luacond.add(line, "]])");
         if (luacond.run(clua))
             mprf(MSGCH_ERROR, "Lua error: %s", luacond.orig_error().c_str());
     }
@@ -1824,16 +1824,16 @@ message_filter game_options::parse_message_filter(const std::string &filter)
     if (pos && pos != std::string::npos)
     {
         std::string prefix = filter.substr(0, pos);
-        int channel = str_to_channel( prefix );
+        int channel = str_to_channel(prefix);
         if (channel != -1 || prefix == "any")
         {
-            std::string s = filter.substr( pos + 1 );
-            trim_string( s );
-            return message_filter( channel, s );
+            std::string s = filter.substr(pos + 1);
+            trim_string(s);
+            return message_filter(channel, s);
         }
     }
 
-    return message_filter( filter );
+    return message_filter(filter);
 }
 
 void game_options::add_message_colour_mapping(const std::string &field)
@@ -1887,7 +1887,7 @@ void game_options::split_parse(
 {
     const std::vector<std::string> defs = split_string(separator, s);
     for (int i = 0, size = defs.size(); i < size; ++i)
-        (this->*add)( defs[i] );
+        (this->*add)(defs[i]);
 }
 
 void game_options::set_option_fragment(const std::string &s)
@@ -1989,11 +1989,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 
 #define COLOUR_OPTION_NAMED(_opt_str, _opt_var)                         \
     if (key == _opt_str) do {                                           \
-        const int col = str_to_colour( field );                         \
+        const int col = str_to_colour(field);                           \
         if (col != -1) {                                                \
             this->_opt_var = col;                                       \
         } else {                                                        \
-            /*fprintf( stderr, "Bad %s -- %s\n", key, field.c_str() );*/ \
+            /*fprintf(stderr, "Bad %s -- %s\n", key, field.c_str());*/  \
             report_error (                                              \
                 make_stringf("Bad %s -- %s\n",                          \
                     key.c_str(), field.c_str()));                       \
@@ -2039,10 +2039,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     if (first_equals < 0)
         return;
 
-    field = str.substr( first_equals + 1 );
+    field = str.substr(first_equals + 1);
     field = expand_vars(field);
 
-    std::string prequal = trimmed_string( str.substr(0, first_equals) );
+    std::string prequal = trimmed_string(str.substr(0, first_equals));
 
     // Is this a case of key += val?
     if (prequal.length() && prequal[prequal.length() - 1] == '+')
@@ -2072,8 +2072,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     const std::string::size_type first_dot = prequal.find('.');
     if (first_dot != std::string::npos)
     {
-        key    = prequal.substr( 0, first_dot );
-        subkey = prequal.substr( first_dot + 1 );
+        key    = prequal.substr(0, first_dot);
+        subkey = prequal.substr(first_dot + 1);
     }
     else
     {
@@ -2082,11 +2082,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
 
     // Clean up our data...
-    lowercase( trim_string( key ) );
-    lowercase( trim_string( subkey ) );
+    lowercase(trim_string(key));
+    lowercase(trim_string(subkey));
 
     // some fields want capitals... none care about external spaces
-    trim_string( field );
+    trim_string(field);
 
     // Keep unlowercased field around
     const std::string orig_field = field;
@@ -2110,7 +2110,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         && key != "include" && key != "bindkey"
         && key.find("font") == std::string::npos)
     {
-        lowercase( field );
+        lowercase(field);
     }
 
     if (key == "include")
@@ -2201,7 +2201,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                 char_set = CSET_UNICODE;
             else
             {
-                fprintf( stderr, "Bad character set: %s\n", field.c_str() );
+                fprintf(stderr, "Bad character set: %s\n", field.c_str());
                 valid = false;
             }
         }
@@ -2282,28 +2282,28 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "colour" || key == "color")
     {
-        const int orig_col   = str_to_colour( subkey );
-        const int result_col = str_to_colour( field );
+        const int orig_col   = str_to_colour(subkey);
+        const int result_col = str_to_colour(field);
 
         if (orig_col != -1 && result_col != -1)
             colour[orig_col] = result_col;
         else
         {
-            fprintf( stderr, "Bad colour -- %s=%d or %s=%d\n",
-                     subkey.c_str(), orig_col, field.c_str(), result_col );
+            fprintf(stderr, "Bad colour -- %s=%d or %s=%d\n",
+                     subkey.c_str(), orig_col, field.c_str(), result_col);
         }
     }
     else if (key == "channel")
     {
-        const int chnl = str_to_channel( subkey );
-        const msg_colour_type col  = _str_to_channel_colour( field );
+        const int chnl = str_to_channel(subkey);
+        const msg_colour_type col  = _str_to_channel_colour(field);
 
         if (chnl != -1 && col != -1)
             channels[chnl] = col;
         else if (chnl == -1)
-            fprintf( stderr, "Bad channel -- %s\n", subkey.c_str() );
+            fprintf(stderr, "Bad channel -- %s\n", subkey.c_str());
         else if (col == MSGCOL_NONE)
-            fprintf( stderr, "Bad colour -- %s\n", field.c_str() );
+            fprintf(stderr, "Bad colour -- %s\n", field.c_str());
     }
     else COLOUR_OPTION(background_colour);
     else COLOUR_OPTION(detected_item_colour);
@@ -2381,22 +2381,22 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "background" || key == "job" || key == "class")
     {
-        game.job = _str_to_job( field );
+        game.job = _str_to_job(field);
     }
     else if (key == "weapon")
     {
         // Choose this weapon for backgrounds that get choice.
-        game.weapon = _str_to_weapon( field );
+        game.weapon = _str_to_weapon(field);
     }
     else if (key == "book")
     {
         // Choose this book for backgrounds that get choice.
-        game.book = _str_to_book( field );
+        game.book = _str_to_book(field);
     }
     else if (key == "wand")
     {
         // Choose this wand for backgrounds that get choice.
-        game.wand = _str_to_wand( field );
+        game.wand = _str_to_wand(field);
     }
     else if (key == "religion")
     {
@@ -2406,12 +2406,12 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     BOOL_OPTION_NAMED("fully_random", game.fully_random);
     else if (key == "fire_items_start")
     {
-        if (isaalpha( field[0] ))
-            fire_items_start = letter_to_index( field[0] );
+        if (isaalpha(field[0]))
+            fire_items_start = letter_to_index(field[0]);
         else
         {
-            fprintf( stderr, "Bad fire item start index: %s\n",
-                     field.c_str() );
+            fprintf(stderr, "Bad fire item start index: %s\n",
+                     field.c_str());
         }
     }
     else if (key == "assign_item_slot")
@@ -2456,22 +2456,22 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 #endif
     else if (key == "hp_warning")
     {
-        hp_warning = atoi( field.c_str() );
+        hp_warning = atoi(field.c_str());
         if (hp_warning < 0 || hp_warning > 100)
         {
             hp_warning = 0;
-            fprintf( stderr, "Bad HP warning percentage -- %s\n",
-                     field.c_str() );
+            fprintf(stderr, "Bad HP warning percentage -- %s\n",
+                     field.c_str());
         }
     }
     else if (key == "mp_warning")
     {
-        magic_point_warning = atoi( field.c_str() );
+        magic_point_warning = atoi(field.c_str());
         if (magic_point_warning < 0 || magic_point_warning > 100)
         {
             magic_point_warning = 0;
-            fprintf( stderr, "Bad MP warning percentage -- %s\n",
-                     field.c_str() );
+            fprintf(stderr, "Bad MP warning percentage -- %s\n",
+                     field.c_str());
         }
     }
     else INT_OPTION(ood_interesting, 0, 500);
@@ -2486,12 +2486,12 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "note_hp_percent")
     {
-        note_hp_percent = atoi( field.c_str() );
+        note_hp_percent = atoi(field.c_str());
         if (note_hp_percent < 0 || note_hp_percent > 100)
         {
             note_hp_percent = 0;
-            fprintf( stderr, "Bad HP note percentage -- %s\n",
-                     field.c_str() );
+            fprintf(stderr, "Bad HP note percentage -- %s\n",
+                     field.c_str());
         }
     }
 #ifndef DGAMELAUNCH
@@ -2512,7 +2512,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(auto_list);
     else if (key == "default_target")
     {
-        default_target = _read_bool( field, default_target );
+        default_target = _read_bool(field, default_target);
         if (default_target)
             target_unshifted_dirs = false;
     }
@@ -2713,20 +2713,20 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         hp_colour.clear();
         std::vector<std::string> thesplit = split_string(",", field);
-        for ( unsigned i = 0; i < thesplit.size(); ++i )
+        for (unsigned i = 0; i < thesplit.size(); ++i)
         {
             std::vector<std::string> insplit = split_string(":", thesplit[i]);
             int hp_percent = 100;
 
-            if ( insplit.size() == 0 || insplit.size() > 2
-                 || insplit.size() == 1 && i != 0 )
+            if (insplit.size() == 0 || insplit.size() > 2
+                 || insplit.size() == 1 && i != 0)
             {
                 report_error (
                     make_stringf("Bad hp_colour string: %s\n", field.c_str()));
                 break;
             }
 
-            if ( insplit.size() == 2 )
+            if (insplit.size() == 2)
                 hp_percent = atoi(insplit[0].c_str());
 
             int scolour = str_to_colour(insplit[(insplit.size() == 1) ? 0 : 1]);
@@ -2737,20 +2737,20 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         mp_colour.clear();
         std::vector<std::string> thesplit = split_string(",", field);
-        for ( unsigned i = 0; i < thesplit.size(); ++i )
+        for (unsigned i = 0; i < thesplit.size(); ++i)
         {
             std::vector<std::string> insplit = split_string(":", thesplit[i]);
             int mp_percent = 100;
 
-            if ( insplit.size() == 0 || insplit.size() > 2
-                 || insplit.size() == 1 && i != 0 )
+            if (insplit.size() == 0 || insplit.size() > 2
+                 || insplit.size() == 1 && i != 0)
             {
                 report_error (
                     make_stringf("Bad mp_colour string: %s\n", field.c_str()));
                 break;
             }
 
-            if ( insplit.size() == 2 )
+            if (insplit.size() == 2)
                 mp_percent = atoi(insplit[0].c_str());
 
             int scolour = str_to_colour(insplit[(insplit.size() == 1) ? 0 : 1]);
@@ -2775,7 +2775,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             }
 
             int stat_limit = 1;
-            if (insplit.size() == 2 )
+            if (insplit.size() == 2)
                 stat_limit = atoi(insplit[0].c_str());
 
             int scolour = str_to_colour(insplit[(insplit.size() == 1) ? 0 : 1]);
@@ -2785,10 +2785,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "note_skill_levels")
     {
         std::vector<std::string> thesplit = split_string(",", field);
-        for ( unsigned i = 0; i < thesplit.size(); ++i )
+        for (unsigned i = 0; i < thesplit.size(); ++i)
         {
             int num = atoi(thesplit[i].c_str());
-            if ( num > 0 && num <= 27 )
+            if (num > 0 && num <= 27)
                 note_skill_levels.push_back(num);
             else
             {
@@ -2848,7 +2848,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "travel_delay")
     {
         // Read travel delay in milliseconds.
-        travel_delay = atoi( field.c_str() );
+        travel_delay = atoi(field.c_str());
         if (travel_delay < -1)
             travel_delay = -1;
         if (travel_delay > 2000)
@@ -2857,7 +2857,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "explore_delay")
     {
         // Read explore delay in milliseconds.
-        explore_delay = atoi( field.c_str() );
+        explore_delay = atoi(field.c_str());
         if (explore_delay < -1)
             explore_delay = -1;
         if (explore_delay > 2000)
@@ -2865,7 +2865,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "level_map_cursor_step")
     {
-        level_map_cursor_step = atoi( field.c_str() );
+        level_map_cursor_step = atoi(field.c_str());
         if (level_map_cursor_step < 1)
             level_map_cursor_step = 1;
         if (level_map_cursor_step > 50)
@@ -2886,19 +2886,19 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             if (pos && pos != std::string::npos)
             {
                 std::string prefix = fragments[i].substr(0, pos);
-                int channel = str_to_channel( prefix );
+                int channel = str_to_channel(prefix);
                 if (channel != -1 || prefix == "any")
                 {
-                    std::string s = fragments[i].substr( pos + 1 );
-                    trim_string( s );
+                    std::string s = fragments[i].substr(pos + 1);
+                    trim_string(s);
                     force_more_message.push_back(
-                        message_filter( channel, s ) );
+                        message_filter(channel, s));
                     continue;
                 }
             }
 
             force_more_message.push_back(
-                    message_filter( fragments[i] ) );
+                    message_filter(fragments[i]));
         }
     }
     else if (key == "drop_filter")
@@ -2909,7 +2909,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         std::vector<std::string> seg = split_string(",", field);
         for (int i = 0, count = seg.size(); i < count; ++i)
-            prevent_travel_to( seg[i] );
+            prevent_travel_to(seg[i]);
     }
     else if (key == "tc_reachable")
     {
@@ -2972,7 +2972,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "explore_item_greed")
     {
-        explore_item_greed = atoi( field.c_str() );
+        explore_item_greed = atoi(field.c_str());
         if (explore_item_greed > 1000)
             explore_item_greed = 1000;
         else if (explore_item_greed < -1000)
@@ -2985,7 +2985,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         std::vector<std::string> seg = split_string(",", field);
         for (int i = 0, count = seg.size(); i < count; ++i)
-            Stash::filter( seg[i] );
+            Stash::filter(seg[i]);
     }
     else if (key == "sound")
     {
@@ -3080,7 +3080,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "dump_message_count")
     {
         // Capping is implicit
-        dump_message_count = atoi( field.c_str() );
+        dump_message_count = atoi(field.c_str());
     }
     else if (key == "dump_item_origins")
     {
@@ -3121,7 +3121,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "dump_item_origin_price")
     {
-        dump_item_origin_price = atoi( field.c_str() );
+        dump_item_origin_price = atoi(field.c_str());
         if (dump_item_origin_price < -1)
             dump_item_origin_price = -1;
     }
@@ -3401,7 +3401,7 @@ std::string game_options::resolve_include(
         const std::vector<std::string> &dirs(*rcdirs);
         for (int i = 0, size = dirs.size(); i < size; ++i)
         {
-            const std::string candidate( catpath(dirs[i], included_file) );
+            const std::string candidate(catpath(dirs[i], included_file));
             if (file_exists(candidate))
                 return (candidate);
         }
@@ -3410,7 +3410,7 @@ std::string game_options::resolve_include(
     return datafile_path(included_file, false, true);
 }
 
-std::string game_options::resolve_include( const std::string &file,
+std::string game_options::resolve_include(const std::string &file,
                                            const char *type)
 {
     try
@@ -3502,11 +3502,11 @@ static std::string check_string(const char *s)
 void get_system_environment(void)
 {
     // The player's name
-    SysEnv.crawl_name = check_string( getenv("CRAWL_NAME") );
+    SysEnv.crawl_name = check_string(getenv("CRAWL_NAME"));
 
     // The directory which contians init.txt, macro.txt, morgue.txt
     // This should end with the appropriate path delimiter.
-    SysEnv.crawl_dir = check_string( getenv("CRAWL_DIR") );
+    SysEnv.crawl_dir = check_string(getenv("CRAWL_DIR"));
 
 #ifdef DGL_SIMPLE_MESSAGING
     // Enable DGL_SIMPLE_MESSAGING only if SIMPLEMAIL and MAIL are set.
@@ -3519,11 +3519,11 @@ void get_system_environment(void)
 #endif
 
     // The full path to the init file -- this overrides CRAWL_DIR.
-    SysEnv.crawl_rc = check_string( getenv("CRAWL_RC") );
+    SysEnv.crawl_rc = check_string(getenv("CRAWL_RC"));
 
 #ifdef MULTIUSER
     // The user's home directory (used to look for ~/.crawlrc file)
-    SysEnv.home = check_string( getenv("HOME") );
+    SysEnv.home = check_string(getenv("HOME"));
 #endif
 }                               // end get_system_environment()
 
@@ -3675,7 +3675,7 @@ static void _edit_save(int argc, char **argv)
                "  put <chunk> [<file>]      extract a chunk to <file> (default \"chunk\", \"-\" for stdin)\n"
                "  rm <chunk>                delete a chunk\n"
                "  repack                    defrag and reclaim unused space\n"
-               );
+             );
         return;
     }
     const char *name = argv[0];
@@ -3836,7 +3836,7 @@ static bool _check_extra_opt(char* _opt)
     return (true);
 }
 
-bool parse_args( int argc, char **argv, bool rc_only )
+bool parse_args(int argc, char **argv, bool rc_only)
 {
     COMPILE_CHECK(ARRAYSZ(cmd_ops) == CLO_NOPS, c1);
 

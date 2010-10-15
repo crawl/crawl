@@ -40,14 +40,14 @@ int place_type(unsigned short place)
     return lev == 0xFF? (int) type : (int) LEVEL_DUNGEON;
 }
 
-unsigned short get_packed_place( branch_type branch, int subdepth,
-                                 level_area_type level_type )
+unsigned short get_packed_place(branch_type branch, int subdepth,
+                                 level_area_type level_type)
 {
     unsigned short place = (unsigned short)
-        ( (static_cast<int>(branch) << 8) | (subdepth & 0xFF) );
+        ((static_cast<int>(branch) << 8) | (subdepth & 0xFF));
 
     if (level_type != LEVEL_DUNGEON)
-        place = (unsigned short) ( (static_cast<int>(level_type) << 8) | 0xFF );
+        place = (unsigned short) ((static_cast<int>(level_type) << 8) | 0xFF);
 
     return place;
 }
@@ -59,14 +59,14 @@ unsigned short get_packed_place()
                             you.level_type);
 }
 
-bool single_level_branch( branch_type branch )
+bool single_level_branch(branch_type branch)
 {
     return (branch >= 0 && branch < NUM_BRANCHES
             && branches[branch].depth == 1);
 }
 
-std::string place_name( unsigned short place, bool long_name,
-                        bool include_number )
+std::string place_name(unsigned short place, bool long_name,
+                        bool include_number)
 {
 
     uint8_t branch = (place >> 8) & 0xFF;
@@ -78,11 +78,11 @@ std::string place_name( unsigned short place, bool long_name,
         switch (branch)
         {
         case LEVEL_ABYSS:
-            return ( long_name ? "The Abyss" : "Abyss" );
+            return (long_name ? "The Abyss" : "Abyss");
         case LEVEL_PANDEMONIUM:
-            return ( long_name ? "Pandemonium" : "Pan" );
+            return (long_name ? "Pandemonium" : "Pan");
         case LEVEL_LABYRINTH:
-            return ( long_name ? "a Labyrinth" : "Lab" );
+            return (long_name ? "a Labyrinth" : "Lab");
         case LEVEL_PORTAL_VAULT:
             // XXX: This was originally in misc.cc:new_level. It really makes
             // no sense for it to be there, as there are instances where portal
@@ -106,7 +106,7 @@ std::string place_name( unsigned short place, bool long_name,
                 return long_name ? "a Portal Chamber" : "Port";
             }
         default:
-            return ( long_name ? "Buggy Badlands" : "Bug" );
+            return (long_name ? "Buggy Badlands" : "Bug");
         }
     }
 
@@ -118,7 +118,7 @@ std::string place_name( unsigned short place, bool long_name,
         if (long_name)
         {
             // decapitalise 'the'
-            if ( result.find("The") == 0 )
+            if (result.find("The") == 0)
                 result[0] = 't';
             result = make_stringf("Level %d of %s",
                       lev, result.c_str());
@@ -136,14 +136,14 @@ std::string place_name( unsigned short place, bool long_name,
 //      describe places would be nice.
 std::string short_place_name(unsigned short place)
 {
-    return place_name( place, false, true );
+    return place_name(place, false, true);
 }
 
 // Prepositional form of branch level name.  For example, "in the
 // Abyss" or "on level 3 of the Main Dungeon".
 std::string prep_branch_level_name(unsigned short packed_place)
 {
-    std::string place = place_name( packed_place, true, true );
+    std::string place = place_name(packed_place, true, true);
     if (place.length() && place != "Pandemonium")
         place[0] = tolower(place[0]);
     return (place.find("level") == 0 ? "on " + place
@@ -153,7 +153,7 @@ std::string prep_branch_level_name(unsigned short packed_place)
 // Use current branch and depth
 std::string prep_branch_level_name()
 {
-    return prep_branch_level_name( get_packed_place() );
+    return prep_branch_level_name(get_packed_place());
 }
 
 int absdungeon_depth(branch_type branch, int subdepth)

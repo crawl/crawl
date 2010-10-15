@@ -344,7 +344,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         {
             int threshold = proportion;
 
-            const int dist = distance( you.pos(), *ri );
+            const int dist = distance(you.pos(), *ri);
 
             if (dist > very_far)
                 threshold = threshold / 3;

@@ -367,7 +367,7 @@ bool ash_id_item(item_def& item, bool silent)
         && (jewellery_is_amulet(item) ?
              _is_slot_cursed(EQ_AMULET) :
              (_is_slot_cursed(EQ_LEFT_RING) && _is_slot_cursed(EQ_RIGHT_RING))
-           ))
+         ))
     {
         ided |= ISFLAG_EQ_JEWELLERY_MASK;
     }

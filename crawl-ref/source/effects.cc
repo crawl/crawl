@@ -695,7 +695,7 @@ bool forget_spell(void)
         if (you.spells[i] != SPELL_NO_SPELL)
         {
             num++;
-            if (one_chance_in( num ))
+            if (one_chance_in(num))
                 slot = i;
         }
     }
@@ -706,7 +706,7 @@ bool forget_spell(void)
     mprf("Your knowledge of %s becomes hazy all of a sudden, and you forget "
          "the spell!", spell_title(you.spells[slot]));
 
-    del_spell_from_memory_by_slot( slot );
+    del_spell_from_memory_by_slot(slot);
     return (true);
 }
 
@@ -903,8 +903,8 @@ bool recharge_wand(int item_slot, bool known)
     {
         if (item_slot == -1)
         {
-            item_slot = prompt_invent_item( "Charge which item?", MT_INVLIST,
-                                            OSEL_RECHARGE, true, true, false );
+            item_slot = prompt_invent_item("Charge which item?", MT_INVLIST,
+                                            OSEL_RECHARGE, true, true, false);
         }
         if (prompt_failed(item_slot))
             return (false);
@@ -1113,8 +1113,8 @@ void yell(bool force)
         }
 
         mprf("Orders for allies: a - Attack new target.%s", previous.c_str());
-        mpr( "                   s - Stop attacking.");
-        mpr( "                   w - Wait here.           f - Follow me.");
+        mpr("                   s - Stop attacking.");
+        mpr("                   w - Wait here.           f - Follow me.");
     }
     mprf(" Anything else - Stay silent%s.",
          one_chance_in(20) ? " (and be thought a fool)" : "");
@@ -1842,14 +1842,14 @@ void change_labyrinth(bool msg)
     // have ended up in walls during the switching.
     std::vector<coord_def> dirs;
     dirs.push_back(coord_def(-1,-1));
-    dirs.push_back(coord_def( 0,-1));
-    dirs.push_back(coord_def( 1,-1));
+    dirs.push_back(coord_def(0,-1));
+    dirs.push_back(coord_def(1,-1));
     dirs.push_back(coord_def(-1, 0));
 
-    dirs.push_back(coord_def( 1, 0));
+    dirs.push_back(coord_def(1, 0));
     dirs.push_back(coord_def(-1, 1));
-    dirs.push_back(coord_def( 0, 1));
-    dirs.push_back(coord_def( 1, 1));
+    dirs.push_back(coord_def(0, 1));
+    dirs.push_back(coord_def(1, 1));
 
     // Search the entire shifted area for stacks of items now stuck in walls
     // and move them to a random adjacent non-wall grid.
@@ -2256,7 +2256,7 @@ void handle_time()
 
     // Only punish if contamination caused by mutagenic randarts.
     // (Haste and invisibility already penalised earlier.)
-    contaminate_player( added_contamination, mutagenic_randart );
+    contaminate_player(added_contamination, mutagenic_randart);
 
     // Only check for badness once every other turn.
     if (coinflip())
@@ -2434,7 +2434,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
          "mon #%d: range %d; "
          "pos (%d,%d); targ %d(%d,%d); flags %"PRIx64,
          mon->mindex(), range, mon->pos().x, mon->pos().y,
-         mon->foe, mon->target.x, mon->target.y, mon->flags );
+         mon->foe, mon->target.x, mon->target.y, mon->flags);
 #endif
 
     if (range <= 0)
@@ -2671,7 +2671,7 @@ void update_level(int elapsedTime)
     }
 
 #ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "total monsters on level = %d", mons_total );
+    mprf(MSGCH_DIAGNOSTICS, "total monsters on level = %d", mons_total);
 #endif
 
     for (int i = 0; i < MAX_CLOUDS; i++)
@@ -3226,16 +3226,16 @@ void update_corpses(int elapsedTime)
     }
 }
 
-static void _recharge_rod( item_def &rod, int aut, bool in_inv )
+static void _recharge_rod(item_def &rod, int aut, bool in_inv)
 {
     if (!item_is_rod(rod) || rod.plus >= rod.plus2)
         return;
 
     int rate = 4 + short(rod.props["rod_enchantment"]);
 
-    rate *= (10 + skill_bump( SK_EVOCATIONS ));
+    rate *= (10 + skill_bump(SK_EVOCATIONS));
     rate *= aut;
-    rate = div_rand_round( rate, 100 );
+    rate = div_rand_round(rate, 100);
 
     if (rate > rod.plus2 - rod.plus) // Prevent overflow
         rate = rod.plus2 - rod.plus;
@@ -3244,7 +3244,7 @@ static void _recharge_rod( item_def &rod, int aut, bool in_inv )
 
     if (rod.plus / ROD_CHARGE_MULT != (rod.plus + rate) / ROD_CHARGE_MULT)
     {
-        if (item_is_equipped( rod, true ))
+        if (item_is_equipped(rod, true))
             you.wield_change = true;
     }
 
@@ -3267,13 +3267,13 @@ void recharge_rods(int aut, bool level_only)
     {
         for (int item = 0; item < ENDOFPACK; ++item)
         {
-            _recharge_rod( you.inv[item], aut, true );
+            _recharge_rod(you.inv[item], aut, true);
         }
     }
 
     for (int item = 0; item < MAX_ITEMS; ++item)
     {
-        _recharge_rod( mitm[item], aut, false );
+        _recharge_rod(mitm[item], aut, false);
     }
 }
 

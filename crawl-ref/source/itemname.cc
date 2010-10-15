@@ -46,22 +46,22 @@
 
 id_arr type_ids;
 
-static bool _is_random_name_space( char let );
-static bool _is_random_name_vowel( char let );
+static bool _is_random_name_space(char let);
+static bool _is_random_name_vowel(char let);
 
 static char _random_vowel(int seed);
 static char _random_cons(int seed);
 
-bool is_vowel( const char chr )
+bool is_vowel(const char chr)
 {
-    const char low = tolower( chr );
+    const char low = tolower(chr);
     return (low == 'a' || low == 'e' || low == 'i' || low == 'o' || low == 'u');
 }
 
 // quant_name is useful since it prints out a different number of items
 // than the item actually contains.
-std::string quant_name( const item_def &item, int quant,
-                        description_level_type des, bool terse )
+std::string quant_name(const item_def &item, int quant,
+                        description_level_type des, bool terse)
 {
     // item_name now requires a "real" item, so we'll mangle a tmp
     item_def tmp = item;
@@ -146,7 +146,7 @@ std::string item_def::name(description_level_type descrip,
     }
 
     if (item_is_orb(*this)
-        || (ident || item_type_known( *this ))
+        || (ident || item_type_known(*this))
             && (this->base_type == OBJ_MISCELLANY
                    && this->sub_type == MISC_HORN_OF_GERYON
                 || is_artefact(*this)))
@@ -293,7 +293,7 @@ std::string item_def::name(description_level_type descrip,
                 tried_str = "tried";
         }
 
-        if ( with_inscription && !(this->inscription.empty()) )
+        if (with_inscription && !(this->inscription.empty()))
         {
             buff << " {";
             if (tried)
@@ -574,7 +574,7 @@ static const char* wand_primary_string(int p)
 
 static const char* potion_type_name(int potiontype)
 {
-    switch ( static_cast<potion_type>(potiontype) )
+    switch (static_cast<potion_type>(potiontype))
     {
     case POT_HEALING:           return "healing";
     case POT_HEAL_WOUNDS:       return "heal wounds";
@@ -611,7 +611,7 @@ static const char* potion_type_name(int potiontype)
 
 static const char* scroll_type_name(int scrolltype)
 {
-    switch ( static_cast<scroll_type>(scrolltype) )
+    switch (static_cast<scroll_type>(scrolltype))
     {
     case SCR_IDENTIFY:           return "identify";
     case SCR_TELEPORTATION:      return "teleportation";
@@ -822,7 +822,7 @@ static const char* misc_type_name(int type, bool known)
 {
     if (known)
     {
-        switch ( static_cast<misc_item_type>(type) )
+        switch (static_cast<misc_item_type>(type))
         {
         case MISC_DECK_OF_ESCAPE:      return "deck of escape";
         case MISC_DECK_OF_DESTRUCTION: return "deck of destruction";
@@ -856,7 +856,7 @@ static const char* misc_type_name(int type, bool known)
     }
     else
     {
-        switch ( static_cast<misc_item_type>(type) )
+        switch (static_cast<misc_item_type>(type))
         {
         case MISC_DECK_OF_ESCAPE:
         case MISC_DECK_OF_DESTRUCTION:
@@ -929,7 +929,7 @@ static const char* book_primary_string(int p)
 
 static const char* book_type_name(int booktype)
 {
-    switch ( static_cast<book_type>(booktype) )
+    switch (static_cast<book_type>(booktype))
     {
     case BOOK_MINOR_MAGIC_I:
     case BOOK_MINOR_MAGIC_II:
@@ -1052,7 +1052,7 @@ static const char* staff_type_name(int stafftype)
 
 const char* racial_description_string(const item_def& item, bool terse)
 {
-    switch (get_equip_race( item ))
+    switch (get_equip_race(item))
     {
     case ISFLAG_ORCISH:
         return terse ? "orc " : "orcish ";
@@ -1529,14 +1529,14 @@ std::string item_def::name_aux(description_level_type desc,
                 "smoky ", "glowing ", "sedimented ", "metallic ", "murky ",
                 "gluggy ", "oily ", "slimy ", "emulsified "
             };
-            COMPILE_CHECK( ARRAYSZ(potion_qualifiers) == PDQ_NQUALS, c1 );
+            COMPILE_CHECK(ARRAYSZ(potion_qualifiers) == PDQ_NQUALS, c1);
 
             static const char *potion_colours[] = {
                 "clear", "blue", "black", "silvery", "cyan", "purple",
                 "orange", "inky", "red", "yellow", "green", "brown", "pink",
                 "white"
             };
-            COMPILE_CHECK( ARRAYSZ(potion_colours) == PDC_NCOLOURS, c1 );
+            COMPILE_CHECK(ARRAYSZ(potion_colours) == PDC_NCOLOURS, c1);
 
             const char *qualifier =
                 (pqual < 0 || pqual >= PDQ_NQUALS) ? "bug-filled "
@@ -1963,7 +1963,7 @@ static item_type_id_type objtype_to_idtype(object_class_type base_type)
     }
 }
 
-bool item_type_known( const item_def& item )
+bool item_type_known(const item_def& item)
 {
     if (item_ident(item, ISFLAG_KNOW_TYPE))
         return (true);
@@ -2006,7 +2006,7 @@ bool item_type_known(const object_class_type base_type, const int sub_type)
         return (false);
 }
 
-bool item_type_tried( const item_def& item )
+bool item_type_tried(const item_def& item)
 {
     if (item_type_known(item))
         return (false);
@@ -2038,8 +2038,8 @@ id_arr& get_typeid_array()
     return type_ids;
 }
 
-void set_ident_type( item_def &item, item_type_id_state_type setting,
-                     bool force )
+void set_ident_type(item_def &item, item_type_id_state_type setting,
+                     bool force)
 {
     if (is_artefact(item) || crawl_state.game_is_arena())
         return;
@@ -2064,14 +2064,14 @@ void set_ident_type( item_def &item, item_type_id_state_type setting,
     }
 }
 
-void set_ident_type( object_class_type basetype, int subtype,
-                     item_type_id_state_type setting, bool force )
+void set_ident_type(object_class_type basetype, int subtype,
+                     item_type_id_state_type setting, bool force)
 {
     preserve_quiver_slots p;
     // Don't allow overwriting of known type with tried unless forced.
     if (!force
         && (setting == ID_MON_TRIED_TYPE || setting == ID_TRIED_TYPE)
-        && setting <= get_ident_type( basetype, subtype ))
+        && setting <= get_ident_type(basetype, subtype))
     {
         return;
     }
@@ -2129,8 +2129,8 @@ static MenuEntry *discoveries_item_mangle(MenuEntry *me)
     return (newme);
 }
 
-bool identified_item_names( const item_def *it1,
-                            const item_def *it2 )
+bool identified_item_names(const item_def *it1,
+                            const item_def *it2)
 {
     int flags = it1->base_type == OBJ_WANDS ? 0 : ISFLAG_KNOW_PLUSES;
     return it1->name(DESC_PLAIN, false, true, false, false, flags)
@@ -2286,28 +2286,28 @@ std::string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
         else if (i > 0
                  && (want_vowel
                      || (i > 1
-                         && _is_random_name_vowel( name[i - 1] )
-                         && !_is_random_name_vowel( name[i - 2] )
-                         && (numb[(k + 4 * j) % 17] % 5) <= 1 ))) // 2/5 chance
+                         && _is_random_name_vowel(name[i - 1])
+                         && !_is_random_name_vowel(name[i - 2])
+                         && (numb[(k + 4 * j) % 17] % 5) <= 1))) // 2/5 chance
         {
             // Place a vowel.
             want_vowel = true;
-            name[i] = _random_vowel( numb[(k + 7 * j) % 17] );
+            name[i] = _random_vowel(numb[(k + 7 * j) % 17]);
 
-            if (_is_random_name_space( name[i] ))
+            if (_is_random_name_space(name[i]))
             {
                 if (i == 0) // Shouldn't happen.
                 {
                     want_vowel = false;
-                    name[i]    = _random_cons( numb[(k + 14 * j) % 17] );
+                    name[i]    = _random_cons(numb[(k + 14 * j) % 17]);
                 }
                 else if (len < 7
                          || i <= 2 || i >= len - 3
-                         || _is_random_name_space( name[i - 1] )
-                         || (i > 1 && _is_random_name_space( name[i - 2] ))
+                         || _is_random_name_space(name[i - 1])
+                         || (i > 1 && _is_random_name_space(name[i - 2]))
                          || i > 2
-                            && !_is_random_name_vowel( name[i - 1] )
-                            && !_is_random_name_vowel( name[i - 2] ))
+                            && !_is_random_name_vowel(name[i - 1])
+                            && !_is_random_name_vowel(name[i - 2]))
                 {
                     // Replace the space with something else if ...
                     // * the name is really short
@@ -2437,12 +2437,12 @@ std::string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
                 {
                     // Start with any letter.
                     name[i] = 'a' + (numb[(k + 8 * j) % 17] % 26);
-                    want_vowel = _is_random_name_vowel( name[i] );
+                    want_vowel = _is_random_name_vowel(name[i]);
                 }
                 else
                 {
                     // Pick a random consonant.
-                    name[i] = _random_cons( numb[(k + 3 * j) % 17] );
+                    name[i] = _random_cons(numb[(k + 3 * j) % 17]);
                 }
             }
         }
@@ -2455,14 +2455,14 @@ std::string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
         }
 
         // Picked wrong type?
-        if (want_vowel && !_is_random_name_vowel( name[i] )
-            || !want_vowel && _is_random_name_vowel( name[i] ))
+        if (want_vowel && !_is_random_name_vowel(name[i])
+            || !want_vowel && _is_random_name_vowel(name[i]))
         {
             i--;
             continue;
         }
 
-        if (_is_random_name_space( name[i] ))
+        if (_is_random_name_space(name[i]))
             has_space = true;
 
         // If we just got a vowel, we want a consonant next, and vice versa.
@@ -2471,22 +2471,22 @@ std::string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
 
     // Catch break and try to give a final letter.
     if (i > 0
-        && !_is_random_name_space( name[i - 1] )
+        && !_is_random_name_space(name[i - 1])
         && name[i - 1] != 'y'
-        && _is_random_name_vowel( name[i - 1] )
+        && _is_random_name_vowel(name[i - 1])
         && (count > 9 || (i < 8 && numb[16] % 3)))
     {
         // 2/3 chance of ending in a consonant
-        name[i] = _random_cons( numb[j] );
+        name[i] = _random_cons(numb[j]);
     }
 
-    len = strlen( name );
+    len = strlen(name);
 
     if (len)
     {
         for (i = len - 1; i > 0; i--)
         {
-            if (!isspace( name[i] ))
+            if (!isspace(name[i]))
                 break;
             else
             {
@@ -2505,7 +2505,7 @@ std::string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
 
     for (i = 0; i < len; i++)
         if (all_cap || i == 0 || name[i - 1] == ' ')
-            name[i] = toupper( name[i] );
+            name[i] = toupper(name[i]);
 
     return name;
 }
@@ -2516,7 +2516,7 @@ static bool _is_random_name_space(char let)
 }
 
 // Returns true for vowels, 'y' or space.
-static bool _is_random_name_vowel( char let )
+static bool _is_random_name_vowel(char let)
 {
     return (let == 'a' || let == 'e' || let == 'i' || let == 'o' || let == 'u'
             || let == 'y' || let == ' ');
@@ -2524,7 +2524,7 @@ static bool _is_random_name_vowel( char let )
 
 // Returns a random vowel (a, e, i, o, u with equal probability) or space
 // or 'y' with lower chances.
-static char _random_vowel( int seed )
+static char _random_vowel(int seed)
 {
     static const char vowels[] = "aeiouaeiouaeiouy  ";
     return (vowels[ seed % (sizeof(vowels) - 1) ]);
@@ -2532,13 +2532,13 @@ static char _random_vowel( int seed )
 
 // Returns a random consonant with not quite equal probability.
 // Does not include 'y'.
-static char _random_cons( int seed )
+static char _random_cons(int seed)
 {
     static const char consonants[] = "bcdfghjklmnpqrstvwxzcdfghlmnrstlmnrst";
     return (consonants[ seed % (sizeof(consonants) - 1) ]);
 }
 
-bool is_interesting_item( const item_def& item )
+bool is_interesting_item(const item_def& item)
 {
     if (fully_identified(item) && is_artefact(item))
         return (true);
@@ -2860,6 +2860,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case SCR_ENCHANT_WEAPON_II:
         case SCR_ENCHANT_WEAPON_III:
         case SCR_ENCHANT_ARMOUR:
+        case SCR_VORPALISE_WEAPON:
             return (you.species == SP_CAT);
         case SCR_DETECT_CURSE:
             return (you.religion == GOD_ASHENZARI);
@@ -3183,7 +3184,7 @@ std::string get_menu_colour_prefix_tags(const item_def &item,
     int col = menu_colour(item_name, cprf, "pickup");
 
     if (col != -1)
-        colour = colour_to_str( col );
+        colour = colour_to_str(col);
 
     if (!colour.empty())
     {
@@ -3221,7 +3222,7 @@ std::string get_message_colour_tags(const item_def &item,
     }
 
     if (col != -1)
-        colour = colour_to_str( col );
+        colour = colour_to_str(col);
 
     if (!colour.empty())
     {

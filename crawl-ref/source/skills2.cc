@@ -1409,13 +1409,13 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
             else
                 putch(lcount++);
 
-            cprintf( " %c %-14s Skill %2d",
+            cprintf(" %c %-14s Skill %2d",
                      (you.skills[x] == 0 || you.skills[x] == 27) ? ' ' :
                      (you.practise_skill[x]) ? '+' : '-',
-                     skill_name(x), you.skills[x] );
+                     skill_name(x), you.skills[x]);
 
 #ifdef DEBUG_DIAGNOSTICS
-            cprintf( " %5d", you.skill_points[x] );
+            cprintf(" %5d", you.skill_points[x]);
 #endif
 
             if (you.skills[x] < 27)
@@ -1427,7 +1427,7 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
                     const int needed =
                         (skill_exp_needed(you.skills[x] + 1) * spec_abil) / 100;
                     const int prev_needed =
-                        (skill_exp_needed(you.skills[x]    ) * spec_abil) / 100;
+                        (skill_exp_needed(you.skills[x]  ) * spec_abil) / 100;
 
                     const int amt_done = you.skill_points[x] - prev_needed;
                     int percent_done = (amt_done*100) / (needed - prev_needed);
@@ -1440,7 +1440,7 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
 
                     textcolor(CYAN);
                     // Round down to multiple of 5.
-                    cprintf( " (%2d%%)", (percent_done / 5) * 5 );
+                    cprintf(" (%2d%%)", (percent_done / 5) * 5);
                 }
                 else
                 {
@@ -1701,8 +1701,8 @@ unsigned get_skill_rank(unsigned skill_lev)
                             /* level 27 */    : 4);
 }
 
-std::string skill_title_by_rank( uint8_t best_skill, uint8_t skill_rank,
-                         int species, int str, int dex, int god )
+std::string skill_title_by_rank(uint8_t best_skill, uint8_t skill_rank,
+                         int species, int str, int dex, int god)
 {
     // paranoia
     if (is_invalid_skill(best_skill))
@@ -1784,8 +1784,8 @@ std::string skill_title_by_rank( uint8_t best_skill, uint8_t skill_rank,
                            : result);
 }
 
-std::string skill_title( uint8_t best_skill, uint8_t skill_lev,
-                         int species, int str, int dex, int god )
+std::string skill_title(uint8_t best_skill, uint8_t skill_lev,
+                         int species, int str, int dex, int god)
 {
     return skill_title_by_rank(best_skill, get_skill_rank(skill_lev), species, str, dex, god);
 }
@@ -1793,10 +1793,10 @@ std::string skill_title( uint8_t best_skill, uint8_t skill_lev,
 std::string player_title()
 {
     const uint8_t best = best_skill(SK_FIGHTING, (NUM_SKILLS - 1));
-    return (skill_title( best, you.skills[ best ] ));
+    return (skill_title(best, you.skills[ best ]));
 }
 
-skill_type best_skill( int min_skill, int max_skill, int excl_skill )
+skill_type best_skill(int min_skill, int max_skill, int excl_skill)
 {
     int ret = SK_FIGHTING;
     unsigned int best_skill_level = 0;
@@ -1842,7 +1842,7 @@ skill_type best_skill( int min_skill, int max_skill, int excl_skill )
 // in that there is no additional advantage anywhere else in the game
 // for partial skill levels.  Besides, its probably best if the player
 // isn't able to micromanage at that level.  -- bwr
-void init_skill_order( void )
+void init_skill_order(void)
 {
     for (int i = SK_FIGHTING; i < NUM_SKILLS; i++)
     {
@@ -1852,7 +1852,7 @@ void init_skill_order( void )
             continue;
         }
 
-        const int i_diff = species_skills( i, you.species );
+        const int i_diff = species_skills(i, you.species);
         const unsigned int i_points = (you.skill_points[i] * 100) / i_diff;
 
         you.skill_order[i] = 0;
@@ -1862,7 +1862,7 @@ void init_skill_order( void )
             if (i == j || is_invalid_skill(j))
                 continue;
 
-            const int j_diff = species_skills( j, you.species );
+            const int j_diff = species_skills(j, you.species);
             const unsigned int j_points = (you.skill_points[j] * 100) / j_diff;
 
             if (you.skills[j] == you.skills[i]
@@ -2010,7 +2010,7 @@ void wield_warning(bool newWeapon)
         if (you.dex() < 11)
         {
             mprf(MSGCH_WARN, "Wielding %s is %s awkward.",
-                 mstr, (you.dex() < 7) ? "fairly" : "a little" );
+                 mstr, (you.dex() < 7) ? "fairly" : "a little");
         }
         else
         {
@@ -2038,12 +2038,12 @@ void dump_skills(std::string &text)
     {
         if (you.skills[i] > 0)
         {
-            text += ( (you.skills[i] == 27)   ? " * " :
-                      (you.practise_skill[i]) ? " + "
-                                              : " - " );
+            text += ((you.skills[i] == 27)   ? " * " :
+                     (you.practise_skill[i]) ? " + "
+                                             : " - ");
 
             text += "Level ";
-            itoa( you.skills[i], tmp_quant, 10 );
+            itoa(you.skills[i], tmp_quant, 10);
             text += tmp_quant;
             text += " ";
             text += skill_name(i);

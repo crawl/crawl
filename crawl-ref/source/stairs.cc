@@ -53,7 +53,7 @@ bool check_annotation_exclusion_warning()
         if (!yesno("Continue anyway?", false, 'N', true, false))
         {
             canned_msg(MSG_OK);
-            interrupt_activity( AI_FORCE_INTERRUPT );
+            interrupt_activity(AI_FORCE_INTERRUPT);
             return (false);
         }
         return (true);
@@ -85,7 +85,7 @@ bool check_annotation_exclusion_warning()
         && !yesno("Enter next level anyway?", true, 'n', true, false))
     {
         canned_msg(MSG_OK);
-        interrupt_activity( AI_FORCE_INTERRUPT );
+        interrupt_activity(AI_FORCE_INTERRUPT);
         crawl_state.level_annotation_shown = false;
         return (false);
     }
@@ -157,7 +157,7 @@ static void _player_change_level_upstairs(dungeon_feature_type stair_find,
     if (level_type_exits_up(you.level_type))
         you.level_type = LEVEL_DUNGEON;
 
-    if (player_in_branch( BRANCH_VESTIBULE_OF_HELL ))
+    if (player_in_branch(BRANCH_VESTIBULE_OF_HELL))
     {
         you.where_are_you = you.hell_branch;
         you.absdepth0 = you.hell_exit;
@@ -694,7 +694,7 @@ void up_stairs(dungeon_feature_type force_stair,
     }
 
     if (old_level.branch == BRANCH_VESTIBULE_OF_HELL
-        && !player_in_branch( BRANCH_VESTIBULE_OF_HELL ))
+        && !player_in_branch(BRANCH_VESTIBULE_OF_HELL))
     {
         mpr("Thank you for visiting Hell. Please come again soon.");
     }
@@ -908,7 +908,7 @@ void down_stairs(dungeon_feature_type force_stair,
 
     if (stair_find > DNGN_ENTER_LABYRINTH
         && stair_find <= DNGN_ESCAPE_HATCH_DOWN
-        && player_in_branch( BRANCH_VESTIBULE_OF_HELL ))
+        && player_in_branch(BRANCH_VESTIBULE_OF_HELL))
     {
         // Down stairs in vestibule are one-way!
         // This doesn't make any sense. Why would there be any down stairs
@@ -1098,7 +1098,7 @@ void down_stairs(dungeon_feature_type force_stair,
     {
         std::string lname = get_level_filename(level_id::current());
 #ifdef DEBUG_DIAGNOSTICS
-        mprf( MSGCH_DIAGNOSTICS, "Deleting: %s", lname.c_str() );
+        mprf(MSGCH_DIAGNOSTICS, "Deleting: %s", lname.c_str());
 #endif
         you.save->delete_chunk(lname);
     }

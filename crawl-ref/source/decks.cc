@@ -457,10 +457,10 @@ static void _push_top_card(item_def& deck, card_type card,
 
 static void _remember_drawn_card(item_def& deck, card_type card, bool allow_id)
 {
-    ASSERT( is_deck(deck) );
+    ASSERT(is_deck(deck));
     CrawlHashTable &props = deck.props;
     CrawlVector &drawn = props["drawn_cards"].get_vector();
-    drawn.push_back( static_cast<char>(card) );
+    drawn.push_back(static_cast<char>(card));
 
     // Once you've drawn two cards, you know the deck.
     if (allow_id && (drawn.size() >= 2 || origin_is_god_gift(deck)))
@@ -536,7 +536,7 @@ static bool _check_buggy_deck(item_def& deck)
         if (deck.link == you.equip[EQ_WEAPON])
             unwield_item();
 
-        dec_inv_item_quantity( deck.link, 1 );
+        dec_inv_item_quantity(deck.link, 1);
         did_god_conduct(DID_CARDS, 1);
 
         return (true);
@@ -596,7 +596,7 @@ static bool _check_buggy_deck(item_def& deck)
         if (deck.link == you.equip[EQ_WEAPON])
             unwield_item();
 
-        dec_inv_item_quantity( deck.link, 1 );
+        dec_inv_item_quantity(deck.link, 1);
         did_god_conduct(DID_CARDS, 1);
 
         return (true);
@@ -714,12 +714,12 @@ static bool _check_buggy_deck(item_def& deck)
 }
 
 // Choose a deck from inventory and return its slot (or -1).
-static int _choose_inventory_deck( const char* prompt )
+static int _choose_inventory_deck(const char* prompt)
 {
-    const int slot = prompt_invent_item( prompt,
+    const int slot = prompt_invent_item(prompt,
                                          MT_INVLIST, OSEL_DRAW_DECK,
                                          true, true, true, 0, -1, NULL,
-                                         OPER_EVOKE );
+                                         OPER_EVOKE);
 
     if (prompt_failed(slot))
         return -1;
@@ -736,7 +736,7 @@ static int _choose_inventory_deck( const char* prompt )
 // Select a deck from inventory and draw a card from it.
 bool choose_deck_and_draw()
 {
-    const int slot = _choose_inventory_deck( "Draw from which deck?" );
+    const int slot = _choose_inventory_deck("Draw from which deck?");
 
     if (slot == -1)
     {
@@ -770,8 +770,8 @@ static void _deck_lose_card(item_def& deck)
         _shuffle_deck(deck);
         get_card_and_flags(deck, -1, flags);
     }
-    while ( (flags & CFLAG_MARKED) && coinflip()
-            || (flags & CFLAG_SEEN) && coinflip() );
+    while ((flags & CFLAG_MARKED) && coinflip()
+            || (flags & CFLAG_SEEN) && coinflip());
 
     _draw_top_card(deck, false, flags);
     deck.plus2++;
@@ -781,7 +781,7 @@ static void _deck_lose_card(item_def& deck)
 // Return false if the operation was failed/aborted along the way.
 bool deck_peek()
 {
-    const int slot = _choose_inventory_deck( "Peek at which deck?" );
+    const int slot = _choose_inventory_deck("Peek at which deck?");
     if (slot == -1)
     {
         crawl_state.zero_turns_taken();
@@ -853,7 +853,7 @@ bool deck_peek()
 // failed/aborted along the way.
 bool deck_mark()
 {
-    const int slot = _choose_inventory_deck( "Mark which deck?" );
+    const int slot = _choose_inventory_deck("Mark which deck?");
     if (slot == -1)
     {
         crawl_state.zero_turns_taken();
@@ -930,7 +930,7 @@ static void _redraw_stacked_cards(const std::vector<card_type>& draws,
     {
         cgotoxy(1, i+2);
         textcolor(selected == i ? WHITE : LIGHTGREY);
-        cprintf("%u - %s", i+1, card_name(draws[i]) );
+        cprintf("%u - %s", i+1, card_name(draws[i]));
         clear_to_end_of_line();
     }
 }
@@ -1188,7 +1188,7 @@ bool deck_triple_draw()
         if (slot == you.equip[EQ_WEAPON])
             unwield_item();
 
-        dec_inv_item_quantity( slot, 1 );
+        dec_inv_item_quantity(slot, 1);
     }
 
     // Note that card_effect() might cause you to unwield the deck.
@@ -1250,7 +1250,7 @@ static int _xom_check_card(item_def &deck, card_type card,
     return amusement;
 }
 
-void evoke_deck( item_def& deck )
+void evoke_deck(item_def& deck)
 {
     if (_check_buggy_deck(deck))
         return;
@@ -1291,7 +1291,7 @@ void evoke_deck( item_def& deck )
                 // You never completely appease Nemelex, but the effects
                 // get less frequent.
                 you.penance[GOD_NEMELEX_XOBEH] -=
-                    random2( (you.penance[GOD_NEMELEX_XOBEH]+18) / 10);
+                    random2((you.penance[GOD_NEMELEX_XOBEH]+18) / 10);
             }
         }
     }
@@ -1316,7 +1316,7 @@ void evoke_deck( item_def& deck )
     if (deck_gone)
     {
         mpr("The deck of cards disappears in a puff of smoke.");
-        dec_inv_item_quantity( deck.link, 1 );
+        dec_inv_item_quantity(deck.link, 1);
         // Finishing the deck will earn a point, even if it
         // was marked or stacked.
         brownie_points++;
@@ -1348,7 +1348,7 @@ void evoke_deck( item_def& deck )
         && you.skills[SK_EVOCATIONS] > 5 + random2(35))
     {
         mpr("Your skill with magical items lets you identify the deck.");
-        set_ident_flags( deck, ISFLAG_KNOW_TYPE );
+        set_ident_flags(deck, ISFLAG_KNOW_TYPE);
         msg::streams(MSGCH_EQUIPMENT) << deck.name(DESC_INVENTORY)
                                       << std::endl;
     }
@@ -1409,7 +1409,7 @@ static void _portal_card(int power, deck_rarity_type rarity)
         you.set_duration(DUR_CONTROL_TELEPORT, threshold); // Long enough to kick in.
 
     if (instant)
-        you_teleport_now( true );
+        you_teleport_now(true);
     else
         you_teleport();
 }
@@ -1808,9 +1808,9 @@ static void _helm_card(int power, deck_rarity_type rarity)
     }
 
     if (do_phaseshift)
-        cast_phase_shift( random2(power/4) );
+        cast_phase_shift(random2(power/4));
     if (do_stoneskin)
-        cast_stoneskin( random2(power/4) );
+        cast_stoneskin(random2(power/4));
     if (num_resists)
     {
         const duration_type possible_resists[4] = {
@@ -1861,11 +1861,11 @@ static void _blade_card(int power, deck_rarity_type rarity)
     const int power_level = get_power_level(power, rarity);
     if (power_level >= 2)
     {
-        cast_tukimas_dance( random2(power/4) );
+        cast_tukimas_dance(random2(power/4));
     }
     else if (power_level == 1)
     {
-        cast_sure_blade( random2(power/4) );
+        cast_sure_blade(random2(power/4));
     }
     else
     {
@@ -2147,7 +2147,7 @@ static void _sage_card(int power, deck_rarity_type rarity)
     // skill = random_choice([x*(40-x)*c/10 for x in skill_levels])
     int totalweight = 0;
     int result = -1;
-    for (int i = 0; i < NUM_SKILLS; ++i )
+    for (int i = 0; i < NUM_SKILLS; ++i)
     {
         if (skill_name(i) == NULL)
             continue;
@@ -2238,7 +2238,7 @@ static void _water_card(int power, deck_rarity_type rarity)
         mpr("Water floods your area!");
 
         // Flood all visible squares.
-        for (radius_iterator ri( you.pos(), LOS_RADIUS, false ); ri; ++ri)
+        for (radius_iterator ri(you.pos(), LOS_RADIUS, false); ri; ++ri)
         {
             coord_def p = *ri;
             destroy_trap(p);
@@ -2277,9 +2277,9 @@ static void _dowsing_card(int power, deck_rarity_type rarity)
     }
 
     if (things_to_do[0])
-        cast_detect_secret_doors( random2(power/4) );
+        cast_detect_secret_doors(random2(power/4));
     if (things_to_do[1])
-        detect_traps( random2(power/4) );
+        detect_traps(random2(power/4));
     if (things_to_do[2])
     {
         you.set_duration(DUR_TELEPATHY, random2(power/4), 0,
@@ -2413,7 +2413,7 @@ static void _genie_card(int power, deck_rarity_type rarity)
         mpr("A genie takes form and thunders: "
             "\"Choose your reward, mortal!\"");
         more();
-        acquirement( OBJ_RANDOM, AQ_CARD_GENIE );
+        acquirement(OBJ_RANDOM, AQ_CARD_GENIE);
     }
     else
     {
@@ -2896,15 +2896,15 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
         break;
 
     case CARD_MAP:
-        if (!magic_mapping( random2(power/10) + 15, random2(power), true))
+        if (!magic_mapping(random2(power/10) + 15, random2(power), true))
             mpr("The map is blank.");
         break;
 
     case CARD_WILD_MAGIC:
         // Yes, high power is bad here.
-        MiscastEffect( &you, god == GOD_NO_GOD ? NON_MONSTER : -god,
+        MiscastEffect(&you, god == GOD_NO_GOD ? NON_MONSTER : -god,
                        SPTYP_RANDOM, random2(power/15) + 5, random2(power),
-                       "a card of wild magic" );
+                       "a card of wild magic");
         break;
 
     case CARD_FAMINE:
@@ -2991,7 +2991,7 @@ bool bad_deck(const item_def &item)
 
 deck_rarity_type deck_rarity(const item_def &item)
 {
-    ASSERT( is_deck(item) );
+    ASSERT(is_deck(item));
 
     return static_cast<deck_rarity_type>(item.special);
 }

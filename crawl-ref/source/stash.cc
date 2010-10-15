@@ -57,8 +57,8 @@ StashTracker StashTrack;
 void stash_init_new_level()
 {
     // If there's an existing stash level for Pan, blow it away.
-    StashTrack.remove_level( level_id(LEVEL_PANDEMONIUM) );
-    StashTrack.remove_level( level_id(LEVEL_PORTAL_VAULT) );
+    StashTrack.remove_level(level_id(LEVEL_PANDEMONIUM));
+    StashTrack.remove_level(level_id(LEVEL_PORTAL_VAULT));
 }
 
 std::string userdef_annotate_item(const char *s, const item_def *item,
@@ -179,9 +179,9 @@ static void _fully_identify_item(item_def *item)
     if (!item || !item->defined())
         return;
 
-    set_ident_flags( *item, ISFLAG_IDENT_MASK );
+    set_ident_flags(*item, ISFLAG_IDENT_MASK);
     if (item->base_type != OBJ_WEAPONS)
-        set_ident_type( *item, ID_KNOWN_TYPE );
+        set_ident_type(*item, ID_KNOWN_TYPE);
 }
 
 // ----------------------------------------------------------------------
@@ -526,7 +526,7 @@ void StashMenu::draw_title()
     {
         cgotoxy(1, 1);
         textcolor(title->colour);
-        cprintf( "%s", title->text.c_str());
+        cprintf("%s", title->text.c_str());
         if (title->quantity)
         {
             cprintf(", %d item%s", title->quantity,
@@ -576,7 +576,7 @@ unsigned char StashMenu::getkey() const
 
 static MenuEntry *stash_menu_fixup(MenuEntry *me)
 {
-    const item_def *item = static_cast<const item_def *>( me->data );
+    const item_def *item = static_cast<const item_def *>(me->data);
     if (item->base_type == OBJ_GOLD)
     {
         me->quantity = 0;
@@ -595,7 +595,7 @@ bool Stash::show_menu(const level_pos &prefix, bool can_travel) const
     menu.can_travel   = can_travel;
     mtitle->quantity  = items.size();
     menu.set_title(mtitle);
-    menu.load_items( InvMenu::xlat_itemvect(items), stash_menu_fixup);
+    menu.load_items(InvMenu::xlat_itemvect(items), stash_menu_fixup);
 
     std::vector<MenuEntry*> sel;
     while (true)
@@ -607,7 +607,7 @@ bool Stash::show_menu(const level_pos &prefix, bool can_travel) const
         if (sel.size() != 1)
             break;
 
-        item_def *item = static_cast<item_def *>( sel[0]->data );
+        item_def *item = static_cast<item_def *>(sel[0]->data);
         describe_item(*item);
     }
     return (false);
@@ -826,7 +826,7 @@ void Stash::save(writer& outf) const
     marshallByte(outf, trap);
 
     // Note: Enabled save value is inverted logic, so that it defaults to true
-    marshallByte(outf, ((verified? 1 : 0) | (!enabled? 2 : 0)) );
+    marshallByte(outf, ((verified? 1 : 0) | (!enabled? 2 : 0)));
 
     // And dump the items individually. We don't bother saving fields we're
     // not interested in (and don't anticipate being interested in).
@@ -937,7 +937,7 @@ void ShopInfo::describe_shop_item(const shop_item &si) const
             | ISFLAG_NOTED_ID | ISFLAG_NOTED_GET;
 
     item_def it = static_cast<item_def>(si.item);
-    describe_item( it );
+    describe_item(it);
 
     if (oldflags != si.item.flags)
         const_cast<shop_item&>(si).item.flags = oldflags;
@@ -1019,7 +1019,7 @@ bool ShopInfo::show_menu(const level_pos &place,
         if (sel.size() != 1)
             break;
 
-        const shop_item *item = static_cast<const shop_item *>( sel[0]->data );
+        const shop_item *item = static_cast<const shop_item *>(sel[0]->data);
         if (menu.menu_action == Menu::ACT_EXAMINE)
             describe_shop_item(*item);
         else
@@ -1062,8 +1062,8 @@ bool ShopInfo::matches_search(const std::string &prefix,
             continue;
 
         std::string sname = shop_item_name(items[i]);
-        std::string ann   = stash_annotate_item( STASH_LUA_SEARCH_ANNOTATE,
-                                                  &items[i].item, true );
+        std::string ann   = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE,
+                                                  &items[i].item, true);
 
         bool thismatch = false;
         if (search.matches(prefix + " " + ann + sname))
@@ -1151,7 +1151,7 @@ void ShopInfo::save(writer& outf) const
     for (unsigned i = 0; i < items.size(); ++i)
     {
         marshallItem(outf, items[i].item);
-        marshallShort(outf, (short) items[i].price );
+        marshallShort(outf, (short) items[i].price);
     }
 }
 
@@ -1564,7 +1564,7 @@ void StashTracker::save(writer& outf) const
 
     // And ask each level to write itself to the tag
     stash_levels_t::const_iterator iter = levels.begin();
-    for ( ; iter != levels.end(); iter++)
+    for (; iter != levels.end(); iter++)
         iter->second.save(outf);
 }
 
@@ -1623,7 +1623,7 @@ std::string StashTracker::stash_search_prompt()
     std::vector<std::string> opts;
     if (!lastsearch.empty())
         opts.push_back(
-            make_stringf("Enter for \"%s\"", lastsearch.c_str()) );
+            make_stringf("Enter for \"%s\"", lastsearch.c_str()));
     if (level_type_is_stash_trackable(you.level_type)
         && lastsearch != ".")
     {
@@ -1774,10 +1774,10 @@ void StashTracker::search_stashes()
 
     base_pattern *search = NULL;
 
-    text_pattern tpat( csearch, true );
+    text_pattern tpat(csearch, true);
     search = &tpat;
 
-    lua_text_pattern ltpat( csearch );
+    lua_text_pattern ltpat(csearch);
 
     if (lua_text_pattern::is_lua_pattern(csearch))
         search = &ltpat;
@@ -1831,7 +1831,7 @@ void StashTracker::get_matching_stashes(
     const
 {
     stash_levels_t::const_iterator iter = levels.begin();
-    for ( ; iter != levels.end(); iter++)
+    for (; iter != levels.end(); iter++)
     {
         iter->second.get_matching_stashes(search, results);
         if (results.size() > SEARCH_SPAM_THRESHOLD)
@@ -1946,7 +1946,7 @@ bool StashTracker::display_search_results(
         stashmenu.add_entry(me);
     }
 
-    stashmenu.set_flags( MF_SINGLESELECT );
+    stashmenu.set_flags(MF_SINGLESELECT);
 
     std::vector<MenuEntry*> sel;
     while (true)

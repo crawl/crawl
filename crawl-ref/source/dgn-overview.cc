@@ -90,11 +90,11 @@ void seen_notable_thing(dungeon_feature_type which_thing, const coord_def& pos)
 
     const god_type god = feat_altar_god(which_thing);
     if (god != GOD_NO_GOD)
-        _seen_altar( god, pos );
-    else if (feat_is_branch_stairs( which_thing ))
-        _seen_staircase( which_thing, pos );
+        _seen_altar(god, pos);
+    else if (feat_is_branch_stairs(which_thing))
+        _seen_staircase(which_thing, pos);
     else
-        _seen_other_thing( which_thing, pos );
+        _seen_other_thing(which_thing, pos);
 }
 
 bool move_notable_thing(const coord_def& orig, const coord_def& dest)
@@ -172,18 +172,18 @@ inline static std::string place_desc(const level_pos &pos)
 
 inline static std::string altar_description(god_type god)
 {
-    return feature_description( altar_for_god(god) );
+    return feature_description(altar_for_god(god));
 }
 
 inline static std::string portal_description(portal_type portal)
 {
-    return feature_description( portal_to_feature(portal) );
+    return feature_description(portal_to_feature(portal));
 }
 
 bool overview_knows_portal(dungeon_feature_type portal)
 {
-    for ( portal_map_type::const_iterator pl_iter = portals_present.begin();
-          pl_iter != portals_present.end(); ++pl_iter )
+    for (portal_map_type::const_iterator pl_iter = portals_present.begin();
+          pl_iter != portals_present.end(); ++pl_iter)
     {
         if (portal_to_feature(pl_iter->second) == portal)
             return (true);
@@ -194,8 +194,8 @@ bool overview_knows_portal(dungeon_feature_type portal)
 int overview_knows_num_portals(dungeon_feature_type portal)
 {
     int num = 0;
-    for ( portal_map_type::const_iterator pl_iter = portals_present.begin();
-          pl_iter != portals_present.end(); ++pl_iter )
+    for (portal_map_type::const_iterator pl_iter = portals_present.begin();
+          pl_iter != portals_present.end(); ++pl_iter)
     {
         if (portal_to_feature(pl_iter->second) == portal)
             num++;
@@ -212,19 +212,19 @@ static std::string _portals_description_string()
     {
         last_id.depth = 10000;
         portal_map_type::const_iterator ci_portals;
-        for ( ci_portals = portals_present.begin();
+        for (ci_portals = portals_present.begin();
               ci_portals != portals_present.end();
-              ++ci_portals )
+              ++ci_portals)
         {
             // one line per region should be enough, they're all of
             // the form D:XX, except for labyrinth portals, of which
             // you would need 11 (at least) to have a problem.
-            if ( ci_portals->second == cur_portal )
+            if (ci_portals->second == cur_portal)
             {
-                if ( last_id.depth == 10000 )
+                if (last_id.depth == 10000)
                     disp += portaltype_to_string(ci_portals->second);
 
-                if ( ci_portals->first.id == last_id )
+                if (ci_portals->first.id == last_id)
                     disp += '*';
                 else
                 {
@@ -234,7 +234,7 @@ static std::string _portals_description_string()
                 last_id = ci_portals->first.id;
             }
         }
-        if ( last_id.depth != 10000 )
+        if (last_id.depth != 10000)
             disp += "\n";
     }
     return disp;
@@ -259,7 +259,7 @@ static std::string _portal_vaults_description_string()
     {
         vault_names_vec.push_back(*i);
     }
-    std::sort(vault_names_vec.begin(), vault_names_vec.end() );
+    std::sort(vault_names_vec.begin(), vault_names_vec.end());
 
     std::string disp;
     level_id    last_id;
@@ -785,8 +785,8 @@ void display_overview()
     redraw_screen();
 }
 
-static void _seen_staircase( dungeon_feature_type which_staircase,
-                             const coord_def& pos )
+static void _seen_staircase(dungeon_feature_type which_staircase,
+                             const coord_def& pos)
 {
     // which_staircase holds the grid value of the stair, must be converted
     // Only handles stairs, not gates or arches
@@ -803,11 +803,11 @@ static void _seen_staircase( dungeon_feature_type which_staircase,
             break;
         }
     }
-    ASSERT( i != NUM_BRANCHES );
+    ASSERT(i != NUM_BRANCHES);
 }
 
 // If player has seen an altar; record it.
-static void _seen_altar( god_type god, const coord_def& pos )
+static void _seen_altar(god_type god, const coord_def& pos)
 {
     // Can't record in Abyss or Pan.
     if (you.level_type != LEVEL_DUNGEON)
@@ -825,7 +825,7 @@ void unnotice_altar()
         altars_present.erase(curpos);
 }
 
-portal_type feature_to_portal( dungeon_feature_type feat )
+portal_type feature_to_portal(dungeon_feature_type feat)
 {
     switch (feat)
     {
@@ -838,7 +838,7 @@ portal_type feature_to_portal( dungeon_feature_type feat )
 }
 
 // If player has seen any other thing; record it.
-void _seen_other_thing( dungeon_feature_type which_thing, const coord_def& pos )
+void _seen_other_thing(dungeon_feature_type which_thing, const coord_def& pos)
 {
     level_pos where(level_id::current(), pos);
 

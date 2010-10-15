@@ -18,12 +18,12 @@ int grid_distance(const coord_def& p1, const coord_def& p2)
     return ((p2 - p1).rdist());
 }
 
-int distance( const coord_def& p1, const coord_def& p2 )
+int distance(const coord_def& p1, const coord_def& p2)
 {
     return ((p2 - p1).abs());
 }
 
-bool adjacent( const coord_def& p1, const coord_def& p2 )
+bool adjacent(const coord_def& p1, const coord_def& p2)
 {
     return grid_distance(p1, p2) <= 1;
 }

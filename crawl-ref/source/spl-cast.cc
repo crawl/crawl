@@ -75,7 +75,7 @@
 static bool _surge_identify_boosters(spell_type spell)
 {
     const unsigned int typeflags = get_spell_disciplines(spell);
-    if ( (typeflags & SPTYP_FIRE) || (typeflags & SPTYP_ICE) )
+    if ((typeflags & SPTYP_FIRE) || (typeflags & SPTYP_ICE))
     {
         // Must not be wielding an unIDed staff.
         // Note that robes of the Archmagi identify on wearing,
@@ -108,8 +108,8 @@ static bool _surge_identify_boosters(spell_type spell)
                             && (ring.sub_type == RING_FIRE
                                 || ring.sub_type == RING_ICE))
                         {
-                            set_ident_type( ring.base_type, ring.sub_type,
-                                            ID_KNOWN_TYPE );
+                            set_ident_type(ring.base_type, ring.sub_type,
+                                            ID_KNOWN_TYPE);
                             set_ident_flags(ring, ISFLAG_KNOW_PROPERTIES);
                             mprf("You are wearing: %s",
                                  ring.name(DESC_INVENTORY_EQUIP).c_str());
@@ -380,8 +380,8 @@ int spell_fail(spell_type spell)
         {-160, 2}, {-180, 0}
     };
 
-    for ( unsigned int i = 0; i < ARRAYSZ(chance_breaks); ++i )
-        if ( chance < chance_breaks[i][0] )
+    for (unsigned int i = 0; i < ARRAYSZ(chance_breaks); ++i)
+        if (chance < chance_breaks[i][0])
             chance2 = chance_breaks[i][1];
 
     if (you.duration[DUR_TRANSFORMATION] > 0)
@@ -426,12 +426,12 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
                      + (fail_rate_check? 0 : player_mag_abil(false));
         int enhanced = 0;
 
-        unsigned int disciplines = get_spell_disciplines( spell );
+        unsigned int disciplines = get_spell_disciplines(spell);
 
         //jmf: evil evil evil -- exclude HOLY bit
         disciplines &= (~SPTYP_HOLY);
 
-        int skillcount = count_bits( disciplines );
+        int skillcount = count_bits(disciplines);
         if (skillcount)
         {
             for (int ndx = 0; ndx <= SPTYP_LAST_EXPONENT; ndx++)
@@ -448,7 +448,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
         // [dshaligram] Enhancers don't affect fail rates any more, only spell
         // power. Note that this does not affect Vehumet's boost in castability.
         if (!fail_rate_check)
-            enhanced = spell_enhancement( disciplines );
+            enhanced = spell_enhancement(disciplines);
 
         if (enhanced > 0)
         {
@@ -464,7 +464,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
                 power /= 2;
         }
 
-        power = stepdown_value( power, 50, 50, 150, 200 );
+        power = stepdown_value(power, 50, 50, 150, 200);
     }
 
     const int cap = spell_power_cap(spell);
@@ -475,7 +475,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
 }
 
 
-int spell_enhancement( unsigned int typeflags )
+int spell_enhancement(unsigned int typeflags)
 {
     int enhanced = 0;
 
@@ -620,7 +620,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
 
         if (key_is_escape(keyin))
         {
-            canned_msg( MSG_OK );
+            canned_msg(MSG_OK);
             return (false);
         }
 
@@ -631,7 +631,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
             return (false);
         }
 
-        spell = get_spell_by_letter( keyin );
+        spell = get_spell_by_letter(keyin);
     }
 
     if (spell == SPELL_NO_SPELL)
@@ -667,7 +667,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
 
     if (!you.is_undead
         && (you.hunger_state == HS_STARVING
-            || you.hunger <= spell_hunger( spell )))
+            || you.hunger <= spell_hunger(spell)))
     {
         mpr("You don't have the energy to cast that spell.");
         return (false);
@@ -687,14 +687,14 @@ bool cast_a_spell(bool check_range, spell_type spell)
 
         practise(cast_result == SPRET_SUCCESS ? EX_DID_CAST : EX_DID_MISCAST,
                  spell);
-        did_god_conduct( DID_SPELL_CASTING, 1 + random2(5) );
+        did_god_conduct(DID_SPELL_CASTING, 1 + random2(5));
     }
 
-    dec_mp( spell_mana(spell) );
+    dec_mp(spell_mana(spell));
 
     if (!staff_energy && you.is_undead != US_UNDEAD)
     {
-        const int spellh = calc_hunger( spell_hunger(spell) );
+        const int spellh = calc_hunger(spell_hunger(spell));
         if (spellh > 0)
         {
             make_hungry(spellh, true);
@@ -809,7 +809,7 @@ bool maybe_identify_staff(item_def &item, spell_type spell)
     {
         item_def& wpn = *you.weapon();
         set_ident_type(wpn, ID_KNOWN_TYPE);
-        set_ident_flags( wpn, ISFLAG_IDENT_MASK);
+        set_ident_flags(wpn, ISFLAG_IDENT_MASK);
         mprf("You are wielding %s.", wpn.name(DESC_NOCAP_A).c_str());
         more();
 
@@ -2021,7 +2021,7 @@ static spret_type _do_cast(spell_type spell, int powc,
     return (SPRET_SUCCESS);
 }
 
-const char* failure_rate_to_string( int fail )
+const char* failure_rate_to_string(int fail)
 {
     return (fail == 100) ? "Useless"   : // 0% success chance
            (fail > 77)   ? "Terrible"  : // 0-5%
@@ -2156,7 +2156,7 @@ int spell_power_colour(spell_type spell)
     return GREEN;
 }
 
-static int _power_to_barcount( int power )
+static int _power_to_barcount(int power)
 {
     if (power == -1)
         return -1;
@@ -2165,7 +2165,7 @@ static int _power_to_barcount( int power )
     return (_breakpoint_rank(power, breakpoints, ARRAYSZ(breakpoints)) + 1);
 }
 
-int spell_power_bars( spell_type spell, bool rod )
+int spell_power_bars(spell_type spell, bool rod)
 {
     const int cap = spell_power_cap(spell);
     if (cap == 0)

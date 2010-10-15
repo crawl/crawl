@@ -70,7 +70,7 @@
 stack_iterator::stack_iterator(const coord_def& pos, bool accessible)
 {
     cur_link = accessible ? you.visible_igrd(pos) : igrd(pos);
-    if ( cur_link != NON_ITEM )
+    if (cur_link != NON_ITEM)
         next_link = mitm[cur_link].link;
     else
         next_link = NON_ITEM;
@@ -79,7 +79,7 @@ stack_iterator::stack_iterator(const coord_def& pos, bool accessible)
 stack_iterator::stack_iterator(int start_link)
 {
     cur_link = start_link;
-    if ( cur_link != NON_ITEM )
+    if (cur_link != NON_ITEM)
         next_link = mitm[cur_link].link;
     else
         next_link = NON_ITEM;
@@ -87,18 +87,18 @@ stack_iterator::stack_iterator(int start_link)
 
 stack_iterator::operator bool() const
 {
-    return ( cur_link != NON_ITEM );
+    return (cur_link != NON_ITEM);
 }
 
 item_def& stack_iterator::operator*() const
 {
-    ASSERT( cur_link != NON_ITEM );
+    ASSERT(cur_link != NON_ITEM);
     return mitm[cur_link];
 }
 
 item_def* stack_iterator::operator->() const
 {
-    ASSERT( cur_link != NON_ITEM );
+    ASSERT(cur_link != NON_ITEM);
     return &mitm[cur_link];
 }
 
@@ -110,7 +110,7 @@ int stack_iterator::link() const
 const stack_iterator& stack_iterator::operator ++ ()
 {
     cur_link = next_link;
-    if ( cur_link != NON_ITEM )
+    if (cur_link != NON_ITEM)
         next_link = mitm[cur_link].link;
     return *this;
 }
@@ -239,7 +239,7 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
     fmenv->travel_target = MTRAV_NONE;
 
     dprf("%s is marked for following.",
-         fmenv->name(DESC_CAP_THE, true).c_str() );
+         fmenv->name(DESC_CAP_THE, true).c_str());
 
     return (true);
 }
@@ -516,7 +516,7 @@ void redraw_screen(void)
     you.redraw_quiver       = true;
 
     set_redraw_status(
-        REDRAW_LINE_1_MASK | REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK );
+        REDRAW_LINE_1_MASK | REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK);
 
     print_stats();
 
@@ -596,7 +596,7 @@ int stepdown_value(int base_value, int stepping, int first_step,
 
 }
 
-int skill_bump( int skill )
+int skill_bump(int skill)
 {
     return ((you.skills[skill] < 3) ? you.skills[skill] * 2
                                     : you.skills[skill] + 3);
@@ -606,13 +606,13 @@ int skill_bump( int skill )
 // - shift/div% @ stat_level = 0; (default 3/20 = 15%, or 20% at stat 1)
 // - even (100%) @ stat_level = div - shift; (default 17)
 // - 1/div% per stat_level (default 1/20 = 5%)
-int stat_mult( int stat_level, int value, int div, int shift )
+int stat_mult(int stat_level, int value, int div, int shift)
 {
     return (((stat_level + shift) * value) / ((div > 1) ? div : 1));
 }
 
 // As above but inverted (ie 5x penalty at stat 1)
-int stat_div( int stat_level, int value, int mult, int shift )
+int stat_div(int stat_level, int value, int mult, int shift)
 {
     int div = stat_level + shift;
 
@@ -707,7 +707,7 @@ void canned_msg(canned_message_type which_message)
 // Like yesno, but requires a full typed answer.
 // Unlike yesno, prompt should have no trailing space.
 // Returns true if the user typed "yes", false if something else or cancel.
-bool yes_or_no( const char* fmt, ... )
+bool yes_or_no(const char* fmt, ...)
 {
     char buf[200];
     va_list args;
@@ -734,7 +734,7 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
 {
     bool message = (region == GOTO_MSG);
     if (interrupt_delays && !crawl_state.is_repeating_cmd())
-        interrupt_activity( AI_FORCE_INTERRUPT );
+        interrupt_activity(AI_FORCE_INTERRUPT);
 
     std::string prompt = make_stringf("%s ", str ? str : "Buggy prompt?");
 
@@ -774,7 +774,7 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
             || tmp == safeanswer
             || Options.easy_confirm == CONFIRM_SAFE_EASY && safe)
         {
-            tmp = toupper( tmp );
+            tmp = toupper(tmp);
         }
 
         if (clear_after && message)
@@ -851,11 +851,11 @@ static std::string _list_allowed_keys(char yes1, char yes2,
 // Like yesno(), but returns 0 for no, 1 for yes, and -1 for quit.
 // alt_yes and alt_yes2 allow up to two synonyms for 'Y'.
 // FIXME: This function is shaping up to be a monster. Help!
-int yesnoquit( const char* str, bool safe, int safeanswer, bool allow_all,
-               bool clear_after, char alt_yes, char alt_yes2 )
+int yesnoquit(const char* str, bool safe, int safeanswer, bool allow_all,
+               bool clear_after, char alt_yes, char alt_yes2)
 {
     if (!crawl_state.is_repeating_cmd())
-        interrupt_activity( AI_FORCE_INTERRUPT );
+        interrupt_activity(AI_FORCE_INTERRUPT);
 
     mouse_control mc(MOUSE_MODE_MORE);
 
@@ -882,7 +882,7 @@ int yesnoquit( const char* str, bool safe, int safeanswer, bool allow_all,
             || tmp == safeanswer
             || safe && Options.easy_confirm == CONFIRM_SAFE_EASY)
         {
-            tmp = toupper( tmp );
+            tmp = toupper(tmp);
         }
 
         if (clear_after)
@@ -1001,7 +1001,7 @@ void zap_los_monsters(bool items_also)
             continue;
 
         dprf("Dismissing %s",
-             mon->name(DESC_PLAIN, true).c_str() );
+             mon->name(DESC_PLAIN, true).c_str());
 
         // Do a hard reset so the monster's items will be discarded.
         mon->flags |= MF_HARD_RESET;

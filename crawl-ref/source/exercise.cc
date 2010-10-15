@@ -194,7 +194,7 @@ static void _exercise_spell(spell_type spell, bool success)
     //jmf: evil evil evil -- exclude HOLY bit
     disciplines &= (~SPTYP_HOLY);
 
-    int skillcount = count_bits( disciplines );
+    int skillcount = count_bits(disciplines);
 
     if (!success)
         skillcount += 4 + random2(10);
@@ -207,7 +207,7 @@ static void _exercise_spell(spell_type spell, bool success)
     std::vector<int> disc;
     for (int ndx = 0; ndx <= SPTYP_LAST_EXPONENT; ndx++)
     {
-        if (!spell_typematch( spell, 1 << ndx ))
+        if (!spell_typematch(spell, 1 << ndx))
             continue;
 
         disc.push_back(ndx);
@@ -217,13 +217,13 @@ static void _exercise_spell(spell_type spell, bool success)
     for (unsigned int k = 0; k < disc.size(); ++k)
     {
         int ndx = disc[k];
-        skill = spell_type2skill( 1 << ndx );
+        skill = spell_type2skill(1 << ndx);
         workout = (random2(1 + diff) / skillcount);
 
         if (!one_chance_in(5))
             workout++;       // most recently, this was an automatic add {dlb}
 
-        const int exercise_amount = exercise( skill, workout );
+        const int exercise_amount = exercise(skill, workout);
         exer      += exercise_amount;
     }
 
@@ -231,7 +231,7 @@ static void _exercise_spell(spell_type spell, bool success)
        Other recent formulae for the above:
 
        * workout = random2(spell_difficulty(spell_ex)
-       * (10 + (spell_difficulty(spell_ex) * 2 )) / 10 / spellsy + 1);
+       * (10 + (spell_difficulty(spell_ex) * 2)) / 10 / spellsy + 1);
 
        * workout = spell_difficulty(spell_ex)
        * (15 + spell_difficulty(spell_ex)) / 15 / spellsy;

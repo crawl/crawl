@@ -97,16 +97,16 @@ From SQLite's documentation:
 ... which saves us a lot of trouble.
 */
 #ifdef ANCIENT_SQLITE
-        if (ec( sqlite3_open(
+        if (ec(sqlite3_open(
                     dbfile.c_str(), &db
 #else
-        if (ec( sqlite3_open_v2(
+        if (ec(sqlite3_open_v2(
                     dbfile.c_str(), &db,
                     readonly? SQLITE_OPEN_READONLY :
                     (SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE),
                     NULL
 #endif
-                    ) ) != SQLITE_OK)
+                  )) != SQLITE_OK)
         {
             const std::string saveerr = error;
             const int serrc = errc;
@@ -273,7 +273,7 @@ std::auto_ptr<std::string> SQL_DBM::nextkey()
         if ((err = ec(sqlite3_step(s_iterator))) == SQLITE_ROW)
             result.reset(
                 new std::string(
-                    (const char *) sqlite3_column_text(s_iterator, 0) ));
+                    (const char *) sqlite3_column_text(s_iterator, 0)));
         else
             sqlite3_reset(s_iterator);
     }

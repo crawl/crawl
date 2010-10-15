@@ -122,11 +122,11 @@ bool conjure_flame(int pow, const coord_def& where)
 }
 
 // Assumes beem.range has already been set. -cao
-bool stinking_cloud( int pow, bolt &beem )
+bool stinking_cloud(int pow, bolt &beem)
 {
     beem.name        = "stinking cloud";
     beem.colour      = GREEN;
-    beem.damage      = dice_def( 1, 0 );
+    beem.damage      = dice_def(1, 0);
     beem.hit         = 20;
     beem.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
     beem.flavour     = BEAM_POTION_STINKING_CLOUD;
@@ -162,7 +162,7 @@ bool stinking_cloud( int pow, bolt &beem )
 
 int cast_big_c(int pow, cloud_type cty, kill_category whose, bolt &beam)
 {
-    big_cloud( cty, whose, beam.target, pow, 8 + random2(3), -1 );
+    big_cloud(cty, whose, beam.target, pow, 8 + random2(3), -1);
     noisy(2, beam.target);
     return (1);
 }
@@ -230,7 +230,7 @@ void manage_fire_shield(int delay)
     // Place fire clouds all around you
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
         if (!feat_is_solid(grd(*ai)) && env.cgrid(*ai) == EMPTY_CLOUD)
-            place_cloud( CLOUD_FIRE, *ai, 1 + random2(6), KC_YOU );
+            place_cloud(CLOUD_FIRE, *ai, 1 + random2(6), KC_YOU);
 }
 
 void corpse_rot()
@@ -269,9 +269,9 @@ int make_a_normal_cloud(coord_def where, int pow, int spread_rate,
     if (killer == KILL_NONE)
         killer = cloud_struct::whose_to_killer(whose);
 
-    place_cloud( ctype, where,
+    place_cloud(ctype, where,
                  (3 + random2(pow / 4) + random2(pow / 4) + random2(pow / 4)),
-                 whose, killer, spread_rate, colour, name, tile );
+                 whose, killer, spread_rate, colour, name, tile);
 
     return 1;
 }
@@ -406,8 +406,8 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
     beem.is_beam     = false;
     beem.aux_source.clear();
 
-    beem.hit        = you.dex() / 2 + roll_dice( 2, you.skills[SK_THROWING] / 2 + 1 );
-    beem.damage     = dice_def( 1, 0 );  // no damage, just producing clouds
+    beem.hit        = you.dex() / 2 + roll_dice(2, you.skills[SK_THROWING] / 2 + 1);
+    beem.damage     = dice_def(1, 0);  // no damage, just producing clouds
     beem.ench_power = pow;               // used for duration only?
     beem.is_explosion = true;
 
@@ -549,7 +549,7 @@ int holy_flames(monster* caster, actor* defender)
     const coord_def pos = defender->pos();
     int cloud_count = 0;
 
-    for ( adjacent_iterator ai(pos); ai; ++ai )
+    for (adjacent_iterator ai(pos); ai; ++ai)
     {
         if (!in_bounds(*ai)
             || env.cgrid(*ai) != EMPTY_CLOUD

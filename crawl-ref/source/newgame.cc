@@ -181,7 +181,7 @@ static bool _is_species_valid_choice(species_type species)
 }
 
 #ifdef ASSERTS
-static bool _species_is_undead( const species_type speci )
+static bool _species_is_undead(const species_type speci)
 {
     return (speci == SP_MUMMY || speci == SP_GHOUL || speci == SP_VAMPIRE);
 }
@@ -375,7 +375,7 @@ static bool _reroll_random(newgame_def* ng)
         specs = specs.substr(0, 79);
 
     cprintf("You are a%s %s %s.\n",
-            (is_vowel( specs[0] )) ? "n" : "", specs.c_str(),
+            (is_vowel(specs[0])) ? "n" : "", specs.c_str(),
             get_job_name(ng->job));
 
     cprintf("\nDo you want to play this combination? (ynq) [y]");
@@ -463,7 +463,7 @@ bool choose_game(newgame_def* ng, newgame_def* choice,
             specs = specs.substr(0, 79);
 
         cprintf("You are a%s %s %s.\n",
-                (is_vowel( specs[0] )) ? "n" : "", specs.c_str(),
+                (is_vowel(specs[0])) ? "n" : "", specs.c_str(),
                 get_job_name(ng->job));
 
         enter_player_name(choice);
@@ -846,7 +846,7 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
     descriptor->set_visible(true);
     highlighter->set_visible(true);
 
-    textcolor( LIGHTGREY );
+    textcolor(LIGHTGREY);
     // Poll input until we have a conclusive escape or pick
     while (true)
     {
@@ -1183,7 +1183,7 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
     textcolor(BROWN);
     cprintf("%s", _welcome(ng).c_str());
 
-    textcolor( YELLOW );
+    textcolor(YELLOW);
     cprintf(" Please select your background.");
 
     _construct_backgrounds_menu(ng, defaults, freeform);
@@ -1211,7 +1211,7 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
     descriptor->set_visible(true);
     highlighter->set_visible(true);
 
-    textcolor( LIGHTGREY );
+    textcolor(LIGHTGREY);
 
     // Poll input until we have a conclusive escape or pick
     while (true)
@@ -1512,7 +1512,7 @@ static bool _prompt_weapon(const newgame_def* ng, newgame_def* ng_choice,
     freeform->set_visible(true);
     highlighter->set_visible(true);
 
-    textcolor( CYAN );
+    textcolor(CYAN);
     cprintf("\nYou have a choice of weapons:  ");
 
     while (true)

@@ -104,19 +104,19 @@ static void _describe_feature(const coord_def& where, bool oos);
 static void _describe_cell(const coord_def& where, bool in_range = true);
 static void _print_cloud_desc(const coord_def where, bool &cloud_described);
 
-static bool _find_object(  const coord_def& where, int mode, bool need_path,
-                           int range );
-static bool _find_monster( const coord_def& where, int mode, bool need_path,
-                           int range );
-static bool _find_feature( const coord_def& where, int mode, bool need_path,
-                           int range );
+static bool _find_object(const coord_def& where, int mode, bool need_path,
+                           int range);
+static bool _find_monster(const coord_def& where, int mode, bool need_path,
+                           int range);
+static bool _find_feature(const coord_def& where, int mode, bool need_path,
+                           int range);
 
-static bool _find_fprop_unoccupied(   const coord_def& where, int mode, bool need_path,
-                           int range );
+static bool _find_fprop_unoccupied(const coord_def& where, int mode, bool need_path,
+                           int range);
 
 #ifndef USE_TILE
-static bool _find_mlist( const coord_def& where, int mode, bool need_path,
-                         int range );
+static bool _find_mlist(const coord_def& where, int mode, bool need_path,
+                         int range);
 #endif
 
 static bool _find_square_wrapper(coord_def &mfp, int direction,
@@ -131,7 +131,7 @@ static bool _find_square(coord_def &mfp, int direction,
                          bool need_path, int mode, int range,
                          bool wrap, int los = LOS_ANY);
 
-static int  _targeting_cmd_to_compass( command_type command );
+static int  _targeting_cmd_to_compass(command_type command);
 static void _describe_oos_square(const coord_def& where);
 static void _extend_move_to_edge(dist &moves);
 static std::vector<std::string> _get_monster_desc_vector(const monster_info& mi);
@@ -277,9 +277,9 @@ bool direction_chooser::choose_compass()
     return moves.isValid;
 }
 
-static int _targeting_cmd_to_compass( command_type command )
+static int _targeting_cmd_to_compass(command_type command)
 {
-    switch ( command )
+    switch (command)
     {
     case CMD_TARGET_UP:         case CMD_TARGET_DIR_UP:
         return 0;
@@ -640,8 +640,8 @@ void full_describe_view()
     std::string title1 = title + " (select to " + action + ", '!' to examine):";
     title += " (select for more detail, '!' to " + action + "):";
 
-    desc_menu.set_title( new MenuEntry(title, MEL_TITLE), false);
-    desc_menu.set_title( new MenuEntry(title1, MEL_TITLE) );
+    desc_menu.set_title(new MenuEntry(title, MEL_TITLE), false);
+    desc_menu.set_title(new MenuEntry(title1, MEL_TITLE));
 
     desc_menu.set_tag("pickup");
     desc_menu.set_type(MT_PICKUP); // necessary for sorting of the item submenu
@@ -660,7 +660,7 @@ void full_describe_view()
     // Build menu entries for monsters.
     if (!list_mons.empty())
     {
-        desc_menu.add_entry( new MenuEntry("Monsters", MEL_SUBTITLE) );
+        desc_menu.add_entry(new MenuEntry("Monsters", MEL_SUBTITLE));
         std::vector<monster_info>::const_iterator mi;
         for (mi = list_mons.begin(); mi != list_mons.end(); ++mi)
         {
@@ -712,12 +712,12 @@ void full_describe_view()
     {
         std::vector<InvEntry*> all_items;
         for (unsigned int i = 0; i < list_items.size(); ++i)
-            all_items.push_back( new InvEntry(list_items[i]) );
+            all_items.push_back(new InvEntry(list_items[i]));
 
         const menu_sort_condition *cond = desc_menu.find_menu_sort_condition();
         desc_menu.sort_menu(all_items, cond);
 
-        desc_menu.add_entry( new MenuEntry( "Items", MEL_SUBTITLE ) );
+        desc_menu.add_entry(new MenuEntry("Items", MEL_SUBTITLE));
         for (unsigned int i = 0; i < all_items.size(); ++i, hotkey++)
         {
             InvEntry *me = all_items[i];
@@ -735,7 +735,7 @@ void full_describe_view()
 
     if (!list_features.empty())
     {
-        desc_menu.add_entry( new MenuEntry("Features", MEL_SUBTITLE) );
+        desc_menu.add_entry(new MenuEntry("Features", MEL_SUBTITLE));
         for (unsigned int i = 0; i < list_features.size(); ++i, hotkey++)
         {
             const coord_def c = list_features[i];
@@ -830,7 +830,7 @@ void full_describe_view()
                 describe_feature_wide(c);
             else // ACT_EXECUTE -> travel to feature
             {
-                start_travel( c );
+                start_travel(c);
                 break;
             }
         }
@@ -1851,9 +1851,9 @@ bool direction_chooser::do_main_loop()
 #endif
 
     case CMD_TARGET_OBJ_CYCLE_BACK:    object_cycle(-1);  break;
-    case CMD_TARGET_OBJ_CYCLE_FORWARD: object_cycle( 1);  break;
+    case CMD_TARGET_OBJ_CYCLE_FORWARD: object_cycle(1);  break;
     case CMD_TARGET_CYCLE_BACK:        monster_cycle(-1); break;
-    case CMD_TARGET_CYCLE_FORWARD:     monster_cycle( 1); break;
+    case CMD_TARGET_CYCLE_FORWARD:     monster_cycle(1); break;
 
     case CMD_TARGET_CANCEL:
         loop_done = true;
@@ -2010,7 +2010,7 @@ void terse_describe_square(const coord_def &c, bool in_range)
 {
     if (!you.see_cell(c))
         _describe_oos_square(c);
-    else if (in_bounds(c) )
+    else if (in_bounds(c))
         _describe_cell(c, in_range);
 }
 
@@ -2098,7 +2098,7 @@ void full_describe_square(const coord_def &c)
     else if (oid != NON_ITEM)
     {
         // Second priority: objects.
-        describe_item( mitm[oid] );
+        describe_item(mitm[oid]);
     }
     else
     {
@@ -2280,7 +2280,7 @@ static bool _find_fprop_unoccupied(const coord_def & where, int mode,
     return (env.pgrid(where) & mode);
 }
 
-static bool _find_monster( const coord_def& where, int mode, bool need_path,
+static bool _find_monster(const coord_def& where, int mode, bool need_path,
                            int range = -1)
 {
 #ifdef CLUA_BINDINGS
@@ -2339,7 +2339,7 @@ static bool _find_monster( const coord_def& where, int mode, bool need_path,
     return (!mons_class_flag(mon->type, M_NO_EXP_GAIN));
 }
 
-static bool _find_feature( const coord_def& where, int mode,
+static bool _find_feature(const coord_def& where, int mode,
                            bool /* need_path */, int /* range */)
 {
     // The stair need not be in LOS if the square is mapped.
@@ -2635,7 +2635,7 @@ static bool _find_square_wrapper(coord_def& mfp, int direction,
                                  bool (*find_targ)(const coord_def& where, int mode,
                                                    bool need_path, int range),
                                  bool need_path, int mode, int range,
-                                 bool wrap, int los )
+                                 bool wrap, int los)
 {
     mfp = grid2view(mfp);
     const bool r =  _find_square(mfp, direction, find_targ, need_path,
@@ -2683,8 +2683,8 @@ std::vector<dungeon_feature_type> features_by_desc(const base_pattern &pattern)
             if (fdesc.empty())
                 continue;
 
-            if (pattern.matches( fdesc ))
-                features.push_back( dungeon_feature_type(i) );
+            if (pattern.matches(fdesc))
+                features.push_back(dungeon_feature_type(i));
         }
     }
     return (features);

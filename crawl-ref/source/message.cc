@@ -877,17 +877,17 @@ static void do_message_print(msg_channel_type channel, int param,
     va_list ap;
     va_copy(ap, argp);
     char buff[200];
-    size_t len = vsnprintf( buff, sizeof( buff ), format, argp );
-    if (len < sizeof( buff ))
+    size_t len = vsnprintf(buff, sizeof(buff), format, argp);
+    if (len < sizeof(buff))
     {
-        mpr( buff, channel, param );
+        mpr(buff, channel, param);
     }
     else
     {
-        char *heapbuf = (char*)malloc( len + 1 );
-        vsnprintf( heapbuf, len + 1, format, ap );
-        mpr( heapbuf, channel, param );
-        free( heapbuf );
+        char *heapbuf = (char*)malloc(len + 1);
+        vsnprintf(heapbuf, len + 1, format, ap);
+        mpr(heapbuf, channel, param);
+        free(heapbuf);
     }
     va_end(ap);
 }
@@ -918,12 +918,12 @@ void mprf(const char *format, ...)
 }
 
 #ifdef DEBUG_DIAGNOSTICS
-void dprf( const char *format, ... )
+void dprf(const char *format, ...)
 {
     va_list  argp;
-    va_start( argp, format );
-    do_message_print( MSGCH_DIAGNOSTICS, 0, format, argp );
-    va_end( argp );
+    va_start(argp, format);
+    do_message_print(MSGCH_DIAGNOSTICS, 0, format, argp);
+    va_end(argp);
 }
 #endif
 

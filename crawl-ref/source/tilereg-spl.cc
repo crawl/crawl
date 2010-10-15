@@ -67,7 +67,7 @@ int SpellRegion::handle_mouse(MouseEvent &event)
         m_last_clicked_item = item_idx;
         tiles.set_need_redraw();
         if (!cast_a_spell(false, spell))
-            flush_input_buffer( FLUSH_ON_FAILURE );
+            flush_input_buffer(FLUSH_ON_FAILURE);
         return CK_MOUSE_CMD;
     }
     else if (spell != NUM_SPELLS && event.button == MouseEvent::RIGHT)

@@ -71,8 +71,8 @@
 
 #define PORTAL_VAULT_ORIGIN_KEY "portal_vault_origin"
 
-static bool _invisible_to_player( const item_def& item );
-static void _autoinscribe_item( item_def& item );
+static bool _invisible_to_player(const item_def& item);
+static void _autoinscribe_item(item_def& item);
 static void _autoinscribe_floor_items();
 static void _autoinscribe_inventory();
 
@@ -124,8 +124,8 @@ void link_items(void)
         }
 
         // link to top
-        mitm[i].link = igrd( mitm[i].pos );
-        igrd( mitm[i].pos ) = i;
+        mitm[i].link = igrd(mitm[i].pos);
+        igrd(mitm[i].pos) = i;
     }
 }
 
@@ -171,7 +171,7 @@ static int _cull_items(void)
     // 3. Avoid monster inventory by iterating over the dungeon grid.
     for (rectangle_iterator ri(1); ri; ++ri)
     {
-        if (distance( you.pos(), *ri ) <= dist_range(9))
+        if (distance(you.pos(), *ri) <= dist_range(9))
             continue;
 
         for (stack_iterator si(*ri); si; ++si)
@@ -188,7 +188,7 @@ static int _cull_items(void)
                     first_cleaned = si->index();
 
                 // POOF!
-                destroy_item( si->index() );
+                destroy_item(si->index());
             }
         }
     }
@@ -199,7 +199,7 @@ static int _cull_items(void)
 // Reduce quantity of an inventory item, do cleanup if item goes away.
 //
 // Returns true if stack of items no longer exists.
-bool dec_inv_item_quantity( int obj, int amount, bool suppress_burden )
+bool dec_inv_item_quantity(int obj, int amount, bool suppress_burden)
 {
     bool ret = false;
 
@@ -217,7 +217,7 @@ bool dec_inv_item_quantity( int obj, int amount, bool suppress_burden )
                 if (i == EQ_WEAPON)
                 {
                     unwield_item();
-                    canned_msg( MSG_EMPTY_HANDED );
+                    canned_msg(MSG_EMPTY_HANDED);
                 }
                 you.equip[i] = -1;
             }
@@ -249,14 +249,14 @@ bool dec_inv_item_quantity( int obj, int amount, bool suppress_burden )
 // Reduce quantity of a monster/grid item, do cleanup if item goes away.
 //
 // Returns true if stack of items no longer exists.
-bool dec_mitm_item_quantity( int obj, int amount )
+bool dec_mitm_item_quantity(int obj, int amount)
 {
     if (mitm[obj].quantity <= amount)
         amount = mitm[obj].quantity;
 
     if (mitm[obj].quantity == amount)
     {
-        destroy_item( obj );
+        destroy_item(obj);
         // If we're repeating a command, the repetitions used up the
         // item stack being repeated on, so stop rather than move onto
         // the next stack.
@@ -270,7 +270,7 @@ bool dec_mitm_item_quantity( int obj, int amount )
     return (false);
 }
 
-void inc_inv_item_quantity( int obj, int amount, bool suppress_burden )
+void inc_inv_item_quantity(int obj, int amount, bool suppress_burden)
 {
     if (you.equip[EQ_WEAPON] == obj)
         you.wield_change = true;
@@ -282,12 +282,12 @@ void inc_inv_item_quantity( int obj, int amount, bool suppress_burden )
         burden_change();
 }
 
-void inc_mitm_item_quantity( int obj, int amount )
+void inc_mitm_item_quantity(int obj, int amount)
 {
     mitm[obj].quantity += amount;
 }
 
-void init_item( int item )
+void init_item(int item)
 {
     if (item == NON_ITEM)
         return;
@@ -298,9 +298,9 @@ void init_item( int item )
 // Returns an unused mitm slot, or NON_ITEM if none available.
 // The reserve is the number of item slots to not check.
 // Items may be culled if a reserve <= 10 is specified.
-int get_item_slot( int reserve )
+int get_item_slot(int reserve)
 {
-    ASSERT( reserve >= 0 );
+    ASSERT(reserve >= 0);
 
     if (crawl_state.game_is_arena())
         reserve = 0;
@@ -328,14 +328,14 @@ int get_item_slot( int reserve )
             return (NON_ITEM);
     }
 
-    ASSERT( item != NON_ITEM );
+    ASSERT(item != NON_ITEM);
 
-    init_item( item );
+    init_item(item);
 
     return (item);
 }
 
-void unlink_item( int dest )
+void unlink_item(int dest)
 {
     // Don't destroy non-items, may be called after an item has been
     // reduced to zero quantity however.
@@ -410,7 +410,7 @@ void unlink_item( int dest )
     // Okay, the sane ways are gone... let's warn the player:
     mprf(MSGCH_ERROR, "BUG WARNING: Problems unlinking item '%s', (%d, %d)!!!",
          mitm[dest].name(DESC_PLAIN).c_str(),
-         mitm[dest].pos.x, mitm[dest].pos.y );
+         mitm[dest].pos.x, mitm[dest].pos.y);
 
     // Okay, first we scan all items to see if we have something
     // linked to this item.  We're not going to return if we find
@@ -468,7 +468,7 @@ void unlink_item( int dest )
 #endif
 }
 
-void destroy_item( item_def &item, bool never_created )
+void destroy_item(item_def &item, bool never_created)
 {
     if (!item.defined())
         return;
@@ -482,7 +482,7 @@ void destroy_item( item_def &item, bool never_created )
     item.clear();
 }
 
-void destroy_item( int dest, bool never_created )
+void destroy_item(int dest, bool never_created)
 {
     // Don't destroy non-items, but this function may be called upon
     // to remove items reduced to zero quantity, so we allow "invalid"
@@ -490,8 +490,8 @@ void destroy_item( int dest, bool never_created )
     if (dest == NON_ITEM || !mitm[dest].defined())
         return;
 
-    unlink_item( dest );
-    destroy_item( mitm[dest], never_created );
+    unlink_item(dest);
+    destroy_item(mitm[dest], never_created);
 }
 
 static void _handle_gone_item(const item_def &item)
@@ -520,8 +520,8 @@ static void _handle_gone_item(const item_def &item)
 
 void item_was_lost(const item_def &item)
 {
-    _handle_gone_item( item );
-    xom_check_lost_item( item );
+    _handle_gone_item(item);
+    xom_check_lost_item(item);
 }
 
 static void _note_item_destruction(const item_def &item)
@@ -536,12 +536,12 @@ static void _note_item_destruction(const item_def &item)
 
 void item_was_destroyed(const item_def &item, int cause)
 {
-    _handle_gone_item( item );
+    _handle_gone_item(item);
     _note_item_destruction(item);
-    xom_check_destroyed_item( item, cause );
+    xom_check_destroyed_item(item, cause);
 }
 
-void lose_item_stack( const coord_def& where )
+void lose_item_stack(const coord_def& where)
 {
     for (stack_iterator si(where); si; ++si)
     {
@@ -554,12 +554,12 @@ void lose_item_stack( const coord_def& where )
     igrd(where) = NON_ITEM;
 }
 
-static bool _invisible_to_player( const item_def& item )
+static bool _invisible_to_player(const item_def& item)
 {
     return strstr(item.inscription.c_str(), "=k") != 0;
 }
 
-static int _count_nonsquelched_items( int obj )
+static int _count_nonsquelched_items(int obj)
 {
     int result = 0;
 
@@ -575,8 +575,8 @@ static int _count_nonsquelched_items( int obj )
 // the square contains *only* squelched items, in which case they
 // are included. If force_squelch is true, squelched items are
 // never displayed.
-void item_list_on_square( std::vector<const item_def*>& items,
-                          int obj, bool force_squelch )
+void item_list_on_square(std::vector<const item_def*>& items,
+                          int obj, bool force_squelch)
 {
     const bool have_nonsquelched = (force_squelch
                                     || _count_nonsquelched_items(obj));
@@ -586,7 +586,7 @@ void item_list_on_square( std::vector<const item_def*>& items,
     {
         // Add them to the items list if they qualify.
         if (!have_nonsquelched || !_invisible_to_player(*si))
-            items.push_back( & (*si) );
+            items.push_back(& (*si));
     }
 }
 
@@ -605,8 +605,8 @@ int item_name_specialness(const item_def& item)
 {
     // All jewellery is worth looking at.
     // And we can always tell from the name if it's an artefact.
-    if (item.base_type == OBJ_JEWELLERY )
-        return ( is_artefact(item) ? 2 : 1 );
+    if (item.base_type == OBJ_JEWELLERY)
+        return (is_artefact(item) ? 2 : 1);
 
     if (item.base_type != OBJ_WEAPONS && item.base_type != OBJ_ARMOUR
         && item.base_type != OBJ_MISSILES)
@@ -634,7 +634,7 @@ int item_name_specialness(const item_def& item)
         default:
             break;
         }
-        return ( branded ? 1 : 0 );
+        return (branded ? 1 : 0);
     }
 
     std::string itname = item.name(DESC_PLAIN, false, false, false);
@@ -751,10 +751,10 @@ static void _pickup_menu(int item_link)
     int n_tried_pickup = 0;
 
     std::vector<const item_def*> items;
-    item_list_on_square( items, item_link, false );
+    item_list_on_square(items, item_link, false);
 
     std::vector<SelItem> selected =
-        select_items( items, "Select items to pick up or press _ for help" );
+        select_items(items, "Select items to pick up or press _ for help");
     redraw_screen();
 
     std::string pickup_warning;
@@ -770,7 +770,7 @@ static void _pickup_menu(int item_link)
                 const bool take_all = (num_to_take == mitm[j].quantity);
                 iflags_t oldflags = mitm[j].flags;
                 mitm[j].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
-                int result = move_item_to_player( j, num_to_take );
+                int result = move_item_to_player(j, num_to_take);
 
                 // If we cleared any flags on the items, but the pickup was
                 // partial, reset the flags for the items that remain on the
@@ -931,11 +931,11 @@ void origin_set(const coord_def& where)
     unsigned short pplace = get_packed_place();
     for (stack_iterator si(where); si; ++si)
     {
-        if (origin_known( *si ))
+        if (origin_known(*si))
             continue;
 
         if (!si->orig_monnum)
-            si->orig_monnum = static_cast<short>( monnum );
+            si->orig_monnum = static_cast<short>(monnum);
         si->orig_place  = pplace;
         _origin_set_portal_vault(*si);
         _milestone_check(*si);
@@ -1111,7 +1111,7 @@ bool pickup_single_item(int link, int qty)
 
     iflags_t oldflags = mitm[link].flags;
     mitm[link].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
-    int num = move_item_to_player( link, qty );
+    int num = move_item_to_player(link, qty);
     if (mitm[link].defined())
         mitm[link].flags = oldflags;
 
@@ -1206,7 +1206,7 @@ void pickup()
                 int num_to_take = mitm[o].quantity;
                 const iflags_t old_flags(mitm[o].flags);
                 mitm[o].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
-                int result = move_item_to_player( o, num_to_take );
+                int result = move_item_to_player(o, num_to_take);
 
                 if (result == 0 || result == -1)
                 {
@@ -1230,7 +1230,7 @@ void pickup()
     }
 }
 
-bool is_stackable_item( const item_def &item )
+bool is_stackable_item(const item_def &item)
 {
     if (!item.defined())
         return (false);
@@ -1332,12 +1332,12 @@ bool items_similar(const item_def &item1, const item_def &item2, bool ignore_ide
     return (true);
 }
 
-bool items_stack( const item_def &item1, const item_def &item2,
-                  bool force_merge, bool ignore_ident )
+bool items_stack(const item_def &item1, const item_def &item2,
+                  bool force_merge, bool ignore_ident)
 {
     // Both items must be stackable.
     if (!force_merge
-        && (!is_stackable_item( item1 ) || !is_stackable_item( item2 )))
+        && (!is_stackable_item(item1) || !is_stackable_item(item2)))
     {
         return (false);
     }
@@ -1517,7 +1517,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         return (retval);
     }
 
-    const int unit_mass = item_mass( mitm[obj] );
+    const int unit_mass = item_mass(mitm[obj]);
     if (quant_got > mitm[obj].quantity || quant_got <= 0)
         quant_got = mitm[obj].quantity;
 
@@ -1540,11 +1540,11 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         retval = part;
     }
 
-    if (is_stackable_item( mitm[obj] ))
+    if (is_stackable_item(mitm[obj]))
     {
         for (int m = 0; m < ENDOFPACK; m++)
         {
-            if (items_stack( you.inv[m], mitm[obj], false, true ))
+            if (items_stack(you.inv[m], mitm[obj], false, true))
             {
                 if (!quiet && partial_pickup)
                     mpr("You can only carry some of what is here.");
@@ -1593,8 +1593,8 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
 
                 merge_item_stacks(mitm[obj], you.inv[m], quant_got);
 
-                inc_inv_item_quantity( m, quant_got );
-                dec_mitm_item_quantity( obj, quant_got );
+                inc_inv_item_quantity(m, quant_got);
+                dec_mitm_item_quantity(obj, quant_got);
                 burden_change();
 
                 _got_item(mitm[obj], quant_got);
@@ -1661,7 +1661,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
             remove_newest_blood_potion(item);
         }
     }
-    dec_mitm_item_quantity( obj, quant_got );
+    dec_mitm_item_quantity(obj, quant_got);
     you.m_quiver->on_inv_quantity_changed(freeslot, quant_got);
     burden_change();
 
@@ -1673,7 +1673,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     if (Hints.hints_left)
     {
         taken_new_item(item.base_type);
-        if (is_artefact(item) || get_equip_desc( item ) != ISFLAG_NO_DESC)
+        if (is_artefact(item) || get_equip_desc(item) != ISFLAG_NO_DESC)
             learned_something_new(HINT_SEEN_RANDART);
     }
 
@@ -1718,7 +1718,7 @@ void mark_items_non_pickup_at(const coord_def &pos)
 //
 // Returns false on error or level full - cases where you
 // keep the item.
-bool move_item_to_grid( int *const obj, const coord_def& p, bool silent )
+bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
 {
     ASSERT(in_bounds(p));
 
@@ -1739,7 +1739,7 @@ bool move_item_to_grid( int *const obj, const coord_def& p, bool silent )
     }
 
     // If it's a stackable type...
-    if (is_stackable_item( item ))
+    if (is_stackable_item(item))
     {
         // Look for similar item to stack:
         for (stack_iterator si(p); si; ++si)
@@ -1748,13 +1748,13 @@ bool move_item_to_grid( int *const obj, const coord_def& p, bool silent )
             if (ob == si->index())
                 return (false);
 
-            if (items_stack( item, *si ))
+            if (items_stack(item, *si))
             {
                 // Add quantity to item already here, and dispose
                 // of obj, while returning the found item. -- bwr
-                inc_mitm_item_quantity( si->index(), item.quantity );
+                inc_mitm_item_quantity(si->index(), item.quantity);
                 merge_item_stacks(item, *si);
-                destroy_item( ob );
+                destroy_item(ob);
                 ob = si->index();
                 return (true);
             }
@@ -1776,10 +1776,10 @@ bool move_item_to_grid( int *const obj, const coord_def& p, bool silent )
         }
     }
 
-    ASSERT( ob != NON_ITEM );
+    ASSERT(ob != NON_ITEM);
 
     // Need to actually move object, so first unlink from old position.
-    unlink_item( ob );
+    unlink_item(ob);
 
     // Move item to coord.
     item.pos = p;
@@ -1794,7 +1794,7 @@ bool move_item_to_grid( int *const obj, const coord_def& p, bool silent )
     return (true);
 }
 
-void move_item_stack_to_grid( const coord_def& from, const coord_def& to )
+void move_item_stack_to_grid(const coord_def& from, const coord_def& to)
 {
     if (igrd(from) == NON_ITEM)
         return;
@@ -1818,8 +1818,8 @@ void move_item_stack_to_grid( const coord_def& from, const coord_def& to )
 
 
 // Returns false if no items could be dropped.
-bool copy_item_to_grid( const item_def &item, const coord_def& p,
-                        int quant_drop, bool mark_dropped, bool silent )
+bool copy_item_to_grid(const item_def &item, const coord_def& p,
+                        int quant_drop, bool mark_dropped, bool silent)
 {
     ASSERT(in_bounds(p));
 
@@ -1844,13 +1844,13 @@ bool copy_item_to_grid( const item_def &item, const coord_def& p,
         quant_drop = item.quantity;
 
     // Loop through items at current location.
-    if (is_stackable_item( item ))
+    if (is_stackable_item(item))
     {
         for (stack_iterator si(p); si; ++si)
         {
-            if (items_stack( item, *si ))
+            if (items_stack(item, *si))
             {
-                inc_mitm_item_quantity( si->index(), quant_drop );
+                inc_mitm_item_quantity(si->index(), quant_drop);
                 item_def copy = item;
                 merge_item_stacks(copy, *si, quant_drop);
 
@@ -1885,7 +1885,7 @@ bool copy_item_to_grid( const item_def &item, const coord_def& p,
         origin_set_unknown(new_item);
     }
 
-    move_item_to_grid( &new_item_idx, p, true );
+    move_item_to_grid(&new_item_idx, p, true);
     if (is_blood_potion(item)
         && item.quantity != quant_drop) // partial drop only
     {
@@ -1904,7 +1904,7 @@ bool copy_item_to_grid( const item_def &item, const coord_def& p,
 // location.
 //
 //---------------------------------------------------------------
-bool move_top_item( const coord_def &pos, const coord_def &dest )
+bool move_top_item(const coord_def &pos, const coord_def &dest)
 {
     int item = igrd(pos);
     if (item == NON_ITEM)
@@ -1914,7 +1914,7 @@ bool move_top_item( const coord_def &pos, const coord_def &dest )
         dgn_event(DET_ITEM_MOVED, pos, 0, item, -1, dest), pos);
 
     // Now move the item to its new possition...
-    move_item_to_grid( &item, dest );
+    move_item_to_grid(&item, dest);
 
     return (true);
 }
@@ -1972,7 +1972,7 @@ bool multiple_items_at(const coord_def& where, bool allow_mimic_item)
     return (found_count > 1);
 }
 
-bool drop_item( int item_dropped, int quant_drop, bool try_offer )
+bool drop_item(int item_dropped, int quant_drop, bool try_offer)
 {
     if (quant_drop < 0 || quant_drop > you.inv[item_dropped].quantity)
         quant_drop = you.inv[item_dropped].quantity;
@@ -1987,8 +1987,8 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
             return (false);
         }
 
-        if (remove_ring( item_dropped, true ))
-            start_delay( DELAY_DROP_ITEM, 1, item_dropped, 1 );
+        if (remove_ring(item_dropped, true))
+            start_delay(DELAY_DROP_ITEM, 1, item_dropped, 1);
 
         return (false);
     }
@@ -2013,9 +2013,9 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
                                                 OPER_TAKEOFF))
             {
                 // If we take off the item, cue up the item being dropped
-                if (takeoff_armour( item_dropped ))
+                if (takeoff_armour(item_dropped))
                 {
-                    start_delay( DELAY_DROP_ITEM, 1, item_dropped, 1 );
+                    start_delay(DELAY_DROP_ITEM, 1, item_dropped, 1);
                     you.turn_is_over = false; // turn happens later
                 }
             }
@@ -2040,8 +2040,8 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
 
     const dungeon_feature_type my_grid = grd(you.pos());
 
-    if (!copy_item_to_grid( you.inv[item_dropped],
-                            you.pos(), quant_drop, true, true ))
+    if (!copy_item_to_grid(you.inv[item_dropped],
+                            you.pos(), quant_drop, true, true))
     {
         mpr("Too many items on this level, not dropping the item.");
         return (false);
@@ -2069,7 +2069,7 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
         for (int i = 0; i < quant_drop; i++)
             remove_oldest_blood_potion(you.inv[item_dropped]);
     }
-    dec_inv_item_quantity( item_dropped, quant_drop );
+    dec_inv_item_quantity(item_dropped, quant_drop);
     you.turn_is_over = true;
 
     if (try_offer
@@ -2094,7 +2094,7 @@ static std::string _drop_menu_invstatus(const Menu *menu)
         int newweight = you.burden;
         for (int i = 0, size = se.size(); i < size; ++i)
         {
-            const item_def *item = static_cast<item_def *>( se[i]->data );
+            const item_def *item = static_cast<item_def *>(se[i]->data);
             newweight -= item_mass(*item) * se[i]->selected_qty;
         }
 
@@ -2110,7 +2110,7 @@ static std::string _drop_menu_invstatus(const Menu *menu)
 static std::string _drop_menu_title(const Menu *menu, const std::string &oldt)
 {
     std::string res = _drop_menu_invstatus(menu) + " " + oldt;
-    if (menu->is_set( MF_MULTISELECT ))
+    if (menu->is_set(MF_MULTISELECT))
         res = "[Multidrop] " + res;
 
     return (res);
@@ -2151,7 +2151,7 @@ mon_inv_type get_mon_equip_slot(const monster* mon, const item_def &item)
     return NUM_MONSTER_SLOTS;
 }
 
-static std::string _drop_selitem_text( const std::vector<MenuEntry*> *s )
+static std::string _drop_selitem_text(const std::vector<MenuEntry*> *s)
 {
     bool extraturns = false;
 
@@ -2160,7 +2160,7 @@ static std::string _drop_selitem_text( const std::vector<MenuEntry*> *s )
 
     for (int i = 0, size = s->size(); i < size; ++i)
     {
-        const item_def *item = static_cast<item_def *>( (*s)[i]->data );
+        const item_def *item = static_cast<item_def *>((*s)[i]->data);
         const int eq = get_equip_slot(item);
         if (eq > EQ_WEAPON && eq < NUM_EQUIP)
         {
@@ -2169,10 +2169,10 @@ static std::string _drop_selitem_text( const std::vector<MenuEntry*> *s )
         }
     }
 
-    return (make_stringf( " (%u%s turn%s)",
+    return (make_stringf(" (%u%s turn%s)",
                 s->size(),
                 extraturns? "+" : "",
-                s->size() > 1? "s" : "" ));
+                s->size() > 1? "s" : ""));
 }
 
 std::vector<SelItem> items_for_multidrop;
@@ -2214,14 +2214,14 @@ void drop()
     }
 
     std::vector<SelItem> tmp_items;
-    tmp_items = prompt_invent_items( "Drop what?  (Press _ for help.)", MT_DROP,
+    tmp_items = prompt_invent_items("Drop what?  (Press _ for help.)", MT_DROP,
                                      -1, _drop_menu_title, true, true, 0,
                                      &Options.drop_filter, _drop_selitem_text,
-                                     &items_for_multidrop );
+                                     &items_for_multidrop);
 
     if (tmp_items.empty())
     {
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
         return;
     }
 
@@ -2229,7 +2229,7 @@ void drop()
     // dropping a worn robe before a cloak (old behaviour: remove
     // cloak, remove robe, wear cloak, drop robe, remove cloak, drop
     // cloak).
-    std::sort( tmp_items.begin(), tmp_items.end(), _drop_item_order );
+    std::sort(tmp_items.begin(), tmp_items.end(), _drop_item_order);
 
     // If the user answers "no" to an item an with a warning inscription,
     // then remove it from the list of items to drop by not copying it
@@ -2260,23 +2260,23 @@ void drop()
 
     if (items_for_multidrop.empty()) // no items.
     {
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
         return;
     }
 
     if (items_for_multidrop.size() == 1) // only one item
     {
-        drop_item( items_for_multidrop[0].slot,
+        drop_item(items_for_multidrop[0].slot,
                    items_for_multidrop[0].quantity,
-                   true );
+                   true);
         items_for_multidrop.clear();
         you.turn_is_over = true;
     }
     else
-        start_delay( DELAY_MULTIDROP, items_for_multidrop.size() );
+        start_delay(DELAY_MULTIDROP, items_for_multidrop.size());
 }
 
-static void _autoinscribe_item( item_def& item )
+static void _autoinscribe_item(item_def& item)
 {
     // If there's an inscription already, do nothing - except
     // for automatically generated inscriptions
@@ -2317,14 +2317,14 @@ static void _autoinscribe_item( item_def& item )
 static void _autoinscribe_floor_items()
 {
     for (stack_iterator si(you.pos()); si; ++si)
-        _autoinscribe_item( *si );
+        _autoinscribe_item(*si);
 }
 
 static void _autoinscribe_inventory()
 {
     for (int i = 0; i < ENDOFPACK; i++)
         if (you.inv[i].defined())
-            _autoinscribe_item( you.inv[i] );
+            _autoinscribe_item(you.inv[i]);
 }
 
 bool need_to_autoinscribe()
@@ -2510,7 +2510,7 @@ static bool _item_different_than_inv(const item_def& pickup_item,
         if (!inv_item.defined())
             continue;
 
-        if ( (*comparer)(pickup_item, inv_item) )
+        if ((*comparer)(pickup_item, inv_item))
             return (false);
     }
 
@@ -3116,12 +3116,12 @@ static void _rune_from_specs(const char* _specs, item_def &item)
             MSGCH_PROMPT);
         mpr("Which rune (ESC to exit)? ", MSGCH_PROMPT);
 
-        int keyin = tolower( get_ch() );
+        int keyin = tolower(get_ch());
 
         if (key_is_escape(keyin) || keyin == ' '
             || keyin == '\r' || keyin == '\n')
         {
-            canned_msg( MSG_OK );
+            canned_msg(MSG_OK);
             item.base_type = OBJ_UNASSIGNED;
             return;
         }
@@ -3225,12 +3225,12 @@ static void _deck_from_specs(const char* _specs, item_def &item)
                 MSGCH_PROMPT);
             mpr("Which deck (ESC to exit)? ");
 
-            const int keyin = tolower( get_ch() );
+            const int keyin = tolower(get_ch());
 
             if (key_is_escape(keyin) || keyin == ' '
                 || keyin == '\r' || keyin == '\n')
             {
-                canned_msg( MSG_OK );
+                canned_msg(MSG_OK);
                 item.base_type = OBJ_UNASSIGNED;
                 return;
             }
@@ -3266,12 +3266,12 @@ static void _deck_from_specs(const char* _specs, item_def &item)
             mpr("[a] plain [b] ornate [c] legendary? (ESC to exit)",
                 MSGCH_PROMPT);
 
-            int keyin = tolower( get_ch() );
+            int keyin = tolower(get_ch());
 
             if (key_is_escape(keyin) || keyin == ' '
                 || keyin == '\r' || keyin == '\n')
             {
-                canned_msg( MSG_OK );
+                canned_msg(MSG_OK);
                 item.base_type = OBJ_UNASSIGNED;
                 return;
             }
@@ -3299,7 +3299,7 @@ static void _deck_from_specs(const char* _specs, item_def &item)
 
     if (num <= 0)
     {
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
         item.base_type = OBJ_UNASSIGNED;
         return;
     }
@@ -3379,7 +3379,7 @@ bool get_item_by_name(item_def *item, char* specs,
             item->sub_type = i;
             strlcpy(obj_name, item->name(DESC_PLAIN).c_str(), sizeof(obj_name));
 
-            ptr = strstr( strlwr(obj_name), specs );
+            ptr = strstr(strlwr(obj_name), specs);
             if (ptr != NULL)
             {
                 // Earliest match is the winner.
@@ -3421,7 +3421,7 @@ bool get_item_by_name(item_def *item, char* specs,
 
                     strlcpy(obj_name, entry->name, sizeof(obj_name));
 
-                    ptr = strstr( strlwr(obj_name), specs );
+                    ptr = strstr(strlwr(obj_name), specs);
                     if (ptr != NULL && entry->base_type == class_wanted)
                     {
                         make_item_unrandart(*item, index);
@@ -3483,7 +3483,7 @@ bool get_item_by_name(item_def *item, char* specs,
                 item->special = i;
                 strlcpy(obj_name, item->name(DESC_PLAIN).c_str(), sizeof(obj_name));
 
-                ptr = strstr( strlwr(obj_name), strlwr(buf) );
+                ptr = strstr(strlwr(obj_name), strlwr(buf));
                 if (ptr != NULL)
                 {
                     // earliest match is the winner
@@ -3506,7 +3506,7 @@ bool get_item_by_name(item_def *item, char* specs,
         if (item->sub_type == BOOK_MANUAL)
         {
             special_wanted =
-                    debug_prompt_for_skill( "A manual for which skill? " );
+                    debug_prompt_for_skill("A manual for which skill? ");
 
             if (special_wanted != -1)
             {

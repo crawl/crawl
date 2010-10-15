@@ -151,7 +151,7 @@ static std::vector<level_id> mg_dungeon_places()
 
         const branch_type branch = static_cast<branch_type>(br);
         for (int depth = 1; depth <= branches[br].depth; ++depth)
-            places.push_back( level_id(branch, depth) );
+            places.push_back(level_id(branch, depth));
     }
 
     places.push_back(LEVEL_ABYSS);
@@ -321,7 +321,7 @@ static void _write_mapgen_stats()
                 continue;
 
             sortedvetos.insert(
-                std::pair<int, level_id>( i->second.second, i->first ));
+                std::pair<int, level_id>(i->second.second, i->first));
         }
 
         int count = 0;

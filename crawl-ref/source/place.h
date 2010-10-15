@@ -14,8 +14,8 @@
 //
 unsigned short get_packed_place();
 
-unsigned short get_packed_place( branch_type branch, int subdepth,
-                                 level_area_type level_type );
+unsigned short get_packed_place(branch_type branch, int subdepth,
+                                 level_area_type level_type);
 
 int place_branch(unsigned short place);
 int place_depth(unsigned short place);
@@ -23,8 +23,8 @@ int place_type(unsigned short place);
 
 std::string short_place_name(unsigned short place);
 std::string short_place_name(level_id id);
-std::string place_name( unsigned short place, bool long_name = false,
-                        bool include_number = true );
+std::string place_name(unsigned short place, bool long_name = false,
+                        bool include_number = true);
 
 // Prepositional form of branch level name.  For example, "in the
 // Abyss" or "on level 3 of the Main Dungeon".

@@ -203,7 +203,7 @@ void update_turn_count()
     // Show the turn count starting from 1. You can still quit on turn 0.
     textcolor(HUD_VALUE_COLOUR);
     if (Options.show_real_turns)
-       cprintf("%.1f", you.elapsed_time / 10.0 );
+       cprintf("%.1f", you.elapsed_time / 10.0);
     else
         cprintf("%d", you.num_turns);
     textcolor(LIGHTGREY);
@@ -347,13 +347,13 @@ static void _print_stats_ac(int x, int y)
     // AC:
     cgotoxy(x+4, y, GOTO_STAT);
     if (you.duration[DUR_STONEMAIL])
-        textcolor(dur_colour( BLUE, dur_expiring(DUR_STONEMAIL) ));
+        textcolor(dur_colour(BLUE, dur_expiring(DUR_STONEMAIL)));
     else if (you.duration[DUR_ICY_ARMOUR] || you.duration[DUR_STONESKIN])
-        textcolor( LIGHTBLUE );
+        textcolor(LIGHTBLUE);
     else if (you.duration[DUR_ICEMAIL_DEPLETED] > ICEMAIL_TIME / ICEMAIL_MAX)
-        textcolor( RED );
+        textcolor(RED);
     else
-        textcolor( HUD_VALUE_COLOUR );
+        textcolor(HUD_VALUE_COLOUR);
     std::string ac = make_stringf("%2d ", you.armour_class());
 #ifdef WIZARD
     if (you.wizard)
@@ -368,11 +368,11 @@ static void _print_stats_ac(int x, int y)
     else if (you.duration[DUR_CONDENSATION_SHIELD]
              || you.duration[DUR_DIVINE_SHIELD])
     {
-        textcolor( LIGHTBLUE );
+        textcolor(LIGHTBLUE);
     }
     else
-        textcolor( HUD_VALUE_COLOUR );
-    cprintf( "%2d ", player_shield_class() );
+        textcolor(HUD_VALUE_COLOUR);
+    cprintf("%2d ", player_shield_class());
 }
 
 static void _print_stats_ev(int x, int y)
@@ -380,7 +380,7 @@ static void _print_stats_ev(int x, int y)
     cgotoxy(x+4, y, GOTO_STAT);
     textcolor(you.duration[DUR_PHASE_SHIFT] || you.duration[DUR_AGILITY]
               ? LIGHTBLUE : HUD_VALUE_COLOUR);
-    cprintf( "%2d ", player_evasion() );
+    cprintf("%2d ", player_evasion());
 }
 
 static void _print_stats_wp(int y)
@@ -482,12 +482,12 @@ static void _get_status_lights(std::vector<status_light>& out)
     {
         static char static_pos_buf[80];
         snprintf(static_pos_buf, sizeof(static_pos_buf),
-                 "%2d,%2d", you.pos().x, you.pos().y );
+                 "%2d,%2d", you.pos().x, you.pos().y);
         out.push_back(status_light(LIGHTGREY, static_pos_buf));
 
         static char static_hunger_buf[80];
         snprintf(static_hunger_buf, sizeof(static_hunger_buf),
-                 "(%d:%d)", you.hunger - you.old_hunger, you.hunger );
+                 "(%d:%d)", you.hunger - you.old_hunger, you.hunger);
         out.push_back(status_light(LIGHTGREY, static_hunger_buf));
     }
 #endif
@@ -606,10 +606,10 @@ void print_stats(void)
     bool has_changed = _need_stats_printed();
 #endif
 
-    if (you.redraw_hit_points)   { you.redraw_hit_points = false;   _print_stats_hp ( 1, 3); }
-    if (you.redraw_magic_points) { you.redraw_magic_points = false; _print_stats_mp ( 1, 4); }
-    if (you.redraw_armour_class) { you.redraw_armour_class = false; _print_stats_ac ( 1, 5); }
-    if (you.redraw_evasion)      { you.redraw_evasion = false;      _print_stats_ev ( 1, 6); }
+    if (you.redraw_hit_points)   { you.redraw_hit_points = false;   _print_stats_hp (1, 3); }
+    if (you.redraw_magic_points) { you.redraw_magic_points = false; _print_stats_mp (1, 4); }
+    if (you.redraw_armour_class) { you.redraw_armour_class = false; _print_stats_ac (1, 5); }
+    if (you.redraw_evasion)      { you.redraw_evasion = false;      _print_stats_ev (1, 6); }
 
     for (int i = 0; i < NUM_STATS; ++i)
         if (you.redraw_stats[i])
@@ -728,7 +728,7 @@ void print_stats_level()
 
     textcolor(HUD_VALUE_COLOUR);
 #ifdef DEBUG_DIAGNOSTICS
-    cprintf( "(%d) ", you.absdepth0 + 1 );
+    cprintf("(%d) ", you.absdepth0 + 1);
 #endif
     cprintf("%s", _level_description_string_hud().c_str());
     clear_to_end_of_line();
@@ -759,13 +759,13 @@ void redraw_skill(const std::string &your_name, const std::string &job_name)
 
     // Line 1: Foo the Bar    *WIZARD*
     cgotoxy(1, 1, GOTO_STAT);
-    textcolor( YELLOW );
+    textcolor(YELLOW);
     if (title.size() > WIDTH)
         title.resize(WIDTH, ' ');
-    cprintf( "%-*s", WIDTH, title.c_str() );
+    cprintf("%-*s", WIDTH, title.c_str());
     if (you.wizard)
     {
-        textcolor( LIGHTBLUE );
+        textcolor(LIGHTBLUE);
         cgotoxy(1 + crawl_view.hudsz.x-9, 1, GOTO_STAT);
         cprintf(" *WIZARD*");
     }
@@ -775,7 +775,7 @@ void redraw_skill(const std::string &your_name, const std::string &job_name)
 
     // Line 2:
     // Level N Minotaur [of God]
-    textcolor( YELLOW );
+    textcolor(YELLOW);
     cgotoxy(1, 2, GOTO_STAT);
     nowrap_eol_cprintf("Level %d %s", you.experience_level,
                        species_name(you.species).c_str());
@@ -788,7 +788,7 @@ void redraw_skill(const std::string &your_name, const std::string &job_name)
 
     clear_to_end_of_line();
 
-    textcolor( LIGHTGREY );
+    textcolor(LIGHTGREY);
 }
 
 void draw_border(void)
@@ -799,11 +799,11 @@ void draw_border(void)
 
     textcolor(Options.status_caption_colour);
 
-    //cgotoxy( 1, 3, GOTO_STAT); cprintf("Hp:");
-    cgotoxy( 1, 4, GOTO_STAT); cprintf("Magic:");
-    cgotoxy( 1, 5, GOTO_STAT); cprintf("AC:");
-    cgotoxy( 1, 6, GOTO_STAT); cprintf("EV:");
-    cgotoxy( 1, 7, GOTO_STAT); cprintf("SH:");
+    //cgotoxy(1, 3, GOTO_STAT); cprintf("Hp:");
+    cgotoxy(1, 4, GOTO_STAT); cprintf("Magic:");
+    cgotoxy(1, 5, GOTO_STAT); cprintf("AC:");
+    cgotoxy(1, 6, GOTO_STAT); cprintf("EV:");
+    cgotoxy(1, 7, GOTO_STAT); cprintf("SH:");
 
     cgotoxy(19, 5, GOTO_STAT); cprintf("Str:");
     cgotoxy(19, 6, GOTO_STAT); cprintf("Int:");
@@ -811,7 +811,7 @@ void draw_border(void)
 
     if (Options.show_gold_turns)
     {
-        cgotoxy( 1, 8, GOTO_STAT); cprintf("Gold:");
+        cgotoxy(1, 8, GOTO_STAT); cprintf("Gold:");
         cgotoxy(19, 8, GOTO_STAT); cprintf("Turn:");
     }
     // Line 9 (or 8) is exp pool, Level
@@ -867,7 +867,7 @@ static std::string _get_monster_name(const monster_info& mi,
 // hostile/neutral/friendly) than the second, or, if both monsters share the
 // same attitude, if the first monster has a lower type.
 // If monster type and attitude are the same, return false.
-bool compare_monsters_attitude( const monster* m1, const monster* m2 )
+bool compare_monsters_attitude(const monster* m1, const monster* m2)
 {
     if (_mons_hostile(m1) && !_mons_hostile(m2))
         return (true);
@@ -1123,25 +1123,25 @@ int update_monster_pane()
 
 const char* itosym1(int stat)
 {
-    return ( (stat >= 1) ? "+  " : ".  " );
+    return ((stat >= 1) ? "+  " : ".  ");
 }
 
 const char* itosym2(int stat)
 {
-    return ( (stat >= 2) ? "+ +" :
-             (stat == 1) ? "+ ." :
-                           ". .");
+    return ((stat >= 2) ? "+ +" :
+            (stat == 1) ? "+ ." :
+                          ". .");
 }
 
 const char* itosym3(int stat)
 {
-    return ( (stat >=  3) ? "+ + +" :
-             (stat ==  2) ? "+ + ." :
-             (stat ==  1) ? "+ . ." :
-             (stat ==  0) ? ". . ." :
-             (stat == -1) ? "x . ." :
-             (stat == -2) ? "x x ." :
-                            "x x x");
+    return ((stat >=  3) ? "+ + +" :
+            (stat ==  2) ? "+ + ." :
+            (stat ==  1) ? "+ . ." :
+            (stat ==  0) ? ". . ." :
+            (stat == -1) ? "x . ." :
+            (stat == -2) ? "x x ." :
+                           "x x x");
 }
 
 static const char *s_equip_slot_names[] =
@@ -1178,7 +1178,7 @@ int equip_name_to_slot(const char *s)
 
 // Colour the string according to the level of an ability/resistance.
 // Take maximum possible level into account.
-static const char* _determine_colour_string( int level, int max_level )
+static const char* _determine_colour_string(int level, int max_level)
 {
     switch (level)
     {
@@ -1309,7 +1309,7 @@ static std::string _overview_screen_title()
         const time_t curr = you.real_time + (time(NULL) - you.start_time);
         snprintf(time_turns, sizeof time_turns,
                  " Turns: %d, Time: %s",
-                 you.num_turns, make_time_string(curr, true).c_str() );
+                 you.num_turns, make_time_string(curr, true).c_str());
     }
 
     int linelength = you.your_name.length() + strlen(title)
@@ -1323,7 +1323,7 @@ static std::string _overview_screen_title()
               snprintf(species_job, sizeof species_job,
                        "(%s%s)",
                        get_species_abbrev(you.species),
-                       get_job_abbrev(you.char_class) );
+                       get_job_abbrev(you.char_class));
               break;
           case 1:
               strcpy(title, "");
@@ -1693,7 +1693,7 @@ static char _get_overview_screen_results()
     bool calc_unid = false;
     formatted_scroller overview;
     overview.set_flags(MF_SINGLESELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP);
-    overview.set_more( formatted_string::parse_string(
+    overview.set_more(formatted_string::parse_string(
 #ifdef USE_TILE
                         "<cyan>[ +/L-click : Page down.   - : Page up."
                         "           Esc/R-click exits.]"));
@@ -1707,7 +1707,7 @@ static char _get_overview_screen_results()
 
     {
         std::vector<formatted_string> blines = _get_overview_stats();
-        for (unsigned int i = 0; i < blines.size(); ++i )
+        for (unsigned int i = 0; i < blines.size(); ++i)
             overview.add_item_formatted_string(blines[i]);
         overview.add_text(" ");
     }

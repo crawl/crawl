@@ -41,12 +41,12 @@ enum unchivalric_attack_type
 
 struct mon_attack_def;
 
-int effective_stat_bonus( int wepType = -1 );
+int effective_stat_bonus(int wepType = -1);
 
 int resist_adjust_damage(actor *defender, beam_type flavour,
                          int res, int rawdamage, bool ranged = false);
 
-int weapon_str_weight( object_class_type wpn_class, int wpn_type );
+int weapon_str_weight(object_class_type wpn_class, int wpn_type);
 bool you_attack(int monster_attacked, bool unarmed_attacks);
 bool monster_attack_actor(monster* attacker, actor *defender,
                           bool allow_unarmed);

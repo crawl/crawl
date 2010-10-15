@@ -101,7 +101,7 @@ static void _save_level(const level_id& lid);
 static bool _get_and_validate_version(reader &inf, int &major,
                                       int &minor, std::string* reason = 0);
 
-static bool _determine_ghost_version( FILE *ghostFile,
+static bool _determine_ghost_version(FILE *ghostFile,
                                       int &majorVersion, int &minorVersion);
 
 static void _restore_ghost(FILE *ghostFile, const std::string filename,
@@ -110,7 +110,7 @@ static void _restore_ghost(FILE *ghostFile, const std::string filename,
 static bool _restore_tagged_chunk(package *save, const std::string name,
                                   tag_type tag, const char* complaint);
 
-const short GHOST_SIGNATURE = short( 0xDC55 );
+const short GHOST_SIGNATURE = short(0xDC55);
 
 static void _redraw_all(void)
 {
@@ -306,7 +306,7 @@ bool is_absolute_path(const std::string &path)
 #ifdef TARGET_OS_WINDOWS
                 || path.find(':') != std::string::npos
 #endif
-                ));
+              ));
 }
 
 // Concatenates two paths, separating them with FILE_SEPARATOR if necessary.
@@ -800,7 +800,7 @@ std::string get_save_filename(const std::string &prefix,
     // Technically we should shorten the string first.  But if
     // MULTIUSER is set we'll have long filenames anyway. Caveat
     // emptor.
-    if ( !suppress_uid )
+    if (!suppress_uid)
         result += _uid_as_string();
 
     result += suffix;
@@ -1064,7 +1064,7 @@ static void _clear_env_map()
 static void _clear_clouds()
 {
     for (int clouty = 0; clouty < MAX_CLOUDS; ++clouty)
-        delete_cloud( clouty );
+        delete_cloud(clouty);
     env.cgrid.init(EMPTY_CLOUD);
 }
 
@@ -1324,7 +1324,7 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
 #ifdef DEBUG_LEVEL_LOAD
         mpr("Generating new file...", MSGCH_DIAGNOSTICS);
 #endif
-        ASSERT( load_mode != LOAD_VISITOR );
+        ASSERT(load_mode != LOAD_VISITOR);
         env.turns_on_level = -1;
 
         if (you.char_direction == GDT_GAME_START
@@ -1467,9 +1467,9 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
         if (just_created_level)
             timeval /= 2;
 
-        timeval -= (stepdown_value( check_stealth(), 50, 50, 150, 150 ) / 10);
+        timeval -= (stepdown_value(check_stealth(), 50, 50, 150, 150) / 10);
 
-        dprf("arrival time: %d", timeval );
+        dprf("arrival time: %d", timeval);
 
         if (timeval > 0)
         {
@@ -2122,8 +2122,8 @@ static bool _restore_tagged_chunk(package *save, const std::string name,
     return true;
 }
 
-static bool _determine_ghost_version( FILE *ghostFile,
-                                      int &majorVersion, int &minorVersion )
+static bool _determine_ghost_version(FILE *ghostFile,
+                                      int &majorVersion, int &minorVersion)
 {
     // Read first two bytes.
     uint8_t buf[2];
@@ -2165,7 +2165,7 @@ static void _restore_ghost(FILE *ghostFile, std::string filename, int minorVersi
     inf.fail_if_not_eof(filename);
 }
 
-void save_ghost( bool force )
+void save_ghost(bool force)
 {
 #ifdef BONES_DIAGNOSTICS
 
@@ -2221,7 +2221,7 @@ void save_ghost( bool force )
 
 #ifdef BONES_DIAGNOSTICS
     if (do_diagnostics)
-        mprf(MSGCH_DIAGNOSTICS, "Saved ghost (%s).", cha_fil.c_str() );
+        mprf(MSGCH_DIAGNOSTICS, "Saved ghost (%s).", cha_fil.c_str());
 #endif
 }
 
@@ -2231,7 +2231,7 @@ void save_ghost( bool force )
 // first, some file locking stuff for multiuser crawl
 #ifdef USE_FILE_LOCKING
 
-bool lock_file_handle( FILE *handle, int type )
+bool lock_file_handle(FILE *handle, int type)
 {
     struct flock  lock;
     int           status;
@@ -2242,11 +2242,11 @@ bool lock_file_handle( FILE *handle, int type )
     lock.l_type = type;
 
 #ifdef USE_BLOCKING_LOCK
-    status = fcntl( fileno( handle ), F_SETLKW, &lock );
+    status = fcntl(fileno(handle), F_SETLKW, &lock);
 #else
     for (int i = 0; i < 30; i++)
     {
-        status = fcntl( fileno( handle ), F_SETLK, &lock );
+        status = fcntl(fileno(handle), F_SETLK, &lock);
 
         // success
         if (status == 0)
@@ -2256,15 +2256,15 @@ bool lock_file_handle( FILE *handle, int type )
         if (status == -1 && (errno != EACCES && errno != EAGAIN))
             break;
 
-        perror( "Problems locking file... retrying..." );
-        delay( 1000 );
+        perror("Problems locking file... retrying...");
+        delay(1000);
     }
 #endif
 
     return (status == 0);
 }
 
-bool unlock_file_handle( FILE *handle )
+bool unlock_file_handle(FILE *handle)
 {
     struct flock  lock;
     int           status;
@@ -2276,13 +2276,13 @@ bool unlock_file_handle( FILE *handle )
 
 #ifdef USE_BLOCKING_LOCK
 
-    status = fcntl( fileno( handle ), F_SETLKW, &lock );
+    status = fcntl(fileno(handle), F_SETLKW, &lock);
 
 #else
 
     for (int i = 0; i < 30; i++)
     {
-        status = fcntl( fileno( handle ), F_SETLK, &lock );
+        status = fcntl(fileno(handle), F_SETLK, &lock);
 
         // success
         if (status == 0)
@@ -2292,8 +2292,8 @@ bool unlock_file_handle( FILE *handle )
         if (status == -1 && (errno != EACCES && errno != EAGAIN))
             break;
 
-        perror( "Problems unlocking file... retrying..." );
-        delay( 1000 );
+        perror("Problems unlocking file... retrying...");
+        delay(1000);
     }
 
 #endif
@@ -2317,10 +2317,10 @@ FILE *lk_open(const char *mode, const std::string &file)
     if (mode && mode[0] != 'r')
         locktype = F_WRLCK;
 
-    if (handle && !lock_file_handle( handle, locktype ))
+    if (handle && !lock_file_handle(handle, locktype))
     {
-        perror( "Could not lock file... " );
-        fclose( handle );
+        perror("Could not lock file... ");
+        fclose(handle);
         handle = NULL;
     }
 #endif
@@ -2329,13 +2329,13 @@ FILE *lk_open(const char *mode, const std::string &file)
 
 void lk_close(FILE *handle, const char *mode, const std::string &file)
 {
-    UNUSED( mode );
+    UNUSED(mode);
 
     if (handle == NULL || handle == stdin)
         return;
 
 #ifdef USE_FILE_LOCKING
-    unlock_file_handle( handle );
+    unlock_file_handle(handle);
 #endif
 
 #ifdef SHARED_FILES_CHMOD_PUBLIC

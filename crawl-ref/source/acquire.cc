@@ -1124,9 +1124,9 @@ int acquirement_create_item(object_class_type class_wanted,
         // ourselves.
         int want_arts = (class_wanted == OBJ_BOOKS ? 0 : 1);
 
-        thing_created = items( want_arts, class_wanted, type_wanted, true,
+        thing_created = items(want_arts, class_wanted, type_wanted, true,
                                MAKE_GOOD_ITEM, MAKE_ITEM_RANDOM_RACE,
-                               0, 0, agent );
+                               0, 0, agent);
 
         if (thing_created == NON_ITEM)
             continue;
@@ -1263,7 +1263,7 @@ int acquirement_create_item(object_class_type class_wanted,
             && is_artefact(doodad))
         {
             artefact_properties_t  proprt;
-            artefact_wpn_properties( doodad, proprt );
+            artefact_wpn_properties(doodad, proprt);
 
             // Check vs. stats. positive stats will automatically fall
             // through.  As will negative stats that won't kill you.
@@ -1479,7 +1479,7 @@ int acquirement_create_item(object_class_type class_wanted,
             return _failed_acquirement(quiet);
     }
 
-    move_item_to_grid( &thing_created, pos );
+    move_item_to_grid(&thing_created, pos);
 
     if (thing_created != NON_ITEM)
     {
@@ -1509,7 +1509,7 @@ bool acquirement(object_class_type class_wanted, int agent,
             (you.religion == GOD_FEDHAS ? "Fruit" : "Food "));
         mpr("What kind of item would you like to acquire? ", MSGCH_PROMPT);
 
-        const int keyin = tolower( get_ch() );
+        const int keyin = tolower(get_ch());
         switch (keyin)
         {
         case 'a': case ')':            class_wanted = OBJ_WEAPONS;    break;

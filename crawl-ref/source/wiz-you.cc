@@ -33,7 +33,7 @@
 #include "xom.h"
 
 #ifdef WIZARD
-void wizard_change_species( void )
+void wizard_change_species(void)
 {
     char specs[80];
     int i;
@@ -75,8 +75,8 @@ void wizard_change_species( void )
     // Re-scale skill-points.
     for (i = 0; i < NUM_SKILLS; ++i)
     {
-        you.skill_points[i] *= species_skills( i, sp );
-        you.skill_points[i] /= species_skills( i, you.species );
+        you.skill_points[i] *= species_skills(i, sp);
+        you.skill_points[i] /= species_skills(i, you.species);
     }
 
     you.species = sp;
@@ -165,10 +165,10 @@ void wizard_cast_spec_spell(void)
     int spell;
 
     mpr("Cast which spell? ", MSGCH_PROMPT);
-    if (cancelable_get_line_autohist( specs, sizeof( specs ) )
+    if (cancelable_get_line_autohist(specs, sizeof(specs))
         || specs[0] == '\0')
     {
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
         crawl_state.cancel_cmd_repeat();
         return;
     }
@@ -185,7 +185,7 @@ void wizard_cast_spec_spell(void)
         }
     }
 
-    if (your_spells( static_cast<spell_type>(spell), 0, false )
+    if (your_spells(static_cast<spell_type>(spell), 0, false)
                 == SPRET_ABORT)
     {
         crawl_state.cancel_cmd_repeat();
@@ -330,7 +330,7 @@ void wizard_set_piety()
 #ifdef WIZARD
 void wizard_exercise_skill(void)
 {
-    int skill = debug_prompt_for_skill( "Which skill (by name)? " );
+    int skill = debug_prompt_for_skill("Which skill (by name)? ");
 
     if (skill == -1)
         mpr("That skill doesn't seem to exist.");
@@ -345,22 +345,22 @@ void wizard_exercise_skill(void)
 #ifdef WIZARD
 void wizard_set_skill_level(void)
 {
-    int skill = debug_prompt_for_skill( "Which skill (by name)? " );
+    int skill = debug_prompt_for_skill("Which skill (by name)? ");
 
     if (skill == -1)
         mpr("That skill doesn't seem to exist.");
     else
     {
         mpr(skill_name(skill));
-        int amount = debug_prompt_for_int( "To what level? ", true );
+        int amount = debug_prompt_for_int("To what level? ", true);
 
         if (amount < 0)
-            canned_msg( MSG_OK );
+            canned_msg(MSG_OK);
         else
         {
             const int old_amount = you.skills[skill];
-            const int points = (skill_exp_needed( amount )
-                                * species_skills( skill, you.species )) / 100;
+            const int points = (skill_exp_needed(amount)
+                                * species_skills(skill, you.species)) / 100;
 
             you.skill_points[skill] = points + 1;
             you.skills[skill] = amount;
@@ -416,10 +416,10 @@ void wizard_set_all_skills(void)
 {
     int i;
     int amount =
-            debug_prompt_for_int( "Set all skills to what level? ", true );
+            debug_prompt_for_int("Set all skills to what level? ", true);
 
     if (amount < 0)             // cancel returns -1 -- bwr
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
     else
     {
         if (amount > 27)
@@ -430,8 +430,8 @@ void wizard_set_all_skills(void)
             if (is_invalid_skill(i))
                 continue;
 
-            const int points = (skill_exp_needed( amount )
-                                * species_skills( i, you.species )) / 100;
+            const int points = (skill_exp_needed(amount)
+                                * species_skills(i, you.species)) / 100;
 
             you.skill_points[i] = points + 1;
             you.skills[i] = amount;
@@ -642,7 +642,7 @@ void wizard_get_religion(void)
     else
     {
         dungeon_feature_type feat =
-            static_cast<dungeon_feature_type>( DNGN_ALTAR_FIRST_GOD + god - 1 );
+            static_cast<dungeon_feature_type>(DNGN_ALTAR_FIRST_GOD + god - 1);
         dungeon_terrain_changed(you.pos(), feat, false);
 
         pray();
@@ -745,7 +745,7 @@ static const char* dur_names[] =
     "scrying",
 };
 
-void wizard_edit_durations( void )
+void wizard_edit_durations(void)
 {
     COMPILE_CHECK(ARRAYSZ(dur_names) == NUM_DURATIONS, dur_names_size);
     std::vector<int> durs;
@@ -778,13 +778,13 @@ void wizard_edit_durations( void )
 
     if (cancelable_get_line_autohist(buf, sizeof buf) || strlen(buf) == 0)
     {
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
         return;
     }
 
     if (!strlcpy(buf, lowercase_string(trimmed_string(buf)).c_str(), sizeof(buf)))
     {
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
         return;
     }
 
@@ -862,7 +862,7 @@ static void debug_uptick_xl(int newxl)
 {
     while (newxl > you.experience_level)
     {
-        you.experience = 1 + exp_needed( 2 + you.experience_level );
+        you.experience = 1 + exp_needed(2 + you.experience_level);
         level_change(true);
     }
 }

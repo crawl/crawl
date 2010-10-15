@@ -376,7 +376,7 @@ void player_quiver::get_fire_order(std::vector<int>& v) const
 // fire order is empty.
 //
 // launcher determines what items match the 'launcher' fire_order type.
-void player_quiver::_get_fire_order( std::vector<int>& order,
+void player_quiver::_get_fire_order(std::vector<int>& order,
                                      bool ignore_inscription_etc,
                                      const item_def* launcher) const
 {
@@ -432,7 +432,7 @@ void player_quiver::_get_fire_order( std::vector<int>& order,
             if (_item_matches(item, (fire_type) Options.fire_order[i_flags],
                               launcher))
             {
-                order.push_back( (i_flags<<16) | (i_inv & 0xffff) );
+                order.push_back((i_flags<<16) | (i_inv & 0xffff));
                 break;
             }
         }

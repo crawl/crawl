@@ -77,7 +77,7 @@
 #include "xom.h"
 
 
-static void end_game( scorefile_entry &se );
+static void end_game(scorefile_entry &se);
 static void _item_corrode(int slot);
 
 static void _maybe_melt_player_enchantments(beam_type flavour)
@@ -108,7 +108,7 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
     int resist;
     int original = hurted;
 
-    dprf("checking resistance: flavour=%d", flavour );
+    dprf("checking resistance: flavour=%d", flavour);
 
     std::string kaux = "";
     if (beam)
@@ -177,7 +177,7 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
         resist = player_res_poison();
 
         if (resist <= 0)
-            poison_player( coinflip() ? 2 : 1, source, kaux );
+            poison_player(coinflip() ? 2 : 1, source, kaux);
 
         hurted = resist_adjust_damage(&you, flavour, resist,
                                       hurted, true);
@@ -192,9 +192,9 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
         resist = player_res_poison();
 
         if (!resist)
-            poison_player( 4 + random2(3), source, kaux, true );
+            poison_player(4 + random2(3), source, kaux, true);
         else if (!you.is_undead)
-            poison_player( 2 + random2(3), source, kaux, true );
+            poison_player(2 + random2(3), source, kaux, true);
 
         hurted = resist_adjust_damage(&you, flavour, resist, hurted);
         if (hurted < original)
@@ -709,7 +709,7 @@ bool expose_items_to_element(beam_type flavour, const coord_def& where,
         default:
             mprf("%s on the floor %s destroyed!",
                  (num_dest > 1) ? "Some items" : "An item",
-                 (num_dest > 1) ? "were" : "was" );
+                 (num_dest > 1) ? "were" : "was");
             break;
         }
     }
@@ -736,7 +736,7 @@ bool expose_player_to_element(beam_type flavour, int strength)
     if (strength <= 0)
         return (false);
 
-    return (_expose_invent_to_element( flavour, strength ));
+    return (_expose_invent_to_element(flavour, strength));
 }
 
 void lose_level()
@@ -750,7 +750,7 @@ void lose_level()
         return;
     }
 
-    you.experience = exp_needed( you.experience_level + 1 ) - 1;
+    you.experience = exp_needed(you.experience_level + 1) - 1;
     you.experience_level--;
 
     mprf(MSGCH_WARN,
@@ -1137,14 +1137,14 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         // Even if we have low HP messages off, we'll still give a
         // big hit warning (in this case, a hit for half our HPs) -- bwr
         if (dam > 0 && you.hp_max <= dam * 2)
-            mpr( "Ouch! That really hurt!", MSGCH_DANGER );
+            mpr("Ouch! That really hurt!", MSGCH_DANGER);
 
         if (you.hp > 0)
         {
             if (Options.hp_warning
                 && you.hp <= (you.hp_max * Options.hp_warning) / 100)
             {
-                mpr( "* * * LOW HITPOINT WARNING * * *", MSGCH_DANGER );
+                mpr("* * * LOW HITPOINT WARNING * * *", MSGCH_DANGER);
                 dungeon_events.fire_event(DET_HP_WARNING);
             }
 
@@ -1164,7 +1164,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
             }
 
             take_note(
-                      Note(NOTE_HP_CHANGE, you.hp, you.hp_max, damage_desc.c_str()) );
+                      Note(NOTE_HP_CHANGE, you.hp, you.hp_max, damage_desc.c_str()));
 
             _yred_mirrors_injury(dam, death_source);
             _maybe_spawn_jellies(dam, aux, death_type, death_source);
@@ -1243,7 +1243,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
             if (crawl_state.test || !yesno("Die?", false, 'n'))
             {
-                take_note(Note( NOTE_DEATH, you.hp, you.hp_max,
+                take_note(Note(NOTE_DEATH, you.hp, you.hp_max,
                                 death_desc.c_str()), true);
                 _wizard_restore_life();
                 return;
@@ -1252,7 +1252,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
             mpr("Since you're a debugger, I'll let you live.");
             mpr("Be more careful next time, okay?");
 
-            take_note(Note( NOTE_DEATH, you.hp, you.hp_max,
+            take_note(Note(NOTE_DEATH, you.hp, you.hp_max,
                             death_desc.c_str()), true);
             _wizard_restore_life();
             return;
@@ -1262,7 +1262,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 #endif  // WIZARD
 
     // Okay, so you're dead.
-    take_note(Note( NOTE_DEATH, you.hp, you.hp_max,
+    take_note(Note(NOTE_DEATH, you.hp, you.hp_max,
                     se.death_description(scorefile_entry::DDV_NORMAL).c_str()),
               true);
     if (you.lives && !non_death)
