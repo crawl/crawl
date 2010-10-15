@@ -36,7 +36,7 @@ void init_libdos()
 void set_cursor_enabled(bool enabled)
 {
     cursor_is_enabled = enabled;
-    _setcursortype( enabled? _NORMALCURSOR : _NOCURSOR );
+    _setcursortype(enabled? _NORMALCURSOR : _NOCURSOR);
 }
 
 bool is_cursor_enabled()

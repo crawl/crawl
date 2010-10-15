@@ -357,7 +357,7 @@ void MiscastEffect::do_miscast()
 
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_MISCAST)
     mprf(MSGCH_DIAGNOSTICS, "Sptype: %s, severity: %d",
-         spelltype_short_name(sp_type), severity );
+         spelltype_short_name(sp_type), severity);
 #endif
 
     beam.ex_size            = 1;
@@ -2667,7 +2667,7 @@ void MiscastEffect::_poison(int severity)
             mon_msg_seen   = "Noxious gasses pour from @the_monster@'s "
                              "@hands@!";
             mon_msg_unseen = "Noxious gasses pour forth from the thin air!";
-            place_cloud(CLOUD_STINK, target->pos(), 2 + random2(4), kc, kt );
+            place_cloud(CLOUD_STINK, target->pos(), 2 + random2(4), kc, kt);
             break;
         }
         break;

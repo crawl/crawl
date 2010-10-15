@@ -300,15 +300,15 @@ bool TilesFramework::initialise()
     m_screen_height = wm->screen_height();
 
 #ifdef TARGET_OS_WINDOWS
-    if(Options.tile_align_at_top)
+    if (Options.tile_align_at_top)
     {
         int delta_x = (wm->desktop_width() - m_screen_width) / 2;
         SDL_SysWMinfo i;
-        SDL_VERSION( &i.version );
-        if ( SDL_GetWMInfo ( &i) )
+        SDL_VERSION(&i.version);
+        if (SDL_GetWMInfo (&i))
         {
             HWND hwnd = i.window;
-            SetWindowPos( hwnd, HWND_TOP, delta_x, 0, 0, 0, SWP_NOSIZE );
+            SetWindowPos(hwnd, HWND_TOP, delta_x, 0, 0, 0, SWP_NOSIZE);
         }
     }
 #endif
@@ -606,7 +606,7 @@ int TilesFramework::getch_ck()
                     // Record mouse pos for tooltip timer
                     // FIXME: This compares signed and unsigned ints
                     if (m_mouse.x != abs(event.mouse_event.px)
-                        || m_mouse.y != abs(event.mouse_event.py) )
+                        || m_mouse.y != abs(event.mouse_event.py))
                     {
                         m_last_tick_moved = ticks;
                     }
@@ -934,7 +934,7 @@ bool TilesFramework::layout_statcol(bool message_overlay, bool show_gold_turns)
     m_region_tab->resize_to_fit(m_windowsz.x - m_region_tab->sx,
                                 m_windowsz.y - m_region_tab->sy);
     m_region_tab->resize(std::min(13, (int)m_region_tab->mx),
-                         std::min( 6, (int)m_region_tab->my));
+                         std::min(6, (int)m_region_tab->my));
 
     int self_inv_y = m_windowsz.y - m_region_tab->wy;
     m_region_tab->place(inv_col, self_inv_y);

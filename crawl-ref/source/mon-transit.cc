@@ -36,7 +36,7 @@ static void level_place_followers(m_transit_list &m);
 static void cull_lost_mons(m_transit_list &mlist, int how_many)
 {
     // First pass, drop non-uniques.
-    for (m_transit_list::iterator i = mlist.begin(); i != mlist.end(); )
+    for (m_transit_list::iterator i = mlist.begin(); i != mlist.end();)
     {
         m_transit_list::iterator finger = i++;
         if (!mons_is_unique(finger->mons.type))
@@ -51,13 +51,13 @@ static void cull_lost_mons(m_transit_list &mlist, int how_many)
     // If we're still over the limit (unlikely), just lose
     // the old ones.
     while (how_many-- > MAX_LOST && !mlist.empty())
-        mlist.erase( mlist.begin() );
+        mlist.erase(mlist.begin());
 }
 
 static void cull_lost_items(i_transit_list &ilist, int how_many)
 {
     // First pass, drop non-artefacts.
-    for (i_transit_list::iterator i = ilist.begin(); i != ilist.end(); )
+    for (i_transit_list::iterator i = ilist.begin(); i != ilist.end();)
     {
         i_transit_list::iterator finger = i++;
         if (!is_artefact(*finger))
@@ -70,7 +70,7 @@ static void cull_lost_items(i_transit_list &ilist, int how_many)
     }
 
     // Second pass, drop randarts.
-    for (i_transit_list::iterator i = ilist.begin(); i != ilist.end(); )
+    for (i_transit_list::iterator i = ilist.begin(); i != ilist.end();)
     {
         i_transit_list::iterator finger = i++;
         if (is_random_artefact(*finger))
@@ -83,7 +83,7 @@ static void cull_lost_items(i_transit_list &ilist, int how_many)
     }
 
     // Third pass, drop unrandarts.
-    for (i_transit_list::iterator i = ilist.begin(); i != ilist.end(); )
+    for (i_transit_list::iterator i = ilist.begin(); i != ilist.end();)
     {
         i_transit_list::iterator finger = i++;
         if (is_unrandom_artefact(*finger)
@@ -99,7 +99,7 @@ static void cull_lost_items(i_transit_list &ilist, int how_many)
     // If we're still over the limit (unlikely), just lose
     // the old ones.
     while (how_many-- > MAX_LOST && !ilist.empty())
-        ilist.erase( ilist.begin() );
+        ilist.erase(ilist.begin());
 }
 
 m_transit_list *get_transit_list(const level_id &lid)
@@ -157,7 +157,7 @@ static bool place_lost_monster(follower &f)
 static void level_place_lost_monsters(m_transit_list &m)
 {
     for (m_transit_list::iterator i = m.begin();
-         i != m.end(); )
+         i != m.end();)
     {
         m_transit_list::iterator mon = i++;
 
@@ -173,7 +173,7 @@ static void level_place_lost_monsters(m_transit_list &m)
 
 static void level_place_followers(m_transit_list &m)
 {
-    for (m_transit_list::iterator i = m.begin(); i != m.end(); )
+    for (m_transit_list::iterator i = m.begin(); i != m.end();)
     {
         m_transit_list::iterator mon = i++;
         if ((mon->mons.flags & MF_TAKING_STAIRS) && mon->place(true))

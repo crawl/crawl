@@ -124,8 +124,8 @@ public:
     void go_to(const level_id &level);
 };
 
-void save_ghost( bool force = false );
-bool load_ghost( bool creating_level );
+void save_ghost(bool force = false);
+bool load_ghost(bool creating_level);
 
 std::string get_level_filename(const level_id& lid);
 
@@ -134,8 +134,8 @@ void lk_close(FILE *handle, const char *mode, const std::string &file);
 
 // file locking stuff
 #ifdef USE_FILE_LOCKING
-bool lock_file_handle( FILE *handle, int type );
-bool unlock_file_handle( FILE *handle );
+bool lock_file_handle(FILE *handle, int type);
+bool unlock_file_handle(FILE *handle);
 #endif // USE_FILE_LOCKING
 
 #ifdef SHARED_FILES_CHMOD_PRIVATE

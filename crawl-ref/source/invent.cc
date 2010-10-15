@@ -48,12 +48,12 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Inventory menu shenanigans
 
-static void _get_inv_items_to_show( std::vector<const item_def*> &v,
+static void _get_inv_items_to_show(std::vector<const item_def*> &v,
                                     int selector, int excluded_slot = -1);
 
-InvTitle::InvTitle( Menu *mn, const std::string &title,
-                    invtitle_annotator tfn )
-    : MenuEntry( title, MEL_TITLE )
+InvTitle::InvTitle(Menu *mn, const std::string &title,
+                    invtitle_annotator tfn)
+    : MenuEntry(title, MEL_TITLE)
 {
     m       = mn;
     titlefn = tfn;
@@ -61,13 +61,13 @@ InvTitle::InvTitle( Menu *mn, const std::string &title,
 
 std::string InvTitle::get_text(const bool) const
 {
-    return (titlefn ? titlefn( m, MenuEntry::get_text() )
+    return (titlefn ? titlefn(m, MenuEntry::get_text())
                     : MenuEntry::get_text());
 }
 
-InvEntry::InvEntry( const item_def &i ) : MenuEntry( "", MEL_ITEM ), item( &i )
+InvEntry::InvEntry(const item_def &i) : MenuEntry("", MEL_ITEM), item(&i)
 {
-    data = const_cast<item_def *>( item );
+    data = const_cast<item_def *>(item);
 
     if (in_inventory(i) && i.base_type != OBJ_GOLD)
     {
@@ -80,7 +80,7 @@ InvEntry::InvEntry( const item_def &i ) : MenuEntry( "", MEL_ITEM ), item( &i )
         text = i.name(DESC_NOCAP_A, false);
 
     if (i.base_type != OBJ_GOLD && in_inventory(i))
-        add_hotkey(index_to_letter( i.link ));
+        add_hotkey(index_to_letter(i.link));
     else
         add_hotkey(' ');        // dummy hotkey
 
@@ -354,7 +354,7 @@ InvMenu::xlat_itemvect(const std::vector<item_def> &v)
 {
     std::vector<const item_def*> xlatitems;
     for (unsigned i = 0, size = v.size(); i < size; ++i)
-        xlatitems.push_back( &v[i] );
+        xlatitems.push_back(&v[i]);
     return (xlatitems);
 }
 
@@ -391,7 +391,7 @@ void InvMenu::set_title(const std::string &s)
             BURDEN_TO_AUM * you.burden,
             BURDEN_TO_AUM * cap,
             (you.burden * 100) / cap,
-            inv_count() );
+            inv_count());
 
         default_title << std::setw(get_number_of_cols() - default_title.str().length() - 1)
                       << std::right
@@ -757,7 +757,7 @@ void init_item_sort_comparators(item_sort_comparators &list,
         for (unsigned ci = 0; ci < ARRAYSZ(cmp_map); ++ci)
             if (cmp_map[ci].cname == s)
             {
-                list.push_back( item_comparator( cmp_map[ci].cmp, negated ) );
+                list.push_back(item_comparator(cmp_map[ci].cmp, negated));
                 break;
             }
     }
@@ -784,7 +784,7 @@ void InvMenu::sort_menu(std::vector<InvEntry*> &invitems,
     if (!cond || cond->sort == -1 || (int) invitems.size() < cond->sort)
         return;
 
-    std::sort( invitems.begin(), invitems.end(), menu_entry_comparator(cond) );
+    std::sort(invitems.begin(), invitems.end(), menu_entry_comparator(cond));
 }
 
 void InvMenu::load_items(const std::vector<const item_def*> &mitems,
@@ -830,14 +830,14 @@ void InvMenu::load_items(const std::vector<const item_def*> &mitems,
             }
         }
 
-        add_entry( new MenuEntry( subtitle, MEL_SUBTITLE ) );
+        add_entry(new MenuEntry(subtitle, MEL_SUBTITLE));
         items_in_class.clear();
 
         for (int j = 0, count = mitems.size(); j < count; ++j)
         {
             if (mitems[j]->base_type != i)
                 continue;
-            items_in_class.push_back( new InvEntry(*mitems[j]) );
+            items_in_class.push_back(new InvEntry(*mitems[j]));
         }
 
         sort_menu(items_in_class, cond);
@@ -852,7 +852,7 @@ void InvMenu::load_items(const std::vector<const item_def*> &mitems,
                 ie->hotkeys[0] = ckey++;
             do_preselect(ie);
 
-            add_entry( procfn? (*procfn)(ie) : ie );
+            add_entry(procfn? (*procfn)(ie) : ie);
         }
     }
 
@@ -884,12 +884,12 @@ std::vector<SelItem> InvMenu::get_selitems() const
                 SelItem(
                     inv->hotkeys[0],
                     inv->selected_qty,
-                    inv->item ) );
+                    inv->item));
     }
     return (selected_items);
 }
 
-bool InvMenu::process_key( int key )
+bool InvMenu::process_key(int key)
 {
     if (items.size()
         && type == MT_DROP
@@ -906,7 +906,7 @@ bool InvMenu::process_key( int key )
         draw_select_count(0, true);
         return (true);
     }
-    return Menu::process_key( key );
+    return Menu::process_key(key);
 }
 
 unsigned char InvMenu::getkey() const
@@ -941,7 +941,7 @@ unsigned char get_invent(int invent_type)
             const int invidx = letter_to_index(select);
             if (you.inv[invidx].defined())
             {
-                if (!describe_item( you.inv[invidx], true ))
+                if (!describe_item(you.inv[invidx], true))
                     break;
             }
         }
@@ -955,7 +955,7 @@ unsigned char get_invent(int invent_type)
     return select;
 }
 
-std::string item_class_name( int type, bool terse )
+std::string item_class_name(int type, bool terse)
 {
     if (terse)
     {
@@ -1004,9 +1004,9 @@ std::string item_class_name( int type, bool terse )
     return ("");
 }
 
-std::vector<SelItem> select_items( const std::vector<const item_def*> &items,
+std::vector<SelItem> select_items(const std::vector<const item_def*> &items,
                                    const char *title, bool noselect,
-                                   menu_type mtype )
+                                   menu_type mtype)
 {
     std::vector<SelItem> selected;
     if (!items.empty())
@@ -1170,7 +1170,7 @@ bool any_items_to_select(int selector, bool msg)
     return (false);
 }
 
-unsigned char invent_select( const char *title,
+unsigned char invent_select(const char *title,
                              menu_type type,
                              int item_selector,
                              int excluded_slot,
@@ -1179,7 +1179,7 @@ unsigned char invent_select( const char *title,
                              std::vector<SelItem> *items,
                              std::vector<text_pattern> *filter,
                              Menu::selitem_tfn selitemfn,
-                             const std::vector<SelItem> *pre_select )
+                             const std::vector<SelItem> *pre_select)
 {
     InvMenu menu(flags);
 
@@ -1187,7 +1187,7 @@ unsigned char invent_select( const char *title,
     menu.set_title_annotator(titlefn);
     menu.f_selitem = selitemfn;
     if (filter)
-        menu.set_select_filter( *filter );
+        menu.set_select_filter(*filter);
     menu.load_inv_items(item_selector, excluded_slot);
     menu.set_type(type);
 
@@ -1203,7 +1203,7 @@ unsigned char invent_select( const char *title,
     return (menu.getkey());
 }
 
-void browse_inventory( bool show_price )
+void browse_inventory(bool show_price)
 {
     InvShowPrices show_item_prices(show_price);
     get_invent(OSEL_ANY);
@@ -1211,7 +1211,7 @@ void browse_inventory( bool show_price )
 
 // Reads in digits for a count and apprends then to val, the
 // return value is the character that stopped the reading.
-static unsigned char _get_invent_quant( unsigned char keyin, int &quant )
+static unsigned char _get_invent_quant(unsigned char keyin, int &quant)
 {
     quant = keyin - '0';
 
@@ -1219,7 +1219,7 @@ static unsigned char _get_invent_quant( unsigned char keyin, int &quant )
     {
         keyin = get_ch();
 
-        if (!isadigit( keyin ))
+        if (!isadigit(keyin))
             break;
 
         quant *= 10;
@@ -1255,7 +1255,7 @@ std::vector<SelItem> prompt_invent_items(
                         const char other_valid_char,
                         std::vector<text_pattern> *select_filter,
                         Menu::selitem_tfn fn,
-                        const std::vector<SelItem> *pre_select )
+                        const std::vector<SelItem> *pre_select)
 {
     unsigned char  keyin = 0;
     int            ret = PROMPT_ABORT;
@@ -1309,13 +1309,13 @@ std::vector<SelItem> prompt_invent_items(
                         MF_MULTISELECT | MF_ALLOW_FILTER;
 
             // The "view inventory listing" mode.
-            const int ch = invent_select( prompt,
+            const int ch = invent_select(prompt,
                                           mtype,
                                           keyin == '*' ? OSEL_ANY : type_expect,
                                           -1,
                                           selmode,
                                           titlefn, &items, select_filter, fn,
-                                          pre_select );
+                                          pre_select);
 
             if ((selmode & MF_SINGLESELECT) || key_is_escape(ch))
             {
@@ -1337,7 +1337,7 @@ std::vector<SelItem> prompt_invent_items(
                 }
 
                 for (unsigned int i = 0; i < items.size(); ++i)
-                    items[i].slot = letter_to_index( items[i].slot );
+                    items[i].slot = letter_to_index(items[i].slot);
                 return (items);
             }
 
@@ -1345,10 +1345,10 @@ std::vector<SelItem> prompt_invent_items(
                             || keyin == ',' || keyin == '+');
             need_prompt = need_redraw;
         }
-        else if (isadigit( keyin ))
+        else if (isadigit(keyin))
         {
             // The "read in quantity" mode
-            keyin = _get_invent_quant( keyin, count );
+            keyin = _get_invent_quant(keyin, count);
 
             need_prompt = false;
             need_getch  = false;
@@ -1361,19 +1361,19 @@ std::vector<SelItem> prompt_invent_items(
             ret = PROMPT_ABORT;
             break;
         }
-        else if (isaalpha( keyin ))
+        else if (isaalpha(keyin))
         {
-            ret = letter_to_index( keyin );
+            ret = letter_to_index(keyin);
 
             if (!you.inv[ret].defined())
                 mpr("You don't have any such object.");
             else
                 break;
         }
-        else if (!isspace( keyin ))
+        else if (!isspace(keyin))
         {
             // We've got a character we don't understand...
-            canned_msg( MSG_HUH );
+            canned_msg(MSG_HUH);
         }
         else
         {
@@ -1385,18 +1385,18 @@ std::vector<SelItem> prompt_invent_items(
     if (ret != PROMPT_ABORT)
     {
         items.push_back(
-            SelItem( ret, count,
-                     ret != PROMPT_GOT_SPECIAL ? &you.inv[ret] : NULL ) );
+            SelItem(ret, count,
+                     ret != PROMPT_GOT_SPECIAL ? &you.inv[ret] : NULL));
     }
     return items;
 }
 
-static int _digit_to_index( char digit, operation_types oper )
+static int _digit_to_index(char digit, operation_types oper)
 {
 
     const char iletter = static_cast<char>(oper);
 
-    for ( int i = 0; i < ENDOFPACK; ++i )
+    for (int i = 0; i < ENDOFPACK; ++i)
     {
         if (you.inv[i].defined())
         {
@@ -1406,7 +1406,7 @@ static int _digit_to_index( char digit, operation_types oper )
             {
                 if (r[j] == '@'
                      && (r[j+1] == iletter || r[j+1] == '*')
-                     && r[j+2] == digit )
+                     && r[j+2] == digit)
                 {
                     return i;
                 }
@@ -1443,8 +1443,8 @@ static bool _has_warning_inscription(const item_def& item,
 
 // Checks if current item (to be removed) has a warning inscription
 // and prompts the user for confirmation.
-bool check_old_item_warning( const item_def& item,
-                             operation_types oper )
+bool check_old_item_warning(const item_def& item,
+                             operation_types oper)
 {
     item_def old_item;
     std::string prompt;
@@ -1579,8 +1579,8 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
 }
 
 // Returns true if user OK'd it (or no warning), false otherwise.
-bool check_warning_inscriptions( const item_def& item,
-                                 operation_types oper )
+bool check_warning_inscriptions(const item_def& item,
+                                 operation_types oper)
 {
     if (item.defined()
         && needs_handle_warning(item, oper))
@@ -1649,7 +1649,7 @@ bool check_warning_inscriptions( const item_def& item,
 // It returns PROMPT_NOTHING     if there are no matching items.
 //
 // Note: This function never checks if the item is appropriate.
-int prompt_invent_item( const char *prompt,
+int prompt_invent_item(const char *prompt,
                         menu_type mtype, int type_expect,
                         bool must_exist, bool allow_auto_list,
                         bool allow_easy_quit,
@@ -1657,7 +1657,7 @@ int prompt_invent_item( const char *prompt,
                         int excluded_slot,
                         int *const count,
                         operation_types oper,
-                        bool allow_list_known )
+                        bool allow_list_known)
 {
     if (!any_items_to_select(type_expect) && type_expect == OSEL_THROWABLE
         && oper == OPER_FIRE && mtype == MT_INVLIST)
@@ -1733,7 +1733,7 @@ int prompt_invent_item( const char *prompt,
                         MF_SINGLESELECT | MF_ANYPRINTABLE | MF_NO_SELECT_QTY
                             | MF_EASY_EXIT,
                         NULL,
-                        &items );
+                        &items);
 
             if (allow_list_known && keyin == '\\')
             {
@@ -1763,10 +1763,10 @@ int prompt_invent_item( const char *prompt,
                 }
             }
         }
-        else if (count != NULL && isadigit( keyin ))
+        else if (count != NULL && isadigit(keyin))
         {
             // The "read in quantity" mode
-            keyin = _get_invent_quant( keyin, *count );
+            keyin = _get_invent_quant(keyin, *count);
 
             need_prompt = false;
             need_getch  = false;
@@ -1774,14 +1774,14 @@ int prompt_invent_item( const char *prompt,
             if (auto_list)
                 need_redraw = true;
         }
-        else if (count == NULL && isadigit( keyin ))
+        else if (count == NULL && isadigit(keyin))
         {
             // scan for our item
-            int res = _digit_to_index( keyin, oper );
+            int res = _digit_to_index(keyin, oper);
             if (res != -1)
             {
                 ret = res;
-                if (check_warning_inscriptions( you.inv[ret], oper ))
+                if (check_warning_inscriptions(you.inv[ret], oper))
                     break;
             }
         }
@@ -1802,19 +1802,19 @@ int prompt_invent_item( const char *prompt,
                 else
                     mpr("You don't recognise anything yet!");
         }
-        else if (isaalpha( keyin ))
+        else if (isaalpha(keyin))
         {
-            ret = letter_to_index( keyin );
+            ret = letter_to_index(keyin);
 
             if (must_exist && !you.inv[ret].defined())
                 mpr("You don't have any such object.");
-            else if (check_warning_inscriptions( you.inv[ret], oper ))
+            else if (check_warning_inscriptions(you.inv[ret], oper))
                 break;
         }
-        else if (!isspace( keyin ))
+        else if (!isspace(keyin))
         {
             // We've got a character we don't understand...
-            canned_msg( MSG_HUH );
+            canned_msg(MSG_HUH);
         }
         else
         {

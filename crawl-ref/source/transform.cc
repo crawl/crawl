@@ -343,8 +343,8 @@ static bool _check_for_cursed_equipment(const std::set<equipment_type> &remove,
 
             if (!quiet)
             {
-                mpr( "Your cursed equipment won't allow you to complete the "
-                     "transformation." );
+                mpr("Your cursed equipment won't allow you to complete the "
+                     "transformation.");
             }
 
             return (true);
@@ -802,28 +802,28 @@ void untransform(bool skip_wielding, bool skip_move)
     {
     case TRAN_SPIDER:
         mpr("Your transformation has ended.", MSGCH_DURATION);
-        notify_stat_change( STAT_DEX, -5, true,
-                     "losing the spider transformation" );
+        notify_stat_change(STAT_DEX, -5, true,
+                     "losing the spider transformation");
         break;
 
     case TRAN_BAT:
         mpr("Your transformation has ended.", MSGCH_DURATION);
-        notify_stat_change( STAT_DEX, -5, true,
-                     "losing the bat transformation" );
-        notify_stat_change( STAT_STR, 5, true,
-                     "losing the bat transformation" );
+        notify_stat_change(STAT_DEX, -5, true,
+                     "losing the bat transformation");
+        notify_stat_change(STAT_STR, 5, true,
+                     "losing the bat transformation");
         break;
 
     case TRAN_BLADE_HANDS:
-        mpr( "Your hands revert to their normal proportions.", MSGCH_DURATION );
+        mpr("Your hands revert to their normal proportions.", MSGCH_DURATION);
         you.wield_change = true;
         break;
 
     case TRAN_STATUE:
-        mpr( "You revert to your normal fleshy form.", MSGCH_DURATION );
-        notify_stat_change( STAT_DEX, 2, true,
-                     "losing the statue transformation" );
-        notify_stat_change( STAT_STR, -2, true,
+        mpr("You revert to your normal fleshy form.", MSGCH_DURATION);
+        notify_stat_change(STAT_DEX, 2, true,
+                     "losing the statue transformation");
+        notify_stat_change(STAT_STR, -2, true,
                      "losing the statue transformation");
 
         // Note: if the core goes down, the combined effect soon disappears,
@@ -838,7 +838,7 @@ void untransform(bool skip_wielding, bool skip_move)
         break;
 
     case TRAN_ICE_BEAST:
-        mpr( "You warm up again.", MSGCH_DURATION );
+        mpr("You warm up again.", MSGCH_DURATION);
 
         // Note: if the core goes down, the combined effect soon disappears,
         // but the reverse isn't true. -- bwr
@@ -849,21 +849,21 @@ void untransform(bool skip_wielding, bool skip_move)
         break;
 
     case TRAN_DRAGON:
-        mpr( "Your transformation has ended.", MSGCH_DURATION );
+        mpr("Your transformation has ended.", MSGCH_DURATION);
         notify_stat_change(STAT_STR, -10, true,
-                    "losing the dragon transformation" );
+                    "losing the dragon transformation");
         hp_downscale = 16;
         break;
 
     case TRAN_LICH:
-        mpr( "You feel yourself come back to life.", MSGCH_DURATION );
+        mpr("You feel yourself come back to life.", MSGCH_DURATION);
         notify_stat_change(STAT_STR, -3, true,
-                    "losing the lich transformation" );
+                    "losing the lich transformation");
         you.is_undead = US_ALIVE;
         break;
 
     case TRAN_PIG:
-        mpr( "Your transformation has ended.", MSGCH_DURATION );
+        mpr("Your transformation has ended.", MSGCH_DURATION);
         break;
 
     default:
@@ -930,7 +930,7 @@ void untransform(bool skip_wielding, bool skip_move)
 
 // XXX: This whole system is a mess as it still relies on special
 // cases to handle a large number of things (see wear_armour()) -- bwr
-bool can_equip( equipment_type use_which, bool ignore_temporary )
+bool can_equip(equipment_type use_which, bool ignore_temporary)
 {
     if (use_which == EQ_HELMET
         && (player_mutation_level(MUT_HORNS)
@@ -988,7 +988,7 @@ void _extra_hp(int amount_extra) // must also set in calc_hp
 // If phys_scales is true then we're checking to see if the form keeps
 // the physical (AC/EV) properties from scales... the special intrinsic
 // features (resistances, etc.) are lost in those forms however.
-bool transform_changed_physiology( bool phys_scales )
+bool transform_changed_physiology(bool phys_scales)
 {
     return (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE
             && you.attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS

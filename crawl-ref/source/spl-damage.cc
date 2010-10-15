@@ -243,8 +243,8 @@ void cast_chain_lightning(int pow, const actor *caster)
             }
         }
 
-        const bool see_source = you.see_cell( source );
-        const bool see_targ   = you.see_cell( target );
+        const bool see_source = you.see_cell(source);
+        const bool see_targ   = you.see_cell(target);
 
         if (target.x == -1)
         {
@@ -265,7 +265,7 @@ void cast_chain_lightning(int pow, const actor *caster)
         else if (!see_source && see_targ)
             mpr("The lightning arc suddenly appears!");
 
-        if (!you.see_cell_no_trans( target ))
+        if (!you.see_cell_no_trans(target))
         {
             // It's no longer in the caster's LOS and influence.
             pow = pow / 2 + 1;
@@ -871,11 +871,11 @@ static int _shatter_monsters(coord_def where, int pow, int, actor *)
 
 static int _shatter_items(coord_def where, int pow, int, actor *)
 {
-    UNUSED( pow );
+    UNUSED(pow);
 
     int broke_stuff = 0;
 
-    for ( stack_iterator si(where); si; ++si )
+    for (stack_iterator si(where); si; ++si)
     {
         if (si->base_type == OBJ_POTIONS && !one_chance_in(10))
         {
@@ -1108,7 +1108,7 @@ static int _ignite_poison_objects(coord_def where, int pow, int, actor *)
     return (strength);
 }
 
-static int _ignite_poison_clouds( coord_def where, int pow, int, actor *)
+static int _ignite_poison_clouds(coord_def where, int pow, int, actor *)
 {
     UNUSED(pow);
 
@@ -1286,7 +1286,7 @@ static int _discharge_monsters(coord_def where, int pow, int, actor *)
     else
     {
         damage = 3 + random2(5 + pow/10);
-        damage = mons_adjust_flavoured(mons, beam, damage );
+        damage = mons_adjust_flavoured(mons, beam, damage);
 
         if (damage)
         {

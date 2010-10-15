@@ -81,7 +81,7 @@ enum ability_flag_type
     ABFLAG_VARIABLE_FRUIT = 0x00000400, // ability requires fruit or piety
 };
 
-static int  _find_ability_slot( ability_type which_ability );
+static int  _find_ability_slot(ability_type which_ability);
 static bool _activate_talent(const talent& tal);
 static bool _do_ability(const ability_def& abil);
 static void _pay_ability_costs(const ability_def& abil);
@@ -164,8 +164,8 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
 // This table puts all the information in one place... -- bwr
 //
 // The four numerical fields are: MP, HP, food, and piety.
-// Note:  food_cost  = val + random2avg( val, 2 )
-//        piety_cost = val + random2( (val + 1) / 2 + 1 );
+// Note:  food_cost  = val + random2avg(val, 2)
+//        piety_cost = val + random2((val + 1) / 2 + 1);
 static const ability_def Ability_List[] =
 {
     // NON_ABILITY should always come first
@@ -564,7 +564,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
 
     // Look through the table to see if there's a preference, else
     // find a new empty slot for this ability. -- bwr
-    const int index = _find_ability_slot( ability );
+    const int index = _find_ability_slot(ability);
     if (index != -1)
         result.hotkey = index_to_letter(index);
     else
@@ -968,17 +968,17 @@ bool activate_ability()
             selected = choose_ability_menu(talents);
             if (selected == -1)
             {
-                canned_msg( MSG_OK );
+                canned_msg(MSG_OK);
                 return (false);
             }
         }
         else if (key_is_escape(keyin) || keyin == ' ' || keyin == '\r'
                  || keyin == '\n')
         {
-            canned_msg( MSG_OK );
+            canned_msg(MSG_OK);
             return (false);
         }
-        else if ( isaalpha(keyin) )
+        else if (isaalpha(keyin))
         {
             // Try to find the hotkey.
             for (unsigned int i = 0; i < talents.size(); ++i)
@@ -1848,7 +1848,7 @@ static bool _do_ability(const ability_def& abil)
             you.hp_max = 1;
 
         // Deflate HP.
-        set_hp( 1 + random2(you.hp), false );
+        set_hp(1 + random2(you.hp), false);
 
         // Lose 1d2 permanent MP.
         rot_mp(coinflip() ? 2 : 1);
@@ -2094,27 +2094,27 @@ static void _pay_ability_costs(const ability_def& abil)
     const int hp_cost    = abil.hp_cost.cost(you.hp_max);
 
     dprf("Cost: mp=%d; hp=%d; food=%d; piety=%d",
-         abil.mp_cost, hp_cost, food_cost, piety_cost );
+         abil.mp_cost, hp_cost, food_cost, piety_cost);
 
     if (abil.mp_cost)
     {
-        dec_mp( abil.mp_cost );
+        dec_mp(abil.mp_cost);
         if (abil.flags & ABFLAG_PERMANENT_MP)
             rot_mp(1);
     }
 
     if (abil.hp_cost)
     {
-        dec_hp( hp_cost, false );
+        dec_hp(hp_cost, false);
         if (abil.flags & ABFLAG_PERMANENT_HP)
             rot_hp(1);
     }
 
     if (food_cost)
-        make_hungry( food_cost, false, true );
+        make_hungry(food_cost, false, true);
 
     if (piety_cost)
-        lose_piety( piety_cost );
+        lose_piety(piety_cost);
 }
 
 int choose_ability_menu(const std::vector<talent>& talents)
@@ -2204,7 +2204,7 @@ int choose_ability_menu(const std::vector<talent>& talents)
 
 static std::string _describe_talent(const talent& tal)
 {
-    ASSERT( tal.which != ABIL_NON_ABILITY );
+    ASSERT(tal.which != ABIL_NON_ABILITY);
 
     std::ostringstream desc;
     desc << std::left
@@ -2393,7 +2393,7 @@ std::vector<talent> your_talents(bool check_confused)
     }
 
     // And finally, the ability to opt-out of your faith {dlb}:
-    if (you.religion != GOD_NO_GOD && !silenced( you.pos()))
+    if (you.religion != GOD_NO_GOD && !silenced(you.pos()))
         _add_talent(talents, ABIL_RENOUNCE_RELIGION, check_confused);
 
     //jmf: Check for breath weapons - they're exclusive of each other, I hope!

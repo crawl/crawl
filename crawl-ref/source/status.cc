@@ -148,7 +148,7 @@ static void _reset_status_info(status_info* inf)
     inf->long_text = "";
 };
 
-static int _bad_ench_colour( int lvl, int orange, int red )
+static int _bad_ench_colour(int lvl, int orange, int red)
 {
     if (lvl > red)
         return (RED);

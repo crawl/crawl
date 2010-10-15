@@ -80,10 +80,10 @@ public:
 #endif
 
 public:
-    MenuEntry( const std::string &txt = std::string(),
+    MenuEntry(const std::string &txt = std::string(),
                MenuEntryLevel lev = MEL_ITEM,
                int qty  = 0,
-               int hotk = 0 ) :
+               int hotk = 0) :
         text(txt), quantity(qty), selected_qty(0), colour(-1),
         hotkeys(), level(lev), data(NULL)
     {
@@ -91,27 +91,27 @@ public:
                   lev == MEL_SUBTITLE ?  BLUE  :
                                          WHITE);
         if (hotk)
-            hotkeys.push_back( hotk );
+            hotkeys.push_back(hotk);
     }
     virtual ~MenuEntry() { }
 
-    bool operator<( const MenuEntry& rhs ) const
+    bool operator<(const MenuEntry& rhs) const
     {
         return text < rhs.text;
     }
 
-    void add_hotkey( int key )
+    void add_hotkey(int key)
     {
         if (key && !is_hotkey(key))
-            hotkeys.push_back( key );
+            hotkeys.push_back(key);
     }
 
-    bool is_hotkey( int key ) const
+    bool is_hotkey(int key) const
     {
-        return find( hotkeys.begin(), hotkeys.end(), key ) != hotkeys.end();
+        return find(hotkeys.begin(), hotkeys.end(), key) != hotkeys.end();
     }
 
-    bool is_primary_hotkey( int key ) const
+    bool is_primary_hotkey(int key) const
     {
         return (hotkeys.size()? hotkeys[0] == key : false);
     }
@@ -138,7 +138,7 @@ public:
         return (selected_qty > 0 && quantity);
     }
 
-    virtual void select( int qty = -1 )
+    virtual void select(int qty = -1)
     {
         if (selected())
             selected_qty = 0;
@@ -163,10 +163,10 @@ class ToggleableMenuEntry : public MenuEntry
 public:
     std::string alt_text;
 
-    ToggleableMenuEntry( const std::string &txt = std::string(),
+    ToggleableMenuEntry(const std::string &txt = std::string(),
                          const std::string &alt_txt = std::string(),
                          MenuEntryLevel lev = MEL_ITEM,
-                         int qty = 0, int hotk = 0 ) :
+                         int qty = 0, int hotk = 0) :
         MenuEntry(txt, lev, qty, hotk), alt_text(alt_txt) {}
 
     void toggle() { text.swap(alt_text); }
@@ -297,7 +297,7 @@ public:
     //
     // These are limitations that should be fixed eventually.
     //
-    Menu( const formatted_string &fs );
+    Menu(const formatted_string &fs);
 
     virtual ~Menu();
 
@@ -308,7 +308,7 @@ public:
     // override options.
     void set_flags(int new_flags, bool use_options = true);
     int  get_flags() const        { return flags; }
-    virtual bool is_set( int flag ) const;
+    virtual bool is_set(int flag) const;
     void set_tag(const std::string& t) { tag = t; }
 
     bool draw_title_suffix(const std::string &s, bool titlefirst = true);
@@ -319,16 +319,16 @@ public:
     void set_more(const formatted_string &more);
     const formatted_string &get_more() const { return more; }
 
-    void set_highlighter( MenuHighlighter *h );
-    void set_title( MenuEntry *e, bool first = true );
-    void add_entry( MenuEntry *entry );
-    void get_selected( std::vector<MenuEntry*> *sel ) const;
+    void set_highlighter(MenuHighlighter *h);
+    void set_title(MenuEntry *e, bool first = true);
+    void add_entry(MenuEntry *entry);
+    void get_selected(std::vector<MenuEntry*> *sel) const;
     virtual int get_cursor() const;
 
     void set_maxpagesize(int max);
     int maxpagesize() const { return max_pagesize; }
 
-    void set_select_filter( std::vector<text_pattern> filter )
+    void set_select_filter(std::vector<text_pattern> filter)
     {
         select_filter = filter;
     }
@@ -342,13 +342,13 @@ public:
     size_t item_count() const    { return items.size(); }
 
     // Get entry index, skipping quantity 0 entries. Returns -1 if not found.
-    int get_entry_index( const MenuEntry *e ) const;
+    int get_entry_index(const MenuEntry *e) const;
 
     virtual int item_colour(int index, const MenuEntry *me) const;
     int get_y_offset() const { return y_offset; }
     int get_pagesize() const { return pagesize; }
 public:
-    typedef std::string (*selitem_tfn)( const std::vector<MenuEntry*> *sel );
+    typedef std::string (*selitem_tfn)(const std::vector<MenuEntry*> *sel);
     typedef void (*drawitem_tfn)(int index, const MenuEntry *me);
     typedef int (*keyfilter_tfn)(int keyin);
 
@@ -393,7 +393,7 @@ protected:
                                   std::string &line, bool check_eol);
     void do_menu();
     virtual void draw_select_count(int count, bool force = false);
-    virtual void draw_item( int index ) const;
+    virtual void draw_item(int index) const;
     virtual void draw_index_item(int index, const MenuEntry *me) const;
     virtual void draw_stock_item(int index, const MenuEntry *me) const;
 
@@ -411,21 +411,21 @@ protected:
     bool in_page(int index) const;
 
     void deselect_all(bool update_view = true);
-    virtual void select_items( int key, int qty = -1 );
+    virtual void select_items(int key, int qty = -1);
     void select_item_index(int idx, int qty, bool draw_cursor = true);
-    void select_index( int index, int qty = -1 );
+    void select_index(int index, int qty = -1);
 
-    bool is_hotkey(int index, int key );
+    bool is_hotkey(int index, int key);
     virtual bool is_selectable(int index) const;
 
-    virtual bool process_key( int keyin );
+    virtual bool process_key(int keyin);
 };
 
 // Allows toggling by specific keys.
 class ToggleableMenu : public Menu
 {
 public:
-    ToggleableMenu( int _flags = MF_MULTISELECT, bool text_only = true )
+    ToggleableMenu(int _flags = MF_MULTISELECT, bool text_only = true)
         : Menu(_flags, "", text_only) {}
     void add_toggle_key(int newkey) { toggle_keys.push_back(newkey); }
 protected:
@@ -491,7 +491,7 @@ public:
                                            int hotkey = 0);
     virtual void add_item_string(const std::string& s, int hotkey = 0);
     virtual void add_text(const std::string& s, bool new_line = false);
-    virtual bool jump_to_hotkey( int keyin );
+    virtual bool jump_to_hotkey(int keyin);
     virtual ~formatted_scroller();
 protected:
     virtual bool page_down();
@@ -500,8 +500,8 @@ protected:
     virtual bool line_up();
 
     virtual void draw_index_item(int index, const MenuEntry* me) const;
-    virtual bool process_key( int keyin );
-    bool jump_to( int linenum );
+    virtual bool process_key(int keyin);
+    bool jump_to(int linenum);
 };
 
 /**
@@ -1029,8 +1029,8 @@ protected:
     SelectType m_select_type;
 };
 
-int linebreak_string( std::string& s, int wrapcol, int maxcol );
-int linebreak_string2( std::string& s, int maxcol );
+int linebreak_string(std::string& s, int wrapcol, int maxcol);
+int linebreak_string2(std::string& s, int maxcol);
 std::string get_linebreak_string(const std::string& s, int maxcol);
 
 #endif

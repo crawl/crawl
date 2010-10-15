@@ -10,8 +10,8 @@
 #include "coord-circle.h"
 #include "player.h"
 
-rectangle_iterator::rectangle_iterator( const coord_def& corner1,
-                                        const coord_def& corner2 )
+rectangle_iterator::rectangle_iterator(const coord_def& corner1,
+                                        const coord_def& corner2)
 {
     topleft.x = std::min(corner1.x, corner2.x);
     topleft.y = std::min(corner1.y, corner2.y); // not really necessary
@@ -20,7 +20,7 @@ rectangle_iterator::rectangle_iterator( const coord_def& corner1,
     current = topleft;
 }
 
-rectangle_iterator::rectangle_iterator( int x_border_dist, int y_border_dist )
+rectangle_iterator::rectangle_iterator(int x_border_dist, int y_border_dist)
 {
     if (y_border_dist < 0)
         y_border_dist = x_border_dist;
@@ -60,7 +60,7 @@ rectangle_iterator& rectangle_iterator::operator ++()
 }
 
 
-rectangle_iterator rectangle_iterator::operator++( int dummy )
+rectangle_iterator rectangle_iterator::operator++(int dummy)
 {
     const rectangle_iterator copy = *this;
     ++(*this);

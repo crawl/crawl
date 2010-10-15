@@ -30,7 +30,7 @@ static uint8_t _random_potion_description()
 
     do
     {
-        desc = random2( PDQ_NQUALS * PDC_NCOLOURS );
+        desc = random2(PDQ_NQUALS * PDC_NCOLOURS);
 
         if (coinflip())
             desc %= PDC_NCOLOURS;
@@ -167,7 +167,7 @@ void initialise_temples()
         = you.props[TEMPLE_GODS_KEY].new_vector(SV_BYTE);
 
     for (unsigned int i = 0; i < god_list.size(); i++)
-        temple_gods.push_back( (char) god_list[i] );
+        temple_gods.push_back((char) god_list[i]);
 
     CrawlVector &overflow_temples
         = you.props[OVERFLOW_TEMPLES_KEY].new_vector(SV_VEC);
@@ -191,7 +191,7 @@ void initialise_temples()
             = temple[TEMPLE_GODS_KEY].new_vector(SV_BYTE);
 
         // Only single-altar overflow temples for now.
-        gods.push_back( (char) overflow_gods[i] );
+        gods.push_back((char) overflow_gods[i]);
 
         level_temples.push_back(temple);
     }

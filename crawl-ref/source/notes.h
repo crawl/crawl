@@ -53,12 +53,12 @@ enum NOTE_TYPES
 struct Note
 {
     Note();
-    Note( NOTE_TYPES t, int f = 0, int s = 0, const char* n = 0,
+    Note(NOTE_TYPES t, int f = 0, int s = 0, const char* n = 0,
           const char* d = 0);
     void save(writer& outf) const;
     void load(reader& inf);
-    std::string describe( bool when = true, bool where = true,
-                          bool what = true ) const;
+    std::string describe(bool when = true, bool where = true,
+                          bool what = true) const;
     void check_milestone() const;
 
     NOTE_TYPES type;
@@ -71,9 +71,9 @@ struct Note
 };
 
 extern std::vector<Note> note_list;
-void activate_notes( bool active );
+void activate_notes(bool active);
 bool notes_are_active();
-void take_note( const Note& note, bool force = false );
+void take_note(const Note& note, bool force = false);
 void save_notes(writer&);
 void load_notes(reader&);
 void make_user_note();

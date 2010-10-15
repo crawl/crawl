@@ -12,7 +12,7 @@ inline int pm_lower(int ch, bool icase)
 
 // Determines whether the pattern specified by 'pattern' matches the given
 // text. A pattern is a simple glob, with the traditional * and ? wildcards.
-static bool glob_match( const char *pattern, const char *text, bool icase )
+static bool glob_match(const char *pattern, const char *text, bool icase)
 {
     char p, t;
     bool special;
@@ -71,12 +71,12 @@ void *compile_glob_pattern(const char *pattern, bool icase)
 
 void free_compiled_glob_pattern(void *compiled_pattern)
 {
-    delete static_cast<glob_info *>( compiled_pattern );
+    delete static_cast<glob_info *>(compiled_pattern);
 }
 
 bool glob_pattern_match(void *compiled_pattern, const char *text, int length)
 {
-    glob_info *gi = static_cast<glob_info *>( compiled_pattern );
+    glob_info *gi = static_cast<glob_info *>(compiled_pattern);
     return glob_match(gi->s.c_str(), text, gi->ignore_case);
 }
 ////////////////////////////////////////////////////////////////////
@@ -141,7 +141,7 @@ void free_compiled_pattern(void *cp)
 {
     if (cp)
     {
-        regex_t *re = static_cast<regex_t *>( cp );
+        regex_t *re = static_cast<regex_t *>(cp);
         regfree(re);
         delete re;
     }
@@ -149,7 +149,7 @@ void free_compiled_pattern(void *cp)
 
 bool pattern_match(void *compiled_pattern, const char *text, int length)
 {
-    regex_t *re = static_cast<regex_t *>( compiled_pattern );
+    regex_t *re = static_cast<regex_t *>(compiled_pattern);
     return !regexec(re, text, 0, NULL, 0);
 }
 

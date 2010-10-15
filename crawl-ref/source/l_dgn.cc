@@ -50,7 +50,7 @@ std::string dgn_set_default_depth(const std::string &s)
     {
         try
         {
-            lc_default_depths.push_back( level_range::parse(frags[i]) );
+            lc_default_depths.push_back(level_range::parse(frags[i]));
         }
         catch (const std::string &error)
         {
@@ -70,7 +70,7 @@ static void dgn_add_depths(depth_ranges &drs, lua_State *ls, int s, int e)
         {
             try
             {
-                drs.push_back( level_range::parse(frags[j]) );
+                drs.push_back(level_range::parse(frags[j]));
             }
             catch (const std::string &error)
             {
@@ -925,10 +925,10 @@ static int dgn_terrain_changed(lua_State *ls)
     lua_isboolean(ls, 5)? lua_toboolean(ls, 5) : true;
     const bool preserve_items =
     lua_isboolean(ls, 6)? lua_toboolean(ls, 6) : true;
-    dungeon_terrain_changed( coord_def( luaL_checkint(ls, 1),
-                                       luaL_checkint(ls, 2) ),
+    dungeon_terrain_changed(coord_def(luaL_checkint(ls, 1),
+                                       luaL_checkint(ls, 2)),
                             type, affect_player,
-                            preserve_features, preserve_items );
+                            preserve_features, preserve_items);
     return (0);
 }
 
@@ -1271,13 +1271,13 @@ static int make_a_lua_cloud(coord_def where, int garbage, int spread_rate,
                             killer_type killer, int colour, std::string name,
                             std::string tile)
 {
-    UNUSED( garbage );
+    UNUSED(garbage);
 
     const int pow = random_range(lua_cloud_pow_min,
                                  lua_cloud_pow_max,
                                  lua_cloud_pow_rolls);
-    place_cloud( ctype, where, pow, whose, killer, spread_rate, colour, name,
-                 tile );
+    place_cloud(ctype, where, pow, whose, killer, spread_rate, colour, name,
+                 tile);
     return 1;
 }
 
@@ -1461,7 +1461,7 @@ static int dgn_register_feature_marker(lua_State *ls)
 {
     COORDS(c, 1, 2);
     FEAT(feat, 3);
-    env.markers.add( new map_feature_marker(c, feat) );
+    env.markers.add(new map_feature_marker(c, feat));
     return (0);
 }
 
@@ -1566,8 +1566,8 @@ LUAFN(dgn_with_map_anchors)
         {
             if (lua_isnumber(ls, i) && lua_isnumber(ls, i + 1))
                 map_anchor_points.push_back(
-                                            coord_def( lua_tointeger(ls, i),
-                                                      lua_tointeger(ls, i + 1) ) );
+                                            coord_def(lua_tointeger(ls, i),
+                                                      lua_tointeger(ls, i + 1)));
         }
 
         ASSERT(lua_isfunction(ls, -1));
@@ -1983,7 +1983,7 @@ const struct luaL_reg dgn_dlib[] =
 
 #define VP(name) \
     vault_placement &name =                                             \
-        **clua_get_userdata<vault_placement*>(                          \
+        **clua_get_userdata<vault_placement*>(                       \
             ls, VAULT_PLACEMENT_METATABLE)
 
 LUAFN(_vp_pos)

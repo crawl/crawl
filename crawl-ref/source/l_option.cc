@@ -21,13 +21,13 @@ static int option_hboolean(lua_State *ls, const char *name, void *data,
 {
     if (get)
     {
-        lua_pushboolean(ls, *static_cast<bool*>( data ));
+        lua_pushboolean(ls, *static_cast<bool*>(data));
         return (1);
     }
     else
     {
         if (lua_isboolean(ls, 3))
-            *static_cast<bool*>( data ) = lua_toboolean(ls, 3);
+            *static_cast<bool*>(data) = lua_toboolean(ls, 3);
         return (0);
     }
 }
@@ -129,7 +129,7 @@ void cluaopen_options(lua_State *ls)
     lua_settop(ls, top);
 
     // Create dummy userdata to front for our metatable
-    int *dummy = static_cast<int *>( lua_newuserdata(ls, sizeof(int)) );
+    int *dummy = static_cast<int *>(lua_newuserdata(ls, sizeof(int)));
     // Mystic number
     *dummy = 42;
 

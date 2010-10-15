@@ -134,7 +134,7 @@ int CLua::file_write(lua_State *ls)
         luaL_argerror(ls, 1, "Expected filehandle at arg 1");
         return (0);
     }
-    CLuaSave *sf = static_cast<CLuaSave *>( lua_touserdata(ls, 1) );
+    CLuaSave *sf = static_cast<CLuaSave *>(lua_touserdata(ls, 1));
     if (!sf)
         return (0);
 
@@ -286,7 +286,7 @@ bool CLua::runhook(const char *hook, const char *params, ...)
     if (!lua_istable(ls, -1))
     {
         lua_pop(ls, 1);
-        CL_RESETSTACK_RETURN( ls, stack_top, false );
+        CL_RESETSTACK_RETURN(ls, stack_top, false);
     }
     for (int i = 1; ; ++i)
     {
@@ -306,7 +306,7 @@ bool CLua::runhook(const char *hook, const char *params, ...)
 
         lua_settop(ls, currtop);
     }
-    CL_RESETSTACK_RETURN( ls, stack_top, true );
+    CL_RESETSTACK_RETURN(ls, stack_top, true);
 }
 
 void CLua::fnreturns(const char *format, ...)
@@ -423,7 +423,7 @@ int CLua::push_args(lua_State *ls, const char *format, va_list args,
             clua_push_map(ls, va_arg(args, map_def *));
             break;
         case 'M':
-            push_monster(ls, va_arg(args, monster* ));
+            push_monster(ls, va_arg(args, monster*));
             break;
         case 'I':
             lua_push_moninf(ls, va_arg(args, monster_info *));
@@ -816,7 +816,7 @@ bool lua_text_pattern::valid() const
     return translated? isvalid : translate();
 }
 
-bool lua_text_pattern::matches( const std::string &s ) const
+bool lua_text_pattern::matches(const std::string &s) const
 {
     if (isvalid && !translated)
         translate();
@@ -830,7 +830,7 @@ bool lua_text_pattern::matches( const std::string &s ) const
 void lua_text_pattern::pre_pattern(std::string &pat, std::string &fn) const
 {
     // Trim trailing spaces
-    pat.erase( pat.find_last_not_of(" \t\n\r") + 1 );
+    pat.erase(pat.find_last_not_of(" \t\n\r") + 1);
 
     fn += " pmatch([[";
     fn += pat;
@@ -841,7 +841,7 @@ void lua_text_pattern::pre_pattern(std::string &pat, std::string &fn) const
 
 void lua_text_pattern::post_pattern(std::string &pat, std::string &fn) const
 {
-    pat.erase( 0, pat.find_first_not_of(" \t\n\r") );
+    pat.erase(0, pat.find_first_not_of(" \t\n\r"));
 
     fn += " pmatch([[";
     fn += pat;
@@ -888,7 +888,7 @@ bool lua_text_pattern::translate() const
                 currop = &lop;
                 luafn += lop.luatok;
 
-                i += strlen( lop.token ) - 1;
+                i += strlen(lop.token) - 1;
 
                 break;
             }
@@ -907,7 +907,7 @@ bool lua_text_pattern::translate() const
 
     const_cast<lua_text_pattern *>(this)->translated = true;
 
-    int err = clua.execstring( luafn.c_str(), "stash-search" );
+    int err = clua.execstring(luafn.c_str(), "stash-search");
     if (err)
     {
         lua_text_pattern *self = const_cast<lua_text_pattern *>(this);
@@ -947,7 +947,7 @@ static int _clua_panic(lua_State *ls)
 
 static void *_clua_allocator(void *ud, void *ptr, size_t osize, size_t nsize)
 {
-    CLua *cl = static_cast<CLua *>( ud );
+    CLua *cl = static_cast<CLua *>(ud);
     cl->memory_used += nsize - osize;
 
     if (nsize > osize && cl->memory_used >= CLUA_MAX_MEMORY_USE * 1024

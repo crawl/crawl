@@ -45,7 +45,7 @@ public:
     std::string::size_type length() const;
     std::string html_dump() const;
 
-    bool operator < ( const formatted_string &other ) const;
+    bool operator < (const formatted_string &other) const;
     const formatted_string &operator += (const formatted_string &other);
     char &operator [] (size_t idx);
 
@@ -54,7 +54,7 @@ public:
             const std::string &s,
             bool  eot_ends_format = true,
             bool (*process_tag)(const std::string &tag) = NULL,
-            int main_colour = LIGHTGREY );
+            int main_colour = LIGHTGREY);
 
     static void parse_string_to_multiple(
             const std::string &s,

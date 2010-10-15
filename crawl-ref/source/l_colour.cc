@@ -77,7 +77,7 @@ LUAFN(l_add_colour)
     add_element_colour(
         new lua_element_colour_calc((element_type)(next_colour++),
                                     name, function)
-    );
+  );
 
     return 0;
 }

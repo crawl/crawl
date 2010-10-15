@@ -172,7 +172,7 @@ bool trap_def::is_known(const actor* act) const
         // * friendlies and good neutrals can be assumed to have been warned
         //   by the player about all traps s/he knows about
         // * very intelligent monsters can be assumed to have a high T&D
-        //   skill (or have memorised part of the dungeon layout ;) )
+        //   skill (or have memorised part of the dungeon layout ;))
 
         if (this->category() == DNGN_TRAP_NATURAL)
         {
@@ -239,7 +239,7 @@ static void maybe_split_nets(item_def &item, const coord_def& where)
     item.quantity = 1;
     set_item_stationary(item);
 
-    copy_item_to_grid( it, where );
+    copy_item_to_grid(it, where);
 }
 
 void mark_net_trapping(const coord_def& where)
@@ -696,8 +696,8 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             if (!trig_knows)
                 xom_is_stimulated(32);
 
-            MiscastEffect( &you, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
-                           3, "a Zot trap" );
+            MiscastEffect(&you, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
+                           3, "a Zot trap");
         }
         else if (m)
         {
@@ -859,7 +859,7 @@ int reveal_traps(const int range)
     return (traps_found);
 }
 
-void destroy_trap( const coord_def& pos )
+void destroy_trap(const coord_def& pos)
 {
     if (trap_def* ptrap = find_trap(pos))
         ptrap->destroy();
@@ -1010,8 +1010,8 @@ void remove_net_from(monster* mon)
         invis = 3 + random2(5);
 
     bool net_destroyed = false;
-    if ( random2(you.skills[SK_TRAPS_DOORS] + 2) + paralys
-           <= random2( 2*mon->body_size(PSIZE_BODY) + 3 ) + invis)
+    if (random2(you.skills[SK_TRAPS_DOORS] + 2) + paralys
+           <= random2(2*mon->body_size(PSIZE_BODY) + 3) + invis)
     {
         if (one_chance_in(you.skills[SK_TRAPS_DOORS] + you.dex()/2))
         {
@@ -1336,8 +1336,8 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
         {
             if (one_chance_in(5) || (was_known && !one_chance_in(4)) && !force_hit)
             {
-                mprf( "You avoid triggering %s trap.",
-                      this->name(DESC_NOCAP_A).c_str() );
+                mprf("You avoid triggering %s trap.",
+                      this->name(DESC_NOCAP_A).c_str());
 
                 return;         // no ammo generated either
             }

@@ -45,7 +45,7 @@ struct SelItem
     const item_def *item;
 
     SelItem() : slot(0), quantity(0), item(NULL) { }
-    SelItem( int s, int q, const item_def *it = NULL )
+    SelItem(int s, int q, const item_def *it = NULL)
         : slot(s), quantity(q), item(it)
     {
     }
@@ -57,8 +57,8 @@ typedef std::string (*invtitle_annotator)(
 class InvTitle : public MenuEntry
 {
 public:
-    InvTitle( Menu *mn, const std::string &title,
-              invtitle_annotator tfn );
+    InvTitle(Menu *mn, const std::string &title,
+              invtitle_annotator tfn);
 
     std::string get_text(const bool = false) const;
 
@@ -83,7 +83,7 @@ private:
 public:
     const item_def *item;
 
-    InvEntry( const item_def &i );
+    InvEntry(const item_def &i);
     std::string get_text(const bool need_cursor = false) const;
     void set_show_glyph(bool doshow);
 
@@ -102,7 +102,7 @@ public:
         return menu_colour(get_text(), menu_colour_item_prefix(*item), tag);
     }
 
-    virtual void select( int qty = -1 );
+    virtual void select(int qty = -1);
 
     virtual std::string get_filter_text() const;
 
@@ -177,7 +177,7 @@ protected:
 
 bool any_items_to_select(int type_expect, bool msg = false);
 
-int prompt_invent_item( const char *prompt,
+int prompt_invent_item(const char *prompt,
                         menu_type type,
                         int type_expect,
                         bool must_exist = true,
@@ -187,12 +187,12 @@ int prompt_invent_item( const char *prompt,
                         int excluded_slot = -1,
                         int *const count = NULL,
                         operation_types oper = OPER_ANY,
-                        bool allow_list_known = false );
+                        bool allow_list_known = false);
 
 std::vector<SelItem> select_items(
                         const std::vector<const item_def*> &items,
                         const char *title, bool noselect = false,
-                        menu_type mtype = MT_PICKUP );
+                        menu_type mtype = MT_PICKUP);
 
 std::vector<SelItem> prompt_invent_items(
                         const char *prompt,
@@ -204,7 +204,7 @@ std::vector<SelItem> prompt_invent_items(
                         const char other_valid_char = '\0',
                         std::vector<text_pattern> *filter = NULL,
                         Menu::selitem_tfn fn = NULL,
-                        const std::vector<SelItem> *pre_select = NULL );
+                        const std::vector<SelItem> *pre_select = NULL);
 
 
 unsigned char invent_select(
@@ -219,9 +219,9 @@ unsigned char invent_select(
                    std::vector<SelItem> *sels = NULL,
                    std::vector<text_pattern> *filter = NULL,
                    Menu::selitem_tfn fn = NULL,
-                   const std::vector<SelItem> *pre_select = NULL );
+                   const std::vector<SelItem> *pre_select = NULL);
 
-void browse_inventory( bool show_price );
+void browse_inventory(bool show_price);
 unsigned char get_invent(int invent_type);
 
 bool in_inventory(const item_def &i);

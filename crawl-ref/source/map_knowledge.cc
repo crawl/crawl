@@ -31,7 +31,7 @@ void map_knowledge_forget_mons(const coord_def& c)
 }
 
 // Used to mark dug out areas, unset when terrain is seen or mapped again.
-void set_terrain_changed( int x, int y )
+void set_terrain_changed(int x, int y)
 {
     env.map_knowledge[x][y].flags |= MAP_CHANGED_FLAG;
 
@@ -40,7 +40,7 @@ void set_terrain_changed( int x, int y )
     los_terrain_changed(coord_def(x,y));
 }
 
-void set_terrain_mapped( int x, int y )
+void set_terrain_mapped(int x, int y)
 {
     const coord_def gc(x, y);
     map_cell* cell = &env.map_knowledge(gc);
@@ -88,7 +88,7 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
     }
 }
 
-static void _automap_from( int x, int y, int mutated )
+static void _automap_from(int x, int y, int mutated)
 {
     if (mutated)
         magic_mapping(8 * mutated, 25, true, false,
@@ -105,7 +105,7 @@ static int _map_quality()
     return passive;
 }
 
-void reautomap_level( )
+void reautomap_level()
 {
     int passive = _map_quality();
 
@@ -115,7 +115,7 @@ void reautomap_level( )
                 _automap_from(x, y, passive);
 }
 
-void set_terrain_seen( int x, int y )
+void set_terrain_seen(int x, int y)
 {
     const dungeon_feature_type feat = grd[x][y];
     map_cell* cell = &env.map_knowledge[x][y];

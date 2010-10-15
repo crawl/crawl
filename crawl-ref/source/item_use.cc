@@ -91,7 +91,7 @@
 static bool _drink_fountain();
 static bool _handle_enchant_weapon(enchant_stat_type which_stat,
                                    bool quiet = false);
-static bool _handle_enchant_armour( int item_slot = -1 );
+static bool _handle_enchant_armour(int item_slot = -1);
 
 static int  _fire_prompt_for_item();
 static bool _fire_validate_item(int selected, std::string& err);
@@ -109,7 +109,7 @@ bool can_wield(item_def *weapon, bool say_reason,
         return (false);
     }
 
-    if (!can_equip( EQ_WEAPON, ignore_temporary_disability ))
+    if (!can_equip(EQ_WEAPON, ignore_temporary_disability))
     {
         SAY(mpr("You can't wield anything in your present form."));
         return (false);
@@ -501,9 +501,9 @@ bool armour_prompt(const std::string & mesg, int *index, operation_types oper)
         int selector = OBJ_ARMOUR;
         if (oper == OPER_TAKEOFF && !Options.equip_unequip)
             selector = OSEL_WORN_ARMOUR;
-        slot = prompt_invent_item( mesg.c_str(), MT_INVLIST, selector,
+        slot = prompt_invent_item(mesg.c_str(), MT_INVLIST, selector,
                                    true, true, true, 0, -1, NULL,
-                                   oper );
+                                   oper);
 
         if (!prompt_failed(slot))
         {
@@ -515,7 +515,7 @@ bool armour_prompt(const std::string & mesg, int *index, operation_types oper)
     return (succeeded);
 }
 
-static bool cloak_is_being_removed( void )
+static bool cloak_is_being_removed(void)
 {
     if (current_delay_action() != DELAY_ARMOUR_OFF)
         return (false);
@@ -558,10 +558,10 @@ void wear_armour(int slot) // slot is for tiles
 
 static int armour_equip_delay(const item_def &item)
 {
-    int delay = property( item, PARM_AC );
+    int delay = property(item, PARM_AC);
 
     // Shields are comparatively easy to wear.
-    if (is_shield( item ))
+    if (is_shield(item))
         delay = delay / 2 + 1;
 
     if (delay < 1)
@@ -619,7 +619,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         if (you.has_claws(false) >= 3)
         {
             if (verbose)
-                mpr( "You can't wear gloves with your huge claws!" );
+                mpr("You can't wear gloves with your huge claws!");
 
             return (false);
         }
@@ -661,7 +661,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     if (slot == EQ_HELMET)
     {
         // Soft helmets (caps and wizard hats) always fit.
-        if (!is_hard_helmet( item ))
+        if (!is_hard_helmet(item))
             return (true);
 
         if (player_mutation_level(MUT_HORNS))
@@ -689,7 +689,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         }
     }
 
-    if (!can_equip( slot, ignore_temporary ))
+    if (!can_equip(slot, ignore_temporary))
     {
         if (verbose)
             mpr("You can't wear that in your present form.");
@@ -1147,10 +1147,10 @@ static int _fire_prompt_for_item()
     if (inv_count() < 1)
         return -1;
 
-    int slot = prompt_invent_item( "Fire/throw which item? (* to show all)",
+    int slot = prompt_invent_item("Fire/throw which item? (* to show all)",
                                    MT_INVLIST,
                                    OSEL_THROWABLE, true, true, true, 0, -1,
-                                   NULL, OPER_FIRE );
+                                   NULL, OPER_FIRE);
 
     if (slot == PROMPT_ABORT || slot == PROMPT_NOTHING)
         return -1;
@@ -1221,7 +1221,7 @@ int get_ammo_to_shoot(int item, dist &target, bool teleport)
 {
     if (_fire_warn_if_impossible())
     {
-        flush_input_buffer( FLUSH_ON_FAILURE );
+        flush_input_buffer(FLUSH_ON_FAILURE);
         return (-1);
     }
 
@@ -1249,7 +1249,7 @@ void fire_thing(int item)
     if (check_warning_inscriptions(you.inv[item], OPER_FIRE))
     {
         bolt beam;
-        throw_it( beam, item, false, 0, &target );
+        throw_it(beam, item, false, 0, &target);
     }
 }
 
@@ -1259,7 +1259,7 @@ void throw_item_no_quiver()
 {
     if (_fire_warn_if_impossible())
     {
-        flush_input_buffer( FLUSH_ON_FAILURE );
+        flush_input_buffer(FLUSH_ON_FAILURE);
         return;
     }
 
@@ -1286,7 +1286,7 @@ void throw_item_no_quiver()
 
     // Okay, item is valid.
     bolt beam;
-    throw_it( beam, slot );
+    throw_it(beam, slot);
 }
 
 // Returns delay multiplier numerator (denominator should be 100) for the
@@ -1332,13 +1332,13 @@ int launcher_shield_slowdown(const item_def &launcher, const item_def *shield)
 // NULL, this function assumes no shield is in use.
 int launcher_final_speed(const item_def &launcher, const item_def *shield)
 {
-    const int  str_weight   = weapon_str_weight( launcher );
+    const int  str_weight   = weapon_str_weight(launcher);
     const int  dex_weight   = 10 - str_weight;
-    const skill_type launcher_skill = range_skill( launcher );
+    const skill_type launcher_skill = range_skill(launcher);
     const int shoot_skill = you.skills[launcher_skill];
-    const int bow_brand = get_weapon_brand( launcher );
+    const int bow_brand = get_weapon_brand(launcher);
 
-    int speed_base = 10 * property( launcher, PWPN_SPEED );
+    int speed_base = 10 * property(launcher, PWPN_SPEED);
     int speed_min = 70;
     int speed_stat = str_weight * you.strength() + dex_weight * you.dex();
 
@@ -2334,7 +2334,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     {
         if (wepType == MI_LARGE_ROCK)
         {
-            range     = 1 + random2( you.strength() / 5 );
+            range     = 1 + random2(you.strength() / 5);
             max_range = you.strength() / 5;
             if (you.can_throw_large_rocks())
             {
@@ -2454,7 +2454,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     if (projected == LRET_LAUNCHED)
         bow_brand = get_weapon_brand(*you.weapon());
 
-    int ammo_brand = get_ammo_brand( item );
+    int ammo_brand = get_ammo_brand(item);
 
     if (projected == LRET_FUMBLED)
     {
@@ -2471,12 +2471,12 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         lnchHitBonus = launcher.plus;
         lnchDamBonus = launcher.plus2;
 
-        const int item_base_dam = property( item, PWPN_DAMAGE );
-        const int lnch_base_dam = property( launcher, PWPN_DAMAGE );
+        const int item_base_dam = property(item, PWPN_DAMAGE);
+        const int lnch_base_dam = property(launcher, PWPN_DAMAGE);
 
-        const skill_type launcher_skill = range_skill( launcher );
+        const skill_type launcher_skill = range_skill(launcher);
 
-        baseHit = property( launcher, PWPN_HIT );
+        baseHit = property(launcher, PWPN_HIT);
         baseDam = lnch_base_dam + random2(1 + item_base_dam);
 
         // Slings are terribly weakened otherwise.
@@ -2494,7 +2494,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         if (wepClass == OBJ_MISSILES && wepType == MI_NEEDLE)
             pbolt.ench_power = AUTOMATIC_HIT;
 
-        dprf(   "Base hit == %d; Base damage == %d "
+        dprf("Base hit == %d; Base damage == %d "
                 "(item %d + launcher %d)",
                         baseHit, baseDam,
                         item_base_dam, lnch_base_dam);
@@ -2674,8 +2674,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 && !item_ident(you.inv[throw_2], ISFLAG_KNOW_PLUSES)
                 && x_chance_in_y(shoot_skill, 100))
             {
-                set_ident_flags( item, ISFLAG_KNOW_PLUSES );
-                set_ident_flags( you.inv[throw_2], ISFLAG_KNOW_PLUSES );
+                set_ident_flags(item, ISFLAG_KNOW_PLUSES);
+                set_ident_flags(you.inv[throw_2], ISFLAG_KNOW_PLUSES);
                 ammo_ided = true;
                 identify_floor_missiles_matching(item, ISFLAG_KNOW_PLUSES);
                 mprf("You are firing %s.",
@@ -2874,8 +2874,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             && !item_ident(you.inv[throw_2], ISFLAG_KNOW_PLUSES)
             && x_chance_in_y(you.skills[SK_THROWING], 100))
         {
-            set_ident_flags( item, ISFLAG_KNOW_PLUSES );
-            set_ident_flags( you.inv[throw_2], ISFLAG_KNOW_PLUSES );
+            set_ident_flags(item, ISFLAG_KNOW_PLUSES);
+            set_ident_flags(you.inv[throw_2], ISFLAG_KNOW_PLUSES);
             identify_floor_missiles_matching(item, ISFLAG_KNOW_PLUSES);
             ammo_ided = true;
             mprf("You are throwing %s.",
@@ -2935,17 +2935,17 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
     scale_dice(pbolt.damage);
 
-    dprf(   "H:%d+%d;a%dl%d.  D:%d+%d;a%dl%d -> %d,%dd%d",
+    dprf("H:%d+%d;a%dl%d.  D:%d+%d;a%dl%d -> %d,%dd%d",
               baseHit, exHitBonus, ammoHitBonus, lnchHitBonus,
               baseDam, exDamBonus, ammoDamBonus, lnchDamBonus,
-              pbolt.hit, pbolt.damage.num, pbolt.damage.size );
+              pbolt.hit, pbolt.damage.num, pbolt.damage.size);
 
     // Create message.
-    mprf( "%s %s%s %s.",
+    mprf("%s %s%s %s.",
           teleport  ? "Magically, you" : "You",
           projected ? "" : "awkwardly ",
           projected == LRET_LAUNCHED ? "shoot" : "throw",
-          ammo_name.c_str() );
+          ammo_name.c_str());
 
     // Ensure we're firing a 'missile'-type beam.
     pbolt.is_beam   = false;
@@ -3372,9 +3372,9 @@ bool puton_ring(int slot)
         item_slot = slot;
     else
     {
-        item_slot = prompt_invent_item( "Put on which piece of jewellery?",
+        item_slot = prompt_invent_item("Put on which piece of jewellery?",
                                         MT_INVLIST, OBJ_JEWELLERY, true, true,
-                                        true, 0, -1, NULL, OPER_PUTON );
+                                        true, 0, -1, NULL, OPER_PUTON);
     }
 
     if (prompt_failed(item_slot))
@@ -3741,7 +3741,7 @@ void zap_wand(int slot)
 #endif
 
     // zapping() updates beam.
-    zapping( type_zapped, 30 + roll_dice(2, you.skills[SK_EVOCATIONS]), beam );
+    zapping(type_zapped, 30 + roll_dice(2, you.skills[SK_EVOCATIONS]), beam);
 
     // Take off a charge.
     wand.plus--;
@@ -4174,7 +4174,7 @@ bool enchant_weapon(enchant_stat_type which_stat, bool quiet, item_def &wpn)
     if (!is_enchantable_weapon(wpn, true, to_hit))
     {
         if (!quiet)
-            canned_msg( MSG_NOTHING_HAPPENS );
+            canned_msg(MSG_NOTHING_HAPPENS);
 
         return (false);
     }
@@ -4283,7 +4283,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
     if (!is_enchantable_armour(arm, true))
     {
         if (!quiet)
-            canned_msg( MSG_NOTHING_HAPPENS );
+            canned_msg(MSG_NOTHING_HAPPENS);
 
         return (false);
     }
@@ -4413,7 +4413,7 @@ static void handle_read_book(int item_slot)
     while (true)
     {
         // Spellbook
-        const int ltr = read_book( book, RBOOK_READ_SPELL );
+        const int ltr = read_book(book, RBOOK_READ_SPELL);
 
         if (ltr < 'a' || ltr > 'h')     //jmf: was 'g', but 8=h
         {
@@ -4554,11 +4554,11 @@ void read_scroll(int slot)
     }
 
     int item_slot = (slot != -1) ? slot
-                                 : prompt_invent_item( "Read which item?",
+                                 : prompt_invent_item("Read which item?",
                                                        MT_INVLIST,
                                                        OBJ_SCROLLS,
                                                        true, true, true, 0, -1,
-                                                       NULL, OPER_READ );
+                                                       NULL, OPER_READ);
 
     if (prompt_failed(item_slot))
         return;
@@ -4575,7 +4575,7 @@ void read_scroll(int slot)
     // Here we try to read a book {dlb}:
     if (scroll.base_type == OBJ_BOOKS)
     {
-        handle_read_book( item_slot );
+        handle_read_book(item_slot);
         return;
     }
 
@@ -4788,7 +4788,7 @@ void read_scroll(int slot)
         else
         {
             // Also sets wield_change.
-            do_curse_item( *you.weapon(), false );
+            do_curse_item(*you.weapon(), false);
             learned_something_new(HINT_YOU_CURSED);
             bad_effect = true;
         }
@@ -4939,7 +4939,7 @@ void read_scroll(int slot)
         }
 
         // Make the name before we curse it.
-        do_curse_item( you.inv[you.equip[affected]], false );
+        do_curse_item(you.inv[you.equip[affected]], false);
         learned_something_new(HINT_YOU_CURSED);
         bad_effect = true;
         break;
@@ -5004,7 +5004,7 @@ void read_scroll(int slot)
         if (id_the_scroll)
             set_ident_flags(scroll, ISFLAG_KNOW_TYPE); // for notes
 
-        dec_inv_item_quantity( item_slot, 1 );
+        dec_inv_item_quantity(item_slot, 1);
     }
 
     if (!alreadyknown && dangerous)
@@ -5018,14 +5018,14 @@ void read_scroll(int slot)
 
 void examine_object(void)
 {
-    int item_slot = prompt_invent_item( "Examine which item?",
+    int item_slot = prompt_invent_item("Examine which item?",
                                         MT_INVLIST, -1,
                                         true, true, true, 0, -1, NULL,
-                                        OPER_EXAMINE );
+                                        OPER_EXAMINE);
     if (prompt_failed(item_slot))
         return;
 
-    describe_item( you.inv[item_slot], true );
+    describe_item(you.inv[item_slot], true);
     redraw_screen();
     mesclr();
 }                               // end original_name()
@@ -5127,7 +5127,7 @@ static bool _prompt_eat_bad_food(const item_def food)
 
     const int col = menu_colour(food.name(DESC_NOCAP_A), food_colour, "pickup");
     if (col != -1)
-        colour = colour_to_str( col );
+        colour = colour_to_str(col);
 
     if (!colour.empty())
     {

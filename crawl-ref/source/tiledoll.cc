@@ -107,7 +107,7 @@ bool load_doll_data(const char *fn, dolls_data *dolls, int max,
                             : dollsTxtString.c_str();
 
 
-    if ( (fp = fopen_u(dollsTxt, "r")) == NULL )
+    if ((fp = fopen_u(dollsTxt, "r")) == NULL)
     {
         // File doesn't exist. By default, use equipment settings.
         *mode = TILEP_MODE_EQUIP;
@@ -165,7 +165,7 @@ bool load_doll_data(const char *fn, dolls_data *dolls, int max,
         }
         else // Load up to max dolls from file.
         {
-            for (int count = 0; count < max && fscanf(fp, "%1023s", fbuf) != EOF; )
+            for (int count = 0; count < max && fscanf(fp, "%1023s", fbuf) != EOF;)
             {
                 if (fbuf[0] == '#') // Skip comment lines.
                     continue;

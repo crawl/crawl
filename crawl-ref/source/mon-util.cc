@@ -105,7 +105,7 @@ static void _initialise_randmons()
 {
     for (int i = 0; i < NUM_HABITATS; ++i)
     {
-        const dungeon_feature_type grid = habitat2grid( habitat_type(i) );
+        const dungeon_feature_type grid = habitat2grid(habitat_type(i));
 
         for (int m = 0; m < NUM_MONSTERS; ++m)
         {
@@ -1326,7 +1326,7 @@ bool mons_immune_magic(const monster* mon)
 
 const char* mons_resist_string(const monster* mon)
 {
-    if ( mons_immune_magic(mon) )
+    if (mons_immune_magic(mon))
         return "is unaffected";
     else
         return "resists";
@@ -2677,9 +2677,9 @@ bool ms_direct_nasty(spell_type monspell)
 
 // Spells a monster may want to cast if fleeing from the player, and
 // the player is not in sight.
-bool ms_useful_fleeing_out_of_sight( const monster* mon, spell_type monspell )
+bool ms_useful_fleeing_out_of_sight(const monster* mon, spell_type monspell)
 {
-    if (monspell == SPELL_NO_SPELL || ms_waste_of_time( mon, monspell ))
+    if (monspell == SPELL_NO_SPELL || ms_waste_of_time(mon, monspell))
         return (false);
 
     switch (monspell)
@@ -2701,7 +2701,7 @@ bool ms_useful_fleeing_out_of_sight( const monster* mon, spell_type monspell )
     return (false);
 }
 
-bool ms_low_hitpoint_cast( const monster* mon, spell_type monspell )
+bool ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
 {
     bool targ_adj      = false;
     bool targ_sanct    = false;
@@ -2764,7 +2764,7 @@ bool ms_low_hitpoint_cast( const monster* mon, spell_type monspell )
 
 // Spells for a quick get-away.
 // Currently only used to get out of a net.
-bool ms_quick_get_away( const monster* mon /*unused*/, spell_type monspell )
+bool ms_quick_get_away(const monster* mon /*unused*/, spell_type monspell)
 {
     switch (monspell)
     {
@@ -2781,7 +2781,7 @@ bool ms_quick_get_away( const monster* mon /*unused*/, spell_type monspell )
 }
 
 // Checks to see if a particular spell is worth casting in the first place.
-bool ms_waste_of_time( const monster* mon, spell_type monspell )
+bool ms_waste_of_time(const monster* mon, spell_type monspell)
 {
     bool ret = false;
     actor *foe = mon->get_foe();

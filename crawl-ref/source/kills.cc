@@ -135,7 +135,7 @@ std::string KillMaster::kill_info() const
     for (int i = 0; i < KC_NCATEGORIES; ++i)
     {
         int targ = Options.kill_map[i];
-        catkills[targ].merge( categorized_kills[i] );
+        catkills[targ].merge(categorized_kills[i]);
     }
 
     for (int i = KC_YOU; i < KC_NCATEGORIES; ++i)
@@ -148,12 +148,12 @@ std::string KillMaster::kill_info() const
         int count = catkills[i].get_kills(kills);
         grandtotal += count;
 
-        add_kill_info( killtext,
+        add_kill_info(killtext,
                        kills,
                        count,
                        i == KC_YOU? NULL :
                                     category_name((kill_category) i),
-                       needseparator );
+                       needseparator);
         needseparator = true;
     }
 
@@ -265,7 +265,7 @@ bool Kills::empty() const
 
 void Kills::merge(const Kills &k)
 {
-    ghosts.insert( ghosts.end(), k.ghosts.begin(), k.ghosts.end() );
+    ghosts.insert(ghosts.end(), k.ghosts.begin(), k.ghosts.end());
 
     // Regular kills are messier to merge.
     for (kill_map::const_iterator i = k.kills.begin();
@@ -308,14 +308,14 @@ int Kills::get_kills(std::vector<kill_exp> &all_kills) const
     {
         const kill_monster_desc &md = iter->first;
         const kill_def &k = iter->second;
-        all_kills.push_back( kill_exp(k, md) );
+        all_kills.push_back(kill_exp(k, md));
         count += k.kills;
     }
 
     ghost_vec::const_iterator gi = ghosts.begin();
     for (; gi != ghosts.end(); ++gi)
     {
-        all_kills.push_back( kill_exp(*gi) );
+        all_kills.push_back(kill_exp(*gi));
     }
     count += ghosts.size();
 
@@ -328,7 +328,7 @@ void Kills::save(writer& outf) const
     // How many kill records do we have?
     marshallInt(outf, kills.size());
 
-    for ( kill_map::const_iterator iter = kills.begin();
+    for (kill_map::const_iterator iter = kills.begin();
           iter != kills.end(); ++iter)
     {
         iter->first.save(outf);
@@ -561,8 +561,8 @@ std::string kill_def::append_places(const kill_monster_desc &md,
     if (Options.dump_kill_places == KDO_NO_PLACES) return name;
 
     int nplaces = places.size();
-    if ( nplaces == 1 || mons_is_unique(md.monnum)
-            || Options.dump_kill_places == KDO_ALL_PLACES )
+    if (nplaces == 1 || mons_is_unique(md.monnum)
+            || Options.dump_kill_places == KDO_ALL_PLACES)
     {
         std::string augmented = name;
         augmented += " (";
@@ -695,7 +695,7 @@ void kill_monster_desc::load(reader& inf)
             return 0; \
         } \
           \
-        kill_exp *ke = static_cast<kill_exp*>( lua_touserdata(ls, 1) ); \
+        kill_exp *ke = static_cast<kill_exp*>(lua_touserdata(ls, 1)); \
         if (ke) \
         { \
             lua_push##type(ls, ke->field); \
@@ -727,7 +727,7 @@ static int kill_lualc_modifier(lua_State *ls)
         return 0;
     }
 
-    kill_exp *ke = static_cast<kill_exp*>( lua_touserdata(ls, 1) );
+    kill_exp *ke = static_cast<kill_exp*>(lua_touserdata(ls, 1));
     if (ke)
     {
         const char *modifier;
@@ -766,7 +766,7 @@ static int kill_lualc_places(lua_State *ls)
         return 0;
     }
 
-    kill_exp *ke = static_cast<kill_exp*>( lua_touserdata(ls, 1) );
+    kill_exp *ke = static_cast<kill_exp*>(lua_touserdata(ls, 1));
     if (ke)
     {
         lua_newtable(ls);
@@ -802,7 +802,7 @@ static int kill_lualc_holiness(lua_State *ls)
         return 0;
     }
 
-    kill_exp *ke = static_cast<kill_exp*>( lua_touserdata(ls, 1) );
+    kill_exp *ke = static_cast<kill_exp*>(lua_touserdata(ls, 1));
     if (ke)
     {
         const char *verdict = "strange";
@@ -837,7 +837,7 @@ static int kill_lualc_symbol(lua_State *ls)
         return 0;
     }
 
-    kill_exp *ke = static_cast<kill_exp*>( lua_touserdata(ls, 1) );
+    kill_exp *ke = static_cast<kill_exp*>(lua_touserdata(ls, 1));
     if (ke)
     {
         wchar_t ch = ke->monnum != -1?
@@ -883,7 +883,7 @@ static int kill_lualc_rawwrite(lua_State *ls)
         return 0;
     }
 
-    std::string *skill = static_cast<std::string *>( lua_touserdata(ls, -1) );
+    std::string *skill = static_cast<std::string *>(lua_touserdata(ls, -1));
     // Pop the userdata off the stack.
     lua_settop(ls, -2);
 
@@ -901,7 +901,7 @@ static int kill_lualc_write(lua_State *ls)
         return 0;
     }
 
-    kill_exp *ke = static_cast<kill_exp*>( lua_touserdata(ls, 1) );
+    kill_exp *ke = static_cast<kill_exp*>(lua_touserdata(ls, 1));
     if (ke)
     {
         lua_pushstring(ls, "cr_skill");
@@ -914,7 +914,7 @@ static int kill_lualc_write(lua_State *ls)
         }
 
         std::string *skill = static_cast<std::string *>(
-                                    lua_touserdata(ls, -1) );
+                                    lua_touserdata(ls, -1));
         // Pop the userdata off the stack.
         lua_settop(ls, -2);
 
@@ -948,7 +948,7 @@ static int kill_lualc_summary(lua_State *ls)
             return 0;
         }
 
-        kill_exp *ke = static_cast<kill_exp*>( lua_touserdata(ls, -1) );
+        kill_exp *ke = static_cast<kill_exp*>(lua_touserdata(ls, -1));
         lua_settop(ls, -2);
         if (ke)
             count += ke->nkills;

@@ -33,7 +33,7 @@ std::vector<Note> note_list;
 
 // return the real number of the power (casting out nonexistent powers),
 // starting from 0, or -1 if the power doesn't exist
-static int _real_god_power( int religion, int idx )
+static int _real_god_power(int religion, int idx)
 {
     if (god_gain_power_messages[religion][idx][0] == 0)
         return -1;
@@ -46,7 +46,7 @@ static int _real_god_power( int religion, int idx )
     return count;
 }
 
-static bool _is_noteworthy_skill_level( int level )
+static bool _is_noteworthy_skill_level(int level)
 {
     for (unsigned int i = 0; i < Options.note_skill_levels.size(); ++i)
         if (level == Options.note_skill_levels[i])
@@ -55,7 +55,7 @@ static bool _is_noteworthy_skill_level( int level )
     return (false);
 }
 
-static bool _is_highest_skill( int skill )
+static bool _is_highest_skill(int skill)
 {
     for (int i = 0; i < NUM_SKILLS; ++i)
     {
@@ -67,20 +67,20 @@ static bool _is_highest_skill( int skill )
     return (true);
 }
 
-static bool _is_noteworthy_hp( int hp, int maxhp )
+static bool _is_noteworthy_hp(int hp, int maxhp)
 {
     return (hp > 0 && Options.note_hp_percent
             && hp <= (maxhp * Options.note_hp_percent) / 100);
 }
 
-static int _dungeon_branch_depth( uint8_t branch )
+static int _dungeon_branch_depth(uint8_t branch)
 {
     if (branch >= NUM_BRANCHES)
         return -1;
     return branches[branch].depth;
 }
 
-static bool _is_noteworthy_dlevel( unsigned short place )
+static bool _is_noteworthy_dlevel(unsigned short place)
 {
     const uint8_t branch = (place >> 8) & 0xFF;
     const int lev = (place & 0xFF);
@@ -102,7 +102,7 @@ static bool _is_noteworthy_dlevel( unsigned short place )
 // Is a note worth taking?
 // This function assumes that game state has not changed since
 // the note was taken, e.g. you.* is valid.
-static bool _is_noteworthy( const Note& note )
+static bool _is_noteworthy(const Note& note)
 {
     // Always noteworthy.
     if (note.type == NOTE_XP_LEVEL_CHANGE
@@ -191,7 +191,7 @@ static bool _is_noteworthy( const Note& note )
         if (note_list[i].type != note.type)
             continue;
 
-        const Note& rnote( note_list[i] );
+        const Note& rnote(note_list[i]);
         switch (note.type)
         {
         case NOTE_DUNGEON_LEVEL_CHANGE:
@@ -232,7 +232,7 @@ static bool _is_noteworthy( const Note& note )
     return (true);
 }
 
-static const char* _number_to_ordinal( int number )
+static const char* _number_to_ordinal(int number)
 {
     const char* ordinals[5] = { "first", "second", "third", "fourth", "fifth" };
 
@@ -243,7 +243,7 @@ static const char* _number_to_ordinal( int number )
     return ordinals[number-1];
 }
 
-std::string Note::describe( bool when, bool where, bool what ) const
+std::string Note::describe(bool when, bool where, bool what) const
 {
 
     std::ostringstream result;
@@ -263,7 +263,7 @@ std::string Note::describe( bool when, bool where, bool what ) const
 
     if (what)
     {
-        switch ( type )
+        switch (type)
         {
         case NOTE_HP_CHANGE:
             // [ds] Shortened HP change note from "Had X hitpoints" to
@@ -287,7 +287,7 @@ std::string Note::describe( bool when, bool where, bool what ) const
             result << "Reached XP level " << first << ". " << name;
             break;
         case NOTE_DUNGEON_LEVEL_CHANGE:
-            if ( !desc.empty() )
+            if (!desc.empty())
                 result << desc;
             else
                 result << "Entered " << place_name(packed_place, true, true);
@@ -411,7 +411,7 @@ Note::Note()
         place_abbrev = you.level_type_name_abbrev;
 }
 
-Note::Note( NOTE_TYPES t, int f, int s, const char* n, const char* d ) :
+Note::Note(NOTE_TYPES t, int f, int s, const char* n, const char* d) :
     type(t), first(f), second(s), place_abbrev("")
 {
     if (n)
@@ -460,26 +460,26 @@ void Note::check_milestone() const
 
 void Note::save(writer& outf) const
 {
-    marshallInt( outf, type );
-    marshallInt( outf, turn );
-    marshallShort( outf, packed_place );
-    marshallInt( outf, first );
-    marshallInt( outf, second );
-    marshallString4( outf, name );
-    marshallString4( outf, place_abbrev );
-    marshallString4( outf, desc );
+    marshallInt(outf, type);
+    marshallInt(outf, turn);
+    marshallShort(outf, packed_place);
+    marshallInt(outf, first);
+    marshallInt(outf, second);
+    marshallString4(outf, name);
+    marshallString4(outf, place_abbrev);
+    marshallString4(outf, desc);
 }
 
 void Note::load(reader& inf)
 {
-    type = static_cast<NOTE_TYPES>(unmarshallInt( inf ));
-    turn = unmarshallInt( inf );
-    packed_place = unmarshallShort( inf );
-    first  = unmarshallInt( inf );
-    second = unmarshallInt( inf );
-    unmarshallString4( inf, name );
-    unmarshallString4( inf, place_abbrev );
-    unmarshallString4( inf, desc );
+    type = static_cast<NOTE_TYPES>(unmarshallInt(inf));
+    turn = unmarshallInt(inf);
+    packed_place = unmarshallShort(inf);
+    first  = unmarshallInt(inf);
+    second = unmarshallInt(inf);
+    unmarshallString4(inf, name);
+    unmarshallString4(inf, place_abbrev);
+    unmarshallString4(inf, desc);
 }
 
 bool notes_active = false;
@@ -489,35 +489,35 @@ bool notes_are_active()
     return (notes_active);
 }
 
-void take_note( const Note& note, bool force )
+void take_note(const Note& note, bool force)
 {
     if (notes_active && (force || _is_noteworthy(note)))
     {
-        note_list.push_back( note );
+        note_list.push_back(note);
         note.check_milestone();
     }
 }
 
-void activate_notes( bool active )
+void activate_notes(bool active)
 {
     notes_active = active;
 }
 
 void save_notes(writer& outf)
 {
-    marshallInt( outf, NOTES_VERSION_NUMBER );
-    marshallInt( outf, note_list.size() );
+    marshallInt(outf, NOTES_VERSION_NUMBER);
+    marshallInt(outf, note_list.size());
     for (unsigned i = 0; i < note_list.size(); ++i)
         note_list[i].save(outf);
 }
 
 void load_notes(reader& inf)
 {
-    if ( unmarshallInt(inf) != NOTES_VERSION_NUMBER )
+    if (unmarshallInt(inf) != NOTES_VERSION_NUMBER)
         return;
 
     const int num_notes = unmarshallInt(inf);
-    for ( long i = 0; i < num_notes; ++i )
+    for (long i = 0; i < num_notes; ++i)
     {
         Note new_note;
         new_note.load(inf);

@@ -85,10 +85,10 @@ hints_state Hints;
 
 void save_hints(writer& outf)
 {
-    marshallInt( outf, HINTS_VERSION);
-    marshallShort( outf, Hints.hints_type);
+    marshallInt(outf, HINTS_VERSION);
+    marshallShort(outf, Hints.hints_type);
     for (long i = 0; i < HINT_EVENTS_NUM; ++i)
-        marshallBoolean( outf, Hints.hints_events[i] );
+        marshallBoolean(outf, Hints.hints_events[i]);
 }
 
 void load_hints(reader& inf)
@@ -633,17 +633,17 @@ void hints_death_screen()
     Hints.hints_left = 0;
     std::string text;
 
-    mpr( "Condolences! Your character's premature death is a sad, but "
+    mpr("Condolences! Your character's premature death is a sad, but "
          "common occurrence in Crawl. Rest assured that with diligence and "
          "playing experience your characters will last longer.",
          MSGCH_TUTORIAL);
 
-    mpr( "Perhaps the following advice can improve your playing style:",
+    mpr("Perhaps the following advice can improve your playing style:",
          MSGCH_TUTORIAL);
     more();
 
     if (Hints.hints_type == HINT_MAGIC_CHAR
-        && Hints.hints_spell_counter < Hints.hints_melee_counter )
+        && Hints.hints_spell_counter < Hints.hints_melee_counter)
     {
         text = "As a Conjurer your main weapon should be offensive magic. Cast "
                "spells more often! Remember to rest when your Magic is low.";
@@ -662,7 +662,7 @@ void hints_death_screen()
         }
     }
     else if (Hints.hints_type == HINT_RANGER_CHAR
-             && 2*Hints.hints_throw_counter < Hints.hints_melee_counter )
+             && 2*Hints.hints_throw_counter < Hints.hints_melee_counter)
     {
         text = "Your bow and arrows are extremely powerful against distant "
                "monsters. Be sure to collect all arrows lying around in the "
@@ -757,7 +757,7 @@ void hints_death_screen()
     mpr(text, MSGCH_TUTORIAL, 0);
     more();
 
-    mpr( "See you next game!", MSGCH_TUTORIAL);
+    mpr("See you next game!", MSGCH_TUTORIAL);
 
     Hints.hints_events.init(false);
 }
@@ -1429,7 +1429,7 @@ static int _num_butchery_tools()
 
         if (tool.defined()
             && tool.base_type == OBJ_WEAPONS
-            && can_cut_meat( tool ))
+            && can_cut_meat(tool))
         {
             num++;
         }
@@ -3705,7 +3705,7 @@ void hints_describe_item(const item_def &item)
 
                 Hints.hints_events[HINT_SEEN_RANDART] = false;
             }
-            if (item_known_cursed( item ) && !long_text)
+            if (item_known_cursed(item) && !long_text)
             {
                 ostr << "\n\nOnce wielded, a cursed weapon won't leave your "
                         "hands again until the curse has been lifted by "
@@ -3833,7 +3833,7 @@ void hints_describe_item(const item_def &item)
 
             if (!item_type_known(item)
                 && (is_artefact(item)
-                    || get_equip_desc( item ) != ISFLAG_NO_DESC))
+                    || get_equip_desc(item) != ISFLAG_NO_DESC))
             {
                 ostr << "\n\nWeapons and armour that have unusual descriptions "
                      << "like this are much more likely to be of higher "
@@ -3845,7 +3845,7 @@ void hints_describe_item(const item_def &item)
             }
             if (wearable)
             {
-                if (item_known_cursed( item ))
+                if (item_known_cursed(item))
                 {
                     ostr << "\nA cursed piece of armour, once worn, cannot be "
                             "removed again until the curse has been lifted by "
@@ -3961,7 +3961,7 @@ void hints_describe_item(const item_def &item)
             cmd.push_back(CMD_WEAR_JEWELLERY);
             cmd.push_back(CMD_REMOVE_JEWELLERY);
 
-            if (item_known_cursed( item ))
+            if (item_known_cursed(item))
             {
                 ostr << "\nA cursed piece of jewellery will cling to its "
                         "unfortunate wearer's neck or fingers until the curse "
@@ -4182,7 +4182,7 @@ void hints_describe_item(const item_def &item)
             break;
 
        case OBJ_STAVES:
-            if (item_is_rod( item ))
+            if (item_is_rod(item))
             {
                 if (!item_ident(item, ISFLAG_KNOW_TYPE))
                 {

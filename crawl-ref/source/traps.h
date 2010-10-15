@@ -15,7 +15,7 @@ class monster;
 struct trap_def;
 
 void disarm_trap(const coord_def& where);
-void remove_net_from( monster* mon );
+void remove_net_from(monster* mon);
 void free_self_from_net(void);
 
 void handle_traps(trap_type trt, int i, bool trap_known);

@@ -285,7 +285,7 @@ bool cast_passwall(const coord_def& delta, int pow)
 
 static int _intoxicate_monsters(coord_def where, int pow, int, actor *)
 {
-    UNUSED( pow );
+    UNUSED(pow);
 
     monster* mons = monster_at(where);
     if (mons == NULL
@@ -302,10 +302,10 @@ static int _intoxicate_monsters(coord_def where, int pow, int, actor *)
 
 void cast_intoxicate(int pow)
 {
-    potion_effect( POT_CONFUSION, 10 + (100 - pow) / 10);
+    potion_effect(POT_CONFUSION, 10 + (100 - pow) / 10);
 
     if (one_chance_in(20)
-        && lose_stat( STAT_INT, 1 + random2(3), false,
+        && lose_stat(STAT_INT, 1 + random2(3), false,
                       "casting intoxication"))
     {
         mpr("Your head spins!");
@@ -521,13 +521,13 @@ void cast_stoneskin(int pow)
     }
 
     if (you.duration[DUR_STONESKIN])
-        mpr( "Your skin feels harder." );
+        mpr("Your skin feels harder.");
     else
     {
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE)
-            mpr( "Your stone body feels more resilient." );
+            mpr("Your stone body feels more resilient.");
         else
-            mpr( "Your skin hardens." );
+            mpr("Your skin hardens.");
 
         you.redraw_armour_class = true;
     }

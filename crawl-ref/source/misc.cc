@@ -536,7 +536,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
 
         if (!knew_coag)
         {
-            set_ident_type( OBJ_POTIONS, POT_BLOOD_COAGULATED, ID_KNOWN_TYPE );
+            set_ident_type(OBJ_POTIONS, POT_BLOOD_COAGULATED, ID_KNOWN_TYPE);
             if (blood.quantity >= 1)
                 mpr(blood.name(DESC_INVENTORY).c_str());
         }
@@ -566,10 +566,10 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
 
     // Identify both blood and coagulated blood, if necessary.
     if (!knew_blood)
-        set_ident_type( OBJ_POTIONS, POT_BLOOD, ID_KNOWN_TYPE );
+        set_ident_type(OBJ_POTIONS, POT_BLOOD, ID_KNOWN_TYPE);
 
     if (!knew_coag)
-        set_ident_type( OBJ_POTIONS, POT_BLOOD_COAGULATED, ID_KNOWN_TYPE );
+        set_ident_type(OBJ_POTIONS, POT_BLOOD_COAGULATED, ID_KNOWN_TYPE);
 
     // Now that coagulating is necessary, check inventory for !coagulated blood.
     for (int m = 0; m < ENDOFPACK; m++)
@@ -971,7 +971,7 @@ void turn_corpse_into_skeleton_and_blood_potions(item_def &item)
 // A variation of the mummy curse:
 // Instead of trashing the entire stack, split the stack and only turn part
 // of it into POT_DECAY.
-void split_potions_into_decay( int obj, int amount, bool need_msg )
+void split_potions_into_decay(int obj, int amount, bool need_msg)
 {
     ASSERT(obj != -1);
     item_def &potion = you.inv[obj];
@@ -1021,7 +1021,7 @@ void split_potions_into_decay( int obj, int amount, bool need_msg )
     if (amount == potion.quantity)
     {
         you.inv[obj].sub_type = POT_DECAY;
-        unset_ident_flags( you.inv[obj], ISFLAG_IDENT_MASK ); // all different
+        unset_ident_flags(you.inv[obj], ISFLAG_IDENT_MASK); // all different
         return;
     }
 
@@ -1277,7 +1277,7 @@ void search_around(bool only_adjacent)
     if (only_adjacent && max_dist > 1 || max_dist < 1)
         max_dist = 1;
 
-    for (radius_iterator ri(you.pos(), max_dist); ri; ++ri )
+    for (radius_iterator ri(you.pos(), max_dist); ri; ++ri)
     {
         // Must have LOS, with no translucent walls in the way.
         if (you.see_cell_no_trans(*ri))
@@ -2089,12 +2089,12 @@ void run_environment_effects()
     // numbers.
     if (nseeds > 50)
     {
-        int nsels = div_rand_round( sfx_seeds.size() * sfx_chance, 100 );
+        int nsels = div_rand_round(sfx_seeds.size() * sfx_chance, 100);
         if (one_chance_in(5))
             nsels += random2(nsels * 3);
 
         for (int i = 0; i < nsels; ++i)
-            apply_environment_effect( sfx_seeds[ random2(nseeds) ] );
+            apply_environment_effect(sfx_seeds[ random2(nseeds) ]);
     }
     else
     {
@@ -2103,7 +2103,7 @@ void run_environment_effects()
             if (random2(100) >= sfx_chance)
                 continue;
 
-            apply_environment_effect( sfx_seeds[i] );
+            apply_environment_effect(sfx_seeds[i]);
         }
     }
 
@@ -2449,7 +2449,7 @@ void maybe_id_ring_TC()
             if (!item_ident(ring, ISFLAG_KNOW_PROPERTIES)
                 && ring.sub_type == RING_TELEPORT_CONTROL)
             {
-                set_ident_type( ring.base_type, ring.sub_type, ID_KNOWN_TYPE );
+                set_ident_type(ring.base_type, ring.sub_type, ID_KNOWN_TYPE);
                 set_ident_flags(ring, ISFLAG_KNOW_PROPERTIES);
                 mprf("You are wearing: %s",
                      ring.name(DESC_INVENTORY_EQUIP).c_str());

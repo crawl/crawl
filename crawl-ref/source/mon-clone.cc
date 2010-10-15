@@ -298,7 +298,7 @@ int clone_mons(const monster* orig, bool quiet, bool* obvious,
             return (NON_MONSTER);
     }
 
-    ASSERT( !actor_at(pos) );
+    ASSERT(!actor_at(pos));
 
     *mons          = *orig;
     mons->set_position(pos);

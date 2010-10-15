@@ -54,12 +54,12 @@ spell_type spell_by_name(std::string name, bool partial_match = false);
 
 spschool_flag_type school_by_name(std::string name);
 
-int get_spell_slot_by_letter( char letter );
-spell_type get_spell_by_letter( char letter );
+int get_spell_slot_by_letter(char letter);
+spell_type get_spell_by_letter(char letter);
 
-bool add_spell_to_memory( spell_type spell );
-bool del_spell_from_memory_by_slot( int slot );
-bool del_spell_from_memory( spell_type spell );
+bool add_spell_to_memory(spell_type spell);
+bool del_spell_from_memory_by_slot(int slot);
+bool del_spell_from_memory(spell_type spell);
 
 int spell_hunger(spell_type which_spell, bool rod = false);
 int spell_mana(spell_type which_spell);
@@ -70,7 +70,7 @@ int spell_range(spell_type spell, int pow, bool real_cast,
 int spell_noise(spell_type spell);
 int spell_noise(unsigned int disciplines, int level);
 
-const char *get_spell_target_prompt( spell_type which_spell );
+const char *get_spell_target_prompt(spell_type which_spell);
 
 bool spell_needs_tracer(spell_type spell);
 bool spell_is_direct_explosion(spell_type spell);
@@ -80,16 +80,16 @@ bool spell_harms_area(spell_type spell);
 bool spell_sanctuary_castable(spell_type spell);
 int spell_levels_required(spell_type which_spell);
 
-unsigned int get_spell_flags( spell_type which_spell );
+unsigned int get_spell_flags(spell_type which_spell);
 
 bool spell_typematch(spell_type which_spell, unsigned int which_discipline);
-unsigned int get_spell_disciplines( spell_type which_spell );
+unsigned int get_spell_disciplines(spell_type which_spell);
 bool disciplines_conflict(unsigned int disc1, unsigned int disc2);
-int count_bits( unsigned int bits );
+int count_bits(unsigned int bits);
 
 const char *spell_title(spell_type which_spell);
-const char* spelltype_short_name( int which_spelltype );
-const char* spelltype_long_name( int which_spelltype );
+const char* spelltype_short_name(int which_spelltype);
+const char* spelltype_long_name(int which_spelltype);
 
 typedef int cell_func(coord_def where, int pow, int aux, actor *agent);
 typedef int monster_func(monster* mon, int pow);
@@ -126,7 +126,7 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
                       int spread_rate = -1, int colour = -1,
                       std::string name = "", std::string tile = "");
 
-bool spell_direction( dist &spelld, bolt &pbolt,
+bool spell_direction(dist &spelld, bolt &pbolt,
                       targeting_type restrict = DIR_NONE,
                       targ_mode_type mode = TARG_HOSTILE,
                       // pbolt.range if applicable, otherwise LOS_RADIUS
@@ -135,7 +135,7 @@ bool spell_direction( dist &spelld, bolt &pbolt,
                       bool may_target_self = false,
                       const char *target_prefix = NULL,
                       const char *prompt = NULL,
-                      bool cancel_at_self = false );
+                      bool cancel_at_self = false);
 
 int spell_type2skill (unsigned int which_spelltype);
 
@@ -146,7 +146,7 @@ bool spell_is_empowered(spell_type spell);
 bool spell_is_useful(spell_type spell);
 bool spell_is_risky(spell_type spell);
 
-int spell_highlight_by_utility( spell_type spell,
+int spell_highlight_by_utility(spell_type spell,
                                 int default_color = COL_UNKNOWN,
                                 bool transient = false,
                                 bool rod_spell = false);

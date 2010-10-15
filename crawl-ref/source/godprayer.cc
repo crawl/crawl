@@ -454,7 +454,7 @@ void pray()
     if (!was_praying)
         do_god_gift(true);
 
-    dprf("piety: %d (-%d)", you.piety, you.piety_hysteresis );
+    dprf("piety: %d (-%d)", you.piety, you.piety_hysteresis);
 }
 
 void end_prayer(void)
@@ -536,9 +536,9 @@ static int _leading_sacrifice_group()
     int weights[5];
     get_pure_deck_weights(weights);
     int best_i = -1, maxweight = -1;
-    for ( int i = 0; i < 5; ++i )
+    for (int i = 0; i < 5; ++i)
     {
-        if ( best_i == -1 || weights[i] > maxweight )
+        if (best_i == -1 || weights[i] > maxweight)
         {
             maxweight = weights[i];
             best_i = i;
@@ -549,7 +549,7 @@ static int _leading_sacrifice_group()
 
 static void _give_sac_group_feedback(int which)
 {
-    ASSERT( which >= 0 && which < 5 );
+    ASSERT(which >= 0 && which < 5);
     const char* names[] = {
         "Escape", "Destruction", "Dungeons", "Summoning", "Wonder"
     };

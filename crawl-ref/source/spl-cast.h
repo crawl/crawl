@@ -55,17 +55,17 @@ typedef bool (*spell_selector)(spell_type spell);
 
 int list_spells(bool toggle_with_I = true, bool viewing = false,
                 int minRange = -1, spell_selector selector = NULL);
-int spell_fail( spell_type spell );
+int spell_fail(spell_type spell);
 int calc_spell_power(spell_type spell, bool apply_intel,
                      bool fail_rate_chk = false, bool cap_power = true,
                      bool rod = false);
 int calc_spell_range(spell_type spell, int power = 0,
                      bool real_cast = false, bool rod = false);
-int spell_enhancement( unsigned int typeflags );
+int spell_enhancement(unsigned int typeflags);
 
-bool cast_a_spell( bool check_range, spell_type spell = SPELL_NO_SPELL );
+bool cast_a_spell(bool check_range, spell_type spell = SPELL_NO_SPELL);
 
-bool maybe_identify_staff( item_def &item, spell_type spell = SPELL_NO_SPELL );
+bool maybe_identify_staff(item_def &item, spell_type spell = SPELL_NO_SPELL);
 
 void inspect_spells();
 void do_cast_spell_cmd(bool force);
@@ -73,7 +73,7 @@ void do_cast_spell_cmd(bool force);
 spret_type your_spells(spell_type spell, int powc = 0, bool allow_fail = true,
                        bool check_range = true, int range_power = 0);
 
-const char* failure_rate_to_string( int fail );
+const char* failure_rate_to_string(int fail);
 
 int spell_power_colour(spell_type spell);
 int spell_power_bars(spell_type spell, bool rod);

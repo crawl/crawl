@@ -237,7 +237,7 @@ void replace_all_in_string(std::string& s, const std::string& search,
                            const std::string& replace)
 {
     std::string::size_type pos = 0;
-    while ( (pos = s.find(search, pos)) != std::string::npos )
+    while ((pos = s.find(search, pos)) != std::string::npos)
     {
         s.replace(pos, search.size(), replace);
         pos += replace.size();
@@ -428,7 +428,7 @@ formatted_string formatted_string::substr(size_t start, size_t substr_length) co
         result.ops.push_back(ops[last_FSOP_COLOUR]);
 
     // Copy the text
-    for ( ; i<ops.size(); i++)
+    for (; i<ops.size(); i++)
     {
         const fs_op& op = ops[i];
         if (op.type == FSOP_TEXT)
@@ -462,7 +462,7 @@ void formatted_string::add_glyph(glyph g)
 void formatted_string::textcolor(int color)
 {
     if (!ops.empty() && ops[ ops.size() - 1 ].type == FSOP_COLOUR)
-        ops.erase( ops.end() - 1 );
+        ops.erase(ops.end() - 1);
 
     ops.push_back(color);
 }
@@ -520,10 +520,10 @@ int count_linebreaks(const formatted_string& fs)
     std::string::size_type where = 0;
     const std::string s = fs;
     int count = 0;
-    while ( 1 )
+    while (1)
     {
         where = s.find("\n", where);
-        if ( where == std::string::npos )
+        if (where == std::string::npos)
             break;
         else
         {

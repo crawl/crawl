@@ -140,9 +140,9 @@ int dlua_chunk::check_op(CLua &interp, int err)
 int dlua_chunk::load(CLua &interp)
 {
     if (!compiled.empty())
-        return check_op( interp,
+        return check_op(interp,
                          interp.loadbuffer(compiled.c_str(), compiled.length(),
-                                           context.c_str()) );
+                                           context.c_str()));
 
     if (empty())
     {
@@ -150,8 +150,8 @@ int dlua_chunk::load(CLua &interp)
         return (-1000);
     }
 
-    int err = check_op( interp,
-                        interp.loadstring(chunk.c_str(), context.c_str()) );
+    int err = check_op(interp,
+                        interp.loadstring(chunk.c_str(), context.c_str()));
     if (err)
         return (err);
     std::ostringstream out;

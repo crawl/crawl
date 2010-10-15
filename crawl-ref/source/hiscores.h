@@ -10,16 +10,16 @@
 
 class scorefile_entry;
 
-void hiscores_new_entry( const scorefile_entry &se );
+void hiscores_new_entry(const scorefile_entry &se);
 
-void logfile_new_entry( const scorefile_entry &se );
+void logfile_new_entry(const scorefile_entry &se);
 
-void hiscores_print_list( int display_count = -1, int format = SCORE_TERSE );
+void hiscores_print_list(int display_count = -1, int format = SCORE_TERSE);
 void hiscores_print_all(int display_count = -1, int format = SCORE_TERSE);
 
-std::string hiscores_format_single( const scorefile_entry &se );
-std::string hiscores_format_single_long( const scorefile_entry &se,
-                                         bool verbose = false );
+std::string hiscores_format_single(const scorefile_entry &se);
+std::string hiscores_format_single_long(const scorefile_entry &se,
+                                         bool verbose = false);
 
 void mark_milestone(const std::string &type, const std::string &milestone,
                     bool report_origin_level = false, time_t t = 0);

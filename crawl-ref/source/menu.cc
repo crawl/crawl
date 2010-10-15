@@ -109,7 +109,7 @@ void MenuDisplayTile::set_num_columns(int columns)
 }
 #endif
 
-Menu::Menu( int _flags, const std::string& tagname, bool text_only )
+Menu::Menu(int _flags, const std::string& tagname, bool text_only)
   : f_selitem(NULL), f_drawitem(NULL), f_keyfilter(NULL),
     action_cycle(CYCLE_NONE), menu_action(ACT_EXAMINE), title(NULL),
     title2(NULL), flags(_flags), tag(tagname), first_entry(0), y_offset(0),
@@ -129,7 +129,7 @@ Menu::Menu( int _flags, const std::string& tagname, bool text_only )
     set_flags(flags);
 }
 
-Menu::Menu( const formatted_string &fs )
+Menu::Menu(const formatted_string &fs)
  : f_selitem(NULL), f_drawitem(NULL), f_keyfilter(NULL),
    action_cycle(CYCLE_NONE), menu_action(ACT_EXAMINE), title(NULL),
    title2(NULL),
@@ -258,14 +258,14 @@ void Menu::set_more(const formatted_string &fs)
     more = fs;
 }
 
-void Menu::set_highlighter( MenuHighlighter *mh )
+void Menu::set_highlighter(MenuHighlighter *mh)
 {
     if (highlighter != mh)
         delete highlighter;
     highlighter = mh;
 }
 
-void Menu::set_title( MenuEntry *e, bool first )
+void Menu::set_title(MenuEntry *e, bool first)
 {
     if (first)
     {
@@ -282,10 +282,10 @@ void Menu::set_title( MenuEntry *e, bool first )
     }
 }
 
-void Menu::add_entry( MenuEntry *entry )
+void Menu::add_entry(MenuEntry *entry)
 {
     entry->tag = tag;
-    items.push_back( entry );
+    items.push_back(entry);
 }
 
 void Menu::reset()
@@ -336,7 +336,7 @@ void Menu::do_menu()
     {
         int keyin = getchm(KMC_MENU, getch_ck);
 
-        if (!process_key( keyin ))
+        if (!process_key(keyin))
             return;
     }
 }
@@ -369,7 +369,7 @@ int Menu::post_process(int k)
     return (k);
 }
 
-bool Menu::process_key( int keyin )
+bool Menu::process_key(int keyin)
 {
     if (items.size() == 0)
     {
@@ -496,7 +496,7 @@ bool Menu::process_key( int keyin )
             {
                 select_index(next, num);
                 get_selected(&sel);
-                draw_select_count( sel.size() );
+                draw_select_count(sel.size());
                 if (get_cursor() < next)
                 {
                     first_entry = 0;
@@ -563,7 +563,7 @@ bool Menu::process_key( int keyin )
         if (!(flags & (MF_SINGLESELECT | MF_MULTISELECT)))
             return (false);
 
-        if (!is_set(MF_NO_SELECT_QTY) && isadigit( keyin ))
+        if (!is_set(MF_NO_SELECT_QTY) && isadigit(keyin))
         {
             if (num > 999)
                 num = -1;
@@ -571,12 +571,12 @@ bool Menu::process_key( int keyin )
                                num * 10 + keyin - '0';
         }
 
-        select_items( keyin, num );
-        get_selected( &sel );
+        select_items(keyin, num);
+        get_selected(&sel);
         if (sel.size() == 1 && (flags & MF_SINGLESELECT))
             return (false);
 
-        draw_select_count( sel.size() );
+        draw_select_count(sel.size());
 
         if (flags & MF_ANYPRINTABLE
             && (!isadigit(keyin) || is_set(MF_NO_SELECT_QTY)))
@@ -590,7 +590,7 @@ bool Menu::process_key( int keyin )
     if (last_selected != -1 && get_cursor() == -1)
         last_selected = -1;
 
-    if (!isadigit( keyin ))
+    if (!isadigit(keyin))
         num = -1;
 
     if (nav)
@@ -607,7 +607,7 @@ bool Menu::process_key( int keyin )
     return (true);
 }
 
-bool Menu::draw_title_suffix( const std::string &s, bool titlefirst )
+bool Menu::draw_title_suffix(const std::string &s, bool titlefirst)
 {
     if (crawl_state.doing_prev_cmd_again)
         return (true);
@@ -632,11 +632,11 @@ bool Menu::draw_title_suffix( const std::string &s, bool titlefirst )
 
     cprintf("%s", towrite.c_str());
 
-    cgotoxy( oldx, oldy );
+    cgotoxy(oldx, oldy);
     return (true);
 }
 
-bool Menu::draw_title_suffix( const formatted_string &fs, bool titlefirst )
+bool Menu::draw_title_suffix(const formatted_string &fs, bool titlefirst)
 {
     if (crawl_state.doing_prev_cmd_again)
         return (true);
@@ -672,7 +672,7 @@ bool Menu::draw_title_suffix( const formatted_string &fs, bool titlefirst )
         }
     }
 
-    cgotoxy( oldx, oldy );
+    cgotoxy(oldx, oldy);
     return (true);
 }
 
@@ -704,13 +704,13 @@ std::vector<MenuEntry*> Menu::selected_entries() const
     return (selection);
 }
 
-void Menu::get_selected( std::vector<MenuEntry*> *selected ) const
+void Menu::get_selected(std::vector<MenuEntry*> *selected) const
 {
     selected->clear();
 
     for (int i = 0, count = items.size(); i < count; ++i)
         if (items[i]->selected())
-            selected->push_back( items[i] );
+            selected->push_back(items[i]);
 }
 
 void Menu::deselect_all(bool update_view)
@@ -743,9 +743,9 @@ void Menu::select_items(int key, int qty)
     int x = wherex(), y = wherey();
 
     if (key == ',' || key == '*')
-        select_index( -1, qty );
+        select_index(-1, qty);
     else if (key == '-')
-        select_index( -1, 0 );
+        select_index(-1, 0);
     else
     {
         int final = items.size();
@@ -765,9 +765,9 @@ void Menu::select_items(int key, int qty)
         // items.
         for (int i = first_entry; i < final; ++i)
         {
-            if (is_hotkey( i, key ))
+            if (is_hotkey(i, key))
             {
-                select_index( i, qty );
+                select_index(i, qty);
                 if (items[i]->hotkeys[0] == key)
                 {
                     selected = true;
@@ -780,9 +780,9 @@ void Menu::select_items(int key, int qty)
         {
             for (int i = 0; i < first_entry; ++i)
             {
-                if (is_hotkey( i, key ))
+                if (is_hotkey(i, key))
                 {
-                    select_index( i, qty );
+                    select_index(i, qty);
                     if (items[i]->hotkeys[0] == key)
                     {
                         selected = true;
@@ -792,7 +792,7 @@ void Menu::select_items(int key, int qty)
             }
         }
     }
-    cgotoxy( x, y );
+    cgotoxy(x, y);
 }
 
 MonsterMenuEntry::MonsterMenuEntry(const std::string &str, const monster* mon,
@@ -854,7 +854,7 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
     if (!Options.tile_menu_icons)
         return (false);
 
-    monster* m = (monster* )(data);
+    monster* m = (monster*)(data);
     if (!m)
         return (false);
 
@@ -996,7 +996,7 @@ bool PlayerMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
 
     MenuEntry::get_tiles(tileset);
 
-    const player_save_info &player = *static_cast<player_save_info*>( data );
+    const player_save_info &player = *static_cast<player_save_info*>(data);
     dolls_data equip_doll = player.doll;
 
     // FIXME: A lot of code duplication from DungeonRegion::pack_doll().
@@ -1092,8 +1092,8 @@ void Menu::select_item_index(int idx, int qty, bool draw_cursor)
     const int old_cursor = get_cursor();
 
     last_selected = idx;
-    items[idx]->select( qty );
-    draw_item( idx );
+    items[idx]->select(qty);
+    draw_item(idx);
 
     if (draw_cursor)
     {
@@ -1113,7 +1113,7 @@ void Menu::select_item_index(int idx, int qty, bool draw_cursor)
     }
 }
 
-void Menu::select_index( int index, int qty )
+void Menu::select_index(int index, int qty)
 {
     int si = index == -1? first_entry : index;
 
@@ -1153,7 +1153,7 @@ void Menu::select_index( int index, int qty )
     }
 }
 
-int Menu::get_entry_index( const MenuEntry *e ) const
+int Menu::get_entry_index(const MenuEntry *e) const
 {
     int index = 0;
     for (unsigned int i = first_entry; i < items.size(); i++)
@@ -1176,7 +1176,7 @@ void Menu::draw_menu()
     clrscr();
 
     draw_title();
-    draw_select_count( sel.size() );
+    draw_select_count(sel.size());
     y_offset = 1 + !!title;
 
     mdisplay->set_offset(y_offset);
@@ -1185,7 +1185,7 @@ void Menu::draw_menu()
     if (end > (int) items.size()) end = items.size();
 
     for (int i = first_entry; i < end; ++i)
-        draw_item( i );
+        draw_item(i);
 
     if (end < (int) items.size() || is_set(MF_ALWAYS_SHOW_MORE))
         mdisplay->draw_more();
@@ -1223,7 +1223,7 @@ void Menu::write_title()
     if (!first)
         ASSERT(title2);
 
-    textattr( item_colour(-1, first ? title : title2) );
+    textattr(item_colour(-1, first ? title : title2));
 
     std::string text = (first ? title->get_text() : title2->get_text());
     cprintf("%s", text.c_str());
@@ -1250,12 +1250,12 @@ bool Menu::in_page(int index) const
     return (index >= first_entry && index < first_entry + pagesize);
 }
 
-void Menu::draw_item( int index ) const
+void Menu::draw_item(int index) const
 {
     if (!in_page(index) || crawl_state.doing_prev_cmd_again)
         return;
 
-    cgotoxy( 1, y_offset + index - first_entry );
+    cgotoxy(1, y_offset + index - first_entry);
 
     draw_index_item(index, items[index]);
 }
@@ -1341,7 +1341,7 @@ int menu_colour(const std::string &text, const std::string &prefix,
         const colour_mapping &cm = Options.menu_colour_mappings[i];
         if ((cm.tag.empty() || cm.tag == "any" || cm.tag == tag
                || cm.tag == "inventory" && tag == "pickup")
-            && cm.pattern.matches(tmp_text) )
+            && cm.pattern.matches(tmp_text))
         {
             return (cm.colour);
         }
@@ -1365,7 +1365,7 @@ column_composer::column_composer(int cols, ...)
     va_list args;
     va_start(args, cols);
 
-    columns.push_back( column(1) );
+    columns.push_back(column(1));
     int lastcol = 1;
     for (int i = 1; i < cols; ++i)
     {
@@ -1373,7 +1373,7 @@ column_composer::column_composer(int cols, ...)
         ASSERT(nextcol > lastcol);
 
         lastcol = nextcol;
-        columns.push_back( column(nextcol) );
+        columns.push_back(column(nextcol));
     }
 
     va_end(args);
@@ -1413,16 +1413,16 @@ void column_composer::add_formatted(int ncol,
     for (unsigned i = 0, size = segs.size(); i < size; ++i)
     {
         newlines.push_back(
-                formatted_string::parse_string( segs[i],
+                formatted_string::parse_string(segs[i],
                                                 eol_ends_format,
                                                 tfilt));
     }
 
     strip_blank_lines(newlines);
 
-    compose_formatted_column( newlines,
+    compose_formatted_column(newlines,
                               col.lines,
-                              margin == -1? col.margin : margin );
+                              margin == -1? col.margin : margin);
 
     col.lines += newlines.size();
 
@@ -1439,7 +1439,7 @@ void column_composer::strip_blank_lines(std::vector<formatted_string> &fs) const
     for (int i = fs.size() - 1; i >= 0; --i)
     {
         if (fs[i].length() == 0)
-            fs.erase( fs.begin() + i );
+            fs.erase(fs.begin() + i);
         else
             break;
     }
@@ -1527,7 +1527,7 @@ formatted_scroller::~formatted_scroller()
             delete static_cast<formatted_string*>(items[i]->data);
 }
 
-int linebreak_string( std::string& s, int wrapcol, int maxcol )
+int linebreak_string(std::string& s, int wrapcol, int maxcol)
 {
     size_t loc = 0;
     int xpos = 0;
@@ -1578,7 +1578,7 @@ int linebreak_string( std::string& s, int wrapcol, int maxcol )
     return breakcount;
 }
 
-int linebreak_string2( std::string& s, int maxcol )
+int linebreak_string2(std::string& s, int maxcol)
 {
     size_t loc = 0;
     int xpos = 0, spaceloc = 0;
@@ -1589,12 +1589,12 @@ int linebreak_string2( std::string& s, int maxcol )
     if (maxcol < 1)
         return 0;
 
-    while ( loc < s.size() )
+    while (loc < s.size())
     {
-        if ( s[loc] == '<' )    // tag
+        if (s[loc] == '<')    // tag
         {
             // << escape
-            if ( loc + 1 < s.size() && s[loc+1] == '<' )
+            if (loc + 1 < s.size() && s[loc+1] == '<')
             {
                 ++xpos;
                 loc += 2;
@@ -1602,7 +1602,7 @@ int linebreak_string2( std::string& s, int maxcol )
                 continue;
             }
             // skip tag
-            while ( loc < s.size() && s[loc] != '>' )
+            while (loc < s.size() && s[loc] != '>')
                 ++loc;
             ++loc;
         }
@@ -1654,7 +1654,7 @@ std::string get_linebreak_string(const std::string& s, int maxcol)
     return r;
 }
 
-bool formatted_scroller::jump_to( int i )
+bool formatted_scroller::jump_to(int i)
 {
     if (i == first_entry + 1)
         return (false);
@@ -1679,7 +1679,7 @@ bool formatted_scroller::page_down()
     // somewhere in the newly displayed page, stop scrolling
     // just before it becomes visible
     int target;
-    for (target = first_entry; target < first_entry + pagesize; ++target )
+    for (target = first_entry; target < first_entry + pagesize; ++target)
     {
         const int offset = target + pagesize;
         if (offset < (int)items.size() && items[offset]->level == MEL_TITLE)
@@ -1733,7 +1733,7 @@ bool formatted_scroller::line_up()
     return (false);
 }
 
-bool formatted_scroller::jump_to_hotkey( int keyin )
+bool formatted_scroller::jump_to_hotkey(int keyin)
 {
     for (unsigned int i = 0; i < items.size(); ++i)
         if (items[i]->is_hotkey(keyin))
@@ -1743,7 +1743,7 @@ bool formatted_scroller::jump_to_hotkey( int keyin )
 }
 
 
-bool formatted_scroller::process_key( int keyin )
+bool formatted_scroller::process_key(int keyin)
 {
     lastch = keyin;
 
@@ -1789,8 +1789,8 @@ bool formatted_scroller::process_key( int keyin )
     default:
         if (is_set(MF_SINGLESELECT))
         {
-            select_items( keyin, -1 );
-            get_selected( &sel );
+            select_items(keyin, -1);
+            get_selected(&sel);
             if (sel.size() >= 1)
                 return (false);
         }

@@ -91,11 +91,11 @@ const int HIT_STRONG = 36;
 
 static void stab_message(actor *defender, int stab_bonus);
 
-static inline int player_weapon_str_weight( void );
-static inline int player_weapon_dex_weight( void );
+static inline int player_weapon_str_weight(void);
+static inline int player_weapon_dex_weight(void);
 
-static inline int calc_stat_to_hit_base( void );
-static inline int calc_stat_to_dam_base( void );
+static inline int calc_stat_to_hit_base(void);
+static inline int calc_stat_to_dam_base(void);
 static void mons_lose_attack_energy(monster* attacker, int wpn_speed,
                                     int which_attack, int effective_attack);
 
@@ -121,7 +121,7 @@ bool test_melee_hit(int to_hit, int ev, defer_rand& r)
         margin = (r[1].random2(2) ? 1 : -1) * AUTOMATIC_HIT;
     else
     {
-        roll = r[2].random2( to_hit + 1 );
+        roll = r[2].random2(to_hit + 1);
         margin = (roll - r[3].random2avg(ev, 2));
     }
 
@@ -136,10 +136,10 @@ bool test_melee_hit(int to_hit, int ev, defer_rand& r)
             ((100.0 - MIN_HIT_MISS_PERCENTAGE) * ev) / to_hit;
     }
 
-    mprf( MSGCH_DIAGNOSTICS,
+    mprf(MSGCH_DIAGNOSTICS,
           "to hit: %d; ev: %d; miss: %0.2f%%; roll: %d; result: %s%s (%d)",
               to_hit, ev, miss, roll, (margin >= 0) ? "hit" : "miss",
-              (roll == -1) ? "!!!" : "", margin );
+              (roll == -1) ? "!!!" : "", margin);
 #endif
 
     return (margin >= 0);
@@ -148,14 +148,14 @@ bool test_melee_hit(int to_hit, int ev, defer_rand& r)
 // This function returns the "extra" stats the player gets because of
 // choice of weapon... it's used only for giving warnings when a player
 // wields a less than ideal weapon.
-int effective_stat_bonus( int wepType )
+int effective_stat_bonus(int wepType)
 {
 #ifdef USE_NEW_COMBAT_STATS
     int str_weight;
     if (wepType == -1)
         str_weight = player_weapon_str_weight();
     else
-        str_weight = weapon_str_weight( OBJ_WEAPONS, wepType );
+        str_weight = weapon_str_weight(OBJ_WEAPONS, wepType);
 
     return ((you.strength() - you.dex()) * (str_weight - 5) / 10);
 #else
@@ -202,7 +202,7 @@ static int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK,
 
 // Calculates your to-hit roll. If random_factor is true, be stochastic;
 // if false, determinstic (e.g. for chardumps).
-int calc_your_to_hit( bool random_factor )
+int calc_your_to_hit(bool random_factor)
 {
     melee_attack attk(&you, NULL);
     return attk.calc_to_hit(random_factor);
@@ -1580,7 +1580,7 @@ int melee_attack::player_apply_weapon_skill(int damage)
     if (weapon && (weapon->base_type == OBJ_WEAPONS
                    || weapon->base_type == OBJ_STAVES))
     {
-        damage *= 25 + (random2( you.skills[ wpn_skill ] + 1 ));
+        damage *= 25 + (random2(you.skills[ wpn_skill ] + 1));
         damage /= 25;
     }
 
@@ -1611,11 +1611,11 @@ int melee_attack::player_apply_misc_modifiers(int damage)
 int melee_attack::player_apply_weapon_bonuses(int damage)
 {
     if (weapon && (weapon->base_type == OBJ_WEAPONS
-                   || item_is_rod( *weapon )))
+                   || item_is_rod(*weapon)))
     {
         int wpn_damage_plus = weapon->plus2;
 
-        if (item_is_rod( *weapon ))
+        if (item_is_rod(*weapon))
             wpn_damage_plus = (short)weapon->props["rod_enchantment"];
 
         damage += (wpn_damage_plus > -1) ? (random2(1 + wpn_damage_plus))
@@ -1664,11 +1664,11 @@ void melee_attack::player_weapon_auto_id()
 {
     if (weapon
         && weapon->base_type == OBJ_WEAPONS
-        && !is_range_weapon( *weapon )
-        && !item_ident( *weapon, ISFLAG_KNOW_PLUSES )
+        && !is_range_weapon(*weapon)
+        && !item_ident(*weapon, ISFLAG_KNOW_PLUSES)
         && x_chance_in_y(you.skills[ wpn_skill ], 100))
     {
-        set_ident_flags( *weapon, ISFLAG_KNOW_PLUSES );
+        set_ident_flags(*weapon, ISFLAG_KNOW_PLUSES);
         mprf("You are wielding %s.", weapon->name(DESC_NOCAP_A).c_str());
         more();
         you.wield_change = true;
@@ -1696,7 +1696,7 @@ int melee_attack::player_stab_weapon_bonus(int damage)
         if (weapon->sub_type != WPN_DAGGER)
             bonus /= 2;
 
-        bonus   = stepdown_value( bonus, 10, 10, 30, 30 );
+        bonus   = stepdown_value(bonus, 10, 10, 30, 30);
         damage += bonus;
     }
     // fall through
@@ -2250,7 +2250,7 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
     return std::max(resistible + irresistible, 0);
 }
 
-void melee_attack::calc_elemental_brand_damage( beam_type flavour,
+void melee_attack::calc_elemental_brand_damage(beam_type flavour,
                                                 int res,
                                                 const char *verb)
 {
@@ -2590,7 +2590,7 @@ void melee_attack::chaos_affects_defender()
         const int friend_factor = defender->as_monster()->friendly() ? 1 : 2;
         const int glow_factor   =
             (defender->as_monster()->has_ench(ENCH_SHAPESHIFTER) ? 1 : 2);
-        xom_is_stimulated( 64 * friend_factor * glow_factor );
+        xom_is_stimulated(64 * friend_factor * glow_factor);
         break;
     }
     case CHAOS_MISCAST:
@@ -2599,9 +2599,9 @@ void melee_attack::chaos_affects_defender()
 
         // At level == 27 there's a 13.9% chance of a level 3 miscast.
         int level0_chance = level;
-        int level1_chance = std::max( 0, level - 7);
-        int level2_chance = std::max( 0, level - 12);
-        int level3_chance = std::max( 0, level - 17);
+        int level1_chance = std::max(0, level - 7);
+        int level2_chance = std::max(0, level - 12);
+        int level3_chance = std::max(0, level - 17);
 
         level = random_choose_weighted(
             level0_chance, 0,
@@ -3394,7 +3394,7 @@ bool melee_attack::apply_damage_brand()
                                  defender->name(DESC_CAP_THE).c_str(),
                                  defender->conj_verb("writhe").c_str());
             }
-            special_damage += random2( 1 + attacker->skill(SK_NECROMANCY) );
+            special_damage += random2(1 + attacker->skill(SK_NECROMANCY));
         }
 
         attacker->god_conduct(DID_NECROMANCY, 4);
@@ -3545,9 +3545,9 @@ void melee_attack::handle_noise(const coord_def & pos)
 }
 
 // Returns true if the attack cut off a head *and* cauterized it.
-bool melee_attack::chop_hydra_head( int dam,
+bool melee_attack::chop_hydra_head(int dam,
                                     int dam_type,
-                                    int wpn_brand )
+                                    int wpn_brand)
 {
     // Monster attackers have only a 25% chance of making the
     // chop-check to prevent runaway head inflation.
@@ -3615,13 +3615,13 @@ bool melee_attack::chop_hydra_head( int dam,
                 if (wpn_brand == SPWPN_FLAMING)
                 {
                     if (defender_visible)
-                        mpr( "The flame cauterises the wound!" );
+                        mpr("The flame cauterises the wound!");
                     return (true);
                 }
                 else if (defender->as_monster()->number < limit - 1)
                 {
                     simple_monster_message(defender->as_monster(),
-                                           " grows two more!" );
+                                           " grows two more!");
                     defender->as_monster()->number += 2;
                     defender->heal(8 + random2(8), true);
                 }
@@ -3802,8 +3802,8 @@ void melee_attack::player_apply_staff_damage()
     {
         if (!item_type_known(*weapon))
         {
-            set_ident_flags( *weapon, ISFLAG_KNOW_TYPE );
-            set_ident_type( *weapon, ID_KNOWN_TYPE );
+            set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
+            set_ident_type(*weapon, ID_KNOWN_TYPE);
 
             mprf("You are wielding %s.", weapon->name(DESC_NOCAP_A).c_str());
             more();
@@ -3947,7 +3947,7 @@ int melee_attack::player_to_hit(bool random_factor)
         if (weapon->base_type == OBJ_WEAPONS)
         {
             your_to_hit += weapon->plus;
-            your_to_hit += property( *weapon, PWPN_HIT );
+            your_to_hit += property(*weapon, PWPN_HIT);
 
             if (get_equip_race(*weapon) == ISFLAG_ELVEN
                 && player_genus(GENPC_ELVEN))
@@ -3964,9 +3964,9 @@ int melee_attack::player_to_hit(bool random_factor)
         else if (weapon->base_type == OBJ_STAVES)
         {
             // magical staff
-            your_to_hit += property( *weapon, PWPN_HIT );
+            your_to_hit += property(*weapon, PWPN_HIT);
 
-            if (item_is_rod( *weapon ))
+            if (item_is_rod(*weapon))
                 your_to_hit += (short)weapon->props["rod_enchantment"];
         }
     }
@@ -3993,15 +3993,15 @@ int melee_attack::player_to_hit(bool random_factor)
     your_to_hit = maybe_random2(your_to_hit, random_factor);
 
 #ifdef DEBUG_DIAGNOSTICS
-    dprf( "to hit die: %d; rolled value: %d; base: %d",
-          roll_hit, your_to_hit, base_to_hit );
+    dprf("to hit die: %d; rolled value: %d; base: %d",
+          roll_hit, your_to_hit, base_to_hit);
 #endif
 
     if (weapon && wpn_skill == SK_SHORT_BLADES && you.duration[DUR_SURE_BLADE])
     {
         int turn_duration = you.duration[DUR_SURE_BLADE] / BASELINE_DELAY;
         your_to_hit += 5 +
-            (random_factor ? random2limit( turn_duration, 10 ) :
+            (random_factor ? random2limit(turn_duration, 10) :
              turn_duration / 2);
     }
 
@@ -4153,7 +4153,7 @@ random_var melee_attack::player_weapon_speed()
         attack_delay = constant(property(*weapon, PWPN_SPEED));
         attack_delay -= constant(you.skills[wpn_skill] / 2);
 
-        min_delay = property( *weapon, PWPN_SPEED ) / 2;
+        min_delay = property(*weapon, PWPN_SPEED) / 2;
 
         // Short blades can get up to at least unarmed speed.
         if (wpn_skill == SK_SHORT_BLADES && min_delay > 5)
@@ -4266,7 +4266,7 @@ int melee_attack::player_calc_base_weapon_damage()
     int damage = 0;
 
     if (weapon->base_type == OBJ_WEAPONS || weapon->base_type == OBJ_STAVES)
-        damage = property( *weapon, PWPN_DAMAGE );
+        damage = property(*weapon, PWPN_DAMAGE);
 
     // Staves can be wielded with a worn shield, but are much less
     // effective.
@@ -4438,8 +4438,8 @@ int melee_attack::mons_calc_damage(const mon_attack_def &attk)
         && weapon->base_type == OBJ_WEAPONS
         && !is_range_weapon(*weapon))
     {
-        damage_max = property( *weapon, PWPN_DAMAGE );
-        damage += random2( damage_max );
+        damage_max = property(*weapon, PWPN_DAMAGE);
+        damage += random2(damage_max);
 
         if (get_equip_race(*weapon) == ISFLAG_ORCISH
             && mons_genus(attacker->mons_species()) == MONS_ORC
@@ -4449,9 +4449,9 @@ int melee_attack::mons_calc_damage(const mon_attack_def &attk)
         }
 
         if (weapon->plus2 >= 0)
-            damage += random2( weapon->plus2 );
+            damage += random2(weapon->plus2);
         else
-            damage -= random2( 1 - weapon->plus2 );
+            damage -= random2(1 - weapon->plus2);
 
         damage -= 1 + random2(3);
     }
@@ -4634,7 +4634,7 @@ void melee_attack::mons_announce_hit(const mon_attack_def &attk)
     {
         mprf("%s %s %s%s%s%s",
              atk_name(DESC_CAP_THE).c_str(),
-             attacker->conj_verb( mons_attack_verb(attk) ).c_str(),
+             attacker->conj_verb(mons_attack_verb(attk)).c_str(),
              mons_defender_name().c_str(),
              debug_damage_number().c_str(),
              mons_attack_desc(attk).c_str(),
@@ -4648,7 +4648,7 @@ void melee_attack::mons_announce_dud_hit(const mon_attack_def &attk)
     {
         mprf("%s %s %s but does no damage.",
              atk_name(DESC_CAP_THE).c_str(),
-             attacker->conj_verb( mons_attack_verb(attk) ).c_str(),
+             attacker->conj_verb(mons_attack_verb(attk)).c_str(),
              mons_defender_name().c_str());
     }
 }
@@ -6086,9 +6086,9 @@ static void mons_lose_attack_energy(monster* attacker, int wpn_speed,
         const int atk_speed = attacker->action_energy(EUT_ATTACK);
         // only get one third penalty/bonus for second weapons.
         if (effective_attack > 0)
-            wpn_speed = div_rand_round( (2 * atk_speed + wpn_speed), 3 );
+            wpn_speed = div_rand_round((2 * atk_speed + wpn_speed), 3);
 
-        int delta = div_rand_round( (wpn_speed - 10 + (atk_speed - 10)), 2 );
+        int delta = div_rand_round((wpn_speed - 10 + (atk_speed - 10)), 2);
         if (delta > 0)
             attacker->speed_increment -= delta;
     }
@@ -6140,12 +6140,12 @@ bool monsters_fight(monster* attacker, monster* defender,
 */
 
 // Returns a value between 0 and 10 representing the weight given to str
-int weapon_str_weight( object_class_type wpn_class, int wpn_type )
+int weapon_str_weight(object_class_type wpn_class, int wpn_type)
 {
     int  ret;
 
-    const int wpn_skill  = weapon_skill( wpn_class, wpn_type );
-    const int hands      = hands_reqd( wpn_class, wpn_type, you.body_size() );
+    const int wpn_skill  = weapon_skill(wpn_class, wpn_type);
+    const int hands      = hands_reqd(wpn_class, wpn_type, you.body_size());
 
     // These are low values, because we'll be adding some bonus to the
     // larger weapons later.  Remember also that 1-1/2-hand weapons get
@@ -6224,13 +6224,13 @@ static inline int player_weapon_str_weight()
 
 // weapon_dex_weight() + weapon_str_weight == 10, so we only need to
 // define one of these.
-static inline int player_weapon_dex_weight( void )
+static inline int player_weapon_dex_weight(void)
 {
     return (10 - player_weapon_str_weight());
 }
 
 // weighted average of strength and dex, between (str+dex)/2 and dex
-static inline int calc_stat_to_hit_base( void )
+static inline int calc_stat_to_hit_base(void)
 {
 #ifdef USE_NEW_COMBAT_STATS
 
@@ -6249,7 +6249,7 @@ static inline int calc_stat_to_hit_base( void )
 }
 
 // weighted average of strength and dex, between str and (str+dex)/2
-static inline int calc_stat_to_dam_base( void )
+static inline int calc_stat_to_dam_base(void)
 {
 #ifdef USE_NEW_COMBAT_STATS
 
@@ -6268,27 +6268,27 @@ static void stab_message(actor *defender, int stab_bonus)
     case 6:     // big melee, monster surrounded/not paying attention
         if (coinflip())
         {
-            mprf( "You %s %s from a blind spot!",
+            mprf("You %s %s from a blind spot!",
                   (you.species == SP_CAT) ? "pounce on" : "strike",
-                  defender->name(DESC_NOCAP_THE).c_str() );
+                  defender->name(DESC_NOCAP_THE).c_str());
         }
         else
         {
-            mprf( "You catch %s momentarily off-guard.",
-                  defender->name(DESC_NOCAP_THE).c_str() );
+            mprf("You catch %s momentarily off-guard.",
+                  defender->name(DESC_NOCAP_THE).c_str());
         }
         break;
     case 4:     // confused/fleeing
         if (!one_chance_in(3))
         {
-            mprf( "You catch %s completely off-guard!",
-                  defender->name(DESC_NOCAP_THE).c_str() );
+            mprf("You catch %s completely off-guard!",
+                  defender->name(DESC_NOCAP_THE).c_str());
         }
         else
         {
-            mprf( "You %s %s from behind!",
+            mprf("You %s %s from behind!",
                   (you.species == SP_CAT) ? "pounce on" : "strike",
-                  defender->name(DESC_NOCAP_THE).c_str() );
+                  defender->name(DESC_NOCAP_THE).c_str());
         }
         break;
     case 2:
@@ -6299,9 +6299,9 @@ static void stab_message(actor *defender, int stab_bonus)
                  defender->name(DESC_PLAIN).c_str());
             break;
         }
-        mprf( "%s fails to defend %s.",
+        mprf("%s fails to defend %s.",
               defender->name(DESC_CAP_THE).c_str(),
-              defender->pronoun(PRONOUN_REFLEXIVE).c_str() );
+              defender->pronoun(PRONOUN_REFLEXIVE).c_str());
         break;
     }
 }

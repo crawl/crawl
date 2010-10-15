@@ -160,7 +160,7 @@ bool try_pathfind(monster* mon, const dungeon_feature_type can_move)
             if (mon->pos() == mon->travel_path[0])
             {
                 // Get next waypoint.
-                mon->travel_path.erase( mon->travel_path.begin() );
+                mon->travel_path.erase(mon->travel_path.begin());
 
                 if (!mon->travel_path.empty())
                 {
@@ -490,7 +490,7 @@ static bool _handle_monster_travelling(monster* mon,
 #ifdef DEBUG_PATHFIND
         mpr("Arrived at first waypoint.");
 #endif
-        mon->travel_path.erase( mon->travel_path.begin() );
+        mon->travel_path.erase(mon->travel_path.begin());
         if (mon->travel_path.empty())
         {
 #ifdef DEBUG_PATHFIND
@@ -545,7 +545,7 @@ static bool _handle_monster_travelling(monster* mon,
             // Erase all waypoints that came earlier:
             // we don't need them anymore.
             while (0 < erase--)
-                mon->travel_path.erase( mon->travel_path.begin() );
+                mon->travel_path.erase(mon->travel_path.begin());
         }
         else
         {

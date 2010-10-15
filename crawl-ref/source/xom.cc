@@ -2950,7 +2950,7 @@ static int _xom_lose_stats(bool debug = false)
 
     god_speaks(GOD_XOM, _get_xom_speech("lose stats").c_str());
     const int loss = 1 + random2(max);
-    lose_stat(stat, loss, true, "the vengeance of Xom" );
+    lose_stat(stat, loss, true, "the vengeance of Xom");
 
     // Take a note.
     const char* sstr[3] = { "Str", "Int", "Dex" };

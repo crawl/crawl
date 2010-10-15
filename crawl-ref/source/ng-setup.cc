@@ -201,8 +201,8 @@ static void _jobs_stat_init(job_type which_job)
     // experience level 3.
     you.last_chosen = (stat_type) random2(NUM_STATS);
 
-    set_hp( hp, true );
-    set_mp( mp, true );
+    set_hp(hp, true);
+    set_mp(mp, true);
 }
 
 // Make sure no stats are unacceptably low
@@ -1371,7 +1371,7 @@ static void _give_basic_spells(job_type which_job)
     }
 
     if (which_spell != SPELL_NO_SPELL)
-        add_spell_to_memory( which_spell );
+        add_spell_to_memory(which_spell);
 
     return;
 }
@@ -1581,7 +1581,7 @@ static void _setup_generic(const newgame_def& ng)
 
     strlcpy(you.class_name, get_job_name(you.char_class), sizeof(you.class_name));
 
-    _species_stat_init( you.species );     // must be down here {dlb}
+    _species_stat_init(you.species);     // must be down here {dlb}
 
     you.is_undead = get_undead_state(you.species);
 
@@ -1589,8 +1589,8 @@ static void _setup_generic(const newgame_def& ng)
     // on species vision. Currently, all species see out to 8 squares.
     update_vision_range();
 
-    _jobs_stat_init( you.char_class );
-    _give_last_paycheck( you.char_class );
+    _jobs_stat_init(you.char_class);
+    _give_last_paycheck(you.char_class);
 
     unfocus_stats();
 
@@ -1657,8 +1657,8 @@ static void _setup_generic(const newgame_def& ng)
     calc_mp();
 
     // Make sure the starting player is fully charged up.
-    set_hp( you.hp_max, false );
-    set_mp( you.max_magic_points, false );
+    set_hp(you.hp_max, false);
+    set_mp(you.max_magic_points, false);
 
     // tmpfile purging removed in favour of marking
     Generated_Levels.clear();

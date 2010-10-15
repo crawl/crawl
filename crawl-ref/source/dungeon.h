@@ -47,7 +47,7 @@ const int MAKE_GOOD_ITEM = 351;
 const unsigned short INVALID_MAP_INDEX = 10000;
 
 // Should be the larger of GXM/GYM
-#define MAP_SIDE ( (GXM) > (GYM) ? (GXM) : (GYM) )
+#define MAP_SIDE ((GXM) > (GYM) ? (GXM) : (GYM))
 
 // Map mask constants.
 
@@ -349,8 +349,8 @@ bool dgn_ensure_vault_placed(bool vault_success,
 vault_placement *dgn_vault_at(coord_def gp);
 void dgn_seen_vault_at(coord_def gp);
 
-inline int count_feature_in_box( const coord_def& p1, const coord_def& p2,
-                          dungeon_feature_type feat )
+inline int count_feature_in_box(const coord_def& p1, const coord_def& p2,
+                          dungeon_feature_type feat)
 {
     return count_feature_in_box(p1.x, p1.y, p2.x, p2.y, feat);
 }
