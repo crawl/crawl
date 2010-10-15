@@ -606,6 +606,7 @@ NSUBST: X = 1:= / *:x
 :       fiery_guardians(_G)
 #       Loot: 8 items.
 :       volcano_setup(_G, false, true)
+COLOUR: = = red
 MAP
 xxxxxxxxx+xxxxxxxxx
 x...xxxx...xxxx...x
@@ -632,6 +633,7 @@ KMONS:  l = lava snake / lava fish w:20 / lava worm w:20 / nothing w:70
 KFEAT:  l = l
 #       Loot: 8 items.
 :       volcano_setup(_G, false, true)
+COLOUR: = = red
 MAP
 xxxxxxxxx.xxxxxxxxx
 xxx..xxxx.xcccccccc
@@ -657,6 +659,7 @@ NSUBST: Y = 1:= / *:x
 MONS:   clay golem w:50 / molten gargoyle w:2
 #       Loot: 8 items, 10 gold.
 :       volcano_setup(_G, false, true)
+COLOUR: = = red
 MAP
 xxxxxxxxx+xxxxxxxxx
 xx....xx...xx....xx
