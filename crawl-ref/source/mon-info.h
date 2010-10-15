@@ -69,6 +69,7 @@ struct monster_info_base
     std::string mname;
     monster_type type;
     monster_type base_type;
+    monster_type draco_type;
     unsigned number;
     unsigned colour;
     mon_attitude_type attitude;
@@ -175,7 +176,7 @@ struct monster_info : public monster_info_base
 
     monster_type draco_subspecies() const
     {
-        return (draco_subspecies());
+        return (draco_type);
     }
 
     mon_intel_type intel() const

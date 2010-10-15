@@ -143,6 +143,8 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     type = p_type;
     base_type = p_base_type;
 
+    draco_type = type;
+
     number = 0;
     colour = LIGHTGRAY;
 
@@ -220,6 +222,11 @@ monster_info::monster_info(const monster* m, int milev)
 
     if (type_known)
     {
+        if (mons_genus(type) == MONS_DRACONIAN)
+            draco_type = ::draco_subspecies(m);
+        else
+            draco_type = type;
+
         if (!mons_can_display_wounds(m)
             || !mons_class_can_display_wounds(type))
         {
