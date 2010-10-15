@@ -2541,6 +2541,13 @@ void mons_stop_fleeing_from_sanctuary(monster* mons)
 
 void mons_pacify(monster* mon, mon_attitude_type att)
 {
+    // If the _real_ (non-charmed) attitude is already that or better,
+    // don't degrade it.  This can happen, for example, with a high-power
+    // Crusade card or the Ring of Charms on Pikel's slaves who would then
+    // go down from friendly to good_neutral when you kill Pikel.
+    if (mon->attitude >= att)
+        return;
+
     // Make the monster permanently neutral.
     mon->attitude = att;
     mon->flags |= MF_WAS_NEUTRAL;
