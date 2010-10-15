@@ -328,7 +328,7 @@ void hints_starting_screen()
         "The hint mode will help you play Crawl without reading any "
         "documentation. If you haven't yet, you might want to try out "
         "the tutorial. Also, if you feel intrigued, there is more information "
-        "available in the following files from the docs/ folder (all of "
+        "available in the following files from the docs/ directory (all of "
         "which can also be read in-game):"
         "\n"
         "  <lightblue>quickstart.txt</lightblue>     - "
@@ -3405,7 +3405,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
         text << "\nAlternatively, you can dump all information pertaining to "
                 "your character into a text file with the <w>%</w> command. "
-                "You can then find said file in the <w>morgue/</w> folder (<w>"
+                "You can then find said file in the <w>morgue/</w> directory (<w>"
              << you.your_name << ".txt</w>) and read it at your leisure. Also, "
                 "such a file will automatically be created upon death (the "
                 "filename will then also contain the date) but that won't be "

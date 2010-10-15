@@ -88,7 +88,7 @@ A: If you've got trouble even reaching the Temple, you might want to try out the
 
 Also, there are easy playing combinations and more challenging ones (marked in dark grey on the selection screen). If you are new to Crawl, sticking to the easier ones is advisable. In general, treat each new monster you meet with utmost caution and keep an eye on your hit points and magic.
 
-For specific hints dealing with a particular character, you can press '#' in-game to create a "character dump" in your morgue folder that you can then post on e.g. the rec.games.roguelike.misc group or in the Something Awful forum, so other players can comment on your equipment, skills or spell selection.
+For specific hints dealing with a particular character, you can press '#' in-game to create a "character dump" in your morgue directory that you can then post on e.g. the rec.games.roguelike.misc group or in the Something Awful forum, so other players can comment on your equipment, skills or spell selection.
 
 Please try to trim your dump by removing stuff unnecessary for this task (such as the extensive Vanquished list). If you join the ##crawl channel of the freenode IRC, you will find helpful souls who will even watch you and give hints should you play on one of the public servers.
 %%%%
@@ -330,7 +330,7 @@ A: Please submit it as a new issue on our Mantis tracker: http://crawl.develz.or
 
 Keep in mind that without previous discussions, we may not be able to use the patch, or it might need heavy modification. In general, it is safer to first file your suggestions under Feature Requests and wait for people to become enthusiastic and give feedback before you submit a patch. If you want, you can also write a patch that implements an existing FR or fixes a bug.
 
-If you'd like to write a patch but don't know how to go about it, patch_guide.txt in the docs/develop/ folder is the file for you.
+If you'd like to write a patch but don't know how to go about it, patch_guide.txt in the docs/develop/ directory is the file for you.
 
 We really appreciate your help!
 %%%%
@@ -341,12 +341,12 @@ I cannot code, but I'd like to help improve the game. What can I do?
 A:help
 
 A: There are several areas where you can get creative and outside help is much appreciated. These are:
-* maps/vaults (see dat/ folder, docs/develop/levels/introduction.txt)
+* maps/vaults (see dat/ directory, docs/develop/levels/introduction.txt)
 * monster speech (see dat/database/, docs/develop/monster_speech.txt)
 * monster/item/spell descriptions (see dat/descript/)
 * tiles (see source/rltiles/, docs/develop/tiles_creation.txt)
 
-Also, if you'd like to write a patch but don't know how to go about it, read patch_guide.txt in the docs/develop/ folder.
+Also, if you'd like to write a patch but don't know how to go about it, read patch_guide.txt in the docs/develop/ directory.
 
 If you've got some cool addition, you can send it over the mailing list, or post it as a Mantis item. You can also help us by giving feedback on the most recent version or trunk (available via git, Windows binaries downloadable from http://crawl.develz.org/trunk/).
 
@@ -358,7 +358,7 @@ What did you change in the most recent version?
 %%%%
 A:changes
 
-A: The admittedly highly subjective highlights of the most recent major release are listed along with the version information under '?v'. For more details, check out changelog.txt in the docs/ folder.
+A: The admittedly highly subjective highlights of the most recent major release are listed along with the version information under '?v'. For more details, check out changelog.txt in the docs/ directory.
 %%%%
 ##############################################
 # Questions about the Tiles version
@@ -391,9 +391,9 @@ Is there a way for me to replace some of the tiles with different ones?
 %%%%
 A:tiles graphics
 
-A: It depends. If all you want are minor modifications such as colour changes, you can directly modify the *.png files in the dat/tiles/ folder.
+A: It depends. If all you want are minor modifications such as colour changes, you can directly modify the *.png files in the dat/tiles/ directory.
 
-Otherwise, you'll need to be able to compile the game. In this case you can either directly replace the tiles in the rltiles/ subfolders, or change their paths in the dc-xxxx.txt files. For the compilation to be successful, you may also need to delete or rename the *.png files in rltiles/. Upon compilation, the newly rolled *.png files are copied into the dat/tiles/ folder which is where the game accesses the tiles it needs. You can then share these files with other players, so they can use your tileset without having to compile the game.
+Otherwise, you'll need to be able to compile the game. In this case you can either directly replace the tiles in the rltiles/ subdirectories, or change their paths in the dc-xxxx.txt files. For the compilation to be successful, you may also need to delete or rename the *.png files in rltiles/. Upon compilation, the newly rolled *.png files are copied into the dat/tiles/ directory which is where the game accesses the tiles it needs. You can then share these files with other players, so they can use your tileset without having to compile the game.
 
 If you've created some nice new tiles or variations of existing ones you'd like to share, you might want to send them to one of the Tiles developers or submit them as a Mantis item: http://crawl.develz.org/mantis/
 

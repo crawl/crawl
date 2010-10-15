@@ -188,12 +188,12 @@ static std::string _get_version_changes(void)
     {
         result += "\n";
         result += "For a more complete list of changes, see changelog.txt "
-                  "in the docs/ folder.";
+                  "in the docs/ directory.";
     }
     else
     {
         result += "For a list of changes, see changelog.txt in the docs/ "
-                  "folder.";
+                  "directory.";
     }
 
     result += "\n\n";
