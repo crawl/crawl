@@ -525,7 +525,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             int source = !m ? you.mindex() :
                          mons_intel(m) >= I_NORMAL ? m->mindex() : -1;
 
-            noisy(12, this->pos, msg, source);
+            noisy(25, this->pos, msg, source);
         }
         break;
 
