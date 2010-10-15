@@ -2860,6 +2860,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case SCR_ENCHANT_WEAPON_II:
         case SCR_ENCHANT_WEAPON_III:
         case SCR_ENCHANT_ARMOUR:
+        case SCR_VORPALISE_WEAPON:
             return (you.species == SP_CAT);
         case SCR_DETECT_CURSE:
             return (you.religion == GOD_ASHENZARI);
