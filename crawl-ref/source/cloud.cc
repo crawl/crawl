@@ -699,10 +699,12 @@ int max_cloud_damage(cloud_type cl_type, int power)
 
         // Intentional fall through
     case CLOUD_COLD:
-        if (you.mutation[MUT_PASSIVE_FREEZE])
-            return (0);
         if (cl_type == CLOUD_COLD)
+        {
+            if (you.mutation[MUT_PASSIVE_FREEZE])
+                return (0);
             resist = player_res_cold();
+        }
 
         if (resist <= 0)
         {
