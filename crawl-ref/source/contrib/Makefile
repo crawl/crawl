@@ -21,7 +21,7 @@ $(SUBDIRS):
 	@if [ ! -x $@ ]; then \
 	    echo "**********************************************************"; \
 	    echo; \
-	    echo "The '$@' folder is missing. Have you run"; \
+	    echo "The '$@' directory is missing. Have you run"; \
 	    echo "   'git submodule update --init'?"; \
 	    echo; \
 	    echo "**********************************************************"; \
@@ -30,7 +30,7 @@ $(SUBDIRS):
 	@if [ ! -f $@/Makefile ] && [ ! -f $@/makefile ]; then \
 	    echo "**********************************************************"; \
 	    echo; \
-	    echo "The '$@' folder exists, but the Makefile is missing!"; \
+	    echo "The '$@' directory exists, but the Makefile is missing!"; \
 	    echo "Did 'git submodule update' work properly?"; \
 	    echo; \
 	    echo "**********************************************************"; \
