@@ -173,7 +173,10 @@ struct monster_info : public monster_info_base
     std::string wounds_description_sentence() const;
     std::string wounds_description(bool colour = false) const;
 
-    monster_type draco_subspecies() const;
+    monster_type draco_subspecies() const
+    {
+        return (draco_subspecies());
+    }
 
     mon_intel_type intel() const
     {
