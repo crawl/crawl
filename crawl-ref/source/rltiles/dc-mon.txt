@@ -382,7 +382,6 @@ molten_gargoyle MONS_MOLTEN_GARGOYLE
 ## Humans ('@')
 %sdir dc-mon/unique
 # Unique humans, in alphabetical order
-agnes MONS_AGNES
 donald MONS_DONALD
 edmund MONS_EDMUND
 erica MONS_ERICA
@@ -539,6 +538,7 @@ pikel MONS_PIKEL
 kobold MONS_KOBOLD
 big_kobold MONS_BIG_KOBOLD
 kobold_demonologist MONS_KOBOLD_DEMONOLOGIST
+nisse MONS_NISSE
 
 ## Liches ('L')
 %sdir dc-mon/unique
@@ -681,6 +681,7 @@ spriggan_rider MONS_SPRIGGAN_RIDER
 spriggan_druid MONS_SPRIGGAN_DRUID
 spriggan_defender MONS_SPRIGGAN_DEFENDER
 dc-mon/unique/enchantress MONS_THE_ENCHANTRESS
+dc-mon/unique/agnes MONS_AGNES
 
 ## Merfolk ('m')
 %sdir dc-mon/unique
