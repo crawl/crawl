@@ -1040,6 +1040,7 @@ mon_itemeat_type mons_itemeat(const monster* mon)
 
 int mons_class_colour(int mc)
 {
+    ASSERT(smc);
     return (monster_symbols[mc].colour);
 }
 
