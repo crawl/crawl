@@ -3617,7 +3617,11 @@ static void _print_save_version(char *name)
 {
     try
     {
-        package save((get_savedir_filename(name, "", "") + SAVE_SUFFIX).c_str(), false);
+        std::string filename = name;
+        // Check for the exact filename first, then go by char name.
+        if (!file_exists(filename))
+            filename = get_savedir_filename(filename, "", "") + SAVE_SUFFIX;
+        package save(filename.c_str(), false);
         reader charf(&save, "chr");
 
         int major, minor;
