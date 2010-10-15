@@ -49,12 +49,12 @@ public:
     dgn_event_type type;
     coord_def      place;
     int            elapsed_ticks;
-    long           arg1, arg2;
+    int            arg1, arg2;
     coord_def      dest;
 
 public:
     dgn_event(dgn_event_type t, const coord_def &p = coord_def(),
-              int ticks = you.time_taken, long a1 = 0, long a2 = 0,
+              int ticks = you.time_taken, int a1 = 0, int a2 = 0,
               const coord_def &d = coord_def())
         : type(t), place(p), elapsed_ticks(ticks), arg1(a1),
           arg2(a2), dest(d)

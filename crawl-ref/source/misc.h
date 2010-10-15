@@ -8,6 +8,7 @@
 #define MISC_H
 
 #include "externs.h"
+#include "mapmark.h"
 
 struct bolt;
 class dist;
@@ -76,6 +77,10 @@ bool there_are_monsters_nearby(bool dangerous_only = false,
 
 void timeout_tombs(int duration);
 
+int count_malign_gateways ();
+std::vector<map_malign_gateway_marker*> get_malign_gateways ();
+void timeout_malign_gateways(int duration);
+
 void setup_environment_effects();
 
 // Lava smokes, swamp water mists.
@@ -84,6 +89,8 @@ void run_environment_effects();
 int str_to_shoptype(const std::string &s);
 
 bool player_in_a_dangerous_place(bool *invis = NULL);
+void bring_to_safety();
+void revive();
 
 coord_def pick_adjacent_free_square(const coord_def& p);
 
@@ -107,4 +114,6 @@ bool is_dragonkind(const actor *act);
 void swap_with_monster(monster* mon_to_swap);
 
 void maybe_id_ring_TC();
+
+void entered_malign_portal(actor* act);
 #endif

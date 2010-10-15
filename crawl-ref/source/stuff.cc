@@ -11,6 +11,7 @@
 #include "areas.h"
 #include "beam.h"
 #include "cio.h"
+#include "colour.h"
 #include "coord.h"
 #include "coordit.h"
 #include "database.h"
@@ -24,7 +25,6 @@
 #include "misc.h"
 #include "mon-place.h"
 #include "terrain.h"
-#include "mgen_data.h"
 #include "state.h"
 #include "travel.h"
 #include "view.h"
@@ -182,8 +182,7 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
     if (fmenv == NULL)
         return (false);
 
-    if (fmenv->type == MONS_PLAYER_GHOST
-        || !fmenv->alive()
+    if (!fmenv->alive()
         || fmenv->speed_increment < 50
         || fmenv->incapacitated()
         || mons_is_stationary(fmenv))
@@ -365,6 +364,7 @@ void clear_globals_on_exit()
 {
     clear_rays_on_exit();
     clear_zap_info_on_exit();
+    clear_colours_on_exit();
     dgn_clear_vault_placements(env.level_vaults);
 }
 
@@ -678,7 +678,10 @@ void canned_msg(canned_message_type which_message)
         crawl_state.cancel_cmd_repeat();
         break;
     case MSG_EMPTY_HANDED:
-        mpr("You are now empty-handed.");
+        if (you.species == SP_CAT)
+            mpr("Your mouth is now empty.");
+        else
+            mpr("You are now empty-handed.");
         break;
     case MSG_YOU_BLINK:
         mpr("You blink.");

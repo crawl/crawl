@@ -156,7 +156,7 @@ static bool _check_moveto_trap(const coord_def& p, const std::string &move_verb)
     if (new_grid == DNGN_UNDISCOVERED_TRAP)
     {
         const int skill =
-            (4 + you.skills[SK_TRAPS_DOORS]
+            (4 + you.traps_skill()
              + player_mutation_level(MUT_ACUTE_VISION)
              - 2 * player_mutation_level(MUT_BLURRY_VISION));
 
@@ -250,8 +250,10 @@ static bool _check_moveto_dangerous(const coord_def& p,
     {
         return (true);
     }
-
-    canned_msg(MSG_UNTHINKING_ACT);
+    else if (you.species == SP_MERFOLK && feat_is_water(env.grid(p)))
+        mpr("You cannot swim in your current form.");
+    else
+        canned_msg(MSG_UNTHINKING_ACT);
     return (false);
 }
 
@@ -293,22 +295,28 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     {
         if (you.species == SP_MERFOLK)
         {
-            if (feat_is_water(new_grid) && !feat_is_water(old_feat))
+            if (feat_is_water(new_grid) // We're entering water
+                // We're not transformed, or with a form compatible with tail
+                && (you.attribute[ATTR_TRANSFORMATION] == TRAN_NONE
+                    || you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS))
             {
-                merfolk_start_swimming();
+                merfolk_start_swimming(stepped);
             }
-            else if (!feat_is_water(new_grid) && feat_is_water(old_feat)
-                     && !is_feat_dangerous(new_grid))
-            {
+            else if (!feat_is_water(new_grid) && !is_feat_dangerous(new_grid))
                 merfolk_stop_swimming();
-            }
         }
 
-        if (new_grid == DNGN_SHALLOW_WATER && !player_likes_water())
+        if (feat_is_water(new_grid) && !stepped)
         {
-            if (!stepped)
+            if (player_likes_water() && you.species != SP_GREY_DRACONIAN)
+                noisy(4, you.pos(), "Floosh!");
+            else
                 noisy(8, you.pos(), "Splash!");
+        }
 
+        if (new_grid == DNGN_SHALLOW_WATER
+            && (!player_likes_water() || you.species == SP_GREY_DRACONIAN))
+        {
             you.time_taken *= 13 + random2(8);
             you.time_taken /= 10;
 
@@ -318,8 +326,17 @@ void moveto_location_effects(dungeon_feature_type old_feat,
                      (stepped ? "enter" : "fall into"));
                 mpr("Moving in this stuff is going to be slow.");
                 if (you.invisible())
-                    mpr("... and don't expect to remain undetected.");
+                    mpr("...and don't expect to remain undetected.");
             }
+        }
+
+        if (new_grid == DNGN_DEEP_WATER && you.species == SP_GREY_DRACONIAN)
+        {
+            you.time_taken *= 13 + random2(8);
+            you.time_taken /= 10;
+
+            if (old_feat != DNGN_DEEP_WATER)
+                mpr("You sink to the bottom.");
         }
     }
 
@@ -462,6 +479,13 @@ bool is_player_same_species(const int mon, bool transform)
         }
     }
 
+    // Genus would include nisse.
+    if (you.species == SP_KOBOLD)
+    {
+        return (mons_species(mon) == MONS_KOBOLD
+                || mons_species(mon) == MONS_BIG_KOBOLD);
+    }
+
     // Genus would include necrophage and rotting hulk.
     if (you.species == SP_GHOUL)
         return (mons_species(mon) == MONS_GHOUL);
@@ -469,6 +493,10 @@ bool is_player_same_species(const int mon, bool transform)
     if (you.species == SP_MERFOLK && mons_genus(mon) == MONS_MERMAID)
         return (true);
 
+    // Note that these are currently considered to be the same species:
+    // * halflings and humans
+    // * dwarves and deep dwarves
+    // * all elf races
     return (mons_genus(mon) == mons_genus(player_mons(false)));
 }
 
@@ -479,97 +507,47 @@ void update_player_symbol()
 
 monster_type player_mons(bool transform)
 {
+    monster_type mons;
+
     if (transform)
     {
-        monster_type mons = transform_mons();
+        mons = transform_mons();
         if (mons != MONS_PLAYER)
-            return mons;
+            return (mons);
     }
 
-    switch (you.species)
+    mons = player_species_to_mons_species(you.species);
+
+    if (mons == MONS_ORC)
     {
-    case SP_HUMAN:
-        return MONS_HUMAN;
-    case SP_HIGH_ELF:
-    case SP_DEEP_ELF:
-    case SP_SLUDGE_ELF:
-        return MONS_ELF;
-    case SP_MOUNTAIN_DWARF:
-        return MONS_DWARF;
-    case SP_HALFLING:
-        return MONS_HALFLING;
-    case SP_HILL_ORC:
         if (you.religion == GOD_BEOGH)
-            return you.piety >= piety_breakpoint(4) ? MONS_ORC_HIGH_PRIEST
-                                                    : MONS_ORC_PRIEST;
-        return MONS_ORC;
-    case SP_KOBOLD:
-        return MONS_KOBOLD;
-    case SP_MUMMY:
-        return MONS_MUMMY;
-    case SP_NAGA:
-        return MONS_NAGA;
-    case SP_OGRE:
-        {
-            skill_type sk = best_skill(SK_FIGHTING, NUM_SKILLS - 1);
-            if (sk >= SK_SPELLCASTING && sk < SK_INVOCATIONS)
-                return MONS_OGRE_MAGE;
-        }
-        return MONS_OGRE;
-    case SP_TROLL:
-        return MONS_TROLL;
-    case SP_RED_DRACONIAN:
-        return MONS_RED_DRACONIAN;
-    case SP_WHITE_DRACONIAN:
-        return MONS_WHITE_DRACONIAN;
-    case SP_GREEN_DRACONIAN:
-        return MONS_GREEN_DRACONIAN;
-    case SP_YELLOW_DRACONIAN:
-        return MONS_YELLOW_DRACONIAN;
-    case SP_GREY_DRACONIAN:
-        return MONS_GREY_DRACONIAN;
-    case SP_BLACK_DRACONIAN:
-        return MONS_BLACK_DRACONIAN;
-    case SP_PURPLE_DRACONIAN:
-        return MONS_PURPLE_DRACONIAN;
-    case SP_MOTTLED_DRACONIAN:
-        return MONS_MOTTLED_DRACONIAN;
-    case SP_PALE_DRACONIAN:
-        return MONS_PALE_DRACONIAN;
-    case SP_BASE_DRACONIAN:
-        return MONS_DRACONIAN;
-    case SP_CENTAUR:
-        return MONS_CENTAUR;
-    case SP_DEMIGOD:
-        return MONS_DEMIGOD;
-    case SP_SPRIGGAN:
-        return MONS_SPRIGGAN;
-    case SP_MINOTAUR:
-        return MONS_MINOTAUR;
-    case SP_DEMONSPAWN:
-        return MONS_DEMONSPAWN;
-    case SP_GHOUL:
-        return MONS_GHOUL;
-    case SP_KENKU:
-        return MONS_KENKU;
-    case SP_MERFOLK:
-        return MONS_MERFOLK;
-    case SP_VAMPIRE:
-        return MONS_VAMPIRE;
-    case SP_DEEP_DWARF:
-        return MONS_DEEP_DWARF;
-    case SP_ELF:
-    case SP_HILL_DWARF:
-    case SP_OGRE_MAGE:
-    case SP_GREY_ELF:
-    case SP_GNOME:
-    case NUM_SPECIES:
-    case SP_UNKNOWN:
-    case SP_RANDOM:
-    case SP_VIABLE:
-        ASSERT(!"player of an invalid species");
+            mons = (you.piety >= piety_breakpoint(4)) ? MONS_ORC_HIGH_PRIEST
+                                                      : MONS_ORC_PRIEST;
     }
-    return MONS_PROGRAM_BUG;
+    else if (mons == MONS_OGRE)
+    {
+        const skill_type sk = best_skill(SK_FIGHTING, NUM_SKILLS - 1);
+        if (sk >= SK_SPELLCASTING && sk < SK_INVOCATIONS)
+            mons = MONS_OGRE_MAGE;
+    }
+
+    return (mons);
+}
+
+void update_vision_range()
+{
+    you.normal_vision = LOS_RADIUS;
+    you.current_vision = you.normal_vision;
+
+    // Nightstalker gives 0/-2/-4.
+    if (player_mutation_level(MUT_NIGHTSTALKER) > 1)
+        you.current_vision -= player_mutation_level(MUT_NIGHTSTALKER)*2 - 2;
+
+    // Lantern of shadows.
+    if (you.attribute[ATTR_SHADOWS])
+        you.current_vision -= 2;
+
+    set_los_radius(you.current_vision);
 }
 
 // Checks whether the player's current species can use
@@ -582,6 +560,9 @@ monster_type player_mons(bool transform)
 // ---------------------------------------------------
 bool you_can_wear(int eq, bool special_armour)
 {
+    if (you.species == SP_CAT)
+        return (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET);
+
     switch (eq)
     {
     case EQ_LEFT_RING:
@@ -661,8 +642,7 @@ bool you_can_wear(int eq, bool special_armour)
 
 bool player_has_feet()
 {
-    if (you.species == SP_NAGA
-        || (you.species == SP_MERFOLK && you.swimming()))
+    if (you.species == SP_NAGA || you.species == SP_CAT || you.fishtail)
     {
         return (false);
     }
@@ -737,7 +717,7 @@ bool you_tran_can_wear(int eq, bool check_mutation)
             return (false);
 
         if (eq == EQ_BOOTS
-            && (you.swimming() && you.species == SP_MERFOLK
+            && (you.fishtail
                 || player_mutation_level(MUT_HOOVES) >= 3
                 || player_mutation_level(MUT_TALONS) >= 3))
         {
@@ -1932,7 +1912,7 @@ int player_movement_speed(bool ignore_burden)
         mv = 5; // but allowed minimum is six
     else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_PIG)
         mv = 7;
-    else if (you.swimming() && you.species == SP_MERFOLK)
+    else if (you.fishtail)
         mv = 6;
 
     // armour
@@ -2031,7 +2011,7 @@ static int _player_armour_racial_bonus(const item_def& item)
     const unsigned long armour_race = get_equip_race(item);
 
     // get the armour race value that corresponds to the character's race:
-    const unsigned long racial_type
+    const iflags_t racial_type
                             = ((player_genus(GENPC_DWARVEN)) ? ISFLAG_DWARVEN :
                                (player_genus(GENPC_ELVEN))   ? ISFLAG_ELVEN :
                                (you.species == SP_HILL_ORC)  ? ISFLAG_ORCISH
@@ -2253,7 +2233,7 @@ int player_scale_evasion(const int prescaled_ev, const int scale)
     {
     case SP_MERFOLK:
         // Merfolk get an evasion bonus in water.
-        if (you.swimming())
+        if (you.fishtail)
         {
             const int ev_bonus =
                 std::min(9 * scale,
@@ -2352,11 +2332,11 @@ int player_body_armour_racial_spellcasting_bonus(const int scale)
     if (!body_armour)
         return (0);
 
-    const unsigned long armour_race = get_equip_race(*body_armour);
+    const iflags_t armour_race = get_equip_race(*body_armour);
 
     // Get the armour race value that corresponds to the character's
     // race:
-    const unsigned long player_race
+    const iflags_t player_race
                             = ((player_genus(GENPC_DWARVEN)) ? ISFLAG_DWARVEN :
                                (player_genus(GENPC_ELVEN))   ? ISFLAG_ELVEN :
                                (you.species == SP_HILL_ORC)  ? ISFLAG_ORCISH
@@ -2619,10 +2599,13 @@ void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
     if (crawl_state.game_is_sprint() && you.level_type == LEVEL_ABYSS)
         return;
 
+    if (you.religion == GOD_ASHENZARI && you.piety > piety_breakpoint(0))
+        exp_gained = div_rand_round(exp_gained * (8 + ash_bondage_level()), 8);
+
     if (player_equip_ego_type( EQ_BODY_ARMOUR, SPARM_ARCHMAGI ))
         exp_gained = div_rand_round( exp_gained, 4 );
 
-    const unsigned long old_exp   = you.experience;
+    const unsigned int  old_exp   = you.experience;
     const int           old_avail = you.exp_available;
 
     dprf("gain_exp: %d", exp_gained );
@@ -2668,10 +2651,12 @@ static void _draconian_scale_colour_message()
     case SP_RED_DRACONIAN:
         mpr("Your scales start taking on a fiery red colour.",
             MSGCH_INTRINSIC_GAIN);
+        perma_mutate(MUT_HEAT_RESISTANCE, 1);
         break;
     case SP_WHITE_DRACONIAN:
         mpr("Your scales start taking on an icy white colour.",
             MSGCH_INTRINSIC_GAIN);
+        perma_mutate(MUT_COLD_RESISTANCE, 1);
         break;
     case SP_GREEN_DRACONIAN:
         mpr("Your scales start taking on a green colour.",
@@ -2690,6 +2675,7 @@ static void _draconian_scale_colour_message()
     case SP_BLACK_DRACONIAN:
         mpr("Your scales start turning black.",
             MSGCH_INTRINSIC_GAIN);
+        perma_mutate(MUT_SHOCK_RESISTANCE, 1);
         break;
     case SP_PURPLE_DRACONIAN:
         mpr("Your scales start taking on a rich purple colour.",
@@ -2710,6 +2696,16 @@ static void _draconian_scale_colour_message()
     default:
         break;
     }
+}
+
+static void _felid_extra_life()
+{
+    if (you.lives + you.deaths < you.max_level/3 && you.lives < 2)
+    {
+        you.lives++;
+        mpr("Extra life!", MSGCH_INTRINSIC_GAIN);
+    }
+    // Should play the 1UP sound from SMB...
 }
 
 void level_change(bool skip_attribute_increase)
@@ -3000,59 +2996,42 @@ void level_change(bool skip_attribute_increase)
             case SP_WHITE_DRACONIAN:
             case SP_GREEN_DRACONIAN:
             case SP_YELLOW_DRACONIAN:
-            // Grey is handled later.
             case SP_BLACK_DRACONIAN:
             case SP_PURPLE_DRACONIAN:
             case SP_MOTTLED_DRACONIAN:
             case SP_PALE_DRACONIAN:
+            case SP_GREY_DRACONIAN:
+                if (!(you.experience_level % 3))
+                    hp_adjust++;
+
+                  if (!(you.experience_level % 3))
+                {
+                    mpr("Your scales feel tougher.", MSGCH_INTRINSIC_GAIN);
+                    you.redraw_armour_class = true;
+                }
+
+                if (!(you.experience_level % 4) && you.experience_level > 7)
+                {
+                    modify_stat(STAT_RANDOM, 1, false, "level gain");
+                }
+
                 if (you.experience_level == 14)
                 {
                     switch (you.species)
                     {
-                    case SP_RED_DRACONIAN:
-                        perma_mutate(MUT_HEAT_RESISTANCE, 1);
-                        break;
-                    case SP_WHITE_DRACONIAN:
-                        perma_mutate(MUT_COLD_RESISTANCE, 1);
-                        break;
-                    default:
-                        break;
+                        case SP_BLACK_DRACONIAN:
+                             perma_mutate(MUT_BIG_WINGS, 1);
+                             break;
+                        case SP_GREEN_DRACONIAN:
+                             perma_mutate(MUT_STINGER, 1);
+                             break;
+                        case SP_YELLOW_DRACONIAN:
+                             perma_mutate(MUT_ACIDIC_BITE, 1);
+                             break;
+                        default:
+                             break;
                     }
                 }
-                else if (you.species == SP_BLACK_DRACONIAN
-                         && you.experience_level == 18)
-                {
-                    perma_mutate(MUT_SHOCK_RESISTANCE, 1);
-                }
-                else if (you.species == SP_GREY_DRACONIAN
-                         && you.experience_level == 7)
-                {
-                    modify_stat(STAT_RANDOM, 1, false, "level gain");
-                }
-
-                if (!(you.experience_level % 3))
-                    hp_adjust++;
-
-                if (!(you.experience_level % 4) && you.experience_level > 7)
-                {
-                    mpr("Your scales feel tougher.", MSGCH_INTRINSIC_GAIN);
-                    you.redraw_armour_class = true;
-                    modify_stat(STAT_RANDOM, 1, false, "level gain");
-                }
-                break;
-
-            case SP_GREY_DRACONIAN:
-                if (!(you.experience_level % 3))
-                    hp_adjust+=2;
-
-                if (!(you.experience_level % 2))
-                {
-                    mpr("Your scales feel tougher.", MSGCH_INTRINSIC_GAIN);
-                    you.redraw_armour_class = true;
-                }
-
-                if (!(you.experience_level % 3)) // and levels 4, 7 while immature
-                    modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
 
             case SP_CENTAUR:
@@ -3221,6 +3200,27 @@ void level_change(bool skip_attribute_increase)
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
 
+            case SP_CAT:
+                hp_adjust--;
+                hp_adjust--;
+
+                if (you.experience_level % 2)
+                    mp_adjust++;
+
+                if (!(you.experience_level % 5))
+                {
+                    modify_stat((coinflip() ? STAT_INT
+                                            : STAT_DEX), 1, false,
+                                "level gain");
+                }
+
+                if (you.experience_level == 6 || you.experience_level == 12)
+                    perma_mutate(MUT_SHAGGY_FUR, 1);
+
+                _felid_extra_life();
+                break;
+
+
             default:
                 break;
             }
@@ -3258,6 +3258,15 @@ void level_change(bool skip_attribute_increase)
         learned_something_new(HINT_NEW_LEVEL);
     }
 
+    while (you.experience > exp_needed(you.max_level + 2))
+    {
+        ASSERT(you.experience_level == 27);
+        ASSERT(you.max_level < 127);
+        you.max_level++;
+        if (you.species == SP_CAT)
+            _felid_extra_life();
+    }
+
     redraw_skill(you.your_name, player_title());
 
     // Increase tutorial time-out now that it's actually become useful
@@ -3285,7 +3294,7 @@ int check_stealth(void)
 
     if (you.skills[SK_STEALTH])
     {
-        if (player_genus(GENPC_DRACONIAN))
+        if (player_genus(GENPC_DRACONIAN) && you.species != SP_GREY_DRACONIAN)
             stealth += (you.skills[SK_STEALTH] * 12);
         else
         {
@@ -3316,7 +3325,9 @@ int check_stealth(void)
             case SP_HALFLING:
             case SP_KOBOLD:
             case SP_SPRIGGAN:
+            case SP_GREY_DRACONIAN:
             case SP_NAGA:       // not small but very good at stealth
+            case SP_CAT:
                 stealth += (you.skills[SK_STEALTH] * 18);
                 break;
             default:
@@ -3372,11 +3383,13 @@ int check_stealth(void)
     else if (you.in_water())
     {
         // Merfolk can sneak up on monsters underwater -- bwr
-        if (you.species == SP_MERFOLK)
+        if (you.fishtail)
             stealth += 50;
         else if ( !you.can_swim() && !you.extra_balanced() )
             stealth /= 2;       // splashy-splashy
     }
+    else if (you.species == SP_CAT && !you.attribute[ATTR_TRANSFORMATION])
+        stealth += 20;  // paws
 
     // Radiating silence is the negative complement of shouting all the
     // time... a sudden change from background noise to no noise is going
@@ -3670,6 +3683,7 @@ void display_char_status()
         DUR_DIVINE_VIGOUR, DUR_DIVINE_STAMINA, DUR_BERSERKER,
         STATUS_AIRBORNE, STATUS_NET, DUR_POISONING, STATUS_SICK,
         STATUS_ROT, STATUS_GLOW, DUR_CONFUSING_TOUCH, DUR_SURE_BLADE,
+        DUR_AFRAID, DUR_MIRROR_DAMAGE, DUR_SCRYING,
     };
 
     status_info inf;
@@ -3701,9 +3715,14 @@ bool player_item_conserve(bool calc_unid)
 
 int player_mental_clarity(bool calc_unid, bool items)
 {
-    const int ret = (3 * player_equip(EQ_AMULET, AMU_CLARITY, calc_unid)
-                       * items)
-                     + player_mutation_level(MUT_CLARITY);
+    int ret = 3 * player_equip(EQ_AMULET, AMU_CLARITY, calc_unid) * items
+              + player_mutation_level(MUT_CLARITY);
+
+    if (you.religion == GOD_ASHENZARI && you.piety >= piety_breakpoint(4)
+        && !player_under_penance())
+    {
+        ret++;
+    }
 
     return ((ret > 3) ? 3 : ret);
 }
@@ -3780,6 +3799,7 @@ static int _species_exp_mod(species_type species)
         case SP_CENTAUR:
         case SP_MINOTAUR:
         case SP_MUMMY:
+        case SP_CAT:
             return 14;
         case SP_HIGH_ELF:
         case SP_VAMPIRE:
@@ -3797,7 +3817,7 @@ unsigned int exp_needed(int lev)
 {
     lev--;
 
-    unsigned long level = 0;
+    unsigned int level = 0;
 
     // Basic plan:
     // Section 1: levels  1- 5, second derivative goes 10-10-20-30.
@@ -4268,7 +4288,8 @@ int get_real_hp(bool trans, bool rotted)
     int hitp;
 
     hitp  = (you.base_hp - 5000) + (you.base_hp2 - 5000);
-    hitp += (you.experience_level * you.skills[SK_FIGHTING]) / 5;
+    hitp += (you.experience_level * you.skills[SK_FIGHTING]) /
+            (you.species == SP_CAT ? 7 : 5);
 
     // Being berserk makes you resistant to damage. I don't know why.
     if (trans && you.berserk())
@@ -4438,7 +4459,7 @@ void contaminate_player(int change, bool controlled, bool msg)
     if (you.religion == GOD_ZIN)
     {
         // Whenever the glow status is first reached, give a warning message.
-        if (old_level < 1 && new_level >= 1)
+        if (old_level < 1 && new_level == 1)
             did_god_conduct(DID_CAUSE_GLOWING, 0, false);
         // If the player actively did something to increase glowing,
         // Zin is displeased.
@@ -4876,7 +4897,13 @@ void levitate_player(int pow)
          "You feel %s buoyant.", standing ? "very" : "more");
 
     if (standing)
-        mpr("You gently float upwards from the floor.");
+        if (you.fishtail)
+        {
+            mpr("Your tail turns into legs as you levitate out of the water.");
+            merfolk_stop_swimming();
+        }
+        else
+            mpr("You gently float upwards from the floor.");
 
     // Amulet of Controlled Flight can auto-ID.
     if (!you.duration[DUR_LEVITATION]
@@ -4895,24 +4922,19 @@ void levitate_player(int pow)
 
     you.increase_duration(DUR_LEVITATION, 25 + random2(pow), 100);
 
-    // Merfolk boots unmeld if levitation takes us out of water.
-    if (standing && you.species == SP_MERFOLK
-        && feat_is_water(grd(you.pos())))
-    {
-        unmeld_one_equip(EQ_BOOTS);
-    }
-
     burden_change();
 }
 
 int count_worn_ego(int which_ego)
 {
     int result = 0;
-    for (int eq = EQ_MIN_ARMOUR; eq <= EQ_MAX_ARMOUR; ++eq)
+    for (int slot = EQ_MIN_ARMOUR; slot <= EQ_MAX_ARMOUR; ++slot)
     {
-        const item_def* item = you.slot_item(static_cast<equipment_type>(eq));
-        if (item && get_armour_ego_type(*item) == which_ego)
+        if (you.equip[slot] != -1
+            && get_armour_ego_type(you.inv[you.equip[slot]]) == which_ego)
+        {
             result++;
+        }
     }
 
     return (result);
@@ -5019,6 +5041,7 @@ void player::init()
     opened_zot      = false;
     royal_jelly_dead = false;
     transform_uncancellable = false;
+    fishtail = false;
 
     pet_target      = MHITNOT;
 
@@ -5037,8 +5060,11 @@ void player::init()
     friendly_pickup = 0;
 #if defined(WIZARD) || defined(DEBUG)
     never_die = false;
-    xray_vision = false;
 #endif
+    dead = false;
+    lives = 0;
+    deaths = 0;
+    xray_vision = false;
 
     skills.init(0);
     practise_skill.init(true);
@@ -5078,7 +5104,8 @@ void player::init()
     gift_timeout     = 0;
     penance.init(0);
     worshipped.init(0);
-    num_gifts.init(0);
+    num_current_gifts.init(0);
+    num_total_gifts.init(0);
 
     mutation.init(0);
     innate_mutations.init(0);
@@ -5099,6 +5126,7 @@ void player::init()
 
     real_time        = 0;
     num_turns        = 0;
+    exploration      = 0;
 
     last_view_update = 0;
 
@@ -5119,6 +5147,7 @@ void player::init()
     props.clear();
 
     beholders.clear();
+    fearmongers.clear();
     dactions.clear();
 
 
@@ -5266,20 +5295,20 @@ bool player::can_swim(bool permanently) const
 {
     // Transforming could be fatal if it would cause unequipment of
     // stat-boosting boots or heavy armour.
-    return (species == SP_MERFOLK
-            || (!permanently
-                && you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST));
+    return ((species == SP_MERFOLK || species == SP_GREY_DRACONIAN)
+             || (!permanently && transform_can_swim()));
 }
 
 int player::visible_igrd(const coord_def &where) const
 {
     if (grd(where) == DNGN_LAVA
-        || (grd(where) == DNGN_DEEP_WATER && species != SP_MERFOLK))
+        || (grd(where) == DNGN_DEEP_WATER
+            && species != SP_MERFOLK && species != SP_GREY_DRACONIAN))
     {
         return (NON_ITEM);
     }
 
-    return igrd(where);
+    return (igrd(where));
 }
 
 bool player::has_spell(spell_type spell) const
@@ -5318,7 +5347,10 @@ std::string player::shout_verb() const
         return "squeak";
     case TRAN_PIG:
         return "squeal";
-    default: // depends on SCREAM mutation
+    default:
+        if (you.species == SP_CAT)
+            return coinflip() ? "meow" : "yowl";
+        // depends on SCREAM mutation
         int level = player_mutation_level(MUT_SCREAM);
         if (level <= 1)
             return "shout";
@@ -5421,6 +5453,17 @@ int player::skill(skill_type sk, bool bump) const
     return (bump? skill_bump(sk) : skills[sk]);
 }
 
+// only for purposes of detection, not disarming
+int player::traps_skill() const
+{
+    int val = skills[SK_TRAPS_DOORS];
+
+    if (you.religion == GOD_ASHENZARI && !player_under_penance())
+        val += you.piety / 15;
+
+    return val;
+}
+
 int player_icemail_armour_class()
 {
     if (!you.mutation[MUT_ICEMAIL])
@@ -5495,12 +5538,7 @@ int player::armour_class() const
         //jmf: only give:
         if (player_genus(GENPC_DRACONIAN))
         {
-            if (experience_level < 8)
-                AC += 200;
-            else if (species == SP_GREY_DRACONIAN)
-                AC += 100 + 100 * (experience_level - 4) / 2;  // max 12
-            else
-                AC += 100 + (100 * experience_level / 4);      // max 7
+           AC += 300 + 100 * (you.experience_level / 3);  // max 12
         }
         else
         {
@@ -5645,6 +5683,11 @@ bool player::is_chaotic() const
     return (false);
 }
 
+bool player::is_artificial() const
+{
+    return (false);
+}
+
 // This is a stub. Makes checking for silver damage a little cleaner.
 bool player::is_insubstantial() const
 {
@@ -5705,14 +5748,14 @@ int player::res_elec() const
 
 int player::res_water_drowning() const
 {
-    return (res_asphyx() ||
-            (you.species == SP_MERFOLK && !transform_changed_physiology()));
+    return (res_asphyx()
+            || (you.species == SP_MERFOLK && !transform_changed_physiology()));
 }
 
 int player::res_asphyx() const
 {
     // The undead are immune to asphyxiation, or so we'll assume.
-    if (is_undead)
+    if (is_undead || you.species == SP_GREY_DRACONIAN)
         return 1;
 
     switch (attribute[ATTR_TRANSFORMATION])
@@ -5795,6 +5838,7 @@ int player::res_magic() const
         break;
     case SP_PURPLE_DRACONIAN:
     case SP_DEEP_DWARF:
+    case SP_CAT:
         rm = experience_level * 6;
         break;
     case SP_SPRIGGAN:
@@ -6085,6 +6129,9 @@ int player::has_claws(bool allow_tran) const
         }
     }
 
+    if (int c = species_has_claws(you.species))
+        return (c);
+
     return (player_mutation_level(MUT_CLAWS));
 }
 
@@ -6103,7 +6150,7 @@ int player::has_talons(bool allow_tran) const
     }
 
     // XXX: Do merfolk in water belong under allow_tran?
-    if (you.species == SP_MERFOLK && you.swimming())
+    if (you.fishtail)
         return (0);
 
     return (player_mutation_level(MUT_TALONS));
@@ -6160,13 +6207,9 @@ int player::has_tail(bool allow_tran) const
         }
     }
 
-
-    if (you.species == SP_GREY_DRACONIAN)
-        return (2);
-
     // XXX: Do merfolk in water belong under allow_tran?
     if (player_genus(GENPC_DRACONIAN)
-        || you.species == SP_MERFOLK && you.swimming()
+        || you.fishtail
         || player_mutation_level(MUT_STINGER))
     {
         return (1);
@@ -6276,6 +6319,12 @@ bool player::can_see_invisible(bool calc_unid, bool transient) const
     if (artefacts > 0)
         si += artefacts;
 
+    if (you.religion == GOD_ASHENZARI && you.piety >= piety_breakpoint(2)
+        && !player_under_penance())
+    {
+        si++;
+    }
+
     if (si > 1)
         si = 1;
 
@@ -6285,6 +6334,11 @@ bool player::can_see_invisible(bool calc_unid, bool transient) const
 bool player::can_see_invisible() const
 {
     return (can_see_invisible(true));
+}
+
+bool player::are_charming() const
+{
+    return player_equip(EQ_RINGS, RING_CHARM, true);
 }
 
 bool player::invisible() const
@@ -6325,12 +6379,17 @@ bool player::backlit(bool check_haloed, bool self_halo) const
     return (false);
 }
 
+bool player::glows_naturally() const
+{
+    return (false);
+}
+
 // This is the imperative version.
 void player::backlight()
 {
     if (!duration[DUR_INVIS])
     {
-        if (duration[DUR_CORONA])
+        if (duration[DUR_CORONA] || you.glows_naturally())
             mpr("You glow brighter.");
         else
             mpr("You are outlined in light.");

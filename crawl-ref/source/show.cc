@@ -109,6 +109,21 @@ static void _update_feat_at(const coord_def &gp)
 {
     dungeon_feature_type feat = grid_appearance(gp);
     unsigned colour = env.grid_colours(gp);
+
+    bool mimic = false;
+
+    // Check for mimics
+    if (monster_at(gp))
+    {
+        const monster* mmimic = monster_at(gp);
+        if (mons_is_feat_mimic(mmimic->type))
+        {
+            feat = get_mimic_feat(mmimic);
+            colour = mmimic->colour;
+            mimic = true;
+        }
+    }
+
     env.map_knowledge(gp).set_feature(feat, colour);
 
     if (haloed(gp))
@@ -126,6 +141,9 @@ static void _update_feat_at(const coord_def &gp)
     }
 
     if (you.get_beholder(gp))
+        env.map_knowledge(gp).flags |= MAP_WITHHELD;
+
+    if (you.get_fearmonger(gp))
         env.map_knowledge(gp).flags |= MAP_WITHHELD;
 
     if (feat >= DNGN_STONE_STAIRS_DOWN_I
@@ -152,7 +170,7 @@ static void _update_feat_at(const coord_def &gp)
     // Tell the world first.
     dungeon_events.fire_position_event(DET_PLAYER_IN_LOS, gp);
 
-    if (is_notable_terrain(feat))
+    if (is_notable_terrain(feat) && !mimic)
         seen_notable_thing(feat, gp);
 
     dgn_seen_vault_at(gp);
@@ -187,7 +205,7 @@ static void _update_item_at(const coord_def &gp)
     bool more_items = false;
     // Check for mimics.
     const monster* m = monster_at(gp);
-    if (m && mons_is_unknown_mimic(m))
+    if (m && mons_is_unknown_mimic(m) && mons_is_item_mimic(m->type))
         eitem = &get_mimic_item(m);
     else if (you.visible_igrd(gp) != NON_ITEM)
         eitem = &mitm[you.visible_igrd(gp)];
@@ -332,4 +350,3 @@ void show_update_emphasis()
        if (stairs[i].destination.is_valid())
            env.map_knowledge(stairs[i].position).flags &= ~MAP_EMPHASIZE;
 }
-

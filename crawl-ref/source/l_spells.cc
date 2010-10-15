@@ -21,4 +21,3 @@ const struct luaL_reg spells_dlib[] =
 { "toxic_radiance", _toxic_radiance },
 { NULL, NULL }
 };
-

@@ -108,4 +108,3 @@ cleanup ()
             /^AppHdr.h /d;
             / artefact.cc/d'
 }
-

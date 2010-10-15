@@ -30,6 +30,7 @@ enum object_selector
     OSEL_WORN_ARMOUR = -12,
     OSEL_FRUIT       = -13,
     OSEL_PONDER_ARM  = -14,
+    OSEL_CURSED_WORN = -15,
 };
 
 #define PROMPT_ABORT         -1

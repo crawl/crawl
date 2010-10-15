@@ -52,6 +52,7 @@ void handle_god_time(void);
 int god_colour(god_type god);
 uint8_t god_message_altar_colour(god_type god);
 bool player_can_join_god(god_type which_god);
+bool transformed_player_can_join_god(god_type which_god);
 void god_pitch(god_type which_god);
 int piety_rank(int piety = -1);
 int piety_scale(int piety_change);
@@ -79,7 +80,7 @@ bool tso_unchivalric_attack_safe_monster(const monster* mon);
 void mons_make_god_gift(monster* mon, god_type god = you.religion);
 bool mons_is_god_gift(const monster* mon, god_type god = you.religion);
 
-int yred_random_servants(int threshold, bool force_hostile = false);
+int yred_random_servants(unsigned int threshold, bool force_hostile = false);
 bool is_undead_slave(const monster* mon);
 bool is_yred_undead_slave(const monster* mon);
 bool is_orcish_follower(const monster* mon);
@@ -112,5 +113,5 @@ std::vector<god_type> temple_god_list();
 std::vector<god_type> nontemple_god_list();
 
 extern const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES];
-std::string adjust_abil_message(const char *pmsg);
+std::string adjust_abil_message(const char *pmsg, bool allow_upgrades = true);
 #endif

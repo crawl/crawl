@@ -219,6 +219,7 @@ public:
     virtual bool is_unholy() const = 0;
     virtual bool is_evil() const = 0;
     virtual bool is_chaotic() const = 0;
+    virtual bool is_artificial() const = 0;
     virtual bool is_insubstantial() const = 0;
     virtual int res_acid() const = 0;
     virtual int res_fire() const = 0;
@@ -260,6 +261,7 @@ public:
     virtual int halo_radius2() const = 0;
     // Squared silence radius.
     virtual int silence_radius2() const = 0;
+    virtual bool glows_naturally() const = 0;
 
     virtual bool petrified() const = 0;
 

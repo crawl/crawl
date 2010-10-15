@@ -38,4 +38,3 @@ void fill_status_info(int status, status_info* info);
 void init_duration_index();
 
 #endif
-

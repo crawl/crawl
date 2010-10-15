@@ -264,7 +264,7 @@ ENCHANT:@The_monster@ becomes larger for a moment.
 
 VISUAL SPELL:@The_monster@'s eyes start to glow.
 
-VISUAL SPELL:@The_monster@ tries to paralyze @foe@ with @possessive@ gaze.
+VISUAL SPELL:@The_monster@ tries to paralyse @foe@ with @possessive@ gaze.
 
 @The_monster@ shouts @at_foe@, "You can't withstand my power!"
 
@@ -759,11 +759,11 @@ VISUAL:@The_monster@ smiles happily.
 %%%%
 _friendly_humanoid_rare_
 
-@The_monster@ says, "Never gonna give you up."
+@The_monster@ says, "I will never give you up."
 
-@The_monster@ says, "Never gonna let you down."
+@The_monster@ says, "I will never let you down."
 
-@The_monster@ says, "Never gonna run around and desert you."
+@The_monster@ says, "I will never run around and desert you."
 
 VISUAL:@The_monster@ looks friendly.
 ## END friendly humanoid ##
@@ -1036,7 +1036,7 @@ Crossbows player ghost
 
 @_generic_ranged_@
 
-@The_monster@ @_reload_adj_@ reloads its weapon.
+@The_monster@ @_reloads_adj_@ its weapon.
 
 %%%%
 Throwing player ghost
@@ -1310,11 +1310,11 @@ _generic_ranged_
 You feel something passing dangerously close to your head. @player_only@
 
 %%%%
-_reload_adj_
+_reloads_adj_
 
-struggles to
+struggles to reload
 
-effortlessly
+effortlessly reloads
 
 %%%%
 _misc_item_
@@ -2568,11 +2568,11 @@ w:50
 
 @The_monster@ says, "I wanna be an adventurer, not a preacher!"
 
-@The_monster@ says, "What does he need our gold for, anyway?"
+@The_monster@ says, "What does Zin need our gold for, anyway?"
 
-@The_monster@ says, "Something seems a little bit odd about a God who wants you to pay him."
+@The_monster@ says, "Something seems a little bit odd about a God who wants to be paid."
 
-@The_monster@ says, "Most gods give you gifts. Zin asks you to give him gifts. I hate that."
+@The_monster@ says, "Most gods give gifts. Zin asks you to give gifts. I hate that."
 
 @The_monster@ says, "That's really confusing. What's the point of divine satiation if you're not allowed to eat?"
 
@@ -2755,7 +2755,7 @@ w:50
 
 @The_monster@ says, "I heard Trog has abandonment issues."
 
-@The_monster@ says, "I bet his next axe will take you to the Abyss."
+@The_monster@ says, "I bet Trog's next axe will take you to the Abyss."
 
 @The_monster@ says, "I considered Trog, but the aftereffects of berserk scare me."
 
@@ -2859,7 +2859,7 @@ w:50
 
 @The_monster@ says, "What is divine providence, anyway? I hate that."
 
-@The_monster@ says, "You'd better watch out. The one of the left looks like he gets lost easily."
+@The_monster@ says, "You'd better watch out. The one on the left looks like he gets lost easily."
 
 @The_monster@ says, "You think you're the Messiah? I met another guy who thought that, too."
 
@@ -3080,7 +3080,7 @@ VISUAL:@The_monster@ shakes his head.
 @The_monster@ says, "That guy with the scythe is really mean."
 
 w:1
-@The_monster@ says, "Why kind of a name is Fauntleroy?"
+@The_monster@ says, "What kind of a name is Fauntleroy?"
 
 w:1
 @The_monster@ says, "What's the big idea?!"
@@ -6050,6 +6050,28 @@ beogh_converted_orc_reaction_battle_follower
 beogh_converted_orc_reaction_speech_follower
 
 @beogh_converted_orc_reaction_speech@
+%%%%
+##################################
+# ring of charms conversion speech
+##################################
+# on sight
+charm_converted_reaction_sight
+
+@The_monster@ stares at you in amazement and grins.
+
+@The_monster@ relaxes @possessive@ fighting stance and waves to you.
+
+@The_monster@ holds @possessive@ arms out to greet you.
+%%%%
+charm_converted_speech_sight
+
+@Pronoun@ shouts, "I'll follow you gladly!"
+
+@Pronoun@ shouts, "Hello, friend!"
+
+@Pronoun@ asks, "Tell me more about your plans... let's go there together!"
+
+@Pronoun@ says, "I'm so glad you are here now!"
 %%%%
 #################################
 # Monsters who worship Zin

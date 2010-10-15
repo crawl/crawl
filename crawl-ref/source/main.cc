@@ -562,6 +562,9 @@ static void _god_greeting_message(bool game_start)
     case GOD_CHEIBRIADOS:
         simple_god_message(" says: Take it easy.");
         break;
+    case GOD_ASHENZARI:
+        simple_god_message(" says: Partake of my vision. Partake of my curse.");
+        break;
 
     case GOD_NO_GOD:
     case NUM_GODS:
@@ -692,6 +695,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'o': wizard_create_spec_object();           break;
     case '%': wizard_create_spec_object_by_name();   break;
     case 'J': jiyva_eat_offlevel_items();            break;
+    case 'W': wizard_god_wrath();                    break;
 
     case 'x':
         you.experience = 1 + exp_needed(2 + you.experience_level);
@@ -700,6 +704,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
 
     case 's':
         you.exp_available = FULL_EXP_POOL;
+        level_change();
         you.redraw_experience = true;
         break;
 
@@ -1101,6 +1106,23 @@ static void _update_place_info()
     curr_PlaceInfo.assert_validity();
 }
 
+static void _update_diag_counters()
+{
+    diag_counter_t act = DC_OTHER;
+
+    if (you.walking == 1)
+        act = DC_WALK_ORTHO;
+    else if (you.walking == 2)
+        act = DC_WALK_DIAG;
+    else if (!apply_berserk_penalty) // a fancy name for "attacking"
+        act = DC_FIGHT;
+
+    bool ae = (you.running == RMODE_EXPLORE)
+              || (you.running == RMODE_EXPLORE_GREEDY);
+    you.dcounters[0][ae][act]++;
+    you.dcounters[1][ae][act]+=you.time_taken;
+}
+
 //
 //  This function handles the player's input. It's called from main(),
 //  from inside an endless loop.
@@ -1118,12 +1140,20 @@ static void _input()
     religion_turn_start();
     god_conduct_turn_start();
     you.update_beholders();
+    you.update_fearmongers();
     you.walking = 0;
 
     // Currently only set if Xom accidentally kills the player.
     you.reset_escaped_death();
 
     reset_damage_counters();
+
+    if (you.dead)
+    {
+        revive();
+        bring_to_safety();
+        redraw_screen();
+    }
 
     if (crawl_state.is_replaying_keys() && crawl_state.is_repeating_cmd()
         && kbhit())
@@ -1299,6 +1329,11 @@ static bool _prompt_dangerous_portal(dungeon_feature_type ftype)
     case DNGN_ENTER_ABYSS:
         return yesno("If you enter this portal you will not be able to return "
                      "immediately. Continue?", false, 'n');
+
+    case DNGN_TEMP_PORTAL:
+        return yesno("Are you sure you wish to approach this portal? There's no "
+                     "telling what its forces would wreak upon your fragile "
+                     "self.", false, 'n');
 
     default:
         return (true);
@@ -1543,6 +1578,12 @@ static void _do_look_around()
 
 static void _do_remove_armour()
 {
+    if (you.species == SP_CAT)
+    {
+        mpr("You can't remove your fur, sorry.");
+        return;
+    }
+
     if (!player_can_handle_equipment())
     {
         mpr("You can't wear or remove anything in your present form.");
@@ -2301,6 +2342,8 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_MISLED, delay, "Your thoughts are your own once more.");
     _decrement_a_duration(DUR_QUAD_DAMAGE, delay, NULL, 0,
                           "Quad Damage is wearing off.");
+    _decrement_a_duration(DUR_MIRROR_DAMAGE, delay,
+                          "Your dark mirror aura disappears.");
 
     if (you.duration[DUR_PARALYSIS] || you.petrified())
     {
@@ -2326,6 +2369,13 @@ static void _decrement_durations()
                               0, NULL, MSGCH_RECOVERY))
     {
         you.clear_beholders();
+    }
+
+    if (_decrement_a_duration(DUR_AFRAID, delay,
+                              "Your fear fades away.",
+                              0, NULL, MSGCH_RECOVERY))
+    {
+        you.clear_fearmongers();
     }
 
     dec_slow_player(delay);
@@ -2566,6 +2616,14 @@ static void _decrement_durations()
 
     _decrement_a_duration(DUR_REPEL_STAIRS_MOVE, 1);
     _decrement_a_duration(DUR_REPEL_STAIRS_CLIMB, 1);
+
+    _decrement_a_duration(DUR_COLOUR_SMOKE_TRAIL, 1);
+
+    if (_decrement_a_duration(DUR_SCRYING, delay,
+                              "Your astral sight fades away."))
+    {
+        you.xray_vision = false;
+    }
 }
 
 static void _check_banished()
@@ -2699,7 +2757,7 @@ static void _update_mold()
 static void _player_reacts()
 {
     if (!you.cannot_act() && !player_mutation_level(MUT_BLURRY_VISION)
-        && x_chance_in_y(you.skills[SK_TRAPS_DOORS], 50))
+        && x_chance_in_y(you.traps_skill(), 50))
     {
         search_around(false); // Check nonadjacent squares too.
     }
@@ -2771,8 +2829,12 @@ static void _player_reacts_to_monsters()
     if (you.duration[DUR_FIRE_SHIELD] > 0)
         manage_fire_shield(you.time_taken);
 
-    if (player_mutation_level(MUT_ANTENNAE))
+    // penance checked there (as you can have antennae too)
+    if (player_mutation_level(MUT_ANTENNAE) || you.religion == GOD_ASHENZARI)
         check_antennae_detect();
+
+    if (you.religion == GOD_ASHENZARI && !player_under_penance())
+        detect_items(-1);
 
     handle_starvation();
 }
@@ -3789,6 +3851,11 @@ static void _move_player(coord_def move)
     if (!you.confused())
         beholder = you.get_beholder(targ);
 
+    // You cannot move closer to a fear monger.
+    monster *fmonger = NULL;
+    if (!you.confused())
+        fmonger = you.get_fearmonger(targ);
+
     if (you.running.check_stop_running())
     {
         // [ds] Do we need this? Shouldn't it be false to start with?
@@ -3800,7 +3867,7 @@ static void _move_player(coord_def move)
 
     if (targ_monst && !targ_monst->submerged())
     {
-        if (can_swap_places && !beholder)
+        if (can_swap_places && !beholder && !fmonger)
         {
             if (swap_check(targ_monst, mon_swap_dest))
                 swap = true;
@@ -3826,7 +3893,7 @@ static void _move_player(coord_def move)
         }
     }
 
-    if (!attacking && targ_pass && moving && !beholder)
+    if (!attacking && targ_pass && moving && !beholder && !fmonger)
     {
         if (!you.confused() && !check_moveto(targ))
         {
@@ -3837,6 +3904,11 @@ static void _move_player(coord_def move)
 
         if (swap)
             swap_places(targ_monst, mon_swap_dest);
+        else if (you.duration[DUR_COLOUR_SMOKE_TRAIL])
+        {
+            check_place_cloud(CLOUD_MAGIC_TRAIL, you.pos(),
+                random_range(3, 10), KC_OTHER, 0, ETC_RANDOM);
+        }
 
         you.time_taken *= player_movement_speed();
         you.time_taken /= 10;
@@ -3856,6 +3928,18 @@ static void _move_player(coord_def move)
         _open_door(move.x, move.y, false);
         you.prev_move = move;
     }
+    if (!targ_pass && grd(targ) == DNGN_TEMP_PORTAL && !attacking)
+    {
+        if (!_prompt_dangerous_portal(grd(targ)))
+            return;
+
+        you.prev_move = move;
+        move.reset();
+        you.turn_is_over = true;
+
+        entered_malign_portal(&you);
+        return;
+    }
     else if (!targ_pass && !attacking)
     {
         if (grd(targ) == DNGN_OPEN_SEA)
@@ -3874,6 +3958,12 @@ static void _move_player(coord_def move)
     {
         mprf("You cannot move away from %s!",
             beholder->name(DESC_NOCAP_THE, true).c_str());
+        return;
+    }
+    else if (fmonger && !attacking)
+    {
+        mprf("You cannot move closer to %s!",
+            fmonger->name(DESC_NOCAP_THE, true).c_str());
         return;
     }
 
@@ -3914,6 +4004,7 @@ static void _move_player(coord_def move)
     {
         did_god_conduct(DID_HASTY, 1, true);
     }
+    _update_diag_counters();
 }
 
 
@@ -4167,9 +4258,11 @@ static void _compile_time_asserts()
     COMPILE_CHECK(SK_UNARMED_COMBAT == 17       , c1);
     COMPILE_CHECK(SK_EVOCATIONS == 38           , c2);
     COMPILE_CHECK(SP_VAMPIRE == 30              , c3);
-    COMPILE_CHECK(SPELL_DEBUGGING_RAY == 102    , c4);
-    COMPILE_CHECK(SPELL_PETRIFY == 154          , c5);
-    COMPILE_CHECK(NUM_SPELLS == 215             , c6);
+#if TAG_MAJOR_VERSION == 31
+    COMPILE_CHECK(NUM_SPELLS == 225             , c6);
+#else
+    COMPILE_CHECK(NUM_SPELLS == 224             , c6);
+#endif
 
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
     COMPILE_CHECK(NUM_SPECIES < SP_UNKNOWN      , c7);

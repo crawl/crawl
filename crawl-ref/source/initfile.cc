@@ -731,6 +731,7 @@ void game_options::reset_options()
     default_friendly_pickup = FRIENDLY_PICKUP_FRIEND;
 
     show_gold_turns = false;
+    show_real_turns = false;
     show_beam       = true;
 
     game = newgame_def();
@@ -966,10 +967,11 @@ void game_options::reset_options()
 
     // window layout
     tile_full_screen      = SCREENMODE_AUTO;
-    tile_window_width     = 0;
-    tile_window_height    = 0;
+    tile_window_width     = -90;
+    tile_window_height    = -90;
     tile_map_pixels       = 0;
     tile_force_overlay    = false;
+    tile_align_at_top     = false;
 
     // delays
     tile_update_rate      = 1000;
@@ -2448,6 +2450,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 #endif
 #endif
     else BOOL_OPTION(show_gold_turns);
+    else BOOL_OPTION(show_real_turns);
 #ifndef USE_TILE
     else BOOL_OPTION(show_beam);
 #endif
@@ -3291,10 +3294,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else INT_OPTION(tile_key_repeat_delay, 0, INT_MAX);
     else if (key == "tile_full_screen")
         tile_full_screen = (screen_mode)_read_bool(field, tile_full_screen);
-    else INT_OPTION(tile_window_width, 0, INT_MAX);
-    else INT_OPTION(tile_window_height, 0, INT_MAX);
+    else INT_OPTION(tile_window_width, INT_MIN, INT_MAX);
+    else INT_OPTION(tile_window_height, INT_MIN, INT_MAX);
     else INT_OPTION(tile_map_pixels, 1, INT_MAX);
     else BOOL_OPTION(tile_force_overlay);
+    else BOOL_OPTION(tile_align_at_top);
     else INT_OPTION(tile_tooltip_ms, 0, INT_MAX);
     else INT_OPTION(tile_update_rate, 50, INT_MAX);
     else INT_OPTION(tile_runrest_rate, 0, INT_MAX);
@@ -3782,6 +3786,7 @@ static void _edit_save(int argc, char **argv)
                     out.write(buf, s);
             }
             save2.commit();
+            save.unlink();
             rename_u((get_savedir_filename(name, "", "") + ".tmp").c_str(),
                      (get_savedir_filename(name, "", "") + SAVE_SUFFIX).c_str());
         }

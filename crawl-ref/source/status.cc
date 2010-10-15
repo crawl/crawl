@@ -106,6 +106,13 @@ static duration_def duration_data[] =
       BLUE, "Sil", "silence", "You radiate silence." },
     { DUR_STEALTH, false,
       BLUE, "Stlth", "", "" },
+    { DUR_AFRAID, true,
+      RED, "Fear", "afraid", "You are terrified." },
+    { DUR_MIRROR_DAMAGE, false,
+      WHITE, "Mirror", "injury mirror", "You mirror injuries." },
+    { DUR_SCRYING, false,
+      LIGHTBLUE, "Scry", "scrying",
+      "Your astral vision lets you see through walls." },
 };
 
 static int duration_index[NUM_DURATIONS];
@@ -293,12 +300,13 @@ void fill_status_info(int status, status_info* inf)
         const int low  = 20 * BASELINE_DELAY;
         inf->long_text = "Your hands are glowing ";
         if (dur > high)
-            inf->long_text += "an extremely bright";
+            inf->long_text += "an extremely bright ";
         else if (dur > low)
-            inf->long_text += "bright";
+            inf->long_text += "bright ";
         else
-           inf->long_text += "a soft";
+           inf->long_text += "a soft ";
         inf->long_text += "red.";
+        break;
     }
 
     case DUR_FIRE_SHIELD:

@@ -28,7 +28,7 @@ Kikubaaqudgha is a terrible Demon-God, served by those who wish to indulge in th
 %%%%
 Yredelemnul
 
-Yredelemnul the Dark is an evil God worshipped by those who seek powers over death and the undead. Followers, who must oppose all things holy, can raise legions of servile undead, and gain a number of other useful (if unpleasant) powers. Yredelemnul appreciates killing, but prefers corpses to be put to use rather than sacrificed.
+Yredelemnul the Dark is an evil God worshipped by those who seek powers over death and the undead. Followers, who must oppose all things holy, can raise legions of servile undead, and gain a number of other useful (if unpleasant) powers. Yredelemnul appreciates killing, but prefers corpses to be put to use rather than sacrificed. Destroying artificial beings is also favoured, as they are neither truly alive nor subject to death or undeath.
 %%%%
 Xom
 
@@ -77,6 +77,10 @@ Fedhas Madash is the god of plant and fungal life. Fedhas demands that followers
 Cheibriados
 
 Cheibriados is a god who meditates on the mystery of time. Those who choose to follow this god's path will learn to eschew unnecessary haste, slowing down both themselves and others, and hurt those who refuse to slow down. Especially devout followers may even temporarily abandon the flow of time and its needless disturbances.
+%%%%
+Ashenzari
+
+While it seems inconceivable that the divine could be shackled, Ashenzari is just that: being purposely nailed to the sky for eternity, the unbudging god is all-knowing, all-seeing. Devoted worshippers are allowed to grasp shreds of this knowledge and foresight, but be warned: to Ashenzari, power and blessing and curse are all the same thing.
 %%%%
 Jiyva
 
@@ -138,7 +142,7 @@ Beogh encourages followers to make use of orcish gear found in the dungeon. Foll
 %%%%
 Fedhas powers
 
-Plants and fungi will not attack Fedhas worshipers without provocation. Fedhas worshipers may walk through plants or fungi, and even fire missiles or spells through them without causing harm. Fedhas grants the ability to promote plants and fungi into stronger species. Followers can eventually grow a wall of plants and create explosive spores from corpses. Followers are granted some control over the weather; they may call sunlight and eventually rainstorms.
+Plants and fungi will not attack Fedhas worshippers without provocation. Fedhas worshippers may walk through plants or fungi, and even fire missiles or spells through them without causing harm. Fedhas grants the ability to promote plants and fungi into stronger species. Followers can eventually grow a wall of plants and create explosive spores from corpses. Followers are granted some control over the weather; they may call sunlight and eventually rainstorms.
 %%%%
 Cheibriados powers
 
@@ -147,3 +151,8 @@ Followers are rewarded for moving slowly and killing creatures which are faster 
 Jiyva powers
 
 Followers can request a jelly from Jiyva, turn monsters to slime, and eventually remove their harmful mutations. As their piety grows, Jiyva will, with increasing frequency, drop jellies into the dungeon, rearrange their attributes to favour the attribute last chosen when gaining an experience level, and grant mutation gifts. All slimes will never harm a follower of Jiyva, and Jiyva demands that worshippers do the same. Eventually, all visible slimes will join in on a prayer, preventing them from moving for a while.
+%%%%
+Ashenzari powers
+
+Ashenzari exhorts his followers to garb themselves with curses, rewarding followers for time spent using cursed armour, jewelry, or weapons. Ashenzari's ultimate desire, however, is not for the devotion of his followers but for knowledge of all things. Pious followers willing to part with a portion of their knowledge will receive a great portion of Ashenzari's in return.
+%%%%

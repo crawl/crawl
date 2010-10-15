@@ -163,7 +163,7 @@ end
 default-depth: D:7-16, Orc
 
 NAME:   bailey_entry_dummy
-TAGS:   bailey_entry transparent trowel_portal allow_dup chance_bailey
+TAGS:   bailey_entry transparent trowel_portal chance_bailey
 CHANCE: 5%
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
@@ -987,4 +987,3 @@ c..........12cccccc.....13c.....c.....14+....5......5c
 cc...<.....1cccccccc....1ccccccccc....1ccc..........cc
 cccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
-

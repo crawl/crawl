@@ -338,6 +338,44 @@ void search_dungeon(const coord_def & start,
     }
 }
 
+// Currently only used for Tiamat.
+void draconian_change_colour(monster* drac)
+{
+    if (mons_genus(drac->type) != MONS_DRACONIAN)
+        return;
+
+    switch (random2(5))
+    {
+    case 0:
+        drac->colour = RED;
+        drac->base_monster = MONS_RED_DRACONIAN;
+        break;
+
+    case 1:
+        drac->colour = WHITE;
+        drac->base_monster = MONS_WHITE_DRACONIAN;
+        break;
+
+    case 2:
+        drac->colour = BLUE;
+        drac->base_monster = MONS_BLACK_DRACONIAN;
+        break;
+
+    case 3:
+        drac->colour = GREEN;
+        drac->base_monster = MONS_GREEN_DRACONIAN;
+        break;
+
+    case 4:
+        drac->colour = MAGENTA;
+        drac->base_monster = MONS_PURPLE_DRACONIAN;
+        break;
+
+    default:
+        break;
+    }
+}
+
 bool ugly_thing_mutate(monster* ugly, bool proximity)
 {
     bool success = false;
@@ -348,9 +386,10 @@ bool ugly_thing_mutate(monster* ugly, bool proximity)
 
     if (!proximity)
         success = true;
-    else if (one_chance_in(8))
+    else if (one_chance_in(9))
     {
         int you_mutate_chance = 0;
+        int ugly_mutate_chance = 0;
         int mon_mutate_chance = 0;
 
         for (adjacent_iterator ri(ugly->pos()); ri; ++ri)
@@ -359,50 +398,81 @@ bool ugly_thing_mutate(monster* ugly, bool proximity)
                 you_mutate_chance = get_contamination_level();
             else
             {
-                monster* ugly_near = monster_at(*ri);
+                monster* mon_near = monster_at(*ri);
 
-                if (!ugly_near
-                    || ugly_near->type != MONS_UGLY_THING
-                        && ugly_near->type != MONS_VERY_UGLY_THING)
+                if (!mon_near
+                    || !mons_class_flag(mon_near->type, M_GLOWS_RADIATION))
                 {
                     continue;
                 }
 
-                for (int i = 0; i < 2; ++i)
+                const bool ugly_type =
+                    mon_near->type == MONS_UGLY_THING
+                        || mon_near->type == MONS_VERY_UGLY_THING;
+
+                int i = mon_near->type == MONS_VERY_UGLY_THING ? 3 :
+                        mon_near->type == MONS_UGLY_THING      ? 2
+                                                               : 1;
+
+                for (; i > 0; --i)
                 {
                     if (coinflip())
                     {
-                        mon_mutate_chance++;
-
-                        if (coinflip())
+                        if (ugly_type)
                         {
-                            const int ugly_colour =
-                                make_low_colour(ugly->colour);
-                            const int ugly_near_colour =
-                                make_low_colour(ugly_near->colour);
+                            ugly_mutate_chance++;
 
-                            if (ugly_colour != ugly_near_colour)
-                                mon_colour = ugly_near_colour;
+                            if (coinflip())
+                            {
+                                const uint8_t ugly_colour =
+                                    make_low_colour(ugly->colour);
+                                const uint8_t ugly_near_colour =
+                                    make_low_colour(mon_near->colour);
+
+                                if (ugly_colour != ugly_near_colour)
+                                    mon_colour = ugly_near_colour;
+                            }
                         }
+                        else
+                            mon_mutate_chance++;
                     }
-
-                    if (ugly_near->type != MONS_VERY_UGLY_THING)
-                        break;
                 }
             }
         }
 
-        you_mutate_chance = std::min(16, you_mutate_chance);
-        mon_mutate_chance = std::min(16, mon_mutate_chance);
+        // The maximum number of monsters that can surround this monster
+        // is 8, and the maximum mutation chance from each surrounding
+        // monster is 3, so the maximum mutation value is 24.
+        you_mutate_chance = std::min(24, you_mutate_chance);
+        ugly_mutate_chance = std::min(24, ugly_mutate_chance);
+        mon_mutate_chance = std::min(24, mon_mutate_chance);
 
-        if (!one_chance_in(you_mutate_chance + mon_mutate_chance + 1))
+        if (!one_chance_in(you_mutate_chance
+                           + ugly_mutate_chance
+                           + mon_mutate_chance
+                           + 1))
         {
-            const bool proximity_you =
-                (you_mutate_chance  > mon_mutate_chance) ? true :
-                (you_mutate_chance == mon_mutate_chance) ? coinflip()
-                                                         : false;
+            int proximity_chance = you_mutate_chance;
+            int proximity_type = 0;
 
-            src = proximity_you ? " from you" : " from its kin";
+            if (ugly_mutate_chance > proximity_chance
+                || (ugly_mutate_chance == proximity_chance && coinflip()))
+            {
+                proximity_chance = ugly_mutate_chance;
+                proximity_type = 1;
+            }
+
+            if (mon_mutate_chance > proximity_chance
+                || (mon_mutate_chance == proximity_chance && coinflip()))
+            {
+                proximity_chance = mon_mutate_chance;
+                proximity_type = 2;
+            }
+
+            src  = " from ";
+            src += proximity_type == 0 ? "you" :
+                   proximity_type == 1 ? "its kin"
+                                       : "its neighbour";
 
             success = true;
         }
@@ -780,6 +850,7 @@ static bool _slime_split_merge(monster* thing)
 }
 
 // Returns true if you resist the siren's call.
+// -- added equivalency for huldra
 static bool _siren_movement_effect(const monster* mons)
 {
     bool do_resist = (you.attribute[ATTR_HELD] || you.check_res_magic(70)
@@ -921,7 +992,7 @@ static bool _orc_battle_cry(monster* chief)
         for (monster_iterator mi(chief); mi; ++mi)
         {
             if (*mi != chief
-                && mons_species(mi->type) == MONS_ORC
+                && mons_genus(mi->type) == MONS_ORC
                 && mons_aligned(chief, *mi)
                 && mi->hit_dice < chief->hit_dice
                 && !mi->berserk()
@@ -1081,19 +1152,54 @@ static inline void _mons_cast_abil(monster* mons, bolt &pbolt,
 
 static void _establish_connection(int tentacle,
                                   int head,
-                                  std::set<position_node>::iterator path)
+                                  std::set<position_node>::iterator path,
+                                  monster_type connector_type)
 {
     const position_node * last = &(*path);
     const position_node * current = last->last;
 
-    // Tentacle is adjacent to the head, not much to do.
+    // Tentacle is adjacent to the end position, not much to do.
     if (!current)
     {
-        menv[tentacle].props["inwards"].get_int() = head;
+        // This is a little awkward now. Oh well. -cao
+        if (tentacle != head)
+            menv[tentacle].props["inwards"].get_int() = head;
+        else
+            menv[tentacle].props["inwards"].get_int() = -1;
+
+     //   mprf ("null tentacle thing, res %d", menv[tentacle].props["inwards"].get_int());
         return;
     }
 
     monster* main = &env.mons[head];
+
+    // No base monster case (demonic tentacles)
+    if (!monster_at(last->pos))
+    {
+        int connect = create_monster(
+            mgen_data(connector_type, SAME_ATTITUDE(main), main,
+                      0, 0, last->pos, main->foe,
+                      MG_FORCE_PLACE, main->god, MONS_NO_MONSTER, tentacle,
+                      main->colour, you.absdepth0, PROX_CLOSE_TO_PLAYER,
+                      you.level_type));
+        if (connect < 0)
+        {
+            // Big failure mode.
+            return;
+        }
+        else
+        {
+            menv[connect].props["inwards"].get_int()  = -1;
+            menv[connect].props["outwards"].get_int() = -1;
+
+            if (main->holiness() == MH_UNDEAD)
+                menv[connect].flags |= MF_FAKE_UNDEAD;
+
+            menv[connect].max_hit_points = menv[tentacle].max_hit_points;
+            menv[connect].hit_points = menv[tentacle].hit_points;
+        }
+    }
+
     while (current)
     {
 
@@ -1119,7 +1225,7 @@ static void _establish_connection(int tentacle,
 
          // place a connector
         int connect = create_monster(
-            mgen_data(MONS_KRAKEN_CONNECTOR, SAME_ATTITUDE(main), main,
+            mgen_data(connector_type, SAME_ATTITUDE(main), main,
                       0, 0, current->pos, main->foe,
                       MG_FORCE_PLACE, main->god, MONS_NO_MONSTER, tentacle,
                       main->colour, you.absdepth0, PROX_CLOSE_TO_PLAYER,
@@ -1133,22 +1239,19 @@ static void _establish_connection(int tentacle,
             menv[connect].props["inwards"].get_int() = last_mon_idx;
             menv[connect].props["outwards"].get_int() = -1;
 
-            if (last_mon->type == MONS_KRAKEN_CONNECTOR)
+            if (last_mon->type == connector_type)
                 menv[last_mon_idx].props["outwards"].get_int() = connect;
 
             if (main->holiness() == MH_UNDEAD)
-            {
-                menv[connect].flags |= MF_HONORARY_UNDEAD;
-            }
-            if (monster_can_submerge(&menv[connect], env.grid(menv[connect].pos())))
-            {
-                menv[connect].add_ench(ENCH_SUBMERGED);
-            }
+                menv[connect].flags |= MF_FAKE_UNDEAD;
 
+            if (monster_can_submerge(&menv[connect], env.grid(menv[connect].pos())))
+                menv[connect].add_ench(ENCH_SUBMERGED);
         }
         else
         {
             // connector placement failed, what to do?
+            mprf("connector placement failed at %d %d", current->pos.x, current->pos.y);
         }
 
         last = current;
@@ -1161,7 +1264,8 @@ struct tentacle_attack_constraints
     std::vector<coord_def> * target_positions;
 
     std::map<coord_def, std::set<int> > * connection_constraints;
-    monster* kraken;
+    monster *base_monster;
+    int max_string_distance;
     int connect_idx[8];
 
     tentacle_attack_constraints()
@@ -1205,8 +1309,7 @@ struct tentacle_attack_constraints
             if (!in_bounds(temp.pos))
                 continue;
 
-
-            if (feat_is_solid(env.grid(temp.pos)) || env.grid(temp.pos) == DNGN_LAVA)
+            if (!base_monster->is_habitable(temp.pos))
             {
                 temp.path_distance = DISCONNECT_DIST;
             }
@@ -1222,7 +1325,7 @@ struct tentacle_attack_constraints
                 // Can still search through a firewood monster, just at a higher
                 // path cost.
                 else if (mons_at && mons_is_firewood(mons_at)
-                    && !mons_aligned(kraken, mons_at))
+                    && !mons_aligned(base_monster, mons_at))
                 {
                     temp.path_distance += 10;
                 }
@@ -1251,9 +1354,12 @@ struct tentacle_attack_constraints
                 // If we can still feasibly retract (haven't left connect range)
                 if (!temp.departure)
                 {
-                    while (probe->second.find(connect_level + 1) != probe->second.end() )
+                    if (probe->second.find(connect_level) != probe->second.end())
                     {
-                        connect_level++;
+                        while (probe->second.find(connect_level + 1) != probe->second.end() )
+                        {
+                            connect_level++;
+                        }
                     }
 
                     int delta = connect_level - base_connect_level;
@@ -1277,7 +1383,8 @@ struct tentacle_attack_constraints
             if (temp.departure)
                 temp.string_distance++;
 
-            if (temp.string_distance > MAX_KRAKEN_TENTACLE_DIST)
+//            if (temp.string_distance > MAX_KRAKEN_TENTACLE_DIST)
+            if (temp.string_distance > max_string_distance)
                 temp.path_distance = DISCONNECT_DIST;
 
             if (temp.path_distance != DISCONNECT_DIST)
@@ -1292,9 +1399,9 @@ struct tentacle_attack_constraints
 
 struct tentacle_connect_constraints
 {
-    monster* kraken;
     std::map<coord_def, std::set<int> > * connection_constraints;
 
+    monster* base_monster;
 
     tentacle_connect_constraints()
     {
@@ -1322,22 +1429,21 @@ struct tentacle_connect_constraints
             std::map<coord_def, std::set<int> >::iterator probe
                         = connection_constraints->find(temp.pos);
 
-            if (feat_is_solid(env.grid(temp.pos))
-                || env.grid(temp.pos) == DNGN_LAVA
-                || actor_at(temp.pos)
-                )
-//                || !kraken->see_cell_no_trans(temp.pos))
+            if (probe == connection_constraints->end()
+                || probe->second.find(node.connect_level) == probe->second.end())
+            {
+                continue;
+            }
+
+
+            if (!base_monster->is_habitable(temp.pos)
+                || actor_at(temp.pos))
             {
                 temp.path_distance = DISCONNECT_DIST;
             }
             else
                 temp.path_distance = 1 + node.path_distance;
 
-            if (probe == connection_constraints->end()
-                || probe->second.find(node.connect_level) == probe->second.end())
-            {
-                continue;
-            }
 
 
             //temp.estimate = grid_distance(temp.pos, kraken->pos());
@@ -1346,16 +1452,20 @@ struct tentacle_connect_constraints
             temp.estimate = 0;
             int test_level = node.connect_level;
 
-            for (std::set<int>::iterator j = probe->second.begin();
+/*            for (std::set<int>::iterator j = probe->second.begin();
                  j!= probe->second.end();
                  j++)
             {
                 if (*j == (test_level + 1))
                     test_level++;
             }
+            */
+            while (probe->second.find(test_level + 1) != probe->second.end())
+                test_level++;
 
             int max = probe->second.empty() ? INT_MAX : *(probe->second.rbegin());
 
+//            mprf("start %d, test %d, max %d", temp.connect_level, test_level, max);
             if (test_level < max)
                 continue;
 
@@ -1363,6 +1473,16 @@ struct tentacle_connect_constraints
 
             expansion.push_back(temp);
         }
+    }
+
+};
+
+struct target_position
+{
+    coord_def target;
+    bool operator() (const coord_def & pos)
+    {
+        return (pos == target);
     }
 
 };
@@ -1399,10 +1519,10 @@ struct multi_target
 };
 
 // returns pathfinding success/failure
-bool tentacle_pathfind(monster* kraken, monster* tentacle,
-                       std::vector<coord_def> & target_positions,
+bool tentacle_pathfind(monster* tentacle,
+                       tentacle_attack_constraints & attack_constraints,
                        coord_def & new_position,
-                       std::map<coord_def, std::set<int> > & connect_data,
+                       std::vector<coord_def> & target_positions,
                        int total_length)
 {
     multi_target foe_check;
@@ -1413,15 +1533,11 @@ bool tentacle_pathfind(monster* kraken, monster* tentacle,
     std::set<position_node> visited;
     visited.clear();
 
-    tentacle_attack_constraints attack_constraints;
-    attack_constraints.kraken = kraken;
-    attack_constraints.connection_constraints = &connect_data;
-    attack_constraints.target_positions = &target_positions;
-
     position_node temp;
     temp.pos = tentacle->pos();
 
-    std::map<coord_def, std::set<int> >::iterator probe = connect_data.find(temp.pos);
+    std::map<coord_def, std::set<int> >::iterator probe = attack_constraints.connection_constraints->find(temp.pos);
+    ASSERT(probe != attack_constraints.connection_constraints->end());
     temp.connect_level = 0;
     while (probe->second.find(temp.connect_level + 1 ) != probe->second.end())
         temp.connect_level++;
@@ -1429,10 +1545,10 @@ bool tentacle_pathfind(monster* kraken, monster* tentacle,
     temp.departure = false;
     temp.string_distance = total_length;
 
-
     search_astar(temp,
                  foe_check, attack_constraints,
                  visited, tentacle_path);
+
 
     bool path_found = false;
     // Did we find a path?
@@ -1460,10 +1576,23 @@ bool tentacle_pathfind(monster* kraken, monster* tentacle,
     return (path_found);
 }
 
-bool try_tentacle_connect(const coord_def & new_pos, int headnum,
+bool try_tentacle_connect(const coord_def & new_pos, const coord_def & base_position,
                           int tentacle_idx,
-                          tentacle_connect_constraints & connect_costs)
+                          int base_idx,
+                          tentacle_connect_constraints & connect_costs,
+                          monster_type connect_type)
 {
+    // Nothing to do here.
+    // Except fix the tentacle end's pointer, idiot.
+    if (base_position == new_pos)
+    {
+        if (tentacle_idx == base_idx)
+            menv[tentacle_idx].props["inwards"].get_int() = -1;
+        else
+            menv[tentacle_idx].props["inwards"].get_int() = base_idx;
+        return (true);
+    }
+
     int start_level = 0;
     std::map<coord_def, std::set<int> >::iterator it
                     = connect_costs.connection_constraints->find(new_pos);
@@ -1478,8 +1607,11 @@ bool try_tentacle_connect(const coord_def & new_pos, int headnum,
     }
 
     // Find the tentacle -> head path
-    target_monster current_target;
+    target_position current_target;
+    current_target.target = base_position;
+/*    target_monster current_target;
     current_target.target_mindex = headnum;
+*/
 
     std::set<position_node> visited;
     std::vector<std::set<position_node>::iterator> candidates;
@@ -1497,7 +1629,7 @@ bool try_tentacle_connect(const coord_def & new_pos, int headnum,
         return (false);
     }
 
-    _establish_connection(tentacle_idx, headnum,candidates[0]);
+    _establish_connection(tentacle_idx, base_idx,candidates[0], connect_type);
 
     return (true);
 }
@@ -1517,13 +1649,15 @@ void collect_tentacles(int headnum, std::vector<monster_iterator> & tentacles)
      }
 }
 
-void purge_connectors(int tentacle_idx)
+void purge_connectors(int tentacle_idx,
+                      bool (*valid_mons)(monster*))
 {
     for (monster_iterator mi; mi; ++mi)
     {
         if (int (mi->number) == tentacle_idx)
         {
-            if (mi->type == MONS_KRAKEN_CONNECTOR)
+            //if (mi->type == MONS_KRAKEN_CONNECTOR)
+            if (valid_mons(&menv[mi->mindex()]))
             {
                 int hp = menv[mi->mindex()].hit_points;
                 if (hp > 0 && hp < menv[tentacle_idx].hit_points)
@@ -1537,12 +1671,29 @@ void purge_connectors(int tentacle_idx)
     }
 }
 
-void collect_foe_positions(monster* kraken, std::vector<coord_def> & foe_positions)
+struct complicated_sight_check
+{
+    coord_def base_position;
+    bool operator()(monster* mons, actor * test)
+    {
+        return (test->visible_to(mons) && cell_see_cell(base_position, test->pos()));
+    }
+};
+
+static bool _basic_sight_check(monster* mons, actor * test)
+{
+    return (mons->can_see(test ));
+}
+
+template<typename T>
+void collect_foe_positions(monster* mons, std::vector<coord_def> & foe_positions,
+                           T & sight_check)
 {
     coord_def foe_pos(-1, -1);
-    if (kraken->near_foe())
+    actor * foe = mons->get_foe();
+    if (foe && sight_check(mons, foe))
     {
-        foe_positions.push_back(kraken->get_foe()->pos());
+        foe_positions.push_back(mons->get_foe()->pos());
         foe_pos = foe_positions.back();
     }
 
@@ -1550,14 +1701,266 @@ void collect_foe_positions(monster* kraken, std::vector<coord_def> & foe_positio
     {
         monster* test = &menv[mi->mindex()];
         if (!mons_is_firewood(test)
-            && !mons_aligned(test, kraken)
+            && !mons_aligned(test, mons)
             && test->pos() != foe_pos
-            && kraken->can_see(test))
+            && sight_check(mons, test))
         {
             foe_positions.push_back(test->pos());
         }
     }
 }
+
+bool valid_kraken_connection(monster* mons)
+{
+    return (mons->type == MONS_KRAKEN_CONNECTOR
+            || mons->type == MONS_KRAKEN_TENTACLE
+            || mons_base_type(mons) == MONS_KRAKEN);
+}
+
+bool valid_demonic_connection(monster* mons)
+{
+    return (mons->mons_species() == MONS_ELDRITCH_TENTACLE_SEGMENT);
+}
+
+// Return value is a retract position for the tentacle or -1, -1 if no
+// retract position exists.
+//
+// move_kraken_tentacle should check retract pos, it could potentially
+// give the kraken head's position as a retract pos.
+int collect_connection_data(monster* start_monster,
+                            bool (*valid_segment_type)(monster*),
+                            std::map<coord_def, std::set<int> > & connection_data,
+                            coord_def & retract_pos)
+{
+    int current_count = 0;
+    monster* current_mon = start_monster;
+    retract_pos.x = -1;
+    retract_pos.y = -1;
+    bool retract_found = false;
+
+    while (current_mon)
+    {
+        for (adjacent_iterator adj_it(current_mon->pos(), false);
+             adj_it; ++adj_it)
+        {
+            connection_data[*adj_it].insert(current_count);
+        }
+
+        bool basis = current_mon->props.exists("inwards");
+        int next_idx = basis ? current_mon->props["inwards"].get_int() : -1;
+
+        if (next_idx != -1 && menv[next_idx].alive()
+            && valid_segment_type(&menv[next_idx]))
+        {
+            current_mon = &menv[next_idx];
+            if (int(current_mon->number) != start_monster->mindex())
+            {
+                mprf("link information corruption!!! tentacle in chain doesn't match mindex");
+            }
+            if (!retract_found)
+            {
+                retract_pos = current_mon->pos();
+                retract_found = true;
+            }
+        }
+        else
+        {
+            current_mon = NULL;
+//            mprf("null at count %d", current_count);
+        }
+        current_count++;
+    }
+
+
+//    mprf("returned count %d", current_count);
+    return current_count;
+}
+
+
+
+void move_demon_tentacle(monster* tentacle)
+{
+    if (!tentacle
+        || tentacle->type != MONS_ELDRITCH_TENTACLE)
+    {
+        return;
+    }
+    int compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
+
+    int tentacle_idx = tentacle->mindex();
+
+    std::vector<coord_def> foe_positions;
+
+    bool attack_foe = false;
+    bool severed = tentacle->has_ench(ENCH_SEVERED);
+
+    coord_def base_position;
+    if (!tentacle->props.exists("base_position"))
+    {
+        tentacle->props["base_position"].get_coord() = tentacle->pos();
+    }
+
+    base_position = tentacle->props["base_position"].get_coord();
+
+
+    if (!severed)
+    {
+        complicated_sight_check base_sight;
+        base_sight.base_position = base_position;
+        collect_foe_positions(tentacle, foe_positions, base_sight);
+        attack_foe = !foe_positions.empty();
+    }
+
+
+    coord_def retract_pos;
+    std::map<coord_def, std::set<int> > connection_data;
+
+    int visited_count = collect_connection_data(tentacle,
+                                                valid_demonic_connection,
+                                                connection_data,
+                                                retract_pos);
+
+    //bool retract_found = retract_pos.x == -1 && retract_pos.y == -1;
+
+    purge_connectors(tentacle->mindex(), valid_demonic_connection);
+
+    if (severed)
+    {
+        std::random_shuffle(compass_idx, compass_idx + 8);
+        for (unsigned i = 0; i < 8; ++i)
+        {
+            coord_def new_base = base_position + Compass[compass_idx[i]];
+            if (!actor_at(new_base)
+                && tentacle->is_habitable(new_base))
+            {
+                tentacle->props["base_position"].get_coord() = new_base;
+                base_position = new_base;
+                break;
+            }
+        }
+    }
+
+    coord_def new_pos = tentacle->pos();
+    coord_def old_pos = tentacle->pos();
+
+    int demonic_max_dist=  5;
+    tentacle_attack_constraints attack_constraints;
+    attack_constraints.base_monster = tentacle;
+    attack_constraints.max_string_distance = demonic_max_dist;
+    attack_constraints.connection_constraints = &connection_data;
+    attack_constraints.target_positions = &foe_positions;
+
+    bool path_found = false;
+    if (attack_foe)
+    {
+        path_found = tentacle_pathfind(tentacle, attack_constraints,
+                                       new_pos, foe_positions, visited_count);
+    }
+
+
+
+    if (!attack_foe || !path_found)
+    {
+        // todo: set a random position?
+
+        //mprf("pathing failed, target %d %d", new_pos.x, new_pos.y);
+        std::random_shuffle(compass_idx, compass_idx + 8);
+        for (int i=0; i < 8; ++i)
+        {
+            coord_def test = old_pos + Compass[compass_idx[i]];
+            //coord_def test = old_pos;
+            //test.x++;
+            if (!in_bounds(test)
+                || actor_at(test))
+            {
+                continue;
+            }
+
+            int escalated = 0;
+            std::map<coord_def, std::set<int> >::iterator probe = connection_data.find(test);
+
+            while (probe->second.find(escalated + 1) != probe->second.end() )
+                escalated++;
+
+
+            if (!severed
+                && tentacle->is_habitable(test)
+                && escalated == *probe->second.rbegin()
+                && (visited_count < demonic_max_dist
+                    || connection_data.find(test)->second.size() > 1))
+            {
+                new_pos = test;
+//                mprf("start 0, escalated %d max %d", escalated, *probe->second.rbegin());
+                break;
+            }
+            else if (tentacle->is_habitable(test)
+                     && visited_count > 1
+                     && escalated == *probe->second.rbegin()
+                     && connection_data.find(test)->second.size() > 1)
+            {
+                new_pos = test;
+                break;
+            }
+        }
+    }
+
+    if (new_pos != old_pos)
+    {
+        // Did we path into a target?
+        actor * blocking_actor = actor_at(new_pos);
+        if (blocking_actor)
+        {
+            tentacle->target = new_pos;
+            monster* mtemp = monster_at(new_pos);
+            if (mtemp)
+            {
+                tentacle->foe = mtemp->mindex();
+            }
+            else if (new_pos == you.pos())
+            {
+                tentacle->foe = MHITYOU;
+            }
+
+            new_pos = old_pos;
+        }
+    }
+
+    mgrd(tentacle->pos()) = NON_MONSTER;
+
+    // Why do I have to do this move? I don't get it.
+    // specifically, if tentacle isn't registered at its new position on mgrd
+    // the search fails (sometimes), Don't know why. -cao
+    tentacle->set_position(new_pos);
+    mgrd(tentacle->pos()) = tentacle->mindex();
+
+    tentacle_connect_constraints connect_costs;
+    connect_costs.connection_constraints = &connection_data;
+    connect_costs.base_monster = tentacle;
+
+    bool connected = try_tentacle_connect(new_pos, base_position,
+                                          tentacle_idx, tentacle_idx,
+                                          connect_costs,
+                                          MONS_ELDRITCH_TENTACLE_SEGMENT);
+
+    if (!connected)
+    {
+        // This should really never fail for demonic tentacles (they don't
+        // have the whole shifting base problem). -cao
+        mprf("tentacle connect failed! What the heck!  severed status %d", tentacle->has_ench(ENCH_SEVERED));
+        mprf("pathed to %d %d from %d %d mid %d count %d", new_pos.x, new_pos.y, old_pos.x, old_pos.y, tentacle->mindex(), visited_count);
+
+//        mgrd(tentacle->pos()) = tentacle->mindex();
+
+        // Is it ok to purge the tentacle here?
+        monster_die(tentacle, KILL_MISC, NON_MONSTER, true);
+        return;
+    }
+
+//    mprf("mindex %d vsisted %d", tentacle_idx, visited_count);
+    tentacle->check_redraw(old_pos);
+    tentacle->apply_location_effects(old_pos);
+}
+
 
 
 void move_kraken_tentacles(monster* kraken)
@@ -1570,10 +1973,9 @@ void move_kraken_tentacles(monster* kraken)
 
 
     bool no_foe = false;
-    actor * foe = NULL;
 
     std::vector<coord_def> foe_positions;
-    collect_foe_positions(kraken, foe_positions);
+    collect_foe_positions(kraken, foe_positions, _basic_sight_check);
 
     //if (!kraken->near_foe())
     if (foe_positions.empty()
@@ -1582,9 +1984,6 @@ void move_kraken_tentacles(monster* kraken)
     {
         no_foe = true;
     }
-    else
-        foe = kraken->get_foe();
-
     std::vector<monster_iterator> tentacles;
 
     int headnum = kraken->mindex();
@@ -1607,7 +2006,7 @@ void move_kraken_tentacles(monster* kraken)
         tentacle_connect_constraints connect_costs;
         std::map<coord_def, std::set<int> > connection_data;
 
-        connect_costs.kraken = kraken;
+//        connect_costs.kraken = kraken;
 
         monster* current_mon = tentacle;
         int current_count = 0;
@@ -1645,7 +2044,7 @@ void move_kraken_tentacles(monster* kraken)
 
         int tentacle_idx = tentacle->mindex();
 
-        purge_connectors(tentacle_idx);
+        purge_connectors(tentacle_idx, valid_kraken_connection);
 
         if (no_foe
             && grid_distance(tentacle->pos(), kraken->pos()) == 1)
@@ -1659,12 +2058,22 @@ void move_kraken_tentacles(monster* kraken)
 
         coord_def new_pos = tentacle->pos();
         coord_def old_pos = tentacle->pos();
-
         bool path_found = false;
+
+        tentacle_attack_constraints attack_constraints;
+        //attack_constraints.base_monster = kraken;
+        attack_constraints.base_monster = tentacle;
+        attack_constraints.max_string_distance = MAX_KRAKEN_TENTACLE_DIST;
+        attack_constraints.connection_constraints = &connection_data;
+        attack_constraints.target_positions = &foe_positions;
+
+
+
         if (!no_foe)
         {
-            path_found = tentacle_pathfind(kraken, tentacle, foe_positions, new_pos,
-                                           connection_data, current_count);
+            path_found = tentacle_pathfind(tentacle, attack_constraints, new_pos,
+                                            foe_positions,
+                                           current_count);
         }
 
         if (no_foe || !path_found)
@@ -1708,7 +2117,12 @@ void move_kraken_tentacles(monster* kraken)
         mgrd(tentacle->pos()) = tentacle->mindex();
 
         connect_costs.connection_constraints = &connection_data;
-        bool connected = try_tentacle_connect(new_pos, headnum, tentacle_idx, connect_costs);
+        connect_costs.base_monster = tentacle;
+        //bool connected = try_tentacle_connect(new_pos, headnum, tentacle_idx, connect_costs);
+        bool connected = try_tentacle_connect(new_pos, kraken->pos(),
+                                              tentacle_idx, kraken->mindex(),
+                                              connect_costs,
+                                              MONS_KRAKEN_CONNECTOR);
 
 
         // Can't connect, usually the head moved and invalidated our position
@@ -2123,6 +2537,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         }
         break;
 
+    case MONS_HULDRA:
     case MONS_MERMAID:
     case MONS_SIREN:
     {
@@ -2185,7 +2600,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
                     already_mesmerised ? "her luring" : "a haunting").c_str(),
                     spl);
 
-                if (mons->type == MONS_SIREN)
+                if ((mons->type == MONS_SIREN) || (mons->type == MONS_HULDRA))
                 {
                     if (_siren_movement_effect(mons))
                     {
@@ -2433,7 +2848,7 @@ static bool _player_at(const coord_def & target)
     return (you.pos() == target);
 }
 
-bool _mold_connected(const coord_def & target)
+static bool _mold_connected(const coord_def & target)
 {
     return (is_moldy(target) || _ballisto_at(target));
 }

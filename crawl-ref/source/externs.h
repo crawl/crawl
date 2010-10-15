@@ -103,6 +103,8 @@ template <typename Z> inline Z sgn(Z x)
     return (x < 0 ? -1 : (x > 0 ? 1 : 0));
 }
 
+inline int dist_range(int x) { return x*x + 1; };
+
 struct coord_def
 {
     int         x;
@@ -290,7 +292,8 @@ struct cloud_struct
     void set_killer(killer_type _killer);
 
     std::string cloud_name(const std::string &default_name = "") const;
-    void announce_actor_engulfed(const actor *engulfee) const;
+    void announce_actor_engulfed(const actor *engulfee,
+                                 bool beneficial = false) const;
 
     static kill_category killer_to_whose(killer_type killer);
     static killer_type   whose_to_killer(kill_category whose);
@@ -492,6 +495,12 @@ struct level_pos
 
 class monster;
 
+// We are not 64 bits clean here yet since many places still pass (or store!)
+// it as 32 bits or, worse, longs.  I considered setting this as uint32_t,
+// however, since free bits are exhausted, it's very likely we'll have to
+// extend this in the future, so this should be easier than undoing the change.
+typedef uint32_t iflags_t;
+
 struct item_def
 {
     object_class_type base_type:8; // basic class (ie OBJ_WEAPON)
@@ -502,7 +511,7 @@ struct item_def
     uint8_t        colour;         // item colour
     uint8_t        rnd;            // random number, used for tile choice
     short          quantity;       // number of items
-    uint64_t       flags;          // item status flags
+    iflags_t       flags;          // item status flags
 
     coord_def pos;     // for inventory items == (-1, -1)
     short  link;       // link to next item;  for inventory items = slot
@@ -527,7 +536,7 @@ public:
                      bool terse = false, bool ident = false,
                      bool with_inscription = true,
                      bool quantity_in_words = false,
-                     unsigned long ignore_flags = 0x0) const;
+                     iflags_t ignore_flags = 0x0) const;
     bool has_spells() const;
     bool cursed() const;
     int book_number() const;
@@ -567,7 +576,7 @@ public:
 private:
     std::string name_aux(description_level_type desc,
                          bool terse, bool ident,
-                         unsigned long ignore_flags) const;
+                         iflags_t ignore_flags) const;
 };
 
 typedef item_def item_info;
@@ -760,6 +769,14 @@ struct mon_display
                 unsigned gly = 0, unsigned col = 0,
                 monster_type d = MONS_NO_MONSTER)
        : type(m), glyph(gly), colour(col), detected(d) { }
+};
+
+struct final_effect
+{
+    final_effect_flavour flavour;
+    short att, def;
+    coord_def pos;
+    int x;
 };
 
 #endif // EXTERNS_H

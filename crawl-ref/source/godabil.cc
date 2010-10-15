@@ -29,7 +29,7 @@
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
-#include "kills.h"
+#include "libutil.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-act.h"
@@ -412,7 +412,8 @@ bool zin_remove_all_mutations()
         return (false);
     }
 
-    you.num_gifts[GOD_ZIN]++;
+    you.num_current_gifts[GOD_ZIN]++;
+    you.num_total_gifts[GOD_ZIN]++;
     take_note(Note(NOTE_GOD_GIFT, you.religion));
 
     simple_god_message(" draws all chaos from your body!");
@@ -531,8 +532,9 @@ bool elyvilon_destroy_weapons()
     for (stack_iterator si(you.pos(), true); si; ++si)
     {
         item_def& item(*si);
-        if (item.base_type != OBJ_WEAPONS
-                && item.base_type != OBJ_MISSILES
+        if ((item.base_type != OBJ_WEAPONS
+                && item.base_type != OBJ_STAVES
+                && item.base_type != OBJ_MISSILES)
             || item_is_stationary(item)) // Held in a net?
         {
             continue;
@@ -738,6 +740,7 @@ bool trog_burn_spellbooks()
                 totalpiety++;
 
             dprf("Burned book rarity: %d", rarity);
+            destroy_spellbook(*si);
             destroy_item(si.link());
             count++;
         }
@@ -840,26 +843,50 @@ bool jiyva_remove_bad_mutation()
     return (true);
 }
 
-bool yred_injury_mirror(bool actual)
+bool yred_injury_mirror()
 {
     return (you.religion == GOD_YREDELEMNUL && !player_under_penance()
             && you.piety >= piety_breakpoint(1)
-            && (!actual || you.duration[DUR_PRAYER]));
+            && you.duration[DUR_MIRROR_DAMAGE]);
 }
 
-void yred_drain_life(int pow)
+bool yred_can_animate_dead()
+{
+    return (you.religion == GOD_YREDELEMNUL && !player_under_penance()
+            && you.piety >= piety_breakpoint(2));
+}
+
+void yred_animate_remains_or_dead()
+{
+    if (yred_can_animate_dead())
+    {
+        mpr("You call on the dead to rise...");
+
+        animate_dead(&you, you.skills[SK_INVOCATIONS] + 1, BEH_FRIENDLY,
+                     MHITYOU, &you, "", GOD_YREDELEMNUL);
+    }
+    else
+    {
+        mpr("You attempt to give life to the dead...");
+
+        if (animate_remains(you.pos(), CORPSE_BODY, BEH_FRIENDLY,
+                            MHITYOU, &you, "", GOD_YREDELEMNUL) < 0)
+        {
+            mpr("There are no remains here to animate!");
+        }
+    }
+}
+
+void yred_drain_life()
 {
     mpr("You draw life from your surroundings.");
-
-    // Incoming power to this function is skill in INVOCATIONS, so
-    // we'll add an assert here to warn anyone who tries to use
-    // this function with spell level power.
-    ASSERT(pow <= 27);
 
     flash_view(DARKGREY);
     more();
     mesclr();
 
+    const int pow = you.skills[SK_INVOCATIONS];
+    const int hurted = 3 + random2(7) + random2(pow);
     int hp_gain = 0;
 
     for (monster_iterator mi(you.get_los()); mi; ++mi)
@@ -873,15 +900,15 @@ void yred_drain_life(int pow)
         mprf("You draw life from %s.",
              mi->name(DESC_NOCAP_THE).c_str());
 
-        const int hurted = 3 + random2(7) + random2(pow);
         behaviour_event(*mi, ME_WHACK, MHITYOU, you.pos());
-        if (!mi->is_summoned())
-            hp_gain += hurted;
 
         mi->hurt(&you, hurted);
 
         if (mi->alive())
             print_wounds(*mi);
+
+        if (!mi->is_summoned())
+            hp_gain += hurted;
     }
 
     hp_gain /= 2;
@@ -899,7 +926,6 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
 {
     add_daction(DACT_OLD_ENSLAVED_SOULS_POOF);
 
-    const monster_type soul_type = mons_species(mon->type);
     const std::string whose =
         you.can_see(mon) ? apostrophise(mon->name(DESC_CAP_THE))
                          : mon->pronoun(PRONOUN_CAP_POSSESSIVE);
@@ -912,28 +938,28 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
 
     const monster orig = *mon;
 
-    // Turn the monster into a spectral thing, minus the usual
-    // adjustments for zombified monsters.
-    mon->type = MONS_SPECTRAL_THING;
-    mon->base_monster = soul_type;
+    // Use the original monster type as the zombified type here, to get
+    // the proper stats from it.
+    define_zombie(mon, mon->type, MONS_SPECTRAL_THING);
 
-    // Recreate the monster as a spectral thing.
-    define_monster(mon);
+    // If the original monster has been drained or levelled up, its HD
+    // might be different from its class HD, in which case its HP should
+    // be rerolled to match.
+    if (mon->hit_dice != orig.hit_dice)
+    {
+        mon->hit_dice = std::max(orig.hit_dice, 1);
+        roll_zombie_hp(mon);
+    }
 
     mon->colour = ETC_UNHOLY;
+    mon->speed  = mons_class_base_speed(mon->base_monster);
 
     mon->flags |= MF_NO_REWARD;
     mon->flags |= MF_ENSLAVED_SOUL;
 
     // If the original monster type has melee, spellcasting or priestly
     // abilities, make sure its spectral thing has them as well.
-#if TAG_MAJOR_VERSION == 30
-    mon->flags |=
-        orig.flags & (MF_FIGHTER | MF_TWOWEAPON | MF_ARCHER
-                      | MF_SPELLCASTER | MF_ACTUAL_SPELLS | MF_PRIEST);
-#else
     mon->flags |= orig.flags & (MF_MELEE_MASK | MF_SPELL_MASK);
-#endif
     mon->spells = orig.spells;
 
     name_zombie(mon, &orig);
@@ -1267,7 +1293,8 @@ static int _create_plant(coord_def & target, int hp_adjust = 0)
                                       0,
                                       target,
                                       MHITNOT,
-                                      MG_FORCE_PLACE, GOD_FEDHAS));
+                                      MG_FORCE_PLACE,
+                                      GOD_FEDHAS));
 
 
     if (plant != -1)
@@ -1816,7 +1843,8 @@ int fedhas_rain(const coord_def &target)
                                       0,
                                       *rad,
                                       MHITNOT,
-                                      MG_FORCE_PLACE, GOD_FEDHAS));
+                                      MG_FORCE_PLACE,
+                                      GOD_FEDHAS));
 
                 if (plant != -1)
                     spawned_count++;
@@ -1945,7 +1973,8 @@ int fedhas_corpse_spores(beh_type behavior, bool interactive)
                                           0,
                                           positions[i]->pos,
                                           MHITNOT,
-                                          MG_FORCE_PLACE));
+                                          MG_FORCE_PLACE,
+                                          GOD_FEDHAS));
 
         if (rc != -1)
         {

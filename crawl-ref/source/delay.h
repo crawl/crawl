@@ -85,7 +85,6 @@ void handle_interrupted_swap(bool swap_if_safe = false,
 
 void clear_macro_process_key_delay();
 
-const char *activity_interrupt_name(activity_interrupt_type ai);
 activity_interrupt_type get_activity_interrupt(const std::string &);
 
 const char *delay_name(int delay);

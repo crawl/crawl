@@ -13,6 +13,7 @@
 #include "dbg-util.h"
 #include "food.h"
 #include "godprayer.h"
+#include "godwrath.h"
 #include "libutil.h"
 #include "message.h"
 #include "mutation.h"
@@ -733,11 +734,15 @@ static const char* dur_names[] =
     "lowered mr",
     "repel stairs move",
     "repel stairs climb",
+    "coloured smoke trail",
     "slimify",
     "time step",
     "icemail depleted",
     "misled",
     "quad damage",
+    "afraid",
+    "mirror damage",
+    "scrying",
 };
 
 void wizard_edit_durations( void )
@@ -920,9 +925,19 @@ void wizard_get_god_gift (void)
 
 void wizard_toggle_xray_vision()
 {
-#ifdef WIZARD
     you.xray_vision = !you.xray_vision;
-#endif
     viewwindow(true);
 }
 
+void wizard_god_wrath()
+{
+    if (you.religion == GOD_NO_GOD)
+    {
+        mpr("You suffer the terrible wrath of No God.");
+        return;
+    }
+
+    if (!divine_retribution(you.religion, true, true))
+        // Currently only dead Jiyva.
+        mpr("You're not eligible for wrath.");
+}

@@ -78,7 +78,7 @@ enum tide_direction
 static tide_direction _shoals_tide_direction;
 static monster* tide_caller = NULL;
 static coord_def tide_caller_pos;
-static long tide_called_turns = 0L;
+static int tide_called_turns = 0;
 static int tide_called_peak = 0;
 static int shoals_plant_quota = 0;
 
@@ -691,7 +691,8 @@ void dgn_build_shoals_level(int level_number)
     env.level_layout_type   = "shoals";
 
     const int shoals_depth = level_id::current().depth - 1;
-    dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, DNGN_OPEN_SEA);
+    if (you.level_type != LEVEL_LABYRINTH && you.level_type != LEVEL_PORTAL_VAULT)
+        dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, DNGN_OPEN_SEA);
     _shoals_init_heights();
     _shoals_init_islands(shoals_depth);
     _shoals_cliffs();
@@ -937,6 +938,7 @@ static int _shoals_tide_at(coord_def pos, int base_tide)
     if (!tide_caller)
         return base_tide;
 
+    // try to avoid the costly sqrt() call
     const int rl_distance = grid_distance(pos, tide_caller_pos);
     if (rl_distance > TIDE_CALL_RADIUS)
         return base_tide;
@@ -1051,7 +1053,7 @@ static monster* _shoals_find_tide_caller()
     return NULL;
 }
 
-void shoals_apply_tides(long turns_elapsed, bool force, bool incremental_tide)
+void shoals_apply_tides(int turns_elapsed, bool force, bool incremental_tide)
 {
     if (!player_in_branch(BRANCH_SHOALS)
         || (!turns_elapsed && !force)
@@ -1067,9 +1069,9 @@ void shoals_apply_tides(long turns_elapsed, bool force, bool incremental_tide)
     // has been updating the tide.
     if (turns_elapsed > 1)
     {
-        const long last_updated_time =
+        const int last_updated_time =
             props[PROPS_SHOALS_TIDE_UPDATE_TIME].get_int();
-        const long turn_delta = (you.elapsed_time - last_updated_time) / 10;
+        const int turn_delta = (you.elapsed_time - last_updated_time) / 10;
         turns_elapsed = std::min(turns_elapsed, turn_delta);
     }
 

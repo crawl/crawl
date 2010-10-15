@@ -25,7 +25,7 @@ This spell causes the dead to rise up and serve the caster; every corpse within 
 %%%%
 Animate Skeleton
 
-This spell raises an inert skeleton to a state of unlife. Note that skeletons are incapable of leaving the level they were created on.
+This spell raises an inert skeleton to a state of unlife, even if that skeleton is still encased in flesh! Note that skeletons are incapable of leaving the level they were created on.
 %%%%
 Apportation
 
@@ -170,7 +170,7 @@ Successfully casting this spell gives the caster the ability to instantaneously 
 %%%%
 Demonic Horde
 
-This spell calls forth a small swarm of small demons to do battle with the caster's foes.
+This spell calls forth a small swarm of small demons to do battle with the caster's foes (and sometimes with each other!).
 %%%%
 Detect Creatures
 
@@ -190,7 +190,7 @@ This spell reveals traps in the caster's vicinity.
 %%%%
 Dig
 
-This spell digs a tunnel through unworked rock.
+This spell forms tunnels through unworked rock by liquefying it.
 %%%%
 Disintegrate
 
@@ -296,7 +296,7 @@ This spell speeds the actions of a creature.
 %%%%
 Haunt
 
-This spell calls on the powers of the undead to aid the caster.
+This spell calls wraiths and ghosts to haunt the caster's target. Calling on the undead exacts a toll on the caster's health, however.
 %%%%
 Hellfire
 
@@ -358,6 +358,10 @@ Magic Dart
 
 This spell hurls a small bolt of magical energy. It never misses.
 %%%%
+Malign Gateway
+
+This spell tears a gash in reality, creating a self-sustained but thankfully temporary portal to an unknown, tainted otherworld. Which dastardly denizens of this place might choose to poke their tentacled appendages through, nobody knows, but certainly nobody would want to be nearby when it happens.
+%%%%
 Mass Confusion
 
 This spell causes confusion in all who gaze upon the caster.
@@ -380,7 +384,7 @@ This spell first transforms the caster into a semi-corporeal apparition receptiv
 %%%%
 Olgreb's Toxic Radiance
 
-This spell bathes the caster's surroundings in poisonous green light.
+This spell bathes the caster's surroundings in a sickly green light, inflicting poison on everything in sight (including the caster).
 %%%%
 Orb of Destruction
 
@@ -488,10 +492,6 @@ See Invisible
 
 This spell enables the caster to perceive things that are shielded from ordinary sight.
 %%%%
-Selective Amnesia
-
-This spell allows the caster to selectively erase one spell from memory to recapture the magical energy bound up with it.
-%%%%
 Shadow Creatures
 
 This spell weaves a creature from shadows and threads of Abyssal matter. The creature thus brought into existence will recreate some type of creature found in the caster's immediate vicinity. The spell even creates appropriate equipment for the creature, which are given a lasting substance by their firm contact with reality.
@@ -575,7 +575,7 @@ This spell creates a shower of colourful butterflies. How pretty!
 %%%%
 Summon Demon
 
-This spell opens a gate to the realm of Pandemonium and draws forth one of its inhabitants to serve the caster for a time.
+This spell opens a gate to the realm of Pandemonium and draws forth one of its inhabitants to serve the caster for a time (although the demon's servitude is by no means guaranteed).
 %%%%
 Summon Dragon
 
@@ -599,7 +599,7 @@ This spell calls forth a beast of ice to serve the caster.
 %%%%
 Summon Scorpions
 
-This spell summons one or more giant scorpions to the caster's assistance.
+This spell summons one or more scorpions (some of which may not be bound to the caster's service).
 %%%%
 Summon Small Mammals
 
@@ -611,7 +611,7 @@ This spell summons forth a pestilential swarm.
 %%%%
 Summon Ugly Thing
 
-This spell summons a mutated otherworldly creature to the caster's aid.
+This spell summons a mutated otherworldly creature to the caster's aid. The hideous thing may not appreciate being called.
 %%%%
 Sure Blade
 

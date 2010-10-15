@@ -16,7 +16,6 @@ bool choose_game(newgame_def *ng, newgame_def* choice,
                  const newgame_def& defaults);
 
 void make_rod(item_def &item, stave_type rod_type, int ncharges);
-int claws_level(species_type sp);
 int start_to_wand(int wandtype, bool& is_rod);
 int start_to_book(int firstbook, int booktype);
 

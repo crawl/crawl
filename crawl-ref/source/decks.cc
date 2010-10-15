@@ -119,7 +119,7 @@ const deck_archetype deck_of_destruction[] = {
     { CARD_HAMMER,  {5, 5, 5} },
     { CARD_SPARK,   {5, 5, 5} },
     { CARD_PAIN,    {5, 5, 5} },
-    { CARD_TORMENT, {5, 5, 5} },
+    { CARD_TORMENT, {1, 3, 5} },
     END_OF_DECK
 };
 
@@ -1846,6 +1846,12 @@ static void _helm_card(int power, deck_rarity_type rarity)
 
 static void _blade_card(int power, deck_rarity_type rarity)
 {
+    if (you.species == SP_CAT)
+    {
+        mpr("You feel like a smilodon for a moment.");
+        return;
+    }
+
     // Pause before jumping to the list.
     if (Options.auto_list)
         more();
@@ -2499,7 +2505,7 @@ static void _crusade_card(int power, deck_rarity_type rarity)
                     // count this as a recruitment.
                     if (is_good_god(you.religion)
                         || you.religion == GOD_BEOGH
-                            && mons_species(mi->type) == MONS_ORC
+                            && mons_genus(mi->type) == MONS_ORC
                             && !mi->is_summoned()
                             && !mi->is_shapeshifter())
                     {
@@ -3127,6 +3133,6 @@ void nemelex_shuffle_decks()
 
     // Wildly inaccurate, but of similar quality as the old code which
     // was triggered by the presence of any deck anywhere.
-    if (you.num_gifts[GOD_NEMELEX_XOBEH])
+    if (you.num_total_gifts[GOD_NEMELEX_XOBEH])
         god_speaks(GOD_NEMELEX_XOBEH, "You hear Nemelex Xobeh chuckle.");
 }

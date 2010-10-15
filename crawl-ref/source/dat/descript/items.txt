@@ -579,10 +579,6 @@ helmet
 
 A piece of metal headgear.
 %%%%
-holy scourge
-
-A blessed weapon, woven by the saints in Heaven and hated by the unholy. It is a favoured weapon of the Shining One's servants.
-%%%%
 honeycomb
 
 A lump of the delicious honeycomb made by giant bees.
@@ -764,7 +760,7 @@ A potion which can send one into an incoherent rage.
 %%%%
 potion of blood
 
-A potion containing the essence of life. Vital for all living creatures, as well as some undead ones.
+A potion containing the essence of life. It is vital for all living creatures, as well as some undead ones. It can also provide nutrition for those capable of eating meat.
 %%%%
 potion of brilliance
 
@@ -772,7 +768,7 @@ A magic potion which greatly increases the intelligence and magical power of one
 %%%%
 potion of coagulated blood
 
-A potion containing the essence of life. Vital for all living creatures, as well as some undead ones. The blood within won't be palatable much longer.
+A potion containing the essence of life. It is vital for all living creatures, as well as some undead ones. It can also provide nutrition for those capable of eating meat. The blood within won't be palatable much longer.
 %%%%
 potion of confusion
 
@@ -1032,6 +1028,10 @@ sabre
 
 A sword with a medium length slashing blade.
 %%%%
+sacred scourge
+
+A blessed weapon, woven by the saints in Heaven and hated by the unholy. It is a favoured weapon of the Shining One's servants.
+%%%%
 sausage
 
 An elongated lump of low-grade gristle, entrails and cereal products encased in an intestine. Yum!
@@ -1048,6 +1048,10 @@ scroll of acquirement
 
 This wonderful scroll causes the creation of a valuable item to appear before the reader. It is especially treasured by specialist magicians, as they can use it to obtain the powerful spells of their specialty.
 %%%%
+scroll of amnesia
+
+This scroll allows its reader to selectively erase one spell from memory to recapture the magical energy bound up with it.
+%%%%
 scroll of blinking
 
 This scroll allows its reader to teleport a short distance, with precise control. Be wary that controlled teleports will cause the subject to become contaminated with magical energy.
@@ -1055,6 +1059,10 @@ This scroll allows its reader to teleport a short distance, with precise control
 scroll of curse armour
 
 This scroll places a curse on a piece of armour.
+%%%%
+scroll of curse jewellery
+
+This scroll places a curse on an amulet or a ring.
 %%%%
 scroll of curse weapon
 
@@ -1342,7 +1350,8 @@ A magical device which induces confusion and bewilderment in a target creature.
 %%%%
 wand of digging
 
-A magical device which drills tunnels through unworked rock.
+A magical device which forms tunnels through unworked rock by liquefying it.
+
 %%%%
 wand of disintegration
 

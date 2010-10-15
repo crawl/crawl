@@ -131,6 +131,7 @@ public:
     virtual void swap_buffers() = 0;
     virtual int screen_width() const = 0;
     virtual int screen_height() const = 0;
+    virtual int desktop_width() const = 0;
 
     // Texture loading
     virtual bool load_texture(GenericTexture *tex, const char *filename,

@@ -453,6 +453,15 @@ void init_element_colours()
                          ));
 }
 
+void clear_colours_on_exit()
+{
+    for (std::map<element_type, element_colour_calc*>::const_iterator it = element_colours.begin(); it != element_colours.end(); ++it)
+        delete it->second;
+
+    element_colours.clear();
+    element_colours_str.clear();
+}
+
 int element_colour( int element, bool no_random, const coord_def& loc )
 {
     // pass regular colours through for safety.

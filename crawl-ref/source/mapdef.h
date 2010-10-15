@@ -615,22 +615,26 @@ private:
 class mons_spec
 {
  public:
-    int  mid;
+    int mid;
     level_id place;
     monster_type monbase;     // Base monster for zombies and dracs.
     mon_attitude_type attitude;
-    int  number;              // Head count for hydras, etc.
-    int  quantity;            // Number of monsters (usually 1).
-    int  genweight, mlevel;
+    int number;               // Head count for hydras, etc.
+    int quantity;             // Number of monsters (usually 1).
+    int genweight, mlevel;
     bool fix_mons;
     bool generate_awake;
     bool patrolling;
     bool band;
-    int  colour;
-    int  hd;
-    int  hp;
-    int  abjuration_duration;
-    int  summon_type;
+    int colour;
+
+    god_type god;
+    bool god_gift;
+
+    int hd;
+    int hp;
+    int abjuration_duration;
+    int summon_type;
 
     item_list items;
     std::string monname;
@@ -650,9 +654,10 @@ class mons_spec
         : mid(id), place(), monbase(base), attitude(ATT_HOSTILE), number(num),
           quantity(1), genweight(gw), mlevel(ml), fix_mons(_fixmons),
           generate_awake(awaken), patrolling(false), band(false),
-          colour(BLACK), hd(0), hp(0), abjuration_duration(0), summon_type(0),
-          items(), monname(""), non_actor_summoner(""), explicit_spells(false),
-          spells(), extra_monster_flags(0L), props()
+          colour(BLACK), god(GOD_NO_GOD), god_gift(false), hd(0), hp(0),
+          abjuration_duration(0), summon_type(0), items(), monname(""),
+          non_actor_summoner(""), explicit_spells(false), spells(),
+          extra_monster_flags(0L), props()
     {
     }
 };

@@ -65,7 +65,7 @@
 #include "viewchar.h"
 #include "xom.h"
 
-static bool _wounded_damaged(monster_type mon_type);
+static bool _wounded_damaged(mon_holy_type holi);
 
 static int _make_mimic_item(monster_type type)
 {
@@ -157,7 +157,7 @@ static int _make_mimic_item(monster_type type)
 
 const item_def *give_mimic_item(monster* mimic)
 {
-    ASSERT(mimic != NULL && mons_is_mimic(mimic->type));
+    ASSERT(mimic != NULL && mons_is_item_mimic(mimic->type));
 
     mimic->destroy_inventory();
     int it = _make_mimic_item(mimic->type);
@@ -171,11 +171,55 @@ const item_def *give_mimic_item(monster* mimic)
 
 const item_def &get_mimic_item(const monster* mimic)
 {
-    ASSERT(mimic != NULL && mons_is_mimic(mimic->type));
+    ASSERT(mimic != NULL && mons_is_item_mimic(mimic->type));
 
     ASSERT(mimic->inv[MSLOT_MISCELLANY] != NON_ITEM);
 
     return (mitm[mimic->inv[MSLOT_MISCELLANY]]);
+}
+
+dungeon_feature_type get_mimic_feat (const monster* mimic)
+{
+    switch (mimic->type)
+    {
+    case MONS_DOOR_MIMIC:
+        return (DNGN_CLOSED_DOOR);
+    case MONS_PORTAL_MIMIC:
+        if (mimic->props.exists("portal_desc"))
+            return (DNGN_ENTER_PORTAL_VAULT);
+        else
+            return (DNGN_ENTER_LABYRINTH);
+    case MONS_TRAP_MIMIC:
+        return (DNGN_TRAP_MECHANICAL);
+    case MONS_STAIR_MIMIC:
+        return (DNGN_STONE_STAIRS_DOWN_I);
+    case MONS_SHOP_MIMIC:
+        return (DNGN_ENTER_SHOP);
+    case MONS_FOUNTAIN_MIMIC:
+        if (mimic->props.exists("fountain_type"))
+        {
+            return static_cast<dungeon_feature_type>(mimic->props[
+                "fountain_type"].get_short());
+        }
+        else
+        {
+            return (DNGN_FOUNTAIN_BLUE);
+        }
+    default:
+        ASSERT(false);
+        break;
+    }
+
+    return (DNGN_UNSEEN);
+}
+
+bool feature_mimic_at (const coord_def &c)
+{
+    const monster* mons = monster_at(c);
+    if (mons != NULL)
+        return mons_is_feat_mimic(mons->type);
+
+    return (false);
 }
 
 // Sets the colour of a mimic to match its description... should be called
@@ -184,12 +228,26 @@ int get_mimic_colour( const monster* mimic )
 {
     ASSERT(mimic != NULL);
 
-    return (get_mimic_item(mimic).colour);
+    if (mons_is_item_mimic(mimic->type))
+        return (get_mimic_item(mimic).colour);
+    else
+        return (mimic->colour);
 }
 
 // Monster curses a random player inventory item.
 bool curse_an_item( bool decay_potions, bool quiet )
 {
+    // allowing these would enable mummy scumming
+    if (you.religion == GOD_ASHENZARI)
+    {
+        if (!quiet)
+        {
+            mprf(MSGCH_GOD, "The curse is absorbed by %s.",
+                 god_name(GOD_ASHENZARI).c_str());
+        }
+        return false;
+    }
+
     int count = 0;
     int item  = ENDOFPACK;
 
@@ -334,7 +392,7 @@ monster_type fill_out_corpse(const monster* mons,
             corpse_class = mons_zombie_base(mons);
         }
 
-        if (mons && corpse_class == MONS_DRACONIAN)
+        if (mons && mons_genus(mtype) == MONS_DRACONIAN)
         {
             if (mons->type == MONS_TIAMAT)
                 corpse_class = MONS_DRACONIAN;
@@ -366,7 +424,8 @@ monster_type fill_out_corpse(const monster* mons,
 
     if (mons)
     {
-        corpse.props[MONSTER_NUMBER] = short(mons->number);
+        corpse.props[MONSTER_HIT_DICE] = short(mons->hit_dice);
+        corpse.props[MONSTER_NUMBER]   = short(mons->number);
     }
 
     corpse.colour = mons_class_colour(corpse_class);
@@ -824,7 +883,7 @@ static bool _beogh_forcibly_convert_orc(monster* mons, killer_type killer,
                                         int i)
 {
     if (you.religion == GOD_BEOGH
-        && mons_species(mons->type) == MONS_ORC
+        && mons_genus(mons->type) == MONS_ORC
         && !mons->is_summoned() && !mons->is_shapeshifter()
         && !player_under_penance() && you.piety >= piety_breakpoint(2)
         && mons_near(mons) && !mons_is_god_gift(mons))
@@ -1252,6 +1311,24 @@ void mons_relocated(monster* mons)
             monster_die(&menv[base_id], KILL_RESET, -1, true, false);
         }
     }
+    else if (mons->type == MONS_ELDRITCH_TENTACLE
+             || mons->type == MONS_ELDRITCH_TENTACLE_SEGMENT)
+    {
+        int base_id = mons->type == MONS_ELDRITCH_TENTACLE
+                      ? mons->mindex() : mons->number;
+
+        monster_die(&menv[base_id], KILL_RESET, -1, true, false);
+
+        for (monster_iterator mit; mit; ++mit)
+        {
+            if (mit->type == MONS_ELDRITCH_TENTACLE_SEGMENT
+                && (int) mit->number == base_id)
+            {
+                monster_die(*mit, KILL_RESET, -1, true, false);
+            }
+        }
+
+    }
 }
 
 static int _destroy_tentacle(int tentacle_idx, monster* origin)
@@ -1348,6 +1425,47 @@ static std::string _killer_type_name(killer_type killer)
     return("");
 }
 
+static void _make_spectral_thing(monster* mons, bool quiet)
+{
+    if (mons->holiness() == MH_NATURAL && mons_can_be_zombified(mons))
+    {
+        const monster_type spectre_type = mons_species(mons->type);
+
+        // Headless hydras cannot be made spectral hydras, sorry.
+        if (spectre_type == MONS_HYDRA && mons->number == 0)
+        {
+            mprf("A glowing mist gathers momentarily, then fades.");
+            return;
+        }
+
+        // Use the original monster type as the zombified type here, to
+        // get the proper stats from it.
+        const int spectre =
+            create_monster(
+                mgen_data(MONS_SPECTRAL_THING, BEH_FRIENDLY, &you,
+                    0, 0, mons->pos(), MHITYOU,
+                    0, static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]),
+                    mons->type, mons->number));
+
+        if (spectre != -1)
+        {
+            if (!quiet)
+                mpr("A glowing mist starts to gather...");
+
+            // If the original monster has been drained or levelled up,
+            // its HD might be different from its class HD, in which
+            // case its HP should be rerolled to match.
+            if (menv[spectre].hit_dice != mons->hit_dice)
+            {
+                menv[spectre].hit_dice = std::max(mons->hit_dice, 1);
+                roll_zombie_hp(&menv[spectre]);
+            }
+
+            name_zombie(&menv[spectre], mons);
+        }
+    }
+}
+
 // Returns the slot of a possibly generated corpse or -1.
 int monster_die(monster* mons, killer_type killer,
                 int killer_index, bool silent, bool wizard, bool fake)
@@ -1406,12 +1524,7 @@ int monster_die(monster* mons, killer_type killer,
     mons_clear_trapping_net(mons);
 
     you.remove_beholder(mons);
-
-    // Monsters haloes should be removed when they die.
-    if (mons->holiness() == MH_HOLY)
-        invalidate_agrid();
-    if (mons->type == MONS_SILENT_SPECTRE)
-        invalidate_agrid();
+    you.remove_fearmonger(mons);
 
     // Clear auto exclusion now the monster is killed - if we know about it.
     if (mons_near(mons) || wizard)
@@ -1566,6 +1679,18 @@ int monster_die(monster* mons, killer_type killer,
                 killer = KILL_RESET;
         }
     }
+    else if (mons->type == MONS_ELDRITCH_TENTACLE)
+    {
+        if (!silent && !mons_reset && !mons->has_ench(ENCH_SEVERED))
+        {
+            mpr("With a roar, the tentacle is hauled back through the portal!",
+                MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+            silent = true;
+        }
+
+        if (killer == KILL_RESET)
+            killer = KILL_DISMISSED;
+    }
 
     const bool death_message = !silent && !did_death_message
                                && mons_near(mons)
@@ -1598,14 +1723,14 @@ int monster_die(monster* mons, killer_type killer,
                     mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s is %s!",
                          mons->name(DESC_CAP_THE).c_str(),
                          exploded                        ? "blown up" :
-                         _wounded_damaged(mons->type)    ? "destroyed"
+                         _wounded_damaged(targ_holy)     ? "destroyed"
                                                          : "killed");
                 }
                 else
                 {
                     mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "You %s %s!",
                          exploded                        ? "blow up" :
-                         _wounded_damaged(mons->type)    ? "destroy"
+                         _wounded_damaged(targ_holy)     ? "destroy"
                                                          : "kill",
                          mons->name(DESC_NOCAP_THE).c_str());
                 }
@@ -1696,6 +1821,13 @@ int monster_die(monster* mons, killer_type killer,
                                     true, mons);
                 }
 
+                // Yredelemnul hates artificial beings.
+                if (mons->is_artificial())
+                {
+                    did_god_conduct(DID_KILL_ARTIFICIAL, mons->hit_dice,
+                                    true, mons);
+                }
+
                 // Holy kills are always noticed.
                 if (mons->is_holy())
                 {
@@ -1748,30 +1880,9 @@ int monster_die(monster* mons, killer_type killer,
             }
 
             if (you.duration[DUR_DEATH_CHANNEL]
-                && mons->holiness() == MH_NATURAL
-                && mons_can_be_zombified(mons)
                 && gives_xp)
             {
-                const monster_type spectre_type = mons_species(mons->type);
-
-                // Don't allow 0-headed hydras to become spectral hydras.
-                if (spectre_type != MONS_HYDRA || mons->number != 0)
-                {
-                    const int spectre =
-                        create_monster(
-                            mgen_data(MONS_SPECTRAL_THING, BEH_FRIENDLY, &you,
-                                0, 0, mons->pos(), MHITYOU,
-                                0, static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]),
-                                spectre_type, mons->number));
-
-                    if (spectre != -1)
-                    {
-                        if (death_message)
-                            mpr("A glowing mist starts to gather...");
-
-                        name_zombie(&menv[spectre], mons);
-                    }
-                }
+                _make_spectral_thing(mons, !death_message);
             }
             break;
         }
@@ -1782,7 +1893,7 @@ int monster_die(monster* mons, killer_type killer,
             {
                 const char* msg =
                     exploded                     ? " is blown up!" :
-                    _wounded_damaged(mons->type) ? " is destroyed!"
+                    _wounded_damaged(targ_holy)  ? " is destroyed!"
                                                  : " dies!";
                 simple_monster_message(mons, msg, MSGCH_MONSTER_DAMAGE,
                                        MDAM_DEAD);
@@ -1887,6 +1998,14 @@ int monster_die(monster* mons, killer_type killer,
                             notice |= did_god_conduct(DID_CHAOTIC_KILLED_BY_SERVANT,
                                                       mons->hit_dice);
                         }
+
+                        if (mons->is_artificial())
+                        {
+                            notice |= did_god_conduct(
+                                          !confused ? DID_ARTIFICIAL_KILLED_BY_UNDEAD_SLAVE :
+                                                      DID_ARTIFICIAL_KILLED_BY_SERVANT,
+                                          mons->hit_dice);
+                        }
                     }
                     // Yes, we are splitting undead pets from the others
                     // as a way to focus Necromancy vs. Summoning
@@ -1936,6 +2055,12 @@ int monster_die(monster* mons, killer_type killer,
                     if (mons->is_chaotic())
                     {
                         notice |= did_god_conduct(DID_CHAOTIC_KILLED_BY_SERVANT,
+                                                  mons->hit_dice);
+                    }
+
+                    if (mons->is_artificial())
+                    {
+                        notice |= did_god_conduct(DID_ARTIFICIAL_KILLED_BY_SERVANT,
                                                   mons->hit_dice);
                     }
                 }
@@ -2019,7 +2144,7 @@ int monster_die(monster* mons, killer_type killer,
             {
                 const char* msg =
                     exploded                     ? " is blown up!" :
-                    _wounded_damaged(mons->type) ? " is destroyed!"
+                    _wounded_damaged(targ_holy)  ? " is destroyed!"
                                                  : " dies!";
                 simple_monster_message(mons, msg, MSGCH_MONSTER_DAMAGE,
                                        MDAM_DEAD);
@@ -2121,6 +2246,38 @@ int monster_die(monster* mons, killer_type killer,
         }
 
     }
+    else if (mons->type == MONS_ELDRITCH_TENTACLE)
+    {
+        for (monster_iterator mit; mit; ++mit)
+        {
+            if (mit->alive()
+                && mit->type == MONS_ELDRITCH_TENTACLE_SEGMENT
+                && mit->number == unsigned(mons->mindex()))
+            {
+                monster_die(*mit, KILL_MISC, NON_MONSTER, true);
+            }
+        }
+        if (mons->has_ench(ENCH_PORTAL_TIMER))
+        {
+            coord_def base_pos = mons->props["base_position"].get_coord();
+
+            if (env.grid(base_pos) == DNGN_TEMP_PORTAL)
+            {
+                env.grid(base_pos) = DNGN_FLOOR;
+            }
+        }
+    }
+    else if (mons->type == MONS_ELDRITCH_TENTACLE_SEGMENT
+             && killer != KILL_MISC)
+    {
+        if (!invalid_monster_index(mons->number)
+             && mons_base_type(&menv[mons->number]) == MONS_ELDRITCH_TENTACLE
+             && menv[mons->number].alive())
+        {
+            monster_die(&menv[mons->number], killer, killer_index, silent,
+                        wizard, fake);
+        }
+    }
     else if (mons_is_elven_twin(mons) && mons_near(mons))
     {
         elven_twin_died(mons, in_transit, killer, killer_index);
@@ -2194,6 +2351,13 @@ int monster_die(monster* mons, killer_type killer,
 
     if (crawl_state.game_is_arena())
         arena_monster_died(mons, killer, killer_index, silent, corpse);
+
+    // Monsters haloes should be removed when they die.
+    if (mons->holiness() == MH_HOLY)
+        invalidate_agrid();
+    // Likewise silence
+    if (mons->type == MONS_SILENT_SPECTRE)
+        invalidate_agrid();
 
     const coord_def mwhere = mons->pos();
     if (drop_items)
@@ -2304,7 +2468,7 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
 
     // Various inappropriate polymorph targets.
     if (mons_class_holiness(new_mclass) != mons->holiness()
-        || mons_class_flag(new_mclass, M_NO_POLY_TO)  // explicitely disallowed
+        || mons_class_flag(new_mclass, M_NO_POLY_TO)  // explicitly disallowed
         || mons_class_flag(new_mclass, M_UNIQUE)      // no uniques
         || mons_class_flag(new_mclass, M_NO_EXP_GAIN) // not helpless
         || new_mclass == mons_species(mons->type)  // must be different
@@ -2465,6 +2629,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     // changing mons->type, since unbeholding can only happen while
     // the monster is still a mermaid/siren.
     you.remove_beholder(mons);
+    you.remove_fearmonger(mons);
 
     if (mons->type == MONS_KRAKEN)
         _destroy_tentacles(mons);
@@ -2475,8 +2640,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     // the actual polymorphing:
     uint64_t flags =
         mons->flags & ~(MF_INTERESTING | MF_SEEN | MF_ATT_CHANGE_ATTEMPT
-                           | MF_WAS_IN_VIEW | MF_BAND_MEMBER
-                           | MF_HONORARY_UNDEAD | MF_KNOWN_MIMIC);
+                           | MF_WAS_IN_VIEW | MF_BAND_MEMBER | MF_KNOWN_MIMIC);
 
     std::string name;
 
@@ -2513,8 +2677,8 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     const god_type god =
         (player_will_anger_monster(real_targetc)
             || (you.religion == GOD_BEOGH
-                && mons_species(real_targetc) != MONS_ORC)) ? GOD_NO_GOD
-                                                            : mons->god;
+                && mons_genus(real_targetc) != MONS_ORC)) ? GOD_NO_GOD
+                                                          : mons->god;
 
     if (god == GOD_NO_GOD)
         flags &= ~MF_GOD_GIFT;
@@ -2745,7 +2909,6 @@ bool mon_can_be_slimified(monster* mons)
 
 void slimify_monster(monster* mon, bool hostile)
 {
-
     if (mon->holiness() == MH_UNDEAD)
         monster_polymorph(mon, MONS_DEATH_OOZE);
     else
@@ -2829,6 +2992,19 @@ void corrode_monster(monster* mons)
             }
         }
     }
+    else if (one_chance_in(3) && !(has_shield || has_armour)
+             && mons->holiness() == MH_NATURAL &&
+             !(mons->res_acid() || mons_is_slime(mons)))
+    {
+                mons->add_ench(mon_enchant(ENCH_BLEED, 1, KC_OTHER, (1 + random2(5))*10));
+
+                if (you.can_see(mons))
+                {
+                        mprf("%s writhes in agony as %s flesh is eaten away!",
+                             mons->name(DESC_CAP_THE).c_str(),
+                             mons->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str());
+            }
+        }
 }
 
 static bool _habitat_okay( const monster* mons, dungeon_feature_type targ )
@@ -2963,10 +3139,12 @@ bool monster_can_hit_monster(monster* mons, const monster* targ)
 
 mon_dam_level_type mons_get_damage_level(const monster* mons)
 {
-    if (monster_descriptor(mons->type, MDSC_NOMSG_WOUNDS)
-        || monster_descriptor(mons->get_mislead_type(), MDSC_NOMSG_WOUNDS)
+    if (!mons_can_display_wounds(mons)
+        || !mons_class_can_display_wounds(mons->get_mislead_type())
         || mons_is_unknown_mimic(mons))
+    {
         return MDAM_OKAY;
+    }
 
     if (mons->hit_points <= mons->max_hit_points / 6)
         return MDAM_ALMOST_DEAD;
@@ -2982,13 +3160,15 @@ mon_dam_level_type mons_get_damage_level(const monster* mons)
         return MDAM_OKAY;
 }
 
-std::string get_damage_level_string(monster_type mon_type, mon_dam_level_type mdam)
+std::string get_damage_level_string(mon_holy_type holi,
+                                    mon_dam_level_type mdam)
 {
     std::ostringstream ss;
-    switch(mdam) {
+    switch (mdam)
+    {
     case MDAM_ALMOST_DEAD:
         ss << "almost";
-        ss << (_wounded_damaged(mon_type) ? " destroyed" : " dead");
+        ss << (_wounded_damaged(holi) ? " destroyed" : " dead");
         return ss.str();
     case MDAM_SEVERELY_DAMAGED:
         ss << "severely";
@@ -3007,7 +3187,7 @@ std::string get_damage_level_string(monster_type mon_type, mon_dam_level_type md
         ss << "not";
         break;
     }
-    ss << (_wounded_damaged(mon_type) ? " damaged" : " wounded");
+    ss << (_wounded_damaged(holi) ? " damaged" : " wounded");
     return ss.str();
 }
 
@@ -3025,11 +3205,11 @@ std::string get_wounds_description(const monster* mons, bool colour)
     if (!mons->alive() || mons->hit_points == mons->max_hit_points)
         return "";
 
-    if (monster_descriptor(mons->type, MDSC_NOMSG_WOUNDS))
+    if (!mons_can_display_wounds(mons))
         return "";
 
     mon_dam_level_type dam_level = mons_get_damage_level(mons);
-    std::string desc = get_damage_level_string(mons->type, dam_level);
+    std::string desc = get_damage_level_string(mons->holiness(), dam_level);
     if (colour)
     {
         const int col = channel_to_colour(MSGCH_MONSTER_DAMAGE, dam_level);
@@ -3043,11 +3223,11 @@ void print_wounds(const monster* mons)
     if (!mons->alive() || mons->hit_points == mons->max_hit_points)
         return;
 
-    if (monster_descriptor(mons->type, MDSC_NOMSG_WOUNDS))
+    if (!mons_can_display_wounds(mons))
         return;
 
     mon_dam_level_type dam_level = mons_get_damage_level(mons);
-    std::string desc = get_damage_level_string(mons->type, dam_level);
+    std::string desc = get_damage_level_string(mons->holiness(), dam_level);
 
     desc.insert(0, " is ");
     desc += ".";
@@ -3057,11 +3237,9 @@ void print_wounds(const monster* mons)
 
 // (true == 'damaged') [constructs, undead, etc.]
 // and (false == 'wounded') [living creatures, etc.] {dlb}
-static bool _wounded_damaged(monster_type mon_type)
+static bool _wounded_damaged(mon_holy_type holi)
 {
     // this schema needs to be abstracted into real categories {dlb}:
-    const mon_holy_type holi = mons_class_holiness(mon_type);
-
     return (holi == MH_UNDEAD || holi == MH_NONLIVING || holi == MH_PLANT);
 }
 
@@ -4086,10 +4264,11 @@ beh_type actual_same_attitude(const monster& base)
 // temporarily.
 void mons_att_changed(monster* mon)
 {
+    const mon_attitude_type att = mon->temp_attitude();
+
     if (mons_base_type(mon) == MONS_KRAKEN)
     {
         const int headnum = mon->mindex();
-        const mon_attitude_type att = mon->temp_attitude();
 
         for (monster_iterator mi; mi; ++mi)
             if (mi->type == MONS_KRAKEN_TENTACLE
@@ -4105,6 +4284,17 @@ void mons_att_changed(monster* mon)
                     }
                 }
             }
+    }
+    if (mon->type == MONS_ELDRITCH_TENTACLE_SEGMENT
+        || mon->type == MONS_ELDRITCH_TENTACLE)
+    {
+        int base_idx = mon->type == MONS_ELDRITCH_TENTACLE ? mon->mindex() : mon->number;
+
+        menv[base_idx].attitude = att;
+        for (monster_iterator mi; mi; ++mi)
+        {
+            mi->attitude = att;
+        }
     }
 }
 
@@ -4194,4 +4384,27 @@ void forest_damage(const actor *mon)
                 break;
             }
     }
+}
+
+void debuff_monster(monster* mon)
+{
+        // List of magical enchantments which will be dispelled.
+    const enchant_type lost_enchantments[] = {
+        ENCH_SLOW,
+        ENCH_HASTE,
+        ENCH_SWIFT,
+        ENCH_MIGHT,
+        ENCH_FEAR,
+        ENCH_CONFUSION,
+        ENCH_INVIS,
+        ENCH_CORONA,
+        ENCH_CHARM,
+        ENCH_PARALYSIS,
+        ENCH_PETRIFYING,
+        ENCH_PETRIFIED
+    };
+
+     // Dispel all magical enchantments.
+     for (unsigned int i = 0; i < ARRAYSZ(lost_enchantments); ++i)
+          mon->del_ench(lost_enchantments[i], true, true);
 }

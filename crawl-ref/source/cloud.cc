@@ -36,7 +36,7 @@
 #include "tiledef-main.h"
 #endif
 
-int actual_spread_rate(cloud_type type, int spread_rate)
+static int _actual_spread_rate(cloud_type type, int spread_rate)
 {
     if (spread_rate >= 0)
         return spread_rate;
@@ -505,7 +505,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
             return;
     }
 
-    const int spread_rate = actual_spread_rate(cl_type, _spread_rate);
+    const int spread_rate = _actual_spread_rate(cl_type, _spread_rate);
 
     // Too many clouds.
     if (env.cloud_no >= MAX_CLOUDS)
@@ -719,7 +719,8 @@ int max_cloud_damage(cloud_type cl_type, int power)
         break;
 
     case CLOUD_STINK:
-        if (player_res_poison())
+        // If you don't have to breathe, unaffected.
+        if (player_res_poison() || you.species == SP_GREY_DRACONIAN)
             return (0);
 
         dam += 2 * speed / 10;
@@ -814,8 +815,8 @@ void in_a_cloud()
 
     case CLOUD_STINK:
         cloud.announce_actor_engulfed(&you);
-
-        if (player_res_poison())
+        // If you don't have to breathe, unaffected.
+        if (player_res_poison() || you.species == SP_GREY_DRACONIAN)
             break;
 
         hurted += (random2(3) * you.time_taken) / 10;
@@ -865,7 +866,6 @@ void in_a_cloud()
         break;
 
     case CLOUD_POISON:
-        // If you don't have to breathe, unaffected
         cloud.announce_actor_engulfed(&you);
         if (!player_res_poison())
         {
@@ -969,7 +969,7 @@ void in_a_cloud()
         break;
 
     case CLOUD_HOLY_FLAMES:
-        mprf("You are engulfed in %s!", !name.empty() ? name.c_str() : "blessed fire");
+        cloud.announce_actor_engulfed(&you);
 
         // Stats are the same for fire, except resists are based on holiness.
         // Damage is reduced if you are holy, increased if you are evil/unholy.
@@ -1025,6 +1025,8 @@ bool is_damaging_cloud(cloud_type type, bool temp)
     // Takes into account what the player can *know* and what s/he can
     // also expect to be the case a few turns later (ignores spells).
     case CLOUD_STINK:
+         if (you.species == SP_GREY_DRACONIAN)
+             return (false);
     case CLOUD_POISON:
         return (!player_res_poison(false, temp));
     case CLOUD_STEAM:
@@ -1103,7 +1105,7 @@ std::string cloud_name_at_index(int cloudno)
 static const char *_terse_cloud_names[] =
 {
     "?",
-    "flame", "noxious fumes", "freezing vapour", "poison gases",
+    "flame", "noxious fumes", "freezing vapour", "poison gasses",
     "black smoke", "grey smoke", "blue smoke",
     "purple smoke", "translocational energy", "fire",
     "steam", "gloom", "ink", "blessed fire", "foul pestilence", "thin mist",
@@ -1201,13 +1203,15 @@ std::string cloud_struct::cloud_name(const std::string &defname) const
                                cloud_type_name(type, false));
 }
 
-void cloud_struct::announce_actor_engulfed(const actor *act) const
+void cloud_struct::announce_actor_engulfed(const actor *act,
+                                           bool beneficial) const
 {
     if (you.can_see(act))
     {
-        mprf("%s %s engulfed in %s.",
+        mprf("%s %s in %s.",
              act->name(DESC_CAP_THE).c_str(),
-             act->conj_verb("are").c_str(),
+             beneficial ? act->conj_verb("bask").c_str()
+                        : (act->conj_verb("are") + " engulfed").c_str(),
              cloud_name().c_str());
     }
 }

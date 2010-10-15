@@ -229,11 +229,6 @@ ifneq (,$(findstring CYGWIN,$(uname_S)))
 	NO_RDYNAMIC = YesPlease
 	BUILD_PCRE = YesPlease
 endif
-ifeq (,$(findstring .exe,$(GAME)))
-	DEFINES += -DUSE_TAR
-else
-	DEFINES += -DUSE_ZIP
-endif
 
 ifdef BUILD_ALL
 	BUILD_FREETYPE = YesPlease

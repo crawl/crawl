@@ -535,7 +535,7 @@ MAGIC:   50
 BOOL:    nospell
 DESC:    An adamantine great sword.
 
-NAME:    "Eos"
+NAME:    morningstar "Eos"
 APPEAR:  encrusted morningstar
 OBJ:     OBJ_WEAPONS/WPN_MORNINGSTAR
 PLUS:    +5/+5
@@ -688,13 +688,13 @@ TILE_EQ: undeadhunter
 BRAND:   SPWPN_HOLY_WRATH
 BOOL:    life
 
-NAME:    whip "Serpent-Scourge"
+NAME:    whip "Snakebite"
 APPEAR:  forked whip
 OBJ:     OBJ_WEAPONS/WPN_WHIP
 PLUS:    +5/+10
 COLOUR:  DARKGREY
-TILE:    urand_serpent_scourge
-TILE_EQ: serpent_scourge
+TILE:    urand_snakebite
+TILE_EQ: snakebite
 BRAND:   SPWPN_VENOM
 BOOL:    poison, tilerim
 DESC_ID: A double-ended whip made from the cured hides of the Lair of Beasts'
@@ -1117,6 +1117,18 @@ COLOUR:  ETC_ENCHANT
 TILE:    urand_mage
 INT:     3
 MAGIC:   50
+
+NAME:    ring of Charms
+APPEAR:  encrusted golden ring
+OBJ:     OBJ_JEWELLERY/RING_CHARM
+COLOUR:  ETC_ENCHANT
+#FIXME! missing tile <================================================
+TILE:    urand_mage
+STEALTH: -10
+VALUE:   1500
+BOOL:    special
+DESC_ID: This lovely ring bestows on the wearer a strange glamour that makes
+         those of his or her kin likely to be friendly.
 
 NAME:     brooch of Shielding
 APPEAR:   shield-shaped amulet

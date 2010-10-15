@@ -52,6 +52,8 @@ enum mon_attack_type
     AT_CONSTRICT,
     AT_TRAMPLE,
     AT_TRUNK_SLAP,
+    AT_SNAP,
+    AT_SPLASH,
 
     AT_SHOOT,       // Attack representing missile damage for M_ARCHER.
     AT_WEAP_ONLY,   // Ranged weap: shoot point-blank like AT_SHOOT, melee weap:
@@ -96,7 +98,7 @@ enum mon_attack_flavour
     AF_STEAL_FOOD,
     AF_CRUSH,
     AF_REACH,
-    AF_HOLY,
+    AF_HOLY
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or
@@ -144,7 +146,9 @@ enum mon_itemuse_type
     MONUSE_OPEN_DOORS,
     MONUSE_STARTING_EQUIPMENT,
     MONUSE_WEAPONS_ARMOUR,
+#if TAG_MAJOR_VERSION == 31
     MONUSE_MAGIC_ITEMS,
+#endif
 
     NUM_MONUSE
 };

@@ -74,7 +74,7 @@ std::string item_def::name(description_level_type descrip,
                            bool terse, bool ident,
                            bool with_inscription,
                            bool quantity_in_words,
-                           unsigned long ignore_flags) const
+                           iflags_t ignore_flags) const
 {
     if (crawl_state.game_is_arena())
     {
@@ -116,7 +116,9 @@ std::string item_def::name(description_level_type descrip,
     if (terse && descrip != DESC_DBNAME)
         descrip = DESC_PLAIN;
 
-    long corpse_flags;
+    // note: only the 32 lower bits of monste flags are passed,
+    // as we don't have support for 64 bit props
+    iflags_t corpse_flags;
 
     if (base_type == OBJ_CORPSES && is_named_corpse(*this)
         && !(((corpse_flags = props[CORPSE_NAME_TYPE_KEY].get_int())
@@ -237,8 +239,10 @@ std::string item_def::name(description_level_type descrip,
                 case EQ_WEAPON:
                     if (this->base_type == OBJ_WEAPONS || item_is_staff(*this))
                         buff << " (weapon)";
-                    else
+                    else if (you.species != SP_CAT)
                         buff << " (in hand)";
+                    else
+                        buff << " (in mouth)";
                     break;
                 case EQ_CLOAK:
                 case EQ_HELMET:
@@ -249,10 +253,12 @@ std::string item_def::name(description_level_type descrip,
                     buff << " (worn)";
                     break;
                 case EQ_LEFT_RING:
-                    buff << " (left hand)";
+                    buff << (you.species != SP_CAT ? " (left hand)"
+                                                   : " (left paw)");
                     break;
                 case EQ_RIGHT_RING:
-                    buff << " (right hand)";
+                    buff << (you.species != SP_CAT ? " (right hand)"
+                                                   : " (right paw)");
                     break;
                 case EQ_AMULET:
                     buff << " (around neck)";
@@ -620,6 +626,7 @@ static const char* scroll_type_name(int scrolltype)
     case SCR_RANDOM_USELESSNESS: return "random uselessness";
     case SCR_CURSE_WEAPON:       return "curse weapon";
     case SCR_CURSE_ARMOUR:       return "curse armour";
+    case SCR_CURSE_JEWELLERY:    return "curse jewellery";
     case SCR_IMMOLATION:         return "immolation";
     case SCR_BLINKING:           return "blinking";
     case SCR_PAPER:              return "paper";
@@ -633,6 +640,7 @@ static const char* scroll_type_name(int scrolltype)
     case SCR_HOLY_WORD:          return "holy word";
     case SCR_VULNERABILITY:      return "vulnerability";
     case SCR_SILENCE:            return "silence";
+    case SCR_AMNESIA:            return "amnesia";
     default:                     return "bugginess";
     }
 }
@@ -1172,7 +1180,7 @@ static void output_with_sign(std::ostream& os, int val)
 // the game screen.
 std::string item_def::name_aux(description_level_type desc,
                                bool terse, bool ident,
-                               unsigned long ignore_flags) const
+                               iflags_t ignore_flags) const
 {
     // Shortcuts
     const int item_typ   = sub_type;
@@ -1766,6 +1774,14 @@ std::string item_def::name_aux(description_level_type desc,
         break;
 
     case OBJ_STAVES:
+        if (know_curse && !terse)
+        {
+            if (cursed())
+                buff << "cursed ";
+            else if (Options.show_uncursed && !know_pluses)
+                buff << "uncursed ";
+        }
+
         if (!know_type)
         {
             if (!basename)
@@ -2638,8 +2654,9 @@ bool is_bad_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case SCR_CURSE_ARMOUR:
+        case SCR_CURSE_JEWELLERY:
         case SCR_CURSE_WEAPON:
-            return (true);
+            return (you.religion != GOD_ASHENZARI);
         case SCR_SUMMONING:
             // Summoning will always produce hostile monsters if you
             // worship a good god. (Use temp to allow autopickup to
@@ -2771,6 +2788,9 @@ bool is_useless_item(const item_def &item, bool temp)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
+        if (you.species == SP_CAT)
+            return (true);
+
         if (!you.could_wield(item, true)
             && !is_throwable(&you, item))
         {
@@ -2795,6 +2815,9 @@ bool is_useless_item(const item_def &item, bool temp)
         return (false);
 
     case OBJ_MISSILES:
+        if (you.species == SP_CAT)
+            return (true);
+
         // These are the same checks as in is_throwable(), except that
         // we don't take launchers into account.
         switch (item.sub_type)
@@ -2828,10 +2851,25 @@ bool is_useless_item(const item_def &item, bool temp)
             return (true);
         case SCR_TELEPORTATION:
             return (crawl_state.game_is_sprint());
+        case SCR_AMNESIA:
+            return (you.religion == GOD_TROG);
+        case SCR_RECHARGING:
+        case SCR_CURSE_WEAPON: // for non-Ashenzari, already handled
+        case SCR_CURSE_ARMOUR:
+        case SCR_ENCHANT_WEAPON_I:
+        case SCR_ENCHANT_WEAPON_II:
+        case SCR_ENCHANT_WEAPON_III:
+        case SCR_ENCHANT_ARMOUR:
+            return (you.species == SP_CAT);
+        case SCR_DETECT_CURSE:
+            return (you.religion == GOD_ASHENZARI);
         default:
             return (false);
         }
     case OBJ_WANDS:
+        if (you.species == SP_CAT)
+            return (true);
+
         return (item.plus2 == ZAPCOUNT_EMPTY)
                || item_ident(item, ISFLAG_KNOW_PLUSES) && !item.plus;
 
@@ -2882,6 +2920,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_INVISIBILITY:
             // If you're Corona'd or a TSO-ite, this is always useless.
             return (temp ? you.backlit(true) : you.haloed());
+
         }
 
         return (false);
@@ -2956,6 +2995,8 @@ bool is_useless_item(const item_def &item, bool temp)
         }
 
     case OBJ_STAVES:
+        if (you.species == SP_CAT)
+            return (true);
         if (you.religion == GOD_TROG && !item_is_rod(item))
             return (true);
         break;

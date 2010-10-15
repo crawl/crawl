@@ -46,9 +46,11 @@ effects.o \
 errors.o \
 exclude.o \
 exercise.o \
+fearmonger.o \
 feature.o \
 fight.o \
 files.o \
+fineff.o \
 food.o \
 format.o \
 fprop.o \

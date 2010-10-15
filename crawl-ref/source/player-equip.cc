@@ -45,6 +45,9 @@ void equip_item(equipment_type slot, int item_slot, bool msg)
     you.equip[slot] = item_slot;
 
     _equip_effect(slot, item_slot, false, msg);
+    ash_check_bondage();
+    if (you.equip[slot] != -1 && you.inv[you.equip[slot]].cursed())
+        ash_id_inventory();
 }
 
 // Clear an equipment slot (possibly melded).
@@ -63,6 +66,7 @@ bool unequip_item(equipment_type slot, bool msg)
             _unequip_effect(slot, item_slot, msg);
         else
             you.melded[slot] = false;
+        ash_check_bondage();
         return (true);
     }
 }
@@ -365,6 +369,47 @@ static void _unequip_artefact_effect(const item_def &item, bool *show_msgs=NULL)
     }
 }
 
+static void _equip_weapon_use_warning(const item_def& item)
+{
+    if (is_holy_item(item) && you.religion == GOD_YREDELEMNUL)
+        mpr("You really shouldn't be using a holy item like this.");
+    else if (is_unholy_item(item) && is_good_god(you.religion))
+        mpr("You really shouldn't be using an unholy item like this.");
+    else if (is_corpse_violating_item(item) && you.religion == GOD_FEDHAS)
+        mpr("You really shouldn't be using a corpse-violating item like this.");
+    else if (is_evil_item(item) && is_good_god(you.religion))
+        mpr("You really shouldn't be using an evil item like this.");
+    else if (is_unclean_item(item) && you.religion == GOD_ZIN)
+        mpr("You really shouldn't be using an unclean item like this.");
+    else if (is_chaotic_item(item) && you.religion == GOD_ZIN)
+        mpr("You really shouldn't be using a chaotic item like this.");
+    else if (is_hasty_item(item) && you.religion == GOD_CHEIBRIADOS)
+        mpr("You really shouldn't be using a fast item like this.");
+    else if (is_poisoned_item(item) && you.religion == GOD_SHINING_ONE)
+        mpr("You really shouldn't be using a poisoned item like this.");
+}
+
+
+static void _wield_cursed(item_def& item, bool known_cursed)
+{
+    if (!item.cursed())
+        return;
+    mpr("It sticks to your hand!");
+    int amusement = 16;
+    if (!known_cursed)
+    {
+        amusement *= 2;
+        god_type god;
+        if (origin_is_god_gift(item, &god) && god == GOD_XOM)
+            amusement *= 2;
+    }
+    const int wpn_skill = weapon_skill(item.base_type, item.sub_type);
+    if (wpn_skill != SK_FIGHTING && you.skills[wpn_skill] == 0)
+        amusement *= 2;
+
+    xom_is_stimulated(amusement);
+}
+
 // Provide a function for handling initial wielding of 'special'
 // weapons, or those whose function is annoying to reproduce in
 // other places *cough* auto-butchering *cough*.    {gdl}
@@ -385,9 +430,8 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
             if (showMsgs)
                 mpr("The area is filled with flickering shadows.");
 
-            you.current_vision -= 2;
-            set_los_radius(you.current_vision);
             you.attribute[ATTR_SHADOWS] = 1;
+            update_vision_range();
         }
         else if (item.sub_type == MISC_HORN_OF_GERYON)
             set_ident_flags(item, ISFLAG_IDENT_MASK);
@@ -396,6 +440,10 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
 
     case OBJ_STAVES:
     {
+        if (showMsgs)
+            _equip_weapon_use_warning(item);
+
+        set_ident_flags(item, ISFLAG_KNOW_CURSE);
         if (item.sub_type == STAFF_POWER)
         {
             int mp = item.special - you.elapsed_time / POWER_DECAY;
@@ -413,12 +461,9 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
             set_ident_type(item, ID_KNOWN_TYPE);
             set_ident_flags(item, ISFLAG_EQ_WEAPON_MASK);
         }
-        else if (!maybe_identify_staff(item))
-        {
-            // Give curse status when wielded.
-            // Right now that's always "uncursed". -- bwr
-            set_ident_flags(item, ISFLAG_KNOW_CURSE);
-        }
+        else
+            maybe_identify_staff(item);
+
         // Automatically identify rods; you can do this by wielding and then
         // evoking them, so do it automatically instead. We don't need to give
         // a message either, as the game will do that automatically. {due}
@@ -432,26 +477,17 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
             if (!item_ident( item, ISFLAG_KNOW_PLUSES))
                 set_ident_flags( item, ISFLAG_KNOW_PLUSES );
         }
+
+        _wield_cursed(item, known_cursed);
         break;
     }
 
     case OBJ_WEAPONS:
     {
         if (showMsgs)
-        {
-            if (is_holy_item(item) && you.religion == GOD_YREDELEMNUL)
-                mpr("You really shouldn't be using a holy item like this.");
-            else if (is_unholy_item(item) && is_good_god(you.religion))
-                mpr("You really shouldn't be using an unholy item like this.");
-            else if (is_evil_item(item) && is_good_god(you.religion))
-                mpr("You really shouldn't be using an evil item like this.");
-            else if (is_chaotic_item(item) && you.religion == GOD_ZIN)
-                mpr("You really shouldn't be using a chaotic item like this.");
-            else if (is_hasty_item(item) && you.religion == GOD_CHEIBRIADOS)
-                mpr("You really shouldn't be using a fast item like this.");
-        }
+            _equip_weapon_use_warning(item);
 
-        // Call unrandrt equip func before item is identified.
+        // Call unrandart equip func before item is identified.
         if (artefact)
             _equip_artefact_effect(item, &showMsgs);
 
@@ -640,24 +676,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
             }
         }
 
-        if (item.cursed())
-        {
-            mpr("It sticks to your hand!");
-            int amusement = 16;
-            if (!known_cursed && !known_recurser)
-            {
-                amusement *= 2;
-                god_type god;
-                if (origin_is_god_gift(item, &god) && god == GOD_XOM)
-                    amusement *= 2;
-            }
-            const int wpn_skill = weapon_skill(item.base_type, item.sub_type);
-            if (wpn_skill != SK_FIGHTING && you.skills[wpn_skill] == 0)
-                amusement *= 2;
-
-            xom_is_stimulated(amusement);
-        }
-
+        _wield_cursed(item, known_cursed || known_recurser);
         break;
     }
     default:
@@ -682,9 +701,8 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs)
     if (item.base_type == OBJ_MISCELLANY
         && item.sub_type == MISC_LANTERN_OF_SHADOWS )
     {
-        you.current_vision += 2;
-        set_los_radius(you.current_vision);
         you.attribute[ATTR_SHADOWS] = 0;
+        update_vision_range();
     }
     else if (item.base_type == OBJ_WEAPONS)
     {
@@ -803,7 +821,8 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
         switch (ego)
         {
         case SPARM_RUNNING:
-            mpr("You feel quick.");
+            if (!you.fishtail)
+                mpr("You feel quick.");
             break;
 
         case SPARM_FIRE_RESISTANCE:
@@ -939,7 +958,8 @@ static void _unequip_armour_effect(item_def& item)
     switch (get_armour_ego_type(item))
     {
     case SPARM_RUNNING:
-        mpr("You feel rather sluggish.");
+        if (!you.fishtail)
+            mpr("You feel rather sluggish.");
         break;
 
     case SPARM_FIRE_RESISTANCE:
@@ -1316,6 +1336,8 @@ static void _equip_jewellery_effect(item_def &item)
         }
         break;
 
+    // When making a jewel type auto-id, please update Ashenzari's list
+    // in godpassive.cc as well.
     }
 
     // Artefacts have completely different appearance than base types

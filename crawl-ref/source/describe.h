@@ -27,6 +27,13 @@ enum item_description_type
     NUM_IDESC
 };
 
+enum book_mem_or_forget
+{
+    BOOK_MEM,
+    BOOK_FORGET,
+    BOOK_NEITHER
+};
+
 struct describe_info
 {
     std::ostringstream body;
@@ -87,10 +94,11 @@ void print_description(const describe_info &inf);
 
 template<class T> void process_description(T &proc, const describe_info &inf);
 
-void trim_randart_inscrip( item_def& item );
-std::string artefact_auto_inscription( const item_def& item );
-void add_autoinscription( item_def &item, std::string ainscrip);
-void add_inscription( item_def &item, std::string inscrip);
+void trim_randart_inscrip(item_def& item);
+std::string artefact_auto_inscription(const item_def& item);
+void add_autoinscription(item_def &item, std::string ainscrip);
+void add_autoinscription(item_def &item);
+void add_inscription(item_def &item, std::string inscrip);
 
 const char *trap_name(trap_type trap);
 int str_to_trap(const std::string &s);
@@ -152,7 +160,7 @@ inline void process_description(T &proc, const describe_info &inf)
         // There is a default 1 line addition for some reason.
         num_lines = body_lines + 1;
     }
-    else if(body_lines + num_lines + 2 <= height)
+    else if (body_lines + num_lines + 2 <= height)
     {
         desc = inf.title + "\n\n";
         desc += inf.body.str();

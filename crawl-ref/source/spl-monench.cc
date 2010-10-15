@@ -85,8 +85,11 @@ static int _tame_beast_monsters(coord_def where, int pow, int, actor *)
         return 0;
     }
 
+    if (you.species == SP_CAT && mons_genus(mons->type) == MONS_HOUND)
+        return 0;
+
     // 50% bonus for dogs
-    if (mons->type == MONS_HOUND || mons->type == MONS_WAR_DOG )
+    if (mons->type == MONS_HOUND || mons->type == MONS_WAR_DOG)
         pow += (pow / 2);
 
     if (you.species == SP_HILL_ORC && mons->type == MONS_WARG)
@@ -121,11 +124,8 @@ bool backlight_monsters(coord_def where, int pow, int garbage)
         return (false);
 
     // Already glowing.
-    if (mons_class_flag(mons->type, M_GLOWS_LIGHT)
-        || mons_class_flag(mons->type, M_GLOWS_RADIATION))
-    {
+    if (mons->glows_naturally())
         return (false);
-    }
 
     mon_enchant bklt = mons->get_ench(ENCH_CORONA);
     const int lvl = bklt.degree;

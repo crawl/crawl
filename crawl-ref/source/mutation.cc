@@ -235,7 +235,7 @@ formatted_string describe_mutations()
         break;
 
     case SP_GREY_DRACONIAN:
-        result += "Your tail is studded with spikes.\n";
+        result += "You do not need to breathe.\n";
         have_any = true;
         break;
 
@@ -311,6 +311,13 @@ formatted_string describe_mutations()
         have_any = true;
         break;
 
+    case SP_CAT:
+        result += "You cannot wear armour.\n";
+        result += "You are incapable of any advanced item manipulation.\n";
+        result += "Your paws have sharp claws.\n";
+        have_any = true;
+        break;
+
     default:
         break;
     }
@@ -339,10 +346,7 @@ formatted_string describe_mutations()
         // weapons and carrying capacity.
         result += "Your body does not fit into most forms of armour.\n";
 
-        int ac = (you.experience_level < 8) ? 2 :
-                 (you.species == SP_GREY_DRACONIAN)
-                     ? (you.experience_level - 4) / 2 + 1 :
-                       you.experience_level / 4 + 1;
+        int ac = 3 + (you.experience_level / 3);
         std::ostringstream num;
         num << ac;
         result += "Your scales are hard (AC +" + num.str() + ").\n";
@@ -904,6 +908,10 @@ static bool _physiology_mutation_conflict(mutation_type mutat)
         return (true);
     }
 
+    // Already innate, and unlike trolls/ghouls, no increases for you!
+    if (mutat == MUT_CLAWS && you.species == SP_CAT)
+        return (true);
+
     equipment_type eq_type = EQ_NONE;
 
     // Mutations of the same slot conflict
@@ -1204,14 +1212,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         break;
 
     case MUT_NIGHTSTALKER:
-        // If we already have at least one level of the mutation, we're
-        // about to go to either level 2 or 3, so we need an LOS
-        // reduction.
-        if (player_mutation_level(mutat))
-        {
-            you.current_vision -= 2;
-            set_los_radius(you.current_vision);
-        }
+        update_vision_range();
         break;
 
     default:
@@ -1284,14 +1285,7 @@ static bool _delete_single_mutation_level(mutation_type mutat)
         break;
 
     case MUT_NIGHTSTALKER:
-        // If we already have more than one level of the mutation, we're
-        // about to go to either level 2 or 1, so we need an LOS
-        // increase.
-        if (player_mutation_level(mutat) > 1)
-        {
-            you.current_vision += 2;
-            set_los_radius(you.current_vision);
-        }
+        update_vision_range();
         break;
 
     default:
@@ -1941,10 +1935,14 @@ void check_demonic_guardian()
 
 void check_antennae_detect()
 {
-    // we're already here, so the player has at least 1 level of Antennae
-    const int radius = player_mutation_level(MUT_ANTENNAE) == 1 ? 3 : 5;
+    int radius = player_mutation_level(MUT_ANTENNAE) * 2 - 1;
+    if (you.religion == GOD_ASHENZARI && !player_under_penance())
+        radius = std::max(radius, you.piety / 20);
+    if (radius <= 0)
+        return;
+    radius = std::min(radius, LOS_RADIUS);
 
-    for (radius_iterator ri(you.pos(), radius, C_SQUARE); ri; ++ri)
+    for (radius_iterator ri(you.pos(), radius, C_ROUND); ri; ++ri)
     {
         const monster* mon = monster_at(*ri);
         if (!mon)

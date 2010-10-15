@@ -67,6 +67,8 @@ struct element_colour_calc
     virtual int get(const coord_def& loc = coord_def(),
                     bool non_random = false);
 
+    virtual ~element_colour_calc() {};
+
 protected:
     int rand(bool non_random);
 
@@ -80,6 +82,7 @@ unsigned int str_to_tile_colour(std::string colour);
 
 void init_element_colours();
 void add_element_colour(element_colour_calc *colour);
+void clear_colours_on_exit();
 uint8_t random_colour();
 uint8_t random_uncommon_colour();
 uint8_t make_low_colour(uint8_t colour);

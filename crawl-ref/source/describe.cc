@@ -22,6 +22,7 @@
 #include "abl-show.h"
 #include "artefact.h"
 #include "cio.h"
+#include "clua.h"
 #include "debug.h"
 #include "decks.h"
 #include "delay.h"
@@ -30,11 +31,15 @@
 #include "ghost.h"
 #include "godabil.h"
 #include "goditem.h"
+#include "godpassive.h"
 #include "invent.h"
+#include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "it_use3.h"
 #include "jobs.h"
+#include "libutil.h"
 #include "macro.h"
 #include "menu.h"
 #include "message.h"
@@ -42,6 +47,7 @@
 #include "mon-util.h"
 #include "output.h"
 #include "player.h"
+#include "quiver.h"
 #include "random.h"
 #include "religion.h"
 #include "rng.h"
@@ -338,7 +344,7 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
 // string, rather than the return value of artefact_auto_inscription(),
 // in case more information about the randart has been learned since
 // the last auto-inscription.
-void trim_randart_inscrip( item_def& item )
+void trim_randart_inscrip(item_def& item)
 {
     std::vector<std::string> propnames = _randart_propnames(item);
 
@@ -350,7 +356,7 @@ void trim_randart_inscrip( item_def& item )
     trim_string(item.inscription);
 }
 
-std::string artefact_auto_inscription( const item_def& item )
+std::string artefact_auto_inscription(const item_def& item)
 {
     if (item.base_type == OBJ_BOOKS)
         return ("");
@@ -361,12 +367,20 @@ std::string artefact_auto_inscription( const item_def& item )
                                  " ", " "));
 }
 
-void add_autoinscription( item_def &item, std::string ainscrip)
+void add_autoinscription(item_def &item, std::string ainscrip)
 {
     // Remove previous randart inscription.
     trim_randart_inscrip(item);
 
     add_inscription(item, ainscrip);
+}
+
+void add_autoinscription(item_def &item)
+{
+    // Remove previous randart inscription.
+    trim_randart_inscrip(item);
+
+    add_inscription(item, artefact_auto_inscription(item));
 }
 
 void add_inscription(item_def &item, std::string inscrip)
@@ -389,7 +403,7 @@ struct property_descriptor
     bool is_graded_resist;
 };
 
-static std::string _randart_descrip( const item_def &item )
+static std::string _randart_descrip(const item_def &item)
 {
     std::string description;
 
@@ -960,7 +974,7 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
             description += "\nDemonspawn deal slightly more damage with it.";
         else if (get_equip_race(item) != ISFLAG_NO_RACE)
         {
-            unsigned long race = get_equip_race(item);
+            iflags_t race = get_equip_race(item);
 
             if (race == ISFLAG_DWARVEN)
                 description += "\nIt is well-crafted, durable, and resistant "
@@ -1101,10 +1115,10 @@ static std::string _describe_ammo(const item_def &item)
             description += "It is tipped with asphyxiating poison.";
             break;
         case SPMSL_PARALYSIS:
-            description += "It is tipped with a paralyzing poison.";
+            description += "It is tipped with a paralysing substance.";
             break;
         case SPMSL_SLOW:
-            description += "It is coated with a poison that causes slowness of the body.";
+            description += "It is coated with a substance that causes slowness of the body.";
             break;
         case SPMSL_SLEEP:
             description += "It is coated with a fast-acting tranquilizer.";
@@ -1172,7 +1186,7 @@ static std::string _describe_ammo(const item_def &item)
 
         if (can_throw)
         {
-            unsigned long race = get_equip_race(item);
+            iflags_t race = get_equip_race(item);
 
             description += "It is more deadly when thrown by ";
             description += (race == ISFLAG_DWARVEN) ? "dwarves" :
@@ -1358,7 +1372,7 @@ static std::string _describe_armour( const item_def &item, bool verbose )
         // Randart armour can't be racial.
         description += "\n";
 
-        unsigned long race = get_equip_race(item);
+        iflags_t race = get_equip_race(item);
 
         if (race == ISFLAG_DWARVEN)
             description += "\nIt is well-crafted, durable, and resistant to "
@@ -2122,9 +2136,19 @@ static std::string _get_feature_description_wide(int feat)
 
 void get_feature_desc(const coord_def &pos, describe_info &inf)
 {
-    const dungeon_feature_type feat = grd(pos);
+    dungeon_feature_type feat = grd(pos);
+    bool mimic = false;
+    monster* mimic_mons = NULL;
+
+    if (monster_at(pos))
+    {
+        mimic_mons = monster_at(pos);
+        mimic = true;
+        if (mons_is_feat_mimic(mimic_mons->type))
+            feat = get_mimic_feat(mimic_mons);
+    }
     std::string desc      = feature_description(pos, false, DESC_CAP_A, false);
-    std::string db_name   = grd(pos) == DNGN_ENTER_SHOP ? "A shop" : desc;
+    std::string db_name   = feat == DNGN_ENTER_SHOP ? "A shop" : desc;
     std::string long_desc = getLongDescription(db_name);
 
     inf.body << desc;
@@ -2154,7 +2178,7 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
         custom_desc = true;
     }
 
-    if (feat == DNGN_ENTER_PORTAL_VAULT && !custom_desc)
+    if (feat == DNGN_ENTER_PORTAL_VAULT && !custom_desc && !mimic)
     {
         long_desc = "UNDESCRIBED PORTAL VAULT ENTRANCE.";
         custom_desc = true;
@@ -2260,9 +2284,26 @@ void get_item_desc(const item_def &item, describe_info &inf, bool terse)
 }
 
 // Returns true if spells can be shown to player.
-static bool _show_item_description(const item_def &item)
+static bool _can_show_spells(const item_def &item)
 {
-    const unsigned int lineWidth = get_number_of_cols()  - 1;
+    return (item.has_spells()
+            && (item.base_type != OBJ_BOOKS || item_type_known(item)
+                || player_can_memorise_from_spellbook(item)));
+}
+
+static void _show_spells(const item_def &item)
+{
+    formatted_string fs;
+    item_def dup = item;
+    spellbook_contents(dup, item.base_type == OBJ_BOOKS ? RBOOK_READ_SPELL
+                                                        : RBOOK_USE_STAFF,
+                       &fs);
+    fs.display(2, -2);
+}
+
+static void _show_item_description(const item_def &item)
+{
+    const unsigned int lineWidth = get_number_of_cols() - 1;
     const          int height    = get_number_of_lines();
 
     std::string desc =
@@ -2275,30 +2316,14 @@ static bool _show_item_description(const item_def &item)
     // by putting the quotes into a separate DB and treating them as
     // a suffix that can be ignored by print_description().
     if (height - num_lines <= 2)
-        desc = get_item_description(item, 1, false, true);
+        desc = get_item_description(item, true, false, true);
 
     print_description(desc);
     if (Hints.hints_left)
         hints_describe_item(item);
 
-    if (item.has_spells())
-    {
-        if (item.base_type == OBJ_BOOKS && !item_type_known(item)
-            && !player_can_memorise_from_spellbook( item ))
-        {
-            return (false);
-        }
-
-        formatted_string fs;
-        item_def dup = item;
-        spellbook_contents( dup, item.base_type == OBJ_BOOKS ? RBOOK_READ_SPELL
-                                                             : RBOOK_USE_STAFF,
-                            &fs );
-        fs.display(2, -2);
-        return (true);
-    }
-
-    return (false);
+    if (_can_show_spells(item))
+      _show_spells(item);
 }
 
 static bool _describe_spells(const item_def &item)
@@ -2321,6 +2346,271 @@ static bool _describe_spells(const item_def &item)
     return (true);
 }
 
+static bool _can_memorise(item_def &item)
+{
+    return (item.base_type == OBJ_BOOKS && in_inventory(item)
+            && player_can_memorise_from_spellbook(item));
+}
+
+static void _update_inscription(item_def &item)
+{
+    if (item.base_type == OBJ_BOOKS && in_inventory(item)
+        && !_can_memorise(item))
+    {
+        inscribe_book_highlevel(item);
+    }
+}
+
+static bool _describe_spellbook(item_def &item)
+{
+    while (true)
+    {
+        // Memorised spell while reading a spellbook.
+        if (already_learning_spell(-1))
+            return (false);
+
+        _show_item_description(item);
+        _update_inscription(item);
+
+        cgotoxy(1, wherey());
+        textcolor(LIGHTGREY);
+
+        if (_can_memorise(item) && !crawl_state.player_is_dead())
+        {
+            cprintf("Select a spell to read its description, to "
+                    "memorise it or to forget it.");
+        }
+        else
+            cprintf("Select a spell to read its description.");
+
+        if (_describe_spells(item))
+            continue;
+
+        return true;
+    }
+}
+
+
+// it takes a key and a list of commands and it returns
+// the command from the list which corresponds to the key
+static command_type _get_action( int key, std::vector<command_type> actions)
+{
+    //FIXME: there must be a more efficient way to set up this static map.
+    std::map<command_type, int> act_key;
+    act_key[CMD_WIELD_WEAPON]       = 'w';
+    act_key[CMD_WEAPON_SWAP]        = 'u'; //unwield
+    act_key[CMD_QUIVER_ITEM]        = 'q';
+    act_key[CMD_WEAR_ARMOUR]        = 'w';
+    act_key[CMD_REMOVE_ARMOUR]      = 't';
+    act_key[CMD_EVOKE]              = 'v';
+    act_key[CMD_EAT]                = 'e';
+    act_key[CMD_READ]               = 'r';
+    act_key[CMD_WEAR_JEWELLERY]     = 'p';
+    act_key[CMD_REMOVE_JEWELLERY]   = 'r';
+    act_key[CMD_QUAFF]              = 'q';
+    act_key[CMD_DROP]               = 'd';
+    act_key[CMD_INSCRIBE_ITEM]      = 'i';
+    act_key[CMD_MAKE_NOTE]          = 'a'; //autoinscribe
+
+    for (std::vector<command_type>::const_iterator at = actions.begin();
+         at < actions.end(); ++at)
+    {
+        if (key == act_key[*at])
+            return *at;
+    }
+    return CMD_NO_CMD;
+}
+
+bool _need_autoinscribe (item_def &item)
+{
+    // Only allow autoinscription if we don't have all the text already.
+    if (is_artefact(item))
+    {
+        std::string ainscrip = artefact_auto_inscription(item);
+        if (!ainscrip.empty()
+            && (item.inscription.empty()
+                || item.inscription.find(ainscrip) == std::string::npos))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+//---------------------------------------------------------------
+//
+// _actions_prompt
+//
+// print a list of actions to be performed on the item
+static bool _actions_prompt( item_def &item, bool allow_inscribe)
+{
+    std::string prompt = "You can ";
+    int keyin;
+    std::vector<command_type> actions;
+    switch(item.base_type)
+    {
+    case OBJ_WEAPONS:
+    case OBJ_STAVES:
+    case OBJ_MISCELLANY:
+        if (item.sub_type == MISC_EMPTY_EBONY_CASKET
+            || item.sub_type == MISC_RUNE_OF_ZOT)
+                break;
+
+        if (item_is_equipped(item))
+            actions.push_back(CMD_WEAPON_SWAP); // no unwield command
+        else
+        {
+            actions.push_back(CMD_WIELD_WEAPON);
+            if (is_throwable(&you, item))
+                actions.push_back(CMD_QUIVER_ITEM);
+        }
+        break;
+    case OBJ_MISSILES:
+        actions.push_back(CMD_QUIVER_ITEM);
+        break;
+    case OBJ_ARMOUR:
+        if (item_is_equipped(item))
+            actions.push_back(CMD_REMOVE_ARMOUR);
+        else
+            actions.push_back(CMD_WEAR_ARMOUR);
+        break;
+    case OBJ_FOOD:
+        actions.push_back(CMD_EAT);
+        break;
+    case OBJ_SCROLLS:
+    case OBJ_BOOKS: // only unknown ones
+        actions.push_back(CMD_READ);
+        break;
+    case OBJ_JEWELLERY:
+        if (item_is_equipped(item))
+            actions.push_back(CMD_REMOVE_JEWELLERY);
+        else
+            actions.push_back(CMD_WEAR_JEWELLERY);
+        break;
+    case OBJ_POTIONS:
+        actions.push_back(CMD_QUAFF);
+        break;
+    default:
+        ;
+    }
+#if defined(CLUA_BINDINGS)
+    if (clua.callbooleanfn(false, "ch_item_wieldable", "i", &item))
+        actions.push_back(CMD_WIELD_WEAPON);
+#endif
+
+    if (item_is_evokable(item))
+        actions.push_back(CMD_EVOKE);
+
+    actions.push_back(CMD_DROP);
+
+    if (allow_inscribe)
+        actions.push_back(CMD_INSCRIBE_ITEM);
+
+    if (_need_autoinscribe(item))
+        actions.push_back(CMD_MAKE_NOTE); //autoinscribe
+
+    //FIXME: there must be a more efficient way to set up this static map.
+    std::map<command_type, std::string> act_str;
+    act_str[CMD_WIELD_WEAPON]       = "(w)ield";
+    act_str[CMD_WEAPON_SWAP]        = "(u)nwield";
+    act_str[CMD_QUIVER_ITEM]        = "(q)uiver";
+    act_str[CMD_WEAR_ARMOUR]        = "(w)ear";
+    act_str[CMD_REMOVE_ARMOUR]      = "(t)ake off";
+    act_str[CMD_EVOKE]              = "e(v)oke";
+    act_str[CMD_EAT]                = "(e)at";
+    act_str[CMD_READ]               = "(r)ead";
+    act_str[CMD_WEAR_JEWELLERY]     = "(p)ut on";
+    act_str[CMD_REMOVE_JEWELLERY]   = "(r)emove";
+    act_str[CMD_QUAFF]              = "(q)uaff";
+    act_str[CMD_DROP]               = "(d)rop";
+    act_str[CMD_INSCRIBE_ITEM]      = "(i)nscribe";
+    act_str[CMD_MAKE_NOTE]          = "(a)utoinscribe";
+
+    for (std::vector<command_type>::const_iterator at = actions.begin();
+         at < actions.end(); ++at)
+    {
+        prompt += act_str[*at];
+        if (at < actions.end() - 2)
+            prompt += ", ";
+        else if (at == actions.end() - 2)
+            prompt += " or ";
+    }
+    prompt += " the " + item.name(DESC_BASENAME) + ".";
+    prompt = "<cyan>" + prompt + "</cyan>";
+    formatted_string::parse_string(prompt).display();
+
+    keyin = tolower(getch_ck());
+    command_type action = _get_action(keyin, actions);
+    int slot = letter_to_index(item.slot);
+
+    switch (action)
+    {
+    case CMD_WIELD_WEAPON:
+        redraw_screen();
+        wield_weapon(true, slot);
+        return false;
+    case CMD_WEAPON_SWAP:
+        redraw_screen();
+        wield_weapon(true, PROMPT_GOT_SPECIAL); // unwield
+        return false;
+    case CMD_QUIVER_ITEM:
+        redraw_screen();
+        quiver_item(slot);
+        return false;
+    case CMD_WEAR_ARMOUR:
+        redraw_screen();
+        wear_armour(slot);
+        return false;
+    case CMD_REMOVE_ARMOUR:
+        redraw_screen();
+        takeoff_armour(slot);
+        return false;
+    case CMD_EVOKE:
+        redraw_screen();
+        evoke_item(slot);
+        return false;
+    case CMD_EAT:
+        redraw_screen();
+        eat_inventory_item(slot);
+        return false;
+    case CMD_READ:
+        read_scroll(slot);
+        if (item.base_type == OBJ_BOOKS)
+            return true; // We stay in the inventory to see the book content.
+        else
+        {
+            redraw_screen();
+            return false;
+        }
+    case CMD_WEAR_JEWELLERY:
+        redraw_screen();
+        puton_ring(slot);
+        return false;
+    case CMD_REMOVE_JEWELLERY:
+        redraw_screen();
+        remove_ring(slot, true);
+        return false;
+    case CMD_QUAFF:
+        redraw_screen();
+        drink(slot);
+        return false;
+    case CMD_DROP:
+        redraw_screen();
+        drop_item(slot, you.inv[slot].quantity);
+        return false;
+    case CMD_INSCRIBE_ITEM:
+        inscribe_item(item, false);
+        break;
+    case CMD_MAKE_NOTE:
+        add_autoinscription(item);
+        break;
+    case CMD_NO_CMD:
+    default:
+        return true;
+    }
+    return true;
+}
+
 //---------------------------------------------------------------
 //
 // describe_item
@@ -2333,55 +2623,34 @@ bool describe_item( item_def &item, bool allow_inscribe, bool shopping )
     if (!item.defined())
         return (true);
 
-    while (true)
-    {
-        // Memorised spell while reading a spellbook.
-        if (already_learning_spell(-1))
-            return (false);
+    if (_can_show_spells(item))
+      return _describe_spellbook(item);
 
-        const bool spells_shown = _show_item_description(item);
-        const bool real_book    = (item.base_type == OBJ_BOOKS
-                                   && in_inventory(item));
-
-        bool can_memorise = false;
-        if (real_book)
-            can_memorise = player_can_memorise_from_spellbook(item);
-
-        if (real_book && !can_memorise)
-            inscribe_book_highlevel(item);
-
-        if (spells_shown)
-        {
-            cgotoxy(1, wherey());
-            textcolor(LIGHTGREY);
-
-            if (can_memorise && !crawl_state.player_is_dead())
-            {
-                cprintf("Select a spell to read its description or to "
-                        "memorise it.");
-            }
-            else
-                cprintf("Select a spell to read its description.");
-
-            if (_describe_spells(item))
-                continue;
-            return (true);
-        }
-        break;
-    }
+    _show_item_description(item);
+    _update_inscription(item);
 
     // Don't ask if there aren't enough rows left
-    if (allow_inscribe && wherey() <= get_number_of_lines() - 3)
+    if (wherey() <= get_number_of_lines() - 2)
     {
         cgotoxy(1, wherey() + 2);
-        inscribe_item(item, false);
+        return _actions_prompt(item, allow_inscribe);
     }
     else
-    {
         wait_for_keypress();
-    }
 
     return (true);
+}
+
+static void _safe_newline()
+{
+    if (wherey() == get_number_of_lines())
+    {
+        cgotoxy(1, wherey());
+        formatted_string::parse_string(std::string(80, ' ')).display();
+        cgotoxy(1, wherey());
+    }
+    else
+        formatted_string::parse_string("\n").display();
 }
 
 // There are currently two ways to inscribe an item:
@@ -2397,86 +2666,62 @@ void inscribe_item(item_def &item, bool msgwin)
         mpr(item.name(DESC_INVENTORY).c_str(), MSGCH_EQUIPMENT);
 
     const bool is_inscribed = !item.inscription.empty();
-    std::string ainscrip;
 
-    // Only allow autoinscription if we don't have all the text
-    // already.
-    bool need_autoinscribe = false;
-    if (is_artefact(item))
-    {
-        ainscrip = artefact_auto_inscription(item);
-        if (!ainscrip.empty()
-            && (!is_inscribed
-                || item.inscription.find(ainscrip) == std::string::npos))
-        {
-            need_autoinscribe = true;
-        }
-    }
-
+    bool need_autoinscribe = _need_autoinscribe(item) && msgwin;
     std::string prompt;
     int keyin;
-    bool did_prompt = false;
 
-    // Don't prompt for whether to inscribe in the first place if the
-    // player is using '{' - unless autoinscribing or clearing an
-    // existing inscription become an option.
-    if (!msgwin || need_autoinscribe || is_inscribed)
-    {
-        if (!is_inscribed)
-            prompt = "Press (i) to inscribe";
-        else
-            prompt = "Press (i) to add to or (r) to replace the inscription";
+    // Don't prompt for whether to inscribe in the first place unless
+    // autoinscribing or clearing an existing inscription become an option.
+    if (need_autoinscribe && !is_inscribed)
+        prompt = "You can (i)nscribe or (a)utoinscribe.";
+    else if (!need_autoinscribe && is_inscribed)
+        prompt = "You can (a)dd to, (r)eplace or (c)lear the inscription.";
+    else if (need_autoinscribe && is_inscribed)
+        prompt = "You can (a)dd to, (r)eplace, (c)lear the inscription "
+                 "or (A)utoinscribe.";
 
-        if (need_autoinscribe || is_inscribed)
-        {
-            if (!need_autoinscribe || !is_inscribed)
-                prompt += ", or ";
-            else
-                prompt += ", ";
-
-            if (need_autoinscribe)
-            {
-                prompt += "(a) to autoinscribe";
-                if (is_inscribed)
-                    prompt += ", or ";
-            }
-            if (is_inscribed)
-                prompt += "(c) to clear it";
-        }
-        prompt += ".";
-
+    if (prompt != "")
         if (msgwin)
             mpr(prompt.c_str(), MSGCH_PROMPT);
         else
         {
+            _safe_newline();
             prompt = "<cyan>" + prompt + "</cyan>";
             formatted_string::parse_string(prompt).display();
 
             if (Hints.hints_left && wherey() <= get_number_of_lines() - 5)
                 hints_inscription_info(need_autoinscribe, prompt);
         }
-        did_prompt = true;
-    }
 
-    keyin = (did_prompt ? tolower(getch_ck()) : 'i');
+    keyin = (prompt != "" ? getch_ck() : 'i');
+    if (keyin != 'A')
+        keyin = tolower(keyin);
     switch (keyin)
     {
     case 'c':
         item.inscription.clear();
         break;
-    case 'a':
+    case 'A':
         if (need_autoinscribe)
         {
-            add_autoinscription(item, ainscrip);
+            add_autoinscription(item);
             break;
         }
         // If autoinscription is impossible, prompt for an inscription instead.
+    case 'a':
+        if (!is_inscribed)
+        {
+            add_autoinscription(item);
+            break;
+        }
+        // If it is inscribed, prompt for an inscription instead.
     case 'i':
     case 'r':
     {
         if (!is_inscribed)
             prompt = "Inscribe with what? ";
-        else if (keyin == 'i')
+        else if (keyin == 'i' || keyin == 'a' || keyin == 'A')
             prompt = "Add what to inscription? ";
         else
             prompt = "Replace inscription with what? ";
@@ -2487,7 +2732,8 @@ void inscribe_item(item_def &item, bool msgwin)
             ret = msgwin_get_line(prompt, buf, sizeof buf);
         else
         {
-            prompt = "\n<cyan>" + prompt + "</cyan>";
+            _safe_newline();
+            prompt = "<cyan>" + prompt + "</cyan>";
             formatted_string::parse_string(prompt).display();
             ret = cancelable_get_line(buf, sizeof buf);
         }
@@ -2537,27 +2783,39 @@ void inscribe_item(item_def &item, bool msgwin)
 }
 
 static void _append_spell_stats(const spell_type spell,
-                                std::string &description)
+                                std::string &description,
+                                bool rod)
 {
-    const std::string schools = spell_schools_string(spell);
-    snprintf(info, INFO_SIZE,
-             "\nLevel: %d        School%s:  %s    (%s)",
-             spell_difficulty(spell),
-             schools.find("/") != std::string::npos ? "s" : "",
-             schools.c_str(),
-             failure_rate_to_string(spell_fail(spell)));
+    if (rod)
+    {
+        snprintf(info, INFO_SIZE,
+                 "\nLevel: %d",
+                 spell_difficulty(spell));
+    }
+    else
+    {
+        const std::string schools = spell_schools_string(spell);
+        snprintf(info, INFO_SIZE,
+                 "\nLevel: %d        School%s:  %s    (%s)",
+                 spell_difficulty(spell),
+                 schools.find("/") != std::string::npos ? "s" : "",
+                 schools.c_str(),
+                 failure_rate_to_string(spell_fail(spell)));
+    }
     description += info;
-
     description += "\n\nPower : ";
-    description += spell_power_string(spell);
+    description += spell_power_string(spell, rod);
     description += "\nRange : ";
-    description += spell_range_string(spell);
+    description += spell_range_string(spell, rod);
     description += "\nHunger: ";
-    description += spell_hunger_string(spell);
+    description += spell_hunger_string(spell, rod);
+    description += "\nNoise : ";
+    description += spell_noise_string(spell);
 }
 
-// Returns true if you can memorise the spell.
-static bool _get_spell_description(const spell_type spell,
+// Returns BOOK_MEM if you can memorise the spell BOOK_FORGET if you can
+// forget it and BOOK_NEITHER if you can do neither
+static int _get_spell_description(const spell_type spell,
                                    std::string &description,
                                    const item_def* item = NULL)
 {
@@ -2599,9 +2857,10 @@ static bool _get_spell_description(const spell_type spell,
         description += "This spell will have no effect right now.\n";
 
     if (crawl_state.player_is_dead())
-        return (false);
+        return (BOOK_NEITHER);
 
-    _append_spell_stats(spell, description);
+    bool rod = item && item->base_type == OBJ_STAVES;
+    _append_spell_stats(spell, description, rod);
 
     bool undead = false;
     if (you_cannot_memorise(spell, undead))
@@ -2609,15 +2868,24 @@ static bool _get_spell_description(const spell_type spell,
         description += "\n\n";
         description += desc_cannot_memorise_reason(undead);
     }
-    else if (item && item->base_type == OBJ_BOOKS && !you.has_spell(spell)
-             && in_inventory(*item) && player_can_memorise_from_spellbook(*item))
-    {
-        description += "\n\n";
-        description += "(M)emorise this spell.";
-        return (true);
-    }
+    if (item && item->base_type == OBJ_BOOKS && in_inventory(*item))
+        if (you.has_spell(spell))
+        {
+            description += "\n\n";
+            description += "(F)orget this spell by destroying the book.";
+            if (you.religion == GOD_SIF_MUNA)
+                description +="\nSif Muna frowns upon the destroying of books.";
+            return (BOOK_FORGET);
+        }
+        else if (player_can_memorise_from_spellbook(*item)
+                 && !you_cannot_memorise(spell, undead))
+        {
+            description += "\n\n";
+            description += "(M)emorise this spell.";
+            return (BOOK_MEM);
+        }
 
-    return (false);
+    return(BOOK_NEITHER);
 }
 
 void get_spell_desc(const spell_type spell, describe_info &inf)
@@ -2637,7 +2905,7 @@ void get_spell_desc(const spell_type spell, describe_info &inf)
 void describe_spell(spell_type spelled, const item_def* item)
 {
     std::string desc;
-    bool can_mem = _get_spell_description(spelled, desc, item);
+    int mem_or_forget = _get_spell_description(spelled, desc, item);
     print_description(desc);
 
     mouse_control mc(MOUSE_MODE_MORE);
@@ -2646,10 +2914,17 @@ void describe_spell(spell_type spelled, const item_def* item)
     if ((ch = getchm()) == 0)
         ch = getchm();
 
-    if (can_mem && toupper(ch) == 'M')
+    if (mem_or_forget == BOOK_MEM && toupper(ch) == 'M')
     {
         redraw_screen();
         if (!learn_spell(spelled, item->sub_type, false) || !you.turn_is_over)
+            more();
+        redraw_screen();
+    }
+    else if (mem_or_forget == BOOK_FORGET && toupper(ch) == 'F')
+    {
+        redraw_screen();
+        if (!forget_spell_from_book(spelled, item) || !you.turn_is_over)
             more();
         redraw_screen();
     }
@@ -2738,14 +3013,14 @@ static std::string _describe_draconian(const monster_info& mi)
     {
         const std::string drac_col = _describe_draconian_colour(subsp);
         if (!drac_col.empty())
-            description += "  " + drac_col;
+            description += " " + drac_col;
     }
 
     if (subsp != mi.type)
     {
         const std::string drac_role = _describe_draconian_role(mi.type);
         if (!drac_role.empty())
-            description += "  " + drac_role;
+            description += " " + drac_role;
     }
 
     return (description);
@@ -2876,12 +3151,16 @@ static std::string _monster_stat_description(const monster_info& mi)
         }
     }
 
-    if (mons_class_flag(mi.type, M_STATIONARY))
+    if (mons_class_flag(mi.type, M_STATIONARY)
+        && !mons_class_is_tentacle(mi.type))
+    {
         result << pronoun << " cannot move.\n";
+    }
 
+    // Monsters can glow from both light and radiation.
     if (mons_class_flag(mi.type, M_GLOWS_LIGHT))
         result << pronoun << " is outlined in light.\n";
-    else if (mons_class_flag(mi.type, M_GLOWS_RADIATION))
+    if (mons_class_flag(mi.type, M_GLOWS_RADIATION))
         result << pronoun << " is glowing with mutagenic radiation.\n";
 
     // These differ between ghost demon monsters, so would be spoily.
@@ -2940,7 +3219,18 @@ static std::string _monster_stat_description(const monster_info& mi)
         "as big as a dragon",
     };
 
-    if (sizes[mi.body_size()])
+    const char *mimic_sizes[6]= {
+        "as big as a fountain",
+        "as big as a shop",
+        "as big as a staircase",
+        "as big as a trap",
+        "as big as a portal",
+        "as big as a door",
+    };
+
+    if (mons_is_feat_mimic(mi.type))
+        result << pronoun << " is " << mimic_sizes[MONS_FOUNTAIN_MIMIC-mi.type] << ".\n";
+    else if (sizes[mi.body_size()])
         result << pronoun << " is " << sizes[mi.body_size()] << ".\n";
 
     return (result.str());
@@ -3028,7 +3318,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     case MONS_DRACONIAN_MONK:
     case MONS_DRACONIAN_KNIGHT:
     {
-        inf.body << "\n" << _describe_draconian(mi);
+        inf.body << "\n" << _describe_draconian(mi) << "\n";
         break;
     }
 
@@ -3118,6 +3408,8 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         inf.quote += "\n";
 
 #ifdef DEBUG_DIAGNOSTICS
+    if (mi.pos.origin())
+        return; // not a real monster
     struct monster& mons = *mi.mon();
     const actor *mfoe = mons.get_foe();
     inf.body << "\nMonster foe: "
@@ -3316,12 +3608,23 @@ static bool _print_final_god_abil_desc(int god, const std::string &final_msg,
 
     std::ostringstream buf;
     buf << final_msg;
-    const std::string cost = "(" + make_cost_description(abil) + ")";
+
+    // For ability slots that give more than one ability, display
+    // "Various" instead of the cost of the first ability.
+    const std::string cost =
+        "(" +
+              ((abil == ABIL_ELYVILON_LESSER_HEALING_OTHERS
+                || abil == ABIL_ELYVILON_GREATER_HEALING_OTHERS
+                || abil == ABIL_YRED_RECALL_UNDEAD_SLAVES) ?
+                    "Various" : make_cost_description(abil))
+            + ")";
+
     if (cost != "(None)")
     {
         const int spacesleft = 79 - buf.str().length();
         buf << std::setw(spacesleft) << cost;
     }
+
     cprintf("%s\n", buf.str().c_str());
 
     return (true);
@@ -3335,7 +3638,8 @@ static bool _print_god_abil_desc(int god, int numpower)
     if (!pmsg[0])
         return (false);
 
-    std::string buf = adjust_abil_message(pmsg);
+    // Don't display ability upgrades here.
+    std::string buf = adjust_abil_message(pmsg, false);
     if (buf.empty())
         return (false);
 
@@ -3393,7 +3697,7 @@ static std::string _religion_help(god_type god)
     case GOD_ZIN:
         result += "You can pray at an altar to donate your money.";
         if (!player_under_penance() && you.piety > 160
-            && !you.num_gifts[god])
+            && !you.num_total_gifts[god])
         {
             if (!result.empty())
                 result += " ";
@@ -3423,7 +3727,7 @@ static std::string _religion_help(god_type god)
                       "easier to hit.";
         }
         if (!player_under_penance() && you.piety > 160
-            && !you.num_gifts[god])
+            && !you.num_total_gifts[god])
         {
             if (!result.empty())
                 result += " ";
@@ -3437,7 +3741,7 @@ static std::string _religion_help(god_type god)
 
     case GOD_LUGONU:
         if (!player_under_penance() && you.piety > 160
-            && !you.num_gifts[god])
+            && !you.num_total_gifts[god])
         {
             result += "You can pray at an altar to have your weapon "
                       "corrupted.";
@@ -3446,7 +3750,7 @@ static std::string _religion_help(god_type god)
 
     case GOD_KIKUBAAQUDGHA:
         if (!player_under_penance() && you.piety > 160
-            && !you.num_gifts[god])
+            && !you.num_total_gifts[god])
         {
             result += "You can pray at an altar to have your necromancy "
                       "enhanced.";
@@ -3572,7 +3876,16 @@ const char *divine_title[NUM_GODS][8] =
 
     // Cheibriados -- slow theme
     {"Unwound %s",         "Timekeeper",            "Righteous Timekeeper",     "Chronographer",
-     "Splendid Chronographer", "Chronicler",        "Eternal Chronicler",       "Ticktocktomancer"}
+     "Splendid Chronographer", "Chronicler",        "Eternal Chronicler",       "Ticktocktomancer"},
+
+    // Ashenzari -- divination theme
+    {"Star-crossed",       "Cursed",                "Initiated",                "Seer",
+     "Soothsayer",         "Oracle",                "Illuminatus",              "Omniscient"},
+#if 0
+    // blue_anna's Romanian variant for Ashenzari
+    {"Impostură",          "Impressionabil",        "Clar-văzător",             "Ghicitor",
+     "Medium",             "Proroc",                "Oracol",                   "Profet"},
+#endif
 };
 
 static int _piety_level()
@@ -3585,7 +3898,6 @@ static int _piety_level()
             (you.piety >=  30) ? 2 :
             (you.piety >    5) ? 1
                                : 0 );
-
 }
 
 std::string god_title(god_type which_god, species_type which_species)
@@ -3661,7 +3973,8 @@ static void _detailed_god_description(god_type which_god)
                      "hostile ones, turning them neutral. Pacification "
                      "works best on natural beasts, worse on humanoids of "
                      "your species, worse on other humanoids, and worst of "
-                     "all on demons and undead. Whether it succeeds or not, "
+                     "all on demons and undead. Monsters cannot be pacified "
+                     "while they are sleeping. Whether it succeeds or not, "
                      "all costs are spent. If it does succeed, the monster "
                      "is healed and you gain half of its experience value "
                      "and possibly some piety. Otherwise, the monster is "
@@ -3726,6 +4039,40 @@ static void _detailed_god_description(god_type which_god)
     const int keyin = getchm();
     if (keyin == '!' || keyin == CK_MOUSE_CMD)
         describe_god(which_god, true);
+}
+
+#define NUM_BONDAGE 3
+static const char* bondage_parts[2][NUM_BONDAGE] =
+{
+  { "weapon", "armour", "magic", },         // normal races
+  { "left ring", "right ring", "amulet", }, // felids
+};
+
+static std::string _describe_bondage()
+{
+    int bondage_types[NUM_BONDAGE];
+    int sum = 0;
+    for (int i = 0; i < NUM_BONDAGE; i++)
+    {
+        sum += bondage_types[i] = ash_bondage_level(i+1);
+        ASSERT(bondage_types[i] == 0 || bondage_types[i] == 1);
+    }
+
+    if (!sum)
+        return "You are not bound.";
+    if (sum == NUM_BONDAGE)
+        return "You are completely bound.";
+
+    const char** names = bondage_parts[you.species == SP_CAT];
+    std::vector<const char*> parts[2];
+    for (int i = 0; i < NUM_BONDAGE; i++)
+        parts[bondage_types[i]].push_back(names[i]);
+    if (sum == 1)
+        return make_stringf("You are bound in %s but not %s or %s.",
+                            parts[1][0], parts[0][0], parts[0][1]);
+    else
+        return make_stringf("You are bound in %s and %s but not %s.",
+                            parts[1][0], parts[1][1], parts[0][0]);
 }
 
 void describe_god( god_type which_god, bool give_title )
@@ -3812,6 +4159,8 @@ void describe_god( god_type which_god, bool give_title )
     else
     {
         cprintf(describe_favour(which_god).c_str());
+        if (which_god == GOD_ASHENZARI)
+            cprintf("\n%s", _describe_bondage().c_str());
 
         //mv: The following code shows abilities given by your god (if any).
 
@@ -3867,9 +4216,9 @@ void describe_god( god_type which_god, bool give_title )
             if (zin_sustenance(false))
             {
                 have_any = true;
-                std::string buf = "Praying to ";
-                buf += god_name(which_god);
-                buf += " will provide sustenance if starving.";
+                std::string buf = "Praying to "
+                                  + god_name(which_god)
+                                  + " will provide sustenance if starving.";
                 _print_final_god_abil_desc(which_god, buf,
                                            ABIL_ZIN_SUSTENANCE);
             }
@@ -3895,58 +4244,72 @@ void describe_god( god_type which_god, bool give_title )
         else if (which_god == GOD_TROG)
         {
             have_any = true;
-            std::string buf = "You can call upon ";
-            buf += god_name(which_god);
-            buf += " to burn spellbooks in your surroundings.";
+            std::string buf = "You can call upon "
+                              + god_name(which_god)
+                              + " to burn spellbooks in your surroundings.";
             _print_final_god_abil_desc(which_god, buf,
                                        ABIL_TROG_BURN_SPELLBOOKS);
         }
         else if (which_god == GOD_ELYVILON)
         {
             have_any = true;
-            std::string buf = "You can destroy weapons on the ground in ";
-            buf += god_name(which_god);
-            buf += "'s name.";
+            std::string buf = "You can destroy weapons on the ground in "
+                              + apostrophise(god_name(which_god))
+                              + " name.";
             _print_final_god_abil_desc(which_god, buf,
                                        ABIL_ELYVILON_DESTROY_WEAPONS);
-        }
-        else if (which_god == GOD_YREDELEMNUL)
-        {
-            if (yred_injury_mirror(false))
-            {
-                have_any = true;
-                std::string buf = god_name(which_god);
-                buf += " mirrors your injuries on your foes during prayer.";
-                _print_final_god_abil_desc(which_god, buf,
-                                           ABIL_YRED_INJURY_MIRROR);
-            }
         }
         else if (which_god == GOD_JIYVA)
         {
             if (jiyva_can_paralyse_jellies())
             {
                 have_any = true;
-                std::string buf = "Your slimes' item consumption is ";
-                buf += "temporarily halted under prayer.";
-                _print_final_god_abil_desc(which_god, buf,
+                _print_final_god_abil_desc(which_god,
+                                           "Your slimes' item consumption is "
+                                           "temporarily halted under prayer.",
                                            ABIL_JIYVA_JELLY_PARALYSE);
             }
             if (you.piety >= piety_breakpoint(2))
             {
+                have_any = true;
                 cprintf("%s shields you from corrosive effects.\n",
                         god_name(which_god).c_str());
+            }
+            if (you.piety >= piety_breakpoint(1))
+            {
+                have_any = true;
+                std::string buf = "You gain nutrition";
+                if (you.piety >= piety_breakpoint(4))
+                    buf += ", power and health";
+                else if (you.piety >= piety_breakpoint(3))
+                    buf += " and power";
+                buf += " when your fellow slimes consume items.\n";
+                _print_final_god_abil_desc(which_god, buf,
+                                           ABIL_NON_ABILITY);
             }
         }
         else if (which_god == GOD_FEDHAS)
         {
             have_any = true;
-
-            std::string buf = "You can speed up decomposition.";
-            _print_final_god_abil_desc(which_god, buf,
+            _print_final_god_abil_desc(which_god,
+                                       "You can speed up decomposition.",
                                        ABIL_FEDHAS_FUNGAL_BLOOM);
             _print_final_god_abil_desc(which_god,
-                                       "You can walk through plants, "
-                                       "and fire through allied plants.",
+                                       "You can walk through plants and "
+                                       "fire through allied plants.",
+                                       ABIL_NON_ABILITY);
+        }
+        else if (which_god == GOD_ASHENZARI)
+        {
+            have_any = true;
+            _print_final_god_abil_desc(which_god,
+                "You are provided with a bounty of information.",
+                ABIL_NON_ABILITY);
+            std::string buf = "You can pray to bestow "
+                              + apostrophise(god_name(which_god))
+                              + " curse upon scrolls that usually remove "
+                                "them.";
+            _print_final_god_abil_desc(which_god, buf,
                                        ABIL_NON_ABILITY);
         }
 
@@ -4033,8 +4396,8 @@ std::string get_skill_description(int skill, bool need_title)
             unarmed_attacks.push_back("kick with your hooves");
         else if (player_mutation_level(MUT_TALONS))
             unarmed_attacks.push_back("claw with your talons");
-        else if (you.species != SP_NAGA
-                 && (you.species != SP_MERFOLK || !you.swimming()))
+        else if (you.species != SP_NAGA && you.species != SP_CAT
+                 && !you.fishtail)
         {
             unarmed_attacks.push_back("deliver a kick");
         }
@@ -4042,7 +4405,9 @@ std::string get_skill_description(int skill, bool need_title)
         if (you.has_usable_pseudopods())
             unarmed_attacks.push_back("slap with your pseudopods");
 
-        if (!you.weapon())
+        if (you.species == SP_CAT)
+            unarmed_attacks.push_back("use your claws");
+        else if (!you.weapon())
             unarmed_attacks.push_back("throw a punch");
         else if (you.has_usable_offhand())
             unarmed_attacks.push_back("punch with your free hand");

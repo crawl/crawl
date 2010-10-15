@@ -12,4 +12,3 @@ bool meld_slot(equipment_type slot, bool msg=true);
 bool unmeld_slot(equipment_type slot, bool msg=true);
 
 #endif
-

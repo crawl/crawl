@@ -31,7 +31,8 @@ map_marker::marker_reader map_marker::readers[NUM_MAP_MARKER_TYPES] =
     &map_lua_marker::read,
     &map_corruption_marker::read,
     &map_wiz_props_marker::read,
-    &map_tomb_marker::read
+    &map_tomb_marker::read,
+    &map_malign_gateway_marker::read
 };
 
 map_marker::marker_parser map_marker::parsers[NUM_MAP_MARKER_TYPES] =
@@ -606,6 +607,69 @@ std::string map_tomb_marker::debug_describe() const
 {
     return make_stringf("Tomb (%d, %d, %d)", duration,
                                              source, target);
+}
+
+//////////////////////////////////////////////////////////////////////////
+// map_malign_gateway_marker
+
+map_malign_gateway_marker::map_malign_gateway_marker(const coord_def &p,
+                                 int dur, bool ip, monster* mon, god_type gd,
+                                 int pow)
+    : map_marker(MAT_MALIGN, p), duration(dur), is_player(ip), monster_summoned(false),
+      caster(mon), god(gd), power(pow)
+{
+}
+
+void map_malign_gateway_marker::write(writer &out) const
+{
+    map_marker::write(out);
+    marshallShort(out, duration);
+    marshallBoolean(out, is_player);
+    marshallBoolean(out, monster_summoned);
+    if (!is_player)
+        marshallMonster(out, *caster);
+    marshallByte(out, god);
+    marshallShort(out, power);
+}
+
+void map_malign_gateway_marker::read(reader &in)
+{
+    map_marker::read(in);
+    duration  = unmarshallShort(in);
+    is_player = unmarshallBoolean(in);
+
+#if TAG_MAJOR_VERSION == 31
+    int minorVersion = in.getMinorVersion();
+    if (minorVersion < TAG_MINOR_MALIGN)
+        monster_summoned = true;
+    else
+#endif
+    monster_summoned = unmarshallBoolean(in);
+
+    if (!is_player)
+        unmarshallMonster(in, *caster);
+    else
+        caster = NULL;
+    god       = static_cast<god_type>(unmarshallByte(in));
+    power     = unmarshallShort(in);
+}
+
+map_marker *map_malign_gateway_marker::read(reader &in, map_marker_type)
+{
+    map_malign_gateway_marker *mc = new map_malign_gateway_marker();
+    mc->read(in);
+    return (mc);
+}
+
+map_marker *map_malign_gateway_marker::clone() const
+{
+    map_malign_gateway_marker *mark = new map_malign_gateway_marker(pos, duration, is_player, caster, god, power);
+    return (mark);
+}
+
+std::string map_malign_gateway_marker::debug_describe() const
+{
+    return make_stringf("Malign gateway (%d, %s)", duration, is_player ? "player" : "monster");
 }
 
 //////////////////////////////////////////////////////////////////////////

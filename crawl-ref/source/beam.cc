@@ -755,12 +755,7 @@ void bolt::draw(const coord_def& p)
 
 #ifdef USE_TILE
     if (tile_beam == -1)
-    {
-        if (effect_known)
-            tile_beam = tileidx_bolt(*this);
-        else
-            tile_beam = tileidx_zap(ETC_MAGIC);
-    }
+        tile_beam = tileidx_bolt(*this);
 
     if (tile_beam != -1)
         tiles.add_overlay(p, tile_beam);
@@ -830,12 +825,16 @@ void bolt::digging_wall_effect()
 
         if (!msg_generated)
         {
-            if (!silenced(you.pos()))
-            {
-                mpr("You hear a grinding noise.", MSGCH_SOUND);
-                obvious_effect = true;
-            }
-
+            std::string wall;
+            if (feat == DNGN_SLIMY_WALL)
+                wall = "slime";
+            else if (you.level_type == LEVEL_PANDEMONIUM)
+                wall = "weird stuff";
+            else
+                wall = "rock";
+            mprf("The %s liquefies and sinks out of sight.", wall.c_str());
+            // This is silent.
+            obvious_effect = true;
             msg_generated = true;
         }
     }
@@ -1414,6 +1413,7 @@ void bolt::do_fire()
         // the cell.
         draw(pos());
 
+        noise_generated = false;
         ray.advance();
     }
 
@@ -2160,7 +2160,7 @@ void mimic_alert(monster* mimic)
 
     // If we got here, we at least got a resists message, if not
     // a full wounds printing. Thus, might as well id the mimic.
-    if (mimic->has_ench(ENCH_TP))
+    if (mimic->has_ench(ENCH_TP) || mons_is_feat_mimic(mimic->type))
     {
         if (should_id)
             mimic->flags |= MF_KNOWN_MIMIC;
@@ -2216,7 +2216,7 @@ bool bolt::is_bouncy(dungeon_feature_type feat) const
     }
 
     if ((flavour == BEAM_FIRE || flavour == BEAM_COLD)
-        && feat == DNGN_GREEN_CRYSTAL_WALL )
+        && feat == DNGN_GREEN_CRYSTAL_WALL)
     {
         return (true);
     }
@@ -2292,6 +2292,12 @@ void bolt::affect_endpoint()
     if (is_tracer)
         return;
 
+    if (!is_explosion && !noise_generated)
+    {
+        noisy(loudness, pos(), beam_source);
+        noise_generated = true;
+    }
+
     if (origin_spell == SPELL_PRIMAL_WAVE) // &&coinflip()
     {
         if (you.see_cell(pos()))
@@ -2338,6 +2344,12 @@ void bolt::affect_endpoint()
     {
         big_cloud(CLOUD_COLD, whose_kill(), killer(), pos(),
                   random_range(10, 15), 9);
+    }
+
+    if ((name == "fiery breath" && you.species == SP_RED_DRACONIAN) ||
+         name == "searing blast") // monster and player red draconian breath abilities
+    {
+        place_cloud(CLOUD_FIRE, pos(), 5 + random2(5), whose_kill(), killer());
     }
 }
 
@@ -2598,6 +2610,9 @@ void bolt::affect_place_clouds()
 
     if (name == "poison gas")
         place_cloud(CLOUD_POISON, p, random2(4) + 3, whose_kill(), killer());
+
+    if (name == "blast of choking fumes")
+       place_cloud(CLOUD_STINK, p, random2(4) + 3, whose_kill(), killer());
 
 }
 
@@ -3494,7 +3509,7 @@ void bolt::affect_player()
     int armour_damage_reduction = random2( 1 + you.armour_class() );
     if (flavour == BEAM_ELECTRICITY)
         armour_damage_reduction /= 2;
-    else if (flavour == BEAM_HELLFIRE)
+    else if (flavour == BEAM_HELLFIRE || name == "chilling blast")
         armour_damage_reduction = 0;
     hurted -= armour_damage_reduction;
 
@@ -3597,6 +3612,9 @@ void bolt::affect_player()
             expose_player_to_element(BEAM_SPORE, burn_power);
     }
 
+    if (origin_spell == SPELL_QUICKSILVER_BOLT)
+        antimagic();
+
     dprf("Damage: %d", hurted );
 
     was_affected = apply_hit_funcs(&you, hurted) || was_affected;
@@ -3632,8 +3650,9 @@ void bolt::affect_player()
 
     extra_range_used += range_used_on_hit(&you);
 
-    if (flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE)
-        water_hits_actor(&you);
+    if ((flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE)
+         || (name == "chilling blast" && you.airborne()))
+        beam_hits_actor(&you);
 }
 
 int bolt::beam_source_as_target() const
@@ -3719,13 +3738,19 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
     if (!apply_dmg_funcs(mon, preac, messages))
         return (false);
 
-    postac = preac - maybe_random2(1 + mon->ac, !is_tracer);
+    postac = preac;
 
-    // Fragmentation has triple AC reduction.
-    if (flavour == BEAM_FRAG)
+    // Hellfire ignores AC.
+    if (flavour != BEAM_HELLFIRE && name != "freezing breath")
     {
         postac -= maybe_random2(1 + mon->ac, !is_tracer);
-        postac -= maybe_random2(1 + mon->ac, !is_tracer);
+
+        // Fragmentation has triple AC reduction.
+        if (flavour == BEAM_FRAG)
+        {
+            postac -= maybe_random2(1 + mon->ac, !is_tracer);
+            postac -= maybe_random2(1 + mon->ac, !is_tracer);
+        }
     }
 
     postac = std::max(postac, 0);
@@ -3864,7 +3889,7 @@ void bolt::enchantment_affect_monster(monster* mon)
             set_attack_conducts(conducts, mon, you.can_see(mon));
 
             if (you.religion == GOD_BEOGH
-                && mons_species(mon->type) == MONS_ORC
+                && mons_genus(mon->type) == MONS_ORC
                 && mon->asleep() && !player_under_penance()
                 && you.piety >= piety_breakpoint(2) && mons_near(mon))
             {
@@ -3930,10 +3955,25 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         behaviour_event(mon, ME_ANNOY, beam_source_as_target());
 
     // Sticky flame.
-    if (name == "sticky flame")
+    if (name == "sticky flame" || name == "splash of liquid fire")
     {
         const int levels = std::min(4, 1 + random2(mon->hit_dice) / 2);
         napalm_monster(mon, whose_kill(), levels);
+
+        if (name == "splash of liquid fire")
+        {
+            // the breath weapon can splash to adjacent monsters
+            for (monster_iterator mi(you.get_los()); mi; ++mi)
+            {
+                if (grid_distance(you.pos(), mi->pos()) == 1 &&
+                    grid_distance(mon->pos(), mi->pos()) == 1)
+                {
+                    mprf("The sticky flame splashes onto %s!",
+                         mi->name(DESC_NOCAP_THE).c_str());
+                    napalm_monster(*mi, whose_kill(), levels);
+                }
+            }
+        }
     }
 
     bool wake_mimic = true;
@@ -3954,25 +3994,44 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         }
     }
 
+    if (name == "bolt of energy") // purple draconian breath
+        debuff_monster(mon);
+
     if (wake_mimic && mons_is_mimic(mon->type))
         mimic_alert(mon);
     else if (dmg)
         beogh_follower_convert(mon, true);
 
-    if (flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE)
-        water_hits_actor(mon);
+    if ((flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE) ||
+          (name == "freezing breath" && mon->flight_mode() == FL_FLY))
+        beam_hits_actor(mon);
 }
 
-void bolt::water_hits_actor(actor *act)
+void bolt::beam_hits_actor(actor *act)
 {
     const coord_def oldpos(act->pos());
+
+    const bool drac_breath = (name == "freezing breath" || name == "chilling blast");
+
     if (knockback_actor(act))
     {
         if (you.can_see(act))
-            mprf("%s %s knocked back by the %s.",
-                 act->name(DESC_CAP_THE).c_str(),
-                 act->conj_verb("are").c_str(),
-                 this->name.c_str());
+        {
+            if (drac_breath)
+            {
+                mprf("%s %s blown backwards by the freezing wind.",
+                     act->name(DESC_CAP_THE).c_str(),
+                     act->conj_verb("are").c_str());
+                knockback_actor(act);
+            }
+            else
+            {
+                mprf("%s %s knocked back by the %s.",
+                     act->name(DESC_CAP_THE).c_str(),
+                     act->conj_verb("are").c_str(),
+                     this->name.c_str());
+            }
+        }
         act->apply_location_effects(oldpos, killer(), beam_source);
     }
 }
@@ -4186,7 +4245,7 @@ void bolt::affect_monster(monster* mon)
             set_attack_conducts(conducts, mon, !okay);
         }
 
-        if (you.religion == GOD_BEOGH && mons_species(mon->type) == MONS_ORC
+        if (you.religion == GOD_BEOGH && mons_genus(mon->type) == MONS_ORC
             && mon->asleep() && YOU_KILL(thrower)
             && !player_under_penance() && you.piety >= piety_breakpoint(2)
             && mons_near(mon))
@@ -4273,8 +4332,11 @@ void bolt::affect_monster(monster* mon)
         conducts[0].enabled = false;
     }
 
-    if (!is_explosion)
+    if (!is_explosion && !noise_generated)
+    {
         heard = noisy(loudness, pos(), beam_source) || heard;
+        noise_generated = true;
+    }
 
     if (!mon->alive())
         return;
@@ -4764,19 +4826,15 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     case BEAM_INVISIBILITY:
     {
         // Mimic or already glowing.
-        if (mons_is_mimic(mon->type)
-            || mons_class_flag(mon->type, M_GLOWS_LIGHT)
-            || mons_class_flag(mon->type, M_GLOWS_RADIATION))
-        {
+        if (mons_is_mimic(mon->type) || mon->glows_naturally())
             return (MON_UNAFFECTED);
-        }
 
         // Store the monster name before it becomes an "it" -- bwr
         const std::string monster_name = mon->name(DESC_CAP_THE);
 
         if (!mon->has_ench(ENCH_INVIS) && mon->add_ench(ENCH_INVIS))
         {
-            // A casting of invisibility erases backlight.
+            // A casting of invisibility erases corona.
             mon->del_ench(ENCH_CORONA);
 
             // Can't use simple_monster_message() here, since it checks
@@ -4955,7 +5013,7 @@ void bolt::refine_for_explosion()
                + " explodes!";
 
         seeMsg  = tmp.c_str();
-        hearMsg = "You hear an explosion.";
+        hearMsg = "You hear an explosion!";
 
         glyph   = dchar_glyph(DCHAR_FIRED_BURST);
     }
@@ -4963,7 +5021,7 @@ void bolt::refine_for_explosion()
     if (name.find("hellfire") != std::string::npos)
     {
         seeMsg  = "The hellfire explodes!";
-        hearMsg = "You hear a strangely unpleasant explosion.";
+        hearMsg = "You hear a strangely unpleasant explosion!";
 
         glyph   = dchar_glyph(DCHAR_FIRED_BURST);
         flavour = BEAM_HELLFIRE;
@@ -4972,7 +5030,7 @@ void bolt::refine_for_explosion()
     if (name == "fireball")
     {
         seeMsg  = "The fireball explodes!";
-        hearMsg = "You hear an explosion.";
+        hearMsg = "You hear an explosion!";
 
         glyph   = dchar_glyph(DCHAR_FIRED_BURST);
         flavour = BEAM_FIRE;
@@ -4993,8 +5051,8 @@ void bolt::refine_for_explosion()
 
     if (name == "orb of energy")
     {
-        seeMsg  = "The orb of energy explodes.";
-        hearMsg = "You hear an explosion.";
+        seeMsg  = "The orb of energy explodes!";
+        hearMsg = "You hear an explosion!";
     }
 
     if (name == "metal orb")
@@ -5021,14 +5079,14 @@ void bolt::refine_for_explosion()
 
     if (name == "stinking cloud")
     {
-        seeMsg     = "The beam expands into a vile cloud!";
-        hearMsg    = "You hear a gentle \'poof\'.";
+        seeMsg     = "The beam explodes into a vile cloud!";
+        hearMsg    = "You hear a loud \'bang\'!";
     }
 
     if (name == "foul vapour")
     {
-        seeMsg     = "The ball expands into a vile cloud!";
-        hearMsg    = "You hear a gentle \'poof\'.";
+        seeMsg     = "The ball explodes into a vile cloud!";
+        hearMsg    = "You hear a loud \'bang\'!";
         if (!is_tracer)
             name = "stinking cloud";
     }
@@ -5451,12 +5509,12 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
                obvious_effect(false), seen(false), heard(false),
                path_taken(), extra_range_used(0), is_tracer(false),
                aimed_at_feet(false), msg_generated(false),
-               passed_target(false), in_explosion_phase(false),
-               smart_monster(false), can_see_invis(false),
-               attitude(ATT_HOSTILE), foe_ratio(0), chose_ray(false),
-               beam_cancelled(false), dont_stop_player(false),
-               bounces(false), bounce_pos(), reflections(0),
-               reflector(-1), auto_hit(false)
+               noise_generated(false), passed_target(false),
+               in_explosion_phase(false), smart_monster(false),
+               can_see_invis(false), attitude(ATT_HOSTILE), foe_ratio(0),
+               chose_ray(false), beam_cancelled(false),
+               dont_stop_player(false), bounces(false), bounce_pos(),
+               reflections(0), reflector(-1), auto_hit(false)
 {
 }
 

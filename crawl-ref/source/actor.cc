@@ -6,6 +6,7 @@
 #include "env.h"
 #include "itemprop.h"
 #include "los.h"
+#include "mon-death.h"
 #include "player.h"
 #include "random.h"
 #include "state.h"
@@ -24,7 +25,10 @@ bool actor::has_equipped(equipment_type eq, int sub_type) const
 
 bool actor::will_trigger_shaft() const
 {
-    return (!airborne() && total_weight() > 0 && is_valid_shaft_level());
+    return (!airborne() && total_weight() > 0 && is_valid_shaft_level()
+            // let's pretend that they always make their saving roll
+            && !(atype() == ACT_MONSTER
+                 && mons_is_elven_twin(static_cast<const monster* >(this))));
 }
 
 level_id actor::shaft_dest(bool known = false) const

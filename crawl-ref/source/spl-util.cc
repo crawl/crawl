@@ -58,7 +58,7 @@ struct spell_desc
     int min_range;
     int max_range;
 
-    // How much louder or quieter the spell is than the default.
+    // Modify spell level for spell noise purposes.
     int noise_mod;
 
     const char  *target_prompt;
@@ -311,8 +311,27 @@ bool del_spell_from_memory_by_slot( int slot )
     return (true);
 }
 
+bool del_spell_from_memory( spell_type spell )
+{
+    int i,j;
 
-int spell_hunger(spell_type which_spell)
+    for (i = 0; i < you.spell_no; i++)
+        if (you.spells[i] == spell)
+        {
+            you.spells[i] = SPELL_NO_SPELL;
+            break;
+        }
+
+    for (j = 0; j < 52; j++)
+        if (you.spell_letter_table[j] == i)
+            you.spell_letter_table[j] = -1;
+
+    you.spell_no--;
+
+    return (true);
+}
+
+int spell_hunger(spell_type which_spell, bool rod)
 {
     const int level = spell_difficulty(which_spell);
 
@@ -327,7 +346,13 @@ int spell_hunger(spell_type which_spell)
     else
         hunger = (basehunger[0] * level * level) / 4;
 
-    hunger -= you.intel() * you.skills[SK_SPELLCASTING];
+    if (rod)
+    {
+        hunger -= 10 * you.skills[SK_EVOCATIONS];
+        hunger = std::max(hunger, level * 5);
+    }
+    else
+        hunger -= you.intel() * you.skills[SK_SPELLCASTING];
 
     if (hunger < 0)
         hunger = 0;
@@ -1032,7 +1057,7 @@ int spell_noise(spell_type spell)
 {
     const spell_desc *desc = _seekspell(spell);
 
-    return desc->noise_mod + spell_noise(desc->disciplines, desc->level);
+    return spell_noise(desc->disciplines, desc->level + desc->noise_mod);
 }
 
 int spell_noise(unsigned int disciplines, int level)
@@ -1197,6 +1222,18 @@ bool spell_is_useless(spell_type spell, bool transient)
         break;
     case SPELL_SEE_INVISIBLE:
         if (you.can_see_invisible(false, false))
+            return (true);
+        break;
+    // weapon branding is useless
+    case SPELL_TUKIMAS_VORPAL_BLADE:
+    case SPELL_FIRE_BRAND:
+    case SPELL_FREEZING_AURA:
+    case SPELL_LETHAL_INFUSION:
+    case SPELL_WARP_BRAND:
+    case SPELL_EXCRUCIATING_WOUNDS:
+    // could be useful if it didn't require wielding
+    case SPELL_TUKIMAS_DANCE:
+        if (you.species == SP_CAT)
             return (true);
         break;
     default:

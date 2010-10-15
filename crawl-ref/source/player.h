@@ -23,6 +23,16 @@
 #include "tiledoll.h"
 #endif
 
+enum diag_counter_t
+{
+    DC_OTHER,
+    DC_WALK_ORTHO,
+    DC_WALK_DIAG,
+    DC_FIGHT,
+    DC_REST,
+    NUM_DC
+};
+
 class player : public actor
 {
 public:
@@ -84,6 +94,7 @@ public:
   bool opened_zot;
   bool royal_jelly_dead;
   bool transform_uncancellable;
+  bool fishtail; // Merfolk fishtail transformation
 
   unsigned short pet_target;
 
@@ -100,12 +111,9 @@ public:
   undead_state_type is_undead;
 
   int  friendly_pickup;       // pickup setting for allies
-#if defined(WIZARD) || defined(DEBUG)
-  // If set to true, then any call to ouch() which would cuase the player
-  // to die automatically returns without ending the game.
-  bool never_die;
-  bool xray_vision;
-#endif
+  bool dead; // ... but pending revival
+  int lives;
+  int deaths;
 
   FixedVector<uint8_t, 50>  skills;
   FixedVector<bool, 50>  practise_skill;
@@ -170,7 +178,8 @@ public:
   uint8_t gift_timeout;
   FixedVector<uint8_t, MAX_NUM_GODS>  penance;
   FixedVector<uint8_t, MAX_NUM_GODS>  worshipped;
-  FixedVector<short,   MAX_NUM_GODS>  num_gifts;
+  FixedVector<short,   MAX_NUM_GODS>  num_current_gifts;
+  FixedVector<short,   MAX_NUM_GODS>  num_total_gifts;
 
   FixedVector<uint8_t, NUM_MUTATIONS> mutation;
   FixedVector<uint8_t, NUM_MUTATIONS> innate_mutations;
@@ -198,6 +207,7 @@ public:
 
   int           real_time;            // real time played (in seconds)
   int           num_turns;            // number of turns taken
+  int           exploration;          // levels explored (16.16 bit real number)
 
   int           last_view_update;     // what turn was the view last updated?
 
@@ -223,9 +233,14 @@ public:
   // and restored.
   std::vector<int> beholders;
 
+  // monsterss causing fear to the player; see above
+  std::vector<int> fearmongers;
+
   // Delayed level actions.  This array is never trimmed, as usually D:1 won't
   // be loaded again until the very end.
   std::vector<daction_type> dactions;
+  // [time (vs turn)][autoexploring][]
+  FixedVector<int, NUM_DC> dcounters[2][2];
 
 
   // Non-saved UI state:
@@ -244,6 +259,13 @@ public:
   delay_queue_type delay_queue;       // pending actions
 
   time_t        start_time;           // start time of session
+#if defined(WIZARD) || defined(DEBUG)
+  // If set to true, then any call to ouch() which would cuase the player
+  // to die automatically returns without ending the game.
+  bool never_die;
+#endif
+  bool xray_vision;
+  int bondage_level;  // how much an Ash worshipper is into bondage
 
 
   // Volatile (same-turn) state:
@@ -340,6 +362,7 @@ public:
     bool misled() const;
     bool can_see_invisible() const;
     bool can_see_invisible(bool unid, bool transient = true) const;
+    bool are_charming() const;
     bool visible_to(const actor *looker) const;
     bool can_see(const actor* a) const;
 
@@ -367,6 +390,18 @@ public:
     void beholders_check_noise(int loudness);
     void update_beholders();
     void update_beholder(const monster* mon);
+
+    // Dealing with fearmongers. Implemented in fearmonger.cc.
+    void add_fearmonger(const monster* mon);
+    bool afraid() const;
+    bool afraid_of(const monster* mon) const;
+    monster* get_fearmonger(const coord_def &pos) const;
+    monster* get_any_fearmonger() const;
+    void remove_fearmonger(const monster* mon);
+    void clear_fearmongers();
+    void fearmongers_check_noise(int loudness);
+    void update_fearmongers();
+    void update_fearmonger(const monster* mon);
 
     kill_category kill_alignment() const;
 
@@ -486,6 +521,7 @@ public:
     bool is_unholy() const;
     bool is_evil() const;
     bool is_chaotic() const;
+    bool is_artificial() const;
     bool is_insubstantial() const;
     int res_acid() const;
     int res_fire() const;
@@ -516,6 +552,7 @@ public:
     bool backlit(bool check_haloed = true, bool self_halo = true) const;
     int halo_radius2() const;
     int silence_radius2() const;
+    bool glows_naturally() const;
     bool petrified() const;
     bool incapacitated() const
     {
@@ -547,6 +584,7 @@ public:
 
     bool wearing_light_armour(bool with_skill = false) const;
     int  skill(skill_type skill, bool skill_bump = false) const;
+    int  traps_skill() const;
 
     bool do_shaft();
 
@@ -588,6 +626,9 @@ public:
 protected:
     void _removed_beholder();
     bool _possible_beholder(const monster* mon) const;
+
+    void _removed_fearmonger();
+    bool _possible_fearmonger(const monster* mon) const;
 };
 
 #ifdef DEBUG_GLOBALS
@@ -766,6 +807,7 @@ bool player_genus( genus_type which_genus,
 bool is_player_same_species( const int mon, bool = false );
 monster_type player_mons(bool transform = true);
 void update_player_symbol();
+void update_vision_range();
 
 bool you_can_wear( int eq, bool special_armour = false );
 bool player_has_feet(void);
@@ -828,6 +870,8 @@ void dec_haste_player(int delay);
 void levitate_player(int pow);
 
 void dec_disease_player(int delay);
+
+void dec_color_smoke_trail();
 
 bool player_weapon_wielded();
 

@@ -1374,6 +1374,8 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // Clear map knowledge stair emphasis.
     show_update_emphasis();
 
+    // Shouldn't happen, but this is too unimportant to assert.
+    env.final_effects.clear();
     los_changed();
 
     // Closes all the gates if you're on the way out.
@@ -1848,8 +1850,11 @@ bool load_ghost(bool creating_level)
 
         menv[imn].set_ghost(ghosts[0]);
         menv[imn].ghost_init();
+        menv[imn].bind_melee_flags();
         if (menv[imn].has_spells())
             menv[imn].bind_spell_flags();
+        if (menv[imn].ghost->species == SP_DEEP_DWARF)
+            menv[imn].flags |= MF_NO_REGEN;
 
         ghosts.erase(ghosts.begin());
 #ifdef BONES_DIAGNOSTICS

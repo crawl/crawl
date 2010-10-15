@@ -48,7 +48,7 @@
 // Creates a specific monster by mon type number.
 void wizard_create_spec_monster(void)
 {
-    int mon = debug_prompt_for_int( "Create which monster by number? ", true );
+    int mon = debug_prompt_for_int("Which monster by number? ", true);
 
     if (mon == -1 || (mon >= NUM_MONSTERS
                       && mon != RANDOM_MONSTER
@@ -57,7 +57,7 @@ void wizard_create_spec_monster(void)
                       && mon != RANDOM_NONBASE_DRACONIAN
                       && mon != WANDERING_MONSTER))
     {
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
     }
     else
     {
@@ -160,7 +160,7 @@ void wizard_create_spec_monster_name()
     }
 
     // FIXME: This is a bit useless, seeing how you cannot set the
-    // ghost's stats, brand or level.
+    // ghost's stats, brand or level, among other things.
     if (mspec.mid == MONS_PLAYER_GHOST)
     {
         unsigned short mid = mgrd(place);
@@ -796,7 +796,6 @@ void wizard_give_monster_item(monster* mon)
         return;
     }
 
-    // Shouldn't we be using MONUSE_MAGIC_ITEMS?
     if (item_use == MONUSE_STARTING_EQUIPMENT
         && !mons_is_unique(mon->type))
     {

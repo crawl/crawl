@@ -222,6 +222,10 @@ int mons_unusable_items(const monster* mon);
 mon_holy_type mons_class_holiness(int mc);
 
 bool mons_is_mimic( int mc );
+bool mons_is_item_mimic(int mc);
+bool mons_is_feat_mimic(int mc);
+
+
 bool mons_is_statue( int mc, bool allow_disintegrate = false );
 bool mons_is_demon( int mc );
 bool mons_is_draconian( int mc );
@@ -257,6 +261,8 @@ int mons_real_base_speed(int mc);
 
 bool mons_class_can_regenerate(int mc);
 bool mons_can_regenerate(const monster* mon);
+bool mons_class_can_display_wounds(int mc);
+bool mons_can_display_wounds(const monster* mon);
 zombie_size_type zombie_class_size(monster_type cs);
 int mons_zombie_size(int mc);
 monster_type mons_zombie_base(const monster* mon);
@@ -388,6 +394,8 @@ std::string ugly_thing_colour_name(const monster* mon);
 uint8_t ugly_thing_random_colour();
 int str_to_ugly_thing_colour(const std::string &s);
 uint8_t random_monster_colour();
+uint8_t random_large_abomination_colour();
+uint8_t random_small_abomination_colour();
 int ugly_thing_colour_offset(const uint8_t colour);
 std::string  draconian_colour_name(monster_type mon_type);
 monster_type draconian_colour_by_name(const std::string &colour);
@@ -423,5 +431,8 @@ int scan_mon_inv_randarts(const monster* mon,
 bool player_or_mon_in_sanct(const monster* mons);
 
 int get_dist_to_nearest_monster();
+
+bool mons_class_is_tentacle(int mc);
+bool mons_is_tentacle(const monster* mon);
 
 #endif

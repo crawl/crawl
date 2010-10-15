@@ -372,7 +372,7 @@ ENDMAP
 NAME:   zombieorc1_lemuel
 TAGS:   orc_entry
 ORIENT: float
-DEPTH:  11
+DEPTH:  D:11
 MONS:   orc zombie / orc skeleton w:2 / goblin zombie w:2 /\
         hobgoblin zombie w:2 / goblin skeleton w:1 / hobgoblin skeleton w:1
 MONS:   ogre zombie / troll zombie w:3 / hill giant zombie w:1
@@ -407,7 +407,7 @@ ENDMAP
 NAME:   zombieorc2_lemuel
 TAGS:   orc_entry
 ORIENT: float
-DEPTH:  11
+DEPTH:  D:11
 MONS:   orc zombie / orc skeleton w:2 / goblin zombie w:2 /\
         hobgoblin zombie w:2 / goblin skeleton w:1 / hobgoblin skeleton w:1
 MONS:   ogre zombie / troll zombie w:3 / hill giant zombie w:1

@@ -83,8 +83,6 @@ bool is_harmless_cloud(cloud_type type);
 bool in_what_cloud (cloud_type type);
 cloud_type in_what_cloud ();
 
-int actual_spread_rate(cloud_type type, int spread_rate);
-
 // fog generator
 void place_fog_machine(fog_machine_type fm_type, cloud_type cl_type,
                        int x, int y, int size, int power);

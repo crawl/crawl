@@ -117,7 +117,8 @@ bool can_wield(item_def *weapon, bool say_reason,
 
     if (!ignore_temporary_disability
         && you.weapon()
-        && you.weapon()->base_type == OBJ_WEAPONS
+        && (you.weapon()->base_type == OBJ_WEAPONS
+           || you.weapon()->base_type == OBJ_STAVES)
         && you.weapon()->cursed())
     {
         SAY(mpr("You can't unwield your weapon to draw a new one!"));
@@ -135,6 +136,13 @@ bool can_wield(item_def *weapon, bool say_reason,
             SAY(mpr("You are wearing that object!"));
             return (false);
         }
+    }
+
+    if (you.species == SP_CAT && (weapon->base_type == OBJ_WEAPONS
+          || weapon->base_type == OBJ_STAVES))
+    {
+        SAY(mpr("You can't use weapons."));
+        return (false);
     }
 
     // Only ogres and trolls can wield giant clubs (>= 30 aum)
@@ -221,11 +229,12 @@ static bool _valid_weapon_swap(const item_def &item)
 {
     // Weapons and staves are valid weapons.
     if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES)
-        return (true);
+        return (you.species != SP_CAT);
 
     // Some misc. items need to be wielded to be evoked.
     if (is_deck(item) || item.base_type == OBJ_MISCELLANY
-                         && item.sub_type == MISC_LANTERN_OF_SHADOWS)
+                         && item.sub_type != MISC_EMPTY_EBONY_CASKET
+                         && item.sub_type != MISC_RUNE_OF_ZOT)
     {
         return (true);
     }
@@ -359,7 +368,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             you.time_taken /= 10;
         }
         else
-            mpr("You are already empty-handed.");
+            canned_msg(MSG_EMPTY_HANDED);
 
         return (true);
     }
@@ -524,6 +533,12 @@ static bool cloak_is_being_removed( void )
 //---------------------------------------------------------------
 void wear_armour(int slot) // slot is for tiles
 {
+    if (you.species == SP_CAT)
+    {
+        mpr("You can't wear anything.");
+        return;
+    }
+
     if (!player_can_handle_equipment())
     {
         mpr("You can't wear anything in your present form.");
@@ -558,7 +573,7 @@ static int armour_equip_delay(const item_def &item)
 bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 {
     const object_class_type base_type = item.base_type;
-    if (base_type != OBJ_ARMOUR)
+    if (base_type != OBJ_ARMOUR || you.species == SP_CAT)
     {
         if (verbose)
            mpr("You can't wear that.");
@@ -634,7 +649,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         }
 
         if (!ignore_temporary
-            && you.species == SP_MERFOLK && you.swimming())
+            && you.fishtail)
         {
             if (verbose)
                mpr("You don't currently have feet!");
@@ -1147,7 +1162,8 @@ static int _fire_prompt_for_item()
 static bool _fire_validate_item(int slot, std::string &err)
 {
     if (slot == you.equip[EQ_WEAPON]
-        && you.inv[slot].base_type == OBJ_WEAPONS
+        && (you.inv[slot].base_type == OBJ_WEAPONS
+            || you.inv[slot].base_type == OBJ_STAVES)
         && you.inv[slot].cursed())
     {
         err = "That weapon is stuck to your hand!";
@@ -1164,14 +1180,14 @@ static bool _fire_validate_item(int slot, std::string &err)
 // Returns true if warning is given.
 static bool _fire_warn_if_impossible()
 {
-    // FIXME: merge this into transform_can_equip_slot()
-    const int trans = you.attribute[ATTR_TRANSFORMATION];
+    if (you.species == SP_CAT)
+    {
+        mpr("You can't grasp things well enough to throw them.");
+        return (true);
+    }
+
     // If you can't wield it, you can't throw it.
-    if (trans == TRAN_SPIDER
-        || trans == TRAN_BLADE_HANDS
-        || trans == TRAN_ICE_BEAST
-        || trans == TRAN_DRAGON
-        || trans == TRAN_BAT)
+    if (!transform_can_wield())
     {
         canned_msg(MSG_PRESENT_FORM);
         return (true);
@@ -1513,7 +1529,7 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
     // Pick the square further away from the agent.
     const coord_def from = agent->pos();
     if (in_bounds(pos2)
-        && grid_distance(pos2, from) > grid_distance(pos, from))
+        && distance(pos2, from) > distance(pos, from))
     {
         pos = pos2;
     }
@@ -2644,8 +2660,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
         // Note that branded missile damage goes through defender
         // resists.
-        if (ammo_brand == SPMSL_STEEL || ammo_brand == SPMSL_FROST
-            || ammo_brand == SPMSL_FLAME)
+        if (ammo_brand == SPMSL_STEEL
+            || elemental_missile_beam(bow_brand, ammo_brand))
         {
             dice_mult = dice_mult * 150 / 100;
         }
@@ -2934,6 +2950,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     // Ensure we're firing a 'missile'-type beam.
     pbolt.is_beam   = false;
     pbolt.is_tracer = false;
+
+    pbolt.loudness = int(sqrt(item_mass(item))/3 + 0.5);
 
     // Mark this item as thrown if it's a missile, so that we'll pick it up
     // when we walk over it.
@@ -3500,7 +3518,7 @@ static bool _dont_use_invis()
     if (!you.backlit())
         return (false);
 
-    if (you.haloed())
+    if (you.haloed() || you.glows_naturally())
     {
         mpr("You can't turn invisible.");
         return (true);
@@ -3517,6 +3535,12 @@ static bool _dont_use_invis()
 
 void zap_wand(int slot)
 {
+    if (you.species == SP_CAT)
+    {
+        mpr("You have no means to grasp a wand firmly enough.");
+        return;
+    }
+
     if (!player_can_handle_equipment())
     {
         canned_msg(MSG_PRESENT_FORM);
@@ -4450,8 +4474,6 @@ static bool _scroll_modify_item(item_def scroll)
     case SCR_RECHARGING:
         if (item_is_rechargeable(item, false, true))
         {
-            // Might still fail on highly enchanted weapons of electrocution.
-            // (If so, already prints the "Nothing happens" message.)
             if (recharge_wand(item_slot, false))
                 return (true);
             return (false);
@@ -4482,22 +4504,6 @@ static void _vulnerability_scroll()
     // First cast antimagic on yourself.
     antimagic();
 
-    // List of magical enchantments which will be dispelled.
-    const enchant_type lost_enchantments[] = {
-        ENCH_SLOW,
-        ENCH_HASTE,
-        ENCH_SWIFT,
-        ENCH_MIGHT,
-        ENCH_FEAR,
-        ENCH_CONFUSION,
-        ENCH_INVIS,
-        ENCH_CORONA,
-        ENCH_CHARM,
-        ENCH_PARALYSIS,
-        ENCH_PETRIFYING,
-        ENCH_PETRIFIED
-    };
-
     mon_enchant lowered_mr(ENCH_LOWERED_MR, 1, KC_YOU, 40);
 
     // Go over all creatures in LOS.
@@ -4505,9 +4511,7 @@ static void _vulnerability_scroll()
     {
         if (monster* mon = monster_at(*ri))
         {
-            // Dispel all magical enchantments.
-            for (unsigned int i = 0; i < ARRAYSZ(lost_enchantments); ++i)
-                mon->del_ench(lost_enchantments[i], true, true);
+                        debuff_monster(mon);
 
             // If relevant, monsters have their MR halved.
             if (!mons_immune_magic(mon))
@@ -4624,6 +4628,14 @@ void read_scroll(int slot)
                 return;
             break;
 
+        case SCR_AMNESIA:
+            if (you.spell_no == 0)
+            {
+                canned_msg(MSG_NO_SPELLS);
+                return;
+            }
+            break;
+
         default:
             break;
         }
@@ -4692,7 +4704,7 @@ void read_scroll(int slot)
         break;
 
     case SCR_REMOVE_CURSE:
-        if (!remove_curse(false))
+        if (!remove_curse())
             id_the_scroll = false;
         break;
 
@@ -4767,6 +4779,7 @@ void read_scroll(int slot)
     case SCR_CURSE_WEAPON:
         if (!you.weapon()
             || you.weapon()->base_type != OBJ_WEAPONS
+               && you.weapon()->base_type != OBJ_STAVES
             || you.weapon()->cursed())
         {
             canned_msg(MSG_NOTHING_HAPPENS);
@@ -4798,6 +4811,7 @@ void read_scroll(int slot)
             const bool is_cursed = wpn.cursed();
 
             if (wpn.base_type != OBJ_WEAPONS && wpn.base_type != OBJ_MISSILES
+                && wpn.base_type != OBJ_STAVES
                 || !is_cursed
                    && !is_enchantable_weapon(wpn, true, true)
                    && !is_enchantable_weapon(wpn, true, false))
@@ -4897,11 +4911,17 @@ void read_scroll(int slot)
         break;
 
     case SCR_CURSE_ARMOUR:
+    case SCR_CURSE_JEWELLERY:
     {
         // make sure there's something to curse first
         int count = 0;
         int affected = EQ_WEAPON;
-        for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
+        int min_type, max_type;
+        if (which_scroll == SCR_CURSE_ARMOUR)
+            min_type = EQ_MIN_ARMOUR, max_type = EQ_MAX_ARMOUR;
+        else
+            min_type = EQ_LEFT_RING, max_type = EQ_AMULET;
+        for (int i = min_type; i <= max_type; i++)
         {
             if (you.equip[i] != -1 && !you.inv[you.equip[i]].cursed())
             {
@@ -4957,6 +4977,16 @@ void read_scroll(int slot)
 
     case SCR_VULNERABILITY:
         _vulnerability_scroll();
+        break;
+
+    case SCR_AMNESIA:
+        if (you.spell_no == 0)
+        {
+            canned_msg(MSG_NOTHING_HAPPENS);
+            id_the_scroll = false;
+        }
+        else
+            cast_selective_amnesia();
         break;
 
     default:

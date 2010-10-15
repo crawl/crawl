@@ -18,6 +18,7 @@
 #include "directn.h"
 #include "env.h"
 #include "fight.h"
+#include "fineff.h"
 #include "fprop.h"
 #include "ghost.h"
 #include "godabil.h"
@@ -568,27 +569,31 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
         if (brand == SPWPN_ORC_SLAYING && is_orckind(this))
             return (false);
 
-        // Undead and demonic monsters won't use holy weapons.
-        if (undead_or_demonic() && is_holy_item(item))
+        // Undead and demonic monsters and monsters that are
+        // gifts/worshippers of Yredelemnul won't use holy weapons.
+        if ((undead_or_demonic() || god == GOD_YREDELEMNUL)
+            && is_holy_item(item))
+        {
             return (false);
+        }
 
-        // Holy monsters that aren't gifts of chaotic gods and monsters
-        // that are gifts of good gods won't use potentially unholy
-        // weapons.
+        // Holy monsters that aren't gifts/worshippers of chaotic gods
+        // and monsters that are gifts/worshippers of good gods won't
+        // use potentially unholy weapons.
         if (((is_holy() && !is_chaotic_god(god)) || is_good_god(god))
             && is_potentially_unholy_item(item))
         {
             return (false);
         }
 
-        // Holy monsters and monsters that are gifts of good gods won't
-        // use unholy weapons.
+        // Holy monsters and monsters that are gifts/worshippers of good
+        // gods won't use unholy weapons.
         if ((is_holy() || is_good_god(god)) && is_unholy_item(item))
             return (false);
 
-        // Holy monsters that aren't gifts of chaotic gods and monsters
-        // that are gifts of good gods or Fedhas won't use potentially
-        // evil weapons.
+        // Holy monsters that aren't gifts/worshippers of chaotic gods
+        // and monsters that are gifts/worshippers of good gods won't
+        // use potentially evil weapons.
         if (((is_holy() && !is_chaotic_god(god))
                 || is_good_god(god))
             && is_potentially_evil_item(item))
@@ -596,27 +601,36 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
             return (false);
         }
 
-        // Holy monsters and monsters that are gifts of good gods or
-        // Fedhas won't use evil weapons.
+        // Holy monsters and monsters that are gifts/worshippers of good
+        // gods won't use evil weapons.
         if (((is_holy() || is_good_god(god)))
             && is_evil_item(item))
         {
             return (false);
         }
 
+        // Monsters that are gifts/worshippers of Fedhas won't use
+        // corpse-violating weapons.
         if (god == GOD_FEDHAS && is_corpse_violating_item(item))
             return (false);
 
-        // Holy monsters that aren't gifts of chaotic gods and monsters
-        // that are gifts of good gods won't use chaotic weapons.
+        // Monsters that are gifts/worshippers of Zin won't use unclean
+        // weapons.
+        if (god == GOD_ZIN && is_unclean_item(item))
+            return (false);
+
+        // Holy monsters that aren't gifts/worshippers of chaotic gods
+        // and monsters that are gifts/worshippers of good gods won't
+        // use chaotic weapons.
         if (((is_holy() && !is_chaotic_god(god)) || is_good_god(god))
             && is_chaotic_item(item))
         {
             return (false);
         }
 
-        // Monsters that are gifts of Zin won't use unclean weapons.
-        if (god == GOD_ZIN && is_unclean_item(item))
+        // Monsters that are gifts/worshippers of TSO won't use poisoned
+        // weapons.
+        if (god == GOD_SHINING_ONE && is_poisoned_item(item))
             return (false);
     }
 
@@ -668,11 +682,11 @@ void monster::bind_melee_flags()
     // Bind fighter / dual-wielder / archer flags from the base type.
 
     // Alas, we don't know if the mon is zombified at the moment, if it
-    // is, the flags will be removed later.
+    // is, the flags (other than dual-wielder) will be removed later.
     if (mons_class_flag(type, M_FIGHTER))
         flags |= MF_FIGHTER;
-    if (mons_class_flag(type, M_TWOWEAPON))
-        flags |= MF_TWOWEAPON;
+    if (mons_class_flag(type, M_TWO_WEAPONS))
+        flags |= MF_TWO_WEAPONS;
     if (mons_class_flag(type, M_ARCHER))
         flags |= MF_ARCHER;
 }
@@ -723,6 +737,10 @@ bool monster::can_use_missile(const item_def &item) const
     {
         return (is_throwable(this, item));
     }
+
+    // Rods are always non-throwable.
+    if (item_is_rod(item) || item_is_staff(item))
+        return (false);
 
     // Stones are allowed even without launcher.
     if (item.sub_type == MI_STONE)
@@ -863,6 +881,7 @@ void monster::equip(item_def &item, int slot, int near)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
+    case OBJ_STAVES:
     {
         bool give_msg = (slot == MSLOT_WEAPON || mons_wields_two_weapons(this));
         equip_weapon(item, near, give_msg);
@@ -1251,8 +1270,8 @@ static bool _is_signature_weapon(monster* mons, const item_def &weapon)
     if (weapon.base_type != OBJ_WEAPONS)
         return (false);
 
-    if (mons->type == MONS_CHERUB || mons->type == MONS_ANGEL)
-        return (weapon.sub_type == WPN_HOLY_SCOURGE);
+    if (mons->type == MONS_ANGEL || mons->type == MONS_CHERUB)
+        return (weapon.sub_type == WPN_SACRED_SCOURGE);
 
     if (mons->type == MONS_DAEVA)
         return (weapon.sub_type == WPN_EUDEMON_BLADE);
@@ -1532,6 +1551,13 @@ bool monster::wants_weapon(const item_def &weap) const
         && hands_reqd(weap, body_size()) == HANDS_TWO)
     {
         return (false);
+    }
+
+    // deep dwarf artificers
+    if (weap.base_type == OBJ_STAVES
+        && type == MONS_DEEP_DWARF_ARTIFICER)
+    {
+        return (true);
     }
 
     // Nobody picks up giant clubs. Starting equipment is okay, of course.
@@ -1815,7 +1841,7 @@ bool monster::pickup_potion(item_def &item, int near)
     // them.
     const potion_type ptype = static_cast<potion_type>(item.sub_type);
 
-    if (!can_drink_potion(ptype))
+    if (type != MONS_PARACELSUS && !can_drink_potion(ptype))
         return (false);
 
     return (pickup(item, MSLOT_POTION, near));
@@ -1919,6 +1945,7 @@ bool monster::pickup_item(item_def &item, int near, bool force)
         return pickup_gold(item, near);
     // Fleeing monsters won't pick up these.
     // Hostiles won't pick them up if they were ever dropped/thrown by you.
+    case OBJ_STAVES:
     case OBJ_WEAPONS:
         return pickup_weapon(item, near, force);
     case OBJ_MISSILES:
@@ -2155,6 +2182,9 @@ std::string monster::conj_verb(const std::string &verb) const
 
     if (verb == "are")
         return ("is");
+
+    if (verb == "snap closed at")
+        return ("snaps closed at");
 
     if (ends_with(verb, "f") || ends_with(verb, "fe")
         || ends_with(verb, "y"))
@@ -2572,13 +2602,8 @@ void monster::banish(const std::string &)
 
     if (mons_is_projectile(type))
         return;
-    if (!silenced(pos()) && can_speak())
-        simple_monster_message(this, (" screams as " + pronoun(PRONOUN_NOCAP)
-            + " is devoured by a tear in reality.").c_str(),
-            MSGCH_BANISHMENT);
-    else
-        simple_monster_message(this, " is devoured by a tear in reality.",
-            MSGCH_BANISHMENT);
+    simple_monster_message(this, " is devoured by a tear in reality.",
+                           MSGCH_BANISHMENT);
     monster_die(this, KILL_RESET, NON_MONSTER);
 
     place_cloud(CLOUD_TLOC_ENERGY, old_pos, 5 + random2(8), KC_OTHER);
@@ -2723,6 +2748,12 @@ bool monster::backlit(bool check_haloed, bool self_halo) const
     return (false);
 }
 
+bool monster::glows_naturally() const
+{
+    return (mons_class_flag(type, M_GLOWS_LIGHT)
+            || mons_class_flag(type, M_GLOWS_RADIATION));
+}
+
 bool monster::caught() const
 {
     return (has_ench(ENCH_HELD));
@@ -2864,7 +2895,7 @@ bool monster::heal(int amount, bool max_too)
 
 mon_holy_type monster::holiness() const
 {
-    if (testbits(flags, MF_HONORARY_UNDEAD))
+    if (testbits(flags, MF_FAKE_UNDEAD))
         return (MH_UNDEAD);
 
     return (mons_class_holiness(type));
@@ -2996,6 +3027,11 @@ bool monster::is_known_chaotic() const
 bool monster::is_chaotic() const
 {
     return (is_shapeshifter() || is_known_chaotic());
+}
+
+bool monster::is_artificial() const
+{
+    return (mons_class_flag(type, M_ARTIFICIAL));
 }
 
 bool monster::is_insubstantial() const
@@ -3139,21 +3175,26 @@ int monster::res_elec() const
 int monster::res_asphyx() const
 {
     int res = get_mons_resists(this).asphyx;
+
     const mon_holy_type holi = holiness();
+
     if (undead_or_demonic()
         || holi == MH_NONLIVING
         || holi == MH_PLANT)
     {
         res += 1;
     }
+
     return (res);
 }
 
 int monster::res_water_drowning() const
 {
     const int res = res_asphyx();
+
     if (res)
         return (res);
+
     switch (mons_habitat(this))
     {
     case HT_WATER:
@@ -3331,6 +3372,9 @@ int monster::res_magic() const
     if (has_ench(ENCH_LOWERED_MR))
         u /= 2;
 
+    if (has_ench(ENCH_RAISED_MR)) //trog's hand
+        u += 70;
+
     return (u);
 }
 
@@ -3455,11 +3499,23 @@ bool monster::rot(actor *agent, int amount, int immediate, bool quiet)
 int monster::hurt(const actor *agent, int amount, beam_type flavour,
                    bool cleanup_dead)
 {
+    const int initial_damage = amount;
     if (mons_is_projectile(type))
         return (0);
 
     if (alive())
     {
+        if (amount != INSTANT_DEATH
+            && ::mons_species(mons_base_type(this)) == MONS_DEEP_DWARF)
+        {
+            // Deep Dwarves get to shave _any_ hp loss. Player version:
+            int shave = 1 + random2(2 + random2(1 + hit_dice / 3));
+            dprf("(mon) HP shaved: %d.", shave);
+            amount -= shave;
+            if (amount <= 0)
+                return (0);
+        }
+
         if (amount == INSTANT_DEATH)
             amount = hit_points;
         else if (hit_dice <= 0)
@@ -3495,6 +3551,10 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         // Allow the victim to exhibit passive damage behaviour (e.g.
         // the royal jelly).
         react_to_damage(agent, amount, flavour);
+
+        if (has_ench(ENCH_MIRROR_DAMAGE))
+            add_final_effect(FINEFF_MIRROR_DAMAGE, agent, this,
+                             coord_def(0, 0), initial_damage);
     }
 
     if (cleanup_dead && (hit_points <= 0 || hit_dice <= 0) && type != -1)
@@ -3619,7 +3679,6 @@ void monster::dancing_weapon_init()
 {
     hit_dice        = ghost->xl;
     max_hit_points  = ghost->max_hp;
-
     hit_points      = max_hit_points;
     ac              = ghost->ac;
     ev              = ghost->ev;
@@ -3961,6 +4020,17 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 
         break;
 
+    case ENCH_STONESKIN:
+        {
+            // player gets 2+earth/5
+            const int ac_bonus = hit_dice / 2;
+
+            ac += ac_bonus;
+            // the monster may get drained or level up, we need to store the bonus
+            props["stoneskin_ac"].get_byte() = ac_bonus;
+        }
+        break;
+
     case ENCH_SUBMERGED:
         mons_clear_trapping_net(this);
 
@@ -4197,6 +4267,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         else
             speed *= 2;
 
+        break;
+
+    case ENCH_STONESKIN:
+        if (props.exists("stoneskin_ac"))
+            ac -= props["stoneskin_ac"].get_byte();
         break;
 
     case ENCH_PARALYSIS:
@@ -4515,7 +4590,9 @@ void monster::timeout_enchantments(int levels)
         case ENCH_PETRIFYING: case ENCH_PETRIFIED: case ENCH_SWIFT:
         case ENCH_BATTLE_FRENZY: case ENCH_TEMP_PACIF: case ENCH_SILENCE:
         case ENCH_LOWERED_MR: case ENCH_SOUL_RIPE: case ENCH_BLEED:
-        case ENCH_ANTIMAGIC:
+        case ENCH_ANTIMAGIC: case ENCH_FEAR_INSPIRING:
+        case ENCH_REGENERATION: case ENCH_RAISED_MR: case ENCH_MIRROR_DAMAGE:
+        case ENCH_STONESKIN:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -4691,6 +4768,11 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_SOUL_RIPE:
     case ENCH_TIDE:
     case ENCH_ANTIMAGIC:
+    case ENCH_REGENERATION:
+    case ENCH_RAISED_MR:
+    case ENCH_MIRROR_DAMAGE:
+    case ENCH_STONESKIN:
+    case ENCH_FEAR_INSPIRING:
         decay_enchantment(me);
         break;
 
@@ -5083,8 +5165,77 @@ void monster::apply_enchantment(const mon_enchant &me)
         }
 
     }
+    break;
+
+    case ENCH_PORTAL_TIMER:
+    {
+        if (decay_enchantment(me))
+        {
+            coord_def base_position = this->props["base_position"].get_coord();
+            // Do a thing.
+            if (you.see_cell(base_position))
+            {
+                mprf("The portal closes; %s is severed.", name(DESC_NOCAP_THE).c_str());
+            }
+
+            if (env.grid(base_position) == DNGN_TEMP_PORTAL)
+            {
+                env.grid(base_position) = DNGN_FLOOR;
+            }
+
+            env.pgrid(base_position) |= FPROP_BLOODY;
+            add_ench(ENCH_SEVERED);
+
+            // Severed tentacles immediately become "hostile" (or insane)
+            this->attitude = ATT_HOSTILE;
+            behaviour_event(this, ME_ALERT, MHITYOU);
+        }
+    }
+    break;
+
+    case ENCH_PORTAL_PACIFIED:
+    {
+        if (decay_enchantment(me))
+        {
+            if (this->has_ench(ENCH_SEVERED))
+                break;
+
+            if (!this->friendly())
+                break;
+
+            if (!silenced(you.pos()))
+            {
+                if (you.can_see(this))
+                    simple_monster_message(this, " suddenly becomes enraged!");
+                else
+                    mpr("You hear a distant and violent thrashing sound.");
+            }
+
+            this->attitude = ATT_HOSTILE;
+            behaviour_event(this, ME_ALERT, MHITYOU);
+        }
+    }
+    break;
+
+
+    case ENCH_SEVERED:
+    {
+        simple_monster_message(this, " writhes!");
+        coord_def base_position = props["base_position"].get_coord();
+        dungeon_feature_type ftype = env.grid(base_position);
+        if (feat_has_solid_floor(ftype)
+            && !feat_is_watery(ftype))
+        {
+            env.pgrid(base_position) |= FPROP_BLOODY;
+        }
+        // We don't have a reasonable agent to give.
+        // Don't clean up the monster in order to credit properly.
+        //hurt(NULL, dam, BEAM_NAPALM, false);
+        hurt(NULL, 20);
+    }
 
     break;
+
     case ENCH_GLOWING_SHAPESHIFTER: // This ench never runs out!
         // Number of actions is fine for shapeshifters.  Don't change
         // shape while taking the stairs because monster_polymorph() has
@@ -5128,7 +5279,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_BLEED:
     {
         // 3, 6, 9% of current hp
-        int dam = random2((1 + hit_points)*(me.degree * 3)/100);
+        int dam = div_rand_round(random2((1 + hit_points)*(me.degree * 3)),100);
 
         if (dam < hit_points)
         {
@@ -5795,6 +5946,8 @@ bool monster::can_drink_potion(potion_type ptype) const
         case POT_BLOOD:
         case POT_BLOOD_COAGULATED:
             return (mons_species() == MONS_VAMPIRE);
+        case POT_PORRIDGE:
+            return (mons_species() == MONS_NISSE);
         case POT_SPEED:
         case POT_MIGHT:
         case POT_BERSERK_RAGE:
@@ -6006,7 +6159,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             && mons_base_type(&menv[number]) == MONS_KRAKEN_TENTACLE)
         {
 
-            // If we aare going to die, monster_die hook will handle
+            // If we are going to die, monster_die hook will handle
             // purging the tentacle.
             if (hit_points < menv[number].hit_points
                 && this->hit_points > 0)
@@ -6019,6 +6172,27 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                 if (invalid_monster(this))
                 {
                     type = MONS_KRAKEN_CONNECTOR;
+                    hit_points = -1;
+                }
+            }
+        }
+    }
+    else if (type == MONS_ELDRITCH_TENTACLE_SEGMENT)
+    {
+        //mprf("in tentacle damage pass");
+        if (!invalid_monster_index(number)
+            && mons_base_type(&menv[number]) == MONS_ELDRITCH_TENTACLE)
+        {
+            if (hit_points < menv[number].hit_points)
+            {
+                int pass_damage = menv[number].hit_points -  hit_points;
+                menv[number].hurt(oppressor, pass_damage, flavour);
+
+                // We could be removed, undo this or certain post-hit
+                // effects will cry.
+                if (invalid_monster(this))
+                {
+                    type = MONS_ELDRITCH_TENTACLE_SEGMENT;
                     hit_points = -1;
                 }
             }
@@ -6038,9 +6212,9 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         {
             bool fly_died = coinflip();
             int old_hp                = hit_points;
-            unsigned long old_flags   = flags;
+            uint64_t old_flags        = flags;
             mon_enchant_list old_ench = enchantments;
-            int8_t old_ench_countdown   = ench_countdown;
+            int8_t old_ench_countdown = ench_countdown;
 
             if (!fly_died)
                 monster_drop_things(this, mons_aligned(oppressor, &you));
@@ -6105,7 +6279,9 @@ static const char *enchant_names[] =
     "petrified", "lowered_mr", "soul_ripe", "slowly_dying", "eat_items",
     "aquatic_land", "spore_production", "slouch", "swift", "tide",
     "insane", "silenced", "awaken_forest", "exploding", "bleeding",
-    "antimagic", "fading_away", "preparing_resurrect", "buggy",
+    "tethered", "severed", "antimagic", "fading_away", "preparing_resurrect", "regen",
+    "magic_res", "mirror_dam", "stoneskin", "fear inspiring", "temporarily pacified",
+    "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -6211,9 +6387,14 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_HASTE:
     case ENCH_MIGHT:
     case ENCH_INVIS:
+    case ENCH_FEAR_INSPIRING:
+    case ENCH_STONESKIN:
         cturn = 1000 / _mod_speed(25, mons->speed);
         break;
     case ENCH_SILENCE:
+    case ENCH_REGENERATION:
+    case ENCH_RAISED_MR:
+    case ENCH_MIRROR_DAMAGE:
         cturn = 300 / _mod_speed(25, mons->speed);
         break;
     case ENCH_SLOW:
@@ -6278,6 +6459,14 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_EXPLODING:
         return (random_range(3,7) * 10);
 
+    case ENCH_PORTAL_PACIFIED:
+        // Must be set by spell.
+        return (0);
+
+    case ENCH_PORTAL_TIMER:
+        cturn = 30 * 10 / _mod_speed(10, mons->speed);
+        break;
+
     case ENCH_ABJ:
         if (deg >= 6)
             cturn = 1000 / _mod_speed(10, mons->speed);
@@ -6321,4 +6510,3 @@ void mon_enchant::set_duration(const monster* mons, const mon_enchant *added)
     if (duration > maxduration)
         maxduration = duration;
 }
-

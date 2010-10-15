@@ -513,6 +513,27 @@ std::string pluralise(const std::string &name,
     return name + "s";
 }
 
+std::string apostrophise(const std::string &name)
+{
+    if (name.empty())
+        return (name);
+
+    if (name == "it" || name == "It")
+        return (name + "s");
+
+    const char lastc = name[name.length() - 1];
+    return (name + (lastc == 's' ? "'" : "'s"));
+}
+
+std::string apostrophise_fixup(const std::string &msg)
+{
+    if (msg.empty())
+        return (msg);
+
+    // XXX: This is rather hackish.
+    return (replace_all(msg, "s's", "s'"));
+}
+
 static std::string pow_in_words(int pow)
 {
     switch (pow)

@@ -281,6 +281,8 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_ENTER_PORTAL_VAULT:
     case DNGN_EXIT_PORTAL_VAULT:
         return TILE_DNGN_PORTAL;
+    case DNGN_TEMP_PORTAL:
+        return TILE_DNGN_STARRY_PORTAL;
 
     // altars
     case DNGN_ALTAR_ZIN:
@@ -317,6 +319,8 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_ALTAR_FEDHAS;
     case DNGN_ALTAR_CHEIBRIADOS:
         return TILE_DNGN_ALTAR_CHEIBRIADOS;
+    case DNGN_ALTAR_ASHENZARI:
+        return TILE_DNGN_ALTAR_ASHENZARI;
     case DNGN_FOUNTAIN_BLUE:
         return TILE_DNGN_BLUE_FOUNTAIN;
     case DNGN_FOUNTAIN_SPARKLING:
@@ -734,6 +738,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_HELL_HOUND;
     case MONS_HELL_HOG:
         return TILEP_MONS_HELL_HOG;
+    case MONS_FELID:
+        return TILEP_MONS_FELID;
 
     // slugs ('j')
     case MONS_ELEPHANT_SLUG:
@@ -867,8 +873,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_GIANT_CENTIPEDE;
     case MONS_SCORPION:
         return TILEP_MONS_SCORPION;
-    case MONS_GIANT_SCORPION:
-        return TILEP_MONS_GIANT_SCORPION;
+    case MONS_EMPEROR_SCORPION:
+        return TILEP_MONS_EMPEROR_SCORPION;
     case MONS_SPIDER:
         return TILEP_MONS_SPIDER;
     case MONS_TARANTELLA:
@@ -2041,8 +2047,8 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_DEMON_WHIP:
         return TILE_WPN_DEMON_WHIP;
 
-    case WPN_HOLY_SCOURGE:
-        return TILE_WPN_HOLY_SCOURGE;
+    case WPN_SACRED_SCOURGE:
+        return TILE_WPN_SACRED_SCOURGE;
 
     case WPN_DEMON_TRIDENT:
         return TILE_WPN_DEMON_TRIDENT;
@@ -2482,6 +2488,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_HELL_HOUND;
     case MONS_HELL_HOG:
         return TILE_CORPSE_HELL_HOG;
+    case MONS_FELID:
+        return TILE_CORPSE_FELID;
 
     // spriggans ('i')
     case MONS_SPRIGGAN:
@@ -2554,6 +2562,11 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     case MONS_ORC_HIGH_PRIEST:
         return TILE_CORPSE_ORC;
 
+    // dwarves ('q')
+    case MONS_DWARF:
+    case MONS_DEEP_DWARF:
+        return TILE_CORPSE_DWARF;
+
     // rodents ('r')
     case MONS_RAT:
         return TILE_CORPSE_RAT;
@@ -2573,8 +2586,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_GIANT_CENTIPEDE;
     case MONS_SCORPION:
         return TILE_CORPSE_SCORPION;
-    case MONS_GIANT_SCORPION:
-        return TILE_CORPSE_GIANT_SCORPION;
+    case MONS_EMPEROR_SCORPION:
+        return TILE_CORPSE_EMPEROR_SCORPION;
     case MONS_SPIDER:
         return TILE_CORPSE_SPIDER;
     case MONS_TARANTELLA:
@@ -2836,9 +2849,6 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_SHAPESHIFTER;
     case MONS_GLOWING_SHAPESHIFTER:
         return TILE_CORPSE_GLOWING_SHAPESHIFTER;
-
-    case MONS_DWARF:
-        return TILE_CORPSE_DWARF;
 
     default:
         return TILE_ERROR;
@@ -3496,7 +3506,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_CONFUSE:                  return TILEG_CONFUSE;
     case SPELL_SLOW:                     return TILEG_SLOW;
     case SPELL_TUKIMAS_DANCE:            return TILEG_TUKIMAS_DANCE;
-    case SPELL_SELECTIVE_AMNESIA:        return TILEG_SELECTIVE_AMNESIA;
     case SPELL_ENSLAVEMENT:              return TILEG_ENSLAVEMENT;
     case SPELL_SEE_INVISIBLE:            return TILEG_SEE_INVISIBLE;
     case SPELL_PETRIFY:                  return TILEG_PETRIFY;

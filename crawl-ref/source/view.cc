@@ -38,6 +38,8 @@
 #include "exclude.h"
 #include "feature.h"
 #include "files.h"
+#include "fprop.h"
+#include "godconduct.h"
 #include "hints.h"
 #include "libutil.h"
 #include "macro.h"
@@ -136,12 +138,12 @@ void seen_monsters_react()
         good_god_follower_attitude_change(*mi);
         beogh_follower_convert(*mi);
         slime_convert(*mi);
-        // XXX: Probably quite hackish. Allows for monsters going berserk when
-        //      they see the player. Currently only used for Duvessa, see the
-        //      function _elven_twin_dies in mon-stuff.cc.
-        if (mi->flags & MF_GOING_BERSERK)
+        passive_enslavement_convert(*mi);
+
+        // XXX: Hack for triggering Duvessa's going berserk.
+        if (mi->props.exists("duvessa_berserk"))
         {
-            mi->flags &= ~MF_GOING_BERSERK;
+            mi->props.erase("duvessa_berserk");
             mi->go_berserk(true);
         }
 
@@ -320,8 +322,8 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     }
 
     // now gradually weaker with distance:
-    const int pfar     = (map_radius * 7) / 10;
-    const int very_far = (map_radius * 9) / 10;
+    const int pfar     = dist_range((map_radius * 7) / 10);
+    const int very_far = dist_range((map_radius * 9) / 10);
 
     bool did_map = false;
     int  num_altars        = 0;
@@ -342,7 +344,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         {
             int threshold = proportion;
 
-            const int dist = grid_distance( you.pos(), *ri );
+            const int dist = distance( you.pos(), *ri );
 
             if (dist > very_far)
                 threshold = threshold / 3;
@@ -730,6 +732,14 @@ static int player_view_update_at(const coord_def &gc)
 
     set_terrain_visible(gc);
 
+    if (!(env.pgrid(gc) & FPROP_SEEN_OR_NOEXP))
+    {
+        env.pgrid(gc) |= FPROP_SEEN_OR_NOEXP;
+        const int density = env.density ? env.density : 1000;
+        did_god_conduct(DID_EXPLORATION, density);
+        you.exploration += div_rand_round(1<<16, density);
+    }
+
 #ifdef USE_TILE
     const coord_def ep = grid2show(gc);
     if (!player_in_mappable_area())
@@ -958,6 +968,9 @@ void viewwindow(bool show_updates)
 #ifdef USE_TILE
         // Grey out grids that cannot be reached due to beholders.
         else if (you.get_beholder(gc))
+            cell->tile_bg |= TILE_FLAG_OOR;
+
+        else if (you.get_fearmonger(gc))
             cell->tile_bg |= TILE_FLAG_OOR;
 
         tile_apply_properties(gc, &cell->tile_fg, &cell->tile_bg);

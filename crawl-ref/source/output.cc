@@ -202,7 +202,10 @@ void update_turn_count()
 
     // Show the turn count starting from 1. You can still quit on turn 0.
     textcolor(HUD_VALUE_COLOUR);
-    cprintf("%d", you.num_turns);
+    if (Options.show_real_turns)
+       cprintf("%.1f", you.elapsed_time / 10.0 );
+    else
+        cprintf("%d", you.num_turns);
     textcolor(LIGHTGREY);
 }
 
@@ -502,7 +505,7 @@ static void _get_status_lights(std::vector<status_light>& out)
         STATUS_SICK, STATUS_ROT, STATUS_NET, STATUS_GLOW, DUR_SWIFTNESS,
         STATUS_SPEED, DUR_DEATH_CHANNEL, DUR_TELEPATHY, DUR_STEALTH,
         DUR_BREATH_WEAPON, DUR_EXHAUSTED, DUR_POWERED_BY_DEATH,
-        DUR_TRANSFORMATION,
+        DUR_TRANSFORMATION, DUR_AFRAID, DUR_MIRROR_DAMAGE, DUR_SCRYING,
     };
 
     status_info inf;
@@ -1537,17 +1540,28 @@ static std::vector<formatted_string> _get_overview_stats()
         godpowers = _wiz_god_powers();
 #endif
 
+    char lives[40];
+    if (you.species == SP_CAT)
+    {
+        snprintf(lives, sizeof(lives), "Lives: %d, deaths: %d",
+                 you.lives, you.deaths);
+    }
+    else
+        lives[0] = 0;
+
     int xp_needed = (exp_needed(you.experience_level + 2) - you.experience) + 1;
     snprintf(buf, sizeof buf,
              "Exp: %d/%u (%d)%s\n"
              "God: %s\n"
-             "Spells: %2d memorised, %2d level%s left\n",
+             "Spells: %2d memorised, %2d level%s left\n"
+             "%s",
              you.experience_level, you.experience, you.exp_available,
              (you.experience_level < 27?
               make_stringf(", need: %d", xp_needed).c_str() : ""),
              godpowers.c_str(),
              you.spell_no, player_spell_levels(),
-             (player_spell_levels() == 1) ? "" : "s");
+             (player_spell_levels() == 1) ? "" : "s",
+             lives);
     cols1.add_formatted(3, buf, false);
 
     return cols1.formatted_lines();
@@ -1704,7 +1718,7 @@ static char _get_overview_screen_results()
         std::vector<formatted_string> blines =
             _get_overview_resistances(equip_chars, calc_unid);
 
-        for (unsigned int i = 0; i < blines.size(); ++i )
+        for (unsigned int i = 0; i < blines.size(); ++i)
         {
             // Kind of a hack -- we don't really care what items these
             // hotkeys go to.  So just pick the first few.
@@ -1818,7 +1832,8 @@ std::string _status_mut_abilities()
         STATUS_AIRBORNE, DUR_BARGAIN, DUR_SLAYING, DUR_SAGE,
         DUR_MAGIC_SHIELD, DUR_FIRE_SHIELD, DUR_POISONING, STATUS_SICK,
         STATUS_GLOW, STATUS_ROT, DUR_CONFUSING_TOUCH, DUR_SLIMIFY,
-        DUR_SURE_BLADE, STATUS_NET, STATUS_SPEED,
+        DUR_SURE_BLADE, STATUS_NET, STATUS_SPEED, DUR_AFRAID,
+        DUR_MIRROR_DAMAGE, DUR_SCRYING,
     };
 
     status_info inf;
@@ -1887,20 +1902,26 @@ std::string _status_mut_abilities()
           }
           break;
 
-      case SP_VAMPIRE:
-          if (you.experience_level < 13 || you.hunger_state >= HS_SATIATED)
-              break;
-          // else fall-through
       case SP_MUMMY:
-          mutations.push_back("in touch with death");
+          if (you.experience_level > 12)
+          {
+              std::string help = "in touch with death";
+              if (you.experience_level > 25)
+                  help = "strongly " + help;
+              mutations.push_back(help);
+          }
+          break;
+
+      case SP_CAT:
+          mutations.push_back("paw claws");
           break;
 
       case SP_GREY_DRACONIAN:
-          mutations.push_back("spiky tail");
+          mutations.push_back("unbreathing");
           break;
 
       case SP_GREEN_DRACONIAN:
-          mutations.push_back("breathe poison");
+          mutations.push_back("breathe noxious fumes");
           break;
 
       case SP_RED_DRACONIAN:
@@ -1941,6 +1962,12 @@ std::string _status_mut_abilities()
         || player_genus(GENPC_DRACONIAN) || you.species == SP_SPRIGGAN)
     {
         mutations.push_back("unfitting armour");
+    }
+
+    if (you.species == SP_CAT)
+    {
+        mutations.push_back("no armour");
+        mutations.push_back("no advanced items");
     }
 
     if (beogh_water_walk())
