@@ -6129,7 +6129,7 @@ int player::has_claws(bool allow_tran) const
         }
     }
 
-    if (int c = species_has_claws(you.species))
+    if (const int c = species_has_claws(you.species))
         return (c);
 
     return (player_mutation_level(MUT_CLAWS));
