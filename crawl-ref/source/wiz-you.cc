@@ -109,23 +109,37 @@ void wizard_change_species(void)
     switch (sp)
     {
     case SP_RED_DRACONIAN:
-        if (you.experience_level >= 14)
+        if (you.experience_level >= 7)
             perma_mutate(MUT_HEAT_RESISTANCE, 1);
         break;
 
     case SP_WHITE_DRACONIAN:
-        if (you.experience_level >= 14)
+        if (you.experience_level >= 7)
             perma_mutate(MUT_COLD_RESISTANCE, 1);
         break;
 
     case SP_GREEN_DRACONIAN:
         if (you.experience_level >= 7)
             perma_mutate(MUT_POISON_RESISTANCE, 1);
+        if (you.experience_level >= 14)
+            perma_mutate(MUT_STINGER, 1);
+        break;
+
+    case SP_YELLOW_DRACONIAN:
+        if (you.experience_level >= 14)
+            perma_mutate(MUT_ACIDIC_BITE, 1);
+        break;
+
+    case SP_GREY_DRACONIAN:
+        if (you.experience_level >= 7)
+            perma_mutate(MUT_UNBREATHING, 1);
         break;
 
     case SP_BLACK_DRACONIAN:
-        if (you.experience_level >= 18)
+        if (you.experience_level >= 7)
             perma_mutate(MUT_SHOCK_RESISTANCE, 1);
+        if (you.experience_level >= 14)
+            perma_mutate(MUT_BIG_WINGS, 1);
         break;
 
     case SP_DEMONSPAWN:
