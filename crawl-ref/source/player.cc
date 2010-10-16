@@ -2661,7 +2661,6 @@ static void _draconian_scale_colour_message()
     case SP_GREEN_DRACONIAN:
         mpr("Your scales start taking on a green colour.",
             MSGCH_INTRINSIC_GAIN);
-        // Green draconians get this at level 7.
         perma_mutate(MUT_POISON_RESISTANCE, 1);
         break;
     case SP_YELLOW_DRACONIAN:
