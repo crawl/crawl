@@ -1149,8 +1149,7 @@ bool mons_can_be_zombified(const monster* mon)
 bool mons_class_can_use_stairs(int mc)
 {
     return ((!mons_class_is_zombified(mc) || mc == MONS_SPECTRAL_THING)
-            && mc != MONS_KRAKEN_TENTACLE
-            && mc != MONS_KRAKEN_TENTACLE_SEGMENT
+            && !mons_is_tentacle(mc)
             && mc != MONS_SILENT_SPECTRE
             && mc != MONS_PLAYER_GHOST);
 }
