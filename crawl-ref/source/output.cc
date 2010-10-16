@@ -1916,14 +1916,6 @@ std::string _status_mut_abilities()
           mutations.push_back("paw claws");
           break;
 
-      case SP_GREY_DRACONIAN:
-          mutations.push_back("walk through water");
-          break;
-
-      case SP_GREEN_DRACONIAN:
-          mutations.push_back("breathe noxious fumes");
-          break;
-
       case SP_RED_DRACONIAN:
           mutations.push_back("breathe fire");
           break;
@@ -1932,13 +1924,21 @@ std::string _status_mut_abilities()
           mutations.push_back("breathe frost");
           break;
 
-      case SP_BLACK_DRACONIAN:
-          mutations.push_back("breathe lightning");
+      case SP_GREEN_DRACONIAN:
+          mutations.push_back("breathe noxious fumes");
           break;
 
       case SP_YELLOW_DRACONIAN:
           mutations.push_back("spit acid");
           mutations.push_back("acid resistance");
+          break;
+
+      case SP_GREY_DRACONIAN:
+          mutations.push_back("walk through water");
+          break;
+
+      case SP_BLACK_DRACONIAN:
+          mutations.push_back("breathe lightning");
           break;
 
       case SP_PURPLE_DRACONIAN:
