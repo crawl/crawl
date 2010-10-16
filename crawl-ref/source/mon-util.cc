@@ -280,12 +280,8 @@ void init_monster_symbols()
 
 static bool _get_kraken_head(monster& mon)
 {
-    if (mons_base_type(&mon) != MONS_KRAKEN
-        && mon.type != MONS_KRAKEN_CONNECTOR
-        && mon.type != MONS_KRAKEN_TENTACLE)
-    {
+    if (!valid_kraken_connection(&mon))
         return (false);
-    }
 
     // For kraken connectors, find the associated tentacle.
     if (mon.type == MONS_KRAKEN_CONNECTOR)
