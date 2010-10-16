@@ -1918,6 +1918,7 @@ std::string _status_mut_abilities()
 
       case SP_GREY_DRACONIAN:
           mutations.push_back("unbreathing");
+          mutations.push_back("walk through water");
           break;
 
       case SP_GREEN_DRACONIAN:
@@ -1971,7 +1972,7 @@ std::string _status_mut_abilities()
     }
 
     if (beogh_water_walk())
-        mutations.push_back("water walking");
+        mutations.push_back("walk on water");
 
     std::string current;
     for (unsigned i = 0; i < NUM_MUTATIONS; ++i)

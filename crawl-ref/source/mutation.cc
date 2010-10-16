@@ -234,13 +234,14 @@ formatted_string describe_mutations()
         have_any = true;
         break;
 
-    case SP_GREY_DRACONIAN:
-        result += "You do not need to breathe.\n";
+    case SP_GREEN_DRACONIAN:
+        result += "You can breathe poison.\n";
         have_any = true;
         break;
 
-    case SP_GREEN_DRACONIAN:
-        result += "You can breathe poison.\n";
+    case SP_GREY_DRACONIAN:
+        result += "You do not need to breathe.\n";
+        result += "You can walk through water.\n";
         have_any = true;
         break;
 
