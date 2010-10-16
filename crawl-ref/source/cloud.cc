@@ -1027,8 +1027,8 @@ bool is_damaging_cloud(cloud_type type, bool temp)
     // Takes into account what the player can *know* and what s/he can
     // also expect to be the case a few turns later (ignores spells).
     case CLOUD_STINK:
-         if (you.species == SP_GREY_DRACONIAN)
-             return (false);
+        if (you.species == SP_GREY_DRACONIAN)
+            return (false);
     case CLOUD_POISON:
         return (!player_res_poison(false, temp));
     case CLOUD_STEAM:
