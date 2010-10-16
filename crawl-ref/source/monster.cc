@@ -4314,8 +4314,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             // This should only happen because of fleeing sanctuary
             snprintf(info, INFO_SIZE, " stops retreating.");
         }
-        else if (type != MONS_KRAKEN_TENTACLE
-                 && type != MONS_KRAKEN_CONNECTOR)
+        else if (!mons_is_tentacle(type))
         {
             snprintf(info, INFO_SIZE, " seems to regain %s courage.",
                      pronoun(PRONOUN_NOCAP_POSSESSIVE, true).c_str());
@@ -5501,8 +5500,7 @@ int monster::foe_distance() const
 
 bool monster::can_go_berserk() const
 {
-    if (holiness() != MH_NATURAL || type == MONS_KRAKEN_TENTACLE
-        || type == MONS_KRAKEN_CONNECTOR)
+    if (holiness() != MH_NATURAL || mons_is_tentacle(type))
         return (false);
 
     if (mons_intel(this) == I_PLANT)
