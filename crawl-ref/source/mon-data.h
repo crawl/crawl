@@ -1744,7 +1744,7 @@ static monsterentry mondata[] = {
 {
     MONS_GIANT_COCKROACH, 's', BROWN, "giant cockroach",
     M_NO_SKELETON,
-    MR_NO_FLAGS,
+    MR_VUL_POISON,
     250, 10, MONS_GIANT_COCKROACH, MONS_GIANT_COCKROACH, MH_NATURAL, -1,
     { {AT_BITE, AF_PLAIN, 2}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 1, 3, 4, 0 },
