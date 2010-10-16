@@ -3178,7 +3178,7 @@ int monster::res_asphyx() const
 
     const mon_holy_type holi = holiness();
 
-    if (undead_or_demonic()
+    if (holi == MH_UNDEAD
         || holi == MH_NONLIVING
         || holi == MH_PLANT)
     {
