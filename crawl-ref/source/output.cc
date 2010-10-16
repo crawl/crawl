@@ -1917,7 +1917,6 @@ std::string _status_mut_abilities()
           break;
 
       case SP_GREY_DRACONIAN:
-          mutations.push_back("unbreathing");
           mutations.push_back("walk through water");
           break;
 

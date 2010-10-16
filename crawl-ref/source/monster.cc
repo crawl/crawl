@@ -3034,6 +3034,20 @@ bool monster::is_artificial() const
     return (mons_class_flag(type, M_ARTIFICIAL));
 }
 
+bool monster::is_unbreathing() const
+{
+    const mon_holy_type holi = holiness();
+
+    if (holi == MH_UNDEAD
+        || holi == MH_NONLIVING
+        || holi == MH_PLANT)
+    {
+        return (true);
+    }
+
+    return (mons_class_flag(type, M_UNBREATHING));
+}
+
 bool monster::is_insubstantial() const
 {
     return (mons_class_flag(type, M_INSUBSTANTIAL));
@@ -3175,16 +3189,8 @@ int monster::res_elec() const
 int monster::res_asphyx() const
 {
     int res = get_mons_resists(this).asphyx;
-
-    const mon_holy_type holi = holiness();
-
-    if (holi == MH_UNDEAD
-        || holi == MH_NONLIVING
-        || holi == MH_PLANT)
-    {
+    if (is_unbreathing())
         res += 1;
-    }
-
     return (res);
 }
 

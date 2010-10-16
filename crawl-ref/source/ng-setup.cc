@@ -270,6 +270,7 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_POISON_RESISTANCE]          = 1;
         you.mutation[MUT_COLD_RESISTANCE]            = 1;
         you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 3;
+        you.mutation[MUT_UNBREATHING]                = 1;
         break;
     case SP_DEEP_DWARF:
         you.mutation[MUT_SLOW_HEALING]    = 3;
@@ -283,6 +284,7 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_SAPROVOROUS]                = 3;
         you.mutation[MUT_CARNIVOROUS]                = 3;
         you.mutation[MUT_SLOW_HEALING]               = 1;
+        you.mutation[MUT_UNBREATHING]                = 1;
         break;
     case SP_KENKU:
         you.mutation[MUT_BEAK]   = 1;
@@ -303,6 +305,7 @@ void give_basic_mutations(species_type speci)
     case SP_VAMPIRE:
         you.mutation[MUT_FANGS]        = 3;
         you.mutation[MUT_ACUTE_VISION] = 1;
+        you.mutation[MUT_UNBREATHING]  = 1;
         break;
     case SP_CAT:
         you.mutation[MUT_FANGS]           = 3;

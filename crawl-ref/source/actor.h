@@ -220,6 +220,7 @@ public:
     virtual bool is_evil() const = 0;
     virtual bool is_chaotic() const = 0;
     virtual bool is_artificial() const = 0;
+    virtual bool is_unbreathing() const = 0;
     virtual bool is_insubstantial() const = 0;
     virtual int res_acid() const = 0;
     virtual int res_fire() const = 0;

@@ -2671,6 +2671,7 @@ static void _draconian_scale_colour_message()
     case SP_GREY_DRACONIAN:
         mpr("Your scales start turning grey.",
             MSGCH_INTRINSIC_GAIN);
+        perma_mutate(MUT_UNBREATHING, 1);
         break;
     case SP_BLACK_DRACONIAN:
         mpr("Your scales start turning black.",
@@ -5688,6 +5689,20 @@ bool player::is_artificial() const
     return (false);
 }
 
+bool player::is_unbreathing() const
+{
+    switch (you.attribute[ATTR_TRANSFORMATION])
+    {
+    case TRAN_LICH:
+    case TRAN_STATUE:
+        return (true);
+    default:
+        break;
+    }
+
+    return (player_mutation_level(MUT_UNBREATHING));
+}
+
 // This is a stub. Makes checking for silver damage a little cleaner.
 bool player::is_insubstantial() const
 {
@@ -5754,18 +5769,9 @@ int player::res_water_drowning() const
 
 int player::res_asphyx() const
 {
-    // The undead are immune to asphyxiation, or so we'll assume.
-    if (is_undead || you.species == SP_GREY_DRACONIAN)
+    // The unbreathing are immune to asphyxiation.
+    if (is_unbreathing())
         return 1;
-
-    switch (attribute[ATTR_TRANSFORMATION])
-    {
-    case TRAN_LICH:
-    case TRAN_STATUE:
-        return 1;
-    default:
-        break;
-    }
 
     return 0;
 }

@@ -457,8 +457,8 @@ static monsterentry mondata[] = {
 
 {
     MONS_GREY_DRACONIAN, 'd', LIGHTGREY, "grey draconian",
-    M_COLD_BLOOD | M_SPEAKS,
-    MR_RES_ASPHYX,
+    M_COLD_BLOOD | M_UNBREATHING | M_SPEAKS,
+    MR_NO_FLAGS,
     900, 10, MONS_DRACONIAN, MONS_GREY_DRACONIAN, MH_NATURAL, -2,
     { {AT_HIT, AF_PLAIN, 25}, {AT_TAIL_SLAP, AF_PLAIN, 15}, AT_NO_ATK,
        AT_NO_ATK },
