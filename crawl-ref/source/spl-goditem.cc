@@ -123,8 +123,7 @@ static int _can_pacify_monster(const monster* mon, const int healed)
     // I was thinking of jellies when I wrote this, but maybe we shouldn't
     // exclude zombies and such... (jpeg)
     if (mons_intel(mon) <= I_PLANT // no self-awareness
-        || mon->type == MONS_KRAKEN_TENTACLE
-        || mon->type == MONS_KRAKEN_CONNECTOR) // body part
+        || mons_is_tentacle(mon->type)) // body part
     {
         return (-1);
     }
