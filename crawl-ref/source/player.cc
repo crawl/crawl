@@ -2669,8 +2669,8 @@ static void _draconian_scale_colour_message()
             MSGCH_INTRINSIC_GAIN);
         break;
     case SP_GREY_DRACONIAN:
-       mpr("Your scales start turning grey.",
-                        MSGCH_INTRINSIC_GAIN);
+        mpr("Your scales start turning grey.",
+            MSGCH_INTRINSIC_GAIN);
         break;
     case SP_BLACK_DRACONIAN:
         mpr("Your scales start turning black.",
