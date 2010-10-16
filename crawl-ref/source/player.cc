@@ -2653,42 +2653,51 @@ static void _draconian_scale_colour_message()
             MSGCH_INTRINSIC_GAIN);
         perma_mutate(MUT_HEAT_RESISTANCE, 1);
         break;
+
     case SP_WHITE_DRACONIAN:
         mpr("Your scales start taking on an icy white colour.",
             MSGCH_INTRINSIC_GAIN);
         perma_mutate(MUT_COLD_RESISTANCE, 1);
         break;
+
     case SP_GREEN_DRACONIAN:
         mpr("Your scales start taking on a green colour.",
             MSGCH_INTRINSIC_GAIN);
         perma_mutate(MUT_POISON_RESISTANCE, 1);
         break;
+
     case SP_YELLOW_DRACONIAN:
         mpr("Your scales start taking on a golden yellow colour.",
             MSGCH_INTRINSIC_GAIN);
         break;
+
     case SP_GREY_DRACONIAN:
         mpr("Your scales start turning grey.",
             MSGCH_INTRINSIC_GAIN);
         perma_mutate(MUT_UNBREATHING, 1);
         break;
+
     case SP_BLACK_DRACONIAN:
         mpr("Your scales start turning black.",
             MSGCH_INTRINSIC_GAIN);
         perma_mutate(MUT_SHOCK_RESISTANCE, 1);
         break;
+
     case SP_PURPLE_DRACONIAN:
         mpr("Your scales start taking on a rich purple colour.",
             MSGCH_INTRINSIC_GAIN);
         break;
+
     case SP_MOTTLED_DRACONIAN:
         mpr("Your scales start taking on a weird mottled pattern.",
             MSGCH_INTRINSIC_GAIN);
         break;
+
     case SP_PALE_DRACONIAN:
         mpr("Your scales start fading to a pale grey colour.",
             MSGCH_INTRINSIC_GAIN);
         break;
+
     case SP_BASE_DRACONIAN:
         mpr("");
         break;
@@ -2996,11 +3005,11 @@ void level_change(bool skip_attribute_increase)
             case SP_WHITE_DRACONIAN:
             case SP_GREEN_DRACONIAN:
             case SP_YELLOW_DRACONIAN:
+            case SP_GREY_DRACONIAN:
             case SP_BLACK_DRACONIAN:
             case SP_PURPLE_DRACONIAN:
             case SP_MOTTLED_DRACONIAN:
             case SP_PALE_DRACONIAN:
-            case SP_GREY_DRACONIAN:
                 if (!(you.experience_level % 3))
                     hp_adjust++;
 
@@ -3019,14 +3028,14 @@ void level_change(bool skip_attribute_increase)
                 {
                     switch (you.species)
                     {
-                        case SP_BLACK_DRACONIAN:
-                             perma_mutate(MUT_BIG_WINGS, 1);
-                             break;
                         case SP_GREEN_DRACONIAN:
                              perma_mutate(MUT_STINGER, 1);
                              break;
                         case SP_YELLOW_DRACONIAN:
                              perma_mutate(MUT_ACIDIC_BITE, 1);
+                             break;
+                        case SP_BLACK_DRACONIAN:
+                             perma_mutate(MUT_BIG_WINGS, 1);
                              break;
                         default:
                              break;
