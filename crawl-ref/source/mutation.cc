@@ -240,7 +240,6 @@ formatted_string describe_mutations()
         break;
 
     case SP_GREY_DRACONIAN:
-        result += "You do not need to breathe.\n";
         result += "You can walk through water.\n";
         have_any = true;
         break;

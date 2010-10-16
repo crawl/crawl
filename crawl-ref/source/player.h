@@ -523,6 +523,7 @@ public:
     bool is_evil() const;
     bool is_chaotic() const;
     bool is_artificial() const;
+    bool is_unbreathing() const;
     bool is_insubstantial() const;
     int res_acid() const;
     int res_fire() const;

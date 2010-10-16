@@ -2673,6 +2673,9 @@ enum mutation_type
     MUT_TOUGH_SKIN,
     MUT_WEAK,
     MUT_SLOW,
+#if TAG_MAJOR_VERSION != 31
+    MUT_UNBREATHING,
+#endif
 
     // Jiyva-specific mutations
     MUT_ACIDIC_BITE,
@@ -2682,6 +2685,9 @@ enum mutation_type
     MUT_PSEUDOPODS,
     MUT_TRANSLUCENT_SKIN,
 
+#if TAG_MAJOR_VERSION == 31
+    MUT_UNBREATHING,
+#endif
     NUM_MUTATIONS,
 
     RANDOM_MUTATION = NUM_MUTATIONS + 1,
