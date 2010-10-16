@@ -283,8 +283,8 @@ static bool _get_kraken_head(monster& mon)
     if (!valid_kraken_connection(&mon))
         return (false);
 
-    // For kraken connectors, find the associated tentacle.
-    if (mon.type == MONS_KRAKEN_CONNECTOR)
+    // For kraken tentacle segments, find the associated tentacle.
+    if (mon.type == MONS_KRAKEN_TENTACLE_SEGMENT)
     {
         if (invalid_monster_index(mon.number))
             return (false);
@@ -568,7 +568,7 @@ bool mons_class_is_firewood(int mc)
     return (mons_class_is_stationary(mc)
             && mons_class_flag(mc, M_NO_EXP_GAIN)
             && mc != MONS_KRAKEN_TENTACLE
-            && mc != MONS_KRAKEN_CONNECTOR);
+            && mc != MONS_KRAKEN_TENTACLE_SEGMENT);
 }
 
 bool mons_is_firewood(const monster* mon)
@@ -1150,7 +1150,7 @@ bool mons_class_can_use_stairs(int mc)
 {
     return ((!mons_class_is_zombified(mc) || mc == MONS_SPECTRAL_THING)
             && mc != MONS_KRAKEN_TENTACLE
-            && mc != MONS_KRAKEN_CONNECTOR
+            && mc != MONS_KRAKEN_TENTACLE_SEGMENT
             && mc != MONS_SILENT_SPECTRE
             && mc != MONS_PLAYER_GHOST);
 }
@@ -4305,7 +4305,7 @@ int get_dist_to_nearest_monster()
 bool mons_is_tentacle(int mc)
 {
     return (mc == MONS_KRAKEN_TENTACLE
-            || mc == MONS_KRAKEN_CONNECTOR
+            || mc == MONS_KRAKEN_TENTACLE_SEGMENT
             || mc == MONS_ELDRITCH_TENTACLE
             || mc == MONS_ELDRITCH_TENTACLE_SEGMENT);
 }
