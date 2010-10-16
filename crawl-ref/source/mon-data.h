@@ -2385,7 +2385,7 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
 },
 
-// cyclops and giants ('C')
+// cyclopes and giants ('C')
 {
     MONS_HILL_GIANT, 'C', LIGHTRED, "hill giant",
     M_WARM_BLOOD | M_SPEAKS,
