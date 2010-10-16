@@ -1275,7 +1275,7 @@ void mons_relocated(monster* mons)
             {
                 for (monster_iterator connect; connect; ++connect)
                 {
-                    if (connect->type == MONS_KRAKEN_CONNECTOR
+                    if (connect->type == MONS_KRAKEN_TENTACLE_SEGMENT
                         && (int) connect->number == mi->mindex())
                     {
                         monster_die(*connect, KILL_RESET, -1, true, false);
@@ -1287,18 +1287,18 @@ void mons_relocated(monster* mons)
     }
     // If a tentacle/segment is relocated just kill the tentacle
     else if (mons->type == MONS_KRAKEN_TENTACLE
-             || mons->type == MONS_KRAKEN_CONNECTOR)
+             || mons->type == MONS_KRAKEN_TENTACLE_SEGMENT)
     {
         int base_id = mons->mindex();
 
-        if (mons->type == MONS_KRAKEN_CONNECTOR)
+        if (mons->type == MONS_KRAKEN_TENTACLE_SEGMENT)
         {
             base_id = mons->number;
         }
 
         for (monster_iterator connect; connect; ++connect)
         {
-            if (connect->type == MONS_KRAKEN_CONNECTOR
+            if (connect->type == MONS_KRAKEN_TENTACLE_SEGMENT
                 && (int) connect->number == base_id)
             {
                 monster_die(*connect, KILL_RESET, -1, true, false);
@@ -1343,7 +1343,7 @@ static int _destroy_tentacle(int tentacle_idx, monster* origin)
     // or w/e. Using hurt seems to cause more problems though.
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->type == MONS_KRAKEN_CONNECTOR
+        if (mi->type == MONS_KRAKEN_TENTACLE_SEGMENT
             && (int)mi->number == tentacle_idx
             && mi->mindex() != origin->mindex())
         {
@@ -1382,7 +1382,7 @@ static int _destroy_tentacles(monster* head)
         {
             for (monster_iterator connect; connect; ++connect)
             {
-                if (connect->type == MONS_KRAKEN_CONNECTOR
+                if (connect->type == MONS_KRAKEN_TENTACLE_SEGMENT
                     && (int) connect->number == mi->mindex())
                 {
                     connect->hurt(*connect, INSTANT_DEATH);
@@ -2234,7 +2234,7 @@ int monster_die(monster* mons, killer_type killer,
                 "into the water like the carrion they now are.");
         }
     }
-    else if ((mons->type == MONS_KRAKEN_CONNECTOR
+    else if ((mons->type == MONS_KRAKEN_TENTACLE_SEGMENT
                   || mons->type == MONS_KRAKEN_TENTACLE)
               && killer != KILL_MISC)
     {
@@ -4277,7 +4277,7 @@ void mons_att_changed(monster* mon)
                 mi->attitude = att;
                 for (monster_iterator connect; connect; ++connect)
                 {
-                    if (connect->type == MONS_KRAKEN_CONNECTOR
+                    if (connect->type == MONS_KRAKEN_TENTACLE_SEGMENT
                         && (int) connect->number == mi->mindex())
                     {
                         connect->attitude = att;

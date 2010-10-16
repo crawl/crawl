@@ -2166,7 +2166,7 @@ enum monster_type                      // (int) menv[].type
     MONS_WATER_ELEMENTAL,
     MONS_SWAMP_WORM,                   //  435
     MONS_SHARK,
-    MONS_KRAKEN_CONNECTOR,
+    MONS_KRAKEN_TENTACLE_SEGMENT,
       MONS_UNUSED_438,
       MONS_UNUSED_439,
 

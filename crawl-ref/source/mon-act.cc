@@ -2383,7 +2383,7 @@ void handle_monster_move(monster* mons)
             // See if we move into (and fight) an unfriendly monster.
             monster* targ = monster_at(mons->pos() + mmov);
             if (mons_base_type(mons) == MONS_KRAKEN
-                && targ && targ->type == MONS_KRAKEN_CONNECTOR
+                && targ && targ->type == MONS_KRAKEN_TENTACLE_SEGMENT
                 && targ->props.exists("inwards") && targ->props["inwards"].get_int() == mons->mindex()
                 && env.grid(targ->pos()) == DNGN_DEEP_WATER)
             {
@@ -3095,7 +3095,7 @@ static bool _same_kraken_parts(const monster* mpusher,
         return (true);
     }
 
-    if (mpushee->type == MONS_KRAKEN_CONNECTOR
+    if (mpushee->type == MONS_KRAKEN_TENTACLE_SEGMENT
         && int(menv[mpushee->number].number) == mpusher->mindex()
         && mpushee->props.exists("inwards") && mpushee->props["inwards"].get_int() == mpusher->mindex())
     {

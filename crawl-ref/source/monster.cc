@@ -6151,7 +6151,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             }
         }
     }
-    else if (type == MONS_KRAKEN_CONNECTOR)
+    else if (type == MONS_KRAKEN_TENTACLE_SEGMENT)
     {
         if (!invalid_monster_index(number)
             && mons_base_type(&menv[number]) == MONS_KRAKEN_TENTACLE)
@@ -6169,7 +6169,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                 // effects will cry.
                 if (invalid_monster(this))
                 {
-                    type = MONS_KRAKEN_CONNECTOR;
+                    type = MONS_KRAKEN_TENTACLE_SEGMENT;
                     hit_points = -1;
                 }
             }

@@ -1656,7 +1656,7 @@ void purge_connectors(int tentacle_idx,
     {
         if (int (mi->number) == tentacle_idx)
         {
-            //if (mi->type == MONS_KRAKEN_CONNECTOR)
+            //if (mi->type == MONS_KRAKEN_TENTACLE_SEGMENT)
             if (valid_mons(&menv[mi->mindex()]))
             {
                 int hp = menv[mi->mindex()].hit_points;
@@ -1712,7 +1712,7 @@ void collect_foe_positions(monster* mons, std::vector<coord_def> & foe_positions
 
 bool valid_kraken_connection(monster* mons)
 {
-    return (mons->type == MONS_KRAKEN_CONNECTOR
+    return (mons->type == MONS_KRAKEN_TENTACLE_SEGMENT
             || mons->type == MONS_KRAKEN_TENTACLE
             || mons_base_type(mons) == MONS_KRAKEN);
 }
@@ -2025,11 +2025,11 @@ void move_kraken_tentacles(monster* kraken)
             int next_idx = basis ? current_mon->props["inwards"].get_int() : -1;
 
             if (next_idx != -1 && menv[next_idx].alive()
-                && (menv[next_idx].type == MONS_KRAKEN_CONNECTOR
+                && (menv[next_idx].type == MONS_KRAKEN_TENTACLE_SEGMENT
                     || mons_base_type(&menv[next_idx]) == MONS_KRAKEN))
             {
                 current_mon = &menv[next_idx];
-                if (!retract_found && current_mon->type == MONS_KRAKEN_CONNECTOR)
+                if (!retract_found && current_mon->type == MONS_KRAKEN_TENTACLE_SEGMENT)
                 {
                     retract_pos = current_mon->pos();
                     retract_found = true;
@@ -2122,7 +2122,7 @@ void move_kraken_tentacles(monster* kraken)
         bool connected = try_tentacle_connect(new_pos, kraken->pos(),
                                               tentacle_idx, kraken->mindex(),
                                               connect_costs,
-                                              MONS_KRAKEN_CONNECTOR);
+                                              MONS_KRAKEN_TENTACLE_SEGMENT);
 
 
         // Can't connect, usually the head moved and invalidated our position
