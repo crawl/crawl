@@ -4025,7 +4025,7 @@ mon_body_shape get_mon_shape(const int type)
     {
     case 'a': // ants
         return (MON_SHAPE_INSECT);
-    case 'b':  // bats and butterflys
+    case 'b':  // bats and butterflies
         if (type == MONS_BUTTERFLY)
             return (MON_SHAPE_INSECT_WINGED);
         else
