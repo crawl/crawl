@@ -21,7 +21,9 @@ void ballisto_on_move(monster* mons, const coord_def & pos);
 void activate_ballistomycetes(monster* mons, const coord_def & origin,
                               bool player_kill);
 
+bool valid_kraken_connection(monster* mons);
 void move_kraken_tentacles(monster * kraken);
+bool valid_demonic_connection(monster* mons);
 void move_demon_tentacle(monster * tentacle);
 
 #endif
