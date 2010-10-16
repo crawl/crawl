@@ -158,6 +158,22 @@ void wizard_change_species(void)
         break;
     }
 
+    case SP_DEEP_DWARF:
+        if (you.experience_level >= 9)
+            perma_mutate(MUT_PASSIVE_MAPPING, 1);
+        if (you.experience_level >= 14)
+            perma_mutate(MUT_NEGATIVE_ENERGY_RESISTANCE, 1);
+        if (you.experience_level >= 18)
+            perma_mutate(MUT_PASSIVE_MAPPING, 1);
+        break;
+
+    case SP_CAT:
+        if (you.experience_level >= 6)
+            perma_mutate(MUT_SHAGGY_FUR, 1);
+        if (you.experience_level >= 12)
+            perma_mutate(MUT_SHAGGY_FUR, 1);
+        break;
+
     default:
         break;
     }
