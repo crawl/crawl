@@ -286,7 +286,7 @@ static monsterentry mondata[] = {
 {
     MONS_BUTTERFLY, 'b', BLACK, "butterfly",
     M_NO_SKELETON | M_CONFUSED | M_NO_EXP_GAIN,
-    MR_VUL_POISON | MR_RES_ASPHYX,
+    MR_VUL_POISON,
     0, 10, MONS_BUTTERFLY, MONS_BUTTERFLY, MH_NATURAL, -3,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 1, 3, 5, 0 },
@@ -3966,7 +3966,7 @@ static monsterentry mondata[] = {
 {
     MONS_KRAKEN_TENTACLE, 'w', BLACK, "tentacle",
     M_COLD_BLOOD | M_NO_EXP_GAIN | M_STATIONARY | M_NO_POLY_TO,
-    MR_RES_ASPHYX,
+    MR_NO_FLAGS,
     0, 10, MONS_KRAKEN, MONS_KRAKEN_TENTACLE, MH_NATURAL, MAG_IMMUNE,
     { {AT_TENTACLE_SLAP, AF_PLAIN, 29}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 12, 3, 2, 0 },
@@ -3978,7 +3978,7 @@ static monsterentry mondata[] = {
 {
     MONS_KRAKEN_TENTACLE_SEGMENT, '*', BLACK, "tentacle segment",
     M_COLD_BLOOD | M_NO_EXP_GAIN | M_STATIONARY | M_SUBMERGES | M_NO_POLY_TO,
-    MR_RES_ASPHYX,
+    MR_NO_FLAGS,
     0, 10, MONS_KRAKEN, MONS_KRAKEN_TENTACLE_SEGMENT, MH_NATURAL, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 12, 3, 2, 0 },
