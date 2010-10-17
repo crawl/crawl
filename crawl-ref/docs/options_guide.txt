@@ -731,11 +731,16 @@ line-of-sight is unaffected by these options.
 view_max_width = 33 (max 81)
         Sets the maximum width of the viewport (defaults to 33).
         Making this larger will allow Crawl to show a wider viewport
-        on larger terminals.
+        on larger terminals. This is ignored in tiles, the viewport will
+        always use all the available space.
 
-view_max_height = 17 (max 71)
-        Similar to view_max_width, but sets the viewport's maximum
-        height.
+view_max_height = 21 (max 71)
+        Similar to view_max_width, but sets the viewport's maximum height.
+        In tiles, this value is used to set when space starts to be affected
+        to the message area instead of the viewport. When the message area
+        reaches msg_max_height, the remaining space goes to the viewport.
+        If for performance reason you need a smaller viewport, either reduce
+        the window size, or increase the message area.
 
 * Note that using large viewports can slow the game down.
 
@@ -1354,9 +1359,11 @@ msg_min_height = 7
         minimum value is 5.
 
 msg_max_height = 10
-        If there is extra space available after the monster list has
-        expanded, the message area will expand up to this height.
+        In console, if there is extra space available after the monster list
+        has expanded, the message area will expand up to this height.
         The monster list will get the rest.
+        In tiles, control the maximum size of the message area. The viewport
+        will get the rest.
 
 messages_at_top = false
         Put the message window at the top of the screen. This moves
