@@ -772,37 +772,23 @@ void TilesFramework::do_layout()
 
     bool message_overlay = Options.tile_force_overlay ? true : false;
 
-    // Calculating stat_x_divider.
-    // First, the optimal situation: we have screen estate to satisfy
-    // Options.view_max_width, and room for status area with the specified
-    // stat font size.
-    if (std::max(Options.view_max_width, ENV_SHOW_DIAMETER) * m_region_tile->dx
-        + stat_width * m_region_stat->dx <= m_windowsz.x)
+    // We ignore Options.view_max_width and use the maximum space available.
+    int available_width_in_tiles = 0;
+
+    available_width_in_tiles = (m_windowsz.x - stat_width
+                                * m_region_stat->dx) / m_region_tile->dx;
+
+    // Scale the dungeon region tiles so we have enough space to
+    // display full LOS.
+    if (available_width_in_tiles < ENV_SHOW_DIAMETER)
     {
-        stat_x_divider = (std::max(Options.view_max_width, ENV_SHOW_DIAMETER))
-                          * m_region_tile->dx;
+        m_region_tile->dx = (m_windowsz.x - stat_width * m_region_stat->dx)
+                            / ENV_SHOW_DIAMETER;
+        m_region_tile->dy = m_region_tile->dx;
+        available_width_in_tiles = ENV_SHOW_DIAMETER;
     }
-    // If we don't have room for Options.view_max_width, use the maximum space
-    // available.
-    else
-    {
-        int available_width_in_tiles = 0;
 
-        available_width_in_tiles = (m_windowsz.x - stat_width
-                                    * m_region_stat->dx) / m_region_tile->dx;
-
-        // Scale the dungeon region tiles so we have enough space to
-        // display full LOS.
-        if (available_width_in_tiles < ENV_SHOW_DIAMETER)
-        {
-            m_region_tile->dx = (m_windowsz.x - stat_width * m_region_stat->dx)
-                                / ENV_SHOW_DIAMETER;
-            m_region_tile->dy = m_region_tile->dx;
-            available_width_in_tiles = ENV_SHOW_DIAMETER;
-        }
-
-        stat_x_divider = available_width_in_tiles * m_region_tile->dx;
-    }
+    stat_x_divider = available_width_in_tiles * m_region_tile->dx;
 
     // Calculate message_y_divider. First off, if we have already decided to
     // use the overlay, we can place the divider to the bottom of the screen.
@@ -820,7 +806,8 @@ void TilesFramework::do_layout()
     {
         message_y_divider = std::max(Options.view_max_height, ENV_SHOW_DIAMETER)
                             * m_region_tile->dy;
-        //TODO: respect Options.msg_max_height
+        message_y_divider = std::max(message_y_divider, m_windowsz.y -
+                                    Options.msg_max_height * m_region_msg->dy);
     }
     else
     {
