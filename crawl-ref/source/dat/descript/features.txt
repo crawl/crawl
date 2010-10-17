@@ -340,6 +340,10 @@ An iron altar of Okawaru
 
 An altar of iron and steel dedicated to the Warmaster Okawaru. Its edges are surprisingly sharp.
 %%%%
+An iron grate
+
+This iron grate looks rusted, as if it could be disrupted with a spell or a wand quite easily. It's too strong to be breakable by hand, though.
+%%%%
 An open door
 
 A wooden door. You can close it by standing next to it and {{

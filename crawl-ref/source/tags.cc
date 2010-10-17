@@ -2330,6 +2330,11 @@ void unmarshallMapCell(reader &th, map_cell& cell)
 
     if (flags & MAP_SERIALIZE_FEATURE)
         feature = (dungeon_feature_type)unmarshallUnsigned(th);
+#if TAG_MAJOR_VERSION == 31
+    if (flags & MAP_SERIALIZE_FEATURE && th.getMinorVersion() < TAG_MINOR_GRATE)
+        if (feature >= DNGN_GRATE && feature < DNGN_GRANITE_STATUE)
+            feature = (dungeon_feature_type)(feature + 1);
+#endif
 
     if (flags & MAP_SERIALIZE_FEATURE_COLOUR)
         feat_colour = unmarshallUnsigned(th);
@@ -2674,6 +2679,11 @@ static void tag_read_level(reader &th, int minorVersion)
         for (int j = 0; j < gy; j++)
         {
             grd[i][j] = static_cast<dungeon_feature_type>(unmarshallUByte(th));
+#if TAG_MAJOR_VERSION == 31
+            if (minorVersion < TAG_MINOR_GRATE)
+                if (grd[i][j] >= DNGN_GRATE && grd[i][j] < DNGN_GRANITE_STATUE)
+                    grd[i][j] = (dungeon_feature_type)(grd[i][j] + 1);
+#endif
 
             unmarshallMapCell(th, env.map_knowledge[i][j]);
             env.map_knowledge[i][j].flags &=~ MAP_VISIBLE_FLAG;

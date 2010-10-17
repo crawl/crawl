@@ -170,15 +170,7 @@ KMONS:   S = ghoul ; nothing
 KMONS:   T = vampire spells:. ; nothing
 KMONS:   U = demigod ; nothing
 #KMONS:  V = a new race!
-COLOUR:  m = cyan
-TILE:    m = dngn_grate
-:           dgn.set_feature_desc_short("translucent rock wall",
-:                                      "iron grate")
-:           dgn.set_feature_desc_long("translucent rock wall",
-:                                     "This iron grate looks rusted, as if " ..
-:                                     "it could be disrupted with a spell " ..
-:                                     "or a wand quite easily. It's too " ..
-:                                     "strong to be breakable by hand, though.")
+KFEAT:   m = iron_grate
 MAP
 ccccccc
 c[.{.(c
@@ -890,20 +882,13 @@ MARKER: C = lua:MonPropsMarker:new { description= \
             "Once able adventurers, the hill dwarves no longer have any interest " ..\
             "in dungeon delving. This one was captured specially for this exhibit." }
 #
-TILE:   m = dngn_grate
+KFEAT:  m = iron_grate
 FTILE:  .m+T = floor_vault
 TILE:   X = wall_vines
 COLOUR: .= lightgrey
 SUBST:  ':., X=x
 SUBST:  T:T.
 SUBST:  T=TTV
-: dgn.set_feature_desc_short("translucent rock wall",
-:                            "iron grate")
-: dgn.set_feature_desc_long("translucent rock wall",
-:                           "This iron grate looks rusted, as if " ..
-:                           "it could be disrupted with a spell " ..
-:                           "or a wand quite easily. It's too " ..
-:                           "strong to be breakable by hand, though.")
 MAP
 xxxxxxxxxxxxxxx
 xxxxxxxAxxxxxxx
