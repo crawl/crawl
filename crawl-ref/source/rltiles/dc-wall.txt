@@ -689,7 +689,7 @@ wall/dngn_metal_wall_brown DNGN_METAL_WALL_BLUE
 
 wall/dngn_metal_wall_cracked DNGN_METAL_WALL_CRACKED
 
-vaults/grate DNGN_GRATE
+grate DNGN_GRATE
 
 %hue 150 120
 wall/dngn_green_crystal_wall DNGN_GREEN_CRYSTAL_WALL DNGN_CRYSTAL DNGN_CRYSTAL_GREEN

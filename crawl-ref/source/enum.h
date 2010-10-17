@@ -939,6 +939,7 @@ enum dungeon_char_type
     DCHAR_TRAP,
     DCHAR_STAIRS_DOWN,
     DCHAR_STAIRS_UP,
+    DCHAR_GRATE,
     DCHAR_ALTAR,
     DCHAR_ARCH,
     DCHAR_FOUNTAIN,
@@ -1018,6 +1019,7 @@ enum dungeon_feature_type
     DNGN_CLEAR_ROCK_WALL,              // transparent walls
     DNGN_CLEAR_STONE_WALL,
     DNGN_CLEAR_PERMAROCK_WALL,
+    DNGN_GRATE,
 
     // Lowest/highest grid value which is a wall.
     DNGN_MINWALL = DNGN_WAX_WALL,
@@ -1030,7 +1032,7 @@ enum dungeon_feature_type
     DNGN_MINSEE = DNGN_CLEAR_ROCK_WALL,
 
     // Highest grid value which can't be reached through.
-    DNGN_MAX_NONREACH = DNGN_CLEAR_PERMAROCK_WALL,
+    DNGN_MAX_NONREACH = DNGN_GRATE,
 
     DNGN_OPEN_SEA,                     // Shoals equivalent for permarock
 
