@@ -2868,8 +2868,8 @@ static coord_def _random_monster_nearby_habitable_space(const monster& mon,
 
         // Check that we didn't go through clear walls.
         if (num_feats_between(mon.pos(), target,
-                              DNGN_CLEAR_ROCK_WALL,
-                              DNGN_CLEAR_PERMAROCK_WALL,
+                              DNGN_MINSEE,
+                              DNGN_MAX_NONREACH,
                               true, true) > 0)
         {
             continue;

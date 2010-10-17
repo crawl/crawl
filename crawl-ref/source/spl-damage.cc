@@ -924,6 +924,12 @@ static int _shatter_walls(coord_def where, int pow, int, actor *)
         chance = 100;
         break;
 
+    case DNGN_GRATE:
+        if (you.see_cell(where))
+            mpr("An iron grate is ripped into pieces!");
+        chance = 100;
+        break;
+
     case DNGN_METAL_WALL:
         chance = pow / 10;
         break;
@@ -1639,6 +1645,7 @@ bool cast_fragmentation(int pow, const dist& spd)
 
         if ((grid == DNGN_ORCISH_IDOL
              || grid == DNGN_GRANITE_STATUE
+             || grid == DNGN_GRATE
              || pow >= 40 && grid == DNGN_ROCK_WALL && one_chance_in(3)
              || pow >= 40 && grid == DNGN_CLEAR_ROCK_WALL
                  && one_chance_in(3)
@@ -1660,12 +1667,16 @@ bool cast_fragmentation(int pow, const dist& spd)
 
     case DNGN_METAL_WALL:
         what            = "metal wall";
+        // fall through
+    case DNGN_GRATE:
+        if (what == NULL)
+            what        = "iron grate";
         beam.colour     = CYAN;
         explode         = true;
         beam.name       = "blast of metal fragments";
         beam.damage.num = 4;
 
-        if (pow >= 80 && x_chance_in_y(pow / 5, 500))
+        if (pow >= 80 && x_chance_in_y(pow / 5, 500) || grid == DNGN_GRATE)
         {
             beam.damage.num += 2;
             grd(spd.target)  = DNGN_FLOOR;

@@ -808,7 +808,7 @@ void bolt::digging_wall_effect()
 {
     const dungeon_feature_type feat = grd(pos());
     if (feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL
-        || feat == DNGN_SLIMY_WALL)
+        || feat == DNGN_SLIMY_WALL || feat == DNGN_GRATE)
     {
         grd(pos()) = DNGN_FLOOR;
         // Mark terrain as changed so travel excludes can be updated
@@ -825,8 +825,16 @@ void bolt::digging_wall_effect()
 
         if (!msg_generated)
         {
+            obvious_effect = true;
+            msg_generated = true;
+
             std::string wall;
-            if (feat == DNGN_SLIMY_WALL)
+            if (feat == DNGN_GRATE)
+            {
+                mprf("The damaged grate falls apart into pieces.");
+                return;
+            }
+            else if (feat == DNGN_SLIMY_WALL)
                 wall = "slime";
             else if (you.level_type == LEVEL_PANDEMONIUM)
                 wall = "weird stuff";
@@ -834,8 +842,6 @@ void bolt::digging_wall_effect()
                 wall = "rock";
             mprf("The %s liquefies and sinks out of sight.", wall.c_str());
             // This is silent.
-            obvious_effect = true;
-            msg_generated = true;
         }
     }
     else if (feat_is_wall(feat))
@@ -947,6 +953,14 @@ static bool _nuke_wall_msg(dungeon_feature_type feat, const coord_def& p)
         }
         break;
 
+    case DNGN_GRATE:
+        if (hear)
+        {
+            msg = "You hear the screech of bent metal.";
+            chan = MSGCH_SOUND;
+        }
+        break;
+
     case DNGN_ORCISH_IDOL:
         if (hear)
         {
@@ -1011,6 +1025,7 @@ void bolt::nuke_wall_effect()
     case DNGN_SLIMY_WALL:
     case DNGN_WAX_WALL:
     case DNGN_CLEAR_ROCK_WALL:
+    case DNGN_GRATE:
     case DNGN_GRANITE_STATUE:
     case DNGN_ORCISH_IDOL:
     case DNGN_TREE:
@@ -2515,7 +2530,7 @@ maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
     // digging
     if (flavour == BEAM_DIGGING
         && (wall == DNGN_ROCK_WALL || wall == DNGN_CLEAR_ROCK_WALL
-            || wall == DNGN_SLIMY_WALL))
+            || wall == DNGN_SLIMY_WALL || wall == DNGN_GRATE))
     {
         return (B_TRUE);
     }
@@ -2533,6 +2548,7 @@ maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
             || wall == DNGN_SLIMY_WALL
             || wall == DNGN_WAX_WALL
             || wall == DNGN_CLEAR_ROCK_WALL
+            || wall == DNGN_GRATE
             || wall == DNGN_GRANITE_STATUE
             || wall == DNGN_ORCISH_IDOL
             || wall == DNGN_TREE
