@@ -3015,7 +3015,7 @@ static builder_rc_type _builder_basic(int level_number)
         else
         {
             grd[xend][yend] = DNGN_FLOOR;
-            dprf("Trail does not end in shaft..");
+            dprf("Trail does not end in shaft.");
         }
     }
 
