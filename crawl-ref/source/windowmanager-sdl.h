@@ -42,6 +42,7 @@ public:
     virtual int screen_width() const;
     virtual int screen_height() const;
     virtual int desktop_width() const;
+    virtual int desktop_height() const;
 
     // Texture loading
     virtual bool load_texture(GenericTexture *tex, const char *filename,
@@ -57,6 +58,7 @@ protected:
     SDL_Surface *m_context;
     const SDL_VideoInfo* video_info;
     int _desktop_width;
+    int _desktop_height;
 };
 
 #endif // USE_SDL

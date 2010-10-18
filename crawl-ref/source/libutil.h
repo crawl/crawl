@@ -199,6 +199,10 @@ GotoRegion get_cursor_region();
 coord_def cgetsize(GotoRegion region = GOTO_CRT);
 void cscroll(int n, GotoRegion region);
 
+#ifdef TARGET_OS_WINDOWS
+int get_taskbar_height();
+#endif
+
 class mouse_control
 {
 public:

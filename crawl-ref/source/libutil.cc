@@ -832,3 +832,15 @@ size_t strlcpy(char *dst, const char *src, size_t n)
 
     return s - src - 1;
 }
+
+#ifdef TARGET_OS_WINDOWS
+int get_taskbar_height()
+{
+    RECT rect;
+    HWND taskbar = FindWindow("Shell_traywnd", NULL);
+    if(taskbar && GetWindowRect(taskbar, &rect)) {
+        return rect.bottom - rect.top;
+    }
+    return 0;
+}
+#endif
