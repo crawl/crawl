@@ -11,6 +11,7 @@
 #include "cio.h"
 #include "files.h"
 #include "glwrapper.h"
+#include "libutil.h"
 #include "options.h"
 #include "windowmanager.h"
 
@@ -246,6 +247,7 @@ int SDLWrapper::init(coord_def *m_windowsz)
     video_info = SDL_GetVideoInfo();
 
     _desktop_width = video_info->current_w;
+    _desktop_height = video_info->current_h;
 
     SDL_EnableUNICODE(true);
 
@@ -293,6 +295,26 @@ int SDLWrapper::init(coord_def *m_windowsz)
         m_windowsz->y = std::max(480, y);
     }
 
+#ifdef TARGET_OS_WINDOWS
+    // We check if the window overlap the taskbar. If it does, we place the
+    // window just above the taskbar.
+    int delta_x = (wm->desktop_width() - m_windowsz->x) / 2;
+    int taskbar_height = get_taskbar_height();
+    taskbar_height += 8; // Some margin for the window border.
+    if ((wm->desktop_height() - m_windowsz->y) / 2 < taskbar_height)
+    {
+        char env_str[50];
+        sprintf(env_str, "SDL_VIDEO_WINDOW_POS=%d,%d", delta_x,
+                wm->desktop_height() - m_windowsz->y - taskbar_height);
+        putenv(env_str);
+    }
+    else
+    {
+        putenv("SDL_VIDEO_WINDOW_POS=center");
+        putenv("SDL_VIDEO_CENTERED=1");
+    }
+#endif
+
     m_context = SDL_SetVideoMode(m_windowsz->x, m_windowsz->y, 0, flags);
     if (!m_context)
     {
@@ -316,6 +338,11 @@ int SDLWrapper::screen_height() const
 int SDLWrapper::desktop_width() const
 {
     return (_desktop_width);
+}
+
+int SDLWrapper::desktop_height() const
+{
+    return (_desktop_height);
 }
 
 void SDLWrapper::set_window_title(const char *title)
