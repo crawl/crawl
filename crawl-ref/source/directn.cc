@@ -2811,6 +2811,8 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
             return ("Zot trap");
         case TRAP_GOLUBRIA:
             return ("passage of Golubria");
+        case TRAP_PLATE:
+            return ("pressure plate");
         default:
             error_message_to_player();
             return ("undefined trap");
