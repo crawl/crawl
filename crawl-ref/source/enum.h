@@ -1324,6 +1324,8 @@ enum enchant_type
     ENCH_STONESKIN,
     ENCH_FEAR_INSPIRING,
     ENCH_PORTAL_PACIFIED,
+    ENCH_WITHDRAWN,
+    ENCH_ATTACHED,
 
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
@@ -1947,7 +1949,7 @@ enum monster_type                      // (int) menv[].type
     MONS_SHADOW_WRAITH,                //  240
     MONS_GIANT_AMOEBA,
     MONS_GIANT_SLUG,
-    MONS_GIANT_SNAIL,
+    MONS_AGATE_SNAIL,
     MONS_SPATIAL_VORTEX,
     MONS_PIT_FIEND,                    //  245
     MONS_BORING_BEETLE,

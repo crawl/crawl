@@ -2793,7 +2793,8 @@ bool monster::strict_neutral() const
 
 bool monster::wont_attack() const
 {
-    return (friendly() || good_neutral() || strict_neutral());
+    return (friendly() || good_neutral() || strict_neutral()
+             || has_ench(ENCH_WITHDRAWN));
 }
 
 bool monster::pacified() const
@@ -2835,7 +2836,8 @@ int monster::shield_bypass_ability(int) const
 
 int monster::armour_class() const
 {
-    return (ac);
+    // Extra AC for snails/turtles drawn into their shells.
+    return (ac + (has_ench(ENCH_WITHDRAWN) ? 10 : 0));
 }
 
 int monster::melee_evasion(const actor *act, ev_ignore_type evit) const
@@ -4506,6 +4508,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " is no longer bleeding.");
         break;
 
+    case ENCH_WITHDRAWN:
+        if (!quiet)
+            simple_monster_message(this, " emerges from its shell.");
+        break;
 
     default:
         break;
@@ -4587,6 +4593,15 @@ void monster::timeout_enchantments(int levels)
     {
         switch (i->first)
         {
+        case ENCH_WITHDRAWN:
+            if (hit_points >= (max_hit_points - max_hit_points / 4)
+                && !one_chance_in(3))
+            {
+                del_ench(i->first);
+                break;
+            }
+            // Deliberate fall-through
+
         case ENCH_POISON: case ENCH_ROT: case ENCH_CORONA:
         case ENCH_STICKY_FLAME: case ENCH_ABJ: case ENCH_SHORT_LIVED:
         case ENCH_SLOW: case ENCH_HASTE: case ENCH_MIGHT: case ENCH_FEAR:
@@ -4754,6 +4769,16 @@ void monster::apply_enchantment(const mon_enchant &me)
             del_ench(ENCH_SLOW, true);
         }
         break;
+
+    case ENCH_WITHDRAWN:
+        if (hit_points >= (max_hit_points - max_hit_points / 4)
+                && !one_chance_in(3))
+        {
+            del_ench(ENCH_WITHDRAWN);
+            break;
+        }
+
+        // Deliberate fall through.
 
     case ENCH_SLOW:
     case ENCH_HASTE:
@@ -6285,7 +6310,7 @@ static const char *enchant_names[] =
     "insane", "silenced", "awaken_forest", "exploding", "bleeding",
     "tethered", "severed", "antimagic", "fading_away", "preparing_resurrect", "regen",
     "magic_res", "mirror_dam", "stoneskin", "fear inspiring", "temporarily pacified",
-    "buggy",
+    "withdrawn", "attached", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -6385,6 +6410,10 @@ int mon_enchant::calc_duration(const monster* mons,
     // monster HD via modded_speed(). Use mod_speed instead!
     switch (ench)
     {
+    case ENCH_WITHDRAWN:
+        cturn = 5000 / _mod_speed(25, mons->speed);
+        break;
+
     case ENCH_SWIFT:
         cturn = 1000 / _mod_speed(25, mons->speed);
         break;

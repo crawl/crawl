@@ -745,7 +745,7 @@ int mons_standard_level(int mcls)
     case MONS_EARTH_ELEMENTAL:
     case MONS_FIRE_ELEMENTAL:
     case MONS_GIANT_ORANGE_BRAIN:
-    case MONS_GIANT_SNAIL:
+    case MONS_AGATE_SNAIL:
     case MONS_GREAT_ORB_OF_EYES:
     case MONS_ICE_DRAGON:
     case MONS_NAGA_MAGE:
@@ -1024,7 +1024,7 @@ int mons_standard_rare(int mcls)
 
     case MONS_BUTTERFLY:
     case MONS_FUNGUS:
-    case MONS_GIANT_SNAIL:
+    case MONS_AGATE_SNAIL:
     case MONS_ICE_DRAGON:
     case MONS_INSUBSTANTIAL_WISP:
     case MONS_PHANTASMAL_WARRIOR:
@@ -1562,7 +1562,7 @@ int mons_lair_level(int mcls)
         break;
 
     case MONS_BLINK_FROG:
-    case MONS_GIANT_SNAIL:
+    case MONS_AGATE_SNAIL:
     case MONS_GIANT_SPORE:
     case MONS_KOMODO_DRAGON:
     case MONS_ORANGE_RAT:
@@ -1646,7 +1646,7 @@ int mons_lair_rare(int mcls)
     case MONS_HOUND:
         return 60;
 
-    case MONS_GIANT_SNAIL:
+    case MONS_AGATE_SNAIL:
         return 56;
 
     case MONS_GIANT_SLUG:
@@ -1764,7 +1764,7 @@ int mons_swamp_level(int mcls)
     case MONS_BUTTERFLY:
     case MONS_CROCODILE:
     case MONS_GIANT_MOSQUITO:
-    case MONS_GIANT_SNAIL:
+    case MONS_AGATE_SNAIL:
     case MONS_HYDRA:
         mlev += 2;
         break;
@@ -1875,7 +1875,7 @@ int mons_swamp_rare(int mcls)
     case MONS_GIANT_GECKO:
     case MONS_GIANT_NEWT:
     case MONS_GIANT_SLUG:
-    case MONS_GIANT_SNAIL:
+    case MONS_AGATE_SNAIL:
     case MONS_TENTACLED_MONSTROSITY:
         return 10;
 
