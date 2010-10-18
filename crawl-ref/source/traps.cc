@@ -1468,55 +1468,19 @@ dungeon_feature_type trap_category(trap_type type)
     }
 }
 
-bool trap_is_mechanical (trap_type trap)
+trap_type random_trap()
 {
-    return (trap == TRAP_DART || trap == TRAP_ARROW || trap == TRAP_SPEAR
-            || trap == TRAP_AXE || trap == TRAP_BLADE || trap == TRAP_BOLT
-            || trap == TRAP_NET || trap == TRAP_NEEDLE || trap == TRAP_PLATE);
+    return (static_cast<trap_type>(random2(TRAP_MAX_REGULAR+1)));
 }
 
-bool trap_is_magical (trap_type trap)
+trap_type random_trap(dungeon_feature_type feat)
 {
-    return (trap == TRAP_TELEPORT || trap == TRAP_ALARM || trap == TRAP_ZOT
-            || trap == TRAP_GOLUBRIA);
-}
-
-bool trap_is_natural (trap_type trap)
-{
-    return (trap == TRAP_SHAFT);
-}
-
-trap_type random_trap ()
-{
-    // NUM_TRAPS - 2, as we don't want Golubria's.
-    return (static_cast<trap_type>(TRAP_DART+random2(NUM_TRAPS-2)));
-}
-
-trap_type random_trap (dungeon_feature_type feat)
-{
-    switch (feat)
-    {
-        case DNGN_TRAP_MECHANICAL:
-            return random_trap(&trap_is_mechanical);
-        case DNGN_TRAP_MAGICAL:
-            return random_trap(&trap_is_magical);
-        case DNGN_TRAP_NATURAL:
-            return random_trap(&trap_is_natural);
-        default:
-            return (TRAP_UNASSIGNED);
-    }
-}
-
-trap_type random_trap (bool (*checker) (trap_type))
-{
+    ASSERT(feat_is_trap(feat, false));
     trap_type trap = NUM_TRAPS;
     do
-    {
         trap = random_trap();
-    }
-    while (!checker(trap));
-
-    return (trap);
+    while (trap_category(trap) != feat);
+    return trap;
 }
 
 bool is_valid_shaft_level(const level_id &place)
