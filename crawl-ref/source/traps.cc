@@ -777,6 +777,10 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         }
         break;
 
+    case TRAP_PLATE:
+        // TODO
+        break;
+
     default:
         break;
     }
@@ -1458,6 +1462,7 @@ dungeon_feature_type trap_category(trap_type type)
     case TRAP_BOLT:
     case TRAP_NEEDLE:
     case TRAP_NET:
+    case TRAP_PLATE:
     default:                    // what *would* be the default? {dlb}
         return (DNGN_TRAP_MECHANICAL);
     }
@@ -1467,7 +1472,7 @@ bool trap_is_mechanical (trap_type trap)
 {
     return (trap == TRAP_DART || trap == TRAP_ARROW || trap == TRAP_SPEAR
             || trap == TRAP_AXE || trap == TRAP_BLADE || trap == TRAP_BOLT
-            || trap == TRAP_NET || trap == TRAP_NEEDLE);
+            || trap == TRAP_NET || trap == TRAP_NEEDLE || trap == TRAP_PLATE);
 }
 
 bool trap_is_magical (trap_type trap)

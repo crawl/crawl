@@ -3272,6 +3272,7 @@ enum trap_type                         // env.trap_type[]
     TRAP_NEEDLE,
     TRAP_SHAFT,
     TRAP_GOLUBRIA,
+    TRAP_PLATE,
     NUM_TRAPS,                         // must remain last 'regular' member {dlb}
     TRAP_UNASSIGNED = 100,             // keep set at 100 for now {dlb}
     TRAP_INDEPTH = 253,                // Level-appropriate trap.
