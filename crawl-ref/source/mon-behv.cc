@@ -918,7 +918,7 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
             break;
 
         // Just set behaviour... foe doesn't change.
-        if (!mons_is_cornered(mon))
+        if (!mons_is_cornered(mon) && !mon->has_ench(ENCH_WITHDRAWN))
         {
             if (mon->friendly() && !crawl_state.game_is_arena())
             {

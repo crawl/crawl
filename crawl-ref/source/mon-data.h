@@ -1048,10 +1048,10 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_GIANT_SNAIL, 'j', LIGHTGREEN, "giant snail",
+    MONS_AGATE_SNAIL, 'j', LIGHTGREEN, "agate snail",
     M_NO_SKELETON,
     MR_NO_FLAGS,
-    950, 2, MONS_GIANT_SLUG, MONS_GIANT_SNAIL, MH_NATURAL, -3,
+    950, 2, MONS_GIANT_SLUG, MONS_AGATE_SNAIL, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 18}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 14, 5, 3, 0 },
     7, 2, MST_NO_SPELLS, CE_POISONOUS, Z_BIG, S_SILENT,

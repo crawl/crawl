@@ -620,7 +620,7 @@ TAGS:    uniq_altar_cheibriados
 DEPTH:   D:2-20
 WEIGHT:  1
 KFEAT:   _ = altar_cheibriados
-MONS:    giant slug, giant snail, elephant slug
+MONS:    giant slug, agate snail, elephant slug
 SUBST:   1 : 1:50 2:30 3:10 4:10
 NSUBST:  4 = 1:1 / 1:2 / 1:3
 MAP

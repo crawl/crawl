@@ -53,7 +53,7 @@ komodo_dragon MONS_KOMODO_DRAGON
 gastronok MONS_GASTRONOK
 %sdir dc-mon/animals
 giant_slug MONS_GIANT_SLUG
-giant_snail MONS_GIANT_SNAIL
+agate_snail MONS_AGATE_SNAIL
 elephant_slug MONS_ELEPHANT_SLUG
 
 ## Rodents ('r')

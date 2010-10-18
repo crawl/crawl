@@ -24,7 +24,7 @@ ENDMAP
 #
 NAME:    david_lair_1
 TAGS:    lair_entry
-MONS:    crocodile / sheep, giant snail / elephant slug / nothing
+MONS:    crocodile / sheep, agate snail / elephant slug / nothing
 MONS:    nothing / yak / weight:2 death yak, plant / fungus / w:20 nothing
 MONS:    elephant
 SHUFFLE: 12
@@ -67,7 +67,7 @@ ENDMAP
 NAME:    david_lair_3
 TAGS:    lair_entry
 ORIENT:  float
-MONS:    w:50 nothing / w:30 giant slug / w:30 giant snail
+MONS:    w:50 nothing / w:30 giant slug / w:30 agate snail
 MONS:    w:100 nothing / w:40 yak / sheep / death yak
 MONS:    w:100 nothing / w:20 iguana / w:20 crocodile /\
          gila monster / komodo dragon
@@ -200,7 +200,7 @@ NAME:   erik_lair_5
 TAGS:   lair_entry
 ORIENT: float
 MONS:   orc
-MONS:   warg / giant snail
+MONS:   warg / agate snail
 MONS:   orc warrior / warg
 MONS:   orc priest / orc wizard / plant
 MAP
@@ -303,7 +303,7 @@ DEPTH:   Lair:3-7
 SUBST:   % = %%%%%$$$**|
 MONS:    patrolling necromancer / necromancer
 SHUFFLE: 23
-MONS:    giant slug zombie / giant snail zombie / \
+MONS:    giant slug zombie / agate snail zombie / \
          elephant slug zombie w:2 / nothing
 MONS:    crocodile zombie / gila monster zombie / \
          komodo dragon zombie w:4 / nothing

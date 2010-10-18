@@ -60,6 +60,8 @@ enum monster_info_flags
     MB_FADING_AWAY,
     MB_MOSTLY_FADED,
     MB_FEAR_INSPIRING,
+    MB_WITHDRAWN,
+    MB_ATTACHED,
 };
 
 struct monster_info_base

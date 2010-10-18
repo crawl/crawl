@@ -128,6 +128,8 @@ static void _monster_regenerate(monster* mons)
 
         || mons->has_ench(ENCH_REGENERATION)
 
+        || mons->has_ench(ENCH_WITHDRAWN)
+
         || _mons_natural_regen_roll(mons))
     {
         mons->heal(1);
@@ -2360,8 +2362,7 @@ void handle_monster_move(monster* mons)
             {
                 ASSERT(!crawl_state.game_is_arena());
 
-                if (!mons_att_wont_attack(mons->attitude)
-                    && !mons->has_ench(ENCH_CHARM))
+                if (!mons->wont_attack() && !mons->has_ench(ENCH_CHARM))
                 {
                     // If it steps into you, cancel other targets.
                     mons->foe = MHITYOU;

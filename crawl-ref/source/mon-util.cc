@@ -557,7 +557,8 @@ bool mons_class_is_stationary(int mc)
 bool mons_is_stationary(const monster* mon)
 {
     return (mons_class_is_stationary(mon->type)
-            || mons_is_feat_mimic(mon->type) && mons_is_unknown_mimic(mon));
+            || mons_is_feat_mimic(mon->type) && mons_is_unknown_mimic(mon)
+            || mon->has_ench(ENCH_WITHDRAWN));
 }
 
 // Monsters that are worthless obstacles: not to

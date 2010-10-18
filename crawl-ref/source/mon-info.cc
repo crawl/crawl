@@ -118,6 +118,10 @@ static uint64_t ench_to_mb(const monster& mons, enchant_type ench)
         return ULL1 << MB_RAISED_MR;
     case ENCH_FEAR_INSPIRING:
         return ULL1 << MB_FEAR_INSPIRING;
+    case ENCH_WITHDRAWN:
+        return ULL1 << MB_WITHDRAWN;
+    case ENCH_ATTACHED:
+        return ULL1 << MB_ATTACHED;
     default:
         return 0;
     }
@@ -1003,6 +1007,10 @@ std::vector<std::string> monster_info::attributes() const
         v.push_back("mostly faded away");
     if (is(MB_FEAR_INSPIRING))
         v.push_back("inspiring fear");
+    if (is(MB_WITHDRAWN))
+        v.push_back("withdrawn into its shell");
+    if (is(MB_ATTACHED))
+        v.push_back("attached and sucking blood");
     return v;
 }
 
