@@ -791,6 +791,17 @@ static bool _is_pet_kill(killer_type killer, int i)
             && (me.who == KC_YOU || me.who == KC_FRIENDLY));
 }
 
+int exp_rate(int killer)
+{
+    if (killer == MHITYOU)
+        return 2;
+
+    if (_is_pet_kill(KILL_MON, killer))
+        return 1;
+
+    return 0;
+}
+
 // Elyvilon will occasionally (5% chance) protect the life of one of
 // your allies.
 static bool _ely_protect_ally(monster* mons)

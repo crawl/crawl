@@ -7,6 +7,8 @@
 const int KRAKEN_TENTACLE_RANGE = 3;
 #define TIDE_CALL_TURN "tide-call-turn"
 
+#define MAX_DAMAGE_COUNTER 10000
+
 class mon_enchant
 {
 public:
@@ -106,6 +108,9 @@ public:
 
     std::string seen_context;          // Non-standard context for
                                        // AI_SEE_MONSTER
+
+    int damage_friendly;               // Damage taken, x2 you, x1 pets, x0 else.
+    int damage_total;
 
     CrawlHashTable props;
 

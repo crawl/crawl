@@ -15,7 +15,8 @@ enum tag_minor_version
     TAG_MINOR_GOD_GIFTS    = 5, // Track current as well as total god gifts.
     TAG_MINOR_ATT_SWAP     = 6, // Sort attitude enums by friendliness.
     TAG_MINOR_GRATE        = 7, // Iron grates.
-    TAG_MINOR_VERSION      = 7, // Current version.  (Keep equal to max.)
+    TAG_MINOR_XP_STEALING  = 8, // Block kill sniping.
+    TAG_MINOR_VERSION      = 8, // Current version.  (Keep equal to max.)
 };
 
 #endif
