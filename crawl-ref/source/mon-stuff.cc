@@ -769,21 +769,42 @@ static int _calc_player_experience(monster* mons, killer_type killer,
         return (0); // No xp if monster was created friendly or summoned.
                     // or if you've only killed one of two shedu.
     }
-    else if (YOU_KILL(killer))
+
+    if (mons->damage_total)
     {
-        if (already_got_half_xp)
-            // Note: This doesn't happen currently since monsters with
-            //       MF_GOT_HALF_XP have always gone through pacification,
-            //       hence also have MF_WAS_NEUTRAL. [rob]
-            return (experience - half_xp);
-        else
-            return (experience);
+        dprf("Damage ratio: %1.1f/%d (%d%%)",
+             0.5 * mons->damage_friendly, mons->damage_total,
+             50 * mons->damage_friendly / mons->damage_total);
+        experience = (experience * mons->damage_friendly / mons->damage_total
+                      + 1) / 2;
+        // All deaths of hostiles grant at least 50% XP in ZotDef.
+        if (crawl_state.game_is_zotdef() && experience < half_xp)
+            experience = half_xp;
     }
-    // Get exp for all kills in Zotdef
-    else if ((pet_kill && !already_got_half_xp) || crawl_state.game_is_zotdef())
-        return (half_xp);
     else
-        return (0);
+    {
+        // We need to eradicate all such cases, as they lead to incorrect
+        // calculation if the monster took some damage beforehand.
+        dprf("Granting xp for non-damage kill.");
+        if (YOU_KILL(killer))
+            ;
+        else if (pet_kill)
+            experience = half_xp;
+        else
+            experience = 0;
+    }
+
+    // Note: This doesn't happen currently since monsters with
+    //       MF_GOT_HALF_XP have always gone through pacification,
+    //       hence also have MF_WAS_NEUTRAL. [rob]
+    if (already_got_half_xp)
+    {
+        experience -= half_xp;
+        if (experience < 0)
+            experience = 0;
+    }
+
+    return experience;
 }
 
 static void _give_player_experience(int experience, killer_type killer,
