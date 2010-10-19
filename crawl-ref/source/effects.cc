@@ -339,7 +339,7 @@ int torment_monsters(coord_def where, int pow, int caster, actor *attacker)
                         attacker ? attacker->mindex() : MHITNOT);
     }
 
-    mons->hurt(NULL, hploss, BEAM_TORMENT_DAMAGE);
+    mons->hurt(attacker, hploss, BEAM_TORMENT_DAMAGE);
 
     if (hploss)
         retval = 1;
