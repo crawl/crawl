@@ -209,5 +209,6 @@ bool mons_avoids_cloud(const monster* mons, int cloud_num,
                        bool placement = false);
 
 void debuff_monster(monster* mons);
+int exp_rate(int killer);
 
 #endif

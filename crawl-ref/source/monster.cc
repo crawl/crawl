@@ -3563,6 +3563,11 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         if (has_ench(ENCH_MIRROR_DAMAGE))
             add_final_effect(FINEFF_MIRROR_DAMAGE, agent, this,
                              coord_def(0, 0), initial_damage);
+
+        damage_total = std::min<int>(MAX_DAMAGE_COUNTER, damage_total + amount);
+        if (agent)
+            damage_friendly = std::min<int>(MAX_DAMAGE_COUNTER * 2,
+                          damage_friendly + amount * exp_rate(agent->mindex()));
     }
 
     if (cleanup_dead && (hit_points <= 0 || hit_dice <= 0) && type != -1)

@@ -2464,6 +2464,8 @@ void marshallMonster(writer &th, const monster& m)
     marshallByte(th, m.god);
     marshallByte(th, m.attitude);
     marshallShort(th, m.foe);
+    marshallShort(th, m.damage_friendly);
+    marshallShort(th, m.damage_total);
 
     if (mons_is_ghost_demon(m.type))
     {
@@ -2881,6 +2883,17 @@ void unmarshallMonster(reader &th, monster& m)
     }
 #endif
     m.foe      = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 31
+    if (th.getMinorVersion() >= TAG_MINOR_XP_STEALING)
+    {
+#endif
+    unmarshallShort(th);
+    unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 31
+    }
+    else
+        m.damage_friendly = m.damage_total = 0;
+#endif
 
     if (mons_is_ghost_demon(m.type))
         m.set_ghost(unmarshallGhost(th, _tag_minor_version));
