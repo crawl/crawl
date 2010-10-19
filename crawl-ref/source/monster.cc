@@ -5673,6 +5673,14 @@ bool monster::mutate()
     if (has_ench(ENCH_SHAPESHIFTER))
         return (monster_polymorph(this, MONS_SHAPESHIFTER));
 
+    // Polymorphing a slime creature will usually split it first
+    // and polymorph each part separately.
+    if (type == MONS_SLIME_CREATURE || type == MONS_MERGED_SLIME_CREATURE)
+    {
+        slime_creature_mutate(this);
+        return (true);
+    }
+
     return (monster_polymorph(this, RANDOM_MONSTER));
 }
 

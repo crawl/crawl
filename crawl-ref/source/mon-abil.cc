@@ -561,7 +561,8 @@ static void _stats_from_blob_count(monster* slime, float max_per_blob,
 
 // Create a new slime creature at 'target', and split 'thing''s hp and
 // merge count with the new monster.
-static bool _do_split(monster* thing, coord_def & target)
+// Now it returns index of new slime (-1 if it fails).
+static int _do_split(monster* thing, coord_def & target)
 {
     // Create a new slime.
     int slime_idx = create_monster(mgen_data(MONS_SLIME_CREATURE,
@@ -574,12 +575,12 @@ static bool _do_split(monster* thing, coord_def & target)
                                              MG_FORCE_PLACE));
 
     if (slime_idx == -1)
-        return (false);
+        return (-1);
 
     monster* new_slime = &env.mons[slime_idx];
 
     if (!new_slime)
-        return (false);
+        return (-1);
 
     // Inflict the new slime with any enchantments on the parent.
     _split_ench_durations(thing, new_slime);
@@ -606,7 +607,7 @@ static bool _do_split(monster* thing, coord_def & target)
     if (crawl_state.game_is_arena())
         arena_split_monster(thing, new_slime);
 
-    return (true);
+    return (slime_idx);
 }
 
 // Actually merge two slime creature, pooling their hp, etc.
@@ -777,13 +778,14 @@ static bool _slime_can_spawn(const coord_def target)
 
 // See if slime creature 'thing' can split, and carry out the split if
 // we can find a square to place the new slime creature on.
-static bool _slime_split(monster* thing)
+// Now it returns index of new slime (-1 if it fails).
+static int _slime_split(monster* thing, bool force_split)
 {
     if (!thing || thing->number <= 1
-        || coinflip() // Don't make splitting quite so reliable. (jpeg)
+        || (coinflip() && !force_split) // Don't make splitting quite so reliable. (jpeg)
         || _disabled_slime(thing))
     {
-        return (false);
+        return (-1);
     }
 
     const coord_def origin  = thing->pos();
@@ -793,7 +795,7 @@ static bool _slime_split(monster* thing)
     const coord_def foe_pos = (has_foe ? foe->position : coord_def(0,0));
     const int old_dist      = (has_foe ? grid_distance(origin, foe_pos) : 0);
 
-    if (has_foe && old_dist > 1)
+    if ((has_foe && old_dist > 1) && !force_split)
     {
         // If we're not already adjacent to the foe, check whether we can
         // move any closer. If so, do that rather than splitting.
@@ -802,7 +804,7 @@ static bool _slime_split(monster* thing)
             if (_slime_can_spawn(*ri)
                 && grid_distance(*ri, foe_pos) < old_dist)
             {
-                return (false);
+                return (-1);
             }
         }
     }
@@ -816,20 +818,23 @@ static bool _slime_split(monster* thing)
         coord_def target = origin + Compass[compass_idx[i]];
 
         // Don't split if this increases the distance to the target.
-        if (has_foe && grid_distance(target, foe_pos) > old_dist)
+        if (has_foe && grid_distance(target, foe_pos) > old_dist
+            && !force_split)
+        {
             continue;
+        }
 
         if (_slime_can_spawn(target))
         {
             // This can fail if placing a new monster fails.  That
             // probably means we have too many monsters on the level,
             // so just return in that case.
-            return (_do_split(thing, target));
+            return(_do_split(thing, target));
         }
     }
 
    // No free squares.
-   return (false);
+   return (-1);
 }
 
 // See if a given slime creature can split or merge.
@@ -843,10 +848,36 @@ static bool _slime_split_merge(monster* thing)
         return (false);
     }
 
-    if (_slime_split(thing))
+    if (_slime_split(thing, false) != -1)
         return (true);
 
     return (_slime_merge(thing));
+}
+
+//Splits and polymorphs merged slime creatures.
+bool slime_creature_mutate(monster* slime)
+{
+    if (slime->type != MONS_SLIME_CREATURE
+        && slime->type != MONS_MERGED_SLIME_CREATURE)
+    {
+        return(false);
+    }
+
+    if (slime->number > 1 && x_chance_in_y(4, 5))
+    {
+        int count = 0;
+        while (slime->number > 1 && count <= 10)
+        {
+            int slime_idx = _slime_split(slime, true);
+            if (slime_idx != -1)
+                slime_creature_mutate(&env.mons[slime_idx]);
+            else
+                break;
+            count++;
+        }
+    }
+
+    return (monster_polymorph(slime, RANDOM_MONSTER));
 }
 
 // Returns true if you resist the siren's call.
