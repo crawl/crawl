@@ -2970,7 +2970,7 @@ void corrode_monster(monster* mons)
     item_def *has_shield = mons->mslot_item(MSLOT_SHIELD);
     item_def *has_armour = mons->mslot_item(MSLOT_ARMOUR);
 
-    if (one_chance_in(3) && (has_shield || has_armour))
+    if (!one_chance_in(3) && (has_shield || has_armour))
     {
         item_def &thing_chosen = (has_armour ? *has_armour : *has_shield);
         if (is_artefact(thing_chosen)
@@ -3003,11 +3003,10 @@ void corrode_monster(monster* mons)
             }
         }
     }
-    else if (one_chance_in(3) && !(has_shield || has_armour)
-             && mons->holiness() == MH_NATURAL &&
-             !(mons->res_acid() || mons_is_slime(mons)))
+    else if (!one_chance_in(3) && !(has_shield || has_armour)
+             && mons->can_bleed() && !mons->res_acid())
     {
-                mons->add_ench(mon_enchant(ENCH_BLEED, 1, KC_OTHER, (1 + random2(5))*10));
+                mons->add_ench(mon_enchant(ENCH_BLEED, 3, KC_OTHER, (5 + random2(5))*10));
 
                 if (you.can_see(mons))
                 {

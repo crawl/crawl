@@ -1393,7 +1393,10 @@ static bool _do_ability(const ability_def& abil)
             break;
 
         case ABIL_BREATHE_FROST:
-            if (!zapping(ZAP_BREATHE_FROST, you.experience_level, beam, true,
+            if (!zapping(ZAP_BREATHE_FROST,
+                 (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON) ?
+                     2 * you.experience_level : you.experience_level,
+                 beam, true,
                          "You exhale a wave of freezing cold."))
             {
                 return (false);
@@ -1413,15 +1416,20 @@ static bool _do_ability(const ability_def& abil)
             break;
 
         case ABIL_SPIT_ACID:
-            if (!zapping(ZAP_BREATHE_ACID, you.experience_level, beam, true,
-                         "You spit acid."))
+            if (!zapping(ZAP_BREATHE_ACID,
+                (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON) ?
+                    2 * you.experience_level : you.experience_level,
+                beam, true, "You spit acid."))
             {
                 return (false);
             }
             break;
 
         case ABIL_BREATHE_POWER:
-            if (!zapping(ZAP_BREATHE_POWER, you.experience_level, beam, true,
+            if (!zapping(ZAP_BREATHE_POWER,
+                (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON) ?
+                    2 * you.experience_level : you.experience_level,
+                beam, true,
                          "You spit a bolt of incandescent energy."))
             {
                 return (false);
@@ -1429,7 +1437,10 @@ static bool _do_ability(const ability_def& abil)
             break;
 
         case ABIL_BREATHE_STICKY_FLAME:
-            if (!zapping(ZAP_BREATHE_STICKY_FLAME, you.experience_level, beam, true,
+            if (!zapping(ZAP_BREATHE_STICKY_FLAME,
+                (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON) ?
+                    2 * you.experience_level : you.experience_level,
+                beam, true,
                          "You spit a glob of burning liquid."))
             {
                 return (false);
@@ -1437,7 +1448,10 @@ static bool _do_ability(const ability_def& abil)
             break;
 
         case ABIL_BREATHE_STEAM:
-            if (!zapping(ZAP_BREATHE_STEAM, you.experience_level, beam, true,
+            if (!zapping(ZAP_BREATHE_STEAM,
+                (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON) ?
+                    2 * you.experience_level : you.experience_level,
+                beam, true,
                          "You exhale a blast of scalding steam."))
             {
                 return (false);
@@ -1445,7 +1459,10 @@ static bool _do_ability(const ability_def& abil)
             break;
 
         case ABIL_BREATHE_MEPHITIC:
-             if (!zapping(ZAP_BREATHE_MEPHITIC, you.experience_level, beam, true,
+             if (!zapping(ZAP_BREATHE_MEPHITIC,
+                 (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON) ?
+                     2 * you.experience_level : you.experience_level,
+                 beam, true,
                           "You exhale a blast of noxious fumes."))
              {
                  return (false);
@@ -2265,8 +2282,8 @@ std::vector<talent> your_talents(bool check_confused)
         }
 
         // Draconians don't maintain their original breath weapons
-        // if shapechanged, but green draconians do get spit poison
-        // in spider form.
+        // if shapechanged into a non-dragon form, but green draconians
+        // do get spit poison in spider form.
         if (transform_changed_physiology())
         {
             if (you.species == SP_GREEN_DRACONIAN
@@ -2274,7 +2291,7 @@ std::vector<talent> your_talents(bool check_confused)
             {
                 ability = ABIL_SPIT_POISON; // spit, not breath
             }
-            else
+            else if (you.attribute[ATTR_TRANSFORMATION] != TRAN_DRAGON)
                 ability = ABIL_NON_ABILITY;
         }
 
@@ -2398,7 +2415,9 @@ std::vector<talent> your_talents(bool check_confused)
 
     //jmf: Check for breath weapons - they're exclusive of each other, I hope!
     //     Make better ones come first.
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
+    if ((you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
+        && dragon_form_dragon_type() == MONS_DRAGON
+        && you.species != SP_RED_DRACONIAN)
         || player_mutation_level(MUT_BREATHE_FLAMES))
     {
         _add_talent(talents, ABIL_BREATHE_FIRE, check_confused);

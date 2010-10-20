@@ -437,7 +437,7 @@ monster_type transform_mons()
     case TRAN_ICE_BEAST:
         return MONS_ICE_BEAST;
     case TRAN_DRAGON:
-        return MONS_DRAGON;
+        return dragon_form_dragon_type();
     case TRAN_LICH:
         return MONS_LICH;
     case TRAN_BAT:
@@ -457,6 +457,32 @@ std::string blade_parts(bool terse)
     if (you.species == SP_CAT)
         return terse ? "paws" : "front paws";
     return "hands";
+}
+
+monster_type dragon_form_dragon_type()
+{
+    switch(you.species)
+    {
+        case SP_WHITE_DRACONIAN:
+             return MONS_ICE_DRAGON;
+        case SP_GREEN_DRACONIAN:
+             return MONS_SWAMP_DRAGON;
+        case SP_YELLOW_DRACONIAN:
+             return MONS_GOLDEN_DRAGON;
+        case SP_GREY_DRACONIAN:
+             return MONS_IRON_DRAGON;
+        case SP_BLACK_DRACONIAN:
+             return MONS_STORM_DRAGON;
+        case SP_PURPLE_DRACONIAN:
+             return MONS_QUICKSILVER_DRAGON;
+        case SP_MOTTLED_DRACONIAN:
+             return MONS_MOTTLED_DRAGON;
+        case SP_PALE_DRACONIAN:
+             return MONS_STEAM_DRAGON;
+        case SP_RED_DRACONIAN:
+        default:
+             return MONS_DRAGON;
+         }
 }
 
 // Transforms you into the specified form. If force is true, checks for
