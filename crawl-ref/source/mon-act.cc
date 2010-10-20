@@ -2287,6 +2287,7 @@ void handle_monster_move(monster* mons)
         mon_nearby_ability(mons);
 
         if (!mons->asleep() && !mons_is_wandering(mons)
+            && !mons->withdrawn()
             // Berserking monsters are limited to running up and
             // hitting their foes.
             && !mons->berserk()
