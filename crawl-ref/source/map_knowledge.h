@@ -124,6 +124,8 @@ struct map_cell
     {
         clear_item();
         flags |= MAP_DETECTED_ITEM;
+        _item = new item_info();
+        _item->base_type = OBJ_DETECTED;
     }
 
     void clear_item()

@@ -2724,6 +2724,7 @@ enum object_class_type                 // mitm[].base_type
     NUM_OBJECT_CLASSES,
     OBJ_UNASSIGNED = 100,              // must remain set to 100 {dlb}
     OBJ_RANDOM,      // used for blanket random sub_type .. see dungeon::items()
+    OBJ_DETECTED,    // unknown item; item_info only
 };
 
 enum operation_types

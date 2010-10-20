@@ -3121,6 +3121,9 @@ tileidx_t tileidx_item(const item_def &item)
     case OBJ_MISCELLANY:
         return _tileidx_misc(item);
 
+    case OBJ_DETECTED:
+        return TILE_UNSEEN_ITEM;
+
     default:
         return TILE_ERROR;
     }
@@ -3217,31 +3220,6 @@ tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy)
 
     // If not a special case, just return the default tile.
     return tileidx_item(item);
-}
-
-tileidx_t tileidx_show_item(int show_item_type)
-{
-    switch (show_item_type)
-    {
-    default:
-    case SHOW_ITEM_NONE:       return (0);
-    case SHOW_ITEM_ORB:        return (TILE_UNSEEN_ORB);
-    case SHOW_ITEM_WEAPON:     return (TILE_UNSEEN_WEAPON);
-    case SHOW_ITEM_ARMOUR:     return (TILE_UNSEEN_ARMOUR);
-    case SHOW_ITEM_WAND:       return (TILE_UNSEEN_WAND);
-    case SHOW_ITEM_FOOD:       return (TILE_UNSEEN_FOOD);
-    case SHOW_ITEM_SCROLL:     return (TILE_UNSEEN_SCROLL);
-    case SHOW_ITEM_RING:       return (TILE_UNSEEN_RING);
-    case SHOW_ITEM_POTION:     return (TILE_UNSEEN_POTION);
-    case SHOW_ITEM_MISSILE:    return (TILE_UNSEEN_MISSILE);
-    case SHOW_ITEM_BOOK:       return (TILE_UNSEEN_BOOK);
-    case SHOW_ITEM_STAVE:      return (TILE_UNSEEN_STAFF);
-    case SHOW_ITEM_MISCELLANY: return (TILE_UNSEEN_MISC);
-    case SHOW_ITEM_CORPSE:     return (TILE_UNSEEN_CORPSE);
-    case SHOW_ITEM_GOLD:       return (TILE_UNSEEN_GOLD);
-    case SHOW_ITEM_AMULET:     return (TILE_UNSEEN_AMULET);
-    case SHOW_ITEM_DETECTED:   return (TILE_UNSEEN_ITEM);
-    }
 }
 
 // For items with randomized descriptions, only the overlay label is
