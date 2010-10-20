@@ -2936,7 +2936,8 @@ bool bolt::harmless_to_player() const
         return (player_res_poison(false));
 
     case BEAM_POTION_STINKING_CLOUD:
-        return (player_res_poison(false) || player_mental_clarity(false));
+        return (player_res_poison(false) || player_mental_clarity(false)
+                || you.is_unbreathing());
 
     case BEAM_ELECTRICITY:
         return (player_res_electricity(false));
@@ -3756,8 +3757,9 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
 
     postac = preac;
 
-    // Hellfire ignores AC.
-    if (flavour != BEAM_HELLFIRE && name != "freezing breath")
+    // Hellfire and white draconian breath ignores AC.
+    if (flavour != BEAM_HELLFIRE && name != "freezing breath"
+        && name != "chilling blast")
     {
         postac -= maybe_random2(1 + mon->ac, !is_tracer);
 
@@ -4010,7 +4012,8 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         }
     }
 
-    if (name == "bolt of energy") // purple draconian breath
+    if (name == "bolt of energy"
+        || origin_spell == SPELL_QUICKSILVER_BOLT) // purple draconian breath
         debuff_monster(mon);
 
     if (wake_mimic && mons_is_mimic(mon->type))

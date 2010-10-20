@@ -465,13 +465,17 @@ const char *get_spell_target_prompt(spell_type which_spell)
 
 bool spell_typematch(spell_type which_spell, unsigned int which_discipline)
 {
-    return (_seekspell(which_spell)->disciplines & which_discipline);
+    return (get_spell_disciplines(which_spell) & which_discipline);
 }
 
 //jmf: next two for simple bit handling
 unsigned int get_spell_disciplines(spell_type spell)
 {
-    return (_seekspell(spell)->disciplines);
+    unsigned int dis = _seekspell(spell)->disciplines;
+    if (spell == SPELL_DRAGON_FORM && player_genus(GENPC_DRACONIAN))
+        dis &= (~SPTYP_FIRE);
+
+    return dis;
 }
 
 int count_bits(unsigned int bits)

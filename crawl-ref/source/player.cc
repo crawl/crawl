@@ -1375,8 +1375,14 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
             rf--;
             break;
         case TRAN_DRAGON:
-            rf += 2;
+        {
+            monster_type form = dragon_form_dragon_type();
+            if (form == MONS_DRAGON)
+                rf += 2;
+            else if (form == MONS_ICE_DRAGON)
+                rf--;
             break;
+        }
         }
     }
 
@@ -1424,8 +1430,14 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
             rc += 3;
             break;
         case TRAN_DRAGON:
-            rc--;
+        {
+            monster_type form = dragon_form_dragon_type();
+            if (form == MONS_DRAGON)
+                rc--;
+            else if (form == MONS_ICE_DRAGON)
+                rc += 2;
             break;
+        }
         case TRAN_LICH:
             rc++;
             break;
@@ -1487,7 +1499,8 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
 int player_res_acid(bool calc_unid, bool items)
 {
     int res = 0;
-    if (!transform_changed_physiology())
+    if (!transform_changed_physiology()
+        || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
     {
         if (you.species == SP_YELLOW_DRACONIAN)
             res += 2;
@@ -5536,7 +5549,9 @@ int player::armour_class() const
 
     if (attribute[ATTR_TRANSFORMATION] == TRAN_NONE
         || attribute[ATTR_TRANSFORMATION] == TRAN_LICH
-        || attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+        || attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS
+        || (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
+        && player_genus(GENPC_DRACONIAN)))
     {
         // Being a lich doesn't preclude the benefits of hide/scales -- bwr
         //
@@ -5549,6 +5564,9 @@ int player::armour_class() const
         if (player_genus(GENPC_DRACONIAN))
         {
            AC += 300 + 100 * (you.experience_level / 3);  // max 12
+
+           if (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
+               AC += 700;
         }
         else
         {
@@ -5584,8 +5602,8 @@ int player::armour_class() const
                 AC += (100 + 100 * skills[SK_ICE_MAGIC] / 4);   // max +7
             break;
 
-        case TRAN_DRAGON:
-            AC += (700 + 100 * skills[SK_FIRE_MAGIC] / 3);      // max 16
+        case TRAN_DRAGON: // Draconians handled above
+            AC += (700 + 100 * skills[SK_FIRE_MAGIC] / 3); // max 16
             break;
 
         case TRAN_STATUE: // main ability is armour (high bonus)
