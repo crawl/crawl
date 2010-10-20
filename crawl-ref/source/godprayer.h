@@ -14,6 +14,5 @@ void pray();
 void end_prayer();
 
 piety_gain_t sacrifice_item_stack(const item_def& item, int *js = 0);
-void offer_items();
 
 #endif
