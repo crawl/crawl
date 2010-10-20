@@ -317,6 +317,9 @@ public:
   // 0 = no, 1 = cardinal move, 2 = diagonal move
   int walking;
 
+  // View code clears and needs new data in places where we can't announce the
+  // portal right away; delay the announcements then.
+  int seen_portals;
 
   // The save file itself.
   package *save;
