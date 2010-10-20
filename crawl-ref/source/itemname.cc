@@ -2816,7 +2816,10 @@ bool is_useless_item(const item_def &item, bool temp)
 
     case OBJ_MISSILES:
         if (you.species == SP_CAT)
-            return (true);
+        {
+            return (item.sub_type != MI_STONE && item.sub_type != MI_LARGE_ROCK)
+                   || !you.has_spell(SPELL_SANDBLAST);
+        }
 
         // These are the same checks as in is_throwable(), except that
         // we don't take launchers into account.
