@@ -311,7 +311,7 @@ void splash_with_acid(int acid_strength, bool corrode_items,
         if (!cloak_protects)
         {
             if (!player_wearing_slot(slot) && slot != EQ_SHIELD)
-                dam ++;
+                dam++;
 
             if (player_wearing_slot(slot) && corrode_items
                 && x_chance_in_y(acid_strength + 1, 20))
