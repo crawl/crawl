@@ -5207,6 +5207,7 @@ void player::init()
     reset_escaped_death();
     on_current_level    = true;
     walking             = 0;
+    seen_portals        = 0;
 
     // Protected fields:
     for (int i = 0; i < NUM_BRANCHES; i++)

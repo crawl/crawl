@@ -1978,6 +1978,17 @@ static void _prep_input()
 
     viewwindow();
     maybe_update_stashes();
+
+    if (you.seen_portals)
+    {
+        ASSERT(you.religion == GOD_ASHENZARI);
+        if (you.seen_portals == 1)
+            mpr("You have a vision of a gate.", MSGCH_GOD);
+        else
+            mpr("You have a vision of multiple gates.", MSGCH_GOD);
+
+        you.seen_portals = 0;
+    }
 }
 
 // Decrement a single duration. Print the message if the duration runs out.

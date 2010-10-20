@@ -16,6 +16,7 @@
 #include "describe.h"
 #include "env.h"
 #include "godconduct.h"
+#include "godpassive.h"
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"

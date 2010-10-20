@@ -40,5 +40,6 @@ int ash_bondage_level(int type_only = 0);
 void ash_check_bondage();
 bool ash_id_item(item_def& item, bool silent = true);
 void ash_id_inventory();
+int ash_detect_portals(bool all);
 
 #endif
