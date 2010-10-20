@@ -321,9 +321,8 @@ size_type species_size(species_type species, size_part_type psize)
     case SP_KOBOLD:
         return (SIZE_SMALL);
     case SP_SPRIGGAN:
-        return (SIZE_LITTLE);
     case SP_CAT:
-        return (SIZE_TINY);
+        return (SIZE_LITTLE);
 
     default:
         return (SIZE_MEDIUM);
