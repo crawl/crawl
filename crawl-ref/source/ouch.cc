@@ -323,7 +323,7 @@ void splash_with_acid(int acid_strength, bool corrode_items,
 
     // Without fur, clothed people have dam 0 (+2 later), Sp/Tr/Dr/Og ~1
     // (randomized), Fe 5.  Fur helps only against naked spots.
-    int fur = player_mutation_level(MUT_SHAGGY_FUR);
+    const int fur = player_mutation_level(MUT_SHAGGY_FUR);
     dam -= fur * dam / 5;
 
     // two extra virtual slots so players can't be immune
