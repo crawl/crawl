@@ -32,6 +32,8 @@
 #include "terrain.h"
 #include "view.h"
 
+static void _offer_items();
+
 static bool _confirm_pray_sacrifice(god_type god)
 {
     if (Options.stash_tracking == STM_EXPLICIT && is_stash(you.pos()))
@@ -326,7 +328,7 @@ static bool _altar_prayer()
         return (did_bless);
     }
 
-    offer_items();
+    _offer_items();
 
     return (did_bless);
 }
@@ -448,7 +450,7 @@ void pray()
             || you.religion == GOD_NEMELEX_XOBEH
             || you.religion == GOD_ASHENZARI))
     {
-        offer_items();
+        _offer_items();
     }
 
     if (!was_praying)
@@ -722,19 +724,12 @@ piety_gain_t sacrifice_item_stack(const item_def& item, int *js)
     return (relative_gain);
 }
 
-void offer_items()
+static void _offer_items()
 {
-    if (you.religion == GOD_NO_GOD)
+    if (you.religion == GOD_NO_GOD || !god_likes_items(you.religion))
         return;
 
     int i = you.visible_igrd(you.pos());
-
-    if (!god_likes_items(you.religion) && i != NON_ITEM)
-    {
-        simple_god_message(" doesn't care about such mundane gifts.",
-                           you.religion);
-        return;
-    }
 
     god_acting gdact;
 
