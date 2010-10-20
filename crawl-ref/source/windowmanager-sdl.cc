@@ -300,7 +300,7 @@ int SDLWrapper::init(coord_def *m_windowsz)
     // window just above the taskbar.
     int delta_x = (wm->desktop_width() - m_windowsz->x) / 2;
     int taskbar_height = get_taskbar_height();
-    taskbar_height += 8; // Some margin for the window border.
+    taskbar_height += 6; // Some margin for the window border.
     if ((wm->desktop_height() - m_windowsz->y) / 2 < taskbar_height)
     {
         char env_str[50];
