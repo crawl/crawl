@@ -2181,9 +2181,13 @@ std::string your_hand(bool plural)
     case TRAN_STATUE:
     case TRAN_LICH:
         result = (you.has_usable_claws()) ? "claw" : "hand";
+        if (you.species == SP_CAT)
+            result = "paw";
         break;
     case TRAN_ICE_BEAST:
         result = "hand";
+        if (you.species == SP_CAT)
+            result = "paw";
         break;
     case TRAN_SPIDER:
     case TRAN_PIG:
