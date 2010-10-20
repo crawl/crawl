@@ -242,7 +242,7 @@ static void _sdump_transform(dump_params &par)
             text += "bat-form.";
             break;
         case TRAN_BLADE_HANDS:
-            text += "Your hands " + verb + " blades.";
+            text += "Your " + blade_parts() + " " + verb + " blades.";
             break;
         case TRAN_STATUE:
             text += "You " + verb + " a stone statue.";

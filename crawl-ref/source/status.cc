@@ -677,8 +677,8 @@ static void _describe_transform(status_info* inf)
         break;
     case TRAN_BLADE_HANDS:
         inf->light_text = "Blades";
-        inf->short_text = "blade hands";
-        inf->long_text  = "You have blades for hands.";
+        inf->short_text = "blade " + blade_parts(true);
+        inf->long_text  = "You have blades for " + blade_parts() + ".";
         break;
     case TRAN_DRAGON:
         inf->light_text = "Dragon";

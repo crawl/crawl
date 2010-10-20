@@ -452,6 +452,13 @@ monster_type transform_mons()
     return MONS_PLAYER;
 }
 
+std::string blade_parts(bool terse)
+{
+    if (you.species == SP_CAT)
+        return terse ? "paws" : "front paws";
+    return "hands";
+}
+
 // Transforms you into the specified form. If force is true, checks for
 // inscription warnings are skipped, and the transformation fails silently
 // (if it fails). If just_check is true the transformation doesn't actually
@@ -592,8 +599,11 @@ bool transform(int pow, transformation_type which_trans, bool force,
 
     case TRAN_BLADE_HANDS:
         tran_name = "Blade Hands";
+        if (you.species == SP_CAT)
+            tran_name = "Blade Paws";
         dur       = std::min(10 + random2(pow), 100);
-        msg       = "Your hands turn into razor-sharp scythe blades.";
+        msg       = "Your " + blade_parts()
+                    + " turn into razor-sharp scythe blades.";
         break;
 
     case TRAN_STATUE:
@@ -815,7 +825,8 @@ void untransform(bool skip_wielding, bool skip_move)
         break;
 
     case TRAN_BLADE_HANDS:
-        mpr("Your hands revert to their normal proportions.", MSGCH_DURATION);
+        mprf(MSGCH_DURATION, "Your %s revert to their normal proportions.",
+             blade_parts().c_str());
         you.wield_change = true;
         break;
 
