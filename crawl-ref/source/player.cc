@@ -227,7 +227,7 @@ static bool _check_moveto_trap(const coord_def& p, const std::string &move_verb)
             std::string prompt = make_stringf(
                 "Really %s %s that %s?",
                 move_verb.c_str(),
-                (type == TRAP_ALARM) ? "onto" : "into",
+                (type == TRAP_ALARM || type == TRAP_PLATE) ? "onto" : "into",
                 feature_description(new_grid, type,
                                     "", DESC_BASENAME,
                                     false).c_str());

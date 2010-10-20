@@ -778,7 +778,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         break;
 
     case TRAP_PLATE:
-        // TODO
+        dungeon_events.fire_position_event(DET_PRESSURE_PLATE, pos);
         break;
 
     default:
