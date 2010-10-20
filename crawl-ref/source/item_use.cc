@@ -4768,7 +4768,7 @@ void read_scroll(int slot)
         break;
 
     case SCR_IMMOLATION:
-        mpr("The scroll explodes in your hands!");
+        mprf("The scroll explodes in your %s!", your_hand(true).c_str());
 
         // Doesn't destroy scrolls anymore, so no special check needed. (jpeg)
         immolation(10, IMMOLATION_SCROLL, you.pos(), alreadyknown, &you);

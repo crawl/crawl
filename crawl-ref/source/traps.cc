@@ -1023,7 +1023,8 @@ void remove_net_from(monster* mon)
             mpr("You tear at the net.");
             if (mitm[net].plus < -7)
             {
-                mpr("Whoops! The net comes apart in your hands!");
+                mprf("Whoops! The net comes apart in your %s!",
+                     your_hand(true).c_str());
                 mon->del_ench(ENCH_HELD, true);
                 destroy_item(net);
                 net_destroyed = true;
