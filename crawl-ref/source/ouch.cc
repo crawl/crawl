@@ -311,7 +311,7 @@ void splash_with_acid(int acid_strength, bool corrode_items,
         if (!cloak_protects)
         {
             if (!player_wearing_slot(slot) && slot != EQ_SHIELD)
-                dam += roll_dice(1, acid_strength);
+                dam ++;
 
             if (player_wearing_slot(slot) && corrode_items
                 && x_chance_in_y(acid_strength + 1, 20))
@@ -321,8 +321,14 @@ void splash_with_acid(int acid_strength, bool corrode_items,
         }
     }
 
+    // Without fur, clothed people have dam 0 (+2 later), Sp/Tr/Dr/Og ~1
+    // (randomized), Fe 5.  Fur helps only against naked spots.
+    int fur = player_mutation_level(MUT_FUR);
+    dam -= fur * dam / 5;
+
     // two extra virtual slots so players can't be immune
-    dam += roll_dice(2, acid_strength);
+    dam += 2;
+    dam = roll_dice(dam, acid_strength);
 
     const int post_res_dam = dam * player_acid_resist_factor() / 100;
 
