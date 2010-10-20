@@ -2764,7 +2764,7 @@ static void _player_reacts()
 
     slime_wall_damage(&you, you.time_taken);
 
-    if (you.level_type == LEVEL_DUNGEON && you.duration[DUR_TELEPATHY])
+    if (you.duration[DUR_TELEPATHY] && player_in_mappable_area())
         detect_creatures(1 + you.duration[DUR_TELEPATHY] /
                          (2 * BASELINE_DELAY), true);
 
