@@ -2362,7 +2362,8 @@ void handle_monster_move(monster* mons)
             {
                 ASSERT(!crawl_state.game_is_arena());
 
-                if (!mons->wont_attack() && !mons->has_ench(ENCH_CHARM))
+                if (!mons->wont_attack() && !mons->has_ench(ENCH_CHARM)
+                    && !mons->withdrawn())
                 {
                     // If it steps into you, cancel other targets.
                     mons->foe = MHITYOU;

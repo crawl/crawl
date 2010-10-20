@@ -89,6 +89,7 @@ static bool _zin_recite_mons_useless(const monster* mon)
             || mon->neutral()
             || mons_is_confused(mon)
             || mon->paralysed()
+            || mon->withdrawn()
             || mon->has_ench(ENCH_BATTLE_FRENZY)
             || mon->has_ench(ENCH_HASTE));
 }
