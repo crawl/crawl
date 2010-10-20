@@ -2579,6 +2579,7 @@ bool is_emergency_item(const item_def &item)
         case SCR_TELEPORTATION:
         case SCR_BLINKING:
         case SCR_FEAR:
+        case SCR_FOG:
             return (true);
         default:
             return (false);
