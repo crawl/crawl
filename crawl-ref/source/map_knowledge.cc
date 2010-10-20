@@ -180,3 +180,12 @@ void clear_terrain_visibility()
         env.map_knowledge(*i).flags &=~ MAP_VISIBLE_FLAG;
     env.visible.clear();
 }
+
+void map_cell::set_detected_item()
+{
+    clear_item();
+    flags |= MAP_DETECTED_ITEM;
+    _item = new item_info();
+    _item->base_type = OBJ_DETECTED;
+    _item->colour    = Options.detected_item_colour;
+}
