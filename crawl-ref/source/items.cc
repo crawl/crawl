@@ -1972,7 +1972,7 @@ bool multiple_items_at(const coord_def& where, bool allow_mimic_item)
     return (found_count > 1);
 }
 
-bool drop_item(int item_dropped, int quant_drop, bool try_offer)
+bool drop_item(int item_dropped, int quant_drop)
 {
     if (quant_drop < 0 || quant_drop > you.inv[item_dropped].quantity)
         quant_drop = you.inv[item_dropped].quantity;
@@ -2071,14 +2071,6 @@ bool drop_item(int item_dropped, int quant_drop, bool try_offer)
     }
     dec_inv_item_quantity(item_dropped, quant_drop);
     you.turn_is_over = true;
-
-    if (try_offer
-        && you.religion != GOD_NO_GOD
-        && you.duration[DUR_PRAYER]
-        && feat_altar_god(grd(you.pos())) == you.religion)
-    {
-        offer_items();
-    }
 
     return (true);
 }
@@ -2267,8 +2259,7 @@ void drop()
     if (items_for_multidrop.size() == 1) // only one item
     {
         drop_item(items_for_multidrop[0].slot,
-                   items_for_multidrop[0].quantity,
-                   true);
+                   items_for_multidrop[0].quantity);
         items_for_multidrop.clear();
         you.turn_is_over = true;
     }
