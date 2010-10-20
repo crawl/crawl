@@ -873,8 +873,7 @@ void handle_delay()
 
         case DELAY_MULTIDROP:
             drop_item(items_for_multidrop[0].slot,
-                      items_for_multidrop[0].quantity,
-                      items_for_multidrop.size() == 1);
+                      items_for_multidrop[0].quantity);
             items_for_multidrop.erase(items_for_multidrop.begin());
             break;
 
