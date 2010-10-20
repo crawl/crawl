@@ -6113,6 +6113,10 @@ bool monster_attack(monster* attacker, bool allow_unarmed)
     if (attacker->wont_attack() && !mons_is_confused(attacker))
         return (false);
 
+    // It's hard to attack from within a shell.
+    if (attacker->withdrawn())
+        return (false);
+
     // In case the monster hasn't noticed you, bumping into it will
     // change that.
     behaviour_event(attacker, ME_ALERT, MHITYOU);

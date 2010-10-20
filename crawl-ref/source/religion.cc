@@ -4069,7 +4069,7 @@ int get_tension(god_type god)
         {
             int exper = get_monster_tension(mon, god);
 
-            if (!mon->wont_attack())
+            if (!mon->wont_attack() && !mon->withdrawn())
                 nearby_monster = true;
 
             total += exper;
