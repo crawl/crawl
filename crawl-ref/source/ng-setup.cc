@@ -1619,11 +1619,11 @@ static void _setup_generic(const newgame_def& ng)
         _setup_tutorial_miscs();
 
     _mark_starting_books();
-    _racialise_starting_equipment();
 
     _give_basic_spells(you.char_class);
     _give_basic_knowledge(you.char_class);
 
+    _racialise_starting_equipment();
     initialise_item_descriptions();
 
     _reassess_starting_skills();
