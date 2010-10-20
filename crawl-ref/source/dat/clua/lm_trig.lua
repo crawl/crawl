@@ -601,6 +601,9 @@ end
 --      close doors).
 --
 -- * hp_warning: Called whenever a HP warning is triggered.
+--
+-- * pressure_plate: Called when someone (player or a monster) steps on a
+--      pressure plate trap.
 
 DgnTriggerer = { CLASS = "DgnTriggerer" }
 DgnTriggerer.__index = DgnTriggerer
@@ -792,6 +795,10 @@ function DgnTriggerer:door_closed(triggerable, marker, ev)
 end
 
 function DgnTriggerer:hp_warning(triggerable, marker, ev)
+  triggerable:do_trigger(self, marker, ev)
+end
+
+function DgnTriggerer:pressure_plate(triggerable, marker, ev)
   triggerable:do_trigger(self, marker, ev)
 end
 
