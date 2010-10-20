@@ -559,8 +559,7 @@ function lugonu_item (data, triggerable, triggerer, marker, ev)
          ["Nemelex Xobeh"]="no",
          Okawaru="lantern of shadows / book of Callings / book of Summonings / rod of demonology \
          / rod of summoning",
-         ["Sif Muna"]="staff of channeling / good_item plate mail \
-         / randbook owner:Lugonu disc:ench spell:selective_amnesia numspells:1",
+         ["Sif Muna"]="staff of channeling / good_item plate mail",
          ["The Shining One"]="wand of invisibility w:20 / book of Envenomations \
          / Young Poisoner's Handbook / rod of venom / book of Necromancy w:5 / book of Death w:5 \
          / book of Unlife w:5",
