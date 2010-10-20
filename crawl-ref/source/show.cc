@@ -197,6 +197,7 @@ static show_item_type _item_to_show_code(const item_def &item)
     case OBJ_MISCELLANY: return (SHOW_ITEM_MISCELLANY);
     case OBJ_CORPSES:    return (SHOW_ITEM_CORPSE);
     case OBJ_GOLD:       return (SHOW_ITEM_GOLD);
+    case OBJ_DETECTED:   return (SHOW_ITEM_DETECTED);
     default:             return (SHOW_ITEM_ORB); // bad item character
    }
 }

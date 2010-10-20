@@ -29,7 +29,6 @@ tileidx_t tileidx_draco_job(const monster* mon);
 
 tileidx_t tileidx_item(const item_def &item);
 tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy);
-tileidx_t tileidx_show_item(int show_item_type);
 tileidx_t tileidx_known_base_item(tileidx_t label);
 
 tileidx_t tileidx_cloud(const cloud_struct &cl);
