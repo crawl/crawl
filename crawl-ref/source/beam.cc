@@ -5677,7 +5677,8 @@ std::string beam_type_name(beam_type type)
     case BEAM_MAGIC:                return ("magic");
     case BEAM_ELECTRICITY:          return ("electricity");
 
-    case BEAM_POTION_STINKING_CLOUD:
+    case BEAM_POTION_STINKING_CLOUD:return ("noxious fumes");
+
     case BEAM_POTION_POISON:        // fall through
     case BEAM_POISON:               return ("poison");
 
