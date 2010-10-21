@@ -6315,7 +6315,7 @@ static const char *enchant_names[] =
     "insane", "silenced", "awaken_forest", "exploding", "bleeding",
     "tethered", "severed", "antimagic", "fading_away", "preparing_resurrect", "regen",
     "magic_res", "mirror_dam", "stoneskin", "fear inspiring", "temporarily pacified",
-    "withdrawn", "attached", "", "buggy",
+    "withdrawn", "attached", "guardian_timer", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
