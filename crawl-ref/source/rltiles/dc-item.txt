@@ -958,6 +958,9 @@ runes/rune_gloorx_vloq MISC_RUNE_GLOORX_VLOQ
 runes/rune_mnoleg MISC_RUNE_MNOLEG
 runes/rune_lom_lobon MISC_RUNE_LOM_LOBON
 runes/rune_snake MISC_RUNE_SNAKE
+%rim 0
+misc_quad MISC_QUAD_DAMAGE
+%rim 1
 
 #OBJ_CORPSES
 #handled in dc-corpse.txt
