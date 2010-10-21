@@ -442,7 +442,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Ashenzari
     { "",
       "Ashenzari no longer helps you learn.",
-      "Ashenzari no longer augments your vision and mind.",
+      "Ashenzari no longer keeps your vision and mind clear.",
       "scry through walls",
       "Ashenzari no longer helps you to reconsider your skills."
     },
