@@ -128,7 +128,7 @@ void set_terrain_seen(int x, int y)
         _automap_from(x, y, _map_quality());
 
         const bool boring = !is_notable_terrain(feat)
-            // A portal deeper into the Zigguart is boring.
+            // A portal deeper into the Ziggurat is boring.
             || (feat == DNGN_ENTER_PORTAL_VAULT
                 && you.level_type == LEVEL_PORTAL_VAULT)
             // Altars in the temple are boring.
