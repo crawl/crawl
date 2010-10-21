@@ -91,7 +91,7 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
 static void _automap_from(int x, int y, int mutated)
 {
     if (mutated)
-        magic_mapping(8 * mutated, 25, true, false,
+        magic_mapping(8 * mutated, 25, true, you.religion == GOD_ASHENZARI,
                       true, true, coord_def(x,y));
 }
 
