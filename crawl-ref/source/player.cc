@@ -2599,6 +2599,7 @@ void forget_map(int chance_forgotten, bool force)
         }
     }
 
+    ash_detect_portals(player_in_mappable_area());
 #ifdef USE_TILE
     tiles.update_minimap_bounds();
 #endif
