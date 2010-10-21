@@ -5663,92 +5663,92 @@ std::string beam_type_name(beam_type type)
 {
     switch (type)
     {
-    case BEAM_NONE:                 return ("none");
-    case BEAM_MISSILE:              return ("missile");
-    case BEAM_MMISSILE:             return ("magic missile");
+    case BEAM_NONE:                  return ("none");
+    case BEAM_MISSILE:               return ("missile");
+    case BEAM_MMISSILE:              return ("magic missile");
 
-    case BEAM_POTION_FIRE:          // fall through
-    case BEAM_FIRE:                 return ("fire");
+    case BEAM_POTION_FIRE:           // fall through
+    case BEAM_FIRE:                  return ("fire");
 
-    case BEAM_POTION_COLD:          // fall through
-    case BEAM_COLD:                 return ("cold");
-    case BEAM_WATER:                return ("water");
+    case BEAM_POTION_COLD:           // fall through
+    case BEAM_COLD:                  return ("cold");
+    case BEAM_WATER:                 return ("water");
 
-    case BEAM_MAGIC:                return ("magic");
-    case BEAM_ELECTRICITY:          return ("electricity");
+    case BEAM_MAGIC:                 return ("magic");
+    case BEAM_ELECTRICITY:           return ("electricity");
 
-    case BEAM_POTION_STINKING_CLOUD:return ("noxious fumes");
+    case BEAM_POTION_STINKING_CLOUD: return ("noxious fumes");
 
-    case BEAM_POTION_POISON:        // fall through
-    case BEAM_POISON:               return ("poison");
+    case BEAM_POTION_POISON:         // fall through
+    case BEAM_POISON:                return ("poison");
 
-    case BEAM_NEG:                  return ("negative energy");
-    case BEAM_ACID:                 return ("acid");
+    case BEAM_NEG:                   return ("negative energy");
+    case BEAM_ACID:                  return ("acid");
 
-    case BEAM_MIASMA:               // fall through
-    case BEAM_POTION_MIASMA:        return ("miasma");
+    case BEAM_MIASMA:                // fall through
+    case BEAM_POTION_MIASMA:         return ("miasma");
 
-    case BEAM_SPORE:                return ("spores");
-    case BEAM_POISON_ARROW:         return ("poison arrow");
-    case BEAM_HELLFIRE:             return ("hellfire");
-    case BEAM_NAPALM:               return ("sticky fire");
+    case BEAM_SPORE:                 return ("spores");
+    case BEAM_POISON_ARROW:          return ("poison arrow");
+    case BEAM_HELLFIRE:              return ("hellfire");
+    case BEAM_NAPALM:                return ("sticky fire");
 
-    case BEAM_POTION_STEAM:         // fall through
-    case BEAM_STEAM:                return ("steam");
+    case BEAM_POTION_STEAM:          // fall through
+    case BEAM_STEAM:                 return ("steam");
 
-    case BEAM_ENERGY:               return ("energy");
-    case BEAM_HOLY:                 return ("holy energy");
-    case BEAM_FRAG:                 return ("fragments");
-    case BEAM_LAVA:                 return ("magma");
-    case BEAM_ICE:                  return ("ice");
-    case BEAM_NUKE:                 return ("nuke");
-    case BEAM_LIGHT:                return ("light");
-    case BEAM_RANDOM:               return ("random");
-    case BEAM_CHAOS:                return ("chaos");
-    case BEAM_SLOW:                 return ("slow");
-    case BEAM_HASTE:                return ("haste");
-    case BEAM_MIGHT:                return ("might");
-    case BEAM_HEALING:              return ("healing");
-    case BEAM_PARALYSIS:            return ("paralysis");
-    case BEAM_CONFUSION:            return ("confusion");
-    case BEAM_INVISIBILITY:         return ("invisibility");
-    case BEAM_DIGGING:              return ("digging");
-    case BEAM_TELEPORT:             return ("teleportation");
-    case BEAM_POLYMORPH:            return ("polymorph");
-    case BEAM_CHARM:                return ("enslave");
-    case BEAM_BANISH:               return ("banishment");
-    case BEAM_DEGENERATE:           return ("degeneration");
-    case BEAM_ENSLAVE_UNDEAD:       return ("enslave undead");
-    case BEAM_ENSLAVE_SOUL:         return ("enslave soul");
-    case BEAM_PAIN:                 return ("pain");
-    case BEAM_DISPEL_UNDEAD:        return ("dispel undead");
-    case BEAM_DISINTEGRATION:       return ("disintegration");
-    case BEAM_ENSLAVE_DEMON:        return ("enslave demon");
-    case BEAM_BLINK:                return ("blink");
-    case BEAM_BLINK_CLOSE:          return ("blink close");
-    case BEAM_PETRIFY:              return ("petrify");
-    case BEAM_CORONA:               return ("backlight");
-    case BEAM_PORKALATOR:           return ("porkalator");
-    case BEAM_HIBERNATION:          return ("hibernation");
-    case BEAM_SLEEP:                return ("sleep");
-    case BEAM_BERSERK:              return ("berserk");
-    case BEAM_POTION_BLACK_SMOKE:   return ("black smoke");
-    case BEAM_POTION_GREY_SMOKE:    return ("grey smoke");
-    case BEAM_POTION_BLUE_SMOKE:    return ("blue smoke");
-    case BEAM_POTION_PURPLE_SMOKE:  return ("purple smoke");
-    case BEAM_POTION_RAIN:          return ("rain");
-    case BEAM_POTION_RANDOM:        return ("random potion");
-    case BEAM_POTION_MUTAGENIC:     return ("mutagenic fog");
-    case BEAM_VISUAL:               return ("visual effects");
-    case BEAM_TORMENT_DAMAGE:       return ("torment damage");
-    case BEAM_DEVOUR_FOOD:          return ("devour food");
-    case BEAM_GLOOM:                return ("gloom");
-    case BEAM_INK:                  return ("ink");
-    case BEAM_HOLY_FLAME:           return ("cleansing flame");
-    case BEAM_HOLY_LIGHT:           return ("holy light");
+    case BEAM_ENERGY:                return ("energy");
+    case BEAM_HOLY:                  return ("holy energy");
+    case BEAM_FRAG:                  return ("fragments");
+    case BEAM_LAVA:                  return ("magma");
+    case BEAM_ICE:                   return ("ice");
+    case BEAM_NUKE:                  return ("nuke");
+    case BEAM_LIGHT:                 return ("light");
+    case BEAM_RANDOM:                return ("random");
+    case BEAM_CHAOS:                 return ("chaos");
+    case BEAM_SLOW:                  return ("slow");
+    case BEAM_HASTE:                 return ("haste");
+    case BEAM_MIGHT:                 return ("might");
+    case BEAM_HEALING:               return ("healing");
+    case BEAM_PARALYSIS:             return ("paralysis");
+    case BEAM_CONFUSION:             return ("confusion");
+    case BEAM_INVISIBILITY:          return ("invisibility");
+    case BEAM_DIGGING:               return ("digging");
+    case BEAM_TELEPORT:              return ("teleportation");
+    case BEAM_POLYMORPH:             return ("polymorph");
+    case BEAM_CHARM:                 return ("enslave");
+    case BEAM_BANISH:                return ("banishment");
+    case BEAM_DEGENERATE:            return ("degeneration");
+    case BEAM_ENSLAVE_UNDEAD:        return ("enslave undead");
+    case BEAM_ENSLAVE_SOUL:          return ("enslave soul");
+    case BEAM_PAIN:                  return ("pain");
+    case BEAM_DISPEL_UNDEAD:         return ("dispel undead");
+    case BEAM_DISINTEGRATION:        return ("disintegration");
+    case BEAM_ENSLAVE_DEMON:         return ("enslave demon");
+    case BEAM_BLINK:                 return ("blink");
+    case BEAM_BLINK_CLOSE:           return ("blink close");
+    case BEAM_PETRIFY:               return ("petrify");
+    case BEAM_CORONA:                return ("backlight");
+    case BEAM_PORKALATOR:            return ("porkalator");
+    case BEAM_HIBERNATION:           return ("hibernation");
+    case BEAM_SLEEP:                 return ("sleep");
+    case BEAM_BERSERK:               return ("berserk");
+    case BEAM_POTION_BLACK_SMOKE:    return ("black smoke");
+    case BEAM_POTION_GREY_SMOKE:     return ("grey smoke");
+    case BEAM_POTION_BLUE_SMOKE:     return ("blue smoke");
+    case BEAM_POTION_PURPLE_SMOKE:   return ("purple smoke");
+    case BEAM_POTION_RAIN:           return ("rain");
+    case BEAM_POTION_RANDOM:         return ("random potion");
+    case BEAM_POTION_MUTAGENIC:      return ("mutagenic fog");
+    case BEAM_VISUAL:                return ("visual effects");
+    case BEAM_TORMENT_DAMAGE:        return ("torment damage");
+    case BEAM_DEVOUR_FOOD:           return ("devour food");
+    case BEAM_GLOOM:                 return ("gloom");
+    case BEAM_INK:                   return ("ink");
+    case BEAM_HOLY_FLAME:            return ("cleansing flame");
+    case BEAM_HOLY_LIGHT:            return ("holy light");
 
-    case NUM_BEAMS:                 DEBUGSTR("invalid beam type");
-                                    return ("INVALID");
+    case NUM_BEAMS:                  DEBUGSTR("invalid beam type");
+                                     return ("INVALID");
     }
     DEBUGSTR("unknown beam type");
     return("UNKNOWN");
