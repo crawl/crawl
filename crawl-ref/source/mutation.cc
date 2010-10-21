@@ -1869,6 +1869,7 @@ int how_mutated(bool all, bool levels)
     return (j);
 }
 
+// Return whether current tension is balanced
 bool balance_demonic_guardian()
 {
     const int mutlevel = player_mutation_level(MUT_DEMONIC_GUARDIAN);
@@ -1876,8 +1877,9 @@ bool balance_demonic_guardian()
     int tension = get_tension(GOD_NO_GOD), mons_val = 0, total = 0;
     monster_iterator mons;
 
+    // tension is unfavorably high, perhaps another guardian should spawn
     if (tension*3/4 > mutlevel*6 + random2(mutlevel*mutlevel*2))
-        return (true);
+        return (false);
 
     for (int i = 0; mons && i <= 20/mutlevel; mons++)
     {
@@ -1896,17 +1898,24 @@ bool balance_demonic_guardian()
             total += mons_val;
     }
 
-    return (false);
+    return (true);
 }
 
+// Primary function to handle and balance demonic guardians, if the tension
+// is unfavorably high and a guardian was not recently spawned, a new guardian
+// will be made, if tension is below a threshold (determined by the mutations
+// level and a bit of randomness), guardians may be dismissed in
+// balance_demonic_guardian()
 void check_demonic_guardian()
 {
     const int mutlevel = player_mutation_level(MUT_DEMONIC_GUARDIAN);
-    if (balance_demonic_guardian() &&
+
+    if (!balance_demonic_guardian() &&
         you.duration[DUR_DEMONIC_GUARDIAN] == 0)
     {
-        const monster_type disallowed[] = { MONS_NEQOXEC, MONS_YNOXINUL, MONS_HELLWING,
-                                            MONS_BLUE_DEATH, MONS_GREEN_DEATH,
+        const monster_type disallowed[] = {
+            MONS_NEQOXEC, MONS_YNOXINUL, MONS_HELLWING,
+            MONS_BLUE_DEATH, MONS_GREEN_DEATH,
                                             MONS_CACODEMON };
 
         monster_type mt;
@@ -1929,7 +1938,8 @@ void check_demonic_guardian()
         menv[guardian].flags |= MF_NO_REWARD;
         menv[guardian].flags |= MF_DEMONIC_GUARDIAN;
 
-        you.duration[DUR_DEMONIC_GUARDIAN] = 100 + random2(200);
+        // no more guardians for mutlevel+1 - mutlevel+20 turns
+        you.duration[DUR_DEMONIC_GUARDIAN] = 10*(mutlevel + random2(20));
     }
 }
 
