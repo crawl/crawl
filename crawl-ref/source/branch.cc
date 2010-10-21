@@ -98,27 +98,21 @@ int current_level_ambient_noise()
     switch (you.level_type) {
     case LEVEL_DUNGEON:
         return branch_ambient_noise(you.where_are_you);
-    break;
     case LEVEL_ABYSS:
         // should probably randomize this somehow - change it up when the
         // abyss shifts?
         return 0;
-    break;
     case LEVEL_PANDEMONIUM:
         // same as abyss
         return 0;
-    break;
     case LEVEL_PORTAL_VAULT:
         // should be overridable in vaults
         return 0;
-    break;
     case LEVEL_LABYRINTH:
         return 0;
-        break;
     default:
         dprf("unknown level type in current_level_ambient_noise: %d", you.level_type);
         return 0;
-    break;
     }
 }
 
