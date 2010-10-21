@@ -1267,13 +1267,12 @@ static int _calc_breath_ability_range(ability_type ability)
     {
     case ABIL_BREATHE_FIRE:         return 6;
     case ABIL_BREATHE_FROST:        return 6;
-    case ABIL_BREATHE_POISON:       return 7;
+    case ABIL_BREATHE_MEPHITIC:     return 7;
     case ABIL_BREATHE_LIGHTNING:    return 8;
     case ABIL_SPIT_ACID:            return 8;
     case ABIL_BREATHE_POWER:        return 8;
     case ABIL_BREATHE_STICKY_FLAME: return 1;
     case ABIL_BREATHE_STEAM:        return 7;
-    case ABIL_BREATHE_MEPHITIC:     return 7;
     default:
         ASSERT(!"Bad breath type!");
         break;
