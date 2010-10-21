@@ -1218,7 +1218,8 @@ bool mons_class_can_use_stairs(int mc)
     return ((!mons_class_is_zombified(mc) || mc == MONS_SPECTRAL_THING)
             && !mons_is_tentacle(mc)
             && mc != MONS_SILENT_SPECTRE
-            && mc != MONS_PLAYER_GHOST);
+            && mc != MONS_PLAYER_GHOST
+            && mc != MONS_GERYON);
 }
 
 bool mons_can_use_stairs(const monster* mon)
