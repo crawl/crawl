@@ -839,7 +839,15 @@ int get_taskbar_height()
     RECT rect;
     HWND taskbar = FindWindow("Shell_traywnd", NULL);
     if(taskbar && GetWindowRect(taskbar, &rect)) {
-        return rect.bottom - rect.top;
+        int height = rect.bottom - rect.top;
+
+        OSVERSIONINFOEX osvi;
+        osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+        if(GetVersionEx((OSVERSIONINFO *) &osvi))
+            if (osvi.dwMajorVersion >= 6 && osvi.dwMinorVersion >= 1)
+                height += 3; // Windows 7 taskbar behave strangely.
+
+        return height;
     }
     return 0;
 }
