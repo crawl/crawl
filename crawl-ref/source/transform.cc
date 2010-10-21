@@ -482,7 +482,7 @@ monster_type dragon_form_dragon_type()
         case SP_RED_DRACONIAN:
         default:
              return MONS_DRAGON;
-         }
+    }
 }
 
 // Transforms you into the specified form. If force is true, checks for
