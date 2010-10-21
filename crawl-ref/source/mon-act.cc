@@ -3159,10 +3159,6 @@ static bool _mon_can_move_to_pos(const monster* mons,
         // Don't burrow out of bounds.
         if (!in_bounds(targ))
             return (false);
-
-        // Don't burrow at an angle (legacy behaviour).
-        if (delta.x != 0 && delta.y != 0)
-            return (false);
     }
     else if (no_water && feat_is_water(target_grid))
         return (false);
