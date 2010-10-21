@@ -2968,6 +2968,9 @@ static tileidx_t _tileidx_misc(const item_def &item)
     }
     case MISC_RUNE_OF_ZOT:
         return _tileidx_rune(item);
+
+    case MISC_QUAD_DAMAGE:
+        return TILE_MISC_QUAD_DAMAGE;
     }
 
     return TILE_ERROR;
