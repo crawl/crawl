@@ -1329,6 +1329,7 @@ enum enchant_type
     ENCH_PORTAL_PACIFIED,
     ENCH_WITHDRAWN,
     ENCH_ATTACHED,
+    ENCH_LIFE_TIMER,    // Minimum time demonic guardian must exist.
 
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.

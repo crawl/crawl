@@ -4807,6 +4807,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_MIRROR_DAMAGE:
     case ENCH_STONESKIN:
     case ENCH_FEAR_INSPIRING:
+    case ENCH_LIFE_TIMER:
         decay_enchantment(me);
         break;
 
@@ -6314,7 +6315,7 @@ static const char *enchant_names[] =
     "insane", "silenced", "awaken_forest", "exploding", "bleeding",
     "tethered", "severed", "antimagic", "fading_away", "preparing_resurrect", "regen",
     "magic_res", "mirror_dam", "stoneskin", "fear inspiring", "temporarily pacified",
-    "withdrawn", "attached", "buggy",
+    "withdrawn", "attached", "", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -6520,6 +6521,8 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_SLEEP_WARY:
         cturn = 1000 / _mod_speed(50, mons->speed);
         break;
+    case ENCH_LIFE_TIMER:
+        cturn = 10 * (4 + random2(4)) / _mod_speed(10, mons->speed);
     default:
         break;
     }
@@ -6528,6 +6531,8 @@ int mon_enchant::calc_duration(const monster* mons,
 
     int raw_duration = (cturn * speed_to_duration(mons->speed));
     raw_duration = std::max(15, fuzz_value(raw_duration, 60, 40));
+
+    dprf("cturn: %d, raw_duration: %d", cturn, raw_duration);
 
     return (raw_duration);
 }
