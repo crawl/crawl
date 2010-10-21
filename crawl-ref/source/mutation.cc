@@ -1888,7 +1888,9 @@ bool balance_demonic_guardian()
 
         if (testbits(mons->flags, MF_DEMONIC_GUARDIAN)
             && total < random2(mutlevel * 5)
-            && att == ATT_FRIENDLY && !one_chance_in(3))
+            && att == ATT_FRIENDLY
+            && !one_chance_in(3)
+            && !mons->has_ench(ENCH_LIFE_TIMER))
         {
             mpr(mons->name(DESC_CAP_THE) + " "
                 + summoned_poof_msg(*mons) + "!", MSGCH_PLAIN);
@@ -1938,7 +1940,9 @@ void check_demonic_guardian()
         menv[guardian].flags |= MF_NO_REWARD;
         menv[guardian].flags |= MF_DEMONIC_GUARDIAN;
 
-        // no more guardians for mutlevel+1 - mutlevel+20 turns
+        menv[guardian].add_ench(ENCH_LIFE_TIMER);
+
+        // no more guardians for mutlevel+1 to mutlevel+20 turns
         you.duration[DUR_DEMONIC_GUARDIAN] = 10*(mutlevel + random2(20));
     }
 }
