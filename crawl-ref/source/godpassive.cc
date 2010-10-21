@@ -241,16 +241,19 @@ int ash_bondage_level(int type_only)
         }
 
         // transformed away slots are still considered to be possibly bound
-        if (you.equip[i] != -1)
+        if (you_can_wear(i, true))
         {
             slots[s]++;
-            const item_def& item = you.inv[you.equip[i]];
-            if (item.cursed()
-                && (i != EQ_WEAPON
-                    || item.base_type == OBJ_WEAPONS
-                    || item.base_type == OBJ_STAVES))
+            if (you.equip[i] != -1)
             {
-                cursed[s]++;
+                const item_def& item = you.inv[you.equip[i]];
+                if (item.cursed()
+                    && (i != EQ_WEAPON
+                        || item.base_type == OBJ_WEAPONS
+                        || item.base_type == OBJ_STAVES))
+                {
+                    cursed[s]++;
+                }
             }
         }
     }
