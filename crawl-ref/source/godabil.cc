@@ -2425,3 +2425,23 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
     flash_view(0);
     mpr("You return to the normal time flow.");
 }
+
+bool ashenzari_transfer_knowledge()
+{
+    skill_type from_skill = list_skills("Select the source skill");
+    if (from_skill == SK_NONE)
+        return false;
+
+    skill_type to_skill = list_skills("Select the destination skill",
+                                      from_skill);
+    if (to_skill == SK_NONE)
+        return false;
+
+    mprf("As you forget about %s, you feel ready to understand %s",
+         skill_name(from_skill), skill_name(to_skill));
+
+     mprf("Well, you would if this were implemented...");
+     return false;
+
+    // return true;
+}

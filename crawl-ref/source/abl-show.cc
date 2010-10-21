@@ -157,7 +157,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       ABIL_CHEIBRIADOS_SLOUCH, ABIL_CHEIBRIADOS_TIME_STEP },
     // Ashenzari
     { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
-      ABIL_ASHENZARI_SCRYING, ABIL_NON_ABILITY },
+      ABIL_ASHENZARI_SCRYING, ABIL_ASHENZARI_TRANSFER_KNOWLEDGE },
 };
 
 // The description screen was way out of date with the actual costs.
@@ -351,6 +351,7 @@ static const ability_def Ability_List[] =
       10, 0, 200, 10, ABFLAG_NONE },
 
     // Ashenzari
+    { ABIL_ASHENZARI_TRANSFER_KNOWLEDGE, "Transfer Knowledge", 0, 0, 0, 10, ABFLAG_NONE},
     { ABIL_ASHENZARI_SCRYING, "Scrying",
       4, 0, 50, generic_cost::range(5, 6), ABFLAG_NONE },
 
@@ -575,6 +576,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     // begin spell abilities
     case ABIL_DELAYED_FIREBALL:
     case ABIL_MUMMY_RESTORATION:
+    case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
         perfect = true;
         failure = 0;
         break;
@@ -2056,6 +2058,14 @@ static bool _do_ability(const ability_def& abil)
             mpr("You gain astral sight.");
         you.duration[DUR_SCRYING] = 100 + random2avg(you.piety * 2, 2);
         you.xray_vision = true;
+        break;
+
+    case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
+        if (!ashenzari_transfer_knowledge())
+        {
+            canned_msg(MSG_OK);
+            return (false);
+        }
         break;
 
 
