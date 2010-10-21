@@ -611,6 +611,7 @@ wraith MONS_WRAITH
 shadow_wraith MONS_SHADOW_WRAITH
 freezing_wraith MONS_FREEZING_WRAITH
 phantasmal_warrior MONS_PHANTASMAL_WARRIOR
+greater_wraith MONS_GREATER_WRAITH
 
 %sdir dc-mon
 %rim 0
