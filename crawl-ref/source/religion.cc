@@ -327,10 +327,9 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Ashenzari
     { "",
       "Ashenzari helps you learn.",
-      "Ashenzari augments your vision.",
+      "Ashenzari keeps your vision and mind clear.",
       "scry through walls",
-      "Ashenzari helps you think straight.",
-      // "Ashenzari helps you to reconsider your skills."
+      "Ashenzari helps you to reconsider your skills."
     },
 };
 
@@ -443,10 +442,9 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Ashenzari
     { "",
       "Ashenzari no longer helps you learn.",
-      "Ashenzari no longer augments your vision.",
+      "Ashenzari no longer augments your vision and mind.",
       "scry through walls",
-      "Ashenzari no longer helps you think straight.",
-      //"Ashenzari no longer helps you to reconsider your skills."
+      "Ashenzari no longer helps you to reconsider your skills."
     },
 };
 
@@ -2670,12 +2668,12 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
             if (you.religion == GOD_ASHENZARI)
             {
                 if (i == 2)
+                {
                     autotoggle_autopickup(false);
-
-                // Inconsistent with donning amulets, but matches the message
-                // better and is not abusable.
-                if (i == 4)
+                    // Inconsistent with donning amulets, but matches the
+                    // message better and is not abusable.
                     you.duration[DUR_CONF] = 0;
+                }
 
                 ash_id_inventory();
             }
