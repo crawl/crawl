@@ -112,6 +112,9 @@ int current_level_ambient_noise()
         // should be overridable in vaults
         return 0;
     break;
+    case LEVEL_LABYRINTH:
+        return 0;
+        break;
     default:
         dprf("unknown level type in current_level_ambient_noise: %d", you.level_type);
         return 0;
