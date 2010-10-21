@@ -2051,3 +2051,52 @@ void dump_skills(std::string &text)
         }
     }
 }
+
+skill_type list_skills(std::string title, skill_type dont_list)
+{
+    menu_letter lcount = 'a';
+
+    Menu skill_menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING);
+
+    MenuEntry* me = new MenuEntry(title);
+    me->colour = WHITE;
+    skill_menu.set_title(me);
+
+    for (int i = 0; i < ndisplayed_skills; ++i)
+    {
+        skill_type sk = skill_display_order[i];
+
+        if (sk == dont_list)
+            continue;
+
+        if (dont_list != SK_NONE && you.skills[sk] == 27)
+            continue;
+
+        if (you.skills[sk] > 0)
+        {
+            std::string skill_text = make_stringf("%s (%d)", skill_name(sk),
+                                                  you.skills[sk]);
+            me = new MenuEntry(skill_text, MEL_ITEM, 1, lcount);
+            if (you.practise_skill[sk] == 0)
+                me->colour = DARKGREY;
+            else if (you.skills[sk] == 27)
+                me->colour = YELLOW;
+            skill_type* skp = new skill_type(sk);
+            me->data = skp;
+            skill_menu.add_entry(me);
+            lcount++;
+        }
+    }
+    while (true)
+    {
+        std::vector<MenuEntry*> sel = skill_menu.show();
+        if (!crawl_state.doing_prev_cmd_again)
+            redraw_screen();
+        if (sel.empty())
+            return SK_NONE;
+
+        ASSERT(sel.size() == 1);
+        ASSERT(sel[0]->hotkeys.size() == 1);
+        return *static_cast<skill_type*>(sel[0]->data);
+    }
+}

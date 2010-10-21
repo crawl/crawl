@@ -330,6 +330,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "Ashenzari augments your vision.",
       "scry through walls",
       "Ashenzari helps you think straight."
+      "Ashenzari helps you to reconsider your skills."
     },
 };
 
@@ -445,6 +446,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "Ashenzari no longer augments your vision.",
       "scry through walls",
       "Ashenzari no longer helps you think straight."
+      "Ashenzari no longer helps you to reconsider your skills."
     },
 };
 
