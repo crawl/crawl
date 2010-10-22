@@ -45,6 +45,7 @@
 #include "player-stats.h"
 #include "random.h"
 #include "religion.h"
+#include "skills.h"
 #include "skills2.h"
 #include "shopping.h"
 #include "shout.h"
@@ -2428,20 +2429,57 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
 
 bool ashenzari_transfer_knowledge()
 {
-    skill_type from_skill = list_skills("Select the source skill");
-    if (from_skill == SK_NONE)
+    skill_type fsk = list_skills("Select the source skill");
+    if (fsk == SK_NONE)
         return false;
 
-    skill_type to_skill = list_skills("Select the destination skill",
-                                      from_skill);
-    if (to_skill == SK_NONE)
+    skill_type tsk = list_skills("Select the destination skill", fsk);
+    if (tsk == SK_NONE)
         return false;
 
     mprf("As you forget about %s, you feel ready to understand %s",
-         skill_name(from_skill), skill_name(to_skill));
+         skill_name(fsk), skill_name(tsk));
 
-     mprf("Well, you would if this were implemented...");
-     return false;
+    unsigned int fsk_points = you.skill_points[fsk];
+    int exp_pool = you.exp_available;
+    int skp_lost = 0;
+    int skp_gained = 0;
+    dprf("you.total_skill_points: %d", you.total_skill_points);
 
-    // return true;
+    skp_lost = you.skill_points[fsk] / 2;
+    skp_lost = std::max(skp_lost, 1000);
+    int train_count = skp_lost / 10;
+    change_skill_points(fsk, -skp_lost, false);
+
+    // Apply the 10% XP penalty
+    skp_lost *= 0.9;
+
+    while (skp_gained < skp_lost && train_count > 0)
+    {
+        you.exp_available = 250;
+        skp_gained += exercise(tsk, 1, false);
+        train_count--;
+    }
+
+    // If there is anything left, we remove the XP penalty and give
+    // it back to the first skill
+    if (skp_gained < skp_lost)
+        change_skill_points(fsk, (skp_lost - skp_gained) / 0.9, true);
+    else
+        change_skill_points(fsk, 0, true);
+
+    change_skill_points(tsk, 0, true);
+
+    // We restore the XP pool
+    you.exp_available = exp_pool;
+
+#ifdef DEBUG_DIAGNOSTICS
+    dprf("Maximum skill points transferable: %d", skp_lost);
+    dprf("skill %s lost %d skill points", skill_name(fsk),
+         fsk_points - you.skill_points[fsk]);
+    dprf("skill %s gained %d skill points", skill_name(tsk), skp_gained);
+    dprf("you.total_skill_points: %d", you.total_skill_points);
+#endif
+
+    return true;
 }
