@@ -141,8 +141,110 @@ static int _calc_skill_cost(int skill_cost_level, int skill_level)
     return (ret);
 }
 
+void _change_skill_level(skill_type exsk, int n)
+{
+    ASSERT(n != 0);
+    skill_type old_best_skill = best_skill(SK_FIGHTING, (NUM_SKILLS - 1));
+
+    you.skills[exsk] += n;
+
+    if (n > 0)
+        take_note(Note(NOTE_GAIN_SKILL, exsk, you.skills[exsk]));
+
+    if (you.skills[exsk] == 27)
+    {
+        mprf(MSGCH_INTRINSIC_GAIN, "You have mastered %s!", skill_name(exsk));
+    }
+    else if (you.skills[exsk] == 1 && n > 0)
+    {
+        mprf(MSGCH_INTRINSIC_GAIN, "You have gained %s skill!", skill_name(exsk));
+        hints_gained_new_skill(exsk);
+    }
+    else if (abs(n) == 1)
+    {
+        mprf(MSGCH_INTRINSIC_GAIN, "Your %s skill %s to level %d!",
+             skill_name(exsk), (n > 0) ? "increases" : "decreases",
+             you.skills[exsk]);
+    }
+    else
+    {
+        mprf(MSGCH_INTRINSIC_GAIN, "Your %s skill %s %d levels and is now at "
+             "level %d!", skill_name(exsk), (n > 0) ? "gained" : "lost",
+             abs(n), you.skills[exsk]);
+    }
+
+    if (n > 0)
+        learned_something_new(HINT_SKILL_RAISE);
+
+    // Recalculate this skill's order for tie breaking skills
+    // at its new level.   See skills2.cc::init_skill_order()
+    // for more details.  -- bwr
+    you.skill_order[exsk] = 0;
+    for (int i = SK_FIGHTING; i < NUM_SKILLS; ++i)
+        if (i != exsk && you.skills[i] >= you.skills[exsk])
+            you.skill_order[exsk]++;
+
+    if (exsk == SK_FIGHTING)
+        calc_hp();
+
+    if (exsk == SK_INVOCATIONS || exsk == SK_SPELLCASTING)
+        calc_mp();
+
+    if (exsk == SK_DODGING || exsk == SK_ARMOUR)
+        you.redraw_evasion = true;
+
+    if (exsk == SK_ARMOUR || exsk == SK_SHIELDS
+        || exsk == SK_ICE_MAGIC || exsk == SK_EARTH_MAGIC
+        || you.duration[DUR_TRANSFORMATION] > 0)
+    {
+        you.redraw_armour_class = true;
+    }
+
+    const skill_type best_spell = best_skill(SK_SPELLCASTING,
+                                             SK_POISON_MAGIC);
+    if (exsk == SK_SPELLCASTING && you.skills[exsk] == 1
+        && best_spell == SK_SPELLCASTING && n > 0)
+    {
+        mpr("You're starting to get the hang of this magic thing.");
+    }
+
+    const skill_type best = best_skill(SK_FIGHTING, (NUM_SKILLS - 1));
+    if (best != old_best_skill || old_best_skill == exsk)
+        redraw_skill(you.your_name, player_title());
+
+    if (you.weapon() && item_is_staff(*you.weapon()))
+        maybe_identify_staff(*you.weapon());
+
+    // TODO: also identify rings of wizardry.
+
+    // Ogres -> ogre mages.
+    update_player_symbol();
+}
+
+static void _check_skill_level_change(skill_type sk)
+{
+    int new_level = you.skills[sk];
+    while (1)
+    {
+        const unsigned int prev = skill_exp_needed(new_level)
+                                 * species_skills(sk, you.species) / 100;
+        const unsigned int next = skill_exp_needed(new_level + 1)
+                                 * species_skills(sk, you.species) / 100;
+
+        if (you.skill_points[sk] >= next)
+            new_level++;
+        else if (you.skill_points[sk] < prev)
+            new_level--;
+        else
+            break;
+    }
+
+    if (new_level != you.skills[sk])
+        _change_skill_level(sk, new_level - you.skills[sk]);
+}
+
 // returns total number of skill points gained
-int exercise(int exsk, int deg)
+int exercise(int exsk, int deg, bool change_level)
 {
     int ret = 0;
 
@@ -153,7 +255,7 @@ int exercise(int exsk, int deg)
 
     while (deg > 0)
     {
-        if (you.exp_available <= 0 || you.skills[exsk] >= 27)
+        if ((you.exp_available <= 0 || you.skills[exsk] >= 27))
             break;
 
         if (you.practise_skill[exsk] || one_chance_in(4))
@@ -164,6 +266,9 @@ int exercise(int exsk, int deg)
 
     if (ret)
         dprf("Exercised %s (deg: %d) by %d", skill_name(exsk), deg, ret);
+
+    if (change_level)
+        _check_skill_level_change(static_cast<skill_type>(exsk));
 
     return (ret);
 }
@@ -280,74 +385,24 @@ static int _stat_mult(skill_type exsk, int skill_inc)
     return (skill_inc * std::max<int>(5, stat) / 10);
 }
 
-static void _gain_skill_level(skill_type exsk)
+static void _check_skill_cost_change()
 {
-    skill_type old_best_skill = best_skill(SK_FIGHTING, (NUM_SKILLS - 1));
-
-    you.skills[exsk]++;
-
-    take_note(Note(NOTE_GAIN_SKILL, exsk, you.skills[exsk]));
-
-    if (you.skills[exsk] == 27)
+    if (you.skill_cost_level < 27
+        && you.total_skill_points
+           >= skill_cost_needed(you.skill_cost_level + 1))
     {
-        mprf(MSGCH_INTRINSIC_GAIN, "You have mastered %s!", skill_name(exsk));
-    }
-    else if (you.skills[exsk] == 1)
-    {
-        mprf(MSGCH_INTRINSIC_GAIN, "You have gained %s skill!", skill_name(exsk));
-        hints_gained_new_skill(exsk);
-    }
-    else
-    {
-        mprf(MSGCH_INTRINSIC_GAIN, "Your %s skill increases to level %d!",
-             skill_name(exsk), you.skills[exsk]);
+        you.skill_cost_level++;
     }
 
-    learned_something_new(HINT_SKILL_RAISE);
+}
 
-    // Recalculate this skill's order for tie breaking skills
-    // at its new level.   See skills2.cc::init_skill_order()
-    // for more details.  -- bwr
-    you.skill_order[exsk] = 0;
-    for (int i = SK_FIGHTING; i < NUM_SKILLS; ++i)
-        if (i != exsk && you.skills[i] >= you.skills[exsk])
-            you.skill_order[exsk]++;
-
-    if (exsk == SK_FIGHTING)
-        calc_hp();
-
-    if (exsk == SK_INVOCATIONS || exsk == SK_SPELLCASTING)
-        calc_mp();
-
-    if (exsk == SK_DODGING || exsk == SK_ARMOUR)
-        you.redraw_evasion = true;
-
-    if (exsk == SK_ARMOUR || exsk == SK_SHIELDS
-        || exsk == SK_ICE_MAGIC || exsk == SK_EARTH_MAGIC
-        || you.duration[DUR_TRANSFORMATION] > 0)
-    {
-        you.redraw_armour_class = true;
-    }
-
-    const skill_type best_spell = best_skill(SK_SPELLCASTING,
-                                             SK_POISON_MAGIC);
-    if (exsk == SK_SPELLCASTING
-        && you.skills[exsk] == 1 && best_spell == SK_SPELLCASTING)
-    {
-        mpr("You're starting to get the hang of this magic thing.");
-    }
-
-    const skill_type best = best_skill(SK_FIGHTING, (NUM_SKILLS - 1));
-    if (best != old_best_skill || old_best_skill == exsk)
-        redraw_skill(you.your_name, player_title());
-
-    if (you.weapon() && item_is_staff(*you.weapon()))
-        maybe_identify_staff(*you.weapon());
-
-    // TODO: also identify rings of wizardry.
-
-    // Ogres -> ogre mages.
-    update_player_symbol();
+void change_skill_points(skill_type sk, int points, bool change_level)
+{
+    you.skill_points[sk] += points;
+    you.total_skill_points += points;
+    _check_skill_cost_change();
+    if (change_level)
+        _check_skill_level_change(sk);
 }
 
 static int _exercise2(int exski)
@@ -421,22 +476,11 @@ static int _exercise2(int exski)
 
     you.skill_points[exsk] += skill_inc;
     you.exp_available -= cost;
-
     you.total_skill_points += skill_inc;
-    if (you.skill_cost_level < 27
-        && you.total_skill_points
-               >= skill_cost_needed(you.skill_cost_level + 1))
-    {
-        you.skill_cost_level++;
-    }
 
+    _check_skill_cost_change();
     you.exp_available = std::max(0, you.exp_available);
     you.redraw_experience = true;
-
-    const unsigned int next = skill_exp_needed(you.skills[exsk] + 1)
-                              * species_skills(exsk, you.species) / 100;
-    if (you.skill_points[exsk] > next)
-        _gain_skill_level(exsk);
 
     return (skill_inc);
 }
