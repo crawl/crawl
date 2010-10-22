@@ -269,13 +269,12 @@ bool monster::can_drown() const
     }
 
     // Mummies can fall apart in water or be incinerated in lava.
-    // Ghouls, vampires, and demons can drown in water or lava.  Others
-    // just "sink like a rock", to never be seen again.
+    // Ghouls and vampires can drown in water or lava.  Others just
+    // "sink like a rock", to never be seen again.
     return (!res_asphyx()
             || mons_genus(type) == MONS_MUMMY
             || mons_genus(type) == MONS_GHOUL
-            || mons_genus(type) == MONS_VAMPIRE
-            || holiness() == MH_DEMONIC);
+            || mons_genus(type) == MONS_VAMPIRE);
 }
 
 size_type monster::body_size(size_part_type /* psize */, bool /* base */) const
