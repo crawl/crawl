@@ -4311,8 +4311,7 @@ int get_real_hp(bool trans, bool rotted)
     int hitp;
 
     hitp  = (you.base_hp - 5000) + (you.base_hp2 - 5000);
-    hitp += (you.experience_level * you.skills[SK_FIGHTING]) /
-            (you.species == SP_CAT ? 7 : 5);
+    hitp += (you.experience_level * you.skills[SK_FIGHTING]) / 5;
 
     // Being berserk makes you resistant to damage. I don't know why.
     if (trans && you.berserk())
