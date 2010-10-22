@@ -5798,7 +5798,7 @@ int player::res_elec() const
 
 int player::res_water_drowning() const
 {
-    return (res_asphyx()
+    return (is_unbreathing()
             || (you.species == SP_MERFOLK && !transform_changed_physiology()));
 }
 
