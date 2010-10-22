@@ -4548,20 +4548,28 @@ bool curare_hits_player(int death_source, int amount, const bolt &beam)
 
     if (you.res_asphyx() <= 0)
     {
-        hurted = roll_dice(2, 6);
-
-        // Note that the hurtage is halved by poison resistance.
-        if (res_poison)
-            hurted /= 2;
-
-        if (hurted)
+        // Players with tracheae who don't resist asphyxiation are
+        // paralysed instead of asphyxiated.
+        if (you.has_trachea())
+            potion_effect(POT_PARALYSIS, 2 + random2(4 + amount));
+        else
         {
-            mpr("You have difficulty breathing.");
-            ouch(hurted, death_source, KILLED_BY_CURARE,
-                 "curare-induced apnoea");
-        }
+            hurted = roll_dice(2, 6);
 
-        potion_effect(POT_SLOWING, 2 + random2(4 + amount));
+            // Note that the hurtage is halved by poison resistance.
+            if (res_poison)
+                hurted /= 2;
+
+            if (hurted)
+            {
+                mpr("You have difficulty breathing.");
+                ouch(hurted, death_source, KILLED_BY_CURARE,
+                     "curare-induced apnoea");
+
+            }
+
+            potion_effect(POT_SLOWING, 2 + random2(4 + amount));
+        }
     }
 
     return (hurted > 0);
@@ -6143,6 +6151,14 @@ void player::petrify(actor *who, int str)
 void player::slow_down(actor *foe, int str)
 {
     ::slow_player(str);
+}
+
+bool player::has_trachea() const
+{
+    if (attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER)
+        return (true);
+
+    return (false);
 }
 
 int player::has_claws(bool allow_tran) const

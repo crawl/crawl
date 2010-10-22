@@ -3212,6 +3212,29 @@ int monster::res_water_drowning() const
     }
 }
 
+bool monster::has_trachea() const
+{
+    int mc = mons_base_type(this);
+
+    switch (mons_base_char(mc))
+    {
+    case 'a': // ants
+    case 'k': // killer bees
+    case 's': // spiders and insects
+    case 'y': // flying insects
+        return (true);
+
+    case 'b': // batty monsters
+        return (mc == MONS_BUTTERFLY);
+
+    case 'B': // beetles
+        return (mc != MONS_PROGRAM_BUG);
+
+    default:
+        return (false);
+    }
+}
+
 int monster::res_poison() const
 {
     int u = get_mons_resists(this).poison;
