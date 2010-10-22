@@ -937,9 +937,14 @@ bool melee_attack::player_attack()
     {
         print_wounds(defender->as_monster());
 
+        // Actually apply the bleeding effect, this can come from an aux claw
+        // or a main hand claw attack and up to now has not actually happened.
         const int degree = you.has_claws();
-        if (apply_bleeding && defender->can_bleed() && degree > 0)
+        if (apply_bleeding && defender->can_bleed()
+            && degree > 0 && damage_done > 0)
+        {
             defender->as_monster()->bleed(3 + roll_dice(degree, 3), degree);
+        }
     }
 
     return (did_primary_hit || did_hit);
