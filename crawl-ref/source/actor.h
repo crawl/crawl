@@ -60,6 +60,8 @@ public:
     // Returns true if the actor is exceptionally well balanced.
     virtual bool      extra_balanced() const = 0;
 
+    virtual bool      has_trachea() const = 0;
+
     virtual int       get_experience_level() const = 0;
 
     virtual bool can_pass_through_feat(dungeon_feature_type grid) const = 0;

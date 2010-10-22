@@ -1997,20 +1997,27 @@ bool curare_hits_monster(actor *agent, monster* mons, kill_category who,
 
     if (!mons->res_asphyx())
     {
-        hurted = roll_dice(2, 6);
-
-        // Note that the hurtage is halved by poison resistance.
-        if (mons->res_poison() > 0)
-            hurted /= 2;
-
-        if (hurted)
+        // Monsters with tracheae who don't resist asphyxiation are
+        // paralysed instead of asphyxiated.
+        if (mons->has_trachea())
+            enchant_monster_with_flavour(mons, agent, BEAM_PARALYSIS);
+        else
         {
-            simple_monster_message(mons, " convulses.");
-            mons->hurt(agent, hurted, BEAM_POISON);
-        }
+            hurted = roll_dice(2, 6);
 
-        if (mons->alive())
-            enchant_monster_with_flavour(mons, agent, BEAM_SLOW);
+            // Note that the hurtage is halved by poison resistance.
+            if (mons->res_poison() > 0)
+                hurted /= 2;
+
+            if (hurted)
+            {
+                simple_monster_message(mons, " convulses.");
+                mons->hurt(agent, hurted, BEAM_POISON);
+            }
+
+            if (mons->alive())
+                enchant_monster_with_flavour(mons, agent, BEAM_SLOW);
+        }
     }
 
     // Deities take notice.
