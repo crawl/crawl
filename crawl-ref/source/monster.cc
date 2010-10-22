@@ -271,7 +271,7 @@ bool monster::can_drown() const
     // Mummies can fall apart in water or be incinerated in lava.
     // Ghouls and vampires can drown in water or lava.  Others just
     // "sink like a rock", to never be seen again.
-    return (!res_asphyx()
+    return (!res_water_drowning()
             || mons_genus(type) == MONS_MUMMY
             || mons_genus(type) == MONS_GHOUL
             || mons_genus(type) == MONS_VAMPIRE);
@@ -3196,10 +3196,8 @@ int monster::res_asphyx() const
 
 int monster::res_water_drowning() const
 {
-    const int res = res_asphyx();
-
-    if (res)
-        return (res);
+    if (is_unbreathing())
+        return (1);
 
     switch (mons_habitat(this))
     {
