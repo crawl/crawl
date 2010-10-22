@@ -1964,6 +1964,7 @@ void bring_to_safety()
         if (!in_bounds(pos)
             || grd(pos) != DNGN_FLOOR
             || env.cgrid(pos) != EMPTY_CLOUD
+            || monster_at(pos)
             || crawl_state.game_is_sprint()
                && distance(pos, you.pos()) > dist_range(10))
         {
