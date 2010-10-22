@@ -411,23 +411,15 @@ static std::string _get_unseen_branches()
         const branch_type branch = branches[i].id;
 
         if (i != BRANCH_SWAMP && i != BRANCH_SNAKE_PIT && i != BRANCH_SHOALS)
-        {
             continue;
-        }
 
         if (stair_level.find(branch) != stair_level.end())
-        {
             possibly_missing_lair_branches++;
-        }
         else
-        {
             missing_lair_branch = i;
-        }
     }
     if (possibly_missing_lair_branches < 2)
-    {
         missing_lair_branch = -1;
-    }
 
     for (int i = BRANCH_FIRST_NON_DUNGEON; i < NUM_BRANCHES; i++)
     {
@@ -647,9 +639,7 @@ static std::string _get_portals()
     std::string disp;
 
     if (!portals_present.empty() || !portal_vaults_present.empty())
-    {
         disp += "\n<green>Portals:</green>\n";
-    }
     disp += _portals_description_string();
     disp += _portal_vaults_description_string();
 
@@ -707,13 +697,9 @@ static std::string _get_notes()
                     disp += depth_str;
                     disp += " ";
                     if (level_annotation_has("!", li))
-                    {
                         disp += get_coloured_level_annotation(LIGHTRED, li);
-                    }
                     else
-                    {
                         disp += get_coloured_level_annotation(LIGHTMAGENTA, li);
-                    }
                     disp += "\n";
                 }
             }
