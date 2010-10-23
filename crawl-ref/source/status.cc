@@ -216,6 +216,7 @@ void fill_status_info(int status, status_info* inf)
     if (status >= 0 && status < NUM_DURATIONS)
     {
         duration_type dur = static_cast<duration_type>(status);
+
         if (!you.duration[dur])
             return;
 
@@ -390,6 +391,18 @@ void fill_status_info(int status, status_info* inf)
 
     case DUR_TRANSFORMATION:
         _describe_transform(inf);
+        break;
+
+    case DUR_WALL_CLINGING:
+        if (you.clinging)
+        {
+            inf->light_text   = "Cling";
+            inf->short_text   = "clinging";
+            inf->long_text = "You cling to the nearby walls.";
+            inf->light_colour = dur_colour(GREEN,
+                                           dur_expiring(DUR_WALL_CLINGING));
+            _mark_expiring(inf, dur_expiring(DUR_WALL_CLINGING));
+        }
         break;
 
     default:

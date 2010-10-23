@@ -3390,6 +3390,16 @@ bool monster::is_levitating() const
     return (flight_mode() == FL_LEVITATE);
 }
 
+bool monster::is_wall_clinging() const
+{
+    return (0);
+}
+
+bool monster::can_cling_to(const coord_def& p) const
+{
+    return (0);
+}
+
 int monster::mons_species() const
 {
     return ::mons_species(type);
@@ -5028,7 +5038,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     // Assumption: monster::res_fire has already been checked.
     case ENCH_STICKY_FLAME:
     {
-        if (feat_is_watery(grd(pos())) && !airborne())
+        if (feat_is_watery(grd(pos())) && !(airborne() || is_wall_clinging()))
         {
             if (mons_near(this) && visible_to(&you))
             {
@@ -5826,7 +5836,7 @@ bool monster::do_shaft()
             return (false);
         }
 
-        if (airborne() || total_weight() == 0)
+        if (airborne() || is_wall_clinging() || total_weight() == 0)
         {
             if (mons_near(this))
             {

@@ -200,7 +200,8 @@ static bool _check_moveto_trap(const coord_def& p, const std::string &move_verb)
                 return (false);
             }
         }
-        else if (new_grid != DNGN_TRAP_MAGICAL && you.airborne())
+        else if (new_grid != DNGN_TRAP_MAGICAL &&
+                 (you.airborne() || you.can_cling_to(p)))
         {
             // No prompt (shaft and mechanical traps
             // ineffective, if flying)
@@ -246,6 +247,7 @@ static bool _check_moveto_dangerous(const coord_def& p,
                                     const std::string move_verb)
 {
     if (you.can_swim() && feat_is_water(env.grid(p))
+        || you.can_cling_to(p)
         || !is_feat_dangerous(env.grid(p)))
     {
         return (true);
@@ -261,7 +263,7 @@ static bool _check_moveto_terrain(const coord_def& p,
                                   const std::string &move_verb)
 {
     // Only consider terrain if player is not levitating.
-    if (you.airborne())
+    if (you.airborne() || you.can_cling_to(p))
         return (true);
 
     return (_check_moveto_dangerous(p, move_verb));
@@ -281,7 +283,8 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     const dungeon_feature_type new_grid = env.grid(you.pos());
 
     // Terrain effects.
-    if (!you.airborne() && is_feat_dangerous(new_grid))
+    if (!(you.airborne() || you.can_cling_to(you.pos()))
+        && is_feat_dangerous(new_grid))
     {
         // Lava and dangerous deep water (ie not merfolk).
         const coord_def& entry = (stepped) ? old_pos : you.pos();
@@ -291,7 +294,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
             return;
     }
 
-    if (!you.airborne())
+    if (!you.airborne() && !you.can_cling_to(you.pos()))
     {
         if (you.species == SP_MERFOLK)
         {
@@ -3461,6 +3464,7 @@ int get_expiration_threshold(duration_type dur)
     case DUR_TRANSFORMATION: // not on status
     case DUR_DEATHS_DOOR:    // not on status
     case DUR_SLIMIFY:
+    case DUR_WALL_CLINGING:
         return (10 * BASELINE_DELAY);
 
     // These get no messages when they "flicker".
@@ -3690,7 +3694,7 @@ void display_char_status()
         DUR_DIVINE_VIGOUR, DUR_DIVINE_STAMINA, DUR_BERSERK,
         STATUS_AIRBORNE, STATUS_NET, DUR_POISONING, STATUS_SICK,
         STATUS_ROT, STATUS_GLOW, DUR_CONFUSING_TOUCH, DUR_SURE_BLADE,
-        DUR_AFRAID, DUR_MIRROR_DAMAGE, DUR_SCRYING,
+        DUR_AFRAID, DUR_MIRROR_DAMAGE, DUR_SCRYING, DUR_WALL_CLINGING,
     };
 
     status_info inf;
@@ -5293,6 +5297,41 @@ bool player::is_levitating() const
     return (duration[DUR_LEVITATION]);
 }
 
+bool player::is_wall_clinging() const
+{
+    return (clinging);
+}
+
+bool player::can_cling_to(const coord_def& p) const
+{
+    if (!in_bounds(p))
+        return(false);
+
+    if (!is_wall_clinging())
+        return(false);
+
+    if (!can_pass_through_feat(grd(p)))
+        return (false);
+
+    for (radius_iterator ri(p, 1, C_CIRCLE, NULL, true);
+         ri; ++ri)
+    {
+        if (feat_is_wall(env.grid(*ri)))
+        {
+            for (radius_iterator ri2(*ri, 1, C_CIRCLE, NULL, false);
+                 ri2; ++ri2)
+            {
+                for (int i = 0, size = cling_to.size(); i < size; ++i)
+                {
+                    if (cling_to[i] == *ri2)
+                        return(true);
+                }
+            }
+        }
+    }
+    return(false);
+}
+
 bool player::in_water() const
 {
     return (!airborne() && !beogh_water_walk()
@@ -6648,7 +6687,7 @@ bool player::do_shaft()
 
         handle_items_on_shaft(pos(), false);
 
-        if (airborne() || total_weight() == 0)
+        if (airborne() || is_wall_clinging() || total_weight() == 0)
             return (true);
 
         force_stair = DNGN_TRAP_NATURAL;
@@ -6719,4 +6758,20 @@ void player::goto_place(const level_id &lid)
         where_are_you = static_cast<branch_type>(lid.branch);
         absdepth0 = absdungeon_depth(lid.branch, lid.depth);
     }
+}
+
+void player::check_clinging()
+{
+    int walls = 0;
+    if (you.duration[DUR_WALL_CLINGING] > 0)
+    {
+        you.cling_to.clear();
+        for (radius_iterator ri(you.pos(), 1, C_CIRCLE, NULL, true); ri; ++ri)
+            if (feat_is_wall(env.grid(*ri)))
+            {
+                you.cling_to.push_back(*ri);
+                walls++;
+            }
+    }
+    you.clinging = (walls > 0) ? true : false;
 }

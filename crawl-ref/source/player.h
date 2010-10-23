@@ -325,6 +325,10 @@ public:
   // The save file itself.
   package *save;
 
+  // Is player clinging to the wall?
+  bool clinging;
+  // Array of walls which player is currently clinging to.
+  std::vector<coord_def>    cling_to;
 protected:
     FixedVector<PlaceInfo, NUM_BRANCHES>             branch_info;
     FixedVector<PlaceInfo, NUM_LEVEL_AREA_TYPES - 1> non_branch_info;
@@ -362,6 +366,9 @@ public:
     bool can_swim(bool permanently = false) const;
     int visible_igrd(const coord_def&) const;
     bool is_levitating() const;
+    bool is_wall_clinging() const;
+    bool can_cling_to(const coord_def& p) const;
+    void check_clinging();
     bool cannot_speak() const;
     bool invisible() const;
     bool misled() const;
@@ -888,5 +895,4 @@ bool is_feat_dangerous(dungeon_feature_type feat);
 void run_macro(const char *macroname = NULL);
 
 int count_worn_ego(int which_ego);
-
 #endif
