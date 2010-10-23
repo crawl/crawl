@@ -2275,7 +2275,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                 const int dur = std::min(4 + count + random2(rarity/2), 23);
                 place_cloud(CLOUD_FIRE, *ri, dur, KC_OTHER);
 
-                mprf(MSGCH_GOD, "The spellbook%s burst%s into flames.",
+                mprf("The spellbook%s burst%s into flames.",
                      count == 1 ? ""  : "s",
                      count == 1 ? "s" : "");
             }
