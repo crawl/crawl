@@ -170,9 +170,7 @@ void init_mon_name_cache()
                 || mon == MONS_STAIR_MIMIC
                 || mon == MONS_TRAP_MIMIC
                 || mon == MONS_FOUNTAIN_MIMIC
-                || mon == MONS_MARA_FAKE
-                || mon == MONS_EVIL_WITCH
-                || mon == MONS_FOREST_WITCH)
+                || mon == MONS_MARA_FAKE)
             {
                 // Keep previous entry.
                 continue;
@@ -1681,34 +1679,6 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
         book[2] = MST_WIZARD_III;
         book[3] = MST_WIZARD_IV;
         book[4] = MST_WIZARD_V;
-        break;
-
-    case MONS_WITCH: /* deliberate fallthrough structure */
-        book[0] = MST_WITCH_I;
-    case MONS_EVIL_WITCH:
-        if (mon_type == MONS_EVIL_WITCH)
-            book[0] = MST_WITCH_II;
-    case MONS_FOREST_WITCH:
-        if (mon_type == MONS_FOREST_WITCH)
-            book[0] = MST_WITCH_III;
-
-        book[1] = MST_DEEP_DWARF_NECROMANCER;
-        book[2] = MST_WIZARD_II;
-        book[3] = MST_WIZARD_I;
-        break;
-
-    case MONS_HULDRA:
-        book[0] = MST_HULDRA;
-        book[1] = MST_WITCH_III;
-        book[2] = MST_WIZARD_III;
-        book[3] = MST_WIZARD_V;
-        break;
-
-    case MONS_TROLLKONOR:
-        book[0] = MST_TROLLKONOR;
-        book[1] = MST_WIZARD_II;
-        book[2] = MST_WIZARD_III;
-        book[3] = MST_WIZARD_V;
         break;
 
     case MONS_DRACONIAN_KNIGHT:
@@ -3229,11 +3199,6 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
 
     if (mons_genus(mon_type) == MONS_MERMAID
         || mon_type == MONS_HARPY
-        || mon_type == MONS_TROLLKONOR
-        || mon_type == MONS_HULDRA
-        || mon_type == MONS_WITCH
-        || mon_type == MONS_EVIL_WITCH
-        || mon_type == MONS_FOREST_WITCH
         || mon_type == MONS_SPHINX)
     {
         gender = GENDER_FEMALE;

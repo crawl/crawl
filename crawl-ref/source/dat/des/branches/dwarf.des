@@ -653,8 +653,7 @@ SUBVAULT: B : dhfh_hall_right
 SUBVAULT: C : dhfh_hall_right
 SUBVAULT: D : dhfh_hall_right
 KMONS:    1 = patrolling nisse w:3 / patrolling deep dwarf unborn w:5 / \
-              patrolling deep dwarf death knight / patrolling deep dwarf necromancer / \
-              patrolling witch / patrolling huldra
+              patrolling deep dwarf death knight / patrolling deep dwarf necromancer
 KMONS:    2 = shadow wraith / freezing wraith / troll / rock troll w:5 / \
               patrolling deep dwarf death knight w:3 / patrolling deep dwarf necromancer w:2 / \
               patrolling deep dwarf unborn w:1

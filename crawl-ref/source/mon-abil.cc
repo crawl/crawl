@@ -2555,7 +2555,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
         }
         break;
 
-    case MONS_HULDRA:
     case MONS_MERMAID:
     case MONS_SIREN:
     {
@@ -2618,7 +2617,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
                     already_mesmerised ? "her luring" : "a haunting").c_str(),
                     spl);
 
-                if ((mons->type == MONS_SIREN) || (mons->type == MONS_HULDRA))
+                if (mons->type == MONS_SIREN)
                 {
                     if (_siren_movement_effect(mons))
                     {

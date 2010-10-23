@@ -1072,11 +1072,6 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_KOBOLD_DEMONOLOGIST:
     case MONS_NECROMANCER:
     case MONS_WIZARD:
-    case MONS_WITCH:
-    case MONS_EVIL_WITCH:
-    case MONS_FOREST_WITCH:
-    case MONS_HULDRA:
-    case MONS_TROLLKONOR:
     case MONS_PSYCHE:
     case MONS_JOSEPHINE:
         item.base_type = OBJ_WEAPONS;
@@ -1897,12 +1892,6 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
             return;
         break;
 
-    case MONS_WITCH:
-        item_race      = MAKE_ITEM_NO_RACE;
-        item.base_type = OBJ_ARMOUR;
-        item.sub_type  = ARM_WIZARD_HAT;
-        break;
-
     case MONS_GASTRONOK:
         if (one_chance_in(10))
         {
@@ -1954,8 +1943,6 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_DRACONIAN_ZEALOT:
     case MONS_DRACONIAN_KNIGHT:
     case MONS_WIZARD:
-    case MONS_HULDRA:
-    case MONS_TROLLKONOR:
     case MONS_ILSUIW:
     case MONS_MARA:
     case MONS_MERFOLK_AQUAMANCER:
@@ -1967,16 +1954,7 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         item.sub_type  = ARM_ROBE;
         break;
 
-    case MONS_EVIL_WITCH:
-        if (item_race == MAKE_ITEM_RANDOM_RACE)
-            item_race = MAKE_ITEM_NO_RACE;
-        item.base_type = OBJ_ARMOUR;
-        item.sub_type  = ARM_ROBE;
-        force_colour   = DARKGREY;
-        break;
-
     case MONS_SPRIGGAN_DRUID:
-    case MONS_FOREST_WITCH:
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ROBE;
