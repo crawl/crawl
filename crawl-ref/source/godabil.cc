@@ -2463,8 +2463,9 @@ bool ashenzari_transfer_knowledge()
 
     // If there is anything left, we remove the XP penalty and give
     // it back to the first skill
-    if (skp_gained < skp_lost)
-        change_skill_points(fsk, (skp_lost - skp_gained) / 0.9, true);
+    int skp_left = std::max(skp_lost - skp_gained, 0);
+    if (skp_left > 0)
+        change_skill_points(fsk, skp_left / 0.9, true);
     else
         change_skill_points(fsk, 0, true);
 
