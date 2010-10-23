@@ -61,6 +61,7 @@ const int MAX_ACTIVE_KRAKEN_TENTACLES = 4;
 
 static bool _valid_mon_spells[NUM_SPELLS];
 
+static bool _mons_burn_spellbook(monster* mons, bool actual = true);
 static bool _mons_drain_life(monster* mons, bool actual = true);
 
 void init_mons_spells()
@@ -1582,6 +1583,12 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 return (false);
             }
         }
+        // Try to burn spellbooks: if nothing burns, pretend we didn't cast it.
+        else if (spell_cast == SPELL_BURN_SPELLBOOK)
+        {
+            if (!_mons_burn_spellbook(mons, false))
+                return (false);
+        }
         // Try to drain life: if nothing is drained, pretend we didn't cast it.
         else if (spell_cast == SPELL_DRAIN_LIFE)
         {
@@ -1992,7 +1999,7 @@ static bool _mons_vampiric_drain(monster *mons)
     return (true);
 }
 
-static bool _mons_burn_spellbook(monster* mons)
+static bool _mons_burn_spellbook(monster* mons, bool actual)
 {
     for (stack_iterator si(mons->pos()); si; ++si)
     {
@@ -2028,15 +2035,20 @@ static bool _mons_burn_spellbook(monster* mons)
                 continue;
             }
 
-            rarity += book_rarity(si->sub_type);
             success = true;
 
-            dprf("Burned spellbook rarity: %d", rarity);
-            destroy_item(si.link());
+            rarity += book_rarity(si->sub_type);
+
+            if (actual)
+            {
+                dprf("Burned spellbook rarity: %d", rarity);
+                destroy_item(si.link());
+            }
+
             count++;
         }
 
-        if (count)
+        if (actual && count)
         {
             if (cloud != EMPTY_CLOUD)
             {
