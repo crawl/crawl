@@ -2119,7 +2119,7 @@ void finished_eating_message(int food_type)
         {
             int temp_rand;
             if (carnivorous) // non-vegetable
-                temp_rand = random2(6);
+                temp_rand = random2(7);
             else if (herbivorous) // non-meaty
                 temp_rand = 6 + random2(3);
             else
@@ -2132,8 +2132,8 @@ void finished_eating_message(int food_type)
                 (temp_rand == 3) ? "Pepperoni." :
                 (temp_rand == 4) ? "Yeuchh - Anchovies!" :
                 (temp_rand == 5) ? "Chicken." :
-                (temp_rand == 6) ? "Vegetable." :
-                (temp_rand == 7) ? "Cheesy."
+                (temp_rand == 6) ? "Cheesy." :
+                (temp_rand == 7) ? "Vegetable."
                                  : "Mushroom.");
         }
         break;
@@ -2389,7 +2389,6 @@ static int _player_likes_food_type(int type)
     case FOOD_APPLE:
     case FOOD_CHOKO:
     case FOOD_SNOZZCUMBER:
-    case FOOD_PIZZA:
     case FOOD_APRICOT:
     case FOOD_ORANGE:
     case FOOD_BANANA:
@@ -2399,7 +2398,6 @@ static int _player_likes_food_type(int type)
     case FOOD_GRAPE:
     case FOOD_SULTANA:
     case FOOD_LYCHEE:
-    case FOOD_CHEESE:
         return 1;
 
     case FOOD_CHUNK:
@@ -2411,6 +2409,8 @@ static int _player_likes_food_type(int type)
     case FOOD_HONEYCOMB:
     case FOOD_ROYAL_JELLY:
     case FOOD_AMBROSIA:
+    case FOOD_CHEESE:
+    case FOOD_PIZZA:
         return 0;
 
     case NUM_FOODS:
