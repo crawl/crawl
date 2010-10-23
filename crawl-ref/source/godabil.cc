@@ -2446,7 +2446,7 @@ bool ashenzari_transfer_knowledge()
     int skp_gained = 0;
     dprf("you.total_skill_points: %d", you.total_skill_points);
 
-    skp_lost = you.skill_points[fsk] / 2;
+    skp_lost = fsk_points / 2;
     skp_lost = std::max(skp_lost, 1000);
     int train_count = skp_lost / 10;
     change_skill_points(fsk, -skp_lost, false);
