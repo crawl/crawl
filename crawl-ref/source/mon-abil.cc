@@ -829,7 +829,7 @@ static int _slime_split(monster* thing, bool force_split)
             // This can fail if placing a new monster fails.  That
             // probably means we have too many monsters on the level,
             // so just return in that case.
-            return(_do_split(thing, target));
+            return (_do_split(thing, target));
         }
     }
 
