@@ -241,6 +241,8 @@ public:
 
     virtual flight_type flight_mode() const = 0;
     virtual bool is_levitating() const = 0;
+    virtual bool is_wall_clinging() const = 0;
+    virtual bool can_cling_to(const coord_def& p) const = 0;
     virtual bool airborne() const;
 
     virtual bool paralysed() const = 0;

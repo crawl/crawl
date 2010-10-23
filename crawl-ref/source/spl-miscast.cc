@@ -2270,7 +2270,8 @@ void MiscastEffect::_ice(int severity)
 
 static bool _on_floor(actor* target)
 {
-    return (!target->airborne() && grd(target->pos()) == DNGN_FLOOR);
+    return (!(target->airborne() || target->is_wall_clinging())
+            && grd(target->pos()) == DNGN_FLOOR);
 }
 
 void MiscastEffect::_earth(int severity)

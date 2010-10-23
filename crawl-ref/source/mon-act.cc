@@ -221,8 +221,8 @@ static void _swim_or_move_energy(monster* mon)
 
     // FIXME: Replace check with mons_is_swimming()?
     mon->lose_energy((feat >= DNGN_LAVA && feat <= DNGN_SHALLOW_WATER
-                       && !mon->airborne()) ? EUT_SWIM
-                                            : EUT_MOVE);
+                      && !(mon->airborne() || mon->is_wall_clinging())) ? EUT_SWIM
+                                                                        : EUT_MOVE);
 }
 
 // Check up to eight grids in the given direction for whether there's a

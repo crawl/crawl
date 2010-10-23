@@ -1267,6 +1267,7 @@ enum duration_type
     DUR_AFRAID,
     DUR_MIRROR_DAMAGE,
     DUR_SCRYING,
+    DUR_WALL_CLINGING,
 
     NUM_DURATIONS
 };

@@ -745,6 +745,11 @@ bool transform(int pow, transformation_type which_trans, bool force,
     // Extra effects
     switch (which_trans)
     {
+    case TRAN_SPIDER:
+        you.duration[DUR_WALL_CLINGING] = dur;
+        you.check_clinging();
+        break;
+
     case TRAN_STATUE:
         if (you.duration[DUR_STONEMAIL] || you.duration[DUR_STONESKIN])
             mpr("Your new body merges with your stone armour.");
