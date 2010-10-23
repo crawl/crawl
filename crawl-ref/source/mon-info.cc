@@ -920,6 +920,8 @@ void monster_info::to_string(int count, std::string& desc,
             out << " (distracted)";
         else if (is(MB_INVISIBLE))
             out << " (invisible)";
+        else if (is(MB_WITHDRAWN))
+            out << " (withdrawn)";
     }
 
     // Friendliness
@@ -1008,7 +1010,10 @@ std::vector<std::string> monster_info::attributes() const
     if (is(MB_FEAR_INSPIRING))
         v.push_back("inspiring fear");
     if (is(MB_WITHDRAWN))
-        v.push_back("withdrawn into its shell");
+    {
+        v.push_back("regenerating health quickly");
+        v.push_back("protected by its shell");
+    }
     if (is(MB_ATTACHED))
         v.push_back("attached and sucking blood");
     return v;
