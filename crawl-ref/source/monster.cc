@@ -5675,7 +5675,7 @@ bool monster::mutate()
 
     // Polymorphing a slime creature will usually split it first
     // and polymorph each part separately.
-    if (type == MONS_SLIME_CREATURE || type == MONS_MERGED_SLIME_CREATURE)
+    if (type == MONS_SLIME_CREATURE)
     {
         slime_creature_mutate(this);
         return (true);
