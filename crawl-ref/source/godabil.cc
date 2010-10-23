@@ -733,13 +733,14 @@ bool trog_burn_spellbooks()
                 continue;
             }
 
-            rarity += book_rarity(si->sub_type);
             // Piety increases by 2 for books never cracked open, else 1.
             // Conversely, rarity influences the duration of the pyre.
             if (!item_type_known(*si))
                 totalpiety += 2;
             else
                 totalpiety++;
+
+            rarity += book_rarity(si->sub_type);
 
             dprf("Burned spellbook rarity: %d", rarity);
             destroy_spellbook(*si);
