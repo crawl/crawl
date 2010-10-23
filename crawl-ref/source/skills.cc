@@ -421,6 +421,11 @@ static int _exercise2(int exski)
     if (_skip_exercise(exsk))
         return (0);
 
+    // Don't train past level 27, even if the level hasn't been updated yet.
+    if (you.skill_points[exsk] >= skill_exp_needed(27)
+                                 * species_skills(exsk, you.species) / 100)
+        return 0;
+
     // This will be added to you.skill_points[exsk];
     int skill_inc = 10;
 
