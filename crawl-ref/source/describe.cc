@@ -2475,7 +2475,8 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
             actions.push_back(CMD_WEAR_ARMOUR);
         break;
     case OBJ_FOOD:
-        actions.push_back(CMD_EAT);
+        if (can_ingest(item.base_type, item.sub_type, true, true, false))
+            actions.push_back(CMD_EAT);
         break;
     case OBJ_SCROLLS:
     case OBJ_BOOKS: // only unknown ones
@@ -2488,7 +2489,8 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
             actions.push_back(CMD_WEAR_JEWELLERY);
         break;
     case OBJ_POTIONS:
-        actions.push_back(CMD_QUAFF);
+        if (you.is_undead != US_UNDEAD) // mummies and lich form only
+            actions.push_back(CMD_QUAFF);
         break;
     default:
         ;
