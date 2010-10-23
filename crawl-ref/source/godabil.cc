@@ -2440,49 +2440,36 @@ bool ashenzari_transfer_knowledge()
     mprf("As you forget about %s, you feel ready to understand %s.",
          skill_name(fsk), skill_name(tsk));
 
-    unsigned int fsk_points = you.skill_points[fsk];
-    int exp_pool = you.exp_available;
-    int skp_lost = 0;
-    int skp_gained = 0;
-    dprf("you.total_skill_points: %d", you.total_skill_points);
+    const float penalty = 0.9; // 10% XP penalty
+    int fsk_points = you.skill_points[fsk];
+    unsigned int exp_pool = you.exp_available;
+    int skp = 0; // skill points transfered.
+    int skp_max; // maximum number of skill points transferable.
 
-    skp_lost = fsk_points / 2;
-    skp_lost = std::max(skp_lost, 1000);
-    if (skp_lost > fsk_points)
-        skp_lost = fsk_points;
-    int train_count = skp_lost / 10;
-    change_skill_points(fsk, -skp_lost, false);
+    skp_max = fsk_points / 2;
+    skp_max = std::max(skp_max, 1000);
+    if (skp_max > fsk_points)
+        skp_max = fsk_points;
 
-    // Apply the 10% XP penalty
-    skp_lost *= 0.9;
+    // Apply the XP penalty
+    skp_max *= penalty;
+    int train_count = skp_max / 10;
 
-    while (skp_gained < skp_lost && train_count > 0)
+    while (skp < skp_max && train_count > 0)
     {
         you.exp_available = 250;
-        skp_gained += exercise(tsk, 1, false);
+        skp += exercise(tsk, 1, false);
         train_count--;
     }
 
-    // If there is anything left, we remove the XP penalty and give
-    // it back to the first skill
-    int skp_left = std::max(skp_lost - skp_gained, 0);
-    if (skp_left > 0)
-        change_skill_points(fsk, skp_left / 0.9, true);
-    else
-        change_skill_points(fsk, 0, true);
-
-    change_skill_points(tsk, 0, true);
+    change_skill_points(fsk, -skp / penalty, true);
+    change_skill_points(tsk, 0, true); // just update the level
 
     // We restore the XP pool
     you.exp_available = exp_pool;
 
-#ifdef DEBUG_DIAGNOSTICS
-    dprf("Maximum skill points transferable: %d", skp_lost);
-    dprf("skill %s lost %d skill points", skill_name(fsk),
-         fsk_points - you.skill_points[fsk]);
-    dprf("skill %s gained %d skill points", skill_name(tsk), skp_gained);
-    dprf("you.total_skill_points: %d", you.total_skill_points);
-#endif
+    dprf("Maximum skill points transferable: %d", skp_max);
+    dprf("skill points transfered: %d", skp);
 
     return true;
 }
