@@ -146,7 +146,10 @@ void _change_skill_level(skill_type exsk, int n)
     ASSERT(n != 0);
     skill_type old_best_skill = best_skill(SK_FIGHTING, (NUM_SKILLS - 1));
 
-    you.skills[exsk] += n;
+    if (you.skills[exsk] > -n)
+        you.skills[exsk] += n;
+    else
+        you.skills[exsk] = 0;
 
     if (n > 0)
         take_note(Note(NOTE_GAIN_SKILL, exsk, you.skills[exsk]));
@@ -398,9 +401,18 @@ static void _check_skill_cost_change()
 
 void change_skill_points(skill_type sk, int points, bool change_level)
 {
-    you.skill_points[sk] += points;
-    you.total_skill_points += points;
+    if (you.skill_points[sk] > -points)
+        you.skill_points[sk] += points;
+    else
+        you.skill_points[sk] = 0;
+
+    if (you.total_skill_points > -points)
+        you.total_skill_points += points;
+    else
+        you.total_skill_points = 0;
+
     _check_skill_cost_change();
+
     if (change_level)
         _check_skill_level_change(sk);
 }
