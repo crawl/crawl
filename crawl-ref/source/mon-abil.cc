@@ -857,11 +857,7 @@ static bool _slime_split_merge(monster* thing)
 //Splits and polymorphs merged slime creatures.
 bool slime_creature_mutate(monster* slime)
 {
-    if (slime->type != MONS_SLIME_CREATURE
-        && slime->type != MONS_MERGED_SLIME_CREATURE)
-    {
-        return(false);
-    }
+    ASSERT(slime->type == MONS_SLIME_CREATURE);
 
     if (slime->number > 1 && x_chance_in_y(4, 5))
     {
