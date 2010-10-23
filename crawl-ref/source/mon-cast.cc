@@ -2224,8 +2224,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         for (stack_iterator si(mons->pos()); si; ++si)
         {
             if (si->base_type == OBJ_BOOKS
-                    && si->sub_type != BOOK_MANUAL
-                    && si->sub_type != BOOK_DESTRUCTION)
+                && si->sub_type != BOOK_MANUAL
+                && si->sub_type != BOOK_DESTRUCTION)
             {
                 return;
             }
@@ -2235,7 +2235,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         {
             const unsigned short cloud = env.cgrid(*ri);
             if (feat_is_solid(grd(*ri))
-                    || cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE)
+                || cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE)
             {
                 continue;
             }
