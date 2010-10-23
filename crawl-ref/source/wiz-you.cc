@@ -388,8 +388,7 @@ void wizard_set_skill_level(void)
         else
         {
             const int old_amount = you.skills[skill];
-            const int points = (skill_exp_needed(amount)
-                                * species_skills(skill, you.species)) / 100;
+            const int points = skill_exp_needed(amount, skill);
 
             you.skill_points[skill] = points + 1;
             you.skills[skill] = amount;
@@ -459,8 +458,7 @@ void wizard_set_all_skills(void)
             if (is_invalid_skill(i))
                 continue;
 
-            const int points = (skill_exp_needed(amount)
-                                * species_skills(i, you.species)) / 100;
+            const int points = skill_exp_needed(amount, i);
 
             you.skill_points[i] = points + 1;
             you.skills[i] = amount;
