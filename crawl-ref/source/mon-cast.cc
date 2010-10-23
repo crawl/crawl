@@ -2233,13 +2233,9 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
         for (radius_iterator ri(mons->pos(), LOS_RADIUS, true, true, true); ri; ++ri)
         {
+            // If a grid is blocked, books lying there will be ignored.
+            // Allow bombing of monsters.
             const unsigned short cloud = env.cgrid(*ri);
-            if (feat_is_solid(grd(*ri))
-                || cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE)
-            {
-                continue;
-            }
-
             int count = 0;
             int rarity = 0;
             for (stack_iterator si(*ri); si; ++si)
@@ -2247,6 +2243,12 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                 if (si->base_type != OBJ_BOOKS
                     || si->sub_type == BOOK_MANUAL
                     || si->sub_type == BOOK_DESTRUCTION)
+                {
+                    continue;
+                }
+
+                if (feat_is_solid(grd(*ri))
+                    || cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE)
                 {
                     continue;
                 }
@@ -2274,8 +2276,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                 place_cloud(CLOUD_FIRE, *ri, dur, KC_OTHER);
 
                 mprf(MSGCH_GOD, "The spellbook%s burst%s into flames.",
-                    count == 1 ? ""  : "s",
-                    count == 1 ? "s" : "");
+                     count == 1 ? ""  : "s",
+                     count == 1 ? "s" : "");
             }
         }
         return;
