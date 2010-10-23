@@ -1167,9 +1167,11 @@ int mons_dwarf_level(int mcls)
     case MONS_DEEP_TROLL:
         mlev += 7;
         break;
+
     case MONS_IRON_TROLL:
         mlev += 9;
         break;
+
     case MONS_FIRE_GIANT:
     case MONS_FROST_GIANT:
     case MONS_STONE_GIANT:
