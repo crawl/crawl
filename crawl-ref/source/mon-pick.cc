@@ -1150,11 +1150,6 @@ int mons_dwarf_level(int mcls)
     case MONS_DEEP_DWARF_BERSERKER:
     case MONS_DEEP_DWARF_DEATH_KNIGHT:
     case MONS_WOLF_SPIDER:
-    case MONS_TROLLKONOR:
-    case MONS_WITCH:
-    case MONS_FOREST_WITCH:
-    case MONS_EVIL_WITCH:
-    case MONS_HULDRA:
     case MONS_NECROMANCER:
         mlev += 4;
         break;
@@ -1233,17 +1228,10 @@ int mons_dwarf_rare(int mcls)
     case MONS_ELF:
         rarity = 50;
         break;
-    case MONS_HULDRA:
-        sharp_before = 2;
     case MONS_WAR_DOG:
         rarity = 40;
         break;
-    case MONS_TROLLKONOR:
-        soft_curve = true;
     case MONS_TROLL:
-    case MONS_WITCH:
-    case MONS_EVIL_WITCH:
-        rarity = 30;
         break;
     case MONS_SHAPESHIFTER:
         sharp_curve = true;
@@ -1260,7 +1248,6 @@ int mons_dwarf_rare(int mcls)
         break;
     case MONS_ORANGE_RAT:
         soft_curve = true;
-    case MONS_FOREST_WITCH:
     case MONS_NECROPHAGE:
     case MONS_GHOUL:
     case MONS_GLOWING_SHAPESHIFTER:

@@ -2211,11 +2211,6 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         band = BAND_GNOLLS;
         band_size = (coinflip() ? 3 : 2);
         break;
-    case MONS_TROLLKONOR:
-        natural_leader = true;
-        band = BAND_TROLLKONOR;
-        band_size = 1;
-        break;
     case MONS_DEEP_DWARF_SCION:
         band = BAND_DEEP_DWARF;
         band_size = (one_chance_in(5)? 2: 1) + random2(3);
@@ -2625,11 +2620,6 @@ static monster_type _band_member(band_type band, int power)
 
     case BAND_GNOLLS:
         mon_type = MONS_GNOLL;
-        break;
-
-    case BAND_TROLLKONOR:
-        mon_type = (power > 11 && one_chance_in(4)) ?
-                   MONS_ROCK_TROLL: MONS_TROLL;
         break;
 
     case BAND_DEEP_DWARF:
