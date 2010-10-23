@@ -4497,7 +4497,7 @@ bool confuse_player(int amount, bool resistable)
     if (amount <= 0)
         return (false);
 
-    if (resistable && wearing_amulet(AMU_CLARITY))
+    if (resistable && player_mental_clarity())
     {
         mpr("You feel momentarily confused.");
         // Identify the amulet if necessary.
