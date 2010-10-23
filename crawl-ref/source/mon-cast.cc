@@ -1992,6 +1992,74 @@ static bool _mons_vampiric_drain(monster *mons)
     return (true);
 }
 
+static bool _mons_burn_spellbook(monster* mons)
+{
+    for (stack_iterator si(mons->pos()); si; ++si)
+    {
+        if (si->base_type == OBJ_BOOKS
+            && si->sub_type != BOOK_MANUAL
+            && si->sub_type != BOOK_DESTRUCTION)
+        {
+            return (false);
+        }
+    }
+
+    bool success = false;
+
+    for (radius_iterator ri(mons->pos(), LOS_RADIUS, true, true, true); ri; ++ri)
+    {
+        // If a grid is blocked, books lying there will be ignored.
+        // Allow bombing of monsters.
+        const unsigned short cloud = env.cgrid(*ri);
+        int count = 0;
+        int rarity = 0;
+        for (stack_iterator si(*ri); si; ++si)
+        {
+            if (si->base_type != OBJ_BOOKS
+                || si->sub_type == BOOK_MANUAL
+                || si->sub_type == BOOK_DESTRUCTION)
+            {
+                continue;
+            }
+
+            if (feat_is_solid(grd(*ri))
+                || cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE)
+            {
+                continue;
+            }
+
+            rarity += book_rarity(si->sub_type);
+            success = true;
+
+            dprf("Burned spellbook rarity: %d", rarity);
+            destroy_item(si.link());
+            count++;
+        }
+
+        if (count)
+        {
+            if (cloud != EMPTY_CLOUD)
+            {
+                // Reinforce the cloud.
+                mpr("The fire roars with new energy!");
+                const int extra_dur = count + random2(rarity / 2);
+                env.cloud[cloud].decay += extra_dur * 5;
+                env.cloud[cloud].set_whose(KC_OTHER);
+                continue;
+            }
+
+            const int dur = std::min(4 + count + random2(rarity/2), 23);
+            place_cloud(CLOUD_FIRE, *ri, dur, KC_OTHER);
+
+            mprf("The spellbook%s burst%s into flames.",
+                 count == 1 ? ""  : "s",
+                 count == 1 ? "s" : "");
+        }
+    }
+
+    return (success);
+}
+
 static bool _mons_drain_life(monster* mons, bool actual)
 {
     if (actual)
@@ -2220,68 +2288,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     }
 
     case SPELL_BURN_SPELLBOOK:
-    {
-        for (stack_iterator si(mons->pos()); si; ++si)
-        {
-            if (si->base_type == OBJ_BOOKS
-                && si->sub_type != BOOK_MANUAL
-                && si->sub_type != BOOK_DESTRUCTION)
-            {
-                return;
-            }
-        }
-
-        for (radius_iterator ri(mons->pos(), LOS_RADIUS, true, true, true); ri; ++ri)
-        {
-            // If a grid is blocked, books lying there will be ignored.
-            // Allow bombing of monsters.
-            const unsigned short cloud = env.cgrid(*ri);
-            int count = 0;
-            int rarity = 0;
-            for (stack_iterator si(*ri); si; ++si)
-            {
-                if (si->base_type != OBJ_BOOKS
-                    || si->sub_type == BOOK_MANUAL
-                    || si->sub_type == BOOK_DESTRUCTION)
-                {
-                    continue;
-                }
-
-                if (feat_is_solid(grd(*ri))
-                    || cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE)
-                {
-                    continue;
-                }
-
-                rarity += book_rarity(si->sub_type);
-
-                dprf("Burned spellbook rarity: %d", rarity);
-                destroy_item(si.link());
-                count++;
-            }
-
-            if (count)
-            {
-                if (cloud != EMPTY_CLOUD)
-                {
-                    // Reinforce the cloud.
-                    mpr("The fire roars with new energy!");
-                    const int extra_dur = count + random2(rarity / 2);
-                    env.cloud[cloud].decay += extra_dur * 5;
-                    env.cloud[cloud].set_whose(KC_OTHER);
-                    continue;
-                }
-
-                const int dur = std::min(4 + count + random2(rarity/2), 23);
-                place_cloud(CLOUD_FIRE, *ri, dur, KC_OTHER);
-
-                mprf("The spellbook%s burst%s into flames.",
-                     count == 1 ? ""  : "s",
-                     count == 1 ? "s" : "");
-            }
-        }
+        _mons_burn_spellbook(mons);
         return;
-    }
 
     case SPELL_SWIFTNESS:
         mons->add_ench(ENCH_SWIFT);
