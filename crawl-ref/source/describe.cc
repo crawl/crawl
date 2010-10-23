@@ -2573,7 +2573,7 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
         return false;
     case CMD_EAT:
         redraw_screen();
-        eat_inventory_item(slot);
+        eat_food(slot);
         return false;
     case CMD_READ:
         read_scroll(slot);
