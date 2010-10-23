@@ -729,7 +729,7 @@ bool trog_burn_spellbooks()
             // Ignore {!D} inscribed books.
             if (!check_warning_inscriptions(*si, OPER_DESTROY))
             {
-                mpr("Won't ignite {!D} inscribed book.");
+                mpr("Won't ignite {!D} inscribed spellbook.");
                 continue;
             }
 
@@ -741,7 +741,7 @@ bool trog_burn_spellbooks()
             else
                 totalpiety++;
 
-            dprf("Burned book rarity: %d", rarity);
+            dprf("Burned spellbook rarity: %d", rarity);
             destroy_spellbook(*si);
             destroy_item(si.link());
             count++;
@@ -762,7 +762,7 @@ bool trog_burn_spellbooks()
             const int duration = std::min(4 + count + random2(rarity/2), 23);
             place_cloud(CLOUD_FIRE, *ri, duration, KC_YOU);
 
-            mprf(MSGCH_GOD, "The book%s burst%s into flames.",
+            mprf(MSGCH_GOD, "The spellbook%s burst%s into flames.",
                  count == 1 ? ""  : "s",
                  count == 1 ? "s" : "");
         }
@@ -775,10 +775,9 @@ bool trog_burn_spellbooks()
     }
     else if (totalblocked)
     {
-        if (totalblocked == 1)
-            mpr("The spellbook fails to ignite!");
-        else
-            mpr("The spellbooks fail to ignite!");
+        mprf("The spellbook%s fail%s to ignite!",
+             totalblocked == 1 ? ""  : "s",
+             totalblocked == 1 ? "s" : "");
         return (false);
     }
     else
