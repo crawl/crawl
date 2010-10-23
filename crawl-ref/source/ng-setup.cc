@@ -1421,16 +1421,15 @@ static void _reassess_starting_skills()
         }
 
         // Grant the amount of skill points required for a human.
-        const int points = skill_exp_needed(you.skills[i]);
-        you.skill_points[i] = (points * species_skills(i, SP_HUMAN)) / 100 + 1;
+        you.skill_points[i] = skill_exp_needed(you.skills[i], i,
+        static_cast<species_type>(SP_HUMAN)) + 1;
 
         // Find out what level that earns this character.
-        const int sp_diff = species_skills(i, you.species);
         you.skills[i] = 0;
 
         for (int lvl = 1; lvl <= 8; ++lvl)
         {
-            if (you.skill_points[i] > (skill_exp_needed(lvl) * sp_diff) / 100)
+            if (you.skill_points[i] > skill_exp_needed(lvl, i))
                 you.skills[i] = lvl;
             else
                 break;
@@ -1440,21 +1439,21 @@ static void _reassess_starting_skills()
         if (you.species == SP_VAMPIRE && i == SK_UNARMED_COMBAT
             && you.skills[i] < 1)
         {
-            you.skill_points[i] = (skill_exp_needed(1) * sp_diff) / 100;
+            you.skill_points[i] = skill_exp_needed(1, i);
             you.skills[i] = 1;
         }
 
         // Wanderers get at least 1 level in their skills.
         if (you.char_class == JOB_WANDERER && you.skills[i] < 1)
         {
-            you.skill_points[i] = (skill_exp_needed(1) * sp_diff) / 100;
+            you.skill_points[i] = skill_exp_needed(1, i);
             you.skills[i] = 1;
         }
 
         // Spellcasters should always have Spellcasting skill.
         if (i == SK_SPELLCASTING && you.skills[i] < 1)
         {
-            you.skill_points[i] = (skill_exp_needed(1) * sp_diff) / 100;
+            you.skill_points[i] = skill_exp_needed(1, i);
             you.skills[i] = 1;
         }
     }

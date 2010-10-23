@@ -11,6 +11,7 @@
 const int MAX_SKILL_ORDER = 100;
 
 #include "enum.h"
+#include "player.h"
 
 const char *skill_name(int which_skill);
 int str_to_skill(const std::string &skill);
@@ -35,6 +36,7 @@ void calc_hp();
 
 int species_skills(int skill, species_type species);
 unsigned int skill_exp_needed(int lev);
+unsigned int skill_exp_needed(int lev, int sk, species_type sp = you.species);
 void show_skills();
 void wield_warning(bool newWeapon = true);
 bool is_invalid_skill(int skill);

@@ -228,10 +228,8 @@ static void _check_skill_level_change(skill_type sk)
     int new_level = you.skills[sk];
     while (1)
     {
-        const unsigned int prev = skill_exp_needed(new_level)
-                                 * species_skills(sk, you.species) / 100;
-        const unsigned int next = skill_exp_needed(new_level + 1)
-                                 * species_skills(sk, you.species) / 100;
+        const unsigned int prev = skill_exp_needed(new_level, sk);
+        const unsigned int next = skill_exp_needed(new_level + 1, sk);
 
         if (you.skill_points[sk] >= next)
             new_level++;
@@ -422,8 +420,7 @@ static int _exercise2(int exski)
         return (0);
 
     // Don't train past level 27, even if the level hasn't been updated yet.
-    if (you.skill_points[exsk] >= skill_exp_needed(27)
-                                 * species_skills(exsk, you.species) / 100)
+    if (you.skill_points[exsk] >= skill_exp_needed(27, exsk))
         return 0;
 
     // This will be added to you.skill_points[exsk];

@@ -1420,14 +1420,10 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
 
             if (you.skills[x] < 27)
             {
-                const int spec_abil = species_skills(x, you.species);
-
                 if (!show_aptitudes)
                 {
-                    const int needed =
-                        (skill_exp_needed(you.skills[x] + 1) * spec_abil) / 100;
-                    const int prev_needed =
-                        (skill_exp_needed(you.skills[x]  ) * spec_abil) / 100;
+                    const int needed = skill_exp_needed(you.skills[x] + 1, x);
+                    const int prev_needed = skill_exp_needed(you.skills[x], x);
 
                     const int amt_done = you.skill_points[x] - prev_needed;
                     int percent_done = (amt_done*100) / (needed - prev_needed);
@@ -1909,6 +1905,11 @@ unsigned int skill_exp_needed(int lev)
     default: return 6200 + 1800 * (lev - 14);
     }
     return 0;
+}
+
+unsigned int skill_exp_needed(int lev, int sk, species_type sp)
+{
+    return skill_exp_needed(lev) * species_skills(sk, sp) / 100;
 }
 
 // Base skill cost, i.e. old-style human aptitudes.
