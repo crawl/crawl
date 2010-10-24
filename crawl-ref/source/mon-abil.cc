@@ -26,6 +26,7 @@
 #include "terrain.h"
 #include "mgen_data.h"
 #include "coord.h"
+#include "cloud.h"
 #include "mon-speak.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
@@ -2461,6 +2462,27 @@ bool mon_special_ability(monster* mons, bolt & beem)
     case MONS_GOLDEN_EYE:
         if (one_chance_in(7) || mons->caught() && one_chance_in(3))
             used = monster_blink(mons);
+        break;
+
+    case MONS_SKY_BEAST:
+        if (one_chance_in(8))
+        {
+            // If we're invisible, become visible
+            if (mons->invisible())
+            {
+                mons->del_ench(ENCH_INVIS);
+                place_cloud(CLOUD_RAIN, mons->pos(),
+                            2, mons->kill_alignment(),
+                            KILL_MON_MISSILE);
+            }
+            // Otherwise, go invisible.
+            else
+            {
+                simple_monster_message(mons, " flickers out of sight!");
+                mons->add_ench(ENCH_INVIS);
+            }
+        }
+
         break;
 
     case MONS_AGATE_SNAIL:

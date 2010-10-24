@@ -2978,7 +2978,7 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
-// ice beast ('I')
+// various beasts ('I')
 {
     MONS_ICE_BEAST, 'I', WHITE, "ice beast",
     M_NO_FLAGS,
@@ -2988,6 +2988,18 @@ static monsterentry mondata[] = {
     { 5, 3, 5, 0 },
     5, 10, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
     I_ANIMAL, HT_AMPHIBIOUS, FL_NONE, 10, SWIM_ENERGY(11),
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
+},
+
+{
+    MONS_SKY_BEAST, 'I', LIGHTCYAN, "sky beast",
+    M_NO_FLAGS,
+    MR_RES_ASPHYX | mrd(MR_RES_ELEC, 3),
+    480, 13, MONS_ICE_BEAST, MONS_SKY_BEAST, MH_NATURAL, -3,
+    { {AT_HIT, AF_ELEC, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 5, 3, 5, 0 },
+    3, 13, MST_NO_SPELLS, CE_MUTAGEN_RANDOM, Z_NOZOMBIE, S_SILENT,
+    I_ANIMAL, HT_LAND, FL_FLY, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
 },
 

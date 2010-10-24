@@ -268,6 +268,7 @@ bool mons_abyss(int mcls)
     case MONS_SKELETAL_WARRIOR:
     case MONS_SKELETON_LARGE:
     case MONS_SKELETON_SMALL:
+    case MONS_SKY_BEAST:
     case MONS_SMOKE_DEMON:
     case MONS_SOUL_EATER:
     case MONS_SPINY_WORM:
@@ -411,6 +412,7 @@ int mons_rare_abyss(int mcls)
     case MONS_VAPOUR:
     case MONS_SIMULACRUM_LARGE:
     case MONS_SIMULACRUM_SMALL:
+    case MONS_SKY_BEAST:
         return 9;
 
     case MONS_FUNGUS:
@@ -636,6 +638,7 @@ int mons_standard_level(int mcls)
     case MONS_NECROPHAGE:
     case MONS_QUASIT:
     case MONS_ZOMBIE_SMALL:
+    case MONS_SKY_BEAST:
         return 9;
 
     case MONS_DEEP_ELF_SOLDIER:
@@ -918,6 +921,7 @@ int mons_standard_rare(int mcls)
     case MONS_HIPPOGRIFF:
     case MONS_HYDRA:
     case MONS_ICE_BEAST:
+    case MONS_SKY_BEAST:
     case MONS_KILLER_BEE:
     case MONS_ORC_WIZARD:
     case MONS_QUOKKA:
