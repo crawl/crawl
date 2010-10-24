@@ -663,7 +663,7 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
               beam.name     = "potion";
           else
               beam.name     = "foul vapour";
-        beam.damage   = dice_def(1,0);
+        beam.damage   = dice_def(1, 0);
         beam.colour   = GREEN;
         // Well, it works, even if the name isn't quite intuitive.
         beam.flavour  = BEAM_POTION_STINKING_CLOUD;
@@ -678,7 +678,7 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
               beam.name     = "potion";
           else
               beam.name     = "cloud of steam";
-        beam.damage   = dice_def(1,0);
+        beam.damage   = dice_def(1, 0);
         beam.colour   = LIGHTGREY;
         beam.flavour  = BEAM_POTION_STEAM;
         beam.hit      = 14 + power / 30;
@@ -692,7 +692,7 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
               beam.name     = "potion";
           else
               beam.name     = "cloud of fire";
-        beam.damage   = dice_def(1,0);
+        beam.damage   = dice_def(1, 0);
         beam.colour   = RED;
         beam.flavour  = BEAM_POTION_FIRE;
         beam.hit      = 14 + power / 30;
@@ -706,7 +706,7 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
               beam.name     = "potion";
           else
               beam.name     = "cloud of poison";
-        beam.damage   = dice_def(1,0);
+        beam.damage   = dice_def(1, 0);
         beam.colour   = LIGHTGREEN;
         beam.flavour  = BEAM_POTION_POISON;
         beam.hit      = 14 + power / 30;
@@ -720,7 +720,7 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
               beam.name     = "potion";
           else
               beam.name     = "foul vapour";
-        beam.damage   = dice_def(1,0);
+        beam.damage   = dice_def(1, 0);
         beam.colour   = DARKGREY;
         beam.flavour  = BEAM_POTION_MIASMA;
         beam.hit      = 14 + power / 30;
