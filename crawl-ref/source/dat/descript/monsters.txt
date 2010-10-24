@@ -1545,6 +1545,10 @@ skeletal warrior
 
 The vicious and heavily armed skeleton of a humanoid creature, animated by unholy power.
 %%%%
+sky beast
+
+A strange creature formed of clouds and tortured flesh that sparkles with electricity and, every so often, slips from view.
+%%%%
 slave
 
 A once proud human that has been magically enslaved, and is now a timid, simpering creature, ready to perform any deed at its master's command.
