@@ -1600,7 +1600,7 @@ int monster_die(monster* mons, killer_type killer,
         {
             const int bonus = (3 + random2avg(10, 2)) / 2;
 
-            you.increase_duration(DUR_BERSERKER, bonus);
+            you.increase_duration(DUR_BERSERK, bonus);
             you.increase_duration(DUR_MIGHT, bonus);
             haste_player(bonus * 2, true);
 
@@ -1611,7 +1611,7 @@ int monster_die(monster* mons, killer_type killer,
         {
             const int bonus = (2 + random2(4)) / 2;;
 
-            you.increase_duration(DUR_BERSERKER, bonus);
+            you.increase_duration(DUR_BERSERK, bonus);
             you.increase_duration(DUR_MIGHT, bonus);
             haste_player(bonus * 2, true);
 

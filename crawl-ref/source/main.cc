@@ -2379,7 +2379,7 @@ static void _decrement_durations()
         notify_stat_change(STAT_INT, -5, true, "brilliance running out");
     }
 
-    if (_decrement_a_duration(DUR_BERSERKER, delay,
+    if (_decrement_a_duration(DUR_BERSERK, delay,
                               "You are no longer berserk."))
     {
         //jmf: Guilty for berserking /after/ berserk.
@@ -3698,9 +3698,9 @@ static void _do_berserk_no_combat_penalty(void)
         int berserk_delay_penalty = you.berserk_penalty * hasted_base_delay;
         // Do these three separately, because the might and
         // haste counters can be different.
-        you.duration[DUR_BERSERKER] -= berserk_delay_penalty;
-        if (you.duration[DUR_BERSERKER] < hasted_base_delay)
-            you.duration[DUR_BERSERKER] = hasted_base_delay;
+        you.duration[DUR_BERSERK] -= berserk_delay_penalty;
+        if (you.duration[DUR_BERSERK] < hasted_base_delay)
+            you.duration[DUR_BERSERK] = hasted_base_delay;
 
         you.duration[DUR_MIGHT] -= berserk_delay_penalty;
         if (you.duration[DUR_MIGHT] < hasted_base_delay)
