@@ -2349,6 +2349,12 @@ void bolt::affect_endpoint()
         explode();
     }
 
+    if (name == "noxious blast")
+    {
+        big_cloud(CLOUD_STINK, whose_kill(), killer(), pos(), 0,
+                  7 + random2(5));
+    }
+
     if (name == "blast of poison")
     {
         big_cloud(CLOUD_POISON, whose_kill(), killer(), pos(), 0,
