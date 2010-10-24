@@ -2635,8 +2635,7 @@ void bolt::affect_place_clouds()
         place_cloud(CLOUD_POISON, p, random2(4) + 3, whose_kill(), killer());
 
     if (name == "blast of choking fumes")
-       place_cloud(CLOUD_STINK, p, random2(4) + 3, whose_kill(), killer());
-
+        place_cloud(CLOUD_STINK, p, random2(4) + 3, whose_kill(), killer());
 }
 
 void bolt::affect_place_explosion_clouds()
