@@ -2154,6 +2154,19 @@ struct spell_desc
 },
 
 {
+    SPELL_NOXIOUS_CLOUD, "Noxious Cloud",
+     SPTYP_CONJURATION | SPTYP_POISON | SPTYP_AIR,
+     SPFLAG_GRID | SPFLAG_AREA | SPFLAG_MONSTER,
+     5,
+     200,
+     6, 6,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
     SPELL_STEAM_BALL, "Steam Ball",
      SPTYP_CONJURATION | SPTYP_FIRE,
      SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,

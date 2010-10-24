@@ -589,6 +589,16 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
         beam.flavour  = BEAM_FIRE;
         break;
 
+    case SPELL_NOXIOUS_CLOUD:
+        beam.name     = "noxious blast";
+        beam.damage   = dice_def(1, 0);
+        beam.colour   = GREEN;
+        beam.flavour  = BEAM_POTION_STINKING_CLOUD;
+        beam.hit      = 18 + power / 25;
+        beam.is_beam  = true;
+        beam.is_big_cloud = true;
+        break;
+
     case SPELL_POISONOUS_CLOUD:
         beam.name     = "blast of poison";
         beam.damage   = dice_def(3, 3 + power / 25);

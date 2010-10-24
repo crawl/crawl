@@ -1305,6 +1305,7 @@ bool spell_no_hostile_in_range(spell_type spell, int minRange)
     case SPELL_MEPHITIC_CLOUD:
     case SPELL_FIREBALL:
     case SPELL_FREEZING_CLOUD:
+    case SPELL_NOXIOUS_CLOUD:
     case SPELL_POISONOUS_CLOUD:
         // Increase range by one due to cloud radius.
         bonus = 1;
