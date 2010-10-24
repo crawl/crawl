@@ -325,6 +325,8 @@ formatted_string describe_mutations()
     switch (you.body_size(PSIZE_TORSO, true))
     {
     case SIZE_LITTLE:
+        if (you.species == SP_CAT)
+            break;
         result += "You are tiny and cannot use many weapons and most armour.\n";
         have_any = true;
         break;
