@@ -112,10 +112,21 @@ static tileidx_t _tileidx_trap(trap_type type)
 static tileidx_t _tileidx_shop(coord_def where)
 {
     const shop_struct *shop = get_shop(where);
-    if (!shop)
+    if (!shop && !feature_mimic_at(where))
         return TILE_DNGN_ERROR;
 
-    switch (shop->type)
+    shop_type stype = shop->type;
+
+    if (feature_mimic_at(where))
+    {
+        monster *mimic = monster_at(where);
+        if (mimic->props.exists("shop_type"))
+            stype = static_cast<shop_type>(mimic->props["shop_type"].get_short());
+        else
+            return TILE_DNGN_ERROR;
+    }
+
+    switch (stype)
     {
         case SHOP_WEAPON:
         case SHOP_WEAPON_ANTIQUE:
@@ -347,6 +358,9 @@ tileidx_t tileidx_feature(const coord_def &gc)
                         && feat != DNGN_UNSEEN;
     if (override && can_override)
         return (override);
+
+    if (feature_mimic_at(gc))
+        feat = get_mimic_feat(monster_at(gc));
 
     // Any grid-specific tiles.
     switch (feat)
@@ -1358,6 +1372,20 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_DANCING_WEAPON:
         return TILE_UNSEEN_WEAPON;
 
+    // Feature mimics are dealt with elsewhere.
+    case MONS_DOOR_MIMIC:
+        return TILE_DNGN_CLOSED_DOOR;
+    case MONS_PORTAL_MIMIC:
+        return TILE_DNGN_ENTER_LABYRINTH;
+    case MONS_TRAP_MIMIC:
+        return TILE_DNGN_TRAP_DART;
+    case MONS_STAIR_MIMIC:
+        return TILE_DNGN_STONE_STAIRS_DOWN;
+    case MONS_SHOP_MIMIC:
+        return TILE_DNGN_ABANDONED_SHOP;
+    case MONS_FOUNTAIN_MIMIC:
+        return TILE_DNGN_DRY_FOUNTAIN;
+
     // '5' demons
     case MONS_IMP:
         return TILEP_MONS_IMP;
@@ -1774,6 +1802,19 @@ static tileidx_t _tileidx_monster_no_props(const monster* mon)
                     t |= TILE_FLAG_ANIM_WEP;
                 return t;
             }
+
+        // Feature mimics are dealt with properly here.
+        case MONS_SHOP_MIMIC:
+            return (_tileidx_shop(mon->pos()));
+        case MONS_TRAP_MIMIC:
+            return (_tileidx_trap(get_trap_type(mon->pos())));
+        case MONS_PORTAL_MIMIC:
+            return TILE_DNGN_ENTER_LABYRINTH;
+
+        case MONS_DOOR_MIMIC:
+        case MONS_STAIR_MIMIC:
+        case MONS_FOUNTAIN_MIMIC:
+            return _tileidx_feature_base(get_mimic_feat(mon));
 
         case MONS_DANCING_WEAPON:
             {
