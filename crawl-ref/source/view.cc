@@ -737,9 +737,12 @@ static int player_view_update_at(const coord_def &gc)
     if (!(env.pgrid(gc) & FPROP_SEEN_OR_NOEXP))
     {
         env.pgrid(gc) |= FPROP_SEEN_OR_NOEXP;
-        const int density = env.density ? env.density : 1000;
-        did_god_conduct(DID_EXPLORATION, density);
-        you.exploration += div_rand_round(1<<16, density);
+        if (!crawl_state.game_is_arena())
+        {
+            const int density = env.density ? env.density : 1000;
+            did_god_conduct(DID_EXPLORATION, density);
+            you.exploration += div_rand_round(1<<16, density);
+        }
     }
 
 #ifdef USE_TILE
