@@ -192,7 +192,15 @@ dungeon_feature_type get_mimic_feat (const monster* mimic)
     case MONS_TRAP_MIMIC:
         return (DNGN_TRAP_MECHANICAL);
     case MONS_STAIR_MIMIC:
-        return (DNGN_STONE_STAIRS_DOWN_I);
+        if (mimic->props.exists("stair_type"))
+        {
+            return static_cast<dungeon_feature_type>(mimic->props[
+                "stair_type"].get_short());
+        }
+        else
+        {
+            return (DNGN_STONE_STAIRS_DOWN_I);
+        }
     case MONS_SHOP_MIMIC:
         return (DNGN_ENTER_SHOP);
     case MONS_FOUNTAIN_MIMIC:

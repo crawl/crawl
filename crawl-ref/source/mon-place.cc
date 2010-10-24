@@ -40,6 +40,7 @@
 #include "religion.h"
 #include "shopping.h"
 #include "sprint.h"
+#include "stairs.h"
 #include "state.h"
 #include "stuff.h"
 #include "env.h"
@@ -1610,7 +1611,7 @@ static int _place_monster_aux(const mgen_data &mg,
         }
 
         case MONS_TRAP_MIMIC:
-            mon->props["trap_type"] = random_trap(DNGN_TRAP_MECHANICAL);
+            mon->props["trap_type"] = static_cast<short>(random_trap(DNGN_TRAP_MECHANICAL));
             break;
 
         // Needs a more complicated block.
@@ -1626,12 +1627,83 @@ static int _place_monster_aux(const mgen_data &mg,
                 sh_name += " " + sh_suffix;
 
             mon->props["shop_name"] = sh_name;
-            mon->props["shop_type"] = type;
+            mon->props["shop_type"] = static_cast<short>(type);
             break;
         }
 
+        // Uses complicated logic!
         case MONS_STAIR_MIMIC:
+        {
+            // So far, branch stairs.
+            mon->colour = YELLOW;
+
+            bool got_stair = false;
+
+            // If we're in lair, and we're in one of the suitable levels,
+            // and it's the disabled branch, pretend to be that one.
+            if (you.where_are_you == BRANCH_LAIR)
+            {
+                const branch_type lair_branches[3] = {
+                    BRANCH_SWAMP,
+                    BRANCH_SHOALS,
+                    BRANCH_SNAKE_PIT,
+                };
+
+                for (int i = 0; i < 3; i++) {
+                    if (branches[lair_branches[i]].startdepth == -1)
+                    {
+                        mon->props["stair_type"] = static_cast<short>(
+                            branches[lair_branches[i]].entry_stairs);
+                        got_stair = true;
+                    }
+                }
+            }
+
+            // If we're in the vaults, pick a suitable branch.
+            if (you.where_are_you == BRANCH_VAULTS)
+            {
+                mon->props["stair_type"] = static_cast<short>(random_choose(
+                    DNGN_ENTER_HALL_OF_BLADES, DNGN_ENTER_CRYPT, -1));
+                break;
+            }
+
+            // Tantalise the player with an early temple.
+            if (you.where_are_you == BRANCH_MAIN_DUNGEON && you.absdepth0 <= 7
+                && you.absdepth0 >= 4)
+            {
+                mon->props["stair_type"] = static_cast<short>(DNGN_ENTER_TEMPLE);
+                break;
+            }
+
+            // Otherwise, give a seemingly valid branch.
+            if (you.where_are_you == BRANCH_MAIN_DUNGEON)
+            {
+                for (int branch = BRANCH_ORCISH_MINES; branch < NUM_BRANCHES; ++branch)
+                {
+                    Branch *b = &branches[branch];
+                    if (b->parent_branch == BRANCH_MAIN_DUNGEON
+                        && you.absdepth0 >= b->mindepth
+                        && you.absdepth0 <= b->maxdepth
+                        && one_chance_in(4))
+                    {
+                        mon->props["stair_type"] = static_cast<short>(b->entry_stairs);
+                        got_stair = true;
+                        break;
+                    }
+                }
+            }
+
+            if (got_stair)
+                break;
+
+            // If we get to here, we've not got a stair yet...
+            // So either choose a stone stair, or an escape hatch.
+            dungeon_feature_type stair = random_stair();
+            mon->props["stair_type"] = static_cast<short>(stair);
+            const feature_def stair_d = get_feature_def(stair);
+            mon->colour = stair_d.colour;
             break;
+        }
 
         // Just needs a selection of random fountains.
         case MONS_FOUNTAIN_MIMIC:
