@@ -1601,8 +1601,6 @@ int monster_die(monster* mons, killer_type killer,
             const int bonus = (3 + random2avg(10, 2)) / 2;
 
             you.increase_duration(DUR_BERSERK, bonus);
-            you.increase_duration(DUR_MIGHT, bonus);
-            haste_player(bonus * 2, true);
 
             mpr("You feel the power of Trog in you as your rage grows.",
                 MSGCH_GOD, GOD_TROG);
@@ -1612,8 +1610,6 @@ int monster_die(monster* mons, killer_type killer,
             const int bonus = (2 + random2(4)) / 2;;
 
             you.increase_duration(DUR_BERSERK, bonus);
-            you.increase_duration(DUR_MIGHT, bonus);
-            haste_player(bonus * 2, true);
 
             mpr("Your amulet glows a violent red.");
         }

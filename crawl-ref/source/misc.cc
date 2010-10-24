@@ -1425,15 +1425,23 @@ bool go_berserk(bool intentional, bool potion)
     if (Hints.hints_left)
         Hints.hints_berserk_counter++;
 
-    // Che prevents hasting the player if the berserk was unintentional.
-    // Otherwise, the haste would be forgiven "just this once" every time.
-    const bool che_blocks_haste =
-        you.religion == GOD_CHEIBRIADOS && !intentional;
-
     mpr("A red film seems to cover your vision as you go berserk!");
 
-    if (che_blocks_haste)
-        simple_god_message(" protects you from inadvertent hurry.");
+    if (you.religion == GOD_CHEIBRIADOS)
+    {
+        // Che makes berserk not speed you up.
+        // Unintentional would be forgiven "just this once" every time.
+        // Intentional could work as normal, but that would require storing
+        // whether you transgressed to start it -- so we just consider this
+        // a part of your penance.
+        if (intentional)
+        {
+            did_god_conduct(DID_HASTY, 8);
+            simple_god_message(" forces you to slow down.");
+        }
+        else
+            simple_god_message(" protects you from inadvertent hurry.");
+    }
     else
         mpr("You feel yourself moving faster!");
 
@@ -1453,17 +1461,6 @@ bool go_berserk(bool intentional, bool potion)
 
     if (!you.duration[DUR_MIGHT])
         notify_stat_change(STAT_STR, 5, true, "going berserk");
-
-    you.increase_duration(DUR_MIGHT, berserk_duration);
-
-    if (!che_blocks_haste)
-    {
-        // doubling the duration here since haste_player already cuts input
-        // durations in half
-        haste_player(berserk_duration * 2);
-
-        did_god_conduct(DID_HASTY, 8, intentional);
-    }
 
     if (you.berserk_penalty != NO_BERSERK_PENALTY)
         you.berserk_penalty = 0;

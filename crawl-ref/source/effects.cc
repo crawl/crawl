@@ -2232,7 +2232,7 @@ void handle_time()
     if (you.duration[DUR_INVIS] && x_chance_in_y(6, 10))
         added_contamination++;
 
-    if (you.duration[DUR_HASTE] && !you.berserk() && x_chance_in_y(6, 10))
+    if (you.duration[DUR_HASTE] && x_chance_in_y(6, 10))
         added_contamination++;
 
     bool mutagenic_randart = false;

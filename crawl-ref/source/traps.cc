@@ -1218,7 +1218,7 @@ void free_self_from_net()
         // You try to escape (takes at least 3 turns, and at most 10).
         int escape = do_what;
 
-        if (you.duration[DUR_HASTE]) // extra bonus, also Berserk
+        if (you.duration[DUR_HASTE] || you.duration[DUR_BERSERK]) // extra bonus
             escape++;
 
         // Medium sized characters are at a disadvantage and sometimes
