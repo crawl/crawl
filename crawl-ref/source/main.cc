@@ -2070,7 +2070,7 @@ static void _decrement_durations()
             you.duration[DUR_DEMONIC_GUARDIAN] -= delay;
     }
 
-    // Must come before might/haste/berserk.
+    // Must come before berserk.
     if (_decrement_a_duration(DUR_BUILDING_RAGE, delay))
         go_berserk(false);
 
@@ -2430,23 +2430,13 @@ static void _decrement_durations()
         // duration.
         you.increase_duration(DUR_EXHAUSTED, dur * 2);
 
+        notify_stat_change(STAT_STR, -5, true, "berserk running out");
+
         // Don't trigger too many hints mode messages.
         const bool hints_slow = Hints.hints_events[HINT_YOU_ENCHANTED];
         Hints.hints_events[HINT_YOU_ENCHANTED] = false;
 
-        {
-            // Don't give duplicate 'You feel yourself slow down' messages.
-            no_messages nm;
-
-            // Even if you had built up haste before going berserk,
-            // exhaustion still ends it.
-            if (you.duration[DUR_HASTE] > 0)
-            {
-                // Silently cancel haste, then slow player.
-                you.duration[DUR_HASTE] = 0;
-            }
-            slow_player(dur);
-        }
+        slow_player(dur);
 
         make_hungry(700, true);
         you.hunger = std::max(50, you.hunger);
@@ -3696,19 +3686,10 @@ static void _do_berserk_no_combat_penalty(void)
 
         const int hasted_base_delay = BASELINE_DELAY / 2;
         int berserk_delay_penalty = you.berserk_penalty * hasted_base_delay;
-        // Do these three separately, because the might and
-        // haste counters can be different.
+
         you.duration[DUR_BERSERK] -= berserk_delay_penalty;
         if (you.duration[DUR_BERSERK] < hasted_base_delay)
             you.duration[DUR_BERSERK] = hasted_base_delay;
-
-        you.duration[DUR_MIGHT] -= berserk_delay_penalty;
-        if (you.duration[DUR_MIGHT] < hasted_base_delay)
-            you.duration[DUR_MIGHT] = hasted_base_delay;
-
-        you.duration[DUR_HASTE] -= berserk_delay_penalty;
-        if (you.duration[DUR_HASTE] < hasted_base_delay)
-            you.duration[DUR_HASTE] = hasted_base_delay;
     }
     return;
 }                               // end do_berserk_no_combat_penalty()

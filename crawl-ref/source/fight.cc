@@ -1604,7 +1604,7 @@ int melee_attack::player_apply_fighting_skill(int damage, bool aux)
 
 int melee_attack::player_apply_misc_modifiers(int damage)
 {
-    if (you.duration[DUR_MIGHT] > 1)
+    if (you.duration[DUR_MIGHT] || you.duration[DUR_BERSERK])
         damage += 1 + random2(10);
 
     if (you.species != SP_VAMPIRE && you.hunger_state == HS_STARVING)

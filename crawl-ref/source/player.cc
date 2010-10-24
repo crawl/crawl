@@ -1199,14 +1199,14 @@ int player_hunger_rate(void)
     // Moved here from main.cc... maintaining the >= 40 behaviour.
     if (you.hunger >= 40)
     {
-        if (you.duration[DUR_INVIS] > 0)
+        if (you.duration[DUR_INVIS])
             hunger += 5;
 
         // Berserk has its own food penalty - excluding berserk haste.
         // Doubling the hunger cost for haste so that the per turn hunger
         // is consistent now that a hasted turn causes 50% the normal hunger
         // -cao
-        if (you.duration[DUR_HASTE] > 0 && !you.berserk())
+        if (you.duration[DUR_HASTE])
             hunger += 10;
     }
 
@@ -1992,8 +1992,11 @@ int player_speed(void)
     if (you.duration[DUR_SLOW])
         ps *= 2;
 
-    if (you.duration[DUR_HASTE])
+    if (you.duration[DUR_HASTE]
+        || you.duration[DUR_BERSERK] && you.religion != GOD_CHEIBRIADOS)
+    {
         ps /= 2;
+    }
 
     switch (you.attribute[ATTR_TRANSFORMATION])
     {
@@ -3466,6 +3469,7 @@ int get_expiration_threshold(duration_type dur)
     case DUR_SWIFTNESS:
     case DUR_INVIS:
     case DUR_HASTE:
+    case DUR_BERSERK:
     case DUR_ICY_ARMOUR:
     case DUR_PHASE_SHIFT:
     case DUR_CONTROL_TELEPORT:
@@ -4846,7 +4850,7 @@ bool haste_player(int turns, bool rageext)
     turns /= 2;
     const int threshold = 40;
 
-    if (you.duration[DUR_HASTE] == 0)
+    if (!you.duration[DUR_HASTE])
         mpr("You feel yourself speed up.");
     else if (you.duration[DUR_HASTE] > threshold * BASELINE_DELAY)
         mpr("You already have as much speed as you can handle.");
@@ -4884,7 +4888,8 @@ void dec_haste_player(int delay)
     }
     else if (you.duration[DUR_HASTE] <= BASELINE_DELAY)
     {
-        mpr("You feel yourself slow down.", MSGCH_DURATION);
+        if (!you.duration[DUR_BERSERK])
+            mpr("You feel yourself slow down.", MSGCH_DURATION);
         you.duration[DUR_HASTE] = 0;
     }
 }
