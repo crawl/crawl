@@ -506,6 +506,7 @@ static void _get_status_lights(std::vector<status_light>& out)
         STATUS_SPEED, DUR_DEATH_CHANNEL, DUR_TELEPATHY, DUR_STEALTH,
         DUR_BREATH_WEAPON, DUR_EXHAUSTED, DUR_POWERED_BY_DEATH,
         DUR_TRANSFORMATION, DUR_AFRAID, DUR_MIRROR_DAMAGE, DUR_SCRYING,
+	STATUS_EARTH_ATTUNED,
     };
 
     status_info inf;

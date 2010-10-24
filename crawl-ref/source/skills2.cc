@@ -1282,6 +1282,43 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_CAT,             SK_POISON_MAGIC,   -1),
     APT(SP_CAT,             SK_INVOCATIONS,    -1),
     APT(SP_CAT,             SK_EVOCATIONS,     -2),
+
+
+    // SP_NOME
+    APT(SP_NOME,           SK_FIGHTING,        0),
+    APT(SP_NOME,           SK_SHORT_BLADES,    0),
+    APT(SP_NOME,           SK_LONG_BLADES,     -2),
+    APT(SP_NOME,           SK_AXES,            0),
+    APT(SP_NOME,           SK_MACES_FLAILS,    1),
+    APT(SP_NOME,           SK_POLEARMS,        -3),
+    APT(SP_NOME,           SK_STAVES,          0),
+    APT(SP_NOME,           SK_SLINGS,          1),
+    APT(SP_NOME,           SK_BOWS,            -1),
+    APT(SP_NOME,           SK_CROSSBOWS,       -1),
+    APT(SP_NOME,           SK_THROWING,        1),
+    APT(SP_NOME,           SK_ARMOUR,          1),
+    APT(SP_NOME,           SK_DODGING,         -1),
+    APT(SP_NOME,           SK_STEALTH,         1),
+    APT(SP_NOME,           SK_STABBING,        1),
+    APT(SP_NOME,           SK_SHIELDS,         0),
+    APT(SP_NOME,           SK_TRAPS_DOORS,     0),
+    APT(SP_NOME,           SK_UNARMED_COMBAT,  0),
+    APT(SP_NOME,           SK_SPELLCASTING,    0),
+    APT(SP_NOME,           SK_CONJURATIONS,    0),
+    APT(SP_NOME,           SK_ENCHANTMENTS,    -2),
+    APT(SP_NOME,           SK_SUMMONINGS,      0),
+    APT(SP_NOME,           SK_NECROMANCY,      0),
+    APT(SP_NOME,           SK_TRANSLOCATIONS,  -2),
+    APT(SP_NOME,           SK_TRANSMUTATIONS,  1),
+    APT(SP_NOME,           SK_FIRE_MAGIC,      1),
+    APT(SP_NOME,           SK_ICE_MAGIC,       -1),
+    APT(SP_NOME,           SK_AIR_MAGIC,       -4),
+    APT(SP_NOME,           SK_EARTH_MAGIC,     5),
+    APT(SP_NOME,           SK_POISON_MAGIC,    -1),
+    APT(SP_NOME,           SK_INVOCATIONS,     -1),
+    APT(SP_NOME,           SK_EVOCATIONS,      -1),
+
+
 };
 
 // Traditionally, Spellcasting and In/Evocations formed the exceptions here:
@@ -1639,6 +1676,7 @@ static std::string _stk_weight()
     case SP_KENKU:
         return "Light";
 
+    case SP_NOME:
     case SP_HALFLING:
     case SP_KOBOLD:
         return "Feather";

@@ -858,13 +858,13 @@ enum delay_type
     DELAY_ASCENDING_STAIRS,
     DELAY_DESCENDING_STAIRS,
     DELAY_RECITE,  // Zin's Recite invocation
+    DELAY_ROCK_SWIMMING, //Nomes entering/leaving rock
 
     // [dshaligram] Shift-running, resting, travel and macros are now
     // also handled as delays.
     DELAY_RUN,
     DELAY_REST,
     DELAY_TRAVEL,
-
     DELAY_MACRO,
 
     // In a macro delay, a stacked delay to tell Crawl to read and act on
@@ -2982,6 +2982,7 @@ enum species_type
     SP_VAMPIRE,
     SP_DEEP_DWARF,
     SP_CAT,
+    SP_NOME,
     SP_ELF,                            // (placeholder)
     SP_HILL_DWARF,                     // (placeholder)
     SP_OGRE_MAGE,                      // (placeholder)

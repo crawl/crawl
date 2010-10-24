@@ -149,6 +149,20 @@ static bool _check_moveto_cloud(const coord_def& p,
     return (true);
 }
 
+static bool _feat_is_there(dungeon_feature_type feat) {
+  return true;
+}
+
+static bool _check_moveto_breathable(const coord_def& p, const std::string &move_verb)
+{
+  //see if square or one of surroundings is non-wall. Used for Nomes.
+  const dungeon_feature_type new_grid = env.grid(p);
+
+  return !feat_is_solid(new_grid)  
+    || (count_neighbours_with_func(p, &feat_is_solid) < 
+	count_neighbours_with_func(p, &_feat_is_there )) ;
+}
+
 static bool _check_moveto_trap(const coord_def& p, const std::string &move_verb)
 {
     // If we're walking along, give a chance to avoid traps.
@@ -245,6 +259,7 @@ static bool _check_moveto_trap(const coord_def& p, const std::string &move_verb)
 static bool _check_moveto_dangerous(const coord_def& p,
                                     const std::string move_verb)
 {
+
     if (you.can_swim() && feat_is_water(env.grid(p))
         || !is_feat_dangerous(env.grid(p)))
     {
@@ -267,9 +282,20 @@ static bool _check_moveto_terrain(const coord_def& p,
     return (_check_moveto_dangerous(p, move_verb));
 }
 
+static bool _check_moveto_rock(const coord_def& p,
+                                  const std::string &move_verb)
+{
+  if (!feat_is_solid(env.grid(p)))
+    return true;
+  if (you.can_swim_through_rock() && feat_is_solid(env.grid(p)) && _check_moveto_breathable(p , move_verb))
+    return (true);
+  return false;
+}
+
 bool check_moveto(const coord_def& p, const std::string &move_verb)
 {
-    return (_check_moveto_terrain(p, move_verb)
+  return (_check_moveto_rock(p,move_verb) 
+	    && _check_moveto_terrain(p, move_verb)
             && _check_moveto_cloud(p, move_verb)
             && _check_moveto_trap(p, move_verb));
 }
@@ -289,6 +315,27 @@ void moveto_location_effects(dungeon_feature_type old_feat,
         // If true, we were shifted and so we're done.
         if (fall_into_a_pool(entry, allow_shift, new_grid))
             return;
+    }
+
+    //Nome effects for entering/leaving rock
+    if (you.can_swim_through_rock()) {
+      //air -> rock
+      if (feat_is_solid(new_grid) && !feat_is_solid(old_feat)) {
+	mpr("You slowly crumble into the wall.");
+	//start_delay(DELAY_ROCK_SWIMMING,1);
+	nome_start_rock_swimming();
+      }
+      //rock -> air
+      if (feat_is_solid(old_feat) && !feat_is_solid(new_grid)) {
+	mpr("Your skin softens as you crumble out of the wall.");
+	//start_delay(DELAY_ROCK_SWIMMING,1);
+	nome_stop_rock_swimming();
+      }
+      //rock -> different rock
+      if (feat_is_solid(old_feat) && feat_is_solid(new_grid) && (old_feat != new_grid)) {
+	//mpr("Your body changes slightly with the surrounding material.");
+	nome_start_rock_swimming();
+      }
     }
 
     if (!you.airborne())
@@ -2006,6 +2053,16 @@ int player_speed(void)
         break;
     }
 
+    if (you.earth_attunement > 0) {
+      int earth = you.earth_attunement;
+      ps *= (earth == 4) ? 15 :
+	(earth == 3) ? 14 :
+	(earth == 2) ? 13 :
+	(earth == 1) ? 12 :
+	20; 
+      ps /= 10;
+    }
+
     return ps;
 }
 
@@ -3090,7 +3147,22 @@ void level_change(bool skip_attribute_increase)
                 if (you.experience_level % 3)
                     mp_adjust++;
                 break;
+	    case SP_NOME:
+                if (you.experience_level < 17)
+                    hp_adjust--;
 
+                if (you.experience_level % 3)
+                    hp_adjust--;
+
+                mp_adjust++;
+
+                if (!(you.experience_level % 5))
+                {
+                    modify_stat((coinflip() ? STAT_STR
+                                            : STAT_INT), 1, false,
+                                "level gain");
+                }
+	      break;
             case SP_SPRIGGAN:
                 if (you.experience_level < 17)
                     hp_adjust--;
@@ -3345,6 +3417,7 @@ int check_stealth(void)
                 else
                     stealth += (you.skills[SK_STEALTH] * 18);
                 break;
+	    case SP_NOME:
             case SP_HALFLING:
             case SP_KOBOLD:
             case SP_SPRIGGAN:
@@ -3400,6 +3473,10 @@ int check_stealth(void)
         stealth += 50;
 
     stealth += scan_artefacts(ARTP_STEALTH);
+
+    //Nome stealth boost in rock
+    if (you.in_rock() && you.rocky()) 
+      stealth += 30;
 
     if (you.airborne())
         stealth += 10;
@@ -3707,6 +3784,7 @@ void display_char_status()
         STATUS_AIRBORNE, STATUS_NET, DUR_POISONING, STATUS_SICK,
         STATUS_ROT, STATUS_GLOW, DUR_CONFUSING_TOUCH, DUR_SURE_BLADE,
         DUR_AFRAID, DUR_MIRROR_DAMAGE, DUR_SCRYING,
+	STATUS_EARTH_ATTUNED,
     };
 
     status_info inf;
@@ -3818,6 +3896,7 @@ static int _species_exp_mod(species_type species)
         case SP_SPRIGGAN:
         case SP_KENKU:
             return 13;
+        case SP_NOME:
         case SP_DEEP_ELF:
         case SP_CENTAUR:
         case SP_MINOTAUR:
@@ -4313,6 +4392,10 @@ int get_real_hp(bool trans, bool rotted)
     hitp  = (you.base_hp - 5000) + (you.base_hp2 - 5000);
     hitp += (you.experience_level * you.skills[SK_FIGHTING]) / 5;
 
+    //Nome wall-swimming HP bonus 
+    if (trans && you.species == SP_NOME && you.rocky() ) 
+      hitp = hitp * 13 / 10;
+
     // Being berserk makes you resistant to damage. I don't know why.
     if (trans && you.berserk())
         hitp = hitp * 3 / 2;
@@ -4410,6 +4493,17 @@ int get_contamination_level()
     return (0);
 }
 
+std::string describe_earth_attunement(int earth_attunement) 
+{
+  if (earth_attunement <= 0) 
+    return "";
+  return make_stringf("You are %s attuned to the earth.",
+		      (earth_attunement == 4) ? "intimately" :
+		      (earth_attunement == 3) ? "deeply" :
+		      (earth_attunement == 2) ? "moderately" :
+		      (earth_attunement == 1) ? "slightly" : "buggily"); 
+}
+
 std::string describe_contamination(int cont)
 {
     if (cont > 5)
@@ -4489,6 +4583,41 @@ void contaminate_player(int change, bool controlled, bool msg)
             did_god_conduct(DID_CAUSE_GLOWING, 1 + new_level, true);
     }
 }
+
+void change_earth_attunement(int change, bool msg ) 
+{
+  you.redraw_armour_class = true;
+  you.redraw_hit_points = true;
+
+  int old_ea = you.earth_attunement;
+  you.earth_attunement += change;
+  if (msg) {
+    if (you.earth_attunement <= 0 && old_ea > 0) {
+     mpr("You are no longer attuned to the earth.");
+    }
+  }
+  
+  //handle HP gain/loss
+  if (you.earth_attunement > 0 && old_ea <= 0) {
+    calc_hp();
+    you.hp = you.hp * 13/10;
+    deflate_hp(you.hp_max,false);
+  }
+
+  if (you.earth_attunement <= 0 && old_ea > 0) {
+    if (you.hp != you.hp_max)
+      {
+        you.hp = you.hp * 10 / 13;
+        if (you.hp < 1)
+	  you.hp = 1;
+        else if (you.hp > you.hp_max)
+	  you.hp = you.hp_max;
+      }
+    calc_hp();
+  }
+
+}
+
 
 bool confuse_player(int amount, bool resistable)
 {
@@ -5316,6 +5445,16 @@ bool player::is_levitating() const
     return (duration[DUR_LEVITATION]);
 }
 
+bool player::in_rock() const 
+{
+  return feat_is_solid(grd(pos())); 
+}
+
+bool player::rocky() const 
+{
+  return (earth_attunement > 0);
+}
+
 bool player::in_water() const
 {
     return (!airborne() && !beogh_water_walk()
@@ -5328,6 +5467,11 @@ bool player::can_swim(bool permanently) const
     // stat-boosting boots or heavy armour.
     return ((species == SP_MERFOLK || species == SP_GREY_DRACONIAN)
              || (!permanently && transform_can_swim()));
+}
+
+bool player::can_swim_through_rock() const 
+{
+  return species == SP_NOME; 
 }
 
 int player::visible_igrd(const coord_def &where) const
@@ -5505,9 +5649,29 @@ int player_icemail_armour_class()
                    * ICEMAIL_MAX / ICEMAIL_TIME));
 }
 
+int player::nome_ac_boost() const
+{
+  int earth = you.earth_attunement;
+  if (earth > 0) {
+    return 100* ( you.experience_level/4 + 
+		  (earth == 4) ? 8 :
+		  (earth == 3) ? 7 : 
+		  (earth == 2) ? 6 :
+		  (earth == 1) ? 5 : 9 );
+  }
+  
+  return 0;
+//   //bonuses do not stack with statue form
+//   if ( you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE)
+//     return 0;
+}
+
 int player::armour_class() const
 {
     int AC = 0;
+    
+    if (you.species == SP_NOME ) 
+      AC += nome_ac_boost();
 
     for (int eq = EQ_MIN_ARMOUR; eq <= EQ_MAX_ARMOUR; ++eq)
     {

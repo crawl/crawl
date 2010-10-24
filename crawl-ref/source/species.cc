@@ -25,7 +25,7 @@ static species_type species_order[] = {
     SP_HILL_ORC,       SP_MERFOLK,
     // small species
     SP_HALFLING,       SP_KOBOLD,
-    SP_SPRIGGAN,
+    SP_SPRIGGAN,       SP_NOME, 
     // significantly different body type from human
     SP_NAGA,           SP_CENTAUR,
     SP_OGRE,           SP_TROLL,
@@ -60,7 +60,7 @@ static const char * Species_Abbrev_List[NUM_SPECIES] =
       // the draconians
       "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr",
       "Ce", "DG", "Sp", "Mi", "DS", "Gh", "Ke", "Mf", "Vp", "DD",
-      "Fe",
+      "Fe", "No",
       // placeholders
       "El", "HD", "OM", "GE", "Gn" };
 
@@ -247,6 +247,7 @@ std::string species_name(species_type speci, bool genus, bool adj)
         case SP_MERFOLK:    res = (adj ? "Merfolkian" : "Merfolk");    break;
         case SP_VAMPIRE:    res = (adj ? "Vampiric"   : "Vampire");    break;
         case SP_CAT:        res = (adj ? "Feline"     : "Felid");      break;
+	case SP_NOME:       res = (adj ? "Nomish"     : "Nome" );      break;      
         default:            res = (adj ? "Yakish"     : "Yak");        break;
         }
     }
@@ -319,6 +320,7 @@ size_type species_size(species_type species, size_part_type psize)
         return ((psize == PSIZE_TORSO) ? SIZE_MEDIUM : SIZE_LARGE);
     case SP_HALFLING:
     case SP_KOBOLD:
+    case SP_NOME:
         return (SIZE_SMALL);
     case SP_SPRIGGAN:
     case SP_CAT:
@@ -340,6 +342,7 @@ monster_type player_species_to_mons_species(species_type species)
     case SP_SLUDGE_ELF:
         return (MONS_ELF);
     case SP_MOUNTAIN_DWARF:
+    case SP_NOME: //PLACEHOLDER until Nome monster implemented
         return (MONS_DWARF);
     case SP_HALFLING:
         return (MONS_HALFLING);

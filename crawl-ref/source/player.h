@@ -96,6 +96,7 @@ public:
   bool royal_jelly_dead;
   bool transform_uncancellable;
   bool fishtail; // Merfolk fishtail transformation
+  //  bool rocky; //Nome wall transformation
 
   unsigned short pet_target;
 
@@ -193,6 +194,7 @@ public:
 
   std::vector<demon_trait> demonic_traits;
 
+  int earth_attunement; // nomes only
   int magic_contamination;
 
   FixedVector<bool, NUM_FIXED_BOOKS> had_book;
@@ -359,8 +361,13 @@ public:
 
     bool in_water() const;
     bool can_swim(bool permanently = false) const;
+    bool can_swim_through_rock() const;
     int visible_igrd(const coord_def&) const;
     bool is_levitating() const;
+    bool in_rock() const;
+    //at least one level of earth attunement (nomes)
+    bool rocky() const; 
+
     bool cannot_speak() const;
     bool invisible() const;
     bool misled() const;
@@ -574,6 +581,7 @@ public:
     bool can_throw_large_rocks() const;
     bool can_smell() const;
 
+    int nome_ac_boost() const;
     int armour_class() const;
     int gdr_perc() const;
     int melee_evasion(const actor *attacker,
@@ -854,6 +862,8 @@ void set_mp(int new_amount, bool max_too);
 
 void contaminate_player(int change, bool controlled = false,
                         bool msg = true);
+void change_earth_attunement(int change, bool msg = true);
+std::string describe_earth_attunement( int earth_attunement) ;
 
 bool confuse_player(int amount, bool resistable = true);
 

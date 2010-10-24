@@ -196,6 +196,7 @@ static void _mark_expiring(status_info* inf, bool expiring)
 
 static void _describe_airborne(status_info* inf);
 static void _describe_burden(status_info* inf);
+static void _describe_earth_attunement(status_info* inf);
 static void _describe_glow(status_info* inf);
 static void _describe_hunger(status_info* inf);
 static void _describe_regen(status_info* inf);
@@ -258,6 +259,9 @@ void fill_status_info(int status, status_info* inf)
         _describe_burden(inf);
         break;
 
+    case STATUS_EARTH_ATTUNED:
+      _describe_earth_attunement(inf);
+        break;
     case STATUS_GLOW:
         // includes corona
         _describe_glow(inf);
@@ -442,6 +446,25 @@ static void _describe_hunger(status_info* inf)
     default:
         break;
     }
+}
+static void _describe_earth_attunement(status_info* inf) 
+{
+  int earth = you.earth_attunement;
+    if ( earth > 0)
+    {
+
+      inf -> light_text = "earth";
+      inf->light_colour = _bad_ench_colour(earth, 2, 3);
+   
+      inf->short_text =
+	(earth == 1) ? "slightly " :
+	(earth == 2) ? "moderately " :
+	(earth == 3) ? "deeply" :
+	(earth == 4) ? "intimately " : "ridiculously";
+      inf->short_text += " earth-attuned";
+      inf->long_text = describe_earth_attunement(earth);
+    }
+    
 }
 
 static void _describe_glow(status_info* inf)

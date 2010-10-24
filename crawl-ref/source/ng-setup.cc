@@ -70,6 +70,7 @@ static void _species_stat_init(species_type which_species)
     case SP_MERFOLK:            sb =  6; ib =  5; db =  7;      break;  // 18
     case SP_KENKU:              sb =  6; ib =  6; db =  7;      break;  // 19
 
+    case SP_NOME:               sb =  7; ib =  6; db =  5;      break;  // 18
     case SP_KOBOLD:             sb =  5; ib =  4; db =  8;      break;  // 17
     case SP_HALFLING:           sb =  3; ib =  6; db =  9;      break;  // 18
     case SP_SPRIGGAN:           sb =  2; ib =  7; db =  9;      break;  // 18

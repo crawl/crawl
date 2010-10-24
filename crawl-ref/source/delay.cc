@@ -995,7 +995,10 @@ static void _finish_delay(const delay_queue_item &delay)
         mprf(MSGCH_PLAIN, "You finish %s.",
              _get_zin_recite_speech("other", you.num_turns + delay.duration).c_str());
         break;
-
+	
+    case DELAY_ROCK_SWIMMING:
+      //no "finish" message to avoid spam.
+      break;
     case DELAY_PASSWALL:
     {
         mpr("You finish merging with the rock.");
@@ -1677,7 +1680,7 @@ static const char *delay_names[] =
     "not_delayed", "eat", "vampire_feed", "armour_on", "armour_off",
     "jewellery_on", "memorise", "butcher", "bottle_blood", "weapon_swap",
     "passwall", "drop_item", "multidrop", "ascending_stairs",
-    "descending_stairs", "recite", "run", "rest", "travel", "macro",
+    "descending_stairs", "recite","swim_through_rock" ,"run", "rest", "travel", "macro",
     "macro_process_key", "interruptible", "uninterruptible"
 };
 

@@ -2222,6 +2222,12 @@ void handle_time()
         lose_stat(STAT_RANDOM, 1, false, "deterioration mutation");
     }
 
+    // earth attunement
+    // decrease earth attunement outside of walls.
+    if (you.rocky() && ! you.in_rock()) {
+      change_earth_attunement(-1);
+    }
+
     int added_contamination = 0;
 
     // Account for mutagenic radiation.  Invis and haste will give the

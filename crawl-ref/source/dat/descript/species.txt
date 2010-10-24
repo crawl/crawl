@@ -75,6 +75,10 @@ Naga
 
 A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake.
 %%%%
+Nome
+
+A gravel-skinned humanoid able to swim through solid rock.
+%%%%
 Ogre
 
 Large and strong, they're mostly seen as brutes. Casting ogres have been spotted, however.
