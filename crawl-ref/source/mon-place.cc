@@ -1,5 +1,5 @@
 /*
- *  File:       monplace.cc
+ *  File:       mon-place.cc
  *  Summary:    Functions used when placing monsters in the dungeon.
  *  Written by: Linley Henzell
  */
