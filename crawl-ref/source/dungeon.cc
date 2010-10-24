@@ -8187,7 +8187,7 @@ bool place_specific_trap(const coord_def& where, trap_type spec_type)
         do
             spec_type = static_cast<trap_type>(random2(NUM_TRAPS));
         while (spec_type == forbidden1 || spec_type == forbidden2 ||
-               spec_type == TRAP_GOLUBRIA);
+               spec_type == TRAP_GOLUBRIA || spec_type == TRAP_PLATE);
     }
 
     for (int tcount = 0; tcount < MAX_TRAPS; tcount++)
