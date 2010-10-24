@@ -2350,10 +2350,16 @@ void bolt::affect_endpoint()
     }
 
     if (name == "blast of poison")
-        big_cloud(CLOUD_POISON, whose_kill(), killer(), pos(), 0, 7+random2(5));
+    {
+        big_cloud(CLOUD_POISON, whose_kill(), killer(), pos(), 0,
+                  7 + random2(5));
+    }
 
     if (origin_spell == SPELL_HOLY_BREATH)
-        big_cloud(CLOUD_HOLY_FLAMES, whose_kill(), killer(), pos(), 0, 7+random2(5));
+    {
+        big_cloud(CLOUD_HOLY_FLAMES, whose_kill(), killer(), pos(), 0,
+                  7 + random2(5));
+    }
 
     if (name == "foul vapour")
     {
@@ -2368,8 +2374,8 @@ void bolt::affect_endpoint()
                   random_range(10, 15), 9);
     }
 
-    if ((name == "fiery breath" && you.species == SP_RED_DRACONIAN) ||
-         name == "searing blast") // monster and player red draconian breath abilities
+    if ((name == "fiery breath" && you.species == SP_RED_DRACONIAN)
+        || name == "searing blast") // monster and player red draconian breath abilities
     {
         place_cloud(CLOUD_FIRE, pos(), 5 + random2(5), whose_kill(), killer());
     }
