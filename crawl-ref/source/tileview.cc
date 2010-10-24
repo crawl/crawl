@@ -642,7 +642,7 @@ void tile_place_monster(const coord_def &gc, const monster* mon)
     tileidx_t t0   = t & TILE_FLAG_MASK;
     tileidx_t flag = t & (~TILE_FLAG_MASK);
 
-    if (mons_is_mimic(mon->type))
+    if (mons_is_item_mimic(mon->type))
     {
         if (!mons_is_known_mimic(mon))
         {
