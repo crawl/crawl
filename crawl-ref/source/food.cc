@@ -923,11 +923,11 @@ bool food_change(bool suppress_message)
         {
             if (newstate <= HS_SATIATED)
             {
-                if (you.duration[DUR_BERSERKER] > 1)
+                if (you.duration[DUR_BERSERK] > 1)
                 {
                     mpr("Your blood-deprived body can't sustain your rage any "
                         "longer.", MSGCH_DURATION);
-                    you.duration[DUR_BERSERKER] = 1;
+                    you.duration[DUR_BERSERK] = 1;
                 }
                 int transform = you.attribute[ATTR_TRANSFORMATION];
                 if (transform != TRAN_NONE && transform != TRAN_BAT

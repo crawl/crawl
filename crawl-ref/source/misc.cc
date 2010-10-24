@@ -1444,7 +1444,7 @@ bool go_berserk(bool intentional, bool potion)
     // approximately consistent withe previous versions. -cao
     int berserk_duration = (20 + random2avg(19,2)) / 2;
 
-    you.increase_duration(DUR_BERSERKER, berserk_duration);
+    you.increase_duration(DUR_BERSERK, berserk_duration);
 
     calc_hp();
     you.hp = you.hp * 3 / 2;
