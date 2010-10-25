@@ -2126,7 +2126,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
                 continue;
             }
 
-            if (you.check_res_magic(pow))
+            if (you.check_res_magic(pow) > 0)
             {
                 if (actual)
                     canned_msg(MSG_YOU_RESIST);
@@ -2177,10 +2177,14 @@ static int _mons_cause_fear(monster* mons, bool actual)
 
             // It's possible to scare this monster. If its magic
             // resistance fails, do so.
-            if (m->check_res_magic(pow))
+            int res_margin = m->check_res_magic(pow);
+            if (res_margin > 0)
             {
                 if (actual)
-                    simple_monster_message(m, " resists.");
+                {
+                    simple_monster_message(m,
+                                mons_resist_string(m, res_margin).c_str());
+                }
                 continue;
             }
 
