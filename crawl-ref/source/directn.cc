@@ -2923,7 +2923,7 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
     case DNGN_TRANSIT_PANDEMONIUM:
         return ("gate leading to another region of Pandemonium");
     case DNGN_ENTER_DWARF_HALL:
-        return ("staircase to the Dwarf Hall of Fallen Heroes");
+        return ("staircase to the Dwarf Hall");
     case DNGN_ENTER_ORCISH_MINES:
         return ("staircase to the Orcish Mines");
     case DNGN_ENTER_HIVE:
