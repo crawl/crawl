@@ -834,20 +834,53 @@ size_t strlcpy(char *dst, const char *src, size_t n)
 }
 
 #ifdef TARGET_OS_WINDOWS
-int get_taskbar_height()
+taskbar_pos get_taskbar_pos()
 {
     RECT rect;
     HWND taskbar = FindWindow("Shell_traywnd", NULL);
-    if(taskbar && GetWindowRect(taskbar, &rect)) {
-        int height = rect.bottom - rect.top;
+    if (taskbar && GetWindowRect(taskbar, &rect))
+    {
+        if (rect.right - rect.left > rect.bottom - rect.top)
+        {
+            if (rect.top > 0)
+                return TASKBAR_BOTTOM;
+            else
+                return TASKBAR_TOP;
+        }
+        else
+        {
+            if (rect.left > 0)
+                return TASKBAR_RIGHT;
+            else
+                return TASKBAR_LEFT;
+        }
+    }
+    return TASKBAR_NO;
+}
+
+int get_taskbar_size()
+{
+    RECT rect;
+    int size;
+    taskbar_pos tpos = get_taskbar_pos();
+    HWND taskbar = FindWindow("Shell_traywnd", NULL);
+
+    if (taskbar && GetWindowRect(taskbar, &rect))
+    {
+        if (tpos & TASKBAR_H)
+                size = rect.bottom - rect.top;
+        else if (tpos & TASKBAR_V)
+                size = rect.right - rect.left;
+        else
+            return 0;
 
         OSVERSIONINFOEX osvi;
         osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
-        if(GetVersionEx((OSVERSIONINFO *) &osvi))
+        if (GetVersionEx((OSVERSIONINFO *) &osvi))
             if (osvi.dwMajorVersion >= 6 && osvi.dwMinorVersion >= 1)
-                height += 3; // Windows 7 taskbar behave strangely.
+                size += 3; // Windows 7 taskbar behave strangely.
 
-        return height;
+        return size;
     }
     return 0;
 }
