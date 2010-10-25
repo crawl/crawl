@@ -108,7 +108,7 @@ static void mons_lose_attack_energy(monster* attacker, int wpn_speed,
 */
 
 // This function is only used when monsters are attacking.
-bool test_melee_hit(int to_hit, int ev, defer_rand& r)
+int test_melee_hit(int to_hit, int ev, defer_rand& r)
 {
     int   roll = -1;
     int margin = AUTOMATIC_HIT;
@@ -142,7 +142,7 @@ bool test_melee_hit(int to_hit, int ev, defer_rand& r)
               (roll == -1) ? "!!!" : "", margin);
 #endif
 
-    return (margin >= 0);
+    return (margin);
 }
 
 // This function returns the "extra" stats the player gets because of
@@ -811,7 +811,9 @@ bool melee_attack::player_attack()
 
     coord_def where = defender->pos();
 
-    if (player_hits_monster())
+    ev_margin = player_hits_monster();
+
+    if (ev_margin >= 0)
     {
         did_hit = true;
         if (Hints.hints_left)
@@ -1444,8 +1446,18 @@ std::string melee_attack::attack_strength_punctuation()
     }
     else
     {
-        return (damage_done < HIT_WEAK ? "." : "!");
+        return (damage_done < HIT_WEAK ? "." :
+                damage_done < HIT_MED  ? "!"
+                                       : "!!!");
     }
+}
+
+std::string melee_attack::evasion_margin_adverb()
+{
+    return((ev_margin <= -20) ? " completely" :
+           (ev_margin <= -12) ? "" :
+           (ev_margin <= -6)  ? " closely"
+                              : " barely");
 }
 
 void melee_attack::player_announce_hit()
@@ -1486,24 +1498,29 @@ std::string melee_attack::player_why_missed()
             return ("Your shield and " + armour_name
                     + " prevent you from hitting ");
     }
-    return "You miss ";
+
+    return ("You" + evasion_margin_adverb() + " miss ");
 }
 
 void melee_attack::player_warn_miss()
 {
     did_hit = false;
-
     // Upset only non-sleeping monsters if we missed.
     if (!defender->asleep())
         behaviour_event(defender->as_monster(), ME_WHACK, MHITYOU);
 
+    // XXX Unlike monster version, we cant use attack_strength_punctuation()
+    // instead of "." here, as player_calc_hit_damage() also produce variety
+    // of effects on premise that the hit check is already made, and so cannot
+    // be used to calculate estimated damage.
     msg::stream << player_why_missed()
                 << defender->name(DESC_NOCAP_THE)
                 << "."
                 << std::endl;
+    damage_done = 0;
 }
 
-bool melee_attack::player_hits_monster()
+int melee_attack::player_hits_monster()
 {
     const int evasion = defender->melee_evasion(attacker);
     const int helpful_evasion =
@@ -1522,7 +1539,7 @@ bool melee_attack::player_hits_monster()
     }
 
     if (to_hit >= helpful_evasion || one_chance_in(20))
-        return (true);
+        return (1);
 
     if (to_hit >= evasion
         || ((defender->cannot_act() || defender->asleep())
@@ -1533,7 +1550,7 @@ bool melee_attack::player_hits_monster()
         if (defender_visible)
             msg::stream << "Helpless, " << defender->name(DESC_NOCAP_THE)
                         << " fails to dodge your attack." << std::endl;
-        return (true);
+        return (1);
     }
 
     const int phaseless_evasion =
@@ -1545,7 +1562,7 @@ bool melee_attack::player_hits_monster()
                     << defender->pronoun(PRONOUN_NOCAP)
                     << " momentarily phases out." << std::endl;
 
-    return (false);
+    return (to_hit - helpful_evasion);
 }
 
 int melee_attack::player_stat_modify_damage(int damage)
@@ -5350,7 +5367,7 @@ void melee_attack::mons_do_spines()
         && attacker->alive()
         && one_chance_in(evp + 1))
     {
-        if (!test_melee_hit(2+ 4 * mut, attacker->melee_evasion(defender), r))
+        if (test_melee_hit(2+ 4 * mut, attacker->melee_evasion(defender), r) < 0)
         {
             simple_monster_message(attacker->as_monster(),
                                    " dodges your spines.");
@@ -5653,13 +5670,20 @@ void melee_attack::mons_perform_attack_rounds()
                 defender_evasion_nophase = defender_evasion;
             }
 
+            // Calculating damage before hit check allows us to print
+            // appropriate number of exlamation marks at the end of "miss"
+            // message.
+            damage_done = mons_calc_damage(attk);
+
+            ev_margin = test_melee_hit(to_hit, defender_evasion_help, r);
+
             if (attacker == defender
-                || test_melee_hit(to_hit, defender_evasion_help, r))
+                || ev_margin >= 0)
             {
                 // Will hit no matter what.
                 this_round_hit = true;
             }
-            else if (test_melee_hit(to_hit, defender_evasion, r))
+            else if (test_melee_hit(to_hit, defender_evasion, r) >= 0)
             {
                 if (needs_message)
                 {
@@ -5670,16 +5694,17 @@ void melee_attack::mons_perform_attack_rounds()
                 }
                 this_round_hit = true;
             }
-            else if (test_melee_hit(to_hit, defender_evasion_nophase, r))
+            else if (test_melee_hit(to_hit, defender_evasion_nophase, r) >= 0)
             {
                 if (needs_message)
                 {
                     mprf("%s momentarily %s out as %s "
-                         "attack passes through %s.",
+                         "attack passes through %s%s",
                          defender->name(DESC_CAP_THE).c_str(),
                          defender->conj_verb("phase").c_str(),
                          atk_name(DESC_NOCAP_ITS).c_str(),
-                         defender->pronoun(PRONOUN_OBJECTIVE).c_str());
+                         defender->pronoun(PRONOUN_OBJECTIVE).c_str(),
+                         attack_strength_punctuation().c_str());
                 }
                 this_round_hit = false;
             }
@@ -5688,9 +5713,11 @@ void melee_attack::mons_perform_attack_rounds()
                 // Misses no matter what.
                 if (needs_message)
                 {
-                    mprf("%s misses %s.",
+                    mprf("%s%s misses %s%s",
                          atk_name(DESC_CAP_THE).c_str(),
-                         mons_defender_name().c_str());
+                         evasion_margin_adverb().c_str(),
+                         mons_defender_name().c_str(),
+                         attack_strength_punctuation().c_str());
                 }
             }
 
@@ -5698,11 +5725,11 @@ void melee_attack::mons_perform_attack_rounds()
             {
                 did_hit = true;
                 perceived_attack = true;
-                damage_done = mons_calc_damage(attk);
             }
             else
             {
                 perceived_attack = perceived_attack || attacker_visible;
+                damage_done = 0;
             }
 
             if (attacker != defender &&

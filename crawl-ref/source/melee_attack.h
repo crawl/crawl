@@ -21,6 +21,7 @@ public:
     int       attack_number;
 
     int       to_hit;
+    int       ev_margin;
     int       damage_done;
     int       special_damage;
     int       aux_damage;
@@ -108,6 +109,7 @@ private:
     std::string debug_damage_number();
     std::string special_attack_punctuation();
     std::string attack_strength_punctuation();
+    std::string evasion_margin_adverb();
 
     std::string atk_name(description_level_type desc) const;
     std::string def_name(description_level_type desc) const;
@@ -197,7 +199,7 @@ private:
     int  player_stab(int damage);
     int  player_weapon_type_modify(int damage);
 
-    bool player_hits_monster();
+    int  player_hits_monster();
     int  player_calc_base_weapon_damage();
     int  player_calc_base_unarmed_damage();
     void player_exercise_combat_skills();
