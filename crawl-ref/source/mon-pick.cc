@@ -1130,7 +1130,7 @@ int mons_standard_rare(int mcls)
     }
 }
 
-// The Dwarf Hall of Fallen Heroes
+// The Dwarf Hall
 int mons_dwarf_level(int mcls)
 {
     int mlev = absdungeon_depth(BRANCH_DWARF_HALL, 1);
