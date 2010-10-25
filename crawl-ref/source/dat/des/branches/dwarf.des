@@ -9,15 +9,6 @@
 
 {{
 local_util = {}
-local_util.random_god = function()
-    local god = local_util.choose_from("rare", "Kikubaaqudgha", "Yredelemnul",
-                  "Okawaru", "Makhleb", "Trog", "Elyvilon", "Cheibriados")
-    if (god == "rare") then
-        god = local_util.choose_from("Zin", "The Shining One", "Xom", "Vehumet",
-                  "Sif Muna", "Lugonu", "Nemelex Xobeh")
-    end
-    return god
-end
 local_util.treasure_level = 0
 local_util.treasure_levels = {}
 local_util.treasure_select_level = function()
@@ -125,63 +116,7 @@ dhfh.hall_setup = function(e, glyph)
             slaved_to="statue" .. local_util.statues_idx})
     e.lua_marker(glyph, mod)
 end
-
-dhfh.tomb_setup = function(e, glyph)
-    local god = local_util.random_god()
-    if (god == "Kikubaaqudgha") then
-        e.kfeat(glyph .. " = altar_kikubaaqudgha")
-    elseif (god == "Yredelemnul") then
-        e.kfeat(glyph .. " = altar_yredelemnul")
-    elseif (god == "Okawaru") then
-        e.kfeat(glyph .. " = altar_okawaru")
-    elseif (god == "Makhleb") then
-        e.kfeat(glyph .. " = altar_makhleb")
-    elseif (god == "Trog") then
-        e.kfeat(glyph .. " = altar_trog")
-    elseif (god == "Elyvilon") then
-        e.kfeat(glyph .. " = altar_elyvilon")
-    elseif (god == "Cheibriados") then
-        e.kfeat(glyph .. " = altar_cheibriados")
-    elseif (god == "Xom") then
-        e.kfeat(glyph .. " = altar_xom")
-    elseif (god == "Zin") then
-        e.kfeat(glyph .. " = altar_zin")
-    elseif (god == "The Shining One") then
-        e.kfeat(glyph .. " = altar_shining_one")
-    elseif (god == "Vehumet") then
-        e.kfeat(glyph .. " = altar_vehumet")
-    elseif (god == "Sif Muna") then
-        e.kfeat(glyph .. " = altar_sif_muna")
-    elseif (god == "Lugonu") then
-        e.kfeat(glyph .. " = altar_lugonu")
-    elseif (god == "Beogh") then
-        e.kfeat(glyph .. " = altar_beogh")
-    elseif (god == "Nemelex Xobeh") then
-        e.kfeat(glyph .. " = altar_nemelex_xobeh")
-    end
-    e.lua_marker(glyph, props_marker {
-        feature_description      = "massive granite shrine",
-        feature_description_long = "A massive granite shrine to the fallen" ..
-        "avatar of " .. god .. "\n"
-    })
-end
-
-dhfh.tomb_milestone = function(e)
-    crawl.mark_milestone("br.enter", "entered the shrine of an ancestral avatar", true)
-end
 }}
-
-## testing map
-################################################
-#NAME:   dhfh_test
-#TAGS:   dhfh_test
-#PLACE: D:1
-#ORIENT: float
-#KFEAT: O = enter_dwarf_hall
-#ITEM: ring of wizardry unrand:ring_of_charms
-#MAP
-#Od
-#ENDMAP
 
 ## section 2: Arrival maps
 ################################################
@@ -816,108 +751,6 @@ ccccccccccsc...cscccccccccc
            c.@.c
 ENDMAP
 
-NAME:   dhfh_tomb_entry_simple
-TAGS:   extra dwarf_tomb_entry chance_dwarf_tomb_entry uniq_dwarf_tomb_entry no_monster_gen no_item_gen
-ORIENT: float
-DEPTH:  Dwarf:4-5
-CHANCE: 10%
-MONS:   nisse w:3 / elf / w:5 deep dwarf / deep dwarf necromancer / \
-        deep dwarf artificer
-MONS:   shadow wraith / wraith / wight w:5 / troll / rock troll w:5 / \
-        deep dwarf necromancer w:2 / deep dwarf artificer w:1
-# crawl will rotate for the rest of possibilities
-: if crawl.coinflip() then
-KFEAT:  A = =
-KFEAT:  B = c
-: else
-KFEAT:  A = c
-KFEAT:  B = =
-: end
-MARKER: O = lua:one_way_stair { desc = "A portal to the shrine of an ancestral avatar", \
-                                dst = "dhfh_tomb" }
-KFEAT: O = enter_portal_vault
-: dhfh.colors(_G)
-MAP
-cccc.cccc
-c1.....1c
-c.ccccc.c
-c.c.2.c.c
-..c.O.c..
-c.c...c.c
-c.cABcc.c
-c1.....1c
-cccc.cccc
-ENDMAP
-
-NAME:   dhfh_tomb_entry_chances
-TAGS:   extra dwarf_tomb_entry chance_dwarf_tomb_entry uniq_dwarf_tomb_entry no_monster_gen no_item_gen
-ORIENT: float
-CHANCE: 10%
-DEPTH:  Dwarf:4-5
-MARKER: + = lua:restrict_door()
-NSUBST: 1 = 1:O / *:1
-SUBST:  1 = 1 w:30 / 2
-MARKER: O = lua:one_way_stair { desc = "A portal to the shrine of an ancestral avatar", \
-                                dst = "dhfh_tomb" }
-KFEAT:  O = enter_portal_vault
-MONS:   nisse w:3 / elf w:5 / deep dwarf / deep dwarf necromancer / \
-        deep dwarf artificer
-MONS:   shadow wraith / wraith / wight w:5 / troll / rock troll w:5 / \
-        deep dwarf necromancer w:2 / deep dwarf artificer w:1
-: dhfh.colors(_G)
-MAP
-ccccccccccccccccccccc
-ccc1c1c1c1c1c1c1c1ccc
-ccc+c+c+c+c+c+c+c+ccc
-.....................
-..........G..........
-.....................
-ENDMAP
-
-NAME:   dhfh_tomb_1
-TAGS:   dhfh_tomb uniq_dhfh_tomb
-ORIENT: encompass
-SUBST:  8 = G
-SUBST:  F = T:40 V:40 U:20
-SUBST:  1 = .:100 1:1 2:1 3:1
-MONS:   fire giant
-MONS:   frost giant
-MONS:   hill giant
-KFEAT:  > = exit_portal_vault
-KITEM:  * = any weapon randart / any armour randart / \
-            war axe unrand:arga w:4 / crossbow unrand:sniper w:3 / \
-            great mace unrand:undeadhunter w:3
-{{
-    dhfh.tomb_setup(_G, "T")
-    dhfh.hall_setup(_G, "*")
-    dhfh.random_monster_set(_G)
-}}
-epilogue{{
-    dhfh.tomb_milestone(_G)
-}}
-
-MAP
-ccccccccccccccccccccc
-c...................c
-c.........T.........c
-c.........*.........c
-c..vvvv8.....8vvvv..c
-c.....v.......v.....c
-c.....v.......v.....c
-cccc..v8.....8v..cccc
-c.$c..v.......v..c$.c
-c..c..v.......v..c..c
-c..c..v8.....8v..c..c
-c..8..v.......v..8..c
-c.....v.......v.....c
-cvvvvvv8.....8vvvvvvc
-c...................c
-c...................c
-c...ccc.......ccc...c
-c.1.c.....>.....c.1.c
-c.F.c.....A.....c.F.c
-ccccccccccccccccccccc
-ENDMAP
 
 ## section 6: Portal entries
 ################################################
@@ -1039,3 +872,26 @@ MAP
    ...
 ENDMAP
 #'
+
+NAME:    enter_dhfh_6
+TAGS:    extra dwarf_entry uniq_dhfh_entry chance_dhfh_entry
+CHANCE:  10%
+MONS:    nisse w:3 / elf / w:5 deep dwarf / deep dwarf necromancer / \
+         deep dwarf artificer
+MONS:    shadow wraith / wraith / wight w:5 / troll / rock troll w:5 / \
+         deep dwarf necromancer w:2 / deep dwarf artificer w:1
+FTILE:   12O.A = floor_limestone
+# crawl will rotate for the rest of possibilities
+NSUBST:  A = 1:= / *:c
+: dhfh.colors(_G)
+MAP
+cccc.cccc
+c1.....1c
+c.ccccc.c
+c.c.2.c.c
+..c.O.c..
+c.c...c.c
+c.cAAcc.c
+c1.....1c
+cccc.cccc
+ENDMAP
