@@ -1372,19 +1372,15 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_DANCING_WEAPON:
         return TILE_UNSEEN_WEAPON;
 
-    // Feature mimics are dealt with elsewhere.
+    // Feature mimics actually get drawn with the dungeon code.
+    // See tileidx_feature.
     case MONS_DOOR_MIMIC:
-        return TILE_DNGN_CLOSED_DOOR;
     case MONS_PORTAL_MIMIC:
-        return TILE_DNGN_ENTER_LABYRINTH;
     case MONS_TRAP_MIMIC:
-        return TILE_DNGN_TRAP_DART;
     case MONS_STAIR_MIMIC:
-        return TILE_DNGN_STONE_STAIRS_DOWN;
     case MONS_SHOP_MIMIC:
-        return TILE_DNGN_ABANDONED_SHOP;
     case MONS_FOUNTAIN_MIMIC:
-        return TILE_DNGN_DRY_FOUNTAIN;
+        return 0;
 
     // '5' demons
     case MONS_IMP:
@@ -1805,18 +1801,14 @@ static tileidx_t _tileidx_monster_no_props(const monster* mon)
                 return t;
             }
 
-        // Feature mimics are dealt with properly here.
+        // Feature mimics get drawn with the dungeon, see tileidx_feature.
         case MONS_SHOP_MIMIC:
-            return (_tileidx_shop(mon->pos()));
         case MONS_TRAP_MIMIC:
-            return (_tileidx_trap(get_trap_type(mon->pos())));
         case MONS_PORTAL_MIMIC:
-            return TILE_DNGN_ENTER_LABYRINTH;
-
         case MONS_DOOR_MIMIC:
         case MONS_STAIR_MIMIC:
         case MONS_FOUNTAIN_MIMIC:
-            return _tileidx_feature_base(get_mimic_feat(mon));
+            return 0;
 
         case MONS_DANCING_WEAPON:
             {
