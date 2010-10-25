@@ -754,28 +754,20 @@ ENDMAP
 
 ## section 6: Portal entries
 ################################################
-default-depth: D:5-7
 
 # Dummy entry
-NAME:    enter_dhfh_dummy
-TAGS:    extra dhfh_entry uniq_dhfh_entry chance_dhfh_entry no_monster_gen
-WEIGHT:  25
-CHANCE:  5%
-ORIENT:  float
-KFEAT:   O = enter_dwarf_hall
+NAME:    enter_dwarf_dummy
+TAGS:    dwarf_entry
 MAP
 O
 ENDMAP
 
-NAME:    enter_dhfh_1
-TAGS:    extra dhfh_entry uniq_dhfh_entry chance_dhfh_entry no_monster_gen
-WEIGHT:  10
-CHANCE:  5%
+NAME:    enter_dwarf_1
+TAGS:    dwarf_entry no_monster_gen
 SUBST:   . = . ':7
 COLOUR:  ' = yellow
 FTILE:   ' = floor_sandstone
 SUBST:   ' = .
-KFEAT:   O = enter_dwarf_hall
 MAP
 .....
 .'G'.
@@ -785,20 +777,16 @@ MAP
 ENDMAP
 #'
 
-NAME:    enter_dhfh_2
-TAGS:    extra dhfh_entry uniq_dhfh_entry chance_dhfh_entry no_monster_gen
-WEIGHT:  10
-CHANCE:  5%
+NAME:    enter_dwarf_2
+TAGS:    dwarf_entry no_monster_gen
 SHUFFLE: CD / c+
 COLOUR:  ' = yellow
 COLOUR:  C = yellow
 COLOUR:  D = yellow
 SUBST:   D = =
 SUBST:   C = c
-FTILE:   ' = floor_sandstone
+FTILE:   'GO= = floor_sandstone
 SUBST:   ' = .
-#'
-KFEAT:   O = enter_dwarf_hall
 MAP
 .......
 .ccDcc.
@@ -810,10 +798,8 @@ MAP
 ENDMAP
 #'
 
-NAME:    enter_dhfh_3
-TAGS:    extra dhfh_entry uniq_dhfh_entry chance_dhfh_entry no_monster_gen
-WEIGHT:  10
-CHANCE:  5%
+NAME:    enter_dwarf_3
+TAGS:    dwarf_entry no_monster_gen
 SUBST:   . = Y .
 COLOUR:  Y = yellow
 FTILE:   Y = floor_sandstone
@@ -822,22 +808,20 @@ MONS:    deep dwarf w:30 / elf w:2 / war dog
 MONS:    wight / orange rat
 MONS:    giant centipede / redback
 SUBST:   . = .:100 11 2 3
-KFEAT:   O = enter_dwarf_hall
 MAP
 .G.
 .O.
 ...
 ENDMAP
 
-NAME:    enter_dhfh_4
-TAGS:    extra dhfh_entry uniq_dhfh_entry chance_dhfh_entry no_monster_gen no_wall_fixup
+NAME:    enter_dwarf_4
+TAGS:    dwarf_entry no_monster_gen no_wall_fixup
 WEIGHT:  10
 CHANCE:  5%
 COLOUR:  1 = yellow, ' = yellow, x = white
 MONS:    dwarf w:30 / elf w:2 / war dog
-FTILE:   1 = floor_sandstone, ' = floor_sandstone, x = floor_sandstone, O = floor_sandstone
+FTILE:   1'xO = floor_sandstone
 RTILE:   x = wall_tomb
-KFEAT:   O = enter_dwarf_hall
 MAP
 .........
 .xxxxxxx.
@@ -848,18 +832,14 @@ MAP
 .xxx'xxx.
 ....'....
 ENDMAP
-#'
 
-NAME:    enter_dhfh_5
-TAGS:    extra dhfh_entry uniq_dhfh_entry chance_dhfh_entry no_monster_gen
-WEIGHT:  10
-CHANCE:  5%
+NAME:    enter_dwarf_5
+TAGS:    dwarf_entry no_monster_gen
 COLOUR:  c = white, = = white, ' = yellow
 RTILE:   c = wall_tomb, = = wall_tomb
-FTILE:   ' = floor_sandstone
+FTILE:   '=GO = floor_sandstone
 NSUBST:  = = 1:= / *:c
 SUBST:   c : cx
-KFEAT:   O = enter_dwarf_hall
 MAP
    ...
   ..c..
@@ -871,16 +851,14 @@ MAP
   ..c..
    ...
 ENDMAP
-#'
 
-NAME:    enter_dhfh_6
-TAGS:    extra dwarf_entry uniq_dhfh_entry chance_dhfh_entry
-CHANCE:  10%
+NAME:    enter_dwarf_6
+TAGS:    dwarf_entry
 MONS:    nisse w:3 / elf / w:5 deep dwarf / deep dwarf necromancer / \
          deep dwarf artificer
 MONS:    shadow wraith / wraith / wight w:5 / troll / rock troll w:5 / \
          deep dwarf necromancer w:2 / deep dwarf artificer w:1
-FTILE:   12O.A = floor_limestone
+FTILE:   12O.A = floor_sandstone
 # crawl will rotate for the rest of possibilities
 NSUBST:  A = 1:= / *:c
 : dhfh.colors(_G)
