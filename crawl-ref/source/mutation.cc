@@ -1501,6 +1501,8 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
     return (result);
 }
 
+// The tiers of each mutation within a facet should never exceed the overall
+// tier of the entire facet, lest ordering / scheduling issues arise.
 static const facet_def _demon_facets[] =
 {
     // Body Slot facets
