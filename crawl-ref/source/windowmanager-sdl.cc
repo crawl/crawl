@@ -296,16 +296,40 @@ int SDLWrapper::init(coord_def *m_windowsz)
     }
 
 #ifdef TARGET_OS_WINDOWS
-    // We check if the window overlap the taskbar. If it does, we place the
-    // window just above the taskbar.
+    // We move the window if it overlaps the taskbar.
+    const int title_bar = 29;
     int delta_x = (wm->desktop_width() - m_windowsz->x) / 2;
-    int taskbar_height = get_taskbar_height();
-    taskbar_height += 3; // Some margin for the window border.
-    if ((wm->desktop_height() - m_windowsz->y) / 2 < taskbar_height)
+    int delta_y = (wm->desktop_height() - m_windowsz->y) / 2;
+    taskbar_pos tpos = get_taskbar_pos();
+    int tsize = get_taskbar_size();
+
+    if (tpos == TASKBAR_TOP)
+        tsize += title_bar; // Title bar
+    else
+        tsize += 3; // Window border
+
+    int overlap = tsize - (tpos & TASKBAR_H ? delta_y : delta_x);
+
+    if (overlap > 0)
     {
         char env_str[50];
-        sprintf(env_str, "SDL_VIDEO_WINDOW_POS=%d,%d", delta_x,
-                wm->desktop_height() - m_windowsz->y - taskbar_height);
+        int x = delta_x;
+        int y = delta_y;
+
+        if (tpos & TASKBAR_H)
+            y += tpos == TASKBAR_TOP ? overlap : -overlap;
+        else
+            x += tpos == TASKBAR_LEFT ? overlap : -overlap;
+
+        x = std::max(x, 0);
+        y = std::max(y, title_bar);
+        tsize += 6;
+        m_windowsz->x = std::min(m_windowsz->x, wm->desktop_width()
+                                 - (tpos & TASKBAR_V ? tsize : 0));
+        m_windowsz->y = std::min(m_windowsz->y, wm->desktop_height()
+                                 - (tpos & TASKBAR_H ? tsize : 0)
+                                 - (tpos & TASKBAR_BOTTOM ? title_bar : 0));
+        sprintf(env_str, "SDL_VIDEO_WINDOW_POS=%d,%d", x, y);
         putenv(env_str);
     }
     else

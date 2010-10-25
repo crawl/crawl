@@ -200,7 +200,19 @@ coord_def cgetsize(GotoRegion region = GOTO_CRT);
 void cscroll(int n, GotoRegion region);
 
 #ifdef TARGET_OS_WINDOWS
-int get_taskbar_height();
+enum taskbar_pos
+{
+    TASKBAR_NO      = 0x00,
+    TASKBAR_BOTTOM  = 0x01,
+    TASKBAR_TOP     = 0x02,
+    TASKBAR_LEFT    = 0x04,
+    TASKBAR_RIGHT   = 0x08,
+    TASKBAR_H       = 0x03,
+    TASKBAR_V       = 0x0C
+};
+
+int get_taskbar_size();
+taskbar_pos get_taskbar_pos();
 #endif
 
 class mouse_control
