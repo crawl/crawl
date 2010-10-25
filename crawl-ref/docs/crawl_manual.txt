@@ -1566,25 +1566,24 @@ Deep Dwarves
   Dwarves can tinker with gadgets so as to recharge them. However,
   each time they do so, they lose a bit of their magical essence.
 
-Nomes 
+Nomes
 ---------
 
-The stooped, gravel-skinned Nomes are true children of the earth: 
-stubborn and strong as the stones, and insular as diamonds trapped in the rocky
-depths. Few Nomes ever glimpse the light of day, preferring instead to swim 
-through the walls of their native caverns in search of ever-prettier gems. 
-For Nomes can indeed swim through solid rock, stone or even metal.
-
+The stooped, gravel-skinned Nomes are true children of the earth:
+stubborn and strong as the stones, and insular as diamonds trapped in
+the rocky depths. Few Nomes ever glimpse the light of day, preferring
+instead to swim through the walls of their native caverns in search of
+ever-prettier gems.  For Nomes can indeed swim through solid rock, stone
+or even metal.
 
 To swim through a wall, a Nome first becomes attuned to the earth, a
 slow process that leaves Nomes entering a wall vulnerable for a short
 time but greatly increases their resilience. Higher attunement allows
-passage into harder walls, grants a Nome increasingly tough skin , and
+passage into harder walls, grants a Nome increasingly tough skin, and
 slows the Nome's actions proportionally - rock barely slows a Nome,
-but a swim through metal is tantamount to a swim through
-molasses. Although attunement gradually decreases when the Nome moves
-in open air, the Nome remains in this slowed but more resilient state
-for some time.
+but a swim through metal is tantamount to a swim through molasses.
+Although attunement gradually decreases when the Nome moves in open air,
+the Nome remains in this slowed but more resilient state for some time.
 
 The Nomes' earthy nature is their greatest strength and greatest
 weakness.  Nomes are the masters of earth magic, and excel at bashing
