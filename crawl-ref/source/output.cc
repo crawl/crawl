@@ -316,6 +316,7 @@ static short _get_stat_colour(stat_type stat)
     // Stat is magically increased.
     if (you.duration[DUR_DIVINE_STAMINA]
         || stat == STAT_STR && you.duration[DUR_MIGHT]
+        || stat == STAT_STR && you.duration[DUR_BERSERK]
         || stat == STAT_INT && you.duration[DUR_BRILLIANCE]
         || stat == STAT_DEX && you.duration[DUR_AGILITY])
     {
@@ -495,7 +496,7 @@ static void _get_status_lights(std::vector<status_light>& out)
     const int statuses[] = {
         STATUS_BURDEN, STATUS_HUNGER, DUR_PRAYER, DUR_TELEPORT,
         DUR_DEATHS_DOOR, DUR_QUAD_DAMAGE, DUR_DEFLECT_MISSILES,
-        DUR_REPEL_MISSILES, STATUS_REGENERATION,
+        DUR_REPEL_MISSILES, STATUS_REGENERATION, DUR_BERSERK,
         DUR_RESIST_POISON, DUR_RESIST_COLD, DUR_RESIST_FIRE,
         DUR_INSULATION, DUR_SEE_INVISIBLE,
         STATUS_AIRBORNE, DUR_INVIS, DUR_CONTROL_TELEPORT, DUR_SILENCE,
@@ -1405,7 +1406,8 @@ static std::vector<formatted_string> _get_overview_stats()
                                 || you.berserk();
     const bool boosted_mp  = you.duration[DUR_DIVINE_VIGOUR];
     const bool boosted_str = you.duration[DUR_DIVINE_STAMINA]
-                                || you.duration[DUR_MIGHT];
+                                || you.duration[DUR_MIGHT]
+                                || you.duration[DUR_BERSERK];
     const bool boosted_int = you.duration[DUR_DIVINE_STAMINA]
                                 || you.duration[DUR_BRILLIANCE];
     const bool boosted_dex = you.duration[DUR_DIVINE_STAMINA]
@@ -1829,7 +1831,7 @@ std::string _status_mut_abilities()
         STATUS_REGENERATION, DUR_DEATHS_DOOR, DUR_STONEMAIL, DUR_STONESKIN,
         DUR_TELEPORT, DUR_DEATH_CHANNEL, DUR_PHASE_SHIFT, DUR_SILENCE,
         DUR_INVIS, DUR_CONF, DUR_EXHAUSTED, DUR_MIGHT, DUR_BRILLIANCE,
-        DUR_AGILITY, DUR_DIVINE_VIGOUR, DUR_DIVINE_STAMINA, DUR_BERSERKER,
+        DUR_AGILITY, DUR_DIVINE_VIGOUR, DUR_DIVINE_STAMINA, DUR_BERSERK,
         STATUS_AIRBORNE, DUR_BARGAIN, DUR_SLAYING, DUR_SAGE,
         DUR_MAGIC_SHIELD, DUR_FIRE_SHIELD, DUR_POISONING, STATUS_SICK,
         STATUS_GLOW, STATUS_ROT, DUR_CONFUSING_TOUCH, DUR_SLIMIFY,

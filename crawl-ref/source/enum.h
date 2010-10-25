@@ -858,7 +858,9 @@ enum delay_type
     DELAY_ASCENDING_STAIRS,
     DELAY_DESCENDING_STAIRS,
     DELAY_RECITE,  // Zin's Recite invocation
-    DELAY_ROCK_SWIMMING, //Nomes entering/leaving rock
+#if TAG_MAJOR_VERSION > 31
+    DELAY_EVOKE,
+#endif
 
     // [dshaligram] Shift-running, resting, travel and macros are now
     // also handled as delays.
@@ -873,6 +875,11 @@ enum delay_type
 
     DELAY_INTERRUPTIBLE,                // simple interruptible delay
     DELAY_UNINTERRUPTIBLE,              // simple uninterruptible delay
+
+#if TAG_MAJOR_VERSION == 31
+    DELAY_EVOKE,
+#endif
+    DELAY_ROCK_SWIMMING, //Nomes entering/leaving rock
 
     NUM_DELAYS
 };
@@ -1198,7 +1205,7 @@ enum duration_type
     DUR_BRILLIANCE,
     DUR_AGILITY,
     DUR_LEVITATION,
-    DUR_BERSERKER,
+    DUR_BERSERK,
     DUR_POISONING,
 
     DUR_CONFUSING_TOUCH,
@@ -3161,6 +3168,9 @@ enum spell_type
     SPELL_VAMPIRE_SUMMON,
     SPELL_BRAIN_FEED,
     SPELL_FAKE_RAKSHASA_SUMMON,
+#if TAG_MAJOR_VERSION != 31
+    SPELL_NOXIOUS_CLOUD,
+#endif
     SPELL_STEAM_BALL,
     SPELL_SUMMON_UFETUBUS,
     SPELL_SUMMON_BEAST,
@@ -3226,6 +3236,9 @@ enum spell_type
     SPELL_FIRE_CLOUD,
     SPELL_STEAM_CLOUD,
     SPELL_MALIGN_GATEWAY,
+#if TAG_MAJOR_VERSION == 31
+    SPELL_NOXIOUS_CLOUD,
+#endif
 
     NUM_SPELLS
 };

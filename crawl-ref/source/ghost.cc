@@ -298,7 +298,6 @@ void ghost_demon::init_random_demon()
         if (one_chance_in(10))
             spells[2] = SPELL_SUMMON_EYEBALLS;
 
-
         if (one_chance_in(20))
             spells[3] = SPELL_SUMMON_GREATER_DEMON;
         if (one_chance_in(20))

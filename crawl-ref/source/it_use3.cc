@@ -20,6 +20,7 @@
 #include "coordit.h"
 #include "database.h"
 #include "decks.h"
+#include "delay.h"
 #include "directn.h"
 #include "effects.h"
 #include "env.h"
@@ -815,8 +816,14 @@ bool evoke_item(int slot)
     if (!item_is_evokable(item, false, false, true))
         return (false);
 
-    if (item.base_type == OBJ_MISCELLANY && you.equip[EQ_WEAPON] != slot)
-        if (!wield_weapon(true, slot))
+    if ((item.base_type == OBJ_MISCELLANY || item.base_type == OBJ_STAVES)
+        && you.equip[EQ_WEAPON] != slot)
+        if (wield_weapon(true, slot))
+        {
+             start_delay(DELAY_EVOKE, 1, slot);
+             return (true);
+         }
+         else
             return (false);
 
     bool wielded = (you.equip[EQ_WEAPON] == slot);

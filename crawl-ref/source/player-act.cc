@@ -618,5 +618,5 @@ bool player::can_go_berserk(bool intentional, bool potion) const
 
 bool player::berserk() const
 {
-    return (duration[DUR_BERSERKER]);
+    return (duration[DUR_BERSERK]);
 }

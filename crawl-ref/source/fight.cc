@@ -1604,7 +1604,7 @@ int melee_attack::player_apply_fighting_skill(int damage, bool aux)
 
 int melee_attack::player_apply_misc_modifiers(int damage)
 {
-    if (you.duration[DUR_MIGHT] > 1)
+    if (you.duration[DUR_MIGHT] || you.duration[DUR_BERSERK])
         damage += 1 + random2(10);
 
     if (you.species != SP_VAMPIRE && you.hunger_state == HS_STARVING)
@@ -4239,7 +4239,7 @@ int melee_attack::player_calc_base_unarmed_damage()
             damage = 12;
             break;
         case TRAN_BLADE_HANDS:
-            damage = 12 + (you.strength() / 4) + (you.dex() / 4);
+            damage = 12 + div_rand_round(you.strength() + you.dex(), 4);
             break;
         case TRAN_STATUE:
             damage = 12 + you.strength();

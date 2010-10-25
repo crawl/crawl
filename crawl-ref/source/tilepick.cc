@@ -112,10 +112,21 @@ static tileidx_t _tileidx_trap(trap_type type)
 static tileidx_t _tileidx_shop(coord_def where)
 {
     const shop_struct *shop = get_shop(where);
-    if (!shop)
+    if (!shop && !feature_mimic_at(where))
         return TILE_DNGN_ERROR;
 
-    switch (shop->type)
+    shop_type stype = shop->type;
+
+    if (feature_mimic_at(where))
+    {
+        monster *mimic = monster_at(where);
+        if (mimic->props.exists("shop_type"))
+            stype = static_cast<shop_type>(mimic->props["shop_type"].get_short());
+        else
+            return TILE_DNGN_ERROR;
+    }
+
+    switch (stype)
     {
         case SHOP_WEAPON:
         case SHOP_WEAPON_ANTIQUE:
@@ -347,6 +358,9 @@ tileidx_t tileidx_feature(const coord_def &gc)
                         && feat != DNGN_UNSEEN;
     if (override && can_override)
         return (override);
+
+    if (feature_mimic_at(gc))
+        feat = get_mimic_feat(monster_at(gc));
 
     // Any grid-specific tiles.
     switch (feat)
@@ -1358,6 +1372,16 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_DANCING_WEAPON:
         return TILE_UNSEEN_WEAPON;
 
+    // Feature mimics actually get drawn with the dungeon code.
+    // See tileidx_feature.
+    case MONS_DOOR_MIMIC:
+    case MONS_PORTAL_MIMIC:
+    case MONS_TRAP_MIMIC:
+    case MONS_STAIR_MIMIC:
+    case MONS_SHOP_MIMIC:
+    case MONS_FOUNTAIN_MIMIC:
+        return 0;
+
     // '5' demons
     case MONS_IMP:
         return TILEP_MONS_IMP;
@@ -1532,6 +1556,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_SPRIGGAN_DRUID;
     case MONS_SPRIGGAN_DEFENDER:
         return TILEP_MONS_SPRIGGAN_DEFENDER;
+    case MONS_SPRIGGAN_ASSASSIN:
+        return TILEP_MONS_SPRIGGAN_ASSASSIN;
     case MONS_THE_ENCHANTRESS:
         return TILEP_MONS_THE_ENCHANTRESS;
     case MONS_AGNES:
@@ -1774,6 +1800,15 @@ static tileidx_t _tileidx_monster_no_props(const monster* mon)
                     t |= TILE_FLAG_ANIM_WEP;
                 return t;
             }
+
+        // Feature mimics get drawn with the dungeon, see tileidx_feature.
+        case MONS_SHOP_MIMIC:
+        case MONS_TRAP_MIMIC:
+        case MONS_PORTAL_MIMIC:
+        case MONS_DOOR_MIMIC:
+        case MONS_STAIR_MIMIC:
+        case MONS_FOUNTAIN_MIMIC:
+            return 0;
 
         case MONS_DANCING_WEAPON:
             {
