@@ -193,6 +193,7 @@ public:
 
   std::vector<demon_trait> demonic_traits;
 
+  int earth_attunement; // nomes only
   int magic_contamination;
 
   FixedVector<bool, NUM_FIXED_BOOKS> had_book;

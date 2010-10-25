@@ -1029,6 +1029,7 @@ static void tag_construct_you(writer &th)
 
     marshallShort(th, you.hunger);
     marshallBoolean(th, you.fishtail);
+    marshallInt(th, you.earth_attunement);
 
     // how many you.equip?
     marshallByte(th, NUM_EQUIP);
@@ -1609,6 +1610,10 @@ static void tag_read_you(reader &th, int minorVersion)
     if (minorVersion >= TAG_MINOR_FISHTAIL)
 #endif
     you.fishtail        = unmarshallBoolean(th);
+#if TAG_MAJOR_VERSION == 31
+    if (minorVersion >= TAG_MINOR_EARTH_ATTUNE)
+#endif
+    you.earth_attunement= unmarshallInt(th);
 
     // How many you.equip?
     count = unmarshallByte(th);

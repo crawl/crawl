@@ -5146,6 +5146,7 @@ void player::init()
     innate_mutations.init(0);
     demonic_traits.clear();
 
+    earth_attunement = 0;
     magic_contamination = 0;
 
     had_book.init(false);
