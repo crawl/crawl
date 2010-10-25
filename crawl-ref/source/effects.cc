@@ -2224,9 +2224,8 @@ void handle_time()
 
     // earth attunement
     // decrease earth attunement outside of walls.
-    if (you.rocky() && ! you.in_rock()) {
-      change_earth_attunement(-1);
-    }
+    if (you.rocky() && !you.in_rock())
+        change_earth_attunement(-1);
 
     int added_contamination = 0;
 

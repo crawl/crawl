@@ -995,7 +995,7 @@ static void _finish_delay(const delay_queue_item &delay)
         mprf(MSGCH_PLAIN, "You finish %s.",
              _get_zin_recite_speech("other", you.num_turns + delay.duration).c_str());
         break;
-	
+
     case DELAY_ROCK_SWIMMING:
       //no "finish" message to avoid spam.
       break;

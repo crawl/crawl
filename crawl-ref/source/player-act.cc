@@ -128,24 +128,23 @@ int player::get_experience_level() const
 
 bool player::can_pass_through_feat(dungeon_feature_type grid) const
 {
-  if (!feat_is_solid(grid) && grid != DNGN_TEMP_PORTAL)
-    return true;
+    if (!feat_is_solid(grid) && grid != DNGN_TEMP_PORTAL)
+      return true;
 
-  if (can_swim_through_rock()) {
-    switch (grid) 
-      {
-      case DNGN_METAL_WALL:
-      case DNGN_GREEN_CRYSTAL_WALL:
-      case DNGN_ROCK_WALL:
-      case DNGN_STONE_WALL:
-      case DNGN_CLEAR_ROCK_WALL:
-      case DNGN_CLEAR_STONE_WALL:
-	return true;
-      default: 
-	return false;
-      }
-  }
-  return false;
+    if (can_swim_through_rock())
+        switch (grid)
+        {
+        case DNGN_METAL_WALL:
+        case DNGN_GREEN_CRYSTAL_WALL:
+        case DNGN_ROCK_WALL:
+        case DNGN_STONE_WALL:
+        case DNGN_CLEAR_ROCK_WALL:
+        case DNGN_CLEAR_STONE_WALL:
+            return true;
+        default:
+            return false;
+        }
+    return false;
 }
 
 bool player::is_habitable_feat(dungeon_feature_type actual_grid) const

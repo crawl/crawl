@@ -1322,55 +1322,55 @@ void search_around(bool only_adjacent)
     }
 }
 
-static int required_earth_attunement(dungeon_feature_type wall) {
-  switch (wall) 
+static int required_earth_attunement(dungeon_feature_type wall)
+{
+    switch (wall)
     {
     case DNGN_ROCK_WALL:
     case DNGN_CLEAR_ROCK_WALL:
-      return 1;
+        return 1;
     case DNGN_GREEN_CRYSTAL_WALL:
-      return 2;
+        return 2;
     case DNGN_STONE_WALL:
     case DNGN_CLEAR_STONE_WALL:
-      return 3;
+        return 3;
     case DNGN_METAL_WALL:
-      return 4;
+        return 4;
     default:
-      return -1;
+        return -1;
     }
 }
 
-void nome_start_rock_swimming() 
+void nome_start_rock_swimming()
 {
-  //redraw HP/AC regardless of rocky status, as these
-  //change if you swim from rock to stone
-  you.redraw_hit_points = true;
-  you.redraw_armour_class=true;
+    //redraw HP/AC regardless of rocky status, as these
+    //change if you swim from rock to stone
+    you.redraw_hit_points = true;
+    you.redraw_armour_class=true;
 
-  dungeon_feature_type current_grid = env.grid(you.pos());
+    dungeon_feature_type current_grid = env.grid(you.pos());
 
-  //increment earth attunement to proper level
-  //before rock swimming
-  int needed_earth_attunement = required_earth_attunement(current_grid) - you.earth_attunement ;
-  if ( needed_earth_attunement > 0 ) 
+    //increment earth attunement to proper level
+    //before rock swimming
+    int needed_earth_attunement = required_earth_attunement(current_grid) - you.earth_attunement ;
+    if (needed_earth_attunement > 0)
     {
-      change_earth_attunement(needed_earth_attunement);
-      start_delay(DELAY_ROCK_SWIMMING, needed_earth_attunement);
+        change_earth_attunement(needed_earth_attunement);
+        start_delay(DELAY_ROCK_SWIMMING, needed_earth_attunement);
     }
 
-  if (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE
-      && you.attribute[ATTR_TRANSFORMATION] != TRAN_STATUE)
+    if (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE
+        && you.attribute[ATTR_TRANSFORMATION] != TRAN_STATUE)
     {
-      mpr("You quickly transform back into your natural form.");
-      untransform(false, true); // We're already entering the water.
+        mpr("You quickly transform back into your natural form.");
+        untransform(false, true); // We're already entering the water.
     }
 }
 
 void nome_stop_rock_swimming()
 {
-
-  you.redraw_hit_points = true;
-  you.redraw_armour_class=true;
+    you.redraw_hit_points = true;
+    you.redraw_armour_class=true;
 }
 
 void merfolk_start_swimming(bool stepped)

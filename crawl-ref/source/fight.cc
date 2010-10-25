@@ -4222,9 +4222,8 @@ int melee_attack::player_calc_base_unarmed_damage()
     }
 
     //unarmed bonus for earth-attuned Nomes in base form
-    if (you.rocky() && you.attribute[ATTR_TRANSFORMATION] == TRAN_NONE) {
-      damage += 2 + you.earth_attunement;
-    }
+    if (you.rocky() && you.attribute[ATTR_TRANSFORMATION] == TRAN_NONE)
+        damage += 2 + you.earth_attunement;
 
     if (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
     {

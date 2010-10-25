@@ -366,7 +366,7 @@ public:
     bool is_levitating() const;
     bool in_rock() const;
     //at least one level of earth attunement (nomes)
-    bool rocky() const; 
+    bool rocky() const;
 
     bool cannot_speak() const;
     bool invisible() const;
@@ -863,7 +863,7 @@ void set_mp(int new_amount, bool max_too);
 void contaminate_player(int change, bool controlled = false,
                         bool msg = true);
 void change_earth_attunement(int change, bool msg = true);
-std::string describe_earth_attunement( int earth_attunement) ;
+std::string describe_earth_attunement(int earth_attunement);
 
 bool confuse_player(int amount, bool resistable = true);
 
