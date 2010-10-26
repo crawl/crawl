@@ -374,8 +374,8 @@ static void _handle_teleport_update (bool large_change, bool check_ring_TC,
 #endif
 }
 
-static
-bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizard_tele)
+static bool _teleport_player(bool allow_control, bool new_abyss_area,
+                             bool wizard_tele)
 {
     bool is_controlled = (allow_control && !you.confused()
                           && player_control_teleport()

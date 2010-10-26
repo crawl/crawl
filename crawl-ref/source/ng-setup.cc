@@ -1544,7 +1544,7 @@ void setup_game(const newgame_def& ng)
 /**
  * Special steps that normal game needs;
  */
-void _setup_normal_game()
+static void _setup_normal_game()
 {
     make_hungry(0, true);
 }
@@ -1552,7 +1552,7 @@ void _setup_normal_game()
 /**
  * Special steps that tutorial game needs;
  */
-void _setup_tutorial()
+static void _setup_tutorial()
 {
     make_hungry(0, true);
 }
@@ -1560,7 +1560,7 @@ void _setup_tutorial()
 /**
  * Special steps that sprint needs;
  */
-void _setup_sprint(const newgame_def& ng)
+static void _setup_sprint(const newgame_def& ng)
 {
     set_sprint_map(ng.map);
 }
@@ -1568,7 +1568,7 @@ void _setup_sprint(const newgame_def& ng)
 /**
  * Special steps that hints mode needs;
  */
-void _setup_hints()
+static void _setup_hints()
 {
     init_hints();
 }

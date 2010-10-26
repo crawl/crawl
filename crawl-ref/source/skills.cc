@@ -141,7 +141,7 @@ static int _calc_skill_cost(int skill_cost_level, int skill_level)
     return (ret);
 }
 
-void _change_skill_level(skill_type exsk, int n)
+static void _change_skill_level(skill_type exsk, int n)
 {
     ASSERT(n != 0);
     skill_type old_best_skill = best_skill(SK_FIGHTING, (NUM_SKILLS - 1));

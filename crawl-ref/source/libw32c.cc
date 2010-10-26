@@ -449,7 +449,7 @@ bool is_cursor_enabled()
     return (cursor_is_enabled);
 }
 
-void _setcursortype_internal(bool curstype)
+static void _setcursortype_internal(bool curstype)
 {
     CONSOLE_CURSOR_INFO cci;
 

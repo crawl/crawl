@@ -2393,7 +2393,7 @@ static bool _describe_spellbook(item_def &item)
 
 // it takes a key and a list of commands and it returns
 // the command from the list which corresponds to the key
-command_type _get_action(int key, std::vector<command_type> actions)
+static command_type _get_action(int key, std::vector<command_type> actions)
 {
     static bool act_key_init = true; // Does act_key needs to be initialise?
     static std::map<command_type, int> act_key;
@@ -2425,7 +2425,7 @@ command_type _get_action(int key, std::vector<command_type> actions)
     return CMD_NO_CMD;
 }
 
-bool _need_autoinscribe (item_def &item)
+static bool _need_autoinscribe (item_def &item)
 {
     // Only allow autoinscription if we don't have all the text already.
     if (is_artefact(item))

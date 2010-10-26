@@ -3939,7 +3939,7 @@ void drink(int slot)
         lessen_hunger(40, true);
 }
 
-bool _drink_fountain()
+static bool _drink_fountain()
 {
     const dungeon_feature_type feat = grd(you.pos());
 

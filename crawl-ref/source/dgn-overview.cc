@@ -831,7 +831,8 @@ portal_type feature_to_portal(dungeon_feature_type feat)
 }
 
 // If player has seen any other thing; record it.
-void _seen_other_thing(dungeon_feature_type which_thing, const coord_def& pos)
+static void _seen_other_thing(dungeon_feature_type which_thing,
+                              const coord_def& pos)
 {
     level_pos where(level_id::current(), pos);
 

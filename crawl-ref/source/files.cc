@@ -1686,7 +1686,7 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
     return just_created_level;
 }
 
-void _save_level(const level_id& lid)
+static void _save_level(const level_id& lid)
 {
     travel_cache.get_level_info(lid).update();
 

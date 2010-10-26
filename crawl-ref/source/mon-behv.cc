@@ -649,7 +649,7 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
 }
 
 // Choose random nearest monster as a foe.
-void _set_nearest_monster_foe(monster* mon)
+static void _set_nearest_monster_foe(monster* mon)
 {
     // These don't look for foes.
     if (mon->good_neutral() || mon->strict_neutral())

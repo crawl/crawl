@@ -145,7 +145,7 @@ enum wave_type
     WV_DEEP,
 };
 
-wave_type _get_wave_type(bool shallow)
+static wave_type _get_wave_type(bool shallow)
 {
     return (shallow ? WV_SHALLOW : WV_DEEP);
 }
