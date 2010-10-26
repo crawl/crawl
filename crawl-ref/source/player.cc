@@ -3773,7 +3773,7 @@ bool extrinsic_amulet_effect(jewellery_type amulet)
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT);
     case AMU_CLARITY:
-        return (player_mutation_level(MUT_CLARITY) > 0);
+        return player_mental_clarity(true, false);
     case AMU_RESIST_CORROSION:
         if (you.religion == GOD_JIYVA && you.piety >= piety_breakpoint(2))
             return (true);
