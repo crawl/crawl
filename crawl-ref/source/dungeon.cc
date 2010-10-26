@@ -6518,7 +6518,7 @@ static bool _spotty_seed_ok(const coord_def& p)
 // This tries to be like _spotty_level, but probably isn't quite.
 // It might be better to aim for a more open connection -- currently
 // it stops pretty much as soon as connectivity is attained.
-bool _connect_spotty(const coord_def& from)
+static bool _connect_spotty(const coord_def& from)
 {
     std::set<coord_def> flatten;
     std::set<coord_def> border;

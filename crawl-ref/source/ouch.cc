@@ -359,7 +359,7 @@ void weapon_acid(int acid_strength)
         _item_corrode(hand_thing);
 }
 
-void _item_corrode(int slot)
+static void _item_corrode(int slot)
 {
     bool it_resists = false;
     bool suppress_msg = false;

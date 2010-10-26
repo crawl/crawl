@@ -2481,7 +2481,7 @@ void start_translevel_travel_prompt()
     start_translevel_travel(target);
 }
 
-command_type _trans_negotiate_stairs()
+static command_type _trans_negotiate_stairs()
 {
     return feat_stair_direction(grd(you.pos()));
 }

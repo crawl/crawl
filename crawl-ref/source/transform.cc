@@ -1011,7 +1011,7 @@ bool can_equip(equipment_type use_which, bool ignore_temporary)
     return (true);
 }
 
-void _extra_hp(int amount_extra) // must also set in calc_hp
+static void _extra_hp(int amount_extra) // must also set in calc_hp
 {
     calc_hp();
 

@@ -374,12 +374,13 @@ FILE *_hs_open(const char *mode, const std::string &scores)
     return lk_open(mode, scores);
 }
 
-void _hs_close(FILE *handle, const char *mode, const std::string &scores)
+static void _hs_close(FILE *handle, const char *mode,
+                      const std::string &scores)
 {
     lk_close(handle, mode, scores);
 }
 
-bool _hs_read(FILE *scores, scorefile_entry &dest)
+static bool _hs_read(FILE *scores, scorefile_entry &dest)
 {
     char inbuf[1300];
     if (!scores || feof(scores))
