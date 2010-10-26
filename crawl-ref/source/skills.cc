@@ -433,12 +433,6 @@ static int _exercise2(int exski)
     if (exsk < SK_ARMOUR)
         skill_inc += _weap_crosstrain_bonus(exsk);
 
-    // Quick fix for the fact that stealth can't be gained fast enough
-    // to keep up with the monster levels.  This should speed its
-    // advancement.
-    if (exsk == SK_STEALTH)
-        skill_inc += 10*random2(3);
-
     // Starting to learn skills is easier if the appropriate stat is high.
     if (you.skills[exsk] == 0)
         skill_inc = _stat_mult(exsk, skill_inc);
