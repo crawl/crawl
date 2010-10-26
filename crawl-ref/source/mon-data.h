@@ -3165,7 +3165,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_NISSE, 'K', WHITE, "nisse",
-    M_WARM_BLOOD | M_SPEAKS,
+    M_SPELLCASTER | M_ACTUAL_SPELLS | M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     350, 7, MONS_KOBOLD, MONS_NISSE, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 5}, {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK },
