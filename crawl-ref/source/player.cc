@@ -4505,10 +4505,8 @@ bool confuse_player(int amount, bool resistable)
     {
         mpr("You feel momentarily confused.");
         // Identify the amulet if necessary.
-        if (!extrinsic_amulet_effect(AMU_CLARITY))
+        if (player_equip(EQ_AMULET, AMU_CLARITY, true))
         {
-            // Since it's not extrinsic, it must be from the amulet.
-            ASSERT(player_wearing_slot(EQ_AMULET));
             item_def* const amu = you.slot_item(EQ_AMULET, false);
             if (!item_ident(*amu, ISFLAG_KNOW_TYPE))
             {
