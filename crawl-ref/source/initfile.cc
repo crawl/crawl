@@ -3772,8 +3772,7 @@ static void _edit_save(int argc, char **argv)
         }
         else if (cmd == ES_REPACK)
         {
-            package save2((get_savedir_filename(name, "", "") + ".tmp").c_str(),
-                           true, true);
+            package save2((filename + ".tmp").c_str(), true, true);
             std::vector<std::string> list = save.list_chunks();
             for (size_t i = 0; i < list.size(); i++)
             {
@@ -3787,8 +3786,7 @@ static void _edit_save(int argc, char **argv)
             }
             save2.commit();
             save.unlink();
-            rename((get_savedir_filename(name, "", "") + ".tmp").c_str(),
-                   (get_savedir_filename(name, "", "") + SAVE_SUFFIX).c_str());
+            rename((filename + ".tmp").c_str(), filename.c_str());
         }
     }
     catch (ext_fail_exception &fe)
