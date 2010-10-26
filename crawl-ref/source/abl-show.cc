@@ -362,7 +362,7 @@ static const ability_def Ability_List[] =
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion", 0, 0, 0, 0, ABFLAG_NONE },
 };
 
-const ability_def & get_ability_def(ability_type abil)
+static const ability_def& _get_ability_def(ability_type abil)
 {
     for (unsigned int i = 0;
          i < sizeof(Ability_List) / sizeof(Ability_List[0]); i++)
@@ -378,7 +378,7 @@ bool string_matches_ability_name(const std::string& key)
 {
     for (int i = ABIL_SPIT_POISON; i <= ABIL_RENOUNCE_RELIGION; ++i)
     {
-        const ability_def abil = get_ability_def(static_cast<ability_type>(i));
+        const ability_def abil = _get_ability_def(static_cast<ability_type>(i));
         if (abil.ability == ABIL_NON_ABILITY)
             continue;
 
@@ -412,7 +412,7 @@ std::string print_abilities()
 
 const std::string make_cost_description(ability_type ability)
 {
-    const ability_def& abil = get_ability_def(ability);
+    const ability_def& abil = _get_ability_def(ability);
     std::ostringstream ret;
     if (abil.mp_cost)
     {
@@ -550,7 +550,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
 
     if (check_confused)
     {
-        const ability_def &abil = get_ability_def(result.which);
+        const ability_def &abil = _get_ability_def(result.which);
         if (you.confused() && !testbits(abil.flags, ABFLAG_CONF_OK))
         {
             // Initialize these so compilers don't complain.
@@ -876,7 +876,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
 
 const char* ability_name(ability_type ability)
 {
-    return get_ability_def(ability).name;
+    return _get_ability_def(ability).name;
 }
 
 std::vector<const char*> get_ability_names()
@@ -1220,7 +1220,7 @@ static bool _activate_talent(const talent& tal)
         return (false);
     }
 
-    const ability_def& abil = get_ability_def(tal.which);
+    const ability_def& abil = _get_ability_def(tal.which);
 
     // Check that we can afford to pay the costs.
     // Note that mutation shenanigans might leave us with negative MP,
