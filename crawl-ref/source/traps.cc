@@ -217,7 +217,7 @@ int get_trapping_net(const coord_def& where, bool trapped)
 
 // If there are more than one net on this square
 // split off one of them for checking/setting values.
-static void maybe_split_nets(item_def &item, const coord_def& where)
+static void _maybe_split_nets(item_def &item, const coord_def& where)
 {
     if (item.quantity == 1)
     {
@@ -242,14 +242,14 @@ static void maybe_split_nets(item_def &item, const coord_def& where)
     copy_item_to_grid(it, where);
 }
 
-void mark_net_trapping(const coord_def& where)
+static void _mark_net_trapping(const coord_def& where)
 {
     int net = get_trapping_net(where);
     if (net == NON_ITEM)
     {
         net = get_trapping_net(where, false);
         if (net != NON_ITEM)
-            maybe_split_nets(mitm[net], where);
+            _maybe_split_nets(mitm[net], where);
     }
 }
 
@@ -623,7 +623,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 copy_item_to_grid(item, triggerer.pos());
 
                 if (you.attribute[ATTR_HELD])
-                    mark_net_trapping(you.pos());
+                    _mark_net_trapping(you.pos());
 
                 trap_destroyed = true;
             }
@@ -681,7 +681,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 copy_item_to_grid(item, triggerer.pos());
 
                 if (m->caught())
-                    mark_net_trapping(m->pos());
+                    _mark_net_trapping(m->pos());
 
                 trap_destroyed = true;
             }
@@ -1633,7 +1633,7 @@ void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
     }
 }
 
-static int num_traps_default(int level_number, const level_id &place)
+static int _num_traps_default(int level_number, const level_id &place)
 {
     return random2avg(9, 2);
 }
@@ -1649,11 +1649,10 @@ int num_traps_for_place(int level_number, const level_id &place)
         if (branches[place.branch].num_traps_function != NULL)
             return branches[place.branch].num_traps_function(level_number);
         else
-            return num_traps_default(level_number, place);
+            return _num_traps_default(level_number, place);
     case LEVEL_ABYSS:
-        return traps_abyss_number(level_number);
     case LEVEL_PANDEMONIUM:
-        return traps_pan_number(level_number);
+        return _num_traps_default(level_number, place);
     case LEVEL_LABYRINTH:
     case LEVEL_PORTAL_VAULT:
         ASSERT(false);
@@ -1684,7 +1683,7 @@ trap_type random_trap_slime(int level_number)
     return (type);
 }
 
-static trap_type random_trap_default(int level_number, const level_id &place)
+static trap_type _random_trap_default(int level_number, const level_id &place)
 {
     trap_type type = TRAP_DART;
 
@@ -1732,54 +1731,14 @@ trap_type random_trap_for_place(int level_number, const level_id &place)
     if (level_number == -1)
         level_number = place.absdepth();
 
-    switch (place.level_type)
-    {
-    case LEVEL_DUNGEON:
+    if (place.level_type == LEVEL_DUNGEON)
         if (branches[place.branch].rand_trap_function != NULL)
             return branches[place.branch].rand_trap_function(level_number);
-        else
-            return random_trap_default(level_number, place);
-    case LEVEL_ABYSS:
-        return traps_abyss_type(level_number);
-    case LEVEL_PANDEMONIUM:
-        return traps_pan_type(level_number);
-    default:
-        return random_trap_default(level_number, place);
-    }
-    return NUM_TRAPS;
+
+    return _random_trap_default(level_number, place);
 }
 
 int traps_zero_number(int level_number)
 {
     return 0;
-}
-
-int traps_pan_number(int level_number)
-{
-    return num_traps_default(level_number, level_id(LEVEL_PANDEMONIUM));
-}
-
-trap_type traps_pan_type(int level_number)
-{
-    return random_trap_default(level_number, level_id(LEVEL_PANDEMONIUM));
-}
-
-int traps_abyss_number(int level_number)
-{
-    return num_traps_default(level_number, level_id(LEVEL_ABYSS));
-}
-
-trap_type traps_abyss_type(int level_number)
-{
-    return random_trap_default(level_number, level_id(LEVEL_ABYSS));
-}
-
-int traps_lab_number(int level_number)
-{
-    return num_traps_default(level_number, level_id(LEVEL_LABYRINTH));
-}
-
-trap_type traps_lab_type(int level_number)
-{
-    return random_trap_default(level_number, level_id(LEVEL_LABYRINTH));
 }
