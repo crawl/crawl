@@ -393,7 +393,12 @@ static void _check_skill_cost_change()
     {
         you.skill_cost_level++;
     }
-
+    else if (you.skill_cost_level > 0
+        && you.total_skill_points
+           < skill_cost_needed(you.skill_cost_level))
+    {
+        you.skill_cost_level--;
+    }
 }
 
 void change_skill_points(skill_type sk, int points, bool change_level)
