@@ -9,37 +9,8 @@
 
 {{
 local_util = {}
-local_util.treasure_level = 0
-local_util.treasure_levels = {}
-local_util.treasure_select_level = function()
-    local ret
-    local tmp_tbl = {}
-    local levels = local_util.treasure_levels
-    if #levels == 1 then
-        ret = levels[1]
-    else
-        local sel = crawl.random2(#levels) + 1
-        local idx = 1
-        while idx <= #levels do
-            if sel == idx then
-                ret = levels[idx]
-            else
-                tmp_tbl[#tmp_tbl + 1] = levels[idx]
-            end
-            idx = idx + 1
-        end
-    end
-    local_util.treasure_levels = tmp_tbl
-    return ret
-end
 local_util.x_chance_in_y = function(x, y)
     return (crawl.random2(y) < x)
-end
-local_util.choose_from = function(...)
-    return arg[ crawl.random2(#arg) + 1 ]
-end
-local_util._abs = function(x)
-    return x >= 0 and x or -x
 end
 local_util.statues_idx = 0
 local_util.monster_from_statue = function(monster)
@@ -123,16 +94,14 @@ end
 
 # Dummy arrival
 NAME:   dhfh_arrival_dummy
-TAGS:   dummy
+TAGS:   extra dummy
 PLACE:  Dwarf:1
-WEIGHT: 25
-ORIENT: float
 MAP
 {
 ENDMAP
 
 NAME:   dhfh_arrival_the_gate
-TAGS:   patrolling no_wall_fixup
+TAGS:   extra patrolling no_wall_fixup
 PLACE:  Dwarf:1
 WEIGHT: 10
 ORIENT: float
@@ -156,7 +125,7 @@ xxxxxxxxxxx
 ENDMAP
 
 NAME:   dhfh_arrival_statues
-TAGS:   patrolling
+TAGS:   extra patrolling
 PLACE:  Dwarf:1
 WEIGHT: 10
 ORIENT: float
@@ -178,6 +147,7 @@ ccG.....Gcc
 ENDMAP
 
 NAME:   dhfh_arrival_fountains
+TAGS:   extra
 PLACE:  Dwarf:1
 WEIGHT: 10
 TAGS:   no_rotate no_wall_fixup
@@ -198,6 +168,7 @@ xxxx..@..xxxx
 ENDMAP
 
 NAME:   dhfh_arrival_gauntlet
+TAGS:   extra
 PLACE:  Dwarf:1
 WEIGHT: 10
 TAGS:   no_rotate no_wall_fixup
@@ -223,7 +194,7 @@ xx....1....xx
 ENDMAP
 
 NAME: dhfh_arrival_vestibule
-TAGS: no_wall_fixup
+TAGS: extra no_wall_fixup
 PLACE:  Dwarf:1
 ORIENT: float
 WEIGHT: 5
@@ -254,7 +225,7 @@ ENDMAP
 #'
 
 NAME:   dhfh_arrival_flooded
-TAGS:   no_wall_fixup no_pool_fixup
+TAGS:   extra no_wall_fixup no_pool_fixup
 PLACE:  Dwarf:1
 WEIGHT: 5
 ORIENT: float
@@ -284,8 +255,8 @@ ENDMAP
 ## section 3: Treasure maps
 ################################################
 NAME:    dhfh_treasure_sunken_tomb
-TAGS:    dhfh_treasure uniq_dhfh_treasure chance_dhfh_treasure no_item_gen no_monster_gen no_pool_fixup no_wall_fixup
-CHANCE:  100%
+TAGS:    extra uniq_dhfh_treasure no_item_gen no_monster_gen no_pool_fixup no_wall_fixup
+PLACE:   Dwarf:1
 WEIGHT:  40
 ORIENT:  float
 MONS:    deep dwarf w:30 / nisse / elf w:3
@@ -309,9 +280,6 @@ ITEM:    amulet of faith / ring of wizardry unrand:ring_of_charms w:5 / \
          potion of experience w:1 / potion of porridge / any potion / \
          scroll of holy word / scroll of torment / any scroll
 ITEM:    potion of porridge
-prelude {{
-    dhfh.treasure_setup(_G)
-}}
 : dhfh.colors(_G)
 MAP
         xxxxxxxxxxxxxxxxxxxx
@@ -344,8 +312,8 @@ xxx+xxxx....xxxC7.xc+cG4$ccx
 ENDMAP
 
 NAME:    dhfh_treasure_vault
-TAGS:    dhfh_treasure uniq_dhfh_treasure chance_dhfh_treasure no_item_gen no_monster_gen no_wall_fixup no_rotate
-CHANCE:  100%
+TAGS:    extra uniq_dhfh_treasure no_item_gen no_monster_gen no_wall_fixup no_rotate
+PLACE:   Dwarf:1
 ORIENT: float
 WEIGHT: 15
 MONS:   deep dwarf w:20, nisse
@@ -357,9 +325,6 @@ MARKER: = = lua:restrict_door()
 SUBST:  * = **d
 ITEM:   staff of death / scroll of torment / necronomicon w:1 / \
         ring of wizardry unrand:ring_of_charms w:5
-prelude {{
-    dhfh.treasure_setup(_G)
-}}
 : dhfh.colors(_G)
 MAP
 cccccccccccccccccccc@cccccccccccccccccccc
@@ -373,8 +338,8 @@ cccccccccccccccccccc@cccccccccccccccccccc
 ENDMAP
 
 NAME:    dhfh_treasure_sunken_vault
-TAGS:    dhfh_treasure uniq_dhfh_treasure chance_dhfh_treasure no_item_gen no_monster_gen no_wall_fixup no_rotate
-CHANCE:  100%
+TAGS:    extra uniq_dhfh_treasure no_item_gen no_monster_gen no_wall_fixup no_rotate
+PLACE:   Dwarf:1
 ORIENT: float
 WEIGHT: 5
 MONS:   wight
@@ -384,9 +349,6 @@ MONS:   war dog
 SUBST:  $ = $$d
 ITEM:   any weapon ego:draining / any armour ego:positive_energy / \
         staff of death / scroll of torment / necronomicon w:1
-prelude {{
-    dhfh.treasure_setup(_G)
-}}
 : dhfh.colors(_G)
 MAP
 ..xxx@<xxxxx
@@ -408,8 +370,7 @@ ENDMAP
 ################################################
 NAME:   dhfh_guard_house_d2
 TAGS:   dhfh_guard_house allow_dup
-CHANCE: 10%
-PLACE:  Dwarf:2
+DEPTH:  Dwarf:1
 NSUBST: C = 1:@ / *:c
 NSUBST: S = 1:= / *:c
 KITEM:  * = % w:20 / * / $
@@ -434,8 +395,7 @@ ENDMAP
 
 NAME:   dhfh_guard_house_d3
 TAGS:   dhfh_guard_house allow_dup
-CHANCE: 10%
-PLACE:  Dwarf:3
+DEPTH:  Dwarf:1
 NSUBST: C = 1:@ / *:c
 NSUBST: S = 1:= / *:c
 KITEM:  * = % w:20 / * / $
@@ -459,8 +419,7 @@ ENDMAP
 
 NAME:   dhfh_guard_house_d4
 TAGS:   dhfh_guard_house allow_dup
-CHANCE: 10%
-PLACE:  Dwarf:4
+DEPTH:  Dwarf:1
 NSUBST: C = 1:@ / *:c
 NSUBST: S = 1:= / *:c
 KITEM:  * = % w:20 / * / $
@@ -484,9 +443,8 @@ cccc@.cccc
 ENDMAP
 
 NAME:     dhfh_alchemist
-TAGS:     dhfh_alchemist no_dup
-CHANCE:   10%
-PLACE:    Dwarf:1-4
+TAGS:     extra
+DEPTH:    Dwarf:1
 SUBVAULT: Z : fruiting_plant
 SUBVAULT: Y : fruiting_plant
 SUBVAULT: X : fruiting_plant
@@ -512,33 +470,6 @@ cppc....cppc
 cp.+.1..+.pc
 cccc....cccc
 cccccccccccc
-ENDMAP
-
-NAME:    dhfh_frost_giant
-TAGS:    extra dhfh_giant uniq_dhfh_giant chance_dhfh_giant
-CHANCE:  10%
-PLACE:   Dwarf: 4-5
-MONS:    frost giant
-MAP
-1
-ENDMAP
-
-NAME:    dhfh_fire_giant
-TAGS:    extra dhfh_giant uniq_dhfh_giant chance_dhfh_giant
-CHANCE:  10%
-PLACE:   Dwarf: 4-5
-MONS:    fire giant
-MAP
-1
-ENDMAP
-
-NAME:    dhfh_hill_giant
-TAGS:    extra dhfh_giant uniq_dhfh_giant chance_dhfh_giant
-CHANCE:  10%
-PLACE:   Dwarf: 4-5
-MONS:    fire giant
-MAP
-1
 ENDMAP
 
 
@@ -571,9 +502,9 @@ MAP
 ENDMAP
 
 NAME:     dhfh_hall
-TAGS:     dwarf_hall no_monster_gen no_item_gen no_wall_fixup no_shop_gen
+TAGS:     extra no_monster_gen no_item_gen no_wall_fixup no_shop_gen
 ORIENT:   float
-PLACE:    Dwarf:5
+PLACE:    Dwarf:1
 NSUBST:   s = 1:= / *:c
 MARKER:   = = lua:restrict_door()
 SUBST:    ? = w * |:3
@@ -618,10 +549,10 @@ cccccc.ccccsc.c
 ENDMAP
 
 NAME:   dhfh_barracks_1
-TAGS:   extra dhfh_barracks uniq_dhfh_barracks chance_dhfh_barracks no_shop_gen
+TAGS:   extra uniq_dhfh_barracks chance_dhfh_barracks no_shop_gen
 ORIENT: float
 CHANCE: 50%
-DEPTH:  Dwarf:5
+DEPTH:  Dwarf:1
 MONS:   nisse w:3 / elf w:5 / deep dwarf / deep dwarf necromancer / \
         deep dwarf berserker
 MONS:   shadow wraith / wraith / wight w:5 / troll / rock troll w:5 / \
@@ -686,10 +617,10 @@ xxxxxxxxxxxxc.?.c........c
 ENDMAP
 
 NAME:   dhfh_barracks_2
-TAGS:   extra dhfh_barracks uniq_dhfh_barracks chance_dhfh_barracks no_shop_gen
+TAGS:   extra uniq_dhfh_barracks chance_dhfh_barracks no_shop_gen
 ORIENT: float
 CHANCE: 50%
-DEPTH:  Dwarf:5
+DEPTH:  Dwarf:1
 MONS:   nisse w:3 / elf w:5 / dwarf / deep dwarf necromancer / \
         deep dwarf berserker
 MONS:   shadow wraith / wraith / wight w:5 / troll / rock troll w:5 / \
