@@ -2223,7 +2223,7 @@ static bool _determine_ghost_version(FILE *ghostFile,
 {
     // Read first two bytes.
     uint8_t buf[2];
-    if (read2(ghostFile, buf, 2) != 2)
+    if (fread(buf, 1, 2, ghostFile) != 2)
         return (false);               // empty file?
 
     // Otherwise, read version and validate.

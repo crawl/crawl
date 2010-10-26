@@ -484,9 +484,10 @@ void find_connected_identical(const coord_def &d, dungeon_feature_type ft,
 }
 
 // Find all connected cells containing ft_min to ft_max, starting at d.
-void find_connected_range(const coord_def& d, dungeon_feature_type ft_min,
-                          dungeon_feature_type ft_max,
-                          std::set<coord_def>& out)
+static void _find_connected_range(const coord_def& d,
+                                  dungeon_feature_type ft_min,
+                                  dungeon_feature_type ft_max,
+                                  std::set<coord_def>& out)
 {
     if (grd(d) < ft_min || grd(d) > ft_max)
         return;
@@ -504,17 +505,17 @@ void find_connected_range(const coord_def& d, dungeon_feature_type ft_min,
 
     if (out.insert(d).second)
     {
-        find_connected_range(coord_def(d.x+1, d.y), ft_min, ft_max, out);
-        find_connected_range(coord_def(d.x-1, d.y), ft_min, ft_max, out);
-        find_connected_range(coord_def(d.x, d.y+1), ft_min, ft_max, out);
-        find_connected_range(coord_def(d.x, d.y-1), ft_min, ft_max, out);
+        _find_connected_range(coord_def(d.x+1, d.y), ft_min, ft_max, out);
+        _find_connected_range(coord_def(d.x-1, d.y), ft_min, ft_max, out);
+        _find_connected_range(coord_def(d.x, d.y+1), ft_min, ft_max, out);
+        _find_connected_range(coord_def(d.x, d.y-1), ft_min, ft_max, out);
     }
 }
 
 std::set<coord_def> connected_doors(const coord_def& d)
 {
     std::set<coord_def> doors;
-    find_connected_range(d, DNGN_CLOSED_DOOR, DNGN_SECRET_DOOR, doors);
+    _find_connected_range(d, DNGN_CLOSED_DOOR, DNGN_SECRET_DOOR, doors);
     return (doors);
 }
 

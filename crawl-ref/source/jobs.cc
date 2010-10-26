@@ -53,27 +53,9 @@ static const char * Job_Name_List[ NUM_JOBS ] =
       "Chaos Knight", "Transmuter", "Healer", "Reaver", "Stalker",
       "Monk", "Warper", "Wanderer", "Artificer", "Arcane Marksman" };
 
-int get_job_index_by_abbrev(const char *abbrev)
-{
-    COMPILE_CHECK(ARRAYSZ(Job_Abbrev_List) == NUM_JOBS, c1);
-
-    unsigned int job;
-    for (unsigned int i = 0; i < ARRAYSZ(jobs_order); i++)
-    {
-        job = jobs_order[i];
-
-        if (tolower(abbrev[0]) == tolower(Job_Abbrev_List[job][0])
-            && tolower(abbrev[1]) == tolower(Job_Abbrev_List[job][1]))
-        {
-            return i;
-        }
-    }
-
-    return (-1);
-}
-
 const char *get_job_abbrev(int which_job)
 {
+    COMPILE_CHECK(ARRAYSZ(Job_Abbrev_List) == NUM_JOBS, c1);
     ASSERT(which_job >= 0 && which_job < NUM_JOBS);
 
     return (Job_Abbrev_List[which_job]);
@@ -95,40 +77,9 @@ job_type get_job_by_abbrev(const char *abbrev)
     return ((i < NUM_JOBS) ? static_cast<job_type>(i) : JOB_UNKNOWN);
 }
 
-int get_job_index_by_name(const char *name)
-{
-    COMPILE_CHECK(ARRAYSZ(Job_Name_List) == NUM_JOBS, c1);
-
-    char *ptr;
-    char lowered_buff[80];
-    char lowered_job[80];
-
-    strncpy(lowered_buff, name, sizeof(lowered_buff));
-    strlwr(lowered_buff);
-
-    int cl = -1;
-    unsigned int job;
-    for (unsigned int i = 0; i < ARRAYSZ(jobs_order); i++)
-    {
-        job = jobs_order[i];
-
-        strncpy(lowered_job, Job_Name_List[job], sizeof(lowered_job));
-        strlwr(lowered_job);
-
-        ptr = strstr(lowered_job, lowered_buff);
-        if (ptr != NULL)
-        {
-            cl = i;
-            if (ptr == lowered_job)  // prefix takes preference
-                break;
-        }
-    }
-
-    return (cl);
-}
-
 const char *get_job_name(int which_job)
 {
+    COMPILE_CHECK(ARRAYSZ(Job_Name_List) == NUM_JOBS, c1);
     ASSERT(which_job >= 0 && which_job < NUM_JOBS);
 
     return (Job_Name_List[which_job]);
