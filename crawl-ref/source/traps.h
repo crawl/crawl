@@ -20,7 +20,6 @@ void free_self_from_net(void);
 
 void handle_traps(trap_type trt, int i, bool trap_known);
 int get_trapping_net(const coord_def& where, bool trapped = true);
-void mark_net_trapping(const coord_def& where);
 void monster_caught_in_net(monster* mon, bolt &pbolt);
 bool player_caught_in_net();
 void clear_trapping_net();
@@ -51,14 +50,5 @@ trap_type random_trap_for_place(int level_number = -1,
 trap_type random_trap_slime(int level_number = -1);
 
 int traps_zero_number(int level_number = -1);
-
-int       traps_pan_number(int level_number = -1);
-trap_type traps_pan_type(int level_number = -1);
-
-int       traps_abyss_number(int level_number = -1);
-trap_type traps_abyss_type(int level_number = -1);
-
-int       traps_lab_number(int level_number = -1);
-trap_type traps_lab_type(int level_number = -1);
 
 #endif
