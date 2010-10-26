@@ -2393,24 +2393,28 @@ static bool _describe_spellbook(item_def &item)
 
 // it takes a key and a list of commands and it returns
 // the command from the list which corresponds to the key
-static command_type _get_action(int key, std::vector<command_type> actions)
+command_type _get_action(int key, std::vector<command_type> actions)
 {
-    //FIXME: there must be a more efficient way to set up this static map.
-    std::map<command_type, int> act_key;
-    act_key[CMD_WIELD_WEAPON]       = 'w';
-    act_key[CMD_WEAPON_SWAP]        = 'u'; //unwield
-    act_key[CMD_QUIVER_ITEM]        = 'q';
-    act_key[CMD_WEAR_ARMOUR]        = 'w';
-    act_key[CMD_REMOVE_ARMOUR]      = 't';
-    act_key[CMD_EVOKE]              = 'v';
-    act_key[CMD_EAT]                = 'e';
-    act_key[CMD_READ]               = 'r';
-    act_key[CMD_WEAR_JEWELLERY]     = 'p';
-    act_key[CMD_REMOVE_JEWELLERY]   = 'r';
-    act_key[CMD_QUAFF]              = 'q';
-    act_key[CMD_DROP]               = 'd';
-    act_key[CMD_INSCRIBE_ITEM]      = 'i';
-    act_key[CMD_MAKE_NOTE]          = 'a'; //autoinscribe
+    static bool act_key_init = true; // Does act_key needs to be initialise?
+    static std::map<command_type, int> act_key;
+    if (act_key_init)
+    {
+        act_key[CMD_WIELD_WEAPON]       = 'w';
+        act_key[CMD_WEAPON_SWAP]        = 'u'; //unwield
+        act_key[CMD_QUIVER_ITEM]        = 'q';
+        act_key[CMD_WEAR_ARMOUR]        = 'w';
+        act_key[CMD_REMOVE_ARMOUR]      = 't';
+        act_key[CMD_EVOKE]              = 'v';
+        act_key[CMD_EAT]                = 'e';
+        act_key[CMD_READ]               = 'r';
+        act_key[CMD_WEAR_JEWELLERY]     = 'p';
+        act_key[CMD_REMOVE_JEWELLERY]   = 'r';
+        act_key[CMD_QUAFF]              = 'q';
+        act_key[CMD_DROP]               = 'd';
+        act_key[CMD_INSCRIBE_ITEM]      = 'i';
+        act_key[CMD_MAKE_NOTE]          = 'a'; //autoinscribe
+        act_key_init = false;
+    }
 
     for (std::vector<command_type>::const_iterator at = actions.begin();
          at < actions.end(); ++at)
@@ -2511,22 +2515,26 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
     if (_need_autoinscribe(item))
         actions.push_back(CMD_MAKE_NOTE); //autoinscribe
 
-    //FIXME: there must be a more efficient way to set up this static map.
-    std::map<command_type, std::string> act_str;
-    act_str[CMD_WIELD_WEAPON]       = "(w)ield";
-    act_str[CMD_WEAPON_SWAP]        = "(u)nwield";
-    act_str[CMD_QUIVER_ITEM]        = "(q)uiver";
-    act_str[CMD_WEAR_ARMOUR]        = "(w)ear";
-    act_str[CMD_REMOVE_ARMOUR]      = "(t)ake off";
-    act_str[CMD_EVOKE]              = "e(v)oke";
-    act_str[CMD_EAT]                = "(e)at";
-    act_str[CMD_READ]               = "(r)ead";
-    act_str[CMD_WEAR_JEWELLERY]     = "(p)ut on";
-    act_str[CMD_REMOVE_JEWELLERY]   = "(r)emove";
-    act_str[CMD_QUAFF]              = "(q)uaff";
-    act_str[CMD_DROP]               = "(d)rop";
-    act_str[CMD_INSCRIBE_ITEM]      = "(i)nscribe";
-    act_str[CMD_MAKE_NOTE]          = "(a)utoinscribe";
+    static bool act_str_init = true; // Does act_str needs to be initialised?
+    static std::map<command_type, std::string> act_str;
+    if (act_str_init)
+    {
+        act_str[CMD_WIELD_WEAPON]       = "(w)ield";
+        act_str[CMD_WEAPON_SWAP]        = "(u)nwield";
+        act_str[CMD_QUIVER_ITEM]        = "(q)uiver";
+        act_str[CMD_WEAR_ARMOUR]        = "(w)ear";
+        act_str[CMD_REMOVE_ARMOUR]      = "(t)ake off";
+        act_str[CMD_EVOKE]              = "e(v)oke";
+        act_str[CMD_EAT]                = "(e)at";
+        act_str[CMD_READ]               = "(r)ead";
+        act_str[CMD_WEAR_JEWELLERY]     = "(p)ut on";
+        act_str[CMD_REMOVE_JEWELLERY]   = "(r)emove";
+        act_str[CMD_QUAFF]              = "(q)uaff";
+        act_str[CMD_DROP]               = "(d)rop";
+        act_str[CMD_INSCRIBE_ITEM]      = "(i)nscribe";
+        act_str[CMD_MAKE_NOTE]          = "(a)utoinscribe";
+        act_str_init = false;
+    }
 
     for (std::vector<command_type>::const_iterator at = actions.begin();
          at < actions.end(); ++at)
