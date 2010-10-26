@@ -287,18 +287,6 @@ static void unmarshall_vector(reader& th, std::vector<T>& vec,
                               T (*T_unmarshall)(reader&));
 
 
-// provide a wrapper for file writing, just in case.
-int write2(FILE * file, const void *buffer, unsigned int count)
-{
-    return fwrite(buffer, 1, count, file);
-}
-
-// provide a wrapper for file reading, just in case.
-int read2(FILE * file, void *buffer, unsigned int count)
-{
-    return fread(buffer, 1, count, file);
-}
-
 void marshallByte(writer &th, int8_t data)
 {
     CHECK_INITIALIZED(data);
@@ -442,9 +430,9 @@ int64_t unmarshallSigned(reader& th)
 
 // FIXME: Kill this abomination - it will break!
 template<typename T>
-void marshall_as_long(writer& th, const T& t)
+static void _marshall_as_int(writer& th, const T& t)
 {
-    marshallInt(th, static_cast<long>(t));
+    marshallInt(th, static_cast<int>(t));
 }
 
 template <typename data>
@@ -583,8 +571,8 @@ coord_def unmarshallCoord(reader &th)
 }
 
 template <typename marshall, typename grid>
-void run_length_encode(writer &th, marshall m, const grid &g,
-                       int width, int height)
+static void _run_length_encode(writer &th, marshall m, const grid &g,
+                               int width, int height)
 {
     int last = 0, nlast = 0;
     for (int y = 0; y < height; ++y)
@@ -610,8 +598,8 @@ void run_length_encode(writer &th, marshall m, const grid &g,
 }
 
 template <typename unmarshall, typename grid>
-void run_length_decode(reader &th, unmarshall um, grid &g,
-                       int width, int height)
+static void _run_length_decode(reader &th, unmarshall um, grid &g,
+                               int width, int height)
 {
     const int end = width * height;
     int offset = 0;
@@ -878,7 +866,7 @@ static int get_val_from_string(const char *ptr, int len)
     return (ret);
 }
 
-time_t parse_date_string(char buff[20])
+static time_t _parse_date_string(char buff[20])
 {
     struct tm date;
 
@@ -1315,13 +1303,13 @@ static void tag_construct_you_dungeon(writer &th)
     marshallSet(th, Generated_Levels, marshall_level_id);
 
     marshallMap(th, stair_level,
-                marshall_as_long<branch_type>, marshall_level_id);
+                _marshall_as_int<branch_type>, marshall_level_id);
     marshallMap(th, shops_present,
-                marshall_level_pos, marshall_as_long<shop_type>);
+                marshall_level_pos, _marshall_as_int<shop_type>);
     marshallMap(th, altars_present,
-                marshall_level_pos, marshall_as_long<god_type>);
+                marshall_level_pos, _marshall_as_int<god_type>);
     marshallMap(th, portals_present,
-                marshall_level_pos, marshall_as_long<portal_type>);
+                marshall_level_pos, _marshall_as_int<portal_type>);
     marshallMap(th, portal_vaults_present,
                 marshall_level_pos, marshallStringNoMax);
     marshallMap(th, portal_vault_notes,
@@ -1771,7 +1759,7 @@ static void tag_read_you(reader &th, int minorVersion)
 
     // time of character creation
     unmarshallCString(th, buff, 20);
-    you.birth_time = parse_date_string(buff);
+    you.birth_time = _parse_date_string(buff);
 
     you.real_time  = unmarshallInt(th);
     you.num_turns  = unmarshallInt(th);
@@ -2103,7 +2091,7 @@ static void tag_construct_level(writer &th)
             marshallInt(th, env.pgrid[count_x][count_y]);
         }
 
-    run_length_encode(th, marshallByte, env.grid_colours, GXM, GYM);
+    _run_length_encode(th, marshallByte, env.grid_colours, GXM, GYM);
 
     // how many clouds?
     const int nc = _last_used_index(env.cloud, MAX_CLOUDS);
@@ -2702,7 +2690,7 @@ static void tag_read_level(reader &th, int minorVersion)
         }
 
     env.grid_colours.init(BLACK);
-    run_length_decode(th, unmarshallByte, env.grid_colours, GXM, GYM);
+    _run_length_decode(th, unmarshallByte, env.grid_colours, GXM, GYM);
 
     env.cloud_no = 0;
 

@@ -1122,19 +1122,19 @@ int update_monster_pane()
 }
 #endif
 
-const char* itosym1(int stat)
+static const char* _itosym1(int stat)
 {
     return ((stat >= 1) ? "+  " : ".  ");
 }
 
-const char* itosym2(int stat)
+static const char* _itosym2(int stat)
 {
     return ((stat >= 2) ? "+ +" :
             (stat == 1) ? "+ ." :
                           ". .");
 }
 
-const char* itosym3(int stat)
+static const char* _itosym3(int stat)
 {
     return ((stat >=  3) ? "+ + +" :
             (stat ==  2) ? "+ + ." :
@@ -1601,15 +1601,15 @@ static std::vector<formatted_string> _get_overview_resistances(
              "%sSust.Abil.: %s\n"
              "%sRes.Mut.  : %s\n"
              "%sRes.Rott. : %s\n",
-             _determine_colour_string(rfire, 3), itosym3(rfire),
-             _determine_colour_string(rcold, 3), itosym3(rcold),
-             _determine_colour_string(rlife, 3), itosym3(rlife),
-             _determine_colour_string(rpois, 1), itosym1(rpois),
-             _determine_colour_string(relec, 1), itosym1(relec),
-             _determine_colour_string(rspir, 1), itosym1(rspir),
-             _determine_colour_string(rsust, 2), itosym2(rsust),
-             _determine_colour_string(rmuta, 1), itosym1(rmuta),
-             _determine_colour_string(rrott, 1), itosym1(rrott));
+             _determine_colour_string(rfire, 3), _itosym3(rfire),
+             _determine_colour_string(rcold, 3), _itosym3(rcold),
+             _determine_colour_string(rlife, 3), _itosym3(rlife),
+             _determine_colour_string(rpois, 1), _itosym1(rpois),
+             _determine_colour_string(relec, 1), _itosym1(relec),
+             _determine_colour_string(rspir, 1), _itosym1(rspir),
+             _determine_colour_string(rsust, 2), _itosym2(rsust),
+             _determine_colour_string(rmuta, 1), _itosym1(rmuta),
+             _determine_colour_string(rrott, 1), _itosym1(rrott));
     cols.add_formatted(0, buf, false);
 
     int saplevel = player_mutation_level(MUT_SAPROVOROUS);
@@ -1619,13 +1619,13 @@ static std::vector<formatted_string> _get_overview_resistances(
     if (wearing_amulet(AMU_THE_GOURMAND, calc_unid))
     {
         pregourmand = "Gourmand  : ";
-        postgourmand = itosym1(1);
+        postgourmand = _itosym1(1);
         saplevel = 1;
     }
     else
     {
         pregourmand = "Saprovore : ";
-        postgourmand = itosym3(saplevel);
+        postgourmand = _itosym3(saplevel);
     }
     snprintf(buf, sizeof buf, "%s%s%s",
              _determine_colour_string(saplevel, 3), pregourmand, postgourmand);
@@ -1644,11 +1644,11 @@ static std::vector<formatted_string> _get_overview_resistances(
              "%sRes.Corr.  : %s\n"
              "%sClarity    : %s\n"
              ,
-             _determine_colour_string(rinvi, 1), itosym1(rinvi),
-             _determine_colour_string(rward, 1), itosym1(rward),
-             _determine_colour_string(rcons, 1), itosym1(rcons),
-             _determine_colour_string(rcorr, 1), itosym1(rcorr),
-             _determine_colour_string(rclar, 1), itosym1(rclar));
+             _determine_colour_string(rinvi, 1), _itosym1(rinvi),
+             _determine_colour_string(rward, 1), _itosym1(rward),
+             _determine_colour_string(rcons, 1), _itosym1(rcons),
+             _determine_colour_string(rcorr, 1), _itosym1(rcorr),
+             _determine_colour_string(rclar, 1), _itosym1(rclar));
     cols.add_formatted(1, buf, false);
 
     const int stasis = wearing_amulet(AMU_STASIS, calc_unid);
@@ -1656,12 +1656,12 @@ static std::vector<formatted_string> _get_overview_resistances(
     if (notele && !stasis)
     {
         snprintf(buf, sizeof buf, "%sPrev.Telep.: %s",
-                 _determine_colour_string(-1, 1), itosym1(1));
+                 _determine_colour_string(-1, 1), _itosym1(1));
     }
     else
     {
         snprintf(buf, sizeof buf, "%sStasis     : %s",
-                 _determine_colour_string(stasis, 1), itosym1(stasis));
+                 _determine_colour_string(stasis, 1), _itosym1(stasis));
     }
     cols.add_formatted(1, buf, false);
 
@@ -1669,7 +1669,7 @@ static std::vector<formatted_string> _get_overview_resistances(
     // it currently shows separately to avoid the blank.
     const int rrtel = !!player_teleport(calc_unid);
     snprintf(buf, sizeof buf, "%sRnd.Telep. : %s",
-             _determine_colour_string(rrtel, 1), itosym1(rrtel));
+             _determine_colour_string(rrtel, 1), _itosym1(rrtel));
     cols.add_formatted(1, buf, false);
 
     const int rctel = player_control_teleport(calc_unid);
@@ -1679,9 +1679,9 @@ static std::vector<formatted_string> _get_overview_resistances(
              "%sCtrl.Telep.: %s\n"
              "%sLevitation : %s\n"
              "%sCtrl.Flight: %s\n",
-             _determine_colour_string(rctel, 1), itosym1(rctel),
-             _determine_colour_string(rlevi, 1), itosym1(rlevi),
-             _determine_colour_string(rcfli, 1), itosym1(rcfli));
+             _determine_colour_string(rctel, 1), _itosym1(rctel),
+             _determine_colour_string(rlevi, 1), _itosym1(rlevi),
+             _determine_colour_string(rcfli, 1), _itosym1(rcfli));
     cols.add_formatted(1, buf, false);
 
     _print_overview_screen_equip(cols, equip_chars);

@@ -614,17 +614,6 @@ int stat_mult(int stat_level, int value, int div, int shift)
     return (((stat_level + shift) * value) / ((div > 1) ? div : 1));
 }
 
-// As above but inverted (ie 5x penalty at stat 1)
-int stat_div(int stat_level, int value, int mult, int shift)
-{
-    int div = stat_level + shift;
-
-    if (div < 1)
-        div = 1;
-
-    return ((mult * value) / div);
-}
-
 int div_round_up(int num, int den)
 {
     return (num / den + (num % den != 0));
@@ -971,11 +960,6 @@ int near_stairs(const coord_def &p, int max_dist,
     }
 
     return (false);
-}
-
-bool is_trap_square(dungeon_feature_type grid)
-{
-    return (grid >= DNGN_TRAP_MECHANICAL && grid <= DNGN_UNDISCOVERED_TRAP);
 }
 
 // Does the equivalent of KILL_RESET on all monsters in LOS. Should only be
