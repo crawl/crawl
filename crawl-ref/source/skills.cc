@@ -258,7 +258,7 @@ int exercise(int exsk, int deg, bool change_level)
         if ((you.exp_available <= 0 || you.skills[exsk] >= 27))
             break;
 
-        if (you.practise_skill[exsk] || one_chance_in(4))
+        if (you.practise_skill[exsk] || one_chance_in(3 + you.skills[exsk]))
             ret += _exercise2(exsk);
 
         deg--;
