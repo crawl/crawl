@@ -41,5 +41,6 @@ void show_skills();
 void wield_warning(bool newWeapon = true);
 bool is_invalid_skill(int skill);
 void dump_skills(std::string &text);
-skill_type list_skills(std::string title, skill_type dont_list = SK_NONE);
+skill_type list_skills(std::string title, skill_type hide = SK_NONE,
+                       bool show_all = false);
 #endif

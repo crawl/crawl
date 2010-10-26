@@ -2053,27 +2053,33 @@ void dump_skills(std::string &text)
     }
 }
 
-skill_type list_skills(std::string title, skill_type dont_list)
+skill_type list_skills(std::string title, skill_type hide, bool show_all)
 {
     menu_letter lcount = 'a';
+    int flags = MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING;
+    if (hide != SK_NONE && !show_all)
+        flags |= MF_ALWAYS_SHOW_MORE;
 
-    Menu skill_menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING);
+    Menu skill_menu(flags);
 
     MenuEntry* me = new MenuEntry(title);
     me->colour = WHITE;
     skill_menu.set_title(me);
+    skill_menu.set_highlighter(NULL);
+    if (hide != SK_NONE && !show_all)
+        skill_menu.set_more(formatted_string("Press * to see all"));
 
     for (int i = 0; i < ndisplayed_skills; ++i)
     {
         skill_type sk = skill_display_order[i];
 
-        if (sk == dont_list)
+        if (sk == hide)
             continue;
 
-        if (dont_list != SK_NONE && you.skills[sk] == 27)
+        if (hide != SK_NONE && you.skills[sk] == 27)
             continue;
 
-        if (you.skills[sk] > 0)
+        if (!is_invalid_skill(sk) && (you.skills[sk] > 0 || show_all))
         {
             std::string skill_text = make_stringf("%s (%d)", skill_name(sk),
                                                   you.skills[sk]);
@@ -2094,7 +2100,12 @@ skill_type list_skills(std::string title, skill_type dont_list)
         if (!crawl_state.doing_prev_cmd_again)
             redraw_screen();
         if (sel.empty())
-            return SK_NONE;
+        {
+            if (!show_all && hide != SK_NONE && skill_menu.getkey() == '*')
+                return list_skills(title, hide, true);
+            else
+                return SK_NONE;
+        }
 
         ASSERT(sel.size() == 1);
         ASSERT(sel[0]->hotkeys.size() == 1);
