@@ -90,6 +90,7 @@ static void _ench_animation(int flavour, const monster* mon = NULL,
                             bool force = false);
 static void _zappy(zap_type z_type, int power, bolt &pbolt);
 static beam_type _chaos_beam_flavour();
+static std::string _beam_type_name(beam_type type);
 
 tracer_info::tracer_info()
 {
@@ -1988,8 +1989,8 @@ void bolt::apply_bolt_petrify(monster* mons)
     }
 }
 
-bool curare_hits_monster(actor *agent, monster* mons, kill_category who,
-                         int levels)
+static bool _curare_hits_monster(actor *agent, monster* mons,
+                                 kill_category who, int levels)
 {
     poison_monster(mons, who, levels, false);
 
@@ -2198,28 +2199,28 @@ void mimic_alert(monster* mimic)
         mimic->flags |= MF_KNOWN_MIMIC;
 }
 
-void create_feat_at(coord_def center,
-                    dungeon_feature_type overwriteable,
-                    dungeon_feature_type newfeat)
+static void _create_feat_at(coord_def center,
+                            dungeon_feature_type overwriteable,
+                            dungeon_feature_type newfeat)
 {
     if (grd(center) == overwriteable)
         dungeon_terrain_changed(center, newfeat, true, false, true);
 }
 
-void create_feat_splash(coord_def center,
-                        dungeon_feature_type overwriteable,
-                        dungeon_feature_type newfeat,
-                        int radius,
-                        int nattempts)
+static void _create_feat_splash(coord_def center,
+                                dungeon_feature_type overwriteable,
+                                dungeon_feature_type newfeat,
+                                int radius,
+                                int nattempts)
 {
     // Always affect center.
-    create_feat_at(center, overwriteable, newfeat);
+    _create_feat_at(center, overwriteable, newfeat);
     for (int i = 0; i < nattempts; ++i)
     {
         const coord_def newp(dgn_random_point_visible_from(center, radius));
         if (newp.origin() || grd(newp) != overwriteable)
             continue;
-        create_feat_at(newp, overwriteable, newfeat);
+        _create_feat_at(newp, overwriteable, newfeat);
     }
 }
 
@@ -2331,11 +2332,11 @@ void bolt::affect_endpoint()
         {
             noisy(25, pos(), "You hear a splash.");
         }
-        create_feat_splash(pos(),
-                           DNGN_FLOOR,
-                           DNGN_SHALLOW_WATER,
-                           2,
-                           random_range(1, 9, 2));
+        _create_feat_splash(pos(),
+                            DNGN_FLOOR,
+                            DNGN_SHALLOW_WATER,
+                            2,
+                            random_range(1, 9, 2));
     }
 
     // FIXME: why don't these just have is_explosion set?
@@ -4022,7 +4023,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         if (item->special == SPMSL_CURARE)
         {
             if (ench_power == AUTOMATIC_HIT
-                && curare_hits_monster(agent(), mon, whose_kill(), 2)
+                && _curare_hits_monster(agent(), mon, whose_kill(), 2)
                 && !mon->alive())
             {
                 wake_mimic = false;
@@ -5660,7 +5661,7 @@ std::string bolt::get_short_name() const
                           | ISFLAG_RACIAL_MASK);
 
     if (real_flavour == BEAM_RANDOM || real_flavour == BEAM_CHAOS)
-        return beam_type_name(real_flavour);
+        return _beam_type_name(real_flavour);
 
     if (flavour == BEAM_FIRE && name == "sticky fire")
         return ("sticky fire");
@@ -5674,10 +5675,10 @@ std::string bolt::get_short_name() const
         return (name);
     }
 
-    return beam_type_name(flavour);
+    return _beam_type_name(flavour);
 }
 
-std::string beam_type_name(beam_type type)
+static std::string _beam_type_name(beam_type type)
 {
     switch (type)
     {

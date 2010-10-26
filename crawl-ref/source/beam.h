@@ -307,8 +307,6 @@ bool enchant_monster_with_flavour(monster* mon, actor *atk,
 void mass_enchantment(enchant_type wh_enchant, int pow, int who,
                        int *m_succumbed = NULL, int *m_attempted = NULL);
 
-bool curare_hits_monster(actor *agent, monster* mons, kill_category who,
-                         int levels = 1);
 bool poison_monster(monster* mons, kill_category who, int levels = 1,
                     bool force = false, bool verbose = true);
 bool miasma_monster(monster* mons, kill_category who);
@@ -320,8 +318,6 @@ void mimic_alert(monster* mimic);
 bool zapping(zap_type ztype, int power, bolt &pbolt,
              bool needs_tracer = false, const char* msg = NULL);
 bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range = 0);
-
-std::string beam_type_name(beam_type type);
 
 void init_zap_index();
 void clear_zap_info_on_exit();

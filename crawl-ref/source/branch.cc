@@ -88,16 +88,11 @@ branch_type str_to_branch(const std::string &branch, branch_type err)
     return (err);
 }
 
-int branch_ambient_noise(branch_type branch)
-{
-    return branches[branch].ambient_noise;
-}
-
 int current_level_ambient_noise()
 {
     switch (you.level_type) {
     case LEVEL_DUNGEON:
-        return branch_ambient_noise(you.where_are_you);
+        return branches[you.where_are_you].ambient_noise;
     case LEVEL_ABYSS:
         // should probably randomize this somehow - change it up when the
         // abyss shifts?

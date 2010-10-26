@@ -650,7 +650,7 @@ void new_mouse_event(const c_mouse_event &ce)
     mouse_events.push(ce);
 }
 
-void flush_mouse_events()
+static void _flush_mouse_events()
 {
     while (!mouse_events.empty())
         mouse_events.pop();
@@ -662,5 +662,5 @@ void c_input_reset(bool enable_mouse, bool flush)
     set_mouse_enabled(crawl_state.mouse_enabled);
 
     if (flush)
-        flush_mouse_events();
+        _flush_mouse_events();
 }
