@@ -1376,18 +1376,6 @@ static bool _has_jelly()
     return (false);
 }
 
-bool is_good_lawful_follower(const monster* mon)
-{
-    return (mon->alive() && !mon->is_unholy() && !mon->is_evil()
-            && !mon->is_unclean() && !mon->is_chaotic() && mon->friendly());
-}
-
-bool is_good_follower(const monster* mon)
-{
-    return (mon->alive() && !mon->is_unholy() && !mon->is_evil()
-            && mon->friendly());
-}
-
 bool is_follower(const monster* mon)
 {
     if (you.religion == GOD_YREDELEMNUL)
@@ -1398,10 +1386,6 @@ bool is_follower(const monster* mon)
         return (is_fellow_slime(mon));
     else if (you.religion == GOD_FEDHAS)
         return (is_neutral_plant(mon));
-    else if (you.religion == GOD_ZIN)
-        return (is_good_lawful_follower(mon));
-    else if (is_good_god(you.religion))
-        return (is_good_follower(mon));
     else
         return (mon->alive() && mon->friendly());
 }
