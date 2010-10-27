@@ -1115,7 +1115,7 @@ std::string sub_type_string (object_class_type type, int sub_type, bool known, i
         if (sub_type == BOOK_MANUAL)
         {
             std::string bookname = "manual of ";
-            bookname += skill_name(plus);
+            bookname += skill_name(static_cast<skill_type>(plus));
             return bookname;
         }
         else if (sub_type == BOOK_NECRONOMICON)
@@ -1759,7 +1759,7 @@ std::string item_def::name_aux(description_level_type desc,
             if (dbname)
                 buff << "manual";
             else
-                buff << "manual of " << skill_name(it_plus);
+                buff << "manual of " << skill_name((skill_type)it_plus);
         }
         else if (item_typ == BOOK_NECRONOMICON)
             buff << "Necronomicon";

@@ -1412,49 +1412,50 @@ static void _give_basic_knowledge(job_type which_job)
 // skill levels.
 static void _reassess_starting_skills()
 {
-    for (int i = 0; i < NUM_SKILLS; ++i)
+    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
     {
-        if (you.skills[i] == 0
-            && (you.species != SP_VAMPIRE || i != SK_UNARMED_COMBAT))
+        skill_type sk = static_cast<skill_type>(i);
+        if (you.skills[sk] == 0
+            && (you.species != SP_VAMPIRE || sk != SK_UNARMED_COMBAT))
         {
             continue;
         }
 
         // Grant the amount of skill points required for a human.
-        you.skill_points[i] = skill_exp_needed(you.skills[i], i,
+        you.skill_points[sk] = skill_exp_needed(you.skills[sk], sk,
         static_cast<species_type>(SP_HUMAN)) + 1;
 
         // Find out what level that earns this character.
-        you.skills[i] = 0;
+        you.skills[sk] = 0;
 
         for (int lvl = 1; lvl <= 8; ++lvl)
         {
-            if (you.skill_points[i] > skill_exp_needed(lvl, i))
-                you.skills[i] = lvl;
+            if (you.skill_points[sk] > skill_exp_needed(lvl, sk))
+                you.skills[sk] = lvl;
             else
                 break;
         }
 
         // Vampires should always have Unarmed Combat skill.
-        if (you.species == SP_VAMPIRE && i == SK_UNARMED_COMBAT
-            && you.skills[i] < 1)
+        if (you.species == SP_VAMPIRE && sk == SK_UNARMED_COMBAT
+            && you.skills[sk] < 1)
         {
-            you.skill_points[i] = skill_exp_needed(1, i);
-            you.skills[i] = 1;
+            you.skill_points[sk] = skill_exp_needed(1, sk);
+            you.skills[sk] = 1;
         }
 
         // Wanderers get at least 1 level in their skills.
-        if (you.char_class == JOB_WANDERER && you.skills[i] < 1)
+        if (you.char_class == JOB_WANDERER && you.skills[sk] < 1)
         {
-            you.skill_points[i] = skill_exp_needed(1, i);
-            you.skills[i] = 1;
+            you.skill_points[sk] = skill_exp_needed(1, sk);
+            you.skills[sk] = 1;
         }
 
         // Spellcasters should always have Spellcasting skill.
-        if (i == SK_SPELLCASTING && you.skills[i] < 1)
+        if (sk == SK_SPELLCASTING && you.skills[sk] < 1)
         {
-            you.skill_points[i] = skill_exp_needed(1, i);
-            you.skills[i] = 1;
+            you.skill_points[sk] = skill_exp_needed(1, sk);
+            you.skills[sk] = 1;
         }
     }
 }

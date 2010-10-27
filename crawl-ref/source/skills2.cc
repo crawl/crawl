@@ -1338,7 +1338,7 @@ static const skill_type skill_display_order[] =
 static const int ndisplayed_skills =
             sizeof(skill_display_order) / sizeof(*skill_display_order);
 
-static int species_apts(int skill, species_type species);
+static int species_apts(skill_type skill, species_type species);
 
 static void _display_skill_table(bool show_aptitudes, bool show_description)
 {
@@ -1361,7 +1361,7 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
 #endif
 
     int scrln = 3, scrcol = 1;
-    int x;
+    skill_type x;
     int maxln = scrln;
 
     // Don't want the help line to appear too far down a big window.
@@ -1571,18 +1571,17 @@ void show_skills()
     }
 }
 
-const char *skill_name(int which_skill)
+const char *skill_name(skill_type which_skill)
 {
     return (skills[which_skill][0]);
 }
 
-int str_to_skill(const std::string &skill)
+skill_type str_to_skill(const std::string &skill)
 {
-    for (int i = 0; i < NUM_SKILLS; ++i)
-    {
+    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
         if (skills[i][0] && skill == skills[i][0])
-            return (i);
-    }
+            return (static_cast<skill_type>(i));
+
     return (SK_FIGHTING);
 }
 
@@ -1697,8 +1696,8 @@ unsigned get_skill_rank(unsigned skill_lev)
                             /* level 27 */    : 4);
 }
 
-std::string skill_title_by_rank(uint8_t best_skill, uint8_t skill_rank,
-                         int species, int str, int dex, int god)
+std::string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
+                                int species, int str, int dex, int god)
 {
     // paranoia
     if (is_invalid_skill(best_skill))
@@ -1780,41 +1779,43 @@ std::string skill_title_by_rank(uint8_t best_skill, uint8_t skill_rank,
                            : result);
 }
 
-std::string skill_title(uint8_t best_skill, uint8_t skill_lev,
-                         int species, int str, int dex, int god)
+std::string skill_title(skill_type best_skill, uint8_t skill_lev,
+                        int species, int str, int dex, int god)
 {
     return skill_title_by_rank(best_skill, get_skill_rank(skill_lev), species, str, dex, god);
 }
 
 std::string player_title()
 {
-    const uint8_t best = best_skill(SK_FIGHTING, (NUM_SKILLS - 1));
+    const skill_type best = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
     return (skill_title(best, you.skills[ best ]));
 }
 
-skill_type best_skill(int min_skill, int max_skill, int excl_skill)
+skill_type best_skill(skill_type min_skill, skill_type max_skill,
+                      skill_type excl_skill)
 {
-    int ret = SK_FIGHTING;
+    skill_type ret = SK_FIGHTING;
     unsigned int best_skill_level = 0;
     unsigned int best_position = 1000;
 
     for (int i = min_skill; i <= max_skill; i++)    // careful!!!
     {
-        if (i == excl_skill || is_invalid_skill(i))
+        skill_type sk = static_cast<skill_type>(i);
+        if (sk == excl_skill || is_invalid_skill(sk))
             continue;
 
-        if (you.skills[i] > best_skill_level)
+        if (you.skills[sk] > best_skill_level)
         {
-            ret = i;
-            best_skill_level = you.skills[i];
-            best_position = you.skill_order[i];
+            ret = sk;
+            best_skill_level = you.skills[sk];
+            best_position = you.skill_order[sk];
 
         }
-        else if (you.skills[i] == best_skill_level
-                && you.skill_order[i] < best_position)
+        else if (you.skills[sk] == best_skill_level
+                && you.skill_order[sk] < best_position)
         {
-            ret = i;
-            best_position = you.skill_order[i];
+            ret = sk;
+            best_position = you.skill_order[sk];
         }
     }
 
@@ -1840,32 +1841,34 @@ skill_type best_skill(int min_skill, int max_skill, int excl_skill)
 // isn't able to micromanage at that level.  -- bwr
 void init_skill_order(void)
 {
-    for (int i = SK_FIGHTING; i < NUM_SKILLS; i++)
+    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; i++)
     {
-        if (is_invalid_skill(i))
+        skill_type si = static_cast<skill_type>(i);
+        if (is_invalid_skill(si))
         {
-            you.skill_order[i] = MAX_SKILL_ORDER;
+            you.skill_order[si] = MAX_SKILL_ORDER;
             continue;
         }
 
-        const int i_diff = species_skills(i, you.species);
-        const unsigned int i_points = (you.skill_points[i] * 100) / i_diff;
+        const int i_diff = species_skills(si, you.species);
+        const unsigned int i_points = (you.skill_points[si] * 100) / i_diff;
 
-        you.skill_order[i] = 0;
+        you.skill_order[si] = 0;
 
-        for (int j = SK_FIGHTING; j < NUM_SKILLS; j++)
+        for (int j = SK_FIRST_SKILL; j < NUM_SKILLS; j++)
         {
-            if (i == j || is_invalid_skill(j))
+            skill_type sj = static_cast<skill_type>(j);
+            if (si == sj || is_invalid_skill(sj))
                 continue;
 
-            const int j_diff = species_skills(j, you.species);
-            const unsigned int j_points = (you.skill_points[j] * 100) / j_diff;
+            const int j_diff = species_skills(sj, you.species);
+            const unsigned int j_points = (you.skill_points[sj] * 100) / j_diff;
 
-            if (you.skills[j] == you.skills[i]
+            if (you.skills[sj] == you.skills[si]
                 && (j_points > i_points
-                    || (j_points == i_points && j > i)))
+                    || (j_points == i_points && sj > si)))
             {
-                you.skill_order[i]++;
+                you.skill_order[si]++;
             }
         }
     }
@@ -1907,7 +1910,7 @@ unsigned int skill_exp_needed(int lev)
     return 0;
 }
 
-unsigned int skill_exp_needed(int lev, int sk, species_type sp)
+unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
 {
     return skill_exp_needed(lev) * species_skills(sk, sp) / 100;
 }
@@ -1942,7 +1945,7 @@ static int _apt_to_cost(skill_type skill, int apt)
     return (_base_cost(skill) / exp(log(2) * apt / APT_DOUBLE));
 }
 
-static int species_apts(int skill, species_type species)
+static int species_apts(skill_type skill, species_type species)
 {
     static bool spec_skills_initialised = false;
     if (!spec_skills_initialised)
@@ -1964,7 +1967,7 @@ static int species_apts(int skill, species_type species)
     return _spec_skills[species][skill];
 }
 
-int species_skills(int skill, species_type species)
+int species_skills(skill_type skill, species_type species)
 {
     return _apt_to_cost(static_cast<skill_type>(skill),
                         species_apts(skill, species));
@@ -2027,7 +2030,7 @@ void wield_warning(bool newWeapon)
     }
 }
 
-bool is_invalid_skill(int skill)
+bool is_invalid_skill(skill_type skill)
 {
     if (skill < 0 || skill >= NUM_SKILLS)
         return (true);
@@ -2053,7 +2056,7 @@ void dump_skills(std::string &text)
             itoa(you.skills[i], tmp_quant, 10);
             text += tmp_quant;
             text += " ";
-            text += skill_name(i);
+            text += skill_name(static_cast<skill_type>(i));
             text += "\n";
         }
     }

@@ -918,7 +918,7 @@ const char* spelltype_long_name(int which_spelltype)
     }
 }
 
-int spell_type2skill(unsigned int spelltype)
+skill_type spell_type2skill(unsigned int spelltype)
 {
     switch (spelltype)
     {
@@ -941,7 +941,7 @@ int spell_type2skill(unsigned int spelltype)
         mprf(MSGCH_DIAGNOSTICS, "spell_type2skill: called with spelltype %u",
              spelltype);
 #endif
-        return (-1);
+        return (SK_NONE);
     }
 }                               // end spell_type2skill()
 

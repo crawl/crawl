@@ -2146,28 +2146,29 @@ static void _sage_card(int power, deck_rarity_type rarity)
     // Ah for Python:
     // skill = random_choice([x*(40-x)*c/10 for x in skill_levels])
     int totalweight = 0;
-    int result = -1;
-    for (int i = 0; i < NUM_SKILLS; ++i)
+    skill_type result = SK_NONE;
+    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
     {
-        if (skill_name(i) == NULL)
+        skill_type s = static_cast<skill_type>(i);
+        if (skill_name(s) == NULL)
             continue;
 
-        if (you.skills[i] < MAX_SKILL_LEVEL)
+        if (you.skills[s] < MAX_SKILL_LEVEL)
         {
             // Choosing a skill is likelier if you are somewhat skilled in it.
-            const int curweight = 1 + you.skills[i] * (40 - you.skills[i]) * c;
+            const int curweight = 1 + you.skills[s] * (40 - you.skills[s]) * c;
             totalweight += curweight;
             if (x_chance_in_y(curweight, totalweight))
-                result = i;
+                result = s;
         }
     }
 
-    if (result == -1)
+    if (result == SK_NONE)
         mpr("You feel omnipotent.");  // All skills maxed.
     else
     {
         you.set_duration(DUR_SAGE, random2(1800) + 200);
-        you.sage_bonus_skill   = static_cast<skill_type>(result);
+        you.sage_bonus_skill   = result;
         you.sage_bonus_degree  = power / 25;
         mprf(MSGCH_PLAIN, "You feel studious about %s.", skill_name(result));
     }

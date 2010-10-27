@@ -2574,7 +2574,7 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
     // Eliminate disciplines that the god dislikes or from which all
     // spells are discarded.
     std::vector<int> ok_discs;
-    std::vector<int> skills;
+    std::vector<skill_type> skills;
     std::vector<int> spellcount;
     for (int i = 0; i < SPTYP_LAST_EXPONENT; i++)
     {
@@ -2622,7 +2622,7 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
         int total_skills = 0;
         for (int i = 0; i < num_discs; i++)
         {
-            int skill  = skills[i];
+            skill_type skill  = skills[i];
             int weight = 2 * you.skills[skill] + 1;
 
             if (spellcount[i] < 3)

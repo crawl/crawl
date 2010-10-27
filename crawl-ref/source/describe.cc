@@ -4371,7 +4371,7 @@ void describe_god(god_type which_god, bool give_title)
         _detailed_god_description(which_god);
 }
 
-std::string get_skill_description(int skill, bool need_title)
+std::string get_skill_description(skill_type skill, bool need_title)
 {
     std::string lookup = skill_name(skill);
     std::string result = "";
@@ -4483,7 +4483,7 @@ std::string get_skill_description(int skill, bool need_title)
     return result;
 }
 
-void describe_skill(int skill)
+void describe_skill(skill_type skill)
 {
     std::ostringstream data;
 

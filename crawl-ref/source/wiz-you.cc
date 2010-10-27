@@ -73,10 +73,11 @@ void wizard_change_species(void)
     }
 
     // Re-scale skill-points.
-    for (i = 0; i < NUM_SKILLS; ++i)
+    for (i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
     {
-        you.skill_points[i] *= species_skills(i, sp);
-        you.skill_points[i] /= species_skills(i, you.species);
+        skill_type sk = static_cast<skill_type>(i);
+        you.skill_points[i] *= species_skills(sk, sp);
+        you.skill_points[i] /= species_skills(sk, you.species);
     }
 
     you.species = sp;
@@ -359,9 +360,9 @@ void wizard_set_piety()
 #ifdef WIZARD
 void wizard_exercise_skill(void)
 {
-    int skill = debug_prompt_for_skill("Which skill (by name)? ");
+    skill_type skill = debug_prompt_for_skill("Which skill (by name)? ");
 
-    if (skill == -1)
+    if (skill == SK_NONE)
         mpr("That skill doesn't seem to exist.");
     else
     {
@@ -374,9 +375,9 @@ void wizard_exercise_skill(void)
 #ifdef WIZARD
 void wizard_set_skill_level(void)
 {
-    int skill = debug_prompt_for_skill("Which skill (by name)? ");
+    skill_type skill = debug_prompt_for_skill("Which skill (by name)? ");
 
-    if (skill == -1)
+    if (skill == SK_NONE)
         mpr("That skill doesn't seem to exist.");
     else
     {
@@ -453,15 +454,16 @@ void wizard_set_all_skills(void)
         if (amount > 27)
             amount = 27;
 
-        for (i = SK_FIGHTING; i < NUM_SKILLS; ++i)
+        for (i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
         {
-            if (is_invalid_skill(i))
+            skill_type sk = static_cast<skill_type>(i);
+            if (is_invalid_skill(sk))
                 continue;
 
-            const int points = skill_exp_needed(amount, i);
+            const int points = skill_exp_needed(amount, sk);
 
-            you.skill_points[i] = points + 1;
-            you.skills[i] = amount;
+            you.skill_points[sk] = points + 1;
+            you.skills[sk] = amount;
         }
 
         redraw_skill(you.your_name, player_title());

@@ -1020,7 +1020,7 @@ void taken_new_item(object_class_type item_type)
 }
 
 // Give a special message if you gain a skill you didn't have before.
-void hints_gained_new_skill(int skill)
+void hints_gained_new_skill(skill_type skill)
 {
     if (!Hints.hints_left)
         return;
@@ -3627,7 +3627,7 @@ void hints_describe_item(const item_def &item)
                 cmd.push_back(CMD_ADJUST_INVENTORY);
 
                 // Weapon skill used by this weapon and the best weapon skill.
-                int curr_wpskill, best_wpskill;
+                skill_type curr_wpskill, best_wpskill;
 
                 // Maybe this is a launching weapon?
                 if (is_range_weapon(item))

@@ -37,7 +37,7 @@
 #define MAX_COST_LIMIT           250
 #define MAX_SPENDING_LIMIT       250
 
-static int _exercise2(int exsk);
+static int _exercise2(skill_type exsk);
 
 // These values were calculated by running a simulation of gaining skills.
 // The goal is to try and match the old cost system which used the player's
@@ -84,7 +84,7 @@ void calc_total_skill_points(void)
         you.total_skill_points += you.skill_points[i];
 
     for (i = 1; i <= 27; i++)
-        if (you.total_skill_points < skill_cost_needed(i))
+        if (you.total_skill_points < skill_cost_needed((skill_type)i))
             break;
 
     you.skill_cost_level = i - 1;
@@ -144,7 +144,7 @@ static int _calc_skill_cost(int skill_cost_level, int skill_level)
 static void _change_skill_level(skill_type exsk, int n)
 {
     ASSERT(n != 0);
-    skill_type old_best_skill = best_skill(SK_FIGHTING, (NUM_SKILLS - 1));
+    skill_type old_best_skill = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
 
     if (-n > you.skills[exsk])
         n = -you.skills[exsk];
@@ -182,9 +182,12 @@ static void _change_skill_level(skill_type exsk, int n)
     // at its new level.   See skills2.cc::init_skill_order()
     // for more details.  -- bwr
     you.skill_order[exsk] = 0;
-    for (int i = SK_FIGHTING; i < NUM_SKILLS; ++i)
-        if (i != exsk && you.skills[i] >= you.skills[exsk])
+    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
+    {
+        skill_type sk = static_cast<skill_type>(i);
+        if (sk != exsk && you.skills[sk] >= you.skills[exsk])
             you.skill_order[exsk]++;
+    }
 
     if (exsk == SK_FIGHTING)
         calc_hp();
@@ -210,7 +213,7 @@ static void _change_skill_level(skill_type exsk, int n)
         mpr("You're starting to get the hang of this magic thing.");
     }
 
-    const skill_type best = best_skill(SK_FIGHTING, (NUM_SKILLS - 1));
+    const skill_type best = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
     if (best != old_best_skill || old_best_skill == exsk)
         redraw_skill(you.your_name, player_title());
 
@@ -244,7 +247,7 @@ static void _check_skill_level_change(skill_type sk)
 }
 
 // returns total number of skill points gained
-int exercise(int exsk, int deg, bool change_level)
+int exercise(skill_type exsk, int deg, bool change_level)
 {
     int ret = 0;
 
@@ -341,10 +344,8 @@ static bool _skip_exercise(skill_type exsk)
     // Count better non-elemental spell skills (up to 6)
     int skill_rank = 1;
     for (int i = SK_CONJURATIONS; i < SK_FIRE_MAGIC; ++i)
-    {
         if (you.skills[exsk] < you.skills[i])
             skill_rank++;
-    }
 
     // Things get progressively harder, but not harder than
     // the Fire-Air or Ice-Earth level.
@@ -415,10 +416,8 @@ void change_skill_points(skill_type sk, int points, bool change_level)
         _check_skill_level_change(sk);
 }
 
-static int _exercise2(int exski)
+static int _exercise2(skill_type exsk)
 {
-    skill_type exsk = static_cast<skill_type>(exski);
-
     // Being better at some magic skills makes others less likely to train.
     // Note: applies to Invocations and Evocations, too! [rob]
     if (_skip_exercise(exsk))

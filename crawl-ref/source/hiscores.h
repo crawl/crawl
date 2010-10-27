@@ -73,7 +73,7 @@ private:
     int         job;                // job_type + legacy values
     std::string race_class_name;    // overrides race & cls if non-empty.
     uint8_t     lvl;                // player level.
-    uint8_t     best_skill;         // best skill #
+    skill_type  best_skill;         // best skill #
     uint8_t     best_skill_lvl;     // best skill level
     int         death_type;
     int         death_source;       // NON_MONSTER or monster type

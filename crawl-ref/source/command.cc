@@ -1095,13 +1095,14 @@ static bool _skill_filter(std::string key, std::string body)
 {
     key = lowercase_string(key);
     std::string name;
-    for (int i = 0; i < NUM_SKILLS; i++)
+    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; i++)
     {
+        skill_type sk = static_cast<skill_type>(i);
         // There are a couple of NULL entries in the skill set.
-        if (!skill_name(i))
+        if (!skill_name(sk))
             continue;
 
-        name = lowercase_string(skill_name(i));
+        name = lowercase_string(skill_name(sk));
 
         if (name.find(key) != std::string::npos)
             return (false);
