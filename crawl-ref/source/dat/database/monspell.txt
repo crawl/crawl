@@ -169,6 +169,19 @@ unseen Holy Flames cast
 
 Blessed flames are called forth!
 %%%%
+Tukima's Dance Party cast
+
+@The_monster@ hums a lilting melody.
+
+@The_monster@ sings a lively tune!
+
+%%%%
+unseen Tukima's Dance Party cast
+
+You hear someone hum a lilting melody!
+
+You hear someone hum a lively tune!
+%%%%
 #####################################################
 # Individual innate spells (breathing and spitting).
 #####################################################
@@ -281,6 +294,32 @@ You hear an invocation said in the dwarven tongue.
 You see a slight glow in a spot of thin air.
 
 Someone prays in loud words.
+
+%%%%
+Tukima cast targeted
+
+@The_monster@ looks at @target@ while chanting.
+
+@The_monster@ looks at @target@ and waves @possessive@ arms gracefully.
+
+@The_monster@ casts a spell at @target@.
+
+%%%%
+Tukima cast
+
+Tukima weaves a pattern with her spectral knives.
+
+Tukima jumps to perform a pas de chat.
+
+Tukima leaps into a pas de poisson!
+
+Tukima performs a soubresaut!
+
+%%%%
+unseen Tukima cast
+
+You hear spectral shoes clatter against the floor.
+
 %%%%
 ########################################################################
 # Individual monsters

@@ -1069,6 +1069,18 @@ struct spell_desc
      false
 },
 
+{   SPELL_TUKIMAS_DANCE_PARTY, "Tukima's Dance Party",
+     SPTYP_HEXES,
+     SPFLAG_NONE,
+     6,
+     200,
+     -1,-1,
+     0,
+     NULL,
+     false,
+     true
+},
+
 {
     SPELL_SUMMON_DEMON, "Summon Demon",
      SPTYP_SUMMONING,

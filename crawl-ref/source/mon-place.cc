@@ -2654,6 +2654,12 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         band_size = 3;
         break;
 
+    case MONS_TUKIMA:
+        natural_leader = true;
+        band = BAND_TUKIMA;
+        band_size = 1 + random_range(1, 3);
+        break;
+
     case MONS_GOLDEN_EYE:
         band = BAND_GOLDEN_EYE;
         band_size = 1 + random2(5);
@@ -2906,7 +2912,11 @@ static monster_type _band_member(band_type band, int power)
                  (temp_rand == 1) ? MONS_DEEP_ELF_SORCERER      // 1 in 16
                                   : MONS_DEEP_ELF_DEATH_MAGE);  // 1 in 16
         break;
-
+    case BAND_TUKIMA:
+        mon_type = MONS_DANCING_WEAPON;
+        if (one_chance_in(4))
+            mon_type = MONS_PHANTOM;
+        break;
     case BAND_HELL_KNIGHTS:
         mon_type = MONS_HELL_KNIGHT;
         if (one_chance_in(4))
