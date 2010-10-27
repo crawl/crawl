@@ -1990,8 +1990,10 @@ std::string get_terse_square_desc(const coord_def &gc)
     {
         const monster& mons = *monster_at(gc);
 
-        if (mons_is_mimic(mons.type) && !(mons.flags & MF_KNOWN_MIMIC))
+        if (mons_is_item_mimic(mons.type) && !mons_is_known_mimic(&mons))
             desc = get_mimic_item(&mons).name(DESC_PLAIN);
+        else if (mons_is_feat_mimic(mons.type) && !mons_is_known_mimic(&mons))
+            desc = feature_description(gc, false, DESC_PLAIN, false);
         else
             desc = mons.full_name(DESC_PLAIN, true);
     }
@@ -2175,7 +2177,7 @@ static bool _mons_is_valid_target(const monster* mon, int mode, int range)
 
     // Unknown mimics don't count as monsters, either.
     if (mons_is_mimic(mon->type)
-        && !(mon->flags & MF_KNOWN_MIMIC))
+        && !mons_is_known_mimic(mon))
     {
         return (false);
     }
@@ -2652,6 +2654,13 @@ static void _describe_feature(const coord_def& where, bool oos)
     dungeon_feature_type grid = grd(where);
     if (grid == DNGN_SECRET_DOOR)
         grid = grid_secret_door_appearance(where);
+
+    if (feature_mimic_at(where))
+    {
+        monster* mimic_mons = monster_at(where);
+        if (!mons_is_known_mimic(mimic_mons))
+            grid = get_mimic_feat(mimic_mons);
+    }
 
     std::string desc;
     desc = feature_description(grid);
@@ -3142,8 +3151,11 @@ std::string feature_description(const coord_def& where, bool covering,
     if (feature_mimic_at(where))
     {
         mimic_mons = monster_at(where);
-        grid = get_mimic_feat(mimic_mons);
-        mimic = true;
+        if (!mons_is_known_mimic(mimic_mons))
+        {
+            grid = get_mimic_feat(mimic_mons);
+            mimic = true;
+        }
     }
 
     if (mimic)
@@ -3668,6 +3680,7 @@ static void _debug_describe_feature_at(const coord_def &where)
 static void _describe_cell(const coord_def& where, bool in_range)
 {
     bool mimic_item = false;
+    bool mimic_feat = false;
     bool monster_described = false;
     bool cloud_described = false;
     bool item_described = false;
@@ -3698,12 +3711,19 @@ static void _describe_cell(const coord_def& where, bool in_range)
 
         if (mons_is_unknown_mimic(mon))
         {
-            const std::string name =
-                    get_menu_colour_prefix_tags(get_mimic_item(mon),
-                                                DESC_NOCAP_A);
-            mprf(MSGCH_FLOOR_ITEMS, "You see %s here.", name.c_str());
-            mimic_item = true;
-            item_described = true;
+            if (mons_is_item_mimic(mon->type))
+            {
+                const std::string name =
+                        get_menu_colour_prefix_tags(get_mimic_item(mon),
+                                                    DESC_NOCAP_A);
+                mprf(MSGCH_FLOOR_ITEMS, "You see %s here.", name.c_str());
+                mimic_item = true;
+                item_described = true;
+            }
+            else
+            {
+                mimic_feat = true;
+            }
         }
         else
         {
@@ -3778,7 +3798,13 @@ static void _describe_cell(const coord_def& where, bool in_range)
     }
     else
     {
-        const dungeon_feature_type feat = grd(where);
+        dungeon_feature_type feat = grd(where);
+
+        if (mimic_feat)
+        {
+            monster* mons = monster_at(where);
+            feat = get_mimic_feat(mons);
+        }
 
         if (_interesting_feature(feat))
         {

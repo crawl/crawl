@@ -2143,9 +2143,11 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
     if (monster_at(pos))
     {
         mimic_mons = monster_at(pos);
-        mimic = true;
-        if (mons_is_feat_mimic(mimic_mons->type))
+        if (mons_is_feat_mimic(mimic_mons->type) && mons_is_unknown_mimic(mimic_mons))
+        {
+            mimic = true;
             feat = get_mimic_feat(mimic_mons);
+        }
     }
     std::string desc      = feature_description(pos, false, DESC_CAP_A, false);
     std::string db_name   = feat == DNGN_ENTER_SHOP ? "A shop" : desc;
