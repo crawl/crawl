@@ -2659,6 +2659,8 @@ static bool _monster_eat_item(monster* mons, bool nearby)
             gain = sacrifice_item_stack(*si, &js);
             if (gain > PIETY_NONE)
                 simple_god_message(" appreciates your sacrifice.");
+
+            jiyva_slurp_message(js);
         }
 
         if (quant >= si->quantity)
@@ -2684,16 +2686,6 @@ static bool _monster_eat_item(monster* mons, bool nearby)
             mons->hit_points += hps_changed;
             mons->max_hit_points = std::max(mons->hit_points,
                                                mons->max_hit_points);
-        }
-
-        if (js != JS_NONE)
-        {
-            if (js & JS_FOOD)
-                mpr("You feel a little less hungry.");
-            if (js & JS_MP)
-                mpr("You feel your power returning.");
-            if (js & JS_HP)
-                mpr("You feel a little better.");
         }
 
         if (death_ooze_ate_corpse)

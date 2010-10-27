@@ -129,6 +129,7 @@ void jiyva_eat_offlevel_items()
             break;
 
         const int branch = random2(NUM_BRANCHES);
+        int js = JS_NONE;
 
         // Choose level based on main dungeon depth so that levels short branches
         // aren't picked more often.
@@ -168,8 +169,9 @@ void jiyva_eat_offlevel_items()
                 // Needs a message now to explain possible hp or mp
                 // gain from jiyva_slurp_bonus()
                 mpr("You hear a distant slurping noise.");
-                sacrifice_item_stack(*si);
+                sacrifice_item_stack(*si, &js);
                 destroy_item(si.link());
+                jiyva_slurp_message(js);
             }
             return;
         }
@@ -204,6 +206,19 @@ void jiyva_slurp_bonus(int item_value, int *js)
          inc_hp(std::max(random2(item_value), 1), false);
          *js |= JS_HP;
      }
+}
+
+void jiyva_slurp_message(int js)
+{
+    if (js != JS_NONE)
+    {
+        if (js & JS_FOOD)
+            mpr("You feel a little less hungry.");
+        if (js & JS_MP)
+            mpr("You feel your power returning.");
+        if (js & JS_HP)
+            mpr("You feel a little better.");
+    }
 }
 
 enum eq_type
