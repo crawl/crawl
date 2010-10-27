@@ -2467,7 +2467,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
     case MONS_SKY_BEAST:
         if (one_chance_in(8))
         {
-            // If we're invisible, become visible
+            // If we're invisible, become visible.
             if (mons->invisible())
             {
                 mons->del_ench(ENCH_INVIS);
@@ -2482,7 +2482,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
                 mons->add_ench(ENCH_INVIS);
             }
         }
-
         break;
 
     case MONS_AGATE_SNAIL:
