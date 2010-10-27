@@ -2477,10 +2477,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             }
             // Otherwise, go invisible.
             else
-            {
-                simple_monster_message(mons, " flickers out of sight!");
-                mons->add_ench(ENCH_INVIS);
-            }
+                enchant_monster_invisible(mons, "flickers out of sight");
         }
         break;
 
