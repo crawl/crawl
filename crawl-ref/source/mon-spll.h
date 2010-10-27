@@ -1186,6 +1186,17 @@
       }
     },
 
+    {  MST_TUKIMA,
+      {
+       SPELL_TUKIMAS_DANCE_PARTY,
+       SPELL_SWIFTNESS,
+       SPELL_CORONA,
+       SPELL_BLINK,
+       SPELL_CANTRIP,
+       SPELL_CANTRIP
+      }
+    },
+
     {  MST_KIRKE,
       {
        SPELL_PORKALATOR,

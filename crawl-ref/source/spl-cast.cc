@@ -1588,6 +1588,13 @@ static spret_type _do_cast(spell_type spell, int powc,
         cast_tukimas_dance(powc, god);
         break;
 
+    case SPELL_TUKIMAS_DANCE_PARTY:
+        if (cast_tukimas_dance_party(&you, powc, god))
+            mpr("Haunting music fills the air, and weapons rise to join the dance!");
+        else
+            mpr("Strange music fills the air, but nothing else happens.");
+        break;
+
     case SPELL_CONJURE_BALL_LIGHTNING:
         cast_conjure_ball_lightning(powc, god);
         break;

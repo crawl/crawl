@@ -909,6 +909,71 @@ bool summon_holy_warrior(int pow, god_type god, int spell,
                                       !force_hostile, quiet);
 }
 
+static bool _can_weapon_dance(item_def* wpn)
+{
+    if (!wpn
+        || (wpn->base_type != OBJ_WEAPONS && wpn->base_type != OBJ_STAVES)
+        || is_range_weapon(*wpn)
+        || is_special_unrandom_artefact(*wpn))
+    {
+        return false;
+    }
+    return true;
+}
+
+// Mass Tukima's dance
+bool cast_tukimas_dance_party(actor *caster, int pow, god_type god, bool force_hostile)
+{
+    bool some_weapon_was_animated = false;
+    const int dur = std::min(2 + (random2(pow) / 5), 6);
+
+    radius_iterator ri(caster->pos(), 6, C_ROUND,
+                       caster->get_los_no_trans());
+    //iterate over all weapons in view
+    for (; ri; ++ri)
+        for (stack_iterator si(*ri) ; si ; ++ si)
+            if (si->base_type == OBJ_WEAPONS || si->base_type == OBJ_STAVES)
+            {
+                if (!_can_weapon_dance(&*si))
+                {
+                    mprf("%s flop%s limply for a second.",
+                    si->name(DESC_CAP_THE).c_str(),
+                    si->quantity > 1 ? "" : "s");
+                    continue;
+                }
+                //attempt to animate weapon
+                item_def wpn = *si;
+
+                // Cursed weapons become hostile.
+                const bool friendly = !force_hostile && !wpn.cursed();
+                mgen_data mg(MONS_DANCING_WEAPON,
+                             friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                             caster,
+                             dur,
+                             SPELL_TUKIMAS_DANCE,
+                             *ri,
+                             MHITYOU,
+                             // mgen_flag_type - might be MG_PLAYER_MADE or MG_FORCE_PLACE
+                             0,
+                             // if you animate the weapon, your god gets mad
+                             // if it poisons/drains stuff
+                             god);
+                mg.props[TUKIMA_WEAPON] = wpn;
+                int mons = create_monster(mg);
+                bool success = (mons != -1);
+                some_weapon_was_animated |= success;
+
+                //remove weapon from ground if animated
+                if (success)
+                    destroy_item(si->index());
+            }
+
+    return some_weapon_was_animated;
+
+    //TODO: add awesome disco lighting and rename the spell "Tukima's rave"
+}
+
+
 // This function seems to have very little regard for encapsulation.
 bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
 {

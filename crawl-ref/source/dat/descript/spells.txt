@@ -667,6 +667,10 @@ Tukima's Dance
 
 This spell causes a weapon held in the caster's hand to dance into the air and strike the caster's enemies. It will not function on certain wilful artefacts; any abilities that require evocation skill won't be used either.
 %%%%
+Tukima's Dance Party
+
+I'm afraid only weapons are invited to this party.
+%%%%
 Twisted Resurrection
 
 This spell allows its caster to imbue a mass of deceased flesh with a magical life force. Casting this spell involves the assembling of several corpses together; the greater the combined mass of flesh available, the greater the chances of success.

@@ -5208,6 +5208,85 @@ _Terence_rare_
 
 ## END Terence ###
 %%%%
+############ TUKIMA ### A spectral dancer
+# Cantrip messages
+Tukima_self_buff
+
+@_Tukima_self_buff_@
+%%%%
+Tukima_other_buff
+
+@_Tukima_other_buff@
+%%%%
+Tukima_debuff
+
+@_Tukima_debuff_@
+%%%%
+_Tukima_self_buff_
+
+Tukima performs a graceful pirouette.
+
+Tukima cartwheels!
+
+Tukima extends her arms.
+
+%%%%
+_Tukima_other_buff_
+
+Tukima beats her extended leg.
+
+A look of regret passes over Tukima's face.
+
+Tukima twirls.
+
+%%%%
+_Tukima_debuff_
+
+You feel light on your feet.
+
+You feel strangely compelled to dance the "Siva Afi."
+
+You feel compelled to twirl your non-existent dancing partner!
+
+Some annoying song lyrics get stuck in your head!
+
+%%%%
+Tukima
+
+@_tukima_common_@
+
+w:4
+@_tukima_rare_@
+
+%%%%
+_tukima_common_
+
+@The_monster@ exclaims, "I never get tired of watching this."
+
+@The_monster@ asks, "Have you ever felt haunted by the need to dance?"
+
+@The_monster@ explains, "If I could tell you what I felt, there would be no point in dancing it..."
+
+@The_monster@ chuckles, "Your body is so clumsy! Shall I rid you of it?"
+
+@The_monster@ calls, "Will you, won't you, will you join the dance?"
+
+@The_monster@ asks, "Would you care for a dance?"
+
+%%%%
+_tukima_rare_
+
+@The_monster@ wistfully exclaims, "I've searched so long for a dance partner..."
+
+@The_monster@ pleads, "Your soul could dance with me forever!"
+
+%%%%
+Tukima killed
+
+@The_monster@ whispers, "I'll be waiting for you..."
+
+## END Tukima ##
+%%%%
 ############ URUG ### An orc hired to kill you
 Urug
 
