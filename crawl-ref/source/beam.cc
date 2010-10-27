@@ -4566,6 +4566,39 @@ bool enchant_monster_with_flavour(monster* mon, actor *foe,
     return dummy.obvious_effect;
 }
 
+bool enchant_monster_invisible(monster* mon, const std::string how)
+{
+    // Store the monster name before it becomes an "it". - bwr
+    const std::string monster_name = mon->name(DESC_CAP_THE);
+
+    if (!mon->has_ench(ENCH_INVIS) && mon->add_ench(ENCH_INVIS))
+    {
+        // A casting of invisibility erases corona.
+        mon->del_ench(ENCH_CORONA);
+
+        if (mons_near(mon))
+        {
+            const bool is_visible = mon->visible_to(&you);
+
+            // Can't use simple_monster_message() here, since it checks
+            // for visibility of the monster (and it's now invisible).
+            // - bwr
+            mprf("%s %s%s",
+                 monster_name.c_str(),
+                 how.c_str(),
+                 is_visible ? " for a moment."
+                            : "!");
+
+            if (!is_visible)
+                autotoggle_autopickup(true);
+        }
+
+        return (true);
+    }
+
+    return (false);
+}
+
 mon_resist_type bolt::try_enchant_monster(monster* mon)
 {
     // Early out if the enchantment is meaningless.
@@ -4867,30 +4900,9 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         if (mons_is_mimic(mon->type) || mon->glows_naturally())
             return (MON_UNAFFECTED);
 
-        // Store the monster name before it becomes an "it" -- bwr
-        const std::string monster_name = mon->name(DESC_CAP_THE);
-
-        if (!mon->has_ench(ENCH_INVIS) && mon->add_ench(ENCH_INVIS))
-        {
-            // A casting of invisibility erases corona.
-            mon->del_ench(ENCH_CORONA);
-
-            // Can't use simple_monster_message() here, since it checks
-            // for visibility of the monster (and it's now invisible).
-            // -- bwr
-            if (mons_near(mon))
-            {
-                mprf("%s flickers %s",
-                     monster_name.c_str(),
-                     mon->visible_to(&you) ? "for a moment."
-                                           : "and vanishes!");
-
-                if (!mon->visible_to(&you))
-                    autotoggle_autopickup(true);
-            }
-
+        if (enchant_monster_invisible(mon, "flickers and vanishes"))
             obvious_effect = true;
-        }
+
         return (MON_AFFECTED);
     }
 
