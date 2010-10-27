@@ -716,7 +716,7 @@ COLOUR:  C = yellow
 COLOUR:  D = yellow
 SUBST:   D = =
 SUBST:   C = c
-FTILE:   'GO= = floor_sandstone
+FTILE:   =GO' = floor_sandstone
 SUBST:   ' = .
 MAP
 .......
@@ -768,7 +768,7 @@ NAME:    enter_dwarf_5
 TAGS:    dwarf_entry no_monster_gen
 COLOUR:  c = white, = = white, ' = yellow
 RTILE:   c = wall_tomb, = = wall_tomb
-FTILE:   '=GO = floor_sandstone
+FTILE:   ='GO = floor_sandstone
 NSUBST:  = = 1:= / *:c
 SUBST:   c : cx
 MAP
