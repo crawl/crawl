@@ -3496,12 +3496,12 @@ bool get_item_by_name(item_def *item, char* specs,
     case OBJ_BOOKS:
         if (item->sub_type == BOOK_MANUAL)
         {
-            special_wanted =
+            skill_type skill =
                     debug_prompt_for_skill("A manual for which skill? ");
 
-            if (special_wanted != -1)
+            if (skill != SK_NONE)
             {
-                item->plus  = special_wanted;
+                item->plus  = skill;
                 item->plus2 = 3 + random2(15);
             }
             else

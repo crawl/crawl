@@ -2903,6 +2903,7 @@ enum size_type
 enum skill_type
 {
     SK_FIGHTING,
+    SK_FIRST_SKILL = SK_FIGHTING,
     SK_SHORT_BLADES,
     SK_LONG_BLADES,
     SK_AXES,
@@ -2939,6 +2940,7 @@ enum skill_type
     SK_POISON_MAGIC,
     SK_INVOCATIONS,
     SK_EVOCATIONS,
+    SK_LAST_SKILL = SK_EVOCATIONS,
     NUM_SKILLS,                        // must remain last regular member
 
     SK_BLANK_LINE,                     // used for skill output

@@ -645,7 +645,7 @@ void skill_manual(int slot)
     const bool known = item_type_known(manual);
     if (!known)
         set_ident_flags(manual, ISFLAG_KNOW_TYPE);
-    const int skill = manual.plus;
+    const skill_type skill = static_cast<skill_type>(manual.plus);
 
     mprf("You read about %s.", skill_name(skill));
 

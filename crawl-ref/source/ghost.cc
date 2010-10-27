@@ -409,7 +409,7 @@ void ghost_demon::init_player_ghost()
     if (!is_good_god(you.religion))
         religion = you.religion;
 
-    best_skill = ::best_skill(SK_FIGHTING, (NUM_SKILLS - 1));
+    best_skill = ::best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
     best_skill_level = you.skills[best_skill];
     xl = you.experience_level;
 

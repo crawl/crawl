@@ -1228,12 +1228,12 @@ static void _debug_acquirement_stats(FILE *ostat)
         {
             const int mannum = subtype_quants[BOOK_MANUAL];
             fprintf(ostat, "\nManuals:\n");
-            for (int i = SK_FIGHTING; i <= SK_EVOCATIONS; ++i)
+            for (int i = SK_FIRST_SKILL; i <= SK_LAST_SKILL; ++i)
             {
                 const int k = 200 + i;
                 if (subtype_quants[k] > 0)
                 {
-                    fprintf(ostat, "%17s: %5.2f\n", skill_name(i),
+                    fprintf(ostat, "%17s: %5.2f\n", skill_name((skill_type)i),
                             100.0 * (float) subtype_quants[k] / (float) mannum);
                 }
             }

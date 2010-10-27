@@ -336,7 +336,7 @@ std::string Note::describe(bool when, bool where, bool what) const
             break;
         case NOTE_GAIN_SKILL:
             result << "Reached skill " << second
-                   << " in " << skill_name(first);
+                   << " in " << skill_name(static_cast<skill_type>(first));
             break;
         case NOTE_SEEN_MONSTER:
             result << "Noticed " << name;
