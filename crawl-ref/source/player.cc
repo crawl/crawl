@@ -378,11 +378,29 @@ void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
     ASSERT(!monster_at(p) || monster_at(p)->submerged()
            || fedhas_passthrough(monster_at(p)));
 
+    // Notifying of new things that comes into view.
+    // Storing current env.map_knowledge to use it as a reference after
+    // LOS is updated.
+    int prev_running_mode = you.running;
+    static FixedArray< map_cell, GXM, GYM > mapshadow;
+    if (!prev_running_mode)
+    {
+        you.running = RMODE_EXPLORE;
+        mapshadow = env.map_knowledge;
+    }
+
     // Move the player to new location.
     you.moveto(p);
     viewwindow();
 
     moveto_location_effects(old_grid, stepped, allow_shift, old_pos);
+
+    // Checking new squares for interesting features.
+    if (!prev_running_mode)
+    {
+        check_for_interesting_features(mapshadow);
+        you.running = prev_running_mode;
+    }
 }
 
 bool is_feat_dangerous(dungeon_feature_type grid)

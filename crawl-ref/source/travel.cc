@@ -903,21 +903,8 @@ command_type travel()
 
     if (you.running.is_explore())
     {
-        // Scan through the shadow map, compare it with the actual map, and if
-        // there are any squares of the shadow map that have just been
-        // discovered and contain an item, or have an interesting dungeon
-        // feature, stop exploring.
-        explore_discoveries discoveries;
-        for (rectangle_iterator ri(1); ri; ++ri)
-        {
-            const coord_def p(*ri);
-            if (!mapshadow(p).seen() && env.map_knowledge(p).seen())
-                _check_interesting_square(p, discoveries);
-        }
-
-        if (discoveries.prompt_stop())
+        if (check_for_interesting_features(mapshadow))
             stop_running();
-
         mapshadow = env.map_knowledge;
     }
 
@@ -4366,4 +4353,21 @@ int click_travel(const coord_def &gc, bool force)
         return 0;
 
     return _adjacent_cmd(dest, force);
+}
+
+bool check_for_interesting_features(FixedArray< map_cell, GXM, GYM > &mapsh)
+{
+    // Scan through the shadow map, compare it with the actual map, and if
+    // there are any squares of the shadow map that have just been
+    // discovered and contain an item, or have an interesting dungeon
+    // feature, stop exploring.
+    explore_discoveries discoveries;
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        const coord_def p(*ri);
+        if (!mapsh(p).seen() && env.map_knowledge(p).seen())
+            _check_interesting_square(p, discoveries);
+    }
+
+    return(discoveries.prompt_stop());
 }
