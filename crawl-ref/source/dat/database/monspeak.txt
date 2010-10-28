@@ -1889,6 +1889,12 @@ Peeping
 
 Fire
 
+Ice
+
+Shadow
+
+Iron
+
 Action
 
 Aardvark
