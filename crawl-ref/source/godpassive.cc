@@ -356,7 +356,7 @@ bool ash_id_item(item_def& item, bool silent)
 
     if (item.base_type == OBJ_WEAPONS
         || item.base_type == OBJ_ARMOUR
-        || item_is_rod(item))
+        || item.base_type == OBJ_STAVES)
     {
         ided |= ISFLAG_KNOW_PROPERTIES | ISFLAG_KNOW_TYPE;
     }
