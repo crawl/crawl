@@ -789,7 +789,7 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
 
     // See if the wielded item is appropriate.
     if (!wpn
-        || wpn->base_type != OBJ_WEAPONS
+        || (wpn->base_type != OBJ_WEAPONS && wpn->base_type != OBJ_STAVES)
         || is_range_weapon(*wpn)
         || is_special_unrandom_artefact(*wpn))
     {
