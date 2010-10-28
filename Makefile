@@ -1,6 +1,6 @@
 HEADERS = $(shell git ls-files|grep "\.h$$")
 SOURCES = $(shell git ls-files|grep "\.cc$$")
-CXX = g++ -Wall
+CXX = g++ -Wall -g
 
 all:	layout
 
