@@ -1,5 +1,6 @@
 #include "AppHdr.h"
 #include "env.h"
+#include "rng.h"
 #include <locale.h>
 
 static wchar_t dchar(dungeon_feature_type g)
@@ -10,6 +11,8 @@ static wchar_t dchar(dungeon_feature_type g)
         return '.';
     case DNGN_ROCK_WALL:
         return '#';
+    case DNGN_STONE_WALL:
+        return 0x2588;
     case DNGN_STONE_ARCH:
         return 0x2229;
     default:
@@ -31,6 +34,7 @@ int main()
 {
     setlocale(LC_CTYPE, "");
     grd.init(DNGN_ROCK_WALL);
+//    seed_rng();
     draw();
     return 0;
 }
