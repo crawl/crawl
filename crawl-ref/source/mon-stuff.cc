@@ -111,7 +111,9 @@ static int _make_mimic_item(monster_type type)
 
     case MONS_ARMOUR_MIMIC:
         item.base_type = OBJ_ARMOUR;
-        item.sub_type = random2(NUM_ARMOURS);
+        do
+            item.sub_type = random2(NUM_ARMOURS);
+        while (armour_is_hide(item));
 
         prop = random2(100);
 
