@@ -1778,7 +1778,8 @@ std::string item_def::name_aux(description_level_type desc,
         {
             if (cursed())
                 buff << "cursed ";
-            else if (Options.show_uncursed && !know_pluses)
+            else if (Options.show_uncursed && !know_pluses
+                     && (!know_type || !is_artefact(*this)))
                 buff << "uncursed ";
         }
 
@@ -1808,6 +1809,9 @@ std::string item_def::name_aux(description_level_type desc,
             buff << (item_is_rod(*this) ? "rod" : "staff")
                  << " of " << staff_type_name(item_typ);
         }
+
+        if (know_curse && cursed() && terse)
+            buff << " (curse)";
         break;
 
     // rearranged 15 Apr 2000 {dlb}:
