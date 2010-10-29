@@ -638,6 +638,7 @@ bool detect_curse(int scroll, bool suppress_msg)
         }
 
         if (item.base_type == OBJ_WEAPONS
+            || item.base_type == OBJ_STAVES
             || item.base_type == OBJ_ARMOUR
             || item.base_type == OBJ_JEWELLERY)
         {
