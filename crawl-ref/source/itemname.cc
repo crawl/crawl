@@ -1778,7 +1778,8 @@ std::string item_def::name_aux(description_level_type desc,
         {
             if (cursed())
                 buff << "cursed ";
-            else if (Options.show_uncursed && !know_pluses
+            else if (Options.show_uncursed && desc != DESC_PLAIN
+                     && !know_pluses
                      && (!know_type || !is_artefact(*this)))
             {
                 buff << "uncursed ";
