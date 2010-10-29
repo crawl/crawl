@@ -152,6 +152,8 @@ static void _change_skill_level(skill_type exsk, int n)
 
     if (n > 0)
         take_note(Note(NOTE_GAIN_SKILL, exsk, you.skills[exsk]));
+    else
+        take_note(Note(NOTE_LOSE_SKILL, exsk, you.skills[exsk]));
 
     if (you.skills[exsk] == 27)
     {
