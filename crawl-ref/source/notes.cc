@@ -157,7 +157,7 @@ static bool _is_noteworthy(const Note& note)
 
     // Skills are noteworthy if in the skill value list or if
     // it's a new maximal skill (depending on options).
-    if (note.type == NOTE_GAIN_SKILL)
+    if (note.type == NOTE_GAIN_SKILL || note.type == NOTE_LOSE_SKILL)
     {
         if (Options.note_all_skill_levels
             || _is_noteworthy_skill_level(note.second)
@@ -335,8 +335,13 @@ std::string Note::describe(bool when, bool where, bool what) const
                    << (first == 1 ? "" : "s") << " to Zin";
             break;
         case NOTE_GAIN_SKILL:
-            result << "Reached skill " << second
+            result << "Reached skill level " << second
                    << " in " << skill_name(static_cast<skill_type>(first));
+            break;
+        case NOTE_LOSE_SKILL:
+            result << "Reduced skill "
+                   << skill_name(static_cast<skill_type>(first))
+                   << " to level " << second;
             break;
         case NOTE_SEEN_MONSTER:
             result << "Noticed " << name;
