@@ -222,7 +222,7 @@ static void _change_skill_level(skill_type exsk, int n)
 
     // TODO: also identify rings of wizardry.
 
-    // Ogres -> ogre mages.
+    // Draconian maturation.
     update_player_symbol();
 }
 
