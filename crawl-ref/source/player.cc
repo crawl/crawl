@@ -6561,7 +6561,7 @@ void player::hibernate(int)
 
     if (!can_hibernate())
     {
-        mpr("You feel weary for a moment.");
+        canned_msg(MSG_YOU_UNAFFECTED);
         return;
     }
 
@@ -6579,7 +6579,10 @@ void player::put_to_sleep(actor*, int power)
     ASSERT(!crawl_state.game_is_arena());
 
     if (!can_sleep())
+    {
+        canned_msg(MSG_YOU_UNAFFECTED);
         return;
+    }
 
     mpr("You fall asleep.");
 
