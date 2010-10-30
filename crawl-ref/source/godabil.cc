@@ -91,6 +91,8 @@ static bool _zin_recite_mons_useless(const monster* mon)
             || mons_is_confused(mon)
             || mon->paralysed()
             || mon->withdrawn()
+            || mon->has_ench(ENCH_BERSERK)
+            || mon->has_ench(ENCH_INSANE) // already insane, Zin is redundant
             || mon->has_ench(ENCH_BATTLE_FRENZY)
             || mon->has_ench(ENCH_HASTE));
 }

@@ -2567,13 +2567,10 @@ void monster::go_berserk(bool /* intentional */, bool /* potion */)
             make_stringf(" shakes off %s lethargy.",
                          pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str()).c_str());
     }
-    del_ench(ENCH_HASTE, true);
     del_ench(ENCH_FATIGUE, true); // Give no additional message.
 
     const int duration = 16 + random2avg(13, 2);
     add_ench(mon_enchant(ENCH_BERSERK, 0, KC_OTHER, duration * 10));
-    add_ench(mon_enchant(ENCH_HASTE, 0, KC_OTHER, duration * 10));
-    add_ench(mon_enchant(ENCH_MIGHT, 0, KC_OTHER, duration * 10));
     if (simple_monster_message(this, " goes berserk!"))
         // Xom likes monsters going berserk.
         xom_is_stimulated(friendly() ? 32 : 128);
@@ -4034,6 +4031,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
             behaviour = BEH_WANDER;
             behaviour_event(this, ME_EVAL);
         }
+        calc_speed();
         break;
 
     case ENCH_HASTE:
@@ -4250,6 +4248,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_BERSERK:
         scale_hp(2, 3);
+        calc_speed();
         break;
 
     case ENCH_HASTE:
@@ -4628,8 +4627,6 @@ void monster::timeout_enchantments(int levels)
         case ENCH_INSANE:
         case ENCH_BERSERK:
             del_ench(i->first);
-            del_ench(ENCH_HASTE, true);
-            del_ench(ENCH_MIGHT, true);
             break;
 
         case ENCH_FATIGUE:
@@ -4751,8 +4748,6 @@ void monster::apply_enchantment(const mon_enchant &me)
         if (decay_enchantment(me))
         {
             simple_monster_message(this, " is no longer in an insane frenzy.");
-            del_ench(ENCH_HASTE, true);
-            del_ench(ENCH_MIGHT, true);
             const int duration = random_range(70, 130);
             add_ench(mon_enchant(ENCH_FATIGUE, 0, KC_OTHER, duration));
             add_ench(mon_enchant(ENCH_SLOW, 0, KC_OTHER, duration));
@@ -4763,8 +4758,6 @@ void monster::apply_enchantment(const mon_enchant &me)
         if (decay_enchantment(me))
         {
             simple_monster_message(this, " is no longer berserk.");
-            del_ench(ENCH_HASTE, true);
-            del_ench(ENCH_MIGHT, true);
             const int duration = random_range(70, 130);
             add_ench(mon_enchant(ENCH_FATIGUE, 0, KC_OTHER, duration));
             add_ench(mon_enchant(ENCH_SLOW, 0, KC_OTHER, duration));
@@ -5477,7 +5470,9 @@ void monster::calc_speed()
 {
     speed = mons_real_base_speed(type);
 
-    if (has_ench(ENCH_HASTE))
+    if (has_ench(ENCH_BERSERK) || has_ench(ENCH_INSANE))
+        speed *= 2;
+    else if (has_ench(ENCH_HASTE))
         speed = haste_mul(speed);
     if (has_ench(ENCH_SLOW))
         speed = haste_div(speed);
