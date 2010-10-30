@@ -6581,7 +6581,7 @@ void player::put_to_sleep(actor*, int power)
     if (!can_sleep())
         return;
 
-    mpr("You fall asleep!");
+    mpr("You fall asleep.");
 
     stop_delay();
     flash_view(DARKGREY);
