@@ -2118,7 +2118,7 @@ static void _mons_cause_fear(monster* mons)
             // Same-aligned intelligent monsters are unaffected, as are
             // magic-immune (regardless).
             if (mons_intel(m) > I_ANIMAL
-                && mons->temp_attitude() == mons->temp_attitude()
+                && m->temp_attitude() == mons->temp_attitude()
                     || mons_immune_magic(m))
             {
                 if (you.can_see(m))
