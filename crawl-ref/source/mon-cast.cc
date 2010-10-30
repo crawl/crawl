@@ -2271,16 +2271,12 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         return;
 
     case SPELL_MIRROR_DAMAGE:
-    {
         simple_monster_message(mons,
                                " kneels in prayer and is bathed in unholy energy.",
                                MSGCH_MONSTER_SPELL);
-        int dur = 20;
         mons->add_ench(mon_enchant(ENCH_MIRROR_DAMAGE, 0, KC_OTHER,
-                       dur * BASELINE_DELAY));
-        mons->paralyse(mons, dur);
+                       20 * BASELINE_DELAY));
         return;
-    }
 
     case SPELL_VAMPIRIC_DRAINING:
         _mons_vampiric_drain(mons);
