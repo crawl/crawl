@@ -543,6 +543,9 @@ static void _describe_speed(status_info* inf)
 {
     if (you.duration[DUR_SLOW] && you.duration[DUR_HASTE])
     {
+        inf->light_colour = MAGENTA;
+        inf->light_text   = "Fast+Slow";
+        inf->short_text   = "hasted and slowed";
         inf->long_text = "You are under both slowing and hasting effects.";
     }
     else if (you.duration[DUR_SLOW])
