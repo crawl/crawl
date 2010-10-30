@@ -1565,7 +1565,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         if (spell_cast == SPELL_POLYMORPH_OTHER && mons->friendly())
             return (false);
 
-
         // Past this point, we're actually casting, instead of just pondering.
 
         // Check for antimagic.
