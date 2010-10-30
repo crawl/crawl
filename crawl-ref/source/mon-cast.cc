@@ -2115,17 +2115,23 @@ static void _mons_cause_fear(monster* mons)
             if (m == mons)
                 continue;
 
-            // Same-aligned intelligent monsters are unaffected, as are magic-immune (regardless).
-            if (mons_intel(m) > I_ANIMAL && mons->temp_attitude() == mons->temp_attitude()
-                || mons_immune_magic(m))
+            // Same-aligned intelligent monsters are unaffected, as are
+            // magic-immune (regardless).
+            if (mons_intel(m) > I_ANIMAL
+                && mons->temp_attitude() == mons->temp_attitude()
+                    || mons_immune_magic(m))
             {
                 if (you.can_see(m))
-                    simple_monster_message(m, mons_immune_magic(mons) ? " is unaffected." : " resists.");
-
+                {
+                    simple_monster_message(m,
+                        mons_immune_magic(mons) ? " is unaffected."
+                                                : " resists.");
+                }
                 continue;
             }
 
-            // Check to see if they can get scared, magic immune already dealt with.
+            // Check to see if they can be scared, magic-immune already
+            // dealt with.
             if (m->check_res_magic(pow))
             {
                 simple_monster_message(m, " resists.");
@@ -2141,7 +2147,9 @@ static void _mons_cause_fear(monster* mons)
                 if (you.can_see(m))
                     simple_monster_message(m, " looks frightened!");
 
-                behaviour_event(m, ME_SCARE, mons->kill_alignment() == KC_YOU ? MHITYOU : MHITNOT);
+                behaviour_event(m, ME_SCARE,
+                                mons->kill_alignment() == KC_YOU ? MHITYOU
+                                                                 : MHITNOT);
             }
         }
     }
