@@ -19,7 +19,7 @@
 #include "areas.h"
 
 // Add a monster to the list of fearmongers.
-void player::add_fearmonger(const monster* mon)
+bool player::add_fearmonger(const monster* mon)
 {
     if (is_sanctuary(you.pos()))
     {
@@ -29,10 +29,9 @@ void player::add_fearmonger(const monster* mon)
                  mon->name(DESC_CAP_THE).c_str());
         }
         else
-        {
             mpr("The fearful aura is strangely muted, and has no effect on you.");
-        }
-        return;
+
+        return (false);
     }
 
     if (!duration[DUR_AFRAID])
@@ -48,6 +47,8 @@ void player::add_fearmonger(const monster* mon)
         if (!afraid_of(mon))
             fearmongers.push_back(mon->mindex());
     }
+
+    return (true);
 }
 
 // Whether player is afraid.

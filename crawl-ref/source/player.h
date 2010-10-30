@@ -397,7 +397,7 @@ public:
     void update_beholder(const monster* mon);
 
     // Dealing with fearmongers. Implemented in fearmonger.cc.
-    void add_fearmonger(const monster* mon);
+    bool add_fearmonger(const monster* mon);
     bool afraid() const;
     bool afraid_of(const monster* mon) const;
     monster* get_fearmonger(const coord_def &pos) const;

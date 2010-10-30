@@ -2134,15 +2134,14 @@ static int _mons_cause_fear(monster* mons, bool actual)
 
             retval = 0;
 
-            if (actual)
+            if (actual && you.add_fearmonger(mons))
             {
                 retval = 1;
 
+                you.increase_duration(DUR_AFRAID, 10 + random2avg(pow, 4));
+
                 if (!mons->has_ench(ENCH_FEAR_INSPIRING))
                     mons->add_ench(ENCH_FEAR_INSPIRING);
-
-                you.add_fearmonger(mons);
-                you.increase_duration(DUR_AFRAID, 10 + random2avg(pow, 4));
             }
         }
         else
@@ -2190,15 +2189,15 @@ static int _mons_cause_fear(monster* mons, bool actual)
             {
                 retval = 1;
 
-                if (!mons->has_ench(ENCH_FEAR_INSPIRING))
-                    mons->add_ench(ENCH_FEAR_INSPIRING);
-
                 if (you.can_see(m))
                     simple_monster_message(m, " looks frightened!");
 
                 behaviour_event(m, ME_SCARE,
                                 mons->kill_alignment() == KC_YOU ? MHITYOU
                                                                  : MHITNOT);
+
+                if (!mons->has_ench(ENCH_FEAR_INSPIRING))
+                    mons->add_ench(ENCH_FEAR_INSPIRING);
             }
         }
     }
