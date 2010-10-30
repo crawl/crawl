@@ -2097,6 +2097,12 @@ static void _mons_cause_fear(monster* mons)
     {
         if (ai->atype() == ACT_PLAYER)
         {
+            if (mons->pacified()
+                || mons->friendly())
+            {
+                continue;
+            }
+
             if (you.check_res_magic(pow))
                 canned_msg(MSG_YOU_RESIST);
             else
