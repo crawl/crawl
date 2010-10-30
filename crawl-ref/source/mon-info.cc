@@ -43,13 +43,6 @@ static uint64_t ench_to_mb(const monster& mons, enchant_type ench)
                       || ench == ENCH_PETRIFYING))
         return 0;
 
-    if ((ench == ENCH_HASTE || ench == ENCH_BATTLE_FRENZY
-            || ench == ENCH_MIGHT)
-        && mons.berserk())
-    {
-        return 0;
-    }
-
     if (ench == ENCH_HASTE && mons.has_ench(ENCH_SLOW))
         return 0;
 
