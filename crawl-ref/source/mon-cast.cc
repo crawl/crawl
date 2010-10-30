@@ -1602,7 +1602,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         // Try to cause fear: if nothing is scared, pretend we didn't cast it.
         else if (spell_cast == SPELL_CAUSE_FEAR)
         {
-            if (!_mons_cause_fear(mons, false) < 0)
+            if (_mons_cause_fear(mons, false) < 0)
                 return (false);
         }
         // Try to drain life: if nothing is drained, pretend we didn't cast it.
