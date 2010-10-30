@@ -50,14 +50,14 @@ void player::add_fearmonger(const monster* mon)
     }
 }
 
-// Whether player is mesmerised.
+// Whether player is afraid.
 bool player::afraid() const
 {
     ASSERT(duration[DUR_AFRAID] > 0 == !fearmongers.empty());
     return (duration[DUR_AFRAID] > 0);
 }
 
-// Whether player is mesmerised by the given monster.
+// Whether player is afraid of the given monster.
 bool player::afraid_of(const monster* mon) const
 {
     for (unsigned int i = 0; i < fearmongers.size(); i++)
@@ -109,7 +109,7 @@ void player::clear_fearmongers()
     duration[DUR_AFRAID] = 0;
 }
 
-// Possibly end mesmerisation if a loud noise happened.
+// Possibly end fear if a loud noise happened.
 void player::fearmongers_check_noise(int loudness)
 {
     if (loudness >= 20 && beheld())
@@ -161,7 +161,7 @@ void player::update_fearmonger(const monster* mon)
 }
 
 // Helper function that resets the duration and messages if the player
-// is no longer mesmerised.
+// is no longer afraid.
 void player::_removed_fearmonger()
 {
     if (fearmongers.empty())

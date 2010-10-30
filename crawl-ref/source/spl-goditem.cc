@@ -112,7 +112,7 @@ static bool _mons_hostile(const monster* mon)
 // Returns 0, if monster can be pacified but the attempt failed.
 // Returns 1, if monster is pacified.
 // Returns -1, if monster can never be pacified.
-// Returns -2, if monster can currently not be pacified (asleep)
+// Returns -2, if monster can currently not be pacified (asleep).
 static int _can_pacify_monster(const monster* mon, const int healed)
 {
     if (you.religion != GOD_ELYVILON)
