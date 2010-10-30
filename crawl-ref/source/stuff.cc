@@ -631,6 +631,9 @@ void canned_msg(canned_message_type which_message)
     case MSG_NOTHING_HAPPENS:
         mpr("Nothing appears to happen.");
         break;
+    case MSG_YOU_UNAFFECTED:
+        mpr("You are unaffected.");
+        break;
     case MSG_YOU_RESIST:
         mpr("You resist.");
         learned_something_new(HINT_YOU_RESIST);

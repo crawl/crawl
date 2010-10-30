@@ -3345,7 +3345,7 @@ void bolt::affect_player_enchantment()
     case BEAM_PAIN:
         if (player_res_torment())
         {
-            mpr("You are unaffected.");
+            canned_msg(MSG_YOU_UNAFFECTED);
             break;
         }
 
@@ -3356,7 +3356,7 @@ void bolt::affect_player_enchantment()
         {
             if (you.res_negative_energy()) // Agony has no effect with rN.
             {
-                mpr("You are unaffected.");
+                canned_msg(MSG_YOU_UNAFFECTED);
                 break;
             }
 
@@ -3377,7 +3377,7 @@ void bolt::affect_player_enchantment()
     case BEAM_DISPEL_UNDEAD:
         if (!you.is_undead)
         {
-            mpr("You are unaffected.");
+            canned_msg(MSG_YOU_UNAFFECTED);
             break;
         }
 
