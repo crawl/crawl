@@ -4038,17 +4038,17 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 
     case ENCH_HASTE:
         if (speed >= 100)
-            speed = 100 + ((speed - 100) * 2);
+            speed = 100 + haste_mul(speed - 100);
         else
-            speed *= 2;
+            speed = haste_mul(speed);
 
         break;
 
     case ENCH_SLOW:
         if (speed >= 100)
-            speed = 100 + ((speed - 100) / 2);
+            speed = 100 + haste_div(speed - 100);
         else
-            speed /= 2;
+            speed = haste_div(speed);
 
         break;
 
@@ -4262,9 +4262,9 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_HASTE:
         if (speed >= 100)
-            speed = 100 + ((speed - 100) / 2);
+            speed = 100 + haste_div(speed - 100);
         else
-            speed /= 2;
+            speed = haste_div(speed);
         if (!quiet)
             simple_monster_message(this, " is no longer moving quickly.");
         break;
@@ -5493,9 +5493,9 @@ void monster::fix_speed()
     speed = mons_real_base_speed(type);
 
     if (has_ench(ENCH_HASTE))
-        speed *= 2;
-    else if (has_ench(ENCH_SLOW))
-        speed /= 2;
+        speed = haste_mul(speed);
+    if (has_ench(ENCH_SLOW))
+        speed = haste_div(speed);
 }
 
 // Check speed and speed_increment sanity.

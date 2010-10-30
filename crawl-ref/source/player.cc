@@ -1207,7 +1207,7 @@ int player_hunger_rate(void)
         // is consistent now that a hasted turn causes 50% the normal hunger
         // -cao
         if (you.duration[DUR_HASTE])
-            hunger += 10;
+            hunger += haste_mul(5);
     }
 
     if (you.species == SP_VAMPIRE)
@@ -1990,13 +1990,12 @@ int player_speed(void)
             ps *= 2;
 
     if (you.duration[DUR_SLOW])
-        ps *= 2;
+        ps = haste_mul(ps);
 
-    if (you.duration[DUR_HASTE]
-        || you.duration[DUR_BERSERK] && you.religion != GOD_CHEIBRIADOS)
-    {
+    if (you.duration[DUR_BERSERK] && you.religion != GOD_CHEIBRIADOS)
         ps /= 2;
-    }
+    else if (you.duration[DUR_HASTE])
+        ps = haste_div(ps);
 
     switch (you.attribute[ATTR_TRANSFORMATION])
     {
@@ -4776,8 +4775,8 @@ bool slow_player(int turns)
 
     // Doubling these values because moving while slowed takes twice the
     // usual delay.
-    turns *= 2;
-    int threshold = 100 * 2;
+    turns = haste_mul(turns);
+    int threshold = haste_mul(100);
 
     if (you.duration[DUR_SLOW] >= threshold * BASELINE_DELAY)
         mpr("You already are as slow as you could be.");
@@ -4803,7 +4802,8 @@ void dec_slow_player(int delay)
     if (you.duration[DUR_SLOW] > BASELINE_DELAY)
     {
         // Make slowing and hasting effects last as long.
-        you.duration[DUR_SLOW] -= you.duration[DUR_HASTE] ? 2 * delay : delay;
+        you.duration[DUR_SLOW] -= you.duration[DUR_HASTE]
+            ? haste_mul(delay) : delay;
     }
     if (you.duration[DUR_SLOW] <= BASELINE_DELAY)
     {
@@ -4821,7 +4821,7 @@ void dec_exhaust_player(int delay)
     if (you.duration[DUR_EXHAUSTED] > BASELINE_DELAY)
     {
         you.duration[DUR_EXHAUSTED] -= you.duration[DUR_HASTE]
-                                       ? 2 * delay : delay;
+                                       ? haste_mul(delay) : delay;
     }
     if (you.duration[DUR_EXHAUSTED] <= BASELINE_DELAY)
     {
@@ -4845,7 +4845,7 @@ bool haste_player(int turns, bool rageext)
 
     // Cutting the nominal turns in half since hasted actions take half the
     // usual delay.
-    turns /= 2;
+    turns = haste_div(turns);
     const int threshold = 40;
 
     if (!you.duration[DUR_HASTE])
