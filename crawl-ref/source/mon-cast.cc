@@ -2101,11 +2101,11 @@ static void _mons_cause_fear(monster* mons)
                 canned_msg(MSG_YOU_RESIST);
             else
             {
-                you.add_fearmonger(mons);
-                you.increase_duration(DUR_AFRAID, 10 + random2avg(pow, 4));
-
                 if (!mons->has_ench(ENCH_FEAR_INSPIRING))
                     mons->add_ench(ENCH_FEAR_INSPIRING);
+
+                you.add_fearmonger(mons);
+                you.increase_duration(DUR_AFRAID, 10 + random2avg(pow, 4));
             }
         }
         else
