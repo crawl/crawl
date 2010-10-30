@@ -4037,19 +4037,11 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         break;
 
     case ENCH_HASTE:
-        if (speed >= 100)
-            speed = 100 + haste_mul(speed - 100);
-        else
-            speed = haste_mul(speed);
-
+        calc_speed();
         break;
 
     case ENCH_SLOW:
-        if (speed >= 100)
-            speed = 100 + haste_div(speed - 100);
-        else
-            speed = haste_div(speed);
-
+        calc_speed();
         break;
 
     case ENCH_STONESKIN:
@@ -4261,10 +4253,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_HASTE:
-        if (speed >= 100)
-            speed = 100 + haste_div(speed - 100);
-        else
-            speed = haste_div(speed);
+        calc_speed();
         if (!quiet)
             simple_monster_message(this, " is no longer moving quickly.");
         break;
@@ -4294,11 +4283,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_SLOW:
         if (!quiet)
             simple_monster_message(this, " is no longer moving slowly.");
-        if (speed >= 100)
-            speed = 100 + ((speed - 100) * 2);
-        else
-            speed *= 2;
-
+        calc_speed();
         break;
 
     case ENCH_STONESKIN:
@@ -5488,7 +5473,7 @@ bool monster::bleed(int amount, int degree)
 }
 
 // Recalculate movement speed.
-void monster::fix_speed()
+void monster::calc_speed()
 {
     speed = mons_real_base_speed(type);
 
@@ -5513,7 +5498,7 @@ void monster::check_speed()
              describe_enchantments().c_str());
 #endif
 
-        fix_speed();
+        calc_speed();
 
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Fixed speed for %s to %d",
