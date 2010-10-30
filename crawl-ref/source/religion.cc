@@ -1020,6 +1020,7 @@ static void _inc_penance(god_type god, int val)
                 tso_remove_divine_shield();
 
             make_god_gifts_disappear(); // only on level
+            invalidate_agrid();
         }
         // Neither does Ely's divine vigour.
         else if (god == GOD_ELYVILON)
