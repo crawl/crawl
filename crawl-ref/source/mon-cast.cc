@@ -62,7 +62,7 @@ const int MAX_ACTIVE_KRAKEN_TENTACLES = 4;
 static bool _valid_mon_spells[NUM_SPELLS];
 
 static bool _mons_burn_spellbook(monster* mons, bool actual = true);
-static bool _mons_cause_fear(monster* mons, bool actual = true);
+static int  _mons_cause_fear(monster* mons, bool actual = true);
 static bool _mons_drain_life(monster* mons, bool actual = true);
 
 void init_mons_spells()
@@ -1602,7 +1602,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         // Try to cause fear: if nothing is scared, pretend we didn't cast it.
         else if (spell_cast == SPELL_CAUSE_FEAR)
         {
-            if (!_mons_cause_fear(mons, false))
+            if (!_mons_cause_fear(mons, false) < 0)
                 return (false);
         }
         // Try to drain life: if nothing is drained, pretend we didn't cast it.
@@ -2088,7 +2088,11 @@ static bool _mons_burn_spellbook(monster* mons, bool actual)
     return (success);
 }
 
-static bool _mons_cause_fear(monster* mons, bool actual)
+// Check whether targets might be scared.
+// Returns 0, if targets can be scared but the attempt failed or wasn't made.
+// Returns 1, if targets are scared.
+// Returns -1, if targets can never be scared.
+static int _mons_cause_fear(monster* mons, bool actual)
 {
     if (actual)
     {
@@ -2100,7 +2104,7 @@ static bool _mons_cause_fear(monster* mons, bool actual)
         flash_view_delay(DARKGREY, 300);
     }
 
-    bool success = false;
+    int retval = -1;
 
     const int pow = std::min(mons->hit_dice * 12, 200);
 
@@ -2128,10 +2132,12 @@ static bool _mons_cause_fear(monster* mons, bool actual)
                 continue;
             }
 
-            success = true;
+            retval = 0;
 
             if (actual)
             {
+                retval = 1;
+
                 if (!mons->has_ench(ENCH_FEAR_INSPIRING))
                     mons->add_ench(ENCH_FEAR_INSPIRING);
 
@@ -2146,6 +2152,8 @@ static bool _mons_cause_fear(monster* mons, bool actual)
             if (m == mons)
                 continue;
 
+            // Magic-immune, unnatural and "firewood" monsters are
+            // immune to being scared.
             if (mons_immune_magic(m)
                 || m->holiness() != MH_NATURAL
                 || mons_is_firewood(m))
@@ -2155,24 +2163,33 @@ static bool _mons_cause_fear(monster* mons, bool actual)
                 continue;
             }
 
-            // Check to see if they can be scared. Same-aligned
-            // intelligent monsters will never be.
-            if (m->check_res_magic(pow)
-                || (mons_intel(m) > I_ANIMAL
-                    && mons_atts_aligned(m->attitude, mons->attitude)))
+            // A same-aligned intelligent monster is never scared, even
+            // though it's not immune.
+            if (mons_intel(m) > I_ANIMAL
+                && mons_atts_aligned(m->attitude, mons->attitude))
             {
                 if (actual)
                     simple_monster_message(m, " resists.");
                 continue;
             }
 
-            success = true;
+            retval = 0;
 
-            // Otherwise, try to scare them.
+            // It's possible to scare this monster. If its magic
+            // resistance fails, do so.
+            if (m->check_res_magic(pow))
+            {
+                if (actual)
+                    simple_monster_message(m, " resists.");
+                continue;
+            }
+
             if (actual
                 && m->add_ench(mon_enchant(ENCH_FEAR, 0,
                                            mons->kill_alignment())))
             {
+                retval = 1;
+
                 if (!mons->has_ench(ENCH_FEAR_INSPIRING))
                     mons->add_ench(ENCH_FEAR_INSPIRING);
 
@@ -2186,7 +2203,7 @@ static bool _mons_cause_fear(monster* mons, bool actual)
         }
     }
 
-    return (success);
+    return (retval);
 }
 
 static bool _mons_drain_life(monster* mons, bool actual)
