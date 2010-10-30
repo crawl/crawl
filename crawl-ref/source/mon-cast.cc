@@ -2103,16 +2103,23 @@ static void _mons_cause_fear(monster* mons)
                 continue;
             }
 
-            if (you.check_res_magic(pow))
-                canned_msg(MSG_YOU_RESIST);
-            else
+            if (you.holiness() != MH_NATURAL)
             {
-                if (!mons->has_ench(ENCH_FEAR_INSPIRING))
-                    mons->add_ench(ENCH_FEAR_INSPIRING);
-
-                you.add_fearmonger(mons);
-                you.increase_duration(DUR_AFRAID, 10 + random2avg(pow, 4));
+                mpr("You are unaffected.");
+                continue;
             }
+
+            if (you.check_res_magic(pow))
+            {
+                canned_msg(MSG_YOU_RESIST);
+                continue;
+            }
+
+            if (!mons->has_ench(ENCH_FEAR_INSPIRING))
+                mons->add_ench(ENCH_FEAR_INSPIRING);
+
+            you.add_fearmonger(mons);
+            you.increase_duration(DUR_AFRAID, 10 + random2avg(pow, 4));
         }
         else
         {
@@ -2121,24 +2128,19 @@ static void _mons_cause_fear(monster* mons)
             if (m == mons)
                 continue;
 
-            // Same-aligned intelligent monsters are unaffected, as are
-            // magic-immune (regardless).
-            if (mons_intel(m) > I_ANIMAL
-                && mons_atts_aligned(m->attitude, mons->attitude)
-                    || mons_immune_magic(m))
+            if (mons_immune_magic(m)
+                || m->holiness() != MH_NATURAL
+                || mons_is_firewood(m))
             {
-                if (you.can_see(m))
-                {
-                    simple_monster_message(m,
-                        mons_immune_magic(mons) ? " is unaffected."
-                                                : " resists.");
-                }
+                simple_monster_message(m, " is unaffected.");
                 continue;
             }
 
-            // Check to see if they can be scared, magic-immune already
-            // dealt with.
-            if (m->check_res_magic(pow))
+            // Check to see if they can be scared. Same-aligned
+            // intelligent monsters will never be.
+            if (m->check_res_magic(pow)
+                || (mons_intel(m) > I_ANIMAL
+                    && mons_atts_aligned(m->attitude, mons->attitude)))
             {
                 simple_monster_message(m, " resists.");
                 continue;
