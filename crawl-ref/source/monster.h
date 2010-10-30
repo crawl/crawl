@@ -430,7 +430,6 @@ public:
     const player* as_player() const { return NULL; }
 
     // Hacks, with a capital H.
-    void fix_speed();
     void check_speed();
     void upgrade_type(monster_type after, bool adjust_hd, bool adjust_hp);
 
@@ -443,6 +442,7 @@ public:
 
     void bind_melee_flags();
     void bind_spell_flags();
+    void calc_speed();
 
 private:
     void init_with(const monster& mons);
