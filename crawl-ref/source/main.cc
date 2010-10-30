@@ -3684,12 +3684,12 @@ static void _do_berserk_no_combat_penalty(void)
             break;
         }
 
-        const int hasted_base_delay = BASELINE_DELAY / 2;
-        int berserk_delay_penalty = you.berserk_penalty * hasted_base_delay;
+        const int berserk_base_delay = BASELINE_DELAY / 2; // _not_ haste
+        int berserk_delay_penalty = you.berserk_penalty * berserk_base_delay;
 
         you.duration[DUR_BERSERK] -= berserk_delay_penalty;
-        if (you.duration[DUR_BERSERK] < hasted_base_delay)
-            you.duration[DUR_BERSERK] = hasted_base_delay;
+        if (you.duration[DUR_BERSERK] < berserk_base_delay)
+            you.duration[DUR_BERSERK] = berserk_base_delay;
     }
     return;
 }                               // end do_berserk_no_combat_penalty()

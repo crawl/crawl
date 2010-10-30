@@ -165,7 +165,7 @@ enchant_type player_duration_to_mons_enchantment(duration_type dur)
     case DUR_SLOW:      return ENCH_SLOW;
     case DUR_HASTE:     return ENCH_HASTE;
     case DUR_MIGHT:     return ENCH_MIGHT;
-    case DUR_BERSERK: return ENCH_BERSERK;
+    case DUR_BERSERK:   return ENCH_BERSERK;
     case DUR_POISONING: return ENCH_POISON;
     case DUR_SWIFTNESS: return ENCH_SWIFT;
 
