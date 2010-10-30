@@ -397,6 +397,9 @@ enum canned_message_type
 {
     MSG_SOMETHING_APPEARS,
     MSG_NOTHING_HAPPENS,
+#if TAG_MAJOR_VERSION != 31
+    MSG_YOU_UNAFFECTED,
+#endif
     MSG_YOU_RESIST,
     MSG_YOU_PARTIALLY_RESIST,
     MSG_TOO_BERSERK,
@@ -414,6 +417,9 @@ enum canned_message_type
     MSG_MANA_INCREASE,
     MSG_MANA_DECREASE,
     MSG_TOO_HUNGRY,
+#if TAG_MAJOR_VERSION == 31
+    MSG_YOU_UNAFFECTED,
+#endif
 };
 
 enum char_set_type

@@ -2104,7 +2104,7 @@ static void _mons_cause_fear(monster* mons)
 
             if (you.holiness() != MH_NATURAL)
             {
-                mpr("You are unaffected.");
+                canned_msg(MSG_YOU_UNAFFECTED);
                 continue;
             }
 
