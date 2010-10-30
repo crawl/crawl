@@ -62,6 +62,7 @@ const int MAX_ACTIVE_KRAKEN_TENTACLES = 4;
 static bool _valid_mon_spells[NUM_SPELLS];
 
 static bool _mons_burn_spellbook(monster* mons, bool actual = true);
+static bool _mons_cause_fear(monster* mons, bool actual = true);
 static bool _mons_drain_life(monster* mons, bool actual = true);
 
 void init_mons_spells()
@@ -1598,6 +1599,12 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             if (!_mons_burn_spellbook(mons, false))
                 return (false);
         }
+        // Try to cause fear: if nothing is scared, pretend we didn't cast it.
+        else if (spell_cast == SPELL_CAUSE_FEAR)
+        {
+            if (!_mons_cause_fear(mons, false))
+                return (false);
+        }
         // Try to drain life: if nothing is drained, pretend we didn't cast it.
         else if (spell_cast == SPELL_DRAIN_LIFE)
         {
@@ -2081,14 +2088,19 @@ static bool _mons_burn_spellbook(monster* mons, bool actual)
     return (success);
 }
 
-static void _mons_cause_fear(monster* mons)
+static bool _mons_cause_fear(monster* mons, bool actual)
 {
-    if (you.can_see(mons))
-        simple_monster_message(mons, " radiates an aura of fear!");
-    else
-        mpr("An aura of fear fills the air!");
+    if (actual)
+    {
+        if (you.can_see(mons))
+            simple_monster_message(mons, " radiates an aura of fear!");
+        else
+            mpr("An aura of fear fills the air!");
 
-    flash_view_delay(DARKGREY, 300);
+        flash_view_delay(DARKGREY, 300);
+    }
+
+    bool success = false;
 
     const int pow = std::min(mons->hit_dice * 12, 200);
 
@@ -2104,21 +2116,28 @@ static void _mons_cause_fear(monster* mons)
 
             if (you.holiness() != MH_NATURAL)
             {
-                canned_msg(MSG_YOU_UNAFFECTED);
+                if (actual)
+                    canned_msg(MSG_YOU_UNAFFECTED);
                 continue;
             }
 
             if (you.check_res_magic(pow))
             {
-                canned_msg(MSG_YOU_RESIST);
+                if (actual)
+                    canned_msg(MSG_YOU_RESIST);
                 continue;
             }
 
-            if (!mons->has_ench(ENCH_FEAR_INSPIRING))
-                mons->add_ench(ENCH_FEAR_INSPIRING);
+            success = true;
 
-            you.add_fearmonger(mons);
-            you.increase_duration(DUR_AFRAID, 10 + random2avg(pow, 4));
+            if (actual)
+            {
+                if (!mons->has_ench(ENCH_FEAR_INSPIRING))
+                    mons->add_ench(ENCH_FEAR_INSPIRING);
+
+                you.add_fearmonger(mons);
+                you.increase_duration(DUR_AFRAID, 10 + random2avg(pow, 4));
+            }
         }
         else
         {
@@ -2131,7 +2150,8 @@ static void _mons_cause_fear(monster* mons)
                 || m->holiness() != MH_NATURAL
                 || mons_is_firewood(m))
             {
-                simple_monster_message(m, " is unaffected.");
+                if (actual)
+                    simple_monster_message(m, " is unaffected.");
                 continue;
             }
 
@@ -2141,12 +2161,17 @@ static void _mons_cause_fear(monster* mons)
                 || (mons_intel(m) > I_ANIMAL
                     && mons_atts_aligned(m->attitude, mons->attitude)))
             {
-                simple_monster_message(m, " resists.");
+                if (actual)
+                    simple_monster_message(m, " resists.");
                 continue;
             }
 
+            success = true;
+
             // Otherwise, try to scare them.
-            if (m->add_ench(mon_enchant(ENCH_FEAR, 0, mons->kill_alignment())))
+            if (actual
+                && m->add_ench(mon_enchant(ENCH_FEAR, 0,
+                                           mons->kill_alignment())))
             {
                 if (!mons->has_ench(ENCH_FEAR_INSPIRING))
                     mons->add_ench(ENCH_FEAR_INSPIRING);
@@ -2160,6 +2185,8 @@ static void _mons_cause_fear(monster* mons)
             }
         }
     }
+
+    return (success);
 }
 
 static bool _mons_drain_life(monster* mons, bool actual)
