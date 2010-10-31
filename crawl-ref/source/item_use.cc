@@ -4993,8 +4993,11 @@ void read_scroll(int slot)
             canned_msg(MSG_NOTHING_HAPPENS);
             id_the_scroll = false;
         }
-        else
-            cast_selective_amnesia();
+        else if (!cast_selective_amnesia())
+        {
+            you.turn_is_over = false;
+            return;
+        }
         break;
 
     default:
