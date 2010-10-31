@@ -1323,12 +1323,10 @@ static std::string _describe_armour(const item_def &item, bool verbose)
                 "the effects of negative energy.";
             break;
         case SPARM_ARCHMAGI:
-            description += "It greatly increases the power of its wearer's "
-                "magical spells, in particular the Necromancy, Conjuration, "
-                "Enchantments or Summoning disciplines, but it is only "
-                "intended for those who have very little left to learn, "
-                "reducing all experience gained to one quarter of its normal "
-                "value.";
+            description += "It increases the power of its wearer's "
+                "magical spells in most disciplines save for Transmutations "
+                "and pure Translocations. It also makes the spells affected "
+                "less likely to suffer a miscast.";
             break;
 
         case SPARM_PRESERVATION:
