@@ -187,9 +187,9 @@ radius_iterator radius_iterator::operator++(int dummy)
  *  spiral iterator
  */
 spiral_iterator::spiral_iterator(const coord_def& _center, bool _fair,
-                                 bool exclude_center) :
-    center(_center), current(_center), radius(1), threshold(0),
-    icur(0), iend(0), fair(_fair)
+                                 bool exclude_center, int _max_radius) :
+    center(_center), current(_center), radius(1), max_radius(_max_radius),
+    threshold(0), icur(0), iend(0), fair(_fair)
 {
     vcur  = lists + 0;
     vnear = lists + 1;
@@ -232,7 +232,11 @@ again:
         else
             icur = iend = 0; // randomness is costly
 
-        radius++;
+        if (radius++ >= max_radius)
+        {
+            vcur->clear();
+            return false;
+        }
         threshold = radius * radius + 1;
     }
 

@@ -98,7 +98,8 @@ class spiral_iterator :
 public:
     spiral_iterator(const coord_def& _center,
                     bool _fair = true,
-                    bool exclude_center = true);
+                    bool exclude_center = true,
+                    int _max_radius = 107);
     operator bool() const;
     coord_def operator *() const;
     const coord_def* operator->() const;
@@ -108,7 +109,7 @@ public:
 private:
     coord_def center, current;
     std::vector<coord_def> lists[3], *vcur, *vnear, *vfar;
-    int radius;
+    int radius, max_radius;
     int threshold;
     unsigned int icur, iend;
     bool fair;
