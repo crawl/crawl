@@ -1685,10 +1685,6 @@ int player_spec_death()
     // Staves
     sd += player_equip(EQ_STAFF, STAFF_DEATH);
 
-    // body armour:
-    if (player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI))
-        sd++;
-
     // species:
     if (you.species == SP_MUMMY)
     {
@@ -1772,10 +1768,6 @@ int player_spec_conj()
     // Staves
     sc += player_equip(EQ_STAFF, STAFF_CONJURATION);
 
-    // armour of the Archmagi
-    if (player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI))
-        sc++;
-
     return sc;
 }
 
@@ -1786,10 +1778,6 @@ int player_spec_ench()
     // Staves
     se += player_equip(EQ_STAFF, STAFF_ENCHANTMENT);
 
-    // armour of the Archmagi
-    if (player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI))
-        se++;
-
     return se;
 }
 
@@ -1799,10 +1787,6 @@ int player_spec_summ()
 
     // Staves
     ss += player_equip(EQ_STAFF, STAFF_SUMMONING);
-
-    // armour of the Archmagi
-    if (player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI))
-        ss++;
 
     return ss;
 }
