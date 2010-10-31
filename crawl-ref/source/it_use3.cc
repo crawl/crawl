@@ -154,6 +154,7 @@ void noisy_equipment()
 
 void shadow_lantern_effect()
 {
+    // Currently only mummies and lich form get more shadows.
     if (x_chance_in_y(player_spec_death() + 1, 8))
     {
         create_monster(mgen_data(MONS_SHADOW, BEH_FRIENDLY, &you, 2, 0,
