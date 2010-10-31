@@ -891,9 +891,9 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
 
         case SPARM_ARCHMAGI:
             if (!you.skills[SK_SPELLCASTING])
-                mpr("You feel strangely numb.");
+                mpr("You feel strangely lacking in power.");
             else
-                mpr("You feel extremely powerful.");
+                mpr("You feel powerful.");
             break;
 
         case SPARM_SPIRIT_SHIELD:

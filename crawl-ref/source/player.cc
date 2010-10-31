@@ -2602,9 +2602,6 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
     if (you.religion == GOD_ASHENZARI && you.piety > piety_breakpoint(0))
         exp_gained = div_rand_round(exp_gained * (8 + ash_bondage_level()), 8);
 
-    if (player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI))
-        exp_gained = div_rand_round(exp_gained, 4);
-
     const unsigned int  old_exp   = you.experience;
     const int           old_avail = you.exp_available;
 
