@@ -380,7 +380,8 @@ void MiscastEffect::do_miscast()
     switch (sp_type)
     {
     case SPTYP_CONJURATION:    _conjuration(severity);    break;
-    case SPTYP_ENCHANTMENT:    _enchantment(severity);    break;
+    case SPTYP_HEXES:
+    case SPTYP_CHARMS:         _enchantment(severity);    break;
     case SPTYP_TRANSLOCATION:  _translocation(severity);  break;
     case SPTYP_SUMMONING:      _summoning(severity);      break;
     case SPTYP_NECROMANCY:     _necromancy(severity);     break;
