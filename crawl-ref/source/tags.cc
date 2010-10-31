@@ -1235,6 +1235,9 @@ static void tag_construct_you_items(writer &th)
         for (j = 0; j < identy.height(); ++j)
             marshallUByte(th, identy[i][j]);
 
+    // Additional identification info
+    get_type_id_props().write(th);
+
     // how many unique items?
     marshallByte(th, MAX_UNRANDARTS);
     for (j = 0; j < MAX_UNRANDARTS; ++j)
@@ -1890,6 +1893,12 @@ static void tag_read_you_items(reader &th, int minorVersion)
                     break;
             }
         }
+
+    // Additional identification info
+#if TAG_MAJOR_VERSION == 31
+    if (minorVersion >= TAG_MINOR_ADD_ID_INFO)
+#endif
+    get_type_id_props().read(th);
 
     // how many unique items?
     count = unmarshallByte(th);
