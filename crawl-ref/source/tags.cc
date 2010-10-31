@@ -1060,8 +1060,8 @@ static void tag_construct_you(writer &th)
     marshallShort(th, you.burden);
 
     // how many spells?
-    marshallByte(th, 25);
-    for (i = 0; i < 25; ++i)
+    marshallUByte(th, MAX_KNOWN_SPELLS);
+    for (i = 0; i < MAX_KNOWN_SPELLS; ++i)
         marshallByte(th, you.spells[i]);
 
     marshallByte(th, 52);
@@ -1645,13 +1645,16 @@ static void tag_read_you(reader &th, int minorVersion)
 
     // how many spells?
     you.spell_no = 0;
-    count = unmarshallByte(th);
-    for (i = 0; i < count; ++i)
+    count = unmarshallUByte(th);
+    ASSERT(count >= 0);
+    for (i = 0; i < count && i < MAX_KNOWN_SPELLS; ++i)
     {
         you.spells[i] = static_cast<spell_type>(unmarshallUByte(th));
         if (you.spells[i] != SPELL_NO_SPELL)
             you.spell_no++;
     }
+    for (; i < count; ++i)
+        unmarshallUByte(th);
 
     count = unmarshallByte(th);
     for (i = 0; i < count; i++)

@@ -690,7 +690,7 @@ bool forget_spell(void)
     int slot = -1;
     int num  = 0;
 
-    for (int i = 0; i < 25; i++)
+    for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
     {
         if (you.spells[i] != SPELL_NO_SPELL)
         {
