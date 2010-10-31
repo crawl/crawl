@@ -4216,7 +4216,7 @@ static void _compile_time_asserts()
     // Check that the numbering comments in enum.h haven't been
     // disturbed accidentally.
     COMPILE_CHECK(SK_UNARMED_COMBAT == 17       , c1);
-    COMPILE_CHECK(SK_EVOCATIONS == 38           , c2);
+    COMPILE_CHECK(SK_EVOCATIONS == 39           , c2);
     COMPILE_CHECK(SP_VAMPIRE == 30              , c3);
 #if TAG_MAJOR_VERSION == 31
     COMPILE_CHECK(NUM_SPELLS == 226             , c6);

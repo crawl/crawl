@@ -39,12 +39,12 @@ General skills, Experience   Melee and Ranged Combat     Spellcasting and Magic
 --------------------------   -----------------------     ----------------------
 Arm - Armour                 Fgt - Fighting              Spc - Spellcasting
 Ddg - Dodging                SBl - Short Blades          Coj - Conjurations
-Sth - Stealth                LBl - Long Blades           Enc - Enchantments
-Stb - Stabbing               M&F - Maces & Flails        Sum - Summonings
-Shd - Shields                Axs - Axes                  Nec - Necromancy
-T&D - Traps & Doors          Pla - Polearms              Trl - Translocations
-                             Stv - Staves                Trm - Transmutations
-Inv - Invocations            UC  - Unarmed Combat
+Sth - Stealth                LBl - Long Blades           Hex - Hexes
+Stb - Stabbing               M&F - Maces & Flails        Cha - Charms
+Shd - Shields                Axs - Axes                  Sum - Summonings
+T&D - Traps & Doors          Pla - Polearms              Nec - Necromancy
+                             Stv - Staves                Trl - Translocations
+Inv - Invocations            UC  - Unarmed Combat        Trm - Transmutations
 Evo - Evocations
                              Thr - Throwing              Fir - Fire Magic
                              Slg - Slings                Ice - Ice Magic
@@ -64,5 +64,5 @@ changes to the template in docs/template/apt-tmpl.txt.
 ----------------------------------------------------------------------
 
 
-                 Spc Coj Enc Sum Nec Trl Trm       Fir Ice Air Ear Poi
+                 Spc Coj Hex Cha Sum Nec Trl Trm   Fir Ice Air Ear Poi
 ----------------------------------------------------------------------

@@ -1669,13 +1669,33 @@ static void tag_read_you(reader &th, int minorVersion)
 
     // how many skills?
     count = unmarshallByte(th);
+    ASSERT(count >= 0 && count <= (int)you.skills.size());
     for (j = 0; j < count; ++j)
     {
+#if TAG_MAJOR_VERSION == 31
+        if (j == SK_CHARMS && minorVersion < TAG_MINOR_ENCH_SPLIT)
+        {
+            you.skills[j]         = you.skills[SK_HEXES];
+            you.practise_skill[j] = you.practise_skill[SK_HEXES];
+            you.skill_points[j]   = you.skill_points[SK_HEXES];
+            you.skill_order[j]    = you.skill_order[SK_HEXES];
+            continue;
+        }
+#endif
         you.skills[j]         = unmarshallByte(th);
         you.practise_skill[j] = unmarshallByte(th);
         you.skill_points[j]   = unmarshallInt(th);
         you.skill_order[j]    = unmarshallByte(th);
     }
+#if TAG_MAJOR_VERSION == 31
+    if (minorVersion < TAG_MINOR_ENCH_SPLIT)
+    {
+        unmarshallByte(th);
+        unmarshallByte(th);
+        unmarshallInt(th);
+        unmarshallByte(th);
+    }
+#endif
 
     // Set up you.total_skill_points and you.skill_cost_level.
     calc_total_skill_points();

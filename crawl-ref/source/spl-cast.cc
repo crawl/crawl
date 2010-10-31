@@ -482,7 +482,7 @@ int spell_enhancement(unsigned int typeflags)
     if (typeflags & SPTYP_CONJURATION)
         enhanced += player_spec_conj();
 
-    if (typeflags & SPTYP_ENCHANTMENT)
+    if (typeflags & (SPTYP_HEXES|SPTYP_CHARMS))
         enhanced += player_spec_ench();
 
     if (typeflags & SPTYP_SUMMONING)
@@ -709,11 +709,11 @@ bool cast_a_spell(bool check_range, spell_type spell)
 }                               // end cast_a_spell()
 
 // "Utility" spells for the sake of simplicity are currently ones with
-// enchantments, translocations, or divinations.
+// charms or translocations.
 static bool _spell_is_utility_spell(spell_type spell_id)
 {
     return (spell_typematch(spell_id,
-                SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION));
+                SPTYP_CHARMS | SPTYP_TRANSLOCATION));
 }
 
 bool maybe_identify_staff(item_def &item, spell_type spell)
@@ -784,8 +784,11 @@ bool maybe_identify_staff(item_def &item, spell_type spell)
             break;
 
         case STAFF_ENCHANTMENT:
-            if (!chance || spell_typematch(spell, SPTYP_ENCHANTMENT))
-                relevant_skill = you.skills[SK_ENCHANTMENTS];
+            if (!chance || spell_typematch(spell, SPTYP_HEXES))
+                relevant_skill = you.skills[SK_HEXES];
+            if (!chance || spell_typematch(spell, SPTYP_CHARMS))
+                relevant_skill = std::max<int>(relevant_skill,
+                                               you.skills[SK_CHARMS]);
             break;
 
         case STAFF_SUMMONING:

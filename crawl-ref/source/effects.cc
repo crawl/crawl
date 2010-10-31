@@ -1323,7 +1323,7 @@ static void _hell_effects()
         else if (temp_rand > 0)     // 1 in 8 odds {dlb}
             which_miscast = SPTYP_CONJURATION;
         else                // 1 in 8 odds {dlb}
-            which_miscast = SPTYP_ENCHANTMENT;
+            which_miscast = coinflip() ? SPTYP_HEXES : SPTYP_CHARMS;
 
         MiscastEffect(&you, MISC_KNOWN_MISCAST, which_miscast,
                       4 + random2(6), random2avg(97, 3),
