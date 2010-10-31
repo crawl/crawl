@@ -89,7 +89,7 @@ public:
 
   int burden;
   burden_state_type burden_state;
-  FixedVector<spell_type, 25> spells;
+  FixedVector<spell_type, MAX_KNOWN_SPELLS> spells;
   uint8_t spell_no;
   game_direction_type char_direction;
   bool opened_zot;

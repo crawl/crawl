@@ -1285,7 +1285,7 @@ int player_spell_levels(void)
     if (sl > 99)
         sl = 99;
 
-    for (int i = 0; i < 25; i++)
+    for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
     {
         if (you.spells[i] == SPELL_FIREBALL)
             fireball = true;
@@ -5348,7 +5348,7 @@ int player::visible_igrd(const coord_def &where) const
 
 bool player::has_spell(spell_type spell) const
 {
-    for (int i = 0; i < 25; i++)
+    for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
     {
         if (spells[i] == spell)
             return (true);

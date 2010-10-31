@@ -269,7 +269,7 @@ bool add_spell_to_memory(spell_type spell)
     int i, j;
 
     // first we find a slot in our head:
-    for (i = 0; i < 25; i++)
+    for (i = 0; i < MAX_KNOWN_SPELLS; i++)
     {
         if (you.spells[i] == SPELL_NO_SPELL)
             break;
