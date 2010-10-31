@@ -45,6 +45,9 @@
 
 
 id_arr type_ids;
+// Additional information, about tried unidentified items.
+// (e.g. name of item, for scrolls of RC, ID, EA)
+CrawlHashTable type_ids_props;
 
 static bool _is_random_name_space(char let);
 static bool _is_random_name_vowel(char let);
@@ -288,7 +291,27 @@ std::string item_def::name(description_level_type descrip,
             if (id_type == ID_MON_TRIED_TYPE)
                 tried_str = "tried by monster";
             else if (id_type == ID_TRIED_ITEM_TYPE)
+            {
                 tried_str = "tried on item";
+                if (base_type == OBJ_SCROLLS)
+                {
+                    if (sub_type == SCR_IDENTIFY
+                        && type_ids_props.exists("SCR_ID"))
+                    {
+                        tried_str = "tried on " + type_ids_props["SCR_ID"].get_string();
+                    }
+                    else if (sub_type == SCR_RECHARGING
+                             && type_ids_props.exists("SCR_RC"))
+                    {
+                        tried_str = "tried on " + type_ids_props["SCR_RC"].get_string();
+                    }
+                    else if (sub_type == SCR_ENCHANT_ARMOUR
+                             && type_ids_props.exists("SCR_EA"))
+                    {
+                        tried_str = "tried on " + type_ids_props["SCR_EA"].get_string();
+                    }
+                }
+            }
             else
                 tried_str = "tried";
         }
@@ -2043,6 +2066,11 @@ bool item_type_tried(const item_def& item)
 id_arr& get_typeid_array()
 {
     return type_ids;
+}
+
+CrawlHashTable& get_type_id_props()
+{
+    return type_ids_props;
 }
 
 void set_ident_type(item_def &item, item_type_id_state_type setting,
