@@ -1906,6 +1906,12 @@ bool item_is_evokable(const item_def &item, bool known, bool all_wands,
             || item.sub_type == STAFF_CHANNELING
                && item_type_known(item))
         {
+            if (!wielded)
+            {
+                if (msg)
+                    mpr("That item can only be evoked when wielded.");
+                return (false);
+            }
             return (true);
         }
         if (msg)
