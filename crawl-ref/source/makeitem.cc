@@ -2779,7 +2779,7 @@ static void _generate_scroll_item(item_def& item, int force_type,
 
                  220, SCR_CURSE_WEAPON,
                  220, SCR_CURSE_ARMOUR,
-		 220, SCR_CURSE_JEWELLERY,
+                 220, SCR_CURSE_JEWELLERY,
 
                  161, SCR_PAPER,
 
