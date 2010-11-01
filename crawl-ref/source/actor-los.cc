@@ -24,9 +24,11 @@ bool actor::see_cell(const coord_def &p) const
 
 bool player::see_cell(const coord_def &p) const
 {
+    if (!map_bounds(p))
+        return (false);
     if (crawl_state.game_is_arena() && this == &you)
         return (true);
-    else if (xray_vision)
+    if (xray_vision)
         return ((pos() - p).abs() <= dist_range(you.current_vision));
     return (actor::see_cell(p));
 }
