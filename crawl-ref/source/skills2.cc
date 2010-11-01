@@ -2093,9 +2093,7 @@ skill_type list_skills(std::string title, skill_type hide, bool show_all)
             std::string skill_text = make_stringf("%s (%d)", skill_name(sk),
                                                   you.skills[sk]);
             me = new MenuEntry(skill_text, MEL_ITEM, 1, lcount);
-            if (you.practise_skill[sk] == 0)
-                me->colour = DARKGREY;
-            else if (you.skills[sk] == 27)
+            if (you.skills[sk] == 27)
                 me->colour = YELLOW;
             skill_type* skp = new skill_type(sk);
             me->data = skp;
