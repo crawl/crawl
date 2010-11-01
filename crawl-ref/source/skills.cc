@@ -273,7 +273,7 @@ int exercise(skill_type exsk, int deg, bool change_level)
         dprf("Exercised %s (deg: %d) by %d", skill_name(exsk), deg, ret);
 
     if (change_level)
-        _check_skill_level_change(static_cast<skill_type>(exsk));
+        _check_skill_level_change(exsk);
 
     return (ret);
 }
