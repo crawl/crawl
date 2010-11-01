@@ -864,9 +864,6 @@ enum delay_type
     DELAY_ASCENDING_STAIRS,
     DELAY_DESCENDING_STAIRS,
     DELAY_RECITE,  // Zin's Recite invocation
-#if TAG_MAJOR_VERSION > 31
-    DELAY_EVOKE,
-#endif
 
     // [dshaligram] Shift-running, resting, travel and macros are now
     // also handled as delays.
@@ -882,10 +879,6 @@ enum delay_type
 
     DELAY_INTERRUPTIBLE,                // simple interruptible delay
     DELAY_UNINTERRUPTIBLE,              // simple uninterruptible delay
-
-#if TAG_MAJOR_VERSION == 31
-    DELAY_EVOKE,
-#endif
 
     NUM_DELAYS
 };
