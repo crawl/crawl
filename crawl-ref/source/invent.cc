@@ -1923,6 +1923,12 @@ bool item_is_evokable(const item_def &item, bool known, bool all_wands,
             && item.sub_type != MISC_EMPTY_EBONY_CASKET
             && item.sub_type != MISC_RUNE_OF_ZOT)
         {
+            if (!wielded)
+            {
+                if (msg)
+                    mpr("That item can only be evoked when wielded.");
+                return (false);
+            }
             return (true);
         }
 
