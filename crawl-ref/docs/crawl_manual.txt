@@ -606,7 +606,7 @@ displayed, and what commands there are to use them:
 "       amulets         (use 'P'ut on and 'R'emove)
 \ or |  staves, rods    (use 'w'ield for staves; 'v' for evoking rods)
 + or :  spellbooks      (use 'r'ead and 'M'emorise and 'z'ap)
-}       miscellaneous   (use generally 'w'ield and 'v' for evoking)
+}       miscellaneous   (use 'V' to evoke)
 $       gold            (picking it up takes no turns)
 
 There are several general keys for item management:
@@ -909,11 +909,10 @@ cause your free experience to go straight into that skill.
 
 { Miscellaneous
 ---------------
-These are items which don't fall into any other category. You can use
-many of them, as well as some special weapons, by wielding and then
-evoking them with 'v'. Runes, a particular item in this category, have
-no function whatsoever except to open the endgame. You must collect at
-least three in order to enter the Realm of Zot. Some people like to
+These are items which don't fall into any other category. They can be
+evoked with 'V', just like wands. Runes, a particular item in this category,
+have no function whatsoever except to open the endgame. You must collect
+at least three in order to enter the Realm of Zot. Some people like to
 brag about retrieving many more runes but those would probably boast
 of any other silly little thing they've done.
 
