@@ -508,7 +508,6 @@ void game_options::set_default_activity_interrupts()
         "interrupt_ascending_stairs = teleport",
         "interrupt_descending_stairs = teleport",
         "interrupt_recite = teleport",
-        "interrupt_evoke = interrupt_armour_on",
         "interrupt_uninterruptible =",
         "interrupt_weapon_swap =",
 
