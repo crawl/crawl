@@ -1969,8 +1969,7 @@ static int species_apts(skill_type skill, species_type species)
 
 int species_skills(skill_type skill, species_type species)
 {
-    return _apt_to_cost(static_cast<skill_type>(skill),
-                        species_apts(skill, species));
+    return _apt_to_cost(skill, species_apts(skill, species));
 }
 
 void wield_warning(bool newWeapon)
