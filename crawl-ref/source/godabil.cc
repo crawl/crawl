@@ -2447,6 +2447,7 @@ bool ashenzari_transfer_knowledge()
     unsigned int exp_pool = you.exp_available;
     int skp = 0; // skill points transfered.
     int skp_max; // maximum number of skill points transferable.
+    bool tsk_practise = you.practise_skill[tsk];
 
     skp_max = fsk_points / 2;
     skp_max = std::max(skp_max, 1000);
@@ -2457,12 +2458,14 @@ bool ashenzari_transfer_knowledge()
     skp_max *= penalty;
     int train_count = skp_max / 10;
 
+    you.practise_skill[tsk] = true;
     while (skp < skp_max && train_count > 0)
     {
         you.exp_available = 250;
         skp += exercise(tsk, 1, false);
         train_count--;
     }
+    you.practise_skill[tsk] = tsk_practise;
 
     change_skill_points(fsk, -skp / penalty, true);
     change_skill_points(tsk, 0, true); // just update the level
