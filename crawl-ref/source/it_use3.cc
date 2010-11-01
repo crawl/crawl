@@ -817,8 +817,7 @@ bool evoke_item(int slot)
     if (!item_is_evokable(item, false, false, true))
         return (false);
 
-    if ((item.base_type == OBJ_MISCELLANY || item.base_type == OBJ_STAVES)
-        && you.equip[EQ_WEAPON] != slot)
+    if (item.base_type == OBJ_MISCELLANY && you.equip[EQ_WEAPON] != slot)
         if (wield_weapon(true, slot))
         {
              start_delay(DELAY_EVOKE, 1, slot);
