@@ -440,6 +440,8 @@ bool cast_selective_amnesia()
     }
 
     int keyin = 0;
+    spell_type spell;
+    int slot;
 
     // Pick a spell to forget.
     while (true)
@@ -457,18 +459,18 @@ bool cast_selective_amnesia()
         }
 
         if (!isaalpha(keyin))
+        {
             mesclr();
+            continue;
+        }
+
+        spell = get_spell_by_letter(keyin);
+        slot = get_spell_slot_by_letter(keyin);
+
+        if (spell == SPELL_NO_SPELL)
+            mpr("You don't know that spell.");
         else
             break;
-    }
-
-    const spell_type spell = get_spell_by_letter(keyin);
-    const int slot = get_spell_slot_by_letter(keyin);
-
-    if (spell == SPELL_NO_SPELL)
-    {
-        mpr("You don't know that spell.");
-        return (false);
     }
 
     const int ep_gain = spell_mana(spell);
