@@ -1906,12 +1906,6 @@ bool item_is_evokable(const item_def &item, bool known, bool all_wands,
             || item.sub_type == STAFF_CHANNELING
                && item_type_known(item))
         {
-            if (you.species == SP_CAT)
-            {
-                if (msg)
-                    mpr("You cannot grab it well enough!");
-                return (false);
-            }
             return (true);
         }
         if (msg)
