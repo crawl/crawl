@@ -1142,8 +1142,6 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_SHIELDS] = 0;
     }
 
-    init_skill_order();
-
     if (you.religion != GOD_NO_GOD)
     {
         you.worshipped[you.religion] = 1;
@@ -1628,6 +1626,7 @@ static void _setup_generic(const newgame_def& ng)
 
     _reassess_starting_skills();
     calc_total_skill_points();
+    init_skill_order();
 
     for (int i = 0; i < ENDOFPACK; ++i)
         if (you.inv[i].defined())
