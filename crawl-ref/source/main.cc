@@ -2208,7 +2208,6 @@ static void _decrement_durations()
                                   "Your transformation is almost over."))
         {
             untransform();
-            you.duration[DUR_BREATH_WEAPON] = 0;
         }
     }
 
