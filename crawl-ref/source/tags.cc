@@ -978,7 +978,7 @@ static void tag_construct_char(writer &th)
     marshallByte(th, you.experience_level);
     marshallString(th, you.class_name, 30);
     marshallByte(th, you.religion);
-    marshallString(th, you.second_god_name);
+    marshallString(th, you.jiyva_second_name);
 
     marshallByte(th, you.wizard);
 }
@@ -1549,7 +1549,7 @@ static void tag_read_char(reader &th, int minorVersion)
     you.experience_level  = unmarshallByte(th);
     unmarshallCString(th, you.class_name, 30);
     you.religion          = static_cast<god_type>(unmarshallByte(th));
-    you.second_god_name   = unmarshallString(th);
+    you.jiyva_second_name   = unmarshallString(th);
 
     you.wizard            = unmarshallBoolean(th);
 }
