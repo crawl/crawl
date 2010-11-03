@@ -173,7 +173,7 @@ public:
   FixedVector<uint8_t, 30> branch_stairs;
 
   god_type religion;
-  std::string second_god_name; // Random second name of Jiyva
+  std::string jiyva_second_name; // Random second name of Jiyva
   uint8_t piety;
   uint8_t piety_hysteresis;       // amount of stored-up docking
   uint8_t gift_timeout;
@@ -652,7 +652,7 @@ struct player_save_info
     species_type species;
     std::string class_name;
     god_type religion;
-    std::string second_god_name;
+    std::string jiyva_second_name;
     game_type saved_game_type;
 
 #ifdef USE_TILE

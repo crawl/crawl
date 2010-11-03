@@ -5112,7 +5112,7 @@ void player::init()
     branch_stairs.init(0);
 
     religion         = GOD_NO_GOD;
-    second_god_name.clear();
+    jiyva_second_name.clear();
     piety            = 0;
     piety_hysteresis = 0;
     gift_timeout     = 0;
@@ -5240,7 +5240,7 @@ player_save_info player_save_info::operator=(const player& rhs)
     species          = rhs.species;
     class_name       = rhs.class_name;
     religion         = rhs.religion;
-    second_god_name  = rhs.second_god_name;
+    jiyva_second_name  = rhs.jiyva_second_name;
 
     // [ds] Perhaps we should move game type to player?
     saved_game_type  = crawl_state.type;

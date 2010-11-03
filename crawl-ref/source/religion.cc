@@ -2332,7 +2332,7 @@ std::string god_name_jiyva(bool second_name)
 {
     std::string name = "Jiyva";
     if (second_name)
-        name += " " + you.second_god_name;
+        name += " " + you.jiyva_second_name;
 
     return (name);
 }
