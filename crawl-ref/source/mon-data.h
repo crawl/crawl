@@ -4573,7 +4573,7 @@ static monsterentry mondata[] = {
 // middle demons ('3')
 {
     MONS_SMOKE_DEMON, '3', LIGHTGREY, "smoke demon",
-    M_SPELLCASTER | M_INSUBSTANTIAL,
+    M_SPELLCASTER | M_INSUBSTANTIAL | M_UNBREATHING,
     MR_RES_POISON | mrd(MR_RES_FIRE, 2),
     0, 12, MONS_SMOKE_DEMON, MONS_SMOKE_DEMON, MH_DEMONIC, -6,
     { {AT_HIT, AF_PLAIN, 8}, {AT_HIT, AF_PLAIN, 5}, {AT_HIT, AF_PLAIN, 5},
