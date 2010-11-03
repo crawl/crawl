@@ -306,6 +306,7 @@ public:
     void go_frenzy();
     bool berserk() const;
     bool frenzied() const;
+    bool has_lifeforce() const;
     bool can_mutate() const;
     bool can_safely_mutate() const;
     bool can_bleed() const;

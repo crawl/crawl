@@ -5595,9 +5595,14 @@ bool monster::near_foe() const
     return (afoe && see_cell(afoe->pos()));
 }
 
-bool monster::can_mutate() const
+bool monster::has_lifeforce() const
 {
     return (holiness() == MH_NATURAL || holiness() == MH_PLANT);
+}
+
+bool monster::can_mutate() const
+{
+    return (has_lifeforce());
 }
 
 bool monster::can_safely_mutate() const

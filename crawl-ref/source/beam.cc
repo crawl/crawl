@@ -1642,7 +1642,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
 
                 // Poison arrow can poison any living thing regardless of
                 // poison resistance. - bwr
-                if (mons_has_lifeforce(mons))
+                if (mons->has_lifeforce())
                     poison_monster(mons, pbolt.whose_kill(), 2, true);
             }
         }

@@ -1336,13 +1336,6 @@ const char* mons_resist_string(const monster* mon)
         return "resists";
 }
 
-bool mons_has_lifeforce(const monster* mon)
-{
-    const mon_holy_type holiness = mon->holiness();
-
-    return (holiness == MH_NATURAL || holiness == MH_PLANT);
-}
-
 bool mons_skeleton(int mc)
 {
     return (!mons_class_flag(mc, M_NO_SKELETON));
