@@ -2307,7 +2307,7 @@ static bool _find_monster(const coord_def& where, int mode, bool need_path,
     const monster* mon = monster_at(where);
 
     // No monster or outside LOS.
-    if (mon == NULL || !you.see_cell(where))
+    if (mon == NULL || !cell_see_cell(you.pos(), where, LOS_DEFAULT))
         return (false);
 
     // Monster in LOS but only via glass walls, so no direct path.
