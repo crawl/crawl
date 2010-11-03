@@ -53,6 +53,8 @@
 #include "directn.h"
 #endif
 
+static std::string _god_powers(bool simple = false);
+
 // Color for captions like 'Health:', 'Str:', etc.
 #define HUD_CAPTION_COLOUR Options.status_caption_colour
 
@@ -773,7 +775,9 @@ void print_stats_level()
 
 void redraw_skill(const std::string &your_name, const std::string &job_name)
 {
-    std::string title = your_name + " the " + job_name;
+    char lvl[9];
+    sprintf(lvl, "Level %d ", you.experience_level);
+    std::string title = your_name + " the " + lvl + job_name;
 
     unsigned int in_len = title.length();
     const unsigned int WIDTH = crawl_view.hudsz.x;
@@ -814,13 +818,26 @@ void redraw_skill(const std::string &your_name, const std::string &job_name)
     // Level N Minotaur [of God]
     textcolor(YELLOW);
     cgotoxy(1, 2, GOTO_STAT);
-    nowrap_eol_cprintf("Level %d %s", you.experience_level,
-                       species_name(you.species).c_str());
+    std::string species = species_name(you.species);
+    nowrap_eol_cprintf("%s", species.c_str());
     if (you.religion != GOD_NO_GOD)
     {
-        nowrap_eol_cprintf(" of %s",
-                           you.religion == GOD_JIYVA ? god_name_jiyva(true).c_str()
-                                                     : god_name(you.religion).c_str());
+        std::string god = " of ";
+        god += you.religion == GOD_JIYVA ? god_name_jiyva(true)
+                                         : god_name(you.religion);
+        nowrap_eol_cprintf("%s", god.c_str());
+
+        std::string piety = _god_powers(true);
+        if (player_under_penance())
+            textcolor(RED);
+        if ((species.length() + god.length() + piety.length() + 1) <= WIDTH)
+            nowrap_eol_cprintf(" %s", piety.c_str());
+        else if ((species.length() + god.length() + piety.length() + 1) == (WIDTH + 1))
+        {
+            //mottled draconian of TSO doesn't fit by one symbol,
+            //so we remove leading space.
+            nowrap_eol_cprintf("%s", piety.c_str());
+        }
     }
 
     clear_to_end_of_line();
@@ -1398,21 +1415,23 @@ static std::string _wiz_god_powers()
 }
 #endif
 
-static std::string _god_powers()
+static std::string _god_powers(bool simple)
 {
-    std::string godpowers = god_name(you.religion);
+    std::string godpowers = simple ? "" : god_name(you.religion) ;
     if (you.religion == GOD_XOM)
     {
         if (you.gift_timeout == 0)
-            godpowers += " - BORED";
+            godpowers += simple ? "- BORED" : " - BORED";
         else if (you.gift_timeout == 1)
-            godpowers += " - getting BORED";
-        return (colour_string(godpowers, god_colour(you.religion)));
+            godpowers += simple ? "- getting BORED" : " - getting BORED";
+        return (simple ? godpowers
+                       : colour_string(godpowers, god_colour(you.religion)));
     }
     else if (you.religion != GOD_NO_GOD)
     {
         if (player_under_penance())
-            return (colour_string("*" + godpowers, RED));
+            return (simple ? "*"
+                           : colour_string("*" + godpowers, RED));
         else
         {
             // piety rankings
@@ -1422,8 +1441,11 @@ static std::string _god_powers()
 
             // Careful about overflow. We erase some of the god's name
             // if necessary.
-            godpowers = godpowers.substr(0, 20)
-                         + " [" + std::string(prank, '*') + std::string(6 - prank, '.') + "]";
+            std::string asterisks = std::string(prank, '*')
+                                    + std::string(6 - prank, '.');
+            if (simple)
+                return(asterisks);
+            godpowers = godpowers.substr(0, 20) + " [" + asterisks + "]";
             return (colour_string(godpowers, god_colour(you.religion)));
         }
     }
@@ -1572,7 +1594,7 @@ static std::vector<formatted_string> _get_overview_stats()
     }
     cols1.add_formatted(2, buf, false);
 
-    std::string godpowers = _god_powers();
+    std::string godpowers = _god_powers(false);
 #ifdef WIZARD
     if (you.wizard)
         godpowers = _wiz_god_powers();
