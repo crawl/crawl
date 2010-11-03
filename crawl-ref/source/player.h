@@ -438,7 +438,6 @@ public:
     bool      submerged() const;
     bool      floundering() const;
     bool      extra_balanced() const;
-    bool      has_trachea() const;
     bool      can_pass_through_feat(dungeon_feature_type grid) const;
     bool      is_habitable_feat(dungeon_feature_type actual_grid) const;
     size_type body_size(size_part_type psize = PSIZE_TORSO, bool base = false) const;
