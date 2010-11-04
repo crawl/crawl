@@ -186,7 +186,7 @@ radius_iterator radius_iterator::operator++(int dummy)
 /*
  *  spiral iterator
  */
-spiral_iterator::spiral_iterator(const coord_def& _center, bool _fair,
+equidistant_iterator::equidistant_iterator(const coord_def& _center, bool _fair,
                                  bool exclude_center, int _max_radius) :
     center(_center), current(_center), radius(1), max_radius(_max_radius),
     threshold(0), icur(0), iend(0), fair(_fair)
@@ -209,7 +209,7 @@ static inline int sgn(int x)
     return (x < 0) ? -1 : (x > 0) ? 1 : 0;
 }
 
-bool spiral_iterator::advance()
+bool equidistant_iterator::advance()
 {
 again:
     if (++icur >= vcur->size())
@@ -267,37 +267,37 @@ again:
     return true;
 }
 
-void spiral_iterator::push_neigh(coord_def d, int dx, int dy)
+void equidistant_iterator::push_neigh(coord_def d, int dx, int dy)
 {
     d.x += dx;
     d.y += dy;
     ((d.abs() <= threshold) ? vnear : vfar)->push_back(d);
 }
 
-spiral_iterator::operator bool() const
+equidistant_iterator::operator bool() const
 {
     return in_bounds(current);
 }
 
-coord_def spiral_iterator::operator *() const
+coord_def equidistant_iterator::operator *() const
 {
     return current;
 }
 
-const coord_def* spiral_iterator::operator->() const
+const coord_def* equidistant_iterator::operator->() const
 {
     return &current;
 }
 
-const spiral_iterator& spiral_iterator::operator++()
+const equidistant_iterator& equidistant_iterator::operator++()
 {
     advance();
     return *this;
 }
 
-spiral_iterator spiral_iterator::operator++(int dummy)
+equidistant_iterator equidistant_iterator::operator++(int dummy)
 {
-    const spiral_iterator copy = *this;
+    const equidistant_iterator copy = *this;
     ++(*this);
     return (copy);
 }
