@@ -393,15 +393,15 @@ void fill_status_info(int status, status_info* inf)
         _describe_transform(inf);
         break;
 
-    case DUR_WALL_CLINGING:
+    case STATUS_CLINGING:
         if (you.clinging)
         {
             inf->light_text   = "Cling";
             inf->short_text   = "clinging";
             inf->long_text = "You cling to the nearby walls.";
             inf->light_colour = dur_colour(GREEN,
-                                           dur_expiring(DUR_WALL_CLINGING));
-            _mark_expiring(inf, dur_expiring(DUR_WALL_CLINGING));
+                                           dur_expiring(DUR_TRANSFORMATION));
+            _mark_expiring(inf, dur_expiring(DUR_TRANSFORMATION));
         }
         break;
 

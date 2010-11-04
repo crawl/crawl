@@ -2200,9 +2200,6 @@ static void _decrement_durations()
         you.duration[DUR_TRANSFORMATION] = 1;
     }
 
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER)
-        you.duration[DUR_WALL_CLINGING] = you.duration[DUR_TRANSFORMATION];
-
     // Vampire bat transformations are permanent (until ended).
     if (you.species != SP_VAMPIRE || !player_in_bat_form()
         || you.duration[DUR_TRANSFORMATION] <= 5 * BASELINE_DELAY)
@@ -2212,14 +2209,6 @@ static void _decrement_durations()
         {
             untransform();
         }
-    }
-
-    if (_decrement_a_duration(DUR_WALL_CLINGING, delay,
-                              "You cant cling to walls anymore.", random2(3),
-                              "Your ability to cling to walls is almost expired."))
-    {
-        you.clinging = false;
-        move_player_to_grid(you.pos(), false, true);
     }
 
     // Must come after transformation duration.
@@ -3735,9 +3724,7 @@ static void _move_player(coord_def move)
     // function, you have to call you.check_clinging() to restore former status.
     // Most probably can be done in less awkward way.
     if (you.is_wall_clinging())
-    {
         you.clinging = you.can_cling_to(you.pos() + move);
-    }
 
     // When confused, sometimes make a random move
     if (you.confused())
@@ -3784,7 +3771,6 @@ static void _move_player(coord_def move)
             crawl_state.cancel_cmd_repeat();
 
             you.check_clinging();
-
             return;
         }
     }

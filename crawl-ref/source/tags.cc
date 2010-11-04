@@ -1203,11 +1203,6 @@ static void tag_construct_you(writer &th)
             for (i = 0; i < NUM_DC; i++)
                 marshallInt(th, you.dcounters[t][ae][i]);
 #endif
-
-    marshallBoolean(th, you.clinging);
-    marshallShort(th, you.cling_to.size());
-    for (unsigned int k = 0; k < you.cling_to.size(); k++)
-         marshallCoord(th, you.cling_to[k]);
 }
 
 static void tag_construct_you_items(writer &th)
@@ -1824,16 +1819,6 @@ static void tag_read_you(reader &th, int minorVersion)
             for (int ae = 0; ae < 2; ae++)
                 for (i = 0; i < count; i++)
                     you.dcounters[t][ae][i] = unmarshallInt(th);
-    }
-#endif
-
-#if TAG_MAJOR_VERSION == 31
-    if (minorVersion >= TAG_MINOR_WALL_CLINGING)
-    {
-        you.clinging = unmarshallBoolean(th);
-        count = unmarshallShort(th);
-        for (i = 0; i < count; i++)
-           you.cling_to.push_back(unmarshallCoord(th));
     }
 #endif
 }

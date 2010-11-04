@@ -274,6 +274,7 @@ static void _post_init(bool newc)
     you.xray_vision = !!you.duration[DUR_SCRYING];
     init_exclusion_los();
     you.bondage_level = ash_bondage_level();
+    you.check_clinging();
 
     trackers_init_new_level(false);
 
