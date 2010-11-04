@@ -527,7 +527,7 @@ This spell smites one creature of the caster's choice.
 %%%%
 Spider Form
 
-This spell temporarily transforms the caster into a venomous, spider-like creature. Spellcasting is slightly more difficult in this form. While in this form, you can cling to walls. This spell is not powerful enough to allow the caster to meld with their cursed equipment.
+This spell temporarily transforms the caster into a venomous, spider-like creature. Spellcasting is slightly more difficult in this form. While in this form, you can cling to walls.
 %%%%
 Static Discharge
 

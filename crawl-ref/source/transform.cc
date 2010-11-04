@@ -298,61 +298,6 @@ void remove_one_equip(equipment_type eq, bool meld, bool mutation)
     _remove_equipment(r, meld, mutation);
 }
 
-static bool _tran_may_meld_cursed(int transformation)
-{
-    switch (transformation)
-    {
-    case TRAN_BAT:
-        // Vampires of sufficient level may transform into bats even
-        // with cursed gear.
-        if (you.species == SP_VAMPIRE && you.experience_level >= 10)
-            return (true);
-        // intentional fall-through
-    case TRAN_SPIDER:
-        return (false);
-    default:
-        return (true);
-    }
-}
-
-// Returns true if any piece of equipment that has to be removed is cursed.
-// Useful for keeping low level transformations from being too useful.
-static bool _check_for_cursed_equipment(const std::set<equipment_type> &remove,
-                                        const int trans, bool quiet = false)
-{
-    std::set<equipment_type>::const_iterator iter;
-    for (iter = remove.begin(); iter != remove.end(); ++iter)
-    {
-        const equipment_type e = *iter;
-        if (you.equip[e] == -1)
-            continue;
-
-        const item_def& item = you.inv[ you.equip[e] ];
-        if (item.cursed())
-        {
-            if (e != EQ_WEAPON && _tran_may_meld_cursed(trans))
-                continue;
-
-            // Wielding a cursed non-weapon/non-staff won't hinder
-            // transformations.
-            if (e == EQ_WEAPON && item.base_type != OBJ_WEAPONS
-                && item.base_type != OBJ_STAVES)
-            {
-                continue;
-            }
-
-            if (!quiet)
-            {
-                mpr("Your cursed equipment won't allow you to complete the "
-                     "transformation.");
-            }
-
-            return (true);
-        }
-    }
-    return (false);
-}
-
 // Returns true if the player got prompted by an inscription warning and
 // chose to opt out.
 static bool _check_transformation_inscription_warning(
@@ -594,12 +539,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
     }
 
     std::set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
-
-    if (which_trans != TRAN_PIG
-        && _check_for_cursed_equipment(rem_stuff, which_trans, force))
-    {
-        return (_abort_or_fizzle(just_check));
-    }
 
     int str = 0, dex = 0, xhp = 0, dur = 0;
     const char* tran_name = "buggy";
