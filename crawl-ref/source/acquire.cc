@@ -1506,9 +1506,11 @@ bool acquirement(object_class_type class_wanted, int agent,
     {
         ASSERT(!quiet);
         mesclr();
-        mpr ("[a] Weapon  [b] Armour  [c] Jewellery      [d] Book");
-        mprf("[e] Staff   [f] Wand    [g] Miscellaneous  [h] %s [i] Gold",
-            (you.religion == GOD_FEDHAS ? "Fruit" : "Food "));
+        mprf("%-24s[c] Jewellery      [d] Book",
+            you.species == SP_CAT ? "" : "[a] Weapon  [b] Armour");
+        mprf("%-24s[g] Miscellaneous  [h] %s [i] Gold",
+            you.species == SP_CAT ? "" : "[e] Staff   [f] Wand",
+            you.religion == GOD_FEDHAS ? "Fruit" : "Food ");
         mpr("What kind of item would you like to acquire? ", MSGCH_PROMPT);
 
         const int keyin = tolower(get_ch());
@@ -1542,6 +1544,13 @@ bool acquirement(object_class_type class_wanted, int agent,
             }
 #endif
            break;
+        }
+
+        if (you.species == SP_CAT
+            && (class_wanted == OBJ_WEAPONS || class_wanted == OBJ_ARMOUR
+             || class_wanted == OBJ_STAVES  || class_wanted == OBJ_WANDS))
+        {
+            class_wanted = OBJ_RANDOM;
         }
     }
 
