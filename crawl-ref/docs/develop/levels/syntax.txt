@@ -370,6 +370,11 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              multiple layouts.  Current values for "foo" are: rooms, city,
              open, caves, cross, shoals, swamp, labyrinth (though currently
              random vaults aren't placed in the last three).
+          * "no_species_xx": Disables the vault for a given player species
+             (two-letter abbreviation).  Note that the current design rules
+             strictly disallow varying the map generation based on the
+             character -- this tag is only for acquirement-like effects,
+             sprint, or tutorial.
           * "ruin": requests the level builder to damage the vault by
              removing walls near the edges, making it look like a ruin.
              You can request that a vault be ruined only in a particular

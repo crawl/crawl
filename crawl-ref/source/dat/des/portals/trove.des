@@ -611,7 +611,7 @@ WEIGHT: 15
 WEIGHT: 5
 : end
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup
+TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
 # Loot: once again, 16 items.
 COLOUR: o = blue
 ITEM:   acquire weapon / any useful weapon good_item / any weapon w:2
@@ -641,7 +641,7 @@ WEIGHT: 15
 WEIGHT: 5
 : end
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup
+TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
 # Loot: once again, 16 items.
 COLOUR: x = blue
 ITEM:   acquire weapon / any useful weapon good_item / any weapon w:2
@@ -663,7 +663,7 @@ ENDMAP
 NAME:   trove_armour_1
 WEIGHT: 15
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup
+TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
 # Loot: once again, 16 items.
 COLOUR: o = blue
 ITEM:   acquire armour / any useful armour good_item / any armour w:2
@@ -692,7 +692,7 @@ ENDMAP
 NAME:   trove_armour_2
 WEIGHT: 15
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup
+TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
 # Loot: once again, 16 items.
 COLOUR: x = blue
 ITEM:   acquire armour / any useful armour good_item / any armour w:2
@@ -714,7 +714,7 @@ ENDMAP
 NAME:    trove_hunter_1
 WEIGHT:  5
 ORIENT:  encompass
-TAGS:    trove no_item_gen no_monster_gen  allow_dup
+TAGS:    trove no_item_gen no_monster_gen allow_dup no_species_fe
 # Loot:  15 items, this time.
 COLOUR:  x = blue
 COLOUR:  o = blue
@@ -836,7 +836,7 @@ ENDMAP
 # extremely useful or extremely useless.
 #
 NAME:    trove_artefacts
-TAGS:    trove no_item_gen no_monster_gen allow_dup
+TAGS:    trove no_item_gen no_monster_gen allow_dup no_species_fe
 WEIGHT:  1
 ORIENT:  encompass
 ######## There should be a better way than listing all of the unrandarts...
@@ -940,7 +940,7 @@ ENDMAP
 
 # 20 items, but you have to dig for them.  Wand is included.
 NAME:    trove_dig
-TAGS:    trove no_item_gen no_monster_gen allow_dup
+TAGS:    trove no_item_gen no_monster_gen allow_dup no_species_fe
 WEIGHT:  5
 ORIENT:  encompass
 ITEM:    acquire armour / any useful armour good_item / any armour w:2
@@ -981,7 +981,7 @@ ENDMAP
 
 # 16 pieces of armour
 NAME:   trove_armour_six_rooms
-TAGS:   trove no_item_gen no_monster_gen allow_dup
+TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
 ORIENT: encompass
 ITEM:   acquire armour / any useful armour good_item / any armour w:2
 : trove.setup_features(_G)
@@ -1000,7 +1000,7 @@ ENDMAP
 
 # 16 weapons
 NAME:   trove_weapons_four_rooms
-TAGS:   trove no_item_gen no_monster_gen allow_dup
+TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
 ORIENT: encompass
 ITEM:   acquire weapon / any useful weapon good_item / any weapon w:2
 NSUBST: " = 16:d / *:.
