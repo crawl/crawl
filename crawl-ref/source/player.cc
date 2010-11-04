@@ -3464,7 +3464,6 @@ int get_expiration_threshold(duration_type dur)
     case DUR_TRANSFORMATION: // not on status
     case DUR_DEATHS_DOOR:    // not on status
     case DUR_SLIMIFY:
-    case DUR_WALL_CLINGING:
         return (10 * BASELINE_DELAY);
 
     // These get no messages when they "flicker".
@@ -3694,7 +3693,7 @@ void display_char_status()
         DUR_DIVINE_VIGOUR, DUR_DIVINE_STAMINA, DUR_BERSERK,
         STATUS_AIRBORNE, STATUS_NET, DUR_POISONING, STATUS_SICK,
         STATUS_ROT, STATUS_GLOW, DUR_CONFUSING_TOUCH, DUR_SURE_BLADE,
-        DUR_AFRAID, DUR_MIRROR_DAMAGE, DUR_SCRYING, DUR_WALL_CLINGING,
+        DUR_AFRAID, DUR_MIRROR_DAMAGE, DUR_SCRYING, STATUS_CLINGING,
     };
 
     status_info inf;
@@ -6763,7 +6762,7 @@ void player::goto_place(const level_id &lid)
 void player::check_clinging()
 {
     int walls = 0;
-    if (you.duration[DUR_WALL_CLINGING] > 0)
+    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER)
     {
         you.cling_to.clear();
         for (radius_iterator ri(you.pos(), 1, C_CIRCLE, NULL, true); ri; ++ri)

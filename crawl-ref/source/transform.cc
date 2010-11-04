@@ -746,7 +746,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
     switch (which_trans)
     {
     case TRAN_SPIDER:
-        you.duration[DUR_WALL_CLINGING] = dur;
         you.check_clinging();
         break;
 
@@ -961,6 +960,13 @@ void untransform(bool skip_wielding, bool skip_move)
             you.hp = you.hp_max;
     }
     calc_hp();
+
+    if (you.clinging)
+    {
+        mpr("You fall off the wall.");
+        you.clinging = false;
+        move_player_to_grid(you.pos(), false, true);
+    }
 
     if (!skip_wielding)
         handle_interrupted_swap(true, false, true);

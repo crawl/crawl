@@ -772,7 +772,6 @@ static const char* dur_names[] =
     "afraid",
     "mirror damage",
     "scrying",
-    "wall clinging",
 };
 
 void wizard_edit_durations(void)
