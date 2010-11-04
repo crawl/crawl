@@ -249,14 +249,20 @@ again:
         push_neigh(d, sgn(d.x), 0);
     if (!d.x)
         push_neigh(d, 0, sgn(d.y));
-    if (d.x <= 0 && d.y <= 0)
-        push_neigh(d, -1, -1);
-    if (d.x >= 0 && d.y <= 0)
-        push_neigh(d, +1, -1);
-    if (d.x <= 0 && d.y >= 0)
-        push_neigh(d, -1, +1);
-    if (d.x >= 0 && d.y >= 0)
-        push_neigh(d, +1, +1);
+    if (d.x <= 0)
+    {
+        if (d.y <= 0)
+            push_neigh(d, -1, -1);
+        if (d.y >= 0)
+            push_neigh(d, -1, +1);
+    }
+    if (d.x >= 0)
+    {
+        if (d.y <= 0)
+            push_neigh(d, +1, -1);
+        if (d.y >= 0)
+            push_neigh(d, +1, +1);
+    }
 
     return true;
 }
