@@ -5709,8 +5709,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_WIGLAF, 'q', YELLOW, "Wiglaf",
-    M_UNIQUE | M_SPELLCASTER | M_PRIEST | M_WARM_BLOOD | M_SEE_INVIS
-        | M_SPEAKS,
+    M_UNIQUE | M_SPELLCASTER | M_PRIEST | M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     550, 8, MONS_DWARF, MONS_DWARF, MH_NATURAL, -5,
     { {AT_HIT, AF_PLAIN, 42}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
