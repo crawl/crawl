@@ -1995,6 +1995,9 @@ static bool _curare_hits_monster(actor *agent, monster* mons,
     if (!mons->alive())
         return (false);
 
+    if (mons->res_poison() > 0)
+        return (false);
+
     poison_monster(mons, who, levels, false);
 
     int hurted = 0;
@@ -2003,19 +2006,15 @@ static bool _curare_hits_monster(actor *agent, monster* mons,
     {
         hurted = roll_dice(2, 6);
 
-        // Note that the hurtage is halved by poison resistance.
-        if (mons->res_poison() > 0)
-            hurted /= 2;
-
         if (hurted)
         {
             simple_monster_message(mons, " convulses.");
             mons->hurt(agent, hurted, BEAM_POISON);
         }
-
-        if (mons->alive())
-            enchant_monster_with_flavour(mons, agent, BEAM_SLOW);
     }
+
+    if (mons->alive())
+        enchant_monster_with_flavour(mons, agent, BEAM_SLOW);
 
     // Deities take notice.
     if (who == KC_YOU)

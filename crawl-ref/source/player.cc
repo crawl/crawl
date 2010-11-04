@@ -4525,9 +4525,10 @@ bool curare_hits_player(int death_source, int amount, const bolt &beam)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    poison_player(amount, beam.get_source_name(), beam.name);
+    if (player_res_poison() > 0)
+        return (false);
 
-    const bool res_poison = player_res_poison() > 0;
+    poison_player(amount, beam.get_source_name(), beam.name);
 
     int hurted = 0;
 
@@ -4535,19 +4536,15 @@ bool curare_hits_player(int death_source, int amount, const bolt &beam)
     {
         hurted = roll_dice(2, 6);
 
-        // Note that the hurtage is halved by poison resistance.
-        if (res_poison)
-            hurted /= 2;
-
         if (hurted)
         {
             mpr("You have difficulty breathing.");
             ouch(hurted, death_source, KILLED_BY_CURARE,
                  "curare-induced apnoea");
         }
-
-        potion_effect(POT_SLOWING, 2 + random2(4 + amount));
     }
+
+    potion_effect(POT_SLOWING, 2 + random2(4 + amount));
 
     return (hurted > 0);
 }
