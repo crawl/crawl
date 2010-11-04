@@ -1338,8 +1338,6 @@ static const skill_type skill_display_order[] =
 static const int ndisplayed_skills =
             sizeof(skill_display_order) / sizeof(*skill_display_order);
 
-static int species_apts(skill_type skill, species_type species);
-
 static void _display_skill_table(bool show_aptitudes, bool show_description)
 {
     menu_letter lcount = 'a';
@@ -1440,7 +1438,7 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
                 }
                 else
                 {
-                    int apt = species_apts(x, you.species);
+                    int apt = species_apt(x, you.species);
                     textcolor(RED);
                     if (apt != 0)
                         cprintf(" %+3d  ", apt);
@@ -1850,8 +1848,8 @@ void init_skill_order(void)
             continue;
         }
 
-        const int i_diff = species_skills(si, you.species);
-        const unsigned int i_points = (you.skill_points[si] * 100) / i_diff;
+        const unsigned int i_points = you.skill_points[si]
+                                      / species_apt_factor(si);
 
         you.skill_order[si] = 0;
 
@@ -1861,8 +1859,8 @@ void init_skill_order(void)
             if (si == sj || is_invalid_skill(sj))
                 continue;
 
-            const int j_diff = species_skills(sj, you.species);
-            const unsigned int j_points = (you.skill_points[sj] * 100) / j_diff;
+            const unsigned int j_points = you.skill_points[sj]
+                                          / species_apt_factor(sj);
 
             if (you.skills[sj] == you.skills[si]
                 && (j_points > i_points
@@ -1885,6 +1883,36 @@ void calc_mp()
     you.max_magic_points = get_real_mp(true);
     you.magic_points = std::min(you.magic_points, you.max_magic_points);
     you.redraw_magic_points = true;
+}
+
+// What aptitude value corresponds to doubled skill learning
+// (i.e., old-style aptitude 50).
+#define APT_DOUBLE 4
+
+static float _apt_to_factor(int apt)
+{
+    return (1 / exp(log(2) * apt / APT_DOUBLE));
+}
+
+// Base skill cost, i.e. old-style human aptitudes.
+static int _base_cost(skill_type sk)
+{
+    switch (sk)
+    {
+    case SK_SPELLCASTING:
+        return 130;
+    case SK_INVOCATIONS:
+    case SK_EVOCATIONS:
+        return 80;
+    // Quick fix for the fact that stealth can't be gained fast enough
+    // to keep up with the monster levels. This was a skill points bonus
+    // in _exercise2 and was changed to a reduced base_cost to keep
+    // total_skill_points progression the same for all skills.
+    case SK_STEALTH:
+        return 50;
+    default:
+        return 100;
+    }
 }
 
 unsigned int skill_exp_needed(int lev)
@@ -1912,40 +1940,11 @@ unsigned int skill_exp_needed(int lev)
 
 unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
 {
-    return skill_exp_needed(lev) * species_skills(sk, sp) / 100;
+    return skill_exp_needed(lev) * species_apt_factor(sk, sp)
+           * _base_cost(sk) / 100;
 }
 
-// Base skill cost, i.e. old-style human aptitudes.
-static int _base_cost(skill_type skill)
-{
-    switch (skill)
-    {
-    case SK_SPELLCASTING:
-        return 130;
-    case SK_INVOCATIONS:
-    case SK_EVOCATIONS:
-        return 80;
-    // Quick fix for the fact that stealth can't be gained fast enough
-    // to keep up with the monster levels. This was a skill points bonus
-    // in _exercise2 and was changed to a reduced base_cost to keep
-    // total_skill_points progression the same for all skills.
-    case SK_STEALTH:
-        return 50;
-    default:
-        return 100;
-    }
-}
-
-// What aptitude value corresponds to doubled skill learning
-// (i.e., old-style aptitude 50).
-#define APT_DOUBLE 4
-
-static int _apt_to_cost(skill_type skill, int apt)
-{
-    return (_base_cost(skill) / exp(log(2) * apt / APT_DOUBLE));
-}
-
-static int species_apts(skill_type skill, species_type species)
+int species_apt(skill_type skill, species_type species)
 {
     static bool spec_skills_initialised = false;
     if (!spec_skills_initialised)
@@ -1967,9 +1966,9 @@ static int species_apts(skill_type skill, species_type species)
     return _spec_skills[species][skill];
 }
 
-int species_skills(skill_type skill, species_type species)
+float species_apt_factor(skill_type sk, species_type sp)
 {
-    return _apt_to_cost(skill, species_apts(skill, species));
+    return _apt_to_factor(species_apt(sk, sp));
 }
 
 void wield_warning(bool newWeapon)

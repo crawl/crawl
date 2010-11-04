@@ -532,11 +532,8 @@ static void _give_items_skills(const newgame_def& ng)
         {
             // Species skilled with maces/flails get one, the others axes.
             weapon_type startwep = WPN_HAND_AXE;
-            if (species_skills(SK_MACES_FLAILS, you.species) <
-                species_skills(SK_AXES, you.species))
-            {
+            if (species_apt(SK_MACES_FLAILS) > species_apt(SK_AXES))
                 startwep = (player_genus(GENPC_OGREISH)) ? WPN_ANKUS : WPN_MACE;
-            }
 
             newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, startwep);
         }
@@ -612,11 +609,8 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_FIGHTING] = 3;
         you.skills[SK_ARMOUR]   = 1;
         you.skills[SK_DODGING]  = 1;
-        if (species_skills(SK_ARMOUR, you.species) >
-            species_skills(SK_DODGING, you.species))
-        {
+        if (species_apt(SK_ARMOUR) < species_apt(SK_DODGING))
             you.skills[SK_DODGING]++;
-        }
         else
             you.skills[SK_ARMOUR]++;
         weap_skill = 2;

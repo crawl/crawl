@@ -1987,8 +1987,8 @@ static int _give_first_conjuration_book()
         // fire/earth book... but we don't have those skills.  So we
         // choose randomly based on the species weighting, again
         // ignoring air/earth which are secondary in these books. - bwr
-        if (random2(species_skills(SK_ICE_MAGIC, you.species)) <
-            random2(species_skills(SK_FIRE_MAGIC, you.species)))
+        if (random2(100 * species_apt_factor(SK_ICE_MAGIC)) <
+            random2(100 * species_apt_factor(SK_FIRE_MAGIC)))
         {
             book = BOOK_CONJURATIONS_II;
         }
