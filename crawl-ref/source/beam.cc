@@ -1992,6 +1992,9 @@ void bolt::apply_bolt_petrify(monster* mons)
 static bool _curare_hits_monster(actor *agent, monster* mons,
                                  kill_category who, int levels)
 {
+    if (!mons->alive())
+        return (false);
+
     poison_monster(mons, who, levels, false);
 
     int hurted = 0;
