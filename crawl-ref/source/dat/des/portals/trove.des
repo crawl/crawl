@@ -2,38 +2,13 @@
 #
 # Treasure Trove (by due)
 #
-# Troves are once-only (tolled) and timed portals to a treasure chamber, most
-# of which are weighted acquirement-esque towards your skills. Of course,
-# there's a chance that you'll get rubbish (casters in an weapon/armour room
-# and melee fighters in a library), but that's kind of the point.
+# Troves are once-only tolled portals to a treasure chamber, most of which
+# are weighted acquirement-esque towards your skills.  Of course, there's a
+# chance that you'll get rubbish (casters in an weapon/armour room and melee
+# fighters in a library), but that's kind of the point.
 #
 # Two Trove portals are 'nasty': one features vampires behind (diggable) glass,
 # and the other features two wandering shining eyes. Have a nice time!
-#
-# -- comments by dpeg:
-# The idea (you spend a lot and gain a meta-acquirement) of troves is cool and
-# robust. There are some slight issues with the current setup:
-# a) The choice between pay-large-sum and make-permanent is not relevant. If
-#    you have the money, you will just buy access to the trove. Therefore, we
-#    should remove the buying option.
-# b) It is a bug that troves hand out incredible sums of money (when they
-#    give money).
-# c) Paying a small sum upfront (thematically, to "lock" the trove) is just
-#    meant to get players emotionally invested into fulfilling the second
-#    trove condition. This may not have been my best idea -- here's another
-#    suggestion: The trove asks you for something and you have to deliver
-#    quickly with a first set. That's easy for the "12 scrolls of identify
-#    scrolls" type quests (i.e. where you have to collect some number of a
-#    common, useful item): you just ask for one or two scrolls of identify.
-#    We can also make it so that the player can take some time for the first
-#    payment -- but the longer it takes, the more the trove wants. (And the
-#    trove will vanish if the total cost exceeds some threshold.)
-#    For quests like "one potion of acquirement" (where you have to part with
-#    very few, very good items), the trove would ask for items of the same
-#    type (scrolls, potions, wands) of sufficient worth: we wouldn't even need
-#    to tell the player the exact value.
-#    And for money demands (usually in the form of "bring me [shop randart]",
-#    the trove would ask for a sum of money.
 #
 ##############################################################################
 {{
