@@ -3133,7 +3133,7 @@ void level_change(bool skip_attribute_increase)
             if (you.experience_level == 12)
                 mpr("Your Zot abilities now extend through the making of mushroom circles.", MSGCH_INTRINSIC_GAIN);
             if (you.experience_level == 13)
-                mpr("Your Zot abilities now extend through the making of axe traps.", MSGCH_INTRINSIC_GAIN);
+                mpr("Your Zot abilities now extend through the making of bolt traps.", MSGCH_INTRINSIC_GAIN);
             if (you.experience_level == 14) 
                 mpr("Your Zot abilities now extend through the making of orange crystal statues.", MSGCH_INTRINSIC_GAIN);
             if (you.experience_level == 15)
@@ -3143,7 +3143,7 @@ void level_change(bool skip_attribute_increase)
             if (you.experience_level == 17)
                 mpr("Your Zot abilities now extend through making water.", MSGCH_INTRINSIC_GAIN);
             if (you.experience_level == 18)
-                mpr("Your Zot abilities now extend through the making of bolt traps.", MSGCH_INTRINSIC_GAIN);
+                mpr("Your Zot abilities now extend through the making of axe traps.", MSGCH_INTRINSIC_GAIN);
             if (you.experience_level == 19)
                 mpr("Your Zot abilities now extend through the making of electric eels.", MSGCH_INTRINSIC_GAIN);
             if (you.experience_level == 20) 

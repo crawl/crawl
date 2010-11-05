@@ -576,6 +576,12 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 m->hurt(NULL, damage_taken);
                 if (in_sight && m->alive())
                     print_wounds(m);
+
+                // zotdef: blade traps break eventually
+                if (game_is_zotdef() && one_chance_in(200)) {
+                    if (in_sight) mpr("The blade breaks!");
+                    disarm();   
+                }
             }
         }
         break;
@@ -1702,4 +1708,12 @@ int traps_lab_number(int level_number)
 trap_type traps_lab_type(int level_number)
 {
     return random_trap_default(level_number, level_id(LEVEL_LABYRINTH));
+}
+
+int count_traps(trap_type ttyp)
+{
+    int num = 0;
+    for (int tcount = 0; tcount < MAX_TRAPS; tcount++)
+            if (env.trap[tcount].type == ttyp) num++;
+    return num;
 }

@@ -56,4 +56,6 @@ trap_type traps_abyss_type(int level_number = -1);
 int       traps_lab_number(int level_number = -1);
 trap_type traps_lab_type(int level_number = -1);
 
+int count_traps(trap_type ttyp);
+
 #endif
