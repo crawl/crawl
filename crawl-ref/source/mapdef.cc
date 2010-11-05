@@ -3511,12 +3511,6 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
                 mspec.extra_monster_flags |= MF_NAME_REPLACE;
             }
 
-            // We should be able to combine this with name_replace.
-            if (strip_tag(mon_str, "name_descriptor")
-                || strip_tag(mon_str, "n_des"))
-            {
-                mspec.extra_monster_flags |= MF_NAME_DESCRIPTOR;
-            }
             // Reasoning for this setting both flags: it does nothing with the
             // description unless NAME_DESCRIPTOR is also set; thus, you end up
             // with bloated vault description lines akin to: "name:blah_blah
@@ -3525,6 +3519,13 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
                 || strip_tag(mon_str, "n_the"))
             {
                 mspec.extra_monster_flags |= MF_NAME_DEFINITE;
+                mspec.extra_monster_flags |= MF_NAME_DESCRIPTOR;
+            }
+
+            // We should be able to combine this with name_replace.
+            if (strip_tag(mon_str, "name_descriptor")
+                || strip_tag(mon_str, "n_des"))
+            {
                 mspec.extra_monster_flags |= MF_NAME_DESCRIPTOR;
             }
 
