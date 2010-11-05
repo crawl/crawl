@@ -60,6 +60,7 @@
 #include "stuff.h"
 #include "areas.h"
 #include "transform.h"
+#include "traps.h"
 #include "tutorial.h"
 #include "zotdef.h"
 
@@ -375,14 +376,14 @@ static const ability_def Ability_List[] =
     { ABIL_MAKE_CURSE_SKULL, "Make curse skull", 0, 0, 600, 0, ABFLAG_NECRO_MISCAST_MINOR, 10000}, 
     { ABIL_MAKE_TELEPORT, "Zot-teleport", 0, 0, 0, 0, ABFLAG_NONE, 2},
     { ABIL_MAKE_ARROW_TRAP, "Make arrow trap", 0, 0, 0, 0, ABFLAG_NONE, 30 },
-    { ABIL_MAKE_BOLT_TRAP, "Make bolt trap", 0, 0, 0, 0, ABFLAG_NONE, 50 },
+    { ABIL_MAKE_BOLT_TRAP, "Make bolt trap", 0, 0, 0, 0, ABFLAG_NONE, 300 },
     { ABIL_MAKE_SPEAR_TRAP, "Make spear trap", 0, 0, 0, 0, ABFLAG_NONE, 50 },
-    { ABIL_MAKE_AXE_TRAP, "Make axe trap", 0, 0, 0, 0, ABFLAG_NONE, 100 },
+    { ABIL_MAKE_AXE_TRAP, "Make axe trap", 0, 0, 0, 0, ABFLAG_NONE, 500 },
     { ABIL_MAKE_NEEDLE_TRAP, "Make needle trap", 0, 0, 0, 0, ABFLAG_NONE, 30 },
     { ABIL_MAKE_NET_TRAP, "Make net trap", 0, 0, 0, 0, ABFLAG_NONE, 2 },
-    { ABIL_MAKE_TELEPORT_TRAP, "Make teleport trap", 0, 0, 0, 0, ABFLAG_TLOC_MISCAST, 10000 }, 
+    { ABIL_MAKE_TELEPORT_TRAP, "Make teleport trap", 0, 0, 0, 0, ABFLAG_TLOC_MISCAST, 15000 }, 
     { ABIL_MAKE_ALARM_TRAP, "Make alarm trap", 0, 0, 0, 0, ABFLAG_NONE, 2 },
-    { ABIL_MAKE_BLADE_TRAP, "Make blade trap", 0, 0, 0, 0, ABFLAG_NONE, 300 },
+    { ABIL_MAKE_BLADE_TRAP, "Make blade trap", 0, 0, 0, 0, ABFLAG_NONE, 3000 },
     { ABIL_MAKE_OKLOB_CIRCLE, "Make oklob circle", 0, 0, 0, 0, ABFLAG_NONE, 1000},
     { ABIL_MAKE_ACQUIRE_GOLD, "Acquire gold", 0, 0, 0, 0, ABFLAG_LEVEL_DRAIN, 0 },
     { ABIL_MAKE_ACQUIREMENT, "Acquirement", 0, 0, 0, 0, ABFLAG_LEVEL_DRAIN, 0 },
@@ -450,19 +451,38 @@ int count_relevant_monsters(const ability_def& abil)
     monster_type mtyp=MONS_PROGRAM_BUG;
     switch(abil.ability)
     {
-	case ABIL_MAKE_OKLOB_SAPLING: mtyp=MONS_OKLOB_SAPLING; break;
-	case ABIL_MAKE_OKLOB_CIRCLE:
-	case ABIL_MAKE_OKLOB_PLANT: mtyp=MONS_OKLOB_PLANT; break;
-	case ABIL_MAKE_BURNING_BUSH: mtyp=MONS_BURNING_BUSH; break;
-	case ABIL_MAKE_ELECTRIC_EEL: mtyp=MONS_ELECTRIC_EEL; break;
-	case ABIL_MAKE_ICE_STATUE: mtyp=MONS_ICE_STATUE; break;
-	case ABIL_MAKE_OCS: mtyp=MONS_ORANGE_STATUE; break;
-	case ABIL_MAKE_SILVER_STATUE: mtyp=MONS_SILVER_STATUE; break;
-	case ABIL_MAKE_CURSE_SKULL: mtyp=MONS_CURSE_SKULL; break;
-	default: mprf("DEBUG: NO RELEVANT MONSTER FOR %d",abil.ability);break;
+        case ABIL_MAKE_OKLOB_SAPLING: mtyp=MONS_OKLOB_SAPLING; break;
+        case ABIL_MAKE_OKLOB_CIRCLE:
+        case ABIL_MAKE_OKLOB_PLANT: mtyp=MONS_OKLOB_PLANT; break;
+        case ABIL_MAKE_BURNING_BUSH: mtyp=MONS_BURNING_BUSH; break;
+        case ABIL_MAKE_ELECTRIC_EEL: mtyp=MONS_ELECTRIC_EEL; break;
+        case ABIL_MAKE_ICE_STATUE: mtyp=MONS_ICE_STATUE; break;
+        case ABIL_MAKE_OCS: mtyp=MONS_ORANGE_STATUE; break;
+        case ABIL_MAKE_SILVER_STATUE: mtyp=MONS_SILVER_STATUE; break;
+        case ABIL_MAKE_CURSE_SKULL: mtyp=MONS_CURSE_SKULL; break;
+        default: mprf("DEBUG: NO RELEVANT MONSTER FOR %d",abil.ability);break;
     }
     if (mtyp==MONS_PROGRAM_BUG) return 0;
     return count_monsters(mtyp, true);	/* Friendly ones only */
+}
+
+trap_type trap_for_ability(const ability_def& abil)
+{
+    switch (abil.ability)
+    {
+        case ABIL_MAKE_DART_TRAP: return TRAP_DART;
+        case ABIL_MAKE_ARROW_TRAP: return TRAP_ARROW;
+        case ABIL_MAKE_BOLT_TRAP: return TRAP_BOLT;
+        case ABIL_MAKE_SPEAR_TRAP: return TRAP_SPEAR;
+        case ABIL_MAKE_AXE_TRAP: return TRAP_AXE;
+        case ABIL_MAKE_NEEDLE_TRAP: return TRAP_NEEDLE;
+        case ABIL_MAKE_NET_TRAP: return TRAP_NET;
+        case ABIL_MAKE_TELEPORT_TRAP: return TRAP_TELEPORT;
+        case ABIL_MAKE_ALARM_TRAP: return TRAP_ALARM;
+        case ABIL_MAKE_BLADE_TRAP: return TRAP_BLADE;
+        default: ;
+    }
+    return TRAP_UNASSIGNED;
 }
 
 // Scale the xp cost by the number of friendly monsters
@@ -473,45 +493,70 @@ int xp_cost(const ability_def& abil)
     int cost=abil.xp_cost;
     int scale10=0;	// number of times to scale up by 10%
     int scale20=0;	// number of times to scale up by 20%
-    int num_mon;
+    int num;
     switch(abil.ability)
     {
-	default: cost=abil.xp_cost; break;
+        default: cost=abil.xp_cost; break;
 
-	// type 1: reasonably generous
-	case ABIL_MAKE_OKLOB_SAPLING:
-	case ABIL_MAKE_OKLOB_PLANT:
-	case ABIL_MAKE_OKLOB_CIRCLE:
-	case ABIL_MAKE_BURNING_BUSH:
-	case ABIL_MAKE_ELECTRIC_EEL:
-	    num_mon=count_relevant_monsters(abil);
-	    // special case for oklob circles
-	    if (abil.ability==ABIL_MAKE_OKLOB_CIRCLE) num_mon/=2;
-	    num_mon-=2;	// first two are base cost
-	    num_mon=std::max(num_mon,0);
-	    scale10=std::min(num_mon,10);	// next 10 at 10% increment
-	    scale20=num_mon-scale10;		// after that at 20% increment
-	    break;
+        // Monster type 1: reasonably generous
+        case ABIL_MAKE_OKLOB_SAPLING:
+        case ABIL_MAKE_OKLOB_PLANT:
+        case ABIL_MAKE_OKLOB_CIRCLE:
+        case ABIL_MAKE_BURNING_BUSH:
+        case ABIL_MAKE_ELECTRIC_EEL:
+            num=count_relevant_monsters(abil);
+            // special case for oklob circles
+            if (abil.ability==ABIL_MAKE_OKLOB_CIRCLE) num/=3;
+            num-=2;	// first two are base cost
+            num=std::max(num,0);
+            scale10=std::min(num,10);	// next 10 at 10% increment
+            scale20=num-scale10;		// after that at 20% increment
+            break;
 
-	// type 2: less generous
-	case ABIL_MAKE_ICE_STATUE:
-	case ABIL_MAKE_OCS:
-	    num_mon=count_relevant_monsters(abil);
-	    num_mon-=2; // first two are base cost
-	    scale20=std::max(num_mon,0);	// after first two, 20% increment
+        // Monster type 2: less generous
+        case ABIL_MAKE_ICE_STATUE:
+        case ABIL_MAKE_OCS:
+            num=count_relevant_monsters(abil);
+            num-=2; // first two are base cost
+            scale20=std::max(num,0);	// after first two, 20% increment
 
-	// type 3: least generous
-	case ABIL_MAKE_SILVER_STATUE:
-	case ABIL_MAKE_CURSE_SKULL:
-	    scale20=count_relevant_monsters(abil);	// scale immediately
+        // Monster type 3: least generous
+        case ABIL_MAKE_SILVER_STATUE:
+        case ABIL_MAKE_CURSE_SKULL:
+            scale20=count_relevant_monsters(abil);	// scale immediately
+
+        // Simple Traps 
+        case ABIL_MAKE_DART_TRAP:
+            scale10 = std::max(count_traps(TRAP_DART)-10,0);   // First 10 at base cost
+            break;
+
+        case ABIL_MAKE_ARROW_TRAP:
+        case ABIL_MAKE_BOLT_TRAP:
+        case ABIL_MAKE_SPEAR_TRAP:
+        case ABIL_MAKE_AXE_TRAP:
+        case ABIL_MAKE_NEEDLE_TRAP:
+        case ABIL_MAKE_NET_TRAP:
+        case ABIL_MAKE_ALARM_TRAP:
+            num=count_traps(trap_for_ability(abil));
+            scale10 = std::max(num-5,0);   // First 5 at base cost
+            break;
+
+        case ABIL_MAKE_TELEPORT_TRAP:
+            scale20=count_traps(TRAP_TELEPORT);
+            break;
+
+        case ABIL_MAKE_BLADE_TRAP:
+            scale10=count_traps(TRAP_BLADE); // Max of 18-ish at base cost 3000
+            break;
+
     }
     for (; scale10>0; scale10--)
     {
-	cost = (cost*11)/10;	// +10%
+        cost = (cost*11)/10;	// +10%
     }
     for (; scale20>0; scale20--)
     {
-	cost = (cost*6)/5;	// +20%
+        cost = (cost*6)/5;	// +20%
     }
 
     return cost;
@@ -2738,7 +2783,7 @@ std::vector<talent> your_talents(bool check_confused)
         if (you.experience_level >= 12)
             _add_talent(talents, ABIL_MAKE_FUNGUS, check_confused);
         if (you.experience_level >= 13)
-            _add_talent(talents, ABIL_MAKE_AXE_TRAP, check_confused);
+            _add_talent(talents, ABIL_MAKE_BOLT_TRAP, check_confused);
         if (you.experience_level >= 14)
             _add_talent(talents, ABIL_MAKE_OCS, check_confused);
         if (you.experience_level >= 15)
@@ -2748,7 +2793,7 @@ std::vector<talent> your_talents(bool check_confused)
         if (you.experience_level >= 17)
             _add_talent(talents, ABIL_MAKE_WATER, check_confused);
         if (you.experience_level >= 18)
-            _add_talent(talents, ABIL_MAKE_BOLT_TRAP, check_confused);
+            _add_talent(talents, ABIL_MAKE_AXE_TRAP, check_confused);
         if (you.experience_level >= 19)
             _add_talent(talents, ABIL_MAKE_ELECTRIC_EEL, check_confused);
         if (you.experience_level >= 20)
