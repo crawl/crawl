@@ -1172,8 +1172,8 @@ bool name_zombie(monster* mon, int mc, const std::string mon_name)
 {
     mon->mname = mon_name;
 
-    // Special case for Blork the orc: shorten his name to "Blork"
-    // to avoid mentions of e.g "Blork the orc the orc zombie".
+    // Special case for Blork the orc: shorten his name to "Blork" to
+    // avoid mentions of "Blork the orc the orc zombie".
     if (mc == MONS_BLORK_THE_ORC)
         mon->mname = "Blork";
     // Also for the Lernaean hydra.
