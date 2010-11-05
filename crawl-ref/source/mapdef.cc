@@ -3511,20 +3511,27 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
                 mspec.extra_monster_flags |= MF_NAME_REPLACE;
             }
 
-            // Reasoning for this setting both flags: it does nothing with the
-            // description unless NAME_DESCRIPTOR is also set; thus, you end up
-            // with bloated vault description lines akin to: "name:blah_blah
-            // name_replace name_descriptor name_definite".
             if (strip_tag(mon_str, "name_definite")
                 || strip_tag(mon_str, "n_the"))
             {
                 mspec.extra_monster_flags |= MF_NAME_DEFINITE;
-                mspec.extra_monster_flags |= MF_NAME_DESCRIPTOR;
             }
 
-            // We should be able to combine this with name_replace.
+            // Reasoning for setting more than one flag: suffixes and
+            // adjectives need NAME_DESCRIPTOR to get proper grammar,
+            // and definite names do nothing with the description unless
+            // NAME_DESCRIPTOR is also set.  Without this, you end up
+            // with bloated vault description lines akin to:
+            // "name:blah_blah name_replace name_descriptor
+            // name_definite".
+            const bool need_name_desc =
+                (mspec.extra_monster_flags & MF_NAME_SUFFIX)
+                    || (mspec.extra_monster_flags & MF_NAME_ADJECTIVE)
+                    || (mspec.extra_monster_flags & MF_NAME_DEFINITE);
+
             if (strip_tag(mon_str, "name_descriptor")
-                || strip_tag(mon_str, "n_des"))
+                || strip_tag(mon_str, "n_des")
+                || need_name_desc)
             {
                 mspec.extra_monster_flags |= MF_NAME_DESCRIPTOR;
             }
