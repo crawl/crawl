@@ -267,17 +267,18 @@ monster_info::monster_info(const monster* m, int milev)
     }
 
     mname = m->mname;
+
+    if ((m->flags & MF_NAME_MASK) == MF_NAME_SUFFIX)
+        mb |= ULL1 << MB_NAME_SUFFIX;
+    else if ((m->flags & MF_NAME_MASK) == MF_NAME_ADJECTIVE)
+        mb |= ULL1 << MB_NAME_ADJECTIVE;
+    else if ((m->flags & MF_NAME_MASK) == MF_NAME_REPLACE)
+        mb |= ULL1 << MB_NAME_REPLACE;
+
     if (!mname.empty() && !(m->flags & MF_NAME_DESCRIPTOR))
         mb |= (ULL1 << MB_NAME_UNQUALIFIED) | (ULL1 << MB_NAME_THE);
     else if (m->flags & MF_NAME_DEFINITE)
         mb |= ULL1 << MB_NAME_THE;
-
-    if ((m->flags & MF_NAME_MASK) == MF_NAME_ADJECTIVE)
-        mb |= ULL1 << MB_NAME_ADJECTIVE;
-    else if ((m->flags & MF_NAME_MASK) == MF_NAME_REPLACE)
-        mb |= ULL1 << MB_NAME_REPLACE;
-    else if ((m->flags & MF_NAME_MASK) == MF_NAME_SUFFIX)
-        mb |= ULL1 << MB_NAME_SUFFIX;
 
     if (milev <= MILEV_NAME)
     {
