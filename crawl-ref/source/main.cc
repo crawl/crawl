@@ -3689,8 +3689,9 @@ static void _do_berserk_no_combat_penalty(void)
         int berserk_delay_penalty = you.berserk_penalty * berserk_base_delay;
 
         you.duration[DUR_BERSERK] -= berserk_delay_penalty;
-        if (you.duration[DUR_BERSERK] < berserk_base_delay)
-            you.duration[DUR_BERSERK] = berserk_base_delay;
+        // Don't actually expire berserk until the next turn.
+        if (you.duration[DUR_BERSERK] < 1)
+            you.duration[DUR_BERSERK] = 1;
     }
     return;
 }                               // end do_berserk_no_combat_penalty()
