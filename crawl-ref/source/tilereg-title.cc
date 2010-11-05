@@ -14,7 +14,7 @@
 #include "libutil.h"
 #include "macro.h"
 
-static const char* _get_title_image()
+static const std::string _get_title_image()
 {
     std::vector<std::string> files;
     for (int i = 0; i < 100; ++i)
@@ -23,7 +23,7 @@ static const char* _get_title_image()
         if (datafile_path(f, false) != "")
             files.push_back(f);
     }
-    return (files[random2(files.size())]).c_str();
+    return files[random2(files.size())];
 }
 
 TitleRegion::TitleRegion(int width, int height, FontWrapper* font) :
@@ -35,7 +35,7 @@ TitleRegion::TitleRegion(int width, int height, FontWrapper* font) :
     sx = sy = 0;
     dx = dy = 1;
 
-    if (!m_img.load_texture(_get_title_image(), MIPMAP_NONE))
+    if (!m_img.load_texture(_get_title_image().c_str(), MIPMAP_NONE))
         return;
 
     // Center
