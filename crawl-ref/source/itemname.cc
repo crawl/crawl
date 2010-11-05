@@ -116,7 +116,7 @@ std::string item_def::name(description_level_type descrip,
     if (terse && descrip != DESC_DBNAME)
         descrip = DESC_PLAIN;
 
-    // note: only the 32 lower bits of monste flags are passed,
+    // note: only the 32 lower bits of monster flags are passed,
     // as we don't have support for 64 bit props
     iflags_t corpse_flags;
 
