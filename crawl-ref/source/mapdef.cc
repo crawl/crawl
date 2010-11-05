@@ -3520,7 +3520,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             // Reasoning for this setting both flags: it does nothing with the
             // description unless NAME_DESCRIPTOR is also set; thus, you end up
             // with bloated vault description lines akin to: "name:blah_blah
-            // name_replace name_descrpitor name_definite".
+            // name_replace name_descriptor name_definite".
             if (strip_tag(mon_str, "name_definite")
                 || strip_tag(mon_str, "n_the"))
             {
