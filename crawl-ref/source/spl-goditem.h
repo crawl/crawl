@@ -19,7 +19,7 @@ bool detect_curse(int scroll, bool suppress_msg);
 bool entomb(int pow);
 bool cast_imprison(int pow, monster* mons, int source);
 
-bool cast_smiting(int power, const coord_def& where);
+bool cast_smiting(int pow, const coord_def& where);
 
 void stonemail(int pow);
 
