@@ -497,7 +497,7 @@ ENDMAP
 #       effects, of course (plants turning into oklobs, fruits turning into
 #       spores or (if possible) animated weapons called like the fruit etc.)
 #       We could add a interesting little sub-game by having ballistos spawn
-#       on their own -- and these could be aggressive ballistos, too!
+#       on their own - and these could be aggressive ballistos, too!
 NAME:       wizlab_eringya
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
@@ -930,12 +930,12 @@ KMONS:      8 = col:red clay golem name:flesh_golem name_replace \
 KMONS:      M = col:mutagenic tentacled monstrosity name:Cigotuvi's_Monster \
             name_replace hp:250 tile:mons_cigotuvis_monster
 MARKER:     M = lua:MonPropsMarker:new {description="This terrifying creation " \
-            .. "looks to have been constructed from the bodyparts of every monstrous " \
-            .. "creature imaginable.\n", quote="\"I beheld the wretch -- the "    \
+            .. "looks to have been constructed from the body parts of every monstrous " \
+            .. "creature imaginable.\n", quote="\"I beheld the wretch - the "     \
             .. "miserable monster whom I had created. He held up the curtain "    \
             .. "of the bed; and his eyes, if eyes they may be called, were "      \
             .. "fixed on me. His jaws opened, and he muttered some inarticulate " \
-            .. "sounds, while a grin wrinkled his cheeks.\"\n  -Frankenstein, Mary Shelley."}
+            .. "sounds, while a grin wrinkled his cheeks.\"\n    -Mary Shelley, \"Frankenstein\""}
 MARKER:     8 = lua:MonPropsMarker:new {description="An animated mound of misshapen flesh.\n"}
 :           local sickdesc = "This poor creature looks hideously deformed.\n"
 MARKER:     a = lua:MonPropsMarker:new {description=sickdesc, speech_key="Cigotuvi_creatures"}
@@ -1048,7 +1048,7 @@ ENDMAP
 #
 # TODO: Fix up the tiles to make them pretty. It's really quite boring. I've
 #       no idea how it could be improved or made interesting, but I think that
-#       a few boring maps is fine--it means that you don't know exactly what
+#       a few boring maps is fine - it means that you don't know exactly what
 #       you're going to get.
 NAME:       wizlab_iskenderun
 ORIENT:     encompass
