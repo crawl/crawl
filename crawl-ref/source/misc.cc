@@ -1969,6 +1969,13 @@ void bring_to_safety()
             continue;
         }
 
+        for (adjacent_iterator ai(pos); ai; ++ai)
+            if (grd(*ai) == DNGN_SLIMY_WALL)
+            {
+                tries++;
+                continue;
+            }
+
         bool junk;
         double gen_threat = 0.0, hi_threat = 0.0;
         monster_threat_values(&gen_threat, &hi_threat, &junk);
