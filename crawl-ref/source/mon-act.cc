@@ -1022,11 +1022,12 @@ static bool _handle_rod(monster *mons, bolt &beem)
     bool was_visible = you.can_see(mons);
 
     int rate;
-    int overriding_power = 0;
-    bool nice_spell     = false;
-    bool check_validity = true;
+    int overriding_power  = 0;
+    bool nice_spell       = false;
+    bool check_validity   = true;
     bool is_direct_effect = false;
-    spell_type mzap     = SPELL_NO_SPELL;
+    spell_type mzap       = SPELL_NO_SPELL;
+
     switch (rod.sub_type)
     {
     case STAFF_STRIKING:
