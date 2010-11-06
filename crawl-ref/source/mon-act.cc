@@ -1201,7 +1201,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
     bool zap = false;
 
     // set up the beam
-    int power = std::max(_generate_rod_power(mons, overriding_power), 1);
+    const int power = std::max(_generate_rod_power(mons, overriding_power), 1);
 
     dprf("using rod with power %d", power);
 
