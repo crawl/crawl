@@ -1030,7 +1030,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
     switch (rod.sub_type)
     {
     case STAFF_STRIKING:
-        if ((rod.plus > 100) && (mons->foe_distance() >= 2))
+        if (rod.plus > 100 && mons->foe_distance() >= 2)
         {
             mzap = SPELL_STRIKING;
             rate = 100;
@@ -1091,7 +1091,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
         {
             if (mons->foe_distance() > 2)
                 mzap = SPELL_FIREBALL;
-            if (one_chance_in(2))
+            if (coinflip())
                 mzap = SPELL_IRON_SHOT;
             else
                 mzap = SPELL_LIGHTNING_BOLT;
@@ -1101,7 +1101,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
     case STAFF_DESTRUCTION_IV:
         if (rod.plus > 1000)
         {
-            if (one_chance_in(2))
+            if (coinflip())
                 mzap = SPELL_BOLT_OF_MAGMA;
             else
                 mzap = SPELL_BOLT_OF_COLD;
@@ -1109,8 +1109,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
         }
         else if (rod.plus > 500)
         {
-            const int choice = random2(3);
-            switch (choice)
+            switch (random2(3))
             {
             case 0:
                 mzap = SPELL_BOLT_OF_MAGMA;
@@ -1199,9 +1198,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
     bool zap = false;
 
     // set up the beam
-    int power = _generate_rod_power(mons, overriding_power);
-    if (power < 1)
-        power = 1;
+    int power = std::max(_generate_rod_power(mons, overriding_power), 1);
 
     dprf("using rod with power %d", power);
 
