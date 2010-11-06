@@ -992,7 +992,7 @@ static bool _rod_fired_post(monster* mons, item_def &rod, int idx, bolt &beem,
     int rate, bool was_visible)
 {
     rod.plus -= rate;
-    dprf("rod charge: %d , %d", rod.plus, rod.plus2);
+    dprf("rod charge: %d, %d", rod.plus, rod.plus2);
 
     if (was_visible)
     {
