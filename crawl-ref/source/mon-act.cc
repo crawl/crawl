@@ -1188,7 +1188,6 @@ static bool _handle_rod(monster *mons, bolt &beem)
        break;
     case STAFF_WARDING: // all temporary self-status effects
     default:
-        return false;
         break;
     }
 
