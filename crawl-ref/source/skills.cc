@@ -437,7 +437,8 @@ static int _exercise2(skill_type exsk)
         skill_inc *= _weap_crosstrain_bonus(exsk);
 
     // Starting to learn skills is easier if the appropriate stat is high.
-    if (you.skills[exsk] == 0)
+	// We check skill points in case skill level hasn't been updated yet
+    if (you.skill_points[exsk] < skill_exp_needed(1, exsk))
         skill_inc = _stat_mult(exsk, skill_inc);
 
     // Spellcasting and Inv/Evo is cheaper early on.
