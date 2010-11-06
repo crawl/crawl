@@ -3626,11 +3626,12 @@ void monster::pandemon_init()
     ev              = ghost->ev;
     flags           = MF_INTERESTING;
     // Don't make greased-lightning Pandemonium demons in the dungeon
-    // max speed = 17).  Demons in Pandemonium can be up to speed 24.
+    // max speed = 17).  Demons in Pandemonium can be up to speed 20,
+    // possibly with haste.
     if (you.level_type == LEVEL_DUNGEON)
         speed = (one_chance_in(3) ? 10 : 7 + roll_dice(2, 5));
     else
-        speed = (one_chance_in(3) ? 10 : 10 + roll_dice(2, 7));
+        speed = (one_chance_in(3) ? 10 : 8 + roll_dice(2, 6));
 
     speed_increment = 70;
 
