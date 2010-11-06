@@ -2035,6 +2035,7 @@ void revive()
     invalidate_agrid();
 
     mpr("You rejoin the land of the living...");
+    more();
 }
 
 ////////////////////////////////////////////////////////////////////////////
