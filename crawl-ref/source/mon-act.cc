@@ -981,9 +981,11 @@ static void _rod_fired_pre(monster* mons, bool nice_spell)
     if (!nice_spell)
         make_mons_stop_fleeing(mons);
 
-    if ((!simple_monster_message(mons, " zaps a rod.")) &&
-        (!silenced(you.pos())))
-            mpr("You hear a zap.", MSGCH_SOUND);
+    if (!simple_monster_message(mons, " zaps a rod.")
+        && !silenced(you.pos()))
+    {
+        mpr("You hear a zap.", MSGCH_SOUND);
+    }
 }
 
 static bool _rod_fired_post(monster* mons, item_def &rod, int idx, bolt &beem,
