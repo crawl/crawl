@@ -1143,7 +1143,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
             dprf("mon-act:_handle_rod():SPELL_SUMMON_DEMON");
             mons_cast(mons, beem, mzap, false);
             _rod_fired_post(mons, rod, weapon, beem, 500, was_visible);
-            return true;
+            return (true);
         }
         else if (rod.plus > 300)
         {
@@ -1152,7 +1152,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
             dprf("mon-act:_handle_rod():SPELL_CALL_IMP");
             mons_cast(mons, beem, mzap, false);
             _rod_fired_post(mons, rod, weapon, beem, 300, was_visible);
-            return true;
+            return (true);
         }
         break;
     case STAFF_VENOM:
@@ -1178,7 +1178,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
             dprf("mon-act:_handle_rod():SPELL_SUMMON_SWARM");
             mons_cast(mons, beem, mzap, false);
             _rod_fired_post(mons, rod, weapon, beem, 600, was_visible);
-            return true;
+            return (true);
         }
         else if (rod.plus > 400)
         {
@@ -1187,7 +1187,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
             dprf("mon-act:_handle_rod():SPELL_SUMMON_ELEMENTAL");
             mons_cast(mons, beem, mzap, false);
             _rod_fired_post(mons, rod, weapon, beem, 400, was_visible);
-            return true;
+            return (true);
        }
        break;
     case STAFF_WARDING: // all temporary self-status effects
@@ -1196,7 +1196,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
     }
 
     if (mzap == SPELL_NO_SPELL)
-        return false;
+        return (false);
 
     bool zap = false;
 
@@ -1228,17 +1228,17 @@ static bool _handle_rod(monster *mons, bolt &beem)
             return (false);
         _rod_fired_pre(mons, nice_spell);
         direct_effect(mons, mzap, beem, foe);
-        return _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
+        return (_rod_fired_post(mons, rod, weapon, beem, rate, was_visible));
     }
     else if (nice_spell || zap)
     {
         _rod_fired_pre(mons, nice_spell);
         beem.is_tracer = false;
         beem.fire();
-        return _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
+        return (_rod_fired_post(mons, rod, weapon, beem, rate, was_visible));
     }
 
-    return false;
+    return (false);
 }
 
 //---------------------------------------------------------------
