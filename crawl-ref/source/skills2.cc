@@ -2042,7 +2042,7 @@ bool is_invalid_skill(skill_type skill)
 void dump_skills(std::string &text)
 {
     char tmp_quant[20];
-    for (uint8_t i = 0; i < 50; i++)
+    for (uint8_t i = 0; i < NUM_SKILLS; i++)
     {
         if (you.skills[i] > 0)
         {
@@ -2080,13 +2080,13 @@ skill_type list_skills(std::string title, skill_type hide, bool show_all)
     {
         skill_type sk = skill_display_order[i];
 
-        if (sk == hide)
+        if (is_invalid_skill(sk) || sk == hide
+			|| hide != SK_NONE && you.skills[sk] == 27)
+		{
             continue;
+		}
 
-        if (hide != SK_NONE && you.skills[sk] == 27)
-            continue;
-
-        if (!is_invalid_skill(sk) && (you.skills[sk] > 0 || show_all))
+        if (you.skills[sk] > 0 || show_all)
         {
             std::string skill_text = make_stringf("%s (%d)", skill_name(sk),
                                                   you.skills[sk]);

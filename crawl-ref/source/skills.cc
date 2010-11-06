@@ -285,24 +285,24 @@ static bool _check_crosstrain(skill_type exsk, skill_type sk1, skill_type sk2)
                 || you.skills[sk2] > you.skills[exsk]));
 }
 
-static int _weap_crosstrain_bonus(skill_type exsk)
+static float _weap_crosstrain_bonus(skill_type exsk)
 {
-    int bonus = 0;
+    int bonus = 1;
 
     if (_check_crosstrain(exsk, SK_SHORT_BLADES, SK_LONG_BLADES))
-        bonus += random2(3);
+        bonus *= 2;
     if (_check_crosstrain(exsk, SK_AXES,         SK_POLEARMS))
-        bonus += random2(3);
+        bonus *= 2;
     if (_check_crosstrain(exsk, SK_POLEARMS,     SK_STAVES))
-        bonus += random2(3);
+        bonus *= 2;
     if (_check_crosstrain(exsk, SK_AXES,         SK_MACES_FLAILS))
-        bonus += random2(3);
+        bonus *= 2;
     if (_check_crosstrain(exsk, SK_MACES_FLAILS, SK_STAVES))
-        bonus += random2(3);
+        bonus *= 2;
     if (_check_crosstrain(exsk, SK_SLINGS,       SK_THROWING))
-        bonus += random2(3);
+        bonus *= 2;
 
-    return (10*bonus);
+    return (bonus);
 }
 
 static bool _skip_exercise(skill_type exsk)
@@ -437,7 +437,7 @@ static int _exercise2(skill_type exsk)
 
     // Being good at some weapons makes others easier to learn.
     if (exsk < SK_ARMOUR)
-        skill_inc += _weap_crosstrain_bonus(exsk);
+        skill_inc *= _weap_crosstrain_bonus(exsk);
 
     // Starting to learn skills is easier if the appropriate stat is high.
     if (you.skills[exsk] == 0)
@@ -484,6 +484,8 @@ static int _exercise2(skill_type exsk)
     cost = std::max<int>(cost, 1); // No free lunch.
 
     you.skill_points[exsk] += skill_inc;
+    you.ct_skill_points[exsk] += (1 - 1 / _weap_crosstrain_bonus(exsk))
+                                 * skill_inc;
     you.exp_available -= cost;
     you.total_skill_points += skill_inc;
 

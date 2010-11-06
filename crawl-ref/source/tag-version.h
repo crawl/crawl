@@ -17,7 +17,8 @@ enum tag_minor_version
     TAG_MINOR_GRATE        = 7, // Iron grates.
     TAG_MINOR_XP_STEALING  = 8, // Block kill sniping.
     TAG_MINOR_EARTH_ATTUNE = 9, // [G]nomes earth attunement.
-    TAG_MINOR_VERSION      = 9, // Current version.  (Keep equal to max.)
+    TAG_MINOR_CROSSTRAIN   = 10,// Track skill points gained with crosstraining.
+    TAG_MINOR_VERSION      = 10,// Current version.  (Keep equal to max.)
 };
 
 #endif
