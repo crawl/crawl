@@ -2343,7 +2343,7 @@ static bool _describe_spells(const item_def &item)
         return (false);
 
     describe_spell(nthing, &item);
-    return (true);
+    return item.is_valid();
 }
 
 static bool _can_memorise(item_def &item)
