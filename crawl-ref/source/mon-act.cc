@@ -1220,9 +1220,13 @@ static bool _handle_rod(monster *mons, bolt &beem)
 
     if (is_direct_effect)
     {
-        _rod_fired_pre(mons, nice_spell);
-        direct_effect(mons, mzap, beem, &you);
-        return _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
+        actor* foe = mons->get_foe();
+        if (foe)
+        {
+            _rod_fired_pre(mons, nice_spell);
+            direct_effect(mons, mzap, beem, foe);
+            return _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
+        }
     }
     else if (nice_spell || zap)
     {
