@@ -2031,6 +2031,9 @@ void revive()
     set_mp(9999, false);
     you.dead = false;
 
+    // Remove silence.
+    invalidate_agrid();
+
     mpr("You rejoin the land of the living...");
 }
 
