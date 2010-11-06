@@ -77,7 +77,7 @@ void wizard_change_species(void)
     {
         skill_type sk = static_cast<skill_type>(i);
         you.skill_points[i] *= species_apt_factor(sk, sp)
-							   / species_apt_factor(sk);
+                               / species_apt_factor(sk);
     }
 
     you.species = sp;
