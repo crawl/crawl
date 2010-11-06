@@ -2081,10 +2081,10 @@ skill_type list_skills(std::string title, skill_type hide, bool show_all)
         skill_type sk = skill_display_order[i];
 
         if (is_invalid_skill(sk) || sk == hide
-			|| hide != SK_NONE && you.skills[sk] == 27)
-		{
+            || hide != SK_NONE && you.skills[sk] == 27)
+        {
             continue;
-		}
+        }
 
         if (you.skills[sk] > 0 || show_all)
         {
