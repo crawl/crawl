@@ -916,10 +916,10 @@ static int _generate_rod_power(monster *mons, int overriding_power = 0)
     // subsection: evocation skill and shield skill equivalents for monsters
     int evoc_num = 1;
     int evoc_den = 1;
+
     if (mons->type == MONS_DEEP_DWARF_ARTIFICER)
-    {
         evoc_num = 2;
-    }
+
     int shield_num = 1;
     int shield_den = 1;
 
@@ -940,6 +940,7 @@ static int _generate_rod_power(monster *mons, int overriding_power = 0)
             break;
         default:
             shield_base = 1;
+            break;
         }
     }
 
@@ -952,7 +953,7 @@ static int _generate_rod_power(monster *mons, int overriding_power = 0)
     }
 
     if (overriding_power > 0)
-    power = overriding_power;
+        power = overriding_power;
 
     return power;
 }
