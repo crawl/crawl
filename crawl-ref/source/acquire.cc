@@ -463,7 +463,7 @@ static int _acquirement_weapon_subtype(bool divine)
     // Let's guess the percentage of shield use the player did, this is
     // based on empirical data where pure-shield MDs get skills like 17 sh 25 m&f
     // and pure-shield Spriggans 7 sh 18 m&f.
-    int shield_sk = you.skills[SK_SHIELDS] * species_skills(SK_SHIELDS, you.species) / 100;
+    int shield_sk = you.skills[SK_SHIELDS] * species_apt_factor(SK_SHIELDS);
     int want_shield = std::min(2 * shield_sk, best_sk) + 10;
     int dont_shield = std::max(best_sk - shield_sk, 0) + 10;
     // At XL 10, weapons of the handedness you want get weight *2, those of
@@ -1507,9 +1507,11 @@ bool acquirement(object_class_type class_wanted, int agent,
     {
         ASSERT(!quiet);
         mesclr();
-        mpr ("[a] Weapon  [b] Armour  [c] Jewellery      [d] Book");
-        mprf("[e] Staff   [f] Wand    [g] Miscellaneous  [h] %s [i] Gold",
-            (you.religion == GOD_FEDHAS ? "Fruit" : "Food "));
+        mprf("%-24s[c] Jewellery      [d] Book",
+            you.species == SP_CAT ? "" : "[a] Weapon  [b] Armour");
+        mprf("%-24s[g] Miscellaneous  [h] %s [i] Gold",
+            you.species == SP_CAT ? "" : "[e] Staff   [f] Wand",
+            you.religion == GOD_FEDHAS ? "Fruit" : "Food ");
         mpr("What kind of item would you like to acquire? ", MSGCH_PROMPT);
 
         const int keyin = tolower(get_ch());
@@ -1543,6 +1545,13 @@ bool acquirement(object_class_type class_wanted, int agent,
             }
 #endif
            break;
+        }
+
+        if (you.species == SP_CAT
+            && (class_wanted == OBJ_WEAPONS || class_wanted == OBJ_ARMOUR
+             || class_wanted == OBJ_STAVES  || class_wanted == OBJ_WANDS))
+        {
+            class_wanted = OBJ_RANDOM;
         }
     }
 

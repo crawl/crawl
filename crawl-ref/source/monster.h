@@ -229,7 +229,6 @@ public:
     bool      can_drown() const;
     bool      floundering() const;
     bool      extra_balanced() const;
-    bool      has_trachea() const;
     bool      can_pass_through_feat(dungeon_feature_type grid) const;
     bool      is_habitable_feat(dungeon_feature_type actual_grid) const;
     size_type body_size(size_part_type psize = PSIZE_TORSO,
@@ -307,6 +306,7 @@ public:
     void go_frenzy();
     bool berserk() const;
     bool frenzied() const;
+    bool has_lifeforce() const;
     bool can_mutate() const;
     bool can_safely_mutate() const;
     bool can_bleed() const;
@@ -345,6 +345,8 @@ public:
 
     flight_type flight_mode() const;
     bool is_levitating() const;
+    bool is_wall_clinging() const;
+    bool can_cling_to(const coord_def& p) const;
     bool invisible() const;
     bool can_see_invisible() const;
     bool visible_to(const actor *looker) const;

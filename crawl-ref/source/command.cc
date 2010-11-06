@@ -2432,7 +2432,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
                          CMD_ADJUST_INVENTORY, 0);
 
     _add_command(cols, 1, CMD_EVOKE_WIELDED, "eVoke power of wielded item", 2);
-    _add_command(cols, 1, CMD_EVOKE, "eVoke wand", 2);
+    _add_command(cols, 1, CMD_EVOKE, "eVoke wand and miscellaneous item", 2);
 
     _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Wear or Take off armour",
                          CMD_WEAR_ARMOUR, CMD_REMOVE_ARMOUR, 0);

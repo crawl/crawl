@@ -571,6 +571,14 @@ static bool map_matches_layout_type(const map_def &map)
             || map.has_tag("layout_" + env.level_layout_type));
 }
 
+static bool _map_matches_species(const map_def &map)
+{
+    if (you.species < 0 || you.species >= NUM_SPECIES)
+        return true;
+    return !map.has_tag("no_species_"
+           + lowercase_string(get_species_abbrev(you.species)));
+}
+
 const map_def *find_map_by_name(const std::string &name)
 {
     for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
@@ -715,6 +723,7 @@ bool map_selector::depth_selectable(const map_def &mapdef) const
             && !mapdef.has_tag("tutorial")
             && (!mapdef.has_tag_prefix("temple_")
                 || mapdef.has_tag_prefix("uniq_altar_"))
+            && _map_matches_species(mapdef)
             && (!check_layout || map_matches_layout_type(mapdef)));
 }
 
@@ -746,6 +755,7 @@ bool map_selector::accept(const map_def &mapdef) const
         return (mapdef.has_tag(tag)
                 && (!check_depth || !mapdef.has_depth()
                     || mapdef.is_usable_in(place))
+                && _map_matches_species(mapdef)
                 && map_matches_layout_type(mapdef)
                 && vault_unforbidden(mapdef));
 

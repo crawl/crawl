@@ -233,8 +233,7 @@ static bool _valid_weapon_swap(const item_def &item)
 
     // Some misc. items need to be wielded to be evoked.
     if (is_deck(item) || item.base_type == OBJ_MISCELLANY
-                         && item.sub_type != MISC_EMPTY_EBONY_CASKET
-                         && item.sub_type != MISC_RUNE_OF_ZOT)
+                         && item.sub_type == MISC_LANTERN_OF_SHADOWS)
     {
         return (true);
     }

@@ -898,7 +898,8 @@ static bool _siren_movement_effect(const monster* mons)
 
         const coord_def newpos = you.pos() + dir;
 
-        if (!in_bounds(newpos) || is_feat_dangerous(grd(newpos))
+        if (!in_bounds(newpos)
+            || (is_feat_dangerous(grd(newpos)) && !you.can_cling_to(newpos))
             || !you.can_pass_through_feat(grd(newpos)))
         {
             do_resist = true;

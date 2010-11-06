@@ -401,3 +401,23 @@ int debug_cap_stat(int stat)
             stat > 127 ? 127
                        : stat);
 }
+
+#ifdef DEBUG
+static FILE *debugf = 0;
+
+void debuglog(const char *format, ...)
+{
+    va_list args;
+
+    if (!debugf)
+    {
+        debugf = fopen("debuglog.txt", "w");
+        ASSERT(debugf);
+    }
+
+    va_start(args, format);
+    vfprintf(debugf, format, args);
+    va_end(args);
+    fflush(debugf);
+}
+#endif

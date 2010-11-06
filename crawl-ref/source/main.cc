@@ -2208,7 +2208,6 @@ static void _decrement_durations()
                                   "Your transformation is almost over."))
         {
             untransform();
-            you.duration[DUR_BREATH_WEAPON] = 0;
         }
     }
 
@@ -2764,6 +2763,8 @@ static void _player_reacts()
         in_a_cloud();
 
     slime_wall_damage(&you, you.time_taken);
+
+    you.check_clinging();
 
     if (you.duration[DUR_TELEPATHY] && player_in_mappable_area())
         detect_creatures(1 + you.duration[DUR_TELEPATHY] /
@@ -3688,8 +3689,9 @@ static void _do_berserk_no_combat_penalty(void)
         int berserk_delay_penalty = you.berserk_penalty * berserk_base_delay;
 
         you.duration[DUR_BERSERK] -= berserk_delay_penalty;
-        if (you.duration[DUR_BERSERK] < berserk_base_delay)
-            you.duration[DUR_BERSERK] = berserk_base_delay;
+        // Don't actually expire berserk until the next turn.
+        if (you.duration[DUR_BERSERK] < 1)
+            you.duration[DUR_BERSERK] = 1;
     }
     return;
 }                               // end do_berserk_no_combat_penalty()
@@ -3717,13 +3719,21 @@ static void _move_player(coord_def move)
         return;
     }
 
+    // Checking if player will be clinging
+    // Changing "cling" status at this moment allows proper further evaluations
+    // of grid dangerousness. But, if movement is terminated further in this
+    // function, you have to call you.check_clinging() to restore former status.
+    // Most probably can be done in less awkward way.
+    if (you.is_wall_clinging())
+        you.clinging = you.can_cling_to(you.pos() + move);
+
     // When confused, sometimes make a random move
     if (you.confused())
     {
         dungeon_feature_type dangerous = DNGN_FLOOR;
         for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
         {
-            if (is_feat_dangerous(grd(*ai))
+            if (is_feat_dangerous(grd(*ai)) && !you.can_cling_to(*ai)
                 && (dangerous == DNGN_FLOOR || grd(*ai) == DNGN_LAVA))
             {
                 dangerous = grd(*ai);
@@ -3740,6 +3750,7 @@ static void _move_player(coord_def move)
             if (!yesno(prompt.c_str(), false, 'n'))
             {
                 canned_msg(MSG_OK);
+                you.check_clinging();
                 return;
             }
         }
@@ -3760,6 +3771,7 @@ static void _move_player(coord_def move)
             apply_berserk_penalty = true;
             crawl_state.cancel_cmd_repeat();
 
+            you.check_clinging();
             return;
         }
     }
@@ -3768,7 +3780,10 @@ static void _move_player(coord_def move)
 
     // You can't walk out of bounds!
     if (!in_bounds(targ))
+    {
+        you.check_clinging();
         return;
+    }
 
     const dungeon_feature_type targ_grid = grd(targ);
     monster* targ_monst = monster_at(targ);
@@ -3820,6 +3835,7 @@ static void _move_player(coord_def move)
     {
         // [ds] Do we need this? Shouldn't it be false to start with?
         you.turn_is_over = false;
+        you.check_clinging();
         return;
     }
 
@@ -3859,6 +3875,7 @@ static void _move_player(coord_def move)
         {
             stop_running();
             you.turn_is_over = false;
+            you.check_clinging();
             return;
         }
 
@@ -3891,13 +3908,17 @@ static void _move_player(coord_def move)
     if (!targ_pass && grd(targ) == DNGN_TEMP_PORTAL && !attacking)
     {
         if (!_prompt_dangerous_portal(grd(targ)))
+        {
+            you.check_clinging();
             return;
+        }
 
         you.prev_move = move;
         move.reset();
         you.turn_is_over = true;
 
         entered_malign_portal(&you);
+        you.check_clinging();
         return;
     }
     else if (!targ_pass && !attacking)
@@ -3912,18 +3933,21 @@ static void _move_player(coord_def move)
         move.reset();
         you.turn_is_over = false;
         crawl_state.cancel_cmd_repeat();
+        you.check_clinging();
         return;
     }
     else if (beholder && !attacking)
     {
         mprf("You cannot move away from %s!",
             beholder->name(DESC_NOCAP_THE, true).c_str());
+        you.check_clinging();
         return;
     }
     else if (fmonger && !attacking)
     {
         mprf("You cannot move closer to %s!",
             fmonger->name(DESC_NOCAP_THE, true).c_str());
+        you.check_clinging();
         return;
     }
 
@@ -3965,6 +3989,7 @@ static void _move_player(coord_def move)
         did_god_conduct(DID_HASTY, 1, true);
     }
     _update_diag_counters();
+    you.check_clinging();
 }
 
 

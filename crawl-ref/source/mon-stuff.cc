@@ -3086,7 +3086,7 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
     loc = you.pos();
 
     // Don't move onto dangerous terrain.
-    if (is_feat_dangerous(grd(mons->pos())))
+    if (is_feat_dangerous(grd(mons->pos())) && !you.can_cling_to(mons->pos()))
     {
         canned_msg(MSG_UNTHINKING_ACT);
         return (false);
@@ -3704,7 +3704,7 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
                      killer_type killer, int killnum)
 {
     // Levitating/flying monsters don't make contact with the terrain.
-    if (mons->airborne())
+    if (mons->airborne() || mons->can_cling_to(oldpos))
         return;
 
     dungeon_feature_type grid = grd(mons->pos());

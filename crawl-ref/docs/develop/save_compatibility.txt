@@ -42,7 +42,7 @@ tag_construct_you in tags.cc.  Unfortunately, you can't just add
 marshall and unmarshall calls, since if you get an old save, the wrong
 value will be unmarshalled, synchronization is lost and things
 fall apart.  So first, add a new option to the tag_minor_version enum
-in tags.h.  Make sure the new option is at the end, and that you
+in tag-version.h.  Make sure the new option is at the end, and that you
 update TAG_MINOR_VERSION to correspond to the new option.  Now, any
 savefile created by the new code, or any later savefile, will have a
 minor version >= your new version number.  So, make the marshall and

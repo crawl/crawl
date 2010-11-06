@@ -3206,29 +3206,6 @@ int monster::res_water_drowning() const
     }
 }
 
-bool monster::has_trachea() const
-{
-    int mc = mons_base_type(this);
-
-    switch (mons_base_char(mc))
-    {
-    case 'a': // ants
-    case 'k': // killer bees
-    case 's': // spiders and insects
-    case 'y': // flying insects
-        return (true);
-
-    case 'b': // batty monsters
-        return (mc == MONS_BUTTERFLY);
-
-    case 'B': // beetles
-        return (mc != MONS_PROGRAM_BUG);
-
-    default:
-        return (false);
-    }
-}
-
 int monster::res_poison() const
 {
     int u = get_mons_resists(this).poison;
@@ -3411,6 +3388,16 @@ bool monster::is_levitating() const
 {
     // Checking class flags is not enough - see mons_flies().
     return (flight_mode() == FL_LEVITATE);
+}
+
+bool monster::is_wall_clinging() const
+{
+    return (0);
+}
+
+bool monster::can_cling_to(const coord_def& p) const
+{
+    return (0);
 }
 
 int monster::mons_species() const
@@ -3639,11 +3626,12 @@ void monster::pandemon_init()
     ev              = ghost->ev;
     flags           = MF_INTERESTING;
     // Don't make greased-lightning Pandemonium demons in the dungeon
-    // max speed = 17).  Demons in Pandemonium can be up to speed 24.
+    // max speed = 17).  Demons in Pandemonium can be up to speed 20,
+    // possibly with haste.
     if (you.level_type == LEVEL_DUNGEON)
         speed = (one_chance_in(3) ? 10 : 7 + roll_dice(2, 5));
     else
-        speed = (one_chance_in(3) ? 10 : 10 + roll_dice(2, 7));
+        speed = (one_chance_in(3) ? 10 : 8 + roll_dice(2, 6));
 
     speed_increment = 70;
 
@@ -5051,7 +5039,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     // Assumption: monster::res_fire has already been checked.
     case ENCH_STICKY_FLAME:
     {
-        if (feat_is_watery(grd(pos())) && !airborne())
+        if (feat_is_watery(grd(pos())) && !(airborne() || is_wall_clinging()))
         {
             if (mons_near(this) && visible_to(&you))
             {
@@ -5618,9 +5606,14 @@ bool monster::near_foe() const
     return (afoe && see_cell(afoe->pos()));
 }
 
-bool monster::can_mutate() const
+bool monster::has_lifeforce() const
 {
     return (holiness() == MH_NATURAL || holiness() == MH_PLANT);
+}
+
+bool monster::can_mutate() const
+{
+    return (has_lifeforce());
 }
 
 bool monster::can_safely_mutate() const
@@ -5844,7 +5837,7 @@ bool monster::do_shaft()
             return (false);
         }
 
-        if (airborne() || total_weight() == 0)
+        if (airborne() || is_wall_clinging() || total_weight() == 0)
         {
             if (mons_near(this))
             {

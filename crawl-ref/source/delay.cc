@@ -32,7 +32,6 @@
 #include "itemprop.h"
 #include "item_use.h"
 #include "it_use2.h"
-#include "it_use3.h"
 #include "macro.h"
 #include "message.h"
 #include "misc.h"
@@ -368,7 +367,6 @@ void stop_delay(bool stop_stair_travel)
     case DELAY_WEAPON_SWAP:       // one turn... too much trouble
     case DELAY_DROP_ITEM:         // one turn... only used for easy armour drops
     case DELAY_JEWELLERY_ON:      // one turn
-    case DELAY_EVOKE:             // one turn
     case DELAY_UNINTERRUPTIBLE:   // never stoppable
     default:
         break;
@@ -851,7 +849,6 @@ void handle_delay()
 
         case DELAY_JEWELLERY_ON:
         case DELAY_WEAPON_SWAP:
-        case DELAY_EVOKE:
             // These are 1-turn delays where the time cost is handled
             // in _finish_delay().
             // FIXME: get rid of this hack!
@@ -997,10 +994,6 @@ static void _finish_delay(const delay_queue_item &delay)
     case DELAY_RECITE:
         mprf(MSGCH_PLAIN, "You finish %s.",
              _get_zin_recite_speech("other", you.num_turns + delay.duration).c_str());
-        break;
-
-    case DELAY_EVOKE:
-        evoke_item(delay.parm1);
         break;
 
     case DELAY_PASSWALL:
@@ -1684,13 +1677,8 @@ static const char *delay_names[] =
     "not_delayed", "eat", "vampire_feed", "armour_on", "armour_off",
     "jewellery_on", "memorise", "butcher", "bottle_blood", "weapon_swap",
     "passwall", "drop_item", "multidrop", "ascending_stairs",
-#if TAG_MAJOR_VERSION == 31
     "descending_stairs", "recite", "run", "rest", "travel", "macro",
-    "macro_process_key", "interruptible", "uninterruptible", "evoke"
-#else
-    "descending_stairs", "recite", "evoke", "run", "rest", "travel", "macro",
     "macro_process_key", "interruptible", "uninterruptible"
-#endif
 };
 
 // Gets a delay given its name.

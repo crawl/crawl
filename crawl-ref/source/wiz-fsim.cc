@@ -449,7 +449,7 @@ static bool debug_fight_sim(int mindex, int missile_slot,
     }
 
     bool success = true;
-    unwind_var<FixedVector<uint8_t, 50> > skills(you.skills);
+    unwind_var<FixedVector<uint8_t, NUM_SKILLS> > skills(you.skills);
     unwind_var<FixedVector<int8_t, NUM_STATS> > stats(you.base_stats);
     unwind_var<int> xp(you.experience_level);
 

@@ -18,6 +18,7 @@ enum status_type
     STATUS_ROT,
     STATUS_SICK,
     STATUS_SPEED,
+    STATUS_CLINGING,
 };
 
 struct status_info

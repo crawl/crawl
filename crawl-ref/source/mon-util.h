@@ -352,7 +352,6 @@ bool mons_is_plant(const monster* mon);
 bool mons_eats_items(const monster* mon);
 bool mons_eats_corpses(const monster* mon);
 bool mons_eats_food(const monster* mon);
-bool mons_has_lifeforce(const monster* mon);
 monster_type mons_genus(int mc);
 monster_type mons_detected_base(monster_type mt);
 monster_type mons_species(int mc);

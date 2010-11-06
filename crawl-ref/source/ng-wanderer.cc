@@ -117,8 +117,7 @@ static skill_type _apt_weighted_choice(const skill_type * skill_array,
 
     for (unsigned i = 0; i < arr_size; ++i)
     {
-        int reciprocal_apt = (100 * 100) /
-                             species_skills(skill_array[i], you.species);
+        int reciprocal_apt = 100 / species_apt_factor(skill_array[i]);
         total_apt += reciprocal_apt;
     }
 
@@ -127,8 +126,7 @@ static skill_type _apt_weighted_choice(const skill_type * skill_array,
 
     for (unsigned i = 0; i < arr_size; ++i)
     {
-        int reciprocal_apt = (100 * 100) /
-                             species_skills(skill_array[i], you.species);
+        int reciprocal_apt = 100 / species_apt_factor(skill_array[i]);
         region_covered += reciprocal_apt;
 
         if (probe < region_covered)

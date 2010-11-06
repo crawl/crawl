@@ -200,7 +200,8 @@ static bool _check_moveto_trap(const coord_def& p, const std::string &move_verb)
                 return (false);
             }
         }
-        else if (new_grid != DNGN_TRAP_MAGICAL && you.airborne())
+        else if (new_grid != DNGN_TRAP_MAGICAL &&
+                 (you.airborne() || you.can_cling_to(p)))
         {
             // No prompt (shaft and mechanical traps
             // ineffective, if flying)
@@ -246,6 +247,7 @@ static bool _check_moveto_dangerous(const coord_def& p,
                                     const std::string move_verb)
 {
     if (you.can_swim() && feat_is_water(env.grid(p))
+        || you.can_cling_to(p)
         || !is_feat_dangerous(env.grid(p)))
     {
         return (true);
@@ -261,7 +263,7 @@ static bool _check_moveto_terrain(const coord_def& p,
                                   const std::string &move_verb)
 {
     // Only consider terrain if player is not levitating.
-    if (you.airborne())
+    if (you.airborne() || you.can_cling_to(p))
         return (true);
 
     return (_check_moveto_dangerous(p, move_verb));
@@ -281,7 +283,8 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     const dungeon_feature_type new_grid = env.grid(you.pos());
 
     // Terrain effects.
-    if (!you.airborne() && is_feat_dangerous(new_grid))
+    if (!(you.airborne() || you.can_cling_to(you.pos()))
+        && is_feat_dangerous(new_grid))
     {
         // Lava and dangerous deep water (ie not merfolk).
         const coord_def& entry = (stepped) ? old_pos : you.pos();
@@ -291,7 +294,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
             return;
     }
 
-    if (!you.airborne())
+    if (!you.airborne() && !you.can_cling_to(you.pos()))
     {
         if (you.species == SP_MERFOLK)
         {
@@ -1685,10 +1688,6 @@ int player_spec_death()
     // Staves
     sd += player_equip(EQ_STAFF, STAFF_DEATH);
 
-    // body armour:
-    if (player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI))
-        sd++;
-
     // species:
     if (you.species == SP_MUMMY)
     {
@@ -1772,10 +1771,6 @@ int player_spec_conj()
     // Staves
     sc += player_equip(EQ_STAFF, STAFF_CONJURATION);
 
-    // armour of the Archmagi
-    if (player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI))
-        sc++;
-
     return sc;
 }
 
@@ -1786,10 +1781,6 @@ int player_spec_ench()
     // Staves
     se += player_equip(EQ_STAFF, STAFF_ENCHANTMENT);
 
-    // armour of the Archmagi
-    if (player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI))
-        se++;
-
     return se;
 }
 
@@ -1799,10 +1790,6 @@ int player_spec_summ()
 
     // Staves
     ss += player_equip(EQ_STAFF, STAFF_SUMMONING);
-
-    // armour of the Archmagi
-    if (player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI))
-        ss++;
 
     return ss;
 }
@@ -2618,9 +2605,6 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
     if (you.religion == GOD_ASHENZARI && you.piety > piety_breakpoint(0))
         exp_gained = div_rand_round(exp_gained * (8 + ash_bondage_level()), 8);
 
-    if (player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI))
-        exp_gained = div_rand_round(exp_gained, 4);
-
     const unsigned int  old_exp   = you.experience;
     const int           old_avail = you.exp_available;
 
@@ -2963,12 +2947,6 @@ void level_change(bool skip_attribute_increase)
                 else if (you.experience_level == 6)
                 {
                     mpr("You can now bottle potions of blood from corpses.",
-                        MSGCH_INTRINSIC_GAIN);
-                }
-                else if (you.experience_level == 10)
-                {
-                    mpr("Cursed equipment will now meld into your body when "
-                        "transforming into a vampire bat.",
                         MSGCH_INTRINSIC_GAIN);
                 }
                 break;
@@ -3709,7 +3687,7 @@ void display_char_status()
         DUR_DIVINE_VIGOUR, DUR_DIVINE_STAMINA, DUR_BERSERK,
         STATUS_AIRBORNE, STATUS_NET, DUR_POISONING, STATUS_SICK,
         STATUS_ROT, STATUS_GLOW, DUR_CONFUSING_TOUCH, DUR_SURE_BLADE,
-        DUR_AFRAID, DUR_MIRROR_DAMAGE, DUR_SCRYING,
+        DUR_AFRAID, DUR_MIRROR_DAMAGE, DUR_SCRYING, STATUS_CLINGING,
     };
 
     status_info inf;
@@ -4541,37 +4519,26 @@ bool curare_hits_player(int death_source, int amount, const bolt &beam)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    poison_player(amount, beam.get_source_name(), beam.name);
+    if (player_res_poison() > 0)
+        return (false);
 
-    const bool res_poison = player_res_poison() > 0;
+    poison_player(amount, beam.get_source_name(), beam.name);
 
     int hurted = 0;
 
     if (you.res_asphyx() <= 0)
     {
-        // Players with tracheae who don't resist asphyxiation are
-        // paralysed instead of asphyxiated.
-        if (you.has_trachea())
-            potion_effect(POT_PARALYSIS, 2 + random2(4 + amount));
-        else
+        hurted = roll_dice(2, 6);
+
+        if (hurted)
         {
-            hurted = roll_dice(2, 6);
-
-            // Note that the hurtage is halved by poison resistance.
-            if (res_poison)
-                hurted /= 2;
-
-            if (hurted)
-            {
-                mpr("You have difficulty breathing.");
-                ouch(hurted, death_source, KILLED_BY_CURARE,
-                     "curare-induced apnoea");
-
-            }
-
-            potion_effect(POT_SLOWING, 2 + random2(4 + amount));
+            mpr("You have difficulty breathing.");
+            ouch(hurted, death_source, KILLED_BY_CURARE,
+                 "curare-induced apnoea");
         }
     }
+
+    potion_effect(POT_SLOWING, 2 + random2(4 + amount));
 
     return (hurted > 0);
 }
@@ -5102,6 +5069,7 @@ void player::init()
     skills.init(0);
     practise_skill.init(true);
     skill_points.init(0);
+    ct_skill_points.init(0);
     skill_order.init(MAX_SKILL_ORDER);
 
     sage_bonus_skill = NUM_SKILLS;
@@ -5131,7 +5099,7 @@ void player::init()
     branch_stairs.init(0);
 
     religion         = GOD_NO_GOD;
-    second_god_name.clear();
+    jiyva_second_name.clear();
     piety            = 0;
     piety_hysteresis = 0;
     gift_timeout     = 0;
@@ -5259,7 +5227,7 @@ player_save_info player_save_info::operator=(const player& rhs)
     species          = rhs.species;
     class_name       = rhs.class_name;
     religion         = rhs.religion;
-    second_god_name  = rhs.second_god_name;
+    jiyva_second_name  = rhs.jiyva_second_name;
 
     // [ds] Perhaps we should move game type to player?
     saved_game_type  = crawl_state.type;
@@ -5318,6 +5286,41 @@ player::~player()
 bool player::is_levitating() const
 {
     return (duration[DUR_LEVITATION]);
+}
+
+bool player::is_wall_clinging() const
+{
+    return (clinging);
+}
+
+bool player::can_cling_to(const coord_def& p) const
+{
+    if (!in_bounds(p))
+        return(false);
+
+    if (!is_wall_clinging())
+        return(false);
+
+    if (!can_pass_through_feat(grd(p)))
+        return (false);
+
+    for (radius_iterator ri(p, 1, C_CIRCLE, NULL, true);
+         ri; ++ri)
+    {
+        if (feat_is_wall(env.grid(*ri)))
+        {
+            for (radius_iterator ri2(*ri, 1, C_CIRCLE, NULL, false);
+                 ri2; ++ri2)
+            {
+                for (int i = 0, size = cling_to.size(); i < size; ++i)
+                {
+                    if (cling_to[i] == *ri2)
+                        return(true);
+                }
+            }
+        }
+    }
+    return(false);
 }
 
 bool player::in_water() const
@@ -6157,14 +6160,6 @@ void player::slow_down(actor *foe, int str)
     ::slow_player(str);
 }
 
-bool player::has_trachea() const
-{
-    if (attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER)
-        return (true);
-
-    return (false);
-}
-
 int player::has_claws(bool allow_tran) const
 {
     if (allow_tran)
@@ -6457,9 +6452,16 @@ void player::backlight()
     }
 }
 
+bool player::has_lifeforce() const
+{
+    const mon_holy_type holi = holiness();
+
+    return (holi == MH_NATURAL || holi == MH_PLANT);
+}
+
 bool player::can_mutate() const
 {
-    return (true);
+    return (has_lifeforce());
 }
 
 bool player::can_safely_mutate() const
@@ -6676,7 +6678,7 @@ bool player::do_shaft()
 
         handle_items_on_shaft(pos(), false);
 
-        if (airborne() || total_weight() == 0)
+        if (airborne() || is_wall_clinging() || total_weight() == 0)
             return (true);
 
         force_stair = DNGN_TRAP_NATURAL;
@@ -6747,4 +6749,20 @@ void player::goto_place(const level_id &lid)
         where_are_you = static_cast<branch_type>(lid.branch);
         absdepth0 = absdungeon_depth(lid.branch, lid.depth);
     }
+}
+
+void player::check_clinging()
+{
+    int walls = 0;
+    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER)
+    {
+        you.cling_to.clear();
+        for (radius_iterator ri(you.pos(), 1, C_CIRCLE, NULL, true); ri; ++ri)
+            if (feat_is_wall(env.grid(*ri)))
+            {
+                you.cling_to.push_back(*ri);
+                walls++;
+            }
+    }
+    you.clinging = (walls > 0) ? true : false;
 }

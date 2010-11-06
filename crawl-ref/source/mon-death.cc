@@ -56,7 +56,7 @@ void pikel_band_neutralise (bool check_tagged)
 
                 message_made = true;
             }
-            mi->flags |= MF_NAME_DESCRIPTOR | MF_NAME_REPLACE;
+            mi->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR;
             mi->mname = "freed slave";
             mons_pacify(*mi);
         }

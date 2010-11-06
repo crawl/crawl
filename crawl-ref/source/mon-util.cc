@@ -1172,13 +1172,17 @@ bool name_zombie(monster* mon, int mc, const std::string mon_name)
 {
     mon->mname = mon_name;
 
-    // Special case for Blork the orc: shorten his name to "Blork"
-    // to avoid mentions of e.g "Blork the orc the orc zombie".
+    // Special case for Blork the orc: shorten his name to "Blork" to
+    // avoid mentions of "Blork the orc the orc zombie".
     if (mc == MONS_BLORK_THE_ORC)
         mon->mname = "Blork";
-    // Also for the Lernaean hydra.
+    // Also for the Lernaean hydra: treat Lernaean as an adjective to
+    // avoid mentions of "the Lernaean hydra the X-headed hydra zombie".
     else if (mc == MONS_LERNAEAN_HYDRA)
-        mon->mname = "Lernaean hydra";
+    {
+        mon->mname = "Lernaean";
+        mon->flags |= MF_NAME_ADJECTIVE;
+    }
 
     if (starts_with(mon->mname, "shaped "))
         mon->flags |= MF_NAME_SUFFIX;
@@ -1334,13 +1338,6 @@ const char* mons_resist_string(const monster* mon)
         return "is unaffected";
     else
         return "resists";
-}
-
-bool mons_has_lifeforce(const monster* mon)
-{
-    const mon_holy_type holiness = mon->holiness();
-
-    return (holiness == MH_NATURAL || holiness == MH_PLANT);
 }
 
 bool mons_skeleton(int mc)
