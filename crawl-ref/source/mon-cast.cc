@@ -1011,6 +1011,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_AIR_ELEMENTALS:
     case SPELL_EARTH_ELEMENTALS:
     case SPELL_IRON_ELEMENTALS:
+    case SPELL_SUMMON_ELEMENTAL:
     case SPELL_KRAKEN_TENTACLES:
     case SPELL_BLINK:
     case SPELL_CONTROLLED_BLINK:
@@ -2567,19 +2568,39 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_FIRE_ELEMENTALS:
         if (summon_type == MONS_NO_MONSTER)
             summon_type = MONS_FIRE_ELEMENTAL;
+        // Deliberate fall through
+    case SPELL_SUMMON_ELEMENTAL:
+    {
+        if (summon_type == MONS_NO_MONSTER)
+            summon_type = static_cast<monster_type>(random_choose(
+                              MONS_EARTH_ELEMENTAL, MONS_FIRE_ELEMENTAL,
+                              MONS_AIR_ELEMENTAL, MONS_WATER_ELEMENTAL,
+                              -1));
 
         if (_mons_abjured(mons, monsterNearby))
             return;
 
-        sumcount2 = 1 + random2(4) + random2(mons->hit_dice / 7 + 1);
+        int dur;
+
+        if (spell_cast == SPELL_SUMMON_ELEMENTAL)
+        {
+            sumcount2 = 1;
+            dur = std::min(2 + mons->hit_dice / 10, 6);
+        }
+        else
+        {
+            sumcount2 = 1 + random2(4) + random2(mons->hit_dice / 7 + 1);
+            dur = 3;
+        }
 
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
             create_monster(
                 mgen_data(summon_type, SAME_ATTITUDE(mons), mons,
-                          3, spell_cast, mons->pos(), mons->foe, 0, god));
+                          dur, spell_cast, mons->pos(), mons->foe, 0, god));
         }
         return;
+    }
 
     case SPELL_SUMMON_RAKSHASA:
         sumcount2 = 1 + random2(4) + random2(mons->hit_dice / 7 + 1);

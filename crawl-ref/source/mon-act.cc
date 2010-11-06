@@ -1178,19 +1178,11 @@ static bool _handle_rod(monster *mons, bolt &beem)
             return true;
         }
         else if (rod.plus > 400)
-        { // could be implemented as a mon-cast.cc spell with this code
+        {
             mzap = SPELL_SUMMON_ELEMENTAL;
             _rod_fired_pre(mons, nice_spell);
             dprf("mon-act:_handle_rod():SPELL_SUMMON_ELEMENTAL");
-            const int duration = std::min(2 + mons->hit_dice / 10, 6);
-            const monster_type summon = static_cast<monster_type>(
-                  random_choose(
-                           MONS_EARTH_ELEMENTAL, MONS_FIRE_ELEMENTAL,
-                           MONS_AIR_ELEMENTAL, MONS_WATER_ELEMENTAL,
-                           -1));
-            create_monster(
-                mgen_data::hostile_at(summon, mons->name(DESC_NOCAP_A),
-                true, duration, 0, mons->pos()));
+            mons_cast(mons, beem, mzap, false);
             _rod_fired_post(mons, rod, weapon, beem, 400, was_visible);
             return true;
        }
