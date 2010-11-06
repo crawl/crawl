@@ -51,6 +51,8 @@
 #include "random.h"
 #include "religion.h"
 #include "shopping.h" // for item values
+#include "spl-book.h"
+#include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -1006,6 +1008,31 @@ static bool _rod_fired_post(monster* mons, item_def &rod, int idx, bolt &beem,
     return true;
 }
 
+static bool _get_rod_spell_and_cost(const item_def& rod, spell_type& spell,
+                                    int& cost)
+{
+    bool success = false;
+
+    for (int i = 0; i < SPELLBOOK_SIZE; ++i)
+    {
+        spell_type s = which_spell_in_book(rod, i);
+        int c = spell_difficulty(spell) * ROD_CHARGE_MULT;
+
+        if (s == SPELL_NO_SPELL || rod.plus < c)
+            continue;
+
+        success = true;
+
+        spell = s;
+        cost = c;
+
+        if (one_chance_in(SPELLBOOK_SIZE - i + 1))
+            break;
+    }
+
+    return (success);
+}
+
 // handle_rod
 // -- implemented as a dependent to handle_wand currently
 // (no wand + rod turns this way)
@@ -1024,179 +1051,63 @@ static bool _handle_rod(monster *mons, bolt &beem)
     // was the player visible when we started?
     bool was_visible = you.can_see(mons);
 
-    int rate;
     int overriding_power  = 0;
     bool nice_spell       = false;
     bool check_validity   = true;
     bool is_direct_effect = false;
     spell_type mzap       = SPELL_NO_SPELL;
+    int rate              = 0;
 
-    switch (rod.sub_type)
-    {
-    case STAFF_STRIKING:
-        if (rod.plus > 100 && mons->foe_distance() >= 2)
-        {
-            mzap = SPELL_STRIKING;
-            rate = 100;
-        }
-        break;
-    case STAFF_SMITING:
-        if (rod.plus > 400)
-        {
-            mzap = SPELL_SMITING;
-            overriding_power = 1;
-            nice_spell = true;
-            is_direct_effect = true;
-            rate = 400;
-        }
-        break;
-    case STAFF_DESTRUCTION_I:
-        if (rod.plus > 600)
-        {
-            if (mons->foe_distance() > 2)
-            {
-                mzap = SPELL_FIREBALL;
-                rate = 600;
-            }
-        }
-        else if (rod.plus > 500)
-        {
-            mzap = SPELL_BOLT_OF_FIRE;
-            rate = 500;
-        }
-        else if (rod.plus > 200)
-        {
-            mzap = SPELL_THROW_FLAME;
-            rate = 200;
-        }
-        break;
-    case STAFF_DESTRUCTION_II:
-        if (rod.plus > 700)
-        {
-            if (mons->foe_distance() > 2)
-            {
-                mzap = SPELL_FREEZING_CLOUD;
-                rate = 700;
-            }
-        }
-        else if (rod.plus > 400)
-        {
-            mzap = SPELL_BOLT_OF_COLD;
-            rate = 400;
-        }
-        else if (rod.plus > 200)
-        {
-            mzap = SPELL_THROW_FROST;
-            rate = 200;
-        }
-        break;
-    case STAFF_DESTRUCTION_III:
-        if (rod.plus > 600)
-        {
-            if (mons->foe_distance() > 2)
-                mzap = SPELL_FIREBALL;
-            if (coinflip())
-                mzap = SPELL_IRON_SHOT;
-            else
-                mzap = SPELL_LIGHTNING_BOLT;
-            rate = 600;
-        }
-        break;
-    case STAFF_DESTRUCTION_IV:
-        if (rod.plus > 1000)
-        {
-            if (coinflip())
-                mzap = SPELL_BOLT_OF_MAGMA;
-            else
-                mzap = SPELL_BOLT_OF_COLD;
-            rate = 500;
-        }
-        else if (rod.plus > 500)
-        {
-            switch (random2(3))
-            {
-            case 0:
-                mzap = SPELL_BOLT_OF_MAGMA;
-                rate = 500;
-                break;
-            case 1:
-                mzap = SPELL_BOLT_OF_COLD;
-                rate = 500;
-                break;
-            default:
-                mzap = SPELL_BOLT_OF_INACCURACY;
-                rate = 300;
-                break;
-            }
-        }
-        else if (rod.plus > 300)
-        {
-            mzap = SPELL_BOLT_OF_INACCURACY;
-            rate = 300;
-        }
-        break;
-    case STAFF_DEMONOLOGY: // ouch
-        if (rod.plus > 500)
-        {
-            mzap = SPELL_SUMMON_DEMON;
-            _rod_fired_pre(mons, nice_spell);
-            dprf("mon-act:_handle_rod():SPELL_SUMMON_DEMON");
-            mons_cast(mons, beem, mzap, false);
-            _rod_fired_post(mons, rod, weapon, beem, 500, was_visible);
-            return (true);
-        }
-        else if (rod.plus > 300)
-        {
-            mzap = SPELL_CALL_IMP;
-            _rod_fired_pre(mons, nice_spell);
-            dprf("mon-act:_handle_rod():SPELL_CALL_IMP");
-            mons_cast(mons, beem, mzap, false);
-            _rod_fired_post(mons, rod, weapon, beem, 300, was_visible);
-            return (true);
-        }
-        break;
-    case STAFF_VENOM:
-        if (rod.plus > 600)
-        {
-            if (mons->foe_distance() > 2)
-                mzap = SPELL_POISONOUS_CLOUD;
-            else
-                mzap = SPELL_POISON_ARROW;
-            rate = 600;
-        }
-        else if (rod.plus > 500)
-        {
-            mzap = SPELL_VENOM_BOLT;
-            rate = 500;
-        }
-        break;
-    case STAFF_SPELL_SUMMONING:
-        if (rod.plus > 600)
-        {
-            mzap = SPELL_SUMMON_SWARM;
-            _rod_fired_pre(mons, nice_spell);
-            dprf("mon-act:_handle_rod():SPELL_SUMMON_SWARM");
-            mons_cast(mons, beem, mzap, false);
-            _rod_fired_post(mons, rod, weapon, beem, 600, was_visible);
-            return (true);
-        }
-        else if (rod.plus > 400)
-        {
-            mzap = SPELL_SUMMON_ELEMENTAL;
-            _rod_fired_pre(mons, nice_spell);
-            dprf("mon-act:_handle_rod():SPELL_SUMMON_ELEMENTAL");
-            mons_cast(mons, beem, mzap, false);
-            _rod_fired_post(mons, rod, weapon, beem, 400, was_visible);
-            return (true);
-       }
-       break;
-    case STAFF_WARDING: // all temporary self-status effects
-    default:
-        break;
-    }
-
-    if (mzap == SPELL_NO_SPELL)
+    if (!_get_rod_spell_and_cost(rod, mzap, rate))
         return (false);
+
+    // XXX: There should be a better way to do this than hardcoding
+    // monster-castable rod spells!
+    switch (mzap)
+    {
+    case SPELL_BOLT_OF_COLD:
+    case SPELL_BOLT_OF_FIRE:
+    case SPELL_BOLT_OF_INACCURACY:
+    case SPELL_BOLT_OF_MAGMA:
+    case SPELL_IRON_SHOT:
+    case SPELL_LIGHTNING_BOLT:
+    case SPELL_POISON_ARROW:
+    case SPELL_THROW_FLAME:
+    case SPELL_THROW_FROST:
+    case SPELL_VENOM_BOLT:
+        break;
+
+    case SPELL_STRIKING:
+        if (mons->foe_distance() < 2)
+            return (false);
+        break;
+
+    case SPELL_FIREBALL:
+    case SPELL_FREEZING_CLOUD:
+    case SPELL_POISONOUS_CLOUD:
+        if (mons->foe_distance() <= 2)
+            return (false);
+        break;
+
+    case SPELL_SMITING:
+        overriding_power = 1;
+        nice_spell = true;
+        is_direct_effect = true;
+        break;
+
+    case SPELL_CALL_IMP:
+    case SPELL_SUMMON_DEMON:
+    case SPELL_SUMMON_ELEMENTAL:
+    case SPELL_SUMMON_SWARM:
+        _rod_fired_pre(mons, nice_spell);
+        dprf("using rod with summoning spell");
+        mons_cast(mons, beem, mzap, false);
+        _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
+        return (true);
+
+    default:
+        return (false);
+    }
 
     bool zap = false;
 
