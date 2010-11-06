@@ -35,9 +35,11 @@ void init_skill_order();
 void calc_mp();
 void calc_hp();
 
-int species_skills(skill_type skill, species_type species);
+int species_apt(skill_type skill, species_type species = you.species);
+float species_apt_factor(skill_type sk, species_type sp = you.species);
 unsigned int skill_exp_needed(int lev);
-unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp = you.species);
+unsigned int skill_exp_needed(int lev, skill_type sk,
+                              species_type sp = you.species);
 void show_skills();
 void wield_warning(bool newWeapon = true);
 bool is_invalid_skill(skill_type skill);

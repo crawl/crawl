@@ -88,4 +88,33 @@ public:
     radius_iterator(pos, 1, C_SQUARE, NULL, _exclude_center) {}
 };
 
+/* equidistant_iterator: Iterates over coordinates in integer ranges.  Unlike other
+ *                  iterators, it tries hard to not favorize any particular
+ *                  direction (unless fair = false, when it saves some CPU).
+ */
+class equidistant_iterator :
+    public std::iterator<std::forward_iterator_tag, coord_def>
+{
+public:
+    equidistant_iterator(const coord_def& _center,
+                    bool _fair = true,
+                    bool exclude_center = true,
+                    int _max_radius = 107);
+    operator bool() const;
+    coord_def operator *() const;
+    const coord_def* operator->() const;
+
+    const equidistant_iterator& operator ++();
+    equidistant_iterator operator ++(int);
+private:
+    coord_def center, current;
+    std::vector<coord_def> lists[3], *vcur, *vnear, *vfar;
+    int radius, max_radius;
+    int threshold;
+    unsigned int icur, iend;
+    bool fair;
+    bool advance();
+    void push_neigh(coord_def from, int dx, int dy);
+};
+
 #endif

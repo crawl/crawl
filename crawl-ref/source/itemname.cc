@@ -116,7 +116,7 @@ std::string item_def::name(description_level_type descrip,
     if (terse && descrip != DESC_DBNAME)
         descrip = DESC_PLAIN;
 
-    // note: only the 32 lower bits of monste flags are passed,
+    // note: only the 32 lower bits of monster flags are passed,
     // as we don't have support for 64 bit props
     iflags_t corpse_flags;
 
@@ -2720,9 +2720,6 @@ bool is_bad_item(const item_def &item, bool temp)
         }
     case OBJ_MISCELLANY:
         return (item.sub_type == MISC_CRYSTAL_BALL_OF_FIXATION);
-    case OBJ_ARMOUR:
-        return (you.religion == GOD_TROG
-                && get_armour_ego_type(item) == SPARM_ARCHMAGI);
 
     default:
         return (false);
@@ -2782,9 +2779,6 @@ bool is_dangerous_item(const item_def &item, bool temp)
         // The Tome of Destruction is certainly risky.
         return (item.sub_type == BOOK_DESTRUCTION
                 || is_dangerous_spellbook(item));
-
-    case OBJ_ARMOUR:
-        return (get_armour_ego_type(item) == SPARM_ARCHMAGI);
 
     default:
         return (false);

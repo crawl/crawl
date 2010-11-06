@@ -978,7 +978,7 @@ static void tag_construct_char(writer &th)
     marshallByte(th, you.experience_level);
     marshallString(th, you.class_name, 30);
     marshallByte(th, you.religion);
-    marshallString(th, you.second_god_name);
+    marshallString(th, you.jiyva_second_name);
 
     marshallByte(th, you.wizard);
 }
@@ -1073,12 +1073,13 @@ static void tag_construct_you(writer &th)
         marshallShort(th, you.ability_letter_table[i]);
 
     // how many skills?
-    marshallByte(th, 50);
-    for (j = 0; j < 50; ++j)
+    marshallByte(th, NUM_SKILLS);
+    for (j = 0; j < NUM_SKILLS; ++j)
     {
         marshallByte(th, you.skills[j]);
         marshallByte(th, you.practise_skill[j]);
         marshallInt(th, you.skill_points[j]);
+        marshallInt(th, you.ct_skill_points[j]);
         marshallByte(th, you.skill_order[j]);   // skills ordering
     }
 
@@ -1549,7 +1550,7 @@ static void tag_read_char(reader &th, int minorVersion)
     you.experience_level  = unmarshallByte(th);
     unmarshallCString(th, you.class_name, 30);
     you.religion          = static_cast<god_type>(unmarshallByte(th));
-    you.second_god_name   = unmarshallString(th);
+    you.jiyva_second_name   = unmarshallString(th);
 
     you.wizard            = unmarshallBoolean(th);
 }
@@ -1669,7 +1670,10 @@ static void tag_read_you(reader &th, int minorVersion)
 
     // how many skills?
     count = unmarshallByte(th);
-    ASSERT(count >= 0 && count <= (int)you.skills.size());
+#if TAG_MAJOR_VERSION == 31
+    if (minorVersion < TAG_MINOR_ENCH_SPLIT)
+        count++;
+#endif
     for (j = 0; j < count; ++j)
     {
 #if TAG_MAJOR_VERSION == 31
@@ -1678,24 +1682,30 @@ static void tag_read_you(reader &th, int minorVersion)
             you.skills[j]         = you.skills[SK_HEXES];
             you.practise_skill[j] = you.practise_skill[SK_HEXES];
             you.skill_points[j]   = you.skill_points[SK_HEXES];
+            you.ct_skill_points[j]= you.ct_skill_points[SK_HEXES];
             you.skill_order[j]    = you.skill_order[SK_HEXES];
             continue;
         }
+
+        if (j >= NUM_SKILLS && minorVersion < TAG_MINOR_CROSSTRAIN)
+        {
+            unmarshallByte(th);
+            unmarshallByte(th);
+            unmarshallInt(th);
+            unmarshallByte(th);
+            continue;
+        }
 #endif
-        you.skills[j]         = unmarshallByte(th);
-        you.practise_skill[j] = unmarshallByte(th);
-        you.skill_points[j]   = unmarshallInt(th);
-        you.skill_order[j]    = unmarshallByte(th);
-    }
+
+        you.skills[j]          = unmarshallByte(th);
+        you.practise_skill[j]  = unmarshallByte(th);
+        you.skill_points[j]    = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 31
-    if (minorVersion < TAG_MINOR_ENCH_SPLIT)
-    {
-        unmarshallByte(th);
-        unmarshallByte(th);
-        unmarshallInt(th);
-        unmarshallByte(th);
-    }
+        if (minorVersion >= TAG_MINOR_CROSSTRAIN)
 #endif
+        you.ct_skill_points[j] = unmarshallInt(th);
+        you.skill_order[j]     = unmarshallByte(th);
+    }
 
     // Set up you.total_skill_points and you.skill_cost_level.
     calc_total_skill_points();

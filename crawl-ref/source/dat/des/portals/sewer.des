@@ -673,8 +673,8 @@ NAME:   sewer_sea
 TAGS:   sewer no_item_gen no_monster_gen no_rotate no_pool_fixup
 ORIENT: encompass
 MONS:   rat w:3 / grey rat w:1 / nothing w:1, rat / grey rat / green rat
-KMONS:  G = mermaid hd:3 name:malarious name_adjective name_descriptor
-KMONS:  H = siren hd:3 name:sickly name_adjective name_descriptor
+KMONS:  G = mermaid hd:3 name:malarious name_adjective
+KMONS:  H = siren hd:3 name:sickly name_adjective
 KMONS:  hJ = giant newt / small snake / snake / nothing w:2
 KMONS:  g = giant newt / small snake / nothing w:3
 KFEAT:  gsh = W

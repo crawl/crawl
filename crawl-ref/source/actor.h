@@ -60,8 +60,6 @@ public:
     // Returns true if the actor is exceptionally well balanced.
     virtual bool      extra_balanced() const = 0;
 
-    virtual bool      has_trachea() const = 0;
-
     virtual int       get_experience_level() const = 0;
 
     virtual bool can_pass_through_feat(dungeon_feature_type grid) const = 0;
@@ -164,6 +162,7 @@ public:
     virtual bool is_icy() const = 0;
     virtual bool is_fiery() const = 0;
     virtual bool is_skeletal() const = 0;
+    virtual bool has_lifeforce() const = 0;
     virtual bool can_mutate() const = 0;
     virtual bool can_safely_mutate() const = 0;
     virtual bool can_bleed() const = 0;
@@ -242,6 +241,8 @@ public:
 
     virtual flight_type flight_mode() const = 0;
     virtual bool is_levitating() const = 0;
+    virtual bool is_wall_clinging() const = 0;
+    virtual bool can_cling_to(const coord_def& p) const = 0;
     virtual bool airborne() const;
 
     virtual bool paralysed() const = 0;

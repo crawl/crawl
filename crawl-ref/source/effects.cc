@@ -431,7 +431,8 @@ void immolation(int pow, int caster, coord_def where, bool known,
 static bool _conduct_electricity_affects_actor(const bolt& beam,
                                                const actor* victim)
 {
-    return (victim->alive() && victim->res_elec() <= 0 && !victim->airborne());
+    return (victim->alive() && victim->res_elec() <= 0
+            && !(victim->airborne() || victim->is_wall_clinging()));
 }
 
 static bool _conduct_electricity_damage(bolt &beam, actor* victim,

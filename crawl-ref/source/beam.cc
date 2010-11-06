@@ -1642,7 +1642,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
 
                 // Poison arrow can poison any living thing regardless of
                 // poison resistance. - bwr
-                if (mons_has_lifeforce(mons))
+                if (mons->has_lifeforce())
                     poison_monster(mons, pbolt.whose_kill(), 2, true);
             }
         }
@@ -1992,34 +1992,29 @@ void bolt::apply_bolt_petrify(monster* mons)
 static bool _curare_hits_monster(actor *agent, monster* mons,
                                  kill_category who, int levels)
 {
+    if (!mons->alive())
+        return (false);
+
+    if (mons->res_poison() > 0)
+        return (false);
+
     poison_monster(mons, who, levels, false);
 
     int hurted = 0;
 
     if (!mons->res_asphyx())
     {
-        // Monsters with tracheae who don't resist asphyxiation are
-        // paralysed instead of asphyxiated.
-        if (mons->has_trachea())
-            enchant_monster_with_flavour(mons, agent, BEAM_PARALYSIS);
-        else
+        hurted = roll_dice(2, 6);
+
+        if (hurted)
         {
-            hurted = roll_dice(2, 6);
-
-            // Note that the hurtage is halved by poison resistance.
-            if (mons->res_poison() > 0)
-                hurted /= 2;
-
-            if (hurted)
-            {
-                simple_monster_message(mons, " convulses.");
-                mons->hurt(agent, hurted, BEAM_POISON);
-            }
-
-            if (mons->alive())
-                enchant_monster_with_flavour(mons, agent, BEAM_SLOW);
+            simple_monster_message(mons, " convulses.");
+            mons->hurt(agent, hurted, BEAM_POISON);
         }
     }
+
+    if (mons->alive())
+        enchant_monster_with_flavour(mons, agent, BEAM_SLOW);
 
     // Deities take notice.
     if (who == KC_YOU)

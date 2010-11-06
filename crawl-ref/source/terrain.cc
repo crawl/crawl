@@ -1369,7 +1369,8 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
 
     if (escape)
     {
-        if (in_bounds(empty) && !is_feat_dangerous(grd(empty)))
+        if (in_bounds(empty)
+            && (!is_feat_dangerous(grd(empty)) || you.can_cling_to(empty)))
         {
             mpr("You manage to scramble free!");
             move_player_to_grid(empty, false, false);

@@ -221,8 +221,8 @@ static void _swim_or_move_energy(monster* mon)
 
     // FIXME: Replace check with mons_is_swimming()?
     mon->lose_energy((feat >= DNGN_LAVA && feat <= DNGN_SHALLOW_WATER
-                       && !mon->airborne()) ? EUT_SWIM
-                                            : EUT_MOVE);
+                      && !(mon->airborne() || mon->is_wall_clinging())) ? EUT_SWIM
+                                                                        : EUT_MOVE);
 }
 
 // Check up to eight grids in the given direction for whether there's a
@@ -1139,8 +1139,8 @@ static bool _handle_rod(monster *mons, bolt &beem)
             _rod_fired_pre(mons, nice_spell);
             dprf("mon-act:_handle_rod():SPELL_SUMMON_DEMON");
             mons_cast(mons, beem, mzap, false);
-           _rod_fired_post(mons, rod, weapon, beem, 500, was_visible);
-           return true;
+            _rod_fired_post(mons, rod, weapon, beem, 500, was_visible);
+            return true;
         }
         else if (rod.plus > 300)
         {
@@ -1213,8 +1213,8 @@ static bool _handle_rod(monster *mons, bolt &beem)
 
     dprf("using rod with power %d", power);
 
-    bolt theBeam      = mons_spells(mons, mzap, power, check_validity);
-    beem = _generate_item_beem(beem, theBeam, mons);
+    bolt theBeam = mons_spells(mons, mzap, power, check_validity);
+    beem         = _generate_item_beem(beem, theBeam, mons);
 
     if (mons->confused())
     {
