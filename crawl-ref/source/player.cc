@@ -5069,6 +5069,7 @@ void player::init()
     skills.init(0);
     practise_skill.init(true);
     skill_points.init(0);
+    ct_skill_points.init(0);
     skill_order.init(MAX_SKILL_ORDER);
 
     sage_bonus_skill = NUM_SKILLS;

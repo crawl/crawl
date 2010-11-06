@@ -1073,12 +1073,13 @@ static void tag_construct_you(writer &th)
         marshallShort(th, you.ability_letter_table[i]);
 
     // how many skills?
-    marshallByte(th, 50);
-    for (j = 0; j < 50; ++j)
+    marshallByte(th, NUM_SKILLS);
+    for (j = 0; j < NUM_SKILLS; ++j)
     {
         marshallByte(th, you.skills[j]);
         marshallByte(th, you.practise_skill[j]);
         marshallInt(th, you.skill_points[j]);
+        marshallInt(th, you.ct_skill_points[j]);
         marshallByte(th, you.skill_order[j]);   // skills ordering
     }
 
@@ -1671,10 +1672,24 @@ static void tag_read_you(reader &th, int minorVersion)
     count = unmarshallByte(th);
     for (j = 0; j < count; ++j)
     {
-        you.skills[j]         = unmarshallByte(th);
-        you.practise_skill[j] = unmarshallByte(th);
-        you.skill_points[j]   = unmarshallInt(th);
-        you.skill_order[j]    = unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 31
+        if (j >= NUM_SKILLS)
+        {
+            unmarshallByte(th);
+            unmarshallByte(th);
+            unmarshallInt(th);
+            unmarshallByte(th);
+            continue;
+        }
+#endif
+        you.skills[j]          = unmarshallByte(th);
+        you.practise_skill[j]  = unmarshallByte(th);
+        you.skill_points[j]    = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 31
+        if (minorVersion >= TAG_MINOR_CROSSTRAIN)
+#endif
+        you.ct_skill_points[j] = unmarshallInt(th);
+        you.skill_order[j]     = unmarshallByte(th);
     }
 
     // Set up you.total_skill_points and you.skill_cost_level.

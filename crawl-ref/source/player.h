@@ -116,10 +116,11 @@ public:
   int lives;
   int deaths;
 
-  FixedVector<uint8_t, 50>  skills;
-  FixedVector<bool, 50>  practise_skill;
-  FixedVector<unsigned int, 50>   skill_points;
-  FixedVector<uint8_t, 50>  skill_order;
+  FixedVector<uint8_t, NUM_SKILLS>  skills;
+  FixedVector<bool, NUM_SKILLS>  practise_skill;
+  FixedVector<unsigned int, NUM_SKILLS>   skill_points;
+  FixedVector<unsigned int, NUM_SKILLS>   ct_skill_points;
+  FixedVector<uint8_t, NUM_SKILLS>  skill_order;
 
   skill_type sage_bonus_skill;  // If Sage is in effect, which skill it affects.
   int sage_bonus_degree;        // How much bonus XP to give in that skill.

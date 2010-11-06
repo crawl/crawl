@@ -2443,14 +2443,16 @@ bool ashenzari_transfer_knowledge()
          skill_name(fsk), skill_name(tsk));
 
     const float penalty = 0.9; // 10% XP penalty
-    int fsk_points = you.skill_points[fsk];
+    const unsigned int min_transfer = 1000;
+    unsigned int fsk_points = you.skill_points[fsk];
     unsigned int exp_pool = you.exp_available;
-    int skp = 0; // skill points transfered.
-    int skp_max; // maximum number of skill points transferable.
+    unsigned int skp_lost   = 0; // skill points lost in fsk.
+    unsigned int skp_gained = 0; // skill points gained in tsk.
+    unsigned int skp_max; // maximum number of skill points transferable.
     bool tsk_practise = you.practise_skill[tsk];
 
-    skp_max = fsk_points / 2;
-    skp_max = std::max(skp_max, 1000);
+    skp_max = (fsk_points - you.ct_skill_points[fsk]) / 2;
+    skp_max = std::max(skp_max, min_transfer);
     if (skp_max > fsk_points)
         skp_max = fsk_points;
 
@@ -2459,22 +2461,28 @@ bool ashenzari_transfer_knowledge()
     int train_count = skp_max / 10;
 
     you.practise_skill[tsk] = true;
-    while (skp < skp_max && train_count > 0)
+    while (skp_gained < skp_max && train_count > 0)
     {
         you.exp_available = 250;
-        skp += exercise(tsk, 1, false);
+        skp_gained += exercise(tsk, 1, false);
         train_count--;
     }
     you.practise_skill[tsk] = tsk_practise;
 
-    change_skill_points(fsk, -skp / penalty, true);
+    skp_lost = skp_gained / penalty;
+    int double_cost = std::min(skp_lost, you.ct_skill_points[fsk]);
+    you.ct_skill_points[fsk] -= double_cost;
+    skp_lost += double_cost;
+
+    change_skill_points(fsk, -skp_lost, true);
     change_skill_points(tsk, 0, true); // just update the level
 
     // We restore the XP pool
     you.exp_available = exp_pool;
 
     dprf("Maximum skill points transferable: %d", skp_max);
-    dprf("skill points transfered: %d", skp);
+    dprf("skill %s lost %d points", skill_name(fsk), skp_lost);
+    dprf("skill %s gained %d points", skill_name(tsk), skp_gained);
 
     return true;
 }

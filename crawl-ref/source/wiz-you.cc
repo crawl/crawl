@@ -392,6 +392,7 @@ void wizard_set_skill_level(void)
             const int points = skill_exp_needed(amount, skill);
 
             you.skill_points[skill] = points + 1;
+            you.ct_skill_points[skill] = 0;
             you.skills[skill] = amount;
 
             calc_total_skill_points();
@@ -463,6 +464,7 @@ void wizard_set_all_skills(void)
             const int points = skill_exp_needed(amount, sk);
 
             you.skill_points[sk] = points + 1;
+            you.ct_skill_points[sk] = 0;
             you.skills[sk] = amount;
         }
 
