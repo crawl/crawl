@@ -223,9 +223,6 @@ static void _change_skill_level(skill_type exsk, int n)
         maybe_identify_staff(*you.weapon());
 
     // TODO: also identify rings of wizardry.
-
-    // Draconian maturation.
-    update_player_symbol();
 }
 
 static void _check_skill_level_change(skill_type sk)
