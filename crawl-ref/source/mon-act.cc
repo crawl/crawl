@@ -1005,7 +1005,7 @@ static bool _rod_fired_post(monster* mons, item_def &rod, int idx, bolt &beem,
     }
 
     mons->lose_energy(EUT_ITEM);
-    return true;
+    return (true);
 }
 
 static bool _get_rod_spell_and_cost(const item_def& rod, spell_type& spell,
