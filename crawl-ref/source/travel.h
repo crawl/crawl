@@ -7,8 +7,8 @@
 #define TRAVEL_H
 
 #include "externs.h"
-
 #include "exclude.h"
+#include "map_knowledge.h"
 
 // For travel_distance_col and travel_distance_grid_t
 #include "travel_defs.h"
