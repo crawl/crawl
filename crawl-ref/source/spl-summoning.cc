@@ -748,7 +748,7 @@ bool summon_berserker(int pow, god_type god, int spell,
     if (force_hostile)
         mg.non_actor_summoner = "the rage of " + god_name(god, false);
 
-    int mons = create_monster(mg);
+    const int mons = create_monster(mg);
 
     if (mons == -1)
         return (false);
@@ -1498,7 +1498,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
 
     mg.non_actor_summoner = nas;
 
-    int mons = create_monster(mg);
+    const int mons = create_monster(mg);
 
     if (mon_index != NULL)
         *mon_index = mons;
