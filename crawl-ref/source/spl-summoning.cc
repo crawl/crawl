@@ -1782,8 +1782,8 @@ bool cast_twisted_resurrection(int pow, god_type god)
     if (total_mass >= 400 + roll_dice(2, 500)
         && how_many_corpses >= (coinflip() ? 3 : 2))
     {
-        mon = (total_mass > 500 + roll_dice(3, 1000)) ? MONS_ABOMINATION_LARGE
-                                                      : MONS_ABOMINATION_SMALL;
+        mon = (total_mass >= 500 + roll_dice(3, 1000)) ? MONS_ABOMINATION_LARGE
+                                                       : MONS_ABOMINATION_SMALL;
 
         colour = (unrotted == how_many_corpses)          ? LIGHTRED :
                  (unrotted >= random2(how_many_corpses)) ? RED
