@@ -1735,6 +1735,107 @@ bool cast_simulacrum(int pow, god_type god)
     return (count > 0);
 }
 
+static int _make_undead_abomination(int pow, god_type god = GOD_NO_GOD,
+                                    int mass = -1, int strength = -1,
+                                    bool force_hostile = false,
+                                    monster_type force_type = MONS_NO_MONSTER)
+{
+    const int min_large_mass = 500 + roll_dice(3, 1000);
+    const int min_small_mass = 400 + roll_dice(2, 500);
+
+    // mass:
+    // -1 picks a random abomination mass.
+    // min_small_mass or greater forces mass when applicable.
+    if (mass != -1 && mass < min_small_mass)
+        return (-1);
+
+    // strength:
+    // -1 picks a random abomination strength.
+    //  0 forces low strength.
+    //  1 forces medium strength.
+    //  2 forces high strength.
+    if (strength != -1 && (strength < 0 || strength > 2))
+        return (-1);
+
+    // force_type:
+    // MONS_NO_MONSTER picks an abomination size based on mass.
+    // MONS_ABOMINATION_LARGE forces a large abomination.
+    // MONS_ABOMINATION_SMALL forces a small abomination.
+    if (force_type != MONS_NO_MONSTER
+        && force_type != MONS_ABOMINATION_LARGE
+        && force_type != MONS_ABOMINATION_SMALL)
+    {
+        return (-1);
+    }
+
+    if (mass == -1)
+        mass = coinflip() ? min_large_mass : min_small_mass;
+
+    if (force_type == MONS_NO_MONSTER)
+    {
+        force_type = mass >= min_large_mass ? MONS_ABOMINATION_LARGE
+                                            : MONS_ABOMINATION_SMALL;
+    }
+    else if (force_type == MONS_ABOMINATION_LARGE)
+        mass = std::max(min_large_mass, mass);
+    else
+        mass = std::max(min_small_mass, mass);
+
+    dprf("Mass for abomination: %d", mass);
+
+    // This is what the old statement pretty much boils down to;
+    // the average will be approximately 10 * pow (or about 1000
+    // at the practical maximum).  That's the same as the mass
+    // of a hippogriff, a spiny frog, or a steam dragon.  Thus,
+    // material components are far more important to this spell. - bwr
+    mass += roll_dice(20, pow);
+
+    dprf("Mass for abomination with power bonus: %d", mass);
+
+    if (strength == -1)
+        strength = random2(3);
+
+    const uint8_t colour = (strength == 2) ? LIGHTRED :
+                           (strength == 1) ? RED
+                                           : BROWN;
+
+    mgen_data mg(force_type, !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
+                 !force_hostile ? &you : 0, 0, 0, you.pos(),
+                 MHITYOU, MG_FORCE_BEH, god, MONS_NO_MONSTER, 0, colour);
+
+    const int retval = create_monster(mg);
+
+    if (retval == -1)
+        return (-1);
+
+    monster* mon = &menv[retval];
+
+    // Mark this abomination as undead.
+    mon->flags |= MF_FAKE_UNDEAD;
+
+    if (force_type == MONS_ABOMINATION_LARGE)
+    {
+        mon->hit_dice = 8 + mass / ((strength == 2) ?  500 :
+                                    (strength == 1) ? 1000
+                                                    : 2500);
+        mon->hit_dice = std::min(30, mon->hit_dice);
+
+        mon->max_hit_points = hit_points(mon->hit_dice, 2, 5);
+        mon->max_hit_points = std::max(mon->max_hit_points, 1);
+        mon->hit_points     = mon->max_hit_points;
+
+        if (strength == 2)
+        {
+            mon->ac += mass / 1000;
+            mon->ac  = std::min(20, mon->ac);
+        }
+    }
+
+    player_angers_monster(mon);
+
+    return (retval);
+}
+
 bool cast_twisted_resurrection(int pow, god_type god)
 {
     int how_many_corpses = 0;
@@ -1762,43 +1863,13 @@ bool cast_twisted_resurrection(int pow, god_type god)
         return (false);
     }
 
-    dprf("Mass for abomination: %d", total_mass);
+    const int strength = (unrotted == how_many_corpses)          ? 2 :
+                         (unrotted >= random2(how_many_corpses)) ? 1
+                                                                 : 0;
 
-    // This is what the old statement pretty much boils down to,
-    // the average will be approximately 10 * pow (or about 1000
-    // at the practical maximum).  That's the same as the mass
-    // of a hippogriff, a spiny frog, or a steam dragon.  Thus,
-    // material components are far more important to this spell. - bwr
-    total_mass += roll_dice(20, pow);
-
-    dprf("Mass including power bonus: %d", total_mass);
-
-    bool success = false;
-
-    monster_type mon;
-    uint8_t colour;
-    int mons;
-
-    if (total_mass >= 400 + roll_dice(2, 500)
-        && how_many_corpses >= (coinflip() ? 3 : 2))
-    {
-        mon = (total_mass >= 500 + roll_dice(3, 1000)) ? MONS_ABOMINATION_LARGE
-                                                       : MONS_ABOMINATION_SMALL;
-
-        colour = (unrotted == how_many_corpses)          ? LIGHTRED :
-                 (unrotted >= random2(how_many_corpses)) ? RED
-                                                         : BROWN;
-
-        mons = create_monster(
-                   mgen_data(mon, BEH_FRIENDLY, &you,
-                       0, 0,
-                       you.pos(), MHITYOU,
-                       MG_FORCE_BEH, god,
-                       MONS_NO_MONSTER, 0, colour));
-
-        if (mons != -1)
-            success = true;
-    }
+    const bool success =
+        how_many_corpses > (coinflip() ? 2 : 1)
+            && _make_undead_abomination(pow, god, total_mass, strength) != -1;
 
     if (success)
         mpr("The corpses meld into an agglomeration of writhing flesh!");
@@ -1811,33 +1882,7 @@ bool cast_twisted_resurrection(int pow, god_type god)
     if (how_many_orcs > 0)
         did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2 * how_many_orcs);
 
-    if (!success)
-        return (false);
-
-    // Mark this abomination as undead.
-    menv[mons].flags |= MF_FAKE_UNDEAD;
-
-    if (mon == MONS_ABOMINATION_LARGE)
-    {
-        menv[mons].hit_dice = 8 + total_mass / ((colour == LIGHTRED) ? 500 :
-                                                (colour == RED)      ? 1000
-                                                                     : 2500);
-
-        menv[mons].hit_dice = std::min(30, menv[mons].hit_dice);
-
-        // XXX: No convenient way to get the hit dice size right now.
-        menv[mons].hit_points = hit_points(menv[mons].hit_dice, 2, 5);
-        menv[mons].max_hit_points = menv[mons].hit_points;
-
-        if (colour == LIGHTRED)
-        {
-            menv[mons].ac += total_mass / 1000;
-            menv[mons].ac  = std::min(20, menv[mons].ac);
-        }
-    }
-
-    player_angers_monster(&menv[mons]);
-    return (true);
+    return (success);
 }
 
 bool cast_haunt(int pow, const coord_def& where, god_type god)
