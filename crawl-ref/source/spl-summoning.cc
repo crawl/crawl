@@ -1740,7 +1740,7 @@ bool cast_twisted_resurrection(int pow, god_type god)
     int how_many_corpses = 0;
     int how_many_orcs = 0;
     int total_mass = 0;
-    int rotted = 0;
+    int unrotted = 0;
 
     for (stack_iterator si(you.pos()); si; ++si)
     {
@@ -1750,8 +1750,8 @@ bool cast_twisted_resurrection(int pow, god_type god)
             how_many_corpses++;
             if (mons_genus(si->plus) == MONS_ORC)
                 how_many_orcs++;
-            if (food_is_rotten(*si))
-                rotted++;
+            if (!food_is_rotten(*si))
+                unrotted++;
             destroy_item(si->index());
         }
     }
@@ -1789,9 +1789,9 @@ bool cast_twisted_resurrection(int pow, god_type god)
         (total_mass > 500 + roll_dice(3, 1000)) ? MONS_ABOMINATION_LARGE
                                                 : MONS_ABOMINATION_SMALL;
 
-    uint8_t colour = (rotted == how_many_corpses)          ? BROWN :
-                     (rotted >= random2(how_many_corpses)) ? RED
-                                                           : LIGHTRED;
+    uint8_t colour = (unrotted == how_many_corpses)          ? LIGHTRED :
+                     (unrotted  < random2(how_many_corpses)) ? RED
+                                                             : BROWN;
 
     const int mons =
         create_monster(
