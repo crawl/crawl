@@ -212,6 +212,7 @@ private:
     void player_stab_check();
     random_var player_weapon_speed();
     random_var player_unarmed_speed();
+    void player_announce_aux_hit();
     void player_announce_hit();
     std::string player_why_missed();
     void player_warn_miss();

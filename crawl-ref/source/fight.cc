@@ -868,27 +868,25 @@ bool melee_attack::player_attack()
 
         if (damage_done > 0 || !defender_visible && !shield_blocked)
         {
-            // Modifying monster flags to apply "helpless" adjective.
-            uint64_t prev_flags = defender->as_monster()->flags;
-            std::string prev_mname = defender->as_monster()->mname;
             if (defender->as_monster()->props.exists("HELPLESS")
                 && defender->as_monster()->props["HELPLESS"].get_bool())
             {
+                // Modifying monster flags to apply "helpless" adjective.
+                uint64_t prev_flags = defender->as_monster()->flags;
+                std::string prev_mname = defender->as_monster()->mname;
                 defender->as_monster()->flags |= MF_NAME_ADJECTIVE;
                 defender->as_monster()->flags |= MF_NAME_DESCRIPTOR;
                 defender->as_monster()->mname = "helpless";
-            }
 
-            player_announce_hit();
+                player_announce_hit();
 
-            // Restoring pre-fight MF_NAME_ADJECTIVE flag status.
-            if (defender->as_monster()->props.exists("HELPLESS")
-                && defender->as_monster()->props["HELPLESS"].get_bool())
-            {
+                // Restoring pre-fight MF_NAME_ADJECTIVE flag status.
                 defender->as_monster()->props.erase("HELPLESS");
                 defender->as_monster()->flags = prev_flags;
                 defender->as_monster()->mname = prev_mname;
             }
+            else
+                player_announce_hit();
         }
         else if (!shield_blocked && damage_done <= 0)
         {
@@ -1385,31 +1383,25 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         wpn_skill   = SK_UNARMED_COMBAT;
         player_exercise_combat_skills();
 
-        // Modifying monster flags to apply "helpless" adjective.
-        uint64_t prev_flags = defender->as_monster()->flags;
-        std::string prev_mname = defender->as_monster()->mname;
         if (defender->as_monster()->props.exists("HELPLESS")
             && defender->as_monster()->props["HELPLESS"].get_bool())
         {
+            // Modifying monster flags to apply "helpless" adjective.
+            uint64_t prev_flags = defender->as_monster()->flags;
+            std::string prev_mname = defender->as_monster()->mname;
             defender->as_monster()->flags |= MF_NAME_ADJECTIVE;
             defender->as_monster()->flags |= MF_NAME_DESCRIPTOR;
             defender->as_monster()->mname = "helpless";
-        }
 
-        mprf("You %s %s%s%s",
-             aux_verb.c_str(),
-             defender->name(DESC_NOCAP_THE).c_str(),
-             debug_damage_number().c_str(),
-             attack_strength_punctuation().c_str());
+            player_announce_aux_hit();
 
-        // Restoring pre-fight MF_NAME_ADJECTIVE flag status.
-        if (defender->as_monster()->props.exists("HELPLESS")
-            && defender->as_monster()->props["HELPLESS"].get_bool())
-        {
+            // Restoring pre-fight MF_NAME_ADJECTIVE flag status.
             defender->as_monster()->props.erase("HELPLESS");
             defender->as_monster()->flags = prev_flags;
             defender->as_monster()->mname = prev_mname;
         }
+        else
+            player_announce_aux_hit();
 
         if (damage_brand == SPWPN_ACID)
         {
@@ -1494,6 +1486,15 @@ std::string melee_attack::evasion_margin_adverb()
            (ev_margin <= -12) ? "" :
            (ev_margin <= -6)  ? " closely"
                               : " barely");
+}
+
+void melee_attack::player_announce_aux_hit()
+{
+    mprf("You %s %s%s%s",
+         aux_verb.c_str(),
+         defender->name(DESC_NOCAP_THE).c_str(),
+         debug_damage_number().c_str(),
+         attack_strength_punctuation().c_str());
 }
 
 void melee_attack::player_announce_hit()
