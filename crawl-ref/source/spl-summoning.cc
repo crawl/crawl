@@ -439,9 +439,10 @@ static monster_type _feature_to_elemental(const coord_def& where,
         return (MONS_NO_MONSTER);
     }
 
+    const bool any_elem = strict_elem == MONS_NO_MONSTER;
+
     bool elem_earth;
-    if (strict_elem == MONS_NO_MONSTER
-        || strict_elem == MONS_EARTH_ELEMENTAL)
+    if (any_elem || strict_elem == MONS_EARTH_ELEMENTAL)
     {
         elem_earth = grd(where) == DNGN_ROCK_WALL
                      || grd(where) == DNGN_CLEAR_ROCK_WALL;
@@ -452,8 +453,7 @@ static monster_type _feature_to_elemental(const coord_def& where,
     bool elem_fire_cloud;
     bool elem_fire_lava;
     bool elem_fire;
-    if (strict_elem == MONS_NO_MONSTER
-        || strict_elem == MONS_FIRE_ELEMENTAL)
+    if (any_elem || strict_elem == MONS_FIRE_ELEMENTAL)
     {
         elem_fire_cloud = env.cgrid(where) != EMPTY_CLOUD
                           && env.cloud[env.cgrid(where)].type == CLOUD_FIRE;
@@ -468,17 +468,13 @@ static monster_type _feature_to_elemental(const coord_def& where,
     }
 
     bool elem_water;
-    if (strict_elem == MONS_NO_MONSTER
-        || strict_elem == MONS_WATER_ELEMENTAL)
-    {
+    if (any_elem || strict_elem == MONS_WATER_ELEMENTAL)
         elem_water = feat_is_watery(grd(where));
-    }
     else
         elem_water = false;
 
     bool elem_air;
-    if (strict_elem == MONS_NO_MONSTER
-        || strict_elem == MONS_AIR_ELEMENTAL)
+    if (any_elem || strict_elem == MONS_AIR_ELEMENTAL)
     {
         elem_air = grd(where) >= DNGN_FLOOR
                    && env.cgrid(where) == EMPTY_CLOUD;
