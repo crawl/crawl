@@ -1229,7 +1229,7 @@ bool melee_attack::player_aux_test_hit()
 
     bool auto_hit = one_chance_in(30);
 
-    if (!auto_hit && to_hit >= evasion && !(to_hit >= helpful_evasion)
+    if (!auto_hit && to_hit >= evasion && helpful_evasion > evasion
         && defender_visible)
     {
         defender->as_monster()->props["HELPLESS"] = true;
@@ -1570,10 +1570,7 @@ int melee_attack::player_hits_monster()
         return (false);
     }
 
-    if (to_hit >= helpful_evasion || one_chance_in(20))
-        return (1);
-
-    if (to_hit >= evasion
+    if (to_hit >= evasion && helpful_evasion > evasion
         || ((defender->cannot_act() || defender->asleep())
             && !one_chance_in(10 + you.skills[SK_STABBING]))
         || defender->as_monster()->petrifying()
@@ -1582,6 +1579,9 @@ int melee_attack::player_hits_monster()
         defender->as_monster()->props["HELPLESS"] = true;
         return (1);
     }
+
+    if (to_hit >= evasion || one_chance_in(20))
+        return (1);
 
     const int phaseless_evasion =
         defender->melee_evasion(attacker, EV_IGNORE_PHASESHIFT);
