@@ -1445,11 +1445,7 @@ std::string melee_attack::attack_strength_punctuation()
             return "!!!";
     }
     else
-    {
-        return (damage_done < HIT_WEAK ? "." :
-                damage_done < HIT_MED  ? "!"
-                                       : "!!!");
-    }
+        return (damage_done < HIT_WEAK ? "." : "!");
 }
 
 std::string melee_attack::evasion_margin_adverb()
@@ -1509,15 +1505,10 @@ void melee_attack::player_warn_miss()
     if (!defender->asleep())
         behaviour_event(defender->as_monster(), ME_WHACK, MHITYOU);
 
-    // XXX Unlike monster version, we cant use attack_strength_punctuation()
-    // instead of "." here, as player_calc_hit_damage() also produce variety
-    // of effects on premise that the hit check is already made, and so cannot
-    // be used to calculate estimated damage.
     msg::stream << player_why_missed()
                 << defender->name(DESC_NOCAP_THE)
                 << "."
                 << std::endl;
-    damage_done = 0;
 }
 
 int melee_attack::player_hits_monster()
@@ -5367,7 +5358,8 @@ void melee_attack::mons_do_spines()
         && attacker->alive()
         && one_chance_in(evp + 1))
     {
-        if (test_melee_hit(2+ 4 * mut, attacker->melee_evasion(defender), r) < 0)
+        if (test_melee_hit(2 + 4 * mut, attacker->melee_evasion(defender), r)
+            < 0)
         {
             simple_monster_message(attacker->as_monster(),
                                    " dodges your spines.");
@@ -5670,15 +5662,9 @@ void melee_attack::mons_perform_attack_rounds()
                 defender_evasion_nophase = defender_evasion;
             }
 
-            // Calculating damage before hit check allows us to print
-            // appropriate number of exlamation marks at the end of "miss"
-            // message.
-            damage_done = mons_calc_damage(attk);
-
             ev_margin = test_melee_hit(to_hit, defender_evasion_help, r);
 
-            if (attacker == defender
-                || ev_margin >= 0)
+            if (attacker == defender || ev_margin >= 0)
             {
                 // Will hit no matter what.
                 this_round_hit = true;
@@ -5725,11 +5711,11 @@ void melee_attack::mons_perform_attack_rounds()
             {
                 did_hit = true;
                 perceived_attack = true;
+                damage_done = mons_calc_damage(attk);
             }
             else
             {
                 perceived_attack = perceived_attack || attacker_visible;
-                damage_done = 0;
             }
 
             if (attacker != defender &&
