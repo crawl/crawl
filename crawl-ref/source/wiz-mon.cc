@@ -692,6 +692,7 @@ void wizard_give_monster_item(monster* mon)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
+    case OBJ_STAVES:
         // Let wizard specify which slot to put weapon into via
         // inscriptions.
         if (item.inscription.find("first") != std::string::npos
