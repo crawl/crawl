@@ -1361,7 +1361,7 @@ static int _disperse_monster(monster* mon, int pow)
         simple_monster_message(mon, " resists.");
         return (1);
     }
-    else if (mon->check_res_magic(pow))
+    else if (int res_margin = mon->check_res_magic(pow) > 0)
     {
         // XXX: Note that this might affect magic-immunes!
         if (coinflip())
@@ -1370,7 +1370,11 @@ static int _disperse_monster(monster* mon, int pow)
             monster_blink(mon);
         }
         else
-            simple_monster_message(mon, " resists.");
+        {
+            simple_monster_message(mon,
+                               mons_resist_string(mon, res_margin).c_str());
+        }
+
         return (1);
     }
     else

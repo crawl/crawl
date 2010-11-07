@@ -2254,17 +2254,19 @@ static int _lugonu_warp_monster(monster* mon, int pow)
     if (!mon->friendly())
         behaviour_event(mon, ME_ANNOY, MHITYOU);
 
-    if (mon->check_res_magic(pow * 2))
+    int res_margin = mon->check_res_magic(pow * 2);
+    if (res_margin > 0)
     {
-        mprf("%s %s.",
-             mon->name(DESC_CAP_THE).c_str(), mons_resist_string(mon));
+        mprf("%s%s",
+             mon->name(DESC_CAP_THE).c_str(),
+             mons_resist_string(mon, res_margin).c_str());
         return (1);
     }
 
     const int damage = 1 + random2(pow / 6);
     if (mons_genus(mon->type) == MONS_BLINK_FROG)
         mon->heal(damage, false);
-    else if (!mon->check_res_magic(pow))
+    else if (mon->check_res_magic(pow) <= 0)
     {
         mon->hurt(&you, damage);
         if (!mon->alive())
@@ -2351,10 +2353,12 @@ void cheibriados_time_bend(int pow)
         monster* mon = monster_at(*ai);
         if (mon && !mons_is_stationary(mon))
         {
-            if (roll_dice(mon->hit_dice, 3) > random2avg(pow, 2))
+            int res_margin = roll_dice(mon->hit_dice, 3) - random2avg(pow, 2);
+            if (res_margin > 0)
             {
-                mprf("%s %s.",
-                     mon->name(DESC_CAP_THE).c_str(), mons_resist_string(mon));
+                mprf("%s%s",
+                     mon->name(DESC_CAP_THE).c_str(),
+                     mons_resist_string(mon, res_margin).c_str());
                 continue;
             }
 

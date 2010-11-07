@@ -31,7 +31,7 @@ static int _sleep_monsters(coord_def where, int pow, int, actor *)
     if (!mons->can_hibernate(true))
         return (0);
 
-    if (mons->check_res_magic(pow))
+    if (mons->check_res_magic(pow) > 0)
         return (0);
 
     const int res = mons->res_cold();
@@ -95,7 +95,7 @@ static int _tame_beast_monsters(coord_def where, int pow, int, actor *)
     if (you.species == SP_HILL_ORC && mons->type == MONS_WARG)
         pow += (pow / 2);
 
-    if (mons->check_res_magic(pow))
+    if (mons->check_res_magic(pow) > 0)
         return 0;
 
     simple_monster_message(mons, " is tamed!");
