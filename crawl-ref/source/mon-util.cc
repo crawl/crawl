@@ -1329,8 +1329,7 @@ int mons_damage(int mc, int rt)
 
 std::string resist_margin_phrase(int margin)
 {
-    if (margin <= 0)
-        return(" resists.");
+    ASSERT(margin > 0);
 
     return((margin >= 40) ? " easily resists." :
            (margin >= 24) ? " resists." :
