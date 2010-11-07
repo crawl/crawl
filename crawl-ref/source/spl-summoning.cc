@@ -1773,51 +1773,49 @@ bool cast_twisted_resurrection(int pow, god_type god)
 
     dprf("Mass including power bonus: %d", total_mass);
 
-    if (total_mass < 400 + roll_dice(2, 500)
-        || how_many_corpses < (coinflip() ? 3 : 2))
+    bool success = false;
+
+    monster_type mon;
+    uint8_t colour;
+    int mons;
+
+    if (total_mass >= 400 + roll_dice(2, 500)
+        && how_many_corpses >= (coinflip() ? 3 : 2))
+    {
+        mon = (total_mass > 500 + roll_dice(3, 1000)) ? MONS_ABOMINATION_LARGE
+                                                      : MONS_ABOMINATION_SMALL;
+
+        colour = (unrotted == how_many_corpses)          ? LIGHTRED :
+                 (unrotted  < random2(how_many_corpses)) ? RED
+                                                         : BROWN;
+
+        mons = create_monster(
+                   mgen_data(mon, BEH_FRIENDLY, &you,
+                       0, 0,
+                       you.pos(), MHITYOU,
+                       MG_FORCE_BEH, god,
+                       MONS_NO_MONSTER, 0, colour));
+
+        if (mons != -1)
+            success = true;
+    }
+
+    if (success)
+        mpr("The heap of corpses melds into an agglomeration of writhing flesh!");
+    else
     {
         mprf("The corpse%s collapse%s into a pulpy mess.",
              how_many_corpses > 1 ? "s": "", how_many_corpses > 1 ? "": "s");
-
-        if (how_many_orcs > 0)
-            did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2 * how_many_orcs);
-
-        return (false);
     }
-
-    monster_type mon =
-        (total_mass > 500 + roll_dice(3, 1000)) ? MONS_ABOMINATION_LARGE
-                                                : MONS_ABOMINATION_SMALL;
-
-    uint8_t colour = (unrotted == how_many_corpses)          ? LIGHTRED :
-                     (unrotted  < random2(how_many_corpses)) ? RED
-                                                             : BROWN;
-
-    const int mons =
-        create_monster(
-            mgen_data(mon, BEH_FRIENDLY, &you,
-                      0, 0,
-                      you.pos(), MHITYOU,
-                      MG_FORCE_BEH, god,
-                      MONS_NO_MONSTER, 0, colour));
-
-    if (mons == -1)
-    {
-        mpr("The corpses collapse into a pulpy mess.");
-
-        if (how_many_orcs > 0)
-            did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2 * how_many_orcs);
-
-        return (false);
-    }
-
-    // Mark this abomination as undead.
-    menv[mons].flags |= MF_FAKE_UNDEAD;
-
-    mpr("The heap of corpses melds into an agglomeration of writhing flesh!");
 
     if (how_many_orcs > 0)
         did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2 * how_many_orcs);
+
+    if (!success)
+        return (false);
+
+    // Mark this abomination as undead.
+    menv[mons].flags |= MF_FAKE_UNDEAD;
 
     if (mon == MONS_ABOMINATION_LARGE)
     {
