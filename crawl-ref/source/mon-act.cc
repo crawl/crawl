@@ -1101,7 +1101,6 @@ static bool _handle_rod(monster *mons, bolt &beem)
     case SPELL_SUMMON_ELEMENTAL:
     case SPELL_SUMMON_SWARM:
         _rod_fired_pre(mons, nice_spell);
-        dprf("using rod with summoning spell");
         mons_cast(mons, beem, mzap, false);
         _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
         return (true);
