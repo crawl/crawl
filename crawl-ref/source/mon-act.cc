@@ -1096,6 +1096,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
         break;
 
     case SPELL_CALL_IMP:
+    case SPELL_CAUSE_FEAR:
     case SPELL_SUMMON_DEMON:
     case SPELL_SUMMON_ELEMENTAL:
     case SPELL_SUMMON_SWARM:
