@@ -403,7 +403,7 @@ static void _check_skill_cost_change()
 
 void change_skill_points(skill_type sk, int points, bool change_level)
 {
-    if (you.skill_points[sk] + points < 0)
+    if (static_cast<int>(you.skill_points[sk]) < -points)
         points = -you.skill_points[sk];
 
     you.skill_points[sk] += points;
