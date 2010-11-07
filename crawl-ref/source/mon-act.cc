@@ -1177,7 +1177,7 @@ static bool _handle_wand(monster* mons, bolt &beem)
         return (false);
 
     if (mons->inv[MSLOT_WEAPON] != NON_ITEM
-       && item_is_rod(mitm[mons->inv[MSLOT_WEAPON]]))
+        && item_is_rod(mitm[mons->inv[MSLOT_WEAPON]]))
     {
         return (_handle_rod(mons, beem));
     }
