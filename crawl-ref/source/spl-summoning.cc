@@ -424,6 +424,92 @@ static int _count_summons(monster_type type)
     return (cnt);
 }
 
+static monster_type _feature_to_elemental(const coord_def& where,
+                                          monster_type strict_elem)
+{
+    if (!in_bounds(where))
+        return (MONS_NO_MONSTER);
+
+    if (strict_elem != MONS_NO_MONSTER
+        && strict_elem != MONS_EARTH_ELEMENTAL
+        && strict_elem != MONS_FIRE_ELEMENTAL
+        && strict_elem != MONS_WATER_ELEMENTAL
+        && strict_elem != MONS_AIR_ELEMENTAL)
+    {
+        return (MONS_NO_MONSTER);
+    }
+
+    bool elem_earth;
+    if (strict_elem == MONS_NO_MONSTER
+        || strict_elem == MONS_EARTH_ELEMENTAL)
+    {
+        elem_earth = grd(where) == DNGN_ROCK_WALL
+                     || grd(where) == DNGN_CLEAR_ROCK_WALL;
+    }
+    else
+        elem_earth = false;
+
+    bool elem_fire_cloud;
+    bool elem_fire_lava;
+    bool elem_fire;
+    if (strict_elem == MONS_NO_MONSTER
+        || strict_elem == MONS_FIRE_ELEMENTAL)
+    {
+        elem_fire_cloud = env.cgrid(where) != EMPTY_CLOUD
+                          && env.cloud[env.cgrid(where)].type == CLOUD_FIRE;
+        elem_fire_lava = grd(where) == DNGN_LAVA;
+        elem_fire = elem_fire_cloud || elem_fire_lava;
+    }
+    else
+    {
+        elem_fire_cloud = false;
+        elem_fire_lava = false;
+        elem_fire = false;
+    }
+
+    bool elem_water;
+    if (strict_elem == MONS_NO_MONSTER
+        || strict_elem == MONS_WATER_ELEMENTAL)
+    {
+        elem_water = feat_is_watery(grd(where));
+    }
+    else
+        elem_water = false;
+
+    bool elem_air;
+    if (strict_elem == MONS_NO_MONSTER
+        || strict_elem == MONS_AIR_ELEMENTAL)
+    {
+        elem_air = grd(where) >= DNGN_FLOOR
+                   && env.cgrid(where) == EMPTY_CLOUD;
+    }
+    else
+        elem_air = false;
+
+    monster_type elemental = MONS_NO_MONSTER;
+
+    if (elem_earth)
+    {
+        grd(where) = DNGN_FLOOR;
+        set_terrain_changed(where);
+
+        elemental = MONS_EARTH_ELEMENTAL;
+    }
+    else if (elem_fire)
+    {
+        if (elem_fire_cloud)
+            delete_cloud(env.cgrid(where));
+
+        elemental = MONS_FIRE_ELEMENTAL;
+    }
+    else if (elem_water)
+        elemental = MONS_WATER_ELEMENTAL;
+    else if (elem_air)
+        elemental = MONS_AIR_ELEMENTAL;
+
+    return (elemental);
+}
+
 // 'unfriendly' is percentage chance summoned elemental goes
 //              postal on the caster (after taking into account
 //              chance of that happening to unskilled casters
@@ -432,13 +518,12 @@ bool cast_summon_elemental(int pow, god_type god,
                            monster_type restricted_type,
                            int unfriendly, int horde_penalty)
 {
-    monster_type mon = MONS_PROGRAM_BUG;
+    monster_type mon;
 
     coord_def targ;
     dist smove;
 
     const int dur = std::min(2 + (random2(pow) / 5), 6);
-    const bool any_elemental = (restricted_type == MONS_NO_MONSTER);
 
     while (true)
     {
@@ -468,56 +553,20 @@ bool cast_summon_elemental(int pow, god_type god,
         }
         else if (smove.delta.origin())
             mpr("You can't summon an elemental from yourself!");
-        else if ((any_elemental || restricted_type == MONS_EARTH_ELEMENTAL)
-                 && (grd(targ) == DNGN_ROCK_WALL
-                     || grd(targ) == DNGN_CLEAR_ROCK_WALL))
+        else if (!in_bounds(targ))
         {
-            if (!in_bounds(targ))
-            {
-                mpr("That wall won't yield to your beckoning.");
-                // XXX: Should this cost a turn?
-            }
-            else
-            {
-                mon = MONS_EARTH_ELEMENTAL;
-                break;
-            }
+            // XXX: Should this cost a turn?
+            mpr("That material won't yield to your beckoning.");
+            return (false);
         }
-        else
-            break;
+
+        break;
     }
 
-    if (mon == MONS_EARTH_ELEMENTAL)
-    {
-        grd(targ) = DNGN_FLOOR;
-        set_terrain_changed(targ);
-    }
-    else if (env.cgrid(targ) != EMPTY_CLOUD
-             && env.cloud[env.cgrid(targ)].type == CLOUD_FIRE
-             && (any_elemental || restricted_type == MONS_FIRE_ELEMENTAL))
-    {
-        mon = MONS_FIRE_ELEMENTAL;
-        delete_cloud(env.cgrid(targ));
-    }
-    else if (grd(targ) == DNGN_LAVA
-             && (any_elemental || restricted_type == MONS_FIRE_ELEMENTAL))
-    {
-        mon = MONS_FIRE_ELEMENTAL;
-    }
-    else if (feat_is_watery(grd(targ))
-             && (any_elemental || restricted_type == MONS_WATER_ELEMENTAL))
-    {
-        mon = MONS_WATER_ELEMENTAL;
-    }
-    else if (grd(targ) >= DNGN_FLOOR
-             && env.cgrid(targ) == EMPTY_CLOUD
-             && (any_elemental || restricted_type == MONS_AIR_ELEMENTAL))
-    {
-        mon = MONS_AIR_ELEMENTAL;
-    }
+    mon = _feature_to_elemental(targ, restricted_type);
 
     // Found something to summon?
-    if (mon == MONS_PROGRAM_BUG)
+    if (mon == MONS_NO_MONSTER)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return (false);
