@@ -3015,12 +3015,11 @@ void activate_ballistomycetes(monster* mons, const coord_def & origin,
     if (candidates.size() > 25)
         return;
 
-
     std::random_shuffle(candidates.begin(), candidates.end());
 
     int index = 0;
 
-    for (int i=0; i<activation_count; ++i)
+    for (int i = 0; i < activation_count; ++i)
     {
         index = i % candidates.size();
 
@@ -3047,13 +3046,9 @@ void activate_ballistomycetes(monster* mons, const coord_def & origin,
         while (thread)
         {
             if (you.see_cell(thread->pos))
-            {
                 env.pgrid(thread->pos) |= FPROP_GLOW_MOLD;
-
-            }
 
             thread = thread->last;
         }
     }
-
 }
