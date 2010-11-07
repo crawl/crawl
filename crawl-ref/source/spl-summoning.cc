@@ -1801,7 +1801,7 @@ bool cast_twisted_resurrection(int pow, god_type god)
     }
 
     if (success)
-        mpr("The heap of corpses melds into an agglomeration of writhing flesh!");
+        mpr("The corpses meld into an agglomeration of writhing flesh!");
     else
     {
         mprf("The corpse%s collapse%s into a pulpy mess.",
