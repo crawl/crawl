@@ -920,7 +920,7 @@ static int _generate_rod_power(monster *mons, int overriding_power = 0)
     int evoc_den = 1;
 
     if (mons->type == MONS_DEEP_DWARF_ARTIFICER)
-        evoc_num = 2;
+        evoc_num++;
 
     int shield_num = 1;
     int shield_den = 1;
