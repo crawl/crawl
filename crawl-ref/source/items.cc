@@ -3719,8 +3719,13 @@ item_info get_item_info(const item_def& item)
         if (item_type_known(item))
         {
             ii.sub_type = item.sub_type;
-            if (item_ident(ii, ISFLAG_KNOW_PLUSES) && item.props.exists("rod_enchantment"))
-                ii.props["rod_enchantment"] = item.props["rod_enchantment"];
+            if (item_ident(ii, ISFLAG_KNOW_PLUSES))
+            {
+                if (item.props.exists("rod_enchantment"))
+                    ii.props["rod_enchantment"] = item.props["rod_enchantment"];
+                ii.plus = item.plus;
+                ii.plus2 = item.plus2;
+            }
         }
         else
             ii.sub_type = item_is_rod(item) ? STAFF_FIRST_ROD : 0;
