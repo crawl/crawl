@@ -1786,7 +1786,7 @@ bool cast_twisted_resurrection(int pow, god_type god)
                                                       : MONS_ABOMINATION_SMALL;
 
         colour = (unrotted == how_many_corpses)          ? LIGHTRED :
-                 (unrotted  < random2(how_many_corpses)) ? RED
+                 (unrotted >= random2(how_many_corpses)) ? RED
                                                          : BROWN;
 
         mons = create_monster(
