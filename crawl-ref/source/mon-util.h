@@ -208,7 +208,8 @@ int hit_points(int hit_dice, int min_hp, int rand_hp);
 int mons_class_hit_dice(int mc);
 
 bool mons_immune_magic(const monster* mon);
-const char* mons_resist_string(const monster* mon);
+std::string mons_resist_string(const monster* mon, int res_margin);
+std::string resist_margin_phrase(int margin);
 
 int mons_damage(int mc, int rt);
 mon_attack_def mons_attack_spec(const monster* mon, int attk_number);

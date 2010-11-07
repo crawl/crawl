@@ -881,7 +881,7 @@ bool slime_creature_mutate(monster* slime)
 // -- added equivalency for huldra
 static bool _siren_movement_effect(const monster* mons)
 {
-    bool do_resist = (you.attribute[ATTR_HELD] || you.check_res_magic(70)
+    bool do_resist = (you.attribute[ATTR_HELD] || you.check_res_magic(70) > 0
                       || you.cannot_act() || you.asleep());
 
     if (!do_resist)
@@ -2696,7 +2696,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             // Once mesmerised by a particular monster, you cannot resist
             // anymore.
             if (!already_mesmerised
-                && (you.species == SP_MERFOLK || you.check_res_magic(100)))
+                && (you.species == SP_MERFOLK || you.check_res_magic(100) > 0))
             {
                 if (!did_resist)
                     canned_msg(MSG_YOU_RESIST);
@@ -2788,14 +2788,17 @@ void mon_nearby_ability(monster* mons)
             if (foe->atype() == ACT_PLAYER && !can_see)
                 mpr("You feel you are being watched by something.");
 
-            if (foe->check_res_magic((mons->hit_dice * 5) * confuse_power))
+            int res_margin = foe->check_res_magic((mons->hit_dice * 5)
+                             * confuse_power);
+            if (res_margin > 0)
             {
                 if (foe->atype() == ACT_PLAYER)
                     canned_msg(MSG_YOU_RESIST);
                 else if (foe->atype() == ACT_MONSTER)
                 {
                     const monster* foe_mons = foe->as_monster();
-                    simple_monster_message(foe_mons, mons_resist_string(foe_mons));
+                    simple_monster_message(foe_mons,
+                           mons_resist_string(foe_mons, res_margin).c_str());
                 }
                 break;
             }

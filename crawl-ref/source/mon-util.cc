@@ -1335,7 +1335,7 @@ std::string resist_margin_phrase(int margin)
     return((margin >= 40) ? " easily resists." :
            (margin >= 24) ? " resists." :
            (margin >= 12)  ? " resists with some effort."
-                           : " resists with visible struggle.");
+                           : " struggles to resist.");
 }
 
 bool mons_immune_magic(const monster* mon)

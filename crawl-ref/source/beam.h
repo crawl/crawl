@@ -259,7 +259,7 @@ public:
     void apply_bolt_paralysis(monster* mons);
     void apply_bolt_petrify(monster* mons);
     void enchantment_affect_monster(monster* mon);
-    mon_resist_type try_enchant_monster(monster* mon);
+    mon_resist_type try_enchant_monster(monster* mon, int &res_margin);
     void tracer_enchantment_affect_monster(monster* mon);
     void tracer_nonenchantment_affect_monster(monster* mon);
     void update_hurt_or_helped(monster* mon);

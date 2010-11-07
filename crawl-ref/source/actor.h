@@ -237,7 +237,7 @@ public:
     virtual int res_negative_energy() const = 0;
     virtual int res_torment() const = 0;
     virtual int res_magic() const = 0;
-    virtual bool check_res_magic(int power);
+    virtual int check_res_magic(int power);
 
     virtual flight_type flight_mode() const = 0;
     virtual bool is_levitating() const = 0;

@@ -4384,7 +4384,7 @@ bool melee_attack::mons_attack_warded_off()
     const int warding = defender->warding();
     if (warding
         && attacker->is_summoned()
-        && !attacker->as_monster()->check_res_magic(warding))
+        && attacker->as_monster()->check_res_magic(warding) <= 0)
     {
         if (needs_message)
         {
@@ -5332,7 +5332,7 @@ void melee_attack::mons_do_eyeball_confusion()
         const int ench_pow = player_mutation_level(MUT_EYEBALLS) * 30;
         monster* mon = attacker->as_monster();
 
-        if (!mon->check_res_magic(ench_pow)
+        if (mon->check_res_magic(ench_pow) <= 0
             && mons_class_is_confusable(mon->type))
         {
             mprf("The eyeballs on your body gaze at %s.",
