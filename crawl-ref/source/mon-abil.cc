@@ -2974,7 +2974,7 @@ void activate_ballistomycetes(monster* mons, const coord_def & origin,
             && any_friendly
             && mons->type == MONS_BALLISTOMYCETE)
         {
-            mprf("Your fungal colony was destroyed.");
+            mpr("Your fungal colony was destroyed.");
             dock_piety(5, 0);
         }
 
@@ -2995,8 +2995,8 @@ void activate_ballistomycetes(monster* mons, const coord_def & origin,
             && ballisto_count == 0
             && mons->attitude == ATT_HOSTILE)
         {
-            mprf("Having destroyed the fungal colony, you feel a bit more "
-                 "experienced.");
+            mpr("Having destroyed the fungal colony, you feel a bit more "
+                "experienced.");
             gain_exp(500);
 
             // Get rid of the mold, so it'll be more useful when new fungi
