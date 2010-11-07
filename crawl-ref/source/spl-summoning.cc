@@ -1830,7 +1830,10 @@ bool cast_twisted_resurrection(int pow, god_type god)
         menv[mons].max_hit_points = menv[mons].hit_points;
 
         if (colour == LIGHTRED)
+        {
             menv[mons].ac += total_mass / 1000;
+            menv[mons].ac  = std::min(20, menv[mons].ac);
+        }
     }
 
     player_angers_monster(&menv[mons]);
