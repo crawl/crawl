@@ -434,8 +434,4 @@ int get_dist_to_nearest_monster();
 
 bool mons_is_tentacle(int mc);
 
-int undead_abomination_min_mass(monster_type abom_type);
-bool undead_abomination_convert(monster* mon, int mass = -1,
-                                int strength = -1);
-
 #endif

@@ -1735,12 +1735,75 @@ bool cast_simulacrum(int pow, god_type god)
     return (count > 0);
 }
 
+static int _undead_abomination_min_mass(monster_type abom_type)
+{
+    if (abom_type == MONS_ABOMINATION_LARGE)
+        return (500 + roll_dice(3, 1000));
+    else if (abom_type == MONS_ABOMINATION_SMALL)
+        return (400 + roll_dice(2, 500));
+    else
+        return (-1);
+}
+
+// Make the proper stat adjustments to turn a demonic abomination into
+// an undead one.
+static bool _undead_abomination_convert(monster* mon, int mass = -1,
+                                        int strength = -1)
+{
+    if (mon->type != MONS_ABOMINATION_LARGE
+        && mon->type != MONS_ABOMINATION_SMALL)
+    {
+        return (false);
+    }
+
+    const int min_mass = _undead_abomination_min_mass(mon->type);
+
+    // Set 1 of 2 minimum masses: large or small.
+    if (mass == -1)
+        mass = min_mass;
+    else
+        mass = std::max(min_mass, mass);
+
+    // Set 1 of 3 strengths: 0 (low), 1 (medium) or 2 (high).
+    if (strength == -1)
+        strength = random2(3);
+    else
+        strength = std::min(3, std::max(0, strength));
+
+    // Mark this abomination as undead.
+    mon->flags |= MF_FAKE_UNDEAD;
+
+    mon->colour = ((strength == 2) ? LIGHTRED :
+                   (strength == 1) ? RED
+                                   : BROWN);
+
+    if (mon->type == MONS_ABOMINATION_LARGE)
+    {
+        mon->hit_dice = 8 + mass / ((strength == 2) ?  500 :
+                                    (strength == 1) ? 1000
+                                                    : 2500);
+        mon->hit_dice = std::min(30, mon->hit_dice);
+
+        mon->max_hit_points = hit_points(mon->hit_dice, 2, 5);
+        mon->max_hit_points = std::max(mon->max_hit_points, 1);
+        mon->hit_points     = mon->max_hit_points;
+
+        if (strength == 2)
+        {
+            mon->ac += mass / 1000;
+            mon->ac  = std::min(20, mon->ac);
+        }
+    }
+
+    return (true);
+}
+
 static bool _make_undead_abomination(int mass, int strength,
                                      int pow, god_type god = GOD_NO_GOD,
                                      bool force_hostile = false)
 {
-    const int min_large = undead_abomination_min_mass(MONS_ABOMINATION_LARGE);
-    const int min_small = undead_abomination_min_mass(MONS_ABOMINATION_SMALL);
+    const int min_large = _undead_abomination_min_mass(MONS_ABOMINATION_LARGE);
+    const int min_small = _undead_abomination_min_mass(MONS_ABOMINATION_SMALL);
 
     if (mass < min_small)
         return (-1);
@@ -1771,7 +1834,7 @@ static bool _make_undead_abomination(int mass, int strength,
     if (mons == -1)
         return (false);
 
-    undead_abomination_convert(&menv[mons], mass, strength);
+    _undead_abomination_convert(&menv[mons], mass, strength);
 
     player_angers_monster(&menv[mons]);
 
