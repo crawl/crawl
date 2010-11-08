@@ -1325,16 +1325,15 @@ void down_stairs(dungeon_feature_type force_stair,
     // Notifying of new things that comes into view.
     // Storing current env.map_knowledge to use it as a reference after
     // LOS is updated.
-    static FixedArray< map_cell, GXM, GYM > mapshadow;
-    mapshadow = env.map_knowledge;
+    env.map_shadow = env.map_knowledge;
     // Preventing obvious finding of stairs at your position.
-    mapshadow(you.pos()).flags |= MAP_SEEN_FLAG;
+    env.map_shadow(you.pos()).flags |= MAP_SEEN_FLAG;
 
     viewwindow();
 
     // Checking new squares for interesting features.
     if (!you.running)
-        check_for_interesting_features(mapshadow);
+        check_for_interesting_features();
 
     maybe_update_stashes();
 
