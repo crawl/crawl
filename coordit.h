@@ -86,27 +86,29 @@ public:
     radius_iterator(pos, 1, C_SQUARE, NULL, _exclude_center) {}
 };
 
-/* spiral_iterator: Iterates over coordinates in integer ranges.  Unlike other
+/* distance_iterator: Iterates over coordinates in integer ranges.  Unlike other
  *                  iterators, it tries hard to not favorize any particular
  *                  direction (unless fair = false, when it saves some CPU).
  */
-class spiral_iterator :
+class distance_iterator :
     public std::iterator<std::forward_iterator_tag, coord_def>
 {
 public:
-    spiral_iterator(const coord_def& _center,
+    distance_iterator(const coord_def& _center,
                     bool _fair = true,
-                    bool exclude_center = true);
+                    bool exclude_center = true,
+                    int _max_radius = 107);
     operator bool() const;
     coord_def operator *() const;
     const coord_def* operator->() const;
 
-    const spiral_iterator& operator ++();
-    spiral_iterator operator ++(int);
+    const distance_iterator& operator ++();
+    void operator ++(int);
+    int radius() const;
 private:
     coord_def center, current;
     std::vector<coord_def> lists[3], *vcur, *vnear, *vfar;
-    int radius;
+    int r, max_radius;
     int threshold;
     unsigned int icur, iend;
     bool fair;

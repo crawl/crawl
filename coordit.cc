@@ -171,10 +171,10 @@ radius_iterator radius_iterator::operator++(int dummy)
 /*
  *  spiral iterator
  */
-spiral_iterator::spiral_iterator(const coord_def& _center, bool _fair,
-                                 bool exclude_center) :
-    center(_center), current(_center), radius(1), threshold(0),
-    icur(0), iend(0), fair(_fair)
+distance_iterator::distance_iterator(const coord_def& _center, bool _fair,
+                                 bool exclude_center, int _max_radius) :
+    center(_center), current(_center), r(0), max_radius(_max_radius),
+    threshold(0), icur(0), iend(0), fair(_fair)
 {
     vcur  = lists + 0;
     vnear = lists + 1;
@@ -194,7 +194,7 @@ static inline int sgn(int x)
     return (x < 0) ? -1 : (x > 0) ? 1 : 0;
 }
 
-bool spiral_iterator::advance()
+bool distance_iterator::advance()
 {
 again:
     if (++icur >= vcur->size())
@@ -213,12 +213,16 @@ again:
         // Randomize the order various directions are returned.
         // Just the initial angle is enough.
         if (fair)
-            icur = iend = random2(vcur->size() + 1);
+            icur = iend = random2(vcur->size());
         else
             icur = iend = 0; // randomness is costly
 
-        radius++;
-        threshold = radius * radius + 1;
+        if (r++ >= max_radius)
+        {
+            vcur->clear();
+            return false;
+        }
+        threshold = (r+1) * (r+1) + 1;
     }
 
     coord_def d = (*vcur)[icur];
@@ -230,49 +234,58 @@ again:
         push_neigh(d, sgn(d.x), 0);
     if (!d.x)
         push_neigh(d, 0, sgn(d.y));
-    if (d.x <= 0 && d.y <= 0)
-        push_neigh(d, -1, -1);
-    if (d.x >= 0 && d.y <= 0)
-        push_neigh(d, +1, -1);
-    if (d.x <= 0 && d.y >= 0)
-        push_neigh(d, -1, +1);
-    if (d.x >= 0 && d.y >= 0)
-        push_neigh(d, +1, +1);
+    if (d.x <= 0)
+    {
+        if (d.y <= 0)
+            push_neigh(d, -1, -1);
+        if (d.y >= 0)
+            push_neigh(d, -1, +1);
+    }
+    if (d.x >= 0)
+    {
+        if (d.y <= 0)
+            push_neigh(d, +1, -1);
+        if (d.y >= 0)
+            push_neigh(d, +1, +1);
+    }
 
     return true;
 }
 
-void spiral_iterator::push_neigh(coord_def d, int dx, int dy)
+void distance_iterator::push_neigh(coord_def d, int dx, int dy)
 {
     d.x += dx;
     d.y += dy;
     ((d.abs() <= threshold) ? vnear : vfar)->push_back(d);
 }
 
-spiral_iterator::operator bool() const
+distance_iterator::operator bool() const
 {
-    return in_bounds(current);
+    return in_bounds(current) && r <= max_radius;
 }
 
-coord_def spiral_iterator::operator *() const
+coord_def distance_iterator::operator *() const
 {
     return current;
 }
 
-const coord_def* spiral_iterator::operator->() const
+const coord_def* distance_iterator::operator->() const
 {
     return &current;
 }
 
-const spiral_iterator& spiral_iterator::operator++()
+const distance_iterator& distance_iterator::operator++()
 {
     advance();
     return *this;
 }
 
-spiral_iterator spiral_iterator::operator++(int dummy)
+void distance_iterator::operator++(int dummy)
 {
-    const spiral_iterator copy = *this;
     ++(*this);
-    return (copy);
+}
+
+int distance_iterator::radius() const
+{
+    return r;
 }
