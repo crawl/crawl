@@ -38,6 +38,7 @@
 #include "showsymb.h"
 #include "skills2.h"
 #include "spl-book.h"
+#include "spl-summoning.h"
 #include "state.h"
 #include "stuff.h"
 #include "env.h"
@@ -2845,11 +2846,20 @@ bool is_useless_item(const item_def &item, bool temp)
         return (false);
 
     case OBJ_MISSILES:
-        if (you.species == SP_CAT)
+        if ((you.has_spell(SPELL_STICKS_TO_SNAKES)
+             || !you.num_turns
+                && you.char_class == JOB_TRANSMUTER)
+            && item_is_snakable(item)
+            || you.has_spell(SPELL_SANDBLAST)
+               && (item.sub_type == MI_STONE
+                || item.sub_type == MI_LARGE_ROCK))
         {
-            return (item.sub_type != MI_STONE && item.sub_type != MI_LARGE_ROCK)
-                   || !you.has_spell(SPELL_SANDBLAST);
+            return false;
         }
+
+        // Save for the above spells, all missiles are useless for felids.
+        if (you.species == SP_CAT)
+            return true;
 
         // These are the same checks as in is_throwable(), except that
         // we don't take launchers into account.
