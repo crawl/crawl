@@ -2908,6 +2908,13 @@ void world_reacts()
         record_turn_timestamp();
         update_turn_count();
         msgwin_new_turn();
+        if (crawl_state.game_is_sprint()
+            && !(you.num_turns % 256)
+            && !you_are_delayed())
+        {
+            // Resting makes the saving quite random, but meh.
+            save_game(false);
+        }
     }
 }
 
