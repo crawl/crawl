@@ -186,9 +186,9 @@ radius_iterator radius_iterator::operator++(int dummy)
 /*
  *  spiral iterator
  */
-equidistant_iterator::equidistant_iterator(const coord_def& _center, bool _fair,
+distance_iterator::distance_iterator(const coord_def& _center, bool _fair,
                                  bool exclude_center, int _max_radius) :
-    center(_center), current(_center), radius(1), max_radius(_max_radius),
+    center(_center), current(_center), r(0), max_radius(_max_radius),
     threshold(0), icur(0), iend(0), fair(_fair)
 {
     vcur  = lists + 0;
@@ -209,7 +209,7 @@ static inline int sgn(int x)
     return (x < 0) ? -1 : (x > 0) ? 1 : 0;
 }
 
-bool equidistant_iterator::advance()
+bool distance_iterator::advance()
 {
 again:
     if (++icur >= vcur->size())
@@ -232,12 +232,12 @@ again:
         else
             icur = iend = 0; // randomness is costly
 
-        if (radius++ >= max_radius)
+        if (r++ >= max_radius)
         {
             vcur->clear();
             return false;
         }
-        threshold = radius * radius + 1;
+        threshold = (r+1) * (r+1) + 1;
     }
 
     coord_def d = (*vcur)[icur];
@@ -267,37 +267,42 @@ again:
     return true;
 }
 
-void equidistant_iterator::push_neigh(coord_def d, int dx, int dy)
+void distance_iterator::push_neigh(coord_def d, int dx, int dy)
 {
     d.x += dx;
     d.y += dy;
     ((d.abs() <= threshold) ? vnear : vfar)->push_back(d);
 }
 
-equidistant_iterator::operator bool() const
+distance_iterator::operator bool() const
 {
-    return in_bounds(current);
+    return in_bounds(current) && r <= max_radius;
 }
 
-coord_def equidistant_iterator::operator *() const
+coord_def distance_iterator::operator *() const
 {
     return current;
 }
 
-const coord_def* equidistant_iterator::operator->() const
+const coord_def* distance_iterator::operator->() const
 {
     return &current;
 }
 
-const equidistant_iterator& equidistant_iterator::operator++()
+const distance_iterator& distance_iterator::operator++()
 {
     advance();
     return *this;
 }
 
-equidistant_iterator equidistant_iterator::operator++(int dummy)
+distance_iterator distance_iterator::operator++(int dummy)
 {
-    const equidistant_iterator copy = *this;
+    const distance_iterator copy = *this;
     ++(*this);
     return (copy);
+}
+
+int distance_iterator::radius() const
+{
+    return r;
 }
