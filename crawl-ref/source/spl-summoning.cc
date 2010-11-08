@@ -1795,13 +1795,9 @@ static int _make_undead_abomination(int pow, god_type god = GOD_NO_GOD,
     if (strength == -1)
         strength = random2(3);
 
-    const uint8_t colour = (strength == 2) ? LIGHTRED :
-                           (strength == 1) ? RED
-                                           : BROWN;
-
     mgen_data mg(force_type, !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
                  !force_hostile ? &you : 0, 0, 0, you.pos(),
-                 MHITYOU, MG_FORCE_BEH, god, MONS_NO_MONSTER, 0, colour);
+                 MHITYOU, MG_FORCE_BEH, god);
 
     const int retval = create_monster(mg);
 
@@ -1812,6 +1808,10 @@ static int _make_undead_abomination(int pow, god_type god = GOD_NO_GOD,
 
     // Mark this abomination as undead.
     mon->flags |= MF_FAKE_UNDEAD;
+
+    mon->colour = ((strength == 2) ? LIGHTRED :
+                   (strength == 1) ? RED
+                                   : BROWN);
 
     if (force_type == MONS_ABOMINATION_LARGE)
     {
