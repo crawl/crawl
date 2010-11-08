@@ -1735,76 +1735,40 @@ bool cast_simulacrum(int pow, god_type god)
     return (count > 0);
 }
 
-static int _make_undead_abomination(int pow, god_type god = GOD_NO_GOD,
-                                    int mass = -1, int strength = -1,
-                                    bool force_hostile = false,
-                                    monster_type force_type = MONS_NO_MONSTER)
+static int _undead_abomination_min_mass(monster_type abom_type)
 {
-    const int min_large_mass = 500 + roll_dice(3, 1000);
-    const int min_small_mass = 400 + roll_dice(2, 500);
-
-    // mass:
-    // -1 picks a random abomination mass.
-    // min_small_mass or greater forces mass when applicable.
-    if (mass != -1 && mass < min_small_mass)
-        return (-1);
-
-    // strength:
-    // -1 picks a random abomination strength.
-    //  0 forces low strength.
-    //  1 forces medium strength.
-    //  2 forces high strength.
-    if (strength != -1 && (strength < 0 || strength > 2))
-        return (-1);
-
-    // force_type:
-    // MONS_NO_MONSTER picks an abomination size based on mass.
-    // MONS_ABOMINATION_LARGE forces a large abomination.
-    // MONS_ABOMINATION_SMALL forces a small abomination.
-    if (force_type != MONS_NO_MONSTER
-        && force_type != MONS_ABOMINATION_LARGE
-        && force_type != MONS_ABOMINATION_SMALL)
-    {
-        return (-1);
-    }
-
-    if (mass == -1)
-        mass = coinflip() ? min_large_mass : min_small_mass;
-
-    if (force_type == MONS_NO_MONSTER)
-    {
-        force_type = mass >= min_large_mass ? MONS_ABOMINATION_LARGE
-                                            : MONS_ABOMINATION_SMALL;
-    }
-    else if (force_type == MONS_ABOMINATION_LARGE)
-        mass = std::max(min_large_mass, mass);
+    if (abom_type == MONS_ABOMINATION_LARGE)
+        return (500 + roll_dice(3, 1000));
+    else if (abom_type == MONS_ABOMINATION_SMALL)
+        return (400 + roll_dice(2, 500));
     else
-        mass = std::max(min_small_mass, mass);
+        return (-1);
+}
 
-    dprf("Mass for abomination: %d", mass);
+// Make the proper stat adjustments to turn a demonic abomination into
+// an undead one.
+static bool _undead_abomination_convert(monster* mon, int mass = -1,
+                                        int strength = -1)
+{
+    if (mon->type != MONS_ABOMINATION_LARGE
+        && mon->type != MONS_ABOMINATION_SMALL)
+    {
+        return (false);
+    }
 
-    // This is what the old statement pretty much boils down to;
-    // the average will be approximately 10 * pow (or about 1000
-    // at the practical maximum).  That's the same as the mass
-    // of a hippogriff, a spiny frog, or a steam dragon.  Thus,
-    // material components are far more important to this spell. - bwr
-    mass += roll_dice(20, pow);
+    const int min_mass = _undead_abomination_min_mass(mon->type);
 
-    dprf("Mass for abomination with power bonus: %d", mass);
+    // Set 1 of 2 minimum masses: large or small.
+    if (mass == -1)
+        mass = min_mass;
+    else
+        mass = std::max(min_mass, mass);
 
+    // Set 1 of 3 strengths: 0 (low), 1 (medium) or 2 (high).
     if (strength == -1)
         strength = random2(3);
-
-    mgen_data mg(force_type, !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
-                 !force_hostile ? &you : 0, 0, 0, you.pos(),
-                 MHITYOU, MG_FORCE_BEH, god);
-
-    const int retval = create_monster(mg);
-
-    if (retval == -1)
-        return (-1);
-
-    monster* mon = &menv[retval];
+    else
+        strength = std::min(3, std::max(0, strength));
 
     // Mark this abomination as undead.
     mon->flags |= MF_FAKE_UNDEAD;
@@ -1813,7 +1777,7 @@ static int _make_undead_abomination(int pow, god_type god = GOD_NO_GOD,
                    (strength == 1) ? RED
                                    : BROWN);
 
-    if (force_type == MONS_ABOMINATION_LARGE)
+    if (mon->type == MONS_ABOMINATION_LARGE)
     {
         mon->hit_dice = 8 + mass / ((strength == 2) ?  500 :
                                     (strength == 1) ? 1000
@@ -1831,9 +1795,50 @@ static int _make_undead_abomination(int pow, god_type god = GOD_NO_GOD,
         }
     }
 
-    player_angers_monster(mon);
+    return (true);
+}
 
-    return (retval);
+static bool _make_undead_abomination(int mass, int strength,
+                                     int pow, god_type god = GOD_NO_GOD,
+                                     bool force_hostile = false)
+{
+    const int min_large = _undead_abomination_min_mass(MONS_ABOMINATION_LARGE);
+    const int min_small = _undead_abomination_min_mass(MONS_ABOMINATION_SMALL);
+
+    if (mass < min_small)
+        return (-1);
+
+    if (strength < 0 || strength > 2)
+        return (-1);
+
+    dprf("Mass for abomination: %d", mass);
+
+    // This is what the old statement pretty much boils down to;
+    // the average will be approximately 10 * pow (or about 1000
+    // at the practical maximum).  That's the same as the mass
+    // of a hippogriff, a spiny frog, or a steam dragon.  Thus,
+    // material components are far more important to this spell. - bwr
+    mass += roll_dice(20, pow);
+
+    dprf("Mass for abomination with power bonus: %d", mass);
+
+    const monster_type abom_type =
+        mass >= min_large ? MONS_ABOMINATION_LARGE : MONS_ABOMINATION_SMALL;
+
+    mgen_data mg(abom_type, !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
+                 !force_hostile ? &you : 0, 0, 0, you.pos(),
+                 MHITYOU, MG_FORCE_BEH, god);
+
+    const int mons = create_monster(mg);
+
+    if (mons == -1)
+        return (false);
+
+    _undead_abomination_convert(&menv[mons], mass, strength);
+
+    player_angers_monster(&menv[mons]);
+
+    return (true);
 }
 
 bool cast_twisted_resurrection(int pow, god_type god)
@@ -1869,7 +1874,7 @@ bool cast_twisted_resurrection(int pow, god_type god)
 
     const bool success =
         how_many_corpses > (coinflip() ? 2 : 1)
-            && _make_undead_abomination(pow, god, total_mass, strength) != -1;
+            && _make_undead_abomination(total_mass, strength, pow, god);
 
     if (success)
         mpr("The corpses meld into an agglomeration of writhing flesh!");
