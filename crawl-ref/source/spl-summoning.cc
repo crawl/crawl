@@ -1735,6 +1735,7 @@ bool cast_simulacrum(int pow, god_type god)
     return (count > 0);
 }
 
+// Return the minimum mass for the specified undead abomination type.
 static int _undead_abomination_min_mass(monster_type abom_type)
 {
     if (abom_type == MONS_ABOMINATION_LARGE)
@@ -1746,7 +1747,7 @@ static int _undead_abomination_min_mass(monster_type abom_type)
 }
 
 // Make the proper stat adjustments to turn a demonic abomination into
-// an undead one.
+// an undead abomination.
 static bool _undead_abomination_convert(monster* mon, int mass = -1,
                                         int strength = -1)
 {
