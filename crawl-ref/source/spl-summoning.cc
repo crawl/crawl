@@ -1807,10 +1807,10 @@ static bool _make_undead_abomination(int mass, int strength,
     const int min_small = _undead_abomination_min_mass(MONS_ABOMINATION_SMALL);
 
     if (mass < min_small)
-        return (-1);
+        return (false);
 
     if (strength < 0 || strength > 2)
-        return (-1);
+        return (false);
 
     dprf("Mass for abomination: %d", mass);
 
