@@ -2481,6 +2481,4 @@ void entered_malign_portal(actor* act)
         ouch(roll_dice(2, 4), NON_MONSTER, KILLED_BY_WILD_MAGIC, "a malign gateway");
     else
         act->hurt(NULL, roll_dice(2, 4));
-
-    return;
 }
