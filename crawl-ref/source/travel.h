@@ -600,6 +600,6 @@ void do_interlevel_travel();
 // If force is true, then the player will attack empty squares/open doors.
 int click_travel(const coord_def &gc, bool force);
 
-bool check_for_interesting_features(FixedArray< map_cell, GXM, GYM > &mapsh);
+bool check_for_interesting_features();
 
 #endif // TRAVEL_H

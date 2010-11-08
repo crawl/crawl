@@ -381,8 +381,7 @@ void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
     // Notifying of new things that comes into view.
     // Storing current env.map_knowledge to use it as a reference after
     // LOS is updated.
-    static FixedArray< map_cell, GXM, GYM > mapshadow;
-    mapshadow = env.map_knowledge;
+    env.map_shadow = env.map_knowledge;
 
     // Move the player to new location.
     you.moveto(p);
@@ -392,7 +391,7 @@ void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
 
     // Checking new squares for interesting features.
     if (!you.running)
-        check_for_interesting_features(mapshadow);
+        check_for_interesting_features();
 }
 
 bool is_feat_dangerous(dungeon_feature_type grid)

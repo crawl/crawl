@@ -46,6 +46,8 @@ struct crawl_environment
 
     // Player-remembered terrain and LOS
     FixedArray< map_cell, GXM, GYM >         map_knowledge;
+    // Previous map knowledge (last step)
+    FixedArray< map_cell, GXM, GYM >         map_shadow;
     std::set<coord_def> visible;
 
 #ifdef USE_TILE
