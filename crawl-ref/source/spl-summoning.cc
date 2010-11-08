@@ -1769,7 +1769,7 @@ static bool _undead_abomination_convert(monster* mon, int mass = -1,
     if (strength == -1)
         strength = random2(3);
     else
-        strength = std::min(3, std::max(0, strength));
+        strength = std::min(2, std::max(0, strength));
 
     // Mark this abomination as undead.
     mon->flags |= MF_FAKE_UNDEAD;
