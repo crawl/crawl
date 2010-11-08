@@ -1792,11 +1792,10 @@ static bool _undead_abomination_convert(monster* mon, int mass = -1,
     mon->max_hit_points = std::max(mon->max_hit_points, 1);
     mon->hit_points     = mon->max_hit_points;
 
-    if (strength == 2)
-    {
-        mon->ac = min_ac + mass / 1000;
-        mon->ac = std::min(max_ac, mon->ac);
-    }
+    mon->ac = min_ac + mass / ((strength == 2) ?  600 :
+                               (strength == 1) ? 1200
+                                               : 3000);
+    mon->ac = std::min(max_ac, mon->ac);
 
     return (true);
 }
