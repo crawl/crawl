@@ -1778,20 +1778,21 @@ static bool _undead_abomination_convert(monster* mon, int mass = -1,
                    (strength == 1) ? RED
                                    : BROWN);
 
-    if (mon->type == MONS_ABOMINATION_LARGE)
-    {
-        mon->hit_dice = 8 + mass / ((strength == 2) ?  500 :
-                                    (strength == 1) ? 1000
-                                                    : 2500);
-        mon->hit_dice = std::min(30, mon->hit_dice);
+    const int min_hd = mon->type == MONS_ABOMINATION_LARGE ?  8 :  4;
+    const int max_hd = mon->type == MONS_ABOMINATION_LARGE ? 30 : 15;
+    const int max_ac = mon->type == MONS_ABOMINATION_LARGE ? 20 : 10;
 
-        mon->max_hit_points = hit_points(mon->hit_dice, 2, 5);
-        mon->max_hit_points = std::max(mon->max_hit_points, 1);
-        mon->hit_points     = mon->max_hit_points;
+    mon->hit_dice = min_hd + mass / ((strength == 2) ?  500 :
+                                     (strength == 1) ? 1000
+                                                     : 2500);
+    mon->hit_dice = std::min(max_hd, mon->hit_dice);
 
-        if (strength == 2)
-            mon->ac = std::min(20, mon->ac + mass / 1000);
-    }
+    mon->max_hit_points = hit_points(mon->hit_dice, 2, 5);
+    mon->max_hit_points = std::max(mon->max_hit_points, 1);
+    mon->hit_points     = mon->max_hit_points;
+
+    if (strength == 2)
+        mon->ac = std::min(max_ac, mon->ac + mass / 1000);
 
     return (true);
 }
