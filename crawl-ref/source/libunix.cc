@@ -206,13 +206,15 @@ static void termio_init()
 
     crawl_state.unicode_ok = false;
 #ifdef UNICODE_GLYPHS
-    if (setlocale(LC_ALL, UNICODE_LOCALE)
+    if (setlocale(LC_ALL, "")
         && !strcmp(nl_langinfo(CODESET), "UTF-8"))
     {
         crawl_state.unicode_ok       = true;
         crawl_state.glyph2strfn      = unix_glyph2string;
         crawl_state.multibyte_strlen = unix_multibyte_strlen;
     }
+    else
+        setlocale(LC_ALL, "C");
 #endif
 
     crawl_state.terminal_resize_handler = unix_handle_terminal_resize;
