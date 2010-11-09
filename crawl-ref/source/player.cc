@@ -6206,9 +6206,14 @@ int player::has_talons(bool allow_tran) const
 {
     if (allow_tran)
     {
-        // no transformations bring talons with them
-        if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
+        // transformations other than these will override talons
+        if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE
+            && attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS
+            && attribute[ATTR_TRANSFORMATION] != TRAN_STATUE
+            && attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
+        {
             return (0);
+        }
     }
 
     // XXX: Do merfolk in water belong under allow_tran?
@@ -6234,6 +6239,7 @@ int player::has_fangs(bool allow_tran) const
         // transformations other than these will override fangs
         if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE
             && attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS
+            && attribute[ATTR_TRANSFORMATION] != TRAN_STATUE
             && attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
         {
             return (0);
@@ -6260,9 +6266,10 @@ int player::has_tail(bool allow_tran) const
         if (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
             return (1);
 
-        // transformations other than these will override the tail
+        // transformations other than these will override a tail
         if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE
             && attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS
+            && attribute[ATTR_TRANSFORMATION] != TRAN_STATUE
             && attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
         {
             return (0);
@@ -6313,6 +6320,7 @@ int player::has_pseudopods(bool allow_tran) const
 {
     if (allow_tran)
     {
+        // transformations other than these will override pseudopods
         if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
             return (0);
     }
