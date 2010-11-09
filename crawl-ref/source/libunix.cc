@@ -520,7 +520,11 @@ void unixcurses_startup(void)
     keypad(stdscr, TRUE);
 
 #ifdef CURSES_SET_ESCDELAY
+#ifdef NCURSES_REENTRANT
+    set_escdelay(CURSES_SET_ESCDELAY);
+#else
     ESCDELAY = CURSES_SET_ESCDELAY;
+#endif
 #endif
 #endif
 
