@@ -43,13 +43,6 @@ static uint64_t ench_to_mb(const monster& mons, enchant_type ench)
                       || ench == ENCH_PETRIFYING))
         return 0;
 
-    if ((ench == ENCH_HASTE || ench == ENCH_BATTLE_FRENZY
-            || ench == ENCH_MIGHT)
-        && mons.berserk())
-    {
-        return 0;
-    }
-
     if (ench == ENCH_HASTE && mons.has_ench(ENCH_SLOW))
         return 0;
 
@@ -118,6 +111,10 @@ static uint64_t ench_to_mb(const monster& mons, enchant_type ench)
         return ULL1 << MB_RAISED_MR;
     case ENCH_FEAR_INSPIRING:
         return ULL1 << MB_FEAR_INSPIRING;
+    case ENCH_WITHDRAWN:
+        return ULL1 << MB_WITHDRAWN;
+    case ENCH_ATTACHED:
+        return ULL1 << MB_ATTACHED;
     default:
         return 0;
     }
@@ -143,8 +140,10 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     type = p_type;
     base_type = p_base_type;
 
+    draco_type = mons_genus(type) == MONS_DRACONIAN ? MONS_DRACONIAN : type;
+
     number = 0;
-    colour = LIGHTGRAY;
+    colour = mons_class_colour(type);
 
     holi = mons_class_holiness(type);
 
@@ -220,6 +219,9 @@ monster_info::monster_info(const monster* m, int milev)
 
     if (type_known)
     {
+        draco_type =
+            mons_genus(type) == MONS_DRACONIAN ? ::draco_subspecies(m) : type;
+
         if (!mons_can_display_wounds(m)
             || !mons_class_can_display_wounds(type))
         {
@@ -233,7 +235,7 @@ monster_info::monster_info(const monster* m, int milev)
         // these use number for internal information
         if (type == MONS_MANTICORE
             || type == MONS_KRAKEN_TENTACLE
-            || type == MONS_KRAKEN_CONNECTOR
+            || type == MONS_KRAKEN_TENTACLE_SEGMENT
             || type == MONS_ELDRITCH_TENTACLE_SEGMENT)
         {
             number = 0;
@@ -265,17 +267,27 @@ monster_info::monster_info(const monster* m, int milev)
     }
 
     mname = m->mname;
-    if (!mname.empty() && !(m->flags & MF_NAME_DESCRIPTOR))
-        mb |= (ULL1 << MB_NAME_UNQUALIFIED) | (ULL1 << MB_NAME_THE);
-    else if (m->flags & MF_NAME_DEFINITE)
-        mb |= ULL1 << MB_NAME_THE;
 
-    if ((m->flags & MF_NAME_MASK) == MF_NAME_ADJECTIVE)
+    if ((m->flags & MF_NAME_MASK) == MF_NAME_SUFFIX)
+        mb |= ULL1 << MB_NAME_SUFFIX;
+    else if ((m->flags & MF_NAME_MASK) == MF_NAME_ADJECTIVE)
         mb |= ULL1 << MB_NAME_ADJECTIVE;
     else if ((m->flags & MF_NAME_MASK) == MF_NAME_REPLACE)
         mb |= ULL1 << MB_NAME_REPLACE;
-    else if ((m->flags & MF_NAME_MASK) == MF_NAME_SUFFIX)
-        mb |= ULL1 << MB_NAME_SUFFIX;
+
+    const bool need_name_desc =
+        (m->flags & MF_NAME_SUFFIX)
+            || (m->flags & MF_NAME_ADJECTIVE)
+            || (m->flags & MF_NAME_DEFINITE);
+
+    if (!mname.empty()
+        && !(m->flags & MF_NAME_DESCRIPTOR)
+        && !need_name_desc)
+    {
+        mb |= (ULL1 << MB_NAME_UNQUALIFIED) | (ULL1 << MB_NAME_THE);
+    }
+    else if (m->flags & MF_NAME_DEFINITE)
+        mb |= ULL1 << MB_NAME_THE;
 
     if (milev <= MILEV_NAME)
     {
@@ -911,6 +923,8 @@ void monster_info::to_string(int count, std::string& desc,
             out << " (distracted)";
         else if (is(MB_INVISIBLE))
             out << " (invisible)";
+        else if (is(MB_WITHDRAWN))
+            out << " (withdrawn)";
     }
 
     // Friendliness
@@ -998,6 +1012,13 @@ std::vector<std::string> monster_info::attributes() const
         v.push_back("mostly faded away");
     if (is(MB_FEAR_INSPIRING))
         v.push_back("inspiring fear");
+    if (is(MB_WITHDRAWN))
+    {
+        v.push_back("regenerating health quickly");
+        v.push_back("protected by its shell");
+    }
+    if (is(MB_ATTACHED))
+        v.push_back("attached and sucking blood");
     return v;
 }
 
@@ -1022,21 +1043,6 @@ std::string monster_info::wounds_description(bool use_colour) const
         desc = colour_string(desc, col);
     }
     return desc;
-}
-
-monster_type monster_info::draco_subspecies() const
-{
-    ASSERT(mons_genus(type) == MONS_DRACONIAN);
-
-    if (type == MONS_PLAYER_ILLUSION)
-        return (player_species_to_mons_species(u.ghost.species));
-
-    monster_type ret = mons_species(type);
-
-    if (ret == MONS_DRACONIAN && type != MONS_DRACONIAN)
-        ret = static_cast<monster_type>(base_type);
-
-    return (ret);
 }
 
 int monster_info::randarts(artefact_prop_type ra_prop) const

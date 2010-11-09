@@ -54,6 +54,7 @@
 #include "env.h"
 #include "errors.h"
 #include "ghost.h"
+#include "godpassive.h"
 #include "initfile.h"
 #include "items.h"
 #include "jobs.h"
@@ -1585,12 +1586,14 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
         // But do not reset the weapon swap if we swapped weapons
         // because of a transformation.
         maybe_clear_weapon_swap();
+
+        ash_detect_portals(player_in_mappable_area());
     }
 
     return just_created_level;
 }
 
-void _save_level(const level_id& lid)
+static void _save_level(const level_id& lid)
 {
     travel_cache.get_level_info(lid).update();
 
@@ -2127,7 +2130,7 @@ static bool _determine_ghost_version(FILE *ghostFile,
 {
     // Read first two bytes.
     uint8_t buf[2];
-    if (read2(ghostFile, buf, 2) != 2)
+    if (fread(buf, 1, 2, ghostFile) != 2)
         return (false);               // empty file?
 
     // Otherwise, read version and validate.

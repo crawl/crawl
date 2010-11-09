@@ -1322,7 +1322,19 @@ void down_stairs(dungeon_feature_type force_stair,
     if (!force_dest)
         _update_travel_cache(collect_travel_data, old_level, stair_pos);
 
+    // Notifying of new things that comes into view.
+    // Storing current env.map_knowledge to use it as a reference after
+    // LOS is updated.
+    env.map_shadow = env.map_knowledge;
+    // Preventing obvious finding of stairs at your position.
+    env.map_shadow(you.pos()).flags |= MAP_SEEN_FLAG;
+
     viewwindow();
+
+    // Checking new squares for interesting features.
+    if (!you.running)
+        check_for_interesting_features();
+
     maybe_update_stashes();
 
     request_autopickup();
@@ -1348,24 +1360,9 @@ void new_level(void)
 }
 
 // Returns a hatch or stair (up or down)
-dungeon_feature_type random_stair ()
+dungeon_feature_type random_stair()
 {
     return (static_cast<dungeon_feature_type>(
         DNGN_STONE_STAIRS_DOWN_I+random2(
             DNGN_ESCAPE_HATCH_UP-DNGN_STONE_STAIRS_DOWN_I+1)));
-}
-
-// Returns a random branch entry stair.
-dungeon_feature_type random_branch_stair ()
-{
-    dungeon_feature_type stair;
-    do
-    {
-        stair = static_cast<dungeon_feature_type>(
-            DNGN_ENTER_FIRST_BRANCH+random2(
-                DNGN_ENTER_LAST_BRANCH-DNGN_ENTER_FIRST_BRANCH+1));
-    }
-    while (stair == DNGN_ENTER_ZOT);
-
-    return (stair);
 }

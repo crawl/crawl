@@ -40,6 +40,7 @@
 #include "files.h"
 #include "fprop.h"
 #include "godconduct.h"
+#include "godpassive.h"
 #include "hints.h"
 #include "libutil.h"
 #include "macro.h"
@@ -735,9 +736,12 @@ static int player_view_update_at(const coord_def &gc)
     if (!(env.pgrid(gc) & FPROP_SEEN_OR_NOEXP))
     {
         env.pgrid(gc) |= FPROP_SEEN_OR_NOEXP;
-        const int density = env.density ? env.density : 1000;
-        did_god_conduct(DID_EXPLORATION, density);
-        you.exploration += div_rand_round(1<<16, density);
+        if (!crawl_state.game_is_arena())
+        {
+            const int density = env.density ? env.density : 2000;
+            did_god_conduct(DID_EXPLORATION, density);
+            you.exploration += div_rand_round(1<<16, density);
+        }
     }
 
 #ifdef USE_TILE
@@ -872,7 +876,10 @@ void viewwindow(bool show_updates)
     if (show_updates || _show_terrain)
     {
         if (!player_in_mappable_area())
+        {
             env.map_knowledge.init(map_cell());
+            ash_detect_portals(false);
+        }
 
 #ifdef USE_TILE
         tile_draw_floor();

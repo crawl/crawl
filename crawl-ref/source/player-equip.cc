@@ -891,9 +891,9 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
 
         case SPARM_ARCHMAGI:
             if (!you.skills[SK_SPELLCASTING])
-                mpr("You feel strangely numb.");
+                mpr("You feel strangely lacking in power.");
             else
-                mpr("You feel extremely powerful.");
+                mpr("You feel powerful.");
             break;
 
         case SPARM_SPIRIT_SHIELD:
@@ -1306,7 +1306,10 @@ static void _equip_jewellery_effect(item_def &item)
         break;
 
     case AMU_STASIS:
-        int amount = you.duration[DUR_HASTE] + you.duration[DUR_SLOW];
+        // Berserk is possible with a Battlelust card or with a moth of wrath
+        // that affects you while donning the amulet.
+        int amount = you.duration[DUR_HASTE] + you.duration[DUR_SLOW]
+                     + you.duration[DUR_BERSERK];
         if (you.duration[DUR_TELEPORT])
             amount += 30 + random2(150);
         if (amount)
@@ -1330,9 +1333,12 @@ static void _equip_jewellery_effect(item_def &item)
                 mpr("Your slowness suddenly goes away.", MSGCH_DURATION);
             if (you.duration[DUR_TELEPORT])
                 mpr("You feel strangely stable.", MSGCH_DURATION);
+            if (you.duration[DUR_BERSERK])
+                mpr("You violently calm down.", MSGCH_DURATION);
             you.duration[DUR_HASTE] = 0;
             you.duration[DUR_SLOW] = 0;
             you.duration[DUR_TELEPORT] = 0;
+            you.duration[DUR_BERSERK] = 0;
         }
         break;
 

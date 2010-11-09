@@ -608,6 +608,16 @@
   "robust"
 },
 
+{ MUT_UNBREATHING,                0,  1, false, false,
+  "unbreathing",
+
+  {"You do not need to breathe.", "", ""},
+  {"You feel breathless.", "", ""},
+  {"", "", ""},
+
+  "unbreathing"
+},
+
 { MUT_TORMENT_RESISTANCE,         0,  1, false, false,
   "torment resistance",
 

@@ -242,7 +242,7 @@ static void _sdump_transform(dump_params &par)
             text += "bat-form.";
             break;
         case TRAN_BLADE_HANDS:
-            text += "Your hands " + verb + " blades.";
+            text += "Your " + blade_parts() + " " + verb + " blades.";
             break;
         case TRAN_STATUE:
             text += "You " + verb + " a stone statue.";
@@ -431,23 +431,6 @@ static void _sdump_gold(dump_params &par)
         text += "\n";
 }
 
-static void _sdump_diag(dump_params &par)
-{
-    std::string &text(par.text);
-
-    text += make_stringf("You made %d melee attacks, avg delay %1.2f aut.\n"
-                "You made %d steps orthogonally, %d diagonally.\n"
-                "Autoexploring made %d steps orthogonally, %d diagonally.\n"
-                "\n",
-                you.dcounters[0][0][DC_FIGHT],
-                you.dcounters[1][0][DC_FIGHT] * 1.0
-                    / std::max(1, you.dcounters[0][0][DC_FIGHT]),
-                you.dcounters[0][0][DC_WALK_ORTHO],
-                you.dcounters[0][0][DC_WALK_DIAG],
-                you.dcounters[0][1][DC_WALK_ORTHO],
-                you.dcounters[0][1][DC_WALK_DIAG]);
-}
-
 static void _sdump_misc(dump_params &par)
 {
     _sdump_location(par);
@@ -457,9 +440,6 @@ static void _sdump_misc(dump_params &par)
     _sdump_transform(par);
     _sdump_visits(par);
     _sdump_gold(par);
-#if TAG_MAJOR_VERSION == 31
-    _sdump_diag(par);
-#endif
 }
 
 #define TO_PERCENT(x, y) (100.0f * (static_cast<float>(x)) / (static_cast<float>(y)))

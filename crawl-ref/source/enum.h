@@ -112,6 +112,7 @@ enum ability_type
     ABIL_CHEIBRIADOS_TIME_BEND,
     ABIL_CHEIBRIADOS_SLOUCH,
     ABIL_ASHENZARI_SCRYING,
+    ABIL_ASHENZARI_TRANSFER_KNOWLEDGE,
 
     // Vampire abilities
     ABIL_TRAN_BAT = 260,
@@ -396,6 +397,9 @@ enum canned_message_type
 {
     MSG_SOMETHING_APPEARS,
     MSG_NOTHING_HAPPENS,
+#if TAG_MAJOR_VERSION != 31
+    MSG_YOU_UNAFFECTED,
+#endif
     MSG_YOU_RESIST,
     MSG_YOU_PARTIALLY_RESIST,
     MSG_TOO_BERSERK,
@@ -413,6 +417,9 @@ enum canned_message_type
     MSG_MANA_INCREASE,
     MSG_MANA_DECREASE,
     MSG_TOO_HUNGRY,
+#if TAG_MAJOR_VERSION == 31
+    MSG_YOU_UNAFFECTED,
+#endif
 };
 
 enum char_set_type
@@ -939,6 +946,7 @@ enum dungeon_char_type
     DCHAR_TRAP,
     DCHAR_STAIRS_DOWN,
     DCHAR_STAIRS_UP,
+    DCHAR_GRATE,
     DCHAR_ALTAR,
     DCHAR_ARCH,
     DCHAR_FOUNTAIN,
@@ -1018,6 +1026,7 @@ enum dungeon_feature_type
     DNGN_CLEAR_ROCK_WALL,              // transparent walls
     DNGN_CLEAR_STONE_WALL,
     DNGN_CLEAR_PERMAROCK_WALL,
+    DNGN_GRATE,
 
     // Lowest/highest grid value which is a wall.
     DNGN_MINWALL = DNGN_WAX_WALL,
@@ -1030,7 +1039,7 @@ enum dungeon_feature_type
     DNGN_MINSEE = DNGN_CLEAR_ROCK_WALL,
 
     // Highest grid value which can't be reached through.
-    DNGN_MAX_NONREACH = DNGN_CLEAR_PERMAROCK_WALL,
+    DNGN_MAX_NONREACH = DNGN_GRATE,
 
     DNGN_OPEN_SEA,                     // Shoals equivalent for permarock
 
@@ -1195,7 +1204,7 @@ enum duration_type
     DUR_BRILLIANCE,
     DUR_AGILITY,
     DUR_LEVITATION,
-    DUR_BERSERKER,
+    DUR_BERSERK,
     DUR_POISONING,
 
     DUR_CONFUSING_TOUCH,
@@ -1324,6 +1333,9 @@ enum enchant_type
     ENCH_STONESKIN,
     ENCH_FEAR_INSPIRING,
     ENCH_PORTAL_PACIFIED,
+    ENCH_WITHDRAWN,
+    ENCH_ATTACHED,
+    ENCH_LIFE_TIMER,    // Minimum time demonic guardian must exist.
 
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
@@ -1947,7 +1959,7 @@ enum monster_type                      // (int) menv[].type
     MONS_SHADOW_WRAITH,                //  240
     MONS_GIANT_AMOEBA,
     MONS_GIANT_SLUG,
-    MONS_GIANT_SNAIL,
+    MONS_AGATE_SNAIL,
     MONS_SPATIAL_VORTEX,
     MONS_PIT_FIEND,                    //  245
     MONS_BORING_BEETLE,
@@ -2166,7 +2178,7 @@ enum monster_type                      // (int) menv[].type
     MONS_WATER_ELEMENTAL,
     MONS_SWAMP_WORM,                   //  435
     MONS_SHARK,
-    MONS_KRAKEN_CONNECTOR,
+    MONS_KRAKEN_TENTACLE_SEGMENT,
       MONS_UNUSED_438,
       MONS_UNUSED_439,
 
@@ -2231,12 +2243,14 @@ enum monster_type                      // (int) menv[].type
     MONS_ELDRITCH_TENTACLE_SEGMENT,
     MONS_TARANTELLA,
     MONS_SILENT_SPECTRE,
+#if TAG_MAJOR_VERSION == 31
     // Dwarf Hall monsters
     MONS_WITCH,
     MONS_EVIL_WITCH,
     MONS_FOREST_WITCH,
     MONS_HULDRA,
     MONS_TROLLKONOR,
+#endif
     MONS_GREATER_WRAITH,
 
     // Spriggans:
@@ -2327,8 +2341,8 @@ enum mon_attitude_type
 {
     ATT_HOSTILE,                       // 0, default in most cases
     ATT_NEUTRAL,                       // neutral
-    ATT_GOOD_NEUTRAL,                  // neutral, but won't attack friendlies
     ATT_STRICT_NEUTRAL,                // neutral, won't attack player. Used by Jiyva.
+    ATT_GOOD_NEUTRAL,                  // neutral, but won't attack friendlies
     ATT_FRIENDLY,                      // created friendly (or tamed?)
 };
 
@@ -2460,11 +2474,13 @@ enum mon_spellbook_type
     MST_WIZARD_III,
     MST_WIZARD_IV,
     MST_WIZARD_V,
+#if TAG_MAJOR_VERSION == 31
     MST_TROLLKONOR,
     MST_HULDRA,
     MST_WITCH_I,
     MST_WITCH_II,
     MST_WITCH_III,
+#endif
     MST_ORC_PRIEST,                    //  80
     MST_ORC_HIGH_PRIEST,
     MST_MOTTLED_DRAGON,
@@ -2673,6 +2689,9 @@ enum mutation_type
     MUT_TOUGH_SKIN,
     MUT_WEAK,
     MUT_SLOW,
+#if TAG_MAJOR_VERSION != 31
+    MUT_UNBREATHING,
+#endif
 
     // Jiyva-specific mutations
     MUT_ACIDIC_BITE,
@@ -2682,6 +2701,9 @@ enum mutation_type
     MUT_PSEUDOPODS,
     MUT_TRANSLUCENT_SKIN,
 
+#if TAG_MAJOR_VERSION == 31
+    MUT_UNBREATHING,
+#endif
     NUM_MUTATIONS,
 
     RANDOM_MUTATION = NUM_MUTATIONS + 1,
@@ -2714,6 +2736,7 @@ enum object_class_type                 // mitm[].base_type
     NUM_OBJECT_CLASSES,
     OBJ_UNASSIGNED = 100,              // must remain set to 100 {dlb}
     OBJ_RANDOM,      // used for blanket random sub_type .. see dungeon::items()
+    OBJ_DETECTED,    // unknown item; item_info only
 };
 
 enum operation_types
@@ -2879,6 +2902,7 @@ enum size_type
 enum skill_type
 {
     SK_FIGHTING,
+    SK_FIRST_SKILL = SK_FIGHTING,
     SK_SHORT_BLADES,
     SK_LONG_BLADES,
     SK_AXES,
@@ -2915,6 +2939,7 @@ enum skill_type
     SK_POISON_MAGIC,
     SK_INVOCATIONS,
     SK_EVOCATIONS,
+    SK_LAST_SKILL = SK_EVOCATIONS,
     NUM_SKILLS,                        // must remain last regular member
 
     SK_BLANK_LINE,                     // used for skill output
@@ -3143,6 +3168,9 @@ enum spell_type
     SPELL_VAMPIRE_SUMMON,
     SPELL_BRAIN_FEED,
     SPELL_FAKE_RAKSHASA_SUMMON,
+#if TAG_MAJOR_VERSION != 31
+    SPELL_NOXIOUS_CLOUD,
+#endif
     SPELL_STEAM_BALL,
     SPELL_SUMMON_UFETUBUS,
     SPELL_SUMMON_BEAST,
@@ -3208,6 +3236,9 @@ enum spell_type
     SPELL_FIRE_CLOUD,
     SPELL_STEAM_CLOUD,
     SPELL_MALIGN_GATEWAY,
+#if TAG_MAJOR_VERSION == 31
+    SPELL_NOXIOUS_CLOUD,
+#endif
 
     NUM_SPELLS
 };
@@ -3262,7 +3293,9 @@ enum trap_type                         // env.trap_type[]
     TRAP_NEEDLE,
     TRAP_SHAFT,
     TRAP_GOLUBRIA,
+    TRAP_PLATE,
     NUM_TRAPS,                         // must remain last 'regular' member {dlb}
+    TRAP_MAX_REGULAR = TRAP_SHAFT,
     TRAP_UNASSIGNED = 100,             // keep set at 100 for now {dlb}
     TRAP_INDEPTH = 253,                // Level-appropriate trap.
     TRAP_NONTELEPORT = 254,

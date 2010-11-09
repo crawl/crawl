@@ -268,6 +268,7 @@ bool mons_abyss(int mcls)
     case MONS_SKELETAL_WARRIOR:
     case MONS_SKELETON_LARGE:
     case MONS_SKELETON_SMALL:
+    case MONS_SKY_BEAST:
     case MONS_SMOKE_DEMON:
     case MONS_SOUL_EATER:
     case MONS_SPINY_WORM:
@@ -411,6 +412,7 @@ int mons_rare_abyss(int mcls)
     case MONS_VAPOUR:
     case MONS_SIMULACRUM_LARGE:
     case MONS_SIMULACRUM_SMALL:
+    case MONS_SKY_BEAST:
         return 9;
 
     case MONS_FUNGUS:
@@ -636,6 +638,7 @@ int mons_standard_level(int mcls)
     case MONS_NECROPHAGE:
     case MONS_QUASIT:
     case MONS_ZOMBIE_SMALL:
+    case MONS_SKY_BEAST:
         return 9;
 
     case MONS_DEEP_ELF_SOLDIER:
@@ -695,6 +698,11 @@ int mons_standard_level(int mcls)
     case MONS_SCROLL_MIMIC:
     case MONS_SKELETAL_WARRIOR:
     case MONS_WEAPON_MIMIC:
+    case MONS_PORTAL_MIMIC:
+    case MONS_TRAP_MIMIC:
+    case MONS_STAIR_MIMIC:
+    case MONS_SHOP_MIMIC:
+    case MONS_FOUNTAIN_MIMIC:
         return 15;
 
     case MONS_BLINK_FROG:
@@ -745,7 +753,7 @@ int mons_standard_level(int mcls)
     case MONS_EARTH_ELEMENTAL:
     case MONS_FIRE_ELEMENTAL:
     case MONS_GIANT_ORANGE_BRAIN:
-    case MONS_GIANT_SNAIL:
+    case MONS_AGATE_SNAIL:
     case MONS_GREAT_ORB_OF_EYES:
     case MONS_ICE_DRAGON:
     case MONS_NAGA_MAGE:
@@ -918,6 +926,7 @@ int mons_standard_rare(int mcls)
     case MONS_HIPPOGRIFF:
     case MONS_HYDRA:
     case MONS_ICE_BEAST:
+    case MONS_SKY_BEAST:
     case MONS_KILLER_BEE:
     case MONS_ORC_WIZARD:
     case MONS_QUOKKA:
@@ -998,6 +1007,11 @@ int mons_standard_rare(int mcls)
     case MONS_WEAPON_MIMIC:
     case MONS_YELLOW_WASP:
     case MONS_ELEPHANT:
+    case MONS_PORTAL_MIMIC:
+    case MONS_TRAP_MIMIC:
+    case MONS_STAIR_MIMIC:
+    case MONS_SHOP_MIMIC:
+    case MONS_FOUNTAIN_MIMIC:
         return 30;
 
     case MONS_FLAYED_GHOST:
@@ -1024,7 +1038,7 @@ int mons_standard_rare(int mcls)
 
     case MONS_BUTTERFLY:
     case MONS_FUNGUS:
-    case MONS_GIANT_SNAIL:
+    case MONS_AGATE_SNAIL:
     case MONS_ICE_DRAGON:
     case MONS_INSUBSTANTIAL_WISP:
     case MONS_PHANTASMAL_WARRIOR:
@@ -1116,7 +1130,7 @@ int mons_standard_rare(int mcls)
     }
 }
 
-// The Dwarf Hall of Fallen Heroes
+// The Dwarf Hall
 int mons_dwarf_level(int mcls)
 {
     int mlev = absdungeon_depth(BRANCH_DWARF_HALL, 1);
@@ -1150,11 +1164,6 @@ int mons_dwarf_level(int mcls)
     case MONS_DEEP_DWARF_BERSERKER:
     case MONS_DEEP_DWARF_DEATH_KNIGHT:
     case MONS_WOLF_SPIDER:
-    case MONS_TROLLKONOR:
-    case MONS_WITCH:
-    case MONS_FOREST_WITCH:
-    case MONS_EVIL_WITCH:
-    case MONS_HULDRA:
     case MONS_NECROMANCER:
         mlev += 4;
         break;
@@ -1172,9 +1181,11 @@ int mons_dwarf_level(int mcls)
     case MONS_DEEP_TROLL:
         mlev += 7;
         break;
+
     case MONS_IRON_TROLL:
         mlev += 9;
         break;
+
     case MONS_FIRE_GIANT:
     case MONS_FROST_GIANT:
     case MONS_STONE_GIANT:
@@ -1233,17 +1244,10 @@ int mons_dwarf_rare(int mcls)
     case MONS_ELF:
         rarity = 50;
         break;
-    case MONS_HULDRA:
-        sharp_before = 2;
     case MONS_WAR_DOG:
         rarity = 40;
         break;
-    case MONS_TROLLKONOR:
-        soft_curve = true;
     case MONS_TROLL:
-    case MONS_WITCH:
-    case MONS_EVIL_WITCH:
-        rarity = 30;
         break;
     case MONS_SHAPESHIFTER:
         sharp_curve = true;
@@ -1260,7 +1264,6 @@ int mons_dwarf_rare(int mcls)
         break;
     case MONS_ORANGE_RAT:
         soft_curve = true;
-    case MONS_FOREST_WITCH:
     case MONS_NECROPHAGE:
     case MONS_GHOUL:
     case MONS_GLOWING_SHAPESHIFTER:
@@ -1562,7 +1565,7 @@ int mons_lair_level(int mcls)
         break;
 
     case MONS_BLINK_FROG:
-    case MONS_GIANT_SNAIL:
+    case MONS_AGATE_SNAIL:
     case MONS_GIANT_SPORE:
     case MONS_KOMODO_DRAGON:
     case MONS_ORANGE_RAT:
@@ -1600,6 +1603,7 @@ int mons_lair_level(int mcls)
     case MONS_BOULDER_BEETLE:
     case MONS_DEATH_YAK:
     case MONS_SPINY_WORM:
+    case MONS_STAIR_MIMIC:
         mlev += 7;
         break;
 
@@ -1646,7 +1650,7 @@ int mons_lair_rare(int mcls)
     case MONS_HOUND:
         return 60;
 
-    case MONS_GIANT_SNAIL:
+    case MONS_AGATE_SNAIL:
         return 56;
 
     case MONS_GIANT_SLUG:
@@ -1728,6 +1732,9 @@ int mons_lair_rare(int mcls)
     case MONS_GIANT_SPORE:
         return 2;
 
+    case MONS_STAIR_MIMIC:
+        return 1;
+
     default:
         return 0;
     }
@@ -1764,7 +1771,7 @@ int mons_swamp_level(int mcls)
     case MONS_BUTTERFLY:
     case MONS_CROCODILE:
     case MONS_GIANT_MOSQUITO:
-    case MONS_GIANT_SNAIL:
+    case MONS_AGATE_SNAIL:
     case MONS_HYDRA:
         mlev += 2;
         break;
@@ -1778,6 +1785,7 @@ int mons_swamp_level(int mcls)
     case MONS_RED_WASP:
     case MONS_SPINY_FROG:
     case MONS_SWAMP_DRAGON:
+    case MONS_PORTAL_MIMIC:
     case MONS_UGLY_THING:
         mlev += 3;
         break;
@@ -1854,6 +1862,7 @@ int mons_swamp_rare(int mcls)
         return 25;
 
     case MONS_WORM:
+    case MONS_PORTAL_MIMIC:
         return 20;
 
     case MONS_KOMODO_DRAGON:
@@ -1875,7 +1884,7 @@ int mons_swamp_rare(int mcls)
     case MONS_GIANT_GECKO:
     case MONS_GIANT_NEWT:
     case MONS_GIANT_SLUG:
-    case MONS_GIANT_SNAIL:
+    case MONS_AGATE_SNAIL:
     case MONS_TENTACLED_MONSTROSITY:
         return 10;
 
@@ -1920,6 +1929,7 @@ int mons_shoals_level(int mcls)
     case MONS_MERFOLK_JAVELINEER:
     case MONS_MERFOLK_IMPALER:
     case MONS_MERFOLK_AQUAMANCER:
+    case MONS_PORTAL_MIMIC:
         mlev += 4;
         break;
 
@@ -1968,6 +1978,7 @@ int mons_shoals_rare(int mcls)
     case MONS_OKLOB_PLANT:
     case MONS_ALLIGATOR_SNAPPING_TURTLE:
     case MONS_MERFOLK_JAVELINEER:
+    case MONS_PORTAL_MIMIC:
         return 10;
 
     default:
@@ -2005,6 +2016,7 @@ int mons_pitsnake_level(int mcls)
         break;
 
     case MONS_GREATER_NAGA:
+    case MONS_PORTAL_MIMIC:
         mlev += 5;
         break;
 
@@ -2040,6 +2052,7 @@ int mons_pitsnake_rare(int mcls)
     case MONS_GREATER_NAGA:
     case MONS_GUARDIAN_SERPENT:
     case MONS_SMALL_SNAKE:
+    case MONS_PORTAL_MIMIC:
         return 15;
 
     default:
@@ -2341,6 +2354,11 @@ int mons_crypt_level(int mcls)
     case MONS_ANCIENT_LICH:
     case MONS_LICH:
     case MONS_CURSE_SKULL:
+    case MONS_PORTAL_MIMIC:
+    case MONS_TRAP_MIMIC:
+    case MONS_STAIR_MIMIC:
+    case MONS_SHOP_MIMIC:
+    case MONS_FOUNTAIN_MIMIC:
         mlev += 5;
         break;
 
@@ -2416,6 +2434,11 @@ int mons_crypt_rare(int mcls)
         return 10;
 
     case MONS_ANCIENT_LICH:
+    case MONS_PORTAL_MIMIC:
+    case MONS_TRAP_MIMIC:
+    case MONS_STAIR_MIMIC:
+    case MONS_SHOP_MIMIC:
+    case MONS_FOUNTAIN_MIMIC:
         return 8;
 
     case MONS_ABOMINATION_SMALL:

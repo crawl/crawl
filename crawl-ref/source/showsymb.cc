@@ -173,7 +173,7 @@ show_class get_cell_show_class(const map_cell& cell, bool only_stationary_monste
     if (feat_is_trap(cell.feat()) || is_critical_feature(cell.feat()))
         return SH_FEATURE;
 
-    if (cell.detected_item() || cell.item())
+    if (cell.item())
         return SH_ITEM;
 
     if (cell.feat())
@@ -277,7 +277,7 @@ glyph get_cell_glyph_with_class(const map_cell& cell, const coord_def& loc, show
         if (!gloom)
             g.col = _cell_feat_show_colour(cell, colored);
 
-        if (cell.detected_item() || cell.item())
+        if (cell.item())
         {
             if (Options.feature_item_brand && is_critical_feature(cell.feat()))
                 g.col |= COLFLAG_FEATURE_ITEM;
@@ -287,13 +287,7 @@ glyph get_cell_glyph_with_class(const map_cell& cell, const coord_def& loc, show
         break;
 
     case SH_ITEM:
-        if (cell.detected_item())
-        {
-            show = SHOW_ITEM_DETECTED;
-            if (!gloom)
-                g.col = Options.detected_item_colour;
-        }
-        else if (cell.item())
+        if (cell.item())
         {
             const item_info* eitem = cell.item();
             show = *eitem;

@@ -203,6 +203,10 @@ const int BRANCH_DUNGEON_DEPTH = 27;
 // Size of unique_items in player class
 #define MAX_UNRANDARTS 100
 
+// Haste/slow boost.
+#define haste_mul(x) div_rand_round((x) * 3, 2)
+#define haste_div(x) div_rand_round((x) * 2, 3)
+
 // some shortcuts:
 #define menv   env.mons
 #define mitm   env.item

@@ -6,6 +6,8 @@
 const int KRAKEN_TENTACLE_RANGE = 3;
 #define TIDE_CALL_TURN "tide-call-turn"
 
+#define MAX_DAMAGE_COUNTER 10000
+
 class mon_enchant
 {
 public:
@@ -105,6 +107,9 @@ public:
 
     std::string seen_context;          // Non-standard context for
                                        // AI_SEE_MONSTER
+
+    int damage_friendly;               // Damage taken, x2 you, x1 pets, x0 else.
+    int damage_total;
 
     CrawlHashTable props;
 
@@ -300,6 +305,7 @@ public:
     void go_frenzy();
     bool berserk() const;
     bool frenzied() const;
+    bool has_lifeforce() const;
     bool can_mutate() const;
     bool can_safely_mutate() const;
     bool can_bleed() const;
@@ -318,6 +324,7 @@ public:
     bool is_known_chaotic() const;
     bool is_chaotic() const;
     bool is_artificial() const;
+    bool is_unbreathing() const;
     bool is_insubstantial() const;
     int res_hellfire() const;
     int res_fire() const;
@@ -337,6 +344,8 @@ public:
 
     flight_type flight_mode() const;
     bool is_levitating() const;
+    bool is_wall_clinging() const;
+    bool can_cling_to(const coord_def& p) const;
     bool invisible() const;
     bool can_see_invisible() const;
     bool visible_to(const actor *looker) const;
@@ -366,6 +375,7 @@ public:
     bool strict_neutral() const;
     bool wont_attack() const;
     bool pacified() const;
+    bool withdrawn() const {return has_ench(ENCH_WITHDRAWN);};
 
     bool has_spells() const;
     bool has_spell(spell_type spell) const;
@@ -421,7 +431,6 @@ public:
     const player* as_player() const { return NULL; }
 
     // Hacks, with a capital H.
-    void fix_speed();
     void check_speed();
     void upgrade_type(monster_type after, bool adjust_hd, bool adjust_hp);
 
@@ -434,6 +443,7 @@ public:
 
     void bind_melee_flags();
     void bind_spell_flags();
+    void calc_speed();
 
 private:
     void init_with(const monster& mons);

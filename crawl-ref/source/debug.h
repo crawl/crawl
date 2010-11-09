@@ -71,4 +71,7 @@ inline void __DUMMY_TRACE__(...)
 
 #endif
 
+#ifdef DEBUG
+void debuglog(const char *format, ...);
+#endif
 #endif

@@ -117,7 +117,7 @@ void monster::upgrade_type(monster_type after, bool adjust_hd,
     colour = dummy.colour;
     speed  = dummy.speed;
     spells = dummy.spells;
-    fix_speed();
+    calc_speed();
 
     const monsterentry *m = get_monster_data(after);
     ac += m->AC - orig->AC;

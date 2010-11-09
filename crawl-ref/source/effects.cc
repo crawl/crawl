@@ -339,7 +339,7 @@ int torment_monsters(coord_def where, int pow, int caster, actor *attacker)
                         attacker ? attacker->mindex() : MHITNOT);
     }
 
-    mons->hurt(NULL, hploss, BEAM_TORMENT_DAMAGE);
+    mons->hurt(attacker, hploss, BEAM_TORMENT_DAMAGE);
 
     if (hploss)
         retval = 1;
@@ -431,7 +431,8 @@ void immolation(int pow, int caster, coord_def where, bool known,
 static bool _conduct_electricity_affects_actor(const bolt& beam,
                                                const actor* victim)
 {
-    return (victim->alive() && victim->res_elec() <= 0 && !victim->airborne());
+    return (victim->alive() && victim->res_elec() <= 0
+            && !(victim->airborne() || victim->is_wall_clinging()));
 }
 
 static bool _conduct_electricity_damage(bolt &beam, actor* victim,
@@ -690,7 +691,7 @@ bool forget_spell(void)
     int slot = -1;
     int num  = 0;
 
-    for (int i = 0; i < 25; i++)
+    for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
     {
         if (you.spells[i] != SPELL_NO_SPELL)
         {
@@ -2232,7 +2233,7 @@ void handle_time()
     if (you.duration[DUR_INVIS] && x_chance_in_y(6, 10))
         added_contamination++;
 
-    if (you.duration[DUR_HASTE] && !you.berserk() && x_chance_in_y(6, 10))
+    if (you.duration[DUR_HASTE] && x_chance_in_y(6, 10))
         added_contamination++;
 
     bool mutagenic_randart = false;

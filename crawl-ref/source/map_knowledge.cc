@@ -91,7 +91,7 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
 static void _automap_from(int x, int y, int mutated)
 {
     if (mutated)
-        magic_mapping(8 * mutated, 25, true, false,
+        magic_mapping(8 * mutated, 25, true, you.religion == GOD_ASHENZARI,
                       true, true, coord_def(x,y));
 }
 
@@ -128,7 +128,7 @@ void set_terrain_seen(int x, int y)
         _automap_from(x, y, _map_quality());
 
         const bool boring = !is_notable_terrain(feat)
-            // A portal deeper into the Zigguart is boring.
+            // A portal deeper into the Ziggurat is boring.
             || (feat == DNGN_ENTER_PORTAL_VAULT
                 && you.level_type == LEVEL_PORTAL_VAULT)
             // Altars in the temple are boring.
@@ -179,4 +179,13 @@ void clear_terrain_visibility()
     for (std::set<coord_def>::iterator i = env.visible.begin(); i != env.visible.end(); ++i)
         env.map_knowledge(*i).flags &=~ MAP_VISIBLE_FLAG;
     env.visible.clear();
+}
+
+void map_cell::set_detected_item()
+{
+    clear_item();
+    flags |= MAP_DETECTED_ITEM;
+    _item = new item_info();
+    _item->base_type = OBJ_DETECTED;
+    _item->colour    = Options.detected_item_colour;
 }

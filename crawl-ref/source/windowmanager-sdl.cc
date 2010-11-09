@@ -11,6 +11,7 @@
 #include "cio.h"
 #include "files.h"
 #include "glwrapper.h"
+#include "libutil.h"
 #include "options.h"
 #include "syscalls.h"
 #include "windowmanager.h"
@@ -247,6 +248,7 @@ int SDLWrapper::init(coord_def *m_windowsz)
     video_info = SDL_GetVideoInfo();
 
     _desktop_width = video_info->current_w;
+    _desktop_height = video_info->current_h;
 
     SDL_EnableUNICODE(true);
 
@@ -292,6 +294,10 @@ int SDLWrapper::init(coord_def *m_windowsz)
         y = (y > 0) ? y : video_info->current_h + y;
         m_windowsz->x = std::max(800, x);
         m_windowsz->y = std::max(480, y);
+
+#ifdef TARGET_OS_WINDOWS
+        set_window_placement(m_windowsz);
+#endif
     }
 
     m_context = SDL_SetVideoMode(m_windowsz->x, m_windowsz->y, 0, flags);
@@ -319,6 +325,11 @@ int SDLWrapper::desktop_width() const
     return (_desktop_width);
 }
 
+int SDLWrapper::desktop_height() const
+{
+    return (_desktop_height);
+}
+
 void SDLWrapper::set_window_title(const char *title)
 {
     SDL_WM_SetCaption(title, CRAWL);
@@ -336,6 +347,53 @@ bool SDLWrapper::set_window_icon(const char* icon_name)
     SDL_FreeSurface(surf);
     return (true);
 }
+
+#ifdef TARGET_OS_WINDOWS
+void SDLWrapper::set_window_placement(coord_def *m_windowsz)
+{
+    // We move the window if it overlaps the taskbar.
+    const int title_bar = 29;
+    int delta_x = (wm->desktop_width() - m_windowsz->x) / 2;
+    int delta_y = (wm->desktop_height() - m_windowsz->y) / 2;
+    taskbar_pos tpos = get_taskbar_pos();
+    int tsize = get_taskbar_size();
+
+    if (tpos == TASKBAR_TOP)
+        tsize += title_bar; // Title bar
+    else
+        tsize += 3; // Window border
+
+    int overlap = tsize - (tpos & TASKBAR_H ? delta_y : delta_x);
+
+    if (overlap > 0)
+    {
+        char env_str[50];
+        int x = delta_x;
+        int y = delta_y;
+
+        if (tpos & TASKBAR_H)
+            y += tpos == TASKBAR_TOP ? overlap : -overlap;
+        else
+            x += tpos == TASKBAR_LEFT ? overlap : -overlap;
+
+        x = std::max(x, 0);
+        y = std::max(y, title_bar);
+        tsize += 6;
+        m_windowsz->x = std::min(m_windowsz->x, wm->desktop_width()
+                                 - (tpos & TASKBAR_V ? tsize : 0));
+        m_windowsz->y = std::min(m_windowsz->y, wm->desktop_height()
+                                 - (tpos & TASKBAR_H ? tsize : 0)
+                                 - (tpos & TASKBAR_BOTTOM ? title_bar : 0));
+        sprintf(env_str, "SDL_VIDEO_WINDOW_POS=%d,%d", x, y);
+        putenv(env_str);
+    }
+    else
+    {
+        putenv("SDL_VIDEO_WINDOW_POS=center");
+        putenv("SDL_VIDEO_CENTERED=1");
+    }
+}
+#endif
 
 void SDLWrapper::resize(coord_def &m_windowsz)
 {

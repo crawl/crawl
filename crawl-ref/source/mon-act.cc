@@ -51,6 +51,8 @@
 #include "random.h"
 #include "religion.h"
 #include "shopping.h" // for item values
+#include "spl-book.h"
+#include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -127,6 +129,8 @@ static void _monster_regenerate(monster* mons)
             && one_chance_in(3))
 
         || mons->has_ench(ENCH_REGENERATION)
+
+        || mons->has_ench(ENCH_WITHDRAWN)
 
         || _mons_natural_regen_roll(mons))
     {
@@ -219,8 +223,8 @@ static void _swim_or_move_energy(monster* mon)
 
     // FIXME: Replace check with mons_is_swimming()?
     mon->lose_energy((feat >= DNGN_LAVA && feat <= DNGN_SHALLOW_WATER
-                       && !mon->airborne()) ? EUT_SWIM
-                                            : EUT_MOVE);
+                      && !(mon->airborne() || mon->is_wall_clinging())) ? EUT_SWIM
+                                                                        : EUT_MOVE);
 }
 
 // Check up to eight grids in the given direction for whether there's a
@@ -333,7 +337,7 @@ static bool _mon_on_interesting_grid(monster* mon)
     case DNGN_RETURN_FROM_ELVEN_HALLS:
         return (mons_is_native_in_branch(mon, BRANCH_ELVEN_HALLS));
 
-    // Same for dwarves and the Dwarf Hall of Fallen Heroes.
+    // Same for dwarves and the Dwarf Hall.
     case DNGN_ENTER_DWARF_HALL:
     case DNGN_RETURN_FROM_DWARF_HALL:
         return (mons_is_native_in_branch(mon, BRANCH_DWARF_HALL));
@@ -914,10 +918,10 @@ static int _generate_rod_power(monster *mons, int overriding_power = 0)
     // subsection: evocation skill and shield skill equivalents for monsters
     int evoc_num = 1;
     int evoc_den = 1;
+
     if (mons->type == MONS_DEEP_DWARF_ARTIFICER)
-    {
-        evoc_num = 2;
-    }
+        evoc_num++;
+
     int shield_num = 1;
     int shield_den = 1;
 
@@ -938,6 +942,7 @@ static int _generate_rod_power(monster *mons, int overriding_power = 0)
             break;
         default:
             shield_base = 1;
+            break;
         }
     }
 
@@ -950,7 +955,7 @@ static int _generate_rod_power(monster *mons, int overriding_power = 0)
     }
 
     if (overriding_power > 0)
-    power = overriding_power;
+        power = overriding_power;
 
     return power;
 }
@@ -978,16 +983,18 @@ static void _rod_fired_pre(monster* mons, bool nice_spell)
     if (!nice_spell)
         make_mons_stop_fleeing(mons);
 
-    if ((!simple_monster_message(mons, " zaps a rod.")) &&
-        (!silenced(you.pos())))
-            mpr("You hear a zap.", MSGCH_SOUND);
+    if (!simple_monster_message(mons, " zaps a rod.")
+        && !silenced(you.pos()))
+    {
+        mpr("You hear a zap.", MSGCH_SOUND);
+    }
 }
 
 static bool _rod_fired_post(monster* mons, item_def &rod, int idx, bolt &beem,
     int rate, bool was_visible)
 {
     rod.plus -= rate;
-    dprf("rod charge: %d , %d", rod.plus, rod.plus2);
+    dprf("rod charge: %d, %d", rod.plus, rod.plus2);
 
     if (was_visible)
     {
@@ -998,11 +1005,36 @@ static bool _rod_fired_post(monster* mons, item_def &rod, int idx, bolt &beem,
     }
 
     mons->lose_energy(EUT_ITEM);
-    return true;
+    return (true);
+}
+
+static bool _get_rod_spell_and_cost(const item_def& rod, spell_type& spell,
+                                    int& cost)
+{
+    bool success = false;
+
+    for (int i = 0; i < SPELLBOOK_SIZE; ++i)
+    {
+        spell_type s = which_spell_in_book(rod, i);
+        int c = spell_difficulty(spell) * ROD_CHARGE_MULT;
+
+        if (s == SPELL_NO_SPELL || rod.plus < c)
+            continue;
+
+        success = true;
+
+        spell = s;
+        cost = c;
+
+        if (one_chance_in(SPELLBOOK_SIZE - i + 1))
+            break;
+    }
+
+    return (success);
 }
 
 // handle_rod
-// -- implimented as a dependent to handle_wand currently
+// -- implemented as a dependent to handle_wand currently
 // (no wand + rod turns this way)
 // notes:
 // shamelessly repurposing handle_wand code
@@ -1019,200 +1051,72 @@ static bool _handle_rod(monster *mons, bolt &beem)
     // was the player visible when we started?
     bool was_visible = you.can_see(mons);
 
-    int rate;
-    int overriding_power = 0;
-    bool nice_spell     = false;
-    bool check_validity = true;
+    int overriding_power  = 0;
+    bool nice_spell       = false;
+    bool check_validity   = true;
     bool is_direct_effect = false;
-    spell_type mzap     = SPELL_NO_SPELL;
-    switch (rod.sub_type)
-    {
-    case STAFF_STRIKING:
-        if ((rod.plus > 100) && (mons->foe_distance() >= 2))
-        {
-            mzap = SPELL_STRIKING;
-            rate = 100;
-        }
-        break;
-    case STAFF_SMITING:
-        if (rod.plus > 400)
-        {
-            mzap = SPELL_SMITING;
-            overriding_power = 1;
-            nice_spell = true;
-            is_direct_effect = true;
-            rate = 400;
-        }
-        break;
-    case STAFF_DESTRUCTION_I:
-        if (rod.plus > 600)
-        {
-            if (mons->foe_distance() > 2)
-            {
-                mzap = SPELL_FIREBALL;
-                rate = 600;
-            }
-        }
-        else if (rod.plus > 500)
-        {
-            mzap = SPELL_BOLT_OF_FIRE;
-            rate = 500;
-        }
-        else if (rod.plus > 200)
-        {
-            mzap = SPELL_THROW_FLAME;
-            rate = 200;
-        }
-        break;
-    case STAFF_DESTRUCTION_II:
-        if (rod.plus > 700)
-        {
-            if (mons->foe_distance() > 2)
-            {
-                mzap = SPELL_FREEZING_CLOUD;
-                rate = 700;
-            }
-        }
-        else if (rod.plus > 400)
-        {
-            mzap = SPELL_BOLT_OF_COLD;
-            rate = 400;
-        }
-        else if (rod.plus > 200)
-        {
-            mzap = SPELL_THROW_FROST;
-            rate = 200;
-        }
-        break;
-    case STAFF_DESTRUCTION_III:
-        if (rod.plus > 600)
-        {
-            if (mons->foe_distance() > 2)
-                mzap = SPELL_FIREBALL;
-            if (one_chance_in(2))
-                mzap = SPELL_IRON_SHOT;
-            else
-                mzap = SPELL_LIGHTNING_BOLT;
-            rate = 600;
-        }
-        break;
-    case STAFF_DESTRUCTION_IV:
-        if (rod.plus > 1000)
-        {
-            if (one_chance_in(2))
-                mzap = SPELL_BOLT_OF_MAGMA;
-            else
-                mzap = SPELL_BOLT_OF_COLD;
-            rate = 500;
-        }
-        else if (rod.plus > 500)
-        {
-            const int choice = random2(3);
-            switch (choice)
-            {
-            case 0:
-                mzap = SPELL_BOLT_OF_MAGMA;
-                rate = 500;
-                break;
-            case 1:
-                mzap = SPELL_BOLT_OF_COLD;
-                rate = 500;
-                break;
-            default:
-                mzap = SPELL_BOLT_OF_INACCURACY;
-                rate = 300;
-                break;
-            }
-        }
-        else if (rod.plus > 300)
-        {
-            mzap = SPELL_BOLT_OF_INACCURACY;
-            rate = 300;
-        }
-        break;
-    case STAFF_DEMONOLOGY: // ouch
-        if (rod.plus > 500)
-        {
-            mzap = SPELL_SUMMON_DEMON;
-            _rod_fired_pre(mons, nice_spell);
-            dprf("mon-act:_handle_rod():SPELL_SUMMON_DEMON");
-            mons_cast(mons, beem, mzap, false);
-           _rod_fired_post(mons, rod, weapon, beem, 500, was_visible);
-           return true;
-        }
-        else if (rod.plus > 300)
-        {
-            mzap = SPELL_CALL_IMP;
-            _rod_fired_pre(mons, nice_spell);
-            dprf("mon-act:_handle_rod():SPELL_CALL_IMP");
-            mons_cast(mons, beem, mzap, false);
-            _rod_fired_post(mons, rod, weapon, beem, 300, was_visible);
-            return true;
-        }
-        break;
-    case STAFF_VENOM:
-        if (rod.plus > 600)
-        {
-            if (mons->foe_distance() > 2)
-                mzap = SPELL_POISONOUS_CLOUD;
-            else
-                mzap = SPELL_POISON_ARROW;
-            rate = 600;
-        }
-        else if (rod.plus > 500)
-        {
-            mzap = SPELL_VENOM_BOLT;
-            rate = 500;
-        }
-        break;
-    case STAFF_SPELL_SUMMONING:
-        if (rod.plus > 600)
-        {
-            mzap = SPELL_SUMMON_SWARM;
-            _rod_fired_pre(mons, nice_spell);
-            dprf("mon-act:_handle_rod():SPELL_SUMMON_SWARM");
-            mons_cast(mons, beem, mzap, false);
-            _rod_fired_post(mons, rod, weapon, beem, 600, was_visible);
-            return true;
-        }
-        else if (rod.plus > 400)
-        { // could be implemented as a mon-cast.cc spell with this code
-            mzap = SPELL_SUMMON_ELEMENTAL;
-            _rod_fired_pre(mons, nice_spell);
-            dprf("mon-act:_handle_rod():SPELL_SUMMON_ELEMENTAL");
-            const int duration = std::min(2 + mons->hit_dice / 10, 6);
-            const monster_type summon = static_cast<monster_type>(
-                  random_choose(
-                           MONS_EARTH_ELEMENTAL, MONS_FIRE_ELEMENTAL,
-                           MONS_AIR_ELEMENTAL, MONS_WATER_ELEMENTAL,
-                           -1));
-            create_monster(
-                mgen_data::hostile_at(summon, mons->name(DESC_NOCAP_A),
-                true, duration, 0, mons->pos()));
-            _rod_fired_post(mons, rod, weapon, beem, 400, was_visible);
-            return true;
-       }
-       break;
-    case STAFF_WARDING: // all temporary self-status effects
-    default:
-        return false;
-        break;
-    }
+    spell_type mzap       = SPELL_NO_SPELL;
+    int rate              = 0;
 
-    if (mzap == SPELL_NO_SPELL)
-        return false;
+    if (!_get_rod_spell_and_cost(rod, mzap, rate))
+        return (false);
+
+    // XXX: There should be a better way to do this than hardcoding
+    // monster-castable rod spells!
+    switch (mzap)
+    {
+    case SPELL_BOLT_OF_COLD:
+    case SPELL_BOLT_OF_FIRE:
+    case SPELL_BOLT_OF_INACCURACY:
+    case SPELL_BOLT_OF_MAGMA:
+    case SPELL_IRON_SHOT:
+    case SPELL_LIGHTNING_BOLT:
+    case SPELL_POISON_ARROW:
+    case SPELL_THROW_FLAME:
+    case SPELL_THROW_FROST:
+    case SPELL_VENOM_BOLT:
+        break;
+
+    case SPELL_STRIKING:
+    case SPELL_FIREBALL:
+        if (mons->foe_distance() < 2)
+            return (false);
+        break;
+
+    case SPELL_FREEZING_CLOUD:
+    case SPELL_POISONOUS_CLOUD:
+        if (mons->foe_distance() <= 2)
+            return (false);
+        break;
+
+    case SPELL_SMITING:
+        overriding_power = 1;
+        nice_spell = true;
+        is_direct_effect = true;
+        break;
+
+    case SPELL_CALL_IMP:
+    case SPELL_SUMMON_DEMON:
+    case SPELL_SUMMON_ELEMENTAL:
+    case SPELL_SUMMON_SWARM:
+        _rod_fired_pre(mons, nice_spell);
+        mons_cast(mons, beem, mzap, false);
+        _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
+        return (true);
+
+    default:
+        return (false);
+    }
 
     bool zap = false;
 
     // set up the beam
-    int power = _generate_rod_power(mons, overriding_power);
-    if (power < 1)
-        power = 1;
+    const int power = std::max(_generate_rod_power(mons, overriding_power), 1);
 
     dprf("using rod with power %d", power);
 
-    bolt theBeam      = mons_spells(mons, mzap, power, check_validity);
-    beem = _generate_item_beem(beem, theBeam, mons);
+    bolt theBeam = mons_spells(mons, mzap, power, check_validity);
+    beem         = _generate_item_beem(beem, theBeam, mons);
 
     if (mons->confused())
     {
@@ -1229,19 +1133,22 @@ static bool _handle_rod(monster *mons, bolt &beem)
 
     if (is_direct_effect)
     {
+        actor* foe = mons->get_foe();
+        if (!foe)
+            return (false);
         _rod_fired_pre(mons, nice_spell);
-        direct_effect(mons, mzap, beem, &you);
-        return _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
+        direct_effect(mons, mzap, beem, foe);
+        return (_rod_fired_post(mons, rod, weapon, beem, rate, was_visible));
     }
     else if (nice_spell || zap)
     {
         _rod_fired_pre(mons, nice_spell);
         beem.is_tracer = false;
         beem.fire();
-        return _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
+        return (_rod_fired_post(mons, rod, weapon, beem, rate, was_visible));
     }
 
-    return false;
+    return (false);
 }
 
 //---------------------------------------------------------------
@@ -1269,7 +1176,7 @@ static bool _handle_wand(monster* mons, bolt &beem)
         return (false);
 
     if (mons->inv[MSLOT_WEAPON] != NON_ITEM
-       && item_is_rod(mitm[mons->inv[MSLOT_WEAPON]]))
+        && item_is_rod(mitm[mons->inv[MSLOT_WEAPON]]))
     {
         return (_handle_rod(mons, beem));
     }
@@ -2285,6 +2192,7 @@ void handle_monster_move(monster* mons)
         mon_nearby_ability(mons);
 
         if (!mons->asleep() && !mons_is_wandering(mons)
+            && !mons->withdrawn()
             // Berserking monsters are limited to running up and
             // hitting their foes.
             && !mons->berserk()
@@ -2360,8 +2268,8 @@ void handle_monster_move(monster* mons)
             {
                 ASSERT(!crawl_state.game_is_arena());
 
-                if (!mons_att_wont_attack(mons->attitude)
-                    && !mons->has_ench(ENCH_CHARM))
+                if (!mons->wont_attack() && !mons->has_ench(ENCH_CHARM)
+                    && !mons->withdrawn())
                 {
                     // If it steps into you, cancel other targets.
                     mons->foe = MHITYOU;
@@ -2383,7 +2291,7 @@ void handle_monster_move(monster* mons)
             // See if we move into (and fight) an unfriendly monster.
             monster* targ = monster_at(mons->pos() + mmov);
             if (mons_base_type(mons) == MONS_KRAKEN
-                && targ && targ->type == MONS_KRAKEN_CONNECTOR
+                && targ && targ->type == MONS_KRAKEN_TENTACLE_SEGMENT
                 && targ->props.exists("inwards") && targ->props["inwards"].get_int() == mons->mindex()
                 && env.grid(targ->pos()) == DNGN_DEEP_WATER)
             {
@@ -2656,6 +2564,8 @@ static bool _monster_eat_item(monster* mons, bool nearby)
             gain = sacrifice_item_stack(*si, &js);
             if (gain > PIETY_NONE)
                 simple_god_message(" appreciates your sacrifice.");
+
+            jiyva_slurp_message(js);
         }
 
         if (quant >= si->quantity)
@@ -2681,16 +2591,6 @@ static bool _monster_eat_item(monster* mons, bool nearby)
             mons->hit_points += hps_changed;
             mons->max_hit_points = std::max(mons->hit_points,
                                                mons->max_hit_points);
-        }
-
-        if (js != JS_NONE)
-        {
-            if (js & JS_FOOD)
-                mpr("You feel a little less hungry.");
-            if (js & JS_MP)
-                mpr("You feel your power returning.");
-            if (js & JS_HP)
-                mpr("You feel a little better.");
         }
 
         if (death_ooze_ate_corpse)
@@ -3095,7 +2995,7 @@ static bool _same_kraken_parts(const monster* mpusher,
         return (true);
     }
 
-    if (mpushee->type == MONS_KRAKEN_CONNECTOR
+    if (mpushee->type == MONS_KRAKEN_TENTACLE_SEGMENT
         && int(menv[mpushee->number].number) == mpusher->mindex()
         && mpushee->props.exists("inwards") && mpushee->props["inwards"].get_int() == mpusher->mindex())
     {
@@ -3963,12 +3863,8 @@ static void _mons_in_cloud(monster* mons)
     case CLOUD_STINK:
         cloud.announce_actor_engulfed(mons);
         // If you don't have to breathe, unaffected.
-        if (mons->res_poison() > 0
-            || (mons_genus(mons->type) == MONS_DRACONIAN
-                && draco_subspecies(mons) == MONS_GREY_DRACONIAN))
-        {
+        if (mons->res_poison() > 0 || mons->is_unbreathing())
             return;
-        }
 
         beam.flavour = BEAM_CONFUSION;
         beam.thrower = cloud.killer;

@@ -88,7 +88,7 @@ public:
 
   int burden;
   burden_state_type burden_state;
-  FixedVector<spell_type, 25> spells;
+  FixedVector<spell_type, MAX_KNOWN_SPELLS> spells;
   uint8_t spell_no;
   game_direction_type char_direction;
   bool opened_zot;
@@ -115,10 +115,11 @@ public:
   int lives;
   int deaths;
 
-  FixedVector<uint8_t, 50>  skills;
-  FixedVector<bool, 50>  practise_skill;
-  FixedVector<unsigned int, 50>   skill_points;
-  FixedVector<uint8_t, 50>  skill_order;
+  FixedVector<uint8_t, NUM_SKILLS>  skills;
+  FixedVector<bool, NUM_SKILLS>  practise_skill;
+  FixedVector<unsigned int, NUM_SKILLS>   skill_points;
+  FixedVector<unsigned int, NUM_SKILLS>   ct_skill_points;
+  FixedVector<uint8_t, NUM_SKILLS>  skill_order;
 
   skill_type sage_bonus_skill;  // If Sage is in effect, which skill it affects.
   int sage_bonus_degree;        // How much bonus XP to give in that skill.
@@ -172,7 +173,7 @@ public:
   FixedVector<uint8_t, 30> branch_stairs;
 
   god_type religion;
-  std::string second_god_name; // Random second name of Jiyva
+  std::string jiyva_second_name; // Random second name of Jiyva
   uint8_t piety;
   uint8_t piety_hysteresis;       // amount of stored-up docking
   uint8_t gift_timeout;
@@ -192,6 +193,7 @@ public:
 
   std::vector<demon_trait> demonic_traits;
 
+  int earth_attunement; // nomes only
   int magic_contamination;
 
   FixedVector<bool, NUM_FIXED_BOOKS> had_book;
@@ -316,10 +318,17 @@ public:
   // 0 = no, 1 = cardinal move, 2 = diagonal move
   int walking;
 
+  // View code clears and needs new data in places where we can't announce the
+  // portal right away; delay the announcements then.
+  int seen_portals;
 
   // The save file itself.
   package *save;
 
+  // Is player clinging to the wall?
+  bool clinging;
+  // Array of walls which player is currently clinging to.
+  std::vector<coord_def>    cling_to;
 protected:
     FixedVector<PlaceInfo, NUM_BRANCHES>             branch_info;
     FixedVector<PlaceInfo, NUM_LEVEL_AREA_TYPES - 1> non_branch_info;
@@ -357,6 +366,9 @@ public:
     bool can_swim(bool permanently = false) const;
     int visible_igrd(const coord_def&) const;
     bool is_levitating() const;
+    bool is_wall_clinging() const;
+    bool can_cling_to(const coord_def& p) const;
+    void check_clinging();
     bool cannot_speak() const;
     bool invisible() const;
     bool misled() const;
@@ -392,7 +404,7 @@ public:
     void update_beholder(const monster* mon);
 
     // Dealing with fearmongers. Implemented in fearmonger.cc.
-    void add_fearmonger(const monster* mon);
+    bool add_fearmonger(const monster* mon);
     bool afraid() const;
     bool afraid_of(const monster* mon) const;
     monster* get_fearmonger(const coord_def &pos) const;
@@ -481,6 +493,7 @@ public:
     bool can_go_berserk(bool intentional, bool potion = false) const;
     void go_berserk(bool intentional, bool potion = false);
     bool berserk() const;
+    bool has_lifeforce() const;
     bool can_mutate() const;
     bool can_safely_mutate() const;
     bool can_bleed() const;
@@ -522,6 +535,7 @@ public:
     bool is_evil() const;
     bool is_chaotic() const;
     bool is_artificial() const;
+    bool is_unbreathing() const;
     bool is_insubstantial() const;
     int res_acid() const;
     int res_fire() const;
@@ -645,7 +659,7 @@ struct player_save_info
     species_type species;
     std::string class_name;
     god_type religion;
-    std::string second_god_name;
+    std::string jiyva_second_name;
     game_type saved_game_type;
 
 #ifdef USE_TILE
@@ -881,5 +895,4 @@ bool is_feat_dangerous(dungeon_feature_type feat);
 void run_macro(const char *macroname = NULL);
 
 int count_worn_ego(int which_ego);
-
 #endif

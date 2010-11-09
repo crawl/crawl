@@ -13,7 +13,7 @@ static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
     // CSET_ASCII
     {
         '#', '*', '.', ',', '\'', '+', '^', '>', '<',  // wall .. stairs up
-        '_', '\\', '}', '~', '8', '{', '{',            // altar .. item detect
+        '#', '_', '\\', '}', '~', '8', '{', '{',       // grate .. item detect
         '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
         ':', '|', '}', '%', '$', '"', '#', '7',        // book .. tree
         ' ', '!', '#', '%', ':', ')', '*', '+',        // space .. fired_burst
@@ -23,7 +23,7 @@ static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
     // CSET_IBM - this is ANSI 437
     {
         177, 176, 249, 250, '\'', 254, '^', '>', '<',  // wall .. stairs up
-        220, 239, 244, 247, '8', '{', '{',             // altar .. item detect
+        '#', 220, 239, 244, 247, '8', '{', '{',        // grate .. item detect
         '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
         236, '\\', '}', '%', '$', '"', '#', 234,       // book .. tree
         ' ', '!', '#', '%', '+', ')', '*', '+',        // space .. fired_burst
@@ -34,7 +34,7 @@ static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
     // It's better known as "vt100 line drawing characters".
     {
         225, 224, 254, ':', '\'', 238, '^', '>', '<',  // wall .. stairs up
-        251, 182, 167, 187, '8', 171, 168,             // altar .. item detect
+        '#', 251, 182, 167, 187, '8', 171, 168,        // grate .. item detect
         '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
         ':', '\\', '}', '%', '$', '"', '#', '7',       // book .. tree
         ' ', '!', '#', '%', '+', ')', '*', '+',        // space .. fired_burst
@@ -51,7 +51,7 @@ static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
     */
     {
         0x2592, 0x2591, 0xB7, 0x25E6, '\'', 0x25FC, '^', '>', '<',
-        '_', 0x2229, 0x2320, 0x2248, '8', '{', 0x2206,
+        '#', '_', 0x2229, 0x2320, 0x2248, '8', '{', 0x2206,
         '0', ')', '[', '/', '%', '?', '=', '!', '(',
         0x221E, '|', '}', '%', '$', '"', '#', 0x2663,
         ' ', '!', '#', '%', '+', ')', '*', '+',        // space .. fired_burst
@@ -64,8 +64,9 @@ dungeon_char_type dchar_by_name(const std::string &name)
     const char *dchar_names[] =
     {
         "wall", "wall_magic", "floor", "floor_magic", "door_open",
-        "door_closed", "trap", "stairs_down", "stairs_up", "altar", "arch",
-        "fountain", "wavy", "statue", "invis_exposed", "item_detected",
+        "door_closed", "trap", "stairs_down", "stairs_up",
+        "grate", "altar", "arch", "fountain", "wavy", "statue",
+        "invis_exposed", "item_detected",
         "item_orb", "item_weapon", "item_armour", "item_wand", "item_food",
         "item_scroll", "item_ring", "item_potion", "item_missile", "item_book",
         "item_stave", "item_miscellany", "item_corpse", "item_gold",

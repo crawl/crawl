@@ -411,23 +411,15 @@ static std::string _get_unseen_branches()
         const branch_type branch = branches[i].id;
 
         if (i != BRANCH_SWAMP && i != BRANCH_SNAKE_PIT && i != BRANCH_SHOALS)
-        {
             continue;
-        }
 
         if (stair_level.find(branch) != stair_level.end())
-        {
             possibly_missing_lair_branches++;
-        }
         else
-        {
             missing_lair_branch = i;
-        }
     }
     if (possibly_missing_lair_branches < 2)
-    {
         missing_lair_branch = -1;
-    }
 
     for (int i = BRANCH_FIRST_NON_DUNGEON; i < NUM_BRANCHES; i++)
     {
@@ -647,9 +639,7 @@ static std::string _get_portals()
     std::string disp;
 
     if (!portals_present.empty() || !portal_vaults_present.empty())
-    {
         disp += "\n<green>Portals:</green>\n";
-    }
     disp += _portals_description_string();
     disp += _portal_vaults_description_string();
 
@@ -706,7 +696,10 @@ static std::string _get_notes()
                     disp += "</yellow>:";
                     disp += depth_str;
                     disp += " ";
-                    disp += get_level_annotation(li);
+                    if (level_annotation_has("!", li))
+                        disp += get_coloured_level_annotation(LIGHTRED, li);
+                    else
+                        disp += get_coloured_level_annotation(LIGHTMAGENTA, li);
                     disp += "\n";
                 }
             }
@@ -838,7 +831,8 @@ portal_type feature_to_portal(dungeon_feature_type feat)
 }
 
 // If player has seen any other thing; record it.
-void _seen_other_thing(dungeon_feature_type which_thing, const coord_def& pos)
+static void _seen_other_thing(dungeon_feature_type which_thing,
+                              const coord_def& pos)
 {
     level_pos where(level_id::current(), pos);
 
@@ -941,6 +935,31 @@ std::string get_level_annotation(level_id li, bool skip_excl)
         return (i->second);
 
     return (i->second + ", " + j->second);
+}
+
+std::string get_coloured_level_annotation(int col, level_id li, bool skip_excl)
+{
+    annotation_map_type::const_iterator i = level_annotations.find(li);
+
+    if (skip_excl)
+    {
+        if (i == level_annotations.end())
+            return "";
+
+        return (colour_string(i->second, col));
+    }
+
+    annotation_map_type::const_iterator j = level_exclusions.find(li);
+
+    if (i == level_annotations.end() && j == level_exclusions.end())
+        return "";
+
+    if (i == level_annotations.end())
+        return (j->second);
+    if (j == level_exclusions.end())
+        return (colour_string(i->second, col));
+
+    return (colour_string(i->second, col) + ", " + j->second);
 }
 
 bool level_annotation_has(std::string find, level_id li)

@@ -484,9 +484,10 @@ void find_connected_identical(const coord_def &d, dungeon_feature_type ft,
 }
 
 // Find all connected cells containing ft_min to ft_max, starting at d.
-void find_connected_range(const coord_def& d, dungeon_feature_type ft_min,
-                          dungeon_feature_type ft_max,
-                          std::set<coord_def>& out)
+static void _find_connected_range(const coord_def& d,
+                                  dungeon_feature_type ft_min,
+                                  dungeon_feature_type ft_max,
+                                  std::set<coord_def>& out)
 {
     if (grd(d) < ft_min || grd(d) > ft_max)
         return;
@@ -504,17 +505,17 @@ void find_connected_range(const coord_def& d, dungeon_feature_type ft_min,
 
     if (out.insert(d).second)
     {
-        find_connected_range(coord_def(d.x+1, d.y), ft_min, ft_max, out);
-        find_connected_range(coord_def(d.x-1, d.y), ft_min, ft_max, out);
-        find_connected_range(coord_def(d.x, d.y+1), ft_min, ft_max, out);
-        find_connected_range(coord_def(d.x, d.y-1), ft_min, ft_max, out);
+        _find_connected_range(coord_def(d.x+1, d.y), ft_min, ft_max, out);
+        _find_connected_range(coord_def(d.x-1, d.y), ft_min, ft_max, out);
+        _find_connected_range(coord_def(d.x, d.y+1), ft_min, ft_max, out);
+        _find_connected_range(coord_def(d.x, d.y-1), ft_min, ft_max, out);
     }
 }
 
 std::set<coord_def> connected_doors(const coord_def& d)
 {
     std::set<coord_def> doors;
-    find_connected_range(d, DNGN_CLOSED_DOOR, DNGN_SECRET_DOOR, doors);
+    _find_connected_range(d, DNGN_CLOSED_DOOR, DNGN_SECRET_DOOR, doors);
     return (doors);
 }
 
@@ -1368,7 +1369,8 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
 
     if (escape)
     {
-        if (in_bounds(empty) && !is_feat_dangerous(grd(empty)))
+        if (in_bounds(empty)
+            && (!is_feat_dangerous(grd(empty)) || you.can_cling_to(empty)))
         {
             mpr("You manage to scramble free!");
             move_player_to_grid(empty, false, false);
@@ -1506,8 +1508,8 @@ const char *dngn_feature_names[] =
 "unseen", "closed_door", "detected_secret_door", "secret_door",
 "wax_wall", "metal_wall", "green_crystal_wall", "rock_wall",
 "slimy_wall", "stone_wall", "permarock_wall",
-"clear_rock_wall", "clear_stone_wall", "clear_permarock_wall", "open_sea",
-"tree", "orcish_idol", "", "", "", "",
+"clear_rock_wall", "clear_stone_wall", "clear_permarock_wall", "iron_grate",
+"open_sea", "tree", "orcish_idol", "", "", "",
 "granite_statue", "statue_reserved_1", "statue_reserved_2",
 "", "", "", "", "", "", "", "",
 "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",

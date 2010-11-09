@@ -51,6 +51,8 @@ bool transform_changed_physiology(bool phys_scales = false);
 bool transform_allows_wearing_item(const item_def& item,
                                    transformation_type transform);
 monster_type transform_mons();
+std::string blade_parts(bool terse = false);
+monster_type dragon_form_dragon_type();
 
 // Check your current transformation.
 bool transform_allows_wearing_item(const item_def& item);

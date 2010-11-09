@@ -270,6 +270,7 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_POISON_RESISTANCE]          = 1;
         you.mutation[MUT_COLD_RESISTANCE]            = 1;
         you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 3;
+        you.mutation[MUT_UNBREATHING]                = 1;
         break;
     case SP_DEEP_DWARF:
         you.mutation[MUT_SLOW_HEALING]    = 3;
@@ -283,6 +284,7 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_SAPROVOROUS]                = 3;
         you.mutation[MUT_CARNIVOROUS]                = 3;
         you.mutation[MUT_SLOW_HEALING]               = 1;
+        you.mutation[MUT_UNBREATHING]                = 1;
         break;
     case SP_KENKU:
         you.mutation[MUT_BEAK]   = 1;
@@ -303,6 +305,7 @@ void give_basic_mutations(species_type speci)
     case SP_VAMPIRE:
         you.mutation[MUT_FANGS]        = 3;
         you.mutation[MUT_ACUTE_VISION] = 1;
+        you.mutation[MUT_UNBREATHING]  = 1;
         break;
     case SP_CAT:
         you.mutation[MUT_FANGS]           = 3;
@@ -529,11 +532,8 @@ static void _give_items_skills(const newgame_def& ng)
         {
             // Species skilled with maces/flails get one, the others axes.
             weapon_type startwep = WPN_HAND_AXE;
-            if (species_skills(SK_MACES_FLAILS, you.species) <
-                species_skills(SK_AXES, you.species))
-            {
+            if (species_apt(SK_MACES_FLAILS) > species_apt(SK_AXES))
                 startwep = (player_genus(GENPC_OGREISH)) ? WPN_ANKUS : WPN_MACE;
-            }
 
             newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, startwep);
         }
@@ -609,11 +609,8 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_FIGHTING] = 3;
         you.skills[SK_ARMOUR]   = 1;
         you.skills[SK_DODGING]  = 1;
-        if (species_skills(SK_ARMOUR, you.species) >
-            species_skills(SK_DODGING, you.species))
-        {
+        if (species_apt(SK_ARMOUR) < species_apt(SK_DODGING))
             you.skills[SK_DODGING]++;
-        }
         else
             you.skills[SK_ARMOUR]++;
         weap_skill = 2;
@@ -1139,8 +1136,6 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_SHIELDS] = 0;
     }
 
-    init_skill_order();
-
     if (you.religion != GOD_NO_GOD)
     {
         you.worshipped[you.religion] = 1;
@@ -1409,50 +1404,50 @@ static void _give_basic_knowledge(job_type which_job)
 // skill levels.
 static void _reassess_starting_skills()
 {
-    for (int i = 0; i < NUM_SKILLS; ++i)
+    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
     {
-        if (you.skills[i] == 0
-            && (you.species != SP_VAMPIRE || i != SK_UNARMED_COMBAT))
+        skill_type sk = static_cast<skill_type>(i);
+        if (you.skills[sk] == 0
+            && (you.species != SP_VAMPIRE || sk != SK_UNARMED_COMBAT))
         {
             continue;
         }
 
         // Grant the amount of skill points required for a human.
-        const int points = skill_exp_needed(you.skills[i]);
-        you.skill_points[i] = (points * species_skills(i, SP_HUMAN)) / 100 + 1;
+        you.skill_points[sk] = skill_exp_needed(you.skills[sk], sk,
+        static_cast<species_type>(SP_HUMAN)) + 1;
 
         // Find out what level that earns this character.
-        const int sp_diff = species_skills(i, you.species);
-        you.skills[i] = 0;
+        you.skills[sk] = 0;
 
         for (int lvl = 1; lvl <= 8; ++lvl)
         {
-            if (you.skill_points[i] > (skill_exp_needed(lvl) * sp_diff) / 100)
-                you.skills[i] = lvl;
+            if (you.skill_points[sk] > skill_exp_needed(lvl, sk))
+                you.skills[sk] = lvl;
             else
                 break;
         }
 
         // Vampires should always have Unarmed Combat skill.
-        if (you.species == SP_VAMPIRE && i == SK_UNARMED_COMBAT
-            && you.skills[i] < 1)
+        if (you.species == SP_VAMPIRE && sk == SK_UNARMED_COMBAT
+            && you.skills[sk] < 1)
         {
-            you.skill_points[i] = (skill_exp_needed(1) * sp_diff) / 100;
-            you.skills[i] = 1;
+            you.skill_points[sk] = skill_exp_needed(1, sk);
+            you.skills[sk] = 1;
         }
 
         // Wanderers get at least 1 level in their skills.
-        if (you.char_class == JOB_WANDERER && you.skills[i] < 1)
+        if (you.char_class == JOB_WANDERER && you.skills[sk] < 1)
         {
-            you.skill_points[i] = (skill_exp_needed(1) * sp_diff) / 100;
-            you.skills[i] = 1;
+            you.skill_points[sk] = skill_exp_needed(1, sk);
+            you.skills[sk] = 1;
         }
 
         // Spellcasters should always have Spellcasting skill.
-        if (i == SK_SPELLCASTING && you.skills[i] < 1)
+        if (sk == SK_SPELLCASTING && you.skills[sk] < 1)
         {
-            you.skill_points[i] = (skill_exp_needed(1) * sp_diff) / 100;
-            you.skills[i] = 1;
+            you.skill_points[sk] = skill_exp_needed(1, sk);
+            you.skills[sk] = 1;
         }
     }
 }
@@ -1542,7 +1537,7 @@ void setup_game(const newgame_def& ng)
 /**
  * Special steps that normal game needs;
  */
-void _setup_normal_game()
+static void _setup_normal_game()
 {
     make_hungry(0, true);
 }
@@ -1550,7 +1545,7 @@ void _setup_normal_game()
 /**
  * Special steps that tutorial game needs;
  */
-void _setup_tutorial()
+static void _setup_tutorial()
 {
     make_hungry(0, true);
 }
@@ -1558,7 +1553,7 @@ void _setup_tutorial()
 /**
  * Special steps that sprint needs;
  */
-void _setup_sprint(const newgame_def& ng)
+static void _setup_sprint(const newgame_def& ng)
 {
     set_sprint_map(ng.map);
 }
@@ -1566,7 +1561,7 @@ void _setup_sprint(const newgame_def& ng)
 /**
  * Special steps that hints mode needs;
  */
-void _setup_hints()
+static void _setup_hints()
 {
     init_hints();
 }
@@ -1616,15 +1611,16 @@ static void _setup_generic(const newgame_def& ng)
         _setup_tutorial_miscs();
 
     _mark_starting_books();
-    _racialise_starting_equipment();
 
     _give_basic_spells(you.char_class);
     _give_basic_knowledge(you.char_class);
 
+    _racialise_starting_equipment();
     initialise_item_descriptions();
 
     _reassess_starting_skills();
     calc_total_skill_points();
+    init_skill_order();
 
     for (int i = 0; i < ENDOFPACK; ++i)
         if (you.inv[i].defined())

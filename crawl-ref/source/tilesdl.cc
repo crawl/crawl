@@ -46,7 +46,6 @@
 
 #ifdef TARGET_OS_WINDOWS
 
-#include <SDL_syswm.h>
 #include <windows.h>
 // WINAPI defines these, but we are already using them in
 // wm_event_type enum,
@@ -262,11 +261,6 @@ void TilesFramework::calculate_default_options()
 
 bool TilesFramework::initialise()
 {
-#ifdef TARGET_OS_WINDOWS
-    putenv("SDL_VIDEO_WINDOW_POS=center");
-    putenv("SDL_VIDEO_CENTERED=1");
-#endif
-
     _init_consoles();
 
     const char *icon_name =
@@ -298,20 +292,6 @@ bool TilesFramework::initialise()
     // Copy over constants that need to have been set by the wrapper
     m_screen_width = wm->screen_width();
     m_screen_height = wm->screen_height();
-
-#ifdef TARGET_OS_WINDOWS
-    if (Options.tile_align_at_top)
-    {
-        int delta_x = (wm->desktop_width() - m_screen_width) / 2;
-        SDL_SysWMinfo i;
-        SDL_VERSION(&i.version);
-        if (SDL_GetWMInfo (&i))
-        {
-            HWND hwnd = i.window;
-            SetWindowPos(hwnd, HWND_TOP, delta_x, 0, 0, 0, SWP_NOSIZE);
-        }
-    }
-#endif
 
     GLStateManager::init();
 
@@ -772,37 +752,23 @@ void TilesFramework::do_layout()
 
     bool message_overlay = Options.tile_force_overlay ? true : false;
 
-    // Calculating stat_x_divider.
-    // First, the optimal situation: we have screen estate to satisfy
-    // Options.view_max_width, and room for status area with the specified
-    // stat font size.
-    if (std::max(Options.view_max_width, ENV_SHOW_DIAMETER) * m_region_tile->dx
-        + stat_width * m_region_stat->dx <= m_windowsz.x)
+    // We ignore Options.view_max_width and use the maximum space available.
+    int available_width_in_tiles = 0;
+
+    available_width_in_tiles = (m_windowsz.x - stat_width
+                                * m_region_stat->dx) / m_region_tile->dx;
+
+    // Scale the dungeon region tiles so we have enough space to
+    // display full LOS.
+    if (available_width_in_tiles < ENV_SHOW_DIAMETER)
     {
-        stat_x_divider = (std::max(Options.view_max_width, ENV_SHOW_DIAMETER))
-                          * m_region_tile->dx;
+        m_region_tile->dx = (m_windowsz.x - stat_width * m_region_stat->dx)
+                            / ENV_SHOW_DIAMETER;
+        m_region_tile->dy = m_region_tile->dx;
+        available_width_in_tiles = ENV_SHOW_DIAMETER;
     }
-    // If we don't have room for Options.view_max_width, use the maximum space
-    // available.
-    else
-    {
-        int available_width_in_tiles = 0;
 
-        available_width_in_tiles = (m_windowsz.x - stat_width
-                                    * m_region_stat->dx) / m_region_tile->dx;
-
-        // Scale the dungeon region tiles so we have enough space to
-        // display full LOS.
-        if (available_width_in_tiles < ENV_SHOW_DIAMETER)
-        {
-            m_region_tile->dx = (m_windowsz.x - stat_width * m_region_stat->dx)
-                                / ENV_SHOW_DIAMETER;
-            m_region_tile->dy = m_region_tile->dx;
-            available_width_in_tiles = ENV_SHOW_DIAMETER;
-        }
-
-        stat_x_divider = available_width_in_tiles * m_region_tile->dx;
-    }
+    stat_x_divider = available_width_in_tiles * m_region_tile->dx;
 
     // Calculate message_y_divider. First off, if we have already decided to
     // use the overlay, we can place the divider to the bottom of the screen.
@@ -820,7 +786,8 @@ void TilesFramework::do_layout()
     {
         message_y_divider = std::max(Options.view_max_height, ENV_SHOW_DIAMETER)
                             * m_region_tile->dy;
-        //TODO: respect Options.msg_max_height
+        message_y_divider = std::max(message_y_divider, m_windowsz.y -
+                                    Options.msg_max_height * m_region_msg->dy);
     }
     else
     {

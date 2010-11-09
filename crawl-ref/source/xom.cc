@@ -2930,7 +2930,8 @@ static int _xom_lose_stats(bool debug = false)
         // Make sure not to lower strength so much that the player
         // will die once might wears off.
         int vals[3] =
-            {you.strength() - (you.duration[DUR_MIGHT] ? 5 : 0),
+            {you.strength() - ((you.duration[DUR_MIGHT]
+                               || you.duration[DUR_BERSERK]) ? 5 : 0),
              you.dex() - (you.duration[DUR_AGILITY] ? 5 : 0),
              you.intel() - (you.duration[DUR_BRILLIANCE] ? 5 : 0)};
 
@@ -3007,7 +3008,8 @@ static int _xom_player_confusion_effect(int sever, bool debug = false)
     {
         // Don't confuse the player if standing next to lava or deep water.
         for (adjacent_iterator ai(you.pos()); ai; ++ai)
-            if (in_bounds(*ai) && is_feat_dangerous(grd(*ai)))
+            if (in_bounds(*ai) && is_feat_dangerous(grd(*ai))
+                && !you.can_cling_to(*ai))
                 return (XOM_DID_NOTHING);
     }
 

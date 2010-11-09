@@ -111,7 +111,9 @@ static int _make_mimic_item(monster_type type)
 
     case MONS_ARMOUR_MIMIC:
         item.base_type = OBJ_ARMOUR;
-        item.sub_type = random2(NUM_ARMOURS);
+        do
+            item.sub_type = random2(NUM_ARMOURS);
+        while (armour_is_hide(item));
 
         prop = random2(100);
 
@@ -192,7 +194,15 @@ dungeon_feature_type get_mimic_feat (const monster* mimic)
     case MONS_TRAP_MIMIC:
         return (DNGN_TRAP_MECHANICAL);
     case MONS_STAIR_MIMIC:
-        return (DNGN_STONE_STAIRS_DOWN_I);
+        if (mimic->props.exists("stair_type"))
+        {
+            return static_cast<dungeon_feature_type>(mimic->props[
+                "stair_type"].get_short());
+        }
+        else
+        {
+            return (DNGN_STONE_STAIRS_DOWN_I);
+        }
     case MONS_SHOP_MIMIC:
         return (DNGN_ENTER_SHOP);
     case MONS_FOUNTAIN_MIMIC:
@@ -791,6 +801,17 @@ static bool _is_pet_kill(killer_type killer, int i)
             && (me.who == KC_YOU || me.who == KC_FRIENDLY));
 }
 
+int exp_rate(int killer)
+{
+    if (killer == MHITYOU)
+        return 2;
+
+    if (_is_pet_kill(KILL_MON, killer))
+        return 1;
+
+    return 0;
+}
+
 // Elyvilon will occasionally (5% chance) protect the life of one of
 // your allies.
 static bool _ely_protect_ally(monster* mons)
@@ -1275,7 +1296,7 @@ void mons_relocated(monster* mons)
             {
                 for (monster_iterator connect; connect; ++connect)
                 {
-                    if (connect->type == MONS_KRAKEN_CONNECTOR
+                    if (connect->type == MONS_KRAKEN_TENTACLE_SEGMENT
                         && (int) connect->number == mi->mindex())
                     {
                         monster_die(*connect, KILL_RESET, -1, true, false);
@@ -1287,18 +1308,18 @@ void mons_relocated(monster* mons)
     }
     // If a tentacle/segment is relocated just kill the tentacle
     else if (mons->type == MONS_KRAKEN_TENTACLE
-             || mons->type == MONS_KRAKEN_CONNECTOR)
+             || mons->type == MONS_KRAKEN_TENTACLE_SEGMENT)
     {
         int base_id = mons->mindex();
 
-        if (mons->type == MONS_KRAKEN_CONNECTOR)
+        if (mons->type == MONS_KRAKEN_TENTACLE_SEGMENT)
         {
             base_id = mons->number;
         }
 
         for (monster_iterator connect; connect; ++connect)
         {
-            if (connect->type == MONS_KRAKEN_CONNECTOR
+            if (connect->type == MONS_KRAKEN_TENTACLE_SEGMENT
                 && (int) connect->number == base_id)
             {
                 monster_die(*connect, KILL_RESET, -1, true, false);
@@ -1343,7 +1364,7 @@ static int _destroy_tentacle(int tentacle_idx, monster* origin)
     // or w/e. Using hurt seems to cause more problems though.
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->type == MONS_KRAKEN_CONNECTOR
+        if (mi->type == MONS_KRAKEN_TENTACLE_SEGMENT
             && (int)mi->number == tentacle_idx
             && mi->mindex() != origin->mindex())
         {
@@ -1382,7 +1403,7 @@ static int _destroy_tentacles(monster* head)
         {
             for (monster_iterator connect; connect; ++connect)
             {
-                if (connect->type == MONS_KRAKEN_CONNECTOR
+                if (connect->type == MONS_KRAKEN_TENTACLE_SEGMENT
                     && (int) connect->number == mi->mindex())
                 {
                     connect->hurt(*connect, INSTANT_DEATH);
@@ -1581,9 +1602,7 @@ int monster_die(monster* mons, killer_type killer,
         {
             const int bonus = (3 + random2avg(10, 2)) / 2;
 
-            you.increase_duration(DUR_BERSERKER, bonus);
-            you.increase_duration(DUR_MIGHT, bonus);
-            haste_player(bonus * 2, true);
+            you.increase_duration(DUR_BERSERK, bonus);
 
             mpr("You feel the power of Trog in you as your rage grows.",
                 MSGCH_GOD, GOD_TROG);
@@ -1592,9 +1611,7 @@ int monster_die(monster* mons, killer_type killer,
         {
             const int bonus = (2 + random2(4)) / 2;;
 
-            you.increase_duration(DUR_BERSERKER, bonus);
-            you.increase_duration(DUR_MIGHT, bonus);
-            haste_player(bonus * 2, true);
+            you.increase_duration(DUR_BERSERK, bonus);
 
             mpr("Your amulet glows a violent red.");
         }
@@ -2234,7 +2251,7 @@ int monster_die(monster* mons, killer_type killer,
                 "into the water like the carrion they now are.");
         }
     }
-    else if ((mons->type == MONS_KRAKEN_CONNECTOR
+    else if ((mons->type == MONS_KRAKEN_TENTACLE_SEGMENT
                   || mons->type == MONS_KRAKEN_TENTACLE)
               && killer != KILL_MISC)
     {
@@ -2868,8 +2885,8 @@ static coord_def _random_monster_nearby_habitable_space(const monster& mon,
 
         // Check that we didn't go through clear walls.
         if (num_feats_between(mon.pos(), target,
-                              DNGN_CLEAR_ROCK_WALL,
-                              DNGN_CLEAR_PERMAROCK_WALL,
+                              DNGN_MINSEE,
+                              DNGN_MAX_NONREACH,
                               true, true) > 0)
         {
             continue;
@@ -2959,7 +2976,7 @@ void corrode_monster(monster* mons)
     item_def *has_shield = mons->mslot_item(MSLOT_SHIELD);
     item_def *has_armour = mons->mslot_item(MSLOT_ARMOUR);
 
-    if (one_chance_in(3) && (has_shield || has_armour))
+    if (!one_chance_in(3) && (has_shield || has_armour))
     {
         item_def &thing_chosen = (has_armour ? *has_armour : *has_shield);
         if (is_artefact(thing_chosen)
@@ -2992,11 +3009,10 @@ void corrode_monster(monster* mons)
             }
         }
     }
-    else if (one_chance_in(3) && !(has_shield || has_armour)
-             && mons->holiness() == MH_NATURAL &&
-             !(mons->res_acid() || mons_is_slime(mons)))
+    else if (!one_chance_in(3) && !(has_shield || has_armour)
+             && mons->can_bleed() && !mons->res_acid())
     {
-                mons->add_ench(mon_enchant(ENCH_BLEED, 1, KC_OTHER, (1 + random2(5))*10));
+                mons->add_ench(mon_enchant(ENCH_BLEED, 3, KC_OTHER, (5 + random2(5))*10));
 
                 if (you.can_see(mons))
                 {
@@ -3070,7 +3086,7 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
     loc = you.pos();
 
     // Don't move onto dangerous terrain.
-    if (is_feat_dangerous(grd(mons->pos())))
+    if (is_feat_dangerous(grd(mons->pos())) && !you.can_cling_to(mons->pos()))
     {
         canned_msg(MSG_UNTHINKING_ACT);
         return (false);
@@ -3688,7 +3704,7 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
                      killer_type killer, int killnum)
 {
     // Levitating/flying monsters don't make contact with the terrain.
-    if (mons->airborne())
+    if (mons->airborne() || mons->can_cling_to(oldpos))
         return;
 
     dungeon_feature_type grid = grd(mons->pos());
@@ -4277,7 +4293,7 @@ void mons_att_changed(monster* mon)
                 mi->attitude = att;
                 for (monster_iterator connect; connect; ++connect)
                 {
-                    if (connect->type == MONS_KRAKEN_CONNECTOR
+                    if (connect->type == MONS_KRAKEN_TENTACLE_SEGMENT
                         && (int) connect->number == mi->mindex())
                     {
                         connect->attitude = att;

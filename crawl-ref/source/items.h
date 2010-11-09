@@ -99,7 +99,7 @@ int inv_count(void);
 
 bool pickup_single_item(int link, int qty);
 
-bool drop_item(int item_dropped, int quant_drop, bool try_offer = false);
+bool drop_item(int item_dropped, int quant_drop);
 
 int          get_equip_slot(const item_def *item);
 mon_inv_type get_mon_equip_slot(const monster* mon, const item_def &item);

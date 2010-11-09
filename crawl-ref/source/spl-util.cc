@@ -269,7 +269,7 @@ bool add_spell_to_memory(spell_type spell)
     int i, j;
 
     // first we find a slot in our head:
-    for (i = 0; i < 25; i++)
+    for (i = 0; i < MAX_KNOWN_SPELLS; i++)
     {
         if (you.spells[i] == SPELL_NO_SPELL)
             break;
@@ -465,13 +465,17 @@ const char *get_spell_target_prompt(spell_type which_spell)
 
 bool spell_typematch(spell_type which_spell, unsigned int which_discipline)
 {
-    return (_seekspell(which_spell)->disciplines & which_discipline);
+    return (get_spell_disciplines(which_spell) & which_discipline);
 }
 
 //jmf: next two for simple bit handling
 unsigned int get_spell_disciplines(spell_type spell)
 {
-    return (_seekspell(spell)->disciplines);
+    unsigned int dis = _seekspell(spell)->disciplines;
+    if (spell == SPELL_DRAGON_FORM && player_genus(GENPC_DRACONIAN))
+        dis &= (~SPTYP_FIRE);
+
+    return dis;
 }
 
 int count_bits(unsigned int bits)
@@ -914,7 +918,7 @@ const char* spelltype_long_name(int which_spelltype)
     }
 }
 
-int spell_type2skill(unsigned int spelltype)
+skill_type spell_type2skill(unsigned int spelltype)
 {
     switch (spelltype)
     {
@@ -937,7 +941,7 @@ int spell_type2skill(unsigned int spelltype)
         mprf(MSGCH_DIAGNOSTICS, "spell_type2skill: called with spelltype %u",
              spelltype);
 #endif
-        return (-1);
+        return (SK_NONE);
     }
 }                               // end spell_type2skill()
 
@@ -1231,6 +1235,7 @@ bool spell_is_useless(spell_type spell, bool transient)
     case SPELL_LETHAL_INFUSION:
     case SPELL_WARP_BRAND:
     case SPELL_EXCRUCIATING_WOUNDS:
+    case SPELL_POISON_WEAPON:
     // could be useful if it didn't require wielding
     case SPELL_TUKIMAS_DANCE:
         if (you.species == SP_CAT)
@@ -1300,6 +1305,7 @@ bool spell_no_hostile_in_range(spell_type spell, int minRange)
     case SPELL_MEPHITIC_CLOUD:
     case SPELL_FIREBALL:
     case SPELL_FREEZING_CLOUD:
+    case SPELL_NOXIOUS_CLOUD:
     case SPELL_POISONOUS_CLOUD:
         // Increase range by one due to cloud radius.
         bonus = 1;

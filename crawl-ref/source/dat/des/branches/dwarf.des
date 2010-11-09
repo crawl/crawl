@@ -1,6 +1,6 @@
 ################################################
 #
-# Dwarf Hall of Fallen Heroes
+# Dwarf Hall
 #
 # thematic branch based on Scandinavian folklore
 
@@ -9,46 +9,8 @@
 
 {{
 local_util = {}
-local_util.random_god = function()
-    local god = local_util.choose_from("rare", "Kikubaaqudgha", "Yredelemnul",
-                  "Okawaru", "Makhleb", "Trog", "Elyvilon", "Cheibriados")
-    if (god == "rare") then
-        god = local_util.choose_from("Zin", "The Shining One", "Xom", "Vehumet",
-                  "Sif Muna", "Lugonu", "Nemelex Xobeh")
-    end
-    return god
-end
-local_util.treasure_level = 0
-local_util.treasure_levels = {}
-local_util.treasure_select_level = function()
-    local ret
-    local tmp_tbl = {}
-    local levels = local_util.treasure_levels
-    if #levels == 1 then
-        ret = levels[1]
-    else
-        local sel = crawl.random2(#levels) + 1
-        local idx = 1
-        while idx <= #levels do
-            if sel == idx then
-                ret = levels[idx]
-            else
-                tmp_tbl[#tmp_tbl + 1] = levels[idx]
-            end
-            idx = idx + 1
-        end
-    end
-    local_util.treasure_levels = tmp_tbl
-    return ret
-end
 local_util.x_chance_in_y = function(x, y)
     return (crawl.random2(y) < x)
-end
-local_util.choose_from = function(...)
-    return arg[ crawl.random2(#arg) + 1 ]
-end
-local_util._abs = function(x)
-    return x >= 0 and x or -x
 end
 local_util.statues_idx = 0
 local_util.monster_from_statue = function(monster)
@@ -125,79 +87,21 @@ dhfh.hall_setup = function(e, glyph)
             slaved_to="statue" .. local_util.statues_idx})
     e.lua_marker(glyph, mod)
 end
-
-dhfh.tomb_setup = function(e, glyph)
-    local god = local_util.random_god()
-    if (god == "Kikubaaqudgha") then
-        e.kfeat(glyph .. " = altar_kikubaaqudgha")
-    elseif (god == "Yredelemnul") then
-        e.kfeat(glyph .. " = altar_yredelemnul")
-    elseif (god == "Okawaru") then
-        e.kfeat(glyph .. " = altar_okawaru")
-    elseif (god == "Makhleb") then
-        e.kfeat(glyph .. " = altar_makhleb")
-    elseif (god == "Trog") then
-        e.kfeat(glyph .. " = altar_trog")
-    elseif (god == "Elyvilon") then
-        e.kfeat(glyph .. " = altar_elyvilon")
-    elseif (god == "Cheibriados") then
-        e.kfeat(glyph .. " = altar_cheibriados")
-    elseif (god == "Xom") then
-        e.kfeat(glyph .. " = altar_xom")
-    elseif (god == "Zin") then
-        e.kfeat(glyph .. " = altar_zin")
-    elseif (god == "The Shining One") then
-        e.kfeat(glyph .. " = altar_shining_one")
-    elseif (god == "Vehumet") then
-        e.kfeat(glyph .. " = altar_vehumet")
-    elseif (god == "Sif Muna") then
-        e.kfeat(glyph .. " = altar_sif_muna")
-    elseif (god == "Lugonu") then
-        e.kfeat(glyph .. " = altar_lugonu")
-    elseif (god == "Beogh") then
-        e.kfeat(glyph .. " = altar_beogh")
-    elseif (god == "Nemelex Xobeh") then
-        e.kfeat(glyph .. " = altar_nemelex_xobeh")
-    end
-    e.lua_marker(glyph, props_marker {
-        feature_description      = "massive granite shrine",
-        feature_description_long = "A massive granite shrine to the fallen" ..
-        "avatar of " .. god .. "\n"
-    })
-end
-
-dhfh.tomb_milestone = function(e)
-    crawl.mark_milestone("br.enter", "entered the shrine of an ancestral avatar", true)
-end
 }}
-
-## testing map
-################################################
-#NAME:   dhfh_test
-#TAGS:   dhfh_test
-#PLACE: D:1
-#ORIENT: float
-#KFEAT: O = enter_dwarf_hall
-#ITEM: ring of wizardry unrand:ring_of_charms
-#MAP
-#Od
-#ENDMAP
 
 ## section 2: Arrival maps
 ################################################
 
 # Dummy arrival
 NAME:   dhfh_arrival_dummy
-TAGS:   dummy
+TAGS:   extra dummy
 PLACE:  Dwarf:1
-WEIGHT: 25
-ORIENT: float
 MAP
 {
 ENDMAP
 
 NAME:   dhfh_arrival_the_gate
-TAGS:   patrolling no_wall_fixup
+TAGS:   extra patrolling no_wall_fixup
 PLACE:  Dwarf:1
 WEIGHT: 10
 ORIENT: float
@@ -221,7 +125,7 @@ xxxxxxxxxxx
 ENDMAP
 
 NAME:   dhfh_arrival_statues
-TAGS:   patrolling
+TAGS:   extra patrolling
 PLACE:  Dwarf:1
 WEIGHT: 10
 ORIENT: float
@@ -243,6 +147,7 @@ ccG.....Gcc
 ENDMAP
 
 NAME:   dhfh_arrival_fountains
+TAGS:   extra
 PLACE:  Dwarf:1
 WEIGHT: 10
 TAGS:   no_rotate no_wall_fixup
@@ -263,6 +168,7 @@ xxxx..@..xxxx
 ENDMAP
 
 NAME:   dhfh_arrival_gauntlet
+TAGS:   extra
 PLACE:  Dwarf:1
 WEIGHT: 10
 TAGS:   no_rotate no_wall_fixup
@@ -288,7 +194,7 @@ xx....1....xx
 ENDMAP
 
 NAME: dhfh_arrival_vestibule
-TAGS: no_wall_fixup
+TAGS: extra no_wall_fixup
 PLACE:  Dwarf:1
 ORIENT: float
 WEIGHT: 5
@@ -319,7 +225,7 @@ ENDMAP
 #'
 
 NAME:   dhfh_arrival_flooded
-TAGS:   no_wall_fixup no_pool_fixup
+TAGS:   extra no_wall_fixup no_pool_fixup
 PLACE:  Dwarf:1
 WEIGHT: 5
 ORIENT: float
@@ -349,8 +255,8 @@ ENDMAP
 ## section 3: Treasure maps
 ################################################
 NAME:    dhfh_treasure_sunken_tomb
-TAGS:    dhfh_treasure uniq_dhfh_treasure chance_dhfh_treasure no_item_gen no_monster_gen no_pool_fixup no_wall_fixup
-CHANCE:  100%
+TAGS:    extra uniq_dhfh_treasure no_item_gen no_monster_gen no_pool_fixup no_wall_fixup
+PLACE:   Dwarf:1
 WEIGHT:  40
 ORIENT:  float
 MONS:    deep dwarf w:30 / nisse / elf w:3
@@ -374,9 +280,6 @@ ITEM:    amulet of faith / ring of wizardry unrand:ring_of_charms w:5 / \
          potion of experience w:1 / potion of porridge / any potion / \
          scroll of holy word / scroll of torment / any scroll
 ITEM:    potion of porridge
-prelude {{
-    dhfh.treasure_setup(_G)
-}}
 : dhfh.colors(_G)
 MAP
         xxxxxxxxxxxxxxxxxxxx
@@ -409,8 +312,8 @@ xxx+xxxx....xxxC7.xc+cG4$ccx
 ENDMAP
 
 NAME:    dhfh_treasure_vault
-TAGS:    dhfh_treasure uniq_dhfh_treasure chance_dhfh_treasure no_item_gen no_monster_gen no_wall_fixup no_rotate
-CHANCE:  100%
+TAGS:    extra uniq_dhfh_treasure no_item_gen no_monster_gen no_wall_fixup no_rotate
+PLACE:   Dwarf:1
 ORIENT: float
 WEIGHT: 15
 MONS:   deep dwarf w:20, nisse
@@ -422,9 +325,6 @@ MARKER: = = lua:restrict_door()
 SUBST:  * = **d
 ITEM:   staff of death / scroll of torment / necronomicon w:1 / \
         ring of wizardry unrand:ring_of_charms w:5
-prelude {{
-    dhfh.treasure_setup(_G)
-}}
 : dhfh.colors(_G)
 MAP
 cccccccccccccccccccc@cccccccccccccccccccc
@@ -438,8 +338,8 @@ cccccccccccccccccccc@cccccccccccccccccccc
 ENDMAP
 
 NAME:    dhfh_treasure_sunken_vault
-TAGS:    dhfh_treasure uniq_dhfh_treasure chance_dhfh_treasure no_item_gen no_monster_gen no_wall_fixup no_rotate
-CHANCE:  100%
+TAGS:    extra uniq_dhfh_treasure no_item_gen no_monster_gen no_wall_fixup no_rotate
+PLACE:   Dwarf:1
 ORIENT: float
 WEIGHT: 5
 MONS:   wight
@@ -449,9 +349,6 @@ MONS:   war dog
 SUBST:  $ = $$d
 ITEM:   any weapon ego:draining / any armour ego:positive_energy / \
         staff of death / scroll of torment / necronomicon w:1
-prelude {{
-    dhfh.treasure_setup(_G)
-}}
 : dhfh.colors(_G)
 MAP
 ..xxx@<xxxxx
@@ -473,8 +370,7 @@ ENDMAP
 ################################################
 NAME:   dhfh_guard_house_d2
 TAGS:   dhfh_guard_house allow_dup
-CHANCE: 10%
-PLACE:  Dwarf:2
+DEPTH:  Dwarf:1
 NSUBST: C = 1:@ / *:c
 NSUBST: S = 1:= / *:c
 KITEM:  * = % w:20 / * / $
@@ -499,8 +395,7 @@ ENDMAP
 
 NAME:   dhfh_guard_house_d3
 TAGS:   dhfh_guard_house allow_dup
-CHANCE: 10%
-PLACE:  Dwarf:3
+DEPTH:  Dwarf:1
 NSUBST: C = 1:@ / *:c
 NSUBST: S = 1:= / *:c
 KITEM:  * = % w:20 / * / $
@@ -524,8 +419,7 @@ ENDMAP
 
 NAME:   dhfh_guard_house_d4
 TAGS:   dhfh_guard_house allow_dup
-CHANCE: 10%
-PLACE:  Dwarf:4
+DEPTH:  Dwarf:1
 NSUBST: C = 1:@ / *:c
 NSUBST: S = 1:= / *:c
 KITEM:  * = % w:20 / * / $
@@ -549,16 +443,12 @@ cccc@.cccc
 ENDMAP
 
 NAME:     dhfh_alchemist
-TAGS:     dhfh_alchemist no_dup
-CHANCE:   10%
-PLACE:    Dwarf:1-4
-#SUBVAULT: Z : fruiting_plant
-#SUBVAULT: Y : fruiting_plant
-#SUBVAULT: X : fruiting_plant
-#SUBVAULT: W : fruiting_plant
-KFEAT: Y = floor
-KFEAT: W = floor
-
+TAGS:     extra
+DEPTH:    Dwarf:1
+SUBVAULT: Z : fruiting_plant
+SUBVAULT: Y : fruiting_plant
+SUBVAULT: X : fruiting_plant
+SUBVAULT: W : fruiting_plant
 KITEM:    p = potion of healing / potion of heal wounds / \
               potion of restore abilities w:1 / potion of poison w:3 / \
               potion of strong poison w:1 / potion of confusion w:1 / nothing
@@ -580,34 +470,6 @@ cppc....cppc
 cp.+.1..+.pc
 cccc....cccc
 cccccccccccc
-............
-ENDMAP
-
-NAME:    dhfh_frost_giant
-TAGS:    extra dhfh_giant uniq_dhfh_giant chance_dhfh_giant
-CHANCE:  10%
-PLACE:   Dwarf: 4-5
-MONS:    frost giant
-MAP
-1
-ENDMAP
-
-NAME:    dhfh_fire_giant
-TAGS:    extra dhfh_giant uniq_dhfh_giant chance_dhfh_giant
-CHANCE:  10%
-PLACE:   Dwarf: 4-5
-MONS:    fire giant
-MAP
-1
-ENDMAP
-
-NAME:    dhfh_hill_giant
-TAGS:    extra dhfh_giant uniq_dhfh_giant chance_dhfh_giant
-CHANCE:  10%
-PLACE:   Dwarf: 4-5
-MONS:    fire giant
-MAP
-1
 ENDMAP
 
 
@@ -640,9 +502,9 @@ MAP
 ENDMAP
 
 NAME:     dhfh_hall
-TAGS:     dwarf_hall no_monster_gen no_item_gen no_wall_fixup no_shop_gen
+TAGS:     extra no_monster_gen no_item_gen no_wall_fixup no_shop_gen
 ORIENT:   float
-PLACE:    Dwarf:5
+PLACE:    Dwarf:1
 NSUBST:   s = 1:= / *:c
 MARKER:   = = lua:restrict_door()
 SUBST:    ? = w * |:3
@@ -657,8 +519,7 @@ SUBVAULT: B : dhfh_hall_right
 SUBVAULT: C : dhfh_hall_right
 SUBVAULT: D : dhfh_hall_right
 KMONS:    1 = patrolling nisse w:3 / patrolling deep dwarf unborn w:5 / \
-              patrolling deep dwarf death knight / patrolling deep dwarf necromancer / \
-              patrolling witch / patrolling huldra
+              patrolling deep dwarf death knight / patrolling deep dwarf necromancer
 KMONS:    2 = shadow wraith / freezing wraith / troll / rock troll w:5 / \
               patrolling deep dwarf death knight w:3 / patrolling deep dwarf necromancer w:2 / \
               patrolling deep dwarf unborn w:1
@@ -688,10 +549,10 @@ cccccc.ccccsc.c
 ENDMAP
 
 NAME:   dhfh_barracks_1
-TAGS:   extra dhfh_barracks uniq_dhfh_barracks chance_dhfh_barracks no_shop_gen
+TAGS:   extra uniq_dhfh_barracks chance_dhfh_barracks no_shop_gen
 ORIENT: float
 CHANCE: 50%
-DEPTH:  Dwarf:5
+DEPTH:  Dwarf:1
 MONS:   nisse w:3 / elf w:5 / deep dwarf / deep dwarf necromancer / \
         deep dwarf berserker
 MONS:   shadow wraith / wraith / wight w:5 / troll / rock troll w:5 / \
@@ -756,10 +617,10 @@ xxxxxxxxxxxxc.?.c........c
 ENDMAP
 
 NAME:   dhfh_barracks_2
-TAGS:   extra dhfh_barracks uniq_dhfh_barracks chance_dhfh_barracks no_shop_gen
+TAGS:   extra uniq_dhfh_barracks chance_dhfh_barracks no_shop_gen
 ORIENT: float
 CHANCE: 50%
-DEPTH:  Dwarf:5
+DEPTH:  Dwarf:1
 MONS:   nisse w:3 / elf w:5 / dwarf / deep dwarf necromancer / \
         deep dwarf berserker
 MONS:   shadow wraith / wraith / wight w:5 / troll / rock troll w:5 / \
@@ -821,133 +682,23 @@ ccccccccccsc...cscccccccccc
            c.@.c
 ENDMAP
 
-NAME:   dhfh_tomb_entry_simple
-TAGS:   extra dwarf_tomb_entry chance_dwarf_tomb_entry uniq_dwarf_tomb_entry no_monster_gen no_item_gen
-ORIENT: float
-DEPTH:  Dwarf:4-5
-CHANCE: 10%
-MONS:   nisse w:3 / elf / w:5 deep dwarf / deep dwarf necromancer / \
-        deep dwarf artificer
-MONS:   shadow wraith / wraith / wight w:5 / troll / rock troll w:5 / \
-        deep dwarf necromancer w:2 / deep dwarf artificer w:1
-# crawl will rotate for the rest of possibilities
-: if crawl.coinflip() then
-KFEAT:  A = =
-KFEAT:  B = c
-: else
-KFEAT:  A = c
-KFEAT:  B = =
-: end
-MARKER: O = lua:one_way_stair { desc = "A portal to the shrine of an ancestral avatar", \
-                                dst = "dhfh_tomb" }
-KFEAT: O = enter_portal_vault
-: dhfh.colors(_G)
-MAP
-cccc.cccc
-c1.....1c
-c.ccccc.c
-c.c.2.c.c
-..c.O.c..
-c.c...c.c
-c.cABcc.c
-c1.....1c
-cccc.cccc
-ENDMAP
-
-NAME:   dhfh_tomb_entry_chances
-TAGS:   extra dwarf_tomb_entry chance_dwarf_tomb_entry uniq_dwarf_tomb_entry no_monster_gen no_item_gen
-ORIENT: float
-CHANCE: 10%
-DEPTH:  Dwarf:4-5
-MARKER: + = lua:restrict_door()
-NSUBST: 1 = 1:O / *:1
-SUBST:  1 = 1 w:30 / 2
-MARKER: O = lua:one_way_stair { desc = "A portal to the shrine of an ancestral avatar", \
-                                dst = "dhfh_tomb" }
-KFEAT:  O = enter_portal_vault
-MONS:   nisse w:3 / elf w:5 / deep dwarf / deep dwarf necromancer / \
-        deep dwarf artificer
-MONS:   shadow wraith / wraith / wight w:5 / troll / rock troll w:5 / \
-        deep dwarf necromancer w:2 / deep dwarf artificer w:1
-: dhfh.colors(_G)
-MAP
-ccccccccccccccccccccc
-ccc1c1c1c1c1c1c1c1ccc
-ccc+c+c+c+c+c+c+c+ccc
-.....................
-..........G..........
-.....................
-ENDMAP
-
-NAME:   dhfh_tomb_1
-TAGS:   dhfh_tomb uniq_dhfh_tomb
-ORIENT: encompass
-SUBST:  8 = G
-SUBST:  F = T:40 V:40 U:20
-SUBST:  1 = .:100 1:1 2:1 3:1
-MONS:   fire giant
-MONS:   frost giant
-MONS:   hill giant
-KFEAT:  > = exit_portal_vault
-KITEM:  * = any weapon randart / any armour randart / \
-            war axe unrand:arga w:4 / crossbow unrand:sniper w:3 / \
-            great mace unrand:undeadhunter w:3
-{{
-    dhfh.tomb_setup(_G, "T")
-    dhfh.hall_setup(_G, "*")
-    dhfh.random_monster_set(_G)
-}}
-epilogue{{
-    dhfh.tomb_milestone(_G)
-}}
-
-MAP
-ccccccccccccccccccccc
-c...................c
-c.........T.........c
-c.........*.........c
-c..vvvv8.....8vvvv..c
-c.....v.......v.....c
-c.....v.......v.....c
-cccc..v8.....8v..cccc
-c.$c..v.......v..c$.c
-c..c..v.......v..c..c
-c..c..v8.....8v..c..c
-c..8..v.......v..8..c
-c.....v.......v.....c
-cvvvvvv8.....8vvvvvvc
-c...................c
-c...................c
-c...ccc.......ccc...c
-c.1.c.....>.....c.1.c
-c.F.c.....A.....c.F.c
-ccccccccccccccccccccc
-ENDMAP
 
 ## section 6: Portal entries
 ################################################
-default-depth: D:5-7
 
 # Dummy entry
-NAME:    enter_dhfh_dummy
-TAGS:    extra dhfh_entry uniq_dhfh_entry chance_dhfh_entry no_monster_gen
-WEIGHT:  25
-CHANCE:  5%
-ORIENT:  float
-KFEAT:   O = enter_dwarf_hall
+NAME:    enter_dwarf_dummy
+TAGS:    dwarf_entry
 MAP
 O
 ENDMAP
 
-NAME:    enter_dhfh_1
-TAGS:    extra dhfh_entry uniq_dhfh_entry chance_dhfh_entry no_monster_gen
-WEIGHT:  10
-CHANCE:  5%
+NAME:    enter_dwarf_1
+TAGS:    dwarf_entry no_monster_gen
 SUBST:   . = . ':7
 COLOUR:  ' = yellow
 FTILE:   ' = floor_sandstone
 SUBST:   ' = .
-KFEAT:   O = enter_dwarf_hall
 MAP
 .....
 .'G'.
@@ -957,20 +708,16 @@ MAP
 ENDMAP
 #'
 
-NAME:    enter_dhfh_2
-TAGS:    extra dhfh_entry uniq_dhfh_entry chance_dhfh_entry no_monster_gen
-WEIGHT:  10
-CHANCE:  5%
+NAME:    enter_dwarf_2
+TAGS:    dwarf_entry no_monster_gen
 SHUFFLE: CD / c+
 COLOUR:  ' = yellow
 COLOUR:  C = yellow
 COLOUR:  D = yellow
 SUBST:   D = =
 SUBST:   C = c
-FTILE:   ' = floor_sandstone
+FTILE:   =GO' = floor_sandstone
 SUBST:   ' = .
-#'
-KFEAT:   O = enter_dwarf_hall
 MAP
 .......
 .ccDcc.
@@ -982,10 +729,8 @@ MAP
 ENDMAP
 #'
 
-NAME:    enter_dhfh_3
-TAGS:    extra dhfh_entry uniq_dhfh_entry chance_dhfh_entry no_monster_gen
-WEIGHT:  10
-CHANCE:  5%
+NAME:    enter_dwarf_3
+TAGS:    dwarf_entry no_monster_gen
 SUBST:   . = Y .
 COLOUR:  Y = yellow
 FTILE:   Y = floor_sandstone
@@ -994,22 +739,20 @@ MONS:    deep dwarf w:30 / elf w:2 / war dog
 MONS:    wight / orange rat
 MONS:    giant centipede / redback
 SUBST:   . = .:100 11 2 3
-KFEAT:   O = enter_dwarf_hall
 MAP
 .G.
 .O.
 ...
 ENDMAP
 
-NAME:    enter_dhfh_4
-TAGS:    extra dhfh_entry uniq_dhfh_entry chance_dhfh_entry no_monster_gen no_wall_fixup
+NAME:    enter_dwarf_4
+TAGS:    dwarf_entry no_monster_gen no_wall_fixup
 WEIGHT:  10
 CHANCE:  5%
 COLOUR:  1 = yellow, ' = yellow, x = white
 MONS:    dwarf w:30 / elf w:2 / war dog
-FTILE:   1 = floor_sandstone, ' = floor_sandstone, x = floor_sandstone, O = floor_sandstone
+FTILE:   1'xO = floor_sandstone
 RTILE:   x = wall_tomb
-KFEAT:   O = enter_dwarf_hall
 MAP
 .........
 .xxxxxxx.
@@ -1020,18 +763,14 @@ MAP
 .xxx'xxx.
 ....'....
 ENDMAP
-#'
 
-NAME:    enter_dhfh_5
-TAGS:    extra dhfh_entry uniq_dhfh_entry chance_dhfh_entry no_monster_gen
-WEIGHT:  10
-CHANCE:  5%
+NAME:    enter_dwarf_5
+TAGS:    dwarf_entry no_monster_gen
 COLOUR:  c = white, = = white, ' = yellow
 RTILE:   c = wall_tomb, = = wall_tomb
-FTILE:   ' = floor_sandstone
+FTILE:   ='GO = floor_sandstone
 NSUBST:  = = 1:= / *:c
 SUBST:   c : cx
-KFEAT:   O = enter_dwarf_hall
 MAP
    ...
   ..c..
@@ -1043,4 +782,25 @@ MAP
   ..c..
    ...
 ENDMAP
-#'
+
+NAME:    enter_dwarf_6
+TAGS:    dwarf_entry
+MONS:    nisse w:3 / elf / w:5 deep dwarf / deep dwarf necromancer / \
+         deep dwarf artificer
+MONS:    shadow wraith / wraith / wight w:5 / troll / rock troll w:5 / \
+         deep dwarf necromancer w:2 / deep dwarf artificer w:1
+FTILE:   12O.A = floor_sandstone
+# crawl will rotate for the rest of possibilities
+NSUBST:  A = 1:= / *:c
+: dhfh.colors(_G)
+MAP
+cccc.cccc
+c1.....1c
+c.ccccc.c
+c.c.2.c.c
+..c.O.c..
+c.c...c.c
+c.cAAcc.c
+c1.....1c
+cccc.cccc
+ENDMAP

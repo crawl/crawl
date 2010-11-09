@@ -469,7 +469,7 @@ IDEF(weap_skill)
     if (!item || !item->defined())
         return (0);
 
-    int skill = range_skill(*item);
+    skill_type skill = range_skill(*item);
     if (skill == SK_THROWING)
         skill = weapon_skill(*item);
     if (skill == SK_FIGHTING)

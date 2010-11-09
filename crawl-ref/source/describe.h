@@ -85,9 +85,9 @@ void describe_spell(spell_type spelled, const item_def* item = NULL);
 
 std::string get_ghost_description(const monster_info &mi, bool concise = false);
 
-std::string get_skill_description(int skill, bool need_title = false);
+std::string get_skill_description(skill_type skill, bool need_title = false);
 
-void describe_skill(int skill);
+void describe_skill(skill_type skill);
 
 void print_description(const std::string &desc);
 void print_description(const describe_info &inf);

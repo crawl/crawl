@@ -5,6 +5,7 @@
 #include "artefact.h"
 #include "branch.h"
 #include "coord.h"
+#include "coordit.h"
 #include "defines.h"
 #include "describe.h"
 #include "env.h"
@@ -128,6 +129,7 @@ void jiyva_eat_offlevel_items()
             break;
 
         const int branch = random2(NUM_BRANCHES);
+        int js = JS_NONE;
 
         // Choose level based on main dungeon depth so that levels short branches
         // aren't picked more often.
@@ -167,8 +169,9 @@ void jiyva_eat_offlevel_items()
                 // Needs a message now to explain possible hp or mp
                 // gain from jiyva_slurp_bonus()
                 mpr("You hear a distant slurping noise.");
-                sacrifice_item_stack(*si);
+                sacrifice_item_stack(*si, &js);
                 destroy_item(si.link());
+                jiyva_slurp_message(js);
             }
             return;
         }
@@ -203,6 +206,19 @@ void jiyva_slurp_bonus(int item_value, int *js)
          inc_hp(std::max(random2(item_value), 1), false);
          *js |= JS_HP;
      }
+}
+
+void jiyva_slurp_message(int js)
+{
+    if (js != JS_NONE)
+    {
+        if (js & JS_FOOD)
+            mpr("You feel a little less hungry.");
+        if (js & JS_MP)
+            mpr("You feel your power returning.");
+        if (js & JS_HP)
+            mpr("You feel a little better.");
+    }
 }
 
 enum eq_type
@@ -240,16 +256,19 @@ int ash_bondage_level(int type_only)
         }
 
         // transformed away slots are still considered to be possibly bound
-        if (you.equip[i] != -1)
+        if (you_can_wear(i, true))
         {
             slots[s]++;
-            const item_def& item = you.inv[you.equip[i]];
-            if (item.cursed()
-                && (i != EQ_WEAPON
-                    || item.base_type == OBJ_WEAPONS
-                    || item.base_type == OBJ_STAVES))
+            if (you.equip[i] != -1)
             {
-                cursed[s]++;
+                const item_def& item = you.inv[you.equip[i]];
+                if (item.cursed()
+                    && (i != EQ_WEAPON
+                        || item.base_type == OBJ_WEAPONS
+                        || item.base_type == OBJ_STAVES))
+                {
+                    cursed[s]++;
+                }
             }
         }
     }
@@ -337,7 +356,7 @@ bool ash_id_item(item_def& item, bool silent)
 
     if (item.base_type == OBJ_WEAPONS
         || item.base_type == OBJ_ARMOUR
-        || item_is_rod(item))
+        || item.base_type == OBJ_STAVES)
     {
         ided |= ISFLAG_KNOW_PROPERTIES | ISFLAG_KNOW_TYPE;
     }
@@ -405,4 +424,70 @@ void ash_id_inventory()
         if (item.defined())
             ash_id_item(item, false);
     }
+}
+
+static bool is_ash_portal(dungeon_feature_type feat)
+{
+    switch(feat)
+    {
+    case DNGN_ENTER_HELL:
+    case DNGN_ENTER_LABYRINTH:
+    case DNGN_ENTER_ABYSS: // for completeness/Pan
+    case DNGN_EXIT_ABYSS:
+    case DNGN_ENTER_PANDEMONIUM:
+    case DNGN_EXIT_PANDEMONIUM:
+    // DNGN_TRANSIT_PANDEMONIUM is too mundane
+    case DNGN_ENTER_PORTAL_VAULT:
+        return true;
+    default:
+        return false;
+    }
+}
+
+// Yay for rectangle_iterator and radius_iterator not sharing a base type
+static bool _check_portal(coord_def where)
+{
+    const dungeon_feature_type feat = grd(where);
+    if (feat != env.map_knowledge(where).feat() && is_ash_portal(feat))
+    {
+        env.map_knowledge(where).set_feature(feat);
+        env.map_knowledge(where).flags |= MAP_MAGIC_MAPPED_FLAG;
+
+        if (!testbits(env.pgrid(where), FPROP_SEEN_OR_NOEXP))
+        {
+            env.pgrid(where) |= FPROP_SEEN_OR_NOEXP;
+            if (!you.see_cell(where))
+                return true;
+        }
+    }
+    return false;
+}
+
+int ash_detect_portals(bool all)
+{
+    if (you.religion != GOD_ASHENZARI)
+        return 0;
+
+    int portals_found = 0;
+    const int map_radius = LOS_RADIUS + 1;
+
+    if (all)
+    {
+        for (rectangle_iterator ri(0); ri; ++ri)
+        {
+            if (_check_portal(*ri))
+                portals_found++;
+        }
+    }
+    else
+    {
+        for (radius_iterator ri(you.pos(), map_radius, C_ROUND); ri; ++ri)
+        {
+            if (_check_portal(*ri))
+                portals_found++;
+        }
+    }
+
+    you.seen_portals += portals_found;
+    return (portals_found);
 }

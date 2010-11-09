@@ -120,11 +120,7 @@ struct map_cell
             flags |= MAP_MORE_ITEMS;
     }
 
-    void set_detected_item()
-    {
-        clear_item();
-        flags |= MAP_DETECTED_ITEM;
-    }
+    void set_detected_item();
 
     void clear_item()
     {

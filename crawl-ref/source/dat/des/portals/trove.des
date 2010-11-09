@@ -2,38 +2,13 @@
 #
 # Treasure Trove (by due)
 #
-# Troves are once-only (tolled) and timed portals to a treasure chamber, most
-# of which are weighted acquirement-esque towards your skills. Of course,
-# there's a chance that you'll get rubbish (casters in an weapon/armour room
-# and melee fighters in a library), but that's kind of the point.
+# Troves are once-only tolled portals to a treasure chamber, most of which
+# are weighted acquirement-esque towards your skills.  Of course, there's a
+# chance that you'll get rubbish (casters in an weapon/armour room and melee
+# fighters in a library), but that's kind of the point.
 #
 # Two Trove portals are 'nasty': one features vampires behind (diggable) glass,
 # and the other features two wandering shining eyes. Have a nice time!
-#
-# -- comments by dpeg:
-# The idea (you spend a lot and gain a meta-acquirement) of troves is cool and
-# robust. There are some slight issues with the current setup:
-# a) The choice between pay-large-sum and make-permanent is not relevant. If
-#    you have the money, you will just buy access to the trove. Therefore, we
-#    should remove the buying option.
-# b) It is a bug that troves hand out incredible sums of money (when they
-#    give money).
-# c) Paying a small sum upfront (thematically, to "lock" the trove) is just
-#    meant to get players emotionally invested into fulfilling the second
-#    trove condition. This may not have been my best idea -- here's another
-#    suggestion: The trove asks you for something and you have to deliver
-#    quickly with a first set. That's easy for the "12 scrolls of identify
-#    scrolls" type quests (i.e. where you have to collect some number of a
-#    common, useful item): you just ask for one or two scrolls of identify.
-#    We can also make it so that the player can take some time for the first
-#    payment -- but the longer it takes, the more the trove wants. (And the
-#    trove will vanish if the total cost exceeds some threshold.)
-#    For quests like "one potion of acquirement" (where you have to part with
-#    very few, very good items), the trove would ask for items of the same
-#    type (scrolls, potions, wands) of sufficient worth: we wouldn't even need
-#    to tell the player the exact value.
-#    And for money demands (usually in the form of "bring me [shop randart]",
-#    the trove would ask for a sum of money.
 #
 ##############################################################################
 {{
@@ -636,7 +611,7 @@ WEIGHT: 15
 WEIGHT: 5
 : end
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup
+TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
 # Loot: once again, 16 items.
 COLOUR: o = blue
 ITEM:   acquire weapon / any useful weapon good_item / any weapon w:2
@@ -666,7 +641,7 @@ WEIGHT: 15
 WEIGHT: 5
 : end
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup
+TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
 # Loot: once again, 16 items.
 COLOUR: x = blue
 ITEM:   acquire weapon / any useful weapon good_item / any weapon w:2
@@ -688,7 +663,7 @@ ENDMAP
 NAME:   trove_armour_1
 WEIGHT: 15
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup
+TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
 # Loot: once again, 16 items.
 COLOUR: o = blue
 ITEM:   acquire armour / any useful armour good_item / any armour w:2
@@ -717,7 +692,7 @@ ENDMAP
 NAME:   trove_armour_2
 WEIGHT: 15
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup
+TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
 # Loot: once again, 16 items.
 COLOUR: x = blue
 ITEM:   acquire armour / any useful armour good_item / any armour w:2
@@ -739,7 +714,7 @@ ENDMAP
 NAME:    trove_hunter_1
 WEIGHT:  5
 ORIENT:  encompass
-TAGS:    trove no_item_gen no_monster_gen  allow_dup
+TAGS:    trove no_item_gen no_monster_gen allow_dup no_species_fe
 # Loot:  15 items, this time.
 COLOUR:  x = blue
 COLOUR:  o = blue
@@ -861,7 +836,7 @@ ENDMAP
 # extremely useful or extremely useless.
 #
 NAME:    trove_artefacts
-TAGS:    trove no_item_gen no_monster_gen allow_dup
+TAGS:    trove no_item_gen no_monster_gen allow_dup no_species_fe
 WEIGHT:  1
 ORIENT:  encompass
 ######## There should be a better way than listing all of the unrandarts...
@@ -965,7 +940,7 @@ ENDMAP
 
 # 20 items, but you have to dig for them.  Wand is included.
 NAME:    trove_dig
-TAGS:    trove no_item_gen no_monster_gen allow_dup
+TAGS:    trove no_item_gen no_monster_gen allow_dup no_species_fe
 WEIGHT:  5
 ORIENT:  encompass
 ITEM:    acquire armour / any useful armour good_item / any armour w:2
@@ -1006,7 +981,7 @@ ENDMAP
 
 # 16 pieces of armour
 NAME:   trove_armour_six_rooms
-TAGS:   trove no_item_gen no_monster_gen allow_dup
+TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
 ORIENT: encompass
 ITEM:   acquire armour / any useful armour good_item / any armour w:2
 : trove.setup_features(_G)
@@ -1025,7 +1000,7 @@ ENDMAP
 
 # 16 weapons
 NAME:   trove_weapons_four_rooms
-TAGS:   trove no_item_gen no_monster_gen allow_dup
+TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
 ORIENT: encompass
 ITEM:   acquire weapon / any useful weapon good_item / any weapon w:2
 NSUBST: " = 16:d / *:.

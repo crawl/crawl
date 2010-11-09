@@ -708,26 +708,26 @@ sub write_tiles
             next;
         }
 
-        # The path always has the form /item/$folder/artefact.
+        # The path always has the form /item/$dir/artefact.
         my $type   = $artefact->{base_type} || "";
-        my $folder = "";
+        my $dir = "";
         if ($type eq "OBJ_WEAPONS")
         {
-            $folder = "weapon";
+            $dir = "weapon";
         }
         elsif ($type eq "OBJ_ARMOUR")
         {
-            $folder = "armour";
+            $dir = "armour";
         }
         elsif ($type eq "OBJ_JEWELLERY")
         {
             if ($artefact->{sub_type} =~ /RING_/)
             {
-                $folder = "ring";
+                $dir = "ring";
             }
             else
             {
-                $folder = "amulet";
+                $dir = "amulet";
             }
         }
         else
@@ -737,20 +737,20 @@ sub write_tiles
 
         my $definition = "$artefact->{TILE} UNRAND_$artefact->{_ENUM}";
         my $needrim    = ($artefact->{TILERIM} ? "1" : "0");
-        if (defined $art_by_type{$folder})
+        if (defined $art_by_type{$dir})
         {
-            if (defined $art_by_type{$folder}{$needrim})
+            if (defined $art_by_type{$dir}{$needrim})
             {
-                push @{$art_by_type{$folder}{$needrim}}, $definition;
+                push @{$art_by_type{$dir}{$needrim}}, $definition;
             }
             else
             {
-                $art_by_type{$folder}{$needrim} = [$definition];
+                $art_by_type{$dir}{$needrim} = [$definition];
             }
         }
         else
         {
-            $art_by_type{$folder} = {$needrim => [$definition]};
+            $art_by_type{$dir} = {$needrim => [$definition]};
         }
     }
 

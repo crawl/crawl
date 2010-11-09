@@ -13,7 +13,13 @@ enum tag_minor_version
     TAG_MINOR_DENSITY      = 3, // Count of level's explorable area.
     TAG_MINOR_MALIGN       = 4, // Keep malign gateway markers around for longer.
     TAG_MINOR_GOD_GIFTS    = 5, // Track current as well as total god gifts.
-    TAG_MINOR_VERSION      = 5, // Current version.  (Keep equal to max.)
+    TAG_MINOR_ATT_SWAP     = 6, // Sort attitude enums by friendliness.
+    TAG_MINOR_GRATE        = 7, // Iron grates.
+    TAG_MINOR_XP_STEALING  = 8, // Block kill sniping.
+    TAG_MINOR_EARTH_ATTUNE = 9, // [G]nomes earth attunement.
+    TAG_MINOR_CROSSTRAIN   = 10,// Track skill points gained with crosstraining.
+    TAG_MINOR_ADD_ID_INFO  = 11, // Additional identification info
+    TAG_MINOR_VERSION      = 11,// Current version.  (Keep equal to max.)
 };
 
 #endif

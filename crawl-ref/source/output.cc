@@ -316,6 +316,7 @@ static short _get_stat_colour(stat_type stat)
     // Stat is magically increased.
     if (you.duration[DUR_DIVINE_STAMINA]
         || stat == STAT_STR && you.duration[DUR_MIGHT]
+        || stat == STAT_STR && you.duration[DUR_BERSERK]
         || stat == STAT_INT && you.duration[DUR_BRILLIANCE]
         || stat == STAT_DEX && you.duration[DUR_AGILITY])
     {
@@ -495,7 +496,7 @@ static void _get_status_lights(std::vector<status_light>& out)
     const int statuses[] = {
         STATUS_BURDEN, STATUS_HUNGER, DUR_PRAYER, DUR_TELEPORT,
         DUR_DEATHS_DOOR, DUR_QUAD_DAMAGE, DUR_DEFLECT_MISSILES,
-        DUR_REPEL_MISSILES, STATUS_REGENERATION,
+        DUR_REPEL_MISSILES, STATUS_REGENERATION, DUR_BERSERK,
         DUR_RESIST_POISON, DUR_RESIST_COLD, DUR_RESIST_FIRE,
         DUR_INSULATION, DUR_SEE_INVISIBLE,
         STATUS_AIRBORNE, DUR_INVIS, DUR_CONTROL_TELEPORT, DUR_SILENCE,
@@ -506,6 +507,7 @@ static void _get_status_lights(std::vector<status_light>& out)
         STATUS_SPEED, DUR_DEATH_CHANNEL, DUR_TELEPATHY, DUR_STEALTH,
         DUR_BREATH_WEAPON, DUR_EXHAUSTED, DUR_POWERED_BY_DEATH,
         DUR_TRANSFORMATION, DUR_AFRAID, DUR_MIRROR_DAMAGE, DUR_SCRYING,
+        STATUS_CLINGING,
     };
 
     status_info inf;
@@ -1121,19 +1123,19 @@ int update_monster_pane()
 }
 #endif
 
-const char* itosym1(int stat)
+static const char* _itosym1(int stat)
 {
     return ((stat >= 1) ? "+  " : ".  ");
 }
 
-const char* itosym2(int stat)
+static const char* _itosym2(int stat)
 {
     return ((stat >= 2) ? "+ +" :
             (stat == 1) ? "+ ." :
                           ". .");
 }
 
-const char* itosym3(int stat)
+static const char* _itosym3(int stat)
 {
     return ((stat >=  3) ? "+ + +" :
             (stat ==  2) ? "+ + ." :
@@ -1404,7 +1406,8 @@ static std::vector<formatted_string> _get_overview_stats()
                                 || you.berserk();
     const bool boosted_mp  = you.duration[DUR_DIVINE_VIGOUR];
     const bool boosted_str = you.duration[DUR_DIVINE_STAMINA]
-                                || you.duration[DUR_MIGHT];
+                                || you.duration[DUR_MIGHT]
+                                || you.duration[DUR_BERSERK];
     const bool boosted_int = you.duration[DUR_DIVINE_STAMINA]
                                 || you.duration[DUR_BRILLIANCE];
     const bool boosted_dex = you.duration[DUR_DIVINE_STAMINA]
@@ -1599,15 +1602,15 @@ static std::vector<formatted_string> _get_overview_resistances(
              "%sSust.Abil.: %s\n"
              "%sRes.Mut.  : %s\n"
              "%sRes.Rott. : %s\n",
-             _determine_colour_string(rfire, 3), itosym3(rfire),
-             _determine_colour_string(rcold, 3), itosym3(rcold),
-             _determine_colour_string(rlife, 3), itosym3(rlife),
-             _determine_colour_string(rpois, 1), itosym1(rpois),
-             _determine_colour_string(relec, 1), itosym1(relec),
-             _determine_colour_string(rspir, 1), itosym1(rspir),
-             _determine_colour_string(rsust, 2), itosym2(rsust),
-             _determine_colour_string(rmuta, 1), itosym1(rmuta),
-             _determine_colour_string(rrott, 1), itosym1(rrott));
+             _determine_colour_string(rfire, 3), _itosym3(rfire),
+             _determine_colour_string(rcold, 3), _itosym3(rcold),
+             _determine_colour_string(rlife, 3), _itosym3(rlife),
+             _determine_colour_string(rpois, 1), _itosym1(rpois),
+             _determine_colour_string(relec, 1), _itosym1(relec),
+             _determine_colour_string(rspir, 1), _itosym1(rspir),
+             _determine_colour_string(rsust, 2), _itosym2(rsust),
+             _determine_colour_string(rmuta, 1), _itosym1(rmuta),
+             _determine_colour_string(rrott, 1), _itosym1(rrott));
     cols.add_formatted(0, buf, false);
 
     int saplevel = player_mutation_level(MUT_SAPROVOROUS);
@@ -1617,13 +1620,13 @@ static std::vector<formatted_string> _get_overview_resistances(
     if (wearing_amulet(AMU_THE_GOURMAND, calc_unid))
     {
         pregourmand = "Gourmand  : ";
-        postgourmand = itosym1(1);
+        postgourmand = _itosym1(1);
         saplevel = 1;
     }
     else
     {
         pregourmand = "Saprovore : ";
-        postgourmand = itosym3(saplevel);
+        postgourmand = _itosym3(saplevel);
     }
     snprintf(buf, sizeof buf, "%s%s%s",
              _determine_colour_string(saplevel, 3), pregourmand, postgourmand);
@@ -1642,11 +1645,11 @@ static std::vector<formatted_string> _get_overview_resistances(
              "%sRes.Corr.  : %s\n"
              "%sClarity    : %s\n"
              ,
-             _determine_colour_string(rinvi, 1), itosym1(rinvi),
-             _determine_colour_string(rward, 1), itosym1(rward),
-             _determine_colour_string(rcons, 1), itosym1(rcons),
-             _determine_colour_string(rcorr, 1), itosym1(rcorr),
-             _determine_colour_string(rclar, 1), itosym1(rclar));
+             _determine_colour_string(rinvi, 1), _itosym1(rinvi),
+             _determine_colour_string(rward, 1), _itosym1(rward),
+             _determine_colour_string(rcons, 1), _itosym1(rcons),
+             _determine_colour_string(rcorr, 1), _itosym1(rcorr),
+             _determine_colour_string(rclar, 1), _itosym1(rclar));
     cols.add_formatted(1, buf, false);
 
     const int stasis = wearing_amulet(AMU_STASIS, calc_unid);
@@ -1654,12 +1657,12 @@ static std::vector<formatted_string> _get_overview_resistances(
     if (notele && !stasis)
     {
         snprintf(buf, sizeof buf, "%sPrev.Telep.: %s",
-                 _determine_colour_string(-1, 1), itosym1(1));
+                 _determine_colour_string(-1, 1), _itosym1(1));
     }
     else
     {
         snprintf(buf, sizeof buf, "%sStasis     : %s",
-                 _determine_colour_string(stasis, 1), itosym1(stasis));
+                 _determine_colour_string(stasis, 1), _itosym1(stasis));
     }
     cols.add_formatted(1, buf, false);
 
@@ -1667,7 +1670,7 @@ static std::vector<formatted_string> _get_overview_resistances(
     // it currently shows separately to avoid the blank.
     const int rrtel = !!player_teleport(calc_unid);
     snprintf(buf, sizeof buf, "%sRnd.Telep. : %s",
-             _determine_colour_string(rrtel, 1), itosym1(rrtel));
+             _determine_colour_string(rrtel, 1), _itosym1(rrtel));
     cols.add_formatted(1, buf, false);
 
     const int rctel = player_control_teleport(calc_unid);
@@ -1677,9 +1680,9 @@ static std::vector<formatted_string> _get_overview_resistances(
              "%sCtrl.Telep.: %s\n"
              "%sLevitation : %s\n"
              "%sCtrl.Flight: %s\n",
-             _determine_colour_string(rctel, 1), itosym1(rctel),
-             _determine_colour_string(rlevi, 1), itosym1(rlevi),
-             _determine_colour_string(rcfli, 1), itosym1(rcfli));
+             _determine_colour_string(rctel, 1), _itosym1(rctel),
+             _determine_colour_string(rlevi, 1), _itosym1(rlevi),
+             _determine_colour_string(rcfli, 1), _itosym1(rcfli));
     cols.add_formatted(1, buf, false);
 
     _print_overview_screen_equip(cols, equip_chars);
@@ -1828,7 +1831,7 @@ std::string _status_mut_abilities()
         STATUS_REGENERATION, DUR_DEATHS_DOOR, DUR_STONEMAIL, DUR_STONESKIN,
         DUR_TELEPORT, DUR_DEATH_CHANNEL, DUR_PHASE_SHIFT, DUR_SILENCE,
         DUR_INVIS, DUR_CONF, DUR_EXHAUSTED, DUR_MIGHT, DUR_BRILLIANCE,
-        DUR_AGILITY, DUR_DIVINE_VIGOUR, DUR_DIVINE_STAMINA, DUR_BERSERKER,
+        DUR_AGILITY, DUR_DIVINE_VIGOUR, DUR_DIVINE_STAMINA, DUR_BERSERK,
         STATUS_AIRBORNE, DUR_BARGAIN, DUR_SLAYING, DUR_SAGE,
         DUR_MAGIC_SHIELD, DUR_FIRE_SHIELD, DUR_POISONING, STATUS_SICK,
         STATUS_GLOW, STATUS_ROT, DUR_CONFUSING_TOUCH, DUR_SLIMIFY,
@@ -1916,14 +1919,6 @@ std::string _status_mut_abilities()
           mutations.push_back("paw claws");
           break;
 
-      case SP_GREY_DRACONIAN:
-          mutations.push_back("unbreathing");
-          break;
-
-      case SP_GREEN_DRACONIAN:
-          mutations.push_back("breathe noxious fumes");
-          break;
-
       case SP_RED_DRACONIAN:
           mutations.push_back("breathe fire");
           break;
@@ -1932,13 +1927,21 @@ std::string _status_mut_abilities()
           mutations.push_back("breathe frost");
           break;
 
-      case SP_BLACK_DRACONIAN:
-          mutations.push_back("breathe lightning");
+      case SP_GREEN_DRACONIAN:
+          mutations.push_back("breathe noxious fumes");
           break;
 
       case SP_YELLOW_DRACONIAN:
           mutations.push_back("spit acid");
           mutations.push_back("acid resistance");
+          break;
+
+      case SP_GREY_DRACONIAN:
+          mutations.push_back("walk through water");
+          break;
+
+      case SP_BLACK_DRACONIAN:
+          mutations.push_back("breathe lightning");
           break;
 
       case SP_PURPLE_DRACONIAN:
@@ -1971,7 +1974,7 @@ std::string _status_mut_abilities()
     }
 
     if (beogh_water_walk())
-        mutations.push_back("water walking");
+        mutations.push_back("walk on water");
 
     std::string current;
     for (unsigned i = 0; i < NUM_MUTATIONS; ++i)

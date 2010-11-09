@@ -108,7 +108,7 @@ static void mons_lose_attack_energy(monster* attacker, int wpn_speed,
 */
 
 // This function is only used when monsters are attacking.
-bool test_melee_hit(int to_hit, int ev, defer_rand& r)
+int test_melee_hit(int to_hit, int ev, defer_rand& r)
 {
     int   roll = -1;
     int margin = AUTOMATIC_HIT;
@@ -142,7 +142,7 @@ bool test_melee_hit(int to_hit, int ev, defer_rand& r)
               (roll == -1) ? "!!!" : "", margin);
 #endif
 
-    return (margin >= 0);
+    return (margin);
 }
 
 // This function returns the "extra" stats the player gets because of
@@ -811,7 +811,9 @@ bool melee_attack::player_attack()
 
     coord_def where = defender->pos();
 
-    if (player_hits_monster())
+    ev_margin = player_hits_monster();
+
+    if (ev_margin >= 0)
     {
         did_hit = true;
         if (Hints.hints_left)
@@ -865,7 +867,27 @@ bool melee_attack::player_attack()
         }
 
         if (damage_done > 0 || !defender_visible && !shield_blocked)
-            player_announce_hit();
+        {
+            if (defender->as_monster()->props.exists("HELPLESS")
+                && defender->as_monster()->props["HELPLESS"].get_bool())
+            {
+                // Modifying monster flags to apply "helpless" adjective.
+                uint64_t prev_flags = defender->as_monster()->flags;
+                std::string prev_mname = defender->as_monster()->mname;
+                defender->as_monster()->flags |= MF_NAME_ADJECTIVE;
+                defender->as_monster()->flags |= MF_NAME_DESCRIPTOR;
+                defender->as_monster()->mname = "helpless";
+
+                player_announce_hit();
+
+                // Restoring pre-fight MF_NAME_ADJECTIVE flag status.
+                defender->as_monster()->props.erase("HELPLESS");
+                defender->as_monster()->flags = prev_flags;
+                defender->as_monster()->mname = prev_mname;
+            }
+            else
+                player_announce_hit();
+        }
         else if (!shield_blocked && damage_done <= 0)
         {
             no_damage_message =
@@ -937,9 +959,14 @@ bool melee_attack::player_attack()
     {
         print_wounds(defender->as_monster());
 
+        // Actually apply the bleeding effect, this can come from an aux claw
+        // or a main hand claw attack and up to now has not actually happened.
         const int degree = you.has_claws();
-        if (apply_bleeding && defender->can_bleed() && degree > 0)
+        if (apply_bleeding && defender->can_bleed()
+            && degree > 0 && damage_done > 0)
+        {
             defender->as_monster()->bleed(3 + roll_dice(degree, 3), degree);
+        }
     }
 
     return (did_primary_hit || did_hit);
@@ -1202,12 +1229,10 @@ bool melee_attack::player_aux_test_hit()
 
     bool auto_hit = one_chance_in(30);
 
-    if (!auto_hit && to_hit >= evasion && !(to_hit >= helpful_evasion)
+    if (!auto_hit && to_hit >= evasion && helpful_evasion > evasion
         && defender_visible)
     {
-        mprf("Helpless, %s fails to dodge your %s.",
-             defender->name(DESC_NOCAP_THE).c_str(),
-             aux_attack.c_str());
+        defender->as_monster()->props["HELPLESS"] = true;
     }
 
     if (to_hit >= evasion || auto_hit)
@@ -1358,11 +1383,25 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         wpn_skill   = SK_UNARMED_COMBAT;
         player_exercise_combat_skills();
 
-        mprf("You %s %s%s%s",
-             aux_verb.c_str(),
-             defender->name(DESC_NOCAP_THE).c_str(),
-             debug_damage_number().c_str(),
-             attack_strength_punctuation().c_str());
+        if (defender->as_monster()->props.exists("HELPLESS")
+            && defender->as_monster()->props["HELPLESS"].get_bool())
+        {
+            // Modifying monster flags to apply "helpless" adjective.
+            uint64_t prev_flags = defender->as_monster()->flags;
+            std::string prev_mname = defender->as_monster()->mname;
+            defender->as_monster()->flags |= MF_NAME_ADJECTIVE;
+            defender->as_monster()->flags |= MF_NAME_DESCRIPTOR;
+            defender->as_monster()->mname = "helpless";
+
+            player_announce_aux_hit();
+
+            // Restoring pre-fight MF_NAME_ADJECTIVE flag status.
+            defender->as_monster()->props.erase("HELPLESS");
+            defender->as_monster()->flags = prev_flags;
+            defender->as_monster()->mname = prev_mname;
+        }
+        else
+            player_announce_aux_hit();
 
         if (damage_brand == SPWPN_ACID)
         {
@@ -1438,9 +1477,24 @@ std::string melee_attack::attack_strength_punctuation()
             return "!!!";
     }
     else
-    {
         return (damage_done < HIT_WEAK ? "." : "!");
-    }
+}
+
+std::string melee_attack::evasion_margin_adverb()
+{
+    return((ev_margin <= -20) ? " completely" :
+           (ev_margin <= -12) ? "" :
+           (ev_margin <= -6)  ? " closely"
+                              : " barely");
+}
+
+void melee_attack::player_announce_aux_hit()
+{
+    mprf("You %s %s%s%s",
+         aux_verb.c_str(),
+         defender->name(DESC_NOCAP_THE).c_str(),
+         debug_damage_number().c_str(),
+         attack_strength_punctuation().c_str());
 }
 
 void melee_attack::player_announce_hit()
@@ -1481,13 +1535,13 @@ std::string melee_attack::player_why_missed()
             return ("Your shield and " + armour_name
                     + " prevent you from hitting ");
     }
-    return "You miss ";
+
+    return ("You" + evasion_margin_adverb() + " miss ");
 }
 
 void melee_attack::player_warn_miss()
 {
     did_hit = false;
-
     // Upset only non-sleeping monsters if we missed.
     if (!defender->asleep())
         behaviour_event(defender->as_monster(), ME_WHACK, MHITYOU);
@@ -1498,7 +1552,7 @@ void melee_attack::player_warn_miss()
                 << std::endl;
 }
 
-bool melee_attack::player_hits_monster()
+int melee_attack::player_hits_monster()
 {
     const int evasion = defender->melee_evasion(attacker);
     const int helpful_evasion =
@@ -1516,20 +1570,18 @@ bool melee_attack::player_hits_monster()
         return (false);
     }
 
-    if (to_hit >= helpful_evasion || one_chance_in(20))
-        return (true);
-
-    if (to_hit >= evasion
+    if (to_hit >= evasion && helpful_evasion > evasion
         || ((defender->cannot_act() || defender->asleep())
             && !one_chance_in(10 + you.skills[SK_STABBING]))
         || defender->as_monster()->petrifying()
             && !one_chance_in(2 + you.skills[SK_STABBING]))
     {
-        if (defender_visible)
-            msg::stream << "Helpless, " << defender->name(DESC_NOCAP_THE)
-                        << " fails to dodge your attack." << std::endl;
-        return (true);
+        defender->as_monster()->props["HELPLESS"] = true;
+        return (1);
     }
+
+    if (to_hit >= evasion || one_chance_in(20))
+        return (1);
 
     const int phaseless_evasion =
         defender->melee_evasion(attacker, EV_IGNORE_PHASESHIFT);
@@ -1540,7 +1592,7 @@ bool melee_attack::player_hits_monster()
                     << defender->pronoun(PRONOUN_NOCAP)
                     << " momentarily phases out." << std::endl;
 
-    return (false);
+    return (to_hit - helpful_evasion);
 }
 
 int melee_attack::player_stat_modify_damage(int damage)
@@ -1599,7 +1651,7 @@ int melee_attack::player_apply_fighting_skill(int damage, bool aux)
 
 int melee_attack::player_apply_misc_modifiers(int damage)
 {
-    if (you.duration[DUR_MIGHT] > 1)
+    if (you.duration[DUR_MIGHT] || you.duration[DUR_BERSERK])
         damage += 1 + random2(10);
 
     if (you.species != SP_VAMPIRE && you.hunger_state == HS_STARVING)
@@ -4230,7 +4282,7 @@ int melee_attack::player_calc_base_unarmed_damage()
             damage = 12;
             break;
         case TRAN_BLADE_HANDS:
-            damage = 12 + (you.strength() / 4) + (you.dex() / 4);
+            damage = 12 + div_rand_round(you.strength() + you.dex(), 4);
             break;
         case TRAN_STATUE:
             damage = 12 + you.strength();
@@ -4371,7 +4423,7 @@ bool melee_attack::mons_attack_warded_off()
     const int warding = defender->warding();
     if (warding
         && attacker->is_summoned()
-        && !attacker->as_monster()->check_res_magic(warding))
+        && attacker->as_monster()->check_res_magic(warding) <= 0)
     {
         if (needs_message)
         {
@@ -4460,8 +4512,12 @@ int melee_attack::mons_calc_damage(const mon_attack_def &attk)
     damage     += 1 + random2(attk.damage);
 
     // Berserk/mighted/frenzied monsters get bonus damage.
-    if (attacker->as_monster()->has_ench(ENCH_MIGHT))
+    if (attacker->as_monster()->has_ench(ENCH_MIGHT)
+        || attacker->as_monster()->has_ench(ENCH_BERSERK)
+        || attacker->as_monster()->has_ench(ENCH_INSANE))
+    {
         damage = damage * 3 / 2;
+    }
     else if (attacker->as_monster()->has_ench(ENCH_BATTLE_FRENZY))
     {
         const mon_enchant ench =
@@ -5315,7 +5371,7 @@ void melee_attack::mons_do_eyeball_confusion()
         const int ench_pow = player_mutation_level(MUT_EYEBALLS) * 30;
         monster* mon = attacker->as_monster();
 
-        if (!mon->check_res_magic(ench_pow)
+        if (mon->check_res_magic(ench_pow) <= 0
             && mons_class_is_confusable(mon->type))
         {
             mprf("The eyeballs on your body gaze at %s.",
@@ -5341,7 +5397,8 @@ void melee_attack::mons_do_spines()
         && attacker->alive()
         && one_chance_in(evp + 1))
     {
-        if (!test_melee_hit(2+ 4 * mut, attacker->melee_evasion(defender), r))
+        if (test_melee_hit(2 + 4 * mut, attacker->melee_evasion(defender), r)
+            < 0)
         {
             simple_monster_message(attacker->as_monster(),
                                    " dodges your spines.");
@@ -5644,13 +5701,14 @@ void melee_attack::mons_perform_attack_rounds()
                 defender_evasion_nophase = defender_evasion;
             }
 
-            if (attacker == defender
-                || test_melee_hit(to_hit, defender_evasion_help, r))
+            ev_margin = test_melee_hit(to_hit, defender_evasion_help, r);
+
+            if (attacker == defender || ev_margin >= 0)
             {
                 // Will hit no matter what.
                 this_round_hit = true;
             }
-            else if (test_melee_hit(to_hit, defender_evasion, r))
+            else if (test_melee_hit(to_hit, defender_evasion, r) >= 0)
             {
                 if (needs_message)
                 {
@@ -5661,16 +5719,17 @@ void melee_attack::mons_perform_attack_rounds()
                 }
                 this_round_hit = true;
             }
-            else if (test_melee_hit(to_hit, defender_evasion_nophase, r))
+            else if (test_melee_hit(to_hit, defender_evasion_nophase, r) >= 0)
             {
                 if (needs_message)
                 {
                     mprf("%s momentarily %s out as %s "
-                         "attack passes through %s.",
+                         "attack passes through %s%s",
                          defender->name(DESC_CAP_THE).c_str(),
                          defender->conj_verb("phase").c_str(),
                          atk_name(DESC_NOCAP_ITS).c_str(),
-                         defender->pronoun(PRONOUN_OBJECTIVE).c_str());
+                         defender->pronoun(PRONOUN_OBJECTIVE).c_str(),
+                         attack_strength_punctuation().c_str());
                 }
                 this_round_hit = false;
             }
@@ -5679,9 +5738,11 @@ void melee_attack::mons_perform_attack_rounds()
                 // Misses no matter what.
                 if (needs_message)
                 {
-                    mprf("%s misses %s.",
+                    mprf("%s%s misses %s%s",
                          atk_name(DESC_CAP_THE).c_str(),
-                         mons_defender_name().c_str());
+                         evasion_margin_adverb().c_str(),
+                         mons_defender_name().c_str(),
+                         attack_strength_punctuation().c_str());
                 }
             }
 
@@ -6111,6 +6172,10 @@ bool monster_attack(monster* attacker, bool allow_unarmed)
 
     // Friendly and good neutral monsters won't attack unless confused.
     if (attacker->wont_attack() && !mons_is_confused(attacker))
+        return (false);
+
+    // It's hard to attack from within a shell.
+    if (attacker->withdrawn())
         return (false);
 
     // In case the monster hasn't noticed you, bumping into it will

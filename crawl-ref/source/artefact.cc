@@ -1357,13 +1357,6 @@ void artefact_wpn_learn_prop(item_def &item, artefact_prop_type prop)
         add_autoinscription(item, artefact_auto_inscription(item));
 }
 
-bool artefact_wpn_known_prop(const item_def &item, artefact_prop_type prop)
-{
-    bool known;
-    artefact_wpn_property(item, prop, known);
-    return known;
-}
-
 static std::string _get_artefact_type(const item_def &item,
                                       bool appear = false)
 {
@@ -1403,18 +1396,18 @@ static bool _pick_db_name(const item_def &item)
     }
 }
 
-std::string artefact_name_lookup(const item_def &item,
+static std::string _artefact_name_lookup(const item_def &item,
                                  const std::string &lookup)
 {
     const std::string name = getRandNameString(lookup);
     return (!name.empty()? _replace_name_parts(name, item) : name);
 }
 
-bool artefact_name_lookup(std::string &result,
+static bool _artefact_name_lookup(std::string &result,
                           const item_def &item,
                           const std::string &lookup)
 {
-    result = artefact_name_lookup(item, lookup);
+    result = _artefact_name_lookup(item, lookup);
     return (!result.empty());
 }
 
@@ -1488,17 +1481,17 @@ std::string artefact_name(const item_def &item, bool appearance)
         std::string name;
         do
         {
-            (artefact_name_lookup(name, item, lookup)
+            (_artefact_name_lookup(name, item, lookup)
 
              // If nothing found, try god name alone.
              || (god_gift
-                 && artefact_name_lookup(name, item,
-                                         god_name(
+                 && _artefact_name_lookup(name, item,
+                                          god_name(
                                              static_cast<god_type>(item_orig),
                                              false)))
 
              // If still nothing found, try base type alone.
-             || artefact_name_lookup(name, item, _get_artefact_type(item)));
+             || _artefact_name_lookup(name, item, _get_artefact_type(item)));
         }
         while (--tries > 0 && name.length() > 25);
 
@@ -1551,13 +1544,6 @@ void set_artefact_name(item_def &item, const std::string &name)
     ASSERT(is_artefact(item));
     ASSERT(!name.empty());
     item.props[ARTEFACT_NAME_KEY].get_string() = name;
-}
-
-void set_artefact_appearance(item_def &item, const std::string &appear)
-{
-    ASSERT(is_artefact(item));
-    ASSERT(!appear.empty());
-    item.props[ARTEFACT_APPEAR_KEY].get_string() = appear;
 }
 
 int find_unrandart_index(const item_def& artefact)
@@ -1867,7 +1853,7 @@ static void _artefact_setup_prop_vectors(item_def &item)
     }
 }
 
-void artefact_set_name(item_def &item, const std::string &name)
+static void _artefact_set_name(item_def &item, const std::string &name)
 {
     item.props[ARTEFACT_NAME_KEY].get_string() = name;
 }
@@ -1934,7 +1920,7 @@ bool make_item_randart(item_def &item, bool force_mundane)
     if (item.props.exists(ARTEFACT_NAME_KEY))
         ASSERT(item.props[ARTEFACT_NAME_KEY].get_type() == SV_STR);
     else
-        artefact_set_name(item, artefact_name(item, false));
+        _artefact_set_name(item, artefact_name(item, false));
 
     // get artefact appearance
     if (item.props.exists(ARTEFACT_APPEAR_KEY))
@@ -2037,23 +2023,9 @@ const char *unrandart_descrip(int which_descrip, const item_def &item)
                                  : "Unknown.");
 }
 
-void artefact_clear_properties(item_def &item)
-{
-    ASSERT(is_artefact(item));
-    ASSERT(item.props.exists(ARTEFACT_PROPS_KEY));
-
-    CrawlVector &rap_vec = item.props[ARTEFACT_PROPS_KEY].get_vector();
-    ASSERT(rap_vec.get_type()     == SV_SHORT);
-    ASSERT(rap_vec.size()         == ART_PROPERTIES);
-    ASSERT(rap_vec.get_max_size() == ART_PROPERTIES);
-
-    for (vec_size i = 0; i < ART_PROPERTIES; i++)
-        rap_vec[i].get_short() = 0;
-}
-
 // Set all non-zero properties in proprt on the randart supplied.
-void artefact_merge_properties(item_def &item,
-                               const artefact_properties_t &proprt)
+static void _artefact_merge_properties(item_def &item,
+                                       const artefact_properties_t &proprt)
 {
     ASSERT(is_artefact(item));
     ASSERT(item.props.exists(ARTEFACT_PROPS_KEY));
@@ -2069,13 +2041,6 @@ void artefact_merge_properties(item_def &item,
         if (value)
             rap_vec[i].get_short() = value;
     }
-}
-
-void artefact_set_properties(item_def &item,
-                             const artefact_properties_t &proprt)
-{
-    artefact_clear_properties(item);
-    artefact_merge_properties(item, proprt);
 }
 
 void artefact_set_property(item_def          &item,
@@ -2102,16 +2067,16 @@ void cheibriados_make_item_ponderous(item_def &item)
         item.flags |= ISFLAG_RANDART;
         _artefact_setup_prop_vectors(item);
         const std::string suffix =
-            artefact_name_lookup(
+            _artefact_name_lookup(
                 item,
                 god_name(GOD_CHEIBRIADOS) + " ponderous");
-        artefact_set_name(item, item_base_name(item) + " " + suffix);
+        _artefact_set_name(item, item_base_name(item) + " " + suffix);
     }
     artefact_properties_t props;
     props.init(0);
     props[ARTP_PONDEROUS] = true;
     props[ARTP_BRAND] = brand;
-    artefact_merge_properties(item, props);
+    _artefact_merge_properties(item, props);
 
     if (Options.autoinscribe_artefacts)
         add_autoinscription(item, artefact_auto_inscription(item));

@@ -324,6 +324,7 @@ TILE:   c = wall_stone_brick
 FTILE:  .1234~*X|+8 = floor_cobble_blood
 FTILE:  = = floor_cobble_blood
 KFEAT:  , = floor
+KFEAT:  m = iron_grate
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x,,,,,,7,,,,,,,,,,,,,,,,,6,6,,,,,,7,,,,,,,,,,,,

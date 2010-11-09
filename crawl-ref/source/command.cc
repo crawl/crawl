@@ -185,12 +185,12 @@ static std::string _get_version_changes(void)
     {
         result += "\n";
         result += "For a more complete list of changes, see changelog.txt "
-                  "in the docs/ folder.";
+                  "in the docs/ directory.";
     }
     else
     {
         result += "For a list of changes, see changelog.txt in the docs/ "
-                  "folder.";
+                  "directory.";
     }
 
     result += "\n\n";
@@ -649,11 +649,11 @@ void list_weapons(void)
     else
     {
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
-            wstring += "    blade hands";
+            wstring += "    blade " + blade_parts(true);
         else if (!you_tran_can_wear(EQ_WEAPON))
             wstring += "    (currently unavailable)";
         else
-            wstring += "    empty hands";
+            wstring += "    empty " + blade_parts(true);
         colour = menu_colour(wstring, "", "equip");
     }
 
@@ -1092,13 +1092,14 @@ static bool _skill_filter(std::string key, std::string body)
 {
     key = lowercase_string(key);
     std::string name;
-    for (int i = 0; i < NUM_SKILLS; i++)
+    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; i++)
     {
+        skill_type sk = static_cast<skill_type>(i);
         // There are a couple of NULL entries in the skill set.
-        if (!skill_name(i))
+        if (!skill_name(sk))
             continue;
 
-        name = lowercase_string(skill_name(i));
+        name = lowercase_string(skill_name(sk));
 
         if (name.find(key) != std::string::npos)
             return (false);
@@ -2428,7 +2429,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
                          CMD_ADJUST_INVENTORY, 0);
 
     _add_command(cols, 1, CMD_EVOKE_WIELDED, "eVoke power of wielded item", 2);
-    _add_command(cols, 1, CMD_EVOKE, "eVoke wand", 2);
+    _add_command(cols, 1, CMD_EVOKE, "eVoke wand and miscellaneous item", 2);
 
     _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Wear or Take off armour",
                          CMD_WEAR_ARMOUR, CMD_REMOVE_ARMOUR, 0);

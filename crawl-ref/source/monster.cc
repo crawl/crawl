@@ -269,13 +269,12 @@ bool monster::can_drown() const
     }
 
     // Mummies can fall apart in water or be incinerated in lava.
-    // Ghouls, vampires, and demons can drown in water or lava.  Others
-    // just "sink like a rock", to never be seen again.
-    return (!res_asphyx()
+    // Ghouls and vampires can drown in water or lava.  Others just
+    // "sink like a rock", to never be seen again.
+    return (!res_water_drowning()
             || mons_genus(type) == MONS_MUMMY
             || mons_genus(type) == MONS_GHOUL
-            || mons_genus(type) == MONS_VAMPIRE
-            || holiness() == MH_DEMONIC);
+            || mons_genus(type) == MONS_VAMPIRE);
 }
 
 size_type monster::body_size(size_part_type /* psize */, bool /* base */) const
@@ -2568,13 +2567,10 @@ void monster::go_berserk(bool /* intentional */, bool /* potion */)
             make_stringf(" shakes off %s lethargy.",
                          pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str()).c_str());
     }
-    del_ench(ENCH_HASTE, true);
     del_ench(ENCH_FATIGUE, true); // Give no additional message.
 
     const int duration = 16 + random2avg(13, 2);
     add_ench(mon_enchant(ENCH_BERSERK, 0, KC_OTHER, duration * 10));
-    add_ench(mon_enchant(ENCH_HASTE, 0, KC_OTHER, duration * 10));
-    add_ench(mon_enchant(ENCH_MIGHT, 0, KC_OTHER, duration * 10));
     if (simple_monster_message(this, " goes berserk!"))
         // Xom likes monsters going berserk.
         xom_is_stimulated(friendly() ? 32 : 128);
@@ -2835,7 +2831,8 @@ int monster::shield_bypass_ability(int) const
 
 int monster::armour_class() const
 {
-    return (ac);
+    // Extra AC for snails/turtles drawn into their shells.
+    return (ac + (has_ench(ENCH_WITHDRAWN) ? 10 : 0));
 }
 
 int monster::melee_evasion(const actor *act, ev_ignore_type evit) const
@@ -3034,6 +3031,20 @@ bool monster::is_artificial() const
     return (mons_class_flag(type, M_ARTIFICIAL));
 }
 
+bool monster::is_unbreathing() const
+{
+    const mon_holy_type holi = holiness();
+
+    if (holi == MH_UNDEAD
+        || holi == MH_NONLIVING
+        || holi == MH_PLANT)
+    {
+        return (true);
+    }
+
+    return (mons_class_flag(type, M_UNBREATHING));
+}
+
 bool monster::is_insubstantial() const
 {
     return (mons_class_flag(type, M_INSUBSTANTIAL));
@@ -3175,25 +3186,15 @@ int monster::res_elec() const
 int monster::res_asphyx() const
 {
     int res = get_mons_resists(this).asphyx;
-
-    const mon_holy_type holi = holiness();
-
-    if (undead_or_demonic()
-        || holi == MH_NONLIVING
-        || holi == MH_PLANT)
-    {
+    if (is_unbreathing())
         res += 1;
-    }
-
     return (res);
 }
 
 int monster::res_water_drowning() const
 {
-    const int res = res_asphyx();
-
-    if (res)
-        return (res);
+    if (is_unbreathing())
+        return (1);
 
     switch (mons_habitat(this))
     {
@@ -3389,6 +3390,16 @@ bool monster::is_levitating() const
     return (flight_mode() == FL_LEVITATE);
 }
 
+bool monster::is_wall_clinging() const
+{
+    return (0);
+}
+
+bool monster::can_cling_to(const coord_def& p) const
+{
+    return (0);
+}
+
 int monster::mons_species() const
 {
     return ::mons_species(type);
@@ -3555,6 +3566,11 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         if (has_ench(ENCH_MIRROR_DAMAGE))
             add_final_effect(FINEFF_MIRROR_DAMAGE, agent, this,
                              coord_def(0, 0), initial_damage);
+
+        damage_total = std::min<int>(MAX_DAMAGE_COUNTER, damage_total + amount);
+        if (agent)
+            damage_friendly = std::min<int>(MAX_DAMAGE_COUNTER * 2,
+                          damage_friendly + amount * exp_rate(agent->mindex()));
     }
 
     if (cleanup_dead && (hit_points <= 0 || hit_dice <= 0) && type != -1)
@@ -3610,11 +3626,12 @@ void monster::pandemon_init()
     ev              = ghost->ev;
     flags           = MF_INTERESTING;
     // Don't make greased-lightning Pandemonium demons in the dungeon
-    // max speed = 17).  Demons in Pandemonium can be up to speed 24.
+    // max speed = 17).  Demons in Pandemonium can be up to speed 20,
+    // possibly with haste.
     if (you.level_type == LEVEL_DUNGEON)
         speed = (one_chance_in(3) ? 10 : 7 + roll_dice(2, 5));
     else
-        speed = (one_chance_in(3) ? 10 : 10 + roll_dice(2, 7));
+        speed = (one_chance_in(3) ? 10 : 8 + roll_dice(2, 6));
 
     speed_increment = 70;
 
@@ -4002,22 +4019,15 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
             behaviour = BEH_WANDER;
             behaviour_event(this, ME_EVAL);
         }
+        calc_speed();
         break;
 
     case ENCH_HASTE:
-        if (speed >= 100)
-            speed = 100 + ((speed - 100) * 2);
-        else
-            speed *= 2;
-
+        calc_speed();
         break;
 
     case ENCH_SLOW:
-        if (speed >= 100)
-            speed = 100 + ((speed - 100) / 2);
-        else
-            speed /= 2;
-
+        calc_speed();
         break;
 
     case ENCH_STONESKIN:
@@ -4226,13 +4236,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_BERSERK:
         scale_hp(2, 3);
+        calc_speed();
         break;
 
     case ENCH_HASTE:
-        if (speed >= 100)
-            speed = 100 + ((speed - 100) / 2);
-        else
-            speed /= 2;
+        calc_speed();
         if (!quiet)
             simple_monster_message(this, " is no longer moving quickly.");
         break;
@@ -4262,11 +4270,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_SLOW:
         if (!quiet)
             simple_monster_message(this, " is no longer moving slowly.");
-        if (speed >= 100)
-            speed = 100 + ((speed - 100) * 2);
-        else
-            speed *= 2;
-
+        calc_speed();
         break;
 
     case ENCH_STONESKIN:
@@ -4314,8 +4318,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             // This should only happen because of fleeing sanctuary
             snprintf(info, INFO_SIZE, " stops retreating.");
         }
-        else if (type != MONS_KRAKEN_TENTACLE
-                 && type != MONS_KRAKEN_CONNECTOR)
+        else if (!mons_is_tentacle(type))
         {
             snprintf(info, INFO_SIZE, " seems to regain %s courage.",
                      pronoun(PRONOUN_NOCAP_POSSESSIVE, true).c_str());
@@ -4501,6 +4504,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " is no longer bleeding.");
         break;
 
+    case ENCH_WITHDRAWN:
+        if (!quiet)
+            simple_monster_message(this, " emerges from its shell.");
+        break;
 
     default:
         break;
@@ -4582,6 +4589,15 @@ void monster::timeout_enchantments(int levels)
     {
         switch (i->first)
         {
+        case ENCH_WITHDRAWN:
+            if (hit_points >= (max_hit_points - max_hit_points / 4)
+                && !one_chance_in(3))
+            {
+                del_ench(i->first);
+                break;
+            }
+            // Deliberate fall-through
+
         case ENCH_POISON: case ENCH_ROT: case ENCH_CORONA:
         case ENCH_STICKY_FLAME: case ENCH_ABJ: case ENCH_SHORT_LIVED:
         case ENCH_SLOW: case ENCH_HASTE: case ENCH_MIGHT: case ENCH_FEAR:
@@ -4599,8 +4615,6 @@ void monster::timeout_enchantments(int levels)
         case ENCH_INSANE:
         case ENCH_BERSERK:
             del_ench(i->first);
-            del_ench(ENCH_HASTE, true);
-            del_ench(ENCH_MIGHT, true);
             break;
 
         case ENCH_FATIGUE:
@@ -4722,8 +4736,6 @@ void monster::apply_enchantment(const mon_enchant &me)
         if (decay_enchantment(me))
         {
             simple_monster_message(this, " is no longer in an insane frenzy.");
-            del_ench(ENCH_HASTE, true);
-            del_ench(ENCH_MIGHT, true);
             const int duration = random_range(70, 130);
             add_ench(mon_enchant(ENCH_FATIGUE, 0, KC_OTHER, duration));
             add_ench(mon_enchant(ENCH_SLOW, 0, KC_OTHER, duration));
@@ -4734,8 +4746,6 @@ void monster::apply_enchantment(const mon_enchant &me)
         if (decay_enchantment(me))
         {
             simple_monster_message(this, " is no longer berserk.");
-            del_ench(ENCH_HASTE, true);
-            del_ench(ENCH_MIGHT, true);
             const int duration = random_range(70, 130);
             add_ench(mon_enchant(ENCH_FATIGUE, 0, KC_OTHER, duration));
             add_ench(mon_enchant(ENCH_SLOW, 0, KC_OTHER, duration));
@@ -4749,6 +4759,16 @@ void monster::apply_enchantment(const mon_enchant &me)
             del_ench(ENCH_SLOW, true);
         }
         break;
+
+    case ENCH_WITHDRAWN:
+        if (hit_points >= (max_hit_points - max_hit_points / 4)
+                && !one_chance_in(3))
+        {
+            del_ench(ENCH_WITHDRAWN);
+            break;
+        }
+
+        // Deliberate fall through.
 
     case ENCH_SLOW:
     case ENCH_HASTE:
@@ -4773,6 +4793,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_MIRROR_DAMAGE:
     case ENCH_STONESKIN:
     case ENCH_FEAR_INSPIRING:
+    case ENCH_LIFE_TIMER:
         decay_enchantment(me);
         break;
 
@@ -5018,7 +5039,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     // Assumption: monster::res_fire has already been checked.
     case ENCH_STICKY_FLAME:
     {
-        if (feat_is_watery(grd(pos())) && !airborne())
+        if (feat_is_watery(grd(pos())) && !(airborne() || is_wall_clinging()))
         {
             if (mons_near(this) && visible_to(&you))
             {
@@ -5433,14 +5454,16 @@ bool monster::bleed(int amount, int degree)
 }
 
 // Recalculate movement speed.
-void monster::fix_speed()
+void monster::calc_speed()
 {
     speed = mons_real_base_speed(type);
 
-    if (has_ench(ENCH_HASTE))
+    if (has_ench(ENCH_BERSERK) || has_ench(ENCH_INSANE))
         speed *= 2;
-    else if (has_ench(ENCH_SLOW))
-        speed /= 2;
+    else if (has_ench(ENCH_HASTE))
+        speed = haste_mul(speed);
+    if (has_ench(ENCH_SLOW))
+        speed = haste_div(speed);
 }
 
 // Check speed and speed_increment sanity.
@@ -5458,7 +5481,7 @@ void monster::check_speed()
              describe_enchantments().c_str());
 #endif
 
-        fix_speed();
+        calc_speed();
 
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Fixed speed for %s to %d",
@@ -5501,8 +5524,7 @@ int monster::foe_distance() const
 
 bool monster::can_go_berserk() const
 {
-    if (holiness() != MH_NATURAL || type == MONS_KRAKEN_TENTACLE
-        || type == MONS_KRAKEN_CONNECTOR)
+    if (holiness() != MH_NATURAL || mons_is_tentacle(type))
         return (false);
 
     if (mons_intel(this) == I_PLANT)
@@ -5584,9 +5606,14 @@ bool monster::near_foe() const
     return (afoe && see_cell(afoe->pos()));
 }
 
-bool monster::can_mutate() const
+bool monster::has_lifeforce() const
 {
     return (holiness() == MH_NATURAL || holiness() == MH_PLANT);
+}
+
+bool monster::can_mutate() const
+{
+    return (has_lifeforce());
 }
 
 bool monster::can_safely_mutate() const
@@ -5618,6 +5645,14 @@ bool monster::mutate()
         return (monster_polymorph(this, MONS_GLOWING_SHAPESHIFTER));
     if (has_ench(ENCH_SHAPESHIFTER))
         return (monster_polymorph(this, MONS_SHAPESHIFTER));
+
+    // Polymorphing a slime creature will usually split it first
+    // and polymorph each part separately.
+    if (type == MONS_SLIME_CREATURE)
+    {
+        slime_creature_mutate(this);
+        return (true);
+    }
 
     return (monster_polymorph(this, RANDOM_MONSTER));
 }
@@ -5802,7 +5837,7 @@ bool monster::do_shaft()
             return (false);
         }
 
-        if (airborne() || total_weight() == 0)
+        if (airborne() || is_wall_clinging() || total_weight() == 0)
         {
             if (mons_near(this))
             {
@@ -6153,7 +6188,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             }
         }
     }
-    else if (type == MONS_KRAKEN_CONNECTOR)
+    else if (type == MONS_KRAKEN_TENTACLE_SEGMENT)
     {
         if (!invalid_monster_index(number)
             && mons_base_type(&menv[number]) == MONS_KRAKEN_TENTACLE)
@@ -6171,7 +6206,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                 // effects will cry.
                 if (invalid_monster(this))
                 {
-                    type = MONS_KRAKEN_CONNECTOR;
+                    type = MONS_KRAKEN_TENTACLE_SEGMENT;
                     hit_points = -1;
                 }
             }
@@ -6281,7 +6316,7 @@ static const char *enchant_names[] =
     "insane", "silenced", "awaken_forest", "exploding", "bleeding",
     "tethered", "severed", "antimagic", "fading_away", "preparing_resurrect", "regen",
     "magic_res", "mirror_dam", "stoneskin", "fear inspiring", "temporarily pacified",
-    "buggy",
+    "withdrawn", "attached", "guardian_timer", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -6381,6 +6416,10 @@ int mon_enchant::calc_duration(const monster* mons,
     // monster HD via modded_speed(). Use mod_speed instead!
     switch (ench)
     {
+    case ENCH_WITHDRAWN:
+        cturn = 5000 / _mod_speed(25, mons->speed);
+        break;
+
     case ENCH_SWIFT:
         cturn = 1000 / _mod_speed(25, mons->speed);
         break;
@@ -6483,6 +6522,8 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_SLEEP_WARY:
         cturn = 1000 / _mod_speed(50, mons->speed);
         break;
+    case ENCH_LIFE_TIMER:
+        cturn = 10 * (4 + random2(4)) / _mod_speed(10, mons->speed);
     default:
         break;
     }
@@ -6491,6 +6532,8 @@ int mon_enchant::calc_duration(const monster* mons,
 
     int raw_duration = (cturn * speed_to_duration(mons->speed));
     raw_duration = std::max(15, fuzz_value(raw_duration, 60, 40));
+
+    dprf("cturn: %d, raw_duration: %d", cturn, raw_duration);
 
     return (raw_duration);
 }

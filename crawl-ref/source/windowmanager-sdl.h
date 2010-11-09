@@ -21,6 +21,9 @@ public:
     // Environment state functions
     virtual void set_window_title(const char *title);
     virtual bool set_window_icon(const char* icon_name);
+#ifdef TARGET_OS_WINDOWS
+    virtual void set_window_placement(coord_def *m_windowsz);
+#endif
     virtual key_mod get_mod_state() const;
     virtual void set_mod_state(key_mod mod);
     virtual int byte_order();
@@ -42,6 +45,7 @@ public:
     virtual int screen_width() const;
     virtual int screen_height() const;
     virtual int desktop_width() const;
+    virtual int desktop_height() const;
 
     // Texture loading
     virtual bool load_texture(GenericTexture *tex, const char *filename,
@@ -57,6 +61,7 @@ protected:
     SDL_Surface *m_context;
     const SDL_VideoInfo* video_info;
     int _desktop_width;
+    int _desktop_height;
 };
 
 #endif // USE_SDL

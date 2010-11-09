@@ -153,6 +153,7 @@ void noisy_equipment()
 
 void shadow_lantern_effect()
 {
+    // Currently only mummies and lich form get more shadows.
     if (x_chance_in_y(player_spec_death() + 1, 8))
     {
         create_monster(mgen_data(MONS_SHADOW, BEH_FRIENDLY, &you, 2, 0,
@@ -644,7 +645,7 @@ void skill_manual(int slot)
     const bool known = item_type_known(manual);
     if (!known)
         set_ident_flags(manual, ISFLAG_KNOW_TYPE);
-    const int skill = manual.plus;
+    const skill_type skill = static_cast<skill_type>(manual.plus);
 
     mprf("You read about %s.", skill_name(skill));
 
@@ -809,17 +810,14 @@ bool evoke_item(int slot)
 
     ASSERT(slot >= 0);
 
-    item_def& item = you.inv[slot];
+#ifdef ASSERTS // Used only by an assert
+    const bool wielded = (you.equip[EQ_WEAPON] == slot);
+#endif /* DEBUG */
 
+    item_def& item = you.inv[slot];
     // Also handles messages.
     if (!item_is_evokable(item, false, false, true))
         return (false);
-
-    if (item.base_type == OBJ_MISCELLANY && you.equip[EQ_WEAPON] != slot)
-        if (!wield_weapon(true, slot))
-            return (false);
-
-    bool wielded = (you.equip[EQ_WEAPON] == slot);
 
     int pract = 0; // By how much Evocations is practised.
     bool did_work   = false;  // Used for default "nothing happens" message.
@@ -897,10 +895,10 @@ bool evoke_item(int slot)
 
     case OBJ_MISCELLANY:
         did_work = true; // easier to do it this way for misc items
-        ASSERT(wielded);
 
         if (is_deck(item))
         {
+            ASSERT(wielded);
             evoke_deck(item);
             pract = 1;
             break;

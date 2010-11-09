@@ -201,8 +201,8 @@ bool random_near_space(const coord_def& origin, coord_def& target,
     {
         // XXX: you.pos() is invalid in the arena.
         min_walls_between = num_feats_between(origin, you.pos(),
-                                              DNGN_CLEAR_ROCK_WALL,
-                                              DNGN_CLEAR_PERMAROCK_WALL);
+                                              DNGN_MINSEE,
+                                              DNGN_MAX_NONREACH);
     }
 
     for (int tries = 0; tries < 150; tries++)
@@ -273,8 +273,8 @@ bool random_near_space(const coord_def& origin, coord_def& target,
         }
 
         int walls_passed = num_feats_between(target, origin,
-                                             DNGN_CLEAR_ROCK_WALL,
-                                             DNGN_CLEAR_PERMAROCK_WALL,
+                                             DNGN_MINSEE,
+                                             DNGN_MAX_NONREACH,
                                              true, true);
         if (walls_passed == 0)
             return (true);
@@ -287,8 +287,8 @@ bool random_near_space(const coord_def& origin, coord_def& target,
         if (!crawl_state.game_is_arena())
         {
             walls_between = num_feats_between(target, you.pos(),
-                                              DNGN_CLEAR_ROCK_WALL,
-                                              DNGN_CLEAR_PERMAROCK_WALL);
+                                              DNGN_MINSEE,
+                                              DNGN_MAX_NONREACH);
         }
 
         if (walls_between >= min_walls_between)
