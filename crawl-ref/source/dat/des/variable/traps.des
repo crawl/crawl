@@ -1,0 +1,101 @@
+##############################################################################
+# traps.des: This is the place for minivaults containing custom traps.
+#           Of course, bigger vaults with traps being merely a side feature
+#           don't belong here.
+###############################################################################
+
+default-depth: D:9-27, Vault, Elf
+
+#############################################
+# a basket of spiders
+#
+NAME:   spider_trap
+DEPTH:  D:9-27, Vault, Elf, Spider, Snake
+KFEAT:  ^ = pressure plate trap
+: function stepped(data, triggerable, triggerer, marker, ev)
+:   if data.triggered == true then
+:     return
+:   end
+:
+:   local x, y = marker:pos()
+:
+:   if not you.see_cell(x, y) then
+:     -- pretend the monster avoided it
+:     return
+:   end
+:
+:   data.triggered = true
+:   -- remove the trap
+:   dgn.grid(x, y, "floor")
+:
+:   local spiders = 0
+:   for p in iter.rect_iterator(dgn.point(x-1, y-1), dgn.point(x+1, y+1)) do
+:     if (dgn.mons_at(p.x, p.y) == nil and p ~= you.pos() and dgn.is_passable(p.x, p.y)) then
+:       if (dgn.create_monster(p.x, p.y, "generate_awake spider")) then
+:         spiders = spiders + 1
+:       end
+:     end
+:   end
+:
+:  if (spiders > 0) then
+:    crawl.mpr("A basket of spiders falls from the above!")
+:  end
+: end
+:
+: local tm = TriggerableFunction:new{func=stepped, repeated=true,
+:              data={triggered=false}}
+: tm:add_triggerer(DgnTriggerer:new{type="pressure_plate"})
+: lua_marker('^', tm)
+MAP
+...
+.^.
+...
+ENDMAP
+
+#############################################
+# falling grate cutting your retreat off
+#
+NAME:   grate_trap
+ORIENT: float
+TAGS:   allow_dup extra luniq_mini layout_rooms layout_cave
+KFEAT:  ^ = pressure plate trap
+: function stepped(data, triggerable, triggerer, marker, ev)
+:
+:   local x, y = marker:pos()
+:
+:   local p = dgn.find_marker_positions_by_prop("grate", 1)[1]
+:   if (p == nil) then
+:     crawl.mpr("Error: no grate to close!")
+:     dgn.grid(x, y, "floor")
+:     return -- uh oh
+:   end
+:
+:   -- It might be better to shove them away instead.  Since followers won't
+:   -- have a chance to get there yet, this means the monster came another way:
+:   -- most likely you displaced it, and that suggests the surroundings are
+:   -- likely to be full.
+:   if (dgn.mons_at(p.x, p.y) ~= nil or p == you.pos()) then
+:     if (you.see_cell(x, y)) then
+:       crawl.mpr("A part of floor depresses, but nothing seems to happen.")
+:       return
+:     end
+:   end
+:
+:   dgn.grid(p.x, p.y, "iron_grate")
+:   -- remove the trap
+:   dgn.grid(x, y, "floor")
+:
+:   if (you.see_cell(p.x, p.y)) then
+:     crawl.mpr("An iron grate slams shut!")
+:   end
+: end
+:
+: local tm = TriggerableFunction:new{func=stepped, repeated=true}
+: tm:add_triggerer(DgnTriggerer:new{type="pressure_plate"})
+: lua_marker('^', tm)
+: lua_marker(',', props_marker { grate=1 })
+MAP
+xxxx
+x(,^@
+xxxx
+ENDMAP

@@ -349,25 +349,26 @@ void debug_dump_mon(const monster* mon, bool recurse)
 // debug_prompt_for_skill
 //
 //---------------------------------------------------------------
-int debug_prompt_for_skill(const char *prompt)
+skill_type debug_prompt_for_skill(const char *prompt)
 {
     char specs[80];
 
     msgwin_get_line_autohist(prompt, specs, sizeof(specs));
 
     if (specs[0] == '\0')
-        return (-1);
+        return (SK_NONE);
 
-    int skill = -1;
+    skill_type skill = SK_NONE;
 
-    for (int i = 0; i < NUM_SKILLS; ++i)
+    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
     {
+        skill_type sk = static_cast<skill_type>(i);
         // Avoid the bad values.
-        if (is_invalid_skill(i))
+        if (is_invalid_skill(sk))
             continue;
 
         char sk_name[80];
-        strncpy(sk_name, skill_name(i), sizeof(sk_name));
+        strncpy(sk_name, skill_name(sk), sizeof(sk_name));
 
         char *ptr = strstr(strlwr(sk_name), strlwr(specs));
         if (ptr != NULL)
@@ -375,11 +376,11 @@ int debug_prompt_for_skill(const char *prompt)
             if (ptr == sk_name && strlen(specs) > 0)
             {
                 // We prefer prefixes over partial matches.
-                skill = i;
+                skill = sk;
                 break;
             }
             else
-                skill = i;
+                skill = sk;
         }
     }
 
@@ -400,3 +401,23 @@ int debug_cap_stat(int stat)
             stat > 127 ? 127
                        : stat);
 }
+
+#ifdef DEBUG
+static FILE *debugf = 0;
+
+void debuglog(const char *format, ...)
+{
+    va_list args;
+
+    if (!debugf)
+    {
+        debugf = fopen("debuglog.txt", "w");
+        ASSERT(debugf);
+    }
+
+    va_start(args, format);
+    vfprintf(debugf, format, args);
+    va_end(args);
+    fflush(debugf);
+}
+#endif

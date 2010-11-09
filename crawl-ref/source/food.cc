@@ -923,11 +923,11 @@ bool food_change(bool suppress_message)
         {
             if (newstate <= HS_SATIATED)
             {
-                if (you.duration[DUR_BERSERKER] > 1)
+                if (you.duration[DUR_BERSERK] > 1)
                 {
                     mpr("Your blood-deprived body can't sustain your rage any "
                         "longer.", MSGCH_DURATION);
-                    you.duration[DUR_BERSERKER] = 1;
+                    you.duration[DUR_BERSERK] = 1;
                 }
                 int transform = you.attribute[ATTR_TRANSFORMATION];
                 if (transform != TRAN_NONE && transform != TRAN_BAT
@@ -2119,7 +2119,7 @@ void finished_eating_message(int food_type)
         {
             int temp_rand;
             if (carnivorous) // non-vegetable
-                temp_rand = random2(6);
+                temp_rand = random2(7);
             else if (herbivorous) // non-meaty
                 temp_rand = 6 + random2(3);
             else
@@ -2132,8 +2132,8 @@ void finished_eating_message(int food_type)
                 (temp_rand == 3) ? "Pepperoni." :
                 (temp_rand == 4) ? "Yeuchh - Anchovies!" :
                 (temp_rand == 5) ? "Chicken." :
-                (temp_rand == 6) ? "Vegetable." :
-                (temp_rand == 7) ? "Cheesy."
+                (temp_rand == 6) ? "Cheesy." :
+                (temp_rand == 7) ? "Vegetable."
                                  : "Mushroom.");
         }
         break;
@@ -2358,7 +2358,8 @@ bool is_mutagenic(const item_def &food)
 // Returns true if a food item (also corpses) may cause sickness.
 bool is_contaminated(const item_def &food)
 {
-    if (food.base_type != OBJ_FOOD && food.base_type != OBJ_CORPSES)
+    if ((food.base_type != OBJ_FOOD || food.sub_type != FOOD_CHUNK)
+            && food.base_type != OBJ_CORPSES)
         return (false);
 
     const corpse_effect_type chunk_type = mons_corpse_effect(food.plus);
@@ -2389,7 +2390,6 @@ static int _player_likes_food_type(int type)
     case FOOD_APPLE:
     case FOOD_CHOKO:
     case FOOD_SNOZZCUMBER:
-    case FOOD_PIZZA:
     case FOOD_APRICOT:
     case FOOD_ORANGE:
     case FOOD_BANANA:
@@ -2399,7 +2399,6 @@ static int _player_likes_food_type(int type)
     case FOOD_GRAPE:
     case FOOD_SULTANA:
     case FOOD_LYCHEE:
-    case FOOD_CHEESE:
         return 1;
 
     case FOOD_CHUNK:
@@ -2411,6 +2410,8 @@ static int _player_likes_food_type(int type)
     case FOOD_HONEYCOMB:
     case FOOD_ROYAL_JELLY:
     case FOOD_AMBROSIA:
+    case FOOD_CHEESE:
+    case FOOD_PIZZA:
         return 0;
 
     case NUM_FOODS:

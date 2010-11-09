@@ -170,9 +170,7 @@ void init_mon_name_cache()
                 || mon == MONS_STAIR_MIMIC
                 || mon == MONS_TRAP_MIMIC
                 || mon == MONS_FOUNTAIN_MIMIC
-                || mon == MONS_MARA_FAKE
-                || mon == MONS_EVIL_WITCH
-                || mon == MONS_FOREST_WITCH)
+                || mon == MONS_MARA_FAKE)
             {
                 // Keep previous entry.
                 continue;
@@ -280,15 +278,11 @@ void init_monster_symbols()
 
 static bool _get_kraken_head(monster& mon)
 {
-    if (mons_base_type(&mon) != MONS_KRAKEN
-        && mon.type != MONS_KRAKEN_CONNECTOR
-        && mon.type != MONS_KRAKEN_TENTACLE)
-    {
+    if (!valid_kraken_connection(&mon))
         return (false);
-    }
 
-    // For kraken connectors, find the associated tentacle.
-    if (mon.type == MONS_KRAKEN_CONNECTOR)
+    // For kraken tentacle segments, find the associated tentacle.
+    if (mon.type == MONS_KRAKEN_TENTACLE_SEGMENT)
     {
         if (invalid_monster_index(mon.number))
             return (false);
@@ -561,7 +555,8 @@ bool mons_class_is_stationary(int mc)
 bool mons_is_stationary(const monster* mon)
 {
     return (mons_class_is_stationary(mon->type)
-            || mons_is_feat_mimic(mon->type) && mons_is_unknown_mimic(mon));
+            || mons_is_feat_mimic(mon->type) && mons_is_unknown_mimic(mon)
+            || mon->has_ench(ENCH_WITHDRAWN));
 }
 
 // Monsters that are worthless obstacles: not to
@@ -572,7 +567,7 @@ bool mons_class_is_firewood(int mc)
     return (mons_class_is_stationary(mc)
             && mons_class_flag(mc, M_NO_EXP_GAIN)
             && mc != MONS_KRAKEN_TENTACLE
-            && mc != MONS_KRAKEN_CONNECTOR);
+            && mc != MONS_KRAKEN_TENTACLE_SEGMENT);
 }
 
 bool mons_is_firewood(const monster* mon)
@@ -883,8 +878,17 @@ monster_type mons_detected_base(monster_type mc)
 
 monster_type draco_subspecies(const monster* mon)
 {
-    monster_info mi(mon, MILEV_NAME);
-    return mi.draco_subspecies();
+    ASSERT(mons_genus(mon->type) == MONS_DRACONIAN);
+
+    if (mon->type == MONS_PLAYER_ILLUSION)
+        return (player_species_to_mons_species(mon->ghost->species));
+
+    monster_type retval = mons_species(mon->type);
+
+    if (retval == MONS_DRACONIAN && mon->type != MONS_DRACONIAN)
+        retval = static_cast<monster_type>(mon->base_monster);
+
+    return (retval);
 }
 
 int get_shout_noise_level(const shout_type shout)
@@ -1031,6 +1035,7 @@ mon_itemeat_type mons_itemeat(const monster* mon)
 
 int mons_class_colour(int mc)
 {
+    ASSERT(smc);
     return (monster_symbols[mc].colour);
 }
 
@@ -1143,8 +1148,7 @@ bool mons_can_be_zombified(const monster* mon)
 bool mons_class_can_use_stairs(int mc)
 {
     return ((!mons_class_is_zombified(mc) || mc == MONS_SPECTRAL_THING)
-            && mc != MONS_KRAKEN_TENTACLE
-            && mc != MONS_KRAKEN_CONNECTOR
+            && !mons_is_tentacle(mc)
             && mc != MONS_SILENT_SPECTRE
             && mc != MONS_PLAYER_GHOST);
 }
@@ -1168,13 +1172,17 @@ bool name_zombie(monster* mon, int mc, const std::string mon_name)
 {
     mon->mname = mon_name;
 
-    // Special case for Blork the orc: shorten his name to "Blork"
-    // to avoid mentions of e.g "Blork the orc the orc zombie".
+    // Special case for Blork the orc: shorten his name to "Blork" to
+    // avoid mentions of "Blork the orc the orc zombie".
     if (mc == MONS_BLORK_THE_ORC)
         mon->mname = "Blork";
-    // Also for the Lernaean hydra.
+    // Also for the Lernaean hydra: treat Lernaean as an adjective to
+    // avoid mentions of "the Lernaean hydra the X-headed hydra zombie".
     else if (mc == MONS_LERNAEAN_HYDRA)
-        mon->mname = "Lernaean hydra";
+    {
+        mon->mname = "Lernaean";
+        mon->flags |= MF_NAME_ADJECTIVE;
+    }
 
     if (starts_with(mon->mname, "shaped "))
         mon->flags |= MF_NAME_SUFFIX;
@@ -1319,24 +1327,27 @@ int mons_damage(int mc, int rt)
     return (smc->attack[rt].damage);
 }
 
+std::string resist_margin_phrase(int margin)
+{
+    ASSERT(margin > 0);
+
+    return((margin >= 40) ? " easily resists." :
+           (margin >= 24) ? " resists." :
+           (margin >= 12)  ? " resists with some effort."
+                           : " struggles to resist.");
+}
+
 bool mons_immune_magic(const monster* mon)
 {
     return (get_monster_data(mon->type)->resist_magic == MAG_IMMUNE);
 }
 
-const char* mons_resist_string(const monster* mon)
+std::string mons_resist_string(const monster* mon, int res_margin)
 {
     if (mons_immune_magic(mon))
-        return "is unaffected";
+        return " is unaffected";
     else
-        return "resists";
-}
-
-bool mons_has_lifeforce(const monster* mon)
-{
-    const mon_holy_type holiness = mon->holiness();
-
-    return (holiness == MH_NATURAL || holiness == MH_PLANT);
+        return resist_margin_phrase(res_margin);
 }
 
 bool mons_skeleton(int mc)
@@ -1675,34 +1686,6 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
         book[2] = MST_WIZARD_III;
         book[3] = MST_WIZARD_IV;
         book[4] = MST_WIZARD_V;
-        break;
-
-    case MONS_WITCH: /* deliberate fallthrough structure */
-        book[0] = MST_WITCH_I;
-    case MONS_EVIL_WITCH:
-        if (mon_type == MONS_EVIL_WITCH)
-            book[0] = MST_WITCH_II;
-    case MONS_FOREST_WITCH:
-        if (mon_type == MONS_FOREST_WITCH)
-            book[0] = MST_WITCH_III;
-
-        book[1] = MST_DEEP_DWARF_NECROMANCER;
-        book[2] = MST_WIZARD_II;
-        book[3] = MST_WIZARD_I;
-        break;
-
-    case MONS_HULDRA:
-        book[0] = MST_HULDRA;
-        book[1] = MST_WITCH_III;
-        book[2] = MST_WIZARD_III;
-        book[3] = MST_WIZARD_V;
-        break;
-
-    case MONS_TROLLKONOR:
-        book[0] = MST_TROLLKONOR;
-        book[1] = MST_WIZARD_II;
-        book[2] = MST_WIZARD_III;
-        book[3] = MST_WIZARD_V;
         break;
 
     case MONS_DRACONIAN_KNIGHT:
@@ -2541,6 +2524,13 @@ void mons_stop_fleeing_from_sanctuary(monster* mons)
 
 void mons_pacify(monster* mon, mon_attitude_type att)
 {
+    // If the _real_ (non-charmed) attitude is already that or better,
+    // don't degrade it.  This can happen, for example, with a high-power
+    // Crusade card or the Ring of Charms on Pikel's slaves who would then
+    // go down from friendly to good_neutral when you kill Pikel.
+    if (mon->attitude >= att)
+        return;
+
     // Make the monster permanently neutral.
     mon->attitude = att;
     mon->flags |= MF_WAS_NEUTRAL;
@@ -3216,11 +3206,6 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
 
     if (mons_genus(mon_type) == MONS_MERMAID
         || mon_type == MONS_HARPY
-        || mon_type == MONS_TROLLKONOR
-        || mon_type == MONS_HULDRA
-        || mon_type == MONS_WITCH
-        || mon_type == MONS_EVIL_WITCH
-        || mon_type == MONS_FOREST_WITCH
         || mon_type == MONS_SPHINX)
     {
         gender = GENDER_FEMALE;
@@ -4008,7 +3993,7 @@ mon_body_shape get_mon_shape(const int type)
     {
     case 'a': // ants
         return (MON_SHAPE_INSECT);
-    case 'b':  // bats and butterflys
+    case 'b':  // bats and butterflies
         if (type == MONS_BUTTERFLY)
             return (MON_SHAPE_INSECT_WINGED);
         else
@@ -4289,15 +4274,10 @@ int get_dist_to_nearest_monster()
     return (minRange);
 }
 
-bool mons_class_is_tentacle(int mc)
+bool mons_is_tentacle(int mc)
 {
     return (mc == MONS_KRAKEN_TENTACLE
-            || mc == MONS_KRAKEN_CONNECTOR
+            || mc == MONS_KRAKEN_TENTACLE_SEGMENT
             || mc == MONS_ELDRITCH_TENTACLE
             || mc == MONS_ELDRITCH_TENTACLE_SEGMENT);
-}
-
-bool mons_is_tentacle(const monster* mon)
-{
-    return (mons_class_is_tentacle(mon->type));
 }

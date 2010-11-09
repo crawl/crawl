@@ -16,6 +16,7 @@
 #include "describe.h"
 #include "env.h"
 #include "godconduct.h"
+#include "godpassive.h"
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
@@ -111,7 +112,7 @@ static bool _mons_hostile(const monster* mon)
 // Returns 0, if monster can be pacified but the attempt failed.
 // Returns 1, if monster is pacified.
 // Returns -1, if monster can never be pacified.
-// Returns -2, if monster can currently not be pacified (asleep)
+// Returns -2, if monster can currently not be pacified (asleep).
 static int _can_pacify_monster(const monster* mon, const int healed)
 {
     if (you.religion != GOD_ELYVILON)
@@ -123,8 +124,7 @@ static int _can_pacify_monster(const monster* mon, const int healed)
     // I was thinking of jellies when I wrote this, but maybe we shouldn't
     // exclude zombies and such... (jpeg)
     if (mons_intel(mon) <= I_PLANT // no self-awareness
-        || mon->type == MONS_KRAKEN_TENTACLE
-        || mon->type == MONS_KRAKEN_CONNECTOR) // body part
+        || mons_is_tentacle(mon->type)) // body part
     {
         return (-1);
     }
@@ -432,6 +432,10 @@ int detect_items(int pow)
 
     for (radius_iterator ri(you.pos(), map_radius, C_ROUND); ri; ++ri)
     {
+        // Don't you love the 0,5 shop hack?
+        if (!in_bounds(*ri))
+            continue;
+
         // Don't expose new dug out areas:
         // Note: assumptions are being made here about how
         // terrain can change (eg it used to be solid, and
@@ -638,6 +642,7 @@ bool detect_curse(int scroll, bool suppress_msg)
         }
 
         if (item.base_type == OBJ_WEAPONS
+            || item.base_type == OBJ_STAVES
             || item.base_type == OBJ_ARMOUR
             || item.base_type == OBJ_JEWELLERY)
         {

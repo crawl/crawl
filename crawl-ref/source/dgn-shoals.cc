@@ -816,7 +816,8 @@ static bool _shoals_tide_sweep_items_clear(coord_def c)
 static bool _shoals_tide_sweep_actors_clear(coord_def c)
 {
     actor *victim = actor_at(c);
-    if (!victim || victim->airborne() || victim->swimming())
+    if (!victim || victim->airborne() || victim->is_wall_clinging()
+        || victim->swimming())
         return true;
 
     if (victim->atype() == ACT_MONSTER)
@@ -925,7 +926,7 @@ static void _shoals_apply_tide_at(coord_def c, int tide, bool incremental_tide)
     if (incremental_tide
         && final_feature == DNGN_DEEP_WATER
         && c == you.pos()
-        && you.airborne()
+        && (you.airborne() || you.is_wall_clinging())
         && !you.permanent_levitation()
         && !you.permanent_flight())
     {
@@ -1121,7 +1122,7 @@ void shoals_release_tide(monster* mons)
         if (player_can_hear(mons->pos()))
         {
             mprf(MSGCH_SOUND, "The tide is released from %s call.",
-                 mons->name(DESC_NOCAP_YOUR, true).c_str());
+                 apostrophise(mons->name(DESC_NOCAP_YOUR, true)).c_str());
             if (you.see_cell(mons->pos()))
                 flash_view_delay(ETC_WATER, 150);
         }

@@ -71,7 +71,6 @@ level_id current_level_parent();
 branch_type str_to_branch(const std::string &branch,
                           branch_type err = NUM_BRANCHES);
 
-int branch_ambient_noise(branch_type branch);
 int current_level_ambient_noise();
 
 const char *level_area_type_name(int level_type);

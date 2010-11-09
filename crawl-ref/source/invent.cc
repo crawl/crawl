@@ -1067,8 +1067,9 @@ static bool _item_class_selected(const item_def &i, int selector)
     }
     case OBJ_WEAPONS:
     case OSEL_WIELD:
-        return (itype == OBJ_WEAPONS || itype == OBJ_STAVES
-                || (itype == OBJ_MISCELLANY && i.sub_type != MISC_RUNE_OF_ZOT));
+        return (itype == OBJ_WEAPONS || itype == OBJ_STAVES || is_deck(i)
+                || itype == OBJ_MISCELLANY
+                   && i.sub_type == MISC_LANTERN_OF_SHADOWS);
 
     case OSEL_BUTCHERY:
         return (itype == OBJ_WEAPONS && can_cut_meat(i));
@@ -1919,13 +1920,23 @@ bool item_is_evokable(const item_def &item, bool known, bool all_wands,
         return (false);
 
     case OBJ_MISCELLANY:
+        if (is_deck(item))
+        {
+            if (!wielded)
+            {
+                if (msg)
+                    mpr("That item can only be evoked when wielded.");
+                return (false);
+            }
+            return (true);
+        }
+
         if (item.sub_type != MISC_LANTERN_OF_SHADOWS
             && item.sub_type != MISC_EMPTY_EBONY_CASKET
             && item.sub_type != MISC_RUNE_OF_ZOT)
         {
             return (true);
         }
-
         // else fall through
     default:
         if (msg)

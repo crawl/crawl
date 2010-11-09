@@ -2,7 +2,7 @@ Guide to des files
 ==================
 
 des files are mostly used for creating parts of maps. Typical examples are
-entry vaults or most branch ends. They are organised in six subfolders of
+entry vaults or most branch ends. They are organised in six subdirectories of
 dat/des, namely
 
 branches  = maps special to a branch, and branch ends

@@ -112,10 +112,21 @@ static tileidx_t _tileidx_trap(trap_type type)
 static tileidx_t _tileidx_shop(coord_def where)
 {
     const shop_struct *shop = get_shop(where);
-    if (!shop)
+    if (!shop && !feature_mimic_at(where))
         return TILE_DNGN_ERROR;
 
-    switch (shop->type)
+    shop_type stype = shop->type;
+
+    if (feature_mimic_at(where))
+    {
+        monster *mimic = monster_at(where);
+        if (mimic->props.exists("shop_type"))
+            stype = static_cast<shop_type>(mimic->props["shop_type"].get_short());
+        else
+            return TILE_DNGN_ERROR;
+    }
+
+    switch (stype)
     {
         case SHOP_WEAPON:
         case SHOP_WEAPON_ANTIQUE:
@@ -347,6 +358,9 @@ tileidx_t tileidx_feature(const coord_def &gc)
                         && feat != DNGN_UNSEEN;
     if (override && can_override)
         return (override);
+
+    if (feature_mimic_at(gc))
+        feat = get_mimic_feat(monster_at(gc));
 
     // Any grid-specific tiles.
     switch (feat)
@@ -746,8 +760,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_ELEPHANT_SLUG;
     case MONS_GIANT_SLUG:
         return TILEP_MONS_GIANT_SLUG;
-    case MONS_GIANT_SNAIL:
-        return TILEP_MONS_GIANT_SNAIL;
+    case MONS_AGATE_SNAIL:
+        return TILEP_MONS_AGATE_SNAIL;
 
     // killer bees ('k')
     case MONS_KILLER_BEE:
@@ -1005,7 +1019,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_BORING_BEETLE:
         return TILEP_MONS_BORING_BEETLE;
 
-    // cyclops and giants ('C')
+    // cyclopes and giants ('C')
     case MONS_HILL_GIANT:
         return TILEP_MONS_HILL_GIANT;
     case MONS_ETTIN:
@@ -1140,6 +1154,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_BIG_KOBOLD;
     case MONS_KOBOLD_DEMONOLOGIST:
         return TILEP_MONS_KOBOLD_DEMONOLOGIST;
+    case MONS_NISSE:
+        return TILEP_MONS_NISSE;
 
     // liches ('L')
     case MONS_LICH:
@@ -1246,6 +1262,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_PHANTASMAL_WARRIOR;
     case MONS_SPECTRAL_THING:
         return TILEP_MONS_SPECTRAL_LARGE;
+    case MONS_GREATER_WRAITH:
+        return TILEP_MONS_GREATER_WRAITH;
 
     // large abominations ('X')
     case MONS_ABOMINATION_LARGE:
@@ -1353,6 +1371,16 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILE_UNSEEN_POTION;
     case MONS_DANCING_WEAPON:
         return TILE_UNSEEN_WEAPON;
+
+    // Feature mimics actually get drawn with the dungeon code.
+    // See tileidx_feature.
+    case MONS_DOOR_MIMIC:
+    case MONS_PORTAL_MIMIC:
+    case MONS_TRAP_MIMIC:
+    case MONS_STAIR_MIMIC:
+    case MONS_SHOP_MIMIC:
+    case MONS_FOUNTAIN_MIMIC:
+        return 0;
 
     // '5' demons
     case MONS_IMP:
@@ -1528,8 +1556,12 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_SPRIGGAN_DRUID;
     case MONS_SPRIGGAN_DEFENDER:
         return TILEP_MONS_SPRIGGAN_DEFENDER;
+    case MONS_SPRIGGAN_ASSASSIN:
+        return TILEP_MONS_SPRIGGAN_ASSASSIN;
     case MONS_THE_ENCHANTRESS:
         return TILEP_MONS_THE_ENCHANTRESS;
+    case MONS_AGNES:
+        return TILEP_MONS_AGNES;
 
     // slug ('j')
     case MONS_GASTRONOK:
@@ -1556,7 +1588,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_MURRAY:
         return TILEP_MONS_MURRAY;
 
-    // cyclops and giants ('C')
+    // cyclopes and giants ('C')
     case MONS_POLYPHEMUS:
         return TILEP_MONS_POLYPHEMUS;
     case MONS_ANTAEUS:
@@ -1660,8 +1692,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_HAROLD;
     case MONS_JOZEF:
         return TILEP_MONS_JOZEF;
-    case MONS_AGNES:
-        return TILEP_MONS_AGNES;
     case MONS_MAUD:
         return TILEP_MONS_MAUD;
     case MONS_LOUISE:
@@ -1770,6 +1800,15 @@ static tileidx_t _tileidx_monster_no_props(const monster* mon)
                     t |= TILE_FLAG_ANIM_WEP;
                 return t;
             }
+
+        // Feature mimics get drawn with the dungeon, see tileidx_feature.
+        case MONS_SHOP_MIMIC:
+        case MONS_TRAP_MIMIC:
+        case MONS_PORTAL_MIMIC:
+        case MONS_DOOR_MIMIC:
+        case MONS_STAIR_MIMIC:
+        case MONS_FOUNTAIN_MIMIC:
+            return 0;
 
         case MONS_DANCING_WEAPON:
             {
@@ -2500,8 +2539,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_ELEPHANT_SLUG;
     case MONS_GIANT_SLUG:
         return TILE_CORPSE_GIANT_SLUG;
-    case MONS_GIANT_SNAIL:
-        return TILE_CORPSE_GIANT_SNAIL;
+    case MONS_AGATE_SNAIL:
+        return TILE_CORPSE_AGATE_SNAIL;
 
     // bees ('k')
     case MONS_KILLER_BEE:
@@ -2758,6 +2797,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_KOBOLD;
     case MONS_BIG_KOBOLD:
         return TILE_CORPSE_BIG_KOBOLD;
+    case MONS_NISSE:
+        return TILE_CORPSE_NISSE;
 
     // nagas ('N')
     case MONS_NAGA:
@@ -2962,6 +3003,9 @@ static tileidx_t _tileidx_misc(const item_def &item)
     }
     case MISC_RUNE_OF_ZOT:
         return _tileidx_rune(item);
+
+    case MISC_QUAD_DAMAGE:
+        return TILE_MISC_QUAD_DAMAGE;
     }
 
     return TILE_ERROR;
@@ -3117,6 +3161,9 @@ tileidx_t tileidx_item(const item_def &item)
     case OBJ_MISCELLANY:
         return _tileidx_misc(item);
 
+    case OBJ_DETECTED:
+        return TILE_UNSEEN_ITEM;
+
     default:
         return TILE_ERROR;
     }
@@ -3213,31 +3260,6 @@ tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy)
 
     // If not a special case, just return the default tile.
     return tileidx_item(item);
-}
-
-tileidx_t tileidx_show_item(int show_item_type)
-{
-    switch (show_item_type)
-    {
-    default:
-    case SHOW_ITEM_NONE:       return (0);
-    case SHOW_ITEM_ORB:        return (TILE_UNSEEN_ORB);
-    case SHOW_ITEM_WEAPON:     return (TILE_UNSEEN_WEAPON);
-    case SHOW_ITEM_ARMOUR:     return (TILE_UNSEEN_ARMOUR);
-    case SHOW_ITEM_WAND:       return (TILE_UNSEEN_WAND);
-    case SHOW_ITEM_FOOD:       return (TILE_UNSEEN_FOOD);
-    case SHOW_ITEM_SCROLL:     return (TILE_UNSEEN_SCROLL);
-    case SHOW_ITEM_RING:       return (TILE_UNSEEN_RING);
-    case SHOW_ITEM_POTION:     return (TILE_UNSEEN_POTION);
-    case SHOW_ITEM_MISSILE:    return (TILE_UNSEEN_MISSILE);
-    case SHOW_ITEM_BOOK:       return (TILE_UNSEEN_BOOK);
-    case SHOW_ITEM_STAVE:      return (TILE_UNSEEN_STAFF);
-    case SHOW_ITEM_MISCELLANY: return (TILE_UNSEEN_MISC);
-    case SHOW_ITEM_CORPSE:     return (TILE_UNSEEN_CORPSE);
-    case SHOW_ITEM_GOLD:       return (TILE_UNSEEN_GOLD);
-    case SHOW_ITEM_AMULET:     return (TILE_UNSEEN_AMULET);
-    case SHOW_ITEM_DETECTED:   return (TILE_UNSEEN_ITEM);
-    }
 }
 
 // For items with randomized descriptions, only the overlay label is

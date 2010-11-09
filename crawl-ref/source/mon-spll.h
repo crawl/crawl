@@ -405,61 +405,6 @@
       }
     },
 
-    {  MST_TROLLKONOR,
-      {
-       SPELL_CORONA,
-       SPELL_MINOR_HEALING,
-       SPELL_MINOR_HEALING,
-       SPELL_NO_SPELL,
-       SPELL_AWAKEN_FOREST,
-       SPELL_BLINK
-      }
-    },
-
-    {  MST_HULDRA,
-      {
-       SPELL_VAMPIRIC_DRAINING, // is_unholy
-       SPELL_CONFUSE,
-       SPELL_MINOR_HEALING,
-       SPELL_NO_SPELL,
-       SPELL_MISLEAD,
-       SPELL_BLINK
-      }
-    },
-
-    {  MST_WITCH_I,
-      {
-       SPELL_BOLT_OF_INACCURACY,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_POLYMORPH_OTHER,
-       SPELL_AWAKEN_FOREST,
-       SPELL_BLINK_AWAY
-      }
-    },
-
-    {  MST_WITCH_II, /* evil-type */
-      {
-       SPELL_ISKENDERUNS_MYSTIC_BLAST,
-       SPELL_MEPHITIC_CLOUD,
-       SPELL_NO_SPELL,
-       SPELL_POLYMORPH_OTHER,
-       SPELL_FIREBALL,
-       SPELL_BLINK_AWAY
-      }
-    },
-
-    {  MST_WITCH_III, /* forest-type */
-      {
-       SPELL_SUNRAY, // is_holy
-       SPELL_SUMMON_SMALL_MAMMALS,
-       SPELL_NO_SPELL,
-       SPELL_SUMMON_CANIFORMS,
-       SPELL_AWAKEN_FOREST,
-       SPELL_MISLEAD
-      }
-    },
-
     {  MST_ORC_PRIEST,
       {
        SPELL_PAIN,
@@ -935,11 +880,11 @@
 
     {  MST_SWAMP_DRAKE,
       {
-       SPELL_MEPHITIC_CLOUD,
-       SPELL_MEPHITIC_CLOUD,
+       SPELL_NOXIOUS_CLOUD,
+       SPELL_NOXIOUS_CLOUD,
        SPELL_NO_SPELL,
-       SPELL_MEPHITIC_CLOUD,
-       SPELL_MEPHITIC_CLOUD,
+       SPELL_NOXIOUS_CLOUD,
+       SPELL_NOXIOUS_CLOUD,
        SPELL_NO_SPELL
       }
     },

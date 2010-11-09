@@ -45,6 +45,7 @@
 #include "player-stats.h"
 #include "random.h"
 #include "religion.h"
+#include "skills.h"
 #include "skills2.h"
 #include "shopping.h"
 #include "shout.h"
@@ -89,6 +90,9 @@ static bool _zin_recite_mons_useless(const monster* mon)
             || mon->neutral()
             || mons_is_confused(mon)
             || mon->paralysed()
+            || mon->withdrawn()
+            || mon->has_ench(ENCH_BERSERK)
+            || mon->has_ench(ENCH_INSANE) // already insane, Zin is redundant
             || mon->has_ench(ENCH_BATTLE_FRENZY)
             || mon->has_ench(ENCH_HASTE));
 }
@@ -727,11 +731,10 @@ bool trog_burn_spellbooks()
             // Ignore {!D} inscribed books.
             if (!check_warning_inscriptions(*si, OPER_DESTROY))
             {
-                mpr("Won't ignite {!D} inscribed book.");
+                mpr("Won't ignite {!D} inscribed spellbook.");
                 continue;
             }
 
-            rarity += book_rarity(si->sub_type);
             // Piety increases by 2 for books never cracked open, else 1.
             // Conversely, rarity influences the duration of the pyre.
             if (!item_type_known(*si))
@@ -739,7 +742,9 @@ bool trog_burn_spellbooks()
             else
                 totalpiety++;
 
-            dprf("Burned book rarity: %d", rarity);
+            rarity += book_rarity(si->sub_type);
+
+            dprf("Burned spellbook rarity: %d", rarity);
             destroy_spellbook(*si);
             destroy_item(si.link());
             count++;
@@ -760,7 +765,7 @@ bool trog_burn_spellbooks()
             const int duration = std::min(4 + count + random2(rarity/2), 23);
             place_cloud(CLOUD_FIRE, *ri, duration, KC_YOU);
 
-            mprf(MSGCH_GOD, "The book%s burst%s into flames.",
+            mprf(MSGCH_GOD, "The spellbook%s burst%s into flames.",
                  count == 1 ? ""  : "s",
                  count == 1 ? "s" : "");
         }
@@ -773,10 +778,9 @@ bool trog_burn_spellbooks()
     }
     else if (totalblocked)
     {
-        if (totalblocked == 1)
-            mpr("The spellbook fails to ignite!");
-        else
-            mpr("The spellbooks fail to ignite!");
+        mprf("The spellbook%s fail%s to ignite!",
+             totalblocked == 1 ? ""  : "s",
+             totalblocked == 1 ? "s" : "");
         return (false);
     }
     else
@@ -2250,17 +2254,19 @@ static int _lugonu_warp_monster(monster* mon, int pow)
     if (!mon->friendly())
         behaviour_event(mon, ME_ANNOY, MHITYOU);
 
-    if (mon->check_res_magic(pow * 2))
+    int res_margin = mon->check_res_magic(pow * 2);
+    if (res_margin > 0)
     {
-        mprf("%s %s.",
-             mon->name(DESC_CAP_THE).c_str(), mons_resist_string(mon));
+        mprf("%s%s",
+             mon->name(DESC_CAP_THE).c_str(),
+             mons_resist_string(mon, res_margin).c_str());
         return (1);
     }
 
     const int damage = 1 + random2(pow / 6);
     if (mons_genus(mon->type) == MONS_BLINK_FROG)
         mon->heal(damage, false);
-    else if (!mon->check_res_magic(pow))
+    else if (mon->check_res_magic(pow) <= 0)
     {
         mon->hurt(&you, damage);
         if (!mon->alive())
@@ -2347,10 +2353,12 @@ void cheibriados_time_bend(int pow)
         monster* mon = monster_at(*ai);
         if (mon && !mons_is_stationary(mon))
         {
-            if (roll_dice(mon->hit_dice, 3) > random2avg(pow, 2))
+            int res_margin = roll_dice(mon->hit_dice, 3) - random2avg(pow, 2);
+            if (res_margin > 0)
             {
-                mprf("%s %s.",
-                     mon->name(DESC_CAP_THE).c_str(), mons_resist_string(mon));
+                mprf("%s%s",
+                     mon->name(DESC_CAP_THE).c_str(),
+                     mons_resist_string(mon, res_margin).c_str());
                 continue;
             }
 
@@ -2423,4 +2431,62 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
 
     flash_view(0);
     mpr("You return to the normal time flow.");
+}
+
+bool ashenzari_transfer_knowledge()
+{
+    skill_type fsk = list_skills("Select the source skill.");
+    if (fsk == SK_NONE)
+        return false;
+
+    skill_type tsk = list_skills("Select the destination skill.", fsk);
+    if (tsk == SK_NONE)
+        return false;
+
+    mprf("As you forget about %s, you feel ready to understand %s.",
+         skill_name(fsk), skill_name(tsk));
+
+    const float penalty = 0.9; // 10% XP penalty
+    const unsigned int min_transfer = 1000;
+    unsigned int fsk_points = you.skill_points[fsk];
+    unsigned int exp_pool = you.exp_available;
+    unsigned int skp_lost   = 0; // skill points lost in fsk.
+    unsigned int skp_gained = 0; // skill points gained in tsk.
+    unsigned int skp_max; // maximum number of skill points transferable.
+    bool tsk_practise = you.practise_skill[tsk];
+
+    skp_max = (fsk_points - you.ct_skill_points[fsk]) / 2;
+    skp_max = std::max(skp_max, min_transfer);
+    if (skp_max > fsk_points)
+        skp_max = fsk_points;
+
+    // Apply the XP penalty
+    skp_max *= penalty;
+    int train_count = skp_max / 10;
+
+    you.practise_skill[tsk] = true;
+    while (skp_gained < skp_max && train_count > 0)
+    {
+        you.exp_available = 250;
+        skp_gained += exercise(tsk, 1, false);
+        train_count--;
+    }
+    you.practise_skill[tsk] = tsk_practise;
+
+    skp_lost = skp_gained / penalty;
+    int double_cost = std::min(skp_lost, you.ct_skill_points[fsk]);
+    you.ct_skill_points[fsk] -= double_cost;
+    skp_lost += double_cost;
+
+    change_skill_points(fsk, -skp_lost, true);
+    change_skill_points(tsk, 0, true); // just update the level
+
+    // We restore the XP pool
+    you.exp_available = exp_pool;
+
+    dprf("Maximum skill points transferable: %d", skp_max);
+    dprf("skill %s lost %d points", skill_name(fsk), skp_lost);
+    dprf("skill %s gained %d points", skill_name(tsk), skp_gained);
+
+    return true;
 }

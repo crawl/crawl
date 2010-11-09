@@ -73,10 +73,11 @@ void wizard_change_species(void)
     }
 
     // Re-scale skill-points.
-    for (i = 0; i < NUM_SKILLS; ++i)
+    for (i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
     {
-        you.skill_points[i] *= species_skills(i, sp);
-        you.skill_points[i] /= species_skills(i, you.species);
+        skill_type sk = static_cast<skill_type>(i);
+        you.skill_points[i] *= species_apt_factor(sk, sp)
+                               / species_apt_factor(sk);
     }
 
     you.species = sp;
@@ -108,25 +109,38 @@ void wizard_change_species(void)
 
     switch (sp)
     {
-    case SP_GREEN_DRACONIAN:
-        if (you.experience_level >= 7)
-            perma_mutate(MUT_POISON_RESISTANCE, 1);
-        break;
-
     case SP_RED_DRACONIAN:
-        if (you.experience_level >= 14)
+        if (you.experience_level >= 7)
             perma_mutate(MUT_HEAT_RESISTANCE, 1);
         break;
 
     case SP_WHITE_DRACONIAN:
-        if (you.experience_level >= 14)
+        if (you.experience_level >= 7)
             perma_mutate(MUT_COLD_RESISTANCE, 1);
         break;
 
+    case SP_GREEN_DRACONIAN:
+        if (you.experience_level >= 7)
+            perma_mutate(MUT_POISON_RESISTANCE, 1);
+        if (you.experience_level >= 14)
+            perma_mutate(MUT_STINGER, 1);
+        break;
+
+    case SP_YELLOW_DRACONIAN:
+        if (you.experience_level >= 14)
+            perma_mutate(MUT_ACIDIC_BITE, 1);
+        break;
+
+    case SP_GREY_DRACONIAN:
+        if (you.experience_level >= 7)
+            perma_mutate(MUT_UNBREATHING, 1);
+        break;
 
     case SP_BLACK_DRACONIAN:
-        if (you.experience_level >= 18)
+        if (you.experience_level >= 7)
             perma_mutate(MUT_SHOCK_RESISTANCE, 1);
+        if (you.experience_level >= 14)
+            perma_mutate(MUT_BIG_WINGS, 1);
         break;
 
     case SP_DEMONSPAWN:
@@ -144,6 +158,22 @@ void wizard_change_species(void)
         }
         break;
     }
+
+    case SP_DEEP_DWARF:
+        if (you.experience_level >= 9)
+            perma_mutate(MUT_PASSIVE_MAPPING, 1);
+        if (you.experience_level >= 14)
+            perma_mutate(MUT_NEGATIVE_ENERGY_RESISTANCE, 1);
+        if (you.experience_level >= 18)
+            perma_mutate(MUT_PASSIVE_MAPPING, 1);
+        break;
+
+    case SP_CAT:
+        if (you.experience_level >= 6)
+            perma_mutate(MUT_SHAGGY_FUR, 1);
+        if (you.experience_level >= 12)
+            perma_mutate(MUT_SHAGGY_FUR, 1);
+        break;
 
     default:
         break;
@@ -330,9 +360,9 @@ void wizard_set_piety()
 #ifdef WIZARD
 void wizard_exercise_skill(void)
 {
-    int skill = debug_prompt_for_skill("Which skill (by name)? ");
+    skill_type skill = debug_prompt_for_skill("Which skill (by name)? ");
 
-    if (skill == -1)
+    if (skill == SK_NONE)
         mpr("That skill doesn't seem to exist.");
     else
     {
@@ -345,9 +375,9 @@ void wizard_exercise_skill(void)
 #ifdef WIZARD
 void wizard_set_skill_level(void)
 {
-    int skill = debug_prompt_for_skill("Which skill (by name)? ");
+    skill_type skill = debug_prompt_for_skill("Which skill (by name)? ");
 
-    if (skill == -1)
+    if (skill == SK_NONE)
         mpr("That skill doesn't seem to exist.");
     else
     {
@@ -359,10 +389,10 @@ void wizard_set_skill_level(void)
         else
         {
             const int old_amount = you.skills[skill];
-            const int points = (skill_exp_needed(amount)
-                                * species_skills(skill, you.species)) / 100;
+            const int points = skill_exp_needed(amount, skill);
 
             you.skill_points[skill] = points + 1;
+            you.ct_skill_points[skill] = 0;
             you.skills[skill] = amount;
 
             calc_total_skill_points();
@@ -425,16 +455,17 @@ void wizard_set_all_skills(void)
         if (amount > 27)
             amount = 27;
 
-        for (i = SK_FIGHTING; i < NUM_SKILLS; ++i)
+        for (i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
         {
-            if (is_invalid_skill(i))
+            skill_type sk = static_cast<skill_type>(i);
+            if (is_invalid_skill(sk))
                 continue;
 
-            const int points = (skill_exp_needed(amount)
-                                * species_skills(i, you.species)) / 100;
+            const int points = skill_exp_needed(amount, sk);
 
-            you.skill_points[i] = points + 1;
-            you.skills[i] = amount;
+            you.skill_points[sk] = points + 1;
+            you.ct_skill_points[sk] = 0;
+            you.skills[sk] = amount;
         }
 
         redraw_skill(you.your_name, player_title());

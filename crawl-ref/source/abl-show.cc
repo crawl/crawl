@@ -157,7 +157,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       ABIL_CHEIBRIADOS_SLOUCH, ABIL_CHEIBRIADOS_TIME_STEP },
     // Ashenzari
     { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
-      ABIL_ASHENZARI_SCRYING, ABIL_NON_ABILITY },
+      ABIL_ASHENZARI_SCRYING, ABIL_ASHENZARI_TRANSFER_KNOWLEDGE },
 };
 
 // The description screen was way out of date with the actual costs.
@@ -351,6 +351,7 @@ static const ability_def Ability_List[] =
       10, 0, 200, 10, ABFLAG_NONE },
 
     // Ashenzari
+    { ABIL_ASHENZARI_TRANSFER_KNOWLEDGE, "Transfer Knowledge", 0, 0, 0, 10, ABFLAG_NONE},
     { ABIL_ASHENZARI_SCRYING, "Scrying",
       4, 0, 50, generic_cost::range(5, 6), ABFLAG_NONE },
 
@@ -361,7 +362,7 @@ static const ability_def Ability_List[] =
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion", 0, 0, 0, 0, ABFLAG_NONE },
 };
 
-const ability_def & get_ability_def(ability_type abil)
+static const ability_def& _get_ability_def(ability_type abil)
 {
     for (unsigned int i = 0;
          i < sizeof(Ability_List) / sizeof(Ability_List[0]); i++)
@@ -377,7 +378,7 @@ bool string_matches_ability_name(const std::string& key)
 {
     for (int i = ABIL_SPIT_POISON; i <= ABIL_RENOUNCE_RELIGION; ++i)
     {
-        const ability_def abil = get_ability_def(static_cast<ability_type>(i));
+        const ability_def abil = _get_ability_def(static_cast<ability_type>(i));
         if (abil.ability == ABIL_NON_ABILITY)
             continue;
 
@@ -411,7 +412,7 @@ std::string print_abilities()
 
 const std::string make_cost_description(ability_type ability)
 {
-    const ability_def& abil = get_ability_def(ability);
+    const ability_def& abil = _get_ability_def(ability);
     std::ostringstream ret;
     if (abil.mp_cost)
     {
@@ -549,7 +550,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
 
     if (check_confused)
     {
-        const ability_def &abil = get_ability_def(result.which);
+        const ability_def &abil = _get_ability_def(result.which);
         if (you.confused() && !testbits(abil.flags, ABFLAG_CONF_OK))
         {
             // Initialize these so compilers don't complain.
@@ -575,6 +576,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     // begin spell abilities
     case ABIL_DELAYED_FIREBALL:
     case ABIL_MUMMY_RESTORATION:
+    case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
         perfect = true;
         failure = 0;
         break;
@@ -874,7 +876,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
 
 const char* ability_name(ability_type ability)
 {
-    return get_ability_def(ability).name;
+    return _get_ability_def(ability).name;
 }
 
 std::vector<const char*> get_ability_names()
@@ -1218,7 +1220,7 @@ static bool _activate_talent(const talent& tal)
         return (false);
     }
 
-    const ability_def& abil = get_ability_def(tal.which);
+    const ability_def& abil = _get_ability_def(tal.which);
 
     // Check that we can afford to pay the costs.
     // Note that mutation shenanigans might leave us with negative MP,
@@ -1267,13 +1269,12 @@ static int _calc_breath_ability_range(ability_type ability)
     {
     case ABIL_BREATHE_FIRE:         return 6;
     case ABIL_BREATHE_FROST:        return 6;
-    case ABIL_BREATHE_POISON:       return 7;
+    case ABIL_BREATHE_MEPHITIC:     return 7;
     case ABIL_BREATHE_LIGHTNING:    return 8;
     case ABIL_SPIT_ACID:            return 8;
     case ABIL_BREATHE_POWER:        return 8;
     case ABIL_BREATHE_STICKY_FLAME: return 1;
     case ABIL_BREATHE_STEAM:        return 7;
-    case ABIL_BREATHE_MEPHITIC:     return 7;
     default:
         ASSERT(!"Bad breath type!");
         break;
@@ -1393,7 +1394,10 @@ static bool _do_ability(const ability_def& abil)
             break;
 
         case ABIL_BREATHE_FROST:
-            if (!zapping(ZAP_BREATHE_FROST, you.experience_level, beam, true,
+            if (!zapping(ZAP_BREATHE_FROST,
+                 (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON) ?
+                     2 * you.experience_level : you.experience_level,
+                 beam, true,
                          "You exhale a wave of freezing cold."))
             {
                 return (false);
@@ -1413,15 +1417,20 @@ static bool _do_ability(const ability_def& abil)
             break;
 
         case ABIL_SPIT_ACID:
-            if (!zapping(ZAP_BREATHE_ACID, you.experience_level, beam, true,
-                         "You spit acid."))
+            if (!zapping(ZAP_BREATHE_ACID,
+                (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON) ?
+                    2 * you.experience_level : you.experience_level,
+                beam, true, "You spit acid."))
             {
                 return (false);
             }
             break;
 
         case ABIL_BREATHE_POWER:
-            if (!zapping(ZAP_BREATHE_POWER, you.experience_level, beam, true,
+            if (!zapping(ZAP_BREATHE_POWER,
+                (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON) ?
+                    2 * you.experience_level : you.experience_level,
+                beam, true,
                          "You spit a bolt of incandescent energy."))
             {
                 return (false);
@@ -1429,7 +1438,10 @@ static bool _do_ability(const ability_def& abil)
             break;
 
         case ABIL_BREATHE_STICKY_FLAME:
-            if (!zapping(ZAP_BREATHE_STICKY_FLAME, you.experience_level, beam, true,
+            if (!zapping(ZAP_BREATHE_STICKY_FLAME,
+                (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON) ?
+                    2 * you.experience_level : you.experience_level,
+                beam, true,
                          "You spit a glob of burning liquid."))
             {
                 return (false);
@@ -1437,7 +1449,10 @@ static bool _do_ability(const ability_def& abil)
             break;
 
         case ABIL_BREATHE_STEAM:
-            if (!zapping(ZAP_BREATHE_STEAM, you.experience_level, beam, true,
+            if (!zapping(ZAP_BREATHE_STEAM,
+                (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON) ?
+                    2 * you.experience_level : you.experience_level,
+                beam, true,
                          "You exhale a blast of scalding steam."))
             {
                 return (false);
@@ -1445,7 +1460,10 @@ static bool _do_ability(const ability_def& abil)
             break;
 
         case ABIL_BREATHE_MEPHITIC:
-             if (!zapping(ZAP_BREATHE_MEPHITIC, you.experience_level, beam, true,
+             if (!zapping(ZAP_BREATHE_MEPHITIC,
+                 (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON) ?
+                     2 * you.experience_level : you.experience_level,
+                 beam, true,
                           "You exhale a blast of noxious fumes."))
              {
                  return (false);
@@ -2042,6 +2060,14 @@ static bool _do_ability(const ability_def& abil)
         you.xray_vision = true;
         break;
 
+    case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
+        if (!ashenzari_transfer_knowledge())
+        {
+            canned_msg(MSG_OK);
+            return (false);
+        }
+        break;
+
 
     case ABIL_RENOUNCE_RELIGION:
         if (yesno("Really renounce your faith, foregoing its fabulous benefits?",
@@ -2265,8 +2291,8 @@ std::vector<talent> your_talents(bool check_confused)
         }
 
         // Draconians don't maintain their original breath weapons
-        // if shapechanged, but green draconians do get spit poison
-        // in spider form.
+        // if shapechanged into a non-dragon form, but green draconians
+        // do get spit poison in spider form.
         if (transform_changed_physiology())
         {
             if (you.species == SP_GREEN_DRACONIAN
@@ -2274,7 +2300,7 @@ std::vector<talent> your_talents(bool check_confused)
             {
                 ability = ABIL_SPIT_POISON; // spit, not breath
             }
-            else
+            else if (you.attribute[ATTR_TRANSFORMATION] != TRAN_DRAGON)
                 ability = ABIL_NON_ABILITY;
         }
 
@@ -2398,7 +2424,9 @@ std::vector<talent> your_talents(bool check_confused)
 
     //jmf: Check for breath weapons - they're exclusive of each other, I hope!
     //     Make better ones come first.
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
+    if ((you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
+        && dragon_form_dragon_type() == MONS_DRAGON
+        && you.species != SP_RED_DRACONIAN)
         || player_mutation_level(MUT_BREATHE_FLAMES))
     {
         _add_talent(talents, ABIL_BREATHE_FIRE, check_confused);

@@ -2,6 +2,7 @@
 
 #include "status.h"
 
+#include "misc.h"
 #include "mutation.h"
 #include "player.h"
 #include "skills2.h"
@@ -24,8 +25,8 @@ static duration_def duration_data[] =
       0, "", "agile", "You are agile." },
     { DUR_BARGAIN, true,
       BLUE, "Brgn", "charismatic", "You get a bargain in shops." },
-    { DUR_BERSERKER, false,
-      0, "", "berserking", "You are possessed by a berserker rage." },
+    { DUR_BERSERK, true,
+      BLUE, "Berserk", "berserking", "You are possessed by a berserker rage." },
     { DUR_BREATH_WEAPON, false,
       YELLOW, "BWpn", "short of breath", "You are short of breath." },
     { DUR_BRILLIANCE, false,
@@ -215,6 +216,7 @@ void fill_status_info(int status, status_info* inf)
     if (status >= 0 && status < NUM_DURATIONS)
     {
         duration_type dur = static_cast<duration_type>(status);
+
         if (!you.duration[dur])
             return;
 
@@ -298,7 +300,9 @@ void fill_status_info(int status, status_info* inf)
         const int dur = you.duration[DUR_CONFUSING_TOUCH];
         const int high = 40 * BASELINE_DELAY;
         const int low  = 20 * BASELINE_DELAY;
-        inf->long_text = "Your hands are glowing ";
+        inf->long_text = std::string("Your ")
+                         + your_hand(true)
+                         + " are glowing ";
         if (dur > high)
             inf->long_text += "an extremely bright ";
         else if (dur > low)
@@ -387,6 +391,18 @@ void fill_status_info(int status, status_info* inf)
 
     case DUR_TRANSFORMATION:
         _describe_transform(inf);
+        break;
+
+    case STATUS_CLINGING:
+        if (you.clinging)
+        {
+            inf->light_text   = "Cling";
+            inf->short_text   = "clinging";
+            inf->long_text = "You cling to the nearby walls.";
+            inf->light_colour = dur_colour(GREEN,
+                                           dur_expiring(DUR_TRANSFORMATION));
+            _mark_expiring(inf, dur_expiring(DUR_TRANSFORMATION));
+        }
         break;
 
     default:
@@ -540,6 +556,9 @@ static void _describe_speed(status_info* inf)
 {
     if (you.duration[DUR_SLOW] && you.duration[DUR_HASTE])
     {
+        inf->light_colour = MAGENTA;
+        inf->light_text   = "Fast+Slow";
+        inf->short_text   = "hasted and slowed";
         inf->long_text = "You are under both slowing and hasting effects.";
     }
     else if (you.duration[DUR_SLOW])
@@ -674,8 +693,8 @@ static void _describe_transform(status_info* inf)
         break;
     case TRAN_BLADE_HANDS:
         inf->light_text = "Blades";
-        inf->short_text = "blade hands";
-        inf->long_text  = "You have blades for hands.";
+        inf->short_text = "blade " + blade_parts(true);
+        inf->long_text  = "You have blades for " + blade_parts() + ".";
         break;
     case TRAN_DRAGON:
         inf->light_text = "Dragon";

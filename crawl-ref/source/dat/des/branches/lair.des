@@ -24,7 +24,7 @@ ENDMAP
 #
 NAME:    david_lair_1
 TAGS:    lair_entry
-MONS:    crocodile / sheep, giant snail / elephant slug / nothing
+MONS:    crocodile / sheep, agate snail / elephant slug / nothing
 MONS:    nothing / yak / weight:2 death yak, plant / fungus / w:20 nothing
 MONS:    elephant
 SHUFFLE: 12
@@ -67,7 +67,7 @@ ENDMAP
 NAME:    david_lair_3
 TAGS:    lair_entry
 ORIENT:  float
-MONS:    w:50 nothing / w:30 giant slug / w:30 giant snail
+MONS:    w:50 nothing / w:30 giant slug / w:30 agate snail
 MONS:    w:100 nothing / w:40 yak / sheep / death yak
 MONS:    w:100 nothing / w:20 iguana / w:20 crocodile /\
          gila monster / komodo dragon
@@ -200,7 +200,7 @@ NAME:   erik_lair_5
 TAGS:   lair_entry
 ORIENT: float
 MONS:   orc
-MONS:   warg / giant snail
+MONS:   warg / agate snail
 MONS:   orc warrior / warg
 MONS:   orc priest / orc wizard / plant
 MAP
@@ -303,7 +303,7 @@ DEPTH:   Lair:3-7
 SUBST:   % = %%%%%$$$**|
 MONS:    patrolling necromancer / necromancer
 SHUFFLE: 23
-MONS:    giant slug zombie / giant snail zombie / \
+MONS:    giant slug zombie / agate snail zombie / \
          elephant slug zombie w:2 / nothing
 MONS:    crocodile zombie / gila monster zombie / \
          komodo dragon zombie w:4 / nothing
@@ -504,6 +504,230 @@ _......'....._
   _........_
    ________
 ENDMAP
+
+#############################################
+# A number of fruity vaults, by blue_anna
+#
+# The "fruiting_plant" tag was used originally for subvault use in
+# blue_anna's dwarven hall branch; it may be obsolete.
+#
+# TODO: Many of them could be combined into a single vault.
+#       Using KMONS and KITEM, we could have fruits on the same
+#       square as a tree/plant.
+#
+NAME:   blue_anna_choko_field
+TAGS:   fruiting_plant allow_dup
+WEIGHT: 1
+SUBST:  . = G:20 B:15 .
+COLOUR: G = green
+FTILE:  G = floor_grass
+COLOUR: B = brown
+FTILE:  B = floor_dirt
+SUBST:  BG = .
+SUBST:  . = d 1 .:50
+MONS:   plant name:gourd name_adjective
+ITEM:   choko q:1 / choko q:2 / choko q:3 w:2
+MAP
+.....
+.....
+.....
+.....
+ENDMAP
+
+NAME:   blue_anna_soapberry_tree
+TAGS:   fruiting_plant allow_dup
+WEIGHT: 1
+SUBST:  . = G:20 B:15 .
+COLOUR: G = green
+FTILE:  G = floor_grass
+COLOUR: B = brown
+FTILE:  B = floor_dirt
+SUBST:  BG = .
+SUBST:  . = d .:50
+SUBST:  ' = d .:33
+MONS:   plant name:soapberry_tree name_replace name_descriptor
+: if crawl.coinflip() then
+ITEM:   lychee q:1 / lychee q:2 / lychee q:3 w:2
+: else
+ITEM:   rambutan q:1 / rambutan q:2 / rambutan q:3 w:2
+: end
+MAP
+.'''.
+.'1'.
+.'''.
+.....
+ENDMAP
+
+NAME:   blue_anna_citrus_tree
+TAGS:   fruiting_plant allow_dup
+WEIGHT: 2
+SUBST:  . = G:20 B:15 .
+COLOUR: G = green
+FTILE:  G = floor_grass
+COLOUR: B = brown
+FTILE:  B = floor_dirt
+SUBST:  BG = .
+SUBST:  . = d .:50
+SUBST:  ' = d .:33
+MONS:   plant name:citrus_tree name_replace name_descriptor
+: if crawl.coinflip() then
+ITEM:   orange q:1 / orange q:2 / orange q:3 w:2
+: else
+ITEM:   lemon q:1 / lemon q:2 / lemon q:3 w:2
+: end
+MAP
+.'''.
+.'1'.
+.'''.
+.....
+ENDMAP
+
+NAME:   blue_anna_apple_tree
+TAGS:   fruiting_plant allow_dup
+WEIGHT: 2
+SUBST:  . = G:20 B:15 .
+COLOUR: G = green
+FTILE:  G = floor_grass
+COLOUR: B = brown
+FTILE:  B = floor_dirt
+SUBST:  BG = .
+SUBST:  . = d .:50
+SUBST:  ' = d .:33
+MONS:   plant name:apple_tree name_replace name_descriptor
+ITEM:   apple q:1 / apple q:2 / apple q:3 w:2
+MAP
+.'''.
+.'1'.
+.'''.
+.....
+ENDMAP
+
+NAME:   blue_anna_apricot_tree
+TAGS:   fruiting_plant allow_dup
+SUBST:  . = G:20 B:15 .
+WEIGHT: 2
+COLOUR: G = green
+FTILE:  G = floor_grass
+COLOUR: B = brown
+FTILE:  B = floor_dirt
+SUBST:  BG = .
+SUBST:  . = d .:50
+SUBST:  ' = d .:33
+MONS:   plant name:apricot_tree name_replace name_descriptor
+ITEM:   apricot q:1 / apricot q:2 / apricot q:3 w:2
+MAP
+.'''.
+.'1'.
+.'''.
+.....
+ENDMAP
+
+NAME:   blue_anna_pyrus_tree
+TAGS:   fruiting_plant allow_dup
+SUBST:  . = G:20 B:15 .
+WEIGHT: 2
+COLOUR: G = green
+FTILE:  G = floor_grass
+COLOUR: B = brown
+FTILE:  B = floor_dirt
+SUBST:  BG = .
+SUBST:  . = d .:50
+SUBST:  ' = d .:33
+MONS:   plant name:pyrus_tree name_replace name_descriptor
+ITEM:   pear q:1 / pear q:2 / pear q:3 w:2
+MAP
+.'''.
+.'1'.
+.'''.
+.....
+ENDMAP
+
+NAME:   blue_anna_bittermelon_vine
+TAGS:   fruiting_plant allow_dup
+WEIGHT: 1
+SUBST:  . = G:20 B:15 .
+COLOUR: G = green
+FTILE:  G = floor_grass
+COLOUR: B = brown
+FTILE:  B = floor_dirt
+SUBST:  BG = .
+SUBST:  .= d 1 .:34
+MONS:   plant name:bittermelon_vine name_replace name_descriptor
+ITEM:   snozzcumber q:1 / snozzcumber q:2 / snozzcumber q:3 w:2
+MAP
+.....
+..1..
+.....
+.....
+ENDMAP
+
+NAME:   blue_anna_grape_vine
+TAGS:   fruiting_plant allow_dup
+WEIGHT: 2
+SUBST:  . = G:20 B:15 .
+COLOUR: G = green
+FTILE:  G = floor_grass
+COLOUR: B = brown
+FTILE:  B = floor_dirt
+SUBST:  BG = .
+SUBST:  . = d 1 .:34
+MONS: plant name:grape_vine name_replace name_descriptor
+: if crawl.coinflip() then
+ITEM:   grape q:1 w:3 / grape q:2 w:5 / grape q:3 / \
+        grape q:4 w:7 / grape q:5 w:5 / grape q:6 w:2
+: else
+ITEM:   sultana q:1 w:2 / sultana q:2 w:3 / sultana q:3 / \
+        sultana q:4 w:5 / sultana q:5 w:7 / sultana q:6 w:5
+: end
+MAP
+.....
+.....
+.....
+.....
+ENDMAP
+
+NAME:   blue_anna_musa_stalks
+TAGS:   fruiting_plant allow_dup
+WEIGHT: 2
+SUBST:  . = G:20 B:15 .
+COLOUR: G = green
+FTILE:  G = floor_grass
+COLOUR: B = brown
+FTILE:  B = floor_dirt
+SUBST:  BG = .
+NSUBST: ' = 1:d *:.
+NSUBST: . = 1:1 *=.....1
+MONS:   plant name:musa name_adjective
+ITEM:   banana q:6 w:2 / banana q:7 w:4 / banana q:10 / banana q:12 / \
+        banana q:14 w:4 / banana q:16 w:2
+MAP
+.....
+.'''.
+.'''.
+.....
+ENDMAP
+
+NAME:   blue_anna_strawberry_field
+TAGS:   fruiting_plant allow_dup
+WEIGHT: 2
+SUBST:  . = G:20 B:15 .
+COLOUR: G = green
+FTILE:  G = floor_grass
+COLOUR: B = brown
+FTILE:  B = floor_dirt
+SUBST:  BG = .
+NSUBST: . = 1:d / *=..1
+NSUBST: . = 2:1 / *=.....1
+MONS:   plant name:strawberry name_adjective
+ITEM:   strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 /\
+        strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
+MAP
+.....
+.....
+.....
+.....
+ENDMAP
+
 
 ################################################################################
 # Ice dragon lair with assorted imp pets

@@ -185,7 +185,7 @@ static int _abil_degree(ability_type abil)
 static void _exercise_spell(spell_type spell, bool success)
 {
     // (!success) reduces skill increase for miscast spells
-    int skill;
+    skill_type skill;
     int exer = 0;
     int workout = 0;
 

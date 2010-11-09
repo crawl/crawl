@@ -124,4 +124,7 @@ const uint64_t M_FLEEING           = (uint64_t)1<<37;
 
 // is an artificial being
 const uint64_t M_ARTIFICIAL        = (uint64_t)1<<38;
+
+// doesn't need to breathe; immune to asphyxiation and Mephitic Cloud
+const uint64_t M_UNBREATHING       = (uint64_t)1<<39;
 #endif

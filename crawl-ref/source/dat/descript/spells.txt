@@ -388,7 +388,7 @@ This spell bathes the caster's surroundings in a sickly green light, inflicting 
 %%%%
 Orb of Destruction
 
-This spell conjures an orb made of pure destructive magic. Compared to most other projectiles, these orbs travel at a relatively slow pace. The orbs home onto their targets, yet because of their huge inertia, especially agile opponents may be able to outmanoeuvre them.
+This spell conjures an orb made of pure destructive magic. Compared to most other projectiles, these orbs travel at a relatively slow pace. The orbs home onto their targets, yet because of their huge inertia, especially agile opponents may be able to outmanoeuvre them. The orbs need some time to stabilize, and a nascent orb won't do the full damage it is capable of.
 
 It is said that most copies of this spell suffer from a scribal error that makes the orbs unstable beyond a short range. Certain individuals may have access to spellbooks without this flaw, so beware!
 %%%%
@@ -527,7 +527,7 @@ This spell smites one creature of the caster's choice.
 %%%%
 Spider Form
 
-This spell temporarily transforms the caster into a venomous, spider-like creature. Spellcasting is slightly more difficult in this form. This spell is not powerful enough to allow the caster to meld with their cursed equipment.
+This spell temporarily transforms the caster into a venomous, spider-like creature. Spellcasting is slightly more difficult in this form. While in this form, you can cling to walls.
 %%%%
 Static Discharge
 

@@ -9,7 +9,7 @@
 
 int          debug_prompt_for_int(const char *prompt, bool nonneg);
 monster_type debug_prompt_for_monster(void);
-int          debug_prompt_for_skill(const char *prompt);
+skill_type   debug_prompt_for_skill(const char *prompt);
 
 int debug_cap_stat(int stat);
 

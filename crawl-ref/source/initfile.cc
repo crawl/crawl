@@ -971,7 +971,6 @@ void game_options::reset_options()
     tile_window_height    = -90;
     tile_map_pixels       = 0;
     tile_force_overlay    = false;
-    tile_align_at_top     = false;
 
     // delays
     tile_update_rate      = 1000;
@@ -3298,7 +3297,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else INT_OPTION(tile_window_height, INT_MIN, INT_MAX);
     else INT_OPTION(tile_map_pixels, 1, INT_MAX);
     else BOOL_OPTION(tile_force_overlay);
-    else BOOL_OPTION(tile_align_at_top);
     else INT_OPTION(tile_tooltip_ms, 0, INT_MAX);
     else INT_OPTION(tile_update_rate, 50, INT_MAX);
     else INT_OPTION(tile_runrest_rate, 0, INT_MAX);
@@ -3624,7 +3622,11 @@ static void _print_save_version(char *name)
 {
     try
     {
-        package save((get_savedir_filename(name, "", "") + SAVE_SUFFIX).c_str(), false);
+        std::string filename = name;
+        // Check for the exact filename first, then go by char name.
+        if (!file_exists(filename))
+            filename = get_savedir_filename(filename, "", "") + SAVE_SUFFIX;
+        package save(filename.c_str(), false);
         reader charf(&save, "chr");
 
         int major, minor;
@@ -3700,7 +3702,11 @@ static void _edit_save(int argc, char **argv)
 
     try
     {
-        package save((get_savedir_filename(name, "", "") + SAVE_SUFFIX).c_str(), rw);
+        std::string filename = name;
+        // Check for the exact filename first, then go by char name.
+        if (!file_exists(filename))
+            filename = get_savedir_filename(filename, "", "") + SAVE_SUFFIX;
+        package save(filename.c_str(), rw);
 
         if (cmd == ES_LS)
         {
@@ -3772,8 +3778,7 @@ static void _edit_save(int argc, char **argv)
         }
         else if (cmd == ES_REPACK)
         {
-            package save2((get_savedir_filename(name, "", "") + ".tmp").c_str(),
-                           true, true);
+            package save2((filename + ".tmp").c_str(), true, true);
             std::vector<std::string> list = save.list_chunks();
             for (size_t i = 0; i < list.size(); i++)
             {
@@ -3787,8 +3792,7 @@ static void _edit_save(int argc, char **argv)
             }
             save2.commit();
             save.unlink();
-            rename_u((get_savedir_filename(name, "", "") + ".tmp").c_str(),
-                     (get_savedir_filename(name, "", "") + SAVE_SUFFIX).c_str());
+            rename_u((filename + ".tmp").c_str(), filename.c_str());
         }
     }
     catch (ext_fail_exception &fe)

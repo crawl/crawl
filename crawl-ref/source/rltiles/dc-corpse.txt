@@ -55,7 +55,7 @@ komodo_dragon CORPSE_KOMODO_DRAGON
 %back dc-misc/blood_green
 elephant_slug CORPSE_ELEPHANT_SLUG
 giant_slug CORPSE_GIANT_SLUG
-giant_snail CORPSE_GIANT_SNAIL
+agate_snail CORPSE_AGATE_SNAIL
 
 ## Rodents ('r')
 %back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
@@ -264,6 +264,7 @@ giant_amoeba CORPSE_GIANT_AMOEBA
 %back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
 kobold CORPSE_KOBOLD
 big_kobold CORPSE_BIG_KOBOLD
+nisse CORPSE_NISSE
 
 ## Nagas ('N')
 naga CORPSE_NAGA

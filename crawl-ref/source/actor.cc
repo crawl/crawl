@@ -25,7 +25,8 @@ bool actor::has_equipped(equipment_type eq, int sub_type) const
 
 bool actor::will_trigger_shaft() const
 {
-    return (!airborne() && total_weight() > 0 && is_valid_shaft_level()
+    return (!(airborne() || is_wall_clinging())
+            && total_weight() > 0 && is_valid_shaft_level()
             // let's pretend that they always make their saving roll
             && !(atype() == ACT_MONSTER
                  && mons_is_elven_twin(static_cast<const monster* >(this))));
@@ -68,6 +69,10 @@ bool actor::can_pass_through(const coord_def &c) const
 
 bool actor::is_habitable(const coord_def &_pos) const
 {
+    //Just for players for now.
+    if (atype() == ACT_PLAYER && can_cling_to(_pos))
+        return(true);
+
     return is_habitable_feat(grd(_pos));
 }
 
@@ -79,12 +84,12 @@ bool actor::handle_trap()
     return (trap != NULL);
 }
 
-bool actor::check_res_magic(int power)
+int actor::check_res_magic(int power)
 {
     const int mrs = res_magic();
 
     if (mrs == MAG_IMMUNE)
-        return (true);
+        return (100);
 
     // Evil, evil hack to make weak one hd monsters easier for first level
     // characters who have resistable 1st level spells. Six is a very special
@@ -97,7 +102,7 @@ bool actor::check_res_magic(int power)
     // help them out (or building a level or two of their base skill so they
     // aren't resisted as often). - bwr
     if (atype() == ACT_MONSTER && mrs < 6 && coinflip())
-        return (false);
+        return (-1);
 
     power = stepdown_value(power, 30, 40, 100, 120);
 
@@ -107,7 +112,7 @@ bool actor::check_res_magic(int power)
     dprf("Power: %d, MR: %d, target: %d, roll: %d",
          power, mrs, mrchance, mrch2);
 
-    return (mrch2 < mrchance);
+    return (mrchance - mrch2);
 }
 
 void actor::set_position(const coord_def &c)

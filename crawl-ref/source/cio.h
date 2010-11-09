@@ -132,7 +132,6 @@ struct c_mouse_event
 coord_def     get_mouse_pos();
 c_mouse_event get_mouse_event();
 void          new_mouse_event(const c_mouse_event &ce);
-void          flush_mouse_events();
 void          c_input_reset(bool enable_mouse, bool flush = false);
 
 // Keys that getch() must return for keys Crawl is interested in.

@@ -431,9 +431,9 @@ static food_def Food_prop[NUM_FOODS] =
 
     { FOOD_ROYAL_JELLY,  "royal jelly",  4000,     0,     0,  55, 1, FFL_NONE },
     { FOOD_HONEYCOMB,    "honeycomb",    2000,     0,     0,  40, 1, FFL_NONE },
-    { FOOD_PIZZA,        "pizza",        1500,     0,     0,  40, 1, FFL_NONE },
-    { FOOD_CHEESE,       "cheese",       1200,     0,     0,  40, 1, FFL_NONE },
-    { FOOD_AMBROSIA,     "ambrosia",     2500,     0,     0,  40, 1, FFL_NONE }
+    { FOOD_PIZZA,        "pizza",        1500,  -100,     0,  40, 1, FFL_NONE },
+    { FOOD_CHEESE,       "cheese",       1200,   100,     0,  40, 1, FFL_NONE },
+    { FOOD_AMBROSIA,     "ambrosia",     2500,     0,     0,  40, 1, FFL_NONE },
 };
 
 // Must call this functions early on so that the above tables can
@@ -1208,8 +1208,9 @@ int wand_charge_value(int type)
 
 bool is_enchantable_weapon(const item_def &wpn, bool uncurse, bool first)
 {
-    if (wpn.base_type != OBJ_WEAPONS && wpn.base_type != OBJ_MISSILES
-        && wpn.base_type != OBJ_STAVES)
+    if (wpn.base_type != OBJ_WEAPONS
+        && wpn.base_type != OBJ_STAVES
+        && wpn.base_type != OBJ_MISSILES)
     {
         return (false);
     }
@@ -1230,7 +1231,7 @@ bool is_enchantable_weapon(const item_def &wpn, bool uncurse, bool first)
             || first && wpn.plus >= MAX_WPN_ENCHANT
             || !first && wpn.plus2 >= MAX_WPN_ENCHANT)
         {
-            return false;
+            return (false);
         }
     }
     // Highly enchanted missiles, which have only one stat, cannot be

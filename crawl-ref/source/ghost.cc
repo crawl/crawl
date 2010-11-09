@@ -85,6 +85,7 @@ static spell_type search_order_third[] = {
     SPELL_HASTE,
     SPELL_SILENCE,
     SPELL_SUMMON_BUTTERFLIES,
+    SPELL_SUMMON_ELEMENTAL,
     SPELL_SUMMON_SWARM,
     SPELL_SUMMON_UGLY_THING,
     SPELL_SWIFTNESS,
@@ -298,7 +299,6 @@ void ghost_demon::init_random_demon()
         if (one_chance_in(10))
             spells[2] = SPELL_SUMMON_EYEBALLS;
 
-
         if (one_chance_in(20))
             spells[3] = SPELL_SUMMON_GREATER_DEMON;
         if (one_chance_in(20))
@@ -410,7 +410,7 @@ void ghost_demon::init_player_ghost()
     if (!is_good_god(you.religion))
         religion = you.religion;
 
-    best_skill = ::best_skill(SK_FIGHTING, (NUM_SKILLS - 1));
+    best_skill = ::best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
     best_skill_level = you.skills[best_skill];
     xl = you.experience_level;
 

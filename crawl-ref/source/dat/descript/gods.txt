@@ -100,7 +100,7 @@ Kikubaaqudgha will send corpses to followers, enhance servants' necromantic prow
 %%%%
 Yredelemnul powers
 
-Yredelemnul gives you the power to raise skeletons and corpses to fight on your side, to recall your undead followers to your vicinity, and to heal hit points by draining the life force of living creatures. Eventually, you'll gain the power to bind a monster's soul, and make it fight for you instead. Yredelemnul will sporadically gift you with stronger undead servants. Under prayer, with sufficient piety, Yredelemnul will mirror any injury you have to suffer onto the attacker.
+Yredelemnul gives you the power to raise skeletons and corpses to fight on your side, to recall your undead followers to your vicinity, and to heal hit points by draining the life force of living creatures. Eventually, you'll gain the power to bind a monster's soul, and make it fight for you instead. Yredelemnul will sporadically gift you with stronger undead servants. Also, with sufficient piety, Yredelemnul will mirror any injury you have to suffer onto the attacker.
 %%%%
 Xom powers
 

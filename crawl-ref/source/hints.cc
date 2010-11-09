@@ -328,7 +328,7 @@ void hints_starting_screen()
         "The hint mode will help you play Crawl without reading any "
         "documentation. If you haven't yet, you might want to try out "
         "the tutorial. Also, if you feel intrigued, there is more information "
-        "available in the following files from the docs/ folder (all of "
+        "available in the following files from the docs/ directory (all of "
         "which can also be read in-game):"
         "\n"
         "  <lightblue>quickstart.txt</lightblue>     - "
@@ -1020,7 +1020,7 @@ void taken_new_item(object_class_type item_type)
 }
 
 // Give a special message if you gain a skill you didn't have before.
-void hints_gained_new_skill(int skill)
+void hints_gained_new_skill(skill_type skill)
 {
     if (!Hints.hints_left)
         return;
@@ -3404,7 +3404,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
         text << "\nAlternatively, you can dump all information pertaining to "
                 "your character into a text file with the <w>%</w> command. "
-                "You can then find said file in the <w>morgue/</w> folder (<w>"
+                "You can then find said file in the <w>morgue/</w> directory (<w>"
              << you.your_name << ".txt</w>) and read it at your leisure. Also, "
                 "such a file will automatically be created upon death (the "
                 "filename will then also contain the date) but that won't be "
@@ -3626,7 +3626,7 @@ void hints_describe_item(const item_def &item)
                 cmd.push_back(CMD_ADJUST_INVENTORY);
 
                 // Weapon skill used by this weapon and the best weapon skill.
-                int curr_wpskill, best_wpskill;
+                skill_type curr_wpskill, best_wpskill;
 
                 // Maybe this is a launching weapon?
                 if (is_range_weapon(item))

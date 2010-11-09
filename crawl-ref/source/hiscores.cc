@@ -374,12 +374,13 @@ FILE *_hs_open(const char *mode, const std::string &scores)
     return lk_open(mode, scores);
 }
 
-void _hs_close(FILE *handle, const char *mode, const std::string &scores)
+static void _hs_close(FILE *handle, const char *mode,
+                      const std::string &scores)
 {
     lk_close(handle, mode, scores);
 }
 
-bool _hs_read(FILE *scores, scorefile_entry &dest)
+static bool _hs_read(FILE *scores, scorefile_entry &dest)
 {
     char inbuf[1300];
     if (!scores || feof(scores))
@@ -1046,7 +1047,7 @@ void scorefile_entry::reset()
     job                  = JOB_UNKNOWN;
     lvl                  = 0;
     race_class_name.clear();
-    best_skill           = 0;
+    best_skill           = SK_NONE;
     best_skill_lvl       = 0;
     death_type           = KILLED_BY_SOMETHING;
     death_source         = NON_MONSTER;
@@ -1233,12 +1234,13 @@ void scorefile_entry::init(time_t dt)
     fixup_char_name();
 
     lvl            = you.experience_level;
-    best_skill     = ::best_skill(SK_FIGHTING, NUM_SKILLS - 1);
+    best_skill     = ::best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
     best_skill_lvl = you.skills[ best_skill ];
 
     // Note all skills at level 27.
-    for (int sk = 0; sk < NUM_SKILLS; ++sk)
+    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
     {
+        skill_type sk = static_cast<skill_type>(i);
         if (you.skills[sk] == 27)
         {
             if (!maxed_skills.empty())
@@ -1254,7 +1256,7 @@ void scorefile_entry::init(time_t dt)
         DUR_DEFLECT_MISSILES, DUR_REPEL_MISSILES, DUR_PRAYER,
         STATUS_REGENERATION, DUR_DEATHS_DOOR, DUR_STONEMAIL, DUR_STONESKIN,
         DUR_TELEPORT, DUR_DEATH_CHANNEL, DUR_PHASE_SHIFT, DUR_SILENCE,
-        DUR_INVIS, DUR_CONF, DUR_DIVINE_VIGOUR, DUR_DIVINE_STAMINA, DUR_BERSERKER,
+        DUR_INVIS, DUR_CONF, DUR_DIVINE_VIGOUR, DUR_DIVINE_STAMINA, DUR_BERSERK,
         STATUS_AIRBORNE, DUR_POISONING, STATUS_NET, STATUS_SPEED, DUR_AFRAID,
         DUR_MIRROR_DAMAGE, DUR_SCRYING,
     };

@@ -327,9 +327,9 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Ashenzari
     { "",
       "Ashenzari helps you learn.",
-      "Ashenzari augments your vision.",
+      "Ashenzari keeps your vision and mind clear.",
       "scry through walls",
-      "Ashenzari helps you think straight."
+      "Ashenzari helps you to reconsider your skills."
     },
 };
 
@@ -442,9 +442,9 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Ashenzari
     { "",
       "Ashenzari no longer helps you learn.",
-      "Ashenzari no longer augments your vision.",
+      "Ashenzari no longer keeps your vision and mind clear.",
       "scry through walls",
-      "Ashenzari no longer helps you think straight."
+      "Ashenzari no longer helps you to reconsider your skills."
     },
 };
 
@@ -1020,6 +1020,7 @@ static void _inc_penance(god_type god, int val)
                 tso_remove_divine_shield();
 
             make_god_gifts_disappear(); // only on level
+            invalidate_agrid();
         }
         // Neither does Ely's divine vigour.
         else if (god == GOD_ELYVILON)
@@ -1376,18 +1377,6 @@ static bool _has_jelly()
     return (false);
 }
 
-bool is_good_lawful_follower(const monster* mon)
-{
-    return (mon->alive() && !mon->is_unholy() && !mon->is_evil()
-            && !mon->is_unclean() && !mon->is_chaotic() && mon->friendly());
-}
-
-bool is_good_follower(const monster* mon)
-{
-    return (mon->alive() && !mon->is_unholy() && !mon->is_evil()
-            && mon->friendly());
-}
-
 bool is_follower(const monster* mon)
 {
     if (you.religion == GOD_YREDELEMNUL)
@@ -1398,10 +1387,6 @@ bool is_follower(const monster* mon)
         return (is_fellow_slime(mon));
     else if (you.religion == GOD_FEDHAS)
         return (is_neutral_plant(mon));
-    else if (you.religion == GOD_ZIN)
-        return (is_good_lawful_follower(mon));
-    else if (is_good_god(you.religion))
-        return (is_good_follower(mon));
     else
         return (mon->alive() && mon->friendly());
 }
@@ -2002,8 +1987,8 @@ static int _give_first_conjuration_book()
         // fire/earth book... but we don't have those skills.  So we
         // choose randomly based on the species weighting, again
         // ignoring air/earth which are secondary in these books. - bwr
-        if (random2(species_skills(SK_ICE_MAGIC, you.species)) <
-            random2(species_skills(SK_FIRE_MAGIC, you.species)))
+        if (random2(100 * species_apt_factor(SK_ICE_MAGIC)) <
+            random2(100 * species_apt_factor(SK_FIRE_MAGIC)))
         {
             book = BOOK_CONJURATIONS_II;
         }
@@ -2347,7 +2332,7 @@ std::string god_name_jiyva(bool second_name)
 {
     std::string name = "Jiyva";
     if (second_name)
-        name += " " + you.second_god_name;
+        name += " " + you.jiyva_second_name;
 
     return (name);
 }
@@ -2668,12 +2653,12 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
             if (you.religion == GOD_ASHENZARI)
             {
                 if (i == 2)
+                {
                     autotoggle_autopickup(false);
-
-                // Inconsistent with donning amulets, but matches the message
-                // better and is not abusable.
-                if (i == 4)
+                    // Inconsistent with donning amulets, but matches the
+                    // message better and is not abusable.
                     you.duration[DUR_CONF] = 0;
+                }
 
                 ash_id_inventory();
             }
@@ -4069,7 +4054,7 @@ int get_tension(god_type god)
         {
             int exper = get_monster_tension(mon, god);
 
-            if (!mon->wont_attack())
+            if (!mon->wont_attack() && !mon->withdrawn())
                 nearby_monster = true;
 
             total += exper;

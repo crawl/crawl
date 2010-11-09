@@ -52,7 +52,7 @@ bool summon_animals(int pow)
         MONS_BUMBLEBEE, MONS_WAR_DOG, MONS_SHEEP, MONS_YAK,
         MONS_HOG, MONS_SOLDIER_ANT, MONS_WOLF,
         MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR, MONS_BLACK_BEAR,
-        MONS_GIANT_SNAIL, MONS_BORING_BEETLE, MONS_GILA_MONSTER,
+        MONS_AGATE_SNAIL, MONS_BORING_BEETLE, MONS_GILA_MONSTER,
         MONS_KOMODO_DRAGON, MONS_SPINY_FROG, MONS_HOUND
     };
 
@@ -424,6 +424,88 @@ static int _count_summons(monster_type type)
     return (cnt);
 }
 
+static monster_type _feature_to_elemental(const coord_def& where,
+                                          monster_type strict_elem)
+{
+    if (!in_bounds(where))
+        return (MONS_NO_MONSTER);
+
+    if (strict_elem != MONS_NO_MONSTER
+        && strict_elem != MONS_EARTH_ELEMENTAL
+        && strict_elem != MONS_FIRE_ELEMENTAL
+        && strict_elem != MONS_WATER_ELEMENTAL
+        && strict_elem != MONS_AIR_ELEMENTAL)
+    {
+        return (MONS_NO_MONSTER);
+    }
+
+    const bool any_elem = strict_elem == MONS_NO_MONSTER;
+
+    bool elem_earth;
+    if (any_elem || strict_elem == MONS_EARTH_ELEMENTAL)
+    {
+        elem_earth = grd(where) == DNGN_ROCK_WALL
+                     || grd(where) == DNGN_CLEAR_ROCK_WALL;
+    }
+    else
+        elem_earth = false;
+
+    bool elem_fire_cloud;
+    bool elem_fire_lava;
+    bool elem_fire;
+    if (any_elem || strict_elem == MONS_FIRE_ELEMENTAL)
+    {
+        elem_fire_cloud = env.cgrid(where) != EMPTY_CLOUD
+                          && env.cloud[env.cgrid(where)].type == CLOUD_FIRE;
+        elem_fire_lava = grd(where) == DNGN_LAVA;
+        elem_fire = elem_fire_cloud || elem_fire_lava;
+    }
+    else
+    {
+        elem_fire_cloud = false;
+        elem_fire_lava = false;
+        elem_fire = false;
+    }
+
+    bool elem_water;
+    if (any_elem || strict_elem == MONS_WATER_ELEMENTAL)
+        elem_water = feat_is_watery(grd(where));
+    else
+        elem_water = false;
+
+    bool elem_air;
+    if (any_elem || strict_elem == MONS_AIR_ELEMENTAL)
+    {
+        elem_air = grd(where) >= DNGN_FLOOR
+                   && env.cgrid(where) == EMPTY_CLOUD;
+    }
+    else
+        elem_air = false;
+
+    monster_type elemental = MONS_NO_MONSTER;
+
+    if (elem_earth)
+    {
+        grd(where) = DNGN_FLOOR;
+        set_terrain_changed(where);
+
+        elemental = MONS_EARTH_ELEMENTAL;
+    }
+    else if (elem_fire)
+    {
+        if (elem_fire_cloud)
+            delete_cloud(env.cgrid(where));
+
+        elemental = MONS_FIRE_ELEMENTAL;
+    }
+    else if (elem_water)
+        elemental = MONS_WATER_ELEMENTAL;
+    else if (elem_air)
+        elemental = MONS_AIR_ELEMENTAL;
+
+    return (elemental);
+}
+
 // 'unfriendly' is percentage chance summoned elemental goes
 //              postal on the caster (after taking into account
 //              chance of that happening to unskilled casters
@@ -432,13 +514,12 @@ bool cast_summon_elemental(int pow, god_type god,
                            monster_type restricted_type,
                            int unfriendly, int horde_penalty)
 {
-    monster_type mon = MONS_PROGRAM_BUG;
+    monster_type mon;
 
     coord_def targ;
     dist smove;
 
     const int dur = std::min(2 + (random2(pow) / 5), 6);
-    const bool any_elemental = (restricted_type == MONS_NO_MONSTER);
 
     while (true)
     {
@@ -468,56 +549,20 @@ bool cast_summon_elemental(int pow, god_type god,
         }
         else if (smove.delta.origin())
             mpr("You can't summon an elemental from yourself!");
-        else if ((any_elemental || restricted_type == MONS_EARTH_ELEMENTAL)
-                 && (grd(targ) == DNGN_ROCK_WALL
-                     || grd(targ) == DNGN_CLEAR_ROCK_WALL))
+        else if (!in_bounds(targ))
         {
-            if (!in_bounds(targ))
-            {
-                mpr("That wall won't yield to your beckoning.");
-                // XXX: Should this cost a turn?
-            }
-            else
-            {
-                mon = MONS_EARTH_ELEMENTAL;
-                break;
-            }
+            // XXX: Should this cost a turn?
+            mpr("That material won't yield to your beckoning.");
+            return (false);
         }
-        else
-            break;
+
+        break;
     }
 
-    if (mon == MONS_EARTH_ELEMENTAL)
-    {
-        grd(targ) = DNGN_FLOOR;
-        set_terrain_changed(targ);
-    }
-    else if (env.cgrid(targ) != EMPTY_CLOUD
-             && env.cloud[env.cgrid(targ)].type == CLOUD_FIRE
-             && (any_elemental || restricted_type == MONS_FIRE_ELEMENTAL))
-    {
-        mon = MONS_FIRE_ELEMENTAL;
-        delete_cloud(env.cgrid(targ));
-    }
-    else if (grd(targ) == DNGN_LAVA
-             && (any_elemental || restricted_type == MONS_FIRE_ELEMENTAL))
-    {
-        mon = MONS_FIRE_ELEMENTAL;
-    }
-    else if (feat_is_watery(grd(targ))
-             && (any_elemental || restricted_type == MONS_WATER_ELEMENTAL))
-    {
-        mon = MONS_WATER_ELEMENTAL;
-    }
-    else if (grd(targ) >= DNGN_FLOOR
-             && env.cgrid(targ) == EMPTY_CLOUD
-             && (any_elemental || restricted_type == MONS_AIR_ELEMENTAL))
-    {
-        mon = MONS_AIR_ELEMENTAL;
-    }
+    mon = _feature_to_elemental(targ, restricted_type);
 
     // Found something to summon?
-    if (mon == MONS_PROGRAM_BUG)
+    if (mon == MONS_NO_MONSTER)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return (false);
@@ -703,7 +748,7 @@ bool summon_berserker(int pow, god_type god, int spell,
     if (force_hostile)
         mg.non_actor_summoner = "the rage of " + god_name(god, false);
 
-    int mons = create_monster(mg);
+    const int mons = create_monster(mg);
 
     if (mons == -1)
         return (false);
@@ -789,7 +834,7 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
 
     // See if the wielded item is appropriate.
     if (!wpn
-        || wpn->base_type != OBJ_WEAPONS
+        || (wpn->base_type != OBJ_WEAPONS && wpn->base_type != OBJ_STAVES)
         || is_range_weapon(*wpn)
         || is_special_unrandom_artefact(*wpn))
     {
@@ -1453,7 +1498,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
 
     mg.non_actor_summoner = nas;
 
-    int mons = create_monster(mg);
+    const int mons = create_monster(mg);
 
     if (mon_index != NULL)
         *mon_index = mons;
@@ -1690,12 +1735,120 @@ bool cast_simulacrum(int pow, god_type god)
     return (count > 0);
 }
 
+// Return the minimum mass for the specified undead abomination type.
+static int _undead_abomination_min_mass(monster_type abom_type)
+{
+    if (abom_type == MONS_ABOMINATION_LARGE)
+        return (500 + roll_dice(3, 1000));
+    else if (abom_type == MONS_ABOMINATION_SMALL)
+        return (400 + roll_dice(2, 500));
+    else
+        return (-1);
+}
+
+// Make the proper stat adjustments to turn a demonic abomination into
+// an undead abomination.
+static bool _undead_abomination_convert(monster* mon, int mass = -1,
+                                        int strength = -1)
+{
+    if (mon->type != MONS_ABOMINATION_LARGE
+        && mon->type != MONS_ABOMINATION_SMALL)
+    {
+        return (false);
+    }
+
+    const int min_mass = _undead_abomination_min_mass(mon->type);
+
+    // Set 1 of 2 minimum masses: large or small.
+    if (mass == -1)
+        mass = min_mass;
+    else
+        mass = std::max(min_mass, mass);
+
+    // Set 1 of 3 strengths: 0 (low), 1 (medium) or 2 (high).
+    if (strength == -1)
+        strength = random2(3);
+    else
+        strength = std::min(2, std::max(0, strength));
+
+    // Mark this abomination as undead.
+    mon->flags |= MF_FAKE_UNDEAD;
+
+    mon->colour = ((strength == 2) ? LIGHTRED :
+                   (strength == 1) ? RED
+                                   : BROWN);
+
+    const int min_hd = mon->type == MONS_ABOMINATION_LARGE ?  8 :  4;
+    const int max_hd = mon->type == MONS_ABOMINATION_LARGE ? 30 : 15;
+    const int min_ac = mon->type == MONS_ABOMINATION_LARGE ?  5 :  3;
+    const int max_ac = mon->type == MONS_ABOMINATION_LARGE ? 20 : 10;
+
+    mon->hit_dice = min_hd + mass / ((strength == 2) ?  500 :
+                                     (strength == 1) ? 1000
+                                                     : 2500);
+    mon->hit_dice = std::min(max_hd, mon->hit_dice);
+
+    mon->max_hit_points = hit_points(mon->hit_dice, 2, 5);
+    mon->max_hit_points = std::max(mon->max_hit_points, 1);
+    mon->hit_points     = mon->max_hit_points;
+
+    mon->ac = min_ac + mass / ((strength == 2) ? 1000 :
+                               (strength == 1) ? 1500
+                                               : 3750);
+    mon->ac = std::min(max_ac, mon->ac);
+
+    return (true);
+}
+
+static bool _make_undead_abomination(int mass, int strength,
+                                     int pow, god_type god = GOD_NO_GOD,
+                                     bool force_hostile = false)
+{
+    const int min_large = _undead_abomination_min_mass(MONS_ABOMINATION_LARGE);
+    const int min_small = _undead_abomination_min_mass(MONS_ABOMINATION_SMALL);
+
+    if (mass < min_small)
+        return (false);
+
+    if (strength < 0 || strength > 2)
+        return (false);
+
+    dprf("Mass for abomination: %d", mass);
+
+    // This is what the old statement pretty much boils down to;
+    // the average will be approximately 10 * pow (or about 1000
+    // at the practical maximum).  That's the same as the mass
+    // of a hippogriff, a spiny frog, or a steam dragon.  Thus,
+    // material components are far more important to this spell. - bwr
+    mass += roll_dice(20, pow);
+
+    dprf("Mass for abomination with power bonus: %d", mass);
+
+    const monster_type abom_type =
+        mass >= min_large ? MONS_ABOMINATION_LARGE : MONS_ABOMINATION_SMALL;
+
+    mgen_data mg(abom_type, !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
+                 !force_hostile ? &you : 0, 0, 0, you.pos(),
+                 MHITYOU, MG_FORCE_BEH, god);
+
+    const int mons = create_monster(mg);
+
+    if (mons == -1)
+        return (false);
+
+    _undead_abomination_convert(&menv[mons], mass, strength);
+
+    player_angers_monster(&menv[mons]);
+
+    return (true);
+}
+
 bool cast_twisted_resurrection(int pow, god_type god)
 {
     int how_many_corpses = 0;
     int how_many_orcs = 0;
     int total_mass = 0;
-    int rotted = 0;
+    int unrotted = 0;
 
     for (stack_iterator si(you.pos()); si; ++si)
     {
@@ -1705,8 +1858,8 @@ bool cast_twisted_resurrection(int pow, god_type god)
             how_many_corpses++;
             if (mons_genus(si->plus) == MONS_ORC)
                 how_many_orcs++;
-            if (food_is_rotten(*si))
-                rotted++;
+            if (!food_is_rotten(*si))
+                unrotted++;
             destroy_item(si->index());
         }
     }
@@ -1717,81 +1870,26 @@ bool cast_twisted_resurrection(int pow, god_type god)
         return (false);
     }
 
-    dprf("Mass for abomination: %d", total_mass);
+    const int strength = (unrotted == how_many_corpses)          ? 2 :
+                         (unrotted >= random2(how_many_corpses)) ? 1
+                                                                 : 0;
 
-    // This is what the old statement pretty much boils down to,
-    // the average will be approximately 10 * pow (or about 1000
-    // at the practical maximum).  That's the same as the mass
-    // of a hippogriff, a spiny frog, or a steam dragon.  Thus,
-    // material components are far more important to this spell. - bwr
-    total_mass += roll_dice(20, pow);
+    const bool success =
+        how_many_corpses > (coinflip() ? 2 : 1)
+            && _make_undead_abomination(total_mass, strength, pow, god);
 
-    dprf("Mass including power bonus: %d", total_mass);
-
-    if (total_mass < 400 + roll_dice(2, 500)
-        || how_many_corpses < (coinflip() ? 3 : 2))
+    if (success)
+        mpr("The corpses meld into an agglomeration of writhing flesh!");
+    else
     {
         mprf("The corpse%s collapse%s into a pulpy mess.",
              how_many_corpses > 1 ? "s": "", how_many_corpses > 1 ? "": "s");
-
-        if (how_many_orcs > 0)
-            did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2 * how_many_orcs);
-
-        return (false);
     }
-
-    monster_type mon =
-        (total_mass > 500 + roll_dice(3, 1000)) ? MONS_ABOMINATION_LARGE
-                                                : MONS_ABOMINATION_SMALL;
-
-    uint8_t colour = (rotted == how_many_corpses)          ? BROWN :
-                     (rotted >= random2(how_many_corpses)) ? RED
-                                                           : LIGHTRED;
-
-    const int mons =
-        create_monster(
-            mgen_data(mon, BEH_FRIENDLY, &you,
-                      0, 0,
-                      you.pos(), MHITYOU,
-                      MG_FORCE_BEH, god,
-                      MONS_NO_MONSTER, 0, colour));
-
-    if (mons == -1)
-    {
-        mpr("The corpses collapse into a pulpy mess.");
-
-        if (how_many_orcs > 0)
-            did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2 * how_many_orcs);
-
-        return (false);
-    }
-
-    // Mark this abomination as undead.
-    menv[mons].flags |= MF_FAKE_UNDEAD;
-
-    mpr("The heap of corpses melds into an agglomeration of writhing flesh!");
 
     if (how_many_orcs > 0)
         did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2 * how_many_orcs);
 
-    if (mon == MONS_ABOMINATION_LARGE)
-    {
-        menv[mons].hit_dice = 8 + total_mass / ((colour == LIGHTRED) ? 500 :
-                                                (colour == RED)      ? 1000
-                                                                     : 2500);
-
-        menv[mons].hit_dice = std::min(30, menv[mons].hit_dice);
-
-        // XXX: No convenient way to get the hit dice size right now.
-        menv[mons].hit_points = hit_points(menv[mons].hit_dice, 2, 5);
-        menv[mons].max_hit_points = menv[mons].hit_points;
-
-        if (colour == LIGHTRED)
-            menv[mons].ac += total_mass / 1000;
-    }
-
-    player_angers_monster(&menv[mons]);
-    return (true);
+    return (success);
 }
 
 bool cast_haunt(int pow, const coord_def& where, god_type god)

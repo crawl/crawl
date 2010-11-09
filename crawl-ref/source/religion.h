@@ -86,8 +86,6 @@ bool is_yred_undead_slave(const monster* mon);
 bool is_orcish_follower(const monster* mon);
 bool is_fellow_slime(const monster* mon);
 bool is_neutral_plant(const monster* mon);
-bool is_good_lawful_follower(const monster* mon);
-bool is_good_follower(const monster* mon);
 bool is_follower(const monster* mon);
 bool bless_follower(monster* follower = NULL,
                     god_type god = you.religion,

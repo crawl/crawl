@@ -518,7 +518,7 @@ static const char *trap_names[] =
     "dart", "arrow", "spear", "axe",
     "teleport", "alarm", "blade",
     "bolt", "net", "zot", "needle",
-    "shaft", "passage"
+    "shaft", "passage", "pressure plate",
 };
 
 const char *trap_name(trap_type trap)
@@ -1323,12 +1323,10 @@ static std::string _describe_armour(const item_def &item, bool verbose)
                 "the effects of negative energy.";
             break;
         case SPARM_ARCHMAGI:
-            description += "It greatly increases the power of its wearer's "
-                "magical spells, in particular the Necromancy, Conjuration, "
-                "Enchantments or Summoning disciplines, but it is only "
-                "intended for those who have very little left to learn, "
-                "reducing all experience gained to one quarter of its normal "
-                "value.";
+            description += "It increases the power of its wearer's "
+                "magical spells in most disciplines save for Transmutations "
+                "and pure Translocations. It also makes the spells affected "
+                "less likely to suffer a miscast.";
             break;
 
         case SPARM_PRESERVATION:
@@ -2143,9 +2141,11 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
     if (monster_at(pos))
     {
         mimic_mons = monster_at(pos);
-        mimic = true;
-        if (mons_is_feat_mimic(mimic_mons->type))
+        if (mons_is_feat_mimic(mimic_mons->type) && mons_is_unknown_mimic(mimic_mons))
+        {
+            mimic = true;
             feat = get_mimic_feat(mimic_mons);
+        }
     }
     std::string desc      = feature_description(pos, false, DESC_CAP_A, false);
     std::string db_name   = feat == DNGN_ENTER_SHOP ? "A shop" : desc;
@@ -2343,7 +2343,7 @@ static bool _describe_spells(const item_def &item)
         return (false);
 
     describe_spell(nthing, &item);
-    return (true);
+    return item.is_valid();
 }
 
 static bool _can_memorise(item_def &item)
@@ -2395,22 +2395,26 @@ static bool _describe_spellbook(item_def &item)
 // the command from the list which corresponds to the key
 static command_type _get_action(int key, std::vector<command_type> actions)
 {
-    //FIXME: there must be a more efficient way to set up this static map.
-    std::map<command_type, int> act_key;
-    act_key[CMD_WIELD_WEAPON]       = 'w';
-    act_key[CMD_WEAPON_SWAP]        = 'u'; //unwield
-    act_key[CMD_QUIVER_ITEM]        = 'q';
-    act_key[CMD_WEAR_ARMOUR]        = 'w';
-    act_key[CMD_REMOVE_ARMOUR]      = 't';
-    act_key[CMD_EVOKE]              = 'v';
-    act_key[CMD_EAT]                = 'e';
-    act_key[CMD_READ]               = 'r';
-    act_key[CMD_WEAR_JEWELLERY]     = 'p';
-    act_key[CMD_REMOVE_JEWELLERY]   = 'r';
-    act_key[CMD_QUAFF]              = 'q';
-    act_key[CMD_DROP]               = 'd';
-    act_key[CMD_INSCRIBE_ITEM]      = 'i';
-    act_key[CMD_MAKE_NOTE]          = 'a'; //autoinscribe
+    static bool act_key_init = true; // Does act_key needs to be initialise?
+    static std::map<command_type, int> act_key;
+    if (act_key_init)
+    {
+        act_key[CMD_WIELD_WEAPON]       = 'w';
+        act_key[CMD_WEAPON_SWAP]        = 'u'; //unwield
+        act_key[CMD_QUIVER_ITEM]        = 'q';
+        act_key[CMD_WEAR_ARMOUR]        = 'w';
+        act_key[CMD_REMOVE_ARMOUR]      = 't';
+        act_key[CMD_EVOKE]              = 'v';
+        act_key[CMD_EAT]                = 'e';
+        act_key[CMD_READ]               = 'r';
+        act_key[CMD_WEAR_JEWELLERY]     = 'p';
+        act_key[CMD_REMOVE_JEWELLERY]   = 'r';
+        act_key[CMD_QUAFF]              = 'q';
+        act_key[CMD_DROP]               = 'd';
+        act_key[CMD_INSCRIBE_ITEM]      = 'i';
+        act_key[CMD_MAKE_NOTE]          = 'a'; //autoinscribe
+        act_key_init = false;
+    }
 
     for (std::vector<command_type>::const_iterator at = actions.begin();
          at < actions.end(); ++at)
@@ -2421,7 +2425,7 @@ static command_type _get_action(int key, std::vector<command_type> actions)
     return CMD_NO_CMD;
 }
 
-bool _need_autoinscribe (item_def &item)
+static bool _need_autoinscribe (item_def &item)
 {
     // Only allow autoinscription if we don't have all the text already.
     if (is_artefact(item))
@@ -2475,7 +2479,8 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
             actions.push_back(CMD_WEAR_ARMOUR);
         break;
     case OBJ_FOOD:
-        actions.push_back(CMD_EAT);
+        if (can_ingest(item.base_type, item.sub_type, true, true, false))
+            actions.push_back(CMD_EAT);
         break;
     case OBJ_SCROLLS:
     case OBJ_BOOKS: // only unknown ones
@@ -2488,7 +2493,8 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
             actions.push_back(CMD_WEAR_JEWELLERY);
         break;
     case OBJ_POTIONS:
-        actions.push_back(CMD_QUAFF);
+        if (you.is_undead != US_UNDEAD) // mummies and lich form only
+            actions.push_back(CMD_QUAFF);
         break;
     default:
         ;
@@ -2509,22 +2515,26 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
     if (_need_autoinscribe(item))
         actions.push_back(CMD_MAKE_NOTE); //autoinscribe
 
-    //FIXME: there must be a more efficient way to set up this static map.
-    std::map<command_type, std::string> act_str;
-    act_str[CMD_WIELD_WEAPON]       = "(w)ield";
-    act_str[CMD_WEAPON_SWAP]        = "(u)nwield";
-    act_str[CMD_QUIVER_ITEM]        = "(q)uiver";
-    act_str[CMD_WEAR_ARMOUR]        = "(w)ear";
-    act_str[CMD_REMOVE_ARMOUR]      = "(t)ake off";
-    act_str[CMD_EVOKE]              = "e(v)oke";
-    act_str[CMD_EAT]                = "(e)at";
-    act_str[CMD_READ]               = "(r)ead";
-    act_str[CMD_WEAR_JEWELLERY]     = "(p)ut on";
-    act_str[CMD_REMOVE_JEWELLERY]   = "(r)emove";
-    act_str[CMD_QUAFF]              = "(q)uaff";
-    act_str[CMD_DROP]               = "(d)rop";
-    act_str[CMD_INSCRIBE_ITEM]      = "(i)nscribe";
-    act_str[CMD_MAKE_NOTE]          = "(a)utoinscribe";
+    static bool act_str_init = true; // Does act_str needs to be initialised?
+    static std::map<command_type, std::string> act_str;
+    if (act_str_init)
+    {
+        act_str[CMD_WIELD_WEAPON]       = "(w)ield";
+        act_str[CMD_WEAPON_SWAP]        = "(u)nwield";
+        act_str[CMD_QUIVER_ITEM]        = "(q)uiver";
+        act_str[CMD_WEAR_ARMOUR]        = "(w)ear";
+        act_str[CMD_REMOVE_ARMOUR]      = "(t)ake off";
+        act_str[CMD_EVOKE]              = "e(v)oke";
+        act_str[CMD_EAT]                = "(e)at";
+        act_str[CMD_READ]               = "(r)ead";
+        act_str[CMD_WEAR_JEWELLERY]     = "(p)ut on";
+        act_str[CMD_REMOVE_JEWELLERY]   = "(r)emove";
+        act_str[CMD_QUAFF]              = "(q)uaff";
+        act_str[CMD_DROP]               = "(d)rop";
+        act_str[CMD_INSCRIBE_ITEM]      = "(i)nscribe";
+        act_str[CMD_MAKE_NOTE]          = "(a)utoinscribe";
+        act_str_init = false;
+    }
 
     for (std::vector<command_type>::const_iterator at = actions.begin();
          at < actions.end(); ++at)
@@ -2571,7 +2581,7 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
         return false;
     case CMD_EAT:
         redraw_screen();
-        eat_inventory_item(slot);
+        eat_food(slot);
         return false;
     case CMD_READ:
         read_scroll(slot);
@@ -3152,7 +3162,7 @@ static std::string _monster_stat_description(const monster_info& mi)
     }
 
     if (mons_class_flag(mi.type, M_STATIONARY)
-        && !mons_class_is_tentacle(mi.type))
+        && !mons_is_tentacle(mi.type))
     {
         result << pronoun << " cannot move.\n";
     }
@@ -4359,7 +4369,7 @@ void describe_god(god_type which_god, bool give_title)
         _detailed_god_description(which_god);
 }
 
-std::string get_skill_description(int skill, bool need_title)
+std::string get_skill_description(skill_type skill, bool need_title)
 {
     std::string lookup = skill_name(skill);
     std::string result = "";
@@ -4471,7 +4481,7 @@ std::string get_skill_description(int skill, bool need_title)
     return result;
 }
 
-void describe_skill(int skill)
+void describe_skill(skill_type skill)
 {
     std::ostringstream data;
 

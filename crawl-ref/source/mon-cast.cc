@@ -61,6 +61,8 @@ const int MAX_ACTIVE_KRAKEN_TENTACLES = 4;
 
 static bool _valid_mon_spells[NUM_SPELLS];
 
+static bool _mons_burn_spellbook(monster* mons, bool actual = true);
+static int  _mons_cause_fear(monster* mons, bool actual = true);
 static bool _mons_drain_life(monster* mons, bool actual = true);
 
 void init_mons_spells()
@@ -588,6 +590,16 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
         beam.flavour  = BEAM_FIRE;
         break;
 
+    case SPELL_NOXIOUS_CLOUD:
+        beam.name     = "noxious blast";
+        beam.damage   = dice_def(1, 0);
+        beam.colour   = GREEN;
+        beam.flavour  = BEAM_POTION_STINKING_CLOUD;
+        beam.hit      = 18 + power / 25;
+        beam.is_beam  = true;
+        beam.is_big_cloud = true;
+        break;
+
     case SPELL_POISONOUS_CLOUD:
         beam.name     = "blast of poison";
         beam.damage   = dice_def(3, 3 + power / 25);
@@ -662,7 +674,7 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
               beam.name     = "potion";
           else
               beam.name     = "foul vapour";
-        beam.damage   = dice_def(1,0);
+        beam.damage   = dice_def(1, 0);
         beam.colour   = GREEN;
         // Well, it works, even if the name isn't quite intuitive.
         beam.flavour  = BEAM_POTION_STINKING_CLOUD;
@@ -677,7 +689,7 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
               beam.name     = "potion";
           else
               beam.name     = "cloud of steam";
-        beam.damage   = dice_def(1,0);
+        beam.damage   = dice_def(1, 0);
         beam.colour   = LIGHTGREY;
         beam.flavour  = BEAM_POTION_STEAM;
         beam.hit      = 14 + power / 30;
@@ -691,7 +703,7 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
               beam.name     = "potion";
           else
               beam.name     = "cloud of fire";
-        beam.damage   = dice_def(1,0);
+        beam.damage   = dice_def(1, 0);
         beam.colour   = RED;
         beam.flavour  = BEAM_POTION_FIRE;
         beam.hit      = 14 + power / 30;
@@ -705,7 +717,7 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
               beam.name     = "potion";
           else
               beam.name     = "cloud of poison";
-        beam.damage   = dice_def(1,0);
+        beam.damage   = dice_def(1, 0);
         beam.colour   = LIGHTGREEN;
         beam.flavour  = BEAM_POTION_POISON;
         beam.hit      = 14 + power / 30;
@@ -719,7 +731,7 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
               beam.name     = "potion";
           else
               beam.name     = "foul vapour";
-        beam.damage   = dice_def(1,0);
+        beam.damage   = dice_def(1, 0);
         beam.colour   = DARKGREY;
         beam.flavour  = BEAM_POTION_MIASMA;
         beam.hit      = 14 + power / 30;
@@ -999,6 +1011,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_AIR_ELEMENTALS:
     case SPELL_EARTH_ELEMENTALS:
     case SPELL_IRON_ELEMENTALS:
+    case SPELL_SUMMON_ELEMENTAL:
     case SPELL_KRAKEN_TENTACLES:
     case SPELL_BLINK:
     case SPELL_CONTROLLED_BLINK:
@@ -1554,7 +1567,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         if (spell_cast == SPELL_POLYMORPH_OTHER && mons->friendly())
             return (false);
 
-
         // Past this point, we're actually casting, instead of just pondering.
 
         // Check for antimagic.
@@ -1581,6 +1593,18 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             {
                 return (false);
             }
+        }
+        // Try to burn spellbooks: if nothing burns, pretend we didn't cast it.
+        else if (spell_cast == SPELL_BURN_SPELLBOOK)
+        {
+            if (!_mons_burn_spellbook(mons, false))
+                return (false);
+        }
+        // Try to cause fear: if nothing is scared, pretend we didn't cast it.
+        else if (spell_cast == SPELL_CAUSE_FEAR)
+        {
+            if (_mons_cause_fear(mons, false) < 0)
+                return (false);
         }
         // Try to drain life: if nothing is drained, pretend we didn't cast it.
         else if (spell_cast == SPELL_DRAIN_LIFE)
@@ -1992,6 +2016,200 @@ static bool _mons_vampiric_drain(monster *mons)
     return (true);
 }
 
+static bool _mons_burn_spellbook(monster* mons, bool actual)
+{
+    for (stack_iterator si(mons->pos()); si; ++si)
+    {
+        if (si->base_type == OBJ_BOOKS
+            && si->sub_type != BOOK_MANUAL
+            && si->sub_type != BOOK_DESTRUCTION)
+        {
+            return (false);
+        }
+    }
+
+    bool success = false;
+
+    for (radius_iterator ri(mons->pos(), LOS_RADIUS, true, true, true); ri; ++ri)
+    {
+        // If a grid is blocked, books lying there will be ignored.
+        // Allow bombing of monsters.
+        const unsigned short cloud = env.cgrid(*ri);
+        int count = 0;
+        int rarity = 0;
+        for (stack_iterator si(*ri); si; ++si)
+        {
+            if (si->base_type != OBJ_BOOKS
+                || si->sub_type == BOOK_MANUAL
+                || si->sub_type == BOOK_DESTRUCTION)
+            {
+                continue;
+            }
+
+            if (feat_is_solid(grd(*ri))
+                || cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE)
+            {
+                continue;
+            }
+
+            success = true;
+
+            rarity += book_rarity(si->sub_type);
+
+            if (actual)
+            {
+                dprf("Burned spellbook rarity: %d", rarity);
+                destroy_item(si.link());
+            }
+
+            count++;
+        }
+
+        if (actual && count)
+        {
+            if (cloud != EMPTY_CLOUD)
+            {
+                // Reinforce the cloud.
+                mpr("The fire roars with new energy!");
+                const int extra_dur = count + random2(rarity / 2);
+                env.cloud[cloud].decay += extra_dur * 5;
+                env.cloud[cloud].set_whose(KC_OTHER);
+                continue;
+            }
+
+            const int dur = std::min(4 + count + random2(rarity/2), 23);
+            place_cloud(CLOUD_FIRE, *ri, dur, KC_OTHER);
+
+            mprf("The spellbook%s burst%s into flames.",
+                 count == 1 ? ""  : "s",
+                 count == 1 ? "s" : "");
+        }
+    }
+
+    return (success);
+}
+
+// Check whether targets might be scared.
+// Returns 0, if targets can be scared but the attempt failed or wasn't made.
+// Returns 1, if targets are scared.
+// Returns -1, if targets can never be scared.
+static int _mons_cause_fear(monster* mons, bool actual)
+{
+    if (actual)
+    {
+        if (you.can_see(mons))
+            simple_monster_message(mons, " radiates an aura of fear!");
+        else
+            mpr("An aura of fear fills the air!");
+
+        flash_view_delay(DARKGREY, 300);
+    }
+
+    int retval = -1;
+
+    const int pow = std::min(mons->hit_dice * 12, 200);
+
+    for (actor_iterator ai(mons->get_los()); ai; ++ai)
+    {
+        if (ai->atype() == ACT_PLAYER)
+        {
+            if (mons->pacified()
+                || mons->friendly())
+            {
+                continue;
+            }
+
+            if (you.holiness() != MH_NATURAL)
+            {
+                if (actual)
+                    canned_msg(MSG_YOU_UNAFFECTED);
+                continue;
+            }
+
+            if (you.check_res_magic(pow) > 0)
+            {
+                if (actual)
+                    canned_msg(MSG_YOU_RESIST);
+                continue;
+            }
+
+            retval = 0;
+
+            if (actual && you.add_fearmonger(mons))
+            {
+                retval = 1;
+
+                you.increase_duration(DUR_AFRAID, 10 + random2avg(pow, 4));
+
+                if (!mons->has_ench(ENCH_FEAR_INSPIRING))
+                    mons->add_ench(ENCH_FEAR_INSPIRING);
+            }
+        }
+        else
+        {
+            monster* m = ai->as_monster();
+
+            if (m == mons)
+                continue;
+
+            // Magic-immune, unnatural and "firewood" monsters are
+            // immune to being scared.
+            if (mons_immune_magic(m)
+                || m->holiness() != MH_NATURAL
+                || mons_is_firewood(m))
+            {
+                if (actual)
+                    simple_monster_message(m, " is unaffected.");
+                continue;
+            }
+
+            // A same-aligned intelligent monster is never scared, even
+            // though it's not immune.
+            if (mons_intel(m) > I_ANIMAL
+                && mons_atts_aligned(m->attitude, mons->attitude))
+            {
+                if (actual)
+                    simple_monster_message(m, " resists.");
+                continue;
+            }
+
+            retval = 0;
+
+            // It's possible to scare this monster. If its magic
+            // resistance fails, do so.
+            int res_margin = m->check_res_magic(pow);
+            if (res_margin > 0)
+            {
+                if (actual)
+                {
+                    simple_monster_message(m,
+                                mons_resist_string(m, res_margin).c_str());
+                }
+                continue;
+            }
+
+            if (actual
+                && m->add_ench(mon_enchant(ENCH_FEAR, 0,
+                                           mons->kill_alignment())))
+            {
+                retval = 1;
+
+                if (you.can_see(m))
+                    simple_monster_message(m, " looks frightened!");
+
+                behaviour_event(m, ME_SCARE,
+                                mons->kill_alignment() == KC_YOU ? MHITYOU
+                                                                 : MHITNOT);
+
+                if (!mons->has_ench(ENCH_FEAR_INSPIRING))
+                    mons->add_ench(ENCH_FEAR_INSPIRING);
+            }
+        }
+    }
+
+    return (retval);
+}
+
 static bool _mons_drain_life(monster* mons, bool actual)
 {
     if (actual)
@@ -2181,16 +2399,12 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         return;
 
     case SPELL_MIRROR_DAMAGE:
-    {
         simple_monster_message(mons,
                                " kneels in prayer and is bathed in unholy energy.",
                                MSGCH_MONSTER_SPELL);
-        int dur = 20;
         mons->add_ench(mon_enchant(ENCH_MIRROR_DAMAGE, 0, KC_OTHER,
-                       dur * BASELINE_DELAY));
-        mons->paralyse(mons, dur);
+                       20 * BASELINE_DELAY));
         return;
-    }
 
     case SPELL_VAMPIRIC_DRAINING:
         _mons_vampiric_drain(mons);
@@ -2220,66 +2434,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     }
 
     case SPELL_BURN_SPELLBOOK:
-    {
-        for (stack_iterator si(mons->pos()); si; ++si)
-        {
-            if (si->base_type == OBJ_BOOKS
-                    && si->sub_type != BOOK_MANUAL
-                    && si->sub_type != BOOK_DESTRUCTION)
-            {
-                return;
-            }
-        }
-
-        for (radius_iterator ri(mons->pos(), LOS_RADIUS, true, true, true); ri; ++ri)
-        {
-            const unsigned short cloud = env.cgrid(*ri);
-            if (feat_is_solid(grd(*ri))
-                    || cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE)
-            {
-                continue;
-            }
-
-            int count = 0;
-            int rarity = 0;
-            for (stack_iterator si(*ri); si; ++si)
-            {
-                if (si->base_type != OBJ_BOOKS
-                    || si->sub_type == BOOK_MANUAL
-                    || si->sub_type == BOOK_DESTRUCTION)
-                {
-                    continue;
-                }
-
-                rarity += book_rarity(si->sub_type);
-
-                dprf("Burned book rarity: %d", rarity);
-                destroy_item(si.link());
-                count++;
-            }
-
-            if (count)
-            {
-                if (cloud != EMPTY_CLOUD)
-                {
-                    // Reinforce the cloud.
-                    mpr("The fire roars with new energy!");
-                    const int extra_dur = count + random2(rarity / 2);
-                    env.cloud[cloud].decay += extra_dur * 5;
-                    env.cloud[cloud].set_whose(KC_OTHER);
-                    continue;
-                }
-
-                const int dur = std::min(4 + count + random2(rarity/2), 23);
-                place_cloud(CLOUD_FIRE, *ri, dur, KC_OTHER);
-
-                mprf(MSGCH_GOD, "The book%s burst%s into flames.",
-                    count == 1 ? ""  : "s",
-                    count == 1 ? "s" : "");
-            }
-        }
+        _mons_burn_spellbook(mons);
         return;
-    }
 
     case SPELL_SWIFTNESS:
         mons->add_ench(ENCH_SWIFT);
@@ -2416,19 +2572,39 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_FIRE_ELEMENTALS:
         if (summon_type == MONS_NO_MONSTER)
             summon_type = MONS_FIRE_ELEMENTAL;
+        // Deliberate fall through
+    case SPELL_SUMMON_ELEMENTAL:
+    {
+        if (summon_type == MONS_NO_MONSTER)
+            summon_type = static_cast<monster_type>(random_choose(
+                              MONS_EARTH_ELEMENTAL, MONS_FIRE_ELEMENTAL,
+                              MONS_AIR_ELEMENTAL, MONS_WATER_ELEMENTAL,
+                              -1));
 
         if (_mons_abjured(mons, monsterNearby))
             return;
 
-        sumcount2 = 1 + random2(4) + random2(mons->hit_dice / 7 + 1);
+        int dur;
+
+        if (spell_cast == SPELL_SUMMON_ELEMENTAL)
+        {
+            sumcount2 = 1;
+            dur = std::min(2 + mons->hit_dice / 10, 6);
+        }
+        else
+        {
+            sumcount2 = 1 + random2(4) + random2(mons->hit_dice / 7 + 1);
+            dur = 3;
+        }
 
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
             create_monster(
                 mgen_data(summon_type, SAME_ATTITUDE(mons), mons,
-                          3, spell_cast, mons->pos(), mons->foe, 0, god));
+                          dur, spell_cast, mons->pos(), mons->foe, 0, god));
         }
         return;
+    }
 
     case SPELL_SUMMON_RAKSHASA:
         sumcount2 = 1 + random2(4) + random2(mons->hit_dice / 7 + 1);
@@ -2747,67 +2923,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         return;
 
     case SPELL_CAUSE_FEAR:
-    {
-        const int pow = std::min(mons->hit_dice * 12, 200);
-
-        if (monsterNearby)
-        {
-            if (you.can_see(mons))
-                simple_monster_message(mons, " radiates an aura of fear!");
-            else
-                mpr("An aura of fear fills the air!");
-
-            flash_view_delay(DARKGREY, 300);
-
-            if (you.check_res_magic(pow))
-                canned_msg(MSG_YOU_RESIST);
-            else
-            {
-                you.add_fearmonger(mons);
-                you.increase_duration(DUR_AFRAID, 10 + random2avg(pow, 4));
-
-                if (!mons->has_ench(ENCH_FEAR_INSPIRING))
-                    mons->add_ench(ENCH_FEAR_INSPIRING);
-            }
-        }
-
-        for (monster_iterator mi(mons->get_los()); mi; ++mi)
-        {
-            if (*mi == mons)
-                continue;
-
-            // Same-aligned intelligent monsters are unaffected, as are magic-immune (regardless).
-            if (mons_intel(*mi) > I_ANIMAL && mons->temp_attitude() == mons->temp_attitude()
-                || mons_immune_magic(*mi))
-            {
-                if (you.can_see(*mi))
-                    simple_monster_message(*mi, mons_immune_magic(mons) ? " is unaffected." : " resists.");
-
-                continue;
-            }
-
-            // Check to see if they can get scared, magic immune already dealt with.
-            if (mi->check_res_magic(pow))
-            {
-                simple_monster_message(*mi, " resists.");
-                continue;
-            }
-
-            // Otherwise, try to scare them.
-            if (mi->add_ench(mon_enchant(ENCH_FEAR, 0, mons->kill_alignment())))
-            {
-                if (!mons->has_ench(ENCH_FEAR_INSPIRING))
-                    mons->add_ench(ENCH_FEAR_INSPIRING);
-
-                if (you.can_see(*mi))
-                    simple_monster_message(*mi, " looks frightened!");
-
-                behaviour_event(*mi, ME_SCARE, mons->kill_alignment() == KC_YOU ? MHITYOU : MHITNOT);
-            }
-        }
-
+        _mons_cause_fear(mons);
         return;
-    }
 
     case SPELL_DRAIN_LIFE:
         _mons_drain_life(mons);

@@ -234,13 +234,13 @@ formatted_string describe_mutations()
         have_any = true;
         break;
 
-    case SP_GREY_DRACONIAN:
-        result += "You do not need to breathe.\n";
+    case SP_GREEN_DRACONIAN:
+        result += "You can breathe poison.\n";
         have_any = true;
         break;
 
-    case SP_GREEN_DRACONIAN:
-        result += "You can breathe poison.\n";
+    case SP_GREY_DRACONIAN:
+        result += "You can walk through water.\n";
         have_any = true;
         break;
 
@@ -325,6 +325,8 @@ formatted_string describe_mutations()
     switch (you.body_size(PSIZE_TORSO, true))
     {
     case SIZE_LITTLE:
+        if (you.species == SP_CAT)
+            break;
         result += "You are tiny and cannot use many weapons and most armour.\n";
         have_any = true;
         break;
@@ -1499,85 +1501,85 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
     return (result);
 }
 
+// The tiers of each mutation within a facet should never exceed the overall
+// tier of the entire facet, lest ordering / scheduling issues arise.
 static const facet_def _demon_facets[] =
 {
     // Body Slot facets
-    { { MUT_CLAWS, MUT_CLAWS, MUT_CLAWS },
+    { 2,  { MUT_CLAWS, MUT_CLAWS, MUT_CLAWS },
       { 2, 2, 2 } },
-    { { MUT_HORNS, MUT_HORNS, MUT_HORNS },
+    { 2, { MUT_HORNS, MUT_HORNS, MUT_HORNS },
       { 2, 2, 2 } },
-    { { MUT_ANTENNAE, MUT_ANTENNAE, MUT_ANTENNAE },
+    { 2, { MUT_ANTENNAE, MUT_ANTENNAE, MUT_ANTENNAE },
       { 2, 2, 2 } },
-    { { MUT_HOOVES, MUT_HOOVES, MUT_HOOVES },
+    { 2, { MUT_HOOVES, MUT_HOOVES, MUT_HOOVES },
       { 2, 2, 2 } },
-    { { MUT_TALONS, MUT_TALONS, MUT_TALONS },
+    { 2, { MUT_TALONS, MUT_TALONS, MUT_TALONS },
       { 2, 2, 2 } },
     // Regular facets
-    { { MUT_THROW_FLAMES, MUT_HEAT_RESISTANCE, MUT_HURL_HELLFIRE },
+    { 3, { MUT_THROW_FLAMES, MUT_HEAT_RESISTANCE, MUT_HURL_HELLFIRE },
+      { 1, 2, 3 } },
+    { 3, { MUT_THROW_FLAMES, MUT_HEAT_RESISTANCE, MUT_CONSERVE_SCROLLS },
+      { 1, 2, 2 } },
+    { 3, { MUT_ROBUST, MUT_ROBUST, MUT_ROBUST },
       { 3, 3, 3 } },
-    { { MUT_THROW_FLAMES, MUT_HEAT_RESISTANCE, MUT_CONSERVE_SCROLLS },
-      { 3, 3, 3 } },
-    { { MUT_ROBUST, MUT_ROBUST, MUT_ROBUST },
-      { 3, 3, 3 } },
-    { { MUT_NEGATIVE_ENERGY_RESISTANCE, MUT_NEGATIVE_ENERGY_RESISTANCE,
+    { 3, { MUT_NEGATIVE_ENERGY_RESISTANCE, MUT_NEGATIVE_ENERGY_RESISTANCE,
           MUT_NEGATIVE_ENERGY_RESISTANCE },
       { 3, 3, 3 } },
-    { { MUT_STOCHASTIC_TORMENT_RESISTANCE, MUT_STOCHASTIC_TORMENT_RESISTANCE,
+    { 3, { MUT_STOCHASTIC_TORMENT_RESISTANCE, MUT_STOCHASTIC_TORMENT_RESISTANCE,
           MUT_STOCHASTIC_TORMENT_RESISTANCE },
       { 3, 3, 3 } },
-    { { MUT_POWERED_BY_DEATH, MUT_POWERED_BY_DEATH, MUT_POWERED_BY_DEATH },
+    { 2, { MUT_POWERED_BY_DEATH, MUT_POWERED_BY_DEATH, MUT_POWERED_BY_DEATH },
       { 2, 2, 2 } },
-    { { MUT_MAGIC_RESISTANCE, MUT_MAGIC_RESISTANCE, MUT_MAGIC_RESISTANCE },
+    { 2, { MUT_MAGIC_RESISTANCE, MUT_MAGIC_RESISTANCE, MUT_MAGIC_RESISTANCE },
+      { 1, 2, 2 } },
+    { 2, { MUT_PASSIVE_MAPPING, MUT_PASSIVE_MAPPING, MUT_PASSIVE_MAPPING },
       { 2, 2, 2 } },
-    { { MUT_PASSIVE_MAPPING, MUT_PASSIVE_MAPPING, MUT_PASSIVE_MAPPING },
+    { 2, { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_ICEMAIL },
       { 2, 2, 2 } },
-    { { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_ICEMAIL },
+    { 2, { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_PASSIVE_FREEZE },
       { 2, 2, 2 } },
-    { { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_PASSIVE_FREEZE },
+    { 2, { MUT_DEMONIC_GUARDIAN, MUT_DEMONIC_GUARDIAN, MUT_DEMONIC_GUARDIAN },
       { 2, 2, 2 } },
-    { { MUT_DEMONIC_GUARDIAN, MUT_DEMONIC_GUARDIAN, MUT_DEMONIC_GUARDIAN },
+    { 2, { MUT_NIGHTSTALKER, MUT_NIGHTSTALKER, MUT_NIGHTSTALKER },
       { 2, 2, 2 } },
-    { { MUT_NIGHTSTALKER, MUT_NIGHTSTALKER, MUT_NIGHTSTALKER },
+    { 2, { MUT_SPINY, MUT_SPINY, MUT_SPINY },
       { 2, 2, 2 } },
-    { { MUT_SPINY, MUT_SPINY, MUT_SPINY },
-      { 2, 2, 2 } },
-    { { MUT_SPIT_POISON, MUT_SPIT_POISON, MUT_SPIT_POISON },
+    { 1, { MUT_SPIT_POISON, MUT_SPIT_POISON, MUT_SPIT_POISON },
       { 1, 1, 1 } },
-    { { MUT_BREATHE_FLAMES, MUT_BREATHE_FLAMES, MUT_BREATHE_FLAMES },
+    { 1, { MUT_BREATHE_FLAMES, MUT_BREATHE_FLAMES, MUT_BREATHE_FLAMES },
       { 1, 1, 1 } },
     // Scale mutations
-    { { MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD },
+    { 1, { MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD },
       { 1, 1, 1 } },
-    { { MUT_ICY_BLUE_SCALES, MUT_ICY_BLUE_SCALES, MUT_ICY_BLUE_SCALES },
+    { 1, { MUT_ICY_BLUE_SCALES, MUT_ICY_BLUE_SCALES, MUT_ICY_BLUE_SCALES },
       { 1, 1, 1 } },
-    { { MUT_IRIDESCENT_SCALES, MUT_IRIDESCENT_SCALES, MUT_IRIDESCENT_SCALES },
+    { 1, { MUT_IRIDESCENT_SCALES, MUT_IRIDESCENT_SCALES, MUT_IRIDESCENT_SCALES },
       { 1, 1, 1 } },
-    { { MUT_LARGE_BONE_PLATES, MUT_LARGE_BONE_PLATES, MUT_LARGE_BONE_PLATES },
+    { 1, { MUT_LARGE_BONE_PLATES, MUT_LARGE_BONE_PLATES, MUT_LARGE_BONE_PLATES },
       { 1, 1, 1 } },
-    { { MUT_MOLTEN_SCALES, MUT_MOLTEN_SCALES, MUT_MOLTEN_SCALES },
+    { 1, { MUT_MOLTEN_SCALES, MUT_MOLTEN_SCALES, MUT_MOLTEN_SCALES },
       { 1, 1, 1 } },
-    { { MUT_ROUGH_BLACK_SCALES, MUT_ROUGH_BLACK_SCALES, MUT_ROUGH_BLACK_SCALES },
+    { 1, { MUT_ROUGH_BLACK_SCALES, MUT_ROUGH_BLACK_SCALES, MUT_ROUGH_BLACK_SCALES },
       { 1, 1, 1 } },
-    { { MUT_RUGGED_BROWN_SCALES, MUT_RUGGED_BROWN_SCALES,
+    { 1, { MUT_RUGGED_BROWN_SCALES, MUT_RUGGED_BROWN_SCALES,
         MUT_RUGGED_BROWN_SCALES },
       { 1, 1, 1 } },
-    { { MUT_SLIMY_GREEN_SCALES, MUT_SLIMY_GREEN_SCALES, MUT_SLIMY_GREEN_SCALES },
+    { 1, { MUT_SLIMY_GREEN_SCALES, MUT_SLIMY_GREEN_SCALES, MUT_SLIMY_GREEN_SCALES },
       { 1, 1, 1 } },
-    { { MUT_THIN_METALLIC_SCALES, MUT_THIN_METALLIC_SCALES,
+    { 1, { MUT_THIN_METALLIC_SCALES, MUT_THIN_METALLIC_SCALES,
         MUT_THIN_METALLIC_SCALES },
       { 1, 1, 1 } },
-    { { MUT_THIN_SKELETAL_STRUCTURE, MUT_THIN_SKELETAL_STRUCTURE,
+    { 1, { MUT_THIN_SKELETAL_STRUCTURE, MUT_THIN_SKELETAL_STRUCTURE,
         MUT_THIN_SKELETAL_STRUCTURE },
       { 1, 1, 1 } },
-    { { MUT_YELLOW_SCALES, MUT_YELLOW_SCALES, MUT_YELLOW_SCALES },
+    { 1, { MUT_YELLOW_SCALES, MUT_YELLOW_SCALES, MUT_YELLOW_SCALES },
       { 1, 1, 1 } }
 };
 
 static bool _works_at_tier(const facet_def& facet, int tier)
 {
-    return facet.tiers[0] == tier
-        || facet.tiers[1] == tier
-        || facet.tiers[2] == tier;
+    return facet.tier == tier;
 }
 
 static int _rank_for_tier(const facet_def& facet, int tier)
@@ -1729,14 +1731,12 @@ _order_ds_mutations(std::vector<demon_mutation_info> muts)
 {
     std::vector<mutation_type> out;
 
-    while (! muts.empty())
+    while (!muts.empty())
     {
         int first_tier = 99;
 
         for (unsigned i = 0; i < muts.size(); ++i)
-        {
             first_tier = std::min(first_tier, muts[i].tier);
-        }
 
         int ix;
 
@@ -1869,6 +1869,7 @@ int how_mutated(bool all, bool levels)
     return (j);
 }
 
+// Return whether current tension is balanced
 bool balance_demonic_guardian()
 {
     const int mutlevel = player_mutation_level(MUT_DEMONIC_GUARDIAN);
@@ -1876,8 +1877,9 @@ bool balance_demonic_guardian()
     int tension = get_tension(GOD_NO_GOD), mons_val = 0, total = 0;
     monster_iterator mons;
 
+    // tension is unfavorably high, perhaps another guardian should spawn
     if (tension*3/4 > mutlevel*6 + random2(mutlevel*mutlevel*2))
-        return (true);
+        return (false);
 
     for (int i = 0; mons && i <= 20/mutlevel; mons++)
     {
@@ -1886,7 +1888,9 @@ bool balance_demonic_guardian()
 
         if (testbits(mons->flags, MF_DEMONIC_GUARDIAN)
             && total < random2(mutlevel * 5)
-            && att == ATT_FRIENDLY && !one_chance_in(3))
+            && att == ATT_FRIENDLY
+            && !one_chance_in(3)
+            && !mons->has_ench(ENCH_LIFE_TIMER))
         {
             mpr(mons->name(DESC_CAP_THE) + " "
                 + summoned_poof_msg(*mons) + "!", MSGCH_PLAIN);
@@ -1896,17 +1900,24 @@ bool balance_demonic_guardian()
             total += mons_val;
     }
 
-    return (false);
+    return (true);
 }
 
+// Primary function to handle and balance demonic guardians, if the tension
+// is unfavorably high and a guardian was not recently spawned, a new guardian
+// will be made, if tension is below a threshold (determined by the mutations
+// level and a bit of randomness), guardians may be dismissed in
+// balance_demonic_guardian()
 void check_demonic_guardian()
 {
     const int mutlevel = player_mutation_level(MUT_DEMONIC_GUARDIAN);
-    if (balance_demonic_guardian() &&
+
+    if (!balance_demonic_guardian() &&
         you.duration[DUR_DEMONIC_GUARDIAN] == 0)
     {
-        const monster_type disallowed[] = { MONS_NEQOXEC, MONS_YNOXINUL, MONS_HELLWING,
-                                            MONS_BLUE_DEATH, MONS_GREEN_DEATH,
+        const monster_type disallowed[] = {
+            MONS_NEQOXEC, MONS_YNOXINUL, MONS_HELLWING,
+            MONS_BLUE_DEATH, MONS_GREEN_DEATH,
                                             MONS_CACODEMON };
 
         monster_type mt;
@@ -1929,7 +1940,10 @@ void check_demonic_guardian()
         menv[guardian].flags |= MF_NO_REWARD;
         menv[guardian].flags |= MF_DEMONIC_GUARDIAN;
 
-        you.duration[DUR_DEMONIC_GUARDIAN] = 100 + random2(200);
+        menv[guardian].add_ench(ENCH_LIFE_TIMER);
+
+        // no more guardians for mutlevel+1 to mutlevel+20 turns
+        you.duration[DUR_DEMONIC_GUARDIAN] = 10*(mutlevel + random2(20));
     }
 }
 

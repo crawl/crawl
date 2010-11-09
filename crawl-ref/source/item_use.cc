@@ -233,8 +233,7 @@ static bool _valid_weapon_swap(const item_def &item)
 
     // Some misc. items need to be wielded to be evoked.
     if (is_deck(item) || item.base_type == OBJ_MISCELLANY
-                         && item.sub_type != MISC_EMPTY_EBONY_CASKET
-                         && item.sub_type != MISC_RUNE_OF_ZOT)
+                         && item.sub_type == MISC_LANTERN_OF_SHADOWS)
     {
         return (true);
     }
@@ -3939,7 +3938,7 @@ void drink(int slot)
         lessen_hunger(40, true);
 }
 
-bool _drink_fountain()
+static bool _drink_fountain()
 {
     const dungeon_feature_type feat = grd(you.pos());
 
@@ -4190,22 +4189,14 @@ bool enchant_weapon(enchant_stat_type which_stat, bool quiet, item_def &wpn)
 
     int enchant_level = (to_hit ? wpn.plus
                                 : wpn.plus2);
+    bool uncurse_only = false;
 
     // Even if not affected, it may be uncursed.
     if (!is_enchantable_weapon(wpn, false, to_hit)
         || enchant_level >= 4 && x_chance_in_y(enchant_level, MAX_WPN_ENCHANT))
     {
         if (is_cursed)
-        {
-            if (!quiet)
-            {
-                mprf("%s glows silver for a moment.",
-                     wpn.name(DESC_CAP_YOUR).c_str());
-            }
-
-            do_uncurse_item(wpn);
-            return (true);
-        }
+            uncurse_only = true;
         else
         {
             if (!quiet)
@@ -4222,36 +4213,52 @@ bool enchant_weapon(enchant_stat_type which_stat, bool quiet, item_def &wpn)
     // Get item name now before changing enchantment.
     std::string iname = wpn.name(DESC_CAP_YOUR);
 
-    if (wpn.base_type == OBJ_WEAPONS)
+    if (!uncurse_only)
     {
-        if (to_hit)
+        if (wpn.base_type == OBJ_WEAPONS)
+        {
+            if (to_hit)
+            {
+                if (!quiet)
+                    mprf("%s glows green for a moment.", iname.c_str());
+
+                wpn.plus++;
+            }
+            else
+            {
+                if (!quiet)
+                    mprf("%s glows red for a moment.", iname.c_str());
+
+                wpn.plus2++;
+            }
+        }
+        else if (wpn.base_type == OBJ_MISSILES)
         {
             if (!quiet)
-                mprf("%s glows green for a moment.", iname.c_str());
+            {
+                mprf("%s glow%s red for a moment.", iname.c_str(),
+                     wpn.quantity > 1 ? "" : "s");
+            }
 
             wpn.plus++;
         }
         else
-        {
-            if (!quiet)
-                mprf("%s glows red for a moment.", iname.c_str());
-
-            wpn.plus2++;
-        }
-    }
-    else if (wpn.base_type == OBJ_MISSILES)
-    {
-        if (!quiet)
-        {
-            mprf("%s glow%s red for a moment.", iname.c_str(),
-                 wpn.quantity > 1 ? "" : "s");
-        }
-
-        wpn.plus++;
+            uncurse_only = true;
     }
 
     if (is_cursed)
+    {
+        if (uncurse_only)
+        {
+            if (!quiet)
+            {
+                mprf("%s glows silver for a moment.",
+                     wpn.name(DESC_CAP_YOUR).c_str());
+            }
+        }
+
         do_uncurse_item(wpn);
+    }
 
     return (true);
 }
@@ -4470,14 +4477,19 @@ static bool _scroll_modify_item(item_def scroll)
             identify(-1, item_slot);
             return (true);
         }
+        else
+            get_type_id_props()["SCR_ID"] = item.name(DESC_PLAIN);
         break;
     case SCR_RECHARGING:
         if (item_is_rechargeable(item, false, true))
         {
             if (recharge_wand(item_slot, false))
                 return (true);
+            get_type_id_props()["SCR_RC"] = item.name(DESC_PLAIN);
             return (false);
         }
+        else
+            get_type_id_props()["SCR_RC"] = item.name(DESC_PLAIN);
         break;
     case SCR_ENCHANT_ARMOUR:
         if (is_enchantable_armour(item, true))
@@ -4486,8 +4498,11 @@ static bool _scroll_modify_item(item_def scroll)
             // (If so, already prints the "Nothing happens" message.)
             if (_handle_enchant_armour(item_slot))
                 return (true);
+            get_type_id_props()["SCR_EA"] = item.name(DESC_PLAIN);
             return (false);
         }
+        else
+            get_type_id_props()["SCR_EA"] = item.name(DESC_PLAIN);
         break;
     default:
         mprf("Buggy scroll %d can't modify item!", scroll.sub_type);
@@ -4768,7 +4783,7 @@ void read_scroll(int slot)
         break;
 
     case SCR_IMMOLATION:
-        mpr("The scroll explodes in your hands!");
+        mprf("The scroll explodes in your %s!", your_hand(true).c_str());
 
         // Doesn't destroy scrolls anymore, so no special check needed. (jpeg)
         immolation(10, IMMOLATION_SCROLL, you.pos(), alreadyknown, &you);

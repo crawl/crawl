@@ -139,8 +139,8 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_RECALL,
      SPELL_SHADOW_CREATURES,
      SPELL_SUMMON_UGLY_THING,
-     SPELL_HAUNT,
-     SPELL_SUMMON_HORRIBLE_THINGS,
+     SPELL_NO_SPELL,
+     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
@@ -553,13 +553,13 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      },
 
     // Book of Demonology - Vehumet special
-    {SPELL_CALL_IMP,
-     SPELL_ABJURATION,
-     SPELL_RECALL,
-     SPELL_SUMMON_DEMON,
+    {SPELL_SUMMON_DEMON,
      SPELL_DEMONIC_HORDE,
+     SPELL_HAUNT,
      SPELL_SUMMON_GREATER_DEMON,
      SPELL_MALIGN_GATEWAY,
+     SPELL_SUMMON_HORRIBLE_THINGS,
+     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
 
@@ -1288,12 +1288,8 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
     if (you.species == SP_DEEP_DWARF && spell == SPELL_REGENERATION)
         rc = true;
 
-    if (you.species == SP_CAT
-        && (spell == SPELL_CALL_CANINE_FAMILIAR
-         || spell == SPELL_PORTAL_PROJECTILE))
-    {
+    if (you.species == SP_CAT && spell == SPELL_PORTAL_PROJECTILE)
         rc = true;
-    }
 
     return (rc);
 }
@@ -1324,7 +1320,7 @@ bool player_can_memorise(const item_def &book)
         }
 
         bool knows_spell = false;
-        for (int i = 0; i < 25 && !knows_spell; i++)
+        for (int i = 0; i < MAX_KNOWN_SPELLS && !knows_spell; i++)
             knows_spell = (you.spells[i] == stype);
 
         // You don't already know this spell.
@@ -2205,7 +2201,7 @@ static bool _compare_spells(spell_type a, spell_type b)
 
 bool is_memorised(spell_type spell)
 {
-    for (int i = 0; i < 25; i++)
+    for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
         if (you.spells[i] == spell)
             return (true);
 
@@ -2578,7 +2574,7 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
     // Eliminate disciplines that the god dislikes or from which all
     // spells are discarded.
     std::vector<int> ok_discs;
-    std::vector<int> skills;
+    std::vector<skill_type> skills;
     std::vector<int> spellcount;
     for (int i = 0; i < SPTYP_LAST_EXPONENT; i++)
     {
@@ -2626,7 +2622,7 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
         int total_skills = 0;
         for (int i = 0; i < num_discs; i++)
         {
-            int skill  = skills[i];
+            skill_type skill  = skills[i];
             int weight = 2 * you.skills[skill] + 1;
 
             if (spellcount[i] < 3)

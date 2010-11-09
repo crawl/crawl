@@ -1972,7 +1972,7 @@ bool multiple_items_at(const coord_def& where, bool allow_mimic_item)
     return (found_count > 1);
 }
 
-bool drop_item(int item_dropped, int quant_drop, bool try_offer)
+bool drop_item(int item_dropped, int quant_drop)
 {
     if (quant_drop < 0 || quant_drop > you.inv[item_dropped].quantity)
         quant_drop = you.inv[item_dropped].quantity;
@@ -2071,14 +2071,6 @@ bool drop_item(int item_dropped, int quant_drop, bool try_offer)
     }
     dec_inv_item_quantity(item_dropped, quant_drop);
     you.turn_is_over = true;
-
-    if (try_offer
-        && you.religion != GOD_NO_GOD
-        && you.duration[DUR_PRAYER]
-        && feat_altar_god(grd(you.pos())) == you.religion)
-    {
-        offer_items();
-    }
 
     return (true);
 }
@@ -2267,8 +2259,7 @@ void drop()
     if (items_for_multidrop.size() == 1) // only one item
     {
         drop_item(items_for_multidrop[0].slot,
-                   items_for_multidrop[0].quantity,
-                   true);
+                   items_for_multidrop[0].quantity);
         items_for_multidrop.clear();
         you.turn_is_over = true;
     }
@@ -3505,12 +3496,12 @@ bool get_item_by_name(item_def *item, char* specs,
     case OBJ_BOOKS:
         if (item->sub_type == BOOK_MANUAL)
         {
-            special_wanted =
+            skill_type skill =
                     debug_prompt_for_skill("A manual for which skill? ");
 
-            if (special_wanted != -1)
+            if (skill != SK_NONE)
             {
-                item->plus  = special_wanted;
+                item->plus  = skill;
                 item->plus2 = 3 + random2(15);
             }
             else
@@ -3728,8 +3719,13 @@ item_info get_item_info(const item_def& item)
         if (item_type_known(item))
         {
             ii.sub_type = item.sub_type;
-            if (item_ident(ii, ISFLAG_KNOW_PLUSES) && item.props.exists("rod_enchantment"))
-                ii.props["rod_enchantment"] = item.props["rod_enchantment"];
+            if (item_ident(ii, ISFLAG_KNOW_PLUSES))
+            {
+                if (item.props.exists("rod_enchantment"))
+                    ii.props["rod_enchantment"] = item.props["rod_enchantment"];
+                ii.plus = item.plus;
+                ii.plus2 = item.plus2;
+            }
         }
         else
             ii.sub_type = item_is_rod(item) ? STAFF_FIRST_ROD : 0;

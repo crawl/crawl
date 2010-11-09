@@ -26,7 +26,7 @@ bool unsuitable_misled_monster(monster_type mons)
             || mons_is_ghost_demon(mons)
             || mons_class_is_stationary(mons)
             || mons_class_is_zombified(mons)
-            || mons_class_is_tentacle(mons)
+            || mons_is_tentacle(mons)
             || mons_genus(mons) == MONS_DRACONIAN
             || mons == MONS_MANTICORE
             || mons == MONS_SLIME_CREATURE

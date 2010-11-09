@@ -171,8 +171,12 @@ static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
     ASSERT(dist >= 0);
     if (dist < 4)
         pow = pow * (dist*2+3) / 10;
-    beam.damage = dice_def(8, pow / 4);
+    beam.damage = dice_def(9, pow / 4);
 
+    if (dist < 3)
+        beam.name = "wavering " + beam.name;
+    if (dist < 2)
+        beam.hit_verb = "weakly hits";
     beam.ex_size = 1;
     beam.loudness = 7;
 

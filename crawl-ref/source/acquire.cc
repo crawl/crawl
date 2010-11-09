@@ -431,25 +431,26 @@ static int _acquirement_weapon_subtype(bool divine)
     // Asking for a weapon is biased towards your skills.
     // First pick a skill, weighting towards those you have.
     int count = 0;
-    int skill = SK_FIGHTING;
+    skill_type skill = SK_FIGHTING;
     int best_sk = 0;
 
     for (int i = SK_SHORT_BLADES; i <= SK_CROSSBOWS; i++)
     {
-        if (is_invalid_skill(i))
+        skill_type sk = static_cast<skill_type>(i);
+        if (is_invalid_skill(sk))
             continue;
 
         // Adding a small constant allows for the occasional
         // weapon in an untrained skill.
 
-        const int weight = you.skills[i] + 1;
+        const int weight = you.skills[sk] + 1;
         count += weight;
 
-        if (you.skills[i] > best_sk)
-            best_sk = you.skills[i];
+        if (you.skills[sk] > best_sk)
+            best_sk = you.skills[sk];
 
         if (x_chance_in_y(weight, count))
-            skill = i;
+            skill = sk;
     }
     if (you.skills[SK_UNARMED_COMBAT] > best_sk)
         best_sk = you.skills[SK_UNARMED_COMBAT];
@@ -462,7 +463,7 @@ static int _acquirement_weapon_subtype(bool divine)
     // Let's guess the percentage of shield use the player did, this is
     // based on empirical data where pure-shield MDs get skills like 17 sh 25 m&f
     // and pure-shield Spriggans 7 sh 18 m&f.
-    int shield_sk = you.skills[SK_SHIELDS] * species_skills(SK_SHIELDS, you.species) / 100;
+    int shield_sk = you.skills[SK_SHIELDS] * species_apt_factor(SK_SHIELDS);
     int want_shield = std::min(2 * shield_sk, best_sk) + 10;
     int dont_shield = std::max(best_sk - shield_sk, 0) + 10;
     // At XL 10, weapons of the handedness you want get weight *2, those of
@@ -607,7 +608,7 @@ static int _acquirement_staff_subtype(const has_vector& already_has)
             result = STAFF_EARTH;
     }
 
-    skill_type best_spell_skill = best_skill(SK_SPELLCASTING, NUM_SKILLS - 1);
+    skill_type best_spell_skill = best_skill(SK_SPELLCASTING, SK_LAST_SKILL);
 
 #define TRY_GIVE(x) { if (!already_has[x]) result = x; }
     // If we're going to give out an enhancer staff,
@@ -914,18 +915,19 @@ static bool _do_book_acquirement(item_def &book, int agent)
         int magic_weights = 0;
         int other_weights = 0;
 
-        for (int i = 0; i < NUM_SKILLS; i++)
+        for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; i++)
         {
-            if (is_invalid_skill(i))
+            skill_type sk = static_cast<skill_type>(i);
+            if (is_invalid_skill(sk))
                 continue;
 
-            int weight = you.skills[i];
+            int weight = you.skills[sk];
 
             // Anyone can get Spellcasting 1. Doesn't prove anything.
-            if (i == SK_SPELLCASTING && weight >= 1)
+            if (sk == SK_SPELLCASTING && weight >= 1)
                 weight--;
 
-            if (_is_magic_skill(i))
+            if (_is_magic_skill(sk))
                 magic_weights += weight;
             else
                 other_weights += weight;
@@ -1014,43 +1016,43 @@ static bool _do_book_acquirement(item_def &book, int agent)
         int weights[NUM_SKILLS];
         int total_weights = 0;
 
-        for (int i = 0; i < NUM_SKILLS; i++)
+        for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; i++)
         {
-            if (is_invalid_skill(i))
+            skill_type sk = static_cast<skill_type>(i);
+            if (is_invalid_skill(sk))
             {
-                weights[i] = 0;
+                weights[sk] = 0;
                 continue;
             }
 
-            int skill = you.skills[i];
+            int skl = you.skills[sk];
 
-            if (skill == 27 || you.species == SP_DEMIGOD && i == SK_INVOCATIONS)
+            if (skl == 27 || you.species == SP_DEMIGOD && sk == SK_INVOCATIONS)
             {
-                weights[i] = 0;
+                weights[sk] = 0;
                 continue;
             }
 
-            int w = (skill < 12) ? skill + 3
-                                 : std::max(0, 25 - skill);
+            int w = (skl < 12) ? skl + 3 : std::max(0, 25 - skl);
 
             // Give a bonus for some highly sought after skills.
-            if (i == SK_FIGHTING || i == SK_ARMOUR || i == SK_SPELLCASTING
-                || i == SK_INVOCATIONS || i == SK_EVOCATIONS)
+            if (sk == SK_FIGHTING || sk == SK_ARMOUR || sk == SK_SPELLCASTING
+                || sk == SK_INVOCATIONS || sk == SK_EVOCATIONS)
             {
                 w += 5;
             }
 
             // Greatly reduce the chances of getting a manual for a skill
             // you couldn't use unless you switched your religion.
-            if (_skill_useless_with_god(i))
+            if (_skill_useless_with_god(sk))
                 w /= 2;
 
             // If we don't have any magic skills, make non-magic skills
             // more likely.
-            if (!knows_magic && !_is_magic_skill(i))
+            if (!knows_magic && !_is_magic_skill(sk))
                 w *= 2;
 
-            weights[i] = w;
+            weights[sk] = w;
             total_weights += w;
         }
 
@@ -1504,9 +1506,11 @@ bool acquirement(object_class_type class_wanted, int agent,
     {
         ASSERT(!quiet);
         mesclr();
-        mpr ("[a] Weapon  [b] Armour  [c] Jewellery      [d] Book");
-        mprf("[e] Staff   [f] Wand    [g] Miscellaneous  [h] %s [i] Gold",
-            (you.religion == GOD_FEDHAS ? "Fruit" : "Food "));
+        mprf("%-24s[c] Jewellery      [d] Book",
+            you.species == SP_CAT ? "" : "[a] Weapon  [b] Armour");
+        mprf("%-24s[g] Miscellaneous  [h] %s [i] Gold",
+            you.species == SP_CAT ? "" : "[e] Staff   [f] Wand",
+            you.religion == GOD_FEDHAS ? "Fruit" : "Food ");
         mpr("What kind of item would you like to acquire? ", MSGCH_PROMPT);
 
         const int keyin = tolower(get_ch());
@@ -1540,6 +1544,13 @@ bool acquirement(object_class_type class_wanted, int agent,
             }
 #endif
            break;
+        }
+
+        if (you.species == SP_CAT
+            && (class_wanted == OBJ_WEAPONS || class_wanted == OBJ_ARMOUR
+             || class_wanted == OBJ_STAVES  || class_wanted == OBJ_WANDS))
+        {
+            class_wanted = OBJ_RANDOM;
         }
     }
 

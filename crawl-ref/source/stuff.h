@@ -42,7 +42,6 @@ private:
 int stepdown_value(int base_value, int stepping, int first_step,
                    int last_step, int ceiling_value);
 int stat_mult(int stat_level, int value, int div = 20, int shift = 3);
-int stat_div(int stat_level, int value, int div = 20, int shift = 3);
 int skill_bump(int skill);
 unsigned char get_ch();
 
@@ -73,7 +72,7 @@ int yesnoquit(const char* str, bool safe = true, int safeanswer = 0,
 
 bool player_can_hear(const coord_def& p, int hear_distance = 999);
 
-char index_to_letter (int the_index);
+char index_to_letter(int the_index);
 
 int letter_to_index(int the_letter);
 
@@ -85,7 +84,6 @@ inline bool testbits(uint64_t flags, uint64_t test)
     return ((flags & test) == test);
 }
 
-bool is_trap_square(dungeon_feature_type grid);
 void zap_los_monsters(bool items_also);
 
 int random_rod_subtype();

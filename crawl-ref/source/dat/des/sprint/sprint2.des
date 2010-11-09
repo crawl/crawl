@@ -132,7 +132,7 @@ ENDMAP
 
 NAME:   sprint2_early_5
 TAGS:   sprint2_early no_item_gen no_trap_gen no_pool_fixup
-MONS:   giant snail
+MONS:   agate snail
 KITEM:  $ = gold q:243
 COLOUR: x = magenta
 MAP

@@ -86,6 +86,13 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap      = MF_WALL;
             break;
 
+        case DNGN_GRATE:
+            f.dchar        = DCHAR_GRATE;
+            f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
+            f.colour       = LIGHTBLUE;
+            f.minimap      = MF_WALL;
+            break;
+
         case DNGN_TREE:
             f.dchar        = DCHAR_TREE;
             f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];

@@ -50,7 +50,7 @@ void hints_dissection_reminder(bool healthy);
 void hints_healing_reminder(void);
 
 void taken_new_item(object_class_type item_type);
-void hints_gained_new_skill(int skill);
+void hints_gained_new_skill(skill_type skill);
 void hints_monster_seen(const monster& mon);
 void hints_first_item(const item_def& item);
 void learned_something_new(hints_event_type seen_what,

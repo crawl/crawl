@@ -120,7 +120,6 @@ travel_distance_grid_t travel_point_distance;
 bool g_Slime_Wall_Check = true;
 
 static uint8_t curr_waypoints[GXM][GYM];
-static FixedArray< map_cell, GXM, GYM >  mapshadow;
 
 const int8_t TRAVERSABLE = 1;
 const int8_t IMPASSABLE  = 0;
@@ -606,7 +605,7 @@ inline static void _check_interesting_square(const coord_def pos,
     {
         if (const monster* mons = monster_at(pos))
         {
-            if (mons_is_unknown_mimic(mons))
+            if (mons_is_unknown_mimic(mons) && mons_is_item_mimic(mons->type))
                 ed.found_item(pos, get_mimic_item(mons));
         }
 
@@ -903,22 +902,9 @@ command_type travel()
 
     if (you.running.is_explore())
     {
-        // Scan through the shadow map, compare it with the actual map, and if
-        // there are any squares of the shadow map that have just been
-        // discovered and contain an item, or have an interesting dungeon
-        // feature, stop exploring.
-        explore_discoveries discoveries;
-        for (rectangle_iterator ri(1); ri; ++ri)
-        {
-            const coord_def p(*ri);
-            if (!mapshadow(p).seen() && env.map_knowledge(p).seen())
-                _check_interesting_square(p, discoveries);
-        }
-
-        if (discoveries.prompt_stop())
+        if (check_for_interesting_features())
             stop_running();
-
-        mapshadow = env.map_knowledge;
+        env.map_shadow = env.map_knowledge;
     }
 
     if (you.running.is_explore())
@@ -1161,9 +1147,12 @@ static bool _is_greed_inducing_square(const LevelStashes *ls,
 
     if (const monster* mons = monster_at(c))
     {
-        if (mons_is_unknown_mimic(mons) && mons_was_seen(mons))
+        if (mons_is_unknown_mimic(mons) && mons_was_seen(mons)
+            && mons_is_item_mimic(mons->type))
+        {
             if (item_needs_autopickup(get_mimic_item(mons)))
                 return (true);
+        }
     }
     return (false);
 }
@@ -2478,7 +2467,7 @@ void start_translevel_travel_prompt()
     start_translevel_travel(target);
 }
 
-command_type _trans_negotiate_stairs()
+static command_type _trans_negotiate_stairs()
 {
     return feat_stair_direction(grd(you.pos()));
 }
@@ -2873,7 +2862,7 @@ void start_explore(bool grab_items)
     }
 
     // Clone shadow array off map
-    mapshadow = env.map_knowledge;
+    env.map_shadow = env.map_knowledge;
 
     you.running.pos.reset();
     _start_running();
@@ -2883,6 +2872,8 @@ void do_explore_cmd()
 {
     if (you.hunger_state == HS_STARVING && !you_min_hunger())
         mpr("You need to eat something NOW!");
+    else if (you.berserk())
+        mpr("Calm down first, please.");
     else if (you.level_type == LEVEL_LABYRINTH)
         mpr("No exploration algorithm can help you here.");
     else                        // Start exploring
@@ -4361,4 +4352,21 @@ int click_travel(const coord_def &gc, bool force)
         return 0;
 
     return _adjacent_cmd(dest, force);
+}
+
+bool check_for_interesting_features()
+{
+    // Scan through the shadow map, compare it with the actual map, and if
+    // there are any squares of the shadow map that have just been
+    // discovered and contain an item, or have an interesting dungeon
+    // feature, stop exploring.
+    explore_discoveries discoveries;
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        const coord_def p(*ri);
+        if (!env.map_shadow(p).seen() && env.map_knowledge(p).seen())
+            _check_interesting_square(p, discoveries);
+    }
+
+    return(discoveries.prompt_stop());
 }

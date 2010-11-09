@@ -298,61 +298,6 @@ void remove_one_equip(equipment_type eq, bool meld, bool mutation)
     _remove_equipment(r, meld, mutation);
 }
 
-static bool _tran_may_meld_cursed(int transformation)
-{
-    switch (transformation)
-    {
-    case TRAN_BAT:
-        // Vampires of sufficient level may transform into bats even
-        // with cursed gear.
-        if (you.species == SP_VAMPIRE && you.experience_level >= 10)
-            return (true);
-        // intentional fall-through
-    case TRAN_SPIDER:
-        return (false);
-    default:
-        return (true);
-    }
-}
-
-// Returns true if any piece of equipment that has to be removed is cursed.
-// Useful for keeping low level transformations from being too useful.
-static bool _check_for_cursed_equipment(const std::set<equipment_type> &remove,
-                                        const int trans, bool quiet = false)
-{
-    std::set<equipment_type>::const_iterator iter;
-    for (iter = remove.begin(); iter != remove.end(); ++iter)
-    {
-        const equipment_type e = *iter;
-        if (you.equip[e] == -1)
-            continue;
-
-        const item_def& item = you.inv[ you.equip[e] ];
-        if (item.cursed())
-        {
-            if (e != EQ_WEAPON && _tran_may_meld_cursed(trans))
-                continue;
-
-            // Wielding a cursed non-weapon/non-staff won't hinder
-            // transformations.
-            if (e == EQ_WEAPON && item.base_type != OBJ_WEAPONS
-                && item.base_type != OBJ_STAVES)
-            {
-                continue;
-            }
-
-            if (!quiet)
-            {
-                mpr("Your cursed equipment won't allow you to complete the "
-                     "transformation.");
-            }
-
-            return (true);
-        }
-    }
-    return (false);
-}
-
 // Returns true if the player got prompted by an inscription warning and
 // chose to opt out.
 static bool _check_transformation_inscription_warning(
@@ -437,7 +382,7 @@ monster_type transform_mons()
     case TRAN_ICE_BEAST:
         return MONS_ICE_BEAST;
     case TRAN_DRAGON:
-        return MONS_DRAGON;
+        return dragon_form_dragon_type();
     case TRAN_LICH:
         return MONS_LICH;
     case TRAN_BAT:
@@ -450,6 +395,39 @@ monster_type transform_mons()
     }
     ASSERT(!"unknown transformation");
     return MONS_PLAYER;
+}
+
+std::string blade_parts(bool terse)
+{
+    if (you.species == SP_CAT)
+        return terse ? "paws" : "front paws";
+    return "hands";
+}
+
+monster_type dragon_form_dragon_type()
+{
+    switch(you.species)
+    {
+        case SP_WHITE_DRACONIAN:
+             return MONS_ICE_DRAGON;
+        case SP_GREEN_DRACONIAN:
+             return MONS_SWAMP_DRAGON;
+        case SP_YELLOW_DRACONIAN:
+             return MONS_GOLDEN_DRAGON;
+        case SP_GREY_DRACONIAN:
+             return MONS_IRON_DRAGON;
+        case SP_BLACK_DRACONIAN:
+             return MONS_STORM_DRAGON;
+        case SP_PURPLE_DRACONIAN:
+             return MONS_QUICKSILVER_DRAGON;
+        case SP_MOTTLED_DRACONIAN:
+             return MONS_MOTTLED_DRAGON;
+        case SP_PALE_DRACONIAN:
+             return MONS_STEAM_DRAGON;
+        case SP_RED_DRACONIAN:
+        default:
+             return MONS_DRAGON;
+    }
 }
 
 // Transforms you into the specified form. If force is true, checks for
@@ -562,12 +540,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
 
     std::set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
 
-    if (which_trans != TRAN_PIG
-        && _check_for_cursed_equipment(rem_stuff, which_trans, force))
-    {
-        return (_abort_or_fizzle(just_check));
-    }
-
     int str = 0, dex = 0, xhp = 0, dur = 0;
     const char* tran_name = "buggy";
     std::string msg;
@@ -592,8 +564,11 @@ bool transform(int pow, transformation_type which_trans, bool force,
 
     case TRAN_BLADE_HANDS:
         tran_name = "Blade Hands";
+        if (you.species == SP_CAT)
+            tran_name = "Blade Paws";
         dur       = std::min(10 + random2(pow), 100);
-        msg       = "Your hands turn into razor-sharp scythe blades.";
+        msg       = "Your " + blade_parts()
+                    + " turn into razor-sharp scythe blades.";
         break;
 
     case TRAN_STATUE:
@@ -709,6 +684,10 @@ bool transform(int pow, transformation_type which_trans, bool force,
     // Extra effects
     switch (which_trans)
     {
+    case TRAN_SPIDER:
+        you.check_clinging();
+        break;
+
     case TRAN_STATUE:
         if (you.duration[DUR_STONEMAIL] || you.duration[DUR_STONESKIN])
             mpr("Your new body merges with your stone armour.");
@@ -815,7 +794,8 @@ void untransform(bool skip_wielding, bool skip_move)
         break;
 
     case TRAN_BLADE_HANDS:
-        mpr("Your hands revert to their normal proportions.", MSGCH_DURATION);
+        mprf(MSGCH_DURATION, "Your %s revert to their normal proportions.",
+             blade_parts().c_str());
         you.wield_change = true;
         break;
 
@@ -920,6 +900,13 @@ void untransform(bool skip_wielding, bool skip_move)
     }
     calc_hp();
 
+    if (you.clinging)
+    {
+        mpr("You fall off the wall.");
+        you.clinging = false;
+        move_player_to_grid(you.pos(), false, true);
+    }
+
     if (!skip_wielding)
         handle_interrupted_swap(true, false, true);
 
@@ -974,7 +961,7 @@ bool can_equip(equipment_type use_which, bool ignore_temporary)
     return (true);
 }
 
-void _extra_hp(int amount_extra) // must also set in calc_hp
+static void _extra_hp(int amount_extra) // must also set in calc_hp
 {
     calc_hp();
 

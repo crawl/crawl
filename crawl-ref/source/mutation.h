@@ -21,6 +21,7 @@ struct body_facet_def
 
 struct facet_def
 {
+    int tier;
     mutation_type muts[3];
     int tiers[3];
 };

@@ -203,10 +203,6 @@ A staircase back to the Mines
 
 These wide stairs lead back to the Orcish Mines.
 %%%%
-A staircase back to the Dwarf Hall
-
-These wide stairs lead back to the Dwarf Hall of Fallen Heroes.
-%%%%
 A staircase back to the Vaults
 
 These stairs lead back to the mighty Vaults.
@@ -239,9 +235,9 @@ A staircase to the Orcish Mines
 
 An entrance to the mines of the orcs, filled with their gold, but treacherous and easy to get trapped in.
 %%%%
-A staircase to the Dwarf Hall of Fallen Heroes
+A staircase to the Dwarf Hall
 
-An entrance to the ancestral shrine of the Dwarves.
+An entrance to the well-worked hall of the dwarves. You think you can smell ale.
 %%%%
 A staircase to the Shoals
 
@@ -339,6 +335,10 @@ A spring-loaded one-way escape hatch set in the dungeon floor, allowing the adve
 An iron altar of Okawaru
 
 An altar of iron and steel dedicated to the Warmaster Okawaru. Its edges are surprisingly sharp.
+%%%%
+An iron grate
+
+This iron grate looks rusted, as if it could be disrupted with a spell or a wand quite easily. It's too strong to be breakable by hand, though.
 %%%%
 An open door
 

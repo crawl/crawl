@@ -217,7 +217,7 @@ int get_trapping_net(const coord_def& where, bool trapped)
 
 // If there are more than one net on this square
 // split off one of them for checking/setting values.
-static void maybe_split_nets(item_def &item, const coord_def& where)
+static void _maybe_split_nets(item_def &item, const coord_def& where)
 {
     if (item.quantity == 1)
     {
@@ -242,14 +242,14 @@ static void maybe_split_nets(item_def &item, const coord_def& where)
     copy_item_to_grid(it, where);
 }
 
-void mark_net_trapping(const coord_def& where)
+static void _mark_net_trapping(const coord_def& where)
 {
     int net = get_trapping_net(where);
     if (net == NON_ITEM)
     {
         net = get_trapping_net(where, false);
         if (net != NON_ITEM)
-            maybe_split_nets(mitm[net], where);
+            _maybe_split_nets(mitm[net], where);
     }
 }
 
@@ -428,7 +428,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             || trig_knows && !mons_is_fleeing(m) && !m->pacified())
         {
             // No message for flying monsters to avoid message spam.
-            if (you_know && !triggerer.airborne())
+            if (you_know && !(triggerer.airborne() || triggerer.is_wall_clinging()))
                 simple_monster_message(m, " carefully avoids the shaft.");
             return;
         }
@@ -436,9 +436,10 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
 
     // Only magical traps affect flying critters.
-    if (triggerer.airborne() && this->category() != DNGN_TRAP_MAGICAL)
+    if ((triggerer.airborne() || triggerer.is_wall_clinging())
+        && this->category() != DNGN_TRAP_MAGICAL)
     {
-        if (you_know && m)
+        if (you_know && m && triggerer.airborne())
             simple_monster_message(m, " flies safely over a trap.");
         return;
     }
@@ -525,7 +526,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             int source = !m ? you.mindex() :
                          mons_intel(m) >= I_NORMAL ? m->mindex() : -1;
 
-            noisy(12, this->pos, msg, source);
+            noisy(25, this->pos, msg, source);
         }
         break;
 
@@ -623,7 +624,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 copy_item_to_grid(item, triggerer.pos());
 
                 if (you.attribute[ATTR_HELD])
-                    mark_net_trapping(you.pos());
+                    _mark_net_trapping(you.pos());
 
                 trap_destroyed = true;
             }
@@ -681,7 +682,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 copy_item_to_grid(item, triggerer.pos());
 
                 if (m->caught())
-                    mark_net_trapping(m->pos());
+                    _mark_net_trapping(m->pos());
 
                 trap_destroyed = true;
             }
@@ -775,6 +776,10 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 mpr("The shaft crumbles and collapses.");
             trap_destroyed = true;
         }
+        break;
+
+    case TRAP_PLATE:
+        dungeon_events.fire_position_event(DET_PRESSURE_PLATE, pos);
         break;
 
     default:
@@ -1019,7 +1024,8 @@ void remove_net_from(monster* mon)
             mpr("You tear at the net.");
             if (mitm[net].plus < -7)
             {
-                mpr("Whoops! The net comes apart in your hands!");
+                mprf("Whoops! The net comes apart in your %s!",
+                     your_hand(true).c_str());
                 mon->del_ench(ENCH_HELD, true);
                 destroy_item(net);
                 net_destroyed = true;
@@ -1213,7 +1219,7 @@ void free_self_from_net()
         // You try to escape (takes at least 3 turns, and at most 10).
         int escape = do_what;
 
-        if (you.duration[DUR_HASTE]) // extra bonus, also Berserk
+        if (you.duration[DUR_HASTE] || you.duration[DUR_BERSERK]) // extra bonus
             escape++;
 
         // Medium sized characters are at a disadvantage and sometimes
@@ -1458,60 +1464,25 @@ dungeon_feature_type trap_category(trap_type type)
     case TRAP_BOLT:
     case TRAP_NEEDLE:
     case TRAP_NET:
+    case TRAP_PLATE:
     default:                    // what *would* be the default? {dlb}
         return (DNGN_TRAP_MECHANICAL);
     }
 }
 
-bool trap_is_mechanical (trap_type trap)
+trap_type random_trap()
 {
-    return (trap == TRAP_DART || trap == TRAP_ARROW || trap == TRAP_SPEAR
-            || trap == TRAP_AXE || trap == TRAP_BLADE || trap == TRAP_BOLT
-            || trap == TRAP_NET || trap == TRAP_NEEDLE);
+    return (static_cast<trap_type>(random2(TRAP_MAX_REGULAR+1)));
 }
 
-bool trap_is_magical (trap_type trap)
+trap_type random_trap(dungeon_feature_type feat)
 {
-    return (trap == TRAP_TELEPORT || trap == TRAP_ALARM || trap == TRAP_ZOT
-            || trap == TRAP_GOLUBRIA);
-}
-
-bool trap_is_natural (trap_type trap)
-{
-    return (trap == TRAP_SHAFT);
-}
-
-trap_type random_trap ()
-{
-    // NUM_TRAPS - 2, as we don't want Golubria's.
-    return (static_cast<trap_type>(TRAP_DART+random2(NUM_TRAPS-2)));
-}
-
-trap_type random_trap (dungeon_feature_type feat)
-{
-    switch (feat)
-    {
-        case DNGN_TRAP_MECHANICAL:
-            return random_trap(&trap_is_mechanical);
-        case DNGN_TRAP_MAGICAL:
-            return random_trap(&trap_is_magical);
-        case DNGN_TRAP_NATURAL:
-            return random_trap(&trap_is_natural);
-        default:
-            return (TRAP_UNASSIGNED);
-    }
-}
-
-trap_type random_trap (bool (*checker) (trap_type))
-{
+    ASSERT(feat_is_trap(feat, false));
     trap_type trap = NUM_TRAPS;
     do
-    {
         trap = random_trap();
-    }
-    while (!checker(trap));
-
-    return (trap);
+    while (trap_category(trap) != feat);
+    return trap;
 }
 
 bool is_valid_shaft_level(const level_id &place)
@@ -1663,7 +1634,7 @@ void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
     }
 }
 
-static int num_traps_default(int level_number, const level_id &place)
+static int _num_traps_default(int level_number, const level_id &place)
 {
     return random2avg(9, 2);
 }
@@ -1679,11 +1650,10 @@ int num_traps_for_place(int level_number, const level_id &place)
         if (branches[place.branch].num_traps_function != NULL)
             return branches[place.branch].num_traps_function(level_number);
         else
-            return num_traps_default(level_number, place);
+            return _num_traps_default(level_number, place);
     case LEVEL_ABYSS:
-        return traps_abyss_number(level_number);
     case LEVEL_PANDEMONIUM:
-        return traps_pan_number(level_number);
+        return _num_traps_default(level_number, place);
     case LEVEL_LABYRINTH:
     case LEVEL_PORTAL_VAULT:
         ASSERT(false);
@@ -1714,7 +1684,7 @@ trap_type random_trap_slime(int level_number)
     return (type);
 }
 
-static trap_type random_trap_default(int level_number, const level_id &place)
+static trap_type _random_trap_default(int level_number, const level_id &place)
 {
     trap_type type = TRAP_DART;
 
@@ -1762,54 +1732,14 @@ trap_type random_trap_for_place(int level_number, const level_id &place)
     if (level_number == -1)
         level_number = place.absdepth();
 
-    switch (place.level_type)
-    {
-    case LEVEL_DUNGEON:
+    if (place.level_type == LEVEL_DUNGEON)
         if (branches[place.branch].rand_trap_function != NULL)
             return branches[place.branch].rand_trap_function(level_number);
-        else
-            return random_trap_default(level_number, place);
-    case LEVEL_ABYSS:
-        return traps_abyss_type(level_number);
-    case LEVEL_PANDEMONIUM:
-        return traps_pan_type(level_number);
-    default:
-        return random_trap_default(level_number, place);
-    }
-    return NUM_TRAPS;
+
+    return _random_trap_default(level_number, place);
 }
 
 int traps_zero_number(int level_number)
 {
     return 0;
-}
-
-int traps_pan_number(int level_number)
-{
-    return num_traps_default(level_number, level_id(LEVEL_PANDEMONIUM));
-}
-
-trap_type traps_pan_type(int level_number)
-{
-    return random_trap_default(level_number, level_id(LEVEL_PANDEMONIUM));
-}
-
-int traps_abyss_number(int level_number)
-{
-    return num_traps_default(level_number, level_id(LEVEL_ABYSS));
-}
-
-trap_type traps_abyss_type(int level_number)
-{
-    return random_trap_default(level_number, level_id(LEVEL_ABYSS));
-}
-
-int traps_lab_number(int level_number)
-{
-    return num_traps_default(level_number, level_id(LEVEL_LABYRINTH));
-}
-
-trap_type traps_lab_type(int level_number)
-{
-    return random_trap_default(level_number, level_id(LEVEL_LABYRINTH));
 }

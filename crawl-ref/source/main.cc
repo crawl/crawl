@@ -2010,6 +2010,17 @@ static void _prep_input()
 
     viewwindow();
     maybe_update_stashes();
+
+    if (you.seen_portals)
+    {
+        ASSERT(you.religion == GOD_ASHENZARI);
+        if (you.seen_portals == 1)
+            mpr("You have a vision of a gate.", MSGCH_GOD);
+        else
+            mpr("You have a vision of multiple gates.", MSGCH_GOD);
+
+        you.seen_portals = 0;
+    }
 }
 
 // Decrement a single duration. Print the message if the duration runs out.
@@ -2091,7 +2102,7 @@ static void _decrement_durations()
             you.duration[DUR_DEMONIC_GUARDIAN] -= delay;
     }
 
-    // Must come before might/haste/berserk.
+    // Must come before berserk.
     if (_decrement_a_duration(DUR_BUILDING_RAGE, delay))
         go_berserk(false);
 
@@ -2229,7 +2240,6 @@ static void _decrement_durations()
                                   "Your transformation is almost over."))
         {
             untransform();
-            you.duration[DUR_BREATH_WEAPON] = 0;
         }
     }
 
@@ -2400,7 +2410,7 @@ static void _decrement_durations()
         notify_stat_change(STAT_INT, -5, true, "brilliance running out");
     }
 
-    if (_decrement_a_duration(DUR_BERSERKER, delay,
+    if (_decrement_a_duration(DUR_BERSERK, delay,
                               "You are no longer berserk."))
     {
         //jmf: Guilty for berserking /after/ berserk.
@@ -2451,23 +2461,13 @@ static void _decrement_durations()
         // duration.
         you.increase_duration(DUR_EXHAUSTED, dur * 2);
 
+        notify_stat_change(STAT_STR, -5, true, "berserk running out");
+
         // Don't trigger too many hints mode messages.
         const bool hints_slow = Hints.hints_events[HINT_YOU_ENCHANTED];
         Hints.hints_events[HINT_YOU_ENCHANTED] = false;
 
-        {
-            // Don't give duplicate 'You feel yourself slow down' messages.
-            no_messages nm;
-
-            // Even if you had built up haste before going berserk,
-            // exhaustion still ends it.
-            if (you.duration[DUR_HASTE] > 0)
-            {
-                // Silently cancel haste, then slow player.
-                you.duration[DUR_HASTE] = 0;
-            }
-            slow_player(dur);
-        }
+        slow_player(dur);
 
         make_hungry(700, true);
         you.hunger = std::max(50, you.hunger);
@@ -2796,7 +2796,9 @@ static void _player_reacts()
 
     slime_wall_damage(&you, you.time_taken);
 
-    if (you.level_type == LEVEL_DUNGEON && you.duration[DUR_TELEPATHY])
+    you.check_clinging();
+
+    if (you.duration[DUR_TELEPATHY] && player_in_mappable_area())
         detect_creatures(1 + you.duration[DUR_TELEPATHY] /
                          (2 * BASELINE_DELAY), true);
 
@@ -2938,6 +2940,13 @@ void world_reacts()
         record_turn_timestamp();
         update_turn_count();
         msgwin_new_turn();
+        if (crawl_state.game_is_sprint()
+            && !(you.num_turns % 256)
+            && !you_are_delayed())
+        {
+            // Resting makes the saving quite random, but meh.
+            save_game(false);
+        }
     }
 }
 
@@ -3715,21 +3724,13 @@ static void _do_berserk_no_combat_penalty(void)
             break;
         }
 
-        const int hasted_base_delay = BASELINE_DELAY / 2;
-        int berserk_delay_penalty = you.berserk_penalty * hasted_base_delay;
-        // Do these three separately, because the might and
-        // haste counters can be different.
-        you.duration[DUR_BERSERKER] -= berserk_delay_penalty;
-        if (you.duration[DUR_BERSERKER] < hasted_base_delay)
-            you.duration[DUR_BERSERKER] = hasted_base_delay;
+        const int berserk_base_delay = BASELINE_DELAY / 2; // _not_ haste
+        int berserk_delay_penalty = you.berserk_penalty * berserk_base_delay;
 
-        you.duration[DUR_MIGHT] -= berserk_delay_penalty;
-        if (you.duration[DUR_MIGHT] < hasted_base_delay)
-            you.duration[DUR_MIGHT] = hasted_base_delay;
-
-        you.duration[DUR_HASTE] -= berserk_delay_penalty;
-        if (you.duration[DUR_HASTE] < hasted_base_delay)
-            you.duration[DUR_HASTE] = hasted_base_delay;
+        you.duration[DUR_BERSERK] -= berserk_delay_penalty;
+        // Don't actually expire berserk until the next turn.
+        if (you.duration[DUR_BERSERK] < 1)
+            you.duration[DUR_BERSERK] = 1;
     }
     return;
 }                               // end do_berserk_no_combat_penalty()
@@ -3757,13 +3758,21 @@ static void _move_player(coord_def move)
         return;
     }
 
+    // Checking if player will be clinging
+    // Changing "cling" status at this moment allows proper further evaluations
+    // of grid dangerousness. But, if movement is terminated further in this
+    // function, you have to call you.check_clinging() to restore former status.
+    // Most probably can be done in less awkward way.
+    if (you.is_wall_clinging())
+        you.clinging = you.can_cling_to(you.pos() + move);
+
     // When confused, sometimes make a random move
     if (you.confused())
     {
         dungeon_feature_type dangerous = DNGN_FLOOR;
         for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
         {
-            if (is_feat_dangerous(grd(*ai))
+            if (is_feat_dangerous(grd(*ai)) && !you.can_cling_to(*ai)
                 && (dangerous == DNGN_FLOOR || grd(*ai) == DNGN_LAVA))
             {
                 dangerous = grd(*ai);
@@ -3780,6 +3789,7 @@ static void _move_player(coord_def move)
             if (!yesno(prompt.c_str(), false, 'n'))
             {
                 canned_msg(MSG_OK);
+                you.check_clinging();
                 return;
             }
         }
@@ -3800,6 +3810,7 @@ static void _move_player(coord_def move)
             apply_berserk_penalty = true;
             crawl_state.cancel_cmd_repeat();
 
+            you.check_clinging();
             return;
         }
     }
@@ -3808,7 +3819,10 @@ static void _move_player(coord_def move)
 
     // You can't walk out of bounds!
     if (!in_bounds(targ))
+    {
+        you.check_clinging();
         return;
+    }
 
     const dungeon_feature_type targ_grid = grd(targ);
     monster* targ_monst = monster_at(targ);
@@ -3860,6 +3874,7 @@ static void _move_player(coord_def move)
     {
         // [ds] Do we need this? Shouldn't it be false to start with?
         you.turn_is_over = false;
+        you.check_clinging();
         return;
     }
 
@@ -3899,6 +3914,7 @@ static void _move_player(coord_def move)
         {
             stop_running();
             you.turn_is_over = false;
+            you.check_clinging();
             return;
         }
 
@@ -3931,13 +3947,17 @@ static void _move_player(coord_def move)
     if (!targ_pass && grd(targ) == DNGN_TEMP_PORTAL && !attacking)
     {
         if (!_prompt_dangerous_portal(grd(targ)))
+        {
+            you.check_clinging();
             return;
+        }
 
         you.prev_move = move;
         move.reset();
         you.turn_is_over = true;
 
         entered_malign_portal(&you);
+        you.check_clinging();
         return;
     }
     else if (!targ_pass && !attacking)
@@ -3952,18 +3972,21 @@ static void _move_player(coord_def move)
         move.reset();
         you.turn_is_over = false;
         crawl_state.cancel_cmd_repeat();
+        you.check_clinging();
         return;
     }
     else if (beholder && !attacking)
     {
         mprf("You cannot move away from %s!",
             beholder->name(DESC_NOCAP_THE, true).c_str());
+        you.check_clinging();
         return;
     }
     else if (fmonger && !attacking)
     {
         mprf("You cannot move closer to %s!",
             fmonger->name(DESC_NOCAP_THE, true).c_str());
+        you.check_clinging();
         return;
     }
 
@@ -4005,6 +4028,7 @@ static void _move_player(coord_def move)
         did_god_conduct(DID_HASTY, 1, true);
     }
     _update_diag_counters();
+    you.check_clinging();
 }
 
 
@@ -4258,11 +4282,6 @@ static void _compile_time_asserts()
     COMPILE_CHECK(SK_UNARMED_COMBAT == 17       , c1);
     COMPILE_CHECK(SK_EVOCATIONS == 38           , c2);
     COMPILE_CHECK(SP_VAMPIRE == 30              , c3);
-#if TAG_MAJOR_VERSION == 31
-    COMPILE_CHECK(NUM_SPELLS == 225             , c6);
-#else
-    COMPILE_CHECK(NUM_SPELLS == 224             , c6);
-#endif
 
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
     COMPILE_CHECK(NUM_SPECIES < SP_UNKNOWN      , c7);

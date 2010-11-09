@@ -60,6 +60,8 @@ enum monster_info_flags
     MB_FADING_AWAY,
     MB_MOSTLY_FADED,
     MB_FEAR_INSPIRING,
+    MB_WITHDRAWN,
+    MB_ATTACHED,
 };
 
 struct monster_info_base
@@ -69,6 +71,7 @@ struct monster_info_base
     std::string mname;
     monster_type type;
     monster_type base_type;
+    monster_type draco_type;
     unsigned number;
     unsigned colour;
     mon_attitude_type attitude;
@@ -173,7 +176,10 @@ struct monster_info : public monster_info_base
     std::string wounds_description_sentence() const;
     std::string wounds_description(bool colour = false) const;
 
-    monster_type draco_subspecies() const;
+    monster_type draco_subspecies() const
+    {
+        return (draco_type);
+    }
 
     mon_intel_type intel() const
     {

@@ -43,9 +43,9 @@
 # otherwise) add "tilerim" to the artefact's boolean properties. Otherwise
 # the image is used without modification.
 #
-# For the equipment tile, place the tile into the appropriate subfolder of
+# For the equipment tile, place the tile into the appropriate subdirectory of
 # rltiles/player/ and define it in rltiles/dc-player.txt as well as here, using
-# the keyword TILE_EQ. Tiles are sorted into folders by equipment slot:
+# the keyword TILE_EQ. Tiles are sorted into directories by equipment slot:
 #     Weapons:     rltiles/player/hand1/artefact
 #     Body armour: rltiles/player/body
 #     Boots:       rltiles/player/boots

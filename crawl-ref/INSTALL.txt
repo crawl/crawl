@@ -143,8 +143,8 @@ Prerequisites (Debian):
 
 On Debian-based systems (Ubuntu, Mepis, Xandros, ...), you can get all
 dependencies by typing the following as root/sudo:
-apt-get install build-essential libncursesw5-dev bison flex liblua5.1-0-dev  \
-  libsqlite3-dev pkg-config libsdl-image1.2-dev libsdl1.2-dev libsqlite3-dev \
+apt-get install build-essential libncursesw5-dev bison flex liblua5.1-0-dev \
+  libsqlite3-dev libz-dev pkg-config libsdl-image1.2-dev libsdl1.2-dev      \
   libfreetype6-dev
 (the last five are needed only for tiles builds).  This is the complete set,
 with it you don't have a need for the bundled "contribs".

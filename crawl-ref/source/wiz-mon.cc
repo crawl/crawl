@@ -454,12 +454,13 @@ void debug_stethoscope(int mon)
 
     // Print stats and other info.
     mprf(MSGCH_DIAGNOSTICS,
-         "HD=%d (%u) HP=%d/%d AC=%d EV=%d MR=%d SP=%d "
+         "HD=%d (%u) HP=%d/%d AC=%d(%d) EV=%d MR=%d SP=%d "
          "energy=%d%s%s num=%d flags=%04"PRIx64,
          mons.hit_dice,
          mons.experience,
          mons.hit_points, mons.max_hit_points,
-         mons.ac, mons.ev,
+         mons.ac, mons.armour_class(),
+         mons.ev,
          mons.res_magic(),
          mons.speed, mons.speed_increment,
          mons.base_monster != MONS_NO_MONSTER ? " base=" : "",
@@ -691,6 +692,7 @@ void wizard_give_monster_item(monster* mon)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
+    case OBJ_STAVES:
         // Let wizard specify which slot to put weapon into via
         // inscriptions.
         if (item.inscription.find("first") != std::string::npos

@@ -1338,8 +1338,6 @@ static const skill_type skill_display_order[] =
 static const int ndisplayed_skills =
             sizeof(skill_display_order) / sizeof(*skill_display_order);
 
-static int species_apts(int skill, species_type species);
-
 static void _display_skill_table(bool show_aptitudes, bool show_description)
 {
     menu_letter lcount = 'a';
@@ -1361,7 +1359,7 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
 #endif
 
     int scrln = 3, scrcol = 1;
-    int x;
+    skill_type x;
     int maxln = scrln;
 
     // Don't want the help line to appear too far down a big window.
@@ -1420,14 +1418,10 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
 
             if (you.skills[x] < 27)
             {
-                const int spec_abil = species_skills(x, you.species);
-
                 if (!show_aptitudes)
                 {
-                    const int needed =
-                        (skill_exp_needed(you.skills[x] + 1) * spec_abil) / 100;
-                    const int prev_needed =
-                        (skill_exp_needed(you.skills[x]  ) * spec_abil) / 100;
+                    const int needed = skill_exp_needed(you.skills[x] + 1, x);
+                    const int prev_needed = skill_exp_needed(you.skills[x], x);
 
                     const int amt_done = you.skill_points[x] - prev_needed;
                     int percent_done = (amt_done*100) / (needed - prev_needed);
@@ -1444,7 +1438,7 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
                 }
                 else
                 {
-                    int apt = species_apts(x, you.species);
+                    int apt = species_apt(x, you.species);
                     textcolor(RED);
                     if (apt != 0)
                         cprintf(" %+3d  ", apt);
@@ -1575,18 +1569,17 @@ void show_skills()
     }
 }
 
-const char *skill_name(int which_skill)
+const char *skill_name(skill_type which_skill)
 {
     return (skills[which_skill][0]);
 }
 
-int str_to_skill(const std::string &skill)
+skill_type str_to_skill(const std::string &skill)
 {
-    for (int i = 0; i < NUM_SKILLS; ++i)
-    {
+    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
         if (skills[i][0] && skill == skills[i][0])
-            return (i);
-    }
+            return (static_cast<skill_type>(i));
+
     return (SK_FIGHTING);
 }
 
@@ -1701,8 +1694,8 @@ unsigned get_skill_rank(unsigned skill_lev)
                             /* level 27 */    : 4);
 }
 
-std::string skill_title_by_rank(uint8_t best_skill, uint8_t skill_rank,
-                         int species, int str, int dex, int god)
+std::string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
+                                int species, int str, int dex, int god)
 {
     // paranoia
     if (is_invalid_skill(best_skill))
@@ -1784,41 +1777,43 @@ std::string skill_title_by_rank(uint8_t best_skill, uint8_t skill_rank,
                            : result);
 }
 
-std::string skill_title(uint8_t best_skill, uint8_t skill_lev,
-                         int species, int str, int dex, int god)
+std::string skill_title(skill_type best_skill, uint8_t skill_lev,
+                        int species, int str, int dex, int god)
 {
     return skill_title_by_rank(best_skill, get_skill_rank(skill_lev), species, str, dex, god);
 }
 
 std::string player_title()
 {
-    const uint8_t best = best_skill(SK_FIGHTING, (NUM_SKILLS - 1));
+    const skill_type best = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
     return (skill_title(best, you.skills[ best ]));
 }
 
-skill_type best_skill(int min_skill, int max_skill, int excl_skill)
+skill_type best_skill(skill_type min_skill, skill_type max_skill,
+                      skill_type excl_skill)
 {
-    int ret = SK_FIGHTING;
+    skill_type ret = SK_FIGHTING;
     unsigned int best_skill_level = 0;
     unsigned int best_position = 1000;
 
     for (int i = min_skill; i <= max_skill; i++)    // careful!!!
     {
-        if (i == excl_skill || is_invalid_skill(i))
+        skill_type sk = static_cast<skill_type>(i);
+        if (sk == excl_skill || is_invalid_skill(sk))
             continue;
 
-        if (you.skills[i] > best_skill_level)
+        if (you.skills[sk] > best_skill_level)
         {
-            ret = i;
-            best_skill_level = you.skills[i];
-            best_position = you.skill_order[i];
+            ret = sk;
+            best_skill_level = you.skills[sk];
+            best_position = you.skill_order[sk];
 
         }
-        else if (you.skills[i] == best_skill_level
-                && you.skill_order[i] < best_position)
+        else if (you.skills[sk] == best_skill_level
+                && you.skill_order[sk] < best_position)
         {
-            ret = i;
-            best_position = you.skill_order[i];
+            ret = sk;
+            best_position = you.skill_order[sk];
         }
     }
 
@@ -1844,32 +1839,34 @@ skill_type best_skill(int min_skill, int max_skill, int excl_skill)
 // isn't able to micromanage at that level.  -- bwr
 void init_skill_order(void)
 {
-    for (int i = SK_FIGHTING; i < NUM_SKILLS; i++)
+    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; i++)
     {
-        if (is_invalid_skill(i))
+        skill_type si = static_cast<skill_type>(i);
+        if (is_invalid_skill(si))
         {
-            you.skill_order[i] = MAX_SKILL_ORDER;
+            you.skill_order[si] = MAX_SKILL_ORDER;
             continue;
         }
 
-        const int i_diff = species_skills(i, you.species);
-        const unsigned int i_points = (you.skill_points[i] * 100) / i_diff;
+        const unsigned int i_points = you.skill_points[si]
+                                      / species_apt_factor(si);
 
-        you.skill_order[i] = 0;
+        you.skill_order[si] = 0;
 
-        for (int j = SK_FIGHTING; j < NUM_SKILLS; j++)
+        for (int j = SK_FIRST_SKILL; j < NUM_SKILLS; j++)
         {
-            if (i == j || is_invalid_skill(j))
+            skill_type sj = static_cast<skill_type>(j);
+            if (si == sj || is_invalid_skill(sj))
                 continue;
 
-            const int j_diff = species_skills(j, you.species);
-            const unsigned int j_points = (you.skill_points[j] * 100) / j_diff;
+            const unsigned int j_points = you.skill_points[sj]
+                                          / species_apt_factor(sj);
 
-            if (you.skills[j] == you.skills[i]
+            if (you.skills[sj] == you.skills[si]
                 && (j_points > i_points
-                    || (j_points == i_points && j > i)))
+                    || (j_points == i_points && sj > si)))
             {
-                you.skill_order[i]++;
+                you.skill_order[si]++;
             }
         }
     }
@@ -1886,6 +1883,36 @@ void calc_mp()
     you.max_magic_points = get_real_mp(true);
     you.magic_points = std::min(you.magic_points, you.max_magic_points);
     you.redraw_magic_points = true;
+}
+
+// What aptitude value corresponds to doubled skill learning
+// (i.e., old-style aptitude 50).
+#define APT_DOUBLE 4
+
+static float _apt_to_factor(int apt)
+{
+    return (1 / exp(log(2) * apt / APT_DOUBLE));
+}
+
+// Base skill cost, i.e. old-style human aptitudes.
+static int _base_cost(skill_type sk)
+{
+    switch (sk)
+    {
+    case SK_SPELLCASTING:
+        return 130;
+    case SK_INVOCATIONS:
+    case SK_EVOCATIONS:
+        return 80;
+    // Quick fix for the fact that stealth can't be gained fast enough
+    // to keep up with the monster levels. This was a skill points bonus
+    // in _exercise2 and was changed to a reduced base_cost to keep
+    // total_skill_points progression the same for all skills.
+    case SK_STEALTH:
+        return 50;
+    default:
+        return 100;
+    }
 }
 
 unsigned int skill_exp_needed(int lev)
@@ -1911,31 +1938,13 @@ unsigned int skill_exp_needed(int lev)
     return 0;
 }
 
-// Base skill cost, i.e. old-style human aptitudes.
-static int _base_cost(skill_type skill)
+unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
 {
-    switch (skill)
-    {
-    case SK_SPELLCASTING:
-        return 130;
-    case SK_INVOCATIONS:
-    case SK_EVOCATIONS:
-        return 80;
-    default:
-        return 100;
-    }
+    return skill_exp_needed(lev) * species_apt_factor(sk, sp)
+           * _base_cost(sk) / 100;
 }
 
-// What aptitude value corresponds to doubled skill learning
-// (i.e., old-style aptitude 50).
-#define APT_DOUBLE 4
-
-static int _apt_to_cost(skill_type skill, int apt)
-{
-    return (_base_cost(skill) / exp(log(2) * apt / APT_DOUBLE));
-}
-
-static int species_apts(int skill, species_type species)
+int species_apt(skill_type skill, species_type species)
 {
     static bool spec_skills_initialised = false;
     if (!spec_skills_initialised)
@@ -1957,10 +1966,9 @@ static int species_apts(int skill, species_type species)
     return _spec_skills[species][skill];
 }
 
-int species_skills(int skill, species_type species)
+float species_apt_factor(skill_type sk, species_type sp)
 {
-    return _apt_to_cost(static_cast<skill_type>(skill),
-                        species_apts(skill, species));
+    return _apt_to_factor(species_apt(sk, sp));
 }
 
 void wield_warning(bool newWeapon)
@@ -2020,7 +2028,7 @@ void wield_warning(bool newWeapon)
     }
 }
 
-bool is_invalid_skill(int skill)
+bool is_invalid_skill(skill_type skill)
 {
     if (skill < 0 || skill >= NUM_SKILLS)
         return (true);
@@ -2034,7 +2042,7 @@ bool is_invalid_skill(int skill)
 void dump_skills(std::string &text)
 {
     char tmp_quant[20];
-    for (uint8_t i = 0; i < 50; i++)
+    for (uint8_t i = 0; i < NUM_SKILLS; i++)
     {
         if (you.skills[i] > 0)
         {
@@ -2046,8 +2054,66 @@ void dump_skills(std::string &text)
             itoa(you.skills[i], tmp_quant, 10);
             text += tmp_quant;
             text += " ";
-            text += skill_name(i);
+            text += skill_name(static_cast<skill_type>(i));
             text += "\n";
         }
+    }
+}
+
+skill_type list_skills(std::string title, skill_type hide, bool show_all)
+{
+    menu_letter lcount = 'a';
+    int flags = MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING;
+    if (hide != SK_NONE && !show_all)
+        flags |= MF_ALWAYS_SHOW_MORE;
+
+    Menu skill_menu(flags);
+
+    MenuEntry* me = new MenuEntry(title);
+    me->colour = WHITE;
+    skill_menu.set_title(me);
+    skill_menu.set_highlighter(NULL);
+    if (hide != SK_NONE && !show_all)
+        skill_menu.set_more(formatted_string("Press * to see all"));
+
+    for (int i = 0; i < ndisplayed_skills; ++i)
+    {
+        skill_type sk = skill_display_order[i];
+
+        if (is_invalid_skill(sk) || sk == hide
+            || hide != SK_NONE && you.skills[sk] == 27)
+        {
+            continue;
+        }
+
+        if (you.skills[sk] > 0 || show_all)
+        {
+            std::string skill_text = make_stringf("%s (%d)", skill_name(sk),
+                                                  you.skills[sk]);
+            me = new MenuEntry(skill_text, MEL_ITEM, 1, lcount);
+            if (you.skills[sk] == 27)
+                me->colour = YELLOW;
+            skill_type* skp = new skill_type(sk);
+            me->data = skp;
+            skill_menu.add_entry(me);
+            lcount++;
+        }
+    }
+    while (true)
+    {
+        std::vector<MenuEntry*> sel = skill_menu.show();
+        if (!crawl_state.doing_prev_cmd_again)
+            redraw_screen();
+        if (sel.empty())
+        {
+            if (!show_all && hide != SK_NONE && skill_menu.getkey() == '*')
+                return list_skills(title, hide, true);
+            else
+                return SK_NONE;
+        }
+
+        ASSERT(sel.size() == 1);
+        ASSERT(sel[0]->hotkeys.size() == 1);
+        return *static_cast<skill_type*>(sel[0]->data);
     }
 }

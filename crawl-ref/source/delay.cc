@@ -873,8 +873,7 @@ void handle_delay()
 
         case DELAY_MULTIDROP:
             drop_item(items_for_multidrop[0].slot,
-                      items_for_multidrop[0].quantity,
-                      items_for_multidrop.size() == 1);
+                      items_for_multidrop[0].quantity);
             items_for_multidrop.erase(items_for_multidrop.begin());
             break;
 
@@ -1463,7 +1462,10 @@ inline static void _monster_warning(activity_interrupt_type ai,
 {
     if (ai != AI_SEE_MONSTER)
         return;
-    if (!delay_is_run(atype) && !_is_butcher_delay(atype))
+    if (!delay_is_run(atype) && !_is_butcher_delay(atype)
+        && !(atype == DELAY_NOT_DELAYED))
+        return;
+    if (at.context != "newly seen" && atype == DELAY_NOT_DELAYED)
         return;
 
     const monster* mon = static_cast<const monster* >(at.data);
@@ -1473,7 +1475,8 @@ inline static void _monster_warning(activity_interrupt_type ai,
     {
         // Only say "comes into view" if the monster wasn't in view
         // during the previous turn.
-        if (testbits(mon->flags, MF_WAS_IN_VIEW))
+        if (testbits(mon->flags, MF_WAS_IN_VIEW)
+            && !(atype == DELAY_NOT_DELAYED))
         {
             mprf(MSGCH_WARN, "%s is too close now for your liking.",
                  mon->name(DESC_CAP_THE).c_str());
@@ -1591,7 +1594,16 @@ bool interrupt_activity(activity_interrupt_type ai,
     const int delay = current_delay_action();
 
     if (delay == DELAY_NOT_DELAYED)
+    {
+        // Printing "[foo] comes into view." messages even when not
+        // auto-exploring/travelling.
+        if (ai == AI_SEE_MONSTER)
+        {
+            _monster_warning(ai, at, DELAY_NOT_DELAYED);
+            return(true);
+        }
         return (false);
+    }
 
     dprf("Activity interrupt: %s", _activity_interrupt_name(ai));
 

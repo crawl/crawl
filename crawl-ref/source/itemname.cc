@@ -38,6 +38,7 @@
 #include "showsymb.h"
 #include "skills2.h"
 #include "spl-book.h"
+#include "spl-summoning.h"
 #include "state.h"
 #include "stuff.h"
 #include "env.h"
@@ -45,6 +46,9 @@
 
 
 id_arr type_ids;
+// Additional information, about tried unidentified items.
+// (e.g. name of item, for scrolls of RC, ID, EA)
+CrawlHashTable type_ids_props;
 
 static bool _is_random_name_space(char let);
 static bool _is_random_name_vowel(char let);
@@ -116,7 +120,7 @@ std::string item_def::name(description_level_type descrip,
     if (terse && descrip != DESC_DBNAME)
         descrip = DESC_PLAIN;
 
-    // note: only the 32 lower bits of monste flags are passed,
+    // note: only the 32 lower bits of monster flags are passed,
     // as we don't have support for 64 bit props
     iflags_t corpse_flags;
 
@@ -288,7 +292,27 @@ std::string item_def::name(description_level_type descrip,
             if (id_type == ID_MON_TRIED_TYPE)
                 tried_str = "tried by monster";
             else if (id_type == ID_TRIED_ITEM_TYPE)
+            {
                 tried_str = "tried on item";
+                if (base_type == OBJ_SCROLLS)
+                {
+                    if (sub_type == SCR_IDENTIFY
+                        && type_ids_props.exists("SCR_ID"))
+                    {
+                        tried_str = "tried on " + type_ids_props["SCR_ID"].get_string();
+                    }
+                    else if (sub_type == SCR_RECHARGING
+                             && type_ids_props.exists("SCR_RC"))
+                    {
+                        tried_str = "tried on " + type_ids_props["SCR_RC"].get_string();
+                    }
+                    else if (sub_type == SCR_ENCHANT_ARMOUR
+                             && type_ids_props.exists("SCR_EA"))
+                    {
+                        tried_str = "tried on " + type_ids_props["SCR_EA"].get_string();
+                    }
+                }
+            }
             else
                 tried_str = "tried";
         }
@@ -1115,7 +1139,7 @@ std::string sub_type_string (object_class_type type, int sub_type, bool known, i
         if (sub_type == BOOK_MANUAL)
         {
             std::string bookname = "manual of ";
-            bookname += skill_name(plus);
+            bookname += skill_name(static_cast<skill_type>(plus));
             return bookname;
         }
         else if (sub_type == BOOK_NECRONOMICON)
@@ -1759,7 +1783,7 @@ std::string item_def::name_aux(description_level_type desc,
             if (dbname)
                 buff << "manual";
             else
-                buff << "manual of " << skill_name(it_plus);
+                buff << "manual of " << skill_name((skill_type)it_plus);
         }
         else if (item_typ == BOOK_NECRONOMICON)
             buff << "Necronomicon";
@@ -1778,8 +1802,12 @@ std::string item_def::name_aux(description_level_type desc,
         {
             if (cursed())
                 buff << "cursed ";
-            else if (Options.show_uncursed && !know_pluses)
+            else if (Options.show_uncursed && desc != DESC_PLAIN
+                     && !know_pluses
+                     && (!know_type || !is_artefact(*this)))
+            {
                 buff << "uncursed ";
+            }
         }
 
         if (!know_type)
@@ -1808,6 +1836,9 @@ std::string item_def::name_aux(description_level_type desc,
             buff << (item_is_rod(*this) ? "rod" : "staff")
                  << " of " << staff_type_name(item_typ);
         }
+
+        if (know_curse && cursed() && terse)
+            buff << " (curse)";
         break;
 
     // rearranged 15 Apr 2000 {dlb}:
@@ -2036,6 +2067,11 @@ bool item_type_tried(const item_def& item)
 id_arr& get_typeid_array()
 {
     return type_ids;
+}
+
+CrawlHashTable& get_type_id_props()
+{
+    return type_ids_props;
 }
 
 void set_ident_type(item_def &item, item_type_id_state_type setting,
@@ -2579,6 +2615,7 @@ bool is_emergency_item(const item_def &item)
         case SCR_TELEPORTATION:
         case SCR_BLINKING:
         case SCR_FEAR:
+        case SCR_FOG:
             return (true);
         default:
             return (false);
@@ -2712,9 +2749,6 @@ bool is_bad_item(const item_def &item, bool temp)
         }
     case OBJ_MISCELLANY:
         return (item.sub_type == MISC_CRYSTAL_BALL_OF_FIXATION);
-    case OBJ_ARMOUR:
-        return (you.religion == GOD_TROG
-                && get_armour_ego_type(item) == SPARM_ARCHMAGI);
 
     default:
         return (false);
@@ -2775,9 +2809,6 @@ bool is_dangerous_item(const item_def &item, bool temp)
         return (item.sub_type == BOOK_DESTRUCTION
                 || is_dangerous_spellbook(item));
 
-    case OBJ_ARMOUR:
-        return (get_armour_ego_type(item) == SPARM_ARCHMAGI);
-
     default:
         return (false);
     }
@@ -2815,8 +2846,20 @@ bool is_useless_item(const item_def &item, bool temp)
         return (false);
 
     case OBJ_MISSILES:
+        if ((you.has_spell(SPELL_STICKS_TO_SNAKES)
+             || !you.num_turns
+                && you.char_class == JOB_TRANSMUTER)
+            && item_is_snakable(item)
+            || you.has_spell(SPELL_SANDBLAST)
+               && (item.sub_type == MI_STONE
+                || item.sub_type == MI_LARGE_ROCK))
+        {
+            return false;
+        }
+
+        // Save for the above spells, all missiles are useless for felids.
         if (you.species == SP_CAT)
-            return (true);
+            return true;
 
         // These are the same checks as in is_throwable(), except that
         // we don't take launchers into account.

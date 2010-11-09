@@ -37,7 +37,7 @@
 #define MAX_COST_LIMIT           250
 #define MAX_SPENDING_LIMIT       250
 
-static int _exercise2(int exsk);
+static int _exercise2(skill_type exsk);
 
 // These values were calculated by running a simulation of gaining skills.
 // The goal is to try and match the old cost system which used the player's
@@ -84,7 +84,7 @@ void calc_total_skill_points(void)
         you.total_skill_points += you.skill_points[i];
 
     for (i = 1; i <= 27; i++)
-        if (you.total_skill_points < skill_cost_needed(i))
+        if (you.total_skill_points < skill_cost_needed((skill_type)i))
             break;
 
     you.skill_cost_level = i - 1;
@@ -141,8 +141,112 @@ static int _calc_skill_cost(int skill_cost_level, int skill_level)
     return (ret);
 }
 
+static void _change_skill_level(skill_type exsk, int n)
+{
+    ASSERT(n != 0);
+    skill_type old_best_skill = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
+
+    if (-n > you.skills[exsk])
+        n = -you.skills[exsk];
+    you.skills[exsk] += n;
+
+    if (n > 0)
+        take_note(Note(NOTE_GAIN_SKILL, exsk, you.skills[exsk]));
+    else
+        take_note(Note(NOTE_LOSE_SKILL, exsk, you.skills[exsk]));
+
+    if (you.skills[exsk] == 27)
+    {
+        mprf(MSGCH_INTRINSIC_GAIN, "You have mastered %s!", skill_name(exsk));
+    }
+    else if (you.skills[exsk] == 1 && n > 0)
+    {
+        mprf(MSGCH_INTRINSIC_GAIN, "You have gained %s skill!", skill_name(exsk));
+        hints_gained_new_skill(exsk);
+    }
+    else if (abs(n) == 1)
+    {
+        mprf(MSGCH_INTRINSIC_GAIN, "Your %s skill %s to level %d!",
+             skill_name(exsk), (n > 0) ? "increases" : "decreases",
+             you.skills[exsk]);
+    }
+    else
+    {
+        mprf(MSGCH_INTRINSIC_GAIN, "Your %s skill %s %d levels and is now at "
+             "level %d!", skill_name(exsk), (n > 0) ? "gained" : "lost",
+             abs(n), you.skills[exsk]);
+    }
+
+    if (n > 0)
+        learned_something_new(HINT_SKILL_RAISE);
+
+    // Recalculate this skill's order for tie breaking skills
+    // at its new level.   See skills2.cc::init_skill_order()
+    // for more details.  -- bwr
+    you.skill_order[exsk] = 0;
+    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
+    {
+        skill_type sk = static_cast<skill_type>(i);
+        if (sk != exsk && you.skills[sk] >= you.skills[exsk])
+            you.skill_order[exsk]++;
+    }
+
+    if (exsk == SK_FIGHTING)
+        calc_hp();
+
+    if (exsk == SK_INVOCATIONS || exsk == SK_SPELLCASTING)
+        calc_mp();
+
+    if (exsk == SK_DODGING || exsk == SK_ARMOUR)
+        you.redraw_evasion = true;
+
+    if (exsk == SK_ARMOUR || exsk == SK_SHIELDS
+        || exsk == SK_ICE_MAGIC || exsk == SK_EARTH_MAGIC
+        || you.duration[DUR_TRANSFORMATION] > 0)
+    {
+        you.redraw_armour_class = true;
+    }
+
+    const skill_type best_spell = best_skill(SK_SPELLCASTING,
+                                             SK_POISON_MAGIC);
+    if (exsk == SK_SPELLCASTING && you.skills[exsk] == 1
+        && best_spell == SK_SPELLCASTING && n > 0)
+    {
+        mpr("You're starting to get the hang of this magic thing.");
+    }
+
+    const skill_type best = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
+    if (best != old_best_skill || old_best_skill == exsk)
+        redraw_skill(you.your_name, player_title());
+
+    if (you.weapon() && item_is_staff(*you.weapon()))
+        maybe_identify_staff(*you.weapon());
+
+    // TODO: also identify rings of wizardry.
+}
+
+static void _check_skill_level_change(skill_type sk)
+{
+    int new_level = you.skills[sk];
+    while (1)
+    {
+        const unsigned int prev = skill_exp_needed(new_level, sk);
+        const unsigned int next = skill_exp_needed(new_level + 1, sk);
+
+        if (you.skill_points[sk] >= next)
+            new_level++;
+        else if (you.skill_points[sk] < prev)
+            new_level--;
+        else
+            break;
+    }
+
+    if (new_level != you.skills[sk])
+        _change_skill_level(sk, new_level - you.skills[sk]);
+}
+
 // returns total number of skill points gained
-int exercise(int exsk, int deg)
+int exercise(skill_type exsk, int deg, bool change_level)
 {
     int ret = 0;
 
@@ -153,10 +257,10 @@ int exercise(int exsk, int deg)
 
     while (deg > 0)
     {
-        if (you.exp_available <= 0 || you.skills[exsk] >= 27)
+        if ((you.exp_available <= 0 || you.skills[exsk] >= 27))
             break;
 
-        if (you.practise_skill[exsk] || one_chance_in(4))
+        if (you.practise_skill[exsk] || one_chance_in(3 + you.skills[exsk]))
             ret += _exercise2(exsk);
 
         deg--;
@@ -164,6 +268,9 @@ int exercise(int exsk, int deg)
 
     if (ret)
         dprf("Exercised %s (deg: %d) by %d", skill_name(exsk), deg, ret);
+
+    if (change_level)
+        _check_skill_level_change(exsk);
 
     return (ret);
 }
@@ -175,24 +282,24 @@ static bool _check_crosstrain(skill_type exsk, skill_type sk1, skill_type sk2)
                 || you.skills[sk2] > you.skills[exsk]));
 }
 
-static int _weap_crosstrain_bonus(skill_type exsk)
+static float _weap_crosstrain_bonus(skill_type exsk)
 {
-    int bonus = 0;
+    int bonus = 1;
 
     if (_check_crosstrain(exsk, SK_SHORT_BLADES, SK_LONG_BLADES))
-        bonus += random2(3);
+        bonus *= 2;
     if (_check_crosstrain(exsk, SK_AXES,         SK_POLEARMS))
-        bonus += random2(3);
+        bonus *= 2;
     if (_check_crosstrain(exsk, SK_POLEARMS,     SK_STAVES))
-        bonus += random2(3);
+        bonus *= 2;
     if (_check_crosstrain(exsk, SK_AXES,         SK_MACES_FLAILS))
-        bonus += random2(3);
+        bonus *= 2;
     if (_check_crosstrain(exsk, SK_MACES_FLAILS, SK_STAVES))
-        bonus += random2(3);
+        bonus *= 2;
     if (_check_crosstrain(exsk, SK_SLINGS,       SK_THROWING))
-        bonus += random2(3);
+        bonus *= 2;
 
-    return (10*bonus);
+    return (bonus);
 }
 
 static bool _skip_exercise(skill_type exsk)
@@ -236,10 +343,8 @@ static bool _skip_exercise(skill_type exsk)
     // Count better non-elemental spell skills (up to 6)
     int skill_rank = 1;
     for (int i = SK_CONJURATIONS; i < SK_FIRE_MAGIC; ++i)
-    {
         if (you.skills[exsk] < you.skills[i])
             skill_rank++;
-    }
 
     // Things get progressively harder, but not harder than
     // the Fire-Air or Ice-Earth level.
@@ -280,84 +385,46 @@ static int _stat_mult(skill_type exsk, int skill_inc)
     return (skill_inc * std::max<int>(5, stat) / 10);
 }
 
-static void _gain_skill_level(skill_type exsk)
+static void _check_skill_cost_change()
 {
-    skill_type old_best_skill = best_skill(SK_FIGHTING, (NUM_SKILLS - 1));
-
-    you.skills[exsk]++;
-
-    take_note(Note(NOTE_GAIN_SKILL, exsk, you.skills[exsk]));
-
-    if (you.skills[exsk] == 27)
+    if (you.skill_cost_level < 27
+        && you.total_skill_points
+           >= skill_cost_needed(you.skill_cost_level + 1))
     {
-        mprf(MSGCH_INTRINSIC_GAIN, "You have mastered %s!", skill_name(exsk));
+        you.skill_cost_level++;
     }
-    else if (you.skills[exsk] == 1)
+    else if (you.skill_cost_level > 0
+        && you.total_skill_points
+           < skill_cost_needed(you.skill_cost_level))
     {
-        mprf(MSGCH_INTRINSIC_GAIN, "You have gained %s skill!", skill_name(exsk));
-        hints_gained_new_skill(exsk);
+        you.skill_cost_level--;
     }
-    else
-    {
-        mprf(MSGCH_INTRINSIC_GAIN, "Your %s skill increases to level %d!",
-             skill_name(exsk), you.skills[exsk]);
-    }
-
-    learned_something_new(HINT_SKILL_RAISE);
-
-    // Recalculate this skill's order for tie breaking skills
-    // at its new level.   See skills2.cc::init_skill_order()
-    // for more details.  -- bwr
-    you.skill_order[exsk] = 0;
-    for (int i = SK_FIGHTING; i < NUM_SKILLS; ++i)
-        if (i != exsk && you.skills[i] >= you.skills[exsk])
-            you.skill_order[exsk]++;
-
-    if (exsk == SK_FIGHTING)
-        calc_hp();
-
-    if (exsk == SK_INVOCATIONS || exsk == SK_SPELLCASTING)
-        calc_mp();
-
-    if (exsk == SK_DODGING || exsk == SK_ARMOUR)
-        you.redraw_evasion = true;
-
-    if (exsk == SK_ARMOUR || exsk == SK_SHIELDS
-        || exsk == SK_ICE_MAGIC || exsk == SK_EARTH_MAGIC
-        || you.duration[DUR_TRANSFORMATION] > 0)
-    {
-        you.redraw_armour_class = true;
-    }
-
-    const skill_type best_spell = best_skill(SK_SPELLCASTING,
-                                             SK_POISON_MAGIC);
-    if (exsk == SK_SPELLCASTING
-        && you.skills[exsk] == 1 && best_spell == SK_SPELLCASTING)
-    {
-        mpr("You're starting to get the hang of this magic thing.");
-    }
-
-    const skill_type best = best_skill(SK_FIGHTING, (NUM_SKILLS - 1));
-    if (best != old_best_skill || old_best_skill == exsk)
-        redraw_skill(you.your_name, player_title());
-
-    if (you.weapon() && item_is_staff(*you.weapon()))
-        maybe_identify_staff(*you.weapon());
-
-    // TODO: also identify rings of wizardry.
-
-    // Ogres -> ogre mages.
-    update_player_symbol();
 }
 
-static int _exercise2(int exski)
+void change_skill_points(skill_type sk, int points, bool change_level)
 {
-    skill_type exsk = static_cast<skill_type>(exski);
+    if (static_cast<int>(you.skill_points[sk]) < -points)
+        points = -you.skill_points[sk];
 
+    you.skill_points[sk] += points;
+    you.total_skill_points += points;
+
+    _check_skill_cost_change();
+
+    if (change_level)
+        _check_skill_level_change(sk);
+}
+
+static int _exercise2(skill_type exsk)
+{
     // Being better at some magic skills makes others less likely to train.
     // Note: applies to Invocations and Evocations, too! [rob]
     if (_skip_exercise(exsk))
         return (0);
+
+    // Don't train past level 27, even if the level hasn't been updated yet.
+    if (you.skill_points[exsk] >= skill_exp_needed(27, exsk))
+        return 0;
 
     // This will be added to you.skill_points[exsk];
     int skill_inc = 10;
@@ -367,16 +434,11 @@ static int _exercise2(int exski)
 
     // Being good at some weapons makes others easier to learn.
     if (exsk < SK_ARMOUR)
-        skill_inc += _weap_crosstrain_bonus(exsk);
-
-    // Quick fix for the fact that stealth can't be gained fast enough
-    // to keep up with the monster levels.  This should speed its
-    // advancement.
-    if (exsk == SK_STEALTH)
-        skill_inc += 10*random2(3);
+        skill_inc *= _weap_crosstrain_bonus(exsk);
 
     // Starting to learn skills is easier if the appropriate stat is high.
-    if (you.skills[exsk] == 0)
+        // We check skill points in case skill level hasn't been updated yet
+    if (you.skill_points[exsk] < skill_exp_needed(1, exsk))
         skill_inc = _stat_mult(exsk, skill_inc);
 
     // Spellcasting and Inv/Evo is cheaper early on.
@@ -420,23 +482,14 @@ static int _exercise2(int exski)
     cost = std::max<int>(cost, 1); // No free lunch.
 
     you.skill_points[exsk] += skill_inc;
+    you.ct_skill_points[exsk] += (1 - 1 / _weap_crosstrain_bonus(exsk))
+                                 * skill_inc;
     you.exp_available -= cost;
-
     you.total_skill_points += skill_inc;
-    if (you.skill_cost_level < 27
-        && you.total_skill_points
-               >= skill_cost_needed(you.skill_cost_level + 1))
-    {
-        you.skill_cost_level++;
-    }
 
+    _check_skill_cost_change();
     you.exp_available = std::max(0, you.exp_available);
     you.redraw_experience = true;
-
-    const unsigned int next = skill_exp_needed(you.skills[exsk] + 1)
-                              * species_skills(exsk, you.species) / 100;
-    if (you.skill_points[exsk] > next)
-        _gain_skill_level(exsk);
 
     return (skill_inc);
 }

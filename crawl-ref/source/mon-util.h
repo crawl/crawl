@@ -208,7 +208,8 @@ int hit_points(int hit_dice, int min_hp, int rand_hp);
 int mons_class_hit_dice(int mc);
 
 bool mons_immune_magic(const monster* mon);
-const char* mons_resist_string(const monster* mon);
+std::string mons_resist_string(const monster* mon, int res_margin);
+std::string resist_margin_phrase(int margin);
 
 int mons_damage(int mc, int rt);
 mon_attack_def mons_attack_spec(const monster* mon, int attk_number);
@@ -352,7 +353,6 @@ bool mons_is_plant(const monster* mon);
 bool mons_eats_items(const monster* mon);
 bool mons_eats_corpses(const monster* mon);
 bool mons_eats_food(const monster* mon);
-bool mons_has_lifeforce(const monster* mon);
 monster_type mons_genus(int mc);
 monster_type mons_detected_base(monster_type mt);
 monster_type mons_species(int mc);
@@ -432,7 +432,6 @@ bool player_or_mon_in_sanct(const monster* mons);
 
 int get_dist_to_nearest_monster();
 
-bool mons_class_is_tentacle(int mc);
-bool mons_is_tentacle(const monster* mon);
+bool mons_is_tentacle(int mc);
 
 #endif

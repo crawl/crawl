@@ -162,6 +162,7 @@ public:
     virtual bool is_icy() const = 0;
     virtual bool is_fiery() const = 0;
     virtual bool is_skeletal() const = 0;
+    virtual bool has_lifeforce() const = 0;
     virtual bool can_mutate() const = 0;
     virtual bool can_safely_mutate() const = 0;
     virtual bool can_bleed() const = 0;
@@ -220,6 +221,7 @@ public:
     virtual bool is_evil() const = 0;
     virtual bool is_chaotic() const = 0;
     virtual bool is_artificial() const = 0;
+    virtual bool is_unbreathing() const = 0;
     virtual bool is_insubstantial() const = 0;
     virtual int res_acid() const = 0;
     virtual int res_fire() const = 0;
@@ -235,10 +237,12 @@ public:
     virtual int res_negative_energy() const = 0;
     virtual int res_torment() const = 0;
     virtual int res_magic() const = 0;
-    virtual bool check_res_magic(int power);
+    virtual int check_res_magic(int power);
 
     virtual flight_type flight_mode() const = 0;
     virtual bool is_levitating() const = 0;
+    virtual bool is_wall_clinging() const = 0;
+    virtual bool can_cling_to(const coord_def& p) const = 0;
     virtual bool airborne() const;
 
     virtual bool paralysed() const = 0;

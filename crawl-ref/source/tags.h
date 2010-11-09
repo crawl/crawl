@@ -234,9 +234,6 @@ void tag_write(tag_type tagID, writer &outf);
  * misc
  * *********************************************************************** */
 
-int write2(FILE * file, const void *buffer, unsigned int count);
-int read2(FILE * file, void *buffer, unsigned int count);
 std::string make_date_string(time_t in_date);
-time_t parse_date_string(char[20]);
 
 #endif // TAGS_H

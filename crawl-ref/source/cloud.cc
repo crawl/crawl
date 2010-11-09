@@ -699,10 +699,12 @@ int max_cloud_damage(cloud_type cl_type, int power)
 
         // Intentional fall through
     case CLOUD_COLD:
-        if (you.mutation[MUT_PASSIVE_FREEZE])
-            return (0);
         if (cl_type == CLOUD_COLD)
+        {
+            if (you.mutation[MUT_PASSIVE_FREEZE])
+                return (0);
             resist = player_res_cold();
+        }
 
         if (resist <= 0)
         {
@@ -720,7 +722,7 @@ int max_cloud_damage(cloud_type cl_type, int power)
 
     case CLOUD_STINK:
         // If you don't have to breathe, unaffected.
-        if (player_res_poison() || you.species == SP_GREY_DRACONIAN)
+        if (player_res_poison() || you.is_unbreathing())
             return (0);
 
         dam += 2 * speed / 10;
@@ -816,7 +818,7 @@ void in_a_cloud()
     case CLOUD_STINK:
         cloud.announce_actor_engulfed(&you);
         // If you don't have to breathe, unaffected.
-        if (player_res_poison() || you.species == SP_GREY_DRACONIAN)
+        if (player_res_poison() || you.is_unbreathing())
             break;
 
         hurted += (random2(3) * you.time_taken) / 10;
@@ -1025,8 +1027,8 @@ bool is_damaging_cloud(cloud_type type, bool temp)
     // Takes into account what the player can *know* and what s/he can
     // also expect to be the case a few turns later (ignores spells).
     case CLOUD_STINK:
-         if (you.species == SP_GREY_DRACONIAN)
-             return (false);
+        if (you.is_unbreathing())
+            return (false);
     case CLOUD_POISON:
         return (!player_res_poison(false, temp));
     case CLOUD_STEAM:

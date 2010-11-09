@@ -259,7 +259,7 @@ public:
     void apply_bolt_paralysis(monster* mons);
     void apply_bolt_petrify(monster* mons);
     void enchantment_affect_monster(monster* mon);
-    mon_resist_type try_enchant_monster(monster* mon);
+    mon_resist_type try_enchant_monster(monster* mon, int &res_margin);
     void tracer_enchantment_affect_monster(monster* mon);
     void tracer_nonenchantment_affect_monster(monster* mon);
     void update_hurt_or_helped(monster* mon);
@@ -304,11 +304,11 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
 bool enchant_monster_with_flavour(monster* mon, actor *atk,
                                   beam_type flavour, int powc = 0);
 
+bool enchant_monster_invisible(monster* mon, const std::string how);
+
 void mass_enchantment(enchant_type wh_enchant, int pow, int who,
                        int *m_succumbed = NULL, int *m_attempted = NULL);
 
-bool curare_hits_monster(actor *agent, monster* mons, kill_category who,
-                         int levels = 1);
 bool poison_monster(monster* mons, kill_category who, int levels = 1,
                     bool force = false, bool verbose = true);
 bool miasma_monster(monster* mons, kill_category who);
@@ -320,8 +320,6 @@ void mimic_alert(monster* mimic);
 bool zapping(zap_type ztype, int power, bolt &pbolt,
              bool needs_tracer = false, const char* msg = NULL);
 bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range = 0);
-
-std::string beam_type_name(beam_type type);
 
 void init_zap_index();
 void clear_zap_info_on_exit();
