@@ -1314,6 +1314,8 @@ static std::string _find_crawlrc()
 std::string read_init_file(bool runscript)
 {
     Options.reset_options();
+	SysEnv.extra_opts_first.clear();
+	SysEnv.extra_opts_last.clear();
 
     Options.filename     = "extra opts first";
     Options.basefilename = "extra opts first";
