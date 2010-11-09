@@ -139,8 +139,8 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_RECALL,
      SPELL_SHADOW_CREATURES,
      SPELL_SUMMON_UGLY_THING,
-     SPELL_HAUNT,
-     SPELL_SUMMON_HORRIBLE_THINGS,
+     SPELL_NO_SPELL,
+     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
@@ -553,13 +553,13 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      },
 
     // Book of Demonology - Vehumet special
-    {SPELL_CALL_IMP,
-     SPELL_ABJURATION,
-     SPELL_RECALL,
-     SPELL_SUMMON_DEMON,
+    {SPELL_SUMMON_DEMON,
      SPELL_DEMONIC_HORDE,
+     SPELL_HAUNT,
      SPELL_SUMMON_GREATER_DEMON,
      SPELL_MALIGN_GATEWAY,
+     SPELL_SUMMON_HORRIBLE_THINGS,
+     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
 
