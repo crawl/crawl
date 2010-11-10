@@ -1063,7 +1063,7 @@
        SPELL_NO_SPELL,
        SPELL_FREEZING_CLOUD,
        SPELL_SUMMON_ICE_BEAST,
-       SPELL_SUMMON_ICE_BEAST
+       SPELL_NO_SPELL		// Zotdef, to stop wounded statues spamming IBs
       }
     },
 

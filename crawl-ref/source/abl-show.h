@@ -62,9 +62,10 @@ struct ability_def
     const char *        name;
     unsigned int        mp_cost;        // magic cost of ability
     scaling_cost        hp_cost;        // hit point cost of ability
-    unsigned int        food_cost;      // + rand2avg(food_cost, 2)
-    generic_cost        piety_cost;     // + random2((piety_cost + 1) / 2 + 1)
-    unsigned int        flags;          // used for additional cost notices
+    unsigned int        food_cost;      // + rand2avg( food_cost, 2 )
+    generic_cost        piety_cost;     // + random2( (piety_cost + 1) / 2 + 1 )
+    unsigned int        flags;          // used for additonal cost notices
+    unsigned int        xp_cost;        // hit point cost of ability
 };
 
 struct talent

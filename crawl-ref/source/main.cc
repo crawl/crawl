@@ -133,6 +133,7 @@
 #include "wiz-mon.h"
 #include "wiz-you.h"
 #include "xom.h"
+#include "zotdef.h"
 
 #ifdef USE_TILE
  #include "tiledef-dngn.h"
@@ -1006,6 +1007,39 @@ struct disable_check
 
     bool was_disabled;
 };
+
+void bosses_check()
+{
+    if ((you.num_turns + 1) % CYCLE_LENGTH == 0)
+    {
+        int mon = zotdef_spawn(true);	// boss monster=true
+
+        if (mon > -1)
+        {
+            const char *msg = "You sense that a powerful threat has arrived.";
+            if ((((you.num_turns + 1)/CYCLE_LENGTH) % FREQUENCY_OF_RUNES) == 0)
+            {
+                int which_rune = get_rune(
+                 ((you.num_turns + 1)/CYCLE_LENGTH) / FREQUENCY_OF_RUNES );
+                int ip = items( 1, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, true, which_rune, which_rune);
+                int *const item_made = &ip; 
+                if (*item_made != NON_ITEM && *item_made != -1)
+                {
+                    move_item_to_grid( item_made, menv[mon].pos() );
+                    msg = "You feel a sense of great excitement!";
+                }
+            }
+            mpr( msg , MSGCH_DANGER );
+            more();
+        }
+    }
+
+    if ((you.num_turns + 1) % CYCLE_LENGTH == CYCLE_INTERVAL)
+    {
+        // Set the next wave
+        zotdef_set_wave();
+    }
+}
 
 static void _update_place_info()
 {
@@ -2883,6 +2917,28 @@ void world_reacts()
     _update_mold();
     _update_golubria_traps();
 
+    if (crawl_state.game_is_zotdef() && you.num_turns == 100) 
+        zotdef_set_wave();
+
+    // Zotdef spawns only in the main dungeon
+    if (crawl_state.game_is_zotdef()
+        && you.level_type==LEVEL_DUNGEON
+        && you.where_are_you==BRANCH_MAIN_DUNGEON
+        && you.num_turns > 100)
+    {
+        bosses_check(); 
+        for (int i = 0; i < SPAWN_SIZE; i++)
+        {
+            // Reduce critter frequency for first wave
+            if (you.num_turns<CYCLE_LENGTH && one_chance_in(3)) continue;
+
+            if ((you.num_turns % CYCLE_LENGTH > CYCLE_INTERVAL)
+                && x_chance_in_y((you.num_turns % CYCLE_LENGTH), CYCLE_LENGTH*3))
+            {
+                zotdef_spawn(false);
+            }
+        }
+    }
     if (!crawl_state.game_is_arena())
         _player_reacts_to_monsters();
 
@@ -2901,8 +2957,20 @@ void world_reacts()
 
     if (you.num_turns != -1)
     {
-        if (you.num_turns < INT_MAX)
-            you.num_turns++;
+        // Zotdef: Time only passes in the main dungeon
+        if (you.num_turns < LONG_MAX)
+        {
+            if (!crawl_state.game_is_zotdef())
+            {
+                you.num_turns++;
+            }
+            else
+            {
+                if (you.where_are_you==BRANCH_MAIN_DUNGEON && you.level_type==LEVEL_DUNGEON)
+                    you.num_turns++;
+            }
+        }
+
         if (env.turns_on_level < INT_MAX)
             env.turns_on_level++;
         record_turn_timestamp();
@@ -3871,6 +3939,35 @@ static void _move_player(coord_def move)
 
     if (!attacking && targ_pass && moving && !beholder && !fmonger)
     {
+        if (crawl_state.game_is_zotdef())
+        {
+            // Are you standing on the Orb? If so, are the critters near?
+            const bool onOrb = (you.pos()==orb_position());
+            bool leaveOrbUnguarded=false;
+            if (onOrb)
+            {
+                for (int i = 0; i < MAX_MONSTERS; ++i)
+                {
+                    monster& mon = menv[i];
+                    if (you.can_see(&mon) && !mon.friendly() &&
+                        (grid_distance(you.pos(), mon.pos())<4))
+                    {
+                        leaveOrbUnguarded=true;
+                    }
+                }
+            }
+
+            if (leaveOrbUnguarded)
+            {
+                    std::string prompt = "Are you sure you want to leave the Orb unguarded?";
+                    if (!yesno(prompt.c_str(), false, 'n'))
+                    {
+                        canned_msg(MSG_OK);
+                        return;
+                    }
+            }
+        }
+
         if (!you.confused() && !check_moveto(targ))
         {
             stop_running();

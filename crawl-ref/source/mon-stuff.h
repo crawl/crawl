@@ -210,5 +210,6 @@ bool mons_avoids_cloud(const monster* mons, int cloud_num,
 
 void debuff_monster(monster* mons);
 int exp_rate(int killer);
+int count_monsters(monster_type mtyp, bool friendlyOnly);
 
 #endif

@@ -471,6 +471,10 @@ bush
 
 A woody plant that, unlike trees, can be removed even with bare hands. It looks dry enough to be easily set on fire, and it isn't very dense so arrows are likely to go past it.
 %%%%
+burning bush
+
+A mass of blackened twigs wreathed in orange flames. The walls and floor surrounding it are covered in scorch marks.
+%%%%
 bumblebee
 
 A very large and fat hairy bee.
@@ -1269,6 +1273,10 @@ A rare breed of ogre, skilled in the use of magic.
 oklob plant
 
 A vicious plant, dripping with vitriol.
+%%%%
+oklob sapling
+
+A young oklob plant, but already dangerous.
 %%%%
 ooze
 
