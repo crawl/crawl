@@ -1314,8 +1314,6 @@ static std::string _find_crawlrc()
 std::string read_init_file(bool runscript)
 {
     Options.reset_options();
-	SysEnv.extra_opts_first.clear();
-	SysEnv.extra_opts_last.clear();
 
     Options.filename     = "extra opts first";
     Options.basefilename = "extra opts first";
@@ -3443,13 +3441,7 @@ void game_options::include(const std::string &rawfilename,
         resolve ? resolve_include(rawfilename) : rawfilename;
 
     if (was_included(include_file))
-    {
-        // Report error with rawfilename, not the resolved file name - we
-        // don't want to leak file paths in dgamelaunch installs.
-        report_error(make_stringf("Skipping previously included file: \"%s\".",
-                                  rawfilename.c_str()));
         return;
-    }
 
     included.insert(include_file);
 
