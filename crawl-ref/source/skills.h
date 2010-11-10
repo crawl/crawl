@@ -11,9 +11,9 @@
 int skill_cost_needed(int level);
 void calc_total_skill_points(void);
 
-int check_skill_level_change(skill_type sk, bool just_check = false);
+void check_skill_level_change(skill_type sk, bool do_level_up = true);
 void change_skill_level(skill_type exsk, int num_level);
-void change_skill_points(skill_type sk, int points, bool change_level = true);
+void change_skill_points(skill_type sk, int points, bool do_level_up);
 
 bool is_antitrained(skill_type sk);
 float crosstrain_bonus(skill_type exsk);

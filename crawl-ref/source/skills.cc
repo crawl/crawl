@@ -225,7 +225,7 @@ static void _change_skill_level(skill_type exsk, int n)
     // TODO: also identify rings of wizardry.
 }
 
-int check_skill_level_change(skill_type sk, bool just_check)
+void check_skill_level_change(skill_type sk, bool do_level_up)
 {
     int new_level = you.skills[sk];
     while (1)
@@ -241,10 +241,11 @@ int check_skill_level_change(skill_type sk, bool just_check)
             break;
     }
 
-    if (new_level != you.skills[sk] && !just_check)
-        _change_skill_level(sk, new_level - you.skills[sk]);
-
-    return new_level - you.skills[sk];
+    if (new_level != you.skills[sk])
+        if (do_level_up)
+            _change_skill_level(sk, new_level - you.skills[sk]);
+        else
+            you.skills[sk] = new_level;
 }
 
 // returns total number of skill points gained
@@ -377,7 +378,7 @@ static void _check_skill_cost_change()
     }
 }
 
-void change_skill_points(skill_type sk, int points, bool change_level)
+void change_skill_points(skill_type sk, int points, bool do_level_up)
 {
     if (static_cast<int>(you.skill_points[sk]) < -points)
         points = -you.skill_points[sk];
@@ -387,8 +388,7 @@ void change_skill_points(skill_type sk, int points, bool change_level)
 
     _check_skill_cost_change();
 
-    if (change_level)
-        check_skill_level_change(sk);
+    check_skill_level_change(sk, do_level_up);
 }
 
 static int _exercise2(skill_type exsk)
@@ -425,7 +425,7 @@ static int _exercise2(skill_type exsk)
     }
 
     if (is_antitrained(exsk))
-        cost *= 2;
+        cost *= ANTITRAIN_PENALTY;
 
     // Scale cost and skill_inc to available experience.
     const int spending_limit = std::min(MAX_SPENDING_LIMIT, you.exp_available);
