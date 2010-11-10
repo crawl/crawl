@@ -2479,7 +2479,7 @@ bool ashenzari_transfer_knowledge()
     skp_lost += double_cost;
 
     change_skill_points(fsk, -skp_lost, true);
-    change_skill_points(tsk, 0, true); // just update the level
+    check_skill_level_change(tsk); // just update the level
 
     // We restore the XP pool
     you.exp_available = exp_pool;

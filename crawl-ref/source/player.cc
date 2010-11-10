@@ -3007,7 +3007,7 @@ void level_change(bool skip_attribute_increase)
                     // We check if any skill has changed level because of
                     // changed aptitude
                     for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
-                        change_skill_points(static_cast<skill_type>(i), 0);
+                        check_skill_level_change(static_cast<skill_type>(i));
                 }
             case SP_RED_DRACONIAN:
             case SP_WHITE_DRACONIAN:

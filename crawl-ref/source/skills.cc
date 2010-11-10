@@ -225,7 +225,7 @@ static void _change_skill_level(skill_type exsk, int n)
     // TODO: also identify rings of wizardry.
 }
 
-static void _check_skill_level_change(skill_type sk)
+int check_skill_level_change(skill_type sk, bool just_check)
 {
     int new_level = you.skills[sk];
     while (1)
@@ -241,8 +241,10 @@ static void _check_skill_level_change(skill_type sk)
             break;
     }
 
-    if (new_level != you.skills[sk])
+    if (new_level != you.skills[sk] && !just_check)
         _change_skill_level(sk, new_level - you.skills[sk]);
+
+    return new_level - you.skills[sk];
 }
 
 // returns total number of skill points gained
@@ -270,7 +272,7 @@ int exercise(skill_type exsk, int deg, bool change_level)
         dprf("Exercised %s (deg: %d) by %d", skill_name(exsk), deg, ret);
 
     if (change_level)
-        _check_skill_level_change(exsk);
+        check_skill_level_change(exsk);
 
     return (ret);
 }
@@ -412,7 +414,7 @@ void change_skill_points(skill_type sk, int points, bool change_level)
     _check_skill_cost_change();
 
     if (change_level)
-        _check_skill_level_change(sk);
+        check_skill_level_change(sk);
 }
 
 static int _exercise2(skill_type exsk)
