@@ -252,6 +252,10 @@ int exercise(skill_type exsk, int deg, bool change_level)
 {
     int ret = 0;
 
+#ifdef DEBUG_DIAGNOSTICS
+    unsigned int exp_pool = you.exp_available;
+#endif
+
     if (crawl_state.game_is_sprint())
     {
         deg = sprint_modify_skills(deg);
@@ -268,8 +272,13 @@ int exercise(skill_type exsk, int deg, bool change_level)
         deg--;
     }
 
+#ifdef DEBUG_DIAGNOSTICS
     if (ret)
+    {
         dprf("Exercised %s (deg: %d) by %d", skill_name(exsk), deg, ret);
+        dprf("Cost %d experience points", exp_pool - you.exp_available);
+    }
+#endif
 
     if (change_level)
         check_skill_level_change(exsk);
@@ -304,57 +313,22 @@ static float _weap_crosstrain_bonus(skill_type exsk)
     return (bonus);
 }
 
-static bool _skip_exercise(skill_type exsk)
+bool is_antitrained(skill_type sk)
 {
-    if (exsk < SK_SPELLCASTING || exsk > SK_EVOCATIONS)
-        return (false);
-
-    // Being good at elemental magic makes other elements harder to
-    // learn.
-    if (exsk >= SK_FIRE_MAGIC && exsk <= SK_EARTH_MAGIC
-        && (you.skills[SK_FIRE_MAGIC] > you.skills[exsk]
-            || you.skills[SK_ICE_MAGIC] > you.skills[exsk]
-            || you.skills[SK_AIR_MAGIC] > you.skills[exsk]
-            || you.skills[SK_EARTH_MAGIC] > you.skills[exsk]))
+    skill_type opposite;
+    switch (sk)
     {
-        if (one_chance_in(3))
-            return (true);
+    case SK_FIRE_MAGIC  : opposite = SK_ICE_MAGIC;   break;
+    case SK_ICE_MAGIC   : opposite = SK_FIRE_MAGIC;  break;
+    case SK_AIR_MAGIC   : opposite = SK_EARTH_MAGIC; break;
+    case SK_EARTH_MAGIC : opposite = SK_AIR_MAGIC;   break;
+    default: return false;
     }
 
-    // Some are direct opposites.
-    if ((exsk == SK_FIRE_MAGIC || exsk == SK_ICE_MAGIC)
-        && (you.skills[SK_FIRE_MAGIC] > you.skills[exsk]
-            || you.skills[SK_ICE_MAGIC] > you.skills[exsk]))
-    {
-        // Of course, this is cumulative with the one above.
-        if (!one_chance_in(3))
-            return (true);
-    }
-
-    if ((exsk == SK_AIR_MAGIC || exsk == SK_EARTH_MAGIC)
-        && (you.skills[SK_AIR_MAGIC] > you.skills[exsk]
-           || you.skills[SK_EARTH_MAGIC] > you.skills[exsk]))
-    {
-        if (!one_chance_in(3))
-            return (true);
-    }
-
-    // Experimental restriction (too many spell schools). -- bwr
-    // XXX: This also hinders Spellcasting and Inv/Evo.
-
-    // Count better non-elemental spell skills (up to 6)
-    int skill_rank = 1;
-    for (int i = SK_CONJURATIONS; i < SK_FIRE_MAGIC; ++i)
-        if (you.skills[exsk] < you.skills[i])
-            skill_rank++;
-
-    // Things get progressively harder, but not harder than
-    // the Fire-Air or Ice-Earth level.
-    // Note: 1 <= skill_rank <= 7, so (1 in 6) to (1 in 3).
-    if (skill_rank > 3 && one_chance_in(10 - skill_rank))
-        return (true);
-
-    return (false);
+    return (you.skills[sk] < you.skills[opposite]
+            || you.skills[sk] == you.skills[opposite]
+               && you.skill_order[sk] > you.skill_order[opposite]
+               && you.skills[sk] != 0);
 }
 
 // These get a discount in the late game -- still required?
@@ -419,11 +393,6 @@ void change_skill_points(skill_type sk, int points, bool change_level)
 
 static int _exercise2(skill_type exsk)
 {
-    // Being better at some magic skills makes others less likely to train.
-    // Note: applies to Invocations and Evocations, too! [rob]
-    if (_skip_exercise(exsk))
-        return (0);
-
     // Don't train past level 27, even if the level hasn't been updated yet.
     if (you.skill_points[exsk] >= skill_exp_needed(27, exsk))
         return 0;
@@ -455,6 +424,9 @@ static int _exercise2(skill_type exsk)
         }
     }
 
+    if (is_antitrained(exsk))
+        cost *= 2;
+
     // Scale cost and skill_inc to available experience.
     const int spending_limit = std::min(MAX_SPENDING_LIMIT, you.exp_available);
     if (cost > spending_limit)
@@ -480,8 +452,16 @@ static int _exercise2(skill_type exsk)
     if (skill_inc <= 0)
         return (0);
 
-    cost -= random2(5);            // XXX: what's this for?
-    cost = std::max<int>(cost, 1); // No free lunch.
+    if (is_antitrained(exsk))
+    {
+        cost -= random2(3);
+        cost = std::max<int>(cost, 2);
+    }
+    else
+    {
+        cost -= random2(5);        // XXX: what's this for?
+        cost = std::max<int>(cost, 1); // No free lunch.
+    }
 
     you.skill_points[exsk] += skill_inc;
     you.ct_skill_points[exsk] += (1 - 1 / _weap_crosstrain_bonus(exsk))
