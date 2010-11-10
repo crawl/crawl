@@ -695,7 +695,9 @@ void you_teleport_now(bool allow_control, bool new_abyss_area, bool wizard_tele)
 // balance: otherwise you have an instant teleport from anywhere.
 int portal()
 {
-    if (!player_in_branch(BRANCH_MAIN_DUNGEON))
+    // Disabled completely in zotdef
+    if (!player_in_branch(BRANCH_MAIN_DUNGEON) 
+	|| crawl_state.game_is_zotdef())
     {
         mpr("This spell doesn't work here.");
         return (-1);
@@ -840,6 +842,13 @@ bool cast_apportation(int pow, const coord_def& where)
     }
 
     item_def& item = mitm[item_idx];
+
+    // Can't apport the Orb in zotdef
+    if (crawl_state.game_is_zotdef() && item_is_orb(item))
+    {
+        mpr("You cannot apport the sacred Orb!");
+	return (false);
+    }
 
     // Protect the player from destroying the item.
     if (feat_destroys_item(grd(you.pos()), item))

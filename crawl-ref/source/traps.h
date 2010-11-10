@@ -51,4 +51,5 @@ trap_type random_trap_slime(int level_number = -1);
 
 int traps_zero_number(int level_number = -1);
 
+int count_traps(trap_type ttyp);
 #endif

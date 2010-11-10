@@ -1507,6 +1507,7 @@ void MiscastEffect::_divination_mon(int severity)
             mon_msg_seen = "@The_monster@ looks slightly disoriented.";
             break;
         case 1:
+	    mon_msg_seen = "@The_monster@ looks disoriented.";
             target->confuse(
                 act_source,
                 1 + random2(3 + act_source->get_experience_level()));
@@ -1530,6 +1531,7 @@ void MiscastEffect::_divination_mon(int severity)
             8 + random2(3 + act_source->get_experience_level()));
         break;
     }
+    do_msg();
 }
 
 void MiscastEffect::_necromancy(int severity)

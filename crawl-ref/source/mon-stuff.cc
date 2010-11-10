@@ -579,6 +579,14 @@ int place_monster_corpse(const monster* mons, bool silent,
     }
 
     int o = get_item_slot();
+
+    // Zotdef corpse creation forces cleanup, otherwise starvation
+    // kicks in. The magic number 9 is less than the magic number of
+    // 10 in get_item_slot which indicates that a cull will be initiated
+    // if a free slot can't be found.
+    if (o==NON_ITEM && crawl_state.game_is_zotdef()) 
+        o = get_item_slot(9);
+
     if (o == NON_ITEM)
     {
         item_was_destroyed(corpse);
@@ -733,7 +741,8 @@ static int _calc_player_experience(monster* mons, killer_type killer,
         else
             return (experience);
     }
-    else if (pet_kill && !already_got_half_xp)
+    // Get exp for all kills in Zotdef
+    else if ((pet_kill && !already_got_half_xp) || crawl_state.game_is_zotdef())
         return (half_xp);
     else
         return (0);
@@ -3319,6 +3328,9 @@ bool can_go_straight(const coord_def& p1, const coord_def& p2,
     if (distance(p1, p2) > get_los_radius_sq())
         return (false);
 
+    // If no distance, then trivially true
+    if (p1==p2) return (true);
+
     // XXX: Hack to improve results for now. See FIXME above.
     ray_def ray;
     if (!find_ray(p1, p2, ray, opc_immob))
@@ -4424,3 +4436,20 @@ void debuff_monster(monster* mon)
      for (unsigned int i = 0; i < ARRAYSZ(lost_enchantments); ++i)
           mon->del_ench(lost_enchantments[i], true, true);
 }
+
+// Return the number of monsters of the specified type.
+// If friendlyOnly is true, only count friendly
+// monsters, otherwise all of them
+int count_monsters(monster_type mtyp, bool friendlyOnly)
+{
+    int count = 0;
+    for (int mon = 0; mon < MAX_MONSTERS; mon++)
+    {
+        monster *mons = &menv[mon];
+        if (mons->alive() && mons->type==mtyp
+        && (!friendlyOnly || mons->friendly()))
+        count++;
+    }
+    return (count);
+}
+

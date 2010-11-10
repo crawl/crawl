@@ -692,6 +692,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool force_full)
 
     bool proceed;
 
+    
     if (force_full)
     {
         bool success = true;
@@ -776,6 +777,14 @@ static bool _do_imprison(int pow, const coord_def& where, bool force_full)
 
 bool entomb(int pow)
 {
+    // Zotdef - turned off
+    if (crawl_state.game_is_zotdef())
+    {
+        mpr("The dungeon rumbles ominously, and rocks fall from the ceiling!");
+        return false;
+    }
+
+
     return (_do_imprison(pow, you.pos(), false));
 }
 
