@@ -293,7 +293,7 @@ static bool _check_crosstrain(skill_type exsk, skill_type sk1, skill_type sk2)
                 || you.skills[sk2] > you.skills[exsk]));
 }
 
-static float _weap_crosstrain_bonus(skill_type exsk)
+float crosstrain_bonus(skill_type exsk)
 {
     int bonus = 1;
 
@@ -405,7 +405,7 @@ static int _exercise2(skill_type exsk)
 
     // Being good at some weapons makes others easier to learn.
     if (exsk < SK_ARMOUR)
-        skill_inc *= _weap_crosstrain_bonus(exsk);
+        skill_inc *= crosstrain_bonus(exsk);
 
     // Starting to learn skills is easier if the appropriate stat is high.
         // We check skill points in case skill level hasn't been updated yet
@@ -464,7 +464,7 @@ static int _exercise2(skill_type exsk)
     }
 
     you.skill_points[exsk] += skill_inc;
-    you.ct_skill_points[exsk] += (1 - 1 / _weap_crosstrain_bonus(exsk))
+    you.ct_skill_points[exsk] += (1 - 1 / crosstrain_bonus(exsk))
                                  * skill_inc;
     you.exp_available -= cost;
     you.total_skill_points += skill_inc;
