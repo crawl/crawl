@@ -2446,47 +2446,54 @@ bool ashenzari_transfer_knowledge()
     mprf("As you forget about %s, you feel ready to understand %s.",
          skill_name(fsk), skill_name(tsk));
 
-    const float penalty = 0.9; // 10% XP penalty
-    const unsigned int min_transfer = 1000;
-    unsigned int fsk_points = you.skill_points[fsk];
-    unsigned int exp_pool = you.exp_available;
-    unsigned int skp_lost   = 0; // skill points lost in fsk.
-    unsigned int skp_gained = 0; // skill points gained in tsk.
-    unsigned int skp_max; // maximum number of skill points transferable.
-    bool tsk_practise = you.practise_skill[tsk];
+    const int penalty = 90; // 10% XP penalty
+    int fsk_points = you.skill_points[fsk];
+    int total_skp_lost   = 0; // skill points lost in fsk.
+    int total_skp_gained = 0; // skill points gained in tsk.
+    int skp_max; // maximum number of skill points transferable.
+    int fsk_level = you.skills[fsk];
+    int tsk_level = you.skills[tsk];
 
     skp_max = (fsk_points - you.ct_skill_points[fsk]) / 2;
-    skp_max = std::max(skp_max, min_transfer);
+    skp_max = std::max(skp_max, 1000);
     if (skp_max > fsk_points)
         skp_max = fsk_points;
 
-    // Apply the XP penalty
-    skp_max *= penalty;
-    int train_count = skp_max / 10;
-
-    you.practise_skill[tsk] = true;
-    while (skp_gained < skp_max && train_count > 0)
+    while (total_skp_lost < skp_max)
     {
-        you.exp_available = 250;
-        skp_gained += exercise(tsk, 1, false);
-        train_count--;
+        int skp_lost = std::min(20, skp_max - total_skp_lost);
+        int skp_gained = skp_lost * penalty / 100;
+
+        float ct_bonus = crosstrain_bonus(tsk);
+        if (ct_bonus > 1)
+        {
+            skp_gained *= ct_bonus;
+            you.ct_skill_points[tsk] += (1 - 1 / ct_bonus) * skp_gained;
+        }
+        else if (is_antitrained(tsk))
+            skp_gained /= ANTITRAIN_PENALTY;
+
+        int double_cost = std::min<int>(skp_lost, you.ct_skill_points[fsk]);
+        you.ct_skill_points[fsk] -= double_cost;
+        skp_lost += double_cost;
+        skp_max += double_cost;
+
+        change_skill_points(fsk, -skp_lost, false);
+        change_skill_points(tsk, skp_gained, false);
+        total_skp_lost += skp_lost;
+        total_skp_gained += skp_gained;
     }
-    you.practise_skill[tsk] = tsk_practise;
 
-    skp_lost = skp_gained / penalty;
-    int double_cost = std::min(skp_lost, you.ct_skill_points[fsk]);
-    you.ct_skill_points[fsk] -= double_cost;
-    skp_lost += double_cost;
+    // Restore the level
+    you.skills[fsk] = fsk_level;
+    you.skills[tsk] = tsk_level;
 
-    change_skill_points(fsk, -skp_lost, true);
-    check_skill_level_change(tsk); // just update the level
+    // Perform the real level up
+    check_skill_level_change(fsk);
+    check_skill_level_change(tsk);
 
-    // We restore the XP pool
-    you.exp_available = exp_pool;
-
-    dprf("Maximum skill points transferable: %d", skp_max);
-    dprf("skill %s lost %d points", skill_name(fsk), skp_lost);
-    dprf("skill %s gained %d points", skill_name(tsk), skp_gained);
+    dprf("skill %s lost %d points", skill_name(fsk), total_skp_lost);
+    dprf("skill %s gained %d points", skill_name(tsk), total_skp_gained);
 
     return true;
 }
