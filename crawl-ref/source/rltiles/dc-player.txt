@@ -793,17 +793,37 @@ green GREEN
 ###Beard
 %parts_ctg BEARD
 %sdir player/beard
-
+full_black FULL_BLACK
+full_blonde FULL_BLONDE
+full_brown FULL_BROWN
+full_green FULL_GREEN
+full_red FULL_RED
+full_white FULL_WHITE
+garibaldi_black GARIBALDI_BLACK
+garibaldi_blonde GARIBALDI_BLONDE
+garibaldi_brown GARIBALDI_BROWN
+garibaldi_green GARIBALDI_GREEN
+garibaldi_red GARIBALDI_RED
+garibaldi_white GARIBALDI_WHITE
+medium_black MEDIUM_BLACK
+medium_blonde MEDIUM_BLONDE
+medium_brown MEDIUM_BROWN
+medium_green MEDIUM_GREEN
+medium_red MEDIUM_RED
+medium_white MEDIUM_WHITE
+scarf SCARF
 short_black SHORT_BLACK
-short_red SHORT_RED
-short_yellow SHORT_YELLOW
-short_white SHORT_WHITE
+short_blonde SHORT_BLONDE
+short_brown SHORT_BROWN
 short_green SHORT_GREEN
-long_black LONG_BLACK
-long_red LONG_RED
-long_yellow LONG_YELLOW
-long_white LONG_WHITE
-long_green LONG_GREEN
+short_red SHORT_RED
+short_white SHORT_WHITE
+stubble_black STUBBLE_BLACK
+stubble_blonde STUBBLE_BLONDE
+stubble_brown STUBBLE_BROWN
+stubble_green STUBBLE_GREEN
+stubble_red STUBBLE_RED
+stubble_white STUBBLE_WHITE
 pj PJ
 %end_ctg
 
