@@ -112,10 +112,7 @@ static tileidx_t _tileidx_trap(trap_type type)
 static tileidx_t _tileidx_shop(coord_def where)
 {
     const shop_struct *shop = get_shop(where);
-    if (!shop && !feature_mimic_at(where))
-        return TILE_DNGN_ERROR;
-
-    shop_type stype = shop->type;
+    shop_type stype;
 
     if (feature_mimic_at(where))
     {
@@ -125,6 +122,10 @@ static tileidx_t _tileidx_shop(coord_def where)
         else
             return TILE_DNGN_ERROR;
     }
+    else if (shop)
+       stype = shop->type;
+    else
+        return TILE_DNGN_ERROR;
 
     switch (stype)
     {
