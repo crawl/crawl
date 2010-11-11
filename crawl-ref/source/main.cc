@@ -106,6 +106,7 @@
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-clouds.h"
+#include "spl-damage.h"
 #include "spl-goditem.h"
 #include "spl-other.h"
 #include "spl-selfench.h"
@@ -2591,6 +2592,13 @@ static void _decrement_durations()
                               "Your astral sight fades away."))
     {
         you.xray_vision = false;
+    }
+
+    if (you.duration[DUR_TORNADO])
+    {
+        tornado_damage(std::min(delay, you.duration[DUR_TORNADO]));
+        _decrement_a_duration(DUR_TORNADO, delay,
+                              "The winds around you calm down.");
     }
 }
 
