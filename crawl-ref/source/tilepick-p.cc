@@ -541,7 +541,7 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
         case SP_HILL_DWARF:
         case SP_MOUNTAIN_DWARF:
             hair  = TILEP_HAIR_LONG_RED;
-            beard = TILEP_BEARD_LONG_RED;
+            beard = TILEP_BEARD_FULL_RED;
             break;
         case SP_HILL_ORC:
             hair = 0;
@@ -590,11 +590,11 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
             break;
         case SP_DEEP_DWARF:
             hair  = TILEP_HAIR_SHORT_WHITE;
-            beard = TILEP_BEARD_LONG_WHITE;
+            beard = TILEP_BEARD_GARIBALDI_WHITE;
             break;
         case SP_SPRIGGAN:
             hair = 0;
-            beard = TILEP_BEARD_LONG_GREEN;
+            beard = TILEP_BEARD_MEDIUM_GREEN;
             break;
         default:
             // nothing to do
