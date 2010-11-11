@@ -537,6 +537,19 @@ struct spell_desc
 },
 
 {
+    SPELL_TORNADO, "Tornado",
+     SPTYP_AIR,
+     SPFLAG_AREA,
+     8,
+     200,
+     6, 6,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_POISONOUS_CLOUD, "Poisonous Cloud",
      SPTYP_CONJURATION | SPTYP_POISON | SPTYP_AIR,
      SPFLAG_GRID | SPFLAG_AREA | SPFLAG_ALLOW_SELF,

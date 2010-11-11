@@ -105,7 +105,7 @@ public:
     const coord_def* operator->() const;
 
     const distance_iterator& operator ++();
-    distance_iterator operator ++(int);
+    void operator ++(int);
     int radius() const;
 private:
     coord_def center, current;

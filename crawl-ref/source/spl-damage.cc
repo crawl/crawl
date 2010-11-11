@@ -13,6 +13,7 @@
 #include "beam.h"
 #include "cloud.h"
 #include "coord.h"
+#include "coordit.h"
 #include "directn.h"
 #include "env.h"
 #include "food.h"
@@ -32,6 +33,7 @@
 #include "ouch.h"
 #include "player.h"
 #include "shout.h"
+#include "spl-cast.h"
 #include "spl-util.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -1829,4 +1831,109 @@ bool cast_sandblast(int pow, bolt &beam)
         dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
 
     return (success);
+}
+
+static void _set_tornado_durations(int powc)
+{
+    int dur = 30 + powc / 2;
+    you.duration[DUR_TORNADO] = dur;
+    you.duration[DUR_LEVITATION] += dur;
+    you.duration[DUR_CONTROLLED_FLIGHT] += dur;
+    you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
+}
+
+#define TORNADO_RADIUS 6
+bool cast_tornado(int powc)
+{
+    if (you.duration[DUR_TORNADO])
+    {
+        _set_tornado_durations(powc);
+        mpr("The winds around you grow in strength.");
+        return true;
+    }
+
+    bool friendlies = false;
+    for (radius_iterator ri(you.pos(), TORNADO_RADIUS, C_ROUND); ri; ++ri)
+    {
+        const monster_info* m = env.map_knowledge(*ri).monsterinfo();
+        if (!m)
+            continue;
+        if (mons_att_wont_attack(m->attitude))
+            friendlies = true;
+    }
+
+    if (friendlies
+        && !yesno("There are friendlies around, are you sure you want to hurt them?",
+                  true, 'n'))
+    {
+        return false;
+    }
+
+    mprf("A great vortex of raging winds %s.",
+         you.is_levitating() ? "appears around you"
+                             : "appears and lifts you up");
+
+    if (you.fishtail)
+        merfolk_stop_swimming();
+
+    _set_tornado_durations(powc);
+    burden_change();
+
+    return true;
+}
+
+void tornado_damage(int dur)
+{
+    // Not stored so unwielding that staff will reduce damage.
+    int pow = calc_spell_power(SPELL_TORNADO, true);
+    dprf("Doing tornado, base power %d", pow);
+    const coord_def org = you.pos();
+
+    std::stack<actor*>    move_act;
+
+    distance_iterator count_i(org, false);
+    distance_iterator dam_i(org, true);
+    for (int r = 1; r <= TORNADO_RADIUS; r++)
+    {
+        int cnt_open = 0;
+        int cnt_all  = 0;
+        while (count_i && count_i.radius() == r)
+        {
+            if (!feat_is_solid(grd(*count_i)))
+                cnt_open++;
+            cnt_all++;
+            count_i++;
+        }
+        pow = pow * cnt_open / cnt_all;
+        dprf("at dist %d pow is %d", r, pow);
+        if (!pow)
+            break;
+
+        std::vector<coord_def> clouds;
+        for (; dam_i && dam_i.radius() == r; dam_i++)
+        {
+            if (grd(*dam_i) == DNGN_TREE && one_chance_in(20))
+            {
+                grd(*dam_i) = DNGN_FLOOR;
+                set_terrain_changed(*dam_i);
+                if (you.see_cell(*dam_i))
+                    mpr("A tree falls to the hurricane!");
+            }
+
+            if (feat_is_solid(grd(*dam_i)))
+                continue;
+
+            if (actor* victim = actor_at(*dam_i))
+            {
+                victim->hurt(&you, roll_dice(6, pow) / 8);
+
+                if (victim->alive())
+                    move_act.push(victim);
+            }
+            if (env.cgrid(*dam_i) == EMPTY_CLOUD && coinflip())
+                place_cloud(CLOUD_MIST, *dam_i, 2 + random2(2), KILL_YOU_MISSILE);
+            clouds.push_back(*dam_i);
+            swap_clouds(clouds[random2(clouds.size())], *dam_i);
+        }
+    }
 }

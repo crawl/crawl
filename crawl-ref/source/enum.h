@@ -456,10 +456,6 @@ enum cloud_type
     CLOUD_GLOOM,
     CLOUD_INK,
     CLOUD_HOLY_FLAMES,
-
-    CLOUD_OPAQUE_FIRST = CLOUD_BLACK_SMOKE,
-    CLOUD_OPAQUE_LAST  = CLOUD_HOLY_FLAMES,
-
     CLOUD_MIASMA,
     CLOUD_MIST,
     CLOUD_CHAOS,
@@ -467,6 +463,10 @@ enum cloud_type
     CLOUD_MUTAGENIC,
     CLOUD_MAGIC_TRAIL,
     NUM_CLOUD_TYPES,
+
+    CLOUD_OPAQUE_FIRST = CLOUD_BLACK_SMOKE,
+    CLOUD_OPAQUE_LAST  = CLOUD_HOLY_FLAMES,
+
     CLOUD_RANDOM = 98,
     CLOUD_DEBUGGING = 99,   //   99: used once as 'nonexistent cloud' {dlb}
 };
@@ -1267,6 +1267,7 @@ enum duration_type
     DUR_AFRAID,
     DUR_MIRROR_DAMAGE,
     DUR_SCRYING,
+    DUR_TORNADO,
 
     NUM_DURATIONS
 };
@@ -3239,6 +3240,7 @@ enum spell_type
 #if TAG_MAJOR_VERSION == 31
     SPELL_NOXIOUS_CLOUD,
 #endif
+    SPELL_TORNADO,
 
     NUM_SPELLS
 };
