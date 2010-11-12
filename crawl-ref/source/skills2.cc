@@ -2268,7 +2268,10 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
     int fsk_points = you.skill_points[fsk];
     int tsk_points = you.skill_points[tsk];
 
-    while (total_skp_lost < skp_max && you.skills[tsk] < 27)
+    // We need to transfer by small steps and updating skill levels each time
+    // so that cross/anti-training are handled properly.
+    while (total_skp_lost < skp_max && you.skills[tsk] < 27
+           && (simu || total_skp_lost < (int)you.transfer_skill_points))
     {
         int skp_lost = std::min(20, skp_max - total_skp_lost);
         int skp_gained = skp_lost * penalty / 100;
@@ -2285,7 +2288,6 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
         int double_cost = std::min<int>(skp_lost, you.ct_skill_points[fsk]);
         you.ct_skill_points[fsk] -= double_cost;
         skp_lost += double_cost;
-        skp_max += double_cost;
 
         change_skill_points(fsk, -skp_lost, false);
         if (fsk != tsk)
@@ -2309,9 +2311,18 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
         // Perform the real level up
         check_skill_level_change(fsk);
         check_skill_level_change(tsk);
+        you.transfer_skill_points -= total_skp_lost;
 
         dprf("skill %s lost %d points", skill_name(fsk), total_skp_lost);
         dprf("skill %s gained %d points", skill_name(tsk), total_skp_gained);
+        if (you.transfer_skill_points <= 0 || you.skills[tsk] == 27)
+        {
+            you.transfer_skill_points = 0;
+            mprf("You stop forgetting about %s and now have a sharp "
+                 "understanding of %s", skill_name(fsk), skill_name(tsk));
+        }
+        else if (you.transfer_skill_points > 0)
+            dprf("%d skill points left to transfer", you.transfer_skill_points);
     }
     return new_level;
 }

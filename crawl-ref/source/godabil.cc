@@ -2435,6 +2435,18 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
 
 bool ashenzari_transfer_knowledge()
 {
+    if (you.transfer_skill_points > 0)
+    {
+        mprf("You are currently transfering knowledge from %s to %s.",
+             skill_name(you.transfer_from_skill),
+             skill_name(you.transfer_to_skill));
+        if (!yesno("Are you sure you want to cancel this transfer?",
+                   false, 'n'))
+        {
+            return (false);
+        }
+    }
+
     skill_type fsk = select_skill();
     if (fsk == SK_NONE)
     {
@@ -2445,7 +2457,7 @@ bool ashenzari_transfer_knowledge()
     int fsk_points = you.skill_points[fsk];
     int skp_max; // maximum number of skill points transferable.
 
-    skp_max = (fsk_points - you.ct_skill_points[fsk]) / 2;
+    skp_max = fsk_points / 2;
     skp_max = std::max(skp_max, 1000);
     if (skp_max > fsk_points)
         skp_max = fsk_points;
@@ -2460,7 +2472,10 @@ bool ashenzari_transfer_knowledge()
     mprf("As you forget about %s, you feel ready to understand %s.",
          skill_name(fsk), skill_name(tsk));
 
-    transfer_skill_points(fsk, tsk, skp_max, false);
+    you.transfer_from_skill = fsk;
+    you.transfer_to_skill = tsk;
+    you.transfer_skill_points = skp_max;
+    you.transfer_total_skill_points = skp_max;
 
     redraw_screen();
     return true;
