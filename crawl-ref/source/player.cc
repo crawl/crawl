@@ -2619,6 +2619,19 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
 
     dprf("gain_exp: %d", exp_gained);
 
+    if (you.transfer_skill_points > 0)
+    {
+        int amount = exp_gained * 10
+                                / calc_skill_cost(you.skill_cost_level,
+                                            you.skills[you.transfer_to_skill]);
+        if (amount >= 20 || one_chance_in(20 - amount))
+        {
+            amount = std::max(20, amount);
+            transfer_skill_points(you.transfer_from_skill,
+                                  you.transfer_to_skill, amount, false);
+        }
+    }
+
     if (you.experience + exp_gained > (unsigned int)MAX_EXP_TOTAL)
         you.experience = MAX_EXP_TOTAL;
     else
@@ -5085,6 +5098,11 @@ void player::init()
     skill_points.init(0);
     ct_skill_points.init(0);
     skill_order.init(MAX_SKILL_ORDER);
+
+    transfer_from_skill = SK_NONE;
+    transfer_to_skill = SK_NONE;
+    transfer_skill_points = 0;
+    transfer_total_skill_points = 0;
 
     sage_bonus_skill = NUM_SKILLS;
     sage_bonus_degree = 0;

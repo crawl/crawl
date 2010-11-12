@@ -3072,6 +3072,15 @@ void excommunication(god_type new_god)
         divine_retribution(old_god);
         break;
 
+    case GOD_ASHENZARI:
+        if (you.transfer_skill_points > 0)
+        {
+            mpr("Transfer knowledge aborted!", MSGCH_GOD, GOD_ASHENZARI);
+            you.transfer_skill_points = 0;
+        }
+        _inc_penance(old_god, 25);
+        break;
+
     case GOD_CHEIBRIADOS:
     default:
         _inc_penance(old_god, 25);

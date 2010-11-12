@@ -122,6 +122,12 @@ public:
   FixedVector<unsigned int, NUM_SKILLS>   ct_skill_points;
   FixedVector<uint8_t, NUM_SKILLS>  skill_order;
 
+  //Ashenzari transfer knowledge
+  skill_type    transfer_from_skill;
+  skill_type    transfer_to_skill;
+  unsigned int  transfer_skill_points;
+  unsigned int  transfer_total_skill_points;
+
   skill_type sage_bonus_skill;  // If Sage is in effect, which skill it affects.
   int sage_bonus_degree;        // How much bonus XP to give in that skill.
 

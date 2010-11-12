@@ -96,7 +96,7 @@ void calc_total_skill_points(void)
 
 // skill_cost_level makes skills more expensive for more experienced characters
 // skill_level      makes higher skills more expensive
-static int _calc_skill_cost(int skill_cost_level, int skill_level)
+int calc_skill_cost(int skill_cost_level, int skill_level)
 {
     int ret = 1 + skill_level;
 
@@ -356,7 +356,7 @@ static int _exercise2(skill_type exsk)
     int skill_inc = 10;
 
     // This will be deducted from you.exp_available.
-    int cost = _calc_skill_cost(you.skill_cost_level, you.skills[exsk]);
+    int cost = calc_skill_cost(you.skill_cost_level, you.skills[exsk]);
 
     // Being good at some weapons makes others easier to learn.
     if (exsk < SK_ARMOUR)
