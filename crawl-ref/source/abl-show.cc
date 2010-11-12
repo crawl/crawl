@@ -86,6 +86,7 @@ static bool _activate_talent(const talent& tal);
 static bool _do_ability(const ability_def& abil);
 static void _pay_ability_costs(const ability_def& abil);
 static std::string _describe_talent(const talent& tal);
+static int _scale_piety_cost(ability_type abil, int original_cost);
 
 // this all needs to be split into data/util/show files
 // and the struct mechanism here needs to be rewritten (again)
@@ -523,6 +524,92 @@ const std::string make_cost_description(ability_type ability)
     return (ret.str());
 }
 
+std::string _get_food_amount_str(int value)
+{
+    return(value > 300 ? "extremely large" :
+           value > 200 ? "large" :
+           value > 100 ? "moderate" :
+                         "small");
+}
+
+std::string _get_piety_amount_str(int value)
+{
+    return(value > 15 ? "extremely large" :
+           value > 10 ? "large" :
+           value > 5  ? "moderate" :
+                        "small");
+}
+
+const std::string make_detailed_cost_description(ability_type ability)
+{
+    const ability_def& abil = _get_ability_def(ability);
+    std::ostringstream ret;
+    std::vector<std::string> values;
+    std::string str;
+
+    bool have_cost = false;
+    ret << "This ability costs: ";
+
+    if (abil.mp_cost > 0)
+    {
+        have_cost = true;
+        ret << "\nMP     : ";
+        ret << abil.mp_cost;
+        if (abil.flags & ABFLAG_PERMANENT_MP)
+            ret << " (permanent)";
+    }
+    if (abil.hp_cost)
+    {
+        have_cost = true;
+        ret << "\nHP     : ";
+        ret << abil.hp_cost.cost(you.hp_max);
+        if (abil.flags & ABFLAG_PERMANENT_HP)
+            ret << " (permanent)";
+    }
+
+    if (abil.food_cost && you.is_undead != US_UNDEAD
+        && (you.is_undead != US_SEMI_UNDEAD || you.hunger_state > HS_STARVING))
+    {
+        have_cost = true;
+        ret << "\nHunger : ";
+        ret << _get_food_amount_str(abil.food_cost + abil.food_cost / 2);
+    }
+
+    if (abil.piety_cost)
+    {
+        have_cost = true;
+        ret << "\nPiety  : ";
+        int avgcost = abil.piety_cost.base + abil.piety_cost.add / 2;
+        ret << _get_piety_amount_str(avgcost);
+    }
+
+    if (!have_cost)
+        ret << "nothing.";
+
+    if (abil.flags & ABFLAG_BREATH)
+        ret << "\nIt is a breathing attack and needs some time between uses.";
+
+    if (abil.flags & ABFLAG_DELAY)
+        ret << "\nIt takes some time before being effective.";
+
+    if (abil.flags & ABFLAG_PAIN)
+        ret << "\nUsing this ability will hurt you.";
+
+    if (abil.flags & ABFLAG_PIETY)
+        ret << "\nIt will drain your piety while it is active.";
+
+    if (abil.flags & ABFLAG_EXHAUSTION)
+        ret << "\nIt cannot be used when exhausted.";
+
+    if (abil.flags & ABFLAG_INSTANT)
+        ret << "\nIt is instantaneous.";
+
+    if (abil.flags & ABFLAG_CONF_OK)
+        ret << "\nYou can use it even if confused.";
+
+    return (ret.str());
+}
+
 static ability_type _fixup_ability(ability_type ability)
 {
     switch (ability)
@@ -913,7 +1000,8 @@ static void _print_talent_description(const talent& tal)
     else
     {
         std::ostringstream data;
-        data << name << "\n\n" << lookup;
+        data << name << "\n\n" << lookup << "\n";
+        data << make_detailed_cost_description(tal.which);
         print_description(data.str());
     }
     wait_for_keypress();
