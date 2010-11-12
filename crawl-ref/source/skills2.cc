@@ -2221,7 +2221,7 @@ skill_type select_skill(skill_type from_skill, int skill_points, bool show_all)
     else
         cprintf("Select the destination skill");
 
-    _display_skill_table(false, false, true, from_skill, skill_points,
+    _display_skill_table(true, false, true, from_skill, skill_points,
                          show_all);
 
     mouse_control mc(MOUSE_MODE_MORE);
