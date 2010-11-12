@@ -28,6 +28,7 @@
 #include "notes.h"
 #include "options.h"
 #include "player.h"
+#include "religion.h"
 #include "quiver.h"
 #include "random.h"
 #include "shopping.h"
@@ -539,8 +540,15 @@ void do_curse_item(item_def &item, bool quiet)
     }
 }
 
-void do_uncurse_item(item_def &item, bool inscribe)
+void do_uncurse_item(item_def &item, bool inscribe, bool no_ash)
 {
+    if (no_ash && you.religion == GOD_ASHENZARI)
+    {
+        mprf(MSGCH_GOD, "%s preserves the curse.",
+             god_name(GOD_ASHENZARI).c_str());
+        return;
+    }
+
     if (inscribe && Options.autoinscribe_cursed
         && item.inscription.find("was cursed") == std::string::npos
         && !item_ident(item, ISFLAG_SEEN_CURSED)

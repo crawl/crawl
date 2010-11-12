@@ -4257,7 +4257,7 @@ bool enchant_weapon(enchant_stat_type which_stat, bool quiet, item_def &wpn)
             }
         }
 
-        do_uncurse_item(wpn);
+        do_uncurse_item(wpn, true, true);
     }
 
     return (true);
@@ -4312,7 +4312,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
         hide2armour(arm);
         ac_change = property(arm, PARM_AC) - ac_change;
 
-        do_uncurse_item(arm);
+        do_uncurse_item(arm, true, true);
 
         // No additional enchantment.
         return (true);
@@ -4331,7 +4331,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
                      arm.name(DESC_CAP_YOUR).c_str());
             }
 
-            do_uncurse_item(arm);
+            do_uncurse_item(arm, true, true);
             return (true);
         }
         else
@@ -4356,7 +4356,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
 
     arm.plus++;
     ac_change++;
-    do_uncurse_item(arm);
+    do_uncurse_item(arm, true, true);
 
     return (true);
 }
@@ -4866,7 +4866,7 @@ void read_scroll(int slot)
             }
 
             if (is_cursed)
-                do_uncurse_item(wpn);
+                do_uncurse_item(wpn, true, true);
 
             if (success)
             {
