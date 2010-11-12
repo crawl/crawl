@@ -977,9 +977,9 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
             iflags_t race = get_equip_race(item);
 
             if (race == ISFLAG_DWARVEN)
-                description += "\nIt is well-crafted, durable, and resistant "
-                               "to corrosion. Dwarves deal slightly more "
-                               "damage with it.";
+                description += "\nIt is well-crafted, durable, and very "
+                               "resistant to corrosion. Dwarves deal slightly "
+                               "more damage with it.";
 
             if (race == ISFLAG_ORCISH)
                 description += "\nOrcs deal slightly more damage with it.";
@@ -1016,6 +1016,19 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
             description += ".";
         }
     }
+
+    if (item.plus2 >= 5)
+        description += "\nIts enchantment level renders it immune to "
+                       "acidic corrosion.";
+    else if (item.plus2 >= 4)
+        description += "\nIts enchantment level renders it extremely "
+                       "resistant to acidic corrosion.";
+    else if (item.plus2 >= 3)
+        description += "\nIts enchantment level renders it "
+                       "resistant to acidic corrosion.";
+    else if (item.plus2 >= 2)
+        description += "\nIts enchantment level renders it somewhat "
+                       "resistant to acidic corrosion.";
 
     return (description);
 }
@@ -1221,6 +1234,19 @@ static std::string _describe_ammo(const item_def &item)
         description += ".";
     }
 
+    if (item.plus >= 5)
+        description += "\nIts enchantment level renders it immune to "
+                       "acidic corrosion.";
+    else if (item.plus >= 4)
+        description += "\nIts enchantment level renders it extremely "
+                       "resistant to acidic corrosion.";
+    else if (item.plus >= 3)
+        description += "\nIts enchantment level renders it "
+                       "resistant to acidic corrosion.";
+    else if (item.plus >= 2)
+        description += "\nIts enchantment level renders it somewhat "
+                       "resistant to acidic corrosion.";
+
     return (description);
 }
 
@@ -1373,8 +1399,8 @@ static std::string _describe_armour(const item_def &item, bool verbose)
         iflags_t race = get_equip_race(item);
 
         if (race == ISFLAG_DWARVEN)
-            description += "\nIt is well-crafted, durable, and resistant to "
-                           "corrosion.";
+            description += "\nIt is well-crafted, durable, and very resistant "
+                           "to corrosion.";
         else if (race == ISFLAG_ELVEN)
         {
             description += "\nIt is well-crafted and unobstructive";
@@ -1407,6 +1433,19 @@ static std::string _describe_armour(const item_def &item, bool verbose)
         else
             description += "\nIt is maximally enchanted.";
     }
+
+    if (item.plus >= 5)
+        description += "\nIts enchantment level renders it immune to "
+                       "acidic corrosion.";
+    else if (item.plus >= 4)
+        description += "\nIts enchantment level renders it extremely "
+                       "resistant to acidic corrosion.";
+    else if (item.plus >= 3)
+        description += "\nIts enchantment level renders it "
+                       "resistant to acidic corrosion.";
+    else if (item.plus >= 2)
+        description += "\nIts enchantment level renders it somewhat "
+                       "resistant to acidic corrosion.";
 
     return description;
 }
