@@ -2435,13 +2435,19 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
 
 bool ashenzari_transfer_knowledge()
 {
-    skill_type fsk = list_skills("Select the source skill.");
+    skill_type fsk = select_skill();
     if (fsk == SK_NONE)
+    {
+        redraw_screen();
         return false;
+    }
 
-    skill_type tsk = list_skills("Select the destination skill.", fsk);
+    skill_type tsk = select_skill(fsk);
     if (tsk == SK_NONE)
+    {
+        redraw_screen();
         return false;
+    }
 
     mprf("As you forget about %s, you feel ready to understand %s.",
          skill_name(fsk), skill_name(tsk));
@@ -2495,5 +2501,6 @@ bool ashenzari_transfer_knowledge()
     dprf("skill %s lost %d points", skill_name(fsk), total_skp_lost);
     dprf("skill %s gained %d points", skill_name(tsk), total_skp_gained);
 
+    redraw_screen();
     return true;
 }
