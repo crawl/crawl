@@ -1223,7 +1223,7 @@ bool is_enchantable_weapon(const item_def &wpn, bool uncurse, bool first)
         return (false);
     }
 
-    if (uncurse && wpn.cursed())
+    if (uncurse && wpn.cursed() && you.religion != GOD_ASHENZARI)
         return true;
 
     // Blowguns don't have any to-dam.
@@ -1272,7 +1272,7 @@ bool is_enchantable_armour(const item_def &arm, bool uncurse, bool unknown)
     // Artefacts or highly enchanted armour cannot be enchanted, only
     // uncursed.
     if (is_artefact(arm) || arm.plus >= armour_max_enchant(arm))
-        return (uncurse && arm.cursed());
+        return (uncurse && arm.cursed() && you.religion != GOD_ASHENZARI);
 
     return (true);
 }
