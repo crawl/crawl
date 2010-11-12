@@ -2268,6 +2268,11 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
     int fsk_points = you.skill_points[fsk];
     int tsk_points = you.skill_points[tsk];
 
+#ifdef DEBUG_DIAGNOSTICS
+    if (!simu && you.ct_skill_points[fsk] > 0)
+        dprf("ct_skill_points[%s]: %d", skill_name(fsk), you.ct_skill_points[fsk]);
+#endif
+
     // We need to transfer by small steps and updating skill levels each time
     // so that cross/anti-training are handled properly.
     while (total_skp_lost < skp_max && you.skills[tsk] < 27
@@ -2285,9 +2290,11 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
         else if (is_antitrained(tsk))
             skp_gained /= ANTITRAIN_PENALTY;
 
-        int double_cost = std::min<int>(skp_lost, you.ct_skill_points[fsk]);
-        you.ct_skill_points[fsk] -= double_cost;
-        skp_lost += double_cost;
+        int ct_penalty = skp_lost * you.ct_skill_points[fsk]
+                          / (you.skill_points[fsk] - you.ct_skill_points[fsk]);
+        ct_penalty = std::min<int>(ct_penalty, you.ct_skill_points[fsk]);
+        you.ct_skill_points[fsk] -= ct_penalty;
+        skp_lost += ct_penalty;
 
         change_skill_points(fsk, -skp_lost, false);
         if (fsk != tsk)
@@ -2315,6 +2322,11 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
 
         dprf("skill %s lost %d points", skill_name(fsk), total_skp_lost);
         dprf("skill %s gained %d points", skill_name(tsk), total_skp_gained);
+#ifdef DEBUG_DIAGNOSTICS
+        if (you.ct_skill_points[fsk] > 0)
+            dprf("ct_skill_points[%s]: %d", skill_name(fsk), you.ct_skill_points[fsk]);
+#endif
+
         if (you.transfer_skill_points <= 0 || you.skills[tsk] == 27)
         {
             you.transfer_skill_points = 0;
