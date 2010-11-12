@@ -1702,13 +1702,15 @@ static void tag_read_you(reader &th, int minorVersion)
 
 #if TAG_MAJOR_VERSION == 31
     if (minorVersion >= TAG_MINOR_SLOW_RESKILL)
-#endif
     {
-        you.transfer_from_skill = static_cast<skill_type>(unmarshallInt(th));
-        you.transfer_to_skill = static_cast<skill_type>(unmarshallInt(th));
-        you.transfer_skill_points = unmarshallInt(th);
-        you.transfer_total_skill_points = unmarshallInt(th);
+#endif
+    you.transfer_from_skill = static_cast<skill_type>(unmarshallInt(th));
+    you.transfer_to_skill = static_cast<skill_type>(unmarshallInt(th));
+    you.transfer_skill_points = unmarshallInt(th);
+    you.transfer_total_skill_points = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 31
     }
+#endif
 
     // Set up you.total_skill_points and you.skill_cost_level.
     calc_total_skill_points();
