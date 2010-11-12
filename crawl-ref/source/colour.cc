@@ -10,6 +10,7 @@
 #include "random.h"
 
 #include <utility>
+#include <math.h>
 
 static std::map<element_type, element_colour_calc*> element_colours;
 static std::map<std::string, element_colour_calc*> element_colours_str;
@@ -166,6 +167,15 @@ static int _etc_tree(int, const coord_def& loc)
     return (h>>30)                        ? GREEN
          : player_in_branch(BRANCH_SWAMP) ? BROWN
          :                                  LIGHTGREEN;
+}
+
+static int _etc_tornado(int, const coord_def& loc)
+{
+    int x = loc.x - you.pos().x;
+    int y = loc.y - you.pos().y;
+    double dir = atan2(x, y)/PI;
+    double dist = sqrt(x*x + y*y);
+    return ((int)floor(dir*2 + dist*0.33 + (you.frame_no % 54)/2.7))&1 ? WHITE : LIGHTGRAY;
 }
 
 static int _etc_random(int, const coord_def&)
@@ -447,6 +457,9 @@ void init_element_colours()
                        ));
     add_element_colour(new element_colour_calc(
                             ETC_TREE, "tree", _etc_tree
+                       ));
+    add_element_colour(new element_colour_calc(
+                            ETC_TORNADO, "tornado", _etc_tornado
                        ));
     add_element_colour(new element_colour_calc(
                             ETC_RANDOM, "random", _etc_random

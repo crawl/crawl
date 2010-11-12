@@ -49,6 +49,7 @@ enum element_type
     ETC_WAVES,          // cyan, with regularly occurring lightcyan waves
     ETC_TREE,           // colour of trees
     ETC_RANDOM,         // any colour (except BLACK)
+    ETC_TORNADO,        // twisting swirls of gray
     ETC_FIRST_LUA = 96, // colour indices have to be <128
 };
 

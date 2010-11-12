@@ -1930,8 +1930,12 @@ void tornado_damage(int dur)
                 if (victim->alive())
                     move_act.push(victim);
             }
-            if (env.cgrid(*dam_i) == EMPTY_CLOUD && coinflip())
-                place_cloud(CLOUD_MIST, *dam_i, 2 + random2(2), KILL_YOU_MISSILE);
+            if (env.cgrid(*dam_i) == EMPTY_CLOUD
+                || env.cloud[env.cgrid(*dam_i)].type == CLOUD_TORNADO)
+            {
+                place_cloud(CLOUD_TORNADO, *dam_i, 2 + random2(2),
+                            KILL_YOU_MISSILE);
+            }
             clouds.push_back(*dam_i);
             swap_clouds(clouds[random2(clouds.size())], *dam_i);
         }
