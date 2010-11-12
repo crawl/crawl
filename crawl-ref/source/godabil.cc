@@ -2465,7 +2465,7 @@ bool ashenzari_transfer_knowledge()
     if (skp_max > fsk_points)
         skp_max = fsk_points;
 
-    while (total_skp_lost < skp_max)
+    while (total_skp_lost < skp_max && you.skills[tsk] < 27)
     {
         int skp_lost = std::min(20, skp_max - total_skp_lost);
         int skp_gained = skp_lost * penalty / 100;
