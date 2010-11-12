@@ -1437,7 +1437,13 @@ static void _display_skill_table(bool show_aptitudes, bool show_description,
 
             if (you.skills[x] < 27)
             {
-                if (!show_aptitudes)
+                if (from_skill != SK_NONE)
+                {
+                    textcolor(CYAN);
+                    cprintf (" -> %d", transfer_skill_points(from_skill, sx,
+                                                          skill_points, true));
+                }
+                else if (!show_aptitudes)
                 {
                     const int needed = skill_exp_needed(you.skills[x] + 1, x);
                     const int prev_needed = skill_exp_needed(you.skills[x], x);
@@ -2205,7 +2211,7 @@ void dump_skills(std::string &text)
     }
 }
 
-skill_type select_skill(skill_type from_skill, bool show_all)
+skill_type select_skill(skill_type from_skill, int skill_points, bool show_all)
 {
     clrscr();
     cgotoxy(1, 1);
@@ -2215,13 +2221,14 @@ skill_type select_skill(skill_type from_skill, bool show_all)
     else
         cprintf("Select the destination skill");
 
-    _display_skill_table(false, false, true, from_skill, 0, show_all);
+    _display_skill_table(false, false, true, from_skill, skill_points,
+                         show_all);
 
     mouse_control mc(MOUSE_MODE_MORE);
     const int keyin = getch();
 
     if (keyin == '*')
-        return select_skill(from_skill, true);
+        return select_skill(from_skill, skill_points, true);
 
     if (!isaalpha(keyin))
         return SK_NONE;
@@ -2245,4 +2252,66 @@ skill_type select_skill(skill_type from_skill, bool show_all)
         ++lcount;
     }
     return SK_NONE;
+}
+
+// Transfer skill points from one skill to another (Ashenzari transfer
+// knowledge ability). If simu, it just simulates the transfer and don't
+// change anything. It returns the new level of tsk.
+int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
+                          bool simu)
+{
+    const int penalty = 90; // 10% XP penalty
+    int total_skp_lost   = 0; // skill points lost in fsk.
+    int total_skp_gained = 0; // skill points gained in tsk.
+    int fsk_level = you.skills[fsk];
+    int tsk_level = you.skills[tsk];
+    int fsk_points = you.skill_points[fsk];
+    int tsk_points = you.skill_points[tsk];
+
+    while (total_skp_lost < skp_max && you.skills[tsk] < 27)
+    {
+        int skp_lost = std::min(20, skp_max - total_skp_lost);
+        int skp_gained = skp_lost * penalty / 100;
+
+        float ct_bonus = crosstrain_bonus(tsk);
+        if (ct_bonus > 1)
+        {
+            skp_gained *= ct_bonus;
+            you.ct_skill_points[tsk] += (1 - 1 / ct_bonus) * skp_gained;
+        }
+        else if (is_antitrained(tsk))
+            skp_gained /= ANTITRAIN_PENALTY;
+
+        int double_cost = std::min<int>(skp_lost, you.ct_skill_points[fsk]);
+        you.ct_skill_points[fsk] -= double_cost;
+        skp_lost += double_cost;
+        skp_max += double_cost;
+
+        change_skill_points(fsk, -skp_lost, false);
+        if (fsk != tsk)
+            change_skill_points(tsk, skp_gained, false);
+        total_skp_lost += skp_lost;
+        total_skp_gained += skp_gained;
+    }
+
+    int new_level = you.skills[tsk];
+    // Restore the level
+    you.skills[fsk] = fsk_level;
+    you.skills[tsk] = tsk_level;
+
+    if (simu)
+    {
+        you.skill_points[fsk] = fsk_points;
+        you.skill_points[tsk] = tsk_points;
+    }
+    else
+    {
+        // Perform the real level up
+        check_skill_level_change(fsk);
+        check_skill_level_change(tsk);
+
+        dprf("skill %s lost %d points", skill_name(fsk), total_skp_lost);
+        dprf("skill %s gained %d points", skill_name(tsk), total_skp_gained);
+    }
+    return new_level;
 }
