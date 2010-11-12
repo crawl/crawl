@@ -1339,25 +1339,31 @@ static const skill_type skill_display_order[] =
 static const int ndisplayed_skills =
             sizeof(skill_display_order) / sizeof(*skill_display_order);
 
-static void _display_skill_table(bool show_aptitudes, bool show_description)
+static void _display_skill_table(bool show_aptitudes, bool show_description,
+                                 bool reskilling,
+                                 skill_type from_skill = SK_NONE,
+                                 int skill_points = 0, bool show_all = false)
 {
     menu_letter lcount = 'a';
 
-    cgotoxy(1, 1);
-    textcolor(LIGHTGREY);
+    if (!reskilling)
+    {
+        cgotoxy(1, 1);
+        textcolor(LIGHTGREY);
 
 #ifdef DEBUG_DIAGNOSTICS
-    cprintf("You have %d points of unallocated experience "
-            " (cost lvl %d; total %d).\n\n",
-            you.exp_available, you.skill_cost_level,
-            you.total_skill_points);
+        cprintf("You have %d points of unallocated experience "
+                " (cost lvl %d; total %d).\n\n",
+                you.exp_available, you.skill_cost_level,
+                you.total_skill_points);
 #else
-    cprintf(" You have %s unallocated experience.\n\n",
-            you.exp_available == 0? "no" :
-            make_stringf("%d point%s of",
-                         you.exp_available,
-                         you.exp_available == 1? "" : "s").c_str());
+        cprintf(" You have %s unallocated experience.\n\n",
+                you.exp_available == 0? "no" :
+                make_stringf("%d point%s of",
+                             you.exp_available,
+                             you.exp_available == 1? "" : "s").c_str());
 #endif
+    }
 
     int scrln = 3, scrcol = 1;
     skill_type x;
@@ -1390,7 +1396,7 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
         cgotoxy(scrcol, scrln);
 
 #ifndef DEBUG_DIAGNOSTICS
-        if (you.skills[x] > 0)
+        if (you.skills[x] > 0 || show_all)
 #endif
         {
             maxln = std::max(maxln, scrln);
@@ -1409,8 +1415,14 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
             if (you.skills[x] == 27)
                 textcolor(YELLOW);
 
-            if (you.skills[x] == 0 || !show_description && you.skills[x] == 27)
+
+            if (you.skills[x] == 0 && !show_all
+                || !show_description && you.skills[x] == 27
+                   && (!reskilling || from_skill != SK_NONE)
+                || reskilling && from_skill == sx)
+            {
                 putch(' ');
+            }
             else
                 putch(lcount++);
 
@@ -1477,6 +1489,16 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
         }
     }
 
+    if (reskilling && from_skill != SK_NONE && !show_all)
+    {
+        textcolor(WHITE);
+        cgotoxy(1, bottom_line);
+        cprintf("Press * to show all");
+    }
+
+    if (reskilling)
+        return;
+
     if (Hints.hints_left)
     {
         if (show_description || maxln >= bottom_line - 5)
@@ -1542,7 +1564,7 @@ void show_skills()
     clrscr();
     while (true)
     {
-        _display_skill_table(show_aptitudes, show_description);
+        _display_skill_table(show_aptitudes, show_description, false);
 
         mouse_control mc(MOUSE_MODE_MORE);
         const int keyin = getch();
@@ -2183,60 +2205,44 @@ void dump_skills(std::string &text)
     }
 }
 
-skill_type list_skills(std::string title, skill_type hide, bool show_all)
+skill_type select_skill(skill_type from_skill, bool show_all)
 {
+    clrscr();
+    cgotoxy(1, 1);
+    textcolor(WHITE);
+    if (from_skill == SK_NONE)
+        cprintf("Select the source skill");
+    else
+        cprintf("Select the destination skill");
+
+    _display_skill_table(false, false, true, from_skill, 0, show_all);
+
+    mouse_control mc(MOUSE_MODE_MORE);
+    const int keyin = getch();
+
+    if (keyin == '*')
+        return select_skill(from_skill, true);
+
+    if (!isaalpha(keyin))
+        return SK_NONE;
+
     menu_letter lcount = 'a';
-    int flags = MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING;
-    if (hide != SK_NONE && !show_all)
-        flags |= MF_ALWAYS_SHOW_MORE;
 
-    Menu skill_menu(flags);
-
-    MenuEntry* me = new MenuEntry(title);
-    me->colour = WHITE;
-    skill_menu.set_title(me);
-    skill_menu.set_highlighter(NULL);
-    if (hide != SK_NONE && !show_all)
-        skill_menu.set_more(formatted_string("Press * to see all"));
-
-    for (int i = 0; i < ndisplayed_skills; ++i)
+    for (int i = 0; i < ndisplayed_skills; i++)
     {
-        skill_type sk = skill_display_order[i];
-
-        if (is_invalid_skill(sk) || sk == hide
-            || hide != SK_NONE && you.skills[sk] == 27)
+        const skill_type x = skill_display_order[i];
+        if (is_invalid_skill(x)
+            || you.skills[x] == 0 && !show_all
+            || you.skills[x] == 27 && from_skill != SK_NONE
+            || x == from_skill)
         {
             continue;
         }
 
-        if (you.skills[sk] > 0 || show_all)
-        {
-            std::string skill_text = make_stringf("%s (%d)", skill_name(sk),
-                                                  you.skills[sk]);
-            me = new MenuEntry(skill_text, MEL_ITEM, 1, lcount);
-            if (you.skills[sk] == 27)
-                me->colour = YELLOW;
-            skill_type* skp = new skill_type(sk);
-            me->data = skp;
-            skill_menu.add_entry(me);
-            lcount++;
-        }
-    }
-    while (true)
-    {
-        std::vector<MenuEntry*> sel = skill_menu.show();
-        if (!crawl_state.doing_prev_cmd_again)
-            redraw_screen();
-        if (sel.empty())
-        {
-            if (!show_all && hide != SK_NONE && skill_menu.getkey() == '*')
-                return list_skills(title, hide, true);
-            else
-                return SK_NONE;
-        }
+        if (keyin == lcount)
+            return x;
 
-        ASSERT(sel.size() == 1);
-        ASSERT(sel[0]->hotkeys.size() == 1);
-        return *static_cast<skill_type*>(sel[0]->data);
+        ++lcount;
     }
+    return SK_NONE;
 }
