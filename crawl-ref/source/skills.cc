@@ -287,51 +287,6 @@ int exercise(skill_type exsk, int deg, bool change_level)
     return (ret);
 }
 
-static bool _check_crosstrain(skill_type exsk, skill_type sk1, skill_type sk2)
-{
-    return ((exsk == sk1 || exsk == sk2)
-            && (you.skills[sk1] > you.skills[exsk]
-                || you.skills[sk2] > you.skills[exsk]));
-}
-
-float crosstrain_bonus(skill_type exsk)
-{
-    int bonus = 1;
-
-    if (_check_crosstrain(exsk, SK_SHORT_BLADES, SK_LONG_BLADES))
-        bonus *= 2;
-    if (_check_crosstrain(exsk, SK_AXES,         SK_POLEARMS))
-        bonus *= 2;
-    if (_check_crosstrain(exsk, SK_POLEARMS,     SK_STAVES))
-        bonus *= 2;
-    if (_check_crosstrain(exsk, SK_AXES,         SK_MACES_FLAILS))
-        bonus *= 2;
-    if (_check_crosstrain(exsk, SK_MACES_FLAILS, SK_STAVES))
-        bonus *= 2;
-    if (_check_crosstrain(exsk, SK_SLINGS,       SK_THROWING))
-        bonus *= 2;
-
-    return (bonus);
-}
-
-bool is_antitrained(skill_type sk)
-{
-    skill_type opposite;
-    switch (sk)
-    {
-    case SK_FIRE_MAGIC  : opposite = SK_ICE_MAGIC;   break;
-    case SK_ICE_MAGIC   : opposite = SK_FIRE_MAGIC;  break;
-    case SK_AIR_MAGIC   : opposite = SK_EARTH_MAGIC; break;
-    case SK_EARTH_MAGIC : opposite = SK_AIR_MAGIC;   break;
-    default: return false;
-    }
-
-    return (you.skills[sk] < you.skills[opposite]
-            || you.skills[sk] == you.skills[opposite]
-               && you.skill_order[sk] > you.skill_order[opposite]
-               && you.skills[sk] != 0);
-}
-
 // These get a discount in the late game -- still required?
 static bool _discounted_throwing_skill(skill_type exsk)
 {

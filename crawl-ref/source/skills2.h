@@ -40,6 +40,12 @@ float species_apt_factor(skill_type sk, species_type sp = you.species);
 unsigned int skill_exp_needed(int lev);
 unsigned int skill_exp_needed(int lev, skill_type sk,
                               species_type sp = you.species);
+
+float crosstrain_bonus(skill_type sk);
+bool crosstrain_other(skill_type sk);
+bool is_antitrained(skill_type sk);
+bool antitrain_other(skill_type sk);
+
 void show_skills();
 void wield_warning(bool newWeapon = true);
 bool is_invalid_skill(skill_type skill);
