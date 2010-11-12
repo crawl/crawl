@@ -26,6 +26,7 @@
 #include "menu.h"
 #include "player.h"
 #include "species.h"
+#include "skills.h"
 #include "stuff.h"
 #include "hints.h"
 
@@ -1393,9 +1394,15 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
 #endif
         {
             maxln = std::max(maxln, scrln);
+            skill_type sx = static_cast<skill_type>(x);
+            int ct_bonus = crosstrain_bonus(sx);
 
             if (you.practise_skill[x] == 0 || you.skills[x] == 0)
                 textcolor(DARKGREY);
+            else if (ct_bonus > 1)
+                textcolor(LIGHTBLUE);
+            else if (is_antitrained(sx))
+                textcolor(MAGENTA);
             else
                 textcolor(LIGHTGREY);
 
@@ -1439,11 +1446,30 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
                 else
                 {
                     int apt = species_apt(x, you.species);
-                    textcolor(RED);
+                    std::string apt_str("<red> ");
                     if (apt != 0)
-                        cprintf(" %+3d  ", apt);
+                        apt_str += make_stringf("%+d", apt);
                     else
-                        cprintf(" %3d  ", apt);
+                        apt_str += make_stringf("%d", apt);
+
+                    if (crosstrain_other(sx))
+                        apt_str += "<lightblue>*</lightblue>";
+                    else if (antitrain_other(sx))
+                        apt_str += "<magenta>*</magenta>";
+                    else
+                        apt_str += " ";
+
+                    if ( ct_bonus > 1)
+                    {
+                        apt_str += make_stringf("<lightblue>%+d </lightblue>",
+                                                ct_bonus * 2);
+                    }
+                    else if (is_antitrained(sx))
+                        apt_str += "<magenta>-4 </magenta>";
+                    else
+                        apt_str += "   ";
+
+                    formatted_string::parse_string(apt_str).display();
                 }
             }
 
@@ -1969,6 +1995,103 @@ int species_apt(skill_type skill, species_type species)
 float species_apt_factor(skill_type sk, species_type sp)
 {
     return _apt_to_factor(species_apt(sk, sp));
+}
+
+static std::vector<skill_type> _get_crosstrain_skills(skill_type sk)
+{
+    std::vector<skill_type> ret;
+
+    switch (sk)
+    {
+    case SK_SHORT_BLADES:
+        ret.push_back(SK_LONG_BLADES);
+        return ret;
+    case SK_LONG_BLADES:
+        ret.push_back(SK_SHORT_BLADES);
+        return ret;
+    case SK_AXES:
+    case SK_STAVES:
+        ret.push_back(SK_POLEARMS);
+        ret.push_back(SK_MACES_FLAILS);
+        return ret;
+    case SK_MACES_FLAILS:
+    case SK_POLEARMS:
+        ret.push_back(SK_AXES);
+        ret.push_back(SK_STAVES);
+        return ret;
+    case SK_SLINGS:
+        ret.push_back(SK_THROWING);
+        return ret;
+    case SK_THROWING:
+        ret.push_back(SK_SLINGS);
+        return ret;
+    default:
+        return ret;
+    }
+}
+
+
+float crosstrain_bonus(skill_type sk)
+{
+    int bonus = 1;
+
+    std::vector<skill_type> crosstrain_skills = _get_crosstrain_skills(sk);
+
+    for (unsigned int i = 0; i < crosstrain_skills.size(); ++i)
+        if (you.skills[crosstrain_skills[i]] > you.skills[sk])
+            bonus *= 2;
+
+    return bonus;
+}
+
+bool crosstrain_other(skill_type sk)
+{
+    std::vector<skill_type> crosstrain_skills = _get_crosstrain_skills(sk);
+
+    for (unsigned int i = 0; i < crosstrain_skills.size(); ++i)
+        if (you.skills[crosstrain_skills[i]] < you.skills[sk]
+            && you.skills[crosstrain_skills[i]] != 0)
+        {
+            return true;
+        }
+
+    return false;
+}
+
+static skill_type _get_opposite(skill_type sk)
+{
+    switch (sk)
+    {
+    case SK_FIRE_MAGIC  : return SK_ICE_MAGIC;   break;
+    case SK_ICE_MAGIC   : return SK_FIRE_MAGIC;  break;
+    case SK_AIR_MAGIC   : return SK_EARTH_MAGIC; break;
+    case SK_EARTH_MAGIC : return SK_AIR_MAGIC;   break;
+    default: return SK_NONE;
+    }
+}
+
+bool is_antitrained(skill_type sk)
+{
+    skill_type opposite = _get_opposite(sk);
+    if (opposite == SK_NONE)
+        return false;
+
+    return (you.skills[sk] < you.skills[opposite]
+            || you.skills[sk] == you.skills[opposite]
+               && you.skill_order[sk] > you.skill_order[opposite]
+               && you.skills[sk] != 0);
+}
+
+bool antitrain_other(skill_type sk)
+{
+    skill_type opposite = _get_opposite(sk);
+    if (opposite == SK_NONE)
+        return false;
+
+    return (you.skills[sk] > you.skills[opposite]
+            || you.skills[sk] == you.skills[opposite]
+               && you.skill_order[sk] < you.skill_order[opposite]
+               && you.skills[sk] != 0);
 }
 
 void wield_warning(bool newWeapon)
