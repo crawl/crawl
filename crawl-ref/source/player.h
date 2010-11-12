@@ -323,6 +323,9 @@ public:
   // portal right away; delay the announcements then.
   int seen_portals;
 
+  // Number of viewport refreshes.
+  unsigned int frame_no;
+
   // The save file itself.
   package *save;
 

@@ -5215,6 +5215,7 @@ void player::init()
     on_current_level    = true;
     walking             = 0;
     seen_portals        = 0;
+    frame_no            = 0;
 
     // Protected fields:
     for (int i = 0; i < NUM_BRANCHES; i++)
