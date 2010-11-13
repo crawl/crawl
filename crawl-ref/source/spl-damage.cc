@@ -1927,9 +1927,13 @@ void tornado_damage(int dur)
 
             if (actor* victim = actor_at(*dam_i))
             {
-                int dmg = roll_dice(6, pow) / 8;
-                dprf("damage done: %d", dmg);
-                victim->hurt(&you, dmg);
+                if (victim->id() != MONS_AIR_ELEMENTAL
+                    && victim->id() != MONS_BALL_LIGHTNING)
+                {
+                    int dmg = roll_dice(6, pow) / 8;
+                    dprf("damage done: %d", dmg);
+                    victim->hurt(&you, dmg);
+                }
 
                 if (victim->alive())
                     move_act.push(victim);
