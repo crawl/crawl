@@ -1406,6 +1406,8 @@ static void _display_skill_table(int flags, skill_type from_skill = SK_NONE,
             {
                 textcolor(GREEN);
             }
+            else if (x == from_skill)
+                textcolor(WHITE);
             else if (you.practise_skill[x] == 0 || you.skills[x] == 0)
                 textcolor(DARKGREY);
             else if (ct_bonus > 1 && flags & SK_MENU_SHOW_APT)
