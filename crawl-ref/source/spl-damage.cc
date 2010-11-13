@@ -1869,8 +1869,11 @@ bool cast_tornado(int powc)
         const monster_info* m = env.map_knowledge(*ri).monsterinfo();
         if (!m)
             continue;
-        if (mons_att_wont_attack(m->attitude))
+        if (mons_att_wont_attack(m->attitude)
+            && mons_class_res_wind(m->type) <= 0)
+        {
             friendlies = true;
+        }
     }
 
     if (friendlies

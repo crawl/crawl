@@ -1404,6 +1404,20 @@ bool mons_flattens_trees(const monster* mon)
     return (mons_class_flattens_trees(mons_base_type(mon)));
 }
 
+int mons_class_res_wind(int mc)
+{
+    // Lightning goes well with storms.
+    if (mc == MONS_AIR_ELEMENTAL || mc == MONS_BALL_LIGHTNING)
+        return 1;
+
+    // Flyers are not immune due to buffeting -- and for airstrike, even
+    // specially vulnerable.
+    // Smoky humanoids may have problems staying together.
+    // Insubstantial wisps are a toss-up between being immune and immediately
+    // fatally dispersing.
+    return 0;
+}
+
 bool mons_class_wall_shielded(int mc)
 {
     return (mons_class_habitat(mc) == HT_ROCK);

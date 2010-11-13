@@ -3336,16 +3336,7 @@ int monster::res_torment() const
 
 int monster::res_wind() const
 {
-    // Lightning goes well with storms.
-    if (type == MONS_AIR_ELEMENTAL || type == MONS_BALL_LIGHTNING)
-        return 1;
-
-    // Flyers are not immune due to buffeting -- and for airstrike, even
-    // specially vulnerable.
-    // Smoky humanoids may have problems staying together.
-    // Insubstantial wisps are a toss-up between being immune and immediately
-    // fatally dispersing.
-    return 0;
+    return mons_class_res_wind(type);
 }
 
 int monster::res_acid() const

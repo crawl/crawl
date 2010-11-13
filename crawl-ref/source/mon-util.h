@@ -181,6 +181,7 @@ flight_type mons_flies(const monster* mon, bool randarts = true);
 
 bool mons_class_amphibious(int mc);
 bool mons_class_flattens_trees(int mc);
+int mons_class_res_wind(int mc);
 bool mons_amphibious(const monster* mon);
 bool mons_flattens_trees(const monster* mon);
 bool mons_class_wall_shielded(int mc);
