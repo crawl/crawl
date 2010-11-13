@@ -792,7 +792,7 @@ Cheibriados says: Take it easy.
 %%%%
 Elyvilon penance
 
-@Elyvilon welcome@
+Elyvilon says: I plead you, be more careful when helping others!
 %%%%
 Elyvilon welcome
 
@@ -848,7 +848,7 @@ Nemelex Xobeh says: It's all in the cards!
 %%%%
 Okawaru penance
 
-@Okawaru welcome@
+Okawaru says: Don't be a dastardly coward this time!
 %%%%
 Okawaru welcome
 
@@ -856,7 +856,7 @@ Okawaru says: Bring me glory in combat!
 %%%%
 Sif Muna penance
 
-@Sif Muna welcome@
+Sif Muna rages: Pay more attention this time!
 %%%%
 Sif Muna welcome
 
@@ -864,7 +864,7 @@ Sif Muna whispers: I know many secrets...
 %%%%
 The Shining One penance
 
-@The Shining One welcome@
+The Shining One says: Being a martyr may wash away your sin!
 %%%%
 The Shining One welcome
 
@@ -872,7 +872,7 @@ The Shining One says: Lead the forces of light to victory!
 %%%%
 Trog penance
 
-@Trog welcome@
+Trog mutters: Ah, it's this puny scribbler again...
 %%%%
 Trog welcome
 
