@@ -1343,10 +1343,10 @@ void end_game(scorefile_entry &se)
 
     for (int i = 0; i < ENDOFPACK; i++)
     {
+        if (!you.inv[i].defined())
+            continue;
         set_ident_flags(you.inv[i], ISFLAG_IDENT_MASK);
-
-        if (you.inv[i].base_type != 0)
-            set_ident_type(you.inv[i], ID_KNOWN_TYPE);
+        set_ident_type(you.inv[i], ID_KNOWN_TYPE);
         if (Options.autoinscribe_artefacts && is_artefact(you.inv[i]))
         {
             std::string inscr = artefact_auto_inscription(you.inv[i]);
