@@ -205,8 +205,8 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     {SPELL_DISCHARGE,
      SPELL_LIGHTNING_BOLT,
      SPELL_FIREBALL,
+     SPELL_TORNADO,
      SPELL_SHATTER,
-     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -273,7 +273,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_CONJURE_FLAME,
      SPELL_POISONOUS_CLOUD,
      SPELL_FREEZING_CLOUD,
-     SPELL_NO_SPELL,
+     SPELL_TORNADO,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
@@ -323,7 +323,11 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      },
 
     // Book of the Sky
+#if TAG_MAJOR_VERSION != 31
     {SPELL_SUMMON_ELEMENTAL,
+#else
+    {SPELL_TORNADO, // in more books for now to get more testing
+#endif
      SPELL_INSULATION,
      SPELL_AIRSTRIKE,
      SPELL_FLY,
