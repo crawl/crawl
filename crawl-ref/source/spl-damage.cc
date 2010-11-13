@@ -1932,8 +1932,9 @@ void tornado_damage(int dur)
                 if (victim->alive())
                     move_act.push(victim);
             }
-            if (env.cgrid(*dam_i) == EMPTY_CLOUD
+            if ((env.cgrid(*dam_i) == EMPTY_CLOUD
                 || env.cloud[env.cgrid(*dam_i)].type == CLOUD_TORNADO)
+                && x_chance_in_y(pow, 20))
             {
                 place_cloud(CLOUD_TORNADO, *dam_i, 2 + random2(2),
                             KILL_YOU_MISSILE);
