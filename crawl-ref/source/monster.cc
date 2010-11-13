@@ -4514,6 +4514,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " emerges from its shell.");
         break;
 
+    case ENCH_LEVITATION:
+        apply_location_effects(pos(), me.killer(), me.kill_agent());
+        break;
+
     default:
         break;
     }
@@ -4799,6 +4803,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_STONESKIN:
     case ENCH_FEAR_INSPIRING:
     case ENCH_LIFE_TIMER:
+    case ENCH_LEVITATION:
         decay_enchantment(me);
         break;
 
@@ -6321,7 +6326,7 @@ static const char *enchant_names[] =
     "insane", "silenced", "awaken_forest", "exploding", "bleeding",
     "tethered", "severed", "antimagic", "fading_away", "preparing_resurrect", "regen",
     "magic_res", "mirror_dam", "stoneskin", "fear inspiring", "temporarily pacified",
-    "withdrawn", "attached", "guardian_timer", "buggy",
+    "withdrawn", "attached", "guardian_timer", "levitation", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

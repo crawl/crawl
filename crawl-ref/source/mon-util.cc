@@ -1361,25 +1361,29 @@ flight_type mons_class_flies(int mc)
     return (me ? me->fly : FL_NONE);
 }
 
-flight_type mons_flies(const monster* mon, bool randarts)
+flight_type mons_flies(const monster* mon, bool temp)
 {
+    flight_type ret;
     // For dancing weapons, this function can get called before their
     // ghost_demon is created, so check for a NULL ghost. -cao
     if (mons_is_ghost_demon(mon->type) && mon->ghost.get())
-        return (mon->ghost->fly);
-
-    flight_type ret = mons_class_flies(mons_base_type(mon));
+        ret = mon->ghost->fly;
+    else
+        ret = mons_class_flies(mons_base_type(mon));
 
     // Handle the case where the zombified base monster can't fly, but
     // the zombified monster can (e.g. spectral things).
     if (ret == FL_NONE && mons_is_zombified(mon))
         ret = mons_class_flies(mon->type);
 
-    if (randarts && ret == FL_NONE
+    if (temp && ret == FL_NONE
         && scan_mon_inv_randarts(mon, ARTP_LEVITATE) > 0)
     {
         ret = FL_LEVITATE;
     }
+
+    if (temp && ret == FL_NONE && mon->has_ench(ENCH_LEVITATION))
+        ret = FL_LEVITATE;
 
     return (ret);
 }
