@@ -1401,7 +1401,12 @@ static void _display_skill_table(int flags, skill_type from_skill = SK_NONE,
             skill_type sx = static_cast<skill_type>(x);
             int ct_bonus = crosstrain_bonus(sx);
 
-            if (you.practise_skill[x] == 0 || you.skills[x] == 0)
+            if (flags & SK_MENU_SHOW_RESKILL && (x == you.transfer_from_skill
+                                                || x == you.transfer_to_skill))
+            {
+                textcolor(GREEN);
+            }
+            else if (you.practise_skill[x] == 0 || you.skills[x] == 0)
                 textcolor(DARKGREY);
             else if (ct_bonus > 1)
                 textcolor(LIGHTBLUE);
@@ -1441,25 +1446,7 @@ static void _display_skill_table(int flags, skill_type from_skill = SK_NONE,
                     cprintf (" -> %d", transfer_skill_points(from_skill, sx,
                                                           skill_points, true));
                 }
-                else if (!(flags & SK_MENU_SHOW_APT))
-                {
-                    const int needed = skill_exp_needed(you.skills[x] + 1, x);
-                    const int prev_needed = skill_exp_needed(you.skills[x], x);
-
-                    const int amt_done = you.skill_points[x] - prev_needed;
-                    int percent_done = (amt_done*100) / (needed - prev_needed);
-
-                    if (percent_done >= 100) // paranoia (1)
-                        percent_done = 99;
-
-                    if (percent_done < 0)    // paranoia (2)
-                        percent_done = 0;
-
-                    textcolor(CYAN);
-                    // Round down to multiple of 5.
-                    cprintf(" (%2d%%)", (percent_done / 5) * 5);
-                }
-                else
+                if (flags & SK_MENU_SHOW_APT)
                 {
                     int apt = species_apt(x, you.species);
                     std::string apt_str("<red> ");
@@ -1486,6 +1473,39 @@ static void _display_skill_table(int flags, skill_type from_skill = SK_NONE,
                         apt_str += "   ";
 
                     formatted_string::parse_string(apt_str).display();
+                }
+                else if (flags & SK_MENU_SHOW_RESKILL)
+                {
+                    textcolor(GREEN);
+                    if (sx == you.transfer_from_skill)
+                        cprintf("  *  ");
+                    else if (sx == you.transfer_to_skill)
+                    {
+                        cprintf(" (%2d%%)", (you.transfer_total_skill_points
+                                             - you.transfer_skill_points) * 100
+                                            / you.transfer_total_skill_points);
+                    }
+                    else
+                        cprintf("      ");
+
+                }
+                else
+                {
+                    const int needed = skill_exp_needed(you.skills[x] + 1, x);
+                    const int prev_needed = skill_exp_needed(you.skills[x], x);
+
+                    const int amt_done = you.skill_points[x] - prev_needed;
+                    int percent_done = (amt_done*100) / (needed - prev_needed);
+
+                    if (percent_done >= 100) // paranoia (1)
+                        percent_done = 99;
+
+                    if (percent_done < 0)    // paranoia (2)
+                        percent_done = 0;
+
+                    textcolor(CYAN);
+                    // Round down to multiple of 5.
+                    cprintf(" (%2d%%)", (percent_done / 5) * 5);
                 }
             }
 
@@ -1556,8 +1576,17 @@ static void _display_skill_table(int flags, skill_type from_skill = SK_NONE,
 #else
             "<w>Right-click</w>"
 #endif
-            " to toggle between <cyan>progress</cyan> and "
-            "<red>aptitude</red> display.").display();
+            " to toggle between <cyan>progress</cyan>").display();
+        if (transfer_skill_points > 0)
+        {
+            formatted_string::parse_string(", <red>aptitude</red> and "
+                    "<green>transfer knowledge</green> display.").display();
+        }
+        else
+        {
+            formatted_string::parse_string(" and <red>aptitude</red> "
+                                           "display.").display();
+        }
     }
 }
 
@@ -1573,7 +1602,18 @@ void show_skills()
         const int keyin = getch();
         if ((keyin == '!' || keyin == CK_MOUSE_CMD))
         {
-            flags ^= SK_MENU_SHOW_APT;
+            if (you.transfer_skill_points == 0)
+                flags ^= SK_MENU_SHOW_APT;
+            else if (!(flags & (SK_MENU_SHOW_APT | SK_MENU_SHOW_RESKILL)))
+                flags |= SK_MENU_SHOW_APT;
+            else if (flags & SK_MENU_SHOW_APT)
+            {
+                flags ^= SK_MENU_SHOW_APT;
+                flags |= SK_MENU_SHOW_RESKILL;
+            }
+            else if (flags & SK_MENU_SHOW_RESKILL)
+                flags ^= SK_MENU_SHOW_RESKILL;
+
             continue;
         }
 
@@ -1600,12 +1640,12 @@ void show_skills()
             if (you.skills[x] == 0)
                 continue;
 
-            if (flags ^ SK_MENU_SHOW_DESC && you.skills[x] == 27)
+            if (!(flags & SK_MENU_SHOW_DESC) && you.skills[x] == 27)
                 continue;
 
             if (keyin == lcount)
             {
-                if (flags ^ SK_MENU_SHOW_DESC)
+                if (!(flags & SK_MENU_SHOW_DESC))
                     you.practise_skill[x] = !you.practise_skill[x];
                 else
                 {
