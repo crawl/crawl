@@ -1339,14 +1339,12 @@ static const skill_type skill_display_order[] =
 static const int ndisplayed_skills =
             sizeof(skill_display_order) / sizeof(*skill_display_order);
 
-static void _display_skill_table(bool show_aptitudes, bool show_description,
-                                 bool reskilling,
-                                 skill_type from_skill = SK_NONE,
+static void _display_skill_table(int flags, skill_type from_skill = SK_NONE,
                                  int skill_points = 0, bool show_all = false)
 {
     menu_letter lcount = 'a';
 
-    if (!reskilling)
+    if (!(flags & SK_MENU_RESKILL))
     {
         cgotoxy(1, 1);
         textcolor(LIGHTGREY);
@@ -1417,9 +1415,9 @@ static void _display_skill_table(bool show_aptitudes, bool show_description,
 
 
             if (you.skills[x] == 0 && !show_all
-                || !show_description && you.skills[x] == 27
-                   && (!reskilling || from_skill != SK_NONE)
-                || reskilling && from_skill == sx)
+                || !(flags & SK_MENU_SHOW_DESC) && you.skills[x] == 27
+                   && (!(flags & SK_MENU_RESKILL) || from_skill != SK_NONE)
+                || flags & SK_MENU_RESKILL && from_skill == sx)
             {
                 putch(' ');
             }
@@ -1443,7 +1441,7 @@ static void _display_skill_table(bool show_aptitudes, bool show_description,
                     cprintf (" -> %d", transfer_skill_points(from_skill, sx,
                                                           skill_points, true));
                 }
-                else if (!show_aptitudes)
+                else if (!(flags & SK_MENU_SHOW_APT))
                 {
                     const int needed = skill_exp_needed(you.skills[x] + 1, x);
                     const int prev_needed = skill_exp_needed(you.skills[x], x);
@@ -1495,19 +1493,19 @@ static void _display_skill_table(bool show_aptitudes, bool show_description,
         }
     }
 
-    if (reskilling && from_skill != SK_NONE && !show_all)
+    if (flags & SK_MENU_RESKILL && from_skill != SK_NONE && !show_all)
     {
         textcolor(WHITE);
         cgotoxy(1, bottom_line);
         cprintf("Press * to show all");
     }
 
-    if (reskilling)
+    if (flags & SK_MENU_RESKILL)
         return;
 
     if (Hints.hints_left)
     {
-        if (show_description || maxln >= bottom_line - 5)
+        if (flags & SK_MENU_SHOW_DESC || maxln >= bottom_line - 5)
         {
             cgotoxy(1, bottom_line-2);
             // Doesn't mention the toggle between progress/aptitudes.
@@ -1526,7 +1524,7 @@ static void _display_skill_table(bool show_aptitudes, bool show_description,
         cgotoxy(1, bottom_line-3);
         textcolor(LIGHTGREY);
 
-        if (show_description)
+        if (flags & SK_MENU_SHOW_DESC)
         {
             // We need the extra spaces to override the alternative sentence.
             cprintf("Press the letter of a skill to read its description.      "
@@ -1540,7 +1538,7 @@ static void _display_skill_table(bool show_aptitudes, bool show_description,
         }
 
         cgotoxy(1, bottom_line-1);
-        if (show_description)
+        if (flags & SK_MENU_SHOW_DESC)
         {
             formatted_string::parse_string("Press '<w>?</w>' to choose which "
                                            "skills to train.  ").display();
@@ -1565,25 +1563,24 @@ static void _display_skill_table(bool show_aptitudes, bool show_description,
 
 void show_skills()
 {
-    bool show_aptitudes   = false;
-    bool show_description = false;
+    int flags = SK_MENU_NONE;
     clrscr();
     while (true)
     {
-        _display_skill_table(show_aptitudes, show_description, false);
+        _display_skill_table(flags);
 
         mouse_control mc(MOUSE_MODE_MORE);
         const int keyin = getch();
         if ((keyin == '!' || keyin == CK_MOUSE_CMD))
         {
-            show_aptitudes = !show_aptitudes;
+            flags ^= SK_MENU_SHOW_APT;
             continue;
         }
 
         if (keyin == '?')
         {
             // Show skill description.
-            show_description = !show_description;
+            flags ^= SK_MENU_SHOW_DESC;
             if (Hints.hints_left)
                 clrscr();
             continue;
@@ -1603,12 +1600,12 @@ void show_skills()
             if (you.skills[x] == 0)
                 continue;
 
-            if (!show_description && you.skills[x] == 27)
+            if (flags ^ SK_MENU_SHOW_DESC && you.skills[x] == 27)
                 continue;
 
             if (keyin == lcount)
             {
-                if (!show_description)
+                if (flags ^ SK_MENU_SHOW_DESC)
                     you.practise_skill[x] = !you.practise_skill[x];
                 else
                 {
@@ -2221,8 +2218,8 @@ skill_type select_skill(skill_type from_skill, int skill_points, bool show_all)
     else
         cprintf("Select the destination skill");
 
-    _display_skill_table(true, false, true, from_skill, skill_points,
-                         show_all);
+    _display_skill_table(SK_MENU_SHOW_APT | SK_MENU_RESKILL, from_skill,
+                         skill_points, show_all);
 
     mouse_control mc(MOUSE_MODE_MORE);
     const int keyin = getch();

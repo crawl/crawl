@@ -13,6 +13,15 @@ const int MAX_SKILL_ORDER = 100;
 #include "enum.h"
 #include "player.h"
 
+enum sk_menu_flags
+{
+    SK_MENU_NONE                  = 0,
+    SK_MENU_SHOW_APT              = (1 << 0),
+    SK_MENU_SHOW_DESC             = (1 << 1),
+    SK_MENU_RESKILL               = (1 << 2),
+    SK_MENU_SHOW_RESKILL_PROGRESS = (1 << 3),
+};
+
 const char *skill_name(skill_type which_skill);
 skill_type str_to_skill(const std::string &skill);
 
