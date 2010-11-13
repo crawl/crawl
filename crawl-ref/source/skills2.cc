@@ -1408,9 +1408,9 @@ static void _display_skill_table(int flags, skill_type from_skill = SK_NONE,
             }
             else if (you.practise_skill[x] == 0 || you.skills[x] == 0)
                 textcolor(DARKGREY);
-            else if (ct_bonus > 1)
+            else if (ct_bonus > 1 && flags & SK_MENU_SHOW_APT)
                 textcolor(LIGHTBLUE);
-            else if (is_antitrained(sx))
+            else if (is_antitrained(sx) && flags & SK_MENU_SHOW_APT)
                 textcolor(MAGENTA);
             else
                 textcolor(LIGHTGREY);
