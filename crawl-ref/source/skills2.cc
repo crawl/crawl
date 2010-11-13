@@ -2153,10 +2153,10 @@ bool antitrain_other(skill_type sk)
     if (opposite == SK_NONE)
         return false;
 
-    return (you.skills[sk] > you.skills[opposite]
-            || you.skills[sk] == you.skills[opposite]
-               && you.skill_order[sk] < you.skill_order[opposite]
-               && you.skills[sk] != 0);
+    return (you.skills[opposite] != 0
+            && (you.skills[sk] > you.skills[opposite]
+                || you.skills[sk] == you.skills[opposite]
+                   && you.skill_order[sk] < you.skill_order[opposite]));
 }
 
 void wield_warning(bool newWeapon)
