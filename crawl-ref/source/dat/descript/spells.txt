@@ -647,11 +647,11 @@ This spell throws a small bolt of frost.
 %%%%
 Tornado
 
-This spell turns the air around the caster in a mighty vortex, doing tremendous damage to everyone caught in it. Only the eye of the storm is a safe place, and it follows the caster. Everything not firmly nailed will be lifted and tossed around.
+This spell turns the air around the caster in a mighty vortex, doing tremendous damage to everyone caught in it. Only the eye of the storm is a safe place, and it follows the caster. Everything not firmly nailed down will be lifted and tossed around.
 
 The spell's effectiveness is greatly diminished in closed areas.
 
-As a side effect, this spell may be used to cross lava, yet be ware of its short duration.
+As a side effect, this spell may be used to cross lava, but beware of its short duration.
 %%%%
 Tukima's Dance
 
