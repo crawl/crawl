@@ -2333,6 +2333,12 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
         you.ct_skill_points[fsk] -= ct_penalty;
         skp_lost += ct_penalty;
 
+        if (!simu)
+        {
+            skp_lost = std::min<int>(skp_lost, you.transfer_skill_points
+                                               - total_skp_lost);
+        }
+
         change_skill_points(fsk, -skp_lost, false);
         if (fsk != tsk)
             change_skill_points(tsk, skp_gained, false);
