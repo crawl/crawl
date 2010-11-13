@@ -1386,7 +1386,7 @@ static bool _do_ability(const ability_def& abil)
             if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
                 power += 12;
 
-            snprintf(info, INFO_SIZE, "You breathe fire%c",
+            snprintf(info, INFO_SIZE, "You breathe a blast of fire%c",
                      (power < 15) ? '.':'!');
 
             if (!zapping(ZAP_BREATHE_FIRE, power, beam, true, info))
@@ -1413,6 +1413,7 @@ static bool _do_ability(const ability_def& abil)
             break;
 
         case ABIL_BREATHE_LIGHTNING:
+            mpr("You breathe a wild blast of lightning!");
             disc_of_storms(true);
             break;
 
@@ -1420,7 +1421,7 @@ static bool _do_ability(const ability_def& abil)
             if (!zapping(ZAP_BREATHE_ACID,
                 (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON) ?
                     2 * you.experience_level : you.experience_level,
-                beam, true, "You spit acid."))
+                beam, true, "You spit a glob of acid."))
             {
                 return (false);
             }

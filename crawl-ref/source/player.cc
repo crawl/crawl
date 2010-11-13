@@ -2683,7 +2683,7 @@ static void _draconian_scale_colour_message()
         break;
 
     case SP_GREEN_DRACONIAN:
-        mpr("Your scales start taking on a green colour.",
+        mpr("Your scales start taking on a lurid green colour.",
             MSGCH_INTRINSIC_GAIN);
         perma_mutate(MUT_POISON_RESISTANCE, 1);
         break;
@@ -2694,13 +2694,13 @@ static void _draconian_scale_colour_message()
         break;
 
     case SP_GREY_DRACONIAN:
-        mpr("Your scales start turning grey.",
+        mpr("Your scales start taking on a dull grey colour.",
             MSGCH_INTRINSIC_GAIN);
         perma_mutate(MUT_UNBREATHING, 1);
         break;
 
     case SP_BLACK_DRACONIAN:
-        mpr("Your scales start turning black.",
+        mpr("Your scales start taking on a glossy black colour.",
             MSGCH_INTRINSIC_GAIN);
         perma_mutate(MUT_SHOCK_RESISTANCE, 1);
         break;
