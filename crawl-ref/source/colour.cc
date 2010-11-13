@@ -175,7 +175,19 @@ static int _etc_tornado(int, const coord_def& loc)
     int y = loc.y - you.pos().y;
     double dir = atan2(x, y)/PI;
     double dist = sqrt(x*x + y*y);
-    return ((int)floor(dir*2 + dist*0.33 + (you.frame_no % 54)/2.7))&1 ? WHITE : LIGHTGRAY;
+    bool phase = ((int)floor(dir*2 + dist*0.33 + (you.frame_no % 54)/2.7))&1;
+
+    switch(grd(loc))
+    {
+    case DNGN_LAVA:
+        return phase ? LIGHTRED : RED;
+    case DNGN_SHALLOW_WATER:
+        return phase ? LIGHTCYAN : CYAN;
+    case DNGN_DEEP_WATER:
+        return phase ? LIGHTBLUE : BLUE;
+    default:
+        return phase ? WHITE : LIGHTGREY;
+    }
 }
 
 static int _etc_random(int, const coord_def&)
