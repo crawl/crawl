@@ -2472,6 +2472,14 @@ static void _decrement_durations()
 #endif
     }
 
+    // Should expire before levitation.
+    if (you.duration[DUR_TORNADO])
+    {
+        tornado_damage(std::min(delay, you.duration[DUR_TORNADO]));
+        _decrement_a_duration(DUR_TORNADO, delay,
+                              "The winds around you calm down.");
+    }
+
     if (you.duration[DUR_LEVITATION])
     {
         if (!you.permanent_levitation() && !you.permanent_flight())
@@ -2592,13 +2600,6 @@ static void _decrement_durations()
                               "Your astral sight fades away."))
     {
         you.xray_vision = false;
-    }
-
-    if (you.duration[DUR_TORNADO])
-    {
-        tornado_damage(std::min(delay, you.duration[DUR_TORNADO]));
-        _decrement_a_duration(DUR_TORNADO, delay,
-                              "The winds around you calm down.");
     }
 }
 
