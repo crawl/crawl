@@ -1941,6 +1941,17 @@ void tornado_damage(int dur)
             {
                 if (!victim->res_wind())
                 {
+                    if (victim->atype() == ACT_MONSTER)
+                    {
+                        // levitate the monster so you get only one attempt at
+                        // tossing them into water/lava
+                        monster *mon = victim->as_monster();
+                        mon_enchant ench(ENCH_LEVITATION, 0, KC_YOU, 20);
+                        if (mon->has_ench(ENCH_LEVITATION))
+                            mon->update_ench(ench);
+                        else
+                            mon->add_ench(ench);
+                    }
                     int dmg = roll_dice(6, pow) / 8;
                     dprf("damage done: %d", dmg);
                     victim->hurt(&you, dmg);
