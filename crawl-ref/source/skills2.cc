@@ -1577,7 +1577,7 @@ static void _display_skill_table(int flags, skill_type from_skill = SK_NONE,
             "<w>Right-click</w>"
 #endif
             " to toggle between <cyan>progress</cyan>").display();
-        if (transfer_skill_points > 0)
+        if (you.transfer_skill_points > 0)
         {
             formatted_string::parse_string(", <red>aptitude</red> and "
                     "<green>transfer knowledge</green> display.").display();
