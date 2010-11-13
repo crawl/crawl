@@ -763,3 +763,162 @@ Beogh
 
 Lugonu
 %%%%
+######################################
+# Welcome messages on game restoration
+######################################
+Ashenzari penance
+
+@Ashenzari welcome@
+%%%%
+Ashenzari welcome
+
+Ashenzari says: Partake of my vision. Partake of my curse.
+%%%%
+Beogh penance
+
+@Beogh welcome@
+%%%%
+Beogh welcome
+
+Beogh says: Drown the unbelievers in a sea of blood!
+%%%%
+Cheibriados penance
+
+@Cheibriados welcome@
+%%%%
+Cheibriados welcome
+
+Cheibriados says: Take it easy.
+%%%%
+Elyvilon penance
+
+@Elyvilon welcome@
+%%%%
+Elyvilon welcome
+
+Elyvilon says: Go forth and aid the weak!
+%%%%
+Fedhas penance
+
+@Fedhas welcome@
+%%%%
+Fedhas welcome
+
+Fedhas says: Spread life and death.
+%%%%
+Jiyva penance
+
+@Jiyva welcome@
+%%%%
+Jiyva welcome
+
+Slime for the Slime God!
+%%%%
+Kikubaaqudgha penance
+
+@Kikubaaqudgha welcome@
+%%%%
+Kikubaaqudgha welcome
+
+Kikubaaqudgha says: Spread unending torment and darkness!
+%%%%
+Lugonu penance
+
+@Lugonu welcome@
+%%%%
+Lugonu welcome
+
+Lugonu says: Spread carnage and corruption!
+%%%%
+Makhleb penance
+
+@Makhleb welcome@
+%%%%
+Makhleb welcome
+
+Blood and souls for Makhleb!
+%%%%
+Nemelex Xobeh penance
+
+@Nemelex Xobeh welcome@
+%%%%
+Nemelex Xobeh welcome
+
+Nemelex Xobeh says: It's all in the cards!
+%%%%
+Okawaru penance
+
+@Okawaru welcome@
+%%%%
+Okawaru welcome
+
+Okawaru says: Bring me glory in combat!
+%%%%
+Sif Muna penance
+
+@Sif Muna welcome@
+%%%%
+Sif Muna welcome
+
+Sif Muna whispers: I know many secrets...
+%%%%
+The Shining One penance
+
+@The Shining One welcome@
+%%%%
+The Shining One welcome
+
+The Shining One says: Lead the forces of light to victory!
+%%%%
+Trog penance
+
+@Trog welcome@
+%%%%
+Trog welcome
+
+Trog says: Kill them all!
+%%%%
+Vehumet penance
+
+@Vehumet welcome@
+%%%%
+Vehumet welcome
+
+Vehumet says: Let it end in hellfire!
+%%%%
+Xom bored
+
+Xom yawns.
+
+"I wonder what else is on..."
+
+@Xom generic@
+%%%%
+Xom newgame
+
+Xom says: A new plaything!
+%%%%
+Xom generic
+
+Xom snickers.
+
+Xom titters.
+%%%%
+Yredelemnul penance
+
+@Yredelemnul welcome@
+%%%%
+Yredelemnul welcome
+
+Yredelemnul says: Carry the black torch! Rouse the idle dead!
+%%%%
+Zin penance
+
+Zin castigates you for your disobediance to the Law.
+
+Zin sternly explains the importance of @important_subject@
+%%%%
+Zin welcome
+
+Zin says: Spread the light, my child.
+%%%%
