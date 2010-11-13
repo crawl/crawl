@@ -664,6 +664,14 @@ int airstrike(int pow, const dist &beam)
         canned_msg(MSG_SPELL_FIZZLES);
     else
     {
+        if (mons->res_wind())
+        {
+            mprf("The air twists arounds and harmlessly tosses %s around.",
+                 mons->name(DESC_NOCAP_THE).c_str());
+            // Bailing out early, no need to upset the gods or the target.
+            return (false);
+        }
+
         god_conduct_trigger conducts[3];
         disable_attack_conducts(conducts);
 
@@ -1928,8 +1936,7 @@ void tornado_damage(int dur)
 
             if (actor* victim = actor_at(*dam_i))
             {
-                if (victim->id() != MONS_AIR_ELEMENTAL
-                    && victim->id() != MONS_BALL_LIGHTNING)
+                if (!victim->res_wind())
                 {
                     int dmg = roll_dice(6, pow) / 8;
                     dprf("damage done: %d", dmg);

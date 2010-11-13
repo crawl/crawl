@@ -3553,6 +3553,14 @@ bool mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
 
         break;
 
+    case CLOUD_TORNADO:
+        // Ball lightnings are not afraid of a _storm_, duh.  Or elementals.
+        if (mons->res_wind())
+            return (false);
+
+        // Locust swarms are too stupid to avoid winds.
+        return (mons_intel(mons) >= I_ANIMAL);
+
     default:
         break;
     }
