@@ -488,6 +488,7 @@ void cast_refrigeration(int pow, bool non_player)
 
         // Calculate damage and apply.
         int hurt = mons_adjust_flavoured(*mi, beam, dam_dice.roll());
+        dprf("damage done: %d", hurt);
         if (non_player)
             mi->hurt(NULL, hurt, BEAM_COLD);
         else
