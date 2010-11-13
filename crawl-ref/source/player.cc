@@ -5896,6 +5896,12 @@ int player::res_torment() const
     return (player_res_torment());
 }
 
+int player::res_wind() const
+{
+    // Full control of the winds around you can negate a hostile tornado.
+    return you.duration[DUR_TORNADO] ? 1 : 0;
+}
+
 int player::res_magic() const
 {
     int rm = 0;

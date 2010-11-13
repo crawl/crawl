@@ -560,6 +560,7 @@ public:
     int res_holy_energy(const actor *) const;
     int res_negative_energy() const;
     int res_torment() const;
+    int res_wind() const;
     int res_magic() const;
     bool confusable() const;
     bool slowable() const;
