@@ -1272,8 +1272,8 @@ void ouch(int dam, int death_source, kill_method_type death_type,
               true);
     if (you.lives && !non_death)
     {
-        mark_milestone("death",
-            se.death_description(scorefile_entry::DDV_NORMAL).c_str());
+        mark_milestone("death", lowercase_first(
+            se.death_description(scorefile_entry::DDV_NORMAL)).c_str());
 
         you.deaths++;
         you.lives--;
