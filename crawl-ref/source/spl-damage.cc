@@ -1951,6 +1951,9 @@ void tornado_damage(int dur)
                             mon->update_ench(ench);
                         else
                             mon->add_ench(ench);
+                        behaviour_event(mon, ME_ANNOY, MHITYOU);
+                        if (mons_is_mimic(mon->type))
+                            mimic_alert(mon);
                     }
                     int dmg = roll_dice(6, pow) / 8;
                     dprf("damage done: %d", dmg);
