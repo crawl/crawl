@@ -1932,6 +1932,7 @@ void tornado_damage(int dur)
                 set_terrain_changed(*dam_i);
                 if (you.see_cell(*dam_i))
                     mpr("A tree falls to the hurricane!");
+                did_god_conduct(DID_KILL_PLANT, 1);
             }
 
             if (feat_is_solid(grd(*dam_i)))
