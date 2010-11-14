@@ -1939,6 +1939,9 @@ void tornado_damage(int dur)
 
             if (actor* victim = actor_at(*dam_i))
             {
+                if (victim->submerged())
+                    continue;
+
                 if (!victim->res_wind())
                 {
                     if (victim->atype() == ACT_MONSTER)
