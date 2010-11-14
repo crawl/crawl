@@ -3554,6 +3554,7 @@ enum commandline_option_type
     CLO_EXTRA_OPT_LAST,
     CLO_SPRINT_MAP,
     CLO_EDIT_SAVE,
+    CLO_PRINT_CHARSET,
 
     CLO_NOPS
 };
@@ -3563,7 +3564,7 @@ static const char *cmd_ops[] = {
     "rcdir", "tscores", "vscores", "scorefile", "morgue", "macro",
     "mapstat", "arena", "test", "script", "builddb", "help", "version",
     "seed", "save-version", "sprint", "extra-opt-first", "extra-opt-last",
-    "sprint-map", "edit-save",
+    "sprint-map", "edit-save", "print-charset",
 };
 
 static const int num_cmd_ops = CLO_NOPS;
@@ -4145,6 +4146,28 @@ bool parse_args(int argc, char **argv, bool rc_only)
             nextUsed               = true;
             crawl_state.sprint_map = next_arg;
             Options.game.map       = next_arg;
+            break;
+
+        case CLO_PRINT_CHARSET:
+            if (rc_only)
+                break;
+            switch(Options.char_set)
+            {
+            case CSET_ASCII:
+                printf("ASCII\n");
+                end(0);
+            case CSET_IBM:
+                printf("IBM\n");
+                end(0);
+            case CSET_DEC:
+                printf("DEC\n");
+                end(0);
+            case CSET_UNICODE:
+                printf("UNICODE\n");
+                end(0);
+            case NUM_CSET:
+                ASSERT(!"unset charset");
+            }
             break;
 
         case CLO_EXTRA_OPT_FIRST:
