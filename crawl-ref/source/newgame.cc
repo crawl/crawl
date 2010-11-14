@@ -331,6 +331,26 @@ static void _resolve_species_job(newgame_def* ng, const newgame_def* ng_choice)
     _resolve_job(ng, ng_choice);
 }
 
+static std::string _highlight_pattern(const newgame_def* ng)
+{
+    if (ng->species != SP_UNKNOWN)
+        return species_name(ng->species) + "  ";
+
+    std::string ret;
+    for (int i = 0; i < ng_num_species(); ++i)
+    {
+        const species_type species = get_species(i);
+        if (!_is_species_valid_choice(species))
+            continue;
+
+        if (is_good_combination(species, ng->job, true))
+            ret += species_name(species) + "  |";
+    }
+
+    ret.resize(ret.size() - 1);
+    return ret;
+}
+
 static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
                             const newgame_def& defaults);
 static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
@@ -913,7 +933,7 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
                 list_commands('1');
                 return _prompt_species(ng, ng_choice, defaults);
             case M_APTITUDES:
-                list_commands('%');
+                list_commands('%', false, _highlight_pattern(ng));
                 return _prompt_species(ng, ng_choice, defaults);
             case M_VIABLE:
                 ng_choice->species = SP_VIABLE;
@@ -1279,7 +1299,7 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
                 list_commands('1');
                 return _prompt_job(ng, ng_choice, defaults);
             case M_APTITUDES:
-                list_commands('%');
+                list_commands('%', false, _highlight_pattern(ng));
                 return _prompt_job(ng, ng_choice, defaults);
             case M_VIABLE:
                 ng_choice->job = JOB_VIABLE;
@@ -1558,7 +1578,7 @@ static bool _prompt_weapon(const newgame_def* ng, newgame_def* ng_choice,
         case M_ABORT:
             return false;
         case M_APTITUDES:
-            list_commands('%');
+            list_commands('%', false, _highlight_pattern(ng));
             return _prompt_weapon(ng, ng_choice, defaults, weapons);
         case M_HELP:
             list_commands('?');
@@ -1991,7 +2011,7 @@ static bool _prompt_book(const newgame_def* ng, newgame_def* ng_choice,
         case M_ABORT:
             return false;
         case M_APTITUDES:
-            list_commands('%');
+            list_commands('%', false, _highlight_pattern(ng));
             return _prompt_book(ng, ng_choice, defaults, firstbook, numbooks);
         case M_HELP:
             list_commands('?');
@@ -2363,7 +2383,7 @@ static bool _prompt_god(const newgame_def* ng, newgame_def* ng_choice,
         case M_ABORT:
             return false;
         case M_APTITUDES:
-            list_commands('%');
+            list_commands('%', false, _highlight_pattern(ng));
             return _prompt_god(ng, ng_choice, defaults, gods);
         case M_HELP:
             list_commands('?');
@@ -2745,7 +2765,7 @@ static bool _prompt_wand(const newgame_def* ng, newgame_def* ng_choice,
         case M_ABORT:
             return false;
         case M_APTITUDES:
-            list_commands('%');
+            list_commands('%', false, _highlight_pattern(ng));
             return _prompt_wand(ng, ng_choice, defaults);
         case M_HELP:
             list_commands('?');
@@ -3033,7 +3053,7 @@ static void _prompt_sprint_map(newgame_def* ng, newgame_def* ng_choice,
             // TODO: fix
             return;
         case M_APTITUDES:
-            list_commands('%');
+            list_commands('%', false, _highlight_pattern(ng));
             return _prompt_sprint_map(ng, ng_choice, defaults, maps);
         case M_HELP:
             list_commands('?');
