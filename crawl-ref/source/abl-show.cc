@@ -351,13 +351,17 @@ static const ability_def Ability_List[] =
       10, 0, 200, 10, ABFLAG_NONE },
 
     // Ashenzari
-    { ABIL_ASHENZARI_TRANSFER_KNOWLEDGE, "Transfer Knowledge", 0, 0, 0, 10, ABFLAG_NONE},
+    { ABIL_ASHENZARI_TRANSFER_KNOWLEDGE, "Transfer Knowledge", 0, 0, 0, 10,
+      ABFLAG_NONE},
     { ABIL_ASHENZARI_SCRYING, "Scrying",
       4, 0, 50, generic_cost::range(5, 6), ABFLAG_NONE },
+    { ABIL_ASHENZARI_END_TRANSFER, "End Transfer Knowledge", 0, 0, 0, 0,
+      ABFLAG_NONE },
 
     { ABIL_HARM_PROTECTION, "Protection From Harm", 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_HARM_PROTECTION_II, "Reliable Protection From Harm",
       0, 0, 0, 0, ABFLAG_PIETY },
+
 
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion", 0, 0, 0, 0, ABFLAG_NONE },
 };
@@ -577,6 +581,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_DELAYED_FIREBALL:
     case ABIL_MUMMY_RESTORATION:
     case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
+    case ABIL_ASHENZARI_END_TRANSFER:
         perfect = true;
         failure = 0;
         break;
@@ -1206,6 +1211,7 @@ static bool _activate_talent(const talent& tal)
         case ABIL_MUMMY_RESTORATION:
         case ABIL_TRAN_BAT:
         case ABIL_BOTTLE_BLOOD:
+        case ABIL_ASHENZARI_END_TRANSFER:
             hungerCheck = false;
             break;
         default:
@@ -2069,6 +2075,9 @@ static bool _do_ability(const ability_def& abil)
         }
         break;
 
+    case ABIL_ASHENZARI_END_TRANSFER:
+        ashenzari_end_transfer();
+        break;
 
     case ABIL_RENOUNCE_RELIGION:
         if (yesno("Really renounce your faith, foregoing its fabulous benefits?",
@@ -2372,6 +2381,8 @@ std::vector<talent> your_talents(bool check_confused)
         _add_talent(talents, ABIL_FEDHAS_FUNGAL_BLOOM, check_confused);
     else if (you.religion == GOD_CHEIBRIADOS)
         _add_talent(talents, ABIL_CHEIBRIADOS_PONDEROUSIFY, check_confused);
+    else if (you.transfer_skill_points > 0)
+        _add_talent(talents, ABIL_ASHENZARI_END_TRANSFER, check_confused);
 
     // Gods take abilities away until penance completed. -- bwr
     // God abilities generally don't work while silenced (they require

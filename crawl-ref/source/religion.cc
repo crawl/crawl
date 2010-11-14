@@ -3074,10 +3074,7 @@ void excommunication(god_type new_god)
 
     case GOD_ASHENZARI:
         if (you.transfer_skill_points > 0)
-        {
-            mpr("Transfer knowledge aborted!", MSGCH_GOD, GOD_ASHENZARI);
-            you.transfer_skill_points = 0;
-        }
+            ashenzari_end_transfer(true);
         _inc_penance(old_god, 25);
         break;
 
