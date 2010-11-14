@@ -113,6 +113,7 @@ enum ability_type
     ABIL_CHEIBRIADOS_SLOUCH,
     ABIL_ASHENZARI_SCRYING,
     ABIL_ASHENZARI_TRANSFER_KNOWLEDGE,
+    ABIL_ASHENZARI_END_TRANSFER,            // 255
 
     // Vampire abilities
     ABIL_TRAN_BAT = 260,
