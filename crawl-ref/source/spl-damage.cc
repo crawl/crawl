@@ -1870,7 +1870,8 @@ bool cast_tornado(int powc)
         if (!m)
             continue;
         if (mons_att_wont_attack(m->attitude)
-            && mons_class_res_wind(m->type) <= 0)
+            && mons_class_res_wind(m->type) <= 0
+            && !mons_is_projectile(m->type))
         {
             friendlies = true;
         }
