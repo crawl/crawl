@@ -2448,7 +2448,7 @@ bool ashenzari_transfer_knowledge()
     }
 
     int fsk_points = you.skill_points[fsk];
-    int skp_max; // maximum number of skill points transferable.
+    int skp_max; // maximum number of skill points transferrable.
 
     skp_max = fsk_points / 2;
     skp_max = std::max(skp_max, 1000);
@@ -2478,7 +2478,7 @@ bool ashenzari_end_transfer(bool force)
 {
     if (!force)
     {
-        mprf("You are currently transfering knowledge from %s to %s.",
+        mprf("You are currently transferring knowledge from %s to %s.",
              skill_name(you.transfer_from_skill),
              skill_name(you.transfer_to_skill));
         if (!yesno("Are you sure you want to cancel the transfer?", false, 'n'))
