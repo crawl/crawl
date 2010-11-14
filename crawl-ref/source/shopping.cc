@@ -2393,7 +2393,7 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
                                                 int cost)
 {
     // Can't put items in Bazaar shops in the shopping list, so
-    // don't bother transfering shopping list items to Bazaar shops.
+    // don't bother transferring shopping list items to Bazaar shops.
     if (cost != -1 && you.level_type != LEVEL_DUNGEON)
         return (0);
 
