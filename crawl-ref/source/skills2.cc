@@ -2380,7 +2380,7 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
         {
             you.transfer_skill_points = 0;
             mprf("You stop forgetting about %s and now have a sharp "
-                 "understanding of %s", skill_name(fsk), skill_name(tsk));
+                 "understanding of %s.", skill_name(fsk), skill_name(tsk));
         }
         else if (you.transfer_skill_points > 0)
             dprf("%d skill points left to transfer", you.transfer_skill_points);
