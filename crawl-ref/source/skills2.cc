@@ -1519,7 +1519,7 @@ static void _display_skill_table(int flags, skill_type from_skill = SK_NONE,
     {
         textcolor(WHITE);
         cgotoxy(1, bottom_line);
-        cprintf("Press * to show all");
+        cprintf("Press * to show all.");
     }
 
     if (flags & SK_MENU_RESKILL)
@@ -2256,9 +2256,9 @@ skill_type select_skill(skill_type from_skill, int skill_points, bool show_all)
     cgotoxy(1, 1);
     textcolor(WHITE);
     if (from_skill == SK_NONE)
-        cprintf("Select the source skill");
+        cprintf("Select the source skill.");
     else
-        cprintf("Select the destination skill");
+        cprintf("Select the destination skill.");
 
     _display_skill_table(SK_MENU_SHOW_APT | SK_MENU_RESKILL, from_skill,
                          skill_points, show_all);
