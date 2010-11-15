@@ -4478,18 +4478,25 @@ static bool _scroll_modify_item(item_def scroll)
             return (true);
         }
         else
-            get_type_id_props()["SCR_ID"] = item.name(DESC_PLAIN);
+        {
+            get_type_id_props()["SCR_ID"] = item.name(DESC_PLAIN, false,
+                                                      false, false);
+        }
         break;
     case SCR_RECHARGING:
         if (item_is_rechargeable(item, false, true))
         {
             if (recharge_wand(item_slot, false))
                 return (true);
-            get_type_id_props()["SCR_RC"] = item.name(DESC_PLAIN);
+            get_type_id_props()["SCR_RC"] = item.name(DESC_PLAIN, false,
+                                                      false, false);
             return (false);
         }
         else
-            get_type_id_props()["SCR_RC"] = item.name(DESC_PLAIN);
+        {
+            get_type_id_props()["SCR_RC"] = item.name(DESC_PLAIN, false,
+                                                      false, false);
+        }
         break;
     case SCR_ENCHANT_ARMOUR:
         if (is_enchantable_armour(item, true))
@@ -4498,11 +4505,15 @@ static bool _scroll_modify_item(item_def scroll)
             // (If so, already prints the "Nothing happens" message.)
             if (_handle_enchant_armour(item_slot))
                 return (true);
-            get_type_id_props()["SCR_EA"] = item.name(DESC_PLAIN);
+            get_type_id_props()["SCR_EA"] = item.name(DESC_PLAIN, false,
+                                                      false, false);
             return (false);
         }
         else
-            get_type_id_props()["SCR_EA"] = item.name(DESC_PLAIN);
+        {
+            get_type_id_props()["SCR_EA"] = item.name(DESC_PLAIN, false,
+                                                      false, false);
+        }
         break;
     default:
         mprf("Buggy scroll %d can't modify item!", scroll.sub_type);
