@@ -1455,7 +1455,7 @@ static void _display_skill_table(int flags, skill_type from_skill = SK_NONE,
                     if (apt != 0)
                         apt_str += make_stringf("%+d", apt);
                     else
-                        apt_str += make_stringf("%d", apt);
+                        apt_str += make_stringf(" %d", apt);
 
                     if (crosstrain_other(sx))
                         apt_str += "<lightblue>*</lightblue>";
