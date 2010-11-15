@@ -2398,6 +2398,7 @@ std::vector<talent> your_talents(bool check_confused)
                 if (abil != ABIL_NON_ABILITY)
                 {
                     _add_talent(talents, abil, check_confused);
+
                     if (abil == ABIL_ELYVILON_LESSER_HEALING_OTHERS)
                     {
                         _add_talent(talents,
