@@ -2273,7 +2273,7 @@ skill_type select_skill(bool show_all)
     mouse_control mc(MOUSE_MODE_MORE);
     const int keyin = getch();
 
-    if (keyin == '*')
+    if (keyin == '*' && you.transfer_from_skill != SK_NONE)
         return select_skill(true);
 
     if (!isaalpha(keyin))
