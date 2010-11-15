@@ -280,7 +280,7 @@ std::string item_def::name(description_level_type descrip,
         }
     }
 
-    if (descrip != DESC_BASENAME)
+    if (descrip != DESC_BASENAME && descrip != DESC_DBNAME)
     {
         const bool  tried  =  !ident && !equipped && item_type_tried(*this);
         std::string tried_str;
