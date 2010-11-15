@@ -749,7 +749,7 @@ static std::string _corrosion_resistance_string(const item_def &item)
              && item.sub_type == ARM_CRYSTAL_PLATE_MAIL)
     {
         return "\nBeing made of crystal renders it very resistant to acidic "
-        "corrosion.";
+               "corrosion.";
     }
     else if (get_equip_race(item) == ISFLAG_DWARVEN)
     {
