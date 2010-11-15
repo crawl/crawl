@@ -1322,10 +1322,6 @@ void down_stairs(dungeon_feature_type force_stair,
     if (!force_dest)
         _update_travel_cache(collect_travel_data, old_level, stair_pos);
 
-    // Notifying of new things that comes into view.
-    // Storing current env.map_knowledge to use it as a reference after
-    // LOS is updated.
-    env.map_shadow = env.map_knowledge;
     // Preventing obvious finding of stairs at your position.
     env.map_shadow(you.pos()).flags |= MAP_SEEN_FLAG;
 
