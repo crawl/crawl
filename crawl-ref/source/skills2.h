@@ -60,8 +60,7 @@ void show_skills();
 void wield_warning(bool newWeapon = true);
 bool is_invalid_skill(skill_type skill);
 void dump_skills(std::string &text);
-skill_type select_skill(skill_type from_skill = SK_NONE, int skill_points = 0,
-                        bool show_all = false);
+skill_type select_skill(bool show_all = false);
 int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
                           bool simu);
 #endif
