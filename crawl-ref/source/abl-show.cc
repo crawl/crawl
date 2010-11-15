@@ -580,8 +580,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
     // begin spell abilities
     case ABIL_DELAYED_FIREBALL:
     case ABIL_MUMMY_RESTORATION:
-    case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
-    case ABIL_ASHENZARI_END_TRANSFER:
         perfect = true;
         failure = 0;
         break;
@@ -730,6 +728,8 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_TROG_BURN_SPELLBOOKS:
     case ABIL_FEDHAS_FUNGAL_BLOOM:
     case ABIL_CHEIBRIADOS_PONDEROUSIFY:
+    case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
+    case ABIL_ASHENZARI_END_TRANSFER:
         invoc = true;
         perfect = true;
         failure = 0;
