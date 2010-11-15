@@ -16,10 +16,11 @@ const int MAX_SKILL_ORDER = 100;
 enum sk_menu_flags
 {
     SK_MENU_NONE         = 0,
-    SK_MENU_SHOW_APT     = (1 << 0),
-    SK_MENU_SHOW_DESC    = (1 << 1),
-    SK_MENU_SHOW_RESKILL = (1 << 2),
-    SK_MENU_RESKILL      = (1 << 3),
+    SK_MENU_SHOW_APT     = 0x01,
+    SK_MENU_SHOW_DESC    = 0x02,
+    SK_MENU_SHOW_RESKILL = 0x04,
+    SK_MENU_SHOW_ALL     = 0x08,
+    SK_MENU_RESKILL      = 0x10
 };
 
 const char *skill_name(skill_type which_skill);

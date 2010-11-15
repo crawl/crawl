@@ -1340,7 +1340,7 @@ static const int ndisplayed_skills =
             sizeof(skill_display_order) / sizeof(*skill_display_order);
 
 static void _display_skill_table(int flags, skill_type from_skill = SK_NONE,
-                                 int skill_points = 0, bool show_all = false)
+                                 int skill_points = 0)
 {
     menu_letter lcount = 'a';
 
@@ -1394,7 +1394,7 @@ static void _display_skill_table(int flags, skill_type from_skill = SK_NONE,
         cgotoxy(scrcol, scrln);
 
 #ifndef DEBUG_DIAGNOSTICS
-        if (you.skills[x] > 0 || show_all)
+        if (you.skills[x] > 0 || flags & SK_MENU_SHOW_ALL)
 #endif
         {
             maxln = std::max(maxln, scrln);
@@ -1421,7 +1421,7 @@ static void _display_skill_table(int flags, skill_type from_skill = SK_NONE,
                 textcolor(YELLOW);
 
 
-            if (you.skills[x] == 0 && !show_all
+            if (you.skills[x] == 0 && !(flags & SK_MENU_SHOW_ALL)
                 || !(flags & SK_MENU_SHOW_DESC) && you.skills[x] == 27
                    && (!(flags & SK_MENU_RESKILL) || from_skill != SK_NONE)
                 || flags & SK_MENU_RESKILL && from_skill == sx)
@@ -1515,7 +1515,8 @@ static void _display_skill_table(int flags, skill_type from_skill = SK_NONE,
         }
     }
 
-    if (flags & SK_MENU_RESKILL && from_skill != SK_NONE && !show_all)
+    if (flags & SK_MENU_RESKILL && from_skill != SK_NONE
+        && !(flags & SK_MENU_SHOW_ALL))
     {
         textcolor(WHITE);
         cgotoxy(1, bottom_line);
@@ -2260,8 +2261,11 @@ skill_type select_skill(skill_type from_skill, int skill_points, bool show_all)
     else
         cprintf("Select the destination skill.");
 
-    _display_skill_table(SK_MENU_SHOW_APT | SK_MENU_RESKILL, from_skill,
-                         skill_points, show_all);
+    int flags = SK_MENU_SHOW_APT | SK_MENU_RESKILL;
+    if (show_all)
+        flags |= SK_MENU_SHOW_ALL;
+
+    _display_skill_table(flags, from_skill, skill_points);
 
     mouse_control mc(MOUSE_MODE_MORE);
     const int keyin = getch();
