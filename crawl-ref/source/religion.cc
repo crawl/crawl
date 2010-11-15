@@ -3074,7 +3074,7 @@ void excommunication(god_type new_god)
 
     case GOD_ASHENZARI:
         if (you.transfer_skill_points > 0)
-            ashenzari_end_transfer(true);
+            ashenzari_end_transfer(false, true);
         _inc_penance(old_god, 25);
         break;
 

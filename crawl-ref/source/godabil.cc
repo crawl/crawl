@@ -2474,9 +2474,9 @@ bool ashenzari_transfer_knowledge()
     return true;
 }
 
-bool ashenzari_end_transfer(bool force)
+bool ashenzari_end_transfer(bool finished, bool force)
 {
-    if (!force)
+    if (!force && !finished)
     {
         mprf("You are currently transferring knowledge from %s to %s.",
              skill_name(you.transfer_from_skill),
@@ -2485,8 +2485,10 @@ bool ashenzari_end_transfer(bool force)
             return false;
     }
 
-    mprf("You stop forgetting about %s and learning about %s.",
-       skill_name(you.transfer_from_skill), skill_name(you.transfer_to_skill));
+    mprf("You %s forgetting about %s and learning about %s",
+         finished ? "have finished" : "stop",
+         skill_name(you.transfer_from_skill),
+         skill_name(you.transfer_to_skill));
     you.transfer_from_skill = SK_NONE;
     you.transfer_to_skill = SK_NONE;
     you.transfer_skill_points = 0;
