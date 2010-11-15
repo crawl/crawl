@@ -914,7 +914,7 @@ Yredelemnul says: Carry the black torch! Rouse the idle dead!
 %%%%
 Zin penance
 
-Zin castigates you for your disobediance of the Law.
+Zin castigates you for your disobedience of the Law.
 
 Zin sternly explains the importance of @important_subject@.
 %%%%
