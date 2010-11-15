@@ -1340,6 +1340,33 @@ static const skill_type skill_display_order[] =
 static const int ndisplayed_skills =
             sizeof(skill_display_order) / sizeof(*skill_display_order);
 
+static bool _skill_is_selectable(skill_type sk, int flags)
+{
+    if (is_invalid_skill(sk))
+        return false;
+
+    if (you.skills[sk] == 0 && !(flags & SK_MENU_SHOW_ALL))
+        return false;
+
+    if (flags & SK_MENU_SHOW_DESC)
+        return true;
+
+    if (flags & SK_MENU_RESKILL && you.transfer_from_skill == sk)
+        return false;
+
+    if (you.skills[sk] == 0
+        && !(flags & SK_MENU_RESKILL && you.transfer_from_skill != SK_NONE))
+    {
+        return false;
+    }
+
+    if (you.skills[sk] == 27
+        && !(flags & SK_MENU_RESKILL && you.transfer_from_skill == SK_NONE))
+    {
+        return false;
+    }
+    return true;
+}
 static void _display_skill_table(int flags)
 {
     menu_letter lcount = 'a';
@@ -1421,16 +1448,10 @@ static void _display_skill_table(int flags)
                 textcolor(YELLOW);
 
 
-            if (you.skills[x] == 0 && !(flags & SK_MENU_SHOW_ALL)
-                || !(flags & SK_MENU_SHOW_DESC) && you.skills[x] == 27
-                   && (!(flags & SK_MENU_RESKILL)
-                       || you.transfer_from_skill != SK_NONE)
-                || flags & SK_MENU_RESKILL && you.transfer_from_skill == sx)
-            {
-                putch(' ');
-            }
-            else
+            if (_skill_is_selectable(x, flags))
                 putch(lcount++);
+            else
+                putch(' ');
 
             cprintf(" %c %-14s Skill %2d",
                      (you.skills[x] == 0 || you.skills[x] == 27) ? ' ' :
@@ -1640,13 +1661,7 @@ void show_skills()
         for (int i = 0; i < ndisplayed_skills; i++)
         {
             const skill_type x = skill_display_order[i];
-            if (x == SK_BLANK_LINE || x == SK_COLUMN_BREAK)
-                continue;
-
-            if (you.skills[x] == 0)
-                continue;
-
-            if (!(flags & SK_MENU_SHOW_DESC) && you.skills[x] == 27)
+            if (!_skill_is_selectable(x, flags))
                 continue;
 
             if (keyin == lcount)
@@ -2284,13 +2299,8 @@ skill_type select_skill(bool show_all)
     for (int i = 0; i < ndisplayed_skills; i++)
     {
         const skill_type x = skill_display_order[i];
-        if (is_invalid_skill(x)
-            || you.skills[x] == 0 && !show_all
-            || you.skills[x] == 27 && you.transfer_from_skill != SK_NONE
-            || x == you.transfer_from_skill)
-        {
+        if (!_skill_is_selectable(x, flags))
             continue;
-        }
 
         if (keyin == lcount)
             return x;
