@@ -1447,14 +1447,14 @@ static void _display_skill_table(int flags)
                     && you.transfer_from_skill != SK_NONE)
                 {
                     textcolor(CYAN);
-                    cprintf (" -> %d",
+                    cprintf (" -> %2d",
                              transfer_skill_points(you.transfer_from_skill, sx,
                                              you.transfer_skill_points, true));
                 }
                 if (flags & SK_MENU_SHOW_APT)
                 {
                     int apt = species_apt(x, you.species);
-                    std::string apt_str("<red> ");
+                    std::string apt_str("<red>");
                     if (apt != 0)
                         apt_str += make_stringf("%+d", apt);
                     else
