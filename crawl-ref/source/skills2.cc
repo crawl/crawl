@@ -1340,8 +1340,7 @@ static const skill_type skill_display_order[] =
 static const int ndisplayed_skills =
             sizeof(skill_display_order) / sizeof(*skill_display_order);
 
-static void _display_skill_table(int flags, skill_type from_skill = SK_NONE,
-                                 int skill_points = 0)
+static void _display_skill_table(int flags)
 {
     menu_letter lcount = 'a';
 
@@ -1407,7 +1406,7 @@ static void _display_skill_table(int flags, skill_type from_skill = SK_NONE,
             {
                 textcolor(GREEN);
             }
-            else if (x == from_skill)
+            else if (flags & SK_MENU_RESKILL && x == you.transfer_from_skill)
                 textcolor(WHITE);
             else if (you.practise_skill[x] == 0 || you.skills[x] == 0)
                 textcolor(DARKGREY);
@@ -1424,8 +1423,9 @@ static void _display_skill_table(int flags, skill_type from_skill = SK_NONE,
 
             if (you.skills[x] == 0 && !(flags & SK_MENU_SHOW_ALL)
                 || !(flags & SK_MENU_SHOW_DESC) && you.skills[x] == 27
-                   && (!(flags & SK_MENU_RESKILL) || from_skill != SK_NONE)
-                || flags & SK_MENU_RESKILL && from_skill == sx)
+                   && (!(flags & SK_MENU_RESKILL)
+                       || you.transfer_from_skill != SK_NONE)
+                || flags & SK_MENU_RESKILL && you.transfer_from_skill == sx)
             {
                 putch(' ');
             }
@@ -1443,11 +1443,13 @@ static void _display_skill_table(int flags, skill_type from_skill = SK_NONE,
 
             if (you.skills[x] < 27)
             {
-                if (from_skill != SK_NONE)
+                if (flags & SK_MENU_RESKILL
+                    && you.transfer_from_skill != SK_NONE)
                 {
                     textcolor(CYAN);
-                    cprintf (" -> %d", transfer_skill_points(from_skill, sx,
-                                                          skill_points, true));
+                    cprintf (" -> %d",
+                             transfer_skill_points(you.transfer_from_skill, sx,
+                                             you.transfer_skill_points, true));
                 }
                 if (flags & SK_MENU_SHOW_APT)
                 {
@@ -1516,7 +1518,7 @@ static void _display_skill_table(int flags, skill_type from_skill = SK_NONE,
         }
     }
 
-    if (flags & SK_MENU_RESKILL && from_skill != SK_NONE
+    if (flags & SK_MENU_RESKILL && you.transfer_from_skill != SK_NONE
         && !(flags & SK_MENU_SHOW_ALL))
     {
         textcolor(WHITE);
@@ -2252,12 +2254,12 @@ void dump_skills(std::string &text)
     }
 }
 
-skill_type select_skill(skill_type from_skill, int skill_points, bool show_all)
+skill_type select_skill(bool show_all)
 {
     clrscr();
     cgotoxy(1, 1);
     textcolor(WHITE);
-    if (from_skill == SK_NONE)
+    if (you.transfer_from_skill == SK_NONE)
         cprintf("Select the source skill.");
     else
         cprintf("Select the destination skill.");
@@ -2266,13 +2268,13 @@ skill_type select_skill(skill_type from_skill, int skill_points, bool show_all)
     if (show_all)
         flags |= SK_MENU_SHOW_ALL;
 
-    _display_skill_table(flags, from_skill, skill_points);
+    _display_skill_table(flags);
 
     mouse_control mc(MOUSE_MODE_MORE);
     const int keyin = getch();
 
     if (keyin == '*')
-        return select_skill(from_skill, skill_points, true);
+        return select_skill(true);
 
     if (!isaalpha(keyin))
         return SK_NONE;
@@ -2284,8 +2286,8 @@ skill_type select_skill(skill_type from_skill, int skill_points, bool show_all)
         const skill_type x = skill_display_order[i];
         if (is_invalid_skill(x)
             || you.skills[x] == 0 && !show_all
-            || you.skills[x] == 27 && from_skill != SK_NONE
-            || x == from_skill)
+            || you.skills[x] == 27 && you.transfer_from_skill != SK_NONE
+            || x == you.transfer_from_skill)
         {
             continue;
         }
