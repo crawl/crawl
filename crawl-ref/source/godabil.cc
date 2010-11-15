@@ -2486,7 +2486,7 @@ bool ashenzari_end_transfer(bool finished, bool force)
             return false;
     }
 
-    mprf("You %s forgetting about %s and learning about %s",
+    mprf("You %s forgetting about %s and learning about %s.",
          finished ? "have finished" : "stop",
          skill_name(you.transfer_from_skill),
          skill_name(you.transfer_to_skill));
