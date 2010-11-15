@@ -351,12 +351,12 @@ static const ability_def Ability_List[] =
       10, 0, 200, 10, ABFLAG_NONE },
 
     // Ashenzari
-    { ABIL_ASHENZARI_TRANSFER_KNOWLEDGE, "Transfer Knowledge", 0, 0, 0, 10,
-      ABFLAG_NONE},
     { ABIL_ASHENZARI_SCRYING, "Scrying",
       4, 0, 50, generic_cost::range(5, 6), ABFLAG_NONE },
-    { ABIL_ASHENZARI_END_TRANSFER, "End Transfer Knowledge", 0, 0, 0, 0,
-      ABFLAG_NONE },
+    { ABIL_ASHENZARI_TRANSFER_KNOWLEDGE, "Transfer Knowledge",
+      0, 0, 0, 10, ABFLAG_NONE },
+    { ABIL_ASHENZARI_END_TRANSFER, "End Transfer Knowledge",
+      0, 0, 0, 0, ABFLAG_NONE },
 
     { ABIL_HARM_PROTECTION, "Protection From Harm", 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_HARM_PROTECTION_II, "Reliable Protection From Harm",
