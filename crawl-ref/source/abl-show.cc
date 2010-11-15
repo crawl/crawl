@@ -553,18 +553,20 @@ const std::string make_detailed_cost_description(ability_type ability)
     if (abil.mp_cost > 0)
     {
         have_cost = true;
-        ret << "\nMP     : ";
-        ret << abil.mp_cost;
         if (abil.flags & ABFLAG_PERMANENT_MP)
-            ret << " (permanent)";
+            ret << "\nMax MP : ";
+        else
+            ret << "\nMP     : ";
+        ret << abil.mp_cost;
     }
     if (abil.hp_cost)
     {
         have_cost = true;
-        ret << "\nHP     : ";
-        ret << abil.hp_cost.cost(you.hp_max);
         if (abil.flags & ABFLAG_PERMANENT_HP)
-            ret << " (permanent)";
+            ret << "\nMax HP : ";
+        else
+            ret << "\nHP     : ";
+        ret << abil.hp_cost.cost(you.hp_max);
     }
 
     if (abil.food_cost && you.is_undead != US_UNDEAD
