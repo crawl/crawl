@@ -6145,7 +6145,7 @@ VISUAL:@The_monster@ stares vacantly at @possessive@ hideously deformed hands.
 
 VISUAL:@The_monster@ prays for aid.
 
-@The_monster@ says, "I think I died ... I think I'm dead ..."
+@The_monster@ says, "I think I died... I think I'm dead..."
 
 w:3
 @The_monster@ wails, "So itchy! Itchy, itchy, itchy! Always itchy!"
@@ -6155,7 +6155,7 @@ VISUAL:@The_monster@ gurgles, unable to form words.
 w:1
 @The_monster@ yells, "I will have my revenge on the monster who did this!"
 
-@The_monster@ mumbles, "Took all my skin, all gone, all gone ..."
+@The_monster@ mumbles, "Took all my skin, all gone, all gone..."
 
 @The_monster@ says, "I was beautiful once. Now look at me."
 
