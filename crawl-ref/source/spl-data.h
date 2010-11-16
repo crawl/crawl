@@ -542,7 +542,7 @@ struct spell_desc
      SPFLAG_AREA,
      8,
      200,
-     6, 6,
+     TORNADO_RADIUS, TORNADO_RADIUS,
      0,
      NULL,
      false,

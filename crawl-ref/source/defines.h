@@ -201,6 +201,8 @@ const int BRANCH_DUNGEON_DEPTH = 27;
 
 const int ANTITRAIN_PENALTY = 2;
 
+#define TORNADO_RADIUS 5
+
 // Size of unique_items in player class
 #define MAX_UNRANDARTS 100
 
