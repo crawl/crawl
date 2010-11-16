@@ -6341,8 +6341,13 @@ int player::has_pseudopods(bool allow_tran) const
     if (allow_tran)
     {
         // transformations other than these will override pseudopods
-        if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
+        if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE
+            && attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS
+            && attribute[ATTR_TRANSFORMATION] != TRAN_STATUE
+            && attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
+        {
             return (0);
+        }
     }
 
     return (player_mutation_level(MUT_PSEUDOPODS));
