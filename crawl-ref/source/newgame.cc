@@ -336,6 +336,9 @@ static std::string _highlight_pattern(const newgame_def* ng)
     if (ng->species != SP_UNKNOWN)
         return species_name(ng->species) + "  ";
 
+    if (ng->job == JOB_UNKNOWN)
+        return "";
+
     std::string ret;
     for (int i = 0; i < ng_num_species(); ++i)
     {
