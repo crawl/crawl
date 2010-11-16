@@ -1113,14 +1113,6 @@ static bool _tran_forbid_aux_attack(unarmed_attack_type atk)
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT);
 
-    case UNAT_TAILSLAP:
-        return (you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT);
-
-    case UNAT_PSEUDOPODS:
-        return (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE);
-
     default:
         return (false);
     }
