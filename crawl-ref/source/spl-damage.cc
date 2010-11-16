@@ -1853,7 +1853,6 @@ static void _set_tornado_durations(int powc)
     you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
 }
 
-#define TORNADO_RADIUS 6
 bool cast_tornado(int powc)
 {
     if (you.duration[DUR_TORNADO])
