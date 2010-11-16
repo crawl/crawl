@@ -1034,7 +1034,6 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
     case UNAT_TAILSLAP:
         aux_attack = aux_verb = "tail-slap";
 
-        // Usually one level, or two for grey draconians.
         aux_damage = 6 * you.has_usable_tail();
 
         noise_factor = 125;
