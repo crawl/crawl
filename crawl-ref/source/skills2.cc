@@ -1365,8 +1365,10 @@ static bool _skill_is_selectable(skill_type sk, int flags)
     {
         return false;
     }
+
     return true;
 }
+
 static void _display_skill_table(int flags)
 {
     menu_letter lcount = 'a';
