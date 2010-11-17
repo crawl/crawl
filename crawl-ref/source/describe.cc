@@ -3263,14 +3263,14 @@ static std::string _monster_stat_description(const monster_info& mi)
 
     // Size
     const char *sizes[NUM_SIZE_LEVELS] = {
-        "as big as a rat",
-        "as big as a spriggan",
-        "as big as a kobold",
+        "tiny",
+        "little",
+        "small",
         NULL,     // don't display anything for 'medium'
-        "as big as an ogre",
-        "as big as a hydra",
-        "as big as a giant",
-        "as big as a dragon",
+        "large",
+        "big",
+        "giant",
+        "huge",
     };
 
     const char *mimic_sizes[6]= {
