@@ -860,8 +860,8 @@ SRC_PKG_TAR   := $(PKG_SRC_DIR).tar.bz2
 SRC_PKG_TAR_NODEPS := $(PKG_SRC_DIR)-nodeps.tar.bz2
 SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 
-.PHONY: all test install clean clean-contrib distclean debug profile wizard package-source source \
-        build-windows package-windows
+.PHONY: all test install clean clean-contrib clean-rltiles distclean debug \
+        profile wizard package-source source build-windows package-windows
 
 all: $(GENERATED_FILES) $(GAME) $(GENERATED_DOCS)
 
@@ -1036,9 +1036,8 @@ ifeq ($(USE_DGAMELAUNCH),)
 endif
 endif
 
-clean:
+clean: clean-rltiles
 	+$(MAKE) -C $(UTIL) clean
-	+$(MAKE) -C $(RLTILES) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(OBJECTS) $(OBJECTS:.o=.d) $(YACC_OBJECTS:.o=.d) *.ixx  \
 	    build.h compflag.h .contrib-libs .cflags
