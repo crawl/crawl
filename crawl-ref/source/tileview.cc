@@ -4,6 +4,7 @@
 #include "tileview.h"
 
 #include "areas.h"
+#include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
 #include "env.h"
@@ -704,10 +705,20 @@ void tile_place_monster(const coord_def &gc, const monster* mon)
 void tile_place_cloud(const coord_def &gc, const cloud_struct &cl)
 {
     const coord_def ep = grid2show(gc);
+    const monster* mon = monster_at(gc);
+    bool disturbance = false;
+
+    if (mon && !mon->visible_to(&you) && you.see_cell(gc)
+        && is_opaque_cloud(env.cgrid(gc))
+        && !mon->is_insubstantial())
+    {
+        disturbance = true;
+    }
+
     // In the Shoals, ink is handled differently. (jpeg)
     // I'm not sure it is even possible anywhere else, but just to be safe...
     if (cl.type != CLOUD_INK || !player_in_branch(BRANCH_SHOALS))
-        env.tile_fg(ep) = tileidx_cloud(cl);
+        env.tile_fg(ep) = tileidx_cloud(cl, disturbance);
 }
 
 unsigned int num_tile_rays = 0;

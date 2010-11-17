@@ -3320,7 +3320,7 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
     return (0);
 }
 
-tileidx_t tileidx_cloud(const cloud_struct &cl)
+tileidx_t tileidx_cloud(const cloud_struct &cl, bool disturbance)
 {
     int type  = cl.type;
     int decay = cl.decay;
@@ -3418,6 +3418,17 @@ tileidx_t tileidx_cloud(const cloud_struct &cl)
 
     if (colour != -1)
         ch = tile_main_coloured(ch, colour);
+
+    // The following clouds are supposed to be opaque, but I didn't make any
+    // disturbance tile for them.
+    // CLOUD_FOREST_FIRE and CLOUD_HOLY_FLAMES: are not in the above switch.
+    // CLOUD_GLOOM: is this one used? Its tile doesn't look like a could.
+    // CLOUD_INK: special cloud with a specific check in tileview.cc.
+    if (disturbance && type != CLOUD_FOREST_FIRE  && type != CLOUD_GLOOM
+        && type != CLOUD_INK && type != CLOUD_HOLY_FLAMES)
+    {
+        ch += tile_main_count(ch);
+    }
 
     return (ch | TILE_FLAG_FLYING);
 }
