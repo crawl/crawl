@@ -1342,7 +1342,6 @@ void merfolk_start_swimming(bool stepped)
     remove_one_equip(EQ_BOOTS);
     you.redraw_evasion = true;
 
-// FIXME: player doll isn't updated properly when player flies out of water
 #ifdef USE_TILE
     init_player_doll();
 #endif

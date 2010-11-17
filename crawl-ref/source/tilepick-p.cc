@@ -580,8 +580,8 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
             hair = 0;
             break;
         case SP_MERFOLK:
-            result = you.in_water() ? TILEP_BASE_MERFOLK_WATER
-                                    : TILEP_BASE_MERFOLK;
+            result = you.fishtail ? TILEP_BASE_MERFOLK_WATER
+                                  : TILEP_BASE_MERFOLK;
             hair = TILEP_HAIR_GREEN;
             beard = TILEP_BEARD_SHORT_GREEN;
             break;
