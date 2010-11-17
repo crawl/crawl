@@ -4919,6 +4919,7 @@ void levitate_player(int pow)
          "You feel %s buoyant.", standing ? "very" : "more");
 
     if (standing)
+    {
         if (you.fishtail)
         {
             mpr("Your tail turns into legs as you levitate out of the water.");
@@ -4926,6 +4927,7 @@ void levitate_player(int pow)
         }
         else
             mpr("You gently float upwards from the floor.");
+    }
 
     // Amulet of Controlled Flight can auto-ID.
     if (!you.duration[DUR_LEVITATION]
