@@ -4183,6 +4183,7 @@ void bolt::affect_monster(monster* mon)
         apply_hit_funcs(mon, 0);
         return;
     }
+
     if (fedhas_shoot_through(*this, mon))
     {
         apply_hit_funcs(mon, 0);
