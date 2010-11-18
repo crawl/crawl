@@ -3443,7 +3443,7 @@ void god_pitch(god_type which_god)
     }
     else if (you.religion == GOD_FEDHAS)
     {
-        mpr("You can call upon Fedhas to speed up the decay of corpses.",
+        mpr("You can now call upon Fedhas to speed up the decay of corpses.",
             MSGCH_GOD);
         mpr("The plants of the dungeon cease their hostilities.", MSGCH_GOD);
     }
