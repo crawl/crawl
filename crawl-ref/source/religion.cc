@@ -3065,7 +3065,7 @@ void excommunication(god_type new_god)
     case GOD_FEDHAS:
         if (query_da_counter(DACT_ALLY_PLANT))
         {
-            mpr("The plants of the dungeon turn on you!", MSGCH_GOD, GOD_FEDHAS);
+            mpr("The plants of the dungeon turn on you.", MSGCH_GOD, GOD_FEDHAS);
             add_daction(DACT_ALLY_PLANT);
         }
         _inc_penance(old_god, 30);
