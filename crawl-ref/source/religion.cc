@@ -3433,8 +3433,8 @@ void god_pitch(god_type which_god)
 
     if (you.religion == GOD_ELYVILON)
     {
-        mpr("You can now call upon Elyvilon to destroy weapons lying "
-            "on the ground.", MSGCH_GOD);
+        mpr("You can now call upon Elyvilon to destroy weapons lying on the "
+            "ground.", MSGCH_GOD);
     }
     else if (you.religion == GOD_TROG)
     {
