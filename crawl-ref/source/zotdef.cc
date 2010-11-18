@@ -756,8 +756,8 @@ int zotdef_spawn(bool boss)
    
     int mid = mons_place(mg);
 
-    /* Boss monsters are named, and beefed a bit further */
-    if ((mid!=-1) && boss)
+    /* Boss monsters which aren't uniques are named, and beefed a bit further */
+    if ((mid!=-1) && boss && !mons_is_unique(mt))
     {
         // Use the proper name function: if that fails, fall back
         // to the randart name generator
