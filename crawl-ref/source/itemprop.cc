@@ -542,6 +542,14 @@ void do_curse_item(item_def &item, bool quiet)
 
 void do_uncurse_item(item_def &item, bool inscribe, bool no_ash)
 {
+    if (!item.cursed())
+    {
+        item.flags &= ~ISFLAG_SEEN_CURSED;
+        if (in_inventory(item))
+            item.flags |= ISFLAG_KNOW_CURSE;
+        return;
+    }
+
     if (no_ash && you.religion == GOD_ASHENZARI)
     {
         mprf(MSGCH_GOD, "%s preserves the curse.",
