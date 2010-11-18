@@ -1272,7 +1272,7 @@ static void _hell_effects()
     if ((you.religion == GOD_ZIN && x_chance_in_y(you.piety, MAX_PIETY))
         || is_sanctuary(you.pos()))
     {
-        mpr("Zin's power protects you from the chaos of Hell!", MSGCH_GOD);
+        simple_god_message("'s power protects you from the chaos of Hell!");
         return;
     }
 
