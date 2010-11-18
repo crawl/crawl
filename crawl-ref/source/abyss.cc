@@ -1378,7 +1378,7 @@ bool lugonu_corrupt_level(int power)
     if (is_level_incorruptible())
         return (false);
 
-    mpr("Lugonu's Hand of Corruption reaches out!", MSGCH_GOD);
+    simple_god_message("'s Hand of Corruption reaches out!");
 
     flash_view(MAGENTA);
 
