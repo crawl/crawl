@@ -496,6 +496,7 @@ mon_attack_flavour ugly_thing_colour_to_flavour(uint8_t u_colour)
 
     if (is_high_colour(u_colour))
         u_att_flav = _very_ugly_thing_flavour_upgrade(u_att_flav);
+
     return (u_att_flav);
 }
 
