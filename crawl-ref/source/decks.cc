@@ -1458,7 +1458,7 @@ static void _velocity_card(int power, deck_rarity_type rarity)
 
 static void _damnation_card(int power, deck_rarity_type rarity)
 {
-    if (you.level_type != LEVEL_DUNGEON)
+    if (you.level_type == LEVEL_ABYSS)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return;
