@@ -701,7 +701,7 @@ bool player_in_hell(void);
 
 bool berserk_check_wielded_weapon(void);
 int player_equip(equipment_type slot, int sub_type, bool calc_unid = true);
-int player_equip_ego_type(int slot, int sub_type);
+int player_equip_ego_type(int slot, int sub_type, bool calc_unid = true);
 bool player_equip_unrand(int unrand_index);
 bool player_can_hit_monster(const monster* mon);
 
@@ -772,6 +772,7 @@ int player_res_steam(bool calc_unid = true, bool temp = true,
 
 int player_res_poison(bool calc_unid = true, bool temp = true,
                       bool items = true);
+int player_res_magic(bool calc_unid = true, bool temp = true);
 
 bool player_control_teleport(bool calc_unid = true, bool temp = true,
                              bool items = true);
