@@ -545,7 +545,8 @@ static void _update_travel_cache(bool collect_travel_data,
             // and that we can descend that downstair and get back to where we
             // came from. This assumption is guaranteed false when climbing out
             // of one of the branches of Hell.
-            if (new_level_id != BRANCH_VESTIBULE_OF_HELL)
+            if (new_level_id != BRANCH_VESTIBULE_OF_HELL
+                || !is_hell_subbranch(old_level.branch))
             {
                 // Set the new level's stair, assuming arbitrarily that going
                 // downstairs will land you on the same upstairs you took to
