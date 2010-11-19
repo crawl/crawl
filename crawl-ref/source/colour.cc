@@ -75,9 +75,19 @@ uint8_t random_uncommon_colour()
     return (result);
 }
 
+bool is_low_colour(uint8_t colour)
+{
+    return (colour <= 7);
+}
+
+bool is_high_colour(uint8_t colour)
+{
+    return (colour >= 8 && colour <= 15);
+}
+
 uint8_t make_low_colour(uint8_t colour)
 {
-    if (colour >= 8 && colour <= 15)
+    if (is_high_colour(colour))
         return (colour - 8);
 
     return (colour);
@@ -85,7 +95,7 @@ uint8_t make_low_colour(uint8_t colour)
 
 uint8_t make_high_colour(uint8_t colour)
 {
-    if (colour <= 7)
+    if (is_low_colour(colour))
         return (colour + 8);
 
     return (colour);
