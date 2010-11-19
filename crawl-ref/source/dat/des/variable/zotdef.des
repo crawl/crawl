@@ -7,7 +7,7 @@
 # hall_of_Zot_5
 
 NAME:    zotvault
-TAGS:    _zotdef no_monster_gen 
+TAGS:    zotdef no_monster_gen 
 ORIENT:  encompass
 LFLOORCOL: magenta
 LROCKCOL:  lightmagenta
@@ -69,7 +69,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    zotvault2
-TAGS:    _zotdef no_monster_gen 
+TAGS:    zotdef no_monster_gen 
 ORIENT:  encompass
 LFLOORCOL: magenta
 LROCKCOL:  lightmagenta
@@ -130,6 +130,9 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+# This one is very sensitive to the pathfinding algorithm, and currently 
+# doesn't work (all critters enter the Orb chamber from the south). Needs
+# reworking before use, so the 'zotdef' tag has been replaced with '_zotdef'.
 NAME:    zotvault3
 TAGS:    _zotdef no_monster_gen no_rotate
 ORIENT:  encompass
@@ -158,7 +161,7 @@ XXXXXXX....................X..XXXXX.......XXXXX..X....................XXXXXXX
 XXXXXXX....................X..XXXXXX.....XXXXXX..X....................XXXXXXX
 XXXXXXX....................X..XXXXXXX...XXXXXXX..X....................XXXXXXX
 XXXXXXX....................X..XXXXXXX...XXXXXXX..X....................XXXXXXX
-XXXXXXX...............XX...X..XXXXXXXX.XXXXXXXX..X...XX...............XXXXXXX
+XXXXXXX..............XX....X..XXXXXXXX.XXXXXXXX..X....XX..............XXXXXXX
 XXXXXXX...............XX...X..XXXXXXXX.XXXXXXXX..X...XX...............XXXXXXX
 XXXXXXX...............XX...X..XXXXXXXX.XXXXXXXX..X...XX...............XXXXXXX
 XXXXXXXXXXXXXXX.......XX...XX...................XX...XX.......XXXXXXXXXXXXXXX
@@ -266,3 +269,63 @@ XXXXXXXXXXXXXXXXXXXXXXXX|||XXXXXXX.........XXXXXXX|||XXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.......XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ENDMAP	
+
+# Currently under development and testing, so commented out in the tags.
+NAME:    zotvault5
+TAGS:    _zotdef no_monster_gen no_rotate
+ORIENT:  encompass
+LFLOORCOL: magenta
+LROCKCOL:  lightmagenta
+LFLAGS:  no_magic_map
+KITEM:   Z = Orb of Zot
+MARKER:  Z = lua:item_pickup_change_flags { \
+            level_flags="!no_magic_map", item="Orb of Zot" \
+         }
+MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
+            pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
+            size = 2, walk_dist = 2, spread_rate= 35 }
+MAP
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX..(.............................................................{..XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..........XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...........XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX...........XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...............................XX.XX...............................XXXXX
+XXXXX..............................Xo...oX..............................XXXXX
+XXXXX.............................Xo.....oX.............................XXXXX
+XXXXX............................Xo.......oX............................XXXXX
+XXXXX...........................Xo.........oX...........................XXXXX
+XXXXX....XXXXXXXXXXXXXXXXXXXXXXXX...........XXXXXXXXXXXXXXXXXXXXXXX.....XXXXX
+XXXXXX..XX|||||||||||||||***...oooooo.Z.ooooo...***|||||||||||||||XXX..XXXXXX
+XXXXX....XXXXXXXXXXXXXXXXXXXXXXXX...........XXXXXXXXXXXXXXXXXXXXXXX.....XXXXX
+XXXXX...........................Xo.........oX...........................XXXXX
+XXXXX............................Xo.......oX............................XXXXX
+XXXXX.............................Xo.....oX.............................XXXXX
+XXXXX..............................Xo...oX..............................XXXXX
+XXXXX...............................XX.XX...............................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...........XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX...........XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..........XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX..(.............................................................[..XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ENDMAP
