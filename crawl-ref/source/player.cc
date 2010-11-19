@@ -414,11 +414,6 @@ bool player_in_level_area(level_area_type area)
 
 bool player_in_hell(void)
 {
-    // No real reason except to draw someone's attention here if they
-    // mess with the branch enum.
-    COMPILE_CHECK(BRANCH_FIRST_HELL == BRANCH_DIS, a);
-    COMPILE_CHECK(BRANCH_LAST_HELL  == BRANCH_TARTARUS, b);
-
     return (you.level_type == LEVEL_DUNGEON
             && is_hell_subbranch(you.where_are_you));
 }
