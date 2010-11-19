@@ -925,7 +925,7 @@ int player_equip(equipment_type slot, int sub_type, bool calc_unid)
 // Returns number of matches (jewellery returns zero -- no ego type).
 // [ds] There's no equivalent of calc_unid or req_id because as of now, weapons
 // and armour type-id on wield/wear.
-int player_equip_ego_type(int slot, int special)
+int player_equip_ego_type(int slot, int special, bool calc_unid)
 {
     int ret = 0;
 
@@ -957,7 +957,8 @@ int player_equip_ego_type(int slot, int special)
         for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
         {
             if ((item = you.slot_item(static_cast<equipment_type>(i)))
-                && get_armour_ego_type(*item) == special)
+                && get_armour_ego_type(*item) == special
+                && (calc_unid || item_type_known(*item)))
             {
                 ret++;
             }
@@ -972,7 +973,8 @@ int player_equip_ego_type(int slot, int special)
         }
         // Check a specific armour slot for an ego type:
         if ((item = you.slot_item(static_cast<equipment_type>(slot)))
-            && get_armour_ego_type(*item) == special)
+            && get_armour_ego_type(*item) == special
+            && (calc_unid || item_type_known(*item)))
         {
             ret++;
         }
@@ -3721,7 +3723,7 @@ void display_char_status()
 
     // magic resistance
     mprf("You are %s resistant to hostile enchantments.",
-         magic_res_adjective(you.res_magic()).c_str());
+         magic_res_adjective(player_res_magic(false)).c_str());
 
     // character evaluates their ability to sneak around:
     mprf("You feel %s.", stealth_desc(check_stealth()).c_str());
@@ -5896,12 +5898,17 @@ int player::res_wind() const
 
 int player::res_magic() const
 {
+    return player_res_magic();
+}
+
+int player_res_magic(bool calc_unid, bool temp)
+{
     int rm = 0;
 
-    switch (species)
+    switch (you.species)
     {
     default:
-        rm = experience_level * 3;
+        rm = you.experience_level * 3;
         break;
     case SP_HIGH_ELF:
     case SP_SLUDGE_ELF:
@@ -5910,47 +5917,48 @@ int player::res_magic() const
     case SP_VAMPIRE:
     case SP_DEMIGOD:
     case SP_OGRE:
-        rm = experience_level * 4;
+        rm = you.experience_level * 4;
         break;
     case SP_NAGA:
-        rm = experience_level * 5;
+        rm = you.experience_level * 5;
         break;
     case SP_PURPLE_DRACONIAN:
     case SP_DEEP_DWARF:
     case SP_CAT:
-        rm = experience_level * 6;
+        rm = you.experience_level * 6;
         break;
     case SP_SPRIGGAN:
-        rm = experience_level * 7;
+        rm = you.experience_level * 7;
         break;
     }
 
     // randarts
-    rm += scan_artefacts(ARTP_MAGIC);
+    rm += scan_artefacts(ARTP_MAGIC, calc_unid);
 
     // armour
-    rm += 30 * player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_MAGIC_RESISTANCE);
+    rm += 30 * player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_MAGIC_RESISTANCE,
+                                     calc_unid);
 
     // rings of magic resistance
-    rm += 40 * player_equip(EQ_RINGS, RING_PROTECTION_FROM_MAGIC);
+    rm += 40 * player_equip(EQ_RINGS, RING_PROTECTION_FROM_MAGIC, calc_unid);
 
     // Enchantment skill through staff of enchantment (up to 90).
-    if (player_equip(EQ_STAFF, STAFF_ENCHANTMENT))
-        rm += 3 * (3 + skills[SK_ENCHANTMENTS]);
+    if (player_equip(EQ_STAFF, STAFF_ENCHANTMENT, calc_unid))
+        rm += 3 * (3 + you.skills[SK_ENCHANTMENTS]);
 
     // Mutations
     rm += 30 * player_mutation_level(MUT_MAGIC_RESISTANCE);
 
     // transformations
-    if (attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
+    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH && temp)
         rm += 50;
 
     // Trog's Hand
-    if (attribute[ATTR_DIVINE_REGENERATION])
+    if (you.attribute[ATTR_DIVINE_REGENERATION] && temp)
         rm += 70;
 
     // Enchantment effect
-    if (duration[DUR_LOWERED_MR])
+    if (you.duration[DUR_LOWERED_MR] && temp)
         rm /= 2;
 
     return (rm);
