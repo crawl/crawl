@@ -965,7 +965,7 @@ bool direction_chooser::move_is_ok() const
 {
     if (!moves.isCancel && moves.isTarget)
     {
-        if (!cell_see_cell(you.pos(), target()))
+        if (!cell_see_cell(you.pos(), target(), LOS_DEFAULT))
         {
             if (you.see_cell(target()))
             {
