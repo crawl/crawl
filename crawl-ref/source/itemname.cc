@@ -2937,13 +2937,17 @@ bool is_useless_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case POT_BERSERK_RAGE:
+            return (you.is_undead
+                        && (you.species != SP_VAMPIRE
+                            || temp && you.hunger_state <= HS_SATIATED));
+
         case POT_CURE_MUTATION:
         case POT_GAIN_STRENGTH:
         case POT_GAIN_INTELLIGENCE:
         case POT_GAIN_DEXTERITY:
-            return (you.species == SP_GHOUL
-                    || temp && you.species == SP_VAMPIRE
-                            && you.hunger_state < HS_SATIATED);
+            return (you.is_undead
+                        && (you.species != SP_VAMPIRE
+                            || temp && you.hunger_state < HS_SATIATED));
 
         case POT_LEVITATION:
             return (you.permanent_levitation() || you.permanent_flight());
