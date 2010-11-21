@@ -120,6 +120,7 @@ CHMOD = chmod 2>/dev/null
 CHOWN = chown 2>/dev/null
 PNGCRUSH = $(COPY)
 PNGCRUSH_LABEL = COPY
+ADVPNG = advpng -z -4
 
 export AR
 export RANLIB
@@ -780,6 +781,7 @@ ifndef V
         QUIET_DEPEND   = @echo '   ' DEPEND $@;
         QUIET_WINDRES  = @echo '   ' WINDRES $@;
         QUIET_PNGCRUSH = @echo '   ' $(PNGCRUSH_LABEL) $@;
+        QUIET_ADVPNG   = @echo '   ' ADVPNG $@;
         export V
 endif
 endif
@@ -799,9 +801,13 @@ DESTTILEFILES = $(TILEFILES:%=dat/tiles/%)
 OBJECTS += $(TILEDEFOBJS)
 
 ifndef NO_OPTIMIZE
-  ifneq (,$(shell which pngcrush))
-    PNGCRUSH = pngcrush -q -m 113
-    PNGCRUSH_LABEL = PNGCRUSH
+  ifneq (,$(shell which advpng))
+    USE_ADVPNG = y
+  else
+    ifneq (,$(shell which pngcrush))
+      PNGCRUSH = pngcrush -q -m 113
+      PNGCRUSH_LABEL = PNGCRUSH
+    endif
   endif
 endif
 endif
@@ -1145,6 +1151,9 @@ $(ORIGTILEFILES): rltile-build
 
 dat/tiles/%.png: $(RLTILES)/%.png
 	$(QUIET_PNGCRUSH)$(PNGCRUSH) $< $@
+ifdef USE_ADVPNG
+	$(QUIET_ADVPNG)$(ADVPNG) $@
+endif
 
 clean-rltiles:
 	$(RM) $(DESTTILEFILES)
