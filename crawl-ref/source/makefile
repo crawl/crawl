@@ -800,7 +800,7 @@ OBJECTS += $(TILEDEFOBJS)
 
 ifndef NO_OPTIMIZE
   ifneq (,$(shell which pngcrush))
-    PNGCRUSH = pngcrush -q
+    PNGCRUSH = pngcrush -q -m 113
     PNGCRUSH_LABEL = PNGCRUSH
   endif
 endif
