@@ -1898,8 +1898,11 @@ bool cast_tornado(int powc)
 
 void tornado_damage(int dur)
 {
+    if (dur <= 0)
+        return;
+
     // Not stored so unwielding that staff will reduce damage.
-    int pow = calc_spell_power(SPELL_TORNADO, true);
+    int pow = calc_spell_power(SPELL_TORNADO, true) * 10 / dur;
     dprf("Doing tornado, base power %d", pow);
     const coord_def org = you.pos();
 
