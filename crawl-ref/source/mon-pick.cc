@@ -117,7 +117,7 @@ static int _mons_misc_level(int mcls)
     case MONS_QUEEN_ANT:
         return 25;
 
-    case MONS_CHERUB:
+    case MONS_ANGEL:
         return 27;
 
     case MONS_DAEVA:
@@ -193,7 +193,7 @@ bool mons_abyss(int mcls)
     case MONS_ABOMINATION_SMALL:
     case MONS_AIR_ELEMENTAL:
     case MONS_ANCIENT_LICH:
-    case MONS_CHERUB:
+    case MONS_ANGEL:
     case MONS_BALRUG:
     case MONS_BLUE_DEATH:
     case MONS_BLUE_DEVIL:
@@ -425,7 +425,7 @@ int mons_rare_abyss(int mcls)
     case MONS_SOUL_EATER:
         return 7;
 
-    case MONS_CHERUB:
+    case MONS_ANGEL:
     case MONS_IRON_DEVIL:
         return 6;
 
