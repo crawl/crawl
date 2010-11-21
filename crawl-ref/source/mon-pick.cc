@@ -2075,6 +2075,7 @@ int mons_spidernest_level(int mcls)
     case MONS_TRAPDOOR_SPIDER:
     case MONS_GIANT_MOSQUITO:
     case MONS_GIANT_BLOWFLY:
+    case MONS_SPIDER:
         mlev++;
         break;
 
@@ -2135,6 +2136,7 @@ int mons_spidernest_rare(int mcls)
     case MONS_BOULDER_BEETLE:
     case MONS_GIANT_CENTIPEDE:
     case MONS_EMPEROR_SCORPION:
+    case MONS_SPIDER:
         return 15;
 
     case MONS_JUMPING_SPIDER:
