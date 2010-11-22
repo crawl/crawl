@@ -2318,6 +2318,8 @@ skill_type select_skill(bool show_all)
 int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
                           bool simu)
 {
+    ASSERT(!is_invalid_skill(fsk) && !is_invalid_skill(tsk));
+
     const int penalty = 90; // 10% XP penalty
     int total_skp_lost   = 0; // skill points lost in fsk.
     int total_skp_gained = 0; // skill points gained in tsk.
@@ -2349,6 +2351,8 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
         }
         else if (is_antitrained(tsk))
             skp_gained /= ANTITRAIN_PENALTY;
+
+        ASSERT(you.skill_points[fsk] > you.ct_skill_points[fsk]);
 
         int ct_penalty = skp_lost * you.ct_skill_points[fsk]
                           / (you.skill_points[fsk] - you.ct_skill_points[fsk]);
