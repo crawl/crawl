@@ -550,7 +550,7 @@ void do_uncurse_item(item_def &item, bool inscribe, bool no_ash)
         return;
     }
 
-    if (item.cursed() && no_ash && you.religion == GOD_ASHENZARI)
+    if (no_ash && you.religion == GOD_ASHENZARI)
     {
         simple_god_message(" preserves the curse.");
         return;
