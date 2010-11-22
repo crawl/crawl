@@ -27,6 +27,7 @@
 #include "place.h"
 #include "random.h"
 #include "spl-clouds.h"
+#include "spl-damage.h"
 #include "spl-transloc.h"
 #include "stash.h"
 #include "state.h"
@@ -1339,6 +1340,8 @@ void down_stairs(dungeon_feature_type force_stair,
 
 void new_level(void)
 {
+    cancel_tornado();
+
     if (you.level_type == LEVEL_PORTAL_VAULT)
     {
         // This here because place_name can't find the name of a level that you

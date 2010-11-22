@@ -1982,3 +1982,23 @@ void tornado_damage(int dur)
         }
     }
 }
+
+void cancel_tornado()
+{
+    if (!you.duration[DUR_TORNADO])
+        return;
+
+    dprf("Aborting tornado.");
+    if (you.duration[DUR_TORNADO] == you.duration[DUR_LEVITATION]
+        && !you.permanent_levitation() && !you.permanent_flight())
+    {
+        you.duration[DUR_LEVITATION] = 0;
+        you.duration[DUR_CONTROLLED_FLIGHT] = 0;
+        you.attribute[ATTR_LEV_UNCANCELLABLE] = 0;
+        burden_change();
+        // NO checking for water, since this is called only during level
+        // change, and being, say, banished from above water shouldn't
+        // kill you.
+    }
+    you.duration[DUR_TORNADO] = 0;
+}
