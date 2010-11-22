@@ -2032,8 +2032,8 @@ bool forget_spell_from_book(spell_type spell, const item_def* book)
     }
     else
     {
-        // This shouldn't happen
-        mprf("A bug prevents you from forgetting %s", spell_title(spell));
+        // This shouldn't happen.
+        mprf("A bug prevents you from forgetting %s.", spell_title(spell));
         return (false);
     }
 }
