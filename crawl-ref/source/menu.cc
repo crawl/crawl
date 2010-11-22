@@ -12,6 +12,7 @@
 #include "command.h"
 #include "coord.h"
 #include "env.h"
+#include "invent.h"
 #include "menu.h"
 #include "macro.h"
 #include "message.h"
@@ -494,6 +495,7 @@ bool Menu::process_key(int keyin)
             const int next = get_cursor();
             if (next != -1)
             {
+                InvEntry::set_show_cursor(true);
                 select_index(next, num);
                 get_selected(&sel);
                 draw_select_count(sel.size());
@@ -518,6 +520,7 @@ bool Menu::process_key(int keyin)
 
         if (last_selected != -1)
         {
+            InvEntry::set_show_cursor(true);
             const int it_count = item_count();
             if (last_selected < it_count
                 && items[last_selected]->level == MEL_ITEM)
