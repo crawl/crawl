@@ -1902,8 +1902,8 @@ void tornado_damage(int dur)
         return;
 
     // Not stored so unwielding that staff will reduce damage.
-    int pow = calc_spell_power(SPELL_TORNADO, true) * 10 / dur;
-    dprf("Doing tornado, base power %d", pow);
+    int pow = div_rand_round(calc_spell_power(SPELL_TORNADO, true) * dur, 10);
+    dprf("Doing tornado, dur %d, effective power %d", dur, pow);
     const coord_def org = you.pos();
 
     std::stack<actor*>    move_act;
