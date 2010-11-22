@@ -257,7 +257,7 @@ int get_spell_slot_by_letter(char letter)
 
 int get_spell_slot(spell_type spell)
 {
-    for (int i = 0; i < you.spell_no; i++)
+    for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
         if (you.spells[i] == spell)
             return i;
 
