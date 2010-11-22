@@ -2022,12 +2022,20 @@ bool forget_spell_from_book(spell_type spell, const item_def* book)
     }
     mprf("As you tear out the page describing %s, the book crumbles to dust.",
         spell_title(spell));
-    del_spell_from_memory(spell);
-    destroy_spellbook(*book);
-    dec_inv_item_quantity(book->link, 1);
-    you.turn_is_over = true;
 
-    return (true);
+    if (del_spell_from_memory(spell))
+    {
+        destroy_spellbook(*book);
+        dec_inv_item_quantity(book->link, 1);
+        you.turn_is_over = true;
+        return (true);
+    }
+    else
+    {
+        // This shouldn't happen
+        mprf("A bug prevents you from forgetting %s", spell_title(spell));
+        return (false);
+    }
 }
 
 int count_staff_spells(const item_def &item, bool need_id)
