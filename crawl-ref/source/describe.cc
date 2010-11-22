@@ -741,6 +741,8 @@ static std::string _corrosion_resistance_string(const item_def &item)
     const char* format = "\nIts enchantment level renders it %s to acidic "
                          "corrosion.";
 
+    if (is_artefact(item))
+        return "";
     if (ench >= 5)
         return make_stringf(format, "immune");
     else if (ench >= 4)
