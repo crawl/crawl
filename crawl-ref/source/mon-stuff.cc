@@ -3666,11 +3666,10 @@ int mons_pick_best_missile(monster* mons, item_def **launcher,
         launch = NULL;
 
     const int n_usable_melee_weapons(mons_wields_two_weapons(mons) ? 2 : 1);
-    const int tdam =
-        mons_thrown_weapon_damage(
-            melee,
-            melee_weapon_count == n_usable_melee_weapons
-            && melee->quantity == 1);
+    const bool only = melee_weapon_count == n_usable_melee_weapons
+                      && melee->quantity == 1;
+    const int tdam = (melee && is_throwable(mons, *melee)) ?
+                         mons_thrown_weapon_damage(melee, only) : 0;
     const int fdam = mons_missile_damage(mons, launch, missiles);
 
     if (!tdam && !fdam)
