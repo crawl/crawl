@@ -902,6 +902,9 @@ void yred_drain_life()
             continue;
         }
 
+        if (mi->wont_attack())
+            continue;
+
         mprf("You draw life from %s.",
              mi->name(DESC_NOCAP_THE).c_str());
 

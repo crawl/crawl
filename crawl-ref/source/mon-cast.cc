@@ -2251,6 +2251,9 @@ static bool _mons_drain_life(monster* mons, bool actual)
             if (m == mons)
                 continue;
 
+            if (mons_atts_aligned(m->attitude, mons->attitude))
+                continue;
+
             if (actual)
             {
                 m->hurt(mons, hurted);
