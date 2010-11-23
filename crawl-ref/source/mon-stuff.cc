@@ -3002,8 +3002,8 @@ void corrode_monster(monster* mons)
                 mons->ac--;
                 if (you.can_see(mons))
                 {
-                    mprf("The acid corrodes %s's %s!",
-                         mons->name(DESC_NOCAP_THE).c_str(),
+                    mprf("The acid corrodes %s %s!",
+                         apostrophise(mons->name(DESC_NOCAP_THE)).c_str(),
                          thing_chosen.name(DESC_PLAIN).c_str());
                 }
             }
