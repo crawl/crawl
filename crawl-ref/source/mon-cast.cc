@@ -2459,7 +2459,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SILENCE:
         mons->add_ench(ENCH_SILENCE);
         invalidate_agrid(true);
-        mpr("Everything around you gets eerily quiet.");
+        simple_monster_message(mons, "'s surroundings become eerily quiet.");
         return;
 
     case SPELL_CALL_TIDE:
