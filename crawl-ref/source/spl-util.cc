@@ -1202,8 +1202,7 @@ bool spell_is_useless(spell_type spell, bool transient)
         break;
     case SPELL_LEVITATION:
     case SPELL_FLY:
-        if (you.mutation[MUT_BIG_WINGS] >= 1
-            || you.species == SP_KENKU && you.experience_level >= 5)
+        if (you.species == SP_KENKU && you.experience_level >= 15)
         {
             return (true);
         }
