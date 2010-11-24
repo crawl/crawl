@@ -4361,7 +4361,7 @@ bool check_for_interesting_features()
     // discovered and contain an item, or have an interesting dungeon
     // feature, stop exploring.
     explore_discoveries discoveries;
-    for (rectangle_iterator ri(1); ri; ++ri)
+    for (radius_iterator ri(you.get_los()); ri; ++ri)
     {
         const coord_def p(*ri);
         if (!env.map_shadow(p).seen() && env.map_knowledge(p).seen())
