@@ -5217,9 +5217,9 @@ void monster::apply_enchantment(const mon_enchant &me)
             env.pgrid(base_position) |= FPROP_BLOODY;
             add_ench(ENCH_SEVERED);
 
-            // Severed tentacles immediately become "hostile" (or insane)
-            this->attitude = ATT_HOSTILE;
-            behaviour_event(this, ME_ALERT, MHITYOU);
+            // Severed tentacles immediately become "hostile" to everyone (or insane)
+            this->attitude = ATT_NEUTRAL;
+            behaviour_event(this, ME_ALERT, MHITNOT);
         }
     }
     break;
