@@ -115,6 +115,8 @@ static uint64_t ench_to_mb(const monster& mons, enchant_type ench)
         return ULL1 << MB_WITHDRAWN;
     case ENCH_ATTACHED:
         return ULL1 << MB_ATTACHED;
+    case ENCH_HELPLESS:
+        return ULL1 << MB_HELPLESS;
     default:
         return 0;
     }
@@ -288,6 +290,9 @@ monster_info::monster_info(const monster* m, int milev)
     }
     else if (m->flags & MF_NAME_DEFINITE)
         mb |= ULL1 << MB_NAME_THE;
+
+    if (m->has_ench(ENCH_HELPLESS))
+        mb |= ench_to_mb(*m, ENCH_HELPLESS);
 
     if (milev <= MILEV_NAME)
     {
@@ -622,6 +627,9 @@ std::string monster_info::_apply_adjusted_description(description_level_type des
 std::string monster_info::common_name(description_level_type desc) const
 {
     std::ostringstream ss;
+
+    if (is(MB_HELPLESS))
+        ss << "helpless ";
 
     if (is(MB_SUBMERGED))
         ss << "submerged ";
