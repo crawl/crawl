@@ -745,9 +745,11 @@ void Menu::select_items(int key, int qty)
 {
     int x = wherex(), y = wherey();
 
-    if (key == ',' || key == '*')
-        select_index(-1, qty);
-    else if (key == '-')
+    if (key == ',') // Select all or apply filter if there is one.
+        select_index(-1, -2);
+    else if (key == '*') // Invert selection.
+        select_index(-1, -1);
+    else if (key == '-') // Clear selection.
         select_index(-1, 0);
     else
     {
@@ -1131,8 +1133,11 @@ void Menu::select_index(int index, int qty)
                 {
                     continue;
                 }
-                if (is_hotkey(i, items[i]->hotkeys[0]) && is_selectable(i))
+                if (is_hotkey(i, items[i]->hotkeys[0])
+                    && (qty != -2 || is_selectable(i)))
+                {
                     select_item_index(i, qty);
+                }
             }
         }
     }
@@ -1792,7 +1797,7 @@ bool formatted_scroller::process_key(int keyin)
     default:
         if (is_set(MF_SINGLESELECT))
         {
-            select_items(keyin, -1);
+            select_items(keyin);
             get_selected(&sel);
             if (sel.size() >= 1)
                 return (false);
