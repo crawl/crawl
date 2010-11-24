@@ -115,7 +115,8 @@ static duration_def duration_data[] =
       LIGHTBLUE, "Scry", "scrying",
       "Your astral vision lets you see through walls." },
     { DUR_TORNADO, true,
-      LIGHTGREY, "Tornado", "tornado", "You are in the eye of a mighty hurricane." },
+      LIGHTGREY, "Tornado", "tornado",
+      "You are in the eye of a mighty hurricane." },
 };
 
 static int duration_index[NUM_DURATIONS];
