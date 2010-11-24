@@ -2992,7 +2992,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_SKY_BEAST, 'I', LIGHTCYAN, "sky beast",
-    M_NO_FLAGS,
+    M_NO_SKELETON,
     MR_RES_ASPHYX | mrd(MR_RES_ELEC, 3),
     480, 13, MONS_ICE_BEAST, MONS_SKY_BEAST, MH_NATURAL, -3,
     { {AT_HIT, AF_ELEC, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
