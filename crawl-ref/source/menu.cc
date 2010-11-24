@@ -490,6 +490,9 @@ bool Menu::process_key(int keyin)
         break;
     }
     case '.':
+        if (last_selected == -1 && is_set(MF_MULTISELECT))
+            last_selected = 0;
+
         if (last_selected != -1)
         {
             const int next = get_cursor();
@@ -516,7 +519,10 @@ bool Menu::process_key(int keyin)
         break;
 
     case '\'':
-        last_selected = get_cursor();
+        if (last_selected == -1 && is_set(MF_MULTISELECT))
+            last_selected = 0;
+        else
+            last_selected = get_cursor();
 
         if (last_selected != -1)
         {
