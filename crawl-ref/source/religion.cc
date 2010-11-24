@@ -3304,6 +3304,7 @@ void god_welcome_identify_gear()
         set_ident_type(OBJ_SCROLLS, SCR_CURSE_ARMOUR, ID_KNOWN_TYPE);
         set_ident_type(OBJ_SCROLLS, SCR_CURSE_JEWELLERY, ID_KNOWN_TYPE);
         ash_id_inventory();
+        ash_detect_portals(true);
     }
 }
 
