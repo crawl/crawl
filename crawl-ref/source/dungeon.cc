@@ -5659,28 +5659,18 @@ static void _vault_grid(vault_placement &place,
             int item_made = NON_ITEM;
             object_class_type which_class = OBJ_RANDOM;
             uint8_t which_type = OBJ_RANDOM;
-            int which_depth;
+            int which_depth = place.level_number;
             int spec = 250;
 
             if (vgrid == '$')
             {
                 which_class = OBJ_GOLD;
-                which_type = OBJ_RANDOM;
             }
             else if (vgrid == '|')
             {
                 which_class = RANDOM_ELEMENT(_acquirement_item_classes);
-                which_type = OBJ_RANDOM;
-            }
-            else
-            {
-                which_class = OBJ_RANDOM;
-                which_type = OBJ_RANDOM;
-            }
-
-            which_depth = place.level_number;
-            if (vgrid == '|')
                 which_depth = MAKE_GOOD_ITEM;
+            }
             else if (vgrid == '*')
                 which_depth = 5 + (place.level_number * 2);
 
