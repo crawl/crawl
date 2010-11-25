@@ -11,6 +11,7 @@ NAME:   temple_hall
 TAGS:   temple_entry
 ORIENT: float
 SUBST:  ? : c:20 x v b G:5
+KFEAT:  O = enter_temple
 MAP
 ccccccccc
 c...O...c
@@ -34,6 +35,7 @@ TAGS:   temple_entry no_pool_fixup no_monster_gen
 WEIGHT: 1
 ORIENT: float
 SUBST:  ? : v b G:5
+KFEAT:  O = enter_temple
 MAP
    ccc
    cOc
@@ -61,6 +63,7 @@ ORIENT: float
 SUBST:  ? : T:30 U
 KMASK:  T = no_monster_gen
 KMASK:  U = no_monster_gen
+KFEAT:  O = enter_temple
 MAP
 ...?...
 .......
@@ -73,6 +76,7 @@ ENDMAP
 NAME:   temple_statues
 TAGS:   temple_entry
 ORIENT: float
+KFEAT:  O = enter_temple
 MAP
 GOG
 ENDMAP
@@ -81,6 +85,7 @@ NAME:   temple_green
 TAGS:   temple_entry
 ORIENT: float
 SUBST:  ? = =+b
+KFEAT:  O = enter_temple
 MAP
 bbbb+bbbb
 b.......b
@@ -100,6 +105,7 @@ SUBST:  c:cxxx
 SUBST:  ? : ?:40 T:30 U, ? = T:30 U
 KMASK:  T = no_monster_gen
 KMASK:  U = no_monster_gen
+KFEAT:  O = enter_temple
 MAP
 cccccccccc
 ccccmmmmmc
@@ -120,6 +126,7 @@ SUBST:  c:cxxx
 NSUBST: X = 1:= / *=m=
 KMASK:  T = no_monster_gen
 KMASK:  U = no_monster_gen
+KFEAT:  O = enter_temple
 MAP
 ccccccccccc
 cccmmmmmccc
@@ -140,6 +147,7 @@ SUBST:  c:cxxx
 NSUBST: X = 1:= / *=m=
 KMASK:  T = no_monster_gen
 KMASK:  U = no_monster_gen
+KFEAT:  O = enter_temple
 MAP
 ccccccccc
 cccmmmmmc
@@ -162,6 +170,7 @@ SUBST:  c:cxxx
 NSUBST: X = 1:= / *=m=
 KMASK:  T = no_monster_gen
 KMASK:  U = no_monster_gen
+KFEAT:  O = enter_temple
 MAP
 ccccccccccc
 cccmmmmmccc
@@ -184,6 +193,7 @@ SUBST:  c:cxxx
 NSUBST: X = 1:= / *=m=
 KMASK:  T = no_monster_gen
 KMASK:  U = no_monster_gen
+KFEAT:  O = enter_temple
 MAP
 cccccc@cccccc
 cccccc.cccccc
@@ -205,6 +215,7 @@ WEIGHT:  3
 ORIENT:  float
 SHUFFLE: XY
 SUBST:   Y=w, X=.
+KFEAT:   O = enter_temple
 MAP
 .....wwwww......
 ...wwwwwwwww....
@@ -226,6 +237,7 @@ WEIGHT:  7
 ORIENT:  float
 SHUFFLE: ABCDEFGHIJKL
 SUBST:   A=W, B=W, C=W, D=w, E=w, F=w, G=w, H=w, I=w, J=w, K=w, L=w
+KFEAT:   O = enter_temple
 MAP
 .....wwwww......
 ...wABwwwDEw....
@@ -250,6 +262,7 @@ SUBST:  ' = .:400 3:30
 SUBST:  ! = .:100 3:30
 SUBST:  ? = .:50  3:30 G:5 T:10 U:1 V:4
 MONS:   angel, iron devil, plant
+KFEAT:  O = enter_temple
 MAP
             ............................xxxxxxxx
         .............'''''...............-llxxxx
@@ -298,6 +311,7 @@ MARKER:  f = lua:fog_machine { cloud_type = "flame", \
              size = 1, walk_dist = 1, spread_rate= 0 }
 MARKER: G = lua:props_marker { stop_explore = "a scorch-marked granite statue."\
         , feature_description = "scorch-marked granite statue" }
+KFEAT:  O = enter_temple
 MAP
 xxxxxxxG@Gxxxxxxx
 x...............x
@@ -341,6 +355,7 @@ MARKER:  f = lua:fog_machine { cloud_type = "flame", \
 COLOUR:  g = yellow
 MARKER: G = lua:props_marker { stop_explore = "a scorch-marked granite statue."\
         , feature_description = "scorch-marked granite statue" }
+KFEAT:  O = enter_temple
 MAP
 xxxxxxxG@Gxxxxxxx
 x...f..ggg....e.x
@@ -369,6 +384,7 @@ ORIENT: float
 SUBST:  ' : .'l
 SUBST:  ' = .l
 SUBST:  l : l w:1
+KFEAT:  O = enter_temple
 MAP
 xxx.@..xx
 xxl'...xx
@@ -394,6 +410,7 @@ ORIENT: float
 KPROP:  ? = no_rtele_into
 SUBST:  ? : lw
 SUBST:  c : cx
+KFEAT:  O = enter_temple
 MAP
 ccccccccccccc
 c???????????c
@@ -415,6 +432,7 @@ TAGS:   temple_entry
 ORIENT: float
 MONS:   plant, bush
 SUBST:  ?=.1, !=...1, 1:123, 2=2.., 3=12
+KFEAT:  O = enter_temple
 MAP
 !!!!!
 !???!
@@ -430,6 +448,7 @@ SUBST:  T = TV U:1
 SUBST:  X : xc v:1 b:1
 KMASK:  T = no_monster_gen
 KMASK:  U = no_monster_gen
+KFEAT:  O = enter_temple
 MAP
 xxx...xxx
 xxX.T.Xxx
@@ -446,6 +465,7 @@ NAME:   minmay_temple_entry_glass
 TAGS:   temple_entry
 ORIENT: float
 SUBST:  m : mb
+KFEAT:  O = enter_temple
 MAP
 ...........
 .m.m.m.m.m.
@@ -465,6 +485,7 @@ TAGS:   temple_entry
 ORIENT: float
 SUBST:  t : t1
 MONS:   bush
+KFEAT:  O = enter_temple
 MAP
 .....
 .t.t.
@@ -476,6 +497,7 @@ ENDMAP
 NAME:   minmay_temple_entry_spiral
 TAGS:   temple_entry
 ORIENT: float
+KFEAT:  O = enter_temple
 MAP
 cncncncnc@c
 n.......n.n
@@ -495,6 +517,7 @@ TAGS:   temple_entry
 ORIENT: float
 MONS:   butterfly
 SUBST:  . = .1
+KFEAT:  O = enter_temple
 MAP
 ...
 .O.
@@ -506,6 +529,7 @@ TAGS:   temple_entry
 WEIGHT: 1
 ORIENT: float
 KMASK:  l = no_monster_gen
+KFEAT:  O = enter_temple
 MAP
 vvvvvvv
 vlvlvlv
@@ -525,6 +549,7 @@ NSUBST: E = 1:. / *:c
 NSUBST: F = 1:. / *:c
 KMASK:  T = no_monster_gen
 KMASK:  U = no_monster_gen
+KFEAT:  O = enter_temple
 MAP
 ccBcccBcccBcc
 c...c...c...c
@@ -550,6 +575,7 @@ MARKER: l = lua:fog_machine { cloud_type = "steam", pow_min = 1, \
         size_max = 3, spread_rate = -1 }
 KMASK:  W = no_monster_gen
 KMASK:  l = no_monster_gen
+KFEAT:  O = enter_temple
 MAP
 ..WWW..
 .WWlWW.
@@ -564,6 +590,7 @@ NAME:   minmay_temple_entry_grid
 TAGS:   temple_entry
 ORIENT: float
 SUBST:  m : bm
+KFEAT:  O = enter_temple
 MAP
 .........
 ...m.m...
@@ -583,6 +610,7 @@ SUBST:  c : c:80 xv
 SUBST:  T = T:80 UV
 KMASK:  T = no_monster_gen
 KMASK:  U = no_monster_gen
+KFEAT:  O = enter_temple
 MAP
 ccc+ccc
 c.....c
@@ -599,6 +627,7 @@ ORIENT: float
 MARKER: O = lua:fog_machine { cloud_type = "purple smoke", pow_min = 1, \
         pow_max = 3, delay_min = 1, delay_max = 10, start_clouds = 5,  \
         size_min = 1, size_max = 2, spread_rate = 1 }
+KFEAT:  O = enter_temple
 MAP
 .....
 .....
@@ -613,6 +642,7 @@ ORIENT: float
 SUBST:  T = T:80 UV
 KMASK:  T = no_monster_gen
 KMASK:  U = no_monster_gen
+KFEAT:  O = enter_temple
 MAP
 .......
 .G.G.G.
@@ -630,6 +660,7 @@ SUBST:  x : xxxc
 SUBST:  T = T:80 UV
 KMASK:  T = no_monster_gen
 KMASK:  U = no_monster_gen
+KFEAT:  O = enter_temple
 MAP
 xx@xx@xx@xx
 x.........x
@@ -648,6 +679,7 @@ NAME:   minmay_temple_entry_secret_door
 TAGS:   temple_entry
 ORIENT: float
 NSUBST: m = 1:= / *:m
+KFEAT:  O = enter_temple
 MAP
 xxx+xxx
 x.....x
@@ -662,6 +694,7 @@ NAME:   minmay_temple_entry_steel_oval
 TAGS:   temple_entry
 WEIGHT: 1
 ORIENT: float
+KFEAT:  O = enter_temple
 MAP
  ....vvv....
 ...vv...vv...
@@ -685,6 +718,7 @@ WEIGHT: 1
 ORIENT: float
 SUBST:  < : <>
 KMASK:  l = no_monster_gen
+KFEAT:  O = enter_temple
 MAP
 clclclclc
 l.......l
@@ -703,6 +737,7 @@ DEPTH:  D:7
 WEIGHT: 1
 ORIENT: float
 MONS:   plant, oklob plant
+KFEAT:  O = enter_temple
 MAP
 ....1..
 1.111.1
@@ -717,6 +752,7 @@ NAME:   minmay_temple_entry_crystal_x
 TAGS:   temple_entry
 ORIENT: float
 WEIGHT: 5
+KFEAT:  O = enter_temple
 MAP
 .......
 .b...b.
@@ -734,6 +770,7 @@ WEIGHT: 5
 SUBST:  x : xccbbmv
 SUBST:  T = T:39 V U:1
 KMASK:  TU = no_monster_gen
+KFEAT:  O = enter_temple
 MAP
 ...........
 ...x...x...
@@ -757,6 +794,7 @@ KFEAT:  1 = W
 KMASK:  W = no_monster_gen
 NSUBST: W = 1:1
 SUBST:  x : xxcccvvbt
+KFEAT:  O = enter_temple
 MAP
 .............
 .xxx.....xxx.
@@ -777,6 +815,7 @@ NAME:   minmay_temple_entry_statues
 TAGS:   temple_entry
 ORIENT: float
 WEIGHT: 5
+KFEAT:  O = enter_temple
 MAP
 GGGGG
 G...G

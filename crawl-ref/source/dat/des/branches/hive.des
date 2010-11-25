@@ -12,6 +12,7 @@ NAME: hive_0
 TAGS: hive_entry
 ORIENT: float
 WEIGHT: 60
+KFEAT: O = enter_hive
 MAP
 O
 ENDMAP
@@ -24,6 +25,7 @@ TAGS: hive_entry
 MONS: queen bee, killer bee, killer bee larva
 KITEM: R = w:2 honeycomb / w:1 royal jelly
 ORIENT: float
+KFEAT: O = enter_hive
 MAP
 ............
 ....aaaa....
@@ -47,6 +49,7 @@ TAGS: hive_entry generate_awake
 MONS: nothing / killer bee / killer bee larva
 MONS: queen bee
 ORIENT: float
+KFEAT: O = enter_hive
 MAP
 1111..@.
 1211....
@@ -76,6 +79,7 @@ SUBST:   V==, W=a, X==, Y=a
 SUBST:   ? = a .:20
 SUBST:   1 : 1 7:2
 SUBST:   7 = 7 .
+KFEAT:   O = enter_hive
 MAP
    .......   ...............
    ..??...   ..??aaa?aaa???.
@@ -103,6 +107,7 @@ ITEM:    honeycomb, royal jelly
 SUBST:   ? = a.
 SUBST:   ; = 1:1 .
 SHUFFLE: deO
+KFEAT:   O = enter_hive
 
 MAP
   ...............
@@ -125,6 +130,7 @@ ORIENT: float
 MONS:   plant, killer bee
 SUBST:  1 = 1.
 SUBST:  2 = 2.
+KFEAT:  O = enter_hive
 MAP
  1.....2.......1.1
  ..1.....1...2..1.
@@ -154,6 +160,7 @@ SUBST:   l=.l, L=l, w=.w, W=w, U==, V=a, T=a, X=a, Y=a, Z=a, '=.a
 KMONS:   l = fire drake / w:200 nothing
 KFEAT:   l = l
 ORIENT:  float
+KFEAT:   O = enter_hive
 MAP
  .............
 .'.aa'aa.'.'....
@@ -199,6 +206,7 @@ KFEAT:     Z = W
 KFEAT:     Z = .
 : end
 SUBST:     q=w
+KFEAT:     O = enter_hive
 MAP
    x   x
  xxx...xxx
@@ -243,6 +251,7 @@ KFEAT:     V = w
 KMONS:     V = killer bee w:20 / nothing w:6 / giant blowfly w:1
 MONS:      plant / nothing w:3
 MONS:      killer bee w:20 / nothing w:6 / giant blowfly w:1
+KFEAT:     O = enter_hive
 MAP
      ....  ...NNNZNN.
   ....11.....NZZwwZZNN.
