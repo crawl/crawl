@@ -398,7 +398,9 @@ enum canned_message_type
 {
     MSG_SOMETHING_APPEARS,
     MSG_NOTHING_HAPPENS,
+#if TAG_MAJOR_VERSION != 31
     MSG_YOU_UNAFFECTED,
+#endif
     MSG_YOU_RESIST,
     MSG_YOU_PARTIALLY_RESIST,
     MSG_TOO_BERSERK,
@@ -416,6 +418,9 @@ enum canned_message_type
     MSG_MANA_INCREASE,
     MSG_MANA_DECREASE,
     MSG_TOO_HUNGRY,
+#if TAG_MAJOR_VERSION == 31
+    MSG_YOU_UNAFFECTED,
+#endif
 };
 
 enum char_set_type
@@ -2243,6 +2248,14 @@ enum monster_type                      // (int) menv[].type
     MONS_ELDRITCH_TENTACLE_SEGMENT,
     MONS_TARANTELLA,
     MONS_SILENT_SPECTRE,
+#if TAG_MAJOR_VERSION == 31
+    // Dwarf Hall monsters
+    MONS_WITCH,
+    MONS_EVIL_WITCH,
+    MONS_FOREST_WITCH,
+    MONS_HULDRA,
+    MONS_TROLLKONOR,
+#endif
     MONS_GREATER_WRAITH,
 
     // Spriggans:
@@ -2466,6 +2479,13 @@ enum mon_spellbook_type
     MST_WIZARD_III,
     MST_WIZARD_IV,
     MST_WIZARD_V,
+#if TAG_MAJOR_VERSION == 31
+    MST_TROLLKONOR,
+    MST_HULDRA,
+    MST_WITCH_I,
+    MST_WITCH_II,
+    MST_WITCH_III,
+#endif
     MST_ORC_PRIEST,                    //  80
     MST_ORC_HIGH_PRIEST,
     MST_MOTTLED_DRAGON,
@@ -2674,7 +2694,9 @@ enum mutation_type
     MUT_TOUGH_SKIN,
     MUT_WEAK,
     MUT_SLOW,
+#if TAG_MAJOR_VERSION != 31
     MUT_UNBREATHING,
+#endif
 
     // Jiyva-specific mutations
     MUT_ACIDIC_BITE,
@@ -2684,6 +2706,9 @@ enum mutation_type
     MUT_PSEUDOPODS,
     MUT_TRANSLUCENT_SKIN,
 
+#if TAG_MAJOR_VERSION == 31
+    MUT_UNBREATHING,
+#endif
     NUM_MUTATIONS,
 
     RANDOM_MUTATION = NUM_MUTATIONS + 1,
@@ -3016,6 +3041,9 @@ enum spell_type
     SPELL_MINOR_HEALING,
     SPELL_MAJOR_HEALING,
     SPELL_DEATHS_DOOR,
+#if TAG_MAJOR_VERSION == 31
+    SPELL_SELECTIVE_AMNESIA,
+#endif
     SPELL_MASS_CONFUSION,
     SPELL_SMITING,
     SPELL_SUMMON_SMALL_MAMMALS,
@@ -3145,7 +3173,9 @@ enum spell_type
     SPELL_VAMPIRE_SUMMON,
     SPELL_BRAIN_FEED,
     SPELL_FAKE_RAKSHASA_SUMMON,
+#if TAG_MAJOR_VERSION != 31
     SPELL_NOXIOUS_CLOUD,
+#endif
     SPELL_STEAM_BALL,
     SPELL_SUMMON_UFETUBUS,
     SPELL_SUMMON_BEAST,
@@ -3211,6 +3241,9 @@ enum spell_type
     SPELL_FIRE_CLOUD,
     SPELL_STEAM_CLOUD,
     SPELL_MALIGN_GATEWAY,
+#if TAG_MAJOR_VERSION == 31
+    SPELL_NOXIOUS_CLOUD,
+#endif
     SPELL_TORNADO,
 
     NUM_SPELLS
