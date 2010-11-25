@@ -20,7 +20,8 @@ enum tag_minor_version
     TAG_MINOR_CROSSTRAIN   = 10, // Track skill points gained with crosstraining.
     TAG_MINOR_ADD_ID_INFO  = 11, // Additional identification info
     TAG_MINOR_SLOW_RESKILL = 12, // Ashenzari progressive reskilling
-    TAG_MINOR_VERSION      = 12, // Current version.  (Keep equal to max.)
+    TAG_MINOR_RUNE_SUBST   = 13, // Removal of stored rune_subst.
+    TAG_MINOR_VERSION      = 13, // Current version.  (Keep equal to max.)
 };
 
 #endif
