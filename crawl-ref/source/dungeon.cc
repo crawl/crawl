@@ -5568,41 +5568,33 @@ static void _vault_grid(vault_placement &place,
     }
 
     // Then, handle grids that place "stuff" {dlb}:
-    // yes, I know this is a bit ugly ... {dlb}
-    switch (vgrid)
+    if (vgrid == '$' || vgrid == '%' || vgrid == '*' || vgrid == '|')
     {
-        case '$':
-        case '%':
-        case '*':
-        case '|':
+        int item_made = NON_ITEM;
+        object_class_type which_class = OBJ_RANDOM;
+        uint8_t which_type = OBJ_RANDOM;
+        int which_depth = place.level_number;
+        int spec = 250;
+
+        if (vgrid == '$')
         {
-            int item_made = NON_ITEM;
-            object_class_type which_class = OBJ_RANDOM;
-            uint8_t which_type = OBJ_RANDOM;
-            int which_depth = place.level_number;
-            int spec = 250;
-
-            if (vgrid == '$')
-            {
-                which_class = OBJ_GOLD;
-            }
-            else if (vgrid == '|')
-            {
-                which_class = RANDOM_ELEMENT(_acquirement_item_classes);
-                which_depth = MAKE_GOOD_ITEM;
-            }
-            else if (vgrid == '*')
-                which_depth = 5 + (place.level_number * 2);
-
-            item_made = items(1, which_class, which_type, true,
-                               which_depth, spec);
-
-            if (item_made != NON_ITEM)
-            {
-                mitm[item_made].pos = where;
-            }
+            which_class = OBJ_GOLD;
         }
-        break;
+        else if (vgrid == '|')
+        {
+            which_class = RANDOM_ELEMENT(_acquirement_item_classes);
+            which_depth = MAKE_GOOD_ITEM;
+        }
+        else if (vgrid == '*')
+            which_depth = 5 + (place.level_number * 2);
+
+        item_made = items(1, which_class, which_type, true,
+                           which_depth, spec);
+
+        if (item_made != NON_ITEM)
+        {
+            mitm[item_made].pos = where;
+        }
     }
 
     // defghijk - items
