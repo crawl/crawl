@@ -5462,6 +5462,50 @@ static bool _dgn_place_one_monster(const vault_placement &place,
     return (false);
 }
 
+/* "Oddball grids" are handled in _vault_grid. 'B' is arguably oddball, too, as
+ * it depends on the place where the vault is. Maybe handling it here is not
+ * such a good idea. */
+static dungeon_feature_type _glyph_to_feat(int glyph,
+                                           vault_placement *place = NULL)
+{
+    return ((glyph == 'x') ? DNGN_ROCK_WALL :
+            (glyph == 'X') ? DNGN_PERMAROCK_WALL :
+            (glyph == 'c') ? DNGN_STONE_WALL :
+            (glyph == 'v') ? DNGN_METAL_WALL :
+            (glyph == 'b') ? DNGN_GREEN_CRYSTAL_WALL :
+            (glyph == 'a') ? DNGN_WAX_WALL :
+            (glyph == 'm') ? DNGN_CLEAR_ROCK_WALL :
+            (glyph == 'n') ? DNGN_CLEAR_STONE_WALL :
+            (glyph == 'o') ? DNGN_CLEAR_PERMAROCK_WALL :
+            (glyph == 't') ? DNGN_TREE :
+            (glyph == '+') ? DNGN_CLOSED_DOOR :
+            (glyph == '=') ? DNGN_SECRET_DOOR :
+            (glyph == 'w') ? DNGN_DEEP_WATER :
+            (glyph == 'W') ? DNGN_SHALLOW_WATER :
+            (glyph == 'l') ? DNGN_LAVA :
+            (glyph == '>') ? DNGN_ESCAPE_HATCH_DOWN :
+            (glyph == '<') ? DNGN_ESCAPE_HATCH_UP :
+            (glyph == '}') ? DNGN_STONE_STAIRS_DOWN_I :
+            (glyph == '{') ? DNGN_STONE_STAIRS_UP_I :
+            (glyph == ')') ? DNGN_STONE_STAIRS_DOWN_II :
+            (glyph == '(') ? DNGN_STONE_STAIRS_UP_II :
+            (glyph == ']') ? DNGN_STONE_STAIRS_DOWN_III :
+            (glyph == '[') ? DNGN_STONE_STAIRS_UP_III :
+            (glyph == 'A') ? DNGN_STONE_ARCH :
+            (glyph == 'B') ? (place ? _pick_temple_altar(*place)
+                                    : DNGN_ALTAR_ZIN) :
+            (glyph == 'C') ? _pick_an_altar() :   // f(x) elsewhere {dlb}
+            (glyph == 'F') ? DNGN_GRANITE_STATUE :
+            (glyph == 'I') ? DNGN_ORCISH_IDOL :
+            (glyph == 'G') ? DNGN_GRANITE_STATUE :
+            (glyph == 'T') ? DNGN_FOUNTAIN_BLUE :
+            (glyph == 'U') ? DNGN_FOUNTAIN_SPARKLING :
+            (glyph == 'V') ? DNGN_PERMADRY_FOUNTAIN :
+            (glyph == 'Y') ? DNGN_FOUNTAIN_BLOOD :
+            (glyph == '\0')? DNGN_ROCK_WALL
+                           : DNGN_FLOOR); // includes everything else
+}
+
 // Grr, keep this in sync with vault_grid.
 dungeon_feature_type map_feature_at(map_def *map, const coord_def &c,
                                     int rawfeat)
@@ -5494,41 +5538,7 @@ dungeon_feature_type map_feature_at(map_def *map, const coord_def &c,
         return (DNGN_FLOOR);
     }
 
-    return ((rawfeat == 'x') ? DNGN_ROCK_WALL :
-            (rawfeat == 'X') ? DNGN_PERMAROCK_WALL :
-            (rawfeat == 'c') ? DNGN_STONE_WALL :
-            (rawfeat == 'v') ? DNGN_METAL_WALL :
-            (rawfeat == 'b') ? DNGN_GREEN_CRYSTAL_WALL :
-            (rawfeat == 'a') ? DNGN_WAX_WALL :
-            (rawfeat == 'm') ? DNGN_CLEAR_ROCK_WALL :
-            (rawfeat == 'n') ? DNGN_CLEAR_STONE_WALL :
-            (rawfeat == 'o') ? DNGN_CLEAR_PERMAROCK_WALL :
-            (rawfeat == 't') ? DNGN_TREE :
-            (rawfeat == '+') ? DNGN_CLOSED_DOOR :
-            (rawfeat == '=') ? DNGN_SECRET_DOOR :
-            (rawfeat == 'w') ? DNGN_DEEP_WATER :
-            (rawfeat == 'W') ? DNGN_SHALLOW_WATER :
-            (rawfeat == 'l') ? DNGN_LAVA :
-            (rawfeat == '>') ? DNGN_ESCAPE_HATCH_DOWN :
-            (rawfeat == '<') ? DNGN_ESCAPE_HATCH_UP :
-            (rawfeat == '}') ? DNGN_STONE_STAIRS_DOWN_I :
-            (rawfeat == '{') ? DNGN_STONE_STAIRS_UP_I :
-            (rawfeat == ')') ? DNGN_STONE_STAIRS_DOWN_II :
-            (rawfeat == '(') ? DNGN_STONE_STAIRS_UP_II :
-            (rawfeat == ']') ? DNGN_STONE_STAIRS_DOWN_III :
-            (rawfeat == '[') ? DNGN_STONE_STAIRS_UP_III :
-            (rawfeat == 'A') ? DNGN_STONE_ARCH :
-            (rawfeat == 'B') ? DNGN_ALTAR_ZIN :
-            (rawfeat == 'C') ? _pick_an_altar() :   // f(x) elsewhere {dlb}
-            (rawfeat == 'F') ? DNGN_GRANITE_STATUE :
-            (rawfeat == 'I') ? DNGN_ORCISH_IDOL :
-            (rawfeat == 'G') ? DNGN_GRANITE_STATUE :
-            (rawfeat == 'T') ? DNGN_FOUNTAIN_BLUE :
-            (rawfeat == 'U') ? DNGN_FOUNTAIN_SPARKLING :
-            (rawfeat == 'V') ? DNGN_PERMADRY_FOUNTAIN :
-            (rawfeat == 'Y') ? DNGN_FOUNTAIN_BLOOD :
-            (rawfeat == '\0')? DNGN_ROCK_WALL
-                             : DNGN_FLOOR); // includes everything else
+    return _glyph_to_feat(rawfeat);
 }
 
 static void _vault_grid(vault_placement &place,
@@ -5582,41 +5592,8 @@ static void _vault_grid(vault_placement &place,
                          const coord_def& where)
 {
     // First, set base tile for grids {dlb}:
-    grd(where)  = ((vgrid == -1)  ? grd(where) :
-                   (vgrid == 'x') ? DNGN_ROCK_WALL :
-                   (vgrid == 'X') ? DNGN_PERMAROCK_WALL :
-                   (vgrid == 'c') ? DNGN_STONE_WALL :
-                   (vgrid == 'v') ? DNGN_METAL_WALL :
-                   (vgrid == 'b') ? DNGN_GREEN_CRYSTAL_WALL :
-                   (vgrid == 'a') ? DNGN_WAX_WALL :
-                   (vgrid == 'm') ? DNGN_CLEAR_ROCK_WALL :
-                   (vgrid == 'n') ? DNGN_CLEAR_STONE_WALL :
-                   (vgrid == 'o') ? DNGN_CLEAR_PERMAROCK_WALL :
-                   (vgrid == 't') ? DNGN_TREE :
-                   (vgrid == '+') ? DNGN_CLOSED_DOOR :
-                   (vgrid == '=') ? DNGN_SECRET_DOOR :
-                   (vgrid == 'w') ? DNGN_DEEP_WATER :
-                   (vgrid == 'W') ? DNGN_SHALLOW_WATER :
-                   (vgrid == 'l') ? DNGN_LAVA :
-                   (vgrid == '>') ? DNGN_ESCAPE_HATCH_DOWN :
-                   (vgrid == '<') ? DNGN_ESCAPE_HATCH_UP :
-                   (vgrid == '}') ? DNGN_STONE_STAIRS_DOWN_I :
-                   (vgrid == '{') ? DNGN_STONE_STAIRS_UP_I :
-                   (vgrid == ')') ? DNGN_STONE_STAIRS_DOWN_II :
-                   (vgrid == '(') ? DNGN_STONE_STAIRS_UP_II :
-                   (vgrid == ']') ? DNGN_STONE_STAIRS_DOWN_III :
-                   (vgrid == '[') ? DNGN_STONE_STAIRS_UP_III :
-                   (vgrid == 'A') ? DNGN_STONE_ARCH :
-                   (vgrid == 'B') ? _pick_temple_altar(place) :
-                   (vgrid == 'C') ? _pick_an_altar() :   // f(x) elsewhere {dlb}
-                   (vgrid == 'I') ? DNGN_ORCISH_IDOL :
-                   (vgrid == 'G') ? DNGN_GRANITE_STATUE :
-                   (vgrid == 'T') ? DNGN_FOUNTAIN_BLUE :
-                   (vgrid == 'U') ? DNGN_FOUNTAIN_SPARKLING :
-                   (vgrid == 'V') ? DNGN_PERMADRY_FOUNTAIN :
-                   (vgrid == 'Y') ? DNGN_FOUNTAIN_BLOOD :
-                   (vgrid == '\0')? DNGN_ROCK_WALL
-                                  : DNGN_FLOOR); // includes everything else
+    if (vgrid != -1)
+        grd(where) = _glyph_to_feat(vgrid, &place);
 
     if (grd(where) == DNGN_ALTAR_JIYVA && jiyva_is_dead())
         grd(where) = DNGN_FLOOR;
