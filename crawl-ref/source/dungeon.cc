@@ -5453,7 +5453,6 @@ static dungeon_feature_type _glyph_to_feat(int glyph,
                            : DNGN_FLOOR); // includes everything else
 }
 
-// Grr, keep this in sync with vault_grid.
 dungeon_feature_type map_feature_at(map_def *map, const coord_def &c,
                                     int rawfeat)
 {
