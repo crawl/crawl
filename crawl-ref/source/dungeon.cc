@@ -208,7 +208,6 @@ static void _roguey_level(int level_number, spec_room &sr, bool make_stairs);
 
 // VAULT FUNCTIONS
 static bool _build_secondary_vault(int level_number, const map_def *vault,
-                                   int rune_subst = -1,
                                    bool clobber = false,
                                    bool make_no_exits = false,
                                    const coord_def &where = coord_def(-1, -1));
@@ -217,7 +216,7 @@ static bool _build_primary_vault(int level_number, const map_def *vault);
 
 static bool _build_vault_impl(int level_number,
                               const map_def *vault,
-                              int rune_subst = -1, bool build_only = false,
+                              bool build_only = false,
                               bool check_collisions = false,
                               bool make_no_exits = false,
                               const coord_def &where = coord_def(-1, -1));
@@ -4203,7 +4202,7 @@ static void _special_room(int level_number, spec_room &sr,
     lua_special_room_spec  = sr;
     lua_special_room_level = level_number;
 
-    _build_secondary_vault(level_number, vault, -1, false, false, sr.tl);
+    _build_secondary_vault(level_number, vault, false, false, sr.tl);
 
     lua_special_room_spec.created = false;
     lua_special_room_spec.tl.set(-1, -1);
@@ -4581,50 +4580,6 @@ static void _connect_vault(const vault_placement &vp)
     }
 }
 
-static dungeon_feature_type _dgn_find_rune_subst(const std::string &tag)
-{
-    const std::string suffix("_entry");
-    const std::string::size_type psuffix = tag.find(suffix);
-
-    if (psuffix == std::string::npos)
-        return (DNGN_FLOOR);
-
-    const std::string key = tag.substr(0, psuffix);
-
-    if (key == "bzr")
-        return (DNGN_ENTER_PORTAL_VAULT);
-    else if (key == "lab")
-        return (DNGN_ENTER_LABYRINTH);
-    else if (key == "hell")
-        return (DNGN_ENTER_HELL);
-    else if (key == "pan")
-        return (DNGN_ENTER_PANDEMONIUM);
-    else if (key == "abyss")
-        return (DNGN_ENTER_ABYSS);
-    else
-    {
-        for (int i = 0; i < NUM_BRANCHES; ++i)
-            if (branches[i].entry_stairs != NUM_FEATURES
-                && !strcasecmp(branches[i].abbrevname, key.c_str()))
-            {
-                return (branches[i].entry_stairs);
-            }
-    }
-    return (DNGN_FLOOR);
-}
-
-static dungeon_feature_type _dgn_find_rune_subst_tags(const std::string &tags)
-{
-    std::vector<std::string> words = split_string(" ", tags);
-    for (int i = 0, size = words.size(); i < size; ++i)
-    {
-        const dungeon_feature_type feat = _dgn_find_rune_subst(words[i]);
-        if (feat != DNGN_FLOOR)
-            return (feat);
-    }
-    return (DNGN_FLOOR);
-}
-
 static void _fixup_after_vault()
 {
     _dgn_set_floor_colours();
@@ -4656,8 +4611,7 @@ static void _fixup_after_vault()
 bool dgn_place_map(const map_def *mdef,
                    bool clobber,
                    bool make_no_exits,
-                   const coord_def &where,
-                   int rune_subst)
+                   const coord_def &where)
 {
     if (!mdef)
         return (false);
@@ -4673,8 +4627,7 @@ bool dgn_place_map(const map_def *mdef,
             unwind_bool levgen(Generating_Level, true);
             dgn_reset_level();
             dungeon_events.clear();
-            const bool res = dgn_place_map(mdef, clobber, make_no_exits,
-                                           where, rune_subst);
+            const bool res = dgn_place_map(mdef, clobber, make_no_exits, where);
             _fixup_after_vault();
             return (res);
         }
@@ -4688,12 +4641,10 @@ bool dgn_place_map(const map_def *mdef,
         }
     }
 
-    if (rune_subst == -1 && mdef->has_tag_suffix("_entry"))
-        rune_subst = _dgn_find_rune_subst_tags(mdef->tags);
     if (!crawl_state.game_is_sprint() && !crawl_state.game_is_tutorial())
     {
-        did_map = _build_secondary_vault(you.absdepth0, mdef, rune_subst,
-                                         clobber, make_no_exits, where);
+        did_map = _build_secondary_vault(you.absdepth0, mdef, clobber,
+                                                        make_no_exits, where);
     }
 
     // Activate any markers within the map.
@@ -4727,8 +4678,7 @@ bool dgn_place_map(const map_def *mdef,
 const map_def *dgn_safe_place_map(const map_def *mdef,
                                   bool clobber,
                                   bool make_no_exits,
-                                  const coord_def &where,
-                                  int rune_subst)
+                                  const coord_def &where)
 {
     const std::string mapname(mdef->name);
     int retries = 10;
@@ -4737,7 +4687,7 @@ const map_def *dgn_safe_place_map(const map_def *mdef,
         try
         {
             const bool placed =
-                dgn_place_map(mdef, clobber, make_no_exits, where, rune_subst);
+                dgn_place_map(mdef, clobber, make_no_exits, where);
             return (placed? mdef : NULL);
         }
         catch (map_load_exception &mload)
@@ -4806,11 +4756,10 @@ static void _ruin_vault(const vault_placement &vp)
 // Places a vault somewhere in an already built level if possible.
 // Returns true if the vault was successfully placed.
 static bool _build_secondary_vault(int level_number, const map_def *vault,
-                                   int rune_subst, bool clobber,
-                                   bool no_exits, const coord_def &where)
+                                   bool clobber, bool no_exits,
+                                   const coord_def &where)
 {
-    if (_build_vault_impl(level_number, vault, rune_subst, true, !clobber,
-                          no_exits, where))
+    if (_build_vault_impl(level_number, vault, true, !clobber, no_exits, where))
     {
         if (!no_exits)
         {
@@ -4841,7 +4790,6 @@ static bool _build_primary_vault(int level_number, const map_def *vault)
 // Builds a vault or minivault. Do not use this function directly: always
 // prefer _build_secondary_vault or _build_primary_vault.
 static bool _build_vault_impl(int level_number, const map_def *vault,
-                              int rune_subst,
                               bool build_only, bool check_collisions,
                               bool make_no_exits, const coord_def &where)
 {
@@ -4854,7 +4802,6 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
     vault_placement place;
 
     place.level_number = level_number;
-    place.rune_subst = rune_subst;
 
     if (map_bounds(where))
         place.pos = where;
@@ -5609,10 +5556,6 @@ static void _vault_grid(vault_placement &place,
         break;
     case '~':
         place_specific_trap(where, random_trap_for_place(place.level_number));
-        break;
-    case 'O':
-        if (place.rune_subst != -1)
-            grd(where) = static_cast<dungeon_feature_type>(place.rune_subst);
         break;
     }
 
@@ -9210,9 +9153,9 @@ void remember_vault_placement(std::string key, const vault_placement &place)
                                     table.size() + 1);
 
     std::string place_str
-        = make_stringf("(%d,%d) (%d,%d) orient: %d lev: %d subst: %d",
+        = make_stringf("(%d,%d) (%d,%d) orient: %d lev: %d",
                        place.pos.x, place.pos.y, place.size.x, place.size.y,
-                       place.orient, place.level_number, place.rune_subst);
+                       place.orient, place.level_number);
 
     table[name] = place_str;
 
