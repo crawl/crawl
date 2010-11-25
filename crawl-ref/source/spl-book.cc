@@ -323,7 +323,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      },
 
     // Book of the Sky
-#if TAG_MAJOR_VERSION != 32
+#if TAG_MAJOR_VERSION != 31
     {SPELL_SUMMON_ELEMENTAL,
 #else
     {SPELL_TORNADO, // in more books for now to get more testing
