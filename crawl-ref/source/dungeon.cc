@@ -2220,8 +2220,7 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
 
     if (player_in_hell())
         _fixup_hell_stairs();
-}                               // end builder()
-
+}
 
 static uint8_t _fix_black_colour(uint8_t incol)
 {
