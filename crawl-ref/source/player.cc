@@ -5352,7 +5352,7 @@ bool player::can_cling_to(const coord_def& p) const
 
 bool player::in_water() const
 {
-    return (!airborne() && !beogh_water_walk()
+    return (!airborne() && !beogh_water_walk() && !is_wall_clinging()
             && feat_is_water(grd(pos())));
 }
 
