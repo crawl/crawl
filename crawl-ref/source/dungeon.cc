@@ -1303,24 +1303,16 @@ void dgn_reset_level(bool enable_random_maps)
 static void _build_layout_skeleton(int level_number, level_area_type level_type,
                                    spec_room &sr)
 {
-    bool continue_build = _builder_by_type(level_number, level_type);
-
-    if (!continue_build)
+    if (!_builder_by_type(level_number, level_type))
         return;
 
-    continue_build = _builder_by_branch(level_number);
-
-    if (!continue_build || dgn_level_vetoed)
+    if (!_builder_by_branch(level_number) || dgn_level_vetoed)
         return;
 
-    continue_build = _builder_normal(level_number, sr);
-
-    if (!continue_build || dgn_level_vetoed)
+    if (!_builder_normal(level_number, sr) || dgn_level_vetoed)
         return;
 
-    continue_build = _builder_basic(level_number);
-
-    if (!continue_build || dgn_level_vetoed)
+    if (!_builder_basic(level_number) || dgn_level_vetoed)
         return;
 
     _builder_extras(level_number);
