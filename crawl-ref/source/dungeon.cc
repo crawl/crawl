@@ -1380,6 +1380,10 @@ static void _fixup_walls()
         wall_type = DNGN_STONE_WALL;
         break;
 
+    case BRANCH_SLIME_PITS:
+        wall_type = DNGN_SLIMY_WALL;
+        break;
+
     default:
         return;
     }
@@ -2130,13 +2134,6 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
             _add_plant_clumps(12 - depth, 18 - depth / 4, depth / 4 + 2);
             depth -= 3;
         } while (depth > 0);
-    }
-
-    // XXX: right place to do this?
-    if (player_in_branch(BRANCH_SLIME_PITS))
-    {
-        dgn_replace_area(0, 0, GXM-1, GYM-1,
-                         DNGN_ROCK_WALL, DNGN_SLIMY_WALL);
     }
 
     // Change pre-rock to rock, and pre-floor to floor.
