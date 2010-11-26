@@ -746,7 +746,16 @@ void up_stairs(dungeon_feature_type force_stair,
 
     _update_travel_cache(collect_travel_data, old_level, stair_pos);
 
+    env.map_shadow = env.map_knowledge;
+    // Preventing obvious finding of stairs at your position.
+    env.map_shadow(you.pos()).flags |= MAP_SEEN_FLAG;
+
     viewwindow();
+
+    // Checking new squares for interesting features.
+    if (!you.running)
+        check_for_interesting_features();
+
     seen_monsters_react();
 
     // Left Zot without enough runes to get back in (because they were
@@ -1324,6 +1333,7 @@ void down_stairs(dungeon_feature_type force_stair,
     if (!force_dest)
         _update_travel_cache(collect_travel_data, old_level, stair_pos);
 
+    env.map_shadow = env.map_knowledge;
     // Preventing obvious finding of stairs at your position.
     env.map_shadow(you.pos()).flags |= MAP_SEEN_FLAG;
 
