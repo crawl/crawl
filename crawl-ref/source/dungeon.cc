@@ -2476,9 +2476,8 @@ static bool _make_box(int room_x1, int room_y1, int room_x2, int room_y2,
     return (true);
 }
 
-// Take care of labyrinth, abyss, pandemonium.
-// Returns 1 if we should skip further generation,
-// -1 if we should immediately quit, and 0 otherwise.
+// Take care of labyrinth, abyss, pandemonium. Returns false if we should skip
+// further generation, and true otherwise.
 static bool _builder_by_type(int level_number, level_area_type level_type)
 {
     if (level_type == LEVEL_PORTAL_VAULT)
@@ -2819,9 +2818,8 @@ static void _place_minivaults(const std::string &tag, int lo, int hi,
     }
 }
 
-// Returns 1 if we should dispense with city building,
-// 0 otherwise.  Also sets special_room if one is generated
-// so that we can link it up later.
+// Returns false if we should dispense with city building, true otherwise.  Also
+// sets special_room if one is generated so that we can link it up later.
 static bool _builder_normal(int level_number,
                                        level_area_type level_type,
                                        spec_room &sr)
@@ -2940,7 +2938,7 @@ static bool _builder_normal(int level_number,
     return true;
 }
 
-// Returns 1 if we should skip extras(), otherwise 0.
+// Returns false if we should skip extras(), otherwise true.
 static bool _builder_basic(int level_number)
 {
     env.level_build_method += make_stringf(" basic [%d]", level_number);
