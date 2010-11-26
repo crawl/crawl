@@ -2750,6 +2750,17 @@ static bool _builder_by_branch(int level_number)
         dgn_build_swamp_level(level_number);
         return false;
 
+    case BRANCH_DIS:
+        _city_level(level_number);
+        return false;
+
+    case BRANCH_VAULTS:
+        if (one_chance_in(3))
+            _city_level(level_number);
+        else
+            _plan_main(level_number, 4);
+        return false;
+
     default:
         break;
     }
@@ -2838,21 +2849,6 @@ static bool _builder_normal(int level_number, spec_room &sr)
         env.level_build_method += " normal_random_map_for_place";
         _ensure_vault_placed_ex(_build_primary_vault(level_number, vault),
                                  vault);
-        return false;
-    }
-
-    if (player_in_branch(BRANCH_DIS))
-    {
-        _city_level(level_number);
-        return false;
-    }
-
-    if (player_in_branch(BRANCH_VAULTS))
-    {
-        if (one_chance_in(3))
-            _city_level(level_number);
-        else
-            _plan_main(level_number, 4);
         return false;
     }
 
