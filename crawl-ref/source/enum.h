@@ -380,13 +380,6 @@ enum branch_type                // you.where_are_you
     NUM_BRANCHES
 };
 
-enum builder_rc_type
-{
-    BUILD_QUIT = -1,            // all done, don't continue
-    BUILD_SKIP = 1,             // skip further generation
-    BUILD_CONTINUE = 0,         // continue generation
-};
-
 enum burden_state_type          // you.burden_state
 {
     BS_UNENCUMBERED,            //    0
