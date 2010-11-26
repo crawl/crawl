@@ -16,7 +16,7 @@ function fill_special_room(mon, lord_mon, pack)
         mon = dgn.monster_spec(mon)
     end
 
-    local lord_x, los_y = -1, -1
+    local lord_x, lord_y = -1, -1
     if lord_mon then
         lord_x = crawl.random_range(tl_x, br_x)
         lord_y = crawl.random_range(tl_y, br_y)
