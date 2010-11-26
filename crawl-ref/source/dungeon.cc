@@ -1354,33 +1354,38 @@ static void _fixup_walls()
     // If part of vaults -> walls depend on level.
     // If part of crypt -> all walls stone.
 
-    if (player_in_branch(BRANCH_DIS)
-        || player_in_branch(BRANCH_VAULTS)
-        || player_in_branch(BRANCH_CRYPT))
+    dungeon_feature_type wall_type = DNGN_ROCK_WALL;
+
+    switch (you.where_are_you)
     {
-        // Always the case with Dis {dlb}
-        dungeon_feature_type vault_wall = DNGN_METAL_WALL;
+    case BRANCH_DIS:
+        wall_type = DNGN_METAL_WALL;
+        break;
 
-        if (player_in_branch(BRANCH_VAULTS))
-        {
-            vault_wall = DNGN_ROCK_WALL;
-            const int bdepth = player_branch_depth();
+    case BRANCH_VAULTS:
+    {
+        const int bdepth = player_branch_depth();
 
-            if (bdepth > 2)
-                vault_wall = DNGN_STONE_WALL;
+        if (bdepth > 6 && one_chance_in(10))
+            wall_type = DNGN_GREEN_CRYSTAL_WALL;
+        else if (bdepth > 4)
+            wall_type = DNGN_METAL_WALL;
+        else if (bdepth > 2)
+            wall_type = DNGN_STONE_WALL;
 
-            if (bdepth > 4)
-                vault_wall = DNGN_METAL_WALL;
-
-            if (bdepth > 6 && one_chance_in(10))
-                vault_wall = DNGN_GREEN_CRYSTAL_WALL;
-        }
-        else if (player_in_branch(BRANCH_CRYPT))
-            vault_wall = DNGN_STONE_WALL;
-
-        dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, vault_wall,
-                         MMT_NO_WALL);
+        break;
     }
+
+    case BRANCH_CRYPT:
+        wall_type = DNGN_STONE_WALL;
+        break;
+
+    default:
+        return;
+    }
+
+    dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, wall_type,
+                     MMT_NO_WALL);
 }
 
 // Remove any items that are on squares that items should not be on.
