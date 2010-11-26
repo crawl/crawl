@@ -1947,6 +1947,9 @@ void timeout_tombs(int duration)
 
 void bring_to_safety()
 {
+    if (you.level_type == LEVEL_ABYSS)
+        return abyss_teleport(true);
+
     coord_def best_pos, pos;
     double min_threat = 1e38;
     int tries = 0;
