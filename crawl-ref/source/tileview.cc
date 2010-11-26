@@ -922,6 +922,22 @@ static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg)
     *bg |= flag;
 }
 
+// If the top tile is a corpse, don't draw blood underneath.
+static bool _top_item_is_corpse(const coord_def &gc)
+{
+	if (!in_bounds(gc))
+		return (false);
+
+    const int item_idx = igrd(gc);
+	// No item.
+    if (item_idx == NON_ITEM)
+		return (false);
+
+    item_def& item = mitm[item_idx];
+    return (item.base_type == OBJ_CORPSES
+			&& item.sub_type == CORPSE_BODY);
+}
+
 void tile_apply_properties(const coord_def &gc, tileidx_t *fg,
                            tileidx_t *bg)
 {
@@ -963,7 +979,7 @@ void tile_apply_properties(const coord_def &gc, tileidx_t *fg,
     {
         if (is_moldy(gc))
             *bg |= TILE_FLAG_MOLD;
-        else if (is_bloodcovered(gc))
+        else if (is_bloodcovered(gc) && !_top_item_is_corpse(gc))
             *bg |= TILE_FLAG_BLOOD;
     }
 
