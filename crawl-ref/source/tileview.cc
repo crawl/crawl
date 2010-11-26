@@ -185,8 +185,8 @@ void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
         return;
 
     case BRANCH_LAIR:
-	case BRANCH_FOREST:
-	case BRANCH_SPIDER_NEST:
+    case BRANCH_FOREST:
+    case BRANCH_SPIDER_NEST:
         flv.wall  = TILE_WALL_LAIR;
         flv.floor = TILE_FLOOR_LAIR;
         return;
@@ -925,17 +925,17 @@ static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg)
 // If the top tile is a corpse, don't draw blood underneath.
 static bool _top_item_is_corpse(const coord_def &gc)
 {
-	if (!in_bounds(gc))
-		return (false);
+    if (!in_bounds(gc))
+        return (false);
 
     const int item_idx = igrd(gc);
-	// No item.
+    // No item.
     if (item_idx == NON_ITEM)
-		return (false);
+        return (false);
 
     item_def& item = mitm[item_idx];
     return (item.base_type == OBJ_CORPSES
-			&& item.sub_type == CORPSE_BODY);
+            && item.sub_type == CORPSE_BODY);
 }
 
 void tile_apply_properties(const coord_def &gc, tileidx_t *fg,
