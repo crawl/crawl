@@ -382,11 +382,11 @@ void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
     you.moveto(p);
     viewwindow();
 
-    moveto_location_effects(old_grid, stepped, allow_shift, old_pos);
-
     // Checking new squares for interesting features.
     if (!you.running)
         check_for_interesting_features();
+
+    moveto_location_effects(old_grid, stepped, allow_shift, old_pos);
 }
 
 bool is_feat_dangerous(dungeon_feature_type grid)
