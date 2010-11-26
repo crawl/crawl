@@ -123,11 +123,11 @@ static bool _make_box(int room_x1, int room_y1, int room_x2, int room_y2,
                       dungeon_feature_type wall=DNGN_UNSEEN,
                       dungeon_feature_type avoid=DNGN_UNSEEN);
 
-static builder_rc_type _builder_by_type(int level_number, level_area_type level_type);
-static builder_rc_type _builder_by_branch(int level_number);
-static builder_rc_type _builder_normal(int level_number, level_area_type level_type,
+static bool _builder_by_type(int level_number, level_area_type level_type);
+static bool _builder_by_branch(int level_number);
+static bool _builder_normal(int level_number, level_area_type level_type,
                                        spec_room &s);
-static builder_rc_type _builder_basic(int level_number);
+static bool _builder_basic(int level_number);
 static void _builder_extras(int level_number, level_area_type level_type);
 static void _builder_items(int level_number, level_area_type level_type,
                            int items_wanted);
@@ -1304,32 +1304,27 @@ void dgn_reset_level(bool enable_random_maps)
 static void _build_layout_skeleton(int level_number, level_area_type level_type,
                                    spec_room &sr)
 {
-    builder_rc_type skip_build = _builder_by_type(level_number, level_type);
+    bool continue_build = _builder_by_type(level_number, level_type);
 
-    if (skip_build == BUILD_QUIT)       // quit immediately
+    if (!continue_build)
         return;
 
-    if (skip_build == BUILD_CONTINUE)
-    {
-        skip_build = _builder_by_branch(level_number);
+    continue_build = _builder_by_branch(level_number);
 
-        if (skip_build == BUILD_QUIT || dgn_level_vetoed)
-            return;
-    }
+    if (!continue_build || dgn_level_vetoed)
+        return;
 
-    if (!dgn_level_vetoed && skip_build == BUILD_CONTINUE)
-    {
-        // Do 'normal' building.  Well, except for the swamp and shoals.
-        if (!player_in_branch(BRANCH_SWAMP) && !player_in_branch(BRANCH_SHOALS))
-            skip_build = _builder_normal(level_number, level_type, sr);
+    continue_build = _builder_normal(level_number, level_type, sr);
 
-        if (!dgn_level_vetoed && skip_build == BUILD_CONTINUE)
-        {
-            skip_build = _builder_basic(level_number);
-            if (!dgn_level_vetoed && skip_build == BUILD_CONTINUE)
-                _builder_extras(level_number, level_type);
-        }
-    }
+    if (!continue_build || dgn_level_vetoed)
+        return;
+
+    continue_build = _builder_basic(level_number);
+
+    if (!continue_build || dgn_level_vetoed)
+        return;
+
+    _builder_extras(level_number, level_type);
 }
 
 static int _num_items_wanted(int level_number)
@@ -2484,24 +2479,24 @@ static bool _make_box(int room_x1, int room_y1, int room_x2, int room_y2,
 // Take care of labyrinth, abyss, pandemonium.
 // Returns 1 if we should skip further generation,
 // -1 if we should immediately quit, and 0 otherwise.
-static builder_rc_type _builder_by_type(int level_number, level_area_type level_type)
+static bool _builder_by_type(int level_number, level_area_type level_type)
 {
     if (level_type == LEVEL_PORTAL_VAULT)
     {
         _portal_vault_level(level_number);
-        return (BUILD_QUIT);
+        return (false);
     }
 
     if (level_type == LEVEL_LABYRINTH)
     {
         _labyrinth_level(level_number);
-        return (BUILD_QUIT);
+        return (false);
     }
 
     if (level_type == LEVEL_ABYSS)
     {
         generate_abyss();
-        return (BUILD_SKIP);
+        return (false);
     }
 
     if (level_type == LEVEL_PANDEMONIUM)
@@ -2555,11 +2550,11 @@ static builder_rc_type _builder_by_type(int level_number, level_area_type level_
             _build_secondary_vault(level_number, vault);
         }
 
-        return BUILD_SKIP;
+        return false;
     }
 
     // Must be normal dungeon.
-    return BUILD_CONTINUE;
+    return true;
 }
 
 static void _portal_vault_level(int level_number)
@@ -2726,10 +2721,9 @@ static int _setup_temple_altars(CrawlHashTable &temple)
     return ((int) god_list.size());
 }
 
-// Returns BUILD_SKIP if we should skip further generation,
-// BUILD_QUIT if we should immediately quit, and BUILD_CONTINUE
+// Returns false if we should skip further generation, and true
 // otherwise.
-static builder_rc_type _builder_by_branch(int level_number)
+static bool _builder_by_branch(int level_number)
 {
     const map_def *vault = _dgn_random_map_for_place(false);
 
@@ -2740,7 +2734,7 @@ static builder_rc_type _builder_by_branch(int level_number)
                                  vault);
         if (!dgn_level_vetoed && player_in_branch(BRANCH_SWAMP))
             dgn_build_swamp_level(level_number);
-        return BUILD_SKIP;
+        return false;
     }
 
     switch (you.where_are_you)
@@ -2755,21 +2749,21 @@ static builder_rc_type _builder_by_branch(int level_number)
         else
             iterations = 100 + random2(500);
         spotty_level(false, iterations, false);
-        return BUILD_SKIP;
+        return false;
     }
 
     case BRANCH_SHOALS:
         dgn_build_shoals_level(level_number);
-        return BUILD_SKIP;
+        return false;
 
     case BRANCH_SWAMP:
         dgn_build_swamp_level(level_number);
-        return BUILD_SKIP;
+        return false;
 
     default:
         break;
     }
-    return BUILD_CONTINUE;
+    return true;
 }
 
 // Place vaults with CHANCE: that want to be placed on this level.
@@ -2828,7 +2822,7 @@ static void _place_minivaults(const std::string &tag, int lo, int hi,
 // Returns 1 if we should dispense with city building,
 // 0 otherwise.  Also sets special_room if one is generated
 // so that we can link it up later.
-static builder_rc_type _builder_normal(int level_number,
+static bool _builder_normal(int level_number,
                                        level_area_type level_type,
                                        spec_room &sr)
 {
@@ -2859,13 +2853,13 @@ static builder_rc_type _builder_normal(int level_number,
         env.level_build_method += " normal_random_map_for_place";
         _ensure_vault_placed_ex(_build_primary_vault(level_number, vault),
                                  vault);
-        return BUILD_SKIP;
+        return false;
     }
 
     if (player_in_branch(BRANCH_DIS))
     {
         _city_level(level_number);
-        return BUILD_SKIP;
+        return false;
     }
 
     if (player_in_branch(BRANCH_VAULTS))
@@ -2874,7 +2868,7 @@ static builder_rc_type _builder_normal(int level_number,
             _city_level(level_number);
         else
             _plan_main(level_number, 4);
-        return BUILD_SKIP;
+        return false;
     }
 
     if (level_number > 7 && level_number < 23)
@@ -2882,20 +2876,20 @@ static builder_rc_type _builder_normal(int level_number,
         if (one_chance_in(16))
         {
             spotty_level(false, 0, coinflip());
-            return BUILD_SKIP;
+            return false;
         }
 
         if (one_chance_in(16))
         {
             _bigger_room();
-            return BUILD_SKIP;
+            return false;
         }
     }
 
     if (level_number > 2 && level_number < 23 && one_chance_in(3))
     {
         _plan_main(level_number, 0);
-        return BUILD_SKIP;
+        return false;
     }
 
     if (one_chance_in(3))
@@ -2912,7 +2906,7 @@ static builder_rc_type _builder_normal(int level_number,
         _roguey_level(level_number, sr, just_roguey);
 
         if (just_roguey)
-            return BUILD_SKIP;
+            return false;
     }
     else
     {
@@ -2923,7 +2917,7 @@ static builder_rc_type _builder_normal(int level_number,
             else
                 _plan_main(level_number, 4);
 
-            return BUILD_SKIP;
+            return false;
         }
     }
 
@@ -2943,11 +2937,11 @@ static builder_rc_type _builder_normal(int level_number,
             _special_room(level_number, sr, sroom);
     }
 
-    return BUILD_CONTINUE;
+    return true;
 }
 
 // Returns 1 if we should skip extras(), otherwise 0.
-static builder_rc_type _builder_basic(int level_number)
+static bool _builder_basic(int level_number)
 {
     env.level_build_method += make_stringf(" basic [%d]", level_number);
     env.level_layout_type  = "basic";
@@ -3081,7 +3075,7 @@ static builder_rc_type _builder_basic(int level_number)
         }
     }
 
-    return BUILD_CONTINUE;
+    return true;
 }
 
 static void _builder_extras(int level_number, level_area_type level_type)
