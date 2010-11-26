@@ -125,10 +125,9 @@ static bool _make_box(int room_x1, int room_y1, int room_x2, int room_y2,
 
 static bool _builder_by_type(int level_number, level_area_type level_type);
 static bool _builder_by_branch(int level_number);
-static bool _builder_normal(int level_number, level_area_type level_type,
-                                       spec_room &s);
+static bool _builder_normal(int level_number, spec_room &s);
 static bool _builder_basic(int level_number);
-static void _builder_extras(int level_number, level_area_type level_type);
+static void _builder_extras(int level_number);
 static void _builder_items(int level_number, level_area_type level_type,
                            int items_wanted);
 static void _builder_monsters(int level_number, level_area_type level_type,
@@ -1314,7 +1313,7 @@ static void _build_layout_skeleton(int level_number, level_area_type level_type,
     if (!continue_build || dgn_level_vetoed)
         return;
 
-    continue_build = _builder_normal(level_number, level_type, sr);
+    continue_build = _builder_normal(level_number, sr);
 
     if (!continue_build || dgn_level_vetoed)
         return;
@@ -1324,7 +1323,7 @@ static void _build_layout_skeleton(int level_number, level_area_type level_type,
     if (!continue_build || dgn_level_vetoed)
         return;
 
-    _builder_extras(level_number, level_type);
+    _builder_extras(level_number);
 }
 
 static int _num_items_wanted(int level_number)
@@ -2820,12 +2819,8 @@ static void _place_minivaults(const std::string &tag, int lo, int hi,
 
 // Returns false if we should dispense with city building, true otherwise.  Also
 // sets special_room if one is generated so that we can link it up later.
-static bool _builder_normal(int level_number,
-                                       level_area_type level_type,
-                                       spec_room &sr)
+static bool _builder_normal(int level_number, spec_room &sr)
 {
-    UNUSED(level_type);
-
     bool skipped = false;
     const map_def *vault = _dgn_random_map_for_place(false);
 
@@ -3076,10 +3071,8 @@ static bool _builder_basic(int level_number)
     return true;
 }
 
-static void _builder_extras(int level_number, level_area_type level_type)
+static void _builder_extras(int level_number)
 {
-    UNUSED(level_type);
-
     if (level_number > 6 && one_chance_in(10))
     {
         dungeon_feature_type pool_type = (level_number < 11
