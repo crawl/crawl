@@ -10,6 +10,8 @@ dc-dngn/dngn_unseen
 
 %include dc-spells.txt
 
+%include dc-skills.txt
+
 dc-misc/todo TODO
 dc-misc/error ERROR
 
