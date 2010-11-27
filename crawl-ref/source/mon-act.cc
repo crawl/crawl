@@ -3205,7 +3205,7 @@ static bool _mon_can_move_to_pos(const monster* mons,
             {
                 if (!mons_is_stationary(targmonster) || targmonster->attitude!=ATT_HOSTILE)
                     return (false);
-            } 
+            }
             else
             {
                 return (false);
@@ -3806,7 +3806,7 @@ static bool _monster_move(monster* mons)
 
         // zotdef: sometimes seem to get gridlock. Reset travel path
         // if we can't move, occasionally
-        if (crawl_state.game_is_zotdef() && one_chance_in(20)) 
+        if (crawl_state.game_is_zotdef() && one_chance_in(20))
         {
              mons->travel_path.clear();
              mons->travel_target = MTRAV_NONE;

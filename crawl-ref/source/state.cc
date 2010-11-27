@@ -594,8 +594,8 @@ std::string game_state::game_type_name_for(game_type _type)
 
 std::string game_state::game_savedir_path() const
 {
-    return game_is_sprint()? "sprint/" : 
-	   game_is_zotdef()? "zotdef/" : "";
+    return game_is_sprint()? "sprint/" :
+           game_is_zotdef()? "zotdef/" : "";
 }
 
 std::string game_state::game_type_qualifier() const

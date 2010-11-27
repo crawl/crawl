@@ -584,7 +584,7 @@ int place_monster_corpse(const monster* mons, bool silent,
     // kicks in. The magic number 9 is less than the magic number of
     // 10 in get_item_slot which indicates that a cull will be initiated
     // if a free slot can't be found.
-    if (o==NON_ITEM && crawl_state.game_is_zotdef()) 
+    if (o==NON_ITEM && crawl_state.game_is_zotdef())
         o = get_item_slot(9);
 
     if (o == NON_ITEM)
@@ -4452,4 +4452,3 @@ int count_monsters(monster_type mtyp, bool friendlyOnly)
     }
     return (count);
 }
-

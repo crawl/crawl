@@ -321,7 +321,7 @@ void give_basic_mutations(species_type speci)
 
     // Zot def games come with teleport control
     if (crawl_state.game_is_zotdef())
-	you.mutation[MUT_TELEPORT_CONTROL] = 1;
+        you.mutation[MUT_TELEPORT_CONTROL] = 1;
 
     // Some mutations out-sourced because they're
     // relevant during character choice.
@@ -1412,16 +1412,16 @@ static void _give_basic_knowledge(job_type which_job)
 static void _reassess_starting_skills()
 {
     // Zotdef: all skills turned off, but not those with no
-    // skill points (makes it too hard to learn a new skill 
+    // skill points (makes it too hard to learn a new skill
     // otherwise)
     for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
     {
         skill_type sk = static_cast<skill_type>(i);
-	if (crawl_state.game_is_zotdef()) you.practise_skill[i]=false;
+        if (crawl_state.game_is_zotdef()) you.practise_skill[i]=false;
         if (you.skills[sk] == 0
             && (you.species != SP_VAMPIRE || sk != SK_UNARMED_COMBAT))
         {
-	    if (crawl_state.game_is_zotdef()) you.practise_skill[i]=true;
+            if (crawl_state.game_is_zotdef()) you.practise_skill[i]=true;
             continue;
         }
 
@@ -1579,7 +1579,7 @@ static void _setup_sprint(const newgame_def& ng)
  */
 static void _setup_zotdef(const newgame_def& ng)
 {
-	// nothing currently
+        // nothing currently
 }
 
 /**

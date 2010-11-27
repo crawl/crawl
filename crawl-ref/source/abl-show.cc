@@ -386,7 +386,7 @@ static const ability_def Ability_List[] =
     { ABIL_MAKE_ICE_STATUE, "Make ice statue", 0, 0, 50, 0, ABFLAG_NONE, 2000},
     { ABIL_MAKE_OCS, "Make crystal statue", 0, 0, 200, 0, ABFLAG_NONE, 2000},
     { ABIL_MAKE_SILVER_STATUE, "Make silver statue", 0, 0, 400, 0, ABFLAG_NONE, 3000},
-    { ABIL_MAKE_CURSE_SKULL, "Make curse skull", 0, 0, 600, 0, ABFLAG_NECRO_MISCAST_MINOR, 10000}, 
+    { ABIL_MAKE_CURSE_SKULL, "Make curse skull", 0, 0, 600, 0, ABFLAG_NECRO_MISCAST_MINOR, 10000},
     { ABIL_MAKE_TELEPORT, "Zot-teleport", 0, 0, 0, 0, ABFLAG_NONE, 2},
     { ABIL_MAKE_ARROW_TRAP, "Make arrow trap", 0, 0, 0, 0, ABFLAG_NONE, 30 },
     { ABIL_MAKE_BOLT_TRAP, "Make bolt trap", 0, 0, 0, 0, ABFLAG_NONE, 300 },
@@ -394,7 +394,7 @@ static const ability_def Ability_List[] =
     { ABIL_MAKE_AXE_TRAP, "Make axe trap", 0, 0, 0, 0, ABFLAG_NONE, 500 },
     { ABIL_MAKE_NEEDLE_TRAP, "Make needle trap", 0, 0, 0, 0, ABFLAG_NONE, 30 },
     { ABIL_MAKE_NET_TRAP, "Make net trap", 0, 0, 0, 0, ABFLAG_NONE, 2 },
-    { ABIL_MAKE_TELEPORT_TRAP, "Make teleport trap", 0, 0, 0, 0, ABFLAG_TLOC_MISCAST, 15000 }, 
+    { ABIL_MAKE_TELEPORT_TRAP, "Make teleport trap", 0, 0, 0, 0, ABFLAG_TLOC_MISCAST, 15000 },
     { ABIL_MAKE_ALARM_TRAP, "Make alarm trap", 0, 0, 0, 0, ABFLAG_NONE, 2 },
     { ABIL_MAKE_BLADE_TRAP, "Make blade trap", 0, 0, 0, 0, ABFLAG_NONE, 3000 },
     { ABIL_MAKE_OKLOB_CIRCLE, "Make oklob circle", 0, 0, 0, 0, ABFLAG_NONE, 1000},
@@ -476,7 +476,7 @@ int count_relevant_monsters(const ability_def& abil)
         default: mprf("DEBUG: NO RELEVANT MONSTER FOR %d",abil.ability);break;
     }
     if (mtyp==MONS_PROGRAM_BUG) return 0;
-    return count_monsters(mtyp, true);	/* Friendly ones only */
+    return count_monsters(mtyp, true);        /* Friendly ones only */
 }
 
 trap_type trap_for_ability(const ability_def& abil)
@@ -504,8 +504,8 @@ trap_type trap_for_ability(const ability_def& abil)
 int xp_cost(const ability_def& abil)
 {
     int cost=abil.xp_cost;
-    int scale10=0;	// number of times to scale up by 10%
-    int scale20=0;	// number of times to scale up by 20%
+    int scale10=0;        // number of times to scale up by 10%
+    int scale20=0;        // number of times to scale up by 20%
     int num;
     switch(abil.ability)
     {
@@ -520,10 +520,10 @@ int xp_cost(const ability_def& abil)
             num=count_relevant_monsters(abil);
             // special case for oklob circles
             if (abil.ability==ABIL_MAKE_OKLOB_CIRCLE) num/=3;
-            num-=2;	// first two are base cost
+            num-=2;        // first two are base cost
             num=std::max(num,0);
-            scale10=std::min(num,10);	// next 10 at 10% increment
-            scale20=num-scale10;		// after that at 20% increment
+            scale10=std::min(num,10);        // next 10 at 10% increment
+            scale20=num-scale10;                // after that at 20% increment
             break;
 
         // Monster type 2: less generous
@@ -531,14 +531,14 @@ int xp_cost(const ability_def& abil)
         case ABIL_MAKE_OCS:
             num=count_relevant_monsters(abil);
             num-=2; // first two are base cost
-            scale20=std::max(num,0);	// after first two, 20% increment
+            scale20=std::max(num,0);        // after first two, 20% increment
 
         // Monster type 3: least generous
         case ABIL_MAKE_SILVER_STATUE:
         case ABIL_MAKE_CURSE_SKULL:
-            scale20=count_relevant_monsters(abil);	// scale immediately
+            scale20=count_relevant_monsters(abil);        // scale immediately
 
-        // Simple Traps 
+        // Simple Traps
         case ABIL_MAKE_DART_TRAP:
             scale10 = std::max(count_traps(TRAP_DART)-10,0);   // First 10 at base cost
             break;
@@ -565,11 +565,11 @@ int xp_cost(const ability_def& abil)
     }
     for (; scale10>0; scale10--)
     {
-        cost = (cost*11)/10;	// +10%
+        cost = (cost*11)/10;        // +10%
     }
     for (; scale20>0; scale20--)
     {
-        cost = (cost*6)/5;	// +20%
+        cost = (cost*6)/5;        // +20%
     }
 
     return cost;
@@ -689,7 +689,7 @@ const std::string make_cost_description(ability_type ability)
     if (abil.flags & ABFLAG_LEVEL_DRAIN)
     {
         if (!ret.str().empty())
-            ret << ", "; 
+            ret << ", ";
 
         ret << "Level drain";      // //
     }
@@ -1554,7 +1554,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_MAKE_PLANT:
         if (!create_zotdef_ally(MONS_PLANT,
-	      "Tendrils and shoots erupt from the earth and gnarl into the form of a plant."))
+              "Tendrils and shoots erupt from the earth and gnarl into the form of a plant."))
             return false;
 
         break; // //
@@ -1607,7 +1607,7 @@ static bool _do_ability(const ability_def& abil)
         break; // //
 
     case ABIL_MAKE_TELEPORT:
-        you_teleport_now( true, true ); 
+        you_teleport_now( true, true );
         break; // //
 
     case ABIL_MAKE_ARROW_TRAP:
@@ -1635,7 +1635,7 @@ static bool _do_ability(const ability_def& abil)
         break; // //
 
     case ABIL_MAKE_TELEPORT_TRAP:
-        if (you.pos().distance_from(orb_position())<10) 
+        if (you.pos().distance_from(orb_position())<10)
         {
             mpr("Radiation from the Orb interferes with the trap's magic!");
             return false;
@@ -1725,11 +1725,11 @@ static bool _do_ability(const ability_def& abil)
                      god_name(rgod).c_str());
             }
         }
-	else
-	{
-	    mpr("The dungeon dims for a moment.");
-	    return (false);
-	}
+        else
+        {
+            mpr("The dungeon dims for a moment.");
+            return (false);
+        }
         break;
 
     case ABIL_MAKE_GRENADES:
@@ -1737,12 +1737,12 @@ static bool _do_ability(const ability_def& abil)
                mgen_data(MONS_GIANT_SPORE, BEH_FRIENDLY, &you, 6, 0,
                          you.pos(), you.pet_target,
                          0)) != -1)
-	    mpr( "You create a living grenade." );
+            mpr( "You create a living grenade." );
         if (create_monster(
                mgen_data(MONS_GIANT_SPORE, BEH_FRIENDLY, &you, 6, 0,
                          you.pos(), you.pet_target,
                          0)) != -1)
-	    mpr( "You create a living grenade." );
+            mpr( "You create a living grenade." );
         break;
 
     case ABIL_REMOVE_CURSE:
@@ -2605,7 +2605,7 @@ static void _pay_ability_costs(const ability_def& abil, int xpcost)
         you.exp_available -= xpcost;
         you.redraw_experience = true;
     }
-   
+
     if (abil.flags & ABFLAG_ENCH_MISCAST)
     {
         MiscastEffect(&you, NON_MONSTER, SPTYP_ENCHANTMENT, 10, 90, "power out of control", NH_DEFAULT);

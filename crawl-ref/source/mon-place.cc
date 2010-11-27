@@ -662,9 +662,9 @@ bool drac_colour_incompatible(int drac, int colour)
 }
 
 // Finds a random square as close to a staircase as possible
-bool find_mon_place_near_stairs(coord_def& pos, 
-			    dungeon_char_type *stair_type,
-			    branch_type &branch)
+bool find_mon_place_near_stairs(coord_def& pos,
+                            dungeon_char_type *stair_type,
+                            branch_type &branch)
 {
     pos = get_random_stair();
     const dungeon_feature_type feat = grd(pos);
@@ -672,16 +672,16 @@ bool find_mon_place_near_stairs(coord_def& pos,
     // Is it a branch stair?
     for (int i = 0; i < NUM_BRANCHES; ++i)
     {
-	if (branches[i].entry_stairs == feat)
-	{
-	    branch = branches[i].id;
-	    break;
-	}
-	else if (branches[i].exit_stairs == feat)
-	{
-	    branch = branches[i].parent_branch;
-	    break;
-	}
+        if (branches[i].entry_stairs == feat)
+        {
+            branch = branches[i].id;
+            break;
+        }
+        else if (branches[i].exit_stairs == feat)
+        {
+            branch = branches[i].parent_branch;
+            break;
+        }
     }
     const monster_type habitat_target = MONS_GIANT_BAT;
     pos = find_newmons_square_contiguous(habitat_target, pos);
@@ -728,7 +728,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
 
         // Respect destination level for staircases.
         if (proximity == PROX_NEAR_STAIRS)
-        { 
+        {
             if (find_mon_place_near_stairs(pos, stair_type, place.branch))
             {
                 // No monsters spawned in the Temple.
@@ -1280,10 +1280,10 @@ int place_monster(mgen_data mg, bool force_pos)
     // too many monsters already, or we successfully placed by stairs.
     // Zotdef change - banding allowed on stairs for extra challenge!
     // Frequency reduced, though, and only after 2K turns.
-    if (id >= MAX_MONSTERS - 30 
-	|| ( mg.proximity == PROX_NEAR_STAIRS && !crawl_state.game_is_zotdef() && coinflip())
-	|| (crawl_state.game_is_zotdef() && you.num_turns<2000)
-	)
+    if (id >= MAX_MONSTERS - 30
+        || ( mg.proximity == PROX_NEAR_STAIRS && !crawl_state.game_is_zotdef() && coinflip())
+        || (crawl_state.game_is_zotdef() && you.num_turns<2000)
+        )
         return (id);
 
     // Not PROX_NEAR_STAIRS, so it will be part of a band, if there is any.

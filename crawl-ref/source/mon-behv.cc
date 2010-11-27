@@ -321,7 +321,7 @@ void handle_behaviour(monster* mon)
         if (crawl_state.game_is_zotdef() && mon->foe == MHITYOU)
         {
             foepos = PLAYER_POS;
-            proxFoe = true; 
+            proxFoe = true;
         }
 
         // Track changes to state; attitude never changes here.
@@ -424,7 +424,7 @@ void handle_behaviour(monster* mon)
                             if (crawl_state.game_is_zotdef())
                             {
                                 mon->target=PLAYER_POS;  // infallible tracking in zotdef
-                            } 
+                            }
                             else
                             {
                                 if (one_chance_in(you.skills[SK_STEALTH]/3))
@@ -1063,4 +1063,3 @@ coord_def zotdef_target()
     if (tgt.origin()) tgt=you.pos();
     return tgt;
 }
-

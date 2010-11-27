@@ -7,7 +7,7 @@
 # hall_of_Zot_5
 
 NAME:    zotvault
-TAGS:    zotdef no_monster_gen 
+TAGS:    zotdef no_monster_gen
 ORIENT:  encompass
 LFLOORCOL: magenta
 LROCKCOL:  lightmagenta
@@ -69,7 +69,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    zotvault2
-TAGS:    zotdef no_monster_gen 
+TAGS:    zotdef no_monster_gen
 ORIENT:  encompass
 LFLOORCOL: magenta
 LROCKCOL:  lightmagenta
@@ -130,7 +130,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-# This one is very sensitive to the pathfinding algorithm, and currently 
+# This one is very sensitive to the pathfinding algorithm, and currently
 # doesn't work (all critters enter the Orb chamber from the south). Needs
 # reworking before use, so the 'zotdef' tag has been replaced with '_zotdef'.
 NAME:    zotvault3
@@ -268,7 +268,7 @@ XXXXXXXXXXXXXXXXXXXXXXXX|||XXXXXX...........XXXXXX|||XXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXX|||XXXXXXX.........XXXXXXX|||XXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.......XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-ENDMAP	
+ENDMAP
 
 # Currently under development and testing, so commented out in the tags.
 NAME:    zotvault5

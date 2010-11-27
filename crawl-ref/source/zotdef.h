@@ -10,4 +10,3 @@ bool create_trap(trap_type spec_type);
 bool create_zotdef_ally(monster_type mtyp, const char *successmsg);
 
 #endif // ZOTDEF_H
-

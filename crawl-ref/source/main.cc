@@ -1012,7 +1012,7 @@ void bosses_check()
 {
     if ((you.num_turns + 1) % CYCLE_LENGTH == 0)
     {
-        int mon = zotdef_spawn(true);	// boss monster=true
+        int mon = zotdef_spawn(true);        // boss monster=true
 
         if (mon > -1)
         {
@@ -1022,7 +1022,7 @@ void bosses_check()
                 int which_rune = get_rune(
                  ((you.num_turns + 1)/CYCLE_LENGTH) / FREQUENCY_OF_RUNES );
                 int ip = items( 1, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, true, which_rune, which_rune);
-                int *const item_made = &ip; 
+                int *const item_made = &ip;
                 if (*item_made != NON_ITEM && *item_made != -1)
                 {
                     move_item_to_grid( item_made, menv[mon].pos() );
@@ -2917,7 +2917,7 @@ void world_reacts()
     _update_mold();
     _update_golubria_traps();
 
-    if (crawl_state.game_is_zotdef() && you.num_turns == 100) 
+    if (crawl_state.game_is_zotdef() && you.num_turns == 100)
         zotdef_set_wave();
 
     // Zotdef spawns only in the main dungeon
@@ -2926,7 +2926,7 @@ void world_reacts()
         && you.where_are_you==BRANCH_MAIN_DUNGEON
         && you.num_turns > 100)
     {
-        bosses_check(); 
+        bosses_check();
         for (int i = 0; i < SPAWN_SIZE; i++)
         {
             // Reduce critter frequency for first wave

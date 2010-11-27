@@ -692,7 +692,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool force_full)
 
     bool proceed;
 
-    
+
     if (force_full)
     {
         bool success = true;
