@@ -508,3 +508,37 @@ TAGS: layout allow_dup
 }}
 MAP
 ENDMAP
+
+##############################################################
+# layout_misc
+#
+# This replaces dungeon.cc:_plan_5().
+NAME: layout_misc
+ORIENT: encompass
+TAGS: layout allow_dup
+{{
+    function random_coord(g)
+        return crawl.random2(g - 20) + 10
+    end
+
+    local gxm, gym = dgn.max_bounds()
+    local rooms = 5 + crawl.random2(20)
+
+    extend_map { width = gxm, height = gym, fill = 'x' }
+
+    while rooms > 0 do
+        join_the_dots {
+            x1 = random_coord(gxm),
+            y1 = random_coord(gym),
+            x2 = random_coord(gxm),
+            y2 = random_coord(gym)
+        }
+        rooms = rooms - 1
+    end
+
+    if not crawl.one_chance_in(4) then
+        spotty_map { boxy = crawl.coinflip(), iterations = 100 }
+    end
+}}
+MAP
+ENDMAP
