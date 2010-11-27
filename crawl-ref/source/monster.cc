@@ -4799,12 +4799,16 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_ANTIMAGIC:
     case ENCH_REGENERATION:
     case ENCH_RAISED_MR:
-    case ENCH_MIRROR_DAMAGE:
     case ENCH_STONESKIN:
     case ENCH_FEAR_INSPIRING:
     case ENCH_LIFE_TIMER:
     case ENCH_LEVITATION:
         decay_enchantment(me);
+        break;
+
+    case ENCH_MIRROR_DAMAGE:
+        if (decay_enchantment(me))
+            simple_monster_message(this, "'s dark mirror aura disappears.");
         break;
 
     case ENCH_SILENCE:
