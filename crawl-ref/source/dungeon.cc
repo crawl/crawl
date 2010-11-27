@@ -2110,12 +2110,6 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
     // Stairs must exist by this point (except in Shoals where they are
     // yet to be placed). Some items and monsters already exist.
 
-#ifdef OLD_SWAMP_LAYOUT
-    // Time to make the swamp or shoals {dlb}:
-    if (player_in_branch(BRANCH_SWAMP))
-        dgn_prepare_swamp();
-#endif
-
     if (dgn_level_vetoed)
         return;
 
