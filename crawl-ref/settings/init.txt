@@ -205,12 +205,6 @@ trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 # 14 filters out corpses
 # stash_filter = 14
 
-stash_filter = scroll of curse armour, scroll of curse weapon, scroll of noise
-stash_filter = scroll of immolation, scroll of random uselessness
-stash_filter = scroll of paper
-
-stash_filter = ring of hunger, amulet of inaccuracy
-
 # annotate_item_class = true
 # annotate_item_dropped = true
 
