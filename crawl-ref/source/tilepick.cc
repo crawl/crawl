@@ -3678,6 +3678,11 @@ tileidx_t tileidx_spell(spell_type spell)
     }
 }
 
+tileidx_t tileidx_skill(skill_type skill)
+{
+	return TILEG_TODO;
+}
+
 tileidx_t tileidx_known_brand(const item_def &item)
 {
     if (!item_type_known(item))

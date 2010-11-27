@@ -28,7 +28,8 @@ DungeonCellBuffer::DungeonCellBuffer(ImageManager *im) :
     m_buf_doll(&im->m_textures[TEX_PLAYER], 17),
     m_buf_main_trans(&im->m_textures[TEX_DEFAULT], 17),
     m_buf_main(&im->m_textures[TEX_DEFAULT]),
-    m_buf_spells(&im->m_textures[TEX_GUI])
+    m_buf_spells(&im->m_textures[TEX_GUI]),
+    m_buf_skills(&im->m_textures[TEX_GUI])
 {
 }
 
@@ -116,6 +117,11 @@ void DungeonCellBuffer::add_spell_tile(int tileidx, int x, int y)
     m_buf_spells.add(tileidx, x, y);
 }
 
+void DungeonCellBuffer::add_skill_tile(int tileidx, int x, int y)
+{
+    m_buf_skills.add(tileidx, x, y);
+}
+
 void DungeonCellBuffer::clear()
 {
     m_buf_floor.clear();
@@ -125,6 +131,7 @@ void DungeonCellBuffer::clear()
     m_buf_main_trans.clear();
     m_buf_main.clear();
     m_buf_spells.clear();
+    m_buf_skills.clear();
 }
 
 void DungeonCellBuffer::draw()
@@ -136,6 +143,7 @@ void DungeonCellBuffer::draw()
     m_buf_main_trans.draw();
     m_buf_main.draw();
     m_buf_spells.draw();
+    m_buf_skills.draw();
 }
 
 enum wave_type
