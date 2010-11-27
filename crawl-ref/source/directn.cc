@@ -3387,6 +3387,9 @@ static std::vector<std::string> _get_monster_desc_vector(const monster_info& mi)
     else if (mi.is(MB_ENSLAVED))
         descs.push_back("disembodied soul");
 
+    if (mi.is(MB_MIRROR_DAMAGE))
+        descs.push_back("reflecting injuries");
+
     if (mi.fire_blocker)
     {
         descs.push_back("fire blocked by "
@@ -3447,6 +3450,9 @@ static std::string _get_monster_desc(const monster_info& mi)
     }
     else if (mi.is(MB_ENSLAVED))
         text += pronoun + " is a disembodied soul.\n";
+
+    if (mi.is(MB_MIRROR_DAMAGE))
+        text += pronoun + " is reflecting injuries back at attackers.\n";
 
     if (mi.fire_blocker)
     {
