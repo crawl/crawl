@@ -869,25 +869,8 @@ bool melee_attack::player_attack()
 
         if (damage_done > 0 || !defender_visible && !shield_blocked)
         {
-            if (defender->as_monster()->props.exists("HELPLESS")
-                && defender->as_monster()->props["HELPLESS"].get_bool())
-            {
-                // Modifying monster flags to apply "helpless" adjective.
-                uint64_t prev_flags = defender->as_monster()->flags;
-                std::string prev_mname = defender->as_monster()->mname;
-                defender->as_monster()->flags |= MF_NAME_ADJECTIVE;
-                defender->as_monster()->flags |= MF_NAME_DESCRIPTOR;
-                defender->as_monster()->mname = "helpless";
-
-                player_announce_hit();
-
-                // Restoring pre-fight MF_NAME_ADJECTIVE flag status.
-                defender->as_monster()->props.erase("HELPLESS");
-                defender->as_monster()->flags = prev_flags;
-                defender->as_monster()->mname = prev_mname;
-            }
-            else
-                player_announce_hit();
+            player_announce_hit();
+            defender->as_monster()->del_ench(ENCH_HELPLESS);
         }
         else if (!shield_blocked && damage_done <= 0)
         {
@@ -1035,7 +1018,6 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
     case UNAT_TAILSLAP:
         aux_attack = aux_verb = "tail-slap";
 
-        // Usually one level, or two for grey draconians.
         aux_damage = 6 * you.has_usable_tail();
 
         noise_factor = 125;
@@ -1114,14 +1096,6 @@ static bool _tran_forbid_aux_attack(unarmed_attack_type atk)
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT);
-
-    case UNAT_TAILSLAP:
-        return (you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT);
-
-    case UNAT_PSEUDOPODS:
-        return (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE);
 
     default:
         return (false);
@@ -1233,7 +1207,7 @@ bool melee_attack::player_aux_test_hit()
     if (!auto_hit && to_hit >= evasion && helpful_evasion > evasion
         && defender_visible)
     {
-        defender->as_monster()->props["HELPLESS"] = true;
+        defender->as_monster()->add_ench(ENCH_HELPLESS);
     }
 
     if (to_hit >= evasion || auto_hit)
@@ -1384,25 +1358,8 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         wpn_skill   = SK_UNARMED_COMBAT;
         player_exercise_combat_skills();
 
-        if (defender->as_monster()->props.exists("HELPLESS")
-            && defender->as_monster()->props["HELPLESS"].get_bool())
-        {
-            // Modifying monster flags to apply "helpless" adjective.
-            uint64_t prev_flags = defender->as_monster()->flags;
-            std::string prev_mname = defender->as_monster()->mname;
-            defender->as_monster()->flags |= MF_NAME_ADJECTIVE;
-            defender->as_monster()->flags |= MF_NAME_DESCRIPTOR;
-            defender->as_monster()->mname = "helpless";
-
-            player_announce_aux_hit();
-
-            // Restoring pre-fight MF_NAME_ADJECTIVE flag status.
-            defender->as_monster()->props.erase("HELPLESS");
-            defender->as_monster()->flags = prev_flags;
-            defender->as_monster()->mname = prev_mname;
-        }
-        else
-            player_announce_aux_hit();
+        player_announce_aux_hit();
+        defender->as_monster()->del_ench(ENCH_HELPLESS);
 
         if (damage_brand == SPWPN_ACID)
         {
@@ -1421,13 +1378,12 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
             _player_vampire_draws_blood(defender->as_monster(), damage_done);
         }
 
-        if (atk == UNAT_TAILSLAP && you.species == SP_GREY_DRACONIAN &&
-            grd(you.pos()) == DNGN_DEEP_WATER &&
-            feat_is_water(grd(defender->as_monster()->pos())))
+        if (atk == UNAT_TAILSLAP && you.species == SP_GREY_DRACONIAN
+            && grd(you.pos()) == DNGN_DEEP_WATER
+            && feat_is_water(grd(defender->as_monster()->pos())))
         {
             do_trample();
         }
-
     }
     else // no damage was done
     {
@@ -1577,7 +1533,7 @@ int melee_attack::player_hits_monster()
         || defender->as_monster()->petrifying()
             && !one_chance_in(2 + you.skills[SK_STABBING]))
     {
-        defender->as_monster()->props["HELPLESS"] = true;
+        defender->as_monster()->add_ench(ENCH_HELPLESS);
         return (1);
     }
 

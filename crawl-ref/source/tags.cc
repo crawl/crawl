@@ -1083,6 +1083,11 @@ static void tag_construct_you(writer &th)
         marshallByte(th, you.skill_order[j]);   // skills ordering
     }
 
+    marshallInt(th, you.transfer_from_skill);
+    marshallInt(th, you.transfer_to_skill);
+    marshallInt(th, you.transfer_skill_points);
+    marshallInt(th, you.transfer_total_skill_points);
+
     // how many durations?
     marshallByte(th, NUM_DURATIONS);
     for (j = 0; j < NUM_DURATIONS; ++j)
@@ -1234,6 +1239,9 @@ static void tag_construct_you_items(writer &th)
     for (i = 0; i < identy.width(); ++i)
         for (j = 0; j < identy.height(); ++j)
             marshallUByte(th, identy[i][j]);
+
+    // Additional identification info
+    get_type_id_props().write(th);
 
     // how many unique items?
     marshallByte(th, MAX_UNRANDARTS);
@@ -1465,7 +1473,6 @@ static void marshall_vault_placement(writer &th, const vault_placement &vp)
     marshall_mapdef(th, vp.map);
     marshall_iterator(th, vp.exits.begin(), vp.exits.end(), marshallCoord);
     marshallShort(th, vp.level_number);
-    marshallShort(th, vp.rune_subst);
     marshallByte(th, vp.seen);
 }
 
@@ -1478,7 +1485,10 @@ static vault_placement unmarshall_vault_placement(reader &th)
     vp.map = unmarshall_mapdef(th);
     unmarshall_vector(th, vp.exits, unmarshallCoord);
     vp.level_number = unmarshallShort(th);
-    vp.rune_subst   = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 31
+    if (th.getMinorVersion() < TAG_MINOR_RUNE_SUBST)
+        unmarshallShort(th);
+#endif
     vp.seen = !!unmarshallByte(th);
 
     return vp;
@@ -1692,6 +1702,18 @@ static void tag_read_you(reader &th, int minorVersion)
         you.skill_order[j]     = unmarshallByte(th);
     }
 
+#if TAG_MAJOR_VERSION == 31
+    if (minorVersion >= TAG_MINOR_SLOW_RESKILL)
+    {
+#endif
+    you.transfer_from_skill = static_cast<skill_type>(unmarshallInt(th));
+    you.transfer_to_skill = static_cast<skill_type>(unmarshallInt(th));
+    you.transfer_skill_points = unmarshallInt(th);
+    you.transfer_total_skill_points = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 31
+    }
+#endif
+
     // Set up you.total_skill_points and you.skill_cost_level.
     calc_total_skill_points();
 
@@ -1890,6 +1912,12 @@ static void tag_read_you_items(reader &th, int minorVersion)
                     break;
             }
         }
+
+    // Additional identification info
+#if TAG_MAJOR_VERSION == 31
+    if (minorVersion >= TAG_MINOR_ADD_ID_INFO)
+#endif
+    get_type_id_props().read(th);
 
     // how many unique items?
     count = unmarshallByte(th);

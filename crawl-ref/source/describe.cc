@@ -735,6 +735,37 @@ void append_weapon_stats(std::string &description, const item_def &item)
    description += "%";
 }
 
+static std::string _corrosion_resistance_string(const item_def &item)
+{
+    const int ench = item.base_type == OBJ_WEAPONS ? item.plus2 : item.plus;
+    const char* format = "\nIts enchantment level renders it %s to acidic "
+                         "corrosion.";
+
+    if (is_artefact(item))
+        return "";
+    if (ench >= 5)
+        return make_stringf(format, "immune");
+    else if (ench >= 4)
+        return make_stringf(format, "extremely resistant");
+    else if (item.base_type == OBJ_ARMOUR
+             && item.sub_type == ARM_CRYSTAL_PLATE_MAIL)
+    {
+        return "\nBeing made of crystal renders it very resistant to acidic "
+               "corrosion.";
+    }
+    else if (get_equip_race(item) == ISFLAG_DWARVEN)
+    {
+        return "\nBeing of dwarven fabrication renders it very resistant to "
+               "acidic corrosion.";
+    }
+    else if (ench >= 3)
+        return make_stringf(format, "resistant");
+    else if (ench >= 2)
+        return make_stringf(format, "somewhat resistant");
+    else
+        return "";
+}
+
 //---------------------------------------------------------------
 //
 // describe_weapon
@@ -977,9 +1008,8 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
             iflags_t race = get_equip_race(item);
 
             if (race == ISFLAG_DWARVEN)
-                description += "\nIt is well-crafted, durable, and resistant "
-                               "to corrosion. Dwarves deal slightly more "
-                               "damage with it.";
+                description += "\nIt is well-crafted and durable. Dwarves "
+                               "deal slightly more damage with it.";
 
             if (race == ISFLAG_ORCISH)
                 description += "\nOrcs deal slightly more damage with it.";
@@ -1016,6 +1046,8 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
             description += ".";
         }
     }
+
+    description += _corrosion_resistance_string(item);
 
     return (description);
 }
@@ -1221,6 +1253,19 @@ static std::string _describe_ammo(const item_def &item)
         description += ".";
     }
 
+    if (item.plus >= 5)
+        description += "\nIts enchantment level renders it immune to "
+                       "acidic corrosion.";
+    else if (item.plus >= 4)
+        description += "\nIts enchantment level renders it extremely "
+                       "resistant to acidic corrosion.";
+    else if (item.plus >= 3)
+        description += "\nIts enchantment level renders it "
+                       "resistant to acidic corrosion.";
+    else if (item.plus >= 2)
+        description += "\nIts enchantment level renders it somewhat "
+                       "resistant to acidic corrosion.";
+
     return (description);
 }
 
@@ -1373,8 +1418,7 @@ static std::string _describe_armour(const item_def &item, bool verbose)
         iflags_t race = get_equip_race(item);
 
         if (race == ISFLAG_DWARVEN)
-            description += "\nIt is well-crafted, durable, and resistant to "
-                           "corrosion.";
+            description += "\nIt is well-crafted and durable.";
         else if (race == ISFLAG_ELVEN)
         {
             description += "\nIt is well-crafted and unobstructive";
@@ -1407,6 +1451,8 @@ static std::string _describe_armour(const item_def &item, bool verbose)
         else
             description += "\nIt is maximally enchanted.";
     }
+
+    description += _corrosion_resistance_string(item);
 
     return description;
 }
@@ -3219,14 +3265,14 @@ static std::string _monster_stat_description(const monster_info& mi)
 
     // Size
     const char *sizes[NUM_SIZE_LEVELS] = {
-        "as big as a rat",
-        "as big as a spriggan",
-        "as big as a kobold",
+        "tiny",
+        "little",
+        "small",
         NULL,     // don't display anything for 'medium'
-        "as big as an ogre",
-        "as big as a hydra",
-        "as big as a giant",
-        "as big as a dragon",
+        "large",
+        "big",
+        "giant",
+        "huge",
     };
 
     const char *mimic_sizes[6]= {
@@ -3891,11 +3937,6 @@ const char *divine_title[NUM_GODS][8] =
     // Ashenzari -- divination theme
     {"Star-crossed",       "Cursed",                "Initiated",                "Seer",
      "Soothsayer",         "Oracle",                "Illuminatus",              "Omniscient"},
-#if 0
-    // blue_anna's Romanian variant for Ashenzari
-    {"Impostură",          "Impressionabil",        "Clar-văzător",             "Ghicitor",
-     "Medium",             "Proroc",                "Oracol",                   "Profet"},
-#endif
 };
 
 static int _piety_level()

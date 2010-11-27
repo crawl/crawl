@@ -27,6 +27,7 @@
 #include "place.h"
 #include "random.h"
 #include "spl-clouds.h"
+#include "spl-damage.h"
 #include "spl-transloc.h"
 #include "stash.h"
 #include "state.h"
@@ -545,7 +546,8 @@ static void _update_travel_cache(bool collect_travel_data,
             // and that we can descend that downstair and get back to where we
             // came from. This assumption is guaranteed false when climbing out
             // of one of the branches of Hell.
-            if (new_level_id != BRANCH_VESTIBULE_OF_HELL)
+            if (new_level_id != BRANCH_VESTIBULE_OF_HELL
+                || !is_hell_subbranch(old_level.branch))
             {
                 // Set the new level's stair, assuming arbitrarily that going
                 // downstairs will land you on the same upstairs you took to
@@ -1322,7 +1324,15 @@ void down_stairs(dungeon_feature_type force_stair,
     if (!force_dest)
         _update_travel_cache(collect_travel_data, old_level, stair_pos);
 
+    // Preventing obvious finding of stairs at your position.
+    env.map_shadow(you.pos()).flags |= MAP_SEEN_FLAG;
+
     viewwindow();
+
+    // Checking new squares for interesting features.
+    if (!you.running)
+        check_for_interesting_features();
+
     maybe_update_stashes();
 
     request_autopickup();
@@ -1335,6 +1345,8 @@ void down_stairs(dungeon_feature_type force_stair,
 
 void new_level(void)
 {
+    cancel_tornado();
+
     if (you.level_type == LEVEL_PORTAL_VAULT)
     {
         // This here because place_name can't find the name of a level that you

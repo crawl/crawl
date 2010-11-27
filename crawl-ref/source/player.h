@@ -122,6 +122,12 @@ public:
   FixedVector<unsigned int, NUM_SKILLS>   ct_skill_points;
   FixedVector<uint8_t, NUM_SKILLS>  skill_order;
 
+  //Ashenzari transfer knowledge
+  skill_type    transfer_from_skill;
+  skill_type    transfer_to_skill;
+  unsigned int  transfer_skill_points;
+  unsigned int  transfer_total_skill_points;
+
   skill_type sage_bonus_skill;  // If Sage is in effect, which skill it affects.
   int sage_bonus_degree;        // How much bonus XP to give in that skill.
 
@@ -322,6 +328,9 @@ public:
   // View code clears and needs new data in places where we can't announce the
   // portal right away; delay the announcements then.
   int seen_portals;
+
+  // Number of viewport refreshes.
+  unsigned int frame_no;
 
   // The save file itself.
   package *save;
@@ -551,6 +560,7 @@ public:
     int res_holy_energy(const actor *) const;
     int res_negative_energy() const;
     int res_torment() const;
+    int res_wind() const;
     int res_magic() const;
     bool confusable() const;
     bool slowable() const;
@@ -691,7 +701,7 @@ bool player_in_hell(void);
 
 bool berserk_check_wielded_weapon(void);
 int player_equip(equipment_type slot, int sub_type, bool calc_unid = true);
-int player_equip_ego_type(int slot, int sub_type);
+int player_equip_ego_type(int slot, int sub_type, bool calc_unid = true);
 bool player_equip_unrand(int unrand_index);
 bool player_can_hit_monster(const monster* mon);
 
@@ -762,6 +772,7 @@ int player_res_steam(bool calc_unid = true, bool temp = true,
 
 int player_res_poison(bool calc_unid = true, bool temp = true,
                       bool items = true);
+int player_res_magic(bool calc_unid = true, bool temp = true);
 
 bool player_control_teleport(bool calc_unid = true, bool temp = true,
                              bool items = true);

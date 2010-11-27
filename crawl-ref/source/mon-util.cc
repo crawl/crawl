@@ -1363,25 +1363,29 @@ flight_type mons_class_flies(int mc)
     return (me ? me->fly : FL_NONE);
 }
 
-flight_type mons_flies(const monster* mon, bool randarts)
+flight_type mons_flies(const monster* mon, bool temp)
 {
+    flight_type ret;
     // For dancing weapons, this function can get called before their
     // ghost_demon is created, so check for a NULL ghost. -cao
     if (mons_is_ghost_demon(mon->type) && mon->ghost.get())
-        return (mon->ghost->fly);
-
-    flight_type ret = mons_class_flies(mons_base_type(mon));
+        ret = mon->ghost->fly;
+    else
+        ret = mons_class_flies(mons_base_type(mon));
 
     // Handle the case where the zombified base monster can't fly, but
     // the zombified monster can (e.g. spectral things).
     if (ret == FL_NONE && mons_is_zombified(mon))
         ret = mons_class_flies(mon->type);
 
-    if (randarts && ret == FL_NONE
+    if (temp && ret == FL_NONE
         && scan_mon_inv_randarts(mon, ARTP_LEVITATE) > 0)
     {
         ret = FL_LEVITATE;
     }
+
+    if (temp && ret == FL_NONE && mon->has_ench(ENCH_LEVITATION))
+        ret = FL_LEVITATE;
 
     return (ret);
 }
@@ -1404,6 +1408,20 @@ bool mons_class_flattens_trees(int mc)
 bool mons_flattens_trees(const monster* mon)
 {
     return (mons_class_flattens_trees(mons_base_type(mon)));
+}
+
+int mons_class_res_wind(int mc)
+{
+    // Lightning goes well with storms.
+    if (mc == MONS_AIR_ELEMENTAL || mc == MONS_BALL_LIGHTNING)
+        return 1;
+
+    // Flyers are not immune due to buffeting -- and for airstrike, even
+    // specially vulnerable.
+    // Smoky humanoids may have problems staying together.
+    // Insubstantial wisps are a toss-up between being immune and immediately
+    // fatally dispersing.
+    return 0;
 }
 
 bool mons_class_wall_shielded(int mc)
@@ -3532,6 +3550,7 @@ mon_inv_type item_to_mslot(const item_def &item)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
+    case OBJ_STAVES:
         return MSLOT_WEAPON;
     case OBJ_MISSILES:
         return MSLOT_MISSILE;

@@ -255,6 +255,15 @@ int get_spell_slot_by_letter(char letter)
     return (you.spell_letter_table[index]);
 }
 
+int get_spell_slot(spell_type spell)
+{
+    for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
+        if (you.spells[i] == spell)
+            return i;
+
+    return -1;
+}
+
 spell_type get_spell_by_letter(char letter)
 {
     ASSERT(isaalpha(letter));
@@ -313,22 +322,11 @@ bool del_spell_from_memory_by_slot(int slot)
 
 bool del_spell_from_memory(spell_type spell)
 {
-    int i,j;
-
-    for (i = 0; i < you.spell_no; i++)
-        if (you.spells[i] == spell)
-        {
-            you.spells[i] = SPELL_NO_SPELL;
-            break;
-        }
-
-    for (j = 0; j < 52; j++)
-        if (you.spell_letter_table[j] == i)
-            you.spell_letter_table[j] = -1;
-
-    you.spell_no--;
-
-    return (true);
+    int i = get_spell_slot(spell);
+    if (i == -1)
+        return false;
+    else
+        return del_spell_from_memory_by_slot(i);
 }
 
 int spell_hunger(spell_type which_spell, bool rod)
@@ -1204,8 +1202,7 @@ bool spell_is_useless(spell_type spell, bool transient)
         break;
     case SPELL_LEVITATION:
     case SPELL_FLY:
-        if (you.mutation[MUT_BIG_WINGS] >= 1
-            || you.species == SP_KENKU && you.experience_level >= 5)
+        if (you.species == SP_KENKU && you.experience_level >= 15)
         {
             return (true);
         }

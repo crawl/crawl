@@ -106,6 +106,7 @@
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-clouds.h"
+#include "spl-damage.h"
 #include "spl-goditem.h"
 #include "spl-other.h"
 #include "spl-selfench.h"
@@ -477,71 +478,32 @@ static void _announce_goal_message()
 
 static void _god_greeting_message(bool game_start)
 {
-    switch (you.religion)
-    {
-    case GOD_ZIN:
-        simple_god_message(" says: Spread the light, my child.");
-        break;
-    case GOD_SHINING_ONE:
-        simple_god_message(" says: Lead the forces of light to victory!");
-        break;
-    case GOD_KIKUBAAQUDGHA:
-        simple_god_message(" says: Spread unending torment and darkness!");
-        break;
-    case GOD_YREDELEMNUL:
-        simple_god_message(" says: Carry the black torch! Rouse the idle dead!");
-        break;
-    case GOD_NEMELEX_XOBEH:
-        simple_god_message(" says: It's all in the cards!");
-        break;
-    case GOD_XOM:
-        if (game_start)
-            simple_god_message(" says: A new plaything!");
-        break;
-    case GOD_VEHUMET:
-        simple_god_message(" says: Let it end in hellfire!");
-        break;
-    case GOD_OKAWARU:
-        simple_god_message(" says: Bring me glory in combat!");
-        break;
-    case GOD_MAKHLEB:
-        god_speaks(you.religion, "Blood and souls for Makhleb!");
-        break;
-    case GOD_SIF_MUNA:
-        simple_god_message(" whispers: I know many secrets...");
-        break;
-    case GOD_TROG:
-        simple_god_message(" says: Kill them all!");
-        break;
-    case GOD_ELYVILON:
-        simple_god_message(" says: Go forth and aid the weak!");
-        break;
-    case GOD_LUGONU:
-        simple_god_message(" says: Spread carnage and corruption!");
-        break;
-    case GOD_BEOGH:
-        simple_god_message(" says: Drown the unbelievers in a sea of blood!");
-        break;
-    case GOD_JIYVA:
-        god_speaks(you.religion, "Slime for the Slime God!");
-        break;
-    case GOD_FEDHAS:
-        simple_god_message(" says: Spread life and death.");
-        break;
-    case GOD_CHEIBRIADOS:
-        simple_god_message(" says: Take it easy.");
-        break;
-    case GOD_ASHENZARI:
-        simple_god_message(" says: Partake of my vision. Partake of my curse.");
-        break;
+    if (you.religion == GOD_NO_GOD)
+        return;
 
-    case GOD_NO_GOD:
-    case NUM_GODS:
-    case GOD_RANDOM:
-    case GOD_NAMELESS:
-    case GOD_VIABLE:
-        break;
+    std::string msg = god_name(you.religion);
+
+    if (you.religion == GOD_XOM)
+    {
+        if (game_start)
+            msg += " newgame";
+        else if (you.gift_timeout <= 1)
+            msg += " bored";
+        else
+            msg += " generic";
     }
+    else
+    {
+        if (player_under_penance())
+            msg += " penance";
+        else
+            msg += " welcome";
+    }
+
+    std::string result = getSpeakString(msg);
+
+    if(!result.empty())
+        god_speaks(you.religion, result.c_str());
 }
 
 static void _take_starting_note()
@@ -2505,6 +2467,14 @@ static void _decrement_durations()
 #endif
     }
 
+    // Should expire before levitation.
+    if (you.duration[DUR_TORNADO])
+    {
+        tornado_damage(std::min(delay, you.duration[DUR_TORNADO]));
+        _decrement_a_duration(DUR_TORNADO, delay,
+                              "The winds around you calm down.");
+    }
+
     if (you.duration[DUR_LEVITATION])
     {
         if (!you.permanent_levitation() && !you.permanent_flight())
@@ -2976,6 +2946,13 @@ void world_reacts()
         record_turn_timestamp();
         update_turn_count();
         msgwin_new_turn();
+        if (crawl_state.game_is_sprint()
+            && !(you.num_turns % 256)
+            && !you_are_delayed())
+        {
+            // Resting makes the saving quite random, but meh.
+            save_game(false);
+        }
     }
 }
 
@@ -4340,11 +4317,6 @@ static void _compile_time_asserts()
     COMPILE_CHECK(SK_UNARMED_COMBAT == 17       , c1);
     COMPILE_CHECK(SK_EVOCATIONS == 38           , c2);
     COMPILE_CHECK(SP_VAMPIRE == 30              , c3);
-#if TAG_MAJOR_VERSION == 31
-    COMPILE_CHECK(NUM_SPELLS == 226             , c6);
-#else
-    COMPILE_CHECK(NUM_SPELLS == 225             , c6);
-#endif
 
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
     COMPILE_CHECK(NUM_SPECIES < SP_UNKNOWN      , c7);

@@ -965,10 +965,17 @@ bool direction_chooser::move_is_ok() const
 {
     if (!moves.isCancel && moves.isTarget)
     {
-        if (!you.see_cell(target()))
+        if (!cell_see_cell(you.pos(), target(), LOS_DEFAULT))
         {
-            mpr("Sorry, you can't target what you can't see.",
-                MSGCH_EXAMINE_FILTER);
+            if (you.see_cell(target()))
+            {
+                ASSERT(you.xray_vision);
+                mpr("Your divination affects just sight, not spellcasting.",
+                    MSGCH_EXAMINE_FILTER);
+            }
+            else
+                mpr("Sorry, you can't target what you can't see.",
+                    MSGCH_EXAMINE_FILTER);
             return (false);
         }
 
@@ -2307,7 +2314,7 @@ static bool _find_monster(const coord_def& where, int mode, bool need_path,
     const monster* mon = monster_at(where);
 
     // No monster or outside LOS.
-    if (mon == NULL || !you.see_cell(where))
+    if (mon == NULL || !cell_see_cell(you.pos(), where, LOS_DEFAULT))
         return (false);
 
     // Monster in LOS but only via glass walls, so no direct path.

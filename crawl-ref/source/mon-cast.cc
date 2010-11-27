@@ -2246,6 +2246,9 @@ static bool _mons_drain_life(monster* mons, bool actual)
 
         if (ai->atype() == ACT_PLAYER)
         {
+            if (mons->wont_attack())
+                continue;
+
             if (actual)
                 ouch(hurted, mons->mindex(), KILLED_BY_BEAM, mons->name(DESC_NOCAP_A).c_str());
 
@@ -2256,6 +2259,9 @@ static bool _mons_drain_life(monster* mons, bool actual)
             monster* m = ai->as_monster();
 
             if (m == mons)
+                continue;
+
+            if (mons_atts_aligned(m->attitude, mons->attitude))
                 continue;
 
             if (actual)
@@ -2466,7 +2472,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SILENCE:
         mons->add_ench(ENCH_SILENCE);
         invalidate_agrid(true);
-        mpr("Everything around you gets eerily quiet.");
+        simple_monster_message(mons, "'s surroundings become eerily quiet.");
         return;
 
     case SPELL_CALL_TIDE:

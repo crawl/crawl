@@ -834,6 +834,19 @@ size_t strlcpy(char *dst, const char *src, size_t n)
 }
 
 #ifdef TARGET_OS_WINDOWS
+// FIXME: This function should detect if aero is running, but the DwmIsCompositionEnabled
+// function isn't included in msys, so I don't know how to do that. Instead, I just check
+// if we are running vista or higher. -rla
+bool _is_aero()
+{
+    OSVERSIONINFOEX osvi;
+    osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+    if (GetVersionEx((OSVERSIONINFO *) &osvi))
+        return (osvi.dwMajorVersion >= 6);
+    else
+        return false;
+}
+
 taskbar_pos get_taskbar_pos()
 {
     RECT rect;
@@ -874,11 +887,8 @@ int get_taskbar_size()
         else
             return 0;
 
-        OSVERSIONINFOEX osvi;
-        osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
-        if (GetVersionEx((OSVERSIONINFO *) &osvi))
-            if (osvi.dwMajorVersion >= 6 && osvi.dwMinorVersion >= 1)
-                size += 3; // Windows 7 taskbar behave strangely.
+        if (_is_aero())
+            size += 3; // Taskbar behave strangely when aero is active.
 
         return size;
     }

@@ -327,10 +327,6 @@
 #error You can use either REGEX_POSIX or REGEX_PCRE, or neither, but not both.
 #endif
 
-#if defined(UNICODE_GLYPHS) && !defined(UNICODE_LOCALE)
-#define UNICODE_LOCALE "en_US.UTF-8"
-#endif
-
 // =========================================================================
 //  Debugging Defines
 // =========================================================================

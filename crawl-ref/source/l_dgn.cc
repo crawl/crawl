@@ -2025,12 +2025,6 @@ LUAFN(_vp_level_number)
     PLUARET(number, vp.level_number)
 }
 
-LUAFN(_vp_rune_subst)
-{
-    VP(vp);
-    PLUARET(number, vp.rune_subst)
-}
-
 static const luaL_reg dgn_vaultplacement_ops[] =
 {
     { "pos", _vp_pos },
@@ -2039,7 +2033,6 @@ static const luaL_reg dgn_vaultplacement_ops[] =
     { "map", _vp_map },
     { "exits", _vp_exits },
     { "level_number", _vp_level_number },
-    { "rune_subst", _vp_rune_subst },
     { NULL, NULL }
 };
 

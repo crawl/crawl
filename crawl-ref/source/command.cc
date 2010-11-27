@@ -1901,15 +1901,15 @@ static int _keyhelp_keyfilter(int ch)
 class help_highlighter : public MenuHighlighter
 {
 public:
-    help_highlighter();
+    help_highlighter(std::string = "");
     int entry_colour(const MenuEntry *entry) const;
 private:
     text_pattern pattern;
     std::string get_species_key() const;
 };
 
-help_highlighter::help_highlighter()
-    : pattern(get_species_key())
+help_highlighter::help_highlighter(std::string highlight_string) :
+    pattern(highlight_string == "" ? get_species_key() : highlight_string)
 {
 }
 
@@ -1933,7 +1933,8 @@ std::string help_highlighter::get_species_key() const
 
 static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
                               bool with_manual, bool easy_exit = false,
-                              int hotkey = 0)
+                              int hotkey = 0,
+                              std::string highlight_string = "")
 {
     formatted_scroller cmd_help;
 
@@ -1957,7 +1958,7 @@ static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
 
     if (with_manual)
     {
-        cmd_help.set_highlighter(new help_highlighter);
+        cmd_help.set_highlighter(new help_highlighter(highlight_string));
         cmd_help.f_keyfilter = _keyhelp_keyfilter;
         column_composer cols(2, 40);
 
@@ -2587,7 +2588,8 @@ static void _add_formatted_hints_help(column_composer &cols)
             true, true, _cmdhelp_textfilter, 40);
 }
 
-void list_commands(int hotkey, bool do_redraw_screen)
+void list_commands(int hotkey, bool do_redraw_screen,
+                   std::string highlight_string)
 {
     // 2 columns, split at column 40.
     column_composer cols(2, 41);
@@ -2600,7 +2602,8 @@ void list_commands(int hotkey, bool do_redraw_screen)
     else
         _add_formatted_keyhelp(cols);
 
-    _show_keyhelp_menu(cols.formatted_lines(), true, false, hotkey);
+    _show_keyhelp_menu(cols.formatted_lines(), true, false, hotkey,
+                       highlight_string);
 
     if (do_redraw_screen)
     {

@@ -38,6 +38,7 @@
 #include "showsymb.h"
 #include "skills2.h"
 #include "spl-book.h"
+#include "spl-summoning.h"
 #include "state.h"
 #include "stuff.h"
 #include "env.h"
@@ -45,6 +46,9 @@
 
 
 id_arr type_ids;
+// Additional information, about tried unidentified items.
+// (e.g. name of item, for scrolls of RC, ID, EA)
+CrawlHashTable type_ids_props;
 
 static bool _is_random_name_space(char let);
 static bool _is_random_name_vowel(char let);
@@ -88,7 +92,7 @@ std::string item_def::name(description_level_type descrip,
     std::ostringstream buff;
 
     const std::string auxname = this->name_aux(descrip, terse, ident,
-                                               ignore_flags);
+                                               with_inscription, ignore_flags);
 
     const bool startvowel     = is_vowel(auxname[0]);
 
@@ -276,7 +280,7 @@ std::string item_def::name(description_level_type descrip,
         }
     }
 
-    if (descrip != DESC_BASENAME)
+    if (descrip != DESC_BASENAME && descrip != DESC_DBNAME && with_inscription)
     {
         const bool  tried  =  !ident && !equipped && item_type_tried(*this);
         std::string tried_str;
@@ -288,7 +292,27 @@ std::string item_def::name(description_level_type descrip,
             if (id_type == ID_MON_TRIED_TYPE)
                 tried_str = "tried by monster";
             else if (id_type == ID_TRIED_ITEM_TYPE)
+            {
                 tried_str = "tried on item";
+                if (base_type == OBJ_SCROLLS)
+                {
+                    if (sub_type == SCR_IDENTIFY
+                        && type_ids_props.exists("SCR_ID"))
+                    {
+                        tried_str = "tried on " + type_ids_props["SCR_ID"].get_string();
+                    }
+                    else if (sub_type == SCR_RECHARGING
+                             && type_ids_props.exists("SCR_RC"))
+                    {
+                        tried_str = "tried on " + type_ids_props["SCR_RC"].get_string();
+                    }
+                    else if (sub_type == SCR_ENCHANT_ARMOUR
+                             && type_ids_props.exists("SCR_EA"))
+                    {
+                        tried_str = "tried on " + type_ids_props["SCR_EA"].get_string();
+                    }
+                }
+            }
             else
                 tried_str = "tried";
         }
@@ -1179,7 +1203,7 @@ static void output_with_sign(std::ostream& os, int val)
 // Note that "terse" is only currently used for the "in hand" listing on
 // the game screen.
 std::string item_def::name_aux(description_level_type desc,
-                               bool terse, bool ident,
+                               bool terse, bool ident, bool with_inscription,
                                iflags_t ignore_flags) const
 {
     // Shortcuts
@@ -1497,7 +1521,7 @@ std::string item_def::name_aux(description_level_type desc,
 
         if (know_pluses)
             buff << " (" << it_plus << ")";
-        else if (!dbname)
+        else if (!dbname && with_inscription)
         {
             if (item_plus2 == ZAPCOUNT_EMPTY)
                 buff << " {empty}";
@@ -2043,6 +2067,11 @@ bool item_type_tried(const item_def& item)
 id_arr& get_typeid_array()
 {
     return type_ids;
+}
+
+CrawlHashTable& get_type_id_props()
+{
+    return type_ids_props;
 }
 
 void set_ident_type(item_def &item, item_type_id_state_type setting,
@@ -2817,11 +2846,20 @@ bool is_useless_item(const item_def &item, bool temp)
         return (false);
 
     case OBJ_MISSILES:
-        if (you.species == SP_CAT)
+        if ((you.has_spell(SPELL_STICKS_TO_SNAKES)
+             || !you.num_turns
+                && you.char_class == JOB_TRANSMUTER)
+            && item_is_snakable(item)
+            || you.has_spell(SPELL_SANDBLAST)
+               && (item.sub_type == MI_STONE
+                || item.sub_type == MI_LARGE_ROCK))
         {
-            return (item.sub_type != MI_STONE && item.sub_type != MI_LARGE_ROCK)
-                   || !you.has_spell(SPELL_SANDBLAST);
+            return false;
         }
+
+        // Save for the above spells, all missiles are useless for felids.
+        if (you.species == SP_CAT)
+            return true;
 
         // These are the same checks as in is_throwable(), except that
         // we don't take launchers into account.
@@ -2899,13 +2937,17 @@ bool is_useless_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case POT_BERSERK_RAGE:
+            return (you.is_undead
+                        && (you.species != SP_VAMPIRE
+                            || temp && you.hunger_state <= HS_SATIATED));
+
         case POT_CURE_MUTATION:
         case POT_GAIN_STRENGTH:
         case POT_GAIN_INTELLIGENCE:
         case POT_GAIN_DEXTERITY:
-            return (you.species == SP_GHOUL
-                    || temp && you.species == SP_VAMPIRE
-                            && you.hunger_state < HS_SATIATED);
+            return (you.is_undead
+                        && (you.species != SP_VAMPIRE
+                            || temp && you.hunger_state < HS_SATIATED));
 
         case POT_LEVITATION:
             return (you.permanent_levitation() || you.permanent_flight());

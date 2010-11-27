@@ -138,9 +138,13 @@ public:
         return (selected_qty > 0 && quantity);
     }
 
+    // -1: Invert
+    // -2: Select all
     virtual void select(int qty = -1)
     {
-        if (selected())
+        if (qty == -2)
+            selected_qty = quantity;
+        else if (selected())
             selected_qty = 0;
         else if (quantity)
             selected_qty = (qty == -1? quantity : qty);

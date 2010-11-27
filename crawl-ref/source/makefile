@@ -118,6 +118,9 @@ STRIP = strip -s
 WINDRES = windres
 CHMOD = chmod 2>/dev/null
 CHOWN = chown 2>/dev/null
+PNGCRUSH = $(COPY)
+PNGCRUSH_LABEL = COPY
+ADVPNG = advpng -z -4
 
 export AR
 export RANLIB
@@ -703,12 +706,6 @@ USE_UNICODE = YesPlease
 endif
 endif
 
-# If you have USE_UNICODE set, and have a preferred Unicode
-# (UTF-8) locale you want Crawl to use, you can set it here. The
-# default is en_US.UTF-8. If you'd prefer that Crawl use the locale
-# as set in your environment LC_* variables, use UNICODE_LOCALE = .
-UNICODE_LOCALE =
-
 INCLUDES_L += -I$(NC_INCLUDE)
 
 ifdef USE_UNICODE
@@ -718,14 +715,6 @@ ifdef USE_UNICODE
 # separate libncursesw; in that case, change this line accordingly.
 NC_LIB  = ncursesw
 CFOTHERS_L += -DUNICODE_GLYPHS
-
-ifneq ($(strip $(UNICODE_LOCALE)),)
-ifneq ($(strip $(UNICODE_LOCALE)),.)
-CFOTHERS_L += -DUNICODE_LOCALE=\"$(strip $(UNICODE_LOCALE))\"
-else
-CFOTHERS_L += -DUNICODE_LOCALE=\"\"
-endif
-endif
 
 # The standard ncurses library also supports Unicode on Mac OS/Darwin.
 ifdef LIBNCURSES_IS_UNICODE
@@ -791,6 +780,8 @@ ifndef V
         QUIET_COPY     = @echo '   ' COPY $@;
         QUIET_DEPEND   = @echo '   ' DEPEND $@;
         QUIET_WINDRES  = @echo '   ' WINDRES $@;
+        QUIET_PNGCRUSH = @echo '   ' $(PNGCRUSH_LABEL) $@;
+        QUIET_ADVPNG   = @echo '   ' ADVPNG $@;
         export V
 endif
 endif
@@ -808,6 +799,17 @@ ORIGTILEFILES = $(TILEFILES:%=$(RLTILES)/%)
 DESTTILEFILES = $(TILEFILES:%=dat/tiles/%)
 
 OBJECTS += $(TILEDEFOBJS)
+
+ifndef NO_OPTIMIZE
+  ifneq (,$(shell which advpng))
+    USE_ADVPNG = y
+  else
+    ifneq (,$(shell which pngcrush))
+      PNGCRUSH = pngcrush -q -m 113
+      PNGCRUSH_LABEL = PNGCRUSH
+    endif
+  endif
+endif
 endif
 
 ifdef BUILD_PCRE
@@ -874,8 +876,8 @@ SRC_PKG_TAR   := $(PKG_SRC_DIR).tar.bz2
 SRC_PKG_TAR_NODEPS := $(PKG_SRC_DIR)-nodeps.tar.bz2
 SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 
-.PHONY: all test install clean clean-contrib distclean debug profile wizard package-source source \
-        build-windows package-windows
+.PHONY: all test install clean clean-contrib clean-rltiles distclean debug \
+        profile wizard package-source source build-windows package-windows
 
 all: $(GENERATED_FILES) $(GAME) $(GENERATED_DOCS)
 
@@ -1050,9 +1052,8 @@ ifeq ($(USE_DGAMELAUNCH),)
 endif
 endif
 
-clean:
+clean: clean-rltiles
 	+$(MAKE) -C $(UTIL) clean
-	+$(MAKE) -C $(RLTILES) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(OBJECTS) $(OBJECTS:.o=.d) $(YACC_OBJECTS:.o=.d) *.ixx  \
 	    build.h compflag.h .contrib-libs .cflags
@@ -1149,7 +1150,10 @@ $(TILEDEFHDRS): rltile-build
 $(ORIGTILEFILES): rltile-build
 
 dat/tiles/%.png: $(RLTILES)/%.png
-	$(QUIET_COPY)$(COPY) $< $@
+	$(QUIET_PNGCRUSH)$(PNGCRUSH) $< $@
+ifdef USE_ADVPNG
+	$(QUIET_ADVPNG)$(ADVPNG) $@
+endif
 
 clean-rltiles:
 	$(RM) $(DESTTILEFILES)

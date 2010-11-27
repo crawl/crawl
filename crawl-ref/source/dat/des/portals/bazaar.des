@@ -15,6 +15,11 @@
 
 lua {{
 
+function place_bazaar_portal(e)
+  e.kfeat("O = enter_portal_vault")
+  e.lua_marker('O', bazaar_portal())
+end
+
 function bazaar_portal()
   local desc_long =
 "Aside from the vendors who've set up their stores at various places in the " ..
@@ -110,7 +115,7 @@ default-depth: 10-27
 
 NAME:   bzr_entry_dummy
 TAGS:   bzr_entry transparent trowel_portal zotdef_bazaar allow_dup
-MARKER: O = lua:bazaar_portal()
+: place_bazaar_portal(_G)
 MAP
 O
 ENDMAP
@@ -120,7 +125,7 @@ ENDMAP
 NAME:    bzr_entry_001
 TAGS:    bzr_entry no_pool_fixup allow_dup
 SHUFFLE: wwl
-MARKER:  O = lua:bazaar_portal()
+: place_bazaar_portal(_G)
 MAP
  www
 w.w.w
@@ -134,7 +139,7 @@ ENDMAP
 NAME:   bzr_entry_002
 TAGS:   bzr_entry allow_dup
 SUBST:  $=$.
-MARKER: O = lua:bazaar_portal()
+: place_bazaar_portal(_G)
 MAP
 xx.xx
 x$$$x
@@ -150,7 +155,7 @@ TAGS:    bzr_entry allow_dup
 MONS:    human, orc, goblin, kobold
 SUBST:   . = .:150 1
 SHUFFLE: 1234
-MARKER:  O = lua:bazaar_portal()
+: place_bazaar_portal(_G)
 MAP
  .....
 .......
@@ -163,7 +168,7 @@ ENDMAP
 # Safe
 NAME:   bzr_entry_004
 TAGS:   bzr_entry allow_dup
-MARKER: O = lua:bazaar_portal()
+: place_bazaar_portal(_G)
 MAP
  xxxxx
 xx...xx
@@ -177,7 +182,7 @@ ENDMAP
 NAME:    bzr_entry_005
 TAGS:    bzr_entry allow_dup
 SHUFFLE: wwlW
-MARKER:  O = lua:bazaar_portal()
+: place_bazaar_portal(_G)
 MAP
  wwwww
 wwwwwww
@@ -193,7 +198,7 @@ TAGS:    bzr_entry allow_dup
 ORIENT:  float
 SHUFFLE: XU, TUV
 SUBST:   X=.
-MARKER:  O = lua:bazaar_portal()
+: place_bazaar_portal(_G)
 MAP
    xxx
   xxOxx
@@ -211,7 +216,7 @@ SHUFFLE: XY
 SUBST:   a = W .
 SUBST:   X : T 1
 SUBST:   Y = .
-MARKER:  O = lua:bazaar_portal()
+: place_bazaar_portal(_G)
 MAP
      waWa.
    wwwWa.X.Y.
@@ -226,7 +231,7 @@ NAME:   statue_bzr
 TAGS:   bzr_entry
 SUBST:  G = G111
 MONS:   orange crystal statue / silver statue / ice statue
-MARKER: O = lua:bazaar_portal()
+: place_bazaar_portal(_G)
 MAP
  @
 cGc
@@ -241,7 +246,7 @@ TAGS:   bzr_entry
 MARKER: W = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 1, pow_max = 5, delay_min = 20, delay_max = 30, \
              size = 1, walk_dist = 3, spread_rate= 20 }
-MARKER: O = lua:bazaar_portal()
+: place_bazaar_portal(_G)
 MAP
   W
  www
@@ -257,7 +262,7 @@ TAGS:   bzr_entry
 MARKER: O = lua:fog_machine { cloud_type= "thin mist", \
             pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
             size = 2, walk_dist = 2, spread_rate= 35 }
-MARKER: O = lua:bazaar_portal()
+: place_bazaar_portal(_G)
 MAP
 O
 ENDMAP
@@ -271,7 +276,7 @@ MARKER:  * = lua:fog_machine { cloud_type = "flame", \
              pow_min = 2, pow_max = 4, delay_min = 5, delay_max = 10, \
              size = 1, walk_dist = 0, spread_rate= 0 }
 SUBST:   * = .
-MARKER:  O = lua:bazaar_portal()
+: place_bazaar_portal(_G)
 MAP
 c.@.$.@.c
 c.*...*.c
