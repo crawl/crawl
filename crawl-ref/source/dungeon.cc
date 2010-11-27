@@ -174,7 +174,7 @@ static bool _plan_2(int level_number);
 static bool _plan_3(int level_number);
 static bool _plan_4(uint8_t forbid_x1, uint8_t forbid_y1, uint8_t forbid_x2,
                     uint8_t forbid_y2, dungeon_feature_type force_wall);
-static bool _plan_5();
+static bool _plan_5(int level_number);
 static bool _plan_6(int level_number);
 static void _portal_vault_level(int level_number);
 static void _labyrinth_level(int level_number);
@@ -6623,7 +6623,7 @@ static void _plan_main(int level_number, int force_plan)
                  (force_plan == 2) ? _plan_2(level_number) :
                  (force_plan == 3) ? _plan_3(level_number) :
                  (force_plan == 4) ? _plan_4(0, 0, 0, 0, NUM_FEATURES) :
-                 (force_plan == 5) ? (one_chance_in(9) ? _plan_5()
+                 (force_plan == 5) ? (one_chance_in(9) ? _plan_5(level_number)
                                                        : _plan_3(level_number)) :
                  (force_plan == 6) ? _plan_6(level_number)
                                    : _plan_3(level_number));
@@ -6795,22 +6795,16 @@ static bool _plan_4(uint8_t forbid_x1, uint8_t forbid_y1, uint8_t forbid_x2,
     return true;
 }
 
-static bool _plan_5()
+static bool _plan_5(int level_number)
 {
     env.level_build_method += " plan_5";
     env.level_layout_type   = "misc"; // XXX: What type of layout is this?
 
-    // value range of [5,24] {dlb}
-    for (unsigned int i = 5 + random2(20); i > 0; i--)
-    {
-        join_the_dots(
-            coord_def(random2(GXM - 20) + 10, random2(GYM - 20) + 10),
-            coord_def(random2(GXM - 20) + 10, random2(GYM - 20) + 10),
-            MMT_VAULT);
-    }
+    const map_def *vault = find_map_by_name("layout_misc");
+    ASSERT(vault);
 
-    if (!one_chance_in(4))
-        spotty_level(true, 100, coinflip());
+    bool success = _build_primary_vault(level_number, vault);
+    dgn_ensure_vault_placed(success, false);
 
     return true;
 }
