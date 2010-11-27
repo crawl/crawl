@@ -6684,7 +6684,7 @@ static bool _plan_3(int level_number)
     bool success = _build_primary_vault(level_number, vault);
     dgn_ensure_vault_placed(success, false);
 
-    return true;
+    return false;
 }
 
 // A more chaotic version of city level.
@@ -6806,7 +6806,7 @@ static bool _plan_5(int level_number)
     bool success = _build_primary_vault(level_number, vault);
     dgn_ensure_vault_placed(success, false);
 
-    return true;
+    return false;
 }
 
 // Octagon with pillars in middle.
