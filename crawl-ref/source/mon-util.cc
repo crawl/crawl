@@ -2808,11 +2808,9 @@ static bool _foe_should_res_negative_energy(const actor* foe)
         // Demonspawn do not appear immune.
         if (holiness == MH_DEMONIC)
             return (false);
-
-        return (true);
     }
-    else
-        return (holiness != MH_NATURAL);
+
+    return (holiness != MH_NATURAL);
 }
 
 // Checks to see if a particular spell is worth casting in the first place.
