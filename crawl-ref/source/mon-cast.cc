@@ -2231,11 +2231,8 @@ static bool _mons_drain_life(monster* mons, bool actual)
 
     for (actor_iterator ai(mons->get_los()); ai; ++ai)
     {
-        if (ai->holiness() != MH_NATURAL
-            || ai->res_negative_energy())
-        {
+        if (ai->res_negative_energy())
             continue;
-        }
 
         if (ai->atype() == ACT_PLAYER)
         {
