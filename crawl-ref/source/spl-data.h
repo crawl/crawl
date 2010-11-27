@@ -1431,7 +1431,7 @@ struct spell_desc
      LOS_RADIUS, LOS_RADIUS,
      0,
      NULL,
-     false,
+     true,
      false
 },
 
