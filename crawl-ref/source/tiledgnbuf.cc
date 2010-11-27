@@ -529,6 +529,9 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         m_buf_main.add(TILE_SOMETHING_UNDER, x, y);
 
     int status_shift = 0;
+    if (fg & TILE_FLAG_MIMIC)
+        m_buf_main.add(TILE_MIMIC, x, y);
+
     if (fg & TILE_FLAG_BERSERK)
     {
         m_buf_main.add(TILE_BERSERK, x, y);
@@ -536,21 +539,25 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
     }
 
     // Pet mark
-    if (fg & TILE_FLAG_PET)
+    if (fg & TILE_FLAG_ATT_MASK)
     {
-        m_buf_main.add(TILE_HEART, x, y);
-        status_shift += 10;
-    }
-    else if (fg & TILE_FLAG_GD_NEUTRAL)
-    {
-        m_buf_main.add(TILE_GOOD_NEUTRAL, x, y);
-        status_shift += 8;
-    }
-    else if (fg & TILE_FLAG_NEUTRAL)
-    {
-        m_buf_main.add(TILE_NEUTRAL, x, y);
-        status_shift += 8;
-    }
+        const tileidx_t att_flag = fg & TILE_FLAG_ATT_MASK;
+		if (att_flag == TILE_FLAG_PET)
+		{
+			m_buf_main.add(TILE_HEART, x, y);
+			status_shift += 10;
+		}
+		else if (att_flag == TILE_FLAG_GD_NEUTRAL)
+		{
+			m_buf_main.add(TILE_GOOD_NEUTRAL, x, y);
+			status_shift += 8;
+		}
+		else if (att_flag == TILE_FLAG_NEUTRAL)
+		{
+			m_buf_main.add(TILE_NEUTRAL, x, y);
+			status_shift += 8;
+		}
+	}
     else if (fg & TILE_FLAG_STAB)
     {
         m_buf_main.add(TILE_STAB_BRAND, x, y);

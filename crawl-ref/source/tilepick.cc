@@ -1798,7 +1798,7 @@ static tileidx_t _tileidx_monster_no_props(const monster* mon)
             {
                 tileidx_t t = tileidx_item(get_mimic_item(mon));
                 if (mons_is_known_mimic(mon))
-                    t |= TILE_FLAG_ANIM_WEP;
+                    t |= TILE_FLAG_MIMIC;
                 return t;
             }
 
