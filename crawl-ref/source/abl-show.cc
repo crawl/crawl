@@ -503,13 +503,13 @@ trap_type trap_for_ability(const ability_def& abil)
 // than the last one, after the first two.
 int xp_cost(const ability_def& abil)
 {
-    int cost=abil.xp_cost;
-    int scale10=0;        // number of times to scale up by 10%
-    int scale20=0;        // number of times to scale up by 20%
+    int cost = abil.xp_cost;
+    int scale10 = 0;        // number of times to scale up by 10%
+    int scale20 = 0;        // number of times to scale up by 20%
     int num;
     switch(abil.ability)
     {
-        default: cost=abil.xp_cost; break;
+        default: cost = abil.xp_cost; break;
 
         // Monster type 1: reasonably generous
         case ABIL_MAKE_OKLOB_SAPLING:
@@ -517,30 +517,31 @@ int xp_cost(const ability_def& abil)
         case ABIL_MAKE_OKLOB_CIRCLE:
         case ABIL_MAKE_BURNING_BUSH:
         case ABIL_MAKE_ELECTRIC_EEL:
-            num=count_relevant_monsters(abil);
+            num = count_relevant_monsters(abil);
             // special case for oklob circles
-            if (abil.ability==ABIL_MAKE_OKLOB_CIRCLE) num/=3;
-            num-=2;        // first two are base cost
-            num=std::max(num,0);
-            scale10=std::min(num,10);        // next 10 at 10% increment
-            scale20=num-scale10;                // after that at 20% increment
+            if (abil.ability == ABIL_MAKE_OKLOB_CIRCLE)
+                num /= 3;
+            num -= 2;        // first two are base cost
+            num = std::max(num, 0);
+            scale10 = std::min(num,10);        // next 10 at 10% increment
+            scale20 = num - scale10;           // after that at 20% increment
             break;
 
         // Monster type 2: less generous
         case ABIL_MAKE_ICE_STATUE:
         case ABIL_MAKE_OCS:
-            num=count_relevant_monsters(abil);
-            num-=2; // first two are base cost
-            scale20=std::max(num,0);        // after first two, 20% increment
+            num = count_relevant_monsters(abil);
+            num -= 2; // first two are base cost
+            scale20 = std::max(num, 0);        // after first two, 20% increment
 
         // Monster type 3: least generous
         case ABIL_MAKE_SILVER_STATUE:
         case ABIL_MAKE_CURSE_SKULL:
-            scale20=count_relevant_monsters(abil);        // scale immediately
+            scale20 = count_relevant_monsters(abil);        // scale immediately
 
         // Simple Traps
         case ABIL_MAKE_DART_TRAP:
-            scale10 = std::max(count_traps(TRAP_DART)-10,0);   // First 10 at base cost
+            scale10 = std::max(count_traps(TRAP_DART)-10, 0); // First 10 at base cost
             break;
 
         case ABIL_MAKE_ARROW_TRAP:
@@ -550,26 +551,26 @@ int xp_cost(const ability_def& abil)
         case ABIL_MAKE_NEEDLE_TRAP:
         case ABIL_MAKE_NET_TRAP:
         case ABIL_MAKE_ALARM_TRAP:
-            num=count_traps(trap_for_ability(abil));
-            scale10 = std::max(num-5,0);   // First 5 at base cost
+            num = count_traps(trap_for_ability(abil));
+            scale10 = std::max(num-5, 0);   // First 5 at base cost
             break;
 
         case ABIL_MAKE_TELEPORT_TRAP:
-            scale20=count_traps(TRAP_TELEPORT);
+            scale20 = count_traps(TRAP_TELEPORT);
             break;
 
         case ABIL_MAKE_BLADE_TRAP:
-            scale10=count_traps(TRAP_BLADE); // Max of 18-ish at base cost 3000
+            scale10 = count_traps(TRAP_BLADE); // Max of 18-ish at base cost 3000
             break;
 
     }
-    for (; scale10>0; scale10--)
+    for (; scale10 > 0; scale10--)
     {
-        cost = (cost*11)/10;        // +10%
+        cost = (cost * 11) / 10;        // +10%
     }
-    for (; scale20>0; scale20--)
+    for (; scale20 > 0; scale20--)
     {
-        cost = (cost*6)/5;        // +20%
+        cost = (cost * 6) / 5;        // +20%
     }
 
     return cost;
@@ -1737,22 +1738,25 @@ static bool _do_ability(const ability_def& abil)
                mgen_data(MONS_GIANT_SPORE, BEH_FRIENDLY, &you, 6, 0,
                          you.pos(), you.pet_target,
                          0)) != -1)
-            mpr( "You create a living grenade." );
+        {
+            mpr("You create a living grenade.");
+        }
         if (create_monster(
                mgen_data(MONS_GIANT_SPORE, BEH_FRIENDLY, &you, 6, 0,
                          you.pos(), you.pet_target,
                          0)) != -1)
-            mpr( "You create a living grenade." );
+        {
+            mpr("You create a living grenade.");
+        }
         break;
 
     case ABIL_REMOVE_CURSE:
         remove_curse();
         lose_stat(STAT_RANDOM, (1 + random2avg(4, 2)), false, "zot ability");
-
         break;
 
     case ABIL_MAKE_SAGE:
-        _sage_card( 20, DECK_RARITY_RARE);
+        _sage_card(20, DECK_RARITY_RARE);
         break;
 
     case ABIL_MUMMY_RESTORATION:
@@ -2608,23 +2612,28 @@ static void _pay_ability_costs(const ability_def& abil, int xpcost)
 
     if (abil.flags & ABFLAG_ENCH_MISCAST)
     {
-        MiscastEffect(&you, NON_MONSTER, SPTYP_ENCHANTMENT, 10, 90, "power out of control", NH_DEFAULT);
+        MiscastEffect(&you, NON_MONSTER, SPTYP_ENCHANTMENT, 10, 90,
+                      "power out of control", NH_DEFAULT);
     }
     if (abil.flags & ABFLAG_NECRO_MISCAST)
     {
-        MiscastEffect(&you, NON_MONSTER, SPTYP_NECROMANCY, 10, 90, "power out of control");
+        MiscastEffect(&you, NON_MONSTER, SPTYP_NECROMANCY, 10, 90,
+                      "power out of control");
     }
     if (abil.flags & ABFLAG_NECRO_MISCAST_MINOR)
     {
-        MiscastEffect(&you, NON_MONSTER, SPTYP_NECROMANCY, 5, 90, "power out of control");
+        MiscastEffect(&you, NON_MONSTER, SPTYP_NECROMANCY, 5, 90,
+                      "power out of control");
     }
     if (abil.flags & ABFLAG_TLOC_MISCAST)
     {
-        MiscastEffect(&you, NON_MONSTER, SPTYP_TRANSLOCATION, 10, 90, "power out of control");
+        MiscastEffect(&you, NON_MONSTER, SPTYP_TRANSLOCATION, 10, 90,
+                      "power out of control");
     }
     if (abil.flags & ABFLAG_TMIG_MISCAST)
     {
-        MiscastEffect(&you, NON_MONSTER, SPTYP_TRANSMUTATION, 10, 90, "power out of control");
+        MiscastEffect(&you, NON_MONSTER, SPTYP_TRANSMUTATION, 10, 90,
+                      "power out of control");
     }
     if (abil.flags & ABFLAG_LEVEL_DRAIN)
     {
