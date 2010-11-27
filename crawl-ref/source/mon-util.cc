@@ -2811,7 +2811,6 @@ static bool _foe_should_res_negative_energy(const actor* foe)
 
         return (true);
     }
-    // The foe is a monster.
     else
         return (holiness != MH_NATURAL);
 }
