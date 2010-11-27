@@ -170,6 +170,10 @@ Recall Undead Slaves
 
 Recall your undead followers from anywhere on the level to your immediate surroundings.
 %%%%
+Injury Mirror
+
+Hurt attacking monsters by reflecting damage they do to you back at them.
+%%%%
 Animate Dead ability
 
 Reanimate all corpses and skeletons in your vicinity as followers. Note that zombies and skeletons cannot leave the level they were created on.
