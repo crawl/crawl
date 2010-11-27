@@ -581,6 +581,11 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
         beam.is_beam    = true;
         break;
 
+    case SPELL_AGONY:
+        beam.flavour    = BEAM_PAIN;
+        beam.is_beam    = true;
+        break;
+
     case SPELL_STICKY_FLAME_SPLASH:
     case SPELL_STICKY_FLAME:
         beam.colour   = RED;
@@ -876,6 +881,9 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
         beam.glyph = 0;
         beam.name = "";
     }
+
+    if (spell_cast == SPELL_AGONY)
+        beam.name = "agony";
 
     if (spell_cast == SPELL_DRACONIAN_BREATH)
         _scale_draconian_breath(beam, drac_type);
