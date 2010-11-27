@@ -109,6 +109,8 @@ static uint64_t ench_to_mb(const monster& mons, enchant_type ench)
         return ULL1 << MB_REGENERATION;
     case ENCH_RAISED_MR:
         return ULL1 << MB_RAISED_MR;
+    case ENCH_MIRROR_DAMAGE:
+        return ULL1 << MB_MIRROR_DAMAGE;
     case ENCH_FEAR_INSPIRING:
         return ULL1 << MB_FEAR_INSPIRING;
     case ENCH_WITHDRAWN:
