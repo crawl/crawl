@@ -1595,8 +1595,13 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             }
         }
         // Try to burn spellbooks: if nothing burns, pretend we didn't cast it.
+        // Friendly monsters don't burn spellbooks, for fear of harming the
+        // player or depriving the player of Trog piety.
         else if (spell_cast == SPELL_BURN_SPELLBOOK)
         {
+            if (mons->friendly())
+                return (false);
+
             if (!_mons_burn_spellbook(mons, false))
                 return (false);
         }
