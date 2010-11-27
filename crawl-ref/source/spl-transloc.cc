@@ -696,8 +696,8 @@ void you_teleport_now(bool allow_control, bool new_abyss_area, bool wizard_tele)
 int portal()
 {
     // Disabled completely in zotdef
-    if (!player_in_branch(BRANCH_MAIN_DUNGEON) 
-	|| crawl_state.game_is_zotdef())
+    if (!player_in_branch(BRANCH_MAIN_DUNGEON)
+        || crawl_state.game_is_zotdef())
     {
         mpr("This spell doesn't work here.");
         return (-1);
@@ -847,7 +847,7 @@ bool cast_apportation(int pow, const coord_def& where)
     if (crawl_state.game_is_zotdef() && item_is_orb(item))
     {
         mpr("You cannot apport the sacred Orb!");
-	return (false);
+        return (false);
     }
 
     // Protect the player from destroying the item.

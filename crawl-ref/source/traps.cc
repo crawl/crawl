@@ -408,8 +408,8 @@ static bool _find_other_passage_side(coord_def& to)
     }
 }
 
-// Returns a direction string from you.pos to the 
-// specified position. If fuzz is true, may be wrong. 
+// Returns a direction string from you.pos to the
+// specified position. If fuzz is true, may be wrong.
 // Returns an empty string if no direction could be
 // determined (if fuzz if false, this is only if
 // you.pos==pos).
@@ -436,7 +436,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
 
     // Zot def - player never sets off known traps
-    if (crawl_state.game_is_zotdef() && you_trigger && you_know) 
+    if (crawl_state.game_is_zotdef() && you_trigger && you_know)
     {
         mpr("You step safely past the trap");
         return;
@@ -552,11 +552,11 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             // Alarm traps aren't set off by hostile monsters, because
             // that would be way too nasty for the player.
             std::string msg;
-            if (you_trigger) 
+            if (you_trigger)
             {
                 msg="An alarm trap emits a blaring wail!";
             }
-            else 
+            else
             {
                 std::string dir=direction_string(this->pos, !in_sight);
                 msg=std::string("You hear a ")+
@@ -647,7 +647,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 // zotdef: blade traps break eventually
                 if (crawl_state.game_is_zotdef() && one_chance_in(200)) {
                     if (in_sight) mpr("The blade breaks!");
-                    disarm();   
+                    disarm();
                 }
             }
         }
@@ -984,12 +984,12 @@ void disarm_trap(const coord_def& where)
     {
     case DNGN_TRAP_MAGICAL:
         // Zotdef - allow alarm traps to be disarmed
-	if (!crawl_state.game_is_zotdef() || trap.type != TRAP_ALARM)
-	{
-	    mpr("You can't disarm that trap.");
-	    return;
-	}
-	break;
+        if (!crawl_state.game_is_zotdef() || trap.type != TRAP_ALARM)
+        {
+            mpr("You can't disarm that trap.");
+            return;
+        }
+        break;
     case DNGN_TRAP_NATURAL:
         // Only shafts for now.
         mpr("You can't disarm a shaft.");

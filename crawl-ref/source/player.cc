@@ -223,7 +223,7 @@ static bool _check_moveto_trap(const coord_def& p, const std::string &move_verb)
                  && (new_grid != DNGN_TRAP_MECHANICAL
                  || !clua.callbooleanfn(false, "ch_cross_trap",
                                         "s", trap_name_at(p)))
-		&& !crawl_state.game_is_zotdef())
+                && !crawl_state.game_is_zotdef())
 #endif
         {
             std::string prompt = make_stringf(
@@ -3266,11 +3266,11 @@ void level_change(bool skip_attribute_increase)
                 mpr("Your Zot abilities now extend through the making of mushroom circles.", MSGCH_INTRINSIC_GAIN);
             if (you.experience_level == 13)
                 mpr("Your Zot abilities now extend through the making of bolt traps.", MSGCH_INTRINSIC_GAIN);
-            if (you.experience_level == 14) 
+            if (you.experience_level == 14)
                 mpr("Your Zot abilities now extend through the making of orange crystal statues.", MSGCH_INTRINSIC_GAIN);
             if (you.experience_level == 15)
                 mpr("Your Zot abilities now extend through the making of needle traps.", MSGCH_INTRINSIC_GAIN);
-            if (you.experience_level == 16) 
+            if (you.experience_level == 16)
                 mpr("Your Zot abilities now extend through self-teleportation.", MSGCH_INTRINSIC_GAIN);
             if (you.experience_level == 17)
                 mpr("Your Zot abilities now extend through making water.", MSGCH_INTRINSIC_GAIN);
@@ -3278,7 +3278,7 @@ void level_change(bool skip_attribute_increase)
                 mpr("Your Zot abilities now extend through the making of axe traps.", MSGCH_INTRINSIC_GAIN);
             if (you.experience_level == 19)
                 mpr("Your Zot abilities now extend through the making of electric eels.", MSGCH_INTRINSIC_GAIN);
-            if (you.experience_level == 20) 
+            if (you.experience_level == 20)
                 mpr("Your Zot abilities now extend through the making of silver statues.", MSGCH_INTRINSIC_GAIN);
             // gold and bazaars gained together
             if (you.experience_level == 21)
@@ -4177,7 +4177,7 @@ bool enough_xp(int minimum, bool suppress_msg)
 
         crawl_state.cancel_cmd_again();
         crawl_state.cancel_cmd_repeat();
-	return (false);
+        return (false);
     }
     return (true);
 }
@@ -5153,7 +5153,7 @@ void player::init()
     xray_vision = false;
 
     skills.init(0);
-    practise_skill.init(true);	// In Zot def we turn off all skills with non-zero skill level later
+    practise_skill.init(true);        // In Zot def we turn off all skills with non-zero skill level later
     skill_points.init(0);
     ct_skill_points.init(0);
     skill_order.init(MAX_SKILL_ORDER);
@@ -5163,7 +5163,7 @@ void player::init()
 
     skill_cost_level = 1;
     total_skill_points = 0;
-    exp_available    = crawl_state.game_is_zotdef()? 80 : 25;	// Zot def starts with 80xp
+    exp_available    = crawl_state.game_is_zotdef()? 80 : 25;        // Zot def starts with 80xp
 
     item_description.init(255);
     unique_items.init(UNIQ_NOT_EXISTS);

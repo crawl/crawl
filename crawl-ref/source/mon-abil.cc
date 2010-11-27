@@ -2375,7 +2375,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
         bool spit = one_chance_in(3);
         if (mons->type == MONS_OKLOB_PLANT)
-            spit = x_chance_in_y(mons->hit_dice, 
+            spit = x_chance_in_y(mons->hit_dice,
                 crawl_state.game_is_zotdef()?40:30);        // reduced chance in zotdef
         if (mons->type == MONS_OKLOB_SAPLING)
             spit = one_chance_in(4);
