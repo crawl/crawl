@@ -2238,6 +2238,8 @@ static bool _mons_drain_life(monster* mons, bool actual)
         flash_view_delay(DARKGREY, 300);
     }
 
+    bool success = false;
+
     const int pow = mons->hit_dice;
     const int hurted = 3 + random2(7) + random2(pow);
     int hp_gain = 0;
@@ -2254,6 +2256,8 @@ static bool _mons_drain_life(monster* mons, bool actual)
 
             if (actual)
                 ouch(hurted, mons->mindex(), KILLED_BY_BEAM, mons->name(DESC_NOCAP_A).c_str());
+
+            success = true;
 
             hp_gain += hurted;
         }
@@ -2275,6 +2279,8 @@ static bool _mons_drain_life(monster* mons, bool actual)
                     print_wounds(m);
             }
 
+            success = true;
+
             if (!m->is_summoned())
                 hp_gain += hurted;
         }
@@ -2288,11 +2294,9 @@ static bool _mons_drain_life(monster* mons, bool actual)
     {
         if (actual && mons->heal(hp_gain))
             simple_monster_message(mons, " is healed.");
-
-        return (true);
     }
 
-    return (false);
+    return (success);
 }
 
 static bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
