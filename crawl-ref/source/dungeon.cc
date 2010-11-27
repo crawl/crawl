@@ -6645,45 +6645,33 @@ static void _plan_main(int level_number, int force_plan)
         dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, special_grid);
 }
 
-static bool _plan_1(int level_number)
+static void _place_layout_vault(int level_number, const char *name,
+                                const char *method, const char *type)
 {
-    env.level_build_method += make_stringf(" plan_1 [%d]", level_number);
-    env.level_layout_type   = "open";
+    env.level_build_method += make_stringf(" %s [%d]", method, level_number);
+    env.level_layout_type = type;
 
-    const map_def *vault = find_map_by_name("layout_forbidden_donut");
+    const map_def *vault = find_map_by_name(make_stringf("layout_%s", name));
     ASSERT(vault);
 
-    bool success = _build_primary_vault(level_number, vault);
-    dgn_ensure_vault_placed(success, false);
+    dgn_ensure_vault_placed(_build_primary_vault(level_number, vault), false);
+}
 
+static bool _plan_1(int level_number)
+{
+    _place_layout_vault(level_number, "forbidden_donut", "plan_1", "open");
     return false;
 }
 
 static bool _plan_2(int level_number)
 {
-    env.level_build_method += " plan_2";
-    env.level_layout_type   = "cross";
-
-    const map_def *vault = find_map_by_name("layout_cross");
-    ASSERT(vault);
-
-    bool success = _build_primary_vault(level_number, vault);
-    dgn_ensure_vault_placed(success, false);
-
+    _place_layout_vault(level_number, "cross", "plan_2", "cross");
     return false;
 }
 
 static bool _plan_3(int level_number)
 {
-    env.level_build_method += " plan_3";
-    env.level_layout_type   = "rooms";
-
-    const map_def *vault = find_map_by_name("layout_rooms");
-    ASSERT(vault);
-
-    bool success = _build_primary_vault(level_number, vault);
-    dgn_ensure_vault_placed(success, false);
-
+    _place_layout_vault(level_number, "rooms", "plan_3", "rooms");
     return false;
 }
 
@@ -6797,29 +6785,14 @@ static bool _plan_4(uint8_t forbid_x1, uint8_t forbid_y1, uint8_t forbid_x2,
 
 static bool _plan_5(int level_number)
 {
-    env.level_build_method += " plan_5";
-    env.level_layout_type   = "misc"; // XXX: What type of layout is this?
-
-    const map_def *vault = find_map_by_name("layout_misc");
-    ASSERT(vault);
-
-    bool success = _build_primary_vault(level_number, vault);
-    dgn_ensure_vault_placed(success, false);
-
+    _place_layout_vault(level_number, "misc", "plan_5", "misc");
     return false;
 }
 
 // Octagon with pillars in middle.
 static bool _plan_6(int level_number)
 {
-    env.level_build_method += make_stringf(" plan_6 [%d]", level_number);
-    env.level_layout_type   = "open";
-
-    const map_def *vault = find_map_by_name("layout_big_octagon");
-    ASSERT(vault);
-
-    bool success = _build_primary_vault(level_number, vault);
-    dgn_ensure_vault_placed(success, false);
+    _place_layout_vault(level_number, "big_octagon", "plan_6", "open");
 
     // This "back door" is often one of the easier ways to get out of
     // pandemonium.
@@ -7599,14 +7572,7 @@ static void _box_room(int bx1, int bx2, int by1, int by2,
 
 static void _city_level(int level_number)
 {
-    env.level_build_method += make_stringf(" city_level [%d]", level_number);
-    env.level_layout_type   = "city";
-
-    const map_def *vault = find_map_by_name("layout_city");
-    ASSERT(vault);
-
-    bool success = _build_primary_vault(level_number, vault);
-    dgn_ensure_vault_placed(success, false);
+    _place_layout_vault(level_number, "city", "city_level", "city");
 }
 
 static bool _treasure_area(int level_number, uint8_t ta1_x,
