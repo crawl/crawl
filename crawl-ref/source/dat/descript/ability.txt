@@ -180,7 +180,7 @@ Reanimate all corpses and skeletons in your vicinity as followers. Note that zom
 %%%%
 Drain Life
 
-Heal hit points by draining the life force of the living monsters surrounding you.
+Heal hit points by draining the life force of the monsters surrounding you.
 %%%%
 Enslave Soul
 
