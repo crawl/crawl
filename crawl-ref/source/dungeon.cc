@@ -198,7 +198,7 @@ static bool _treasure_area(int level_number, uint8_t ta1_x,
 // SPECIAL ROOM BUILDERS
 static void _special_room(int level_number, spec_room &sr,
                           const map_def *vault);
-static void _specr_2(spec_room &sr);
+static void _special_room_hook_up(spec_room &sr);
 static void _big_room(int level_number);
 static void _chequerboard(spec_room &sr, dungeon_feature_type target,
                           dungeon_feature_type floor1,
@@ -2103,7 +2103,7 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
     if (sr.created && !sr.hooked_up && !crawl_state.game_is_sprint()
         && !crawl_state.game_is_tutorial())
     {
-        _specr_2(sr);
+        _special_room_hook_up(sr);
     }
 
     // Now place items, mons, gates, etc.
@@ -4040,7 +4040,7 @@ static void _builder_items(int level_number, level_area_type level_type, int ite
 // to a closed door, and normal rock wall to pre-floor.
 // Anything that might otherwise block the hallway is changed
 // to pre-floor.
-static void _specr_2(spec_room &sr)
+static void _special_room_hook_up(spec_room &sr)
 {
     coord_def c, delta;
     int i = 0;
