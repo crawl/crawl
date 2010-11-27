@@ -2098,13 +2098,8 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
         return;
     }
 
-    // Hook up the special room (if there is one, and it hasn't
-    // been hooked up already in roguey_level()).
-    if (sr.created && !sr.hooked_up && !crawl_state.game_is_sprint()
-        && !crawl_state.game_is_tutorial())
-    {
+    if (sr.created && !sr.hooked_up)
         _special_room_hook_up(sr);
-    }
 
     // Now place items, mons, gates, etc.
     // Stairs must exist by this point (except in Shoals where they are
