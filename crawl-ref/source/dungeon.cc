@@ -2110,9 +2110,6 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
     // Stairs must exist by this point (except in Shoals where they are
     // yet to be placed). Some items and monsters already exist.
 
-    if (dgn_level_vetoed)
-        return;
-
     _check_doors();
 
     if (!player_in_branch(BRANCH_DIS) && !player_in_branch(BRANCH_VAULTS))
