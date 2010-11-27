@@ -3314,50 +3314,84 @@ int check_stealth(void)
 
     int stealth = you.dex() * 3;
 
-    if (you.skills[SK_STEALTH])
+    int race_mod = 0;
+    if (player_genus(GENPC_DRACONIAN) && you.species != SP_GREY_DRACONIAN)
+        race_mod = 12;
+    else
     {
-        if (player_genus(GENPC_DRACONIAN) && you.species != SP_GREY_DRACONIAN)
-            stealth += (you.skills[SK_STEALTH] * 12);
-        else
+        switch (you.species) // why not use body_size here?
         {
-            switch (you.species) // why not use body_size here?
+        case SP_TROLL:
+        case SP_OGRE:
+        case SP_CENTAUR:
+            race_mod = 9;
+            break;
+        case SP_MINOTAUR:
+            race_mod = 12;
+            break;
+        case SP_VAMPIRE:
+            // Thirsty/bat-form vampires are (much) more stealthy
+            if (you.hunger_state == HS_STARVING)
+                race_mod = 21;
+            else if (player_in_bat_form()
+                     || you.hunger_state <= HS_NEAR_STARVING)
             {
-            case SP_TROLL:
-            case SP_OGRE:
-            case SP_CENTAUR:
-                stealth += (you.skills[SK_STEALTH] * 9);
-                break;
-            case SP_MINOTAUR:
-                stealth += (you.skills[SK_STEALTH] * 12);
-                break;
-            case SP_VAMPIRE:
-                // Thirsty/bat-form vampires are (much) more stealthy
-                if (you.hunger_state == HS_STARVING)
-                    stealth += (you.skills[SK_STEALTH] * 21);
-                else if (player_in_bat_form()
-                         || you.hunger_state <= HS_NEAR_STARVING)
-                {
-                    stealth += (you.skills[SK_STEALTH] * 20);
-                }
-                else if (you.hunger_state < HS_SATIATED)
-                    stealth += (you.skills[SK_STEALTH] * 19);
-                else
-                    stealth += (you.skills[SK_STEALTH] * 18);
-                break;
-            case SP_HALFLING:
-            case SP_KOBOLD:
-            case SP_SPRIGGAN:
-            case SP_GREY_DRACONIAN:
-            case SP_NAGA:       // not small but very good at stealth
-            case SP_CAT:
-                stealth += (you.skills[SK_STEALTH] * 18);
-                break;
-            default:
-                stealth += (you.skills[SK_STEALTH] * 15);
-                break;
+                race_mod = 20;
             }
+            else if (you.hunger_state < HS_SATIATED)
+                race_mod = 19;
+            else
+                race_mod = 18;
+            break;
+        case SP_HALFLING:
+        case SP_KOBOLD:
+        case SP_SPRIGGAN:
+        case SP_GREY_DRACONIAN:
+        case SP_NAGA:       // not small but very good at stealth
+        case SP_CAT:
+            race_mod = 18;
+            break;
+        default:
+            race_mod = 15;
+            break;
         }
     }
+
+    switch((transformation_type)you.attribute[ATTR_TRANSFORMATION])
+    {
+    case TRAN_SPIDER:
+        race_mod = 21;
+        break;
+    case TRAN_ICE_BEAST:
+        race_mod = 15;
+        break;
+    case TRAN_STATUE:
+        race_mod -= 3; // depends on the base race
+        break;
+    case TRAN_DRAGON:
+        race_mod = 6;
+        break;
+    case TRAN_PIG:
+        race_mod = 9; // trotters, oinking...
+        break;
+    case TRAN_BAT:
+        if (you.species != SP_VAMPIRE)
+            race_mod = 17;
+        break;
+    case TRAN_BLADE_HANDS:
+        if (you.species == SP_CAT && !you.airborne())
+            stealth -= 50; // a constant penalty
+        break;
+    case TRAN_LICH:
+        race_mod++; // intentionally tiny, lich form is already overpowered
+        break;
+    case NUM_TRANSFORMATIONS:
+        ASSERT(false);
+    case TRAN_NONE:
+        break;
+    }
+
+    stealth += you.skills[SK_STEALTH] * race_mod;
 
     if (you.burden_state > BS_UNENCUMBERED)
         stealth /= you.burden_state;
