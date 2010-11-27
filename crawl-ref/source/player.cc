@@ -384,6 +384,10 @@ void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
     viewwindow();
 
     moveto_location_effects(old_grid, stepped, allow_shift, old_pos);
+
+    // Checking new squares for interesting features.
+    if (!you.running)
+        check_for_interesting_features();
 }
 
 bool is_feat_dangerous(dungeon_feature_type grid)
@@ -411,11 +415,6 @@ bool player_in_level_area(level_area_type area)
 
 bool player_in_hell(void)
 {
-    // No real reason except to draw someone's attention here if they
-    // mess with the branch enum.
-    COMPILE_CHECK(BRANCH_FIRST_HELL == BRANCH_DIS, a);
-    COMPILE_CHECK(BRANCH_LAST_HELL  == BRANCH_TARTARUS, b);
-
     return (you.level_type == LEVEL_DUNGEON
             && is_hell_subbranch(you.where_are_you));
 }
@@ -927,7 +926,7 @@ int player_equip(equipment_type slot, int sub_type, bool calc_unid)
 // Returns number of matches (jewellery returns zero -- no ego type).
 // [ds] There's no equivalent of calc_unid or req_id because as of now, weapons
 // and armour type-id on wield/wear.
-int player_equip_ego_type(int slot, int special)
+int player_equip_ego_type(int slot, int special, bool calc_unid)
 {
     int ret = 0;
 
@@ -959,7 +958,8 @@ int player_equip_ego_type(int slot, int special)
         for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
         {
             if ((item = you.slot_item(static_cast<equipment_type>(i)))
-                && get_armour_ego_type(*item) == special)
+                && get_armour_ego_type(*item) == special
+                && (calc_unid || item_type_known(*item)))
             {
                 ret++;
             }
@@ -974,7 +974,8 @@ int player_equip_ego_type(int slot, int special)
         }
         // Check a specific armour slot for an ego type:
         if ((item = you.slot_item(static_cast<equipment_type>(slot)))
-            && get_armour_ego_type(*item) == special)
+            && get_armour_ego_type(*item) == special
+            && (calc_unid || item_type_known(*item)))
         {
             ret++;
         }
@@ -2611,6 +2612,19 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
 
     dprf("gain_exp: %d", exp_gained);
 
+    if (you.transfer_skill_points > 0)
+    {
+        int amount = exp_gained * 10
+                                / calc_skill_cost(you.skill_cost_level,
+                                            you.skills[you.transfer_to_skill]);
+        if (amount >= 20 || one_chance_in(20 - amount))
+        {
+            amount = std::max(20, amount);
+            transfer_skill_points(you.transfer_from_skill,
+                                  you.transfer_to_skill, amount, false);
+        }
+    }
+
     if (you.experience + exp_gained > (unsigned int)MAX_EXP_TOTAL)
         you.experience = MAX_EXP_TOTAL;
     else
@@ -2662,7 +2676,7 @@ static void _draconian_scale_colour_message()
         break;
 
     case SP_GREEN_DRACONIAN:
-        mpr("Your scales start taking on a green colour.",
+        mpr("Your scales start taking on a lurid green colour.",
             MSGCH_INTRINSIC_GAIN);
         perma_mutate(MUT_POISON_RESISTANCE, 1);
         break;
@@ -2673,13 +2687,13 @@ static void _draconian_scale_colour_message()
         break;
 
     case SP_GREY_DRACONIAN:
-        mpr("Your scales start turning grey.",
+        mpr("Your scales start taking on a dull grey colour.",
             MSGCH_INTRINSIC_GAIN);
         perma_mutate(MUT_UNBREATHING, 1);
         break;
 
     case SP_BLACK_DRACONIAN:
-        mpr("Your scales start turning black.",
+        mpr("Your scales start taking on a glossy black colour.",
             MSGCH_INTRINSIC_GAIN);
         perma_mutate(MUT_SHOCK_RESISTANCE, 1);
         break;
@@ -2999,7 +3013,7 @@ void level_change(bool skip_attribute_increase)
                     // We check if any skill has changed level because of
                     // changed aptitude
                     for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
-                        change_skill_points(static_cast<skill_type>(i), 0);
+                        check_skill_level_change(static_cast<skill_type>(i));
                 }
             case SP_RED_DRACONIAN:
             case SP_WHITE_DRACONIAN:
@@ -3774,7 +3788,7 @@ void display_char_status()
 
     // magic resistance
     mprf("You are %s resistant to hostile enchantments.",
-         magic_res_adjective(you.res_magic()).c_str());
+         magic_res_adjective(player_res_magic(false)).c_str());
 
     // character evaluates their ability to sneak around:
     mprf("You feel %s.", stealth_desc(check_stealth()).c_str());
@@ -4983,6 +4997,7 @@ void levitate_player(int pow)
          "You feel %s buoyant.", standing ? "very" : "more");
 
     if (standing)
+    {
         if (you.fishtail)
         {
             mpr("Your tail turns into legs as you levitate out of the water.");
@@ -4990,6 +5005,7 @@ void levitate_player(int pow)
         }
         else
             mpr("You gently float upwards from the floor.");
+    }
 
     // Amulet of Controlled Flight can auto-ID.
     if (!you.duration[DUR_LEVITATION]
@@ -5158,6 +5174,11 @@ void player::init()
     ct_skill_points.init(0);
     skill_order.init(MAX_SKILL_ORDER);
 
+    transfer_from_skill = SK_NONE;
+    transfer_to_skill = SK_NONE;
+    transfer_skill_points = 0;
+    transfer_total_skill_points = 0;
+
     sage_bonus_skill = NUM_SKILLS;
     sage_bonus_degree = 0;
 
@@ -5287,6 +5308,7 @@ void player::init()
     on_current_level    = true;
     walking             = 0;
     seen_portals        = 0;
+    frame_no            = 0;
 
     // Protected fields:
     for (int i = 0; i < NUM_BRANCHES; i++)
@@ -5411,7 +5433,7 @@ bool player::can_cling_to(const coord_def& p) const
 
 bool player::in_water() const
 {
-    return (!airborne() && !beogh_water_walk()
+    return (!airborne() && !beogh_water_walk() && !is_wall_clinging()
             && feat_is_water(grd(pos())));
 }
 
@@ -5949,14 +5971,25 @@ int player::res_torment() const
     return (player_res_torment());
 }
 
+int player::res_wind() const
+{
+    // Full control of the winds around you can negate a hostile tornado.
+    return you.duration[DUR_TORNADO] ? 1 : 0;
+}
+
 int player::res_magic() const
+{
+    return player_res_magic();
+}
+
+int player_res_magic(bool calc_unid, bool temp)
 {
     int rm = 0;
 
-    switch (species)
+    switch (you.species)
     {
     default:
-        rm = experience_level * 3;
+        rm = you.experience_level * 3;
         break;
     case SP_HIGH_ELF:
     case SP_SLUDGE_ELF:
@@ -5965,47 +5998,48 @@ int player::res_magic() const
     case SP_VAMPIRE:
     case SP_DEMIGOD:
     case SP_OGRE:
-        rm = experience_level * 4;
+        rm = you.experience_level * 4;
         break;
     case SP_NAGA:
-        rm = experience_level * 5;
+        rm = you.experience_level * 5;
         break;
     case SP_PURPLE_DRACONIAN:
     case SP_DEEP_DWARF:
     case SP_CAT:
-        rm = experience_level * 6;
+        rm = you.experience_level * 6;
         break;
     case SP_SPRIGGAN:
-        rm = experience_level * 7;
+        rm = you.experience_level * 7;
         break;
     }
 
     // randarts
-    rm += scan_artefacts(ARTP_MAGIC);
+    rm += scan_artefacts(ARTP_MAGIC, calc_unid);
 
     // armour
-    rm += 30 * player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_MAGIC_RESISTANCE);
+    rm += 30 * player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_MAGIC_RESISTANCE,
+                                     calc_unid);
 
     // rings of magic resistance
-    rm += 40 * player_equip(EQ_RINGS, RING_PROTECTION_FROM_MAGIC);
+    rm += 40 * player_equip(EQ_RINGS, RING_PROTECTION_FROM_MAGIC, calc_unid);
 
     // Enchantment skill through staff of enchantment (up to 90).
-    if (player_equip(EQ_STAFF, STAFF_ENCHANTMENT))
-        rm += 3 * (3 + skills[SK_ENCHANTMENTS]);
+    if (player_equip(EQ_STAFF, STAFF_ENCHANTMENT, calc_unid))
+        rm += 3 * (3 + you.skills[SK_ENCHANTMENTS]);
 
     // Mutations
     rm += 30 * player_mutation_level(MUT_MAGIC_RESISTANCE);
 
     // transformations
-    if (attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
+    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH && temp)
         rm += 50;
 
     // Trog's Hand
-    if (attribute[ATTR_DIVINE_REGENERATION])
+    if (you.attribute[ATTR_DIVINE_REGENERATION] && temp)
         rm += 70;
 
     // Enchantment effect
-    if (duration[DUR_LOWERED_MR])
+    if (you.duration[DUR_LOWERED_MR] && temp)
         rm /= 2;
 
     return (rm);
@@ -6278,9 +6312,14 @@ int player::has_talons(bool allow_tran) const
 {
     if (allow_tran)
     {
-        // no transformations bring talons with them
-        if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
+        // transformations other than these will override talons
+        if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE
+            && attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS
+            && attribute[ATTR_TRANSFORMATION] != TRAN_STATUE
+            && attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
+        {
             return (0);
+        }
     }
 
     // XXX: Do merfolk in water belong under allow_tran?
@@ -6306,6 +6345,7 @@ int player::has_fangs(bool allow_tran) const
         // transformations other than these will override fangs
         if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE
             && attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS
+            && attribute[ATTR_TRANSFORMATION] != TRAN_STATUE
             && attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
         {
             return (0);
@@ -6332,9 +6372,10 @@ int player::has_tail(bool allow_tran) const
         if (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
             return (1);
 
-        // transformations other than these will override the tail
+        // transformations other than these will override a tail
         if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE
             && attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS
+            && attribute[ATTR_TRANSFORMATION] != TRAN_STATUE
             && attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
         {
             return (0);
@@ -6385,8 +6426,14 @@ int player::has_pseudopods(bool allow_tran) const
 {
     if (allow_tran)
     {
-        if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
+        // transformations other than these will override pseudopods
+        if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE
+            && attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS
+            && attribute[ATTR_TRANSFORMATION] != TRAN_STATUE
+            && attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
+        {
             return (0);
+        }
     }
 
     return (player_mutation_level(MUT_PSEUDOPODS));

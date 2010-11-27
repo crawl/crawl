@@ -89,7 +89,7 @@ extern point_vector      map_anchor_points;
 // Use dgn_map_parameters to modify:
 extern string_vector     map_parameters;
 
-const int              MAP_CACHE_VERSION = 1014;
+const int              MAP_CACHE_VERSION = 1015;
 
 class dgn_map_parameters
 {

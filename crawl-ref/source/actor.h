@@ -236,6 +236,7 @@ public:
     virtual int res_holy_energy(const actor *attacker) const = 0;
     virtual int res_negative_energy() const = 0;
     virtual int res_torment() const = 0;
+    virtual int res_wind() const = 0;
     virtual int res_magic() const = 0;
     virtual int check_res_magic(int power);
 

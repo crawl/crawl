@@ -7,8 +7,8 @@
 #define TRAVEL_H
 
 #include "externs.h"
-
 #include "exclude.h"
+#include "map_knowledge.h"
 
 // For travel_distance_col and travel_distance_grid_t
 #include "travel_defs.h"
@@ -599,5 +599,7 @@ void do_interlevel_travel();
 // Travel from a mouse click.  Take one step if not safe.  Attack if adjacent.
 // If force is true, then the player will attack empty squares/open doors.
 int click_travel(const coord_def &gc, bool force);
+
+bool check_for_interesting_features();
 
 #endif // TRAVEL_H

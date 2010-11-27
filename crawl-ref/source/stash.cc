@@ -1943,6 +1943,16 @@ bool StashTracker::display_search_results(
         if (res.shop && !res.shop->is_visited())
             me->colour = CYAN;
 
+        if (res.stash && res.stash->get_items().size() > 0)
+        {
+            item_def first = res.stash->get_items()[0];
+            int itemcol = menu_colour(first.name(DESC_PLAIN).c_str(),
+                                      menu_colour_item_prefix(first),
+                                      "pickup");
+            if (itemcol != -1)
+                me->colour = itemcol;
+        }
+
         stashmenu.add_entry(me);
     }
 

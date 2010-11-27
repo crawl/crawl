@@ -102,6 +102,7 @@ static bool _activate_talent(const talent& tal);
 static bool _do_ability(const ability_def& abil);
 static void _pay_ability_costs(const ability_def& abil, int xpcost);
 static std::string _describe_talent(const talent& tal);
+static int _scale_piety_cost(ability_type abil, int original_cost);
 
 // this all needs to be split into data/util/show files
 // and the struct mechanism here needs to be rewritten (again)
@@ -368,9 +369,12 @@ static const ability_def Ability_List[] =
       10, 0, 200, 10, ABFLAG_NONE },
 
     // Ashenzari
-    { ABIL_ASHENZARI_TRANSFER_KNOWLEDGE, "Transfer Knowledge", 0, 0, 0, 10, ABFLAG_NONE},
     { ABIL_ASHENZARI_SCRYING, "Scrying",
       4, 0, 50, generic_cost::range(5, 6), ABFLAG_NONE },
+    { ABIL_ASHENZARI_TRANSFER_KNOWLEDGE, "Transfer Knowledge",
+      0, 0, 0, 10, ABFLAG_NONE },
+    { ABIL_ASHENZARI_END_TRANSFER, "End Transfer Knowledge",
+      0, 0, 0, 0, ABFLAG_NONE },
 
     { ABIL_HARM_PROTECTION, "Protection From Harm", 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_HARM_PROTECTION_II, "Reliable Protection From Harm",
@@ -715,6 +719,94 @@ const std::string make_cost_description(ability_type ability)
     return (ret.str());
 }
 
+std::string _get_food_amount_str(int value)
+{
+    return(value > 300 ? "extremely large" :
+           value > 200 ? "large" :
+           value > 100 ? "moderate" :
+                         "small");
+}
+
+std::string _get_piety_amount_str(int value)
+{
+    return(value > 15 ? "extremely large" :
+           value > 10 ? "large" :
+           value > 5  ? "moderate" :
+                        "small");
+}
+
+const std::string make_detailed_cost_description(ability_type ability)
+{
+    const ability_def& abil = _get_ability_def(ability);
+    std::ostringstream ret;
+    std::vector<std::string> values;
+    std::string str;
+
+    bool have_cost = false;
+    ret << "This ability costs: ";
+
+    if (abil.mp_cost > 0)
+    {
+        have_cost = true;
+        if (abil.flags & ABFLAG_PERMANENT_MP)
+            ret << "\nMax MP : ";
+        else
+            ret << "\nMP     : ";
+        ret << abil.mp_cost;
+    }
+    if (abil.hp_cost)
+    {
+        have_cost = true;
+        if (abil.flags & ABFLAG_PERMANENT_HP)
+            ret << "\nMax HP : ";
+        else
+            ret << "\nHP     : ";
+        ret << abil.hp_cost.cost(you.hp_max);
+    }
+
+    if (abil.food_cost && you.is_undead != US_UNDEAD
+        && (you.is_undead != US_SEMI_UNDEAD || you.hunger_state > HS_STARVING))
+    {
+        have_cost = true;
+        ret << "\nHunger : ";
+        ret << _get_food_amount_str(abil.food_cost + abil.food_cost / 2);
+    }
+
+    if (abil.piety_cost)
+    {
+        have_cost = true;
+        ret << "\nPiety  : ";
+        int avgcost = abil.piety_cost.base + abil.piety_cost.add / 2;
+        ret << _get_piety_amount_str(avgcost);
+    }
+
+    if (!have_cost)
+        ret << "nothing.";
+
+    if (abil.flags & ABFLAG_BREATH)
+        ret << "\nIt is a breathing attack and needs some time between uses.";
+
+    if (abil.flags & ABFLAG_DELAY)
+        ret << "\nIt takes some time before being effective.";
+
+    if (abil.flags & ABFLAG_PAIN)
+        ret << "\nUsing this ability will hurt you.";
+
+    if (abil.flags & ABFLAG_PIETY)
+        ret << "\nIt will drain your piety while it is active.";
+
+    if (abil.flags & ABFLAG_EXHAUSTION)
+        ret << "\nIt cannot be used when exhausted.";
+
+    if (abil.flags & ABFLAG_INSTANT)
+        ret << "\nIt is instantaneous.";
+
+    if (abil.flags & ABFLAG_CONF_OK)
+        ret << "\nYou can use it even if confused.";
+
+    return (ret.str());
+}
+
 static ability_type _fixup_ability(ability_type ability)
 {
     switch (ability)
@@ -772,7 +864,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
     // begin spell abilities
     case ABIL_DELAYED_FIREBALL:
     case ABIL_MUMMY_RESTORATION:
-    case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
         perfect = true;
         failure = 0;
         break;
@@ -956,6 +1047,8 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_TROG_BURN_SPELLBOOKS:
     case ABIL_FEDHAS_FUNGAL_BLOOM:
     case ABIL_CHEIBRIADOS_PONDEROUSIFY:
+    case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
+    case ABIL_ASHENZARI_END_TRANSFER:
         invoc = true;
         perfect = true;
         failure = 0;
@@ -1139,7 +1232,8 @@ static void _print_talent_description(const talent& tal)
     else
     {
         std::ostringstream data;
-        data << name << "\n\n" << lookup;
+        data << name << "\n\n" << lookup << "\n";
+        data << make_detailed_cost_description(tal.which);
         print_description(data.str());
     }
     wait_for_keypress();
@@ -1437,6 +1531,7 @@ static bool _activate_talent(const talent& tal)
         case ABIL_MUMMY_RESTORATION:
         case ABIL_TRAN_BAT:
         case ABIL_BOTTLE_BLOOD:
+        case ABIL_ASHENZARI_END_TRANSFER:
             hungerCheck = false;
             break;
         default:
@@ -1852,7 +1947,7 @@ static bool _do_ability(const ability_def& abil)
             if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
                 power += 12;
 
-            snprintf(info, INFO_SIZE, "You breathe fire%c",
+            snprintf(info, INFO_SIZE, "You breathe a blast of fire%c",
                      (power < 15) ? '.':'!');
 
             if (!zapping(ZAP_BREATHE_FIRE, power, beam, true, info))
@@ -1879,6 +1974,7 @@ static bool _do_ability(const ability_def& abil)
             break;
 
         case ABIL_BREATHE_LIGHTNING:
+            mpr("You breathe a wild blast of lightning!");
             disc_of_storms(true);
             break;
 
@@ -1886,7 +1982,7 @@ static bool _do_ability(const ability_def& abil)
             if (!zapping(ZAP_BREATHE_ACID,
                 (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON) ?
                     2 * you.experience_level : you.experience_level,
-                beam, true, "You spit acid."))
+                beam, true, "You spit a glob of acid."))
             {
                 return (false);
             }
@@ -2534,6 +2630,9 @@ static bool _do_ability(const ability_def& abil)
         }
         break;
 
+    case ABIL_ASHENZARI_END_TRANSFER:
+        ashenzari_end_transfer();
+        break;
 
     case ABIL_RENOUNCE_RELIGION:
         if (yesno("Really renounce your faith, foregoing its fabulous benefits?",
@@ -2943,6 +3042,8 @@ std::vector<talent> your_talents(bool check_confused)
         _add_talent(talents, ABIL_FEDHAS_FUNGAL_BLOOM, check_confused);
     else if (you.religion == GOD_CHEIBRIADOS)
         _add_talent(talents, ABIL_CHEIBRIADOS_PONDEROUSIFY, check_confused);
+    else if (you.transfer_skill_points > 0)
+        _add_talent(talents, ABIL_ASHENZARI_END_TRANSFER, check_confused);
 
     // Gods take abilities away until penance completed. -- bwr
     // God abilities generally don't work while silenced (they require
@@ -2958,6 +3059,7 @@ std::vector<talent> your_talents(bool check_confused)
                 if (abil != ABIL_NON_ABILITY)
                 {
                     _add_talent(talents, abil, check_confused);
+
                     if (abil == ABIL_ELYVILON_LESSER_HEALING_OTHERS)
                     {
                         _add_talent(talents,

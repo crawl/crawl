@@ -31,16 +31,25 @@ cloud_poison0 CLOUD_POISON_0
 cloud_poison1 CLOUD_POISON_1
 cloud_poison2 CLOUD_POISON_2
 cloud_black_smoke CLOUD_BLACK_SMOKE
+cloud_black_smoke_disturbance CLOUD_BLACK_SMOKE_DISTURBANCE
 cloud_blue_smoke CLOUD_BLUE_SMOKE
+cloud_blue_smoke_disturbance CLOUD_BLUE_SMOKE_DISTURBANCE
 cloud_grey_smoke CLOUD_GREY_SMOKE
+cloud_grey_smoke_disturbance CLOUD_GREY_SMOKE_DISTURBANCE
 
 %variation CLOUD_GREY_SMOKE white
 %lum 0 30
 %repeat CLOUD_GREY_SMOKE CLOUD_WHITE_SMOKE
 %resetcol
 
+%variation CLOUD_GREY_SMOKE_DISTURBANCE white
+%lum 0 30
+%repeat CLOUD_GREY_SMOKE_DISTURBANCE CLOUD_WHITE_SMOKE_DISTURBANCE
+%resetcol
+
 cloud_miasma CLOUD_MIASMA
 cloud_tloc_energy CLOUD_TLOC_ENERGY
+cloud_tloc_energy_disturbance CLOUD_TLOC_ENERGY_DISTURBANCE
 cloud_mutagenic_small1 CLOUD_MUTAGENIC_0
 cloud_mutagenic_small2
 cloud_mutagenic_medium1 CLOUD_MUTAGENIC_1

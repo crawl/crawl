@@ -22,10 +22,12 @@
 #include "describe.h"
 #include "externs.h"
 #include "fight.h"
+#include "godabil.h"
 #include "itemprop.h"
 #include "menu.h"
 #include "player.h"
 #include "species.h"
+#include "skills.h"
 #include "stuff.h"
 #include "hints.h"
 
@@ -1338,25 +1340,57 @@ static const skill_type skill_display_order[] =
 static const int ndisplayed_skills =
             sizeof(skill_display_order) / sizeof(*skill_display_order);
 
-static void _display_skill_table(bool show_aptitudes, bool show_description)
+static bool _skill_is_selectable(skill_type sk, int flags)
+{
+    if (is_invalid_skill(sk))
+        return false;
+
+    if (you.skills[sk] == 0 && !(flags & SK_MENU_SHOW_ALL))
+        return false;
+
+    if (flags & SK_MENU_SHOW_DESC)
+        return true;
+
+    if (flags & SK_MENU_RESKILL && you.transfer_from_skill == sk)
+        return false;
+
+    if (you.skills[sk] == 0
+        && !(flags & SK_MENU_RESKILL && you.transfer_from_skill != SK_NONE))
+    {
+        return false;
+    }
+
+    if (you.skills[sk] == 27
+        && !(flags & SK_MENU_RESKILL && you.transfer_from_skill == SK_NONE))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+static void _display_skill_table(int flags)
 {
     menu_letter lcount = 'a';
 
-    cgotoxy(1, 1);
-    textcolor(LIGHTGREY);
+    if (!(flags & SK_MENU_RESKILL))
+    {
+        cgotoxy(1, 1);
+        textcolor(LIGHTGREY);
 
 #ifdef DEBUG_DIAGNOSTICS
-    cprintf("You have %d points of unallocated experience "
-            " (cost lvl %d; total %d).\n\n",
-            you.exp_available, you.skill_cost_level,
-            you.total_skill_points);
+        cprintf("You have %d points of unallocated experience "
+                " (cost lvl %d; total %d).\n\n",
+                you.exp_available, you.skill_cost_level,
+                you.total_skill_points);
 #else
-    cprintf(" You have %s unallocated experience.\n\n",
-            you.exp_available == 0? "no" :
-            make_stringf("%d point%s of",
-                         you.exp_available,
-                         you.exp_available == 1? "" : "s").c_str());
+        cprintf(" You have %s unallocated experience.\n\n",
+                you.exp_available == 0? "no" :
+                make_stringf("%d point%s of",
+                             you.exp_available,
+                             you.exp_available == 1? "" : "s").c_str());
 #endif
+    }
 
     int scrln = 3, scrcol = 1;
     skill_type x;
@@ -1389,23 +1423,37 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
         cgotoxy(scrcol, scrln);
 
 #ifndef DEBUG_DIAGNOSTICS
-        if (you.skills[x] > 0)
+        if (you.skills[x] > 0 || flags & SK_MENU_SHOW_ALL)
 #endif
         {
             maxln = std::max(maxln, scrln);
+            skill_type sx = static_cast<skill_type>(x);
+            int ct_bonus = crosstrain_bonus(sx);
 
-            if (you.practise_skill[x] == 0 || you.skills[x] == 0)
+            if (flags & SK_MENU_SHOW_RESKILL && (x == you.transfer_from_skill
+                                                || x == you.transfer_to_skill))
+            {
+                textcolor(GREEN);
+            }
+            else if (flags & SK_MENU_RESKILL && x == you.transfer_from_skill)
+                textcolor(WHITE);
+            else if (you.practise_skill[x] == 0 || you.skills[x] == 0)
                 textcolor(DARKGREY);
+            else if (ct_bonus > 1 && flags & SK_MENU_SHOW_APT)
+                textcolor(LIGHTBLUE);
+            else if (is_antitrained(sx) && flags & SK_MENU_SHOW_APT)
+                textcolor(MAGENTA);
             else
                 textcolor(LIGHTGREY);
 
             if (you.skills[x] == 27)
                 textcolor(YELLOW);
 
-            if (you.skills[x] == 0 || !show_description && you.skills[x] == 27)
-                putch(' ');
-            else
+
+            if (_skill_is_selectable(x, flags))
                 putch(lcount++);
+            else
+                putch(' ');
 
             cprintf(" %c %-14s Skill %2d",
                      (you.skills[x] == 0 || you.skills[x] == 27) ? ' ' :
@@ -1418,7 +1466,58 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
 
             if (you.skills[x] < 27)
             {
-                if (!show_aptitudes)
+                if (flags & SK_MENU_RESKILL
+                    && you.transfer_from_skill != SK_NONE)
+                {
+                    textcolor(CYAN);
+                    cprintf (" ->%2d",
+                             transfer_skill_points(you.transfer_from_skill, sx,
+                                             you.transfer_skill_points, true));
+                }
+                if (flags & SK_MENU_SHOW_APT)
+                {
+                    int apt = species_apt(x, you.species);
+                    std::string apt_str(" <red>");
+                    if (apt != 0)
+                        apt_str += make_stringf("%+d", apt);
+                    else
+                        apt_str += make_stringf(" %d", apt);
+
+                    if (crosstrain_other(sx))
+                        apt_str += "<lightblue>*</lightblue>";
+                    else if (antitrain_other(sx))
+                        apt_str += "<magenta>*</magenta>";
+                    else
+                        apt_str += " ";
+
+                    if ( ct_bonus > 1)
+                    {
+                        apt_str += make_stringf("<lightblue>%+d </lightblue>",
+                                                ct_bonus * 2);
+                    }
+                    else if (is_antitrained(sx))
+                        apt_str += "<magenta>-4 </magenta>";
+                    else
+                        apt_str += "   ";
+
+                    formatted_string::parse_string(apt_str).display();
+                }
+                else if (flags & SK_MENU_SHOW_RESKILL)
+                {
+                    textcolor(GREEN);
+                    if (sx == you.transfer_from_skill)
+                        cprintf("  *  ");
+                    else if (sx == you.transfer_to_skill)
+                    {
+                        cprintf(" (%2d%%)", (you.transfer_total_skill_points
+                                             - you.transfer_skill_points) * 100
+                                            / you.transfer_total_skill_points);
+                    }
+                    else
+                        cprintf("      ");
+
+                }
+                else
                 {
                     const int needed = skill_exp_needed(you.skills[x] + 1, x);
                     const int prev_needed = skill_exp_needed(you.skills[x], x);
@@ -1436,24 +1535,26 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
                     // Round down to multiple of 5.
                     cprintf(" (%2d%%)", (percent_done / 5) * 5);
                 }
-                else
-                {
-                    int apt = species_apt(x, you.species);
-                    textcolor(RED);
-                    if (apt != 0)
-                        cprintf(" %+3d  ", apt);
-                    else
-                        cprintf(" %3d  ", apt);
-                }
             }
 
             scrln++;
         }
     }
 
+    if (flags & SK_MENU_RESKILL && you.transfer_from_skill != SK_NONE
+        && !(flags & SK_MENU_SHOW_ALL))
+    {
+        textcolor(WHITE);
+        cgotoxy(1, bottom_line);
+        cprintf("Press * to show all.");
+    }
+
+    if (flags & SK_MENU_RESKILL)
+        return;
+
     if (Hints.hints_left)
     {
-        if (show_description || maxln >= bottom_line - 5)
+        if (flags & SK_MENU_SHOW_DESC || maxln >= bottom_line - 5)
         {
             cgotoxy(1, bottom_line-2);
             // Doesn't mention the toggle between progress/aptitudes.
@@ -1472,7 +1573,7 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
         cgotoxy(1, bottom_line-3);
         textcolor(LIGHTGREY);
 
-        if (show_description)
+        if (flags & SK_MENU_SHOW_DESC)
         {
             // We need the extra spaces to override the alternative sentence.
             cprintf("Press the letter of a skill to read its description.      "
@@ -1486,7 +1587,7 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
         }
 
         cgotoxy(1, bottom_line-1);
-        if (show_description)
+        if (flags & SK_MENU_SHOW_DESC)
         {
             formatted_string::parse_string("Press '<w>?</w>' to choose which "
                                            "skills to train.  ").display();
@@ -1504,32 +1605,51 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
 #else
             "<w>Right-click</w>"
 #endif
-            " to toggle between <cyan>progress</cyan> and "
-            "<red>aptitude</red> display.").display();
+            " to toggle between <cyan>progress</cyan>").display();
+        if (you.transfer_skill_points > 0)
+        {
+            formatted_string::parse_string(", <red>aptitude</red> and "
+                    "<green>transfer knowledge</green> display.").display();
+        }
+        else
+        {
+            formatted_string::parse_string(" and <red>aptitude</red> "
+                                           "display.").display();
+        }
     }
 }
 
 void show_skills()
 {
-    bool show_aptitudes   = false;
-    bool show_description = false;
+    int flags = SK_MENU_NONE;
     clrscr();
     while (true)
     {
-        _display_skill_table(show_aptitudes, show_description);
+        _display_skill_table(flags);
 
         mouse_control mc(MOUSE_MODE_MORE);
         const int keyin = getch();
         if ((keyin == '!' || keyin == CK_MOUSE_CMD))
         {
-            show_aptitudes = !show_aptitudes;
+            if (you.transfer_skill_points == 0)
+                flags ^= SK_MENU_SHOW_APT;
+            else if (!(flags & (SK_MENU_SHOW_APT | SK_MENU_SHOW_RESKILL)))
+                flags |= SK_MENU_SHOW_APT;
+            else if (flags & SK_MENU_SHOW_APT)
+            {
+                flags ^= SK_MENU_SHOW_APT;
+                flags |= SK_MENU_SHOW_RESKILL;
+            }
+            else if (flags & SK_MENU_SHOW_RESKILL)
+                flags ^= SK_MENU_SHOW_RESKILL;
+
             continue;
         }
 
         if (keyin == '?')
         {
             // Show skill description.
-            show_description = !show_description;
+            flags ^= SK_MENU_SHOW_DESC;
             if (Hints.hints_left)
                 clrscr();
             continue;
@@ -1543,18 +1663,12 @@ void show_skills()
         for (int i = 0; i < ndisplayed_skills; i++)
         {
             const skill_type x = skill_display_order[i];
-            if (x == SK_BLANK_LINE || x == SK_COLUMN_BREAK)
-                continue;
-
-            if (you.skills[x] == 0)
-                continue;
-
-            if (!show_description && you.skills[x] == 27)
+            if (!_skill_is_selectable(x, flags))
                 continue;
 
             if (keyin == lcount)
             {
-                if (!show_description)
+                if (!(flags & SK_MENU_SHOW_DESC))
                     you.practise_skill[x] = !you.practise_skill[x];
                 else
                 {
@@ -1971,6 +2085,103 @@ float species_apt_factor(skill_type sk, species_type sp)
     return _apt_to_factor(species_apt(sk, sp));
 }
 
+static std::vector<skill_type> _get_crosstrain_skills(skill_type sk)
+{
+    std::vector<skill_type> ret;
+
+    switch (sk)
+    {
+    case SK_SHORT_BLADES:
+        ret.push_back(SK_LONG_BLADES);
+        return ret;
+    case SK_LONG_BLADES:
+        ret.push_back(SK_SHORT_BLADES);
+        return ret;
+    case SK_AXES:
+    case SK_STAVES:
+        ret.push_back(SK_POLEARMS);
+        ret.push_back(SK_MACES_FLAILS);
+        return ret;
+    case SK_MACES_FLAILS:
+    case SK_POLEARMS:
+        ret.push_back(SK_AXES);
+        ret.push_back(SK_STAVES);
+        return ret;
+    case SK_SLINGS:
+        ret.push_back(SK_THROWING);
+        return ret;
+    case SK_THROWING:
+        ret.push_back(SK_SLINGS);
+        return ret;
+    default:
+        return ret;
+    }
+}
+
+
+float crosstrain_bonus(skill_type sk)
+{
+    int bonus = 1;
+
+    std::vector<skill_type> crosstrain_skills = _get_crosstrain_skills(sk);
+
+    for (unsigned int i = 0; i < crosstrain_skills.size(); ++i)
+        if (you.skills[crosstrain_skills[i]] > you.skills[sk])
+            bonus *= 2;
+
+    return bonus;
+}
+
+bool crosstrain_other(skill_type sk)
+{
+    std::vector<skill_type> crosstrain_skills = _get_crosstrain_skills(sk);
+
+    for (unsigned int i = 0; i < crosstrain_skills.size(); ++i)
+        if (you.skills[crosstrain_skills[i]] < you.skills[sk]
+            && you.skills[crosstrain_skills[i]] != 0)
+        {
+            return true;
+        }
+
+    return false;
+}
+
+static skill_type _get_opposite(skill_type sk)
+{
+    switch (sk)
+    {
+    case SK_FIRE_MAGIC  : return SK_ICE_MAGIC;   break;
+    case SK_ICE_MAGIC   : return SK_FIRE_MAGIC;  break;
+    case SK_AIR_MAGIC   : return SK_EARTH_MAGIC; break;
+    case SK_EARTH_MAGIC : return SK_AIR_MAGIC;   break;
+    default: return SK_NONE;
+    }
+}
+
+bool is_antitrained(skill_type sk)
+{
+    skill_type opposite = _get_opposite(sk);
+    if (opposite == SK_NONE)
+        return false;
+
+    return (you.skills[sk] < you.skills[opposite]
+            || you.skills[sk] == you.skills[opposite]
+               && you.skill_order[sk] > you.skill_order[opposite]
+               && you.skills[sk] != 0);
+}
+
+bool antitrain_other(skill_type sk)
+{
+    skill_type opposite = _get_opposite(sk);
+    if (opposite == SK_NONE)
+        return false;
+
+    return (you.skills[opposite] != 0
+            && (you.skills[sk] > you.skills[opposite]
+                || you.skills[sk] == you.skills[opposite]
+                   && you.skill_order[sk] < you.skill_order[opposite]));
+}
+
 void wield_warning(bool newWeapon)
 {
     // Early out - no weapon.
@@ -2060,60 +2271,138 @@ void dump_skills(std::string &text)
     }
 }
 
-skill_type list_skills(std::string title, skill_type hide, bool show_all)
+skill_type select_skill(bool show_all)
 {
+    clrscr();
+    cgotoxy(1, 1);
+    textcolor(WHITE);
+    if (you.transfer_from_skill == SK_NONE)
+        cprintf("Select the source skill.");
+    else
+        cprintf("Select the destination skill.");
+
+    int flags = SK_MENU_SHOW_APT | SK_MENU_RESKILL;
+    if (show_all)
+        flags |= SK_MENU_SHOW_ALL;
+
+    _display_skill_table(flags);
+
+    mouse_control mc(MOUSE_MODE_MORE);
+    const int keyin = getch();
+
+    if (keyin == '*' && you.transfer_from_skill != SK_NONE)
+        return select_skill(true);
+
+    if (!isaalpha(keyin))
+        return SK_NONE;
+
     menu_letter lcount = 'a';
-    int flags = MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING;
-    if (hide != SK_NONE && !show_all)
-        flags |= MF_ALWAYS_SHOW_MORE;
 
-    Menu skill_menu(flags);
-
-    MenuEntry* me = new MenuEntry(title);
-    me->colour = WHITE;
-    skill_menu.set_title(me);
-    skill_menu.set_highlighter(NULL);
-    if (hide != SK_NONE && !show_all)
-        skill_menu.set_more(formatted_string("Press * to see all"));
-
-    for (int i = 0; i < ndisplayed_skills; ++i)
+    for (int i = 0; i < ndisplayed_skills; i++)
     {
-        skill_type sk = skill_display_order[i];
-
-        if (is_invalid_skill(sk) || sk == hide
-            || hide != SK_NONE && you.skills[sk] == 27)
-        {
+        const skill_type x = skill_display_order[i];
+        if (!_skill_is_selectable(x, flags))
             continue;
-        }
 
-        if (you.skills[sk] > 0 || show_all)
-        {
-            std::string skill_text = make_stringf("%s (%d)", skill_name(sk),
-                                                  you.skills[sk]);
-            me = new MenuEntry(skill_text, MEL_ITEM, 1, lcount);
-            if (you.skills[sk] == 27)
-                me->colour = YELLOW;
-            skill_type* skp = new skill_type(sk);
-            me->data = skp;
-            skill_menu.add_entry(me);
-            lcount++;
-        }
+        if (keyin == lcount)
+            return x;
+
+        ++lcount;
     }
-    while (true)
+    return SK_NONE;
+}
+
+// Transfer skill points from one skill to another (Ashenzari transfer
+// knowledge ability). If simu, it just simulates the transfer and don't
+// change anything. It returns the new level of tsk.
+int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
+                          bool simu)
+{
+    ASSERT(!is_invalid_skill(fsk) && !is_invalid_skill(tsk));
+
+    const int penalty = 90; // 10% XP penalty
+    int total_skp_lost   = 0; // skill points lost in fsk.
+    int total_skp_gained = 0; // skill points gained in tsk.
+    int fsk_level = you.skills[fsk];
+    int tsk_level = you.skills[tsk];
+    int fsk_points = you.skill_points[fsk];
+    int tsk_points = you.skill_points[tsk];
+    int fsk_ct_points = you.ct_skill_points[fsk];
+    int tsk_ct_points = you.ct_skill_points[tsk];
+
+#ifdef DEBUG_DIAGNOSTICS
+    if (!simu && you.ct_skill_points[fsk] > 0)
+        dprf("ct_skill_points[%s]: %d", skill_name(fsk), you.ct_skill_points[fsk]);
+#endif
+
+    // We need to transfer by small steps and updating skill levels each time
+    // so that cross/anti-training are handled properly.
+    while (total_skp_lost < skp_max && you.skills[tsk] < 27
+           && (simu || total_skp_lost < (int)you.transfer_skill_points))
     {
-        std::vector<MenuEntry*> sel = skill_menu.show();
-        if (!crawl_state.doing_prev_cmd_again)
-            redraw_screen();
-        if (sel.empty())
+        int skp_lost = std::min(20, skp_max - total_skp_lost);
+        int skp_gained = skp_lost * penalty / 100;
+
+        float ct_bonus = crosstrain_bonus(tsk);
+        if (ct_bonus > 1)
         {
-            if (!show_all && hide != SK_NONE && skill_menu.getkey() == '*')
-                return list_skills(title, hide, true);
-            else
-                return SK_NONE;
+            skp_gained *= ct_bonus;
+            you.ct_skill_points[tsk] += (1 - 1 / ct_bonus) * skp_gained;
+        }
+        else if (is_antitrained(tsk))
+            skp_gained /= ANTITRAIN_PENALTY;
+
+        ASSERT(you.skill_points[fsk] > you.ct_skill_points[fsk]);
+
+        int ct_penalty = skp_lost * you.ct_skill_points[fsk]
+                          / (you.skill_points[fsk] - you.ct_skill_points[fsk]);
+        ct_penalty = std::min<int>(ct_penalty, you.ct_skill_points[fsk]);
+        you.ct_skill_points[fsk] -= ct_penalty;
+        skp_lost += ct_penalty;
+
+        if (!simu)
+        {
+            skp_lost = std::min<int>(skp_lost, you.transfer_skill_points
+                                               - total_skp_lost);
         }
 
-        ASSERT(sel.size() == 1);
-        ASSERT(sel[0]->hotkeys.size() == 1);
-        return *static_cast<skill_type*>(sel[0]->data);
+        change_skill_points(fsk, -skp_lost, false);
+        if (fsk != tsk)
+            change_skill_points(tsk, skp_gained, false);
+        total_skp_lost += skp_lost;
+        total_skp_gained += skp_gained;
     }
+
+    int new_level = you.skills[tsk];
+    // Restore the level
+    you.skills[fsk] = fsk_level;
+    you.skills[tsk] = tsk_level;
+
+    if (simu)
+    {
+        you.skill_points[fsk] = fsk_points;
+        you.skill_points[tsk] = tsk_points;
+        you.ct_skill_points[fsk] = fsk_ct_points;
+        you.ct_skill_points[tsk] = tsk_ct_points;
+    }
+    else
+    {
+        // Perform the real level up
+        check_skill_level_change(fsk);
+        check_skill_level_change(tsk);
+        you.transfer_skill_points -= total_skp_lost;
+
+        dprf("skill %s lost %d points", skill_name(fsk), total_skp_lost);
+        dprf("skill %s gained %d points", skill_name(tsk), total_skp_gained);
+#ifdef DEBUG_DIAGNOSTICS
+        if (you.ct_skill_points[fsk] > 0)
+            dprf("ct_skill_points[%s]: %d", skill_name(fsk), you.ct_skill_points[fsk]);
+#endif
+
+        if (you.transfer_skill_points <= 0 || you.skills[tsk] == 27)
+            ashenzari_end_transfer(true);
+        else if (you.transfer_skill_points > 0)
+            dprf("%d skill points left to transfer", you.transfer_skill_points);
+    }
+    return new_level;
 }

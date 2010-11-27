@@ -177,8 +177,10 @@ MDEF(dancing_weapon)
 
 static const char *_monuse_names[] =
 {
-    "nothing", "open_doors", "starting_equipment", "weapons_armour",
-    "magic_items"
+    "nothing", "open_doors", "starting_equipment", "weapons_armour"
+#if TAG_MAJOR_VERSION == 31
+    , "magic_items"
+#endif
 };
 
 static const char *_monuse_to_str(mon_itemuse_type utyp)

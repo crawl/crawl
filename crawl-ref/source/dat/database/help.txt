@@ -4,26 +4,26 @@ pick-up
                    <h>Picking up and dropping items</h>
 <h>Item letters</h>
 Pressing an item's letter key will select the item.
+Entering a number before the letter will only select that quantity.
 
 <h>Regular expressions</h>
 You can press <w>Ctrl-F</w> to enter a word (or a regular expression).
 All matching items will be selected.
 
+<h>Cursor</h>
+There are shortcuts to quickly select several items in succession:
+<w>.</w>   selects the next item and moves the cursor down
+<w>'</w>   moves the cursor down without changing selection
+The cursor is usually hidden; pressing <w>.</w> or <w>'</w> makes it appear.
+
 <h>Category shortcuts</w>
 You can quickly select items by type by pressing:
-<w>(</w>         weapons         <w>=</w> or <w>"</w>    jewellery      <w>:</w> or <w>+</w>    books
-<w>)</w>         ammunition      <w>!</w>         potions        <w>/</w>         wands
-<w>[</w>         armour          <w>?</w>         scrolls        <w>%</w>         food
-<w>&</w>         carrion (corpses, skeletons, useless chunks)
-
-Apart from these, there are the general shortcuts:
-<w>-</w>         deselect everything
-<w>,</w>         select everything
-<w>*</w>         invert selection
-
-Note that for dropping, the <w>,</w> and <w>-</w> commands use the <w>drop_filter</w> option,
-which narrows the range of items to be (de)selected. The default value
-of the option is useless items.
+<w>!</w>   potions      <w>(</w>   weapons         <w>[</w>   armour       <w>=</w> or <w>"</w>   jewellery 
+<w>?</w>   scrolls      <w>)</w>   ammunition      <w>/</w>   wands        <w>:</w> or <w>+</w>   books
+<w>%</w>   food         <w>&</w>   carrion (corpses, skeletons, useless chunks)
+Global selects:  <w>,</w>   select all      <w>*</w>   invert all        <w>-</w>   deselect all     
+Note that for dropping, the <w>,</w> command uses the <w>drop_filter</w> option, which
+narrows the range of items to be (de)selected. The default are useless items.
 %%%%
 stash-search.prompt
 

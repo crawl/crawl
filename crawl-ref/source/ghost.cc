@@ -460,11 +460,12 @@ static mon_attack_flavour _very_ugly_thing_flavour_upgrade(mon_attack_flavour u_
 
     return (u_att_flav);
 }
+
 mon_attack_flavour ugly_thing_colour_to_flavour(uint8_t u_colour)
 {
     mon_attack_flavour u_att_flav = AF_PLAIN;
 
-    switch (u_colour & 7)
+    switch (make_low_colour(u_colour))
     {
     case RED:
         u_att_flav = AF_FIRE;
@@ -494,8 +495,9 @@ mon_attack_flavour ugly_thing_colour_to_flavour(uint8_t u_colour)
         break;
     }
 
-    if (u_colour & 8)
+    if (is_high_colour(u_colour))
         u_att_flav = _very_ugly_thing_flavour_upgrade(u_att_flav);
+
     return (u_att_flav);
 }
 

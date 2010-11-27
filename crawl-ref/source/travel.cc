@@ -120,7 +120,6 @@ travel_distance_grid_t travel_point_distance;
 bool g_Slime_Wall_Check = true;
 
 static uint8_t curr_waypoints[GXM][GYM];
-static FixedArray< map_cell, GXM, GYM >  mapshadow;
 
 const int8_t TRAVERSABLE = 1;
 const int8_t IMPASSABLE  = 0;
@@ -903,22 +902,9 @@ command_type travel()
 
     if (you.running.is_explore())
     {
-        // Scan through the shadow map, compare it with the actual map, and if
-        // there are any squares of the shadow map that have just been
-        // discovered and contain an item, or have an interesting dungeon
-        // feature, stop exploring.
-        explore_discoveries discoveries;
-        for (rectangle_iterator ri(1); ri; ++ri)
-        {
-            const coord_def p(*ri);
-            if (!mapshadow(p).seen() && env.map_knowledge(p).seen())
-                _check_interesting_square(p, discoveries);
-        }
-
-        if (discoveries.prompt_stop())
+        if (check_for_interesting_features())
             stop_running();
-
-        mapshadow = env.map_knowledge;
+        env.map_shadow = env.map_knowledge;
     }
 
     if (you.running.is_explore())
@@ -2876,7 +2862,7 @@ void start_explore(bool grab_items)
     }
 
     // Clone shadow array off map
-    mapshadow = env.map_knowledge;
+    env.map_shadow = env.map_knowledge;
 
     you.running.pos.reset();
     _start_running();
@@ -4366,4 +4352,22 @@ int click_travel(const coord_def &gc, bool force)
         return 0;
 
     return _adjacent_cmd(dest, force);
+}
+
+bool check_for_interesting_features()
+{
+    // Scan through the shadow map, compare it with the actual map, and if
+    // there are any squares of the shadow map that have just been
+    // discovered and contain an item, or have an interesting dungeon
+    // feature, stop exploring.
+    explore_discoveries discoveries;
+    for (radius_iterator ri(you.get_los()); ri; ++ri)
+    {
+        const coord_def p(*ri);
+        if (!env.map_shadow(p).seen() && env.map_knowledge(p).seen())
+            _check_interesting_square(p, discoveries);
+    }
+
+    env.map_shadow = env.map_knowledge;
+    return(discoveries.prompt_stop());
 }

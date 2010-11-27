@@ -389,6 +389,51 @@ void move_cloud(int cloud, const coord_def& newpos)
     }
 }
 
+#if 0
+static void _validate_clouds()
+{
+    for (rectangle_iterator ri(0); ri; ri++)
+    {
+        int c = env.cgrid(*ri);
+        if (c == EMPTY_CLOUD)
+            continue;
+        ASSERT(env.cloud[c].pos == *ri);
+    }
+
+    for (int c = 0; c < MAX_CLOUDS; c++)
+        if (env.cloud[c].type != CLOUD_NONE)
+            ASSERT(env.cgrid(env.cloud[c].pos) == c);
+}
+#endif
+
+void swap_clouds(coord_def p1, coord_def p2)
+{
+    if (p1 == p2)
+        return;
+    int c1 = env.cgrid(p1);
+    int c2 = env.cgrid(p2);
+    bool affects_los = false;
+    if (c1 != EMPTY_CLOUD)
+    {
+        env.cloud[c1].pos = p2;
+        if (is_opaque_cloud(env.cloud[c1].type))
+            affects_los = true;
+    }
+    if (c2 != EMPTY_CLOUD)
+    {
+        env.cloud[c2].pos = p1;
+        if (is_opaque_cloud(env.cloud[c2].type))
+            affects_los = true;
+    }
+    env.cgrid(p1) = c2;
+    env.cgrid(p2) = c1;
+    if (affects_los)
+    {
+        invalidate_los_around(p1);
+        invalidate_los_around(p2);
+    }
+}
+
 // Places a cloud with the given stats assuming one doesn't already
 // exist at that point.
 void check_place_cloud(cloud_type cl_type, const coord_def& p, int lifetime,
@@ -1112,6 +1157,7 @@ static const char *_terse_cloud_names[] =
     "purple smoke", "translocational energy", "fire",
     "steam", "gloom", "ink", "blessed fire", "foul pestilence", "thin mist",
     "seething chaos", "rain", "mutagenic fog", "magical condensation",
+    "raging winds",
 };
 
 static const char *_verbose_cloud_names[] =
@@ -1122,7 +1168,7 @@ static const char *_verbose_cloud_names[] =
     "purple smoke", "translocational energy", "roaring flames",
     "a cloud of scalding steam", "a thick gloom", "ink", "blessed fire",
     "a dark miasma", "thin mist", "seething chaos", "the rain",
-    "a mutagenic fog", "magical condensation",
+    "a mutagenic fog", "magical condensation", "raging winds",
 };
 
 std::string cloud_type_name(cloud_type type, bool terse)
@@ -1296,6 +1342,10 @@ int get_cloud_colour(int cloudno)
 
     case CLOUD_HOLY_FLAMES:
         which_colour = ETC_HOLY;
+        break;
+
+    case CLOUD_TORNADO:
+        which_colour = ETC_TORNADO;
         break;
 
     default:

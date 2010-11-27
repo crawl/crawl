@@ -122,6 +122,8 @@ const int NUM_ID_SUBTYPE = 50;
 typedef FixedArray<item_type_id_state_type, NUM_IDTYPE, NUM_ID_SUBTYPE> id_arr;
 
 id_arr& get_typeid_array();
+CrawlHashTable& get_type_id_props();
+
 item_type_id_state_type get_ident_type(const item_def &item);
 item_type_id_state_type get_ident_type(object_class_type basetype,
                                        int subtype);

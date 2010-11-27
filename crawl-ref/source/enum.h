@@ -146,6 +146,7 @@ enum ability_type
     ABIL_CHEIBRIADOS_SLOUCH,
     ABIL_ASHENZARI_SCRYING,
     ABIL_ASHENZARI_TRANSFER_KNOWLEDGE,
+    ABIL_ASHENZARI_END_TRANSFER,            // 255
 
     // Vampire abilities
     ABIL_TRAN_BAT = 260,
@@ -412,13 +413,6 @@ enum branch_type                // you.where_are_you
     NUM_BRANCHES
 };
 
-enum builder_rc_type
-{
-    BUILD_QUIT = -1,            // all done, don't continue
-    BUILD_SKIP = 1,             // skip further generation
-    BUILD_CONTINUE = 0,         // continue generation
-};
-
 enum burden_state_type          // you.burden_state
 {
     BS_UNENCUMBERED,            //    0
@@ -489,17 +483,18 @@ enum cloud_type
     CLOUD_GLOOM,
     CLOUD_INK,
     CLOUD_HOLY_FLAMES,
-
-    CLOUD_OPAQUE_FIRST = CLOUD_BLACK_SMOKE,
-    CLOUD_OPAQUE_LAST  = CLOUD_HOLY_FLAMES,
-
     CLOUD_MIASMA,
     CLOUD_MIST,
     CLOUD_CHAOS,
     CLOUD_RAIN,
     CLOUD_MUTAGENIC,
     CLOUD_MAGIC_TRAIL,
+    CLOUD_TORNADO,
     NUM_CLOUD_TYPES,
+
+    CLOUD_OPAQUE_FIRST = CLOUD_BLACK_SMOKE,
+    CLOUD_OPAQUE_LAST  = CLOUD_HOLY_FLAMES,
+
     CLOUD_RANDOM = 98,
     CLOUD_DEBUGGING = 99,   //   99: used once as 'nonexistent cloud' {dlb}
 };
@@ -1301,6 +1296,7 @@ enum duration_type
     DUR_AFRAID,
     DUR_MIRROR_DAMAGE,
     DUR_SCRYING,
+    DUR_TORNADO,
 
     NUM_DURATIONS
 };
@@ -1370,6 +1366,8 @@ enum enchant_type
     ENCH_WITHDRAWN,
     ENCH_ATTACHED,
     ENCH_LIFE_TIMER,    // Minimum time demonic guardian must exist.
+    ENCH_LEVITATION,
+    ENCH_HELPLESS,
 
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
@@ -3275,6 +3273,7 @@ enum spell_type
 #if TAG_MAJOR_VERSION == 31
     SPELL_NOXIOUS_CLOUD,
 #endif
+    SPELL_TORNADO,
 
     NUM_SPELLS
 };

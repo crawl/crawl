@@ -3065,11 +3065,17 @@ void excommunication(god_type new_god)
     case GOD_FEDHAS:
         if (query_da_counter(DACT_ALLY_PLANT))
         {
-            mpr("The plants of the dungeon turn on you!", MSGCH_GOD, GOD_FEDHAS);
+            mpr("The plants of the dungeon turn on you.", MSGCH_GOD, GOD_FEDHAS);
             add_daction(DACT_ALLY_PLANT);
         }
         _inc_penance(old_god, 30);
         divine_retribution(old_god);
+        break;
+
+    case GOD_ASHENZARI:
+        if (you.transfer_skill_points > 0)
+            ashenzari_end_transfer(false, true);
+        _inc_penance(old_god, 25);
         break;
 
     case GOD_CHEIBRIADOS:
@@ -3298,6 +3304,7 @@ void god_welcome_identify_gear()
         set_ident_type(OBJ_SCROLLS, SCR_CURSE_ARMOUR, ID_KNOWN_TYPE);
         set_ident_type(OBJ_SCROLLS, SCR_CURSE_JEWELLERY, ID_KNOWN_TYPE);
         ash_id_inventory();
+        ash_detect_portals(true);
     }
 }
 
@@ -3427,8 +3434,8 @@ void god_pitch(god_type which_god)
 
     if (you.religion == GOD_ELYVILON)
     {
-        mpr("You can now call upon Elyvilon to destroy weapons lying "
-            "on the ground.", MSGCH_GOD);
+        mpr("You can now call upon Elyvilon to destroy weapons lying on the "
+            "ground.", MSGCH_GOD);
     }
     else if (you.religion == GOD_TROG)
     {
@@ -3437,7 +3444,7 @@ void god_pitch(god_type which_god)
     }
     else if (you.religion == GOD_FEDHAS)
     {
-        mpr("You can call upon Fedhas to speed up the decay of corpses.",
+        mpr("You can now call upon Fedhas to speed up the decay of corpses.",
             MSGCH_GOD);
         mpr("The plants of the dungeon cease their hostilities.", MSGCH_GOD);
     }

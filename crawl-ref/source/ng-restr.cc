@@ -31,6 +31,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_BASE_DRACONIAN:
             case SP_MUMMY:
             case SP_VAMPIRE:
+            case SP_CAT:
                 return (CC_RESTRICTED);
             default:
                 return (CC_UNRESTRICTED);
@@ -51,6 +52,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_BASE_DRACONIAN:
             case SP_GHOUL:
             case SP_MUMMY:
+            case SP_CAT:
                 return (CC_RESTRICTED);
             default:
                 return (CC_UNRESTRICTED);
@@ -157,6 +159,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_SPRIGGAN:
             case SP_NAGA:
             case SP_KENKU:
+            case SP_CAT:
                 return (CC_RESTRICTED);
             default:
                 return (CC_UNRESTRICTED);
@@ -175,6 +178,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_HALFLING:
             case SP_SPRIGGAN:
             case SP_NAGA:
+            case SP_CAT:
                 return (CC_RESTRICTED);
             default:
                 return (CC_UNRESTRICTED);
@@ -224,7 +228,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_MUMMY:
             case SP_GHOUL:
             case SP_VAMPIRE:
-            case SP_CAT:
                 return (CC_RESTRICTED);
             default:
                 return (CC_UNRESTRICTED);
@@ -245,7 +248,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_OGRE:
             case SP_MINOTAUR:
             case SP_GHOUL:
-            case SP_CAT:
                 return (CC_RESTRICTED);
             default:
                 return (CC_UNRESTRICTED);
@@ -264,7 +266,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_MINOTAUR:
             case SP_GHOUL:
             case SP_VAMPIRE:
-            case SP_CAT:
                 return (CC_RESTRICTED);
             default:
                 return (CC_UNRESTRICTED);
@@ -354,7 +355,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_MUMMY:
             case SP_GHOUL:
             case SP_VAMPIRE:
-            case SP_CAT:
                 return (CC_RESTRICTED);
             default:
                 return (CC_UNRESTRICTED);
@@ -427,7 +427,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_MINOTAUR:
             case SP_GHOUL:
             case SP_VAMPIRE:
-            case SP_CAT:
                 return (CC_RESTRICTED);
             default:
                 return (CC_UNRESTRICTED);
@@ -446,7 +445,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_MINOTAUR:
             case SP_GHOUL:
             case SP_VAMPIRE:
-            case SP_CAT:
                 return (CC_RESTRICTED);
             default:
                 return (CC_UNRESTRICTED);
@@ -465,7 +463,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_MUMMY:
             case SP_GHOUL:
             case SP_VAMPIRE:
-            case SP_CAT:
                 return (CC_RESTRICTED);
             default:
                 return (CC_UNRESTRICTED);
@@ -487,7 +484,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_BASE_DRACONIAN:
             case SP_GHOUL:
             case SP_VAMPIRE:
-            case SP_CAT:
                 return (CC_RESTRICTED);
             default:
                 return (CC_UNRESTRICTED);
@@ -506,7 +502,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_MINOTAUR:
             case SP_GHOUL:
             case SP_VAMPIRE:
-            case SP_CAT:
                 return (CC_RESTRICTED);
             default:
                 return (CC_UNRESTRICTED);
@@ -546,6 +541,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_TROLL:
             case SP_MINOTAUR:
             case SP_BASE_DRACONIAN:
+            case SP_CAT:
                 return (CC_RESTRICTED);
             default:
                 return (CC_UNRESTRICTED);
@@ -626,6 +622,7 @@ char_choice_restriction book_restriction(startup_book_type booktype,
             case SP_DEMIGOD:
             case SP_DEMONSPAWN:
             case SP_MUMMY:
+            case SP_CAT:
                 return (CC_UNRESTRICTED);
 
             default:
@@ -651,6 +648,7 @@ char_choice_restriction book_restriction(startup_book_type booktype,
             case SP_DEMIGOD:
             case SP_DEMONSPAWN:
             case SP_MUMMY:
+            case SP_CAT:
                 return (CC_UNRESTRICTED);
 
             default:
@@ -671,6 +669,7 @@ char_choice_restriction book_restriction(startup_book_type booktype,
             case SP_KENKU:
             case SP_MUMMY:
             case SP_VAMPIRE:
+            case SP_CAT:
                 return (CC_UNRESTRICTED);
 
             default:
@@ -875,6 +874,7 @@ char_choice_restriction religion_restriction(god_type god,
             case SP_MUMMY:
             case SP_GHOUL:
             case SP_VAMPIRE:
+            case SP_CAT:
                 return (CC_UNRESTRICTED);
             default:
                 if (species_genus(ng.species) == GENPC_DRACONIAN)
@@ -896,6 +896,7 @@ char_choice_restriction religion_restriction(god_type god,
             case SP_MINOTAUR:
             case SP_KENKU:
             case SP_DEMONSPAWN:
+            case SP_CAT:
                 return (CC_UNRESTRICTED);
             default:
                 if (species_genus(ng.species) == GENPC_DRACONIAN)
@@ -927,6 +928,7 @@ char_choice_restriction religion_restriction(god_type god,
             case SP_MUMMY:
             case SP_GHOUL:
             case SP_VAMPIRE:
+            case SP_CAT:
                 return (CC_UNRESTRICTED);
             default:
                 if (species_genus(ng.species) == GENPC_DRACONIAN)

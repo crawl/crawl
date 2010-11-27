@@ -932,16 +932,15 @@ static int _generate_rod_power(monster *mons, int overriding_power = 0)
         switch (shield->sub_type)
         {
         case ARM_BUCKLER:
-            shield_base = 5;
+            shield_base += 4;
             break;
         case ARM_SHIELD:
-            shield_base = 3;
+            shield_base += 2;
             break;
         case ARM_LARGE_SHIELD:
-            shield_base = 2;
+            shield_base++;
             break;
         default:
-            shield_base = 1;
             break;
         }
     }
