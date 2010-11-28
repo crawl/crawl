@@ -66,8 +66,15 @@ int SkillRegion::handle_mouse(MouseEvent &event)
     if (event.button == MouseEvent::LEFT)
     {
         m_last_clicked_item = item_idx;
-        tiles.set_need_redraw();
-		// TODO: toggle skill
+        if (you.skills[skill] == 0)
+            mpr("You cannot toggle a skill you don't have yet.");
+        else if (you.skills[skill] >= 27)
+            mpr("There's no point to toggling this skill anymore.");
+        else
+        {
+            tiles.set_need_redraw();
+            you.practise_skill[skill] = !you.practise_skill[skill];
+        }
         return CK_MOUSE_CMD;
     }
     else if (skill != NUM_SKILLS && event.button == MouseEvent::RIGHT)
@@ -98,14 +105,18 @@ bool SkillRegion::update_tip_text(std::string& tip)
     if (item_idx >= m_items.size() || m_items[item_idx].empty())
         return (false);
 
-    int flag = m_items[item_idx].flag;
+    const int flag = m_items[item_idx].flag;
     std::vector<command_type> cmd;
     if (flag & TILEI_FLAG_INVALID)
         tip = "You don't have this skill yet.";
     else
     {
-		// TODO: Change tip text depending on active or not
-        tip = "[L-Click] Toggle training";
+        const skill_type skill = (skill_type) m_items[item_idx].idx;
+
+        tip = "[L-Click] ";
+        if (you.practise_skill[skill])
+            tip += "Lower the rate of training";
+        tip += "Increase the rate of training";
     }
 
     tip += "\n[R-Click] Describe";
@@ -133,6 +144,7 @@ bool SkillRegion::update_alt_text(std::string &alt)
     const skill_type skill = (skill_type) idx;
 
     describe_info inf;
+    // TODO: Nicer display for level, aptitude and crosstraining.
     inf.body << get_skill_description(skill, true);
 
     alt_desc_proc proc(crawl_view.msgsz.x, crawl_view.msgsz.y);
@@ -142,25 +154,17 @@ bool SkillRegion::update_alt_text(std::string &alt)
     return (true);
 }
 
-int SkillRegion::get_max_slots()
-{
-    return (NUM_SKILLS);
-}
-
 void SkillRegion::pack_buffers()
 {
-    const int max_skills = get_max_slots();
-
-    // Pack base separately, as it comes from a different texture...
     int i = 0;
     for (int y = 0; y < my; y++)
     {
-        if (i >= max_skills)
+        if (i >= 32)
             break;
 
         for (int x = 0; x < mx; x++)
         {
-            if (i++ >= max_skills)
+            if (i++ >= 32)
                 break;
 
             m_buf.add_dngn_tile(TILE_ITEM_SLOT, x, y);
@@ -182,14 +186,14 @@ void SkillRegion::pack_buffers()
             if (item.flag & TILEI_FLAG_INVALID)
                 m_buf.add_main_tile(TILE_MESH, x, y);
 
-            if (item.flag & TILEI_FLAG_CURSOR)
-                m_buf.add_main_tile(TILE_CURSOR, x, y);
-
-            if (item.quantity != -1)
+            if (item.quantity > 0)
                 draw_number(x, y, item.quantity);
 
             if (item.tile)
                 m_buf.add_skill_tile(item.tile, x, y);
+
+            if (item.flag & TILEI_FLAG_CURSOR)
+                m_buf.add_main_tile(TILE_CURSOR, x, y);
         }
     }
 }
@@ -210,12 +214,12 @@ void SkillRegion::update()
             continue;
 
         InventoryTile desc;
-        desc.tile     = tileidx_skill(skill);
+        desc.tile     = tileidx_skill(skill,
+                                      you.practise_skill[skill]);
         desc.idx      = idx;
         desc.quantity = you.skills[skill];
 
-        std::string temp;
-        if (you.skills[skill] < 1)
+        if (you.skills[skill] == 0 || you.skills[skill] >= 27)
             desc.flag |= TILEI_FLAG_INVALID;
 
         m_items.push_back(desc);

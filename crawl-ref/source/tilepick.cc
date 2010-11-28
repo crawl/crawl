@@ -3678,9 +3678,50 @@ tileidx_t tileidx_spell(spell_type spell)
     }
 }
 
-tileidx_t tileidx_skill(skill_type skill)
+tileidx_t tileidx_skill(skill_type skill, bool active)
 {
-	return TILEG_TODO;
+    tileidx_t ch;
+	switch (skill)
+	{
+    case SK_FIGHTING:       ch = TILEG_FIGHTING_ON; break;
+    case SK_SHORT_BLADES:   ch = TILEG_SHORT_BLADES_ON; break;
+    case SK_LONG_BLADES:    ch = TILEG_LONG_BLADES_ON; break;
+    case SK_AXES:           ch = TILEG_AXES_ON; break;
+    case SK_MACES_FLAILS:   ch = TILEG_MACES_FLAILS_ON; break;
+    case SK_POLEARMS:       ch = TILEG_POLEARMS_ON; break;
+    case SK_STAVES:         ch = TILEG_STAVES_ON; break;
+    case SK_SLINGS:         ch = TILEG_SLINGS_ON; break;
+    case SK_BOWS:           ch = TILEG_BOWS_ON; break;
+    case SK_CROSSBOWS:      ch = TILEG_CROSSBOWS_ON; break;
+    case SK_THROWING:       ch = TILEG_THROWING_ON; break;
+    case SK_ARMOUR:         ch = TILEG_ARMOUR_ON; break;
+    case SK_DODGING:        ch = TILEG_DODGING_ON; break;
+    case SK_STEALTH:        ch = TILEG_STEALTH_ON; break;
+    case SK_STABBING:       ch = TILEG_STABBING_ON; break;
+    case SK_SHIELDS:        ch = TILEG_SHIELDS_ON; break;
+    case SK_TRAPS_DOORS:    ch = TILEG_TRAPS_DOORS_ON; break;
+    case SK_UNARMED_COMBAT: ch = TILEG_UNARMED_COMBAT_ON; break;
+    case SK_SPELLCASTING:   ch = TILEG_SPELLCASTING_ON; break;
+    case SK_CONJURATIONS:   ch = TILEG_CONJURATIONS_ON; break;
+    case SK_ENCHANTMENTS:   ch = TILEG_ENCHANTMENTS_ON; break;
+    case SK_SUMMONINGS:     ch = TILEG_SUMMONINGS_ON; break;
+    case SK_NECROMANCY:     ch = TILEG_NECROMANCY_ON; break;
+    case SK_TRANSLOCATIONS: ch = TILEG_TRANSLOCATIONS_ON; break;
+    case SK_TRANSMUTATIONS: ch = TILEG_TRANSMUTATIONS_ON; break;
+    case SK_FIRE_MAGIC:     ch = TILEG_FIRE_MAGIC_ON; break;
+    case SK_ICE_MAGIC:      ch = TILEG_ICE_MAGIC_ON; break;
+    case SK_AIR_MAGIC:      ch = TILEG_AIR_MAGIC_ON; break;
+    case SK_EARTH_MAGIC:    ch = TILEG_EARTH_MAGIC_ON; break;
+    case SK_POISON_MAGIC:   ch = TILEG_POISON_MAGIC_ON; break;
+    case SK_INVOCATIONS:    ch = TILEG_INVOCATIONS_ON; break;
+    case SK_EVOCATIONS:     ch = TILEG_EVOCATIONS_ON; break;
+	default:        		return TILEG_TODO;
+	}
+
+    if (!active)
+        ch++;
+
+    return ch;
 }
 
 tileidx_t tileidx_known_brand(const item_def &item)
