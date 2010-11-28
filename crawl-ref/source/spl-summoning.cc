@@ -850,6 +850,9 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
         if (you.duration[DUR_WEAPON_BRAND])
             set_item_ego_type(cp, OBJ_WEAPONS, SPWPN_NORMAL);
 
+        // Mark weapon as "thrown", so we'll autopickup it later.
+        cp.flags |= ISFLAG_THROWN;
+
         // Cursed weapons become hostile.
         const bool friendly = (!force_hostile && !wpn->cursed());
 
