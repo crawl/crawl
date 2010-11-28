@@ -18,6 +18,10 @@
 #include "tilepick.h"
 #include "viewgeom.h"
 
+#ifdef WIZARD
+#include "wiz-you.h"
+#endif
+
 SkillRegion::SkillRegion(const TileRegionInit &init) : GridRegion(init)
 {
 }
@@ -58,6 +62,14 @@ int SkillRegion::handle_mouse(MouseEvent &event)
     const skill_type skill = (skill_type) m_items[item_idx].idx;
     if (event.button == MouseEvent::LEFT)
     {
+        // TODO: Handle skill transferral using MOD_SHIFT.
+#ifdef WIZARD
+        if (you.wizard && (event.mod & MOD_CTRL))
+        {
+            wizard_set_skill_level(skill);
+            return CK_MOUSE_CMD;
+        }
+#endif
         m_last_clicked_item = item_idx;
         if (you.skills[skill] == 0)
             mpr("You cannot toggle a skill you don't have yet.");
@@ -109,8 +121,13 @@ bool SkillRegion::update_tip_text(std::string& tip)
         tip = "[L-Click] ";
         if (you.practise_skill[skill])
             tip += "Lower the rate of training";
-        tip += "Increase the rate of training";
+        else
+            tip += "Increase the rate of training";
     }
+#ifdef WIZARD
+    if (you.wizard)
+        tip += "\n[Ctrl-L-Click] Change skill level (wizmode)";
+#endif
 
     tip += "\n[R-Click] Describe";
 
