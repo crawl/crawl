@@ -396,15 +396,9 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_PALE_DRACONIAN, 'd',
-#ifdef USE_TILE
     // Colours are used for picking the right tile for Tiamat,
     // so this needs to be different from the grey draconian. (jpeg)
-    CYAN,
-#else
-    LIGHTGREY,
-#endif
-    "pale draconian",
+    MONS_PALE_DRACONIAN, 'd', CYAN, "pale draconian",
     M_COLD_BLOOD | M_SPEAKS,
     MR_RES_STEAM,
     900, 10, MONS_DRACONIAN, MONS_PALE_DRACONIAN, MH_NATURAL, -2,
