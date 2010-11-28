@@ -10,17 +10,10 @@
 
 #include "tilereg-skl.h"
 
-#include "skills.h"
-#include "skills2.h"
-
 #include "cio.h"
 #include "libutil.h"
-#include "macro.h"
-#include "message.h"
-#include "spl-cast.h"
-#include "spl-util.h"
+#include "skills2.h"
 #include "stuff.h"
-#include "tiledef-dngn.h"
 #include "tiledef-main.h"
 #include "tilepick.h"
 #include "viewgeom.h"
@@ -157,21 +150,6 @@ bool SkillRegion::update_alt_text(std::string &alt)
 void SkillRegion::pack_buffers()
 {
     int i = 0;
-    for (int y = 0; y < my; y++)
-    {
-        if (i >= 32)
-            break;
-
-        for (int x = 0; x < mx; x++)
-        {
-            if (i++ >= 32)
-                break;
-
-            m_buf.add_dngn_tile(TILE_ITEM_SLOT, x, y);
-        }
-    }
-
-    i = 0;
     for (int y = 0; y < my; y++)
     {
         if (i >= (int)m_items.size())
