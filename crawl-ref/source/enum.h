@@ -2249,7 +2249,7 @@ enum monster_type                      // (int) menv[].type
     MONS_HULDRA,
     MONS_TROLLKONOR,
 #endif
-    MONS_GREATER_WRAITH,
+    MONS_EIDOLON,
 
     // Spriggans:
     MONS_SPRIGGAN,

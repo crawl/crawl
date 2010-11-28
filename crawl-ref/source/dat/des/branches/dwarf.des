@@ -67,12 +67,12 @@ end
 dhfh.hall_setup = function(e, glyph)
     local mod
     if (glyph == "|") then
-        mod = local_util.monster_from_statue("greater wraith")
+        mod = local_util.monster_from_statue("eidolon")
         mod:add_triggerer( local_util.new_trigger("item_pickup") )
     else
         local new_monster
         if (local_util.x_chance_in_y(1, 3)) then
-            new_monster="greater wraith"
+            new_monster="eidolon"
         else
             new_monster="freezing wraith"
         end

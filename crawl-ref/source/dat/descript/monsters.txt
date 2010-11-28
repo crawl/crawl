@@ -672,6 +672,10 @@ efreet
 
 A huge and muscular figure engulfed in a cloud of searing flame.
 %%%%
+eidolon
+
+An ancient skeletal apparition, sheathed in a cloud of mist. Its form glows white-hot with debilitating energy.
+%%%%
 eldritch tentacle
 
 This immense, batrachian appendage of some thankfully unseen creature drips with ichor and is tipped with a single, terrible-looking claw.
@@ -899,10 +903,6 @@ greater naga
 A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake.
 
 It looks strong and aggressive.
-%%%%
-greater wraith
-
-An ancient skeletal apparition, sheathed in a cloud of mist. Its form glows white-hot with debilitating energy.
 %%%%
 Green Death
 

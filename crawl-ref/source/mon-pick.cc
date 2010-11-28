@@ -208,6 +208,7 @@ bool mons_abyss(int mcls)
     case MONS_DEMONIC_CRAWLER:
     case MONS_EARTH_ELEMENTAL:
     case MONS_EFREET:
+    case MONS_EIDOLON:
     case MONS_EXECUTIONER:
     case MONS_EYE_OF_DEVASTATION:
     case MONS_EYE_OF_DRAINING:
@@ -223,7 +224,6 @@ bool mons_abyss(int mcls)
     case MONS_GIANT_SPORE:
     case MONS_GREAT_ORB_OF_EYES:
     case MONS_GOLDEN_EYE:
-    case MONS_GREATER_WRAITH:
     case MONS_GREEN_DEATH:
     case MONS_GUARDIAN_SERPENT:
     case MONS_HAIRY_DEVIL:
@@ -416,9 +416,9 @@ int mons_rare_abyss(int mcls)
     case MONS_SKY_BEAST:
         return 9;
 
+    case MONS_EIDOLON:
     case MONS_FUNGUS:
     case MONS_GIANT_EYEBALL:
-    case MONS_GREATER_WRAITH:
     case MONS_PHANTOM:
     case MONS_REAPER:
         return 8;
@@ -1162,7 +1162,7 @@ int mons_dwarf_rare(int mcls)
     case MONS_WRAITH:
         return 30;
     case MONS_PHANTASMAL_WARRIOR:
-    case MONS_GREATER_WRAITH:
+    case MONS_EIDOLON:
     case MONS_FIRE_GIANT:
     case MONS_FROST_GIANT:
     case MONS_STONE_GIANT:
