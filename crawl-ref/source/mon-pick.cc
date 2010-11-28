@@ -223,6 +223,7 @@ bool mons_abyss(int mcls)
     case MONS_GIANT_SPORE:
     case MONS_GREAT_ORB_OF_EYES:
     case MONS_GOLDEN_EYE:
+    case MONS_GREATER_WRAITH:
     case MONS_GREEN_DEATH:
     case MONS_GUARDIAN_SERPENT:
     case MONS_HAIRY_DEVIL:
@@ -417,6 +418,7 @@ int mons_rare_abyss(int mcls)
 
     case MONS_FUNGUS:
     case MONS_GIANT_EYEBALL:
+    case MONS_GREATER_WRAITH:
     case MONS_PHANTOM:
     case MONS_REAPER:
         return 8;
