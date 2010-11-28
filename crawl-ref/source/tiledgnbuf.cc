@@ -141,9 +141,9 @@ void DungeonCellBuffer::draw()
     m_buf_feat.draw();
     m_buf_doll.draw();
     m_buf_main_trans.draw();
+    m_buf_skills.draw();
     m_buf_main.draw();
     m_buf_spells.draw();
-    m_buf_skills.draw();
 }
 
 enum wave_type

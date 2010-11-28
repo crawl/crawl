@@ -23,8 +23,6 @@ public:
     virtual const std::string name() const { return "Skills"; }
 
 protected:
-    virtual int get_max_slots();
-
     virtual void pack_buffers();
     virtual void draw_tag();
     virtual void activate();
