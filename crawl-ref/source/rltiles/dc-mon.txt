@@ -761,7 +761,15 @@ flying_skull MONS_FLYING_SKULL
 
 ## Draconians ('d')
 %sdir dc-mon/unique
-tiamat MONS_TIAMAT
+tiamat_black MONS_TIAMAT
+tiamat_yellow
+tiamat_green
+tiamat_grey
+tiamat_mottled
+tiamat_pale
+tiamat_purple
+tiamat_red
+tiamat_white
 %sdir dc-mon/draco
 draco-base-brown DRACO_BASE
 draco-base-black
