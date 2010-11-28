@@ -3694,10 +3694,10 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_GREATER_WRAITH, 'W', LIGHTGREY, "greater wraith",
+    MONS_EIDOLON, 'W', LIGHTGREY, "eidolon",
     M_SEE_INVIS | M_GLOWS_LIGHT | M_INSUBSTANTIAL,
     MR_RES_COLD,
-    0, 14, MONS_WRAITH, MONS_WRAITH, MH_UNDEAD, -8,
+    0, 14, MONS_WRAITH, MONS_EIDOLON, MH_UNDEAD, -8,
     { {AT_HIT, AF_DRAIN_XP, 13}, {AT_HIT, AF_DRAIN_STAT, 13}, AT_NO_ATK,
        AT_NO_ATK },
     { 13, 3, 5, 0 },
