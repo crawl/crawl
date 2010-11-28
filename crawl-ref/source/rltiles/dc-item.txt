@@ -51,6 +51,7 @@ giant_spiked_club WPN_GIANT_SPIKED_CLUB
 knife WPN_KNIFE
 
 dagger WPN_DAGGER
+dagger2
 orcish_dagger WPN_DAGGER_ORC
 elven_dagger WPN_DAGGER_ELF
 
