@@ -13,6 +13,8 @@ dc-misc/cursor CURSOR
 %sdir player/base
 human_f HUMAN
 human_m
+human_dark_f
+human_dark_m
 elf_m ELF
 elf_f
 deep_elf_f DEEP_ELF
@@ -27,6 +29,8 @@ orc_f ORC
 orc_m
 kobold_m KOBOLD
 kobold_f
+kobold2_m
+kobold2_f
 mummy_m MUMMY
 mummy_f
 naga_f NAGA
@@ -35,6 +39,10 @@ naga_darkgreen_f
 naga_darkgreen_m
 naga_lightgreen_f
 naga_lightgreen_m
+naga_blue_f
+naga_blue_m
+naga_red_f
+naga_red_m
 ogre_m OGRE
 ogre_f
 troll_f TROLL
@@ -90,6 +98,8 @@ kenku_wingless_f KENKU
 kenku_wingless_m
 kenku_winged_f
 kenku_winged_m
+kenku_wingless_brown_f
+kenku_wingless_brown_m
 merfolk_m MERFOLK
 merfolk_f
 merfolk_water_m MERFOLK_WATER
@@ -788,6 +798,7 @@ knot_red KNOT_RED
 brown1 BROWN1
 brown2 BROWN2
 green GREEN
+kenku_comb KENKU_COMB
 %end_ctg
 
 ###Beard
