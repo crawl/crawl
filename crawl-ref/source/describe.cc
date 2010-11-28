@@ -3563,15 +3563,48 @@ void describe_monsters(const monster_info &mi, bool force_seen,
 }
 
 static const char* xl_rank_names[] = {
-    " weakling",
-    "n average",
-    "n experienced",
-    " powerful",
-    " mighty",
-    " great",
-    "n awesomely powerful",
-    " legendary"
+    "weakling",
+    "average",
+    "experienced",
+    "powerful",
+    "mighty",
+    "great",
+    "awesomely powerful",
+    "legendary"
 };
+
+static const char* xl_rank_name(const int xl_rank)
+{
+    const char* rank = xl_rank_names[xl_rank];
+    
+    std::string name = make_stringf("a%s %s",
+                                    is_vowel(rank[0]) ? "n" : "",
+                                    rank);
+    return name.c_str();
+}
+
+std::string short_ghost_description(const monster *mon)
+{
+    ASSERT(mons_is_pghost(mon->type));
+    
+    const ghost_demon &ghost = *(mon->ghost);
+    const char* rank = xl_rank_names[ghost_level_to_rank(ghost.xl)];
+    
+    std::string desc = make_stringf("%s %s %s",
+                        rank,
+                        species_name(ghost.species).c_str(),
+                        get_job_name(ghost.job));
+                        
+    if (desc.length() > 40)
+    {
+        desc = make_stringf("%s %s%s",
+                            rank,
+                            get_species_abbrev(ghost.species),
+                            get_job_abbrev(ghost.job));
+    }
+    
+    return desc;
+}
 
 // Describes the current ghost's previous owner. The caller must
 // prepend "The apparition of" or whatever and append any trailing
@@ -3619,7 +3652,7 @@ std::string get_ghost_description(const monster_info &mi, bool concise)
                         mi.u.ghost.best_skill_rank,
                         gspecies,
                         str, dex, mi.u.ghost.religion)
-         << ", a" << xl_rank_names[mi.u.ghost.xl_rank] << " ";
+         << ", a" << xl_rank_name(mi.u.ghost.xl_rank) << " ";
 
     if (concise)
     {
