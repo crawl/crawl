@@ -742,6 +742,7 @@ hungry_ghost MONS_HUNGRY_GHOST
 insubstantial_wisp MONS_INSUBSTANTIAL_WISP
 %sdir dc-mon/holy
 spirit MONS_SPIRIT
+blessed_toe MONS_BLESSED_TOE /*'*'*/
 
 ## Small zombified monsters ('z')
 %sdir dc-mon/undead
