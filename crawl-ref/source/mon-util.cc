@@ -359,8 +359,8 @@ mon_resist_def get_mons_resists(const monster* mon)
         resists.poison = std::max(static_cast<int>(resists.poison), 1);
 
     if (mons_genus(newmon.type) == MONS_DRACONIAN
-        && newmon.type != MONS_DRACONIAN
-            || newmon.type == MONS_TIAMAT)
+            && newmon.type != MONS_DRACONIAN
+        || newmon.type == MONS_TIAMAT)
     {
         monster_type draco_species = draco_subspecies(&newmon);
         if (draco_species != newmon.type)
