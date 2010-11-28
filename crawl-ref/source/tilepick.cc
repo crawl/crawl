@@ -3476,6 +3476,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_DEFLECT_MISSILES:         return TILEG_DEFLECT_MISSILES;
     case SPELL_CONJURE_BALL_LIGHTNING:   return TILEG_CONJURE_BALL_LIGHTNING;
     case SPELL_CHAIN_LIGHTNING:          return TILEG_CHAIN_LIGHTNING;
+    case SPELL_TORNADO:                  return TILEG_TORNADO;
 
     // Earth
     case SPELL_SANDBLAST:                return TILEG_SANDBLAST;
