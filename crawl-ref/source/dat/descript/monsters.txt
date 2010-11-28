@@ -1639,7 +1639,7 @@ These elite spriggan warriors are known for their prowess with advanced weaponry
 %%%%
 spriggan druid
 
-Revelling nature, these protectors of forests are the doom of anyone who as much as snaps a twig.
+Revelling in nature, these protectors of forests are the doom of anyone who as much as snaps a twig.
 %%%%
 spriggan rider
 
