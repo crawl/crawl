@@ -23,6 +23,7 @@ enum sk_menu_flags
     SK_MENU_RESKILL      = 0x10
 };
 
+int get_skill_percentage(const skill_type x);
 const char *skill_name(skill_type which_skill);
 skill_type str_to_skill(const std::string &skill);
 

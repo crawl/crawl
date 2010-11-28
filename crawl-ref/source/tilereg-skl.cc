@@ -44,9 +44,19 @@ void SkillRegion::draw_tag()
 
     const skill_type skill = (skill_type) idx;
     const int apt          = species_apt(skill, you.species);
-    std::string desc = make_stringf("%-14s Skill %2d   Aptitude %c%d",
+    
+    std::string progress = "";
+    // Don't display progress when unskilled or expert.
+    if (you.skills[skill] > 0 && you.skills[skill] < 27)
+    {
+        progress = make_stringf("(%d%%)  ",
+                                get_skill_percentage(skill));
+    }
+                                    
+    std::string desc = make_stringf("%-14s Skill %2d  %s Aptitude %c%d",
                                     skill_name(skill),
                                     you.skills[skill],
+                                    progress.c_str(),
                                     apt > 0 ? '+' : ' ',
                                     apt);
 

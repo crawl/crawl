@@ -1369,6 +1369,24 @@ static bool _skill_is_selectable(skill_type sk, int flags)
     return true;
 }
 
+int get_skill_percentage(const skill_type x)
+{
+    const int needed = skill_exp_needed(you.skills[x] + 1, x);
+    const int prev_needed = skill_exp_needed(you.skills[x], x);
+
+    const int amt_done = you.skill_points[x] - prev_needed;
+    int percent_done = (amt_done*100) / (needed - prev_needed);
+
+    if (percent_done >= 100) // paranoia (1)
+        percent_done = 99;
+
+    if (percent_done < 0)    // paranoia (2)
+        percent_done = 0;
+
+    // Round down to multiple of 5.
+    return ((percent_done / 5) * 5);
+}
+
 static void _display_skill_table(int flags)
 {
     menu_letter lcount = 'a';
@@ -1519,21 +1537,8 @@ static void _display_skill_table(int flags)
                 }
                 else
                 {
-                    const int needed = skill_exp_needed(you.skills[x] + 1, x);
-                    const int prev_needed = skill_exp_needed(you.skills[x], x);
-
-                    const int amt_done = you.skill_points[x] - prev_needed;
-                    int percent_done = (amt_done*100) / (needed - prev_needed);
-
-                    if (percent_done >= 100) // paranoia (1)
-                        percent_done = 99;
-
-                    if (percent_done < 0)    // paranoia (2)
-                        percent_done = 0;
-
                     textcolor(CYAN);
-                    // Round down to multiple of 5.
-                    cprintf(" (%2d%%)", (percent_done / 5) * 5);
+                    cprintf(" (%2d%%)", get_skill_percentage(x));
                 }
             }
 
