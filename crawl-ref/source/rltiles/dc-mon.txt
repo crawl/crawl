@@ -435,8 +435,9 @@ cherub MONS_CHERUB
 
 ## Giants ('C')
 %sdir dc-mon/unique
-antaeus MONS_ANTAEUS
 polyphemus MONS_POLYPHEMUS
+chuck MONS_CHUCK
+antaeus MONS_ANTAEUS
 %sdir dc-mon
 hill_giant MONS_HILL_GIANT
 ettin MONS_ETTIN

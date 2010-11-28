@@ -1596,11 +1596,10 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     // cyclopes and giants ('C')
     case MONS_POLYPHEMUS:
         return TILEP_MONS_POLYPHEMUS;
+    case MONS_CHUCK:
+        return TILEP_MONS_CHUCK;
     case MONS_ANTAEUS:
         return TILEP_MONS_ANTAEUS;
-    // TODO
-    case MONS_CHUCK:
-        return TILEP_MONS_STONE_GIANT;
     // TODO
     case MONS_IRON_GIANT:
         return TILEP_MONS_STONE_GIANT;
