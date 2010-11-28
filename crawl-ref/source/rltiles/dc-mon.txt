@@ -506,9 +506,10 @@ kenku MONS_KENKU
 %sdir dc-mon/holy
 shedu MONS_SHEDU
 
-## Ice beasts
+## Beasts ('I')
 %sdir dc-mon
-ice_beast MONS_ICE_BEAST /*'I'*/
+ice_beast MONS_ICE_BEAST
+sky_beast MONS_SKY_BEAST
 
 ## Jellies ('J')
 %sdir dc-mon/unique
@@ -738,6 +739,8 @@ flayed_ghost MONS_FLAYED_GHOST
 hungry_ghost MONS_HUNGRY_GHOST
 %sdir dc-mon/nonliving
 insubstantial_wisp MONS_INSUBSTANTIAL_WISP
+%sdir dc-mon/holy
+spirit MONS_SPIRIT
 
 ## Small zombified monsters ('z')
 %sdir dc-mon/undead
@@ -763,6 +766,7 @@ draco-base-brown DRACO_BASE
 draco-base-black
 draco-base-yellow
 draco-base-green
+draco-base-grey
 draco-base-mottle
 draco-base-pale
 draco-base-purple
