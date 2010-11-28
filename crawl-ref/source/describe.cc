@@ -743,9 +743,9 @@ static std::string _corrosion_resistance_string(const item_def &item)
 
     if (is_artefact(item))
         return "";
-    if (ench >= 5)
+    if (ench >= 5 && item_ident(item, ISFLAG_KNOW_PLUSES))
         return make_stringf(format, "immune");
-    else if (ench >= 4)
+    else if (ench >= 4 && item_ident(item, ISFLAG_KNOW_PLUSES))
         return make_stringf(format, "extremely resistant");
     else if (item.base_type == OBJ_ARMOUR
              && item.sub_type == ARM_CRYSTAL_PLATE_MAIL)
@@ -758,9 +758,9 @@ static std::string _corrosion_resistance_string(const item_def &item)
         return "\nBeing of dwarven fabrication renders it very resistant to "
                "acidic corrosion.";
     }
-    else if (ench >= 3)
+    else if (ench >= 3 && item_ident(item, ISFLAG_KNOW_PLUSES))
         return make_stringf(format, "resistant");
-    else if (ench >= 2)
+    else if (ench >= 2 && item_ident(item, ISFLAG_KNOW_PLUSES))
         return make_stringf(format, "somewhat resistant");
     else
         return "";
@@ -1253,18 +1253,7 @@ static std::string _describe_ammo(const item_def &item)
         description += ".";
     }
 
-    if (item.plus >= 5)
-        description += "\nIts enchantment level renders it immune to "
-                       "acidic corrosion.";
-    else if (item.plus >= 4)
-        description += "\nIts enchantment level renders it extremely "
-                       "resistant to acidic corrosion.";
-    else if (item.plus >= 3)
-        description += "\nIts enchantment level renders it "
-                       "resistant to acidic corrosion.";
-    else if (item.plus >= 2)
-        description += "\nIts enchantment level renders it somewhat "
-                       "resistant to acidic corrosion.";
+    description += _corrosion_resistance_string(item);
 
     return (description);
 }
