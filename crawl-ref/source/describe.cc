@@ -3030,7 +3030,7 @@ static std::string _describe_draconian_colour(int species)
     case MONS_WHITE_DRACONIAN:
         return "Frost pours from its nostrils.";
     case MONS_GREY_DRACONIAN:
-        return "Its scales seem rigid and its tail muscular.";
+        return "Its scales and tail are adapted to the water.";
     case MONS_PALE_DRACONIAN:
         return "It is cloaked in a pall of superheated steam.";
     }
