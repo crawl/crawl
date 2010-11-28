@@ -979,3 +979,15 @@ bool debug_check_ghosts()
     }
     return (true);
 }
+
+int ghost_level_to_rank(const int xl)
+{
+    if (xl <  4) return 0;
+    if (xl <  7) return 1;
+    if (xl < 11) return 2;
+    if (xl < 16) return 3;
+    if (xl < 22) return 4;
+    if (xl < 26) return 5;
+    if (xl < 27) return 6;
+    return 7;
+}
