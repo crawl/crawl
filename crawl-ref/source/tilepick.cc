@@ -3704,8 +3704,8 @@ tileidx_t tileidx_spell(spell_type spell)
 tileidx_t tileidx_skill(skill_type skill, bool active)
 {
     tileidx_t ch;
-	switch (skill)
-	{
+    switch (skill)
+    {
     case SK_FIGHTING:       ch = TILEG_FIGHTING_ON; break;
     case SK_SHORT_BLADES:   ch = TILEG_SHORT_BLADES_ON; break;
     case SK_LONG_BLADES:    ch = TILEG_LONG_BLADES_ON; break;
@@ -3738,8 +3738,8 @@ tileidx_t tileidx_skill(skill_type skill, bool active)
     case SK_POISON_MAGIC:   ch = TILEG_POISON_MAGIC_ON; break;
     case SK_INVOCATIONS:    ch = TILEG_INVOCATIONS_ON; break;
     case SK_EVOCATIONS:     ch = TILEG_EVOCATIONS_ON; break;
-	default:        		return TILEG_TODO;
-	}
+    default:                return TILEG_TODO;
+    }
 
     if (!active)
         ch++;
