@@ -868,6 +868,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_INSUBSTANTIAL_WISP;
     case MONS_SILENT_SPECTRE:
         return TILEP_MONS_SILENT_SPECTRE;
+    case MONS_SPIRIT:
+        return TILEP_MONS_SPIRIT;
 
     // rodents ('r')
     case MONS_RAT:
@@ -1124,6 +1126,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     // ice beast ('I')
     case MONS_ICE_BEAST:
         return TILEP_MONS_ICE_BEAST;
+    case MONS_SKY_BEAST:
+        return TILEP_MONS_SKY_BEAST;
 
     // jellies ('J')
     case MONS_OOZE:
@@ -1914,11 +1918,12 @@ tileidx_t tileidx_draco_base(const monster* mon)
     case MONS_BLACK_DRACONIAN:  colour = 1; break;
     case MONS_YELLOW_DRACONIAN: colour = 2; break;
     case MONS_GREEN_DRACONIAN:  colour = 3; break;
-    case MONS_MOTTLED_DRACONIAN:colour = 4; break;
-    case MONS_PALE_DRACONIAN:   colour = 5; break;
-    case MONS_PURPLE_DRACONIAN: colour = 6; break;
-    case MONS_RED_DRACONIAN:    colour = 7; break;
-    case MONS_WHITE_DRACONIAN:  colour = 8; break;
+    case MONS_GREY_DRACONIAN:   colour = 4; break;
+    case MONS_MOTTLED_DRACONIAN:colour = 5; break;
+    case MONS_PALE_DRACONIAN:   colour = 6; break;
+    case MONS_PURPLE_DRACONIAN: colour = 7; break;
+    case MONS_RED_DRACONIAN:    colour = 8; break;
+    case MONS_WHITE_DRACONIAN:  colour = 9; break;
     }
 
     return (TILEP_DRACO_BASE + colour);
