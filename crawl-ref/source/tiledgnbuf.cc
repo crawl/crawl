@@ -550,22 +550,22 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
     if (fg & TILE_FLAG_ATT_MASK)
     {
         const tileidx_t att_flag = fg & TILE_FLAG_ATT_MASK;
-		if (att_flag == TILE_FLAG_PET)
-		{
-			m_buf_main.add(TILE_HEART, x, y);
-			status_shift += 10;
-		}
-		else if (att_flag == TILE_FLAG_GD_NEUTRAL)
-		{
-			m_buf_main.add(TILE_GOOD_NEUTRAL, x, y);
-			status_shift += 8;
-		}
-		else if (att_flag == TILE_FLAG_NEUTRAL)
-		{
-			m_buf_main.add(TILE_NEUTRAL, x, y);
-			status_shift += 8;
-		}
-	}
+        if (att_flag == TILE_FLAG_PET)
+        {
+            m_buf_main.add(TILE_HEART, x, y);
+            status_shift += 10;
+        }
+        else if (att_flag == TILE_FLAG_GD_NEUTRAL)
+        {
+            m_buf_main.add(TILE_GOOD_NEUTRAL, x, y);
+            status_shift += 8;
+        }
+        else if (att_flag == TILE_FLAG_NEUTRAL)
+        {
+            m_buf_main.add(TILE_NEUTRAL, x, y);
+            status_shift += 8;
+        }
+    }
     else if (fg & TILE_FLAG_STAB)
     {
         m_buf_main.add(TILE_STAB_BRAND, x, y);

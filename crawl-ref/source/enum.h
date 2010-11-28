@@ -3594,7 +3594,7 @@ enum tile_flags
 {
     // Foreground flags
 
-	// 3 mutually exclusive flags for attitude.
+    // 3 mutually exclusive flags for attitude.
     TILE_FLAG_ATT_MASK   = 0x00001800,
     TILE_FLAG_PET        = 0x00000800,
     TILE_FLAG_GD_NEUTRAL = 0x00001000,

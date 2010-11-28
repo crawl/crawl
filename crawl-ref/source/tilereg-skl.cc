@@ -42,9 +42,9 @@ void SkillRegion::draw_tag()
     const int apt          = species_apt(skill, you.species);
     std::string desc = make_stringf("%-14s Skill %2d   Aptitude %c%d",
                                     skill_name(skill),
-									you.skills[skill],
-									apt > 0 ? '+' : ' ',
-									apt);
+                                    you.skills[skill],
+                                    apt > 0 ? '+' : ' ',
+                                    apt);
 
     draw_desc(desc.c_str());
 }
@@ -186,7 +186,7 @@ void SkillRegion::update()
 
     for (int idx = 0; idx < NUM_SKILLS; ++idx)
     {
-		const skill_type skill = (skill_type) idx;
+        const skill_type skill = (skill_type) idx;
 
         if (skill > SK_UNARMED_COMBAT && skill < SK_SPELLCASTING)
             continue;
