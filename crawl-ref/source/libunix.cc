@@ -325,6 +325,8 @@ static void handle_sigwinch(int)
 {
     if (crawl_state.waiting_for_command)
         handle_terminal_resize();
+    else
+        crawl_state.terminal_resized = true;
 }
 
 #ifdef SIGHUP_SAVE
