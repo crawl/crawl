@@ -1324,7 +1324,7 @@ function convert_book (data, triggerable, triggerer, marker, ev)
       if string.find(book.name(), 'book') then
         book.destroy()
         dgn.place_cloud(_x, _y, "flame", 15)
-        crawl.god_speaks("Trog", "The book bursts into flames! "
+        crawl.god_speaks("Trog", "The spellbook bursts into flames! "
                               .. "Trog roars with delight!")
       end
     end
