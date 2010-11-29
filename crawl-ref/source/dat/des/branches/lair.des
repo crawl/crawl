@@ -989,7 +989,7 @@ MARKER: G = lua:portal_desc { desc="elephant-shaped statue", \
             desc_long=("This worn granite statue depicts" .. \
                        " elephants standing guard.") }
 COLOUR: oG = green
-TILE:   oG = dngn_elephant_statue
+TILE:   oG = dngn_statue_elephant
 MARKER: o = lua:monster_on_death { \
             target="anaconda_guard", new_monster="generate_awake dire elephant", \
             message_seen="The elephant guardians awaken!", \
