@@ -1042,7 +1042,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         break;
 
     case MONS_DEEP_DWARF_ARTIFICER:
-        if (one_chance_in(2))
+        if (coinflip())
         {
             item.base_type = OBJ_STAVES;
             item.sub_type  = STAFF_STRIKING;
