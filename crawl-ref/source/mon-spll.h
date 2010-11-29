@@ -101,7 +101,7 @@
       {
        SPELL_NO_SPELL,
        SPELL_ANIMATE_DEAD,
-       SPELL_SUMMON_UNDEAD, /* cheaper to fake recall and gift with summon spell */
+       SPELL_SUMMON_UNDEAD, // cheaper to fake recall and gift with summon spell
        SPELL_NO_SPELL,
        SPELL_DRAIN_LIFE,
        SPELL_MIRROR_DAMAGE
