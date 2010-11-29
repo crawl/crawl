@@ -47,12 +47,17 @@ dngn_stone_arch DNGN_STONE_ARCH
 
 %sdir dc-dngn/statues
 dngn_orcish_idol DNGN_ORCISH_IDOL
-%weight 30
+%weight 20
 dngn_granite_statue DNGN_GRANITE_STATUE
+%weight 5
+dngn_statue_dwarf_axe
+%weight 3
+dngn_statue_dwarf_mace
+%weight 2
+dngn_statue_dwarf_sword
 %weight 8
 dngn_statue_centaur
 dngn_statue_dragon
-dngn_statue_dwarf
 dngn_statue_eye
 %weight 5
 dngn_statue_snail
