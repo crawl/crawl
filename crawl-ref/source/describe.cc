@@ -3573,14 +3573,14 @@ static const char* xl_rank_names[] = {
     "legendary"
 };
 
-static const char* _xl_rank_name(const int xl_rank)
+std::string _xl_rank_name(const int xl_rank)
 {
     const char* rank = xl_rank_names[xl_rank];
     
-    std::string name = make_stringf("%s %s",
+    std::string name = make_stringf("a%s %s",
                                     is_vowel(rank[0]) ? "n" : "",
                                     rank);
-    return name.c_str();
+    return name;
 }
 
 std::string short_ghost_description(const monster *mon, bool abbrev)
@@ -3652,7 +3652,7 @@ std::string get_ghost_description(const monster_info &mi, bool concise)
                         mi.u.ghost.best_skill_rank,
                         gspecies,
                         str, dex, mi.u.ghost.religion)
-         << ", a" << _xl_rank_name(mi.u.ghost.xl_rank) << " ";
+         << ", " << _xl_rank_name(mi.u.ghost.xl_rank) << " ";
 
     if (concise)
     {
