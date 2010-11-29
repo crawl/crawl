@@ -1307,7 +1307,7 @@ xxxx
 ENDMAP
 
 NAME:   secret_library_closet
-DEPTH:  1-27, !Swamp
+DEPTH:  D, Vault, Elf, Crypt, Snake, Spider, Dwarf, Orc
 TAGS:   mini_float allow_dup extra luniq_mini
 ITEM:   any book w:20 / any scroll / nothing
 MAP
