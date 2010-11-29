@@ -92,7 +92,7 @@
        SPELL_NO_SPELL,
        SPELL_TROGS_HAND,
        SPELL_BERSERKER_RAGE,
-       SPELL_BURN_SPELLBOOK,
+       SPELL_NO_SPELL,
        SPELL_NO_SPELL
       }
     },
