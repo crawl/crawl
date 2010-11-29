@@ -914,18 +914,10 @@ static int _generate_rod_power(monster *mons, int overriding_power = 0)
 {
     // power is actually 5 + Evocations + 2d(Evocations)
     // modified by shield and shield skill
-
-    // subsection: evocation skill and shield skill equivalents for monsters
-    int evoc_num = 1;
-    int evoc_den = 1;
-
-    if (mons->type == MONS_DEEP_DWARF_ARTIFICER)
-        evoc_num++;
-
     int shield_num = 1;
     int shield_den = 1;
-
     int shield_base = 1;
+
     if (mons->inv[MSLOT_SHIELD] != NON_ITEM)
     {
         item_def *shield = mons->mslot_item(MSLOT_SHIELD);
@@ -945,8 +937,9 @@ static int _generate_rod_power(monster *mons, int overriding_power = 0)
         }
     }
 
-    const int power_base = (mons->hit_dice * evoc_num) / evoc_den;
+    const int power_base = mons->skill(SK_EVOCATIONS);
     int power            = 5 + power_base + (2 * random2(power_base));
+
     if (shield_base > 1)
     {
         const int shield_mod = ((power / shield_base) * shield_num) / shield_den;
