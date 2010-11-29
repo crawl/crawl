@@ -3683,9 +3683,7 @@ void melee_attack::player_apply_staff_damage()
         return;
 
     if (random2(15) > you.skills[SK_EVOCATIONS])
-    {
         return;
-    }
 
     switch (weapon->sub_type)
     {
