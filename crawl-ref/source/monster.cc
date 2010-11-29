@@ -3426,6 +3426,9 @@ int monster::skill(skill_type sk, bool) const
 {
     switch (sk)
     {
+    case SK_EVOCATIONS:
+        return (type == MONS_DEEP_DWARF_ARTIFICER ? hit_dice * 2 : hit_dice);
+
     case SK_NECROMANCY:
         return (holiness() == MH_UNDEAD ? hit_dice / 2 : hit_dice / 3);
 
