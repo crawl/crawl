@@ -3700,7 +3700,7 @@ void melee_attack::player_apply_staff_damage()
         if (special_damage)
         {
             special_damage_message =
-                make_stringf("%s is jolted!",
+                make_stringf("%s is electrocuted!",
                              defender->name(DESC_CAP_THE).c_str());
             special_damage_flavour = BEAM_ELECTRICITY;
         }
