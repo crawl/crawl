@@ -3577,7 +3577,7 @@ static const char* _xl_rank_name(const int xl_rank)
 {
     const char* rank = xl_rank_names[xl_rank];
     
-    std::string name = make_stringf("a%s %s",
+    std::string name = make_stringf("%s %s",
                                     is_vowel(rank[0]) ? "n" : "",
                                     rank);
     return name.c_str();
