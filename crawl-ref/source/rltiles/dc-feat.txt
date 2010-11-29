@@ -63,8 +63,8 @@ dngn_statue_eye
 dngn_statue_snail
 dngn_statue_troll
 %weight 3
-%syn DNGN_ELEPHANT_STATUE
 dngn_statue_elephant
+%syn DNGN_STATUE_ELEPHANT
 %weight 1
 dngn_statue_ancient_hero
 dngn_crumbled_column DNGN_CRUMBLED_COLUMN
