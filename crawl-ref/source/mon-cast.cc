@@ -61,7 +61,6 @@ const int MAX_ACTIVE_KRAKEN_TENTACLES = 4;
 
 static bool _valid_mon_spells[NUM_SPELLS];
 
-static bool _mons_burn_spellbook(monster* mons, bool actual = true);
 static int  _mons_cause_fear(monster* mons, bool actual = true);
 static bool _mons_drain_life(monster* mons, bool actual = true);
 
@@ -1011,7 +1010,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BROTHERS_IN_ARMS:
     case SPELL_BERSERKER_RAGE:
     case SPELL_TROGS_HAND:
-    case SPELL_BURN_SPELLBOOK:
     case SPELL_SWIFTNESS:
     case SPELL_STONESKIN:
     case SPELL_WATER_ELEMENTALS:
@@ -1602,17 +1600,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 return (false);
             }
         }
-        // Try to burn spellbooks: if nothing burns, pretend we didn't cast it.
-        // Friendly monsters don't burn spellbooks, for fear of harming the
-        // player or depriving the player of Trog piety.
-        else if (spell_cast == SPELL_BURN_SPELLBOOK)
-        {
-            if (mons->friendly())
-                return (false);
-
-            if (!_mons_burn_spellbook(mons, false))
-                return (false);
-        }
         // Try to cause fear: if nothing is scared, pretend we didn't cast it.
         else if (spell_cast == SPELL_CAUSE_FEAR)
         {
@@ -2029,79 +2016,6 @@ static bool _mons_vampiric_drain(monster *mons)
     return (true);
 }
 
-static bool _mons_burn_spellbook(monster* mons, bool actual)
-{
-    for (stack_iterator si(mons->pos()); si; ++si)
-    {
-        if (si->base_type == OBJ_BOOKS
-            && si->sub_type != BOOK_MANUAL
-            && si->sub_type != BOOK_DESTRUCTION)
-        {
-            return (false);
-        }
-    }
-
-    bool success = false;
-
-    for (radius_iterator ri(mons->pos(), LOS_RADIUS, true, true, true); ri; ++ri)
-    {
-        // If a grid is blocked, books lying there will be ignored.
-        // Allow bombing of monsters.
-        const unsigned short cloud = env.cgrid(*ri);
-        int count = 0;
-        int rarity = 0;
-        for (stack_iterator si(*ri); si; ++si)
-        {
-            if (si->base_type != OBJ_BOOKS
-                || si->sub_type == BOOK_MANUAL
-                || si->sub_type == BOOK_DESTRUCTION)
-            {
-                continue;
-            }
-
-            if (feat_is_solid(grd(*ri))
-                || cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE)
-            {
-                continue;
-            }
-
-            success = true;
-
-            rarity += book_rarity(si->sub_type);
-
-            if (actual)
-            {
-                dprf("Burned spellbook rarity: %d", rarity);
-                destroy_item(si.link());
-            }
-
-            count++;
-        }
-
-        if (actual && count)
-        {
-            if (cloud != EMPTY_CLOUD)
-            {
-                // Reinforce the cloud.
-                mpr("The fire roars with new energy!");
-                const int extra_dur = count + random2(rarity / 2);
-                env.cloud[cloud].decay += extra_dur * 5;
-                env.cloud[cloud].set_whose(KC_OTHER);
-                continue;
-            }
-
-            const int dur = std::min(4 + count + random2(rarity/2), 23);
-            place_cloud(CLOUD_FIRE, *ri, dur, KC_OTHER);
-
-            mprf("The spellbook%s burst%s into flames.",
-                 count == 1 ? ""  : "s",
-                 count == 1 ? "s" : "");
-        }
-    }
-
-    return (success);
-}
-
 // Check whether targets might be scared.
 // Returns 0, if targets can be scared but the attempt failed or wasn't made.
 // Returns 1, if targets are scared.
@@ -2452,10 +2366,6 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         summon_berserker(power, GOD_TROG, 0, true);
         return;
     }
-
-    case SPELL_BURN_SPELLBOOK:
-        _mons_burn_spellbook(mons);
-        return;
 
     case SPELL_SWIFTNESS:
         mons->add_ench(ENCH_SWIFT);

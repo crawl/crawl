@@ -2752,19 +2752,6 @@ struct spell_desc
 },
 
 {
-    SPELL_BURN_SPELLBOOK, "Burn Spellbook",
-    SPTYP_ENCHANTMENT,
-    SPFLAG_AREA,
-    1,
-    200,
-    LOS_RADIUS, LOS_RADIUS,
-    0,
-    NULL,
-    false,
-    false
-},
-
-{
     SPELL_SUMMON_SPECTRAL_ORCS, "Summon Spectral Orcs",
      SPTYP_NECROMANCY,
      SPFLAG_MONSTER | SPFLAG_TARGET,
