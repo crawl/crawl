@@ -2445,7 +2445,7 @@ enum mon_spellbook_type
     MST_BK_TROG,
     MST_BK_YREDELEMNUL,
     MST_PARACELSUS,
-    MST_GUARDIAN_SERPENT    = 10,
+    MST_GUARDIAN_SERPENT = 10,
     MST_LICH_I           = 20,
     MST_LICH_II,
     MST_LICH_III,
