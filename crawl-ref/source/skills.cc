@@ -249,7 +249,7 @@ void check_skill_level_change(skill_type sk, bool do_level_up)
 }
 
 // returns total number of skill points gained
-int exercise(skill_type exsk, int deg, bool change_level)
+int exercise(skill_type exsk, int deg)
 {
     int ret = 0;
 
@@ -281,8 +281,7 @@ int exercise(skill_type exsk, int deg, bool change_level)
     }
 #endif
 
-    if (change_level)
-        check_skill_level_change(exsk);
+    check_skill_level_change(exsk);
 
     return (ret);
 }
