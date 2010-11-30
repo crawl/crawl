@@ -967,7 +967,7 @@ static bool _silver_statue_effects(monster* mons)
 
     int abjuration_duration = 5;
 
-    // Tone down friendly silver statues for Zotdef.
+    // Tone down friendly silver statues for Zotdef (but not only!).
     if (mons->attitude == ATT_FRIENDLY && foe != &you)
     {
         if (!one_chance_in(3))
