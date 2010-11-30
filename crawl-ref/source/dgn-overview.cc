@@ -432,7 +432,7 @@ static std::string _get_unseen_branches()
             continue;
 
         if (i == BRANCH_FOREST || i == BRANCH_SPIDER_NEST
-            || i == BRANCH_DWARF_HALL)
+            || i == BRANCH_DWARVEN_HALL)
         {
             continue;
         }

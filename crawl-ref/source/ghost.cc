@@ -906,7 +906,6 @@ int ghost_demon::n_extra_ghosts()
         // areas at this depth, such as portal vaults.
         if (subdepth < 9 && you.where_are_you == BRANCH_MAIN_DUNGEON
             || subdepth < 2 && you.where_are_you == BRANCH_LAIR
-            || subdepth < 3 && you.where_are_you == BRANCH_DWARF_HALL
             || subdepth < 2 && you.where_are_you == BRANCH_ORCISH_MINES)
         {
             return (0);
@@ -979,4 +978,16 @@ bool debug_check_ghosts()
                 return (false);
     }
     return (true);
+}
+
+int ghost_level_to_rank(const int xl)
+{
+    if (xl <  4) return 0;
+    if (xl <  7) return 1;
+    if (xl < 11) return 2;
+    if (xl < 16) return 3;
+    if (xl < 22) return 4;
+    if (xl < 26) return 5;
+    if (xl < 27) return 6;
+    return 7;
 }

@@ -3888,9 +3888,15 @@ void seen_monster(monster* mons)
 
         if (MONST_INTERESTING(mons))
         {
+            std::string name = mons->name(DESC_NOCAP_A, true);
+            if (mons->type == MONS_PLAYER_GHOST)
+            {
+                name += make_stringf(" (%s)",
+                        short_ghost_description(mons, true).c_str());
+            }
             take_note(
                       Note(NOTE_SEEN_MONSTER, mons->type, 0,
-                           mons->name(DESC_NOCAP_A, true).c_str()));
+                           name.c_str()));
         }
     }
 }

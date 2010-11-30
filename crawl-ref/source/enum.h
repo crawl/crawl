@@ -409,7 +409,7 @@ enum branch_type                // you.where_are_you
     BRANCH_HALL_OF_ZOT,
     BRANCH_FOREST,
     BRANCH_SPIDER_NEST,
-    BRANCH_DWARF_HALL,
+    BRANCH_DWARVEN_HALL,
     NUM_BRANCHES
 };
 
@@ -1140,7 +1140,7 @@ enum dungeon_feature_type
 
     // Entrances to various branches
     DNGN_ENTER_FIRST_BRANCH = 110,     //  110
-    DNGN_ENTER_DWARF_HALL = DNGN_ENTER_FIRST_BRANCH,
+    DNGN_ENTER_DWARVEN_HALL = DNGN_ENTER_FIRST_BRANCH,
     DNGN_ENTER_ORCISH_MINES,
     DNGN_ENTER_HIVE,
     DNGN_ENTER_LAIR,
@@ -1162,7 +1162,7 @@ enum dungeon_feature_type
     // Exits from various branches
     // Order must be the same as above
     DNGN_RETURN_FROM_FIRST_BRANCH = 130, //  130
-    DNGN_RETURN_FROM_DWARF_HALL = DNGN_RETURN_FROM_FIRST_BRANCH,
+    DNGN_RETURN_FROM_DWARVEN_HALL = DNGN_RETURN_FROM_FIRST_BRANCH,
     DNGN_RETURN_FROM_ORCISH_MINES,
     DNGN_RETURN_FROM_HIVE,
     DNGN_RETURN_FROM_LAIR,
@@ -2103,7 +2103,11 @@ enum monster_type                      // (int) menv[].type
     MONS_DEEP_DWARF_BERSERKER,
     MONS_DEEP_DWARF_DEATH_KNIGHT,
     MONS_DEEP_DWARF_UNBORN,
+#if TAG_MAJOR_VERSION == 31
     MONS_NISSE,
+#else
+      MONS_UNUSED_337,
+#endif
       MONS_UNUSED_338,
       MONS_UNUSED_339,
 
@@ -2278,14 +2282,13 @@ enum monster_type                      // (int) menv[].type
     MONS_TARANTELLA,
     MONS_SILENT_SPECTRE,
 #if TAG_MAJOR_VERSION == 31
-    // Dwarf Hall monsters
     MONS_WITCH,
     MONS_EVIL_WITCH,
     MONS_FOREST_WITCH,
     MONS_HULDRA,
     MONS_TROLLKONOR,
 #endif
-    MONS_GREATER_WRAITH,
+    MONS_EIDOLON,
 
     // Spriggans:
     MONS_SPRIGGAN,
@@ -2475,13 +2478,15 @@ enum mon_spellbook_type
     MST_ORC_WIZARD_I     = 0,
     MST_ORC_WIZARD_II,
     MST_ORC_WIZARD_III,
+#if TAG_MAJOR_VERSION == 31
     MST_NISSE,
+#endif
     MST_DEEP_DWARF_NECROMANCER,
     MST_DEEP_DWARF_UNBORN,
     MST_BK_TROG,
     MST_BK_YREDELEMNUL,
     MST_PARACELSUS,
-    MST_GUARDIAN_SERPENT    = 10,
+    MST_GUARDIAN_SERPENT = 10,
     MST_LICH_I           = 20,
     MST_LICH_II,
     MST_LICH_III,
@@ -2515,7 +2520,7 @@ enum mon_spellbook_type
     MST_WITCH_II,
     MST_WITCH_III,
 #endif
-    MST_ORC_PRIEST,                    //  80
+    MST_ORC_PRIEST       = 80,
     MST_ORC_HIGH_PRIEST,
     MST_MOTTLED_DRAGON,
     MST_ICE_FIEND,
@@ -3260,7 +3265,9 @@ enum spell_type
     SPELL_SACRIFICE,
     SPELL_HOLY_FLAMES,
     SPELL_HOLY_BREATH,
+#if TAG_MAJOR_VERSION == 31
     SPELL_BURN_SPELLBOOK,
+#endif
     SPELL_TROGS_HAND,
     SPELL_BROTHERS_IN_ARMS,
     SPELL_MIRROR_DAMAGE,
@@ -3629,16 +3636,21 @@ enum tag_pref
 enum tile_flags
 {
     // Foreground flags
-    TILE_FLAG_S_UNDER    = 0x00000800,
-    TILE_FLAG_FLYING     = 0x00001000,
-    TILE_FLAG_PET        = 0x00002000,
-    TILE_FLAG_GD_NEUTRAL = 0x00004000,
-    TILE_FLAG_NEUTRAL    = 0x00008000,
-    TILE_FLAG_STAB       = 0x00010000,
-    TILE_FLAG_MAY_STAB   = 0x00020000,
-    TILE_FLAG_NET        = 0x00040000,
-    TILE_FLAG_POISON     = 0x00080000,
-    TILE_FLAG_ANIM_WEP   = 0x00100000,
+
+    // 3 mutually exclusive flags for attitude.
+    TILE_FLAG_ATT_MASK   = 0x00001800,
+    TILE_FLAG_PET        = 0x00000800,
+    TILE_FLAG_GD_NEUTRAL = 0x00001000,
+    TILE_FLAG_NEUTRAL    = 0x00001800,
+
+    TILE_FLAG_S_UNDER    = 0x00002000,
+    TILE_FLAG_FLYING     = 0x00004000,
+    TILE_FLAG_STAB       = 0x00008000,
+    TILE_FLAG_MAY_STAB   = 0x00010000,
+    TILE_FLAG_NET        = 0x00020000,
+    TILE_FLAG_POISON     = 0x00040000,
+    TILE_FLAG_ANIM_WEP   = 0x00080000,
+    TILE_FLAG_MIMIC      = 0x00100000,
     TILE_FLAG_FLAME      = 0x00200000,
     TILE_FLAG_BERSERK    = 0x00400000,
 
@@ -3651,12 +3663,12 @@ enum tile_flags
     TILE_FLAG_MDAM_ADEAD = 0x02800000,
 
     // Demon difficulty has 5 possibilities, so uses 3 bits.
-    TILE_FLAG_DEMON   = 0x34000000,
-    TILE_FLAG_DEMON_5 = 0x04000000,
-    TILE_FLAG_DEMON_4 = 0x10000000,
-    TILE_FLAG_DEMON_3 = 0x14000000,
-    TILE_FLAG_DEMON_2 = 0x20000000,
-    TILE_FLAG_DEMON_1 = 0x24000000,
+    TILE_FLAG_DEMON      = 0x34000000,
+    TILE_FLAG_DEMON_5    = 0x04000000,
+    TILE_FLAG_DEMON_4    = 0x10000000,
+    TILE_FLAG_DEMON_3    = 0x14000000,
+    TILE_FLAG_DEMON_2    = 0x20000000,
+    TILE_FLAG_DEMON_1    = 0x24000000,
 
     // Background flags
     TILE_FLAG_RAY        = 0x00000800,

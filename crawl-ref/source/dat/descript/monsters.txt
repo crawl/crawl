@@ -54,7 +54,7 @@ A violent and wrathful demon, Cerebov appears as a giant human covered in shinin
 %%%%
 Chuck
 
-Chuck loves rocks, the bigger the better! Over the years, he has managed to amass quite the collection, including some rare, enchanted ones.
+Chuck the stone giant loves rocks, the bigger the better! Over the years, he has managed to amass quite the collection, including some rare, enchanted ones.
 %%%%
 Crazy Yiuf
 
@@ -346,7 +346,6 @@ agate snail
 
 A huge and disgusting gastropod with a light green shell.
 %%%%
-
 air elemental
 
 A spirit drawn from the elemental plane of air. It exists in this world as a swirling vortex of air, often dissipating and reforming.
@@ -676,6 +675,10 @@ efreet
 
 A huge and muscular figure engulfed in a cloud of searing flame.
 %%%%
+eidolon
+
+An ancient skeletal apparition, sheathed in a cloud of mist. Its form glows white-hot with debilitating energy.
+%%%%
 eldritch tentacle
 
 This immense, batrachian appendage of some thankfully unseen creature drips with ichor and is tipped with a single, terrible-looking claw.
@@ -903,10 +906,6 @@ greater naga
 A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake.
 
 It looks strong and aggressive.
-%%%%
-greater wraith
-
-An ancient skeletal apparition, sheathed in a cloud of mist. Its form glows white-hot with debilitating energy.
 %%%%
 Green Death
 
@@ -1257,10 +1256,6 @@ A vile undead creation of the most unholy necromancy, these creatures are made f
 neqoxec
 
 A weirdly shaped demon, pulsing and shifting with mutagenic energies, its belly distended with the devoured brains of its victims.
-%%%%
-nisse
-
-Nisse take care of a lord's home and children and protect them from misfortune, in particular at night, when the housefolk are asleep. Since nisse are thought to be skilled in illusions and sometimes able to become invisible, getting more than brief glimpses of one is unlikely. Nisse have four fingers, and are hairy all over, with pointed ears. Their eyes glow in the dark.
 %%%%
 ogre
 
@@ -1647,7 +1642,7 @@ These elite spriggan warriors are known for their prowess with advanced weaponry
 %%%%
 spriggan druid
 
-Revelling nature, these protectors of forests are the doom of anyone who as much as snaps a twig.
+Revelling in nature, these protectors of forests are the doom of anyone who as much as snaps a twig.
 %%%%
 spriggan rider
 

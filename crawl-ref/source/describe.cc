@@ -743,9 +743,9 @@ static std::string _corrosion_resistance_string(const item_def &item)
 
     if (is_artefact(item))
         return "";
-    if (ench >= 5)
+    if (ench >= 5 && item_ident(item, ISFLAG_KNOW_PLUSES))
         return make_stringf(format, "immune");
-    else if (ench >= 4)
+    else if (ench >= 4 && item_ident(item, ISFLAG_KNOW_PLUSES))
         return make_stringf(format, "extremely resistant");
     else if (item.base_type == OBJ_ARMOUR
              && item.sub_type == ARM_CRYSTAL_PLATE_MAIL)
@@ -758,9 +758,9 @@ static std::string _corrosion_resistance_string(const item_def &item)
         return "\nBeing of dwarven fabrication renders it very resistant to "
                "acidic corrosion.";
     }
-    else if (ench >= 3)
+    else if (ench >= 3 && item_ident(item, ISFLAG_KNOW_PLUSES))
         return make_stringf(format, "resistant");
-    else if (ench >= 2)
+    else if (ench >= 2 && item_ident(item, ISFLAG_KNOW_PLUSES))
         return make_stringf(format, "somewhat resistant");
     else
         return "";
@@ -1253,18 +1253,7 @@ static std::string _describe_ammo(const item_def &item)
         description += ".";
     }
 
-    if (item.plus >= 5)
-        description += "\nIts enchantment level renders it immune to "
-                       "acidic corrosion.";
-    else if (item.plus >= 4)
-        description += "\nIts enchantment level renders it extremely "
-                       "resistant to acidic corrosion.";
-    else if (item.plus >= 3)
-        description += "\nIts enchantment level renders it "
-                       "resistant to acidic corrosion.";
-    else if (item.plus >= 2)
-        description += "\nIts enchantment level renders it somewhat "
-                       "resistant to acidic corrosion.";
+    description += _corrosion_resistance_string(item);
 
     return (description);
 }
@@ -3030,7 +3019,7 @@ static std::string _describe_draconian_colour(int species)
     case MONS_WHITE_DRACONIAN:
         return "Frost pours from its nostrils.";
     case MONS_GREY_DRACONIAN:
-        return "Its scales seem rigid and its tail muscular.";
+        return "Its scales and tail are adapted to the water.";
     case MONS_PALE_DRACONIAN:
         return "It is cloaked in a pall of superheated steam.";
     }
@@ -3574,15 +3563,48 @@ void describe_monsters(const monster_info &mi, bool force_seen,
 }
 
 static const char* xl_rank_names[] = {
-    " weakling",
-    "n average",
-    "n experienced",
-    " powerful",
-    " mighty",
-    " great",
-    "n awesomely powerful",
-    " legendary"
+    "weakling",
+    "average",
+    "experienced",
+    "powerful",
+    "mighty",
+    "great",
+    "awesomely powerful",
+    "legendary"
 };
+
+std::string _xl_rank_name(const int xl_rank)
+{
+    const char* rank = xl_rank_names[xl_rank];
+    
+    std::string name = make_stringf("a%s %s",
+                                    is_vowel(rank[0]) ? "n" : "",
+                                    rank);
+    return name;
+}
+
+std::string short_ghost_description(const monster *mon, bool abbrev)
+{
+    ASSERT(mons_is_pghost(mon->type));
+    
+    const ghost_demon &ghost = *(mon->ghost);
+    const char* rank = xl_rank_names[ghost_level_to_rank(ghost.xl)];
+    
+    std::string desc = make_stringf("%s %s %s",
+                        rank,
+                        species_name(ghost.species).c_str(),
+                        get_job_name(ghost.job));
+                        
+    if (abbrev || desc.length() > 40)
+    {
+        desc = make_stringf("%s %s%s",
+                            rank,
+                            get_species_abbrev(ghost.species),
+                            get_job_abbrev(ghost.job));
+    }
+    
+    return desc;
+}
 
 // Describes the current ghost's previous owner. The caller must
 // prepend "The apparition of" or whatever and append any trailing
@@ -3630,7 +3652,7 @@ std::string get_ghost_description(const monster_info &mi, bool concise)
                         mi.u.ghost.best_skill_rank,
                         gspecies,
                         str, dex, mi.u.ghost.religion)
-         << ", a" << xl_rank_names[mi.u.ghost.xl_rank] << " ";
+         << ", " << _xl_rank_name(mi.u.ghost.xl_rank) << " ";
 
     if (concise)
     {

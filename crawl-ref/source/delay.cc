@@ -1486,6 +1486,11 @@ inline static void _monster_warning(activity_interrupt_type ai,
     {
         ASSERT(mon->seen_context != "just seen");
         std::string text = mon->full_name(DESC_CAP_A);
+        if (mon->type == MONS_PLAYER_GHOST)
+        {
+            text += make_stringf(" (%s)",
+                                 short_ghost_description(mon).c_str());
+        }
         set_auto_exclude(mon);
 
         if (starts_with(at.context, "open"))

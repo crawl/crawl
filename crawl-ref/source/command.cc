@@ -2660,7 +2660,8 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>;</w>      : list known levels and counters\n"
                        "<w>{</w>      : magic mapping\n"
                        "<w>}</w>      : detect all traps on level\n"
-                       "<w>)</w>      : change Shoals' tide speed\n",
+                       "<w>)</w>      : change Shoals' tide speed\n"
+                       "<w>Ctrl-E</w> : dump level builder information\n",
                        true, true);
 
     cols.add_formatted(1,

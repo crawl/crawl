@@ -130,7 +130,7 @@ static int _mons_misc_level(int mcls)
 static global_level_info g_lev_infos[] = {
     {mons_standard_level, BRANCH_MAIN_DUNGEON,  1},
     {_mons_misc_level,    BRANCH_MAIN_DUNGEON,  1},
-    {mons_dwarf_level,    BRANCH_DWARF_HALL,    7},
+    {mons_dwarf_level,    BRANCH_DWARVEN_HALL,  7},
     {mons_mineorc_level,  BRANCH_ORCISH_MINES,  8},
     {mons_lair_level,     BRANCH_LAIR,         10},
     {mons_hallelf_level,  BRANCH_ELVEN_HALLS,  11},
@@ -208,6 +208,7 @@ bool mons_abyss(int mcls)
     case MONS_DEMONIC_CRAWLER:
     case MONS_EARTH_ELEMENTAL:
     case MONS_EFREET:
+    case MONS_EIDOLON:
     case MONS_EXECUTIONER:
     case MONS_EYE_OF_DEVASTATION:
     case MONS_EYE_OF_DRAINING:
@@ -415,6 +416,7 @@ int mons_rare_abyss(int mcls)
     case MONS_SKY_BEAST:
         return 9;
 
+    case MONS_EIDOLON:
     case MONS_FUNGUS:
     case MONS_GIANT_EYEBALL:
     case MONS_PHANTOM:
@@ -1130,10 +1132,10 @@ int mons_standard_rare(int mcls)
     }
 }
 
-// The Dwarf Hall
+// The Dwarven Hall
 int mons_dwarf_level(int mcls)
 {
-    int mlev = absdungeon_depth(BRANCH_DWARF_HALL, 1);
+    int mlev = absdungeon_depth(BRANCH_DWARVEN_HALL, 1);
 
     if (!mons_dwarf_rare(mcls))
         return mlev + 99;
@@ -1156,11 +1158,10 @@ int mons_dwarf_rare(int mcls)
         return 60;
     case MONS_DEEP_DWARF_UNBORN:
         return 40;
-    case MONS_NISSE:
     case MONS_WRAITH:
         return 30;
     case MONS_PHANTASMAL_WARRIOR:
-    case MONS_GREATER_WRAITH:
+    case MONS_EIDOLON:
     case MONS_FIRE_GIANT:
     case MONS_FROST_GIANT:
     case MONS_STONE_GIANT:

@@ -48,6 +48,7 @@
 #include "crash.h"
 #include "database.h"
 #include "dbg-scan.h"
+#include "dbg-util.h"
 #include "debug.h"
 #include "delay.h"
 #include "describe.h"
@@ -567,6 +568,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
 
     case CONTROL('B'): you.teleport(true, false, true); break;
     case CONTROL('D'): wizard_edit_durations(); break;
+    case CONTROL('E'): debug_dump_levgen(); break;
     case CONTROL('F'): debug_fight_statistics(false, true); break;
     case CONTROL('G'): debug_ghosts(); break;
     case CONTROL('H'): wizard_set_hunger_state(); break;
