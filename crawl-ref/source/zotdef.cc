@@ -424,8 +424,8 @@ void wraith_wave(int power)
     mpr("WRAITH WAVE");
 #endif
     monster_type wraiths[]={ MONS_WRAITH, MONS_SHADOW_WRAITH, MONS_FREEZING_WRAITH,
-                MONS_GREATER_WRAITH, MONS_PHANTASMAL_WARRIOR, MONS_SPECTRAL_THING };
-    monster_type boss[]={MONS_GREATER_WRAITH, MONS_PHANTASMAL_WARRIOR, MONS_SPECTRAL_THING};
+                MONS_EIDOLON, MONS_PHANTASMAL_WARRIOR, MONS_SPECTRAL_THING };
+    monster_type boss[]={MONS_EIDOLON, MONS_PHANTASMAL_WARRIOR, MONS_SPECTRAL_THING};
     zotdef_fill_from_list(wraiths, sizeof(wraiths) / sizeof(monster_type), 0,
         power); // full
     zotdef_choose_boss(boss, sizeof(boss) / sizeof(monster_type), power);
