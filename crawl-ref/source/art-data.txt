@@ -1123,7 +1123,6 @@ APPEAR:  encrusted golden ring
 OBJ:     OBJ_JEWELLERY/RING_CHARM
 COLOUR:  ETC_ENCHANT
 TILE:    urand_charms
-STEALTH: -10
 VALUE:   1500
 BOOL:    special
 DESC_ID: This lovely ring bestows on the wearer a strange glamour that makes
