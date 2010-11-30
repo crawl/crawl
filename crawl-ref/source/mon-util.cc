@@ -654,7 +654,7 @@ bool mons_is_native_in_branch(const monster* mons,
     case BRANCH_ORCISH_MINES:
         return (mons_genus(mons->type) == MONS_ORC);
 
-    case BRANCH_DWARF_HALL:
+    case BRANCH_DWARVEN_HALL:
         return (mons_genus(mons->type) == MONS_DWARF);
 
     case BRANCH_SHOALS:
