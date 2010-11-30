@@ -3985,26 +3985,8 @@ static void _builder_items(int level_number, level_area_type level_type, int ite
     {
         for (i = 0; i < items_wanted; i++)
         {
-            // porridge in the dwarven hall
-            if (player_in_branch(BRANCH_DWARVEN_HALL))
-            {
-                const int it = random2(100);
-                if (it == 1)
-                {
-                    items(1, OBJ_POTIONS, POT_PORRIDGE, false, 0, 250,
-                          MMT_NO_ITEM);
-                }
-                else if (it < 10)
-                {
-                    items(1, specif_type, OBJ_RANDOM, false, items_levels, 250,
-                          MMT_NO_ITEM);
-                }
-            }
-            else
-            {
-                items(1, specif_type, OBJ_RANDOM, false, items_levels, 250,
-                      MMT_NO_ITEM);
-            }
+            items(1, specif_type, OBJ_RANDOM, false, items_levels, 250,
+                  MMT_NO_ITEM);
         }
 
         // Make sure there's a very good chance of a knife being placed
