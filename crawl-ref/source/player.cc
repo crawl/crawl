@@ -5169,7 +5169,8 @@ void player::init()
     xray_vision = false;
 
     skills.init(0);
-    practise_skill.init(true);        // In Zot def we turn off all skills with non-zero skill level later
+    // In Zot def we turn off all skills with non-zero skill level later
+    practise_skill.init(true);
     skill_points.init(0);
     ct_skill_points.init(0);
     skill_order.init(MAX_SKILL_ORDER);
@@ -5184,7 +5185,7 @@ void player::init()
 
     skill_cost_level = 1;
     total_skill_points = 0;
-    exp_available    = crawl_state.game_is_zotdef()? 80 : 25;        // Zot def starts with 80xp
+    exp_available    = crawl_state.game_is_zotdef()? 80 : 25;
 
     item_description.init(255);
     unique_items.init(UNIQ_NOT_EXISTS);

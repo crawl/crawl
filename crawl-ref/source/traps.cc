@@ -117,18 +117,21 @@ void trap_def::prepare_ammo()
         break;
     case TRAP_ALARM:
         this->ammo_qty = 1 + random2(3);
-        // Zotdef: alarm traps have unlimited ammo
-        if (crawl_state.game_is_zotdef()) this->ammo_qty = 100000;
+        // Zotdef: alarm traps have practically unlimited ammo
+        if (crawl_state.game_is_zotdef())
+            this->ammo_qty = 100000;
         break;
     case TRAP_GOLUBRIA:
         // really, turns until it vanishes
         this->ammo_qty = 30 + random2(20);
+        break;
     default:
         this->ammo_qty = 0;
         break;
     }
     // Zot def: traps have 10x as much ammo
-    if (crawl_state.game_is_zotdef()) this->ammo_qty*=10;
+    if (crawl_state.game_is_zotdef())
+        this->ammo_qty *= 10;
 }
 
 void trap_def::reveal()
@@ -415,15 +418,19 @@ static bool _find_other_passage_side(coord_def& to)
 // you.pos==pos).
 std::string direction_string(coord_def pos, bool fuzz)
 {
-    int dx=you.pos().x-pos.x;
-    if (fuzz) dx+=(random2avg(41,2)-20);
-    int dy=you.pos().y-pos.y;
-    if (fuzz) dy+=(random2avg(41,2)-20);
-    const char *ew=((dx>0) ? "west" : ((dx < 0) ? "east" : ""));
-    const char *ns=((dy<0) ? "south" : ((dy > 0) ? "north" : ""));
-    if (abs(dy)>2*abs(dx)) ew="";
-    if (abs(dx)>2*abs(dy)) ns="";
-    return (std::string(ns)+ew);
+    int dx = you.pos().x - pos.x;
+    if (fuzz)
+        dx += random2avg(41,2) - 20;
+    int dy = you.pos().y - pos.y;
+    if (fuzz)
+        dy += random2avg(41,2) - 20;
+    const char *ew=((dx > 0) ? "west" : ((dx < 0) ? "east" : ""));
+    const char *ns=((dy < 0) ? "south" : ((dy > 0) ? "north" : ""));
+    if (abs(dy) > 2 * abs(dx))
+        ew="";
+    if (abs(dx) > 2 * abs(dy))
+        ns="";
+    return (std::string(ns) + ew);
 }
 
 void trap_def::trigger(actor& triggerer, bool flat_footed)
@@ -553,16 +560,14 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             // that would be way too nasty for the player.
             std::string msg;
             if (you_trigger)
-            {
                 msg="An alarm trap emits a blaring wail!";
-            }
             else
             {
                 std::string dir=direction_string(this->pos, !in_sight);
-                msg=std::string("You hear a ")+
-                    ((in_sight)?"":"distant ")
+                msg=std::string("You hear a ") +
+                    ((in_sight) ? "" : "distant ")
                     + "blaring wail "
-                    +((dir.length())? ("to the "+dir+".") : "behind you!");
+                    + ((dir.length())? ("to the " + dir + ".") : "behind you!");
             }
             // Monsters of normal or greater intelligence will realize that
             // they were the one to set off the trap.
@@ -572,7 +577,8 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             // Zotdef - Made alarm traps noisier and more noticeable
             int noiselevel = crawl_state.game_is_zotdef() ? 30 : 12;
             noisy(noiselevel, this->pos, msg.c_str(), source, false);
-            if (crawl_state.game_is_zotdef()) more();
+            if (crawl_state.game_is_zotdef())
+                more();
         }
         break;
 
@@ -645,8 +651,10 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                     print_wounds(m);
 
                 // zotdef: blade traps break eventually
-                if (crawl_state.game_is_zotdef() && one_chance_in(200)) {
-                    if (in_sight) mpr("The blade breaks!");
+                if (crawl_state.game_is_zotdef() && one_chance_in(200))
+                {
+                    if (in_sight)
+                        mpr("The blade breaks!");
                     disarm();
                 }
             }
@@ -1548,7 +1556,8 @@ bool is_valid_shaft_level(const level_id &place)
         return (false);
 
     // Zot def - no shafts
-    if (crawl_state.game_is_zotdef()) return (false);
+    if (crawl_state.game_is_zotdef())
+        return (false);
 
     if (place.level_type != LEVEL_DUNGEON)
         return (false);
@@ -1807,6 +1816,6 @@ int count_traps(trap_type ttyp)
 {
     int num = 0;
     for (int tcount = 0; tcount < MAX_TRAPS; tcount++)
-            if (env.trap[tcount].type == ttyp) num++;
+        if (env.trap[tcount].type == ttyp) num++;
     return num;
 }

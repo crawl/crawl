@@ -1281,7 +1281,9 @@ int place_monster(mgen_data mg, bool force_pos)
     // Zotdef change - banding allowed on stairs for extra challenge!
     // Frequency reduced, though, and only after 2K turns.
     if (id >= MAX_MONSTERS - 30
-        || ( mg.proximity == PROX_NEAR_STAIRS && !crawl_state.game_is_zotdef() && coinflip())
+        || (mg.proximity == PROX_NEAR_STAIRS
+            && !crawl_state.game_is_zotdef()
+            && coinflip())
         || (crawl_state.game_is_zotdef() && you.num_turns<2000)
         )
         return (id);

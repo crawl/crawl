@@ -657,13 +657,13 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
     case SPELL_ACID_SPLASH:
         beam.colour   = YELLOW;
         beam.name     = "splash of acid";
-        beam.damage   = dice_def( 3, 7 );
+        beam.damage   = dice_def(3, 7);
 
         // Zotdef change: make acid splash dmg dependent on power
         // Oklob saplings pwr=48, oklobs pwr=120, acid blobs pwr=216
         //  =>             3d3        3d6            3d9
         if (crawl_state.game_is_zotdef())
-            beam.damage   = dice_def( 3, 2 + (power / 30) );
+            beam.damage   = dice_def(3, 2 + (power / 30));
 
         beam.hit      = 20 + (3 * mons->hit_dice);
         beam.flavour  = BEAM_ACID;

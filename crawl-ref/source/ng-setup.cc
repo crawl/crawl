@@ -1120,7 +1120,8 @@ static void _give_items_skills(const newgame_def& ng)
     }
 
     // Zotdef: everyone gets a bonus two potions of healing
-    if (crawl_state.game_is_zotdef()) newgame_make_item(-1, EQ_NONE, OBJ_POTIONS, POT_HEALING,-1,2);
+    if (crawl_state.game_is_zotdef())
+        newgame_make_item(-1, EQ_NONE, OBJ_POTIONS, POT_HEALING, -1, 2);
 
     if (weap_skill)
     {
@@ -1417,11 +1418,11 @@ static void _reassess_starting_skills()
     for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
     {
         skill_type sk = static_cast<skill_type>(i);
-        if (crawl_state.game_is_zotdef()) you.practise_skill[i]=false;
+        if (crawl_state.game_is_zotdef())
+            you.practise_skill[i] = !you.skills[sk];
         if (you.skills[sk] == 0
             && (you.species != SP_VAMPIRE || sk != SK_UNARMED_COMBAT))
         {
-            if (crawl_state.game_is_zotdef()) you.practise_skill[i]=true;
             continue;
         }
 
@@ -1579,7 +1580,7 @@ static void _setup_sprint(const newgame_def& ng)
  */
 static void _setup_zotdef(const newgame_def& ng)
 {
-        // nothing currently
+    // nothing currently
 }
 
 /**

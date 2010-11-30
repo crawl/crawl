@@ -2493,7 +2493,7 @@ static bool _monster_eat_item(monster* mons, bool nearby)
 
     int hps_changed = 0;
     // Zotdef jellies are toned down slightly
-    int max_eat = roll_dice(1, (crawl_state.game_is_zotdef()?8:10));
+    int max_eat = roll_dice(1, (crawl_state.game_is_zotdef() ? 8 : 10));
     int eaten = 0;
     bool eaten_net = false;
     bool death_ooze_ate_good = false;
@@ -2530,7 +2530,8 @@ static bool _monster_eat_item(monster* mons, bool nearby)
         {
             quant = std::min(quant, max_eat - eaten);
 
-            hps_changed += (quant * item_mass(*si)) / (crawl_state.game_is_zotdef()?30:20) + quant;
+            hps_changed += (quant * item_mass(*si))
+                           / (crawl_state.game_is_zotdef() ? 30 : 20) + quant;
             eaten += quant;
 
             if (mons->caught()
@@ -3202,8 +3203,11 @@ static bool _mon_can_move_to_pos(const monster* mons,
             // - prevents plugging gaps with hostile oklobs
             if (crawl_state.game_is_zotdef())
             {
-                if (!mons_is_stationary(targmonster) || targmonster->attitude!=ATT_HOSTILE)
+                if (!mons_is_stationary(targmonster)
+                    || targmonster->attitude != ATT_HOSTILE)
+                {
                     return (false);
+                }
             }
             else
             {
@@ -3752,7 +3756,8 @@ static bool _monster_move(monster* mons)
         if (monster* targ = monster_at(mons->pos() + mmov))
         {
             if (mons_aligned(mons, targ) &&
-                (!crawl_state.game_is_zotdef() || !mons_is_firewood(targ))) // Zotdef: monsters will cut down firewood
+                (!crawl_state.game_is_zotdef() || !mons_is_firewood(targ)))
+                // Zotdef: monsters will cut down firewood
                 ret = _monster_swaps_places(mons, mmov);
             else
             {

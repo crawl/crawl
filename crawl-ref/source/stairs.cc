@@ -1337,9 +1337,11 @@ void down_stairs(dungeon_feature_type force_stair,
 
     request_autopickup();
 
-    // Zotdef: returning from portals (e.g. bazaar) paralyses the player in place for 5 moves. Nasty,
-    // but punishes players for using portals as quick-healing stopovers.
-    if (crawl_state.game_is_zotdef()) start_delay(DELAY_UNINTERRUPTIBLE, 5);
+    // Zotdef: returning from portals (e.g. bazaar) paralyses the player in
+    // place for 5 moves.  Nasty, but punishes players for using portals as
+    // quick-healing stopovers.
+    if (crawl_state.game_is_zotdef())
+        start_delay(DELAY_UNINTERRUPTIBLE, 5);
 
 }
 
