@@ -130,7 +130,7 @@ static int _mons_misc_level(int mcls)
 static global_level_info g_lev_infos[] = {
     {mons_standard_level, BRANCH_MAIN_DUNGEON,  1},
     {_mons_misc_level,    BRANCH_MAIN_DUNGEON,  1},
-    {mons_dwarf_level,    BRANCH_DWARF_HALL,    7},
+    {mons_dwarf_level,    BRANCH_DWARVEN_HALL,  7},
     {mons_mineorc_level,  BRANCH_ORCISH_MINES,  8},
     {mons_lair_level,     BRANCH_LAIR,         10},
     {mons_hallelf_level,  BRANCH_ELVEN_HALLS,  11},
@@ -1132,10 +1132,10 @@ int mons_standard_rare(int mcls)
     }
 }
 
-// The Dwarf Hall
+// The Dwarven Hall
 int mons_dwarf_level(int mcls)
 {
-    int mlev = absdungeon_depth(BRANCH_DWARF_HALL, 1);
+    int mlev = absdungeon_depth(BRANCH_DWARVEN_HALL, 1);
 
     if (!mons_dwarf_rare(mcls))
         return mlev + 99;

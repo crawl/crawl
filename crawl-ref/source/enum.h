@@ -376,7 +376,7 @@ enum branch_type                // you.where_are_you
     BRANCH_HALL_OF_ZOT,
     BRANCH_FOREST,
     BRANCH_SPIDER_NEST,
-    BRANCH_DWARF_HALL,
+    BRANCH_DWARVEN_HALL,
     NUM_BRANCHES
 };
 
@@ -1106,7 +1106,7 @@ enum dungeon_feature_type
 
     // Entrances to various branches
     DNGN_ENTER_FIRST_BRANCH = 110,     //  110
-    DNGN_ENTER_DWARF_HALL = DNGN_ENTER_FIRST_BRANCH,
+    DNGN_ENTER_DWARVEN_HALL = DNGN_ENTER_FIRST_BRANCH,
     DNGN_ENTER_ORCISH_MINES,
     DNGN_ENTER_HIVE,
     DNGN_ENTER_LAIR,
@@ -1128,7 +1128,7 @@ enum dungeon_feature_type
     // Exits from various branches
     // Order must be the same as above
     DNGN_RETURN_FROM_FIRST_BRANCH = 130, //  130
-    DNGN_RETURN_FROM_DWARF_HALL = DNGN_RETURN_FROM_FIRST_BRANCH,
+    DNGN_RETURN_FROM_DWARVEN_HALL = DNGN_RETURN_FROM_FIRST_BRANCH,
     DNGN_RETURN_FROM_ORCISH_MINES,
     DNGN_RETURN_FROM_HIVE,
     DNGN_RETURN_FROM_LAIR,
@@ -2246,7 +2246,6 @@ enum monster_type                      // (int) menv[].type
     MONS_TARANTELLA,
     MONS_SILENT_SPECTRE,
 #if TAG_MAJOR_VERSION == 31
-    // Dwarf Hall monsters
     MONS_WITCH,
     MONS_EVIL_WITCH,
     MONS_FOREST_WITCH,

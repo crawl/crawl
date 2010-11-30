@@ -793,7 +793,7 @@ static bool _is_bottom_exit_stair(const coord_def &c)
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
     case DNGN_EXIT_HELL:
-    case DNGN_RETURN_FROM_DWARF_HALL:
+    case DNGN_RETURN_FROM_DWARVEN_HALL:
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_HIVE:
     case DNGN_RETURN_FROM_LAIR:
@@ -833,7 +833,7 @@ static bool _is_exit_stair(const coord_def &c)
     case DNGN_STONE_STAIRS_UP_III:
     case DNGN_ESCAPE_HATCH_UP:
     case DNGN_EXIT_HELL:
-    case DNGN_RETURN_FROM_DWARF_HALL:
+    case DNGN_RETURN_FROM_DWARVEN_HALL:
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_HIVE:
     case DNGN_RETURN_FROM_LAIR:
@@ -3985,8 +3985,8 @@ static void _builder_items(int level_number, level_area_type level_type, int ite
     {
         for (i = 0; i < items_wanted; i++)
         {
-            // porridge in the dwarf hall
-            if (player_in_branch(BRANCH_DWARF_HALL))
+            // porridge in the dwarven hall
+            if (player_in_branch(BRANCH_DWARVEN_HALL))
             {
                 const int it = random2(100);
                 if (it == 1)
@@ -5950,7 +5950,7 @@ static dungeon_feature_type _pick_an_altar()
                                      : DNGN_ALTAR_YREDELEMNUL);
             break;
 
-        case BRANCH_DWARF_HALL:
+        case BRANCH_DWARVEN_HALL:
             temp_rand = random2(7);
 
             altar_type = ((temp_rand == 0) ? DNGN_ALTAR_KIKUBAAQUDGHA :

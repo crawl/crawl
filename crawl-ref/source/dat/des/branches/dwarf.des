@@ -1,6 +1,6 @@
 ################################################
 #
-# Dwarf Hall
+# Dwarven Hall
 #
 # thematic branch based on Scandinavian folklore
 
@@ -681,7 +681,7 @@ ENDMAP
 # Dummy entry
 NAME:    enter_dwarf_dummy
 TAGS:    dwarf_entry
-KFEAT:   O = enter_dwarf_hall
+KFEAT:   O = enter_dwarven_hall
 MAP
 O
 ENDMAP
@@ -692,7 +692,7 @@ SUBST:   . = . ':7
 COLOUR:  ' = yellow
 FTILE:   ' = floor_sandstone
 SUBST:   ' = .
-KFEAT:   O = enter_dwarf_hall
+KFEAT:   O = enter_dwarven_hall
 MAP
 .....
 .'G'.
@@ -712,7 +712,7 @@ SUBST:   D = =
 SUBST:   C = c
 FTILE:   =GO' = floor_sandstone
 SUBST:   ' = .
-KFEAT:   O = enter_dwarf_hall
+KFEAT:   O = enter_dwarven_hall
 MAP
 .......
 .ccDcc.
@@ -734,7 +734,7 @@ MONS:    deep dwarf w:30 / elf w:2 / war dog
 MONS:    wight / orange rat
 MONS:    giant centipede / redback
 SUBST:   . = .:100 11 2 3
-KFEAT:   O = enter_dwarf_hall
+KFEAT:   O = enter_dwarven_hall
 MAP
 .G.
 .O.
@@ -749,7 +749,7 @@ COLOUR:  1 = yellow, ' = yellow, x = white
 MONS:    dwarf w:30 / elf w:2 / war dog
 FTILE:   1'xO = floor_sandstone
 RTILE:   x = wall_tomb
-KFEAT:   O = enter_dwarf_hall
+KFEAT:   O = enter_dwarven_hall
 MAP
 .........
 .xxxxxxx.
@@ -768,7 +768,7 @@ RTILE:   c = wall_tomb, = = wall_tomb
 FTILE:   ='GO = floor_sandstone
 NSUBST:  = = 1:= / *:c
 SUBST:   c : cx
-KFEAT:   O = enter_dwarf_hall
+KFEAT:   O = enter_dwarven_hall
 MAP
    ...
   ..c..
@@ -791,7 +791,7 @@ FTILE:   12O.A = floor_sandstone
 # crawl will rotate for the rest of possibilities
 NSUBST:  A = 1:= / *:c
 : dhfh.colors(_G)
-KFEAT:   O = enter_dwarf_hall
+KFEAT:   O = enter_dwarven_hall
 MAP
 cccc.cccc
 c1.....1c
