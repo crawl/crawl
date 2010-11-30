@@ -2479,7 +2479,7 @@ enum mon_spellbook_type
     MST_WITCH_II,
     MST_WITCH_III,
 #endif
-    MST_ORC_PRIEST,                    //  80
+    MST_ORC_PRIEST       = 80,
     MST_ORC_HIGH_PRIEST,
     MST_MOTTLED_DRAGON,
     MST_ICE_FIEND,
