@@ -52,17 +52,6 @@
       }
     },
 
-    {  MST_NISSE,
-      {
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_INVISIBILITY,
-       SPELL_NO_SPELL
-      }
-    },
-
     {  MST_DEEP_DWARF_NECROMANCER,
       {
        SPELL_PAIN,

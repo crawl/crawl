@@ -5998,8 +5998,6 @@ bool monster::can_drink_potion(potion_type ptype) const
         case POT_BLOOD:
         case POT_BLOOD_COAGULATED:
             return (mons_species() == MONS_VAMPIRE);
-        case POT_PORRIDGE:
-            return (mons_species() == MONS_NISSE);
         case POT_SPEED:
         case POT_MIGHT:
         case POT_BERSERK_RAGE:

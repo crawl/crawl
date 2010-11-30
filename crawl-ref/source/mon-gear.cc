@@ -178,17 +178,6 @@ static void _give_potion(monster* mon, int level)
         mitm[thing_created].flags = 0;
         _give_monster_item(mon, thing_created);
     }
-    else if (mons_species(mon->type) == MONS_NISSE && one_chance_in(6))
-    {
-        const int thing_created =
-            items(0, OBJ_POTIONS, POT_PORRIDGE, true, level, 0);
-
-        if (thing_created == NON_ITEM)
-            return;
-
-        mitm[thing_created].flags = 0;
-        _give_monster_item(mon, thing_created, true);
-    }
     else if (mon->type == MONS_PARACELSUS)
     {
         int type = random2(4);
@@ -1185,19 +1174,6 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                                        WPN_SABRE, -1);
         break;
 
-    case MONS_NISSE:
-        if (!melee_only && one_chance_in(6))
-        {
-            item.base_type = OBJ_WEAPONS;
-            item.sub_type  = WPN_BLOWGUN;
-            item_race = MAKE_ITEM_NO_RACE;
-            break;
-        }
-        item_race = MAKE_ITEM_NO_RACE;
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = ((one_chance_in(3))? WPN_WAR_AXE: WPN_SPEAR);
-        break;
-
     case MONS_SPRIGGAN_RIDER:
         if (!melee_only && one_chance_in(4))
         {
@@ -1815,9 +1791,6 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_DEEP_DWARF_DEATH_KNIGHT:
     case MONS_DEEP_DWARF_BERSERKER:
         item_race = MAKE_ITEM_DWARVEN;
-        // deliberate fall through
-
-    case MONS_NISSE:
         item.base_type = OBJ_ARMOUR;
         item.sub_type = random_choose_weighted(5, ARM_CHAIN_MAIL,
                                                1, ARM_SPLINT_MAIL,

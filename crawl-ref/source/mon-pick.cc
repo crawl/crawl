@@ -1158,7 +1158,6 @@ int mons_dwarf_rare(int mcls)
         return 60;
     case MONS_DEEP_DWARF_UNBORN:
         return 40;
-    case MONS_NISSE:
     case MONS_WRAITH:
         return 30;
     case MONS_PHANTASMAL_WARRIOR:
