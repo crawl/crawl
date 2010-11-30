@@ -1414,6 +1414,13 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                     spell_cast = (one_chance_in(5) ? SPELL_NO_SPELL
                                                    : hspell_pass[5]);
 
+                    if (crawl_state.game_is_zotdef()
+                        && mons->type == MONS_ICE_STATUE)
+                    {
+                        // Don't spam ice beasts when wounded.
+                        spell_cast = SPELL_NO_SPELL;
+                    }
+
                     // Pacified monsters leaving the level won't choose
                     // emergency spells harmful to the area.
                     if (spell_cast != SPELL_NO_SPELL
