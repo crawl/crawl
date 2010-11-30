@@ -147,8 +147,8 @@ card_type get_card_and_flags(const item_def& deck, int idx,
                              uint8_t& _flags);
 
 // Used elsewhere in Zotdef
-void _create_pond(const coord_def& center, int radius, bool allow_deep);
-void _sage_card(int power, deck_rarity_type rarity);
+void create_pond(const coord_def& center, int radius, bool allow_deep);
+void sage_card(int power, deck_rarity_type rarity);
 
 const std::vector<card_type> get_drawn_cards(const item_def& deck);
 

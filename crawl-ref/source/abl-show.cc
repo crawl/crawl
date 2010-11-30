@@ -1784,7 +1784,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_MAKE_WATER:
-        _create_pond(you.pos(), 3, false); // //
+        create_pond(you.pos(), 3, false); // //
         break;
 
     case ABIL_MAKE_ELECTRIC_EEL:
@@ -1866,7 +1866,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_MAKE_SAGE:
-        _sage_card(20, DECK_RARITY_RARE);
+        sage_card(20, DECK_RARITY_RARE);
         break;
 
     case ABIL_MUMMY_RESTORATION:
