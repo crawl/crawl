@@ -533,6 +533,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         level = MAKE_GOOD_ITEM;
         break;
 
+    case MONS_ELF:
     case MONS_DEEP_ELF_FIGHTER:
     case MONS_DEEP_ELF_HIGH_PRIEST:
     case MONS_DEEP_ELF_KNIGHT:
@@ -1662,6 +1663,7 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         break;
 
     case MONS_DUVESSA:
+    case MONS_ELF:
     case MONS_DEEP_ELF_ANNIHILATOR:
     case MONS_DEEP_ELF_CONJURER:
     case MONS_DEEP_ELF_DEATH_MAGE:
