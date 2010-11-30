@@ -1818,7 +1818,6 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         // deliberate fall through
 
     case MONS_NISSE:
-    {
         item.base_type = OBJ_ARMOUR;
         item.sub_type = random_choose_weighted(5, ARM_CHAIN_MAIL,
                                                1, ARM_SPLINT_MAIL,
@@ -1826,7 +1825,6 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
                                                1, ARM_PLATE_MAIL,
                                                0);
         break;
-    }
 
     case MONS_MERFOLK_IMPALER:
         item_race = MAKE_ITEM_NO_RACE;
