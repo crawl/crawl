@@ -1828,6 +1828,8 @@ static tileidx_t _tileidx_monster_no_props(const monster* mon)
         case MONS_DOOR_MIMIC:
         case MONS_STAIR_MIMIC:
         case MONS_FOUNTAIN_MIMIC:
+            if (mons_is_known_mimic(mon))
+                return TILE_FLAG_MIMIC;
             return 0;
 
         case MONS_DANCING_WEAPON:
