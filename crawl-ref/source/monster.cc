@@ -1840,7 +1840,7 @@ bool monster::pickup_potion(item_def &item, int near)
     // them.
     const potion_type ptype = static_cast<potion_type>(item.sub_type);
 
-    if (type != MONS_PARACELSUS && !can_drink_potion(ptype))
+    if (!can_drink_potion(ptype))
         return (false);
 
     return (pickup(item, MSLOT_POTION, near));

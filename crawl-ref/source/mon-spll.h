@@ -97,17 +97,6 @@
       }
     },
 
-    {  MST_PARACELSUS,
-      {
-       SPELL_EVAPORATE,
-       SPELL_EVAPORATE,
-       SPELL_STONESKIN,
-       SPELL_POLYMORPH_OTHER,
-       SPELL_STICKS_TO_SNAKES,
-       SPELL_STICKS_TO_SNAKES
-      }
-    },
-
     {  MST_GUARDIAN_SERPENT,
       {
        SPELL_TELEPORT_OTHER,
