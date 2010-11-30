@@ -1974,7 +1974,7 @@ enum monster_type                      // (int) menv[].type
       MONS_UNUSED_256,
       MONS_UNUSED_257,
       MONS_UNUSED_258,
-    MONS_PARACELSUS,
+      MONS_UNUSED_PARACELSUS,
 // BCR - End first batch of uniques.
     MONS_NAGA_MAGE,                    //  260
     MONS_NAGA_WARRIOR,
@@ -2449,7 +2449,6 @@ enum mon_spellbook_type
     MST_DEEP_DWARF_UNBORN,
     MST_BK_TROG,
     MST_BK_YREDELEMNUL,
-    MST_PARACELSUS,
     MST_GUARDIAN_SERPENT = 10,
     MST_LICH_I           = 20,
     MST_LICH_II,

@@ -452,7 +452,7 @@ SUBVAULT: W : fruiting_plant
 KITEM:    p = potion of healing / potion of heal wounds / \
               potion of restore abilities w:1 / potion of poison w:3 / \
               potion of strong poison w:1 / potion of confusion w:1 / nothing
-KMONS:    1 = patrolling Paracelsus name:the_alchemist name_suffix
+KMONS:    1 = deep dwarf artificer
 MAP
 ZZZZZ..YYYYY
 ZZZZZ..YYYYY

@@ -178,39 +178,6 @@ static void _give_potion(monster* mon, int level)
         mitm[thing_created].flags = 0;
         _give_monster_item(mon, thing_created);
     }
-    else if (mon->type == MONS_PARACELSUS)
-    {
-        int type = random2(4);
-        switch (type)
-        {
-        case 0:
-            type = OBJ_RANDOM;
-            break;
-        case 1:
-            type = POT_HEALING;
-            break;
-        case 2:
-            type = POT_HEAL_WOUNDS;
-            break;
-        case 3:
-            type = POT_POISON;
-            break;
-        case 4:
-            type = POT_STRONG_POISON;
-            break;
-        default:
-            type = POT_WATER;
-            break;
-        }
-        int pot = items(0, OBJ_POTIONS, type, true, level, 0);
-
-        if (pot == NON_ITEM)
-            return;
-
-        mitm[pot].flags = 0;
-        _give_monster_item(mon, pot, true,
-                           &monster::pickup_potion);
-    }
     else if (mons_is_unique(mon->type) && one_chance_in(3))
     {
         const int thing_created =
