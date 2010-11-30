@@ -1253,7 +1253,7 @@ ogre
 
 A larger, uglier and fatter relative of orcs and goblins.
 %%%%
-ogre-mage
+ogre mage
 
 A rare breed of ogre, skilled in the use of magic.
 %%%%
