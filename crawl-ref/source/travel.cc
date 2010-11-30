@@ -613,7 +613,18 @@ inline static void _check_interesting_square(const coord_def pos,
             ed.found_item(pos, mitm[ you.visible_igrd(pos) ]);
     }
 
-    ed.found_feature(pos, grd(pos));
+    dungeon_feature_type feat = grd(pos);
+    if (monster_at(pos))
+    {
+        monster* mimic_mons = monster_at(pos);
+        if (mons_is_feat_mimic(mimic_mons->type)
+            && mons_is_unknown_mimic(mimic_mons))
+        {
+            feat = get_mimic_feat(mimic_mons);
+        }
+    }
+
+    ed.found_feature(pos, feat);
 }
 
 static void _userdef_run_stoprunning_hook(void)
