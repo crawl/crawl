@@ -47,7 +47,7 @@ static int _fuzz_mons_level(int level)
     if (level>1 && one_chance_in(7))
     {
         const int fuzz = random2avg(9, 2);
-        return (fuzz > 4? level + fuzz - 4 : level);
+        return (fuzz > 4 ? level + fuzz - 4 : level);
     }
     return (level);
 }
@@ -58,49 +58,77 @@ branch_type zotdef_random_branch()
 {
     int wavenum = you.num_turns / CYCLE_LENGTH;
 
-    branch_type b = NUM_BRANCHES;
-    while (b == NUM_BRANCHES)
+    while (1)
     {
         branch_type pb=static_cast<branch_type>(random2(NUM_BRANCHES));
-        bool ok=true;
+        bool ok = true;
         switch (pb)
         {
-            case BRANCH_MAIN_DUNGEON:      ok=true;
-                                           // reduce freq at high levels
-                                           if (wavenum>40) ok=one_chance_in(2);
-                                           break;
+            case BRANCH_MAIN_DUNGEON:
+                ok = true;
+                // reduce freq at high levels
+                if (wavenum > 40)
+                    ok=one_chance_in(2);
+                break;
 
-            case BRANCH_SNAKE_PIT:         ok= (wavenum>10);
-                                           // reduce freq at high levels
-                                           if (wavenum>40) ok=ok && one_chance_in(2);
-                                           break;
+            case BRANCH_SNAKE_PIT:
+                ok = wavenum >10;
+                // reduce freq at high levels
+                if (wavenum > 40 && !coinflip())
+                   ok = false;
+                break;
 
             default:
             case BRANCH_ECUMENICAL_TEMPLE:
             case BRANCH_VAULTS:
-            case BRANCH_VESTIBULE_OF_HELL: ok=false;break;                // vaults/vestibule same as dungeon
+            case BRANCH_VESTIBULE_OF_HELL:
+                ok=false;
+                break;                // vaults/vestibule same as dungeon
 
-            case BRANCH_ORCISH_MINES:      ok = (wavenum<30); break;        // <6K turns only
-            case BRANCH_ELVEN_HALLS:       ok = (wavenum>10 && wavenum<60); break; // 2K-12K turns
-            case BRANCH_LAIR:                   ok = (wavenum<40); break;        // <8K turns only
-            case BRANCH_SWAMP:                   ok = (wavenum>12 && wavenum<40); break;        // <8K turns only
-            case BRANCH_SHOALS:                   ok = (wavenum>12 && wavenum<60); break;        // <12K turns only
-            case BRANCH_CRYPT:                   ok = (wavenum>13); break; // >2.5K turns only
-            case BRANCH_SLIME_PITS:        ok = (wavenum>20) && one_chance_in(2); break;        // >4K turns only
-            case BRANCH_HIVE:                   ok=(wavenum>12 && wavenum<35);break;        // <7.5K turns only
-            case BRANCH_HALL_OF_BLADES:           ok=(wavenum>30);break;        // >6K turns only
-            case BRANCH_TOMB:              ok=(wavenum>30) && one_chance_in(2);        break;
-            case BRANCH_DIS:
+            case BRANCH_ORCISH_MINES:
+                ok = wavenum < 30;                 // <6K turns only
+                break;
+            case BRANCH_ELVEN_HALLS:
+                ok = wavenum > 10 && wavenum < 60; // 2.2-12K turns
+                break;
+            case BRANCH_LAIR:
+                ok = wavenum < 40;                 // <8K turns only
+                break;
+            case BRANCH_SWAMP:
+                ok = wavenum > 12 && wavenum < 40; // 2.6-8K turns
+                break;
+            case BRANCH_SHOALS:
+                ok = wavenum > 12 && wavenum < 60; // 2.6-12K turns
+                break;
+            case BRANCH_CRYPT:
+                ok = wavenum > 13;                 // 2.8K-
+                break;
+            case BRANCH_SLIME_PITS:
+                ok = wavenum > 20 && coinflip();   // 4K-
+                break;        // >4K turns only
+            case BRANCH_HIVE:
+                ok = wavenum > 12 && wavenum < 35; // 2.6-7.5K
+                break;
+            case BRANCH_HALL_OF_BLADES:
+                ok = wavenum > 30;                 // 6K-
+                break;
+            case BRANCH_TOMB:
+                ok = wavenum > 30 && coinflip();   // 6K-
+                break;
+            case BRANCH_DIS:                       // 8K-
             case BRANCH_COCYTUS:
             case BRANCH_TARTARUS:
-            case BRANCH_GEHENNA:           ok=(wavenum>40) && one_chance_in(3);break;
-            case BRANCH_HALL_OF_ZOT:           ok=(wavenum>50); break;        // >10K turns only
-
+            case BRANCH_GEHENNA:
+                ok = wavenum > 40 && one_chance_in(3);
+                break;
+            case BRANCH_HALL_OF_ZOT:               // 10K-
+                ok = wavenum > 50;
+                break;
         }
-        if (ok) b=pb;
-        if (one_chance_in(4)) b=BRANCH_MAIN_DUNGEON;        // strong bias to main dungeon
+        if (ok)
+            return (one_chance_in(4) ? BRANCH_MAIN_DUNGEON : pb);
+            // strong bias to main dungeon
     }
-    return b;
 }
 
 int mon_strength(monster_type mon_type)
@@ -120,7 +148,7 @@ int mon_strength(monster_type mon_type)
             strength += 4;
             break;
         case MONS_PANDEMONIUM_DEMON:        // base init has 4HD (!)
-            strength=30;
+            strength = 30;
             break;
         default: break;
     }
@@ -135,16 +163,20 @@ int mon_strength(monster_type mon_type)
 // Note that this fills in the boss slot as well.
 void zotdef_fill_from_list(monster_type mlist[], int mlistlen, int chance, int power)
 {
-    for (int i=0; i<=NSLOTS; i++) {
-        env.mons_alloc[i]=MONS_PROGRAM_BUG;
-        if (i<NSLOTS && random2(power)<chance) continue;        // no monster this entry
-        while (env.mons_alloc[i]==MONS_PROGRAM_BUG)
+    for (int i = 0; i <= NSLOTS; i++)
+    {
+        env.mons_alloc[i] = MONS_PROGRAM_BUG;
+        if (i < NSLOTS && random2(power) < chance)
+             continue;        // no monster this entry
+        while (env.mons_alloc[i] == MONS_PROGRAM_BUG)
         {
             monster_type mon_type=mlist[random2(mlistlen)];
-            if (random2((power*3)/2)>mon_strength(mon_type)) continue;        // bias away from weaker critters
-            if (random2((power*3)/2)>mon_strength(mon_type))
-                        env.mons_alloc[i]=mon_type;
-            if (one_chance_in(100)) env.mons_alloc[i]=mon_type;        // occasional random pick
+            if (random2((power * 3) / 2) > mon_strength(mon_type))
+                continue;        // bias away from weaker critters
+            if (random2((power * 3) / 2) > mon_strength(mon_type))
+                env.mons_alloc[i] = mon_type;
+            if (one_chance_in(100))
+                env.mons_alloc[i]=mon_type;        // occasional random pick
         }
     }
 }
@@ -155,15 +187,19 @@ void zotdef_fill_from_list(monster_type mlist[], int mlistlen, int chance, int p
 void zotdef_choose_boss(monster_type mlist[], int mlistlen, int power)
 {
     int tries=0;
-    while (tries++<100)
+    while (tries++ < 100)
     {
-        monster_type mon_type=mlist[random2(mlistlen)];
+        monster_type mon_type = mlist[random2(mlistlen)];
         if (mons_is_unique(mon_type)
-            && you.unique_creatures[mon_type]) continue;
-        if (random2avg(power*3,2)<mon_strength(mon_type)) continue;
+            && you.unique_creatures[mon_type])
+        {
+            continue;
+        }
+        if (random2avg(power*3,2) < mon_strength(mon_type))
+            continue;
 
         // OK, take this one
-        env.mons_alloc[BOSS_SLOT]=mon_type;
+        env.mons_alloc[BOSS_SLOT] = mon_type;
         break;
     }
 }
@@ -172,9 +208,10 @@ void hydra_wave(int power)
 {
     monster_type hydras[]={MONS_HYDRA};
     monster_type boss[]={MONS_LERNAEAN_HYDRA};
-    zotdef_fill_from_list(hydras, sizeof(hydras)/sizeof(monster_type), 4, power);        // 66% full at power 12
-    zotdef_choose_boss(boss, sizeof(boss)/sizeof(monster_type), power*2);
-    mpr("You hear a distant many-voiced hissing!",MSGCH_DANGER);
+    zotdef_fill_from_list(hydras, sizeof(hydras) / sizeof(monster_type), 4,
+                          power);        // 66% full at power 12
+    zotdef_choose_boss(boss, sizeof(boss)/sizeof(monster_type), power * 2);
+    mpr("You hear a distant many-voiced hissing!", MSGCH_DANGER);
     more();
 }
 
@@ -194,7 +231,7 @@ void fire_wave(int power)
                     MONS_MARGERY, MONS_FIEND, MONS_BALRUG, MONS_FIRE_GIANT};
     zotdef_fill_from_list(firemons, sizeof(firemons)/sizeof(monster_type), 0, power);
     zotdef_choose_boss(boss, sizeof(boss)/sizeof(monster_type), power);
-    mpr("You hear roaring flames in the distance!",MSGCH_DANGER);
+    mpr("You hear roaring flames in the distance!", MSGCH_DANGER);
     more();
 }
 
@@ -203,15 +240,15 @@ void cold_wave(int power)
 #ifdef DEBUG_WAVE
     mpr("COLD WAVE");
 #endif
-    monster_type coldmons[]={MONS_ICE_BEAST, MONS_AZURE_JELLY, MONS_FREEZING_WRAITH,
-        MONS_WHITE_IMP, MONS_ICE_DEVIL, MONS_ICE_FIEND, MONS_WHITE_DRACONIAN,
-        MONS_SIMULACRUM_SMALL, MONS_SIMULACRUM_LARGE, MONS_FROST_GIANT,
-        MONS_POLAR_BEAR, MONS_BLUE_DEVIL};
+    monster_type coldmons[]={MONS_ICE_BEAST, MONS_AZURE_JELLY,
+        MONS_FREEZING_WRAITH, MONS_WHITE_IMP, MONS_ICE_DEVIL, MONS_ICE_FIEND,
+        MONS_WHITE_DRACONIAN, MONS_SIMULACRUM_SMALL, MONS_SIMULACRUM_LARGE,
+        MONS_FROST_GIANT, MONS_POLAR_BEAR, MONS_BLUE_DEVIL};
     monster_type boss[]={MONS_ANTAEUS, MONS_ICE_FIEND, MONS_AZURE_JELLY,
                         MONS_WHITE_DRACONIAN};
-    zotdef_fill_from_list(coldmons, sizeof(coldmons)/sizeof(monster_type), 4, power);
+    zotdef_fill_from_list(coldmons, sizeof(coldmons) / sizeof(monster_type), 4, power);
     zotdef_choose_boss(boss, sizeof(boss)/sizeof(monster_type), power);
-    mpr("A deadly chill settles over the dungeon!",MSGCH_DANGER);
+    mpr("A deadly chill settles over the dungeon!", MSGCH_DANGER);
     more();
 }
 
@@ -223,9 +260,9 @@ void gnoll_wave(int power)
     monster_type gnolls[]={MONS_GNOLL, MONS_GNOLL, MONS_GNOLL,
                 MONS_GNOLL, MONS_GNOLL, MONS_GNOLL, MONS_TROLL};
     monster_type boss[]={MONS_GRUM, MONS_TROLL};
-    zotdef_fill_from_list(gnolls, sizeof(gnolls)/sizeof(monster_type), 0, power);        // full
+    zotdef_fill_from_list(gnolls, sizeof(gnolls) / sizeof(monster_type), 0, power); // full
     zotdef_choose_boss(boss, sizeof(boss)/sizeof(monster_type), power);
-    mpr("Harsh voices can be heard, coming closer!",MSGCH_DANGER);
+    mpr("Harsh voices can be heard, coming closer!", MSGCH_DANGER);
     more();
 }
 
@@ -237,9 +274,9 @@ void rat_wave(int power)
     monster_type rats[]={MONS_RAT, MONS_GREEN_RAT, MONS_GREY_RAT,
                 MONS_ORANGE_RAT};
     monster_type boss[]={MONS_ORANGE_RAT};
-    zotdef_fill_from_list(rats, sizeof(rats)/sizeof(monster_type), 0, power);        // full
-    zotdef_choose_boss(boss, sizeof(boss)/sizeof(monster_type), power);
-    mpr("You hear distant squeaking!",MSGCH_DANGER);
+    zotdef_fill_from_list(rats, sizeof(rats) / sizeof(monster_type), 0, power); // full power
+    zotdef_choose_boss(boss, sizeof(boss) / sizeof(monster_type), power);
+    mpr("You hear distant squeaking!", MSGCH_DANGER);
     more();
 }
 
@@ -251,9 +288,9 @@ void hound_wave(int power)
     monster_type hounds[]={ MONS_JACKAL, MONS_HOUND, MONS_WARG,
                 MONS_WOLF, MONS_WAR_DOG };
     monster_type boss[]={MONS_HELL_HOUND};
-    zotdef_fill_from_list(hounds, sizeof(hounds)/sizeof(monster_type), 0, power);        // full
+    zotdef_fill_from_list(hounds, sizeof(hounds) / sizeof(monster_type), 0, power); // full
     zotdef_choose_boss(boss, sizeof(boss)/sizeof(monster_type), power);
-    mpr("Horrible howls echo around!",MSGCH_DANGER);
+    mpr("Horrible howls echo around!", MSGCH_DANGER);
     more();
 }
 
@@ -264,9 +301,10 @@ void abomination_wave(int power)
 #endif
     monster_type aboms[]={ MONS_ABOMINATION_SMALL, MONS_ABOMINATION_LARGE};
     monster_type boss[]={MONS_TENTACLED_MONSTROSITY};
-    zotdef_fill_from_list(aboms, sizeof(aboms)/sizeof(monster_type), 0, power);        // full
+    zotdef_fill_from_list(aboms, sizeof(aboms) / sizeof(monster_type), 0, power); // full
     zotdef_choose_boss(boss, sizeof(boss)/sizeof(monster_type), power);
-    mpr("A dreadful chittering sound fills the air. It's coming closer...",MSGCH_DANGER);
+    mpr("A dreadful chittering sound fills the air. It's coming closer...",
+        MSGCH_DANGER);
     more();
 }
 
@@ -278,9 +316,10 @@ void ugly_wave(int power)
     monster_type ugly[]={ MONS_UGLY_THING, MONS_UGLY_THING, MONS_UGLY_THING,
                         MONS_VERY_UGLY_THING};
     monster_type boss[]={MONS_VERY_UGLY_THING};
-    zotdef_fill_from_list(ugly, sizeof(ugly)/sizeof(monster_type), 6, power);        // reduced size
+    zotdef_fill_from_list(ugly, sizeof(ugly) / sizeof(monster_type), 6, power);
+    // reduced size
     zotdef_choose_boss(boss, sizeof(boss)/sizeof(monster_type), power);
-    mpr("You feel uneasy.",MSGCH_DANGER);
+    mpr("You feel uneasy.", MSGCH_DANGER);
     more();
 }
 
@@ -292,7 +331,8 @@ void golem_wave(int power)
     monster_type golems[]={ MONS_CLAY_GOLEM, MONS_WOOD_GOLEM, MONS_STONE_GOLEM,
             MONS_IRON_GOLEM, MONS_CRYSTAL_GOLEM, MONS_TOENAIL_GOLEM};
     monster_type boss[]={MONS_ELECTRIC_GOLEM};
-    zotdef_fill_from_list(golems, sizeof(golems)/sizeof(monster_type), 6, power*2/3);        // reduced size
+    zotdef_fill_from_list(golems, sizeof(golems) / sizeof(monster_type), 6,
+            power * 2 / 3); // reduced size
     zotdef_choose_boss(boss, sizeof(boss)/sizeof(monster_type), power);
     mpr("Booming thuds herald the arrival of something large...",MSGCH_DANGER);
     more();
@@ -312,17 +352,19 @@ void human_wave(int power)
             MONS_RUPERT, MONS_KIRKE,
             MONS_NORRIS, MONS_FREDERICK, MONS_MARGERY, MONS_EUSTACHIO,
             MONS_MAURICE};
-    zotdef_fill_from_list(humans, sizeof(humans)/sizeof(monster_type), 4, power);        // reduced size due to banding
+    zotdef_fill_from_list(humans, sizeof(humans) / sizeof(monster_type), 4,
+                          power); // reduced size due to banding
 
     // Get too many hell knights with the defaults, due to their large band size.
     // Reduce here
-    for (int i=0; i<NSLOTS; i++) {
-        if (env.mons_alloc[i]==MONS_HELL_KNIGHT && random2(power)<8)
-            env.mons_alloc[i]=MONS_PROGRAM_BUG;
+    for (int i=0; i<NSLOTS; i++)
+    {
+        if (env.mons_alloc[i] == MONS_HELL_KNIGHT && random2(power) < 8)
+            env.mons_alloc[i] = MONS_PROGRAM_BUG;
     }
 
-    zotdef_choose_boss(boss, sizeof(boss)/sizeof(monster_type), power);
-    mpr("War cries fill the air!",MSGCH_DANGER);
+    zotdef_choose_boss(boss, sizeof(boss) / sizeof(monster_type), power);
+    mpr("War cries fill the air!", MSGCH_DANGER);
     more();
 }
 
@@ -332,8 +374,8 @@ void butterfly_wave(int power)
     mpr("BUTTERFLY WAVE");
 #endif
     monster_type bfs[]={ MONS_BUTTERFLY};
-    zotdef_fill_from_list(bfs, sizeof(bfs)/sizeof(monster_type), 0, power);        // full
-    mpr("You feel a sudden sense of peace!",MSGCH_DANGER);
+    zotdef_fill_from_list(bfs, sizeof(bfs) / sizeof(monster_type), 0, power); // full...
+    mpr("You feel a sudden sense of peace!", MSGCH_DANGER);
     more();
 }
 
@@ -343,8 +385,8 @@ void beast_wave(int power)
     mpr("BEAST WAVE");
 #endif
     monster_type bst[]={ MONS_BEAST};
-    zotdef_fill_from_list(bst, sizeof(bst)/sizeof(monster_type), 0, power);        // full
-    mpr("A hideous howling noise can be heard in the distance!",MSGCH_DANGER);
+    zotdef_fill_from_list(bst, sizeof(bst) / sizeof(monster_type), 0, power); // full
+    mpr("A hideous howling noise can be heard in the distance!", MSGCH_DANGER);
     more();
 }
 
@@ -356,9 +398,9 @@ void frog_wave(int power)
     monster_type frogs[]={ MONS_GIANT_FROG, MONS_GIANT_TOAD,
                 MONS_SPINY_FROG, MONS_BLINK_FROG};
     monster_type boss[]={MONS_PRINCE_RIBBIT, MONS_SPINY_FROG, MONS_BLINK_FROG};
-    zotdef_fill_from_list(frogs, sizeof(frogs)/sizeof(monster_type), 0, power);        // full
+    zotdef_fill_from_list(frogs, sizeof(frogs) / sizeof(monster_type), 0, power); // full
     zotdef_choose_boss(boss, sizeof(boss)/sizeof(monster_type), power);
-    mpr("Croaking noises echo off the walls!",MSGCH_DANGER);
+    mpr("Croaking noises echo off the walls!", MSGCH_DANGER);
     more();
 }
 
@@ -370,9 +412,9 @@ void bear_wave(int power)
     monster_type bears[]={ MONS_BEAR, MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR,
                  MONS_BLACK_BEAR};
     monster_type boss[]={MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR};
-    zotdef_fill_from_list(bears, sizeof(bears)/sizeof(monster_type), 0, power);        // full
-    zotdef_choose_boss(boss, sizeof(boss)/sizeof(monster_type), power);
-    mpr("Gravelly voices can be heard calling for porridge!",MSGCH_DANGER);
+    zotdef_fill_from_list(bears, sizeof(bears) / sizeof(monster_type), 0, power); // full
+    zotdef_choose_boss(boss, sizeof(boss) / sizeof(monster_type), power);
+    mpr("Gravelly voices can be heard calling for porridge!", MSGCH_DANGER);
     more();
 }
 
@@ -384,9 +426,10 @@ void wraith_wave(int power)
     monster_type wraiths[]={ MONS_WRAITH, MONS_SHADOW_WRAITH, MONS_FREEZING_WRAITH,
                 MONS_GREATER_WRAITH, MONS_PHANTASMAL_WARRIOR, MONS_SPECTRAL_THING };
     monster_type boss[]={MONS_GREATER_WRAITH, MONS_PHANTASMAL_WARRIOR, MONS_SPECTRAL_THING};
-    zotdef_fill_from_list(wraiths, sizeof(wraiths)/sizeof(monster_type), 0, power);        // full
-    zotdef_choose_boss(boss, sizeof(boss)/sizeof(monster_type), power);
-    mpr("The hair rises on the back of your neck!",MSGCH_DANGER);
+    zotdef_fill_from_list(wraiths, sizeof(wraiths) / sizeof(monster_type), 0,
+        power); // full
+    zotdef_choose_boss(boss, sizeof(boss) / sizeof(monster_type), power);
+    mpr("The hair rises on the back of your neck!", MSGCH_DANGER);
     more();
 }
 
@@ -402,9 +445,9 @@ void giant_wave(int power)
     monster_type boss[]={ MONS_EROLCHA, MONS_POLYPHEMUS, MONS_ANTAEUS,
             MONS_SNORG, MONS_PURGY, MONS_STONE_GIANT, MONS_FIRE_GIANT,
             MONS_FROST_GIANT, MONS_TITAN};
-    zotdef_fill_from_list(giants, sizeof(giants)/sizeof(monster_type), 0, power);        // full
-    zotdef_choose_boss(boss, sizeof(boss)/sizeof(monster_type), power);
-    mpr("The stamp of enormous boots can be heard in the distance.",MSGCH_DANGER);
+    zotdef_fill_from_list(giants, sizeof(giants) / sizeof(monster_type), 0, power); // full
+    zotdef_choose_boss(boss, sizeof(boss) / sizeof(monster_type), power);
+    mpr("The stamp of enormous boots can be heard in the distance.", MSGCH_DANGER);
     more();
 }
 
@@ -418,9 +461,9 @@ void yak_wave(int power)
                 MONS_SHEEP, MONS_YAK, MONS_DEATH_YAK,
                 MONS_CYCLOPS};
     monster_type boss[]={MONS_POLYPHEMUS, MONS_CYCLOPS};
-    zotdef_fill_from_list(yaks, sizeof(yaks)/sizeof(monster_type), 0, power);        // full
-    zotdef_choose_boss(boss, sizeof(boss)/sizeof(monster_type), power);
-    mpr("Bleats and roars echo around!",MSGCH_DANGER);
+    zotdef_fill_from_list(yaks, sizeof(yaks) / sizeof(monster_type), 0, power);        // full
+    zotdef_choose_boss(boss, sizeof(boss) / sizeof(monster_type), power);
+    mpr("Bleats and roars echo around!", MSGCH_DANGER);
     more();
 }
 
@@ -437,9 +480,9 @@ void insect_wave(int power)
                 MONS_SCORPION, MONS_GIANT_MOSQUITO, MONS_GIANT_CENTIPEDE};
     monster_type boss[]={MONS_GIANT_BEETLE, MONS_BOULDER_BEETLE,
                 MONS_QUEEN_ANT, MONS_BORING_BEETLE, MONS_QUEEN_BEE};
-    zotdef_fill_from_list(insects, sizeof(insects)/sizeof(monster_type), 0, power);  // full
-    zotdef_choose_boss(boss, sizeof(boss)/sizeof(monster_type), power);
-    mpr("You hear an ominous buzzing.",MSGCH_DANGER);
+    zotdef_fill_from_list(insects, sizeof(insects) / sizeof(monster_type), 0, power);  // full
+    zotdef_choose_boss(boss, sizeof(boss) / sizeof(monster_type), power);
+    mpr("You hear an ominous buzzing.", MSGCH_DANGER);
     more();
 }
 
@@ -457,94 +500,98 @@ void pan_wave(int power)
                 MONS_PIT_FIEND, MONS_ICE_FIEND, MONS_BLUE_DEATH };
 
     for (int i=0; i<=NSLOTS; i++) {
-        env.mons_alloc[i]=MONS_PROGRAM_BUG;
-        while (env.mons_alloc[i]==MONS_PROGRAM_BUG)
+        env.mons_alloc[i] = MONS_PROGRAM_BUG;
+        while (env.mons_alloc[i] == MONS_PROGRAM_BUG)
         {
             monster_type mon_type = static_cast<monster_type>(random2(NUM_MONSTERS));
             monsterentry *mentry = get_monster_data(mon_type);
-            int pow=random2avg(power,2);
+            int pow = random2avg(power,2);
             switch (mentry->showchar)
             {
-            case '5': if (pow>4) continue; break;
-            case '4': if (pow>4) continue; break;
-            case '3': if (pow>6) continue; break;
-            case '2': if (pow>10) continue; break;
-            case '1': if (pow>12) continue; break;
+            case '5': if (pow > 4) continue; break;
+            case '4': if (pow > 4) continue; break;
+            case '3': if (pow > 6) continue; break;
+            case '2': if (pow > 10) continue; break;
+            case '1': if (pow > 12) continue; break;
             default: continue;
             }
-            env.mons_alloc[i]=mon_type;
+            env.mons_alloc[i] = mon_type;
         }
     }
-    zotdef_choose_boss(boss, sizeof(boss)/sizeof(monster_type), power);
+    zotdef_choose_boss(boss, sizeof(boss) / sizeof(monster_type), power);
     // Weak bosses only at lower power
     if (power<27)
-        zotdef_choose_boss(weakboss, sizeof(weakboss)/sizeof(monster_type), power);
-    mpr("Hellish voices call for your blood. They are coming!",MSGCH_DANGER);
+        zotdef_choose_boss(weakboss, sizeof(weakboss) / sizeof(monster_type), power);
+    mpr("Hellish voices call for your blood. They are coming!", MSGCH_DANGER);
     more();
 }
 
 
 void zotdef_set_special_wave(int power)
 {
-    void (*wave_fn)(int)=NULL;
+    void (*wave_fn)(int) = NULL;
     int tries=0;
 
-    while (wave_fn==NULL && tries++<10000)
+    while (wave_fn == NULL && tries++ < 10000)
     {
-        int wpow=0;
+        int wpow = 0;
         switch(random2(21))
         {
-            case 0: wave_fn=hydra_wave; wpow=10; break;
-            case 1: wave_fn=fire_wave; wpow=12; break;
-            case 2: wave_fn=cold_wave; wpow=12; break;
-            case 3: wave_fn=gnoll_wave; wpow=4; break;
-            case 4: wave_fn=rat_wave; wpow=2; break;
-            case 5: wave_fn=hound_wave; wpow=2; break;
-            case 6: wave_fn=abomination_wave; wpow=12; break;
-            case 7: wave_fn=ugly_wave; wpow=14; break;
-            case 8: wave_fn=golem_wave; wpow=22; break;
-            case 9: wave_fn=human_wave; wpow=12; break;
-            case 10: wave_fn=butterfly_wave; wpow=1; break;
-            case 11: wave_fn=beast_wave; wpow=12; break;
-            case 12: wave_fn=frog_wave; wpow=4; break;
-            case 13: wave_fn=bear_wave; wpow=6; break;
-            case 14: wave_fn=wraith_wave; wpow=8; break;
-            case 15: wave_fn=giant_wave; wpow=16; break;
-            case 16: wave_fn=yak_wave; wpow=12; break; // lots of bands
-            case 17: wave_fn=insect_wave; wpow=4; break;
-            case 18: wave_fn=pan_wave; wpow=24; break;
+            case 0: wave_fn = hydra_wave; wpow = 10; break;
+            case 1: wave_fn = fire_wave; wpow = 12; break;
+            case 2: wave_fn = cold_wave; wpow = 12; break;
+            case 3: wave_fn = gnoll_wave; wpow = 4; break;
+            case 4: wave_fn = rat_wave; wpow = 2; break;
+            case 5: wave_fn = hound_wave; wpow = 2; break;
+            case 6: wave_fn = abomination_wave; wpow = 12; break;
+            case 7: wave_fn = ugly_wave; wpow = 14; break;
+            case 8: wave_fn = golem_wave; wpow = 22; break;
+            case 9: wave_fn = human_wave; wpow = 12; break;
+            case 10: wave_fn = butterfly_wave; wpow = 1; break;
+            case 11: wave_fn = beast_wave; wpow = 12; break;
+            case 12: wave_fn = frog_wave; wpow = 4; break;
+            case 13: wave_fn = bear_wave; wpow = 6; break;
+            case 14: wave_fn = wraith_wave; wpow = 8; break;
+            case 15: wave_fn = giant_wave; wpow = 16; break;
+            case 16: wave_fn = yak_wave; wpow = 12; break; // lots of bands
+            case 17: wave_fn = insect_wave; wpow = 4; break;
+            case 18: wave_fn = pan_wave; wpow = 24; break;
             // extra copies of fire and cold at higher power
-            case 19: wave_fn=fire_wave; wpow=20; break;
-            case 20: wave_fn=cold_wave; wpow=20; break;
+            case 19: wave_fn = fire_wave; wpow = 20; break;
+            case 20: wave_fn = cold_wave; wpow = 20; break;
         }
         // Algorithm: doesn't appear before 'wpow-5'. Max probability
         // at 'wpow'. Doesn't appear after 'wpow*2+4'.
         // OK: do we keep this one?
-        if (power>=(wpow-5) && power<=(wpow*2+4)) {
-          int diff = power-wpow;
-          if (diff > 0) diff /= 2;        // weaker waves more common
-          if (one_chance_in(diff*diff)) break;        // keep this one
+        if (power >= (wpow - 5) && power <= (wpow * 2 + 4))
+        {
+            int diff = power - wpow;
+            if (diff > 0)
+                diff /= 2;        // weaker waves more common
+            if (one_chance_in(diff * diff))
+                break;        // keep this one
         }
         // Nope, don't keep
-        wave_fn=NULL;
+        wave_fn = NULL;
     }
-    if (wave_fn) wave_fn(power);
+    if (wave_fn)
+        wave_fn(power);
 }
 
 void debug_waves()
 {
-  for (int i=0; i<15*7; i++)
-  {
-    you.num_turns+=200;
-    zotdef_set_wave();
-  }
+    for (int i=0; i < 15 * 7; i++)
+    {
+        you.num_turns += 200;
+        zotdef_set_wave();
+    }
 }
 
 
 monster_type get_zotdef_monster(level_id &place, int power)
 {
     monster_type mon_type;
-    monster_type mon_type_ret=MONS_PROGRAM_BUG;
+    monster_type mon_type_ret = MONS_PROGRAM_BUG;
     for (int i = 0; i <= 10000; ++i)
     {
         int count = 0;
@@ -554,7 +601,7 @@ monster_type get_zotdef_monster(level_id &place, int power)
         {
             mon_type = static_cast<monster_type>(random2(NUM_MONSTERS));
             count++;
-            rarity=(place.branch==NUM_BRANCHES) ? 30 : mons_rarity(mon_type, place);
+            rarity = (place.branch == NUM_BRANCHES) ? 30 : mons_rarity(mon_type, place);
         }
         while (rarity == 0 && count < 2000);
 
@@ -563,67 +610,76 @@ monster_type get_zotdef_monster(level_id &place, int power)
 
         // Calculate strength
         monsterentry *mentry = get_monster_data(mon_type);
-        if (!mentry) continue;        // sanity
-        if (mentry==get_monster_data(MONS_PROGRAM_BUG)) continue;        // sanity
-        if (mons_is_unique(mon_type)) continue;        // No uniques here!
-        if (mons_class_is_stationary(mon_type)) continue;        // Must be able to move!
+        if (!mentry)
+            continue;        // sanity
+        if (mentry == get_monster_data(MONS_PROGRAM_BUG))
+            continue;        // sanity
+        if (mons_is_unique(mon_type))
+            continue;        // No uniques here!
+        if (mons_class_is_stationary(mon_type))
+            continue;        // Must be able to move!
 
         int strength = mon_strength(mon_type);
 
         // get default level
-        int lev_mons = (place.branch==NUM_BRANCHES) ? ((strength*3)/2) : mons_level(mon_type, place);
+        int lev_mons = (place.branch == NUM_BRANCHES)
+                       ? ((strength * 3) / 2)
+                       : mons_level(mon_type, place);
 
         // if >50, bail out - these are special flags
-        if (lev_mons>=50) continue;
+        if (lev_mons >= 50)
+            continue;
 
         //int orig_lev_mons=lev_mons;
 
         // adjust level based on strength, as weak monsters with high
         // level pop up on some branches and we want to allow them
-        if (place.branch!=BRANCH_MAIN_DUNGEON
-            && lev_mons>power
-            && lev_mons>strength*3)
+        if (place.branch != BRANCH_MAIN_DUNGEON
+            && lev_mons > power
+            && lev_mons > strength * 3)
         {
-            lev_mons=(lev_mons+2*strength)/3;
+            lev_mons = (lev_mons + 2 * strength) / 3;
         }
 
         // reduce power to 32 if that reduces diff
-        if (lev_mons<=32 && power>32) power=32;
-            int diff   = power - lev_mons;
-        if (power>20) diff = (diff * 20) / power;        // reduce diff at high power
+        if (lev_mons <= 32 && power > 32)
+            power=32;
+        int diff = power - lev_mons;
+        if (power > 20)
+            diff = diff * 20 / power;        // reduce diff at high power
 
         int chance = rarity - (diff * diff);
         // Occasionally accept a weaker monster
-        if (diff>0 && chance<=0)
+        if (diff > 0 && chance <= 0)
         {
             chance=1;
-            if (lev_mons>20) chance=3;
-            if (lev_mons>25) chance=5;
+            if (lev_mons > 20) chance = 3;
+            if (lev_mons > 25) chance = 5;
         }
 
         // Rarely accept monsters too far outside the power range
-        if ((diff<-5 || diff > 5) && !one_chance_in(3)) continue;
+        if ((diff <- 5 || diff > 5) && !one_chance_in(3))
+            continue;
 
         // Less OOD allowed on early levels
-        if (diff<std::min(-3,-power)) continue;
+        if (diff < std::min(-3,-power))
+            continue;
 
-        const char *bn="RANDOM";
-        if (place.branch!=NUM_BRANCHES)
-        {
-            bn=branches[place.branch].shortname;
-        }
+        const char *bn = "RANDOM";
+        if (place.branch != NUM_BRANCHES)
+            bn = branches[place.branch].shortname;
 
         if (random2avg(100, 2) <= chance)
         {
-            //mprf("ZOTDEF %d %s chose monster %s rarity %d power %d strength %d level %d chance %d",i,bn,mentry->name, rarity, power, strength, lev_mons, chance);
-            mon_type_ret=mon_type;
+            dprf("ZOTDEF %d %s chose monster %s rarity %d power %d strength %d "
+                 "level %d chance %d", i, bn,mentry->name, rarity, power,
+                 strength, lev_mons, chance);
+            mon_type_ret = mon_type;
             break;
         }
 
         if (i == 10000)
-        {
             return (MONS_PROGRAM_BUG);
-        }
     }
 
     return mon_type_ret;
@@ -632,31 +688,34 @@ monster_type get_zotdef_monster(level_id &place, int power)
 void zotdef_set_random_branch_wave(int power)
 {
     //mprf("RANDOM WAVE");
-    for (int i=0; i<NSLOTS; i++)
+    for (int i=0; i < NSLOTS; i++)
     {
-       level_id l(zotdef_random_branch(),-1);
-       env.mons_alloc[i]=get_zotdef_monster(l, _fuzz_mons_level(power));
+        level_id l(zotdef_random_branch(), -1);
+        env.mons_alloc[i] = get_zotdef_monster(l, _fuzz_mons_level(power));
     }
-    level_id l(zotdef_random_branch(),-1);
-    env.mons_alloc[BOSS_SLOT]=get_zotdef_monster(l, power+BOSS_MONSTER_EXTRA_POWER);
+    level_id l(zotdef_random_branch(), -1);
+    env.mons_alloc[BOSS_SLOT] = get_zotdef_monster(l,
+        power + BOSS_MONSTER_EXTRA_POWER);
 }
 
 void zotdef_set_branch_wave(branch_type b, int power)
 {
     level_id l(b,-1);
-    //mprf("BRANCH WAVE: BRANCH %s",(b==NUM_BRANCHES)?"RANDOM":branches[b].shortname);
-    for (int i=0; i<NSLOTS; i++)
+    dprf("BRANCH WAVE: BRANCH %s", (b == NUM_BRANCHES)
+         ? "RANDOM" : branches[b].shortname);
+    for (int i=0; i < NSLOTS; i++)
     {
-       env.mons_alloc[i]=get_zotdef_monster(l, _fuzz_mons_level(power));
+       env.mons_alloc[i] = get_zotdef_monster(l, _fuzz_mons_level(power));
     }
-    env.mons_alloc[BOSS_SLOT]=get_zotdef_monster(l, power+BOSS_MONSTER_EXTRA_POWER);
+    env.mons_alloc[BOSS_SLOT] = get_zotdef_monster(l,
+                                    power + BOSS_MONSTER_EXTRA_POWER);
 }
 
 void set_boss_unique()
 {
-    for (int tries=0; tries<100; tries++)
+    for (int tries = 0; tries < 100; tries++)
     {
-        int level = random2avg(you.num_turns/CYCLE_LENGTH,2)+1;
+        int level = random2avg(you.num_turns/CYCLE_LENGTH, 2)+1;
         monster_type which_unique = pick_unique(level);
 
         // Sometimes, we just quit if a unique is already placed.
@@ -666,7 +725,7 @@ void set_boss_unique()
             continue;
         }
 
-        env.mons_alloc[BOSS_SLOT]= which_unique;
+        env.mons_alloc[BOSS_SLOT] = which_unique;
         break;
     }
 }
@@ -681,10 +740,10 @@ void set_boss_unique()
 void zotdef_set_wave()
 {
     // power ramps up from 1 to 35 over the course of the game.
-    int power = (you.num_turns+CYCLE_LENGTH*2)/(CYCLE_LENGTH*3);
+    int power = (you.num_turns + CYCLE_LENGTH*2) / (CYCLE_LENGTH * 3);
 
     // Early waves are all DUNGEON
-    if (you.num_turns < CYCLE_LENGTH*4)
+    if (you.num_turns < CYCLE_LENGTH * 4)
     {
         zotdef_set_branch_wave(BRANCH_MAIN_DUNGEON, power);
         return;
@@ -692,31 +751,34 @@ void zotdef_set_wave()
 
     switch (random2(5))
     {
-        case 0:
-        case 1: zotdef_set_branch_wave(BRANCH_MAIN_DUNGEON, power); break;
-        case 2:
-        case 3: {
-                branch_type b = zotdef_random_branch();
-                // HoB branch waves v. rare before 10K turns
-                if (b==BRANCH_HALL_OF_BLADES && you.num_turns/CYCLE_LENGTH<50)
-                    b = zotdef_random_branch();
-                zotdef_set_branch_wave(b, power);
-                break;
-            }
-        // A random mixture of monsters from across the branches
-        case 4: zotdef_set_random_branch_wave(power); break;
+    case 0:
+    case 1:
+        zotdef_set_branch_wave(BRANCH_MAIN_DUNGEON, power);
+        break;
+    case 2:
+    case 3:
+        {
+            branch_type b = zotdef_random_branch();
+            // HoB branch waves v. rare before 10K turns
+            if (b == BRANCH_HALL_OF_BLADES && you.num_turns / CYCLE_LENGTH < 50)
+                b = zotdef_random_branch();
+            zotdef_set_branch_wave(b, power);
+            break;
+        }
+    // A random mixture of monsters from across the branches
+    case 4:
+        zotdef_set_random_branch_wave(power);
+        break;
     }
 
     // special waves have their own boss choices. Note that flavour
     // messages can be emitted by each individual wave type
     if (one_chance_in(8))
-    {
         zotdef_set_special_wave(power);
-    }
     else
     {
         // Truly random wave, (crappily) signalled by passing branch=NUM_BRANCHES
-        if (power>8 && one_chance_in(20))
+        if (power > 8 && one_chance_in(20))
         {
             mpr("The air ripples, and you hear distant laughter!", MSGCH_DANGER);
             more();
@@ -724,7 +786,8 @@ void zotdef_set_wave()
         }
 
         // overwrite the previously-set boss with a random unique?
-        if (one_chance_in(3)) set_boss_unique();
+        if (one_chance_in(3))
+            set_boss_unique();
     }
 
 /*
@@ -738,16 +801,16 @@ void zotdef_set_wave()
 
 int zotdef_spawn(bool boss)
 {
-
-    monster_type mt=env.mons_alloc[random2(NSLOTS)];
+    monster_type mt = env.mons_alloc[random2(NSLOTS)];
     if (boss)
     {
-        mt=env.mons_alloc[BOSS_SLOT];
+        mt = env.mons_alloc[BOSS_SLOT];
         // check if unique
         if (mons_is_unique(mt) && you.unique_creatures[mt])
-            mt=env.mons_alloc[0];        // grab slot 0 as crap alternative
+            mt = env.mons_alloc[0];        // grab slot 0 as crap alternative
     }
-    if (mt==MONS_PROGRAM_BUG) return -1;
+    if (mt == MONS_PROGRAM_BUG)
+        return -1;
 
     // Generate a monster of the appropriate branch and strength
     mgen_data mg(mt, BEH_SEEK, NULL, 0, 0, coord_def(), MHITYOU);
@@ -764,7 +827,7 @@ int zotdef_spawn(bool boss)
         if (!menv[mid].is_named())        // Don't rename uniques!
         {
             if (!give_monster_proper_name(&menv[mid], false))
-            menv[mid].mname=make_name(random_int(), false);
+                menv[mid].mname=make_name(random_int(), false);
         }
 
         menv[mid].hit_points = (menv[mid].hit_points * 3) / 2;
@@ -889,9 +952,9 @@ bool create_trap(trap_type spec_type)
     args.restricts = DIR_TARGET;
     args.needs_path = false;
     args.may_target_monster = false;
-    args.top_prompt="Make ";
-    args.top_prompt+=trap_name(spec_type);
-    args.top_prompt+=" trap where?";
+    args.top_prompt = "Make ";
+    args.top_prompt += trap_name(spec_type);
+    args.top_prompt += " trap where?";
     direction(abild, args);
     const dungeon_feature_type grid = grd(abild.target);
     if (!abild.isValid)
@@ -915,15 +978,15 @@ bool create_trap(trap_type spec_type)
 bool create_zotdef_ally(monster_type mtyp, const char *successmsg)
 {
     dist abild;
-    std::string msg="Make ";
-    msg+=get_monster_data(mtyp)->name;
-    msg+=" where?";
+    std::string msg = "Make ";
+    msg += get_monster_data(mtyp)->name;
+    msg += " where?";
 
     direction_chooser_args args;
     args.restricts = DIR_TARGET;
     args.needs_path = false;
     args.may_target_monster = false;
-    args.top_prompt=msg;
+    args.top_prompt = msg;
     direction(abild, args);
 
     if (!abild.isValid)
@@ -932,7 +995,8 @@ bool create_zotdef_ally(monster_type mtyp, const char *successmsg)
             canned_msg(MSG_OK);
         return (false);
     }
-    if (mons_place( mgen_data(mtyp, BEH_FRIENDLY, &you, 0, 0, abild.target, you.pet_target)) != -1)
+    if (mons_place(mgen_data(mtyp, BEH_FRIENDLY, &you, 0, 0, abild.target,
+        you.pet_target)) != -1)
     {
         mpr(successmsg);
         return (true);

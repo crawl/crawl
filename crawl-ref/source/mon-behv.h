@@ -43,7 +43,7 @@ bool monster_can_hit_monster(monster* mons, const monster* targ);
 // the orb, if it's on the ground. Note that zotdef_target()
 // returns the orb position, or you.pos if the orb's not
 // on the ground.
-#define PLAYER_POS (crawl_state.game_is_zotdef()?zotdef_target():you.pos())
+#define PLAYER_POS (crawl_state.game_is_zotdef() ? zotdef_target() : you.pos())
 
 coord_def zotdef_target();
 

@@ -979,11 +979,12 @@ void bosses_check()
         if (mon > -1)
         {
             const char *msg = "You sense that a powerful threat has arrived.";
-            if ((((you.num_turns + 1)/CYCLE_LENGTH) % FREQUENCY_OF_RUNES) == 0)
+            if (!(((you.num_turns + 1) / CYCLE_LENGTH) % FREQUENCY_OF_RUNES))
             {
                 int which_rune = get_rune(
-                 ((you.num_turns + 1)/CYCLE_LENGTH) / FREQUENCY_OF_RUNES );
-                int ip = items( 1, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, true, which_rune, which_rune);
+                     ((you.num_turns + 1)/CYCLE_LENGTH) / FREQUENCY_OF_RUNES);
+                int ip = items(1, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, true,
+                               which_rune, which_rune);
                 int *const item_made = &ip;
                 if (*item_made != NON_ITEM && *item_made != -1)
                 {
@@ -991,7 +992,7 @@ void bosses_check()
                     msg = "You feel a sense of great excitement!";
                 }
             }
-            mpr( msg , MSGCH_DANGER );
+            mpr(msg, MSGCH_DANGER);
             more();
         }
     }
@@ -2892,15 +2893,16 @@ void world_reacts()
 
     // Zotdef spawns only in the main dungeon
     if (crawl_state.game_is_zotdef()
-        && you.level_type==LEVEL_DUNGEON
-        && you.where_are_you==BRANCH_MAIN_DUNGEON
+        && you.level_type == LEVEL_DUNGEON
+        && you.where_are_you == BRANCH_MAIN_DUNGEON
         && you.num_turns > 100)
     {
         bosses_check();
         for (int i = 0; i < SPAWN_SIZE; i++)
         {
             // Reduce critter frequency for first wave
-            if (you.num_turns<CYCLE_LENGTH && one_chance_in(3)) continue;
+            if (you.num_turns<CYCLE_LENGTH && one_chance_in(3))
+                continue;
 
             if ((you.num_turns % CYCLE_LENGTH > CYCLE_INTERVAL)
                 && x_chance_in_y((you.num_turns % CYCLE_LENGTH), CYCLE_LENGTH*3))
@@ -3916,32 +3918,28 @@ static void _move_player(coord_def move)
 
     if (!attacking && targ_pass && moving && !beholder && !fmonger)
     {
-        if (crawl_state.game_is_zotdef())
+        if (crawl_state.game_is_zotdef() && you.pos() == orb_position())
         {
-            // Are you standing on the Orb? If so, are the critters near?
-            const bool onOrb = (you.pos()==orb_position());
-            bool leaveOrbUnguarded=false;
-            if (onOrb)
+            // Aree you standing on the Orb? If so, are the critters near?
+            bool danger = false;
+            for (int i = 0; i < MAX_MONSTERS; ++i)
             {
-                for (int i = 0; i < MAX_MONSTERS; ++i)
+                monster& mon = menv[i];
+                if (you.can_see(&mon) && !mon.friendly() &&
+                    (grid_distance(you.pos(), mon.pos()) < 4))
                 {
-                    monster& mon = menv[i];
-                    if (you.can_see(&mon) && !mon.friendly() &&
-                        (grid_distance(you.pos(), mon.pos())<4))
-                    {
-                        leaveOrbUnguarded=true;
-                    }
+                    danger = true;
                 }
             }
 
-            if (leaveOrbUnguarded)
+            if (danger)
             {
-                    std::string prompt = "Are you sure you want to leave the Orb unguarded?";
-                    if (!yesno(prompt.c_str(), false, 'n'))
-                    {
-                        canned_msg(MSG_OK);
-                        return;
-                    }
+                std::string prompt = "Are you sure you want to leave the Orb unguarded?";
+                if (!yesno(prompt.c_str(), false, 'n'))
+                {
+                    canned_msg(MSG_OK);
+                    return;
+                }
             }
         }
 

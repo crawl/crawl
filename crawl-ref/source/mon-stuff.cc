@@ -584,7 +584,7 @@ int place_monster_corpse(const monster* mons, bool silent,
     // kicks in. The magic number 9 is less than the magic number of
     // 10 in get_item_slot which indicates that a cull will be initiated
     // if a free slot can't be found.
-    if (o==NON_ITEM && crawl_state.game_is_zotdef())
+    if (o == NON_ITEM && crawl_state.game_is_zotdef())
         o = get_item_slot(9);
 
     if (o == NON_ITEM)
@@ -3329,7 +3329,8 @@ bool can_go_straight(const coord_def& p1, const coord_def& p2,
         return (false);
 
     // If no distance, then trivially true
-    if (p1==p2) return (true);
+    if (p1 == p2)
+        return (true);
 
     // XXX: Hack to improve results for now. See FIXME above.
     ray_def ray;
@@ -4453,9 +4454,11 @@ int count_monsters(monster_type mtyp, bool friendlyOnly)
     for (int mon = 0; mon < MAX_MONSTERS; mon++)
     {
         monster *mons = &menv[mon];
-        if (mons->alive() && mons->type==mtyp
-        && (!friendlyOnly || mons->friendly()))
-        count++;
+        if (mons->alive() && mons->type == mtyp
+            && (!friendlyOnly || mons->friendly()))
+        {
+            count++;
+        }
     }
     return (count);
 }

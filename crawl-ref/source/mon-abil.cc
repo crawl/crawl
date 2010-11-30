@@ -965,13 +965,14 @@ static bool _silver_statue_effects(monster* mons)
 {
     actor *foe = mons->get_foe();
 
-    int abjuration_duration=5;
+    int abjuration_duration = 5;
 
     // Tone down friendly silver statues for Zotdef.
-    if (mons->attitude == ATT_FRIENDLY && foe!=&you)
+    if (mons->attitude == ATT_FRIENDLY && foe != &you)
     {
-        if (!one_chance_in(3)) return (false);
-        abjuration_duration=1;
+        if (!one_chance_in(3))
+            return (false);
+        abjuration_duration = 1;
     }
 
     if (foe && mons->can_see(foe) && !one_chance_in(3))
@@ -984,7 +985,8 @@ static bool _silver_statue_effects(monster* mons)
             mgen_data(
                 summon_any_demon((coinflip() ? DEMON_COMMON
                                              : DEMON_LESSER)),
-                SAME_ATTITUDE(mons), mons, abjuration_duration, 0, foe->pos(), mons->foe));
+                SAME_ATTITUDE(mons), mons, abjuration_duration, 0,
+                foe->pos(), mons->foe));
         return (true);
     }
     return (false);
@@ -994,20 +996,20 @@ static bool _orange_statue_effects(monster* mons)
 {
     actor *foe = mons->get_foe();
 
-    int pow=random2(15);
-    int fail=random2(150);
+    int pow  = random2(15);
+    int fail = random2(150);
 
     if (foe && mons->can_see(foe) && !one_chance_in(3))
     {
         // Tone down friendly OCSs for Zotdef.
-        if (mons->attitude == ATT_FRIENDLY && foe!=&you)
+        if (mons->attitude == ATT_FRIENDLY && foe != &you)
         {
             if ( foe->check_res_magic(120))
             {
                 return (false);
             }
-            pow/=2;
-            fail/=2;
+            pow  /= 2;
+            fail /= 2;
         }
 
         if (you.can_see(foe))
@@ -2376,7 +2378,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         bool spit = one_chance_in(3);
         if (mons->type == MONS_OKLOB_PLANT)
             spit = x_chance_in_y(mons->hit_dice,
-                crawl_state.game_is_zotdef()?40:30);        // reduced chance in zotdef
+                crawl_state.game_is_zotdef() ? 40 : 30); // reduced chance in zotdef
         if (mons->type == MONS_OKLOB_SAPLING)
             spit = one_chance_in(4);
 

@@ -137,13 +137,16 @@ void handle_behaviour(monster* mon)
     {
         if ((!isFriendly && !isNeutral) && (orb_position() == mon->pos()))
         {
-            mpr("Your flesh rots away as the Orb of Zot is desecrated.", MSGCH_DANGER );
+            mpr("Your flesh rots away as the Orb of Zot is desecrated.",
+                MSGCH_DANGER );
             rot_hp(random_range(1,1));
-            ouch(1,NON_MONSTER,KILLED_BY_ROTTING);
+            ouch(1, NON_MONSTER,KILLED_BY_ROTTING);
         }
     }
 
-    //mprf("AI debug: mon %d behv=%d foe=%d pos=%d %d target=%d %d",mon->mindex(), mon->behaviour, mon->foe, mon->pos().x, mon->pos().y, mon->target.x, mon->target.y);
+    //mprf("AI debug: mon %d behv=%d foe=%d pos=%d %d target=%d %d",
+    //     mon->mindex(), mon->behaviour, mon->foe, mon->pos().x,
+    //     mon->pos().y, mon->target.x, mon->target.y);
 
     // Check for confusion -- early out.
     if (mon->has_ench(ENCH_CONFUSION))
@@ -208,8 +211,9 @@ void handle_behaviour(monster* mon)
             && (mon->foe != MHITNOT && mon->foe != MHITYOU)
             && !mon->can_see(&menv[mon->foe]))
         {
-            mon->foe=MHITYOU;
-            //mprf("%s resetting target (cantSee)",mon->name(DESC_CAP_THE,true).c_str());
+            mon->foe = MHITYOU;
+            //mprf("%s resetting target (cantSee)",
+            //     mon->name(DESC_CAP_THE,true).c_str());
         }
     }
 
@@ -230,13 +234,14 @@ void handle_behaviour(monster* mon)
             // Attack pet target if nearby
             if (you.pet_target != MHITNOT && proxPlayer)
             {
-                //mprf("%s setting target (player target)",mon->name(DESC_CAP_THE,true).c_str());
+                //mprf("%s setting target (player target)",
+                //     mon->name(DESC_CAP_THE,true).c_str());
                 mon->foe = you.pet_target;
             }
             else
             {
-               // Zotdef - this is all new, for out-of-sight friendlies to do something useful
-               // If no current target, get the closest one
+               // Zotdef - this is all new, for out-of-sight friendlies to do
+               // something useful.  If no current target, get the closest one.
                 _set_nearest_monster_foe(mon);
             }
         }
@@ -264,7 +269,8 @@ void handle_behaviour(monster* mon)
         && (proxPlayer || one_chance_in(3)))
     {
         _set_nearest_monster_foe(mon);
-        if (mon->foe == MHITNOT && crawl_state.game_is_zotdef()) mon->foe=MHITYOU;
+        if (mon->foe == MHITNOT && crawl_state.game_is_zotdef())
+            mon->foe = MHITYOU;
     }
 
     // Monsters do not attack themselves. {dlb}
@@ -292,7 +298,8 @@ void handle_behaviour(monster* mon)
     if (!isFriendly && !isNeutral
         && mon->foe != MHITYOU && mon->foe != MHITNOT
         && proxPlayer && !mon->berserk() && isHealthy
-        && (crawl_state.game_is_zotdef()?one_chance_in(4):!one_chance_in(3)))
+        && (crawl_state.game_is_zotdef() ? one_chance_in(4)
+                                         : !one_chance_in(3)))
     {
         mon->foe = MHITYOU;
     }
@@ -417,8 +424,8 @@ void handle_behaviour(monster* mon)
                     // intuition only go so far).
 
                     if ((mon->pos() == mon->target)
-                        && (!isFriendly || !crawl_state.game_is_zotdef()))  // hostiles only in Zotdef
-                    {
+                        && (!isFriendly || !crawl_state.game_is_zotdef()))
+                    {   // hostiles only in Zotdef
                         if (mon->foe == MHITYOU)
                         {
                             if (crawl_state.game_is_zotdef())
@@ -427,7 +434,7 @@ void handle_behaviour(monster* mon)
                             }
                             else
                             {
-                                if (one_chance_in(you.skills[SK_STEALTH]/3))
+                                if (one_chance_in(you.skills[SK_STEALTH] / 3))
                                     mon->target = you.pos();
                                 else
                                     mon->foe_memory = 0;
@@ -700,7 +707,8 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
             && (friendly || !is_sanctuary(p))
             && (foe->friendly() != friendly
                 || neutral && !foe->neutral())
-            && (crawl_state.game_is_zotdef() || !mons_is_firewood(foe)))    // Zotdef allies take out firewood
+            && (crawl_state.game_is_zotdef() || !mons_is_firewood(foe)))
+                // Zotdef allies take out firewood
         {
             return (true);
         }

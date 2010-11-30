@@ -88,13 +88,13 @@ enum ability_flag_type
     ABFLAG_CONF_OK        = 0x00000100, // can use even if confused
     ABFLAG_FRUIT          = 0x00000200, // ability requires fruit
     ABFLAG_VARIABLE_FRUIT = 0x00000400,  // ability requires fruit or piety
-    ABFLAG_ENCH_MISCAST = 0X00000800, // // severity 3 enchantment miscast
-    ABFLAG_TLOC_MISCAST = 0X00001000, // // severity 3 translocation miscast
+    ABFLAG_ENCH_MISCAST   = 0X00000800, // // severity 3 enchantment miscast
+    ABFLAG_TLOC_MISCAST   = 0X00001000, // // severity 3 translocation miscast
     ABFLAG_NECRO_MISCAST_MINOR = 0X00002000, // // severity 2 necro miscast
-    ABFLAG_NECRO_MISCAST = 0X00004000, // // severity 3 necro miscast
-    ABFLAG_TMIG_MISCAST = 0X00008000, // // severity 3 transmigration miscast
-    ABFLAG_LEVEL_DRAIN  = 0X00010000, // // drains 2 levels
-    ABFLAG_STAT_DRAIN   = 0x00020000  // stat drain
+    ABFLAG_NECRO_MISCAST  = 0X00004000, // // severity 3 necro miscast
+    ABFLAG_TMIG_MISCAST   = 0X00008000, // // severity 3 transmigration miscast
+    ABFLAG_LEVEL_DRAIN    = 0X00010000, // // drains 2 levels
+    ABFLAG_STAT_DRAIN     = 0x00020000  // stat drain
 };
 
 static int  _find_ability_slot(ability_type which_ability);
@@ -465,21 +465,24 @@ std::string print_abilities()
 
 int count_relevant_monsters(const ability_def& abil)
 {
-    monster_type mtyp=MONS_PROGRAM_BUG;
+    monster_type mtyp = MONS_PROGRAM_BUG;
     switch(abil.ability)
     {
-        case ABIL_MAKE_OKLOB_SAPLING: mtyp=MONS_OKLOB_SAPLING; break;
+        case ABIL_MAKE_OKLOB_SAPLING: mtyp = MONS_OKLOB_SAPLING; break;
         case ABIL_MAKE_OKLOB_CIRCLE:
-        case ABIL_MAKE_OKLOB_PLANT: mtyp=MONS_OKLOB_PLANT; break;
-        case ABIL_MAKE_BURNING_BUSH: mtyp=MONS_BURNING_BUSH; break;
-        case ABIL_MAKE_ELECTRIC_EEL: mtyp=MONS_ELECTRIC_EEL; break;
-        case ABIL_MAKE_ICE_STATUE: mtyp=MONS_ICE_STATUE; break;
-        case ABIL_MAKE_OCS: mtyp=MONS_ORANGE_STATUE; break;
-        case ABIL_MAKE_SILVER_STATUE: mtyp=MONS_SILVER_STATUE; break;
-        case ABIL_MAKE_CURSE_SKULL: mtyp=MONS_CURSE_SKULL; break;
-        default: mprf("DEBUG: NO RELEVANT MONSTER FOR %d",abil.ability);break;
+        case ABIL_MAKE_OKLOB_PLANT:   mtyp = MONS_OKLOB_PLANT;   break;
+        case ABIL_MAKE_BURNING_BUSH:  mtyp = MONS_BURNING_BUSH;  break;
+        case ABIL_MAKE_ELECTRIC_EEL:  mtyp = MONS_ELECTRIC_EEL;  break;
+        case ABIL_MAKE_ICE_STATUE:    mtyp = MONS_ICE_STATUE;    break;
+        case ABIL_MAKE_OCS:           mtyp = MONS_ORANGE_STATUE; break;
+        case ABIL_MAKE_SILVER_STATUE: mtyp = MONS_SILVER_STATUE; break;
+        case ABIL_MAKE_CURSE_SKULL:   mtyp = MONS_CURSE_SKULL;   break;
+        default:
+            mprf("DEBUG: NO RELEVANT MONSTER FOR %d", abil.ability);
+            break;
     }
-    if (mtyp==MONS_PROGRAM_BUG) return 0;
+    if (mtyp == MONS_PROGRAM_BUG)
+        return 0;
     return count_monsters(mtyp, true);        /* Friendly ones only */
 }
 
@@ -513,7 +516,9 @@ int xp_cost(const ability_def& abil)
     int num;
     switch(abil.ability)
     {
-        default: cost = abil.xp_cost; break;
+        default:
+            cost = abil.xp_cost;
+            break;
 
         // Monster type 1: reasonably generous
         case ABIL_MAKE_OKLOB_SAPLING:
@@ -527,7 +532,7 @@ int xp_cost(const ability_def& abil)
                 num /= 3;
             num -= 2;        // first two are base cost
             num = std::max(num, 0);
-            scale10 = std::min(num,10);        // next 10 at 10% increment
+            scale10 = std::min(num, 10);       // next 10 at 10% increment
             scale20 = num - scale10;           // after that at 20% increment
             break;
 
@@ -569,13 +574,9 @@ int xp_cost(const ability_def& abil)
 
     }
     for (; scale10 > 0; scale10--)
-    {
         cost = (cost * 11) / 10;        // +10%
-    }
     for (; scale20 > 0; scale20--)
-    {
         cost = (cost * 6) / 5;        // +20%
-    }
 
     return cost;
 }
@@ -1645,14 +1646,16 @@ static bool _do_ability(const ability_def& abil)
             return (false);
         }
         for(adjacent_iterator ai(abild.target); ai; ++ai)
-            place_monster( mgen_data(MONS_FUNGUS, BEH_FRIENDLY, &you, 0, 0, *ai, you.pet_target), true);
+        {
+            place_monster(mgen_data(MONS_FUNGUS, BEH_FRIENDLY, &you, 0, 0, *ai,
+                          you.pet_target), true);
+        }
         break; // //
 
     case ABIL_MAKE_PLANT:
         if (!create_zotdef_ally(MONS_PLANT,
               "Tendrils and shoots erupt from the earth and gnarl into the form of a plant."))
             return false;
-
         break; // //
 
     case ABIL_MAKE_OKLOB_SAPLING:
@@ -1703,52 +1706,61 @@ static bool _do_ability(const ability_def& abil)
         break; // //
 
     case ABIL_MAKE_TELEPORT:
-        you_teleport_now( true, true );
+        you_teleport_now(true, true);
         break; // //
 
     case ABIL_MAKE_ARROW_TRAP:
-        if (!create_trap(TRAP_ARROW)) return false;
+        if (!create_trap(TRAP_ARROW))
+            return false;
         break; // //
 
     case ABIL_MAKE_BOLT_TRAP:
-        if (!create_trap(TRAP_BOLT)) return false;
+        if (!create_trap(TRAP_BOLT))
+            return false;
         break; // //
 
     case ABIL_MAKE_SPEAR_TRAP:
-        if (!create_trap(TRAP_SPEAR)) return false;
+        if (!create_trap(TRAP_SPEAR))
+            return false;
         break; // //
 
     case ABIL_MAKE_AXE_TRAP:
-        if (!create_trap(TRAP_AXE)) return false;
+        if (!create_trap(TRAP_AXE))
+            return false;
         break; // //
 
     case ABIL_MAKE_NEEDLE_TRAP:
-        if (!create_trap(TRAP_NEEDLE)) return false;
+        if (!create_trap(TRAP_NEEDLE))
+            return false;
         break; // //
 
     case ABIL_MAKE_NET_TRAP:
-        if (!create_trap(TRAP_NET)) return false;
+        if (!create_trap(TRAP_NET))
+            return false;
         break; // //
 
     case ABIL_MAKE_TELEPORT_TRAP:
-        if (you.pos().distance_from(orb_position())<10)
+        if (you.pos().distance_from(orb_position()) < 10)
         {
             mpr("Radiation from the Orb interferes with the trap's magic!");
             return false;
         }
-        if (!create_trap(TRAP_TELEPORT)) return false;
+        if (!create_trap(TRAP_TELEPORT))
+             return false;
         break; // //
 
     case ABIL_MAKE_ALARM_TRAP:
-        if (!create_trap(TRAP_ALARM)) return false;
+        if (!create_trap(TRAP_ALARM))
+            return false;
         break; // //
 
     case ABIL_MAKE_BLADE_TRAP:
-        if (!create_trap(TRAP_BLADE)) return false;
+        if (!create_trap(TRAP_BLADE))
+            return false;
         break; // //
 
     case ABIL_MAKE_OKLOB_CIRCLE:
-        args.top_prompt="Center oklob circle where?";
+        args.top_prompt = "Center oklob circle where?";
         direction(abild, args);
         if (!abild.isValid)
         {
@@ -1757,7 +1769,10 @@ static bool _do_ability(const ability_def& abil)
             return (false);
         }
         for(adjacent_iterator ai(abild.target); ai; ++ai)
-            place_monster( mgen_data(MONS_OKLOB_PLANT, BEH_FRIENDLY, &you, 0, 0, *ai, you.pet_target), true);
+        {
+            place_monster(mgen_data(MONS_OKLOB_PLANT, BEH_FRIENDLY, &you, 0, 0,
+                          *ai, you.pet_target), true);
+        }
         break; // //
 
     case ABIL_MAKE_ACQUIRE_GOLD:
