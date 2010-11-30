@@ -48,6 +48,7 @@ public:
     void add_main_tile(int tileidx, int x, int y);
     void add_main_tile(int tileidx, int x, int y, int ox, int oy);
     void add_spell_tile(int tileidx, int x, int y);
+    void add_skill_tile(int tileidx, int x, int y);
 
     void clear();
     void draw();
@@ -68,6 +69,7 @@ protected:
     SubmergedTileBuffer m_buf_main_trans;
     TileBuffer m_buf_main;
     TileBuffer m_buf_spells;
+    TileBuffer m_buf_skills;
 };
 
 #endif

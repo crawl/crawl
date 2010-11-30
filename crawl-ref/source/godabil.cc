@@ -896,11 +896,8 @@ void yred_drain_life()
 
     for (monster_iterator mi(you.get_los()); mi; ++mi)
     {
-        if (mi->holiness() != MH_NATURAL
-            || mi->res_negative_energy())
-        {
+        if (mi->res_negative_energy())
             continue;
-        }
 
         if (mi->wont_attack())
             continue;

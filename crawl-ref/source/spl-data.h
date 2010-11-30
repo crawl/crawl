@@ -1431,7 +1431,7 @@ struct spell_desc
      LOS_RADIUS, LOS_RADIUS,
      0,
      NULL,
-     false,
+     true,
      false
 },
 
@@ -2745,19 +2745,6 @@ struct spell_desc
     3,
     0,
     -1, -1,
-    0,
-    NULL,
-    false,
-    false
-},
-
-{
-    SPELL_BURN_SPELLBOOK, "Burn Spellbook",
-    SPTYP_ENCHANTMENT,
-    SPFLAG_AREA,
-    1,
-    200,
-    LOS_RADIUS, LOS_RADIUS,
     0,
     NULL,
     false,

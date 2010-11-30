@@ -3426,6 +3426,9 @@ int monster::skill(skill_type sk, bool) const
 {
     switch (sk)
     {
+    case SK_EVOCATIONS:
+        return (type == MONS_DEEP_DWARF_ARTIFICER ? hit_dice * 2 : hit_dice);
+
     case SK_NECROMANCY:
         return (holiness() == MH_UNDEAD ? hit_dice / 2 : hit_dice / 3);
 
@@ -4799,12 +4802,16 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_ANTIMAGIC:
     case ENCH_REGENERATION:
     case ENCH_RAISED_MR:
-    case ENCH_MIRROR_DAMAGE:
     case ENCH_STONESKIN:
     case ENCH_FEAR_INSPIRING:
     case ENCH_LIFE_TIMER:
     case ENCH_LEVITATION:
         decay_enchantment(me);
+        break;
+
+    case ENCH_MIRROR_DAMAGE:
+        if (decay_enchantment(me))
+            simple_monster_message(this, "'s dark mirror aura disappears.");
         break;
 
     case ENCH_SILENCE:
@@ -5991,8 +5998,6 @@ bool monster::can_drink_potion(potion_type ptype) const
         case POT_BLOOD:
         case POT_BLOOD_COAGULATED:
             return (mons_species() == MONS_VAMPIRE);
-        case POT_PORRIDGE:
-            return (mons_species() == MONS_NISSE);
         case POT_SPEED:
         case POT_MIGHT:
         case POT_BERSERK_RAGE:

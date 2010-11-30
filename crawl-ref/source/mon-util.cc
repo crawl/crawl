@@ -359,8 +359,8 @@ mon_resist_def get_mons_resists(const monster* mon)
         resists.poison = std::max(static_cast<int>(resists.poison), 1);
 
     if (mons_genus(newmon.type) == MONS_DRACONIAN
-        && newmon.type != MONS_DRACONIAN
-            || newmon.type == MONS_TIAMAT)
+            && newmon.type != MONS_DRACONIAN
+        || newmon.type == MONS_TIAMAT)
     {
         monster_type draco_species = draco_subspecies(&newmon);
         if (draco_species != newmon.type)
@@ -656,7 +656,7 @@ bool mons_is_native_in_branch(const monster* mons,
     case BRANCH_ORCISH_MINES:
         return (mons_genus(mons->type) == MONS_ORC);
 
-    case BRANCH_DWARF_HALL:
+    case BRANCH_DWARVEN_HALL:
         return (mons_genus(mons->type) == MONS_DWARF);
 
     case BRANCH_SHOALS:
@@ -2790,6 +2790,31 @@ bool ms_quick_get_away(const monster* mon /*unused*/, spell_type monspell)
     }
 }
 
+// Checks if the foe *appears* to be immune to negative energy.  We
+// can't just use foe->res_negative_energy(), because that'll mean
+// monsters will just "know" whether a player is fully life-protected.
+static bool _foe_should_res_negative_energy(const actor* foe)
+{
+    const mon_holy_type holiness = foe->holiness();
+
+    if (foe->atype() == ACT_PLAYER)
+    {
+        // Non-bloodless vampires do not appear immune.
+        if (holiness == MH_UNDEAD
+            && you.is_undead == US_SEMI_UNDEAD
+            && you.hunger_state > HS_STARVING)
+        {
+            return (false);
+        }
+
+        // Demonspawn do not appear immune.
+        if (holiness == MH_DEMONIC)
+            return (false);
+    }
+
+    return (holiness != MH_NATURAL);
+}
+
 // Checks to see if a particular spell is worth casting in the first place.
 bool ms_waste_of_time(const monster* mon, spell_type monspell)
 {
@@ -2832,31 +2857,8 @@ bool ms_waste_of_time(const monster* mon, spell_type monspell)
     case SPELL_BOLT_OF_DRAINING:
     case SPELL_AGONY:
     case SPELL_SYMBOL_OF_TORMENT:
-    {
-        if (!foe)
-        {
-            ret = true;
-            break;
-        }
-
-        // Check if the foe *appears* to be immune to negative energy.
-        // We can't just use foe->res_negative_energy() because
-        // that'll mean monsters can just "know" the player is fully
-        // life-protected if he has triple life protection.
-        const mon_holy_type holiness = foe->holiness();
-        ret = ((holiness == MH_UNDEAD
-                   // If the claimed undead is the player, it must be
-                   // a non-vampire, or a bloodless vampire.
-                   && (foe != &you || you.is_undead != US_SEMI_UNDEAD
-                       || you.hunger_state == HS_STARVING))
-                // Demons, but not demonspawn - demonspawn will show
-                // up as demonic for purposes of things like holy
-                // wrath, but are still (usually) susceptible to
-                // torment and draining.
-                || holiness == MH_DEMONIC && foe != &you
-                || holiness == MH_NONLIVING || holiness == MH_PLANT);
+        ret = (!foe || _foe_should_res_negative_energy(foe));
         break;
-    }
 
     case SPELL_MIASMA:
         ret = (!foe || foe->res_rotting());

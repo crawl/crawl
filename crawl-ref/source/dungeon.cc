@@ -174,7 +174,7 @@ static bool _plan_2(int level_number);
 static bool _plan_3(int level_number);
 static bool _plan_4(uint8_t forbid_x1, uint8_t forbid_y1, uint8_t forbid_x2,
                     uint8_t forbid_y2, dungeon_feature_type force_wall);
-static bool _plan_5();
+static bool _plan_5(int level_number);
 static bool _plan_6(int level_number);
 static void _portal_vault_level(int level_number);
 static void _labyrinth_level(int level_number);
@@ -198,7 +198,7 @@ static bool _treasure_area(int level_number, uint8_t ta1_x,
 // SPECIAL ROOM BUILDERS
 static void _special_room(int level_number, spec_room &sr,
                           const map_def *vault);
-static void _specr_2(spec_room &sr);
+static void _special_room_hook_up(spec_room &sr);
 static void _big_room(int level_number);
 static void _chequerboard(spec_room &sr, dungeon_feature_type target,
                           dungeon_feature_type floor1,
@@ -794,7 +794,7 @@ static bool _is_bottom_exit_stair(const coord_def &c)
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
     case DNGN_EXIT_HELL:
-    case DNGN_RETURN_FROM_DWARF_HALL:
+    case DNGN_RETURN_FROM_DWARVEN_HALL:
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_HIVE:
     case DNGN_RETURN_FROM_LAIR:
@@ -834,7 +834,7 @@ static bool _is_exit_stair(const coord_def &c)
     case DNGN_STONE_STAIRS_UP_III:
     case DNGN_ESCAPE_HATCH_UP:
     case DNGN_EXIT_HELL:
-    case DNGN_RETURN_FROM_DWARF_HALL:
+    case DNGN_RETURN_FROM_DWARVEN_HALL:
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_HIVE:
     case DNGN_RETURN_FROM_LAIR:
@@ -2099,28 +2099,12 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
         return;
     }
 
-    // Hook up the special room (if there is one, and it hasn't
-    // been hooked up already in roguey_level()).
-    if (sr.created && !sr.hooked_up
-        && !crawl_state.game_is_sprint()
-        && !crawl_state.game_is_zotdef()
-        && !crawl_state.game_is_tutorial())
-    {
-        _specr_2(sr);
-    }
+    if (sr.created && !sr.hooked_up)
+        _special_room_hook_up(sr);
 
     // Now place items, mons, gates, etc.
     // Stairs must exist by this point (except in Shoals where they are
     // yet to be placed). Some items and monsters already exist.
-
-#ifdef OLD_SWAMP_LAYOUT
-    // Time to make the swamp or shoals {dlb}:
-    if (player_in_branch(BRANCH_SWAMP))
-        dgn_prepare_swamp();
-#endif
-
-    if (dgn_level_vetoed)
-        return;
 
     _check_doors();
 
@@ -4015,8 +3999,8 @@ static void _builder_items(int level_number, level_area_type level_type, int ite
     {
         for (i = 0; i < items_wanted; i++)
         {
-            // porridge in the dwarf hall
-            if (player_in_branch(BRANCH_DWARF_HALL))
+            // porridge in the dwarven hall
+            if (player_in_branch(BRANCH_DWARVEN_HALL))
             {
                 const int it = random2(100);
                 if (it == 1)
@@ -4065,7 +4049,7 @@ static void _builder_items(int level_number, level_area_type level_type, int ite
 // to a closed door, and normal rock wall to pre-floor.
 // Anything that might otherwise block the hallway is changed
 // to pre-floor.
-static void _specr_2(spec_room &sr)
+static void _special_room_hook_up(spec_room &sr)
 {
     coord_def c, delta;
     int i = 0;
@@ -5982,7 +5966,7 @@ static dungeon_feature_type _pick_an_altar()
                                      : DNGN_ALTAR_YREDELEMNUL);
             break;
 
-        case BRANCH_DWARF_HALL:
+        case BRANCH_DWARVEN_HALL:
             temp_rand = random2(7);
 
             altar_type = ((temp_rand == 0) ? DNGN_ALTAR_KIKUBAAQUDGHA :
@@ -6655,7 +6639,7 @@ static void _plan_main(int level_number, int force_plan)
                  (force_plan == 2) ? _plan_2(level_number) :
                  (force_plan == 3) ? _plan_3(level_number) :
                  (force_plan == 4) ? _plan_4(0, 0, 0, 0, NUM_FEATURES) :
-                 (force_plan == 5) ? (one_chance_in(9) ? _plan_5()
+                 (force_plan == 5) ? (one_chance_in(9) ? _plan_5(level_number)
                                                        : _plan_3(level_number)) :
                  (force_plan == 6) ? _plan_6(level_number)
                                    : _plan_3(level_number));
@@ -6677,46 +6661,34 @@ static void _plan_main(int level_number, int force_plan)
         dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, special_grid);
 }
 
-static bool _plan_1(int level_number)
+static void _place_layout_vault(int level_number, const char *name,
+                                const char *method, const char *type)
 {
-    env.level_build_method += make_stringf(" plan_1 [%d]", level_number);
-    env.level_layout_type   = "open";
+    env.level_build_method += make_stringf(" %s [%d]", method, level_number);
+    env.level_layout_type = type;
 
-    const map_def *vault = find_map_by_name("layout_forbidden_donut");
+    const map_def *vault = find_map_by_name(make_stringf("layout_%s", name));
     ASSERT(vault);
 
-    bool success = _build_primary_vault(level_number, vault);
-    dgn_ensure_vault_placed(success, false);
+    dgn_ensure_vault_placed(_build_primary_vault(level_number, vault), false);
+}
 
+static bool _plan_1(int level_number)
+{
+    _place_layout_vault(level_number, "forbidden_donut", "plan_1", "open");
     return false;
 }
 
 static bool _plan_2(int level_number)
 {
-    env.level_build_method += " plan_2";
-    env.level_layout_type   = "cross";
-
-    const map_def *vault = find_map_by_name("layout_cross");
-    ASSERT(vault);
-
-    bool success = _build_primary_vault(level_number, vault);
-    dgn_ensure_vault_placed(success, false);
-
+    _place_layout_vault(level_number, "cross", "plan_2", "cross");
     return false;
 }
 
 static bool _plan_3(int level_number)
 {
-    env.level_build_method += " plan_3";
-    env.level_layout_type   = "rooms";
-
-    const map_def *vault = find_map_by_name("layout_rooms");
-    ASSERT(vault);
-
-    bool success = _build_primary_vault(level_number, vault);
-    dgn_ensure_vault_placed(success, false);
-
-    return true;
+    _place_layout_vault(level_number, "rooms", "plan_3", "rooms");
+    return false;
 }
 
 // A more chaotic version of city level.
@@ -6827,37 +6799,16 @@ static bool _plan_4(uint8_t forbid_x1, uint8_t forbid_y1, uint8_t forbid_x2,
     return true;
 }
 
-static bool _plan_5()
+static bool _plan_5(int level_number)
 {
-    env.level_build_method += " plan_5";
-    env.level_layout_type   = "misc"; // XXX: What type of layout is this?
-
-    // value range of [5,24] {dlb}
-    for (unsigned int i = 5 + random2(20); i > 0; i--)
-    {
-        join_the_dots(
-            coord_def(random2(GXM - 20) + 10, random2(GYM - 20) + 10),
-            coord_def(random2(GXM - 20) + 10, random2(GYM - 20) + 10),
-            MMT_VAULT);
-    }
-
-    if (!one_chance_in(4))
-        spotty_level(true, 100, coinflip());
-
-    return true;
+    _place_layout_vault(level_number, "misc", "plan_5", "misc");
+    return false;
 }
 
 // Octagon with pillars in middle.
 static bool _plan_6(int level_number)
 {
-    env.level_build_method += make_stringf(" plan_6 [%d]", level_number);
-    env.level_layout_type   = "open";
-
-    const map_def *vault = find_map_by_name("layout_big_octagon");
-    ASSERT(vault);
-
-    bool success = _build_primary_vault(level_number, vault);
-    dgn_ensure_vault_placed(success, false);
+    _place_layout_vault(level_number, "big_octagon", "plan_6", "open");
 
     // This "back door" is often one of the easier ways to get out of
     // pandemonium.
@@ -7637,14 +7588,7 @@ static void _box_room(int bx1, int bx2, int by1, int by2,
 
 static void _city_level(int level_number)
 {
-    env.level_build_method += make_stringf(" city_level [%d]", level_number);
-    env.level_layout_type   = "city";
-
-    const map_def *vault = find_map_by_name("layout_city");
-    ASSERT(vault);
-
-    bool success = _build_primary_vault(level_number, vault);
-    dgn_ensure_vault_placed(success, false);
+    _place_layout_vault(level_number, "city", "city_level", "city");
 }
 
 static bool _treasure_area(int level_number, uint8_t ta1_x,

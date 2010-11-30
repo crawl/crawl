@@ -45,13 +45,31 @@ fleshy_orifice_open
 %sdir dc-dngn/gateways
 dngn_stone_arch DNGN_STONE_ARCH
 
-%sdir dc-dngn
+%sdir dc-dngn/statues
 dngn_orcish_idol DNGN_ORCISH_IDOL
+%weight 20
 dngn_granite_statue DNGN_GRANITE_STATUE
-elephant_statue DNGN_ELEPHANT_STATUE
-crumbled_column DNGN_CRUMBLED_COLUMN
-granite_stump DNGN_GRANITE_STUMP
-zot_pillar DNGN_ZOT_PILLAR
+%weight 5
+dngn_statue_dwarf_axe
+%weight 3
+dngn_statue_dwarf_mace
+%weight 2
+dngn_statue_dwarf_sword
+%weight 8
+dngn_statue_centaur
+dngn_statue_dragon
+dngn_statue_eye
+%weight 5
+dngn_statue_snail
+dngn_statue_troll
+%weight 3
+dngn_statue_elephant
+%syn DNGN_STATUE_ELEPHANT
+%weight 1
+dngn_statue_ancient_hero
+dngn_crumbled_column DNGN_CRUMBLED_COLUMN
+dngn_granite_stump DNGN_GRANITE_STUMP
+dngn_zot_pillar DNGN_ZOT_PILLAR
 
 ## Features only used in certain minivaults
 %sdir dc-dngn/vaults

@@ -52,17 +52,6 @@
       }
     },
 
-    {  MST_NISSE,
-      {
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_INVISIBILITY,
-       SPELL_NO_SPELL
-      }
-    },
-
     {  MST_DEEP_DWARF_NECROMANCER,
       {
        SPELL_PAIN,
@@ -76,7 +65,7 @@
 
     {  MST_DEEP_DWARF_UNBORN,
       {
-       SPELL_SYMBOL_OF_TORMENT,
+       SPELL_AGONY,
        SPELL_DISPEL_UNDEAD,
        SPELL_MIRROR_DAMAGE,
        SPELL_ANIMATE_DEAD,
@@ -92,7 +81,7 @@
        SPELL_NO_SPELL,
        SPELL_TROGS_HAND,
        SPELL_BERSERKER_RAGE,
-       SPELL_BURN_SPELLBOOK,
+       SPELL_NO_SPELL,
        SPELL_NO_SPELL
       }
     },
@@ -101,7 +90,7 @@
       {
        SPELL_NO_SPELL,
        SPELL_ANIMATE_DEAD,
-       SPELL_SUMMON_UNDEAD, /* cheaper to fake recall and gift with summon spell */
+       SPELL_SUMMON_UNDEAD, // cheaper to fake recall and gift with summon spell
        SPELL_NO_SPELL,
        SPELL_DRAIN_LIFE,
        SPELL_MIRROR_DAMAGE

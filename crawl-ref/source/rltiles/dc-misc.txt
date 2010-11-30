@@ -104,6 +104,7 @@ heart HEART
 good_neutral GOOD_NEUTRAL
 neutral NEUTRAL
 animated_weapon ANIMATED_WEAPON
+mimic MIMIC
 poison POISON
 flame FLAME
 berserk BERSERK

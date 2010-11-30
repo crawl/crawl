@@ -69,6 +69,7 @@ private:
 };
 
 bool debug_check_ghosts();
+int ghost_level_to_rank(const int xl);
 
 extern std::vector<ghost_demon> ghosts;
 

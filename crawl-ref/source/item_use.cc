@@ -4259,6 +4259,14 @@ bool enchant_weapon(enchant_stat_type which_stat, bool quiet, item_def &wpn)
 
         do_uncurse_item(wpn, true, true);
     }
+    else
+    {
+        if (uncurse_only)
+        {
+            if (!quiet)
+                canned_msg(MSG_NOTHING_HAPPENS);
+        }
+    }
 
     return (true);
 }
