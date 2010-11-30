@@ -826,7 +826,7 @@ bool cast_apportation(int pow, const coord_def& where)
         // Maybe the player *thought* there was something there (a mimic.)
         if (monster* m = monster_at(where))
         {
-            if (mons_is_mimic(m->type) && you.can_see(m))
+            if (mons_is_item_mimic(m->type) && you.can_see(m))
             {
                 mprf("%s twitches.", m->name(DESC_CAP_THE).c_str());
                 // Nothing else gives this message, so identify the mimic.
