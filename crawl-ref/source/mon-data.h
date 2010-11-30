@@ -3164,6 +3164,10 @@ static monsterentry mondata[] = {
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_SMALL
 },
 
+#if TAG_MAJOR_VERSION == 31
+AXED_MON(MONS_UNUSED_NISSE)
+#endif
+
 // liches ('L')
 {
     MONS_LICH, 'L', LIGHTGREY, "lich",

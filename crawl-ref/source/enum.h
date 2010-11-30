@@ -2067,11 +2067,7 @@ enum monster_type                      // (int) menv[].type
     MONS_DEEP_DWARF_BERSERKER,
     MONS_DEEP_DWARF_DEATH_KNIGHT,
     MONS_DEEP_DWARF_UNBORN,
-#if TAG_MAJOR_VERSION == 31
-    MONS_NISSE,
-#else
-      MONS_UNUSED_337,
-#endif
+      MONS_UNUSED_NISSE,
       MONS_UNUSED_338,
       MONS_UNUSED_339,
 
