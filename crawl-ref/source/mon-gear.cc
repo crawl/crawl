@@ -1810,10 +1810,10 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         break;
 
     case MONS_DWARF:
+    case MONS_DEEP_DWARF:
     case MONS_DEEP_DWARF_SCION:
     case MONS_DEEP_DWARF_DEATH_KNIGHT:
     case MONS_DEEP_DWARF_BERSERKER:
-    case MONS_DEEP_DWARF:
         item_race = MAKE_ITEM_DWARVEN;
         // deliberate fall through
 
