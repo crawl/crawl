@@ -223,7 +223,7 @@ dungeon_feature_type get_mimic_feat (const monster* mimic)
     return (DNGN_UNSEEN);
 }
 
-bool feature_mimic_at (const coord_def &c)
+bool feature_mimic_at(const coord_def &c)
 {
     const monster* mons = monster_at(c);
     if (mons != NULL)
