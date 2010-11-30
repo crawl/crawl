@@ -333,6 +333,13 @@ static bool _grid_has_mimic_item(const coord_def& pos)
     return (mon && mons_is_unknown_mimic(mon) && mons_is_item_mimic(mon->type));
 }
 
+static bool _grid_has_mimic_shop(const coord_def& pos)
+{
+    const monster* mon = monster_at(pos);
+    return (mon && mons_is_unknown_mimic(mon)
+            && mon->type == MONS_SHOP_MIMIC);
+}
+
 static bool _grid_has_perceived_item(const coord_def& pos)
 {
     return (you.visible_igrd(pos) != NON_ITEM || _grid_has_mimic_item(pos));
@@ -1228,6 +1235,9 @@ const ShopInfo *LevelStashes::find_shop(const coord_def& c) const
 
 bool LevelStashes::shop_needs_visit(const coord_def& c) const
 {
+    if (_grid_has_mimic_shop(c))
+        return(true);
+
     const ShopInfo *shop = find_shop(c);
     return (shop && !shop->is_visited());
 }
