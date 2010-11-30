@@ -540,7 +540,6 @@ pikel MONS_PIKEL
 kobold MONS_KOBOLD
 big_kobold MONS_BIG_KOBOLD
 kobold_demonologist MONS_KOBOLD_DEMONOLOGIST
-nisse MONS_NISSE
 
 ## Liches ('L')
 %sdir dc-mon/unique

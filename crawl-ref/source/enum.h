@@ -2067,7 +2067,11 @@ enum monster_type                      // (int) menv[].type
     MONS_DEEP_DWARF_BERSERKER,
     MONS_DEEP_DWARF_DEATH_KNIGHT,
     MONS_DEEP_DWARF_UNBORN,
+#if TAG_MAJOR_VERSION == 31
     MONS_NISSE,
+#else
+      MONS_UNUSED_337,
+#endif
       MONS_UNUSED_338,
       MONS_UNUSED_339,
 
@@ -2439,7 +2443,9 @@ enum mon_spellbook_type
     MST_ORC_WIZARD_I     = 0,
     MST_ORC_WIZARD_II,
     MST_ORC_WIZARD_III,
+#if TAG_MAJOR_VERSION == 31
     MST_NISSE,
+#endif
     MST_DEEP_DWARF_NECROMANCER,
     MST_DEEP_DWARF_UNBORN,
     MST_BK_TROG,
