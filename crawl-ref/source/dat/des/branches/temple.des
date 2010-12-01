@@ -2317,11 +2317,17 @@ bbbbb...bbbbbbbbb...bbb...bbbbbbbbb...bbbbb
                   bbbbbbb
 ENDMAP
 
-# A random number of temple gods, plus Lugonu.
+# 6 gods, plus 6 more altars to Lugonu.
+# NOTE: A random number of temple gods would be nicer, but
+#       this does not currently work. Since the map is evaluated
+#       twice (once at gamestart, once at Temple generation),
+#       pre-rolled altars may end up not being placed without
+#       overflow altars to replace them elsewhere, leading to
+#       gods missing from the game entirely.
 NAME:     corrupted_temple
 PLACE:    Temple
 ORIENT:   encompass
-NSUBST:   O = 3:B / 3=OB / *:O
+NSUBST:   O = 6:B / *:O
 KFEAT:    O = altar_lugonu
 MONS:     plant col:random name:demonic name_adjective
 SUBST:    . = . x:1 w:1 l:1
