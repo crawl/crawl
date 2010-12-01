@@ -502,10 +502,8 @@ void pan_wave(int power)
             env.mons_alloc[i] = mon_type;
         }
     }
-    _zotdef_choose_boss(boss, power);
     // Weak bosses only at lower power
-    if (power < 27)
-        _zotdef_choose_boss(weakboss, power);
+    _zotdef_choose_boss((power < 27 ? weakboss : boss), power);
     _zotdef_danger_msg("Hellish voices call for your blood. They are coming!");
 }
 
