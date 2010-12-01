@@ -1732,7 +1732,13 @@ static int _place_monster_aux(const mgen_data &mg,
             dungeon_feature_type stair = random_stair();
             mon->props["stair_type"] = static_cast<short>(stair);
             const feature_def stair_d = get_feature_def(stair);
-            mon->colour = stair_d.colour;
+            if (stair == DNGN_ESCAPE_HATCH_DOWN
+                || stair == DNGN_ESCAPE_HATCH_UP)
+            {
+                mon->colour = stair_d.colour;
+            }
+            else
+                mon->colour = stair_d.seen_em_colour;
             break;
         }
 
