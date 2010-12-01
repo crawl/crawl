@@ -2432,6 +2432,58 @@ static bool _make_box(int room_x1, int room_y1, int room_x2, int room_y2,
     return (true);
 }
 
+static void _pan_level(int level_number)
+{
+    int which_demon = -1;
+    // Could do spotty_level, but that doesn't always put all paired
+    // stairs reachable from each other which isn't a problem in normal
+    // dungeon but could be in Pandemonium.
+    if (one_chance_in(4))
+    {
+        do
+        {
+            which_demon = random2(4);
+
+            // Makes these things less likely as you find more.
+            if (one_chance_in(4))
+            {
+                which_demon = -1;
+                break;
+            }
+        }
+        while (you.unique_creatures[MONS_MNOLEG + which_demon]);
+    }
+
+    if (which_demon >= 0)
+    {
+        const char *pandemon_level_names[] =
+        {
+            "mnoleg", "lom_lobon", "cerebov", "gloorx_vloq"
+        };
+
+        const map_def *vault =
+            random_map_for_tag(pandemon_level_names[which_demon], false);
+
+        ASSERT(vault);
+        if (!vault)
+        {
+            end(1, false, "Failed to find Pandemonium level %s!\n",
+                pandemon_level_names[which_demon]);
+        }
+
+        dgn_ensure_vault_placed(_build_primary_vault(level_number, vault),
+                                 true);
+    }
+    else
+    {
+        _plan_main(level_number, 0);
+        const map_def *vault = random_map_for_tag("pan", true);
+        ASSERT(vault);
+
+        _build_secondary_vault(level_number, vault);
+    }
+}
+
 // Take care of labyrinth, abyss, pandemonium. Returns false if we should skip
 // further generation, and true otherwise.
 static bool _builder_by_type(int level_number, level_area_type level_type)
@@ -2456,55 +2508,7 @@ static bool _builder_by_type(int level_number, level_area_type level_type)
 
     if (level_type == LEVEL_PANDEMONIUM)
     {
-        int which_demon = -1;
-        // Could do spotty_level, but that doesn't always put all paired
-        // stairs reachable from each other which isn't a problem in normal
-        // dungeon but could be in Pandemonium.
-        if (one_chance_in(4))
-        {
-            do
-            {
-                which_demon = random2(4);
-
-                // Makes these things less likely as you find more.
-                if (one_chance_in(4))
-                {
-                    which_demon = -1;
-                    break;
-                }
-            }
-            while (you.unique_creatures[MONS_MNOLEG + which_demon]);
-        }
-
-        if (which_demon >= 0)
-        {
-            const char *pandemon_level_names[] =
-            {
-                "mnoleg", "lom_lobon", "cerebov", "gloorx_vloq"
-            };
-
-            const map_def *vault =
-                random_map_for_tag(pandemon_level_names[which_demon], false);
-
-            ASSERT(vault);
-            if (!vault)
-            {
-                end(1, false, "Failed to find Pandemonium level %s!\n",
-                    pandemon_level_names[which_demon]);
-            }
-
-            dgn_ensure_vault_placed(_build_primary_vault(level_number, vault),
-                                     true);
-        }
-        else
-        {
-            _plan_main(level_number, 0);
-            const map_def *vault = random_map_for_tag("pan", true);
-            ASSERT(vault);
-
-            _build_secondary_vault(level_number, vault);
-        }
-
+        _pan_level(level_number);
         return false;
     }
 
