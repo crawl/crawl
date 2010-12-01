@@ -685,9 +685,7 @@ void zotdef_set_branch_wave(branch_type b, int power)
     dprf("BRANCH WAVE: BRANCH %s",
          (b == NUM_BRANCHES) ? "RANDOM" : branches[b].shortname);
     for (int i = 0; i < NSLOTS; i++)
-    {
        env.mons_alloc[i] = get_zotdef_monster(l, _fuzz_mons_level(power));
-    }
     env.mons_alloc[BOSS_SLOT] = get_zotdef_monster(l,
                                     power + BOSS_MONSTER_EXTRA_POWER);
 }
