@@ -711,7 +711,7 @@ void set_boss_unique()
 // mons_alloc[BOSS_SLOT] is the boss.
 //
 // A game lasts for 15 runes, each rune 1400 turns apart
-// (assuming FREQUENCY_ON_RUNES=7, CYCLE_LENGTH=200). That's
+// (assuming FREQUENCY_OF_RUNES=7, CYCLE_LENGTH=200). That's
 // a total of 105 waves. Set probabilities accordingly.
 void zotdef_set_wave()
 {
