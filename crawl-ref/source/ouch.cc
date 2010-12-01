@@ -1280,6 +1280,11 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         you.dead = true;
 
         stop_delay(true);
+
+        mprnojoin("You die...");
+        xom_death_message((kill_method_type) se.get_death_type());
+        more();
+
         _place_player_corpse(death_type == KILLED_BY_DISINT);
         return;
     }
