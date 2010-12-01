@@ -2156,7 +2156,9 @@ void handle_time()
     // Every 5 turns, spawn random monsters, not in Zotdef.
     if (_div(base_time, 50) > _div(old_time, 50)
         && !crawl_state.game_is_zotdef())
+    {
         spawn_random_monsters();
+    }
 
     // Every 20 turns, a variety of other effects.
     if (! (_div(base_time, 200) > _div(old_time, 200)))

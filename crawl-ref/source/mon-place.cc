@@ -668,7 +668,7 @@ bool find_mon_place_near_stairs(coord_def& pos,
 {
     pos = get_random_stair();
     const dungeon_feature_type feat = grd(pos);
-    *stair_type=get_feature_dchar(feat);
+    *stair_type = get_feature_dchar(feat);
     // Is it a branch stair?
     for (int i = 0; i < NUM_BRANCHES; ++i)
     {
@@ -1054,7 +1054,6 @@ int place_monster(mgen_data mg, bool force_pos)
             mg.proximity = PROX_AWAY_FROM_PLAYER;
         }
     } // end proximity check
-
 
     if (mg.cls == MONS_PROGRAM_BUG)
         return (-1);
@@ -3125,7 +3124,7 @@ int mons_place(mgen_data mg)
     default:
         mg.power = you.absdepth0;
         if (crawl_state.game_is_zotdef())
-            mg.power =  you.num_turns/(CYCLE_LENGTH * 3);
+            mg.power =  you.num_turns / (CYCLE_LENGTH * 3);
         break;
     }
 

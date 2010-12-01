@@ -190,7 +190,7 @@ bool monster_pathfind::calc_path_to_neighbours()
     //      7  4  5
     //
     // To avoid bias, we'll choose a random 90 degree rotation
-    int rotate=random2(4)*2; // equal probability of 0,2,4,6
+    int rotate = random2(4) * 2; // equal probability of 0,2,4,6
     for (int idir = 1; idir < 8; (idir += 2) == 9 && (idir = 0))
     {
         // Skip diagonal movement.

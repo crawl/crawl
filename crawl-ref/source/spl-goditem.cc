@@ -783,7 +783,6 @@ bool entomb(int pow)
         return false;
     }
 
-
     return (_do_imprison(pow, you.pos(), false));
 }
 

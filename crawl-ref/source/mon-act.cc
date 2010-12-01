@@ -3203,9 +3203,7 @@ static bool _mon_can_move_to_pos(const monster* mons,
                 }
             }
             else
-            {
                 return (false);
-            }
         }
     }
 

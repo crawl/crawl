@@ -138,8 +138,8 @@ void handle_behaviour(monster* mon)
         if ((!isFriendly && !isNeutral) && (orb_position() == mon->pos()))
         {
             mpr("Your flesh rots away as the Orb of Zot is desecrated.",
-                MSGCH_DANGER );
-            rot_hp(random_range(1,1));
+                MSGCH_DANGER);
+            rot_hp(random_range(1, 1));
             ouch(1, NON_MONSTER,KILLED_BY_ROTTING);
         }
     }
@@ -429,9 +429,7 @@ void handle_behaviour(monster* mon)
                         if (mon->foe == MHITYOU)
                         {
                             if (crawl_state.game_is_zotdef())
-                            {
-                                mon->target=PLAYER_POS;  // infallible tracking in zotdef
-                            }
+                                mon->target = PLAYER_POS;  // infallible tracking in zotdef
                             else
                             {
                                 if (one_chance_in(you.skills[SK_STEALTH] / 3))
@@ -1068,6 +1066,7 @@ void make_mons_stop_fleeing(monster* mon)
 coord_def zotdef_target()
 {
     coord_def tgt = orb_position();
-    if (tgt.origin()) tgt=you.pos();
+    if (tgt.origin())
+        tgt = you.pos();
     return tgt;
 }

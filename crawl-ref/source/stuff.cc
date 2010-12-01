@@ -1031,7 +1031,6 @@ bool tobool(maybe_bool mb, bool def)
     }
 }
 
-
 coord_def get_random_stair()
 {
     std::vector<coord_def> st;

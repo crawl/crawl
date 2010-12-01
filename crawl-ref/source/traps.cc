@@ -441,7 +441,6 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     const bool you_trigger = (triggerer.atype() == ACT_PLAYER);
     const bool in_sight = you.see_cell(this->pos);
 
-
     // Zot def - player never sets off known traps
     if (crawl_state.game_is_zotdef() && you_trigger && you_know)
     {
@@ -469,7 +468,6 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             return;
         }
     }
-
 
     // Zot def - friendly monsters never set off known traps
     if (crawl_state.game_is_zotdef() && m && m->friendly() && trig_knows)
@@ -560,11 +558,11 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             // that would be way too nasty for the player.
             std::string msg;
             if (you_trigger)
-                msg="An alarm trap emits a blaring wail!";
+                msg = "An alarm trap emits a blaring wail!";
             else
             {
                 std::string dir=direction_string(this->pos, !in_sight);
-                msg=std::string("You hear a ") +
+                msg = std::string("You hear a ") +
                     ((in_sight) ? "" : "distant ")
                     + "blaring wail "
                     + ((dir.length())? ("to the " + dir + ".") : "behind you!");
@@ -1812,10 +1810,12 @@ int traps_zero_number(int level_number)
 {
     return 0;
 }
+
 int count_traps(trap_type ttyp)
 {
     int num = 0;
     for (int tcount = 0; tcount < MAX_TRAPS; tcount++)
-        if (env.trap[tcount].type == ttyp) num++;
+        if (env.trap[tcount].type == ttyp)
+            num++;
     return num;
 }

@@ -1004,10 +1004,8 @@ static bool _orange_statue_effects(monster* mons)
         // Tone down friendly OCSs for Zotdef.
         if (mons->attitude == ATT_FRIENDLY && foe != &you)
         {
-            if ( foe->check_res_magic(120))
-            {
+            if (foe->check_res_magic(120))
                 return (false);
-            }
             pow  /= 2;
             fail /= 2;
         }

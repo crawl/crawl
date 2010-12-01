@@ -2198,7 +2198,6 @@ void _create_pond(const coord_def& center, int radius, bool allow_deep)
     }
 }
 
-
 static void _deepen_water(const coord_def& center, int radius)
 {
     for (radius_iterator ri(center, radius, false); ri; ++ri)
