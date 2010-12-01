@@ -562,7 +562,7 @@ void debug_waves()
 {
     for (int i = 0; i < 15 * FREQUENCY_OF_RUNES; i++)
     {
-        you.num_turns += 200;
+        you.num_turns += CYCLE_LENGTH;
         zotdef_set_wave();
     }
 }
