@@ -850,7 +850,7 @@ rune_type get_rune(int runenumber)
     return RUNE_DEMONIC;
 }
 
-//       Dowan is automatically placed together with Duvessa.
+// Dowan is automatically placed together with Duvessa.
 static monster_type _choose_unique_by_depth(int step)
 {
     int ret;
