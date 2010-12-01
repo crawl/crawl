@@ -1523,6 +1523,10 @@ int monster_die(monster* mons, killer_type killer,
     // Same for silencers.
     mons->del_ench(ENCH_SILENCE);
 
+    // For the case when shop mimic was killed before player discovered him
+    if (mons->type == MONS_SHOP_MIMIC)
+        StashTrack.remove_shop(mons->pos());
+
     crawl_state.inc_mon_acting(mons);
 
     ASSERT(!(YOU_KILL(killer) && crawl_state.game_is_arena()));

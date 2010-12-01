@@ -961,6 +961,9 @@ void dungeon_terrain_changed(const coord_def &pos,
             _dgn_shift_feature(pos);
 
         unnotice_feature(level_pos(level_id::current(), pos));
+        if (grd(pos) == DNGN_ENTER_SHOP)
+            StashTrack.remove_shop(pos);
+
         grd(pos) = nfeat;
         env.grid_colours(pos) = BLACK;
         if (is_notable_terrain(nfeat) && you.see_cell(pos))
