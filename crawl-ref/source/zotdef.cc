@@ -560,7 +560,7 @@ void zotdef_set_special_wave(int power)
 
 void debug_waves()
 {
-    for (int i = 0; i < 15 * 7; i++)
+    for (int i = 0; i < 15 * FREQUENCY_OF_RUNES; i++)
     {
         you.num_turns += 200;
         zotdef_set_wave();
