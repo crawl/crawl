@@ -34,7 +34,6 @@
 #include "macro.h"
 #include "menu.h"
 #include "message.h"
-#include "mon-pick.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "ouch.h"
@@ -1000,7 +999,7 @@ static std::vector<std::string> _get_monster_keys(wchar_t showchar)
 
     for (int i = 0; i < NUM_MONSTERS; i++)
     {
-        if (i == MONS_PROGRAM_BUG || mons_global_level(i) == 0)
+        if (i == MONS_PROGRAM_BUG)
             continue;
 
         monsterentry *me = get_monster_data(i);
@@ -1064,7 +1063,7 @@ static std::vector<std::string> _get_branch_keys()
 static bool _monster_filter(std::string key, std::string body)
 {
     int mon_num = get_monster_by_name(key.c_str(), true);
-    return (mon_num == MONS_PROGRAM_BUG || mons_global_level(mon_num) == 0);
+    return (mon_num == MONS_PROGRAM_BUG);
 }
 
 static bool _spell_filter(std::string key, std::string body)
