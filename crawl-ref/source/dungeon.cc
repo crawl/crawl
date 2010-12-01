@@ -128,8 +128,7 @@ static bool _builder_by_branch(int level_number);
 static bool _builder_normal(int level_number, spec_room &s);
 static bool _builder_basic(int level_number);
 static void _builder_extras(int level_number);
-static void _builder_items(int level_number, level_area_type level_type,
-                           int items_wanted);
+static void _builder_items(int level_number, int items_wanted);
 static void _builder_monsters(int level_number, level_area_type level_type,
                               int mon_wanted);
 static void _place_specific_stair(dungeon_feature_type stair,
@@ -2153,8 +2152,7 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
         && !crawl_state.game_is_zotdef()
         && !crawl_state.game_is_tutorial())
     {
-        _builder_items(level_number, level_type,
-                       _num_items_wanted(level_number));
+        _builder_items(level_number, _num_items_wanted(level_number));
     }
 
     // Place monsters.
@@ -3929,10 +3927,8 @@ static void _builder_monsters(int level_number, level_area_type level_type, int 
     }
 }
 
-static void _builder_items(int level_number, level_area_type level_type, int items_wanted)
+static void _builder_items(int level_number, int items_wanted)
 {
-    UNUSED(level_type);
-
     int i = 0;
     object_class_type specif_type = OBJ_RANDOM;
     int items_levels = level_number;
