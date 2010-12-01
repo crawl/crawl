@@ -205,14 +205,19 @@ static void _zotdef_choose_boss(monster_type mlist[], int power)
     }
 }
 
+static void _zotdef_danger_msg(const char *msg)
+{
+    mpr(msg, MSGCH_DANGER);
+    more();
+}
+
 void hydra_wave(int power)
 {
     monster_type hydras[] = {MONS_HYDRA};
     monster_type boss[] = {MONS_LERNAEAN_HYDRA};
     _zotdef_fill_from_list(hydras, 4, power); // 66% full at power 12
     _zotdef_choose_boss(boss, power * 2);
-    mpr("You hear a distant many-voiced hissing!", MSGCH_DANGER);
-    more();
+    _zotdef_danger_msg("You hear a distant many-voiced hissing!");
 }
 
 void fire_wave(int power)
@@ -231,8 +236,7 @@ void fire_wave(int power)
                     MONS_MARGERY, MONS_FIEND, MONS_BALRUG, MONS_FIRE_GIANT};
     _zotdef_fill_from_list(firemons, 0, power);
     _zotdef_choose_boss(boss, power);
-    mpr("You hear roaring flames in the distance!", MSGCH_DANGER);
-    more();
+    _zotdef_danger_msg("You hear roaring flames in the distance!");
 }
 
 void cold_wave(int power)
@@ -248,8 +252,7 @@ void cold_wave(int power)
                            MONS_WHITE_DRACONIAN};
     _zotdef_fill_from_list(coldmons, 4, power);
     _zotdef_choose_boss(boss, power);
-    mpr("A deadly chill settles over the dungeon!", MSGCH_DANGER);
-    more();
+    _zotdef_danger_msg("A deadly chill settles over the dungeon!");
 }
 
 void gnoll_wave(int power)
@@ -262,8 +265,7 @@ void gnoll_wave(int power)
     monster_type boss[] = {MONS_GRUM, MONS_TROLL};
     _zotdef_fill_from_list(gnolls, 0, power); // full
     _zotdef_choose_boss(boss, power);
-    mpr("Harsh voices can be heard, coming closer!", MSGCH_DANGER);
-    more();
+    _zotdef_danger_msg("Harsh voices can be heard, coming closer!");
 }
 
 void rat_wave(int power)
@@ -276,8 +278,7 @@ void rat_wave(int power)
     monster_type boss[] = {MONS_ORANGE_RAT};
     _zotdef_fill_from_list(rats, 0, power); // full power
     _zotdef_choose_boss(boss, power);
-    mpr("You hear distant squeaking!", MSGCH_DANGER);
-    more();
+    _zotdef_danger_msg("You hear distant squeaking!");
 }
 
 void hound_wave(int power)
@@ -290,8 +291,7 @@ void hound_wave(int power)
     monster_type boss[] = {MONS_HELL_HOUND};
     _zotdef_fill_from_list(hounds, 0, power); // full
     _zotdef_choose_boss(boss, power);
-    mpr("Horrible howls echo around!", MSGCH_DANGER);
-    more();
+    _zotdef_danger_msg("Horrible howls echo around!");
 }
 
 void abomination_wave(int power)
@@ -303,9 +303,7 @@ void abomination_wave(int power)
     monster_type boss[] = {MONS_TENTACLED_MONSTROSITY};
     _zotdef_fill_from_list(aboms, 0, power); // full
     _zotdef_choose_boss(boss, power);
-    mpr("A dreadful chittering sound fills the air. It's coming closer...",
-        MSGCH_DANGER);
-    more();
+    _zotdef_danger_msg("A dreadful chittering sound fills the air. It's coming closer...");
 }
 
 void ugly_wave(int power)
@@ -318,8 +316,7 @@ void ugly_wave(int power)
     monster_type boss[] = {MONS_VERY_UGLY_THING};
     _zotdef_fill_from_list(ugly, 6, power); // reduced size
     _zotdef_choose_boss(boss, power);
-    mpr("You feel uneasy.", MSGCH_DANGER);
-    more();
+    _zotdef_danger_msg("You feel uneasy.");
 }
 
 void golem_wave(int power)
@@ -332,8 +329,7 @@ void golem_wave(int power)
     monster_type boss[] = {MONS_ELECTRIC_GOLEM};
     _zotdef_fill_from_list(golems, 6, power * 2 / 3); // reduced size
     _zotdef_choose_boss(boss, power);
-    mpr("Booming thuds herald the arrival of something large...",MSGCH_DANGER);
-    more();
+    _zotdef_danger_msg("Booming thuds herald the arrival of something large...");
 }
 
 void human_wave(int power)
@@ -361,8 +357,7 @@ void human_wave(int power)
     }
 
     _zotdef_choose_boss(boss, power);
-    mpr("War cries fill the air!", MSGCH_DANGER);
-    more();
+    _zotdef_danger_msg("War cries fill the air!");
 }
 
 void butterfly_wave(int power)
@@ -372,8 +367,7 @@ void butterfly_wave(int power)
 #endif
     monster_type bfs[] = {MONS_BUTTERFLY};
     _zotdef_fill_from_list(bfs, 0, power); // full
-    mpr("You feel a sudden sense of peace!", MSGCH_DANGER);
-    more();
+    _zotdef_danger_msg("You feel a sudden sense of peace!");
 }
 
 void beast_wave(int power)
@@ -383,8 +377,7 @@ void beast_wave(int power)
 #endif
     monster_type bst[] = {MONS_BEAST};
     _zotdef_fill_from_list(bst, 0, power); // full
-    mpr("A hideous howling noise can be heard in the distance!", MSGCH_DANGER);
-    more();
+    _zotdef_danger_msg("A hideous howling noise can be heard in the distance!");
 }
 
 void frog_wave(int power)
@@ -397,8 +390,7 @@ void frog_wave(int power)
     monster_type boss[] = {MONS_PRINCE_RIBBIT, MONS_SPINY_FROG, MONS_BLINK_FROG};
     _zotdef_fill_from_list(frogs, 0, power); // full
     _zotdef_choose_boss(boss, power);
-    mpr("Croaking noises echo off the walls!", MSGCH_DANGER);
-    more();
+    _zotdef_danger_msg("Croaking noises echo off the walls!");
 }
 
 void bear_wave(int power)
@@ -411,8 +403,7 @@ void bear_wave(int power)
     monster_type boss[] = {MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR};
     _zotdef_fill_from_list(bears, 0, power); // full
     _zotdef_choose_boss(boss, power);
-    mpr("Gravelly voices can be heard calling for porridge!", MSGCH_DANGER);
-    more();
+    _zotdef_danger_msg("Gravelly voices can be heard calling for porridge!");
 }
 
 void wraith_wave(int power)
@@ -425,8 +416,7 @@ void wraith_wave(int power)
     monster_type boss[] = {MONS_EIDOLON, MONS_PHANTASMAL_WARRIOR, MONS_SPECTRAL_THING};
     _zotdef_fill_from_list(wraiths, 0, power); // full
     _zotdef_choose_boss(boss, power);
-    mpr("The hair rises on the back of your neck!", MSGCH_DANGER);
-    more();
+    _zotdef_danger_msg("The hair rises on the back of your neck!");
 }
 
 void giant_wave(int power)
@@ -443,8 +433,7 @@ void giant_wave(int power)
             MONS_FROST_GIANT, MONS_TITAN};
     _zotdef_fill_from_list(giants, 0, power); // full
     _zotdef_choose_boss(boss, power);
-    mpr("The stamp of enormous boots can be heard in the distance.", MSGCH_DANGER);
-    more();
+    _zotdef_danger_msg("The stamp of enormous boots can be heard in the distance.");
 }
 
 void yak_wave(int power)
@@ -459,8 +448,7 @@ void yak_wave(int power)
     monster_type boss[] = {MONS_POLYPHEMUS, MONS_CYCLOPS};
     _zotdef_fill_from_list(yaks, 0, power); // full
     _zotdef_choose_boss(boss, power);
-    mpr("Bleats and roars echo around!", MSGCH_DANGER);
-    more();
+    _zotdef_danger_msg("Bleats and roars echo around!");
 }
 
 void insect_wave(int power)
@@ -478,8 +466,7 @@ void insect_wave(int power)
                 MONS_QUEEN_ANT, MONS_BORING_BEETLE, MONS_QUEEN_BEE};
     _zotdef_fill_from_list(insects, 0, power); // full
     _zotdef_choose_boss(boss, power);
-    mpr("You hear an ominous buzzing.", MSGCH_DANGER);
-    more();
+    _zotdef_danger_msg("You hear an ominous buzzing.");
 }
 
 void pan_wave(int power)
@@ -519,8 +506,7 @@ void pan_wave(int power)
     // Weak bosses only at lower power
     if (power < 27)
         _zotdef_choose_boss(weakboss, power);
-    mpr("Hellish voices call for your blood. They are coming!", MSGCH_DANGER);
-    more();
+    _zotdef_danger_msg("Hellish voices call for your blood. They are coming!");
 }
 
 void zotdef_set_special_wave(int power)
@@ -774,8 +760,7 @@ void zotdef_set_wave()
         // Truly random wave, (crappily) signalled by passing branch=NUM_BRANCHES
         if (power > 8 && one_chance_in(20))
         {
-            mpr("The air ripples, and you hear distant laughter!", MSGCH_DANGER);
-            more();
+            _zotdef_danger_msg("The air ripples, and you hear distant laughter!");
             zotdef_set_branch_wave(NUM_BRANCHES, power);
         }
 
@@ -1021,8 +1006,7 @@ void zotdef_bosses_check()
                     msg = "You feel a sense of great excitement!";
                 }
             }
-            mpr(msg, MSGCH_DANGER);
-            more();
+            _zotdef_danger_msg(msg);
         }
     }
 
