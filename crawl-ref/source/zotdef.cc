@@ -58,7 +58,7 @@ branch_type zotdef_random_branch()
 {
     int wavenum = you.num_turns / CYCLE_LENGTH;
 
-    while (1)
+    while (true)
     {
         branch_type pb = static_cast<branch_type>(random2(NUM_BRANCHES));
         bool ok = true;
