@@ -696,7 +696,7 @@ void set_boss_unique()
 {
     for (int tries = 0; tries < 100; tries++)
     {
-        int level = random2avg(you.num_turns/CYCLE_LENGTH, 2)+1;
+        int level = random2avg(you.num_turns / CYCLE_LENGTH, 2) + 1;
         monster_type which_unique = _pick_unique(level);
 
         // Sometimes, we just quit if a unique is already placed.
@@ -720,7 +720,7 @@ void set_boss_unique()
 void zotdef_set_wave()
 {
     // power ramps up from 1 to 35 over the course of the game.
-    int power = (you.num_turns + CYCLE_LENGTH*2) / (CYCLE_LENGTH * 3);
+    int power = (you.num_turns + CYCLE_LENGTH * 2) / (CYCLE_LENGTH * 3);
 
     // Early waves are all DUNGEON
     if (you.num_turns < CYCLE_LENGTH * 4)
