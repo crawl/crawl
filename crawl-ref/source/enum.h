@@ -1955,14 +1955,12 @@ enum monster_type                      // (int) menv[].type
     MONS_ALLIGATOR_SNAPPING_TURTLE,    //  205
     MONS_SEA_SNAKE,
 
-    MONS_OKLOB_SAPLING,
-    MONS_BURNING_BUSH,
     MONS_HYPERACTIVE_BALLISTOMYCETE,
     MONS_HALFLING,              // for recolouring only.  And let's remove them!
     MONS_FELID,                 // for recolouring only.  Miaow!
     MONS_SPIDER,                // for recolouring, for now.
-      MONS_UNUSED_211,
-      MONS_UNUSED_212,
+    MONS_OKLOB_SAPLING,
+    MONS_BURNING_BUSH,
       MONS_UNUSED_213,
       MONS_UNUSED_214,
       MONS_UNUSED_215,
