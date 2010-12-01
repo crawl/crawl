@@ -150,12 +150,12 @@ static bool _item_preferred_to_clean(int item)
 {
     // Preferably clean "normal" weapons and ammo
     if (mitm[item].base_type == OBJ_WEAPONS
-        && mitm[item].plus == 0 && mitm[item].plus2 == 0
+        && mitm[item].plus <= 0 && mitm[item].plus2 <= 0
         && !is_artefact(mitm[item]))
         return (true);
 
     if (mitm[item].base_type == OBJ_MISSILES
-        && mitm[item].plus == 0 && mitm[item].plus2 == 0
+        && mitm[item].plus <= 0 && mitm[item].plus2 <= 0
         && !is_artefact(mitm[item]))
         return (true);
 
