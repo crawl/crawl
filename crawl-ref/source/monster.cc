@@ -5625,7 +5625,9 @@ bool monster::near_foe() const
 
 bool monster::has_lifeforce() const
 {
-    return (holiness() == MH_NATURAL || holiness() == MH_PLANT);
+    const mon_holy_type holi = holiness();
+
+    return (holi == MH_NATURAL || holi == MH_PLANT);
 }
 
 bool monster::can_mutate() const
