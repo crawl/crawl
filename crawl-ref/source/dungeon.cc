@@ -266,13 +266,25 @@ const map_mask *Vault_Placement_Mask = NULL;
 bool Generating_Level = false;
 
 static int can_create_vault = true;
-static bool dgn_level_vetoed = false;
 static bool use_random_maps  = true;
 static bool dgn_check_connectivity = false;
 static int  dgn_zones = 0;
 
 static CrawlHashTable _you_vault_list;
 static std::string    _portal_vault_map_name;
+
+class dgn_veto_exception : public std::exception
+{
+public:
+    dgn_veto_exception(const std::string& _msg) : msg(_msg) { }
+    ~dgn_veto_exception() throw () { }
+    const char *what() const throw ()
+    {
+        return msg.c_str();
+    }
+private:
+    std::string msg;
+};
 
 struct coloured_feature
 {
@@ -370,16 +382,21 @@ static bool _build_level_vetoable(int level_number, level_area_type level_type,
     if (player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
         _setup_temple_altars(you.props);
 
-    _build_dungeon_level(level_number, level_type);
-    _dgn_set_floor_colours();
-
+    try {
+        _build_dungeon_level(level_number, level_type);
+    }
+    catch (dgn_veto_exception& e)
+    {
+        dprf("VETO: %s: %s", level_id::current().describe().c_str(), e.what());
 #ifdef DEBUG_DIAGNOSTICS
-    if (dgn_level_vetoed)
         mapgen_report_map_veto();
 #endif
+        return false;
+    }
 
-    if ((!dgn_level_vetoed &&
-         _valid_dungeon_level(level_number, level_type)) ||
+    _dgn_set_floor_colours();
+
+    if (_valid_dungeon_level(level_number, level_type) ||
         crawl_state.game_is_zotdef() ||
         crawl_state.game_is_sprint())
     {
@@ -1090,7 +1107,7 @@ bool dgn_ensure_vault_placed(bool vault_success,
                              bool disable_further_vaults)
 {
     if (!vault_success)
-        dgn_level_vetoed = true;
+        throw dgn_veto_exception("Vault placement failure.");
     else if (disable_further_vaults)
         can_create_vault = false;
     return (vault_success);
@@ -1165,14 +1182,8 @@ static void _dgn_init_vault_excavatable_feats()
     dgn_Vault_Excavatable_Feats.insert(DNGN_ROCK_WALL);
 }
 
-void dgn_veto_level()
-{
-    dgn_level_vetoed = true;
-}
-
 void dgn_reset_level(bool enable_random_maps)
 {
-    dgn_level_vetoed = false;
     env.level_uniq_maps.clear();
     env.level_uniq_map_tags.clear();
 
@@ -1307,13 +1318,13 @@ static void _build_layout_skeleton(int level_number, level_area_type level_type,
     if (!_builder_by_type(level_number, level_type))
         return;
 
-    if (!_builder_by_branch(level_number) || dgn_level_vetoed)
+    if (!_builder_by_branch(level_number))
         return;
 
-    if (!_builder_normal(level_number, sr) || dgn_level_vetoed)
+    if (!_builder_normal(level_number, sr))
         return;
 
-    if (!_builder_basic(level_number) || dgn_level_vetoed)
+    if (!_builder_basic(level_number))
         return;
 
     _builder_extras(level_number);
@@ -1758,9 +1769,6 @@ static bool _branch_entrances_are_connected()
 
 static void _dgn_verify_connectivity(unsigned nvaults)
 {
-    if (dgn_level_vetoed)
-        return;
-
     // After placing vaults, make sure parts of the level have not been
     // disconnected.
     if (dgn_zones && nvaults != env.level_vaults.size())
@@ -1780,15 +1788,14 @@ static void _dgn_verify_connectivity(unsigned nvaults)
 #endif
         if (newzones > dgn_zones)
         {
-            dgn_level_vetoed = true;
+            throw dgn_veto_exception(make_stringf(
+                 "Had %d zones, now has %d%s%s.", dgn_zones, newzones,
 #ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS,
-                 "VETO: %s broken by [%s] (had %d zones, "
-                 "now have %d zones.",
-                 level_id::current().describe().c_str(),
-                 vlist.str().c_str(), dgn_zones, newzones);
+                 "; broken by ", vlist.str().c_str()
+#else
+                 "", ""
 #endif
-            return;
+            ));
         }
     }
 
@@ -1797,13 +1804,7 @@ static void _dgn_verify_connectivity(unsigned nvaults)
         && !(branches[you.where_are_you].branch_flags & BFLAG_ISLANDED)
         && dgn_count_disconnected_zones(true) > 0)
     {
-        dgn_level_vetoed = true;
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS,
-             "VETO: %s has isolated areas with no stairs.",
-             level_id::current().describe().c_str());
-#endif
-        return;
+        throw dgn_veto_exception("Isolated areas with no stairs.");
     }
 
     if (!_fixup_stone_stairs(true))
@@ -1811,49 +1812,25 @@ static void _dgn_verify_connectivity(unsigned nvaults)
         dprf("Warning: failed to preserve vault stairs.");
         if (!_fixup_stone_stairs(false))
         {
-            dgn_level_vetoed = true;
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS,
-                 "VETO: Failed to fix stone stairs: %s.",
-                 level_id::current().describe().c_str());
-#endif
-            return;
+            throw dgn_veto_exception("Failed to fix stone stairs.");
         }
     }
 
     if (!_branch_entrances_are_connected())
     {
-        dgn_level_vetoed = true;
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS,
-             "VETO: %s has a disconnected branch entrance.",
-             level_id::current().describe().c_str());
-#endif
-        return;
+        throw dgn_veto_exception("A disconnected branch entrance.");
     }
 
     if (!_add_connecting_escape_hatches())
     {
-        dgn_level_vetoed = true;
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS,
-             "VETO: %s failed to get connecting escape hatches.",
-             level_id::current().describe().c_str());
-#endif
-        return;
+        throw dgn_veto_exception("Failed to get connecting escape hatches.");
     }
 
     // XXX: Interlevel connectivity fixup relies on being the last
     //      point at which a level may be vetoed.
     if (!_fixup_interlevel_connectivity())
     {
-        dgn_level_vetoed = true;
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS,
-             "VETO: %s failed to ensure interlevel connectivity.",
-             level_id::current().describe().c_str());
-#endif
-        return;
+        throw dgn_veto_exception("Failed to ensure interlevel connectivity.");
     }
 }
 
@@ -2093,8 +2070,7 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
     _build_layout_skeleton(level_number, level_type, sr);
 
     if (you.level_type == LEVEL_LABYRINTH
-        || you.level_type == LEVEL_PORTAL_VAULT
-        || dgn_level_vetoed)
+        || you.level_type == LEVEL_PORTAL_VAULT)
     {
         return;
     }
@@ -2138,9 +2114,6 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
         && !crawl_state.game_is_tutorial())
     {
         _build_overflow_temples(level_number);
-
-        if (dgn_level_vetoed)
-            return;
     }
 
     // Try to place minivaults that really badly want to be placed. Still
@@ -2169,12 +2142,6 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
         && !crawl_state.game_is_zotdef()
         && !crawl_state.game_is_tutorial())
         _dgn_verify_connectivity(nvaults);
-
-    if (dgn_level_vetoed && !crawl_state.game_is_sprint()
-        && !crawl_state.game_is_zotdef())
-    {
-        return;
-    }
 
     if (level_type != LEVEL_ABYSS && !crawl_state.game_is_zotdef())
         _place_traps(level_number);
@@ -2724,7 +2691,7 @@ static bool _builder_by_branch(int level_number)
         env.level_build_method += " random_map_for_place";
         _ensure_vault_placed_ex(_build_primary_vault(level_number, vault),
                                  vault);
-        if (!dgn_level_vetoed && player_in_branch(BRANCH_SWAMP))
+        if (player_in_branch(BRANCH_SWAMP))
             dgn_build_swamp_level(level_number);
         return false;
     }
@@ -3227,7 +3194,7 @@ void dgn_place_feature_at_random_floor_square(dungeon_feature_type feat,
     const coord_def place =
         dgn_random_point_in_bounds(DNGN_FLOOR, mask, DNGN_FLOOR);
     if (place.origin())
-        dgn_veto_level();
+        throw dgn_veto_exception("Cannot place feature at random floor square.");
     else
         grd(place) = feat;
 }
@@ -3344,7 +3311,7 @@ static void _place_specific_feature(dungeon_feature_type feat)
     if (in_bounds(c))
         env.grid(c) = feat;
     else
-        dgn_veto_level();
+        throw dgn_veto_exception("Cannot place specific feature.");
 }
 
 static void _place_specific_stair(dungeon_feature_type stair,
