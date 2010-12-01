@@ -68,7 +68,7 @@ branch_type zotdef_random_branch()
                 ok = true;
                 // reduce freq at high levels
                 if (wavenum > 40)
-                    ok = one_chance_in(2);
+                    ok = coinflip();
                 break;
 
             case BRANCH_SNAKE_PIT:
