@@ -118,6 +118,9 @@ bool is_feature(wchar_t feature, const coord_def& where)
 
     dungeon_feature_type grid = grd(where);
 
+    if (feature_mimic_at(where))
+        grid = get_mimic_feat(monster_at(where));
+
     switch (feature)
     {
     case 'E':
