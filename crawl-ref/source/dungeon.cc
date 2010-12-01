@@ -2170,8 +2170,11 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
         && !crawl_state.game_is_tutorial())
         _dgn_verify_connectivity(nvaults);
 
-    if (dgn_level_vetoed && !crawl_state.game_is_sprint() && !crawl_state.game_is_zotdef())
+    if (dgn_level_vetoed && !crawl_state.game_is_sprint()
+        && !crawl_state.game_is_zotdef())
+    {
         return;
+    }
 
     if (level_type != LEVEL_ABYSS && !crawl_state.game_is_zotdef())
         _place_traps(level_number);
@@ -2189,7 +2192,7 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
 
     // Place monsters.
     if (!crawl_state.game_is_zotdef())
-    _builder_monsters(level_number, level_type, _num_mons_wanted(level_type));
+        _builder_monsters(level_number, level_type, _num_mons_wanted(level_type));
 
     if (!crawl_state.game_is_sprint()
         && !crawl_state.game_is_zotdef()
@@ -2688,9 +2691,7 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
                 end(1, false, "Couldn't find tutorial map.");
         }
         else if (crawl_state.game_is_zotdef())
-        {
             vault = random_map_for_tag("zotdef");
-        }
         else
             vault = random_map_for_tag("entry");
     }

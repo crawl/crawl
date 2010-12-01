@@ -57,7 +57,8 @@ static bool mons_block_immob(const monster* mons)
 
     // In Zotdef, plants don't block movement as critters
     // will attack them
-    if (crawl_state.game_is_zotdef()) return (false);
+    if (crawl_state.game_is_zotdef())
+        return (false);
 
     switch (mons->id())
     {

@@ -499,13 +499,14 @@ void pan_wave(int power)
     monster_type weakboss[]={ MONS_PANDEMONIUM_DEMON, MONS_FIEND,
                 MONS_PIT_FIEND, MONS_ICE_FIEND, MONS_BLUE_DEATH };
 
-    for (int i=0; i<=NSLOTS; i++) {
+    for (int i=0; i <= NSLOTS; i++)
+     {
         env.mons_alloc[i] = MONS_PROGRAM_BUG;
         while (env.mons_alloc[i] == MONS_PROGRAM_BUG)
         {
             monster_type mon_type = static_cast<monster_type>(random2(NUM_MONSTERS));
             monsterentry *mentry = get_monster_data(mon_type);
-            int pow = random2avg(power,2);
+            int pow = random2avg(power, 2);
             switch (mentry->showchar)
             {
             case '5': if (pow > 4) continue; break;
@@ -525,7 +526,6 @@ void pan_wave(int power)
     mpr("Hellish voices call for your blood. They are coming!", MSGCH_DANGER);
     more();
 }
-
 
 void zotdef_set_special_wave(int power)
 {
@@ -586,7 +586,6 @@ void debug_waves()
         zotdef_set_wave();
     }
 }
-
 
 monster_type get_zotdef_monster(level_id &place, int power)
 {
@@ -729,7 +728,6 @@ void set_boss_unique()
         break;
     }
 }
-
 
 // Set the env.mons_alloc data for this wave. Note that
 // mons_alloc[BOSS_SLOT] is the boss.
@@ -874,7 +872,6 @@ rune_type get_rune(int runenumber)
     }
     return RUNE_DEMONIC;
 }
-
 
 //       Dowan is automatically placed together with Duvessa.
 static monster_type _choose_unique_by_depth(int step)

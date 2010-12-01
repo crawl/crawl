@@ -983,14 +983,14 @@ void bosses_check()
             const char *msg = "You sense that a powerful threat has arrived.";
             if (!(((you.num_turns + 1) / CYCLE_LENGTH) % FREQUENCY_OF_RUNES))
             {
-                int which_rune = get_rune(
-                     ((you.num_turns + 1)/CYCLE_LENGTH) / FREQUENCY_OF_RUNES);
+                int which_rune = get_rune(((you.num_turns + 1) / CYCLE_LENGTH)
+                                 / FREQUENCY_OF_RUNES);
                 int ip = items(1, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, true,
                                which_rune, which_rune);
                 int *const item_made = &ip;
                 if (*item_made != NON_ITEM && *item_made != -1)
                 {
-                    move_item_to_grid( item_made, menv[mon].pos() );
+                    move_item_to_grid(item_made, menv[mon].pos());
                     msg = "You feel a sense of great excitement!";
                 }
             }
@@ -2934,14 +2934,11 @@ void world_reacts()
         // Zotdef: Time only passes in the main dungeon
         if (you.num_turns < LONG_MAX)
         {
-            if (!crawl_state.game_is_zotdef())
+            if (!crawl_state.game_is_zotdef()
+                || you.where_are_you == BRANCH_MAIN_DUNGEON
+                   && you.level_type == LEVEL_DUNGEON)
             {
                 you.num_turns++;
-            }
-            else
-            {
-                if (you.where_are_you==BRANCH_MAIN_DUNGEON && you.level_type==LEVEL_DUNGEON)
-                    you.num_turns++;
             }
         }
 
