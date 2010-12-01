@@ -2349,7 +2349,7 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
         int skp_gained = skp_lost * penalty / 100;
 
         float ct_bonus = crosstrain_bonus(tsk);
-        if (ct_bonus > 1)
+        if (ct_bonus > 1 && fsk != tsk)
         {
             skp_gained *= ct_bonus;
             you.ct_skill_points[tsk] += (1 - 1 / ct_bonus) * skp_gained;
