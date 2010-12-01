@@ -836,10 +836,20 @@ static void _seen_other_thing(dungeon_feature_type which_thing,
 {
     level_pos where(level_id::current(), pos);
 
+    monster* mimic = monster_at(pos);
+
     switch (which_thing)
     {
     case DNGN_ENTER_SHOP:
-        shops_present[where] = static_cast<shop_type>(get_shop(pos)->type);
+        if (mimic && mons_is_feat_mimic(mimic->type)
+            && mimic->props.exists("shop_type"))
+        {
+            shops_present[where] = static_cast<shop_type>(mimic->props[
+                                       "shop_type"].get_short());
+        }
+        else
+            shops_present[where] = static_cast<shop_type>(get_shop(pos)->type);
+
         break;
 
     case DNGN_ENTER_PORTAL_VAULT:
@@ -847,6 +857,13 @@ static void _seen_other_thing(dungeon_feature_type which_thing,
         std::string portal_name;
 
         portal_name = env.markers.property_at(pos, MAT_ANY, "overview");
+
+        if (mimic && mons_is_feat_mimic(mimic->type)
+            && mimic->props.exists("portal_desc"))
+        {
+            portal_name = (mimic->props["portal_desc"].get_string());
+        }
+
         if (portal_name.empty())
             portal_name = env.markers.property_at(pos, MAT_ANY, "dstname");
         if (portal_name.empty())
@@ -863,6 +880,12 @@ static void _seen_other_thing(dungeon_feature_type which_thing,
         else
             col = get_feature_def(which_thing).colour;
         portal_vault_colours[where] = element_colour(col, true);
+
+        if (mimic && mons_is_feat_mimic(mimic->type)
+            && mimic->props.exists("portal_desc"))
+        {
+            portal_vault_colours[where] = mimic->colour;
+        }
 
         portal_vault_notes[where] =
             env.markers.property_at(pos, MAT_ANY, "overview_note");

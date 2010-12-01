@@ -2183,7 +2183,7 @@ void mimic_alert(monster* mimic)
     if (mimic->has_ench(ENCH_TP) || mons_is_feat_mimic(mimic->type))
     {
         if (should_id)
-            mimic->flags |= MF_KNOWN_MIMIC;
+            discover_mimic(mimic);
 
         return;
     }
@@ -2193,7 +2193,7 @@ void mimic_alert(monster* mimic)
 
     // At least for this short while, we know it's a mimic.
     if (!instant_tele && should_id)
-        mimic->flags |= MF_KNOWN_MIMIC;
+        discover_mimic(mimic);
 }
 
 static void _create_feat_at(coord_def center,

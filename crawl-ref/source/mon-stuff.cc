@@ -2837,7 +2837,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         // If the player saw both the beginning and end results of a
         // shifter changing, then s/he knows it must be a shifter.
         if (can_see && shifter.ench != ENCH_NONE)
-            mons->flags |= MF_KNOWN_MIMIC;
+            discover_mimic(mons);
     }
 
     if (old_mon_caught)
@@ -4142,7 +4142,7 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     if (mons_is_mimic(mons->type))
     {
         if (now_visible)
-            mons->flags |= MF_KNOWN_MIMIC;
+            discover_mimic(mons);
         else
             mons->flags &= ~MF_KNOWN_MIMIC;
     }
