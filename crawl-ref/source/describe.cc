@@ -3573,7 +3573,7 @@ static const char* xl_rank_names[] = {
     "legendary"
 };
 
-std::string _xl_rank_name(const int xl_rank)
+static std::string _xl_rank_name(const int xl_rank)
 {
     const char* rank = xl_rank_names[xl_rank];
 
