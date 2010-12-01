@@ -3576,7 +3576,7 @@ static const char* xl_rank_names[] = {
 std::string _xl_rank_name(const int xl_rank)
 {
     const char* rank = xl_rank_names[xl_rank];
-    
+
     std::string name = make_stringf("a%s %s",
                                     is_vowel(rank[0]) ? "n" : "",
                                     rank);
@@ -3586,15 +3586,15 @@ std::string _xl_rank_name(const int xl_rank)
 std::string short_ghost_description(const monster *mon, bool abbrev)
 {
     ASSERT(mons_is_pghost(mon->type));
-    
+
     const ghost_demon &ghost = *(mon->ghost);
     const char* rank = xl_rank_names[ghost_level_to_rank(ghost.xl)];
-    
+
     std::string desc = make_stringf("%s %s %s",
                         rank,
                         species_name(ghost.species).c_str(),
                         get_job_name(ghost.job));
-                        
+
     if (abbrev || desc.length() > 40)
     {
         desc = make_stringf("%s %s%s",
@@ -3602,7 +3602,7 @@ std::string short_ghost_description(const monster *mon, bool abbrev)
                             get_species_abbrev(ghost.species),
                             get_job_abbrev(ghost.job));
     }
-    
+
     return desc;
 }
 
