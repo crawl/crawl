@@ -151,7 +151,8 @@ int mon_strength(monster_type mon_type)
         case MONS_PANDEMONIUM_DEMON:        // base init has 4HD (!)
             strength = 30;
             break;
-        default: break;
+        default:
+            break;
     }
     return strength;
 }
@@ -733,14 +734,14 @@ void zotdef_set_wave()
         break;
     case 2:
     case 3:
-        {
-            branch_type b = zotdef_random_branch();
-            // HoB branch waves v. rare before 10K turns
-            if (b == BRANCH_HALL_OF_BLADES && you.num_turns / CYCLE_LENGTH < 50)
-                b = zotdef_random_branch();
-            zotdef_set_branch_wave(b, power);
-            break;
-        }
+    {
+        branch_type b = zotdef_random_branch();
+        // HoB branch waves v. rare before 10K turns
+        if (b == BRANCH_HALL_OF_BLADES && you.num_turns / CYCLE_LENGTH < 50)
+            b = zotdef_random_branch();
+        zotdef_set_branch_wave(b, power);
+        break;
+    }
     // A random mixture of monsters from across the branches
     case 4:
         zotdef_set_random_branch_wave(power);
