@@ -356,8 +356,8 @@ void human_wave(int power)
     zotdef_fill_from_list(humans, sizeof(humans) / sizeof(monster_type), 4,
                           power); // reduced size due to banding
 
-    // Get too many hell knights with the defaults, due to their large band size.
-    // Reduce here
+    // Get too many hell knights with the defaults, due to their large band
+    // size. Reduce here
     for (int i = 0; i < NSLOTS; i++)
     {
         if (env.mons_alloc[i] == MONS_HELL_KNIGHT && random2(power) < 8)
@@ -375,7 +375,7 @@ void butterfly_wave(int power)
     mpr("BUTTERFLY WAVE");
 #endif
     monster_type bfs[] = {MONS_BUTTERFLY};
-    zotdef_fill_from_list(bfs, sizeof(bfs) / sizeof(monster_type), 0, power); // full...
+    zotdef_fill_from_list(bfs, sizeof(bfs) / sizeof(monster_type), 0, power); // full
     mpr("You feel a sudden sense of peace!", MSGCH_DANGER);
     more();
 }
