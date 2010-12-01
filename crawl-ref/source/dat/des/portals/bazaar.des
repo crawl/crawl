@@ -114,7 +114,7 @@ default-depth: 10-27
 # Dummy entry
 
 NAME:   bzr_entry_dummy
-TAGS:   bzr_entry transparent trowel_portal allow_dup
+TAGS:   bzr_entry transparent trowel_portal zotdef_bazaar allow_dup
 : place_bazaar_portal(_G)
 MAP
 O

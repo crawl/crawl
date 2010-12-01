@@ -738,6 +738,8 @@ void scorefile_entry::set_base_xlog_fields() const
         /* XXX: hmmm, something better here? */
         score_version += "-sprint.1";
     }
+    else if (crawl_state.game_is_zotdef())
+        score_version += "-zotdef.1";
     fields->add_field("v", "%s", Version::Short().c_str());
     fields->add_field("lv", score_version.c_str());
     fields->add_field("name", "%s", name.c_str());

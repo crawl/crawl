@@ -380,6 +380,7 @@ static bool _build_level_vetoable(int level_number, level_area_type level_type,
 
     if ((!dgn_level_vetoed &&
          _valid_dungeon_level(level_number, level_type)) ||
+        crawl_state.game_is_zotdef() ||
         crawl_state.game_is_sprint())
     {
 #ifdef DEBUG_MONS_SCAN
@@ -2144,7 +2145,9 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
 
     // Try to place minivaults that really badly want to be placed. Still
     // no guarantees, seeing this is a minivault.
-    if (!crawl_state.game_is_sprint() && !crawl_state.game_is_tutorial())
+    if (!crawl_state.game_is_sprint()
+        && !crawl_state.game_is_zotdef()
+        && !crawl_state.game_is_tutorial())
     {
         _place_chance_vaults();
         _place_minivaults();
@@ -2162,28 +2165,38 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
         _place_shops(level_number);
 
     // Any vault-placement activity must happen before this check.
-    if (!crawl_state.game_is_sprint() && !crawl_state.game_is_tutorial())
+    if (!crawl_state.game_is_sprint()
+        && !crawl_state.game_is_zotdef()
+        && !crawl_state.game_is_tutorial())
         _dgn_verify_connectivity(nvaults);
 
-    if (dgn_level_vetoed && !crawl_state.game_is_sprint())
+    if (dgn_level_vetoed && !crawl_state.game_is_sprint()
+        && !crawl_state.game_is_zotdef())
+    {
         return;
+    }
 
-    if (level_type != LEVEL_ABYSS)
+    if (level_type != LEVEL_ABYSS && !crawl_state.game_is_zotdef())
         _place_traps(level_number);
 
     _place_fog_machines(level_number);
 
     // Place items.
-    if (!crawl_state.game_is_sprint() && !crawl_state.game_is_tutorial())
+    if (!crawl_state.game_is_sprint()
+        && !crawl_state.game_is_zotdef()
+        && !crawl_state.game_is_tutorial())
     {
         _builder_items(level_number, level_type,
                        _num_items_wanted(level_number));
     }
 
     // Place monsters.
-    _builder_monsters(level_number, level_type, _num_mons_wanted(level_type));
+    if (!crawl_state.game_is_zotdef())
+        _builder_monsters(level_number, level_type, _num_mons_wanted(level_type));
 
-    if (!crawl_state.game_is_sprint() && !crawl_state.game_is_tutorial())
+    if (!crawl_state.game_is_sprint()
+        && !crawl_state.game_is_zotdef()
+        && !crawl_state.game_is_tutorial())
     {
         _fixup_walls();
         _fixup_branch_stairs();
@@ -2677,6 +2690,8 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
             if (vault == NULL)
                 end(1, false, "Couldn't find tutorial map.");
         }
+        else if (crawl_state.game_is_zotdef())
+            vault = random_map_for_tag("zotdef");
         else
             vault = random_map_for_tag("entry");
     }
@@ -4583,7 +4598,9 @@ bool dgn_place_map(const map_def *mdef,
         }
     }
 
-    if (!crawl_state.game_is_sprint() && !crawl_state.game_is_tutorial())
+    if (!crawl_state.game_is_sprint()
+        && !crawl_state.game_is_zotdef()
+        && !crawl_state.game_is_tutorial())
     {
         did_map = _build_secondary_vault(you.absdepth0, mdef, clobber,
                                                         make_no_exits, where);

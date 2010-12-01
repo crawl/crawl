@@ -215,7 +215,8 @@ wiz-fsim.o \
 wiz-item.o \
 wiz-mon.o \
 wiz-you.o \
-xom.o
+xom.o \
+zotdef.o
 
 ifdef TILES
 OBJECTS += \

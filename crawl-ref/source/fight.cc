@@ -579,9 +579,10 @@ bool melee_attack::attack()
     }
 
     // Defending monster protects itself from attacks using the wall
-    // it's in.
+    // it's in. Zotdef: allow a 5% chance of a hit anyway
     if (defender->atype() == ACT_MONSTER && cell_is_solid(defender->pos())
-        && mons_wall_shielded(defender->as_monster()))
+        && mons_wall_shielded(defender->as_monster())
+        && !one_chance_in(20))
     {
         std::string feat_name = raw_feature_description(grd(defender->pos()));
 

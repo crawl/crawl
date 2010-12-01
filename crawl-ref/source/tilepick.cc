@@ -1201,6 +1201,9 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_PLANT;
     case MONS_BUSH:
         return TILEP_MONS_BUSH;
+    case MONS_BURNING_BUSH:
+        return TILEP_MONS_BUSH_BURNING;
+    case MONS_OKLOB_SAPLING:
     case MONS_OKLOB_PLANT:
         return TILEP_MONS_OKLOB_PLANT;
 
