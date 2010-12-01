@@ -968,16 +968,13 @@ bool create_zotdef_ally(monster_type mtyp, const char *successmsg)
         return (false);
     }
     if (mons_place(mgen_data(mtyp, BEH_FRIENDLY, &you, 0, 0, abild.target,
-                   you.pet_target)) != -1)
+                   you.pet_target)) == -1)
     {
-        mpr(successmsg);
-        return (true);
+        mpr("You can't create it there!");
+        return (false);
     }
-    else
-    {
-       mpr("You can't create it there!");
-       return (false);
-    }
+    mpr(successmsg);
+    return (true);
 }
 
 void zotdef_bosses_check()
