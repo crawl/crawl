@@ -57,16 +57,22 @@ dngn_statue_dwarf_mace
 dngn_statue_dwarf_sword
 %weight 8
 dngn_statue_centaur
+%syn DNGN_STATUE_CENTAUR
 dngn_statue_dragon
+%syn DNGN_STATUE_DRAGON
 dngn_statue_eye
 %weight 5
 dngn_statue_snail
 dngn_statue_troll
+%syn DNGN_STATUE_TROLL
 %weight 3
+dngn_statue_skull
+%syn DNGN_STATUE_SKULL
 dngn_statue_elephant
 %syn DNGN_STATUE_ELEPHANT
 %weight 1
 dngn_statue_ancient_hero
+%syn DNGN_STATUE_ANCIENT_HERO
 dngn_crumbled_column DNGN_CRUMBLED_COLUMN
 dngn_granite_stump DNGN_GRANITE_STUMP
 dngn_zot_pillar DNGN_ZOT_PILLAR
