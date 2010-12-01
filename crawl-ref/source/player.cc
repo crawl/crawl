@@ -6541,7 +6541,7 @@ bool player::has_lifeforce() const
 
 bool player::can_mutate() const
 {
-    return (has_lifeforce());
+    return (true);
 }
 
 bool player::can_safely_mutate() const
