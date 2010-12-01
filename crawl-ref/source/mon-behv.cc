@@ -135,12 +135,16 @@ void handle_behaviour(monster* mon)
     // Zotdef rotting
     if (crawl_state.game_is_zotdef())
     {
-        if ((!isFriendly && !isNeutral) && (orb_position() == mon->pos()))
+        if (!isFriendly && !isNeutral && orb_position() == mon->pos())
         {
-            mpr("Your flesh rots away as the Orb of Zot is desecrated.",
-                MSGCH_DANGER);
-            rot_hp(random_range(1, 1));
-            ouch(1, NON_MONSTER,KILLED_BY_ROTTING);
+            int loss = div_rand_round(10, mon->speed);
+            if (loss)
+            {
+                mpr("Your flesh rots away as the Orb of Zot is desecrated.",
+                    MSGCH_DANGER);
+                rot_hp(loss);
+                ouch(1, NON_MONSTER, KILLED_BY_ROTTING);
+            }
         }
     }
 
