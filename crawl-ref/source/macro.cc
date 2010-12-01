@@ -104,7 +104,7 @@ typedef std::map<int, int> cmd_to_key_map;
 static key_to_cmd_map _keys_to_cmds[KMC_CONTEXT_COUNT];
 static cmd_to_key_map _cmds_to_keys[KMC_CONTEXT_COUNT];
 
-inline int userfunc_index(int key)
+static inline int userfunc_index(int key)
 {
     int index = (key <= USERFUNCBASE? USERFUNCBASE - key : -1);
     return (index < 0 || index >= (int) userfunctions.size()? -1 : index);
