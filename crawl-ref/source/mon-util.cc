@@ -17,6 +17,7 @@
 #include "coordit.h"
 #include "database.h"
 #include "debug.h"
+#include "dgn-overview.h"
 #include "directn.h"
 #include "env.h"
 #include "fight.h"
@@ -799,6 +800,18 @@ bool mons_is_item_mimic(int mc)
 bool mons_is_feat_mimic(int mc)
 {
     return (mons_genus(mc) == MONS_DOOR_MIMIC);
+}
+
+void discover_mimic(monster* mimic)
+{
+    if (mons_is_known_mimic(mimic))
+        return;
+
+    mimic->flags |= MF_KNOWN_MIMIC;
+    if (mons_is_feat_mimic(mimic->type))
+    {
+        unnotice_feature(level_pos(level_id::current(), mimic->pos()));
+    }
 }
 
 bool mons_is_demon(int mc)

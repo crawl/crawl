@@ -516,7 +516,7 @@ void melee_attack::identify_mimic(actor *act)
         && you.can_see(act))
     {
         monster* mon = act->as_monster();
-        mon->flags |= MF_KNOWN_MIMIC;
+        discover_mimic(mon);
     }
 }
 

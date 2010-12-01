@@ -832,7 +832,7 @@ bool cast_apportation(int pow, const coord_def& where)
             {
                 mprf("%s twitches.", m->name(DESC_CAP_THE).c_str());
                 // Nothing else gives this message, so identify the mimic.
-                m->flags |= MF_KNOWN_MIMIC;
+                discover_mimic(m);
                 return (true);  // otherwise you get free mimic ID
             }
         }
