@@ -894,8 +894,10 @@ std::string get_save_filename(const std::string &prefix,
     // Technically we should shorten the string first.  But if
     // MULTIUSER is set we'll have long filenames anyway. Caveat
     // emptor.
+#if TAG_MAJOR_VERSION == 31
     if (!suppress_uid)
         result += _uid_as_string();
+#endif
 
     result += suffix;
 
