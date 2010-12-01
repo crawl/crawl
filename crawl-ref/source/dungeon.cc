@@ -2794,28 +2794,20 @@ static void _place_minivaults(const std::string &tag, int lo, int hi,
 static bool _builder_normal(int level_number, spec_room &sr)
 {
     bool skipped = false;
-    const map_def *vault = _dgn_random_map_for_place(false);
+    const map_def *vault = NULL;
 
-    // Can't have vaults on you.where_are_you != BRANCH_MAIN_DUNGEON levels.
-    if (!vault && use_random_maps && can_create_vault)
+    if (use_random_maps && can_create_vault)
     {
         vault = random_map_in_depth(level_id::current());
-
-        // We'll accept any kind of primary vault in the main dungeon,
-        // but only ORIENT: encompass primary vaults in other
-        // branches. Other kinds of vaults can still be placed in
-        // other branches as secondary vaults.
-
-        if (vault && !player_in_branch(BRANCH_MAIN_DUNGEON)
-            && vault->orient != MAP_ENCOMPASS)
-        {
-            vault = NULL;
-        }
     }
 
-    if (vault)
+    // We'll accept any kind of primary vault in the main dungeon, but only
+    // ORIENT: encompass primary vaults in other branches. Other kinds of vaults
+    // can still be placed in other branches as secondary vaults.
+    if (vault && (player_in_branch(BRANCH_MAIN_DUNGEON)
+               || vault->orient == MAP_ENCOMPASS))
     {
-        env.level_build_method += " normal_random_map_for_place";
+        env.level_build_method += " random_map_in_depth";
         _ensure_vault_placed_ex(_build_primary_vault(level_number, vault),
                                  vault);
         return false;
