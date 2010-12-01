@@ -868,7 +868,8 @@ static int _get_door_offset (tileidx_t base_tile, bool opened = false,
     return offset + gateway_type;
 }
 
-static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg)
+static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg,
+                                     const coord_def &gc)
 {
     tileidx_t orig = (*bg) & TILE_FLAG_MASK;
     tileidx_t flag = (*bg) & (~TILE_FLAG_MASK);
@@ -908,6 +909,13 @@ static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg)
         }
         else
             *bg = orig + std::min((int)flv.special, 3);
+
+        if (feature_mimic_at(gc))
+        {
+            dungeon_feature_type feat = get_mimic_feat(monster_at(gc));
+            if (feat == DNGN_CLOSED_DOOR)
+                *bg = orig;
+        }
     }
     else if (orig == TILE_DNGN_PORTAL_WIZARD_LAB
              || orig == TILE_DNGN_ALTAR_CHEIBRIADOS)
@@ -952,7 +960,7 @@ void tile_apply_properties(const coord_def &gc, tileidx_t *fg,
     if (!map_bounds(gc))
         return;
 
-    _apply_variations(env.tile_flv(gc), bg);
+    _apply_variations(env.tile_flv(gc), bg, gc);
 
     bool print_blood = true;
     if (haloed(gc))
