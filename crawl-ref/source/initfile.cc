@@ -293,6 +293,8 @@ std::string gametype_to_str(game_type type)
         return ("arena");
     case GAME_TYPE_SPRINT:
         return ("sprint");
+    case GAME_TYPE_ZOTDEF:
+        return ("zotdef");
     default:
         return ("none");
     }
@@ -3555,6 +3557,7 @@ enum commandline_option_type
     CLO_SPRINT_MAP,
     CLO_EDIT_SAVE,
     CLO_PRINT_CHARSET,
+    CLO_ZOTDEF,
 
     CLO_NOPS
 };
@@ -3564,7 +3567,7 @@ static const char *cmd_ops[] = {
     "rcdir", "tscores", "vscores", "scorefile", "morgue", "macro",
     "mapstat", "arena", "test", "script", "builddb", "help", "version",
     "seed", "save-version", "sprint", "extra-opt-first", "extra-opt-last",
-    "sprint-map", "edit-save", "print-charset",
+    "sprint-map", "edit-save", "print-charset", "zotdef",
 };
 
 static const int num_cmd_ops = CLO_NOPS;
@@ -4146,6 +4149,11 @@ bool parse_args(int argc, char **argv, bool rc_only)
             nextUsed               = true;
             crawl_state.sprint_map = next_arg;
             Options.game.map       = next_arg;
+            break;
+
+        case CLO_ZOTDEF:
+            if (!rc_only)
+                Options.game.type = GAME_TYPE_ZOTDEF;
             break;
 
         case CLO_PRINT_CHARSET:
