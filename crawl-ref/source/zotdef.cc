@@ -134,7 +134,8 @@ branch_type zotdef_random_branch()
 int mon_strength(monster_type mon_type)
 {
     monsterentry *mentry = get_monster_data(mon_type);
-    if (!mentry) return 0;  // sanity
+    if (!mentry)
+        return 0; // sanity
     int strength = (mentry->hpdice[0] * mentry->exp_mod) / 10;
     // Fix for skeletons and zombies
     switch (mon_type)
@@ -962,9 +963,7 @@ bool create_trap(trap_type spec_type)
     }
     // only try to create on floor squares
     if (grid >= DNGN_FLOOR_MIN && grid <= DNGN_FLOOR_MAX)
-    {
         return place_specific_trap(abild.target, spec_type);
-    }
     else
     {
         mpr("You can't create a trap there!");
