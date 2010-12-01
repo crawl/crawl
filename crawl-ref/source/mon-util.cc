@@ -811,6 +811,8 @@ void discover_mimic(monster* mimic)
     if (mons_is_feat_mimic(mimic->type))
     {
         unnotice_feature(level_pos(level_id::current(), mimic->pos()));
+        if (mimic->type == MONS_SHOP_MIMIC)
+            StashTrack.remove_shop(mimic->pos());
     }
 }
 
