@@ -117,6 +117,9 @@ void trap_def::prepare_ammo()
         break;
     case TRAP_ALARM:
         this->ammo_qty = 1 + random2(3);
+        // Zotdef: alarm traps have practically unlimited ammo
+        if (crawl_state.game_is_zotdef())
+            this->ammo_qty = 100000;
         break;
     case TRAP_GOLUBRIA:
         // really, turns until it vanishes
@@ -126,6 +129,9 @@ void trap_def::prepare_ammo()
         this->ammo_qty = 0;
         break;
     }
+    // Zot def: traps have 10x as much ammo
+    if (crawl_state.game_is_zotdef())
+        this->ammo_qty *= 10;
 }
 
 void trap_def::reveal()
@@ -405,6 +411,28 @@ static bool _find_other_passage_side(coord_def& to)
     }
 }
 
+// Returns a direction string from you.pos to the
+// specified position. If fuzz is true, may be wrong.
+// Returns an empty string if no direction could be
+// determined (if fuzz if false, this is only if
+// you.pos==pos).
+std::string direction_string(coord_def pos, bool fuzz)
+{
+    int dx = you.pos().x - pos.x;
+    if (fuzz)
+        dx += random2avg(41,2) - 20;
+    int dy = you.pos().y - pos.y;
+    if (fuzz)
+        dy += random2avg(41,2) - 20;
+    const char *ew=((dx > 0) ? "west" : ((dx < 0) ? "east" : ""));
+    const char *ns=((dy < 0) ? "south" : ((dy > 0) ? "north" : ""));
+    if (abs(dy) > 2 * abs(dx))
+        ew="";
+    if (abs(dx) > 2 * abs(dy))
+        ns="";
+    return (std::string(ns) + ew);
+}
+
 void trap_def::trigger(actor& triggerer, bool flat_footed)
 {
     const bool you_know = this->is_known();
@@ -412,6 +440,13 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
     const bool you_trigger = (triggerer.atype() == ACT_PLAYER);
     const bool in_sight = you.see_cell(this->pos);
+
+    // Zot def - player never sets off known traps
+    if (crawl_state.game_is_zotdef() && you_trigger && you_know)
+    {
+        mpr("You step safely past the trap");
+        return;
+    }
 
     // If set, the trap will be removed at the end of the
     // triggering process.
@@ -434,7 +469,12 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         }
     }
 
-
+    // Zot def - friendly monsters never set off known traps
+    if (crawl_state.game_is_zotdef() && m && m->friendly() && trig_knows)
+    {
+        simple_monster_message(m," carefully avoids a trap.");
+        return;
+    }
     // Only magical traps affect flying critters.
     if ((triggerer.airborne() || triggerer.is_wall_clinging())
         && this->category() != DNGN_TRAP_MAGICAL)
@@ -516,17 +556,27 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         {
             // Alarm traps aren't set off by hostile monsters, because
             // that would be way too nasty for the player.
-            const char* message_here = "An alarm trap emits a blaring wail!";
-            const char* message_near = "You hear a blaring wail!";
-            const char* message_far  = "You hear a distant blaring wail!";
-            const char* msg = (you_trigger ? message_here :
-                                 (in_sight ? message_near : message_far));
+            std::string msg;
+            if (you_trigger)
+                msg = "An alarm trap emits a blaring wail!";
+            else
+            {
+                std::string dir=direction_string(this->pos, !in_sight);
+                msg = std::string("You hear a ") +
+                    ((in_sight) ? "" : "distant ")
+                    + "blaring wail "
+                    + ((dir.length())? ("to the " + dir + ".") : "behind you!");
+            }
             // Monsters of normal or greater intelligence will realize that
             // they were the one to set off the trap.
             int source = !m ? you.mindex() :
                          mons_intel(m) >= I_NORMAL ? m->mindex() : -1;
 
-            noisy(25, this->pos, msg, source);
+            // Zotdef - Made alarm traps noisier and more noticeable
+            int noiselevel = crawl_state.game_is_zotdef() ? 30 : 12;
+            noisy(noiselevel, this->pos, msg.c_str(), source, false);
+            if (crawl_state.game_is_zotdef())
+                more();
         }
         break;
 
@@ -597,6 +647,14 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 m->hurt(NULL, damage_taken);
                 if (in_sight && m->alive())
                     print_wounds(m);
+
+                // zotdef: blade traps break eventually
+                if (crawl_state.game_is_zotdef() && one_chance_in(200))
+                {
+                    if (in_sight)
+                        mpr("The blade breaks!");
+                    disarm();
+                }
             }
         }
         break;
@@ -931,8 +989,13 @@ void disarm_trap(const coord_def& where)
     switch (trap.category())
     {
     case DNGN_TRAP_MAGICAL:
-        mpr("You can't disarm that trap.");
-        return;
+        // Zotdef - allow alarm traps to be disarmed
+        if (!crawl_state.game_is_zotdef() || trap.type != TRAP_ALARM)
+        {
+            mpr("You can't disarm that trap.");
+            return;
+        }
+        break;
     case DNGN_TRAP_NATURAL:
         // Only shafts for now.
         mpr("You can't disarm a shaft.");
@@ -1490,6 +1553,10 @@ bool is_valid_shaft_level(const level_id &place)
     if (crawl_state.game_is_sprint())
         return (false);
 
+    // Zot def - no shafts
+    if (crawl_state.game_is_zotdef())
+        return (false);
+
     if (place.level_type != LEVEL_DUNGEON)
         return (false);
 
@@ -1742,4 +1809,13 @@ trap_type random_trap_for_place(int level_number, const level_id &place)
 int traps_zero_number(int level_number)
 {
     return 0;
+}
+
+int count_traps(trap_type ttyp)
+{
+    int num = 0;
+    for (int tcount = 0; tcount < MAX_TRAPS; tcount++)
+        if (env.trap[tcount].type == ttyp)
+            num++;
+    return num;
 }

@@ -843,6 +843,7 @@ bool you_tran_can_wear(int eq, bool check_mutation = false);
 
 bool enough_hp(int minimum, bool suppress_msg);
 bool enough_mp(int minimum, bool suppress_msg, bool include_items = true);
+bool enough_xp(int minimum, bool suppress_msg);
 
 void dec_hp(int hp_loss, bool fatal, const char *aux = NULL);
 void dec_mp(int mp_loss);

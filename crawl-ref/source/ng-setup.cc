@@ -319,6 +319,10 @@ void give_basic_mutations(species_type speci)
         break;
     }
 
+    // Zot def games come with teleport control
+    if (crawl_state.game_is_zotdef())
+        you.mutation[MUT_TELEPORT_CONTROL] = 1;
+
     // Some mutations out-sourced because they're
     // relevant during character choice.
     you.mutation[MUT_CLAWS] = species_has_claws(speci, true);
@@ -1115,6 +1119,10 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(-1, EQ_NONE, OBJ_WANDS, WAND_HEALING, -1, 1, 3);
     }
 
+    // Zotdef: everyone gets a bonus two potions of healing
+    if (crawl_state.game_is_zotdef())
+        newgame_make_item(-1, EQ_NONE, OBJ_POTIONS, POT_HEALING, -1, 2);
+
     if (weap_skill)
     {
         if (!you.weapon())
@@ -1404,9 +1412,14 @@ static void _give_basic_knowledge(job_type which_job)
 // skill levels.
 static void _reassess_starting_skills()
 {
+    // Zotdef: all skills turned off, but not those with no
+    // skill points (makes it too hard to learn a new skill
+    // otherwise)
     for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
     {
         skill_type sk = static_cast<skill_type>(i);
+        if (crawl_state.game_is_zotdef())
+            you.practise_skill[i] = !you.skills[sk];
         if (you.skills[sk] == 0
             && (you.species != SP_VAMPIRE || sk != SK_UNARMED_COMBAT))
         {
@@ -1503,6 +1516,7 @@ static void _apply_job_colour(item_def &item)
 static void _setup_normal_game();
 static void _setup_tutorial();
 static void _setup_sprint(const newgame_def& ng);
+static void _setup_zotdef(const newgame_def& ng);
 static void _setup_hints();
 static void _setup_generic(const newgame_def& ng);
 
@@ -1521,6 +1535,9 @@ void setup_game(const newgame_def& ng)
         break;
     case GAME_TYPE_SPRINT:
         _setup_sprint(ng);
+        break;
+    case GAME_TYPE_ZOTDEF:
+        _setup_zotdef(ng);
         break;
     case GAME_TYPE_HINTS:
         _setup_hints();
@@ -1556,6 +1573,14 @@ static void _setup_tutorial()
 static void _setup_sprint(const newgame_def& ng)
 {
     set_sprint_map(ng.map);
+}
+
+/**
+ * Special steps that zotdef needs;
+ */
+static void _setup_zotdef(const newgame_def& ng)
+{
+    // nothing currently
 }
 
 /**

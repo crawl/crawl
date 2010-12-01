@@ -2483,6 +2483,7 @@ void bolt::affect_ground()
         }
 
         if (x_chance_in_y(2, 21)
+           && !crawl_state.game_is_zotdef() // Turn off in Zotdef
            && mons_class_can_pass(MONS_BALLISTOMYCETE, env.grid(pos()))
            && !actor_at(pos()))
         {

@@ -44,6 +44,39 @@ enum ability_type
     ABIL_STOP_FLYING,
     ABIL_BREATHE_MEPHITIC,
 
+
+    // // zot defense abilities
+    ABIL_MAKE_FUNGUS = 60,             //   60
+    ABIL_MAKE_PLANT,
+    ABIL_MAKE_OKLOB_SAPLING,
+    ABIL_MAKE_DART_TRAP,
+    ABIL_MAKE_ICE_STATUE,
+    ABIL_MAKE_OCS,                     //   65
+    ABIL_MAKE_SILVER_STATUE,
+    ABIL_MAKE_CURSE_SKULL,
+    ABIL_MAKE_TELEPORT,
+    ABIL_MAKE_ARROW_TRAP,
+    ABIL_MAKE_BOLT_TRAP,               //   70
+    ABIL_MAKE_SPEAR_TRAP,
+    ABIL_MAKE_AXE_TRAP,
+    ABIL_MAKE_NEEDLE_TRAP,
+    ABIL_MAKE_NET_TRAP,
+    ABIL_MAKE_TELEPORT_TRAP,           //   75
+    ABIL_MAKE_ALARM_TRAP,
+    ABIL_MAKE_BLADE_TRAP,
+    ABIL_MAKE_OKLOB_CIRCLE,
+    ABIL_MAKE_ACQUIRE_GOLD,
+    ABIL_MAKE_ACQUIREMENT,             //   80
+    ABIL_MAKE_WATER,
+    ABIL_MAKE_ELECTRIC_EEL,
+    ABIL_MAKE_BAZAAR,
+    ABIL_MAKE_ALTAR,
+    ABIL_MAKE_GRENADES,                //   85
+    ABIL_MAKE_SAGE,
+    ABIL_MAKE_OKLOB_PLANT,
+    ABIL_MAKE_BURNING_BUSH,
+    ABIL_REMOVE_CURSE,
+
     // Divine abilities
     ABIL_ZIN_SUSTENANCE = 109,              //  109
     ABIL_ZIN_RECITE,
@@ -916,6 +949,7 @@ enum game_type
     GAME_TYPE_ARENA,
     GAME_TYPE_SPRINT,
     GAME_TYPE_HINTS,
+    GAME_TYPE_ZOTDEF,
     NUM_GAME_TYPE
 };
 
@@ -1921,6 +1955,8 @@ enum monster_type                      // (int) menv[].type
     MONS_ALLIGATOR_SNAPPING_TURTLE,    //  205
     MONS_SEA_SNAKE,
 
+    MONS_OKLOB_SAPLING,
+    MONS_BURNING_BUSH,
     MONS_HYPERACTIVE_BALLISTOMYCETE,
     MONS_HALFLING,              // for recolouring only.  And let's remove them!
     MONS_FELID,                 // for recolouring only.  Miaow!

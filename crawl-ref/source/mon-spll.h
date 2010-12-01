@@ -1041,7 +1041,7 @@
        SPELL_NO_SPELL,
        SPELL_FREEZING_CLOUD,
        SPELL_SUMMON_ICE_BEAST,
-       SPELL_SUMMON_ICE_BEAST
+       SPELL_SUMMON_ICE_BEAST // in Zotdef forced off
       }
     },
 
