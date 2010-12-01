@@ -14,8 +14,6 @@ int mons_rarity(int mcls, const level_id &place = level_id::current());
 
 int mons_level(int mcls, const level_id &place = level_id::current());
 
-int mons_global_level(int mcls);
-
 bool mons_abyss(int mcls);
 
 int mons_rare_abyss(int mcls);
