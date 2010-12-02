@@ -312,8 +312,9 @@ ifdef USE_MERGE_BASE
 MERGE_BASE := $(shell git merge-base HEAD $(USE_MERGE_BASE))
 endif
 
+ifdef USE_DGAMELAUNCH
 # Permissions to set on the game executable.
-MCHMOD := 2755
+MCHMOD := 755
 
 # Permissions to set on the save directory.
 MCHMOD_SAVEDIR := 775
@@ -321,6 +322,7 @@ MCHMOD_LOGS := 664
 
 # The user:group to install the game as.
 INSTALL_UGRP := games:games
+endif
 
 chroot_prefix :=
 prefix        :=
@@ -991,8 +993,6 @@ endif
 	[ -d $(prefix_fp)/$(bin_prefix) ] || mkdir -p $(prefix_fp)/$(bin_prefix)
 	$(COPY) $(GAME) $(prefix_fp)/$(bin_prefix)/
 	$(STRIP) $(prefix_fp)/$(bin_prefix)/$(GAME)
-	$(CHOWN) $(INSTALL_UGRP) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
-	$(CHMOD) $(MCHMOD) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
 	mkdir -p $(datadir_fp)/dat/des
 	mkdir -p $(datadir_fp)/dat/clua
 	mkdir -p $(datadir_fp)/dat/lua
@@ -1022,13 +1022,13 @@ ifndef MONOSPACED_FONT
 	$(COPY) dat/tiles/VeraMono.ttf $(datadir_fp)/dat/tiles/
 endif
 endif
-ifeq ($(USE_DGAMELAUNCH),)
-	$(CHOWN) -R $(INSTALL_UGRP) $(datadir_fp) || true
-endif
 ifneq ($(savedir_fp),)
 	mkdir -p $(savedir_fp)/saves
 	mkdir -p $(savedir_fp)/morgue
 ifeq ($(USE_DGAMELAUNCH),)
+	$(CHOWN) $(INSTALL_UGRP) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
+	$(CHMOD) $(MCHMOD) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
+	$(CHOWN) -R $(INSTALL_UGRP) $(datadir_fp) || true
 	$(CHOWN) -R $(INSTALL_UGRP) $(savedir_fp) || true
 	$(CHMOD) $(MCHMOD_SAVEDIR) $(savedir_fp) || true
 	$(CHMOD) $(MCHMOD_SAVEDIR) $(savedir_fp)/saves || true
