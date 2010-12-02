@@ -222,7 +222,8 @@ static bool _check_moveto_trap(const coord_def& p, const std::string &move_verb)
                  && type != TRAP_GOLUBRIA // don't need a warning here
                  && (new_grid != DNGN_TRAP_MECHANICAL
                  || !clua.callbooleanfn(false, "ch_cross_trap",
-                                        "s", trap_name_at(p))))
+                                        "s", trap_name_at(p)))
+                && !crawl_state.game_is_zotdef())
 #endif
         {
             std::string prompt = make_stringf(
@@ -378,20 +379,15 @@ void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
     ASSERT(!monster_at(p) || monster_at(p)->submerged()
            || fedhas_passthrough(monster_at(p)));
 
-    // Notifying of new things that comes into view.
-    // Storing current env.map_knowledge to use it as a reference after
-    // LOS is updated.
-    env.map_shadow = env.map_knowledge;
-
     // Move the player to new location.
     you.moveto(p);
     viewwindow();
 
-    moveto_location_effects(old_grid, stepped, allow_shift, old_pos);
-
     // Checking new squares for interesting features.
     if (!you.running)
         check_for_interesting_features();
+
+    moveto_location_effects(old_grid, stepped, allow_shift, old_pos);
 }
 
 bool is_feat_dangerous(dungeon_feature_type grid)
@@ -419,11 +415,6 @@ bool player_in_level_area(level_area_type area)
 
 bool player_in_hell(void)
 {
-    // No real reason except to draw someone's attention here if they
-    // mess with the branch enum.
-    COMPILE_CHECK(BRANCH_FIRST_HELL == BRANCH_DIS, a);
-    COMPILE_CHECK(BRANCH_LAST_HELL  == BRANCH_TARTARUS, b);
-
     return (you.level_type == LEVEL_DUNGEON
             && is_hell_subbranch(you.where_are_you));
 }
@@ -489,13 +480,6 @@ bool is_player_same_species(const int mon, bool transform)
         default:
             break; // Check real (non-transformed) form.
         }
-    }
-
-    // Genus would include nisse.
-    if (you.species == SP_KOBOLD)
-    {
-        return (mons_species(mon) == MONS_KOBOLD
-                || mons_species(mon) == MONS_BIG_KOBOLD);
     }
 
     // Genus would include necrophage and rotting hulk.
@@ -935,7 +919,7 @@ int player_equip(equipment_type slot, int sub_type, bool calc_unid)
 // Returns number of matches (jewellery returns zero -- no ego type).
 // [ds] There's no equivalent of calc_unid or req_id because as of now, weapons
 // and armour type-id on wield/wear.
-int player_equip_ego_type(int slot, int special)
+int player_equip_ego_type(int slot, int special, bool calc_unid)
 {
     int ret = 0;
 
@@ -967,7 +951,8 @@ int player_equip_ego_type(int slot, int special)
         for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
         {
             if ((item = you.slot_item(static_cast<equipment_type>(i)))
-                && get_armour_ego_type(*item) == special)
+                && get_armour_ego_type(*item) == special
+                && (calc_unid || item_type_known(*item)))
             {
                 ret++;
             }
@@ -982,7 +967,8 @@ int player_equip_ego_type(int slot, int special)
         }
         // Check a specific armour slot for an ego type:
         if ((item = you.slot_item(static_cast<equipment_type>(slot)))
-            && get_armour_ego_type(*item) == special)
+            && get_armour_ego_type(*item) == special
+            && (calc_unid || item_type_known(*item)))
         {
             ret++;
         }
@@ -2619,6 +2605,19 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
 
     dprf("gain_exp: %d", exp_gained);
 
+    if (you.transfer_skill_points > 0)
+    {
+        int amount = exp_gained * 10
+                                / calc_skill_cost(you.skill_cost_level,
+                                            you.skills[you.transfer_to_skill]);
+        if (amount >= 20 || one_chance_in(20 - amount))
+        {
+            amount = std::max(20, amount);
+            transfer_skill_points(you.transfer_from_skill,
+                                  you.transfer_to_skill, amount, false);
+        }
+    }
+
     if (you.experience + exp_gained > (unsigned int)MAX_EXP_TOTAL)
         you.experience = MAX_EXP_TOTAL;
     else
@@ -2670,7 +2669,7 @@ static void _draconian_scale_colour_message()
         break;
 
     case SP_GREEN_DRACONIAN:
-        mpr("Your scales start taking on a green colour.",
+        mpr("Your scales start taking on a lurid green colour.",
             MSGCH_INTRINSIC_GAIN);
         perma_mutate(MUT_POISON_RESISTANCE, 1);
         break;
@@ -2681,13 +2680,13 @@ static void _draconian_scale_colour_message()
         break;
 
     case SP_GREY_DRACONIAN:
-        mpr("Your scales start turning grey.",
+        mpr("Your scales start taking on a dull grey colour.",
             MSGCH_INTRINSIC_GAIN);
         perma_mutate(MUT_UNBREATHING, 1);
         break;
 
     case SP_BLACK_DRACONIAN:
-        mpr("Your scales start turning black.",
+        mpr("Your scales start taking on a glossy black colour.",
             MSGCH_INTRINSIC_GAIN);
         perma_mutate(MUT_SHOCK_RESISTANCE, 1);
         break;
@@ -3007,7 +3006,7 @@ void level_change(bool skip_attribute_increase)
                     // We check if any skill has changed level because of
                     // changed aptitude
                     for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
-                        change_skill_points(static_cast<skill_type>(i), 0);
+                        check_skill_level_change(static_cast<skill_type>(i));
                 }
             case SP_RED_DRACONIAN:
             case SP_WHITE_DRACONIAN:
@@ -3243,6 +3242,70 @@ void level_change(bool skip_attribute_increase)
             }
         }
 
+        // // zot defense abilities; must also be updated in abil-show.cc when these levels are changed
+        if (crawl_state.game_is_zotdef())
+        {
+            if (you.experience_level == 1)
+                mpr("Your Zot abilities now extend through the making of dart traps.", MSGCH_INTRINSIC_GAIN);
+            if (you.experience_level == 2)
+                mpr("Your Zot abilities now extend through the making of oklob saplings.", MSGCH_INTRINSIC_GAIN);
+            if (you.experience_level == 3)
+                mpr("Your Zot abilities now extend through the making of arrow traps.", MSGCH_INTRINSIC_GAIN);
+            if (you.experience_level == 4)
+                mpr("Your Zot abilities now extend through the making of plants.", MSGCH_INTRINSIC_GAIN);
+            if (you.experience_level == 4)
+                mpr("Your Zot abilities now extend through removing curses.", MSGCH_INTRINSIC_GAIN);
+            if (you.experience_level == 5)
+                mpr("Your Zot abilities now extend through the making of burning bushes.", MSGCH_INTRINSIC_GAIN);
+            if (you.experience_level == 6)
+                mpr("Your Zot abilities now extend through the making of altars and grenades.", MSGCH_INTRINSIC_GAIN);
+            if (you.experience_level == 7)
+                mpr("Your Zot abilities now extend through the making of oklob plants.", MSGCH_INTRINSIC_GAIN);
+            if (you.experience_level == 8)
+                mpr("Your Zot abilities now extend through the making of net traps.", MSGCH_INTRINSIC_GAIN);
+            if (you.experience_level == 9)
+                mpr("Your Zot abilities now extend through the making of ice statues.", MSGCH_INTRINSIC_GAIN);
+            if (you.experience_level == 10)
+                mpr("Your Zot abilities now extend through the making of spear traps.", MSGCH_INTRINSIC_GAIN);
+            if (you.experience_level == 11)
+                mpr("Your Zot abilities now extend through the making of alarm traps.", MSGCH_INTRINSIC_GAIN);
+            if (you.experience_level == 12)
+                mpr("Your Zot abilities now extend through the making of mushroom circles.", MSGCH_INTRINSIC_GAIN);
+            if (you.experience_level == 13)
+                mpr("Your Zot abilities now extend through the making of bolt traps.", MSGCH_INTRINSIC_GAIN);
+            if (you.experience_level == 14)
+                mpr("Your Zot abilities now extend through the making of orange crystal statues.", MSGCH_INTRINSIC_GAIN);
+            if (you.experience_level == 15)
+                mpr("Your Zot abilities now extend through the making of needle traps.", MSGCH_INTRINSIC_GAIN);
+            if (you.experience_level == 16)
+                mpr("Your Zot abilities now extend through self-teleportation.", MSGCH_INTRINSIC_GAIN);
+            if (you.experience_level == 17)
+                mpr("Your Zot abilities now extend through making water.", MSGCH_INTRINSIC_GAIN);
+            if (you.experience_level == 18)
+                mpr("Your Zot abilities now extend through the making of axe traps.", MSGCH_INTRINSIC_GAIN);
+            if (you.experience_level == 19)
+                mpr("Your Zot abilities now extend through the making of electric eels.", MSGCH_INTRINSIC_GAIN);
+            if (you.experience_level == 20)
+                mpr("Your Zot abilities now extend through the making of silver statues.", MSGCH_INTRINSIC_GAIN);
+            // gold and bazaars gained together
+            if (you.experience_level == 21)
+                mpr("Your Zot abilities now extend through the making of bazaars.", MSGCH_INTRINSIC_GAIN);
+            if (you.experience_level == 21)
+                mpr("Your Zot abilities now extend through acquiring gold.", MSGCH_INTRINSIC_GAIN);
+            if (you.experience_level == 22)
+                mpr("Your Zot abilities now extend through the making of oklob circles.", MSGCH_INTRINSIC_GAIN);
+            if (you.experience_level == 23)
+                mpr("Your Zot abilities now extend through invoking Sage effects.", MSGCH_INTRINSIC_GAIN);
+            if (you.experience_level == 24)
+                mpr("Your Zot abilities now extend through acquirement.", MSGCH_INTRINSIC_GAIN);
+            if (you.experience_level == 25)
+                mpr("Your Zot abilities now extend through the making of blade traps.", MSGCH_INTRINSIC_GAIN);
+            if (you.experience_level == 26)
+                mpr("Your Zot abilities now extend through the making of curse skulls.", MSGCH_INTRINSIC_GAIN);
+            if (you.experience_level == 27)
+                mpr("Your Zot abilities now extend through the making of teleport traps.", MSGCH_INTRINSIC_GAIN);
+        }
+
         // add hp and mp adjustments - GDL
         inc_max_hp(hp_adjust);
         inc_max_mp(mp_adjust);
@@ -3309,50 +3372,84 @@ int check_stealth(void)
 
     int stealth = you.dex() * 3;
 
-    if (you.skills[SK_STEALTH])
+    int race_mod = 0;
+    if (player_genus(GENPC_DRACONIAN) && you.species != SP_GREY_DRACONIAN)
+        race_mod = 12;
+    else
     {
-        if (player_genus(GENPC_DRACONIAN) && you.species != SP_GREY_DRACONIAN)
-            stealth += (you.skills[SK_STEALTH] * 12);
-        else
+        switch (you.species) // why not use body_size here?
         {
-            switch (you.species) // why not use body_size here?
+        case SP_TROLL:
+        case SP_OGRE:
+        case SP_CENTAUR:
+            race_mod = 9;
+            break;
+        case SP_MINOTAUR:
+            race_mod = 12;
+            break;
+        case SP_VAMPIRE:
+            // Thirsty/bat-form vampires are (much) more stealthy
+            if (you.hunger_state == HS_STARVING)
+                race_mod = 21;
+            else if (player_in_bat_form()
+                     || you.hunger_state <= HS_NEAR_STARVING)
             {
-            case SP_TROLL:
-            case SP_OGRE:
-            case SP_CENTAUR:
-                stealth += (you.skills[SK_STEALTH] * 9);
-                break;
-            case SP_MINOTAUR:
-                stealth += (you.skills[SK_STEALTH] * 12);
-                break;
-            case SP_VAMPIRE:
-                // Thirsty/bat-form vampires are (much) more stealthy
-                if (you.hunger_state == HS_STARVING)
-                    stealth += (you.skills[SK_STEALTH] * 21);
-                else if (player_in_bat_form()
-                         || you.hunger_state <= HS_NEAR_STARVING)
-                {
-                    stealth += (you.skills[SK_STEALTH] * 20);
-                }
-                else if (you.hunger_state < HS_SATIATED)
-                    stealth += (you.skills[SK_STEALTH] * 19);
-                else
-                    stealth += (you.skills[SK_STEALTH] * 18);
-                break;
-            case SP_HALFLING:
-            case SP_KOBOLD:
-            case SP_SPRIGGAN:
-            case SP_GREY_DRACONIAN:
-            case SP_NAGA:       // not small but very good at stealth
-            case SP_CAT:
-                stealth += (you.skills[SK_STEALTH] * 18);
-                break;
-            default:
-                stealth += (you.skills[SK_STEALTH] * 15);
-                break;
+                race_mod = 20;
             }
+            else if (you.hunger_state < HS_SATIATED)
+                race_mod = 19;
+            else
+                race_mod = 18;
+            break;
+        case SP_HALFLING:
+        case SP_KOBOLD:
+        case SP_SPRIGGAN:
+        case SP_GREY_DRACONIAN:
+        case SP_NAGA:       // not small but very good at stealth
+        case SP_CAT:
+            race_mod = 18;
+            break;
+        default:
+            race_mod = 15;
+            break;
         }
     }
+
+    switch((transformation_type)you.attribute[ATTR_TRANSFORMATION])
+    {
+    case TRAN_SPIDER:
+        race_mod = 21;
+        break;
+    case TRAN_ICE_BEAST:
+        race_mod = 15;
+        break;
+    case TRAN_STATUE:
+        race_mod -= 3; // depends on the base race
+        break;
+    case TRAN_DRAGON:
+        race_mod = 6;
+        break;
+    case TRAN_PIG:
+        race_mod = 9; // trotters, oinking...
+        break;
+    case TRAN_BAT:
+        if (you.species != SP_VAMPIRE)
+            race_mod = 17;
+        break;
+    case TRAN_BLADE_HANDS:
+        if (you.species == SP_CAT && !you.airborne())
+            stealth -= 50; // a constant penalty
+        break;
+    case TRAN_LICH:
+        race_mod++; // intentionally tiny, lich form is already overpowered
+        break;
+    case NUM_TRANSFORMATIONS:
+        ASSERT(false);
+    case TRAN_NONE:
+        break;
+    }
+
+    stealth += you.skills[SK_STEALTH] * race_mod;
 
     if (you.burden_state > BS_UNENCUMBERED)
         stealth /= you.burden_state;
@@ -3718,7 +3815,7 @@ void display_char_status()
 
     // magic resistance
     mprf("You are %s resistant to hostile enchantments.",
-         magic_res_adjective(you.res_magic()).c_str());
+         magic_res_adjective(player_res_magic(false)).c_str());
 
     // character evaluates their ability to sneak around:
     mprf("You feel %s.", stealth_desc(check_stealth()).c_str());
@@ -3817,11 +3914,11 @@ static int _species_exp_mod(species_type species)
         case SP_CENTAUR:
         case SP_MINOTAUR:
         case SP_MUMMY:
-        case SP_CAT:
             return 14;
         case SP_HIGH_ELF:
         case SP_VAMPIRE:
         case SP_TROLL:
+        case SP_CAT:
             return 15;
         case SP_DEMIGOD:
         case SP_DEMONSPAWN:
@@ -4110,6 +4207,22 @@ bool enough_mp(int minimum, bool suppress_msg, bool include_items)
     return (rc);
 }
 
+bool enough_xp(int minimum, bool suppress_msg)
+{
+    ASSERT(!crawl_state.game_is_arena());
+
+    if (you.exp_available < minimum)
+    {
+        if (!suppress_msg)
+            mpr("You haven't enough experience in your experience pool.");
+
+        crawl_state.cancel_cmd_again();
+        crawl_state.cancel_cmd_repeat();
+        return (false);
+    }
+    return (true);
+}
+
 // Note that "max_too" refers to the base potential, the actual
 // resulting max value is subject to penalties, bonuses, and scalings.
 void inc_mp(int mp_gain, bool max_too)
@@ -4306,7 +4419,8 @@ int get_real_hp(bool trans, bool rotted)
     int hitp;
 
     hitp  = (you.base_hp - 5000) + (you.base_hp2 - 5000);
-    hitp += (you.experience_level * you.skills[SK_FIGHTING]) / 5;
+    hitp += (you.experience_level * you.skills[SK_FIGHTING]) /
+            (you.species == SP_CAT ? 7 : 5);
 
     // Being berserk makes you resistant to damage. I don't know why.
     if (trans && you.berserk())
@@ -4911,6 +5025,7 @@ void levitate_player(int pow)
          "You feel %s buoyant.", standing ? "very" : "more");
 
     if (standing)
+    {
         if (you.fishtail)
         {
             mpr("Your tail turns into legs as you levitate out of the water.");
@@ -4918,6 +5033,7 @@ void levitate_player(int pow)
         }
         else
             mpr("You gently float upwards from the floor.");
+    }
 
     // Amulet of Controlled Flight can auto-ID.
     if (!you.duration[DUR_LEVITATION]
@@ -5081,17 +5197,23 @@ void player::init()
     xray_vision = false;
 
     skills.init(0);
+    // In Zot def we turn off all skills with non-zero skill level later
     practise_skill.init(true);
     skill_points.init(0);
     ct_skill_points.init(0);
     skill_order.init(MAX_SKILL_ORDER);
+
+    transfer_from_skill = SK_NONE;
+    transfer_to_skill = SK_NONE;
+    transfer_skill_points = 0;
+    transfer_total_skill_points = 0;
 
     sage_bonus_skill = NUM_SKILLS;
     sage_bonus_degree = 0;
 
     skill_cost_level = 1;
     total_skill_points = 0;
-    exp_available    = 25;
+    exp_available    = crawl_state.game_is_zotdef()? 80 : 25;
 
     item_description.init(255);
     unique_items.init(UNIQ_NOT_EXISTS);
@@ -5215,6 +5337,7 @@ void player::init()
     on_current_level    = true;
     walking             = 0;
     seen_portals        = 0;
+    frame_no            = 0;
 
     // Protected fields:
     for (int i = 0; i < NUM_BRANCHES; i++)
@@ -5339,7 +5462,7 @@ bool player::can_cling_to(const coord_def& p) const
 
 bool player::in_water() const
 {
-    return (!airborne() && !beogh_water_walk()
+    return (!airborne() && !beogh_water_walk() && !is_wall_clinging()
             && feat_is_water(grd(pos())));
 }
 
@@ -5877,14 +6000,25 @@ int player::res_torment() const
     return (player_res_torment());
 }
 
+int player::res_wind() const
+{
+    // Full control of the winds around you can negate a hostile tornado.
+    return you.duration[DUR_TORNADO] ? 1 : 0;
+}
+
 int player::res_magic() const
+{
+    return player_res_magic();
+}
+
+int player_res_magic(bool calc_unid, bool temp)
 {
     int rm = 0;
 
-    switch (species)
+    switch (you.species)
     {
     default:
-        rm = experience_level * 3;
+        rm = you.experience_level * 3;
         break;
     case SP_HIGH_ELF:
     case SP_SLUDGE_ELF:
@@ -5893,47 +6027,48 @@ int player::res_magic() const
     case SP_VAMPIRE:
     case SP_DEMIGOD:
     case SP_OGRE:
-        rm = experience_level * 4;
+        rm = you.experience_level * 4;
         break;
     case SP_NAGA:
-        rm = experience_level * 5;
+        rm = you.experience_level * 5;
         break;
     case SP_PURPLE_DRACONIAN:
     case SP_DEEP_DWARF:
     case SP_CAT:
-        rm = experience_level * 6;
+        rm = you.experience_level * 6;
         break;
     case SP_SPRIGGAN:
-        rm = experience_level * 7;
+        rm = you.experience_level * 7;
         break;
     }
 
     // randarts
-    rm += scan_artefacts(ARTP_MAGIC);
+    rm += scan_artefacts(ARTP_MAGIC, calc_unid);
 
     // armour
-    rm += 30 * player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_MAGIC_RESISTANCE);
+    rm += 30 * player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_MAGIC_RESISTANCE,
+                                     calc_unid);
 
     // rings of magic resistance
-    rm += 40 * player_equip(EQ_RINGS, RING_PROTECTION_FROM_MAGIC);
+    rm += 40 * player_equip(EQ_RINGS, RING_PROTECTION_FROM_MAGIC, calc_unid);
 
     // Enchantment skill through staff of enchantment (up to 90).
-    if (player_equip(EQ_STAFF, STAFF_ENCHANTMENT))
-        rm += 3 * (3 + skills[SK_ENCHANTMENTS]);
+    if (player_equip(EQ_STAFF, STAFF_ENCHANTMENT, calc_unid))
+        rm += 3 * (3 + you.skills[SK_ENCHANTMENTS]);
 
     // Mutations
     rm += 30 * player_mutation_level(MUT_MAGIC_RESISTANCE);
 
     // transformations
-    if (attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
+    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH && temp)
         rm += 50;
 
     // Trog's Hand
-    if (attribute[ATTR_DIVINE_REGENERATION])
+    if (you.attribute[ATTR_DIVINE_REGENERATION] && temp)
         rm += 70;
 
     // Enchantment effect
-    if (duration[DUR_LOWERED_MR])
+    if (you.duration[DUR_LOWERED_MR] && temp)
         rm /= 2;
 
     return (rm);
@@ -6206,9 +6341,14 @@ int player::has_talons(bool allow_tran) const
 {
     if (allow_tran)
     {
-        // no transformations bring talons with them
-        if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
+        // transformations other than these will override talons
+        if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE
+            && attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS
+            && attribute[ATTR_TRANSFORMATION] != TRAN_STATUE
+            && attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
+        {
             return (0);
+        }
     }
 
     // XXX: Do merfolk in water belong under allow_tran?
@@ -6234,6 +6374,7 @@ int player::has_fangs(bool allow_tran) const
         // transformations other than these will override fangs
         if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE
             && attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS
+            && attribute[ATTR_TRANSFORMATION] != TRAN_STATUE
             && attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
         {
             return (0);
@@ -6260,9 +6401,10 @@ int player::has_tail(bool allow_tran) const
         if (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
             return (1);
 
-        // transformations other than these will override the tail
+        // transformations other than these will override a tail
         if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE
             && attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS
+            && attribute[ATTR_TRANSFORMATION] != TRAN_STATUE
             && attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
         {
             return (0);
@@ -6313,8 +6455,14 @@ int player::has_pseudopods(bool allow_tran) const
 {
     if (allow_tran)
     {
-        if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
+        // transformations other than these will override pseudopods
+        if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE
+            && attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS
+            && attribute[ATTR_TRANSFORMATION] != TRAN_STATUE
+            && attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
+        {
             return (0);
+        }
     }
 
     return (player_mutation_level(MUT_PSEUDOPODS));
@@ -6475,7 +6623,7 @@ bool player::has_lifeforce() const
 
 bool player::can_mutate() const
 {
-    return (has_lifeforce());
+    return (true);
 }
 
 bool player::can_safely_mutate() const

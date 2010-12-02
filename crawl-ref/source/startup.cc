@@ -374,6 +374,19 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     tmp->set_visible(true);
 
     tmp = new TextItem();
+    text = "Zot Defense";
+    tmp->set_text(text);
+    tmp->set_fg_colour(WHITE);
+    tmp->set_highlight_colour(WHITE);
+    tmp->set_id(GAME_TYPE_ZOTDEF);
+    // Scroller does not care about x-coordinates and only cares about
+    // item height obtained from max.y - min.y
+    tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
+    tmp->set_description_text("Defend the Orb of Zot against waves of critters.");
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
+
+    tmp = new TextItem();
     text = "Instructions";
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
@@ -698,6 +711,7 @@ static void _show_startup_menu(newgame_def* ng_choice,
                 case GAME_TYPE_NORMAL:
                 case GAME_TYPE_TUTORIAL:
                 case GAME_TYPE_SPRINT:
+                case GAME_TYPE_ZOTDEF:
                 case GAME_TYPE_HINTS:
                     // If a game type is chosen, the user expects
                     // to start a new game. Just blanking the name
@@ -731,6 +745,7 @@ static void _show_startup_menu(newgame_def* ng_choice,
         case GAME_TYPE_NORMAL:
         case GAME_TYPE_TUTORIAL:
         case GAME_TYPE_SPRINT:
+        case GAME_TYPE_ZOTDEF:
         case GAME_TYPE_HINTS:
             trim_string(input_string);
             if (is_good_name(input_string, true, false))

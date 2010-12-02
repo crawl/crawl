@@ -39,137 +39,6 @@ int mons_level(int mcls, const level_id &place)
     return monster_level;
 }
 
-typedef int (*mons_level_function)(int);
-
-struct global_level_info
-{
-    mons_level_function level_func;
-    branch_type         branch;
-    int                 avg_depth;
-};
-
-static int _mons_misc_level(int mcls)
-{
-    switch (mons_base_char(mcls))
-    {
-    case '&':
-        return 35;
-
-    case '1':
-        return 30;
-
-    case '2':
-        return 25;
-
-    case '3':
-        return 20;
-
-    case '4':
-        return 15;
-
-    case '5':
-        return 10;
-    }
-
-    if (mons_is_unique(mcls))
-        return (mons_class_hit_dice(mcls) * 14 / 10 + 1);
-
-    switch (mcls)
-    {
-    case MONS_HUMAN:
-    case MONS_ELF:
-    case MONS_DRACONIAN:
-        return 1;
-
-    case MONS_BIG_FISH:
-    case MONS_GIANT_GOLDFISH:
-    case MONS_JELLYFISH:
-        return 8;
-
-    case MONS_ANT_LARVA:
-        return 10;
-
-    case MONS_ELECTRIC_EEL:
-    case MONS_LAVA_FISH:
-    case MONS_LAVA_SNAKE:
-    case MONS_LAVA_WORM:
-    case MONS_SALAMANDER:
-    case MONS_HOG:
-        return 14;
-
-    case MONS_FIRE_VORTEX:
-        return 18;
-
-    case MONS_MINOTAUR:
-    case MONS_BALL_LIGHTNING:
-    case MONS_ORANGE_STATUE:
-    case MONS_SILVER_STATUE:
-    case MONS_ICE_STATUE:
-    case MONS_SPATIAL_VORTEX:
-    case MONS_MOLTEN_GARGOYLE:
-    case MONS_WATER_ELEMENTAL:
-        return 20;
-
-    case MONS_METAL_GARGOYLE:
-    case MONS_VAULT_GUARD:
-        return 24;
-
-    case MONS_QUEEN_ANT:
-        return 25;
-
-    case MONS_CHERUB:
-        return 27;
-
-    case MONS_DAEVA:
-        return 28;
-    }
-
-    return 0;
-}
-
-static global_level_info g_lev_infos[] = {
-    {mons_standard_level, BRANCH_MAIN_DUNGEON,  1},
-    {_mons_misc_level,    BRANCH_MAIN_DUNGEON,  1},
-    {mons_dwarf_level,    BRANCH_DWARF_HALL,    7},
-    {mons_mineorc_level,  BRANCH_ORCISH_MINES,  8},
-    {mons_lair_level,     BRANCH_LAIR,         10},
-    {mons_hallelf_level,  BRANCH_ELVEN_HALLS,  11},
-    {mons_swamp_level,    BRANCH_SWAMP,        14},
-    {mons_shoals_level,   BRANCH_SHOALS,       14},
-    {mons_pitsnake_level, BRANCH_SNAKE_PIT,    15},
-    {mons_spidernest_level,BRANCH_SPIDER_NEST, 15},
-    {mons_pitslime_level, BRANCH_SLIME_PITS,   16},
-    {mons_crypt_level,    BRANCH_CRYPT,        19},
-    {mons_tomb_level,     BRANCH_TOMB,         21},
-    {mons_hallzot_level,  BRANCH_HALL_OF_ZOT,  27},
-    {mons_dis_level,      BRANCH_DIS,          29},
-    {mons_gehenna_level,  BRANCH_GEHENNA,      29},
-    {mons_cocytus_level,  BRANCH_COCYTUS,      29},
-    {mons_tartarus_level, BRANCH_TARTARUS,     29},
-
-    {NULL,                NUM_BRANCHES,         0}
-};
-
-int mons_global_level(int mcls)
-{
-    for (int i = 0; g_lev_infos[i].level_func != NULL; i++)
-    {
-        int level     = (*g_lev_infos[i].level_func)(mcls);
-        int rel_level = level - absdungeon_depth(g_lev_infos[i].branch, 1);
-
-        if (g_lev_infos[i].branch == BRANCH_HALL_OF_ZOT)
-            rel_level++;
-
-        if (level >= 1 && level < 99 && rel_level != 0)
-        {
-            level = rel_level + g_lev_infos[i].avg_depth - 1;
-            return (level);
-        }
-    }
-
-    return (0);
-}
-
 // NOTE: Higher values returned means the monster is "more common".
 // A return value of zero means the monster will never appear. {dlb}
 int mons_rarity(int mcls, const level_id &place)
@@ -193,7 +62,7 @@ bool mons_abyss(int mcls)
     case MONS_ABOMINATION_SMALL:
     case MONS_AIR_ELEMENTAL:
     case MONS_ANCIENT_LICH:
-    case MONS_CHERUB:
+    case MONS_ANGEL:
     case MONS_BALRUG:
     case MONS_BLUE_DEATH:
     case MONS_BLUE_DEVIL:
@@ -208,6 +77,7 @@ bool mons_abyss(int mcls)
     case MONS_DEMONIC_CRAWLER:
     case MONS_EARTH_ELEMENTAL:
     case MONS_EFREET:
+    case MONS_EIDOLON:
     case MONS_EXECUTIONER:
     case MONS_EYE_OF_DEVASTATION:
     case MONS_EYE_OF_DRAINING:
@@ -415,6 +285,7 @@ int mons_rare_abyss(int mcls)
     case MONS_SKY_BEAST:
         return 9;
 
+    case MONS_EIDOLON:
     case MONS_FUNGUS:
     case MONS_GIANT_EYEBALL:
     case MONS_PHANTOM:
@@ -425,7 +296,7 @@ int mons_rare_abyss(int mcls)
     case MONS_SOUL_EATER:
         return 7;
 
-    case MONS_CHERUB:
+    case MONS_ANGEL:
     case MONS_IRON_DEVIL:
         return 6;
 
@@ -1130,172 +1001,49 @@ int mons_standard_rare(int mcls)
     }
 }
 
-// The Dwarf Hall
+// The Dwarven Hall
 int mons_dwarf_level(int mcls)
 {
-    int mlev = absdungeon_depth(BRANCH_DWARF_HALL, 1);
+    int mlev = absdungeon_depth(BRANCH_DWARVEN_HALL, 1);
 
-    switch (mcls)
-    {
-    case MONS_DEEP_DWARF:
-    case MONS_DEEP_DWARF_SCION:
-    case MONS_WRAITH:
-    case MONS_ORANGE_RAT:
-    case MONS_GIANT_CENTIPEDE:
-    case MONS_WAR_DOG:
-        mlev++;
-        break;
-
-    case MONS_DEEP_DWARF_NECROMANCER:
-    case MONS_NISSE:
-    case MONS_SHAPESHIFTER:
-        mlev += 2;
-        break;
-
-    case MONS_DEEP_DWARF_ARTIFICER:
-    case MONS_ELF:
-    case MONS_TROLL:
-    case MONS_NECROPHAGE:
-    case MONS_GHOUL:
-    case MONS_REDBACK:
-        mlev += 3;
-        break;
-
-    case MONS_DEEP_DWARF_BERSERKER:
-    case MONS_DEEP_DWARF_DEATH_KNIGHT:
-    case MONS_WOLF_SPIDER:
-    case MONS_NECROMANCER:
-        mlev += 4;
-        break;
-
-    case MONS_DEEP_DWARF_UNBORN:
-    case MONS_SHADOW_WRAITH:
-    case MONS_ROCK_TROLL:
-    case MONS_GLOWING_SHAPESHIFTER:
-        mlev += 5;
-        break;
-
-    // OOD monsters
-    case MONS_PHANTASMAL_WARRIOR:
-    case MONS_GREATER_WRAITH:
-    case MONS_DEEP_TROLL:
-        mlev += 7;
-        break;
-
-    case MONS_IRON_TROLL:
-        mlev += 9;
-        break;
-
-    case MONS_FIRE_GIANT:
-    case MONS_FROST_GIANT:
-    case MONS_STONE_GIANT:
-        mlev += 11;
-        break;
-
-    default:
-        mlev += 99;
-        break;
-    }
-
-    return (mlev);
+    if (!mons_dwarf_rare(mcls))
+        return mlev + 99;
+    // Depths are irrelevant for a depth-1 branch.
+    return mlev + 1;
 }
 
 int mons_dwarf_rare(int mcls)
 {
-    int rarity;
-    int sharp_before; // cutoff applied on levels shallower by <= than
-    int soft_until;   // cutoff artificially applied on levels deeper by >= than
-    bool sharp_curve = false;
-    bool soft_curve  = false;
-
     switch (mcls)
     {
-    case MONS_DEEP_DWARF_NECROMANCER:
-        rarity = 210;
-        break;
-    case MONS_DEEP_DWARF_SCION:
-        soft_until = 1;
-    case MONS_DEEP_DWARF_ARTIFICER:
-        rarity = 205;
-        break;
     case MONS_DEEP_DWARF:
-        rarity = 200;
-        break;
+        return 100;
+    case MONS_DEEP_DWARF_SCION:
+    case MONS_DEEP_DWARF_ARTIFICER:
+        return 70;
+    case MONS_DEEP_DWARF_NECROMANCER:
+    case MONS_DEEP_DWARF_BERSERKER:
+    case MONS_DEEP_DWARF_DEATH_KNIGHT:
+        return 60;
     case MONS_DEEP_DWARF_UNBORN:
-        rarity = 108;
-        break;
-    /* BEGIN - OOD monsters */
+        return 40;
+    case MONS_WRAITH:
+        return 30;
     case MONS_PHANTASMAL_WARRIOR:
-    case MONS_GREATER_WRAITH:
-    case MONS_DEEP_TROLL:
-    case MONS_IRON_TROLL:
+    case MONS_EIDOLON:
     case MONS_FIRE_GIANT:
     case MONS_FROST_GIANT:
     case MONS_STONE_GIANT:
-    /* END - OOD monsters */
-    case MONS_DEEP_DWARF_BERSERKER:
-    case MONS_DEEP_DWARF_DEATH_KNIGHT:
-        rarity = 100;
-        break;
-    case MONS_NISSE:
-    case MONS_WRAITH:
-        rarity = 80;
-        break;
-    case MONS_ELF:
-        rarity = 50;
-        break;
-    case MONS_WAR_DOG:
-        rarity = 40;
-        break;
-    case MONS_TROLL:
-        break;
-    case MONS_SHAPESHIFTER:
-        sharp_curve = true;
+        return 5;
+    case MONS_DEEP_TROLL:
+    case MONS_IRON_TROLL:
     case MONS_ROCK_TROLL:
     case MONS_SHADOW_WRAITH:
-        rarity = 15;
-        break;
-    case MONS_GIANT_CENTIPEDE:
-    case MONS_WOLF_SPIDER:
-    case MONS_REDBACK:
-        soft_curve = true;
-    case MONS_NECROMANCER:
-        rarity = 10;
-        break;
-    case MONS_ORANGE_RAT:
-        soft_curve = true;
-    case MONS_NECROPHAGE:
-    case MONS_GHOUL:
-    case MONS_GLOWING_SHAPESHIFTER:
-        rarity = 5;
-        break;
+        return 2;
 
     default:
         return 0;
     }
-
-    if (soft_curve)
-        return rarity;
-
-    const int mlev = mons_dwarf_level(mcls);
-    const int diff = mlev - you.absdepth0;
-    if (((diff > soft_until) or ((diff < 0) and (abs(diff) > sharp_before)) and
-         ((soft_until > 0) or (sharp_before > 0))) or (diff >= 0))
-    {
-        sharp_curve = true; // its a shadow-reuse, sorry :(
-    }
-
-    // by default, this section makes rarity much higher for placing monsters
-    // above their level
-    if (sharp_curve)
-    { // fake integer sqroot
-        int i=0;
-        while((i*i) <= rarity)
-            i+=1;
-        rarity = i;
-    }
-
-    return rarity;
 }
 
 // The Orcish Mines
@@ -2075,6 +1823,7 @@ int mons_spidernest_level(int mcls)
     case MONS_TRAPDOOR_SPIDER:
     case MONS_GIANT_MOSQUITO:
     case MONS_GIANT_BLOWFLY:
+    case MONS_SPIDER:
         mlev++;
         break;
 
@@ -2135,6 +1884,7 @@ int mons_spidernest_rare(int mcls)
     case MONS_BOULDER_BEETLE:
     case MONS_GIANT_CENTIPEDE:
     case MONS_EMPEROR_SCORPION:
+    case MONS_SPIDER:
         return 15;
 
     case MONS_JUMPING_SPIDER:

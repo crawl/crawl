@@ -33,6 +33,7 @@ NAME:   vaults_0_dummy
 TAGS:   vault_entry
 WEIGHT: 60
 ORIENT: float
+KFEAT:  O = enter_vaults
 MAP
 O
 ENDMAP
@@ -47,6 +48,7 @@ ORIENT:  float
 SHUFFLE: !=
 SUBST:   ! = x
 SUBST:   ' : cxv
+KFEAT:   O = enter_vaults
 MAP
 xxxxx.@.'''''
 x...+...'...'
@@ -69,6 +71,7 @@ MONS: weight:70 nothing / weight:40 ogre / weight:20 two-headed ogre / ogre mage
 MONS: weight:100 nothing / shapeshifter
 SHUFFLE: 123
 ORIENT:  float
+KFEAT:   O = enter_vaults
 MAP
 1111..@......
 111..........
@@ -89,6 +92,7 @@ TAGS:    vault_entry
 ORIENT:  float
 MONS:    human, human / Donald, human / human / Norris, human / Wiglaf
 SHUFFLE: 2345
+KFEAT:   O = enter_vaults
 MAP
 @..........@
 ....1131....
@@ -120,6 +124,7 @@ MONS:    nothing
 MONS:    shapeshifter / weight:30 nothing
 SUBST:   1=.1, 2=.2, 3=.3, 4=.4, 5=.5, *:*.%
 SUBST:   x : xcv
+KFEAT:   O = enter_vaults
 MAP
 @..........@
 .xxxxxxxxxx.
@@ -143,6 +148,7 @@ SUBST:  ! : ! .
 SUBST:  ? : ? .
 SUBST:  ? = .:30 0:10 9:4 8:1 %:10 *:4 |:1
 SUBST:  ! = .:30 0:10 9:4 8:1 %:10 *:4 |:1
+KFEAT:  O = enter_vaults
 MAP
 xxxxxxxxxxxxxx
 xOx!x!x?x!x?xx
@@ -164,6 +170,7 @@ TAGS:    vault_entry
 MONS:    dancing weapon
 ORIENT:  float
 SHUFFLE: vcxxx
+KFEAT:   O = enter_vaults
 MAP
 .............
 .............
@@ -184,6 +191,7 @@ TAGS:    vault_entry
 MONS:    vault guard
 ORIENT:  float
 SHUFFLE: vxxx, bcc
+KFEAT:   O = enter_vaults
 MAP
 vvvvvv.vvvvvv
 vvvvvv.vvvvvv

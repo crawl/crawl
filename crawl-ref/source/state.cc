@@ -553,6 +553,12 @@ bool game_state::game_is_sprint() const
     return type == GAME_TYPE_SPRINT;
 }
 
+bool game_state::game_is_zotdef() const
+{
+    ASSERT(type < NUM_GAME_TYPE);
+    return type == GAME_TYPE_ZOTDEF;
+}
+
 bool game_state::game_is_hints() const
 {
     ASSERT(type < NUM_GAME_TYPE);
@@ -580,18 +586,23 @@ std::string game_state::game_type_name_for(game_type _type)
         return "Arena";
     case GAME_TYPE_SPRINT:
         return "Sprint";
+    case GAME_TYPE_ZOTDEF:
+        return "Zot Defense";
     }
 }
 
 std::string game_state::game_savedir_path() const
 {
-    return game_is_sprint()? "sprint/" : "";
+    return game_is_sprint()? "sprint/" :
+           game_is_zotdef()? "zotdef/" : "";
 }
 
 std::string game_state::game_type_qualifier() const
 {
     if (crawl_state.game_is_sprint())
         return "-sprint";
+    if (crawl_state.game_is_zotdef())
+        return "-zotdef";
     if (crawl_state.game_is_tutorial())
         return "-tutorial";
     if (crawl_state.game_is_hints())

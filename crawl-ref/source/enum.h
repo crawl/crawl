@@ -44,6 +44,39 @@ enum ability_type
     ABIL_STOP_FLYING,
     ABIL_BREATHE_MEPHITIC,
 
+
+    // // zot defense abilities
+    ABIL_MAKE_FUNGUS = 60,             //   60
+    ABIL_MAKE_PLANT,
+    ABIL_MAKE_OKLOB_SAPLING,
+    ABIL_MAKE_DART_TRAP,
+    ABIL_MAKE_ICE_STATUE,
+    ABIL_MAKE_OCS,                     //   65
+    ABIL_MAKE_SILVER_STATUE,
+    ABIL_MAKE_CURSE_SKULL,
+    ABIL_MAKE_TELEPORT,
+    ABIL_MAKE_ARROW_TRAP,
+    ABIL_MAKE_BOLT_TRAP,               //   70
+    ABIL_MAKE_SPEAR_TRAP,
+    ABIL_MAKE_AXE_TRAP,
+    ABIL_MAKE_NEEDLE_TRAP,
+    ABIL_MAKE_NET_TRAP,
+    ABIL_MAKE_TELEPORT_TRAP,           //   75
+    ABIL_MAKE_ALARM_TRAP,
+    ABIL_MAKE_BLADE_TRAP,
+    ABIL_MAKE_OKLOB_CIRCLE,
+    ABIL_MAKE_ACQUIRE_GOLD,
+    ABIL_MAKE_ACQUIREMENT,             //   80
+    ABIL_MAKE_WATER,
+    ABIL_MAKE_ELECTRIC_EEL,
+    ABIL_MAKE_BAZAAR,
+    ABIL_MAKE_ALTAR,
+    ABIL_MAKE_GRENADES,                //   85
+    ABIL_MAKE_SAGE,
+    ABIL_MAKE_OKLOB_PLANT,
+    ABIL_MAKE_BURNING_BUSH,
+    ABIL_REMOVE_CURSE,
+
     // Divine abilities
     ABIL_ZIN_SUSTENANCE = 109,              //  109
     ABIL_ZIN_RECITE,
@@ -113,6 +146,7 @@ enum ability_type
     ABIL_CHEIBRIADOS_SLOUCH,
     ABIL_ASHENZARI_SCRYING,
     ABIL_ASHENZARI_TRANSFER_KNOWLEDGE,
+    ABIL_ASHENZARI_END_TRANSFER,            // 255
 
     // Vampire abilities
     ABIL_TRAN_BAT = 260,
@@ -375,15 +409,8 @@ enum branch_type                // you.where_are_you
     BRANCH_HALL_OF_ZOT,
     BRANCH_FOREST,
     BRANCH_SPIDER_NEST,
-    BRANCH_DWARF_HALL,
+    BRANCH_DWARVEN_HALL,
     NUM_BRANCHES
-};
-
-enum builder_rc_type
-{
-    BUILD_QUIT = -1,            // all done, don't continue
-    BUILD_SKIP = 1,             // skip further generation
-    BUILD_CONTINUE = 0,         // continue generation
 };
 
 enum burden_state_type          // you.burden_state
@@ -456,17 +483,18 @@ enum cloud_type
     CLOUD_GLOOM,
     CLOUD_INK,
     CLOUD_HOLY_FLAMES,
-
-    CLOUD_OPAQUE_FIRST = CLOUD_BLACK_SMOKE,
-    CLOUD_OPAQUE_LAST  = CLOUD_HOLY_FLAMES,
-
     CLOUD_MIASMA,
     CLOUD_MIST,
     CLOUD_CHAOS,
     CLOUD_RAIN,
     CLOUD_MUTAGENIC,
     CLOUD_MAGIC_TRAIL,
+    CLOUD_TORNADO,
     NUM_CLOUD_TYPES,
+
+    CLOUD_OPAQUE_FIRST = CLOUD_BLACK_SMOKE,
+    CLOUD_OPAQUE_LAST  = CLOUD_HOLY_FLAMES,
+
     CLOUD_RANDOM = 98,
     CLOUD_DEBUGGING = 99,   //   99: used once as 'nonexistent cloud' {dlb}
 };
@@ -921,6 +949,7 @@ enum game_type
     GAME_TYPE_ARENA,
     GAME_TYPE_SPRINT,
     GAME_TYPE_HINTS,
+    GAME_TYPE_ZOTDEF,
     NUM_GAME_TYPE
 };
 
@@ -1111,7 +1140,7 @@ enum dungeon_feature_type
 
     // Entrances to various branches
     DNGN_ENTER_FIRST_BRANCH = 110,     //  110
-    DNGN_ENTER_DWARF_HALL = DNGN_ENTER_FIRST_BRANCH,
+    DNGN_ENTER_DWARVEN_HALL = DNGN_ENTER_FIRST_BRANCH,
     DNGN_ENTER_ORCISH_MINES,
     DNGN_ENTER_HIVE,
     DNGN_ENTER_LAIR,
@@ -1133,7 +1162,7 @@ enum dungeon_feature_type
     // Exits from various branches
     // Order must be the same as above
     DNGN_RETURN_FROM_FIRST_BRANCH = 130, //  130
-    DNGN_RETURN_FROM_DWARF_HALL = DNGN_RETURN_FROM_FIRST_BRANCH,
+    DNGN_RETURN_FROM_DWARVEN_HALL = DNGN_RETURN_FROM_FIRST_BRANCH,
     DNGN_RETURN_FROM_ORCISH_MINES,
     DNGN_RETURN_FROM_HIVE,
     DNGN_RETURN_FROM_LAIR,
@@ -1267,6 +1296,7 @@ enum duration_type
     DUR_AFRAID,
     DUR_MIRROR_DAMAGE,
     DUR_SCRYING,
+    DUR_TORNADO,
 
     NUM_DURATIONS
 };
@@ -1336,6 +1366,8 @@ enum enchant_type
     ENCH_WITHDRAWN,
     ENCH_ATTACHED,
     ENCH_LIFE_TIMER,    // Minimum time demonic guardian must exist.
+    ENCH_LEVITATION,
+    ENCH_HELPLESS,
 
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
@@ -1927,8 +1959,8 @@ enum monster_type                      // (int) menv[].type
     MONS_HALFLING,              // for recolouring only.  And let's remove them!
     MONS_FELID,                 // for recolouring only.  Miaow!
     MONS_SPIDER,                // for recolouring, for now.
-      MONS_UNUSED_211,
-      MONS_UNUSED_212,
+    MONS_OKLOB_SAPLING,
+    MONS_BURNING_BUSH,
       MONS_UNUSED_213,
       MONS_UNUSED_214,
       MONS_UNUSED_215,
@@ -1976,7 +2008,7 @@ enum monster_type                      // (int) menv[].type
       MONS_UNUSED_256,
       MONS_UNUSED_257,
       MONS_UNUSED_258,
-    MONS_PARACELSUS,
+      MONS_UNUSED_PARACELSUS,
 // BCR - End first batch of uniques.
     MONS_NAGA_MAGE,                    //  260
     MONS_NAGA_WARRIOR,
@@ -2069,7 +2101,7 @@ enum monster_type                      // (int) menv[].type
     MONS_DEEP_DWARF_BERSERKER,
     MONS_DEEP_DWARF_DEATH_KNIGHT,
     MONS_DEEP_DWARF_UNBORN,
-    MONS_NISSE,
+      MONS_UNUSED_NISSE,
       MONS_UNUSED_338,
       MONS_UNUSED_339,
 
@@ -2244,14 +2276,13 @@ enum monster_type                      // (int) menv[].type
     MONS_TARANTELLA,
     MONS_SILENT_SPECTRE,
 #if TAG_MAJOR_VERSION == 31
-    // Dwarf Hall monsters
     MONS_WITCH,
     MONS_EVIL_WITCH,
     MONS_FOREST_WITCH,
     MONS_HULDRA,
     MONS_TROLLKONOR,
 #endif
-    MONS_GREATER_WRAITH,
+    MONS_EIDOLON,
 
     // Spriggans:
     MONS_SPRIGGAN,
@@ -2436,172 +2467,164 @@ enum mon_inv_type           // (int) menv[].inv[]
 };
 
 // XXX: These still need to be applied in mon-data.h
+// The order doesn't matter, these don't get saved.
 enum mon_spellbook_type
 {
-    MST_ORC_WIZARD_I     = 0,
+    MST_ORC_WIZARD_I,
     MST_ORC_WIZARD_II,
     MST_ORC_WIZARD_III,
-    MST_NISSE,
     MST_DEEP_DWARF_NECROMANCER,
     MST_DEEP_DWARF_UNBORN,
     MST_BK_TROG,
     MST_BK_YREDELEMNUL,
-    MST_PARACELSUS,
-    MST_GUARDIAN_SERPENT    = 10,
-    MST_LICH_I           = 20,
+    MST_BK_OKAWARU,
+    MST_GUARDIAN_SERPENT,
+    MST_LICH_I,
     MST_LICH_II,
     MST_LICH_III,
     MST_LICH_IV,
-    MST_HELLION          = 30,
-    MST_VAMPIRE          = 40,
+    MST_HELLION,
+    MST_VAMPIRE,
     MST_VAMPIRE_KNIGHT,
     MST_VAMPIRE_MAGE,
-    MST_EFREET           = 50,
+    MST_EFREET,
     MST_KILLER_KLOWN,
     MST_BRAIN_WORM,
     MST_GIANT_ORANGE_BRAIN,
     MST_RAKSHASA,
-    MST_GREAT_ORB_OF_EYES,             //  55
+    MST_GREAT_ORB_OF_EYES,
     MST_KRAKEN,
     MST_ORC_SORCERER,
     MST_STEAM_DRAGON,
-    MST_HELL_KNIGHT_I    = 60,
+    MST_HELL_KNIGHT_I,
     MST_HELL_KNIGHT_II,
-    MST_NECROMANCER_I    = 65,
+    MST_NECROMANCER_I,
     MST_NECROMANCER_II,
-    MST_WIZARD_I         = 70,
+    MST_WIZARD_I,
     MST_WIZARD_II,
     MST_WIZARD_III,
     MST_WIZARD_IV,
     MST_WIZARD_V,
-#if TAG_MAJOR_VERSION == 31
-    MST_TROLLKONOR,
-    MST_HULDRA,
-    MST_WITCH_I,
-    MST_WITCH_II,
-    MST_WITCH_III,
-#endif
-    MST_ORC_PRIEST,                    //  80
+    MST_ORC_PRIEST,
     MST_ORC_HIGH_PRIEST,
     MST_MOTTLED_DRAGON,
     MST_ICE_FIEND,
     MST_SHADOW_FIEND,
-    MST_TORMENTOR,                     //  85
+    MST_TORMENTOR,
     MST_STORM_DRAGON,
     MST_WHITE_IMP,
     MST_YNOXINUL,
     MST_NEQOXEC,
-    MST_HELLWING,                      //  90
+    MST_HELLWING,
     MST_SMOKE_DEMON,
     MST_CACODEMON,
     MST_GREEN_DEATH,
     MST_BALRUG,
-    MST_BLUE_DEATH,                    //  95
+    MST_BLUE_DEATH,
     MST_TITAN,
     MST_GOLDEN_DRAGON,
     MST_DEEP_ELF_SUMMONER,
     MST_DEEP_ELF_CONJURER_I,
-    MST_DEEP_ELF_CONJURER_II,          // 100
+    MST_DEEP_ELF_CONJURER_II,
     MST_DEEP_ELF_PRIEST,
     MST_DEEP_ELF_HIGH_PRIEST,
     MST_DEEP_ELF_DEMONOLOGIST,
     MST_DEEP_ELF_ANNIHILATOR,
-    MST_DEEP_ELF_SORCERER,             // 105
+    MST_DEEP_ELF_SORCERER,
     MST_DEEP_ELF_DEATH_MAGE,
     MST_KOBOLD_DEMONOLOGIST,
     MST_NAGA,
     MST_NAGA_MAGE,
-    MST_CURSE_SKULL,                   // 110
+    MST_CURSE_SKULL,
     MST_SHINING_EYE,
     MST_FROST_GIANT,
     MST_ANGEL,
     MST_DAEVA,
-    MST_SHADOW_DRAGON,                 // 115
+    MST_SHADOW_DRAGON,
     MST_SPHINX,
     MST_MUMMY,
     MST_ELECTRIC_GOLEM,
     MST_ORB_OF_FIRE,
-    MST_SHADOW_IMP,                    // 120
-    MST_GHOST,
+    MST_SHADOW_IMP,
     MST_HELL_HOG,
     MST_SWAMP_DRAGON,
     MST_SWAMP_DRAKE,
-    MST_BOGGART,                       // 125
+    MST_BOGGART,
     MST_EYE_OF_DEVASTATION,
     MST_QUICKSILVER_DRAGON,
     MST_IRON_DRAGON,
     MST_SKELETAL_WARRIOR,
-    MST_NORRIS,                        // 130
+    MST_NORRIS,
     MST_DEATH_DRAKE,
     MST_DRAC_SCORCHER, // As Bioster would say.. pig*s
     MST_DRAC_CALLER,
     MST_DRAC_SHIFTER,
-    MST_CURSE_TOE,                     // 135
+    MST_CURSE_TOE,
     MST_ICE_STATUE,
-    // unique monsters' "spellbooks"
-    MST_RUPERT = 140,
-    MST_ROXANNE,
-    MST_SONJA,
-    MST_EUSTACHIO,
-    MST_ILSUIW,
-    MST_PRINCE_RIBBIT,                 // 145
-    MST_NESSOS,
-    MST_KIRKE,
-    MST_MENKAURE,
-    MST_DOWAN,
-    MST_GERYON,                        // 150
-    MST_DISPATER,
-    MST_ASMODEUS,
-    MST_ERESHKIGAL,
-    MST_ANTAEUS,
-    MST_MNOLEG = 160,
-    MST_LOM_LOBON,
-    MST_CEREBOV,
-    MST_GLOORX_VLOQ,
-    MST_JESSICA,
-    MST_BERSERK_ESCAPE,                // 165
-    MST_GASTRONOK,
-    MST_MAURICE,
-    MST_KHUFU,
-    MST_NIKOLA,
-    MST_DISSOLUTION,                   // 170
-    MST_AIZUL,
-    MST_EXECUTIONER,
-    MST_HAROLD,
-    MST_MARA,
-    MST_MARA_FAKE,                     // 175
     MST_MERFOLK_AQUAMANCER,
     MST_ALLIGATOR,
-    MST_BORIS,
-    MST_FREDERICK,
-    MST_BK_OKAWARU,                    // 180
-    MST_SPRIGGAN_DRUID,
-    MST_THE_ENCHANTRESS,
-    MST_HELLEPHANT,
-    MST_GRINDER,
-    MST_IRON_GIANT,                    // 185
-    MST_IRON_ELEMENTAL,
-    MST_MENNAS,
     MST_JUMPING_SPIDER,
-    MST_SERPENT_OF_HELL_GEHENNA,
-    MST_SERPENT_OF_HELL_COCYTUS,       // 190
-    MST_SERPENT_OF_HELL_TARTARUS,
-    MST_SERPENT_OF_HELL_DIS,
-    MST_NERGALLE,
     MST_CHERUB,
-    MST_PHOENIX,                       // 195
+    MST_PHOENIX,
     MST_SILVER_STAR,
     MST_BLESSED_TOE,
     MST_SHEDU,
     MST_OPHAN,
-    MST_SPIRIT,                        // 200
+    MST_SPIRIT,
     MST_PALADIN,
     MST_HOLY_DRAGON,
     MST_BOG_MUMMY,
+    MST_SPRIGGAN_DRUID,
+    // unique monsters' "spellbooks"
+    MST_RUPERT,
+    MST_ROXANNE,
+    MST_SONJA,
+    MST_EUSTACHIO,
+    MST_ILSUIW,
+    MST_PRINCE_RIBBIT,
+    MST_NESSOS,
+    MST_KIRKE,
+    MST_MENKAURE,
+    MST_DOWAN,
+    MST_GERYON,
+    MST_DISPATER,
+    MST_ASMODEUS,
+    MST_ERESHKIGAL,
+    MST_ANTAEUS,
+    MST_MNOLEG,
+    MST_LOM_LOBON,
+    MST_CEREBOV,
+    MST_GLOORX_VLOQ,
+    MST_JESSICA,
+    MST_BERSERK_ESCAPE,
+    MST_GASTRONOK,
+    MST_MAURICE,
+    MST_KHUFU,
+    MST_NIKOLA,
+    MST_DISSOLUTION,
+    MST_AIZUL,
+    MST_EXECUTIONER,
+    MST_HAROLD,
+    MST_MARA,
+    MST_MARA_FAKE,
+    MST_BORIS,
+    MST_FREDERICK,
+    MST_THE_ENCHANTRESS,
+    MST_HELLEPHANT,
+    MST_GRINDER,
+    MST_IRON_GIANT,
+    MST_IRON_ELEMENTAL,
+    MST_MENNAS,
+    MST_SERPENT_OF_HELL_GEHENNA,
+    MST_SERPENT_OF_HELL_COCYTUS,
+    MST_SERPENT_OF_HELL_TARTARUS,
+    MST_SERPENT_OF_HELL_DIS,
+    MST_NERGALLE,
 
-    MST_TEST_SPAWNER = 205,
+    MST_GHOST, // special
+    MST_TEST_SPAWNER,
     NUM_MSTYPES,
-    MST_NO_SPELLS = 250
+    MST_NO_SPELLS
 };
 
 enum mutation_type
@@ -3226,7 +3249,9 @@ enum spell_type
     SPELL_SACRIFICE,
     SPELL_HOLY_FLAMES,
     SPELL_HOLY_BREATH,
+#if TAG_MAJOR_VERSION == 31
     SPELL_BURN_SPELLBOOK,
+#endif
     SPELL_TROGS_HAND,
     SPELL_BROTHERS_IN_ARMS,
     SPELL_MIRROR_DAMAGE,
@@ -3239,6 +3264,7 @@ enum spell_type
 #if TAG_MAJOR_VERSION == 31
     SPELL_NOXIOUS_CLOUD,
 #endif
+    SPELL_TORNADO,
 
     NUM_SPELLS
 };
@@ -3594,16 +3620,21 @@ enum tag_pref
 enum tile_flags
 {
     // Foreground flags
-    TILE_FLAG_S_UNDER    = 0x00000800,
-    TILE_FLAG_FLYING     = 0x00001000,
-    TILE_FLAG_PET        = 0x00002000,
-    TILE_FLAG_GD_NEUTRAL = 0x00004000,
-    TILE_FLAG_NEUTRAL    = 0x00008000,
-    TILE_FLAG_STAB       = 0x00010000,
-    TILE_FLAG_MAY_STAB   = 0x00020000,
-    TILE_FLAG_NET        = 0x00040000,
-    TILE_FLAG_POISON     = 0x00080000,
-    TILE_FLAG_ANIM_WEP   = 0x00100000,
+
+    // 3 mutually exclusive flags for attitude.
+    TILE_FLAG_ATT_MASK   = 0x00001800,
+    TILE_FLAG_PET        = 0x00000800,
+    TILE_FLAG_GD_NEUTRAL = 0x00001000,
+    TILE_FLAG_NEUTRAL    = 0x00001800,
+
+    TILE_FLAG_S_UNDER    = 0x00002000,
+    TILE_FLAG_FLYING     = 0x00004000,
+    TILE_FLAG_STAB       = 0x00008000,
+    TILE_FLAG_MAY_STAB   = 0x00010000,
+    TILE_FLAG_NET        = 0x00020000,
+    TILE_FLAG_POISON     = 0x00040000,
+    TILE_FLAG_ANIM_WEP   = 0x00080000,
+    TILE_FLAG_MIMIC      = 0x00100000,
     TILE_FLAG_FLAME      = 0x00200000,
     TILE_FLAG_BERSERK    = 0x00400000,
 
@@ -3616,12 +3647,12 @@ enum tile_flags
     TILE_FLAG_MDAM_ADEAD = 0x02800000,
 
     // Demon difficulty has 5 possibilities, so uses 3 bits.
-    TILE_FLAG_DEMON   = 0x34000000,
-    TILE_FLAG_DEMON_5 = 0x04000000,
-    TILE_FLAG_DEMON_4 = 0x10000000,
-    TILE_FLAG_DEMON_3 = 0x14000000,
-    TILE_FLAG_DEMON_2 = 0x20000000,
-    TILE_FLAG_DEMON_1 = 0x24000000,
+    TILE_FLAG_DEMON      = 0x34000000,
+    TILE_FLAG_DEMON_5    = 0x04000000,
+    TILE_FLAG_DEMON_4    = 0x10000000,
+    TILE_FLAG_DEMON_3    = 0x14000000,
+    TILE_FLAG_DEMON_2    = 0x20000000,
+    TILE_FLAG_DEMON_1    = 0x24000000,
 
     // Background flags
     TILE_FLAG_RAY        = 0x00000800,

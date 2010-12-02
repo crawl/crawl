@@ -170,7 +170,7 @@ static void _update_feat_at(const coord_def &gp)
     // Tell the world first.
     dungeon_events.fire_position_event(DET_PLAYER_IN_LOS, gp);
 
-    if (is_notable_terrain(feat) && !mimic)
+    if (is_notable_terrain(feat))
         seen_notable_thing(feat, gp);
 
     dgn_seen_vault_at(gp);

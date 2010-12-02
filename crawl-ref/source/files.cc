@@ -128,7 +128,10 @@ static void _redraw_all(void)
 
 static std::string _uid_as_string()
 {
-#ifndef MULTIUSER
+#ifdef TARGET_OS_WINDOWS
+    return std::string();
+#else
+#ifndef UNIX
     return std::string();
 #else
 #ifndef SAVE_DIR_PATH
@@ -138,6 +141,7 @@ static std::string _uid_as_string()
         return make_stringf("-%d", static_cast<int>(getuid()));
     else
         return std::string();
+#endif
 #endif
 #endif
 }
@@ -383,11 +387,7 @@ void check_newer(const std::string &target,
 
 static int _create_directory(const char *dir)
 {
-#if defined(MULTIUSER)
-    return mkdir_u(dir, SHARED_FILES_CHMOD_PUBLIC | 0111);
-#else
     return mkdir_u(dir, 0755);
-#endif
 }
 
 static bool _create_dirs(const std::string &dir)
@@ -798,11 +798,13 @@ std::string get_save_filename(const std::string &prefix,
     // Shorten string as appropriate
     result += strip_filename_unsafe_chars(prefix).substr(0, kFileNameLen);
 
+#if TAG_MAJOR_VERSION == 31
     // Technically we should shorten the string first.  But if
     // MULTIUSER is set we'll have long filenames anyway. Caveat
     // emptor.
     if (!suppress_uid)
         result += _uid_as_string();
+#endif
 
     result += suffix;
 
@@ -891,7 +893,6 @@ public:
                 end(1, true, "failed to rename %s -> %s",
                     tmp_filename.c_str(), target_filename.c_str());
         }
-        DO_CHMOD_PRIVATE(target_filename.c_str());
     }
 
     FILE *open()
@@ -2234,74 +2235,14 @@ void save_ghost(bool force)
 // first, some file locking stuff for multiuser crawl
 #ifdef USE_FILE_LOCKING
 
-bool lock_file_handle(FILE *handle, int type)
+bool lock_file_handle(FILE *handle, bool write)
 {
-    struct flock  lock;
-    int           status;
-
-    lock.l_whence = SEEK_SET;
-    lock.l_start = 0;
-    lock.l_len = 0;
-    lock.l_type = type;
-
-#ifdef USE_BLOCKING_LOCK
-    status = fcntl(fileno(handle), F_SETLKW, &lock);
-#else
-    for (int i = 0; i < 30; i++)
-    {
-        status = fcntl(fileno(handle), F_SETLK, &lock);
-
-        // success
-        if (status == 0)
-            break;
-
-        // known failure
-        if (status == -1 && (errno != EACCES && errno != EAGAIN))
-            break;
-
-        perror("Problems locking file... retrying...");
-        delay(1000);
-    }
-#endif
-
-    return (status == 0);
+    return lock_file(fileno(handle), write, true);
 }
 
 bool unlock_file_handle(FILE *handle)
 {
-    struct flock  lock;
-    int           status;
-
-    lock.l_whence = SEEK_SET;
-    lock.l_start = 0;
-    lock.l_len = 0;
-    lock.l_type = F_UNLCK;
-
-#ifdef USE_BLOCKING_LOCK
-
-    status = fcntl(fileno(handle), F_SETLKW, &lock);
-
-#else
-
-    for (int i = 0; i < 30; i++)
-    {
-        status = fcntl(fileno(handle), F_SETLK, &lock);
-
-        // success
-        if (status == 0)
-            break;
-
-        // known failure
-        if (status == -1 && (errno != EACCES && errno != EAGAIN))
-            break;
-
-        perror("Problems unlocking file... retrying...");
-        delay(1000);
-    }
-
-#endif
-
-    return (status == 0);
+    return unlock_file(fileno(handle));
 }
 
 #endif
@@ -2311,14 +2252,11 @@ FILE *lk_open(const char *mode, const std::string &file)
     FILE *handle = fopen_u(file.c_str(), mode);
     if (!handle)
         return NULL;
-#ifdef SHARED_FILES_CHMOD_PUBLIC
-    fchmod(fileno(handle), SHARED_FILES_CHMOD_PUBLIC);
-#endif
 
 #ifdef USE_FILE_LOCKING
-    int locktype = F_RDLCK;
+    bool locktype = false;
     if (mode && mode[0] != 'r')
-        locktype = F_WRLCK;
+        locktype = true;
 
     if (handle && !lock_file_handle(handle, locktype))
     {
@@ -2339,11 +2277,6 @@ void lk_close(FILE *handle, const char *mode, const std::string &file)
 
 #ifdef USE_FILE_LOCKING
     unlock_file_handle(handle);
-#endif
-
-#ifdef SHARED_FILES_CHMOD_PUBLIC
-    if (mode && mode[0] == 'w')
-        fchmod(fileno(handle), SHARED_FILES_CHMOD_PUBLIC);
 #endif
 
     // actually close

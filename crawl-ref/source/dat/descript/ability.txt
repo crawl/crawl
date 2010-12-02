@@ -170,13 +170,17 @@ Recall Undead Slaves
 
 Recall your undead followers from anywhere on the level to your immediate surroundings.
 %%%%
+Injury Mirror
+
+Hurt attacking monsters by reflecting damage they do to you back at them.
+%%%%
 Animate Dead ability
 
 Reanimate all corpses and skeletons in your vicinity as followers. Note that zombies and skeletons cannot leave the level they were created on.
 %%%%
 Drain Life
 
-Heal hit points by draining the life force of the living monsters surrounding you.
+Heal hit points by draining the life force of the monsters surrounding you.
 %%%%
 Enslave Soul
 

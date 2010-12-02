@@ -613,7 +613,18 @@ inline static void _check_interesting_square(const coord_def pos,
             ed.found_item(pos, mitm[ you.visible_igrd(pos) ]);
     }
 
-    ed.found_feature(pos, grd(pos));
+    dungeon_feature_type feat = grd(pos);
+    if (monster_at(pos))
+    {
+        monster* mimic_mons = monster_at(pos);
+        if (mons_is_feat_mimic(mimic_mons->type)
+            && mons_is_unknown_mimic(mimic_mons))
+        {
+            feat = get_mimic_feat(mimic_mons);
+        }
+    }
+
+    ed.found_feature(pos, feat);
 }
 
 static void _userdef_run_stoprunning_hook(void)
@@ -4361,12 +4372,13 @@ bool check_for_interesting_features()
     // discovered and contain an item, or have an interesting dungeon
     // feature, stop exploring.
     explore_discoveries discoveries;
-    for (rectangle_iterator ri(1); ri; ++ri)
+    for (radius_iterator ri(you.get_los()); ri; ++ri)
     {
         const coord_def p(*ri);
         if (!env.map_shadow(p).seen() && env.map_knowledge(p).seen())
             _check_interesting_square(p, discoveries);
     }
 
+    env.map_shadow = env.map_knowledge;
     return(discoveries.prompt_stop());
 }

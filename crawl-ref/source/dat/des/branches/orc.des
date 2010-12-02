@@ -13,6 +13,7 @@ NAME:   orc_0_dummy
 TAGS:   orc_entry
 WEIGHT: 50
 ORIENT: float
+KFEAT:  O = enter_orcish_mines
 MAP
 O
 ENDMAP
@@ -27,6 +28,7 @@ ITEM: % / scroll of teleportation / scroll of remove curse / scroll of identify
 ITEM: % / w:2 * / scroll of blinking / scroll of recharging / scroll of fear
 SHUFFLE: %1
 ORIENT: float
+KFEAT: O = enter_orcish_mines
 MAP
            xxx
         xxxxOxxxx
@@ -55,6 +57,7 @@ NAME: david_orc_2
 TAGS: orc_entry no_rotate
 MONS: weight:50 orc / orc warrior / nothing
 ORIENT: float
+KFEAT: O = enter_orcish_mines
 MAP
 xxxx..@..xxxx
 x.....I.....x
@@ -75,6 +78,7 @@ TAGS: orc_entry
 MONS: weight:80 nothing / weight:50 orc / orc priest / orc wizard / orc warrior
 MONS: nothing / orc warrior / warg / orc priest
 ORIENT: float
+KFEAT: O = enter_orcish_mines
 MAP
 1.....@....11
 1............
@@ -103,6 +107,7 @@ MONS: weight:30 orc / orc warrior
 KFEAT: X = armour shop / .
 KFEAT: Y = weapon shop / .
 SUBST: ? = 1 $
+KFEAT: O = enter_orcish_mines
 MAP
 @.........@
 ...??..??..
@@ -129,6 +134,7 @@ SUBST: d = ~:16 .
 KFEAT: X = .
 KFEAT: Y = blade trap
 KFEAT: Z = blade trap
+KFEAT: O = enter_orcish_mines
 MAP
 xxxxxxxxxxxxxxxxxxxxxx
 xx?xxx?xxx?xxx?xxxxxxx
@@ -166,6 +172,7 @@ MONS:    orc w:32 / w:7 orc warrior / w:1 orc knight
 MONS:    orc w:32 / w:7 orc warrior
 : end
 SUBST:   x : cxv
+KFEAT:   O = enter_orcish_mines
 MAP
 xxxxxxxxxxxxxxx
 x......O......x
@@ -193,6 +200,7 @@ KFEAT:   1 = 1
 ITEM:    club, potion of confusion, slice of pizza, sausage / weight:40 nothing
 ITEM:    potion of confusion / potion of water
 SHUFFLE: defO
+KFEAT:   O = enter_orcish_mines
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x.........g..........2x...w4xxx
@@ -220,6 +228,7 @@ MONS:  orc warrior
 SUBST: G = 4
 : end
 SUBST: c = c:1000 x
+KFEAT: O = enter_orcish_mines
 MAP
 .............................
 .Iwwwwwwwwwwwwwwwwwwwwwwwwww.
@@ -247,6 +256,7 @@ MONS:   orc warrior / orc priest / orc wizard / nothing
 MONS:   warg / ogre / nothing
 ORIENT: float
 SUBST:  ? = x . $:1
+KFEAT: O = enter_orcish_mines
 MAP
 xxx.xxxxxxxxxxxxxxxxxxx
 xxx?.x?x?xx?xxx??xx?xxx
@@ -287,6 +297,7 @@ SUBST: v : c:60 .
 SUBST: b : c:60 .
 KITEM: 2 = knife
 KFEAT: 2 = 2
+KFEAT: O = enter_orcish_mines
 #
 MAP
 ..............................
@@ -319,6 +330,7 @@ ORIENT: float
 MONS:   orc w:40 / orc wizard w:2 / orc priest w:2, orc warrior
 SUBST:  ? = .x
 SUBST:  ! : .$
+KFEAT: O = enter_orcish_mines
 MAP
 x??@....@....@??x
 xx??.........??xx
@@ -350,6 +362,7 @@ SUBST:  ? = @ x:20 + =
 COLOUR: ! = brown
 FTILE:  ! = floor_orc
 SUBST:  ! : .$
+KFEAT:  O = enter_orcish_mines
 MAP
 xx?xxxxxxx?xx
 x111xxxxx111x
@@ -379,6 +392,7 @@ MONS:   ogre zombie / troll zombie w:3 / hill giant zombie w:1
 MONS:   hungry ghost / phantom / w:1 wraith
 MONS:   w:1 orc sorcerer / orc priest / nothing
 SUBST:  ? = x . $:1
+KFEAT:  O = enter_orcish_mines
 MAP
 xxx.xxxxxxxxxxxxxxxxxxx
 xxx?.x?x?xx?xxx??xx?xxx
@@ -415,6 +429,7 @@ MONS:   hungry ghost / phantom / w:1 wraith
 MONS:   w:1 orc sorcerer / orc priest
 SUBST:  4 = 34
 SUBST:  ? = x . $:1
+KFEAT:  O = enter_orcish_mines
 MAP
 xxxxx..@..xxxxx
 x21....I....12x

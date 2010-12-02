@@ -96,7 +96,6 @@
     // #define DGAMELAUNCH
 
 #ifndef TARGET_COMPILER_MINGW
-    #define MULTIUSER
     #define USE_UNIX_SIGNALS
 #endif
 
@@ -388,13 +387,6 @@
 // clamp time between command inputs at 5 minutes when reporting play time.
 #define IDLE_TIME_CLAMP  (5 * 60)
 
-// Set this to the number of runes that will be required to enter Zot's
-// domain.  You shouldn't set this really high unless you want to
-// make players spend far too much time in Pandemonium/The Abyss.
-//
-// Traditional setting of this is one rune, but three is pretty standard now.
-#define NUMBER_OF_RUNES_NEEDED    3
-
 // Number of top scores to keep. See above for the dgamelaunch setting.
 #ifndef SCORE_FILE_ENTRIES
 #define SCORE_FILE_ENTRIES      100
@@ -415,15 +407,6 @@
 // Wizard death option (needed to test new death messages)
 #define USE_OPTIONAL_WIZARD_DEATH
 
-// Semi-Controlled Blink
-#define USE_SEMI_CONTROLLED_BLINK
-
-// Use new system for weighting str and dex based on weapon type, -- bwr
-#define USE_NEW_COMBAT_STATS
-
-// mv: (new 9 Aug 01) turns off missile trails, might be slow on some computers
-// #define MISSILE_TRAILS_OFF
-
 // bwr: define this if you want to know the pluses, "runed" status
 // of the monster's weapons in the hiscore file.
 #define HISCORE_WEAPON_DETAIL
@@ -434,42 +417,15 @@
 
 #define SAVE_SUFFIX ".cs"
 
-#ifdef MULTIUSER
-    // If you are installing Crawl for multiple users, define SAVE_DIR
-    // to the directory where saves, bones, and score file will go...
-    // end it with a '/'. Since all player files will be in the same
-    // directory, the players UID will be appended when this option is
-    // set.
-    //
-    // If you want to build Crawl that only one user will use, you do not need
-    // to set SAVE_DIR_PATH (and do not need to run make install).
-    //
-    // Setting it to nothing or not setting it will cause all game files to
-    // be dumped in the current directory.
-    //
-    // #define SAVE_DIR_PATH       "/opt/crawl/lib/"
-    // #define SAVE_DIR_PATH       ""
+// If you are installing Crawl for multiple users, define SAVE_DIR
+// to the directory where saves, bones, and score file will go...
+// end it with a '/'. Only one system user should be able to access
+// these -- usually this means you should place them in ~/crawl/
+// unless it's a DGL build.
 
-    // This defines the chmod permissions for score and bones files.
-    #define SHARED_FILES_CHMOD_PRIVATE  0664
-    #define SHARED_FILES_CHMOD_PUBLIC   0664
-
-    // If we're on a multiuser system, file locking of shared files is
-    // very important (else things will just keep getting corrupted)
-    #define USE_FILE_LOCKING
-
-    // Define this if you'd rather have the game block on locked files,
-    // commenting it will poll the file lock once a second for thirty
-    // seconds before giving up.
-    #define USE_BLOCKING_LOCK
-
-    // some files needed for file locking
-    #include <unistd.h>
-    #include <fcntl.h>
-    #include <sys/types.h>
-    #include <sys/stat.h>
-
-#endif /* MULTIUSER */
+// If we're on a multiuser system, file locking of shared files is
+// very important (else things will just keep getting corrupted)
+#define USE_FILE_LOCKING
 
 #if defined(DGL_SIMPLE_MESSAGING) && !defined(USE_FILE_LOCKING)
 #error Must define USE_FILE_LOCKING for DGL_SIMPLE_MESSAGING

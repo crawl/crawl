@@ -74,21 +74,6 @@ bool is_good_name(const std::string& name, bool blankOK, bool verbose)
         return (false);
     }
 
-    // If MULTIUSER is defined, userid will be tacked onto the end
-    // of each character's files, making bones a valid player name.
-#ifndef MULTIUSER
-    // This would cause big probs with ghosts.
-    // What would? {dlb}
-    // ... having the name "bones" of course! The problem comes from
-    // the fact that bones files would have the exact same filename
-    // as level files for a character named "bones".  -- bwr
-    if (stricmp(name.c_str(), "bones") == 0)
-    {
-        if (verbose)
-            cprintf("\nThat's a silly name!\n");
-        return (false);
-    }
-#endif
     return (validate_player_name(name, verbose));
 }
 
