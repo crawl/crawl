@@ -37,7 +37,7 @@
 #include "traps.h"
 #include "view.h"
 
-void identify(int power, int item_slot)
+int identify(int power, int item_slot, std::string *pre_msg)
 {
     int id_used = 1;
 
@@ -53,7 +53,7 @@ void identify(int power, int item_slot)
                                            OSEL_UNIDENT, true, true, false);
         }
         if (prompt_failed(item_slot))
-            return;
+            return(-1);
 
         item_def& item(you.inv[item_slot]);
 
@@ -65,6 +65,9 @@ void identify(int power, int item_slot)
             item_slot = -1;
             continue;
         }
+
+        if (pre_msg)
+            mpr(pre_msg->c_str());
 
         set_ident_type(item, ID_KNOWN_TYPE);
         set_ident_flags(item, ISFLAG_IDENT_MASK);
@@ -108,6 +111,7 @@ void identify(int power, int item_slot)
         item_slot = -1;
     }
     while (id_used > 0);
+    return(1);
 }
 
 static bool _mons_hostile(const monster* mon)

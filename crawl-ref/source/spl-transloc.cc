@@ -58,7 +58,8 @@ static bool _abyss_blocks_teleport(bool cblink)
 // If wizard_blink is set, all restriction are ignored (except for
 // a monster being at the target spot), and the player gains no
 // contamination.
-int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
+int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
+          std::string *pre_msg)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -74,17 +75,29 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
 
     // yes, there is a logic to this ordering {dlb}:
     if (item_blocks_teleport(true, true) && !wizard_blink)
+    {
+        if (pre_msg)
+            mpr(pre_msg->c_str());
         canned_msg(MSG_STRANGE_STASIS);
+    }
     else if (you.level_type == LEVEL_ABYSS
              && _abyss_blocks_teleport(high_level_controlled_blink)
              && !wizard_blink)
     {
+        if (pre_msg)
+            mpr(pre_msg->c_str());
         mpr("The power of the Abyss keeps you in your place!");
     }
     else if (you.confused() && !wizard_blink)
+    {
+        if (pre_msg)
+            mpr(pre_msg->c_str());
         random_blink(false);
+    }
     else if (!allow_control_teleport(true) && !wizard_blink)
     {
+        if (pre_msg)
+            mpr(pre_msg->c_str());
         mpr("A powerful magic interferes with your control of the blink.");
         if (high_level_controlled_blink)
             return (cast_semi_controlled_blink(pow));
@@ -160,6 +173,9 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
                 mpr("You can only blink to visible locations.");
             }
         }
+
+        if (pre_msg)
+            mpr(pre_msg->c_str());
 
         // Allow wizard blink to send player into walls, in case the
         // user wants to alter that grid to something else.
