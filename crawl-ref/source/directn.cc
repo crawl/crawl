@@ -965,10 +965,17 @@ bool direction_chooser::move_is_ok() const
 {
     if (!moves.isCancel && moves.isTarget)
     {
-        if (!you.see_cell(target()))
+        if (!cell_see_cell(you.pos(), target(), LOS_DEFAULT))
         {
-            mpr("Sorry, you can't target what you can't see.",
-                MSGCH_EXAMINE_FILTER);
+            if (you.see_cell(target()))
+            {
+                ASSERT(you.xray_vision);
+                mpr("Your divination affects just sight, not spellcasting.",
+                    MSGCH_EXAMINE_FILTER);
+            }
+            else
+                mpr("Sorry, you can't target what you can't see.",
+                    MSGCH_EXAMINE_FILTER);
             return (false);
         }
 
@@ -2307,7 +2314,7 @@ static bool _find_monster(const coord_def& where, int mode, bool need_path,
     const monster* mon = monster_at(where);
 
     // No monster or outside LOS.
-    if (mon == NULL || !you.see_cell(where))
+    if (mon == NULL || !cell_see_cell(you.pos(), where, LOS_DEFAULT))
         return (false);
 
     // Monster in LOS but only via glass walls, so no direct path.
@@ -2931,8 +2938,8 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return ("gate leading out of Pandemonium");
     case DNGN_TRANSIT_PANDEMONIUM:
         return ("gate leading to another region of Pandemonium");
-    case DNGN_ENTER_DWARF_HALL:
-        return ("staircase to the Dwarf Hall");
+    case DNGN_ENTER_DWARVEN_HALL:
+        return ("staircase to the Dwarven Hall");
     case DNGN_ENTER_ORCISH_MINES:
         return ("staircase to the Orcish Mines");
     case DNGN_ENTER_HIVE:
@@ -2969,7 +2976,7 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return ("gate leading back to the Dungeon");
     case DNGN_TEMP_PORTAL:
         return ("portal to somewhere");
-    case DNGN_RETURN_FROM_DWARF_HALL:
+    case DNGN_RETURN_FROM_DWARVEN_HALL:
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_HIVE:
     case DNGN_RETURN_FROM_LAIR:
@@ -3380,6 +3387,9 @@ static std::vector<std::string> _get_monster_desc_vector(const monster_info& mi)
     else if (mi.is(MB_ENSLAVED))
         descs.push_back("disembodied soul");
 
+    if (mi.is(MB_MIRROR_DAMAGE))
+        descs.push_back("reflecting injuries");
+
     if (mi.fire_blocker)
     {
         descs.push_back("fire blocked by "
@@ -3440,6 +3450,9 @@ static std::string _get_monster_desc(const monster_info& mi)
     }
     else if (mi.is(MB_ENSLAVED))
         text += pronoun + " is a disembodied soul.\n";
+
+    if (mi.is(MB_MIRROR_DAMAGE))
+        text += pronoun + " is reflecting injuries back at attackers.\n";
 
     if (mi.fire_blocker)
     {

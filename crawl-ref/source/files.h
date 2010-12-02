@@ -134,15 +134,9 @@ void lk_close(FILE *handle, const char *mode, const std::string &file);
 
 // file locking stuff
 #ifdef USE_FILE_LOCKING
-bool lock_file_handle(FILE *handle, int type);
+bool lock_file_handle(FILE *handle, bool write);
 bool unlock_file_handle(FILE *handle);
 #endif // USE_FILE_LOCKING
-
-#ifdef SHARED_FILES_CHMOD_PRIVATE
-#define DO_CHMOD_PRIVATE(x) chmod_u((x), SHARED_FILES_CHMOD_PRIVATE)
-#else
-#define DO_CHMOD_PRIVATE(x) // empty command
-#endif
 
 class file_lock
 {

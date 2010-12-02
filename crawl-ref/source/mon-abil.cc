@@ -964,6 +964,17 @@ static bool _siren_movement_effect(const monster* mons)
 static bool _silver_statue_effects(monster* mons)
 {
     actor *foe = mons->get_foe();
+
+    int abjuration_duration = 5;
+
+    // Tone down friendly silver statues for Zotdef (but not only!).
+    if (mons->attitude == ATT_FRIENDLY && foe != &you)
+    {
+        if (!one_chance_in(3))
+            return (false);
+        abjuration_duration = 1;
+    }
+
     if (foe && mons->can_see(foe) && !one_chance_in(3))
     {
         const std::string msg =
@@ -974,7 +985,8 @@ static bool _silver_statue_effects(monster* mons)
             mgen_data(
                 summon_any_demon((coinflip() ? DEMON_COMMON
                                              : DEMON_LESSER)),
-                SAME_ATTITUDE(mons), mons, 5, 0, foe->pos(), mons->foe));
+                SAME_ATTITUDE(mons), mons, abjuration_duration, 0,
+                foe->pos(), mons->foe));
         return (true);
     }
     return (false);
@@ -983,8 +995,21 @@ static bool _silver_statue_effects(monster* mons)
 static bool _orange_statue_effects(monster* mons)
 {
     actor *foe = mons->get_foe();
+
+    int pow  = random2(15);
+    int fail = random2(150);
+
     if (foe && mons->can_see(foe) && !one_chance_in(3))
     {
+        // Tone down friendly OCSs for Zotdef.
+        if (mons->attitude == ATT_FRIENDLY && foe != &you)
+        {
+            if (foe->check_res_magic(120))
+                return (false);
+            pow  /= 2;
+            fail /= 2;
+        }
+
         if (you.can_see(foe))
         {
             if (foe == &you)
@@ -997,7 +1022,7 @@ static bool _orange_statue_effects(monster* mons)
         }
 
         MiscastEffect(foe, mons->mindex(), SPTYP_DIVINATION,
-                      random2(15), random2(150),
+                      pow, fail,
                       "an orange crystal statue");
         return (true);
     }
@@ -2339,6 +2364,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
     case MONS_ACID_BLOB:
     case MONS_OKLOB_PLANT:
+    case MONS_OKLOB_SAPLING:
     case MONS_YELLOW_DRACONIAN:
     {
         if (mons->has_ench(ENCH_CONFUSION))
@@ -2349,11 +2375,41 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
         bool spit = one_chance_in(3);
         if (mons->type == MONS_OKLOB_PLANT)
-            spit = x_chance_in_y(mons->hit_dice, 30);
+            spit = x_chance_in_y(mons->hit_dice,
+                crawl_state.game_is_zotdef() ? 40 : 30); // reduced chance in zotdef
+        if (mons->type == MONS_OKLOB_SAPLING)
+            spit = one_chance_in(4);
 
         if (spit)
         {
             spell = SPELL_ACID_SPLASH;
+            setup_mons_cast(mons, beem, spell);
+
+            // Fire tracer.
+            fire_tracer(mons, beem);
+
+            // Good idea?
+            if (mons_should_fire(beem))
+            {
+                make_mons_stop_fleeing(mons);
+                _mons_cast_abil(mons, beem, spell);
+                used = true;
+            }
+        }
+        break;
+    }
+
+    case MONS_BURNING_BUSH:
+    {
+        if (mons->has_ench(ENCH_CONFUSION))
+            break;
+
+        if (player_or_mon_in_sanct(mons))
+            break;
+
+        if (one_chance_in(3))
+        {
+            spell = SPELL_THROW_FLAME;
             setup_mons_cast(mons, beem, spell);
 
             // Fire tracer.
@@ -2860,7 +2916,7 @@ void mon_nearby_ability(monster* mons)
 // off of.
 void ballisto_on_move(monster* mons, const coord_def & position)
 {
-    if (mons->type == MONS_GIANT_SPORE
+    if (mons->type == MONS_GIANT_SPORE && !crawl_state.game_is_zotdef()
         && !mons->is_summoned())
     {
         dungeon_feature_type ftype = env.grid(mons->pos());

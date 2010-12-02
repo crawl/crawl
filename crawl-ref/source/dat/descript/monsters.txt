@@ -54,7 +54,7 @@ A violent and wrathful demon, Cerebov appears as a giant human covered in shinin
 %%%%
 Chuck
 
-Chuck loves rocks, the bigger the better! Over the years, he has managed to amass quite the collection, including some rare, enchanted ones.
+Chuck the stone giant loves rocks, the bigger the better! Over the years, he has managed to amass quite the collection, including some rare, enchanted ones.
 %%%%
 Crazy Yiuf
 
@@ -219,10 +219,6 @@ There was once a human priest named Mennas. He travelled far and wide preaching 
 
 Whether or not this angel is that same Mennas is something of a mystery, as he seems to have difficulty speaking.
 %%%%
-Paracelsus
-
-A powerful alchemist of particular renown for his discovery of zinc and the beginnings of medicine. His wanderings as an itinerant physician and sometime journeyman miner took him throughout the world, but never could he find a safer replacement for his laudanum. People say he wanders the world in search of one to this day.
-%%%%
 Menkaure
 
 A fair and noble ruler of an ancient and mighty kingdom, mummified after an early death. His faithful priests subsequently infused him with great and powerful magic, seeking to grant him eternal life. Now he is forgotten and reduced to mouldering bandages and dry, brittle bones.
@@ -346,7 +342,6 @@ agate snail
 
 A huge and disgusting gastropod with a light green shell.
 %%%%
-
 air elemental
 
 A spirit drawn from the elemental plane of air. It exists in this world as a swirling vortex of air, often dissipating and reforming.
@@ -470,6 +465,10 @@ A viscous liquid, flowing along the floor in search of organic matter to corrode
 bush
 
 A woody plant that, unlike trees, can be removed even with bare hands. It looks dry enough to be easily set on fire, and it isn't very dense so arrows are likely to go past it.
+%%%%
+burning bush
+
+A mass of blackened twigs wreathed in orange flames. The walls and floor surrounding it are covered in scorch marks.
 %%%%
 bumblebee
 
@@ -671,6 +670,10 @@ A spirit drawn from the elemental plane of earth, which exists in this world by 
 efreet
 
 A huge and muscular figure engulfed in a cloud of searing flame.
+%%%%
+eidolon
+
+An ancient skeletal apparition, sheathed in a cloud of mist. Its form glows white-hot with debilitating energy.
 %%%%
 eldritch tentacle
 
@@ -899,10 +902,6 @@ greater naga
 A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake.
 
 It looks strong and aggressive.
-%%%%
-greater wraith
-
-An ancient skeletal apparition, sheathed in a cloud of mist. Its form glows white-hot with debilitating energy.
 %%%%
 Green Death
 
@@ -1254,21 +1253,21 @@ neqoxec
 
 A weirdly shaped demon, pulsing and shifting with mutagenic energies, its belly distended with the devoured brains of its victims.
 %%%%
-nisse
-
-Nisse take care of a lord's home and children and protect them from misfortune, in particular at night, when the housefolk are asleep. Since nisse are thought to be skilled in illusions and sometimes able to become invisible, getting more than brief glimpses of one is unlikely. Nisse have four fingers, and are hairy all over, with pointed ears. Their eyes glow in the dark.
-%%%%
 ogre
 
 A larger, uglier and fatter relative of orcs and goblins.
 %%%%
-ogre-mage
+ogre mage
 
 A rare breed of ogre, skilled in the use of magic.
 %%%%
 oklob plant
 
 A vicious plant, dripping with vitriol.
+%%%%
+oklob sapling
+
+A young oklob plant, but already dangerous.
 %%%%
 ooze
 
@@ -1639,7 +1638,7 @@ These elite spriggan warriors are known for their prowess with advanced weaponry
 %%%%
 spriggan druid
 
-Revelling nature, these protectors of forests are the doom of anyone who as much as snaps a twig.
+Revelling in nature, these protectors of forests are the doom of anyone who as much as snaps a twig.
 %%%%
 spriggan rider
 

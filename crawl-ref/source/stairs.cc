@@ -27,6 +27,7 @@
 #include "place.h"
 #include "random.h"
 #include "spl-clouds.h"
+#include "spl-damage.h"
 #include "spl-transloc.h"
 #include "stash.h"
 #include "state.h"
@@ -545,7 +546,8 @@ static void _update_travel_cache(bool collect_travel_data,
             // and that we can descend that downstair and get back to where we
             // came from. This assumption is guaranteed false when climbing out
             // of one of the branches of Hell.
-            if (new_level_id != BRANCH_VESTIBULE_OF_HELL)
+            if (new_level_id != BRANCH_VESTIBULE_OF_HELL
+                || !is_hell_subbranch(old_level.branch))
             {
                 // Set the new level's stair, assuming arbitrarily that going
                 // downstairs will land you on the same upstairs you took to
@@ -744,7 +746,16 @@ void up_stairs(dungeon_feature_type force_stair,
 
     _update_travel_cache(collect_travel_data, old_level, stair_pos);
 
+    env.map_shadow = env.map_knowledge;
+    // Preventing obvious finding of stairs at your position.
+    env.map_shadow(you.pos()).flags |= MAP_SEEN_FLAG;
+
     viewwindow();
+
+    // Checking new squares for interesting features.
+    if (!you.running)
+        check_for_interesting_features();
+
     seen_monsters_react();
 
     // Left Zot without enough runes to get back in (because they were
@@ -1322,9 +1333,6 @@ void down_stairs(dungeon_feature_type force_stair,
     if (!force_dest)
         _update_travel_cache(collect_travel_data, old_level, stair_pos);
 
-    // Notifying of new things that comes into view.
-    // Storing current env.map_knowledge to use it as a reference after
-    // LOS is updated.
     env.map_shadow = env.map_knowledge;
     // Preventing obvious finding of stairs at your position.
     env.map_shadow(you.pos()).flags |= MAP_SEEN_FLAG;
@@ -1338,10 +1346,19 @@ void down_stairs(dungeon_feature_type force_stair,
     maybe_update_stashes();
 
     request_autopickup();
+
+    // Zotdef: returning from portals (e.g. bazaar) paralyses the player in
+    // place for 5 moves.  Nasty, but punishes players for using portals as
+    // quick-healing stopovers.
+    if (crawl_state.game_is_zotdef())
+        start_delay(DELAY_UNINTERRUPTIBLE, 5);
+
 }
 
 void new_level(void)
 {
+    cancel_tornado();
+
     if (you.level_type == LEVEL_PORTAL_VAULT)
     {
         // This here because place_name can't find the name of a level that you

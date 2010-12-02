@@ -10,6 +10,8 @@ dc-dngn/dngn_unseen
 
 %include dc-spells.txt
 
+%include dc-skills.txt
+
 dc-misc/todo TODO
 dc-misc/error ERROR
 
@@ -69,4 +71,17 @@ dc-misc/error ERROR
 %start
 %compose tab_selected
 %compose tab_label_monster
+%finish
+
+%start
+%compose tab_unselected
+%compose tab_label_skill
+%finish TAB_SKILL
+%start
+%compose tab_mouseover
+%compose tab_label_skill
+%finish
+%start
+%compose tab_selected
+%compose tab_label_skill
 %finish

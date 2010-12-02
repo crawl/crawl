@@ -34,6 +34,7 @@
 #include "tilereg-mon.h"
 #include "tilereg-msg.h"
 #include "tilereg-spl.h"
+#include "tilereg-skl.h"
 #include "tilereg-stat.h"
 #include "tilereg-tab.h"
 #include "tilereg-text.h"
@@ -331,11 +332,13 @@ bool TilesFramework::initialise()
     m_region_spl  = new SpellRegion(init);
     m_region_mem  = new MemoriseRegion(init);
     m_region_mon  = new MonsterRegion(init);
+    m_region_skl  = new SkillRegion(init);
 
     m_region_tab->set_tab_region(TAB_ITEM, m_region_inv, TILEG_TAB_ITEM);
     m_region_tab->set_tab_region(TAB_SPELL, m_region_spl, TILEG_TAB_SPELL);
     m_region_tab->set_tab_region(TAB_MEMORISE, m_region_mem, TILEG_TAB_MEMORISE);
     m_region_tab->set_tab_region(TAB_MONSTER, m_region_mon, TILEG_TAB_MONSTER);
+    m_region_tab->set_tab_region(TAB_SKILL, m_region_skl, TILEG_TAB_SKILL);
     m_region_tab->activate_tab(TAB_ITEM);
 
     m_region_msg  = new MessageRegion(m_fonts[m_msg_font].font);

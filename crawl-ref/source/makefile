@@ -28,16 +28,15 @@
 #                     dumps).  Can be relative to "prefix", absolute or placed
 #                     in the user's home dir (~).  Remember to protect the ~
 #                     from your shell!
-#    SHAREDDIR     -- place to hold site-wide writeable data (scores, the
-#                     logfile, ghosts).  Will be placed insite the SAVEDIR if
-#                     not specified.
+#                     Warning, shared directories are no longer supported.
+#    SHAREDDIR     -- place to hold writeable data common to multiple
+#                     players (scores, the logfile, ghosts).  Will be placed
+#                     inside the SAVEDIR if not specified.
 #       Layout examples:
 #         prefix=~/crawl DATADIR=data/ SAVEDIR=saves/
 #                  -- everything under ~/crawl
 #         prefix=/usr/local
-#                  -- a typical old-style multiuser installation
-#         prefix=/usr/local SAVEDIR='~/.crawl' SHAREDDIR=/var/games/crawl
-#                  -- multiuser installation with secure saves
+#                  -- system-wide installation
 #
 #    V             -- set to anything to enable verbose build
 #
@@ -118,6 +117,9 @@ STRIP = strip -s
 WINDRES = windres
 CHMOD = chmod 2>/dev/null
 CHOWN = chown 2>/dev/null
+PNGCRUSH = $(COPY)
+PNGCRUSH_LABEL = COPY
+ADVPNG = advpng -z -4
 
 export AR
 export RANLIB
@@ -308,8 +310,9 @@ ifdef USE_MERGE_BASE
 MERGE_BASE := $(shell git merge-base HEAD $(USE_MERGE_BASE))
 endif
 
+ifdef USE_DGAMELAUNCH
 # Permissions to set on the game executable.
-MCHMOD := 2755
+MCHMOD := 755
 
 # Permissions to set on the save directory.
 MCHMOD_SAVEDIR := 775
@@ -317,6 +320,7 @@ MCHMOD_LOGS := 664
 
 # The user:group to install the game as.
 INSTALL_UGRP := games:games
+endif
 
 chroot_prefix :=
 prefix        :=
@@ -342,7 +346,7 @@ endif
 # DATADIR := data/
 ifneq (,$(FHS))
 DATADIR       := share/crawl
-SAVEDIR       := /var/games/crawl
+SAVEDIR       := ~/.crawl
 endif
 
 
@@ -769,6 +773,8 @@ ifndef V
         QUIET_COPY     = @echo '   ' COPY $@;
         QUIET_DEPEND   = @echo '   ' DEPEND $@;
         QUIET_WINDRES  = @echo '   ' WINDRES $@;
+        QUIET_PNGCRUSH = @echo '   ' $(PNGCRUSH_LABEL) $@;
+        QUIET_ADVPNG   = @echo '   ' ADVPNG $@;
         export V
 endif
 endif
@@ -786,6 +792,17 @@ ORIGTILEFILES = $(TILEFILES:%=$(RLTILES)/%)
 DESTTILEFILES = $(TILEFILES:%=dat/tiles/%)
 
 OBJECTS += $(TILEDEFOBJS)
+
+ifndef NO_OPTIMIZE
+  ifneq (,$(shell which advpng))
+    USE_ADVPNG = y
+  else
+    ifneq (,$(shell which pngcrush))
+      PNGCRUSH = pngcrush -q -m 113
+      PNGCRUSH_LABEL = PNGCRUSH
+    endif
+  endif
+endif
 endif
 
 ifdef BUILD_PCRE
@@ -852,8 +869,8 @@ SRC_PKG_TAR   := $(PKG_SRC_DIR).tar.bz2
 SRC_PKG_TAR_NODEPS := $(PKG_SRC_DIR)-nodeps.tar.bz2
 SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 
-.PHONY: all test install clean clean-contrib distclean debug profile wizard package-source source \
-        build-windows package-windows
+.PHONY: all test install clean clean-contrib clean-rltiles distclean debug \
+        profile wizard package-source source build-windows package-windows
 
 all: $(GENERATED_FILES) $(GAME) $(GENERATED_DOCS)
 
@@ -914,7 +931,7 @@ version.o: build.h compflag.h
 ##########################################################################
 # Documentation
 #
-$(DOC_BASE)/aptitudes.txt: $(DOC_TEMPLATES)/apt-tmpl.txt player.cc skills2.cc \
+$(DOC_BASE)/aptitudes.txt: $(DOC_TEMPLATES)/apt-tmpl.txt player.cc aptitudes.h \
 						   util/gen-apt.pl
 	$(QUIET_GEN)./util/gen-apt.pl $@ $^
 
@@ -967,8 +984,6 @@ endif
 	[ -d $(prefix_fp)/$(bin_prefix) ] || mkdir -p $(prefix_fp)/$(bin_prefix)
 	$(COPY) $(GAME) $(prefix_fp)/$(bin_prefix)/
 	$(STRIP) $(prefix_fp)/$(bin_prefix)/$(GAME)
-	$(CHOWN) $(INSTALL_UGRP) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
-	$(CHMOD) $(MCHMOD) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
 	mkdir -p $(datadir_fp)/dat/des
 	mkdir -p $(datadir_fp)/dat/clua
 	mkdir -p $(datadir_fp)/dat/lua
@@ -998,13 +1013,13 @@ ifndef MONOSPACED_FONT
 	$(COPY) dat/tiles/VeraMono.ttf $(datadir_fp)/dat/tiles/
 endif
 endif
-ifeq ($(USE_DGAMELAUNCH),)
-	$(CHOWN) -R $(INSTALL_UGRP) $(datadir_fp) || true
-endif
 ifneq ($(savedir_fp),)
 	mkdir -p $(savedir_fp)/saves
 	mkdir -p $(savedir_fp)/morgue
 ifeq ($(USE_DGAMELAUNCH),)
+	$(CHOWN) $(INSTALL_UGRP) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
+	$(CHMOD) $(MCHMOD) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
+	$(CHOWN) -R $(INSTALL_UGRP) $(datadir_fp) || true
 	$(CHOWN) -R $(INSTALL_UGRP) $(savedir_fp) || true
 	$(CHMOD) $(MCHMOD_SAVEDIR) $(savedir_fp) || true
 	$(CHMOD) $(MCHMOD_SAVEDIR) $(savedir_fp)/saves || true
@@ -1028,9 +1043,8 @@ ifeq ($(USE_DGAMELAUNCH),)
 endif
 endif
 
-clean:
+clean: clean-rltiles
 	+$(MAKE) -C $(UTIL) clean
-	+$(MAKE) -C $(RLTILES) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(OBJECTS) $(OBJECTS:.o=.d) $(YACC_OBJECTS:.o=.d) *.ixx  \
 	    build.h compflag.h .contrib-libs .cflags
@@ -1127,7 +1141,10 @@ $(TILEDEFHDRS): rltile-build
 $(ORIGTILEFILES): rltile-build
 
 dat/tiles/%.png: $(RLTILES)/%.png
-	$(QUIET_COPY)$(COPY) $< $@
+	$(QUIET_PNGCRUSH)$(PNGCRUSH) $< $@
+ifdef USE_ADVPNG
+	$(QUIET_ADVPNG)$(ADVPNG) $@
+endif
 
 clean-rltiles:
 	$(RM) $(DESTTILEFILES)

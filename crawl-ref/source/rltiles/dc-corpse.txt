@@ -20,7 +20,7 @@ queen_ant CORPSE_QUEEN_ANT
 
 ## Batty monsters ('b')
 butterfly CORPSE_BUTTERFLY
-%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
+%back dc-misc/blood_puddle_red dc-misc/blood_puddle_red1 dc-misc/blood_puddle_red2 dc-misc/blood_puddle_red3 dc-misc/blood_puddle_red4
 giant_bat CORPSE_GIANT_BAT
 
 ## Hounds and hogs ('h')
@@ -44,7 +44,7 @@ queen_bee CORPSE_QUEEN_BEE
 giant_firefly CORPSE_FIREFLY
 
 ## Lizards ('l')
-%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
+%back dc-misc/blood_puddle_red dc-misc/blood_puddle_red1 dc-misc/blood_puddle_red2 dc-misc/blood_puddle_red3 dc-misc/blood_puddle_red4
 giant_newt CORPSE_GIANT_NEWT
 giant_gecko CORPSE_GIANT_GECKO
 iguana CORPSE_IGUANA
@@ -58,7 +58,7 @@ giant_slug CORPSE_GIANT_SLUG
 agate_snail CORPSE_AGATE_SNAIL
 
 ## Rodents ('r')
-%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
+%back dc-misc/blood_puddle_red dc-misc/blood_puddle_red1 dc-misc/blood_puddle_red2 dc-misc/blood_puddle_red3 dc-misc/blood_puddle_red4
 rat CORPSE_RAT
 quokka CORPSE_QUOKKA
 grey_rat CORPSE_GREY_RAT
@@ -82,7 +82,7 @@ demonic_crawler CORPSE_DEMONIC_CRAWLER
 
 ## Turtles and crocodiles ('t')
 %sdir dc-mon/animals
-%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
+%back dc-misc/blood_puddle_red dc-misc/blood_puddle_red1 dc-misc/blood_puddle_red2 dc-misc/blood_puddle_red3 dc-misc/blood_puddle_red4
 crocodile CORPSE_CROCODILE
 alligator_baby CORPSE_BABY_ALLIGATOR
 alligator CORPSE_ALLIGATOR
@@ -109,7 +109,7 @@ ghost_moth CORPSE_GHOST_MOTH
 moth_of_wrath CORPSE_MOTH_OF_WRATH
 
 ## Aquatics (';')
-%back dc-misc/blood_red
+%back dc-misc/blood_puddle_red dc-misc/blood_puddle_red1 dc-misc/blood_puddle_red2 dc-misc/blood_puddle_red3 dc-misc/blood_puddle_red4
 big_fish CORPSE_BIG_FISH
 giant_goldfish CORPSE_GIANT_GOLDFISH
 electric_eel CORPSE_ELECTRIC_EEL
@@ -125,14 +125,14 @@ boring_beetle CORPSE_BORING_BEETLE
 boulder_beetle CORPSE_BOULDER_BEETLE
 
 ## Frogs ('F')
-%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
+%back dc-misc/blood_puddle_red dc-misc/blood_puddle_red1 dc-misc/blood_puddle_red2 dc-misc/blood_puddle_red3 dc-misc/blood_puddle_red4
 giant_frog CORPSE_GIANT_FROG
 giant_toad CORPSE_GIANT_TOAD
 blink_frog CORPSE_BLINK_FROG
 spiny_frog CORPSE_SPINY_FROG
 
 ## Snakes ('S')
-%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
+%back dc-misc/blood_puddle_red dc-misc/blood_puddle_red1 dc-misc/blood_puddle_red2 dc-misc/blood_puddle_red3 dc-misc/blood_puddle_red4
 small_snake CORPSE_SMALL_SNAKE
 snake CORPSE_SNAKE
 black_mamba CORPSE_BLACK_MAMBA
@@ -186,7 +186,7 @@ ghoul CORPSE_GHOUL
 rotting_hulk CORPSE_ROTTING_HULK
 
 ## Orcs ('o')
-%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
+%back dc-misc/blood_puddle_red dc-misc/blood_puddle_red1 dc-misc/blood_puddle_red2 dc-misc/blood_puddle_red3 dc-misc/blood_puddle_red4
 %sdir dc-mon
 orc CORPSE_ORC
 
@@ -245,7 +245,7 @@ eye_of_devastation CORPSE_EYE_OF_DEVASTATION
 eye_of_draining CORPSE_EYE_OF_DRAINING
 great_orb_of_eyes CORPSE_GREAT_ORB_OF_EYES
 shining_eye CORPSE_SHINING_EYE
-%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
+%back dc-misc/blood_puddle_red dc-misc/blood_puddle_red1 dc-misc/blood_puddle_red2 dc-misc/blood_puddle_red3 dc-misc/blood_puddle_red4
 giant_orange_brain CORPSE_GIANT_ORANGE_BRAIN
 
 ## Hybrids ('H')
@@ -261,10 +261,9 @@ sphinx CORPSE_SPHINX
 giant_amoeba CORPSE_GIANT_AMOEBA
 
 ## Kobolds ('K')
-%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
+%back dc-misc/blood_puddle_red dc-misc/blood_puddle_red1 dc-misc/blood_puddle_red2 dc-misc/blood_puddle_red3 dc-misc/blood_puddle_red4
 kobold CORPSE_KOBOLD
 big_kobold CORPSE_BIG_KOBOLD
-nisse CORPSE_NISSE
 
 ## Nagas ('N')
 naga CORPSE_NAGA
@@ -288,7 +287,7 @@ glowing_shapeshifter CORPSE_GLOWING_SHAPESHIFTER
 
 ## Draconians ('d')
 %sdir player
-%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
+%back dc-misc/blood_puddle_red dc-misc/blood_puddle_red1 dc-misc/blood_puddle_red2 dc-misc/blood_puddle_red3 dc-misc/blood_puddle_red4
 %start
 %compose drcwing/drcwing_black
 %compose base/draconian_black_m

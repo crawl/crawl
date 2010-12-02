@@ -7,7 +7,8 @@
 #ifndef SYSCALLS_H
 #define SYSCALLS_H
 
-bool lock_file(int fd, bool write);
+bool lock_file(int fd, bool write, bool wait = false);
+bool unlock_file(int fd);
 
 int rename_u(const char *oldpath, const char *newpath);
 int unlink_u(const char *pathname);

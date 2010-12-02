@@ -1127,10 +1127,6 @@ easy_exit_menu = true
         In multidrop (and pickup) menus, paging past the end will drop
         out of the menu if easy_exit_menu is true.
 
-menu_cursor = false
-        Provide extra keys and a cursor for selecting items in multi-select
-        menus.
-
 sort_menus = [menu:](true | false | auto:X)[:sort_order]
         Controls if and how items are sorted in inventory and pickup
         menus.

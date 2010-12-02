@@ -1,6 +1,6 @@
 ################################################
 #
-# Dwarf Hall
+# Dwarven Hall
 #
 # thematic branch based on Scandinavian folklore
 
@@ -67,12 +67,12 @@ end
 dhfh.hall_setup = function(e, glyph)
     local mod
     if (glyph == "|") then
-        mod = local_util.monster_from_statue("greater wraith")
+        mod = local_util.monster_from_statue("eidolon")
         mod:add_triggerer( local_util.new_trigger("item_pickup") )
     else
         local new_monster
         if (local_util.x_chance_in_y(1, 3)) then
-            new_monster="greater wraith"
+            new_monster="eidolon"
         else
             new_monster="freezing wraith"
         end
@@ -105,7 +105,7 @@ TAGS:   extra patrolling no_wall_fixup
 PLACE:  Dwarf:1
 WEIGHT: 10
 ORIENT: float
-MONS:   nothing w:20 / nisse w:30 / deep dwarf / elf w:5
+MONS:   nothing w:20 / deep dwarf / elf w:5
 MONS:   wight / troll w:5 / deep dwarf necromancer w:2 / deep dwarf artificer w:1
 : dhfh.colors(_G)
 MAP
@@ -129,7 +129,7 @@ TAGS:   extra patrolling
 PLACE:  Dwarf:1
 WEIGHT: 10
 ORIENT: float
-KMONS:  1 = nothing w:30 / nisse / deep dwarf w:5 / wight w:2 / troll w:1
+KMONS:  1 = nothing w:30 / deep dwarf w:5 / wight w:2 / troll w:1
 : dhfh.colors(_G)
 MAP
   ccccccc
@@ -153,7 +153,7 @@ WEIGHT: 10
 TAGS:   no_rotate no_wall_fixup
 ORIENT: float
 SUBST:  f = T:40 V:40 U:20
-KMONS:  1 = nothing w:50 / nisse / deep dwarf w:5 / wight w:2 / troll w:1
+KMONS:  1 = nothing w:50 / deep dwarf w:5 / wight w:2 / troll w:1
 : dhfh.colors(_G)
 MAP
 xxxx..@..xxxx
@@ -174,7 +174,7 @@ WEIGHT: 10
 TAGS:   no_rotate no_wall_fixup
 ORIENT: float
 SUBST:  f = T:40 V:40 U:20
-KMONS:  1 = nothing / nisse / deep dwarf w:5 / wight w:2 / troll w:1
+KMONS:  1 = nothing / deep dwarf w:5 / wight w:2 / troll w:1
 : dhfh.colors(_G)
 MAP
 x@xxxxxxxxx@x
@@ -199,7 +199,7 @@ PLACE:  Dwarf:1
 ORIENT: float
 WEIGHT: 5
 SUBST:  f = T:40 V:40 U:20
-KMONS:  1 = nothing / nisse / war dog / giant centipede / \
+KMONS:  1 = nothing / war dog / giant centipede / \
             deep dwarf w:5 / wight w:2 / troll w:1
 KMONS:  2 = nothing / wight / troll w:5 / necrophage w:2
 KMONS:  3 = nothing / orange rat / redback / wolf spider
@@ -259,14 +259,14 @@ TAGS:    extra uniq_dhfh_treasure no_item_gen no_monster_gen no_pool_fixup no_wa
 PLACE:   Dwarf:1
 WEIGHT:  40
 ORIENT:  float
-MONS:    deep dwarf w:30 / nisse / elf w:3
+MONS:    deep dwarf w:30 / elf w:3
 MONS:    deep dwarf w:20 / elf w:3
 MONS:    generate_awake giant centipede / generate_awake redback / \
 generate_awake wolf spider w:8 / generate_awake war dog w:8
 MONS:    generate_awake wight w:20 / generate_awake troll / \
 generate_awake orange rat
-MONS:    deep dwarf w:20 / nisse / elf w:3 / wight w:2
-MONS:    deep dwarf / nisse / elf w:3 / wight w:2 / troll w:5 / orc priest / deep elf priest w:5
+MONS:    deep dwarf w:20 / elf w:3 / wight w:2
+MONS:    deep dwarf / elf w:3 / wight w:2 / troll w:5 / orc priest / deep elf priest w:5
 MONS:    orc priest / deep elf priest w:3
 SUBST:   p = T:40 V:40 U:20
 SUBST:   . = .:92 ~:5 ^:1 %:1 *:1
@@ -316,10 +316,10 @@ TAGS:    extra uniq_dhfh_treasure no_item_gen no_monster_gen no_wall_fixup no_ro
 PLACE:   Dwarf:1
 ORIENT: float
 WEIGHT: 15
-MONS:   deep dwarf w:20, nisse
+MONS:   deep dwarf
 MONS:   troll w:20, elf, wight
 MONS:   wight
-MONS:   patrolling deep dwarf w:20, patrolling nisse
+MONS:   patrolling deep dwarf
 NSUBST: X = 2:= / *:x
 MARKER: = = lua:restrict_door()
 SUBST:  * = **d
@@ -452,7 +452,7 @@ SUBVAULT: W : fruiting_plant
 KITEM:    p = potion of healing / potion of heal wounds / \
               potion of restore abilities w:1 / potion of poison w:3 / \
               potion of strong poison w:1 / potion of confusion w:1 / nothing
-KMONS:    1 = patrolling Paracelsus name:the_alchemist name_suffix
+KMONS:    1 = deep dwarf artificer
 MAP
 ZZZZZ..YYYYY
 ZZZZZ..YYYYY
@@ -518,7 +518,7 @@ SUBVAULT: A : dhfh_hall_right
 SUBVAULT: B : dhfh_hall_right
 SUBVAULT: C : dhfh_hall_right
 SUBVAULT: D : dhfh_hall_right
-KMONS:    1 = patrolling nisse w:3 / patrolling deep dwarf unborn w:5 / \
+KMONS:    1 = patrolling deep dwarf unborn w:5 / \
               patrolling deep dwarf death knight / patrolling deep dwarf necromancer
 KMONS:    2 = shadow wraith / freezing wraith / troll / rock troll w:5 / \
               patrolling deep dwarf death knight w:3 / patrolling deep dwarf necromancer w:2 / \
@@ -553,24 +553,20 @@ TAGS:   extra uniq_dhfh_barracks chance_dhfh_barracks no_shop_gen
 ORIENT: float
 CHANCE: 50%
 DEPTH:  Dwarf:1
-MONS:   nisse w:3 / elf w:5 / deep dwarf / deep dwarf necromancer / \
+MONS:   elf w:5 / deep dwarf / deep dwarf necromancer / \
         deep dwarf berserker
 MONS:   shadow wraith / wraith / wight w:5 / troll / rock troll w:5 / \
         deep dwarf necromancer w:2 / deep dwarf scion w:1
-SUBST:   1 = d e f:5 g:2 i:1 j:1
+SUBST:   1 = d f:5 g:2 j:1
 KMONS:   d = deep dwarf / deep dwarf scion
-KMONS:   e = nisse
 KMONS:   f = deep dwarf necromancer
 KMONS:   g = deep dwarf berserker
 KMONS:   h = deep dwarf ; potion of porridge
-KMONS:   i = nisse ; potion of porridge
 KMONS:   j = deep dwarf necromancer ; potion of porridge
-SUBST:   2 = k l m:5 p:2 q:1 r:1
-KMONS:   k = patrolling nisse
+SUBST:   2 = l m:5 p:2 r:1
 KMONS:   l = patrolling deep dwarf necromancer
 KMONS:   m = patrolling deep dwarf berserker
 KMONS:   p = patrolling deep dwarf ; potion of porridge
-KMONS:   q = patrolling nisse ; potion of porridge
 KMONS:   r = patrolling deep dwarf necromancer ; potion of porridge
 KMONS:   3 = generate_awake wight w:20 / generate_awake troll / \
              generate_awake orange rat
@@ -621,24 +617,20 @@ TAGS:   extra uniq_dhfh_barracks chance_dhfh_barracks no_shop_gen
 ORIENT: float
 CHANCE: 50%
 DEPTH:  Dwarf:1
-MONS:   nisse w:3 / elf w:5 / dwarf / deep dwarf necromancer / \
+MONS:   elf w:5 / dwarf / deep dwarf necromancer / \
         deep dwarf berserker
 MONS:   shadow wraith / wraith / wight w:5 / troll / rock troll w:5 / \
         deep dwarf necromancer w:2 / deep dwarf scion w:1
-SUBST:   1 = d e f:5 g:2 i:1 j:1
+SUBST:   1 = d f:5 g:2 j:1
 KMONS:   d = deep dwarf / deep dwarf scion
-KMONS:   e = nisse
 KMONS:   f = deep dwarf necromancer
 KMONS:   g = deep dwarf berserker
 KMONS:   h = deep dwarf ; potion of porridge
-KMONS:   i = nisse ; potion of porridge
 KMONS:   j = deep dwarf necromancer ; potion of porridge
-SUBST:   2 = k l m:5 p:2 q:1 r:1
-KMONS:   k = patrolling nisse
+SUBST:   2 = l m:5 p:2 r:1
 KMONS:   l = patrolling deep dwarf necromancer
 KMONS:   m = patrolling deep dwarf berserker
 KMONS:   p = patrolling deep dwarf ; potion of porridge
-KMONS:   q = patrolling nisse ; potion of porridge
 KMONS:   r = patrolling deep dwarf necromancer ; potion of porridge
 KMONS:   3 = generate_awake wight w:20 / generate_awake troll / \
              generate_awake orange rat
@@ -689,6 +681,7 @@ ENDMAP
 # Dummy entry
 NAME:    enter_dwarf_dummy
 TAGS:    dwarf_entry
+KFEAT:   O = enter_dwarven_hall
 MAP
 O
 ENDMAP
@@ -699,6 +692,7 @@ SUBST:   . = . ':7
 COLOUR:  ' = yellow
 FTILE:   ' = floor_sandstone
 SUBST:   ' = .
+KFEAT:   O = enter_dwarven_hall
 MAP
 .....
 .'G'.
@@ -718,6 +712,7 @@ SUBST:   D = =
 SUBST:   C = c
 FTILE:   =GO' = floor_sandstone
 SUBST:   ' = .
+KFEAT:   O = enter_dwarven_hall
 MAP
 .......
 .ccDcc.
@@ -739,6 +734,7 @@ MONS:    deep dwarf w:30 / elf w:2 / war dog
 MONS:    wight / orange rat
 MONS:    giant centipede / redback
 SUBST:   . = .:100 11 2 3
+KFEAT:   O = enter_dwarven_hall
 MAP
 .G.
 .O.
@@ -753,6 +749,7 @@ COLOUR:  1 = yellow, ' = yellow, x = white
 MONS:    dwarf w:30 / elf w:2 / war dog
 FTILE:   1'xO = floor_sandstone
 RTILE:   x = wall_tomb
+KFEAT:   O = enter_dwarven_hall
 MAP
 .........
 .xxxxxxx.
@@ -771,6 +768,7 @@ RTILE:   c = wall_tomb, = = wall_tomb
 FTILE:   ='GO = floor_sandstone
 NSUBST:  = = 1:= / *:c
 SUBST:   c : cx
+KFEAT:   O = enter_dwarven_hall
 MAP
    ...
   ..c..
@@ -785,7 +783,7 @@ ENDMAP
 
 NAME:    enter_dwarf_6
 TAGS:    dwarf_entry
-MONS:    nisse w:3 / elf / w:5 deep dwarf / deep dwarf necromancer / \
+MONS:    elf / w:5 deep dwarf / deep dwarf necromancer / \
          deep dwarf artificer
 MONS:    shadow wraith / wraith / wight w:5 / troll / rock troll w:5 / \
          deep dwarf necromancer w:2 / deep dwarf artificer w:1
@@ -793,6 +791,7 @@ FTILE:   12O.A = floor_sandstone
 # crawl will rotate for the rest of possibilities
 NSUBST:  A = 1:= / *:c
 : dhfh.colors(_G)
+KFEAT:   O = enter_dwarven_hall
 MAP
 cccc.cccc
 c1.....1c

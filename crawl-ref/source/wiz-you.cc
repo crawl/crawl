@@ -373,9 +373,10 @@ void wizard_exercise_skill(void)
 #endif
 
 #ifdef WIZARD
-void wizard_set_skill_level(void)
+void wizard_set_skill_level(skill_type skill)
 {
-    skill_type skill = debug_prompt_for_skill("Which skill (by name)? ");
+    if (skill == SK_NONE)
+        skill = debug_prompt_for_skill("Which skill (by name)? ");
 
     if (skill == SK_NONE)
         mpr("That skill doesn't seem to exist.");
@@ -774,6 +775,7 @@ static const char* dur_names[] =
     "afraid",
     "mirror damage",
     "scrying",
+    "tornado",
 };
 
 void wizard_edit_durations(void)

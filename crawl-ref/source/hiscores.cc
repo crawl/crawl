@@ -61,12 +61,6 @@
 #include "skills2.h"
 #define SCORE_VERSION "0.1"
 
-#ifdef MULTIUSER
-    // includes to get passwd file access:
-    #include <pwd.h>
-    #include <sys/types.h>
-#endif
-
 // enough memory allocated to snarf in the scorefile entries
 static std::auto_ptr<scorefile_entry> hs_list[SCORE_FILE_ENTRIES];
 
@@ -496,7 +490,6 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     version           = se.version;
     points            = se.points;
     name              = se.name;
-    uid               = se.uid;
     race              = se.race;
     job               = se.job;
     race_class_name   = se.race_class_name;
@@ -665,7 +658,6 @@ void scorefile_entry::init_with_fields()
     points  = fields->long_field("sc");
 
     name    = fields->str_field("name");
-    uid     = fields->int_field("uid");
     race    = str_to_species(fields->str_field("race"));
     job     = _job_by_name(fields->str_field("cls"));
     lvl     = fields->int_field("xl");
@@ -738,10 +730,11 @@ void scorefile_entry::set_base_xlog_fields() const
         /* XXX: hmmm, something better here? */
         score_version += "-sprint.1";
     }
+    else if (crawl_state.game_is_zotdef())
+        score_version += "-zotdef.1";
     fields->add_field("v", "%s", Version::Short().c_str());
     fields->add_field("lv", score_version.c_str());
     fields->add_field("name", "%s", name.c_str());
-    fields->add_field("uid",  "%d", uid);
     fields->add_field("race", "%s", species_name(race).c_str());
     fields->add_field("cls",  "%s", _job_name(job));
     fields->add_field("char", "%s", race_class_name.c_str());
@@ -1042,7 +1035,6 @@ void scorefile_entry::reset()
     version.clear();
     points               = -1;
     name.clear();
-    uid                  = 0;
     race                 = SP_UNKNOWN;
     job                  = JOB_UNKNOWN;
     lvl                  = 0;
@@ -1133,12 +1125,6 @@ void scorefile_entry::init(time_t dt)
 
     version = Version::Short();
     name    = you.your_name;
-
-#ifdef MULTIUSER
-    uid = static_cast<int>(getuid());
-#else
-    uid = 0;
-#endif
 
     /*
      *  old scoring system:
@@ -1344,25 +1330,10 @@ std::string scorefile_entry::game_time(death_desc_verbosity verbosity) const
     {
         if (real_time > 0)
         {
-            char username[80] = "The";
             char scratch[INFO_SIZE];
 
-#ifdef MULTIUSER
-            if (uid > 0)
-            {
-                struct passwd *pw_entry = getpwuid(uid);
-                if (pw_entry)
-                {
-                    strncpy(username, pw_entry->pw_name, sizeof(username)-3);
-                    username[sizeof(username)-3] = 0;
-                    username[0] = toupper(username[0]);
-                    strcat(username, "'s");
-                }
-            }
-#endif
-            snprintf(scratch, INFO_SIZE, "%s game lasted %s (%d turns).",
-                     username, make_time_string(real_time).c_str(),
-                     num_turns);
+            snprintf(scratch, INFO_SIZE, "The game lasted %s (%d turns).",
+                     make_time_string(real_time).c_str(), num_turns);
 
             line += scratch;
             line += _hiscore_newline_string();

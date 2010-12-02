@@ -34,7 +34,6 @@
 #include "macro.h"
 #include "menu.h"
 #include "message.h"
-#include "mon-pick.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "ouch.h"
@@ -997,7 +996,7 @@ static std::vector<std::string> _get_monster_keys(wchar_t showchar)
 
     for (int i = 0; i < NUM_MONSTERS; i++)
     {
-        if (i == MONS_PROGRAM_BUG || mons_global_level(i) == 0)
+        if (i == MONS_PROGRAM_BUG)
             continue;
 
         monsterentry *me = get_monster_data(i);
@@ -1061,7 +1060,7 @@ static std::vector<std::string> _get_branch_keys()
 static bool _monster_filter(std::string key, std::string body)
 {
     int mon_num = get_monster_by_name(key.c_str(), true);
-    return (mon_num == MONS_PROGRAM_BUG || mons_global_level(mon_num) == 0);
+    return (mon_num == MONS_PROGRAM_BUG);
 }
 
 static bool _spell_filter(std::string key, std::string body)
@@ -1898,15 +1897,15 @@ static int _keyhelp_keyfilter(int ch)
 class help_highlighter : public MenuHighlighter
 {
 public:
-    help_highlighter();
+    help_highlighter(std::string = "");
     int entry_colour(const MenuEntry *entry) const;
 private:
     text_pattern pattern;
     std::string get_species_key() const;
 };
 
-help_highlighter::help_highlighter()
-    : pattern(get_species_key())
+help_highlighter::help_highlighter(std::string highlight_string) :
+    pattern(highlight_string == "" ? get_species_key() : highlight_string)
 {
 }
 
@@ -1930,7 +1929,8 @@ std::string help_highlighter::get_species_key() const
 
 static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
                               bool with_manual, bool easy_exit = false,
-                              int hotkey = 0)
+                              int hotkey = 0,
+                              std::string highlight_string = "")
 {
     formatted_scroller cmd_help;
 
@@ -1954,7 +1954,7 @@ static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
 
     if (with_manual)
     {
-        cmd_help.set_highlighter(new help_highlighter);
+        cmd_help.set_highlighter(new help_highlighter(highlight_string));
         cmd_help.f_keyfilter = _keyhelp_keyfilter;
         column_composer cols(2, 40);
 
@@ -2584,7 +2584,8 @@ static void _add_formatted_hints_help(column_composer &cols)
             true, true, _cmdhelp_textfilter, 40);
 }
 
-void list_commands(int hotkey, bool do_redraw_screen)
+void list_commands(int hotkey, bool do_redraw_screen,
+                   std::string highlight_string)
 {
     // 2 columns, split at column 40.
     column_composer cols(2, 41);
@@ -2597,7 +2598,8 @@ void list_commands(int hotkey, bool do_redraw_screen)
     else
         _add_formatted_keyhelp(cols);
 
-    _show_keyhelp_menu(cols.formatted_lines(), true, false, hotkey);
+    _show_keyhelp_menu(cols.formatted_lines(), true, false, hotkey,
+                       highlight_string);
 
     if (do_redraw_screen)
     {
@@ -2654,7 +2656,8 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>;</w>      : list known levels and counters\n"
                        "<w>{</w>      : magic mapping\n"
                        "<w>}</w>      : detect all traps on level\n"
-                       "<w>)</w>      : change Shoals' tide speed\n",
+                       "<w>)</w>      : change Shoals' tide speed\n"
+                       "<w>Ctrl-E</w> : dump level builder information\n",
                        true, true);
 
     cols.add_formatted(1,

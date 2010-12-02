@@ -9,6 +9,7 @@
 # Weight balancer
 NAME: slime_dummy
 TAGS: slime_entry
+KFEAT: O = enter_slime_pits
 MAP
 O
 ENDMAP
@@ -18,6 +19,7 @@ NAME:   slime_altar_1
 TAGS:   slime_entry
 WEIGHT: 5
 KFEAT:  Z = altar_jiyva
+KFEAT:  O = enter_slime_pits
 MAP
 ....
 .OZ.
@@ -33,6 +35,7 @@ NSUBST: 1 = 1 / 1. , 2 = 2 / 2... , 3 = 3 / 3....
 MONS:   jelly / ooze / brown ooze / giant amoeba
 MONS:   acid blob / slime creature w:5
 MONS:   azure jelly
+KFEAT:  O = enter_slime_pits
 MARKER: + = lua:restrict_door({ \
             door_open_prompt="This door is covered in warnings. Open " .. \
                              "it anyway?", \

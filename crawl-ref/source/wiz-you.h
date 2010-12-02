@@ -7,13 +7,15 @@
 #ifndef WIZYOU_H
 #define WIZYOU_H
 
+#include "enum.h"
+
 void wizard_cast_spec_spell(void);
 void wizard_cast_spec_spell_name(void);
 void wizard_heal(bool super_heal);
 void wizard_set_hunger_state();
 void wizard_set_piety();
 void wizard_exercise_skill(void);
-void wizard_set_skill_level(void);
+void wizard_set_skill_level(skill_type skill = SK_NONE);
 void wizard_set_all_skills(void);
 void wizard_change_species(void);
 void wizard_set_xl();

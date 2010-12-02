@@ -61,7 +61,7 @@ static void _read_each_message()
     // Read messages, code borrowed from the SIMPLEMAIL patch.
     char line[120];
 
-    if (!lock_file_handle(mf, F_RDLCK))
+    if (!lock_file_handle(mf, false))
     {
         mprf(MSGCH_ERROR, "Failed to lock %s: %s", SysEnv.messagefile.c_str(),
              strerror(errno));
@@ -88,7 +88,7 @@ static void _read_each_message()
             _show_message_line(line);
         }
 
-        if (!lock_file_handle(mf, F_RDLCK))
+        if (!lock_file_handle(mf, false))
         {
             mprf(MSGCH_ERROR, "Failed to lock %s: %s",
                  SysEnv.messagefile.c_str(),
@@ -97,7 +97,7 @@ static void _read_each_message()
             return;
         }
     }
-    if (!lock_file_handle(mf, F_WRLCK))
+    if (!lock_file_handle(mf, true))
     {
         mprf(MSGCH_ERROR, "Unable to write lock %s: %s",
              SysEnv.messagefile.c_str(),

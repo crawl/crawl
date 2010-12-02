@@ -340,6 +340,7 @@ public:
     int res_negative_energy() const;
     int res_torment() const;
     int res_acid() const;
+    int res_wind() const;
     int res_magic() const;
 
     flight_type flight_mode() const;

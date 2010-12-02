@@ -150,7 +150,6 @@ int test_melee_hit(int to_hit, int ev, defer_rand& r)
 // wields a less than ideal weapon.
 int effective_stat_bonus(int wepType)
 {
-#ifdef USE_NEW_COMBAT_STATS
     int str_weight;
     if (wepType == -1)
         str_weight = player_weapon_str_weight();
@@ -158,9 +157,6 @@ int effective_stat_bonus(int wepType)
         str_weight = weapon_str_weight(OBJ_WEAPONS, wepType);
 
     return ((you.strength() - you.dex()) * (str_weight - 5) / 10);
-#else
-    return (0);
-#endif
 }
 
 // Returns the to-hit for your extra unarmed attacks.
@@ -516,7 +512,7 @@ void melee_attack::identify_mimic(actor *act)
         && you.can_see(act))
     {
         monster* mon = act->as_monster();
-        mon->flags |= MF_KNOWN_MIMIC;
+        discover_mimic(mon);
     }
 }
 
@@ -579,9 +575,10 @@ bool melee_attack::attack()
     }
 
     // Defending monster protects itself from attacks using the wall
-    // it's in.
+    // it's in. Zotdef: allow a 5% chance of a hit anyway
     if (defender->atype() == ACT_MONSTER && cell_is_solid(defender->pos())
-        && mons_wall_shielded(defender->as_monster()))
+        && mons_wall_shielded(defender->as_monster())
+        && !one_chance_in(20))
     {
         std::string feat_name = raw_feature_description(grd(defender->pos()));
 
@@ -868,25 +865,8 @@ bool melee_attack::player_attack()
 
         if (damage_done > 0 || !defender_visible && !shield_blocked)
         {
-            if (defender->as_monster()->props.exists("HELPLESS")
-                && defender->as_monster()->props["HELPLESS"].get_bool())
-            {
-                // Modifying monster flags to apply "helpless" adjective.
-                uint64_t prev_flags = defender->as_monster()->flags;
-                std::string prev_mname = defender->as_monster()->mname;
-                defender->as_monster()->flags |= MF_NAME_ADJECTIVE;
-                defender->as_monster()->flags |= MF_NAME_DESCRIPTOR;
-                defender->as_monster()->mname = "helpless";
-
-                player_announce_hit();
-
-                // Restoring pre-fight MF_NAME_ADJECTIVE flag status.
-                defender->as_monster()->props.erase("HELPLESS");
-                defender->as_monster()->flags = prev_flags;
-                defender->as_monster()->mname = prev_mname;
-            }
-            else
-                player_announce_hit();
+            player_announce_hit();
+            defender->as_monster()->del_ench(ENCH_HELPLESS);
         }
         else if (!shield_blocked && damage_done <= 0)
         {
@@ -1034,7 +1014,6 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
     case UNAT_TAILSLAP:
         aux_attack = aux_verb = "tail-slap";
 
-        // Usually one level, or two for grey draconians.
         aux_damage = 6 * you.has_usable_tail();
 
         noise_factor = 125;
@@ -1113,14 +1092,6 @@ static bool _tran_forbid_aux_attack(unarmed_attack_type atk)
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT);
-
-    case UNAT_TAILSLAP:
-        return (you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT);
-
-    case UNAT_PSEUDOPODS:
-        return (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE);
 
     default:
         return (false);
@@ -1232,7 +1203,7 @@ bool melee_attack::player_aux_test_hit()
     if (!auto_hit && to_hit >= evasion && helpful_evasion > evasion
         && defender_visible)
     {
-        defender->as_monster()->props["HELPLESS"] = true;
+        defender->as_monster()->add_ench(ENCH_HELPLESS);
     }
 
     if (to_hit >= evasion || auto_hit)
@@ -1383,25 +1354,8 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         wpn_skill   = SK_UNARMED_COMBAT;
         player_exercise_combat_skills();
 
-        if (defender->as_monster()->props.exists("HELPLESS")
-            && defender->as_monster()->props["HELPLESS"].get_bool())
-        {
-            // Modifying monster flags to apply "helpless" adjective.
-            uint64_t prev_flags = defender->as_monster()->flags;
-            std::string prev_mname = defender->as_monster()->mname;
-            defender->as_monster()->flags |= MF_NAME_ADJECTIVE;
-            defender->as_monster()->flags |= MF_NAME_DESCRIPTOR;
-            defender->as_monster()->mname = "helpless";
-
-            player_announce_aux_hit();
-
-            // Restoring pre-fight MF_NAME_ADJECTIVE flag status.
-            defender->as_monster()->props.erase("HELPLESS");
-            defender->as_monster()->flags = prev_flags;
-            defender->as_monster()->mname = prev_mname;
-        }
-        else
-            player_announce_aux_hit();
+        player_announce_aux_hit();
+        defender->as_monster()->del_ench(ENCH_HELPLESS);
 
         if (damage_brand == SPWPN_ACID)
         {
@@ -1420,13 +1374,12 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
             _player_vampire_draws_blood(defender->as_monster(), damage_done);
         }
 
-        if (atk == UNAT_TAILSLAP && you.species == SP_GREY_DRACONIAN &&
-            grd(you.pos()) == DNGN_DEEP_WATER &&
-            feat_is_water(grd(defender->as_monster()->pos())))
+        if (atk == UNAT_TAILSLAP && you.species == SP_GREY_DRACONIAN
+            && grd(you.pos()) == DNGN_DEEP_WATER
+            && feat_is_water(grd(defender->as_monster()->pos())))
         {
             do_trample();
         }
-
     }
     else // no damage was done
     {
@@ -1576,7 +1529,7 @@ int melee_attack::player_hits_monster()
         || defender->as_monster()->petrifying()
             && !one_chance_in(2 + you.skills[SK_STABBING]))
     {
-        defender->as_monster()->props["HELPLESS"] = true;
+        defender->as_monster()->add_ench(ENCH_HELPLESS);
         return (1);
     }
 
@@ -3727,9 +3680,7 @@ void melee_attack::player_apply_staff_damage()
         return;
 
     if (random2(15) > you.skills[SK_EVOCATIONS])
-    {
         return;
-    }
 
     switch (weapon->sub_type)
     {
@@ -3746,7 +3697,7 @@ void melee_attack::player_apply_staff_damage()
         if (special_damage)
         {
             special_damage_message =
-                make_stringf("%s is jolted!",
+                make_stringf("%s is electrocuted!",
                              defender->name(DESC_CAP_THE).c_str());
             special_damage_flavour = BEAM_ELECTRICITY;
         }
@@ -6297,8 +6248,6 @@ static inline int player_weapon_dex_weight(void)
 // weighted average of strength and dex, between (str+dex)/2 and dex
 static inline int calc_stat_to_hit_base(void)
 {
-#ifdef USE_NEW_COMBAT_STATS
-
     // towards_str_avg is a variable, whose sign points towards strength,
     // and the magnitude is half the difference (thus, when added directly
     // to you.dex() it gives the average of the two.
@@ -6307,23 +6256,13 @@ static inline int calc_stat_to_hit_base(void)
     // dex is modified by strength towards the average, by the
     // weighted amount weapon_str_weight() / 10.
     return (you.dex() + towards_str_avg * player_weapon_str_weight() / 10);
-
-#else
-    return (you.dex());
-#endif
 }
 
 // weighted average of strength and dex, between str and (str+dex)/2
 static inline int calc_stat_to_dam_base(void)
 {
-#ifdef USE_NEW_COMBAT_STATS
-
     const signed int towards_dex_avg = (you.dex() - you.strength()) / 2;
     return (you.strength() + towards_dex_avg * player_weapon_dex_weight() / 10);
-
-#else
-    return (you.strength());
-#endif
 }
 
 static void stab_message(actor *defender, int stab_bonus)

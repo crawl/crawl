@@ -1840,7 +1840,7 @@ bool monster::pickup_potion(item_def &item, int near)
     // them.
     const potion_type ptype = static_cast<potion_type>(item.sub_type);
 
-    if (type != MONS_PARACELSUS && !can_drink_potion(ptype))
+    if (!can_drink_potion(ptype))
         return (false);
 
     return (pickup(item, MSLOT_POTION, near));
@@ -3334,6 +3334,11 @@ int monster::res_torment() const
     return (0);
 }
 
+int monster::res_wind() const
+{
+    return mons_class_res_wind(type);
+}
+
 int monster::res_acid() const
 {
     return (get_mons_resists(this).acid);
@@ -3421,6 +3426,9 @@ int monster::skill(skill_type sk, bool) const
 {
     switch (sk)
     {
+    case SK_EVOCATIONS:
+        return (type == MONS_DEEP_DWARF_ARTIFICER ? hit_dice * 2 : hit_dice);
+
     case SK_NECROMANCY:
         return (holiness() == MH_UNDEAD ? hit_dice / 2 : hit_dice / 3);
 
@@ -4509,6 +4517,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " emerges from its shell.");
         break;
 
+    case ENCH_LEVITATION:
+        apply_location_effects(pos(), me.killer(), me.kill_agent());
+        break;
+
     default:
         break;
     }
@@ -4790,11 +4802,16 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_ANTIMAGIC:
     case ENCH_REGENERATION:
     case ENCH_RAISED_MR:
-    case ENCH_MIRROR_DAMAGE:
     case ENCH_STONESKIN:
     case ENCH_FEAR_INSPIRING:
     case ENCH_LIFE_TIMER:
+    case ENCH_LEVITATION:
         decay_enchantment(me);
+        break;
+
+    case ENCH_MIRROR_DAMAGE:
+        if (decay_enchantment(me))
+            simple_monster_message(this, "'s dark mirror aura disappears.");
         break;
 
     case ENCH_SILENCE:
@@ -5207,9 +5224,9 @@ void monster::apply_enchantment(const mon_enchant &me)
             env.pgrid(base_position) |= FPROP_BLOODY;
             add_ench(ENCH_SEVERED);
 
-            // Severed tentacles immediately become "hostile" (or insane)
-            this->attitude = ATT_HOSTILE;
-            behaviour_event(this, ME_ALERT, MHITYOU);
+            // Severed tentacles immediately become "hostile" to everyone (or insane)
+            this->attitude = ATT_NEUTRAL;
+            behaviour_event(this, ME_ALERT, MHITNOT);
         }
     }
     break;
@@ -5608,7 +5625,9 @@ bool monster::near_foe() const
 
 bool monster::has_lifeforce() const
 {
-    return (holiness() == MH_NATURAL || holiness() == MH_PLANT);
+    const mon_holy_type holi = holiness();
+
+    return (holi == MH_NATURAL || holi == MH_PLANT);
 }
 
 bool monster::can_mutate() const
@@ -5981,8 +6000,6 @@ bool monster::can_drink_potion(potion_type ptype) const
         case POT_BLOOD:
         case POT_BLOOD_COAGULATED:
             return (mons_species() == MONS_VAMPIRE);
-        case POT_PORRIDGE:
-            return (mons_species() == MONS_NISSE);
         case POT_SPEED:
         case POT_MIGHT:
         case POT_BERSERK_RAGE:
@@ -6316,7 +6333,8 @@ static const char *enchant_names[] =
     "insane", "silenced", "awaken_forest", "exploding", "bleeding",
     "tethered", "severed", "antimagic", "fading_away", "preparing_resurrect", "regen",
     "magic_res", "mirror_dam", "stoneskin", "fear inspiring", "temporarily pacified",
-    "withdrawn", "attached", "guardian_timer", "buggy",
+    "withdrawn", "attached", "guardian_timer", "levitation", "helpless",
+    "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

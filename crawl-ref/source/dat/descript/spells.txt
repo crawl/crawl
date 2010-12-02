@@ -645,6 +645,14 @@ Throw Frost
 
 This spell throws a small bolt of frost.
 %%%%
+Tornado
+
+This spell turns the air around the caster in a mighty vortex, doing tremendous damage to everyone caught in it. Only the eye of the storm is a safe place, and it follows the caster. Everything not firmly nailed down will be lifted and tossed around.
+
+The spell's effectiveness is greatly diminished in closed areas.
+
+As a side effect, this spell may be used to cross lava, but beware of its short duration.
+%%%%
 Tukima's Dance
 
 This spell causes a weapon held in the caster's hand to dance into the air and strike the caster's enemies. It will not function on magical staves and certain wilful artefacts.

@@ -1273,11 +1273,19 @@ void ouch(int dam, int death_source, kill_method_type death_type,
               true);
     if (you.lives && !non_death)
     {
+        mark_milestone("death", lowercase_first(
+            se.death_description(scorefile_entry::DDV_NORMAL)).c_str());
+
         you.deaths++;
         you.lives--;
         you.dead = true;
 
         stop_delay(true);
+
+        mprnojoin("You die...");
+        xom_death_message((kill_method_type) se.get_death_type());
+        more();
+
         _place_player_corpse(death_type == KILLED_BY_DISINT);
         return;
     }
@@ -1341,10 +1349,10 @@ void end_game(scorefile_entry &se)
 
     for (int i = 0; i < ENDOFPACK; i++)
     {
+        if (!you.inv[i].defined())
+            continue;
         set_ident_flags(you.inv[i], ISFLAG_IDENT_MASK);
-
-        if (you.inv[i].base_type != 0)
-            set_ident_type(you.inv[i], ID_KNOWN_TYPE);
+        set_ident_type(you.inv[i], ID_KNOWN_TYPE);
         if (Options.autoinscribe_artefacts && is_artefact(you.inv[i]))
         {
             std::string inscr = artefact_auto_inscription(you.inv[i]);

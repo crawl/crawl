@@ -238,11 +238,9 @@ static void _abyss_erase_stairs_from(const vault_placement *vp)
 static bool _abyss_place_map(const map_def *mdef,
                              bool clobber,
                              bool make_no_exits = false,
-                             const coord_def &where = INVALID_COORD,
-                             int rune_subst = -1)
+                             const coord_def &where = INVALID_COORD)
 {
-    const bool did_place = dgn_safe_place_map(mdef, clobber, make_no_exits,
-                                              where, rune_subst);
+    const bool did_place = dgn_safe_place_map(mdef, clobber, make_no_exits, where);
     if (did_place)
         _abyss_erase_stairs_from(env.level_vaults[env.level_vaults.size() - 1]);
 
@@ -250,15 +248,13 @@ static bool _abyss_place_map(const map_def *mdef,
 }
 
 static bool _abyss_place_vault_tagged(const map_mask &abyss_genlevel_mask,
-                                      const std::string &tag,
-                                      int rune_subst = -1)
+                                      const std::string &tag)
 {
     const map_def *map = random_map_for_tag(tag, false, true);
     if (map)
     {
         unwind_vault_placement_mask vaultmask(&abyss_genlevel_mask);
-        return (_abyss_place_map(map, false, false, INVALID_COORD,
-                                 rune_subst));
+        return (_abyss_place_map(map, false, false, INVALID_COORD));
     }
     return (false);
 }
@@ -454,8 +450,7 @@ static bool _abyss_check_place_feat(coord_def p,
         // When placing Abyss exits, try to use a vault if we have one.
         if (which_feat == DNGN_EXIT_ABYSS
             && use_map && *use_map
-            && _abyss_place_vault_tagged(abyss_genlevel_mask, "abyss_exit",
-                                              which_feat))
+            && _abyss_place_vault_tagged(abyss_genlevel_mask, "abyss_exit"))
         {
             *use_map = false;
         }
@@ -1378,7 +1373,7 @@ bool lugonu_corrupt_level(int power)
     if (is_level_incorruptible())
         return (false);
 
-    mpr("Lugonu's Hand of Corruption reaches out!", MSGCH_GOD);
+    simple_god_message("'s Hand of Corruption reaches out!");
 
     flash_view(MAGENTA);
 

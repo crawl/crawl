@@ -13,6 +13,8 @@ dc-misc/cursor CURSOR
 %sdir player/base
 human_f HUMAN
 human_m
+human_dark_f
+human_dark_m
 elf_m ELF
 elf_f
 deep_elf_f DEEP_ELF
@@ -27,6 +29,8 @@ orc_f ORC
 orc_m
 kobold_m KOBOLD
 kobold_f
+kobold2_m
+kobold2_f
 mummy_m MUMMY
 mummy_f
 naga_f NAGA
@@ -35,6 +39,10 @@ naga_darkgreen_f
 naga_darkgreen_m
 naga_lightgreen_f
 naga_lightgreen_m
+naga_blue_f
+naga_blue_m
+naga_red_f
+naga_red_m
 ogre_m OGRE
 ogre_f
 troll_f TROLL
@@ -90,6 +98,8 @@ kenku_wingless_f KENKU
 kenku_wingless_m
 kenku_winged_f
 kenku_winged_m
+kenku_wingless_brown_f
+kenku_wingless_brown_m
 merfolk_m MERFOLK
 merfolk_f
 merfolk_water_m MERFOLK_WATER
@@ -788,22 +798,43 @@ knot_red KNOT_RED
 brown1 BROWN1
 brown2 BROWN2
 green GREEN
+kenku_comb KENKU_COMB
 %end_ctg
 
 ###Beard
 %parts_ctg BEARD
 %sdir player/beard
-
+full_black FULL_BLACK
+full_blonde FULL_BLONDE
+full_brown FULL_BROWN
+full_green FULL_GREEN
+full_red FULL_RED
+full_white FULL_WHITE
+garibaldi_black GARIBALDI_BLACK
+garibaldi_blonde GARIBALDI_BLONDE
+garibaldi_brown GARIBALDI_BROWN
+garibaldi_green GARIBALDI_GREEN
+garibaldi_red GARIBALDI_RED
+garibaldi_white GARIBALDI_WHITE
+medium_black MEDIUM_BLACK
+medium_blonde MEDIUM_BLONDE
+medium_brown MEDIUM_BROWN
+medium_green MEDIUM_GREEN
+medium_red MEDIUM_RED
+medium_white MEDIUM_WHITE
+scarf SCARF
 short_black SHORT_BLACK
-short_red SHORT_RED
-short_yellow SHORT_YELLOW
-short_white SHORT_WHITE
+short_blonde SHORT_BLONDE
+short_brown SHORT_BROWN
 short_green SHORT_GREEN
-long_black LONG_BLACK
-long_red LONG_RED
-long_yellow LONG_YELLOW
-long_white LONG_WHITE
-long_green LONG_GREEN
+short_red SHORT_RED
+short_white SHORT_WHITE
+stubble_black STUBBLE_BLACK
+stubble_blonde STUBBLE_BLONDE
+stubble_brown STUBBLE_BROWN
+stubble_green STUBBLE_GREEN
+stubble_red STUBBLE_RED
+stubble_white STUBBLE_WHITE
 pj PJ
 %end_ctg
 

@@ -178,50 +178,6 @@ static void _give_potion(monster* mon, int level)
         mitm[thing_created].flags = 0;
         _give_monster_item(mon, thing_created);
     }
-    else if (mons_species(mon->type) == MONS_NISSE && one_chance_in(6))
-    {
-        const int thing_created =
-            items(0, OBJ_POTIONS, POT_PORRIDGE, true, level, 0);
-
-        if (thing_created == NON_ITEM)
-            return;
-
-        mitm[thing_created].flags = 0;
-        _give_monster_item(mon, thing_created, true);
-    }
-    else if (mon->type == MONS_PARACELSUS)
-    {
-        int type = random2(4);
-        switch (type)
-        {
-        case 0:
-            type = OBJ_RANDOM;
-            break;
-        case 1:
-            type = POT_HEALING;
-            break;
-        case 2:
-            type = POT_HEAL_WOUNDS;
-            break;
-        case 3:
-            type = POT_POISON;
-            break;
-        case 4:
-            type = POT_STRONG_POISON;
-            break;
-        default:
-            type = POT_WATER;
-            break;
-        }
-        int pot = items(0, OBJ_POTIONS, type, true, level, 0);
-
-        if (pot == NON_ITEM)
-            return;
-
-        mitm[pot].flags = 0;
-        _give_monster_item(mon, pot, true,
-                           &monster::pickup_potion);
-    }
     else if (mons_is_unique(mon->type) && one_chance_in(3))
     {
         const int thing_created =
@@ -533,6 +489,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         level = MAKE_GOOD_ITEM;
         break;
 
+    case MONS_ELF:
     case MONS_DEEP_ELF_FIGHTER:
     case MONS_DEEP_ELF_HIGH_PRIEST:
     case MONS_DEEP_ELF_KNIGHT:
@@ -1042,7 +999,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         break;
 
     case MONS_DEEP_DWARF_ARTIFICER:
-        if (one_chance_in(2))
+        if (coinflip())
         {
             item.base_type = OBJ_STAVES;
             item.sub_type  = STAFF_STRIKING;
@@ -1182,19 +1139,6 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         // no quick blades for mooks
         item.sub_type  = random_choose(WPN_DAGGER, WPN_SHORT_SWORD,
                                        WPN_SABRE, -1);
-        break;
-
-    case MONS_NISSE:
-        if (!melee_only && one_chance_in(6))
-        {
-            item.base_type = OBJ_WEAPONS;
-            item.sub_type  = WPN_BLOWGUN;
-            item_race = MAKE_ITEM_NO_RACE;
-            break;
-        }
-        item_race = MAKE_ITEM_NO_RACE;
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = ((one_chance_in(3))? WPN_WAR_AXE: WPN_SPEAR);
         break;
 
     case MONS_SPRIGGAN_RIDER:
@@ -1662,6 +1606,7 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         break;
 
     case MONS_DUVESSA:
+    case MONS_ELF:
     case MONS_DEEP_ELF_ANNIHILATOR:
     case MONS_DEEP_ELF_CONJURER:
     case MONS_DEEP_ELF_DEATH_MAGE:
@@ -1807,16 +1752,12 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         item.sub_type  = ARM_ROBE;
         break;
 
+    case MONS_DWARF:
+    case MONS_DEEP_DWARF:
     case MONS_DEEP_DWARF_SCION:
     case MONS_DEEP_DWARF_DEATH_KNIGHT:
     case MONS_DEEP_DWARF_BERSERKER:
-    case MONS_DEEP_DWARF:
-    case MONS_DWARF:
         item_race = MAKE_ITEM_DWARVEN;
-        // deliberate fall through
-
-    case MONS_NISSE:
-    {
         item.base_type = OBJ_ARMOUR;
         item.sub_type = random_choose_weighted(5, ARM_CHAIN_MAIL,
                                                1, ARM_SPLINT_MAIL,
@@ -1824,7 +1765,6 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
                                                1, ARM_PLATE_MAIL,
                                                0);
         break;
-    }
 
     case MONS_MERFOLK_IMPALER:
         item_race = MAKE_ITEM_NO_RACE;

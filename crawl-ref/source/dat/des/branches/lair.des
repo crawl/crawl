@@ -15,6 +15,7 @@ NAME:   lair_0_dummy
 TAGS:   lair_entry dummy
 WEIGHT: 30
 ORIENT: float
+KFEAT:  O = enter_lair
 MAP
 O
 ENDMAP
@@ -29,6 +30,7 @@ MONS:    nothing / yak / weight:2 death yak, plant / fungus / w:20 nothing
 MONS:    elephant
 SHUFFLE: 12
 ORIENT:  float
+KFEAT:   O = enter_lair
 MAP
 xxxx..@..xxxx
 xx.........xx
@@ -49,6 +51,7 @@ TAGS:   lair_entry
 MONS:   plant, fire drake
 SUBST:  ' = 1.
 ORIENT: float
+KFEAT:  O = enter_lair
 MAP
 xxxxxxxxxxxxx
 xx111111111xx
@@ -76,6 +79,7 @@ MONS:    w:90 nothing / w:30 giant frog / blink frog / giant toad /\
          spiny frog
 MONS:    elephant
 SHUFFLE: 123456
+KFEAT:   O = enter_lair
 MAP
 111...@......
 111..........
@@ -102,6 +106,7 @@ MONS:   plant, oklob plant / w:150 plant
 MONS:   fungus, wandering mushroom / w:50 fungus
 :end
 SUBST:  ? = 2.
+KFEAT:  O = enter_lair
 MAP
 ...xxxxxxx...
 ..x.......x..
@@ -126,6 +131,7 @@ MONS: generate_awake boring beetle
 # Rats are boring.
 ORIENT: float
 SUBST: ? = c x $ .
+KFEAT: O = enter_lair
 MAP
 xxxxxxxxx?xxxx
 xxxxxx?xxxx?xx
@@ -147,6 +153,7 @@ ORIENT: float
 MONS:   w:60 troll / Snorg
 MONS:   w:30 hound / jackal / w:20 war dog
 SUBST:  ? = w.
+KFEAT:  O = enter_lair
 MAP
 .@........wwwwww?.....
 ..?.?.?..wwwwwww.?..?.
@@ -176,6 +183,7 @@ MONS:    w:20 iguana / komodo dragon / giant gecko / crocodile / nothing
 SUBST:   ? = x.c
 SHUFFLE: %*RO
 KITEM:   R = w:2 honeycomb / w:1 royal jelly
+KFEAT:   O = enter_lair
 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -203,6 +211,7 @@ MONS:   orc
 MONS:   warg / agate snail
 MONS:   orc warrior / warg
 MONS:   orc priest / orc wizard / plant
+KFEAT:  O = enter_lair
 MAP
 xxxx..@..xxxx
 xx.........xx
@@ -234,6 +243,7 @@ SUBST:  G = .
 COLOUR: B = brown
 FTILE:  B = floor_dirt
 SUBST:  B = .
+KFEAT:  O = enter_lair
 MAP
        ..1.1..
      ...........
@@ -979,7 +989,7 @@ MARKER: G = lua:portal_desc { desc="elephant-shaped statue", \
             desc_long=("This worn granite statue depicts" .. \
                        " elephants standing guard.") }
 COLOUR: oG = green
-TILE:   oG = dngn_elephant_statue
+TILE:   oG = dngn_statue_elephant
 MARKER: o = lua:monster_on_death { \
             target="anaconda_guard", new_monster="generate_awake dire elephant", \
             message_seen="The elephant guardians awaken!", \
