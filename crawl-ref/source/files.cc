@@ -986,7 +986,6 @@ public:
                 end(1, true, "failed to rename %s -> %s",
                     tmp_filename.c_str(), target_filename.c_str());
         }
-        DO_CHMOD_PRIVATE(target_filename.c_str());
     }
 
     FILE *open()
@@ -2406,9 +2405,6 @@ FILE *lk_open(const char *mode, const std::string &file)
     FILE *handle = fopen(file.c_str(), mode);
     if (!handle)
         return NULL;
-#ifdef SHARED_FILES_CHMOD_PUBLIC
-    fchmod(fileno(handle), SHARED_FILES_CHMOD_PUBLIC);
-#endif
 
 #ifdef USE_FILE_LOCKING
     int locktype = F_RDLCK;
@@ -2434,11 +2430,6 @@ void lk_close(FILE *handle, const char *mode, const std::string &file)
 
 #ifdef USE_FILE_LOCKING
     unlock_file_handle(handle);
-#endif
-
-#ifdef SHARED_FILES_CHMOD_PUBLIC
-    if (mode && mode[0] == 'w')
-        fchmod(fileno(handle), SHARED_FILES_CHMOD_PUBLIC);
 #endif
 
     // actually close
