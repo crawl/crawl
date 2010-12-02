@@ -922,6 +922,7 @@ int player_equip(equipment_type slot, int sub_type, bool calc_unid)
 int player_equip_ego_type(int slot, int special, bool calc_unid)
 {
     int ret = 0;
+    bool melded = (special == SPARM_PONDEROUSNESS);
 
     item_def* item;
     switch (slot)
@@ -950,7 +951,7 @@ int player_equip_ego_type(int slot, int special, bool calc_unid)
         // Check all armour slots:
         for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
         {
-            if ((item = you.slot_item(static_cast<equipment_type>(i)))
+            if ((item = you.slot_item(static_cast<equipment_type>(i), melded))
                 && get_armour_ego_type(*item) == special
                 && (calc_unid || item_type_known(*item)))
             {
@@ -966,7 +967,7 @@ int player_equip_ego_type(int slot, int special, bool calc_unid)
             return (0);
         }
         // Check a specific armour slot for an ego type:
-        if ((item = you.slot_item(static_cast<equipment_type>(slot)))
+        if ((item = you.slot_item(static_cast<equipment_type>(slot), melded))
             && get_armour_ego_type(*item) == special
             && (calc_unid || item_type_known(*item)))
         {
@@ -4090,8 +4091,11 @@ int scan_artefacts(artefact_prop_type which_property, bool calc_unid)
 
     for (int i = EQ_WEAPON; i < NUM_EQUIP; ++i)
     {
-        if (!player_wearing_slot(i))
+        if (you.melded[i] && which_property != ARTP_PONDEROUS
+            || you.equip[i] == -1)
+        {
             continue;
+        }
 
         const int eq = you.equip[i];
 
