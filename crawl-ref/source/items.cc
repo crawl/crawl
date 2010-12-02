@@ -58,6 +58,7 @@
 #include "spl-book.h"
 #include "spl-util.h"
 #include "state.h"
+#include "stairs.h"
 #include "stuff.h"
 #include "areas.h"
 #include "stash.h"
@@ -145,6 +146,22 @@ static bool _item_ok_to_clean(int item)
     return (true);
 }
 
+static bool _item_preferred_to_clean(int item)
+{
+    // Preferably clean "normal" weapons and ammo
+    if (mitm[item].base_type == OBJ_WEAPONS
+        && mitm[item].plus <= 0 && mitm[item].plus2 <= 0
+        && !is_artefact(mitm[item]))
+        return (true);
+
+    if (mitm[item].base_type == OBJ_MISSILES
+        && mitm[item].plus <= 0 && mitm[item].plus2 <= 0
+        && !is_artefact(mitm[item]))
+        return (true);
+
+    return (false);
+}
+
 // Returns index number of first available space, or NON_ITEM for
 // unsuccessful cleanup (should be exceedingly rare!)
 static int _cull_items(void)
@@ -164,31 +181,41 @@ static int _cull_items(void)
     //  7. uniques weapons are moved to the abyss
     //  8. randarts are simply lost
     //  9. unrandarts are 'destroyed', but may be generated again
+    // 10. Remove +0 weapons and ammo first, only removing others if this fails.
 
     int first_cleaned = NON_ITEM;
 
     // 2. Avoid shops by avoiding (0,5..9).
     // 3. Avoid monster inventory by iterating over the dungeon grid.
-    for (rectangle_iterator ri(1); ri; ++ri)
+
+    // 10. Remove +0 weapons and ammo first, only removing others if this fails.
+    // Loop twice. First iteration, get rid of uninteresting stuff. Second
+    // iteration, get rid of anything non-essential
+    for (int remove_all=0; remove_all<2 && first_cleaned==NON_ITEM; remove_all++)
     {
-        if (distance(you.pos(), *ri) <= dist_range(9))
-            continue;
-
-        for (stack_iterator si(*ri); si; ++si)
+        for (rectangle_iterator ri(1); ri; ++ri)
         {
-            if (_item_ok_to_clean(si->index()) && x_chance_in_y(15, 100))
+            if (distance(you.pos(), *ri) <= dist_range(9))
+                continue;
+
+            for (stack_iterator si(*ri); si; ++si)
             {
-                if (is_unrandom_artefact(*si))
+                if (_item_ok_to_clean(si->index())
+                    && (remove_all || _item_preferred_to_clean(si->index()))
+                    && x_chance_in_y(15, 100))
                 {
-                    // 7. Move uniques to abyss.
-                    set_unique_item_status(*si, UNIQ_LOST_IN_ABYSS);
+                    if (is_unrandom_artefact(*si))
+                    {
+                        // 7. Move uniques to abyss.
+                        set_unique_item_status(*si, UNIQ_LOST_IN_ABYSS);
+                    }
+
+                    if (first_cleaned == NON_ITEM)
+                        first_cleaned = si->index();
+
+                    // POOF!
+                    destroy_item( si->index() );
                 }
-
-                if (first_cleaned == NON_ITEM)
-                    first_cleaned = si->index();
-
-                // POOF!
-                destroy_item(si->index());
             }
         }
     }
@@ -1494,6 +1521,16 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         // Fake a successful pickup (return 1), so we can continue to
         // pick up anything else that might be on this square.
         return (1);
+    }
+
+    if (mitm[obj].base_type == OBJ_ORBS && crawl_state.game_is_zotdef())
+    {
+        std::vector<int> runes;
+        if (runes_in_pack(runes) < 15)
+        {
+            mpr("You must possess at least fifteen runes to touch the sacred Orb which you defend.");
+            return (1);
+        }
     }
 
     int retval = quant_got;
@@ -3594,6 +3631,14 @@ bool get_item_by_name(item_def *item, char* specs,
     return (true);
 }
 
+// Returns the position of the Orb on the floor, or
+// coord_def() if not present
+coord_def orb_position()
+{
+    item_def* orb = find_floor_item(OBJ_ORBS,ORB_ZOT);
+    return (orb ? orb->pos: coord_def());
+}
+
 void move_items(const coord_def r, const coord_def p)
 {
     ASSERT(in_bounds(r));
@@ -3719,8 +3764,13 @@ item_info get_item_info(const item_def& item)
         if (item_type_known(item))
         {
             ii.sub_type = item.sub_type;
-            if (item_ident(ii, ISFLAG_KNOW_PLUSES) && item.props.exists("rod_enchantment"))
-                ii.props["rod_enchantment"] = item.props["rod_enchantment"];
+            if (item_ident(ii, ISFLAG_KNOW_PLUSES))
+            {
+                if (item.props.exists("rod_enchantment"))
+                    ii.props["rod_enchantment"] = item.props["rod_enchantment"];
+                ii.plus = item.plus;
+                ii.plus2 = item.plus2;
+            }
         }
         else
             ii.sub_type = item_is_rod(item) ? STAFF_FIRST_ROD : 0;

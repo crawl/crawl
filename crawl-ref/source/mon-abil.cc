@@ -881,7 +881,7 @@ bool slime_creature_mutate(monster* slime)
 // -- added equivalency for huldra
 static bool _siren_movement_effect(const monster* mons)
 {
-    bool do_resist = (you.attribute[ATTR_HELD] || you.check_res_magic(70)
+    bool do_resist = (you.attribute[ATTR_HELD] || you.check_res_magic(70) > 0
                       || you.cannot_act() || you.asleep());
 
     if (!do_resist)
@@ -964,6 +964,17 @@ static bool _siren_movement_effect(const monster* mons)
 static bool _silver_statue_effects(monster* mons)
 {
     actor *foe = mons->get_foe();
+
+    int abjuration_duration = 5;
+
+    // Tone down friendly silver statues for Zotdef (but not only!).
+    if (mons->attitude == ATT_FRIENDLY && foe != &you)
+    {
+        if (!one_chance_in(3))
+            return (false);
+        abjuration_duration = 1;
+    }
+
     if (foe && mons->can_see(foe) && !one_chance_in(3))
     {
         const std::string msg =
@@ -974,7 +985,8 @@ static bool _silver_statue_effects(monster* mons)
             mgen_data(
                 summon_any_demon((coinflip() ? DEMON_COMMON
                                              : DEMON_LESSER)),
-                SAME_ATTITUDE(mons), mons, 5, 0, foe->pos(), mons->foe));
+                SAME_ATTITUDE(mons), mons, abjuration_duration, 0,
+                foe->pos(), mons->foe));
         return (true);
     }
     return (false);
@@ -983,8 +995,21 @@ static bool _silver_statue_effects(monster* mons)
 static bool _orange_statue_effects(monster* mons)
 {
     actor *foe = mons->get_foe();
+
+    int pow  = random2(15);
+    int fail = random2(150);
+
     if (foe && mons->can_see(foe) && !one_chance_in(3))
     {
+        // Tone down friendly OCSs for Zotdef.
+        if (mons->attitude == ATT_FRIENDLY && foe != &you)
+        {
+            if (foe->check_res_magic(120))
+                return (false);
+            pow  /= 2;
+            fail /= 2;
+        }
+
         if (you.can_see(foe))
         {
             if (foe == &you)
@@ -997,7 +1022,7 @@ static bool _orange_statue_effects(monster* mons)
         }
 
         MiscastEffect(foe, mons->mindex(), SPTYP_DIVINATION,
-                      random2(15), random2(150),
+                      pow, fail,
                       "an orange crystal statue");
         return (true);
     }
@@ -2339,6 +2364,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
     case MONS_ACID_BLOB:
     case MONS_OKLOB_PLANT:
+    case MONS_OKLOB_SAPLING:
     case MONS_YELLOW_DRACONIAN:
     {
         if (mons->has_ench(ENCH_CONFUSION))
@@ -2349,11 +2375,41 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
         bool spit = one_chance_in(3);
         if (mons->type == MONS_OKLOB_PLANT)
-            spit = x_chance_in_y(mons->hit_dice, 30);
+            spit = x_chance_in_y(mons->hit_dice,
+                crawl_state.game_is_zotdef() ? 40 : 30); // reduced chance in zotdef
+        if (mons->type == MONS_OKLOB_SAPLING)
+            spit = one_chance_in(4);
 
         if (spit)
         {
             spell = SPELL_ACID_SPLASH;
+            setup_mons_cast(mons, beem, spell);
+
+            // Fire tracer.
+            fire_tracer(mons, beem);
+
+            // Good idea?
+            if (mons_should_fire(beem))
+            {
+                make_mons_stop_fleeing(mons);
+                _mons_cast_abil(mons, beem, spell);
+                used = true;
+            }
+        }
+        break;
+    }
+
+    case MONS_BURNING_BUSH:
+    {
+        if (mons->has_ench(ENCH_CONFUSION))
+            break;
+
+        if (player_or_mon_in_sanct(mons))
+            break;
+
+        if (one_chance_in(3))
+        {
+            spell = SPELL_THROW_FLAME;
             setup_mons_cast(mons, beem, spell);
 
             // Fire tracer.
@@ -2696,7 +2752,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             // Once mesmerised by a particular monster, you cannot resist
             // anymore.
             if (!already_mesmerised
-                && (you.species == SP_MERFOLK || you.check_res_magic(100)))
+                && (you.species == SP_MERFOLK || you.check_res_magic(100) > 0))
             {
                 if (!did_resist)
                     canned_msg(MSG_YOU_RESIST);
@@ -2788,14 +2844,17 @@ void mon_nearby_ability(monster* mons)
             if (foe->atype() == ACT_PLAYER && !can_see)
                 mpr("You feel you are being watched by something.");
 
-            if (foe->check_res_magic((mons->hit_dice * 5) * confuse_power))
+            int res_margin = foe->check_res_magic((mons->hit_dice * 5)
+                             * confuse_power);
+            if (res_margin > 0)
             {
                 if (foe->atype() == ACT_PLAYER)
                     canned_msg(MSG_YOU_RESIST);
                 else if (foe->atype() == ACT_MONSTER)
                 {
                     const monster* foe_mons = foe->as_monster();
-                    simple_monster_message(foe_mons, mons_resist_string(foe_mons));
+                    simple_monster_message(foe_mons,
+                           mons_resist_string(foe_mons, res_margin).c_str());
                 }
                 break;
             }
@@ -2857,7 +2916,7 @@ void mon_nearby_ability(monster* mons)
 // off of.
 void ballisto_on_move(monster* mons, const coord_def & position)
 {
-    if (mons->type == MONS_GIANT_SPORE
+    if (mons->type == MONS_GIANT_SPORE && !crawl_state.game_is_zotdef()
         && !mons->is_summoned())
     {
         dungeon_feature_type ftype = env.grid(mons->pos());
@@ -2974,7 +3033,7 @@ void activate_ballistomycetes(monster* mons, const coord_def & origin,
             && any_friendly
             && mons->type == MONS_BALLISTOMYCETE)
         {
-            mprf("Your fungal colony was destroyed.");
+            mpr("Your fungal colony was destroyed.");
             dock_piety(5, 0);
         }
 
@@ -2995,8 +3054,8 @@ void activate_ballistomycetes(monster* mons, const coord_def & origin,
             && ballisto_count == 0
             && mons->attitude == ATT_HOSTILE)
         {
-            mprf("Having destroyed the fungal colony, you feel a bit more "
-                 "experienced.");
+            mpr("Having destroyed the fungal colony, you feel a bit more "
+                "experienced.");
             gain_exp(500);
 
             // Get rid of the mold, so it'll be more useful when new fungi
@@ -3015,12 +3074,11 @@ void activate_ballistomycetes(monster* mons, const coord_def & origin,
     if (candidates.size() > 25)
         return;
 
-
     std::random_shuffle(candidates.begin(), candidates.end());
 
     int index = 0;
 
-    for (int i=0; i<activation_count; ++i)
+    for (int i = 0; i < activation_count; ++i)
     {
         index = i % candidates.size();
 
@@ -3047,13 +3105,9 @@ void activate_ballistomycetes(monster* mons, const coord_def & origin,
         while (thread)
         {
             if (you.see_cell(thread->pos))
-            {
                 env.pgrid(thread->pos) |= FPROP_GLOW_MOLD;
-
-            }
 
             thread = thread->last;
         }
     }
-
 }

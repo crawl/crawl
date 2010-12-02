@@ -14,15 +14,42 @@
 #undef rename
 
 #include <io.h>
+#else
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #endif
 
-bool lock_file(int fd, bool write)
+bool lock_file(int fd, bool write, bool wait)
 {
 #ifdef TARGET_OS_WINDOWS
-    return !!LockFile((HANDLE)_get_osfhandle(fd), 0, 0, -1, -1);
+    OVERLAPPED pos;
+    pos.hEvent     = 0;
+    pos.Offset     = 0;
+    pos.OffsetHigh = 0;
+    return !!LockFileEx((HANDLE)_get_osfhandle(fd),
+                        (write ? LOCKFILE_EXCLUSIVE_LOCK : 0) |
+                        (wait ? 0 : LOCKFILE_FAIL_IMMEDIATELY),
+                        0, -1, -1, &pos);
 #else
     struct flock fl;
     fl.l_type = write ? F_WRLCK : F_RDLCK;
+    fl.l_whence = SEEK_SET;
+    fl.l_start = 0;
+    fl.l_len = 0;
+
+    return !fcntl(fd, wait ? F_SETLKW : F_SETLK, &fl);
+#endif
+}
+
+bool unlock_file(int fd)
+{
+#ifdef TARGET_OS_WINDOWS
+    return !!UnlockFile((HANDLE)_get_osfhandle(fd), 0, 0, -1, -1);
+#else
+    struct flock fl;
+    fl.l_type = F_UNLCK;
     fl.l_whence = SEEK_SET;
     fl.l_start = 0;
     fl.l_len = 0;

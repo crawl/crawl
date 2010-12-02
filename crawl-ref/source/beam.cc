@@ -1838,10 +1838,11 @@ static bool _monster_resists_mass_enchantment(monster* mons,
         if (mons->holiness() != MH_UNDEAD)
             return (true);
 
-        if (mons->check_res_magic(pow))
+        int res_margin = mons->check_res_magic(pow);
+        if (res_margin > 0)
         {
-            if (simple_monster_message(mons, mons_immune_magic(mons)
-                                       ? " is unaffected." : " resists."))
+            if (simple_monster_message(mons,
+                    mons_resist_string(mons, res_margin).c_str()))
             {
                 *did_msg = true;
             }
@@ -1857,10 +1858,11 @@ static bool _monster_resists_mass_enchantment(monster* mons,
             return (true);
         }
 
-        if (mons->check_res_magic(pow))
+        int res_margin = mons->check_res_magic(pow);
+        if (res_margin > 0)
         {
-            if (simple_monster_message(mons, mons_immune_magic(mons)
-                                       ? " is unaffected." : " resists."))
+            if (simple_monster_message(mons,
+                    mons_resist_string(mons, res_margin).c_str()))
             {
                 *did_msg = true;
             }
@@ -2181,7 +2183,7 @@ void mimic_alert(monster* mimic)
     if (mimic->has_ench(ENCH_TP) || mons_is_feat_mimic(mimic->type))
     {
         if (should_id)
-            mimic->flags |= MF_KNOWN_MIMIC;
+            discover_mimic(mimic);
 
         return;
     }
@@ -2191,7 +2193,7 @@ void mimic_alert(monster* mimic)
 
     // At least for this short while, we know it's a mimic.
     if (!instant_tele && should_id)
-        mimic->flags |= MF_KNOWN_MIMIC;
+        discover_mimic(mimic);
 }
 
 static void _create_feat_at(coord_def center,
@@ -2481,6 +2483,7 @@ void bolt::affect_ground()
         }
 
         if (x_chance_in_y(2, 21)
+           && !crawl_state.game_is_zotdef() // Turn off in Zotdef
            && mons_class_can_pass(MONS_BALLISTOMYCETE, env.grid(pos()))
            && !actor_at(pos()))
         {
@@ -3182,7 +3185,7 @@ void bolt::affect_player_enchantment()
         ench_power = ench_power * 6 / 5;
 
     if (flavour != BEAM_POLYMORPH && has_saving_throw()
-        && you.check_res_magic(ench_power))
+        && you.check_res_magic(ench_power) > 0)
     {
         // You resisted it.
 
@@ -3943,7 +3946,8 @@ void bolt::enchantment_affect_monster(monster* mon)
         _zap_animation(-1, mon, false);
 
     // Try to hit the monster with the enchantment.
-    const mon_resist_type ench_result = try_enchant_monster(mon);
+    int res_margin = 0;
+    const mon_resist_type ench_result = try_enchant_monster(mon, res_margin);
 
     if (mon->alive())           // Aftereffects.
     {
@@ -3955,8 +3959,11 @@ void bolt::enchantment_affect_monster(monster* mon)
         switch (ench_result)
         {
         case MON_RESIST:
-            if (simple_monster_message(mon, " resists."))
+            if (simple_monster_message(mon,
+                                   resist_margin_phrase(res_margin).c_str()))
+            {
                 msg_generated = true;
+            }
             break;
         case MON_UNAFFECTED:
             if (simple_monster_message(mon, " is unaffected."))
@@ -4177,6 +4184,7 @@ void bolt::affect_monster(monster* mon)
         apply_hit_funcs(mon, 0);
         return;
     }
+
     if (fedhas_shoot_through(*this, mon))
     {
         apply_hit_funcs(mon, 0);
@@ -4594,7 +4602,7 @@ bool enchant_monster_invisible(monster* mon, const std::string how)
     return (false);
 }
 
-mon_resist_type bolt::try_enchant_monster(monster* mon)
+mon_resist_type bolt::try_enchant_monster(monster* mon, int &res_margin)
 {
     // Early out if the enchantment is meaningless.
     if (!_ench_flavour_affects_monster(flavour, mon))
@@ -4617,7 +4625,8 @@ mon_resist_type bolt::try_enchant_monster(monster* mon)
         }
         else
         {
-            if (mon->check_res_magic(ench_power))
+            res_margin = mon->check_res_magic(ench_power);
+            if (res_margin > 0)
                 return (MON_RESIST);
         }
     }

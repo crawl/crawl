@@ -28,7 +28,8 @@ DungeonCellBuffer::DungeonCellBuffer(ImageManager *im) :
     m_buf_doll(&im->m_textures[TEX_PLAYER], 17),
     m_buf_main_trans(&im->m_textures[TEX_DEFAULT], 17),
     m_buf_main(&im->m_textures[TEX_DEFAULT]),
-    m_buf_spells(&im->m_textures[TEX_GUI])
+    m_buf_spells(&im->m_textures[TEX_GUI]),
+    m_buf_skills(&im->m_textures[TEX_GUI])
 {
 }
 
@@ -116,6 +117,11 @@ void DungeonCellBuffer::add_spell_tile(int tileidx, int x, int y)
     m_buf_spells.add(tileidx, x, y);
 }
 
+void DungeonCellBuffer::add_skill_tile(int tileidx, int x, int y)
+{
+    m_buf_skills.add(tileidx, x, y);
+}
+
 void DungeonCellBuffer::clear()
 {
     m_buf_floor.clear();
@@ -125,6 +131,7 @@ void DungeonCellBuffer::clear()
     m_buf_main_trans.clear();
     m_buf_main.clear();
     m_buf_spells.clear();
+    m_buf_skills.clear();
 }
 
 void DungeonCellBuffer::draw()
@@ -134,6 +141,7 @@ void DungeonCellBuffer::draw()
     m_buf_feat.draw();
     m_buf_doll.draw();
     m_buf_main_trans.draw();
+    m_buf_skills.draw();
     m_buf_main.draw();
     m_buf_spells.draw();
 }
@@ -529,6 +537,9 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         m_buf_main.add(TILE_SOMETHING_UNDER, x, y);
 
     int status_shift = 0;
+    if (fg & TILE_FLAG_MIMIC)
+        m_buf_main.add(TILE_MIMIC, x, y);
+
     if (fg & TILE_FLAG_BERSERK)
     {
         m_buf_main.add(TILE_BERSERK, x, y);
@@ -536,20 +547,24 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
     }
 
     // Pet mark
-    if (fg & TILE_FLAG_PET)
+    if (fg & TILE_FLAG_ATT_MASK)
     {
-        m_buf_main.add(TILE_HEART, x, y);
-        status_shift += 10;
-    }
-    else if (fg & TILE_FLAG_GD_NEUTRAL)
-    {
-        m_buf_main.add(TILE_GOOD_NEUTRAL, x, y);
-        status_shift += 8;
-    }
-    else if (fg & TILE_FLAG_NEUTRAL)
-    {
-        m_buf_main.add(TILE_NEUTRAL, x, y);
-        status_shift += 8;
+        const tileidx_t att_flag = fg & TILE_FLAG_ATT_MASK;
+        if (att_flag == TILE_FLAG_PET)
+        {
+            m_buf_main.add(TILE_HEART, x, y);
+            status_shift += 10;
+        }
+        else if (att_flag == TILE_FLAG_GD_NEUTRAL)
+        {
+            m_buf_main.add(TILE_GOOD_NEUTRAL, x, y);
+            status_shift += 8;
+        }
+        else if (att_flag == TILE_FLAG_NEUTRAL)
+        {
+            m_buf_main.add(TILE_NEUTRAL, x, y);
+            status_shift += 8;
+        }
     }
     else if (fg & TILE_FLAG_STAB)
     {

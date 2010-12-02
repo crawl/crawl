@@ -185,7 +185,7 @@ std::string InvEntry::get_filter_text() const
 
 std::string InvEntry::get_text(bool need_cursor) const
 {
-    need_cursor = need_cursor && Options.menu_cursor;
+    need_cursor = need_cursor && show_cursor;
 
     std::ostringstream tstr;
 
@@ -320,6 +320,12 @@ void InvEntry::set_show_prices(bool doshow)
     show_prices = doshow;
 }
 
+bool InvEntry::show_cursor = false;
+void InvEntry::set_show_cursor(bool doshow)
+{
+    show_cursor = doshow;
+}
+
 InvShowPrices::InvShowPrices(bool doshow)
 {
     InvEntry::set_show_prices(doshow);
@@ -344,6 +350,8 @@ InvMenu::InvMenu(int mflags)
     if (Options.tile_menu_icons)
 #endif
         mdisplay->set_num_columns(2);
+
+    InvEntry::set_show_cursor(false);
 }
 
 // Returns vector of item_def pointers to each item_def in the given

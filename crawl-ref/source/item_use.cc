@@ -4257,7 +4257,15 @@ bool enchant_weapon(enchant_stat_type which_stat, bool quiet, item_def &wpn)
             }
         }
 
-        do_uncurse_item(wpn);
+        do_uncurse_item(wpn, true, true);
+    }
+    else
+    {
+        if (uncurse_only)
+        {
+            if (!quiet)
+                canned_msg(MSG_NOTHING_HAPPENS);
+        }
     }
 
     return (true);
@@ -4312,7 +4320,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
         hide2armour(arm);
         ac_change = property(arm, PARM_AC) - ac_change;
 
-        do_uncurse_item(arm);
+        do_uncurse_item(arm, true, true);
 
         // No additional enchantment.
         return (true);
@@ -4331,7 +4339,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
                      arm.name(DESC_CAP_YOUR).c_str());
             }
 
-            do_uncurse_item(arm);
+            do_uncurse_item(arm, true, true);
             return (true);
         }
         else
@@ -4356,7 +4364,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
 
     arm.plus++;
     ac_change++;
-    do_uncurse_item(arm);
+    do_uncurse_item(arm, true, true);
 
     return (true);
 }
@@ -4477,13 +4485,25 @@ static bool _scroll_modify_item(item_def scroll)
             identify(-1, item_slot);
             return (true);
         }
+        else
+        {
+            get_type_id_props()["SCR_ID"] = item.name(DESC_PLAIN, false,
+                                                      false, false);
+        }
         break;
     case SCR_RECHARGING:
         if (item_is_rechargeable(item, false, true))
         {
             if (recharge_wand(item_slot, false))
                 return (true);
+            get_type_id_props()["SCR_RC"] = item.name(DESC_PLAIN, false,
+                                                      false, false);
             return (false);
+        }
+        else
+        {
+            get_type_id_props()["SCR_RC"] = item.name(DESC_PLAIN, false,
+                                                      false, false);
         }
         break;
     case SCR_ENCHANT_ARMOUR:
@@ -4493,7 +4513,14 @@ static bool _scroll_modify_item(item_def scroll)
             // (If so, already prints the "Nothing happens" message.)
             if (_handle_enchant_armour(item_slot))
                 return (true);
+            get_type_id_props()["SCR_EA"] = item.name(DESC_PLAIN, false,
+                                                      false, false);
             return (false);
+        }
+        else
+        {
+            get_type_id_props()["SCR_EA"] = item.name(DESC_PLAIN, false,
+                                                      false, false);
         }
         break;
     default:
@@ -4858,7 +4885,7 @@ void read_scroll(int slot)
             }
 
             if (is_cursed)
-                do_uncurse_item(wpn);
+                do_uncurse_item(wpn, true, true);
 
             if (success)
             {

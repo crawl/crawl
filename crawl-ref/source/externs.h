@@ -575,7 +575,7 @@ public:
 
 private:
     std::string name_aux(description_level_type desc,
-                         bool terse, bool ident,
+                         bool terse, bool ident, bool with_inscription,
                          iflags_t ignore_flags) const;
 };
 

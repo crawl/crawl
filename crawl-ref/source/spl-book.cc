@@ -139,8 +139,8 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_RECALL,
      SPELL_SHADOW_CREATURES,
      SPELL_SUMMON_UGLY_THING,
-     SPELL_HAUNT,
-     SPELL_SUMMON_HORRIBLE_THINGS,
+     SPELL_NO_SPELL,
+     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
@@ -205,8 +205,8 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     {SPELL_DISCHARGE,
      SPELL_LIGHTNING_BOLT,
      SPELL_FIREBALL,
+     SPELL_TORNADO,
      SPELL_SHATTER,
-     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -273,7 +273,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_CONJURE_FLAME,
      SPELL_POISONOUS_CLOUD,
      SPELL_FREEZING_CLOUD,
-     SPELL_NO_SPELL,
+     SPELL_TORNADO,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
@@ -323,7 +323,11 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      },
 
     // Book of the Sky
+#if TAG_MAJOR_VERSION != 31
     {SPELL_SUMMON_ELEMENTAL,
+#else
+    {SPELL_TORNADO, // in more books for now to get more testing
+#endif
      SPELL_INSULATION,
      SPELL_AIRSTRIKE,
      SPELL_FLY,
@@ -553,13 +557,13 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      },
 
     // Book of Demonology - Vehumet special
-    {SPELL_CALL_IMP,
-     SPELL_ABJURATION,
-     SPELL_RECALL,
-     SPELL_SUMMON_DEMON,
+    {SPELL_SUMMON_DEMON,
      SPELL_DEMONIC_HORDE,
+     SPELL_HAUNT,
      SPELL_SUMMON_GREATER_DEMON,
      SPELL_MALIGN_GATEWAY,
+     SPELL_SUMMON_HORRIBLE_THINGS,
+     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
 
@@ -2018,12 +2022,20 @@ bool forget_spell_from_book(spell_type spell, const item_def* book)
     }
     mprf("As you tear out the page describing %s, the book crumbles to dust.",
         spell_title(spell));
-    del_spell_from_memory(spell);
-    destroy_spellbook(*book);
-    dec_inv_item_quantity(book->link, 1);
-    you.turn_is_over = true;
 
-    return (true);
+    if (del_spell_from_memory(spell))
+    {
+        destroy_spellbook(*book);
+        dec_inv_item_quantity(book->link, 1);
+        you.turn_is_over = true;
+        return (true);
+    }
+    else
+    {
+        // This shouldn't happen.
+        mprf("A bug prevents you from forgetting %s.", spell_title(spell));
+        return (false);
+    }
 }
 
 int count_staff_spells(const item_def &item, bool need_id)

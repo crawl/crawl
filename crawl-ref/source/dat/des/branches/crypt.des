@@ -14,6 +14,7 @@
 NAME:   dummy_crypt_entry
 WEIGHT: 50
 TAGS:   crypt_entry
+KFEAT:  O = enter_crypt
 MAP
 O
 ENDMAP
@@ -23,6 +24,7 @@ NAME:   minmay_crypt_entry_simple_round
 ORIENT: float
 TAGS:   crypt_entry
 MONS:   place:Crypt:1
+KFEAT:  O = enter_crypt
 MAP
 .........
 ..ccccc..
@@ -42,6 +44,7 @@ NAME:   minmay_crypt_entry_simple_box
 ORIENT: float
 TAGS:   crypt_entry
 MONS:   place:Crypt:1
+KFEAT:  O = enter_crypt
 MAP
 .......
 .cc.cc.
@@ -57,6 +60,7 @@ NAME:   minmay_crypt_entry_simple_statues
 ORIENT: float
 TAGS:   crypt_entry
 MONS:   place:Crypt:1
+KFEAT:  O = enter_crypt
 MAP
 ...........
 .x.......x.
@@ -76,6 +80,7 @@ NAME:   minmay_crypt_entry_simple_sparse
 ORIENT: float
 TAGS:   crypt_entry
 MONS:   place:Crypt:1
+KFEAT:  O = enter_crypt
 MAP
 ...........
 .x...x...x.
@@ -95,6 +100,7 @@ NAME:   minmay_crypt_entry_simple_walls
 ORIENT: float
 TAGS:   crypt_entry
 MONS:   place:Crypt:1
+KFEAT:  O = enter_crypt
 MAP
 ..........
 .xxxxxxxx.
@@ -118,6 +124,7 @@ NAME:   minmay_crypt_entry_simple_corners
 ORIENT: float
 TAGS:   crypt_entry
 MONS:   place:Crypt:1
+KFEAT:  O = enter_crypt
 MAP
 ...........
 .xx.....xx.
@@ -137,6 +144,7 @@ NAME:   minmay_crypt_entry_simple_plaza
 ORIENT: float
 TAGS:   crypt_entry
 MONS:   place:Crypt:1
+KFEAT:  O = enter_crypt
 MAP
 ......................
 ..............xxxxxxx.
@@ -154,6 +162,7 @@ NAME:   minmay_crypt_entry_skeletal_spiral
 ORIENT: float
 TAGS:   crypt_entry
 MONS:   small skeleton / large skeleton / skeletal warrior
+KFEAT:  O = enter_crypt
 MAP
 ...........
 .xxxxxxxxx.
@@ -176,6 +185,7 @@ TAGS:    crypt_entry
 SHUFFLE: AB
 KFEAT:   A = altar_kikubaaqudgha
 KFEAT:   B = altar_yredelemnul
+KFEAT:   O = enter_crypt
 MAP
 ...........
 .G.ccccc.G.
@@ -197,6 +207,7 @@ TAGS:    crypt_entry
 MONS:    bone dragon w:25 / lich / shadow dragon w:5, curse skull
 SHUFFLE: 1X/2Y
 SUBST:   X=., Y=x
+KFEAT:   O = enter_crypt
 MAP
 .........
 .x.....x.
@@ -218,6 +229,7 @@ ORIENT: float
 TAGS:   crypt_entry
 MONS:   vampire, vampire knight / vampire mage
 SUBST:  V = VVVY
+KFEAT:  O = enter_crypt
 MAP
 ................
 .xxxxx....xxxxx.

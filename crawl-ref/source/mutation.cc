@@ -169,6 +169,7 @@ formatted_string describe_mutations()
     std::string result;
     bool have_any = false;
     const char *mut_title = "Innate Abilities, Weirdness & Mutations";
+    std::string scale_type = "plain brown";
 
     // center title
     int offset = 39 - strlen(mut_title) / 2;
@@ -235,48 +236,61 @@ formatted_string describe_mutations()
         break;
 
     case SP_GREEN_DRACONIAN:
-        result += "You can breathe poison.\n";
+        result += "You can breathe blasts of noxious fumes.\n";
         have_any = true;
+        scale_type = "lurid green";
         break;
 
     case SP_GREY_DRACONIAN:
         result += "You can walk through water.\n";
         have_any = true;
+        scale_type = "dull grey";
         break;
 
     case SP_RED_DRACONIAN:
-        result += "You can breathe fire.\n";
+        result += "You can breathe blasts of fire.\n";
         have_any = true;
+        scale_type = "fiery red";
         break;
 
     case SP_WHITE_DRACONIAN:
-        result += "You can breathe cold.\n";
+        result += "You can breathe waves of freezing cold.\n";
+        result += "You can buffet flying creatures when you breathe cold.\n";
+        scale_type = "icy white";
         have_any = true;
         break;
 
     case SP_BLACK_DRACONIAN:
-        result += "You can breathe lightning.\n";
+        result += "You can breathe wild blasts of lightning.\n";
+        scale_type = "glossy black";
         have_any = true;
         break;
 
     case SP_YELLOW_DRACONIAN:
-        result += "You can spit acid.\n";
+        result += "You can spit globs of acid.\n";
+        result += "You can corrode armour when you spit acid.\n";
         result += "You are resistant to acid.\n";
+        scale_type = "golden yellow";
         have_any = true;
         break;
 
     case SP_PURPLE_DRACONIAN:
-        result += "You can breathe power.\n";
+        result += "You can breathe bolts of incandescent energy.\n";
+        result += "You can dispel enchantments when you breathe energy.\n";
+        scale_type = "rich purple";
         have_any = true;
         break;
 
     case SP_MOTTLED_DRACONIAN:
-        result += "You can breathe sticky flames.\n";
+        result += "You can spit globs of burning liquid.\n";
+        result += "You can ignite nearby creatures when you spit burning liquid.\n";
+        scale_type = "weird mottled";
         have_any = true;
         break;
 
     case SP_PALE_DRACONIAN:
-        result += "You can breathe steam.\n";
+        result += "You can breathe blasts of scalding steam.\n";
+        scale_type = "pale grey";
         have_any = true;
         break;
 
@@ -346,13 +360,13 @@ formatted_string describe_mutations()
     {
         // Draconians are large for the purposes of armour, but only medium for
         // weapons and carrying capacity.
-        result += "Your body does not fit into most forms of armour.\n";
-
         int ac = 3 + (you.experience_level / 3);
         std::ostringstream num;
         num << ac;
-        result += "Your scales are hard (AC +" + num.str() + ").\n";
+        result += "Your " + scale_type + " scales are hard (AC +" + num.str() + ").\n";
         have_any = true;
+
+        result += "Your body does not fit into most forms of armour.\n";
     }
 
     result += "</lightblue>";

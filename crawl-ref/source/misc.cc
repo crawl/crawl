@@ -1342,7 +1342,6 @@ void merfolk_start_swimming(bool stepped)
     remove_one_equip(EQ_BOOTS);
     you.redraw_evasion = true;
 
-// FIXME: player doll isn't updated properly when player flies out of water
 #ifdef USE_TILE
     init_player_doll();
 #endif
@@ -1948,6 +1947,9 @@ void timeout_tombs(int duration)
 
 void bring_to_safety()
 {
+    if (you.level_type == LEVEL_ABYSS)
+        return abyss_teleport(true);
+
     coord_def best_pos, pos;
     double min_threat = 1e38;
     int tries = 0;
@@ -2481,6 +2483,4 @@ void entered_malign_portal(actor* act)
         ouch(roll_dice(2, 4), NON_MONSTER, KILLED_BY_WILD_MAGIC, "a malign gateway");
     else
         act->hurt(NULL, roll_dice(2, 4));
-
-    return;
 }

@@ -62,6 +62,7 @@ enum monster_info_flags
     MB_FEAR_INSPIRING,
     MB_WITHDRAWN,
     MB_ATTACHED,
+    MB_HELPLESS,
 };
 
 struct monster_info_base

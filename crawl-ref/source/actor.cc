@@ -84,12 +84,12 @@ bool actor::handle_trap()
     return (trap != NULL);
 }
 
-bool actor::check_res_magic(int power)
+int actor::check_res_magic(int power)
 {
     const int mrs = res_magic();
 
     if (mrs == MAG_IMMUNE)
-        return (true);
+        return (100);
 
     // Evil, evil hack to make weak one hd monsters easier for first level
     // characters who have resistable 1st level spells. Six is a very special
@@ -102,7 +102,7 @@ bool actor::check_res_magic(int power)
     // help them out (or building a level or two of their base skill so they
     // aren't resisted as often). - bwr
     if (atype() == ACT_MONSTER && mrs < 6 && coinflip())
-        return (false);
+        return (-1);
 
     power = stepdown_value(power, 30, 40, 100, 120);
 
@@ -112,7 +112,7 @@ bool actor::check_res_magic(int power)
     dprf("Power: %d, MR: %d, target: %d, roll: %d",
          power, mrs, mrchance, mrch2);
 
-    return (mrch2 < mrchance);
+    return (mrchance - mrch2);
 }
 
 void actor::set_position(const coord_def &c)
