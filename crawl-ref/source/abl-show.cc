@@ -88,7 +88,7 @@ enum ability_flag_type
     ABFLAG_CONF_OK        = 0x00000100, // can use even if confused
     ABFLAG_FRUIT          = 0x00000200, // ability requires fruit
     ABFLAG_VARIABLE_FRUIT = 0x00000400,  // ability requires fruit or piety
-    ABFLAG_ENCH_MISCAST   = 0X00000800, // // severity 3 enchantment miscast
+    ABFLAG_HEX_MISCAST    = 0X00000800, // // severity 3 enchantment miscast
     ABFLAG_TLOC_MISCAST   = 0X00001000, // // severity 3 translocation miscast
     ABFLAG_NECRO_MISCAST_MINOR = 0X00002000, // // severity 2 necro miscast
     ABFLAG_NECRO_MISCAST  = 0X00004000, // // severity 3 necro miscast
@@ -2724,9 +2724,9 @@ static void _pay_ability_costs(const ability_def& abil, int xpcost)
         you.redraw_experience = true;
     }
 
-    if (abil.flags & ABFLAG_ENCH_MISCAST)
+    if (abil.flags & ABFLAG_HEX_MISCAST)
     {
-        MiscastEffect(&you, NON_MONSTER, SPTYP_ENCHANTMENT, 10, 90,
+        MiscastEffect(&you, NON_MONSTER, SPTYP_HEXES, 10, 90,
                       "power out of control", NH_DEFAULT);
     }
     if (abil.flags & ABFLAG_NECRO_MISCAST)
