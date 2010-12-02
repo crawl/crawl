@@ -390,11 +390,20 @@ void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
     moveto_location_effects(old_grid, stepped, allow_shift, old_pos);
 }
 
-bool is_feat_dangerous(dungeon_feature_type grid)
+bool is_feat_dangerous(dungeon_feature_type grid, bool permanently)
 {
-    return (!you.airborne()
-            && (grid == DNGN_LAVA
-                || (grid == DNGN_DEEP_WATER && !player_likes_water())));
+    if (you.permanent_flight() || you.permanent_levitation()
+        || you.airborne() && !permanently)
+    {
+        return false;
+    }
+    else if (grid == DNGN_DEEP_WATER && !player_likes_water(permanently)
+             || grid == DNGN_LAVA)
+    {
+        return true;
+    }
+    else
+        return false;
 }
 
 bool player_in_mappable_area(void)
