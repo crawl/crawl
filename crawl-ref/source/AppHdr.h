@@ -396,13 +396,6 @@
 // clamp time between command inputs at 5 minutes when reporting play time.
 #define IDLE_TIME_CLAMP  (5 * 60)
 
-// Set this to the number of runes that will be required to enter Zot's
-// domain.  You shouldn't set this really high unless you want to
-// make players spend far too much time in Pandemonium/The Abyss.
-//
-// Traditional setting of this is one rune, but three is pretty standard now.
-#define NUMBER_OF_RUNES_NEEDED    3
-
 // Number of top scores to keep. See above for the dgamelaunch setting.
 #ifndef SCORE_FILE_ENTRIES
 #define SCORE_FILE_ENTRIES      100
