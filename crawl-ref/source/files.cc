@@ -472,14 +472,12 @@ bool dir_exists(const std::string &dir)
 
 static int _create_directory(const char *dir)
 {
-#if defined(MULTIUSER)
-    return mkdir(dir, SHARED_FILES_CHMOD_PUBLIC | 0111);
-#elif defined(TARGET_OS_DOS)
-    return mkdir(dir, 0755);
-#elif defined(TARGET_COMPILER_VC)
+#if defined(TARGET_COMPILER_VC)
     return _mkdir(dir);
-#else
+#elif defined(TARGET_OS_WINDOWS)
     return mkdir(dir);
+#else
+    return mkdir(dir, 0755);
 #endif
 }
 
