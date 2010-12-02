@@ -195,9 +195,9 @@ struct spell_desc
 
 {
     SPELL_POLYMORPH_OTHER, "Polymorph Other",
-     SPTYP_TRANSMUTATION,  // removed enchantment, wasn't needed - bwr
+     SPTYP_TRANSMUTATION | SPTYP_HEXES,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_CHAOTIC,
-     5,
+     4,
      200,
      LOS_RADIUS, LOS_RADIUS,
      0,
