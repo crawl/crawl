@@ -681,6 +681,7 @@ boggart MONS_BOGGART
 spriggan MONS_SPRIGGAN
 spriggan_rider MONS_SPRIGGAN_RIDER
 spriggan_druid MONS_SPRIGGAN_DRUID
+spriggan_berserker MONS_SPRIGGAN_BERSERKER
 spriggan_defender MONS_SPRIGGAN_DEFENDER
 spriggan_assassin MONS_SPRIGGAN_ASSASSIN
 dc-mon/unique/enchantress MONS_THE_ENCHANTRESS

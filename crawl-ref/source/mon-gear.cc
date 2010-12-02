@@ -1154,6 +1154,15 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.sub_type  = WPN_SPEAR;
         break;
 
+    case MONS_SPRIGGAN_BERSERKER:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = random_choose(WPN_HAND_AXE,
+                                       WPN_MACE,
+                                       WPN_SHORT_SWORD,
+                                       -1);
+        break;
+
     case MONS_SPRIGGAN_DRUID:
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
@@ -1668,6 +1677,7 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
 
     case MONS_SLAVE:
     case MONS_GRUM:
+    case MONS_SPRIGGAN_BERSERKER:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ANIMAL_SKIN;
         break;
