@@ -7758,12 +7758,8 @@ static void _roguey_level(int level_number, spec_room &sr, bool make_stairs)
             rox1[cn] = bcount_x * 13 + 8 + random2(4);
             roy1[cn] = bcount_y * 11 + 8 + random2(4);
 
-            rox2[cn] = rox1[cn] + 3 + random2(8);
+            rox2[cn] = std::min(rox1[cn] + 3 + random2(8), GXM - 8);
             roy2[cn] = roy1[cn] + 3 + random2(6);
-
-            // bounds
-            if (rox2[cn] > GXM-8)
-                rox2[cn] = GXM-8;
 
             cn++;
         }
