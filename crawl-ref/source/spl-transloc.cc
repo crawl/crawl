@@ -303,33 +303,10 @@ static bool _cell_vetoes_teleport (const coord_def cell, bool  check_monsters = 
     if (env.cgrid(cell) != EMPTY_CLOUD)
         return (true);
 
-    // But not all features.
-    switch (grd(cell))
-    {
-    case DNGN_FLOOR:
-    case DNGN_SHALLOW_WATER:
-        return (false);
-
-    case DNGN_DEEP_WATER:
-        if (you.species == SP_MERFOLK && (transform_can_swim()
-                                          || !you.transform_uncancellable))
-        {
-            return (false);
-        }
-        else
-            return (true);
-
-    case DNGN_LAVA:
+    if (cell_is_solid(cell))
         return (true);
 
-    default:
-        // Lava is really the only non-solid glyph above DNGN_MAXSOLID that is
-        // not a safe teleport location, and that's handled above.
-        if (cell_is_solid(cell))
-            return (true);
-
-        return (false);
-    }
+    return is_feat_dangerous(grd(cell), true);
 }
 
 static void _handle_teleport_update (bool large_change, bool check_ring_TC,
