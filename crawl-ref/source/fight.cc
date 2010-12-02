@@ -864,16 +864,14 @@ bool melee_attack::player_attack()
         }
 
         if (damage_done > 0 || !defender_visible && !shield_blocked)
-        {
             player_announce_hit();
-            defender->as_monster()->del_ench(ENCH_HELPLESS);
-        }
         else if (!shield_blocked && damage_done <= 0)
         {
             no_damage_message =
                 make_stringf("You %s %s.", attack_verb.c_str(),
                              defender->name(DESC_NOCAP_THE).c_str());
         }
+        defender->as_monster()->del_ench(ENCH_HELPLESS);
 
         damage_done = defender->hurt(&you, damage_done,
                                      special_damage_flavour, false);
