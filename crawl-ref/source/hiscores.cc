@@ -61,12 +61,6 @@
 #include "skills2.h"
 #define SCORE_VERSION "0.1"
 
-#ifdef MULTIUSER
-    // includes to get passwd file access:
-    #include <pwd.h>
-    #include <sys/types.h>
-#endif
-
 // enough memory allocated to snarf in the scorefile entries
 static std::auto_ptr<scorefile_entry> hs_list[SCORE_FILE_ENTRIES];
 
@@ -1136,11 +1130,7 @@ void scorefile_entry::init(time_t dt)
     version = Version::Short();
     name    = you.your_name;
 
-#ifdef MULTIUSER
-    uid = static_cast<int>(getuid());
-#else
     uid = 0;
-#endif
 
     /*
      *  old scoring system:
@@ -1346,25 +1336,10 @@ std::string scorefile_entry::game_time(death_desc_verbosity verbosity) const
     {
         if (real_time > 0)
         {
-            char username[80] = "The";
             char scratch[INFO_SIZE];
 
-#ifdef MULTIUSER
-            if (uid > 0)
-            {
-                struct passwd *pw_entry = getpwuid(uid);
-                if (pw_entry)
-                {
-                    strncpy(username, pw_entry->pw_name, sizeof(username)-3);
-                    username[sizeof(username)-3] = 0;
-                    username[0] = toupper(username[0]);
-                    strcat(username, "'s");
-                }
-            }
-#endif
-            snprintf(scratch, INFO_SIZE, "%s game lasted %s (%d turns).",
-                     username, make_time_string(real_time).c_str(),
-                     num_turns);
+            snprintf(scratch, INFO_SIZE, "The game lasted %s (%d turns).",
+                     make_time_string(real_time).c_str(), num_turns);
 
             line += scratch;
             line += _hiscore_newline_string();

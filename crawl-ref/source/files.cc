@@ -137,7 +137,7 @@ static std::string _uid_as_string()
 #ifdef TARGET_OS_WINDOWS
     return std::string();
 #else
-#ifndef MULTIUSER
+#ifndef UNIX
     return std::string();
 #else
 #ifndef SAVE_DIR_PATH
@@ -893,10 +893,10 @@ std::string get_save_filename(const std::string &prefix,
     // Shorten string as appropriate
     result += strip_filename_unsafe_chars(prefix).substr(0, kFileNameLen);
 
+#if TAG_MAJOR_VERSION == 31
     // Technically we should shorten the string first.  But if
     // MULTIUSER is set we'll have long filenames anyway. Caveat
     // emptor.
-#if TAG_MAJOR_VERSION == 31
     if (!suppress_uid)
         result += _uid_as_string();
 #endif

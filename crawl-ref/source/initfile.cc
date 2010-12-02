@@ -1259,7 +1259,7 @@ static std::string _find_crawlrc()
 {
     const char* locations_data[][2] = {
         { SysEnv.crawl_dir.c_str(), "init.txt" },
-#ifdef MULTIUSER
+#ifdef UNIX
         { SysEnv.home.c_str(), ".crawlrc" },
         { SysEnv.home.c_str(), "init.txt" },
 #endif
@@ -1334,7 +1334,7 @@ std::string read_init_file(bool runscript)
             return make_stringf("(\"%s\" is not readable)",
                                 init_file_name.c_str());
 
-#ifdef MULTIUSER
+#ifdef UNIX
         return "(~/.crawlrc missing)";
 #else
         return "(no init.txt in current directory)";
@@ -1343,7 +1343,7 @@ std::string read_init_file(bool runscript)
 
     Options.filename = init_file_name;
     Options.line_num = 0;
-#ifdef MULTIUSER
+#ifdef UNIX
     Options.basefilename = "~/.crawlrc";
 #else
     Options.basefilename = "init.txt";
@@ -3509,7 +3509,7 @@ void get_system_environment(void)
     // The full path to the init file -- this overrides CRAWL_DIR.
     SysEnv.crawl_rc = check_string(getenv("CRAWL_RC"));
 
-#ifdef MULTIUSER
+#ifdef UNIX
     // The user's home directory (used to look for ~/.crawlrc file)
     SysEnv.home = check_string(getenv("HOME"));
 #endif
