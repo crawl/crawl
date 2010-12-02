@@ -28,16 +28,15 @@
 #                     dumps).  Can be relative to "prefix", absolute or placed
 #                     in the user's home dir (~).  Remember to protect the ~
 #                     from your shell!
-#    SHAREDDIR     -- place to hold site-wide writeable data (scores, the
-#                     logfile, ghosts).  Will be placed insite the SAVEDIR if
-#                     not specified.
+#                     Warning, shared directories are no longer supported.
+#    SHAREDDIR     -- place to hold writeable data common to multiple
+#                     players (scores, the logfile, ghosts).  Will be placed
+#                     inside the SAVEDIR if not specified.
 #       Layout examples:
 #         prefix=~/crawl DATADIR=data/ SAVEDIR=saves/
 #                  -- everything under ~/crawl
 #         prefix=/usr/local
-#                  -- a typical old-style multiuser installation
-#         prefix=/usr/local SAVEDIR='~/.crawl' SHAREDDIR=/var/games/crawl
-#                  -- multiuser installation with secure saves
+#                  -- system-wide installation
 #
 #    V             -- set to anything to enable verbose build
 #
@@ -348,7 +347,7 @@ endif
 # DATADIR := data/
 ifneq (,$(FHS))
 DATADIR       := share/crawl
-SAVEDIR       := /var/games/crawl
+SAVEDIR       := ~/.crawl
 endif
 
 
