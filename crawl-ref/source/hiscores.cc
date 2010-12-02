@@ -490,7 +490,6 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     version           = se.version;
     points            = se.points;
     name              = se.name;
-    uid               = se.uid;
     race              = se.race;
     job               = se.job;
     race_class_name   = se.race_class_name;
@@ -659,7 +658,6 @@ void scorefile_entry::init_with_fields()
     points  = fields->long_field("sc");
 
     name    = fields->str_field("name");
-    uid     = fields->int_field("uid");
     race    = str_to_species(fields->str_field("race"));
     job     = _job_by_name(fields->str_field("cls"));
     lvl     = fields->int_field("xl");
@@ -737,7 +735,6 @@ void scorefile_entry::set_base_xlog_fields() const
     fields->add_field("v", "%s", Version::Short().c_str());
     fields->add_field("lv", score_version.c_str());
     fields->add_field("name", "%s", name.c_str());
-    fields->add_field("uid",  "%d", uid);
     fields->add_field("race", "%s", species_name(race).c_str());
     fields->add_field("cls",  "%s", _job_name(job));
     fields->add_field("char", "%s", race_class_name.c_str());
@@ -1038,7 +1035,6 @@ void scorefile_entry::reset()
     version.clear();
     points               = -1;
     name.clear();
-    uid                  = 0;
     race                 = SP_UNKNOWN;
     job                  = JOB_UNKNOWN;
     lvl                  = 0;
@@ -1129,8 +1125,6 @@ void scorefile_entry::init(time_t dt)
 
     version = Version::Short();
     name    = you.your_name;
-
-    uid = 0;
 
     /*
      *  old scoring system:

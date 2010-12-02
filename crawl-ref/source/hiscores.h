@@ -68,7 +68,6 @@ private:
     std::string version;
     int         points;
     std::string name;
-    uint32_t    uid;                // for multiuser systems
     species_type race;
     int         job;                // job_type + legacy values
     std::string race_class_name;    // overrides race & cls if non-empty.
