@@ -442,10 +442,6 @@
     // #define SAVE_DIR_PATH       "/opt/crawl/lib/"
     // #define SAVE_DIR_PATH       ""
 
-    // This defines the chmod permissions for score and bones files.
-    #define SHARED_FILES_CHMOD_PRIVATE  0664
-    #define SHARED_FILES_CHMOD_PUBLIC   0664
-
     // If we're on a multiuser system, file locking of shared files is
     // very important (else things will just keep getting corrupted)
     #define USE_FILE_LOCKING

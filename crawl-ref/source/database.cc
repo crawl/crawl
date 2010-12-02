@@ -209,8 +209,6 @@ void TextDB::_regenerate_db()
         _store_text_db(full_input_path, db_path);
     }
     file_touch(full_db_path);
-
-    DO_CHMOD_PRIVATE(full_db_path.c_str());
 }
 
 // ----------------------------------------------------------------------
