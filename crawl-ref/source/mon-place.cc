@@ -1477,9 +1477,12 @@ static int _place_monster_aux(const mgen_data &mg,
     // Not a god gift, give priestly monsters a god.
     else if (mons_class_flag(mg.cls, M_PRIEST))
     {
-        // Deep dwarf berserkers belong to Trog.
-        if (mg.cls == MONS_DEEP_DWARF_BERSERKER)
+        // Berserkers belong to Trog.
+        if (mg.cls == MONS_DEEP_DWARF_BERSERKER
+            || mg.cls == MONS_SPRIGGAN_BERSERKER)
+        {
             mon->god = GOD_TROG;
+        }
         // Deep dwarf death knights belong to Yredelemnul.
         else if (mg.cls == MONS_DEEP_DWARF_DEATH_KNIGHT)
             mon->god = GOD_YREDELEMNUL;

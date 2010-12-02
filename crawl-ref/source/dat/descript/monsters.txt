@@ -1632,6 +1632,10 @@ spriggan assassin
 
 These masters of stealth have mastered the art of delivering a quick blade right under your fifth rib as well.
 %%%%
+spriggan berserker
+
+A load of pure fury concentrated in a stature of three and a half feet.
+%%%%
 spriggan defender
 
 These elite spriggan warriors are known for their prowess with advanced weaponry and their unbelievable agility.
