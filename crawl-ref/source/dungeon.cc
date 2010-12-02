@@ -3188,9 +3188,14 @@ void dgn_place_feature_at_random_floor_square(dungeon_feature_type feat,
 }
 
 // Create randomly-placed stone stairs.
-void dgn_place_stone_stairs()
+void dgn_place_stone_stairs(bool maybe_place_hatches)
 {
-    for (int i = 0; i < 3; ++i)
+    int pair_count = 3;
+
+    if (maybe_place_hatches && coinflip())
+        pair_count++;
+
+    for (int i = 0; i < pair_count; ++i)
     {
         dgn_place_feature_at_random_floor_square(
             static_cast<dungeon_feature_type>(DNGN_STONE_STAIRS_DOWN_I + i));
@@ -6548,15 +6553,7 @@ static void _bigger_room()
             _build_lake(DNGN_DEEP_WATER);
     }
 
-    int pair_count = coinflip() ? 4 : 3;
-
-    for (j = 0; j < pair_count; j++)
-        for (i = 0; i < 2; i++)
-        {
-            _place_specific_stair(static_cast<dungeon_feature_type>(
-                                    j + ((i == 0) ? DNGN_STONE_STAIRS_DOWN_I
-                                                  : DNGN_STONE_STAIRS_UP_I)));
-        }
+    dgn_place_stone_stairs(true);
 }
 
 // Various plan_xxx functions.
@@ -6569,8 +6566,6 @@ static void _plan_main(int level_number, int force_plan)
     bool do_stairs = false;
     dungeon_feature_type special_grid = (one_chance_in(3) ? DNGN_METAL_WALL
                                                           : DNGN_STONE_WALL);
-    int i,j;
-
     if (!force_plan)
         force_plan = 1 + random2(12);
 
@@ -6584,17 +6579,7 @@ static void _plan_main(int level_number, int force_plan)
                                    : _plan_3(level_number));
 
     if (do_stairs)
-    {
-        int pair_count = coinflip()?4:3;
-
-        for (j = 0; j < pair_count; j++)
-            for (i = 0; i < 2; i++)
-            {
-                _place_specific_stair(static_cast<dungeon_feature_type>(
-                                       j + ((i == 0)? DNGN_STONE_STAIRS_DOWN_I
-                                                    : DNGN_STONE_STAIRS_UP_I)));
-            }
-    }
+        dgn_place_stone_stairs(true);
 
     if (one_chance_in(20))
         dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, special_grid);
@@ -7917,18 +7902,8 @@ static void _roguey_level(int level_number, spec_room &sr, bool make_stairs)
         _dgn_make_special(sr.br.x + 1, sr.tl.y - 1, sr.br.x + 1, sr.br.y + 1);
     }
 
-    if (!make_stairs)
-        return;
-
-    int stair_count = coinflip() ? 4 : 3;
-
-    for (int j = 0; j < stair_count; j++)
-        for (i = 0; i < 2; i++)
-        {
-            _place_specific_stair(static_cast<dungeon_feature_type>(
-                                    j + ((i == 0) ? DNGN_STONE_STAIRS_DOWN_I
-                                                  : DNGN_STONE_STAIRS_UP_I)));
-        }
+    if (make_stairs)
+        dgn_place_stone_stairs(true);
 }                               // end roguey_level()
 
 bool place_specific_trap(const coord_def& where, trap_type spec_type)
