@@ -267,7 +267,7 @@ struct spell_desc
      6,
      200,
      LOS_RADIUS, LOS_RADIUS,
-     0,
+     -6,
      NULL,
      false,
      true
