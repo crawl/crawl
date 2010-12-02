@@ -220,7 +220,6 @@ void random_blink(bool allow_partial_control, bool override_abyss)
         mpr("You feel jittery for a moment.");
     }
 
-#ifdef USE_SEMI_CONTROLLED_BLINK
     //jmf: Add back control, but effect is cast_semi_controlled_blink(pow).
     else if (player_control_teleport() && !you.confused()
              && allow_partial_control && allow_control_teleport())
@@ -230,7 +229,6 @@ void random_blink(bool allow_partial_control, bool override_abyss)
         maybe_id_ring_TC();
         success = true;
     }
-#endif
     else
     {
         canned_msg(MSG_YOU_BLINK);
