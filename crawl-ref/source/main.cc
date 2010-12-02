@@ -431,6 +431,7 @@ static void _show_commandline_options_help()
     puts("  -save-version <name>  Save file version for the given player");
     puts("  -sprint               select Sprint");
     puts("  -sprint-map <name>    preselect a Sprint map");
+    puts("  -zotdef               select Zot Defense");
     puts("");
 
     puts("Command line options override init file options, which override");
