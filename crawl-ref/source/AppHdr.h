@@ -426,9 +426,6 @@
 // Semi-Controlled Blink
 #define USE_SEMI_CONTROLLED_BLINK
 
-// Use new system for weighting str and dex based on weapon type, -- bwr
-#define USE_NEW_COMBAT_STATS
-
 // bwr: define this if you want to know the pluses, "runed" status
 // of the monster's weapons in the hiscore file.
 #define HISCORE_WEAPON_DETAIL

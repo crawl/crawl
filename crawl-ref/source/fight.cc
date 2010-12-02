@@ -150,7 +150,6 @@ int test_melee_hit(int to_hit, int ev, defer_rand& r)
 // wields a less than ideal weapon.
 int effective_stat_bonus(int wepType)
 {
-#ifdef USE_NEW_COMBAT_STATS
     int str_weight;
     if (wepType == -1)
         str_weight = player_weapon_str_weight();
@@ -158,9 +157,6 @@ int effective_stat_bonus(int wepType)
         str_weight = weapon_str_weight(OBJ_WEAPONS, wepType);
 
     return ((you.strength() - you.dex()) * (str_weight - 5) / 10);
-#else
-    return (0);
-#endif
 }
 
 // Returns the to-hit for your extra unarmed attacks.
@@ -6252,8 +6248,6 @@ static inline int player_weapon_dex_weight(void)
 // weighted average of strength and dex, between (str+dex)/2 and dex
 static inline int calc_stat_to_hit_base(void)
 {
-#ifdef USE_NEW_COMBAT_STATS
-
     // towards_str_avg is a variable, whose sign points towards strength,
     // and the magnitude is half the difference (thus, when added directly
     // to you.dex() it gives the average of the two.
@@ -6262,23 +6256,13 @@ static inline int calc_stat_to_hit_base(void)
     // dex is modified by strength towards the average, by the
     // weighted amount weapon_str_weight() / 10.
     return (you.dex() + towards_str_avg * player_weapon_str_weight() / 10);
-
-#else
-    return (you.dex());
-#endif
 }
 
 // weighted average of strength and dex, between str and (str+dex)/2
 static inline int calc_stat_to_dam_base(void)
 {
-#ifdef USE_NEW_COMBAT_STATS
-
     const signed int towards_dex_avg = (you.dex() - you.strength()) / 2;
     return (you.strength() + towards_dex_avg * player_weapon_dex_weight() / 10);
-
-#else
-    return (you.strength());
-#endif
 }
 
 static void stab_message(actor *defender, int stab_bonus)
