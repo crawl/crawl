@@ -1,7 +1,8 @@
 #ifndef SPL_TRANSLOC_H
 #define SPL_TRANSLOC_H
 
-int blink(int pow, bool high_level_controlled_blink, bool wizard_blink = false);
+int blink(int pow, bool high_level_controlled_blink, bool wizard_blink = false,
+          std::string *pre_msg = NULL);
 void random_blink(bool, bool override_abyss = false);
 
 bool allow_control_teleport(bool quiet = false);

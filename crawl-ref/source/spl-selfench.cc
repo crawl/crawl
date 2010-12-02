@@ -399,12 +399,12 @@ void cast_teleport_control(int power)
                           "You feel in control.");
 }
 
-bool cast_selective_amnesia()
+int cast_selective_amnesia(std::string *pre_msg)
 {
     if (you.spell_no == 0)
     {
         canned_msg(MSG_NO_SPELLS);
-        return (false);
+        return (0);
     }
 
     int keyin = 0;
@@ -420,7 +420,7 @@ bool cast_selective_amnesia()
         if (key_is_escape(keyin))
         {
             canned_msg(MSG_OK);
-            return (false);
+            return (-1);
         }
 
         if (keyin == '?' || keyin == '*')
@@ -444,6 +444,9 @@ bool cast_selective_amnesia()
             break;
     }
 
+    if (pre_msg)
+        mpr(pre_msg->c_str());
+
     const int ep_gain = spell_mana(spell);
     del_spell_from_memory_by_slot(slot);
 
@@ -454,7 +457,7 @@ bool cast_selective_amnesia()
             "it unravels.");
     }
 
-    return (true);
+    return (1);
 }
 
 void cast_see_invisible(int pow)

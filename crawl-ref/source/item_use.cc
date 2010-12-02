@@ -90,10 +90,13 @@
 static bool _drink_fountain();
 static bool _handle_enchant_weapon(enchant_stat_type which_stat,
                                    bool quiet = false);
-static bool _handle_enchant_armour(int item_slot = -1);
+static int _handle_enchant_armour(int item_slot = -1,
+                                  std::string *pre_msg = NULL);
 
 static int  _fire_prompt_for_item();
 static bool _fire_validate_item(int selected, std::string& err);
+
+static bool _is_cancellable_scroll(scroll_type scroll);
 
 // Rather messy - we've gathered all the can't-wield logic from wield_weapon()
 // here.
@@ -4352,7 +4355,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
     return (true);
 }
 
-static bool _handle_enchant_armour(int item_slot)
+static int _handle_enchant_armour(int item_slot, std::string *pre_msg)
 {
     do
     {
@@ -4362,7 +4365,7 @@ static bool _handle_enchant_armour(int item_slot)
                                            OSEL_ENCH_ARM, true, true, false);
         }
         if (prompt_failed(item_slot))
-            return (false);
+            return (-1);
 
         item_def& arm(you.inv[item_slot]);
 
@@ -4377,17 +4380,20 @@ static bool _handle_enchant_armour(int item_slot)
         }
 
         // Okay, we may actually (attempt to) enchant something.
+        if (pre_msg)
+            mpr(pre_msg->c_str());
+
         int ac_change;
         bool result = enchant_armour(ac_change, false, arm);
 
         if (ac_change)
             you.redraw_armour_class = true;
 
-        return (result);
+        return (result ? 1 : 0);
     }
     while (true);
 
-    return (false);
+    return (0);
 }
 
 static void handle_read_book(int item_slot)
@@ -4494,7 +4500,7 @@ static bool _scroll_modify_item(item_def scroll)
         {
             // Might still fail because of already high enchantment.
             // (If so, already prints the "Nothing happens" message.)
-            if (_handle_enchant_armour(item_slot))
+            if (_handle_enchant_armour(item_slot) > 0)
                 return (true);
             get_type_id_props()["SCR_EA"] = item.name(DESC_PLAIN, false,
                                                       false, false);
@@ -4542,6 +4548,13 @@ static void _vulnerability_scroll()
 
     you.set_duration(DUR_LOWERED_MR, 40, 0,
                      "Magic dampens, then quickly surges around you.");
+}
+
+bool _is_cancellable_scroll(scroll_type scroll)
+{
+    return (scroll == SCR_IDENTIFY
+            || scroll == SCR_BLINKING || scroll == SCR_RECHARGING
+            || scroll == SCR_ENCHANT_ARMOUR || scroll == SCR_AMNESIA);
 }
 
 void read_scroll(int slot)
@@ -4661,6 +4674,9 @@ void read_scroll(int slot)
     // Ok - now we FINALLY get to read a scroll !!! {dlb}
     you.turn_is_over = true;
 
+    // ... but some scrolls may still be cancelled afterwards.
+    bool cancel_scroll = false;
+
     // Imperfect vision prevents players from reading actual content {dlb}:
     if (player_mutation_level(MUT_BLURRY_VISION)
         && x_chance_in_y(player_mutation_level(MUT_BLURRY_VISION), 5))
@@ -4671,10 +4687,15 @@ void read_scroll(int slot)
         return;
     }
 
+    // For cancellable scrolls leave printing this message to their
+    // respective functions.
+    std::string pre_succ_msg = "As you read the scroll, it crumbles to dust.";
     if (which_scroll != SCR_PAPER
-        && (which_scroll != SCR_IMMOLATION || you.confused()))
+        && (you.confused()
+            || (which_scroll != SCR_IMMOLATION
+                && !_is_cancellable_scroll(which_scroll))))
     {
-        mpr("As you read the scroll, it crumbles to dust.");
+        mpr(pre_succ_msg.c_str());
         // Actual removal of scroll done afterwards. -- bwr
     }
 
@@ -4713,7 +4734,17 @@ void read_scroll(int slot)
         break;
 
     case SCR_BLINKING:
-        blink(1000, false);
+        // XXX Because some checks in blink() are made before player get to
+        // choose target location it is possible "abuse" scrolls' free
+        // cancelling to get some normally hidden information (i.e. presence
+        // of (unidentified) -TELE gear).
+        if (!alreadyknown)
+        {
+            mpr(pre_succ_msg.c_str());
+            blink(1000, false);
+        }
+        else
+            cancel_scroll = (blink(1000, false, false, &pre_succ_msg) == -1);
         break;
 
     case SCR_TELEPORTATION:
@@ -4897,34 +4928,37 @@ void read_scroll(int slot)
     case SCR_IDENTIFY:
         if (!item_type_known(scroll))
         {
+            mpr(pre_succ_msg.c_str());
             id_the_scroll = _scroll_modify_item(scroll);
             if (!id_the_scroll)
                 tried_on_item = true;
         }
         else
-            identify(-1);
+            cancel_scroll = (identify(-1, -1, &pre_succ_msg) == -1);
         break;
 
     case SCR_RECHARGING:
         if (!item_type_known(scroll))
         {
+            mpr(pre_succ_msg.c_str());
             id_the_scroll = _scroll_modify_item(scroll);
             if (!id_the_scroll)
                 tried_on_item = true;
         }
         else
-            recharge_wand(-1);
+            cancel_scroll = (recharge_wand(-1, true, &pre_succ_msg) == -1);
         break;
 
     case SCR_ENCHANT_ARMOUR:
         if (!item_type_known(scroll))
         {
+            mpr(pre_succ_msg.c_str());
             id_the_scroll = _scroll_modify_item(scroll);
             if (!id_the_scroll)
                 tried_on_item = true;
         }
         else
-            _handle_enchant_armour(-1);
+            cancel_scroll = (_handle_enchant_armour(-1, &pre_succ_msg) == -1);
         break;
 
     case SCR_CURSE_ARMOUR:
@@ -5002,14 +5036,22 @@ void read_scroll(int slot)
             canned_msg(MSG_NOTHING_HAPPENS);
             id_the_scroll = false;
         }
-        else
+        else if (!alreadyknown)
+        {
+            mpr(pre_succ_msg.c_str());
             cast_selective_amnesia();
+        }
+        else
+            cancel_scroll = (cast_selective_amnesia(&pre_succ_msg) == -1);
         break;
 
     default:
         mpr("Read a buggy scroll, please report this.");
         break;
     }
+
+    if (cancel_scroll)
+        you.turn_is_over = false;
 
     set_ident_type(scroll, id_the_scroll ? ID_KNOWN_TYPE :
                            tried_on_item ? ID_TRIED_ITEM_TYPE
@@ -5021,7 +5063,8 @@ void read_scroll(int slot)
         if (id_the_scroll)
             set_ident_flags(scroll, ISFLAG_KNOW_TYPE); // for notes
 
-        dec_inv_item_quantity(item_slot, 1);
+        if (!cancel_scroll)
+            dec_inv_item_quantity(item_slot, 1);
     }
 
     if (!alreadyknown && dangerous)

@@ -889,7 +889,7 @@ void random_uselessness(int scroll_slot)
     }
 }
 
-bool recharge_wand(int item_slot, bool known)
+int recharge_wand(int item_slot, bool known, std::string *pre_msg)
 {
     do
     {
@@ -899,7 +899,7 @@ bool recharge_wand(int item_slot, bool known)
                                             OSEL_RECHARGE, true, true, false);
         }
         if (prompt_failed(item_slot))
-            return (false);
+            return (-1);
 
         item_def &wand = you.inv[ item_slot ];
 
@@ -915,7 +915,7 @@ bool recharge_wand(int item_slot, bool known)
         }
 
         if (wand.base_type != OBJ_WANDS && !item_is_rod(wand))
-            return (false);
+            return (0);
 
         int charge_gain = 0;
         if (wand.base_type == OBJ_WANDS)
@@ -939,6 +939,9 @@ bool recharge_wand(int item_slot, bool known)
                          new_charges, new_charges == 1 ? "" : "s");
                 desc = info;
             }
+
+            if (pre_msg)
+                mpr(pre_msg->c_str());
 
             mprf("%s %s for a moment%s.",
                  wand.name(DESC_CAP_YOUR).c_str(),
@@ -981,17 +984,20 @@ bool recharge_wand(int item_slot, bool known)
             }
 
             if (!work)
-                return (false);
+                return (0);
+
+            if (pre_msg)
+                mpr(pre_msg->c_str());
 
             mprf("%s glows for a moment.", wand.name(DESC_CAP_YOUR).c_str());
         }
 
         you.wield_change = true;
-        return (true);
+        return (1);
     }
     while (true);
 
-    return (false);
+    return (0);
 }
 
 // Berserking monsters cannot be ordered around.
