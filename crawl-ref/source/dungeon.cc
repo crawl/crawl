@@ -2491,29 +2491,23 @@ static bool _builder_by_type(int level_number, level_area_type level_type)
     if (level_type == LEVEL_PORTAL_VAULT)
     {
         _portal_vault_level(level_number);
-        return (false);
     }
-
-    if (level_type == LEVEL_LABYRINTH)
+    else if (level_type == LEVEL_LABYRINTH)
     {
         _labyrinth_level(level_number);
-        return (false);
     }
-
-    if (level_type == LEVEL_ABYSS)
+    else if (level_type == LEVEL_ABYSS)
     {
         generate_abyss();
-        return (false);
     }
-
-    if (level_type == LEVEL_PANDEMONIUM)
+    else if (level_type == LEVEL_PANDEMONIUM)
     {
         _pan_level(level_number);
-        return false;
     }
+    else
+        return true;
 
-    // Must be normal dungeon.
-    return true;
+    return false;
 }
 
 static void _portal_vault_level(int level_number)
