@@ -54,6 +54,7 @@ ORIENT:  float                    # "ORIENT: float" tells the level builder that
 TAGS:    temple_entry             #  "TAGS: temple_entry" turns the 'O' on the
 MONS:    butterfly, plant         #               map into stairs to the Temple.
 ITEM:    stone
+KFEAT:   O = enter_temple
 # actual map below:               # The symbols on the map:
 MAP                               # x - rock wall
 xx.d.xx                           # . - floor

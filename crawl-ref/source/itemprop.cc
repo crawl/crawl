@@ -28,6 +28,7 @@
 #include "notes.h"
 #include "options.h"
 #include "player.h"
+#include "religion.h"
 #include "quiver.h"
 #include "random.h"
 #include "shopping.h"
@@ -539,8 +540,22 @@ void do_curse_item(item_def &item, bool quiet)
     }
 }
 
-void do_uncurse_item(item_def &item, bool inscribe)
+void do_uncurse_item(item_def &item, bool inscribe, bool no_ash)
 {
+    if (!item.cursed())
+    {
+        item.flags &= ~ISFLAG_SEEN_CURSED;
+        if (in_inventory(item))
+            item.flags |= ISFLAG_KNOW_CURSE;
+        return;
+    }
+
+    if (no_ash && you.religion == GOD_ASHENZARI)
+    {
+        simple_god_message(" preserves the curse.");
+        return;
+    }
+
     if (inscribe && Options.autoinscribe_cursed
         && item.inscription.find("was cursed") == std::string::npos
         && !item_ident(item, ISFLAG_SEEN_CURSED)
@@ -1215,7 +1230,7 @@ bool is_enchantable_weapon(const item_def &wpn, bool uncurse, bool first)
         return (false);
     }
 
-    if (uncurse && wpn.cursed())
+    if (uncurse && wpn.cursed() && you.religion != GOD_ASHENZARI)
         return true;
 
     // Blowguns don't have any to-dam.
@@ -1264,7 +1279,7 @@ bool is_enchantable_armour(const item_def &arm, bool uncurse, bool unknown)
     // Artefacts or highly enchanted armour cannot be enchanted, only
     // uncursed.
     if (is_artefact(arm) || arm.plus >= armour_max_enchant(arm))
-        return (uncurse && arm.cursed());
+        return (uncurse && arm.cursed() && you.religion != GOD_ASHENZARI);
 
     return (true);
 }

@@ -672,6 +672,7 @@ bool vehumet_supports_spell(spell_type spell)
         || spell == SPELL_FRAGMENTATION // LRD
         || spell == SPELL_SANDBLAST
         || spell == SPELL_AIRSTRIKE
+        || spell == SPELL_TORNADO
         || spell == SPELL_IGNITE_POISON
         || spell == SPELL_OZOCUBUS_REFRIGERATION
         // Toxic Radiance does no direct damage
@@ -895,11 +896,11 @@ void yred_drain_life()
 
     for (monster_iterator mi(you.get_los()); mi; ++mi)
     {
-        if (mi->holiness() != MH_NATURAL
-            || mi->res_negative_energy())
-        {
+        if (mi->res_negative_energy())
             continue;
-        }
+
+        if (mi->wont_attack())
+            continue;
 
         mprf("You draw life from %s.",
              mi->name(DESC_NOCAP_THE).c_str());
@@ -2254,17 +2255,19 @@ static int _lugonu_warp_monster(monster* mon, int pow)
     if (!mon->friendly())
         behaviour_event(mon, ME_ANNOY, MHITYOU);
 
-    if (mon->check_res_magic(pow * 2))
+    int res_margin = mon->check_res_magic(pow * 2);
+    if (res_margin > 0)
     {
-        mprf("%s %s.",
-             mon->name(DESC_CAP_THE).c_str(), mons_resist_string(mon));
+        mprf("%s%s",
+             mon->name(DESC_CAP_THE).c_str(),
+             mons_resist_string(mon, res_margin).c_str());
         return (1);
     }
 
     const int damage = 1 + random2(pow / 6);
     if (mons_genus(mon->type) == MONS_BLINK_FROG)
         mon->heal(damage, false);
-    else if (!mon->check_res_magic(pow))
+    else if (mon->check_res_magic(pow) <= 0)
     {
         mon->hurt(&you, damage);
         if (!mon->alive())
@@ -2351,10 +2354,12 @@ void cheibriados_time_bend(int pow)
         monster* mon = monster_at(*ai);
         if (mon && !mons_is_stationary(mon))
         {
-            if (roll_dice(mon->hit_dice, 3) > random2avg(pow, 2))
+            int res_margin = roll_dice(mon->hit_dice, 3) - random2avg(pow, 2);
+            if (res_margin > 0)
             {
-                mprf("%s %s.",
-                     mon->name(DESC_CAP_THE).c_str(), mons_resist_string(mon));
+                mprf("%s%s",
+                     mon->name(DESC_CAP_THE).c_str(),
+                     mons_resist_string(mon, res_margin).c_str());
                 continue;
             }
 
@@ -2431,58 +2436,63 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
 
 bool ashenzari_transfer_knowledge()
 {
-    skill_type fsk = list_skills("Select the source skill.");
-    if (fsk == SK_NONE)
+    if (you.transfer_skill_points > 0)
+        if (!ashenzari_end_transfer())
+            return false;
+
+    you.transfer_from_skill = select_skill();
+    if (you.transfer_from_skill == SK_NONE)
+    {
+        redraw_screen();
         return false;
+    }
 
-    skill_type tsk = list_skills("Select the destination skill.", fsk);
-    if (tsk == SK_NONE)
-        return false;
+    int fsk_points = you.skill_points[you.transfer_from_skill];
+    int skp_max; // maximum number of skill points transferrable.
 
-    mprf("As you forget about %s, you feel ready to understand %s.",
-         skill_name(fsk), skill_name(tsk));
-
-    const float penalty = 0.9; // 10% XP penalty
-    const unsigned int min_transfer = 1000;
-    unsigned int fsk_points = you.skill_points[fsk];
-    unsigned int exp_pool = you.exp_available;
-    unsigned int skp_lost   = 0; // skill points lost in fsk.
-    unsigned int skp_gained = 0; // skill points gained in tsk.
-    unsigned int skp_max; // maximum number of skill points transferable.
-    bool tsk_practise = you.practise_skill[tsk];
-
-    skp_max = (fsk_points - you.ct_skill_points[fsk]) / 2;
-    skp_max = std::max(skp_max, min_transfer);
+    skp_max = fsk_points / 2;
+    skp_max = std::max(skp_max, 1000);
     if (skp_max > fsk_points)
         skp_max = fsk_points;
 
-    // Apply the XP penalty
-    skp_max *= penalty;
-    int train_count = skp_max / 10;
-
-    you.practise_skill[tsk] = true;
-    while (skp_gained < skp_max && train_count > 0)
+    you.transfer_skill_points = skp_max;
+    you.transfer_to_skill = select_skill();
+    if (you.transfer_to_skill == SK_NONE)
     {
-        you.exp_available = 250;
-        skp_gained += exercise(tsk, 1, false);
-        train_count--;
+        you.transfer_from_skill = SK_NONE;
+        you.transfer_skill_points = 0;
+        redraw_screen();
+        return false;
     }
-    you.practise_skill[tsk] = tsk_practise;
 
-    skp_lost = skp_gained / penalty;
-    int double_cost = std::min(skp_lost, you.ct_skill_points[fsk]);
-    you.ct_skill_points[fsk] -= double_cost;
-    skp_lost += double_cost;
+    mprf("As you forget about %s, you feel ready to understand %s.",
+         skill_name(you.transfer_from_skill),
+         skill_name(you.transfer_to_skill));
 
-    change_skill_points(fsk, -skp_lost, true);
-    change_skill_points(tsk, 0, true); // just update the level
+    you.transfer_total_skill_points = skp_max;
 
-    // We restore the XP pool
-    you.exp_available = exp_pool;
+    redraw_screen();
+    return true;
+}
 
-    dprf("Maximum skill points transferable: %d", skp_max);
-    dprf("skill %s lost %d points", skill_name(fsk), skp_lost);
-    dprf("skill %s gained %d points", skill_name(tsk), skp_gained);
+bool ashenzari_end_transfer(bool finished, bool force)
+{
+    if (!force && !finished)
+    {
+        mprf("You are currently transferring knowledge from %s to %s.",
+             skill_name(you.transfer_from_skill),
+             skill_name(you.transfer_to_skill));
+        if (!yesno("Are you sure you want to cancel the transfer?", false, 'n'))
+            return false;
+    }
 
+    mprf("You %s forgetting about %s and learning about %s.",
+         finished ? "have finished" : "stop",
+         skill_name(you.transfer_from_skill),
+         skill_name(you.transfer_to_skill));
+    you.transfer_from_skill = SK_NONE;
+    you.transfer_to_skill = SK_NONE;
+    you.transfer_skill_points = 0;
+    you.transfer_total_skill_points = 0;
     return true;
 }

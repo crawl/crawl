@@ -22,10 +22,12 @@
 #include "describe.h"
 #include "externs.h"
 #include "fight.h"
+#include "godabil.h"
 #include "itemprop.h"
 #include "menu.h"
 #include "player.h"
 #include "species.h"
+#include "skills.h"
 #include "stuff.h"
 #include "hints.h"
 
@@ -153,1170 +155,7 @@ struct species_skill_aptitude
     }
 };
 
-static inline species_skill_aptitude APT(species_type sp,
-                                         skill_type sk,
-                                         int aptitude)
-{
-    return species_skill_aptitude(sp, sk, aptitude);
-}
-
-static const species_skill_aptitude species_skill_aptitudes[] =
-{
-    // SP_HUMAN
-    APT(SP_HUMAN,           SK_FIGHTING,        0),
-    APT(SP_HUMAN,           SK_SHORT_BLADES,    0),
-    APT(SP_HUMAN,           SK_LONG_BLADES,     0),
-    APT(SP_HUMAN,           SK_AXES,            0),
-    APT(SP_HUMAN,           SK_MACES_FLAILS,    0),
-    APT(SP_HUMAN,           SK_POLEARMS,        0),
-    APT(SP_HUMAN,           SK_STAVES,          0),
-    APT(SP_HUMAN,           SK_SLINGS,          0),
-    APT(SP_HUMAN,           SK_BOWS,            0),
-    APT(SP_HUMAN,           SK_CROSSBOWS,       0),
-    APT(SP_HUMAN,           SK_THROWING,        0),
-    APT(SP_HUMAN,           SK_ARMOUR,          0),
-    APT(SP_HUMAN,           SK_DODGING,         0),
-    APT(SP_HUMAN,           SK_STEALTH,         0),
-    APT(SP_HUMAN,           SK_STABBING,        0),
-    APT(SP_HUMAN,           SK_SHIELDS,         0),
-    APT(SP_HUMAN,           SK_TRAPS_DOORS,     0),
-    APT(SP_HUMAN,           SK_UNARMED_COMBAT,  0),
-    APT(SP_HUMAN,           SK_SPELLCASTING,    0),
-    APT(SP_HUMAN,           SK_CONJURATIONS,    0),
-    APT(SP_HUMAN,           SK_HEXES,           0),
-    APT(SP_HUMAN,           SK_CHARMS,          0),
-    APT(SP_HUMAN,           SK_SUMMONINGS,      0),
-    APT(SP_HUMAN,           SK_NECROMANCY,      0),
-    APT(SP_HUMAN,           SK_TRANSLOCATIONS,  0),
-    APT(SP_HUMAN,           SK_TRANSMUTATIONS,  0),
-    APT(SP_HUMAN,           SK_FIRE_MAGIC,      0),
-    APT(SP_HUMAN,           SK_ICE_MAGIC,       0),
-    APT(SP_HUMAN,           SK_AIR_MAGIC,       0),
-    APT(SP_HUMAN,           SK_EARTH_MAGIC,     0),
-    APT(SP_HUMAN,           SK_POISON_MAGIC,    0),
-    APT(SP_HUMAN,           SK_INVOCATIONS,     0),
-    APT(SP_HUMAN,           SK_EVOCATIONS,      0),
-
-    // SP_HIGH_ELF
-    APT(SP_HIGH_ELF,        SK_FIGHTING,        0),
-    APT(SP_HIGH_ELF,        SK_SHORT_BLADES,    2),
-    APT(SP_HIGH_ELF,        SK_LONG_BLADES,     2),
-    APT(SP_HIGH_ELF,        SK_AXES,           -2),
-    APT(SP_HIGH_ELF,        SK_MACES_FLAILS,   -2),
-    APT(SP_HIGH_ELF,        SK_POLEARMS,       -2),
-    APT(SP_HIGH_ELF,        SK_STAVES,          0),
-    APT(SP_HIGH_ELF,        SK_SLINGS,         -2),
-    APT(SP_HIGH_ELF,        SK_BOWS,            3),
-    APT(SP_HIGH_ELF,        SK_CROSSBOWS,       0),
-    APT(SP_HIGH_ELF,        SK_THROWING,        1),
-    APT(SP_HIGH_ELF,        SK_ARMOUR,         -1),
-    APT(SP_HIGH_ELF,        SK_DODGING,         1),
-    APT(SP_HIGH_ELF,        SK_STEALTH,         1),
-    APT(SP_HIGH_ELF,        SK_STABBING,       -1),
-    APT(SP_HIGH_ELF,        SK_SHIELDS,        -1),
-    APT(SP_HIGH_ELF,        SK_TRAPS_DOORS,     0),
-    APT(SP_HIGH_ELF,        SK_UNARMED_COMBAT, -2),
-    APT(SP_HIGH_ELF,        SK_SPELLCASTING,    2),
-    APT(SP_HIGH_ELF,        SK_CONJURATIONS,    1),
-    APT(SP_HIGH_ELF,        SK_HEXES,           1),
-    APT(SP_HIGH_ELF,        SK_CHARMS,          2),
-    APT(SP_HIGH_ELF,        SK_SUMMONINGS,     -1),
-    APT(SP_HIGH_ELF,        SK_NECROMANCY,     -2),
-    APT(SP_HIGH_ELF,        SK_TRANSLOCATIONS,  1),
-    APT(SP_HIGH_ELF,        SK_TRANSMUTATIONS,  1),
-    APT(SP_HIGH_ELF,        SK_FIRE_MAGIC,      0),
-    APT(SP_HIGH_ELF,        SK_ICE_MAGIC,       0),
-    APT(SP_HIGH_ELF,        SK_AIR_MAGIC,       2),
-    APT(SP_HIGH_ELF,        SK_EARTH_MAGIC,    -2),
-    APT(SP_HIGH_ELF,        SK_POISON_MAGIC,   -2),
-    APT(SP_HIGH_ELF,        SK_INVOCATIONS,     0),
-    APT(SP_HIGH_ELF,        SK_EVOCATIONS,      0),
-
-    // SP_DEEP_ELF
-    APT(SP_DEEP_ELF,        SK_FIGHTING,       -2),
-    APT(SP_DEEP_ELF,        SK_SHORT_BLADES,    0),
-    APT(SP_DEEP_ELF,        SK_LONG_BLADES,    -1),
-    APT(SP_DEEP_ELF,        SK_AXES,           -2),
-    APT(SP_DEEP_ELF,        SK_MACES_FLAILS,   -3),
-    APT(SP_DEEP_ELF,        SK_POLEARMS,       -3),
-    APT(SP_DEEP_ELF,        SK_STAVES,          0),
-    APT(SP_DEEP_ELF,        SK_SLINGS,         -2),
-    APT(SP_DEEP_ELF,        SK_BOWS,            1),
-    APT(SP_DEEP_ELF,        SK_CROSSBOWS,      -1),
-    APT(SP_DEEP_ELF,        SK_THROWING,        1),
-    APT(SP_DEEP_ELF,        SK_ARMOUR,         -2),
-    APT(SP_DEEP_ELF,        SK_DODGING,         2),
-    APT(SP_DEEP_ELF,        SK_STEALTH,         2),
-    APT(SP_DEEP_ELF,        SK_STABBING,        1),
-    APT(SP_DEEP_ELF,        SK_SHIELDS,        -2),
-    APT(SP_DEEP_ELF,        SK_TRAPS_DOORS,     0),
-    APT(SP_DEEP_ELF,        SK_UNARMED_COMBAT, -2),
-    APT(SP_DEEP_ELF,        SK_SPELLCASTING,    4),
-    APT(SP_DEEP_ELF,        SK_CONJURATIONS,    1),
-    APT(SP_DEEP_ELF,        SK_HEXES,           3),
-    APT(SP_DEEP_ELF,        SK_CHARMS,          4),
-    APT(SP_DEEP_ELF,        SK_SUMMONINGS,      1),
-    APT(SP_DEEP_ELF,        SK_NECROMANCY,      2),
-    APT(SP_DEEP_ELF,        SK_TRANSLOCATIONS,  1),
-    APT(SP_DEEP_ELF,        SK_TRANSMUTATIONS,  1),
-    APT(SP_DEEP_ELF,        SK_FIRE_MAGIC,      1),
-    APT(SP_DEEP_ELF,        SK_ICE_MAGIC,       1),
-    APT(SP_DEEP_ELF,        SK_AIR_MAGIC,       1),
-    APT(SP_DEEP_ELF,        SK_EARTH_MAGIC,     0),
-    APT(SP_DEEP_ELF,        SK_POISON_MAGIC,    1),
-    APT(SP_DEEP_ELF,        SK_INVOCATIONS,     0),
-    APT(SP_DEEP_ELF,        SK_EVOCATIONS,      1),
-
-    // SP_SLUDGE_ELF
-    APT(SP_SLUDGE_ELF,      SK_FIGHTING,        1),
-    APT(SP_SLUDGE_ELF,      SK_SHORT_BLADES,   -1),
-    APT(SP_SLUDGE_ELF,      SK_LONG_BLADES,    -1),
-    APT(SP_SLUDGE_ELF,      SK_AXES,           -2),
-    APT(SP_SLUDGE_ELF,      SK_MACES_FLAILS,   -2),
-    APT(SP_SLUDGE_ELF,      SK_POLEARMS,       -2),
-    APT(SP_SLUDGE_ELF,      SK_STAVES,          0),
-    APT(SP_SLUDGE_ELF,      SK_SLINGS,          0),
-    APT(SP_SLUDGE_ELF,      SK_BOWS,            0),
-    APT(SP_SLUDGE_ELF,      SK_CROSSBOWS,       0),
-    APT(SP_SLUDGE_ELF,      SK_THROWING,        2),
-    APT(SP_SLUDGE_ELF,      SK_ARMOUR,         -2),
-    APT(SP_SLUDGE_ELF,      SK_DODGING,         2),
-    APT(SP_SLUDGE_ELF,      SK_STEALTH,         1),
-    APT(SP_SLUDGE_ELF,      SK_STABBING,        0),
-    APT(SP_SLUDGE_ELF,      SK_SHIELDS,        -2),
-    APT(SP_SLUDGE_ELF,      SK_TRAPS_DOORS,     0),
-    APT(SP_SLUDGE_ELF,      SK_UNARMED_COMBAT,  1),
-    APT(SP_SLUDGE_ELF,      SK_SPELLCASTING,    2),
-    APT(SP_SLUDGE_ELF,      SK_CONJURATIONS,   -2),
-    APT(SP_SLUDGE_ELF,      SK_HEXES,           0),
-    APT(SP_SLUDGE_ELF,      SK_CHARMS,         -2),
-    APT(SP_SLUDGE_ELF,      SK_SUMMONINGS,      1),
-    APT(SP_SLUDGE_ELF,      SK_NECROMANCY,      1),
-    APT(SP_SLUDGE_ELF,      SK_TRANSLOCATIONS,  0),
-    APT(SP_SLUDGE_ELF,      SK_TRANSMUTATIONS,  3),
-    APT(SP_SLUDGE_ELF,      SK_FIRE_MAGIC,      1),
-    APT(SP_SLUDGE_ELF,      SK_ICE_MAGIC,       1),
-    APT(SP_SLUDGE_ELF,      SK_AIR_MAGIC,       1),
-    APT(SP_SLUDGE_ELF,      SK_EARTH_MAGIC,     1),
-    APT(SP_SLUDGE_ELF,      SK_POISON_MAGIC,    1),
-    APT(SP_SLUDGE_ELF,      SK_INVOCATIONS,     0),
-    APT(SP_SLUDGE_ELF,      SK_EVOCATIONS,      0),
-
-    // SP_MOUNTAIN_DWARF
-    APT(SP_MOUNTAIN_DWARF,  SK_FIGHTING,        2),
-    APT(SP_MOUNTAIN_DWARF,  SK_SHORT_BLADES,    1),
-    APT(SP_MOUNTAIN_DWARF,  SK_LONG_BLADES,     0),
-    APT(SP_MOUNTAIN_DWARF,  SK_AXES,            2),
-    APT(SP_MOUNTAIN_DWARF,  SK_MACES_FLAILS,    2),
-    APT(SP_MOUNTAIN_DWARF,  SK_POLEARMS,       -1),
-    APT(SP_MOUNTAIN_DWARF,  SK_STAVES,         -1),
-    APT(SP_MOUNTAIN_DWARF,  SK_SLINGS,         -1),
-    APT(SP_MOUNTAIN_DWARF,  SK_BOWS,           -2),
-    APT(SP_MOUNTAIN_DWARF,  SK_CROSSBOWS,       1),
-    APT(SP_MOUNTAIN_DWARF,  SK_THROWING,       -1),
-    APT(SP_MOUNTAIN_DWARF,  SK_ARMOUR,          3),
-    APT(SP_MOUNTAIN_DWARF,  SK_DODGING,        -1),
-    APT(SP_MOUNTAIN_DWARF,  SK_STEALTH,        -3),
-    APT(SP_MOUNTAIN_DWARF,  SK_STABBING,       -2),
-    APT(SP_MOUNTAIN_DWARF,  SK_SHIELDS,         2),
-    APT(SP_MOUNTAIN_DWARF,  SK_TRAPS_DOORS,     1),
-    APT(SP_MOUNTAIN_DWARF,  SK_UNARMED_COMBAT,  0),
-    APT(SP_MOUNTAIN_DWARF,  SK_SPELLCASTING,   -3),
-    APT(SP_MOUNTAIN_DWARF,  SK_CONJURATIONS,   -1),
-    APT(SP_MOUNTAIN_DWARF,  SK_HEXES,          -2),
-    APT(SP_MOUNTAIN_DWARF,  SK_CHARMS,         -2),
-    APT(SP_MOUNTAIN_DWARF,  SK_SUMMONINGS,     -2),
-    APT(SP_MOUNTAIN_DWARF,  SK_NECROMANCY,     -3),
-    APT(SP_MOUNTAIN_DWARF,  SK_TRANSLOCATIONS, -2),
-    APT(SP_MOUNTAIN_DWARF,  SK_TRANSMUTATIONS, -1),
-    APT(SP_MOUNTAIN_DWARF,  SK_FIRE_MAGIC,      2),
-    APT(SP_MOUNTAIN_DWARF,  SK_ICE_MAGIC,      -2),
-    APT(SP_MOUNTAIN_DWARF,  SK_AIR_MAGIC,      -2),
-    APT(SP_MOUNTAIN_DWARF,  SK_EARTH_MAGIC,     2),
-    APT(SP_MOUNTAIN_DWARF,  SK_POISON_MAGIC,   -2),
-    APT(SP_MOUNTAIN_DWARF,  SK_INVOCATIONS,     0),
-    APT(SP_MOUNTAIN_DWARF,  SK_EVOCATIONS,      1),
-
-    // SP_HALFLING
-    APT(SP_HALFLING,        SK_FIGHTING,       -1),
-    APT(SP_HALFLING,        SK_SHORT_BLADES,    3),
-    APT(SP_HALFLING,        SK_LONG_BLADES,     0),
-    APT(SP_HALFLING,        SK_AXES,           -1),
-    APT(SP_HALFLING,        SK_MACES_FLAILS,   -2),
-    APT(SP_HALFLING,        SK_POLEARMS,       -3),
-    APT(SP_HALFLING,        SK_STAVES,         -2),
-    APT(SP_HALFLING,        SK_SLINGS,          4),
-    APT(SP_HALFLING,        SK_BOWS,            2),
-    APT(SP_HALFLING,        SK_CROSSBOWS,       1),
-    APT(SP_HALFLING,        SK_THROWING,        3),
-    APT(SP_HALFLING,        SK_ARMOUR,         -2),
-    APT(SP_HALFLING,        SK_DODGING,         2),
-    APT(SP_HALFLING,        SK_STEALTH,         3),
-    APT(SP_HALFLING,        SK_STABBING,        2),
-    APT(SP_HALFLING,        SK_SHIELDS,         1),
-    APT(SP_HALFLING,        SK_TRAPS_DOORS,     0),
-    APT(SP_HALFLING,        SK_UNARMED_COMBAT, -2),
-    APT(SP_HALFLING,        SK_SPELLCASTING,   -1),
-    APT(SP_HALFLING,        SK_CONJURATIONS,   -2),
-    APT(SP_HALFLING,        SK_HEXES,           0),
-    APT(SP_HALFLING,        SK_CHARMS,          0),
-    APT(SP_HALFLING,        SK_SUMMONINGS,     -1),
-    APT(SP_HALFLING,        SK_NECROMANCY,     -2),
-    APT(SP_HALFLING,        SK_TRANSLOCATIONS,  0),
-    APT(SP_HALFLING,        SK_TRANSMUTATIONS, -2),
-    APT(SP_HALFLING,        SK_FIRE_MAGIC,      0),
-    APT(SP_HALFLING,        SK_ICE_MAGIC,       0),
-    APT(SP_HALFLING,        SK_AIR_MAGIC,       1),
-    APT(SP_HALFLING,        SK_EARTH_MAGIC,     0),
-    APT(SP_HALFLING,        SK_POISON_MAGIC,   -1),
-    APT(SP_HALFLING,        SK_INVOCATIONS,     0),
-    APT(SP_HALFLING,        SK_EVOCATIONS,      1),
-
-    // SP_HILL_ORC
-    APT(SP_HILL_ORC,        SK_FIGHTING,        2),
-    APT(SP_HILL_ORC,        SK_SHORT_BLADES,    0),
-    APT(SP_HILL_ORC,        SK_LONG_BLADES,     1),
-    APT(SP_HILL_ORC,        SK_AXES,            2),
-    APT(SP_HILL_ORC,        SK_MACES_FLAILS,    1),
-    APT(SP_HILL_ORC,        SK_POLEARMS,        1),
-    APT(SP_HILL_ORC,        SK_STAVES,         -1),
-    APT(SP_HILL_ORC,        SK_SLINGS,         -1),
-    APT(SP_HILL_ORC,        SK_BOWS,           -1),
-    APT(SP_HILL_ORC,        SK_CROSSBOWS,      -1),
-    APT(SP_HILL_ORC,        SK_THROWING,        0),
-    APT(SP_HILL_ORC,        SK_ARMOUR,          1),
-    APT(SP_HILL_ORC,        SK_DODGING,        -2),
-    APT(SP_HILL_ORC,        SK_STEALTH,        -2),
-    APT(SP_HILL_ORC,        SK_STABBING,        2),
-    APT(SP_HILL_ORC,        SK_SHIELDS,         1),
-    APT(SP_HILL_ORC,        SK_TRAPS_DOORS,     0),
-    APT(SP_HILL_ORC,        SK_UNARMED_COMBAT,  1),
-    APT(SP_HILL_ORC,        SK_SPELLCASTING,   -3),
-    APT(SP_HILL_ORC,        SK_CONJURATIONS,    0),
-    APT(SP_HILL_ORC,        SK_HEXES,           0),
-    APT(SP_HILL_ORC,        SK_CHARMS,         -1),
-    APT(SP_HILL_ORC,        SK_SUMMONINGS,      0),
-    APT(SP_HILL_ORC,        SK_NECROMANCY,      0),
-    APT(SP_HILL_ORC,        SK_TRANSLOCATIONS, -2),
-    APT(SP_HILL_ORC,        SK_TRANSMUTATIONS, -3),
-    APT(SP_HILL_ORC,        SK_FIRE_MAGIC,      0),
-    APT(SP_HILL_ORC,        SK_ICE_MAGIC,       0),
-    APT(SP_HILL_ORC,        SK_AIR_MAGIC,      -2),
-    APT(SP_HILL_ORC,        SK_EARTH_MAGIC,     0),
-    APT(SP_HILL_ORC,        SK_POISON_MAGIC,   -1),
-    APT(SP_HILL_ORC,        SK_INVOCATIONS,     0),
-    APT(SP_HILL_ORC,        SK_EVOCATIONS,      0),
-
-    // SP_KOBOLD
-    APT(SP_KOBOLD,          SK_FIGHTING,        1),
-    APT(SP_KOBOLD,          SK_SHORT_BLADES,    3),
-    APT(SP_KOBOLD,          SK_LONG_BLADES,    -2),
-    APT(SP_KOBOLD,          SK_AXES,           -1),
-    APT(SP_KOBOLD,          SK_MACES_FLAILS,    0),
-    APT(SP_KOBOLD,          SK_POLEARMS,       -2),
-    APT(SP_KOBOLD,          SK_STAVES,         -1),
-    APT(SP_KOBOLD,          SK_SLINGS,          2),
-    APT(SP_KOBOLD,          SK_BOWS,            1),
-    APT(SP_KOBOLD,          SK_CROSSBOWS,       1),
-    APT(SP_KOBOLD,          SK_THROWING,        3),
-    APT(SP_KOBOLD,          SK_ARMOUR,         -2),
-    APT(SP_KOBOLD,          SK_DODGING,         2),
-    APT(SP_KOBOLD,          SK_STEALTH,         3),
-    APT(SP_KOBOLD,          SK_STABBING,        2),
-    APT(SP_KOBOLD,          SK_SHIELDS,        -2),
-    APT(SP_KOBOLD,          SK_TRAPS_DOORS,     0),
-    APT(SP_KOBOLD,          SK_UNARMED_COMBAT,  0),
-    APT(SP_KOBOLD,          SK_SPELLCASTING,    0),
-    APT(SP_KOBOLD,          SK_CONJURATIONS,   -1),
-    APT(SP_KOBOLD,          SK_HEXES,          -1),
-    APT(SP_KOBOLD,          SK_CHARMS,         -1),
-    APT(SP_KOBOLD,          SK_SUMMONINGS,     -1),
-    APT(SP_KOBOLD,          SK_NECROMANCY,     -1),
-    APT(SP_KOBOLD,          SK_TRANSLOCATIONS,  0),
-    APT(SP_KOBOLD,          SK_TRANSMUTATIONS, -1),
-    APT(SP_KOBOLD,          SK_FIRE_MAGIC,      0),
-    APT(SP_KOBOLD,          SK_ICE_MAGIC,       0),
-    APT(SP_KOBOLD,          SK_AIR_MAGIC,       0),
-    APT(SP_KOBOLD,          SK_EARTH_MAGIC,     0),
-    APT(SP_KOBOLD,          SK_POISON_MAGIC,    0),
-    APT(SP_KOBOLD,          SK_INVOCATIONS,     0),
-    APT(SP_KOBOLD,          SK_EVOCATIONS,      2),
-
-    // SP_MUMMY
-    APT(SP_MUMMY,           SK_FIGHTING,        0),
-    APT(SP_MUMMY,           SK_SHORT_BLADES,   -2),
-    APT(SP_MUMMY,           SK_LONG_BLADES,    -2),
-    APT(SP_MUMMY,           SK_AXES,           -2),
-    APT(SP_MUMMY,           SK_MACES_FLAILS,   -2),
-    APT(SP_MUMMY,           SK_POLEARMS,       -2),
-    APT(SP_MUMMY,           SK_STAVES,         -2),
-    APT(SP_MUMMY,           SK_SLINGS,         -2),
-    APT(SP_MUMMY,           SK_BOWS,           -2),
-    APT(SP_MUMMY,           SK_CROSSBOWS,      -2),
-    APT(SP_MUMMY,           SK_THROWING,       -2),
-    APT(SP_MUMMY,           SK_ARMOUR,         -2),
-    APT(SP_MUMMY,           SK_DODGING,        -2),
-    APT(SP_MUMMY,           SK_STEALTH,        -2),
-    APT(SP_MUMMY,           SK_STABBING,       -2),
-    APT(SP_MUMMY,           SK_SHIELDS,        -2),
-    APT(SP_MUMMY,           SK_TRAPS_DOORS,    -2),
-    APT(SP_MUMMY,           SK_UNARMED_COMBAT, -2),
-    APT(SP_MUMMY,           SK_SPELLCASTING,    0),
-    APT(SP_MUMMY,           SK_CONJURATIONS,   -2),
-    APT(SP_MUMMY,           SK_HEXES,          -1),
-    APT(SP_MUMMY,           SK_CHARMS,         -2),
-    APT(SP_MUMMY,           SK_SUMMONINGS,     -2),
-    APT(SP_MUMMY,           SK_NECROMANCY,      0),
-    APT(SP_MUMMY,           SK_TRANSLOCATIONS, -2),
-    APT(SP_MUMMY,           SK_TRANSMUTATIONS, -2),
-    APT(SP_MUMMY,           SK_FIRE_MAGIC,     -2),
-    APT(SP_MUMMY,           SK_ICE_MAGIC,      -2),
-    APT(SP_MUMMY,           SK_AIR_MAGIC,      -2),
-    APT(SP_MUMMY,           SK_EARTH_MAGIC,    -2),
-    APT(SP_MUMMY,           SK_POISON_MAGIC,   -2),
-    APT(SP_MUMMY,           SK_INVOCATIONS,    -2),
-    APT(SP_MUMMY,           SK_EVOCATIONS,     -2),
-
-    // SP_NAGA
-    APT(SP_NAGA,            SK_FIGHTING,        0),
-    APT(SP_NAGA,            SK_SHORT_BLADES,    0),
-    APT(SP_NAGA,            SK_LONG_BLADES,     0),
-    APT(SP_NAGA,            SK_AXES,            0),
-    APT(SP_NAGA,            SK_MACES_FLAILS,    0),
-    APT(SP_NAGA,            SK_POLEARMS,        0),
-    APT(SP_NAGA,            SK_STAVES,         -1),
-    APT(SP_NAGA,            SK_SLINGS,         -1),
-    APT(SP_NAGA,            SK_BOWS,           -1),
-    APT(SP_NAGA,            SK_CROSSBOWS,      -1),
-    APT(SP_NAGA,            SK_THROWING,       -1),
-    APT(SP_NAGA,            SK_ARMOUR,         -2),
-    APT(SP_NAGA,            SK_DODGING,        -2),
-    APT(SP_NAGA,            SK_STEALTH,         5),
-    APT(SP_NAGA,            SK_STABBING,        0),
-    APT(SP_NAGA,            SK_SHIELDS,        -2),
-    APT(SP_NAGA,            SK_TRAPS_DOORS,     0),
-    APT(SP_NAGA,            SK_UNARMED_COMBAT,  0),
-    APT(SP_NAGA,            SK_SPELLCASTING,    0),
-    APT(SP_NAGA,            SK_CONJURATIONS,    0),
-    APT(SP_NAGA,            SK_HEXES,           0),
-    APT(SP_NAGA,            SK_CHARMS,          0),
-    APT(SP_NAGA,            SK_SUMMONINGS,      0),
-    APT(SP_NAGA,            SK_NECROMANCY,      0),
-    APT(SP_NAGA,            SK_TRANSLOCATIONS,  0),
-    APT(SP_NAGA,            SK_TRANSMUTATIONS,  0),
-    APT(SP_NAGA,            SK_FIRE_MAGIC,      0),
-    APT(SP_NAGA,            SK_ICE_MAGIC,       0),
-    APT(SP_NAGA,            SK_AIR_MAGIC,       0),
-    APT(SP_NAGA,            SK_EARTH_MAGIC,     0),
-    APT(SP_NAGA,            SK_POISON_MAGIC,    3),
-    APT(SP_NAGA,            SK_INVOCATIONS,     0),
-    APT(SP_NAGA,            SK_EVOCATIONS,      0),
-
-    // SP_OGRE
-    APT(SP_OGRE,            SK_FIGHTING,        2),
-    APT(SP_OGRE,            SK_SHORT_BLADES,   -4),
-    APT(SP_OGRE,            SK_LONG_BLADES,    -3),
-    APT(SP_OGRE,            SK_AXES,           -3),
-    APT(SP_OGRE,            SK_MACES_FLAILS,    1),
-    APT(SP_OGRE,            SK_POLEARMS,        0),
-    APT(SP_OGRE,            SK_STAVES,         -1),
-    APT(SP_OGRE,            SK_SLINGS,         -3),
-    APT(SP_OGRE,            SK_BOWS,           -3),
-    APT(SP_OGRE,            SK_CROSSBOWS,      -3),
-    APT(SP_OGRE,            SK_THROWING,        1),
-    APT(SP_OGRE,            SK_ARMOUR,         -2),
-    APT(SP_OGRE,            SK_DODGING,        -1),
-    APT(SP_OGRE,            SK_STEALTH,        -2),
-    APT(SP_OGRE,            SK_STABBING,       -2),
-    APT(SP_OGRE,            SK_SHIELDS,        -1),
-    APT(SP_OGRE,            SK_TRAPS_DOORS,    -2),
-    APT(SP_OGRE,            SK_UNARMED_COMBAT, -1),
-    APT(SP_OGRE,            SK_SPELLCASTING,    2),
-    APT(SP_OGRE,            SK_CONJURATIONS,   -3),
-    APT(SP_OGRE,            SK_HEXES,          -3),
-    APT(SP_OGRE,            SK_CHARMS,         -3),
-    APT(SP_OGRE,            SK_SUMMONINGS,     -3),
-    APT(SP_OGRE,            SK_NECROMANCY,     -3),
-    APT(SP_OGRE,            SK_TRANSLOCATIONS, -3),
-    APT(SP_OGRE,            SK_TRANSMUTATIONS, -3),
-    APT(SP_OGRE,            SK_FIRE_MAGIC,     -3),
-    APT(SP_OGRE,            SK_ICE_MAGIC,      -3),
-    APT(SP_OGRE,            SK_AIR_MAGIC,      -3),
-    APT(SP_OGRE,            SK_EARTH_MAGIC,    -3),
-    APT(SP_OGRE,            SK_POISON_MAGIC,   -3),
-    APT(SP_OGRE,            SK_INVOCATIONS,     0),
-    APT(SP_OGRE,            SK_EVOCATIONS,     -2),
-
-    // SP_TROLL
-    APT(SP_TROLL,           SK_FIGHTING,       -2),
-    APT(SP_TROLL,           SK_SHORT_BLADES,   -2),
-    APT(SP_TROLL,           SK_LONG_BLADES,    -2),
-    APT(SP_TROLL,           SK_AXES,           -2),
-    APT(SP_TROLL,           SK_MACES_FLAILS,   -1),
-    APT(SP_TROLL,           SK_POLEARMS,       -2),
-    APT(SP_TROLL,           SK_STAVES,         -2),
-    APT(SP_TROLL,           SK_SLINGS,         -4),
-    APT(SP_TROLL,           SK_BOWS,           -4),
-    APT(SP_TROLL,           SK_CROSSBOWS,      -4),
-    APT(SP_TROLL,           SK_THROWING,       -1),
-    APT(SP_TROLL,           SK_ARMOUR,         -2),
-    APT(SP_TROLL,           SK_DODGING,        -2),
-    APT(SP_TROLL,           SK_STEALTH,        -5),
-    APT(SP_TROLL,           SK_STABBING,       -2),
-    APT(SP_TROLL,           SK_SHIELDS,        -2),
-    APT(SP_TROLL,           SK_TRAPS_DOORS,    -4),
-    APT(SP_TROLL,           SK_UNARMED_COMBAT,  0),
-    APT(SP_TROLL,           SK_SPELLCASTING,   -4),
-    APT(SP_TROLL,           SK_CONJURATIONS,   -3),
-    APT(SP_TROLL,           SK_HEXES,          -4),
-    APT(SP_TROLL,           SK_CHARMS,         -4),
-    APT(SP_TROLL,           SK_SUMMONINGS,     -3),
-    APT(SP_TROLL,           SK_NECROMANCY,     -2),
-    APT(SP_TROLL,           SK_TRANSLOCATIONS, -3),
-    APT(SP_TROLL,           SK_TRANSMUTATIONS, -3),
-    APT(SP_TROLL,           SK_FIRE_MAGIC,     -3),
-    APT(SP_TROLL,           SK_ICE_MAGIC,      -3),
-    APT(SP_TROLL,           SK_AIR_MAGIC,      -4),
-    APT(SP_TROLL,           SK_EARTH_MAGIC,    -1),
-    APT(SP_TROLL,           SK_POISON_MAGIC,   -3),
-    APT(SP_TROLL,           SK_INVOCATIONS,    -2),
-    APT(SP_TROLL,           SK_EVOCATIONS,     -3),
-
-    // SP_RED_DRACONIAN
-    APT(SP_RED_DRACONIAN,   SK_FIGHTING,        1),
-    APT(SP_RED_DRACONIAN,   SK_SHORT_BLADES,    0),
-    APT(SP_RED_DRACONIAN,   SK_LONG_BLADES,     0),
-    APT(SP_RED_DRACONIAN,   SK_AXES,            0),
-    APT(SP_RED_DRACONIAN,   SK_MACES_FLAILS,    0),
-    APT(SP_RED_DRACONIAN,   SK_POLEARMS,        0),
-    APT(SP_RED_DRACONIAN,   SK_STAVES,          0),
-    APT(SP_RED_DRACONIAN,   SK_SLINGS,         -1),
-    APT(SP_RED_DRACONIAN,   SK_BOWS,           -1),
-    APT(SP_RED_DRACONIAN,   SK_CROSSBOWS,      -1),
-    APT(SP_RED_DRACONIAN,   SK_THROWING,       -1),
-    APT(SP_RED_DRACONIAN,   SK_ARMOUR,         -4),
-    APT(SP_RED_DRACONIAN,   SK_DODGING,        -1),
-    APT(SP_RED_DRACONIAN,   SK_STEALTH,        -1),
-    APT(SP_RED_DRACONIAN,   SK_STABBING,        0),
-    APT(SP_RED_DRACONIAN,   SK_SHIELDS,         0),
-    APT(SP_RED_DRACONIAN,   SK_TRAPS_DOORS,     0),
-    APT(SP_RED_DRACONIAN,   SK_UNARMED_COMBAT,  0),
-    APT(SP_RED_DRACONIAN,   SK_SPELLCASTING,    0),
-    APT(SP_RED_DRACONIAN,   SK_CONJURATIONS,    0),
-    APT(SP_RED_DRACONIAN,   SK_HEXES,          -1),
-    APT(SP_RED_DRACONIAN,   SK_CHARMS,         -1),
-    APT(SP_RED_DRACONIAN,   SK_SUMMONINGS,      0),
-    APT(SP_RED_DRACONIAN,   SK_NECROMANCY,      0),
-    APT(SP_RED_DRACONIAN,   SK_TRANSLOCATIONS,  0),
-    APT(SP_RED_DRACONIAN,   SK_TRANSMUTATIONS,  0),
-    APT(SP_RED_DRACONIAN,   SK_FIRE_MAGIC,      2),
-    APT(SP_RED_DRACONIAN,   SK_ICE_MAGIC,      -2),
-    APT(SP_RED_DRACONIAN,   SK_AIR_MAGIC,       0),
-    APT(SP_RED_DRACONIAN,   SK_EARTH_MAGIC,     0),
-    APT(SP_RED_DRACONIAN,   SK_POISON_MAGIC,    0),
-    APT(SP_RED_DRACONIAN,   SK_INVOCATIONS,     0),
-    APT(SP_RED_DRACONIAN,   SK_EVOCATIONS,      0),
-
-    // SP_WHITE_DRACONIAN
-    APT(SP_WHITE_DRACONIAN, SK_FIGHTING,        1),
-    APT(SP_WHITE_DRACONIAN, SK_SHORT_BLADES,    0),
-    APT(SP_WHITE_DRACONIAN, SK_LONG_BLADES,     0),
-    APT(SP_WHITE_DRACONIAN, SK_AXES,            0),
-    APT(SP_WHITE_DRACONIAN, SK_MACES_FLAILS,    0),
-    APT(SP_WHITE_DRACONIAN, SK_POLEARMS,        0),
-    APT(SP_WHITE_DRACONIAN, SK_STAVES,          0),
-    APT(SP_WHITE_DRACONIAN, SK_SLINGS,         -1),
-    APT(SP_WHITE_DRACONIAN, SK_BOWS,           -1),
-    APT(SP_WHITE_DRACONIAN, SK_CROSSBOWS,      -1),
-    APT(SP_WHITE_DRACONIAN, SK_THROWING,       -1),
-    APT(SP_WHITE_DRACONIAN, SK_ARMOUR,         -4),
-    APT(SP_WHITE_DRACONIAN, SK_DODGING,        -1),
-    APT(SP_WHITE_DRACONIAN, SK_STEALTH,        -1),
-    APT(SP_WHITE_DRACONIAN, SK_STABBING,        0),
-    APT(SP_WHITE_DRACONIAN, SK_SHIELDS,         0),
-    APT(SP_WHITE_DRACONIAN, SK_TRAPS_DOORS,     0),
-    APT(SP_WHITE_DRACONIAN, SK_UNARMED_COMBAT,  0),
-    APT(SP_WHITE_DRACONIAN, SK_SPELLCASTING,    0),
-    APT(SP_WHITE_DRACONIAN, SK_CONJURATIONS,    0),
-    APT(SP_WHITE_DRACONIAN, SK_HEXES,          -1),
-    APT(SP_WHITE_DRACONIAN, SK_CHARMS,         -1),
-    APT(SP_WHITE_DRACONIAN, SK_SUMMONINGS,      0),
-    APT(SP_WHITE_DRACONIAN, SK_NECROMANCY,      0),
-    APT(SP_WHITE_DRACONIAN, SK_TRANSLOCATIONS,  0),
-    APT(SP_WHITE_DRACONIAN, SK_TRANSMUTATIONS,  0),
-    APT(SP_WHITE_DRACONIAN, SK_FIRE_MAGIC,     -2),
-    APT(SP_WHITE_DRACONIAN, SK_ICE_MAGIC,       2),
-    APT(SP_WHITE_DRACONIAN, SK_AIR_MAGIC,       0),
-    APT(SP_WHITE_DRACONIAN, SK_EARTH_MAGIC,     0),
-    APT(SP_WHITE_DRACONIAN, SK_POISON_MAGIC,    0),
-    APT(SP_WHITE_DRACONIAN, SK_INVOCATIONS,     0),
-    APT(SP_WHITE_DRACONIAN, SK_EVOCATIONS,      0),
-
-    // SP_GREEN_DRACONIAN
-    APT(SP_GREEN_DRACONIAN, SK_FIGHTING,        1),
-    APT(SP_GREEN_DRACONIAN, SK_SHORT_BLADES,    0),
-    APT(SP_GREEN_DRACONIAN, SK_LONG_BLADES,     0),
-    APT(SP_GREEN_DRACONIAN, SK_AXES,            0),
-    APT(SP_GREEN_DRACONIAN, SK_MACES_FLAILS,    0),
-    APT(SP_GREEN_DRACONIAN, SK_POLEARMS,        0),
-    APT(SP_GREEN_DRACONIAN, SK_STAVES,          0),
-    APT(SP_GREEN_DRACONIAN, SK_SLINGS,         -1),
-    APT(SP_GREEN_DRACONIAN, SK_BOWS,           -1),
-    APT(SP_GREEN_DRACONIAN, SK_CROSSBOWS,      -1),
-    APT(SP_GREEN_DRACONIAN, SK_THROWING,       -1),
-    APT(SP_GREEN_DRACONIAN, SK_ARMOUR,         -4),
-    APT(SP_GREEN_DRACONIAN, SK_DODGING,        -1),
-    APT(SP_GREEN_DRACONIAN, SK_STEALTH,        -1),
-    APT(SP_GREEN_DRACONIAN, SK_STABBING,        0),
-    APT(SP_GREEN_DRACONIAN, SK_SHIELDS,         0),
-    APT(SP_GREEN_DRACONIAN, SK_TRAPS_DOORS,     0),
-    APT(SP_GREEN_DRACONIAN, SK_UNARMED_COMBAT,  0),
-    APT(SP_GREEN_DRACONIAN, SK_SPELLCASTING,    0),
-    APT(SP_GREEN_DRACONIAN, SK_CONJURATIONS,    0),
-    APT(SP_GREEN_DRACONIAN, SK_HEXES,          -1),
-    APT(SP_GREEN_DRACONIAN, SK_CHARMS,         -1),
-    APT(SP_GREEN_DRACONIAN, SK_SUMMONINGS,      0),
-    APT(SP_GREEN_DRACONIAN, SK_NECROMANCY,      0),
-    APT(SP_GREEN_DRACONIAN, SK_TRANSLOCATIONS,  0),
-    APT(SP_GREEN_DRACONIAN, SK_TRANSMUTATIONS,  0),
-    APT(SP_GREEN_DRACONIAN, SK_FIRE_MAGIC,      0),
-    APT(SP_GREEN_DRACONIAN, SK_ICE_MAGIC,       0),
-    APT(SP_GREEN_DRACONIAN, SK_AIR_MAGIC,       0),
-    APT(SP_GREEN_DRACONIAN, SK_EARTH_MAGIC,     0),
-    APT(SP_GREEN_DRACONIAN, SK_POISON_MAGIC,    2),
-    APT(SP_GREEN_DRACONIAN, SK_INVOCATIONS,     0),
-    APT(SP_GREEN_DRACONIAN, SK_EVOCATIONS,      0),
-
-    // SP_YELLOW_DRACONIAN
-    APT(SP_YELLOW_DRACONIAN,SK_FIGHTING,        1),
-    APT(SP_YELLOW_DRACONIAN,SK_SHORT_BLADES,    0),
-    APT(SP_YELLOW_DRACONIAN,SK_LONG_BLADES,     0),
-    APT(SP_YELLOW_DRACONIAN,SK_AXES,            0),
-    APT(SP_YELLOW_DRACONIAN,SK_MACES_FLAILS,    0),
-    APT(SP_YELLOW_DRACONIAN,SK_POLEARMS,        0),
-    APT(SP_YELLOW_DRACONIAN,SK_STAVES,          0),
-    APT(SP_YELLOW_DRACONIAN,SK_SLINGS,         -1),
-    APT(SP_YELLOW_DRACONIAN,SK_BOWS,           -1),
-    APT(SP_YELLOW_DRACONIAN,SK_CROSSBOWS,      -1),
-    APT(SP_YELLOW_DRACONIAN,SK_THROWING,       -1),
-    APT(SP_YELLOW_DRACONIAN,SK_ARMOUR,         -4),
-    APT(SP_YELLOW_DRACONIAN,SK_DODGING,        -1),
-    APT(SP_YELLOW_DRACONIAN,SK_STEALTH,        -1),
-    APT(SP_YELLOW_DRACONIAN,SK_STABBING,        0),
-    APT(SP_YELLOW_DRACONIAN,SK_SHIELDS,         0),
-    APT(SP_YELLOW_DRACONIAN,SK_TRAPS_DOORS,     0),
-    APT(SP_YELLOW_DRACONIAN,SK_UNARMED_COMBAT,  0),
-    APT(SP_YELLOW_DRACONIAN,SK_SPELLCASTING,    0),
-    APT(SP_YELLOW_DRACONIAN,SK_CONJURATIONS,    0),
-    APT(SP_YELLOW_DRACONIAN,SK_HEXES,          -1),
-    APT(SP_YELLOW_DRACONIAN,SK_CHARMS,         -1),
-    APT(SP_YELLOW_DRACONIAN,SK_SUMMONINGS,      0),
-    APT(SP_YELLOW_DRACONIAN,SK_NECROMANCY,      0),
-    APT(SP_YELLOW_DRACONIAN,SK_TRANSLOCATIONS,  0),
-    APT(SP_YELLOW_DRACONIAN,SK_TRANSMUTATIONS,  0),
-    APT(SP_YELLOW_DRACONIAN,SK_FIRE_MAGIC,      0),
-    APT(SP_YELLOW_DRACONIAN,SK_ICE_MAGIC,       0),
-    APT(SP_YELLOW_DRACONIAN,SK_AIR_MAGIC,       0),
-    APT(SP_YELLOW_DRACONIAN,SK_EARTH_MAGIC,     0),
-    APT(SP_YELLOW_DRACONIAN,SK_POISON_MAGIC,    0),
-    APT(SP_YELLOW_DRACONIAN,SK_INVOCATIONS,     0),
-    APT(SP_YELLOW_DRACONIAN,SK_EVOCATIONS,      0),
-
-    // SP_GREY_DRACONIAN
-    APT(SP_GREY_DRACONIAN,  SK_FIGHTING,       -1),
-    APT(SP_GREY_DRACONIAN,  SK_SHORT_BLADES,    0),
-    APT(SP_GREY_DRACONIAN,  SK_LONG_BLADES,     0),
-    APT(SP_GREY_DRACONIAN,  SK_AXES,            0),
-    APT(SP_GREY_DRACONIAN,  SK_MACES_FLAILS,    0),
-    APT(SP_GREY_DRACONIAN,  SK_POLEARMS,        0),
-    APT(SP_GREY_DRACONIAN,  SK_STAVES,          0),
-    APT(SP_GREY_DRACONIAN,  SK_SLINGS,         -1),
-    APT(SP_GREY_DRACONIAN,  SK_BOWS,           -1),
-    APT(SP_GREY_DRACONIAN,  SK_CROSSBOWS,      -1),
-    APT(SP_GREY_DRACONIAN,  SK_THROWING,        0),
-    APT(SP_GREY_DRACONIAN,  SK_ARMOUR,         -4),
-    APT(SP_GREY_DRACONIAN,  SK_DODGING,        -1),
-    APT(SP_GREY_DRACONIAN,  SK_STEALTH,         2),
-    APT(SP_GREY_DRACONIAN,  SK_STABBING,        2),
-    APT(SP_GREY_DRACONIAN,  SK_SHIELDS,         0),
-    APT(SP_GREY_DRACONIAN,  SK_TRAPS_DOORS,     0),
-    APT(SP_GREY_DRACONIAN,  SK_UNARMED_COMBAT,  0),
-    APT(SP_GREY_DRACONIAN,  SK_SPELLCASTING,    0),
-    APT(SP_GREY_DRACONIAN,  SK_CONJURATIONS,    0),
-    APT(SP_GREY_DRACONIAN,  SK_HEXES,          -1),
-    APT(SP_GREY_DRACONIAN,  SK_CHARMS,         -1),
-    APT(SP_GREY_DRACONIAN,  SK_SUMMONINGS,      0),
-    APT(SP_GREY_DRACONIAN,  SK_NECROMANCY,      0),
-    APT(SP_GREY_DRACONIAN,  SK_TRANSLOCATIONS,  0),
-    APT(SP_GREY_DRACONIAN,  SK_TRANSMUTATIONS,  0),
-    APT(SP_GREY_DRACONIAN,  SK_FIRE_MAGIC,      0),
-    APT(SP_GREY_DRACONIAN,  SK_ICE_MAGIC,       0),
-    APT(SP_GREY_DRACONIAN,  SK_AIR_MAGIC,       0),
-    APT(SP_GREY_DRACONIAN,  SK_EARTH_MAGIC,     0),
-    APT(SP_GREY_DRACONIAN,  SK_POISON_MAGIC,    0),
-    APT(SP_GREY_DRACONIAN,  SK_INVOCATIONS,     0),
-    APT(SP_GREY_DRACONIAN,  SK_EVOCATIONS,      0),
-
-    // SP_BLACK_DRACONIAN
-    APT(SP_BLACK_DRACONIAN, SK_FIGHTING,        1),
-    APT(SP_BLACK_DRACONIAN, SK_SHORT_BLADES,    0),
-    APT(SP_BLACK_DRACONIAN, SK_LONG_BLADES,     0),
-    APT(SP_BLACK_DRACONIAN, SK_AXES,            0),
-    APT(SP_BLACK_DRACONIAN, SK_MACES_FLAILS,    0),
-    APT(SP_BLACK_DRACONIAN, SK_POLEARMS,        0),
-    APT(SP_BLACK_DRACONIAN, SK_STAVES,          0),
-    APT(SP_BLACK_DRACONIAN, SK_SLINGS,         -1),
-    APT(SP_BLACK_DRACONIAN, SK_BOWS,           -1),
-    APT(SP_BLACK_DRACONIAN, SK_CROSSBOWS,      -1),
-    APT(SP_BLACK_DRACONIAN, SK_THROWING,       -1),
-    APT(SP_BLACK_DRACONIAN, SK_ARMOUR,         -4),
-    APT(SP_BLACK_DRACONIAN, SK_DODGING,        -1),
-    APT(SP_BLACK_DRACONIAN, SK_STEALTH,        -1),
-    APT(SP_BLACK_DRACONIAN, SK_STABBING,        0),
-    APT(SP_BLACK_DRACONIAN, SK_SHIELDS,         0),
-    APT(SP_BLACK_DRACONIAN, SK_TRAPS_DOORS,     0),
-    APT(SP_BLACK_DRACONIAN, SK_UNARMED_COMBAT,  0),
-    APT(SP_BLACK_DRACONIAN, SK_SPELLCASTING,    0),
-    APT(SP_BLACK_DRACONIAN, SK_CONJURATIONS,    0),
-    APT(SP_BLACK_DRACONIAN, SK_HEXES,          -1),
-    APT(SP_BLACK_DRACONIAN, SK_CHARMS,         -1),
-    APT(SP_BLACK_DRACONIAN, SK_SUMMONINGS,      0),
-    APT(SP_BLACK_DRACONIAN, SK_NECROMANCY,      0),
-    APT(SP_BLACK_DRACONIAN, SK_TRANSLOCATIONS,  0),
-    APT(SP_BLACK_DRACONIAN, SK_TRANSMUTATIONS,  0),
-    APT(SP_BLACK_DRACONIAN, SK_FIRE_MAGIC,      0),
-    APT(SP_BLACK_DRACONIAN, SK_ICE_MAGIC,       0),
-    APT(SP_BLACK_DRACONIAN, SK_AIR_MAGIC,       2),
-    APT(SP_BLACK_DRACONIAN, SK_EARTH_MAGIC,    -2),
-    APT(SP_BLACK_DRACONIAN, SK_POISON_MAGIC,    0),
-    APT(SP_BLACK_DRACONIAN, SK_INVOCATIONS,     0),
-    APT(SP_BLACK_DRACONIAN, SK_EVOCATIONS,      0),
-
-    // SP_PURPLE_DRACONIAN
-    APT(SP_PURPLE_DRACONIAN,SK_FIGHTING,        1),
-    APT(SP_PURPLE_DRACONIAN,SK_SHORT_BLADES,    0),
-    APT(SP_PURPLE_DRACONIAN,SK_LONG_BLADES,     0),
-    APT(SP_PURPLE_DRACONIAN,SK_AXES,            0),
-    APT(SP_PURPLE_DRACONIAN,SK_MACES_FLAILS,    0),
-    APT(SP_PURPLE_DRACONIAN,SK_POLEARMS,        0),
-    APT(SP_PURPLE_DRACONIAN,SK_STAVES,          0),
-    APT(SP_PURPLE_DRACONIAN,SK_SLINGS,         -1),
-    APT(SP_PURPLE_DRACONIAN,SK_BOWS,           -1),
-    APT(SP_PURPLE_DRACONIAN,SK_CROSSBOWS,      -1),
-    APT(SP_PURPLE_DRACONIAN,SK_THROWING,       -1),
-    APT(SP_PURPLE_DRACONIAN,SK_ARMOUR,         -4),
-    APT(SP_PURPLE_DRACONIAN,SK_DODGING,        -1),
-    APT(SP_PURPLE_DRACONIAN,SK_STEALTH,        -1),
-    APT(SP_PURPLE_DRACONIAN,SK_STABBING,        0),
-    APT(SP_PURPLE_DRACONIAN,SK_SHIELDS,         0),
-    APT(SP_PURPLE_DRACONIAN,SK_TRAPS_DOORS,     0),
-    APT(SP_PURPLE_DRACONIAN,SK_UNARMED_COMBAT,  0),
-    APT(SP_PURPLE_DRACONIAN,SK_SPELLCASTING,    2),
-    APT(SP_PURPLE_DRACONIAN,SK_CONJURATIONS,    0),
-    APT(SP_PURPLE_DRACONIAN,SK_HEXES,           1),
-    APT(SP_PURPLE_DRACONIAN,SK_CHARMS,          1),
-    APT(SP_PURPLE_DRACONIAN,SK_SUMMONINGS,      0),
-    APT(SP_PURPLE_DRACONIAN,SK_NECROMANCY,      0),
-    APT(SP_PURPLE_DRACONIAN,SK_TRANSLOCATIONS,  0),
-    APT(SP_PURPLE_DRACONIAN,SK_TRANSMUTATIONS,  0),
-    APT(SP_PURPLE_DRACONIAN,SK_FIRE_MAGIC,      0),
-    APT(SP_PURPLE_DRACONIAN,SK_ICE_MAGIC,       0),
-    APT(SP_PURPLE_DRACONIAN,SK_AIR_MAGIC,       0),
-    APT(SP_PURPLE_DRACONIAN,SK_EARTH_MAGIC,     0),
-    APT(SP_PURPLE_DRACONIAN,SK_POISON_MAGIC,    0),
-    APT(SP_PURPLE_DRACONIAN,SK_INVOCATIONS,     0),
-    APT(SP_PURPLE_DRACONIAN,SK_EVOCATIONS,      1),
-
-    // SP_MOTTLED_DRACONIAN
-    APT(SP_MOTTLED_DRACONIAN,SK_FIGHTING,        1),
-    APT(SP_MOTTLED_DRACONIAN,SK_SHORT_BLADES,    0),
-    APT(SP_MOTTLED_DRACONIAN,SK_LONG_BLADES,     0),
-    APT(SP_MOTTLED_DRACONIAN,SK_AXES,            0),
-    APT(SP_MOTTLED_DRACONIAN,SK_MACES_FLAILS,    0),
-    APT(SP_MOTTLED_DRACONIAN,SK_POLEARMS,        0),
-    APT(SP_MOTTLED_DRACONIAN,SK_STAVES,          0),
-    APT(SP_MOTTLED_DRACONIAN,SK_SLINGS,         -1),
-    APT(SP_MOTTLED_DRACONIAN,SK_BOWS,           -1),
-    APT(SP_MOTTLED_DRACONIAN,SK_CROSSBOWS,      -1),
-    APT(SP_MOTTLED_DRACONIAN,SK_THROWING,       -1),
-    APT(SP_MOTTLED_DRACONIAN,SK_ARMOUR,         -4),
-    APT(SP_MOTTLED_DRACONIAN,SK_DODGING,        -1),
-    APT(SP_MOTTLED_DRACONIAN,SK_STEALTH,        -1),
-    APT(SP_MOTTLED_DRACONIAN,SK_STABBING,        0),
-    APT(SP_MOTTLED_DRACONIAN,SK_SHIELDS,         0),
-    APT(SP_MOTTLED_DRACONIAN,SK_TRAPS_DOORS,     0),
-    APT(SP_MOTTLED_DRACONIAN,SK_UNARMED_COMBAT,  0),
-    APT(SP_MOTTLED_DRACONIAN,SK_SPELLCASTING,    0),
-    APT(SP_MOTTLED_DRACONIAN,SK_CONJURATIONS,    0),
-    APT(SP_MOTTLED_DRACONIAN,SK_HEXES,          -1),
-    APT(SP_MOTTLED_DRACONIAN,SK_CHARMS,         -1),
-    APT(SP_MOTTLED_DRACONIAN,SK_SUMMONINGS,      0),
-    APT(SP_MOTTLED_DRACONIAN,SK_NECROMANCY,      0),
-    APT(SP_MOTTLED_DRACONIAN,SK_TRANSLOCATIONS,  0),
-    APT(SP_MOTTLED_DRACONIAN,SK_TRANSMUTATIONS,  0),
-    APT(SP_MOTTLED_DRACONIAN,SK_FIRE_MAGIC,      1),
-    APT(SP_MOTTLED_DRACONIAN,SK_ICE_MAGIC,       0),
-    APT(SP_MOTTLED_DRACONIAN,SK_AIR_MAGIC,       0),
-    APT(SP_MOTTLED_DRACONIAN,SK_EARTH_MAGIC,     0),
-    APT(SP_MOTTLED_DRACONIAN,SK_POISON_MAGIC,    0),
-    APT(SP_MOTTLED_DRACONIAN,SK_INVOCATIONS,     0),
-    APT(SP_MOTTLED_DRACONIAN,SK_EVOCATIONS,      0),
-
-    // SP_PALE_DRACONIAN
-    APT(SP_PALE_DRACONIAN,  SK_FIGHTING,        1),
-    APT(SP_PALE_DRACONIAN,  SK_SHORT_BLADES,    0),
-    APT(SP_PALE_DRACONIAN,  SK_LONG_BLADES,     0),
-    APT(SP_PALE_DRACONIAN,  SK_AXES,            0),
-    APT(SP_PALE_DRACONIAN,  SK_MACES_FLAILS,    0),
-    APT(SP_PALE_DRACONIAN,  SK_POLEARMS,        0),
-    APT(SP_PALE_DRACONIAN,  SK_STAVES,          0),
-    APT(SP_PALE_DRACONIAN,  SK_SLINGS,         -1),
-    APT(SP_PALE_DRACONIAN,  SK_BOWS,           -1),
-    APT(SP_PALE_DRACONIAN,  SK_CROSSBOWS,      -1),
-    APT(SP_PALE_DRACONIAN,  SK_THROWING,       -1),
-    APT(SP_PALE_DRACONIAN,  SK_ARMOUR,         -4),
-    APT(SP_PALE_DRACONIAN,  SK_DODGING,        -1),
-    APT(SP_PALE_DRACONIAN,  SK_STEALTH,        -1),
-    APT(SP_PALE_DRACONIAN,  SK_STABBING,        0),
-    APT(SP_PALE_DRACONIAN,  SK_SHIELDS,         0),
-    APT(SP_PALE_DRACONIAN,  SK_TRAPS_DOORS,     0),
-    APT(SP_PALE_DRACONIAN,  SK_UNARMED_COMBAT,  0),
-    APT(SP_PALE_DRACONIAN,  SK_SPELLCASTING,    0),
-    APT(SP_PALE_DRACONIAN,  SK_CONJURATIONS,    0),
-    APT(SP_PALE_DRACONIAN,  SK_HEXES,          -1),
-    APT(SP_PALE_DRACONIAN,  SK_CHARMS,         -1),
-    APT(SP_PALE_DRACONIAN,  SK_SUMMONINGS,      0),
-    APT(SP_PALE_DRACONIAN,  SK_NECROMANCY,      0),
-    APT(SP_PALE_DRACONIAN,  SK_TRANSLOCATIONS,  0),
-    APT(SP_PALE_DRACONIAN,  SK_TRANSMUTATIONS,  0),
-    APT(SP_PALE_DRACONIAN,  SK_FIRE_MAGIC,      1),
-    APT(SP_PALE_DRACONIAN,  SK_ICE_MAGIC,       0),
-    APT(SP_PALE_DRACONIAN,  SK_AIR_MAGIC,       1),
-    APT(SP_PALE_DRACONIAN,  SK_EARTH_MAGIC,     0),
-    APT(SP_PALE_DRACONIAN,  SK_POISON_MAGIC,    0),
-    APT(SP_PALE_DRACONIAN,  SK_INVOCATIONS,     0),
-    APT(SP_PALE_DRACONIAN,  SK_EVOCATIONS,      1),
-
-    // SP_BASE_DRACONIAN
-    APT(SP_BASE_DRACONIAN,  SK_FIGHTING,        1),
-    APT(SP_BASE_DRACONIAN,  SK_SHORT_BLADES,    0),
-    APT(SP_BASE_DRACONIAN,  SK_LONG_BLADES,     0),
-    APT(SP_BASE_DRACONIAN,  SK_AXES,            0),
-    APT(SP_BASE_DRACONIAN,  SK_MACES_FLAILS,    0),
-    APT(SP_BASE_DRACONIAN,  SK_POLEARMS,        0),
-    APT(SP_BASE_DRACONIAN,  SK_STAVES,          0),
-    APT(SP_BASE_DRACONIAN,  SK_SLINGS,         -1),
-    APT(SP_BASE_DRACONIAN,  SK_BOWS,           -1),
-    APT(SP_BASE_DRACONIAN,  SK_CROSSBOWS,      -1),
-    APT(SP_BASE_DRACONIAN,  SK_THROWING,       -1),
-    APT(SP_BASE_DRACONIAN,  SK_ARMOUR,         -4),
-    APT(SP_BASE_DRACONIAN,  SK_DODGING,        -1),
-    APT(SP_BASE_DRACONIAN,  SK_STEALTH,        -1),
-    APT(SP_BASE_DRACONIAN,  SK_STABBING,        0),
-    APT(SP_BASE_DRACONIAN,  SK_SHIELDS,         0),
-    APT(SP_BASE_DRACONIAN,  SK_TRAPS_DOORS,     0),
-    APT(SP_BASE_DRACONIAN,  SK_UNARMED_COMBAT,  0),
-    APT(SP_BASE_DRACONIAN,  SK_SPELLCASTING,    0),
-    APT(SP_BASE_DRACONIAN,  SK_CONJURATIONS,    0),
-    APT(SP_BASE_DRACONIAN,  SK_HEXES,          -1),
-    APT(SP_BASE_DRACONIAN,  SK_CHARMS,         -1),
-    APT(SP_BASE_DRACONIAN,  SK_SUMMONINGS,      0),
-    APT(SP_BASE_DRACONIAN,  SK_NECROMANCY,      0),
-    APT(SP_BASE_DRACONIAN,  SK_TRANSLOCATIONS,  0),
-    APT(SP_BASE_DRACONIAN,  SK_TRANSMUTATIONS,  0),
-    APT(SP_BASE_DRACONIAN,  SK_FIRE_MAGIC,      0),
-    APT(SP_BASE_DRACONIAN,  SK_ICE_MAGIC,       0),
-    APT(SP_BASE_DRACONIAN,  SK_AIR_MAGIC,       0),
-    APT(SP_BASE_DRACONIAN,  SK_EARTH_MAGIC,     0),
-    APT(SP_BASE_DRACONIAN,  SK_POISON_MAGIC,    0),
-    APT(SP_BASE_DRACONIAN,  SK_INVOCATIONS,     0),
-    APT(SP_BASE_DRACONIAN,  SK_EVOCATIONS,      0),
-
-    // SP_CENTAUR
-    APT(SP_CENTAUR,         SK_FIGHTING,        0),
-    APT(SP_CENTAUR,         SK_SHORT_BLADES,   -1),
-    APT(SP_CENTAUR,         SK_LONG_BLADES,    -1),
-    APT(SP_CENTAUR,         SK_AXES,           -1),
-    APT(SP_CENTAUR,         SK_MACES_FLAILS,   -1),
-    APT(SP_CENTAUR,         SK_POLEARMS,       -1),
-    APT(SP_CENTAUR,         SK_STAVES,         -1),
-    APT(SP_CENTAUR,         SK_SLINGS,          1),
-    APT(SP_CENTAUR,         SK_BOWS,            3),
-    APT(SP_CENTAUR,         SK_CROSSBOWS,       1),
-    APT(SP_CENTAUR,         SK_THROWING,        3),
-    APT(SP_CENTAUR,         SK_ARMOUR,         -3),
-    APT(SP_CENTAUR,         SK_DODGING,        -3),
-    APT(SP_CENTAUR,         SK_STEALTH,        -4),
-    APT(SP_CENTAUR,         SK_STABBING,       -3),
-    APT(SP_CENTAUR,         SK_SHIELDS,        -3),
-    APT(SP_CENTAUR,         SK_TRAPS_DOORS,    -2),
-    APT(SP_CENTAUR,         SK_UNARMED_COMBAT,  0),
-    APT(SP_CENTAUR,         SK_SPELLCASTING,   -2),
-    APT(SP_CENTAUR,         SK_CONJURATIONS,   -1),
-    APT(SP_CENTAUR,         SK_HEXES,          -1),
-    APT(SP_CENTAUR,         SK_CHARMS,         -1),
-    APT(SP_CENTAUR,         SK_SUMMONINGS,     -1),
-    APT(SP_CENTAUR,         SK_NECROMANCY,     -1),
-    APT(SP_CENTAUR,         SK_TRANSLOCATIONS, -1),
-    APT(SP_CENTAUR,         SK_TRANSMUTATIONS, -1),
-    APT(SP_CENTAUR,         SK_FIRE_MAGIC,     -1),
-    APT(SP_CENTAUR,         SK_ICE_MAGIC,      -1),
-    APT(SP_CENTAUR,         SK_AIR_MAGIC,      -1),
-    APT(SP_CENTAUR,         SK_EARTH_MAGIC,    -1),
-    APT(SP_CENTAUR,         SK_POISON_MAGIC,   -2),
-    APT(SP_CENTAUR,         SK_INVOCATIONS,     0),
-    APT(SP_CENTAUR,         SK_EVOCATIONS,     -1),
-
-    // SP_DEMIGOD
-    APT(SP_DEMIGOD,         SK_FIGHTING,       -1),
-    APT(SP_DEMIGOD,         SK_SHORT_BLADES,   -1),
-    APT(SP_DEMIGOD,         SK_LONG_BLADES,    -1),
-    APT(SP_DEMIGOD,         SK_AXES,           -1),
-    APT(SP_DEMIGOD,         SK_MACES_FLAILS,   -1),
-    APT(SP_DEMIGOD,         SK_POLEARMS,       -1),
-    APT(SP_DEMIGOD,         SK_STAVES,         -1),
-    APT(SP_DEMIGOD,         SK_SLINGS,         -1),
-    APT(SP_DEMIGOD,         SK_BOWS,           -1),
-    APT(SP_DEMIGOD,         SK_CROSSBOWS,      -1),
-    APT(SP_DEMIGOD,         SK_THROWING,       -1),
-    APT(SP_DEMIGOD,         SK_ARMOUR,         -1),
-    APT(SP_DEMIGOD,         SK_DODGING,        -1),
-    APT(SP_DEMIGOD,         SK_STEALTH,        -1),
-    APT(SP_DEMIGOD,         SK_STABBING,       -1),
-    APT(SP_DEMIGOD,         SK_SHIELDS,        -1),
-    APT(SP_DEMIGOD,         SK_TRAPS_DOORS,    -1),
-    APT(SP_DEMIGOD,         SK_UNARMED_COMBAT, -1),
-    APT(SP_DEMIGOD,         SK_SPELLCASTING,   -1),
-    APT(SP_DEMIGOD,         SK_CONJURATIONS,   -1),
-    APT(SP_DEMIGOD,         SK_HEXES,          -1),
-    APT(SP_DEMIGOD,         SK_CHARMS,         -1),
-    APT(SP_DEMIGOD,         SK_SUMMONINGS,     -1),
-    APT(SP_DEMIGOD,         SK_NECROMANCY,     -1),
-    APT(SP_DEMIGOD,         SK_TRANSLOCATIONS, -1),
-    APT(SP_DEMIGOD,         SK_TRANSMUTATIONS, -1),
-    APT(SP_DEMIGOD,         SK_FIRE_MAGIC,     -1),
-    APT(SP_DEMIGOD,         SK_ICE_MAGIC,      -1),
-    APT(SP_DEMIGOD,         SK_AIR_MAGIC,      -1),
-    APT(SP_DEMIGOD,         SK_EARTH_MAGIC,    -1),
-    APT(SP_DEMIGOD,         SK_POISON_MAGIC,   -1),
-    APT(SP_DEMIGOD,         SK_INVOCATIONS,     0),
-    APT(SP_DEMIGOD,         SK_EVOCATIONS,     -1),
-
-    // SP_SPRIGGAN
-    APT(SP_SPRIGGAN,        SK_FIGHTING,       -2),
-    APT(SP_SPRIGGAN,        SK_SHORT_BLADES,    1),
-    APT(SP_SPRIGGAN,        SK_LONG_BLADES,    -2),
-    APT(SP_SPRIGGAN,        SK_AXES,           -2),
-    APT(SP_SPRIGGAN,        SK_MACES_FLAILS,   -3),
-    APT(SP_SPRIGGAN,        SK_POLEARMS,       -3),
-    APT(SP_SPRIGGAN,        SK_STAVES,         -3),
-    APT(SP_SPRIGGAN,        SK_SLINGS,          2),
-    APT(SP_SPRIGGAN,        SK_BOWS,            2),
-    APT(SP_SPRIGGAN,        SK_CROSSBOWS,       0),
-    APT(SP_SPRIGGAN,        SK_THROWING,        1),
-    APT(SP_SPRIGGAN,        SK_ARMOUR,         -3),
-    APT(SP_SPRIGGAN,        SK_DODGING,         4),
-    APT(SP_SPRIGGAN,        SK_STEALTH,         4),
-    APT(SP_SPRIGGAN,        SK_STABBING,        4),
-    APT(SP_SPRIGGAN,        SK_SHIELDS,        -3),
-    APT(SP_SPRIGGAN,        SK_TRAPS_DOORS,     3),
-    APT(SP_SPRIGGAN,        SK_UNARMED_COMBAT, -2),
-    APT(SP_SPRIGGAN,        SK_SPELLCASTING,    3),
-    APT(SP_SPRIGGAN,        SK_CONJURATIONS,   -3),
-    APT(SP_SPRIGGAN,        SK_HEXES,           4),
-    APT(SP_SPRIGGAN,        SK_CHARMS,          4),
-    APT(SP_SPRIGGAN,        SK_SUMMONINGS,     -2),
-    APT(SP_SPRIGGAN,        SK_NECROMANCY,     -1),
-    APT(SP_SPRIGGAN,        SK_TRANSLOCATIONS,  4),
-    APT(SP_SPRIGGAN,        SK_TRANSMUTATIONS,  3),
-    APT(SP_SPRIGGAN,        SK_FIRE_MAGIC,     -2),
-    APT(SP_SPRIGGAN,        SK_ICE_MAGIC,      -2),
-    APT(SP_SPRIGGAN,        SK_AIR_MAGIC,      -1),
-    APT(SP_SPRIGGAN,        SK_EARTH_MAGIC,    -1),
-    APT(SP_SPRIGGAN,        SK_POISON_MAGIC,    0),
-    APT(SP_SPRIGGAN,        SK_INVOCATIONS,    -1),
-    APT(SP_SPRIGGAN,        SK_EVOCATIONS,      3),
-
-    // SP_MINOTAUR
-    APT(SP_MINOTAUR,        SK_FIGHTING,        2),
-    APT(SP_MINOTAUR,        SK_SHORT_BLADES,    2),
-    APT(SP_MINOTAUR,        SK_LONG_BLADES,     2),
-    APT(SP_MINOTAUR,        SK_AXES,            2),
-    APT(SP_MINOTAUR,        SK_MACES_FLAILS,    2),
-    APT(SP_MINOTAUR,        SK_POLEARMS,        2),
-    APT(SP_MINOTAUR,        SK_STAVES,          2),
-    APT(SP_MINOTAUR,        SK_SLINGS,          1),
-    APT(SP_MINOTAUR,        SK_BOWS,            1),
-    APT(SP_MINOTAUR,        SK_CROSSBOWS,       1),
-    APT(SP_MINOTAUR,        SK_THROWING,        1),
-    APT(SP_MINOTAUR,        SK_ARMOUR,          1),
-    APT(SP_MINOTAUR,        SK_DODGING,         1),
-    APT(SP_MINOTAUR,        SK_STEALTH,        -2),
-    APT(SP_MINOTAUR,        SK_STABBING,        0),
-    APT(SP_MINOTAUR,        SK_SHIELDS,         1),
-    APT(SP_MINOTAUR,        SK_TRAPS_DOORS,    -1),
-    APT(SP_MINOTAUR,        SK_UNARMED_COMBAT,  1),
-    APT(SP_MINOTAUR,        SK_SPELLCASTING,   -3),
-    APT(SP_MINOTAUR,        SK_CONJURATIONS,   -3),
-    APT(SP_MINOTAUR,        SK_HEXES,          -3),
-    APT(SP_MINOTAUR,        SK_CHARMS,         -3),
-    APT(SP_MINOTAUR,        SK_SUMMONINGS,     -3),
-    APT(SP_MINOTAUR,        SK_NECROMANCY,     -3),
-    APT(SP_MINOTAUR,        SK_TRANSLOCATIONS, -3),
-    APT(SP_MINOTAUR,        SK_TRANSMUTATIONS, -3),
-    APT(SP_MINOTAUR,        SK_FIRE_MAGIC,     -3),
-    APT(SP_MINOTAUR,        SK_ICE_MAGIC,      -3),
-    APT(SP_MINOTAUR,        SK_AIR_MAGIC,      -3),
-    APT(SP_MINOTAUR,        SK_EARTH_MAGIC,    -3),
-    APT(SP_MINOTAUR,        SK_POISON_MAGIC,   -3),
-    APT(SP_MINOTAUR,        SK_INVOCATIONS,    -1),
-    APT(SP_MINOTAUR,        SK_EVOCATIONS,     -3),
-
-    // SP_DEMONSPAWN
-    APT(SP_DEMONSPAWN,      SK_FIGHTING,        0),
-    APT(SP_DEMONSPAWN,      SK_SHORT_BLADES,   -1),
-    APT(SP_DEMONSPAWN,      SK_LONG_BLADES,    -1),
-    APT(SP_DEMONSPAWN,      SK_AXES,           -1),
-    APT(SP_DEMONSPAWN,      SK_MACES_FLAILS,   -1),
-    APT(SP_DEMONSPAWN,      SK_POLEARMS,       -1),
-    APT(SP_DEMONSPAWN,      SK_STAVES,         -1),
-    APT(SP_DEMONSPAWN,      SK_SLINGS,         -1),
-    APT(SP_DEMONSPAWN,      SK_BOWS,           -1),
-    APT(SP_DEMONSPAWN,      SK_CROSSBOWS,      -1),
-    APT(SP_DEMONSPAWN,      SK_THROWING,       -1),
-    APT(SP_DEMONSPAWN,      SK_ARMOUR,         -1),
-    APT(SP_DEMONSPAWN,      SK_DODGING,        -1),
-    APT(SP_DEMONSPAWN,      SK_STEALTH,        -1),
-    APT(SP_DEMONSPAWN,      SK_STABBING,       -1),
-    APT(SP_DEMONSPAWN,      SK_SHIELDS,        -1),
-    APT(SP_DEMONSPAWN,      SK_TRAPS_DOORS,    -1),
-    APT(SP_DEMONSPAWN,      SK_UNARMED_COMBAT, -1),
-    APT(SP_DEMONSPAWN,      SK_SPELLCASTING,    0),
-    APT(SP_DEMONSPAWN,      SK_CONJURATIONS,    0),
-    APT(SP_DEMONSPAWN,      SK_HEXES,           0),
-    APT(SP_DEMONSPAWN,      SK_CHARMS,         -1),
-    APT(SP_DEMONSPAWN,      SK_SUMMONINGS,      0),
-    APT(SP_DEMONSPAWN,      SK_NECROMANCY,      1),
-    APT(SP_DEMONSPAWN,      SK_TRANSLOCATIONS, -1),
-    APT(SP_DEMONSPAWN,      SK_TRANSMUTATIONS, -1),
-    APT(SP_DEMONSPAWN,      SK_FIRE_MAGIC,     -1),
-    APT(SP_DEMONSPAWN,      SK_ICE_MAGIC,      -1),
-    APT(SP_DEMONSPAWN,      SK_AIR_MAGIC,      -1),
-    APT(SP_DEMONSPAWN,      SK_EARTH_MAGIC,    -1),
-    APT(SP_DEMONSPAWN,      SK_POISON_MAGIC,    0),
-    APT(SP_DEMONSPAWN,      SK_INVOCATIONS,     2),
-    APT(SP_DEMONSPAWN,      SK_EVOCATIONS,      0),
-
-    // SP_GHOUL
-    APT(SP_GHOUL,           SK_FIGHTING,        1),
-    APT(SP_GHOUL,           SK_SHORT_BLADES,   -1),
-    APT(SP_GHOUL,           SK_LONG_BLADES,    -1),
-    APT(SP_GHOUL,           SK_AXES,           -1),
-    APT(SP_GHOUL,           SK_MACES_FLAILS,   -1),
-    APT(SP_GHOUL,           SK_POLEARMS,       -1),
-    APT(SP_GHOUL,           SK_STAVES,         -1),
-    APT(SP_GHOUL,           SK_SLINGS,         -1),
-    APT(SP_GHOUL,           SK_BOWS,           -1),
-    APT(SP_GHOUL,           SK_CROSSBOWS,      -1),
-    APT(SP_GHOUL,           SK_THROWING,       -1),
-    APT(SP_GHOUL,           SK_ARMOUR,         -1),
-    APT(SP_GHOUL,           SK_DODGING,        -1),
-    APT(SP_GHOUL,           SK_STEALTH,         1),
-    APT(SP_GHOUL,           SK_STABBING,        0),
-    APT(SP_GHOUL,           SK_SHIELDS,        -1),
-    APT(SP_GHOUL,           SK_TRAPS_DOORS,    -1),
-    APT(SP_GHOUL,           SK_UNARMED_COMBAT,  1),
-    APT(SP_GHOUL,           SK_SPELLCASTING,   -1),
-    APT(SP_GHOUL,           SK_CONJURATIONS,   -2),
-    APT(SP_GHOUL,           SK_HEXES,          -2),
-    APT(SP_GHOUL,           SK_CHARMS,         -1),
-    APT(SP_GHOUL,           SK_SUMMONINGS,     -1),
-    APT(SP_GHOUL,           SK_NECROMANCY,      0),
-    APT(SP_GHOUL,           SK_TRANSLOCATIONS, -1),
-    APT(SP_GHOUL,           SK_TRANSMUTATIONS, -1),
-    APT(SP_GHOUL,           SK_FIRE_MAGIC,     -2),
-    APT(SP_GHOUL,           SK_ICE_MAGIC,       1),
-    APT(SP_GHOUL,           SK_AIR_MAGIC,      -2),
-    APT(SP_GHOUL,           SK_EARTH_MAGIC,     1),
-    APT(SP_GHOUL,           SK_POISON_MAGIC,    0),
-    APT(SP_GHOUL,           SK_INVOCATIONS,     0),
-    APT(SP_GHOUL,           SK_EVOCATIONS,     -1),
-
-    // SP_KENKU
-    APT(SP_KENKU,           SK_FIGHTING,        0),
-    APT(SP_KENKU,           SK_SHORT_BLADES,    1),
-    APT(SP_KENKU,           SK_LONG_BLADES,     1),
-    APT(SP_KENKU,           SK_AXES,            1),
-    APT(SP_KENKU,           SK_MACES_FLAILS,    1),
-    APT(SP_KENKU,           SK_POLEARMS,        1),
-    APT(SP_KENKU,           SK_STAVES,          1),
-    APT(SP_KENKU,           SK_SLINGS,          0),
-    APT(SP_KENKU,           SK_BOWS,            1),
-    APT(SP_KENKU,           SK_CROSSBOWS,       1),
-    APT(SP_KENKU,           SK_THROWING,        1),
-    APT(SP_KENKU,           SK_ARMOUR,          1),
-    APT(SP_KENKU,           SK_DODGING,         1),
-    APT(SP_KENKU,           SK_STEALTH,         0),
-    APT(SP_KENKU,           SK_STABBING,        1),
-    APT(SP_KENKU,           SK_SHIELDS,         0),
-    APT(SP_KENKU,           SK_TRAPS_DOORS,     0),
-    APT(SP_KENKU,           SK_UNARMED_COMBAT,  1),
-    APT(SP_KENKU,           SK_SPELLCASTING,    0),
-    APT(SP_KENKU,           SK_CONJURATIONS,    3),
-    APT(SP_KENKU,           SK_HEXES,          -3),
-    APT(SP_KENKU,           SK_CHARMS,         -2),
-    APT(SP_KENKU,           SK_SUMMONINGS,      2),
-    APT(SP_KENKU,           SK_NECROMANCY,      1),
-    APT(SP_KENKU,           SK_TRANSLOCATIONS, -2),
-    APT(SP_KENKU,           SK_TRANSMUTATIONS, -2),
-    APT(SP_KENKU,           SK_FIRE_MAGIC,      1),
-    APT(SP_KENKU,           SK_ICE_MAGIC,      -1),
-    APT(SP_KENKU,           SK_AIR_MAGIC,       1),
-    APT(SP_KENKU,           SK_EARTH_MAGIC,    -1),
-    APT(SP_KENKU,           SK_POISON_MAGIC,    0),
-    APT(SP_KENKU,           SK_INVOCATIONS,    -2),
-    APT(SP_KENKU,           SK_EVOCATIONS,      0),
-
-    // SP_MERFOLK
-    APT(SP_MERFOLK,         SK_FIGHTING,        1),
-    APT(SP_MERFOLK,         SK_SHORT_BLADES,    2),
-    APT(SP_MERFOLK,         SK_LONG_BLADES,     1),
-    APT(SP_MERFOLK,         SK_AXES,           -2),
-    APT(SP_MERFOLK,         SK_MACES_FLAILS,   -2),
-    APT(SP_MERFOLK,         SK_POLEARMS,        4),
-    APT(SP_MERFOLK,         SK_STAVES,         -2),
-    APT(SP_MERFOLK,         SK_SLINGS,         -2),
-    APT(SP_MERFOLK,         SK_BOWS,           -2),
-    APT(SP_MERFOLK,         SK_CROSSBOWS,      -2),
-    APT(SP_MERFOLK,         SK_THROWING,        0),
-    APT(SP_MERFOLK,         SK_ARMOUR,         -3),
-    APT(SP_MERFOLK,         SK_DODGING,         3),
-    APT(SP_MERFOLK,         SK_STEALTH,         1),
-    APT(SP_MERFOLK,         SK_STABBING,        2),
-    APT(SP_MERFOLK,         SK_SHIELDS,         0),
-    APT(SP_MERFOLK,         SK_TRAPS_DOORS,    -1),
-    APT(SP_MERFOLK,         SK_UNARMED_COMBAT,  1),
-    APT(SP_MERFOLK,         SK_SPELLCASTING,    0),
-    APT(SP_MERFOLK,         SK_CONJURATIONS,   -2),
-    APT(SP_MERFOLK,         SK_HEXES,           0),
-    APT(SP_MERFOLK,         SK_CHARMS,          1),
-    APT(SP_MERFOLK,         SK_SUMMONINGS,      0),
-    APT(SP_MERFOLK,         SK_NECROMANCY,     -2),
-    APT(SP_MERFOLK,         SK_TRANSLOCATIONS, -2),
-    APT(SP_MERFOLK,         SK_TRANSMUTATIONS,  3),
-    APT(SP_MERFOLK,         SK_FIRE_MAGIC,     -3),
-    APT(SP_MERFOLK,         SK_ICE_MAGIC,       1),
-    APT(SP_MERFOLK,         SK_AIR_MAGIC,      -2),
-    APT(SP_MERFOLK,         SK_EARTH_MAGIC,    -2),
-    APT(SP_MERFOLK,         SK_POISON_MAGIC,    1),
-    APT(SP_MERFOLK,         SK_INVOCATIONS,     0),
-    APT(SP_MERFOLK,         SK_EVOCATIONS,      0),
-
-    // SP_VAMPIRE
-    APT(SP_VAMPIRE,         SK_FIGHTING,       -1),
-    APT(SP_VAMPIRE,         SK_SHORT_BLADES,    1),
-    APT(SP_VAMPIRE,         SK_LONG_BLADES,     0),
-    APT(SP_VAMPIRE,         SK_AXES,           -1),
-    APT(SP_VAMPIRE,         SK_MACES_FLAILS,   -2),
-    APT(SP_VAMPIRE,         SK_POLEARMS,       -1),
-    APT(SP_VAMPIRE,         SK_STAVES,         -2),
-    APT(SP_VAMPIRE,         SK_SLINGS,         -2),
-    APT(SP_VAMPIRE,         SK_BOWS,           -2),
-    APT(SP_VAMPIRE,         SK_CROSSBOWS,      -2),
-    APT(SP_VAMPIRE,         SK_THROWING,       -2),
-    APT(SP_VAMPIRE,         SK_ARMOUR,         -2),
-    APT(SP_VAMPIRE,         SK_DODGING,         1),
-    APT(SP_VAMPIRE,         SK_STEALTH,         4),
-    APT(SP_VAMPIRE,         SK_STABBING,        1),
-    APT(SP_VAMPIRE,         SK_SHIELDS,        -1),
-    APT(SP_VAMPIRE,         SK_TRAPS_DOORS,     0),
-    APT(SP_VAMPIRE,         SK_UNARMED_COMBAT,  1),
-    APT(SP_VAMPIRE,         SK_SPELLCASTING,    0),
-    APT(SP_VAMPIRE,         SK_CONJURATIONS,   -3),
-    APT(SP_VAMPIRE,         SK_HEXES,           3),
-    APT(SP_VAMPIRE,         SK_CHARMS,          1),
-    APT(SP_VAMPIRE,         SK_SUMMONINGS,      0),
-    APT(SP_VAMPIRE,         SK_NECROMANCY,      1),
-    APT(SP_VAMPIRE,         SK_TRANSLOCATIONS, -2),
-    APT(SP_VAMPIRE,         SK_TRANSMUTATIONS,  1),
-    APT(SP_VAMPIRE,         SK_FIRE_MAGIC,     -2),
-    APT(SP_VAMPIRE,         SK_ICE_MAGIC,       0),
-    APT(SP_VAMPIRE,         SK_AIR_MAGIC,       0),
-    APT(SP_VAMPIRE,         SK_EARTH_MAGIC,    -1),
-    APT(SP_VAMPIRE,         SK_POISON_MAGIC,   -1),
-    APT(SP_VAMPIRE,         SK_INVOCATIONS,    -2),
-    APT(SP_VAMPIRE,         SK_EVOCATIONS,     -1),
-
-    // SP_DEEP_DWARF
-    APT(SP_DEEP_DWARF,      SK_FIGHTING,       -1),
-    APT(SP_DEEP_DWARF,      SK_SHORT_BLADES,   -1),
-    APT(SP_DEEP_DWARF,      SK_LONG_BLADES,     0),
-    APT(SP_DEEP_DWARF,      SK_AXES,            1),
-    APT(SP_DEEP_DWARF,      SK_MACES_FLAILS,    0),
-    APT(SP_DEEP_DWARF,      SK_POLEARMS,       -1),
-    APT(SP_DEEP_DWARF,      SK_STAVES,         -1),
-    APT(SP_DEEP_DWARF,      SK_SLINGS,          1),
-    APT(SP_DEEP_DWARF,      SK_BOWS,           -3),
-    APT(SP_DEEP_DWARF,      SK_CROSSBOWS,       1),
-    APT(SP_DEEP_DWARF,      SK_THROWING,       -1),
-    APT(SP_DEEP_DWARF,      SK_ARMOUR,          1),
-    APT(SP_DEEP_DWARF,      SK_DODGING,         1),
-    APT(SP_DEEP_DWARF,      SK_STEALTH,         2),
-    APT(SP_DEEP_DWARF,      SK_STABBING,       -1),
-    APT(SP_DEEP_DWARF,      SK_SHIELDS,         1),
-    APT(SP_DEEP_DWARF,      SK_TRAPS_DOORS,     1),
-    APT(SP_DEEP_DWARF,      SK_UNARMED_COMBAT, -1),
-    APT(SP_DEEP_DWARF,      SK_SPELLCASTING,   -1),
-    APT(SP_DEEP_DWARF,      SK_CONJURATIONS,   -1),
-    APT(SP_DEEP_DWARF,      SK_HEXES,          -1),
-    APT(SP_DEEP_DWARF,      SK_CHARMS,         -1),
-    APT(SP_DEEP_DWARF,      SK_SUMMONINGS,     -1),
-    APT(SP_DEEP_DWARF,      SK_NECROMANCY,      1),
-    APT(SP_DEEP_DWARF,      SK_TRANSLOCATIONS,  1),
-    APT(SP_DEEP_DWARF,      SK_TRANSMUTATIONS, -1),
-    APT(SP_DEEP_DWARF,      SK_FIRE_MAGIC,     -1),
-    APT(SP_DEEP_DWARF,      SK_ICE_MAGIC,      -1),
-    APT(SP_DEEP_DWARF,      SK_AIR_MAGIC,      -3),
-    APT(SP_DEEP_DWARF,      SK_EARTH_MAGIC,     3),
-    APT(SP_DEEP_DWARF,      SK_POISON_MAGIC,   -2),
-    APT(SP_DEEP_DWARF,      SK_INVOCATIONS,     2),
-    APT(SP_DEEP_DWARF,      SK_EVOCATIONS,      3),
-
-    // SP_CAT
-    APT(SP_CAT,             SK_FIGHTING,        0),
-    APT(SP_CAT,             SK_SHORT_BLADES,    0),
-    APT(SP_CAT,             SK_LONG_BLADES,     0),
-    APT(SP_CAT,             SK_AXES,            0),
-    APT(SP_CAT,             SK_MACES_FLAILS,    0),
-    APT(SP_CAT,             SK_POLEARMS,        0),
-    APT(SP_CAT,             SK_STAVES,          0),
-    APT(SP_CAT,             SK_SLINGS,          0),
-    APT(SP_CAT,             SK_BOWS,            0),
-    APT(SP_CAT,             SK_CROSSBOWS,       0),
-    APT(SP_CAT,             SK_THROWING,        0),
-    APT(SP_CAT,             SK_ARMOUR,          0),
-    APT(SP_CAT,             SK_DODGING,         2),
-    APT(SP_CAT,             SK_STEALTH,         2),
-    APT(SP_CAT,             SK_STABBING,        3),
-    APT(SP_CAT,             SK_SHIELDS,         0),
-    APT(SP_CAT,             SK_TRAPS_DOORS,     2),
-    APT(SP_CAT,             SK_UNARMED_COMBAT,  0),
-    APT(SP_CAT,             SK_SPELLCASTING,    0),
-    APT(SP_CAT,             SK_CONJURATIONS,   -1),
-    APT(SP_CAT,             SK_HEXES,           3),
-    APT(SP_CAT,             SK_CHARMS,          2),
-    APT(SP_CAT,             SK_SUMMONINGS,      1),
-    APT(SP_CAT,             SK_NECROMANCY,      0),
-    APT(SP_CAT,             SK_TRANSLOCATIONS,  2),
-    APT(SP_CAT,             SK_TRANSMUTATIONS,  1),
-    APT(SP_CAT,             SK_FIRE_MAGIC,     -1),
-    APT(SP_CAT,             SK_ICE_MAGIC,      -1),
-    APT(SP_CAT,             SK_AIR_MAGIC,      -1),
-    APT(SP_CAT,             SK_EARTH_MAGIC,    -1),
-    APT(SP_CAT,             SK_POISON_MAGIC,   -1),
-    APT(SP_CAT,             SK_INVOCATIONS,    -1),
-    APT(SP_CAT,             SK_EVOCATIONS,     -2),
-};
+#include "aptitudes.h"
 
 // Traditionally, Spellcasting and In/Evocations formed the exceptions here:
 // Spellcasting skill was more expensive with about 130%, the other two got
@@ -1372,25 +211,75 @@ static const skill_type skill_display_order[] =
 static const int ndisplayed_skills =
             sizeof(skill_display_order) / sizeof(*skill_display_order);
 
-static void _display_skill_table(bool show_aptitudes, bool show_description)
+static bool _skill_is_selectable(skill_type sk, int flags)
+{
+    if (is_invalid_skill(sk))
+        return false;
+
+    if (you.skills[sk] == 0 && !(flags & SK_MENU_SHOW_ALL))
+        return false;
+
+    if (flags & SK_MENU_SHOW_DESC)
+        return true;
+
+    if (flags & SK_MENU_RESKILL && you.transfer_from_skill == sk)
+        return false;
+
+    if (you.skills[sk] == 0
+        && !(flags & SK_MENU_RESKILL && you.transfer_from_skill != SK_NONE))
+    {
+        return false;
+    }
+
+    if (you.skills[sk] == 27
+        && !(flags & SK_MENU_RESKILL && you.transfer_from_skill == SK_NONE))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+int get_skill_percentage(const skill_type x)
+{
+    const int needed = skill_exp_needed(you.skills[x] + 1, x);
+    const int prev_needed = skill_exp_needed(you.skills[x], x);
+
+    const int amt_done = you.skill_points[x] - prev_needed;
+    int percent_done = (amt_done*100) / (needed - prev_needed);
+
+    if (percent_done >= 100) // paranoia (1)
+        percent_done = 99;
+
+    if (percent_done < 0)    // paranoia (2)
+        percent_done = 0;
+
+    // Round down to multiple of 5.
+    return ((percent_done / 5) * 5);
+}
+
+static void _display_skill_table(int flags)
 {
     menu_letter lcount = 'a';
 
-    cgotoxy(1, 1);
-    textcolor(LIGHTGREY);
+    if (!(flags & SK_MENU_RESKILL))
+    {
+        cgotoxy(1, 1);
+        textcolor(LIGHTGREY);
 
 #ifdef DEBUG_DIAGNOSTICS
-    cprintf("You have %d points of unallocated experience "
-            " (cost lvl %d; total %d).\n\n",
-            you.exp_available, you.skill_cost_level,
-            you.total_skill_points);
+        cprintf("You have %d points of unallocated experience "
+                " (cost lvl %d; total %d).\n\n",
+                you.exp_available, you.skill_cost_level,
+                you.total_skill_points);
 #else
-    cprintf(" You have %s unallocated experience.\n\n",
-            you.exp_available == 0? "no" :
-            make_stringf("%d point%s of",
-                         you.exp_available,
-                         you.exp_available == 1? "" : "s").c_str());
+        cprintf(" You have %s unallocated experience.\n\n",
+                you.exp_available == 0? "no" :
+                make_stringf("%d point%s of",
+                             you.exp_available,
+                             you.exp_available == 1? "" : "s").c_str());
 #endif
+    }
 
     int scrln = 3, scrcol = 1;
     skill_type x;
@@ -1423,23 +312,37 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
         cgotoxy(scrcol, scrln);
 
 #ifndef DEBUG_DIAGNOSTICS
-        if (you.skills[x] > 0)
+        if (you.skills[x] > 0 || flags & SK_MENU_SHOW_ALL)
 #endif
         {
             maxln = std::max(maxln, scrln);
+            skill_type sx = static_cast<skill_type>(x);
+            int ct_bonus = crosstrain_bonus(sx);
 
-            if (you.practise_skill[x] == 0 || you.skills[x] == 0)
+            if (flags & SK_MENU_SHOW_RESKILL && (x == you.transfer_from_skill
+                                                || x == you.transfer_to_skill))
+            {
+                textcolor(GREEN);
+            }
+            else if (flags & SK_MENU_RESKILL && x == you.transfer_from_skill)
+                textcolor(WHITE);
+            else if (you.practise_skill[x] == 0 || you.skills[x] == 0)
                 textcolor(DARKGREY);
+            else if (ct_bonus > 1 && flags & SK_MENU_SHOW_APT)
+                textcolor(LIGHTBLUE);
+            else if (is_antitrained(sx) && flags & SK_MENU_SHOW_APT)
+                textcolor(MAGENTA);
             else
                 textcolor(LIGHTGREY);
 
             if (you.skills[x] == 27)
                 textcolor(YELLOW);
 
-            if (you.skills[x] == 0 || !show_description && you.skills[x] == 27)
-                putch(' ');
-            else
+
+            if (_skill_is_selectable(x, flags))
                 putch(lcount++);
+            else
+                putch(' ');
 
             cprintf(" %c %-14s Skill %2d",
                      (you.skills[x] == 0 || you.skills[x] == 27) ? ' ' :
@@ -1452,32 +355,61 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
 
             if (you.skills[x] < 27)
             {
-                if (!show_aptitudes)
+                if (flags & SK_MENU_RESKILL
+                    && you.transfer_from_skill != SK_NONE)
                 {
-                    const int needed = skill_exp_needed(you.skills[x] + 1, x);
-                    const int prev_needed = skill_exp_needed(you.skills[x], x);
-
-                    const int amt_done = you.skill_points[x] - prev_needed;
-                    int percent_done = (amt_done*100) / (needed - prev_needed);
-
-                    if (percent_done >= 100) // paranoia (1)
-                        percent_done = 99;
-
-                    if (percent_done < 0)    // paranoia (2)
-                        percent_done = 0;
-
                     textcolor(CYAN);
-                    // Round down to multiple of 5.
-                    cprintf(" (%2d%%)", (percent_done / 5) * 5);
+                    cprintf (" ->%2d",
+                             transfer_skill_points(you.transfer_from_skill, sx,
+                                             you.transfer_skill_points, true));
+                }
+                if (flags & SK_MENU_SHOW_APT)
+                {
+                    int apt = species_apt(x, you.species);
+                    std::string apt_str(" <red>");
+                    if (apt != 0)
+                        apt_str += make_stringf("%+d", apt);
+                    else
+                        apt_str += make_stringf(" %d", apt);
+
+                    if (crosstrain_other(sx))
+                        apt_str += "<lightblue>*</lightblue>";
+                    else if (antitrain_other(sx))
+                        apt_str += "<magenta>*</magenta>";
+                    else
+                        apt_str += " ";
+
+                    if ( ct_bonus > 1)
+                    {
+                        apt_str += make_stringf("<lightblue>%+d </lightblue>",
+                                                ct_bonus * 2);
+                    }
+                    else if (is_antitrained(sx))
+                        apt_str += "<magenta>-4 </magenta>";
+                    else
+                        apt_str += "   ";
+
+                    formatted_string::parse_string(apt_str).display();
+                }
+                else if (flags & SK_MENU_SHOW_RESKILL)
+                {
+                    textcolor(GREEN);
+                    if (sx == you.transfer_from_skill)
+                        cprintf("  *  ");
+                    else if (sx == you.transfer_to_skill)
+                    {
+                        cprintf(" (%2d%%)", (you.transfer_total_skill_points
+                                             - you.transfer_skill_points) * 100
+                                            / you.transfer_total_skill_points);
+                    }
+                    else
+                        cprintf("      ");
+
                 }
                 else
                 {
-                    int apt = species_apt(x, you.species);
-                    textcolor(RED);
-                    if (apt != 0)
-                        cprintf(" %+3d  ", apt);
-                    else
-                        cprintf(" %3d  ", apt);
+                    textcolor(CYAN);
+                    cprintf(" (%2d%%)", get_skill_percentage(x));
                 }
             }
 
@@ -1485,9 +417,20 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
         }
     }
 
+    if (flags & SK_MENU_RESKILL && you.transfer_from_skill != SK_NONE
+        && !(flags & SK_MENU_SHOW_ALL))
+    {
+        textcolor(WHITE);
+        cgotoxy(1, bottom_line);
+        cprintf("Press * to show all.");
+    }
+
+    if (flags & SK_MENU_RESKILL)
+        return;
+
     if (Hints.hints_left)
     {
-        if (show_description || maxln >= bottom_line - 5)
+        if (flags & SK_MENU_SHOW_DESC || maxln >= bottom_line - 5)
         {
             cgotoxy(1, bottom_line-2);
             // Doesn't mention the toggle between progress/aptitudes.
@@ -1506,7 +449,7 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
         cgotoxy(1, bottom_line-3);
         textcolor(LIGHTGREY);
 
-        if (show_description)
+        if (flags & SK_MENU_SHOW_DESC)
         {
             // We need the extra spaces to override the alternative sentence.
             cprintf("Press the letter of a skill to read its description.      "
@@ -1520,7 +463,7 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
         }
 
         cgotoxy(1, bottom_line-1);
-        if (show_description)
+        if (flags & SK_MENU_SHOW_DESC)
         {
             formatted_string::parse_string("Press '<w>?</w>' to choose which "
                                            "skills to train.  ").display();
@@ -1538,32 +481,51 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
 #else
             "<w>Right-click</w>"
 #endif
-            " to toggle between <cyan>progress</cyan> and "
-            "<red>aptitude</red> display.").display();
+            " to toggle between <cyan>progress</cyan>").display();
+        if (you.transfer_skill_points > 0)
+        {
+            formatted_string::parse_string(", <red>aptitude</red> and "
+                    "<green>transfer knowledge</green> display.").display();
+        }
+        else
+        {
+            formatted_string::parse_string(" and <red>aptitude</red> "
+                                           "display.").display();
+        }
     }
 }
 
 void show_skills()
 {
-    bool show_aptitudes   = false;
-    bool show_description = false;
+    int flags = SK_MENU_NONE;
     clrscr();
     while (true)
     {
-        _display_skill_table(show_aptitudes, show_description);
+        _display_skill_table(flags);
 
         mouse_control mc(MOUSE_MODE_MORE);
         const int keyin = getch();
         if ((keyin == '!' || keyin == CK_MOUSE_CMD))
         {
-            show_aptitudes = !show_aptitudes;
+            if (you.transfer_skill_points == 0)
+                flags ^= SK_MENU_SHOW_APT;
+            else if (!(flags & (SK_MENU_SHOW_APT | SK_MENU_SHOW_RESKILL)))
+                flags |= SK_MENU_SHOW_APT;
+            else if (flags & SK_MENU_SHOW_APT)
+            {
+                flags ^= SK_MENU_SHOW_APT;
+                flags |= SK_MENU_SHOW_RESKILL;
+            }
+            else if (flags & SK_MENU_SHOW_RESKILL)
+                flags ^= SK_MENU_SHOW_RESKILL;
+
             continue;
         }
 
         if (keyin == '?')
         {
             // Show skill description.
-            show_description = !show_description;
+            flags ^= SK_MENU_SHOW_DESC;
             if (Hints.hints_left)
                 clrscr();
             continue;
@@ -1577,18 +539,12 @@ void show_skills()
         for (int i = 0; i < ndisplayed_skills; i++)
         {
             const skill_type x = skill_display_order[i];
-            if (x == SK_BLANK_LINE || x == SK_COLUMN_BREAK)
-                continue;
-
-            if (you.skills[x] == 0)
-                continue;
-
-            if (!show_description && you.skills[x] == 27)
+            if (!_skill_is_selectable(x, flags))
                 continue;
 
             if (keyin == lcount)
             {
-                if (!show_description)
+                if (!(flags & SK_MENU_SHOW_DESC))
                     you.practise_skill[x] = !you.practise_skill[x];
                 else
                 {
@@ -2005,6 +961,103 @@ float species_apt_factor(skill_type sk, species_type sp)
     return _apt_to_factor(species_apt(sk, sp));
 }
 
+static std::vector<skill_type> _get_crosstrain_skills(skill_type sk)
+{
+    std::vector<skill_type> ret;
+
+    switch (sk)
+    {
+    case SK_SHORT_BLADES:
+        ret.push_back(SK_LONG_BLADES);
+        return ret;
+    case SK_LONG_BLADES:
+        ret.push_back(SK_SHORT_BLADES);
+        return ret;
+    case SK_AXES:
+    case SK_STAVES:
+        ret.push_back(SK_POLEARMS);
+        ret.push_back(SK_MACES_FLAILS);
+        return ret;
+    case SK_MACES_FLAILS:
+    case SK_POLEARMS:
+        ret.push_back(SK_AXES);
+        ret.push_back(SK_STAVES);
+        return ret;
+    case SK_SLINGS:
+        ret.push_back(SK_THROWING);
+        return ret;
+    case SK_THROWING:
+        ret.push_back(SK_SLINGS);
+        return ret;
+    default:
+        return ret;
+    }
+}
+
+
+float crosstrain_bonus(skill_type sk)
+{
+    int bonus = 1;
+
+    std::vector<skill_type> crosstrain_skills = _get_crosstrain_skills(sk);
+
+    for (unsigned int i = 0; i < crosstrain_skills.size(); ++i)
+        if (you.skills[crosstrain_skills[i]] > you.skills[sk])
+            bonus *= 2;
+
+    return bonus;
+}
+
+bool crosstrain_other(skill_type sk)
+{
+    std::vector<skill_type> crosstrain_skills = _get_crosstrain_skills(sk);
+
+    for (unsigned int i = 0; i < crosstrain_skills.size(); ++i)
+        if (you.skills[crosstrain_skills[i]] < you.skills[sk]
+            && you.skills[crosstrain_skills[i]] != 0)
+        {
+            return true;
+        }
+
+    return false;
+}
+
+static skill_type _get_opposite(skill_type sk)
+{
+    switch (sk)
+    {
+    case SK_FIRE_MAGIC  : return SK_ICE_MAGIC;   break;
+    case SK_ICE_MAGIC   : return SK_FIRE_MAGIC;  break;
+    case SK_AIR_MAGIC   : return SK_EARTH_MAGIC; break;
+    case SK_EARTH_MAGIC : return SK_AIR_MAGIC;   break;
+    default: return SK_NONE;
+    }
+}
+
+bool is_antitrained(skill_type sk)
+{
+    skill_type opposite = _get_opposite(sk);
+    if (opposite == SK_NONE)
+        return false;
+
+    return (you.skills[sk] < you.skills[opposite]
+            || you.skills[sk] == you.skills[opposite]
+               && you.skill_order[sk] > you.skill_order[opposite]
+               && you.skills[sk] != 0);
+}
+
+bool antitrain_other(skill_type sk)
+{
+    skill_type opposite = _get_opposite(sk);
+    if (opposite == SK_NONE)
+        return false;
+
+    return (you.skills[opposite] != 0
+            && (you.skills[sk] > you.skills[opposite]
+                || you.skills[sk] == you.skills[opposite]
+                   && you.skill_order[sk] < you.skill_order[opposite]));
+}
+
 void wield_warning(bool newWeapon)
 {
     // Early out - no weapon.
@@ -2094,60 +1147,138 @@ void dump_skills(std::string &text)
     }
 }
 
-skill_type list_skills(std::string title, skill_type hide, bool show_all)
+skill_type select_skill(bool show_all)
 {
+    clrscr();
+    cgotoxy(1, 1);
+    textcolor(WHITE);
+    if (you.transfer_from_skill == SK_NONE)
+        cprintf("Select the source skill.");
+    else
+        cprintf("Select the destination skill.");
+
+    int flags = SK_MENU_SHOW_APT | SK_MENU_RESKILL;
+    if (show_all)
+        flags |= SK_MENU_SHOW_ALL;
+
+    _display_skill_table(flags);
+
+    mouse_control mc(MOUSE_MODE_MORE);
+    const int keyin = getch();
+
+    if (keyin == '*' && you.transfer_from_skill != SK_NONE)
+        return select_skill(true);
+
+    if (!isaalpha(keyin))
+        return SK_NONE;
+
     menu_letter lcount = 'a';
-    int flags = MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING;
-    if (hide != SK_NONE && !show_all)
-        flags |= MF_ALWAYS_SHOW_MORE;
 
-    Menu skill_menu(flags);
-
-    MenuEntry* me = new MenuEntry(title);
-    me->colour = WHITE;
-    skill_menu.set_title(me);
-    skill_menu.set_highlighter(NULL);
-    if (hide != SK_NONE && !show_all)
-        skill_menu.set_more(formatted_string("Press * to see all"));
-
-    for (int i = 0; i < ndisplayed_skills; ++i)
+    for (int i = 0; i < ndisplayed_skills; i++)
     {
-        skill_type sk = skill_display_order[i];
-
-        if (is_invalid_skill(sk) || sk == hide
-			|| hide != SK_NONE && you.skills[sk] == 27)
-		{
+        const skill_type x = skill_display_order[i];
+        if (!_skill_is_selectable(x, flags))
             continue;
-		}
 
-        if (you.skills[sk] > 0 || show_all)
-        {
-            std::string skill_text = make_stringf("%s (%d)", skill_name(sk),
-                                                  you.skills[sk]);
-            me = new MenuEntry(skill_text, MEL_ITEM, 1, lcount);
-            if (you.skills[sk] == 27)
-                me->colour = YELLOW;
-            skill_type* skp = new skill_type(sk);
-            me->data = skp;
-            skill_menu.add_entry(me);
-            lcount++;
-        }
+        if (keyin == lcount)
+            return x;
+
+        ++lcount;
     }
-    while (true)
+    return SK_NONE;
+}
+
+// Transfer skill points from one skill to another (Ashenzari transfer
+// knowledge ability). If simu, it just simulates the transfer and don't
+// change anything. It returns the new level of tsk.
+int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
+                          bool simu)
+{
+    ASSERT(!is_invalid_skill(fsk) && !is_invalid_skill(tsk));
+
+    const int penalty = 90; // 10% XP penalty
+    int total_skp_lost   = 0; // skill points lost in fsk.
+    int total_skp_gained = 0; // skill points gained in tsk.
+    int fsk_level = you.skills[fsk];
+    int tsk_level = you.skills[tsk];
+    int fsk_points = you.skill_points[fsk];
+    int tsk_points = you.skill_points[tsk];
+    int fsk_ct_points = you.ct_skill_points[fsk];
+    int tsk_ct_points = you.ct_skill_points[tsk];
+
+#ifdef DEBUG_DIAGNOSTICS
+    if (!simu && you.ct_skill_points[fsk] > 0)
+        dprf("ct_skill_points[%s]: %d", skill_name(fsk), you.ct_skill_points[fsk]);
+#endif
+
+    // We need to transfer by small steps and updating skill levels each time
+    // so that cross/anti-training are handled properly.
+    while (total_skp_lost < skp_max && you.skills[tsk] < 27
+           && (simu || total_skp_lost < (int)you.transfer_skill_points))
     {
-        std::vector<MenuEntry*> sel = skill_menu.show();
-        if (!crawl_state.doing_prev_cmd_again)
-            redraw_screen();
-        if (sel.empty())
+        int skp_lost = std::min(20, skp_max - total_skp_lost);
+        int skp_gained = skp_lost * penalty / 100;
+
+        float ct_bonus = crosstrain_bonus(tsk);
+        if (ct_bonus > 1 && fsk != tsk)
         {
-            if (!show_all && hide != SK_NONE && skill_menu.getkey() == '*')
-                return list_skills(title, hide, true);
-            else
-                return SK_NONE;
+            skp_gained *= ct_bonus;
+            you.ct_skill_points[tsk] += (1 - 1 / ct_bonus) * skp_gained;
+        }
+        else if (is_antitrained(tsk))
+            skp_gained /= ANTITRAIN_PENALTY;
+
+        ASSERT(you.skill_points[fsk] > you.ct_skill_points[fsk]);
+
+        int ct_penalty = skp_lost * you.ct_skill_points[fsk]
+                          / (you.skill_points[fsk] - you.ct_skill_points[fsk]);
+        ct_penalty = std::min<int>(ct_penalty, you.ct_skill_points[fsk]);
+        you.ct_skill_points[fsk] -= ct_penalty;
+        skp_lost += ct_penalty;
+
+        if (!simu)
+        {
+            skp_lost = std::min<int>(skp_lost, you.transfer_skill_points
+                                               - total_skp_lost);
         }
 
-        ASSERT(sel.size() == 1);
-        ASSERT(sel[0]->hotkeys.size() == 1);
-        return *static_cast<skill_type*>(sel[0]->data);
+        change_skill_points(fsk, -skp_lost, false);
+        if (fsk != tsk)
+            change_skill_points(tsk, skp_gained, false);
+        total_skp_lost += skp_lost;
+        total_skp_gained += skp_gained;
     }
+
+    int new_level = you.skills[tsk];
+    // Restore the level
+    you.skills[fsk] = fsk_level;
+    you.skills[tsk] = tsk_level;
+
+    if (simu)
+    {
+        you.skill_points[fsk] = fsk_points;
+        you.skill_points[tsk] = tsk_points;
+        you.ct_skill_points[fsk] = fsk_ct_points;
+        you.ct_skill_points[tsk] = tsk_ct_points;
+    }
+    else
+    {
+        // Perform the real level up
+        check_skill_level_change(fsk);
+        check_skill_level_change(tsk);
+        you.transfer_skill_points -= total_skp_lost;
+
+        dprf("skill %s lost %d points", skill_name(fsk), total_skp_lost);
+        dprf("skill %s gained %d points", skill_name(tsk), total_skp_gained);
+#ifdef DEBUG_DIAGNOSTICS
+        if (you.ct_skill_points[fsk] > 0)
+            dprf("ct_skill_points[%s]: %d", skill_name(fsk), you.ct_skill_points[fsk]);
+#endif
+
+        if (you.transfer_skill_points <= 0 || you.skills[tsk] == 27)
+            ashenzari_end_transfer(true);
+        else if (you.transfer_skill_points > 0)
+            dprf("%d skill points left to transfer", you.transfer_skill_points);
+    }
+    return new_level;
 }

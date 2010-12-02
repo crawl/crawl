@@ -96,7 +96,7 @@ void calc_total_skill_points(void)
 
 // skill_cost_level makes skills more expensive for more experienced characters
 // skill_level      makes higher skills more expensive
-static int _calc_skill_cost(int skill_cost_level, int skill_level)
+int calc_skill_cost(int skill_cost_level, int skill_level)
 {
     int ret = 1 + skill_level;
 
@@ -223,12 +223,9 @@ static void _change_skill_level(skill_type exsk, int n)
         maybe_identify_staff(*you.weapon());
 
     // TODO: also identify rings of wizardry.
-
-    // Draconian maturation.
-    update_player_symbol();
 }
 
-static void _check_skill_level_change(skill_type sk)
+void check_skill_level_change(skill_type sk, bool do_level_up)
 {
     int new_level = you.skills[sk];
     while (1)
@@ -245,13 +242,20 @@ static void _check_skill_level_change(skill_type sk)
     }
 
     if (new_level != you.skills[sk])
-        _change_skill_level(sk, new_level - you.skills[sk]);
+        if (do_level_up)
+            _change_skill_level(sk, new_level - you.skills[sk]);
+        else
+            you.skills[sk] = new_level;
 }
 
 // returns total number of skill points gained
-int exercise(skill_type exsk, int deg, bool change_level)
+int exercise(skill_type exsk, int deg)
 {
     int ret = 0;
+
+#ifdef DEBUG_DIAGNOSTICS
+    unsigned int exp_pool = you.exp_available;
+#endif
 
     if (crawl_state.game_is_sprint())
     {
@@ -269,93 +273,17 @@ int exercise(skill_type exsk, int deg, bool change_level)
         deg--;
     }
 
+#ifdef DEBUG_DIAGNOSTICS
     if (ret)
+    {
         dprf("Exercised %s (deg: %d) by %d", skill_name(exsk), deg, ret);
+        dprf("Cost %d experience points", exp_pool - you.exp_available);
+    }
+#endif
 
-    if (change_level)
-        _check_skill_level_change(exsk);
+    check_skill_level_change(exsk);
 
     return (ret);
-}
-
-static bool _check_crosstrain(skill_type exsk, skill_type sk1, skill_type sk2)
-{
-    return ((exsk == sk1 || exsk == sk2)
-            && (you.skills[sk1] > you.skills[exsk]
-                || you.skills[sk2] > you.skills[exsk]));
-}
-
-static float _weap_crosstrain_bonus(skill_type exsk)
-{
-    int bonus = 1;
-
-    if (_check_crosstrain(exsk, SK_SHORT_BLADES, SK_LONG_BLADES))
-        bonus *= 2;
-    if (_check_crosstrain(exsk, SK_AXES,         SK_POLEARMS))
-        bonus *= 2;
-    if (_check_crosstrain(exsk, SK_POLEARMS,     SK_STAVES))
-        bonus *= 2;
-    if (_check_crosstrain(exsk, SK_AXES,         SK_MACES_FLAILS))
-        bonus *= 2;
-    if (_check_crosstrain(exsk, SK_MACES_FLAILS, SK_STAVES))
-        bonus *= 2;
-    if (_check_crosstrain(exsk, SK_SLINGS,       SK_THROWING))
-        bonus *= 2;
-
-    return (bonus);
-}
-
-static bool _skip_exercise(skill_type exsk)
-{
-    if (exsk < SK_SPELLCASTING || exsk > SK_EVOCATIONS)
-        return (false);
-
-    // Being good at elemental magic makes other elements harder to
-    // learn.
-    if (exsk >= SK_FIRE_MAGIC && exsk <= SK_EARTH_MAGIC
-        && (you.skills[SK_FIRE_MAGIC] > you.skills[exsk]
-            || you.skills[SK_ICE_MAGIC] > you.skills[exsk]
-            || you.skills[SK_AIR_MAGIC] > you.skills[exsk]
-            || you.skills[SK_EARTH_MAGIC] > you.skills[exsk]))
-    {
-        if (one_chance_in(3))
-            return (true);
-    }
-
-    // Some are direct opposites.
-    if ((exsk == SK_FIRE_MAGIC || exsk == SK_ICE_MAGIC)
-        && (you.skills[SK_FIRE_MAGIC] > you.skills[exsk]
-            || you.skills[SK_ICE_MAGIC] > you.skills[exsk]))
-    {
-        // Of course, this is cumulative with the one above.
-        if (!one_chance_in(3))
-            return (true);
-    }
-
-    if ((exsk == SK_AIR_MAGIC || exsk == SK_EARTH_MAGIC)
-        && (you.skills[SK_AIR_MAGIC] > you.skills[exsk]
-           || you.skills[SK_EARTH_MAGIC] > you.skills[exsk]))
-    {
-        if (!one_chance_in(3))
-            return (true);
-    }
-
-    // Experimental restriction (too many spell schools). -- bwr
-    // XXX: This also hinders Spellcasting and Inv/Evo.
-
-    // Count better non-elemental spell skills (up to 6)
-    int skill_rank = 1;
-    for (int i = SK_CONJURATIONS; i < SK_FIRE_MAGIC; ++i)
-        if (you.skills[exsk] < you.skills[i])
-            skill_rank++;
-
-    // Things get progressively harder, but not harder than
-    // the Fire-Air or Ice-Earth level.
-    // Note: 1 <= skill_rank <= 7, so (1 in 6) to (1 in 3).
-    if (skill_rank > 3 && one_chance_in(10 - skill_rank))
-        return (true);
-
-    return (false);
 }
 
 // These get a discount in the late game -- still required?
@@ -404,9 +332,9 @@ static void _check_skill_cost_change()
     }
 }
 
-void change_skill_points(skill_type sk, int points, bool change_level)
+void change_skill_points(skill_type sk, int points, bool do_level_up)
 {
-    if (you.skill_points[sk] + points < 0)
+    if (static_cast<int>(you.skill_points[sk]) < -points)
         points = -you.skill_points[sk];
 
     you.skill_points[sk] += points;
@@ -414,17 +342,11 @@ void change_skill_points(skill_type sk, int points, bool change_level)
 
     _check_skill_cost_change();
 
-    if (change_level)
-        _check_skill_level_change(sk);
+    check_skill_level_change(sk, do_level_up);
 }
 
 static int _exercise2(skill_type exsk)
 {
-    // Being better at some magic skills makes others less likely to train.
-    // Note: applies to Invocations and Evocations, too! [rob]
-    if (_skip_exercise(exsk))
-        return (0);
-
     // Don't train past level 27, even if the level hasn't been updated yet.
     if (you.skill_points[exsk] >= skill_exp_needed(27, exsk))
         return 0;
@@ -433,14 +355,15 @@ static int _exercise2(skill_type exsk)
     int skill_inc = 10;
 
     // This will be deducted from you.exp_available.
-    int cost = _calc_skill_cost(you.skill_cost_level, you.skills[exsk]);
+    int cost = calc_skill_cost(you.skill_cost_level, you.skills[exsk]);
 
     // Being good at some weapons makes others easier to learn.
     if (exsk < SK_ARMOUR)
-        skill_inc *= _weap_crosstrain_bonus(exsk);
+        skill_inc *= crosstrain_bonus(exsk);
 
     // Starting to learn skills is easier if the appropriate stat is high.
-    if (you.skills[exsk] == 0)
+        // We check skill points in case skill level hasn't been updated yet
+    if (you.skill_points[exsk] < skill_exp_needed(1, exsk))
         skill_inc = _stat_mult(exsk, skill_inc);
 
     // Spellcasting and Inv/Evo is cheaper early on.
@@ -454,6 +377,9 @@ static int _exercise2(skill_type exsk)
             cost /= 20;
         }
     }
+
+    if (is_antitrained(exsk))
+        cost *= ANTITRAIN_PENALTY;
 
     // Scale cost and skill_inc to available experience.
     const int spending_limit = std::min(MAX_SPENDING_LIMIT, you.exp_available);
@@ -480,11 +406,19 @@ static int _exercise2(skill_type exsk)
     if (skill_inc <= 0)
         return (0);
 
-    cost -= random2(5);            // XXX: what's this for?
-    cost = std::max<int>(cost, 1); // No free lunch.
+    if (is_antitrained(exsk))
+    {
+        cost -= random2(3);
+        cost = std::max<int>(cost, 2);
+    }
+    else
+    {
+        cost -= random2(5);        // XXX: what's this for?
+        cost = std::max<int>(cost, 1); // No free lunch.
+    }
 
     you.skill_points[exsk] += skill_inc;
-    you.ct_skill_points[exsk] += (1 - 1 / _weap_crosstrain_bonus(exsk))
+    you.ct_skill_points[exsk] += (1 - 1 / crosstrain_bonus(exsk))
                                  * skill_inc;
     you.exp_available -= cost;
     you.total_skill_points += skill_inc;

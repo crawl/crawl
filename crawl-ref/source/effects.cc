@@ -1272,7 +1272,7 @@ static void _hell_effects()
     if ((you.religion == GOD_ZIN && x_chance_in_y(you.piety, MAX_PIETY))
         || is_sanctuary(you.pos()))
     {
-        mpr("Zin's power protects you from the chaos of Hell!", MSGCH_GOD);
+        simple_god_message("'s power protects you from the chaos of Hell!");
         return;
     }
 
@@ -2153,9 +2153,12 @@ void handle_time()
     // The checks below assume the function is called at least
     // once every 50 elapsed time units.
 
-    // Every 5 turns, spawn random monsters.
-    if (_div(base_time, 50) > _div(old_time, 50))
+    // Every 5 turns, spawn random monsters, not in Zotdef.
+    if (_div(base_time, 50) > _div(old_time, 50)
+        && !crawl_state.game_is_zotdef())
+    {
         spawn_random_monsters();
+    }
 
     // Every 20 turns, a variety of other effects.
     if (! (_div(base_time, 200) > _div(old_time, 200)))

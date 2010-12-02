@@ -333,6 +333,13 @@ static bool _grid_has_mimic_item(const coord_def& pos)
     return (mon && mons_is_unknown_mimic(mon) && mons_is_item_mimic(mon->type));
 }
 
+static bool _grid_has_mimic_shop(const coord_def& pos)
+{
+    const monster* mon = monster_at(pos);
+    return (mon && mons_is_unknown_mimic(mon)
+            && mon->type == MONS_SHOP_MIMIC);
+}
+
 static bool _grid_has_perceived_item(const coord_def& pos)
 {
     return (you.visible_igrd(pos) != NON_ITEM || _grid_has_mimic_item(pos));
@@ -356,6 +363,10 @@ void Stash::update()
     coord_def p(x,y);
     feat = grd(p);
     trap = NUM_TRAPS;
+
+    const monster* mon = monster_at(p);
+    if ((mon && mons_is_unknown_mimic(mon) && mons_is_feat_mimic(mon->type)))
+        feat = get_mimic_feat(mon);
 
     if (is_boring_feature(feat))
         feat = DNGN_FLOOR;
@@ -1228,6 +1239,9 @@ const ShopInfo *LevelStashes::find_shop(const coord_def& c) const
 
 bool LevelStashes::shop_needs_visit(const coord_def& c) const
 {
+    if (_grid_has_mimic_shop(c))
+        return(true);
+
     const ShopInfo *shop = find_shop(c);
     return (shop && !shop->is_visited());
 }
@@ -1457,6 +1471,30 @@ void LevelStashes::load(reader& inf)
     }
 }
 
+void LevelStashes::remove_shop(const coord_def& c)
+{
+    const monster* mon = monster_at(c);
+    std::string mimic_name;
+    bool mimic_shop = false;
+
+    // If there are both shop mimic and normal shop here, then we want to erase
+    // just mimic entry.
+    if (mon && mon->type == MONS_SHOP_MIMIC)
+    {
+        mimic_shop = true;
+        if (mon->props.exists("shop_name"))
+            mimic_name = mon->props["shop_name"].get_string();
+    }
+
+    for (unsigned i = 0; i < m_shops.size(); ++i)
+        if (m_shops[i].isAt(c)
+            && (!mimic_shop || m_shops[i].description() == mimic_name))
+        {
+            m_shops.erase(m_shops.begin() + i);
+            return;
+        }
+}
+
 std::ostream &operator << (std::ostream &os, const LevelStashes &ls)
 {
     ls.write(os);
@@ -1595,7 +1633,12 @@ void StashTracker::update_visible_stashes(
     coord_def c;
     for (radius_iterator ri(you.get_los()); ri; ++ri)
     {
-        const dungeon_feature_type feat = grd(*ri);
+        dungeon_feature_type feat = grd(*ri);
+
+        const monster* mon = monster_at(*ri);
+        if (mon && mons_is_unknown_mimic(mon) && mons_is_feat_mimic(mon->type))
+            feat = get_mimic_feat(mon);
+
         if ((!lev || !lev->update_stash(*ri))
             && mode == ST_AGGRESSIVE
             && (_grid_has_perceived_item(*ri)
@@ -1637,6 +1680,13 @@ std::string StashTracker::stash_search_prompt()
         prompt_qual = " [" + prompt_qual + "]";
 
     return (make_stringf("Search for what%s? ", prompt_qual.c_str()));
+}
+
+void StashTracker::remove_shop(const coord_def& c)
+{
+    LevelStashes *lev = find_current_level();
+    if (lev)
+        lev->remove_shop(c);
 }
 
 class stash_search_reader : public line_reader
@@ -1942,6 +1992,16 @@ bool StashTracker::display_search_results(
 
         if (res.shop && !res.shop->is_visited())
             me->colour = CYAN;
+
+        if (res.stash && res.stash->get_items().size() > 0)
+        {
+            item_def first = res.stash->get_items()[0];
+            int itemcol = menu_colour(first.name(DESC_PLAIN).c_str(),
+                                      menu_colour_item_prefix(first),
+                                      "pickup");
+            if (itemcol != -1)
+                me->colour = itemcol;
+        }
 
         stashmenu.add_entry(me);
     }

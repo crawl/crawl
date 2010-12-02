@@ -26,6 +26,7 @@ shock SHOCK
 silence SILENCE
 static_discharge STATIC_DISCHARGE
 swiftness SWIFTNESS
+tornado TORNADO
 
 %sdir spells/conjuration
 iskenderuns_mystic_blast ISKENDERUNS_MYSTIC_BLAST

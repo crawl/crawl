@@ -9,8 +9,13 @@
 
 #include "mon-info.h"
 
+#include "artefact.h"
+#include "coord.h"
+#include "env.h"
 #include "fight.h"
+#include "ghost.h"
 #include "libutil.h"
+#include "message.h"
 #include "misc.h"
 #include "mon-iter.h"
 #include "mon-util.h"
@@ -18,15 +23,10 @@
 #include "options.h"
 #include "religion.h"
 #include "showsymb.h"
-#include "state.h"
-#include "coord.h"
-#include "env.h"
-#include "stuff.h"
-#include "ghost.h"
 #include "skills2.h"
-#include "message.h"
+#include "state.h"
+#include "stuff.h"
 #include "tagstring.h"
-#include "artefact.h"
 
 #include <algorithm>
 #include <sstream>
@@ -109,12 +109,16 @@ static uint64_t ench_to_mb(const monster& mons, enchant_type ench)
         return ULL1 << MB_REGENERATION;
     case ENCH_RAISED_MR:
         return ULL1 << MB_RAISED_MR;
+    case ENCH_MIRROR_DAMAGE:
+        return ULL1 << MB_MIRROR_DAMAGE;
     case ENCH_FEAR_INSPIRING:
         return ULL1 << MB_FEAR_INSPIRING;
     case ENCH_WITHDRAWN:
         return ULL1 << MB_WITHDRAWN;
     case ENCH_ATTACHED:
         return ULL1 << MB_ATTACHED;
+    case ENCH_HELPLESS:
+        return ULL1 << MB_HELPLESS;
     default:
         return 0;
     }
@@ -289,6 +293,9 @@ monster_info::monster_info(const monster* m, int milev)
     else if (m->flags & MF_NAME_DEFINITE)
         mb |= ULL1 << MB_NAME_THE;
 
+    if (m->has_ench(ENCH_HELPLESS))
+        mb |= ench_to_mb(*m, ENCH_HELPLESS);
+
     if (milev <= MILEV_NAME)
     {
         if (type_known && type == MONS_DANCING_WEAPON
@@ -434,13 +441,7 @@ monster_info::monster_info(const monster* m, int milev)
         u.ghost.religion = ghost.religion;
         u.ghost.best_skill = ghost.best_skill;
         u.ghost.best_skill_rank = get_skill_rank(ghost.best_skill_level);
-        u.ghost.xl_rank = ((ghost.xl <  4) ? 0:
-            (ghost.xl <  7) ? 1 :
-            (ghost.xl < 11) ? 2 :
-            (ghost.xl < 16) ? 3 :
-            (ghost.xl < 22) ? 4 :
-            (ghost.xl < 26) ? 5 :
-            (ghost.xl < 27) ? 6 : 7);
+        u.ghost.xl_rank = ghost_level_to_rank(ghost.xl);
     }
 
     if (type_known)
@@ -622,6 +623,9 @@ std::string monster_info::_apply_adjusted_description(description_level_type des
 std::string monster_info::common_name(description_level_type desc) const
 {
     std::ostringstream ss;
+
+    if (is(MB_HELPLESS))
+        ss << "helpless ";
 
     if (is(MB_SUBMERGED))
         ss << "submerged ";

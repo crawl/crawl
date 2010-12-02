@@ -12,6 +12,7 @@
 #include "command.h"
 #include "coord.h"
 #include "env.h"
+#include "invent.h"
 #include "menu.h"
 #include "macro.h"
 #include "message.h"
@@ -489,11 +490,15 @@ bool Menu::process_key(int keyin)
         break;
     }
     case '.':
+        if (last_selected == -1 && is_set(MF_MULTISELECT))
+            last_selected = 0;
+
         if (last_selected != -1)
         {
             const int next = get_cursor();
             if (next != -1)
             {
+                InvEntry::set_show_cursor(true);
                 select_index(next, num);
                 get_selected(&sel);
                 draw_select_count(sel.size());
@@ -514,10 +519,14 @@ bool Menu::process_key(int keyin)
         break;
 
     case '\'':
-        last_selected = get_cursor();
+        if (last_selected == -1 && is_set(MF_MULTISELECT))
+            last_selected = 0;
+        else
+            last_selected = get_cursor();
 
         if (last_selected != -1)
         {
+            InvEntry::set_show_cursor(true);
             const int it_count = item_count();
             if (last_selected < it_count
                 && items[last_selected]->level == MEL_ITEM)
@@ -742,9 +751,11 @@ void Menu::select_items(int key, int qty)
 {
     int x = wherex(), y = wherey();
 
-    if (key == ',' || key == '*')
-        select_index(-1, qty);
-    else if (key == '-')
+    if (key == ',') // Select all or apply filter if there is one.
+        select_index(-1, -2);
+    else if (key == '*') // Invert selection.
+        select_index(-1, -1);
+    else if (key == '-') // Clear selection.
         select_index(-1, 0);
     else
     {
@@ -1128,8 +1139,11 @@ void Menu::select_index(int index, int qty)
                 {
                     continue;
                 }
-                if (is_hotkey(i, items[i]->hotkeys[0]) && is_selectable(i))
+                if (is_hotkey(i, items[i]->hotkeys[0])
+                    && (qty != -2 || is_selectable(i)))
+                {
                     select_item_index(i, qty);
+                }
             }
         }
     }
@@ -1789,7 +1803,7 @@ bool formatted_scroller::process_key(int keyin)
     default:
         if (is_set(MF_SINGLESELECT))
         {
-            select_items(keyin, -1);
+            select_items(keyin);
             get_selected(&sel);
             if (sel.size() >= 1)
                 return (false);

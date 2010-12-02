@@ -17,6 +17,7 @@
 #include "coordit.h"
 #include "database.h"
 #include "debug.h"
+#include "dgn-overview.h"
 #include "directn.h"
 #include "env.h"
 #include "fight.h"
@@ -359,8 +360,8 @@ mon_resist_def get_mons_resists(const monster* mon)
         resists.poison = std::max(static_cast<int>(resists.poison), 1);
 
     if (mons_genus(newmon.type) == MONS_DRACONIAN
-        && newmon.type != MONS_DRACONIAN
-            || newmon.type == MONS_TIAMAT)
+            && newmon.type != MONS_DRACONIAN
+        || newmon.type == MONS_TIAMAT)
     {
         monster_type draco_species = draco_subspecies(&newmon);
         if (draco_species != newmon.type)
@@ -637,7 +638,9 @@ bool mons_behaviour_perceptible(const monster* mon)
             && !mons_is_mimic(mon->type)
             && !mons_is_statue(mon->type)
             && mon->type != MONS_OKLOB_PLANT
-            && mon->type != MONS_BALLISTOMYCETE);
+            && mon->type != MONS_BALLISTOMYCETE
+            && mon->type != MONS_OKLOB_SAPLING
+            && mon->type != MONS_BURNING_BUSH);
 }
 
 // Returns true for monsters that obviously (to the player) feel
@@ -654,7 +657,7 @@ bool mons_is_native_in_branch(const monster* mons,
     case BRANCH_ORCISH_MINES:
         return (mons_genus(mons->type) == MONS_ORC);
 
-    case BRANCH_DWARF_HALL:
+    case BRANCH_DWARVEN_HALL:
         return (mons_genus(mons->type) == MONS_DWARF);
 
     case BRANCH_SHOALS:
@@ -797,6 +800,20 @@ bool mons_is_item_mimic(int mc)
 bool mons_is_feat_mimic(int mc)
 {
     return (mons_genus(mc) == MONS_DOOR_MIMIC);
+}
+
+void discover_mimic(monster* mimic)
+{
+    if (mons_is_known_mimic(mimic))
+        return;
+
+    mimic->flags |= MF_KNOWN_MIMIC;
+    if (mons_is_feat_mimic(mimic->type))
+    {
+        unnotice_feature(level_pos(level_id::current(), mimic->pos()));
+        if (mimic->type == MONS_SHOP_MIMIC)
+            StashTrack.remove_shop(mimic->pos());
+    }
 }
 
 bool mons_is_demon(int mc)
@@ -1327,17 +1344,27 @@ int mons_damage(int mc, int rt)
     return (smc->attack[rt].damage);
 }
 
+std::string resist_margin_phrase(int margin)
+{
+    ASSERT(margin > 0);
+
+    return((margin >= 40) ? " easily resists." :
+           (margin >= 24) ? " resists." :
+           (margin >= 12)  ? " resists with some effort."
+                           : " struggles to resist.");
+}
+
 bool mons_immune_magic(const monster* mon)
 {
     return (get_monster_data(mon->type)->resist_magic == MAG_IMMUNE);
 }
 
-const char* mons_resist_string(const monster* mon)
+std::string mons_resist_string(const monster* mon, int res_margin)
 {
     if (mons_immune_magic(mon))
-        return "is unaffected";
+        return " is unaffected";
     else
-        return "resists";
+        return resist_margin_phrase(res_margin);
 }
 
 bool mons_skeleton(int mc)
@@ -1351,25 +1378,29 @@ flight_type mons_class_flies(int mc)
     return (me ? me->fly : FL_NONE);
 }
 
-flight_type mons_flies(const monster* mon, bool randarts)
+flight_type mons_flies(const monster* mon, bool temp)
 {
+    flight_type ret;
     // For dancing weapons, this function can get called before their
     // ghost_demon is created, so check for a NULL ghost. -cao
     if (mons_is_ghost_demon(mon->type) && mon->ghost.get())
-        return (mon->ghost->fly);
-
-    flight_type ret = mons_class_flies(mons_base_type(mon));
+        ret = mon->ghost->fly;
+    else
+        ret = mons_class_flies(mons_base_type(mon));
 
     // Handle the case where the zombified base monster can't fly, but
     // the zombified monster can (e.g. spectral things).
     if (ret == FL_NONE && mons_is_zombified(mon))
         ret = mons_class_flies(mon->type);
 
-    if (randarts && ret == FL_NONE
+    if (temp && ret == FL_NONE
         && scan_mon_inv_randarts(mon, ARTP_LEVITATE) > 0)
     {
         ret = FL_LEVITATE;
     }
+
+    if (temp && ret == FL_NONE && mon->has_ench(ENCH_LEVITATION))
+        ret = FL_LEVITATE;
 
     return (ret);
 }
@@ -1392,6 +1423,20 @@ bool mons_class_flattens_trees(int mc)
 bool mons_flattens_trees(const monster* mon)
 {
     return (mons_class_flattens_trees(mons_base_type(mon)));
+}
+
+int mons_class_res_wind(int mc)
+{
+    // Lightning goes well with storms.
+    if (mc == MONS_AIR_ELEMENTAL || mc == MONS_BALL_LIGHTNING)
+        return 1;
+
+    // Flyers are not immune due to buffeting -- and for airstrike, even
+    // specially vulnerable.
+    // Smoky humanoids may have problems staying together.
+    // Insubstantial wisps are a toss-up between being immune and immediately
+    // fatally dispersing.
+    return 0;
 }
 
 bool mons_class_wall_shielded(int mc)
@@ -2760,6 +2805,31 @@ bool ms_quick_get_away(const monster* mon /*unused*/, spell_type monspell)
     }
 }
 
+// Checks if the foe *appears* to be immune to negative energy.  We
+// can't just use foe->res_negative_energy(), because that'll mean
+// monsters will just "know" whether a player is fully life-protected.
+static bool _foe_should_res_negative_energy(const actor* foe)
+{
+    const mon_holy_type holiness = foe->holiness();
+
+    if (foe->atype() == ACT_PLAYER)
+    {
+        // Non-bloodless vampires do not appear immune.
+        if (holiness == MH_UNDEAD
+            && you.is_undead == US_SEMI_UNDEAD
+            && you.hunger_state > HS_STARVING)
+        {
+            return (false);
+        }
+
+        // Demonspawn do not appear immune.
+        if (holiness == MH_DEMONIC)
+            return (false);
+    }
+
+    return (holiness != MH_NATURAL);
+}
+
 // Checks to see if a particular spell is worth casting in the first place.
 bool ms_waste_of_time(const monster* mon, spell_type monspell)
 {
@@ -2802,31 +2872,8 @@ bool ms_waste_of_time(const monster* mon, spell_type monspell)
     case SPELL_BOLT_OF_DRAINING:
     case SPELL_AGONY:
     case SPELL_SYMBOL_OF_TORMENT:
-    {
-        if (!foe)
-        {
-            ret = true;
-            break;
-        }
-
-        // Check if the foe *appears* to be immune to negative energy.
-        // We can't just use foe->res_negative_energy() because
-        // that'll mean monsters can just "know" the player is fully
-        // life-protected if he has triple life protection.
-        const mon_holy_type holiness = foe->holiness();
-        ret = ((holiness == MH_UNDEAD
-                   // If the claimed undead is the player, it must be
-                   // a non-vampire, or a bloodless vampire.
-                   && (foe != &you || you.is_undead != US_SEMI_UNDEAD
-                       || you.hunger_state == HS_STARVING))
-                // Demons, but not demonspawn - demonspawn will show
-                // up as demonic for purposes of things like holy
-                // wrath, but are still (usually) susceptible to
-                // torment and draining.
-                || holiness == MH_DEMONIC && foe != &you
-                || holiness == MH_NONLIVING || holiness == MH_PLANT);
+        ret = (!foe || _foe_should_res_negative_energy(foe));
         break;
-    }
 
     case SPELL_MIASMA:
         ret = (!foe || foe->res_rotting());
@@ -3520,6 +3567,7 @@ mon_inv_type item_to_mslot(const item_def &item)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
+    case OBJ_STAVES:
         return MSLOT_WEAPON;
     case OBJ_MISSILES:
         return MSLOT_MISSILE;
