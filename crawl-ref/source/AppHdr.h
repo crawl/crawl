@@ -429,9 +429,6 @@
 // Use new system for weighting str and dex based on weapon type, -- bwr
 #define USE_NEW_COMBAT_STATS
 
-// mv: (new 9 Aug 01) turns off missile trails, might be slow on some computers
-// #define MISSILE_TRAILS_OFF
-
 // bwr: define this if you want to know the pluses, "runed" status
 // of the monster's weapons in the hiscore file.
 #define HISCORE_WEAPON_DETAIL
