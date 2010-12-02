@@ -103,7 +103,6 @@
     // #define DGAMELAUNCH
 
 #ifndef TARGET_COMPILER_MINGW
-    #define MULTIUSER
     #define USE_UNIX_SIGNALS
 #endif
 
@@ -426,27 +425,15 @@
 
 #define SAVE_SUFFIX ".cs"
 
-#ifdef MULTIUSER
-    // If you are installing Crawl for multiple users, define SAVE_DIR
-    // to the directory where saves, bones, and score file will go...
-    // end it with a '/'. Since all player files will be in the same
-    // directory, the players UID will be appended when this option is
-    // set.
-    //
-    // If you want to build Crawl that only one user will use, you do not need
-    // to set SAVE_DIR_PATH (and do not need to run make install).
-    //
-    // Setting it to nothing or not setting it will cause all game files to
-    // be dumped in the current directory.
-    //
-    // #define SAVE_DIR_PATH       "/opt/crawl/lib/"
-    // #define SAVE_DIR_PATH       ""
+// If you are installing Crawl for multiple users, define SAVE_DIR
+// to the directory where saves, bones, and score file will go...
+// end it with a '/'. Only one system user should be able to access
+// these -- usually this means you should place them in ~/crawl/
+// unless it's a DGL build.
 
-    // If we're on a multiuser system, file locking of shared files is
-    // very important (else things will just keep getting corrupted)
-    #define USE_FILE_LOCKING
-
-#endif /* MULTIUSER */
+// If we're on a multiuser system, file locking of shared files is
+// very important (else things will just keep getting corrupted)
+#define USE_FILE_LOCKING
 
 #if defined(DGL_SIMPLE_MESSAGING) && !defined(USE_FILE_LOCKING)
 #error Must define USE_FILE_LOCKING for DGL_SIMPLE_MESSAGING
