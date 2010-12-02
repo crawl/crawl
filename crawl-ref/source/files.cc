@@ -134,6 +134,9 @@ static void _redraw_all(void)
 
 static std::string _uid_as_string()
 {
+#ifdef TARGET_OS_WINDOWS
+    return std::string();
+#else
 #ifndef MULTIUSER
     return std::string();
 #else
@@ -144,6 +147,7 @@ static std::string _uid_as_string()
         return make_stringf("-%d", static_cast<int>(getuid()));
     else
         return std::string();
+#endif
 #endif
 #endif
 }
