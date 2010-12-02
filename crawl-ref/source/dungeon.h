@@ -220,7 +220,7 @@ coord_def dgn_random_point_visible_from(const coord_def &c,
 coord_def dgn_find_feature_marker(dungeon_feature_type feat);
 
 // Generate 3 stone stairs in both directions.
-void dgn_place_stone_stairs();
+void dgn_place_stone_stairs(bool maybe_place_hatches = false);
 
 // Set floor/wall colour based on the mons_alloc array. Used for
 // Abyss and Pan.
