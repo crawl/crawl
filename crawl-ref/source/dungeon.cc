@@ -7775,21 +7775,16 @@ static void _roguey_level(int level_number, spec_room &sr, bool make_stairs)
         dgn_replace_area(rox1[i], roy1[i], rox2[i], roy2[i],
                           DNGN_ROCK_WALL, DNGN_FLOOR);
 
-        // Inner room?
+        // If the room is sufficiently large, we may place an inner room in it,
+        // optionally filled with treasure.
         if (rox2[i] - rox1[i] > 5 && roy2[i] - roy1[i] > 5
             && x_chance_in_y(3, 100 - level_number))
         {
+            dungeon_feature_type wall = DNGN_METAL_WALL;
             if (!one_chance_in(4))
-            {
-                _box_room(rox1[i] + 2, rox2[i] - 2, roy1[i] + 2,
-                           roy2[i] - 2, (coinflip() ? DNGN_STONE_WALL
-                                                    : DNGN_ROCK_WALL));
-            }
-            else
-            {
-                _box_room(rox1[i] + 2, rox2[i] - 2, roy1[i] + 2,
-                           roy2[i] - 2, DNGN_METAL_WALL);
-            }
+                wall = coinflip() ? DNGN_STONE_WALL : DNGN_ROCK_WALL;
+
+            _box_room(rox1[i] + 2, rox2[i] - 2, roy1[i] + 2, roy2[i] - 2, wall);
 
             if (coinflip())
             {
