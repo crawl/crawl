@@ -423,9 +423,6 @@
 // Wizard death option (needed to test new death messages)
 #define USE_OPTIONAL_WIZARD_DEATH
 
-// Semi-Controlled Blink
-#define USE_SEMI_CONTROLLED_BLINK
-
 // bwr: define this if you want to know the pluses, "runed" status
 // of the monster's weapons in the hiscore file.
 #define HISCORE_WEAPON_DETAIL
