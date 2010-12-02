@@ -2326,74 +2326,14 @@ void save_ghost(bool force)
 // first, some file locking stuff for multiuser crawl
 #ifdef USE_FILE_LOCKING
 
-bool lock_file_handle(FILE *handle, int type)
+bool lock_file_handle(FILE *handle, bool write)
 {
-    struct flock  lock;
-    int           status;
-
-    lock.l_whence = SEEK_SET;
-    lock.l_start = 0;
-    lock.l_len = 0;
-    lock.l_type = type;
-
-#ifdef USE_BLOCKING_LOCK
-    status = fcntl(fileno(handle), F_SETLKW, &lock);
-#else
-    for (int i = 0; i < 30; i++)
-    {
-        status = fcntl(fileno(handle), F_SETLK, &lock);
-
-        // success
-        if (status == 0)
-            break;
-
-        // known failure
-        if (status == -1 && (errno != EACCES && errno != EAGAIN))
-            break;
-
-        perror("Problems locking file... retrying...");
-        delay(1000);
-    }
-#endif
-
-    return (status == 0);
+    return lock_file(fileno(handle), write, true);
 }
 
 bool unlock_file_handle(FILE *handle)
 {
-    struct flock  lock;
-    int           status;
-
-    lock.l_whence = SEEK_SET;
-    lock.l_start = 0;
-    lock.l_len = 0;
-    lock.l_type = F_UNLCK;
-
-#ifdef USE_BLOCKING_LOCK
-
-    status = fcntl(fileno(handle), F_SETLKW, &lock);
-
-#else
-
-    for (int i = 0; i < 30; i++)
-    {
-        status = fcntl(fileno(handle), F_SETLK, &lock);
-
-        // success
-        if (status == 0)
-            break;
-
-        // known failure
-        if (status == -1 && (errno != EACCES && errno != EAGAIN))
-            break;
-
-        perror("Problems unlocking file... retrying...");
-        delay(1000);
-    }
-
-#endif
-
-    return (status == 0);
+    return unlock_file(fileno(handle));
 }
 
 #endif
@@ -2405,9 +2345,9 @@ FILE *lk_open(const char *mode, const std::string &file)
         return NULL;
 
 #ifdef USE_FILE_LOCKING
-    int locktype = F_RDLCK;
+    bool locktype = false;
     if (mode && mode[0] != 'r')
-        locktype = F_WRLCK;
+        locktype = true;
 
     if (handle && !lock_file_handle(handle, locktype))
     {
