@@ -4092,22 +4092,25 @@ static void _special_room(int level_number, spec_room &sr,
                                      vault->name.c_str(), level_number);
     env.properties[LEVEL_EXTRAS_KEY].get_vector().push_back(extra);
 
-    // Overwrites anything: this function better be called early on during
-    // creation.
-    int room_x1 = 8 + random2(55);
-    int room_y1 = 8 + random2(45);
-    int room_x2 = room_x1 + 4 + random2avg(6,2);
-    int room_y2 = room_y1 + 4 + random2avg(6,2);
+    if (!sr.created)
+    {
+        sr.created = true;
+        sr.hooked_up = false;
 
-    // Do special walls & floor.
-    _make_box(room_x1, room_y1, room_x2, room_y2,
-              DNGN_BUILDER_SPECIAL_FLOOR, DNGN_BUILDER_SPECIAL_WALL);
+        // Overwrites anything: this function better be called early on during
+        // creation.
+        int room_x1 = 8 + random2(55);
+        int room_y1 = 8 + random2(45);
+        int room_x2 = room_x1 + 4 + random2avg(6,2);
+        int room_y2 = room_y1 + 4 + random2avg(6,2);
 
-    // Set up passed in spec_room structure.
-    sr.created   = true;
-    sr.hooked_up = false;
-    sr.tl.set(room_x1 + 1, room_y1 + 1);
-    sr.br.set(room_x2 - 1, room_y2 - 1);
+        // Do special walls & floor.
+        _make_box(room_x1, room_y1, room_x2, room_y2,
+                  DNGN_BUILDER_SPECIAL_FLOOR, DNGN_BUILDER_SPECIAL_WALL);
+
+        sr.tl.set(room_x1 + 1, room_y1 + 1);
+        sr.br.set(room_x2 - 1, room_y2 - 1);
+    }
 
     lua_special_room_spec  = sr;
     lua_special_room_level = level_number;
