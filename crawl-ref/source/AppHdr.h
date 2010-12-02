@@ -446,17 +446,6 @@
     // very important (else things will just keep getting corrupted)
     #define USE_FILE_LOCKING
 
-    // Define this if you'd rather have the game block on locked files,
-    // commenting it will poll the file lock once a second for thirty
-    // seconds before giving up.
-    #define USE_BLOCKING_LOCK
-
-    // some files needed for file locking
-    #include <unistd.h>
-    #include <fcntl.h>
-    #include <sys/types.h>
-    #include <sys/stat.h>
-
 #endif /* MULTIUSER */
 
 #if defined(DGL_SIMPLE_MESSAGING) && !defined(USE_FILE_LOCKING)
