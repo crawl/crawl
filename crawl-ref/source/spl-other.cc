@@ -275,8 +275,11 @@ bool cast_passwall(const coord_def& delta, int pow)
     {
         if (grd(dest) == DNGN_DEEP_WATER)
             mpr("You sense a large body of water on the other side of the rock.");
-        else
+        else if (grd(dest) == DNGN_LAVA)
             mpr("You sense an intense heat on the other side of the rock.");
+        else
+            mprf(MSGCH_ERROR, "Unhandled dangerous feature: ",
+                 feature_description(dest, false, DESC_PLAIN).c_str());
     }
     else if (walls > maxrange)
         mpr("This rock feels extremely deep.");
