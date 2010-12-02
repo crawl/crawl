@@ -7742,6 +7742,13 @@ static void _chequerboard(spec_room &sr, dungeon_feature_type target,
             grd(*ri) = ((ri->x + ri->y) % 2) ? floor2 : floor1;
 }
 
+static void _dgn_make_special(int x1, int y1, int x2, int y2)
+{
+    dgn_replace_area(x1, y1, x2, y2, DNGN_ROCK_WALL, DNGN_BUILDER_SPECIAL_WALL);
+    dgn_replace_area(x1, y1, x2, y2, DNGN_FLOOR, DNGN_BUILDER_SPECIAL_FLOOR);
+    dgn_replace_area(x1, y1, x2, y2, DNGN_CLOSED_DOOR, DNGN_BUILDER_SPECIAL_FLOOR);
+}
+
 static void _roguey_level(int level_number, spec_room &sr, bool make_stairs)
 {
     env.level_build_method += make_stringf(" roguey_level [%d%s]", level_number,
@@ -7895,36 +7902,16 @@ static void _roguey_level(int level_number, spec_room &sr, bool make_stairs)
         // by something else (or put monsters in walls, etc...)
 
         // top
-        dgn_replace_area(sr.tl.x-1, sr.tl.y-1, sr.br.x+1,sr.tl.y-1,
-                         DNGN_ROCK_WALL, DNGN_BUILDER_SPECIAL_WALL);
-        dgn_replace_area(sr.tl.x-1, sr.tl.y-1, sr.br.x+1,sr.tl.y-1,
-                         DNGN_FLOOR, DNGN_BUILDER_SPECIAL_FLOOR);
-        dgn_replace_area(sr.tl.x-1, sr.tl.y-1, sr.br.x+1,sr.tl.y-1,
-                         DNGN_CLOSED_DOOR, DNGN_BUILDER_SPECIAL_FLOOR);
+        _dgn_make_special(sr.tl.x - 1, sr.tl.y - 1, sr.br.x + 1, sr.tl.y - 1);
 
         // bottom
-        dgn_replace_area(sr.tl.x-1, sr.br.y+1, sr.br.x+1,sr.br.y+1,
-                         DNGN_ROCK_WALL, DNGN_BUILDER_SPECIAL_WALL);
-        dgn_replace_area(sr.tl.x-1, sr.br.y+1, sr.br.x+1,sr.br.y+1,
-                         DNGN_FLOOR, DNGN_BUILDER_SPECIAL_FLOOR);
-        dgn_replace_area(sr.tl.x-1, sr.br.y+1, sr.br.x+1,sr.br.y+1,
-                         DNGN_CLOSED_DOOR, DNGN_BUILDER_SPECIAL_FLOOR);
+        _dgn_make_special(sr.tl.x - 1, sr.br.y + 1, sr.br.x + 1, sr.br.y + 1);
 
         // left
-        dgn_replace_area(sr.tl.x-1, sr.tl.y-1, sr.tl.x-1, sr.br.y+1,
-                         DNGN_ROCK_WALL, DNGN_BUILDER_SPECIAL_WALL);
-        dgn_replace_area(sr.tl.x-1, sr.tl.y-1, sr.tl.x-1, sr.br.y+1,
-                         DNGN_FLOOR, DNGN_BUILDER_SPECIAL_FLOOR);
-        dgn_replace_area(sr.tl.x-1, sr.tl.y-1, sr.tl.x-1, sr.br.y+1,
-                         DNGN_CLOSED_DOOR, DNGN_BUILDER_SPECIAL_FLOOR);
+        _dgn_make_special(sr.tl.x - 1, sr.tl.y - 1, sr.tl.x - 1, sr.br.y + 1);
 
         // right
-        dgn_replace_area(sr.br.x+1, sr.tl.y-1, sr.br.x+1, sr.br.y+1,
-                         DNGN_ROCK_WALL, DNGN_BUILDER_SPECIAL_WALL);
-        dgn_replace_area(sr.br.x+1, sr.tl.y-1, sr.br.x+1, sr.br.y+1,
-                         DNGN_FLOOR, DNGN_BUILDER_SPECIAL_FLOOR);
-        dgn_replace_area(sr.br.x+1, sr.tl.y-1, sr.br.x+1, sr.br.y+1,
-                         DNGN_CLOSED_DOOR, DNGN_BUILDER_SPECIAL_FLOOR);
+        _dgn_make_special(sr.br.x + 1, sr.tl.y - 1, sr.br.x + 1, sr.br.y + 1);
     }
 
     if (!make_stairs)
