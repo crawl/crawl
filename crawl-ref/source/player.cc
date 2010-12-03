@@ -1541,8 +1541,10 @@ int player_res_acid(bool calc_unid, bool items)
     }
 
     // mutations:
-    if (player_mutation_level(MUT_YELLOW_SCALES) == 3)
+    if (player_mutation_level(MUT_YELLOW_SCALES) == 2)
         res++;
+    else if (player_mutation_level(MUT_YELLOW_SCALES) == 3)
+        res += 2;
 
     if (res > 3)
             res = 3;
