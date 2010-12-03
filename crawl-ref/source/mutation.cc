@@ -1174,6 +1174,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
     bool gain_msg = true;
 
+    you.mutation[mutat]++;
+
     switch (mutat)
     {
     case MUT_STRONG: case MUT_AGILE:  case MUT_CLEVER:
@@ -1190,7 +1192,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
         // Hooves and talons force boots off at 3.  Check for level 2 or
         // higher here.
-        if (you.mutation[mutat] >= 2 && !you.melded[EQ_BOOTS])
+        if (you.mutation[mutat] >= 3 && !you.melded[EQ_BOOTS])
             remove_one_equip(EQ_BOOTS, false, true);
         break;
 
@@ -1201,7 +1203,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         // Gloves aren't prevented until level 3.  We don't have the
         // mutation yet, so we have to check for level 2 or higher claws
         // here.
-        if (you.mutation[mutat] >= 2 && !you.melded[EQ_GLOVES])
+        if (you.mutation[mutat] >= 3 && !you.melded[EQ_GLOVES])
             remove_one_equip(EQ_GLOVES, false, true);
         break;
 
@@ -1237,8 +1239,6 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
     // For all those scale mutations.
     you.redraw_armour_class = true;
-
-    you.mutation[mutat]++;
 
     notify_stat_change("losing a mutation");
 
@@ -1279,6 +1279,8 @@ static bool _delete_single_mutation_level(mutation_type mutat)
 
     bool lose_msg = true;
 
+    you.mutation[mutat]--;
+
     switch (mutat)
     {
     case MUT_STRONG: case MUT_AGILE:  case MUT_CLEVER:
@@ -1311,7 +1313,6 @@ static bool _delete_single_mutation_level(mutation_type mutat)
     // For all those scale mutations.
     you.redraw_armour_class = true;
 
-    you.mutation[mutat]--;
     notify_stat_change("losing a mutation");
 
     if (lose_msg)
