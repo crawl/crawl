@@ -1718,13 +1718,13 @@ int num_traps_for_place(int level_number, const level_id &place)
             return branches[place.branch].num_traps_function(level_number);
         else
             return _num_traps_default(level_number, place);
-    case LEVEL_ABYSS:
     case LEVEL_PANDEMONIUM:
         return _num_traps_default(level_number, place);
     case LEVEL_LABYRINTH:
     case LEVEL_PORTAL_VAULT:
         ASSERT(false);
         break;
+    case LEVEL_ABYSS:
     default:
         return 0;
     }

@@ -2142,7 +2142,7 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
         && !crawl_state.game_is_tutorial())
         _dgn_verify_connectivity(nvaults);
 
-    if (level_type != LEVEL_ABYSS && !crawl_state.game_is_zotdef())
+    if (!crawl_state.game_is_zotdef())
         _place_traps(level_number);
 
     _place_fog_machines(level_number);
