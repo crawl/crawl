@@ -487,7 +487,7 @@ void pan_wave(int power)
                 MONS_PIT_FIEND, MONS_ICE_FIEND, MONS_BLUE_DEATH};
 
     for (int i = 0; i <= NSLOTS; i++)
-     {
+    {
         env.mons_alloc[i] = MONS_PROGRAM_BUG;
         while (env.mons_alloc[i] == MONS_PROGRAM_BUG)
         {
@@ -687,7 +687,7 @@ void zotdef_set_branch_wave(branch_type b, int power)
     dprf("BRANCH WAVE: BRANCH %s",
          (b == NUM_BRANCHES) ? "RANDOM" : branches[b].shortname);
     for (int i = 0; i < NSLOTS; i++)
-       env.mons_alloc[i] = get_zotdef_monster(l, _fuzz_mons_level(power));
+        env.mons_alloc[i] = get_zotdef_monster(l, _fuzz_mons_level(power));
     env.mons_alloc[BOSS_SLOT] = get_zotdef_monster(l,
                                     power + BOSS_MONSTER_EXTRA_POWER);
 }
@@ -820,38 +820,39 @@ rune_type get_rune(int runenumber)
 {
     switch (runenumber)
     {
-        case 1:
-            return RUNE_DIS;
-        case 2:
-            return RUNE_GEHENNA;
-        case 3:
-            return RUNE_COCYTUS;
-        case 4:
-            return RUNE_TARTARUS;
-        case 5:
-            return RUNE_SLIME_PITS;
-        case 6:
-            return RUNE_VAULTS;
-        case 7:
-            return RUNE_SNAKE_PIT;
-        case 8:
-            return RUNE_TOMB;
-        case 9:
-            return RUNE_SWAMP;
-        case 10:
-            return RUNE_DEMONIC;
-        case 11:
-            return RUNE_ABYSSAL;
-        case 12:
-            return RUNE_MNOLEG;
-        case 13:
-            return RUNE_LOM_LOBON;
-        case 14:
-            return RUNE_CEREBOV;
-        case 15:
-            return RUNE_GLOORX_VLOQ;
+    case 1:
+        return RUNE_DIS;
+    case 2:
+        return RUNE_GEHENNA;
+    case 3:
+        return RUNE_COCYTUS;
+    case 4:
+        return RUNE_TARTARUS;
+    case 5:
+        return RUNE_SLIME_PITS;
+    case 6:
+        return RUNE_VAULTS;
+    case 7:
+        return RUNE_SNAKE_PIT;
+    case 8:
+        return RUNE_TOMB;
+    case 9:
+        return RUNE_SWAMP;
+    case 10:
+        return RUNE_DEMONIC;
+    case 11:
+        return RUNE_ABYSSAL;
+    case 12:
+        return RUNE_MNOLEG;
+    case 13:
+        return RUNE_LOM_LOBON;
+    case 14:
+        return RUNE_CEREBOV;
+    case 15:
+        return RUNE_GLOORX_VLOQ;
+    default:
+        return RUNE_DEMONIC;
     }
-    return RUNE_DEMONIC;
 }
 
 // Dowan is automatically placed together with Duvessa.
