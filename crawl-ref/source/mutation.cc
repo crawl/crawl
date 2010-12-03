@@ -1190,8 +1190,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         mpr(mdef.gain[you.mutation[mutat]], MSGCH_MUTATION);
         gain_msg = false;
 
-        // Hooves and talons force boots off at 3.  Check for level 2 or
-        // higher here.
+        // Hooves and talons force boots off at 3.
         if (you.mutation[mutat] >= 3 && !you.melded[EQ_BOOTS])
             remove_one_equip(EQ_BOOTS, false, true);
         break;
@@ -1200,9 +1199,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         mpr(mdef.gain[you.mutation[mutat]], MSGCH_MUTATION);
         gain_msg = false;
 
-        // Gloves aren't prevented until level 3.  We don't have the
-        // mutation yet, so we have to check for level 2 or higher claws
-        // here.
+        // Gloves aren't prevented until level 3.
         if (you.mutation[mutat] >= 3 && !you.melded[EQ_GLOVES])
             remove_one_equip(EQ_GLOVES, false, true);
         break;
