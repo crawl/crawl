@@ -689,7 +689,7 @@ void zotdef_set_branch_wave(branch_type b, int power)
                                     power + BOSS_MONSTER_EXTRA_POWER);
 }
 
-void set_boss_unique()
+void zotdef_set_boss_unique()
 {
     for (int tries = 0; tries < 100; tries++)
     {
@@ -763,7 +763,7 @@ void zotdef_set_wave()
 
         // overwrite the previously-set boss with a random unique?
         if (one_chance_in(3))
-            set_boss_unique();
+            zotdef_set_boss_unique();
     }
 
 /*
