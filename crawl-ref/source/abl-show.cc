@@ -2948,7 +2948,7 @@ std::vector<talent> your_talents(bool check_confused)
     // Spit Poison. Nontransformed nagas can upgrade to Breathe Poison.
     // Transformed nagas, or non-nagas, can only get Spit Poison.
     if (you.species == SP_NAGA
-        && (!transform_changed_physiology()
+        && (!form_changed_physiology()
             || you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER))
     {
         _add_talent(talents, player_mutation_level(MUT_BREATHE_POISON) ?
@@ -2979,7 +2979,7 @@ std::vector<talent> your_talents(bool check_confused)
         // Draconians don't maintain their original breath weapons
         // if shapechanged into a non-dragon form, but green draconians
         // do get spit poison in spider form.
-        if (transform_changed_physiology())
+        if (form_changed_physiology())
         {
             if (you.species == SP_GREEN_DRACONIAN
                 && you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER)
@@ -3006,7 +3006,7 @@ std::vector<talent> your_talents(bool check_confused)
         _add_talent(talents, ABIL_BOTTLE_BLOOD, false);
     }
 
-    if (!you.airborne() && !transform_changed_physiology())
+    if (!you.airborne() && !form_changed_physiology())
     {
         // Kenku can fly, but only from the ground
         // (until level 15, when it becomes permanent until revoked).
@@ -3020,7 +3020,7 @@ std::vector<talent> your_talents(bool check_confused)
         }
     }
 
-    if (you.airborne() && !transform_changed_physiology()
+    if (you.airborne() && !form_changed_physiology()
         && you.species == SP_KENKU && you.experience_level >= 5)
     {
         _add_talent(talents, ABIL_STOP_FLYING, check_confused);

@@ -163,7 +163,7 @@ void passive_enslavement_convert(monster* mons)
     if (you.are_charming()
         && mons->alive()
         && is_player_same_species(mons->type, false)
-        && !transform_changed_physiology(false)
+        && !form_changed_physiology(false)
         && mons->foe == MHITYOU
         && !mons->is_summoned()
         && !mons->is_shapeshifter()

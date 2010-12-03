@@ -118,7 +118,7 @@ bool player::floundering() const
 
 bool player::extra_balanced() const
 {
-    return (species == SP_NAGA && !transform_changed_physiology());
+    return (species == SP_NAGA && !form_changed_physiology());
 }
 
 int player::get_experience_level() const
@@ -388,7 +388,7 @@ std::string player::foot_name(bool plural, bool *can_plural) const
 
     if (attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER)
         str = "hind leg";
-    else if (!transform_changed_physiology())
+    else if (!form_changed_physiology())
     {
         if (player_mutation_level(MUT_HOOVES) >= 3)
             str = "hoof";
@@ -417,7 +417,7 @@ std::string player::foot_name(bool plural, bool *can_plural) const
 
 std::string player::arm_name(bool plural, bool *can_plural) const
 {
-    if (transform_changed_physiology())
+    if (form_changed_physiology())
         return hand_name(plural, can_plural);
 
     if (can_plural != NULL)

@@ -1186,7 +1186,7 @@ static bool _fire_warn_if_impossible()
     }
 
     // If you can't wield it, you can't throw it.
-    if (!transform_can_wield())
+    if (!form_can_wield())
     {
         canned_msg(MSG_PRESENT_FORM);
         return (true);

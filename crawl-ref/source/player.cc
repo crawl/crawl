@@ -1514,7 +1514,7 @@ int player_res_corr(bool calc_unid, bool items)
 int player_res_acid(bool calc_unid, bool items)
 {
     int res = 0;
-    if (!transform_changed_physiology()
+    if (!form_changed_physiology()
         || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
     {
         if (you.species == SP_YELLOW_DRACONIAN)
@@ -5505,7 +5505,7 @@ bool player::can_swim(bool permanently) const
     // Transforming could be fatal if it would cause unequipment of
     // stat-boosting boots or heavy armour.
     return ((species == SP_MERFOLK || species == SP_GREY_DRACONIAN
-             || !permanently) && transform_can_swim());
+             || !permanently) && form_can_swim());
 }
 
 int player::visible_igrd(const coord_def &where) const
@@ -5977,7 +5977,7 @@ int player::res_elec() const
 int player::res_water_drowning() const
 {
     return (is_unbreathing()
-            || (you.species == SP_MERFOLK && !transform_changed_physiology()));
+            || (you.species == SP_MERFOLK && !form_changed_physiology()));
 }
 
 int player::res_asphyx() const

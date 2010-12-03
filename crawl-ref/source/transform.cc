@@ -35,53 +35,43 @@
 
 static void _extra_hp(int amount_extra);
 
-bool transform_can_wield(transformation_type trans)
+bool form_can_wield(transformation_type trans)
 {
     return (trans == TRAN_NONE
             || trans == TRAN_STATUE
             || trans == TRAN_LICH);
 }
 
-bool transform_can_wield()
-{
-    return (transform_can_wield(static_cast<transformation_type>(
-                                you.attribute[ATTR_TRANSFORMATION])));
-}
-
-bool transform_can_fly(transformation_type trans)
+bool form_can_fly(transformation_type trans)
 {
     return (trans == TRAN_DRAGON || trans == TRAN_BAT);
 }
 
-bool transform_can_fly()
-{
-    return (transform_can_fly(static_cast<transformation_type>(
-                              you.attribute[ATTR_TRANSFORMATION])));
-}
-
-bool transform_can_swim(transformation_type trans)
+bool form_can_swim(transformation_type trans)
 {
     return(trans == TRAN_ICE_BEAST
            || you.species == SP_GREY_DRACONIAN || you.species == SP_MERFOLK
               && (trans == TRAN_NONE || trans == TRAN_BLADE_HANDS));
 }
 
-bool transform_can_swim()
+bool form_can_butcher_barehanded(transformation_type trans)
 {
-    return (transform_can_swim(static_cast<transformation_type>(
-                               you.attribute[ATTR_TRANSFORMATION])));
+    return (trans == TRAN_BLADE_HANDS || trans == TRAN_DRAGON
+            || trans == TRAN_ICE_BEAST);
 }
 
-bool transform_allows_wearing_item(const item_def& item)
+// Used to mark transformations which override species/mutation intrinsics.
+// If phys_scales is true then we're checking to see if the form keeps
+// the physical (AC/EV) properties from scales... the special intrinsic
+// features (resistances, etc.) are lost in those forms however.
+bool form_changed_physiology(bool phys_scales, transformation_type trans)
 {
-    return (
-        transform_allows_wearing_item(item,
-                                      static_cast<transformation_type>(
-                                          you.attribute[ATTR_TRANSFORMATION])));
+    return (trans != TRAN_NONE && trans != TRAN_BLADE_HANDS
+            && (!phys_scales
+                || (trans != TRAN_LICH && trans != TRAN_STATUE)));
 }
 
-bool transform_allows_wearing_item(const item_def& item,
-                                   transformation_type transform)
+bool form_can_wear_item(const item_def& item, transformation_type trans)
 {
     bool rc = true;
 
@@ -89,7 +79,7 @@ bool transform_allows_wearing_item(const item_def& item,
     {
         // Everything but bats can wear all jewellery; bats and pigs can
         // only wear amulets.
-        if ((transform == TRAN_BAT || transform == TRAN_PIG)
+        if ((trans == TRAN_BAT || trans == TRAN_PIG)
              && !jewellery_is_amulet(item))
         {
             rc = false;
@@ -101,7 +91,7 @@ bool transform_allows_wearing_item(const item_def& item,
         const equipment_type eqslot = get_armour_slot(item);
         const bool is_soft_helmet   = is_helmet(item) && !is_hard_helmet(item);
 
-        switch (transform)
+        switch (trans)
         {
         // Some forms can wear everything.
         case TRAN_NONE:
@@ -135,7 +125,7 @@ bool transform_allows_wearing_item(const item_def& item,
 
         default:                // Bug-catcher.
             mprf(MSGCH_ERROR, "Unknown transformation type %d in "
-                 "transform_allows_wearing_item",
+                 "form_can_wear_item",
                  you.attribute[ATTR_TRANSFORMATION]);
             break;
         }
@@ -148,7 +138,7 @@ static std::set<equipment_type>
 _init_equipment_removal(transformation_type trans)
 {
     std::set<equipment_type> result;
-    if (!transform_can_wield(trans) && you.weapon())
+    if (!form_can_wield(trans) && you.weapon())
         result.insert(EQ_WEAPON);
 
     // Liches can't wield holy weapons.
@@ -163,7 +153,7 @@ _init_equipment_removal(transformation_type trans)
     {
         const equipment_type eq = static_cast<equipment_type>(i);
         const item_def *pitem = you.slot_item(eq, true);
-        if (pitem && !transform_allows_wearing_item(*pitem, trans))
+        if (pitem && !form_can_wear_item(*pitem, trans))
             result.insert(eq);
     }
     return (result);
@@ -457,16 +447,16 @@ bool transform(int pow, transformation_type which_trans, bool force,
     dungeon_feature_type feat = env.grid(you.pos());
 
     if (feat == DNGN_DEEP_WATER && you.swimming()
-        && !transform_can_fly(which_trans) && !transform_can_swim(which_trans))
+        && !form_can_fly(which_trans) && !form_can_swim(which_trans))
     {
         if (!force)
             mpr("You would drown in your new form.");
         return (false);
     }
 
-    if ((feat == DNGN_DEEP_WATER && !transform_can_swim(which_trans)
+    if ((feat == DNGN_DEEP_WATER && !form_can_swim(which_trans)
          || feat == DNGN_LAVA)
-         && transform_can_fly() && !transform_can_fly(which_trans))
+         && form_can_fly() && !form_can_fly(which_trans))
     {
         if (!force)
             mprf("You would %s in your new form.",
@@ -544,10 +534,10 @@ bool transform(int pow, transformation_type which_trans, bool force,
     const char* tran_name = "buggy";
     std::string msg;
 
-    if (was_swimming && transform_can_fly(which_trans))
+    if (was_swimming && form_can_fly(which_trans))
         msg = "You fly out of the water as you turn into ";
-    else if (transform_can_fly(previous_trans)
-             && transform_can_swim(which_trans)
+    else if (form_can_fly(previous_trans)
+             && form_can_swim(which_trans)
              && feat_is_water(grd(you.pos())))
         msg = "As you dive into the water, you turn into ";
     else
@@ -749,11 +739,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
     return (true);
 }
 
-bool transform_can_butcher_barehanded(transformation_type tt)
-{
-    return (tt == TRAN_BLADE_HANDS || tt == TRAN_DRAGON || tt == TRAN_ICE_BEAST);
-}
-
 void untransform(bool skip_wielding, bool skip_move)
 {
     const flight_type old_flight = you.flight_mode();
@@ -861,7 +846,7 @@ void untransform(bool skip_wielding, bool skip_move)
         move_player_to_grid(you.pos(), false, true);
     }
 
-    if (transform_can_butcher_barehanded(old_form))
+    if (form_can_butcher_barehanded(old_form))
         stop_butcher_delay();
 
     // If nagas wear boots while transformed, they fall off again afterwards:
@@ -969,17 +954,4 @@ static void _extra_hp(int amount_extra) // must also set in calc_hp
     you.hp /= 10;
 
     deflate_hp(you.hp_max, false);
-}
-
-// Used to mark transformations which override species/mutation intrinsics.
-// If phys_scales is true then we're checking to see if the form keeps
-// the physical (AC/EV) properties from scales... the special intrinsic
-// features (resistances, etc.) are lost in those forms however.
-bool transform_changed_physiology(bool phys_scales)
-{
-    return (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE
-            && you.attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS
-            && (!phys_scales
-                || (you.attribute[ATTR_TRANSFORMATION] != TRAN_LICH
-                    && you.attribute[ATTR_TRANSFORMATION] != TRAN_STATUE)));
 }
