@@ -57,3 +57,43 @@ bool unlock_file(int fd)
     return !fcntl(fd, F_SETLK, &fl);
 #endif
 }
+
+#ifdef TARGET_OS_WINDOWS
+# ifndef UNIX
+// implementation by Richard W.M. Jones
+// He claims this is the equivalent to fsync(), reading the MSDN doesn't seem
+// to show that vital metadata is indeed flushed, others report that at least
+// non-vital isn't.
+int fdatasync(int fd)
+{
+    HANDLE h = (HANDLE)_get_osfhandle(fd);
+
+    if (h == INVALID_HANDLE_VALUE)
+    {
+        errno = EBADF;
+        return -1;
+    }
+
+    if (!FlushFileBuffers(h))
+    {
+        /* Translate some Windows errors into rough approximations of Unix
+         * errors.  MSDN is useless as usual - in this case it doesn't
+         * document the full range of errors.
+         */
+        switch (GetLastError())
+        {
+        /* eg. Trying to fsync a tty. */
+        case ERROR_INVALID_HANDLE:
+            errno = EINVAL;
+            break;
+
+        default:
+            errno = EIO;
+        }
+        return -1;
+    }
+
+    return 0;
+}
+# endif
+#endif
