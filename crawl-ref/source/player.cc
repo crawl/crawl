@@ -1524,8 +1524,17 @@ int player_res_acid(bool calc_unid, bool items)
 
     if (items)
     {
-        if (wearing_amulet(AMU_RESIST_CORROSION, calc_unid))
-            res++;
+        // We can't use wearing_amulet here, because it would also count
+        // the cloak of preservation.
+        if (player_wearing_slot(EQ_AMULET))
+        {
+            const item_def& amu(you.inv[you.equip[EQ_AMULET]]);
+            if (amu.sub_type == AMU_RESIST_CORROSION
+                && (calc_unid || item_type_known(amu)))
+            {
+                res++;
+            }
+        }
 
         if (player_equip_ego_type(EQ_CLOAK, SPARM_PRESERVATION))
             res++;
