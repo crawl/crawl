@@ -214,6 +214,9 @@ static void _zotdef_danger_msg(const char *msg)
 
 void hydra_wave(int power)
 {
+#ifdef DEBUG_WAVE
+    mpr("HYDRA WAVE");
+#endif
     monster_type hydras[] = {MONS_HYDRA};
     monster_type boss[] = {MONS_LERNAEAN_HYDRA};
     _zotdef_fill_from_list(hydras, 4, power); // 66% full at power 12
