@@ -4790,17 +4790,12 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
     // kind of wallification it wants.
     const bool dis_wallify = place.map.has_tag("dis");
 
+    dprf("Wall builder: %s.", dis_wallify ? "Dis" : "Normal");
+
     const int v1x = place.pos.x;
     const int v1y = place.pos.y;
     const int v2x = place.pos.x + place.size.x - 1;
     const int v2y = place.pos.y + place.size.y - 1;
-
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS,
-            "Vault: (%d,%d)-(%d,%d); Dis: %s",
-            v1x, v1y, v2x, v2y,
-            dis_wallify? "yes" : "no");
-#endif
 
     if (dis_wallify)
     {
