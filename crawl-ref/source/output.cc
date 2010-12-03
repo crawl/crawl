@@ -1182,9 +1182,6 @@ int equip_name_to_slot(const char *s)
 // Take maximum possible level into account.
 static const char* _determine_colour_string(int level, int max_level)
 {
-    if (level > 3)
-        level = 3;
-
     switch (level)
     {
     case 3:
