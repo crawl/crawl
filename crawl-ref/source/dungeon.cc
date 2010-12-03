@@ -3190,6 +3190,17 @@ void dgn_place_feature_at_random_floor_square(dungeon_feature_type feat,
 // Create randomly-placed stone stairs.
 void dgn_place_stone_stairs(bool maybe_place_hatches)
 {
+    const int stair_start = DNGN_STONE_STAIRS_DOWN_I;
+    const int stair_count = DNGN_ESCAPE_HATCH_UP - stair_start + 1;
+
+    FixedVector < bool, stair_count > existing;
+
+    existing.init(false);
+
+    for (rectangle_iterator ri(0); ri; ++ri)
+        if (grd(*ri) >= stair_start && grd(*ri) < stair_start + stair_count)
+            existing[grd(*ri) - stair_start] = true;
+
     int pair_count = 3;
 
     if (maybe_place_hatches && coinflip())
@@ -3197,10 +3208,13 @@ void dgn_place_stone_stairs(bool maybe_place_hatches)
 
     for (int i = 0; i < pair_count; ++i)
     {
-        dgn_place_feature_at_random_floor_square(
-            static_cast<dungeon_feature_type>(DNGN_STONE_STAIRS_DOWN_I + i));
-        dgn_place_feature_at_random_floor_square(
-            static_cast<dungeon_feature_type>(DNGN_STONE_STAIRS_UP_I + i));
+        if (!existing[i])
+            dgn_place_feature_at_random_floor_square(
+                static_cast<dungeon_feature_type>(DNGN_STONE_STAIRS_DOWN_I + i));
+
+        if (!existing[DNGN_STONE_STAIRS_UP_I - stair_start + i])
+            dgn_place_feature_at_random_floor_square(
+                static_cast<dungeon_feature_type>(DNGN_STONE_STAIRS_UP_I + i));
     }
 }
 
@@ -4713,9 +4727,6 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
                               bool build_only, bool check_collisions,
                               bool make_no_exits, const coord_def &where)
 {
-    FixedVector < bool, 10 > stair_exist;
-    int stx, sty;
-
     if (dgn_check_connectivity && !dgn_zones)
         dgn_zones = dgn_count_disconnected_zones(false);
 
@@ -4816,53 +4827,7 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
         _dig_vault_loose(place, target_connections);
     }
 
-    coord_def pos;
-
-    for (stx = 0; stx < 10; stx++)
-        stair_exist[stx] = false;
-
-    for (stx = 0; stx < GXM; stx++)
-        for (sty = 0; sty < GYM; sty++)
-            if (grd[stx][sty] >= DNGN_STONE_STAIRS_DOWN_I
-                && grd[stx][sty] <= DNGN_ESCAPE_HATCH_UP)
-            {
-                stair_exist[grd[stx][sty] - DNGN_STONE_STAIRS_DOWN_I] = true;
-            }
-
-    for (int j = 0; j < (coinflip()? 4 : 3); j++)
-        for (int i = 0; i < 2; i++)
-        {
-            const dungeon_feature_type stair
-                = static_cast<dungeon_feature_type>(
-                   j + ((i == 0) ? DNGN_STONE_STAIRS_DOWN_I
-                                 : DNGN_STONE_STAIRS_UP_I));
-
-            if (stair_exist[stair - DNGN_STONE_STAIRS_DOWN_I])
-                continue;
-
-            int tries = 10000;
-            do
-                pos = random_in_bounds();
-            while ((grd(pos) != DNGN_FLOOR
-                    || (!is_layout && pos.x >= v1x && pos.x <= v2x
-                        && pos.y >= v1y && pos.y <= v2y))
-                   && tries-- > 0);
-
-
-            if (tries <= 0)
-            {
-#ifdef DEBUG_DIAGNOSTICS
-                dump_map("debug.map", true);
-                end(1, false,
-                    "Failed to create level: vault stairs for %s "
-                    "(layout: %s) failed",
-                    place.map.name.c_str(), is_layout? "yes" : "no");
-#endif
-                pos = you.pos();
-            }
-
-            grd(pos) = stair;
-        }
+    dgn_place_stone_stairs(true);
 
     return (true);
 }                               // end build_vaults()
