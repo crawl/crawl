@@ -1636,7 +1636,7 @@ static std::vector<formatted_string> _get_overview_resistances(
     const int rinvi = you.can_see_invisible(calc_unid);
     const int rward = wearing_amulet(AMU_WARDING, calc_unid);
     const int rcons = player_item_conserve(calc_unid);
-    const int rcorr = player_res_acid(calc_unid);
+    const int rcorr = player_res_corr(calc_unid);
     const int rclar = player_mental_clarity(calc_unid);
     const int rspir = player_spirit_shield(calc_unid);
     snprintf(buf, sizeof buf,

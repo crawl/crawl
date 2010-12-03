@@ -1504,6 +1504,14 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
     return (rc);
 }
 
+int player_res_corr(bool calc_unid, bool items)
+{
+    if (items && wearing_amulet(AMU_RESIST_CORROSION, calc_unid))
+        return 1;
+    else
+        return 0;
+}
+
 int player_res_acid(bool calc_unid, bool items)
 {
     int res = 0;

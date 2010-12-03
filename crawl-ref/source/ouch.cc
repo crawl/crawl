@@ -376,13 +376,6 @@ static void _item_corrode(int slot)
         return;
     }
 
-    // mutations:
-    if (player_mutation_level(MUT_YELLOW_SCALES) == 3 && !one_chance_in(10))
-    {
-        dprf("Yellow scales protect.");
-        return;
-    }
-
     int how_rusty = ((item.base_type == OBJ_WEAPONS) ? item.plus2 : item.plus);
     // Already very rusty.
     if (how_rusty < -5)
