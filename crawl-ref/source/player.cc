@@ -1527,6 +1527,9 @@ int player_res_acid(bool calc_unid, bool items)
     if (player_mutation_level(MUT_YELLOW_SCALES) == 3)
         res++;
 
+    if (res > 3)
+            res = 3;
+
     return (res);
 }
 
