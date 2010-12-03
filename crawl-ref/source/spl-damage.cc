@@ -1844,7 +1844,7 @@ bool cast_sandblast(int pow, bolt &beam)
 
 static void _set_tornado_durations(int powc)
 {
-    int dur = 50 + powc / 5;
+    int dur = 40 + powc / 6;
     you.duration[DUR_TORNADO] = dur;
     you.duration[DUR_LEVITATION] =
         std::max(dur, you.duration[DUR_LEVITATION]);
