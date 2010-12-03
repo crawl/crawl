@@ -284,8 +284,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     const dungeon_feature_type new_grid = env.grid(you.pos());
 
     // Terrain effects.
-    if (!(you.airborne() || you.can_cling_to(you.pos()))
-        && is_feat_dangerous(new_grid))
+    if (is_feat_dangerous(new_grid) && !you.can_cling_to(you.pos()))
     {
         // Lava and dangerous deep water (ie not merfolk).
         const coord_def& entry = (stepped) ? old_pos : you.pos();
