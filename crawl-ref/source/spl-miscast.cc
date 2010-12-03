@@ -719,7 +719,7 @@ static bool _has_hair(actor* target)
     if (target->atype() == ACT_MONSTER)
         return (false);
 
-    return (!transform_changed_physiology() && you.species != SP_GHOUL
+    return (!form_changed_physiology() && you.species != SP_GHOUL
             && you.species != SP_KENKU && !player_genus(GENPC_DRACONIAN));
 }
 

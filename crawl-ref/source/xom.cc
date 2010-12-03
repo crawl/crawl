@@ -2800,7 +2800,7 @@ static void _get_hand_type(std::string &hand, bool &can_plural)
     hand_vec.push_back(you.hand_name(false, &plural));
     plural_vec.push_back(plural);
 
-    if (you.species != SP_NAGA || transform_changed_physiology())
+    if (you.species != SP_NAGA || form_changed_physiology())
     {
         item_def* item;
         if ((item = _tran_get_eq(EQ_BOOTS)) && item->sub_type == ARM_BOOTS)
@@ -2819,20 +2819,20 @@ static void _get_hand_type(std::string &hand, bool &can_plural)
         plural_vec.push_back(true);
     }
     else if (you.species != SP_MUMMY && !player_mutation_level(MUT_BEAK)
-             || transform_changed_physiology())
+             || form_changed_physiology())
     {
         hand_vec.push_back("nose");
         plural_vec.push_back(false);
     }
 
     if (transform == TRAN_BAT
-        || you.species != SP_MUMMY && !transform_changed_physiology())
+        || you.species != SP_MUMMY && !form_changed_physiology())
     {
         hand_vec.push_back("ear");
         plural_vec.push_back(true);
     }
 
-    if (!transform_changed_physiology())
+    if (!form_changed_physiology())
     {
         hand_vec.push_back("elbow");
         plural_vec.push_back(true);

@@ -389,11 +389,8 @@ void stop_butcher_delay()
 
 void maybe_clear_weapon_swap()
 {
-    if (transform_can_wield(static_cast<transformation_type>(
-                                    you.attribute[ATTR_TRANSFORMATION])))
-    {
+    if (form_can_wield())
         you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
-    }
 }
 
 void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe,

@@ -282,10 +282,7 @@ static bool _find_butchering_implement(int &butcher_tool, bool gloved_butcher)
     }
     else if (item_slot == PROMPT_GOT_SPECIAL)
     {
-        if (you.has_claws()
-            || transform_can_butcher_barehanded(
-                    static_cast<transformation_type>(
-                        you.attribute[ATTR_TRANSFORMATION])))
+        if (you.has_claws() || form_can_butcher_barehanded())
         {
             butcher_tool = -1;
             return (true);
@@ -498,7 +495,7 @@ bool butchery(int which_corpse, bool bottle_blood)
     bool teeth_butcher    = (you.has_usable_fangs() == 3
                              && you.species != SP_VAMPIRE);
 
-    bool barehand_butcher = (transform_can_butcher_barehanded(transform)
+    bool barehand_butcher = (form_can_butcher_barehanded(transform)
                                  || you.has_claws())
                              && !player_wearing_slot(EQ_GLOVES);
 

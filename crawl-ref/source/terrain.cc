@@ -1300,7 +1300,7 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
     coord_def empty;
 
     if (you.species == SP_MERFOLK && terrain == DNGN_DEEP_WATER
-        && (!transform_can_swim() || !you.fishtail)
+        && (!form_can_swim() || !you.fishtail)
         && !you.transform_uncancellable)
     {
         // These can happen when we enter deep water directly -- bwr
