@@ -402,7 +402,7 @@ void bear_wave(int power)
 #ifdef DEBUG_WAVE
     mpr("BEAR WAVE");
 #endif
-    monster_type bears[] ={MONS_BEAR, MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR,
+    monster_type bears[] = {MONS_BEAR, MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR,
                  MONS_BLACK_BEAR};
     monster_type boss[] = {MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR};
     _zotdef_fill_from_list(bears, 0, power); // full
