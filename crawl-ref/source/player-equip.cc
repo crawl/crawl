@@ -560,7 +560,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
 
                 case SPWPN_DRAGON_SLAYING:
                     mpr(player_genus(GENPC_DRACONIAN)
-                        || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
+                        || you.form == TRAN_DRAGON
                             ? "You feel a sudden desire to commit suicide."
                             : "You feel a sudden desire to slay dragons!");
                     break;

@@ -22,7 +22,8 @@ enum tag_minor_version
     TAG_MINOR_SLOW_RESKILL = 12, // Ashenzari progressive reskilling
     TAG_MINOR_RUNE_SUBST   = 13, // Removal of stored rune_subst.
     TAG_MINOR_NO_CSTRINGS  = 14, // No const-length strings in saves.
-    TAG_MINOR_VERSION      = 14, // Current version.  (Keep equal to max.)
+    TAG_MINOR_YOU_FORM     = 15, // Give transformations a field on their own.
+    TAG_MINOR_VERSION      = 15, // Current version.  (Keep equal to max.)
 };
 
 #endif

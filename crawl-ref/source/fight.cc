@@ -1028,7 +1028,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
         aux_attack = aux_verb = "punch";
         aux_damage = 5 + you.skills[SK_UNARMED_COMBAT] / 3;
 
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+        if (you.form == TRAN_BLADE_HANDS)
         {
             aux_verb = "slash";
             aux_damage += 6;
@@ -1086,10 +1086,10 @@ static bool _tran_forbid_aux_attack(unarmed_attack_type atk)
     case UNAT_KICK:
     case UNAT_HEADBUTT:
     case UNAT_PUNCH:
-        return (you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT);
+        return (you.form == TRAN_ICE_BEAST
+                || you.form == TRAN_DRAGON
+                || you.form == TRAN_SPIDER
+                || you.form == TRAN_BAT);
 
     default:
         return (false);
@@ -1819,9 +1819,9 @@ int melee_attack::player_weapon_type_modify(int damage)
 
     // Take transformations into account, if no weapon is wielded.
     if (weap_type == WPN_UNARMED
-        && you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
+        && you.form != TRAN_NONE)
     {
-        switch (you.attribute[ATTR_TRANSFORMATION])
+        switch (you.form)
         {
         case TRAN_SPIDER:
         case TRAN_BAT:
@@ -1879,6 +1879,8 @@ int melee_attack::player_weapon_type_modify(int damage)
                 if (coinflip())
                     attack_verb = "trample";
             }
+            break;
+        case TRAN_NONE:
             break;
         } // transformations
 
@@ -4015,7 +4017,7 @@ int melee_attack::player_to_hit(bool random_factor)
             your_to_hit += maybe_random2(you.dex(), random_factor);
         }
 
-        switch (you.attribute[ATTR_TRANSFORMATION])
+        switch (you.form)
         {
         case TRAN_SPIDER:
             your_to_hit += maybe_random2(10, random_factor);
@@ -4038,8 +4040,8 @@ int melee_attack::player_to_hit(bool random_factor)
         case TRAN_LICH:
             your_to_hit += maybe_random2(10, random_factor);
             break;
+        case TRAN_PIG:
         case TRAN_NONE:
-        default:
             break;
         }
     }
@@ -4217,9 +4219,9 @@ int melee_attack::player_calc_base_unarmed_damage()
         damage = 0;
     }
 
-    if (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
+    if (you.form)
     {
-        switch (you.attribute[ATTR_TRANSFORMATION])
+        switch (you.form)
         {
         case TRAN_SPIDER:
             damage = 5;

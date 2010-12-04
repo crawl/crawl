@@ -178,7 +178,7 @@ void hogs_to_humans()
     }
 
     // Revert the player as well.
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_PIG)
+    if (you.form == TRAN_PIG)
         untransform();
 }
 

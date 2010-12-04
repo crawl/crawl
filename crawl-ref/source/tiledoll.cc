@@ -270,7 +270,7 @@ void fill_doll_equipment(dolls_data &result)
     if (result.parts[TILEP_PART_HAND1] == TILEP_SHOW_EQUIP)
     {
         const int item = you.equip[EQ_WEAPON];
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+        if (you.form == TRAN_BLADE_HANDS)
             result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND;
         else if (item == -1)
             result.parts[TILEP_PART_HAND1] = 0;
@@ -281,7 +281,7 @@ void fill_doll_equipment(dolls_data &result)
     if (result.parts[TILEP_PART_HAND2] == TILEP_SHOW_EQUIP)
     {
         const int item = you.equip[EQ_SHIELD];
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+        if (you.form == TRAN_BLADE_HANDS)
             result.parts[TILEP_PART_HAND2] = TILEP_HAND2_BLADEHAND;
         else if (item == -1)
             result.parts[TILEP_PART_HAND2] = 0;

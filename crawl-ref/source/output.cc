@@ -400,7 +400,7 @@ static void _print_stats_wp(int y)
 
         text = wpn.name(DESC_INVENTORY, true, false, true);
     }
-    else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+    else if (you.form == TRAN_BLADE_HANDS)
     {
         col = RED;
         text = "Blade Hands";
@@ -1258,7 +1258,7 @@ static void _print_overview_screen_equip(column_composer& cols,
             snprintf(buf, sizeof buf, "%s  - Unarmed", slot);
         }
         else if (e_order[i] == EQ_WEAPON
-                 && you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+                 && you.form == TRAN_BLADE_HANDS)
         {
             snprintf(buf, sizeof buf, "%s  - Blade Hands", slot);
         }

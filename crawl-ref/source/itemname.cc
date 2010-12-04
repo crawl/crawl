@@ -2835,7 +2835,7 @@ bool is_useless_item(const item_def &item, bool temp)
 
         if (you.undead_or_demonic() && is_holy_item(item))
         {
-            if (!temp && you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH
+            if (!temp && you.form == TRAN_LICH
                 && you.species != SP_DEMONSPAWN)
             {
                 return (false);
@@ -3056,7 +3056,7 @@ bool is_useless_item(const item_def &item, bool temp)
         if (item.sub_type == FOOD_CHUNK
             && (you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
                 || you.has_spell(SPELL_SIMULACRUM)
-                || !temp && you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH))
+                || !temp && you.form == TRAN_LICH))
         {
             return (false);
         }

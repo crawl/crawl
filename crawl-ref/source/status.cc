@@ -684,7 +684,7 @@ static void _describe_transform(status_info* inf)
     const bool vampbat = (you.species == SP_VAMPIRE && player_in_bat_form());
     const bool expire  = dur_expiring(DUR_TRANSFORMATION) && !vampbat;
 
-    switch (you.attribute[ATTR_TRANSFORMATION])
+    switch (you.form)
     {
     case TRAN_BAT:
         inf->light_text     = "Bat";
@@ -728,6 +728,8 @@ static void _describe_transform(status_info* inf)
         inf->light_text = "Statue";
         inf->short_text = "statue-form";
         inf->long_text  = "You are a statue.";
+        break;
+    case TRAN_NONE:
         break;
     }
 

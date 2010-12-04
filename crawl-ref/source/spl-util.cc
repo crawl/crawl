@@ -1146,7 +1146,7 @@ bool spell_is_empowered(spell_type spell)
         break;
     case SPELL_STONESKIN:
         if (you.duration[DUR_TRANSFORMATION] > 0
-            && you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE
+            && you.form == TRAN_STATUE
             && you.duration[DUR_STONESKIN] < 1)
         {
             return (true);
@@ -1154,7 +1154,7 @@ bool spell_is_empowered(spell_type spell)
         break;
     case SPELL_OZOCUBUS_ARMOUR:
         if (you.duration[DUR_TRANSFORMATION] > 0
-            && you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST
+            && you.form == TRAN_ICE_BEAST
             && you.duration[DUR_ICY_ARMOUR] < 1)
         {
             return (true);

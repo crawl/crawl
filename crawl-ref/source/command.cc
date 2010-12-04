@@ -650,7 +650,7 @@ void list_weapons(void)
     }
     else
     {
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+        if (you.form == TRAN_BLADE_HANDS)
             wstring += "    blade " + blade_parts(true);
         else if (!you_tran_can_wear(EQ_WEAPON))
             wstring += "    (currently unavailable)";

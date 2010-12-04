@@ -516,9 +516,9 @@ void cast_stoneskin(int pow)
         return;
     }
 
-    if (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE
-        && you.attribute[ATTR_TRANSFORMATION] != TRAN_STATUE
-        && you.attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS)
+    if (you.form != TRAN_NONE
+        && you.form != TRAN_STATUE
+        && you.form != TRAN_BLADE_HANDS)
     {
         mpr("This spell does not affect your current form.");
         return;
@@ -534,7 +534,7 @@ void cast_stoneskin(int pow)
         mpr("Your skin feels harder.");
     else
     {
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE)
+        if (you.form == TRAN_STATUE)
             mpr("Your stone body feels more resilient.");
         else
             mpr("Your skin hardens.");

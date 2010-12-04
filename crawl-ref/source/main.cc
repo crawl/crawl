@@ -2164,7 +2164,7 @@ static void _decrement_durations()
 
     // FIXME: [ds] Remove this once we've ensured durations can never go < 0?
     if (you.duration[DUR_TRANSFORMATION] <= 0
-        && you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
+        && you.form != TRAN_NONE)
     {
         you.duration[DUR_TRANSFORMATION] = 1;
     }

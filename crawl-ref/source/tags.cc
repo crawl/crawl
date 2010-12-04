@@ -1020,6 +1020,7 @@ static void tag_construct_you(writer &th)
     marshallShort(th, you.hunger);
     marshallBoolean(th, you.fishtail);
     marshallInt(th, you.earth_attunement);
+    marshallInt(th, you.form);
 
     // how many you.equip?
     marshallByte(th, NUM_EQUIP);
@@ -1616,6 +1617,10 @@ static void tag_read_you(reader &th, int minorVersion)
     if (minorVersion >= TAG_MINOR_EARTH_ATTUNE)
 #endif
     you.earth_attunement= unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 31
+    if (minorVersion >= TAG_MINOR_YOU_FORM)
+#endif
+    you.form            = static_cast<transformation_type>(unmarshallInt(th));
 
     // How many you.equip?
     count = unmarshallByte(th);
@@ -1867,6 +1872,9 @@ static void tag_read_you(reader &th, int minorVersion)
                 for (i = 0; i < count; i++)
                     you.dcounters[t][ae][i] = unmarshallInt(th);
     }
+    if (minorVersion < TAG_MINOR_YOU_FORM)
+        you.form = static_cast<transformation_type>(
+                   you.attribute[ATTR_OBSOLETE_TRANSFORMATION]);
 #endif
 }
 

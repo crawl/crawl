@@ -133,7 +133,7 @@ bool form_can_wear_item(const item_def& item, transformation_type trans)
         default:                // Bug-catcher.
             mprf(MSGCH_ERROR, "Unknown transformation type %d in "
                  "form_can_wear_item",
-                 you.attribute[ATTR_TRANSFORMATION]);
+                 you.form);
             break;
         }
     }
@@ -331,8 +331,7 @@ size_type transform_size(int psize)
 
 size_type player::transform_size(int psize) const
 {
-    const int transform = attribute[ATTR_TRANSFORMATION];
-    switch (transform)
+    switch (you.form)
     {
     case TRAN_SPIDER:
     case TRAN_BAT:
@@ -370,7 +369,7 @@ static bool _abort_or_fizzle(bool just_check)
 
 monster_type transform_mons()
 {
-    switch(you.attribute[ATTR_TRANSFORMATION])
+    switch(you.form)
     {
     case TRAN_SPIDER:
         return MONS_SPIDER;
@@ -435,7 +434,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
                bool just_check)
 {
     transformation_type previous_trans = static_cast<transformation_type>(
-                                         you.attribute[ATTR_TRANSFORMATION]);
+                                         you.form);
     bool was_in_water = you.in_water();
     const flight_type was_flying = you.flight_mode();
 
@@ -621,7 +620,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
         break;
 
     case TRAN_NONE:
-    case NUM_TRANSFORMATIONS:
         break;
     default:
         msg += "something buggy!";
@@ -655,7 +653,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
     _remove_equipment(rem_stuff);
 
     // Update your status.
-    you.attribute[ATTR_TRANSFORMATION] = which_trans;
+    you.form = which_trans;
     you.set_duration(DUR_TRANSFORMATION, dur);
     update_player_symbol();
 
@@ -755,13 +753,12 @@ void untransform(bool skip_wielding, bool skip_move)
     you.wield_change        = true;
 
     // Must be unset first or else infinite loops might result. -- bwr
-    const transformation_type old_form =
-        static_cast<transformation_type>(you.attribute[ ATTR_TRANSFORMATION ]);
+    const transformation_type old_form = you.form;
 
     // We may have to unmeld a couple of equipment types.
     std::set<equipment_type> melded = _init_equipment_removal(old_form);
 
-    you.attribute[ATTR_TRANSFORMATION] = TRAN_NONE;
+    you.form = TRAN_NONE;
     you.duration[DUR_TRANSFORMATION]   = 0;
     update_player_symbol();
 
@@ -926,7 +923,7 @@ bool can_equip(equipment_type use_which, bool ignore_temporary)
 
     if (!ignore_temporary)
     {
-        switch (you.attribute[ATTR_TRANSFORMATION])
+        switch (you.form)
         {
         case TRAN_NONE:
         case TRAN_LICH:

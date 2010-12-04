@@ -300,8 +300,8 @@ void moveto_location_effects(dungeon_feature_type old_feat,
         {
             if (feat_is_water(new_grid) // We're entering water
                 // We're not transformed, or with a form compatible with tail
-                && (you.attribute[ATTR_TRANSFORMATION] == TRAN_NONE
-                    || you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS))
+                && (you.form == TRAN_NONE
+                    || you.form == TRAN_BLADE_HANDS))
             {
                 merfolk_start_swimming(stepped);
             }
@@ -438,14 +438,14 @@ bool player_likes_water(bool permanently)
 
 bool player_in_bat_form()
 {
-    return (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT);
+    return (you.form == TRAN_BAT);
 }
 
 bool player_can_open_doors()
 {
     // Bats and pigs can't open/close doors.
-    return (you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT
-            && you.attribute[ATTR_TRANSFORMATION] != TRAN_PIG);
+    return (you.form != TRAN_BAT
+            && you.form != TRAN_PIG);
 }
 
 bool player_under_penance(void)
@@ -472,7 +472,7 @@ bool is_player_same_species(const int mon, bool transform)
 {
     if (transform)
     {
-        switch (you.attribute[ATTR_TRANSFORMATION])
+        switch (you.form)
         {
         // Unique monsters.
         case TRAN_BAT:
@@ -489,7 +489,9 @@ bool is_player_same_species(const int mon, bool transform)
             return (mons_genus(mon) == MONS_DRAGON); // Includes all drakes.
         case TRAN_PIG:
             return (mons_genus(mon) == MONS_HOG);
-        default:
+        case TRAN_STATUE:
+        case TRAN_BLADE_HANDS:
+        case TRAN_NONE:
             break; // Check real (non-transformed) form.
         }
     }
@@ -688,8 +690,8 @@ bool you_tran_can_wear(const item_def &item)
 
         if (get_armour_slot(item) == EQ_HELMET
             && !is_hard_helmet(item)
-            && (you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST))
+            && (you.form == TRAN_SPIDER
+                || you.form == TRAN_ICE_BEAST))
         {
             return (true);
         }
@@ -733,14 +735,12 @@ bool you_tran_can_wear(int eq, bool check_mutation)
         }
     }
 
-    const int transform = you.attribute[ATTR_TRANSFORMATION];
-
     // No further restrictions.
-    if (transform == TRAN_NONE || transform == TRAN_LICH)
+    if (you.form == TRAN_NONE || you.form == TRAN_LICH)
         return (true);
 
     // Bats and pigs cannot wear anything except amulets.
-    if ((transform == TRAN_BAT || transform == TRAN_PIG) && eq != EQ_AMULET)
+    if ((you.form == TRAN_BAT || you.form == TRAN_PIG) && eq != EQ_AMULET)
         return (false);
 
     // Everyone else can wear jewellery, at least.
@@ -748,24 +748,24 @@ bool you_tran_can_wear(int eq, bool check_mutation)
         return (true);
 
     // These cannot use anything but jewellery.
-    if (transform == TRAN_SPIDER || transform == TRAN_DRAGON)
+    if (you.form == TRAN_SPIDER || you.form == TRAN_DRAGON)
         return (false);
 
-    if (transform == TRAN_BLADE_HANDS)
+    if (you.form == TRAN_BLADE_HANDS)
     {
         if (eq == EQ_WEAPON || eq == EQ_GLOVES || eq == EQ_SHIELD)
             return (false);
         return (true);
     }
 
-    if (transform == TRAN_ICE_BEAST)
+    if (you.form == TRAN_ICE_BEAST)
     {
         if (eq != EQ_CLOAK)
             return (false);
         return (true);
     }
 
-    if (transform == TRAN_STATUE)
+    if (you.form == TRAN_STATUE)
     {
         if (eq == EQ_WEAPON || eq == EQ_CLOAK || eq == EQ_HELMET)
             return (true);
@@ -1380,20 +1380,22 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
             rf += 2;
 
         // transformations:
-        switch (you.attribute[ATTR_TRANSFORMATION])
+        switch (you.form)
         {
         case TRAN_ICE_BEAST:
             rf--;
             break;
         case TRAN_DRAGON:
         {
-            monster_type form = dragon_form_dragon_type();
-            if (form == MONS_DRAGON)
+            monster_type drag = dragon_form_dragon_type();
+            if (drag == MONS_DRAGON)
                 rf += 2;
-            else if (form == MONS_ICE_DRAGON)
+            else if (drag == MONS_ICE_DRAGON)
                 rf--;
             break;
         }
+        default:
+            break;
         }
     }
 
@@ -1435,7 +1437,7 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
             rc -= 2;
 
         // transformations:
-        switch (you.attribute[ATTR_TRANSFORMATION])
+        switch (you.form)
         {
         case TRAN_ICE_BEAST:
             rc += 3;
@@ -1451,6 +1453,8 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
         }
         case TRAN_LICH:
             rc++;
+            break;
+        default:
             break;
         }
 
@@ -1519,7 +1523,7 @@ int player_res_acid(bool calc_unid, bool items)
 {
     int res = 0;
     if (!form_changed_physiology()
-        || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
+        || you.form == TRAN_DRAGON)
     {
         if (you.species == SP_YELLOW_DRACONIAN)
             res += 2;
@@ -1584,7 +1588,7 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
             re++;
 
         // transformations:
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE)
+        if (you.form == TRAN_STATUE)
             re += 1;
 
         if (you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION])
@@ -1624,7 +1628,7 @@ bool player_control_teleport(bool calc_unid, bool temp, bool items)
 int player_res_torment(bool, bool temp)
 {
     return (player_mutation_level(MUT_TORMENT_RESISTANCE)
-            || you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH
+            || you.form == TRAN_LICH
             || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING
             || (temp &&
                 (20 * player_mutation_level(MUT_STOCHASTIC_TORMENT_RESISTANCE)
@@ -1673,13 +1677,15 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
             rp++;
 
         // transformations:
-        switch (you.attribute[ATTR_TRANSFORMATION])
+        switch (you.form)
         {
         case TRAN_LICH:
         case TRAN_ICE_BEAST:
         case TRAN_STATUE:
         case TRAN_DRAGON:
             rp++;
+            break;
+        default:
             break;
         }
     }
@@ -1725,7 +1731,7 @@ int player_spec_death()
     }
 
     // transformations:
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
+    if (you.form == TRAN_LICH)
         sd++;
 
     return sd;
@@ -1881,7 +1887,7 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
     if (temp)
     {
         // Now, transformations could stop at any time.
-        switch (you.attribute[ATTR_TRANSFORMATION])
+        switch (you.form)
         {
         case TRAN_STATUE:
             pl++;
@@ -1933,11 +1939,11 @@ int player_movement_speed(bool ignore_burden)
     int mv = 10;
 
     // transformations
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER)
+    if (you.form == TRAN_SPIDER)
         mv = 8;
     else if (player_in_bat_form())
         mv = 5; // but allowed minimum is six
-    else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_PIG)
+    else if (you.form == TRAN_PIG)
         mv = 7;
     else if (you.fishtail)
         mv = 6;
@@ -2011,15 +2017,10 @@ int player_speed(void)
     else if (you.duration[DUR_HASTE])
         ps = haste_div(ps);
 
-    switch (you.attribute[ATTR_TRANSFORMATION])
+    if (you.form == TRAN_STATUE)
     {
-    case TRAN_STATUE:
         ps *= 15;
         ps /= 10;
-        break;
-
-    default:
-        break;
     }
 
     return ps;
@@ -2101,9 +2102,9 @@ bool player_effectively_in_light_armour()
 // it just makes the character undead (with the benefits that implies). - bwr
 bool player_is_shapechanged(void)
 {
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_NONE
-        || you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS
-        || you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
+    if (you.form == TRAN_NONE
+        || you.form == TRAN_BLADE_HANDS
+        || you.form == TRAN_LICH)
     {
         return (false);
     }
@@ -2242,14 +2243,8 @@ int player_evasion_bonuses(ev_ignore_type evit)
     evbonus += std::max(0, player_mutation_level(MUT_GELATINOUS_BODY) - 1);
 
     // transformation penalties/bonuses not covered by size alone:
-    switch (you.attribute[ATTR_TRANSFORMATION])
-    {
-    case TRAN_STATUE:
+    if (you.form == TRAN_STATUE)
         evbonus -= 5;                // stiff
-        break;
-    default:
-        break;
-    }
 
     return (evbonus);
 }
@@ -3446,7 +3441,7 @@ int check_stealth(void)
         }
     }
 
-    switch((transformation_type)you.attribute[ATTR_TRANSFORMATION])
+    switch(you.form)
     {
     case TRAN_SPIDER:
         race_mod = 21;
@@ -3474,8 +3469,6 @@ int check_stealth(void)
     case TRAN_LICH:
         race_mod++; // intentionally tiny, lich form is already overpowered
         break;
-    case NUM_TRANSFORMATIONS:
-        ASSERT(false);
     case TRAN_NONE:
         break;
     }
@@ -3533,7 +3526,7 @@ int check_stealth(void)
         else if (!you.can_swim() && !you.extra_balanced())
             stealth /= 2;       // splashy-splashy
     }
-    else if (you.species == SP_CAT && !you.attribute[ATTR_TRANSFORMATION])
+    else if (you.species == SP_CAT && !you.form)
         stealth += 20;  // paws
 
     // Radiating silence is the negative complement of shouting all the
@@ -3889,8 +3882,8 @@ bool extrinsic_amulet_effect(jewellery_type amulet)
         return (you.duration[DUR_CONTROLLED_FLIGHT]
                 || player_genus(GENPC_DRACONIAN)
                 || (you.species == SP_KENKU && you.experience_level >= 5)
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT);
+                || you.form == TRAN_DRAGON
+                || you.form == TRAN_BAT);
     case AMU_CLARITY:
         return player_mental_clarity(true, false);
     case AMU_RESIST_CORROSION:
@@ -4463,7 +4456,7 @@ int get_real_hp(bool trans, bool rotted)
     if (trans)
     {
         // Some transformations give you extra hp.
-        switch (you.attribute[ATTR_TRANSFORMATION])
+        switch (you.form)
         {
         case TRAN_STATUE:
             hitp *= 15;
@@ -4476,6 +4469,8 @@ int get_real_hp(bool trans, bool rotted)
         case TRAN_DRAGON:
             hitp *= 16;
             hitp /= 10;
+            break;
+        default:
             break;
         }
     }
@@ -5192,7 +5187,8 @@ void player::init()
     melded.init(false);
     unrand_reacts   = 0;
 
-    symbol          = MONS_PLAYER;;
+    symbol          = MONS_PLAYER;
+    form            = TRAN_NONE;
 
     for (int i = 0; i < ENDOFPACK; i++)
         inv[i].clear();
@@ -5545,8 +5541,7 @@ bool player::cannot_speak() const
 
 std::string player::shout_verb() const
 {
-    const int transform = attribute[ATTR_TRANSFORMATION];
-    switch (transform)
+    switch (you.form)
     {
     case TRAN_DRAGON:
         return "roar";
@@ -5733,17 +5728,17 @@ int player::armour_class() const
     if (mutation[MUT_ICEMAIL])
         AC += 100 * player_icemail_armour_class();
 
-    if (attribute[ATTR_TRANSFORMATION] == TRAN_NONE
-        || attribute[ATTR_TRANSFORMATION] == TRAN_LICH
-        || attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS
-        || (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
+    if (form == TRAN_NONE
+        || form == TRAN_LICH
+        || form == TRAN_BLADE_HANDS
+        || (form == TRAN_DRAGON
         && player_genus(GENPC_DRACONIAN)))
     {
         // Being a lich doesn't preclude the benefits of hide/scales -- bwr
         //
         // Note: Even though necromutation is a high level spell, it does
         // allow the character full armour (so the bonus is low). -- bwr
-        if (attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
+        if (form == TRAN_LICH)
             AC += (300 + 100 * skills[SK_NECROMANCY] / 6);   // max 7
 
         //jmf: only give:
@@ -5751,7 +5746,7 @@ int player::armour_class() const
         {
            AC += 300 + 100 * (you.experience_level / 3);  // max 12
 
-           if (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
+           if (form == TRAN_DRAGON)
                AC += 700;
         }
         else
@@ -5770,7 +5765,7 @@ int player::armour_class() const
     else
     {
         // transformations:
-        switch (attribute[ATTR_TRANSFORMATION])
+        switch (form)
         {
         case TRAN_NONE:
         case TRAN_BLADE_HANDS:
@@ -5904,7 +5899,7 @@ bool player::is_artificial() const
 
 bool player::is_unbreathing() const
 {
-    switch (you.attribute[ATTR_TRANSFORMATION])
+    switch (you.form)
     {
     case TRAN_LICH:
     case TRAN_STATUE:
@@ -6094,7 +6089,7 @@ int player_res_magic(bool calc_unid, bool temp)
     rm += 30 * player_mutation_level(MUT_MAGIC_RESISTANCE);
 
     // transformations
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH && temp)
+    if (you.form == TRAN_LICH && temp)
         rm += 50;
 
     // Trog's Hand
@@ -6120,8 +6115,8 @@ bool player::slowable() const
 
 flight_type player::flight_mode() const
 {
-    if (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
-        || attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+    if (form == TRAN_DRAGON
+        || form == TRAN_BAT)
     {
         return (FL_FLY);
     }
@@ -6348,13 +6343,13 @@ int player::has_claws(bool allow_tran) const
     if (allow_tran)
     {
         // these transformations bring claws with them
-        if (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
+        if (form == TRAN_DRAGON)
             return (3);
 
         // transformations other than these will override claws
-        if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE
-            && attribute[ATTR_TRANSFORMATION] != TRAN_STATUE
-            && attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
+        if (form != TRAN_NONE
+            && form != TRAN_STATUE
+            && form != TRAN_LICH)
         {
             return (0);
         }
@@ -6376,10 +6371,10 @@ int player::has_talons(bool allow_tran) const
     if (allow_tran)
     {
         // transformations other than these will override talons
-        if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE
-            && attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS
-            && attribute[ATTR_TRANSFORMATION] != TRAN_STATUE
-            && attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
+        if (form != TRAN_NONE
+            && form != TRAN_BLADE_HANDS
+            && form != TRAN_STATUE
+            && form != TRAN_LICH)
         {
             return (0);
         }
@@ -6402,14 +6397,14 @@ int player::has_fangs(bool allow_tran) const
     if (allow_tran)
     {
         // these transformations bring fangs with them
-        if (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
+        if (form == TRAN_DRAGON)
             return (3);
 
         // transformations other than these will override fangs
-        if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE
-            && attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS
-            && attribute[ATTR_TRANSFORMATION] != TRAN_STATUE
-            && attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
+        if (form != TRAN_NONE
+            && form != TRAN_BLADE_HANDS
+            && form != TRAN_STATUE
+            && form != TRAN_LICH)
         {
             return (0);
         }
@@ -6432,14 +6427,14 @@ int player::has_tail(bool allow_tran) const
     if (allow_tran)
     {
         // these transformations bring a tail with them
-        if (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
+        if (form == TRAN_DRAGON)
             return (1);
 
         // transformations other than these will override a tail
-        if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE
-            && attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS
-            && attribute[ATTR_TRANSFORMATION] != TRAN_STATUE
-            && attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
+        if (form != TRAN_NONE
+            && form != TRAN_BLADE_HANDS
+            && form != TRAN_STATUE
+            && form != TRAN_LICH)
         {
             return (0);
         }
@@ -6490,10 +6485,10 @@ int player::has_pseudopods(bool allow_tran) const
     if (allow_tran)
     {
         // transformations other than these will override pseudopods
-        if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE
-            && attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS
-            && attribute[ATTR_TRANSFORMATION] != TRAN_STATUE
-            && attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
+        if (form != TRAN_NONE
+            && form != TRAN_BLADE_HANDS
+            && form != TRAN_STATUE
+            && form != TRAN_LICH)
         {
             return (0);
         }
@@ -6678,10 +6673,9 @@ bool player::can_bleed() const
         return (false);
     }
 
-    const int tran = attribute[ATTR_TRANSFORMATION];
     // The corresponding monsters don't bleed either.
-    if (tran == TRAN_STATUE || tran == TRAN_ICE_BEAST
-        || tran == TRAN_LICH || tran == TRAN_SPIDER)
+    if (you.form == TRAN_STATUE || you.form == TRAN_ICE_BEAST
+        || you.form == TRAN_LICH || you.form == TRAN_SPIDER)
     {
         return (false);
     }
@@ -6709,7 +6703,7 @@ bool player::mutate()
 
 bool player::is_icy() const
 {
-    return (attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST);
+    return (form == TRAN_ICE_BEAST);
 }
 
 bool player::is_fiery() const
@@ -6950,7 +6944,7 @@ void player::goto_place(const level_id &lid)
 void player::check_clinging()
 {
     int walls = 0;
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER)
+    if (you.form == TRAN_SPIDER)
     {
         you.cling_to.clear();
         for (radius_iterator ri(you.pos(), 1, C_CIRCLE, NULL, true); ri; ++ri)

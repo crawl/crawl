@@ -33,7 +33,7 @@
 
 static const char *transform_name()
 {
-    switch (you.attribute[ATTR_TRANSFORMATION])
+    switch (you.form)
     {
     case TRAN_SPIDER:
         return "spider";
