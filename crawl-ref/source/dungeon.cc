@@ -4799,7 +4799,7 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
     else if (!is_layout)
     {
         dgn_region_list excluded_regions;
-        excluded_regions.push_back(dgn_region::absolute(v1x, v1y, v2x, v2y));
+        excluded_regions.push_back(dgn_region(place.pos, place.size));
 
         int nrooms = random_range(15, 90);
 
