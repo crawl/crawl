@@ -3848,10 +3848,8 @@ void monster::load_spells(mon_spellbook_type book)
     if (book == MST_NO_SPELLS || book == MST_GHOST && !ghost.get())
         return;
 
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "%s: loading spellbook #%d",
-          name(DESC_PLAIN).c_str(), static_cast<int>(book));
-#endif
+    dprf("%s: loading spellbook #%d", name(DESC_PLAIN, true).c_str(),
+         static_cast<int>(book));
 
     if (book == MST_GHOST)
         spells = ghost->spells;
