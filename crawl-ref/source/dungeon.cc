@@ -4786,11 +4786,6 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
 
     dprf("Wall builder: %s.", dis_wallify ? "Dis" : "Normal");
 
-    const int v1x = place.pos.x;
-    const int v1y = place.pos.y;
-    const int v2x = place.pos.x + place.size.x - 1;
-    const int v2y = place.pos.y + place.size.y - 1;
-
     dgn_region_list excluded_regions;
     excluded_regions.push_back(dgn_region(place.pos, place.size));
 
