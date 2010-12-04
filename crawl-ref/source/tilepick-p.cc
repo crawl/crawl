@@ -383,6 +383,9 @@ tileidx_t tileidx_player()
         case TRAN_STATUE:    ch = TILEP_TRAN_STATUE;    break;
         case TRAN_DRAGON:    ch = TILEP_TRAN_DRAGON;    break;
         case TRAN_LICH:      ch = TILEP_TRAN_LICH;      break;
+        // no special tile
+        case TRAN_BLADE_HANDS: break;
+        case TRAN_NONE: break;
     }
 
     if (you.airborne())
