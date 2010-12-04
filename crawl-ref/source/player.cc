@@ -1543,7 +1543,7 @@ int player_res_acid(bool calc_unid, bool items)
     res += std::max(0, player_mutation_level(MUT_YELLOW_SCALES) - 1);
 
     if (res > 3)
-            res = 3;
+        res = 3;
 
     return (res);
 }
