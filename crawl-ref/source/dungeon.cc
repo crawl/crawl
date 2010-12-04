@@ -2594,7 +2594,7 @@ static const map_def *_random_portal_vault(const std::string &tag)
     return random_map_for_tag(tag, true);
 }
 
-static bool _place_portal_vault(int stair, const std::string &tag, int dlevel)
+static bool _place_portal_vault(const std::string &tag, int dlevel)
 {
     const map_def *vault = _random_portal_vault(tag);
     if (!vault)
@@ -3324,11 +3324,8 @@ static void _place_specific_stair(dungeon_feature_type stair,
                                   int dlevel,
                                   bool vault_only)
 {
-    if ((tag.empty() || !_place_portal_vault(stair, tag, dlevel))
-        && !vault_only)
-    {
+    if ((tag.empty() || !_place_portal_vault(tag, dlevel)) && !vault_only)
         _place_specific_feature(stair);
-    }
 }
 
 static void _place_extra_vaults()
