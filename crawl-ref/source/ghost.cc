@@ -967,7 +967,9 @@ bool debug_check_ghosts()
         // Name validation.
         if (!validate_player_name(ghost.name, false))
             return (false);
-        if (ghost.name.length() > kNameLen || ghost.name.length() == 0)
+        // Many combining characters can come per every letter, but if there's
+        // that much, it's probably a maliciously forged ghost of some kind.
+        if (ghost.name.length() > kNameLen * 10 || ghost.name.empty())
             return (false);
         if (ghost.name != trimmed_string(ghost.name))
             return (false);

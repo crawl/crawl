@@ -140,6 +140,13 @@ bool validate_player_name(const std::string &name, bool verbose)
     }
 #endif
 
+    if (strwidth(name) > kNameLen)
+    {
+        if (verbose)
+            cprintf("\nThat name is too long.\n");
+        return (false);
+    }
+
     for (unsigned int i = 0; i < name.length(); i++)
     {
         char c = name[i];
