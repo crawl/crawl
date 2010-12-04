@@ -866,6 +866,7 @@ static int get_val_from_string(const char *ptr, int len)
     return (ret);
 }
 
+#if TAG_MAJOR_VERSION == 31
 static time_t _parse_date_string(char buff[20])
 {
     struct tm date;
@@ -881,6 +882,7 @@ static time_t _parse_date_string(char buff[20])
 
     return (mktime(&date));
 }
+#endif
 
 // Write a tagged chunk of data to the FILE*.
 // tagId specifies what to write.
@@ -976,7 +978,7 @@ static void tag_construct_char(writer &th)
     marshallByte(th, you.species);
     marshallByte(th, you.char_class);
     marshallByte(th, you.experience_level);
-    marshallString(th, you.class_name, 30);
+    marshallString(th, you.class_name);
     marshallByte(th, you.religion);
     marshallString(th, you.jiyva_second_name);
 
@@ -1145,9 +1147,8 @@ static void tag_construct_you(writer &th)
     // elapsed time
     marshallInt(th, you.elapsed_time);
 
-
     // time of game start
-    marshallString(th, make_date_string(you.birth_time).c_str(), 20);
+    marshallInt(th, you.birth_time);
 
     // real_time == -1 means game was started before this feature.
     if (you.real_time != -1)
@@ -1558,16 +1559,18 @@ static void tag_read_char(reader &th, int minorVersion)
     you.species           = static_cast<species_type>(unmarshallByte(th));
     you.char_class        = static_cast<job_type>(unmarshallByte(th));
     you.experience_level  = unmarshallByte(th);
-    unmarshallCString(th, you.class_name, 30);
+    you.class_name        = unmarshallString(th);
     you.religion          = static_cast<god_type>(unmarshallByte(th));
-    you.jiyva_second_name   = unmarshallString(th);
+    you.jiyva_second_name = unmarshallString(th);
 
     you.wizard            = unmarshallBoolean(th);
 }
 
 static void tag_read_you(reader &th, int minorVersion)
 {
+#if TAG_MAJOR_VERSION == 31
     char buff[20];      // For birth date.
+#endif
     int i,j;
     int count;
 
@@ -1798,8 +1801,15 @@ static void tag_read_you(reader &th, int minorVersion)
     you.elapsed_time   = unmarshallInt(th);
 
     // time of character creation
-    unmarshallCString(th, buff, 20);
-    you.birth_time = _parse_date_string(buff);
+#if TAG_MAJOR_VERSION == 31
+    if (minorVersion < TAG_MINOR_NO_CSTRINGS)
+    {
+        unmarshallCString(th, buff, 20);
+        you.birth_time = _parse_date_string(buff);
+    }
+    else
+#endif
+    you.birth_time = unmarshallInt(th);
 
     you.real_time  = unmarshallInt(th);
     you.num_turns  = unmarshallInt(th);

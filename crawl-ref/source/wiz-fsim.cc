@@ -322,7 +322,7 @@ static void _fsim_title(FILE *o, int mon, int ms)
     fprintf(o, CRAWL " version %s\n\n", Version::Long().c_str());
     fprintf(o, "Combat simulation: %s %s vs. %s (%d rounds) (%s)\n",
             species_name(you.species).c_str(),
-            you.class_name,
+            you.class_name.c_str(),
             menv[mon].name(DESC_PLAIN, true).c_str(),
             Options.fsim_rounds,
             _fsim_time_string().c_str());
@@ -349,7 +349,7 @@ static void _fsim_defence_title(FILE *o, int mon)
     fprintf(o, "Combat simulation: %s vs. %s %s (%d rounds) (%s)\n",
             menv[mon].name(DESC_PLAIN).c_str(),
             species_name(you.species).c_str(),
-            you.class_name,
+            you.class_name.c_str(),
             Options.fsim_rounds,
             _fsim_time_string().c_str());
     fprintf(o, "Experience: %d\n", you.experience_level);

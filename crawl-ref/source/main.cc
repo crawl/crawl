@@ -1434,7 +1434,7 @@ static void _experience_check()
     mprf("You are a level %d %s %s.",
          you.experience_level,
          species_name(you.species).c_str(),
-         you.class_name);
+         you.class_name.c_str());
 
     if (you.experience_level < 27)
     {

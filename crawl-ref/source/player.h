@@ -41,7 +41,7 @@ public:
   std::string your_name;
   species_type species;
   job_type char_class;
-  char class_name[30];
+  std::string class_name;
 
   // This field is here even in non-WIZARD compiles, since the
   // player might have been playing previously under wiz mode.
