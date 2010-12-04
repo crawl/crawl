@@ -3753,10 +3753,7 @@ static int _place_uniques(int level_number, level_area_type level_type)
             fprintf(ostat, "Placed valid unique map: %s.\n",
                     uniq_map->name.c_str());
 #endif
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Placed %s.",
-                 uniq_map->name.c_str());
-#endif
+            dprf("Placed %s.", uniq_map->name.c_str());
         }
 #ifdef DEBUG_UNIQUE_PLACEMENT
         else
@@ -6118,11 +6115,10 @@ void place_spec_shop(int level_number,
         // Need to calculate with factor as greed (uint8_t)
         // is capped at 255.
         int factor = random2(8) + 12;
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "shop type %d: original greed = %d, factor = %d",
-                                env.shop[i].type, env.shop[i].greed, factor);
-        mprf(MSGCH_DIAGNOSTICS, "discount at shop %d is %d%%", i, (20-factor)*5);
-#endif
+
+        dprf("Shop type %d: original greed = %d, factor = %d, discount = %d%%.",
+             env.shop[i].type, env.shop[i].greed, factor, (20-factor)*5);
+
         factor *= env.shop[i].greed;
         factor /= 20;
         env.shop[i].greed = factor;
@@ -8175,13 +8171,9 @@ static void _fixup_slime_hatch_dest(coord_def* pos)
 coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
                                 coord_def base_pos, bool find_closest)
 {
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS,
-         "Level entry point on %sstair: %d (%s)",
-         find_closest? "closest " : "",
-         stair_to_find,
-         dungeon_feature_name(stair_to_find));
-#endif
+    dprf("Level entry point on %sstair: %d (%s)",
+         find_closest ? "closest " : "",
+         stair_to_find, dungeon_feature_name(stair_to_find));
 
     if (stair_to_find == DNGN_EXIT_PORTAL_VAULT)
     {
