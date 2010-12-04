@@ -2600,7 +2600,7 @@ static bool _place_portal_vault(int stair, const std::string &tag, int dlevel)
     if (!vault)
         return (false);
 
-    return _build_secondary_vault(dlevel, vault, stair);
+    return _build_secondary_vault(dlevel, vault);
 }
 
 static const map_def *_dgn_random_map_for_place(bool minivault)
@@ -3345,7 +3345,7 @@ static void _place_extra_vaults()
             if (!vault || vault->orient == MAP_ENCOMPASS)
                 break;
 
-            if (vault && _build_secondary_vault(you.absdepth0, vault, -1))
+            if (vault && _build_secondary_vault(you.absdepth0, vault))
             {
                 const map_def &map(*vault);
                 if (map.has_tag("extra"))
