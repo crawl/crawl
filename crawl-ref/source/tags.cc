@@ -961,7 +961,7 @@ static void tag_construct_you(writer &th)
 {
     int i, j;
 
-    marshallString(th, you.your_name, kNameLen);
+    marshallString(th, you.your_name);
     marshallString(th, Version::Long());
 
     marshallByte(th, you.religion);
@@ -1514,7 +1514,7 @@ static void tag_read_you(reader &th, char minorVersion)
     char count_c;
     short count_s;
 
-    you.your_name         = unmarshallString(th, kNameLen);
+    you.your_name         = unmarshallString(th);
     if (minorVersion >= TAG_MINOR_SAVEVER)
     {
         const std::string old_version = unmarshallString(th);
