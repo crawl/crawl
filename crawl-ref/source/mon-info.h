@@ -148,7 +148,8 @@ struct monster_info : public monster_info_base
 
     inline bool is(unsigned mbflag) const
     {
-        return !!(mb & ((uint64_t)1 << mbflag));
+        uint64_t tmpuint = (mb & ((uint64_t)1 << mbflag));
+        return (tmpuint > 0);
     }
 
     inline std::string damage_desc() const
