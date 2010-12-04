@@ -4219,34 +4219,36 @@ int melee_attack::player_calc_base_unarmed_damage()
         damage = 0;
     }
 
-    if (you.form)
+    switch (you.form)
     {
-        switch (you.form)
-        {
-        case TRAN_SPIDER:
-            damage = 5;
-            break;
-        case TRAN_BAT:
-            damage = (you.species == SP_VAMPIRE ? 2 : 1);
-            break;
-        case TRAN_ICE_BEAST:
-            damage = 12;
-            break;
-        case TRAN_BLADE_HANDS:
-            damage = 12 + div_rand_round(you.strength() + you.dex(), 4);
-            break;
-        case TRAN_STATUE:
-            damage = 12 + you.strength();
-            break;
-        case TRAN_DRAGON:
-            damage = 20 + you.strength();
-            break;
-        case TRAN_LICH:
-            damage = 5;
-            break;
-        }
+    case TRAN_SPIDER:
+        damage = 5;
+        break;
+    case TRAN_BAT:
+        damage = (you.species == SP_VAMPIRE ? 2 : 1);
+        break;
+    case TRAN_ICE_BEAST:
+        damage = 12;
+        break;
+    case TRAN_BLADE_HANDS:
+        damage = 12 + div_rand_round(you.strength() + you.dex(), 4);
+        break;
+    case TRAN_STATUE:
+        damage = 12 + you.strength();
+        break;
+    case TRAN_DRAGON:
+        damage = 20 + you.strength();
+        break;
+    case TRAN_LICH:
+        damage = 5;
+        break;
+    case TRAN_PIG:
+        break;
+    case TRAN_NONE:
+        break;
     }
-    else if (you.has_usable_claws(false))
+
+    if (you.has_usable_claws())
     {
         // Claw damage only applies for bare hands.
         damage += you.has_claws(false) * 2;
