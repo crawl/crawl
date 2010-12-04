@@ -858,7 +858,7 @@ void stonemail(int pow)
         mpr("Your scaly armour looks firmer.");
     else
     {
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE)
+        if (you.form == TRAN_STATUE)
             mpr("Your stone body feels more resilient.");
         else
             mpr("A set of stone scales covers your body!");

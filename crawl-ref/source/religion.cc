@@ -3268,7 +3268,7 @@ bool player_can_join_god(god_type which_god)
 bool transformed_player_can_join_god(god_type which_god)
 {
     if ((is_good_god(which_god) || which_god == GOD_FEDHAS)
-        && you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
+        && you.form == TRAN_LICH)
     {
         return (false);
     }

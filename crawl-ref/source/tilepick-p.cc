@@ -372,7 +372,7 @@ tileidx_t tileidx_player()
     int ch = TILEP_PLAYER;
 
     // Handle shapechange first
-    switch (you.attribute[ATTR_TRANSFORMATION])
+    switch (you.form)
     {
         // animals
         case TRAN_BAT:       ch = TILEP_TRAN_BAT;       break;

@@ -12,31 +12,16 @@
 
 #include "enum.h"
 #include "player.h"
-#define your_form static_cast<transformation_type>(you.attribute[ATTR_TRANSFORMATION])
 
-enum transformation_type
-{
-    TRAN_NONE,                         //    0
-    TRAN_SPIDER,
-    TRAN_BLADE_HANDS,
-    TRAN_STATUE,
-    TRAN_ICE_BEAST,
-    TRAN_DRAGON,                       //    5
-    TRAN_LICH,
-    TRAN_BAT,
-    TRAN_PIG,
-    NUM_TRANSFORMATIONS                // must remain last member {dlb}
-};
-
-bool form_can_wield(transformation_type trans = your_form);
-bool form_can_fly(transformation_type trans = your_form);
-bool form_can_swim(transformation_type trans = your_form);
-bool form_likes_water(transformation_type trans = your_form);
-bool form_can_butcher_barehanded(transformation_type trans = your_form);
+bool form_can_wield(transformation_type trans = you.form);
+bool form_can_fly(transformation_type trans = you.form);
+bool form_can_swim(transformation_type trans = you.form);
+bool form_likes_water(transformation_type trans = you.form);
+bool form_can_butcher_barehanded(transformation_type trans = you.form);
 bool form_changed_physiology(bool phys_scales = false,
-                             transformation_type trans = your_form);
+                             transformation_type trans = you.form);
 bool form_can_wear_item(const item_def& item,
-                        transformation_type trans = your_form);
+                        transformation_type trans = you.form);
 
 bool can_equip(equipment_type use_which, bool ignore_temporary);
 

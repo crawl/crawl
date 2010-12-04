@@ -226,11 +226,11 @@ static void _sdump_hunger(dump_params &par)
 static void _sdump_transform(dump_params &par)
 {
     std::string &text(par.text);
-    if (you.attribute[ATTR_TRANSFORMATION])
+    if (you.form)
     {
         std::string verb = par.se? "were" : "are";
 
-        switch (you.attribute[ATTR_TRANSFORMATION])
+        switch (you.form)
         {
         case TRAN_SPIDER:
             text += "You " + verb + " in spider-form.";
@@ -258,6 +258,8 @@ static void _sdump_transform(dump_params &par)
             break;
         case TRAN_PIG:
             text += "You " + verb + " a filthy swine.";
+            break;
+        case TRAN_NONE:
             break;
         }
 

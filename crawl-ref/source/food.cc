@@ -486,16 +486,13 @@ bool butchery(int which_corpse, bool bottle_blood)
         return (false);
     }
 
-    const transformation_type transform =
-        static_cast<transformation_type>(you.attribute[ATTR_TRANSFORMATION]);
-
     // Vampires' fangs are optimised for biting, not for tearing flesh.
     // (Not that they really need to.) Other species with this mutation
     // might still benefit from it.
     bool teeth_butcher    = (you.has_usable_fangs() == 3
                              && you.species != SP_VAMPIRE);
 
-    bool barehand_butcher = (form_can_butcher_barehanded(transform)
+    bool barehand_butcher = (form_can_butcher_barehanded(you.form)
                                  || you.has_claws())
                              && !player_wearing_slot(EQ_GLOVES);
 
@@ -926,8 +923,7 @@ bool food_change(bool suppress_message)
                         "longer.", MSGCH_DURATION);
                     you.duration[DUR_BERSERK] = 1;
                 }
-                int transform = you.attribute[ATTR_TRANSFORMATION];
-                if (transform != TRAN_NONE && transform != TRAN_BAT
+                if (you.form != TRAN_NONE && you.form != TRAN_BAT
                     && you.duration[DUR_TRANSFORMATION] > 2 * BASELINE_DELAY)
                 {
                     mpr("Your blood-deprived body can't sustain your "

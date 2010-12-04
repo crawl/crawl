@@ -1145,7 +1145,7 @@ static int damage_or_escape_net(int hold)
         if (brand == SPWPN_FLAMING || brand == SPWPN_VORPAL)
             damage++;
     }
-    else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+    else if (you.form == TRAN_BLADE_HANDS)
         damage += 2;
     else if (you.has_usable_claws())
     {
@@ -1225,7 +1225,7 @@ void free_self_from_net()
         // For previously undamaged nets this takes at least 2 and at most
         // 8 turns.
         bool can_slice =
-            (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+            (you.form == TRAN_BLADE_HANDS)
             || (you.weapon() && can_cut_meat(*you.weapon()));
 
         int damage = -do_what;

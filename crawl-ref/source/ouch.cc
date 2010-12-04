@@ -1376,7 +1376,7 @@ void end_game(scorefile_entry &se)
 
         case GOD_KIKUBAAQUDGHA:
             if (you.is_undead
-                && you.attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
+                && you.form != TRAN_LICH)
             {
                 simple_god_message(" rasps: \"You have failed me! "
                                    "Welcome... oblivion!\"");

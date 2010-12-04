@@ -84,6 +84,7 @@ public:
 
   // PC's symbol (usually @) and colour.
   monster_type symbol;
+  transformation_type form;
 
   FixedVector< item_def, ENDOFPACK > inv;
 

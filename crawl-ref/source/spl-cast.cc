@@ -386,7 +386,7 @@ int spell_fail(spell_type spell)
 
     if (you.duration[DUR_TRANSFORMATION] > 0)
     {
-        switch (you.attribute[ATTR_TRANSFORMATION])
+        switch (you.form)
         {
         case TRAN_BLADE_HANDS:
             chance2 += 20;
@@ -395,6 +395,9 @@ int spell_fail(spell_type spell)
         case TRAN_SPIDER:
         case TRAN_BAT:
             chance2 += 10;
+            break;
+
+        default:
             break;
         }
     }
@@ -541,7 +544,7 @@ void inspect_spells()
 
 void do_cast_spell_cmd(bool force)
 {
-    if (player_in_bat_form() || you.attribute[ATTR_TRANSFORMATION] == TRAN_PIG)
+    if (player_in_bat_form() || you.form == TRAN_PIG)
     {
         canned_msg(MSG_PRESENT_FORM);
         return;

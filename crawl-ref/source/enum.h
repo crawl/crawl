@@ -192,7 +192,9 @@ enum attribute_type
     ATTR_DIVINE_LIGHTNING_PROTECTION,
     ATTR_DIVINE_REGENERATION,
     ATTR_DIVINE_DEATH_CHANNEL,
-    ATTR_TRANSFORMATION,
+#if TAG_MAJOR_VERSION == 31
+    ATTR_OBSOLETE_TRANSFORMATION,
+#endif
     ATTR_CARD_COUNTDOWN,
     ATTR_WAS_SILENCED,          //jmf: added for silenced messages
     ATTR_GOD_GIFT_COUNT,        //jmf: added to help manage god gift giving
@@ -220,6 +222,19 @@ enum attribute_type
     ATTR_LEV_UNCANCELLABLE,    // Potion or spell of levitation is in effect.
     ATTR_INVIS_UNCANCELLABLE,  // Potion/spell/wand of invis is in effect.
     NUM_ATTRIBUTES
+};
+
+enum transformation_type
+{
+    TRAN_NONE,
+    TRAN_SPIDER,
+    TRAN_BLADE_HANDS,
+    TRAN_STATUE,
+    TRAN_ICE_BEAST,
+    TRAN_DRAGON,
+    TRAN_LICH,
+    TRAN_BAT,
+    TRAN_PIG,
 };
 
 enum beam_type                  // beam[].flavour

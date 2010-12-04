@@ -1477,7 +1477,7 @@ static bool _get_mem_list(spell_list &mem_spells,
         mpr("You already know all available spells.", MSGCH_PROMPT);
     else if (num_race == total || (num_known + num_race) == total)
     {
-        const bool lichform = (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH);
+        const bool lichform = (you.form == TRAN_LICH);
         const std::string species = "a " + species_name(you.species);
         mprf(MSGCH_PROMPT,
              "You cannot memorise any of the available spells because you "
@@ -1826,7 +1826,7 @@ std::string desc_cannot_memorise_reason(bool undead)
         ASSERT(you.is_undead);
 
     const bool lichform = (undead
-                           && you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH);
+                           && you.form == TRAN_LICH);
 
     std::string desc = "You cannot ";
     if (lichform)
