@@ -311,35 +311,33 @@ void moveto_location_effects(dungeon_feature_type old_feat,
 
         if (feat_is_water(new_grid) && !stepped)
         {
-            if (player_likes_water() && you.species != SP_GREY_DRACONIAN)
+            if (you.can_swim())
                 noisy(4, you.pos(), "Floosh!");
-            else
+            else if (!beogh_water_walk())
                 noisy(8, you.pos(), "Splash!");
         }
 
-        if (new_grid == DNGN_SHALLOW_WATER
-            && (!player_likes_water() || you.species == SP_GREY_DRACONIAN))
+        if (feat_is_water(new_grid) && !you.can_swim() && !beogh_water_walk())
         {
             you.time_taken *= 13 + random2(8);
             you.time_taken /= 10;
 
-            if (old_feat != DNGN_SHALLOW_WATER)
+            if (!feat_is_water(old_feat))
             {
-                mprf("You %s the shallow water.",
-                     (stepped ? "enter" : "fall into"));
+                mprf("You %s the %s water.",
+                     stepped ? "enter" : "fall into",
+                     new_grid == DNGN_SHALLOW_WATER ? "shallow" : "deep");
+            }
+
+            if (new_grid == DNGN_DEEP_WATER && old_feat != DNGN_DEEP_WATER)
+                mpr("You sink to the bottom.");
+
+            if (!feat_is_water(old_feat))
+            {
                 mpr("Moving in this stuff is going to be slow.");
                 if (you.invisible())
                     mpr("...and don't expect to remain undetected.");
             }
-        }
-
-        if (new_grid == DNGN_DEEP_WATER && you.species == SP_GREY_DRACONIAN)
-        {
-            you.time_taken *= 13 + random2(8);
-            you.time_taken /= 10;
-
-            if (old_feat != DNGN_DEEP_WATER)
-                mpr("You sink to the bottom.");
         }
     }
 
@@ -427,9 +425,15 @@ bool player_in_hell(void)
             && is_hell_subbranch(you.where_are_you));
 }
 
+static bool _species_like_water()
+{
+    return you.species == SP_MERFOLK || you.species == SP_GREY_DRACONIAN;
+}
+
 bool player_likes_water(bool permanently)
 {
-    return (you.can_swim(permanently) || (!permanently && beogh_water_walk()));
+    return !permanently && beogh_water_walk()
+           || (_species_like_water() || !permanently) && form_likes_water();
 }
 
 bool player_in_bat_form()
@@ -5463,10 +5467,10 @@ bool player::is_wall_clinging() const
 bool player::can_cling_to(const coord_def& p) const
 {
     if (!in_bounds(p))
-        return(false);
+        return (false);
 
     if (!is_wall_clinging())
-        return(false);
+        return (false);
 
     if (!can_pass_through_feat(grd(p)))
         return (false);
@@ -5482,12 +5486,12 @@ bool player::can_cling_to(const coord_def& p) const
                 for (int i = 0, size = cling_to.size(); i < size; ++i)
                 {
                     if (cling_to[i] == *ri2)
-                        return(true);
+                        return (true);
                 }
             }
         }
     }
-    return(false);
+    return (false);
 }
 
 bool player::in_water() const
@@ -5500,8 +5504,8 @@ bool player::can_swim(bool permanently) const
 {
     // Transforming could be fatal if it would cause unequipment of
     // stat-boosting boots or heavy armour.
-    return ((species == SP_MERFOLK || species == SP_GREY_DRACONIAN
-             || !permanently) && form_can_swim());
+
+    return (species == SP_MERFOLK || !permanently) && form_can_swim();
 }
 
 int player::visible_igrd(const coord_def &where) const

@@ -49,9 +49,16 @@ bool form_can_fly(transformation_type trans)
 
 bool form_can_swim(transformation_type trans)
 {
-    return(trans == TRAN_ICE_BEAST
-           || you.species == SP_GREY_DRACONIAN || you.species == SP_MERFOLK
-              && (trans == TRAN_NONE || trans == TRAN_BLADE_HANDS));
+    return trans == TRAN_ICE_BEAST
+           || you.species == SP_MERFOLK &&
+              !form_changed_physiology(false, trans);
+}
+
+bool form_likes_water(transformation_type trans)
+{
+    return form_can_swim(trans)
+           || you.species == SP_GREY_DRACONIAN
+              && !form_changed_physiology(false, trans);
 }
 
 bool form_can_butcher_barehanded(transformation_type trans)
@@ -429,7 +436,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
 {
     transformation_type previous_trans = static_cast<transformation_type>(
                                          you.attribute[ATTR_TRANSFORMATION]);
-    bool was_swimming = you.swimming();
+    bool was_in_water = you.in_water();
     const flight_type was_flying = you.flight_mode();
 
 
@@ -446,15 +453,15 @@ bool transform(int pow, transformation_type which_trans, bool force,
 
     dungeon_feature_type feat = env.grid(you.pos());
 
-    if (feat == DNGN_DEEP_WATER && you.swimming()
-        && !form_can_fly(which_trans) && !form_can_swim(which_trans))
+    if (feat == DNGN_DEEP_WATER && you.in_water()
+        && !form_can_fly(which_trans) && !form_likes_water(which_trans))
     {
         if (!force)
             mpr("You would drown in your new form.");
         return (false);
     }
 
-    if ((feat == DNGN_DEEP_WATER && !form_can_swim(which_trans)
+    if ((feat == DNGN_DEEP_WATER && !form_likes_water(which_trans)
          || feat == DNGN_LAVA)
          && form_can_fly() && !form_can_fly(which_trans))
     {
@@ -534,7 +541,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
     const char* tran_name = "buggy";
     std::string msg;
 
-    if (was_swimming && form_can_fly(which_trans))
+    if (was_in_water && form_can_fly(which_trans))
         msg = "You fly out of the water as you turn into ";
     else if (form_can_fly(previous_trans)
              && form_can_swim(which_trans)

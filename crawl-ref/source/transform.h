@@ -31,6 +31,7 @@ enum transformation_type
 bool form_can_wield(transformation_type trans = your_form);
 bool form_can_fly(transformation_type trans = your_form);
 bool form_can_swim(transformation_type trans = your_form);
+bool form_likes_water(transformation_type trans = your_form);
 bool form_can_butcher_barehanded(transformation_type trans = your_form);
 bool form_changed_physiology(bool phys_scales = false,
                              transformation_type trans = your_form);
