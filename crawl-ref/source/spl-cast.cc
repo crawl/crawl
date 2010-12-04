@@ -86,8 +86,11 @@ static bool _surge_identify_boosters(spell_type spell)
             || item_ident(*wpn, ISFLAG_KNOW_PROPERTIES))
         {
             int num_unknown = 0;
-            for (int i = EQ_LEFT_RING; i <= EQ_RIGHT_RING; ++i)
+            for (int i = EQ_LEFT_RING; i <= NUM_EQUIP; ++i)
             {
+                if (i == EQ_AMULET)
+                    continue;
+
                 if (player_wearing_slot(i)
                     && !item_ident(you.inv[you.equip[i]],
                                    ISFLAG_KNOW_PROPERTIES))
@@ -100,7 +103,11 @@ static bool _surge_identify_boosters(spell_type spell)
             // of fire (or both of ice)...let's skip it.
             if (num_unknown == 1)
             {
-                for (int i = EQ_LEFT_RING; i <= EQ_RIGHT_RING; ++i)
+                for (int i = EQ_LEFT_RING; i <= NUM_EQUIP; ++i)
+                {
+                    if (i == EQ_AMULET)
+                        continue;
+
                     if (player_wearing_slot(i))
                     {
                         item_def& ring = you.inv[you.equip[i]];
@@ -115,7 +122,7 @@ static bool _surge_identify_boosters(spell_type spell)
                                  ring.name(DESC_INVENTORY_EQUIP).c_str());
                         }
                     }
-
+                }
                 return (true);
             }
         }

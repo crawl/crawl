@@ -1091,8 +1091,14 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
         break;
 
     case UNAT_PSEUDOPODS:
-        aux_attack = aux_verb = "slap";
+        aux_attack = aux_verb = "bludgeon";
         aux_damage += 4 * you.has_usable_pseudopods();
+        noise_factor = 125;
+        break;
+
+    case UNAT_TENTACLES:
+        aux_attack = aux_verb = "tentacle-slap";
+        aux_damage += 4 * you.has_usable_tentacles();
         noise_factor = 125;
         break;
 
@@ -1120,6 +1126,9 @@ static bool _tran_forbid_aux_attack(unarmed_attack_type atk)
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT);
 
     case UNAT_PSEUDOPODS:
+        return (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE);
+
+    case UNAT_TENTACLES:
         return (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE);
 
     default:
@@ -1155,6 +1164,10 @@ static bool _extra_aux_attack(unarmed_attack_type atk)
         return (you.has_usable_pseudopods()
                 && one_chance_in(3));
 
+    case UNAT_TENTACLES:
+        return (you.has_usable_tentacles()
+                && one_chance_in(3));
+
     case UNAT_BITE:
         return ((you.has_usable_fangs()
                  || player_mutation_level(MUT_ACIDIC_BITE))
@@ -1172,11 +1185,8 @@ unarmed_attack_type melee_attack::player_aux_choose_baseattack()
                        -1));
 
     // No punching with a shield or 2-handed wpn, except staves.
-    if (baseattack == UNAT_PUNCH && !you.has_usable_offhand())
+    if (you.species != SP_OCTOPUS && baseattack == UNAT_PUNCH && !you.has_usable_offhand())
         baseattack = UNAT_NO_ATTACK;
-
-    if (you.species == SP_NAGA && baseattack == UNAT_KICK)
-        baseattack = UNAT_HEADBUTT;
 
     if (you.has_usable_tail()
         && (baseattack == UNAT_HEADBUTT || baseattack == UNAT_KICK)
@@ -1200,6 +1210,18 @@ unarmed_attack_type melee_attack::player_aux_choose_baseattack()
     {
         baseattack = UNAT_BITE;
     }
+
+    //Move racial stuff to the bottom, so that nagas can use pseudopods and the like.
+    if (you.species == SP_NAGA && baseattack == UNAT_KICK)
+        baseattack = UNAT_HEADBUTT;
+
+    //Octopus with no usable offhand has a 50% chance of a punch aux failing to happen.
+    if (you.species == SP_OCTOPUS && (baseattack == UNAT_PUNCH || baseattack == UNAT_KICK) && !you.has_usable_offhand() && you.has_usable_tentacles())
+        baseattack = coinflip() ? UNAT_TENTACLES : UNAT_NO_ATTACK;
+
+    //Octopus with a usable offhand always substitutes in a tentacle attack for a punch aux.
+    if (you.species == SP_OCTOPUS && (baseattack == UNAT_PUNCH || baseattack == UNAT_KICK) && you.has_usable_offhand() && you.has_usable_tentacles())
+        baseattack = UNAT_TENTACLES;
 
     if (_tran_forbid_aux_attack(baseattack))
         baseattack = UNAT_NO_ATTACK;

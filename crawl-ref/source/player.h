@@ -465,6 +465,8 @@ public:
     bool      has_usable_offhand() const;
     int       has_pseudopods(bool allow_tran = true) const;
     int       has_usable_pseudopods(bool allow_tran = true) const;
+    int       has_tentacles(bool allow_tran = true) const;
+    int       has_usable_tentacles(bool allow_tran = true) const;
 
     item_def *weapon(int which_attack = -1);
     item_def *shield();

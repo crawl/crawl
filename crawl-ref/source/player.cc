@@ -575,6 +575,19 @@ bool you_can_wear(int eq, bool special_armour)
     if (you.species == SP_CAT)
         return (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET);
 
+//Octopodes can wear soft helmets, eight rings, and an amulet.
+
+    if (you.species == SP_OCTOPUS)
+    {
+        if (special_armour && eq == EQ_HELMET)
+            return (true);
+        else
+            return (eq == EQ_RING_ONE || eq == EQ_RING_TWO || eq == EQ_RING_THREE ||
+                    eq == EQ_RING_FOUR || eq == EQ_RING_FIVE || eq == EQ_RING_SIX ||
+                    eq == EQ_RING_SEVEN || eq == EQ_RING_EIGHT || eq == EQ_AMULET ||
+                    eq == EQ_SHIELD);
+    }
+
     switch (eq)
     {
     case EQ_LEFT_RING:
@@ -654,7 +667,7 @@ bool you_can_wear(int eq, bool special_armour)
 
 bool player_has_feet()
 {
-    if (you.species == SP_NAGA || you.species == SP_CAT || you.fishtail)
+    if (you.species == SP_NAGA || you.species == SP_CAT || you.species == SP_OCTOPUS || you.fishtail)
     {
         return (false);
     }
@@ -715,8 +728,10 @@ bool you_tran_can_wear(int eq, bool check_mutation)
 
     if (eq == EQ_STAFF)
         eq = EQ_WEAPON;
-    else if (eq >= EQ_RINGS && eq <= EQ_RINGS_PLUS2)
+    else if (eq >= EQ_RINGS && eq <= EQ_RINGS_PLUS2 && you.species != SP_OCTOPUS)
         eq = EQ_LEFT_RING;
+    else if (eq >= EQ_RINGS && eq <= EQ_RINGS_PLUS2 && you.species == SP_OCTOPUS)
+        eq = EQ_RING_ONE;
 
     // Everybody can wear at least some type of armour.
     if (eq == EQ_ALL_ARMOUR)
@@ -748,7 +763,7 @@ bool you_tran_can_wear(int eq, bool check_mutation)
         return (false);
 
     // Everyone else can wear jewellery, at least.
-    if (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET)
+    if (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET || eq == EQ_RING_ONE)
         return (true);
 
     // These cannot use anything but jewellery.
@@ -854,56 +869,50 @@ int player_equip(equipment_type slot, int sub_type, bool calc_unid)
         break;
 
     case EQ_RINGS:
-        if ((item = you.slot_item(EQ_LEFT_RING))
-            && item->sub_type == sub_type
-            && (calc_unid
-                || item_type_known(*item)))
+        for (int slots = EQ_LEFT_RING; slots < NUM_EQUIP; slots++)
         {
-            ret++;
-        }
+            if (slots == EQ_AMULET)
+                continue;
 
-        if ((item = you.slot_item(EQ_RIGHT_RING))
-            && item->sub_type == sub_type
-            && (calc_unid
-                || item_type_known(*item)))
-        {
-            ret++;
+            if ((item = you.slot_item(static_cast<equipment_type>(slots), true))
+                && item->sub_type == sub_type
+                && (calc_unid
+                    || item_type_known(*item)))
+            {
+                ret++;
+            }
         }
         break;
 
     case EQ_RINGS_PLUS:
-        if ((item = you.slot_item(EQ_LEFT_RING))
-            && item->sub_type == sub_type
-            && (calc_unid
-                || item_type_known(*item)))
+        for (int slots = EQ_LEFT_RING; slots < NUM_EQUIP; slots++)
         {
-            ret += item->plus;
-        }
+            if (slots == EQ_AMULET)
+                continue;
 
-        if ((item = you.slot_item(EQ_RIGHT_RING))
-            && item->sub_type == sub_type
-            && (calc_unid
-                || item_type_known(*item)))
-        {
-            ret += item->plus;
+            if ((item = you.slot_item(static_cast<equipment_type>(slots), true))
+                && item->sub_type == sub_type
+                && (calc_unid
+                    || item_type_known(*item)))
+            {
+                ret += item->plus;
+            }
         }
         break;
 
     case EQ_RINGS_PLUS2:
-        if ((item = you.slot_item(EQ_LEFT_RING))
-            && item->sub_type == sub_type
-            && (calc_unid
-                || item_type_known(*item)))
+        for (int slots = EQ_LEFT_RING; slots < NUM_EQUIP; ++slots)
         {
-            ret += item->plus2;
-        }
+            if (slots == EQ_AMULET)
+                continue;
 
-        if ((item = you.slot_item(EQ_RIGHT_RING))
-            && item->sub_type == sub_type
-            && (calc_unid
-                || item_type_known(*item)))
-        {
-            ret += item->plus2;
+            if ((item = you.slot_item(static_cast<equipment_type>(slots), true))
+                && item->sub_type == sub_type
+                && (calc_unid
+                    || item_type_known(*item)))
+            {
+                ret += item->plus2;
+            }
         }
         break;
 
@@ -919,7 +928,7 @@ int player_equip(equipment_type slot, int sub_type, bool calc_unid)
 
             return (0);
         }
-        if ((item = you.slot_item(slot))
+        if ((item = you.slot_item(static_cast<equipment_type>(slot)))
             && item->sub_type == sub_type
             && (calc_unid || item_type_known(*item)))
         {
@@ -1017,18 +1026,17 @@ bool player_equip_unrand(int unrand_index)
         break;
 
     case EQ_RINGS:
-        if ((item = you.slot_item(EQ_LEFT_RING))
-            && is_unrandom_artefact(*item)
-            && item->special == unrand_index)
+        for (int slots = EQ_LEFT_RING; slots < NUM_EQUIP; ++slots)
         {
-            return (true);
-        }
+            if (slots == EQ_AMULET)
+                continue;
 
-        if ((item = you.slot_item(EQ_RIGHT_RING))
-            && is_unrandom_artefact(*item)
-            && item->special == unrand_index)
-        {
-            return (true);
+            if ((item = you.slot_item(static_cast<equipment_type>(slots)))
+                && is_unrandom_artefact(*item)
+                && item->special == unrand_index)
+            {
+                return (true);
+            }
         }
         break;
 
@@ -3237,6 +3245,15 @@ void level_change(bool skip_attribute_increase)
                 _felid_extra_life();
                 break;
 
+            case SP_OCTOPUS:
+
+                if (you.experience_level % 2)
+                    hp_adjust--;
+
+                if (!(you.experience_level % 5))
+                    modify_stat(STAT_RANDOM, 1, false, "level gain");
+
+                break;
 
             default:
                 break;
@@ -3345,6 +3362,7 @@ int check_stealth(void)
             case SP_GREY_DRACONIAN:
             case SP_NAGA:       // not small but very good at stealth
             case SP_CAT:
+            case SP_OCTOPUS:
                 stealth += (you.skills[SK_STEALTH] * 18);
                 break;
             default:
@@ -3400,7 +3418,7 @@ int check_stealth(void)
     else if (you.in_water())
     {
         // Merfolk can sneak up on monsters underwater -- bwr
-        if (you.fishtail)
+        if (you.fishtail || you.species == SP_OCTOPUS)
             stealth += 50;
         else if (!you.can_swim() && !you.extra_balanced())
             stealth /= 2;       // splashy-splashy
@@ -3809,6 +3827,7 @@ static int _species_exp_mod(species_type species)
         case SP_NAGA:
         case SP_GHOUL:
         case SP_MERFOLK:
+        case SP_OCTOPUS:
             return 12;
         case SP_SPRIGGAN:
         case SP_KENKU:
@@ -3959,13 +3978,14 @@ bool items_give_ability(const int slot, artefact_prop_type abil)
         if (i == EQ_WEAPON && you.inv[ eq ].base_type != OBJ_WEAPONS)
             continue;
 
-        if (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING)
+        if (eq >= EQ_LEFT_RING && eq < NUM_EQUIP && eq != EQ_AMULET)
         {
             if (abil == ARTP_LEVITATE && you.inv[eq].sub_type == RING_LEVITATION)
                 return (true);
             if (abil == ARTP_INVISIBLE && you.inv[eq].sub_type == RING_INVISIBILITY)
                 return (true);
         }
+
         else if (eq == EQ_AMULET)
         {
             if (abil == ARTP_BERSERK && you.inv[eq].sub_type == AMU_RAGE)
@@ -6332,6 +6352,23 @@ int player::has_usable_pseudopods(bool allow_tran) const
 {
     return (has_pseudopods(allow_tran));
 }
+
+int player::has_tentacles(bool allow_tran) const
+{
+    if (allow_tran)
+    {
+        if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
+            return (0);
+    }
+
+    return (player_mutation_level(MUT_TENTACLES));
+}
+
+int player::has_usable_tentacles(bool allow_tran) const
+{
+    return (has_tentacles(allow_tran));
+}
+
 
 bool player::sicken(int amount)
 {

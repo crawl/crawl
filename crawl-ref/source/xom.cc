@@ -802,7 +802,7 @@ static bool _xom_annoyance_gift(int power, bool debug = false)
 
         const item_def *left_ring = you.slot_item(EQ_LEFT_RING, true);
         const item_def *right_ring = you.slot_item(EQ_RIGHT_RING, true);
-        if (coinflip() && ((left_ring && left_ring->cursed())
+        if (you.species != SP_OCTOPUS && coinflip() && ((left_ring && left_ring->cursed())
                            || (right_ring && right_ring->cursed())))
         {
             if (debug)

@@ -595,7 +595,7 @@ void list_jewellery(void)
 {
     std::ostringstream jstr;
 
-    for (int i = EQ_LEFT_RING; i <= EQ_AMULET; i++)
+    for (int i = EQ_LEFT_RING; i <= NUM_EQUIP; i++)
     {
         const int jewellery_id = you.equip[i];
         int       colour       = MSGCOL_BLACK;
@@ -603,9 +603,17 @@ void list_jewellery(void)
         jstr.str("");
         jstr.clear();
 
-        jstr << ((i == EQ_LEFT_RING)  ? "Left ring " :
-                 (i == EQ_RIGHT_RING) ? "Right ring" :
-                 (i == EQ_AMULET)     ? "Amulet    "
+        jstr << ((i == EQ_LEFT_RING)   ? "Left ring " :
+                 (i == EQ_RIGHT_RING)  ? "Right ring" :
+                 (i == EQ_AMULET)      ? "Amulet    " :
+                 (i == EQ_RING_ONE)    ? "1st ring  " :
+                 (i == EQ_RING_TWO)    ? "2nd ring  " :
+                 (i == EQ_RING_THREE)  ? "3rd ring  " :
+                 (i == EQ_RING_FOUR)   ? "4th ring  " :
+                 (i == EQ_RING_FIVE)   ? "5th ring  " :
+                 (i == EQ_RING_SIX)    ? "6th ring  " :
+                 (i == EQ_RING_SEVEN)  ? "7th ring  " :
+                 (i == EQ_RING_EIGHT)  ? "8th ring  "
                                       : "unknown   ")
              << " : ";
 

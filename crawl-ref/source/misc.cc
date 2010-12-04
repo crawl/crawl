@@ -2192,11 +2192,15 @@ std::string your_hand(bool plural)
         result = (you.has_usable_claws()) ? "claw" : "hand";
         if (you.species == SP_CAT)
             result = "paw";
+        if (you.species == SP_OCTOPUS)
+            result = "tentacle";
         break;
     case TRAN_ICE_BEAST:
         result = "hand";
         if (you.species == SP_CAT)
             result = "paw";
+        if (you.species == SP_OCTOPUS)
+            result = "tentacle";
         break;
     case TRAN_SPIDER:
     case TRAN_PIG:
@@ -2444,8 +2448,11 @@ void maybe_id_ring_TC()
     }
 
     int num_unknown = 0;
-    for (int i = EQ_LEFT_RING; i <= EQ_RIGHT_RING; ++i)
+    for (int i = EQ_LEFT_RING; i <= NUM_EQUIP; ++i)
     {
+        if (i == EQ_AMULET)
+            continue;
+
         if (player_wearing_slot(i)
             && !item_ident(you.inv[you.equip[i]], ISFLAG_KNOW_PROPERTIES))
         {
@@ -2453,10 +2460,14 @@ void maybe_id_ring_TC()
         }
     }
 
-    if (num_unknown != 1)
+    if (num_unknown == 0)
         return;
 
-    for (int i = EQ_LEFT_RING; i <= EQ_RIGHT_RING; ++i)
+    for (int i = EQ_LEFT_RING; i <= NUM_EQUIP; ++i)
+    {
+        if (i == EQ_AMULET)
+            continue;
+
         if (player_wearing_slot(i))
         {
             item_def& ring = you.inv[you.equip[i]];
@@ -2469,6 +2480,7 @@ void maybe_id_ring_TC()
                      ring.name(DESC_INVENTORY_EQUIP).c_str());
             }
         }
+    }
 }
 
 void entered_malign_portal(actor* act)

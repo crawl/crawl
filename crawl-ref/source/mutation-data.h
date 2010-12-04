@@ -792,6 +792,24 @@
   "talons"
 },
 
+{ MUT_TENTACLES,                 0,    3, false, true,
+  "tentacles",
+
+  {"You have a mass of small tentacles instead of fingers.",
+   "You have a mass of tentacles instead of hands.",
+   "You have a mass of large tentacles instead of arms."},
+
+  {"Your fingers turn into small tentacles.",
+   "Your hands turn into tentacles.",
+   "Your arms turn into large tentacles."},
+
+  {"Your fingers look less like tentacles.",
+   "Your hands look less like tentacles.",
+   "Your arms look less like tentacles."},
+
+   "tentacles"
+},
+
 // Naga only
 { MUT_BREATHE_POISON,             0,  1, false, false,
   "breathe poison",
