@@ -171,8 +171,7 @@ static void _plan_main(int level_number, int force_plan);
 static bool _plan_1(int level_number);
 static bool _plan_2(int level_number);
 static bool _plan_3(int level_number);
-static bool _plan_4(uint8_t forbid_x1, uint8_t forbid_y1, uint8_t forbid_x2,
-                    uint8_t forbid_y2, dungeon_feature_type force_wall);
+static bool _plan_4(dgn_region_list *excluded, dungeon_feature_type force_wall);
 static bool _plan_5(int level_number);
 static bool _plan_6(int level_number);
 static void _portal_vault_level(int level_number);
@@ -4792,15 +4791,15 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
     const int v2x = place.pos.x + place.size.x - 1;
     const int v2y = place.pos.y + place.size.y - 1;
 
+    dgn_region_list excluded_regions;
+    excluded_regions.push_back(dgn_region(place.pos, place.size));
+
     if (dis_wallify)
     {
-        _plan_4(v1x, v1y, v2x, v2y, DNGN_METAL_WALL);
+        _plan_4(&excluded_regions, DNGN_METAL_WALL);
     }
     else if (!is_layout)
     {
-        dgn_region_list excluded_regions;
-        excluded_regions.push_back(dgn_region(place.pos, place.size));
-
         int nrooms = random_range(15, 90);
 
         // Try harder for floating vaults, which tend to complicate room
@@ -6527,7 +6526,7 @@ static void _plan_main(int level_number, int force_plan)
     do_stairs = ((force_plan == 1) ? _plan_1(level_number) :
                  (force_plan == 2) ? _plan_2(level_number) :
                  (force_plan == 3) ? _plan_3(level_number) :
-                 (force_plan == 4) ? _plan_4(0, 0, 0, 0, NUM_FEATURES) :
+                 (force_plan == 4) ? _plan_4(NULL, NUM_FEATURES) :
                  (force_plan == 5) ? (one_chance_in(9) ? _plan_5(level_number)
                                                        : _plan_3(level_number)) :
                  (force_plan == 6) ? _plan_6(level_number)
@@ -6571,13 +6570,9 @@ static bool _plan_3(int level_number)
 }
 
 // A more chaotic version of city level.
-static bool _plan_4(uint8_t forbid_x1, uint8_t forbid_y1, uint8_t forbid_x2,
-                    uint8_t forbid_y2, dungeon_feature_type force_wall)
+static bool _plan_4(dgn_region_list *excluded, dungeon_feature_type force_wall)
 {
-    env.level_build_method += make_stringf(" plan_4 [%d,%d %d,%d %d]",
-                                     (int) forbid_x1, (int) forbid_y1,
-                                     (int) forbid_x2, (int) forbid_y2,
-                                     (int) force_wall);
+    env.level_build_method += make_stringf(" plan_4 [%d]", (int) force_wall);
     env.level_layout_type   = "city";
 
     int temp_rand;              // req'd for probability checking
@@ -6618,19 +6613,11 @@ static bool _plan_4(uint8_t forbid_x1, uint8_t forbid_y1, uint8_t forbid_x2,
         b2x = b1x + 3 + random2(7) + random2(5);
         b2y = b1y + 3 + random2(7) + random2(5);
 
-        if (forbid_x1 != 0 || forbid_x2 != 0)
+        if (excluded)
         {
-            if (b1x <= forbid_x2 && b1x >= forbid_x1
-                && b1y <= forbid_y2 && b1y >= forbid_y1)
-            {
+            dgn_region box = dgn_region::absolute(b1x, b1y, b2x, b2y);
+            if (box.overlaps(*excluded, env.level_map_mask))
                 continue;
-            }
-
-            if (b2x <= forbid_x2 && b2x >= forbid_x1
-                && b2y <= forbid_y2 && b2y >= forbid_y1)
-            {
-                continue;
-            }
         }
 
         if (count_antifeature_in_box(b1x-1, b1y-1, b2x+1, b2y+1, DNGN_FLOOR))
@@ -6658,7 +6645,7 @@ static bool _plan_4(uint8_t forbid_x1, uint8_t forbid_y1, uint8_t forbid_x2,
             _box_room(b1x, b2x - 1, b1y, b2y - 1, drawing);
     }
 
-    if (forbid_x1 == 0 && one_chance_in(4))     // a market square
+    if (!excluded && one_chance_in(4))     // a market square
     {
         spec_room sr;
         sr.tl.set(25, 25);
