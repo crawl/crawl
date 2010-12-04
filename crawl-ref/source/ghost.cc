@@ -967,7 +967,7 @@ bool debug_check_ghosts()
         // Name validation.
         if (!validate_player_name(ghost.name, false))
             return (false);
-        if (ghost.name.length() > (kNameLen - 1) || ghost.name.length() == 0)
+        if (ghost.name.length() > kNameLen || ghost.name.length() == 0)
             return (false);
         if (ghost.name != trimmed_string(ghost.name))
             return (false);
