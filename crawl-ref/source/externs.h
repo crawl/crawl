@@ -69,7 +69,7 @@ protected:
 
 extern char info[INFO_SIZE];         // defined in main.cc {dlb}
 
-const int kNameLen = 30;
+#define kNameLen        30
 #ifdef SHORT_FILE_NAMES
     const int kFileNameLen = 6;
 #else

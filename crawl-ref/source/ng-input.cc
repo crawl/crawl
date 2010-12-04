@@ -80,7 +80,7 @@ bool is_good_name(const std::string& name, bool blankOK, bool verbose)
 static bool _read_player_name(std::string &name)
 {
     const int name_x = wherex(), name_y = wherey();
-    char buf[kNameLen];
+    char buf[kNameLen + 1];
     // XXX: Prompt displays garbage otherwise, but don't really know why.
     //      Other places don't do this. --rob
     buf[0] = '\0';
