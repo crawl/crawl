@@ -99,7 +99,7 @@ function tutorial.message_autoexplore ()
 end
 
 function tutorial.message_door ()
-  local text = "Doors, like the one in front of you, can be opened by walking into them. They'll also be opened automatically while traveling or auto-exploring."
+  local text = "Doors, like the one in front of you, can be opened by walking into them. They'll also be opened automatically while traveling or auto-exploring. You can close an open door with " .. tutorial.get_cmd("CMD_CLOSE_DOOR") .. "."
 
   return tutorial.message(text, "tutorial", true, true)
 end
@@ -177,15 +177,13 @@ function tutorial.message_rest ()
 end
 
 function tutorial.message_log ()
-  local text = "(If you've forgotten any of the commands mentioned above, you can re-read previous message by "
+  local text = "(If you've forgotten any of the commands mentioned above, you can reread previous messages by "
 
   if crawl.is_tiles() then
-    text = text .. "<white>clicking</white> on the message area. "
-  else
-    text = text .. "pressing " .. tutorial.get_cmd("CMD_REPLAY_MESSAGES") .. ". "
+    text = text .. "<white>clicking</white> on the message area or by "
   end
 
-  text = text .. "To access the complete command help, press " .. tutorial.get_cmd("CMD_DISPLAY_COMMANDS") .. " followed by <white>?</white>.)"
+  text = text .. "pressing " .. tutorial.get_cmd("CMD_REPLAY_MESSAGES") .. ". To access the complete command help, press " .. tutorial.get_cmd("CMD_DISPLAY_COMMANDS") .. " followed by <white>?</white>.)"
 
   return tutorial.message(text, "tutorial", true)
 end
@@ -230,7 +228,7 @@ end
 function tutorial.message_memorize ()
   local text = "Memorise the spell from this spellbook by pressing " .. tutorial.get_cmd("CMD_MEMORISE_SPELL") .. " to enter the memorisation screen."
   if crawl.is_tiles() then
-    text = text .. "You can also memorise spells by <white>clicking</white> the spell icon on the book tab in your inventory."
+    text = text .. " You can also memorise spells by <white>clicking</white> the spell icon on the book tab in your inventory."
   end
 
   return tutorial.message(text, "tutorial", true)
@@ -293,7 +291,7 @@ end
 function tutorial.message_inventory ()
   local text = "You can read item descriptions from your inventory by pressing " .. tutorial.get_cmd("CMD_DISPLAY_INVENTORY")
   if crawl.is_tiles() then
-    text = text .. " or by doing a <white>mouseover</white> or <white>right-click</white> on the item tile"
+    text = text .. " or by doing a <white>right-click</white> on the item tile"
   end
   text = text .. "."
 
@@ -431,8 +429,8 @@ MARKER:  A = lua:tutorial.message( "You can chop up corpses with " .. tutorial.g
 MARKER:  d = lua:tutorial.message( "This axe was picked up automatically because you didn't have a butchering tool. Once you've " .. tutorial.get_cmd("CMD_BUTCHER") .. "hopped a corpse you're standing on, you can eat the resulting chunks with " .. tutorial.get_cmd("CMD_EAT") .. ", though only if you're hungry.", "tutorial", "true" )
 MARKER:  B = lua:tutorial.message_eat()
 MARKER:  C = lua:tutorial.message_identify()
-MARKER:  D = lua:tutorial.message( "These meat rations weigh too much. You can drop them with <white>d</white>. You can also drop e.g. only 10, by typing " .. tutorial.get_cmd("CMD_DROP") .. ", <white>10</white> and then selecting the meat rations.", "tutorial", "true" )
-MARKER:  E = lua:tutorial.message( "This sword is cursed. If you wield it, you can uncurse it by reading this remove curse scroll. Remove curse scrolls uncurse all the cursed items you have currently equipped. The other items in your inventory are not affected. Once the sword is uncursed, you can drop it with " .. tutorial.get_cmd("CMD_DROP") .. " or wield something else with " .. tutorial.get_cmd("CMD_WIELD_WEAPON") .. ".", "tutorial", "true" )
+MARKER:  D = lua:tutorial.message( "These meat rations weigh too much. You can drop them again with <white>d</white>. You can also drop e.g. only 10, by typing " .. tutorial.get_cmd("CMD_DROP") .. ", <white>10</white> and then selecting the meat rations.", "tutorial", "true" )
+MARKER:  E = lua:tutorial.message( "This sword is cursed. Once you've wielded it, you won't be able to unwield it again. However, you can then uncurse it by reading this remove curse scroll. Remove curse scrolls uncurse all the cursed items you have currently equipped. The other items in your inventory are not affected. Once the sword is no longer stuck to you, you can drop it with " .. tutorial.get_cmd("CMD_DROP") .. " or wield something else with " .. tutorial.get_cmd("CMD_WIELD_WEAPON") .. ".", "tutorial", "true" )
 MARKER:  F = lua:tutorial.message_quaff()
 MARKER:  G = lua:tutorial.message_evoke()
 MARKER:  H = lua:tutorial.message( "Here's some gold that can be spent in shops. Note that they don't buy items from you, so there's no need to carry stuff around that you can't use. Gold is picked up automatically.", "tutorial", "true" )

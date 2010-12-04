@@ -34,6 +34,7 @@ void delete_cloud(int cloud);
 void delete_cloud_at(coord_def p);
 void move_cloud(int cloud, const coord_def& newpos);
 void move_cloud_to(coord_def src, coord_def dest);
+void swap_clouds(coord_def p1, coord_def p2);
 
 void check_place_cloud(cloud_type cl_type, const coord_def& p, int lifetime,
                         kill_category whose, int spread_rate = -1,

@@ -1,0 +1,331 @@
+###############################################################################
+# zotdef.des - the zotdef (and only) vault for D:1.
+###############################################################################
+
+
+##############################################################################
+# hall_of_Zot_5
+
+NAME:    zotvault
+TAGS:    zotdef no_monster_gen
+ORIENT:  encompass
+LFLOORCOL: magenta
+LROCKCOL:  lightmagenta
+LFLAGS:  no_magic_map
+KITEM:   Z = Orb of Zot
+MARKER:  Z = lua:item_pickup_change_flags { \
+            level_flags="!no_magic_map", item="Orb of Zot" \
+         }
+MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
+            pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
+            size = 2, walk_dist = 2, spread_rate= 35 }
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxXXXXXxxxxxxxxxxxxxXXXXxxxxxxxxxxxxxxxxxXXXXxxxxxxxxxxxxXXXXXxxxxxxxxxx
+xxxxxxxxxxX|||XxxxxxxxxxxxxxX||XxxxxxxxxxxxxxxxxxX||XxxxxxxxxxxxxX|||Xxxxxxxxxxx
+xxxxxxxxxxX|||XxxxxxxxxxxxxxX||XxxxxxxxxxxxxxxxxxX||XxxxxxxxxxxxxX|||Xxxxxxxxxxx
+xxxxxxxxxxXXXXoXXXXXXXXXXXXXoXXXxxxxxxxxxxxxxxxxxXXXoXXXXXXXXXXXXXoXXXxxxxxxxxxx
+xxxxxxxxxxxXXXX.............XXXXxxxxxxxxxxxxxxxxxXXXX.............XXXXxxxxxxxxxx
+xxxxxxxxxxXX...................XXXxxxxxxxxxxxxxXXX...................XXxxxxxxxxx
+xxxxxxxxxXX......................XXxxxxxxxxxxxXX......................XXxxxxxxxx
+xxxxxxxxxX........................XXXXXXXXXXXXX........................Xxxxxxxxx
+xxxxxxxxxX........................XXX.......XXX........................Xxxxxxxxx
+xxxxxxxxxXX.......................XX.........XX.......................XXxxxxxxxx
+xxxxxxxxxxXX......................X...........X......................XXxxxxxxxxx
+xxxxxxxxxxxXX...........................Z...........................XXxxxxxxxxxx
+xxxxxxxxxxXX......................X...........X......................XXxxxxxxxxx
+xxxxxxxxxXX.......................XX.........XX.......................XXxxxxxxxx
+xxxxxxxxxX........................XXX.......XXX........................Xxxxxxxxx
+xxxxxxxxxX........................cXXXXXXXXXXXc........................Xxxxxxxxx
+xxxxxxxxxXX......................ccccccccccccccc......................XXxxxxxxxx
+xxxxxxxxxxXX...................ccccccccccccccccccc...................XXxxxxxxxxx
+xxxxxxxxxxxXX...............ccccccccccccccccccccccccc...............XXxxxxxxxxxx
+xxxxxxxxxxxxXX.....ccccccccccccccccccccccccccccccccccccccccccc.....XXxxxxxxxxxxx
+xxxxxxxxxxxcc...................ccccccccccccccccc...................ccxxxxxxxxxx
+xxxxxxxxxxcc................cc....ccccccccccccc....cc................ccxxxxxxxxx
+xxxxxxxxxcc..................ccc...ccccccccccc...ccc..................ccxxxxxxxx
+xxxxxxxxxc....................ccc...............ccc....................cxxxxxxxx
+xxxxxxxxxc....................cxcc.............ccxc....................cxxxxxxxx
+xxxxxxxxxc....................cxxc.............cxxc....................cxxxxxxxx
+xxxxxxxxxc....................cxxcc...........ccxxc....................cxxxxxxxx
+xxxxxxxxxc....................cxxxc...........cxxxc....................cxxxxxxxx
+xxxxxxxxxc....................cxxcc...........ccxxc....................cxxxxxxxx
+xxxxxxxxxcc..................ccxxc.............cxxcc..................ccxxxxxxxx
+xxxxxxxxxxcc................ccxxcc.............ccxxcc................ccxxxxxxxxx
+xxxxxxxxxxxco..............ccxxxc......(.{......cxxxcc..............ocxxxxxxxxxx
+xxxxxxxxxxx|cccccccccccccccoxxxxcccccccc[ccccccccxxxxoccccccccccccccc|xxxxxxxxxx
+xxxxxxxxxx|||xxxxxxxxxxxxxxx*xxxxxxxxxxxxxxxxxxxxxxx*xxxxxxxxxxxxxxx|||xxxxxxxxx
+xxxxxxxxxxx|xxxxxxxxxxxxxxx*|*xxxxxxxxxxxxxxxxxxxxx*|*xxxxxxxxxxxxxxx|xxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx*xxxxxxxxxxxxxxxxxxxxxxx*xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    zotvault2
+TAGS:    zotdef no_monster_gen
+ORIENT:  encompass
+LFLOORCOL: magenta
+LROCKCOL:  lightmagenta
+LFLAGS:  no_magic_map
+KITEM:   Z = Orb of Zot
+MARKER:  Z = lua:item_pickup_change_flags { \
+            level_flags="!no_magic_map", item="Orb of Zot" \
+         }
+MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
+            pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
+            size = 2, walk_dist = 2, spread_rate= 35 }
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxXXXXXXXXXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXXXXXXXXXXxxxxxxxxxx
+xxxxxxxxXXX.........XXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXXX.........XXXxxxxxxxx
+xxxxxxxXX..............XXXxxxxxxxxxxxxXXXxxxxxxxxxxxxXXX..............XXxxxxxxx
+xxxxxxXX.................XXxxxxxxxxxxXX.XXxxxxxxxxxxXX.................XXxxxxxx
+xxxxxXX...................XXxxxxxxxxXX...XXxxxxxxxxXX...................XXxxxxx
+xxxxxX.....................XXXxxxxxXX.....XXxxxxxXXX.....................Xxxxxx
+xxxxxX.......................XXXXXXX.......XXXXXXX.......................Xxxxxx
+xxxxxX.......................X...................X.......................Xxxxxx
+xxxxxXX................................Z................................XXxxxxx
+xxxxxxXX...............XXXXXXX...................XXXXXXX...............XXxxxxxx
+xxxxxxxXXx...........XXXxxxxxXXXXXXX.......XXXXXXXxxxxxXXX...........XXXxxxxxxx
+xxxxxxxxxXXX.......XXXxxxxxxxxxxxxxXX.....XXxxxxxxxxxxxxxXXX.......XXXxxxxxxxxx
+xxxxxxxxxxxXX.....XXxxxxxxxxxxxxxxxxXX...XXxxxxxxxxxxxxxxxxXX.....XXxxxxxxxxxxx
+xxxxxxxxxxxxX.....XXxxxxxxxxxxxxxxxxxXX.XXxxxxxxxxxxxxxxxxxXX.....Xxxxxxxxxxxxx
+xxxxxxxxxxXXX......XXXXXXXXXxxxxxxxxxxXXXxxxxxxxxxxXXXXXXXXX......XXXxxxxxxxxxx
+xxxxxxxxxXX................XXxxxx*|||*xxx*|||*xxxxXX................XXxxxxxxxxx
+xxxxxxxxxX..................Xxxxx|X|X|xxx|X|X|xxxxX..................Xxxxxxxxxx
+xxxxxxxxxX..................Xxxxx||X||ooo||X||xxxxX..................Xxxxxxxxxx
+xxxxxxxxXX..................XXxxx|X|X|xxx|X|X|xxxXX..................XXxxxxxxxx
+xxxxxxxxX....................Xxxx*|||*xxx*|||*xxxX....................Xxxxxxxxx
+xxxxxxxxX....................ooooxxxxxxxxxxxxxoooo....................Xxxxxxxxx
+xxxxxxxxXX..................XXxxxxxxxxxxxxxxxxxxxXX..................XXxxxxxxxx
+xxxxxxxxxXXX..............XXXxxxxxxxxxxxxxxxxxxxxxXXX..............XXXxxxxxxxxx
+xxxxxxxxxxxXXX..........XXXxxxxxxxxxxxxxxxxxxxxxxxxxXXX..........XXXxxxxxxxxxxx
+xxxxxxxxxxxxxXX.......XXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXX.......XXxxxxxxxxxxxxx
+xxxxxxxxxxxxxxXX.....XXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXX.....XXxxxxxxxxxxxxxx
+xxxxxxxxxxxccccXX...XXcccccccccxxxxxxxxxxxxxxxxxccccxccccXX...XXccccxxxxxxxxxxx
+xxxxxxxxxccc..................cccccccxxxxxccccccc..................cccxxxxxxxxx
+xxxxxxxccc......ccccccc.............cccxccc.............ccccccc......cccxxxxxxx
+xxxxxxcc.......cccxxxxcccccccc........ccc........ccccccccxxxxccc.......ccxxxxxx
+xxxxxxc..........ccxxxxxxxxxcc.........c.........ccxxxxxxxxxcc..........cxxxxxx
+xxxxxxcc..........ccxxxxxxxxc.....................cxxxxxxxxcc..........ccxxxxxx
+xxxxxxxcc..........ccxxxxxxxc.....................cxxxxxxxcc..........ccxxxxxxx
+xxxxxxxxcc..........cxxxxxxxc.....................cxxxxxxxc..........ccxxxxxxxx
+xxxxxxxxxc..........cxxxxxxxcc...................ccxxxxxxxc..........cxxxxxxxxx
+xxxxxxxccc..........cxxxxxxxxcc.................ccxxxxxxxxc..........cccxxxxxxx
+xxxxxccc..........cccxxxxxxxxxcc...............ccxxxxxxxxxccc..........cccxxxxx
+xxxxxc..........cccxxxxxxxxxxxxcc.............ccxxxxxxxxxxxxccc..........cxxxxx
+xxxxxc........cccxxxxxxxxxxxxxxxccc.........cccxxxxxxxxxxxxxxxccc........cxxxxx
+xxxxxc........cxxxxxxxxxxxxxxxxxxxccc..[..cccxxxxxxxxxxxxxxxxxxxc........cxxxxx
+xxxxxc...{....cxxxxxxxxxxxxxxxxxxxxxc..F..cxxxxxxxxxxxxxxxxxxxxxc....(...cxxxxx
+xxxxxc...F....cxxxxxxxxxxxxxxxxxxxxxcccccccxxxxxxxxxxxxxxxxxxxxxc....F...cxxxxx
+xxxxxccccccccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccccccccccxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# This one is very sensitive to the pathfinding algorithm, and currently
+# doesn't work (all critters enter the Orb chamber from the south). Needs
+# reworking before use, so the 'zotdef' tag has been replaced with '_zotdef'.
+NAME:    zotvault3
+TAGS:    _zotdef no_monster_gen no_rotate
+ORIENT:  encompass
+LFLOORCOL: magenta
+LROCKCOL:  lightmagenta
+LFLAGS:  no_magic_map
+KITEM:   Z = Orb of Zot
+MARKER:  Z = lua:item_pickup_change_flags { \
+            level_flags="!no_magic_map", item="Orb of Zot" \
+         }
+MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
+            pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
+            size = 2, walk_dist = 2, spread_rate= 35 }
+MAP
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX...XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX...XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.....XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.......XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX...........XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX..........Z..........XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXX....................X..XXX...........XXX..X....................XXXXXXX
+XXXXXXX....................X..XXXXX.......XXXXX..X....................XXXXXXX
+XXXXXXX....................X..XXXXXX.....XXXXXX..X....................XXXXXXX
+XXXXXXX....................X..XXXXXXX...XXXXXXX..X....................XXXXXXX
+XXXXXXX....................X..XXXXXXX...XXXXXXX..X....................XXXXXXX
+XXXXXXX..............XX....X..XXXXXXXX.XXXXXXXX..X....XX..............XXXXXXX
+XXXXXXX...............XX...X..XXXXXXXX.XXXXXXXX..X...XX...............XXXXXXX
+XXXXXXX...............XX...X..XXXXXXXX.XXXXXXXX..X...XX...............XXXXXXX
+XXXXXXXXXXXXXXX.......XX...XX...................XX...XX.......XXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXX.....XX.....X.................X.....XX.....XXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXX...XX.....X.................X.....XX...XXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXX.........XXXXXXXXXXXXXXXXXXXXXXXXX.........XXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXX....XXXXX....XXXXXXX.......XXXXXXX....XXXXX....XXXXXXXXXXXXXXX
+XXXXXXXXXXXXX....XXXXXXXXX....XXXX.........XXXX....XXXXXXXXX....XXXXXXXXXXXXX
+XXXXXXXXXXX....XXXXX|||XXXXX....X...........X....XXXXX|||XXXXX....XXXXXXXXXXX
+XX...........XXXXXXX|||XXXXXXX.................XXXXXXX|||XXXXXXX...........XX
+X..........XXXXXXXXXX|XXXXXXXXXX.............XXXXXXXXXX|XXXXXXXXXX..........X
+X........XXXXXXXXXXXX|XXXXXXXXXXXX.........XXXXXXXXXXXX|XXXXXXXXXXXX........X
+X.......Xooooooo*****|*****oooooooX.......Xooooooo*****|*****oooooooX.......X
+X........XXXXXXXXXXXX|XXXXXXXXXXXX.........XXXXXXXXXXXX|XXXXXXXXXXXX........X
+X..........XXXXXXXXXX|XXXXXXXXXX.............XXXXXXXXXX|XXXXXXXXXX..........X
+XX...........XXXXXXX|||XXXXXXX.................XXXXXXX|||XXXXXXX...........XX
+XXXXXXXXXXX....XXXXX|||XXXXX.....................XXXXX|||XXXXX....XXXXXXXXXXX
+XXXXXXXXXXXX.....XXXXXXXXX.........................XXXXXXXXX.....XXXXXXXXXXXX
+XXXXXXXXXXXXX......XXXXX.............................XXXXX......XXXXXXXXXXXXX
+XXXXXXXXXXXXXX...............XXXXXXXXXXXXXXXXXXX...............XXXXXXXXXXXXXX
+XXXXXXXXXXXXXXX.............XXXXXXXXXXXXXXXXXXXXX.............XXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXX...........XXXXXXXXXXXXXXXXXXXXXXX...........XXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXX.........XXXXXXXXXXXXXXXXXXXXXXXXX.........XXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXX.......XXXXXXXXXXXXXXXXXXXXXXXXXXX.......XXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXX.....XXXXXXXXXXXXXXXXXXXXXXXXXXXXX.....XXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXX.....XXXXXXXXXXXXXXXXXXXXXXXXXXXXX.....XXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXX...XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX...XXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXx.xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx.xXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXX...XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX...XXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXX.....XXXXXXXXXXXXXXXXXXXXXXXXXXXXX.....XXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXX.........XXXXXXXXXXXXXXXXXXXXXXXXX.........XXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXX....XXX....XXXXXXXXXXXXXXXXXXXXXXX....XXX....XXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXX....XXXXXXX....XXXXXXXXXXXXXXXXXXX....XXXXXXX....XXXXXXXXXXXXXX
+XXXXXXXXXXXX....XXXXXXXXXXX....XXXXXXXXXXXXXXX....XXXXXXXXXXX....XXXXXXXXXXXX
+XXXXXXXXX.....XXXXXXXXXXXXXXX....XXXXXXXXXXX....XXXXXXXXXXXXXXX.....XXXXXXXXX
+XXXXXXX.....XXXXXXXXXXXXXXXXXXX.....XXXXX.....XXXXXXXXXXXXXXXXXXX.....XXXXXXX
+XXXXXXX.....XXXXXXXXXXXXXXXXXXXXX....XXX....XXXXXXXXXXXXXXXXXXXXX.....XXXXXXX
+XXXXXXX.....XXXXXXXXXXXXXXXXXXXXXX....X....XXXXXXXXXXXXXXXXXXXXXX.....XXXXXXX
+XXXXXXX.....XXXXXXXXXXXXXXXXXXXXXXX...X...XXXXXXXXXXXXXXXXXXXXXXX.....XXXXXXX
+XXXXXX.......XXXXXXXXXXXXXXXXXXXXXX...X...XXXXXXXXXXXXXXXXXXXXXX.......XXXXXX
+XXXXX.........XXXXXXXXXXXXXXXXXXXXXXX.[.XXXXXXXXXXXXXXXXXXXXXXX.........XXXXX
+XXXX.....{.....XXXXXXXXXXXXXXXXXXXXXX...XXXXXXXXXXXXXXXXXXXXXX.....(.....XXXX
+XXX.............XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.............XXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ENDMAP
+
+NAME:    zotvault4
+TAGS:    zotdef no_monster_gen no_rotate
+ORIENT:  encompass
+LFLOORCOL: magenta
+LROCKCOL:  lightmagenta
+LFLAGS:  no_magic_map
+KITEM:   Z = Orb of Zot
+MARKER:  Z = lua:item_pickup_change_flags { \
+            level_flags="!no_magic_map", item="Orb of Zot" \
+         }
+MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
+            pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
+            size = 2, walk_dist = 2, spread_rate= 35 }
+MAP
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+X.......XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.......X
+X...F...XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX...F...X
+X...(...XXXXXXXX**|XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX|**XXXXXXXX...{...X
+X.......XXXXXXXX*|*XXXXXXXXXXXX...............XXXXXXXXXXXX*|*XXXXXXXX.......X
+X.......XXXXXXXX|**XXXXXXXXXXXX...............XXXXXXXXXXXX**|XXXXXXXX.......X
+XXXX....XXXXXXXoXXXXXX.................................XXXXXXoXXXXXXX....XXXX
+XXXX...........XXXXXXX.................................XXXXXXX...........XXXX
+XXXX...........XXXXXXX......XXXXX...X...X...XXXXX......XXXXXXX...........XXXX
+XXXXXXXXXXX....XXXXXXX...XXXXXXXX...........XXXXXXXX...XXXXXXX....XXXXXXXXXXX
+XXXXXXXXXXX....XXXXXXX...XXXXXXXX...X...X...XXXXXXXX...XXXXXXX....XXXXXXXXXXX
+XXXXXXX............XXX...XXXXXXXX...........XXXXXXXX...XXX............XXXXXXX
+XXXXXXX..X......X..XXX...XXXXXXXX...X...X...XXXXXXXX...XXX..X......X..XXXXXXX
+XXXXXXX............XXX...XXXXXXXX...........XXXXXXXX...XXX............XXXXXXX
+XXXXXXX..X......X..XXX...XXXXXXXX...X...X...XXXXXXXX...XXX..X......X..XXXXXXX
+XXXXXXX.....XX.....XXX...XXXXXXXX...........XXXXXXXX...XXX.....XX.....XXXXXXX
+XXXXXXX..X......X..XXX...XXXXXXXX...X...X...XXXXXXXX...XXX..X......X..XXXXXXX
+XXXXXXX............XXX...XXXXXXXX...........XXXXXXXX...XXX............XXXXXXX
+XXXXXXX..X......X..XXX...XXXXXXXXXXXX...XXXXXXXXXXXX...XXX..X......X..XXXXXXX
+XXXXXXX............XXX...XXXXXXXXXXX.....XXXXXXXXXXX...XXX............XXXXXXX
+XXXXXXXXXXX....XXXXXXX...XXXXXXXXXXX..X..XXXXXXXXXXX...XXXXXXX....XXXXXXXXXXX
+XXXXXXXXXXX....XXXXXXX...XXXXXXXXXXX..X..XXXXXXXXXXX...XXXXXXX....XXXXXXXXXXX
+XXXXXXXXXXX....XXXXXXX...XXXXXXXXXXX..X..XXXXXXXXXXX...XXXXXXX....XXXXXXXXXXX
+XXXXXXXXXXX....XXXXXXX...XXXXXXXXXXX..X..XXXXXXXXXXX...XXXXXXX....XXXXXXXXXXX
+XXXXXXXXXXX....XXXXXXX...XXXXXXXXXXX..X..XXXXXXXXXXX...XXXXXXX....XXXXXXXXXXX
+XXXXXXXXXXX..............XXXXXXXXXXX..X..XXXXXXXXXXX..............XXXXXXXXXXX
+XXXXXXXXXX................XXXXXXXXXX..X..XXXXXXXXXX................XXXXXXXXXX
+XXXXXXXXX..................XXXXXXXXX..X..XXXXXXXXX..................XXXXXXXXX
+XXXXXXXXX....XXXXoXXXXX....XXXXXXXXX..X..XXXXXXXXX....XXXXXoXXXX....XXXXXXXXX
+XXXXXXXXX...XXXXXoXXXXXX...XXXXXXXX...X...XXXXXXXX...XXXXXXoXXXXX...XXXXXXXXX
+XXXXXXXXXXXXXXXXXoXXXXXXXXXXXXXXXX...XXX...XXXXXXXXXXXXXXXXoXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXoXXXXXXXXXXXXXXX...XXXXX...XXXXXXXXXXXXXXXoXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXX|||XXXXXXXXXXXXX...XXXXXXX...XXXXXXXXXXXXX|||XXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXX|||XXXXXXXXXXXX...XXXXXXXXX...XXXXXXXXXXXX|||XXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX...XXXX...XXXX...XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXX...XXXX.....XXXX...XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX...XXXX.......XXXX...XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX.....................XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX.....................XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXoXXXXX.....Z.....XXXXXoXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXX|||XXXXXX...........XXXXXX|||XXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXX|||XXXXXXX.........XXXXXXX|||XXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.......XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ENDMAP
+
+# Currently under development and testing, so commented out in the tags.
+NAME:    zotvault5
+TAGS:    _zotdef no_monster_gen no_rotate
+ORIENT:  encompass
+LFLOORCOL: magenta
+LROCKCOL:  lightmagenta
+LFLAGS:  no_magic_map
+KITEM:   Z = Orb of Zot
+MARKER:  Z = lua:item_pickup_change_flags { \
+            level_flags="!no_magic_map", item="Orb of Zot" \
+         }
+MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
+            pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
+            size = 2, walk_dist = 2, spread_rate= 35 }
+MAP
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX..(.............................................................{..XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..........XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...........XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX...........XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...............................XX.XX...............................XXXXX
+XXXXX..............................Xo...oX..............................XXXXX
+XXXXX.............................Xo.....oX.............................XXXXX
+XXXXX............................Xo.......oX............................XXXXX
+XXXXX...........................Xo.........oX...........................XXXXX
+XXXXX....XXXXXXXXXXXXXXXXXXXXXXXX...........XXXXXXXXXXXXXXXXXXXXXXX.....XXXXX
+XXXXXX..XX|||||||||||||||***...oooooo.Z.ooooo...***|||||||||||||||XXX..XXXXXX
+XXXXX....XXXXXXXXXXXXXXXXXXXXXXXX...........XXXXXXXXXXXXXXXXXXXXXXX.....XXXXX
+XXXXX...........................Xo.........oX...........................XXXXX
+XXXXX............................Xo.......oX............................XXXXX
+XXXXX.............................Xo.....oX.............................XXXXX
+XXXXX..............................Xo...oX..............................XXXXX
+XXXXX...............................XX.XX...............................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...........XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX...........XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..........XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX..(.............................................................[..XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ENDMAP

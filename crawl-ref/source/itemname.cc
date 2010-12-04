@@ -92,7 +92,7 @@ std::string item_def::name(description_level_type descrip,
     std::ostringstream buff;
 
     const std::string auxname = this->name_aux(descrip, terse, ident,
-                                               ignore_flags);
+                                               with_inscription, ignore_flags);
 
     const bool startvowel     = is_vowel(auxname[0]);
 
@@ -295,7 +295,7 @@ std::string item_def::name(description_level_type descrip,
         }
     }
 
-    if (descrip != DESC_BASENAME)
+    if (descrip != DESC_BASENAME && descrip != DESC_DBNAME && with_inscription)
     {
         const bool  tried  =  !ident && !equipped && item_type_tried(*this);
         std::string tried_str;
@@ -1218,7 +1218,7 @@ static void output_with_sign(std::ostream& os, int val)
 // Note that "terse" is only currently used for the "in hand" listing on
 // the game screen.
 std::string item_def::name_aux(description_level_type desc,
-                               bool terse, bool ident,
+                               bool terse, bool ident, bool with_inscription,
                                iflags_t ignore_flags) const
 {
     // Shortcuts
@@ -1536,7 +1536,7 @@ std::string item_def::name_aux(description_level_type desc,
 
         if (know_pluses)
             buff << " (" << it_plus << ")";
-        else if (!dbname)
+        else if (!dbname && with_inscription)
         {
             if (item_plus2 == ZAPCOUNT_EMPTY)
                 buff << " {empty}";
@@ -2952,13 +2952,17 @@ bool is_useless_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case POT_BERSERK_RAGE:
+            return (you.is_undead
+                        && (you.species != SP_VAMPIRE
+                            || temp && you.hunger_state <= HS_SATIATED));
+
         case POT_CURE_MUTATION:
         case POT_GAIN_STRENGTH:
         case POT_GAIN_INTELLIGENCE:
         case POT_GAIN_DEXTERITY:
-            return (you.species == SP_GHOUL
-                    || temp && you.species == SP_VAMPIRE
-                            && you.hunger_state < HS_SATIATED);
+            return (you.is_undead
+                        && (you.species != SP_VAMPIRE
+                            || temp && you.hunger_state < HS_SATIATED));
 
         case POT_LEVITATION:
             return (you.permanent_levitation() || you.permanent_flight());

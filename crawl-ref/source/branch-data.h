@@ -220,9 +220,9 @@ Branch branches[] = {
       NULL, NULL, NULL, NULL,
       0, 'N', false, true, 0 },
 
-    { BRANCH_DWARF_HALL, BRANCH_MAIN_DUNGEON, 5, 7, 1, 6, 0, 0,
-      DNGN_ENTER_DWARF_HALL, DNGN_RETURN_FROM_DWARF_HALL,
-      "Dwarf Hall", "the Dwarf Hall", "Dwarf",
+    { BRANCH_DWARVEN_HALL, BRANCH_MAIN_DUNGEON, 5, 7, 1, 6, 0, 0,
+      DNGN_ENTER_DWARVEN_HALL, DNGN_RETURN_FROM_DWARVEN_HALL,
+      "Dwarven Hall", "the Dwarven Hall", "Dwarf",
       NULL,
       30, true, YELLOW, LIGHTGREY,
       mons_dwarf_rare, mons_dwarf_level,

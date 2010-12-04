@@ -27,6 +27,20 @@
     #endif
 #endif
 
+// length of a single zot defense cycle
+#define CYCLE_LENGTH 200
+
+// Waiting time before monsters arrive
+#define CYCLE_INTERVAL 50
+
+// peak size of a random spawn
+#define SPAWN_SIZE 1
+
+// Extra power to assign to a boss monster
+#define BOSS_MONSTER_EXTRA_POWER 5
+
+// number of waves to pass between bosses generated with a rune
+#define FREQUENCY_OF_RUNES 7
 
 // max size of inventory array {dlb}:
 #define ENDOFPACK 52
@@ -41,8 +55,9 @@ const int MAX_GHOSTS = 10;
 
 enum extra_monster_index_type
 {
-    MAX_MONSTERS = 700,         // max size of monster array {dlb}
-    NON_MONSTER  = NON_ENTITY,  // no monster
+    MAX_MONSTERS = 700,                  // max size of monster array {dlb}
+    ANON_FRIENDLY_MONSTER = MAX_MONSTERS,// unknown/dead ally, for actor blaming
+    NON_MONSTER  = NON_ENTITY,           // no monster
 
     MHITNOT = NON_MONSTER,
     MHITYOU,
@@ -57,13 +72,13 @@ enum extra_monster_index_type
 // number of monster enchantments
 #define NUM_MON_ENCHANTS 6
 
-// size of Pan monster sets
-#define MAX_MONS_ALLOC 10
+// size of Pan monster sets. Also used for wave data in ZotDef.
+#define MAX_MONS_ALLOC 20
 
 #define MAX_SUBTYPES    50
 
 // max size of item list {dlb}:
-#define MAX_ITEMS 1000
+#define MAX_ITEMS 2000   // //
 // non-item -- (ITEMS + 1) {dlb}
 #define NON_ITEM  NON_ENTITY
 
@@ -138,9 +153,6 @@ const int LABYRINTH_BORDER = 4;
 // changing this affects the total number of shops in a game
 #define MAX_RANDOM_SHOPS  5
 
-// Can be passed to monster_die to indicate that a friendly did the killing.
-const int ANON_FRIENDLY_MONSTER = -1999;
-
 // This value is used to make test_hit checks always succeed
 #define AUTOMATIC_HIT           1500
 
@@ -200,6 +212,10 @@ const int DEPTH_PAN   = 52;
 const int BRANCH_DUNGEON_DEPTH = 27;
 
 const int ANTITRAIN_PENALTY = 2;
+
+#define TORNADO_RADIUS 5
+
+#define NUMBER_OF_RUNES_NEEDED    3
 
 // Size of unique_items in player class
 #define MAX_UNRANDARTS 100

@@ -310,7 +310,7 @@ static void _shoals_furniture(int margin)
                 vault = random_map_for_tag("shoal_hut");
             while (!vault && --tries > 0);
             if (vault)
-                dgn_place_map(vault, false, false, _pick_shoals_island(), 0);
+                dgn_place_map(vault, false, false, _pick_shoals_island());
         }
 
         // Fixup pass to connect vaults.

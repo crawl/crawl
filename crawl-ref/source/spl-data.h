@@ -267,7 +267,7 @@ struct spell_desc
      6,
      200,
      LOS_RADIUS, LOS_RADIUS,
-     0,
+     -6,
      NULL,
      false,
      true
@@ -533,6 +533,19 @@ struct spell_desc
      0,
      NULL,
      true,
+     false
+},
+
+{
+    SPELL_TORNADO, "Tornado",
+     SPTYP_AIR,
+     SPFLAG_AREA,
+     9,
+     200,
+     TORNADO_RADIUS, TORNADO_RADIUS,
+     0,
+     NULL,
+     false,
      false
 },
 
@@ -1418,7 +1431,7 @@ struct spell_desc
      LOS_RADIUS, LOS_RADIUS,
      0,
      NULL,
-     false,
+     true,
      false
 },
 
@@ -2732,19 +2745,6 @@ struct spell_desc
     3,
     0,
     -1, -1,
-    0,
-    NULL,
-    false,
-    false
-},
-
-{
-    SPELL_BURN_SPELLBOOK, "Burn Spellbook",
-    SPTYP_ENCHANTMENT,
-    SPFLAG_AREA,
-    1,
-    200,
-    LOS_RADIUS, LOS_RADIUS,
     0,
     NULL,
     false,

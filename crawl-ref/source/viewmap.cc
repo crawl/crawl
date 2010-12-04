@@ -118,6 +118,9 @@ bool is_feature(wchar_t feature, const coord_def& where)
 
     dungeon_feature_type grid = grd(where);
 
+    if (feature_mimic_at(where))
+        grid = get_mimic_feat(monster_at(where));
+
     switch (feature)
     {
     case 'E':
@@ -184,7 +187,7 @@ bool is_feature(wchar_t feature, const coord_def& where)
         case DNGN_STONE_STAIRS_UP_I:
         case DNGN_STONE_STAIRS_UP_II:
         case DNGN_STONE_STAIRS_UP_III:
-        case DNGN_RETURN_FROM_DWARF_HALL:
+        case DNGN_RETURN_FROM_DWARVEN_HALL:
         case DNGN_RETURN_FROM_ORCISH_MINES:
         case DNGN_RETURN_FROM_HIVE:
         case DNGN_RETURN_FROM_LAIR:
@@ -210,7 +213,7 @@ bool is_feature(wchar_t feature, const coord_def& where)
         case DNGN_STONE_STAIRS_DOWN_I:
         case DNGN_STONE_STAIRS_DOWN_II:
         case DNGN_STONE_STAIRS_DOWN_III:
-        case DNGN_ENTER_DWARF_HALL:
+        case DNGN_ENTER_DWARVEN_HALL:
         case DNGN_ENTER_ORCISH_MINES:
         case DNGN_ENTER_HIVE:
         case DNGN_ENTER_LAIR:

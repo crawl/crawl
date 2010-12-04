@@ -293,6 +293,8 @@ std::string gametype_to_str(game_type type)
         return ("arena");
     case GAME_TYPE_SPRINT:
         return ("sprint");
+    case GAME_TYPE_ZOTDEF:
+        return ("zotdef");
     default:
         return ("none");
     }
@@ -1035,7 +1037,6 @@ void game_options::reset_options()
     menu_colour_mappings.clear();
     menu_colour_prefix_class = true;
     menu_colour_shops = true;
-    menu_cursor = false;
     message_colour_mappings.clear();
     drop_filter.clear();
     map_file_name.clear();
@@ -1258,7 +1259,7 @@ static std::string _find_crawlrc()
 {
     const char* locations_data[][2] = {
         { SysEnv.crawl_dir.c_str(), "init.txt" },
-#ifdef MULTIUSER
+#ifdef UNIX
         { SysEnv.home.c_str(), ".crawlrc" },
         { SysEnv.home.c_str(), "init.txt" },
 #endif
@@ -1314,8 +1315,6 @@ static std::string _find_crawlrc()
 std::string read_init_file(bool runscript)
 {
     Options.reset_options();
-	SysEnv.extra_opts_first.clear();
-	SysEnv.extra_opts_last.clear();
 
     Options.filename     = "extra opts first";
     Options.basefilename = "extra opts first";
@@ -1335,7 +1334,7 @@ std::string read_init_file(bool runscript)
             return make_stringf("(\"%s\" is not readable)",
                                 init_file_name.c_str());
 
-#ifdef MULTIUSER
+#ifdef UNIX
         return "(~/.crawlrc missing)";
 #else
         return "(no init.txt in current directory)";
@@ -1344,7 +1343,7 @@ std::string read_init_file(bool runscript)
 
     Options.filename = init_file_name;
     Options.line_num = 0;
-#ifdef MULTIUSER
+#ifdef UNIX
     Options.basefilename = "~/.crawlrc";
 #else
     Options.basefilename = "init.txt";
@@ -3040,7 +3039,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION_NAMED("menu_color_prefix_class", menu_colour_prefix_class);
     else BOOL_OPTION(menu_colour_shops);
     else BOOL_OPTION_NAMED("menu_color_shops", menu_colour_shops);
-    else BOOL_OPTION(menu_cursor);
     else if (key == "message_colour" || key == "message_color")
     {
         add_message_colour_mappings(field);
@@ -3443,13 +3441,7 @@ void game_options::include(const std::string &rawfilename,
         resolve ? resolve_include(rawfilename) : rawfilename;
 
     if (was_included(include_file))
-    {
-        // Report error with rawfilename, not the resolved file name - we
-        // don't want to leak file paths in dgamelaunch installs.
-        report_error(make_stringf("Skipping previously included file: \"%s\".",
-                                  rawfilename.c_str()));
         return;
-    }
 
     included.insert(include_file);
 
@@ -3517,7 +3509,7 @@ void get_system_environment(void)
     // The full path to the init file -- this overrides CRAWL_DIR.
     SysEnv.crawl_rc = check_string(getenv("CRAWL_RC"));
 
-#ifdef MULTIUSER
+#ifdef UNIX
     // The user's home directory (used to look for ~/.crawlrc file)
     SysEnv.home = check_string(getenv("HOME"));
 #endif
@@ -3564,6 +3556,8 @@ enum commandline_option_type
     CLO_EXTRA_OPT_LAST,
     CLO_SPRINT_MAP,
     CLO_EDIT_SAVE,
+    CLO_PRINT_CHARSET,
+    CLO_ZOTDEF,
 
     CLO_NOPS
 };
@@ -3573,7 +3567,7 @@ static const char *cmd_ops[] = {
     "rcdir", "tscores", "vscores", "scorefile", "morgue", "macro",
     "mapstat", "arena", "test", "script", "builddb", "help", "version",
     "seed", "save-version", "sprint", "extra-opt-first", "extra-opt-last",
-    "sprint-map", "edit-save",
+    "sprint-map", "edit-save", "print-charset", "zotdef",
 };
 
 static const int num_cmd_ops = CLO_NOPS;
@@ -4155,6 +4149,33 @@ bool parse_args(int argc, char **argv, bool rc_only)
             nextUsed               = true;
             crawl_state.sprint_map = next_arg;
             Options.game.map       = next_arg;
+            break;
+
+        case CLO_ZOTDEF:
+            if (!rc_only)
+                Options.game.type = GAME_TYPE_ZOTDEF;
+            break;
+
+        case CLO_PRINT_CHARSET:
+            if (rc_only)
+                break;
+            switch(Options.char_set)
+            {
+            case CSET_ASCII:
+                printf("ASCII\n");
+                end(0);
+            case CSET_IBM:
+                printf("IBM\n");
+                end(0);
+            case CSET_DEC:
+                printf("DEC\n");
+                end(0);
+            case CSET_UNICODE:
+                printf("UNICODE\n");
+                end(0);
+            case NUM_CSET:
+                ASSERT(!"unset charset");
+            }
             break;
 
         case CLO_EXTRA_OPT_FIRST:

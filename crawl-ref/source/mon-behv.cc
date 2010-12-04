@@ -15,12 +15,14 @@
 #include "env.h"
 #include "fprop.h"
 #include "exclude.h"
+#include "items.h"
 #include "mon-death.h"
 #include "mon-iter.h"
 #include "mon-movetarget.h"
 #include "mon-pathfind.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
+#include "ouch.h"
 #include "random.h"
 #include "state.h"
 #include "terrain.h"
@@ -130,6 +132,26 @@ void handle_behaviour(monster* mon)
     static std::vector<level_exit> e;
     static int                     e_index = -1;
 
+    // Zotdef rotting
+    if (crawl_state.game_is_zotdef())
+    {
+        if (!isFriendly && !isNeutral && orb_position() == mon->pos())
+        {
+            int loss = div_rand_round(10, mon->speed);
+            if (loss)
+            {
+                mpr("Your flesh rots away as the Orb of Zot is desecrated.",
+                    MSGCH_DANGER);
+                rot_hp(loss);
+                ouch(1, NON_MONSTER, KILLED_BY_ROTTING);
+            }
+        }
+    }
+
+    //mprf("AI debug: mon %d behv=%d foe=%d pos=%d %d target=%d %d",
+    //     mon->mindex(), mon->behaviour, mon->foe, mon->pos().x,
+    //     mon->pos().y, mon->target.x, mon->target.y);
+
     // Check for confusion -- early out.
     if (mon->has_ench(ENCH_CONFUSION))
     {
@@ -186,15 +208,47 @@ void handle_behaviour(monster* mon)
         }
     }
 
+    // Zotdef: immobile allies forget targets that are out of sight
+    if (crawl_state.game_is_zotdef())
+    {
+        if (isFriendly && mons_is_stationary(mon)
+            && (mon->foe != MHITNOT && mon->foe != MHITYOU)
+            && !mon->can_see(&menv[mon->foe]))
+        {
+            mon->foe = MHITYOU;
+            //mprf("%s resetting target (cantSee)",
+            //     mon->name(DESC_CAP_THE,true).c_str());
+        }
+    }
+
     // Set friendly target, if they don't already have one.
     // Berserking allies ignore your commands!
     if (isFriendly
-        && you.pet_target != MHITNOT
         && (mon->foe == MHITNOT || mon->foe == MHITYOU)
         && !mon->berserk()
         && mon->type != MONS_GIANT_SPORE)
     {
-        mon->foe = you.pet_target;
+        if  (!crawl_state.game_is_zotdef())
+        {
+            if (you.pet_target != MHITNOT)
+                mon->foe = you.pet_target;
+        }
+        else    // Zotdef only
+        {
+            // Attack pet target if nearby
+            if (you.pet_target != MHITNOT && proxPlayer)
+            {
+                //mprf("%s setting target (player target)",
+                //     mon->name(DESC_CAP_THE,true).c_str());
+                mon->foe = you.pet_target;
+            }
+            else
+            {
+               // Zotdef - this is all new, for out-of-sight friendlies to do
+               // something useful.  If no current target, get the closest one.
+                _set_nearest_monster_foe(mon);
+            }
+        }
     }
 
     // Instead, berserkers attack nearest monsters.
@@ -219,6 +273,8 @@ void handle_behaviour(monster* mon)
         && (proxPlayer || one_chance_in(3)))
     {
         _set_nearest_monster_foe(mon);
+        if (mon->foe == MHITNOT && crawl_state.game_is_zotdef())
+            mon->foe = MHITYOU;
     }
 
     // Monsters do not attack themselves. {dlb}
@@ -242,10 +298,12 @@ void handle_behaviour(monster* mon)
 
     // Unfriendly monsters fighting other monsters will usually
     // target the player, if they're healthy.
+    // Zotdef: 2/3 chance of retargeting changed to 1/4
     if (!isFriendly && !isNeutral
         && mon->foe != MHITYOU && mon->foe != MHITNOT
         && proxPlayer && !mon->berserk() && isHealthy
-        && !one_chance_in(3))
+        && (crawl_state.game_is_zotdef() ? one_chance_in(4)
+                                         : !one_chance_in(3)))
     {
         mon->foe = MHITYOU;
     }
@@ -271,6 +329,11 @@ void handle_behaviour(monster* mon)
         if (afoe)
             foepos = afoe->pos();
 
+        if (crawl_state.game_is_zotdef() && mon->foe == MHITYOU)
+        {
+            foepos = PLAYER_POS;
+            proxFoe = true;
+        }
 
         // Track changes to state; attitude never changes here.
         beh_type new_beh       = mon->behaviour;
@@ -298,7 +361,7 @@ void handle_behaviour(monster* mon)
                 else
                 {
                     new_foe = MHITYOU;
-                    mon->target = you.pos();
+                    mon->target = PLAYER_POS;
                 }
                 break;
             }
@@ -364,14 +427,20 @@ void handle_behaviour(monster* mon)
                     // but only for a few moves (smell and
                     // intuition only go so far).
 
-                    if (mon->pos() == mon->target)
-                    {
+                    if ((mon->pos() == mon->target)
+                        && (!isFriendly || !crawl_state.game_is_zotdef()))
+                    {   // hostiles only in Zotdef
                         if (mon->foe == MHITYOU)
                         {
-                            if (one_chance_in(you.skills[SK_STEALTH]/3))
-                                mon->target = you.pos();
+                            if (crawl_state.game_is_zotdef())
+                                mon->target = PLAYER_POS;  // infallible tracking in zotdef
                             else
-                                mon->foe_memory = 0;
+                            {
+                                if (one_chance_in(you.skills[SK_STEALTH] / 3))
+                                    mon->target = you.pos();
+                                else
+                                    mon->foe_memory = 0;
+                            }
                         }
                         else
                         {
@@ -439,7 +508,7 @@ void handle_behaviour(monster* mon)
                 }
                 else
                 {
-                    mon->target = you.pos();
+                    mon->target = PLAYER_POS;
                 }
             }
             else
@@ -640,7 +709,8 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
             && (friendly || !is_sanctuary(p))
             && (foe->friendly() != friendly
                 || neutral && !foe->neutral())
-            && !mons_is_firewood(foe))
+            && (crawl_state.game_is_zotdef() || !mons_is_firewood(foe)))
+                // Zotdef allies take out firewood
         {
             return (true);
         }
@@ -993,4 +1063,14 @@ void make_mons_stop_fleeing(monster* mon)
 {
     if (mons_is_fleeing(mon))
         behaviour_event(mon, ME_CORNERED);
+}
+
+// Returns the position of the Orb, or you.pos() if
+// the Orb's not found.
+coord_def zotdef_target()
+{
+    coord_def tgt = orb_position();
+    if (tgt.origin())
+        tgt = you.pos();
+    return tgt;
 }

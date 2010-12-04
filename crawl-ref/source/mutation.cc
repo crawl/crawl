@@ -169,6 +169,7 @@ formatted_string describe_mutations()
     std::string result;
     bool have_any = false;
     const char *mut_title = "Innate Abilities, Weirdness & Mutations";
+    std::string scale_type = "plain brown";
 
     // center title
     int offset = 39 - strlen(mut_title) / 2;
@@ -235,48 +236,61 @@ formatted_string describe_mutations()
         break;
 
     case SP_GREEN_DRACONIAN:
-        result += "You can breathe poison.\n";
+        result += "You can breathe blasts of noxious fumes.\n";
         have_any = true;
+        scale_type = "lurid green";
         break;
 
     case SP_GREY_DRACONIAN:
         result += "You can walk through water.\n";
         have_any = true;
+        scale_type = "dull grey";
         break;
 
     case SP_RED_DRACONIAN:
-        result += "You can breathe fire.\n";
+        result += "You can breathe blasts of fire.\n";
         have_any = true;
+        scale_type = "fiery red";
         break;
 
     case SP_WHITE_DRACONIAN:
-        result += "You can breathe cold.\n";
+        result += "You can breathe waves of freezing cold.\n";
+        result += "You can buffet flying creatures when you breathe cold.\n";
+        scale_type = "icy white";
         have_any = true;
         break;
 
     case SP_BLACK_DRACONIAN:
-        result += "You can breathe lightning.\n";
+        result += "You can breathe wild blasts of lightning.\n";
+        scale_type = "glossy black";
         have_any = true;
         break;
 
     case SP_YELLOW_DRACONIAN:
-        result += "You can spit acid.\n";
+        result += "You can spit globs of acid.\n";
+        result += "You can corrode armour when you spit acid.\n";
         result += "You are resistant to acid.\n";
+        scale_type = "golden yellow";
         have_any = true;
         break;
 
     case SP_PURPLE_DRACONIAN:
-        result += "You can breathe power.\n";
+        result += "You can breathe bolts of incandescent energy.\n";
+        result += "You can dispel enchantments when you breathe energy.\n";
+        scale_type = "rich purple";
         have_any = true;
         break;
 
     case SP_MOTTLED_DRACONIAN:
-        result += "You can breathe sticky flames.\n";
+        result += "You can spit globs of burning liquid.\n";
+        result += "You can ignite nearby creatures when you spit burning liquid.\n";
+        scale_type = "weird mottled";
         have_any = true;
         break;
 
     case SP_PALE_DRACONIAN:
-        result += "You can breathe steam.\n";
+        result += "You can breathe blasts of scalding steam.\n";
+        scale_type = "pale grey";
         have_any = true;
         break;
 
@@ -352,13 +366,13 @@ formatted_string describe_mutations()
     {
         // Draconians are large for the purposes of armour, but only medium for
         // weapons and carrying capacity.
-        result += "Your body does not fit into most forms of armour.\n";
-
         int ac = 3 + (you.experience_level / 3);
         std::ostringstream num;
         num << ac;
-        result += "Your scales are hard (AC +" + num.str() + ").\n";
+        result += "Your " + scale_type + " scales are hard (AC +" + num.str() + ").\n";
         have_any = true;
+
+        result += "Your body does not fit into most forms of armour.\n";
     }
 
     result += "</lightblue>";
@@ -1166,6 +1180,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
     bool gain_msg = true;
 
+    you.mutation[mutat]++;
+
     switch (mutat)
     {
     case MUT_STRONG: case MUT_AGILE:  case MUT_CLEVER:
@@ -1180,9 +1196,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         mpr(mdef.gain[you.mutation[mutat]], MSGCH_MUTATION);
         gain_msg = false;
 
-        // Hooves and talons force boots off at 3.  Check for level 2 or
-        // higher here.
-        if (you.mutation[mutat] >= 2 && !you.melded[EQ_BOOTS])
+        // Hooves and talons force boots off at 3.
+        if (you.mutation[mutat] >= 3 && !you.melded[EQ_BOOTS])
             remove_one_equip(EQ_BOOTS, false, true);
         break;
 
@@ -1190,10 +1205,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         mpr(mdef.gain[you.mutation[mutat]], MSGCH_MUTATION);
         gain_msg = false;
 
-        // Gloves aren't prevented until level 3.  We don't have the
-        // mutation yet, so we have to check for level 2 or higher claws
-        // here.
-        if (you.mutation[mutat] >= 2 && !you.melded[EQ_GLOVES])
+        // Gloves aren't prevented until level 3.
+        if (you.mutation[mutat] >= 3 && !you.melded[EQ_GLOVES])
             remove_one_equip(EQ_GLOVES, false, true);
         break;
 
@@ -1229,8 +1242,6 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
     // For all those scale mutations.
     you.redraw_armour_class = true;
-
-    you.mutation[mutat]++;
 
     notify_stat_change("losing a mutation");
 
@@ -1271,6 +1282,8 @@ static bool _delete_single_mutation_level(mutation_type mutat)
 
     bool lose_msg = true;
 
+    you.mutation[mutat]--;
+
     switch (mutat)
     {
     case MUT_STRONG: case MUT_AGILE:  case MUT_CLEVER:
@@ -1303,7 +1316,6 @@ static bool _delete_single_mutation_level(mutation_type mutat)
     // For all those scale mutations.
     you.redraw_armour_class = true;
 
-    you.mutation[mutat]--;
     notify_stat_change("losing a mutation");
 
     if (lose_msg)

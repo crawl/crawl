@@ -13,6 +13,17 @@ const int MAX_SKILL_ORDER = 100;
 #include "enum.h"
 #include "player.h"
 
+enum sk_menu_flags
+{
+    SK_MENU_NONE         = 0,
+    SK_MENU_SHOW_APT     = 0x01,
+    SK_MENU_SHOW_DESC    = 0x02,
+    SK_MENU_SHOW_RESKILL = 0x04,
+    SK_MENU_SHOW_ALL     = 0x08,
+    SK_MENU_RESKILL      = 0x10
+};
+
+int get_skill_percentage(const skill_type x);
 const char *skill_name(skill_type which_skill);
 skill_type str_to_skill(const std::string &skill);
 
@@ -40,10 +51,17 @@ float species_apt_factor(skill_type sk, species_type sp = you.species);
 unsigned int skill_exp_needed(int lev);
 unsigned int skill_exp_needed(int lev, skill_type sk,
                               species_type sp = you.species);
+
+float crosstrain_bonus(skill_type sk);
+bool crosstrain_other(skill_type sk);
+bool is_antitrained(skill_type sk);
+bool antitrain_other(skill_type sk);
+
 void show_skills();
 void wield_warning(bool newWeapon = true);
 bool is_invalid_skill(skill_type skill);
 void dump_skills(std::string &text);
-skill_type list_skills(std::string title, skill_type hide = SK_NONE,
-                       bool show_all = false);
+skill_type select_skill(bool show_all = false);
+int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
+                          bool simu);
 #endif

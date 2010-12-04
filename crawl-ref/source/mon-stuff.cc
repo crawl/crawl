@@ -223,7 +223,7 @@ dungeon_feature_type get_mimic_feat (const monster* mimic)
     return (DNGN_UNSEEN);
 }
 
-bool feature_mimic_at (const coord_def &c)
+bool feature_mimic_at(const coord_def &c)
 {
     const monster* mons = monster_at(c);
     if (mons != NULL)
@@ -579,6 +579,14 @@ int place_monster_corpse(const monster* mons, bool silent,
     }
 
     int o = get_item_slot();
+
+    // Zotdef corpse creation forces cleanup, otherwise starvation
+    // kicks in. The magic number 9 is less than the magic number of
+    // 10 in get_item_slot which indicates that a cull will be initiated
+    // if a free slot can't be found.
+    if (o == NON_ITEM && crawl_state.game_is_zotdef())
+        o = get_item_slot(9);
+
     if (o == NON_ITEM)
     {
         item_was_destroyed(corpse);
@@ -733,7 +741,8 @@ static int _calc_player_experience(monster* mons, killer_type killer,
         else
             return (experience);
     }
-    else if (pet_kill && !already_got_half_xp)
+    // Get exp for all kills in Zotdef
+    else if ((pet_kill && !already_got_half_xp) || crawl_state.game_is_zotdef())
         return (half_xp);
     else
         return (0);
@@ -1513,6 +1522,10 @@ int monster_die(monster* mons, killer_type killer,
 
     // Same for silencers.
     mons->del_ench(ENCH_SILENCE);
+
+    // For the case when shop mimic was killed before player discovered him
+    if (mons->type == MONS_SHOP_MIMIC)
+        StashTrack.remove_shop(mons->pos());
 
     crawl_state.inc_mon_acting(mons);
 
@@ -2828,7 +2841,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         // If the player saw both the beginning and end results of a
         // shifter changing, then s/he knows it must be a shifter.
         if (can_see && shifter.ench != ENCH_NONE)
-            mons->flags |= MF_KNOWN_MIMIC;
+            discover_mimic(mons);
     }
 
     if (old_mon_caught)
@@ -3002,8 +3015,8 @@ void corrode_monster(monster* mons)
                 mons->ac--;
                 if (you.can_see(mons))
                 {
-                    mprf("The acid corrodes %s's %s!",
-                         mons->name(DESC_NOCAP_THE).c_str(),
+                    mprf("The acid corrodes %s %s!",
+                         apostrophise(mons->name(DESC_NOCAP_THE)).c_str(),
                          thing_chosen.name(DESC_PLAIN).c_str());
                 }
             }
@@ -3319,6 +3332,10 @@ bool can_go_straight(const coord_def& p1, const coord_def& p2,
     if (distance(p1, p2) > get_los_radius_sq())
         return (false);
 
+    // If no distance, then trivially true
+    if (p1 == p2)
+        return (true);
+
     // XXX: Hack to improve results for now. See FIXME above.
     ray_def ray;
     if (!find_ray(p1, p2, ray, opc_immob))
@@ -3553,6 +3570,14 @@ bool mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
 
         break;
 
+    case CLOUD_TORNADO:
+        // Ball lightnings are not afraid of a _storm_, duh.  Or elementals.
+        if (mons->res_wind())
+            return (false);
+
+        // Locust swarms are too stupid to avoid winds.
+        return (mons_intel(mons) >= I_ANIMAL);
+
     default:
         break;
     }
@@ -3658,11 +3683,10 @@ int mons_pick_best_missile(monster* mons, item_def **launcher,
         launch = NULL;
 
     const int n_usable_melee_weapons(mons_wields_two_weapons(mons) ? 2 : 1);
-    const int tdam =
-        mons_thrown_weapon_damage(
-            melee,
-            melee_weapon_count == n_usable_melee_weapons
-            && melee->quantity == 1);
+    const bool only = melee_weapon_count == n_usable_melee_weapons
+                      && melee->quantity == 1;
+    const int tdam = (melee && is_throwable(mons, *melee)) ?
+                         mons_thrown_weapon_damage(melee, only) : 0;
     const int fdam = mons_missile_damage(mons, launch, missiles);
 
     if (!tdam && !fdam)
@@ -3868,9 +3892,15 @@ void seen_monster(monster* mons)
 
         if (MONST_INTERESTING(mons))
         {
+            std::string name = mons->name(DESC_NOCAP_A, true);
+            if (mons->type == MONS_PLAYER_GHOST)
+            {
+                name += make_stringf(" (%s)",
+                        short_ghost_description(mons, true).c_str());
+            }
             take_note(
                       Note(NOTE_SEEN_MONSTER, mons->type, 0,
-                           mons->name(DESC_NOCAP_A, true).c_str()));
+                           name.c_str()));
         }
     }
 }
@@ -4116,7 +4146,7 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     if (mons_is_mimic(mons->type))
     {
         if (now_visible)
-            mons->flags |= MF_KNOWN_MIMIC;
+            discover_mimic(mons);
         else
             mons->flags &= ~MF_KNOWN_MIMIC;
     }
@@ -4423,4 +4453,22 @@ void debuff_monster(monster* mon)
      // Dispel all magical enchantments.
      for (unsigned int i = 0; i < ARRAYSZ(lost_enchantments); ++i)
           mon->del_ench(lost_enchantments[i], true, true);
+}
+
+// Return the number of monsters of the specified type.
+// If friendlyOnly is true, only count friendly
+// monsters, otherwise all of them
+int count_monsters(monster_type mtyp, bool friendlyOnly)
+{
+    int count = 0;
+    for (int mon = 0; mon < MAX_MONSTERS; mon++)
+    {
+        monster *mons = &menv[mon];
+        if (mons->alive() && mons->type == mtyp
+            && (!friendlyOnly || mons->friendly()))
+        {
+            count++;
+        }
+    }
+    return (count);
 }

@@ -460,11 +460,12 @@ static mon_attack_flavour _very_ugly_thing_flavour_upgrade(mon_attack_flavour u_
 
     return (u_att_flav);
 }
+
 mon_attack_flavour ugly_thing_colour_to_flavour(uint8_t u_colour)
 {
     mon_attack_flavour u_att_flav = AF_PLAIN;
 
-    switch (u_colour & 7)
+    switch (make_low_colour(u_colour))
     {
     case RED:
         u_att_flav = AF_FIRE;
@@ -494,8 +495,9 @@ mon_attack_flavour ugly_thing_colour_to_flavour(uint8_t u_colour)
         break;
     }
 
-    if (u_colour & 8)
+    if (is_high_colour(u_colour))
         u_att_flav = _very_ugly_thing_flavour_upgrade(u_att_flav);
+
     return (u_att_flav);
 }
 
@@ -904,7 +906,6 @@ int ghost_demon::n_extra_ghosts()
         // areas at this depth, such as portal vaults.
         if (subdepth < 9 && you.where_are_you == BRANCH_MAIN_DUNGEON
             || subdepth < 2 && you.where_are_you == BRANCH_LAIR
-            || subdepth < 3 && you.where_are_you == BRANCH_DWARF_HALL
             || subdepth < 2 && you.where_are_you == BRANCH_ORCISH_MINES)
         {
             return (0);
@@ -977,4 +978,16 @@ bool debug_check_ghosts()
                 return (false);
     }
     return (true);
+}
+
+int ghost_level_to_rank(const int xl)
+{
+    if (xl <  4) return 0;
+    if (xl <  7) return 1;
+    if (xl < 11) return 2;
+    if (xl < 16) return 3;
+    if (xl < 22) return 4;
+    if (xl < 26) return 5;
+    if (xl < 27) return 6;
+    return 7;
 }

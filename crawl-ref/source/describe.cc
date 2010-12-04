@@ -735,6 +735,37 @@ void append_weapon_stats(std::string &description, const item_def &item)
    description += "%";
 }
 
+static std::string _corrosion_resistance_string(const item_def &item)
+{
+    const int ench = item.base_type == OBJ_WEAPONS ? item.plus2 : item.plus;
+    const char* format = "\nIts enchantment level renders it %s to acidic "
+                         "corrosion.";
+
+    if (is_artefact(item))
+        return "";
+    if (ench >= 5 && item_ident(item, ISFLAG_KNOW_PLUSES))
+        return make_stringf(format, "immune");
+    else if (ench >= 4 && item_ident(item, ISFLAG_KNOW_PLUSES))
+        return make_stringf(format, "extremely resistant");
+    else if (item.base_type == OBJ_ARMOUR
+             && item.sub_type == ARM_CRYSTAL_PLATE_MAIL)
+    {
+        return "\nBeing made of crystal renders it very resistant to acidic "
+               "corrosion.";
+    }
+    else if (get_equip_race(item) == ISFLAG_DWARVEN)
+    {
+        return "\nBeing of dwarven fabrication renders it very resistant to "
+               "acidic corrosion.";
+    }
+    else if (ench >= 3 && item_ident(item, ISFLAG_KNOW_PLUSES))
+        return make_stringf(format, "resistant");
+    else if (ench >= 2 && item_ident(item, ISFLAG_KNOW_PLUSES))
+        return make_stringf(format, "somewhat resistant");
+    else
+        return "";
+}
+
 //---------------------------------------------------------------
 //
 // describe_weapon
@@ -977,9 +1008,8 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
             iflags_t race = get_equip_race(item);
 
             if (race == ISFLAG_DWARVEN)
-                description += "\nIt is well-crafted, durable, and resistant "
-                               "to corrosion. Dwarves deal slightly more "
-                               "damage with it.";
+                description += "\nIt is well-crafted and durable. Dwarves "
+                               "deal slightly more damage with it.";
 
             if (race == ISFLAG_ORCISH)
                 description += "\nOrcs deal slightly more damage with it.";
@@ -1016,6 +1046,8 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
             description += ".";
         }
     }
+
+    description += _corrosion_resistance_string(item);
 
     return (description);
 }
@@ -1221,6 +1253,8 @@ static std::string _describe_ammo(const item_def &item)
         description += ".";
     }
 
+    description += _corrosion_resistance_string(item);
+
     return (description);
 }
 
@@ -1373,8 +1407,7 @@ static std::string _describe_armour(const item_def &item, bool verbose)
         iflags_t race = get_equip_race(item);
 
         if (race == ISFLAG_DWARVEN)
-            description += "\nIt is well-crafted, durable, and resistant to "
-                           "corrosion.";
+            description += "\nIt is well-crafted and durable.";
         else if (race == ISFLAG_ELVEN)
         {
             description += "\nIt is well-crafted and unobstructive";
@@ -1407,6 +1440,8 @@ static std::string _describe_armour(const item_def &item, bool verbose)
         else
             description += "\nIt is maximally enchanted.";
     }
+
+    description += _corrosion_resistance_string(item);
 
     return description;
 }
@@ -2984,7 +3019,7 @@ static std::string _describe_draconian_colour(int species)
     case MONS_WHITE_DRACONIAN:
         return "Frost pours from its nostrils.";
     case MONS_GREY_DRACONIAN:
-        return "Its scales seem rigid and its tail muscular.";
+        return "Its scales and tail are adapted to the water.";
     case MONS_PALE_DRACONIAN:
         return "It is cloaked in a pall of superheated steam.";
     }
@@ -3219,14 +3254,14 @@ static std::string _monster_stat_description(const monster_info& mi)
 
     // Size
     const char *sizes[NUM_SIZE_LEVELS] = {
-        "as big as a rat",
-        "as big as a spriggan",
-        "as big as a kobold",
+        "tiny",
+        "little",
+        "small",
         NULL,     // don't display anything for 'medium'
-        "as big as an ogre",
-        "as big as a hydra",
-        "as big as a giant",
-        "as big as a dragon",
+        "large",
+        "big",
+        "giant",
+        "huge",
     };
 
     const char *mimic_sizes[6]= {
@@ -3528,15 +3563,48 @@ void describe_monsters(const monster_info &mi, bool force_seen,
 }
 
 static const char* xl_rank_names[] = {
-    " weakling",
-    "n average",
-    "n experienced",
-    " powerful",
-    " mighty",
-    " great",
-    "n awesomely powerful",
-    " legendary"
+    "weakling",
+    "average",
+    "experienced",
+    "powerful",
+    "mighty",
+    "great",
+    "awesomely powerful",
+    "legendary"
 };
+
+static std::string _xl_rank_name(const int xl_rank)
+{
+    const char* rank = xl_rank_names[xl_rank];
+
+    std::string name = make_stringf("a%s %s",
+                                    is_vowel(rank[0]) ? "n" : "",
+                                    rank);
+    return name;
+}
+
+std::string short_ghost_description(const monster *mon, bool abbrev)
+{
+    ASSERT(mons_is_pghost(mon->type));
+
+    const ghost_demon &ghost = *(mon->ghost);
+    const char* rank = xl_rank_names[ghost_level_to_rank(ghost.xl)];
+
+    std::string desc = make_stringf("%s %s %s",
+                        rank,
+                        species_name(ghost.species).c_str(),
+                        get_job_name(ghost.job));
+
+    if (abbrev || desc.length() > 40)
+    {
+        desc = make_stringf("%s %s%s",
+                            rank,
+                            get_species_abbrev(ghost.species),
+                            get_job_abbrev(ghost.job));
+    }
+
+    return desc;
+}
 
 // Describes the current ghost's previous owner. The caller must
 // prepend "The apparition of" or whatever and append any trailing
@@ -3584,7 +3652,7 @@ std::string get_ghost_description(const monster_info &mi, bool concise)
                         mi.u.ghost.best_skill_rank,
                         gspecies,
                         str, dex, mi.u.ghost.religion)
-         << ", a" << xl_rank_names[mi.u.ghost.xl_rank] << " ";
+         << ", " << _xl_rank_name(mi.u.ghost.xl_rank) << " ";
 
     if (concise)
     {
@@ -3891,11 +3959,6 @@ const char *divine_title[NUM_GODS][8] =
     // Ashenzari -- divination theme
     {"Star-crossed",       "Cursed",                "Initiated",                "Seer",
      "Soothsayer",         "Oracle",                "Illuminatus",              "Omniscient"},
-#if 0
-    // blue_anna's Romanian variant for Ashenzari
-    {"Impostură",          "Impressionabil",        "Clar-văzător",             "Ghicitor",
-     "Medium",             "Proroc",                "Oracol",                   "Profet"},
-#endif
 };
 
 static int _piety_level()

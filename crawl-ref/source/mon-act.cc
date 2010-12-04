@@ -337,10 +337,10 @@ static bool _mon_on_interesting_grid(monster* mon)
     case DNGN_RETURN_FROM_ELVEN_HALLS:
         return (mons_is_native_in_branch(mon, BRANCH_ELVEN_HALLS));
 
-    // Same for dwarves and the Dwarf Hall.
-    case DNGN_ENTER_DWARF_HALL:
-    case DNGN_RETURN_FROM_DWARF_HALL:
-        return (mons_is_native_in_branch(mon, BRANCH_DWARF_HALL));
+    // Same for dwarves and the Dwarven Hall.
+    case DNGN_ENTER_DWARVEN_HALL:
+    case DNGN_RETURN_FROM_DWARVEN_HALL:
+        return (mons_is_native_in_branch(mon, BRANCH_DWARVEN_HALL));
 
     // Killer bees always return to their hive.
     case DNGN_ENTER_HIVE:
@@ -914,40 +914,32 @@ static int _generate_rod_power(monster *mons, int overriding_power = 0)
 {
     // power is actually 5 + Evocations + 2d(Evocations)
     // modified by shield and shield skill
-
-    // subsection: evocation skill and shield skill equivalents for monsters
-    int evoc_num = 1;
-    int evoc_den = 1;
-
-    if (mons->type == MONS_DEEP_DWARF_ARTIFICER)
-        evoc_num++;
-
     int shield_num = 1;
     int shield_den = 1;
-
     int shield_base = 1;
+
     if (mons->inv[MSLOT_SHIELD] != NON_ITEM)
     {
         item_def *shield = mons->mslot_item(MSLOT_SHIELD);
         switch (shield->sub_type)
         {
         case ARM_BUCKLER:
-            shield_base = 5;
+            shield_base += 4;
             break;
         case ARM_SHIELD:
-            shield_base = 3;
+            shield_base += 2;
             break;
         case ARM_LARGE_SHIELD:
-            shield_base = 2;
+            shield_base++;
             break;
         default:
-            shield_base = 1;
             break;
         }
     }
 
-    const int power_base = (mons->hit_dice * evoc_num) / evoc_den;
+    const int power_base = mons->skill(SK_EVOCATIONS);
     int power            = 5 + power_base + (2 * random2(power_base));
+
     if (shield_base > 1)
     {
         const int shield_mod = ((power / shield_base) * shield_num) / shield_den;
@@ -2493,7 +2485,8 @@ static bool _monster_eat_item(monster* mons, bool nearby)
         return (false);
 
     int hps_changed = 0;
-    int max_eat = roll_dice(1, 10);
+    // Zotdef jellies are toned down slightly
+    int max_eat = roll_dice(1, (crawl_state.game_is_zotdef() ? 8 : 10));
     int eaten = 0;
     bool eaten_net = false;
     bool death_ooze_ate_good = false;
@@ -2530,7 +2523,8 @@ static bool _monster_eat_item(monster* mons, bool nearby)
         {
             quant = std::min(quant, max_eat - eaten);
 
-            hps_changed += (quant * item_mass(*si)) / 20 + quant;
+            hps_changed += (quant * item_mass(*si))
+                           / (crawl_state.game_is_zotdef() ? 30 : 20) + quant;
             eaten += quant;
 
             if (mons->caught()
@@ -2894,6 +2888,10 @@ static bool _is_trap_safe(const monster* mons, const coord_def& where,
         return (true);
     }
 
+    // In Zotdef critters will risk death to get to the Orb
+    if (crawl_state.game_is_zotdef() && mechanical)
+        return (true);
+
     // Friendly and good neutral monsters don't enjoy Zot trap perks;
     // handle accordingly.  In the arena Zot traps affect all monsters.
     if (mons->wont_attack() || crawl_state.game_is_arena())
@@ -3194,7 +3192,18 @@ static bool _mon_can_move_to_pos(const monster* mons,
         if (mons_aligned(mons, targmonster)
             && !_mons_can_displace(mons, targmonster))
         {
-            return (false);
+            // In Zotdef hostiles will whack other hostiles if immobile
+            // - prevents plugging gaps with hostile oklobs
+            if (crawl_state.game_is_zotdef())
+            {
+                if (!mons_is_stationary(targmonster)
+                    || targmonster->attitude != ATT_HOSTILE)
+                {
+                    return (false);
+                }
+            }
+            else
+                return (false);
         }
     }
 
@@ -3737,7 +3746,9 @@ static bool _monster_move(monster* mons)
         // Check for attacking another monster.
         if (monster* targ = monster_at(mons->pos() + mmov))
         {
-            if (mons_aligned(mons, targ))
+            if (mons_aligned(mons, targ) &&
+                (!crawl_state.game_is_zotdef() || !mons_is_firewood(targ)))
+                // Zotdef: monsters will cut down firewood
                 ret = _monster_swaps_places(mons, mmov);
             else
             {
@@ -3787,6 +3798,14 @@ static bool _monster_move(monster* mons)
         }
 
         mmov.reset();
+
+        // zotdef: sometimes seem to get gridlock. Reset travel path
+        // if we can't move, occasionally
+        if (crawl_state.game_is_zotdef() && one_chance_in(20))
+        {
+             mons->travel_path.clear();
+             mons->travel_target = MTRAV_NONE;
+        }
 
         // Fleeing monsters that can't move will panic and possibly
         // turn to face their attacker.

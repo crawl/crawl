@@ -8,6 +8,7 @@
 # The only Swamp entry... mist leaking from the stairs.
 NAME:   swamp_mist
 TAGS:   swamp_entry
+KFEAT:  O = enter_swamp
 MARKER: O = lua:fog_machine { \
              pow_min = 8, pow_max = 12, delay = 25, \
              size = 1, walk_dist = 1, spread_rate= 33 }
@@ -18,6 +19,7 @@ ENDMAP
 # No longer the only swamp entry! This one gives a taste of what's "to come".
 NAME:   swamp_mist_pool
 TAGS:   swamp_entry no_pool_fixup
+KFEAT:  O = enter_swamp
 MARKER: O = lua:fog_machine { \
              pow_min = 8, pow_max = 12, delay = 25, \
              size = 1, walk_dist = 1, spread_rate= 33 }
