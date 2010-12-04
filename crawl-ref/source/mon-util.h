@@ -177,10 +177,11 @@ std::string mons_type_name(int type, description_level_type desc);
 bool give_monster_proper_name(monster* mon, bool orcs_only = true);
 
 flight_type mons_class_flies(int mc);
-flight_type mons_flies(const monster* mon, bool randarts = true);
+flight_type mons_flies(const monster* mon, bool temp = true);
 
 bool mons_class_amphibious(int mc);
 bool mons_class_flattens_trees(int mc);
+int mons_class_res_wind(int mc);
 bool mons_amphibious(const monster* mon);
 bool mons_flattens_trees(const monster* mon);
 bool mons_class_wall_shielded(int mc);
@@ -225,6 +226,7 @@ mon_holy_type mons_class_holiness(int mc);
 bool mons_is_mimic(int mc);
 bool mons_is_item_mimic(int mc);
 bool mons_is_feat_mimic(int mc);
+void discover_mimic(monster* mimic);
 
 
 bool mons_is_statue(int mc, bool allow_disintegrate = false);

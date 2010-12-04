@@ -2183,7 +2183,7 @@ void mimic_alert(monster* mimic)
     if (mimic->has_ench(ENCH_TP) || mons_is_feat_mimic(mimic->type))
     {
         if (should_id)
-            mimic->flags |= MF_KNOWN_MIMIC;
+            discover_mimic(mimic);
 
         return;
     }
@@ -2193,7 +2193,7 @@ void mimic_alert(monster* mimic)
 
     // At least for this short while, we know it's a mimic.
     if (!instant_tele && should_id)
-        mimic->flags |= MF_KNOWN_MIMIC;
+        discover_mimic(mimic);
 }
 
 static void _create_feat_at(coord_def center,
@@ -2483,6 +2483,7 @@ void bolt::affect_ground()
         }
 
         if (x_chance_in_y(2, 21)
+           && !crawl_state.game_is_zotdef() // Turn off in Zotdef
            && mons_class_can_pass(MONS_BALLISTOMYCETE, env.grid(pos()))
            && !actor_at(pos()))
         {
@@ -4183,6 +4184,7 @@ void bolt::affect_monster(monster* mon)
         apply_hit_funcs(mon, 0);
         return;
     }
+
     if (fedhas_shoot_through(*this, mon))
     {
         apply_hit_funcs(mon, 0);

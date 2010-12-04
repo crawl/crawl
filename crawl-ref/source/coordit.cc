@@ -228,7 +228,7 @@ again:
         // Randomize the order various directions are returned.
         // Just the initial angle is enough.
         if (fair)
-            icur = iend = random2(vcur->size() + 1);
+            icur = iend = random2(vcur->size());
         else
             icur = iend = 0; // randomness is costly
 
@@ -295,11 +295,9 @@ const distance_iterator& distance_iterator::operator++()
     return *this;
 }
 
-distance_iterator distance_iterator::operator++(int dummy)
+void distance_iterator::operator++(int dummy)
 {
-    const distance_iterator copy = *this;
     ++(*this);
-    return (copy);
 }
 
 int distance_iterator::radius() const

@@ -14,6 +14,7 @@
 #include "monster.h"
 #include "player.h"
 #include "random.h"
+#include "state.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "traps.h"
@@ -101,7 +102,7 @@ bool try_pathfind(monster* mon, const dungeon_feature_type can_move)
     // next turn, and even extend that flag to neighbouring
     // monsters of similar movement restrictions.
 
-    bool need_pathfind = !can_go_straight(mon->pos(), you.pos(), can_move);
+    bool need_pathfind = !can_go_straight(mon->pos(), PLAYER_POS, can_move);
 
     // Smart monsters that can fire through obstacles won't use
     // pathfinding.
@@ -115,11 +116,11 @@ bool try_pathfind(monster* mon, const dungeon_feature_type can_move)
     // Also don't use pathfinding if the monster can shoot
     // across the blocking terrain, and is smart enough to
     // realise that.
-    if (need_pathfind
+    if ((!crawl_state.game_is_zotdef()) && need_pathfind
         && mons_intel(mon) >= I_NORMAL && !mon->friendly()
         && (mons_has_ranged_spell(mon, true)
             || mons_has_ranged_attack(mon))
-        && exists_ray(mon->pos(), you.pos(), opc_solid))
+        && exists_ray(mon->pos(), PLAYER_POS, opc_solid))
     {
         need_pathfind = false;
     }
@@ -154,7 +155,7 @@ bool try_pathfind(monster* mon, const dungeon_feature_type can_move)
         const coord_def targ = mon->travel_path[len - 1];
 
         // Current target still valid?
-        if (can_go_straight(targ, you.pos(), can_move))
+        if (can_go_straight(targ, PLAYER_POS, can_move))
         {
             // Did we reach the target?
             if (mon->pos() == mon->travel_path[0])
@@ -178,12 +179,13 @@ bool try_pathfind(monster* mon, const dungeon_feature_type can_move)
     }
 
     // Use pathfinding to find a (new) path to the player.
-    const int dist = distance(mon->pos(), you.pos());
+    const int dist = grid_distance(mon->pos(), PLAYER_POS);
 
 #ifdef DEBUG_PATHFIND
     mprf("Need to calculate a path... (dist = %d)", dist);
 #endif
-    const int range = mons_tracking_range(mon);
+    // All monsters can find the Orb in Zotdef
+    const int range = (crawl_state.game_is_zotdef() ? 1000 : mons_tracking_range(mon));
     if (range > 0 && dist > dist_range(range))
     {
         mon->travel_target = MTRAV_UNREACHABLE;
@@ -196,13 +198,13 @@ bool try_pathfind(monster* mon, const dungeon_feature_type can_move)
 
 #ifdef DEBUG_PATHFIND
     mprf("Need a path for %s from (%d, %d) to (%d, %d), max. dist = %d",
-         mon->name(DESC_PLAIN).c_str(), mon->pos(), you.pos(), range);
+         mon->name(DESC_PLAIN).c_str(), mon->pos(), PLAYER_POS, range);
 #endif
     monster_pathfind mp;
     if (range > 0)
         mp.set_range(range);
 
-    if (mp.init_pathfind(mon, you.pos()))
+    if (mp.init_pathfind(mon, PLAYER_POS))
     {
         mon->travel_path = mp.calc_waypoints();
         if (!mon->travel_path.empty())

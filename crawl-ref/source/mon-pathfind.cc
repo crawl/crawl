@@ -9,6 +9,7 @@
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "monster.h"
+#include "random.h"
 #include "terrain.h"
 #include "traps.h"
 
@@ -188,11 +189,15 @@ bool monster_pathfind::calc_path_to_neighbours()
     //       / | \        of (dir = 0) once dir has passed 7.
     //      7  4  5
     //
-    for (int dir = 1; dir < 8; (dir += 2) == 9 && (dir = 0))
+    // To avoid bias, we'll choose a random 90 degree rotation
+    int rotate = random2(4) * 2; // equal probability of 0,2,4,6
+    for (int idir = 1; idir < 8; (idir += 2) == 9 && (idir = 0))
     {
         // Skip diagonal movement.
-        if (!allow_diagonals && (dir % 2))
+        if (!allow_diagonals && (idir % 2))
             continue;
+
+        int dir = (idir + rotate) % 8;  // apply our random 90 degree rotation
 
         npos = pos + Compass[dir];
 

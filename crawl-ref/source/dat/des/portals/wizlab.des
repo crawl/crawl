@@ -508,6 +508,7 @@ MONS:       stone golem name:vine_covered name_adjective col:lightgreen \
 MONS:       toadstool
 SUBST:      y = ct
 COLOUR:     G = lightgrey
+TILE:       G = dngn_statue_centaur
 KFEAT:      / = stone_arch
 KFEAT:      _ = altar_fedhas
 MARKER:     A = feat:stone_arch
@@ -1300,6 +1301,7 @@ KITEM:      8 = quarterstaff unrand:staff_of_wucad_mu, book of enchantments
 COLOUR:     =c = darkgrey
 COLOUR:     t = lightred / red w:3
 TILE:       t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
+TILE:       G = dngn_granite_statue w:1 / dngn_statue_troll w:3 / dngn_statue_ancient_hero w:1
 COLOUR:     AG = red
 COLOUR:     < = lightred
 TILE:       c = dngn_stone_dark

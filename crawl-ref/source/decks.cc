@@ -2131,7 +2131,7 @@ static void _helix_card(int power, deck_rarity_type rarity)
     }
 }
 
-static void _sage_card(int power, deck_rarity_type rarity)
+void sage_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
     int c;                      // how much to weight your skills
@@ -2174,7 +2174,7 @@ static void _sage_card(int power, deck_rarity_type rarity)
     }
 }
 
-static void _create_pond(const coord_def& center, int radius, bool allow_deep)
+void create_pond(const coord_def& center, int radius, bool allow_deep)
 {
     for (radius_iterator ri(center, radius, false); ri; ++ri)
     {
@@ -2225,12 +2225,12 @@ static void _water_card(int power, deck_rarity_type rarity)
     if (power_level == 0)
     {
         mpr("You create a pond!");
-        _create_pond(you.pos(), 4, false);
+        create_pond(you.pos(), 4, false);
     }
     else if (power_level == 1)
     {
         mpr("You feel the tide rushing in!");
-        _create_pond(you.pos(), 6, true);
+        create_pond(you.pos(), 6, true);
         for (int i = 0; i < 2; ++i)
             _deepen_water(you.pos(), 6);
     }
@@ -2845,7 +2845,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_SHUFFLE:          _shuffle_card(power, rarity); break;
     case CARD_EXPERIENCE:       _experience_card(power, rarity); break;
     case CARD_HELIX:            _helix_card(power, rarity); break;
-    case CARD_SAGE:             _sage_card(power, rarity); break;
+    case CARD_SAGE:             sage_card(power, rarity); break;
     case CARD_WATER:            _water_card(power, rarity); break;
     case CARD_GLASS:            _glass_card(power, rarity); break;
     case CARD_DOWSING:          _dowsing_card(power, rarity); break;

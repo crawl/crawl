@@ -672,6 +672,7 @@ bool vehumet_supports_spell(spell_type spell)
         || spell == SPELL_FRAGMENTATION // LRD
         || spell == SPELL_SANDBLAST
         || spell == SPELL_AIRSTRIKE
+        || spell == SPELL_TORNADO
         || spell == SPELL_IGNITE_POISON
         || spell == SPELL_OZOCUBUS_REFRIGERATION
         // Toxic Radiance does no direct damage
@@ -895,11 +896,11 @@ void yred_drain_life()
 
     for (monster_iterator mi(you.get_los()); mi; ++mi)
     {
-        if (mi->holiness() != MH_NATURAL
-            || mi->res_negative_energy())
-        {
+        if (mi->res_negative_energy())
             continue;
-        }
+
+        if (mi->wont_attack())
+            continue;
 
         mprf("You draw life from %s.",
              mi->name(DESC_NOCAP_THE).c_str());
@@ -2435,65 +2436,63 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
 
 bool ashenzari_transfer_knowledge()
 {
-    skill_type fsk = list_skills("Select the source skill.");
-    if (fsk == SK_NONE)
+    if (you.transfer_skill_points > 0)
+        if (!ashenzari_end_transfer())
+            return false;
+
+    you.transfer_from_skill = select_skill();
+    if (you.transfer_from_skill == SK_NONE)
+    {
+        redraw_screen();
         return false;
+    }
 
-    skill_type tsk = list_skills("Select the destination skill.", fsk);
-    if (tsk == SK_NONE)
-        return false;
+    int fsk_points = you.skill_points[you.transfer_from_skill];
+    int skp_max; // maximum number of skill points transferrable.
 
-    mprf("As you forget about %s, you feel ready to understand %s.",
-         skill_name(fsk), skill_name(tsk));
-
-    const int penalty = 90; // 10% XP penalty
-    int fsk_points = you.skill_points[fsk];
-    int total_skp_lost   = 0; // skill points lost in fsk.
-    int total_skp_gained = 0; // skill points gained in tsk.
-    int skp_max; // maximum number of skill points transferable.
-    int fsk_level = you.skills[fsk];
-    int tsk_level = you.skills[tsk];
-
-    skp_max = (fsk_points - you.ct_skill_points[fsk]) / 2;
+    skp_max = fsk_points / 2;
     skp_max = std::max(skp_max, 1000);
     if (skp_max > fsk_points)
         skp_max = fsk_points;
 
-    while (total_skp_lost < skp_max)
+    you.transfer_skill_points = skp_max;
+    you.transfer_to_skill = select_skill();
+    if (you.transfer_to_skill == SK_NONE)
     {
-        int skp_lost = std::min(20, skp_max - total_skp_lost);
-        int skp_gained = skp_lost * penalty / 100;
-
-        float ct_bonus = crosstrain_bonus(tsk);
-        if (ct_bonus > 1)
-        {
-            skp_gained *= ct_bonus;
-            you.ct_skill_points[tsk] += (1 - 1 / ct_bonus) * skp_gained;
-        }
-        else if (is_antitrained(tsk))
-            skp_gained /= ANTITRAIN_PENALTY;
-
-        int double_cost = std::min<int>(skp_lost, you.ct_skill_points[fsk]);
-        you.ct_skill_points[fsk] -= double_cost;
-        skp_lost += double_cost;
-        skp_max += double_cost;
-
-        change_skill_points(fsk, -skp_lost, false);
-        change_skill_points(tsk, skp_gained, false);
-        total_skp_lost += skp_lost;
-        total_skp_gained += skp_gained;
+        you.transfer_from_skill = SK_NONE;
+        you.transfer_skill_points = 0;
+        redraw_screen();
+        return false;
     }
 
-    // Restore the level
-    you.skills[fsk] = fsk_level;
-    you.skills[tsk] = tsk_level;
+    mprf("As you forget about %s, you feel ready to understand %s.",
+         skill_name(you.transfer_from_skill),
+         skill_name(you.transfer_to_skill));
 
-    // Perform the real level up
-    check_skill_level_change(fsk);
-    check_skill_level_change(tsk);
+    you.transfer_total_skill_points = skp_max;
 
-    dprf("skill %s lost %d points", skill_name(fsk), total_skp_lost);
-    dprf("skill %s gained %d points", skill_name(tsk), total_skp_gained);
+    redraw_screen();
+    return true;
+}
 
+bool ashenzari_end_transfer(bool finished, bool force)
+{
+    if (!force && !finished)
+    {
+        mprf("You are currently transferring knowledge from %s to %s.",
+             skill_name(you.transfer_from_skill),
+             skill_name(you.transfer_to_skill));
+        if (!yesno("Are you sure you want to cancel the transfer?", false, 'n'))
+            return false;
+    }
+
+    mprf("You %s forgetting about %s and learning about %s.",
+         finished ? "have finished" : "stop",
+         skill_name(you.transfer_from_skill),
+         skill_name(you.transfer_to_skill));
+    you.transfer_from_skill = SK_NONE;
+    you.transfer_to_skill = SK_NONE;
+    you.transfer_skill_points = 0;
+    you.transfer_total_skill_points = 0;
     return true;
 }

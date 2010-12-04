@@ -1337,8 +1337,8 @@
   NULL,
 
   {"You are partially covered in colourless scales (AC +1).",
-   "You are mostly covered in yellow scales (AC +2).",
-   "You are completely covered in yellow scales (AC +3, rCorr)."},
+   "You are mostly covered in yellow scales (AC +2, rAcid+).",
+   "You are completely covered in yellow scales (AC +3, rAcid++)."},
 
   {"Colourless scales grow over part of your body.",
    "Your colourless scales turn yellow and spread over more of your body.",

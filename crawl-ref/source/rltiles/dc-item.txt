@@ -39,6 +39,7 @@ hammer1 WPN_HAMMER
 hammer2
 ankus WPN_ANKUS
 bullwhip WPN_WHIP
+bullwhip2
 %rim 0
 sacred_scourge WPN_SACRED_SCOURGE
 trishula WPN_TRISHULA
@@ -51,12 +52,17 @@ giant_spiked_club WPN_GIANT_SPIKED_CLUB
 knife WPN_KNIFE
 
 dagger WPN_DAGGER
+dagger2
+dagger3
 orcish_dagger WPN_DAGGER_ORC
+orcish_dagger2
 elven_dagger WPN_DAGGER_ELF
+elven_dagger2
 
 short_sword1 WPN_SHORT_SWORD
 short_sword2
 orcish_short_sword WPN_SHORT_SWORD_ORC
+orcish_short_sword2
 elven_short_sword WPN_SHORT_SWORD_ELF
 
 long_sword1 WPN_LONG_SWORD
@@ -121,6 +127,7 @@ bardiche2
 
 ##Staff
 quarterstaff WPN_QUARTERSTAFF
+quarterstaff2
 lajatang1 WPN_LAJATANG
 lajatang2
 
@@ -303,22 +310,28 @@ leather_armour1 ARM_LEATHER_ARMOUR
 leather_armour2
 leather_armour3
 orcish_leather_armor ARM_LEATHER_ARMOUR_ORC
+orcish_leather_armor2
 elven_leather_armor ARM_LEATHER_ARMOUR_ELF
+elven_leather_armor2
 
 ring_mail1 ARM_RING_MAIL
 ring_mail2
 orcish_ringmail ARM_RING_MAIL_ORC
+orcish_ringmail2
 elven_ringmail ARM_RING_MAIL_ELF
+elven_ringmail2
 dwarven_ringmail ARM_RING_MAIL_DWA
 
 scale_mail1 ARM_SCALE_MAIL
 scale_mail2
 elven_scalemail ARM_SCALE_MAIL_ELF
+elven_scalemail2
 
 chain_mail1 ARM_CHAIN_MAIL
 chain_mail2
 chain_mail3 ARM_CHAIN_MAIL_ELF
 orcish_chain_mail ARM_CHAIN_MAIL_ORC
+orcish_chain_mail2
 
 splint_mail1 ARM_SPLINT_MAIL
 splint_mail2
@@ -328,6 +341,7 @@ banded_mail2
 plate_mail1 ARM_PLATE_MAIL
 plate_mail2
 orcish_platemail ARM_PLATE_MAIL_ORC
+orcish_platemail2
 
 crystal_plate_mail ARM_CRYSTAL_PLATE_MAIL
 

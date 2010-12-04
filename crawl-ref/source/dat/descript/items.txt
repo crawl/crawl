@@ -399,7 +399,7 @@ A magical device which allows one to see the layout of one's surroundings. It re
 %%%%
 crystal plate mail
 
-An incredibly heavy but extremely effective suit of crystalline armour. It is somewhat resistant to corrosion.
+An incredibly heavy but extremely effective suit of crystalline armour.
 %%%%
 dagger
 

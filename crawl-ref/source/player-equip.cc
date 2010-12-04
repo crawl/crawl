@@ -32,8 +32,10 @@
 
 #include <cmath>
 
-static void _equip_effect(equipment_type slot, int item_slot, bool unmeld, bool msg);
-static void _unequip_effect(equipment_type slot, int item_slot, bool msg);
+static void _equip_effect(equipment_type slot, int item_slot, bool unmeld,
+                          bool msg);
+static void _unequip_effect(equipment_type slot, int item_slot, bool meld,
+                            bool msg);
 
 // Fill an empty equipment slot.
 void equip_item(equipment_type slot, int item_slot, bool msg)
@@ -63,7 +65,7 @@ bool unequip_item(equipment_type slot, bool msg)
     {
         you.equip[slot] = -1;
         if (!you.melded[slot])
-            _unequip_effect(slot, item_slot, msg);
+            _unequip_effect(slot, item_slot, false, msg);
         else
             you.melded[slot] = false;
         ash_check_bondage();
@@ -80,7 +82,7 @@ bool meld_slot(equipment_type slot, bool msg)
     if (you.equip[slot] != -1 && !you.melded[slot])
     {
         you.melded[slot] = true;
-        _unequip_effect(slot, you.equip[slot], msg);
+        _unequip_effect(slot, you.equip[slot], true, msg);
         return (true);
     }
     return (false);
@@ -103,11 +105,12 @@ bool unmeld_slot(equipment_type slot, bool msg)
 static void _equip_weapon_effect(item_def& item, bool showMsgs);
 static void _unequip_weapon_effect(item_def& item, bool showMsgs);
 static void _equip_armour_effect(item_def& arm, bool unmeld);
-static void _unequip_armour_effect(item_def& item);
+static void _unequip_armour_effect(item_def& item, bool meld);
 static void _equip_jewellery_effect(item_def &item);
 static void _unequip_jewellery_effect(item_def &item, bool mesg);
 
-static void _equip_effect(equipment_type slot, int item_slot, bool unmeld, bool msg)
+static void _equip_effect(equipment_type slot, int item_slot, bool unmeld,
+                          bool msg)
 {
     item_def& item = you.inv[item_slot];
     equipment_type eq = get_item_slot(item);
@@ -127,7 +130,8 @@ static void _equip_effect(equipment_type slot, int item_slot, bool unmeld, bool 
         _equip_jewellery_effect(item);
 }
 
-static void _unequip_effect(equipment_type slot, int item_slot, bool msg)
+static void _unequip_effect(equipment_type slot, int item_slot, bool meld,
+                            bool msg)
 {
     item_def& item = you.inv[item_slot];
     equipment_type eq = get_item_slot(item);
@@ -142,7 +146,7 @@ static void _unequip_effect(equipment_type slot, int item_slot, bool msg)
     if (slot == EQ_WEAPON)
         _unequip_weapon_effect(item, msg);
     else if (slot >= EQ_CLOAK && slot <= EQ_BODY_ARMOUR)
-        _unequip_armour_effect(item);
+        _unequip_armour_effect(item, meld);
     else if (slot >= EQ_LEFT_RING && slot < NUM_EQUIP)
         _unequip_jewellery_effect(item, msg);
 }
@@ -205,7 +209,7 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs=NULL,
         }
     }
 
-    if (proprt[ARTP_PONDEROUS])
+    if (proprt[ARTP_PONDEROUS] && !unmeld)
     {
         mpr("You feel rather ponderous.");
         che_handle_change(CB_PONDEROUS, 1);
@@ -283,7 +287,8 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs=NULL,
 #undef unknown_proprt
 }
 
-static void _unequip_artefact_effect(const item_def &item, bool *show_msgs=NULL)
+static void _unequip_artefact_effect(const item_def &item,
+                                     bool *show_msgs = NULL, bool meld = false)
 {
     ASSERT(is_artefact(item));
 
@@ -311,7 +316,7 @@ static void _unequip_artefact_effect(const item_def &item, bool *show_msgs=NULL)
         }
     }
 
-    if (proprt[ARTP_PONDEROUS])
+    if (proprt[ARTP_PONDEROUS] && !meld)
     {
         mpr("That put a bit of spring back into your step.");
         che_handle_change(CB_PONDEROUS, -1);
@@ -860,9 +865,12 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
             break;
 
         case SPARM_PONDEROUSNESS:
-            mpr("You feel rather ponderous.");
-            che_handle_change(CB_PONDEROUS, 1);
-            you.redraw_evasion = true;
+            if (!unmeld)
+            {
+                mpr("You feel rather ponderous.");
+                che_handle_change(CB_PONDEROUS, 1);
+                you.redraw_evasion = true;
+            }
             break;
 
         case SPARM_LEVITATION:
@@ -950,7 +958,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
     you.redraw_evasion = true;
 }
 
-static void _unequip_armour_effect(item_def& item)
+static void _unequip_armour_effect(item_def& item, bool meld)
 {
     you.redraw_armour_class = true;
     you.redraw_evasion = true;
@@ -1002,8 +1010,11 @@ static void _unequip_armour_effect(item_def& item)
         break;
 
     case SPARM_PONDEROUSNESS:
-        mpr("That put a bit of spring back into your step.");
-        che_handle_change(CB_PONDEROUS, -1);
+        if (!meld)
+        {
+            mpr("That put a bit of spring back into your step.");
+            che_handle_change(CB_PONDEROUS, -1);
+        }
         break;
 
     case SPARM_LEVITATION:
@@ -1067,7 +1078,7 @@ static void _unequip_armour_effect(item_def& item)
     }
 
     if (is_artefact(item))
-        _unequip_artefact_effect(item);
+        _unequip_artefact_effect(item, NULL, meld);
 }
 
 static void _remove_amulet_of_faith(item_def &item)

@@ -220,7 +220,6 @@ void random_blink(bool allow_partial_control, bool override_abyss)
         mpr("You feel jittery for a moment.");
     }
 
-#ifdef USE_SEMI_CONTROLLED_BLINK
     //jmf: Add back control, but effect is cast_semi_controlled_blink(pow).
     else if (player_control_teleport() && !you.confused()
              && allow_partial_control && allow_control_teleport())
@@ -230,7 +229,6 @@ void random_blink(bool allow_partial_control, bool override_abyss)
         maybe_id_ring_TC();
         success = true;
     }
-#endif
     else
     {
         canned_msg(MSG_YOU_BLINK);
@@ -305,33 +303,10 @@ static bool _cell_vetoes_teleport (const coord_def cell, bool  check_monsters = 
     if (env.cgrid(cell) != EMPTY_CLOUD)
         return (true);
 
-    // But not all features.
-    switch (grd(cell))
-    {
-    case DNGN_FLOOR:
-    case DNGN_SHALLOW_WATER:
-        return (false);
-
-    case DNGN_DEEP_WATER:
-        if (you.species == SP_MERFOLK && (transform_can_swim()
-                                          || !you.transform_uncancellable))
-        {
-            return (false);
-        }
-        else
-            return (true);
-
-    case DNGN_LAVA:
+    if (cell_is_solid(cell))
         return (true);
 
-    default:
-        // Lava is really the only non-solid glyph above DNGN_MAXSOLID that is
-        // not a safe teleport location, and that's handled above.
-        if (cell_is_solid(cell))
-            return (true);
-
-        return (false);
-    }
+    return is_feat_dangerous(grd(cell), true);
 }
 
 static void _handle_teleport_update (bool large_change, bool check_ring_TC,
@@ -695,7 +670,9 @@ void you_teleport_now(bool allow_control, bool new_abyss_area, bool wizard_tele)
 // balance: otherwise you have an instant teleport from anywhere.
 int portal()
 {
-    if (!player_in_branch(BRANCH_MAIN_DUNGEON))
+    // Disabled completely in zotdef
+    if (!player_in_branch(BRANCH_MAIN_DUNGEON)
+        || crawl_state.game_is_zotdef())
     {
         mpr("This spell doesn't work here.");
         return (-1);
@@ -826,11 +803,11 @@ bool cast_apportation(int pow, const coord_def& where)
         // Maybe the player *thought* there was something there (a mimic.)
         if (monster* m = monster_at(where))
         {
-            if (mons_is_mimic(m->type) && you.can_see(m))
+            if (mons_is_item_mimic(m->type) && you.can_see(m))
             {
                 mprf("%s twitches.", m->name(DESC_CAP_THE).c_str());
                 // Nothing else gives this message, so identify the mimic.
-                m->flags |= MF_KNOWN_MIMIC;
+                discover_mimic(m);
                 return (true);  // otherwise you get free mimic ID
             }
         }
@@ -840,6 +817,13 @@ bool cast_apportation(int pow, const coord_def& where)
     }
 
     item_def& item = mitm[item_idx];
+
+    // Can't apport the Orb in zotdef
+    if (crawl_state.game_is_zotdef() && item_is_orb(item))
+    {
+        mpr("You cannot apport the sacred Orb!");
+        return (false);
+    }
 
     // Protect the player from destroying the item.
     if (feat_destroys_item(grd(you.pos()), item))

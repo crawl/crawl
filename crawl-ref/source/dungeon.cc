@@ -123,14 +123,12 @@ static bool _make_box(int room_x1, int room_y1, int room_x2, int room_y2,
                       dungeon_feature_type wall=DNGN_UNSEEN,
                       dungeon_feature_type avoid=DNGN_UNSEEN);
 
-static builder_rc_type _builder_by_type(int level_number, level_area_type level_type);
-static builder_rc_type _builder_by_branch(int level_number);
-static builder_rc_type _builder_normal(int level_number, level_area_type level_type,
-                                       spec_room &s);
-static builder_rc_type _builder_basic(int level_number);
-static void _builder_extras(int level_number, level_area_type level_type);
-static void _builder_items(int level_number, level_area_type level_type,
-                           int items_wanted);
+static bool _builder_by_type(int level_number, level_area_type level_type);
+static bool _builder_by_branch(int level_number);
+static bool _builder_normal(int level_number, spec_room &s);
+static bool _builder_basic(int level_number);
+static void _builder_extras(int level_number);
+static void _builder_items(int level_number, int items_wanted);
 static void _builder_monsters(int level_number, level_area_type level_type,
                               int mon_wanted);
 static void _place_specific_stair(dungeon_feature_type stair,
@@ -175,7 +173,7 @@ static bool _plan_2(int level_number);
 static bool _plan_3(int level_number);
 static bool _plan_4(uint8_t forbid_x1, uint8_t forbid_y1, uint8_t forbid_x2,
                     uint8_t forbid_y2, dungeon_feature_type force_wall);
-static bool _plan_5();
+static bool _plan_5(int level_number);
 static bool _plan_6(int level_number);
 static void _portal_vault_level(int level_number);
 static void _labyrinth_level(int level_number);
@@ -199,7 +197,7 @@ static bool _treasure_area(int level_number, uint8_t ta1_x,
 // SPECIAL ROOM BUILDERS
 static void _special_room(int level_number, spec_room &sr,
                           const map_def *vault);
-static void _specr_2(spec_room &sr);
+static void _special_room_hook_up(spec_room &sr);
 static void _big_room(int level_number);
 static void _chequerboard(spec_room &sr, dungeon_feature_type target,
                           dungeon_feature_type floor1,
@@ -208,7 +206,6 @@ static void _roguey_level(int level_number, spec_room &sr, bool make_stairs);
 
 // VAULT FUNCTIONS
 static bool _build_secondary_vault(int level_number, const map_def *vault,
-                                   int rune_subst = -1,
                                    bool clobber = false,
                                    bool make_no_exits = false,
                                    const coord_def &where = coord_def(-1, -1));
@@ -217,7 +214,7 @@ static bool _build_primary_vault(int level_number, const map_def *vault);
 
 static bool _build_vault_impl(int level_number,
                               const map_def *vault,
-                              int rune_subst = -1, bool build_only = false,
+                              bool build_only = false,
                               bool check_collisions = false,
                               bool make_no_exits = false,
                               const coord_def &where = coord_def(-1, -1));
@@ -268,13 +265,25 @@ const map_mask *Vault_Placement_Mask = NULL;
 bool Generating_Level = false;
 
 static int can_create_vault = true;
-static bool dgn_level_vetoed = false;
 static bool use_random_maps  = true;
 static bool dgn_check_connectivity = false;
 static int  dgn_zones = 0;
 
 static CrawlHashTable _you_vault_list;
 static std::string    _portal_vault_map_name;
+
+class dgn_veto_exception : public std::exception
+{
+public:
+    dgn_veto_exception(const std::string& _msg) : msg(_msg) { }
+    ~dgn_veto_exception() throw () { }
+    const char *what() const throw ()
+    {
+        return msg.c_str();
+    }
+private:
+    std::string msg;
+};
 
 struct coloured_feature
 {
@@ -372,16 +381,22 @@ static bool _build_level_vetoable(int level_number, level_area_type level_type,
     if (player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
         _setup_temple_altars(you.props);
 
-    _build_dungeon_level(level_number, level_type);
-    _dgn_set_floor_colours();
-
+    try {
+        _build_dungeon_level(level_number, level_type);
+    }
+    catch (dgn_veto_exception& e)
+    {
+        dprf("VETO: %s: %s", level_id::current().describe().c_str(), e.what());
 #ifdef DEBUG_DIAGNOSTICS
-    if (dgn_level_vetoed)
         mapgen_report_map_veto();
 #endif
+        return false;
+    }
 
-    if ((!dgn_level_vetoed &&
-         _valid_dungeon_level(level_number, level_type)) ||
+    _dgn_set_floor_colours();
+
+    if (_valid_dungeon_level(level_number, level_type) ||
+        crawl_state.game_is_zotdef() ||
         crawl_state.game_is_sprint())
     {
 #ifdef DEBUG_MONS_SCAN
@@ -795,7 +810,7 @@ static bool _is_bottom_exit_stair(const coord_def &c)
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
     case DNGN_EXIT_HELL:
-    case DNGN_RETURN_FROM_DWARF_HALL:
+    case DNGN_RETURN_FROM_DWARVEN_HALL:
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_HIVE:
     case DNGN_RETURN_FROM_LAIR:
@@ -835,7 +850,7 @@ static bool _is_exit_stair(const coord_def &c)
     case DNGN_STONE_STAIRS_UP_III:
     case DNGN_ESCAPE_HATCH_UP:
     case DNGN_EXIT_HELL:
-    case DNGN_RETURN_FROM_DWARF_HALL:
+    case DNGN_RETURN_FROM_DWARVEN_HALL:
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_HIVE:
     case DNGN_RETURN_FROM_LAIR:
@@ -1091,7 +1106,7 @@ bool dgn_ensure_vault_placed(bool vault_success,
                              bool disable_further_vaults)
 {
     if (!vault_success)
-        dgn_level_vetoed = true;
+        throw dgn_veto_exception("Vault placement failure.");
     else if (disable_further_vaults)
         can_create_vault = false;
     return (vault_success);
@@ -1166,14 +1181,8 @@ static void _dgn_init_vault_excavatable_feats()
     dgn_Vault_Excavatable_Feats.insert(DNGN_ROCK_WALL);
 }
 
-void dgn_veto_level()
-{
-    dgn_level_vetoed = true;
-}
-
 void dgn_reset_level(bool enable_random_maps)
 {
-    dgn_level_vetoed = false;
     env.level_uniq_maps.clear();
     env.level_uniq_map_tags.clear();
 
@@ -1305,32 +1314,19 @@ void dgn_reset_level(bool enable_random_maps)
 static void _build_layout_skeleton(int level_number, level_area_type level_type,
                                    spec_room &sr)
 {
-    builder_rc_type skip_build = _builder_by_type(level_number, level_type);
-
-    if (skip_build == BUILD_QUIT)       // quit immediately
+    if (!_builder_by_type(level_number, level_type))
         return;
 
-    if (skip_build == BUILD_CONTINUE)
-    {
-        skip_build = _builder_by_branch(level_number);
+    if (!_builder_by_branch(level_number))
+        return;
 
-        if (skip_build == BUILD_QUIT || dgn_level_vetoed)
-            return;
-    }
+    if (!_builder_normal(level_number, sr))
+        return;
 
-    if (!dgn_level_vetoed && skip_build == BUILD_CONTINUE)
-    {
-        // Do 'normal' building.  Well, except for the swamp and shoals.
-        if (!player_in_branch(BRANCH_SWAMP) && !player_in_branch(BRANCH_SHOALS))
-            skip_build = _builder_normal(level_number, level_type, sr);
+    if (!_builder_basic(level_number))
+        return;
 
-        if (!dgn_level_vetoed && skip_build == BUILD_CONTINUE)
-        {
-            skip_build = _builder_basic(level_number);
-            if (!dgn_level_vetoed && skip_build == BUILD_CONTINUE)
-                _builder_extras(level_number, level_type);
-        }
-    }
+    _builder_extras(level_number);
 }
 
 static int _num_items_wanted(int level_number)
@@ -1369,33 +1365,42 @@ static void _fixup_walls()
     // If part of vaults -> walls depend on level.
     // If part of crypt -> all walls stone.
 
-    if (player_in_branch(BRANCH_DIS)
-        || player_in_branch(BRANCH_VAULTS)
-        || player_in_branch(BRANCH_CRYPT))
+    dungeon_feature_type wall_type = DNGN_ROCK_WALL;
+
+    switch (you.where_are_you)
     {
-        // Always the case with Dis {dlb}
-        dungeon_feature_type vault_wall = DNGN_METAL_WALL;
+    case BRANCH_DIS:
+        wall_type = DNGN_METAL_WALL;
+        break;
 
-        if (player_in_branch(BRANCH_VAULTS))
-        {
-            vault_wall = DNGN_ROCK_WALL;
-            const int bdepth = player_branch_depth();
+    case BRANCH_VAULTS:
+    {
+        const int bdepth = player_branch_depth();
 
-            if (bdepth > 2)
-                vault_wall = DNGN_STONE_WALL;
+        if (bdepth > 6 && one_chance_in(10))
+            wall_type = DNGN_GREEN_CRYSTAL_WALL;
+        else if (bdepth > 4)
+            wall_type = DNGN_METAL_WALL;
+        else if (bdepth > 2)
+            wall_type = DNGN_STONE_WALL;
 
-            if (bdepth > 4)
-                vault_wall = DNGN_METAL_WALL;
-
-            if (bdepth > 6 && one_chance_in(10))
-                vault_wall = DNGN_GREEN_CRYSTAL_WALL;
-        }
-        else if (player_in_branch(BRANCH_CRYPT))
-            vault_wall = DNGN_STONE_WALL;
-
-        dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, vault_wall,
-                         MMT_NO_WALL);
+        break;
     }
+
+    case BRANCH_CRYPT:
+        wall_type = DNGN_STONE_WALL;
+        break;
+
+    case BRANCH_SLIME_PITS:
+        wall_type = DNGN_SLIMY_WALL;
+        break;
+
+    default:
+        return;
+    }
+
+    dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, wall_type,
+                     MMT_NO_WALL);
 }
 
 // Remove any items that are on squares that items should not be on.
@@ -1763,9 +1768,6 @@ static bool _branch_entrances_are_connected()
 
 static void _dgn_verify_connectivity(unsigned nvaults)
 {
-    if (dgn_level_vetoed)
-        return;
-
     // After placing vaults, make sure parts of the level have not been
     // disconnected.
     if (dgn_zones && nvaults != env.level_vaults.size())
@@ -1785,15 +1787,14 @@ static void _dgn_verify_connectivity(unsigned nvaults)
 #endif
         if (newzones > dgn_zones)
         {
-            dgn_level_vetoed = true;
+            throw dgn_veto_exception(make_stringf(
+                 "Had %d zones, now has %d%s%s.", dgn_zones, newzones,
 #ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS,
-                 "VETO: %s broken by [%s] (had %d zones, "
-                 "now have %d zones.",
-                 level_id::current().describe().c_str(),
-                 vlist.str().c_str(), dgn_zones, newzones);
+                 "; broken by ", vlist.str().c_str()
+#else
+                 "", ""
 #endif
-            return;
+            ));
         }
     }
 
@@ -1802,13 +1803,7 @@ static void _dgn_verify_connectivity(unsigned nvaults)
         && !(branches[you.where_are_you].branch_flags & BFLAG_ISLANDED)
         && dgn_count_disconnected_zones(true) > 0)
     {
-        dgn_level_vetoed = true;
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS,
-             "VETO: %s has isolated areas with no stairs.",
-             level_id::current().describe().c_str());
-#endif
-        return;
+        throw dgn_veto_exception("Isolated areas with no stairs.");
     }
 
     if (!_fixup_stone_stairs(true))
@@ -1816,49 +1811,25 @@ static void _dgn_verify_connectivity(unsigned nvaults)
         dprf("Warning: failed to preserve vault stairs.");
         if (!_fixup_stone_stairs(false))
         {
-            dgn_level_vetoed = true;
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS,
-                 "VETO: Failed to fix stone stairs: %s.",
-                 level_id::current().describe().c_str());
-#endif
-            return;
+            throw dgn_veto_exception("Failed to fix stone stairs.");
         }
     }
 
     if (!_branch_entrances_are_connected())
     {
-        dgn_level_vetoed = true;
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS,
-             "VETO: %s has a disconnected branch entrance.",
-             level_id::current().describe().c_str());
-#endif
-        return;
+        throw dgn_veto_exception("A disconnected branch entrance.");
     }
 
     if (!_add_connecting_escape_hatches())
     {
-        dgn_level_vetoed = true;
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS,
-             "VETO: %s failed to get connecting escape hatches.",
-             level_id::current().describe().c_str());
-#endif
-        return;
+        throw dgn_veto_exception("Failed to get connecting escape hatches.");
     }
 
     // XXX: Interlevel connectivity fixup relies on being the last
     //      point at which a level may be vetoed.
     if (!_fixup_interlevel_connectivity())
     {
-        dgn_level_vetoed = true;
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS,
-             "VETO: %s failed to ensure interlevel connectivity.",
-             level_id::current().describe().c_str());
-#endif
-        return;
+        throw dgn_veto_exception("Failed to ensure interlevel connectivity.");
     }
 }
 
@@ -2098,32 +2069,17 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
     _build_layout_skeleton(level_number, level_type, sr);
 
     if (you.level_type == LEVEL_LABYRINTH
-        || you.level_type == LEVEL_PORTAL_VAULT
-        || dgn_level_vetoed)
+        || you.level_type == LEVEL_PORTAL_VAULT)
     {
         return;
     }
 
-    // Hook up the special room (if there is one, and it hasn't
-    // been hooked up already in roguey_level()).
-    if (sr.created && !sr.hooked_up && !crawl_state.game_is_sprint()
-        && !crawl_state.game_is_tutorial())
-    {
-        _specr_2(sr);
-    }
+    if (sr.created && !sr.hooked_up)
+        _special_room_hook_up(sr);
 
     // Now place items, mons, gates, etc.
     // Stairs must exist by this point (except in Shoals where they are
     // yet to be placed). Some items and monsters already exist.
-
-#ifdef OLD_SWAMP_LAYOUT
-    // Time to make the swamp or shoals {dlb}:
-    if (player_in_branch(BRANCH_SWAMP))
-        dgn_prepare_swamp();
-#endif
-
-    if (dgn_level_vetoed)
-        return;
 
     _check_doors();
 
@@ -2142,13 +2098,6 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
         } while (depth > 0);
     }
 
-    // XXX: right place to do this?
-    if (player_in_branch(BRANCH_SLIME_PITS))
-    {
-        dgn_replace_area(0, 0, GXM-1, GYM-1,
-                         DNGN_ROCK_WALL, DNGN_SLIMY_WALL);
-    }
-
     // Change pre-rock to rock, and pre-floor to floor.
     dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_BUILDER_SPECIAL_WALL,
                      DNGN_ROCK_WALL);
@@ -2164,14 +2113,13 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
         && !crawl_state.game_is_tutorial())
     {
         _build_overflow_temples(level_number);
-
-        if (dgn_level_vetoed)
-            return;
     }
 
     // Try to place minivaults that really badly want to be placed. Still
     // no guarantees, seeing this is a minivault.
-    if (!crawl_state.game_is_sprint() && !crawl_state.game_is_tutorial())
+    if (!crawl_state.game_is_sprint()
+        && !crawl_state.game_is_zotdef()
+        && !crawl_state.game_is_tutorial())
     {
         _place_chance_vaults();
         _place_minivaults();
@@ -2189,28 +2137,31 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
         _place_shops(level_number);
 
     // Any vault-placement activity must happen before this check.
-    if (!crawl_state.game_is_sprint() && !crawl_state.game_is_tutorial())
+    if (!crawl_state.game_is_sprint()
+        && !crawl_state.game_is_zotdef()
+        && !crawl_state.game_is_tutorial())
         _dgn_verify_connectivity(nvaults);
 
-    if (dgn_level_vetoed && !crawl_state.game_is_sprint())
-        return;
-
-    if (level_type != LEVEL_ABYSS)
+    if (!crawl_state.game_is_zotdef())
         _place_traps(level_number);
 
     _place_fog_machines(level_number);
 
     // Place items.
-    if (!crawl_state.game_is_sprint() && !crawl_state.game_is_tutorial())
+    if (!crawl_state.game_is_sprint()
+        && !crawl_state.game_is_zotdef()
+        && !crawl_state.game_is_tutorial())
     {
-        _builder_items(level_number, level_type,
-                       _num_items_wanted(level_number));
+        _builder_items(level_number, _num_items_wanted(level_number));
     }
 
     // Place monsters.
-    _builder_monsters(level_number, level_type, _num_mons_wanted(level_type));
+    if (!crawl_state.game_is_zotdef())
+        _builder_monsters(level_number, level_type, _num_mons_wanted(level_type));
 
-    if (!crawl_state.game_is_sprint() && !crawl_state.game_is_tutorial())
+    if (!crawl_state.game_is_sprint()
+        && !crawl_state.game_is_zotdef()
+        && !crawl_state.game_is_tutorial())
     {
         _fixup_walls();
         _fixup_branch_stairs();
@@ -2235,8 +2186,7 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
 
     if (player_in_hell())
         _fixup_hell_stairs();
-}                               // end builder()
-
+}
 
 static uint8_t _fix_black_colour(uint8_t incol)
 {
@@ -2482,85 +2432,82 @@ static bool _make_box(int room_x1, int room_y1, int room_x2, int room_y2,
     return (true);
 }
 
-// Take care of labyrinth, abyss, pandemonium.
-// Returns 1 if we should skip further generation,
-// -1 if we should immediately quit, and 0 otherwise.
-static builder_rc_type _builder_by_type(int level_number, level_area_type level_type)
+static void _pan_level(int level_number)
+{
+    int which_demon = -1;
+    // Could do spotty_level, but that doesn't always put all paired
+    // stairs reachable from each other which isn't a problem in normal
+    // dungeon but could be in Pandemonium.
+    if (one_chance_in(4))
+    {
+        do
+        {
+            which_demon = random2(4);
+
+            // Makes these things less likely as you find more.
+            if (one_chance_in(4))
+            {
+                which_demon = -1;
+                break;
+            }
+        }
+        while (you.unique_creatures[MONS_MNOLEG + which_demon]);
+    }
+
+    if (which_demon >= 0)
+    {
+        const char *pandemon_level_names[] =
+        {
+            "mnoleg", "lom_lobon", "cerebov", "gloorx_vloq"
+        };
+
+        const map_def *vault =
+            random_map_for_tag(pandemon_level_names[which_demon], false);
+
+        ASSERT(vault);
+        if (!vault)
+        {
+            end(1, false, "Failed to find Pandemonium level %s!\n",
+                pandemon_level_names[which_demon]);
+        }
+
+        dgn_ensure_vault_placed(_build_primary_vault(level_number, vault),
+                                 true);
+    }
+    else
+    {
+        _plan_main(level_number, 0);
+        const map_def *vault = random_map_for_tag("pan", true);
+        ASSERT(vault);
+
+        _build_secondary_vault(level_number, vault);
+    }
+}
+
+// Take care of labyrinth, abyss, pandemonium. Returns false if we should skip
+// further generation, and true otherwise.
+static bool _builder_by_type(int level_number, level_area_type level_type)
 {
     if (level_type == LEVEL_PORTAL_VAULT)
     {
         _portal_vault_level(level_number);
-        return (BUILD_QUIT);
     }
-
-    if (level_type == LEVEL_LABYRINTH)
+    else if (level_type == LEVEL_LABYRINTH)
     {
         _labyrinth_level(level_number);
-        return (BUILD_QUIT);
     }
-
-    if (level_type == LEVEL_ABYSS)
+    else if (level_type == LEVEL_ABYSS)
     {
         generate_abyss();
-        return (BUILD_SKIP);
     }
-
-    if (level_type == LEVEL_PANDEMONIUM)
+    else if (level_type == LEVEL_PANDEMONIUM)
     {
-        int which_demon = -1;
-        // Could do spotty_level, but that doesn't always put all paired
-        // stairs reachable from each other which isn't a problem in normal
-        // dungeon but could be in Pandemonium.
-        if (one_chance_in(4))
-        {
-            do
-            {
-                which_demon = random2(4);
-
-                // Makes these things less likely as you find more.
-                if (one_chance_in(4))
-                {
-                    which_demon = -1;
-                    break;
-                }
-            }
-            while (you.unique_creatures[MONS_MNOLEG + which_demon]);
-        }
-
-        if (which_demon >= 0)
-        {
-            const char *pandemon_level_names[] =
-            {
-                "mnoleg", "lom_lobon", "cerebov", "gloorx_vloq"
-            };
-
-            const map_def *vault =
-                random_map_for_tag(pandemon_level_names[which_demon], false);
-
-            ASSERT(vault);
-            if (!vault)
-            {
-                end(1, false, "Failed to find Pandemonium level %s!\n",
-                    pandemon_level_names[which_demon]);
-            }
-
-            dgn_ensure_vault_placed(_build_primary_vault(level_number, vault),
-                                     true);
-        }
-        else
-        {
-            _plan_main(level_number, 0);
-            const map_def *vault = random_map_for_tag("pan", true);
-            ASSERT(vault);
-
-            _build_secondary_vault(level_number, vault);
-        }
-
-        return BUILD_SKIP;
+        _pan_level(level_number);
     }
+    else
+        return true;
 
-    // Must be normal dungeon.
-    return BUILD_CONTINUE;
+    return false;
 }
 
 static void _portal_vault_level(int level_number)
@@ -2706,6 +2653,8 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
             if (vault == NULL)
                 end(1, false, "Couldn't find tutorial map.");
         }
+        else if (crawl_state.game_is_zotdef())
+            vault = random_map_for_tag("zotdef");
         else
             vault = random_map_for_tag("entry");
     }
@@ -2727,10 +2676,9 @@ static int _setup_temple_altars(CrawlHashTable &temple)
     return ((int) god_list.size());
 }
 
-// Returns BUILD_SKIP if we should skip further generation,
-// BUILD_QUIT if we should immediately quit, and BUILD_CONTINUE
+// Returns false if we should skip further generation, and true
 // otherwise.
-static builder_rc_type _builder_by_branch(int level_number)
+static bool _builder_by_branch(int level_number)
 {
     const map_def *vault = _dgn_random_map_for_place(false);
 
@@ -2739,9 +2687,9 @@ static builder_rc_type _builder_by_branch(int level_number)
         env.level_build_method += " random_map_for_place";
         _ensure_vault_placed_ex(_build_primary_vault(level_number, vault),
                                  vault);
-        if (!dgn_level_vetoed && player_in_branch(BRANCH_SWAMP))
+        if (player_in_branch(BRANCH_SWAMP))
             dgn_build_swamp_level(level_number);
-        return BUILD_SKIP;
+        return false;
     }
 
     switch (you.where_are_you)
@@ -2756,21 +2704,32 @@ static builder_rc_type _builder_by_branch(int level_number)
         else
             iterations = 100 + random2(500);
         spotty_level(false, iterations, false);
-        return BUILD_SKIP;
+        return false;
     }
 
     case BRANCH_SHOALS:
         dgn_build_shoals_level(level_number);
-        return BUILD_SKIP;
+        return false;
 
     case BRANCH_SWAMP:
         dgn_build_swamp_level(level_number);
-        return BUILD_SKIP;
+        return false;
+
+    case BRANCH_DIS:
+        _city_level(level_number);
+        return false;
+
+    case BRANCH_VAULTS:
+        if (one_chance_in(3))
+            _city_level(level_number);
+        else
+            _plan_main(level_number, 4);
+        return false;
 
     default:
         break;
     }
-    return BUILD_CONTINUE;
+    return true;
 }
 
 // Place vaults with CHANCE: that want to be placed on this level.
@@ -2826,56 +2785,28 @@ static void _place_minivaults(const std::string &tag, int lo, int hi,
     }
 }
 
-// Returns 1 if we should dispense with city building,
-// 0 otherwise.  Also sets special_room if one is generated
-// so that we can link it up later.
-static builder_rc_type _builder_normal(int level_number,
-                                       level_area_type level_type,
-                                       spec_room &sr)
+// Returns false if we should dispense with city building, true otherwise.  Also
+// sets special_room if one is generated so that we can link it up later.
+static bool _builder_normal(int level_number, spec_room &sr)
 {
-    UNUSED(level_type);
-
     bool skipped = false;
-    const map_def *vault = _dgn_random_map_for_place(false);
+    const map_def *vault = NULL;
 
-    // Can't have vaults on you.where_are_you != BRANCH_MAIN_DUNGEON levels.
-    if (!vault && use_random_maps && can_create_vault)
+    if (use_random_maps && can_create_vault)
     {
         vault = random_map_in_depth(level_id::current());
-
-        // We'll accept any kind of primary vault in the main dungeon,
-        // but only ORIENT: encompass primary vaults in other
-        // branches. Other kinds of vaults can still be placed in
-        // other branches as secondary vaults.
-
-        if (vault && !player_in_branch(BRANCH_MAIN_DUNGEON)
-            && vault->orient != MAP_ENCOMPASS)
-        {
-            vault = NULL;
-        }
     }
 
-    if (vault)
+    // We'll accept any kind of primary vault in the main dungeon, but only
+    // ORIENT: encompass primary vaults in other branches. Other kinds of vaults
+    // can still be placed in other branches as secondary vaults.
+    if (vault && (player_in_branch(BRANCH_MAIN_DUNGEON)
+               || vault->orient == MAP_ENCOMPASS))
     {
-        env.level_build_method += " normal_random_map_for_place";
+        env.level_build_method += " random_map_in_depth";
         _ensure_vault_placed_ex(_build_primary_vault(level_number, vault),
                                  vault);
-        return BUILD_SKIP;
-    }
-
-    if (player_in_branch(BRANCH_DIS))
-    {
-        _city_level(level_number);
-        return BUILD_SKIP;
-    }
-
-    if (player_in_branch(BRANCH_VAULTS))
-    {
-        if (one_chance_in(3))
-            _city_level(level_number);
-        else
-            _plan_main(level_number, 4);
-        return BUILD_SKIP;
+        return false;
     }
 
     if (level_number > 7 && level_number < 23)
@@ -2883,20 +2814,20 @@ static builder_rc_type _builder_normal(int level_number,
         if (one_chance_in(16))
         {
             spotty_level(false, 0, coinflip());
-            return BUILD_SKIP;
+            return false;
         }
 
         if (one_chance_in(16))
         {
             _bigger_room();
-            return BUILD_SKIP;
+            return false;
         }
     }
 
     if (level_number > 2 && level_number < 23 && one_chance_in(3))
     {
         _plan_main(level_number, 0);
-        return BUILD_SKIP;
+        return false;
     }
 
     if (one_chance_in(3))
@@ -2913,7 +2844,7 @@ static builder_rc_type _builder_normal(int level_number,
         _roguey_level(level_number, sr, just_roguey);
 
         if (just_roguey)
-            return BUILD_SKIP;
+            return false;
     }
     else
     {
@@ -2924,7 +2855,7 @@ static builder_rc_type _builder_normal(int level_number,
             else
                 _plan_main(level_number, 4);
 
-            return BUILD_SKIP;
+            return false;
         }
     }
 
@@ -2944,11 +2875,11 @@ static builder_rc_type _builder_normal(int level_number,
             _special_room(level_number, sr, sroom);
     }
 
-    return BUILD_CONTINUE;
+    return true;
 }
 
-// Returns 1 if we should skip extras(), otherwise 0.
-static builder_rc_type _builder_basic(int level_number)
+// Returns false if we should skip extras(), otherwise true.
+static bool _builder_basic(int level_number)
 {
     env.level_build_method += make_stringf(" basic [%d]", level_number);
     env.level_layout_type  = "basic";
@@ -3082,13 +3013,11 @@ static builder_rc_type _builder_basic(int level_number)
         }
     }
 
-    return BUILD_CONTINUE;
+    return true;
 }
 
-static void _builder_extras(int level_number, level_area_type level_type)
+static void _builder_extras(int level_number)
 {
-    UNUSED(level_type);
-
     if (level_number > 6 && one_chance_in(10))
     {
         dungeon_feature_type pool_type = (level_number < 11
@@ -3253,20 +3182,39 @@ void dgn_place_feature_at_random_floor_square(dungeon_feature_type feat,
     const coord_def place =
         dgn_random_point_in_bounds(DNGN_FLOOR, mask, DNGN_FLOOR);
     if (place.origin())
-        dgn_veto_level();
+        throw dgn_veto_exception("Cannot place feature at random floor square.");
     else
         grd(place) = feat;
 }
 
 // Create randomly-placed stone stairs.
-void dgn_place_stone_stairs()
+void dgn_place_stone_stairs(bool maybe_place_hatches)
 {
-    for (int i = 0; i < 3; ++i)
+    const int stair_start = DNGN_STONE_STAIRS_DOWN_I;
+    const int stair_count = DNGN_ESCAPE_HATCH_UP - stair_start + 1;
+
+    FixedVector < bool, stair_count > existing;
+
+    existing.init(false);
+
+    for (rectangle_iterator ri(0); ri; ++ri)
+        if (grd(*ri) >= stair_start && grd(*ri) < stair_start + stair_count)
+            existing[grd(*ri) - stair_start] = true;
+
+    int pair_count = 3;
+
+    if (maybe_place_hatches && coinflip())
+        pair_count++;
+
+    for (int i = 0; i < pair_count; ++i)
     {
-        dgn_place_feature_at_random_floor_square(
-            static_cast<dungeon_feature_type>(DNGN_STONE_STAIRS_DOWN_I + i));
-        dgn_place_feature_at_random_floor_square(
-            static_cast<dungeon_feature_type>(DNGN_STONE_STAIRS_UP_I + i));
+        if (!existing[i])
+            dgn_place_feature_at_random_floor_square(
+                static_cast<dungeon_feature_type>(DNGN_STONE_STAIRS_DOWN_I + i));
+
+        if (!existing[DNGN_STONE_STAIRS_UP_I - stair_start + i])
+            dgn_place_feature_at_random_floor_square(
+                static_cast<dungeon_feature_type>(DNGN_STONE_STAIRS_UP_I + i));
     }
 }
 
@@ -3370,7 +3318,7 @@ static void _place_specific_feature(dungeon_feature_type feat)
     if (in_bounds(c))
         env.grid(c) = feat;
     else
-        dgn_veto_level();
+        throw dgn_veto_exception("Cannot place specific feature.");
 }
 
 static void _place_specific_stair(dungeon_feature_type stair,
@@ -3996,10 +3944,8 @@ static void _builder_monsters(int level_number, level_area_type level_type, int 
     }
 }
 
-static void _builder_items(int level_number, level_area_type level_type, int items_wanted)
+static void _builder_items(int level_number, int items_wanted)
 {
-    UNUSED(level_type);
-
     int i = 0;
     object_class_type specif_type = OBJ_RANDOM;
     int items_levels = level_number;
@@ -4026,26 +3972,8 @@ static void _builder_items(int level_number, level_area_type level_type, int ite
     {
         for (i = 0; i < items_wanted; i++)
         {
-            // porridge in the dwarf hall
-            if (player_in_branch(BRANCH_DWARF_HALL))
-            {
-                const int it = random2(100);
-                if (it == 1)
-                {
-                    items(1, OBJ_POTIONS, POT_PORRIDGE, false, 0, 250,
-                          MMT_NO_ITEM);
-                }
-                else if (it < 10)
-                {
-                    items(1, specif_type, OBJ_RANDOM, false, items_levels, 250,
-                          MMT_NO_ITEM);
-                }
-            }
-            else
-            {
-                items(1, specif_type, OBJ_RANDOM, false, items_levels, 250,
-                      MMT_NO_ITEM);
-            }
+            items(1, specif_type, OBJ_RANDOM, false, items_levels, 250,
+                  MMT_NO_ITEM);
         }
 
         // Make sure there's a very good chance of a knife being placed
@@ -4076,7 +4004,7 @@ static void _builder_items(int level_number, level_area_type level_type, int ite
 // to a closed door, and normal rock wall to pre-floor.
 // Anything that might otherwise block the hallway is changed
 // to pre-floor.
-static void _specr_2(spec_room &sr)
+static void _special_room_hook_up(spec_room &sr)
 {
     coord_def c, delta;
     int i = 0;
@@ -4183,27 +4111,30 @@ static void _special_room(int level_number, spec_room &sr,
                                      vault->name.c_str(), level_number);
     env.properties[LEVEL_EXTRAS_KEY].get_vector().push_back(extra);
 
-    // Overwrites anything: this function better be called early on during
-    // creation.
-    int room_x1 = 8 + random2(55);
-    int room_y1 = 8 + random2(45);
-    int room_x2 = room_x1 + 4 + random2avg(6,2);
-    int room_y2 = room_y1 + 4 + random2avg(6,2);
+    if (!sr.created)
+    {
+        sr.created = true;
+        sr.hooked_up = false;
 
-    // Do special walls & floor.
-    _make_box(room_x1, room_y1, room_x2, room_y2,
-              DNGN_BUILDER_SPECIAL_FLOOR, DNGN_BUILDER_SPECIAL_WALL);
+        // Overwrites anything: this function better be called early on during
+        // creation.
+        int room_x1 = 8 + random2(55);
+        int room_y1 = 8 + random2(45);
+        int room_x2 = room_x1 + 4 + random2avg(6,2);
+        int room_y2 = room_y1 + 4 + random2avg(6,2);
 
-    // Set up passed in spec_room structure.
-    sr.created   = true;
-    sr.hooked_up = false;
-    sr.tl.set(room_x1 + 1, room_y1 + 1);
-    sr.br.set(room_x2 - 1, room_y2 - 1);
+        // Do special walls & floor.
+        _make_box(room_x1, room_y1, room_x2, room_y2,
+                  DNGN_BUILDER_SPECIAL_FLOOR, DNGN_BUILDER_SPECIAL_WALL);
+
+        sr.tl.set(room_x1 + 1, room_y1 + 1);
+        sr.br.set(room_x2 - 1, room_y2 - 1);
+    }
 
     lua_special_room_spec  = sr;
     lua_special_room_level = level_number;
 
-    _build_secondary_vault(level_number, vault, -1, false, false, sr.tl);
+    _build_secondary_vault(level_number, vault, false, false, sr.tl);
 
     lua_special_room_spec.created = false;
     lua_special_room_spec.tl.set(-1, -1);
@@ -4581,50 +4512,6 @@ static void _connect_vault(const vault_placement &vp)
     }
 }
 
-static dungeon_feature_type _dgn_find_rune_subst(const std::string &tag)
-{
-    const std::string suffix("_entry");
-    const std::string::size_type psuffix = tag.find(suffix);
-
-    if (psuffix == std::string::npos)
-        return (DNGN_FLOOR);
-
-    const std::string key = tag.substr(0, psuffix);
-
-    if (key == "bzr")
-        return (DNGN_ENTER_PORTAL_VAULT);
-    else if (key == "lab")
-        return (DNGN_ENTER_LABYRINTH);
-    else if (key == "hell")
-        return (DNGN_ENTER_HELL);
-    else if (key == "pan")
-        return (DNGN_ENTER_PANDEMONIUM);
-    else if (key == "abyss")
-        return (DNGN_ENTER_ABYSS);
-    else
-    {
-        for (int i = 0; i < NUM_BRANCHES; ++i)
-            if (branches[i].entry_stairs != NUM_FEATURES
-                && !strcasecmp(branches[i].abbrevname, key.c_str()))
-            {
-                return (branches[i].entry_stairs);
-            }
-    }
-    return (DNGN_FLOOR);
-}
-
-static dungeon_feature_type _dgn_find_rune_subst_tags(const std::string &tags)
-{
-    std::vector<std::string> words = split_string(" ", tags);
-    for (int i = 0, size = words.size(); i < size; ++i)
-    {
-        const dungeon_feature_type feat = _dgn_find_rune_subst(words[i]);
-        if (feat != DNGN_FLOOR)
-            return (feat);
-    }
-    return (DNGN_FLOOR);
-}
-
 static void _fixup_after_vault()
 {
     _dgn_set_floor_colours();
@@ -4656,8 +4543,7 @@ static void _fixup_after_vault()
 bool dgn_place_map(const map_def *mdef,
                    bool clobber,
                    bool make_no_exits,
-                   const coord_def &where,
-                   int rune_subst)
+                   const coord_def &where)
 {
     if (!mdef)
         return (false);
@@ -4673,8 +4559,7 @@ bool dgn_place_map(const map_def *mdef,
             unwind_bool levgen(Generating_Level, true);
             dgn_reset_level();
             dungeon_events.clear();
-            const bool res = dgn_place_map(mdef, clobber, make_no_exits,
-                                           where, rune_subst);
+            const bool res = dgn_place_map(mdef, clobber, make_no_exits, where);
             _fixup_after_vault();
             return (res);
         }
@@ -4688,12 +4573,12 @@ bool dgn_place_map(const map_def *mdef,
         }
     }
 
-    if (rune_subst == -1 && mdef->has_tag_suffix("_entry"))
-        rune_subst = _dgn_find_rune_subst_tags(mdef->tags);
-    if (!crawl_state.game_is_sprint() && !crawl_state.game_is_tutorial())
+    if (!crawl_state.game_is_sprint()
+        && !crawl_state.game_is_zotdef()
+        && !crawl_state.game_is_tutorial())
     {
-        did_map = _build_secondary_vault(you.absdepth0, mdef, rune_subst,
-                                         clobber, make_no_exits, where);
+        did_map = _build_secondary_vault(you.absdepth0, mdef, clobber,
+                                                        make_no_exits, where);
     }
 
     // Activate any markers within the map.
@@ -4727,8 +4612,7 @@ bool dgn_place_map(const map_def *mdef,
 const map_def *dgn_safe_place_map(const map_def *mdef,
                                   bool clobber,
                                   bool make_no_exits,
-                                  const coord_def &where,
-                                  int rune_subst)
+                                  const coord_def &where)
 {
     const std::string mapname(mdef->name);
     int retries = 10;
@@ -4737,7 +4621,7 @@ const map_def *dgn_safe_place_map(const map_def *mdef,
         try
         {
             const bool placed =
-                dgn_place_map(mdef, clobber, make_no_exits, where, rune_subst);
+                dgn_place_map(mdef, clobber, make_no_exits, where);
             return (placed? mdef : NULL);
         }
         catch (map_load_exception &mload)
@@ -4806,11 +4690,10 @@ static void _ruin_vault(const vault_placement &vp)
 // Places a vault somewhere in an already built level if possible.
 // Returns true if the vault was successfully placed.
 static bool _build_secondary_vault(int level_number, const map_def *vault,
-                                   int rune_subst, bool clobber,
-                                   bool no_exits, const coord_def &where)
+                                   bool clobber, bool no_exits,
+                                   const coord_def &where)
 {
-    if (_build_vault_impl(level_number, vault, rune_subst, true, !clobber,
-                          no_exits, where))
+    if (_build_vault_impl(level_number, vault, true, !clobber, no_exits, where))
     {
         if (!no_exits)
         {
@@ -4841,20 +4724,15 @@ static bool _build_primary_vault(int level_number, const map_def *vault)
 // Builds a vault or minivault. Do not use this function directly: always
 // prefer _build_secondary_vault or _build_primary_vault.
 static bool _build_vault_impl(int level_number, const map_def *vault,
-                              int rune_subst,
                               bool build_only, bool check_collisions,
                               bool make_no_exits, const coord_def &where)
 {
-    FixedVector < bool, 10 > stair_exist;
-    int stx, sty;
-
     if (dgn_check_connectivity && !dgn_zones)
         dgn_zones = dgn_count_disconnected_zones(false);
 
     vault_placement place;
 
     place.level_number = level_number;
-    place.rune_subst = rune_subst;
 
     if (map_bounds(where))
         place.pos = where;
@@ -4912,17 +4790,12 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
     // kind of wallification it wants.
     const bool dis_wallify = place.map.has_tag("dis");
 
+    dprf("Wall builder: %s.", dis_wallify ? "Dis" : "Normal");
+
     const int v1x = place.pos.x;
     const int v1y = place.pos.y;
     const int v2x = place.pos.x + place.size.x - 1;
     const int v2y = place.pos.y + place.size.y - 1;
-
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS,
-            "Vault: (%d,%d)-(%d,%d); Dis: %s",
-            v1x, v1y, v2x, v2y,
-            dis_wallify? "yes" : "no");
-#endif
 
     if (dis_wallify)
     {
@@ -4949,53 +4822,7 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
         _dig_vault_loose(place, target_connections);
     }
 
-    coord_def pos;
-
-    for (stx = 0; stx < 10; stx++)
-        stair_exist[stx] = false;
-
-    for (stx = 0; stx < GXM; stx++)
-        for (sty = 0; sty < GYM; sty++)
-            if (grd[stx][sty] >= DNGN_STONE_STAIRS_DOWN_I
-                && grd[stx][sty] <= DNGN_ESCAPE_HATCH_UP)
-            {
-                stair_exist[grd[stx][sty] - DNGN_STONE_STAIRS_DOWN_I] = true;
-            }
-
-    for (int j = 0; j < (coinflip()? 4 : 3); j++)
-        for (int i = 0; i < 2; i++)
-        {
-            const dungeon_feature_type stair
-                = static_cast<dungeon_feature_type>(
-                   j + ((i == 0) ? DNGN_STONE_STAIRS_DOWN_I
-                                 : DNGN_STONE_STAIRS_UP_I));
-
-            if (stair_exist[stair - DNGN_STONE_STAIRS_DOWN_I])
-                continue;
-
-            int tries = 10000;
-            do
-                pos = random_in_bounds();
-            while ((grd(pos) != DNGN_FLOOR
-                    || (!is_layout && pos.x >= v1x && pos.x <= v2x
-                        && pos.y >= v1y && pos.y <= v2y))
-                   && tries-- > 0);
-
-
-            if (tries <= 0)
-            {
-#ifdef DEBUG_DIAGNOSTICS
-                dump_map("debug.map", true);
-                end(1, false,
-                    "Failed to create level: vault stairs for %s "
-                    "(layout: %s) failed",
-                    place.map.name.c_str(), is_layout? "yes" : "no");
-#endif
-                pos = you.pos();
-            }
-
-            grd(pos) = stair;
-        }
+    dgn_place_stone_stairs(true);
 
     return (true);
 }                               // end build_vaults()
@@ -5462,7 +5289,50 @@ static bool _dgn_place_one_monster(const vault_placement &place,
     return (false);
 }
 
-// Grr, keep this in sync with vault_grid.
+/* "Oddball grids" are handled in _vault_grid. 'B' is arguably oddball, too, as
+ * it depends on the place where the vault is. Maybe handling it here is not
+ * such a good idea. */
+static dungeon_feature_type _glyph_to_feat(int glyph,
+                                           vault_placement *place = NULL)
+{
+    return ((glyph == 'x') ? DNGN_ROCK_WALL :
+            (glyph == 'X') ? DNGN_PERMAROCK_WALL :
+            (glyph == 'c') ? DNGN_STONE_WALL :
+            (glyph == 'v') ? DNGN_METAL_WALL :
+            (glyph == 'b') ? DNGN_GREEN_CRYSTAL_WALL :
+            (glyph == 'a') ? DNGN_WAX_WALL :
+            (glyph == 'm') ? DNGN_CLEAR_ROCK_WALL :
+            (glyph == 'n') ? DNGN_CLEAR_STONE_WALL :
+            (glyph == 'o') ? DNGN_CLEAR_PERMAROCK_WALL :
+            (glyph == 't') ? DNGN_TREE :
+            (glyph == '+') ? DNGN_CLOSED_DOOR :
+            (glyph == '=') ? DNGN_SECRET_DOOR :
+            (glyph == 'w') ? DNGN_DEEP_WATER :
+            (glyph == 'W') ? DNGN_SHALLOW_WATER :
+            (glyph == 'l') ? DNGN_LAVA :
+            (glyph == '>') ? DNGN_ESCAPE_HATCH_DOWN :
+            (glyph == '<') ? DNGN_ESCAPE_HATCH_UP :
+            (glyph == '}') ? DNGN_STONE_STAIRS_DOWN_I :
+            (glyph == '{') ? DNGN_STONE_STAIRS_UP_I :
+            (glyph == ')') ? DNGN_STONE_STAIRS_DOWN_II :
+            (glyph == '(') ? DNGN_STONE_STAIRS_UP_II :
+            (glyph == ']') ? DNGN_STONE_STAIRS_DOWN_III :
+            (glyph == '[') ? DNGN_STONE_STAIRS_UP_III :
+            (glyph == 'A') ? DNGN_STONE_ARCH :
+            (glyph == 'B') ? (place ? _pick_temple_altar(*place)
+                                    : DNGN_ALTAR_ZIN) :
+            (glyph == 'C') ? _pick_an_altar() :   // f(x) elsewhere {dlb}
+            (glyph == 'F') ? DNGN_GRANITE_STATUE :
+            (glyph == 'I') ? DNGN_ORCISH_IDOL :
+            (glyph == 'G') ? DNGN_GRANITE_STATUE :
+            (glyph == 'T') ? DNGN_FOUNTAIN_BLUE :
+            (glyph == 'U') ? DNGN_FOUNTAIN_SPARKLING :
+            (glyph == 'V') ? DNGN_PERMADRY_FOUNTAIN :
+            (glyph == 'Y') ? DNGN_FOUNTAIN_BLOOD :
+            (glyph == '\0')? DNGN_ROCK_WALL
+                           : DNGN_FLOOR); // includes everything else
+}
+
 dungeon_feature_type map_feature_at(map_def *map, const coord_def &c,
                                     int rawfeat)
 {
@@ -5494,41 +5364,7 @@ dungeon_feature_type map_feature_at(map_def *map, const coord_def &c,
         return (DNGN_FLOOR);
     }
 
-    return ((rawfeat == 'x') ? DNGN_ROCK_WALL :
-            (rawfeat == 'X') ? DNGN_PERMAROCK_WALL :
-            (rawfeat == 'c') ? DNGN_STONE_WALL :
-            (rawfeat == 'v') ? DNGN_METAL_WALL :
-            (rawfeat == 'b') ? DNGN_GREEN_CRYSTAL_WALL :
-            (rawfeat == 'a') ? DNGN_WAX_WALL :
-            (rawfeat == 'm') ? DNGN_CLEAR_ROCK_WALL :
-            (rawfeat == 'n') ? DNGN_CLEAR_STONE_WALL :
-            (rawfeat == 'o') ? DNGN_CLEAR_PERMAROCK_WALL :
-            (rawfeat == 't') ? DNGN_TREE :
-            (rawfeat == '+') ? DNGN_CLOSED_DOOR :
-            (rawfeat == '=') ? DNGN_SECRET_DOOR :
-            (rawfeat == 'w') ? DNGN_DEEP_WATER :
-            (rawfeat == 'W') ? DNGN_SHALLOW_WATER :
-            (rawfeat == 'l') ? DNGN_LAVA :
-            (rawfeat == '>') ? DNGN_ESCAPE_HATCH_DOWN :
-            (rawfeat == '<') ? DNGN_ESCAPE_HATCH_UP :
-            (rawfeat == '}') ? DNGN_STONE_STAIRS_DOWN_I :
-            (rawfeat == '{') ? DNGN_STONE_STAIRS_UP_I :
-            (rawfeat == ')') ? DNGN_STONE_STAIRS_DOWN_II :
-            (rawfeat == '(') ? DNGN_STONE_STAIRS_UP_II :
-            (rawfeat == ']') ? DNGN_STONE_STAIRS_DOWN_III :
-            (rawfeat == '[') ? DNGN_STONE_STAIRS_UP_III :
-            (rawfeat == 'A') ? DNGN_STONE_ARCH :
-            (rawfeat == 'B') ? DNGN_ALTAR_ZIN :
-            (rawfeat == 'C') ? _pick_an_altar() :   // f(x) elsewhere {dlb}
-            (rawfeat == 'F') ? DNGN_GRANITE_STATUE :
-            (rawfeat == 'I') ? DNGN_ORCISH_IDOL :
-            (rawfeat == 'G') ? DNGN_GRANITE_STATUE :
-            (rawfeat == 'T') ? DNGN_FOUNTAIN_BLUE :
-            (rawfeat == 'U') ? DNGN_FOUNTAIN_SPARKLING :
-            (rawfeat == 'V') ? DNGN_PERMADRY_FOUNTAIN :
-            (rawfeat == 'Y') ? DNGN_FOUNTAIN_BLOOD :
-            (rawfeat == '\0')? DNGN_ROCK_WALL
-                             : DNGN_FLOOR); // includes everything else
+    return _glyph_to_feat(rawfeat);
 }
 
 static void _vault_grid(vault_placement &place,
@@ -5582,41 +5418,8 @@ static void _vault_grid(vault_placement &place,
                          const coord_def& where)
 {
     // First, set base tile for grids {dlb}:
-    grd(where)  = ((vgrid == -1)  ? grd(where) :
-                   (vgrid == 'x') ? DNGN_ROCK_WALL :
-                   (vgrid == 'X') ? DNGN_PERMAROCK_WALL :
-                   (vgrid == 'c') ? DNGN_STONE_WALL :
-                   (vgrid == 'v') ? DNGN_METAL_WALL :
-                   (vgrid == 'b') ? DNGN_GREEN_CRYSTAL_WALL :
-                   (vgrid == 'a') ? DNGN_WAX_WALL :
-                   (vgrid == 'm') ? DNGN_CLEAR_ROCK_WALL :
-                   (vgrid == 'n') ? DNGN_CLEAR_STONE_WALL :
-                   (vgrid == 'o') ? DNGN_CLEAR_PERMAROCK_WALL :
-                   (vgrid == 't') ? DNGN_TREE :
-                   (vgrid == '+') ? DNGN_CLOSED_DOOR :
-                   (vgrid == '=') ? DNGN_SECRET_DOOR :
-                   (vgrid == 'w') ? DNGN_DEEP_WATER :
-                   (vgrid == 'W') ? DNGN_SHALLOW_WATER :
-                   (vgrid == 'l') ? DNGN_LAVA :
-                   (vgrid == '>') ? DNGN_ESCAPE_HATCH_DOWN :
-                   (vgrid == '<') ? DNGN_ESCAPE_HATCH_UP :
-                   (vgrid == '}') ? DNGN_STONE_STAIRS_DOWN_I :
-                   (vgrid == '{') ? DNGN_STONE_STAIRS_UP_I :
-                   (vgrid == ')') ? DNGN_STONE_STAIRS_DOWN_II :
-                   (vgrid == '(') ? DNGN_STONE_STAIRS_UP_II :
-                   (vgrid == ']') ? DNGN_STONE_STAIRS_DOWN_III :
-                   (vgrid == '[') ? DNGN_STONE_STAIRS_UP_III :
-                   (vgrid == 'A') ? DNGN_STONE_ARCH :
-                   (vgrid == 'B') ? _pick_temple_altar(place) :
-                   (vgrid == 'C') ? _pick_an_altar() :   // f(x) elsewhere {dlb}
-                   (vgrid == 'I') ? DNGN_ORCISH_IDOL :
-                   (vgrid == 'G') ? DNGN_GRANITE_STATUE :
-                   (vgrid == 'T') ? DNGN_FOUNTAIN_BLUE :
-                   (vgrid == 'U') ? DNGN_FOUNTAIN_SPARKLING :
-                   (vgrid == 'V') ? DNGN_PERMADRY_FOUNTAIN :
-                   (vgrid == 'Y') ? DNGN_FOUNTAIN_BLOOD :
-                   (vgrid == '\0')? DNGN_ROCK_WALL
-                                  : DNGN_FLOOR); // includes everything else
+    if (vgrid != -1)
+        grd(where) = _glyph_to_feat(vgrid, &place);
 
     if (grd(where) == DNGN_ALTAR_JIYVA && jiyva_is_dead())
         grd(where) = DNGN_FLOOR;
@@ -5633,10 +5436,6 @@ static void _vault_grid(vault_placement &place,
     case '~':
         place_specific_trap(where, random_trap_for_place(place.level_number));
         break;
-    case 'O':
-        if (place.rune_subst != -1)
-            grd(where) = static_cast<dungeon_feature_type>(place.rune_subst);
-        break;
     }
 
     if ((vgrid == '=' || vgrid == '+')
@@ -5648,51 +5447,33 @@ static void _vault_grid(vault_placement &place,
     }
 
     // Then, handle grids that place "stuff" {dlb}:
-    // yes, I know this is a bit ugly ... {dlb}
-    switch (vgrid)
+    if (vgrid == '$' || vgrid == '%' || vgrid == '*' || vgrid == '|')
     {
-        case '$':
-        case '%':
-        case '*':
-        case '|':
+        int item_made = NON_ITEM;
+        object_class_type which_class = OBJ_RANDOM;
+        uint8_t which_type = OBJ_RANDOM;
+        int which_depth = place.level_number;
+        int spec = 250;
+
+        if (vgrid == '$')
         {
-            int item_made = NON_ITEM;
-            object_class_type which_class = OBJ_RANDOM;
-            uint8_t which_type = OBJ_RANDOM;
-            int which_depth;
-            int spec = 250;
-
-            if (vgrid == '$')
-            {
-                which_class = OBJ_GOLD;
-                which_type = OBJ_RANDOM;
-            }
-            else if (vgrid == '|')
-            {
-                which_class = RANDOM_ELEMENT(_acquirement_item_classes);
-                which_type = OBJ_RANDOM;
-            }
-            else
-            {
-                which_class = OBJ_RANDOM;
-                which_type = OBJ_RANDOM;
-            }
-
-            which_depth = place.level_number;
-            if (vgrid == '|')
-                which_depth = MAKE_GOOD_ITEM;
-            else if (vgrid == '*')
-                which_depth = 5 + (place.level_number * 2);
-
-            item_made = items(1, which_class, which_type, true,
-                               which_depth, spec);
-
-            if (item_made != NON_ITEM)
-            {
-                mitm[item_made].pos = where;
-            }
+            which_class = OBJ_GOLD;
         }
-        break;
+        else if (vgrid == '|')
+        {
+            which_class = RANDOM_ELEMENT(_acquirement_item_classes);
+            which_depth = MAKE_GOOD_ITEM;
+        }
+        else if (vgrid == '*')
+            which_depth = 5 + (place.level_number * 2);
+
+        item_made = items(1, which_class, which_type, true,
+                           which_depth, spec);
+
+        if (item_made != NON_ITEM)
+        {
+            mitm[item_made].pos = where;
+        }
     }
 
     // defghijk - items
@@ -6089,7 +5870,7 @@ static dungeon_feature_type _pick_an_altar()
                                      : DNGN_ALTAR_YREDELEMNUL);
             break;
 
-        case BRANCH_DWARF_HALL:
+        case BRANCH_DWARVEN_HALL:
             temp_rand = random2(7);
 
             altar_type = ((temp_rand == 0) ? DNGN_ALTAR_KIKUBAAQUDGHA :
@@ -6732,15 +6513,7 @@ static void _bigger_room()
             _build_lake(DNGN_DEEP_WATER);
     }
 
-    int pair_count = coinflip() ? 4 : 3;
-
-    for (j = 0; j < pair_count; j++)
-        for (i = 0; i < 2; i++)
-        {
-            _place_specific_stair(static_cast<dungeon_feature_type>(
-                                    j + ((i == 0) ? DNGN_STONE_STAIRS_DOWN_I
-                                                  : DNGN_STONE_STAIRS_UP_I)));
-        }
+    dgn_place_stone_stairs(true);
 }
 
 // Various plan_xxx functions.
@@ -6753,8 +6526,6 @@ static void _plan_main(int level_number, int force_plan)
     bool do_stairs = false;
     dungeon_feature_type special_grid = (one_chance_in(3) ? DNGN_METAL_WALL
                                                           : DNGN_STONE_WALL);
-    int i,j;
-
     if (!force_plan)
         force_plan = 1 + random2(12);
 
@@ -6762,68 +6533,46 @@ static void _plan_main(int level_number, int force_plan)
                  (force_plan == 2) ? _plan_2(level_number) :
                  (force_plan == 3) ? _plan_3(level_number) :
                  (force_plan == 4) ? _plan_4(0, 0, 0, 0, NUM_FEATURES) :
-                 (force_plan == 5) ? (one_chance_in(9) ? _plan_5()
+                 (force_plan == 5) ? (one_chance_in(9) ? _plan_5(level_number)
                                                        : _plan_3(level_number)) :
                  (force_plan == 6) ? _plan_6(level_number)
                                    : _plan_3(level_number));
 
     if (do_stairs)
-    {
-        int pair_count = coinflip()?4:3;
-
-        for (j = 0; j < pair_count; j++)
-            for (i = 0; i < 2; i++)
-            {
-                _place_specific_stair(static_cast<dungeon_feature_type>(
-                                       j + ((i == 0)? DNGN_STONE_STAIRS_DOWN_I
-                                                    : DNGN_STONE_STAIRS_UP_I)));
-            }
-    }
+        dgn_place_stone_stairs(true);
 
     if (one_chance_in(20))
         dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, special_grid);
 }
 
-static bool _plan_1(int level_number)
+static void _place_layout_vault(int level_number, const char *name,
+                                const char *method, const char *type)
 {
-    env.level_build_method += make_stringf(" plan_1 [%d]", level_number);
-    env.level_layout_type   = "open";
+    env.level_build_method += make_stringf(" %s [%d]", method, level_number);
+    env.level_layout_type = type;
 
-    const map_def *vault = find_map_by_name("layout_forbidden_donut");
+    const map_def *vault = find_map_by_name(make_stringf("layout_%s", name));
     ASSERT(vault);
 
-    bool success = _build_primary_vault(level_number, vault);
-    dgn_ensure_vault_placed(success, false);
+    dgn_ensure_vault_placed(_build_primary_vault(level_number, vault), false);
+}
 
+static bool _plan_1(int level_number)
+{
+    _place_layout_vault(level_number, "forbidden_donut", "plan_1", "open");
     return false;
 }
 
 static bool _plan_2(int level_number)
 {
-    env.level_build_method += " plan_2";
-    env.level_layout_type   = "cross";
-
-    const map_def *vault = find_map_by_name("layout_cross");
-    ASSERT(vault);
-
-    bool success = _build_primary_vault(level_number, vault);
-    dgn_ensure_vault_placed(success, false);
-
+    _place_layout_vault(level_number, "cross", "plan_2", "cross");
     return false;
 }
 
 static bool _plan_3(int level_number)
 {
-    env.level_build_method += " plan_3";
-    env.level_layout_type   = "rooms";
-
-    const map_def *vault = find_map_by_name("layout_rooms");
-    ASSERT(vault);
-
-    bool success = _build_primary_vault(level_number, vault);
-    dgn_ensure_vault_placed(success, false);
-
-    return true;
+    _place_layout_vault(level_number, "rooms", "plan_3", "rooms");
+    return false;
 }
 
 // A more chaotic version of city level.
@@ -6934,37 +6683,16 @@ static bool _plan_4(uint8_t forbid_x1, uint8_t forbid_y1, uint8_t forbid_x2,
     return true;
 }
 
-static bool _plan_5()
+static bool _plan_5(int level_number)
 {
-    env.level_build_method += " plan_5";
-    env.level_layout_type   = "misc"; // XXX: What type of layout is this?
-
-    // value range of [5,24] {dlb}
-    for (unsigned int i = 5 + random2(20); i > 0; i--)
-    {
-        join_the_dots(
-            coord_def(random2(GXM - 20) + 10, random2(GYM - 20) + 10),
-            coord_def(random2(GXM - 20) + 10, random2(GYM - 20) + 10),
-            MMT_VAULT);
-    }
-
-    if (!one_chance_in(4))
-        spotty_level(true, 100, coinflip());
-
-    return true;
+    _place_layout_vault(level_number, "misc", "plan_5", "misc");
+    return false;
 }
 
 // Octagon with pillars in middle.
 static bool _plan_6(int level_number)
 {
-    env.level_build_method += make_stringf(" plan_6 [%d]", level_number);
-    env.level_layout_type   = "open";
-
-    const map_def *vault = find_map_by_name("layout_big_octagon");
-    ASSERT(vault);
-
-    bool success = _build_primary_vault(level_number, vault);
-    dgn_ensure_vault_placed(success, false);
+    _place_layout_vault(level_number, "big_octagon", "plan_6", "open");
 
     // This "back door" is often one of the easier ways to get out of
     // pandemonium.
@@ -7744,14 +7472,7 @@ static void _box_room(int bx1, int bx2, int by1, int by2,
 
 static void _city_level(int level_number)
 {
-    env.level_build_method += make_stringf(" city_level [%d]", level_number);
-    env.level_layout_type   = "city";
-
-    const map_def *vault = find_map_by_name("layout_city");
-    ASSERT(vault);
-
-    bool success = _build_primary_vault(level_number, vault);
-    dgn_ensure_vault_placed(success, false);
+    _place_layout_vault(level_number, "city", "city_level", "city");
 }
 
 static bool _treasure_area(int level_number, uint8_t ta1_x,
@@ -7969,6 +7690,13 @@ static void _chequerboard(spec_room &sr, dungeon_feature_type target,
             grd(*ri) = ((ri->x + ri->y) % 2) ? floor2 : floor1;
 }
 
+static void _dgn_make_special(int x1, int y1, int x2, int y2)
+{
+    dgn_replace_area(x1, y1, x2, y2, DNGN_ROCK_WALL, DNGN_BUILDER_SPECIAL_WALL);
+    dgn_replace_area(x1, y1, x2, y2, DNGN_FLOOR, DNGN_BUILDER_SPECIAL_FLOOR);
+    dgn_replace_area(x1, y1, x2, y2, DNGN_CLOSED_DOOR, DNGN_BUILDER_SPECIAL_FLOOR);
+}
+
 static void _roguey_level(int level_number, spec_room &sr, bool make_stairs)
 {
     env.level_build_method += make_stringf(" roguey_level [%d%s]", level_number,
@@ -7990,12 +7718,8 @@ static void _roguey_level(int level_number, spec_room &sr, bool make_stairs)
             rox1[cn] = bcount_x * 13 + 8 + random2(4);
             roy1[cn] = bcount_y * 11 + 8 + random2(4);
 
-            rox2[cn] = rox1[cn] + 3 + random2(8);
+            rox2[cn] = std::min(rox1[cn] + 3 + random2(8), GXM - 8);
             roy2[cn] = roy1[cn] + 3 + random2(6);
-
-            // bounds
-            if (rox2[cn] > GXM-8)
-                rox2[cn] = GXM-8;
 
             cn++;
         }
@@ -8007,21 +7731,16 @@ static void _roguey_level(int level_number, spec_room &sr, bool make_stairs)
         dgn_replace_area(rox1[i], roy1[i], rox2[i], roy2[i],
                           DNGN_ROCK_WALL, DNGN_FLOOR);
 
-        // Inner room?
+        // If the room is sufficiently large, we may place an inner room in it,
+        // optionally filled with treasure.
         if (rox2[i] - rox1[i] > 5 && roy2[i] - roy1[i] > 5
             && x_chance_in_y(3, 100 - level_number))
         {
+            dungeon_feature_type wall = DNGN_METAL_WALL;
             if (!one_chance_in(4))
-            {
-                _box_room(rox1[i] + 2, rox2[i] - 2, roy1[i] + 2,
-                           roy2[i] - 2, (coinflip() ? DNGN_STONE_WALL
-                                                    : DNGN_ROCK_WALL));
-            }
-            else
-            {
-                _box_room(rox1[i] + 2, rox2[i] - 2, roy1[i] + 2,
-                           roy2[i] - 2, DNGN_METAL_WALL);
-            }
+                wall = coinflip() ? DNGN_STONE_WALL : DNGN_ROCK_WALL;
+
+            _box_room(rox1[i] + 2, rox2[i] - 2, roy1[i] + 2, roy2[i] - 2, wall);
 
             if (coinflip())
             {
@@ -8122,50 +7841,20 @@ static void _roguey_level(int level_number, spec_room &sr, bool make_stairs)
         // by something else (or put monsters in walls, etc...)
 
         // top
-        dgn_replace_area(sr.tl.x-1, sr.tl.y-1, sr.br.x+1,sr.tl.y-1,
-                         DNGN_ROCK_WALL, DNGN_BUILDER_SPECIAL_WALL);
-        dgn_replace_area(sr.tl.x-1, sr.tl.y-1, sr.br.x+1,sr.tl.y-1,
-                         DNGN_FLOOR, DNGN_BUILDER_SPECIAL_FLOOR);
-        dgn_replace_area(sr.tl.x-1, sr.tl.y-1, sr.br.x+1,sr.tl.y-1,
-                         DNGN_CLOSED_DOOR, DNGN_BUILDER_SPECIAL_FLOOR);
+        _dgn_make_special(sr.tl.x - 1, sr.tl.y - 1, sr.br.x + 1, sr.tl.y - 1);
 
         // bottom
-        dgn_replace_area(sr.tl.x-1, sr.br.y+1, sr.br.x+1,sr.br.y+1,
-                         DNGN_ROCK_WALL, DNGN_BUILDER_SPECIAL_WALL);
-        dgn_replace_area(sr.tl.x-1, sr.br.y+1, sr.br.x+1,sr.br.y+1,
-                         DNGN_FLOOR, DNGN_BUILDER_SPECIAL_FLOOR);
-        dgn_replace_area(sr.tl.x-1, sr.br.y+1, sr.br.x+1,sr.br.y+1,
-                         DNGN_CLOSED_DOOR, DNGN_BUILDER_SPECIAL_FLOOR);
+        _dgn_make_special(sr.tl.x - 1, sr.br.y + 1, sr.br.x + 1, sr.br.y + 1);
 
         // left
-        dgn_replace_area(sr.tl.x-1, sr.tl.y-1, sr.tl.x-1, sr.br.y+1,
-                         DNGN_ROCK_WALL, DNGN_BUILDER_SPECIAL_WALL);
-        dgn_replace_area(sr.tl.x-1, sr.tl.y-1, sr.tl.x-1, sr.br.y+1,
-                         DNGN_FLOOR, DNGN_BUILDER_SPECIAL_FLOOR);
-        dgn_replace_area(sr.tl.x-1, sr.tl.y-1, sr.tl.x-1, sr.br.y+1,
-                         DNGN_CLOSED_DOOR, DNGN_BUILDER_SPECIAL_FLOOR);
+        _dgn_make_special(sr.tl.x - 1, sr.tl.y - 1, sr.tl.x - 1, sr.br.y + 1);
 
         // right
-        dgn_replace_area(sr.br.x+1, sr.tl.y-1, sr.br.x+1, sr.br.y+1,
-                         DNGN_ROCK_WALL, DNGN_BUILDER_SPECIAL_WALL);
-        dgn_replace_area(sr.br.x+1, sr.tl.y-1, sr.br.x+1, sr.br.y+1,
-                         DNGN_FLOOR, DNGN_BUILDER_SPECIAL_FLOOR);
-        dgn_replace_area(sr.br.x+1, sr.tl.y-1, sr.br.x+1, sr.br.y+1,
-                         DNGN_CLOSED_DOOR, DNGN_BUILDER_SPECIAL_FLOOR);
+        _dgn_make_special(sr.br.x + 1, sr.tl.y - 1, sr.br.x + 1, sr.br.y + 1);
     }
 
-    if (!make_stairs)
-        return;
-
-    int stair_count = coinflip() ? 4 : 3;
-
-    for (int j = 0; j < stair_count; j++)
-        for (i = 0; i < 2; i++)
-        {
-            _place_specific_stair(static_cast<dungeon_feature_type>(
-                                    j + ((i == 0) ? DNGN_STONE_STAIRS_DOWN_I
-                                                  : DNGN_STONE_STAIRS_UP_I)));
-        }
+    if (make_stairs)
+        dgn_place_stone_stairs(true);
 }                               // end roguey_level()
 
 bool place_specific_trap(const coord_def& where, trap_type spec_type)
@@ -9243,9 +8932,9 @@ void remember_vault_placement(std::string key, const vault_placement &place)
                                     table.size() + 1);
 
     std::string place_str
-        = make_stringf("(%d,%d) (%d,%d) orient: %d lev: %d subst: %d",
+        = make_stringf("(%d,%d) (%d,%d) orient: %d lev: %d",
                        place.pos.x, place.pos.y, place.size.x, place.size.y,
-                       place.orient, place.level_number, place.rune_subst);
+                       place.orient, place.level_number);
 
     table[name] = place_str;
 

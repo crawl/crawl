@@ -262,6 +262,7 @@ public:
 
     bool  is_current() const;
 
+    void  remove_shop(const coord_def& c);
  private:
     int _num_enabled_stashes() const;
     void _update_corpses(int rot_time);
@@ -339,6 +340,7 @@ public:
 
     void dump(const char *filename, bool identify = false) const;
 
+    void remove_shop(const coord_def& c);
 private:
     void get_matching_stashes(const base_pattern &search,
                               std::vector<stash_search_result> &results) const;

@@ -79,6 +79,8 @@ int letter_to_index(int the_letter);
 int near_stairs(const coord_def &p, int max_dist,
                 dungeon_char_type &stair_type, branch_type &branch);
 
+coord_def get_random_stair();
+
 inline bool testbits(uint64_t flags, uint64_t test)
 {
     return ((flags & test) == test);

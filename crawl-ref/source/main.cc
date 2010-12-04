@@ -48,6 +48,7 @@
 #include "crash.h"
 #include "database.h"
 #include "dbg-scan.h"
+#include "dbg-util.h"
 #include "debug.h"
 #include "delay.h"
 #include "describe.h"
@@ -106,6 +107,7 @@
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-clouds.h"
+#include "spl-damage.h"
 #include "spl-goditem.h"
 #include "spl-other.h"
 #include "spl-selfench.h"
@@ -133,6 +135,7 @@
 #include "wiz-mon.h"
 #include "wiz-you.h"
 #include "xom.h"
+#include "zotdef.h"
 
 #ifdef USE_TILE
  #include "tiledef-dngn.h"
@@ -363,6 +366,9 @@ static void _launch_game()
     viewwindow();
 #endif
 
+    if (!game_start)
+        env.map_shadow = env.map_knowledge;
+
     if (game_start && you.char_class == JOB_WANDERER)
         _wanderer_startup_message();
 
@@ -425,6 +431,7 @@ static void _show_commandline_options_help()
     puts("  -save-version <name>  Save file version for the given player");
     puts("  -sprint               select Sprint");
     puts("  -sprint-map <name>    preselect a Sprint map");
+    puts("  -zotdef               select Zot Defense");
     puts("");
 
     puts("Command line options override init file options, which override");
@@ -476,71 +483,32 @@ static void _announce_goal_message()
 
 static void _god_greeting_message(bool game_start)
 {
-    switch (you.religion)
-    {
-    case GOD_ZIN:
-        simple_god_message(" says: Spread the light, my child.");
-        break;
-    case GOD_SHINING_ONE:
-        simple_god_message(" says: Lead the forces of light to victory!");
-        break;
-    case GOD_KIKUBAAQUDGHA:
-        simple_god_message(" says: Spread unending torment and darkness!");
-        break;
-    case GOD_YREDELEMNUL:
-        simple_god_message(" says: Carry the black torch! Rouse the idle dead!");
-        break;
-    case GOD_NEMELEX_XOBEH:
-        simple_god_message(" says: It's all in the cards!");
-        break;
-    case GOD_XOM:
-        if (game_start)
-            simple_god_message(" says: A new plaything!");
-        break;
-    case GOD_VEHUMET:
-        simple_god_message(" says: Let it end in hellfire!");
-        break;
-    case GOD_OKAWARU:
-        simple_god_message(" says: Bring me glory in combat!");
-        break;
-    case GOD_MAKHLEB:
-        god_speaks(you.religion, "Blood and souls for Makhleb!");
-        break;
-    case GOD_SIF_MUNA:
-        simple_god_message(" whispers: I know many secrets...");
-        break;
-    case GOD_TROG:
-        simple_god_message(" says: Kill them all!");
-        break;
-    case GOD_ELYVILON:
-        simple_god_message(" says: Go forth and aid the weak!");
-        break;
-    case GOD_LUGONU:
-        simple_god_message(" says: Spread carnage and corruption!");
-        break;
-    case GOD_BEOGH:
-        simple_god_message(" says: Drown the unbelievers in a sea of blood!");
-        break;
-    case GOD_JIYVA:
-        god_speaks(you.religion, "Slime for the Slime God!");
-        break;
-    case GOD_FEDHAS:
-        simple_god_message(" says: Spread life and death.");
-        break;
-    case GOD_CHEIBRIADOS:
-        simple_god_message(" says: Take it easy.");
-        break;
-    case GOD_ASHENZARI:
-        simple_god_message(" says: Partake of my vision. Partake of my curse.");
-        break;
+    if (you.religion == GOD_NO_GOD)
+        return;
 
-    case GOD_NO_GOD:
-    case NUM_GODS:
-    case GOD_RANDOM:
-    case GOD_NAMELESS:
-    case GOD_VIABLE:
-        break;
+    std::string msg = god_name(you.religion);
+
+    if (you.religion == GOD_XOM)
+    {
+        if (game_start)
+            msg += " newgame";
+        else if (you.gift_timeout <= 1)
+            msg += " bored";
+        else
+            msg += " generic";
     }
+    else
+    {
+        if (player_under_penance())
+            msg += " penance";
+        else
+            msg += " welcome";
+    }
+
+    std::string result = getSpeakString(msg);
+
+    if(!result.empty())
+        god_speaks(you.religion, result.c_str());
 }
 
 static void _take_starting_note()
@@ -604,6 +572,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
 
     case CONTROL('B'): you.teleport(true, false, true); break;
     case CONTROL('D'): wizard_edit_durations(); break;
+    case CONTROL('E'): debug_dump_levgen(); break;
     case CONTROL('F'): debug_fight_statistics(false, true); break;
     case CONTROL('G'): debug_ghosts(); break;
     case CONTROL('H'): wizard_set_hunger_state(); break;
@@ -2471,6 +2440,14 @@ static void _decrement_durations()
 #endif
     }
 
+    // Should expire before levitation.
+    if (you.duration[DUR_TORNADO])
+    {
+        tornado_damage(std::min(delay, you.duration[DUR_TORNADO]));
+        _decrement_a_duration(DUR_TORNADO, delay,
+                              "The winds around you calm down.");
+    }
+
     if (you.duration[DUR_LEVITATION])
     {
         if (!you.permanent_levitation() && !you.permanent_flight())
@@ -2883,6 +2860,29 @@ void world_reacts()
     _update_mold();
     _update_golubria_traps();
 
+    if (crawl_state.game_is_zotdef() && you.num_turns == 100)
+        zotdef_set_wave();
+
+    // Zotdef spawns only in the main dungeon
+    if (crawl_state.game_is_zotdef()
+        && you.level_type == LEVEL_DUNGEON
+        && you.where_are_you == BRANCH_MAIN_DUNGEON
+        && you.num_turns > 100)
+    {
+        zotdef_bosses_check();
+        for (int i = 0; i < SPAWN_SIZE; i++)
+        {
+            // Reduce critter frequency for first wave
+            if (you.num_turns<CYCLE_LENGTH && one_chance_in(3))
+                continue;
+
+            if ((you.num_turns % CYCLE_LENGTH > CYCLE_INTERVAL)
+                && x_chance_in_y((you.num_turns % CYCLE_LENGTH), CYCLE_LENGTH*3))
+            {
+                zotdef_spawn(false);
+            }
+        }
+    }
     if (!crawl_state.game_is_arena())
         _player_reacts_to_monsters();
 
@@ -2901,8 +2901,17 @@ void world_reacts()
 
     if (you.num_turns != -1)
     {
-        if (you.num_turns < INT_MAX)
-            you.num_turns++;
+        // Zotdef: Time only passes in the main dungeon
+        if (you.num_turns < LONG_MAX)
+        {
+            if (!crawl_state.game_is_zotdef()
+                || you.where_are_you == BRANCH_MAIN_DUNGEON
+                   && you.level_type == LEVEL_DUNGEON)
+            {
+                you.num_turns++;
+            }
+        }
+
         if (env.turns_on_level < INT_MAX)
             env.turns_on_level++;
         record_turn_timestamp();
@@ -3878,6 +3887,31 @@ static void _move_player(coord_def move)
 
     if (!attacking && targ_pass && moving && !beholder && !fmonger)
     {
+        if (crawl_state.game_is_zotdef() && you.pos() == orb_position())
+        {
+            // Aree you standing on the Orb? If so, are the critters near?
+            bool danger = false;
+            for (int i = 0; i < MAX_MONSTERS; ++i)
+            {
+                monster& mon = menv[i];
+                if (you.can_see(&mon) && !mon.friendly() &&
+                    (grid_distance(you.pos(), mon.pos()) < 4))
+                {
+                    danger = true;
+                }
+            }
+
+            if (danger)
+            {
+                std::string prompt = "Are you sure you want to leave the Orb unguarded?";
+                if (!yesno(prompt.c_str(), false, 'n'))
+                {
+                    canned_msg(MSG_OK);
+                    return;
+                }
+            }
+        }
+
         if (!you.confused() && !check_moveto(targ))
         {
             stop_running();

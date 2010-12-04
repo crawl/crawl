@@ -73,6 +73,7 @@ class InvEntry : public MenuEntry
 private:
     static bool show_prices;
     static bool show_glyph;
+    static bool show_cursor;
     static void set_show_prices(bool doshow);
 
     mutable std::string basename;
@@ -86,6 +87,7 @@ public:
     InvEntry(const item_def &i);
     std::string get_text(const bool need_cursor = false) const;
     void set_show_glyph(bool doshow);
+    static void set_show_cursor(bool doshow);
 
     const std::string &get_basename() const;
     const std::string &get_qualname() const;

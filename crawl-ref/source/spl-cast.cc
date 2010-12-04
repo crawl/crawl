@@ -1551,6 +1551,11 @@ static spret_type _do_cast(spell_type spell, int powc,
         cast_ignite_poison(powc);
         break;
 
+    case SPELL_TORNADO:
+        if (!cast_tornado(powc))
+            return SPRET_ABORT;
+        break;
+
     // Summoning spells, and other spells that create new monsters.
     // If a god is making you cast one of these spells, any monsters
     // produced will count as god gifts.

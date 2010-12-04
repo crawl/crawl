@@ -1122,9 +1122,7 @@ NAME:    ring of Charms
 APPEAR:  encrusted golden ring
 OBJ:     OBJ_JEWELLERY/RING_CHARM
 COLOUR:  ETC_ENCHANT
-#FIXME! missing tile <================================================
-TILE:    urand_mage
-STEALTH: -10
+TILE:    urand_charms
 VALUE:   1500
 BOOL:    special
 DESC_ID: This lovely ring bestows on the wearer a strange glamour that makes

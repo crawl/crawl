@@ -144,4 +144,7 @@ bool get_item_by_name(item_def *item, char* specs,
                       bool create_for_real = false);
 
 void move_items(const coord_def r, const coord_def p);
+// Returns the Orb's position on the ground, or origin()
+coord_def orb_position();
+
 #endif

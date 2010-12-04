@@ -49,6 +49,7 @@ enum element_type
     ETC_WAVES,          // cyan, with regularly occurring lightcyan waves
     ETC_TREE,           // colour of trees
     ETC_RANDOM,         // any colour (except BLACK)
+    ETC_TORNADO,        // twisting swirls of gray
     ETC_FIRST_LUA = 96, // colour indices have to be <128
 };
 
@@ -85,6 +86,8 @@ void add_element_colour(element_colour_calc *colour);
 void clear_colours_on_exit();
 uint8_t random_colour();
 uint8_t random_uncommon_colour();
+bool is_low_colour(uint8_t colour);
+bool is_high_colour(uint8_t colour);
 uint8_t make_low_colour(uint8_t colour);
 uint8_t make_high_colour(uint8_t colour);
 bool is_element_colour(int col);

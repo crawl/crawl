@@ -147,16 +147,13 @@ public:
 
     int level_number;
 
-    // If we're not placing runes, this is the substitute feature.
-    int rune_subst;
-
     // The PC has seen at least one square of this vault.
     bool seen;
 
 public:
     vault_placement()
         : pos(-1, -1), size(0, 0), orient(0), map(),
-          exits(), level_number(0), rune_subst(-1), seen(false)
+          exits(), level_number(0), seen(false)
     {
     }
 
@@ -223,7 +220,7 @@ coord_def dgn_random_point_visible_from(const coord_def &c,
 coord_def dgn_find_feature_marker(dungeon_feature_type feat);
 
 // Generate 3 stone stairs in both directions.
-void dgn_place_stone_stairs();
+void dgn_place_stone_stairs(bool maybe_place_hatches = false);
 
 // Set floor/wall colour based on the mons_alloc array. Used for
 // Abyss and Pan.
@@ -233,14 +230,12 @@ void dgn_set_grid_colour_at(const coord_def &c, int colour);
 bool dgn_place_map(const map_def *map,
                    bool clobber,
                    bool make_no_exits,
-                   const coord_def &pos = INVALID_COORD,
-                   int rune_subst = -1);
+                   const coord_def &pos = INVALID_COORD);
 
 const map_def *dgn_safe_place_map(const map_def *map,
                                   bool clobber,
                                   bool make_no_exits,
-                                  const coord_def &pos = INVALID_COORD,
-                                  int rune_subst = -1);
+                                  const coord_def &pos = INVALID_COORD);
 
 void level_clear_vault_memory();
 void level_welcome_messages();

@@ -435,8 +435,9 @@ cherub MONS_CHERUB
 
 ## Giants ('C')
 %sdir dc-mon/unique
-antaeus MONS_ANTAEUS
 polyphemus MONS_POLYPHEMUS
+chuck MONS_CHUCK
+antaeus MONS_ANTAEUS
 %sdir dc-mon
 hill_giant MONS_HILL_GIANT
 ettin MONS_ETTIN
@@ -506,9 +507,10 @@ kenku MONS_KENKU
 %sdir dc-mon/holy
 shedu MONS_SHEDU
 
-## Ice beasts
+## Beasts ('I')
 %sdir dc-mon
-ice_beast MONS_ICE_BEAST /*'I'*/
+ice_beast MONS_ICE_BEAST
+sky_beast MONS_SKY_BEAST
 
 ## Jellies ('J')
 %sdir dc-mon/unique
@@ -538,7 +540,6 @@ pikel MONS_PIKEL
 kobold MONS_KOBOLD
 big_kobold MONS_BIG_KOBOLD
 kobold_demonologist MONS_KOBOLD_DEMONOLOGIST
-nisse MONS_NISSE
 
 ## Liches ('L')
 %sdir dc-mon/unique
@@ -611,7 +612,7 @@ wraith MONS_WRAITH
 shadow_wraith MONS_SHADOW_WRAITH
 freezing_wraith MONS_FREEZING_WRAITH
 phantasmal_warrior MONS_PHANTASMAL_WARRIOR
-greater_wraith MONS_GREATER_WRAITH
+eidolon MONS_EIDOLON
 
 %sdir dc-mon
 %rim 0
@@ -680,6 +681,7 @@ boggart MONS_BOGGART
 spriggan MONS_SPRIGGAN
 spriggan_rider MONS_SPRIGGAN_RIDER
 spriggan_druid MONS_SPRIGGAN_DRUID
+spriggan_berserker MONS_SPRIGGAN_BERSERKER
 spriggan_defender MONS_SPRIGGAN_DEFENDER
 spriggan_assassin MONS_SPRIGGAN_ASSASSIN
 dc-mon/unique/enchantress MONS_THE_ENCHANTRESS
@@ -738,6 +740,9 @@ flayed_ghost MONS_FLAYED_GHOST
 hungry_ghost MONS_HUNGRY_GHOST
 %sdir dc-mon/nonliving
 insubstantial_wisp MONS_INSUBSTANTIAL_WISP
+%sdir dc-mon/holy
+spirit MONS_SPIRIT
+blessed_toe MONS_BLESSED_TOE /*'*'*/
 
 ## Small zombified monsters ('z')
 %sdir dc-mon/undead
@@ -757,12 +762,21 @@ flying_skull MONS_FLYING_SKULL
 
 ## Draconians ('d')
 %sdir dc-mon/unique
-tiamat MONS_TIAMAT
+tiamat_black MONS_TIAMAT
+tiamat_yellow
+tiamat_green
+tiamat_grey
+tiamat_mottled
+tiamat_pale
+tiamat_purple
+tiamat_red
+tiamat_white
 %sdir dc-mon/draco
 draco-base-brown DRACO_BASE
 draco-base-black
 draco-base-yellow
 draco-base-green
+draco-base-grey
 draco-base-mottle
 draco-base-pale
 draco-base-purple
