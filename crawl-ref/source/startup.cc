@@ -189,6 +189,8 @@ static void _initialize()
 
 static void _post_init(bool newc)
 {
+    ASSERT(you.your_name.length() <= kNameLen);
+
     // Fix the mutation definitions for the species we're playing.
     fixup_mutations();
 
