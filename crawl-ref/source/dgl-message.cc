@@ -14,6 +14,7 @@
 #include "output.h"
 
 #include <errno.h>
+#include <sys/stat.h>
 
 static struct stat mfilestat;
 
