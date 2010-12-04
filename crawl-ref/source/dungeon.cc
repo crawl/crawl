@@ -6632,12 +6632,10 @@ static bool _plan_4(dgn_region_list *excluded, dungeon_feature_type force_wall)
                 drawing = DNGN_METAL_WALL;
         }
 
-        temp_rand = random2(210);
-
-        if (temp_rand > 71)     // odds: 138 in 210 {dlb}
-            dgn_replace_area(b1x, b1y, b2x, b2y, DNGN_FLOOR, drawing);
-        else                    // odds:  72 in 210 {dlb}
+        if (one_chance_in(3))
             _box_room(b1x, b2x - 1, b1y, b2y - 1, drawing);
+        else
+            dgn_replace_area(b1x, b1y, b2x, b2y, DNGN_FLOOR, drawing);
     }
 
     if (!excluded && one_chance_in(4))     // a market square
