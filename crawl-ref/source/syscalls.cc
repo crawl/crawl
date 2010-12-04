@@ -97,3 +97,10 @@ int fdatasync(int fd)
 }
 # endif
 #endif
+
+#ifdef TARGET_OS_MACOSX
+int fdatasync(int fd) 
+{
+    return fsync(fd);
+}
+#endif
