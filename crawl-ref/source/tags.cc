@@ -972,7 +972,7 @@ void tag_read(reader &inf, int minorVersion, tag_type tag_id)
 
 static void tag_construct_char(writer &th)
 {
-    marshallString(th, you.your_name, kNameLen);
+    marshallString(th, you.your_name);
     marshallString(th, Version::Long());
 
     marshallByte(th, you.species);
@@ -1552,7 +1552,7 @@ static void tag_construct_game_state(writer &th)
 
 static void tag_read_char(reader &th, int minorVersion)
 {
-    you.your_name         = unmarshallString(th, kNameLen);
+    you.your_name         = unmarshallString(th);
     const std::string old_version = unmarshallString(th);
     dprf("Last save Crawl version: %s", old_version.c_str());
 
