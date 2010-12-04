@@ -189,7 +189,7 @@ static void _initialize()
 
 static void _post_init(bool newc)
 {
-    ASSERT(you.your_name.length() <= kNameLen);
+    ASSERT(strwidth(you.your_name) <= kNameLen);
 
     // Fix the mutation definitions for the species we're playing.
     fixup_mutations();
