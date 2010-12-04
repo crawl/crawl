@@ -1540,10 +1540,7 @@ int player_res_acid(bool calc_unid, bool items)
     }
 
     // mutations:
-    if (player_mutation_level(MUT_YELLOW_SCALES) == 2)
-        res++;
-    else if (player_mutation_level(MUT_YELLOW_SCALES) == 3)
-        res += 2;
+    res += std::max(0, player_mutation_level(MUT_YELLOW_SCALES) - 1);
 
     if (res > 3)
             res = 3;
@@ -2238,8 +2235,7 @@ int player_evasion_bonuses(ev_ignore_type evit)
     if (player_mutation_level(MUT_MOLTEN_SCALES) > 1)
         evbonus--;
     evbonus -= std::max(0, player_mutation_level(MUT_SLIMY_GREEN_SCALES) - 1);
-    if (player_mutation_level(MUT_GELATINOUS_BODY))
-        evbonus += player_mutation_level(MUT_GELATINOUS_BODY) - 1;
+    evbonus += std::max(0, player_mutation_level(MUT_GELATINOUS_BODY) - 1);
 
     // transformation penalties/bonuses not covered by size alone:
     switch (you.attribute[ATTR_TRANSFORMATION])
