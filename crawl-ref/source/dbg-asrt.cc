@@ -101,26 +101,10 @@ static void _dump_player(FILE *file)
     fprintf(file, "Player:\n");
     fprintf(file, "{{{{{{{{{{{\n");
 
-    bool name_overrun = true;
-    for (int i = 0; i < 30; ++i)
-    {
-        if (you.class_name[i] == '\0')
-        {
-            name_overrun = false;
-            break;
-        }
-    }
-
-    if (name_overrun)
-    {
-        fprintf(file, "job_name runs past end of buffer.\n");
-        you.class_name[29] = '\0';
-    }
-
     fprintf(file, "Name:       [%s]\n", you.your_name.c_str());
     fprintf(file, "Species:    %s\n", species_name(you.species).c_str());
     fprintf(file, "Job:        %s\n\n", get_job_name(you.char_class));
-    fprintf(file, "class_name: %s\n\n", you.class_name);
+    fprintf(file, "class_name: %s\n\n", you.class_name.c_str());
 
     fprintf(file, "HP: %d/%d; base: %d/%d\n", you.hp, you.hp_max,
             you.base_hp, you.base_hp2);

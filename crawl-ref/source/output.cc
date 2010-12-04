@@ -1302,7 +1302,7 @@ static std::string _overview_screen_title()
     snprintf(species_job, sizeof species_job,
              "(%s %s)",
              species_name(you.species).c_str(),
-             you.class_name);
+             you.class_name.c_str());
 
     char time_turns[50] = "";
 

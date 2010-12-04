@@ -5150,7 +5150,7 @@ void player::init()
     your_name.clear();
     species          = SP_UNKNOWN;
     char_class       = JOB_UNKNOWN;
-    class_name[0]    = 0;
+    class_name.clear();
 
 #ifdef WIZARD
     wizard = (Options.wiz_mode == WIZ_YES) ? true : false;
