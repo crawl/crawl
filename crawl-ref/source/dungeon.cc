@@ -2465,11 +2465,6 @@ static void _pan_level(int level_number)
             random_map_for_tag(pandemon_level_names[which_demon], false);
 
         ASSERT(vault);
-        if (!vault)
-        {
-            end(1, false, "Failed to find Pandemonium level %s!\n",
-                pandemon_level_names[which_demon]);
-        }
 
         dgn_ensure_vault_placed(_build_primary_vault(level_number, vault),
                                  true);
