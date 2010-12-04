@@ -1979,7 +1979,8 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
 
     switch (item.sub_type)
     {
-    case WPN_KNIFE: return TILE_WPN_KNIFE;
+    case WPN_KNIFE:
+        return TILE_WPN_KNIFE;
 
     case WPN_DAGGER:
         if (race == ISFLAG_ORCISH)
@@ -1995,10 +1996,17 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
             return TILE_WPN_SHORT_SWORD_ELF;
         return TILE_WPN_SHORT_SWORD;
 
-    case WPN_QUICK_BLADE: return TILE_WPN_QUICK_BLADE;
-    case WPN_SABRE: return TILE_WPN_SABRE;
-    case WPN_FALCHION: return TILE_WPN_FALCHION;
-    case WPN_KATANA: return TILE_WPN_KATANA;
+    case WPN_QUICK_BLADE:
+        return TILE_WPN_QUICK_BLADE;
+
+    case WPN_SABRE:
+        return TILE_WPN_SABRE;
+
+    case WPN_FALCHION:
+        return TILE_WPN_FALCHION;
+
+    case WPN_KATANA:
+        return TILE_WPN_KATANA;
 
     case WPN_LONG_SWORD:
         if (race == ISFLAG_ORCISH)
