@@ -202,7 +202,7 @@ static void _big_room(int level_number);
 static void _chequerboard(spec_room &sr, dungeon_feature_type target,
                           dungeon_feature_type floor1,
                           dungeon_feature_type floor2);
-static void _roguey_level(int level_number, spec_room &sr, bool make_stairs);
+static void _roguey_level(int level_number, spec_room &sr);
 
 // VAULT FUNCTIONS
 static bool _build_secondary_vault(int level_number, const map_def *vault,
@@ -2841,10 +2841,13 @@ static bool _builder_normal(int level_number, spec_room &sr)
         bool just_roguey = coinflip();
 
         // Sometimes _roguey_level() generates a special room.
-        _roguey_level(level_number, sr, just_roguey);
+        _roguey_level(level_number, sr);
 
         if (just_roguey)
+        {
+            dgn_place_stone_stairs(true);
             return false;
+        }
     }
     else
     {
@@ -7697,10 +7700,9 @@ static void _dgn_make_special(int x1, int y1, int x2, int y2)
     dgn_replace_area(x1, y1, x2, y2, DNGN_CLOSED_DOOR, DNGN_BUILDER_SPECIAL_FLOOR);
 }
 
-static void _roguey_level(int level_number, spec_room &sr, bool make_stairs)
+static void _roguey_level(int level_number, spec_room &sr)
 {
-    env.level_build_method += make_stringf(" roguey_level [%d%s]", level_number,
-                                           make_stairs ? " make_stairs" : "");
+    env.level_build_method += make_stringf(" roguey_level [%d]", level_number);
 
     int bcount_x, bcount_y;
     int cn = 0;
@@ -7852,9 +7854,6 @@ static void _roguey_level(int level_number, spec_room &sr, bool make_stairs)
         // right
         _dgn_make_special(sr.br.x + 1, sr.tl.y - 1, sr.br.x + 1, sr.br.y + 1);
     }
-
-    if (make_stairs)
-        dgn_place_stone_stairs(true);
 }                               // end roguey_level()
 
 bool place_specific_trap(const coord_def& where, trap_type spec_type)
