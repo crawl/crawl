@@ -697,8 +697,7 @@ bool cast_summon_dragon(int pow, god_type god)
 }
 
 // This is actually one of Trog's wrath effects.
-bool summon_berserker(int pow, god_type god, int spell,
-                      bool force_hostile)
+bool summon_berserker(int pow, actor *caster)
 {
     monster_type mon = MONS_PROGRAM_BUG;
 
@@ -741,12 +740,11 @@ bool summon_berserker(int pow, god_type god, int spell,
         mon = (coinflip()) ? MONS_HILL_GIANT : MONS_STONE_GIANT;
     }
 
-    mgen_data mg(mon, !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
-                 !force_hostile ? &you : 0, dur, spell, you.pos(),
-                 MHITYOU, 0, god);
+    mgen_data mg(mon, caster ? BEH_COPY : BEH_HOSTILE, caster, dur, 0,
+                 caster? caster->pos() : you.pos(), MHITYOU, 0, GOD_TROG);
 
-    if (force_hostile)
-        mg.non_actor_summoner = "the rage of " + god_name(god, false);
+    if (!caster)
+        mg.non_actor_summoner = "the rage of " + god_name(GOD_TROG, false);
 
     const int mons = create_monster(mg);
 

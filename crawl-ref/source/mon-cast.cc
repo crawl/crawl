@@ -2377,7 +2377,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BROTHERS_IN_ARMS:
     {
         const int power = (mons->hit_dice * 20) + random2(mons->hit_dice * 5) - random2(mons->hit_dice * 5);
-        summon_berserker(power, GOD_TROG, 0, true);
+        summon_berserker(power, mons);
         return;
     }
 

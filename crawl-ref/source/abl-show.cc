@@ -2343,7 +2343,7 @@ static bool _do_ability(const ability_def& abil)
         // Trog abilities don't use or train invocations.
         summon_berserker(you.piety +
                          random2(you.piety/4) - random2(you.piety/4),
-                         GOD_TROG);
+                         &you);
         break;
 
     case ABIL_SIF_MUNA_FORGET_SPELL:
