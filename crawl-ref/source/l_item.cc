@@ -173,7 +173,7 @@ static int l_item_do_remove(lua_State *ls)
     bool result = false;
     if (eq == EQ_WEAPON)
         result = wield_weapon(true, -1);
-    else if (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET)
+    else if (eq >= EQ_LEFT_RING && eq < NUM_EQUIP)
         result = remove_ring(item->link);
     else
         result = takeoff_armour(item->link);

@@ -1613,16 +1613,17 @@ bool check_warning_inscriptions(const item_def& item,
                 equip = you.equip[EQ_AMULET];
             else
             {
-                equip = you.equip[EQ_LEFT_RING];
-                if (equip != -1 && item.link == equip)
-                    return (check_old_item_warning(item, oper));
 
-                // Or maybe the other ring?
-                equip = you.equip[EQ_RIGHT_RING];
+                for (int slots = EQ_LEFT_RING; slots < NUM_EQUIP; ++slots)
+                {
+                    if (slots == EQ_AMULET)
+                    continue;
+
+                    equip = you.equip[slots];
+                    if (equip != -1 && item.link == equip)
+                        return (check_old_item_warning(item, oper));
+                }
             }
-
-            if (equip != -1 && item.link == equip)
-                return (check_old_item_warning(item, oper));
         }
 
         std::string prompt = "Really " + _operation_verb(oper) + " ";

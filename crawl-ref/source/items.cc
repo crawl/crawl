@@ -1977,9 +1977,10 @@ bool drop_item(int item_dropped, int quant_drop)
     if (quant_drop < 0 || quant_drop > you.inv[item_dropped].quantity)
         quant_drop = you.inv[item_dropped].quantity;
 
-    if (item_dropped == you.equip[EQ_LEFT_RING]
-        || item_dropped == you.equip[EQ_RIGHT_RING]
-        || item_dropped == you.equip[EQ_AMULET])
+    if (item_dropped == you.equip[EQ_LEFT_RING] || item_dropped == you.equip[EQ_RIGHT_RING] || item_dropped == you.equip[EQ_AMULET] ||
+        item_dropped == you.equip[EQ_RING_ONE] || item_dropped == you.equip[EQ_RING_TWO] || item_dropped == you.equip[EQ_RING_THREE] ||
+        item_dropped == you.equip[EQ_RING_FOUR] || item_dropped == you.equip[EQ_RING_FIVE] || item_dropped == you.equip[EQ_RING_SIX] ||
+        item_dropped == you.equip[EQ_RING_SEVEN] || item_dropped == you.equip[EQ_RING_EIGHT])
     {
         if (!Options.easy_unequip)
         {

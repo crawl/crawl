@@ -1372,14 +1372,24 @@ enum equipment_type
     EQ_BOOTS,
     EQ_SHIELD,
     EQ_BODY_ARMOUR,
+    //Everything beyond here is jewellery
     EQ_LEFT_RING,
     EQ_RIGHT_RING,
     EQ_AMULET,
+    //Octopodes don't have left and right rings. They have eight rings, instead.
+    EQ_RING_ONE,
+    EQ_RING_TWO,
+    EQ_RING_THREE,
+    EQ_RING_FOUR,
+    EQ_RING_FIVE,
+    EQ_RING_SIX,
+    EQ_RING_SEVEN,
+    EQ_RING_EIGHT,
     NUM_EQUIP,
 
     EQ_MIN_ARMOUR = EQ_CLOAK,
     EQ_MAX_ARMOUR = EQ_BODY_ARMOUR,
-    EQ_MAX_WORN   = EQ_AMULET,
+    EQ_MAX_WORN   = EQ_RING_EIGHT,
     // these aren't actual equipment slots, they're categories for functions
     EQ_STAFF            = 100,         // weapon with base_type OBJ_STAVES
     EQ_RINGS,                          // check both rings
@@ -2616,7 +2626,7 @@ enum mutation_type
     MUT_HORNS,          // head
     MUT_STINGER,
     MUT_TALONS,         // feet
-
+    MUT_TENTACLES,      // Gloves but don't lose a slot yet.
     // scales
     MUT_DISTORTION_FIELD,
     MUT_ICY_BLUE_SCALES,
@@ -2990,6 +3000,7 @@ enum species_type
     SP_VAMPIRE,
     SP_DEEP_DWARF,
     SP_CAT,
+    SP_OCTOPUS,
     SP_ELF,                            // (placeholder)
     SP_HILL_DWARF,                     // (placeholder)
     SP_OGRE_MAGE,                      // (placeholder)

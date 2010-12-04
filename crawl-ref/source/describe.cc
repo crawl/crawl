@@ -4413,13 +4413,16 @@ std::string get_skill_description(skill_type skill, bool need_title)
         }
 
         if (you.has_usable_pseudopods())
-            unarmed_attacks.push_back("slap with your pseudopods");
+            unarmed_attacks.push_back("bludgeon with your pseudopods");
+
+        if (you.has_usable_tentacles())
+            unarmed_attacks.push_back("slap with your tentacles");
 
         if (you.species == SP_CAT)
             unarmed_attacks.push_back("use your claws");
-        else if (!you.weapon())
+        else if (you.species != SP_OCTOPUS && !you.weapon())
             unarmed_attacks.push_back("throw a punch");
-        else if (you.has_usable_offhand())
+        else if (you.species != SP_OCTOPUS && you.has_usable_offhand())
             unarmed_attacks.push_back("punch with your free hand");
 
         if (!unarmed_attacks.empty())

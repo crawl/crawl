@@ -75,6 +75,10 @@ Naga
 
 A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake.
 %%%%
+Octopode
+
+A species of amphibious cephalopods. They can wear eight rings, but almost no armour fits them.
+%%%%%%%%
 Ogre
 
 Large and strong, they're mostly seen as brutes. Casting ogres have been spotted, however.

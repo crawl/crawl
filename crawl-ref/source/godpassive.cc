@@ -381,11 +381,23 @@ bool ash_id_item(item_def& item, bool silent)
         ided |= ISFLAG_KNOW_PLUSES;
     }
 
-    if (item.base_type == OBJ_JEWELLERY
+    if (you.species != SP_OCTOPUS && item.base_type == OBJ_JEWELLERY
         && you.piety >= piety_breakpoint(1)
         && (jewellery_is_amulet(item) ?
              _is_slot_cursed(EQ_AMULET) :
              (_is_slot_cursed(EQ_LEFT_RING) && _is_slot_cursed(EQ_RIGHT_RING))
+         ))
+    {
+        ided |= ISFLAG_EQ_JEWELLERY_MASK;
+    }
+    else if (you.species == SP_OCTOPUS && item.base_type == OBJ_JEWELLERY
+        && you.piety >= piety_breakpoint(1)
+        && (jewellery_is_amulet(item) ?
+             _is_slot_cursed(EQ_AMULET) :
+             (_is_slot_cursed(EQ_RING_ONE) && _is_slot_cursed(EQ_RING_TWO) &&
+              _is_slot_cursed(EQ_RING_THREE) && _is_slot_cursed(EQ_RING_FOUR) &&
+              _is_slot_cursed(EQ_RING_FIVE) && _is_slot_cursed(EQ_RING_SIX) &&
+              _is_slot_cursed(EQ_RING_SEVEN) && _is_slot_cursed(EQ_RING_EIGHT))
          ))
     {
         ided |= ISFLAG_EQ_JEWELLERY_MASK;

@@ -1282,6 +1282,40 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_CAT,             SK_POISON_MAGIC,   -1),
     APT(SP_CAT,             SK_INVOCATIONS,    -1),
     APT(SP_CAT,             SK_EVOCATIONS,     -2),
+
+    // SP_OCTOPUS
+    APT(SP_OCTOPUS,             SK_FIGHTING,       -1),
+    APT(SP_OCTOPUS,             SK_SHORT_BLADES,   -1),
+    APT(SP_OCTOPUS,             SK_LONG_BLADES,    -1),
+    APT(SP_OCTOPUS,             SK_AXES,            0),
+    APT(SP_OCTOPUS,             SK_MACES_FLAILS,    0),
+    APT(SP_OCTOPUS,             SK_POLEARMS,        1),
+    APT(SP_OCTOPUS,             SK_STAVES,          1),
+    APT(SP_OCTOPUS,             SK_SLINGS,         -3),
+    APT(SP_OCTOPUS,             SK_BOWS,           -3),
+    APT(SP_OCTOPUS,             SK_CROSSBOWS,      -3),
+    APT(SP_OCTOPUS,             SK_THROWING,       -3),
+    APT(SP_OCTOPUS,             SK_ARMOUR,         -4),
+    APT(SP_OCTOPUS,             SK_DODGING,        -1),
+    APT(SP_OCTOPUS,             SK_STEALTH,         2),
+    APT(SP_OCTOPUS,             SK_STABBING,        0),
+    APT(SP_OCTOPUS,             SK_SHIELDS,        -3),
+    APT(SP_OCTOPUS,             SK_TRAPS_DOORS,     2),
+    APT(SP_OCTOPUS,             SK_UNARMED_COMBAT,  0),
+    APT(SP_OCTOPUS,             SK_SPELLCASTING,    0),
+    APT(SP_OCTOPUS,             SK_CONJURATIONS,   -4),
+    APT(SP_OCTOPUS,             SK_ENCHANTMENTS,    0),
+    APT(SP_OCTOPUS,             SK_SUMMONINGS,      0),
+    APT(SP_OCTOPUS,             SK_NECROMANCY,      0),
+    APT(SP_OCTOPUS,             SK_TRANSLOCATIONS,  0),
+    APT(SP_OCTOPUS,             SK_TRANSMUTATIONS,  0),
+    APT(SP_OCTOPUS,             SK_FIRE_MAGIC,     -2),
+    APT(SP_OCTOPUS,             SK_ICE_MAGIC,       1),
+    APT(SP_OCTOPUS,             SK_AIR_MAGIC,      -2),
+    APT(SP_OCTOPUS,             SK_EARTH_MAGIC,    -1),
+    APT(SP_OCTOPUS,             SK_POISON_MAGIC,    2),
+    APT(SP_OCTOPUS,             SK_INVOCATIONS,     0),
+    APT(SP_OCTOPUS,             SK_EVOCATIONS,      2),
 };
 
 // Traditionally, Spellcasting and In/Evocations formed the exceptions here:
@@ -1605,13 +1639,15 @@ static std::string _stk_genus_short_cap()
 {
     return (Skill_Species == SP_DEMIGOD ? "God" :
             Skill_Species == SP_CAT     ? "Cat" :
+            Skill_Species == SP_OCTOPUS ? "Octopus" :
             _stk_genus_cap());
 }
 
 static std::string _stk_walker()
 {
-    return (Skill_Species == SP_NAGA  ? "Slider" :
-            Skill_Species == SP_KENKU ? "Glider"
+    return (Skill_Species == SP_NAGA    ? "Slider" :
+            Skill_Species == SP_KENKU   ? "Glider" :
+            Skill_Species == SP_OCTOPUS ? "Wriggler"
                                       : "Walker");
 }
 

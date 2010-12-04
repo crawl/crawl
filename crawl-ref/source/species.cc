@@ -37,7 +37,8 @@ static species_type species_order[] = {
     SP_MUMMY,          SP_GHOUL,
     SP_VAMPIRE,
     // not humanoid at all
-    SP_CAT
+    SP_CAT,
+    SP_OCTOPUS
 };
 
 species_type random_draconian_player_species()
@@ -60,7 +61,7 @@ static const char * Species_Abbrev_List[NUM_SPECIES] =
       // the draconians
       "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr",
       "Ce", "DG", "Sp", "Mi", "DS", "Gh", "Ke", "Mf", "Vp", "DD",
-      "Fe",
+      "Fe", "Oc",
       // placeholders
       "El", "HD", "OM", "GE", "Gn" };
 
@@ -247,6 +248,7 @@ std::string species_name(species_type speci, bool genus, bool adj)
         case SP_MERFOLK:    res = (adj ? "Merfolkian" : "Merfolk");    break;
         case SP_VAMPIRE:    res = (adj ? "Vampiric"   : "Vampire");    break;
         case SP_CAT:        res = (adj ? "Feline"     : "Felid");      break;
+        case SP_OCTOPUS:    res = (adj ? "Octopoid"   : "Octopode");   break;
         default:            res = (adj ? "Yakish"     : "Yak");        break;
         }
     }

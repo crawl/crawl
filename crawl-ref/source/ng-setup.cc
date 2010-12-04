@@ -90,7 +90,8 @@ static void _species_stat_init(species_type which_species)
     case SP_BASE_DRACONIAN:     sb =  9; ib =  6; db =  2;      break;  // 17
 
     case SP_CAT:                sb =  2; ib =  7; db =  9;      break;  // 18
-    }
+    case SP_OCTOPUS:            sb =  5; ib =  8; db =  5;      break;  // 18
+}
 
     you.base_stats[STAT_STR] = sb + 2;
     you.base_stats[STAT_INT] = ib + 2;
@@ -314,6 +315,10 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_FAST]            = 1;
         you.mutation[MUT_CARNIVOROUS]     = 3;
         you.mutation[MUT_SLOW_METABOLISM] = 2;
+        break;
+    case SP_OCTOPUS:
+        you.mutation[MUT_REGENERATION]    = 1;
+        you.mutation[MUT_TENTACLES]       = 3;
         break;
     default:
         break;
@@ -1185,6 +1190,10 @@ static void _give_species_bonus_hp()
 
         case SP_CAT:
             dec_max_hp(3);
+            break;
+
+        case SP_OCTOPUS:
+            dec_max_hp(1);
             break;
 
         default:

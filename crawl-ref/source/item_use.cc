@@ -583,6 +583,13 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     const int sub_type = item.sub_type;
     const equipment_type slot = get_armour_slot(item);
 
+    if (you.species == SP_OCTOPUS && slot != EQ_HELMET && slot != EQ_SHIELD)
+    {
+        if (verbose)
+            mpr("You can't wear that!");
+        return (false);
+    }
+
     if (sub_type == ARM_NAGA_BARDING || sub_type == ARM_CENTAUR_BARDING)
     {
         if (you.species == SP_NAGA && sub_type == ARM_NAGA_BARDING
@@ -686,6 +693,14 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 
             return (false);
         }
+
+        if (you.species == SP_OCTOPUS)
+        {
+            if (verbose)
+                mpr("You can't wear that!");
+            return (false);
+        }
+
     }
 
     if (!can_equip(slot, ignore_temporary))
@@ -3157,7 +3172,73 @@ static int _prompt_ring_to_remove(int new_ring)
 
     const int eqslot = (c == lslot || c == '<') ? EQ_LEFT_RING
                                                 : EQ_RIGHT_RING;
+    return (you.equip[eqslot]);
+}
 
+static int _prompt_ring_to_remove_octopus(int new_ring)
+{
+    const item_def *one_ring = you.slot_item(EQ_RING_ONE, true);
+    const item_def *two_ring = you.slot_item(EQ_RING_TWO, true);
+    const item_def *three_ring = you.slot_item(EQ_RING_THREE, true);
+    const item_def *four_ring = you.slot_item(EQ_RING_FOUR, true);
+    const item_def *five_ring = you.slot_item(EQ_RING_FIVE, true);
+    const item_def *six_ring = you.slot_item(EQ_RING_SIX, true);
+    const item_def *seven_ring = you.slot_item(EQ_RING_SEVEN, true);
+    const item_def *eight_ring = you.slot_item(EQ_RING_EIGHT, true);
+
+    const char one_slot = index_to_letter(one_ring->link);
+    const char two_slot = index_to_letter(two_ring->link);
+    const char three_slot = index_to_letter(three_ring->link);
+    const char four_slot = index_to_letter(four_ring->link);
+    const char five_slot = index_to_letter(five_ring->link);
+    const char six_slot = index_to_letter(six_ring->link);
+    const char seven_slot = index_to_letter(seven_ring->link);
+    const char eight_slot = index_to_letter(eight_ring->link);
+
+    mesclr();
+//    mprf("Wearing %s.", you.inv[new_ring].name(DESC_NOCAP_A).c_str());
+
+    mprf(MSGCH_PROMPT,
+         "You're wearing eight rings. Remove which one?");
+//I think it looks better without the letters.
+// (%c/%c/%c/%c/%c/%c/%c/%c/Esc)",
+//         one_slot, two_slot, three_slot, four_slot, five_slot, six_slot, seven_slot, eight_slot);
+
+    mprf("%s", one_ring->name(DESC_INVENTORY).c_str());
+    mprf("%s", two_ring->name(DESC_INVENTORY).c_str());
+    mprf("%s", three_ring->name(DESC_INVENTORY).c_str());
+    mprf("%s", four_ring->name(DESC_INVENTORY).c_str());
+    mprf("%s", five_ring->name(DESC_INVENTORY).c_str());
+    mprf("%s", six_ring->name(DESC_INVENTORY).c_str());
+    mprf("%s", seven_ring->name(DESC_INVENTORY).c_str());
+    mprf("%s", eight_ring->name(DESC_INVENTORY).c_str());
+    flush_prev_message();
+
+    // Deactivate choice from tile inventory.
+    // FIXME: We need to be able to get the choice (item letter)
+    //        *without* the choice taking action by itself!
+
+    mouse_control mc(MOUSE_MODE_MORE);
+    int c;
+    do
+        c = getchm();
+    while (c != one_slot && c != two_slot && c != three_slot && c != four_slot &&
+           c != five_slot && c != six_slot && c != seven_slot && c != eight_slot &&
+           !key_is_escape(c) && c != ' ');
+
+    mesclr();
+
+    if (key_is_escape(c) || c == ' ')
+        return (-1);
+
+    const int eqslot = (c == one_slot)   ? EQ_RING_ONE   :
+                       (c == two_slot)   ? EQ_RING_TWO   :
+                       (c == three_slot) ? EQ_RING_THREE :
+                       (c == four_slot)  ? EQ_RING_FOUR  :
+                       (c == five_slot)  ? EQ_RING_FIVE  :
+                       (c == six_slot)   ? EQ_RING_SIX   :
+                       (c == seven_slot) ? EQ_RING_SEVEN :
+                                                           EQ_RING_EIGHT;
     return (you.equip[eqslot]);
 }
 
@@ -3251,13 +3332,75 @@ static bool _swap_rings(int ring_slot)
     return (true);
 }
 
+static bool _swap_rings_octopus(int ring_slot)
+{
+    const item_def* ring [8] = {you.slot_item(EQ_RING_ONE, true), you.slot_item(EQ_RING_TWO, true),
+                                you.slot_item(EQ_RING_THREE, true), you.slot_item(EQ_RING_FOUR, true),
+                                you.slot_item(EQ_RING_FIVE, true), you.slot_item(EQ_RING_SIX, true),
+                                you.slot_item(EQ_RING_SEVEN, true), you.slot_item(EQ_RING_EIGHT, true)};
+    int array = 0;
+    int unwanted = 0;
+    int cursed = 0;
+    int uncursed = 0;
+
+    for (int slots = EQ_RING_ONE; slots < NUM_EQUIP && array < 8; ++slots && ++array)
+    {
+        if (ring[array] != NULL)
+        {
+            if (ring[array]->cursed())
+            {
+                cursed++;
+                continue;
+            }
+            else
+            {
+                uncursed++;
+                unwanted = you.equip[slots];
+            }
+        }
+    }
+
+    //We can't put a ring on, because we're wearing 8 cursed ones.
+    if (cursed == 8)
+    {
+        mprf("You're already wearing eight cursed rings! Isn't that enough for you?");
+        return (false);
+    }
+    //The simple case - only one uncursed ring.
+    else if (uncursed == 1)
+    {
+      if (!remove_ring(unwanted, false))
+          return (false);
+    }
+   //We can't put a ring on without swapping - because we found multiple uncursed rings.
+    else if (uncursed > 1)
+    {
+      unwanted = _prompt_ring_to_remove_octopus(ring_slot);
+      if (!remove_ring(unwanted, false))
+          return (false);
+    }
+
+    //In case something goes wrong.
+    if (unwanted == -1)
+    {
+        canned_msg(MSG_OK);
+        return (false);
+    }
+
+    // Put on the new ring.
+    start_delay(DELAY_JEWELLERY_ON, 1, ring_slot);
+
+    return (true);
+}
+
 bool puton_item(int item_slot)
 {
     item_def& item = you.inv[item_slot];
 
-    if (item_slot == you.equip[EQ_LEFT_RING]
-        || item_slot == you.equip[EQ_RIGHT_RING]
-        || item_slot == you.equip[EQ_AMULET])
+    if (item_slot == you.equip[EQ_LEFT_RING] || item_slot == you.equip[EQ_RIGHT_RING] || item_slot == you.equip[EQ_AMULET] ||
+        item_slot == you.equip[EQ_RING_ONE] || item_slot == you.equip[EQ_RING_TWO] || item_slot == you.equip[EQ_RING_THREE] ||
+        item_slot == you.equip[EQ_RING_FOUR] || item_slot == you.equip[EQ_RING_FIVE] || item_slot == you.equip[EQ_RING_SIX] ||
+        item_slot == you.equip[EQ_RING_SEVEN] || item_slot == you.equip[EQ_RING_EIGHT])
     {
         // "Putting on" an equipped item means taking it off.
         if (Options.equip_unequip)
@@ -3284,6 +3427,11 @@ bool puton_item(int item_slot)
     const bool lring = (you.slot_item(EQ_LEFT_RING, true)  != NULL);
     const bool rring = (you.slot_item(EQ_RIGHT_RING, true) != NULL);
     const bool is_amulet = jewellery_is_amulet(item);
+    const bool blinged_octopus = (you.species == SP_OCTOPUS &&
+                          (you.slot_item(EQ_RING_ONE, true) != NULL && you.slot_item(EQ_RING_TWO, true) != NULL &&
+                           you.slot_item(EQ_RING_THREE, true) != NULL && you.slot_item(EQ_RING_FOUR, true) != NULL &&
+                           you.slot_item(EQ_RING_FIVE, true) != NULL && you.slot_item(EQ_RING_SIX, true) != NULL &&
+                           you.slot_item(EQ_RING_SEVEN, true) != NULL && you.slot_item(EQ_RING_EIGHT, true) != NULL));
 
     if (!is_amulet)     // i.e. it's a ring
     {
@@ -3294,6 +3442,9 @@ bool puton_item(int item_slot)
             mpr("You can't take your gloves off to put on a ring!");
             return (false);
         }
+
+        if (blinged_octopus)
+            return _swap_rings_octopus(item_slot);
 
         if (lring && rring)
             return _swap_rings(item_slot);
@@ -3319,6 +3470,19 @@ bool puton_item(int item_slot)
     if (is_amulet)
     {
         hand_used = EQ_AMULET;
+    }
+    else if (you.species == SP_OCTOPUS)
+    {
+        hand_used =
+                    (you.slot_item(EQ_RING_ONE, true) == NULL)    ? EQ_RING_ONE   :
+                    (you.slot_item(EQ_RING_TWO, true) == NULL)    ? EQ_RING_TWO   :
+                    (you.slot_item(EQ_RING_THREE, true) == NULL)  ? EQ_RING_THREE :
+                    (you.slot_item(EQ_RING_FOUR, true) == NULL)   ? EQ_RING_FOUR  :
+                    (you.slot_item(EQ_RING_FIVE, true) == NULL)   ? EQ_RING_FIVE  :
+                    (you.slot_item(EQ_RING_SIX, true) == NULL)    ? EQ_RING_SIX   :
+                    (you.slot_item(EQ_RING_SEVEN, true) == NULL)  ? EQ_RING_SEVEN :
+                    (you.slot_item(EQ_RING_EIGHT, true) == NULL)  ? EQ_RING_EIGHT
+                                                                  : EQ_NONE;
     }
     else
     {
@@ -3396,7 +3560,13 @@ bool remove_ring(int slot, bool announce)
     const bool left  = player_wearing_slot(EQ_LEFT_RING);
     const bool right = player_wearing_slot(EQ_RIGHT_RING);
     const bool amu   = player_wearing_slot(EQ_AMULET);
-    if (!left && !right && !amu)
+    const bool octopus_with_ring = (you.species == SP_OCTOPUS &&
+                          (player_wearing_slot(EQ_RING_ONE)   || player_wearing_slot(EQ_RING_TWO)  ||
+                           player_wearing_slot(EQ_RING_THREE) || player_wearing_slot(EQ_RING_FOUR) ||
+                           player_wearing_slot(EQ_RING_FIVE)  || player_wearing_slot(EQ_RING_SIX)  ||
+                           player_wearing_slot(EQ_RING_SEVEN) || player_wearing_slot(EQ_RING_EIGHT)));
+
+    if (!left && !right && !amu && !octopus_with_ring)
     {
         mpr("You aren't wearing any rings or amulets.");
         return (false);
@@ -3420,7 +3590,7 @@ bool remove_ring(int slot, bool announce)
         hand_used = EQ_LEFT_RING;
     else if (!left && right && !amu)
         hand_used = EQ_RIGHT_RING;
-    else if (!left && !right && amu)
+    else if (!left && !right && !octopus_with_ring && amu)
         hand_used = EQ_AMULET;
 
     if (hand_used == EQ_NONE)
@@ -4935,7 +5105,7 @@ void read_scroll(int slot)
         if (which_scroll == SCR_CURSE_ARMOUR)
             min_type = EQ_MIN_ARMOUR, max_type = EQ_MAX_ARMOUR;
         else
-            min_type = EQ_LEFT_RING, max_type = EQ_AMULET;
+            min_type = EQ_LEFT_RING, max_type = EQ_RING_EIGHT;
         for (int i = min_type; i <= max_type; i++)
         {
             if (you.equip[i] != -1 && !you.inv[you.equip[i]].cursed())
