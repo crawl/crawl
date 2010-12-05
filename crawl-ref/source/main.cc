@@ -2902,7 +2902,7 @@ void world_reacts()
     if (you.num_turns != -1)
     {
         // Zotdef: Time only passes in the main dungeon
-        if (you.num_turns < LONG_MAX)
+        if (you.num_turns < INT_MAX)
         {
             if (!crawl_state.game_is_zotdef()
                 || you.where_are_you == BRANCH_MAIN_DUNGEON
