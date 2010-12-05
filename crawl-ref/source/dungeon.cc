@@ -4171,8 +4171,7 @@ static void _build_rooms(const dgn_region_list &excluded,
             continue;
         }
 
-        dgn_replace_area(myroom.pos.x, myroom.pos.y, end.x, end.y,
-                         DNGN_ROCK_WALL, DNGN_FLOOR);
+        dgn_replace_area(myroom.pos, end, DNGN_ROCK_WALL, DNGN_FLOOR);
 
         if (which_room > 0)
         {
