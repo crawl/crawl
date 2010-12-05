@@ -12,6 +12,11 @@ Stone Soup 0.8 (2011????)
 * Replace Selective Amnesia with forgetting spells by book destruction.
 * Many interface improvements.
 
+Technical
+---------
+* No setgid installs, due to many security issues; this means no shared
+  scores or ghosts.
+
 Stone Soup 0.7.1 (20100724)
 ---------------------------
 * Fix travel excludes not being saved.
