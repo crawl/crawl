@@ -28,9 +28,10 @@ Lawrence Ramsey, Robert Vollmert, Enne Walker) would like to thank:
 We'd also like to thank members of the Dungeon Crawl community who have
 contributed to Dungeon Crawl Stone Soup:
 
-Mike Adams                   Chris Hamons              Yuuma Oohara
-Warwick Allison              R. Dan Henry              Pedro
-Juha Arpiainen               Brendan Hickey            Arlen Phillips
+Mike Adams                   Sophie Hamilton           Dylan O'Donnell
+Warwick Allison              Chris Hamons              Yuuma Oohara
+Juha Arpiainen               R. Dan Henry              Pedro
+Arxale                       Brendan Hickey            Arlen Phillips
 John 'Poor Yurik' Attea      Benoit Hudson             Lemuel Pitkin
 Roy Axenov                   Sylvia 'Onia' Hörnke      Derek Ray
 Max Bane                     Iainuki                   Terence Reeves
@@ -59,5 +60,4 @@ GreyKnight                   Wille Mäntylä             Jeremey Wilson
 Joshua Gross                 Erkki Nurmi               Yelve Yakut
 Brian Haase                  Mattias Nyberg            Zooko
 Shayne Halvorson             nyra
-Sophie Hamilton              Dylan O'Donnell
 
