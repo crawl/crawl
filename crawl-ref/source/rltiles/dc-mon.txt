@@ -417,7 +417,6 @@ glowing_shapeshifter MONS_GLOWING_SHAPESHIFTER
 killer_klown MONS_KILLER_KLOWN
 slave MONS_SLAVE
 human_slave
-dwarf MONS_DWARF
 ## From the Wucad Mu wizlab
 human_monk_ghost MONS_HUMAN_MONK
 ## From the Cigotuvi wizlab
@@ -743,6 +742,12 @@ insubstantial_wisp MONS_INSUBSTANTIAL_WISP
 %sdir dc-mon/holy
 spirit MONS_SPIRIT
 blessed_toe MONS_BLESSED_TOE /*'*'*/
+
+## Dwarves ('q')
+%sdir dc-mon
+dwarf MONS_DWARF
+# an entry vault
+gnome MONS_GNOME
 
 ## Small zombified monsters ('z')
 %sdir dc-mon/undead
