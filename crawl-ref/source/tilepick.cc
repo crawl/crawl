@@ -1337,7 +1337,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
 
     // humans ('@')
     case MONS_HUMAN:
-    case MONS_DEMIGOD:
         return TILEP_MONS_HUMAN;
     case MONS_HELL_KNIGHT:
         return TILEP_MONS_HELL_KNIGHT;
@@ -1359,6 +1358,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return _mon_mod(TILEP_MONS_SLAVE, tile_num_prop);
     case MONS_DEMONSPAWN:
         return TILEP_MONS_DEMONSPAWN;
+    case MONS_DEMIGOD:
+        return TILEP_MONS_DEMIGOD;
     case MONS_HALFLING:
         return TILEP_MONS_HALFLING;
     case MONS_PALADIN:
@@ -2921,7 +2922,12 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     case MONS_HELL_KNIGHT:
     case MONS_NECROMANCER:
     case MONS_WIZARD:
+    case MONS_DEMIGOD: // haloed corpse looks abysmal
         return TILE_CORPSE_HUMAN;
+    case MONS_DEMONSPAWN:
+        return TILE_CORPSE_DEMONSPAWN;
+    case MONS_HALFLING:
+        return TILE_CORPSE_HALFLING;
     case MONS_SHAPESHIFTER:
         return TILE_CORPSE_SHAPESHIFTER;
     case MONS_GLOWING_SHAPESHIFTER:

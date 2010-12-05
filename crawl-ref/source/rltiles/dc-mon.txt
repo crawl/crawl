@@ -423,6 +423,7 @@ human_monk_ghost MONS_HUMAN_MONK
 deformed_human MONS_DEFORMED_HUMAN
 ## From an entry vault
 halfling MONS_HALFLING
+demigod MONS_DEMIGOD
 demonspawn MONS_DEMONSPAWN
 %sdir dc-mon/holy
 paladin MONS_PALADIN

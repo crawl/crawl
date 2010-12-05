@@ -282,6 +282,8 @@ deep_troll CORPSE_DEEP_TROLL
 
 ## Human shaped ('@')
 human CORPSE_HUMAN
+demonspawn CORPSE_DEMONSPAWN
+halfling CORPSE_HALFLING
 %back dc-misc/blood_green
 shapeshifter CORPSE_SHAPESHIFTER
 glowing_shapeshifter CORPSE_GLOWING_SHAPESHIFTER
