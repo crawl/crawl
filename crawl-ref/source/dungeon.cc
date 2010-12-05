@@ -2895,8 +2895,8 @@ static bool _builder_basic(int level_number)
     _make_trail(10, 15, 10, 15, corrlength, intersect_chance, no_corr,
                  xbegin, ybegin, xend, yend);
 
-    grd[xbegin][ybegin] = DNGN_STONE_STAIRS_DOWN_III;
-    grd[xend][yend]     = DNGN_STONE_STAIRS_UP_III;
+    grd[xbegin][ybegin] = DNGN_STONE_STAIRS_DOWN_II;
+    grd[xend][yend]     = DNGN_STONE_STAIRS_UP_II;
 
     xbegin = -1, ybegin = -1, xend = -1, yend = -1;
 
