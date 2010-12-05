@@ -862,7 +862,7 @@ ORIENT:  float
 SHUFFLE: ABC
 KFEAT:   ABC = floor
 #
-KMONS:  A = dwarf col:lightblue name:gnome n_rpl n_spe n_des tile:mons_halfling\
+KMONS:  A = dwarf col:lightblue name:gnome n_rpl n_spe n_des tile:mons_gnome\
                   ; nothing
 MARKER: A = lua:MonPropsMarker:new { description= \
             "A small, stout humanoid said to be good at finding its way through " ..\
