@@ -299,8 +299,6 @@ struct spec_room
     spec_room() : created(false), hooked_up(false), tl(), br()
     {
     }
-
-    coord_def random_spot() const;
 };
 
 bool join_the_dots(const coord_def &from, const coord_def &to,
