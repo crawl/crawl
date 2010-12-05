@@ -98,6 +98,6 @@ class game_ended_condition : public std::exception
 {
 };
 
-int debug_prompt_for_int(const char *prompt, bool nonneg);
+int prompt_for_int(const char *prompt, bool nonneg);
 
 #endif

@@ -1049,13 +1049,13 @@ coord_def get_random_stair()
 
 //---------------------------------------------------------------
 //
-// debug_prompt_for_int
+// prompt_for_int
 //
 // If nonneg, then it returns a non-negative number or -1 on fail
 // If !nonneg, then it returns an integer, and 0 on fail
 //
 //---------------------------------------------------------------
-int debug_prompt_for_int(const char *prompt, bool nonneg)
+int prompt_for_int(const char *prompt, bool nonneg)
 {
     char specs[80];
 

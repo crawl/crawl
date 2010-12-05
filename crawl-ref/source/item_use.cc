@@ -5139,7 +5139,7 @@ void tile_item_pickup(int idx, bool part)
     int quantity = mitm[idx].quantity;
     if (part && quantity > 1)
     {
-        quantity = debug_prompt_for_int("Pickup how many? ", true);
+        quantity = prompt_for_int("Pickup how many? ", true);
         if (quantity < 1)
         {
             canned_msg(MSG_OK);
@@ -5156,7 +5156,7 @@ void tile_item_drop(int idx, bool partdrop)
     int quantity = you.inv[idx].quantity;
     if (partdrop && quantity > 1)
     {
-        quantity = debug_prompt_for_int("Drop how many? ", true);
+        quantity = prompt_for_int("Drop how many? ", true);
         if (quantity < 1)
         {
             canned_msg(MSG_OK);
