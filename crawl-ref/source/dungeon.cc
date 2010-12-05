@@ -4164,29 +4164,15 @@ static void _build_rooms(const dgn_region_list &excluded,
                 connections.erase(connections.begin());
         }
 
-        if (i > 0 && exclusive)
-        {
-            const coord_def end = myroom.end();
-            bool found_collision = false;
-            for (int cnx = myroom.pos.x - 1;
-                 cnx < end.x && !found_collision; cnx++)
-            {
-                for (int cny = myroom.pos.y - 1;
-                     cny < end.y; cny++)
-                {
-                    if (grd[cnx][cny] != DNGN_ROCK_WALL)
-                    {
-                        found_collision = true;
-                        break;
-                    }
-                }
-            }
+        const coord_def end = myroom.end();
 
-            if (found_collision)
-                continue;
+        if (i > 0 && exclusive
+         && count_antifeature_in_box(myroom.pos.x - 1, myroom.pos.y - 1,
+                                     end.x, end.y, DNGN_ROCK_WALL))
+        {
+            continue;
         }
 
-        const coord_def end = myroom.end();
         dgn_replace_area(myroom.pos.x, myroom.pos.y, end.x, end.y,
                          DNGN_ROCK_WALL, DNGN_FLOOR);
 
