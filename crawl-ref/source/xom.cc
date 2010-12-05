@@ -4314,8 +4314,8 @@ static char* _list_exploration_estimate()
 void debug_xom_effects()
 {
     // Repeat N times.
-    const int N = debug_prompt_for_int("How many iterations over the "
-                                       "entire piety range? ", true);
+    const int N = prompt_for_int("How many iterations over the "
+                                 "entire piety range? ", true);
 
     if (N == 0)
     {
