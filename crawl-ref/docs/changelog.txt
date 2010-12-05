@@ -1,3 +1,17 @@
+Stone Soup 0.8 (2011????)
+-------------------------
+
+0.8 Highlights
+--------------
+* New god: Ashenzari, god of divinations.
+* New species: Felids, sentient cats.
+* New spells: Passage of Golubria, Malign Gateway, Tornado.
+* New monster sets: holy monsters, deep dwarves, feature mimics.
+* Nerf Haste.
+* Greatly improve player Draconians.
+* Replace Selective Amnesia with forgetting spells by book destruction.
+* Many interface improvements.
+
 Stone Soup 0.7.1 (20100724)
 ---------------------------
 * Fix travel excludes not being saved.
@@ -5,7 +19,19 @@ Stone Soup 0.7.1 (20100724)
 
 Stone Soup 0.7 (20100724)
 -------------------------
+
+0.7 Highlights
+--------------
+* Fix over-enthusiastic Armour nerf.
+* New tutorial and mini-game (Dungeon Sprint).
+* Removed instant stat death.
+* Overhauled Demonspawn mutations.
+* Aptitudes now on a scale +5 to -5.
+* New starting menus, mouse-operable in tiles builds.
+* Removed Thief and Death Knight character backgrounds.
+
 Balance fixes
+-------------
 * Monster double actions due to energy randomisation always include a move.
 * Greatly accelerate armour training when armour is heavy relative to skill.
 * Make heavy armour guaranteed damage reduction percentage independent of
@@ -14,7 +40,8 @@ Balance fixes
 * Shields reduce attack speed.
 * Nagas and worshippers of Cheibriados don't suffer from as much hunger.
 
-Unsorted:
+Unsorted
+--------
 * New mini-game, Dungeon Sprint.
 * New tutorial, old tutorial is now a hints mode.
 * Aptitudes now on a scale +5 to -5.
@@ -22,14 +49,16 @@ Unsorted:
 * Magic mapping and Lugonu's self-banishment now work in Pandemonium.
 * Ghouls can no longer starve; they just rot faster.
 
-Interface:
+Interface
+---------
 * New starting menus, mouse-operable in tiles builds.
 * New tiles monster list tab.
 * Swap water and disturbance glyphs ('~' and '{').
 * Show effective weapon speed in '@' character info.
 * Player body size is now described on the "A" screen.
 
-Game:
+Game
+----
 * Walls in the Slime Pits are acidic.
 * Changed shop distribution between branches.
 * Removed instant stat death.
@@ -46,7 +75,8 @@ Game:
 * Magic contamination effects are more than twice as harsh.
 * The Abyss may now include hand-made structures.
 
-Gods:
+Gods
+----
 * Zin no longer objects to deaths of non-sentient allies, and takes
   collateral kills of unclean and chaotic monsters.
 * Zin has a new power: Imprison.
@@ -59,7 +89,8 @@ Gods:
   mutations, and produces temporary friendly slimes instead of permanent
   neutral ones via the royal jelly effect.
 
-Items:
+Items
+-----
 * Scrolls of holy word do more damage to susceptible monsters.
 * Blowguns no longer show damage, as they do none; accordingly, scrolls of
   enchant weapon II no longer work on them.
@@ -67,11 +98,13 @@ Items:
   is properly applied for thrown weapons.
 * Demon tridents can be blessed by TSO.
 
-Backgrounds:
+Backgrounds
+-----------
 * Thieves and Death Knights are no more.
 * Warpers receive darts of dispersal.
 
-Monsters:
+Monsters
+--------
 * Anacondas are now amphibious.
 * Skeletal dragons are renamed to bone dragons.
 * Manes are now iron imps, with stat tweaks.
@@ -88,7 +121,8 @@ Monsters:
 * New unique: Grinder the shadow imp.
 * Wayne is now capable of laying a major smackdown.
 
-Spells:
+Spells
+------
 * Call Imp is now level 2, takes spell power into account, and can summon
   iron imps.
 * Call Canine Familiar replaces Summon Elemental in the book of Callings,
@@ -99,7 +133,8 @@ Spells:
 * Death's Door only blocks healing, paralysis only for Revivification.
 * Summon Ugly Things is level 6, Haunt is level 7.
 
-Technical:
+Technical
+---------
 * LOS and areas recalculated on-demand.
 * Asserts are enabled by default.
 * Abstract tiles code from SDL and OpenGL.
