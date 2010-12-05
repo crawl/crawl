@@ -1322,18 +1322,21 @@ void search_around(bool only_adjacent)
     }
 }
 
+void emergency_untransform()
+{
+    mpr("You quickly transform back into your natural form.");
+    untransform(false, true); // We're already entering the water.
+
+    if (you.species == SP_MERFOLK)
+        merfolk_start_swimming(false);
+}
+
 void merfolk_start_swimming(bool stepped)
 {
     if (you.fishtail)
         return;
 
-    if (you.form != TRAN_NONE
-        && you.form != TRAN_BLADE_HANDS)
-    {
-        mpr("You quickly transform back into your natural form.");
-        untransform(false, true); // We're already entering the water.
-    }
-    else if (stepped)
+    if (stepped)
         mpr("Your legs become a tail as you enter the water.");
     else
         mpr("Your legs become a tail as you dive into the water.");

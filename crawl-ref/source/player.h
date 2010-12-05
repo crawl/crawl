@@ -762,6 +762,7 @@ int player_mental_clarity(bool calc_unid = true, bool items = true);
 int player_spirit_shield(bool calc_unid = true);
 
 bool player_likes_chunks(bool permanently = false);
+bool species_likes_water();
 bool player_likes_water(bool permanently = false);
 
 int player_mutation_level(mutation_type mut);
