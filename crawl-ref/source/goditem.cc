@@ -312,7 +312,7 @@ bool is_potentially_hasty_item(const item_def& item)
     case OBJ_MISSILES:
         {
         const int item_brand = get_ammo_brand(item);
-        if (item_brand == SPMSL_CHAOS)
+        if (item_brand == SPMSL_CHAOS || item_brand == SPMSL_RAGE)
             return (true);
         }
         break;
