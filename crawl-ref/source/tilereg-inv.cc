@@ -142,12 +142,12 @@ int InventoryRegion::handle_mouse(MouseEvent &event)
             if (event.mod & MOD_SHIFT)
                 tile_item_use_floor(idx);
             else
-                tile_item_pickup(idx);
+                tile_item_pickup(idx, (event.mod & MOD_CTRL));
         }
         else
         {
             if (event.mod & MOD_SHIFT)
-                tile_item_drop(idx);
+                tile_item_drop(idx, (event.mod & MOD_CTRL));
             else if (event.mod & MOD_CTRL)
                 tile_item_use_secondary(idx);
             else
@@ -292,6 +292,11 @@ bool InventoryRegion::update_tip_text(std::string& tip)
 
         tip += "\n[L-Click] Pick up (%)";
         cmd.push_back(CMD_PICKUP);
+        if (item.quantity > 1)
+        {
+            tip += "\n[Ctrl-L-Click] Pick up quantity (%#)";
+            cmd.push_back(CMD_PICKUP);
+        }
         if (item.base_type == OBJ_CORPSES
             && item.sub_type != CORPSE_SKELETON
             && !food_is_rotten(item))
@@ -520,6 +525,11 @@ bool InventoryRegion::update_tip_text(std::string& tip)
         {
             tip += "\n[Shift-L-Click] Drop (%)";
             cmd.push_back(CMD_DROP);
+            if (you.inv[idx].quantity > 1)
+            {
+                tip += "\n[Ctrl-Shift-L-Click] Drop quantity (%#)";
+                cmd.push_back(CMD_DROP);
+            }
         }
     }
 

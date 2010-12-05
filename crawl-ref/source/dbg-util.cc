@@ -22,32 +22,6 @@
 #include "skills2.h"
 #include "spl-util.h"
 
-//---------------------------------------------------------------
-//
-// debug_prompt_for_int
-//
-// If nonneg, then it returns a non-negative number or -1 on fail
-// If !nonneg, then it returns an integer, and 0 on fail
-//
-//---------------------------------------------------------------
-int debug_prompt_for_int(const char *prompt, bool nonneg)
-{
-    char specs[80];
-
-    msgwin_get_line(prompt, specs, sizeof(specs));
-
-    if (specs[0] == '\0')
-        return (nonneg ? -1 : 0);
-
-    char *end;
-    int   ret = strtol(specs, &end, 10);
-
-    if (ret < 0 && nonneg || ret == 0 && end == specs)
-        ret = (nonneg ? -1 : 0);
-
-    return (ret);
-}
-
 monster_type debug_prompt_for_monster(void)
 {
     char  specs[80];

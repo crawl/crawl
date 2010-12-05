@@ -5134,14 +5134,38 @@ void tile_item_use_floor(int idx)
     }
 }
 
-void tile_item_pickup(int idx)
+void tile_item_pickup(int idx, bool part)
 {
-    pickup_single_item(idx, mitm[idx].quantity);
+    int quantity = mitm[idx].quantity;
+    if (part && quantity > 1)
+    {
+        quantity = debug_prompt_for_int("Pickup how many? ", true);
+        if (quantity < 1)
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+        if (quantity > mitm[idx].quantity)
+            quantity = mitm[idx].quantity;
+    }
+    pickup_single_item(idx, quantity);
 }
 
-void tile_item_drop(int idx)
+void tile_item_drop(int idx, bool partdrop)
 {
-    drop_item(idx, you.inv[idx].quantity);
+    int quantity = you.inv[idx].quantity;
+    if (partdrop && quantity > 1)
+    {
+        quantity = debug_prompt_for_int("Drop how many? ", true);
+        if (quantity < 1)
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+        if (quantity > you.inv[idx].quantity)
+            quantity = you.inv[idx].quantity;
+    }
+    drop_item(idx, quantity);
 }
 
 static bool _prompt_eat_bad_food(const item_def food)
