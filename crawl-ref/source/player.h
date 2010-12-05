@@ -718,7 +718,8 @@ bool player_effectively_in_light_armour();
 bool player_under_penance(void);
 
 bool extrinsic_amulet_effect(jewellery_type amulet);
-bool wearing_amulet(jewellery_type which_am, bool calc_unid = true);
+bool wearing_amulet(jewellery_type which_am, bool calc_unid = true,
+                    bool ignore_extrinsic = false);
 
 int burden_change(void);
 
