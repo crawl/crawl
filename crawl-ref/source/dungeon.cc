@@ -2868,16 +2868,39 @@ static bool _builder_normal(int level_number, spec_room &sr)
     return true;
 }
 
+static void _make_random_rooms(int num, int max_doors, int door_level,
+                               int max_x, int max_y, int max_room_size)
+{
+    int i, sx, sy, ex, ey, time_run = 0;
+
+    for (i = 0; i < num; i++)
+    {
+        sx = 8 + random2(max_x);
+        sy = 8 + random2(max_y);
+        ex = sx + 2 + random2(max_room_size);
+        ey = sy + 2 + random2(max_room_size);
+
+        if (!_make_room(sx, sy, ex, ey, max_doors, door_level))
+        {
+            time_run++;
+            i--;
+        }
+
+        if (time_run > 30)
+        {
+            time_run = 0;
+            i++;
+        }
+    }
+}
+
 // Returns false if we should skip extras(), otherwise true.
 static bool _builder_basic(int level_number)
 {
     env.level_build_method += make_stringf(" basic [%d]", level_number);
     env.level_layout_type  = "basic";
 
-    int temp_rand;
-    int doorlevel  = random2(11);
     int corrlength = 2 + random2(14);
-    int roomsize   = 4 + random2(5) + random2(6);
     int no_corr = (one_chance_in(100) ? 500 + random2(500)
                                       : 30 + random2(200));
     int intersect_chance = (one_chance_in(20) ? 400 : random2(20));
@@ -2946,62 +2969,17 @@ static bool _builder_basic(int level_number)
     if (random2(level_number) > 6 && one_chance_in(3))
         _diamond_rooms(level_number);
 
-    // make some rooms:
-    int i, no_rooms, max_doors;
-    int sx,sy,ex,ey, time_run;
+    // Make some rooms:
+    int doorlevel = random2(11);
+    int roomsize  = 4 + random2(5) + random2(6);
 
-    temp_rand = random2(750);
-    time_run = 0;
+    int no_rooms = random_choose_weighted(636, (5 + random2avg(29, 2)),
+                                          49, 100,
+                                          15, 1, 0);
 
-    no_rooms = ((temp_rand > 63) ? (5 + random2avg(29, 2)) : // 91.47% {dlb}
-                (temp_rand > 14) ? 100                       //  6.53% {dlb}
-                                 : 1);                       //  2.00% {dlb}
+    _make_random_rooms(no_rooms, 2 + random2(8), doorlevel, 50, 40, roomsize);
 
-    max_doors = 2 + random2(8);
-
-    for (i = 0; i < no_rooms; i++)
-    {
-        sx = 8 + random2(50);
-        sy = 8 + random2(40);
-        ex = sx + 2 + random2(roomsize);
-        ey = sy + 2 + random2(roomsize);
-
-        if (!_make_room(sx,sy,ex,ey,max_doors, doorlevel))
-        {
-            time_run++;
-            i--;
-        }
-
-        if (time_run > 30)
-        {
-            time_run = 0;
-            i++;
-        }
-    }
-
-    // Make some more rooms.
-    no_rooms = 1 + random2(3);
-    max_doors = 1;
-
-    for (i = 0; i < no_rooms; i++)
-    {
-        sx = 8 + random2(55);
-        sy = 8 + random2(45);
-        ex = sx + 5 + random2(6);
-        ey = sy + 5 + random2(6);
-
-        if (!_make_room(sx,sy,ex,ey,max_doors, doorlevel))
-        {
-            time_run++;
-            i--;
-        }
-
-        if (time_run > 30)
-        {
-            time_run = 0;
-            i++;
-        }
-    }
+    _make_random_rooms(1 + random2(3), 1, doorlevel, 55, 45, 6);
 
     return true;
 }
