@@ -1137,6 +1137,10 @@ static void tag_construct_you(writer &th)
     for (i = 0; i < MAX_NUM_GODS; i++)
         marshallShort(th, you.num_total_gifts[i]);
 
+    marshallByte(th, NUM_NEMELEX_GIFT_TYPES);
+    for (i = 0; i < NUM_NEMELEX_GIFT_TYPES; ++i)
+        marshallBoolean(th, you.nemelex_sacrificing[i]);
+
     marshallByte(th, you.gift_timeout);
 #if TAG_MAJOR_VERSION == 31
     marshallByte(th, you.normal_vision);
@@ -1791,6 +1795,17 @@ static void tag_read_you(reader &th, int minorVersion)
 #endif
     for (i = 0; i < count; i++)
         you.num_total_gifts[i] = unmarshallShort(th);
+
+#if TAG_MAJOR_VERSION == 31
+    if (minorVersion >= TAG_MINOR_NEMELEX_TOGGLE)
+    {
+#endif
+    count = unmarshallByte(th);
+    for (i = 0; i < count; i++)
+        you.nemelex_sacrificing[i] = unmarshallBoolean(th);
+#if TAG_MAJOR_VERSION == 31
+    }
+#endif
 
     you.gift_timeout   = unmarshallByte(th);
 

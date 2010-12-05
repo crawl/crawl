@@ -1143,29 +1143,29 @@ static bool _need_missile_gift(bool forced)
 
 void get_pure_deck_weights(int weights[])
 {
-    weights[0] = you.sacrifice_value[OBJ_ARMOUR] + 1;
-    weights[1] = you.sacrifice_value[OBJ_WEAPONS]
-                 + you.sacrifice_value[OBJ_STAVES]
-                 + you.sacrifice_value[OBJ_MISSILES] + 1;
-    weights[2] = you.sacrifice_value[OBJ_MISCELLANY]
-                 + you.sacrifice_value[OBJ_JEWELLERY]
-                 + you.sacrifice_value[OBJ_BOOKS];
-    weights[3] = you.sacrifice_value[OBJ_CORPSES] / 2;
-    weights[4] = you.sacrifice_value[OBJ_POTIONS]
-                 + you.sacrifice_value[OBJ_SCROLLS]
-                 + you.sacrifice_value[OBJ_WANDS]
-                 + you.sacrifice_value[OBJ_FOOD];
+    weights[NEM_GIFT_ESCAPE]      = you.sacrifice_value[OBJ_ARMOUR] + 1;
+    weights[NEM_GIFT_DESTRUCTION] = you.sacrifice_value[OBJ_WEAPONS]
+                                    + you.sacrifice_value[OBJ_STAVES]
+                                    + you.sacrifice_value[OBJ_MISSILES] + 1;
+    weights[NEM_GIFT_DUNGEONS]    = you.sacrifice_value[OBJ_MISCELLANY]
+                                    + you.sacrifice_value[OBJ_JEWELLERY]
+                                    + you.sacrifice_value[OBJ_BOOKS];
+    weights[NEM_GIFT_SUMMONING]   = you.sacrifice_value[OBJ_CORPSES] / 2;
+    weights[NEM_GIFT_WONDERS]     = you.sacrifice_value[OBJ_POTIONS]
+                                    + you.sacrifice_value[OBJ_SCROLLS]
+                                    + you.sacrifice_value[OBJ_WANDS]
+                                    + you.sacrifice_value[OBJ_FOOD];
 }
 
 static void _update_sacrifice_weights(int which)
 {
     switch (which)
     {
-    case 0:
+    case NEM_GIFT_ESCAPE:
         you.sacrifice_value[OBJ_ARMOUR] /= 5;
         you.sacrifice_value[OBJ_ARMOUR] *= 4;
         break;
-    case 1:
+    case NEM_GIFT_DESTRUCTION:
         you.sacrifice_value[OBJ_WEAPONS]  /= 5;
         you.sacrifice_value[OBJ_STAVES]   /= 5;
         you.sacrifice_value[OBJ_MISSILES] /= 5;
@@ -1173,18 +1173,18 @@ static void _update_sacrifice_weights(int which)
         you.sacrifice_value[OBJ_STAVES]   *= 4;
         you.sacrifice_value[OBJ_MISSILES] *= 4;
         break;
-    case 2:
+    case NEM_GIFT_DUNGEONS:
         you.sacrifice_value[OBJ_MISCELLANY] /= 5;
         you.sacrifice_value[OBJ_JEWELLERY]  /= 5;
         you.sacrifice_value[OBJ_BOOKS]      /= 5;
         you.sacrifice_value[OBJ_MISCELLANY] *= 4;
         you.sacrifice_value[OBJ_JEWELLERY]  *= 4;
         you.sacrifice_value[OBJ_BOOKS]      *= 4;
-    case 3:
+    case NEM_GIFT_SUMMONING:
         you.sacrifice_value[OBJ_CORPSES] /= 5;
         you.sacrifice_value[OBJ_CORPSES] *= 4;
         break;
-    case 4:
+    case NEM_GIFT_WONDERS:
         you.sacrifice_value[OBJ_POTIONS] /= 5;
         you.sacrifice_value[OBJ_SCROLLS] /= 5;
         you.sacrifice_value[OBJ_WANDS]   /= 5;
@@ -1204,8 +1204,9 @@ static void _show_pure_deck_chances()
 
     get_pure_deck_weights(weights);
 
-    float total = (float) (weights[0] + weights[1] + weights[2] + weights[3]
-                           + weights[4]);
+    float total = 0;
+    for (int i = 0; i < NUM_NEMELEX_GIFT_TYPES; ++i)
+        total += (float) weights[i];
 
     mprf(MSGCH_DIAGNOSTICS, "Pure cards chances: "
          "escape %0.2f%%, destruction %0.2f%%, dungeons %0.2f%%,"
@@ -1217,6 +1218,20 @@ static void _show_pure_deck_chances()
          (float)weights[4] / total * 100.0);
 }
 #endif
+
+static misc_item_type _gift_type_to_deck(int gift)
+{
+    switch (gift)
+    {
+    case NEM_GIFT_ESCAPE:      return (MISC_DECK_OF_ESCAPE);
+    case NEM_GIFT_DESTRUCTION: return (MISC_DECK_OF_DESTRUCTION);
+    case NEM_GIFT_DUNGEONS:    return (MISC_DECK_OF_DUNGEONS);
+    case NEM_GIFT_SUMMONING:   return (MISC_DECK_OF_SUMMONING);
+    case NEM_GIFT_WONDERS:     return (MISC_DECK_OF_WONDERS);
+    }
+    ASSERT(false);
+    return (NUM_MISCELLANY);
+}
 
 static bool _give_nemelex_gift(bool forced = false)
 {
@@ -1235,17 +1250,10 @@ static bool _give_nemelex_gift(bool forced = false)
         misc_item_type gift_type;
 
         // Make a pure deck.
-        const misc_item_type pure_decks[] = {
-            MISC_DECK_OF_ESCAPE,
-            MISC_DECK_OF_DESTRUCTION,
-            MISC_DECK_OF_DUNGEONS,
-            MISC_DECK_OF_SUMMONING,
-            MISC_DECK_OF_WONDERS
-        };
         int weights[5];
         get_pure_deck_weights(weights);
         const int choice = choose_random_weighted(weights, weights+5);
-        gift_type = pure_decks[choice];
+        gift_type = _gift_type_to_deck(choice);
 #if defined(DEBUG_GIFTS) || defined(DEBUG_CARDS)
         _show_pure_deck_chances();
 #endif

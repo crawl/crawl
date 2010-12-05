@@ -14,6 +14,7 @@
 #include "itemprop-enum.h"
 #include "package.h"
 #include "place-info.h"
+#include "religion-enum.h"
 
 #include "species.h"
 
@@ -189,6 +190,9 @@ public:
   FixedVector<uint8_t, MAX_NUM_GODS>  worshipped;
   FixedVector<short,   MAX_NUM_GODS>  num_current_gifts;
   FixedVector<short,   MAX_NUM_GODS>  num_total_gifts;
+
+  // Nemelex sacrifice toggles
+  FixedVector<bool, NUM_NEMELEX_GIFT_TYPES> nemelex_sacrificing;
 
   FixedVector<uint8_t, NUM_MUTATIONS> mutation;
   FixedVector<uint8_t, NUM_MUTATIONS> innate_mutations;
