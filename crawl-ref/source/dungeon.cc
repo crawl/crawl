@@ -103,13 +103,6 @@ const struct coord_def OrthCompass[4] =
     coord_def(0, -1), coord_def(0, 1), coord_def(-1, 0), coord_def(1, 0)
 };
 
-// FIXME: maintaining previous behaviour, but why are we forbidding the
-// last row and column?
-coord_def spec_room::random_spot() const
-{
-    return coord_def(random_range(tl.x, br.x-1), random_range(tl.y, br.y-1));
-}
-
 // DUNGEON BUILDERS
 static bool _build_level_vetoable(int level_number, level_area_type level_type,
                                   bool enable_random_maps);
