@@ -1106,6 +1106,21 @@ MAP
 .............
 ENDMAP
 
+NAME:    kenku_band
+DEPTH:   D:9-, Shoals, Swamp
+TAGS:    no_pool_fixup
+MONS:    kenku
+MONS:    kenku ; war axe / kenku ; long sword / kenku ; scimitar
+MONS:    kenku spells:airstrike;magic_dart;iskenderun's_mystic_blast
+MAP
+ .........
+..wwwww.1..
+.wwttwww.2.
+.wtt3.tww..
+.wwwt.2....
+..wwwwww2..
+ .........
+ENDMAP
 
 ################################################################################
 #
