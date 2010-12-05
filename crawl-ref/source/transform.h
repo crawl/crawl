@@ -13,15 +13,15 @@
 #include "enum.h"
 #include "player.h"
 
-bool form_can_wield(transformation_type trans = you.form);
-bool form_can_fly(transformation_type trans = you.form);
-bool form_can_swim(transformation_type trans = you.form);
-bool form_likes_water(transformation_type trans = you.form);
-bool form_can_butcher_barehanded(transformation_type trans = you.form);
+bool form_can_wield(transformation_type form = you.form);
+bool form_can_fly(transformation_type form = you.form);
+bool form_can_swim(transformation_type form = you.form);
+bool form_likes_water(transformation_type form = you.form);
+bool form_can_butcher_barehanded(transformation_type form = you.form);
 bool form_changed_physiology(bool phys_scales = false,
-                             transformation_type trans = you.form);
+                             transformation_type form = you.form);
 bool form_can_wear_item(const item_def& item,
-                        transformation_type trans = you.form);
+                        transformation_type form = you.form);
 
 bool can_equip(equipment_type use_which, bool ignore_temporary);
 

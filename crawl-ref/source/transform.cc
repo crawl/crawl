@@ -35,50 +35,46 @@
 
 static void _extra_hp(int amount_extra);
 
-bool form_can_wield(transformation_type trans)
+bool form_can_wield(transformation_type form)
 {
-    return (trans == TRAN_NONE
-            || trans == TRAN_STATUE
-            || trans == TRAN_LICH);
+    return (form == TRAN_NONE || form == TRAN_STATUE || form == TRAN_LICH);
 }
 
-bool form_can_fly(transformation_type trans)
+bool form_can_fly(transformation_type form)
 {
-    return (trans == TRAN_DRAGON || trans == TRAN_BAT);
+    return (form == TRAN_DRAGON || form == TRAN_BAT);
 }
 
-bool form_can_swim(transformation_type trans)
+bool form_can_swim(transformation_type form)
 {
-    return trans == TRAN_ICE_BEAST
-           || you.species == SP_MERFOLK &&
-              !form_changed_physiology(false, trans);
+    return (you.species == SP_MERFOLK && !form_changed_physiology(false, form)
+            || form == TRAN_ICE_BEAST);
 }
 
-bool form_likes_water(transformation_type trans)
+bool form_likes_water(transformation_type form)
 {
-    return form_can_swim(trans)
-           || you.species == SP_GREY_DRACONIAN
-              && !form_changed_physiology(false, trans);
+    return (form_can_swim(form) || you.species == SP_GREY_DRACONIAN
+                                   && !form_changed_physiology(false, form));
 }
 
-bool form_can_butcher_barehanded(transformation_type trans)
+bool form_can_butcher_barehanded(transformation_type form)
 {
-    return (trans == TRAN_BLADE_HANDS || trans == TRAN_DRAGON
-            || trans == TRAN_ICE_BEAST);
+    return (form == TRAN_BLADE_HANDS || form == TRAN_DRAGON
+            || form == TRAN_ICE_BEAST);
 }
 
 // Used to mark transformations which override species/mutation intrinsics.
 // If phys_scales is true then we're checking to see if the form keeps
 // the physical (AC/EV) properties from scales... the special intrinsic
 // features (resistances, etc.) are lost in those forms however.
-bool form_changed_physiology(bool phys_scales, transformation_type trans)
+bool form_changed_physiology(bool phys_scales, transformation_type form)
 {
-    return (trans != TRAN_NONE && trans != TRAN_BLADE_HANDS
+    return (form != TRAN_NONE && form != TRAN_BLADE_HANDS
             && (!phys_scales
-                || (trans != TRAN_LICH && trans != TRAN_STATUE)));
+                || (form != TRAN_LICH && form != TRAN_STATUE)));
 }
 
-bool form_can_wear_item(const item_def& item, transformation_type trans)
+bool form_can_wear_item(const item_def& item, transformation_type form)
 {
     bool rc = true;
 
@@ -86,7 +82,7 @@ bool form_can_wear_item(const item_def& item, transformation_type trans)
     {
         // Everything but bats can wear all jewellery; bats and pigs can
         // only wear amulets.
-        if ((trans == TRAN_BAT || trans == TRAN_PIG)
+        if ((form == TRAN_BAT || form == TRAN_PIG)
              && !jewellery_is_amulet(item))
         {
             rc = false;
@@ -98,7 +94,7 @@ bool form_can_wear_item(const item_def& item, transformation_type trans)
         const equipment_type eqslot = get_armour_slot(item);
         const bool is_soft_helmet   = is_helmet(item) && !is_hard_helmet(item);
 
-        switch (trans)
+        switch (form)
         {
         // Some forms can wear everything.
         case TRAN_NONE:
@@ -142,15 +138,14 @@ bool form_can_wear_item(const item_def& item, transformation_type trans)
 }
 
 static std::set<equipment_type>
-_init_equipment_removal(transformation_type trans)
+_init_equipment_removal(transformation_type form)
 {
     std::set<equipment_type> result;
-    if (!form_can_wield(trans) && you.weapon())
+    if (!form_can_wield(form) && you.weapon())
         result.insert(EQ_WEAPON);
 
     // Liches can't wield holy weapons.
-    if (trans == TRAN_LICH
-        && you.weapon()
+    if (form == TRAN_LICH && you.weapon()
         && get_weapon_brand(*you.weapon()) == SPWPN_HOLY_WRATH)
     {
         result.insert(EQ_WEAPON);
@@ -160,7 +155,7 @@ _init_equipment_removal(transformation_type trans)
     {
         const equipment_type eq = static_cast<equipment_type>(i);
         const item_def *pitem = you.slot_item(eq, true);
-        if (pitem && !form_can_wear_item(*pitem, trans))
+        if (pitem && !form_can_wear_item(*pitem, form))
             result.insert(eq);
     }
     return (result);
@@ -433,8 +428,7 @@ monster_type dragon_form_dragon_type()
 bool transform(int pow, transformation_type which_trans, bool force,
                bool just_check)
 {
-    transformation_type previous_trans = static_cast<transformation_type>(
-                                         you.form);
+    transformation_type previous_trans = you.form;
     bool was_in_water = you.in_water();
     const flight_type was_flying = you.flight_mode();
 
@@ -636,7 +630,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
     you.redraw_evasion      = true;
     you.redraw_armour_class = true;
     you.wield_change        = true;
-    if (which_trans != TRAN_BLADE_HANDS)
+    if (form_changed_physiology(false, which_trans))
         you.fishtail = false;
 
     // Most transformations conflict with stone skin.
