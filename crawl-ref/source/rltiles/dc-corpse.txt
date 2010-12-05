@@ -255,6 +255,7 @@ manticore CORPSE_MANTICORE
 harpy CORPSE_HARPY
 minotaur CORPSE_MINOTAUR
 sphinx CORPSE_SPHINX
+kenku CORPSE_KENKU
 
 ## Jellies ('J')
 %back dc-misc/blood_green
