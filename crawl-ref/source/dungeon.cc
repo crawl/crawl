@@ -1749,15 +1749,13 @@ static bool _branch_entrances_are_connected()
 {
     // Returns true if all branch entrances on the level are connected to
     // stone stairs.
-    for (int y = 0; y < GYM; ++y)
-        for (int x = 0; x < GXM; ++x)
-        {
-            coord_def gc(x,y);
-            if (!feat_is_branch_stairs(grd(gc)))
-                continue;
-            if (!_has_connected_stone_stairs_from(gc))
-                return (false);
-        }
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        if (!feat_is_branch_stairs(grd(*ri)))
+            continue;
+        if (!_has_connected_stone_stairs_from(*ri))
+            return (false);
+    }
 
     return (true);
 }
