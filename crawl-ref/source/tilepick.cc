@@ -2821,6 +2821,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_HARPY;
     case MONS_MINOTAUR:
         return TILE_CORPSE_MINOTAUR;
+    case MONS_KENKU:
+        return TILE_CORPSE_KENKU;
     case MONS_SPHINX:
         return TILE_CORPSE_SPHINX;
 
