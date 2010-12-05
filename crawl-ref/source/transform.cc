@@ -47,14 +47,14 @@ bool form_can_fly(transformation_type form)
 
 bool form_can_swim(transformation_type form)
 {
-    return (you.species == SP_MERFOLK && !form_changed_physiology(false, form)
+    return (you.species == SP_MERFOLK && !form_changed_physiology(form)
             || form == TRAN_ICE_BEAST);
 }
 
 bool form_likes_water(transformation_type form)
 {
     return (form_can_swim(form) || you.species == SP_GREY_DRACONIAN
-                                   && !form_changed_physiology(false, form));
+                                   && !form_changed_physiology(form));
 }
 
 bool form_can_butcher_barehanded(transformation_type form)
@@ -64,14 +64,9 @@ bool form_can_butcher_barehanded(transformation_type form)
 }
 
 // Used to mark transformations which override species/mutation intrinsics.
-// If phys_scales is true then we're checking to see if the form keeps
-// the physical (AC/EV) properties from scales... the special intrinsic
-// features (resistances, etc.) are lost in those forms however.
-bool form_changed_physiology(bool phys_scales, transformation_type form)
+bool form_changed_physiology(transformation_type form)
 {
-    return (form != TRAN_NONE && form != TRAN_BLADE_HANDS
-            && (!phys_scales
-                || (form != TRAN_LICH && form != TRAN_STATUE)));
+    return (form != TRAN_NONE && form != TRAN_BLADE_HANDS);
 }
 
 bool form_can_wear_item(const item_def& item, transformation_type form)
@@ -630,7 +625,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
     you.redraw_evasion      = true;
     you.redraw_armour_class = true;
     you.wield_change        = true;
-    if (form_changed_physiology(false, which_trans))
+    if (form_changed_physiology(which_trans))
         you.fishtail = false;
 
     // Most transformations conflict with stone skin.
