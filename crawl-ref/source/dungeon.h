@@ -141,7 +141,7 @@ public:
     coord_def pos;
     coord_def size;
 
-    int orient;
+    map_section_type orient;
     map_def map;
     std::vector<coord_def> exits;
 
@@ -152,7 +152,7 @@ public:
 
 public:
     vault_placement()
-        : pos(-1, -1), size(0, 0), orient(0), map(),
+        : pos(-1, -1), size(0, 0), orient(MAP_NONE), map(),
           exits(), level_number(0), seen(false)
     {
     }

@@ -35,11 +35,10 @@ BRANCHFN(parent_branch, string,
 
 static void _push_level_id(lua_State *ls, const level_id &lid)
 {
-    // We're skipping the constructor; naughty, but level_id has no
-    // virtual methods and no dynamically allocated memory.
-    level_id *nlev =
-    static_cast<level_id*>(lua_newuserdata(ls, sizeof(level_id)));
-    *nlev = lid;
+    // [ds] Should really set up a metatable to delete (FIXME).
+    level_id *nlev = static_cast<level_id*>(
+        lua_newuserdata(ls, sizeof(level_id)));
+    new (nlev) level_id(lid);
 }
 
 level_id dlua_level_id(lua_State *ls, int ndx)

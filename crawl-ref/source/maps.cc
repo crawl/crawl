@@ -37,13 +37,13 @@
 #include "tags.h"
 #include "terrain.h"
 
-static int write_vault(map_def &mdef,
-                       vault_placement &,
-                       bool check_place);
-static int apply_vault_definition(
-                        map_def &def,
-                        vault_placement &,
-                        bool check_place);
+static map_section_type write_vault(map_def &mdef,
+                                    vault_placement &,
+                                    bool check_place);
+static map_section_type apply_vault_definition(
+    map_def &def,
+    vault_placement &,
+    bool check_place);
 
 static bool resolve_map(map_def &def);
 
@@ -84,8 +84,8 @@ dgn_map_parameters::dgn_map_parameters(const string_vector &parameters)
 
 // Make sure that vault_n, where n is a number, is a vault which can be put
 // anywhere, while other vault names are for specific level ranges, etc.
-int vault_main(vault_placement &place, const map_def *vault,
-                bool check_place)
+map_section_type vault_main(vault_placement &place, const map_def *vault,
+                            bool check_place)
 {
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Generating level: %s (%d,%d)",
@@ -102,9 +102,9 @@ int vault_main(vault_placement &place, const map_def *vault,
     return (write_vault(const_cast<map_def&>(*vault), place, check_place));
 }
 
-static int write_vault(map_def &mdef,
-                       vault_placement &place,
-                       bool check_place)
+static map_section_type write_vault(map_def &mdef,
+                                    vault_placement &place,
+                                    bool check_place)
 {
     mdef.load();
 
@@ -133,8 +133,20 @@ static int write_vault(map_def &mdef,
     return (MAP_NONE);
 }
 
+void dgn_flush_map_environments()
+{
+    // Clean up cached environments.
+    dlua.callfn("dgn_flush_map_environments", 0, 0);
+}
+
+void dgn_flush_map_environment_for(const std::string &mapname)
+{
+    dlua.callfn("dgn_flush_map_environment_for", "s", mapname.c_str());
+}
+
 static bool resolve_map_lua(map_def &map)
 {
+    dgn_flush_map_environment_for(map.name);
     map.reinit();
     std::string err = map.run_lua(true);
     if (!err.empty())
@@ -525,19 +537,16 @@ static bool apply_vault_grid(map_def &def,
     return (true);
 }
 
-static int apply_vault_definition(
-        map_def &def,
-        vault_placement &place,
-        bool check_place)
+static map_section_type apply_vault_definition(
+    map_def &def,
+    vault_placement &place,
+    bool check_place)
 {
     if (!apply_vault_grid(def, place, check_place))
         return (MAP_NONE);
 
-    int orient = def.orient;
-    if (orient == MAP_NONE)
-        orient = MAP_NORTH;
-
-    return (orient);
+    const map_section_type orient = def.orient;
+    return (orient == MAP_NONE? MAP_NORTH : orient);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -1291,8 +1300,7 @@ static void parse_maps(const std::string &s)
 void read_map(const std::string &file)
 {
     parse_maps(lc_desfile = datafile_path(file));
-    // Clean up cached environments.
-    dlua.callfn("dgn_flush_map_environments", 0, 0);
+    dgn_flush_map_environments();
     // Force GC to prevent heap from swelling unnecessarily.
     dlua.gc();
 }

@@ -10,9 +10,10 @@ Contents:  I. Conditionalising levels
            K. Abyss vaults
            L. Portal vaults
            M. Lua reference
-           N. Feature names
-           O. Map statistics
-           P. Map generation
+           N. Lua hooks
+           O. Feature names
+           P. Map statistics
+           Q. Map generation
 
 This document describes the advanced features of vault making. This includes
 usage of lua and how to create portal vaults. Triggerables are covered in a separate document: triggerables.txt.
@@ -470,7 +471,7 @@ ice_cave_milestone(_G)
 
 This marks down entering the portal vault in the server milestones and causes
 it to be announced by the IRC bots. Notice the use of an epilogue block. The
-epilogues are only ran after the map is validated, that is, it ensures that
+epilogues are only run after the map is validated, that is, it ensures that
 the map was actually used.
 
 
@@ -932,7 +933,83 @@ The "colour" module provides functions for defining new colour patterns.
 add_colour
 
 
-N.   Feature Names
+N.    Lua hooks
+===============
+
+When the dungeon builder places a vault, it runs hooks at certain
+steps during vault building. These hooks are:
+
+1. pre_main: This hook is called just before the main chunk's Lua code
+   is called.
+2. post_main: This hook is called just after the main Lua code is called.
+3. post_place: This hook is called after the vault has been placed,
+   and before the dungeon builder continues with level-generation,
+   i.e. during level-generation time.
+4. pre_epilogue: This hook is called just before the epilogue code is run.
+   Note that by the time epilogues run, level generation is complete.
+5. post_epilogue: This hook is called after the epilogue code is run.
+
+You may also specify hooks as "main", "place", "epilogue", which will
+select the post_XXX hook. i.e. using "main" as the hook name is the
+same as writing "post_main".
+
+Hooks may be global, in which case they're fired for all vaults
+placed, or may be specific to a map. Global hooks must be defined in a
+Lua file, or in a .des file's global prelude.
+
+You may use the post_place hook to take an action immediately after a
+vault is placed successfully. For instance, if you're designing a
+vault (star) that should always be accompanied by several other vaults
+(fan), then you might write it as:
+
+NAME: star
+PLACE: D:2
+{{
+  hook("post_place", function()
+    -- Place ten instances of vault(s) tagged "fan"
+    dgn.place_maps{tag="fan", count=10}
+  end)
+}}
+MAP
+***
+***
+ENDMAP
+
+NAME: fan
+# Must be allow_dup since 10 instances will be used.
+TAGS: fan allow_dup
+MONS: human
+MAP
+1
+ENDMAP
+
+Using global hooks affects every vault, so they should be used very
+sparingly. Global hooks must be defined in Lua files, or in .des
+files' global preludes (i.e. before any map definitions). As an
+example, here's a frivolous global hook to place a pile of gold on
+each floor square in vaults:
+
+{{
+  dgn.global_hook("main",
+                  function ()
+                    kitem(". = gold")
+                  end)
+}}
+
+Note the use of the "main" hook in this example instead of
+"post_place". "post_place" is too late to modify the vault definition,
+since the vault is already placed at that point.
+
+Errors in hooks
+---------------
+
+Errors in hooks will usually be ignored by the level builder, although
+errors will still be displayed to the end user. The only exception is
+the "post_place" hook -- errors in the post_place hook will cause the
+dungeon builder to veto its current level and retry level generation.
+
+
+O.   Feature Names
 ==================
 
 These are the feature names usable in MARKER declarations:
@@ -967,7 +1044,7 @@ fountain_sparkling, fountain_blood, dry_fountain_blue,
 dry_fountain_sparkling, dry_fountain_blood, permadry_fountain
 
 
-O.   Map Statistics
+P.   Map Statistics
 ===================
 
 Full-debug Crawl builds (this does not include normal Crawl builds
@@ -990,7 +1067,7 @@ probabilities of the random map on each level, use:
 crawl -mapstat 1
 
 
-P.   Map Generation
+Q.   Map Generation
 ===================
 
 Full-debug Crawl builds (see above for more information) include a test for
@@ -1017,5 +1094,5 @@ Once you have saved your changes, run crawl:
 
  crawl -test vault_generation
 
-Once all of the tests have been finished successfully you should find the 
+Once all of the tests have been finished successfully you should find the
 relevant files in your working directory.
