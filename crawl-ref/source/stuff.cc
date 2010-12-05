@@ -1046,3 +1046,29 @@ coord_def get_random_stair()
         return coord_def();        // sanity check: shouldn't happen
     return st[random2(st.size())];
 }
+
+//---------------------------------------------------------------
+//
+// debug_prompt_for_int
+//
+// If nonneg, then it returns a non-negative number or -1 on fail
+// If !nonneg, then it returns an integer, and 0 on fail
+//
+//---------------------------------------------------------------
+int debug_prompt_for_int(const char *prompt, bool nonneg)
+{
+    char specs[80];
+
+    msgwin_get_line(prompt, specs, sizeof(specs));
+
+    if (specs[0] == '\0')
+        return (nonneg ? -1 : 0);
+
+    char *end;
+    int   ret = strtol(specs, &end, 10);
+
+    if (ret < 0 && nonneg || ret == 0 && end == specs)
+        ret = (nonneg ? -1 : 0);
+
+    return (ret);
+}
