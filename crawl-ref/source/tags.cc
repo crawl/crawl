@@ -1483,7 +1483,7 @@ static vault_placement unmarshall_vault_placement(reader &th)
     vault_placement vp;
     vp.pos = unmarshallCoord(th);
     vp.size = unmarshallCoord(th);
-    vp.orient = unmarshallShort(th);
+    vp.orient = static_cast<map_section_type>(unmarshallShort(th));
     vp.map = unmarshall_mapdef(th);
     unmarshall_vector(th, vp.exits, unmarshallCoord);
     vp.level_number = unmarshallShort(th);

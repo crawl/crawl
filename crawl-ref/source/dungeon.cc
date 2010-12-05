@@ -204,6 +204,10 @@ static bool _build_secondary_vault(int level_number, const map_def *vault,
 
 static bool _build_primary_vault(int level_number, const map_def *vault);
 
+static void _build_postvault_level(
+    map_section_type placed_vault_orientation,
+    vault_placement &place,
+    std::vector<coord_def> &target_connections);
 static bool _build_vault_impl(int level_number,
                               const map_def *vault,
                               bool build_only = false,
@@ -4699,13 +4703,15 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
     if (map_bounds(where))
         place.pos = where;
 
-    const int gluggy = vault_main(place, vault, check_collisions);
+    const map_section_type placed_vault_orientation =
+        vault_main(place, vault, check_collisions);
 
     dprf("Map: %s; placed ok: %s; place: (%d,%d), size: (%d,%d)",
-         vault->name.c_str(), gluggy != MAP_NONE? "yes" : "no",
+         vault->name.c_str(),
+         placed_vault_orientation != MAP_NONE? "yes" : "no",
          place.pos.x, place.pos.y, place.size.x, place.size.y);
 
-    if (gluggy == MAP_NONE)
+    if (placed_vault_orientation == MAP_NONE)
         return (false);
 
     // XXX: Moved this out of dgn_register_place so that vault-set monsters can
@@ -4722,7 +4728,7 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
         _ruin_vault(place);
 
     std::vector<coord_def> &target_connections = place.exits;
-    if (target_connections.empty() && gluggy != MAP_ENCOMPASS
+    if (target_connections.empty() && placed_vault_orientation != MAP_ENCOMPASS
         && (!place.map.is_minivault() || place.map.has_tag("mini_float")))
     {
         _pick_float_exits(place, target_connections);
@@ -4741,12 +4747,28 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
 #endif
 
     const bool is_layout = place.map.has_tag("layout");
-
     // If the map takes the whole screen or we were only requested to
     // build the vault, our work is done.
-    if (gluggy == MAP_ENCOMPASS && !is_layout || build_only)
-        return (true);
+    if (!build_only && (placed_vault_orientation != MAP_ENCOMPASS || is_layout))
+        _build_postvault_level(placed_vault_orientation,
+                               place, target_connections);
 
+    // Fire any post-place hooks defined for this map; any failure
+    // here is an automatic veto. Note that the post-place hook must
+    // be run only after _build_postvault_level.
+    if (!place.map.run_postplace_hook())
+        throw dgn_veto_exception("Post-place hook failed for: "
+                                 + place.map.name);
+
+    return (true);
+}                               // end build_vaults()
+
+static void _build_postvault_level(
+    map_section_type placed_vault_orientation,
+    vault_placement &place,
+    std::vector<coord_def> &target_connections)
+{
+    const bool is_layout = place.map.has_tag("layout");
     // Does this level require Dis treatment (metal wallification)?
     // XXX: Change this so the level definition can explicitly state what
     // kind of wallification it wants.
@@ -4767,7 +4789,7 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
 
         // Try harder for floating vaults, which tend to complicate room
         // building somewhat.
-        if (gluggy == MAP_FLOAT)
+        if (placed_vault_orientation == MAP_FLOAT)
             nrooms += 10;
 
         std::vector<coord_def> ex_connection_points =
@@ -4778,11 +4800,8 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
         // Excavate and connect the vault to the rest of the level.
         _dig_vault_loose(place, target_connections);
     }
-
     dgn_place_stone_stairs(true);
-
-    return (true);
-}                               // end build_vaults()
+}
 
 static const object_class_type _acquirement_item_classes[] = {
     OBJ_WEAPONS,

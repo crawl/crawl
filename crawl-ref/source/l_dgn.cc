@@ -165,6 +165,12 @@ static int dgn_tags(lua_State *ls)
     PLUARET(string, map->tags.c_str());
 }
 
+static int dgn_has_tag(lua_State *ls)
+{
+    MAP(ls, 1, map);
+    PLUARET(boolean, map->has_tag(luaL_checkstring(ls, 2)));
+}
+
 static int dgn_tags_remove(lua_State *ls)
 {
     MAP(ls, 1, map);
@@ -1881,6 +1887,7 @@ const struct luaL_reg dgn_dlib[] =
 { "place", dgn_place },
 { "desc", dgn_desc },
 { "tags",  dgn_tags },
+{ "has_tag", dgn_has_tag },
 { "tags_remove", dgn_tags_remove },
 { "lflags", dgn_lflags },
 { "bflags", dgn_bflags },

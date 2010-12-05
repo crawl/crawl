@@ -9,6 +9,32 @@ dgn.GXM, dgn.GYM = dgn.max_bounds()
 dgn.MAX_MONSTERS = dgn.max_monsters()
 
 dgn.f_map = { }
+dgn.MAP_GLOBAL_HOOKS = { }
+
+dgn.MAP_HOOK_NAMES = {
+  "pre_main", "post_main", "post_place",
+  "pre_epilogue", "post_epilogue"
+}
+
+dgn.MAP_HOOK_ALIASES = {
+  main = 'post_main',
+  epilogue = 'post_epilogue',
+  place = 'post_place'
+}
+
+local function dgn_hook_variable_name(hook_name)
+  hook_name = dgn.MAP_HOOK_ALIASES[hook_name] or hook_name
+  return "HOOK_" .. hook_name
+end
+
+local function dgn_init_hook_tables(container_table)
+  -- Define hook tables for Lua hooks.
+  for _, hook in ipairs(dgn.MAP_HOOK_NAMES) do
+    container_table[dgn_hook_variable_name(hook)] = { }
+  end
+end
+
+dgn_init_hook_tables(dgn.MAP_GLOBAL_HOOKS)
 
 -- Table that will be saved in <foo>.sav.
 dgn.persist = { }
@@ -34,6 +60,40 @@ function dgn.fnum(name)
   return fnum
 end
 
+function dgn.map_environment(map)
+  if not map then
+    map = g_dgn_curr_map
+  end
+  assert(map, "Can't get map_environment: No active map")
+  local mapname = dgn.name(map)
+  return dgn.map_environment_by_name(mapname)
+end
+
+function dgn.map_environment_by_name(mapname)
+  assert(dgn._map_envs, "Can't get map environment for " .. mapname ..
+         ": no environments available")
+  local mapenv = dgn._map_envs[mapname]
+  return mapenv or { }
+end
+
+function dgn.hook_environment(hook_env, hook_name, fn)
+  local hook_table = hook_env[dgn_hook_variable_name(hook_name)]
+  assert(hook_table and type(hook_table) == 'table',
+         "Bad hook table for hook " .. hook_name)
+  table.insert(hook_table, fn)
+end
+
+-- Register a hook for the current map.
+function dgn.hook(map, hook_name, fn)
+  local map_environment = dgn.map_environment_by_name(dgn.name(map))
+  dgn.hook_environment(map_environment, hook_name, fn)
+end
+
+-- Register a global hook that will be fired for all maps.
+function dgn.global_hook(hook_name, fn)
+  dgn.hook_environment(dgn.MAP_GLOBAL_HOOKS, hook_name, fn)
+end
+
 function dgn.monster_fn(spec)
   local mspec = dgn.monster_spec(spec)
   return function (x, y)
@@ -48,6 +108,67 @@ function dgn.find_feature_number(name_num)
   else
     return dgn.fnum(name_num)
   end
+end
+
+-- Given a hook function, returns a single-element table containing the
+-- function, viz. { fn }. Given anything else, returns it unchanged.
+local function dgn_fixup_hook(hook_function_or_table)
+  if not hook_function_or_table then
+    return
+  end
+  if type(hook_function_or_table) == 'function' then
+    return { hook_function_or_table }
+  end
+  assert(type(hook_function_or_table) == 'table',
+         "Bad hook value: expected table or function, got "
+           .. type(hook_function_or_table))
+  return hook_function_or_table
+end
+
+function dgn_map_copy_hooks_from(hook_source_mapname, hook_name)
+  local source_environment = dgn.map_environment_by_name(hook_source_mapname)
+  local hook_variable = dgn_hook_variable_name(hook_name)
+  local source_hook = dgn_fixup_hook(source_environment[hook_variable])
+  if not source_hook then
+    return
+  end
+
+  local target_environment = dgn.map_environment();
+  local target_hook = dgn_fixup_hook(target_environment[hook_variable])
+  if not target_hook then
+    target_hook = source_hook
+  else
+    target_hook = util.append(target_hook, source_hook)
+  end
+  target_environment[hook_variable] = target_hook
+end
+
+function dgn_run_hooks_in_environment(env, hook_name)
+  local hook_variable_name = dgn_hook_variable_name(hook_name)
+  local hook_functions_table = dgn_fixup_hook(env[hook_variable_name])
+  if hook_functions_table then
+    for _, hook_function in ipairs(hook_functions_table) do
+      dgn_run_map(hook_function)
+    end
+  end
+end
+
+function dgn_map_run_hook(hook_name)
+  -- There must be a "current" map that we can run hooks for.
+  if not g_dgn_curr_map then
+    return
+  end
+
+  -- Hooks, if any, will be defined in the map environment, so if there are
+  -- no map environments, there's nothing to do.
+  if not dgn._map_envs then
+    return
+  end
+
+  local mapname = dgn.name(g_dgn_curr_map)
+  local map_environment = dgn.map_environment_by_name(mapname)
+  dgn_run_hooks_in_environment(map_environment, hook_name)
+  dgn_run_hooks_in_environment(dgn.MAP_GLOBAL_HOOKS, hook_name)
 end
 
 -- Wraps a map_def into a Lua environment (a table) such that
@@ -66,7 +187,7 @@ function dgn_map_meta_wrap(map, tab)
 
    if not meta then
       meta = { }
-
+      dgn_init_hook_tables(meta)
       local meta_meta = { __index = _G }
       setmetatable(meta, meta_meta)
       dgn._map_envs[name] = meta
@@ -90,29 +211,43 @@ end
 
 -- Discards accumulated map environments.
 function dgn_flush_map_environments()
-   dgn._map_envs = nil
+  dgn._map_envs = nil
+  dgn.MAP_GLOBAL_HOOKS = { }
+  dgn_init_hook_tables(dgn.MAP_GLOBAL_HOOKS)
+end
+
+function dgn_flush_map_environment_for(mapname)
+  if dgn._map_envs then
+    dgn._map_envs[mapname] = nil
+  end
 end
 
 function dgn_set_map(map)
-   g_dgn_curr_map = map
+  local old_map = g_dgn_curr_map
+  g_dgn_curr_map = map
+  return old_map
 end
 
-function dgn_run_map(prelude, map, main)
-   if prelude or map or main then
-      local env = dgn_map_meta_wrap(g_dgn_curr_map, dgn)
-      local ret
-      if prelude then
-         ret = setfenv(prelude, env)()
+-- Given a list of map chunk functions, runs each one in order in that
+-- map's environment (wrapped with setfenv) and returns the return
+-- value of the last chunk. If the caller is interested in the return
+-- values of all the chunks, this function may be called multiple
+-- times, once for each chunk.
+function dgn_run_map(...)
+  local map_chunk_functions = { ... }
+  if #map_chunk_functions > 0 then
+    local ret
+    if not g_dgn_curr_map then
+      error("No current map?")
+    end
+    local env = dgn_map_meta_wrap(g_dgn_curr_map, dgn)
+    for _, map_chunk_function in pairs(map_chunk_functions) do
+      if map_chunk_function then
+        ret = setfenv(map_chunk_function, env)()
       end
-      if map then
-         ret = setfenv(map, env)()
-         dgn.normalise(g_dgn_curr_map)
-      end
-      if main then
-         ret = setfenv(main, env)()
-      end
-      return ret
-   end
+    end
+    return ret
+  end
 end
 
 --------------------------------------------------------------------
@@ -371,6 +506,83 @@ function dgn.gridmark(x, y, grid, marker)
       dgn.register_feature_marker(x, y, marker)
     end
   end
+end
+
+function dgn.find_map(parameters)
+  local function resolve_parameter(par)
+    local partype = type(par)
+    if partype == 'table' then
+      return resolve_parameter(util.random_from(par))
+    elseif partype == 'function' then
+      return resolve_parameter(par())
+    else
+      return par
+    end
+  end
+  if parameters.map then
+    return resolve_parameter(parameters.map)
+  end
+
+  if parameters.tag then
+    return dgn.map_by_tag(resolve_parameter(parameters.tag))
+  end
+
+  if parameters.name then
+    return dgn.map_by_name(resolve_parameter(parameters.name))
+  end
+
+  if parameters.random_mini or parameters.random_vault then
+    local mini = parameters.random_mini
+    local depth = resolve_parameter(parameters.random_mini
+                                    or parameters.random_vault)
+    if type(depth) == 'boolean' then
+      depth = dgn.level_id()
+    end
+    return dgn.map_in_depth(depth, mini)
+  end
+  error("dgn.find_map: no map selection criteria provided")
+end
+
+-- Places one or more maps matching the specified parameters. parameters
+-- must be a Lua table; these parameter values are relevant:
+--   map          - map object to place
+--   name         - name of the map to place (not recommended; using a specific
+--                  tag is usually better).
+--   tag          - tag of the map to place
+--   random_mini  - if logical true, picks a random minivault in depth;
+--                  if set to a place name, uses that place name to choose
+--                  the minivault.
+--   random_vault - if logical true, picks a random vault in depth; if
+--                  set to a place name, uses that place name to choose the
+--                  vault.
+--
+--   count        - Number of times to repeat the map placement; defaults to 1.
+--                  Note that the map must be marked allow_dup.
+--   die_on_error - If set false, will *not* raise an error if a map cannot
+--                  be placed. Defaults to true.
+-- Returns true if the map(s) were placed successfully, false or nil otherwise.
+--
+-- map, name and tag are mutually exclusive. These parameters may be
+-- single-valued, or may be a table. If the value is a table, a random
+-- element of the table is used by calling util.random_from(table). If
+-- the value is a function, the function is called to get the map.
+function dgn.place_maps(parameters)
+  local n_times = parameters.count or 1
+  for i = 1, n_times do
+    local map = dgn.find_map(parameters)
+    assert(map, "dgn.place_maps: no map given")
+    local map_placed_ok = dgn.place_map(map)
+    if not map_placed_ok then
+      if parameters.die_on_error == nil then
+        parameters.die_on_error = true
+      end
+      if not parameters.die_on_error then
+        return nil
+      end
+      error("Failed to place map '" .. dgn.name(map) .. "'")
+    end
+  end
+  return true
 end
 
 ----------------------------------------------------------------------
