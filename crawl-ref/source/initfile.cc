@@ -622,10 +622,12 @@ static std::string _user_home_subpath(const std::string subpath)
     return catpath(_user_home_dir(), subpath);
 }
 
+#ifdef UNIX
 static std::string _user_home_crawl_subpath(const std::string subpath)
 {
     return _user_home_subpath(catpath(".crawl", subpath));
 }
+#endif
 
 #if defined(SAVE_DIR_PATH) || defined(SHARED_DIR_PATH)
 static std::string _resolve_dir(const char* path, const char* suffix)
