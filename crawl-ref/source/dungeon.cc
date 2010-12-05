@@ -6537,30 +6537,25 @@ static bool _plan_4(dgn_region_list *excluded, dungeon_feature_type force_wall)
     env.level_build_method += make_stringf(" plan_4 [%d]", (int) force_wall);
     env.level_layout_type   = "city";
 
-    int temp_rand;              // req'd for probability checking
-
     int number_boxes = 5000;
     dungeon_feature_type drawing = DNGN_ROCK_WALL;
     uint8_t b1x, b1y, b2x, b2y;
     int i;
 
-    temp_rand = random2(81);
-
-    number_boxes = ((temp_rand > 48) ? 4000 :   // odds: 32 in 81 {dlb}
-                    (temp_rand > 24) ? 3000 :   // odds: 24 in 81 {dlb}
-                    (temp_rand >  8) ? 5000 :   // odds: 16 in 81 {dlb}
-                    (temp_rand >  0) ? 2000     // odds:  8 in 81 {dlb}
-                                     : 1000);   // odds:  1 in 81 {dlb}
+    number_boxes = random_choose_weighted(32, 4000,
+                                          24, 3000,
+                                          16, 5000,
+                                          8, 2000,
+                                          1, 1000, 0);
 
     if (force_wall != NUM_FEATURES)
         drawing = force_wall;
     else
     {
-        temp_rand = random2(18);
-
-        drawing = ((temp_rand > 7) ? DNGN_ROCK_WALL :   // odds: 10 in 18 {dlb}
-                   (temp_rand > 2) ? DNGN_STONE_WALL    // odds:  5 in 18 {dlb}
-                                   : DNGN_METAL_WALL);  // odds:  3 in 18 {dlb}
+        drawing = static_cast<dungeon_feature_type>(
+                  random_choose_weighted(10, DNGN_ROCK_WALL,
+                                         5, DNGN_STONE_WALL,
+                                         3, DNGN_METAL_WALL, 0));
     }
 
     dgn_replace_area(10, 10, (GXM - 10), (GYM - 10), DNGN_ROCK_WALL,
@@ -6585,18 +6580,12 @@ static bool _plan_4(dgn_region_list *excluded, dungeon_feature_type force_wall)
         if (count_antifeature_in_box(b1x-1, b1y-1, b2x+1, b2y+1, DNGN_FLOOR))
             continue;
 
-        if (force_wall == NUM_FEATURES)
+        if (force_wall == NUM_FEATURES && one_chance_in(3))
         {
-            // NB: comparison reversal here - combined
-            temp_rand = random2(1200);
-
-            // probabilities *not meant* to sum to one! {dlb}
-            if (temp_rand < 417)        // odds: 261 in 1200 {dlb}
-                drawing = DNGN_ROCK_WALL;
-            else if (temp_rand < 156)   // odds: 116 in 1200 {dlb}
-                drawing = DNGN_STONE_WALL;
-            else if (temp_rand < 40)    // odds:  40 in 1200 {dlb}
-                drawing = DNGN_METAL_WALL;
+            drawing = static_cast<dungeon_feature_type>(
+                      random_choose_weighted(261, DNGN_ROCK_WALL,
+                                             116, DNGN_STONE_WALL,
+                                             40, DNGN_METAL_WALL));
         }
 
         if (one_chance_in(3))
