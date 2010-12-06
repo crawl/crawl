@@ -26,6 +26,7 @@
 #include "ng-init.h"
 #include "state.h"
 #include "stuff.h"
+#include "zotdef.h"
 
 #include <algorithm>
 #include <vector>
@@ -126,6 +127,15 @@ namespace crawl_tests
             failures.push_back(file_error(file, dlua.error));
     }
 
+    static bool _has_test(const std::string& test)
+    {
+        if (crawl_state.script)
+            return false;
+        if (crawl_state.tests_selected.empty())
+            return true;
+        return crawl_state.tests_selected[0].find(test) != std::string::npos;
+    }
+
     // Assumes curses has already been initialized.
     bool run_tests(bool exit_on_complete)
     {
@@ -139,13 +149,10 @@ namespace crawl_tests
 
         init_test_bindings();
 
-        if ((crawl_state.tests_selected.empty()
-             || (crawl_state.tests_selected[0].find("makeitem") !=
-                 std::string::npos))
-            && !crawl_state.script)
-        {
+        if (_has_test("makeitem"))
             makeitem_tests();
-        }
+        if (_has_test("zotdef_wave"))
+            debug_waves();
 
         // Get a list of Lua files in test. Order of execution of
         // tests should be irrelevant.
