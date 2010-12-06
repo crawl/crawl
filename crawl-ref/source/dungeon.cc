@@ -3922,7 +3922,6 @@ static void _builder_items(int level_number, int items_wanted)
     int i = 0;
     object_class_type specif_type = OBJ_RANDOM;
     int items_levels = level_number;
-    int item_no;
 
     if (player_in_branch(BRANCH_VAULTS))
     {
@@ -3936,26 +3935,6 @@ static void _builder_items(int level_number, int items_wanted)
     {
         items(1, specif_type, OBJ_RANDOM, false, items_levels, 250,
               MMT_NO_ITEM);
-    }
-
-    // Make sure there's a very good chance of a knife being placed
-    // in the first five levels, but not a guarantee of one.  The
-    // intent of this is to reduce the advantage that "cutting"
-    // starting weapons have.  -- bwr
-    if (player_in_branch(BRANCH_MAIN_DUNGEON)
-        && level_number < 5 && coinflip())
-    {
-        item_no = items(0, OBJ_WEAPONS, WPN_KNIFE, false, 0, 250,
-                         MMT_NO_ITEM);
-
-        // Guarantee that the knife is uncursed and non-special.
-        if (item_no != NON_ITEM)
-        {
-            mitm[item_no].plus    = 0;
-            mitm[item_no].plus2   = 0;
-            mitm[item_no].flags   = 0; // no id, no race/desc, no curse
-            mitm[item_no].special = 0; // no ego type
-        }
     }
 }
 

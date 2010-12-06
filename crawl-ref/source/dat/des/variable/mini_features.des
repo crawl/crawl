@@ -2032,3 +2032,12 @@ MAP
 .x.xxxxxxxx.
 ............
 ENDMAP
+
+NAME: early_knife
+TAGS: allow_dup extra transparent
+DEPTH: D:1-5
+CHANCE: 50%
+ITEM: knife
+MAP
+d
+ENDMAP
