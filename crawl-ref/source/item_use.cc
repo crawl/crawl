@@ -3895,7 +3895,8 @@ void drink(int slot)
     }
 
     if (alreadyknown && potion.sub_type == POT_BERSERK_RAGE
-        && !berserk_check_wielded_weapon())
+        && (!berserk_check_wielded_weapon()
+            || !you.can_go_berserk(true, true)))
     {
         return;
     }
