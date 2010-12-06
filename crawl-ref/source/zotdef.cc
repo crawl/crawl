@@ -131,7 +131,7 @@ static branch_type _zotdef_random_branch()
     }
 }
 
-int mon_strength(monster_type mon_type)
+static int _mon_strength(monster_type mon_type)
 {
     monsterentry *mentry = get_monster_data(mon_type);
     if (!mentry)
@@ -173,9 +173,9 @@ static void _zotdef_fill_from_list(monster_type mlist[], int chance, int power)
         while (env.mons_alloc[i] == MONS_PROGRAM_BUG)
         {
             monster_type mon_type = RANDOM_ELEMENT(mlist);
-            if (random2((power * 3) / 2) > mon_strength(mon_type))
+            if (random2((power * 3) / 2) > _mon_strength(mon_type))
                 continue;        // bias away from weaker critters
-            if (random2((power * 3) / 2) > mon_strength(mon_type))
+            if (random2((power * 3) / 2) > _mon_strength(mon_type))
                 env.mons_alloc[i] = mon_type;
             if (one_chance_in(100))
                 env.mons_alloc[i] = mon_type;      // occasional random pick
@@ -197,7 +197,7 @@ static void _zotdef_choose_boss(monster_type mlist[], int power)
         {
             continue;
         }
-        if (random2avg(power * 3, 2) < mon_strength(mon_type))
+        if (random2avg(power * 3, 2) < _mon_strength(mon_type))
             continue;
 
         // OK, take this one
@@ -212,7 +212,7 @@ static void _zotdef_danger_msg(const char *msg)
     more();
 }
 
-void hydra_wave(int power)
+static void _hydra_wave(int power)
 {
 #ifdef DEBUG_WAVE
     mpr("HYDRA WAVE");
@@ -224,7 +224,7 @@ void hydra_wave(int power)
     _zotdef_danger_msg("You hear a distant many-voiced hissing!");
 }
 
-void fire_wave(int power)
+static void _fire_wave(int power)
 {
 #ifdef DEBUG_WAVE
     mpr("FIRE WAVE");
@@ -243,7 +243,7 @@ void fire_wave(int power)
     _zotdef_danger_msg("You hear roaring flames in the distance!");
 }
 
-void cold_wave(int power)
+static void _cold_wave(int power)
 {
 #ifdef DEBUG_WAVE
     mpr("COLD WAVE");
@@ -259,7 +259,7 @@ void cold_wave(int power)
     _zotdef_danger_msg("A deadly chill settles over the dungeon!");
 }
 
-void gnoll_wave(int power)
+static void _gnoll_wave(int power)
 {
 #ifdef DEBUG_WAVE
     mpr("GNOLL WAVE");
@@ -272,7 +272,7 @@ void gnoll_wave(int power)
     _zotdef_danger_msg("Harsh voices can be heard, coming closer!");
 }
 
-void rat_wave(int power)
+static void _rat_wave(int power)
 {
 #ifdef DEBUG_WAVE
     mpr("RAT WAVE");
@@ -285,7 +285,7 @@ void rat_wave(int power)
     _zotdef_danger_msg("You hear distant squeaking!");
 }
 
-void hound_wave(int power)
+static void _hound_wave(int power)
 {
 #ifdef DEBUG_WAVE
     mpr("HOUND WAVE");
@@ -298,7 +298,7 @@ void hound_wave(int power)
     _zotdef_danger_msg("Horrible howls echo around!");
 }
 
-void abomination_wave(int power)
+static void _abomination_wave(int power)
 {
 #ifdef DEBUG_WAVE
     mpr("ABOMINATION WAVE");
@@ -310,7 +310,7 @@ void abomination_wave(int power)
     _zotdef_danger_msg("A dreadful chittering sound fills the air. It's coming closer...");
 }
 
-void ugly_wave(int power)
+static void _ugly_wave(int power)
 {
 #ifdef DEBUG_WAVE
     mpr("UGLY WAVE");
@@ -323,7 +323,7 @@ void ugly_wave(int power)
     _zotdef_danger_msg("You feel uneasy.");
 }
 
-void golem_wave(int power)
+static void _golem_wave(int power)
 {
 #ifdef DEBUG_WAVE
     mpr("GOLEM WAVE");
@@ -336,7 +336,7 @@ void golem_wave(int power)
     _zotdef_danger_msg("Booming thuds herald the arrival of something large...");
 }
 
-void human_wave(int power)
+static void _human_wave(int power)
 {
 #ifdef DEBUG_WAVE
     mpr("HUMAN WAVE");
@@ -364,7 +364,7 @@ void human_wave(int power)
     _zotdef_danger_msg("War cries fill the air!");
 }
 
-void butterfly_wave(int power)
+static void _butterfly_wave(int power)
 {
 #ifdef DEBUG_WAVE
     mpr("BUTTERFLY WAVE");
@@ -374,7 +374,7 @@ void butterfly_wave(int power)
     _zotdef_danger_msg("You feel a sudden sense of peace!");
 }
 
-void beast_wave(int power)
+static void _beast_wave(int power)
 {
 #ifdef DEBUG_WAVE
     mpr("BEAST WAVE");
@@ -384,7 +384,7 @@ void beast_wave(int power)
     _zotdef_danger_msg("A hideous howling noise can be heard in the distance!");
 }
 
-void frog_wave(int power)
+static void _frog_wave(int power)
 {
 #ifdef DEBUG_WAVE
     mpr("FROG WAVE");
@@ -397,7 +397,7 @@ void frog_wave(int power)
     _zotdef_danger_msg("Croaking noises echo off the walls!");
 }
 
-void bear_wave(int power)
+static void _bear_wave(int power)
 {
 #ifdef DEBUG_WAVE
     mpr("BEAR WAVE");
@@ -410,7 +410,7 @@ void bear_wave(int power)
     _zotdef_danger_msg("Gravelly voices can be heard calling for porridge!");
 }
 
-void wraith_wave(int power)
+static void _wraith_wave(int power)
 {
 #ifdef DEBUG_WAVE
     mpr("WRAITH WAVE");
@@ -423,7 +423,7 @@ void wraith_wave(int power)
     _zotdef_danger_msg("The hair rises on the back of your neck!");
 }
 
-void giant_wave(int power)
+static void _giant_wave(int power)
 {
 #ifdef DEBUG_WAVE
     mpr("GIANT WAVE");
@@ -440,7 +440,7 @@ void giant_wave(int power)
     _zotdef_danger_msg("The stamp of enormous boots can be heard in the distance.");
 }
 
-void yak_wave(int power)
+static void _yak_wave(int power)
 {
 #ifdef DEBUG_WAVE
     mpr("YAK WAVE");
@@ -455,7 +455,7 @@ void yak_wave(int power)
     _zotdef_danger_msg("Bleats and roars echo around!");
 }
 
-void insect_wave(int power)
+static void _insect_wave(int power)
 {
 #ifdef DEBUG_WAVE
     mpr("INSECT WAVE");
@@ -473,7 +473,7 @@ void insect_wave(int power)
     _zotdef_danger_msg("You hear an ominous buzzing.");
 }
 
-void pan_wave(int power)
+static void _pan_wave(int power)
 {
 #ifdef DEBUG_WAVE
     mpr("PAN WAVE");
@@ -521,28 +521,28 @@ static void _zotdef_set_special_wave(int power)
         int wpow = 0;
         switch (random2(21))
         {
-            case 0: wave_fn = hydra_wave; wpow = 10; break;
-            case 1: wave_fn = fire_wave; wpow = 12; break;
-            case 2: wave_fn = cold_wave; wpow = 12; break;
-            case 3: wave_fn = gnoll_wave; wpow = 4; break;
-            case 4: wave_fn = rat_wave; wpow = 2; break;
-            case 5: wave_fn = hound_wave; wpow = 2; break;
-            case 6: wave_fn = abomination_wave; wpow = 12; break;
-            case 7: wave_fn = ugly_wave; wpow = 14; break;
-            case 8: wave_fn = golem_wave; wpow = 22; break;
-            case 9: wave_fn = human_wave; wpow = 12; break;
-            case 10: wave_fn = butterfly_wave; wpow = 1; break;
-            case 11: wave_fn = beast_wave; wpow = 12; break;
-            case 12: wave_fn = frog_wave; wpow = 4; break;
-            case 13: wave_fn = bear_wave; wpow = 6; break;
-            case 14: wave_fn = wraith_wave; wpow = 8; break;
-            case 15: wave_fn = giant_wave; wpow = 16; break;
-            case 16: wave_fn = yak_wave; wpow = 12; break; // lots of bands
-            case 17: wave_fn = insect_wave; wpow = 4; break;
-            case 18: wave_fn = pan_wave; wpow = 24; break;
+            case 0: wave_fn = _hydra_wave; wpow = 10; break;
+            case 1: wave_fn = _fire_wave; wpow = 12; break;
+            case 2: wave_fn = _cold_wave; wpow = 12; break;
+            case 3: wave_fn = _gnoll_wave; wpow = 4; break;
+            case 4: wave_fn = _rat_wave; wpow = 2; break;
+            case 5: wave_fn = _hound_wave; wpow = 2; break;
+            case 6: wave_fn = _abomination_wave; wpow = 12; break;
+            case 7: wave_fn = _ugly_wave; wpow = 14; break;
+            case 8: wave_fn = _golem_wave; wpow = 22; break;
+            case 9: wave_fn = _human_wave; wpow = 12; break;
+            case 10: wave_fn = _butterfly_wave; wpow = 1; break;
+            case 11: wave_fn = _beast_wave; wpow = 12; break;
+            case 12: wave_fn = _frog_wave; wpow = 4; break;
+            case 13: wave_fn = _bear_wave; wpow = 6; break;
+            case 14: wave_fn = _wraith_wave; wpow = 8; break;
+            case 15: wave_fn = _giant_wave; wpow = 16; break;
+            case 16: wave_fn = _yak_wave; wpow = 12; break; // lots of bands
+            case 17: wave_fn = _insect_wave; wpow = 4; break;
+            case 18: wave_fn = _pan_wave; wpow = 24; break;
             // extra copies of fire and cold at higher power
-            case 19: wave_fn = fire_wave; wpow = 20; break;
-            case 20: wave_fn = cold_wave; wpow = 20; break;
+            case 19: wave_fn = _fire_wave; wpow = 20; break;
+            case 20: wave_fn = _cold_wave; wpow = 20; break;
         }
         // Algorithm: doesn't appear before 'wpow-5'. Max probability
         // at 'wpow'. Doesn't appear after 'wpow*2+4'.
@@ -571,7 +571,7 @@ void debug_waves()
     }
 }
 
-monster_type get_zotdef_monster(level_id &place, int power)
+static monster_type _get_zotdef_monster(level_id &place, int power)
 {
     monster_type mon_type;
     monster_type mon_type_ret = MONS_PROGRAM_BUG;
@@ -602,7 +602,7 @@ monster_type get_zotdef_monster(level_id &place, int power)
         if (mons_class_is_stationary(mon_type))
             continue;        // Must be able to move!
 
-        int strength = mon_strength(mon_type);
+        int strength = _mon_strength(mon_type);
 
         // get default level
         int lev_mons = (place.branch == NUM_BRANCHES)
@@ -674,10 +674,10 @@ static void _zotdef_set_random_branch_wave(int power)
     for (int i = 0; i < NSLOTS; i++)
     {
         level_id l(_zotdef_random_branch(), -1);
-        env.mons_alloc[i] = get_zotdef_monster(l, _fuzz_mons_level(power));
+        env.mons_alloc[i] = _get_zotdef_monster(l, _fuzz_mons_level(power));
     }
     level_id l(_zotdef_random_branch(), -1);
-    env.mons_alloc[BOSS_SLOT] = get_zotdef_monster(l,
+    env.mons_alloc[BOSS_SLOT] = _get_zotdef_monster(l,
         power + BOSS_MONSTER_EXTRA_POWER);
 }
 
@@ -687,12 +687,12 @@ static void _zotdef_set_branch_wave(branch_type b, int power)
     dprf("BRANCH WAVE: BRANCH %s",
          (b == NUM_BRANCHES) ? "RANDOM" : branches[b].shortname);
     for (int i = 0; i < NSLOTS; i++)
-        env.mons_alloc[i] = get_zotdef_monster(l, _fuzz_mons_level(power));
-    env.mons_alloc[BOSS_SLOT] = get_zotdef_monster(l,
+        env.mons_alloc[i] = _get_zotdef_monster(l, _fuzz_mons_level(power));
+    env.mons_alloc[BOSS_SLOT] = _get_zotdef_monster(l,
                                     power + BOSS_MONSTER_EXTRA_POWER);
 }
 
-void zotdef_set_boss_unique()
+static void _zotdef_set_boss_unique()
 {
     for (int tries = 0; tries < 100; tries++)
     {
@@ -766,7 +766,7 @@ void zotdef_set_wave()
 
         // overwrite the previously-set boss with a random unique?
         if (one_chance_in(3))
-            zotdef_set_boss_unique();
+            _zotdef_set_boss_unique();
     }
 
 /*
@@ -816,7 +816,7 @@ int zotdef_spawn(bool boss)
     return mid;
 }
 
-rune_type get_rune(int runenumber)
+static rune_type _get_rune(int runenumber)
 {
     switch (runenumber)
     {
@@ -993,7 +993,7 @@ void zotdef_bosses_check()
             const char *msg = "You sense that a powerful threat has arrived.";
             if (!(((you.num_turns + 1) / CYCLE_LENGTH) % FREQUENCY_OF_RUNES))
             {
-                int which_rune = get_rune(((you.num_turns + 1) / CYCLE_LENGTH)
+                int which_rune = _get_rune(((you.num_turns + 1) / CYCLE_LENGTH)
                                  / FREQUENCY_OF_RUNES);
                 int ip = items(1, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, true,
                                which_rune, which_rune);
