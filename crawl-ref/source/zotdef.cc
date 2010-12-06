@@ -37,6 +37,7 @@
 // it that we use).
 #define NSLOTS (MAX_MONS_ALLOC - 1)
 #define BOSS_SLOT NSLOTS
+#define END static_cast<monster_type>(-1)
 
 #define wave_name(x) dprf(x)
 
@@ -165,6 +166,11 @@ static int _mon_strength(monster_type mon_type)
 // Note that this fills in the boss slot as well.
 static void _zotdef_fill_from_list(monster_type mlist[], int chance, int power)
 {
+    int ls = 0;
+    while (mlist[ls] != END)
+        ls++;
+    ASSERT(ls > 0);
+
     for (int i = 0; i <= NSLOTS; i++)
     {
         env.mons_alloc[i] = MONS_PROGRAM_BUG;
@@ -172,7 +178,7 @@ static void _zotdef_fill_from_list(monster_type mlist[], int chance, int power)
              continue;        // no monster this entry
         while (env.mons_alloc[i] == MONS_PROGRAM_BUG)
         {
-            monster_type mon_type = RANDOM_ELEMENT(mlist);
+            monster_type mon_type = mlist[random2(ls)];
             if (random2((power * 3) / 2) > _mon_strength(mon_type))
                 continue;        // bias away from weaker critters
             if (random2((power * 3) / 2) > _mon_strength(mon_type))
@@ -188,10 +194,15 @@ static void _zotdef_fill_from_list(monster_type mlist[], int chance, int power)
 // leave the existing entry there.
 static void _zotdef_choose_boss(monster_type mlist[], int power)
 {
+    int ls = 0;
+    while (mlist[ls] != END)
+        ls++;
+    ASSERT(ls > 0);
+
     int tries = 0;
     while (tries++ < 100)
     {
-        monster_type mon_type = RANDOM_ELEMENT(mlist);
+        monster_type mon_type = mlist[random2(ls)];
         if (mons_is_unique(mon_type)
             && you.unique_creatures[mon_type])
         {
@@ -215,8 +226,8 @@ static void _zotdef_danger_msg(const char *msg)
 static void _hydra_wave(int power)
 {
     wave_name("HYDRA WAVE");
-    monster_type hydras[] = {MONS_HYDRA};
-    monster_type boss[] = {MONS_LERNAEAN_HYDRA};
+    monster_type hydras[] = {MONS_HYDRA, END};
+    monster_type boss[] = {MONS_LERNAEAN_HYDRA, END};
     _zotdef_fill_from_list(hydras, 4, power); // 66% full at power 12
     _zotdef_choose_boss(boss, power * 2);
     _zotdef_danger_msg("You hear a distant many-voiced hissing!");
@@ -231,9 +242,9 @@ static void _fire_wave(int power)
         MONS_RED_DRACONIAN, MONS_MOTTLED_DRACONIAN, MONS_DRACONIAN_SCORCHER,
         MONS_FLAMING_CORPSE, MONS_MOTTLED_DRAGON, MONS_EFREET,
         MONS_HELL_KNIGHT, MONS_FIEND, MONS_BALRUG, MONS_HELL_HOUND,
-        MONS_HELL_HOG};
+        MONS_HELL_HOG, END};
     monster_type boss[] = {MONS_AZRAEL, MONS_XTAHUA, MONS_SERPENT_OF_HELL,
-                    MONS_MARGERY, MONS_FIEND, MONS_BALRUG, MONS_FIRE_GIANT};
+                    MONS_MARGERY, MONS_FIEND, MONS_BALRUG, MONS_FIRE_GIANT, END};
     _zotdef_fill_from_list(firemons, 0, power);
     _zotdef_choose_boss(boss, power);
     _zotdef_danger_msg("You hear roaring flames in the distance!");
@@ -245,9 +256,9 @@ static void _cold_wave(int power)
     monster_type coldmons[] = {MONS_ICE_BEAST, MONS_AZURE_JELLY,
         MONS_FREEZING_WRAITH, MONS_WHITE_IMP, MONS_ICE_DEVIL, MONS_ICE_FIEND,
         MONS_WHITE_DRACONIAN, MONS_SIMULACRUM_SMALL, MONS_SIMULACRUM_LARGE,
-        MONS_FROST_GIANT, MONS_POLAR_BEAR, MONS_BLUE_DEVIL};
+        MONS_FROST_GIANT, MONS_POLAR_BEAR, MONS_BLUE_DEVIL, END};
     monster_type boss[] = {MONS_ANTAEUS, MONS_ICE_FIEND, MONS_AZURE_JELLY,
-                           MONS_WHITE_DRACONIAN};
+                           MONS_WHITE_DRACONIAN, END};
     _zotdef_fill_from_list(coldmons, 4, power);
     _zotdef_choose_boss(boss, power);
     _zotdef_danger_msg("A deadly chill settles over the dungeon!");
@@ -257,8 +268,8 @@ static void _gnoll_wave(int power)
 {
     wave_name("GNOLL WAVE");
     monster_type gnolls[] = {MONS_GNOLL, MONS_GNOLL, MONS_GNOLL,
-                MONS_GNOLL, MONS_GNOLL, MONS_GNOLL, MONS_TROLL};
-    monster_type boss[] = {MONS_GRUM, MONS_TROLL};
+                MONS_GNOLL, MONS_GNOLL, MONS_GNOLL, MONS_TROLL, END};
+    monster_type boss[] = {MONS_GRUM, MONS_TROLL, END};
     _zotdef_fill_from_list(gnolls, 0, power); // full
     _zotdef_choose_boss(boss, power);
     _zotdef_danger_msg("Harsh voices can be heard, coming closer!");
@@ -268,8 +279,8 @@ static void _rat_wave(int power)
 {
     wave_name("RAT WAVE");
     monster_type rats[] = {MONS_RAT, MONS_GREEN_RAT, MONS_GREY_RAT,
-                MONS_ORANGE_RAT};
-    monster_type boss[] = {MONS_ORANGE_RAT};
+                MONS_ORANGE_RAT, END};
+    monster_type boss[] = {MONS_ORANGE_RAT, END};
     _zotdef_fill_from_list(rats, 0, power); // full power
     _zotdef_choose_boss(boss, power);
     _zotdef_danger_msg("You hear distant squeaking!");
@@ -279,8 +290,8 @@ static void _hound_wave(int power)
 {
     wave_name("HOUND WAVE");
     monster_type hounds[] = {MONS_JACKAL, MONS_HOUND, MONS_WARG,
-                MONS_WOLF, MONS_WAR_DOG};
-    monster_type boss[] = {MONS_HELL_HOUND};
+                MONS_WOLF, MONS_WAR_DOG, END};
+    monster_type boss[] = {MONS_HELL_HOUND, END};
     _zotdef_fill_from_list(hounds, 0, power); // full
     _zotdef_choose_boss(boss, power);
     _zotdef_danger_msg("Horrible howls echo around!");
@@ -289,8 +300,8 @@ static void _hound_wave(int power)
 static void _abomination_wave(int power)
 {
     wave_name("ABOMINATION WAVE");
-    monster_type aboms[] = {MONS_ABOMINATION_SMALL, MONS_ABOMINATION_LARGE};
-    monster_type boss[] = {MONS_TENTACLED_MONSTROSITY};
+    monster_type aboms[] = {MONS_ABOMINATION_SMALL, MONS_ABOMINATION_LARGE, END};
+    monster_type boss[] = {MONS_TENTACLED_MONSTROSITY, END};
     _zotdef_fill_from_list(aboms, 0, power); // full
     _zotdef_choose_boss(boss, power);
     _zotdef_danger_msg("A dreadful chittering sound fills the air. It's coming closer...");
@@ -300,8 +311,8 @@ static void _ugly_wave(int power)
 {
     wave_name("UGLY WAVE");
     monster_type ugly[] = {MONS_UGLY_THING, MONS_UGLY_THING, MONS_UGLY_THING,
-                           MONS_VERY_UGLY_THING};
-    monster_type boss[] = {MONS_VERY_UGLY_THING};
+                           MONS_VERY_UGLY_THING, END};
+    monster_type boss[] = {MONS_VERY_UGLY_THING, END};
     _zotdef_fill_from_list(ugly, 6, power); // reduced size
     _zotdef_choose_boss(boss, power);
     _zotdef_danger_msg("You feel uneasy.");
@@ -311,8 +322,8 @@ static void _golem_wave(int power)
 {
     wave_name("GOLEM WAVE");
     monster_type golems[] = {MONS_CLAY_GOLEM, MONS_WOOD_GOLEM, MONS_STONE_GOLEM,
-            MONS_IRON_GOLEM, MONS_CRYSTAL_GOLEM, MONS_TOENAIL_GOLEM};
-    monster_type boss[] = {MONS_ELECTRIC_GOLEM};
+            MONS_IRON_GOLEM, MONS_CRYSTAL_GOLEM, MONS_TOENAIL_GOLEM, END};
+    monster_type boss[] = {MONS_ELECTRIC_GOLEM, END};
     _zotdef_fill_from_list(golems, 6, power * 2 / 3); // reduced size
     _zotdef_choose_boss(boss, power);
     _zotdef_danger_msg("Booming thuds herald the arrival of something large...");
@@ -322,14 +333,14 @@ static void _human_wave(int power)
 {
     wave_name("HUMAN WAVE");
     monster_type humans[] = {MONS_HUMAN, MONS_HELL_KNIGHT, MONS_NECROMANCER,
-            MONS_WIZARD, MONS_VAULT_GUARD, MONS_KILLER_KLOWN};
+            MONS_WIZARD, MONS_VAULT_GUARD, MONS_KILLER_KLOWN, END};
     monster_type boss[] = {MONS_HELL_KNIGHT, MONS_KILLER_KLOWN,
             MONS_VAULT_GUARD, MONS_JOSEPH, MONS_ERICA, MONS_JOSEPHINE,
             MONS_HAROLD,  MONS_JOZEF, MONS_AGNES,
             MONS_MAUD, MONS_LOUISE,  MONS_FRANCES,
             MONS_RUPERT, MONS_KIRKE,
             MONS_NORRIS, MONS_FREDERICK, MONS_MARGERY, MONS_EUSTACHIO,
-            MONS_MAURICE};
+            MONS_MAURICE, END};
     _zotdef_fill_from_list(humans, 4, power); // reduced size due to banding
 
     // Get too many hell knights with the defaults, due to their large band
@@ -347,7 +358,7 @@ static void _human_wave(int power)
 static void _butterfly_wave(int power)
 {
     wave_name("BUTTERFLY WAVE");
-    monster_type bfs[] = {MONS_BUTTERFLY};
+    monster_type bfs[] = {MONS_BUTTERFLY, END};
     _zotdef_fill_from_list(bfs, 0, power); // full
     _zotdef_danger_msg("You feel a sudden sense of peace!");
 }
@@ -355,7 +366,7 @@ static void _butterfly_wave(int power)
 static void _beast_wave(int power)
 {
     wave_name("BEAST WAVE");
-    monster_type bst[] = {MONS_BEAST};
+    monster_type bst[] = {MONS_BEAST, END};
     _zotdef_fill_from_list(bst, 0, power); // full
     _zotdef_danger_msg("A hideous howling noise can be heard in the distance!");
 }
@@ -364,8 +375,8 @@ static void _frog_wave(int power)
 {
     wave_name("FROG WAVE");
     monster_type frogs[] = {MONS_GIANT_FROG, MONS_GIANT_TOAD,
-                MONS_SPINY_FROG, MONS_BLINK_FROG};
-    monster_type boss[] = {MONS_PRINCE_RIBBIT, MONS_SPINY_FROG, MONS_BLINK_FROG};
+                MONS_SPINY_FROG, MONS_BLINK_FROG, END};
+    monster_type boss[] = {MONS_PRINCE_RIBBIT, MONS_SPINY_FROG, MONS_BLINK_FROG, END};
     _zotdef_fill_from_list(frogs, 0, power); // full
     _zotdef_choose_boss(boss, power);
     _zotdef_danger_msg("Croaking noises echo off the walls!");
@@ -375,8 +386,8 @@ static void _bear_wave(int power)
 {
     wave_name("BEAR WAVE");
     monster_type bears[] = {MONS_BEAR, MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR,
-                 MONS_BLACK_BEAR};
-    monster_type boss[] = {MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR};
+                 MONS_BLACK_BEAR, END};
+    monster_type boss[] = {MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR, END};
     _zotdef_fill_from_list(bears, 0, power); // full
     _zotdef_choose_boss(boss, power);
     _zotdef_danger_msg("Gravelly voices can be heard calling for porridge!");
@@ -386,8 +397,9 @@ static void _wraith_wave(int power)
 {
     wave_name("WRAITH WAVE");
     monster_type wraiths[] = {MONS_WRAITH, MONS_SHADOW_WRAITH, MONS_FREEZING_WRAITH,
-                MONS_EIDOLON, MONS_PHANTASMAL_WARRIOR, MONS_SPECTRAL_THING};
-    monster_type boss[] = {MONS_EIDOLON, MONS_PHANTASMAL_WARRIOR, MONS_SPECTRAL_THING};
+                MONS_EIDOLON, MONS_PHANTASMAL_WARRIOR, MONS_SPECTRAL_THING, END};
+    monster_type boss[] = {MONS_EIDOLON, MONS_PHANTASMAL_WARRIOR,
+                MONS_SPECTRAL_THING, END};
     _zotdef_fill_from_list(wraiths, 0, power); // full
     _zotdef_choose_boss(boss, power);
     _zotdef_danger_msg("The hair rises on the back of your neck!");
@@ -399,10 +411,10 @@ static void _giant_wave(int power)
     monster_type giants[] = {MONS_ETTIN, MONS_CYCLOPS, MONS_TWO_HEADED_OGRE,
             MONS_OGRE, MONS_TROLL, MONS_MINOTAUR, MONS_HILL_GIANT,
             MONS_STONE_GIANT, MONS_FIRE_GIANT, MONS_FROST_GIANT, MONS_OGRE_MAGE,
-            MONS_ROCK_TROLL, MONS_IRON_TROLL, MONS_DEEP_TROLL, MONS_TITAN};
+            MONS_ROCK_TROLL, MONS_IRON_TROLL, MONS_DEEP_TROLL, MONS_TITAN, END};
     monster_type boss[] = {MONS_EROLCHA, MONS_POLYPHEMUS, MONS_ANTAEUS,
             MONS_SNORG, MONS_PURGY, MONS_STONE_GIANT, MONS_FIRE_GIANT,
-            MONS_FROST_GIANT, MONS_TITAN};
+            MONS_FROST_GIANT, MONS_TITAN, END};
     _zotdef_fill_from_list(giants, 0, power); // full
     _zotdef_choose_boss(boss, power);
     _zotdef_danger_msg("The stamp of enormous boots can be heard in the distance.");
@@ -414,8 +426,8 @@ static void _yak_wave(int power)
     monster_type yaks[] = {MONS_SHEEP, MONS_YAK, MONS_DEATH_YAK,
                 MONS_SHEEP, MONS_YAK, MONS_DEATH_YAK,
                 MONS_SHEEP, MONS_YAK, MONS_DEATH_YAK,
-                MONS_CYCLOPS};
-    monster_type boss[] = {MONS_POLYPHEMUS, MONS_CYCLOPS};
+                MONS_CYCLOPS, END};
+    monster_type boss[] = {MONS_POLYPHEMUS, MONS_CYCLOPS, END};
     _zotdef_fill_from_list(yaks, 0, power); // full
     _zotdef_choose_boss(boss, power);
     _zotdef_danger_msg("Bleats and roars echo around!");
@@ -429,9 +441,9 @@ static void _insect_wave(int power)
                 MONS_BOULDER_BEETLE, MONS_GIANT_MITE, MONS_BUMBLEBEE, MONS_REDBACK,
                 MONS_GIANT_BLOWFLY, MONS_RED_WASP, MONS_SOLDIER_ANT, MONS_QUEEN_ANT,
                 MONS_GIANT_COCKROACH, MONS_BORING_BEETLE, MONS_TRAPDOOR_SPIDER,
-                MONS_SCORPION, MONS_GIANT_MOSQUITO, MONS_GIANT_CENTIPEDE};
+                MONS_SCORPION, MONS_GIANT_MOSQUITO, MONS_GIANT_CENTIPEDE, END};
     monster_type boss[] = {MONS_GIANT_BEETLE, MONS_BOULDER_BEETLE,
-                MONS_QUEEN_ANT, MONS_BORING_BEETLE, MONS_QUEEN_BEE};
+                MONS_QUEEN_ANT, MONS_BORING_BEETLE, MONS_QUEEN_BEE, END};
     _zotdef_fill_from_list(insects, 0, power); // full
     _zotdef_choose_boss(boss, power);
     _zotdef_danger_msg("You hear an ominous buzzing.");
@@ -444,9 +456,9 @@ static void _pan_wave(int power)
     // Lobon in particular is almost unkillable
     monster_type boss[] = {MONS_MNOLEG, MONS_LOM_LOBON, MONS_CEREBOV,
                 MONS_GLOORX_VLOQ, MONS_GERYON, MONS_DISPATER,
-                MONS_ASMODEUS, MONS_ERESHKIGAL, MONS_PANDEMONIUM_DEMON};
+                MONS_ASMODEUS, MONS_ERESHKIGAL, MONS_PANDEMONIUM_DEMON, END};
     monster_type weakboss[] = {MONS_PANDEMONIUM_DEMON, MONS_FIEND,
-                MONS_PIT_FIEND, MONS_ICE_FIEND, MONS_BLUE_DEATH};
+                MONS_PIT_FIEND, MONS_ICE_FIEND, MONS_BLUE_DEATH, END};
 
     for (int i = 0; i <= NSLOTS; i++)
     {
