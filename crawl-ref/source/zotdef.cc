@@ -54,7 +54,7 @@ static int _fuzz_mons_level(int level)
 
 // Choose a random branch. Which branches may be chosen is a function of
 // the wave number
-branch_type zotdef_random_branch()
+static branch_type _zotdef_random_branch()
 {
     int wavenum = you.num_turns / CYCLE_LENGTH;
 
@@ -511,7 +511,7 @@ void pan_wave(int power)
     _zotdef_danger_msg("Hellish voices call for your blood. They are coming!");
 }
 
-void zotdef_set_special_wave(int power)
+static void _zotdef_set_special_wave(int power)
 {
     void (*wave_fn)(int) = NULL;
     int tries = 0;
@@ -668,20 +668,20 @@ monster_type get_zotdef_monster(level_id &place, int power)
     return mon_type_ret;
 }
 
-void zotdef_set_random_branch_wave(int power)
+static void _zotdef_set_random_branch_wave(int power)
 {
     //mprf("RANDOM WAVE");
     for (int i = 0; i < NSLOTS; i++)
     {
-        level_id l(zotdef_random_branch(), -1);
+        level_id l(_zotdef_random_branch(), -1);
         env.mons_alloc[i] = get_zotdef_monster(l, _fuzz_mons_level(power));
     }
-    level_id l(zotdef_random_branch(), -1);
+    level_id l(_zotdef_random_branch(), -1);
     env.mons_alloc[BOSS_SLOT] = get_zotdef_monster(l,
         power + BOSS_MONSTER_EXTRA_POWER);
 }
 
-void zotdef_set_branch_wave(branch_type b, int power)
+static void _zotdef_set_branch_wave(branch_type b, int power)
 {
     level_id l(b,-1);
     dprf("BRANCH WAVE: BRANCH %s",
@@ -725,7 +725,7 @@ void zotdef_set_wave()
     // Early waves are all DUNGEON
     if (you.num_turns < CYCLE_LENGTH * 4)
     {
-        zotdef_set_branch_wave(BRANCH_MAIN_DUNGEON, power);
+        _zotdef_set_branch_wave(BRANCH_MAIN_DUNGEON, power);
         return;
     }
 
@@ -733,35 +733,35 @@ void zotdef_set_wave()
     {
     case 0:
     case 1:
-        zotdef_set_branch_wave(BRANCH_MAIN_DUNGEON, power);
+        _zotdef_set_branch_wave(BRANCH_MAIN_DUNGEON, power);
         break;
     case 2:
     case 3:
     {
-        branch_type b = zotdef_random_branch();
+        branch_type b = _zotdef_random_branch();
         // HoB branch waves v. rare before 10K turns
         if (b == BRANCH_HALL_OF_BLADES && you.num_turns / CYCLE_LENGTH < 50)
-            b = zotdef_random_branch();
-        zotdef_set_branch_wave(b, power);
+            b = _zotdef_random_branch();
+        _zotdef_set_branch_wave(b, power);
         break;
     }
     // A random mixture of monsters from across the branches
     case 4:
-        zotdef_set_random_branch_wave(power);
+        _zotdef_set_random_branch_wave(power);
         break;
     }
 
     // special waves have their own boss choices. Note that flavour
     // messages can be emitted by each individual wave type
     if (one_chance_in(8))
-        zotdef_set_special_wave(power);
+        _zotdef_set_special_wave(power);
     else
     {
         // Truly random wave, (crappily) signalled by passing branch=NUM_BRANCHES
         if (power > 8 && one_chance_in(20))
         {
             _zotdef_danger_msg("The air ripples, and you hear distant laughter!");
-            zotdef_set_branch_wave(NUM_BRANCHES, power);
+            _zotdef_set_branch_wave(NUM_BRANCHES, power);
         }
 
         // overwrite the previously-set boss with a random unique?
