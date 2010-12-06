@@ -1953,6 +1953,17 @@ void bring_to_safety()
     if (you.level_type == LEVEL_ABYSS)
         return abyss_teleport(true);
 
+    if (crawl_state.game_is_zotdef() && !orb_position().origin())
+    {
+        // In ZotDef, it's not the safety of your sorry butt that matters.
+        for (distance_iterator di(orb_position(), true, false); di; ++di)
+            if (!monster_at(*di))
+            {
+                you.moveto(*di);
+                return;
+            }
+    }
+
     coord_def best_pos, pos;
     double min_threat = 1e38;
     int tries = 0;
