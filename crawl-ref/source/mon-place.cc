@@ -3012,7 +3012,7 @@ void mark_interesting_monst(monster* mons, beh_type behaviour)
 
     bool interesting = false;
 
-    // Unique monsters are always intersting
+    // Unique monsters are always interesting
     if (mons_is_unique(mons->type))
         interesting = true;
     // If it's never going to attack us, then not interesting
