@@ -38,7 +38,7 @@
 #define NSLOTS (MAX_MONS_ALLOC - 1)
 #define BOSS_SLOT NSLOTS
 
-//#define DEBUG_WAVE 1
+#define wave_name(x) dprf(x)
 
 static monster_type _pick_unique(int level);
 
@@ -214,9 +214,7 @@ static void _zotdef_danger_msg(const char *msg)
 
 static void _hydra_wave(int power)
 {
-#ifdef DEBUG_WAVE
-    mpr("HYDRA WAVE");
-#endif
+    wave_name("HYDRA WAVE");
     monster_type hydras[] = {MONS_HYDRA};
     monster_type boss[] = {MONS_LERNAEAN_HYDRA};
     _zotdef_fill_from_list(hydras, 4, power); // 66% full at power 12
@@ -226,9 +224,7 @@ static void _hydra_wave(int power)
 
 static void _fire_wave(int power)
 {
-#ifdef DEBUG_WAVE
-    mpr("FIRE WAVE");
-#endif
+    wave_name("FIRE WAVE");
     monster_type firemons[] = {MONS_FIRE_ELEMENTAL, MONS_FIRE_DRAKE, MONS_IMP,
         MONS_DRAGON, MONS_FIRE_VORTEX ,MONS_FIRE_GIANT, MONS_HELLION,
         MONS_MOLTEN_GARGOYLE, MONS_SALAMANDER, MONS_SUN_DEMON,
@@ -245,9 +241,7 @@ static void _fire_wave(int power)
 
 static void _cold_wave(int power)
 {
-#ifdef DEBUG_WAVE
-    mpr("COLD WAVE");
-#endif
+    wave_name("COLD WAVE");
     monster_type coldmons[] = {MONS_ICE_BEAST, MONS_AZURE_JELLY,
         MONS_FREEZING_WRAITH, MONS_WHITE_IMP, MONS_ICE_DEVIL, MONS_ICE_FIEND,
         MONS_WHITE_DRACONIAN, MONS_SIMULACRUM_SMALL, MONS_SIMULACRUM_LARGE,
@@ -261,9 +255,7 @@ static void _cold_wave(int power)
 
 static void _gnoll_wave(int power)
 {
-#ifdef DEBUG_WAVE
-    mpr("GNOLL WAVE");
-#endif
+    wave_name("GNOLL WAVE");
     monster_type gnolls[] = {MONS_GNOLL, MONS_GNOLL, MONS_GNOLL,
                 MONS_GNOLL, MONS_GNOLL, MONS_GNOLL, MONS_TROLL};
     monster_type boss[] = {MONS_GRUM, MONS_TROLL};
@@ -274,9 +266,7 @@ static void _gnoll_wave(int power)
 
 static void _rat_wave(int power)
 {
-#ifdef DEBUG_WAVE
-    mpr("RAT WAVE");
-#endif
+    wave_name("RAT WAVE");
     monster_type rats[] = {MONS_RAT, MONS_GREEN_RAT, MONS_GREY_RAT,
                 MONS_ORANGE_RAT};
     monster_type boss[] = {MONS_ORANGE_RAT};
@@ -287,9 +277,7 @@ static void _rat_wave(int power)
 
 static void _hound_wave(int power)
 {
-#ifdef DEBUG_WAVE
-    mpr("HOUND WAVE");
-#endif
+    wave_name("HOUND WAVE");
     monster_type hounds[] = {MONS_JACKAL, MONS_HOUND, MONS_WARG,
                 MONS_WOLF, MONS_WAR_DOG};
     monster_type boss[] = {MONS_HELL_HOUND};
@@ -300,9 +288,7 @@ static void _hound_wave(int power)
 
 static void _abomination_wave(int power)
 {
-#ifdef DEBUG_WAVE
-    mpr("ABOMINATION WAVE");
-#endif
+    wave_name("ABOMINATION WAVE");
     monster_type aboms[] = {MONS_ABOMINATION_SMALL, MONS_ABOMINATION_LARGE};
     monster_type boss[] = {MONS_TENTACLED_MONSTROSITY};
     _zotdef_fill_from_list(aboms, 0, power); // full
@@ -312,9 +298,7 @@ static void _abomination_wave(int power)
 
 static void _ugly_wave(int power)
 {
-#ifdef DEBUG_WAVE
-    mpr("UGLY WAVE");
-#endif
+    wave_name("UGLY WAVE");
     monster_type ugly[] = {MONS_UGLY_THING, MONS_UGLY_THING, MONS_UGLY_THING,
                            MONS_VERY_UGLY_THING};
     monster_type boss[] = {MONS_VERY_UGLY_THING};
@@ -325,9 +309,7 @@ static void _ugly_wave(int power)
 
 static void _golem_wave(int power)
 {
-#ifdef DEBUG_WAVE
-    mpr("GOLEM WAVE");
-#endif
+    wave_name("GOLEM WAVE");
     monster_type golems[] = {MONS_CLAY_GOLEM, MONS_WOOD_GOLEM, MONS_STONE_GOLEM,
             MONS_IRON_GOLEM, MONS_CRYSTAL_GOLEM, MONS_TOENAIL_GOLEM};
     monster_type boss[] = {MONS_ELECTRIC_GOLEM};
@@ -338,9 +320,7 @@ static void _golem_wave(int power)
 
 static void _human_wave(int power)
 {
-#ifdef DEBUG_WAVE
-    mpr("HUMAN WAVE");
-#endif
+    wave_name("HUMAN WAVE");
     monster_type humans[] = {MONS_HUMAN, MONS_HELL_KNIGHT, MONS_NECROMANCER,
             MONS_WIZARD, MONS_VAULT_GUARD, MONS_KILLER_KLOWN};
     monster_type boss[] = {MONS_HELL_KNIGHT, MONS_KILLER_KLOWN,
@@ -366,9 +346,7 @@ static void _human_wave(int power)
 
 static void _butterfly_wave(int power)
 {
-#ifdef DEBUG_WAVE
-    mpr("BUTTERFLY WAVE");
-#endif
+    wave_name("BUTTERFLY WAVE");
     monster_type bfs[] = {MONS_BUTTERFLY};
     _zotdef_fill_from_list(bfs, 0, power); // full
     _zotdef_danger_msg("You feel a sudden sense of peace!");
@@ -376,9 +354,7 @@ static void _butterfly_wave(int power)
 
 static void _beast_wave(int power)
 {
-#ifdef DEBUG_WAVE
-    mpr("BEAST WAVE");
-#endif
+    wave_name("BEAST WAVE");
     monster_type bst[] = {MONS_BEAST};
     _zotdef_fill_from_list(bst, 0, power); // full
     _zotdef_danger_msg("A hideous howling noise can be heard in the distance!");
@@ -386,9 +362,7 @@ static void _beast_wave(int power)
 
 static void _frog_wave(int power)
 {
-#ifdef DEBUG_WAVE
-    mpr("FROG WAVE");
-#endif
+    wave_name("FROG WAVE");
     monster_type frogs[] = {MONS_GIANT_FROG, MONS_GIANT_TOAD,
                 MONS_SPINY_FROG, MONS_BLINK_FROG};
     monster_type boss[] = {MONS_PRINCE_RIBBIT, MONS_SPINY_FROG, MONS_BLINK_FROG};
@@ -399,9 +373,7 @@ static void _frog_wave(int power)
 
 static void _bear_wave(int power)
 {
-#ifdef DEBUG_WAVE
-    mpr("BEAR WAVE");
-#endif
+    wave_name("BEAR WAVE");
     monster_type bears[] = {MONS_BEAR, MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR,
                  MONS_BLACK_BEAR};
     monster_type boss[] = {MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR};
@@ -412,9 +384,7 @@ static void _bear_wave(int power)
 
 static void _wraith_wave(int power)
 {
-#ifdef DEBUG_WAVE
-    mpr("WRAITH WAVE");
-#endif
+    wave_name("WRAITH WAVE");
     monster_type wraiths[] = {MONS_WRAITH, MONS_SHADOW_WRAITH, MONS_FREEZING_WRAITH,
                 MONS_EIDOLON, MONS_PHANTASMAL_WARRIOR, MONS_SPECTRAL_THING};
     monster_type boss[] = {MONS_EIDOLON, MONS_PHANTASMAL_WARRIOR, MONS_SPECTRAL_THING};
@@ -425,9 +395,7 @@ static void _wraith_wave(int power)
 
 static void _giant_wave(int power)
 {
-#ifdef DEBUG_WAVE
-    mpr("GIANT WAVE");
-#endif
+    wave_name("GIANT WAVE");
     monster_type giants[] = {MONS_ETTIN, MONS_CYCLOPS, MONS_TWO_HEADED_OGRE,
             MONS_OGRE, MONS_TROLL, MONS_MINOTAUR, MONS_HILL_GIANT,
             MONS_STONE_GIANT, MONS_FIRE_GIANT, MONS_FROST_GIANT, MONS_OGRE_MAGE,
@@ -442,9 +410,7 @@ static void _giant_wave(int power)
 
 static void _yak_wave(int power)
 {
-#ifdef DEBUG_WAVE
-    mpr("YAK WAVE");
-#endif
+    wave_name("YAK WAVE");
     monster_type yaks[] = {MONS_SHEEP, MONS_YAK, MONS_DEATH_YAK,
                 MONS_SHEEP, MONS_YAK, MONS_DEATH_YAK,
                 MONS_SHEEP, MONS_YAK, MONS_DEATH_YAK,
@@ -457,9 +423,7 @@ static void _yak_wave(int power)
 
 static void _insect_wave(int power)
 {
-#ifdef DEBUG_WAVE
-    mpr("INSECT WAVE");
-#endif
+    wave_name("INSECT WAVE");
     monster_type insects[] = {MONS_GIANT_ANT, MONS_KILLER_BEE, MONS_YELLOW_WASP,
                 MONS_GIANT_BEETLE, MONS_QUEEN_BEE, MONS_WOLF_SPIDER, MONS_BUTTERFLY,
                 MONS_BOULDER_BEETLE, MONS_GIANT_MITE, MONS_BUMBLEBEE, MONS_REDBACK,
@@ -475,9 +439,7 @@ static void _insect_wave(int power)
 
 static void _pan_wave(int power)
 {
-#ifdef DEBUG_WAVE
-    mpr("PAN WAVE");
-#endif
+    wave_name("PAN WAVE");
     // The unique '&'s are a bit too strong at lower levels. Lom
     // Lobon in particular is almost unkillable
     monster_type boss[] = {MONS_MNOLEG, MONS_LOM_LOBON, MONS_CEREBOV,
