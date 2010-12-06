@@ -1327,7 +1327,16 @@ static void _build_layout_skeleton(int level_number, level_area_type level_type,
 
 static int _num_items_wanted(int level_number)
 {
-    if (level_number > 5 && one_chance_in(500 - 5 * level_number))
+    if (player_in_branch(BRANCH_VESTIBULE_OF_HELL)
+     || player_in_hell()
+     || player_in_branch(BRANCH_SLIME_PITS)
+     || player_in_branch(BRANCH_HALL_OF_BLADES)
+     || player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
+    {
+        // No random items in hell, the slime pits, the temple, the hall.
+        return 0;
+    }
+    else if (level_number > 5 && one_chance_in(500 - 5 * level_number))
         return (10 + random2avg(90, 2)); // rich level!
     else
         return (3 + roll_dice(3, 11));
@@ -3923,41 +3932,29 @@ static void _builder_items(int level_number, int items_wanted)
     else if (player_in_branch(BRANCH_ORCISH_MINES))
         specif_type = OBJ_GOLD;  // Lots of gold in the orcish mines.
 
-    if (player_in_branch(BRANCH_VESTIBULE_OF_HELL)
-        || player_in_hell()
-        || player_in_branch(BRANCH_SLIME_PITS)
-        || player_in_branch(BRANCH_HALL_OF_BLADES)
-        || player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
+    for (i = 0; i < items_wanted; i++)
     {
-        // No random items in hell, the slime pits, the temple, the hall.
-        return;
+        items(1, specif_type, OBJ_RANDOM, false, items_levels, 250,
+              MMT_NO_ITEM);
     }
-    else
+
+    // Make sure there's a very good chance of a knife being placed
+    // in the first five levels, but not a guarantee of one.  The
+    // intent of this is to reduce the advantage that "cutting"
+    // starting weapons have.  -- bwr
+    if (player_in_branch(BRANCH_MAIN_DUNGEON)
+        && level_number < 5 && coinflip())
     {
-        for (i = 0; i < items_wanted; i++)
-        {
-            items(1, specif_type, OBJ_RANDOM, false, items_levels, 250,
-                  MMT_NO_ITEM);
-        }
+        item_no = items(0, OBJ_WEAPONS, WPN_KNIFE, false, 0, 250,
+                         MMT_NO_ITEM);
 
-        // Make sure there's a very good chance of a knife being placed
-        // in the first five levels, but not a guarantee of one.  The
-        // intent of this is to reduce the advantage that "cutting"
-        // starting weapons have.  -- bwr
-        if (player_in_branch(BRANCH_MAIN_DUNGEON)
-            && level_number < 5 && coinflip())
+        // Guarantee that the knife is uncursed and non-special.
+        if (item_no != NON_ITEM)
         {
-            item_no = items(0, OBJ_WEAPONS, WPN_KNIFE, false, 0, 250,
-                             MMT_NO_ITEM);
-
-            // Guarantee that the knife is uncursed and non-special.
-            if (item_no != NON_ITEM)
-            {
-                mitm[item_no].plus    = 0;
-                mitm[item_no].plus2   = 0;
-                mitm[item_no].flags   = 0; // no id, no race/desc, no curse
-                mitm[item_no].special = 0; // no ego type
-            }
+            mitm[item_no].plus    = 0;
+            mitm[item_no].plus2   = 0;
+            mitm[item_no].flags   = 0; // no id, no race/desc, no curse
+            mitm[item_no].special = 0; // no ego type
         }
     }
 }
