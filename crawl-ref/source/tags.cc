@@ -1209,11 +1209,7 @@ static void tag_construct_you(writer &th)
 
     you.props.write(th);
 #if TAG_MAJOR_VERSION == 31
-    marshallByte(th, NUM_DC);
-    for (int t = 0; t < 2; t++)
-        for (int ae = 0; ae < 2; ae++)
-            for (i = 0; i < NUM_DC; i++)
-                marshallInt(th, you.dcounters[t][ae][i]);
+    marshallByte(th, 0);
 #endif
 }
 
@@ -1881,11 +1877,10 @@ static void tag_read_you(reader &th, int minorVersion)
     if (minorVersion >= TAG_MINOR_DIAG_COUNTERS)
     {
         count = unmarshallByte(th);
-        ASSERT(count <= NUM_DC);
         for (int t = 0; t < 2; t++)
             for (int ae = 0; ae < 2; ae++)
                 for (i = 0; i < count; i++)
-                    you.dcounters[t][ae][i] = unmarshallInt(th);
+                    unmarshallInt(th);
     }
     if (minorVersion < TAG_MINOR_YOU_FORM)
         you.form = static_cast<transformation_type>(
