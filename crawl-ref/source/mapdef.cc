@@ -2282,7 +2282,7 @@ std::string map_def::run_lua(bool run_main)
     dlua_set_map mset(this);
 
     int err = prelude.load(dlua);
-    if (err == -1000)
+    if (err == E_CHUNK_LOAD_FAILURE)
         lua_pushnil(dlua);
     else if (err)
         return (prelude.orig_error());
@@ -2291,21 +2291,28 @@ std::string map_def::run_lua(bool run_main)
 
     if (run_main)
     {
-        run_hook("pre_main");
-        const int dlua_stack_oldtop = lua_gettop(dlua);
+        // Run the map chunk to set up the vault's map grid.
         err = mapchunk.load(dlua);
-        if (err == -1000)
+        if (err == E_CHUNK_LOAD_FAILURE)
             lua_pushnil(dlua);
         else if (err)
             return (mapchunk.orig_error());
+        if (!dlua.callfn("dgn_run_map", 1, 0))
+            return rewrite_chunk_errors(dlua.error);
 
+        // The vault may be non-rectangular with a ragged-right edge; for
+        // transforms to work right at this point, we must pad out the right
+        // edge with spaces, so run normalise:
+        normalise();
+
+        // Run the main Lua chunk to set up the rest of the vault
+        run_hook("pre_main");
         err = main.load(dlua);
-        if (err == -1000)
+        if (err == E_CHUNK_LOAD_FAILURE)
             lua_pushnil(dlua);
         else if (err)
             return (main.orig_error());
-        if (!dlua.callfn("dgn_run_map",
-                         lua_gettop(dlua) - dlua_stack_oldtop, 0))
+        if (!dlua.callfn("dgn_run_map", 1, 0))
             return rewrite_chunk_errors(dlua.error);
         run_hook("post_main");
     }
@@ -2356,7 +2363,7 @@ bool map_def::test_lua_boolchunk(dlua_chunk &chunk, bool defval,
     dlua_set_map mset(this);
 
     int err = chunk.load(dlua);
-    if (err == -1000)
+    if (err == E_CHUNK_LOAD_FAILURE)
         return (result);
     else if (err)
     {
