@@ -1043,23 +1043,6 @@ static void _update_place_info()
     curr_PlaceInfo.assert_validity();
 }
 
-static void _update_diag_counters()
-{
-    diag_counter_t act = DC_OTHER;
-
-    if (you.walking == 1)
-        act = DC_WALK_ORTHO;
-    else if (you.walking == 2)
-        act = DC_WALK_DIAG;
-    else if (!apply_berserk_penalty) // a fancy name for "attacking"
-        act = DC_FIGHT;
-
-    bool ae = (you.running == RMODE_EXPLORE)
-              || (you.running == RMODE_EXPLORE_GREEDY);
-    you.dcounters[0][ae][act]++;
-    you.dcounters[1][ae][act]+=you.time_taken;
-}
-
 //
 //  This function handles the player's input. It's called from main(),
 //  from inside an endless loop.
@@ -4029,7 +4012,6 @@ static void _move_player(coord_def move)
     {
         did_god_conduct(DID_HASTY, 1, true);
     }
-    _update_diag_counters();
     you.check_clinging();
 }
 

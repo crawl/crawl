@@ -25,16 +25,6 @@
 #include "tiledoll.h"
 #endif
 
-enum diag_counter_t
-{
-    DC_OTHER,
-    DC_WALK_ORTHO,
-    DC_WALK_DIAG,
-    DC_FIGHT,
-    DC_REST,
-    NUM_DC
-};
-
 class player : public actor
 {
 public:
@@ -253,8 +243,6 @@ public:
   // Delayed level actions.  This array is never trimmed, as usually D:1 won't
   // be loaded again until the very end.
   std::vector<daction_type> dactions;
-  // [time (vs turn)][autoexploring][]
-  FixedVector<int, NUM_DC> dcounters[2][2];
 
 
   // Non-saved UI state:
