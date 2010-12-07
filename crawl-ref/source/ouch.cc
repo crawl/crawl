@@ -1028,6 +1028,8 @@ static void _place_player_corpse(bool explode)
     }
 
     corpse.props[MONSTER_HIT_DICE].get_short() = you.experience_level;
+    corpse.props[CORPSE_NAME_KEY] = you.your_name;
+    corpse.props[CORPSE_NAME_TYPE_KEY].get_int() = 0;
     mitm[o] = corpse;
 
     move_item_to_grid(&o, you.pos(), !you.in_water());
