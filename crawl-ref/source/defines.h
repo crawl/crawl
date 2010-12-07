@@ -147,7 +147,7 @@ const int LABYRINTH_BORDER = 4;
 #define MAX_TRAPS         400
 
 // max shops per level
-#define MAX_SHOPS         100
+#define MAX_SHOPS         64
 
 // max shops randomly generated in a level.
 // changing this affects the total number of shops in a game
