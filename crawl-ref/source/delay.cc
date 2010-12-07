@@ -1455,7 +1455,8 @@ static bool _should_stop_activity(const delay_queue_item &item,
 
 inline static void _monster_warning(activity_interrupt_type ai,
                                     const activity_interrupt_data &at,
-                                    delay_type atype)
+                                    delay_type atype,
+                                    std::vector<std::string>* msgs_buf = NULL)
 {
     if (ai != AI_SEE_MONSTER)
         return;
@@ -1539,7 +1540,11 @@ inline static void _monster_warning(activity_interrupt_type ai,
             text += " " + mon->pronoun(PRONOUN_CAP)
                     + " is" + mweap + ".";
         }
-        mpr(text, MSGCH_WARN);
+
+        if (msgs_buf)
+            msgs_buf->push_back(text);
+        else
+            mpr(text, MSGCH_WARN);
         const_cast<monster* >(mon)->seen_context = "just seen";
     }
 
@@ -1577,7 +1582,8 @@ void autotoggle_autopickup(bool off)
 
 // Returns true if any activity was stopped. Not reentrant.
 bool interrupt_activity(activity_interrupt_type ai,
-                         const activity_interrupt_data &at)
+                         const activity_interrupt_data &at,
+                        std::vector<std::string>* msgs_buf)
 {
     if (interrupt_block::blocked())
         return (false);
@@ -1601,7 +1607,8 @@ bool interrupt_activity(activity_interrupt_type ai,
         // auto-exploring/travelling.
         if (ai == AI_SEE_MONSTER)
         {
-            _monster_warning(ai, at, DELAY_NOT_DELAYED);
+            if (!you.turn_is_over)
+                _monster_warning(ai, at, DELAY_NOT_DELAYED, msgs_buf);
             return(true);
         }
         return (false);
