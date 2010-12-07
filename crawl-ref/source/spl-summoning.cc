@@ -1516,6 +1516,11 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
         roll_zombie_hp(&menv[mons]);
     }
 
+    if (item.props.exists("ev"))
+        menv[mons].ev = item.props["ev"].get_int();
+    if (item.props.exists("ac"))
+        menv[mons].ac = item.props["ac"].get_int();
+
     if (is_named_corpse(item))
     {
         uint64_t name_type = 0;
