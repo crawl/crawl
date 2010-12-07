@@ -1115,12 +1115,11 @@ static bool _ensure_vault_placed_ex(bool vault_success, const map_def *vault)
 
 static coord_def _find_level_feature(int feat)
 {
-    for (int y = 1; y < GYM; ++y)
-        for (int x = 1; x < GXM; ++x)
-        {
-            if (grd[x][y] == feat)
-                return coord_def(x, y);
-        }
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        if (grd(*ri) == feat)
+            return *ri;
+    }
 
     return coord_def(0, 0);
 }
@@ -1491,23 +1490,22 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
     unsigned int num_up_stairs   = 0;
     unsigned int num_down_stairs = 0;
 
-    for (int x = 1; x < GXM; ++x)
-        for (int y = 1; y < GYM; ++y)
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        const coord_def& c = *ri;
+        if (grd(c) >= DNGN_STONE_STAIRS_DOWN_I
+            && grd(c) <= DNGN_STONE_STAIRS_DOWN_III
+            && num_down_stairs < max_stairs)
         {
-            const coord_def c(x,y);
-            if (grd(c) >= DNGN_STONE_STAIRS_DOWN_I
-                && grd(c) <= DNGN_STONE_STAIRS_DOWN_III
-                && num_down_stairs < max_stairs)
-            {
-                down_stairs[num_down_stairs++] = c;
-            }
-            else if (grd(c) >= DNGN_STONE_STAIRS_UP_I
-                     && grd(c) <= DNGN_STONE_STAIRS_UP_III
-                     && num_up_stairs < max_stairs)
-            {
-                up_stairs[num_up_stairs++] = c;
-            }
+            down_stairs[num_down_stairs++] = c;
         }
+        else if (grd(c) >= DNGN_STONE_STAIRS_UP_I
+                 && grd(c) <= DNGN_STONE_STAIRS_UP_III
+                 && num_up_stairs < max_stairs)
+        {
+            up_stairs[num_up_stairs++] = c;
+        }
+    }
 
     bool success = true;
 
@@ -3335,8 +3333,6 @@ static void _place_extra_vaults()
 
 static void _place_branch_entrances(int dlevel, level_area_type level_type)
 {
-    int sx, sy;
-
     if (level_type != LEVEL_DUNGEON)
         return;
 
@@ -3357,13 +3353,14 @@ static void _place_branch_entrances(int dlevel, level_area_type level_type)
         // level 26: replaces all down stairs with staircases to Zot:
         if (dlevel == 26)
         {
-            for (sx = 1; sx < GXM; sx++)
-                for (sy = 1; sy < GYM; sy++)
-                    if (grd[sx][sy] >= DNGN_STONE_STAIRS_DOWN_I
-                        && grd[sx][sy] <= DNGN_ESCAPE_HATCH_DOWN)
-                    {
-                        grd[sx][sy] = DNGN_ENTER_ZOT;
-                    }
+            for (rectangle_iterator ri(1); ri; ++ri)
+            {
+                if (grd(*ri) >= DNGN_STONE_STAIRS_DOWN_I
+                    && grd(*ri) <= DNGN_ESCAPE_HATCH_DOWN)
+                {
+                    grd(*ri) = DNGN_ENTER_ZOT;
+                }
+            }
         }
     }
 
@@ -3811,15 +3808,14 @@ static void _place_aquatic_monsters(int level_number, level_area_type level_type
     }
 
     // Count the number of lava and water tiles {dlb}:
-    for (int x = 0; x < GXM; x++)
-        for (int y = 0; y < GYM; y++)
-        {
-            if (grd[x][y] == DNGN_LAVA)
-                lava_spaces++;
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        if (grd(*ri) == DNGN_LAVA)
+            lava_spaces++;
 
-            if (feat_is_water(grd[x][y]))
-                water_spaces++;
-        }
+        if (feat_is_water(grd(*ri)))
+            water_spaces++;
+    }
 
     if (lava_spaces > 49 && level_number > 6)
     {
@@ -8009,12 +8005,11 @@ static coord_def _dgn_find_closest_to_stone_stairs(coord_def base_pos)
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
     init_travel_terrain_check(false);
     nearest_point np(base_pos);
-    for (int y = 0; y < GYM; ++y)
-        for (int x = 0; x < GXM; ++x)
-        {
-            if (!travel_point_distance[x][y] && feat_is_stone_stair(grd[x][y]))
-                _dgn_fill_zone(coord_def(x, y), 1, np, dgn_square_travel_ok);
-        }
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        if (!travel_point_distance[ri->x][ri->y] && feat_is_stone_stair(grd(*ri)))
+            _dgn_fill_zone(*ri, 1, np, dgn_square_travel_ok);
+    }
 
     return (np.nearest);
 }
