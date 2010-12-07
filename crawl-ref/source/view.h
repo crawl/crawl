@@ -44,7 +44,8 @@ void flash_monster_colour(const monster* mon, uint8_t fmc_colour,
 
 void viewwindow(bool show_updates = true);
 void update_monsters_in_view();
-void handle_seen_interrupt(monster* mons);
+void handle_seen_interrupt(monster* mons,
+                           std::vector<std::string>* msgs_buf = NULL);
 void flush_comes_into_view();
 
 void toggle_show_terrain();

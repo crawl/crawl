@@ -4152,8 +4152,14 @@ void explore_discoveries::add_item(const item_def &i)
         items[j].thing.quantity = orig_quantity;
     }
 
-    items.push_back(named_thing<item_def>(get_menu_colour_prefix_tags(i,
-                                                DESC_NOCAP_A), i));
+    std::string itemname = get_menu_colour_prefix_tags(i, DESC_NOCAP_A);
+    monster* mon = monster_at(i.pos);
+    if (mon && mon->type == MONS_BUSH)
+        itemname += " (under bush)";
+    else if (mon && mon->type == MONS_PLANT)
+        itemname += " (under plant)";
+
+    items.push_back(named_thing<item_def>(itemname, i));
 
     // First item of this type?
     // XXX: Only works when travelling.

@@ -75,7 +75,7 @@
 
 crawl_view_geometry crawl_view;
 
-void handle_seen_interrupt(monster* mons)
+void handle_seen_interrupt(monster* mons, std::vector<std::string>* msgs_buf)
 {
     if (mons_is_unknown_mimic(mons))
         return;
@@ -96,7 +96,7 @@ void handle_seen_interrupt(monster* mons)
         && !mons_class_flag(mons->type, M_NO_EXP_GAIN)
             || mons->type == MONS_BALLISTOMYCETE && mons->number > 0)
     {
-        interrupt_activity(AI_SEE_MONSTER, aid);
+        interrupt_activity(AI_SEE_MONSTER, aid, msgs_buf);
     }
     seen_monster(mons);
 }
@@ -162,6 +162,7 @@ void seen_monsters_react()
 void update_monsters_in_view()
 {
     int num_hostile = 0;
+    std::vector<std::string> msgs;
 
     for (monster_iterator mi; mi; ++mi)
     {
@@ -179,7 +180,7 @@ void update_monsters_in_view()
             }
             else if (mi->visible_to(&you))
             {
-                handle_seen_interrupt(*mi);
+                handle_seen_interrupt(*mi, &msgs);
                 seen_monster(*mi);
             }
             else
@@ -191,6 +192,18 @@ void update_monsters_in_view()
         // If the monster hasn't been seen by the time that the player
         // gets control back then seen_context is out of date.
         mi->seen_context.clear();
+    }
+
+    if (!msgs.empty())
+    {
+        int size = msgs.size();
+        if (size <= 6)
+        {
+            for (int i = 0; i < size; i++)
+                mpr(msgs[i], MSGCH_WARN);
+        }
+        else
+            mprf(MSGCH_WARN, "%d monsters comes into view.", size);
     }
 
     // Xom thinks it's hilarious the way the player picks up an ever

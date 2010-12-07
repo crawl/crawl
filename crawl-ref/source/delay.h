@@ -93,5 +93,6 @@ delay_type get_delay(const std::string &);
 void autotoggle_autopickup(bool off);
 bool interrupt_activity(activity_interrupt_type ai,
                          const activity_interrupt_data &a
-                            = activity_interrupt_data());
+                            = activity_interrupt_data(),
+                        std::vector<std::string>* msgs_buf = NULL);
 #endif
