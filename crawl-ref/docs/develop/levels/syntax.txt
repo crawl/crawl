@@ -483,7 +483,7 @@ ITEM:     (list of items, separated by comma)
             vault's level number).
           * "damaged" sets the item plusses to -1..-4.
           * "cursed" gets a curse plus plusses as in "damaged".
-          * "uncursed" forces an item to have any curse placed on it to be
+          * "not_cursed" forces an item to have any curse placed on it to be
             removed.
           * "any" by itself gives a random choice; you can combine "any" with
             "good_item."
