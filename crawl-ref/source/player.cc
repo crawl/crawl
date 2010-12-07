@@ -1623,7 +1623,7 @@ int player_res_torment(bool, bool temp)
             || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING
             || (temp &&
                 (20 * player_mutation_level(MUT_STOCHASTIC_TORMENT_RESISTANCE)
-                 >= random2(100))));
+                 > random2(100))));
 }
 
 // Funny that no races are susceptible to poisons. {dlb}
