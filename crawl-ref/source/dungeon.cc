@@ -6384,34 +6384,6 @@ void spotty_level(bool seeded, int iterations, bool boxy)
     }
 }                               // end spotty_level()
 
-void smear_feature(int iterations, bool boxy, dungeon_feature_type feature,
-                   int x1, int y1, int x2, int y2)
-{
-    for (int i = 0; i < iterations; ++i)
-    {
-        int x, y;
-        bool diagonals, straights;
-        do
-        {
-            x = random_range(x1 + 1, x2 - 1);
-            y = random_range(y1 + 1, y2 - 1);
-
-            diagonals = grd[x + 1][y + 1] == feature
-                        || grd[x - 1][y + 1] == feature
-                        || grd[x - 1][y - 1] == feature
-                        || grd[x + 1][y - 1] == feature;
-
-            straights = grd[x + 1][y] == feature
-                        || grd[x - 1][y] == feature
-                        || grd[x][y + 1] == feature
-                        || grd[x][y - 1] == feature;
-        }
-        while (grd[x][y] == feature || !straights && (boxy || !diagonals));
-
-        grd[x][y] = feature;
-    }
-}
-
 static void _bigger_room()
 {
     env.level_build_method += " bigger_room";
