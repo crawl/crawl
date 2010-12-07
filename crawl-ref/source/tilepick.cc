@@ -428,8 +428,12 @@ tileidx_t tileidx_feature(const coord_def &gc)
 
 tileidx_t tileidx_out_of_bounds(int branch)
 {
-    if (branch == BRANCH_SHOALS)
+    if (branch == BRANCH_SHOALS
+        && you.level_type != LEVEL_LABYRINTH
+        && you.level_type != LEVEL_PORTAL_VAULT)
+    {
         return (TILE_DNGN_OPEN_SEA | TILE_FLAG_UNSEEN);
+    }
     else
         return (TILE_DNGN_UNSEEN | TILE_FLAG_UNSEEN);
 }
