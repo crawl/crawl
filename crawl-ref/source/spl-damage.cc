@@ -1286,10 +1286,12 @@ static int _discharge_monsters(coord_def where, int pow, int, actor *)
     bolt beam;
     beam.flavour = BEAM_ELECTRICITY; // used for mons_adjust_flavoured
 
+    dprf("Static discharge on (%d,%d) pow: %d", where.x, where.y, pow);
     if (where == you.pos())
     {
         mpr("You are struck by lightning.");
-        damage = 3 + random2(5 + pow / 10);
+        damage = 1 + random2(3 + pow / 15);
+        dprf("You: static discharge damage: %d", damage);
         damage = check_your_resists(damage, BEAM_ELECTRICITY,
                                     "static discharge");
         if (you.airborne())
@@ -1302,7 +1304,9 @@ static int _discharge_monsters(coord_def where, int pow, int, actor *)
         return (0);
     else
     {
-        damage = 3 + random2(5 + pow/10);
+        damage = 3 + random2(5 + pow / 10 + (random2(pow) / 10));
+        dprf("%s: static discharge damage: %d",
+             mons->name(DESC_PLAIN, true).c_str(), damage);
         damage = mons_adjust_flavoured(mons, beam, damage);
 
         if (damage)
@@ -1315,7 +1319,7 @@ static int _discharge_monsters(coord_def where, int pow, int, actor *)
 
     // Recursion to give us chain-lightning -- bwr
     // Low power slight chance added for low power characters -- bwr
-    if ((pow >= 10 && !one_chance_in(3)) || (pow >= 3 && one_chance_in(10)))
+    if ((pow >= 10 && !one_chance_in(4)) || (pow >= 3 && one_chance_in(10)))
     {
         mpr("The lightning arcs!");
         pow /= (coinflip() ? 2 : 3);
@@ -1334,11 +1338,9 @@ static int _discharge_monsters(coord_def where, int pow, int, actor *)
 
 void cast_discharge(int pow)
 {
-    int num_targs = 1 + random2(1 + pow / 25);
-    int dam;
-
-    dam = apply_random_around_square(_discharge_monsters, you.pos(),
-                                     true, pow, num_targs);
+    const int num_targs = 1 + random2(random_range(1, 3) + pow / 20);
+    const int dam = apply_random_around_square(_discharge_monsters, you.pos(),
+                                               true, pow, num_targs);
 
     dprf("Arcs: %d Damage: %d", num_targs, dam);
 
