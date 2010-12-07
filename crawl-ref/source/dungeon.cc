@@ -2697,7 +2697,7 @@ static bool _builder_by_branch(int level_number)
             iterations = 600 + random2(600);
         else
             iterations = 100 + random2(500);
-        spotty_level(false, iterations, false);
+        spotty_level(iterations, false);
         return false;
     }
 
@@ -2807,7 +2807,7 @@ static bool _builder_normal(int level_number, spec_room &sr)
     {
         if (one_chance_in(16))
         {
-            spotty_level(false, 0, coinflip());
+            spotty_level(0, coinflip());
             return false;
         }
 
@@ -6321,25 +6321,19 @@ static void _place_spotty_stairs(void)
     }
 }
 
-void spotty_level(bool seeded, int iterations, bool boxy)
+void spotty_level(int iterations, bool boxy)
 {
-    env.level_build_method += make_stringf(" spotty_level [%d%s%s]",
-                                     iterations, seeded ? " seeeded" : "",
-                                     boxy ? " boxy" : "");
-    if (env.level_layout_type == "open" || env.level_layout_type == "cross")
-        env.level_layout_type = "open";
-    else if (iterations >= 100)
+    env.level_build_method += make_stringf(" spotty_level [%d%s]",
+                                     iterations, boxy ? " boxy" : "");
+    if (iterations >= 100)
         env.level_layout_type  = "caves";
-    else if (env.level_layout_type.empty())
-        env.level_layout_type = "spotty";
     else
-        env.level_layout_type += "_spotty";
+        env.level_layout_type = "spotty";
 
     // Assumes starting with a level full of rock walls (1).
     int i, j, k, l;
 
-    if (!seeded)
-        _place_spotty_stairs();
+    _place_spotty_stairs();
 
     l = iterations;
 
