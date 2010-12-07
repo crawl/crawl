@@ -959,37 +959,35 @@ int dgn_count_disconnected_zones(bool choose_stairless,
 
 static void _fixup_hell_stairs()
 {
-    for (int i = 0; i < GXM; i++)
-        for (int j = 0; j < GYM; j++)
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        if (grd(*ri) >= DNGN_STONE_STAIRS_UP_I
+            && grd(*ri) <= DNGN_ESCAPE_HATCH_UP)
         {
-            if (grd[i][j] >= DNGN_STONE_STAIRS_UP_I
-                && grd[i][j] <= DNGN_ESCAPE_HATCH_UP)
-            {
-                grd[i][j] = DNGN_ENTER_HELL;
-            }
+            grd(*ri) = DNGN_ENTER_HELL;
         }
+    }
 }
 
 static void _fixup_pandemonium_stairs()
 {
-    for (int i = 0; i < GXM; i++)
-        for (int j = 0; j < GYM; j++)
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        if (grd(*ri) >= DNGN_STONE_STAIRS_UP_I
+            && grd(*ri) <= DNGN_ESCAPE_HATCH_UP)
         {
-            if (grd[i][j] >= DNGN_STONE_STAIRS_UP_I
-                && grd[i][j] <= DNGN_ESCAPE_HATCH_UP)
-            {
-                if (one_chance_in(50))
-                    grd[i][j] = DNGN_EXIT_PANDEMONIUM;
-                else
-                    grd[i][j] = DNGN_FLOOR;
-            }
-
-            if (grd[i][j] >= DNGN_ENTER_LABYRINTH
-                && grd[i][j] <= DNGN_ESCAPE_HATCH_DOWN)
-            {
-                grd[i][j] = DNGN_TRANSIT_PANDEMONIUM;
-            }
+            if (one_chance_in(50))
+                grd(*ri) = DNGN_EXIT_PANDEMONIUM;
+            else
+                grd(*ri) = DNGN_FLOOR;
         }
+
+        if (grd(*ri) >= DNGN_ENTER_LABYRINTH
+            && grd(*ri) <= DNGN_ESCAPE_HATCH_DOWN)
+        {
+            grd(*ri) = DNGN_TRANSIT_PANDEMONIUM;
+        }
+    }
 }
 
 static void _mask_vault(const vault_placement &place, unsigned mask)
