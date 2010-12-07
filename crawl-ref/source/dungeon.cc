@@ -6283,6 +6283,44 @@ static bool _connect_spotty(const coord_def& from)
     return (success);
 }
 
+static void _place_spotty_stairs(void)
+{
+    int x, y;
+
+    for (int i = DNGN_STONE_STAIRS_DOWN_I; i < DNGN_ESCAPE_HATCH_UP; i++)
+    {
+        if (i == DNGN_ESCAPE_HATCH_DOWN
+            || i == DNGN_STONE_STAIRS_UP_I
+               && !player_in_branch(BRANCH_SLIME_PITS))
+        {
+            continue;
+        }
+
+        do
+        {
+            x = random_range(X_BOUND_1 + 4, X_BOUND_2 - 4);
+            y = random_range(Y_BOUND_1 + 4, Y_BOUND_2 - 4);
+        }
+        while (grd[x][y] != DNGN_ROCK_WALL
+               && grd[x + 1][y] != DNGN_ROCK_WALL);
+
+        grd[x][y] = static_cast<dungeon_feature_type>(i);
+
+        // creating elevators
+        if (i == DNGN_STONE_STAIRS_DOWN_I
+            && !player_in_branch(BRANCH_SLIME_PITS))
+        {
+            grd[x + 1][y] = DNGN_STONE_STAIRS_UP_I;
+        }
+
+        coord_def c(x, y);
+        const int r = (player_in_branch(BRANCH_SLIME_PITS) ? 2 : 1);
+        for (radius_iterator ri(c, r, C_POINTY); ri; ++ri)
+            if (grd(*ri) == DNGN_ROCK_WALL)
+                grd(*ri) = DNGN_FLOOR;
+    }
+}
+
 void spotty_level(bool seeded, int iterations, bool boxy)
 {
     env.level_build_method += make_stringf(" spotty_level [%d%s%s]",
@@ -6301,40 +6339,7 @@ void spotty_level(bool seeded, int iterations, bool boxy)
     int i, j, k, l;
 
     if (!seeded)
-    {
-        for (i = DNGN_STONE_STAIRS_DOWN_I; i < DNGN_ESCAPE_HATCH_UP; i++)
-        {
-            if (i == DNGN_ESCAPE_HATCH_DOWN
-                || i == DNGN_STONE_STAIRS_UP_I
-                   && !player_in_branch(BRANCH_SLIME_PITS))
-            {
-                continue;
-            }
-
-            do
-            {
-                j = random_range(X_BOUND_1 + 4, X_BOUND_2 - 4);
-                k = random_range(Y_BOUND_1 + 4, Y_BOUND_2 - 4);
-            }
-            while (grd[j][k] != DNGN_ROCK_WALL
-                   && grd[j + 1][k] != DNGN_ROCK_WALL);
-
-            grd[j][k] = static_cast<dungeon_feature_type>(i);
-
-            // creating elevators
-            if (i == DNGN_STONE_STAIRS_DOWN_I
-                && !player_in_branch(BRANCH_SLIME_PITS))
-            {
-                grd[j + 1][k] = DNGN_STONE_STAIRS_UP_I;
-            }
-
-            coord_def c(j,k);
-            const int r = (player_in_branch(BRANCH_SLIME_PITS) ? 2 : 1);
-            for (radius_iterator ri(c, r, C_POINTY); ri; ++ri)
-                if (grd(*ri) == DNGN_ROCK_WALL)
-                    grd(*ri) = DNGN_FLOOR;
-        }
-    }                           // end if !seeded
+        _place_spotty_stairs();
 
     l = iterations;
 
