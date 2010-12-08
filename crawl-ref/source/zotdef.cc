@@ -31,6 +31,7 @@
 #include "stuff.h"
 #include "terrain.h"
 #include "traps.h"
+#include "libutil.h"
 #include "view.h"
 #include "zotdef.h"
 
@@ -744,13 +745,25 @@ void zotdef_set_wave()
             _zotdef_set_boss_unique();
     }
 
-/*
-    for (int i = 0; i < 20; i++)
+    dprf("NEW WAVE: %s", zotdef_debug_wave_desc().c_str());
+}
+
+std::string zotdef_debug_wave_desc()
+{
+    std::string list = "[";
+    for (int i = 0; i <= NSLOTS; i++)
     {
+        if (i)
+            list += ", ";
         monsterentry *mentry = get_monster_data(env.mons_alloc[i]);
-        mprf("NEW WAVE: monster %d is %s",i,mentry->name);
+        if (!env.mons_alloc[i])
+            list += "EMPTY";
+        else if (mentry)
+            list += mentry->name;
+        else
+            list += make_stringf("!!!INVALID (%d)!!!", env.mons_alloc[i]);
     }
-*/
+    return list + "]";
 }
 
 int zotdef_spawn(bool boss)

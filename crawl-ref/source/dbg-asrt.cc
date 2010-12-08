@@ -35,6 +35,7 @@
 #include "state.h"
 #include "travel.h"
 #include "hiscores.h"
+#include "zotdef.h"
 
 #ifdef ASSERTS
 static std::string _assert_msg;
@@ -598,6 +599,9 @@ void do_crash_dump()
     // another crash, so do that next.
     crawl_state.dump();
     _dump_player(file);
+
+    if (crawl_state.game_is_zotdef())
+        fprintf(file, "ZotDef wave data: %s\n", zotdef_debug_wave_desc().c_str());
 
     // Next item and monster scans.  Any messages will be sent straight to
     // the file because of set_msg_dump_file()
