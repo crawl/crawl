@@ -8638,9 +8638,7 @@ void run_map_epilogues ()
     for (unsigned i = 0, size = env.level_vaults.size(); i < size; ++i)
     {
         map_def &map = env.level_vaults[i]->map;
-        const bool result = map.run_lua_epilogue();
-        dprf("ran lua epilogue for %s: result was %s.",
-             map.name.c_str(), result ? "true" : "false");
+        map.run_lua_epilogue();
     }
 }
 
