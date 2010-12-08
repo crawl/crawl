@@ -2675,7 +2675,7 @@ bool describe_item(item_def &item, bool allow_inscribe, bool shopping)
     _update_inscription(item);
 
     // Don't ask if there aren't enough rows left
-    if (wherey() <= get_number_of_lines() - 2)
+    if (wherey() <= get_number_of_lines() - 2 && in_inventory(item))
     {
         cgotoxy(1, wherey() + 2);
         return _actions_prompt(item, allow_inscribe);
