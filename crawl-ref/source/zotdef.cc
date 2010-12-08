@@ -579,6 +579,8 @@ static monster_type _get_zotdef_monster(level_id &place, int power)
             continue;        // sanity
         if (mons_class_flag(mon_type, M_NO_POLY_TO))
             continue;
+        if (mons_class_flag(mon_type, M_UNFINISHED))
+            continue;
         if (mons_is_unique(mon_type))
             continue;        // No uniques here!
         if (mons_class_is_stationary(mon_type))
