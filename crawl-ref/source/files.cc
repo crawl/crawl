@@ -1131,6 +1131,18 @@ static void _place_player_on_stair(level_area_type old_level_type,
         find_first = false;
     }
 
+    if (crawl_state.game_is_zotdef())
+    {
+        // For Zot Defence, look for a start point marker and hop
+        // there if available.
+        const coord_def pos(dgn_find_feature_marker(DNGN_STONE_STAIRS_UP_I));
+        if (in_bounds(pos))
+        {
+            you.moveto(pos);
+            return;
+        }
+    }
+
     const coord_def where_to_go =
         dgn_find_nearby_stair(static_cast<dungeon_feature_type>(stair_taken),
                               old_pos, find_first);
