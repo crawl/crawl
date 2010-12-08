@@ -20,6 +20,40 @@
         end
     end
 
+    function spotty_stairs(mapgrd)
+        local gxm, gym = dgn.max_bounds()
+
+        local in_slime = you.in_branch("slime")
+        local elevator = not in_slime
+
+        local stairs = { '}', ')', ']', '(', '[' }
+
+        local make_floor = function (x, y)
+            mapgrd[x][y] = '.'
+        end
+
+        if not elevator then table.insert(stairs, '{') end
+
+        for i, glyph in ipairs(stairs) do
+            local x, y
+            repeat
+                x = crawl.random_range(5, gxm - 5)
+                y = crawl.random_range(5, gym - 5)
+            until mapgrd[x][y] == 'x' and mapgrd[x + 1][y] == 'x'
+
+            mapgrd[x][y] = glyph
+
+            apply_circle(x, y, 4, 1, 1, 1, make_floor)
+
+            if in_slime then
+                apply_circle(x, y, 8, 2, 1, 1, make_floor)
+            end
+
+            if elevator and glyph == '}' then
+                mapgrd[x + 1][y] = '{'
+            end
+        end
+    end
 }}
 
 ##############################################################
@@ -539,6 +573,47 @@ TAGS: layout allow_dup
     if not crawl.one_chance_in(4) then
         spotty_map { boxy = crawl.coinflip(), iterations = 100 }
     end
+}}
+MAP
+ENDMAP
+
+NAME: layout_caves
+ORIENT: encompass
+TAGS: layout allow_dup
+{{
+    local gxm, gym = dgn.max_bounds()
+
+    extend_map { width = gxm, height = gym, fill = 'x' }
+
+    spotty_stairs(mapgrd)
+
+    local iterations
+
+    if you.at_branch_bottom() then
+        iterations = 600 + crawl.random2(600)
+    else
+        iterations = 100 + crawl.random2(500)
+    end
+
+    spotty_map { boxy = false, iterations = iterations }
+}}
+MAP
+ENDMAP
+
+NAME: layout_spotty
+ORIENT: encompass
+TAGS: layout allow_dup
+{{
+    local gxm, gym = dgn.max_bounds()
+
+    extend_map { width = gxm, height = gym, fill = 'x' }
+
+    spotty_stairs(mapgrd)
+
+    local boxy = crawl.coinflip()
+    local iterations = 200 + crawl.random2(boxy and 750 or 1500)
+
+    spotty_map { boxy = boxy, iterations = iterations }
 }}
 MAP
 ENDMAP
