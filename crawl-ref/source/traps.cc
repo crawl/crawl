@@ -444,7 +444,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     // Zot def - player never sets off known traps
     if (crawl_state.game_is_zotdef() && you_trigger && you_know)
     {
-        mpr("You step safely past the trap");
+        mpr("You step safely past the trap.");
         return;
     }
 
