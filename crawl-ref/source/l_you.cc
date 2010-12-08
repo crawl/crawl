@@ -385,6 +385,11 @@ LUAFN(_you_shopping_list_del)
     PLUARET(boolean, deleted);
 }
 
+LUAFN(_you_at_branch_bottom)
+{
+    PLUARET(boolean, at_branch_bottom());
+}
+
 static const struct luaL_reg you_dlib[] =
 {
 { "hear_pos",           you_can_hear_pos },
@@ -407,6 +412,7 @@ static const struct luaL_reg you_dlib[] =
 { "shopping_list_add",  _you_shopping_list_add },
 { "shopping_list_del",  _you_shopping_list_del },
 { "stop_running",       you_stop_running },
+{ "at_branch_bottom",   _you_at_branch_bottom },
 
 { NULL, NULL }
 };
