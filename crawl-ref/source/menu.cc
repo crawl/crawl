@@ -2429,6 +2429,11 @@ void MenuItem::add_hotkey(int key)
     m_hotkeys.push_back(key);
 }
 
+void MenuItem::clear_hotkeys()
+{
+    m_hotkeys.clear();
+}
+
 const std::vector<int>& MenuItem::get_hotkeys() const
 {
     return m_hotkeys;
@@ -2588,6 +2593,38 @@ bool NoSelectTextItem::selected() const
 bool NoSelectTextItem::can_be_highlighted() const
 {
     return false;
+}
+
+void FormattedTextItem::render()
+{
+    if (!m_visible)
+        return;
+
+#ifdef USE_TILE
+    if (m_dirty)
+    {
+        m_font_buf.clear();
+        // FIXME: m_fg_colour doesn't work here while it works in console.
+        m_font_buf.add(formatted_string::parse_string(m_render_text, true,
+                                                      NULL, m_fg_colour),
+                       m_min_coord.x, m_min_coord.y);
+        m_dirty = false;
+    }
+    m_font_buf.draw();
+#else
+    // Clean the drawing area first
+    // clear_to_end_of_line does not work for us
+    std::string white_space(m_max_coord.x - m_min_coord.x, ' ');
+    for (int i = 0; i < (m_max_coord.y - m_min_coord.y); ++i)
+    {
+        cgotoxy(m_min_coord.x, m_min_coord.y + i);
+        cprintf("%s", white_space.c_str());
+    }
+
+    cgotoxy(m_min_coord.x, m_min_coord.y);
+    formatted_string::parse_string(m_render_text, true,
+                                   NULL, m_fg_colour).display();
+#endif
 }
 
 #ifdef USE_TILE
