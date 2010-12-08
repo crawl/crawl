@@ -1076,12 +1076,17 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
     if (dam != INSTANT_DEATH && you.species == SP_DEEP_DWARF)
     {
-        // Deep Dwarves get to shave _any_ hp loss.
+        // Deep Dwarves get to shave any hp loss.
         int shave = 1 + random2(2 + random2(1 + you.experience_level / 3));
         dprf("HP shaved: %d.", shave);
         dam -= shave;
         if (dam <= 0)
-            return;
+        {
+            // Rotting and costs may lower hp directly.
+            if (you.hp > 0)
+                return;
+            dam = 0;
+        }
     }
 
     ait_hp_loss hpl(dam, death_type);
