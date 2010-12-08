@@ -502,9 +502,8 @@ trap_type trap_for_ability(const ability_def& abil)
         case ABIL_MAKE_TELEPORT_TRAP: return TRAP_TELEPORT;
         case ABIL_MAKE_ALARM_TRAP: return TRAP_ALARM;
         case ABIL_MAKE_BLADE_TRAP: return TRAP_BLADE;
-        default: ;
+        default: return TRAP_UNASSIGNED;
     }
-    return TRAP_UNASSIGNED;
 }
 
 // Scale the xp cost by the number of friendly monsters
