@@ -137,7 +137,7 @@ void handle_behaviour(monster* mon)
     {
         if (!isFriendly && !isNeutral && orb_position() == mon->pos())
         {
-            int loss = div_rand_round(10, mon->speed);
+            const int loss = div_rand_round(10, std::max(1, mon->speed));
             if (loss)
             {
                 mpr("Your flesh rots away as the Orb of Zot is desecrated.",
