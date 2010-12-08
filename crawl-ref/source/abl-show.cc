@@ -1820,16 +1820,10 @@ static bool _do_ability(const ability_def& abil)
 
         // Generate a portal to something.
         const map_def *mapidx = random_map_for_tag("zotdef_bazaar", false);
-        if (!mapidx)
-        {
-            mpr("A buggy portal flickers into view, then vanishes.");
-        }
-        else
-        {
-            //no_messages n;
-            dgn_place_map(mapidx, true, true, you.pos());
+        if (mapidx && dgn_safe_place_map(mapidx, true, true, you.pos()))
             mpr("A mystic portal forms.");
-        }
+        else
+            mpr("A buggy portal flickers into view, then vanishes.");
 
         break;
     }

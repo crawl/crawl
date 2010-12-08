@@ -530,6 +530,11 @@ bool game_state::player_is_dead() const
     return (updating_scores && !need_save);
 }
 
+bool game_state::game_standard_levelgen() const
+{
+    return (game_is_normal() || game_is_hints());
+}
+
 bool game_state::game_is_normal() const
 {
     ASSERT(type < NUM_GAME_TYPE);

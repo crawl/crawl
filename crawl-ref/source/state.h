@@ -160,6 +160,7 @@ public:
     void dump();
     bool player_is_dead() const;
 
+    bool game_standard_levelgen() const;
     bool game_is_normal() const;
     bool game_is_tutorial() const;
     bool game_is_arena() const;
