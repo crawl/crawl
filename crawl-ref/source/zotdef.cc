@@ -997,13 +997,15 @@ void zotdef_bosses_check()
             const char *msg = "You sense that a powerful threat has arrived.";
             if (!(((you.num_turns + 1) / CYCLE_LENGTH) % FREQUENCY_OF_RUNES))
             {
-                int which_rune = _get_rune(((you.num_turns + 1) / CYCLE_LENGTH)
-                                 / FREQUENCY_OF_RUNES);
+                const rune_type which_rune =
+                    _get_rune(((you.num_turns + 1) / CYCLE_LENGTH)
+                              / FREQUENCY_OF_RUNES);
                 int ip = items(1, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, true,
                                which_rune, which_rune);
                 int *const item_made = &ip;
                 if (*item_made != NON_ITEM && *item_made != -1)
                 {
+                    mitm[ip].plus = which_rune;
                     move_item_to_grid(item_made, menv[mon].pos());
                     msg = "You feel a sense of great excitement!";
                 }
