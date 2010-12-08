@@ -713,9 +713,7 @@ static std::string _level_description_string_hud()
     }
     // Definite articles
     else if (place.level_type == LEVEL_ABYSS)
-    {
         short_name.insert(0, "The ");
-    }
     return short_name;
 }
 
