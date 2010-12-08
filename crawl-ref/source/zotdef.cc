@@ -11,6 +11,7 @@
 #include "dungeon.h" // for Zotdef unique placement
 #include "env.h"
 #include "externs.h"
+#include "files.h"
 #include "ghost.h"
 #include "items.h" // // for find_floor_item
 #include "itemname.h" // // for make_name
@@ -986,6 +987,9 @@ void zotdef_bosses_check()
             }
             _zotdef_danger_msg(msg);
         }
+
+        // since you don't move between maps, any crash would be fatal
+        save_game(false);
     }
 
     if ((you.num_turns + 1) % CYCLE_LENGTH == CYCLE_INTERVAL)
