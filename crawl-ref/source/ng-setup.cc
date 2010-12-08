@@ -447,7 +447,7 @@ static void _update_weapon(const newgame_def& ng)
 
     if (ng.weapon == WPN_UNARMED)
         _newgame_clear_item(0);
-    else
+    else if (ng.weapon != WPN_UNKNOWN)
         you.inv[0].sub_type = ng.weapon;
 }
 
