@@ -4472,3 +4472,13 @@ int count_monsters(monster_type mtyp, bool friendlyOnly)
     }
     return (count);
 }
+
+int count_allies()
+{
+    int count = 0;
+    for (int mon = 0; mon < MAX_MONSTERS; mon++)
+        if (menv[mon].alive() && menv[mon].friendly())
+            count++;
+
+    return count;
+}

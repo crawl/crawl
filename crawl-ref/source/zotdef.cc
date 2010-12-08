@@ -928,6 +928,12 @@ bool create_trap(trap_type spec_type)
 
 bool create_zotdef_ally(monster_type mtyp, const char *successmsg)
 {
+    if (count_allies() > MAX_MONSTERS / 2)
+    {
+        mpr("The place is too crowded already!");
+        return false;
+    }
+
     dist abild;
     std::string msg = "Make ";
     msg += get_monster_data(mtyp)->name;
