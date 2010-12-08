@@ -231,6 +231,7 @@ private:
     void step();
     bool hit_wall();
 
+    bool damage_ignores_armour() const;
     bool apply_hit_funcs(actor* victim, int dmg, int corpse = -1);
     bool apply_dmg_funcs(actor* victim, int &dmg,
                          std::vector<std::string> &messages);
