@@ -1648,6 +1648,11 @@ static bool _do_ability(const ability_def& abil)
     switch (abil.ability)
     {
     case ABIL_MAKE_FUNGUS:
+        if (count_allies() > MAX_MONSTERS / 2)
+        {
+            mpr("Mushrooms don't grow well in such thickets.");
+            return false;
+        }
         args.top_prompt="Center fungus circle where?";
         direction(abild, args);
         if (!abild.isValid)
