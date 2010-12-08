@@ -756,8 +756,10 @@ static bool _check_nemelex_sacrificing_item_type(const item_def& item)
     case OBJ_BOOKS:
     case OBJ_MISCELLANY:
         return (you.nemelex_sacrificing[NEM_GIFT_DUNGEONS]);
+
+    default:
+        return false;
     }
-    return (false);
 }
 
 static void _offer_items()
