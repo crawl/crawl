@@ -1964,6 +1964,15 @@ static int _place_monster_aux(const mgen_data &mg,
     tile_init_props(mon);
 #endif
 
+#ifndef DEBUG_DIAGNOSTICS
+    // A rare case of a debug message NOT showing in the debug mode.
+    if (mons_class_flag(mon->type, M_UNFINISHED))
+    {
+        mprf(MSGCH_WARN, "Warning: monster '%s' is not yet fully coded.",
+             mon->name(DESC_PLAIN).c_str());
+    }
+#endif
+
     mark_interesting_monst(mon, mg.behaviour);
 
     if (crawl_state.game_is_arena())
