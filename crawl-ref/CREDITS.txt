@@ -28,22 +28,23 @@ Lawrence Ramsey, Robert Vollmert, Enne Walker) would like to thank:
 We'd also like to thank members of the Dungeon Crawl community who have
 contributed to Dungeon Crawl Stone Soup:
 
-Mike Adams                   Sophie Hamilton           Dylan O'Donnell
-Warwick Allison              Chris Hamons              Yuuma Oohara
-Juha Arpiainen               R. Dan Henry              Pedro
-Arxale                       Brendan Hickey            Arlen Phillips
-John 'Poor Yurik' Attea      Benoit Hudson             Lemuel Pitkin
-Roy Axenov                   Sylvia 'Onia' Hörnke      Derek Ray
-Max Bane                     Iainuki                   Terence Reeves
-Bill Beher                   Ilyak                     Remsleep
-Alexander Beisig             Matthew Ince              Will Rogers
-Stu Black                    Mitsuhiro Itakura         David Rose
-Erik Inge Bolsø              Mikko Juola               Risto Saarelma
-Peter Borgmann               Jarmo Kielosto            Sebastian Salman
-Daniel Mark Brownrigg        Kornel Kisielewicz        Brett Scarborough
-Trent W. Buck                Daniel Klein              Robert Shimmin
-Joe Buzzelli                 Ilkka Koskela             Sigurd
-Terje Bø                     Vambola Kotkas            Edgar Simo
+Mike Adams                   Shayne Halvorson          nyra
+Warwick Allison              Sophie Hamilton           Dylan O'Donnell
+Juha Arpiainen               Chris Hamons              Yuuma Oohara
+Arxale                       R. Dan Henry              Pedro
+John 'Poor Yurik' Attea      Brendan Hickey            Arlen Phillips
+Roy Axenov                   Benoit Hudson             Lemuel Pitkin
+Max Bane                     Sylvia 'Onia' Hörnke      Derek Ray
+Bill Beher                   Iainuki                   Terence Reeves
+Alexander Beisig             Ilyak                     Remsleep
+Stu Black                    Matthew Ince              Will Rogers
+Erik Inge Bolsø              Mitsuhiro Itakura         David Rose
+Peter Borgmann               Mikko Juola               Risto Saarelma
+Daniel Mark Brownrigg        Jarmo Kielosto            Sebastian Salman
+Trent W. Buck                Kornel Kisielewicz        Brett Scarborough
+Joe Buzzelli                 Daniel Klein              Robert Shimmin
+Terje Bø                     Ilkka Koskela             Sigurd
+Chris Campbell               Vambola Kotkas            Edgar Simo
 Henry Cipolla                Ryan Kusnery              Alex Smith
 Aaron Curtis                 Jukka Kuusisto            Solf
 Denzi                        Raphaël Langella          Michael Spang
@@ -59,5 +60,4 @@ John Greenberg               Eva Myers                 Evan Williams
 GreyKnight                   Wille Mäntylä             Jeremey Wilson
 Joshua Gross                 Erkki Nurmi               Yelve Yakut
 Brian Haase                  Mattias Nyberg            Zooko
-Shayne Halvorson             nyra
 

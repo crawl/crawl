@@ -510,7 +510,8 @@ static void _shoals_make_plant_near(coord_def c, int radius,
         const coord_def plant_place(
             dgn_random_point_from(c, random2(1 + radius), _shoals_margin));
         if (!plant_place.origin()
-            && !monster_at(plant_place))
+            && !monster_at(plant_place)
+            && unforbidden(plant_place, MMT_VAULT))
         {
             const dungeon_feature_type feat(grd(plant_place));
             if (_shoals_plantworthy_feat(feat)
@@ -649,7 +650,7 @@ static void _shoals_generate_wind_sheltered_plants(
     _shoals_plant_supercluster(spot, DNGN_FLOOR, &windy);
 }
 
-static void _shoals_generate_flora()
+void dgn_shoals_generate_flora()
 {
     // Water clusters are groups of plants clustered near the water.
     // Wind clusters are groups of plants clustered in wind shadow --
@@ -702,9 +703,6 @@ void dgn_build_shoals_level(int level_number)
     _shoals_deepen_edges();
     _shoals_smooth_water();
     _shoals_furniture(_shoals_margin);
-
-    // This has to happen after placing shoal rune vault!
-    _shoals_generate_flora();
 }
 
 // Search the map for vaults and set the terrain heights for features

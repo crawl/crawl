@@ -2156,7 +2156,8 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
 
     // Place monsters.
     if (!crawl_state.game_is_zotdef())
-        _builder_monsters(level_number, level_type, _num_mons_wanted(level_type));
+        _builder_monsters(level_number, level_type,
+                          _num_mons_wanted(level_type));
 
     if (!crawl_state.game_is_sprint()
         && !crawl_state.game_is_zotdef()
@@ -3880,11 +3881,15 @@ static void _builder_monsters(int level_number, level_area_type level_type, int 
         return;
     }
 
+    const bool in_shoals = player_in_branch(BRANCH_SHOALS);
+    if (in_shoals)
+        dgn_shoals_generate_flora();
+
     // Try to place Shoals monsters on floor where possible instead of
     // letting all the merfolk be generated in the middle of the
     // water.
     const dungeon_feature_type preferred_grid_feature =
-        player_in_branch(BRANCH_SHOALS)? DNGN_FLOOR : DNGN_UNSEEN;
+        in_shoals? DNGN_FLOOR : DNGN_UNSEEN;
 
     dprf("_builder_monsters: Generating %d monsters", mon_wanted);
     for (int i = 0; i < mon_wanted; i++)

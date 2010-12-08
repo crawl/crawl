@@ -3754,18 +3754,48 @@ void bolt::tracer_enchantment_affect_monster(monster* mon)
     }
 }
 
+bool bolt::damage_ignores_armour() const
+{
+    // [ds] FIXME: replace beam name checks with flavour or origin spell checks
+    return (flavour == BEAM_HELLFIRE
+            || name == "freezing breath"
+            || name == "chilling blast");
+}
+
 // Return false if we should skip handling this monster.
 bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
                             std::vector<std::string>& messages)
 {
+    // [ds] Changed how tracers determined damage: the old tracer
+    // model took the average damage potential, subtracted the average
+    // AC damage reduction and called that the average damage output.
+    // This could easily predict an average damage output of 0 for
+    // high AC monsters, with the result that monsters often didn't
+    // bother using ranged attacks at high AC targets.
+    //
+    // The new model rounds up average damage at every stage, so it
+    // will predict a damage output of 1 even if the average damage
+    // expected is much closer to 0. This will allow monsters to use
+    // ranged attacks vs high AC targets.
+    //
+    // This is not an entirely beneficial change; the old tracer
+    // damage system would make monsters with weak ranged attacks
+    // close in to their foes, while the new system will make it more
+    // likely that such monsters will hang back and make ineffective
+    // ranged attacks. Thus the new tracer damage calculation will
+    // hurt monsters with low-damage ranged attacks and high-damage
+    // melee attacks. I judge this an acceptable compromise (for now).
+    //
+    const int preac_min_damage = damage.num;
+    const int preac_max_damage = damage.num * damage.size;
+
     // preac: damage before AC modifier
     // postac: damage after AC modifier
     // final: damage after AC and resists
     // All these are invalid if we return false.
 
-    // Tracers get the mean.
     if (is_tracer)
-        preac = (damage.num * (damage.size + 1)) / 2;
+        preac = div_round_up(preac_max_damage + preac_max_damage, 2);
     else
         preac = damage.roll();
 
@@ -3774,24 +3804,47 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
 
     postac = preac;
 
-    // Hellfire and white draconian breath ignores AC.
-    if (flavour != BEAM_HELLFIRE && name != "freezing breath"
-        && name != "chilling blast")
-    {
-        postac -= maybe_random2(1 + mon->ac, !is_tracer);
+    int tracer_postac_min = preac_min_damage;
+    int tracer_postac_max = preac_max_damage;
 
-        // Fragmentation has triple AC reduction.
-        if (flavour == BEAM_FRAG)
+    // Hellfire and white draconian breath ignores AC.
+    if (!damage_ignores_armour())
+    {
+        if (is_tracer && preac_max_damage > 0)
+        {
+            tracer_postac_min = std::max(0, preac_min_damage - mon->ac);
+            tracer_postac_max = preac_max_damage;
+            postac = div_round_up(tracer_postac_min + tracer_postac_max, 2);
+        }
+        else
         {
             postac -= maybe_random2(1 + mon->ac, !is_tracer);
-            postac -= maybe_random2(1 + mon->ac, !is_tracer);
+
+            // Fragmentation has triple AC reduction.
+            if (flavour == BEAM_FRAG)
+            {
+                postac -= maybe_random2(1 + mon->ac, !is_tracer);
+                postac -= maybe_random2(1 + mon->ac, !is_tracer);
+            }
         }
     }
 
     postac = std::max(postac, 0);
 
-    // Don't do side effects (beam might miss or be a tracer).
-    final = mons_adjust_flavoured(mon, *this, postac, false);
+    if (is_tracer)
+    {
+        const int adjusted_postac_max =
+            mons_adjust_flavoured(mon, *this, tracer_postac_max, false);
+        const int adjusted_postac_min =
+            !tracer_postac_min? 0 :
+            mons_adjust_flavoured(mon, *this, tracer_postac_min, false);
+        final = div_round_up(adjusted_postac_max + adjusted_postac_min, 2);
+    }
+    else
+    {
+        // Don't do side effects (beam might miss or be a tracer).
+        final = mons_adjust_flavoured(mon, *this, postac, false);
+    }
 
     // Sanity check. Importantly for
     // tracer_nonenchantment_affect_monster, final > 0
@@ -3831,6 +3884,7 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
 {
     std::vector<std::string> messages;
     int preac, post, final;
+
     if (!determine_damage(mon, preac, post, final, messages))
         return;
 

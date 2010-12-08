@@ -3456,8 +3456,12 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     if (mi.pos.origin())
         return; // not a real monster
     struct monster& mons = *mi.mon();
+
+    inf.body << "\nMonster health: "
+             << mons.hit_points << "/" << mons.max_hit_points << "\n";
+
     const actor *mfoe = mons.get_foe();
-    inf.body << "\nMonster foe: "
+    inf.body << "Monster foe: "
              << (mfoe? mfoe->name(DESC_PLAIN, true)
                  : "(none)");
 
