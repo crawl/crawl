@@ -468,6 +468,8 @@ int count_relevant_monsters(const ability_def& abil)
     monster_type mtyp = MONS_PROGRAM_BUG;
     switch(abil.ability)
     {
+        case ABIL_MAKE_PLANT:         mtyp = MONS_PLANT;         break;
+        case ABIL_MAKE_FUNGUS:        mtyp = MONS_FUNGUS;        break;
         case ABIL_MAKE_OKLOB_SAPLING: mtyp = MONS_OKLOB_SAPLING; break;
         case ABIL_MAKE_OKLOB_CIRCLE:
         case ABIL_MAKE_OKLOB_PLANT:   mtyp = MONS_OKLOB_PLANT;   break;
@@ -517,10 +519,11 @@ int xp_cost(const ability_def& abil)
     switch(abil.ability)
     {
         default:
-            cost = abil.xp_cost;
-            break;
+            return abil.xp_cost;
 
         // Monster type 1: reasonably generous
+        case ABIL_MAKE_PLANT:
+        case ABIL_MAKE_FUNGUS:
         case ABIL_MAKE_OKLOB_SAPLING:
         case ABIL_MAKE_OKLOB_PLANT:
         case ABIL_MAKE_OKLOB_CIRCLE:
@@ -530,6 +533,12 @@ int xp_cost(const ability_def& abil)
             // special case for oklob circles
             if (abil.ability == ABIL_MAKE_OKLOB_CIRCLE)
                 num /= 3;
+            // ... and for harmless stuff
+            else if (abil.ability == ABIL_MAKE_PLANT
+                  || abil.ability == ABIL_MAKE_FUNGUS)
+            {
+                num /= 5;
+            }
             num -= 2;        // first two are base cost
             num = std::max(num, 0);
             scale10 = std::min(num, 10);       // next 10 at 10% increment
@@ -573,12 +582,14 @@ int xp_cost(const ability_def& abil)
             break;
 
     }
+
+    cost *= 1000; // stave off round-off errors
     for (; scale10 > 0; scale10--)
         cost = (cost * 11) / 10;        // +10%
     for (; scale20 > 0; scale20--)
         cost = (cost * 6) / 5;        // +20%
 
-    return cost;
+    return cost / 1000;
 }
 
 const std::string make_cost_description(ability_type ability)
