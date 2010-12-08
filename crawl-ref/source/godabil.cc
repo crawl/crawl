@@ -2440,36 +2440,34 @@ bool ashenzari_transfer_knowledge()
         if (!ashenzari_end_transfer())
             return false;
 
-    you.transfer_from_skill = select_skill();
-    if (you.transfer_from_skill == SK_NONE)
+    while(true)
     {
-        redraw_screen();
-        return false;
-    }
+        skill_menu(true);
+        if (is_invalid_skill(you.transfer_from_skill))
+        {
+            redraw_screen();
+            return false;
+        }
 
-    int fsk_points = you.skill_points[you.transfer_from_skill];
-    int skp_max; // maximum number of skill points transferrable.
+        you.transfer_skill_points = skill_transfer_amount(
+                                                    you.transfer_from_skill);
 
-    skp_max = fsk_points / 2;
-    skp_max = std::max(skp_max, 1000);
-    if (skp_max > fsk_points)
-        skp_max = fsk_points;
+        skill_menu(true);
+        if (is_invalid_skill(you.transfer_to_skill))
+        {
+            you.transfer_from_skill = SK_NONE;
+            you.transfer_skill_points = 0;
+            continue;
+        }
 
-    you.transfer_skill_points = skp_max;
-    you.transfer_to_skill = select_skill();
-    if (you.transfer_to_skill == SK_NONE)
-    {
-        you.transfer_from_skill = SK_NONE;
-        you.transfer_skill_points = 0;
-        redraw_screen();
-        return false;
+        break;
     }
 
     mprf("As you forget about %s, you feel ready to understand %s.",
          skill_name(you.transfer_from_skill),
          skill_name(you.transfer_to_skill));
 
-    you.transfer_total_skill_points = skp_max;
+    you.transfer_total_skill_points = you.transfer_skill_points;
 
     redraw_screen();
     return true;

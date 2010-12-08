@@ -2982,6 +2982,7 @@ enum skill_type
 
     SK_BLANK_LINE,                     // used for skill output
     SK_COLUMN_BREAK,                   // used for skill output
+    SK_TITLE,                          // used for skill output
     SK_NONE,
 };
 
