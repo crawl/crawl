@@ -116,6 +116,9 @@ static bool _make_box(int room_x1, int room_y1, int room_x2, int room_y2,
                       dungeon_feature_type wall=DNGN_UNSEEN,
                       dungeon_feature_type avoid=DNGN_UNSEEN);
 
+static void _place_layout_vault(int level_number, const char *name,
+                                const char *method, const char *type);
+
 static bool _builder_by_type(int level_number, level_area_type level_type);
 static bool _builder_by_branch(int level_number);
 static bool _builder_normal(int level_number, spec_room &s);
@@ -159,6 +162,8 @@ static void _build_lake(dungeon_feature_type lake_type); //mv
 static void _add_plant_clumps(int frequency = 10, int clump_density = 12,
                               int clump_radius = 4);
 
+static void _spotty_level(int level_number);
+static void _caves_level(int level_number);
 static void _bigger_room();
 static void _plan_main(int level_number, int force_plan);
 static bool _plan_1(int level_number);
@@ -2692,15 +2697,8 @@ static bool _builder_by_branch(int level_number)
     case BRANCH_HIVE:
     case BRANCH_SLIME_PITS:
     case BRANCH_ORCISH_MINES:
-    {
-        int iterations;
-        if (at_branch_bottom())
-            iterations = 600 + random2(600);
-        else
-            iterations = 100 + random2(500);
-        spotty_level(iterations, false);
+        _caves_level(level_number);
         return false;
-    }
 
     case BRANCH_SHOALS:
         dgn_build_shoals_level(level_number);
@@ -2808,7 +2806,7 @@ static bool _builder_normal(int level_number, spec_room &sr)
     {
         if (one_chance_in(16))
         {
-            spotty_level(0, coinflip());
+            _spotty_level(level_number);
             return false;
         }
 
@@ -6288,105 +6286,15 @@ static bool _connect_spotty(const coord_def& from)
     return (success);
 }
 
-static void _place_spotty_stairs(void)
+static void _spotty_level(int level_number)
 {
-    int x, y;
-
-    for (int i = DNGN_STONE_STAIRS_DOWN_I; i < DNGN_ESCAPE_HATCH_UP; i++)
-    {
-        if (i == DNGN_ESCAPE_HATCH_DOWN
-            || i == DNGN_STONE_STAIRS_UP_I
-               && !player_in_branch(BRANCH_SLIME_PITS))
-        {
-            continue;
-        }
-
-        do
-        {
-            x = random_range(X_BOUND_1 + 4, X_BOUND_2 - 4);
-            y = random_range(Y_BOUND_1 + 4, Y_BOUND_2 - 4);
-        }
-        while (grd[x][y] != DNGN_ROCK_WALL
-               && grd[x + 1][y] != DNGN_ROCK_WALL);
-
-        grd[x][y] = static_cast<dungeon_feature_type>(i);
-
-        // creating elevators
-        if (i == DNGN_STONE_STAIRS_DOWN_I
-            && !player_in_branch(BRANCH_SLIME_PITS))
-        {
-            grd[x + 1][y] = DNGN_STONE_STAIRS_UP_I;
-        }
-
-        coord_def c(x, y);
-        const int r = (player_in_branch(BRANCH_SLIME_PITS) ? 2 : 1);
-        for (radius_iterator ri(c, r, C_POINTY); ri; ++ri)
-            if (grd(*ri) == DNGN_ROCK_WALL)
-                grd(*ri) = DNGN_FLOOR;
-    }
+    _place_layout_vault(level_number, "spotty", "spotty_level", "caves");
 }
 
-void spotty_level(int iterations, bool boxy)
+static void _caves_level(int level_number)
 {
-    env.level_build_method += make_stringf(" spotty_level [%d%s]",
-                                     iterations, boxy ? " boxy" : "");
-    if (iterations >= 100)
-        env.level_layout_type  = "caves";
-    else
-        env.level_layout_type = "spotty";
-
-    // Assumes starting with a level full of rock walls (1).
-    int i, j, k, l;
-
-    _place_spotty_stairs();
-
-    l = iterations;
-
-    // Boxy levels have more clearing, so they get fewer iterations.
-    if (l == 0)
-        l = 200 + random2((boxy ? 750 : 1500));
-
-    for (i = 0; i < l; ++i)
-    {
-        do
-        {
-            j = random_range(X_BOUND_1 + 4, X_BOUND_2 - 4);
-            k = random_range(Y_BOUND_1 + 4, Y_BOUND_2 - 4);
-        }
-        while (grd[j][k] == DNGN_ROCK_WALL
-               && grd[j - 1][k] == DNGN_ROCK_WALL
-               && grd[j + 1][k] == DNGN_ROCK_WALL
-               && grd[j][k - 1] == DNGN_ROCK_WALL
-               && grd[j][k + 1] == DNGN_ROCK_WALL
-               && grd[j - 2][k] == DNGN_ROCK_WALL
-               && grd[j + 2][k] == DNGN_ROCK_WALL
-               && grd[j][k - 2] == DNGN_ROCK_WALL
-               && grd[j][k + 2] == DNGN_ROCK_WALL);
-
-        if (grd[j][k] == DNGN_ROCK_WALL)
-            grd[j][k] = DNGN_FLOOR;
-        if (grd[j][k - 1] == DNGN_ROCK_WALL)
-            grd[j][k - 1] = DNGN_FLOOR;
-        if (grd[j][k + 1] == DNGN_ROCK_WALL)
-            grd[j][k + 1] = DNGN_FLOOR;
-        if (grd[j - 1][k] == DNGN_ROCK_WALL)
-            grd[j - 1][k] = DNGN_FLOOR;
-        if (grd[j + 1][k] == DNGN_ROCK_WALL)
-            grd[j + 1][k] = DNGN_FLOOR;
-
-        if (boxy)
-        {
-            if (grd[j - 1][k - 1] == DNGN_ROCK_WALL)
-                grd[j - 1][k - 1] = DNGN_FLOOR;
-            if (grd[j + 1][k + 1] == DNGN_ROCK_WALL)
-                grd[j + 1][k + 1] = DNGN_FLOOR;
-            if (grd[j - 1][k + 1] == DNGN_ROCK_WALL)
-                grd[j - 1][k + 1] = DNGN_FLOOR;
-            if (grd[j + 1][k - 1] == DNGN_ROCK_WALL)
-                grd[j + 1][k - 1] = DNGN_FLOOR;
-        }
-    }
-}                               // end spotty_level()
+    _place_layout_vault(level_number, "caves", "caves_level", "caves");
+}
 
 static void _bigger_room()
 {
