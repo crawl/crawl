@@ -5309,6 +5309,9 @@ void player::init()
     fearmongers.clear();
     dactions.clear();
 
+    clinging = 0;
+    zotdef_wave_name.clear();
+
 
     // Non-saved UI state:
     prev_targ        = MHITNOT;
