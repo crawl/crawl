@@ -3786,7 +3786,7 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
     // hurt monsters with low-damage ranged attacks and high-damage
     // melee attacks. I judge this an acceptable compromise (for now).
     //
-    const int preac_min_damage = damage.num;
+    const int preac_min_damage = damage.size? damage.num : 0;
     const int preac_max_damage = damage.num * damage.size;
 
     // preac: damage before AC modifier
