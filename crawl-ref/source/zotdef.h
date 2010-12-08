@@ -10,5 +10,6 @@ bool create_zotdef_ally(monster_type mtyp, const char *successmsg);
 void zotdef_bosses_check();
 
 void debug_waves();
+std::string zotdef_debug_wave_desc();
 
 #endif // ZOTDEF_H
