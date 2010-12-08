@@ -1353,7 +1353,6 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         player_exercise_combat_skills();
 
         player_announce_aux_hit();
-        defender->as_monster()->del_ench(ENCH_HELPLESS);
 
         if (damage_brand == SPWPN_ACID)
         {
@@ -1386,6 +1385,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
              defender->name(DESC_NOCAP_THE).c_str(),
              you.can_see(defender) ? ", but do no damage" : "");
     }
+    defender->as_monster()->del_ench(ENCH_HELPLESS);
 
     if (defender->as_monster()->hit_points < 1)
     {
