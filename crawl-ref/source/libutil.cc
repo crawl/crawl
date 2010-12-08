@@ -418,6 +418,13 @@ std::string pluralise(const std::string &name,
         return (pluralise(name.substr(0, pos)) + name.substr(pos));
     }
 
+    if (ends_with(name, " unborn"))
+    {
+        // Deep dwarf unborn -> deep dwarves unborn.
+        pos = name.length() - 7;
+        return (pluralise(name.substr(0, pos)) + name.substr(pos));
+    }
+
     if (ends_with(name, "us"))
     {
         // Fungus, ufetubus, for instance.
