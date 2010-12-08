@@ -373,7 +373,8 @@ static void _launch_game()
         _wanderer_startup_message();
 
     if (!crawl_state.game_is_tutorial()
-        && !crawl_state.game_is_sprint() && game_start)
+        && crawl_state.game_is_normal()
+        && game_start)
     {
        _announce_goal_message();
     }
