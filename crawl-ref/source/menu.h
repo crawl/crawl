@@ -552,6 +552,8 @@ public:
 
     void add_hotkey(int key);
     const std::vector<int>& get_hotkeys() const;
+    void clear_hotkeys();
+
 protected:
     coord_def m_min_coord;
     coord_def m_max_coord;
@@ -614,6 +616,17 @@ public:
     virtual ~NoSelectTextItem();
     virtual bool selected() const;
     virtual bool can_be_highlighted() const;
+};
+
+/**
+ * Behaves the same as NoSelectTextItem but use formatted text for rendering.
+ * It ignores bg_colour.
+ * TODO: add bg_colour support to formatted_string and merge this with TextItem.
+ */
+class FormattedTextItem : public NoSelectTextItem
+{
+public:
+    virtual void render();
 };
 
 /**
