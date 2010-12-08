@@ -24,7 +24,8 @@ enum tag_minor_version
     TAG_MINOR_NO_CSTRINGS    = 14, // No const-length strings in saves.
     TAG_MINOR_YOU_FORM       = 15, // Give transformations a field on their own.
     TAG_MINOR_NEMELEX_TOGGLE = 16, // Store Nemelex' sacrificing toggle values.
-    TAG_MINOR_VERSION        = 16, // Current version.  (Keep equal to max.)
+    TAG_MINOR_ZOTDEF_NAME    = 17, // ZotDef wave name.
+    TAG_MINOR_VERSION        = 17, // Current version.  (Keep equal to max.)
 };
 
 #endif

@@ -332,6 +332,8 @@ public:
   bool clinging;
   // Array of walls which player is currently clinging to.
   std::vector<coord_def>    cling_to;
+  // The type of a zotdef wave, if any.
+  std::string zotdef_wave_name;
 protected:
     FixedVector<PlaceInfo, NUM_BRANCHES>             branch_info;
     FixedVector<PlaceInfo, NUM_LEVEL_AREA_TYPES - 1> non_branch_info;

@@ -41,8 +41,6 @@
 #define BOSS_SLOT NSLOTS
 #define END static_cast<monster_type>(-1)
 
-#define wave_name(x) dprf(x)
-
 static monster_type _pick_unique(int level);
 
 static int _fuzz_mons_level(int level)
@@ -223,6 +221,12 @@ static void _zotdef_danger_msg(const char *msg)
 {
     mpr(msg, MSGCH_DANGER);
     more();
+}
+
+static void wave_name(const char *n)
+{
+    you.zotdef_wave_name = n;
+    dprf("%s", n);
 }
 
 static void _hydra_wave(int power)
@@ -646,7 +650,7 @@ static monster_type _get_zotdef_monster(level_id &place, int power)
 
 static void _zotdef_set_random_branch_wave(int power)
 {
-    //mprf("RANDOM WAVE");
+    wave_name("RANDOM WAVE");
     for (int i = 0; i < NSLOTS; i++)
     {
         level_id l(_zotdef_random_branch(), -1);
@@ -660,8 +664,10 @@ static void _zotdef_set_random_branch_wave(int power)
 static void _zotdef_set_branch_wave(branch_type b, int power)
 {
     level_id l(b,-1);
-    dprf("BRANCH WAVE: BRANCH %s",
+    char buf[128];
+    snprintf(buf, sizeof(buf), "BRANCH WAVE: BRANCH %s",
          (b == NUM_BRANCHES) ? "RANDOM" : branches[b].shortname);
+    wave_name(buf);
     for (int i = 0; i < NSLOTS; i++)
         env.mons_alloc[i] = _get_zotdef_monster(l, _fuzz_mons_level(power));
     env.mons_alloc[BOSS_SLOT] = _get_zotdef_monster(l,
@@ -750,7 +756,7 @@ void zotdef_set_wave()
 
 std::string zotdef_debug_wave_desc()
 {
-    std::string list = "[";
+    std::string list = you.zotdef_wave_name + " [";
     for (int i = 0; i <= NSLOTS; i++)
     {
         if (i)

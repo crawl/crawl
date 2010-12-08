@@ -1198,6 +1198,8 @@ static void tag_construct_you(writer &th)
 
     marshallByte(th, you.friendly_pickup);
 
+    marshallString(th, you.zotdef_wave_name);
+
     if (!dlua.callfn("dgn_save_data", "u", &th))
         mprf(MSGCH_ERROR, "Failed to save Lua data: %s", dlua.error.c_str());
 
@@ -1863,6 +1865,11 @@ static void tag_read_you(reader &th, int minorVersion)
     you.m_quiver->load(th);
 
     you.friendly_pickup = unmarshallByte(th);
+
+#if TAG_MAJOR_VERSION == 31
+    if (minorVersion >= TAG_MINOR_ZOTDEF_NAME)
+#endif
+    you.zotdef_wave_name = unmarshallString(th);
 
     if (!dlua.callfn("dgn_load_data", "u", &th))
         mprf(MSGCH_ERROR, "Failed to load Lua persist table: %s",
