@@ -2304,7 +2304,8 @@ static bool _trowel_card(int power, deck_rarity_type rarity)
     // handles stacked level_area_types correctly. We should also
     // review whether Trowel being able to create infinite portal
     // vaults is a Good Thing, because it looks pretty broken to me.
-    if (power_level >= 2 && you.level_type == LEVEL_DUNGEON)
+    if (power_level >= 2 && you.level_type == LEVEL_DUNGEON
+        && crawl_state.game_standard_levelgen())
     {
         // Generate a portal to something.
         const map_def *map = random_map_for_tag("trowel_portal");

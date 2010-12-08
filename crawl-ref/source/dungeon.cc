@@ -396,9 +396,8 @@ static bool _build_level_vetoable(int level_number, level_area_type level_type,
 
     _dgn_set_floor_colours();
 
-    if (_valid_dungeon_level(level_number, level_type) ||
-        crawl_state.game_is_zotdef() ||
-        crawl_state.game_is_sprint())
+    if (!crawl_state.game_standard_levelgen()
+        || _valid_dungeon_level(level_number, level_type))
     {
 #ifdef DEBUG_MONS_SCAN
         // If debug_mons_scan() finds a problem while Generating_Level is
@@ -407,8 +406,11 @@ static bool _build_level_vetoable(int level_number, level_area_type level_type,
         debug_mons_scan();
 #endif
 
-        if (env.level_build_method.size() > 0 && env.level_build_method[0] == ' ')
+        if (env.level_build_method.size() > 0
+            && env.level_build_method[0] == ' ')
+        {
             env.level_build_method = env.level_build_method.substr(1);
+        }
 
         // Save information in the level's properties hash table
         // so we can inlcude it in crash reports.
@@ -2121,58 +2123,41 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
 
     // Try to place minivaults that really badly want to be placed. Still
     // no guarantees, seeing this is a minivault.
-    if (!crawl_state.game_is_sprint()
-        && !crawl_state.game_is_zotdef()
-        && !crawl_state.game_is_tutorial())
+    if (crawl_state.game_standard_levelgen())
     {
         _place_chance_vaults();
         _place_minivaults();
         _place_branch_entrances(level_number, level_type);
         _place_extra_vaults();
-    }
 
-    // XXX: Moved this here from builder_monsters so that connectivity can be
-    //      ensured
-    _place_uniques(level_number, level_type);
+        // XXX: Moved this here from builder_monsters so that
+        //      connectivity can be ensured
+        _place_uniques(level_number, level_type);
 
-    // Place shops, if appropriate. This must be protected by the connectivity
-    // check.
-    if (level_type == LEVEL_DUNGEON)
-        _place_shops(level_number);
+        // Place shops, if appropriate. This must be protected by the
+        // connectivity check.
+        if (level_type == LEVEL_DUNGEON)
+            _place_shops(level_number);
 
-    // Any vault-placement activity must happen before this check.
-    if (!crawl_state.game_is_sprint()
-        && !crawl_state.game_is_zotdef()
-        && !crawl_state.game_is_tutorial())
+        // Any vault-placement activity must happen before this check.
         _dgn_verify_connectivity(nvaults);
 
-    if (!crawl_state.game_is_zotdef())
         _place_traps(level_number);
 
-    _place_fog_machines(level_number);
+        _place_fog_machines(level_number);
 
-    // Place items.
-    if (!crawl_state.game_is_sprint()
-        && !crawl_state.game_is_zotdef()
-        && !crawl_state.game_is_tutorial())
-    {
+        // Place items.
         _builder_items(level_number, _num_items_wanted(level_number));
-    }
 
-    // Place monsters.
-    if (!crawl_state.game_is_zotdef())
-        _builder_monsters(level_number, level_type,
-                          _num_mons_wanted(level_type));
+        // Place monsters.
+        if (!crawl_state.game_is_zotdef())
+            _builder_monsters(level_number, level_type,
+                              _num_mons_wanted(level_type));
 
-    if (!crawl_state.game_is_sprint()
-        && !crawl_state.game_is_zotdef()
-        && !crawl_state.game_is_tutorial())
-    {
         _fixup_walls();
         _fixup_branch_stairs();
+        _place_altars();
     }
-
-    _place_altars();
 
     _fixup_misplaced_items();
 
@@ -4495,13 +4480,8 @@ bool dgn_place_map(const map_def *mdef,
         }
     }
 
-    if (!crawl_state.game_is_sprint()
-        && !crawl_state.game_is_zotdef()
-        && !crawl_state.game_is_tutorial())
-    {
-        did_map = _build_secondary_vault(you.absdepth0, mdef, clobber,
-                                                        make_no_exits, where);
-    }
+    did_map = _build_secondary_vault(you.absdepth0, mdef, clobber,
+                                     make_no_exits, where);
 
     // Activate any markers within the map.
     if (did_map && !Generating_Level)
