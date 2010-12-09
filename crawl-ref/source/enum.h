@@ -1855,8 +1855,8 @@ enum monster_type                      // (int) menv[].type
     MONS_SENSED,                // dummy monster for unspecified sensed mons
     MONS_PLAYER,                // a certain ugly creature
     MONS_VAMPIRE_BAT,           // for recolouring
-    MONS_DEMIGOD,               // for recolouring
-    MONS_DEMONSPAWN,            // for recolouring... but there are FRs
+    MONS_DEMIGOD,               // recolouring + single vault
+    MONS_DEMONSPAWN,            // recolouring + single vault... but there are FRs
     MONS_GLOWING_SHAPESHIFTER,
     MONS_SHAPESHIFTER,
     MONS_GIANT_MITE,                   //  100
@@ -1971,9 +1971,9 @@ enum monster_type                      // (int) menv[].type
     MONS_SEA_SNAKE,
 
     MONS_HYPERACTIVE_BALLISTOMYCETE,
-    MONS_HALFLING,              // for recolouring only.  And let's remove them!
-    MONS_FELID,                 // for recolouring only.  Miaow!
-    MONS_SPIDER,                // for recolouring, for now.
+    MONS_HALFLING,              // recolouring + single vault.  And let's remove them!
+    MONS_FELID,                 // recolouring + single vault.  Miaow!
+    MONS_SPIDER,
     MONS_OKLOB_SAPLING,
     MONS_BURNING_BUSH,
       MONS_UNUSED_213,
