@@ -12,6 +12,7 @@
 #include "cloud.h"
 #include "colour.h"
 #include "coord.h"
+#include "coordit.h"
 #include "decks.h"
 #include "describe.h"
 #include "env.h"
@@ -1768,12 +1769,47 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     return TILEP_MONS_PROGRAM_BUG;
 }
 
-static bool _tentacle_pos_unknown(const monster *tentacle)
+// Returns true if using a directional tentacle tile would leak 
+// information the player doesn't have about a tentacle segment's
+// current position.
+static bool _tentacle_pos_unknown(const monster *tentacle, 
+							   	  const coord_def orig_pos)
 {
 	if (!tentacle->submerged())
 		return (false);
-		
-	return (grd(tentacle->pos()) == DNGN_DEEP_WATER);
+
+	const coord_def t_pos = tentacle->pos();
+
+	// Checks whether there are any positions adjacent to the
+	// original tentacle that might also contain the segment.
+	for (adjacent_iterator ai(orig_pos); ai; ++ai)
+	{
+		if (*ai == t_pos)
+			continue;
+
+		if (!in_bounds(*ai))
+			continue;
+
+		// If there's an adjacent deep water tile, the segment
+		// might be there instead.
+		if (grd(*ai) == DNGN_DEEP_WATER)
+			return (true);
+			
+		if (grd(*ai) == DNGN_SHALLOW_WATER)
+		{
+			// We know there's no monster there.
+			if (you.pos() == *ai || !monster_at(*ai))
+				continue;
+
+			// Disturbance in shallow water -> might be a tentacle.
+			const monster *mon = monster_at(*ai);
+			if (mon->submerged())
+				return (true);
+		}
+	}
+
+	// Using a directional tile leaks no information.
+	return (false);
 }
 
 static tileidx_t _tileidx_tentacle(const monster *mon)
@@ -1794,8 +1830,9 @@ static tileidx_t _tileidx_tentacle(const monster *mon)
 	const coord_def h_pos = head.pos();  // head position
 	ASSERT(adjacent(t_pos, h_pos));
 
-	const bool head_in_water =
-		(head.type == MONS_KRAKEN || _tentacle_pos_unknown(&head));
+	const bool head_in_water = 
+					(head.type == MONS_KRAKEN 
+					 || _tentacle_pos_unknown(&head, mon->pos()));
 
 	// Tentacle end only requires checking of head position.
 	if (mon->type == MONS_KRAKEN_TENTACLE)
@@ -1853,7 +1890,7 @@ static tileidx_t _tileidx_tentacle(const monster *mon)
 		return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_WATER;
 	}
 
-	if (head_in_water || _tentacle_pos_unknown(&next))
+	if (head_in_water || _tentacle_pos_unknown(&next, mon->pos()))
 	{
 		// One segment end goes into water, the other
 		// into the direction of head or next.
