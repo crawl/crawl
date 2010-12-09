@@ -252,6 +252,7 @@ SkillMenuEntry::SkillMenuEntry(coord_def coord, MenuFreeform* ff)
 {
     m_name = new TextItem();
     _add_item(m_name, ff, NAME_SIZE, coord);
+    m_name->set_highlight_colour(BROWN);
 
     m_level = new NoSelectTextItem();
     _add_item(m_level, ff, LEVEL_SIZE, coord);
@@ -298,7 +299,6 @@ void SkillMenuEntry::set_name(bool keep_hotkey)
         if (!keep_hotkey)
             m_name->add_hotkey(++m_letter);
         m_name->set_id(m_sk);
-        m_name->set_highlight_colour(LIGHTGRAY);
         m_name->allow_highlight(true);
     }
     else
