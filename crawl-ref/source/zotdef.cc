@@ -544,10 +544,14 @@ static void _zotdef_set_special_wave(int power)
 
 void debug_waves()
 {
-    for (int i = 0; i < 15 * FREQUENCY_OF_RUNES; i++)
+    // Test more than just 15 runes, the player may stay longer, and if
+    // for some reason a rune is lost, he will have to, and get extra
+    // demonics.
+    for (int i = 0; i < 30 * FREQUENCY_OF_RUNES; i++)
     {
         you.num_turns += CYCLE_LENGTH;
         zotdef_set_wave();
+        // debuglog("%i: %s\n", i, zotdef_debug_wave_desc().c_str());
     }
 }
 
