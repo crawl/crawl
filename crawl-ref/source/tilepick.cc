@@ -1352,8 +1352,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_GLOWING_SHAPESHIFTER;
     case MONS_KILLER_KLOWN:
         return TILEP_MONS_KILLER_KLOWN;
-    case MONS_DWARF:
-        return TILEP_MONS_DWARF;
     case MONS_SLAVE:
         return _mon_mod(TILEP_MONS_SLAVE, tile_num_prop);
     case MONS_DEMONSPAWN:
@@ -1610,6 +1608,12 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_NERGALLE;
     case MONS_SAINT_ROKA:
         return TILEP_MONS_SAINT_ROKA;
+
+    // dwarves ('q')
+    case MONS_DWARF:
+        return TILEP_MONS_DWARF;
+    case MONS_GNOME:
+        return TILEP_MONS_GNOME;
 
     // curse skull ('z')
     case MONS_MURRAY:
@@ -2642,6 +2646,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     case MONS_DWARF:
     case MONS_DEEP_DWARF:
         return TILE_CORPSE_DWARF;
+    case MONS_GNOME:
+        return TILE_CORPSE_GNOME;
 
     // rodents ('r')
     case MONS_RAT:
