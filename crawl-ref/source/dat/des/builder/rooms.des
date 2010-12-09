@@ -1,40 +1,24 @@
 lua {{
 
-function fill_special_room(mon, lord_mon, pack)
-    local level, tl_x, tl_y, br_x, br_y = dgn.get_special_room_info()
-
-    -- Return early if we're being called during map validation.
-    if not level then
-        return
-    end
-
+function fill_special_room(e, mon, lord_mon, pack)
     if type(mon) == "table" then
         mon = util.join(" / ", mon)
     end
 
-    if type(mon) == "string" then
-        mon = dgn.monster_spec(mon)
-    end
+    e.default_subvault_glyphs()
 
-    local lord_x, lord_y = -1, -1
-    if lord_mon then
-        lord_x = crawl.random_range(tl_x, br_x)
-        lord_y = crawl.random_range(tl_y, br_y)
-    end
-
-    for x = tl_x, br_x do
-        for y = tl_y, br_y do
-            if (pack or not crawl.one_chance_in(4))
-               and not (lord_x == x and lord_y == y)
-            then
-                dgn.create_monster(x, y, mon)
-            end
-        end
+    if pack then
+        e.subst('. : 1')
+    else
+        e.subst('. = 1:30 .')
     end
 
     if lord_mon then
-        dgn.create_monster(lord_x, lord_y, lord_mon)
+        e.nsubst('1 = 1:2 / *:1')
+        e.kmons('2 = ' .. lord_mon)
     end
+
+    e.kmons('1 = ' .. mon)
 end
 
 -- NOTE: To make beehives occur in the Lair with the same absolute frequency
@@ -46,8 +30,8 @@ function is_in_lair()
     return string.find(dgn.level_name(dgn.level_id()), "Lair")
 end
 
-function sroom_kobold_lair()
-    local level = dgn.get_special_room_info()
+function sroom_kobold_lair(e)
+    local level = you.absdepth() - 1
 
     -- Return early if we're being called during map validation.
     if not level then
@@ -73,11 +57,11 @@ function sroom_kobold_lair()
 
     local mon = "kobold w:" .. small_freq .. " / big kobold w:" .. big_freq
 
-    fill_special_room(mon, "big kobold")
+    fill_special_room(e, mon, "big kobold")
 end
 
-function sroom_orc_lair()
-    local level = dgn.get_special_room_info()
+function sroom_orc_lair(e)
+    local level = you.absdepth() - 1
 
     -- Return early if we're being called during map validation.
     if not level then
@@ -100,41 +84,35 @@ function sroom_orc_lair()
         mon = "orc w:9 / orc warrior w:1"
     end
 
-    fill_special_room(mon)
+    fill_special_room(e, mon)
 end
 
-function sroom_beehive()
-    local level, tl_x, tl_y, br_x, br_y = dgn.get_special_room_info()
+function sroom_beehive(e)
+    local level = you.absdepth() - 1
 
     -- Return early if we're being called during map validation.
     if not level then
         return
     end
-    fill_special_room("patrolling killer bee larva w:1 / "
+
+    fill_special_room(e, "patrolling killer bee larva w:1 / "
                       .. "patrolling killer bee w:6",
                       "patrolling queen bee", true)
 
-    local food = dgn.item_spec("royal jelly w:1 / honeycomb w:24")
-    for x = tl_x, br_x do
-        for y = tl_y, br_y do
-            if crawl.one_chance_in(2) then
-                dgn.create_item(x, y, food)
-            end
-        end
-    end
+    e.kitem('12 = royal jelly w:1 / honeycomb w:24 / nothing w:25')
 end
 
-function sroom_morgue()
+function sroom_morgue(e)
     if is_in_lair() then
         return
     end
 
-    fill_special_room("small zombie w:500 / wight w:167 / necrophage w:167 / "
+    fill_special_room(e, "small zombie w:500 / wight w:167 / necrophage w:167 / "
                       .. "wraith w:125 / vampire w:42", nil, true)
 end
 
-function sroom_jelly_pit()
-    local level, tl_x, tl_y, br_x, br_y = dgn.get_special_room_info()
+function sroom_jelly_pit(e)
+    local level = you.absdepth() - 1
 
     -- Return early if we're being called during map validation.
     if not level then
@@ -156,20 +134,13 @@ function sroom_jelly_pit()
         mons[6] = "acid blob w:" .. (1 + math.floor((level - 15) / 4))
     end
 
-    -- XXX: This may leave behind random Jiyva altars when the vault is veto'd.
-    -- It really shouldn't, though!
-    local jiyva_placed = false
-    local jiyva_altar = dgn.fnum("altar_jiyva")
-    for x = tl_x, br_x do
-        for y = tl_y, br_y do
-            if not jiyva_placed and crawl.one_chance_in(30) then
-                dgn.grid(x, y, jiyva_altar)
-                jiyva_placed = true
-            end
-        end
-    end
+    fill_special_room(e, mons, nil, true)
 
-    fill_special_room(mons, nil, true)
+    -- XXX: What should the odds be?
+    if crawl.coinflip() then
+        e.nsubst('1 = 1:A / *:1')
+        e.kfeat('A = altar_jiyva')
+    end
 end
 }}
 
@@ -177,145 +148,145 @@ end
 
 NAME:   special_room_kobold
 DEPTH:  6-14, !Lair, !Crypt
-TAGS:   special_room allow_dup
+TAGS:   special_room allow_dup unrand
 WEIGHT: 11
-: sroom_kobold_lair()
+: sroom_kobold_lair(_G)
 MAP
 ENDMAP
 
 NAME:   special_room_orc_a
 DEPTH:  8-14, !Lair, !Crypt
-TAGS:   special_room allow_dup
+TAGS:   special_room allow_dup unrand
 WEIGHT: 59
-: sroom_orc_lair()
+: sroom_orc_lair(_G)
 MAP
 ENDMAP
 
 NAME:   special_room_bee_a
 DEPTH:  8-14, !Crypt
-TAGS:   special_room allow_dup
+TAGS:   special_room allow_dup unrand
 WEIGHT: 30
-: sroom_beehive()
+: sroom_beehive(_G)
 MAP
 ENDMAP
 ################################
 NAME:   special_room_orc_b
 DEPTH:  15-16, !Lair, !Crypt
-TAGS:   special_room allow_dup
+TAGS:   special_room allow_dup unrand
 WEIGHT: 50
-: sroom_orc_lair()
+: sroom_orc_lair(_G)
 MAP
 ENDMAP
 
 NAME:   special_room_bee_b
 DEPTH:  15-16, !Crypt
-TAGS:   special_room allow_dup
+TAGS:   special_room allow_dup unrand
 WEIGHT: 25
-: sroom_beehive()
+: sroom_beehive(_G)
 MAP
 ENDMAP
 
 NAME:   special_room_morgue_b
 DEPTH:  15-16, !Lair
-TAGS:   special_room allow_dup
+TAGS:   special_room allow_dup unrand
 WEIGHT: 25
-: sroom_morgue()
+: sroom_morgue(_G)
 MAP
 ENDMAP
 #################################
 NAME:   special_room_orc_c
 DEPTH:  17, !Lair, !Crypt
-TAGS:   special_room allow_dup
+TAGS:   special_room allow_dup unrand
 WEIGHT: 40
-: sroom_orc_lair()
+: sroom_orc_lair(_G)
 MAP
 ENDMAP
 
 NAME:   special_room_bee_c
 DEPTH:  17, !Crypt
-TAGS:   special_room allow_dup
+TAGS:   special_room allow_dup unrand
 WEIGHT: 25
-: sroom_beehive()
+: sroom_beehive(_G)
 MAP
 ENDMAP
 
 NAME:   special_room_morgue_c
 DEPTH:  17, !Lair
-TAGS:   special_room allow_dup
+TAGS:   special_room allow_dup unrand
 WEIGHT: 27
-: sroom_morgue()
+: sroom_morgue(_G)
 MAP
 ENDMAP
 
 NAME:   special_room_jelly_c
 DEPTH:  17, !Crypt
-TAGS:   special_room allow_dup
+TAGS:   special_room allow_dup unrand
 WEIGHT: 9
-: sroom_jelly_pit()
+: sroom_jelly_pit(_G)
 MAP
 ENDMAP
 #################################
 NAME:   special_room_orc_d
 DEPTH:  18-20, !Lair, !Crypt
-TAGS:   special_room allow_dup
+TAGS:   special_room allow_dup unrand
 WEIGHT: 25
-: sroom_orc_lair()
+: sroom_orc_lair(_G)
 MAP
 ENDMAP
 
 NAME:   special_room_bee_d
 DEPTH:  18-20, !Crypt
-TAGS:   special_room allow_dup
+TAGS:   special_room allow_dup unrand
 WEIGHT: 33
-: sroom_beehive()
+: sroom_beehive(_G)
 MAP
 ENDMAP
 
 NAME:   special_room_morgue_d
 DEPTH:  18-20, !Lair
-TAGS:   special_room allow_dup
+TAGS:   special_room allow_dup unrand
 WEIGHT: 29
-: sroom_morgue()
+: sroom_morgue(_G)
 MAP
 ENDMAP
 
 NAME:   special_room_jelly_d
 DEPTH:  18-20, !Crypt
-TAGS:   special_room allow_dup
+TAGS:   special_room allow_dup unrand
 WEIGHT: 13
-: sroom_jelly_pit()
+: sroom_jelly_pit(_G)
 MAP
 ENDMAP
 #################################
 NAME:   special_room_orc_e
 DEPTH:  21-, !Lair, !Crypt
-TAGS:   special_room allow_dup
+TAGS:   special_room allow_dup unrand
 WEIGHT: 15
-: sroom_orc_lair()
+: sroom_orc_lair(_G)
 MAP
 ENDMAP
 
 NAME:   special_room_bee_e
 DEPTH:  21-, !Crypt
-TAGS:   special_room allow_dup
+TAGS:   special_room allow_dup unrand
 WEIGHT: 8
-: sroom_beehive()
+: sroom_beehive(_G)
 MAP
 ENDMAP
 
 NAME:   special_room_morgue_e
 DEPTH:  21-, !Lair
-TAGS:   special_room allow_dup
+TAGS:   special_room allow_dup unrand
 WEIGHT: 32
-: sroom_morgue()
+: sroom_morgue(_G)
 MAP
 ENDMAP
 
 NAME:   special_room_jelly_e
 DEPTH:  21-, !Crypt
-TAGS:   special_room allow_dup
+TAGS:   special_room allow_dup unrand
 WEIGHT: 45
-: sroom_jelly_pit()
+: sroom_jelly_pit(_G)
 MAP
 ENDMAP
 
