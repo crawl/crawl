@@ -2749,11 +2749,11 @@ DEPTH: 6-30
 
     local entrance_x, entrance_y
     if crawl.coinflip() then
-	entrance_x = crawl.coinflip() and 0 or width - 1
-	entrance_y = crawl.random_range(1, height - 2)
+        entrance_x = crawl.coinflip() and 0 or width - 1
+        entrance_y = crawl.random_range(1, height - 2)
     else
-	entrance_x = crawl.random_range(1, width - 2)
-	entrance_y = crawl.coinflip() and 0 or height - 1
+        entrance_x = crawl.random_range(1, width - 2)
+        entrance_y = crawl.coinflip() and 0 or height - 1
     end
 
     mapgrd[entrance_x][entrance_y] = '+'
