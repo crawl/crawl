@@ -2673,8 +2673,7 @@ static void _place_minivaults(const std::string &tag, int lo, int hi,
     }
 }
 
-// Returns false if we should dispense with city building, true otherwise.  Also
-// sets special_room if one is generated so that we can link it up later.
+// Returns false if we should dispense with city building, true otherwise.
 static bool _builder_normal(int level_number)
 {
     bool skipped = false;
