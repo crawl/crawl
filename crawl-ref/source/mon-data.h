@@ -3361,7 +3361,8 @@ AXED_MON(MONS_UNUSED_NISSE)
 
 {
     MONS_OKLOB_SAPLING, 'p', LIGHTGREEN, "oklob sapling",
-    M_SPECIAL_ABILITY | M_STATIONARY,
+    // if we decide to allow this for normal games, please remove M_NO_POLY_TO
+    M_SPECIAL_ABILITY | M_STATIONARY | M_NO_POLY_TO,
     MR_RES_POISON | MR_RES_ACID,
     0, 10, MONS_PLANT, MONS_OKLOB_PLANT, MH_PLANT, -3,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
