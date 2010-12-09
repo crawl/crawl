@@ -3468,10 +3468,22 @@ static bool _may_cutdown(monster* mons, monster* targ)
     // [ds] I'm deliberately making the alignment checks symmetric here.
     // The previous check involved good-neutrals never attacking friendlies
     // and friendlies never attacking anything other than hostiles.
-    const bool bad_align =
-        ((mons->friendly() || mons->good_neutral())
-         && (targ->friendly() || targ->good_neutral()));
-    return (mons_is_firewood(targ) && !bad_align);
+    if ((mons->friendly() || mons->good_neutral())
+         && (targ->friendly() || targ->good_neutral()))
+    {
+        return false;
+    }
+    // Outside of that case, can always cut mundane plants.
+    if (mons_is_firewood(targ))
+        return true;
+
+    // In normal games, that's it.  Gotta keep those butterflies alive...
+    if (!crawl_state.game_is_zotdef())
+        return false;
+
+    return (mons_is_stationary(targ)
+            || mons_class_flag(mons_base_type(targ), M_NO_EXP_GAIN)
+               && !mons_is_tentacle(targ->type));
 }
 
 static bool _monster_move(monster* mons)
@@ -3747,7 +3759,7 @@ static bool _monster_move(monster* mons)
         if (monster* targ = monster_at(mons->pos() + mmov))
         {
             if (mons_aligned(mons, targ) &&
-                (!crawl_state.game_is_zotdef() || !mons_is_firewood(targ)))
+                (!crawl_state.game_is_zotdef() || !_may_cutdown(mons, targ)))
                 // Zotdef: monsters will cut down firewood
                 ret = _monster_swaps_places(mons, mmov);
             else
