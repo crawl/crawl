@@ -1768,6 +1768,14 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     return TILEP_MONS_PROGRAM_BUG;
 }
 
+static bool _tentacle_pos_unknown(const monster *tentacle)
+{
+	if (!tentacle->submerged())
+		return (false);
+		
+	return (grd(tentacle->pos()) == DNGN_DEEP_WATER);
+}
+
 static tileidx_t _tileidx_tentacle(const monster *mon)
 {
 	ASSERT(mon->type == MONS_KRAKEN_TENTACLE
@@ -1787,7 +1795,7 @@ static tileidx_t _tileidx_tentacle(const monster *mon)
 	ASSERT(adjacent(t_pos, h_pos));
 
 	const bool head_in_water =
-					(head.type == MONS_KRAKEN || head.submerged());
+		(head.type == MONS_KRAKEN || _tentacle_pos_unknown(&head));
 
 	// Tentacle end only requires checking of head position.
 	if (mon->type == MONS_KRAKEN_TENTACLE)
@@ -1845,7 +1853,7 @@ static tileidx_t _tileidx_tentacle(const monster *mon)
 		return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_WATER;
 	}
 
-	if (head_in_water || next.submerged())
+	if (head_in_water || _tentacle_pos_unknown(&next))
 	{
 		// One segment end goes into water, the other
 		// into the direction of head or next.
