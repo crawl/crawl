@@ -112,37 +112,9 @@ electric_eel MONS_ELECTRIC_EEL
 lava_fish MONS_LAVA_FISH
 shark MONS_SHARK
 jellyfish MONS_JELLYFISH /*'J'*/
-## Kraken head ('X') and tentacles ('w')
-%sdir dc-mon/kraken
-kraken_head MONS_KRAKEN_HEAD
-## Tentacles emerging from water
-%sdir dc-mon/kraken/tentacles
-kraken_tentacle1 MONS_KRAKEN_TENTACLE_WATER
-kraken_tentacle2
-kraken_tentacle3
-kraken_tentacle4
-kraken_tentacle5
-kraken_tentacle6
-## Tentacles connected to another segment
-kraken_tentacle_N MONS_KRAKEN_TENTACLE_N
-kraken_tentacle_S MONS_KRAKEN_TENTACLE_S
-kraken_tentacle_E MONS_KRAKEN_TENTACLE_E
-kraken_tentacle_W MONS_KRAKEN_TENTACLE_W
-kraken_tentacle_NE MONS_KRAKEN_TENTACLE_NE
-kraken_tentacle_NW MONS_KRAKEN_TENTACLE_NW
-kraken_tentacle_SE MONS_KRAKEN_TENTACLE_SE
-kraken_tentacle_SW MONS_KRAKEN_TENTACLE_SW
-%sdir dc-mon/kraken/segments
-kraken_tentacle_segment_water_N MONS_KRAKEN_TENTACLE_SEGMENT_N
-kraken_tentacle_segment_water_S MONS_KRAKEN_TENTACLE_SEGMENT_S
-kraken_tentacle_segment_water_E MONS_KRAKEN_TENTACLE_SEGMENT_E
-kraken_tentacle_segment_water_W MONS_KRAKEN_TENTACLE_SEGMENT_W
-kraken_tentacle_segment_water_NE MONS_KRAKEN_TENTACLE_SEGMENT_NE
-kraken_tentacle_segment_water_NW MONS_KRAKEN_TENTACLE_SEGMENT_NW
-kraken_tentacle_segment_water_SE MONS_KRAKEN_TENTACLE_SEGMENT_SE
-kraken_tentacle_segment_water_SW MONS_KRAKEN_TENTACLE_SEGMENT_SW
-kraken_tentacle_segment_water_water MONS_KRAKEN_TENTACLE_SEGMENT_WATER
 %rim 1
+
+%include dc-kraken.txt
 
 ## Beetles ('B')
 %sdir dc-mon/animals
