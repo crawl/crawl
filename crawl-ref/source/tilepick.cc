@@ -19,6 +19,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "libutil.h"
+#include "mon-iter.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "options.h"
@@ -1318,8 +1319,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_JELLYFISH;
     case MONS_KRAKEN:
         return TILEP_MONS_KRAKEN_HEAD;
-    case MONS_KRAKEN_TENTACLE:
-        return _mon_random(TILEP_MONS_KRAKEN_TENTACLE);
 
     // lava monsters
     case MONS_LAVA_WORM:
@@ -1769,6 +1768,126 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     return TILEP_MONS_PROGRAM_BUG;
 }
 
+static tileidx_t _tileidx_tentacle(const monster *mon)
+{
+	ASSERT(mon->type == MONS_KRAKEN_TENTACLE
+		   || mon->type == MONS_KRAKEN_TENTACLE_SEGMENT);
+	// No point to drawing submerged monsters.
+	ASSERT(!mon->submerged());
+
+	// Get the parent tentacle.
+	ASSERT(mon->props.exists("inwards"));
+	const int h_idx = mon->props["inwards"].get_int();
+	ASSERT(!invalid_monster_index(h_idx));
+	const monster head = menv[h_idx];
+
+    // Get head and tentacle positions.
+	const coord_def t_pos = mon->pos();  // tentacle position
+	const coord_def h_pos = head.pos();  // head position
+	ASSERT(adjacent(t_pos, h_pos));
+
+	const bool head_in_water =
+					(head.type == MONS_KRAKEN || head.submerged());
+
+	// Tentacle end only requires checking of head position.
+	if (mon->type == MONS_KRAKEN_TENTACLE)
+	{
+		if (head_in_water)
+			return _mon_random(TILEP_MONS_KRAKEN_TENTACLE_WATER);
+
+		ASSERT(head.type == MONS_KRAKEN_TENTACLE_SEGMENT);
+
+		// Different handling according to relative positions.
+		if (h_pos.x == t_pos.x)
+		{
+			if (h_pos.y < t_pos.y)
+				return TILEP_MONS_KRAKEN_TENTACLE_N;
+			else
+				return TILEP_MONS_KRAKEN_TENTACLE_S;
+		}
+		else if (h_pos.y == t_pos.y)
+		{
+			if (h_pos.x < t_pos.x)
+				return TILEP_MONS_KRAKEN_TENTACLE_W;
+			else
+				return TILEP_MONS_KRAKEN_TENTACLE_E;
+		}
+		else if (h_pos.x < t_pos.x)
+		{
+			if (h_pos.y < t_pos.y)
+				return TILEP_MONS_KRAKEN_TENTACLE_NW;
+			else
+				return TILEP_MONS_KRAKEN_TENTACLE_SW;
+		}
+		else if (h_pos.x > t_pos.x)
+		{
+			if (h_pos.y < t_pos.y)
+				return TILEP_MONS_KRAKEN_TENTACLE_NE;
+			else
+				return TILEP_MONS_KRAKEN_TENTACLE_SE;
+		}
+		ASSERT(false);
+	}
+
+	// Only tentacle segments from now on.
+	ASSERT(mon->type == MONS_KRAKEN_TENTACLE_SEGMENT);
+
+	// For segments, we also need the next segment (or end piece).
+	ASSERT(mon->props.exists("outwards"));
+	const int n_idx = mon->props["outwards"].get_int();
+	ASSERT(!invalid_monster_index(n_idx));
+	const monster next = menv[n_idx];
+
+	const coord_def n_pos = next.pos();  // next position
+	if (head_in_water && next.submerged())
+	{
+		// Both head and next are submerged.
+		return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_WATER;
+	}
+
+	if (head_in_water || next.submerged())
+	{
+		// One segment end goes into water, the other
+		// into the direction of head or next.
+		const coord_def s_pos = (head_in_water ? n_pos : h_pos);
+
+		if (s_pos.x == t_pos.x)
+		{
+			if (s_pos.y < t_pos.y)
+				return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N;
+			else
+				return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S;
+		}
+		else if (s_pos.y == t_pos.y)
+		{
+			if (s_pos.x < t_pos.x)
+				return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W;
+			else
+				return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E;
+		}
+		else if (s_pos.x < t_pos.x)
+		{
+			if (s_pos.y < t_pos.y)
+				return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW;
+			else
+				return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SW;
+		}
+		else if (s_pos.x > t_pos.x)
+		{
+			if (s_pos.y < t_pos.y)
+				return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE;
+			else
+				return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SE;
+		}
+		ASSERT(false);
+	}
+
+	// Okay, neither head nor next are submerged.
+	// Compare all three positions.
+
+    return TILEP_MONS_PROGRAM_BUG;
+}
+
 static tileidx_t _tileidx_monster_no_props(const monster* mon)
 {
     bool in_water = feat_is_water(grd(mon->pos()));
@@ -1848,6 +1967,10 @@ static tileidx_t _tileidx_monster_no_props(const monster* mon)
                 item_def item = mitm[mon->inv[MSLOT_WEAPON]];
                 return tileidx_item(item) | TILE_FLAG_ANIM_WEP;
             }
+
+		case MONS_KRAKEN_TENTACLE:
+		case MONS_KRAKEN_TENTACLE_SEGMENT:
+			return _tileidx_tentacle(mon);
 
         default:
             return _tileidx_monster_base(type, in_water, mon->colour,
