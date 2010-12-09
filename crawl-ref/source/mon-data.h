@@ -1695,6 +1695,18 @@ static monsterentry mondata[] = {
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
+{ // one vault.  Polymorph disabled.
+    MONS_GNOME, 'q', LIGHTBLUE, "gnome",
+    M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
+    MR_NO_FLAGS,
+    400, 10, MONS_GNOME, MONS_GNOME, MH_NATURAL, -3,
+    { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 5, 3, 5, 0 },
+    2, 12, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT,
+    I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
+    MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_SMALL
+},
+
 // rodents ('r')
 {
     MONS_RAT, 'r', BROWN, "rat",
@@ -3179,10 +3191,6 @@ static monsterentry mondata[] = {
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_SMALL
 },
 
-#if TAG_MAJOR_VERSION == 31
-AXED_MON(MONS_UNUSED_NISSE)
-#endif
-
 // liches ('L')
 {
     MONS_LICH, 'L', LIGHTGREY, "lich",
@@ -3361,7 +3369,8 @@ AXED_MON(MONS_UNUSED_NISSE)
 
 {
     MONS_OKLOB_SAPLING, 'p', LIGHTGREEN, "oklob sapling",
-    M_SPECIAL_ABILITY | M_STATIONARY,
+    // if we decide to allow this for normal games, please remove M_NO_POLY_TO
+    M_SPECIAL_ABILITY | M_STATIONARY | M_NO_POLY_TO,
     MR_RES_POISON | MR_RES_ACID,
     0, 10, MONS_PLANT, MONS_OKLOB_PLANT, MH_PLANT, -3,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },

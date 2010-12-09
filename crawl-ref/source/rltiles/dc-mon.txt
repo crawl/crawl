@@ -112,17 +112,12 @@ electric_eel MONS_ELECTRIC_EEL
 lava_fish MONS_LAVA_FISH
 shark MONS_SHARK
 jellyfish MONS_JELLYFISH /*'J'*/
-## Kraken head ('X') and tentacles ('w')
-kraken_head MONS_KRAKEN_HEAD
-kraken_tentacle1 MONS_KRAKEN_TENTACLE
-kraken_tentacle2
-kraken_tentacle3
-kraken_tentacle4
-kraken_tentacle5
-kraken_tentacle6
 %rim 1
 
+%include dc-kraken.txt
+
 ## Beetles ('B')
+%sdir dc-mon/animals
 giant_beetle MONS_GIANT_BEETLE
 boring_beetle MONS_BORING_BEETLE
 boulder_beetle MONS_BOULDER_BEETLE

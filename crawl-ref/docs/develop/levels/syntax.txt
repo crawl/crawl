@@ -394,6 +394,8 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              vaults generated during the game.  Use this if the vault
              is predictable (like the Vault:8 and Slime:6 vaults) or
              are for weird internal uses (like the shoalhut vaults).
+          * "unrand": Don't pick this vault randomly by DEPTH.  Can still be
+             picked by tag or PLACE.
 
 LFLAGS:   Persistent, changeable per-level flags which affect game behaviour
           (FLAGS just controls how the vault is placed); should only be used

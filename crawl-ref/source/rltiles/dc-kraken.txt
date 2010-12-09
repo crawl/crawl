@@ -1,0 +1,62 @@
+## Kraken head ('X') and tentacles ('w')
+%sdir dc-mon/kraken
+kraken_head MONS_KRAKEN_HEAD
+
+## Tentacle ends
+%sdir dc-mon/kraken/tentacles
+
+## Tentacles emerging from water
+kraken_tentacle1 MONS_KRAKEN_TENTACLE_WATER
+kraken_tentacle2
+kraken_tentacle3
+kraken_tentacle4
+kraken_tentacle5
+kraken_tentacle6
+
+## Tentacles connected to another segment
+kraken_tentacle_N MONS_KRAKEN_TENTACLE_N
+kraken_tentacle_S MONS_KRAKEN_TENTACLE_S
+kraken_tentacle_E MONS_KRAKEN_TENTACLE_E
+kraken_tentacle_W MONS_KRAKEN_TENTACLE_W
+kraken_tentacle_NE MONS_KRAKEN_TENTACLE_NE
+kraken_tentacle_NW MONS_KRAKEN_TENTACLE_NW
+kraken_tentacle_SE MONS_KRAKEN_TENTACLE_SE
+kraken_tentacle_SW MONS_KRAKEN_TENTACLE_SW
+
+## Segments
+%sdir dc-mon/kraken/segments
+
+## Tentacle segments ending in water
+kraken_tentacle_segment_water_N MONS_KRAKEN_TENTACLE_SEGMENT_N
+kraken_tentacle_segment_water_S MONS_KRAKEN_TENTACLE_SEGMENT_S
+kraken_tentacle_segment_water_E MONS_KRAKEN_TENTACLE_SEGMENT_E
+kraken_tentacle_segment_water_W MONS_KRAKEN_TENTACLE_SEGMENT_W
+kraken_tentacle_segment_water_NE MONS_KRAKEN_TENTACLE_SEGMENT_NE
+kraken_tentacle_segment_water_NW MONS_KRAKEN_TENTACLE_SEGMENT_NW
+kraken_tentacle_segment_water_SE MONS_KRAKEN_TENTACLE_SEGMENT_SE
+kraken_tentacle_segment_water_SW MONS_KRAKEN_TENTACLE_SEGMENT_SW
+kraken_tentacle_segment_water_water MONS_KRAKEN_TENTACLE_SEGMENT_WATER
+
+## Fully connected tentacle segments
+### (a) straight ones
+kraken_tentacle_segment_E_W MONS_KRAKEN_TENTACLE_SEGMENT_E_W
+kraken_tentacle_segment_N_S MONS_KRAKEN_TENTACLE_SEGMENT_N_S
+kraken_tentacle_segment_NE_SW MONS_KRAKEN_TENTACLE_SEGMENT_NE_SW
+kraken_tentacle_segment_NW_SE MONS_KRAKEN_TENTACLE_SEGMENT_NW_SE
+### (b) curved ones
+kraken_tentacle_segment_E_N MONS_KRAKEN_TENTACLE_SEGMENT_E_N
+kraken_tentacle_segment_E_S MONS_KRAKEN_TENTACLE_SEGMENT_E_S
+kraken_tentacle_segment_N_W MONS_KRAKEN_TENTACLE_SEGMENT_N_W
+kraken_tentacle_segment_S_W MONS_KRAKEN_TENTACLE_SEGMENT_S_W
+## corner connectors not yet included
+##kraken_tentacle_segment_NE_NW
+##kraken_tentacle_segment_NE_SE
+##kraken_tentacle_segment_NW_SW
+##kraken_tentacle_segment_SE_SW
+##kraken_tentacle_segment_N_SE
+##kraken_tentacle_segment_N_SW
+##kraken_tentacle_segment_S_NE
+##kraken_tentacle_segment_S_NW
+##kraken_tentacle_segment_E_NW
+##kraken_tentacle_segment_W_NE
+##kraken_tentacle_segment_W_SE

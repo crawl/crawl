@@ -1176,6 +1176,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
     you.mutation[mutat]++;
 
+    // More than three messages, need to give them by hand.
     switch (mutat)
     {
     case MUT_STRONG: case MUT_AGILE:  case MUT_CLEVER:
@@ -1184,21 +1185,44 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         gain_msg = false;
         break;
 
-        // FIXME: these cases should be handled better.
+    default:
+        break;
+    }
+
+    // For all those scale mutations.
+    you.redraw_armour_class = true;
+
+    notify_stat_change("gaining a mutation");
+
+    if (gain_msg)
+        mpr(mdef.gain[you.mutation[mutat]-1], MSGCH_MUTATION);
+
+    // Do post-mutation effects.
+    switch (mutat)
+    {
+    case MUT_FRAIL:
+    case MUT_ROBUST:
+    case MUT_RUGGED_BROWN_SCALES:
+        calc_hp();
+        break;
+
+    case MUT_LOW_MAGIC:
+    case MUT_HIGH_MAGIC:
+        calc_mp();
+        break;
+
+    case MUT_PASSIVE_MAPPING:
+        add_daction(DACT_REAUTOMAP);
+        break;
+
     case MUT_HOOVES:
     case MUT_TALONS:
-        mpr(mdef.gain[you.mutation[mutat]], MSGCH_MUTATION);
-        gain_msg = false;
-
         // Hooves and talons force boots off at 3.
         if (you.mutation[mutat] >= 3 && !you.melded[EQ_BOOTS])
             remove_one_equip(EQ_BOOTS, false, true);
         break;
 
     case MUT_CLAWS:
-        mpr(mdef.gain[you.mutation[mutat]], MSGCH_MUTATION);
-        gain_msg = false;
-
         // Gloves aren't prevented until level 3.
         if (you.mutation[mutat] >= 3 && !you.melded[EQ_GLOVES])
             remove_one_equip(EQ_GLOVES, false, true);
@@ -1207,9 +1231,6 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     case MUT_HORNS:
     case MUT_BEAK:
     case MUT_ANTENNAE:
-        mpr(mdef.gain[you.mutation[mutat]], MSGCH_MUTATION);
-        gain_msg = false;
-
         // Horns, beaks, and antennae force hard helmets off.
         if (you.equip[EQ_HELMET] != -1
             && is_hard_helmet(you.inv[you.equip[EQ_HELMET]])
@@ -1221,8 +1242,6 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
     case MUT_ACUTE_VISION:
         // We might have to turn autopickup back on again.
-        mpr(mdef.gain[you.mutation[mutat]], MSGCH_MUTATION);
-        gain_msg = false;
         autotoggle_autopickup(false);
         break;
 
@@ -1233,25 +1252,6 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     default:
         break;
     }
-
-    // For all those scale mutations.
-    you.redraw_armour_class = true;
-
-    notify_stat_change("losing a mutation");
-
-    if (gain_msg)
-        mpr(mdef.gain[you.mutation[mutat]-1], MSGCH_MUTATION);
-
-    // Do post-mutation effects.
-    if (mutat == MUT_FRAIL || mutat == MUT_ROBUST
-        || mutat == MUT_RUGGED_BROWN_SCALES)
-    {
-        calc_hp();
-    }
-    if (mutat == MUT_LOW_MAGIC || mutat == MUT_HIGH_MAGIC)
-        calc_mp();
-    if (mutat == MUT_PASSIVE_MAPPING)
-        add_daction(DACT_REAUTOMAP);
 
     // Amusement value will be 16 * (11-rarity) * Xom's-sense-of-humor.
     xom_is_stimulated(_calc_mutation_amusement_value(mutat));
@@ -1529,10 +1529,8 @@ static const facet_def _demon_facets[] =
     { 2, { MUT_TALONS, MUT_TALONS, MUT_TALONS },
       { 2, 2, 2 } },
     // Regular facets
-    { 3, { MUT_THROW_FLAMES, MUT_HEAT_RESISTANCE, MUT_HURL_HELLFIRE },
+    { 3, { MUT_CONSERVE_SCROLLS, MUT_HEAT_RESISTANCE, MUT_HURL_HELLFIRE },
       { 1, 2, 3 } },
-    { 3, { MUT_THROW_FLAMES, MUT_HEAT_RESISTANCE, MUT_CONSERVE_SCROLLS },
-      { 1, 2, 2 } },
     { 3, { MUT_ROBUST, MUT_ROBUST, MUT_ROBUST },
       { 3, 3, 3 } },
     { 3, { MUT_NEGATIVE_ENERGY_RESISTANCE, MUT_NEGATIVE_ENERGY_RESISTANCE,
@@ -1702,7 +1700,7 @@ try_again:
                 if (m == MUT_COLD_RESISTANCE)
                     ice_elemental++;
 
-                if (m == MUT_THROW_FLAMES)
+                if (m == MUT_CONSERVE_SCROLLS)
                     fire_elemental++;
 
                 if (m == MUT_CLAWS && i == 2

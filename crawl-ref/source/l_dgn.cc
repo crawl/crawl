@@ -1753,24 +1753,6 @@ LUAFN(_dgn_marker_at_pos)
     return (1);
 }
 
-extern spec_room lua_special_room_spec;
-extern int       lua_special_room_level;
-
-LUAFN(dgn_get_special_room_info)
-{
-    if (!lua_special_room_spec.created || !in_bounds(lua_special_room_spec.tl)
-        || lua_special_room_level == -1)
-    {
-        return (0);
-    }
-
-    lua_pushnumber(ls,  lua_special_room_level);
-    dlua_push_coordinates(ls, lua_special_room_spec.tl);
-    dlua_push_coordinates(ls, lua_special_room_spec.br);
-
-    return (5);
-}
-
 LUAFN(dgn_is_validating)
 {
     MAP(ls, 1, map);
@@ -1978,7 +1960,6 @@ const struct luaL_reg dgn_dlib[] =
 
 { "marker_at_pos", _dgn_marker_at_pos },
 
-{ "get_special_room_info", dgn_get_special_room_info },
 { "is_validating", dgn_is_validating },
 
 { "fill_grd_area", dgn_fill_grd_area },
