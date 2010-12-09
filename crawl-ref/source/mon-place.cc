@@ -104,7 +104,6 @@ bool feat_compatible(dungeon_feature_type feat_wanted,
     if (feat_wanted == DNGN_FLOOR)
     {
         return (actual_feat >= DNGN_FLOOR
-                    && actual_feat != DNGN_BUILDER_SPECIAL_WALL
                 || actual_feat == DNGN_SHALLOW_WATER);
     }
 

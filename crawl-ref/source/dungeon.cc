@@ -106,9 +106,6 @@ static bool _build_level_vetoable(int level_number, level_area_type level_type,
 static void _build_dungeon_level(int level_number, level_area_type level_type);
 static bool _valid_dungeon_level(int level_number, level_area_type level_type);
 
-static bool _find_in_area(int sx, int sy, int ex, int ey,
-                          dungeon_feature_type feature);
-
 static void _place_layout_vault(int level_number, const char *name,
                                 const char *method, const char *type);
 
@@ -2081,12 +2078,6 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
         } while (depth > 0);
     }
 
-    // Change pre-rock to rock, and pre-floor to floor.
-    dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_BUILDER_SPECIAL_WALL,
-                     DNGN_ROCK_WALL);
-    dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_BUILDER_SPECIAL_FLOOR,
-                     DNGN_FLOOR);
-
     const unsigned nvaults = env.level_vaults.size();
 
     // Any further vaults must make sure not to disrupt level layout.
@@ -2340,24 +2331,6 @@ static void _prepare_water(int level_number)
             }
         }
 }                               // end prepare_water()
-
-static bool _find_in_area(int sx, int sy, int ex, int ey,
-                          dungeon_feature_type feature)
-{
-    int x,y;
-
-    if (feature != 0)
-    {
-        for (x = sx; x <= ex; x++)
-            for (y = sy; y <= ey; y++)
-            {
-                if (grd[x][y] == feature)
-                    return (true);
-            }
-    }
-
-    return (false);
-}
 
 static void _pan_level(int level_number)
 {
@@ -3406,10 +3379,6 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
                 dir_x = 0;      //random2(3) - 1;
             }
 
-            // Don't interfere with special rooms.
-            if (grd[x_ps + dir_x][y_ps + dir_y] == DNGN_BUILDER_SPECIAL_WALL)
-                break;
-
             // See if we stop due to intersection with another corridor/room.
             if (grd[x_ps + 2 * dir_x][y_ps + 2 * dir_y] == DNGN_FLOOR
                 && !one_chance_in(intersect_chance))
@@ -3476,10 +3445,6 @@ static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
         return (false);
 
     if (find_door == 0 || find_door > max_doors)
-        return (false);
-
-    // Look for 'special' rock walls - don't interrupt them.
-    if (_find_in_area(sx, sy, ex, ey, DNGN_BUILDER_SPECIAL_WALL))
         return (false);
 
     // Convert the area to floor.
@@ -6259,13 +6224,8 @@ bool octa_room(spec_room &sr, int oblique_max,
 
     int oblique = oblique_max;
 
-    // Check octagonal room for special; avoid if exists.
     for (x = sr.tl.x; x < sr.br.x; x++)
     {
-        for (y = sr.tl.y + oblique; y < sr.br.y - oblique; y++)
-            if (grd[x][y] == DNGN_BUILDER_SPECIAL_WALL)
-                return (false);
-
         if (x > sr.tl.x - oblique_max)
             oblique += 2;
 
@@ -7120,10 +7080,6 @@ static void _big_room(int level_number)
     sr.tl.set(8 + random2(30), 8 + random2(22));
     sr.br.set(20 + random2(10), 20 + random2(8));
     sr.br += sr.tl;
-
-    // Check for previous special.
-    if (count_feature_in_box(sr.tl, sr.br, DNGN_BUILDER_SPECIAL_WALL) > 0)
-        return;
 
     if (level_number > 7 && one_chance_in(4))
     {
