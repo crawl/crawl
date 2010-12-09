@@ -1529,10 +1529,8 @@ static const facet_def _demon_facets[] =
     { 2, { MUT_TALONS, MUT_TALONS, MUT_TALONS },
       { 2, 2, 2 } },
     // Regular facets
-    { 3, { MUT_THROW_FLAMES, MUT_HEAT_RESISTANCE, MUT_HURL_HELLFIRE },
+    { 3, { MUT_CONSERVE_SCROLLS, MUT_HEAT_RESISTANCE, MUT_HURL_HELLFIRE },
       { 1, 2, 3 } },
-    { 3, { MUT_THROW_FLAMES, MUT_HEAT_RESISTANCE, MUT_CONSERVE_SCROLLS },
-      { 1, 2, 2 } },
     { 3, { MUT_ROBUST, MUT_ROBUST, MUT_ROBUST },
       { 3, 3, 3 } },
     { 3, { MUT_NEGATIVE_ENERGY_RESISTANCE, MUT_NEGATIVE_ENERGY_RESISTANCE,
@@ -1702,7 +1700,7 @@ try_again:
                 if (m == MUT_COLD_RESISTANCE)
                     ice_elemental++;
 
-                if (m == MUT_THROW_FLAMES)
+                if (m == MUT_CONSERVE_SCROLLS)
                     fire_elemental++;
 
                 if (m == MUT_CLAWS && i == 2
