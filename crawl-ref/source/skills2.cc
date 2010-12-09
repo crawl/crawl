@@ -608,6 +608,8 @@ void SkillMenu::change_action()
     _set_help(new_action);
     _refresh_names();
     _set_footer();
+    if (!m_ff->get_active_item()->can_be_highlighted())
+        m_ff->activate_first_item();
 }
 
 void SkillMenu::change_display()
