@@ -2799,7 +2799,6 @@ static bool _builder_normal(int level_number)
     if (!skipped && one_chance_in(7))
     {
         _roguey_level(level_number);
-        dgn_place_stone_stairs(true);
         return false;
     }
     else
@@ -7273,166 +7272,10 @@ static void _chequerboard(spec_room &sr, dungeon_feature_type target,
             grd(*ri) = ((ri->x + ri->y) % 2) ? floor2 : floor1;
 }
 
-static void _dgn_make_special(int x1, int y1, int x2, int y2)
-{
-    dgn_replace_area(x1, y1, x2, y2, DNGN_ROCK_WALL, DNGN_BUILDER_SPECIAL_WALL);
-    dgn_replace_area(x1, y1, x2, y2, DNGN_FLOOR, DNGN_BUILDER_SPECIAL_FLOOR);
-    dgn_replace_area(x1, y1, x2, y2, DNGN_CLOSED_DOOR, DNGN_BUILDER_SPECIAL_FLOOR);
-}
-
 static void _roguey_level(int level_number)
 {
-    env.level_build_method += make_stringf(" roguey_level [%d]", level_number);
-
-    int bcount_x, bcount_y;
-    int cn = 0;
-    int i;
-
-    FixedVector < uint8_t, 30 > rox1;
-    FixedVector < uint8_t, 30 > rox2;
-    FixedVector < uint8_t, 30 > roy1;
-    FixedVector < uint8_t, 30 > roy2;
-
-    for (bcount_y = 0; bcount_y < 5; bcount_y++)
-        for (bcount_x = 0; bcount_x < 5; bcount_x++)
-        {
-            // rooms:
-            rox1[cn] = bcount_x * 13 + 8 + random2(4);
-            roy1[cn] = bcount_y * 11 + 8 + random2(4);
-
-            rox2[cn] = std::min(rox1[cn] + 3 + random2(8), GXM - 8);
-            roy2[cn] = roy1[cn] + 3 + random2(6);
-
-            cn++;
-        }
-
-    cn = 0;
-
-    for (i = 0; i < 25; i++)
-    {
-        dgn_replace_area(rox1[i], roy1[i], rox2[i], roy2[i],
-                          DNGN_ROCK_WALL, DNGN_FLOOR);
-
-        // If the room is sufficiently large, we may place an inner room in it,
-        // optionally filled with treasure.
-        if (rox2[i] - rox1[i] > 5 && roy2[i] - roy1[i] > 5
-            && x_chance_in_y(3, 100 - level_number))
-        {
-            dungeon_feature_type wall = DNGN_METAL_WALL;
-            if (!one_chance_in(4))
-                wall = coinflip() ? DNGN_STONE_WALL : DNGN_ROCK_WALL;
-
-            _box_room(rox1[i] + 2, rox2[i] - 2, roy1[i] + 2, roy2[i] - 2, wall);
-
-            if (coinflip())
-            {
-                _treasure_area(level_number, rox1[i] + 3, rox2[i] - 3,
-                                              roy1[i] + 3, roy2[i] - 3);
-            }
-        }
-    }
-
-    // Now, join them together:
-
-    int last_room = 0;
-    int bp;
-
-    for (bp = 0; bp < 2; bp++)
-        for (i = 0; i < 25; i++)
-        {
-            if (bp == 0 && (!(i % 5) || i == 0))
-                continue;
-
-            if (bp == 1 && i < 5)
-                continue;
-
-            coord_def pos, jpos;
-
-            switch (bp)
-            {
-            case 0:
-                last_room = i - 1;
-                pos.x  = rox1[i];      // - 1;
-                pos.y  = roy1[i] + random2(roy2[i] - roy1[i]);
-                jpos.x = rox2[last_room];      // + 1;
-                jpos.y = roy1[last_room]
-                            + random2(roy2[last_room] - roy1[last_room]);
-                break;
-
-            case 1:
-                last_room = i - 5;
-                pos.y  = roy1[i];      // - 1;
-                pos.x  = rox1[i] + random2(rox2[i] - rox1[i]);
-                jpos.y = roy2[last_room];      // + 1;
-                jpos.x = rox1[last_room]
-                                + random2(rox2[last_room] - rox1[last_room]);
-                break;
-            }
-
-            while (pos != jpos)
-            {
-                // make a corridor
-                if (coinflip())
-                {
-                    if (pos.x < jpos.x)
-                        pos.x++;
-                    else if (pos.x > jpos.x)
-                        pos.x--;
-                }
-                else
-                {
-                    if (pos.y < jpos.y)
-                        pos.y++;
-                    else if (pos.y > jpos.y)
-                        pos.y--;
-                }
-                if (grd(pos) == DNGN_ROCK_WALL)
-                    grd(pos) = DNGN_FLOOR;
-            }
-
-            if (grd(pos) == DNGN_FLOOR)
-            {
-                if ((grd[pos.x + 1][pos.y] == DNGN_ROCK_WALL
-                     && grd[pos.x - 1][pos.y] == DNGN_ROCK_WALL)
-                    || (grd[pos.x][pos.y + 1] == DNGN_ROCK_WALL
-                        && grd[pos.x][pos.y - 1] == DNGN_ROCK_WALL))
-                {
-                    grd(pos) = DNGN_GRANITE_STATUE;
-                }
-            }
-        }                       // end "for bp, for i"
-
-#if 0
-    // Is one of them a special room?
-    const map_def *sroom = NULL;
-
-    if ((sroom = random_map_for_tag("special_room", true)) != NULL)
-    {
-        int spec_room_done = random2(25);
-
-        sr.created = true;
-        sr.hooked_up = true;
-        sr.tl.set(rox1[spec_room_done], roy1[spec_room_done]);
-        sr.br.set(rox2[spec_room_done], roy2[spec_room_done]);
-        _special_room(level_number, sr, sroom);
-
-        // Make the room 'special' so it doesn't get overwritten
-        // by something else (or put monsters in walls, etc...)
-
-        // top
-        _dgn_make_special(sr.tl.x - 1, sr.tl.y - 1, sr.br.x + 1, sr.tl.y - 1);
-
-        // bottom
-        _dgn_make_special(sr.tl.x - 1, sr.br.y + 1, sr.br.x + 1, sr.br.y + 1);
-
-        // left
-        _dgn_make_special(sr.tl.x - 1, sr.tl.y - 1, sr.tl.x - 1, sr.br.y + 1);
-
-        // right
-        _dgn_make_special(sr.br.x + 1, sr.tl.y - 1, sr.br.x + 1, sr.br.y + 1);
-    }
-#endif
-}                               // end roguey_level()
+    _place_layout_vault(level_number, "roguey", "roguey_level", "rooms");
+}
 
 bool place_specific_trap(const coord_def& where, trap_type spec_type)
 {

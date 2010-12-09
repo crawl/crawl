@@ -617,3 +617,125 @@ TAGS: layout allow_dup
 }}
 MAP
 ENDMAP
+
+## This replaces dungeon.cc:_roguey_level.
+NAME: layout_roguey
+ORIENT: encompass
+TAGS: layout allow_dup
+{{
+    function make_inner_room(room, feat, treasure)
+        make_box {
+            x1 = room.x1 + 1, y1 = room.y1 + 1,
+            x2 = room.x2 - 1, y2 = room.y2 - 1,
+            wall = feat
+        }
+
+        make_box_doors {
+            x1 = room.x1 + 1, y1 = room.y1 + 1,
+            x2 = room.x2 - 1, y2 = room.y2 - 1,
+            number = 1
+        }
+
+        if treasure then
+            fill_area {
+                x1 = room.x1 + 2, y1 = room.y1 + 2,
+                x2 = room.x2 - 2, y2 = room.y2 - 2,
+                fill = '*'
+            }
+        end
+    end
+
+    function sign(a)
+        return a > 0 and 1 or a < 0 and -1 or 0
+    end
+
+    function link_rooms(r1, r2, sideways)
+        local x1, y1, x2, y2
+        if sideways then
+            x1 = r1.x2
+            y1 = crawl.random_range(r1.y1 + 1, r1.y2 - 1)
+            x2 = r2.x1
+            y2 = crawl.random_range(r2.y1 + 1, r2.y2 - 1)
+        else
+            x1 = crawl.random_range(r1.x1 + 1, r1.x2 - 1)
+            y1 = r1.y2
+            x2 = crawl.random_range(r2.x1 + 1, r2.x2 - 1)
+            y2 = r2.y1
+        end
+
+        while x1 ~= x2 or y1 ~= y2 do
+            if crawl.coinflip() then
+                x1 = x1 + sign(x2 - x1)
+            else
+                y1 = y1 + sign(y2 - y1)
+            end
+
+            mapgrd[x1][y1] = '.'
+        end
+    end
+
+    local gxm, gym = dgn.max_bounds()
+
+    extend_map { width = gxm, height = gym, fill = 'x' }
+
+    local rows = 5
+    local cols = 5
+    local special = -1
+
+    if crawl.one_chance_in(10) and dgn.map_by_tag('special_room', true) then
+        special = crawl.random_range(1, rows * cols)
+    end
+
+    local rooms = {}
+
+    for y = 0, cols - 1 do
+        for x = 0, rows - 1 do
+            local room = {
+                x1 = x * 13 + 8 + crawl.random2(4),
+                y1 = y * 11 + 8 + crawl.random2(4),
+            }
+
+            room.x2 = room.x1 + 3 + crawl.random2(8)
+            room.y2 = room.y1 + 3 + crawl.random2(6)
+
+            room.fill = '.'
+
+            table.insert(rooms, room)
+        end
+    end
+
+    for i, room in ipairs(rooms) do
+        if i == special then
+            room.fill = 'O'
+        end
+
+        fill_area(room)
+
+        if room.fill == '.'
+           and (room.x2 - room.x1 > 5)
+           and (room.y2 - room.y1 > 5)
+           and crawl.one_chance_in((100 - you.absdepth()) / 3)
+        then
+            local feat = crawl.random_element { ['v'] = 2, ['c'] = 3, ['x'] = 3 }
+            make_inner_room(room, feat, crawl.coinflip())
+        end
+    end
+
+    for i, room in ipairs(rooms) do
+        -- There is a neighbour on the right, connect to it.
+        if i % cols ~= 0 then
+            link_rooms(room, rooms[i + 1], true)
+        end
+
+        -- There is a neighbour below, connect to it.
+        if i + cols <= #rooms then
+            link_rooms(room, rooms[i + cols], false)
+        end
+    end
+
+    if special ~= -1 then
+        _G.subvault('O : special_room')
+    end
+}}
+MAP
+ENDMAP
