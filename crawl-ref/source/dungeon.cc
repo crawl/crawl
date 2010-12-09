@@ -108,10 +108,6 @@ static bool _valid_dungeon_level(int level_number, level_area_type level_type);
 
 static bool _find_in_area(int sx, int sy, int ex, int ey,
                           dungeon_feature_type feature);
-static bool _make_box(int room_x1, int room_y1, int room_x2, int room_y2,
-                      dungeon_feature_type floor=DNGN_UNSEEN,
-                      dungeon_feature_type wall=DNGN_UNSEEN,
-                      dungeon_feature_type avoid=DNGN_UNSEEN);
 
 static void _place_layout_vault(int level_number, const char *name,
                                 const char *method, const char *type);
@@ -184,9 +180,6 @@ static void _connect_vault(const vault_placement &vp);
 // ITEM & SHOP FUNCTIONS
 static void _place_shops(int level_number);
 static object_class_type _item_in_shop(shop_type shop_type);
-static bool _treasure_area(int level_number, uint8_t ta1_x,
-                           uint8_t ta2_x, uint8_t ta1_y,
-                           uint8_t ta2_y);
 
 // SPECIAL ROOM BUILDERS
 static void _big_room(int level_number);
@@ -2364,46 +2357,6 @@ static bool _find_in_area(int sx, int sy, int ex, int ey,
     }
 
     return (false);
-}
-
-// Stamp a box. Can avoid a possible type, and walls and floors can
-// be different (or not stamped at all).
-// Note that the box boundaries are INclusive.
-static bool _make_box(int room_x1, int room_y1, int room_x2, int room_y2,
-                      dungeon_feature_type floor,
-                      dungeon_feature_type wall,
-                      dungeon_feature_type avoid)
-{
-    int bx,by;
-
-    // Check for avoidance.
-    if (_find_in_area(room_x1, room_y1, room_x2, room_y2, avoid))
-        return (false);
-
-    // Draw walls.
-    if (wall != 0)
-    {
-        for (bx = room_x1; bx <= room_x2; bx++)
-        {
-            grd[bx][room_y1] = wall;
-            grd[bx][room_y2] = wall;
-        }
-        for (by = room_y1+1; by < room_y2; by++)
-        {
-            grd[room_x1][by] = wall;
-            grd[room_x2][by] = wall;
-        }
-    }
-
-    // Draw floor.
-    if (floor != 0)
-    {
-        for (bx = room_x1 + 1; bx < room_x2; bx++)
-            for (by = room_y1 + 1; by < room_y2; by++)
-                grd[bx][by] = floor;
-    }
-
-    return (true);
 }
 
 static void _pan_level(int level_number)
@@ -7055,39 +7008,6 @@ static void _box_room(int bx1, int bx2, int by1, int by2,
 static void _city_level(int level_number)
 {
     _place_layout_vault(level_number, "city", "city_level", "city");
-}
-
-static bool _treasure_area(int level_number, uint8_t ta1_x,
-                           uint8_t ta2_x, uint8_t ta1_y,
-                           uint8_t ta2_y)
-{
-    ta2_x++;
-    ta2_y++;
-
-    if (ta2_x <= ta1_x || ta2_y <= ta1_y)
-        return (false);
-
-    if ((ta2_x - ta1_x) * (ta2_y - ta1_y) >= 40)
-        return (false);
-
-    // Gah. FIXME.
-    coord_def tl(ta1_x, ta1_y);
-    coord_def br(ta2_x-1, ta2_y-1);
-
-    for (rectangle_iterator ri(tl, br); ri; ++ri)
-    {
-        if (grd(*ri) != DNGN_FLOOR || coinflip())
-            continue;
-
-        int item_made = items(1, OBJ_RANDOM, OBJ_RANDOM, true,
-                               random2(level_number * 2),
-                               MAKE_ITEM_RANDOM_RACE);
-
-        if (item_made != NON_ITEM)
-            mitm[item_made].pos = *ri;
-    }
-
-    return (true);
 }
 
 static void _diamond_rooms(int level_number)
