@@ -585,11 +585,8 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
 
 #ifdef USE_TILE
     tiles.get_crt()->attach_menu(this);
-    // Black and White highlighter looks kinda bad on tiles
-    m_highlighter = new BoxMenuHighlighter(this);
-#else
-    m_highlighter = new BlackWhiteHighlighter(this);
 #endif
+    m_highlighter = new BoxMenuHighlighter(this);
     m_highlighter->init(coord_def(-1,-1), coord_def(-1,-1), "highlighter");
     attach_object(m_highlighter);
 
