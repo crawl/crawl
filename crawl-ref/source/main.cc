@@ -2557,7 +2557,7 @@ static void _decrement_durations()
 
 static void _check_banished()
 {
-    if (you.banished)
+    if (you.banished && !crawl_state.game_is_zotdef())
     {
         you.banished = false;
         if (you.level_type != LEVEL_ABYSS)
