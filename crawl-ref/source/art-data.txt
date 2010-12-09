@@ -235,12 +235,14 @@ COLOUR:  ETC_POISON
 TILE:    spwpn_staff_of_olgreb
 TILE_EQ: olgreb
 VALUE:   1000
-BRAND:   SPWPN_VENOM
 BOOL:    poison, special
 DESC_ID: It was the magical weapon wielded by the mighty wizard Olgreb
          before he met his fate somewhere within these dungeons. It
          increases the ability of its wielder to use venomous magic, and
          carries magical powers which can be evoked.
+         The tales say that Olgreb researched rare venoms that may have
+         some limited effect even on creatures immune to all commonly known
+         poisons.
 
 NAME:    Staff of Wucad Mu
 APPEAR:  ephemeral quarterstaff

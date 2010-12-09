@@ -3751,13 +3751,8 @@ void melee_attack::player_apply_staff_damage()
 
     case STAFF_POISON:
     {
-        // Cap chance at 30% -- let staff of Olgreb shine.
-        int temp_rand = damage_done + you.skills[SK_POISON_MAGIC];
-
-        if (temp_rand > 30)
-            temp_rand = 30;
-
-        if (x_chance_in_y(temp_rand, 100))
+        // Base chance at 50% -- like mundane weapons.
+        if (coinflip() || x_chance_in_y(you.skills[SK_POISON_MAGIC], 8))
         {
             // Poison monster message needs to arrive after hit message.
             emit_nodmg_hit_message();

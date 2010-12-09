@@ -6170,7 +6170,7 @@ int player::mons_species() const
     }
 }
 
-void player::poison(actor *agent, int amount)
+void player::poison(actor *agent, int amount, bool force)
 {
     ::poison_player(amount, agent? agent->name(DESC_NOCAP_A, true) : "");
 }
