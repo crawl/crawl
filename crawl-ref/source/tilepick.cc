@@ -1930,24 +1930,59 @@ static tileidx_t _tileidx_tentacle(const monster *mon)
 
     // Okay, neither head nor next are submerged.
     // Compare all three positions.
+    
+    // Straight lines first: Vertical.
     if (h_pos.x == t_pos.x && t_pos.x == n_pos.x)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_S;
+    // Horizontal.
     if (h_pos.y == t_pos.y && t_pos.y == n_pos.y)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_W;
+    // Diagonals.
     if (h_pos.x < t_pos.x && t_pos.x < n_pos.x
-            && h_pos.y < t_pos.y && t_pos.y < n_pos.y
+           && h_pos.y < t_pos.y && t_pos.y < n_pos.y
         || n_pos.x < t_pos.x && t_pos.x < h_pos.x
            && n_pos.y < t_pos.y && t_pos.y < h_pos.y)
     {
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW_SE;
     }
     if (n_pos.x < t_pos.x && t_pos.x < h_pos.x
-            && h_pos.y < t_pos.y && t_pos.y < n_pos.y
+           && h_pos.y < t_pos.y && t_pos.y < n_pos.y
         || h_pos.x < t_pos.x && t_pos.x < n_pos.x
            && n_pos.y < t_pos.y && t_pos.y < h_pos.y)
     {
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_SW;
     }
+    
+    // Curved segments.
+    if (h_pos.x > t_pos.x && h_pos.y == t_pos.y
+           && t_pos.x == n_pos.x && t_pos.y > n_pos.y
+        || n_pos.x > t_pos.x && n_pos.y == t_pos.y
+           && t_pos.x == h_pos.x && t_pos.y > h_pos.y)
+    {
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_N;
+    }
+    if (h_pos.x > t_pos.x && h_pos.y == t_pos.y
+           && t_pos.x == n_pos.x && t_pos.y < n_pos.y
+        || n_pos.x > t_pos.x && n_pos.y == t_pos.y
+           && t_pos.x == h_pos.x && t_pos.y < h_pos.y)
+    {
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_S;
+    }
+    if (h_pos.x < t_pos.x && h_pos.y == t_pos.y
+           && t_pos.x == n_pos.x && t_pos.y < n_pos.y
+        || n_pos.x < t_pos.x && n_pos.y == t_pos.y
+           && t_pos.x == h_pos.x && t_pos.y < h_pos.y)
+    {
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_W;
+    }
+    if (h_pos.x < t_pos.x && h_pos.y == t_pos.y
+           && t_pos.x == n_pos.x && t_pos.y > n_pos.y
+        || n_pos.x < t_pos.x && n_pos.y == t_pos.y
+           && t_pos.x == h_pos.x && t_pos.y > h_pos.y)
+    {
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_W;
+    }
+        
     return TILEP_MONS_PROGRAM_BUG;
 }
 
