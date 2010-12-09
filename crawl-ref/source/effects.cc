@@ -540,6 +540,8 @@ static std::string _who_banished(const std::string &who)
 void banished(dungeon_feature_type gate_type, const std::string &who)
 {
     ASSERT(!crawl_state.game_is_arena());
+    if (crawl_state.game_is_zotdef())
+        return;
 
     if (gate_type == DNGN_ENTER_ABYSS)
     {

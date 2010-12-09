@@ -203,6 +203,24 @@ static void _check_odd_card(uint8_t flags)
         mpr("This card doesn't seem to belong here.");
 }
 
+static bool _card_forbidden(card_type card)
+{
+    if (crawl_state.game_is_zotdef())
+        switch(card)
+        {
+        case CARD_TOMB:
+        case CARD_WARPWRIGHT:
+        case CARD_WATER:
+        case CARD_TROWEL:
+        case CARD_MINEFIELD: // with teleport taken away, might be acceptable
+        case CARD_STAIRS:
+            return true;
+        default:
+            break;
+        }
+    return false;
+}
+
 int cards_in_deck(const item_def &deck)
 {
     ASSERT(is_deck(deck));
@@ -389,6 +407,8 @@ static card_type _choose_from_archetype(const deck_archetype* pdeck,
     for (int i = 0; pdeck[i].card != NUM_CARDS; ++i)
     {
         const card_with_weights& cww = pdeck[i];
+        if (_card_forbidden(cww.card))
+            continue;
         totalweight += cww.weight[rarity];
         if (x_chance_in_y(cww.weight[rarity], totalweight))
             result = cww.card;
@@ -2788,6 +2808,8 @@ static int _card_power(deck_rarity_type rarity)
 bool card_effect(card_type which_card, deck_rarity_type rarity,
                  uint8_t flags, bool tell_card)
 {
+    ASSERT(!_card_forbidden(which_card));
+
     bool rc = true;
     const int power = _card_power(rarity);
 

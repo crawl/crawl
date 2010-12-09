@@ -248,6 +248,19 @@ static bool _OLGREB_evoke(item_def *item, int* pract, bool* did_work,
     return (false);
 }
 
+static void _OLGREB_melee_effect(item_def* weapon, actor* attacker,
+                                 actor* defender, bool mondied)
+{
+    if (defender->alive()
+        && (coinflip() || x_chance_in_y(you.skills[SK_POISON_MAGIC], 8)))
+    {
+        defender->poison(attacker, 2, defender->has_lifeforce()
+                                      && one_chance_in(4));
+        if (attacker->atype() == ACT_PLAYER)
+            did_god_conduct(DID_POISON, 3);
+    }
+}
+
 ////////////////////////////////////////////////////
 
 static void _power_pluses(item_def *item)

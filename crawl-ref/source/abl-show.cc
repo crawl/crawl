@@ -211,7 +211,7 @@ static const ability_def Ability_List[] =
 
     { ABIL_FLY, "Fly", 3, 0, 100, 0, ABFLAG_NONE },
     { ABIL_STOP_FLYING, "Stop Flying", 0, 0, 0, 0, ABFLAG_NONE },
-    { ABIL_HELLFIRE, "Hellfire", 0, 350, 200, 0, ABFLAG_NONE },
+    { ABIL_HELLFIRE, "Hellfire", 0, 250, 200, 0, ABFLAG_NONE },
     { ABIL_THROW_FLAME, "Throw Flame", 0, 20, 50, 0, ABFLAG_NONE },
     { ABIL_THROW_FROST, "Throw Frost", 0, 20, 50, 0, ABFLAG_NONE },
 
@@ -579,16 +579,15 @@ int xp_cost(const ability_def& abil)
         case ABIL_MAKE_BLADE_TRAP:
             scale10 = count_traps(TRAP_BLADE); // Max of 18-ish at base cost 3000
             break;
-
     }
 
-    cost *= 1000; // stave off round-off errors
+    float c = cost; // stave off round-off errors
     for (; scale10 > 0; scale10--)
-        cost = (cost * 11) / 10;        // +10%
+        c = c * 1.1;        // +10%
     for (; scale20 > 0; scale20--)
-        cost = (cost * 6) / 5;        // +20%
+        c = c * 1.2;        // +20%
 
-    return cost / 1000;
+    return c;
 }
 
 const std::string make_cost_description(ability_type ability)

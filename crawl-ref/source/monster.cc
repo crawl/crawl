@@ -3410,7 +3410,7 @@ int monster::mons_species() const
     return ::mons_species(type);
 }
 
-void monster::poison(actor *agent, int amount)
+void monster::poison(actor *agent, int amount, bool force)
 {
     if (amount <= 0)
         return;
@@ -3419,7 +3419,8 @@ void monster::poison(actor *agent, int amount)
     if (!(amount /= 2))
         amount = 1;
 
-    poison_monster(this, agent ? agent->kill_alignment() : KC_OTHER, amount);
+    poison_monster(this, agent ? agent->kill_alignment() : KC_OTHER, amount,
+                   force);
 }
 
 int monster::skill(skill_type sk, bool) const

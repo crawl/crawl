@@ -701,7 +701,8 @@ private:
         : ignore_chance(false), preserve_dummy(false),
           sel(_typ), place(_pl), tag(_tag),
           mini(_mini), check_depth(_check_depth),
-          check_layout(sel == DEPTH && place == level_id::current())
+          check_layout((sel == DEPTH || sel == DEPTH_AND_CHANCE)
+                    && place == level_id::current())
     {
         if (_typ == PLACE)
             ignore_chance = true;
