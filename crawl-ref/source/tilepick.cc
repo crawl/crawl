@@ -1982,7 +1982,68 @@ static tileidx_t _tileidx_tentacle(const monster *mon)
     {
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_W;
     }
-        
+
+    // Connect corners and edges.
+    if (h_pos.x == t_pos.x && h_pos.y < t_pos.y
+           && t_pos.x > n_pos.x && t_pos.y < n_pos.y
+        || n_pos.x == t_pos.x && n_pos.y < t_pos.y
+           && t_pos.x > h_pos.x && t_pos.y < h_pos.y)
+    {
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_SW;
+    }
+    if (h_pos.x == t_pos.x && h_pos.y < t_pos.y
+           && t_pos.x < n_pos.x && t_pos.y < n_pos.y
+        || n_pos.x == t_pos.x && n_pos.y < t_pos.y
+           && t_pos.x < h_pos.x && t_pos.y < h_pos.y)
+    {
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_SE;
+    }
+    // n..  h.x == t.x && h.y > t.y && t.x > n.x && t.y > n.y
+    // .t.  || n.x == t.x && n.y > t.y && t.x > h.x && t.y > h.y
+    // .h.
+    if (h_pos.x == t_pos.x && h_pos.y > t_pos.y
+           && t_pos.x > n_pos.x && t_pos.y > n_pos.y
+        || n_pos.x == t_pos.x && n_pos.y > t_pos.y
+           && t_pos.x > h_pos.x && t_pos.y > h_pos.y)
+    {
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_NW;
+    }
+    if (h_pos.x == t_pos.x && h_pos.y > t_pos.y
+           && t_pos.x < n_pos.x && t_pos.y > n_pos.y
+        || n_pos.x == t_pos.x && n_pos.y > t_pos.y
+           && t_pos.x < h_pos.x && t_pos.y > h_pos.y)
+    {
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_NE;
+    }
+    if (h_pos.x < t_pos.x && h_pos.y == t_pos.y
+           && t_pos.x < n_pos.x && t_pos.y > n_pos.y
+        || n_pos.x < t_pos.x && n_pos.y == t_pos.y
+           && t_pos.x < h_pos.x && t_pos.y > h_pos.y)
+    {
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_NE;
+    }
+    if (h_pos.x < t_pos.x && h_pos.y == t_pos.y
+           && t_pos.x < n_pos.x && t_pos.y < n_pos.y
+        || n_pos.x < t_pos.x && n_pos.y == t_pos.y
+           && t_pos.x < h_pos.x && t_pos.y < h_pos.y)
+    {
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_SE;
+    }
+    if (h_pos.x > t_pos.x && h_pos.y == t_pos.y
+           && t_pos.x > n_pos.x && t_pos.y > n_pos.y
+        || n_pos.x > t_pos.x && n_pos.y == t_pos.y
+           && t_pos.x > h_pos.x && t_pos.y > h_pos.y)
+    {
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_NW;
+    }
+    if (h_pos.x > t_pos.x && h_pos.y == t_pos.y
+           && t_pos.x > n_pos.x && t_pos.y < n_pos.y
+        || n_pos.x > t_pos.x && n_pos.y == t_pos.y
+           && t_pos.x > h_pos.x && t_pos.y < h_pos.y)
+    {
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_SW;
+    }
+    
     return TILEP_MONS_PROGRAM_BUG;
 }
 
