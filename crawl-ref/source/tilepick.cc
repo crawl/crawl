@@ -1775,6 +1775,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
 static bool _tentacle_pos_unknown(const monster *tentacle,
                                   const coord_def orig_pos)
 {
+    // We can see the segment, no guessing necessary.
     if (!tentacle->submerged())
         return (false);
 
@@ -1790,20 +1791,36 @@ static bool _tentacle_pos_unknown(const monster *tentacle,
         if (!in_bounds(*ai))
             continue;
 
+        if (you.pos() == *ai)
+            continue;
+
         // If there's an adjacent deep water tile, the segment
         // might be there instead.
         if (grd(*ai) == DNGN_DEEP_WATER)
+        {
+            const monster *mon = monster_at(*ai);
+            if (mon && you.can_see(mon))
+            {
+                // Could originate from the kraken.
+                if (mon->type == MONS_KRAKEN)
+                    return (true);
+
+                // Otherwise, we know the segment can't be there.
+                continue;
+            }
             return (true);
+        }
 
         if (grd(*ai) == DNGN_SHALLOW_WATER)
         {
-            // We know there's no monster there.
-            if (you.pos() == *ai || !monster_at(*ai))
+            const monster *mon = monster_at(*ai);
+            
+            // We know there's no segment there.
+            if (!mon)
                 continue;
 
             // Disturbance in shallow water -> might be a tentacle.
-            const monster *mon = monster_at(*ai);
-            if (mon->submerged())
+            if (mon->type == MONS_KRAKEN || mon->submerged())
                 return (true);
         }
     }
