@@ -3050,7 +3050,7 @@ std::string map_def::apply_subvault(string_spec &spec)
         you.uniq_map_tags = uniq_tags;
         you.uniq_map_names = uniq_names;
 
-        const map_def *orig = random_map_for_tag(tag);
+        const map_def *orig = random_map_for_tag(tag, true);
         if (!orig)
             return (make_stringf("No vault found for tag '%s'", tag.c_str()));
 
