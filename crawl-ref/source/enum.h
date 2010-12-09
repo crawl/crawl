@@ -2116,7 +2116,7 @@ enum monster_type                      // (int) menv[].type
     MONS_DEEP_DWARF_BERSERKER,
     MONS_DEEP_DWARF_DEATH_KNIGHT,
     MONS_DEEP_DWARF_UNBORN,
-      MONS_UNUSED_NISSE,
+    MONS_GNOME, // single vault
       MONS_UNUSED_338,
       MONS_UNUSED_339,
 

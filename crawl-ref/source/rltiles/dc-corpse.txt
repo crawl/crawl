@@ -192,6 +192,7 @@ orc CORPSE_ORC
 
 ## Dwarves ('q')
 unique/wiglaf CORPSE_DWARF
+gnome CORPSE_GNOME
 
 ## Ugly things ('u')
 %sdir dc-mon/demons

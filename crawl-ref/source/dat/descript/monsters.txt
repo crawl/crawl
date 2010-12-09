@@ -877,6 +877,10 @@ gnoll
 
 A taller and better-equipped relative of goblins and orcs, somewhat doglike in appearance.
 %%%%
+gnome
+
+A small, stout humanoid said to be good at finding its way through underground passages. Once commonly found in dungeons across the world, gnomes are now on the verge of extinction. This one may be the last of its kind.
+%%%%
 goblin
 
 A short, ugly and unfriendly humanoid:  squat, broad, flat-nosed, sallow-skinned, with a wide mouth and pistachio-shaped eyes.
