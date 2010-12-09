@@ -2814,18 +2814,10 @@ static bool _builder_normal(int level_number, spec_room &sr)
     //V was 3
     if (!skipped && one_chance_in(7))
     {
-        // Sometimes do just a rogue level, sometimes override with
-        // the basic builder for something more interesting.
-        bool just_roguey = coinflip();
-
         // Sometimes _roguey_level() generates a special room.
         _roguey_level(level_number, sr);
-
-        if (just_roguey)
-        {
-            dgn_place_stone_stairs(true);
-            return false;
-        }
+        dgn_place_stone_stairs(true);
+        return false;
     }
     else
     {
