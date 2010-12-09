@@ -2735,6 +2735,31 @@ MAP
 ...........
 ENDMAP
 
+NAME: special_room
+TAGS: allow_dup luniq no_item_gen layout_basic
+CHANCE: 20%
+DEPTH: 6-30
+{{
+    local width = 5 + crawl.random2avg(6, 2)
+    local height = 5 + crawl.random2avg(6, 2)
+
+    extend_map { width = width, height = height }
+    make_box { x1 = 0, y1 = 0, x2 = width - 1, y2 = height - 1, floor = 'O' }
+    _G.subvault('O : special_room')
+
+    local entrance_x, entrance_y
+    if crawl.coinflip() then
+	entrance_x = crawl.coinflip() and 0 or width - 1
+	entrance_y = crawl.random_range(1, height - 2)
+    else
+	entrance_x = crawl.random_range(1, width - 2)
+	entrance_y = crawl.coinflip() and 0 or height - 1
+    end
+
+    mapgrd[entrance_x][entrance_y] = '+'
+}}
+MAP
+ENDMAP
 
 
 #### commented out vaults #### should look into these at some point
