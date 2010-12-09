@@ -1237,7 +1237,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     // For all those scale mutations.
     you.redraw_armour_class = true;
 
-    notify_stat_change("losing a mutation");
+    notify_stat_change("gaining a mutation");
 
     if (gain_msg)
         mpr(mdef.gain[you.mutation[mutat]-1], MSGCH_MUTATION);
