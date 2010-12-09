@@ -179,6 +179,13 @@ bool mons_abyss(int mcls)
     case MONS_DRACONIAN_ANNIHILATOR:
     case MONS_DRACONIAN_ZEALOT:
     case MONS_DRACONIAN_SHIFTER:
+    case MONS_DEEP_DWARF:
+    case MONS_DEEP_DWARF_SCION:
+    case MONS_DEEP_DWARF_ARTIFICER:
+    case MONS_DEEP_DWARF_NECROMANCER:
+    case MONS_DEEP_DWARF_BERSERKER:
+    case MONS_DEEP_DWARF_DEATH_KNIGHT:
+    case MONS_DEEP_DWARF_UNBORN:
         return (true);
     default:
         return (false);
@@ -317,6 +324,13 @@ int mons_rare_abyss(int mcls)
     case MONS_WOOD_GOLEM:
     case MONS_DEATH_DRAKE:
     case MONS_SILENT_SPECTRE:
+    case MONS_DEEP_DWARF:
+    case MONS_DEEP_DWARF_SCION:
+    case MONS_DEEP_DWARF_ARTIFICER:
+    case MONS_DEEP_DWARF_NECROMANCER:
+    case MONS_DEEP_DWARF_BERSERKER:
+    case MONS_DEEP_DWARF_DEATH_KNIGHT:
+    case MONS_DEEP_DWARF_UNBORN:
         return 5;
 
     case MONS_AIR_ELEMENTAL:
