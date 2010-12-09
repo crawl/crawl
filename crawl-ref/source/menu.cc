@@ -2605,6 +2605,7 @@ void FormattedTextItem::render()
     {
         m_font_buf.clear();
         // FIXME: m_fg_colour doesn't work here while it works in console.
+        textcolor(m_fg_colour);
         m_font_buf.add(formatted_string::parse_string(m_render_text, true,
                                                       NULL, m_fg_colour),
                        m_min_coord.x, m_min_coord.y);
@@ -2622,6 +2623,7 @@ void FormattedTextItem::render()
     }
 
     cgotoxy(m_min_coord.x, m_min_coord.y);
+    textcolor(m_fg_colour);
     formatted_string::parse_string(m_render_text, true,
                                    NULL, m_fg_colour).display();
 #endif
