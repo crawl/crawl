@@ -344,7 +344,9 @@ COLORS SkillMenuEntry::_get_colour() const
 {
     int ct_bonus = crosstrain_bonus(m_sk);
 
-    if (is_set(SKMF_DISP_RESKILL) && (m_sk == you.transfer_from_skill
+    if (is_set(SKMF_DO_PRACTISE) && you.practise_skill[m_sk] == 0)
+        return(DARKGREY);
+    else if (is_set(SKMF_DISP_RESKILL) && (m_sk == you.transfer_from_skill
                                         || m_sk == you.transfer_to_skill))
     {
         return(GREEN);
@@ -361,8 +363,6 @@ COLORS SkillMenuEntry::_get_colour() const
         return(MAGENTA);
     else
         return(LIGHTGREY);
-
-
 }
 
 std::string SkillMenuEntry::_get_prefix()
