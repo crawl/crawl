@@ -25,6 +25,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    bool circular = false,
                    coord_def origin = coord_def(-1, -1));
 void reautomap_level();
+void fully_map_level();
 
 bool is_feature(wchar_t feature, const coord_def& where);
 
