@@ -24,7 +24,7 @@ default-depth: D, Vault, Elf, Crypt
 ############################################################################
 #
 # <<0>> Serial vaults
-#       Sometimes, we want flavour vaults to be placed several times, so as 
+#       Sometimes, we want flavour vaults to be placed several times, so as
 #       to makes the level feel more coherent. The lua calls for such serial
 #       vaults are here.
 #       The vaults eventually could be just copies of one map, or also come
@@ -263,7 +263,7 @@ ENDMAP
 # with a chance of a secret bypass, by Core Xii.
 NAME:   corexii_corridor_pit
 DEPTH:  D
-TAGS:   no_pool_fixup no_monster_gen no_item_gen 
+TAGS:   no_pool_fixup no_monster_gen no_item_gen
 TAGS:   allow_dup extra luniq_mini mini_float
 : if crawl.random2(5) == 0 then
 :   subst("l = W")
