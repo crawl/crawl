@@ -798,9 +798,7 @@ int unmarshallEnumVal(reader& rd, const enum_info *ei)
         ei->collect(values);
 
         for (unsigned i = 0; i < values.size(); ++i)
-        {
             ers.names.insert(make_pair(values[i].second, values[i].first));
-        }
 
         if (rd.getMinorVersion() < ei->non_historical_first)
         {
@@ -811,19 +809,13 @@ int unmarshallEnumVal(reader& rd, const enum_info *ei)
             for (; evi->name; ++evi)
             {
                 if (ers.names.find(std::string(evi->name)) != ers.names.end())
-                {
                     ers.mapping[evi->value] = ers.names[std::string(evi->name)];
-                }
                 else
-                {
                     ers.mapping[evi->value] = ei->replacement;
-                }
             }
         }
         else
-        {
             ers.store_type = unmarshallByte(rd);
-        }
     }
 
     int raw;
@@ -841,17 +833,14 @@ int unmarshallEnumVal(reader& rd, const enum_info *ei)
     std::string name = unmarshallString(rd);
 
     if (ers.names.find(name) != ers.names.end())
-    {
         ers.mapping[raw] = ers.names[name];
-    }
     else
-    {
         ers.mapping[raw] = ei->replacement;
-    }
 
     return ers.mapping[raw];
 }
 
+#if TAG_MAJOR_VERSION == 31
 static int get_val_from_string(const char *ptr, int len)
 {
     int ret = 0;
@@ -866,7 +855,6 @@ static int get_val_from_string(const char *ptr, int len)
     return (ret);
 }
 
-#if TAG_MAJOR_VERSION == 31
 static time_t _parse_date_string(char buff[20])
 {
     struct tm date;
