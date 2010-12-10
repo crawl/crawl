@@ -183,6 +183,8 @@ static void _big_room(int level_number);
 static void _chequerboard(dgn_region& region, dungeon_feature_type target,
                           dungeon_feature_type floor1,
                           dungeon_feature_type floor2);
+static bool _octa_room(dgn_region& region, int oblique_max,
+                       dungeon_feature_type type_floor);
 static void _roguey_level(int level_number);
 
 // VAULT FUNCTIONS
@@ -6174,7 +6176,7 @@ static bool _plan_4(dgn_region_list *excluded, dungeon_feature_type force_wall)
         if (one_chance_in(10))
             feature = coinflip()? DNGN_DEEP_WATER : DNGN_LAVA;
 
-        octa_room(room, oblique_max, feature);
+        _octa_room(room, oblique_max, feature);
     }
 
     return true;
@@ -6204,8 +6206,8 @@ static bool _plan_6(int level_number)
     return (false);
 }
 
-bool octa_room(dgn_region& region, int oblique_max,
-               dungeon_feature_type type_floor)
+static bool _octa_room(dgn_region& region, int oblique_max,
+                       dungeon_feature_type type_floor)
 {
     env.level_build_method += make_stringf(" octa_room [%d %d]", oblique_max,
                                      (int) type_floor);
@@ -7008,7 +7010,7 @@ static void _diamond_rooms(int level_number)
 
         oblique_max = room.size.x / 2;
 
-        if (!octa_room(room, oblique_max, type_floor))
+        if (!_octa_room(room, oblique_max, type_floor))
         {
             runthru++;
             if (runthru > 9)
@@ -7056,7 +7058,7 @@ static void _big_room(int level_number)
         // Usually floor, except at higher levels.
         if (!one_chance_in(5) || level_number < 8 + random2(8))
         {
-            octa_room(region, oblique, DNGN_FLOOR);
+            _octa_room(region, oblique, DNGN_FLOOR);
             return;
         }
 
@@ -7069,7 +7071,7 @@ static void _big_room(int level_number)
                                                           : DNGN_LAVA);
         }
 
-        octa_room(region, oblique, type_floor);
+        _octa_room(region, oblique, type_floor);
     }
 
     // What now?
