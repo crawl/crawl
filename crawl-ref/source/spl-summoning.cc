@@ -741,7 +741,10 @@ bool summon_berserker(int pow, actor *caster)
     }
 
     mgen_data mg(mon, caster ? BEH_COPY : BEH_HOSTILE, caster, dur, 0,
-                 caster? caster->pos() : you.pos(), MHITYOU, 0, GOD_TROG);
+                 caster? caster->pos() : you.pos(),
+                 (caster && caster->atype() == ACT_MONSTER)
+                     ? ((monster*)caster)->foe : MHITYOU,
+                 0, GOD_TROG);
 
     if (!caster)
         mg.non_actor_summoner = "the rage of " + god_name(GOD_TROG, false);
