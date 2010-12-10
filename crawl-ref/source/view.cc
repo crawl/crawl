@@ -453,6 +453,24 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     return (did_map);
 }
 
+void fully_map_level()
+{
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        bool ok = false;
+        for (adjacent_iterator ai(*ri, false); ai; ++ai)
+            if (grd(*ai) >= DNGN_MINSEE)
+                ok = true;
+        if (!ok)
+            continue;
+        set_terrain_visible(*ri);
+        env.map_knowledge(*ri).set_feature(grd(*ri));
+        if (igrd(*ri) != NON_ITEM)
+            env.map_knowledge(*ri).set_detected_item();
+        env.pgrid(*ri) |= FPROP_SEEN_OR_NOEXP;
+    }
+}
+
 // Is the given monster near (in LOS of) the player?
 bool mons_near(const monster* mons)
 {
