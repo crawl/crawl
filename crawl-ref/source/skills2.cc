@@ -859,18 +859,35 @@ void SkillMenu::_set_help(int flag)
                "<green>green</green>.";
         break;
     case SKMF_DISP_PROGRESS:
-        help = "The percentage of the progress done before reaching next level"
-               " is in <cyan>cyan</cyan>.";
-        break;
     case SKMF_DISP_APTITUDE:
-        help = "The species aptitude is in <red>red</red>. ";
-        if (m_crosstrain)
-            help += "Crosstraining is in <blue>blue</blue>. ";
-        if (m_antitrain)
-            help += "Antitraining is in <magenta>magenta</magenta>. ";
-        if (m_crosstrain || m_antitrain)
-            help += "The skill responsible for the bonus or malus is marked "
-                    "with '*'.";
+        if (flag == SKMF_DISP_PROGRESS || !m_crosstrain && !m_antitrain)
+        {
+            help = "The percentage of the progress done before reaching next "
+                   "level is in <cyan>cyan</cyan>.   ";
+        }
+        help += "The species aptitude is in <red>red</red>. ";
+        if (flag == SKMF_DISP_APTITUDE)
+        {
+            if (m_crosstrain)
+                help += "Crosstraining is in <blue>blue</blue>. ";
+            if (m_antitrain)
+                help += "Antitraining is in <magenta>magenta</magenta>. ";
+            if (m_crosstrain && !m_antitrain)
+            {
+                help += "The skill responsible for the bonus is marked with "
+                        "'<blue>*</blue>'.";
+            }
+            else if (!m_crosstrain && m_antitrain)
+            {
+                help += "The skill responsible for the malus is marked with "
+                        "'<magenta>*</magenta>'.";
+            }
+            else if (m_crosstrain && m_antitrain)
+            {
+                help += "The skill responsible for the bonus or malus is "
+                        "marked with '*'.";
+            }
+        }
         break;
     case SKMF_DISP_RESKILL:
         help = "The progress of the knowledge transfer is displayed in "
