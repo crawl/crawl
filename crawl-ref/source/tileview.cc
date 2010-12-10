@@ -814,6 +814,12 @@ static bool _suppress_blood(const coord_def pos)
     return (false);
 }
 
+static bool _suppress_blood(tileidx_t bg_idx)
+{
+    return (bg_idx >= TILE_WALL_BRICK_TORCH_START
+            && bg_idx <= TILE_WALL_BRICK_TORCH_END);
+}
+
 // Specifically for vault-overwritten doors. We have three "sets" of tiles that
 // can be dealt with. The tile sets should be 2, 3, 8 and 9 respectively. They
 // are:
@@ -978,8 +984,11 @@ void tile_apply_properties(const coord_def &gc, tileidx_t *fg,
         }
     }
 
-    if (print_blood && _suppress_blood(gc))
+    if (print_blood && (_suppress_blood(gc)
+                        || _suppress_blood((*bg) & TILE_FLAG_MASK)))
+    {
         print_blood = false;
+    }
 
     // Mold has the same restrictions as blood
     // but mold takes precendence over blood.
