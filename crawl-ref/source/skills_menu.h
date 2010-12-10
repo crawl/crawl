@@ -98,8 +98,10 @@ private:
     BoxMenuHighlighter*  m_highlighter;
 
     int m_flags;
-    int m_max_col;
-    int m_max_ln;
+    int m_start_col;
+    int m_start_ln;
+    int m_end_col;
+    int m_end_ln;
 
     SkillMenuEntry  m_skills[SK_ARR_LN][SK_ARR_COL];
 
