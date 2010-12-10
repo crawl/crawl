@@ -8,6 +8,7 @@
 #           Minivaults with monsters go to mini_monsters.des.
 #           Maps for the Vault branch, including Vaults:8 are in vaults.des.
 #
+# <<0>> Serial vaults            (thematic vaults possibly spawned together)
 # <<1>> Flavour vaults           (no items, no monsters)
 # <<2>> Inaccessible items
 # <<3>> Supply closet vaults     (vaults with items and no risk).
@@ -22,6 +23,35 @@ default-depth: D, Vault, Elf, Crypt
 
 ############################################################################
 #
+# <<0>> Serial vaults
+#       Sometimes, we want flavour vaults to be placed several times, so as 
+#       to makes the level feel more coherent. The lua calls for such serial
+#       vaults are here.
+#       The vaults eventually could be just copies of one map, or also come
+#       from a list of thematically linked maps. This is mostly for flavour,
+#       although it may later be interesting to created serial vaults around
+#       threats.
+#
+############################################################################
+
+NAME:   serial_glass
+TAGS:   allow_dup extra l_uniq
+DEPTH:  D, Elf, Vault, Crypt
+CHANCE: 5%
+{{
+  -- Single instances of serial_glass vaults can be placed normally, so
+  -- we only roll numbers between 2 and 12 (non-flat distribution).
+  -- Sometimes we add a few rarer glass vaults to the level.
+  local c = 2 + crawl.random2(3)*crawl.random2(3)*crawl.random2(4)
+  local d = crawl.random2(2)*crawl.random2(2)*crawl.random2(5)
+  hook("post_place", function()
+    dgn.place_maps{tag="serial_glass", count=c}
+    dgn.place_maps{tag="serial_glass_rare", count=d}
+  end)
+}}
+
+############################################################################
+#
 # <<1>> Flavour vaults
 #       no items, no monsters. Statues, glass, fountains, water...
 #
@@ -29,7 +59,7 @@ default-depth: D, Vault, Elf, Crypt
 
 NAME:   glass_columns_a
 DEPTH:  D, Elf, Crypt
-TAGS:   extra luniq_mini
+TAGS:   serial_glass allow_dup
 WEIGHT: 5
 MAP
 .....
@@ -41,7 +71,7 @@ ENDMAP
 
 NAME:   glass_columns_b
 DEPTH:  D, Elf, Crypt
-TAGS:   extra luniq_mini
+TAGS:   serial_glass allow_dup
 WEIGHT: 3
 MAP
 .......
@@ -55,7 +85,7 @@ ENDMAP
 
 NAME:   glass_columns_c
 DEPTH:  D, Elf, Crypt
-TAGS:   extra luniq_mini
+TAGS:   serial_glass allow_dup
 WEIGHT: 2
 MAP
 .........
@@ -233,7 +263,8 @@ ENDMAP
 # with a chance of a secret bypass, by Core Xii.
 NAME:   corexii_corridor_pit
 DEPTH:  D
-TAGS:   no_pool_fixup no_monster_gen no_item_gen allow_dup extra luniq_mini mini_float
+TAGS:   no_pool_fixup no_monster_gen no_item_gen 
+TAGS:   allow_dup extra luniq_mini mini_float
 : if crawl.random2(5) == 0 then
 :   subst("l = W")
 :   subst("= = x")
@@ -264,7 +295,7 @@ ENDMAP
 NAME:   corexii_hall_statues_deadend
 DEPTH:  D
 WEIGHT: 1
-TAGS:   allow_dup extra mini_float
+TAGS:   extra mini_float
 SUBST:  T = T:2 V:2 G:1
 NSUBST: ? = 1:% / *:.
 MAP
@@ -295,7 +326,7 @@ ENDMAP
 NAME:   corexii_hall_statues_l
 DEPTH:  D
 WEIGHT: 2
-TAGS:   allow_dup extra mini_float
+TAGS:   extra mini_float
 SUBST:  T = T:1 G:2, T = T V
 MAP
 xx@@@xx
@@ -316,7 +347,7 @@ ENDMAP
 NAME:   corexii_hall_statues_s
 DEPTH:  D
 WEIGHT: 1
-TAGS:   allow_dup extra mini_float
+TAGS:   extra mini_float
 SUBST:  T = T:4 G:1, T = T V
 MAP
 xx@@@xx
@@ -335,7 +366,7 @@ ENDMAP
 NAME:   corexii_hall_statues_u
 DEPTH:  D
 WEIGHT: 1
-TAGS:   allow_dup extra mini_float
+TAGS:   extra mini_float
 SUBST:  T = T:4 G:1, T = T V
 MAP
 xx@@@xxxxx@@@xx
@@ -352,7 +383,7 @@ ENDMAP
 NAME:   corexii_hall_statues_t
 DEPTH:  D
 WEIGHT: 1
-TAGS:   allow_dup extra mini_float
+TAGS:   dup extra mini_float
 SUBST:  T = T:2 V:2 G:1
 MAP
 xxxxxxxxxxxxxxxxxxx
@@ -373,7 +404,7 @@ ENDMAP
 NAME:   corexii_hall_statues_x
 DEPTH:  D
 WEIGHT: 2
-TAGS:   allow_dup extra mini_float
+TAGS:   extra mini_float
 SUBST:  T = T:3 V:3 G:1 .:3
 MAP
       xx@@@xx
@@ -489,8 +520,8 @@ MAP
 ENDMAP
 
 NAME:  minmay_strange_pillars
-TAGS:  extra luniq_mini
-DEPTH: D, Elf
+TAGS:  serial_glass_rare allow_dup extra
+DEPTH: D, Elf, Crypt
 MAP
  ...   ...
 ..m.. ..m..
@@ -1024,7 +1055,7 @@ ENDMAP
 
 NAME:  feat_on_display
 DEPTH: D, Elf, Crypt, Vault
-TAGS:  extra luniq_mini
+TAGS:  serial_glass_rare allow_dup
 SUBST: ? = TUl
 TAGS:  no_monster_gen no_item_gen
 MAP
@@ -1037,7 +1068,7 @@ ENDMAP
 
 NAME:   item_on_display_a
 DEPTH:  D, Elf, Crypt, Vault
-TAGS:   extra luniq_mini
+TAGS:   serial_glass_rare allow_dup
 WEIGHT: 9
 SUBST:  % = %%%*
 TAGS:   no_monster_gen no_item_gen
@@ -1051,7 +1082,7 @@ ENDMAP
 
 NAME:   item_on_display_b
 DEPTH:  D, Elf, Crypt, Vault
-TAGS:   extra luniq_mini
+TAGS:   serial_glass_rare allow_dup
 WEIGHT: 1
 SUBST:  * = ***|
 TAGS:   no_monster_gen no_item_gen
@@ -1067,7 +1098,7 @@ ENDMAP
 # contains within an unseen horror, by due.
 NAME:   unseen_surprise_small
 WEIGHT: 1
-TAGS:   no_wall_fixup extra luniq_mini
+TAGS:   serial_glass_rare allow_dup no_wall_fixup
 DEPTH:  D:8-27, Elf, Crypt, Vault
 KMONS:  a = generate_awake unseen_horror
 KITEM:  a = | / *
@@ -1082,7 +1113,7 @@ ENDMAP
 # Unseen surprise! by due (and dpeg).
 NAME:   due_unseen_surprise
 DEPTH:  D, Elf, Crypt, Vault
-TAGS:   no_wall_fixup extra luniq_mini
+TAGS:   serial_glass_rare allow_dup no_wall_fixup l_uniq
 : if you.absdepth()<11 or crawl.random2(27)>you.absdepth() then
 SUBST:  a = %
 SUBST:  b = %**
