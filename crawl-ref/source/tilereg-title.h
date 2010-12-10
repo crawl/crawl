@@ -16,7 +16,7 @@ public:
 
     virtual void render();
     virtual void clear() {};
-    virtual void run();
+    virtual void run() {};
 
     virtual int handle_mouse(MouseEvent &event) { return 0; }
 

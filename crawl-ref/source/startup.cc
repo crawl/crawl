@@ -148,10 +148,7 @@ static void _initialize()
     textbackground(0);
 #ifdef USE_TILE
     if (Options.tile_title_screen)
-    {
-        tiles.update_title_msg("Loading complete, press any key to start.");
         tiles.hide_title();
-    }
 #endif
 
     clrscr();

@@ -59,12 +59,6 @@ void TitleRegion::render()
     m_font_buf.draw();
 }
 
-void TitleRegion::run()
-{
-    mouse_control mc(MOUSE_MODE_MORE);
-    getchm();
-}
-
 /**
  * We only want to show one line of message by default so clear the
  * font buffer before adding the new message.
