@@ -470,6 +470,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
 
+#if TAG_MAJOR_VERSION == 31
     // Book of Beasts
     {SPELL_SUMMON_SMALL_MAMMALS,
      SPELL_STICKS_TO_SNAKES,
@@ -480,6 +481,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
+#endif
 
     // Book of Stalking
     {SPELL_FULSOME_DISTILLATION,
@@ -980,7 +982,6 @@ int book_rarity(uint8_t which_book)
         return 11;
 
     case BOOK_MUTATIONS:
-    case BOOK_BEASTS:           //jmf: added 23mar2000
     case BOOK_BURGLARY:
     case BOOK_CHEMISTRY:
     case BOOK_DREAMS:

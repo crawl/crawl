@@ -369,7 +369,9 @@ enum book_type
     BOOK_POWER,
     BOOK_CANTRIPS,
     BOOK_PARTY_TRICKS,
+#if TAG_MAJOR_VERSION == 31
     BOOK_BEASTS,
+#endif
     BOOK_STALKING,
     BOOK_BRANDS,
     BOOK_DRAGON,
