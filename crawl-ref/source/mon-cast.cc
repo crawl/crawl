@@ -1194,9 +1194,7 @@ static bool _animate_dead_okay()
     if (is_butchering())
         return (false);
 
-    // TODO: Could probably check herbivorousness here too, but this should be
-    // enough for the moment.
-    if (you.hunger_state < HS_SATIATED)
+    if (you.hunger_state < HS_SATIATED && you.mutation[MUT_HERBIVOROUS] < 3)
         return (false);
 
     return (true);
