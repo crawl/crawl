@@ -841,7 +841,7 @@ static rune_type _get_rune(int runenumber)
     case 9:
         return RUNE_SWAMP;
     case 10:
-        return RUNE_DEMONIC;
+        return RUNE_SHOALS;
     case 11:
         return RUNE_ABYSSAL;
     case 12:
