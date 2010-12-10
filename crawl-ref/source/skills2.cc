@@ -683,7 +683,7 @@ void SkillMenu::_init_footer()
 
     m_next_action = new TextItem();
     _add_item(m_next_action, m_ff, NEXT_ACTION_SIZE, coord);
-    m_next_action->set_highlight_colour(WHITE);
+    m_next_action->set_highlight_colour(BROWN);
     m_next_action->set_fg_colour(WHITE);
     m_next_action->add_hotkey('?');
     m_next_action->set_id(-2);
@@ -692,7 +692,7 @@ void SkillMenu::_init_footer()
     {
         m_next_display = new TextItem();
         _add_item(m_next_display, m_ff, NEXT_DISPLAY_SIZE, coord);
-        m_next_display->set_highlight_colour(WHITE);
+        m_next_display->set_highlight_colour(BROWN);
         m_next_display->set_fg_colour(WHITE);
         m_next_display->add_hotkey('!');
         m_next_display->set_id(-3);
@@ -700,7 +700,7 @@ void SkillMenu::_init_footer()
 
     m_show_all = new TextItem();
     _add_item(m_show_all, m_ff, SHOW_ALL_SIZE, coord);
-    m_show_all->set_highlight_colour(WHITE);
+    m_show_all->set_highlight_colour(BROWN);
     m_show_all->set_fg_colour(WHITE);
     m_show_all->add_hotkey('*');
     m_show_all->set_id(-4);
