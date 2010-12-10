@@ -543,6 +543,8 @@ void SkillMenuEntry::_set_points()
 }
 #endif
 
+#define SCREEN_COL          80
+#define SCREEN_LINES        24
 #define CURRENT_ACTION_SIZE 24
 #define NEXT_ACTION_SIZE    15
 #define NEXT_DISPLAY_SIZE   18
@@ -551,13 +553,16 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
     m_disp_queue()
 {
     SkillMenuEntry::m_skm = this;
-    m_max_col    = get_number_of_cols();
-    // Don't want the help line to appear too far down a big window.
-    m_max_ln   = std::min(30, get_number_of_lines());
+
+    m_start_col = (get_number_of_cols() - SCREEN_COL) / 2 + 3;
+    m_start_ln = (get_number_of_lines() - SCREEN_LINES) / 2 + 1;
+
+    m_end_col = SCREEN_COL + m_start_col;
+    m_end_ln = SCREEN_LINES + m_start_ln;
 
     m_ff = new MenuFreeform();
-    m_ff->init(coord_def(1, 1),
-               coord_def(m_max_col, m_max_ln + 1), "freeform");
+    m_ff->init(coord_def(m_start_col, m_start_ln),
+               coord_def(m_end_col, m_end_ln), "freeform");
     attach_object(m_ff);
     set_active_object(m_ff);
 
@@ -565,13 +570,14 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
     for (int ln = 0; ln < SK_ARR_LN; ++ln)
         for (int col = 0; col < SK_ARR_COL; ++col)
         {
-            m_skills[ln][col] = SkillMenuEntry(coord_def(1 + 40*col, 2 + ln),
+            m_skills[ln][col] = SkillMenuEntry(coord_def(m_start_col + 40*col,
+                                                         m_start_ln + 1 + ln),
                                                m_ff);
         }
 
     m_help = new FormattedTextItem();
-    m_help->set_bounds(coord_def(1, m_max_ln - 2),
-                       coord_def(m_max_col, m_max_ln));
+    m_help->set_bounds(coord_def(m_start_col, m_end_ln - 3),
+                       coord_def(m_end_col, m_end_ln - 1));
     m_ff->attach_item(m_help);
 
     _init_disp_queue();
@@ -668,7 +674,8 @@ void SkillMenu::_init_disp_queue()
 void SkillMenu::_init_title()
 {
     m_title = new NoSelectTextItem();
-    m_title->set_bounds(coord_def(1, 1), coord_def(m_max_col, 2));
+    m_title->set_bounds(coord_def(m_start_col, m_start_ln),
+                        coord_def(m_end_col, m_start_ln + 1));
     m_title->set_fg_colour(WHITE);
     m_ff->attach_item(m_title);
     m_title->set_visible(true);
@@ -676,7 +683,7 @@ void SkillMenu::_init_title()
 
 void SkillMenu::_init_footer()
 {
-    coord_def coord = coord_def(1, m_max_ln);
+    coord_def coord(m_start_col, m_end_ln - 1);
     m_current_action = new NoSelectTextItem();
     _add_item(m_current_action, m_ff, CURRENT_ACTION_SIZE, coord);
     m_current_action->set_fg_colour(WHITE);
