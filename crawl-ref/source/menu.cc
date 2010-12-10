@@ -2624,8 +2624,7 @@ void FormattedTextItem::render()
 
     cgotoxy(m_min_coord.x, m_min_coord.y);
     textcolor(m_fg_colour);
-    formatted_string::parse_string(m_render_text, true,
-                                   NULL, m_fg_colour).display();
+    display_tagged_block(m_render_text);
 #endif
 }
 
