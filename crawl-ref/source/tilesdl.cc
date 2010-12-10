@@ -196,8 +196,7 @@ void TilesFramework::update_title_msg(std::string message)
 
 /**
  * Deletes the dynamically reserved Titlescreen memory
- * at end. Runs reg->run to get one key input from the user
- * so that the title screen stays ope until any input is given.
+ * at end.
  * Assumes that we only have one region on the layer
  * If at some point it's possible to have multiple regions
  * open while the title screen shows, the .at(0) will need
@@ -210,7 +209,6 @@ void TilesFramework::hide_title()
     TitleRegion* reg = dynamic_cast<TitleRegion*>(
             m_layers[LAYER_TILE_CONTROL].m_regions.at(0));
     redraw();
-    reg->run();
     delete reg;
     m_layers[LAYER_TILE_CONTROL].m_regions.clear();
 }
