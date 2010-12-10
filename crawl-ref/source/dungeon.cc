@@ -180,7 +180,7 @@ static object_class_type _item_in_shop(shop_type shop_type);
 
 // SPECIAL ROOM BUILDERS
 static void _big_room(int level_number);
-static void _chequerboard(spec_room &sr, dungeon_feature_type target,
+static void _chequerboard(dgn_region& region, dungeon_feature_type target,
                           dungeon_feature_type floor1,
                           dungeon_feature_type floor2);
 static void _roguey_level(int level_number);
@@ -6164,9 +6164,7 @@ static bool _plan_4(dgn_region_list *excluded, dungeon_feature_type force_wall)
 
     if (!excluded && one_chance_in(4))     // a market square
     {
-        spec_room sr;
-        sr.tl.set(25, 25);
-        sr.br.set(55, 45);
+        dgn_region room = dgn_region::absolute(25, 25, 55, 45);
 
         int oblique_max = 0;
         if (!one_chance_in(4))
@@ -6176,7 +6174,7 @@ static bool _plan_4(dgn_region_list *excluded, dungeon_feature_type force_wall)
         if (one_chance_in(10))
             feature = coinflip()? DNGN_DEEP_WATER : DNGN_LAVA;
 
-        octa_room(sr, oblique_max, feature);
+        octa_room(room, oblique_max, feature);
     }
 
     return true;
@@ -6206,13 +6204,16 @@ static bool _plan_6(int level_number)
     return (false);
 }
 
-bool octa_room(spec_room &sr, int oblique_max,
+bool octa_room(dgn_region& region, int oblique_max,
                dungeon_feature_type type_floor)
 {
     env.level_build_method += make_stringf(" octa_room [%d %d]", oblique_max,
                                      (int) type_floor);
 
     int x,y;
+
+    coord_def& tl = region.pos;
+    coord_def br = region.end();
 
     // Hack - avoid lava in the crypt {gdl}
     if ((player_in_branch(BRANCH_CRYPT) || player_in_branch(BRANCH_TOMB))
@@ -6223,9 +6224,9 @@ bool octa_room(spec_room &sr, int oblique_max,
 
     int oblique = oblique_max;
 
-    for (x = sr.tl.x; x < sr.br.x; x++)
+    for (x = tl.x; x < br.x; x++)
     {
-        if (x > sr.tl.x - oblique_max)
+        if (x > tl.x - oblique_max)
             oblique += 2;
 
         if (oblique > 0)
@@ -6235,9 +6236,9 @@ bool octa_room(spec_room &sr, int oblique_max,
     oblique = oblique_max;
 
 
-    for (x = sr.tl.x; x < sr.br.x; x++)
+    for (x = tl.x; x < br.x; x++)
     {
-        for (y = sr.tl.y + oblique; y < sr.br.y - oblique; y++)
+        for (y = tl.y + oblique; y < br.y - oblique; y++)
         {
             if (grd[x][y] == DNGN_ROCK_WALL)
                 grd[x][y] = type_floor;
@@ -6249,7 +6250,7 @@ bool octa_room(spec_room &sr, int oblique_max,
                 grd[x][y] = DNGN_FLOOR;       // ick
         }
 
-        if (x > sr.br.x - oblique_max)
+        if (x > br.x - oblique_max)
             oblique += 2;
 
         if (oblique > 0)
@@ -7002,15 +7003,12 @@ static void _diamond_rooms(int level_number)
 
     for (i = 0; i < numb_diam; i++)
     {
-        spec_room sr;
+        dgn_region room(8 + random2(43), 8 + random2(35),
+                        6 + random2(15), 6 + random2(10));
 
-        sr.tl.set(8 + random2(43), 8 + random2(35));
-        sr.br.set(5 + random2(15), 5 + random2(10));
-        sr.br += sr.tl;
+        oblique_max = room.size.x / 2;
 
-        oblique_max = (sr.br.x - sr.tl.x) / 2;
-
-        if (!octa_room(sr, oblique_max, type_floor))
+        if (!octa_room(room, oblique_max, type_floor))
         {
             runthru++;
             if (runthru > 9)
@@ -7045,21 +7043,20 @@ static void _big_room(int level_number)
     dungeon_feature_type type_2 = DNGN_FLOOR;
     int i, j, k, l;
 
-    spec_room sr;
+    dgn_region region;
     int oblique;
 
     if (one_chance_in(4))
     {
         oblique = 5 + random2(20);
 
-        sr.tl.set(8 + random2(30), 8 + random2(22));
-        sr.br.set(20 + random2(10), 20 + random2(8));
-        sr.br += sr.tl;
+        region = dgn_region(8 + random2(30), 8 + random2(22),
+                            21 + random2(10), 21 + random2(8));
 
         // Usually floor, except at higher levels.
         if (!one_chance_in(5) || level_number < 8 + random2(8))
         {
-            octa_room(sr, oblique, DNGN_FLOOR);
+            octa_room(region, oblique, DNGN_FLOOR);
             return;
         }
 
@@ -7072,13 +7069,12 @@ static void _big_room(int level_number)
                                                           : DNGN_LAVA);
         }
 
-        octa_room(sr, oblique, type_floor);
+        octa_room(region, oblique, type_floor);
     }
 
     // What now?
-    sr.tl.set(8 + random2(30), 8 + random2(22));
-    sr.br.set(20 + random2(10), 20 + random2(8));
-    sr.br += sr.tl;
+    region = dgn_region(8 + random2(30), 8 + random2(22),
+                        21 + random2(10), 21 + random2(8));
 
     if (level_number > 7 && one_chance_in(4))
     {
@@ -7087,8 +7083,8 @@ static void _big_room(int level_number)
     }
 
     // Make the big room.
-    dgn_replace_area(sr.tl, sr.br, DNGN_ROCK_WALL, type_floor);
-    dgn_replace_area(sr.tl, sr.br, DNGN_CLOSED_DOOR, type_floor);
+    dgn_replace_area(region.pos, region.end(), DNGN_ROCK_WALL, type_floor);
+    dgn_replace_area(region.pos, region.end(), DNGN_CLOSED_DOOR, type_floor);
 
     if (type_floor == DNGN_FLOOR)
         type_2 = _random_wall();
@@ -7105,14 +7101,14 @@ static void _big_room(int level_number)
 
     // Sometimes make it a chequerboard.
     if (one_chance_in(4))
-        _chequerboard(sr, type_floor, type_floor, type_2);
+        _chequerboard(region, type_floor, type_floor, type_2);
     // Sometimes make an inside room w/ stone wall.
     else if (one_chance_in(6))
     {
-        i = sr.tl.x;
-        j = sr.tl.y;
-        k = sr.br.x;
-        l = sr.br.y;
+        i = region.pos.x;
+        j = region.pos.y;
+        k = region.end().x;
+        l = region.end().y;
 
         do
         {
@@ -7127,7 +7123,6 @@ static void _big_room(int level_number)
                 break;
 
             _box_room(i, k, j, l, DNGN_STONE_WALL);
-
         }
         while (level_number < 1500);       // ie forever
     }
@@ -7135,14 +7130,11 @@ static void _big_room(int level_number)
 
 // Helper function for chequerboard rooms.
 // Note that box boundaries are INclusive.
-static void _chequerboard(spec_room &sr, dungeon_feature_type target,
+static void _chequerboard(dgn_region& region, dungeon_feature_type target,
                            dungeon_feature_type floor1,
                            dungeon_feature_type floor2)
 {
-    if (sr.br.x < sr.tl.x || sr.br.y < sr.tl.y)
-        return;
-
-    for (rectangle_iterator ri(sr.tl, sr.br); ri; ++ri)
+    for (rectangle_iterator ri(region.pos, region.end()); ri; ++ri)
         if (grd(*ri) == target)
             grd(*ri) = ((ri->x + ri->y) % 2) ? floor2 : floor1;
 }

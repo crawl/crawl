@@ -288,25 +288,12 @@ void dgn_unregister_vault(const map_def &map);
 
 void dgn_seen_vault_at(coord_def p);
 
-struct spec_room
-{
-    bool created;
-    bool hooked_up;
-
-    coord_def tl;
-    coord_def br;
-
-    spec_room() : created(false), hooked_up(false), tl(), br()
-    {
-    }
-};
-
 bool join_the_dots(const coord_def &from, const coord_def &to,
                    unsigned mmask, bool early_exit = false);
 int process_disconnected_zones(int x1, int y1, int x2, int y2,
                                bool choose_stairless,
                                dungeon_feature_type fill);
-bool octa_room(spec_room &sr, int oblique_max,
+bool octa_room(dgn_region& region, int oblique_max,
                dungeon_feature_type type_floor);
 
 int count_feature_in_box(int x0, int y0, int x1, int y1,
