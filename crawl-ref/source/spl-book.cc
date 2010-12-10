@@ -215,9 +215,9 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     // Book of Death
     {SPELL_CORPSE_ROT,
      SPELL_LETHAL_INFUSION,
-     SPELL_BONE_SHARDS,
      SPELL_AGONY,
      SPELL_BOLT_OF_DRAINING,
+     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -344,8 +344,8 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_GOLUBRIAS_PASSAGE,
      SPELL_WARP_BRAND,
      SPELL_DISPERSAL,
-     SPELL_PORTAL,
      SPELL_CONTROLLED_BLINK,
+     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
 
@@ -374,10 +374,10 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     // Book of Control
     {SPELL_CONTROL_TELEPORT,
      SPELL_ENSLAVEMENT,
-     SPELL_TAME_BEASTS,
      SPELL_MASS_CONFUSION,
      SPELL_CONTROL_UNDEAD,
      SPELL_ENGLACIATION,
+     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
@@ -474,8 +474,8 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     {SPELL_SUMMON_SMALL_MAMMALS,
      SPELL_STICKS_TO_SNAKES,
      SPELL_CALL_CANINE_FAMILIAR,
-     SPELL_TAME_BEASTS,
      SPELL_DRAGON_FORM,
+     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -1229,7 +1229,6 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
         case SPELL_STATUE_FORM:
         case SPELL_STONESKIN:
         case SPELL_SYMBOL_OF_TORMENT:
-        case SPELL_TAME_BEASTS:
             rc = true;
             break;
         default:
@@ -1272,7 +1271,6 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
         case SPELL_STATUE_FORM:
         case SPELL_STONESKIN:
         case SPELL_SYMBOL_OF_TORMENT:
-        case SPELL_TAME_BEASTS:
             rc = true;
             break;
         default:

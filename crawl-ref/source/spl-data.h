@@ -1018,6 +1018,7 @@ struct spell_desc
      true
 },
 
+#if TAG_MAJOR_VERSION == 31
 {
     SPELL_BONE_SHARDS, "Bone Shards",
      SPTYP_NECROMANCY,
@@ -1030,6 +1031,7 @@ struct spell_desc
      true,
      false
 },
+#endif
 
 {
     SPELL_BANISHMENT, "Banishment",
@@ -1409,6 +1411,7 @@ struct spell_desc
      true
 },
 
+#if TAG_MAJOR_VERSION == 31
 {
     SPELL_PORTAL, "Portal",
      SPTYP_TRANSLOCATION,
@@ -1421,6 +1424,7 @@ struct spell_desc
      false,
      true
 },
+#endif
 
 {
     SPELL_AGONY, "Agony",
@@ -1721,6 +1725,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 31
 {
     SPELL_TAME_BEASTS, "Tame Beasts",
      SPTYP_ENCHANTMENT,
@@ -1733,6 +1738,7 @@ struct spell_desc
      false,
      false
 },
+#endif
 
 {
     SPELL_HIBERNATION, "Ensorcelled Hibernation",

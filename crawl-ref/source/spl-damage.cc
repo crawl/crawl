@@ -716,52 +716,6 @@ int airstrike(int pow, const dist &beam)
     return (success);
 }
 
-bool cast_bone_shards(int power, bolt &beam)
-{
-    if (!you.weapon() || you.weapon()->base_type != OBJ_CORPSES)
-    {
-        canned_msg(MSG_SPELL_FIZZLES);
-        return (false);
-    }
-
-    bool success = false;
-
-    const bool was_orc = (mons_genus(you.weapon()->plus) == MONS_ORC);
-
-    if (you.weapon()->sub_type != CORPSE_SKELETON)
-    {
-        mpr("The corpse collapses into a pulpy mess.");
-
-        dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
-
-        if (was_orc)
-            did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
-    }
-    else
-    {
-        // Practical max of 100 * 15 + 3000 = 4500.
-        // Actual max of    200 * 15 + 3000 = 6000.
-        power *= 15;
-        power += mons_weight(you.weapon()->plus);
-
-        if (!player_tracer(ZAP_BONE_SHARDS, power, beam))
-            return (false);
-
-        mpr("The skeleton explodes into sharp fragments of bone!");
-
-        dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
-
-        if (was_orc)
-            did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
-
-        zapping(ZAP_BONE_SHARDS, power, beam);
-
-        success = true;
-    }
-
-    return (success);
-}
-
 enum DEBRIS                 // jmf: add for shatter, dig, and Giants to throw
 {
     DEBRIS_METAL,           //    0

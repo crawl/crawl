@@ -11,7 +11,6 @@ void you_teleport_now(bool allow_control,
                       bool wizard_tele = false);
 bool you_teleport_to(const coord_def where,
                      bool move_monsters = false);
-int portal();
 
 bool cast_portal_projectile(int pow);
 bool cast_apportation(int powc, const coord_def& where);

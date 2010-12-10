@@ -3070,8 +3070,7 @@ bool is_useless_item(const item_def &item, bool temp)
         if (item.sub_type != CORPSE_SKELETON)
             return (false);
 
-        if (you.has_spell(SPELL_BONE_SHARDS)
-            || you.has_spell(SPELL_ANIMATE_DEAD)
+        if (you.has_spell(SPELL_ANIMATE_DEAD)
             || you.has_spell(SPELL_ANIMATE_SKELETON)
             || you.religion == GOD_YREDELEMNUL && !you.penance[GOD_YREDELEMNUL]
                && you.piety >= piety_breakpoint(0))
