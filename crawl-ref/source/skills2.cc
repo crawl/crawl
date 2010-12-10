@@ -29,11 +29,9 @@
 #include "species.h"
 #include "skills.h"
 #include "stuff.h"
+#include "tilereg-crt.h"
 #include "hints.h"
 
-#ifdef USE_TILE
-#include "tilereg-crt.h"
-#endif
 
 typedef std::string (*string_fn)();
 typedef std::map<std::string, string_fn> skill_op_map;
