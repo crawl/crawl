@@ -1814,7 +1814,7 @@ static bool _tentacle_pos_unknown(const monster *tentacle,
         if (grd(*ai) == DNGN_SHALLOW_WATER)
         {
             const monster *mon = monster_at(*ai);
-            
+
             // We know there's no segment there.
             if (!mon)
                 continue;
@@ -1848,8 +1848,8 @@ static tileidx_t _tileidx_tentacle(const monster *mon)
     const coord_def h_pos = head.pos();  // head position
     ASSERT(adjacent(t_pos, h_pos));
 
-    const bool head_in_water = 
-                    (head.type == MONS_KRAKEN 
+    const bool head_in_water =
+                    (head.type == MONS_KRAKEN
                      || _tentacle_pos_unknown(&head, mon->pos()));
 
     // Tentacle end only requires checking of head position.
@@ -1894,7 +1894,7 @@ static tileidx_t _tileidx_tentacle(const monster *mon)
 
     // Only tentacle segments from now on.
     ASSERT(mon->type == MONS_KRAKEN_TENTACLE_SEGMENT);
-    
+
     // For segments, we also need the next segment (or end piece).
     ASSERT(mon->props.exists("outwards"));
     const int n_idx = mon->props["outwards"].get_int();
@@ -1947,7 +1947,7 @@ static tileidx_t _tileidx_tentacle(const monster *mon)
 
     // Okay, neither head nor next are submerged.
     // Compare all three positions.
-    
+
     // Straight lines first: Vertical.
     if (h_pos.x == t_pos.x && t_pos.x == n_pos.x)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_S;
@@ -1969,7 +1969,7 @@ static tileidx_t _tileidx_tentacle(const monster *mon)
     {
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_SW;
     }
-    
+
     // Curved segments.
     if (h_pos.x > t_pos.x && h_pos.y == t_pos.y
            && t_pos.x == n_pos.x && t_pos.y > n_pos.y
@@ -2085,7 +2085,7 @@ static tileidx_t _tileidx_tentacle(const monster *mon)
     {
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_SW;
     }
-    
+
     return TILEP_MONS_PROGRAM_BUG;
 }
 
