@@ -4610,11 +4610,11 @@ void contaminate_player(int change, bool controlled, bool msg)
     if (you.religion == GOD_ZIN)
     {
         // Whenever the glow status is first reached, give a warning message.
-        if (old_level < 1 && new_level == 1)
+        if (old_level < 2 && new_level >= 2)
             did_god_conduct(DID_CAUSE_GLOWING, 0, false);
         // If the player actively did something to increase glowing,
         // Zin is displeased.
-        else if (controlled && change > 0 && old_level > 0)
+        else if (controlled && change > 0 && old_level > 1)
             did_god_conduct(DID_CAUSE_GLOWING, 1 + new_level, true);
     }
 }
