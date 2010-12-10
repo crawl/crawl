@@ -61,7 +61,7 @@ void CRTRegion::clear()
 
 void CRTRegion::render()
 {
-    set_transform();
+    set_transform(true);
 
     // render all the inherited texts
     TextRegion::render();
