@@ -2180,11 +2180,19 @@ static tileidx_t _tileidx_monster_no_props(const monster* mon)
     }
 }
 
+static bool _tentacle_tile_not_levitating(tileidx_t tile)
+{
+    // All tiles between these two enums feature tentacles
+    // emerging from water.
+    return (tile >= TILEP_FIRST_TENTACLE_IN_WATER
+            && tile <= TILEP_LAST_TENTACLE_IN_WATER);
+}
+
 tileidx_t tileidx_monster(const monster* mons)
 {
     tileidx_t ch = _tileidx_monster_no_props(mons);
 
-    if (mons_flies(mons))
+    if (mons_flies(mons) && !_tentacle_tile_not_levitating(ch))
         ch |= TILE_FLAG_FLYING;
     if (mons->has_ench(ENCH_HELD))
         ch |= TILE_FLAG_NET;
