@@ -92,16 +92,22 @@ public:
     void show_description(skill_type sk);
     void toggle_show_all();
     void clear_selections();
+    void set_crosstrain();
+    void set_antitrain();
 
 private:
     MenuFreeform*        m_ff;
     BoxMenuHighlighter*  m_highlighter;
 
     int m_flags;
+    int m_current_help;
     int m_start_col;
     int m_start_ln;
     int m_end_col;
     int m_end_ln;
+
+    bool m_crosstrain;
+    bool m_antitrain;
 
     SkillMenuEntry  m_skills[SK_ARR_LN][SK_ARR_COL];
 
