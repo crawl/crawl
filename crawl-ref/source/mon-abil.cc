@@ -1180,7 +1180,7 @@ static bool _moth_incite_monsters(const monster* mon)
         return false;
 
     int goaded = 0;
-    circle_def c(mon->pos(), 3, C_SQUARE);
+    circle_def c(mon->pos(), 4, C_ROUND);
     for (monster_iterator mi(&c); mi; ++mi)
     {
         if (*mi == mon || !mi->needs_berserk())
