@@ -435,6 +435,7 @@ void SkillMenuEntry::_set_aptitude()
 
     if (crosstrain_other(m_sk, show_all) || ct_bonus > 1)
     {
+        m_skm->set_crosstrain();
         text += "<lightblue>";
         text += crosstrain_other(m_sk, show_all) ? "*" : " ";
 
@@ -445,6 +446,7 @@ void SkillMenuEntry::_set_aptitude()
     }
     else if (antitrain_other(m_sk, show_all) || is_antitrained(m_sk))
     {
+        m_skm->set_antitrain();
         text += "<magenta>";
         text += antitrain_other(m_sk, show_all) ? "*" : " ";
         if (is_antitrained(m_sk))
@@ -549,7 +551,7 @@ void SkillMenuEntry::_set_points()
 #define NEXT_DISPLAY_SIZE   18
 #define SHOW_ALL_SIZE       16
 SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
-    m_disp_queue()
+    m_crosstrain(false), m_antitrain(false), m_disp_queue()
 {
     SkillMenuEntry::m_skm = this;
 
@@ -648,12 +650,23 @@ void SkillMenu::toggle_show_all()
 {
     m_flags ^= SKMF_DISP_ALL;
     _set_skills();
+    _set_help(m_current_help);
     _set_footer();
 }
 
 void SkillMenu::clear_selections()
 {
     _clear_selections();
+}
+
+void SkillMenu::set_crosstrain()
+{
+    m_crosstrain = true;
+}
+
+void SkillMenu::set_antitrain()
+{
+    m_antitrain = true;
 }
 
 void SkillMenu::_init_disp_queue()
@@ -772,6 +785,8 @@ void SkillMenu::_set_skills()
         previous_active = -1;
 
     SkillMenuEntry::m_letter = 'Z';
+    m_crosstrain = false;
+    m_antitrain = false;
 
     int col = 0, ln = 0;
 
@@ -821,6 +836,7 @@ void SkillMenu::_set_help(int flag)
         else
             flag = SKMF_DISP_APTITUDE;
     }
+    m_current_help = flag;
 
     std::string help;
     switch (flag)
@@ -847,10 +863,14 @@ void SkillMenu::_set_help(int flag)
                " is in <cyan>cyan</cyan>.";
         break;
     case SKMF_DISP_APTITUDE:
-        help = "The species aptitude is in <red>red</red>. Crosstraining is "
-               "in <blue>blue</blue>, antitraining in "
-               "<magenta>magenta</magenta>. The skill responsible for the "
-               "bonus or malus is marked with '*'.";
+        help = "The species aptitude is in <red>red</red>. ";
+        if (m_crosstrain)
+            help += "Crosstraining is in <blue>blue</blue>. ";
+        if (m_antitrain)
+            help += "Antitraining is in <magenta>magenta</magenta>. ";
+        if (m_crosstrain || m_antitrain)
+            help += "The skill responsible for the bonus or malus is marked "
+                    "with '*'.";
         break;
     case SKMF_DISP_RESKILL:
         help = "The progress of the knowledge transfer is displayed in "
