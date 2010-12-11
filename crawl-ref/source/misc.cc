@@ -1322,18 +1322,21 @@ void search_around(bool only_adjacent)
     }
 }
 
+void emergency_untransform()
+{
+    mpr("You quickly transform back into your natural form.");
+    untransform(false, true); // We're already entering the water.
+
+    if (you.species == SP_MERFOLK)
+        merfolk_start_swimming(false);
+}
+
 void merfolk_start_swimming(bool stepped)
 {
     if (you.fishtail)
         return;
 
-    if (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE
-        && you.attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS)
-    {
-        mpr("You quickly transform back into your natural form.");
-        untransform(false, true); // We're already entering the water.
-    }
-    else if (stepped)
+    if (stepped)
         mpr("Your legs become a tail as you enter the water.");
     else
         mpr("Your legs become a tail as you dive into the water.");
@@ -1393,7 +1396,7 @@ bool scramble(void)
     ASSERT(!crawl_state.game_is_arena());
 
     // Statues are too stiff and heavy to scramble out of the water.
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE)
+    if (you.form == TRAN_STATUE)
         return (false);
 
     int max_carry = carrying_capacity();
@@ -1950,6 +1953,17 @@ void bring_to_safety()
     if (you.level_type == LEVEL_ABYSS)
         return abyss_teleport(true);
 
+    if (crawl_state.game_is_zotdef() && !orb_position().origin())
+    {
+        // In ZotDef, it's not the safety of your sorry butt that matters.
+        for (distance_iterator di(orb_position(), true, false); di; ++di)
+            if (!monster_at(*di))
+            {
+                you.moveto(*di);
+                return;
+            }
+    }
+
     coord_def best_pos, pos;
     double min_threat = 1e38;
     int tries = 0;
@@ -2013,7 +2027,7 @@ void revive()
     you.attribute[ATTR_DIVINE_SHIELD] = 0;
     if (you.duration[DUR_WEAPON_BRAND])
         set_item_ego_type(*you.weapon(), OBJ_WEAPONS, SPWPN_NORMAL);
-    if (you.attribute[ATTR_TRANSFORMATION])
+    if (you.form)
         untransform();
     you.clear_beholders();
 
@@ -2183,7 +2197,7 @@ std::string your_hand(bool plural)
 {
     std::string result;
 
-    switch (you.attribute[ATTR_TRANSFORMATION])
+    switch (you.form)
     {
     default:
         mpr("ERROR: unknown transformation in your_hand() (misc.cc)",
@@ -2345,7 +2359,7 @@ bool is_dragonkind(const actor *act)
     }
 
     if (act->atype() == ACT_PLAYER)
-        return (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON);
+        return (you.form == TRAN_DRAGON);
 
     // Else the actor is a monster.
     const monster* mon = act->as_monster();

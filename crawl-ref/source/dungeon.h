@@ -141,7 +141,7 @@ public:
     coord_def pos;
     coord_def size;
 
-    int orient;
+    map_section_type orient;
     map_def map;
     std::vector<coord_def> exits;
 
@@ -152,7 +152,7 @@ public:
 
 public:
     vault_placement()
-        : pos(-1, -1), size(0, 0), orient(0), map(),
+        : pos(-1, -1), size(0, 0), orient(MAP_NONE), map(),
           exits(), level_number(0), seen(false)
     {
     }
@@ -206,12 +206,6 @@ void dgn_flush_map_memory();
 double dgn_degrees_to_radians(int degrees);
 bool dgn_has_adjacent_feat(coord_def c, dungeon_feature_type feat);
 coord_def dgn_random_point_in_margin(int margin);
-coord_def dgn_random_point_in_bounds(
-    dungeon_feature_type searchfeat,
-    uint32_t mapmask = MMT_VAULT,
-    dungeon_feature_type adjacent = DNGN_UNSEEN,
-    bool monster_free = false,
-    int tries = 1500);
 coord_def dgn_random_point_from(const coord_def &c, int radius, int margin = 1);
 coord_def dgn_random_point_visible_from(const coord_def &c,
                                         int radius,
@@ -220,7 +214,7 @@ coord_def dgn_random_point_visible_from(const coord_def &c,
 coord_def dgn_find_feature_marker(dungeon_feature_type feat);
 
 // Generate 3 stone stairs in both directions.
-void dgn_place_stone_stairs();
+void dgn_place_stone_stairs(bool maybe_place_hatches = false);
 
 // Set floor/wall colour based on the mons_alloc array. Used for
 // Abyss and Pan.
@@ -275,44 +269,16 @@ void dgn_set_lt_callback(std::string level_type_name,
 
 void dgn_reset_level(bool enable_random_maps = true);
 
-// Returns true if the given square is okay for use by any character,
-// but always false for squares in non-transparent vaults. This
-// function returns sane results only immediately after dungeon generation
-// (specifically, saving and restoring a game discards information on the
-// vaults used in the current level).
-bool dgn_square_is_passable(const coord_def &c);
-
 void dgn_register_place(const vault_placement &place, bool register_vault);
 void dgn_register_vault(const map_def &map);
-void dgn_unregister_vault(const map_def &map);
 
 void dgn_seen_vault_at(coord_def p);
 
-struct spec_room
-{
-    bool created;
-    bool hooked_up;
-
-    coord_def tl;
-    coord_def br;
-
-    spec_room() : created(false), hooked_up(false), tl(), br()
-    {
-    }
-
-    coord_def random_spot() const;
-};
-
 bool join_the_dots(const coord_def &from, const coord_def &to,
                    unsigned mmask, bool early_exit = false);
-void spotty_level(bool seeded, int iterations, bool boxy);
-void smear_feature(int iterations, bool boxy, dungeon_feature_type feature,
-                   int x1, int y1, int x2, int y2);
 int process_disconnected_zones(int x1, int y1, int x2, int y2,
                                bool choose_stairless,
                                dungeon_feature_type fill);
-bool octa_room(spec_room &sr, int oblique_max,
-               dungeon_feature_type type_floor);
 
 int count_feature_in_box(int x0, int y0, int x1, int y1,
                          dungeon_feature_type feat);
@@ -333,9 +299,7 @@ void dgn_replace_area(int sx, int sy, int ex, int ey,
                       dungeon_feature_type feature,
                       unsigned mmask = 0, bool needs_update = false);
 
-void dgn_excavate(coord_def dig_at, coord_def dig_dir);
 void dgn_dig_vault_loose(vault_placement &vp);
-coord_def dgn_random_direction();
 
 bool dgn_ensure_vault_placed(bool vault_success,
                              bool disable_further_vaults);

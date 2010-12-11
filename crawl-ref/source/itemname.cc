@@ -1148,8 +1148,10 @@ std::string sub_type_string (object_class_type type, int sub_type, bool known, i
             return "tome of Destruction";
         else if (sub_type == BOOK_YOUNG_POISONERS)
             return "Young Poisoner's Handbook";
+#if TAG_MAJOR_VERSION == 31
         else if (sub_type == BOOK_BEASTS)
             return "Monster Manual";
+#endif
 
         return book_type_name(sub_type);
     }
@@ -1791,8 +1793,10 @@ std::string item_def::name_aux(description_level_type desc,
             buff << "tome of Destruction";
         else if (item_typ == BOOK_YOUNG_POISONERS)
             buff << "Young Poisoner's Handbook";
+#if TAG_MAJOR_VERSION == 31
         else if (item_typ == BOOK_BEASTS)
             buff << "Monster Manual";
+#endif
         else
             buff << "book of " << book_type_name(item_typ);
         break;
@@ -2835,7 +2839,7 @@ bool is_useless_item(const item_def &item, bool temp)
 
         if (you.undead_or_demonic() && is_holy_item(item))
         {
-            if (!temp && you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH
+            if (!temp && you.form == TRAN_LICH
                 && you.species != SP_DEMONSPAWN)
             {
                 return (false);
@@ -3056,7 +3060,7 @@ bool is_useless_item(const item_def &item, bool temp)
         if (item.sub_type == FOOD_CHUNK
             && (you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
                 || you.has_spell(SPELL_SIMULACRUM)
-                || !temp && you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH))
+                || !temp && you.form == TRAN_LICH))
         {
             return (false);
         }
@@ -3070,8 +3074,7 @@ bool is_useless_item(const item_def &item, bool temp)
         if (item.sub_type != CORPSE_SKELETON)
             return (false);
 
-        if (you.has_spell(SPELL_BONE_SHARDS)
-            || you.has_spell(SPELL_ANIMATE_DEAD)
+        if (you.has_spell(SPELL_ANIMATE_DEAD)
             || you.has_spell(SPELL_ANIMATE_SKELETON)
             || you.religion == GOD_YREDELEMNUL && !you.penance[GOD_YREDELEMNUL]
                && you.piety >= piety_breakpoint(0))

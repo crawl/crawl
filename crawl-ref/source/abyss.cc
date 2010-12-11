@@ -235,12 +235,9 @@ static void _abyss_erase_stairs_from(const vault_placement *vp)
     }
 }
 
-static bool _abyss_place_map(const map_def *mdef,
-                             bool clobber,
-                             bool make_no_exits = false,
-                             const coord_def &where = INVALID_COORD)
+static bool _abyss_place_map(const map_def *mdef)
 {
-    const bool did_place = dgn_safe_place_map(mdef, clobber, make_no_exits, where);
+    const bool did_place = dgn_safe_place_map(mdef, false, false, INVALID_COORD);
     if (did_place)
         _abyss_erase_stairs_from(env.level_vaults[env.level_vaults.size() - 1]);
 
@@ -254,7 +251,7 @@ static bool _abyss_place_vault_tagged(const map_mask &abyss_genlevel_mask,
     if (map)
     {
         unwind_vault_placement_mask vaultmask(&abyss_genlevel_mask);
-        return (_abyss_place_map(map, false, false, INVALID_COORD));
+        return (_abyss_place_map(map));
     }
     return (false);
 }
@@ -551,7 +548,7 @@ static int _abyss_place_vaults(const map_mask &abyss_genlevel_mask)
         if (!map)
             break;
 
-        if (_abyss_place_map(map, false, false)
+        if (_abyss_place_map(map)
             && !one_chance_in(2 + (++vaults_placed)))
         {
             break;

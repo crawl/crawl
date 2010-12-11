@@ -147,7 +147,7 @@ int dlua_chunk::load(CLua &interp)
     if (empty())
     {
         chunk.clear();
-        return (-1000);
+        return (E_CHUNK_LOAD_FAILURE);
     }
 
     int err = check_op(interp,
@@ -179,7 +179,7 @@ int dlua_chunk::run(CLua &interp)
 int dlua_chunk::load_call(CLua &interp, const char *fn)
 {
     int err = load(interp);
-    if (err == -1000)
+    if (err == E_CHUNK_LOAD_FAILURE)
         return (0);
     if (err)
         return (err);

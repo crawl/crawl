@@ -357,6 +357,11 @@ static std::string _get_seen_branches(bool display)
         snprintf(buffer, sizeof(buffer),
                         "<yellow>Dungeon</yellow> <darkgrey>(1/1)</darkgrey>");
     }
+    else if (crawl_state.game_is_zotdef())
+    {
+        snprintf(buffer, sizeof(buffer),
+                        "<yellow>Zot</yellow>     <darkgrey>(1/1)</darkgrey>");
+    }
     else
     {
         snprintf(buffer, sizeof(buffer),

@@ -864,16 +864,14 @@ bool melee_attack::player_attack()
         }
 
         if (damage_done > 0 || !defender_visible && !shield_blocked)
-        {
             player_announce_hit();
-            defender->as_monster()->del_ench(ENCH_HELPLESS);
-        }
         else if (!shield_blocked && damage_done <= 0)
         {
             no_damage_message =
                 make_stringf("You %s %s.", attack_verb.c_str(),
                              defender->name(DESC_NOCAP_THE).c_str());
         }
+        defender->as_monster()->del_ench(ENCH_HELPLESS);
 
         damage_done = defender->hurt(&you, damage_done,
                                      special_damage_flavour, false);
@@ -1030,7 +1028,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
         aux_attack = aux_verb = "punch";
         aux_damage = 5 + you.skills[SK_UNARMED_COMBAT] / 3;
 
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+        if (you.form == TRAN_BLADE_HANDS)
         {
             aux_verb = "slash";
             aux_damage += 6;
@@ -1088,10 +1086,10 @@ static bool _tran_forbid_aux_attack(unarmed_attack_type atk)
     case UNAT_KICK:
     case UNAT_HEADBUTT:
     case UNAT_PUNCH:
-        return (you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT);
+        return (you.form == TRAN_ICE_BEAST
+                || you.form == TRAN_DRAGON
+                || you.form == TRAN_SPIDER
+                || you.form == TRAN_BAT);
 
     default:
         return (false);
@@ -1355,7 +1353,6 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         player_exercise_combat_skills();
 
         player_announce_aux_hit();
-        defender->as_monster()->del_ench(ENCH_HELPLESS);
 
         if (damage_brand == SPWPN_ACID)
         {
@@ -1388,6 +1385,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
              defender->name(DESC_NOCAP_THE).c_str(),
              you.can_see(defender) ? ", but do no damage" : "");
     }
+    defender->as_monster()->del_ench(ENCH_HELPLESS);
 
     if (defender->as_monster()->hit_points < 1)
     {
@@ -1821,9 +1819,9 @@ int melee_attack::player_weapon_type_modify(int damage)
 
     // Take transformations into account, if no weapon is wielded.
     if (weap_type == WPN_UNARMED
-        && you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
+        && you.form != TRAN_NONE)
     {
-        switch (you.attribute[ATTR_TRANSFORMATION])
+        switch (you.form)
         {
         case TRAN_SPIDER:
         case TRAN_BAT:
@@ -1881,6 +1879,8 @@ int melee_attack::player_weapon_type_modify(int damage)
                 if (coinflip())
                     attack_verb = "trample";
             }
+            break;
+        case TRAN_NONE:
             break;
         } // transformations
 
@@ -3751,13 +3751,8 @@ void melee_attack::player_apply_staff_damage()
 
     case STAFF_POISON:
     {
-        // Cap chance at 30% -- let staff of Olgreb shine.
-        int temp_rand = damage_done + you.skills[SK_POISON_MAGIC];
-
-        if (temp_rand > 30)
-            temp_rand = 30;
-
-        if (x_chance_in_y(temp_rand, 100))
+        // Base chance at 50% -- like mundane weapons.
+        if (coinflip() || x_chance_in_y(you.skills[SK_POISON_MAGIC], 8))
         {
             // Poison monster message needs to arrive after hit message.
             emit_nodmg_hit_message();
@@ -4017,7 +4012,7 @@ int melee_attack::player_to_hit(bool random_factor)
             your_to_hit += maybe_random2(you.dex(), random_factor);
         }
 
-        switch (you.attribute[ATTR_TRANSFORMATION])
+        switch (you.form)
         {
         case TRAN_SPIDER:
             your_to_hit += maybe_random2(10, random_factor);
@@ -4040,8 +4035,8 @@ int melee_attack::player_to_hit(bool random_factor)
         case TRAN_LICH:
             your_to_hit += maybe_random2(10, random_factor);
             break;
+        case TRAN_PIG:
         case TRAN_NONE:
-        default:
             break;
         }
     }
@@ -4219,34 +4214,36 @@ int melee_attack::player_calc_base_unarmed_damage()
         damage = 0;
     }
 
-    if (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
+    switch (you.form)
     {
-        switch (you.attribute[ATTR_TRANSFORMATION])
-        {
-        case TRAN_SPIDER:
-            damage = 5;
-            break;
-        case TRAN_BAT:
-            damage = (you.species == SP_VAMPIRE ? 2 : 1);
-            break;
-        case TRAN_ICE_BEAST:
-            damage = 12;
-            break;
-        case TRAN_BLADE_HANDS:
-            damage = 12 + div_rand_round(you.strength() + you.dex(), 4);
-            break;
-        case TRAN_STATUE:
-            damage = 12 + you.strength();
-            break;
-        case TRAN_DRAGON:
-            damage = 20 + you.strength();
-            break;
-        case TRAN_LICH:
-            damage = 5;
-            break;
-        }
+    case TRAN_SPIDER:
+        damage = 5;
+        break;
+    case TRAN_BAT:
+        damage = (you.species == SP_VAMPIRE ? 2 : 1);
+        break;
+    case TRAN_ICE_BEAST:
+        damage = 12;
+        break;
+    case TRAN_BLADE_HANDS:
+        damage = 12 + div_rand_round(you.strength() + you.dex(), 4);
+        break;
+    case TRAN_STATUE:
+        damage = 12 + you.strength();
+        break;
+    case TRAN_DRAGON:
+        damage = 20 + you.strength();
+        break;
+    case TRAN_LICH:
+        damage = 5;
+        break;
+    case TRAN_PIG:
+        break;
+    case TRAN_NONE:
+        break;
     }
-    else if (you.has_usable_claws(false))
+
+    if (you.has_usable_claws())
     {
         // Claw damage only applies for bare hands.
         damage += you.has_claws(false) * 2;

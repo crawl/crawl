@@ -28,8 +28,7 @@ bool cast_summon_elemental(int pow, god_type god = GOD_NO_GOD,
 bool cast_summon_ice_beast(int pow, god_type god = GOD_NO_GOD);
 bool cast_summon_ugly_thing(int pow, god_type god = GOD_NO_GOD);
 bool cast_summon_dragon(int pow, god_type god = GOD_NO_GOD);
-bool summon_berserker(int pow, god_type god = GOD_NO_GOD, int spell = 0,
-                      bool force_hostile = false);
+bool summon_berserker(int pow, actor *caster);
 bool summon_holy_warrior(int pow, god_type god = GOD_NO_GOD, int spell = 0,
                          bool force_hostile = false, bool permanent = false,
                          bool quiet = false);

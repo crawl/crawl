@@ -1125,8 +1125,10 @@ $(foreach t,$(CONTRIB_LIBS),$(if $(wildcard $t),,$(shell rm -f .contrib-libs)))
 
 #############################################################################
 # Build unrandart data
-$(GENERATED_FILES): art-data.txt util/art-data.pl art-func.h
+art-data.h: art-data.txt util/art-data.pl art-func.h
 	@util/art-data.pl
+
+$(RLTILES)/dc-unrand.txt: art-data.h
 
 #############################################################################
 # RLTiles

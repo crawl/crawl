@@ -124,7 +124,7 @@ static spell_type _brand_spell()
 
 static spell_type _transform_spell()
 {
-    switch(you.attribute[ATTR_TRANSFORMATION])
+    switch(you.form)
     {
     case TRAN_BLADE_HANDS:
         return SPELL_BLADE_HANDS;
@@ -199,7 +199,7 @@ void extension(int pow)
         missile_prot(pow);
 
     if (you.duration[DUR_REGENERATION] && _know_spell(SPELL_REGENERATION)
-        && you.attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
+        && you.form != TRAN_LICH)
     {
         cast_regen(pow);
     }
@@ -245,7 +245,7 @@ void extension(int pow)
         you.increase_duration(DUR_TRANSFORMATION, random2(pow), 100,
                               "Your transformation has been extended.");
 
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH
+        if (you.form == TRAN_LICH
             && is_good_god(you.religion))
         {
             // possible with Xom or a card
@@ -314,7 +314,7 @@ void ice_armour(int pow, bool extending)
         mpr("Your icy armour thickens.");
     else
     {
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST)
+        if (you.form == TRAN_ICE_BEAST)
             mpr("Your icy body feels more resilient.");
         else
             mpr("A film of ice covers your body!");

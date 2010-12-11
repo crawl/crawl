@@ -716,52 +716,6 @@ int airstrike(int pow, const dist &beam)
     return (success);
 }
 
-bool cast_bone_shards(int power, bolt &beam)
-{
-    if (!you.weapon() || you.weapon()->base_type != OBJ_CORPSES)
-    {
-        canned_msg(MSG_SPELL_FIZZLES);
-        return (false);
-    }
-
-    bool success = false;
-
-    const bool was_orc = (mons_genus(you.weapon()->plus) == MONS_ORC);
-
-    if (you.weapon()->sub_type != CORPSE_SKELETON)
-    {
-        mpr("The corpse collapses into a pulpy mess.");
-
-        dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
-
-        if (was_orc)
-            did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
-    }
-    else
-    {
-        // Practical max of 100 * 15 + 3000 = 4500.
-        // Actual max of    200 * 15 + 3000 = 6000.
-        power *= 15;
-        power += mons_weight(you.weapon()->plus);
-
-        if (!player_tracer(ZAP_BONE_SHARDS, power, beam))
-            return (false);
-
-        mpr("The skeleton explodes into sharp fragments of bone!");
-
-        dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
-
-        if (was_orc)
-            did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
-
-        zapping(ZAP_BONE_SHARDS, power, beam);
-
-        success = true;
-    }
-
-    return (success);
-}
-
 enum DEBRIS                 // jmf: add for shatter, dig, and Giants to throw
 {
     DEBRIS_METAL,           //    0
@@ -1231,7 +1185,7 @@ void cast_ignite_poison(int pow)
     // Player is poisonous.
     if (player_mutation_level(MUT_SPIT_POISON)
         || player_mutation_level(MUT_STINGER)
-        || you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER // poison attack
+        || you.form == TRAN_SPIDER // poison attack
         || (!player_is_shapechanged()
             && (you.species == SP_GREEN_DRACONIAN       // poison breath
                 || you.species == SP_KOBOLD             // poisonous corpse
@@ -1286,10 +1240,12 @@ static int _discharge_monsters(coord_def where, int pow, int, actor *)
     bolt beam;
     beam.flavour = BEAM_ELECTRICITY; // used for mons_adjust_flavoured
 
+    dprf("Static discharge on (%d,%d) pow: %d", where.x, where.y, pow);
     if (where == you.pos())
     {
         mpr("You are struck by lightning.");
-        damage = 3 + random2(5 + pow / 10);
+        damage = 1 + random2(3 + pow / 15);
+        dprf("You: static discharge damage: %d", damage);
         damage = check_your_resists(damage, BEAM_ELECTRICITY,
                                     "static discharge");
         if (you.airborne())
@@ -1302,7 +1258,9 @@ static int _discharge_monsters(coord_def where, int pow, int, actor *)
         return (0);
     else
     {
-        damage = 3 + random2(5 + pow/10);
+        damage = 3 + random2(5 + pow / 10 + (random2(pow) / 10));
+        dprf("%s: static discharge damage: %d",
+             mons->name(DESC_PLAIN, true).c_str(), damage);
         damage = mons_adjust_flavoured(mons, beam, damage);
 
         if (damage)
@@ -1315,7 +1273,7 @@ static int _discharge_monsters(coord_def where, int pow, int, actor *)
 
     // Recursion to give us chain-lightning -- bwr
     // Low power slight chance added for low power characters -- bwr
-    if ((pow >= 10 && !one_chance_in(3)) || (pow >= 3 && one_chance_in(10)))
+    if ((pow >= 10 && !one_chance_in(4)) || (pow >= 3 && one_chance_in(10)))
     {
         mpr("The lightning arcs!");
         pow /= (coinflip() ? 2 : 3);
@@ -1334,11 +1292,9 @@ static int _discharge_monsters(coord_def where, int pow, int, actor *)
 
 void cast_discharge(int pow)
 {
-    int num_targs = 1 + random2(1 + pow / 25);
-    int dam;
-
-    dam = apply_random_around_square(_discharge_monsters, you.pos(),
-                                     true, pow, num_targs);
+    const int num_targs = 1 + random2(random_range(1, 3) + pow / 20);
+    const int dam = apply_random_around_square(_discharge_monsters, you.pos(),
+                                               true, pow, num_targs);
 
     dprf("Arcs: %d Damage: %d", num_targs, dam);
 
@@ -1844,7 +1800,7 @@ bool cast_sandblast(int pow, bolt &beam)
 
 static void _set_tornado_durations(int powc)
 {
-    int dur = 50 + powc / 5;
+    int dur = 40 + powc / 6;
     you.duration[DUR_TORNADO] = dur;
     you.duration[DUR_LEVITATION] =
         std::max(dur, you.duration[DUR_LEVITATION]);

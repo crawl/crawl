@@ -147,7 +147,7 @@ static void _init_player_illusion_properties(monsterentry *me)
     // the effects of their Necromutation spell. This is important
     // since Necromutation users presumably also have Dispel Undead
     // available to them. :P
-    if (transform_changed_physiology() && me->holiness == MH_UNDEAD)
+    if (form_changed_physiology() && me->holiness == MH_UNDEAD)
         me->holiness = MH_NATURAL;
 }
 

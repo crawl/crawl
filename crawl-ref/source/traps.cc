@@ -444,7 +444,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     // Zot def - player never sets off known traps
     if (crawl_state.game_is_zotdef() && you_trigger && you_know)
     {
-        mpr("You step safely past the trap");
+        mpr("You step safely past the trap.");
         return;
     }
 
@@ -1145,7 +1145,7 @@ static int damage_or_escape_net(int hold)
         if (brand == SPWPN_FLAMING || brand == SPWPN_VORPAL)
             damage++;
     }
-    else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+    else if (you.form == TRAN_BLADE_HANDS)
         damage += 2;
     else if (you.has_usable_claws())
     {
@@ -1225,7 +1225,7 @@ void free_self_from_net()
         // For previously undamaged nets this takes at least 2 and at most
         // 8 turns.
         bool can_slice =
-            (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+            (you.form == TRAN_BLADE_HANDS)
             || (you.weapon() && can_cut_meat(*you.weapon()));
 
         int damage = -do_what;
@@ -1718,13 +1718,13 @@ int num_traps_for_place(int level_number, const level_id &place)
             return branches[place.branch].num_traps_function(level_number);
         else
             return _num_traps_default(level_number, place);
-    case LEVEL_ABYSS:
     case LEVEL_PANDEMONIUM:
         return _num_traps_default(level_number, place);
     case LEVEL_LABYRINTH:
     case LEVEL_PORTAL_VAULT:
         ASSERT(false);
         break;
+    case LEVEL_ABYSS:
     default:
         return 0;
     }

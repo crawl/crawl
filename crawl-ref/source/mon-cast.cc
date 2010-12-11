@@ -1194,9 +1194,7 @@ static bool _animate_dead_okay()
     if (is_butchering())
         return (false);
 
-    // TODO: Could probably check herbivorousness here too, but this should be
-    // enough for the moment.
-    if (you.hunger_state < HS_SATIATED)
+    if (you.hunger_state < HS_SATIATED && you.mutation[MUT_HERBIVOROUS] < 3)
         return (false);
 
     return (true);
@@ -2377,7 +2375,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BROTHERS_IN_ARMS:
     {
         const int power = (mons->hit_dice * 20) + random2(mons->hit_dice * 5) - random2(mons->hit_dice * 5);
-        summon_berserker(power, GOD_TROG, 0, true);
+        summon_berserker(power, mons);
         return;
     }
 

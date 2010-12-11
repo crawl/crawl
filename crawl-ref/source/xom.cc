@@ -2643,8 +2643,6 @@ static void _xom_zero_miscast()
     ////////////////////////////////////////////
     // Body, player spcies, transformations, etc
 
-    const int transform = you.attribute[ATTR_TRANSFORMATION];
-
     if (you.species == SP_MUMMY && you_tran_can_wear(EQ_BODY_ARMOUR))
     {
         messages.push_back("You briefly get tangled in your bandages.");
@@ -2652,7 +2650,7 @@ static void _xom_zero_miscast()
             messages.push_back("You trip over your bandages.");
     }
 
-    if (transform != TRAN_SPIDER)
+    if (you.form != TRAN_SPIDER)
     {
         std::string str = "A monocle briefly appears over your ";
         str += coinflip() ? "right" : "left";
@@ -2661,7 +2659,7 @@ static void _xom_zero_miscast()
     }
 
     if (!player_genus(GENPC_DRACONIAN) && you.species != SP_MUMMY
-        && (transform == TRAN_NONE || transform == TRAN_BLADE_HANDS))
+        && (you.form == TRAN_NONE || you.form == TRAN_BLADE_HANDS))
     {
         messages.push_back("Your eyebrows briefly feel incredibly bushy.");
         messages.push_back("Your eyebrows wriggle.");
@@ -2791,8 +2789,6 @@ static void _get_hand_type(std::string &hand, bool &can_plural)
     hand       = "";
     can_plural = true;
 
-    const int transform = you.attribute[ATTR_TRANSFORMATION];
-
     std::vector<std::string> hand_vec;
     std::vector<bool>        plural_vec;
     bool                     plural;
@@ -2800,7 +2796,7 @@ static void _get_hand_type(std::string &hand, bool &can_plural)
     hand_vec.push_back(you.hand_name(false, &plural));
     plural_vec.push_back(plural);
 
-    if (you.species != SP_NAGA || transform_changed_physiology())
+    if (you.species != SP_NAGA || form_changed_physiology())
     {
         item_def* item;
         if ((item = _tran_get_eq(EQ_BOOTS)) && item->sub_type == ARM_BOOTS)
@@ -2813,26 +2809,26 @@ static void _get_hand_type(std::string &hand, bool &can_plural)
         plural_vec.push_back(plural);
     }
 
-    if (transform == TRAN_SPIDER)
+    if (you.form == TRAN_SPIDER)
     {
         hand_vec.push_back("mandible");
         plural_vec.push_back(true);
     }
     else if (you.species != SP_MUMMY && !player_mutation_level(MUT_BEAK)
-             || transform_changed_physiology())
+             || form_changed_physiology())
     {
         hand_vec.push_back("nose");
         plural_vec.push_back(false);
     }
 
-    if (transform == TRAN_BAT
-        || you.species != SP_MUMMY && !transform_changed_physiology())
+    if (you.form == TRAN_BAT
+        || you.species != SP_MUMMY && !form_changed_physiology())
     {
         hand_vec.push_back("ear");
         plural_vec.push_back(true);
     }
 
-    if (!transform_changed_physiology())
+    if (!form_changed_physiology())
     {
         hand_vec.push_back("elbow");
         plural_vec.push_back(true);
@@ -4318,8 +4314,8 @@ static char* _list_exploration_estimate()
 void debug_xom_effects()
 {
     // Repeat N times.
-    const int N = debug_prompt_for_int("How many iterations over the "
-                                       "entire piety range? ", true);
+    const int N = prompt_for_int("How many iterations over the "
+                                 "entire piety range? ", true);
 
     if (N == 0)
     {

@@ -71,7 +71,7 @@ public:
 protected:
     void recalculate();
     virtual void on_resize() = 0;
-    void set_transform();
+    void set_transform(bool no_scaling = false);
 };
 
 class FontWrapper;

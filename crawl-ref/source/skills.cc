@@ -138,6 +138,9 @@ int calc_skill_cost(int skill_cost_level, int skill_level)
     if (ret > MAX_COST_LIMIT)
         ret = MAX_COST_LIMIT;
 
+    if (crawl_state.game_is_zotdef())
+        ret = ret / 3 + 1;
+
     return (ret);
 }
 

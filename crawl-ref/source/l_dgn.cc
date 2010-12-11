@@ -165,6 +165,12 @@ static int dgn_tags(lua_State *ls)
     PLUARET(string, map->tags.c_str());
 }
 
+static int dgn_has_tag(lua_State *ls)
+{
+    MAP(ls, 1, map);
+    PLUARET(boolean, map->has_tag(luaL_checkstring(ls, 2)));
+}
+
 static int dgn_tags_remove(lua_State *ls)
 {
     MAP(ls, 1, map);
@@ -1747,24 +1753,6 @@ LUAFN(_dgn_marker_at_pos)
     return (1);
 }
 
-extern spec_room lua_special_room_spec;
-extern int       lua_special_room_level;
-
-LUAFN(dgn_get_special_room_info)
-{
-    if (!lua_special_room_spec.created || !in_bounds(lua_special_room_spec.tl)
-        || lua_special_room_level == -1)
-    {
-        return (0);
-    }
-
-    lua_pushnumber(ls,  lua_special_room_level);
-    dlua_push_coordinates(ls, lua_special_room_spec.tl);
-    dlua_push_coordinates(ls, lua_special_room_spec.br);
-
-    return (5);
-}
-
 LUAFN(dgn_is_validating)
 {
     MAP(ls, 1, map);
@@ -1881,6 +1869,7 @@ const struct luaL_reg dgn_dlib[] =
 { "place", dgn_place },
 { "desc", dgn_desc },
 { "tags",  dgn_tags },
+{ "has_tag", dgn_has_tag },
 { "tags_remove", dgn_tags_remove },
 { "lflags", dgn_lflags },
 { "bflags", dgn_bflags },
@@ -1971,7 +1960,6 @@ const struct luaL_reg dgn_dlib[] =
 
 { "marker_at_pos", _dgn_marker_at_pos },
 
-{ "get_special_room_info", dgn_get_special_room_info },
 { "is_validating", dgn_is_validating },
 
 { "fill_grd_area", dgn_fill_grd_area },

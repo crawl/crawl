@@ -810,6 +810,8 @@ class dlua_set_map
 public:
     dlua_set_map(map_def *map);
     ~dlua_set_map();
+private:
+    std::auto_ptr<lua_datum> old_map;
 };
 
 class map_def;
@@ -944,6 +946,11 @@ public:
 
     void set_file(const std::string &s);
     std::string run_lua(bool skip_main);
+    bool run_hook(const std::string &hook_name, bool die_on_lua_error = false);
+    bool run_postplace_hook(bool die_on_lua_error = false);
+    void copy_hooks_from(const map_def &other_map,
+                         const std::string &hook_name);
+
 
     // Returns true if the validation passed.
     bool test_lua_validate(bool croak = false);

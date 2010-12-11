@@ -57,8 +57,9 @@ const int MAX_GHOSTS = 10;
 
 enum extra_monster_index_type
 {
-    MAX_MONSTERS = 700,         // max size of monster array {dlb}
-    NON_MONSTER  = NON_ENTITY,  // no monster
+    MAX_MONSTERS = 700,                  // max size of monster array {dlb}
+    ANON_FRIENDLY_MONSTER = MAX_MONSTERS,// unknown/dead ally, for actor blaming
+    NON_MONSTER  = NON_ENTITY,           // no monster
 
     MHITNOT = NON_MONSTER,
     MHITYOU,
@@ -148,14 +149,11 @@ const int LABYRINTH_BORDER = 4;
 #define MAX_TRAPS         400
 
 // max shops per level
-#define MAX_SHOPS         100
+#define MAX_SHOPS         64
 
 // max shops randomly generated in a level.
 // changing this affects the total number of shops in a game
 #define MAX_RANDOM_SHOPS  5
-
-// Can be passed to monster_die to indicate that a friendly did the killing.
-const int ANON_FRIENDLY_MONSTER = -1999;
 
 // This value is used to make test_hit checks always succeed
 #define AUTOMATIC_HIT           1500

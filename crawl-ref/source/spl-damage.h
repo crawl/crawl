@@ -18,7 +18,6 @@ bool vampiric_drain(int pow, monster* mons);
 bool burn_freeze(int pow, beam_type flavour, monster* mons);
 
 int airstrike(int pow, const dist &beam);
-bool cast_bone_shards(int power, bolt &);
 
 void cast_shatter(int pow);
 void cast_ignite_poison(int pow);

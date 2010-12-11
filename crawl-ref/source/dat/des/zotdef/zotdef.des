@@ -2,6 +2,16 @@
 # zotdef.des - the zotdef (and only) vault for D:1.
 ###############################################################################
 
+{{
+  function zotdef_setup(e)
+    e.marker("Y = feat:stone_stairs_up_i")
+    e.kfeat("Y = .")
+    e.kitem("Z = Orb of Zot")
+    e.lua_marker("Z", item_pickup_change_flags {
+            level_flags="!no_magic_map", item="Orb of Zot"
+         })
+  end
+}}
 
 ##############################################################################
 # hall_of_Zot_5
@@ -12,10 +22,7 @@ ORIENT:  encompass
 LFLOORCOL: magenta
 LROCKCOL:  lightmagenta
 LFLAGS:  no_magic_map
-KITEM:   Z = Orb of Zot
-MARKER:  Z = lua:item_pickup_change_flags { \
-            level_flags="!no_magic_map", item="Orb of Zot" \
-         }
+: zotdef_setup(_G)
 MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
             pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
             size = 2, walk_dist = 2, spread_rate= 35 }
@@ -33,7 +40,7 @@ xxxxxxxxxXX......................XXxxxxxxxxxxxXX......................XXxxxxxxxx
 xxxxxxxxxX........................XXXXXXXXXXXXX........................Xxxxxxxxx
 xxxxxxxxxX........................XXX.......XXX........................Xxxxxxxxx
 xxxxxxxxxXX.......................XX.........XX.......................XXxxxxxxxx
-xxxxxxxxxxXX......................X...........X......................XXxxxxxxxxx
+xxxxxxxxxxXX......................X.....Y.....X......................XXxxxxxxxxx
 xxxxxxxxxxxXX...........................Z...........................XXxxxxxxxxxx
 xxxxxxxxxxXX......................X...........X......................XXxxxxxxxxx
 xxxxxxxxxXX.......................XX.........XX.......................XXxxxxxxxx
@@ -74,7 +81,7 @@ ORIENT:  encompass
 LFLOORCOL: magenta
 LROCKCOL:  lightmagenta
 LFLAGS:  no_magic_map
-KITEM:   Z = Orb of Zot
+: zotdef_setup(_G)
 MARKER:  Z = lua:item_pickup_change_flags { \
             level_flags="!no_magic_map", item="Orb of Zot" \
          }
@@ -90,7 +97,7 @@ xxxxxxXX.................XXxxxxxxxxxxXX.XXxxxxxxxxxxXX.................XXxxxxxx
 xxxxxXX...................XXxxxxxxxxXX...XXxxxxxxxxXX...................XXxxxxx
 xxxxxX.....................XXXxxxxxXX.....XXxxxxxXXX.....................Xxxxxx
 xxxxxX.......................XXXXXXX.......XXXXXXX.......................Xxxxxx
-xxxxxX.......................X...................X.......................Xxxxxx
+xxxxxX.......................X.........Y.........X.......................Xxxxxx
 xxxxxXX................................Z................................XXxxxxx
 xxxxxxXX...............XXXXXXX...................XXXXXXX...............XXxxxxxx
 xxxxxxxXXx...........XXXxxxxxXXXXXXX.......XXXXXXXxxxxxXXX...........XXXxxxxxxx
@@ -139,10 +146,7 @@ ORIENT:  encompass
 LFLOORCOL: magenta
 LROCKCOL:  lightmagenta
 LFLAGS:  no_magic_map
-KITEM:   Z = Orb of Zot
-MARKER:  Z = lua:item_pickup_change_flags { \
-            level_flags="!no_magic_map", item="Orb of Zot" \
-         }
+: zotdef_setup(_G)
 MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
             pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
             size = 2, walk_dist = 2, spread_rate= 35 }
@@ -154,7 +158,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX...XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX...XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.....XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.......XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX...........XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.....Y.....XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXX..........Z..........XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXX....................X..XXX...........XXX..X....................XXXXXXX
 XXXXXXX....................X..XXXXX.......XXXXX..X....................XXXXXXX
@@ -216,10 +220,7 @@ ORIENT:  encompass
 LFLOORCOL: magenta
 LROCKCOL:  lightmagenta
 LFLAGS:  no_magic_map
-KITEM:   Z = Orb of Zot
-MARKER:  Z = lua:item_pickup_change_flags { \
-            level_flags="!no_magic_map", item="Orb of Zot" \
-         }
+: zotdef_setup(_G)
 MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
             pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
             size = 2, walk_dist = 2, spread_rate= 35 }
@@ -264,7 +265,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXX...XXXX.......XXXX...XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXX.....................XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXX.....................XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXoXXXXX.....Z.....XXXXXoXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXXXXX|||XXXXXX...........XXXXXX|||XXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXX|||XXXXXX.....Y.....XXXXXX|||XXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXX|||XXXXXXX.........XXXXXXX|||XXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.......XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -277,10 +278,7 @@ ORIENT:  encompass
 LFLOORCOL: magenta
 LROCKCOL:  lightmagenta
 LFLAGS:  no_magic_map
-KITEM:   Z = Orb of Zot
-MARKER:  Z = lua:item_pickup_change_flags { \
-            level_flags="!no_magic_map", item="Orb of Zot" \
-         }
+: zotdef_setup(_G)
 MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
             pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
             size = 2, walk_dist = 2, spread_rate= 35 }
@@ -305,7 +303,7 @@ XXXXX..............................Xo...oX..............................XXXXX
 XXXXX.............................Xo.....oX.............................XXXXX
 XXXXX............................Xo.......oX............................XXXXX
 XXXXX...........................Xo.........oX...........................XXXXX
-XXXXX....XXXXXXXXXXXXXXXXXXXXXXXX...........XXXXXXXXXXXXXXXXXXXXXXX.....XXXXX
+XXXXX....XXXXXXXXXXXXXXXXXXXXXXXX.....Y.....XXXXXXXXXXXXXXXXXXXXXXX.....XXXXX
 XXXXXX..XX|||||||||||||||***...oooooo.Z.ooooo...***|||||||||||||||XXX..XXXXXX
 XXXXX....XXXXXXXXXXXXXXXXXXXXXXXX...........XXXXXXXXXXXXXXXXXXXXXXX.....XXXXX
 XXXXX...........................Xo.........oX...........................XXXXX

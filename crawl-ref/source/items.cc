@@ -3323,7 +3323,7 @@ static void _deck_from_specs(const char* _specs, item_def &item)
         static_cast<deck_rarity_type>(DECK_RARITY_COMMON + rarity_val);
     item.special = rarity;
 
-    int num = debug_prompt_for_int("How many cards? ", false);
+    int num = prompt_for_int("How many cards? ", false);
 
     if (num <= 0)
     {
@@ -3587,7 +3587,7 @@ bool get_item_by_name(item_def *item, char* specs,
                 prompt = "# turns away from rotting? "
                          "[ENTER for fully fresh] ";
             }
-            int age = debug_prompt_for_int(prompt, false);
+            int age = prompt_for_int(prompt, false);
 
             if (age <= 0)
                 age = -1;

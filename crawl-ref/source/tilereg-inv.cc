@@ -142,12 +142,12 @@ int InventoryRegion::handle_mouse(MouseEvent &event)
             if (event.mod & MOD_SHIFT)
                 tile_item_use_floor(idx);
             else
-                tile_item_pickup(idx);
+                tile_item_pickup(idx, (event.mod & MOD_CTRL));
         }
         else
         {
             if (event.mod & MOD_SHIFT)
-                tile_item_drop(idx);
+                tile_item_drop(idx, (event.mod & MOD_CTRL));
             else if (event.mod & MOD_CTRL)
                 tile_item_use_secondary(idx);
             else
@@ -292,6 +292,11 @@ bool InventoryRegion::update_tip_text(std::string& tip)
 
         tip += "\n[L-Click] Pick up (%)";
         cmd.push_back(CMD_PICKUP);
+        if (item.quantity > 1)
+        {
+            tip += "\n[Ctrl-L-Click] Pick up quantity (%#)";
+            cmd.push_back(CMD_PICKUP);
+        }
         if (item.base_type == OBJ_CORPSES
             && item.sub_type != CORPSE_SKELETON
             && !food_is_rotten(item))
@@ -386,16 +391,16 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                 if (item.sub_type >= MISC_DECK_OF_ESCAPE
                     && item.sub_type <= MISC_DECK_OF_DEFENCE)
                 {
-                    tip += "Draw a card (%)\n";
+                    tip += "Draw a card (%)";
                     cmd.push_back(CMD_EVOKE_WIELDED);
-                    _handle_wield_tip(tip, cmd, "[Ctrl-L-Click]", true);
+                    _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click] ", true);
                     break;
                 }
                 // else fall-through
             case OBJ_STAVES + EQUIP_OFFSET: // rods - other staves handled above
-                tip += "Evoke (%)\n";
+                tip += "Evoke (%)";
                 cmd.push_back(CMD_EVOKE_WIELDED);
-                _handle_wield_tip(tip, cmd, "[Ctrl-L-Click]", true);
+                _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click] ", true);
                 break;
             case OBJ_ARMOUR:
                 tip += "Wear (%)";
@@ -418,7 +423,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                 cmd.push_back(CMD_FIRE);
 
                 if (wielded)
-                    _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click]", true);
+                    _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click] ", true);
                 else if (item.sub_type == MI_STONE
                             && you.has_spell(SPELL_SANDBLAST)
                          || item.sub_type == MI_ARROW
@@ -426,14 +431,14 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                 {
                     // For Sandblast and Sticks to Snakes,
                     // respectively.
-                    _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click]");
+                    _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click] ");
                 }
                 break;
             case OBJ_WANDS:
                 tip += "Evoke (%)";
                 cmd.push_back(CMD_EVOKE);
                 if (wielded)
-                    _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click]", true);
+                    _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click] ", true);
                 break;
             case OBJ_BOOKS:
                 if (item_type_known(item)
@@ -448,7 +453,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                         cmd.push_back(CMD_MEMORISE_SPELL);
                     }
                     if (wielded)
-                        _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click]", true);
+                        _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click] ", true);
                     break;
                 }
                 // else fall-through
@@ -456,19 +461,19 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                 tip += "Read (%)";
                 cmd.push_back(CMD_READ);
                 if (wielded)
-                    _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click]", true);
+                    _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click] ", true);
                 break;
             case OBJ_POTIONS:
                 tip += "Quaff (%)";
                 cmd.push_back(CMD_QUAFF);
                 // For Sublimation of Blood.
                 if (wielded)
-                    _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click]", true);
+                    _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click] ", true);
                 else if (item_type_known(item)
                          && is_blood_potion(item)
                          && you.has_spell(SPELL_SUBLIMATION_OF_BLOOD))
                 {
-                    _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click]");
+                    _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click] ");
                 }
                 break;
             case OBJ_FOOD:
@@ -476,11 +481,11 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                 cmd.push_back(CMD_EAT);
                 // For Sublimation of Blood.
                 if (wielded)
-                    _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click]", true);
+                    _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click] ", true);
                 else if (item.sub_type == FOOD_CHUNK
                          && you.has_spell(SPELL_SUBLIMATION_OF_BLOOD))
                 {
-                    _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click]");
+                    _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click] ");
                 }
                 break;
             case OBJ_CORPSES:
@@ -494,7 +499,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                 {
                     if (you.species == SP_VAMPIRE)
                         tip += "\n";
-                    _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click]", true);
+                    _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click] ", true);
                 }
                 break;
             default:
@@ -508,9 +513,9 @@ bool InventoryRegion::update_tip_text(std::string& tip)
             && item.sub_type == CORPSE_SKELETON)
         {
             if (wielded)
-                _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click]", true);
+                _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click] ", true);
             else if (you.has_spell(SPELL_BONE_SHARDS))
-                _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click]");
+                _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click] ");
         }
 
         tip += "\n[R-Click] Describe";
@@ -520,6 +525,11 @@ bool InventoryRegion::update_tip_text(std::string& tip)
         {
             tip += "\n[Shift-L-Click] Drop (%)";
             cmd.push_back(CMD_DROP);
+            if (you.inv[idx].quantity > 1)
+            {
+                tip += "\n[Ctrl-Shift-L-Click] Drop quantity (%#)";
+                cmd.push_back(CMD_DROP);
+            }
         }
     }
 

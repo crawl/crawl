@@ -3410,7 +3410,7 @@ int monster::mons_species() const
     return ::mons_species(type);
 }
 
-void monster::poison(actor *agent, int amount)
+void monster::poison(actor *agent, int amount, bool force)
 {
     if (amount <= 0)
         return;
@@ -3419,7 +3419,8 @@ void monster::poison(actor *agent, int amount)
     if (!(amount /= 2))
         amount = 1;
 
-    poison_monster(this, agent ? agent->kill_alignment() : KC_OTHER, amount);
+    poison_monster(this, agent ? agent->kill_alignment() : KC_OTHER, amount,
+                   force);
 }
 
 int monster::skill(skill_type sk, bool) const
@@ -3848,10 +3849,8 @@ void monster::load_spells(mon_spellbook_type book)
     if (book == MST_NO_SPELLS || book == MST_GHOST && !ghost.get())
         return;
 
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "%s: loading spellbook #%d",
-          name(DESC_PLAIN).c_str(), static_cast<int>(book));
-#endif
+    dprf("%s: loading spellbook #%d", name(DESC_PLAIN, true).c_str(),
+         static_cast<int>(book));
 
     if (book == MST_GHOST)
         spells = ghost->spells;
@@ -5425,8 +5424,11 @@ void monster::apply_enchantments()
 
 void monster::scale_hp(int num, int den)
 {
-    hit_points     = hit_points * num / den;
-    max_hit_points = max_hit_points * num / den;
+    // Without the +1, we lose maxhp on every berserk (the only use) if the
+    // maxhp is odd.  This version does preserve the value correctly, but only
+    // if it is first inflated then deflated.
+    hit_points     = (hit_points * num + 1) / den;
+    max_hit_points = (max_hit_points * num + 1) / den;
 
     if (hit_points < 1)
         hit_points = 1;

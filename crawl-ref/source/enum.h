@@ -192,7 +192,9 @@ enum attribute_type
     ATTR_DIVINE_LIGHTNING_PROTECTION,
     ATTR_DIVINE_REGENERATION,
     ATTR_DIVINE_DEATH_CHANNEL,
-    ATTR_TRANSFORMATION,
+#if TAG_MAJOR_VERSION == 31
+    ATTR_OBSOLETE_TRANSFORMATION,
+#endif
     ATTR_CARD_COUNTDOWN,
     ATTR_WAS_SILENCED,          //jmf: added for silenced messages
     ATTR_GOD_GIFT_COUNT,        //jmf: added to help manage god gift giving
@@ -220,6 +222,19 @@ enum attribute_type
     ATTR_LEV_UNCANCELLABLE,    // Potion or spell of levitation is in effect.
     ATTR_INVIS_UNCANCELLABLE,  // Potion/spell/wand of invis is in effect.
     NUM_ATTRIBUTES
+};
+
+enum transformation_type
+{
+    TRAN_NONE,
+    TRAN_SPIDER,
+    TRAN_BLADE_HANDS,
+    TRAN_STATUE,
+    TRAN_ICE_BEAST,
+    TRAN_DRAGON,
+    TRAN_LICH,
+    TRAN_BAT,
+    TRAN_PIG,
 };
 
 enum beam_type                  // beam[].flavour
@@ -354,7 +369,9 @@ enum book_type
     BOOK_POWER,
     BOOK_CANTRIPS,
     BOOK_PARTY_TRICKS,
+#if TAG_MAJOR_VERSION == 31
     BOOK_BEASTS,
+#endif
     BOOK_STALKING,
     BOOK_BRANDS,
     BOOK_DRAGON,
@@ -1840,8 +1857,8 @@ enum monster_type                      // (int) menv[].type
     MONS_SENSED,                // dummy monster for unspecified sensed mons
     MONS_PLAYER,                // a certain ugly creature
     MONS_VAMPIRE_BAT,           // for recolouring
-    MONS_DEMIGOD,               // for recolouring
-    MONS_DEMONSPAWN,            // for recolouring... but there are FRs
+    MONS_DEMIGOD,               // recolouring + single vault
+    MONS_DEMONSPAWN,            // recolouring + single vault... but there are FRs
     MONS_GLOWING_SHAPESHIFTER,
     MONS_SHAPESHIFTER,
     MONS_GIANT_MITE,                   //  100
@@ -1956,9 +1973,9 @@ enum monster_type                      // (int) menv[].type
     MONS_SEA_SNAKE,
 
     MONS_HYPERACTIVE_BALLISTOMYCETE,
-    MONS_HALFLING,              // for recolouring only.  And let's remove them!
-    MONS_FELID,                 // for recolouring only.  Miaow!
-    MONS_SPIDER,                // for recolouring, for now.
+    MONS_HALFLING,              // recolouring + single vault.  And let's remove them!
+    MONS_FELID,                 // recolouring + single vault.  Miaow!
+    MONS_SPIDER,
     MONS_OKLOB_SAPLING,
     MONS_BURNING_BUSH,
       MONS_UNUSED_213,
@@ -2101,7 +2118,7 @@ enum monster_type                      // (int) menv[].type
     MONS_DEEP_DWARF_BERSERKER,
     MONS_DEEP_DWARF_DEATH_KNIGHT,
     MONS_DEEP_DWARF_UNBORN,
-      MONS_UNUSED_NISSE,
+    MONS_GNOME, // single vault
       MONS_UNUSED_338,
       MONS_UNUSED_339,
 
@@ -2289,7 +2306,7 @@ enum monster_type                      // (int) menv[].type
     MONS_SPRIGGAN_DRUID,
     MONS_SPRIGGAN_ASSASSIN,
     MONS_SPRIGGAN_RIDER,
-    MONS_SPRIGGAN_WARPER,
+    MONS_SPRIGGAN_BERSERKER,
     MONS_SPRIGGAN_DEFENDER,
     MONS_THE_ENCHANTRESS,
     MONS_FIREFLY,
@@ -2967,6 +2984,7 @@ enum skill_type
 
     SK_BLANK_LINE,                     // used for skill output
     SK_COLUMN_BREAK,                   // used for skill output
+    SK_TITLE,                          // used for skill output
     SK_NONE,
 };
 
@@ -3102,7 +3120,9 @@ enum spell_type
     SPELL_POISON_ARROW,
     SPELL_TWISTED_RESURRECTION,
     SPELL_REGENERATION,
+#if TAG_MAJOR_VERSION == 31
     SPELL_BONE_SHARDS,
+#endif
     SPELL_BANISHMENT,
     SPELL_CIGOTUVIS_DEGENERATION,
     SPELL_STING,
@@ -3133,7 +3153,9 @@ enum spell_type
     SPELL_ALTER_SELF,
     SPELL_DEBUGGING_RAY,
     SPELL_RECALL,
+#if TAG_MAJOR_VERSION == 31
     SPELL_PORTAL,
+#endif
     SPELL_AGONY,
     SPELL_SPIDER_FORM,
     SPELL_DISINTEGRATE,
@@ -3157,7 +3179,9 @@ enum spell_type
     SPELL_STICKS_TO_SNAKES,
     SPELL_CALL_CANINE_FAMILIAR,
     SPELL_SUMMON_DRAGON,
+#if TAG_MAJOR_VERSION == 31
     SPELL_TAME_BEASTS,
+#endif
     SPELL_HIBERNATION,
     SPELL_ENGLACIATION,
     SPELL_DETECT_SECRET_DOORS,
