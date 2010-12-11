@@ -206,12 +206,6 @@ void dgn_flush_map_memory();
 double dgn_degrees_to_radians(int degrees);
 bool dgn_has_adjacent_feat(coord_def c, dungeon_feature_type feat);
 coord_def dgn_random_point_in_margin(int margin);
-coord_def dgn_random_point_in_bounds(
-    dungeon_feature_type searchfeat,
-    uint32_t mapmask = MMT_VAULT,
-    dungeon_feature_type adjacent = DNGN_UNSEEN,
-    bool monster_free = false,
-    int tries = 1500);
 coord_def dgn_random_point_from(const coord_def &c, int radius, int margin = 1);
 coord_def dgn_random_point_visible_from(const coord_def &c,
                                         int radius,
@@ -275,16 +269,8 @@ void dgn_set_lt_callback(std::string level_type_name,
 
 void dgn_reset_level(bool enable_random_maps = true);
 
-// Returns true if the given square is okay for use by any character,
-// but always false for squares in non-transparent vaults. This
-// function returns sane results only immediately after dungeon generation
-// (specifically, saving and restoring a game discards information on the
-// vaults used in the current level).
-bool dgn_square_is_passable(const coord_def &c);
-
 void dgn_register_place(const vault_placement &place, bool register_vault);
 void dgn_register_vault(const map_def &map);
-void dgn_unregister_vault(const map_def &map);
 
 void dgn_seen_vault_at(coord_def p);
 
@@ -313,9 +299,7 @@ void dgn_replace_area(int sx, int sy, int ex, int ey,
                       dungeon_feature_type feature,
                       unsigned mmask = 0, bool needs_update = false);
 
-void dgn_excavate(coord_def dig_at, coord_def dig_dir);
 void dgn_dig_vault_loose(vault_placement &vp);
-coord_def dgn_random_direction();
 
 bool dgn_ensure_vault_placed(bool vault_success,
                              bool disable_further_vaults);

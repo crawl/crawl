@@ -218,6 +218,23 @@ static const map_def *_dgn_random_map_for_place(bool minivault);
 static void _dgn_load_colour_grid();
 static void _dgn_map_colour_fixup();
 
+static void _dgn_excavate(coord_def dig_at, coord_def dig_dir);
+static void _dgn_unregister_vault(const map_def &map);
+
+// Returns true if the given square is okay for use by any character,
+// but always false for squares in non-transparent vaults. This
+// function returns sane results only immediately after dungeon generation
+// (specifically, saving and restoring a game discards information on the
+// vaults used in the current level).
+static bool _dgn_square_is_passable(const coord_def &c);
+
+static coord_def _dgn_random_point_in_bounds(
+    dungeon_feature_type searchfeat,
+    uint32_t mapmask = MMT_VAULT,
+    dungeon_feature_type adjacent = DNGN_UNSEEN,
+    bool monster_free = false,
+    int tries = 1500);
+
 // ALTAR FUNCTIONS
 static int                  _setup_temple_altars(CrawlHashTable &temple);
 static dungeon_feature_type _pick_temple_altar(vault_placement &place);
@@ -234,7 +251,7 @@ typedef std::list<coord_def> coord_list;
 static void _dgn_set_floor_colours();
 static bool _fixup_interlevel_connectivity();
 
-void dgn_postprocess_level();
+static void _dgn_postprocess_level();
 static void _calc_density();
 
 //////////////////////////////////////////////////////////////////////////
@@ -431,7 +448,7 @@ static bool _build_level_vetoable(int level_number, level_area_type level_type,
                 vault_names.push_back(you.level_type_name);
         }
 
-        dgn_postprocess_level();
+        _dgn_postprocess_level();
 
         env.level_layout_type.clear();
         env.level_uniq_maps.clear();
@@ -448,7 +465,7 @@ static bool _build_level_vetoable(int level_number, level_area_type level_type,
 
 // Should be called after a level is constructed to perform any final
 // fixups.
-void dgn_postprocess_level()
+static void _dgn_postprocess_level()
 {
     shoals_postprocess_level();
     _calc_density();
@@ -503,7 +520,7 @@ void dgn_erase_unused_vault_placements()
             if (!vp->seen)
             {
                 dprf("Unregistering unseen vault: %s", vp->map.name.c_str());
-                dgn_unregister_vault(vp->map);
+                _dgn_unregister_vault(vp->map);
             }
 
             delete vp;
@@ -685,7 +702,7 @@ void dgn_register_vault(const map_def &map)
     }
 }
 
-void dgn_unregister_vault(const map_def &map)
+static void _dgn_unregister_vault(const map_def &map)
 {
     you.uniq_map_names.erase(map.name);
     env.level_uniq_maps.erase(map.name);
@@ -708,7 +725,7 @@ bool dgn_square_travel_ok(const coord_def &c)
             || feat == DNGN_SECRET_DOOR);
 }
 
-bool dgn_square_is_passable(const coord_def &c)
+static bool _dgn_square_is_passable(const coord_def &c)
 {
     // [enne] Why does this function check MMT_OPAQUE?
     //
@@ -725,7 +742,7 @@ template <class point_record>
 static bool _dgn_fill_zone(
     const coord_def &start, int zone,
     point_record &record_point,
-    bool (*passable)(const coord_def &) = dgn_square_is_passable,
+    bool (*passable)(const coord_def &) = _dgn_square_is_passable,
     bool (*iswanted)(const coord_def &) = NULL)
 {
     bool ret = false;
@@ -910,7 +927,7 @@ int process_disconnected_zones(int x1, int y1, int x2, int y2,
         {
             if (!map_bounds(x, y)
                 || travel_point_distance[x][y]
-                || !dgn_square_is_passable(coord_def(x, y)))
+                || !_dgn_square_is_passable(coord_def(x, y)))
             {
                 continue;
             }
@@ -1660,13 +1677,13 @@ static bool _add_feat_if_missing(bool (*iswanted)(const coord_def &),
             const coord_def gc(x, y);
             if (!map_bounds(x, y)
                 || travel_point_distance[x][y]
-                || !dgn_square_is_passable(gc))
+                || !_dgn_square_is_passable(gc))
             {
                 continue;
             }
 
             if (_dgn_fill_zone(gc, ++nzones, _dgn_point_record_stub,
-                               dgn_square_is_passable, iswanted))
+                               _dgn_square_is_passable, iswanted))
             {
                 continue;
             }
@@ -3020,11 +3037,11 @@ static void _place_fog_machines(int level_number)
     }
 }
 
-void dgn_place_feature_at_random_floor_square(dungeon_feature_type feat,
-                                              unsigned mask = MMT_VAULT)
+static void _dgn_place_feature_at_random_floor_square(dungeon_feature_type feat,
+                                                      unsigned mask = MMT_VAULT)
 {
     const coord_def place =
-        dgn_random_point_in_bounds(DNGN_FLOOR, mask, DNGN_FLOOR);
+        _dgn_random_point_in_bounds(DNGN_FLOOR, mask, DNGN_FLOOR);
     if (place.origin())
         throw dgn_veto_exception("Cannot place feature at random floor square.");
     else
@@ -3053,11 +3070,11 @@ void dgn_place_stone_stairs(bool maybe_place_hatches)
     for (int i = 0; i < pair_count; ++i)
     {
         if (!existing[i])
-            dgn_place_feature_at_random_floor_square(
+            _dgn_place_feature_at_random_floor_square(
                 static_cast<dungeon_feature_type>(DNGN_STONE_STAIRS_DOWN_I + i));
 
         if (!existing[DNGN_STONE_STAIRS_UP_I - stair_start + i])
-            dgn_place_feature_at_random_floor_square(
+            _dgn_place_feature_at_random_floor_square(
                 static_cast<dungeon_feature_type>(DNGN_STONE_STAIRS_UP_I + i));
     }
 }
@@ -3107,7 +3124,7 @@ static inline bool _point_matches_feat(coord_def c,
 // If a suitable point is not available (or was not found in X tries),
 // returns coord_def(0,0)
 //
-coord_def dgn_random_point_in_bounds(dungeon_feature_type searchfeat,
+static coord_def _dgn_random_point_in_bounds(dungeon_feature_type searchfeat,
                                      uint32_t mapmask,
                                      dungeon_feature_type adjacent_feat,
                                      bool monster_free,
@@ -3119,11 +3136,11 @@ coord_def dgn_random_point_in_bounds(dungeon_feature_type searchfeat,
         int n = 10;
         if (searchfeat == DNGN_FLOOR)
             n = 500;
-        coord_def chosen = dgn_random_point_in_bounds(searchfeat,
-                                                      mapmask,
-                                                      adjacent_feat,
-                                                      monster_free,
-                                                      n);
+        coord_def chosen = _dgn_random_point_in_bounds(searchfeat,
+                                                       mapmask,
+                                                       adjacent_feat,
+                                                       monster_free,
+                                                       n);
         if (!chosen.origin())
             return chosen;
 
@@ -3158,7 +3175,7 @@ coord_def dgn_random_point_in_bounds(dungeon_feature_type searchfeat,
 
 static void _place_specific_feature(dungeon_feature_type feat)
 {
-    coord_def c = dgn_random_point_in_bounds(DNGN_FLOOR, 0, DNGN_UNSEEN, true);
+    coord_def c = _dgn_random_point_in_bounds(DNGN_FLOOR, 0, DNGN_UNSEEN, true);
     if (in_bounds(c))
         env.grid(c) = feat;
     else
@@ -3942,18 +3959,13 @@ static coord_def _dig_away_dir(const vault_placement &place,
 
 // Returns true if the feature can be ovewritten by floor when digging a path
 // from a vault to its surroundings.
-bool dgn_vault_excavatable_feat(dungeon_feature_type feat)
+static bool _dgn_vault_excavatable_feat(dungeon_feature_type feat)
 {
     return (dgn_Vault_Excavatable_Feats.find(feat) !=
             dgn_Vault_Excavatable_Feats.end());
 }
 
-coord_def dgn_random_direction()
-{
-    return Compass[random2(8)];
-}
-
-void dgn_excavate(coord_def dig_at, coord_def dig_dir)
+static void _dgn_excavate(coord_def dig_at, coord_def dig_dir)
 {
     bool dug = false;
     for (int i = 0; i < GXM; i++)
@@ -3964,7 +3976,7 @@ void dgn_excavate(coord_def dig_at, coord_def dig_dir)
             break;
 
         const dungeon_feature_type dig_feat(grd(dig_at));
-        if (dgn_vault_excavatable_feat(dig_feat))
+        if (_dgn_vault_excavatable_feat(dig_feat))
         {
             grd(dig_at) = DNGN_FLOOR;
             dug = true;
@@ -3994,7 +4006,7 @@ static void _dig_away_from(vault_placement &place, const coord_def &pos)
 {
     coord_def dig_dir = _dig_away_dir(place, pos);
     coord_def dig_at  = pos;
-    dgn_excavate(dig_at, dig_dir);
+    _dgn_excavate(dig_at, dig_dir);
 }
 
 static void _dig_vault_loose(vault_placement &place,
@@ -4224,7 +4236,7 @@ bool dgn_place_map(const map_def *mdef,
         env.markers.clear_need_activate();
 
         setup_environment_effects();
-        dgn_postprocess_level();
+        _dgn_postprocess_level();
     }
 
     return (did_map);
