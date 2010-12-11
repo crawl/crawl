@@ -1493,6 +1493,11 @@ int exper_value(const monster* mon)
     const int hd          = mon->hit_dice;
     int maxhp             = mon->max_hit_points;
 
+    // A berserking monster is much harder, but the xp value shouldn't depend
+    // on whether it was berserk at the moment of death.
+    if (mon->has_ench(ENCH_BERSERK))
+        maxhp = (maxhp * 2 + 1) / 3;
+
     // Hacks to make merged slime creatures not worth so much exp.  We
     // will calculate the experience we would get for 1 blob, and then
     // just multiply it so that exp is linear with blobs merged. -cao
