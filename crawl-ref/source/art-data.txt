@@ -541,7 +541,7 @@ DESC:    An adamantine great sword.
 NAME:    morningstar "Eos"
 APPEAR:  encrusted morningstar
 OBJ:     OBJ_WEAPONS/WPN_MORNINGSTAR
-PLUS:    +5/+5
+PLUS:    +11/+11
 COLOUR:  ETC_JEWEL
 TILE:    urand_eos
 TILE_EQ: eos
