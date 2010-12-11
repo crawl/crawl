@@ -193,13 +193,14 @@ DESC_ID: This was the favourite weapon of the old god Trog, before it was
 
 NAME:    Mace of Variability
 APPEAR:  shimmering mace
-OBJ:     OBJ_WEAPONS/WPN_MACE
+OBJ:     OBJ_WEAPONS/WPN_GREAT_MACE
 PLUS:    0/0   # Set on generation
 COLOUR:  ETC_RANDOM
 TILE:    spwpn_mace_of_variability
 TILE_EQ: mace_of_variability
 VALUE:   700
 BOOL:    special
+BRAND:   SPWPN_CHAOS
 DESC_ID: It is rather unreliable.
 
 NAME:    Glaive of Prune
@@ -354,9 +355,9 @@ DESC:    Faerie dragons used to be a race of the same species as mottled ones.
 
 ##################### End of old fixed arts.
 
-NAME:    long sword "Bloodbane"
-APPEAR:  blackened long sword
-OBJ:     OBJ_WEAPONS/WPN_LONG_SWORD
+NAME:    katana "Bloodbane"
+APPEAR:  blackened katana
+OBJ:     OBJ_WEAPONS/WPN_KATANA
 PLUS:    +7/+8
 COLOUR:  ETC_DARK
 TILE:    urand_bloodbane
@@ -498,7 +499,7 @@ DESC_END: This weapon once belonged to Gar Dogh, the guard of a king's
 
 NAME:     sword of Jihad
 APPEAR:   crystal sword
-OBJ:      OBJ_WEAPONS/WPN_LONG_SWORD
+OBJ:      OBJ_WEAPONS/WPN_EUDEMON_BLADE
 PLUS:     +12/+10
 COLOUR:   ETC_HOLY
 TILE:     urand_jihad
@@ -669,8 +670,8 @@ DESC_END: This knife was made by Spriggans, or for Spriggans, or possibly
           fey folk.
 
 NAME:    plutonium sword
-APPEAR:  glowing long sword
-OBJ:     OBJ_WEAPONS/WPN_LONG_SWORD
+APPEAR:  glowing triple sword
+OBJ:     OBJ_WEAPONS/WPN_TRIPLE_SWORD
 PLUS:    +12/+16
 COLOUR:  ETC_RANDOM
 TILE:    urand_plutonium
@@ -678,7 +679,7 @@ TILE_EQ: plutonium_sword
 MUTATE:  6
 CURSED:  1
 STEALTH: -20
-DESC:    A long sword made of weird glowing metal.
+DESC:    A triple sword made of weird glowing metal.
 
 NAME:    great mace "Undeadhunter"
 APPEAR:  great steel mace
@@ -722,6 +723,7 @@ COLOUR:   GREEN
 TILE:     urand_crystal_spear
 TILE_EQ:  crystal_spear
 INT:      3
+BRAND:    SPWPN_RETURNING
 DESC_END: Presumably this relic led to the invention of the famous spell, or maybe the other way around.
 
 NAME:     Captain's cutlass
