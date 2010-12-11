@@ -696,6 +696,7 @@ bool cast_summon_dragon(int pow, god_type god)
     return (false);
 }
 
+// This assumes that the specified monster can go berserk.
 static void _make_mons_berserk_summon(monster* mon)
 {
     mon->go_berserk(false);
