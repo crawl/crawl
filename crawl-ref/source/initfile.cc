@@ -4168,23 +4168,14 @@ bool parse_args(int argc, char **argv, bool rc_only)
         case CLO_PRINT_CHARSET:
             if (rc_only)
                 break;
-            switch(Options.char_set)
-            {
-            case CSET_ASCII:
-                printf("ASCII\n");
-                end(0);
-            case CSET_IBM:
-                printf("IBM\n");
-                end(0);
-            case CSET_DEC:
-                printf("DEC\n");
-                end(0);
-            case CSET_UNICODE:
-                printf("UNICODE\n");
-                end(0);
-            case NUM_CSET:
-                ASSERT(!"unset charset");
-            }
+#ifdef DGAMELAUNCH
+            // Tell DGL we don't use ancient charsets anymore.  The glyph set
+            // doesn't matter here, just the encoding.
+            printf("UNICODE\n");
+#else
+            printf("This option is for DGL use only.\n");
+#endif
+            end(0);
             break;
 
         case CLO_EXTRA_OPT_FIRST:
