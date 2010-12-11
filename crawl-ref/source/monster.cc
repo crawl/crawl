@@ -5424,8 +5424,11 @@ void monster::apply_enchantments()
 
 void monster::scale_hp(int num, int den)
 {
-    hit_points     = hit_points * num / den;
-    max_hit_points = max_hit_points * num / den;
+    // Without the +1, we lose maxhp on every berserk (the only use) if the
+    // maxhp is odd.  This version does preserve the value correctly, but only
+    // if it is first inflated then deflated.
+    hit_points     = (hit_points * num + 1) / den;
+    max_hit_points = (max_hit_points * num + 1) / den;
 
     if (hit_points < 1)
         hit_points = 1;
