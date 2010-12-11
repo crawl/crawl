@@ -372,12 +372,8 @@ static void _launch_game()
     if (game_start && you.char_class == JOB_WANDERER)
         _wanderer_startup_message();
 
-    if (!crawl_state.game_is_tutorial()
-        && crawl_state.game_is_normal()
-        && game_start)
-    {
+    if (game_start)
        _announce_goal_message();
-    }
 
     _god_greeting_message(game_start);
 
@@ -479,7 +475,13 @@ static void _wanderer_startup_message()
 // A one-liner upon game start to mention the orb.
 static void _announce_goal_message()
 {
-    mprf(MSGCH_PLAIN,"<yellow>%s</yellow>", getMiscString("welcome_spam").c_str());
+    std::string type = crawl_state.game_type_name();
+    if (crawl_state.game_is_hints())
+        type = "Hints";
+    if (!type.empty())
+        type = " " + type;
+    mprf(MSGCH_PLAIN, "<yellow>%s</yellow>",
+         getMiscString("welcome_spam" + type).c_str());
 }
 
 static void _god_greeting_message(bool game_start)
