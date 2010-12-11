@@ -696,6 +696,21 @@ bool cast_summon_dragon(int pow, god_type god)
     return (false);
 }
 
+static void _make_mons_berserk_summon(monster* mon)
+{
+    mon->go_berserk(false);
+    mon_enchant berserk = mon->get_ench(ENCH_BERSERK);
+    mon_enchant abj = mon->get_ench(ENCH_ABJ);
+
+    // Let Trog's gifts berserk longer, and set the abjuration timeout
+    // to the berserk timeout.
+    berserk.duration = berserk.duration * 3 / 2;
+    berserk.maxduration = berserk.duration;
+    abj.duration = abj.maxduration = berserk.duration;
+    mon->update_ench(berserk);
+    mon->update_ench(abj);
+}
+
 // This is actually one of Trog's wrath effects.
 bool summon_berserker(int pow, actor *caster)
 {
@@ -754,21 +769,9 @@ bool summon_berserker(int pow, actor *caster)
     if (mons == -1)
         return (false);
 
-    monster* summon = &menv[mons];
+    _make_mons_berserk_summon(&menv[mons]);
 
-    summon->go_berserk(false);
-    mon_enchant berserk = summon->get_ench(ENCH_BERSERK);
-    mon_enchant abj = summon->get_ench(ENCH_ABJ);
-
-    // Let Trog's gifts berserk longer, and set the abjuration
-    // timeout to the berserk timeout.
-    berserk.duration = berserk.duration * 3 / 2;
-    berserk.maxduration = berserk.duration;
-    abj.duration = abj.maxduration = berserk.duration;
-    summon->update_ench(berserk);
-    summon->update_ench(abj);
-
-    player_angers_monster(summon);
+    player_angers_monster(&menv[mons]);
     return (true);
 }
 
