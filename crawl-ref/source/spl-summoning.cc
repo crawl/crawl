@@ -770,8 +770,6 @@ bool summon_berserker(int pow, actor *caster)
         return (false);
 
     _make_mons_berserk_summon(&menv[mons]);
-
-    player_angers_monster(&menv[mons]);
     return (true);
 }
 
