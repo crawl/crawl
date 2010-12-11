@@ -287,3 +287,11 @@ The destiny of this world depends on the Orb of Zot. Go down and get it!
 
 They say that the Orb of Zot exists deep, deep down but nobody ever got it.
 %%%%
+welcome_spam Zot Defense
+
+They are going to get your Orb!
+
+Stand and defend the Orb!
+
+The safety of the most sacred Orb of Zot relies on you.
+%%%%
