@@ -48,7 +48,7 @@
 // Creates a specific monster by mon type number.
 void wizard_create_spec_monster(void)
 {
-    int mon = debug_prompt_for_int("Which monster by number? ", true);
+    int mon = prompt_for_int("Which monster by number? ", true);
 
     if (mon == -1 || (mon >= NUM_MONSTERS
                       && mon != RANDOM_MONSTER
@@ -593,7 +593,7 @@ void debug_make_monster_shout(monster* mon)
         return;
     }
 
-    int num_times = debug_prompt_for_int("How many times? ", false);
+    int num_times = prompt_for_int("How many times? ", false);
 
     if (num_times <= 0)
     {
@@ -963,7 +963,7 @@ void wizard_make_monster_summoned(monster* mon)
         return;
     }
 
-    int dur = debug_prompt_for_int("What summon longevity (1 to 6)? ", true);
+    int dur = prompt_for_int("What summon longevity (1 to 6)? ", true);
 
     if (dur < 1 || dur > 6)
     {
@@ -1263,7 +1263,7 @@ void debug_miscast(int target_index)
 
     // Handle repeats ourselves since miscasts are likely to interrupt
     // command repetions, especially if the player is the target.
-    int repeats = debug_prompt_for_int("Number of repetitions? ", true);
+    int repeats = prompt_for_int("Number of repetitions? ", true);
     if (repeats < 1)
     {
         canned_msg(MSG_OK);

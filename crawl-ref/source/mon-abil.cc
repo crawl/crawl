@@ -967,8 +967,9 @@ static bool _silver_statue_effects(monster* mons)
 
     int abjuration_duration = 5;
 
-    // Tone down friendly silver statues for Zotdef (but not only!).
-    if (mons->attitude == ATT_FRIENDLY && foe != &you)
+    // Tone down friendly silver statues for Zotdef.
+    if (mons->attitude == ATT_FRIENDLY && foe != &you
+        && crawl_state.game_is_zotdef())
     {
         if (!one_chance_in(3))
             return (false);
@@ -1002,9 +1003,10 @@ static bool _orange_statue_effects(monster* mons)
     if (foe && mons->can_see(foe) && !one_chance_in(3))
     {
         // Tone down friendly OCSs for Zotdef.
-        if (mons->attitude == ATT_FRIENDLY && foe != &you)
+        if (mons->attitude == ATT_FRIENDLY && foe != &you
+            && crawl_state.game_is_zotdef())
         {
-            if (foe->check_res_magic(120))
+            if (foe->check_res_magic(120) > 0)
                 return (false);
             pow  /= 2;
             fail /= 2;
@@ -1178,7 +1180,7 @@ static bool _moth_incite_monsters(const monster* mon)
         return false;
 
     int goaded = 0;
-    circle_def c(mon->pos(), 3, C_SQUARE);
+    circle_def c(mon->pos(), 4, C_ROUND);
     for (monster_iterator mi(&c); mi; ++mi)
     {
         if (*mi == mon || !mi->needs_berserk())

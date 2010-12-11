@@ -799,9 +799,7 @@ int unmarshallEnumVal(reader& rd, const enum_info *ei)
         ei->collect(values);
 
         for (unsigned i = 0; i < values.size(); ++i)
-        {
             ers.names.insert(make_pair(values[i].second, values[i].first));
-        }
 
         if (rd.getMinorVersion() < ei->non_historical_first)
         {
@@ -812,19 +810,13 @@ int unmarshallEnumVal(reader& rd, const enum_info *ei)
             for (; evi->name; ++evi)
             {
                 if (ers.names.find(std::string(evi->name)) != ers.names.end())
-                {
                     ers.mapping[evi->value] = ers.names[std::string(evi->name)];
-                }
                 else
-                {
                     ers.mapping[evi->value] = ei->replacement;
-                }
             }
         }
         else
-        {
             ers.store_type = unmarshallByte(rd);
-        }
     }
 
     int raw;
@@ -842,17 +834,14 @@ int unmarshallEnumVal(reader& rd, const enum_info *ei)
     std::string name = unmarshallString(rd);
 
     if (ers.names.find(name) != ers.names.end())
-    {
         ers.mapping[raw] = ers.names[name];
-    }
     else
-    {
         ers.mapping[raw] = ei->replacement;
-    }
 
     return ers.mapping[raw];
 }
 
+#if TAG_MAJOR_VERSION == 31
 static int get_val_from_string(const char *ptr, int len)
 {
     int ret = 0;
@@ -882,6 +871,7 @@ static time_t _parse_date_string(char buff[20])
 
     return (mktime(&date));
 }
+#endif
 
 // Write a tagged chunk of data to the FILE*.
 // tagId specifies what to write.
@@ -971,13 +961,13 @@ void tag_read(reader &inf, int minorVersion, tag_type tag_id)
 
 static void tag_construct_char(writer &th)
 {
-    marshallString(th, you.your_name, kNameLen);
+    marshallString(th, you.your_name);
     marshallString(th, Version::Long());
 
     marshallByte(th, you.species);
     marshallByte(th, you.char_class);
     marshallByte(th, you.experience_level);
-    marshallString(th, you.class_name, 30);
+    marshallString(th, you.class_name);
     marshallByte(th, you.religion);
     marshallString(th, you.jiyva_second_name);
 
@@ -1019,6 +1009,7 @@ static void tag_construct_you(writer &th)
     marshallShort(th, you.hunger);
     marshallBoolean(th, you.fishtail);
     marshallInt(th, you.earth_attunement);
+    marshallInt(th, you.form);
 
     // how many you.equip?
     marshallByte(th, NUM_EQUIP);
@@ -1135,6 +1126,10 @@ static void tag_construct_you(writer &th)
     for (i = 0; i < MAX_NUM_GODS; i++)
         marshallShort(th, you.num_total_gifts[i]);
 
+    marshallByte(th, NUM_NEMELEX_GIFT_TYPES);
+    for (i = 0; i < NUM_NEMELEX_GIFT_TYPES; ++i)
+        marshallBoolean(th, you.nemelex_sacrificing[i]);
+
     marshallByte(th, you.gift_timeout);
 #if TAG_MAJOR_VERSION == 31
     marshallByte(th, you.normal_vision);
@@ -1146,9 +1141,8 @@ static void tag_construct_you(writer &th)
     // elapsed time
     marshallInt(th, you.elapsed_time);
 
-
     // time of game start
-    marshallString(th, make_date_string(you.birth_time).c_str(), 20);
+    marshallInt(th, you.birth_time);
 
     // real_time == -1 means game was started before this feature.
     if (you.real_time != -1)
@@ -1193,6 +1187,8 @@ static void tag_construct_you(writer &th)
 
     marshallByte(th, you.friendly_pickup);
 
+    marshallString(th, you.zotdef_wave_name);
+
     if (!dlua.callfn("dgn_save_data", "u", &th))
         mprf(MSGCH_ERROR, "Failed to save Lua data: %s", dlua.error.c_str());
 
@@ -1204,11 +1200,7 @@ static void tag_construct_you(writer &th)
 
     you.props.write(th);
 #if TAG_MAJOR_VERSION == 31
-    marshallByte(th, NUM_DC);
-    for (int t = 0; t < 2; t++)
-        for (int ae = 0; ae < 2; ae++)
-            for (i = 0; i < NUM_DC; i++)
-                marshallInt(th, you.dcounters[t][ae][i]);
+    marshallByte(th, 0);
 #endif
 }
 
@@ -1482,7 +1474,7 @@ static vault_placement unmarshall_vault_placement(reader &th)
     vault_placement vp;
     vp.pos = unmarshallCoord(th);
     vp.size = unmarshallCoord(th);
-    vp.orient = unmarshallShort(th);
+    vp.orient = static_cast<map_section_type>(unmarshallShort(th));
     vp.map = unmarshall_mapdef(th);
     unmarshall_vector(th, vp.exits, unmarshallCoord);
     vp.level_number = unmarshallShort(th);
@@ -1552,23 +1544,25 @@ static void tag_construct_game_state(writer &th)
 
 static void tag_read_char(reader &th, int minorVersion)
 {
-    you.your_name         = unmarshallString(th, kNameLen);
+    you.your_name         = unmarshallString(th);
     const std::string old_version = unmarshallString(th);
     dprf("Last save Crawl version: %s", old_version.c_str());
 
     you.species           = static_cast<species_type>(unmarshallByte(th));
     you.char_class        = static_cast<job_type>(unmarshallByte(th));
     you.experience_level  = unmarshallByte(th);
-    unmarshallCString(th, you.class_name, 30);
+    you.class_name        = unmarshallString(th);
     you.religion          = static_cast<god_type>(unmarshallByte(th));
-    you.jiyva_second_name   = unmarshallString(th);
+    you.jiyva_second_name = unmarshallString(th);
 
     you.wizard            = unmarshallBoolean(th);
 }
 
 static void tag_read_you(reader &th, int minorVersion)
 {
+#if TAG_MAJOR_VERSION == 31
     char buff[20];      // For birth date.
+#endif
     int i,j;
     int count;
 
@@ -1614,6 +1608,10 @@ static void tag_read_you(reader &th, int minorVersion)
     if (minorVersion >= TAG_MINOR_EARTH_ATTUNE)
 #endif
     you.earth_attunement= unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 31
+    if (minorVersion >= TAG_MINOR_YOU_FORM)
+#endif
+    you.form            = static_cast<transformation_type>(unmarshallInt(th));
 
     // How many you.equip?
     count = unmarshallByte(th);
@@ -1785,6 +1783,17 @@ static void tag_read_you(reader &th, int minorVersion)
     for (i = 0; i < count; i++)
         you.num_total_gifts[i] = unmarshallShort(th);
 
+#if TAG_MAJOR_VERSION == 31
+    if (minorVersion >= TAG_MINOR_NEMELEX_TOGGLE)
+    {
+#endif
+    count = unmarshallByte(th);
+    for (i = 0; i < count; i++)
+        you.nemelex_sacrificing[i] = unmarshallBoolean(th);
+#if TAG_MAJOR_VERSION == 31
+    }
+#endif
+
     you.gift_timeout   = unmarshallByte(th);
 
 #if TAG_MAJOR_VERSION == 31
@@ -1799,8 +1808,15 @@ static void tag_read_you(reader &th, int minorVersion)
     you.elapsed_time   = unmarshallInt(th);
 
     // time of character creation
-    unmarshallCString(th, buff, 20);
-    you.birth_time = _parse_date_string(buff);
+#if TAG_MAJOR_VERSION == 31
+    if (minorVersion < TAG_MINOR_NO_CSTRINGS)
+    {
+        unmarshallCString(th, buff, 20);
+        you.birth_time = _parse_date_string(buff);
+    }
+    else
+#endif
+    you.birth_time = unmarshallInt(th);
 
     you.real_time  = unmarshallInt(th);
     you.num_turns  = unmarshallInt(th);
@@ -1839,6 +1855,11 @@ static void tag_read_you(reader &th, int minorVersion)
 
     you.friendly_pickup = unmarshallByte(th);
 
+#if TAG_MAJOR_VERSION == 31
+    if (minorVersion >= TAG_MINOR_ZOTDEF_NAME)
+#endif
+    you.zotdef_wave_name = unmarshallString(th);
+
     if (!dlua.callfn("dgn_load_data", "u", &th))
         mprf(MSGCH_ERROR, "Failed to load Lua persist table: %s",
              dlua.error.c_str());
@@ -1852,12 +1873,14 @@ static void tag_read_you(reader &th, int minorVersion)
     if (minorVersion >= TAG_MINOR_DIAG_COUNTERS)
     {
         count = unmarshallByte(th);
-        ASSERT(count <= NUM_DC);
         for (int t = 0; t < 2; t++)
             for (int ae = 0; ae < 2; ae++)
                 for (i = 0; i < count; i++)
-                    you.dcounters[t][ae][i] = unmarshallInt(th);
+                    unmarshallInt(th);
     }
+    if (minorVersion < TAG_MINOR_YOU_FORM)
+        you.form = static_cast<transformation_type>(
+                   you.attribute[ATTR_OBSOLETE_TRANSFORMATION]);
 #endif
 }
 

@@ -93,7 +93,9 @@ demonspawn_red_f
 demonspawn_red_m
 demonspawn_black_f
 demonspawn_black_m
-ghoul GHOUL
+ghoul_m GHOUL
+ghoul2_m
+ghoul2_f
 kenku_wingless_f KENKU
 kenku_wingless_m
 kenku_winged_f

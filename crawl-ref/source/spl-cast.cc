@@ -386,7 +386,7 @@ int spell_fail(spell_type spell)
 
     if (you.duration[DUR_TRANSFORMATION] > 0)
     {
-        switch (you.attribute[ATTR_TRANSFORMATION])
+        switch (you.form)
         {
         case TRAN_BLADE_HANDS:
             chance2 += 20;
@@ -395,6 +395,9 @@ int spell_fail(spell_type spell)
         case TRAN_SPIDER:
         case TRAN_BAT:
             chance2 += 10;
+            break;
+
+        default:
             break;
         }
     }
@@ -541,7 +544,7 @@ void inspect_spells()
 
 void do_cast_spell_cmd(bool force)
 {
-    if (player_in_bat_form() || you.attribute[ATTR_TRANSFORMATION] == TRAN_PIG)
+    if (player_in_bat_form() || you.form == TRAN_PIG)
     {
         canned_msg(MSG_PRESENT_FORM);
         return;
@@ -892,7 +895,6 @@ static bool _vampire_cannot_cast(spell_type spell)
     case SPELL_SPIDER_FORM:
     case SPELL_STATUE_FORM:
     case SPELL_STONESKIN:
-    case SPELL_TAME_BEASTS:
         return (true);
     default:
         return (false);
@@ -1038,7 +1040,6 @@ static void _maybe_cancel_repeat(spell_type spell)
     case SPELL_DELAYED_FIREBALL:
     case SPELL_TUKIMAS_DANCE:
     case SPELL_ALTER_SELF:
-    case SPELL_PORTAL:
         crawl_state.cant_cmd_repeat(make_stringf("You can't repeat %s.",
                                                  spell_title(spell)));
         break;
@@ -1396,11 +1397,6 @@ static spret_type _do_cast(spell_type spell, int powc,
             return (SPRET_ABORT);
         break;
 
-    case SPELL_BONE_SHARDS:
-        if (!cast_bone_shards(powc, beam))
-            return (SPRET_ABORT);
-        break;
-
     case SPELL_VAMPIRIC_DRAINING:
         if (!vampiric_drain(powc,
                             monster_at(spd.isTarget ? beam.target
@@ -1685,9 +1681,13 @@ static spret_type _do_cast(spell_type spell, int powc,
         mass_enchantment(ENCH_FEAR, powc, MHITYOU);
         break;
 
+#if TAG_MAJOR_VERSION == 31
     case SPELL_TAME_BEASTS:
-        cast_tame_beasts(powc);
-        break;
+    case SPELL_BONE_SHARDS:
+    case SPELL_PORTAL:
+        mpr("It appears that an accident happened to this spell.");
+        return SPRET_ABORT;
+#endif
 
     case SPELL_INTOXICATE:
         cast_intoxicate(powc);
@@ -2006,11 +2006,6 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_RECALL:
         recall(0);
-        break;
-
-    case SPELL_PORTAL:
-        if (crawl_state.game_is_sprint() || (portal() == -1))
-            return (SPRET_ABORT);
         break;
 
     case SPELL_CORPSE_ROT:

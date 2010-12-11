@@ -189,6 +189,8 @@ static void _initialize()
 
 static void _post_init(bool newc)
 {
+    ASSERT(strwidth(you.your_name) <= kNameLen);
+
     // Fix the mutation definitions for the species we're playing.
     fixup_mutations();
 
@@ -292,6 +294,9 @@ static void _post_init(bool newc)
         // For a newly started hints mode, turn secret doors into normal ones.
         if (Hints.hints_left)
             hints_zap_secret_doors();
+
+        if (crawl_state.game_is_zotdef())
+            fully_map_level();
     }
 
 #ifdef USE_TILE

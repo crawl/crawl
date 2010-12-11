@@ -2675,7 +2675,7 @@ bool describe_item(item_def &item, bool allow_inscribe, bool shopping)
     _update_inscription(item);
 
     // Don't ask if there aren't enough rows left
-    if (wherey() <= get_number_of_lines() - 2)
+    if (wherey() <= get_number_of_lines() - 2 && in_inventory(item))
     {
         cgotoxy(1, wherey() + 2);
         return _actions_prompt(item, allow_inscribe);
@@ -3455,9 +3455,13 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 #ifdef DEBUG_DIAGNOSTICS
     if (mi.pos.origin())
         return; // not a real monster
-    struct monster& mons = *mi.mon();
+    monster& mons = *mi.mon();
+
+    inf.body << "\nMonster health: "
+             << mons.hit_points << "/" << mons.max_hit_points << "\n";
+
     const actor *mfoe = mons.get_foe();
-    inf.body << "\nMonster foe: "
+    inf.body << "Monster foe: "
              << (mfoe? mfoe->name(DESC_PLAIN, true)
                  : "(none)");
 
@@ -4073,14 +4077,38 @@ static void _detailed_god_description(god_type which_god)
                          "Evocations skill help here, as the power of Nemelex's "
                          "abilities is governed by Evocations instead of "
                          "Invocations. The type of the deck gifts strongly "
-                         "depends on the dominating item class sacrificed:\n"
-                         "  decks of Escape      -- armour\n"
-                         "  decks of Destruction -- weapons and ammunition\n"
-                         "  decks of Dungeons    -- jewellery, books, "
-                                                    "miscellaneous items\n"
-                         "  decks of Summoning   -- corpses, chunks, blood\n"
-                         "  decks of Wonders     -- consumables: food, potions, "
-                                                    "scrolls, wands\n";
+                         "depends on the dominating item class sacrificed:\n";
+
+                for (int i = 0; i < NUM_NEMELEX_GIFT_TYPES; ++i)
+                {
+                    const bool active = you.nemelex_sacrificing[i];
+                    std::string desc = "";
+                    switch (i)
+                    {
+                    case NEM_GIFT_ESCAPE:
+                        desc = "decks of Escape      -- armour";
+                        break;
+                    case NEM_GIFT_DESTRUCTION:
+                        desc = "decks of Destruction -- weapons and ammunition";
+                        break;
+                    case NEM_GIFT_DUNGEONS:
+                        desc = "decks of Dungeons    -- jewellery, books, "
+                                                    "miscellaneous items";
+                        break;
+                    case NEM_GIFT_SUMMONING:
+                        desc = "decks of Summoning   -- corpses, chunks, blood";
+                        break;
+                    case NEM_GIFT_WONDERS:
+                        desc = "decks of Wonders     -- consumables: food, potions, "
+                                                    "scrolls, wands";
+                        break;
+                    }
+                    broken += make_stringf(" %c %s%s%s\n",
+                                           'a' + (char) i,
+                                           active ? "+ " : "- <darkgrey>",
+                                           desc.c_str(),
+                                           active ? "" : "</darkgrey>");
+                }
             }
         default:
             break;
@@ -4110,7 +4138,14 @@ static void _detailed_god_description(god_type which_god)
     mouse_control mc(MOUSE_MODE_MORE);
 
     const int keyin = getchm();
-    if (keyin == '!' || keyin == CK_MOUSE_CMD)
+    if (you.religion == GOD_NEMELEX_XOBEH
+        && keyin >= 'a' && keyin < 'a' + (char) NUM_NEMELEX_GIFT_TYPES)
+    {
+        const int num = keyin - 'a';
+        you.nemelex_sacrificing[num] = !you.nemelex_sacrificing[num];
+        _detailed_god_description(which_god);
+    }
+    else if (keyin == '!' || keyin == CK_MOUSE_CMD)
         describe_god(which_god, true);
 }
 

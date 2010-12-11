@@ -404,11 +404,8 @@ static void _launch_game()
     if (game_start && you.char_class == JOB_WANDERER)
         _wanderer_startup_message();
 
-    if (!crawl_state.game_is_tutorial()
-        && !crawl_state.game_is_sprint() && game_start)
-    {
+    if (game_start)
        _announce_goal_message();
-    }
 
     _god_greeting_message(game_start);
 
@@ -510,7 +507,13 @@ static void _wanderer_startup_message()
 // A one-liner upon game start to mention the orb.
 static void _announce_goal_message()
 {
-    mprf(MSGCH_PLAIN,"<yellow>%s</yellow>", getMiscString("welcome_spam").c_str());
+    std::string type = crawl_state.game_type_name();
+    if (crawl_state.game_is_hints())
+        type = "Hints";
+    if (!type.empty())
+        type = " " + type;
+    mprf(MSGCH_PLAIN, "<yellow>%s</yellow>",
+         getMiscString("welcome_spam" + type).c_str());
 }
 
 static void _god_greeting_message(bool game_start)
@@ -1075,23 +1078,6 @@ static void _update_place_info()
     curr_PlaceInfo.assert_validity();
 }
 
-static void _update_diag_counters()
-{
-    diag_counter_t act = DC_OTHER;
-
-    if (you.walking == 1)
-        act = DC_WALK_ORTHO;
-    else if (you.walking == 2)
-        act = DC_WALK_DIAG;
-    else if (!apply_berserk_penalty) // a fancy name for "attacking"
-        act = DC_FIGHT;
-
-    bool ae = (you.running == RMODE_EXPLORE)
-              || (you.running == RMODE_EXPLORE_GREEDY);
-    you.dcounters[0][ae][act]++;
-    you.dcounters[1][ae][act]+=you.time_taken;
-}
-
 //
 //  This function handles the player's input. It's called from main(),
 //  from inside an endless loop.
@@ -1466,7 +1452,7 @@ static void _experience_check()
     mprf("You are a level %d %s %s.",
          you.experience_level,
          species_name(you.species).c_str(),
-         you.class_name);
+         you.class_name.c_str());
 
     if (you.experience_level < 27)
     {
@@ -1835,7 +1821,7 @@ void process_command(command_type cmd)
     case CMD_DISPLAY_INVENTORY:        get_invent(OSEL_ANY);           break;
     case CMD_DISPLAY_KNOWN_OBJECTS:    check_item_knowledge();         break;
     case CMD_DISPLAY_MUTATIONS: display_mutations(); redraw_screen();  break;
-    case CMD_DISPLAY_SKILLS:           show_skills(); redraw_screen(); break;
+    case CMD_DISPLAY_SKILLS:           skill_menu(); redraw_screen();  break;
     case CMD_EXPERIENCE_CHECK:         _experience_check();            break;
     case CMD_FULL_VIEW:                full_describe_view();           break;
     case CMD_INSCRIBE_ITEM:            prompt_inscribe_item();         break;
@@ -2196,7 +2182,7 @@ static void _decrement_durations()
 
     // FIXME: [ds] Remove this once we've ensured durations can never go < 0?
     if (you.duration[DUR_TRANSFORMATION] <= 0
-        && you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
+        && you.form != TRAN_NONE)
     {
         you.duration[DUR_TRANSFORMATION] = 1;
     }
@@ -2605,7 +2591,7 @@ static void _decrement_durations()
 
 static void _check_banished()
 {
-    if (you.banished)
+    if (you.banished && !crawl_state.game_is_zotdef())
     {
         you.banished = false;
         if (you.level_type != LEVEL_ABYSS)
@@ -2934,7 +2920,7 @@ void world_reacts()
     if (you.num_turns != -1)
     {
         // Zotdef: Time only passes in the main dungeon
-        if (you.num_turns < LONG_MAX)
+        if (you.num_turns < INT_MAX)
         {
             if (!crawl_state.game_is_zotdef()
                 || you.where_are_you == BRANCH_MAIN_DUNGEON
@@ -4061,7 +4047,6 @@ static void _move_player(coord_def move)
     {
         did_god_conduct(DID_HASTY, 1, true);
     }
-    _update_diag_counters();
     you.check_clinging();
 }
 

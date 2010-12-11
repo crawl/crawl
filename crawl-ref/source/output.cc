@@ -400,7 +400,7 @@ static void _print_stats_wp(int y)
 
         text = wpn.name(DESC_INVENTORY, true, false, true);
     }
-    else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+    else if (you.form == TRAN_BLADE_HANDS)
     {
         col = RED;
         text = "Blade Hands";
@@ -713,9 +713,7 @@ static std::string _level_description_string_hud()
     }
     // Definite articles
     else if (place.level_type == LEVEL_ABYSS)
-    {
         short_name.insert(0, "The ");
-    }
     return short_name;
 }
 
@@ -1258,7 +1256,7 @@ static void _print_overview_screen_equip(column_composer& cols,
             snprintf(buf, sizeof buf, "%s  - Unarmed", slot);
         }
         else if (e_order[i] == EQ_WEAPON
-                 && you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+                 && you.form == TRAN_BLADE_HANDS)
         {
             snprintf(buf, sizeof buf, "%s  - Blade Hands", slot);
         }
@@ -1302,7 +1300,7 @@ static std::string _overview_screen_title()
     snprintf(species_job, sizeof species_job,
              "(%s %s)",
              species_name(you.species).c_str(),
-             you.class_name);
+             you.class_name.c_str());
 
     char time_turns[50] = "";
 
@@ -1582,9 +1580,9 @@ static std::vector<formatted_string> _get_overview_resistances(
     const int rfire = player_res_fire(calc_unid);
     const int rcold = player_res_cold(calc_unid);
     const int rlife = player_prot_life(calc_unid);
+    const int racid = player_res_acid(calc_unid);
     const int rpois = player_res_poison(calc_unid);
     const int relec = player_res_electricity(calc_unid);
-    const int rspir = player_spirit_shield(calc_unid);
     const int rsust = player_sust_abil(calc_unid);
     const int rmuta = (wearing_amulet(AMU_RESIST_MUTATION, calc_unid)
                        || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
@@ -1596,18 +1594,18 @@ static std::vector<formatted_string> _get_overview_resistances(
              "%sRes.Fire  : %s\n"
              "%sRes.Cold  : %s\n"
              "%sLife Prot.: %s\n"
+             "%sRes.Acid. : %s\n"
              "%sRes.Poison: %s\n"
              "%sRes.Elec. : %s\n"
-             "%sSpirit.Shd: %s\n"
              "%sSust.Abil.: %s\n"
              "%sRes.Mut.  : %s\n"
              "%sRes.Rott. : %s\n",
              _determine_colour_string(rfire, 3), _itosym3(rfire),
              _determine_colour_string(rcold, 3), _itosym3(rcold),
              _determine_colour_string(rlife, 3), _itosym3(rlife),
+             _determine_colour_string(racid, 3), _itosym3(racid),
              _determine_colour_string(rpois, 1), _itosym1(rpois),
              _determine_colour_string(relec, 1), _itosym1(relec),
-             _determine_colour_string(rspir, 1), _itosym1(rspir),
              _determine_colour_string(rsust, 2), _itosym2(rsust),
              _determine_colour_string(rmuta, 1), _itosym1(rmuta),
              _determine_colour_string(rrott, 1), _itosym1(rrott));
@@ -1636,27 +1634,37 @@ static std::vector<formatted_string> _get_overview_resistances(
     const int rinvi = you.can_see_invisible(calc_unid);
     const int rward = wearing_amulet(AMU_WARDING, calc_unid);
     const int rcons = player_item_conserve(calc_unid);
-    const int rcorr = player_res_acid(calc_unid);
+    const int rcorr = player_res_corr(calc_unid);
     const int rclar = player_mental_clarity(calc_unid);
+    const int rspir = player_spirit_shield(calc_unid);
     snprintf(buf, sizeof buf,
              "%sSee Invis. : %s\n"
              "%sWarding    : %s\n"
              "%sConserve   : %s\n"
              "%sRes.Corr.  : %s\n"
              "%sClarity    : %s\n"
+             "%sSpirit.Shd : %s\n"
              ,
              _determine_colour_string(rinvi, 1), _itosym1(rinvi),
              _determine_colour_string(rward, 1), _itosym1(rward),
              _determine_colour_string(rcons, 1), _itosym1(rcons),
              _determine_colour_string(rcorr, 1), _itosym1(rcorr),
-             _determine_colour_string(rclar, 1), _itosym1(rclar));
+             _determine_colour_string(rclar, 1), _itosym1(rclar),
+             _determine_colour_string(rspir, 1), _itosym1(rspir));
     cols.add_formatted(1, buf, false);
 
     const int stasis = wearing_amulet(AMU_STASIS, calc_unid);
     const int notele = scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid);
+    const int rrtel = !!player_teleport(calc_unid);
     if (notele && !stasis)
     {
         snprintf(buf, sizeof buf, "%sPrev.Telep.: %s",
+                 _determine_colour_string(-1, 1), _itosym1(1));
+    }
+    else
+    if (rrtel && !stasis)
+    {
+        snprintf(buf, sizeof buf, "%sRnd.Telep. : %s",
                  _determine_colour_string(-1, 1), _itosym1(1));
     }
     else
@@ -1664,13 +1672,6 @@ static std::vector<formatted_string> _get_overview_resistances(
         snprintf(buf, sizeof buf, "%sStasis     : %s",
                  _determine_colour_string(stasis, 1), _itosym1(stasis));
     }
-    cols.add_formatted(1, buf, false);
-
-    // If you need extra space, rnd tele conflicts with stasis/-TELE;
-    // it currently shows separately to avoid the blank.
-    const int rrtel = !!player_teleport(calc_unid);
-    snprintf(buf, sizeof buf, "%sRnd.Telep. : %s",
-             _determine_colour_string(rrtel, 1), _itosym1(rrtel));
     cols.add_formatted(1, buf, false);
 
     const int rctel = player_control_teleport(calc_unid);

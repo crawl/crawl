@@ -19,6 +19,7 @@
 #include "colour.h"
 #include "coord.h"
 #include "coordit.h"
+#include "cluautil.h"
 #include "debug.h"
 #include "describe.h"
 #include "directn.h"
@@ -1959,12 +1960,19 @@ coord_def map_lines::iterator::operator ++ (int)
 
 dlua_set_map::dlua_set_map(map_def *map)
 {
-    dlua.callfn("dgn_set_map", "m", map);
+    clua_push_map(dlua, map);
+    if (!dlua.callfn("dgn_set_map", 1, 1))
+        mprf(MSGCH_ERROR, "dgn_set_map failed for '%s': %s",
+             map->name.c_str(), dlua.error.c_str());
+    // Save the returned map as a lua_datum
+    old_map.reset(new lua_datum(dlua));
 }
 
 dlua_set_map::~dlua_set_map()
 {
-    dlua.callfn("dgn_set_map", 0, 0);
+    old_map->push();
+    if (!dlua.callfn("dgn_set_map", 1, 0))
+        mprf(MSGCH_ERROR, "dgn_set_map failed: %s", dlua.error.c_str());
 }
 
 ///////////////////////////////////////////////
@@ -2274,48 +2282,92 @@ std::string map_def::run_lua(bool run_main)
     dlua_set_map mset(this);
 
     int err = prelude.load(dlua);
-    if (err == -1000)
+    if (err == E_CHUNK_LOAD_FAILURE)
         lua_pushnil(dlua);
     else if (err)
         return (prelude.orig_error());
+    if (!dlua.callfn("dgn_run_map", 1, 0))
+        return rewrite_chunk_errors(dlua.error);
 
-    if (!run_main)
+    if (run_main)
     {
-        lua_pushnil(dlua);
-        lua_pushnil(dlua);
-    }
-    else
-    {
+        // Run the map chunk to set up the vault's map grid.
         err = mapchunk.load(dlua);
-        if (err == -1000)
+        if (err == E_CHUNK_LOAD_FAILURE)
             lua_pushnil(dlua);
         else if (err)
             return (mapchunk.orig_error());
+        if (!dlua.callfn("dgn_run_map", 1, 0))
+            return rewrite_chunk_errors(dlua.error);
 
+        // The vault may be non-rectangular with a ragged-right edge; for
+        // transforms to work right at this point, we must pad out the right
+        // edge with spaces, so run normalise:
+        normalise();
+
+        // Run the main Lua chunk to set up the rest of the vault
+        run_hook("pre_main");
         err = main.load(dlua);
-        if (err == -1000)
+        if (err == E_CHUNK_LOAD_FAILURE)
             lua_pushnil(dlua);
         else if (err)
             return (main.orig_error());
+        if (!dlua.callfn("dgn_run_map", 1, 0))
+            return rewrite_chunk_errors(dlua.error);
+        run_hook("post_main");
     }
-
-    if (!dlua.callfn("dgn_run_map", 3, 0))
-        return rewrite_chunk_errors(dlua.error);
 
     return (dlua.error);
 }
 
-bool map_def::test_lua_boolchunk(dlua_chunk &chunk, bool defval, bool croak)
+void map_def::copy_hooks_from(const map_def &other_map,
+                              const std::string &hook_name)
+{
+    const dlua_set_map mset(this);
+    if (!dlua.callfn("dgn_map_copy_hooks_from", "ss",
+                     other_map.name.c_str(), hook_name.c_str()))
+        mprf(MSGCH_ERROR, "Lua error copying hook (%s) from '%s' to '%s': %s",
+             hook_name.c_str(), other_map.name.c_str(),
+             name.c_str(), dlua.error.c_str());
+}
+
+// Runs Lua hooks registered by the map's Lua code, if any. Returns true if
+// no errors occurred while running hooks.
+bool map_def::run_hook(const std::string &hook_name, bool die_on_lua_error)
+{
+    const dlua_set_map mset(this);
+    if (!dlua.callfn("dgn_map_run_hook", "s", hook_name.c_str()))
+    {
+        if (die_on_lua_error)
+            end(1, false, "Lua error running hook '%s' on map '%s': %s",
+                hook_name.c_str(), name.c_str(),
+                rewrite_chunk_errors(dlua.error).c_str());
+        else
+            mprf(MSGCH_ERROR, "Lua error running hook '%s' on map '%s': %s",
+                 hook_name.c_str(), name.c_str(),
+                 rewrite_chunk_errors(dlua.error).c_str());
+        return (false);
+    }
+    return (true);
+}
+
+bool map_def::run_postplace_hook(bool die_on_lua_error)
+{
+    return run_hook("post_place", die_on_lua_error);
+}
+
+bool map_def::test_lua_boolchunk(dlua_chunk &chunk, bool defval,
+                                 bool die_on_lua_error)
 {
     bool result = defval;
     dlua_set_map mset(this);
 
     int err = chunk.load(dlua);
-    if (err == -1000)
+    if (err == E_CHUNK_LOAD_FAILURE)
         return (result);
     else if (err)
     {
-        if (croak)
+        if (die_on_lua_error)
             end(1, false, "Lua error: %s", chunk.orig_error().c_str());
         else
             mprf(MSGCH_ERROR, "Lua error: %s", chunk.orig_error().c_str());
@@ -2325,7 +2377,7 @@ bool map_def::test_lua_boolchunk(dlua_chunk &chunk, bool defval, bool croak)
         dlua.fnreturns(">b", &result);
     else
     {
-        if (croak)
+        if (die_on_lua_error)
             end(1, false, "Lua error: %s",
                 rewrite_chunk_errors(dlua.error).c_str());
         else
@@ -2345,9 +2397,14 @@ bool map_def::test_lua_veto()
     return !veto.empty() && test_lua_boolchunk(veto, true);
 }
 
-bool map_def::run_lua_epilogue (bool croak)
+bool map_def::run_lua_epilogue(bool die_on_lua_error)
 {
-    return !epilogue.empty() && test_lua_boolchunk(epilogue, false, croak);
+    run_hook("pre_epilogue", die_on_lua_error);
+    const bool epilogue_result =
+        !epilogue.empty() && test_lua_boolchunk(epilogue, false,
+                                                die_on_lua_error);
+    run_hook("post_epilogue", die_on_lua_error);
+    return epilogue_result;
 }
 
 std::string map_def::rewrite_chunk_errors(const std::string &s) const
@@ -2478,6 +2535,7 @@ std::string map_def::validate_map_def(const depth_ranges &default_depths)
     fixup();
     resolve();
     test_lua_validate(true);
+    run_lua_epilogue(true);
 
     if (!has_depth() && !lc_default_depths.empty())
         add_depths(lc_default_depths.begin(),
@@ -2543,8 +2601,7 @@ std::string map_def::validate_map_def(const depth_ranges &default_depths)
     }
     else
     {
-        if (map.width() > GXM
-            || map.height() > GYM)
+        if (map.width() > GXM || map.height() > GYM)
         {
             return make_stringf(
                      "Map '%s' is too big: %dx%d - max %dx%d",
@@ -2993,7 +3050,7 @@ std::string map_def::apply_subvault(string_spec &spec)
         you.uniq_map_tags = uniq_tags;
         you.uniq_map_names = uniq_names;
 
-        const map_def *orig = random_map_for_tag(tag);
+        const map_def *orig = random_map_for_tag(tag, true);
         if (!orig)
             return (make_stringf("No vault found for tag '%s'", tag.c_str()));
 
@@ -3012,7 +3069,7 @@ std::string map_def::apply_subvault(string_spec &spec)
         ASSERT(vault.map.height() <= vheight);
 
         map.merge_subvault(tl, br, flags, vault);
-
+        copy_hooks_from(vault, "post_place");
         dgn_register_vault(vault);
 
         return ("");

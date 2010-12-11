@@ -570,7 +570,7 @@ static bool _trog_retribution()
 
                 points -= cost;
 
-                if (summon_berserker(cost * 20, god, 0, true))
+                if (summon_berserker(cost * 20, 0))
                     count++;
             }
         }

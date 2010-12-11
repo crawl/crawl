@@ -104,7 +104,6 @@ bool feat_compatible(dungeon_feature_type feat_wanted,
     if (feat_wanted == DNGN_FLOOR)
     {
         return (actual_feat >= DNGN_FLOOR
-                    && actual_feat != DNGN_BUILDER_SPECIAL_WALL
                 || actual_feat == DNGN_SHALLOW_WATER);
     }
 
@@ -1477,9 +1476,12 @@ static int _place_monster_aux(const mgen_data &mg,
     // Not a god gift, give priestly monsters a god.
     else if (mons_class_flag(mg.cls, M_PRIEST))
     {
-        // Deep dwarf berserkers belong to Trog.
-        if (mg.cls == MONS_DEEP_DWARF_BERSERKER)
+        // Berserkers belong to Trog.
+        if (mg.cls == MONS_DEEP_DWARF_BERSERKER
+            || mg.cls == MONS_SPRIGGAN_BERSERKER)
+        {
             mon->god = GOD_TROG;
+        }
         // Deep dwarf death knights belong to Yredelemnul.
         else if (mg.cls == MONS_DEEP_DWARF_DEATH_KNIGHT)
             mon->god = GOD_YREDELEMNUL;
@@ -1959,6 +1961,15 @@ static int _place_monster_aux(const mgen_data &mg,
 
 #ifdef USE_TILE
     tile_init_props(mon);
+#endif
+
+#ifndef DEBUG_DIAGNOSTICS
+    // A rare case of a debug message NOT showing in the debug mode.
+    if (mons_class_flag(mon->type, M_UNFINISHED))
+    {
+        mprf(MSGCH_WARN, "Warning: monster '%s' is not yet fully coded.",
+             mon->name(DESC_PLAIN).c_str());
+    }
 #endif
 
     mark_interesting_monst(mon, mg.behaviour);
@@ -3009,7 +3020,7 @@ void mark_interesting_monst(monster* mons, beh_type behaviour)
 
     bool interesting = false;
 
-    // Unique monsters are always intersting
+    // Unique monsters are always interesting
     if (mons_is_unique(mons->type))
         interesting = true;
     // If it's never going to attack us, then not interesting
@@ -3472,7 +3483,7 @@ bool empty_surrounds(const coord_def& where, dungeon_feature_type spc_wanted,
 
     int good_count = 0;
 
-    for (radius_iterator ri(where, radius, C_SQUARE, NULL, !allow_centre);
+    for (radius_iterator ri(where, radius, C_ROUND, NULL, !allow_centre);
          ri; ++ri)
     {
         bool success = false;

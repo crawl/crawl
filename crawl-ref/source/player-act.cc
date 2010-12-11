@@ -118,7 +118,7 @@ bool player::floundering() const
 
 bool player::extra_balanced() const
 {
-    return (species == SP_NAGA && !transform_changed_physiology());
+    return (species == SP_NAGA && !form_changed_physiology());
 }
 
 int player::get_experience_level() const
@@ -167,7 +167,7 @@ int player::body_weight(bool base) const
     if (base)
         return (weight);
 
-    switch (attribute[ATTR_TRANSFORMATION])
+    switch (form)
     {
     case TRAN_STATUE:
         weight *= 2;
@@ -191,7 +191,7 @@ int player::damage_type(int)
 {
     if (const item_def* wp = weapon())
         return (get_vorpal_type(*wp));
-    else if (attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+    else if (form == TRAN_BLADE_HANDS)
         return (DVORP_SLICING);
     else if (has_usable_claws())
         return (DVORP_CLAWING);
@@ -213,7 +213,7 @@ int player::damage_brand(int)
         ret = SPWPN_CONFUSE;
     else
     {
-        switch (attribute[ATTR_TRANSFORMATION])
+        switch (form)
         {
         case TRAN_SPIDER:
             ret = SPWPN_VENOM;
@@ -386,9 +386,9 @@ std::string player::foot_name(bool plural, bool *can_plural) const
 
     std::string str;
 
-    if (attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER)
+    if (form == TRAN_SPIDER)
         str = "hind leg";
-    else if (!transform_changed_physiology())
+    else if (!form_changed_physiology())
     {
         if (player_mutation_level(MUT_HOOVES) >= 3)
             str = "hoof";
@@ -417,7 +417,7 @@ std::string player::foot_name(bool plural, bool *can_plural) const
 
 std::string player::arm_name(bool plural, bool *can_plural) const
 {
-    if (transform_changed_physiology())
+    if (form_changed_physiology())
         return hand_name(plural, can_plural);
 
     if (can_plural != NULL)

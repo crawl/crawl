@@ -383,7 +383,7 @@ void wizard_set_skill_level(skill_type skill)
     else
     {
         mpr(skill_name(skill));
-        int amount = debug_prompt_for_int("To what level? ", true);
+        int amount = prompt_for_int("To what level? ", true);
 
         if (amount < 0)
             canned_msg(MSG_OK);
@@ -446,8 +446,7 @@ void wizard_set_skill_level(skill_type skill)
 void wizard_set_all_skills(void)
 {
     int i;
-    int amount =
-            debug_prompt_for_int("Set all skills to what level? ", true);
+    int amount = prompt_for_int("Set all skills to what level? ", true);
 
     if (amount < 0)             // cancel returns -1 -- bwr
         canned_msg(MSG_OK);
@@ -619,7 +618,7 @@ bool wizard_add_mutation()
              mutation_name(mutat, 1, false).c_str());
 
         const int levels =
-            debug_prompt_for_int("How many levels to increase or decrease? ",
+            prompt_for_int("How many levels to increase or decrease? ",
                                   false);
 
         if (levels == 0)
@@ -880,7 +879,7 @@ void wizard_edit_durations(void)
     }
 
     snprintf(buf, sizeof(buf), "Set '%s' to: ", dur_names[choice]);
-    int num = debug_prompt_for_int(buf, false);
+    int num = prompt_for_int(buf, false);
 
     if (num == 0)
     {

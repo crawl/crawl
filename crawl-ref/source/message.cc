@@ -1243,6 +1243,8 @@ void flush_prev_message()
 
 void mesclr(bool force)
 {
+    if (!crawl_state.io_inited)
+        return;
     // Unflushed message will be lost with clear_messages,
     // so they shouldn't really exist, but some of the delay
     // code appears to do this intentionally.
@@ -1318,6 +1320,8 @@ static bool _pre_more()
 
 void more(bool user_forced)
 {
+    if (!crawl_state.io_inited)
+        return;
     flush_prev_message();
     msgwin.more(false, user_forced);
     mesclr();

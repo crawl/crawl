@@ -112,17 +112,12 @@ electric_eel MONS_ELECTRIC_EEL
 lava_fish MONS_LAVA_FISH
 shark MONS_SHARK
 jellyfish MONS_JELLYFISH /*'J'*/
-## Kraken head ('X') and tentacles ('w')
-kraken_head MONS_KRAKEN_HEAD
-kraken_tentacle1 MONS_KRAKEN_TENTACLE
-kraken_tentacle2
-kraken_tentacle3
-kraken_tentacle4
-kraken_tentacle5
-kraken_tentacle6
 %rim 1
 
+%include dc-kraken.txt
+
 ## Beetles ('B')
+%sdir dc-mon/animals
 giant_beetle MONS_GIANT_BEETLE
 boring_beetle MONS_BORING_BEETLE
 boulder_beetle MONS_BOULDER_BEETLE
@@ -417,13 +412,13 @@ glowing_shapeshifter MONS_GLOWING_SHAPESHIFTER
 killer_klown MONS_KILLER_KLOWN
 slave MONS_SLAVE
 human_slave
-dwarf MONS_DWARF
 ## From the Wucad Mu wizlab
 human_monk_ghost MONS_HUMAN_MONK
 ## From the Cigotuvi wizlab
 deformed_human MONS_DEFORMED_HUMAN
 ## From an entry vault
 halfling MONS_HALFLING
+demigod MONS_DEMIGOD
 demonspawn MONS_DEMONSPAWN
 %sdir dc-mon/holy
 paladin MONS_PALADIN
@@ -681,6 +676,7 @@ boggart MONS_BOGGART
 spriggan MONS_SPRIGGAN
 spriggan_rider MONS_SPRIGGAN_RIDER
 spriggan_druid MONS_SPRIGGAN_DRUID
+spriggan_berserker MONS_SPRIGGAN_BERSERKER
 spriggan_defender MONS_SPRIGGAN_DEFENDER
 spriggan_assassin MONS_SPRIGGAN_ASSASSIN
 dc-mon/unique/enchantress MONS_THE_ENCHANTRESS
@@ -742,6 +738,12 @@ insubstantial_wisp MONS_INSUBSTANTIAL_WISP
 %sdir dc-mon/holy
 spirit MONS_SPIRIT
 blessed_toe MONS_BLESSED_TOE /*'*'*/
+
+## Dwarves ('q')
+%sdir dc-mon
+dwarf MONS_DWARF
+# an entry vault
+gnome MONS_GNOME
 
 ## Small zombified monsters ('z')
 %sdir dc-mon/undead

@@ -14,6 +14,7 @@
 #include "itemprop-enum.h"
 #include "package.h"
 #include "place-info.h"
+#include "religion-enum.h"
 
 #include "species.h"
 
@@ -23,16 +24,6 @@
 #include "tiledoll.h"
 #endif
 
-enum diag_counter_t
-{
-    DC_OTHER,
-    DC_WALK_ORTHO,
-    DC_WALK_DIAG,
-    DC_FIGHT,
-    DC_REST,
-    NUM_DC
-};
-
 class player : public actor
 {
 public:
@@ -40,7 +31,7 @@ public:
   std::string your_name;
   species_type species;
   job_type char_class;
-  char class_name[30];
+  std::string class_name;
 
   // This field is here even in non-WIZARD compiles, since the
   // player might have been playing previously under wiz mode.
@@ -83,6 +74,7 @@ public:
 
   // PC's symbol (usually @) and colour.
   monster_type symbol;
+  transformation_type form;
 
   FixedVector< item_def, ENDOFPACK > inv;
 
@@ -188,6 +180,9 @@ public:
   FixedVector<short,   MAX_NUM_GODS>  num_current_gifts;
   FixedVector<short,   MAX_NUM_GODS>  num_total_gifts;
 
+  // Nemelex sacrifice toggles
+  FixedVector<bool, NUM_NEMELEX_GIFT_TYPES> nemelex_sacrificing;
+
   FixedVector<uint8_t, NUM_MUTATIONS> mutation;
   FixedVector<uint8_t, NUM_MUTATIONS> innate_mutations;
 
@@ -247,8 +242,6 @@ public:
   // Delayed level actions.  This array is never trimmed, as usually D:1 won't
   // be loaded again until the very end.
   std::vector<daction_type> dactions;
-  // [time (vs turn)][autoexploring][]
-  FixedVector<int, NUM_DC> dcounters[2][2];
 
 
   // Non-saved UI state:
@@ -338,6 +331,8 @@ public:
   bool clinging;
   // Array of walls which player is currently clinging to.
   std::vector<coord_def>    cling_to;
+  // The type of a zotdef wave, if any.
+  std::string zotdef_wave_name;
 protected:
     FixedVector<PlaceInfo, NUM_BRANCHES>             branch_info;
     FixedVector<PlaceInfo, NUM_LEVEL_AREA_TYPES - 1> non_branch_info;
@@ -520,7 +515,7 @@ public:
 
     int hunger_level() const { return hunger_state; }
     void make_hungry(int nutrition, bool silent = true);
-    void poison(actor *agent, int amount = 1);
+    void poison(actor *agent, int amount = 1, bool force = false);
     bool sicken(int amount);
     void paralyse(actor *, int str);
     void petrify(actor *, int str);
@@ -712,7 +707,8 @@ bool player_effectively_in_light_armour();
 bool player_under_penance(void);
 
 bool extrinsic_amulet_effect(jewellery_type amulet);
-bool wearing_amulet(jewellery_type which_am, bool calc_unid = true);
+bool wearing_amulet(jewellery_type which_am, bool calc_unid = true,
+                    bool ignore_extrinsic = false);
 
 int burden_change(void);
 
@@ -746,6 +742,7 @@ int player_regen(void);
 int player_res_cold(bool calc_unid = true, bool temp = true,
                     bool items = true);
 int player_res_acid(bool calc_unid = true, bool items = true);
+int player_res_corr(bool calc_unid = true, bool items = true);
 int player_acid_resist_factor();
 
 int player_res_torment(bool calc_unid = true, bool temp = true);
@@ -755,6 +752,7 @@ int player_mental_clarity(bool calc_unid = true, bool items = true);
 int player_spirit_shield(bool calc_unid = true);
 
 bool player_likes_chunks(bool permanently = false);
+bool species_likes_water();
 bool player_likes_water(bool permanently = false);
 
 int player_mutation_level(mutation_type mut);
@@ -902,7 +900,7 @@ void dec_color_smoke_trail();
 bool player_weapon_wielded();
 
 // Determines if the given grid is dangerous for the player to enter.
-bool is_feat_dangerous(dungeon_feature_type feat);
+bool is_feat_dangerous(dungeon_feature_type feat, bool permanently = false);
 
 void run_macro(const char *macroname = NULL);
 

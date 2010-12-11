@@ -377,13 +377,6 @@ static void _item_corrode(int slot)
         return;
     }
 
-    // mutations:
-    if (player_mutation_level(MUT_YELLOW_SCALES) == 3 && !one_chance_in(10))
-    {
-        dprf("Yellow scales protect.");
-        return;
-    }
-
     int how_rusty = ((item.base_type == OBJ_WEAPONS) ? item.plus2 : item.plus);
     // Already very rusty.
     if (how_rusty < -5)
@@ -1036,6 +1029,12 @@ static void _place_player_corpse(bool explode)
     }
 
     corpse.props[MONSTER_HIT_DICE].get_short() = you.experience_level;
+    corpse.props[CORPSE_NAME_KEY] = you.your_name;
+    corpse.props[CORPSE_NAME_TYPE_KEY].get_int() = 0;
+    corpse.props["ev"].get_int() = player_evasion(static_cast<ev_ignore_type>(
+                                   EV_IGNORE_HELPLESS | EV_IGNORE_PHASESHIFT));
+    // mostly mutations here.  At least there's no need to handle armour.
+    corpse.props["ac"].get_int() = you.armour_class();
     mitm[o] = corpse;
 
     move_item_to_grid(&o, you.pos(), !you.in_water());
@@ -1078,12 +1077,17 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
     if (dam != INSTANT_DEATH && you.species == SP_DEEP_DWARF)
     {
-        // Deep Dwarves get to shave _any_ hp loss.
+        // Deep Dwarves get to shave any hp loss.
         int shave = 1 + random2(2 + random2(1 + you.experience_level / 3));
         dprf("HP shaved: %d.", shave);
         dam -= shave;
         if (dam <= 0)
-            return;
+        {
+            // Rotting and costs may lower hp directly.
+            if (you.hp > 0)
+                return;
+            dam = 0;
+        }
     }
 
     ait_hp_loss hpl(dam, death_type);
@@ -1384,7 +1388,7 @@ void end_game(scorefile_entry &se)
 
         case GOD_KIKUBAAQUDGHA:
             if (you.is_undead
-                && you.attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
+                && you.form != TRAN_LICH)
             {
                 simple_god_message(" rasps: \"You have failed me! "
                                    "Welcome... oblivion!\"");

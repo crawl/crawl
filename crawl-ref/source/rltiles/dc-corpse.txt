@@ -115,7 +115,7 @@ giant_goldfish CORPSE_GIANT_GOLDFISH
 electric_eel CORPSE_ELECTRIC_EEL
 #lava_fish CORPSE_LAVA_FISH
 shark CORPSE_SHARK
-kraken_head CORPSE_KRAKEN /*'x'*/
+dc-mon/kraken/kraken_head CORPSE_KRAKEN /*'x'*/
 %back dc-misc/blood_green
 jellyfish CORPSE_JELLYFISH /*'J'*/
 
@@ -192,6 +192,7 @@ orc CORPSE_ORC
 
 ## Dwarves ('q')
 unique/wiglaf CORPSE_DWARF
+gnome CORPSE_GNOME
 
 ## Ugly things ('u')
 %sdir dc-mon/demons
@@ -255,6 +256,7 @@ manticore CORPSE_MANTICORE
 harpy CORPSE_HARPY
 minotaur CORPSE_MINOTAUR
 sphinx CORPSE_SPHINX
+kenku CORPSE_KENKU
 
 ## Jellies ('J')
 %back dc-misc/blood_green
@@ -281,6 +283,8 @@ deep_troll CORPSE_DEEP_TROLL
 
 ## Human shaped ('@')
 human CORPSE_HUMAN
+demonspawn CORPSE_DEMONSPAWN
+halfling CORPSE_HALFLING
 %back dc-misc/blood_green
 shapeshifter CORPSE_SHAPESHIFTER
 glowing_shapeshifter CORPSE_GLOWING_SHAPESHIFTER

@@ -38,9 +38,13 @@ Caveats/issues:
 #include "errors.h"
 #include "syscalls.h"
 
+#ifndef DGAMELAUNCH
+#define DO_FSYNC
+#endif
+
+// debugging defines
 #undef  FSCK_VERBOSE
 #undef  COSTLY_ASSERTS
-#undef  DO_FSYNC
 #undef  DEBUG_PACKAGE
 
 static len_t htole(len_t x)

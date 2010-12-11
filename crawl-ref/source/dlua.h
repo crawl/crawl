@@ -17,6 +17,7 @@ extern CLua dlua;
 
 // Lua chunks cannot exceed 512K. Which is plenty!
 const int LUA_CHUNK_MAX_SIZE = 512 * 1024;
+const int E_CHUNK_LOAD_FAILURE = -1000;
 
 class reader;
 class writer;

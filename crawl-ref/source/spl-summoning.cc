@@ -696,9 +696,24 @@ bool cast_summon_dragon(int pow, god_type god)
     return (false);
 }
 
+// This assumes that the specified monster can go berserk.
+static void _make_mons_berserk_summon(monster* mon)
+{
+    mon->go_berserk(false);
+    mon_enchant berserk = mon->get_ench(ENCH_BERSERK);
+    mon_enchant abj = mon->get_ench(ENCH_ABJ);
+
+    // Let Trog's gifts berserk longer, and set the abjuration timeout
+    // to the berserk timeout.
+    berserk.duration = berserk.duration * 3 / 2;
+    berserk.maxduration = berserk.duration;
+    abj.duration = abj.maxduration = berserk.duration;
+    mon->update_ench(berserk);
+    mon->update_ench(abj);
+}
+
 // This is actually one of Trog's wrath effects.
-bool summon_berserker(int pow, god_type god, int spell,
-                      bool force_hostile)
+bool summon_berserker(int pow, actor *caster)
 {
     monster_type mon = MONS_PROGRAM_BUG;
 
@@ -741,33 +756,21 @@ bool summon_berserker(int pow, god_type god, int spell,
         mon = (coinflip()) ? MONS_HILL_GIANT : MONS_STONE_GIANT;
     }
 
-    mgen_data mg(mon, !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
-                 !force_hostile ? &you : 0, dur, spell, you.pos(),
-                 MHITYOU, 0, god);
+    mgen_data mg(mon, caster ? BEH_COPY : BEH_HOSTILE, caster, dur, 0,
+                 caster ? caster->pos() : you.pos(),
+                 (caster && caster->atype() == ACT_MONSTER)
+                     ? ((monster*)caster)->foe : MHITYOU,
+                 0, GOD_TROG);
 
-    if (force_hostile)
-        mg.non_actor_summoner = "the rage of " + god_name(god, false);
+    if (!caster)
+        mg.non_actor_summoner = "the rage of " + god_name(GOD_TROG, false);
 
     const int mons = create_monster(mg);
 
     if (mons == -1)
         return (false);
 
-    monster* summon = &menv[mons];
-
-    summon->go_berserk(false);
-    mon_enchant berserk = summon->get_ench(ENCH_BERSERK);
-    mon_enchant abj = summon->get_ench(ENCH_ABJ);
-
-    // Let Trog's gifts berserk longer, and set the abjuration
-    // timeout to the berserk timeout.
-    berserk.duration = berserk.duration * 3 / 2;
-    berserk.maxduration = berserk.duration;
-    abj.duration = abj.maxduration = berserk.duration;
-    summon->update_ench(berserk);
-    summon->update_ench(abj);
-
-    player_angers_monster(summon);
+    _make_mons_berserk_summon(&menv[mons]);
     return (true);
 }
 
@@ -1518,6 +1521,11 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
         roll_zombie_hp(&menv[mons]);
     }
 
+    if (item.props.exists("ev"))
+        menv[mons].ev = item.props["ev"].get_int();
+    if (item.props.exists("ac"))
+        menv[mons].ac = item.props["ac"].get_int();
+
     if (is_named_corpse(item))
     {
         uint64_t name_type = 0;
@@ -1640,7 +1648,7 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
     int number_seen   = 0;
     int motions       = 0;
 
-    radius_iterator ri(caster->pos(), 6, C_SQUARE,
+    radius_iterator ri(caster->pos(), 7, C_ROUND,
                        caster->get_los_no_trans());
 
     for (; ri; ++ri)
