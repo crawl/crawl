@@ -3455,7 +3455,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 #ifdef DEBUG_DIAGNOSTICS
     if (mi.pos.origin())
         return; // not a real monster
-    struct monster& mons = *mi.mon();
+    monster& mons = *mi.mon();
 
     inf.body << "\nMonster health: "
              << mons.hit_points << "/" << mons.max_hit_points << "\n";
