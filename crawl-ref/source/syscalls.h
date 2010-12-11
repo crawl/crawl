@@ -25,7 +25,9 @@ int fdatasync(int fd);
 # endif
 #endif
 
-#ifdef TARGET_OS_MACOSX
+// This check is way underinclusive.
+#if !defined(TARGET_OS_LINUX) && !defined(TARGET_OS_WINDOWS) && !defined(TARGET_OS_NETBSD) && !defined(TARGET_OS_SOLARIS)
+# define NEED_FAKE_FDATASYNC
 int fdatasync(int fd);
 #endif
 

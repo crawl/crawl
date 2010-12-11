@@ -98,7 +98,7 @@ int fdatasync(int fd)
 # endif
 #endif
 
-#ifdef TARGET_OS_MACOSX
+#ifdef NEED_FAKE_FDATASYNC
 // At least MacOS X 10.6 has it (as required by Posix) but present only
 // as a symbol in the libraries without a proper header.
 int fdatasync(int fd)
