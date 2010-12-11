@@ -3517,15 +3517,7 @@ static bool _place_unique_map(const map_def *uniq_map)
         env.level_map_mask.init(0);
     }
 
-    bool placed = false;
-    for (int i = 0; i < 4; i++)
-    {
-        if (dgn_place_map(uniq_map, false, false))
-        {
-            placed = true;
-            break;
-        }
-    }
+    bool placed = dgn_place_map(uniq_map, false, false);
 
     if (transparent)
         env.level_map_mask = *backup_mask;
