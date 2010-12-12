@@ -1,7 +1,7 @@
 /*
  *  File:       skill_menu.h
  *  Summary:    Skill menu
- *  Written by: Raphaël Langella
+ *  Written by: RaphaÃ«l Langella
  */
 
 #ifndef SKILL_MENU_H

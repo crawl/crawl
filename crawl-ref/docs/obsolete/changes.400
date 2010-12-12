@@ -1278,7 +1278,7 @@ The old LOS code can die, I think I lost my fascination with it.
 I don't believe anyone else was defending its existence.
 
 == 156. On this topic, I get tons of warnings about FixVec.h and FixAry.h
-not having a final newline.   Could you add one to these?
+not having a final newline.   Could you add one to these?
 
 == 157. The compiler also noted a problem in dungeon.cc:
     if (you.where_are_you == BRANCH_CRYPT || you.where_are_you == BRANCH_TOMB)
@@ -1295,7 +1295,7 @@ dungeon.cc: In function `void link_items ()':
 dungeon.cc:6395: warning: comparison between signed and unsigned integer expressions
 FixVec.h: In method `FixedVector<TYPE, SIZE>::FixedVector (TYPE, TYPE, ...)
 [with TYPE = char, int SIZE = 7]':
-dungeon.cc:7998:    instantiated from here FixVec.h:125: `char' is promoted to `int'
+dungeon.cc:7998:    instantiated from here FixVec.h:125: `char' is promoted to `int'
 when passed through `...' FixVec.h:125: (so you should pass `int' not `char' to `va_arg')
 
 This also affects spells4.cc (instantiated from line 729).
