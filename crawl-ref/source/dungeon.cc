@@ -142,6 +142,8 @@ static void _place_pool(dungeon_feature_type pool_type, uint8_t pool_x1,
                         uint8_t pool_y1, uint8_t pool_x2,
                         uint8_t pool_y2);
 static void _many_pools(dungeon_feature_type pool_type);
+static bool _join_the_dots(const coord_def &from, const coord_def &to,
+                           unsigned mmask, bool early_exit = false);
 static bool _join_the_dots_rigorous(const coord_def &from,
                                     const coord_def &to,
                                     uint32_t mapmask,
@@ -3859,7 +3861,7 @@ static void _build_rooms(const dgn_region_list &excluded,
         if (connections.size())
         {
             const coord_def c = connections[0];
-            if (join_the_dots(c, myroom.random_edge_point(), MMT_VAULT))
+            if (_join_the_dots(c, myroom.random_edge_point(), MMT_VAULT))
                 connections.erase(connections.begin());
         }
 
@@ -4153,7 +4155,7 @@ static void _connect_vault(const vault_placement &vp)
         if (!floor.x && !floor.y)
             continue;
 
-        join_the_dots(p, floor, MMT_VAULT, true);
+        _join_the_dots(p, floor, MMT_VAULT, true);
     }
 }
 
@@ -5330,8 +5332,8 @@ static bool _join_the_dots_rigorous(const coord_def &from,
     return (found);
 }
 
-bool join_the_dots(const coord_def &from, const coord_def &to,
-                   uint32_t mapmask, bool early_exit)
+static bool _join_the_dots(const coord_def &from, const coord_def &to,
+                           uint32_t mapmask, bool early_exit)
 {
     if (from == to || !in_bounds(from))
         return (true);
@@ -5394,7 +5396,7 @@ bool join_the_dots(const coord_def &from, const coord_def &to,
         grd(at) = DNGN_FLOOR;
 
     return (at == to);
-}                               // end join_the_dots()
+}
 
 static void _place_pool(dungeon_feature_type pool_type, uint8_t pool_x1,
                         uint8_t pool_y1, uint8_t pool_x2,

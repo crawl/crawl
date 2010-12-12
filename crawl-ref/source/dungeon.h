@@ -274,8 +274,6 @@ void dgn_register_vault(const map_def &map);
 
 void dgn_seen_vault_at(coord_def p);
 
-bool join_the_dots(const coord_def &from, const coord_def &to,
-                   unsigned mmask, bool early_exit = false);
 int process_disconnected_zones(int x1, int y1, int x2, int y2,
                                bool choose_stairless,
                                dungeon_feature_type fill);
