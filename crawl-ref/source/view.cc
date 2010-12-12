@@ -203,7 +203,7 @@ void update_monsters_in_view()
                 mpr(msgs[i], MSGCH_WARN);
         }
         else
-            mprf(MSGCH_WARN, "%d monsters comes into view.", size);
+            mprf(MSGCH_WARN, "%d monsters come into view.", size);
     }
 
     // Xom thinks it's hilarious the way the player picks up an ever
