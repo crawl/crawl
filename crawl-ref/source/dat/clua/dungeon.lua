@@ -568,21 +568,25 @@ end
 -- the value is a function, the function is called to get the map.
 function dgn.place_maps(parameters)
   local n_times = parameters.count or 1
+  local n_placed = 0
   for i = 1, n_times do
     local map = dgn.find_map(parameters)
-    assert(map, "dgn.place_maps: no map given")
-    local map_placed_ok = dgn.place_map(map)
-    if not map_placed_ok then
-      if parameters.die_on_error == nil then
-        parameters.die_on_error = true
+    if map then
+      local map_placed_ok = dgn.place_map(map)
+      if map_placed_ok then
+        n_placed = n_placed + 1
+      else
+        if parameters.die_on_error == nil then
+          parameters.die_on_error = true
+        end
+        if not parameters.die_on_error then
+          return nil
+        end
+        error("Failed to place map '" .. dgn.name(map) .. "'")
       end
-      if not parameters.die_on_error then
-        return nil
-      end
-      error("Failed to place map '" .. dgn.name(map) .. "'")
     end
   end
-  return true
+  return n_placed
 end
 
 ----------------------------------------------------------------------
