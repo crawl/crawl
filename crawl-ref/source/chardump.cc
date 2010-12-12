@@ -185,7 +185,13 @@ bool dump_char(const std::string &fname, bool show_prices, bool full_id,
 
 static void _sdump_header(dump_params &par)
 {
-    par.text += " " CRAWL " version " + Version::Long();
+    std::string type = crawl_state.game_type_name();
+    if (type.empty())
+        type = CRAWL;
+    else
+        type += " DCSS";
+
+    par.text += " " + type + " version " + Version::Long();
     par.text += " character file.\n\n";
 }
 
