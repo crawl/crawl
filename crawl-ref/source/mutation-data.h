@@ -1174,9 +1174,9 @@
 { MUT_IRIDESCENT_SCALES,                2,  3, false,  true,
   NULL,
 
-  {"You are partially covered in iridescent scales (AC +3).",
+  {"You are partially covered in iridescent scales (AC +4).",
    "You are mostly covered in iridescent scales (AC +6).",
-   "You are completely covered in iridescent scales (AC +9)."},
+   "You are completely covered in iridescent scales (AC +8)."},
 
   {"Iridescent scales grow over part of your body.",
    "Iridescent scales spread over more of your body.",
