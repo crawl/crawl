@@ -144,10 +144,6 @@ static void _place_pool(dungeon_feature_type pool_type, uint8_t pool_x1,
 static void _many_pools(dungeon_feature_type pool_type);
 static bool _join_the_dots(const coord_def &from, const coord_def &to,
                            unsigned mmask, bool early_exit = false);
-static bool _join_the_dots_rigorous(const coord_def &from,
-                                    const coord_def &to,
-                                    uint32_t mapmask,
-                                    bool early_exit = false);
 
 static void _build_river(dungeon_feature_type river_type); //mv
 static void _build_lake(dungeon_feature_type lake_type); //mv
@@ -3878,9 +3874,9 @@ static void _build_rooms(const dgn_region_list &excluded,
 
         if (which_room > 0)
         {
-            _join_the_dots_rigorous(myroom.random_edge_point(),
-                                    rom[which_room - 1].random_edge_point(),
-                                    MMT_VAULT);
+            _join_the_dots(myroom.random_edge_point(),
+                           rom[which_room - 1].random_edge_point(),
+                           MMT_VAULT);
         }
 
         which_room++;
@@ -5317,10 +5313,8 @@ static bool _join_the_dots_pathfind(coord_set &coords,
     return (true);
 }
 
-static bool _join_the_dots_rigorous(const coord_def &from,
-                                    const coord_def &to,
-                                    uint32_t mapmask,
-                                    bool early_exit)
+static bool _join_the_dots(const coord_def &from, const coord_def &to,
+                           uint32_t mapmask, bool early_exit)
 {
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
 
@@ -5330,72 +5324,6 @@ static bool _join_the_dots_rigorous(const coord_def &from,
                                                early_exit);
 
     return (found);
-}
-
-static bool _join_the_dots(const coord_def &from, const coord_def &to,
-                           uint32_t mapmask, bool early_exit)
-{
-    if (from == to || !in_bounds(from))
-        return (true);
-
-    int join_count = 0;
-
-    coord_def at = from;
-    do
-    {
-        if (!in_bounds(at))
-            return (false);
-
-        join_count++;
-
-        const dungeon_feature_type feat = grd(at);
-        if (early_exit && at != from && feat_is_traversable(feat))
-            return (true);
-
-        if (unforbidden(at, MMT_VAULT) && !feat_is_traversable(feat))
-            grd(at) = DNGN_FLOOR;
-
-        if (join_count > 10000) // just insurance
-            return (false);
-
-        if (at.x < to.x
-            && unforbidden(coord_def(at.x + 1, at.y), mapmask))
-        {
-            at.x++;
-            continue;
-        }
-
-        if (at.x > to.x
-            && unforbidden(coord_def(at.x - 1, at.y), mapmask))
-        {
-            at.x--;
-            continue;
-        }
-
-        if (at.y > to.y
-            && unforbidden(coord_def(at.x, at.y - 1), mapmask))
-        {
-            at.y--;
-            continue;
-        }
-
-        if (at.y < to.y
-            && unforbidden(coord_def(at.x, at.y + 1), mapmask))
-        {
-            at.y++;
-            continue;
-        }
-
-        // If we get here, no progress can be made anyway. Why use the
-        // join_count insurance?
-        break;
-    }
-    while (at != to && in_bounds(at));
-
-    if (in_bounds(at) && unforbidden(at, mapmask))
-        grd(at) = DNGN_FLOOR;
-
-    return (at == to);
 }
 
 static void _place_pool(dungeon_feature_type pool_type, uint8_t pool_x1,
