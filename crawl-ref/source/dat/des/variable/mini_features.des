@@ -383,7 +383,7 @@ ENDMAP
 NAME:   corexii_hall_statues_t
 DEPTH:  D
 WEIGHT: 1
-TAGS:   dup extra mini_float
+TAGS:   allow_dup extra mini_float
 SUBST:  T = T:2 V:2 G:1
 MAP
 xxxxxxxxxxxxxxxxxxx
