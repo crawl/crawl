@@ -1138,13 +1138,12 @@ lua_marker("W", portal_desc { wizard_grave = 1,
         desc="Zonguldrok's gravestone",
         desc_long="A gravestone. The name 'Zonguldrok' is engraved on it in golden letters.\n"})
 
-function spawn_zombies (data, triggerable, triggerer, marker, ev)
-    function spawn_zombie (x, y, spec)
-        dgn.terrain_changed(x, y, "floor", false, false, false)
-        local mons = dgn.create_monster(x, y, spec)
-        return mons
-    end
+function spawn_zombie (x, y, spec)
+    dgn.terrain_changed(x, y, "floor", false, false, false)
+    return dgn.create_monster(x, y, spec)
+end
 
+function spawn_zombies (data, triggerable, triggerer, marker, ev)
     if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
         return
     end
@@ -1181,12 +1180,6 @@ function killed_zombie (data, triggerable, triggerer, marker, ev)
 end
 
 function awaken_wizard (data, triggerable, triggerer, marker, ev)
-    function spawn_zombie (x, y, spec)
-        dgn.terrain_changed(x, y, "floor", false, false, false)
-        local mons = dgn.create_monster(x, y, spec)
-        return mons
-    end
-
     if data.awoke == true then
         return
     end
@@ -1218,7 +1211,7 @@ local zombies_killed_marker = TriggerableFunction:new {
 
 local wizard_appear_marker = TriggerableFunction:new {
     data = {
-        awoke = 0
+        awoke = false
     },
     func = awaken_wizard,
     repeated = true,
