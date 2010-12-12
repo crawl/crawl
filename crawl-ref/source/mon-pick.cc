@@ -574,7 +574,6 @@ int mons_standard_level(int mcls)
     case MONS_BRAIN_WORM:
     case MONS_CYCLOPS:
     case MONS_EFREET:
-    case MONS_ETTIN:
     case MONS_EYE_OF_DEVASTATION:
     case MONS_GOLD_MIMIC:
     case MONS_HYDRA:
@@ -685,6 +684,7 @@ int mons_standard_level(int mcls)
     case MONS_INSUBSTANTIAL_WISP:
     case MONS_LICH:
     case MONS_STONE_GIANT:
+    case MONS_ETTIN:
         return 25;
 
     case MONS_DEEP_ELF_CONJURER:

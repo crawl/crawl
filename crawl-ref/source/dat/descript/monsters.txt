@@ -707,7 +707,7 @@ This one is remarkably plain looking.
 %%%%
 ettin
 
-A two-headed giant.
+A two-headed giant, able to land devastating blows left and right.
 %%%%
 Executioner
 
