@@ -278,9 +278,6 @@ int process_disconnected_zones(int x1, int y1, int x2, int y2,
                                bool choose_stairless,
                                dungeon_feature_type fill);
 
-int count_feature_in_box(int x0, int y0, int x1, int y1,
-                         dungeon_feature_type feat);
-
 // Count number of mutually isolated zones. If choose_stairless, only count
 // zones with no stairs in them. If fill is set to anything other than
 // DNGN_UNSEEN, chosen zones will be filled with the provided feature.
@@ -306,17 +303,10 @@ bool dgn_ensure_vault_placed(bool vault_success,
 vault_placement *dgn_vault_at(coord_def gp);
 void dgn_seen_vault_at(coord_def gp);
 
-inline int count_feature_in_box(const coord_def& p1, const coord_def& p2,
-                          dungeon_feature_type feat)
-{
-    return count_feature_in_box(p1.x, p1.y, p2.x, p2.y, feat);
-}
-int count_antifeature_in_box(int x0, int y0, int x1, int y1,
-                             dungeon_feature_type feat);
 int count_neighbours(int x, int y, dungeon_feature_type feat);
 inline int count_neighbours(const coord_def& p, dungeon_feature_type feat)
 {
-  return count_neighbours(p.x, p.y, feat);
+    return count_neighbours(p.x, p.y, feat);
 }
 
 void remember_vault_placement(std::string key, const vault_placement &place);

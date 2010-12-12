@@ -252,6 +252,17 @@ static bool _fixup_interlevel_connectivity();
 static void _dgn_postprocess_level();
 static void _calc_density();
 
+static int _count_feature_in_box(int x0, int y0, int x1, int y1,
+                                 dungeon_feature_type feat);
+static inline int _count_feature_in_box(const coord_def& p1, const coord_def& p2,
+                                        dungeon_feature_type feat)
+{
+    return _count_feature_in_box(p1.x, p1.y, p2.x, p2.y, feat);
+}
+
+static int _count_antifeature_in_box(int x0, int y0, int x1, int y1,
+                                     dungeon_feature_type feat);
+
 //////////////////////////////////////////////////////////////////////////
 // Static data
 
@@ -2285,8 +2296,8 @@ static void _hide_doors()
         }
 }
 
-int count_feature_in_box(int x0, int y0, int x1, int y1,
-                         dungeon_feature_type feat)
+static int _count_feature_in_box(int x0, int y0, int x1, int y1,
+                                 dungeon_feature_type feat)
 {
     int result = 0;
     for (int i = x0; i < x1; ++i)
@@ -2299,16 +2310,16 @@ int count_feature_in_box(int x0, int y0, int x1, int y1,
     return result;
 }
 
-int count_antifeature_in_box(int x0, int y0, int x1, int y1,
-                             dungeon_feature_type feat)
+static int _count_antifeature_in_box(int x0, int y0, int x1, int y1,
+                                     dungeon_feature_type feat)
 {
-    return (x1-x0)*(y1-y0) - count_feature_in_box(x0, y0, x1, y1, feat);
+    return (x1-x0)*(y1-y0) - _count_feature_in_box(x0, y0, x1, y1, feat);
 }
 
 // Count how many neighbours of grd[x][y] are the feature feat.
 int count_neighbours(int x, int y, dungeon_feature_type feat)
 {
-    return count_feature_in_box(x-1, y-1, x+2, y+2, feat);
+    return _count_feature_in_box(x-1, y-1, x+2, y+2, feat);
 }
 
 // Gives water which is next to ground/shallow water a chance of being
@@ -3864,8 +3875,8 @@ static void _build_rooms(const dgn_region_list &excluded,
         const coord_def end = myroom.end();
 
         if (i > 0 && exclusive
-         && count_antifeature_in_box(myroom.pos.x - 1, myroom.pos.y - 1,
-                                     end.x, end.y, DNGN_ROCK_WALL))
+         && _count_antifeature_in_box(myroom.pos.x - 1, myroom.pos.y - 1,
+                                      end.x, end.y, DNGN_ROCK_WALL))
         {
             continue;
         }
@@ -5402,7 +5413,7 @@ static void _many_pools(dungeon_feature_type pool_type)
         const int k = i + 2 + roll_dice(2, 9);
         const int l = j + 2 + roll_dice(2, 9);
 
-        if (count_antifeature_in_box(i, j, k, l, DNGN_FLOOR) == 0)
+        if (_count_antifeature_in_box(i, j, k, l, DNGN_FLOOR) == 0)
         {
             _place_pool(pool_type, i, j, k, l);
             pools++;
@@ -5569,13 +5580,13 @@ static void _place_altar()
         int px = 15 + random2(55);
         int py = 15 + random2(45);
 
-        const int numfloors = count_feature_in_box(px-2, py-2, px+3, py+3,
-                                                   DNGN_FLOOR);
+        const int numfloors = _count_feature_in_box(px-2, py-2, px+3, py+3,
+                                                    DNGN_FLOOR);
         const int numgood =
-            count_feature_in_box(px-2, py-2, px+3, py+3, DNGN_ROCK_WALL) +
-            count_feature_in_box(px-2, py-2, px+3, py+3, DNGN_CLOSED_DOOR) +
-            count_feature_in_box(px-2, py-2, px+3, py+3, DNGN_SECRET_DOOR) +
-            count_feature_in_box(px-2, py-2, px+3, py+3, DNGN_FLOOR);
+            _count_feature_in_box(px-2, py-2, px+3, py+3, DNGN_ROCK_WALL) +
+            _count_feature_in_box(px-2, py-2, px+3, py+3, DNGN_CLOSED_DOOR) +
+            _count_feature_in_box(px-2, py-2, px+3, py+3, DNGN_SECRET_DOOR) +
+            _count_feature_in_box(px-2, py-2, px+3, py+3, DNGN_FLOOR);
 
         if (numgood < 5*5 || numfloors == 0)
             continue;
@@ -6083,7 +6094,7 @@ static bool _plan_4(dgn_region_list *excluded, dungeon_feature_type force_wall)
                 continue;
         }
 
-        if (count_antifeature_in_box(b1x-1, b1y-1, b2x+1, b2y+1, DNGN_FLOOR))
+        if (_count_antifeature_in_box(b1x-1, b1y-1, b2x+1, b2y+1, DNGN_FLOOR))
             continue;
 
         if (force_wall == NUM_FEATURES && one_chance_in(3))
