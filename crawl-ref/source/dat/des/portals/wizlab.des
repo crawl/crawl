@@ -1162,6 +1162,10 @@ function spawn_zombies (data, triggerable, triggerer, marker, ev)
 end
 
 function killed_zombie (data, triggerable, triggerer, marker, ev)
+    if data.door_appeared then
+        return
+    end
+
     local mons = dgn.mons_from_index(ev:arg1())
     if not string.find(mons.full_name, "zombie") then
         return
@@ -1172,6 +1176,7 @@ function killed_zombie (data, triggerable, triggerer, marker, ev)
         local x, y = marker:pos()
         dgn.tile_feat_changed(x, y, nil)
         dgn.terrain_changed(x, y, "closed_door", false, false, false)
+        data.door_appeared = true
     end
 end
 
@@ -1204,7 +1209,8 @@ local zombies_appear_marker = TriggerableFunction:new {
 
 local zombies_killed_marker = TriggerableFunction:new {
     data = {
-        number_killed = 0
+        number_killed = 0,
+        door_appeared = false
     },
     func = killed_zombie,
     repeated = true
