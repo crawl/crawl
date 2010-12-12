@@ -8,9 +8,9 @@ Breaks save compatibility with the 0.7 release.
 --------------
 * New god: Ashenzari, god of divinations.
 * New species: Felids, sentient cats.
+* Removed spells: Bone Shards, Tame Beasts, Portal.
 * New spells: Passage of Golubria, Malign Gateway, Tornado.
 * New game mode: Zot Defence, a tower defence mini-game.
-* Several new monster sets: deep dwarves, spriggans, holy monsters.
 * New and improved save file format.
 * Nerf Haste.
 * Greatly improve player Draconians.
@@ -22,6 +22,7 @@ Gods
 * New god: Ashenzari, god of divinations.
 * Fix Jiyva off-level eating crash.
 * Fix gods missing from the game due to corrupted_temple.
+* Allow the player more control over what items to sacrifice to Nemelex (on the '^!' screen).
 * Yredelemnul's prayer (Injury Mirror) is now an ability.
 * Allow Injury Mirror to reflect torment damage.
 * Yredelemnul accepts kills of artificial beings (golems, gargoyles).
@@ -30,7 +31,7 @@ Gods
 * Elyvilon allows destruction of staves.
 * Clarified Ely's healing/pacification messaging.
 * Zin protects from Hell effects, chance depending on piety.
-* Make spell failure glow anger Zin.
+* Spell failure while already in yellow glow angers Zin.
 * Zin's Recite no longer pacifies undead or chaotic monsters.
 * TSO no longer accepts item sacrifices.
 * Extending Necromutation results in excommunication for followers of good gods.
@@ -53,18 +54,20 @@ Character
 * Stalker background changed to Transmutation-based Stabber.
 * Only cancel levitation once the last equipped +Lev item is removed.
 * Nearing stat death causes paralysis, with increasing chances.
+* Auxilary unarmed attacks have additional effects (stun, bleeding, ...)
 * Allow Merfolk transformations even in water.
 * Retain talons, fangs and tail in appropriate transformations.
 * Fix mutators and glowing occasionally giving good mutations.
-* Based Demonic guardian timeout.* Demonspawn Fire and Ice facets are now mutually exclusive.
+* Balanced some Demonspawn mutations (Demonic guardian, Nightstalker).
+* Demonspawn Fire and Ice facets are now mutually exclusive.
 * Ghouls may now use food-cost abilities when starving.
 * Ghouls and Vampires may evoke invisibility when starving/bloodless.
 * Make hellfire ignore monster AC.
 * Don't train Stealth for pacified monsters.
 * Allow Merfolk/Kenku to blink over deep water.
 * Allow Kenku to stop flying.
+* Apply terrain change to player when banished.
 * Bring Merfolk HP to Human HP levels
-* Auxilary unarmed attacks have additional effects (stun, bleeding, ...)
 
 Interface
 ---------
@@ -72,6 +75,7 @@ Interface
 * Messages for things coming into view even when not exploring.
 * More status lights: transformations, post-berserk exhaustion, temporary resistances.
 * Timeout information for temporary resistances and see invisible.
+* Greatly improved skill menu ('m' screen).
 * Don't consider places next to slime walls as "safe".
 * Make i_feel_safe() smarter about critters behind lava/statues/etc.
 * Explicitly name inventory items that are getting destroyed.
@@ -109,6 +113,7 @@ Interface
 
 Spells
 ------
+* Removed Bone Shards, Tame Beasts, Portal.
 * New spell: Passage of Golubria, levl 5 Translocations spell.
 * New spell: Malign Gateway, level 7 Summonings/Translocations spell.
 * New spell: Tornado, level 9 Air spell.
@@ -137,6 +142,7 @@ Spells
 * Slightly bump Orb of Destruction (IOOD) damage.
 * Allow Sticks to Snakes on staves.
 * Allow Tukimizing staves.
+* Buff Static Discharge: Higher damage and increased chance of arcing.
 * Move Horrible Things and Haunt from Summonings into Demonology.
 * Remove Call Imp, Abjuration and Recall from the book of Demonology.
 * Reduce the chance of any book to be replaced by Power/Wizardry from 10% to 4%.
@@ -159,11 +165,12 @@ Monsters
 * New monster set: holy monsters (unfinished!)
 * New monster set: feature mimics.
 * New monsters: silent spectre, sky beast, ghost moth, jumping spider, tarantella.
+* New monster spells: Cause Fear, Drain Life, Agony, Summon Elemental, Noxious Cloud.
 * Fix monsters being capable of spellcasting while berserk.
 * Disallow various attacks on submerged monsters.
 * Fix Aizul and Mara casting through allies.
 * Fix rock worms aimlessly moving around in walls instead of attacking.
-* New monster spells: Cause Fear, Drain Life, Agony, Summon Elemental, Noxious Cloud.
+* Allies animating dead is okay for hungry level 3 herbivores.
 * Compensate by the Haste nerf by slowing monsters most players fight hasted.
 * Huge monsters (dragons, elephants) can trample smaller ones, moving them around.
 * Krakens have multi-segment tentacles.
@@ -178,6 +185,7 @@ Monsters
 * Implement snail/turtle shells; withdrawing into such a shell adds extra protection.
 * Print “zot!” sound when a friendly monster triggers a zot trap outside LOS.
 * Make zombified monsters retain their stats (at least HD and HP).
+* Boost ettins to hit as hard as dual-wielding stone giants. Move them deeper.
 * Monsters respect glowing when deciding whether to cast Invisibility.
 * Ugly things may mutate if adjacent to a monster glowing with radiation.
 * Make good and strict neutral monsters not choose nearby foes.
@@ -219,9 +227,14 @@ Levels
 
 Items
 -----
-* Fix breakage of blood potion stacks when partially eaten by jellies.
+* New items: scroll of curse jewellery, scroll of amnesia.
+* Antimagic weapon brand.
+* Disable equipment corrosion from slime walls.
+* Remove the robe of the Archmagi's experience penalty.
+* Fix the robe of the Archmagi doubly enhancing Haunt and Regen.
 * Autopickup weapons subjected to Tukima's Dance.
 * Disallow blowing Geryon's horn when silenced.
+* Fix breakage of blood potion stacks when partially eaten by jellies.
 * Fix randarts with unknown base type sometimes not being eligible for ?identify.
 * Fix rod pluses not being considered for ?identify.
 * Fix misleading spell descriptions on rods; display average power.
@@ -229,11 +242,7 @@ Items
 * Fix permafood being coloured brown like contaminated chunks.
 * Inscribe "was cursed" for items uncursed using ?enchant foo.
 * Fix an information leak about magic resistance from unidentified items.
-* Remove the robe of the Archmagi's experience penalty.
-* Fix the robe of the Archmagi doubly enhancing Haunt and Regen.
-* New items: scroll of curse jewellery, scroll of amnesia.
-* Disable equipment corrosion from slime walls.
-* Antimagic weapon brand.
+* Boost staves of venom.  Olgreb becomes 1/4 irresistible.
 * Asphyxiation resistance blocks curare damage, but not slowing.
 * Poison resistance protects against curare entirely.
 * Add new chunk type that is both poisonous and contaminated.
@@ -248,7 +257,6 @@ Items
 * Make wield mass check apply to all items.
 * Make torment rarer in plain/ornate decks.
 * Allow staves and rods to become cursed.
-* Special and non-special unrandarts use the same generation code.
 * More detailed corrosion resistance reporting.
 * Tweak blood potion descriptions to mention nutrition for non-herbivores.
 * Remove rods of discovery.
@@ -257,11 +265,14 @@ Items
 * Remove scrolls of recharging's effect on weapons of electrocution.
 * Stop the generation of racial missiles.
 * Make ball of energy stat loss now drains between 1 and 2/3 max Int.
+* Improve some unrandarts: add brands, more damage.
 
 Tiles
 -----
+* Fix crashes in the doll editor for ghoul characters.
 * Run pngcrush in non-debug builds if installed, shaving 700KB per download.
 * Fix randomized animation of unidentified wand/missile.
+* Ctrl-mouseclick asks for quantity for drop/pickup.
 * Add disturbance tiles for invisible monsters in clouds.
 * Add a skill management tab.
 * More helpful and less obnoxious exclusion tiles.
@@ -273,7 +284,7 @@ Tiles
 * Many new player doll tiles.
 * Improved some monster tiles.
 * New statue and Xom altar tiles.
-* New blood tiles.
+* New blood tiles, suppress blood overlay for torch wall variants.
 
 Technical
 ---------
@@ -284,6 +295,7 @@ Technical
 * Autosave at game start and in Sprint, to keep crashes from losing the game.
 * Internal changes to handling monsters/LOS/map/UI, merged from NetTiles.
 * Except for public servers, ensure robustness against filesystem crashes.
+* Special and non-special unrandarts use the same generation code.
 * Reorder spell code by school and functionality.
 * Simplify ghost I/O.
 * Clean up the level generation code.
