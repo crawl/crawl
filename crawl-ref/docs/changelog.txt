@@ -93,16 +93,16 @@ Interface
 * Colour annotations in Overview.
 * Colouring labyrinth messages.
 * Add force_more_messages for bazaar and labyrinth announcements.
-* Don’t prompt for which ring to swap if one of them is cursed.
+* Don't prompt for which ring to swap if one of them is cursed.
 * When enchanting an unknown piece of armour, mark it as uncursed.
 * Make the . drop/pickup selector respect quantity input.
-* ‘*’ inverts selection instead of selecting drop_filter, and ‘,’ selects all instead of inverting.
+* '*' inverts selection instead of selecting drop_filter, and ',' selects all instead of inverting.
 * More information when missing.
 * More information when MR is effective.
-* Display on the HUD if you’re both hasted and slowed.
+* Display on the HUD if you're both hasted and slowed.
 * Add a toggle to the discoveries screen to display _un_known items.
 * Check terrain before clouds for moveto check.
-* Don’t warn about entering excluded portals.
+* Don't warn about entering excluded portals.
 * Force a -more- on death.
 * Autoinscribe randarts after death.
 * Taskbar overlap is now automatically detected, and the window is placed just above it.
@@ -132,7 +132,7 @@ Spells
 * Add a toggle to the memorisation screen for the spell descriptions.
 * Auto-id items of wizardry if you have spellcasting skills.
 * Enable autotargeting for Vampiric Draining and Freeze.
-* Make Borgnor’s Revivification cost 2-11 *percent* of maxhp.
+* Make Borgnor's Revivification cost 2-11 *percent* of maxhp.
 * Restore casting noise for target spells.
 * Add noise level to spell description.
 * Increased claw damage for Dragon Form, also allows trampling.
@@ -146,15 +146,15 @@ Spells
 * Move Horrible Things and Haunt from Summonings into Demonology.
 * Remove Call Imp, Abjuration and Recall from the book of Demonology.
 * Reduce the chance of any book to be replaced by Power/Wizardry from 10% to 4%.
-* Don’t prompt for targeting self with clouds if you’ve got the matching resistance.
-* Make trying to cast Death’s Door when ineligible cost no time nor MP.
-* Make only heavy armour remove Ozocubu’s Armour on wearing.
+* Don't prompt for targeting self with clouds if you've got the matching resistance.
+* Make trying to cast Death's Door when ineligible cost no time nor MP.
+* Make only heavy armour remove Ozocubu's Armour on wearing.
 * Make large rocks do extra damage with Sandblast.
 * Allow swapping to large rocks when Sandblast is memorised.
 * Offer wielding coagulated blood for Sublimation of Blood.
 * Make transformations affect stealth.
-* Don’t prompt for unwielding weapons branded with Warp Weapon.
-* Don’t incorrectly mark Levitation/Flight as useless.
+* Don't prompt for unwielding weapons branded with Warp Weapon.
+* Don't incorrectly mark Levitation/Flight as useless.
 * More sensible spell sorting in the memorisation list.
 * Include spell hunger in the chardump.
 
@@ -179,11 +179,11 @@ Monsters
 * Get rid of chain paralysis.
 * Prevent confused giant eyeballs from paralyzing.
 * Make aquatic monsters chase instead of submerging if they can.
-* Friendly monsters told to “wait here” don’t follow through stairs.
+* Friendly monsters told to 'wait here' don't follow through stairs.
 * Merged slimes split on polymorph.
-* Porkelated monsters can’t cast spells either.
+* Porkelated monsters can't cast spells either.
 * Implement snail/turtle shells; withdrawing into such a shell adds extra protection.
-* Print “zot!” sound when a friendly monster triggers a zot trap outside LOS.
+* Print 'zot!' sound when a friendly monster triggers a zot trap outside LOS.
 * Make zombified monsters retain their stats (at least HD and HP).
 * Boost ettins to hit as hard as dual-wielding stone giants. Move them deeper.
 * Monsters respect glowing when deciding whether to cast Invisibility.
@@ -192,13 +192,13 @@ Monsters
 * Disallow armour mimics from taking the forms of hides.
 * Naga/serpent glyph changes. (See 'settings/060_monster_glyphs.txt'.)
 * Refactor monster vamp draining.
-* Experimentally increase iron imps’ AC from 5 to 6.
-* Experimentally decrease bushes’ AC from 30 to 15.
-* Don’t consider plants/fungi “interesting”, no matter their rarity.
+* Experimentally increase iron imps' AC from 5 to 6.
+* Experimentally decrease bushes' AC from 30 to 15.
+* Don't consider plants/fungi 'interesting', no matter their rarity.
 
 Levels
 ------
-* New game mode: “Zot Defence”.
+* New game mode: 'Zot Defence'.
 * Fix crashes on entering new levels with restart_after_game = true.
 * Use a random Temple map if original temple is no longer available.
 * Fix portal vaults not being deleted after leaving.
