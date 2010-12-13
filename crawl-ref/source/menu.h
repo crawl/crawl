@@ -785,6 +785,8 @@ public:
     virtual void set_active_item(MenuItem* item);
     virtual void activate_first_item();
     virtual void activate_last_item();
+    void set_default_item(MenuItem* item);
+    void activate_default_item();
 
     virtual bool select_item(int index);
     virtual bool select_item(MenuItem* item);
@@ -798,6 +800,7 @@ protected:
 
     // cursor position
     MenuItem* m_active_item;
+    MenuItem* m_default_item;
 };
 
 /**
