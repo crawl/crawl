@@ -1047,6 +1047,10 @@ void skill_menu(bool reskilling)
             case CK_LEFT:
             case CK_RIGHT:
             case CK_ENTER:
+            case 1004:
+            case 1002:
+            case 1008:
+            case 1006:
                 continue;
             default:
                 return;
