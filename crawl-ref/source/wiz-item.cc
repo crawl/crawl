@@ -17,7 +17,6 @@
 #include "cio.h"
 #include "dbg-util.h"
 #include "decks.h"
-#include "dungeon.h"
 #include "effects.h"
 #include "env.h"
 #include "godpassive.h"
