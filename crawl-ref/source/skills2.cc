@@ -551,19 +551,18 @@ void SkillMenuEntry::_set_points()
 #define NEXT_DISPLAY_SIZE   18
 #define SHOW_ALL_SIZE       16
 SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
-    m_crosstrain(false), m_antitrain(false), m_disp_queue()
+    m_min_coord(), m_max_coord(), m_disp_queue()
 {
     SkillMenuEntry::m_skm = this;
 
-    m_start_col = (get_number_of_cols() - SCREEN_COL) / 2 + 3;
-    m_start_ln = (get_number_of_lines() - SCREEN_LINES) / 2 + 1;
+    m_min_coord.x = (get_number_of_cols() - SCREEN_COL) / 2 + 3;
+    m_min_coord.y = (get_number_of_lines() - SCREEN_LINES) / 2 + 1;
 
-    m_end_col = SCREEN_COL + m_start_col;
-    m_end_ln = SCREEN_LINES + m_start_ln;
+    m_max_coord.x = SCREEN_COL + m_min_coord.x;
+    m_max_coord.y = SCREEN_LINES + m_min_coord.y;
 
     m_ff = new MenuFreeform();
-    m_ff->init(coord_def(m_start_col, m_start_ln),
-               coord_def(m_end_col, m_end_ln), "freeform");
+    m_ff->init(m_min_coord, m_max_coord, "freeform");
     attach_object(m_ff);
     set_active_object(m_ff);
 
@@ -571,14 +570,14 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
     for (int ln = 0; ln < SK_ARR_LN; ++ln)
         for (int col = 0; col < SK_ARR_COL; ++col)
         {
-            m_skills[ln][col] = SkillMenuEntry(coord_def(m_start_col + 40*col,
-                                                         m_start_ln + 1 + ln),
+            m_skills[ln][col] = SkillMenuEntry(coord_def(m_min_coord.x + 40*col,
+                                                         m_min_coord.y + 1 + ln),
                                                m_ff);
         }
 
     m_help = new FormattedTextItem();
-    m_help->set_bounds(coord_def(m_start_col, m_end_ln - 3),
-                       coord_def(m_end_col, m_end_ln - 1));
+    m_help->set_bounds(coord_def(m_min_coord.x, m_max_coord.y - 3),
+                       coord_def(m_max_coord.x, m_max_coord.y - 1));
     m_ff->attach_item(m_help);
 
     _init_disp_queue();
@@ -686,8 +685,8 @@ void SkillMenu::_init_disp_queue()
 void SkillMenu::_init_title()
 {
     m_title = new NoSelectTextItem();
-    m_title->set_bounds(coord_def(m_start_col, m_start_ln),
-                        coord_def(m_end_col, m_start_ln + 1));
+    m_title->set_bounds(m_min_coord,
+                        coord_def(m_max_coord.x, m_min_coord.y + 1));
     m_title->set_fg_colour(WHITE);
     m_ff->attach_item(m_title);
     m_title->set_visible(true);
@@ -695,7 +694,7 @@ void SkillMenu::_init_title()
 
 void SkillMenu::_init_footer()
 {
-    coord_def coord(m_start_col, m_end_ln - 1);
+    coord_def coord(m_min_coord.x, m_max_coord.y - 1);
     m_current_action = new NoSelectTextItem();
     _add_item(m_current_action, m_ff, CURRENT_ACTION_SIZE, coord);
     m_current_action->set_fg_colour(WHITE);

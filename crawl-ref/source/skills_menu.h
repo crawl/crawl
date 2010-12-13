@@ -101,10 +101,8 @@ private:
 
     int m_flags;
     int m_current_help;
-    int m_start_col;
-    int m_start_ln;
-    int m_end_col;
-    int m_end_ln;
+    coord_def m_min_coord;
+    coord_def m_max_coord;
 
     bool m_crosstrain;
     bool m_antitrain;
