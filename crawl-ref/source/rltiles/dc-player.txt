@@ -975,4 +975,3 @@ drchead_purple PURPLE
 drchead_red RED
 drchead_white WHITE
 %end_ctg
-
