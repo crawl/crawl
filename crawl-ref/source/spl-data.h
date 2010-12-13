@@ -382,7 +382,7 @@ struct spell_desc
     SPELL_TELEPORT_OTHER, "Teleport Other",
      SPTYP_TRANSLOCATION,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_ESCAPE,
-     4,
+     3,
      200,
      LOS_RADIUS, LOS_RADIUS,
      0,
@@ -1822,7 +1822,7 @@ struct spell_desc
     SPELL_WARP_BRAND, "Warp Weapon",
      SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION,
      SPFLAG_HELPFUL | SPFLAG_BATTLE,
-     7,     // this is high for a reason - Warp brands are very powerful.
+     5,     // this is high for a reason - Warp brands are very powerful.
      0,
      -1, -1,
      0,
@@ -1861,7 +1861,7 @@ struct spell_desc
     SPELL_DISPERSAL, "Dispersal",
      SPTYP_TRANSLOCATION,
      SPFLAG_AREA | SPFLAG_ESCAPE,
-     7,
+     6,
      200,
      -1, -1,
      0,
