@@ -3031,6 +3031,7 @@ void tag_read_level_tiles(reader &th)
         return;
     }
 #ifdef USE_TILE
+    // Initialise env settings.
     for (int i = 0; i < GXM; i++)
         for (int j = 0; j < GYM; j++)
         {
@@ -3126,7 +3127,7 @@ static void tag_missing_level_tiles()
 
     mcache.clear_all();
 
-    tile_new_level(true);
+    tile_new_level(true, false);
 #endif
 }
 
