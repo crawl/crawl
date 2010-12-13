@@ -25,7 +25,7 @@
 #include "travel.h"
 #include "viewgeom.h"
 
-void tile_new_level(bool first_time)
+void tile_new_level(bool first_time, bool init_unseen)
 {
     tiles.clear_minimap();
 
@@ -36,7 +36,7 @@ void tile_new_level(bool first_time)
     if (first_time)
         tile_init_flavour();
 
-    if (!player_in_mappable_area() || first_time)
+    if (!player_in_mappable_area() || init_unseen)
     {
         for (unsigned int x = 0; x < GXM; x++)
             for (unsigned int y = 0; y < GYM; y++)

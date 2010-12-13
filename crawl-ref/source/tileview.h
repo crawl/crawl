@@ -19,7 +19,12 @@ class monster;
 class tile_flavour;
 
 // Initialize the flavour and the tile env when changing or creating levels.
-void tile_new_level(bool first_time);
+void tile_new_level(bool first_time, bool init_unseen);
+
+inline void tile_new_level(bool first_time)
+{
+    return tile_new_level(first_time, first_time);
+}
 
 // Tile flavour
 
