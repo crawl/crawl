@@ -208,9 +208,10 @@ static void _vault_grid(vault_placement &,
                         int vgrid,
                         const coord_def& where,
                         keyed_mapspec *mapsp);
-static void _vault_grid(vault_placement &,
-                        int vgrid,
-                        const coord_def& where);
+static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
+                              int vgrid);
+static void _vault_grid_mapspec(vault_placement &place, const coord_def& where,
+                                keyed_mapspec& mapsp);
 
 static const map_def *_dgn_random_map_for_place(bool minivault);
 static void _dgn_load_colour_grid();
@@ -5028,18 +5029,10 @@ dungeon_feature_type map_feature_at(map_def *map, const coord_def &c,
     return _glyph_to_feat(rawfeat);
 }
 
-static void _vault_grid(vault_placement &place,
-                        int vgrid,
-                        const coord_def& where,
-                        keyed_mapspec *mapsp)
+static void _vault_grid_mapspec(vault_placement &place, const coord_def &where,
+                                keyed_mapspec& mapsp)
 {
-    if (!mapsp)
-    {
-        _vault_grid(place, vgrid, where);
-        return;
-    }
-
-    const feature_spec f = mapsp->get_feat();
+    const feature_spec f = mapsp.get_feat();
     if (f.trap >= 0)
     {
         const trap_type trap =
@@ -5056,27 +5049,25 @@ static void _vault_grid(vault_placement &place,
     else if (f.feat >= 0)
     {
         grd(where) = static_cast<dungeon_feature_type>(f.feat);
-        vgrid = -1;
     }
     else if (f.glyph >= 0)
     {
-        _vault_grid(place, f.glyph, where);
+        _vault_grid_glyph(place, where, f.glyph);
     }
     else if (f.shop >= 0)
         place_spec_shop(place.level_number, where, f.shop);
     else
         grd(where) = DNGN_FLOOR;
 
-    mons_list &mons = mapsp->get_monsters();
+    mons_list &mons = mapsp.get_monsters();
     _dgn_place_one_monster(place, mons, place.level_number, where);
 
-    item_list &items = mapsp->get_items();
+    item_list &items = mapsp.get_items();
     dgn_place_multiple_items(items, where, place.level_number);
 }
 
-static void _vault_grid(vault_placement &place,
-                         int vgrid,
-                         const coord_def& where)
+static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
+                              int vgrid)
 {
     // First, set base tile for grids {dlb}:
     if (vgrid != -1)
@@ -5181,6 +5172,17 @@ static void _vault_grid(vault_placement &place,
 
         _dgn_place_monster(place, monster_type_thing, monster_level, where);
     }
+}
+
+static void _vault_grid(vault_placement &place,
+                        int vgrid,
+                        const coord_def& where,
+                        keyed_mapspec *mapsp)
+{
+    if (mapsp)
+        _vault_grid_mapspec(place, where, *mapsp);
+    else
+        _vault_grid_glyph(place, where, vgrid);
 }
 
 // Currently only used for Slime: branch end
