@@ -292,7 +292,7 @@ void SkillMenuEntry::set_name(bool keep_hotkey)
     if (!keep_hotkey)
         m_name->clear_hotkeys();
 
-    if (_is_selectable())
+    if (is_selectable())
     {
         if (!keep_hotkey)
             m_name->add_hotkey(++m_letter);
@@ -338,6 +338,34 @@ bool SkillMenuEntry::is_set(int flag) const
     return m_skm->is_set(flag);
 }
 
+bool SkillMenuEntry::is_selectable() const
+{
+    if (is_invalid_skill(m_sk))
+        return false;
+
+    if (you.skills[m_sk] == 0 && !is_set(SKMF_DISP_ALL))
+        return false;
+
+    if (is_set(SKMF_DO_SHOW_DESC))
+        return true;
+
+    if (is_set(SKMF_DO_RESKILL_TO) && you.transfer_from_skill == m_sk)
+        return false;
+
+    if (you.skills[m_sk] == 0 && !is_set(SKMF_DO_RESKILL_TO))
+        return false;
+
+    if (you.skills[m_sk] == 27 && !is_set(SKMF_DO_RESKILL_FROM))
+        return false;
+
+    return true;
+}
+
+TextItem* SkillMenuEntry::get_name_item() const
+{
+    return m_name;
+}
+
 COLORS SkillMenuEntry::_get_colour() const
 {
     int ct_bonus = crosstrain_bonus(m_sk);
@@ -377,29 +405,6 @@ std::string SkillMenuEntry::_get_prefix()
     const int sign = (you.skills[m_sk] == 0 || you.skills[m_sk] == 27) ? ' '
                                     : (you.practise_skill[m_sk]) ? '+' : '-';
     return make_stringf("%c %c", letter, sign);
-}
-
-bool SkillMenuEntry::_is_selectable() const
-{
-    if (is_invalid_skill(m_sk))
-        return false;
-
-    if (you.skills[m_sk] == 0 && !is_set(SKMF_DISP_ALL))
-        return false;
-
-    if (is_set(SKMF_DO_SHOW_DESC))
-        return true;
-
-    if (is_set(SKMF_DO_RESKILL_TO) && you.transfer_from_skill == m_sk)
-        return false;
-
-    if (you.skills[m_sk] == 0 && !is_set(SKMF_DO_RESKILL_TO))
-        return false;
-
-    if (you.skills[m_sk] == 27 && !is_set(SKMF_DO_RESKILL_FROM))
-        return false;
-
-    return true;
 }
 
 void SkillMenuEntry::_set_level()
@@ -494,7 +499,7 @@ void SkillMenuEntry::_set_new_level()
         m_progress->set_fg_colour(GREEN);
     }
 
-    if (_is_selectable() || m_sk == you.transfer_from_skill)
+    if (is_selectable() || m_sk == you.transfer_from_skill)
         m_progress->set_text(make_stringf("-> %2d", new_level));
     else
         m_progress->set_text("");
@@ -614,8 +619,11 @@ void SkillMenu::change_action()
     _set_help(new_action);
     _refresh_names();
     _set_footer();
-    if (!m_ff->get_active_item()->can_be_highlighted())
-        m_ff->activate_first_item();
+    if (m_ff->get_active_item() != NULL
+        && !m_ff->get_active_item()->can_be_highlighted())
+    {
+        m_ff->activate_default_item();
+    }
 }
 
 void SkillMenu::change_display()
@@ -730,15 +738,28 @@ void SkillMenu::_refresh_name(skill_type sk)
     for (int col = 0; col < SK_ARR_COL; ++col)
         for (int ln = 0; ln < SK_ARR_LN; ++ln)
             if (m_skills[ln][col].get_skill() == sk)
+            {
                 m_skills[ln][col].set_name(true);
+                m_ff->set_default_item(m_skills[ln][col].get_name_item());
+                break;
+            }
 }
 
 void SkillMenu::_refresh_names()
 {
     SkillMenuEntry::m_letter = 'Z';
+    bool default_set = false;
     for (int col = 0; col < SK_ARR_COL; ++col)
         for (int ln = 0; ln < SK_ARR_LN; ++ln)
-                m_skills[ln][col].set_name(false);
+        {
+            SkillMenuEntry& skme = m_skills[ln][col];
+            if (!default_set && skme.is_selectable())
+            {
+                m_ff->set_default_item(skme.get_name_item());
+                default_set = true;
+            }
+            skme.set_name(false);
+        }
 }
 
 void SkillMenu::_refresh_display()
@@ -786,12 +807,14 @@ void SkillMenu::_set_skills()
     SkillMenuEntry::m_letter = 'Z';
     m_crosstrain = false;
     m_antitrain = false;
+    bool default_set = false;
 
     int col = 0, ln = 0;
 
     for (int i = 0; i < ndisplayed_skills; ++i)
     {
         skill_type sk = skill_display_order[i];
+        SkillMenuEntry& skme = m_skills[ln][col];
 
         if (sk == SK_COLUMN_BREAK)
         {
@@ -809,17 +832,19 @@ void SkillMenu::_set_skills()
         {
             continue;
         }
-        else if (sk == SK_TITLE)
-            m_skills[ln][col].set_skill(sk);
         else
         {
-            m_skills[ln][col].set_skill(sk);
-            if (previous_active == -1)
-                previous_active = m_skills[ln][col].get_id();
+            skme.set_skill(sk);
+            if (!default_set && skme.is_selectable())
+            {
+                m_ff->set_default_item(skme.get_name_item());
+                default_set = true;
+            }
         }
         ++ln;
     }
-    m_ff->set_active_item(previous_active);
+    if (previous_active != -1)
+        m_ff->set_active_item(previous_active);
 }
 
 void SkillMenu::_set_help(int flag)
@@ -1021,6 +1046,7 @@ void skill_menu(bool reskilling)
             case CK_DOWN:
             case CK_LEFT:
             case CK_RIGHT:
+            case CK_ENTER:
                 continue;
             default:
                 return;

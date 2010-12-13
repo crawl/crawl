@@ -51,6 +51,8 @@ public:
     void set_display();
     int get_id();
     bool is_set(int flag) const;
+    bool is_selectable() const;
+    TextItem* get_name_item() const;
 
 private:
     skill_type m_sk;
@@ -61,7 +63,6 @@ private:
 
     COLORS _get_colour() const;
     std::string _get_prefix();
-    bool _is_selectable() const;
     void _set_level();
     void _set_progress();
     void _set_aptitude();

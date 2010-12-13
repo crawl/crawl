@@ -2941,7 +2941,7 @@ bool MenuObject::is_visible() const
 
 
 
-MenuFreeform::MenuFreeform(): m_active_item(NULL)
+MenuFreeform::MenuFreeform(): m_active_item(NULL), m_default_item(NULL)
 {
 }
 
@@ -2958,6 +2958,16 @@ MenuFreeform::~MenuFreeform()
     m_entries.clear();
 }
 
+void MenuFreeform::set_default_item(MenuItem* item)
+{
+    m_default_item = item;
+}
+
+void MenuFreeform::activate_default_item()
+{
+    m_active_item = m_default_item;
+}
+
 MenuObject::InputReturnValue MenuFreeform::process_input(int key)
 {
     if (!m_allow_focus || !m_visible)
@@ -2970,7 +2980,7 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
             // nothing to process
             return MenuObject::INPUT_NO_ACTION;
         }
-        else
+        else if (m_default_item == NULL)
         {
             // pick the first item possible
             for (std::vector<MenuItem*>::iterator it = m_entries.begin();
@@ -2985,13 +2995,19 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
         }
     }
 
+    MenuItem* item = m_active_item ? m_active_item : m_default_item;
     MenuItem* find_entry = NULL;
     switch (key)
     {
     case CK_ENTER:
-        if (m_active_item == NULL)
+        if (item == NULL)
         {
             return MenuObject::INPUT_NO_ACTION;
+        }
+        else if (m_active_item == NULL)
+        {
+            m_active_item = m_default_item;
+            return MenuObject::INPUT_ACTIVE_CHANGED;
         }
 
         select_item(m_active_item);
@@ -3005,7 +3021,7 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
         }
         break;
     case CK_UP:
-        find_entry = _find_item_by_direction(m_active_item, UP);
+        find_entry = _find_item_by_direction(item, UP);
         if (find_entry != NULL)
         {
             set_active_item(find_entry);
@@ -3017,7 +3033,7 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
         }
         break;
     case CK_DOWN:
-        find_entry = _find_item_by_direction(m_active_item, DOWN);
+        find_entry = _find_item_by_direction(item, DOWN);
         if (find_entry != NULL)
         {
             set_active_item(find_entry);
@@ -3029,7 +3045,7 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
         }
         break;
     case CK_LEFT:
-        find_entry = _find_item_by_direction(m_active_item, LEFT);
+        find_entry = _find_item_by_direction(item, LEFT);
         if (find_entry != NULL)
         {
             set_active_item(find_entry);
@@ -3041,7 +3057,7 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
         }
         break;
     case CK_RIGHT:
-        find_entry = _find_item_by_direction(m_active_item, RIGHT);
+        find_entry = _find_item_by_direction(item, RIGHT);
         if (find_entry != NULL)
         {
             set_active_item(find_entry);
