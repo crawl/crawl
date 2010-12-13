@@ -1550,7 +1550,7 @@ bool crosstrain_other(skill_type sk, bool show_zero)
 
     for (unsigned int i = 0; i < crosstrain_skills.size(); ++i)
         if (you.skills[crosstrain_skills[i]] < you.skills[sk]
-            && (you.skills[crosstrain_skills[i]] != 0 || show_zero))
+            && (you.skills[crosstrain_skills[i]] > 0 || show_zero))
         {
             return true;
         }
@@ -1579,7 +1579,7 @@ bool is_antitrained(skill_type sk)
     return (you.skills[sk] < you.skills[opposite]
             || you.skills[sk] == you.skills[opposite]
                && you.skill_order[sk] > you.skill_order[opposite]
-               && you.skills[sk] != 0);
+               && you.skills[sk] > 0);
 }
 
 bool antitrain_other(skill_type sk, bool show_zero)
@@ -1588,7 +1588,7 @@ bool antitrain_other(skill_type sk, bool show_zero)
     if (opposite == SK_NONE)
         return false;
 
-    return ((you.skills[opposite] != 0 || show_zero)
+    return ((you.skills[opposite] > 0 || show_zero) && you.skills[sk] > 0
             && (you.skills[sk] > you.skills[opposite]
                 || you.skills[sk] == you.skills[opposite]
                    && you.skill_order[sk] < you.skill_order[opposite]));
