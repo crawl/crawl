@@ -2995,19 +2995,26 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
         }
     }
 
-    MenuItem* item = m_active_item ? m_active_item : m_default_item;
+    if (m_active_item == NULL && m_default_item != NULL)
+        switch (key)
+        {
+        case CK_UP:
+        case CK_DOWN:
+        case CK_LEFT:
+        case CK_RIGHT:
+        case CK_ENTER:
+            m_active_item = m_default_item;
+            return MenuObject::INPUT_ACTIVE_CHANGED;
+        }
+
+
     MenuItem* find_entry = NULL;
     switch (key)
     {
     case CK_ENTER:
-        if (item == NULL)
+        if (m_active_item == NULL)
         {
             return MenuObject::INPUT_NO_ACTION;
-        }
-        else if (m_active_item == NULL)
-        {
-            m_active_item = m_default_item;
-            return MenuObject::INPUT_ACTIVE_CHANGED;
         }
 
         select_item(m_active_item);
@@ -3021,7 +3028,7 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
         }
         break;
     case CK_UP:
-        find_entry = _find_item_by_direction(item, UP);
+        find_entry = _find_item_by_direction(m_active_item, UP);
         if (find_entry != NULL)
         {
             set_active_item(find_entry);
@@ -3033,7 +3040,7 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
         }
         break;
     case CK_DOWN:
-        find_entry = _find_item_by_direction(item, DOWN);
+        find_entry = _find_item_by_direction(m_active_item, DOWN);
         if (find_entry != NULL)
         {
             set_active_item(find_entry);
@@ -3045,7 +3052,7 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
         }
         break;
     case CK_LEFT:
-        find_entry = _find_item_by_direction(item, LEFT);
+        find_entry = _find_item_by_direction(m_active_item, LEFT);
         if (find_entry != NULL)
         {
             set_active_item(find_entry);
@@ -3057,7 +3064,7 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
         }
         break;
     case CK_RIGHT:
-        find_entry = _find_item_by_direction(item, RIGHT);
+        find_entry = _find_item_by_direction(m_active_item, RIGHT);
         if (find_entry != NULL)
         {
             set_active_item(find_entry);
