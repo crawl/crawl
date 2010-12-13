@@ -192,7 +192,7 @@ DESC_ID: This was the favourite weapon of the old god Trog, before it was
          who uses it to strike another.
 
 NAME:    Mace of Variability
-APPEAR:  shimmering mace
+APPEAR:  great shimmering mace
 OBJ:     OBJ_WEAPONS/WPN_GREAT_MACE
 PLUS:    0/0   # Set on generation
 COLOUR:  ETC_RANDOM
