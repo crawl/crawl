@@ -1,4 +1,5 @@
 #!/usr/bin/perl -w
+use Encode;
 
 open FLIST, "git ls-files|" or die "Can't run git ls-files";
 
@@ -24,6 +25,14 @@ while(<FLIST>)
     print "tab: $file\n" if s/ {0,7}\t/        /sg;
     print "spaces at eol: $file\n" if s/ +\n/\n/sg;
     print "CR: $file\n" if s/\r//sg;
+    eval{decode("UTF-8", "$_", Encode::FB_CROAK)};
+    if ($@)
+    {
+        print "invalid UTF-8: $file\n";
+        # We don't know the actual encoding, assume a Windows-using american/
+        # frenchman/german/finn.  Sorry, polacks and russkies.
+        Encode::from_to($_, "CP1252", "UTF-8");
+    }
 
     if ($_ ne $cont)
     {
