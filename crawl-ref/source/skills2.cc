@@ -560,11 +560,11 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
 {
     SkillMenuEntry::m_skm = this;
 
-    m_min_coord.x = (get_number_of_cols() - SCREEN_COL) / 2 + 3;
-    m_min_coord.y = (get_number_of_lines() - SCREEN_LINES) / 2 + 1;
+    m_min_coord.x = 3;
+    m_min_coord.y = 1;
 
-    m_max_coord.x = SCREEN_COL + m_min_coord.x;
-    m_max_coord.y = SCREEN_LINES + m_min_coord.y;
+    m_max_coord.x = SCREEN_COL + 1;
+    m_max_coord.y = SCREEN_LINES + 1;
 
     m_ff = new MenuFreeform();
     m_ff->init(m_min_coord, m_max_coord, "freeform");
