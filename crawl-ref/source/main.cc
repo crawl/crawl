@@ -56,7 +56,6 @@
 #include "dgn-shoals.h"
 #include "dlua.h"
 #include "directn.h"
-#include "dungeon.h"
 #include "effects.h"
 #include "env.h"
 #include "errors.h"

@@ -29,7 +29,6 @@
 #include "decks.h"
 #include "delay.h"
 #include "dgn-shoals.h"
-#include "dungeon.h"
 #include "directn.h"
 #include "dgnevent.h"
 #include "env.h"
