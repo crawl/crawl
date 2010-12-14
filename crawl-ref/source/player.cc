@@ -5817,7 +5817,7 @@ int player::gdr_perc() const
         return (0);
 
     const int body_base_AC = property(*body_armour, PARM_AC);
-    return (std::max(body_base_AC - 2, 0) * 5 / 2);
+    return (std::max(body_base_AC - 2, 0) * 5);
 }
 
 int player::melee_evasion(const actor *act, ev_ignore_type evit) const
