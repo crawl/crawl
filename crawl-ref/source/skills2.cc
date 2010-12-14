@@ -30,7 +30,6 @@
 #include "skills.h"
 #include "stuff.h"
 #include "tilereg-crt.h"
-#include "hints.h"
 
 
 typedef std::string (*string_fn)();

@@ -11,7 +11,6 @@
 #include "itemprop.h"
 #include "items.h"
 #include "jobs.h"
-#include "libutil.h"
 #include "maps.h"
 #include "misc.h"
 #include "mutation.h"

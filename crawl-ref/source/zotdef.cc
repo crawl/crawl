@@ -15,8 +15,6 @@
 #include "ghost.h"
 #include "items.h" // // for find_floor_item
 #include "itemname.h" // // for make_name
-#include "lev-pand.h"
-#include "los.h"
 #include "makeitem.h"
 #include "message.h"
 #include "mgen_data.h"
@@ -25,14 +23,12 @@
 #include "mon-pick.h"
 #include "mon-util.h"
 #include "player.h"
-#include "religion.h"
 #include "random.h"
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "traps.h"
 #include "libutil.h"
-#include "view.h"
 #include "zotdef.h"
 
 // Size of the mons_alloc array (or at least the bit of

@@ -23,7 +23,6 @@
 #include "viewchar.h"
 #include "viewgeom.h"
 #include "coord.h"
-#include "cloud.h"
 
 static unsigned short _cell_feat_show_colour(const map_cell& cell, bool colored)
 {

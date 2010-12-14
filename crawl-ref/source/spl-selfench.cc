@@ -23,7 +23,6 @@
 #include "spl-other.h"
 #include "spl-util.h"
 #include "stuff.h"
-#include "terrain.h"
 #include "transform.h"
 
 int allowed_deaths_door_hp(void)
