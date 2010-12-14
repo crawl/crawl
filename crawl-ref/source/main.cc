@@ -232,7 +232,7 @@ int main(int argc, char *argv[])
     real_crawl_state = new game_state();
     real_env = new crawl_environment();
 #endif
-    _compile_time_asserts();  // Just to quiet "unused static function" warning.
+    _compile_time_asserts();  // Actually, not just compile time.
 
     init_crash_handler();
 
@@ -4272,6 +4272,7 @@ static void _compile_time_asserts()
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
     COMPILE_CHECK(NUM_SPECIES < SP_UNKNOWN      , c7);
     COMPILE_CHECK(NUM_JOBS < JOB_UNKNOWN        , c8);
+    COMPILE_CHECK(NUM_MONSTERS < MONS_NO_MONSTER, cmax_mon);
 
     // Make sure there's enough room in you.unique_items to hold all
     // the unrandarts.
