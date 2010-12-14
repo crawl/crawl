@@ -75,6 +75,7 @@ bool  check_armour_size(const item_def &item, size_type size);
 bool item_is_rechargeable(const item_def &it, bool hide_charged = false,
                           bool weapons = false);
 int wand_charge_value(int type);
+int wand_max_charges(int type);
 bool is_enchantable_weapon(const item_def &wpn, bool uncurse,
                            bool first = true);
 bool is_enchantable_armour(const item_def &arm, bool uncurse,

@@ -1171,7 +1171,7 @@ bool item_is_rechargeable(const item_def &it, bool hide_charged, bool weapons)
         // Don't offer wands already maximally charged.
         if (it.plus2 == ZAPCOUNT_MAX_CHARGED
             || item_ident(it, ISFLAG_KNOW_PLUSES)
-               && it.plus >= 3 * wand_charge_value(it.sub_type))
+               && it.plus >= wand_max_charges(it.sub_type))
         {
             return (false);
         }
@@ -1195,7 +1195,6 @@ bool item_is_rechargeable(const item_def &it, bool hide_charged, bool weapons)
     return (false);
 }
 
-// Max. charges are 3 times this value.
 int wand_charge_value(int type)
 {
     switch (type)
@@ -1218,6 +1217,11 @@ int wand_charge_value(int type)
     default:
         return 8;
     }
+}
+
+int wand_max_charges(int type)
+{
+    return wand_charge_value(type) * 3;
 }
 
 bool is_enchantable_weapon(const item_def &wpn, bool uncurse, bool first)

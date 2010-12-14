@@ -1901,7 +1901,7 @@ std::string get_item_description(const item_def &item, bool verbose,
     case OBJ_WANDS:
         if (item_type_known(item))
         {
-            const int max_charges = 3 * wand_charge_value(item.sub_type);
+            const int max_charges = wand_max_charges(item.sub_type);
             if (item.plus < max_charges
                 || !item_ident(item, ISFLAG_KNOW_PLUSES))
             {
