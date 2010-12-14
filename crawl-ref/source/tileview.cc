@@ -337,14 +337,13 @@ static int _jitter(SpecialIdx i)
 
 static bool _adjacent_target(dungeon_feature_type target, int x, int y)
 {
-    for (int i = -1; i <= 1; i++)
-        for (int j = -1; j <= 1; j++)
-        {
-            if (!map_bounds(x+i, y+j))
-                continue;
-            if (grd[x+i][y+j] == target)
-                return (true);
-        }
+    for (adjacent_iterator ai(coord_def(x, y), false); ai; ++ai)
+    {
+        if (!map_bounds(*ai))
+            continue;
+        if (grd(*ai) == target)
+            return (true);
+    }
 
     return (false);
 }
