@@ -46,7 +46,7 @@ public:
     SkillMenuEntry() {};
     SkillMenuEntry(coord_def coord, MenuFreeform* ff);
     void set_skill(skill_type sk = SK_NONE);
-    skill_type get_skill();
+    skill_type get_skill() const;
     void set_name(bool keep_hotkey);
     void set_display();
     int get_id();
@@ -119,11 +119,11 @@ private:
 
     std::queue<int> m_disp_queue;
 
+    SkillMenuEntry* _find_entry(skill_type sk);
     void _init_disp_queue();
     void _init_title();
     void _init_footer();
     void _refresh_display();
-    void _refresh_name(skill_type sk);
     void _refresh_names();
     void _set_title();
     void _set_skills();

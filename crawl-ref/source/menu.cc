@@ -3003,7 +3003,7 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
         case CK_LEFT:
         case CK_RIGHT:
         case CK_ENTER:
-            m_active_item = m_default_item;
+            set_active_item(m_default_item);
             return MenuObject::INPUT_ACTIVE_CHANGED;
         }
 
