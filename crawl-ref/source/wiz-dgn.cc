@@ -345,10 +345,10 @@ void wizard_create_feature()
             return;
         }
 
-        dungeon_terrain_changed(you.pos(), feat, false);
 #ifdef USE_TILE
         env.tile_flv(you.pos()).special = 0;
 #endif
+        dungeon_terrain_changed(you.pos(), feat, false);
     }
     else
         canned_msg(MSG_OK);
