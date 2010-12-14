@@ -44,6 +44,8 @@
 #include "message.h"
 #include "state.h"
 #include "stuff.h"
+#include "syscalls.h"
+#include "unicode.h"
 
 // for trim_string:
 #include "initfile.h"
@@ -650,7 +652,7 @@ int macro_buf_get()
     return (key);
 }
 
-static void write_map(std::ofstream &f, const macromap &mp, const char *key)
+static void write_map(FILE *f, const macromap &mp, const char *key)
 {
     for (macromap::const_iterator i = mp.begin(); i != mp.end(); i++)
     {
@@ -658,8 +660,8 @@ static void write_map(std::ofstream &f, const macromap &mp, const char *key)
         // macro struct for all used keyboard commands.
         if (i->second.size())
         {
-            f << key  << vtostr((*i).first) << std::endl
-              << "A:" << vtostr((*i).second) << std::endl << std::endl;
+            fprintf(f, "%s%s\nA:%s\n\n", OUTS(key),
+                OUTS(vtostr((*i).first)), OUTS(vtostr((*i).second)));
         }
     }
 }
@@ -669,18 +671,21 @@ static void write_map(std::ofstream &f, const macromap &mp, const char *key)
  */
 void macro_save()
 {
-    std::ofstream f;
+    FILE *f;
     const std::string macrofile = get_macro_file();
-    f.open(macrofile.c_str());
+    f = fopen_u(macrofile.c_str(), "w");
     if (!f)
     {
         mprf(MSGCH_ERROR, "Couldn't open %s for writing!", macrofile.c_str());
         return;
     }
 
-    f << "# " CRAWL " " << Version::Long() << " macro file" << std::endl
-      << "# WARNING: This file is entirely auto-generated." << std::endl
-      << std::endl << "# Key Mappings:" << std::endl;
+    fprintf(f, "# %s %s macro file\n"
+               "# WARNING: This file is entirely auto-generated.\n"
+               "\n"
+               "# Key Mappings:\n",
+            OUTS(CRAWL), // ok, localizing the game name is not likely
+            OUTS(Version::Long())); // nor the version string
     for (int mc = KMC_DEFAULT; mc < KMC_CONTEXT_COUNT; ++mc)
     {
         char keybuf[30] = "K:";
@@ -689,11 +694,11 @@ void macro_save()
         write_map(f, Keymaps[mc], keybuf);
     }
 
-    f << "# Command Macros:" << std::endl;
+    fprintf(f, "# Command Macros:\n");
     write_map(f, Macros, "M:");
 
     crawl_state.unsaved_macros = false;
-    f.close();
+    fclose(f);
 }
 
 /*
