@@ -696,10 +696,12 @@ void tile_place_monster(const coord_def &gc, const monster* mon)
     if (pref != TAGPREF_NAMED && mon->friendly())
         return;
 
-    // HACK.  Names cover up pan demons in a weird way.
-    if (mon->type == MONS_PANDEMONIUM_DEMON)
+    // HACK.  Large-tile monsters don't interact well with name tags.
+    if (mon->type == MONS_PANDEMONIUM_DEMON
+        || mon->type == MONS_LERNAEAN_HYDRA)
+    {
         return;
-
+    }
     tiles.add_text_tag(TAG_NAMED_MONSTER, mon);
 }
 
