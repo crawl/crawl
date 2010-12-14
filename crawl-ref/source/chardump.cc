@@ -55,6 +55,7 @@
 #include "env.h"
 #include "transform.h"
 #include "travel.h"
+#include "unicode.h"
 #include "view.h"
 #include "viewchar.h"
 #include "xom.h"
@@ -1247,13 +1248,6 @@ static std::string morgue_directory()
 
 void dump_map(FILE *fp, bool debug, bool dist)
 {
-    // Duplicate the screenshot() trick.
-    FixedVector<ucs_t, NUM_DCHAR_TYPES> char_table_bk;
-    char_table_bk = Options.char_table;
-
-    init_char_table(CSET_ASCII);
-    init_show_table();
-
     if (debug)
     {
         // Write the whole map out without checking for mappedness. Handy
@@ -1273,7 +1267,10 @@ void dump_map(FILE *fp, bool debug, bool dist)
                     fputc('0' + travel_point_distance[x][y], fp);
                 }
                 else
-                    fputc(get_feature_def(grd[x][y]).symbol, fp);
+                {
+                    fputs(OUTS(stringize_glyph(
+                               get_feature_def(grd[x][y]).symbol)), fp);
+                }
             }
             fputc('\n', fp);
         }
@@ -1295,15 +1292,14 @@ void dump_map(FILE *fp, bool debug, bool dist)
         for (int y = min_y; y <= max_y; ++y)
         {
             for (int x = min_x; x <= max_x; ++x)
-                fputc(get_cell_glyph(coord_def(x, y)).ch, fp);
+            {
+                fputs(OUTS(stringize_glyph(
+                           get_cell_glyph(coord_def(x, y)).ch)), fp);
+            }
 
             fputc('\n', fp);
         }
     }
-
-    // Restore char and feature tables
-    Options.char_table = char_table_bk;
-    init_show_table();
 }
 
 void dump_map(const char* fname, bool debug, bool dist)
