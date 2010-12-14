@@ -49,7 +49,6 @@
 #include "travel.h"
 #include "view.h"
 #include "viewchar.h"
-#include "zotdef.h"
 #ifdef USE_TILE
  #include "tiledef-player.h"
  #include "tilepick.h"

@@ -63,7 +63,6 @@
 #include "spl-util.h"
 #include "spl-wpnench.h"
 #include "spl-zap.h"
-#include "sprint.h"
 #include "state.h"
 #include "stuff.h"
 #ifdef USE_TILE
