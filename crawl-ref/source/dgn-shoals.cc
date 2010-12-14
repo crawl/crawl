@@ -689,7 +689,7 @@ void dgn_shoals_generate_flora()
 void dgn_build_shoals_level(int level_number)
 {
     env.level_build_method += make_stringf(" shoals+ [%d]", level_number);
-    env.level_layout_type   = "shoals";
+    env.level_layout_types.insert("shoals");
 
     const int shoals_depth = level_id::current().depth - 1;
     if (you.level_type != LEVEL_LABYRINTH && you.level_type != LEVEL_PORTAL_VAULT)

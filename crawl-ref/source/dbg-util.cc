@@ -51,7 +51,8 @@ void debug_dump_levgen()
     {
         mpr("Currently generating level.");
         method = env.level_build_method;
-        type   = env.level_layout_type;
+        type   = comma_separated_line(env.level_layout_types.begin(),
+                                      env.level_layout_types.end(), ", ");
     }
     else
     {

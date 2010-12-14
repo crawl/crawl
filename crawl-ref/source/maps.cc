@@ -575,9 +575,17 @@ static bool vault_unforbidden(const map_def &map)
 
 static bool map_matches_layout_type(const map_def &map)
 {
-    return (env.level_layout_type.empty()
-            || !map.has_tag_prefix("layout_")
-            || map.has_tag("layout_" + env.level_layout_type));
+    if (env.level_layout_types.empty() || !map.has_tag_prefix("layout_"))
+        return true;
+
+    for (string_set::const_iterator i = env.level_layout_types.begin();
+         i != env.level_layout_types.end(); ++i)
+    {
+        if (map.has_tag("layout_" + *i))
+            return true;
+    }
+
+    return false;
 }
 
 static bool _map_matches_species(const map_def &map)

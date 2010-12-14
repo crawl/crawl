@@ -36,9 +36,9 @@ struct crawl_environment
 
     string_set                               level_uniq_maps;
     string_set                               level_uniq_map_tags;
+    string_set                               level_layout_types;
 
     std::string                              level_build_method;
-    std::string                              level_layout_type;
 
     vault_placement_refv                     level_vaults;
 
