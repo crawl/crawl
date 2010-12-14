@@ -3038,11 +3038,32 @@ static void tag_read_level_monsters(reader &th, int minorVersion)
     }
 }
 
+static void _debug_count_tiles()
+{
+#ifdef DEBUG_DIAGNOSTICS
+    std::map<int,bool> found;
+    int t, cnt = 0;
+    for (int i = 0; i < GXM; i++)
+        for (int j = 0; j < GYM; j++)
+        {
+            t = env.tile_bk_bg[i][j];
+            if (found.find(t) == found.end())
+                cnt++, found[t] = true;
+            t = env.tile_bk_fg[i][j];
+            if (found.find(t) == found.end())
+                cnt++, found[t] = true;
+        }
+    dprf("Unique tiles found: %d", cnt);
+#endif
+}
+
 void tag_read_level_tiles(reader &th)
 {
     if (!unmarshallBoolean(th))
     {
+        dprf("Tile data missing -- recreating from scratch.");
         tag_missing_level_tiles();
+        _debug_count_tiles();
         return;
     }
 #ifdef USE_TILE
@@ -3106,6 +3127,7 @@ void tag_read_level_tiles(reader &th)
             env.tile_flv[x][y].special = unmarshallShort(th);
             env.tile_flv[x][y].feat   = unmarshallShort(th);
         }
+    _debug_count_tiles();
 
     mcache.read(th);
 #else
