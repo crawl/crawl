@@ -3841,6 +3841,8 @@ static void _build_rooms(const dgn_region_list &excluded,
                          const std::vector<coord_def> &connections_needed,
                          int nrooms)
 {
+    env.level_layout_types.insert("rooms");
+
     int which_room = 0;
     const bool exclusive = !one_chance_in(10);
 
