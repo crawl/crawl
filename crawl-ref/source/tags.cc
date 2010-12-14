@@ -2597,8 +2597,10 @@ static void tag_construct_level_monsters(writer &th)
     // how many monsters?
     nm = _last_used_index(menv, MAX_MONSTERS);
     marshallShort(th, nm);
+#if TAG_MAJOR_VERSION == 31
     // how many monster inventory slots?
     marshallByte(th, NUM_MONSTER_SLOTS);
+#endif
 
     for (int i = 0; i < nm; i++)
     {
@@ -2992,8 +2994,10 @@ static void tag_read_level_monsters(reader &th, int minorVersion)
     // how many monsters?
     count = unmarshallShort(th);
     ASSERT(count >= 0 && count <= MAX_MONSTERS);
+#if TAG_MAJOR_VERSION == 31
     // how many monster inventory slots?
     icount = unmarshallByte(th);
+#endif
 
     for (i = 0; i < count; i++)
     {
