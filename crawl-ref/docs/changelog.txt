@@ -16,6 +16,7 @@ Breaks save compatibility with the 0.7 release.
 * Greatly improve player Draconians.
 * Replace Selective Amnesia with forgetting spells by book destruction.
 * Many interface improvements.
+* Improved heavy armour.
 
 Gods
 ----
@@ -67,7 +68,7 @@ Character
 * Allow Merfolk/Kenku to blink over deep water.
 * Allow Kenku to stop flying.
 * Apply terrain change to player when banished.
-* Bring Merfolk HP to Human HP levels
+* Bring Merfolk HP to Human HP levels.
 
 Interface
 ---------
@@ -266,6 +267,9 @@ Items
 * Stop the generation of racial missiles.
 * Make ball of energy stat loss now drains between 1 and 2/3 max Int.
 * Improve some unrandarts: add brands, more damage.
+* Doubled guaranteed damage reduction from armour.
+* Armour can be enchanted up to a bonus equivalent of its base AC.
+* Enchant armour scrolls don't fail because of high bonus anymore.
 
 Tiles
 -----
