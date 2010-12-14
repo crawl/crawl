@@ -23,3 +23,4 @@ static inline std::string mb_to_utf8(const std::string &s)
     return mb_to_utf8(s.c_str());
 }
 
+#define OUTS(x) utf8_to_mb(x).c_str()
