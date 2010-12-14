@@ -4320,9 +4320,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
     }
 
     // Even if not affected, it may be uncursed.
-    if (!is_enchantable_armour(arm, false)
-        || arm.plus > MAX_SEC_ENCHANT
-           && x_chance_in_y(arm.plus, MAX_ARM_ENCHANT))
+    if (!is_enchantable_armour(arm, false))
     {
         if (is_cursed)
         {
@@ -4339,10 +4337,6 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
         {
             if (!quiet)
                 canned_msg(MSG_NOTHING_HAPPENS);
-
-            // Xom thinks it's funny if enchantment is possible but fails.
-            if (is_enchantable_armour(arm, false))
-                xom_is_stimulated(32);
 
             return (false);
         }
