@@ -945,13 +945,12 @@ bool create_trap(trap_type spec_type)
         return (false);
     }
     // only try to create on floor squares
-    if (grid >= DNGN_FLOOR_MIN && grid <= DNGN_FLOOR_MAX)
-        return place_specific_trap(abild.target, spec_type);
-    else
+    if (!feat_is_floor(grid))
     {
         mpr("You can't create a trap there!");
         return (false);
     }
+    return place_specific_trap(abild.target, spec_type);
 }
 
 bool create_zotdef_ally(monster_type mtyp, const char *successmsg)
