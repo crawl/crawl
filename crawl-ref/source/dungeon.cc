@@ -4216,14 +4216,15 @@ bool dgn_place_map(const map_def *mdef,
         }
     }
 
+    const int map_index = env.level_vaults.size();
     did_map = _build_secondary_vault(you.absdepth0, mdef, clobber,
                                      make_no_exits, where);
 
     // Activate any markers within the map.
     if (did_map && !Generating_Level)
     {
-        const vault_placement &vp =
-            *env.level_vaults[env.level_vaults.size() - 1];
+        const vault_placement &vp = *env.level_vaults[map_index];
+        ASSERT(mdef->name == vp.map.name);
         for (vault_place_iterator vpi(vp); vpi; ++vpi)
         {
             const coord_def p = *vpi;
@@ -4331,12 +4332,13 @@ static bool _build_secondary_vault(int level_number, const map_def *vault,
                                    bool clobber, bool no_exits,
                                    const coord_def &where)
 {
+    const int map_index = env.level_vaults.size();
     if (_build_vault_impl(level_number, vault, true, !clobber, no_exits, where))
     {
         if (!no_exits)
         {
-            const vault_placement &vp =
-                *env.level_vaults[ env.level_vaults.size() - 1 ];
+            const vault_placement &vp = *env.level_vaults[map_index];
+            ASSERT(vault->name == vp.map.name);
             _connect_vault(vp);
         }
         return (true);
