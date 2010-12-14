@@ -379,7 +379,7 @@ bool builder(int level_number, level_area_type level_type, bool enable_random_ma
                                level_id::current().describe().c_str()).c_str());
     }
 
-    env.level_layout_type.clear();
+    env.level_layout_types.clear();
     return (false);
 }
 
@@ -425,10 +425,14 @@ static bool _build_level_vetoable(int level_number, level_area_type level_type,
             env.level_build_method = env.level_build_method.substr(1);
         }
 
+        std::string level_layout_type = comma_separated_line(
+            env.level_layout_types.begin(),
+            env.level_layout_types.end(), ", ");
+
         // Save information in the level's properties hash table
         // so we can inlcude it in crash reports.
         env.properties[BUILD_METHOD_KEY] = env.level_build_method;
-        env.properties[LAYOUT_TYPE_KEY]  = env.level_layout_type;
+        env.properties[LAYOUT_TYPE_KEY]  = level_layout_type;
         env.properties[LEVEL_ID_KEY]     = level_id::current().describe();
 
         // Save information in the player's properties has table so
@@ -460,7 +464,7 @@ static bool _build_level_vetoable(int level_number, level_area_type level_type,
 
         _dgn_postprocess_level();
 
-        env.level_layout_type.clear();
+        env.level_layout_types.clear();
         env.level_uniq_maps.clear();
         env.level_uniq_map_tags.clear();
         _dgn_map_colour_fixup();
@@ -1205,7 +1209,7 @@ void dgn_reset_level(bool enable_random_maps)
     _portal_vault_map_name.clear();
     _you_vault_list.clear();
     env.level_build_method.clear();
-    env.level_layout_type.clear();
+    env.level_layout_types.clear();
     level_clear_vault_memory();
     dgn_colour_grid.reset(NULL);
 
@@ -2438,7 +2442,7 @@ static void _portal_vault_level(int level_number)
 {
     env.level_build_method += make_stringf(" portal_vault_level [%d]",
                                      level_number);
-    env.level_layout_type   = "portal vault";
+    env.level_layout_types.insert("portal vault");
 
     // level_type_tag may contain spaces for human readability, but the
     // corresponding vault tag name cannot use spaces, so force spaces to
@@ -2801,7 +2805,7 @@ static void _make_random_rooms(int num, int max_doors, int door_level,
 static bool _builder_basic(int level_number)
 {
     env.level_build_method += make_stringf(" basic [%d]", level_number);
-    env.level_layout_type  = "basic";
+    env.level_layout_types.insert("basic");
 
     int corrlength = 2 + random2(14);
     int no_corr = (one_chance_in(100) ? 500 + random2(500)
@@ -5962,7 +5966,7 @@ static void _caves_level(int level_number)
 static void _bigger_room()
 {
     env.level_build_method += " bigger_room";
-    env.level_layout_type   = "open";
+    env.level_layout_types.insert("open");
 
     int i, j;
 
@@ -5996,7 +6000,7 @@ static void _plan_main(int level_number, int force_plan)
 {
     env.level_build_method += make_stringf(" plan_main [%d%s]", level_number,
                                      force_plan ? " force_plan" : "");
-    env.level_layout_type   = "rooms";
+    env.level_layout_types.insert("rooms");
 
     bool do_stairs = false;
     dungeon_feature_type special_grid = (one_chance_in(3) ? DNGN_METAL_WALL
@@ -6024,7 +6028,7 @@ static void _place_layout_vault(int level_number, const char *name,
                                 const char *method, const char *type)
 {
     env.level_build_method += make_stringf(" %s [%d]", method, level_number);
-    env.level_layout_type = type;
+    env.level_layout_types.insert(type);
 
     const map_def *vault = find_map_by_name(make_stringf("layout_%s", name));
     ASSERT(vault);
@@ -6054,7 +6058,7 @@ static bool _plan_3(int level_number)
 static bool _plan_4(dgn_region_list *excluded, dungeon_feature_type force_wall)
 {
     env.level_build_method += make_stringf(" plan_4 [%d]", (int) force_wall);
-    env.level_layout_type   = "city";
+    env.level_layout_types.insert("city");
 
     int number_boxes = 5000;
     dungeon_feature_type drawing = DNGN_ROCK_WALL;
@@ -6690,7 +6694,7 @@ static void _labyrinth_add_glass_walls(const dgn_region &region)
 static void _labyrinth_level(int level_number)
 {
     env.level_build_method += make_stringf(" labyrinth [%d]", level_number);
-    env.level_layout_type   = "labyrinth";
+    env.level_layout_types.insert("labyrinth");
 
     dgn_region lab = dgn_region::absolute(LABYRINTH_BORDER,
                                            LABYRINTH_BORDER,

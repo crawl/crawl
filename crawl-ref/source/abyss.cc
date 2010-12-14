@@ -109,7 +109,7 @@ static dungeon_feature_type _abyss_proto_feature()
 void generate_abyss()
 {
     env.level_build_method += " abyss";
-    env.level_layout_type   = "abyss";
+    env.level_layout_types.insert("abyss");
 
 #ifdef DEBUG_ABYSS
     mprf(MSGCH_DIAGNOSTICS,

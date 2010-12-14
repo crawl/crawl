@@ -1508,7 +1508,7 @@ static void unmarshall_level_vault_placements(reader &th)
 static void marshall_level_vault_data(writer &th)
 {
     marshallStringNoMax(th, env.level_build_method);
-    marshallStringNoMax(th, env.level_layout_type);
+    marshallSet(th, env.level_layout_types, marshallStringNoMax);
 
     marshall_level_map_masks(th);
     marshall_level_map_unique_ids(th);
@@ -1518,7 +1518,13 @@ static void marshall_level_vault_data(writer &th)
 static void unmarshall_level_vault_data(reader &th)
 {
     env.level_build_method = unmarshallStringNoMax(th);
-    env.level_layout_type  = unmarshallStringNoMax(th);
+#if TAG_MAJOR_VERSION == 31
+    if (th.getMinorVersion() < TAG_MINOR_LAYOUT_TYPES)
+        env.level_layout_types.insert(unmarshallStringNoMax(th));
+    else
+#endif
+    unmarshallSet(th, env.level_layout_types, unmarshallStringNoMax);
+
     unmarshall_level_map_masks(th);
     unmarshall_level_map_unique_ids(th);
     unmarshall_level_vault_placements(th);
