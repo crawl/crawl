@@ -1633,7 +1633,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
 
     // dragons and hydras ('D')
     case MONS_LERNAEAN_HYDRA:
-        return TILEP_MONS_LERNAEAN_HYDRA;
+        return _mon_clamp(TILEP_MONS_LERNAEAN_HYDRA, number - 1);
     case MONS_XTAHUA:
         return TILEP_MONS_XTAHUA;
 

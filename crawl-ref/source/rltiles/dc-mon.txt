@@ -451,7 +451,16 @@ death_drake MONS_DEATH_DRAKE
 ## Dragons ('D')
 %sdir dc-mon/unique
 xtahua MONS_XTAHUA
-lernaean_hydra MONS_LERNAEAN_HYDRA
+lernaean_hydra01 MONS_LERNAEAN_HYDRA
+lernaean_hydra02
+lernaean_hydra03
+lernaean_hydra04
+lernaean_hydra05
+lernaean_hydra06
+lernaean_hydra07
+lernaean_hydra08
+lernaean_hydra09
+lernaean_hydra10
 serpent_of_hell MONS_SERPENT_OF_HELL
 %sdir dc-mon
 wyvern MONS_WYVERN
