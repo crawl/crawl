@@ -1340,7 +1340,7 @@ static bool write_dump(const std::string &fname, dump_params &par)
 
     if (handle != NULL)
     {
-        fputs(par.text.c_str(), handle);
+        fputs(OUTS(par.text), handle);
         fclose(handle);
         succeeded = true;
     }
@@ -1398,6 +1398,7 @@ void whereis_record(const char *status)
 
     if (FILE *handle = fopen_replace(file_name.c_str()))
     {
+        // no need to bother with supporting ancient charsets for DGL
         fprintf(handle, "%s:status=%s\n",
                 xlog_status_line().c_str(),
                 status? status : "");
