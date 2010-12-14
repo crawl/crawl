@@ -11,6 +11,7 @@ Contents:  A. Introduction
            D. Kinds of vaults
            E. Hints for level makers
            F. Principles of vault making
+           G. How vaults are picked
 
 This document explains some basics of vault making. For actual vault work,
 you will need to look at syntax.txt. However, by simply looking at the 
@@ -324,3 +325,27 @@ ways, giving monsters special names.
 Each of these have their uses, but ask yourself each time if the vaults
 really benefits from this. If all vaults use colours, actual flavour has
 been lost.
+
+
+G.   How vaults are picked
+==========================
+
+The dungeon builder selects vaults by:
+
+1. PLACE: Before the dungeon builder starts building a level, it looks
+   for non-minivaults that are marked for the same PLACE: and places
+   them. After building the level, it looks for minivaults that are marked
+   for the same PLACE: and attempts to place them.
+
+2. TAGS: Branch entries, Pandemonium special levels, etc. are placed by
+   looking for vaults with a particular tag, for instance "mnoleg".
+
+3. DEPTH: When building a level, the dungeon builder looks for random
+   vaults that are eligible to be placed in that DEPTH range.
+
+If you do not want a vault to be randomly generated, do not assign it
+a DEPTH. If the vault is in a des file with a default-depth set, you
+can force it to have no DEPTH setting with an empty DEPTH: line.
+
+Vaults without a DEPTH: should be eligible to be selected in some
+other way, either by PLACE: or by tag.
