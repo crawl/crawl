@@ -2584,13 +2584,18 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
 
 static void tag_construct_level_monsters(writer &th)
 {
-    // how many mons_alloc?
-    marshallByte(th, MAX_MONS_ALLOC);
+    int nm = 0;
     for (int i = 0; i < MAX_MONS_ALLOC; ++i)
+        if (env.mons_alloc[i] != MONS_NO_MONSTER)
+            nm = i + 1;
+
+    // how many mons_alloc?
+    marshallByte(th, nm);
+    for (int i = 0; i < nm; ++i)
         marshallShort(th, env.mons_alloc[i]);
 
     // how many monsters?
-    const int nm = _last_used_index(menv, MAX_MONSTERS);
+    nm = _last_used_index(menv, MAX_MONSTERS);
     marshallShort(th, nm);
     // how many monster inventory slots?
     marshallByte(th, NUM_MONSTER_SLOTS);
