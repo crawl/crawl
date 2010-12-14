@@ -278,7 +278,7 @@ void SkillMenuEntry::set_skill(skill_type sk)
     }
 }
 
-skill_type SkillMenuEntry::get_skill()
+skill_type SkillMenuEntry::get_skill() const
 {
     return m_sk;
 }
@@ -640,7 +640,24 @@ void SkillMenu::change_display()
 void SkillMenu::toggle_practise(skill_type sk)
 {
     you.practise_skill[sk] = !you.practise_skill[sk];
-    _refresh_name(sk);
+    SkillMenuEntry* skme = _find_entry(sk);
+    skme->set_name(true);
+    const std::vector<int> hotkeys = skme->get_name_item()->get_hotkeys();
+
+    if (hotkeys.size())
+    {
+        int letter;
+        letter = hotkeys[0];
+        MenuItem* next_item = m_ff->select_item_by_hotkey(++letter);
+        if (next_item != NULL)
+        {
+            next_item->select(false);
+            if (m_ff->get_active_item() != NULL)
+                m_ff->set_active_item(next_item);
+            else
+                m_ff->set_default_item(next_item);
+        }
+    }
 }
 
 void SkillMenu::show_description(skill_type sk)
@@ -673,6 +690,16 @@ void SkillMenu::set_crosstrain()
 void SkillMenu::set_antitrain()
 {
     m_antitrain = true;
+}
+
+SkillMenuEntry* SkillMenu::_find_entry(skill_type sk)
+{
+    for (int col = 0; col < SK_ARR_COL; ++col)
+        for (int ln = 0; ln < SK_ARR_LN; ++ln)
+            if (m_skills[ln][col].get_skill() == sk)
+                return &m_skills[ln][col];
+
+    return NULL;
 }
 
 void SkillMenu::_init_disp_queue()
@@ -730,18 +757,6 @@ void SkillMenu::_init_footer()
     m_show_all->add_hotkey('*');
     m_show_all->set_id(-4);
 
-}
-
-void SkillMenu::_refresh_name(skill_type sk)
-{
-    for (int col = 0; col < SK_ARR_COL; ++col)
-        for (int ln = 0; ln < SK_ARR_LN; ++ln)
-            if (m_skills[ln][col].get_skill() == sk)
-            {
-                m_skills[ln][col].set_name(true);
-                m_ff->set_default_item(m_skills[ln][col].get_name_item());
-                break;
-            }
 }
 
 void SkillMenu::_refresh_names()
