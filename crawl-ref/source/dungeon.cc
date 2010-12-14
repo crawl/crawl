@@ -5969,14 +5969,9 @@ static void _bigger_room()
     env.level_build_method += " bigger_room";
     env.level_layout_types.insert("open");
 
-    int i, j;
-
-    for (i = 10; i < (GXM - 10); i++)
-        for (j = 10; j < (GYM - 10); j++)
-        {
-            if (grd[i][j] == DNGN_ROCK_WALL)
-                grd[i][j] = DNGN_FLOOR;
-        }
+    for (rectangle_iterator ri(10); ri; ++ri)
+        if (grd(*ri) == DNGN_ROCK_WALL)
+            grd(*ri) = DNGN_FLOOR;
 
     dungeon_feature_type pool_type = DNGN_DEEP_WATER;
 
