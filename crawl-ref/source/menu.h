@@ -554,6 +554,16 @@ public:
     const std::vector<int>& get_hotkeys() const;
     void clear_hotkeys();
 
+    void set_link_left(MenuItem* item);
+    void set_link_right(MenuItem* item);
+    void set_link_up(MenuItem* item);
+    void set_link_down(MenuItem* item);
+
+    MenuItem* get_link_left() const;
+    MenuItem* get_link_right() const;
+    MenuItem* get_link_up() const;
+    MenuItem* get_link_down() const;
+
 protected:
     coord_def m_min_coord;
     coord_def m_max_coord;
@@ -567,6 +577,11 @@ protected:
     COLORS m_fg_colour;
     COLORS m_highlight_colour;
     int m_bg_colour;
+
+    MenuItem* m_link_left;
+    MenuItem* m_link_right;
+    MenuItem* m_link_up;
+    MenuItem* m_link_down;
 
 #ifdef USE_TILE
     // Holds the conversion values to translate unit values to pixel values

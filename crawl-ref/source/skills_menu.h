@@ -129,6 +129,8 @@ private:
     void _set_skills();
     void _set_help(int flag = SKMF_NONE);
     void _set_footer();
+    TextItem* _find_closest_selectable(int start_ln, int col);
+    void _set_links();
     int _get_next_action() const;
     int _get_next_display() const;
 };

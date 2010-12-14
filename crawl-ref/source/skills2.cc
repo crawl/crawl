@@ -774,6 +774,7 @@ void SkillMenu::_refresh_names()
             }
             skme.set_name(false);
         }
+    _set_links();
 }
 
 void SkillMenu::_refresh_display()
@@ -859,6 +860,8 @@ void SkillMenu::_set_skills()
     }
     if (previous_active != -1)
         m_ff->set_active_item(previous_active);
+
+    _set_links();
 }
 
 void SkillMenu::_set_help(int flag)
@@ -993,6 +996,66 @@ void SkillMenu::_set_footer()
 
     text = is_set(SKMF_DISP_ALL) ? "hide unknown" : "show all";
     m_show_all->set_text(make_stringf("[*:%-12s]", text.c_str()));
+}
+
+TextItem* SkillMenu::_find_closest_selectable(int start_ln, int col)
+{
+    int delta = 0;
+    while (1)
+    {
+        int ln_up = std::max(0, start_ln - delta);
+        int ln_down = std::min(SK_ARR_LN, start_ln + delta);
+        if (m_skills[ln_up][col].is_selectable())
+            return m_skills[ln_up][col].get_name_item();
+        else if (m_skills[ln_down][col].is_selectable())
+            return m_skills[ln_down][col].get_name_item();
+        else if (ln_up == 0 && ln_down == SK_ARR_LN)
+            return NULL;
+
+        ++delta;
+    }
+}
+
+void SkillMenu::_set_links()
+{
+    TextItem* top_left = NULL;
+    TextItem* top_right = NULL;
+    TextItem* bottom_left = NULL;
+    TextItem* bottom_right = NULL;
+
+    for (int ln = 0; ln < SK_ARR_LN; ++ln)
+    {
+        if (m_skills[ln][0].is_selectable())
+        {
+            TextItem* left = m_skills[ln][0].get_name_item();
+            left->set_link_up(NULL);
+            left->set_link_down(NULL);
+            left->set_link_right(_find_closest_selectable(ln, 1));
+            if (top_left == NULL)
+                top_left = left;
+            bottom_left = left;
+        }
+        if (m_skills[ln][1].is_selectable())
+        {
+            TextItem* right = m_skills[ln][1].get_name_item();
+            right->set_link_up(NULL);
+            right->set_link_down(NULL);
+            right->set_link_left(_find_closest_selectable(ln, 0));
+            if (top_right == NULL)
+                top_right = right;
+            bottom_right = right;
+        }
+    }
+    if (top_left != NULL)
+    {
+        top_left->set_link_up(bottom_right);
+        bottom_left->set_link_down(top_right);
+    }
+    if (top_right != NULL)
+    {
+        top_right->set_link_up(bottom_left);
+        bottom_right->set_link_down(top_left);
+    }
 }
 
 int SkillMenu::_get_next_action() const

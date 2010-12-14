@@ -2306,7 +2306,8 @@ void PrecisionMenu::draw_menu()
 
 MenuItem::MenuItem(): m_min_coord(0,0), m_max_coord(0,0), m_selected(false),
                       m_allow_highlight(true), m_dirty(false), m_visible(false),
-                      m_item_id(-1)
+                      m_link_left(NULL), m_link_right(NULL), m_link_up(NULL),
+                      m_link_down(NULL), m_item_id(-1)
 {
 #ifdef USE_TILE
     m_unit_width_pixels = tiles.get_crt_font()->char_width();
@@ -2437,6 +2438,46 @@ void MenuItem::clear_hotkeys()
 const std::vector<int>& MenuItem::get_hotkeys() const
 {
     return m_hotkeys;
+}
+
+void MenuItem::set_link_left(MenuItem* item)
+{
+    m_link_left = item;
+}
+
+void MenuItem::set_link_right(MenuItem* item)
+{
+    m_link_right = item;
+}
+
+void MenuItem::set_link_up(MenuItem* item)
+{
+    m_link_up = item;
+}
+
+void MenuItem::set_link_down(MenuItem* item)
+{
+    m_link_down = item;
+}
+
+MenuItem* MenuItem::get_link_left() const
+{
+    return m_link_left;
+}
+
+MenuItem* MenuItem::get_link_right() const
+{
+    return m_link_right;
+}
+
+MenuItem* MenuItem::get_link_up() const
+{
+    return m_link_up;
+}
+
+MenuItem* MenuItem::get_link_down() const
+{
+    return m_link_down;
 }
 
 #ifdef USE_TILE
@@ -3362,12 +3403,18 @@ MenuItem* MenuFreeform::_find_item_by_direction(const MenuItem* start,
     switch (dir)
     {
     case UP:
+        if (start->get_link_up())
+            return start->get_link_up();
+
         aabb_start.x = start->get_min_coord().x;
         aabb_end.x = start->get_max_coord().x;
         aabb_start.y = 0; // top of screen
         aabb_end.y = start->get_min_coord().y;
         break;
     case DOWN:
+        if (start->get_link_down())
+            return start->get_link_down();
+
         aabb_start.x = start->get_min_coord().x;
         aabb_end.x = start->get_max_coord().x;
         aabb_start.y = start->get_max_coord().y;
@@ -3379,12 +3426,18 @@ MenuItem* MenuFreeform::_find_item_by_direction(const MenuItem* start,
         aabb_end.y = 32767;
         break;
     case LEFT:
+        if (start->get_link_left())
+            return start->get_link_left();
+
         aabb_start.x = 0; // left of screen
         aabb_end.x = start->get_min_coord().x;
         aabb_start.y = start->get_min_coord().y;
         aabb_end.y = start->get_max_coord().y;
         break;
     case RIGHT:
+        if (start->get_link_right())
+            return start->get_link_right();
+
         aabb_start.x = start->get_max_coord().x;
         // we again want a value that is always larger then the width of screen
         aabb_end.x = 32767;
