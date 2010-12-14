@@ -360,10 +360,10 @@ void tile_floor_halo(dungeon_feature_type target, tileidx_t tile)
             if (!_adjacent_target(target, x, y))
                 continue;
 
-            bool l_flr = (x > 0) ? grd[x-1][y] >= DNGN_FLOOR_MIN : false;
-            bool r_flr = (x < GXM - 1) ? grd[x+1][y] >= DNGN_FLOOR_MIN : false;
-            bool u_flr = (y > 0) ? grd[x][y-1] >= DNGN_FLOOR_MIN : false;
-            bool d_flr = (y < GYM - 1) ? grd[x][y+1] >= DNGN_FLOOR_MIN : false;
+            bool l_flr = (x > 0 && grd[x-1][y] >= DNGN_FLOOR_MIN);
+            bool r_flr = (x < GXM - 1 && grd[x+1][y] >= DNGN_FLOOR_MIN);
+            bool u_flr = (y > 0 && grd[x][y-1] >= DNGN_FLOOR_MIN);
+            bool d_flr = (y < GYM - 1 && grd[x][y+1] >= DNGN_FLOOR_MIN);
 
             bool l_target = _adjacent_target(target, x-1, y);
             bool r_target = _adjacent_target(target, x+1, y);
@@ -829,8 +829,8 @@ static bool _suppress_blood(tileidx_t bg_idx)
 //     gate left open, gate middle open, gate right open.
 //  9. Detected, closed, open, gate left closed, gate middle closed, gate right
 //     closed, gate left open, gate middle open, gate right open.
-static int _get_door_offset (tileidx_t base_tile, bool opened = false,
-                             bool detected = false, int gateway_type = 0)
+static int _get_door_offset(tileidx_t base_tile, bool opened = false,
+                            bool detected = false, int gateway_type = 0)
 {
     int count = tile_dngn_count(base_tile);
     if (count == 1)
