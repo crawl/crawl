@@ -2440,8 +2440,7 @@ static bool _builder_by_type(int level_number, level_area_type level_type)
 
 static void _portal_vault_level(int level_number)
 {
-    env.level_build_method += make_stringf(" portal_vault_level [%d]",
-                                     level_number);
+    env.level_build_method += " portal_vault_level";
     env.level_layout_types.insert("portal vault");
 
     // level_type_tag may contain spaces for human readability, but the
@@ -2804,7 +2803,7 @@ static void _make_random_rooms(int num, int max_doors, int door_level,
 // Returns false if we should skip extras(), otherwise true.
 static bool _builder_basic(int level_number)
 {
-    env.level_build_method += make_stringf(" basic [%d]", level_number);
+    env.level_build_method += " basic";
     env.level_layout_types.insert("basic");
 
     int corrlength = 2 + random2(14);
@@ -6000,8 +5999,8 @@ static void _bigger_room()
 // Various plan_xxx functions.
 static void _plan_main(int level_number, int force_plan)
 {
-    env.level_build_method += make_stringf(" plan_main [%d%s]", level_number,
-                                     force_plan ? " force_plan" : "");
+    env.level_build_method += make_stringf(" plan_main%s",
+                                     force_plan ? " [force_plan]" : "");
     env.level_layout_types.insert("rooms");
 
     bool do_stairs = false;
@@ -6029,7 +6028,7 @@ static void _plan_main(int level_number, int force_plan)
 static void _place_layout_vault(int level_number, const char *name,
                                 const char *method, const char *type)
 {
-    env.level_build_method += make_stringf(" %s [%d]", method, level_number);
+    env.level_build_method += make_stringf(" %s", method);
     env.level_layout_types.insert(type);
 
     const map_def *vault = find_map_by_name(make_stringf("layout_%s", name));
@@ -6695,7 +6694,7 @@ static void _labyrinth_add_glass_walls(const dgn_region &region)
 
 static void _labyrinth_level(int level_number)
 {
-    env.level_build_method += make_stringf(" labyrinth [%d]", level_number);
+    env.level_build_method += " labyrinth";
     env.level_layout_types.insert("labyrinth");
 
     dgn_region lab = dgn_region::absolute(LABYRINTH_BORDER,
