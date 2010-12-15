@@ -5840,7 +5840,7 @@ static std::string _beam_type_name(beam_type type)
                                      return ("INVALID");
     }
     DEBUGSTR("unknown beam type");
-    return("UNKNOWN");
+    return "UNKNOWN";
 }
 
 std::string bolt::get_source_name() const

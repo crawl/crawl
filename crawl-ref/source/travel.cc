@@ -4386,5 +4386,5 @@ bool check_for_interesting_features()
     }
 
     env.map_shadow = env.map_knowledge;
-    return(discoveries.prompt_stop());
+    return discoveries.prompt_stop();
 }

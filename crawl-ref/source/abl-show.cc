@@ -731,18 +731,18 @@ const std::string make_cost_description(ability_type ability)
 
 static std::string _get_food_amount_str(int value)
 {
-    return(value > 300 ? "extremely large" :
-           value > 200 ? "large" :
-           value > 100 ? "moderate" :
-                         "small");
+    return (value > 300 ? "extremely large" :
+            value > 200 ? "large" :
+            value > 100 ? "moderate" :
+                          "small");
 }
 
 static std::string _get_piety_amount_str(int value)
 {
-    return(value > 15 ? "extremely large" :
-           value > 10 ? "large" :
-           value > 5  ? "moderate" :
-                        "small");
+    return (value > 15 ? "extremely large" :
+            value > 10 ? "large" :
+            value > 5  ? "moderate" :
+                         "small");
 }
 
 const std::string make_detailed_cost_description(ability_type ability)

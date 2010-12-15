@@ -1063,7 +1063,7 @@ static int dgn_fixup_stairs(lua_State *ls)
     dungeon_feature_by_name(luaL_checkstring(ls, 2));
 
     if (up_feat == DNGN_UNSEEN && down_feat == DNGN_UNSEEN)
-        return(0);
+        return 0;
 
     for (int y = 0; y < GYM; ++y)
     {
@@ -1121,7 +1121,7 @@ static int dgn_floor_halo(lua_State *ls)
     if (!error.empty())
     {
         luaL_argerror(ls, 2, error.c_str());
-        return(0);
+        return 0;
     }
 
     for (int y = 0; y < GYM; ++y)
