@@ -65,7 +65,7 @@ function trove.get_trove_item(e, value, base_item)
       base_type="armour",
       sub_type="robe",
       ego_type="resistance",
-      plus1=3+crawl.random2(3),
+      plus1=1+crawl.random2(2),
       plus2=false,
       artefact_name=false
     }
