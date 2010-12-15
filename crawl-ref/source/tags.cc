@@ -3041,6 +3041,7 @@ static void tag_read_level_monsters(reader &th, int minorVersion)
 static void _debug_count_tiles()
 {
 #ifdef DEBUG_DIAGNOSTICS
+# ifdef USE_TILE
     std::map<int,bool> found;
     int t, cnt = 0;
     for (int i = 0; i < GXM; i++)
@@ -3054,6 +3055,7 @@ static void _debug_count_tiles()
                 cnt++, found[t] = true;
         }
     dprf("Unique tiles found: %d", cnt);
+# endif
 #endif
 }
 
