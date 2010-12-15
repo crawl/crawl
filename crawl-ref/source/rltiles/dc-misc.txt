@@ -110,7 +110,7 @@ flame FLAME
 berserk BERSERK
 %rim 0
 may_stab_brand MAY_STAB_BRAND
-stab_brand STAB_BRAND
+sleeping STAB_BRAND
 out_of_sight MESH
 out_of_range OOR_MESH
 magicmap MAGIC_MAP_MESH

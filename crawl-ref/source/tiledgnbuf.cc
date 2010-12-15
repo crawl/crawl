@@ -569,12 +569,12 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
     else if (fg & TILE_FLAG_STAB)
     {
         m_buf_main.add(TILE_STAB_BRAND, x, y);
-        status_shift += 8;
+        status_shift += 15;
     }
     else if (fg & TILE_FLAG_MAY_STAB)
     {
         m_buf_main.add(TILE_MAY_STAB_BRAND, x, y);
-        status_shift += 5;
+        status_shift += 8;
     }
 
     if (fg & TILE_FLAG_POISON)
