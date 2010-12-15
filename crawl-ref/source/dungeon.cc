@@ -2614,8 +2614,6 @@ static bool _builder_by_branch(int level_number)
         env.level_build_method += " random_map_for_place";
         _ensure_vault_placed_ex(_build_primary_vault(level_number, vault),
                                  vault);
-        if (player_in_branch(BRANCH_SWAMP))
-            dgn_build_swamp_level(level_number);
         return false;
     }
 
@@ -4479,6 +4477,10 @@ static void _build_postvault_level(
     if (dis_wallify)
     {
         _plan_4(&excluded_regions, DNGN_METAL_WALL);
+    }
+    else if (player_in_branch(BRANCH_SWAMP))
+    {
+        dgn_build_swamp_level(place.level_number);
     }
     else
     {
