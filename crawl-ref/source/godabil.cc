@@ -172,33 +172,34 @@ int zin_recite_to_single_monster(const coord_def& where,
 
     const mon_holy_type holiness = mon->holiness();
     bool impressible = true;
-    int resist;
+    int resist = 1 + (mon->res_magic() / 4);
 
     if (mon->is_holy())
-        resist = std::max(0, 7 - random2(you.skills[SK_INVOCATIONS]));
-    else
     {
-        resist = mon->res_magic();
-
-        if (holiness == MH_UNDEAD)
-        {
-            impressible = false;
-            pow -= 2 + random2(3);
-        }
-        else if (holiness == MH_DEMONIC)
-        {
-            impressible = false;
-            pow -= 3 + random2(5);
-        }
-
-        if (mon->is_unclean() || mon->is_chaotic())
-            impressible = false;
+        resist -= 2 + random2(3);
+    }
+    else if (holiness == MH_UNDEAD)
+    {
+       impressible = false;
+       resist += 2 + random2(3);
+    }
+    else if (holiness == MH_DEMONIC)
+    {
+        impressible = false;
+        resist += 3 + random2(5);
     }
 
-    pow -= resist;
+    if (mon->is_unclean() || mon->is_chaotic())
+        impressible = false;
 
-    if (pow > 0)
-        pow = random2avg(pow, 2);
+    resist -= random2(you.skills[SK_INVOCATIONS]);
+    resist = std::max(0, resist);
+
+    dprf("Pow: %d  MR: %d  Resist: %d ", pow, mon->res_magic(), resist);
+
+    pow = random2(pow) - resist;
+
+    dprf("random2d pow - resist: %d", pow);
 
     if (pow <= 0) // Uh oh...
     {
