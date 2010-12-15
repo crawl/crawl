@@ -4441,8 +4441,15 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
     // If the map takes the whole screen or we were only requested to
     // build the vault, our work is done.
     if (!build_only && (placed_vault_orientation != MAP_ENCOMPASS || is_layout))
-        _build_postvault_level(placed_vault_orientation,
-                               place, target_connections);
+    {
+        if (!is_layout)
+        {
+            _build_postvault_level(placed_vault_orientation,
+                                   place, target_connections);
+        }
+
+        dgn_place_stone_stairs(true);
+    }
 
     // Fire any post-place hooks defined for this map; any failure
     // here is an automatic veto. Note that the post-place hook must
@@ -4459,7 +4466,6 @@ static void _build_postvault_level(
     vault_placement &place,
     std::vector<coord_def> &target_connections)
 {
-    const bool is_layout = place.map.has_tag("layout");
     // Does this level require Dis treatment (metal wallification)?
     // XXX: Change this so the level definition can explicitly state what
     // kind of wallification it wants.
@@ -4474,7 +4480,7 @@ static void _build_postvault_level(
     {
         _plan_4(&excluded_regions, DNGN_METAL_WALL);
     }
-    else if (!is_layout)
+    else
     {
         int nrooms = random_range(15, 90);
 
@@ -4491,7 +4497,6 @@ static void _build_postvault_level(
         // Excavate and connect the vault to the rest of the level.
         _dig_vault_loose(place, target_connections);
     }
-    dgn_place_stone_stairs(true);
 }
 
 static const object_class_type _acquirement_item_classes[] = {
