@@ -1433,10 +1433,10 @@ std::string melee_attack::attack_strength_punctuation()
 
 std::string melee_attack::evasion_margin_adverb()
 {
-    return((ev_margin <= -20) ? " completely" :
+    return (ev_margin <= -20) ? " completely" :
            (ev_margin <= -12) ? "" :
            (ev_margin <= -6)  ? " closely"
-                              : " barely");
+                              : " barely";
 }
 
 void melee_attack::player_announce_aux_hit()

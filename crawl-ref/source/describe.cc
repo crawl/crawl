@@ -2930,7 +2930,7 @@ static int _get_spell_description(const spell_type spell,
             return (BOOK_MEM);
         }
 
-    return(BOOK_NEITHER);
+    return BOOK_NEITHER;
 }
 
 void get_spell_desc(const spell_type spell, describe_info &inf)

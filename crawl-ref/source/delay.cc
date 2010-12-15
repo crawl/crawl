@@ -1609,7 +1609,7 @@ bool interrupt_activity(activity_interrupt_type ai,
         {
             if (!you.turn_is_over)
                 _monster_warning(ai, at, DELAY_NOT_DELAYED, msgs_buf);
-            return(true);
+            return true;
         }
         return (false);
     }

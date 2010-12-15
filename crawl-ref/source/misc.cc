@@ -1109,7 +1109,7 @@ bool maybe_bloodify_square(const coord_def& where)
         return (false);
 
     env.pgrid(where) |= FPROP_BLOODY;
-    return(true);
+    return true;
 }
 
 static void _maybe_bloodify_square(const coord_def& where, int amount,

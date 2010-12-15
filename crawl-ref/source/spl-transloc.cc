@@ -840,7 +840,7 @@ static int _quadrant_blink(coord_def where, int pow, int, actor *)
     }
 
     if (!found)
-        return(0);
+        return 0;
 
     coord_def origin = you.pos();
     move_player_to_grid(target, false, true);

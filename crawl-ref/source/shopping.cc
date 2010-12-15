@@ -2123,29 +2123,29 @@ std::string shop_type_name (shop_type type)
     switch (type)
     {
         case SHOP_WEAPON_ANTIQUE:
-            return("Antique Weapon");
+            return "Antique Weapon";
         case SHOP_ARMOUR_ANTIQUE:
-            return("Antique Armour");
+            return "Antique Armour";
         case SHOP_WEAPON:
-            return("Weapon");
+            return "Weapon";
         case SHOP_ARMOUR:
-            return("Armour");
+            return "Armour";
         case SHOP_JEWELLERY:
-            return("Jewellery");
+            return "Jewellery";
         case SHOP_WAND:
-            return("Magical Wand");
+            return "Magical Wand";
         case SHOP_BOOK:
-            return("Book");
+            return "Book";
         case SHOP_FOOD:
-            return("Food");
+            return "Food";
         case SHOP_SCROLL:
-            return("Magic Scroll");
+            return "Magic Scroll";
         case SHOP_GENERAL_ANTIQUE:
-            return("Assorted Antiques");
+            return "Assorted Antiques";
         case SHOP_DISTILLERY:
-            return("Distillery");
+            return "Distillery";
         case SHOP_GENERAL:
-            return("General Store");
+            return "General Store";
         default:
             return ("Bug");
     }

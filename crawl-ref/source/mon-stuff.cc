@@ -1452,7 +1452,7 @@ static std::string _killer_type_name(killer_type killer)
         return ("dismissed");
     }
     ASSERT(false);
-    return("");
+    return "";
 }
 
 static void _make_spectral_thing(monster* mons, bool quiet)

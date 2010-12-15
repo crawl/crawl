@@ -1348,10 +1348,10 @@ std::string resist_margin_phrase(int margin)
 {
     ASSERT(margin > 0);
 
-    return((margin >= 40) ? " easily resists." :
+    return (margin >= 40) ? " easily resists." :
            (margin >= 24) ? " resists." :
-           (margin >= 12)  ? " resists with some effort."
-                           : " struggles to resist.");
+           (margin >= 12) ? " resists with some effort."
+                          : " struggles to resist.";
 }
 
 bool mons_immune_magic(const monster* mon)
@@ -4244,7 +4244,7 @@ std::string get_mon_shape_str(const mon_body_shape shape)
     ASSERT(shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_MISC);
 
     if (shape < MON_SHAPE_HUMANOID || shape > MON_SHAPE_MISC)
-        return("buggy shape");
+        return "buggy shape";
 
     static const char *shape_names[] =
     {

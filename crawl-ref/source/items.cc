@@ -3458,7 +3458,7 @@ bool get_item_by_name(item_def *item, char* specs,
                             mprf("%s (%s)", entry->name,
                                  debug_art_val_str(*item).c_str());
                         }
-                        return(true);
+                        return true;
                     }
                 }
 

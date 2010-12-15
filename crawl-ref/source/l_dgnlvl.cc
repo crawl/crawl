@@ -88,12 +88,12 @@ LUAFN(dgn_set_level_type_name)
     if (!lua_isstring(ls, 1))
     {
         luaL_argerror(ls, 1, "Expected string for level type name");
-        return(0);
+        return 0;
     }
 
     you.level_type_name = luaL_checkstring(ls, 1);
 
-    return(0);
+    return 0;
 }
 
 LUAFN(dgn_set_level_type_name_abbrev)
@@ -102,12 +102,12 @@ LUAFN(dgn_set_level_type_name_abbrev)
     {
         luaL_argerror(ls, 1, "Expected string for level type name "
                       "abbreviation");
-        return(0);
+        return 0;
     }
 
     you.level_type_name_abbrev = luaL_checkstring(ls, 1);
 
-    return(0);
+    return 0;
 }
 
 LUAFN(dgn_set_level_type_origin)
@@ -115,12 +115,12 @@ LUAFN(dgn_set_level_type_origin)
     if (!lua_isstring(ls, 1))
     {
         luaL_argerror(ls, 1, "Expected string for level type origin");
-        return(0);
+        return 0;
     }
 
     you.level_type_origin = luaL_checkstring(ls, 1);
 
-    return(0);
+    return 0;
 }
 
 const struct luaL_reg dgn_level_dlib[] =

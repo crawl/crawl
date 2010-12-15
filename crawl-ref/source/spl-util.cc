@@ -1079,45 +1079,45 @@ spell_type zap_type_to_spell(zap_type zap)
     switch (zap)
     {
     case ZAP_FLAME:
-        return(SPELL_THROW_FLAME);
+        return SPELL_THROW_FLAME;
     case ZAP_FROST:
-        return(SPELL_THROW_FROST);
+        return SPELL_THROW_FROST;
     case ZAP_SLOWING:
-        return(SPELL_SLOW);
+        return SPELL_SLOW;
     case ZAP_HASTING:
-        return(SPELL_HASTE);
+        return SPELL_HASTE;
     case ZAP_MAGIC_DARTS:
-        return(SPELL_MAGIC_DART);
+        return SPELL_MAGIC_DART;
     case ZAP_HEALING:
-        return(SPELL_MAJOR_HEALING);
+        return SPELL_MAJOR_HEALING;
     case ZAP_PARALYSIS:
-        return(SPELL_PARALYSE);
+        return SPELL_PARALYSE;
     case ZAP_FIRE:
-        return(SPELL_BOLT_OF_FIRE);
+        return SPELL_BOLT_OF_FIRE;
     case ZAP_COLD:
-        return(SPELL_BOLT_OF_COLD);
+        return SPELL_BOLT_OF_COLD;
     case ZAP_PRIMAL_WAVE:
-        return(SPELL_PRIMAL_WAVE);
+        return SPELL_PRIMAL_WAVE;
     case ZAP_CONFUSION:
-        return(SPELL_CONFUSE);
+        return SPELL_CONFUSE;
     case ZAP_INVISIBILITY:
-        return(SPELL_INVISIBILITY);
+        return SPELL_INVISIBILITY;
     case ZAP_DIGGING:
-        return(SPELL_DIG);
+        return SPELL_DIG;
     case ZAP_FIREBALL:
-        return(SPELL_FIREBALL);
+        return SPELL_FIREBALL;
     case ZAP_TELEPORTATION:
-        return(SPELL_TELEPORT_OTHER);
+        return SPELL_TELEPORT_OTHER;
     case ZAP_LIGHTNING:
-        return(SPELL_LIGHTNING_BOLT);
+        return SPELL_LIGHTNING_BOLT;
     case ZAP_POLYMORPH_OTHER:
-        return(SPELL_POLYMORPH_OTHER);
+        return SPELL_POLYMORPH_OTHER;
     case ZAP_NEGATIVE_ENERGY:
-        return(SPELL_BOLT_OF_DRAINING);
+        return SPELL_BOLT_OF_DRAINING;
     case ZAP_ENSLAVEMENT:
-        return(SPELL_ENSLAVEMENT);
+        return SPELL_ENSLAVEMENT;
     case ZAP_DISINTEGRATION:
-        return(SPELL_DISINTEGRATE);
+        return SPELL_DISINTEGRATE;
     default:
         DEBUGSTR("zap_type_to_spell() only handles wand zaps for now");
     }
