@@ -416,7 +416,7 @@ void SkillMenuEntry::_set_level()
 
 void SkillMenuEntry::_set_progress()
 {
-    if (you.skills[m_sk] == 27)
+    if (you.skills[m_sk] == 27 || you.skills[m_sk] == 0)
         m_progress->set_text("");
     else
     {
