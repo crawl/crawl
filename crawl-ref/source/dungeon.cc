@@ -5416,9 +5416,8 @@ static void _many_pools(dungeon_feature_type pool_type)
     const int num_pools = 20 + random2avg(9, 2);
     int pools = 0;
 
-    std::string extra = make_stringf("many pools [%d %d]", (int) pool_type,
-                                     num_pools);
-    env.properties[LEVEL_EXTRAS_KEY].get_vector().push_back(extra);
+    env.level_build_method += make_stringf(" many_pools [%d %d]", (int)pool_type,
+                                           num_pools);
 
     for (int timeout = 0; pools < num_pools && timeout < 30000; ++timeout)
     {
@@ -7145,8 +7144,7 @@ static void _build_river(dungeon_feature_type river_type) //mv
     if (player_in_branch(BRANCH_CRYPT) || player_in_branch(BRANCH_TOMB))
         return;
 
-    std::string extra = make_stringf("river [%d]", (int) river_type);
-    env.properties[LEVEL_EXTRAS_KEY].get_vector().push_back(extra);
+    env.level_build_method += make_stringf(" river [%d]", (int) river_type);
 
     // if (one_chance_in(10))
     //     _build_river(river_type);
@@ -7196,8 +7194,7 @@ static void _build_lake(dungeon_feature_type lake_type) //mv
     if (player_in_branch(BRANCH_CRYPT) || player_in_branch(BRANCH_TOMB))
         return;
 
-    std::string extra = make_stringf("lake [%d]", (int) lake_type);
-    env.properties[LEVEL_EXTRAS_KEY].get_vector().push_back(extra);
+    env.level_build_method += make_stringf(" lake [%d]", (int) lake_type);
 
     // if (one_chance_in (10))
     //     _build_lake(lake_type);
