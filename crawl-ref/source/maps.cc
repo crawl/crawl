@@ -326,12 +326,9 @@ static bool _may_overwrite_feature(const coord_def p,
         return (false);
 
     // If in the abyss, the placement mask is the only check necessary
-    // for terrain; we must still check that we're not overwriting
-    // items.
+    // for terrain.
     if (Vault_Placement_Mask && player_in_level_area(LEVEL_ABYSS))
-    {
-        return (igrd(p) == NON_ITEM);
-    }
+        return (true);
 
     const dungeon_feature_type grid = grd(p);
 
