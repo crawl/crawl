@@ -126,8 +126,8 @@ void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
     switch (br)
     {
     case BRANCH_MAIN_DUNGEON:
-        flv.wall    = TILE_WALL_NORMAL;
-        flv.floor   = TILE_FLOOR_NORMAL;
+        flv.wall  = TILE_WALL_NORMAL;
+        flv.floor = TILE_FLOOR_NORMAL;
         return;
 
     case BRANCH_HIVE:
