@@ -29,6 +29,7 @@
 #include "species.h"
 #include "skills.h"
 #include "stuff.h"
+#include "tilepick.h"
 #include "tilereg-crt.h"
 
 
@@ -241,23 +242,40 @@ static void _add_item(TextItem* item, MenuObject* mo, const int size,
     coord.x += size + 1;
 }
 
-#define NAME_SIZE 19
+#define NAME_SIZE 20
 #define LEVEL_SIZE 4
 #define PROGRESS_SIZE 6
 #define APTITUDE_SIZE 5
 SkillMenuEntry::SkillMenuEntry(coord_def coord, MenuFreeform* ff)
 {
-    m_name = new TextItem();
-    _add_item(m_name, ff, NAME_SIZE, coord);
-    m_name->set_highlight_colour(RED);
+#ifdef USE_TILE
+    if (m_skm->m_skill_tiles)
+    {
+        m_name_tile = new TextTileItem();
+        m_name = m_name_tile;
+    }
+    else
+#endif
+        m_name = new TextItem();
 
     m_level = new NoSelectTextItem();
-    _add_item(m_level, ff, LEVEL_SIZE, coord);
-
     m_progress = new NoSelectTextItem();
-    _add_item(m_progress, ff, PROGRESS_SIZE, coord);
-
     m_aptitude = new FormattedTextItem();
+
+#ifdef USE_TILE
+    if (m_skm->m_skill_tiles)
+    {
+        m_name->set_tile_height();
+        m_level->set_tile_height();
+        m_progress->set_tile_height();
+        m_aptitude->set_tile_height();
+    }
+#endif
+
+    _add_item(m_name, ff, NAME_SIZE + (m_skm->m_skill_tiles ? 4 : 0), coord);
+    m_name->set_highlight_colour(RED);
+    _add_item(m_level, ff, LEVEL_SIZE, coord);
+    _add_item(m_progress, ff, PROGRESS_SIZE, coord);
     _add_item(m_aptitude, ff, APTITUDE_SIZE, coord);
 }
 
@@ -307,6 +325,15 @@ void SkillMenuEntry::set_name(bool keep_hotkey)
     m_name->set_text(make_stringf("%s %-15s", _get_prefix().c_str(),
                                 skill_name(m_sk)));
     m_name->set_fg_colour(_get_colour());
+#ifdef USE_TILE
+    if (m_skm->m_skill_tiles)
+    {
+        m_name_tile->clear_tile();
+        m_name_tile->add_tile(tile_def(tileidx_skill(m_sk,
+                                                     _get_colour() != DARKGRAY),
+                                       TEX_GUI));
+    }
+#endif
     _set_level();
 }
 
@@ -405,7 +432,7 @@ std::string SkillMenuEntry::_get_prefix()
 
     const int sign = (you.skills[m_sk] == 0 || you.skills[m_sk] == 27) ? ' '
                                     : (you.practise_skill[m_sk]) ? '+' : '-';
-    return make_stringf("%c %c", letter, sign);
+    return make_stringf(" %c %c", letter, sign);
 }
 
 void SkillMenuEntry::_set_level()
@@ -542,6 +569,10 @@ void SkillMenuEntry::_clear()
     m_name->set_id(-1);
     m_name->clear_hotkeys();
     m_name->allow_highlight(false);
+#ifdef USE_TILE
+    if (m_skm->m_skill_tiles)
+        m_name_tile->clear_tile();
+#endif
 }
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -554,6 +585,7 @@ void SkillMenuEntry::_set_points()
 
 #define SCREEN_COL          80
 #define SCREEN_LINES        24
+#define TILES_COL            6
 #define CURRENT_ACTION_SIZE 24
 #define NEXT_ACTION_SIZE    15
 #define NEXT_DISPLAY_SIZE   18
@@ -563,27 +595,43 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
 {
     SkillMenuEntry::m_skm = this;
 
-    m_min_coord.x = 3;
+#ifdef USE_TILE
+    m_skill_tiles = (get_number_of_lines() >= 42);
+#else
+    m_skill_tiles = false;
+#endif
+
+    m_min_coord.x = 2;
     m_min_coord.y = 1;
 
     m_max_coord.x = SCREEN_COL + 1;
     m_max_coord.y = SCREEN_LINES + 1;
 
     m_ff = new MenuFreeform();
+    m_help = new FormattedTextItem();
+#ifdef USE_TILE
+    if (m_skill_tiles)
+    {
+        m_ff->set_tile_height();
+        m_max_coord.x += 2 * TILES_COL;
+        m_help->set_tile_height();
+    }
+#endif
     m_ff->init(m_min_coord, m_max_coord, "freeform");
     attach_object(m_ff);
     set_active_object(m_ff);
 
     _init_title();
+    const int col_split = SCREEN_COL / 2 + (m_skill_tiles ? TILES_COL : 0);
     for (int col = 0; col < SK_ARR_COL; ++col)
         for (int ln = 0; ln < SK_ARR_LN; ++ln)
         {
-            m_skills[ln][col] = SkillMenuEntry(coord_def(m_min_coord.x + 40*col,
+            m_skills[ln][col] = SkillMenuEntry(coord_def(m_min_coord.x
+                                                         + col_split * col,
                                                          m_min_coord.y + 1 + ln),
                                                m_ff);
         }
 
-    m_help = new FormattedTextItem();
     m_help->set_bounds(coord_def(m_min_coord.x, m_max_coord.y - 3),
                        coord_def(m_max_coord.x, m_max_coord.y - 1));
     m_ff->attach_item(m_help);
@@ -732,12 +780,25 @@ void SkillMenu::_init_title()
 
 void SkillMenu::_init_footer()
 {
-    coord_def coord(m_min_coord.x, m_max_coord.y - 1);
     m_current_action = new NoSelectTextItem();
+    m_next_action = new TextItem();
+    m_next_display = new TextItem();
+    m_show_all = new TextItem();
+
+#ifdef USE_TILE
+    if (m_skill_tiles)
+    {
+        m_current_action->set_tile_height();
+        m_next_action->set_tile_height();
+        m_next_display->set_tile_height();
+        m_show_all->set_tile_height();
+    }
+#endif
+
+    coord_def coord(m_min_coord.x, m_max_coord.y - 1);
     _add_item(m_current_action, m_ff, CURRENT_ACTION_SIZE, coord);
     m_current_action->set_fg_colour(WHITE);
 
-    m_next_action = new TextItem();
     _add_item(m_next_action, m_ff, NEXT_ACTION_SIZE, coord);
     m_next_action->set_highlight_colour(RED);
     m_next_action->set_fg_colour(WHITE);
@@ -746,7 +807,6 @@ void SkillMenu::_init_footer()
 
     if (m_disp_queue.size() > 1)
     {
-        m_next_display = new TextItem();
         _add_item(m_next_display, m_ff, NEXT_DISPLAY_SIZE, coord);
         m_next_display->set_highlight_colour(RED);
         m_next_display->set_fg_colour(WHITE);
@@ -754,7 +814,6 @@ void SkillMenu::_init_footer()
         m_next_display->set_id(-3);
     }
 
-    m_show_all = new TextItem();
     _add_item(m_show_all, m_ff, SHOW_ALL_SIZE, coord);
     m_show_all->set_highlight_colour(RED);
     m_show_all->set_fg_colour(WHITE);
@@ -908,7 +967,7 @@ void SkillMenu::_set_help(int flag)
         if (flag == SKMF_DISP_PROGRESS || !m_crosstrain && !m_antitrain)
         {
             help = "The percentage of the progress done before reaching next "
-                   "level is in <cyan>cyan</cyan>.   ";
+                   "level is in <cyan>cyan</cyan>.\n";
         }
         help += "The species aptitude is in <red>red</red>. ";
         if (flag == SKMF_DISP_APTITUDE)

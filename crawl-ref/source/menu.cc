@@ -2323,6 +2323,13 @@ MenuItem::~MenuItem()
 {
 }
 
+#ifdef USE_TILE
+void MenuItem::set_tile_height()
+{
+    m_unit_height_pixels = TILE_Y;
+}
+#endif
+
 /**
  * Override this if you use eg funky different sized fonts, tiles etc
  */
@@ -2843,6 +2850,13 @@ MenuObject::MenuObject() : m_dirty(false), m_allow_focus(true), m_min_coord(0,0)
 MenuObject::~MenuObject()
 {
 }
+
+#ifdef USE_TILE
+void MenuObject::set_tile_height()
+{
+    m_unit_height_pixels = TILE_Y;
+}
+#endif
 
 void MenuObject::init(const coord_def& min_coord, const coord_def& max_coord,
               const std::string& name)

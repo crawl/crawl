@@ -521,6 +521,8 @@ public:
     MenuItem();
     virtual ~MenuItem();
 
+    void set_tile_height();
+
     void set_id(int id) { m_item_id = id; }
     int get_id() const { return m_item_id; }
 
@@ -658,6 +660,7 @@ public:
     virtual void render();
 
     virtual void add_tile(tile_def tile);
+    void clear_tile() { m_tiles.clear(); };
 
 protected:
     std::vector<tile_def> m_tiles;
@@ -716,6 +719,7 @@ public:
     MenuObject();
     virtual ~MenuObject();
 
+    void set_tile_height();
     void init(const coord_def& min_coord, const coord_def& max_coord,
               const std::string& name);
     const coord_def& get_min_coord() const { return m_min_coord; }
