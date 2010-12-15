@@ -38,7 +38,7 @@ KFEAT:  ^ = pressure plate trap
 :   end
 :
 :  if (spiders > 0) then
-:    crawl.mpr("A basket of spiders falls from the above!")
+:    crawl.mpr("A basket of spiders falls from above!")
 :  end
 : end
 :
