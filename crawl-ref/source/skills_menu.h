@@ -95,7 +95,7 @@ public:
     bool is_set(int flag) const;
     void change_action();
     void change_display();
-    void toggle_practise(skill_type sk);
+    void toggle_practise(skill_type sk, int keyn);
     void show_description(skill_type sk);
     void toggle_show_all();
     void clear_selections();

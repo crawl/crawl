@@ -689,7 +689,7 @@ void SkillMenu::change_display()
     _set_footer();
 }
 
-void SkillMenu::toggle_practise(skill_type sk)
+void SkillMenu::toggle_practise(skill_type sk, int keyn)
 {
     you.practise_skill[sk] = !you.practise_skill[sk];
     SkillMenuEntry* skme = _find_entry(sk);
@@ -704,7 +704,7 @@ void SkillMenu::toggle_practise(skill_type sk)
         if (next_item != NULL)
         {
             next_item->select(false);
-            if (m_ff->get_active_item() != NULL)
+            if (m_ff->get_active_item() != NULL && keyn == CK_ENTER)
                 m_ff->set_active_item(next_item);
             else
                 m_ff->set_default_item(next_item);
@@ -1220,7 +1220,7 @@ void skill_menu(bool reskilling)
                 ASSERT(!is_invalid_skill(sk));
 
                 if (skm.is_set(SKMF_DO_PRACTISE))
-                    skm.toggle_practise(sk);
+                    skm.toggle_practise(sk, keyn);
                 else if (skm.is_set(SKMF_DO_SHOW_DESC))
                     skm.show_description(sk);
                 else if (skm.is_set(SKMF_DO_RESKILL_FROM))
