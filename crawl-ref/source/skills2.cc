@@ -399,25 +399,25 @@ COLORS SkillMenuEntry::_get_colour() const
     if (is_set(SKMF_DO_PRACTISE) && you.practise_skill[m_sk] == 0
         || is_set(SKMF_DO_SHOW_DESC))
     {
-        return(DARKGREY);
+        return (DARKGREY);
     }
     else if (is_set(SKMF_DISP_RESKILL) && (m_sk == you.transfer_from_skill
                                         || m_sk == you.transfer_to_skill))
     {
-        return(GREEN);
+        return (GREEN);
     }
     else if (is_set(SKMF_DO_RESKILL_TO) && m_sk == you.transfer_from_skill)
-        return(WHITE);
+        return (WHITE);
     else if (you.skills[m_sk] == 27)
-        return(YELLOW);
+        return (YELLOW);
     else if (you.practise_skill[m_sk] == 0 || you.skills[m_sk] == 0)
-        return(DARKGREY);
+        return (DARKGREY);
     else if (ct_bonus > 1 && is_set(SKMF_DISP_APTITUDE))
-        return(LIGHTBLUE);
+        return (LIGHTBLUE);
     else if (is_antitrained(m_sk) && is_set(SKMF_DISP_APTITUDE))
-        return(MAGENTA);
+        return (MAGENTA);
     else
-        return(LIGHTGREY);
+        return (LIGHTGREY);
 }
 
 std::string SkillMenuEntry::_get_prefix()
