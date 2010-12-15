@@ -2692,7 +2692,7 @@ void TextTileItem::set_bounds(const coord_def &min_coord, const coord_def &max_c
     // remove 1 unit from all the entries because console starts at (1,1)
     // but tiles starts at (0,0)
     m_min_coord.x = (min_coord.x - 1) * m_unit_width_pixels;
-    m_max_coord.x = (max_coord.x - 1) * m_unit_height_pixels;
+    m_max_coord.x = (max_coord.x - 1) * m_unit_width_pixels;
     // TODO: get the tile height from somewhere cleaner
     m_min_coord.y = (min_coord.y - 1) * 32;
     m_max_coord.y = (max_coord.y - 1) * 32;
