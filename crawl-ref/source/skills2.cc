@@ -371,7 +371,9 @@ COLORS SkillMenuEntry::_get_colour() const
 
     if (is_set(SKMF_DO_PRACTISE) && you.practise_skill[m_sk] == 0
         || is_set(SKMF_DO_SHOW_DESC))
+    {
         return(DARKGREY);
+    }
     else if (is_set(SKMF_DISP_RESKILL) && (m_sk == you.transfer_from_skill
                                         || m_sk == you.transfer_to_skill))
     {
@@ -417,9 +419,11 @@ void SkillMenuEntry::_set_progress()
     if (you.skills[m_sk] == 27)
         m_progress->set_text("");
     else
+    {
         m_progress->set_text(make_stringf("(%2d%%)",
                                           get_skill_percentage(m_sk)));
-        m_progress->set_fg_colour(CYAN);
+    }
+    m_progress->set_fg_colour(CYAN);
 }
 
 void SkillMenuEntry::_set_aptitude()
