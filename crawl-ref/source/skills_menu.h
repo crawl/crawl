@@ -56,7 +56,11 @@ public:
 
 private:
     skill_type m_sk;
+
     TextItem* m_name;
+#ifdef USE_TILE
+    TextTileItem* m_name_tile;
+#endif
     NoSelectTextItem* m_level;
     NoSelectTextItem* m_progress;
     FormattedTextItem* m_aptitude;
@@ -85,6 +89,8 @@ static const int SK_ARR_COL =  2;
 class SkillMenu : public PrecisionMenu
 {
 public:
+    bool m_skill_tiles;
+
     SkillMenu(int flags);
     bool is_set(int flag) const;
     void change_action();
