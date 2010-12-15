@@ -5996,7 +5996,6 @@ static void _plan_main(int level_number, int force_plan)
 {
     env.level_build_method += make_stringf(" plan_main%s",
                                      force_plan ? " [force_plan]" : "");
-    env.level_layout_types.insert("rooms");
 
     bool do_stairs = false;
     dungeon_feature_type special_grid = (one_chance_in(3) ? DNGN_METAL_WALL
