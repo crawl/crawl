@@ -254,7 +254,7 @@ int zin_recite_to_single_monster(const coord_def& where,
     {
         simple_monster_message(mon, " turns to flee.");
     }
-    else if (pow > 8 && impressible 
+    else if (pow > 8 && impressible
              && mon->add_ench(mon_enchant(ENCH_TEMP_PACIF, 0, KC_YOU,
                                           (16 + random2avg(13, 2)) * 10)))
     {
@@ -265,7 +265,7 @@ int zin_recite_to_single_monster(const coord_def& where,
         mon->hibernate();
         simple_monster_message(mon, " falls asleep!");
     }
-    else if (pow > 0 && mons_class_is_confusable(mon->type) 
+    else if (pow > 0 && mons_class_is_confusable(mon->type)
              && mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_YOU,
                                           (16 + random2avg(13, 2)) * 10)))
     {
