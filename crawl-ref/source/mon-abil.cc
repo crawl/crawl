@@ -1773,6 +1773,12 @@ bool valid_kraken_connection(monster* mons)
             || mons_base_type(mons) == MONS_KRAKEN);
 }
 
+
+bool valid_kraken_segment(monster * mons)
+{
+    return (mons->type == MONS_KRAKEN_TENTACLE_SEGMENT);
+}
+
 bool valid_demonic_connection(monster* mons)
 {
     return (mons->mons_species() == MONS_ELDRITCH_TENTACLE_SEGMENT);
@@ -2100,7 +2106,7 @@ void move_kraken_tentacles(monster* kraken)
 
         int tentacle_idx = tentacle->mindex();
 
-        purge_connectors(tentacle_idx, valid_kraken_connection);
+        purge_connectors(tentacle_idx, valid_kraken_segment);
 
         if (no_foe
             && grid_distance(tentacle->pos(), kraken->pos()) == 1)
