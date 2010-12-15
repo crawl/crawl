@@ -37,6 +37,18 @@ monster_type debug_prompt_for_monster(void)
     return (MONS_NO_MONSTER);
 }
 
+static void _dump_vault_table(const CrawlHashTable &table)
+{
+    if (!table.empty())
+    {
+        CrawlHashTable::const_iterator i = table.begin();
+
+        for (; i != table.end(); ++i)
+            mprf("    %s: %s", i->first.c_str(),
+                 i->second.get_string().c_str());
+    }
+}
+
 void debug_dump_levgen()
 {
     if (crawl_state.game_is_arena())
@@ -70,35 +82,18 @@ void debug_dump_levgen()
     mprf("level build method = %s", method.c_str());
     mprf("level layout type  = %s", type.c_str());
 
-    std::string extra;
-
-    if (!props.exists(LEVEL_EXTRAS_KEY))
-        extra = "ABSENT";
-    else
+    if (props.exists(LEVEL_EXTRAS_KEY))
     {
-        const CrawlVector &vec = props[LEVEL_EXTRAS_KEY].get_vector();
-
-        for (unsigned int i = 0; i < vec.size(); ++i)
-            extra += vec[i].get_string() + ", ";
+        mpr("Level extras:");
+        const CrawlHashTable &extras = props[LEVEL_EXTRAS_KEY].get_table();
+        _dump_vault_table(extras);
     }
 
-    mprf("Level extras: %s", extra.c_str());
-
-    mpr("Level vaults:");
-    if (!props.exists(LEVEL_VAULTS_KEY))
-        mpr("ABSENT");
-    else
+    if (props.exists(LEVEL_VAULTS_KEY))
     {
+        mpr("Level vaults:");
         const CrawlHashTable &vaults = props[LEVEL_VAULTS_KEY].get_table();
-        // const_iterator asserts if the table has hash_map == NULL
-        if (!vaults.empty())
-        {
-            CrawlHashTable::const_iterator i = vaults.begin();
-
-            for (; i != vaults.end(); ++i)
-                mprf("    %s: %s", i->first.c_str(),
-                     i->second.get_string().c_str());
-        }
+        _dump_vault_table(vaults);
     }
     mpr("");
 }
