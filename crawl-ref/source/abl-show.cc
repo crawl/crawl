@@ -1690,7 +1690,6 @@ static bool _do_ability(const ability_def& abil)
             return false;
         break; // //
 
-
     case ABIL_MAKE_DART_TRAP:
         if (!create_trap(TRAP_DART)) return false;
         break; // //
@@ -1838,9 +1837,7 @@ static bool _do_ability(const ability_def& abil)
             god_type rgod=GOD_NO_GOD;
             // Don't allow Fedhas, as his abilities don't fit
             while (rgod==GOD_NO_GOD || rgod==GOD_FEDHAS)
-            {
                 rgod = static_cast<god_type>(random2(NUM_GODS));
-            }
             grd(you.pos()) = altar_for_god(rgod);
 
             if (grd(you.pos()) != DNGN_FLOOR)
@@ -3015,9 +3012,7 @@ std::vector<talent> your_talents(bool check_confused)
     }
 
     if (you.species == SP_VAMPIRE && you.experience_level >= 6)
-    {
         _add_talent(talents, ABIL_BOTTLE_BLOOD, false);
-    }
 
     if (!you.airborne() && !form_changed_physiology())
     {
@@ -3049,11 +3044,8 @@ std::vector<talent> your_talents(bool check_confused)
     if (player_mutation_level(MUT_THROW_FROST))
         _add_talent(talents, ABIL_THROW_FROST, check_confused);
 
-    if (you.duration[DUR_TRANSFORMATION]
-        && !you.transform_uncancellable)
-    {
+    if (you.duration[DUR_TRANSFORMATION] && !you.transform_uncancellable)
         _add_talent(talents, ABIL_END_TRANSFORMATION, check_confused);
-    }
 
     if (player_mutation_level(MUT_BLINK))
         _add_talent(talents, ABIL_BLINK, check_confused);
