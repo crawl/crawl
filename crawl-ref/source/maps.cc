@@ -501,17 +501,17 @@ static bool apply_vault_grid(map_def &def,
     // Floating maps can go anywhere, ask the map_def to suggest a place.
     if (orient == MAP_FLOAT)
     {
-        const bool minivault = def.has_tag("minivault");
+        const bool minivault = def.is_minivault();
         if (map_bounds(place.pos))
         {
             start = place.pos - size / 2;
-            fit_region_into_map_bounds(start, size, minivault ? 2 : 0);
+            fit_region_into_map_bounds(start, size, minivault ? MAPGEN_BORDER : 0);
         }
         else if (minivault)
         {
             start = _find_minivault_place(place, check_place);
             if (map_bounds(start))
-                fit_region_into_map_bounds(start, size, 2);
+                fit_region_into_map_bounds(start, size, MAPGEN_BORDER);
         }
         else
             start = def.float_place();
