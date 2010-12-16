@@ -12,7 +12,7 @@
 
 #include "libutil.h"
 #include "random.h"
-#include "tiledef-main.h"
+#include "tiledef-icons.h"
 #include "tilefont.h"
 
 InventoryTile::InventoryTile()
@@ -133,9 +133,9 @@ void GridRegion::add_quad_char(char c, int x, int y, int ofs_x, int ofs_y)
 {
     int num = c - '0';
     ASSERT(num >= 0 && num <= 9);
-    tileidx_t idx = TILE_NUM0 + num;
+    tileidx_t idx = TILEI_NUM0 + num;
 
-    m_buf.add_main_tile(idx, x, y, ofs_x, ofs_y);
+    m_buf.add_icons_tile(idx, x, y, ofs_x, ofs_y);
 }
 
 void GridRegion::render()

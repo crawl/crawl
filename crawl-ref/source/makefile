@@ -788,7 +788,7 @@ endif
 endif
 
 ifdef TILES
-TILEIMAGEFILES := floor wall feat main player gui
+TILEIMAGEFILES := floor wall feat main player gui icons
 TILEDEFS = $(TILEIMAGEFILES) dngn unrand
 TILEDEFPRES = $(TILEDEFS:%=$(RLTILES)/tiledef-%)
 TILEDEFOBJS = $(TILEDEFPRES:%=%.o)

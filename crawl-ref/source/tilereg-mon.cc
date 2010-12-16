@@ -16,6 +16,7 @@
 #include "monster.h"
 #include "stuff.h"
 #include "tiledef-dngn.h"
+#include "tiledef-icons.h"
 #include "tiledef-player.h"
 #include "tilereg-dgn.h"
 #include "tilepick.h"
@@ -184,7 +185,7 @@ void MonsterRegion::pack_buffers()
                     m_buf.add(cell, x, y);
 
                     if (cursor)
-                        m_buf.add_main_tile(TILE_CURSOR, x, y);
+                        m_buf.add_icons_tile(TILEI_CURSOR, x, y);
                     continue;
                 }
             }
@@ -192,7 +193,7 @@ void MonsterRegion::pack_buffers()
             // Fill the rest of the space with out of sight floor tiles.
             int tileidx = env.tile_default.floor + m_flavour[i] % num_floor;
             m_buf.add_dngn_tile(tileidx, x, y);
-            m_buf.add_main_tile(TILE_MESH, x, y);
+            m_buf.add_icons_tile(TILEI_MESH, x, y);
         }
     }
 }

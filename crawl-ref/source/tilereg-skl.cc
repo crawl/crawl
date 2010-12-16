@@ -14,7 +14,7 @@
 #include "libutil.h"
 #include "skills2.h"
 #include "stuff.h"
-#include "tiledef-main.h"
+#include "tiledef-icons.h"
 #include "tilepick.h"
 #include "viewgeom.h"
 
@@ -189,7 +189,7 @@ void SkillRegion::pack_buffers()
 
             InventoryTile &item = m_items[i++];
             if (item.flag & TILEI_FLAG_INVALID)
-                m_buf.add_main_tile(TILE_MESH, x, y);
+                m_buf.add_icons_tile(TILEI_MESH, x, y);
 
             if (item.quantity > 0)
                 draw_number(x, y, item.quantity);
@@ -198,7 +198,7 @@ void SkillRegion::pack_buffers()
                 m_buf.add_skill_tile(item.tile, x, y);
 
             if (item.flag & TILEI_FLAG_CURSOR)
-                m_buf.add_main_tile(TILE_CURSOR, x, y);
+                m_buf.add_icons_tile(TILEI_CURSOR, x, y);
         }
     }
 }

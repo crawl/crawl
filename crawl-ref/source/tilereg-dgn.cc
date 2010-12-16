@@ -28,6 +28,7 @@
 #include "stash.h"
 #include "stuff.h"
 #include "terrain.h"
+#include "tiledef-icons.h"
 #include "tiledef-main.h"
 #include "tilefont.h"
 #include "tilepick.h"
@@ -90,7 +91,7 @@ void DungeonRegion::pack_cursor(cursor_type type, unsigned int tile)
         return;
 
     const coord_def ep(gc.x - m_cx_to_gx, gc.y - m_cy_to_gy);
-    m_buf_dngn.add_main_tile(tile, ep.x, ep.y);
+    m_buf_dngn.add_icons_tile(tile, ep.x, ep.y);
 }
 
 void DungeonRegion::pack_buffers()
@@ -132,15 +133,15 @@ void DungeonRegion::pack_buffers()
             vbuf_cell++;
         }
 
-    pack_cursor(CURSOR_TUTORIAL, TILE_TUTORIAL_CURSOR);
+    pack_cursor(CURSOR_TUTORIAL, TILEI_TUTORIAL_CURSOR);
     const bool mouse_curs_vis = you.see_cell(m_cursor[CURSOR_MOUSE]);
-    pack_cursor(CURSOR_MOUSE, mouse_curs_vis ? TILE_CURSOR : TILE_CURSOR2);
-    pack_cursor(CURSOR_MAP, TILE_CURSOR);
+    pack_cursor(CURSOR_MOUSE, mouse_curs_vis ? TILEI_CURSOR : TILEI_CURSOR2);
+    pack_cursor(CURSOR_MAP, TILEI_CURSOR);
 
     if (m_cursor[CURSOR_TUTORIAL] != NO_CURSOR
         && on_screen(m_cursor[CURSOR_TUTORIAL]))
     {
-        m_buf_dngn.add_main_tile(TILE_TUTORIAL_CURSOR,
+        m_buf_dngn.add_main_tile(TILEI_TUTORIAL_CURSOR,
                                  m_cursor[CURSOR_TUTORIAL].x,
                                  m_cursor[CURSOR_TUTORIAL].y);
     }

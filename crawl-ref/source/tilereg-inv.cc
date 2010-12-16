@@ -27,6 +27,8 @@
 #include "spl-book.h"
 #include "stuff.h"
 #include "tiledef-dngn.h"
+#include "tiledef-icons.h"
+#include "tiledef-icons.h"
 #include "tiledef-main.h"
 #include "tilepick.h"
 #include "viewgeom.h"
@@ -86,16 +88,16 @@ void InventoryRegion::pack_buffers()
                     m_buf.add_main_tile(TILE_ITEM_SLOT_EQUIP, x, y);
 
                 if (item.flag & TILEI_FLAG_MELDED)
-                    m_buf.add_main_tile(TILE_MESH, x, y);
+                    m_buf.add_icons_tile(TILEI_MESH, x, y);
             }
             else if (item.flag & TILEI_FLAG_CURSE)
                 m_buf.add_main_tile(TILE_ITEM_SLOT_CURSED, x, y);
 
             if (item.flag & TILEI_FLAG_SELECT)
-                m_buf.add_main_tile(TILE_ITEM_SLOT_SELECTED, x, y);
+                m_buf.add_icons_tile(TILEI_ITEM_SLOT_SELECTED, x, y);
 
             if (item.flag & TILEI_FLAG_CURSOR)
-                m_buf.add_main_tile(TILE_CURSOR, x, y);
+                m_buf.add_icons_tile(TILEI_CURSOR, x, y);
 
             if (item.tile)
                 m_buf.add_main_tile(item.tile, x, y);
@@ -107,10 +109,10 @@ void InventoryRegion::pack_buffers()
                 m_buf.add_main_tile(item.special, x, y, 0, 0);
 
             if (item.flag & TILEI_FLAG_TRIED)
-                m_buf.add_main_tile(TILE_TRIED, x, y, 0, TILE_Y / 2);
+                m_buf.add_icons_tile(TILEI_TRIED, x, y, 0, TILE_Y / 2);
 
             if (item.flag & TILEI_FLAG_INVALID)
-                m_buf.add_main_tile(TILE_MESH, x, y);
+                m_buf.add_icons_tile(TILEI_MESH, x, y);
         }
     }
 }
