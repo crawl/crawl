@@ -2706,7 +2706,6 @@ static void _place_minivaults(const std::string &tag, int lo, int hi,
 // Returns false if we should dispense with city building, true otherwise.
 static bool _builder_normal(int level_number)
 {
-    bool skipped = false;
     const map_def *vault = NULL;
 
     if (use_random_maps && can_create_vault)
@@ -2747,18 +2746,14 @@ static bool _builder_normal(int level_number)
         return false;
     }
 
-    if (one_chance_in(3))
-        skipped = true;
-
-    //V was 3
-    if (!skipped && one_chance_in(7))
+    if (!one_chance_in(3))
     {
-        _roguey_level(level_number);
-        return false;
-    }
-    else
-    {
-        if (!skipped && level_number > 13 && one_chance_in(8))
+        if (one_chance_in(7))
+        {
+            _roguey_level(level_number);
+            return false;
+        }
+        else if (level_number > 13 && one_chance_in(8))
         {
             if (one_chance_in(3))
                 _city_level(level_number);
