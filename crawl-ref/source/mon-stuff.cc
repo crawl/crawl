@@ -4334,12 +4334,17 @@ void mons_att_changed(monster* mon)
     if (mon->type == MONS_ELDRITCH_TENTACLE_SEGMENT
         || mon->type == MONS_ELDRITCH_TENTACLE)
     {
-        int base_idx = mon->type == MONS_ELDRITCH_TENTACLE ? mon->mindex() : mon->number;
+        unsigned base_idx = mon->type == MONS_ELDRITCH_TENTACLE ?
+                            mon->mindex() : mon->number;
 
         menv[base_idx].attitude = att;
         for (monster_iterator mi; mi; ++mi)
         {
-            mi->attitude = att;
+            if (mi->type == MONS_ELDRITCH_TENTACLE_SEGMENT
+                && mi->number == base_idx)
+            {
+                mi->attitude = att;
+            }
         }
     }
 }
