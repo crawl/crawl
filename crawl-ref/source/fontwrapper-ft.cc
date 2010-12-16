@@ -517,7 +517,9 @@ void FTFontWrapper::render_string(unsigned int px, unsigned int py,
     ucs_t c;
     for (const char *tp = text; int s = utf8towc(&c, tp); tp += s)
     {
-        cols++; // TODO: use wcwidth()
+        int w = wcwidth(c);
+        if (w != -1)
+            cols += w;
         max_cols = std::max(cols, max_cols);
 
         // NOTE: only newlines should be used for tool tips.  Don't use EOL.
@@ -542,8 +544,14 @@ void FTFontWrapper::render_string(unsigned int px, unsigned int py,
     unsigned int rows = 0;
     for (const char *tp = text; int s = utf8towc(&c, tp); tp += s)
     {
-        chars[cols + rows * max_cols] = c;
-        cols++;
+        int w = wcwidth(c);
+        if (w > 0) // FIXME: combining characters are silently ignored
+        {
+            chars[cols + rows * max_cols] = c;
+            cols++;
+            if (w == 2)
+                chars[cols + rows * max_cols] = ' ', cols++;
+        }
 
         if (c == '\n')
         {
