@@ -341,6 +341,9 @@ void SkillMenuEntry::set_name(bool keep_hotkey)
 
 void SkillMenuEntry::set_display()
 {
+    if (m_sk == SK_TITLE)
+        _set_title();
+
     if (is_invalid_skill(m_sk))
         return;
 
