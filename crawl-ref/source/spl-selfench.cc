@@ -32,7 +32,7 @@ int allowed_deaths_door_hp(void)
     if (you.religion == GOD_KIKUBAAQUDGHA && !player_under_penance())
         hp += you.piety / 15;
 
-    return (hp);
+    return std::max(hp, 1);
 }
 
 bool cast_deaths_door(int pow)
