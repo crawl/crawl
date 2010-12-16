@@ -774,6 +774,10 @@ void lose_level()
     you.redraw_experience = true;
 
     xom_is_stimulated(255);
+
+    // Kill the player if maxhp <= 0.  We can't just move the ouch() call past
+    // dec_max_hp() since it would decrease hp twice, so here's another one.
+    ouch(0, NON_MONSTER, KILLED_BY_DRAINING);
 }
 
 bool drain_exp(bool announce_full)
