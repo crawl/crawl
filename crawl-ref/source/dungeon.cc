@@ -6885,7 +6885,7 @@ static void _box_room(int bx1, int bx2, int by1, int by2,
         wall_type = DNGN_SHALLOW_WATER;
     }
 
-    int temp_rand, new_doors, doors_placed;
+    int new_doors, doors_placed;
 
     // Do top & bottom walls.
     dgn_replace_area(bx1, by1, bx2, by1, DNGN_FLOOR, wall_type);
@@ -6899,10 +6899,9 @@ static void _box_room(int bx1, int bx2, int by1, int by2,
     // buildings' doors.
     doors_placed = _box_room_doors(bx1, bx2, by1, by2, 0);
 
-    temp_rand = random2(100);
-    new_doors = (temp_rand > 45) ? 2 :
-                (temp_rand > 22) ? 1
-                                 : 3;
+    new_doors = random_choose_weighted(54, 2,
+                                       23, 1,
+                                       23, 3, 0);
 
     // Small rooms don't have as many doors.
     if ((bx2-bx1)*(by2-by1) < 36 && new_doors > 1)
