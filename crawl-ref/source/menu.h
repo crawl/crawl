@@ -746,6 +746,7 @@ public:
     virtual std::vector<MenuItem*> get_selected_items();
     virtual bool select_item(int index) = 0;
     virtual bool select_item(MenuItem* item) = 0;
+    virtual MenuItem* find_item_by_hotkey(int key);
     virtual MenuItem* select_item_by_hotkey(int key);
     virtual void clear_selections();
     virtual MenuItem* get_active_item() = 0;

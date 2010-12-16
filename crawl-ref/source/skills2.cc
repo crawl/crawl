@@ -717,10 +717,9 @@ void SkillMenu::toggle_practise(skill_type sk, int keyn)
     {
         int letter;
         letter = hotkeys[0];
-        MenuItem* next_item = m_ff->select_item_by_hotkey(++letter);
+        MenuItem* next_item = m_ff->find_item_by_hotkey(++letter);
         if (next_item != NULL)
         {
-            next_item->select(false);
             if (m_ff->get_active_item() != NULL && keyn == CK_ENTER)
                 m_ff->set_active_item(next_item);
             else
