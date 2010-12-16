@@ -321,7 +321,8 @@ SUBST:  ~ = ~:2 .
 SUBST:  8 = 89
 MONS:   plant
 TILE:   c = wall_stone_brick
-FTILE:  .1234~*X|+8 = floor_cobble_blood
+FTILE:  .~*X|+$ = floor_cobble_blood
+FTILE:  12348 = floor_cobble_blood
 FTILE:  = = floor_cobble_blood
 KFEAT:  , = floor
 KFEAT:  m = iron_grate
