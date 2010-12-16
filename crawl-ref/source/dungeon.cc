@@ -3786,14 +3786,6 @@ static void _builder_monsters(int level_number, level_area_type level_type, int 
 
     if (!player_in_branch(BRANCH_CRYPT)) // No water creatures in the Crypt.
         _place_aquatic_monsters(level_number, level_type);
-    else
-    {
-        if (one_chance_in(3))
-            mons_place(mgen_data(MONS_CURSE_SKULL, BEH_SLEEP));
-
-        if (one_chance_in(7))
-            mons_place(mgen_data(MONS_CURSE_SKULL, BEH_SLEEP));
-    }
 }
 
 static void _builder_items(int level_number, int items_wanted)

@@ -2761,6 +2761,24 @@ DEPTH: 6-30
 MAP
 ENDMAP
 
+NAME: crypt_curse_skull
+TAGS: allow_dup luniq extra
+DEPTH: Crypt
+CHANCE: 3333
+MONS: curse skull
+MAP
+1
+ENDMAP
+
+NAME: crypt_curse_skull_rare
+TAGS: allow_dup luniq extra
+DEPTH: Crypt
+CHANCE: 1429
+MONS: curse skull
+MAP
+1
+ENDMAP
+
 
 #### commented out vaults #### should look into these at some point
 
