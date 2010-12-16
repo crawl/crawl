@@ -1104,7 +1104,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         || death_type == KILLED_BY_LEAVING;
 
     if (you.duration[DUR_DEATHS_DOOR] && death_type != KILLED_BY_LAVA
-        && death_type != KILLED_BY_WATER && !non_death)
+        && death_type != KILLED_BY_WATER && !non_death && you.hp_max > 0)
     {
         return;
     }
