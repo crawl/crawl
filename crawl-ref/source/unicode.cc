@@ -12,6 +12,7 @@
 #include <string.h>
 #include <limits.h>
 
+#include "syscalls.h"
 #include "unicode.h"
 
 // there must be at least 4 bytes free, NOT CHECKED!
@@ -112,7 +113,6 @@ int utf8towc(ucs_t *d, const char *s)
     return cnt;
 }
 
-#ifdef TARGET_OS_WINDOWS
 std::wstring utf8_to_16(const char *s)
 {
     std::wstring d;
@@ -162,7 +162,6 @@ std::string utf16_to_8(const wchar_t *s)
 
     return d;
 }
-#endif
 
 std::string utf8_to_mb(const char *s)
 {
@@ -214,4 +213,204 @@ std::string mb_to_utf8(const char *s)
             d.push_back(buf[i]);
     }
     return d;
+}
+
+static std::string utf8_validate(const char *s)
+{
+    std::string d;
+    ucs_t c;
+    int l;
+
+    while((l = utf8towc(&c, s)))
+    {
+        s += l;
+
+        char buf[4];
+        int r = wctoutf8(buf, c);
+        for (int i = 0; i < r; i++)
+            d.push_back(buf[i]);
+    }
+    return d;
+}
+
+static bool _check_trail(FILE *f, const char* bytes, int len)
+{
+    while (len--)
+    {
+        if (fgetc(f) != (unsigned char)*bytes++)
+        {
+            rewind(f);
+            return false;
+        }
+    }
+    return true;
+}
+
+TextFileReader::TextFileReader(const char *name)
+{
+    f = fopen_u(name, "r");
+    if (!f)
+    {
+        seen_eof = true;
+        return;
+    }
+    seen_eof = false;
+
+    bom = BOM_NORMAL;
+    int ch = fgetc(f);
+    switch(ch)
+    {
+    case 0xEF:
+        if (_check_trail(f, "\xBB\xBF", 2))
+            bom = BOM_UTF8;
+        break;
+    case 0xFE:
+        if (_check_trail(f, "\xFF", 1))
+            bom = BOM_UTF16BE;
+        break;
+    case 0xFF:
+        if (_check_trail(f, "\xFE\x00\x00", 3))
+            bom = BOM_UTF32LE;
+        else if (_check_trail(f, "\xFF\xFE", 2)) // rewound
+            bom = BOM_UTF16LE;
+        break;
+    case 0x00:
+        if (_check_trail(f, "\x00\xFE\xFF", 3))
+            bom = BOM_UTF32BE;
+        break;
+    default:
+        ungetc(ch, f);
+    }
+}
+
+TextFileReader::~TextFileReader()
+{
+    if (f)
+        fclose(f);
+}
+
+std::string TextFileReader::get_line()
+{
+    ASSERT(f);
+    std::wstring win; // actually, these are more of a lose
+    std::string out;
+    char buf[512];
+    ucs_t c;
+    int len;
+
+    switch(bom)
+    {
+    case BOM_NORMAL:
+        do
+        {
+            if (!fgets(buf, sizeof buf, f))
+            {
+                seen_eof = true;
+                break;
+            }
+            out += buf;
+            if (out[out.length() - 1] == '\n')
+            {
+                out.erase(out.length() - 1);
+                break;
+            }
+        } while (!seen_eof);
+        return mb_to_utf8(out.c_str());
+
+    case BOM_UTF8:
+        do
+        {
+            if (!fgets(buf, sizeof buf, f))
+            {
+                seen_eof = true;
+                break;
+            }
+            out += buf;
+            if (out[out.length() - 1] == '\n')
+            {
+                out.erase(out.length() - 1);
+                break;
+            }
+        } while (!seen_eof);
+        return utf8_validate(out.c_str());
+
+    case BOM_UTF16LE:
+        do
+        {
+            if (fread(buf, 2, 1, f) != 1)
+            {
+                seen_eof = true;
+                break;
+            }
+            c = ((uint32_t)((unsigned char)buf[0]))
+              | ((uint32_t)((unsigned char)buf[1])) << 8;
+            if (c == '\n')
+                break;
+            win.push_back(c);
+        }
+        while (!seen_eof);
+        return utf16_to_8(win.c_str());
+
+    case BOM_UTF16BE:
+        do
+        {
+            if (fread(buf, 2, 1, f) != 1)
+            {
+                seen_eof = true;
+                break;
+            }
+            c = ((uint32_t)((unsigned char)buf[1]))
+              | ((uint32_t)((unsigned char)buf[0])) << 8;
+            if (c == '\n')
+                break;
+            win.push_back(c);
+        }
+        while (!seen_eof);
+        return utf16_to_8(win.c_str());
+
+    case BOM_UTF32LE:
+        do
+        {
+            if (fread(buf, 4, 1, f) != 1)
+            {
+                seen_eof = true;
+                break;
+            }
+            c = ((uint32_t)((unsigned char)buf[0]))
+              | ((uint32_t)((unsigned char)buf[1])) << 8
+              | ((uint32_t)((unsigned char)buf[2])) << 16
+              | ((uint32_t)((unsigned char)buf[3])) << 24;
+            if (c == '\n')
+                break;
+            len = wctoutf8(buf, c);
+            for (int i = 0; i < len; i++)
+                out.push_back(buf[i]);
+        }
+        while (!seen_eof);
+        return out;
+
+    case BOM_UTF32BE:
+        do
+        {
+            if (fread(buf, 4, 1, f) != 1)
+            {
+                seen_eof = true;
+                break;
+            }
+            c = ((uint32_t)((unsigned char)buf[0])) << 24
+              | ((uint32_t)((unsigned char)buf[1])) << 16
+              | ((uint32_t)((unsigned char)buf[2])) << 8
+              | ((uint32_t)((unsigned char)buf[3]));
+            if (c == '\n')
+                break;
+            len = wctoutf8(buf, c);
+            for (int i = 0; i < len; i++)
+                out.push_back(buf[i]);
+        }
+        while (!seen_eof);
+        return out;
+    }
+
+    ASSERT(!"our memory got trampled!");
+    return "говно";
 }
