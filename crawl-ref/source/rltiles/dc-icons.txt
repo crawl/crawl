@@ -1,0 +1,71 @@
+%prefix TILEI
+%name icons
+%startvalue 0
+
+%back none
+
+# idx == 0 must be invalid
+dc-dngn/dngn_unseen
+
+%sdir dc-misc
+effect/net_trap TRAP_NET
+mask_deep_water MASK_DEEP_WATER
+mask_shallow_water MASK_SHALLOW_WATER
+mask_deep_water_murky MASK_DEEP_WATER_MURKY
+mask_shallow_water_murky MASK_SHALLOW_WATER_MURKY
+mask_deep_water_shoals MASK_DEEP_WATER_SHOALS
+mask_shallow_water_shoals MASK_SHALLOW_WATER_SHOALS
+mask_lava MASK_LAVA
+cursor CURSOR
+cursor_red CURSOR2
+cursor_green CURSOR3
+tutorial_cursor TUTORIAL_CURSOR
+%rim 1
+heart HEART
+good_neutral GOOD_NEUTRAL
+neutral NEUTRAL
+animated_weapon ANIMATED_WEAPON
+mimic MIMIC
+poison POISON
+flame FLAME
+berserk BERSERK
+%rim 0
+may_stab_brand MAY_STAB_BRAND
+sleeping STAB_BRAND
+out_of_sight MESH
+out_of_range OOR_MESH
+magicmap MAGIC_MAP_MESH
+something_under SOMETHING_UNDER
+travel_exclusion TRAVEL_EXCLUSION_FG
+travel_exclusion_centre TRAVEL_EXCLUSION_CENTRE_FG
+%rim 1
+new_stair NEW_STAIR
+%rim 0
+
+num0 NUM0
+num1 NUM1
+num2 NUM2
+num3 NUM3
+num4 NUM4
+num5 NUM5
+num6 NUM6
+num7 NUM7
+num8 NUM8
+num9 NUM9
+tried TRIED
+
+%rim 1
+demon_pentagram1 DEMON_NUM1
+demon_pentagram2 DEMON_NUM2
+demon_pentagram3 DEMON_NUM3
+demon_pentagram4 DEMON_NUM4
+demon_pentagram5 DEMON_NUM5
+%rim 0
+
+ray ITEM_SLOT_SELECTED
+
+mdam_lightly_damaged MDAM_LIGHTLY_DAMAGED
+mdam_moderately_damaged MDAM_MODERATELY_DAMAGED
+mdam_heavily_damaged MDAM_HEAVILY_DAMAGED
+mdam_severely_damaged MDAM_SEVERELY_DAMAGED
+mdam_almost_dead MDAM_ALMOST_DEAD

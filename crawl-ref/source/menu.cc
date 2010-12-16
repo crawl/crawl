@@ -27,6 +27,7 @@
  #include "tilebuf.h"
  #include "tilefont.h"
  #include "tiledef-dngn.h"
+ #include "tiledef-icons.h"
  #include "tiledef-main.h"
  #include "tiledef-player.h"
  #include "tilepick.h"
@@ -901,7 +902,7 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
             item = mitm[m->inv[MSLOT_WEAPON]];
 
         tileset.push_back(tile_def(tileidx_item(item), TEX_DEFAULT));
-        tileset.push_back(tile_def(TILE_ANIMATED_WEAPON, TEX_DEFAULT));
+        tileset.push_back(tile_def(TILEI_ANIMATED_WEAPON, TEX_ICONS));
     }
     else if (mons_is_draconian(m->type))
     {
@@ -926,15 +927,15 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
     if (!fake && !mons_flies(m))
     {
         if (ch == TILE_DNGN_LAVA)
-            tileset.push_back(tile_def(TILE_MASK_LAVA, TEX_DEFAULT));
+            tileset.push_back(tile_def(TILEI_MASK_LAVA, TEX_ICONS));
         else if (ch == TILE_DNGN_SHALLOW_WATER)
-            tileset.push_back(tile_def(TILE_MASK_SHALLOW_WATER, TEX_DEFAULT));
+            tileset.push_back(tile_def(TILEI_MASK_SHALLOW_WATER, TEX_ICONS));
         else if (ch == TILE_DNGN_DEEP_WATER)
-            tileset.push_back(tile_def(TILE_MASK_DEEP_WATER, TEX_DEFAULT));
+            tileset.push_back(tile_def(TILEI_MASK_DEEP_WATER, TEX_ICONS));
         else if (ch == TILE_DNGN_SHALLOW_WATER_MURKY)
-            tileset.push_back(tile_def(TILE_MASK_SHALLOW_WATER_MURKY, TEX_DEFAULT));
+            tileset.push_back(tile_def(TILEI_MASK_SHALLOW_WATER_MURKY, TEX_ICONS));
         else if (ch == TILE_DNGN_DEEP_WATER_MURKY)
-            tileset.push_back(tile_def(TILE_MASK_DEEP_WATER_MURKY, TEX_DEFAULT));
+            tileset.push_back(tile_def(TILEI_MASK_DEEP_WATER_MURKY, TEX_ICONS));
     }
 
     if (mons_can_display_wounds(m))
@@ -946,19 +947,19 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
         {
         case MDAM_DEAD:
         case MDAM_ALMOST_DEAD:
-            tileset.push_back(tile_def(TILE_MDAM_ALMOST_DEAD, TEX_DEFAULT));
+            tileset.push_back(tile_def(TILEI_MDAM_ALMOST_DEAD, TEX_ICONS));
             break;
         case MDAM_SEVERELY_DAMAGED:
-            tileset.push_back(tile_def(TILE_MDAM_SEVERELY_DAMAGED, TEX_DEFAULT));
+            tileset.push_back(tile_def(TILEI_MDAM_SEVERELY_DAMAGED, TEX_ICONS));
             break;
         case MDAM_HEAVILY_DAMAGED:
-            tileset.push_back(tile_def(TILE_MDAM_HEAVILY_DAMAGED, TEX_DEFAULT));
+            tileset.push_back(tile_def(TILEI_MDAM_HEAVILY_DAMAGED, TEX_ICONS));
             break;
         case MDAM_MODERATELY_DAMAGED:
-            tileset.push_back(tile_def(TILE_MDAM_MODERATELY_DAMAGED, TEX_DEFAULT));
+            tileset.push_back(tile_def(TILEI_MDAM_MODERATELY_DAMAGED, TEX_ICONS));
             break;
         case MDAM_LIGHTLY_DAMAGED:
-            tileset.push_back(tile_def(TILE_MDAM_LIGHTLY_DAMAGED, TEX_DEFAULT));
+            tileset.push_back(tile_def(TILEI_MDAM_LIGHTLY_DAMAGED, TEX_ICONS));
             break;
         case MDAM_OKAY:
         default:
@@ -968,15 +969,15 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
     }
 
     if (m->friendly())
-        tileset.push_back(tile_def(TILE_HEART, TEX_DEFAULT));
+        tileset.push_back(tile_def(TILEI_HEART, TEX_ICONS));
     else if (m->good_neutral())
-        tileset.push_back(tile_def(TILE_GOOD_NEUTRAL, TEX_DEFAULT));
+        tileset.push_back(tile_def(TILEI_GOOD_NEUTRAL, TEX_ICONS));
     else if (m->neutral())
-        tileset.push_back(tile_def(TILE_NEUTRAL, TEX_DEFAULT));
+        tileset.push_back(tile_def(TILEI_NEUTRAL, TEX_ICONS));
     else if (mons_looks_stabbable(m))
-        tileset.push_back(tile_def(TILE_STAB_BRAND, TEX_DEFAULT));
+        tileset.push_back(tile_def(TILEI_STAB_BRAND, TEX_ICONS));
     else if (mons_looks_distracted(m))
-        tileset.push_back(tile_def(TILE_MAY_STAB_BRAND, TEX_DEFAULT));
+        tileset.push_back(tile_def(TILEI_MAY_STAB_BRAND, TEX_ICONS));
 
     return (true);
 }
@@ -995,7 +996,7 @@ bool FeatureMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
     tileset.push_back(tile_def(tile, get_dngn_tex(tile)));
 
     if (in_bounds(pos) && is_unknown_stair(pos))
-        tileset.push_back(tile_def(TILE_NEW_STAIR, TEX_DEFAULT));
+        tileset.push_back(tile_def(TILEI_NEW_STAIR, TEX_ICONS));
 
     return (true);
 }

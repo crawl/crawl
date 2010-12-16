@@ -6,6 +6,7 @@
 #include "glwrapper.h"
 #include "tiledef-dngn.h"
 #include "tiledef-gui.h"
+#include "tiledef-icons.h"
 #include "tiledef-main.h"
 #include "tiledef-player.h"
 #include "tiletex.h"
@@ -91,7 +92,7 @@ void TilesTexture::set_info(int tile_max, tile_info_func *info_func)
     m_info_func = info_func;
 }
 
-// This array should correspond to the TEXTURE_ enum.
+// This array should correspond to the TEX_ enum.
 const char *ImageManager::filenames[TEX_MAX] =
 {
     "floor.png",
@@ -99,7 +100,8 @@ const char *ImageManager::filenames[TEX_MAX] =
     "feat.png",
     "player.png",
     "main.png",
-    "gui.png"
+    "gui.png",
+    "icons.png"
 };
 
 ImageManager::ImageManager()
@@ -128,6 +130,7 @@ bool ImageManager::load_textures(bool need_mips)
     m_textures[TEX_DEFAULT].set_info(TILEP_PLAYER_MAX, &tile_main_info);
     m_textures[TEX_PLAYER].set_info(TILEP_PLAYER_MAX, &tile_player_info);
     m_textures[TEX_GUI].set_info(TILEG_GUI_MAX, &tile_gui_info);
+    m_textures[TEX_ICONS].set_info(TILEI_ICONS_MAX, &tile_icons_info);
 
     return (true);
 }

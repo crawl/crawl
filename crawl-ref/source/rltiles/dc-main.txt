@@ -16,4 +16,3 @@ dc-dngn/dngn_unseen
 #### Effects, etc.
 %include dc-misc.txt
 
-effect/net_trap TRAP_NET

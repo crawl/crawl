@@ -40,6 +40,7 @@
 #include "state.h"
 
 #ifdef USE_TILE
+ #include "tiledef-icons.h"
  #include "tiledef-main.h"
  #include "tiledef-dngn.h"
  #include "tilepick.h"
@@ -538,7 +539,7 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
         tileset.push_back(tile_def(idx, TEX_DEFAULT));
 
         if (eq != EQ_NONE && you.melded[eq])
-            tileset.push_back(tile_def(TILE_MESH, TEX_DEFAULT));
+            tileset.push_back(tile_def(TILEI_MESH, TEX_ICONS));
     }
     else
     {
@@ -573,13 +574,13 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
             // Needs to be displayed so as to not give away mimics in shallow water.
             if (ch == TILE_DNGN_SHALLOW_WATER)
             {
-                tileset.push_back(tile_def(TILE_MASK_SHALLOW_WATER,
-                                           TEX_DEFAULT));
+                tileset.push_back(tile_def(TILEI_MASK_SHALLOW_WATER,
+                                           TEX_ICONS));
             }
             else if (ch == TILE_DNGN_SHALLOW_WATER_MURKY)
             {
-                tileset.push_back(tile_def(TILE_MASK_SHALLOW_WATER_MURKY,
-                                           TEX_DEFAULT));
+                tileset.push_back(tile_def(TILEI_MASK_SHALLOW_WATER_MURKY,
+                                           TEX_ICONS));
             }
         }
     }
