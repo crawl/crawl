@@ -88,9 +88,6 @@ map_section_type vault_main(vault_placement &place, const map_def *vault,
                             bool check_place)
 {
 #ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Generating level: %s (%d,%d)",
-         vault->name.c_str(), place.pos.x, place.pos.y);
-
     if (crawl_state.map_stat_gen)
         mapgen_report_map_try(*vault);
 #endif
