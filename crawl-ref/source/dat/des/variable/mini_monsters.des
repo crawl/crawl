@@ -881,25 +881,25 @@ MONS:   plant / w:40 nothing, goblin / hobgoblin / kobold / orc / w:5 gnoll
 MAP
 .......................
 ..1..x++x..1..x+++++x..
-.1x++x--x++x++x-----+.. 7
-..+--A--B--C--E-----+.. 11
-..+--A--B--C--E-----+.. 14
-.1xxAxxBxCCx--xEExEExx. 2
-..1+--R....xDDx..F---+. 5
-..1+--R..........F---+. 5 -- 44
+.1x++x--x++x++x-----+..
+..+--A--B--C--E-----+..
+..+--A--B--C--E-----+..
+.1xxAxxBxCCx--xEExEExx.
+..1+--R....xDDx..F---+.
+..1+--R..........F---+.
 .1xxRxx.xSSSxTTx.xFx+x.
-..+--Q..S---T--T...+1.. 7
-..+--Q..S---T--T...+1.. 7 -- 14
+..+--Q..S---T--T...+1..
+..+--Q..S---T--T...+1..
 .xxPxx.xxSSxxTxx.xGxx1.
-.+--P..V---U--U..G--+.. 9 -- 53
-.+--P..V---U--U..G--+.. 9
-.xxOxx.V---xUUx..xHHxx. 3
-..+--O.xVVVx.....H---+. 5
-..+--O........xJJx---+. 5
-.xxNNxMMx..xKKx--xIIxx. 2
-.+---N--xLLx--J--I--+.. 1
-.+---N--M--L--x++x--+.. 11
-.x+++x++x--L--+11+--+.. 6
+.+--P..V---U--U..G--+..
+.+--P..V---U--U..G--+..
+.xxOxx.V---xUUx..xHHxx.
+..+--O.xVVVx.....H---+.
+..+--O........xJJx---+.
+.xxNNxMMx..xKKx--xIIxx.
+.+---N--xLLx--J--I--+..
+.+---N--M--L--x++x--+..
+.x+++x++x--L--+11+--+..
 .1...1..x++x++x..x++x1.
 .......................
 ENDMAP
