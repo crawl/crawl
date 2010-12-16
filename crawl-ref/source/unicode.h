@@ -24,3 +24,25 @@ static inline std::string mb_to_utf8(const std::string &s)
 }
 
 #define OUTS(x) utf8_to_mb(x).c_str()
+
+class TextFileReader
+{
+    enum bom_type
+    {
+        BOM_NORMAL, // system locale
+        BOM_UTF8,
+        BOM_UTF16LE,
+        BOM_UTF16BE,
+        BOM_UTF32LE,
+        BOM_UTF32BE,
+    };
+    FILE *f;
+    bom_type bom;
+    bool seen_eof;
+public:
+    TextFileReader(const char *name);
+    ~TextFileReader();
+    bool eof() { return seen_eof; };
+    bool error() { return !f; };
+    std::string get_line();
+};
