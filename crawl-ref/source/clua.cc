@@ -16,6 +16,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "syscalls.h"
+#include "unicode.h"
 
 #include <algorithm>
 
@@ -249,7 +250,13 @@ int CLua::loadfile(lua_State *ls, const char *filename, bool trusted,
                        make_stringf("Can't find \"%s\"", filename).c_str());
         return (-1);
     }
-    return (luaL_loadfile(ls, file.c_str()));
+
+    FileLineInput f(file.c_str());
+    std::string script;
+    while (!f.eof())
+        script += f.get_line() + "\n";
+
+    return luaL_loadbuffer(ls, &script[0], script.length(), file.c_str());
 }
 
 int CLua::execfile(const char *filename, bool trusted, bool die_on_fail,
