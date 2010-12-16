@@ -414,3 +414,24 @@ std::string FileLineInput::get_line()
     ASSERT(!"our memory got trampled!");
     return "говно";
 }
+
+int strwidth(const char *s)
+{
+    ucs_t c;
+    int w = 0;
+
+    while(int l = utf8towc(&c, s))
+    {
+        s += l;
+        int cw = wcwidth(c);
+        if (cw != -1) // shouldn't ever happen
+            w += cw;
+    }
+
+    return w;
+}
+
+int strwidth(const std::string &s)
+{
+    return strwidth(s.c_str());
+}
