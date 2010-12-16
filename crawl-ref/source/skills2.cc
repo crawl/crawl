@@ -25,6 +25,7 @@
 #include "fight.h"
 #include "godabil.h"
 #include "itemprop.h"
+#include "options.h"
 #include "player.h"
 #include "species.h"
 #include "skills.h"
@@ -597,7 +598,7 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
     SkillMenuEntry::m_skm = this;
 
 #ifdef USE_TILE
-    if (get_number_of_lines() >= 42)
+    if (Options.tile_menu_icons && tiles.get_crt()->wy >= 760)
         set_flag(SKMF_SKILL_ICONS);
 #endif
 
