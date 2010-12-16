@@ -45,7 +45,6 @@
 #include "tags.h"
 #include "travel.h"
 #include "items.h"
-#include "unicode.h"
 #include "view.h"
 #include "viewchar.h"
 
@@ -1333,8 +1332,8 @@ std::string read_init_file(bool runscript)
 
     const std::string init_file_name(_find_crawlrc());
 
-    FILE* f = fopen_u(init_file_name.c_str(), "r");
-    if (f == NULL)
+    FileLineInput f(init_file_name.c_str());
+    if (f.error())
     {
         if (!init_file_name.empty())
             return make_stringf("(\"%s\" is not readable)",
@@ -1354,8 +1353,7 @@ std::string read_init_file(bool runscript)
 #else
     Options.basefilename = "init.txt";
 #endif
-    read_options(f, runscript);
-    fclose(f);
+    Options.read_options(f, runscript);
 
     Options.filename     = "extra opts last";
     Options.basefilename = "extra opts last";
@@ -1376,15 +1374,12 @@ std::string read_init_file(bool runscript)
 newgame_def read_startup_prefs()
 {
 #ifndef DISABLE_STICKY_STARTUP_OPTIONS
-    std::string fn = get_prefs_filename();
-    FILE *f = fopen_u(fn.c_str(), "r");
-    if (!f)
+    FileLineInput fl(get_prefs_filename().c_str());
+    if (fl.error())
         return newgame_def();
 
     game_options temp;
-    FileLineInput fl(f);
     temp.read_options(fl, false);
-    fclose(f);
 
     return (temp.game);
 #endif // !DISABLE_STICKY_STARTUP_OPTIONS
@@ -1472,12 +1467,6 @@ void save_player_name()
 #endif // !DISABLE_STICKY_STARTUP_OPTIONS
 }
 
-void read_options(FILE *f, bool runscript)
-{
-    FileLineInput fl(f);
-    Options.read_options(fl, runscript);
-}
-
 void read_options(const std::string &s, bool runscript, bool clear_aliases)
 {
     StringLineInput st(s);
@@ -1489,7 +1478,7 @@ game_options::game_options()
     reset_options();
 }
 
-void game_options::read_options(InitLineInput &il, bool runscript,
+void game_options::read_options(LineInput &il, bool runscript,
                                 bool clear_aliases)
 {
     unsigned int line = 0;
@@ -1509,7 +1498,7 @@ void game_options::read_options(InitLineInput &il, bool runscript,
     while (!il.eof())
     {
         line_num++;
-        std::string s   = il.getline();
+        std::string s   = il.get_line();
         std::string str = s;
         line++;
 
@@ -3461,13 +3450,9 @@ void game_options::include(const std::string &rawfilename,
     // Also unwind any aliases defined in included files.
     unwind_var<string_map> unwalias(aliases);
 
-    FILE* f = fopen_u(include_file.c_str(), "r");
-    if (f)
-    {
-        FileLineInput fl(f);
-        this->read_options(fl, runscript, false);
-        fclose(f);
-    }
+    FileLineInput fl(include_file.c_str());
+    if (!fl.error())
+        read_options(fl, runscript, false);
 }
 
 void game_options::report_error(const std::string &error)

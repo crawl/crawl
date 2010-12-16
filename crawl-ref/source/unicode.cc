@@ -246,7 +246,7 @@ static bool _check_trail(FILE *f, const char* bytes, int len)
     return true;
 }
 
-TextFileReader::TextFileReader(const char *name)
+FileLineInput::FileLineInput(const char *name)
 {
     f = fopen_u(name, "r");
     if (!f)
@@ -283,13 +283,13 @@ TextFileReader::TextFileReader(const char *name)
     }
 }
 
-TextFileReader::~TextFileReader()
+FileLineInput::~FileLineInput()
 {
     if (f)
         fclose(f);
 }
 
-std::string TextFileReader::get_line()
+std::string FileLineInput::get_line()
 {
     ASSERT(f);
     std::wstring win; // actually, these are more of a lose

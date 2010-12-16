@@ -5,7 +5,7 @@
 #include "pattern.h"
 #include "newgame_def.h"
 
-class InitLineInput;
+class LineInput;
 struct game_options
 {
 public:
@@ -13,7 +13,7 @@ public:
     void reset_options();
 
     void read_option_line(const std::string &s, bool runscripts = false);
-    void read_options(InitLineInput &, bool runscripts,
+    void read_options(LineInput &, bool runscripts,
                       bool clear_aliases = true);
 
     void include(const std::string &file, bool resolve, bool runscript);

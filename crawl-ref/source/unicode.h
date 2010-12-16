@@ -4,6 +4,8 @@
  *              manipulation functions that act on character types.
  *  Written by: Adam Borowski
  */
+#ifndef UNICODE_H
+#define UNICODE_H
 
 int wctoutf8(char *d, ucs_t s);
 int utf8towc(ucs_t *d, const char *s);
@@ -25,7 +27,16 @@ static inline std::string mb_to_utf8(const std::string &s)
 
 #define OUTS(x) utf8_to_mb(x).c_str()
 
-class TextFileReader
+class LineInput
+{
+public:
+    virtual ~LineInput() {}
+    virtual bool eof() = 0;
+    virtual bool error() { return false; };
+    virtual std::string get_line() = 0;
+};
+
+class FileLineInput : public LineInput
 {
     enum bom_type
     {
@@ -40,9 +51,11 @@ class TextFileReader
     bom_type bom;
     bool seen_eof;
 public:
-    TextFileReader(const char *name);
-    ~TextFileReader();
-    bool eof() { return seen_eof; };
+    FileLineInput(const char *name);
+    ~FileLineInput();
+    bool eof() { return seen_eof || !f; };
     bool error() { return !f; };
     std::string get_line();
 };
+
+#endif

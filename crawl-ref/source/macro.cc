@@ -986,7 +986,7 @@ static void _read_macros_from(const char* filename)
         return;
 
     std::string s;
-    TextFileReader f(filename);
+    FileLineInput f(filename);
     keyseq key, action;
     bool keymap = false;
     KeymapContext keymc = KMC_DEFAULT;
