@@ -25,6 +25,10 @@ static inline std::string mb_to_utf8(const std::string &s)
     return mb_to_utf8(s.c_str());
 }
 
+#ifndef UNIX
+int wcwidth(ucs_t c);
+#endif
+
 #define OUTS(x) utf8_to_mb(x).c_str()
 
 class LineInput
