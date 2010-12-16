@@ -330,7 +330,7 @@ static void _maybe_leave_water(const cloud_struct& c)
 
         if (grd(c.pos) != feat)
         {
-            if (you.pos() == c.pos)
+            if (you.pos() == c.pos && !you.airborne())
                 mpr("The rain has left you waist-deep in water!");
             dungeon_terrain_changed(c.pos, feat);
         }
