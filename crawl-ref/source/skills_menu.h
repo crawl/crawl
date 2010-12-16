@@ -33,6 +33,8 @@ enum skill_menu_flags
 
 //Ashenzari transfer knowledge ability set this flag.
     SKMF_RESKILLING      = 0x400,
+
+    SKMF_SKILL_ICONS     = 0x800,
 };
 
 class SkillMenu;
@@ -89,10 +91,11 @@ static const int SK_ARR_COL =  2;
 class SkillMenu : public PrecisionMenu
 {
 public:
-    bool m_skill_tiles;
-
     SkillMenu(int flags);
     bool is_set(int flag) const;
+    void set_flag(int flag);
+    void clear_flag(int flag);
+    void toggle_flag(int flag);
     void change_action();
     void change_display();
     void toggle_practise(skill_type sk, int keyn);
