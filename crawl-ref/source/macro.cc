@@ -24,8 +24,6 @@
 #include "macro.h"
 #include "state.h"
 
-#include <iostream>
-#include <fstream>
 #include <string>
 #include <sstream>
 #include <map>
@@ -988,13 +986,14 @@ static void _read_macros_from(const char* filename)
         return;
 
     std::string s;
-    std::ifstream f(filename);
+    TextFileReader f(filename);
     keyseq key, action;
     bool keymap = false;
     KeymapContext keymc = KMC_DEFAULT;
 
-    while (f >> s)
+    while (!f.eof())
     {
+        s = f.get_line();
         trim_string(s);  // remove white space from ends
 
         if (s[0] == '#')
