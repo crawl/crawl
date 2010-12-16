@@ -2924,7 +2924,7 @@ MenuItem* MenuObject::_find_item_by_mouse_coords(const coord_def& pos)
     return NULL;
 }
 
-MenuItem* MenuObject::select_item_by_hotkey(int key)
+MenuItem* MenuObject::find_item_by_hotkey(int key)
 {
     // browse through all the Entries
     std::vector<MenuItem*>::iterator it;
@@ -2936,13 +2936,18 @@ MenuItem* MenuObject::select_item_by_hotkey(int key)
             ++hot_iterator)
         {
             if (key == *hot_iterator)
-            {
-                select_item(*it);
                 return *it;
-            }
         }
     }
     return NULL;
+}
+
+MenuItem* MenuObject::select_item_by_hotkey(int key)
+{
+    MenuItem* item = find_item_by_hotkey(key);
+    if (item)
+        select_item(item);
+    return item;
 }
 
 std::vector<MenuItem*> MenuObject::get_selected_items()
