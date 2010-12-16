@@ -583,8 +583,8 @@ void SkillMenuEntry::_set_points()
 }
 #endif
 
-#define SCREEN_COL          80
-#define SCREEN_LINES        24
+#define MIN_COLS            80
+#define MIN_LINES           24
 #define TILES_COL            6
 #define CURRENT_ACTION_SIZE 24
 #define NEXT_ACTION_SIZE    15
@@ -604,8 +604,8 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
     m_min_coord.x = 2;
     m_min_coord.y = 1;
 
-    m_max_coord.x = SCREEN_COL + 1;
-    m_max_coord.y = SCREEN_LINES + 1;
+    m_max_coord.x = MIN_COLS + 1;
+    m_max_coord.y = MIN_LINES + 1;
 
     m_ff = new MenuFreeform();
     m_help = new FormattedTextItem();
@@ -622,7 +622,7 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
     set_active_object(m_ff);
 
     _init_title();
-    const int col_split = SCREEN_COL / 2 + (m_skill_tiles ? TILES_COL : 0);
+    const int col_split = MIN_COLS / 2 + (m_skill_tiles ? TILES_COL : 0);
     for (int col = 0; col < SK_ARR_COL; ++col)
         for (int ln = 0; ln < SK_ARR_LN; ++ln)
         {
@@ -1141,6 +1141,16 @@ int SkillMenu::_get_next_display() const
 
 void skill_menu(bool reskilling)
 {
+#ifndef USE_TILE
+    if (get_number_of_lines() < MIN_LINES || get_number_of_cols() < MIN_COLS)
+    {
+        mprf(MSGCH_ERROR, "Terminal too small (%d, %d) to display the skill "
+             "menu; need at least (%d, %d).", get_number_of_cols(),
+             get_number_of_lines(), MIN_COLS, MIN_LINES);
+        return;
+    }
+#endif
+
     int flags = SKMF_NONE;
 
     if (reskilling)
