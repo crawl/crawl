@@ -249,7 +249,7 @@ static void _add_item(TextItem* item, MenuObject* mo, const int size,
 SkillMenuEntry::SkillMenuEntry(coord_def coord, MenuFreeform* ff)
 {
 #ifdef USE_TILE
-    if (m_skm->m_skill_tiles)
+    if (is_set(SKMF_SKILL_ICONS))
     {
         m_name_tile = new TextTileItem();
         m_name = m_name_tile;
@@ -263,7 +263,7 @@ SkillMenuEntry::SkillMenuEntry(coord_def coord, MenuFreeform* ff)
     m_aptitude = new FormattedTextItem();
 
 #ifdef USE_TILE
-    if (m_skm->m_skill_tiles)
+    if (is_set(SKMF_SKILL_ICONS))
     {
         m_name->set_tile_height();
         m_level->set_tile_height();
@@ -272,7 +272,8 @@ SkillMenuEntry::SkillMenuEntry(coord_def coord, MenuFreeform* ff)
     }
 #endif
 
-    _add_item(m_name, ff, NAME_SIZE + (m_skm->m_skill_tiles ? 4 : 0), coord);
+    _add_item(m_name, ff, NAME_SIZE + (is_set(SKMF_SKILL_ICONS) ? 4 : 0),
+              coord);
     m_name->set_highlight_colour(RED);
     _add_item(m_level, ff, LEVEL_SIZE, coord);
     _add_item(m_progress, ff, PROGRESS_SIZE, coord);
@@ -326,7 +327,7 @@ void SkillMenuEntry::set_name(bool keep_hotkey)
                                 skill_name(m_sk)));
     m_name->set_fg_colour(_get_colour());
 #ifdef USE_TILE
-    if (m_skm->m_skill_tiles)
+    if (is_set(SKMF_SKILL_ICONS))
     {
         m_name_tile->clear_tile();
         m_name_tile->add_tile(tile_def(tileidx_skill(m_sk,
@@ -570,7 +571,7 @@ void SkillMenuEntry::_clear()
     m_name->clear_hotkeys();
     m_name->allow_highlight(false);
 #ifdef USE_TILE
-    if (m_skm->m_skill_tiles)
+    if (is_set(SKMF_SKILL_ICONS))
         m_name_tile->clear_tile();
 #endif
 }
@@ -596,9 +597,8 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
     SkillMenuEntry::m_skm = this;
 
 #ifdef USE_TILE
-    m_skill_tiles = (get_number_of_lines() >= 42);
-#else
-    m_skill_tiles = false;
+    if (get_number_of_lines() >= 42)
+        set_flag(SKMF_SKILL_ICONS);
 #endif
 
     m_min_coord.x = 2;
@@ -610,7 +610,7 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
     m_ff = new MenuFreeform();
     m_help = new FormattedTextItem();
 #ifdef USE_TILE
-    if (m_skill_tiles)
+    if (is_set(SKMF_SKILL_ICONS))
     {
         m_ff->set_tile_height();
         m_max_coord.x += 2 * TILES_COL;
@@ -622,7 +622,8 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
     set_active_object(m_ff);
 
     _init_title();
-    const int col_split = MIN_COLS / 2 + (m_skill_tiles ? TILES_COL : 0);
+    const int col_split = MIN_COLS / 2
+                          + (is_set(SKMF_SKILL_ICONS) ? TILES_COL : 0);
     for (int col = 0; col < SK_ARR_COL; ++col)
         for (int ln = 0; ln < SK_ARR_LN; ++ln)
         {
@@ -662,11 +663,26 @@ bool SkillMenu::is_set(int flag) const
     return (m_flags & flag);
 }
 
+void SkillMenu::set_flag(int flag)
+{
+    m_flags |= flag;
+}
+
+void SkillMenu::clear_flag(int flag)
+{
+    m_flags &= ~flag;
+}
+
+void SkillMenu::toggle_flag(int flag)
+{
+    m_flags ^= flag;
+}
+
 void SkillMenu::change_action()
 {
     const int new_action = _get_next_action();
-    m_flags &= ~SKMF_ACTION_MASK;
-    m_flags |= new_action;
+    clear_flag(SKMF_ACTION_MASK);
+    set_flag(new_action);
     _set_help(new_action);
     _refresh_names();
     _set_footer();
@@ -680,8 +696,8 @@ void SkillMenu::change_action()
 void SkillMenu::change_display()
 {
     const int new_disp = _get_next_display();
-    m_flags &= ~SKMF_DISP_MASK;
-    m_flags |= new_disp;
+    clear_flag(SKMF_DISP_MASK);
+    set_flag(new_disp);
     m_disp_queue.pop();
     m_disp_queue.push(new_disp);
     _set_help(new_disp);
@@ -723,7 +739,7 @@ void SkillMenu::show_description(skill_type sk)
 
 void SkillMenu::toggle_show_all()
 {
-    m_flags ^= SKMF_DISP_ALL;
+    toggle_flag(SKMF_DISP_ALL);
     _set_skills();
     _set_help(m_current_help);
     _set_footer();
@@ -786,7 +802,7 @@ void SkillMenu::_init_footer()
     m_show_all = new TextItem();
 
 #ifdef USE_TILE
-    if (m_skill_tiles)
+    if (is_set(SKMF_SKILL_ICONS))
     {
         m_current_action->set_tile_height();
         m_next_action->set_tile_height();
