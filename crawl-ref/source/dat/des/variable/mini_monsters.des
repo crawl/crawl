@@ -955,11 +955,12 @@ DEPTH:  D:3-10
 WEIGHT: 5
 TAGS:   uniq_gnoll_camp no_monster_gen patrolling
 MONS:   gnoll
-# a "gnoll seargeant" with guaranteed good gear
-MONS:   gnoll ; potion of healing | potion of heal wounds \
-              . whip ego:reaching | whip good_item no_uniq | \
-                spear ego:reaching | glaive \
-              . scale mail | chain mail
+# A gnoll seargeant with guaranteed good gear.
+MONS:   gnoll name:seargeant name_suffix hd:3 ; \
+        potion of healing | potion of heal wounds . \
+        whip ego:reaching | whip good_item no_uniq | spear ego:reaching | \
+        glaive . \
+        scale mail | chain mail
 MONS:  jackal / hound
 MAP
 xxxxxxxxxx
@@ -977,10 +978,12 @@ DEPTH:  D:3-10
 WEIGHT: 5
 TAGS:   uniq_gnoll_camp mini_float no_monster_gen patrolling
 MONS:   gnoll
-# a "gnoll seargeant" with guaranteed good gear
-MONS:   gnoll ; potion of healing | potion of heal wounds \
-              . whip ego:reaching | whip good_item no_uniq | \
-                spear ego:reaching | glaive . scale mail | chain mail
+# A gnoll seargeant with guaranteed good gear.
+MONS:   gnoll name:seargeant name_suffix hd:3 ; \
+        potion of healing | potion of heal wounds . \
+        whip ego:reaching | whip good_item no_uniq | spear ego:reaching | \
+        glaive . \
+        scale mail | chain mail
 MONS:   jackal / hound
 MAP
 xxxxxxxxxx
