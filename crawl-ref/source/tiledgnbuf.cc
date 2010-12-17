@@ -464,6 +464,21 @@ void pack_cell_overlays(const coord_def &gc, packed_cell *cell)
     }
 }
 
+void DungeonCellBuffer::add_blood_overlay(int x, int y, const packed_cell &cell)
+{
+    const tileidx_t bg = cell.bg;
+    if (bg & TILE_FLAG_BLOOD)
+    {
+        int offset = cell.flv.special % tile_dngn_count(TILE_BLOOD);
+        m_buf_feat.add(TILE_BLOOD + offset, x, y);
+    }
+    else if (bg & TILE_FLAG_MOLD)
+    {
+        int offset = cell.flv.special % tile_dngn_count(TILE_MOLD);
+        m_buf_feat.add(TILE_MOLD + offset, x, y);
+    }
+}
+
 void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
 {
     const tileidx_t bg = cell.bg;
@@ -473,6 +488,10 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
     {
         add_dngn_tile(cell.flv.floor, x, y);
     }
+    // Draw blood beneath feature tiles.
+    if (bg_idx > TILE_WALL_MAX)
+        add_blood_overlay(x, y, cell);
+
     add_dngn_tile(bg_idx, x, y);
 
     if (bg_idx > TILE_DNGN_UNSEEN)
@@ -480,16 +499,9 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
         if (bg & TILE_FLAG_WAS_SECRET)
             m_buf_feat.add(TILE_DNGN_DETECTED_SECRET_DOOR, x, y);
 
-        if (bg & TILE_FLAG_BLOOD)
-        {
-            int offset = cell.flv.special % tile_dngn_count(TILE_BLOOD);
-            m_buf_feat.add(TILE_BLOOD + offset, x, y);
-        }
-        else if (bg & TILE_FLAG_MOLD)
-        {
-            int offset = cell.flv.special % tile_dngn_count(TILE_MOLD);
-            m_buf_feat.add(TILE_MOLD + offset, x, y);
-        }
+        // Draw blood on top of wall tiles.
+        if (bg_idx <= TILE_WALL_MAX)
+            add_blood_overlay(x, y, cell);
 
         for (int i = 0; i < cell.num_dngn_overlay; ++i)
             add_dngn_tile(cell.dngn_overlay[i], x, y);
