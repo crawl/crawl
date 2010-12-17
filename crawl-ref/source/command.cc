@@ -2444,12 +2444,12 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<h>Item Interaction (floor):\n",
             true, true, _cmdhelp_textfilter);
 
-    _add_command(cols, 1, CMD_PICKUP, "pick up items (also <w>g</w>)", 2);
-
+    _add_command(cols, 1, CMD_PICKUP, "pick up items", 2);
     cols.add_formatted(
             1,
             "    (press twice for pick up menu)\n",
             false, true, _cmdhelp_textfilter);
+    _add_command(cols, 1, CMD_PICKUP_QUANTITY, "prompt for single-item quantity on pickup", 2);
 
     _add_command(cols, 1, CMD_DROP, "Drop an item", 2);
     _add_insert_commands(cols, 1, "<w>%#</w>: Drop exact number of items",
