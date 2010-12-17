@@ -3820,8 +3820,7 @@ static bool _may_overwrite_pos(coord_def c)
     return (!monster_at(c) && igrd(c) == NON_ITEM);
 }
 
-static void _build_rooms(const std::vector<coord_def> &connections_needed,
-                         int nrooms)
+static void _build_rooms(int nrooms)
 {
     env.level_layout_types.insert("rooms");
 
@@ -3831,8 +3830,6 @@ static void _build_rooms(const std::vector<coord_def> &connections_needed,
     // Where did this magic number come from?
     const int maxrooms = 30;
     dgn_region rom[maxrooms];
-
-    std::vector<coord_def> connections = connections_needed;
 
     for (int i = 0; i < nrooms; i++)
     {
@@ -3853,13 +3850,6 @@ static void _build_rooms(const std::vector<coord_def> &connections_needed,
 
         if (overlap_tries < 0)
             continue;
-
-        if (connections.size())
-        {
-            const coord_def c = connections[0];
-            if (_join_the_dots(c, myroom.random_edge_point(), MMT_VAULT))
-                connections.erase(connections.begin());
-        }
 
         const coord_def end = myroom.end();
 
@@ -4473,10 +4463,7 @@ static void _build_postvault_level(
         if (placed_vault_orientation == MAP_FLOAT)
             nrooms += 10;
 
-        std::vector<coord_def> ex_connection_points =
-            _external_connection_points(place, target_connections);
-
-        _build_rooms(ex_connection_points, nrooms);
+        _build_rooms(nrooms);
 
         // Excavate and connect the vault to the rest of the level.
         _dig_vault_loose(place, target_connections);
