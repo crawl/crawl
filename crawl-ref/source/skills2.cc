@@ -524,7 +524,7 @@ void SkillMenuEntry::_set_new_level()
     {
         new_level = transfer_skill_points(m_sk, m_sk,
                                           skill_transfer_amount(m_sk), true);
-        m_progress->set_fg_colour(RED);
+        m_progress->set_fg_colour(BROWN);
     }
     else if (is_set(SKMF_DO_RESKILL_TO))
     {
