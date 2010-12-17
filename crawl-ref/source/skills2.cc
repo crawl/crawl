@@ -1919,8 +1919,21 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
         }
 
         total_skp_lost += skp_lost;
-        total_skp_gained += skp_gained;
         change_skill_points(fsk, -skp_lost, false);
+
+        // If reducing fighting would reduce your maxHP to 0 or below,
+        // we cancel the last step and end the transfer.
+        if (fsk == SK_FIGHTING && get_real_hp(false, true) <= 0)
+        {
+            change_skill_points(fsk, skp_lost, false);
+            total_skp_lost -= skp_lost;
+            if (!simu)
+                you.transfer_skill_points = total_skp_lost;
+            break;
+        }
+
+        total_skp_gained += skp_gained;
+
         if (fsk != tsk)
         {
             change_skill_points(tsk, skp_gained, false);
