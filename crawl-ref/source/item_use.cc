@@ -5123,19 +5123,7 @@ void tile_item_use_floor(int idx)
 
 void tile_item_pickup(int idx, bool part)
 {
-    int quantity = mitm[idx].quantity;
-    if (part && quantity > 1)
-    {
-        quantity = prompt_for_int("Pickup how many? ", true);
-        if (quantity < 1)
-        {
-            canned_msg(MSG_OK);
-            return;
-        }
-        if (quantity > mitm[idx].quantity)
-            quantity = mitm[idx].quantity;
-    }
-    pickup_single_item(idx, quantity);
+    pickup_single_item(idx, part ? 0 : -1);
 }
 
 void tile_item_drop(int idx, bool partdrop)

@@ -296,8 +296,8 @@ bool InventoryRegion::update_tip_text(std::string& tip)
         cmd.push_back(CMD_PICKUP);
         if (item.quantity > 1)
         {
-            tip += "\n[Ctrl-L-Click] Pick up quantity (%#)";
-            cmd.push_back(CMD_PICKUP);
+            tip += "\n[Ctrl-L-Click] Partial pick up (%)";
+            cmd.push_back(CMD_PICKUP_QUANTITY);
         }
         if (item.base_type == OBJ_CORPSES
             && item.sub_type != CORPSE_SKELETON

@@ -1733,6 +1733,11 @@ void process_command(command_type cmd)
         you.turn_is_over = true;
         break;
 
+    case CMD_PICKUP:
+    case CMD_PICKUP_QUANTITY:
+        pickup(cmd != CMD_PICKUP);
+        break;
+
         // Action commands.
     case CMD_BUTCHER:              butchery();               break;
     case CMD_CAST_SPELL:           do_cast_spell_cmd(false); break;
@@ -1742,7 +1747,6 @@ void process_command(command_type cmd)
     case CMD_FIRE:                 fire_thing();             break;
     case CMD_FORCE_CAST_SPELL:     do_cast_spell_cmd(true);  break;
     case CMD_LOOK_AROUND:          _do_look_around();        break;
-    case CMD_PICKUP:               pickup();                 break;
     case CMD_PRAY:                 pray();                   break;
     case CMD_QUAFF:                drink();                  break;
     case CMD_READ:                 read_scroll();            break;
