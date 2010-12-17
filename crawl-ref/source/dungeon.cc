@@ -4371,7 +4371,7 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
     const map_section_type placed_vault_orientation =
         vault_main(place, vault, check_collisions);
 
-    dprf("Map: %s; placed ok: %s; place: (%d,%d), size: (%d,%d)",
+    dprf("Map: %s; placed: %s; place: (%d,%d), size: (%d,%d)",
          vault->name.c_str(),
          placed_vault_orientation != MAP_NONE? "yes" : "no",
          place.pos.x, place.pos.y, place.size.x, place.size.y);
