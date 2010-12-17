@@ -157,7 +157,7 @@ static void _plan_main(int level_number, int force_plan);
 static bool _plan_1(int level_number);
 static bool _plan_2(int level_number);
 static bool _plan_3(int level_number);
-static bool _plan_4(dgn_region_list *excluded, dungeon_feature_type force_wall);
+static bool _plan_4(dungeon_feature_type force_wall);
 static bool _plan_5(int level_number);
 static bool _plan_6(int level_number);
 static void _portal_vault_level(int level_number);
@@ -219,6 +219,7 @@ static void _dgn_map_colour_fixup();
 
 static void _dgn_excavate(coord_def dig_at, coord_def dig_dir);
 static void _dgn_unregister_vault(const map_def &map);
+static bool _find_forbidden_in_area(dgn_region& area, unsigned int mask);
 
 // Returns true if the given square is okay for use by any character,
 // but always false for squares in non-transparent vaults. This
@@ -4461,7 +4462,7 @@ static void _build_postvault_level(
 
     if (dis_wallify)
     {
-        _plan_4(&excluded_regions, DNGN_METAL_WALL);
+        _plan_4(DNGN_METAL_WALL);
     }
     else if (player_in_branch(BRANCH_SWAMP))
     {
@@ -5245,6 +5246,15 @@ bool unforbidden(const coord_def &c, unsigned mask)
     return (!mask || !(env.level_map_mask(c) & mask));
 }
 
+static bool _find_forbidden_in_area(dgn_region& area, unsigned int mask)
+{
+    for (rectangle_iterator ri(area.pos, area.end()); ri; ++ri)
+        if (!unforbidden(*ri, mask))
+            return true;
+
+    return false;
+}
+
 struct coord_comparator
 {
     coord_def target;
@@ -5997,7 +6007,7 @@ static void _plan_main(int level_number, int force_plan)
     do_stairs = ((force_plan == 1) ? _plan_1(level_number) :
                  (force_plan == 2) ? _plan_2(level_number) :
                  (force_plan == 3) ? _plan_3(level_number) :
-                 (force_plan == 4) ? _plan_4(NULL, NUM_FEATURES) :
+                 (force_plan == 4) ? _plan_4(NUM_FEATURES) :
                  (force_plan == 5) ? (one_chance_in(9) ? _plan_5(level_number)
                                                        : _plan_3(level_number)) :
                  (force_plan == 6) ? _plan_6(level_number)
@@ -6041,7 +6051,7 @@ static bool _plan_3(int level_number)
 }
 
 // A more chaotic version of city level.
-static bool _plan_4(dgn_region_list *excluded, dungeon_feature_type force_wall)
+static bool _plan_4(dungeon_feature_type force_wall)
 {
     env.level_build_method += make_stringf(" plan_4 [%d]", (int) force_wall);
     env.level_layout_types.insert("city");
@@ -6079,12 +6089,9 @@ static bool _plan_4(dgn_region_list *excluded, dungeon_feature_type force_wall)
         b2x = b1x + 3 + random2(7) + random2(5);
         b2y = b1y + 3 + random2(7) + random2(5);
 
-        if (excluded)
-        {
-            dgn_region box = dgn_region::absolute(b1x, b1y, b2x, b2y);
-            if (box.overlaps(*excluded, env.level_map_mask))
-                continue;
-        }
+        dgn_region box = dgn_region::absolute(b1x, b1y, b2x, b2y);
+        if (_find_forbidden_in_area(box, MMT_VAULT))
+            continue;
 
         if (_count_antifeature_in_box(b1x-1, b1y-1, b2x+1, b2y+1, DNGN_FLOOR))
             continue;
@@ -6103,10 +6110,11 @@ static bool _plan_4(dgn_region_list *excluded, dungeon_feature_type force_wall)
             dgn_replace_area(b1x, b1y, b2x, b2y, DNGN_FLOOR, drawing);
     }
 
-    if (!excluded && one_chance_in(4))     // a market square
-    {
-        dgn_region room = dgn_region::absolute(25, 25, 55, 45);
+    dgn_region room = dgn_region::absolute(25, 25, 55, 45);
 
+    // A market square.
+    if (!_find_forbidden_in_area(room, MMT_VAULT) && one_chance_in(4))
+    {
         int oblique_max = 0;
         if (!one_chance_in(4))
             oblique_max = 5 + random2(20);      // used elsewhere {dlb}
