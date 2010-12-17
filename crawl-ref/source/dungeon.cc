@@ -3820,8 +3820,7 @@ static bool _may_overwrite_pos(coord_def c)
     return (!monster_at(c) && igrd(c) == NON_ITEM);
 }
 
-static void _build_rooms(const dgn_region_list &excluded,
-                         const std::vector<coord_def> &connections_needed,
+static void _build_rooms(const std::vector<coord_def> &connections_needed,
                          int nrooms)
 {
     env.level_layout_types.insert("rooms");
@@ -3849,7 +3848,7 @@ static void _build_rooms(const dgn_region_list &excluded,
                 random_range(MAPGEN_BORDER,
                              GYM - MAPGEN_BORDER - 1 - myroom.size.y));
         }
-        while (myroom.overlaps(excluded, env.level_map_mask)
+        while (_find_forbidden_in_area(myroom, MMT_VAULT)
                && overlap_tries-- > 0);
 
         if (overlap_tries < 0)
@@ -4457,9 +4456,6 @@ static void _build_postvault_level(
 
     dprf("Wall builder: %s.", dis_wallify ? "Dis" : "Normal");
 
-    dgn_region_list excluded_regions;
-    excluded_regions.push_back(dgn_region(place.pos, place.size));
-
     if (dis_wallify)
     {
         _plan_4(DNGN_METAL_WALL);
@@ -4480,7 +4476,7 @@ static void _build_postvault_level(
         std::vector<coord_def> ex_connection_points =
             _external_connection_points(place, target_connections);
 
-        _build_rooms(excluded_regions, ex_connection_points, nrooms);
+        _build_rooms(ex_connection_points, nrooms);
 
         // Excavate and connect the vault to the rest of the level.
         _dig_vault_loose(place, target_connections);
