@@ -234,7 +234,7 @@ static void _update_item_at(const coord_def &gp)
 static void _update_cloud(int cloudno)
 {
     const coord_def gp = env.cloud[cloudno].pos;
-    cloud_type cloud = env.cloud[cloudno].type;
+    cloud_type cloud   = env.cloud[cloudno].type;
     env.map_knowledge(gp).set_cloud(cloud, get_cloud_colour(cloudno));
 
 #ifdef USE_TILE
@@ -281,15 +281,15 @@ static void _update_monster(const monster* mons)
     if (!mons->visible_to(&you))
     {
         // ripple effect?
-        if ((grd(gp) == DNGN_SHALLOW_WATER
-            && !mons_flies(mons)
-            && env.cgrid(gp) == EMPTY_CLOUD)
-            ||
-            (is_opaque_cloud(env.cgrid(gp))
-                 && !mons->submerged()
-                 && !mons->is_insubstantial())
-         )
+        if (grd(gp) == DNGN_SHALLOW_WATER
+                && !mons_flies(mons)
+                && env.cgrid(gp) == EMPTY_CLOUD
+            || is_opaque_cloud(env.cgrid(gp))
+                && !mons->submerged()
+                && !mons->is_insubstantial())
+        {
             env.map_knowledge(gp).set_invisible_monster();
+        }
         return;
     }
 
