@@ -600,7 +600,7 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
     SkillMenuEntry::m_skm = this;
 
 #ifdef USE_TILE
-    if (Options.tile_menu_icons && tiles.get_crt()->wy >= 760)
+    if (Options.tile_menu_icons && tiles.get_crt()->wy >= 756)
         set_flag(SKMF_SKILL_ICONS);
 #endif
 
