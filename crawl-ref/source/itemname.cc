@@ -65,7 +65,7 @@ bool is_vowel(const char chr)
 // quant_name is useful since it prints out a different number of items
 // than the item actually contains.
 std::string quant_name(const item_def &item, int quant,
-                        description_level_type des, bool terse)
+                       description_level_type des, bool terse)
 {
     // item_name now requires a "real" item, so we'll mangle a tmp
     item_def tmp = item;
