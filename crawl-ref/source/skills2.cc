@@ -401,21 +401,20 @@ COLORS SkillMenuEntry::_get_colour() const
 {
     int ct_bonus = crosstrain_bonus(m_sk);
 
-    if (is_set(SKMF_DO_PRACTISE) && you.practise_skill[m_sk] == 0
-        || is_set(SKMF_DO_SHOW_DESC))
-    {
+    if (is_set(SKMF_DO_SHOW_DESC))
         return DARKGREY;
-    }
+    else if (is_set(SKMF_DO_RESKILL_TO) && m_sk == you.transfer_from_skill)
+        return WHITE;
+    else if (you.practise_skill[m_sk] == 0 && you.skills[m_sk] < 27)
+        return DARKGREY;
     else if (is_set(SKMF_DISP_RESKILL) && (m_sk == you.transfer_from_skill
                                         || m_sk == you.transfer_to_skill))
     {
         return GREEN;
     }
-    else if (is_set(SKMF_DO_RESKILL_TO) && m_sk == you.transfer_from_skill)
-        return WHITE;
     else if (you.skills[m_sk] == 27)
         return YELLOW;
-    else if (you.practise_skill[m_sk] == 0 || you.skills[m_sk] == 0)
+    else if (you.skills[m_sk] == 0)
         return DARKGREY;
     else if (ct_bonus > 1 && is_set(SKMF_DISP_APTITUDE))
         return LIGHTBLUE;
