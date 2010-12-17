@@ -4443,11 +4443,7 @@ static void _build_postvault_level(
     // Does this level require Dis treatment (metal wallification)?
     // XXX: Change this so the level definition can explicitly state what
     // kind of wallification it wants.
-    const bool dis_wallify = place.map.has_tag("dis");
-
-    dprf("Wall builder: %s.", dis_wallify ? "Dis" : "Normal");
-
-    if (dis_wallify)
+    if (place.map.has_tag("dis"))
     {
         _plan_4(DNGN_METAL_WALL);
     }
