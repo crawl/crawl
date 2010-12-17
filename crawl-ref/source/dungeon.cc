@@ -3822,6 +3822,7 @@ static bool _may_overwrite_pos(coord_def c)
 
 static void _build_rooms(int nrooms)
 {
+    env.level_build_method += " build_rooms";
     env.level_layout_types.insert("rooms");
 
     int which_room = 0;
