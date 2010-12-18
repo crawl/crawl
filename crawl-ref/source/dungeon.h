@@ -315,7 +315,4 @@ std::string dump_vault_maps();
 
 bool dgn_square_travel_ok(const coord_def &c);
 
-typedef std::set<dungeon_feature_type> dungeon_feature_set;
-extern dungeon_feature_set dgn_Vault_Excavatable_Feats;
-
 #endif
