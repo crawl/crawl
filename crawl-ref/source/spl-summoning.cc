@@ -1941,7 +1941,7 @@ bool cast_haunt(int pow, const coord_def& where, god_type god)
             create_monster(
                 mgen_data(mon,
                           BEH_FRIENDLY, &you,
-                          5, SPELL_HAUNT,
+                          3, SPELL_HAUNT,
                           where, mi, MG_FORCE_BEH, god));
 
         if (mons != -1)
