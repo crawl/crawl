@@ -75,7 +75,7 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
     }
     else if (fg_idx >= TILE_MAIN_MAX)
     {
-        m_buf_doll.add(fg_idx, x, y, 0, in_water, false);
+        m_buf_doll.add(fg_idx, x, y, TILEP_PART_MAX, in_water, false);
         if (fg_idx == TILEP_TRAN_LICH)
             _lichform_add_weapon(m_buf_doll, x, y, in_water);
     }
@@ -713,7 +713,7 @@ void DungeonCellBuffer::pack_mcache(mcache_entry *entry, int x, int y,
     int draw_info_count = entry->info(&dinfo[0]);
     for (int i = 0; i < draw_info_count; i++)
     {
-        m_buf_doll.add(dinfo[i].idx, x, y, 0, submerged, trans,
+        m_buf_doll.add(dinfo[i].idx, x, y, TILEP_PART_MAX, submerged, trans,
                        dinfo[i].ofs_x, dinfo[i].ofs_y);
     }
 }

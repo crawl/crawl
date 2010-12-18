@@ -3675,9 +3675,7 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
     }
 
     if (label >= TILE_SCR_ID_FIRST && label <= TILE_SCR_ID_LAST)
-    {
         return (TILE_SCROLL);
-    }
 
     if (label >= TILE_WAND_ID_FIRST && label <= TILE_WAND_ID_LAST)
     {
