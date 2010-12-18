@@ -3952,9 +3952,9 @@ static void _connect_vault_exit(const coord_def& exit)
     ff.add_feat(DNGN_FLOOR);
 
     coord_def target = ff.find_first_from(exit, env.level_map_mask);
-    dprf("connect_vault: Found target %d;%d.", target.x, target.y);
 
-    _join_the_dots(exit, target, MMT_VAULT);
+    if (in_bounds(target))
+        _join_the_dots(exit, target, MMT_VAULT);
 }
 
 static void _dig_vault_loose(vault_placement &place,
