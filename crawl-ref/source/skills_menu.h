@@ -131,7 +131,7 @@ private:
     SkillMenuEntry* _find_entry(skill_type sk);
     void _init_disp_queue();
     void _init_title();
-    void _init_footer();
+    void _init_footer(coord_def coord);
     void _refresh_display();
     void _refresh_names();
     void _set_title();

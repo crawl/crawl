@@ -23,6 +23,7 @@
 #include "describe.h"
 #include "externs.h"
 #include "fight.h"
+#include "fontwrapper-ft.h"
 #include "godabil.h"
 #include "itemprop.h"
 #include "options.h"
@@ -600,7 +601,7 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
     SkillMenuEntry::m_skm = this;
 
 #ifdef USE_TILE
-    if (Options.tile_menu_icons && tiles.get_crt()->wy >= 756)
+    if (Options.tile_menu_icons && tiles.get_crt()->wy >= 702)
         set_flag(SKMF_SKILL_ICONS);
 #endif
 
@@ -617,7 +618,6 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
     {
         m_ff->set_tile_height();
         m_max_coord.x += 2 * TILES_COL;
-        m_help->set_tile_height();
     }
 #endif
     m_ff->init(m_min_coord, m_max_coord, "freeform");
@@ -636,12 +636,22 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
                                                m_ff);
         }
 
-    m_help->set_bounds(coord_def(m_min_coord.x, m_max_coord.y - 3),
-                       coord_def(m_max_coord.x, m_max_coord.y - 1));
+    coord_def help_min_coord(m_min_coord.x, 0);
+    help_min_coord.y = (m_min_coord.y + SK_ARR_LN + 2);
+#ifdef USE_TILE
+    if (is_set(SKMF_SKILL_ICONS))
+    {
+        --help_min_coord.y;
+        help_min_coord.y *= TILE_Y;
+        help_min_coord.y /= tiles.get_crt_font()->char_height();
+    }
+#endif
+    m_help->set_bounds(help_min_coord,
+                       coord_def(m_max_coord.x, help_min_coord.y + 2));
     m_ff->attach_item(m_help);
 
     _init_disp_queue();
-    _init_footer();
+    _init_footer(coord_def(help_min_coord.x, help_min_coord.y + 2));
 
     _set_title();
     _set_skills();
@@ -796,24 +806,13 @@ void SkillMenu::_init_title()
     m_title->set_visible(true);
 }
 
-void SkillMenu::_init_footer()
+void SkillMenu::_init_footer(coord_def coord)
 {
     m_current_action = new NoSelectTextItem();
     m_next_action = new TextItem();
     m_next_display = new TextItem();
     m_show_all = new TextItem();
 
-#ifdef USE_TILE
-    if (is_set(SKMF_SKILL_ICONS))
-    {
-        m_current_action->set_tile_height();
-        m_next_action->set_tile_height();
-        m_next_display->set_tile_height();
-        m_show_all->set_tile_height();
-    }
-#endif
-
-    coord_def coord(m_min_coord.x, m_max_coord.y - 1);
     _add_item(m_current_action, m_ff, CURRENT_ACTION_SIZE, coord);
     m_current_action->set_fg_colour(WHITE);
 
