@@ -3291,7 +3291,7 @@ int items(int allow_uniques,       // not just true-false,
         {
             itempos = random_in_bounds();
             found = (grd(itempos) == DNGN_FLOOR
-                     && unforbidden(itempos, mapmask));
+                     && !map_masked(itempos, mapmask));
         }
         if (!found)
         {

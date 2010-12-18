@@ -45,7 +45,7 @@ static void _swamp_apply_features(int margin)
     for (rectangle_iterator ri(0); ri; ++ri)
     {
         const coord_def c(*ri);
-        if (unforbidden(c, MMT_VAULT))
+        if (!map_masked(c, MMT_VAULT))
         {
             if (c.x < margin || c.y < margin || c.x >= GXM - margin
                 || c.y >= GYM - margin)
