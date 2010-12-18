@@ -4025,47 +4025,14 @@ static bool _map_feat_is_on_edge(const vault_placement &place,
     return (false);
 }
 
-static void _pick_internal_float_exits(const vault_placement &place,
-                                       std::vector<coord_def> &exits)
-{
-    for (int y = place.pos.y + 1; y < place.pos.y + place.size.y - 1; ++y)
-        for (int x = place.pos.x + 1; x < place.pos.x + place.size.x - 1; ++x)
-            if (_grid_needs_exit(x, y)
-                && _map_feat_is_on_edge(place, coord_def(x, y)))
-            {
-                exits.push_back(coord_def(x, y));
-            }
-}
-
 static void _pick_float_exits(vault_placement &place,
                               std::vector<coord_def> &targets)
 {
     std::vector<coord_def> possible_exits;
-    for (int y = place.pos.y; y < place.pos.y + place.size.y; ++y)
-    {
-        if (_grid_needs_exit(place.pos.x, y))
-            possible_exits.push_back(coord_def(place.pos.x, y));
 
-        if (_grid_needs_exit(place.pos.x + place.size.x - 1, y))
-        {
-            possible_exits.push_back(
-                coord_def(place.pos.x + place.size.x - 1, y));
-        }
-    }
-
-    for (int x = place.pos.x + 1; x < place.pos.x + place.size.x - 1; ++x)
-    {
-        if (_grid_needs_exit(x, place.pos.y))
-            possible_exits.push_back(coord_def(x, place.pos.y));
-
-        if (_grid_needs_exit(x, place.pos.y + place.size.y - 1))
-        {
-            possible_exits.push_back(
-                coord_def(x, place.pos.y + place.size.y - 1));
-        }
-    }
-
-    _pick_internal_float_exits(place, possible_exits);
+    for (rectangle_iterator ri(place.pos, place.pos + place.size - 1); ri; ++ri)
+        if (_grid_needs_exit(ri->x, ri->y) && _map_feat_is_on_edge(place, *ri))
+            possible_exits.push_back(*ri);
 
     if (possible_exits.empty())
     {
