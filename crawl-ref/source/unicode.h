@@ -62,4 +62,18 @@ public:
     std::string get_line();
 };
 
+// The file is always UTF-8, no BOM.
+// Just read it as-is, merely validating for a well-formed stream.
+class UTF8FileLineInput : public LineInput
+{
+    FILE *f;
+    bool seen_eof;
+public:
+    UTF8FileLineInput(const char *name);
+    ~UTF8FileLineInput();
+    bool eof() { return seen_eof || !f; };
+    bool error() { return !f; };
+    std::string get_line();
+};
+
 #endif

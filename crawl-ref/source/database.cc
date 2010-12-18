@@ -12,7 +12,6 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <cstdlib>
-#include <fstream>
 #ifndef TARGET_COMPILER_VC
 #include <unistd.h>
 #endif
@@ -24,6 +23,7 @@
 #include "random.h"
 #include "stuff.h"
 #include "syscalls.h"
+#include "unicode.h"
 
 // TextDB handles dependency checking the db vs text files, creating the
 // db, loading, and destroying the DB.
@@ -359,7 +359,7 @@ static void _add_entry(DBM *db, const std::string &k, std::string &v)
         end(1, true, "Error storing %s", k.c_str());
 }
 
-static void _parse_text_db(std::ifstream &inf, DBM *db)
+static void _parse_text_db(LineInput &inf, DBM *db)
 {
     std::string key;
     std::string value;
@@ -367,8 +367,7 @@ static void _parse_text_db(std::ifstream &inf, DBM *db)
     bool in_entry = false;
     while (!inf.eof())
     {
-        std::string line;
-        std::getline(inf, line);
+        std::string line = inf.get_line();
 
         if (!line.empty() && line[0] == '#')
             continue;
@@ -405,8 +404,8 @@ static void _parse_text_db(std::ifstream &inf, DBM *db)
 
 static void _store_text_db(const std::string &in, const std::string &out)
 {
-    std::ifstream inf(in.c_str());
-    if (!inf)
+    UTF8FileLineInput inf(in.c_str());
+    if (inf.error())
         end(1, true, "Unable to open input file: %s", in.c_str());
 
     if (DBM *db = dbm_open(out.c_str(), O_RDWR | O_CREAT, 0660))
@@ -416,8 +415,6 @@ static void _store_text_db(const std::string &in, const std::string &out)
     }
     else
         end(1, true, "Unable to open DB: %s", out.c_str());
-
-    inf.close();
 }
 
 static std::string _chooseStrByWeight(std::string entry, int fixed_weight = -1)

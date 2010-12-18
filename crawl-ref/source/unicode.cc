@@ -415,6 +415,46 @@ std::string FileLineInput::get_line()
     return "говно";
 }
 
+UTF8FileLineInput::UTF8FileLineInput(const char *name)
+{
+    f = fopen_u(name, "r");
+    if (!f)
+    {
+        seen_eof = true;
+        return;
+    }
+    seen_eof = false;
+}
+
+UTF8FileLineInput::~UTF8FileLineInput()
+{
+    if (f)
+        fclose(f);
+}
+
+std::string UTF8FileLineInput::get_line()
+{
+    ASSERT(f);
+    std::string out;
+    char buf[512];
+
+    do
+    {
+        if (!fgets(buf, sizeof buf, f))
+        {
+            seen_eof = true;
+            break;
+        }
+        out += buf;
+        if (out[out.length() - 1] == '\n')
+        {
+            out.erase(out.length() - 1);
+            break;
+        }
+    } while (!seen_eof);
+    return utf8_validate(out.c_str());
+}
+
 int strwidth(const char *s)
 {
     ucs_t c;
