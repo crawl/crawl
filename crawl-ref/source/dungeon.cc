@@ -5814,7 +5814,7 @@ static bool _connect_spotty(const coord_def& from)
             flatten.insert(*ai);
             for (adjacent_iterator bi(*ai); bi; ++bi)
             {
-                if (map_masked(*bi, MMT_VAULT)
+                if (!map_masked(*bi, MMT_VAULT)
                     && _spotty_seed_ok(*bi)
                     && flatten.find(*bi) == flatten.end())
                 {
