@@ -542,7 +542,7 @@
     ZAP_STONE_ARROW,
     "stone arrow",
     50,
-    new dicedef_calculator<2, 5, 1, 7>,
+    new dicedef_calculator<3, 5, 1, 8>,
     new tohit_calculator<8, 1, 10>,
     LIGHTGREY,
     false,
