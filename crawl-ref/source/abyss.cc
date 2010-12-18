@@ -310,7 +310,7 @@ static bool _abyss_square_accepts_items(const map_mask &abyss_genlevel_mask,
     return (abyss_genlevel_mask(p)
             && grd(p) == DNGN_FLOOR
             && igrd(p) == NON_ITEM
-            && unforbidden(p, MMT_VAULT));
+            && !map_masked(p, MMT_VAULT));
 }
 
 static int _abyss_create_items(const map_mask &abyss_genlevel_mask,
@@ -508,7 +508,7 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask)
     {
         const coord_def p(*ri);
 
-        if (!abyss_genlevel_mask(p) || !unforbidden(p, MMT_VAULT))
+        if (!abyss_genlevel_mask(p) || map_masked(p, MMT_VAULT))
             continue;
 
         if (x_chance_in_y(floor_density, 100))

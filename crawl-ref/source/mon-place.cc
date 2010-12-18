@@ -1138,7 +1138,7 @@ int place_monster(mgen_data mg, bool force_pos)
                 continue;
 
             // Is the grid verboten?
-            if (!unforbidden(mg.pos, mg.map_mask))
+            if (map_masked(mg.pos, mg.map_mask))
                 continue;
 
             // Let's recheck these even for PROX_NEAR_STAIRS, just in case.

@@ -961,7 +961,7 @@ int process_disconnected_zones(int x1, int y1, int x2, int y2,
                 for (int fy = y1; fy <= y2 ; ++fy)
                     for (int fx = x1; fx <= x2; ++fx)
                         if (travel_point_distance[fx][fy] == nzones
-                            && unforbidden(coord_def(fx, fy), MMT_OPAQUE))
+                            && !map_masked(coord_def(fx, fy), MMT_OPAQUE))
                         {
                             grd[fx][fy] = fill;
                         }
@@ -2002,7 +2002,7 @@ static void _ruin_level(Iterator ri,
         }
 
         /* or vaults */
-        if (!unforbidden(*ri, vault_mask))
+        if (map_masked(*ri, vault_mask))
         {
             continue;
         }
@@ -2268,7 +2268,7 @@ static void _hide_doors()
         {
             // Only one out of four doors are candidates for hiding. {gdl}
             if (grd[dx][dy] == DNGN_CLOSED_DOOR && one_chance_in(4)
-                && unforbidden(coord_def(dx, dy), MMT_NO_DOOR))
+                && !map_masked(coord_def(dx, dy), MMT_NO_DOOR))
             {
                 wall_count = 0;
 
@@ -2327,7 +2327,7 @@ static void _prepare_water(int level_number)
     for (i = 1; i < (GXM - 1); i++)
         for (j = 1; j < (GYM - 1); j++)
         {
-            if (!unforbidden(coord_def(i, j), MMT_NO_POOL))
+            if (map_masked(coord_def(i, j), MMT_NO_POOL))
                 continue;
 
             if (grd[i][j] == DNGN_DEEP_WATER)
@@ -2831,7 +2831,7 @@ static bool _builder_basic(int level_number)
                      xbegin, ybegin, xend, yend);
 
         dprf("Placing shaft trail...");
-        if (!one_chance_in(3) && unforbidden(coord_def(xend, yend), MMT_NO_TRAP)) // 2/3 chance it ends in a shaft
+        if (!one_chance_in(3) && !map_masked(coord_def(xend, yend), MMT_NO_TRAP)) // 2/3 chance it ends in a shaft
         {
             trap_def& ts(env.trap[0]);
             ts.type = TRAP_SHAFT;
@@ -2961,7 +2961,7 @@ static void _place_traps(int level_number)
             ts.pos.y = random2(GYM);
             if (in_bounds(ts.pos)
                 && grd(ts.pos) == DNGN_FLOOR
-                && unforbidden(ts.pos, MMT_NO_TRAP))
+                && !map_masked(ts.pos, MMT_NO_TRAP))
             {
                 break;
             }
@@ -3095,7 +3095,7 @@ static inline bool _point_matches_feat(coord_def c,
 {
     return (grd(c) == searchfeat
             && (!monster_free || !monster_at(c))
-            && unforbidden(c, mapmask)
+            && !map_masked(c, mapmask)
             && (adjacent_feat == DNGN_UNSEEN ||
                 dgn_has_adjacent_feat(c, adjacent_feat)));
 }
@@ -5101,7 +5101,7 @@ void dgn_replace_area(const coord_def& p1, const coord_def& p2,
 {
     for (rectangle_iterator ri(p1, p2); ri; ++ri)
     {
-        if (grd(*ri) == replace && unforbidden(*ri, mapmask))
+        if (grd(*ri) == replace && !map_masked(*ri, mapmask))
         {
             grd(*ri) = feature;
             if (needs_update && env.map_knowledge(*ri).seen())
@@ -5117,15 +5117,15 @@ void dgn_replace_area(const coord_def& p1, const coord_def& p2,
 
 
 // With apologies to Metallica.
-bool unforbidden(const coord_def &c, unsigned mask)
+bool map_masked(const coord_def &c, unsigned mask)
 {
-    return (!mask || !(env.level_map_mask(c) & mask));
+    return (mask && (env.level_map_mask(c) & mask));
 }
 
 static bool _find_forbidden_in_area(dgn_region& area, unsigned int mask)
 {
     for (rectangle_iterator ri(area.pos, area.end()); ri; ++ri)
-        if (!unforbidden(*ri, mask))
+        if (map_masked(*ri, mask))
             return true;
 
     return false;
@@ -5161,7 +5161,7 @@ static void _jtd_init_surrounds(coord_set &coords, uint32_t mapmask,
 
             const coord_def cx(c.x + xi, c.y + yi);
             if (!in_bounds(cx) || travel_point_distance[cx.x][cx.y]
-                || !unforbidden(cx, mapmask))
+                || map_masked(cx, mapmask))
             {
                 continue;
             }
@@ -5198,14 +5198,14 @@ static bool _join_the_dots_pathfind(coord_set &coords,
 
     while (curr != from)
     {
-        if (unforbidden(curr, mapmask))
+        if (!map_masked(curr, mapmask))
             grd(curr) = DNGN_FLOOR;
 
         const int dist = travel_point_distance[curr.x][curr.y];
         ASSERT(dist < 0 && dist != -1000);
         curr += coord_def(-dist / 4 - 2, (-dist % 4) - 2);
     }
-    if (unforbidden(curr, mapmask))
+    if (!map_masked(curr, mapmask))
         grd(curr) = DNGN_FLOOR;
 
     return (true);
@@ -5537,7 +5537,7 @@ static void _place_shops(int level_number)
                 return;
         }
         while (grd(shop_place) != DNGN_FLOOR
-               && unforbidden(shop_place, MMT_NO_SHOP));
+               && !map_masked(shop_place, MMT_NO_SHOP));
 
         if (allow_bazaars && level_number > 9 && level_number < 27
             && one_chance_in(30 - level_number))
@@ -5568,7 +5568,7 @@ void place_spec_shop(int level_number,
     bool note_status = notes_are_active();
     activate_notes(false);
 
-    if (!unforbidden(where, MMT_NO_SHOP))
+    if (map_masked(where, MMT_NO_SHOP))
         return;
 
     for (i = 0; i < MAX_SHOPS; i++)
@@ -5783,7 +5783,7 @@ static bool _connect_spotty(const coord_def& from)
     bool success = false;
 
     for (adjacent_iterator ai(from); ai; ++ai)
-        if (unforbidden(*ai, MMT_VAULT) && _spotty_seed_ok(*ai))
+        if (!map_masked(*ai, MMT_VAULT) && _spotty_seed_ok(*ai))
             border.insert(*ai);
 
     while (!success && !border.empty())
@@ -5799,7 +5799,7 @@ static bool _connect_spotty(const coord_def& from)
         flatten.insert(cur);
         for (radius_iterator ai(cur, 1, C_POINTY, NULL, true); ai; ++ai)
         {
-            if (!unforbidden(*ai, MMT_VAULT))
+            if (map_masked(*ai, MMT_VAULT))
                 continue;
 
             if (grd(*ai) == DNGN_FLOOR)
@@ -5814,7 +5814,7 @@ static bool _connect_spotty(const coord_def& from)
             flatten.insert(*ai);
             for (adjacent_iterator bi(*ai); bi; ++bi)
             {
-                if (!unforbidden(*bi, MMT_VAULT)
+                if (map_masked(*bi, MMT_VAULT)
                     && _spotty_seed_ok(*bi)
                     && flatten.find(*bi) == flatten.end())
                 {
@@ -6242,7 +6242,7 @@ static void _change_walls_from_centre(const dgn_region &region,
         for (int x = region.pos.x; x < end.x; ++x)
         {
             const coord_def c(x, y);
-            if (grd(c) != wall || !unforbidden(c, mmask))
+            if (grd(c) != wall || map_masked(c, mmask))
                 continue;
 
             const int distance =
@@ -6321,7 +6321,7 @@ static bool _has_vault_in_radius(const coord_def &pos, int radius,
             const coord_def p = pos + coord_def(xi, yi);
             if (!in_bounds(p))
                 continue;
-            if (!unforbidden(p, mask))
+            if (map_masked(p, mask))
                 return (true);
         }
 
@@ -7499,7 +7499,7 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
         {
             if (grd[xpos][ypos] >= DNGN_FLOOR
                 && (you.level_type == LEVEL_DUNGEON
-                    || unforbidden(coord_def(xpos, ypos), MMT_VAULT)))
+                    || !map_masked(coord_def(xpos, ypos), MMT_VAULT)))
             {
                 found++;
                 if (one_chance_in(found))

@@ -365,7 +365,7 @@ static int _shoals_contiguous_feature_flood(
             {
                 const coord_def adj(*ai);
                 if (in_bounds(adj) && !rmap(adj) && grd(adj) == feat
-                    && unforbidden(adj, MMT_VAULT))
+                    && !map_masked(adj, MMT_VAULT))
                 {
                     rmap(adj) = nregion;
                     visit.push_back(adj);
@@ -453,7 +453,7 @@ _shoals_point_feat_cluster(dungeon_feature_type feat,
     {
         coord_def c(*ri);
         if (!region_map(c) && grd(c) == feat
-            && unforbidden(c, MMT_VAULT))
+            && !map_masked(c, MMT_VAULT))
         {
             const int featcount =
                 _shoals_contiguous_feature_flood(region_map,
@@ -508,7 +508,7 @@ static void _shoals_make_plant_near(coord_def c, int radius,
             dgn_random_point_from(c, random2(1 + radius), _shoals_margin));
         if (!plant_place.origin()
             && !monster_at(plant_place)
-            && unforbidden(plant_place, MMT_VAULT))
+            && !map_masked(plant_place, MMT_VAULT))
         {
             const dungeon_feature_type feat(grd(plant_place));
             if (_shoals_plantworthy_feat(feat)
@@ -618,7 +618,7 @@ static std::vector<coord_def> _shoals_windshadows(grid_bool &windy)
     // To avoid plants cropping up inside vaults, mark everything inside
     // vaults as "windy".
     for (rectangle_iterator ri(1); ri; ++ri)
-        if (!unforbidden(*ri, MMT_VAULT))
+        if (map_masked(*ri, MMT_VAULT))
             windy(*ri) = true;
 
     // Now we know the places in the wind shadow:
