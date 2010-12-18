@@ -217,7 +217,6 @@ static const map_def *_dgn_random_map_for_place(bool minivault);
 static void _dgn_load_colour_grid();
 static void _dgn_map_colour_fixup();
 
-static void _dgn_excavate(coord_def dig_at, coord_def dig_dir);
 static void _dgn_unregister_vault(const map_def &map);
 static bool _find_forbidden_in_area(dgn_region& area, unsigned int mask);
 
@@ -3946,58 +3945,6 @@ static coord_def _dig_away_dir(const vault_placement &place,
     return (dig_dir);
 }
 
-// Returns true if the feature can be ovewritten by floor when digging a path
-// from a vault to its surroundings.
-static bool _dgn_vault_excavatable_feat(dungeon_feature_type feat)
-{
-    return (dgn_Vault_Excavatable_Feats.find(feat) !=
-            dgn_Vault_Excavatable_Feats.end());
-}
-
-static void _dgn_excavate(coord_def dig_at, coord_def dig_dir)
-{
-    bool dug = false;
-    for (int i = 0; i < GXM; i++)
-    {
-        dig_at += dig_dir;
-
-        if (!map_bounds_with_margin(dig_at, MAPGEN_BORDER))
-            break;
-
-        const dungeon_feature_type dig_feat(grd(dig_at));
-        if (_dgn_vault_excavatable_feat(dig_feat))
-        {
-            grd(dig_at) = DNGN_FLOOR;
-            dug = true;
-        }
-        else if (dig_feat == DNGN_FLOOR && i > 0)
-        {
-            // If the floor square has at least two neighbouring
-            // non-solid squares, we're done.
-            int adjacent_count = 0;
-
-            for (int yi = -1; yi <= 1; ++yi)
-                for (int xi = -1; xi <= 1; ++xi)
-                {
-                    if (!xi && !yi)
-                        continue;
-                    if (!cell_is_solid(dig_at + coord_def(xi, yi))
-                        && ++adjacent_count >= 2)
-                    {
-                        return;
-                    }
-                }
-        }
-    }
-}
-
-static void _dig_away_from(vault_placement &place, const coord_def &pos)
-{
-    coord_def dig_dir = _dig_away_dir(place, pos);
-    coord_def dig_at  = pos;
-    _dgn_excavate(dig_at, dig_dir);
-}
-
 static void _connect_vault_exit(const coord_def& exit)
 {
     flood_find<feature_grid, coord_predicate> ff(env.grid, in_bounds, true,
@@ -4086,21 +4033,6 @@ static std::vector<coord_def> _external_connection_points(
     }
 
     return (ex_connection_points);
-}
-
-static coord_def _find_random_grid(int grid, unsigned mask)
-{
-    for (int i = 0; i < 100; ++i)
-    {
-        coord_def c(random_range(MAPGEN_BORDER,
-                                  GXM - MAPGEN_BORDER - 1),
-                     random_range(MAPGEN_BORDER,
-                                  GYM - MAPGEN_BORDER - 1));
-
-        if (unforbidden(c, mask) && grd(c) == grid)
-            return c;
-    }
-    return coord_def(0, 0);
 }
 
 static bool _connect_spotty(const coord_def& from);
