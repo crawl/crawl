@@ -3998,11 +3998,23 @@ static void _dig_away_from(vault_placement &place, const coord_def &pos)
     _dgn_excavate(dig_at, dig_dir);
 }
 
+static void _connect_vault_exit(const coord_def& exit)
+{
+    flood_find<feature_grid, coord_predicate> ff(env.grid, in_bounds, true,
+                                                 false);
+    ff.add_feat(DNGN_FLOOR);
+
+    coord_def target = ff.find_first_from(exit, env.level_map_mask);
+    dprf("connect_vault: Found target %d;%d.", target.x, target.y);
+
+    _join_the_dots(exit, target, MMT_VAULT);
+}
+
 static void _dig_vault_loose(vault_placement &place,
                               std::vector<coord_def> &targets)
 {
     for (int i = 0, size = targets.size(); i < size; ++i)
-        _dig_away_from(place, targets[i]);
+        _connect_vault_exit(targets[i]);
 }
 
 static bool _grid_needs_exit(int x, int y)
@@ -4104,12 +4116,7 @@ static void _connect_vault(const vault_placement &vp)
         if (player_in_branch(BRANCH_ORCISH_MINES) && _connect_spotty(p))
             continue;
 
-        const coord_def floor = _find_random_grid(DNGN_FLOOR, MMT_VAULT);
-
-        if (!floor.x && !floor.y)
-            continue;
-
-        _join_the_dots(p, floor, MMT_VAULT, true);
+        _connect_vault_exit(p);
     }
 }
 
