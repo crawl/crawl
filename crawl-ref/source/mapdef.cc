@@ -440,7 +440,7 @@ bool map_lines::in_bounds(const coord_def &c) const
 
 bool map_lines::in_map(const coord_def &c) const
 {
-    return (lines[c.y][c.x] != ' ');
+    return (in_bounds(c) && lines[c.y][c.x] != ' ');
 }
 
 map_lines &map_lines::operator = (const map_lines &map)
