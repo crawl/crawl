@@ -291,9 +291,6 @@ static void _shoals_furniture(int margin)
 {
     if (at_branch_bottom())
     {
-        unwind_var<dungeon_feature_set> vault_exc(dgn_Vault_Excavatable_Feats);
-        dgn_Vault_Excavatable_Feats.insert(DNGN_STONE_WALL);
-
         const coord_def p = _pick_shoals_island();
         const char *SHOAL_RUNE_HUT = "shoal_rune_hut";
         const map_def *vault = random_map_for_tag(SHOAL_RUNE_HUT);

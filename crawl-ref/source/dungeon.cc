@@ -272,8 +272,6 @@ std::vector<vault_placement> Temp_Vaults;
 FixedVector<bool, NUM_MONSTERS> temp_unique_creatures;
 FixedVector<unique_item_status_type, MAX_UNRANDARTS> temp_unique_items;
 
-dungeon_feature_set dgn_Vault_Excavatable_Feats;
-
 const map_mask *Vault_Placement_Mask = NULL;
 
 bool Generating_Level = false;
@@ -1192,12 +1190,6 @@ static bool _valid_dungeon_level(int level_number, level_area_type level_type)
     return (true);
 }
 
-static void _dgn_init_vault_excavatable_feats()
-{
-    dgn_Vault_Excavatable_Feats.clear();
-    dgn_Vault_Excavatable_Feats.insert(DNGN_ROCK_WALL);
-}
-
 void dgn_reset_level(bool enable_random_maps)
 {
     env.level_uniq_maps.clear();
@@ -1212,8 +1204,6 @@ void dgn_reset_level(bool enable_random_maps)
     env.level_layout_types.clear();
     level_clear_vault_memory();
     dgn_colour_grid.reset(NULL);
-
-    _dgn_init_vault_excavatable_feats();
 
     can_create_vault = true;
     use_random_maps  = enable_random_maps;
