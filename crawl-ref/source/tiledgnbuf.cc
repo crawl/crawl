@@ -76,8 +76,11 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
     else if (fg_idx >= TILE_MAIN_MAX)
     {
         m_buf_doll.add(fg_idx, x, y, TILEP_PART_MAX, in_water, false);
-        if (fg_idx == TILEP_TRAN_LICH)
+        if (fg_idx >= TILEP_TRAN_LICH_EQUIP_FIRST
+            && fg_idx <= TILEP_TRAN_LICH_EQUIP_LAST)
+        {
             _lichform_add_weapon(m_buf_doll, x, y, in_water);
+        }
     }
 
     pack_foreground(x, y, cell);

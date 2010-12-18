@@ -814,7 +814,12 @@ pig_form TRAN_PIG
 ice_form TRAN_ICE_BEAST
 statue_form TRAN_STATUE
 dragon_form TRAN_DRAGON
-lich_form TRAN_LICH
+lich_form_humanoid TRAN_LICH_HUMANOID
+%syn TRAN_LICH_EQUIP_FIRST
+lich_form_centaur TRAN_LICH_CENTAUR
+lich_form_naga TRAN_LICH_NAGA
+%syn TRAN_LICH_EQUIP_LAST
+dc-mon/undead/skeletons/skeleton_quadruped_small TRAN_LICH_FELID
 
 %sdir dc-misc
 unseen_monster MONS_UNKNOWN
