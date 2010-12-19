@@ -196,8 +196,7 @@ static bool _build_primary_vault(int level_number, const map_def *vault);
 
 static void _build_postvault_level(
     map_section_type placed_vault_orientation,
-    vault_placement &place,
-    std::vector<coord_def> &target_connections);
+    vault_placement &place);
 static bool _build_vault_impl(int level_number,
                               const map_def *vault,
                               bool build_only = false,
@@ -3879,12 +3878,6 @@ static void _connect_vault_exit(const coord_def& exit)
         _join_the_dots(exit, target, MMT_VAULT);
 }
 
-static void _dig_vault_loose(std::vector<coord_def> &targets)
-{
-    for (int i = 0, size = targets.size(); i < size; ++i)
-        _connect_vault_exit(targets[i]);
-}
-
 static bool _grid_needs_exit(int x, int y)
 {
     return (!cell_is_solid(x, y)
@@ -4085,11 +4078,6 @@ void dgn_seen_vault_at(coord_def p)
     }
 }
 
-void dgn_dig_vault_loose(vault_placement &vp)
-{
-    _dig_vault_loose(vp.exits);
-}
-
 static bool _vault_wants_damage(const vault_placement &vp)
 {
     const map_def &map = vp.map;
@@ -4208,8 +4196,7 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
     {
         if (!is_layout)
         {
-            _build_postvault_level(placed_vault_orientation,
-                                   place, place.exits);
+            _build_postvault_level(placed_vault_orientation, place);
         }
 
         dgn_place_stone_stairs(true);
@@ -4227,8 +4214,7 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
 
 static void _build_postvault_level(
     map_section_type placed_vault_orientation,
-    vault_placement &place,
-    std::vector<coord_def> &target_connections)
+    vault_placement &place)
 {
     // Does this level require Dis treatment (metal wallification)?
     // XXX: Change this so the level definition can explicitly state what
@@ -4253,7 +4239,7 @@ static void _build_postvault_level(
         _build_rooms(nrooms);
 
         // Excavate and connect the vault to the rest of the level.
-        _dig_vault_loose(target_connections);
+        place.connect();
     }
 }
 

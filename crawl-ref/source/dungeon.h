@@ -295,8 +295,6 @@ void dgn_replace_area(int sx, int sy, int ex, int ey,
                       dungeon_feature_type feature,
                       unsigned mmask = 0, bool needs_update = false);
 
-void dgn_dig_vault_loose(vault_placement &vp);
-
 bool dgn_ensure_vault_placed(bool vault_success,
                              bool disable_further_vaults);
 
