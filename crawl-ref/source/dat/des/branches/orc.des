@@ -540,7 +540,7 @@ ENDMAP
 #
 NAME: mines2_lemuel
 TAGS: mini_float
-SUBST: ? = x.
+SUBST: ? = x@
 MAP
   ?x=x?
  ?xx.xx?
@@ -556,11 +556,11 @@ ENDMAP
 NAME:  mines3_lemuel
 TAGS:  mini_float
 SUBST: ? = +=.
-SUBST: ! = x.
+SUBST: ! = x@
 SUBST: $ = $:30 *
 MONS:  oklob plant
 MAP
-    !.!
+    !@!
    !x?x!
    !x.xx!
   !xx..xx!
