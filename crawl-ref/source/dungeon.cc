@@ -1693,12 +1693,11 @@ static bool _add_feat_if_missing(bool (*iswanted)(const coord_def &),
             }
 
             bool found_feature = false;
-            for (int y2 = 0; y2 < GYM && !found_feature; ++y2)
-                for (int x2 = 0; x2 < GXM && !found_feature; ++x2)
-                {
-                    if (grd[x2][y2] == feat)
-                        found_feature = true;
-                }
+            for (rectangle_iterator ri(0); ri; ++ri)
+            {
+                if (grd(*ri) == feat)
+                    found_feature = true;
+            }
 
             if (found_feature)
                 continue;
@@ -1717,19 +1716,17 @@ static bool _add_feat_if_missing(bool (*iswanted)(const coord_def &),
                 return (true);
             }
 
-            for (int y2 = 0; y2 < GYM; ++y2)
-                for (int x2 = 0; x2 < GXM; ++x2)
-                {
-                    coord_def rnd(x2, y2);
-                    if (grd(rnd) != DNGN_FLOOR)
-                        continue;
+            for (rectangle_iterator ri(0); ri; ++ri)
+            {
+                if (grd(*ri) != DNGN_FLOOR)
+                    continue;
 
-                    if (travel_point_distance[rnd.x][rnd.y] != nzones)
-                        continue;
+                if (travel_point_distance[ri->x][ri->y] != nzones)
+                    continue;
 
-                    grd(rnd) = feat;
-                    return (true);
-                }
+                grd(*ri) = feat;
+                return (true);
+            }
 
 #ifdef DEBUG_DIAGNOSTICS
             dump_map("debug.map", true, true);
@@ -7598,69 +7595,65 @@ static bool _fixup_interlevel_connectivity()
     // Find up stairs and down stairs on the current level.
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
     int nzones = 0;
-    for (int y = 0; y < GYM ; ++y)
-        for (int x = 0; x < GXM; ++x)
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        if (!map_bounds(ri->x, ri->y)
+            || travel_point_distance[ri->x][ri->y]
+            || !dgn_square_travel_ok(*ri))
         {
-            coord_def gc(x,y);
-            if (!map_bounds(x, y)
-                || travel_point_distance[x][y]
-                || !dgn_square_travel_ok(gc))
-            {
-                continue;
-            }
-
-            _dgn_fill_zone(gc, ++nzones, _dgn_point_record_stub,
-                           dgn_square_travel_ok, NULL);
+            continue;
         }
+
+        _dgn_fill_zone(*ri, ++nzones, _dgn_point_record_stub,
+                       dgn_square_travel_ok, NULL);
+    }
 
     int max_region = 0;
-    for (int y = 0; y < GYM ; ++y)
-        for (int x = 0; x < GXM; ++x)
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        dungeon_feature_type feat = grd(*ri);
+        switch (feat)
         {
-            coord_def gc(x,y);
-            dungeon_feature_type feat = grd(gc);
-            switch (feat)
+        case DNGN_STONE_STAIRS_DOWN_I:
+        case DNGN_STONE_STAIRS_DOWN_II:
+        case DNGN_STONE_STAIRS_DOWN_III:
+        {
+            int idx = feat - DNGN_STONE_STAIRS_DOWN_I;
+            if (down_region[idx] == -1)
             {
-            case DNGN_STONE_STAIRS_DOWN_I:
-            case DNGN_STONE_STAIRS_DOWN_II:
-            case DNGN_STONE_STAIRS_DOWN_III:
+                down_region[idx] = travel_point_distance[ri->x][ri->y];
+                down_gc[idx] = *ri;
+                max_region = std::max(down_region[idx], max_region);
+            }
+            else
             {
-                int idx = feat - DNGN_STONE_STAIRS_DOWN_I;
-                if (down_region[idx] == -1)
-                {
-                    down_region[idx] = travel_point_distance[x][y];
-                    down_gc[idx] = gc;
-                    max_region = std::max(down_region[idx], max_region);
-                }
-                else
-                {
-                    // Too many stairs!
-                    return (false);
-                }
-                break;
+                // Too many stairs!
+                return (false);
             }
-            case DNGN_STONE_STAIRS_UP_I:
-            case DNGN_STONE_STAIRS_UP_II:
-            case DNGN_STONE_STAIRS_UP_III:
-            {
-                int idx = feat - DNGN_STONE_STAIRS_UP_I;
-                if (up_region[idx] == -1)
-                {
-                    up_region[idx] = travel_point_distance[x][y];
-                    up_gc[idx] = gc;
-                    max_region = std::max(up_region[idx], max_region);
-                }
-                else
-                {
-                    // Too many stairs!
-                    return (false);
-                }
-                break;
-            }
-            default:
-                break;
-            }
+            break;
         }
+        case DNGN_STONE_STAIRS_UP_I:
+        case DNGN_STONE_STAIRS_UP_II:
+        case DNGN_STONE_STAIRS_UP_III:
+        {
+            int idx = feat - DNGN_STONE_STAIRS_UP_I;
+            if (up_region[idx] == -1)
+            {
+                up_region[idx] = travel_point_distance[ri->x][ri->y];
+                up_gc[idx] = *ri;
+                max_region = std::max(up_region[idx], max_region);
+            }
+            else
+            {
+                // Too many stairs!
+                return (false);
+            }
+            break;
+        }
+        default:
+            break;
+        }
+    }
 
     // Ensure all up stairs were found.
     for (int i = 0; i < 3; i++)
