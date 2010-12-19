@@ -125,6 +125,7 @@ void TilesFramework::shutdown()
     delete m_region_msg;
     delete m_region_map;
     delete m_region_tab;
+    delete m_region_tsp;
     delete m_region_inv;
     delete m_region_spl;
     delete m_region_mem;
@@ -137,6 +138,7 @@ void TilesFramework::shutdown()
     m_region_msg   = NULL;
     m_region_map   = NULL;
     m_region_tab   = NULL;
+    m_region_tsp   = NULL;
     m_region_inv   = NULL;
     m_region_spl   = NULL;
     m_region_mem   = NULL;
@@ -328,6 +330,7 @@ bool TilesFramework::initialise()
     m_region_tile = new DungeonRegion(init);
     m_region_map  = new MapRegion(Options.tile_map_pixels);
     m_region_tab  = new TabbedRegion(init);
+    m_region_tsp  = new TabbedRegion(init);
     m_region_inv  = new InventoryRegion(init);
     m_region_spl  = new SpellRegion(init);
     m_region_mem  = new MemoriseRegion(init);
@@ -335,11 +338,14 @@ bool TilesFramework::initialise()
     m_region_skl  = new SkillRegion(init);
 
     m_region_tab->set_tab_region(TAB_ITEM, m_region_inv, TILEG_TAB_ITEM);
-    m_region_tab->set_tab_region(TAB_SPELL, m_region_spl, TILEG_TAB_SPELL);
+    //m_region_tab->set_tab_region(TAB_SPELL, m_region_spl, TILEG_TAB_SPELL);
     m_region_tab->set_tab_region(TAB_MEMORISE, m_region_mem, TILEG_TAB_MEMORISE);
     m_region_tab->set_tab_region(TAB_MONSTER, m_region_mon, TILEG_TAB_MONSTER);
     m_region_tab->set_tab_region(TAB_SKILL, m_region_skl, TILEG_TAB_SKILL);
     m_region_tab->activate_tab(TAB_ITEM);
+
+    m_region_tsp->set_tab_region(0, m_region_spl, TILEG_TAB_SPELL);
+    m_region_tsp->activate_tab(0);
 
     m_region_msg  = new MessageRegion(m_fonts[m_msg_font].font);
     m_region_stat = new StatRegion(m_fonts[stat_font].font);
@@ -722,6 +728,7 @@ int TilesFramework::getch_ck()
 }
 
 static const int map_margin      = 2;
+static const int tab_margin      = 5;
 static const int map_stat_margin = 4;
 static const int crt_width       = 80;
 static const int crt_height      = 30;
@@ -908,6 +915,19 @@ bool TilesFramework::layout_statcol(bool message_overlay, bool show_gold_turns)
 
     int self_inv_y = m_windowsz.y - m_region_tab->wy;
     m_region_tab->place(inv_col, self_inv_y);
+
+    // Integer divison rounded up
+    int lines = (m_region_spl->get_max_slots() - 1) / m_region_tab->mx + 1;
+    int delta_y = m_region_tab->dy * lines + tab_margin;
+
+    if (delta_y < m_region_tab->sy - m_region_map->ey)
+    {
+        m_layers[LAYER_NORMAL].m_regions.push_back(m_region_tsp);
+        m_region_tsp->place(inv_col, m_region_tab->sy - delta_y);
+        m_region_tsp->resize(m_region_tab->mx, lines);
+    }
+    else
+        m_region_tab->set_tab_region(TAB_SPELL, m_region_spl, TILEG_TAB_SPELL);
 
     int num_items = m_region_tab->mx * (m_region_tab->my - 1);
     return (num_items >= ENDOFPACK);

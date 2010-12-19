@@ -21,9 +21,9 @@ public:
     virtual bool update_alt_text(std::string &alt);
 
     virtual const std::string name() const { return "Spells"; }
+    virtual int get_max_slots();
 
 protected:
-    virtual int get_max_slots();
 
     virtual void pack_buffers();
     virtual void draw_tag();
