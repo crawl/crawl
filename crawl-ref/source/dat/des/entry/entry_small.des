@@ -243,7 +243,7 @@ ORIENT:  float
 SHUFFLE: d'
 : end
 SUBST:   '=.
-MONS:    worm w:30 / mummy / human zombie
+MONS:    worm w:30 / human zombie hp:20
 ITEM:    stone / dart
 MAP
 xxxxxxxxxxxxxxxxx
