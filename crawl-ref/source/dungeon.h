@@ -160,6 +160,7 @@ public:
     void reset();
     void apply_grid();
     void draw_at(const coord_def &c);
+    void connect(bool spotty = false) const;
 };
 
 class vault_place_iterator
