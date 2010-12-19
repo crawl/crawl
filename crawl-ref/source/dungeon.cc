@@ -170,7 +170,8 @@ static void _diamond_rooms(int level_number);
 
 static void _pick_float_exits(vault_placement &place,
                               std::vector<coord_def> &targets);
-static void _connect_vault(const vault_placement &vp);
+static bool _connect_spotty(const coord_def& from);
+static void _connect_vault_exit(const coord_def& exit);
 
 // ITEM & SHOP FUNCTIONS
 static void _place_shops(int level_number);
@@ -3936,22 +3937,6 @@ static void _pick_float_exits(vault_placement &place,
     }
 }
 
-static bool _connect_spotty(const coord_def& from);
-
-static void _connect_vault(const vault_placement &vp)
-{
-    for (int i = 0, size = vp.exits.size(); i < size; ++i)
-    {
-        const coord_def &p = vp.exits[i];
-
-        // Try to connect vaults in a spotty fashion in the mines.
-        if (player_in_branch(BRANCH_ORCISH_MINES) && _connect_spotty(p))
-            continue;
-
-        _connect_vault_exit(p);
-    }
-}
-
 static void _fixup_after_vault()
 {
     _dgn_set_floor_colours();
@@ -4136,7 +4121,7 @@ static bool _build_secondary_vault(int level_number, const map_def *vault,
         {
             const vault_placement &vp = *env.level_vaults[map_index];
             ASSERT(vault->name == vp.map.name);
-            _connect_vault(vp);
+            vp.connect(player_in_branch(BRANCH_ORCISH_MINES));
         }
         return (true);
     }
@@ -7931,6 +7916,18 @@ void vault_placement::draw_at(const coord_def &c)
 {
     pos = c;
     apply_grid();
+}
+
+void vault_placement::connect(bool spotty) const
+{
+    for (std::vector<coord_def>::const_iterator i = exits.begin();
+         i != exits.end(); ++i)
+    {
+        if (spotty && _connect_spotty(*i))
+            continue;
+
+        _connect_vault_exit(*i);
+    }
 }
 
 void remember_vault_placement(std::string key, const vault_placement &place)
