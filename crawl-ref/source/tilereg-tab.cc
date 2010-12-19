@@ -76,7 +76,7 @@ void TabbedRegion::set_tab_region(int idx, GridRegion *reg, tileidx_t tile_tab)
 
 GridRegion *TabbedRegion::get_tab_region(int idx)
 {
-    if (idx < 0 || (int)m_tabs.size() <= idx)
+    if (invalid_index(idx))
         return (NULL);
 
     return (m_tabs[idx].reg);
@@ -84,7 +84,7 @@ GridRegion *TabbedRegion::get_tab_region(int idx)
 
 void TabbedRegion::activate_tab(int idx)
 {
-    if (idx < 0 || (int)m_tabs.size() <= idx)
+    if (invalid_index(idx))
         return;
 
     if (m_active == idx)
@@ -111,9 +111,14 @@ int TabbedRegion::num_tabs() const
     return (m_tabs.size());
 }
 
+bool TabbedRegion::invalid_index(int idx) const
+{
+    return (idx < 0 || (int)m_tabs.size() <= idx);
+}
+
 bool TabbedRegion::active_is_valid() const
 {
-    if (m_active < 0 || (int)m_tabs.size() <= m_active)
+    if (invalid_index(m_active))
         return (false);
     if (!m_tabs[m_active].reg)
         return (false);

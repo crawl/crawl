@@ -47,6 +47,7 @@ protected:
     virtual void draw_tag();
     virtual void activate() {}
 
+    bool invalid_index(int idx) const;
     bool active_is_valid() const;
     // Returns the tab the mouse is over, -1 if none.
     int get_mouseover_tab(MouseEvent &event) const;
