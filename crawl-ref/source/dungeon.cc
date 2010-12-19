@@ -4183,15 +4183,14 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
     if (_vault_wants_damage(place))
         _ruin_vault(place);
 
-    std::vector<coord_def> &target_connections = place.exits;
-    if (target_connections.empty() && placed_vault_orientation != MAP_ENCOMPASS
+    if (place.exits.empty() && placed_vault_orientation != MAP_ENCOMPASS
         && (!place.map.is_minivault() || place.map.has_tag("mini_float")))
     {
-        _pick_float_exits(place, target_connections);
+        _pick_float_exits(place, place.exits);
     }
 
     if (make_no_exits)
-        target_connections.clear();
+        place.exits.clear();
 
     // Must do this only after target_connections is finalised, or the vault
     // exits will not be correctly set.
@@ -4210,7 +4209,7 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
         if (!is_layout)
         {
             _build_postvault_level(placed_vault_orientation,
-                                   place, target_connections);
+                                   place, place.exits);
         }
 
         dgn_place_stone_stairs(true);
