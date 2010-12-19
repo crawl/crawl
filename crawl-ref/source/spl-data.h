@@ -2837,7 +2837,7 @@ struct spell_desc
 
 {
     SPELL_HEAL_OTHER, "Heal Other",
-     SPTYP_HOLY,
+     SPTYP_NONE,
      SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL,
      6,
      200,
