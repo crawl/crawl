@@ -4028,10 +4028,9 @@ static bool _connect_spotty(const coord_def& from);
 
 static void _connect_vault(const vault_placement &vp)
 {
-    std::vector<coord_def> exc = _external_connection_points(vp, vp.exits);
-    for (int i = 0, size = exc.size(); i < size; ++i)
+    for (int i = 0, size = vp.exits.size(); i < size; ++i)
     {
-        const coord_def &p = exc[i];
+        const coord_def &p = vp.exits[i];
 
         // Try to connect vaults in a spotty fashion in the mines.
         if (player_in_branch(BRANCH_ORCISH_MINES) && _connect_spotty(p))
