@@ -3875,11 +3875,11 @@ static void _connect_vault_exit(const coord_def& exit)
         _join_the_dots(exit, target, MMT_VAULT);
 }
 
-static bool _grid_needs_exit(int x, int y)
+static bool _grid_needs_exit(const coord_def& c)
 {
-    return (!cell_is_solid(x, y)
-            || feat_is_closed_door(grd[x][y])
-            || grd[x][y] == DNGN_SECRET_DOOR);
+    return (!cell_is_solid(c)
+            || feat_is_closed_door(grd(c))
+            || grd(c) == DNGN_SECRET_DOOR);
 }
 
 static bool _map_feat_is_on_edge(const vault_placement &place,
@@ -3901,7 +3901,7 @@ static void _pick_float_exits(vault_placement &place,
     std::vector<coord_def> possible_exits;
 
     for (rectangle_iterator ri(place.pos, place.pos + place.size - 1); ri; ++ri)
-        if (_grid_needs_exit(ri->x, ri->y) && _map_feat_is_on_edge(place, *ri))
+        if (_grid_needs_exit(*ri) && _map_feat_is_on_edge(place, *ri))
             possible_exits.push_back(*ri);
 
     if (possible_exits.empty())
