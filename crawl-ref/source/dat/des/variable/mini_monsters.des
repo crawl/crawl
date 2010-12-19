@@ -24,7 +24,6 @@
 
 default-depth: D:9-27, Vault, Elf
 
-
 ###############################################################################
 #
 # <<1>> Invertebrae
@@ -947,57 +946,6 @@ MAP
 .x--E---G--x1.H--x1.
 .xxxxxxxxxxx1.xxxx1.
 ....................
-ENDMAP
-
-# Small gnoll camp 1
-NAME:   eino_small_gnoll_camp_1
-DEPTH:  D:3-10
-WEIGHT: 5
-TAGS:   uniq_gnoll_camp no_monster_gen patrolling
-MONS:   gnoll
-# A gnoll sergeant with guaranteed good gear.
-MONS:   gnoll name:sergeant name_suffix hd:3 ; \
-        potion of healing | potion of heal wounds . \
-        whip ego:reaching | whip good_item no_uniq | spear ego:reaching | \
-        glaive . \
-        scale mail | chain mail
-MONS:  jackal / hound
-MAP
-xxxxxxxxxx
-x..3..xTxx
-x..313..xx
-+....2..>x
-x..1..x%xx
-x...31x%xx
-xxxxxxxxxx
-ENDMAP
-
-# Small gnoll camp 2
-NAME:   eino_small_gnoll_camp_2
-DEPTH:  D:3-10
-WEIGHT: 5
-TAGS:   uniq_gnoll_camp mini_float no_monster_gen patrolling
-MONS:   gnoll
-# A gnoll sergeant with guaranteed good gear.
-MONS:   gnoll name:sergeant name_suffix hd:3 ; \
-        potion of healing | potion of heal wounds . \
-        whip ego:reaching | whip good_item no_uniq | spear ego:reaching | \
-        glaive . \
-        scale mail | chain mail
-MONS:   jackal / hound
-MAP
-xxxxxxxxxx
-xxxx33+%%x
-xxx...x*$x
-xxx...xxxx
-xxxx.3.xxx
-x21+...1.x
-x11x..1..x
-xxxx....xx
-xxxx..xxxx
-xxxx..xxxx
-xx......xx
-xx......xx
 ENDMAP
 
 # Centaur isle (Lemuel)
