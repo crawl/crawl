@@ -3866,75 +3866,6 @@ static void _build_rooms(int nrooms)
     }
 }
 
-static int _away_from_edge(int x, int left_edge, int right_edge)
-{
-    if (x < left_edge)
-        return (1);
-    else if (x > right_edge)
-        return (-1);
-    else
-        return (coinflip()? 1 : -1);
-}
-
-static coord_def _dig_away_dir(const vault_placement &place,
-                               const coord_def &pos)
-{
-    // Figure out which way we need to go to dig our way out of the vault.
-    bool x_edge =
-        pos.x == place.pos.x || pos.x == place.pos.x + place.size.x - 1;
-    bool y_edge =
-        pos.y == place.pos.y || pos.y == place.pos.y + place.size.y - 1;
-
-    // Handle exits in non-rectangular areas.
-    if (!x_edge && !y_edge)
-    {
-        const coord_def rel = pos - place.pos;
-        for (int yi = -1; yi <= 1; ++yi)
-            for (int xi = -1; xi <= 1; ++xi)
-            {
-                if (!xi == !yi)
-                    continue;
-
-                const coord_def mv(rel.x + xi, rel.y + yi);
-                if (!place.map.in_map(mv))
-                    return (mv - rel);
-            }
-    }
-
-    if (x_edge && y_edge)
-    {
-        if (coinflip())
-            x_edge = false;
-        else
-            y_edge = false;
-    }
-
-    coord_def dig_dir;
-    if (x_edge)
-    {
-        if (place.size.x == 1)
-        {
-            dig_dir.x = _away_from_edge(pos.x, MAPGEN_BORDER * 2,
-                                        GXM - MAPGEN_BORDER * 2);
-        }
-        else
-            dig_dir.x = pos.x == place.pos.x? -1 : 1;
-    }
-
-    if (y_edge)
-    {
-        if (place.size.y == 1)
-        {
-            dig_dir.y = _away_from_edge(pos.y, MAPGEN_BORDER * 2,
-                                        GYM - MAPGEN_BORDER * 2);
-        }
-        else
-            dig_dir.y = pos.y == place.pos.y? -1 : 1;
-    }
-
-    return (dig_dir);
-}
-
 static void _connect_vault_exit(const coord_def& exit)
 {
     flood_find<feature_grid, coord_predicate> ff(env.grid, in_bounds, true,
@@ -4003,25 +3934,6 @@ static void _pick_float_exits(vault_placement &place,
         targets.push_back(possible_exits[which_exit]);
         possible_exits.erase(possible_exits.begin() + which_exit);
     }
-}
-
-static std::vector<coord_def> _external_connection_points(
-                               const vault_placement &place,
-                               const std::vector<coord_def> &target_connections)
-{
-    std::vector<coord_def> ex_connection_points;
-
-    // Giving target_connections directly to build_rooms causes
-    // problems with long, skinny vaults where paths to the exit
-    // tend to cut through the vault. By backing out of the vault
-    // one square, we improve connectibility.
-    for (int i = 0, size = target_connections.size(); i < size; ++i)
-    {
-        const coord_def &p = target_connections[i];
-        ex_connection_points.push_back(p + _dig_away_dir(place, p));
-    }
-
-    return (ex_connection_points);
 }
 
 static bool _connect_spotty(const coord_def& from);
