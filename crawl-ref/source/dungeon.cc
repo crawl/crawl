@@ -3947,8 +3947,7 @@ static void _connect_vault_exit(const coord_def& exit)
         _join_the_dots(exit, target, MMT_VAULT);
 }
 
-static void _dig_vault_loose(vault_placement &place,
-                              std::vector<coord_def> &targets)
+static void _dig_vault_loose(std::vector<coord_def> &targets)
 {
     for (int i = 0, size = targets.size(); i < size; ++i)
         _connect_vault_exit(targets[i]);
@@ -4192,7 +4191,7 @@ void dgn_seen_vault_at(coord_def p)
 
 void dgn_dig_vault_loose(vault_placement &vp)
 {
-    _dig_vault_loose(vp, vp.exits);
+    _dig_vault_loose(vp.exits);
 }
 
 static bool _vault_wants_damage(const vault_placement &vp)
@@ -4359,7 +4358,7 @@ static void _build_postvault_level(
         _build_rooms(nrooms);
 
         // Excavate and connect the vault to the rest of the level.
-        _dig_vault_loose(place, target_connections);
+        _dig_vault_loose(target_connections);
     }
 }
 
