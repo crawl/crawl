@@ -315,7 +315,7 @@ static void _shoals_furniture(int margin)
         {
             vault_placement &vp(*env.level_vaults[i]);
             if (vp.map.has_tag(SHOAL_RUNE_HUT))
-                dgn_dig_vault_loose(vp);
+                vp.connect();
         }
     }
 
