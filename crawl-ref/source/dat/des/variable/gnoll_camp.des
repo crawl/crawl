@@ -29,7 +29,7 @@ end
 
 NAME:   serial_gnoll_camp
 DEPTH:  D:5-10
-TAGS:   layout_open layout_caves layout_cross layout_city layout_spotty
+TAGS:   layout_open layout_caves layout_cross
 CHANCE: 10%
 {{
   local c = 4 + crawl.random2(3)
