@@ -1334,3 +1334,367 @@ bbbbbbbbbWW.......WWbbbbbbbbb
             x................
             xxxxxxxxxxxxxxxxx
 ENDMAP
+
+NAME:    minmay_open_boxes_in_corner
+ORIENT:  southeast
+DEPTH:   D:12-, Vault
+SHUFFLE: $*%
+SUBST:   c : xcv
+SUBST:   $ = $$$$%*
+SUBST:   % = %%%%$*
+SUBST:   * = ****$%
+MAP
+        ........x
+        ...cccc.x
+        ...c0...x
+        ...c0...x
+        ...cccc.x
+        ........x
+        ...cccc.x
+        ...c9...x
+...........c9...x
+...........cccc.x
+................x
+.cccc.cccc.cccc.x
+.c00c.c99c.c**$$x
+.c..c.c..c.c**$$x
+.c..c.c..c.c$$%%x
+............$$%%x
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    minmay_connected_boxes_in_corner
+ORIENT:  southeast
+DEPTH:   D:12-, Vault
+SHUFFLE: $*%, ABCDEFH
+SUBST:   $ = $$$$%*..
+SUBST:   % = %%%%$*.....
+SUBST:   * = ****$%.....
+SUBST:   A = .
+SUBST:   B = .
+SUBST:   C = .
+SUBST:   D = .
+SUBST:   E = c
+SUBST:   F = c
+SUBST:   H = c
+SUBST:   c : xcv
+SUBST:   G : GGTTU.
+MAP
+...........................x
+.CCCcc.....ccccc.....ccBBB.x
+.C...c.....c...c.....c...B.x
+.C.0.cc...cc.0.cc...cc.0.B.x
+.c....cc.cc.....cc.cc....c.x
+.ccc...ccc...c...ccc...ccc.x
+...cc.......ccc.......cc...x
+....cc.....cc*cc.....cc....x
+.....c..G.0c***c0.G..c.....x
+....cc.....cc*cc.....cc....x
+...cc...0...c+c...0...cc...x
+.ccc...ccc.......ccc...ccc.x
+.c....cc$cc.9.9.cc$cc....c.x
+.c.0.cc$$$+..8..+$$$cc.0.c.x
+.c....cc$cc.9.9.cc$cc....c.x
+.ccc...ccc.......ccc...ccc.x
+...cc...0...c+c...0...cc...x
+....cc.....cc%cc.....cc....x
+.....c..G.0c%%%c0.G..c.....x
+....cc.....cc%cc.....cc....x
+...cc.......ccc.......cc...x
+.ccc...ccc...c...ccc...ccc.x
+.c....cc.cc.....cc.cc....c.x
+.D.0.cc...cc.0.cc...cc.0.A.x
+.D...c.....c...c.....c...A.x
+.DDDcc.....ccccc.....ccAAA.x
+...........................x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    minmay_triangles_in_corner
+ORIENT:  southeast
+DEPTH:   D:12-
+SHUFFLE: $%
+SUBST:   $ = $$$$%* .:180
+SUBST:   % = %%%%$* .:180
+SUBST:   c : xcv
+MAP
+                        ...x
+                       ...cx
+                      ...ccx
+                     ...cccx
+                    ...ccc$x
+                   ...ccc.$x
+                  ...ccc.9$x
+                 ...ccc...$x
+                ...ccc.xxxxx
+               ...ccc.x...$x
+              ...ccc.x.x.9$x
+             ...ccc..x..x.$x
+            ...ccc.0.x.0.x$x
+           ....cc....x....xx
+          .......xxxx.xxxx|x
+         ...cc.cc....x....xx
+        ...ccc.ccc.0.x.0.x$x
+       ...ccc.x.ccc..x..x.$x
+      ...ccc..x..ccc.x.x.9$x
+     ...ccc.0.x.0.ccc.x...$x
+    ...ccc....x....ccc.xxxxx
+   ...ccc.xxxx.xxxx.ccc...$x
+  ...ccc.x....x....x.ccc.9$x
+ ...ccc.x.x.0.x.0.x.x.ccc.$x
+...ccc..x..x..x..x..x..ccc$x
+..ccc.9.x.9.x.x.x.9.x.9.cccx
+.ccc%%%%x%%%%x|x%%%%x%%%%ccx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    minmay_isolated_rectangles_in_corner
+ORIENT:  southeast
+DEPTH:   D:12-26, Vault:2-6
+SHUFFLE: ([{)]}, *$
+SUBST:   * = %**|$....
+SUBST:   $ = $$$$%
+SUBST:   G = GTUV
+SUBST:   c : cv
+MAP
+.............................x
+.............................x
+..ccccccccccccccccccccccccc..x
+..c(.c........0..ccc...c**c..x
+..c..c.0.0.......cc..9.+**c..x
+..c..c.....c0.G.0c.....c**c..x
+..c..+.0..cc.......9.9.c**c..x
+..c..c...ccc..0........c**c..x
+..ccccccccccccccccccccccccc..x
+.............................x
+.............................x
+..ccccccccccccccccccccccccc..x
+..c$$c999ccc......0....c..c..x
+..c$$c...ccc...........+..c..x
+..c$$c....0...G...0....c..c..x
+..c$$+...........ccc...c..c..x
+..c$$c....0......ccc000c.[c..x
+..ccccccccccccccccccccccccc..x
+.............................x
+.............................x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    minmay_connected_triangles_in_corner
+ORIENT:  southeast
+DEPTH:   D:12-26, Vault:2-6
+SHUFFLE: ([{)]}, 890, |*%$
+SUBST:   c : cv
+MAP
+........................x
+........................x
+..cccccccccccc..........x
+..c|*%9.9.9cc...........x
+..c*%.....cc............x
+..c%.....cc.............x
+..c9....cc..............x
+..c.....cc..............x
+..c9..cc.cc.............x
+..c..cccc.cc............x
+..c9cc..cc.cc........c..x
+..ccc....cc.cc......cc..x
+..cc......cc.cc....ccc..x
+..c........cc.cc..cc0c..x
+............cc.cccc..c..x
+.............cc.cc..0c..x
+..............cc.....c..x
+..............cc....0c..x
+.............cc......c..x
+............cc.......c..x
+...........cc0.0.0..(c..x
+..........cccccccccccc..x
+........................x
+........................x
+xxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   minmay_expanding_squares
+ORIENT: southeast
+DEPTH:  D:12-
+MAP
+@xxxxxxxxxxxxxxxxxxxxx
+x.0xxxxxxxxxxxxxxxxxxx
+x0.xxxxxxxxxxxxxxxxxxx
+xxx..0xxxxxxxxxxxxxxxx
+xxx.0.xxxxxxxxxxxxxxxx
+xxx0..xxxxxxxxxxxxxxxx
+xxxxxx...0xxxxxxxxxxxx
+xxxxxx..9.xxxxxxxxxxxx
+xxxxxx.9..xxxxxxxxxxxx
+xxxxxx0...xxxxxxxxxxxx
+xxxxxxxxxx....0xxxxxxx
+xxxxxxxxxx...9.xxxxxxx
+xxxxxxxxxx..9..xxxxxxx
+xxxxxxxxxx.9...xxxxxxx
+xxxxxxxxxx0....xxxxxxx
+xxxxxxxxxxxxxxx.....9x
+xxxxxxxxxxxxxxx....9.x
+xxxxxxxxxxxxxxx...8..x
+xxxxxxxxxxxxxxx..8..*x
+xxxxxxxxxxxxxxx.9..*|x
+xxxxxxxxxxxxxxx9..*||x
+xxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   minmay_expanding_circles
+ORIENT: southeast
+DEPTH:  D:12-
+KPROP:  .089 = no_rtele_into
+SUBST:  c : cv
+KMONS:  0 = 0
+KMONS:  8 = 8
+KMONS:  9 = 9
+KITEM:  0 = %
+KITEM:  8 = |
+KITEM:  9 = *
+MAP
+@cccccccccccccccc
+c+..ccccccccccccc
+c...0cccccccccccc
+c...9cccccccccccc
+cc09xxccccccccccc
+ccccxx...cccccccc
+ccccc....0ccccccc
+ccccc...09ccccccc
+ccccc..098ccccccc
+cccccc098xxcccccc
+cccccccccxx....cc
+cccccccccc.....0c
+cccccccccc....09c
+cccccccccc...098c
+cccccccccc..0988c
+ccccccccccc0988cc
+ccccccccccccccccc
+ENDMAP
+
+NAME:   minmay_box_of_statues
+ORIENT: southeast
+DEPTH:  D:12-
+SUBST:  c : cv
+MAP
+ccccccccccccccc+ccc
+cG...............Gc
+c.0.............0.c
+c.................c
+c...............0.c
+c................Gc
+c.....ccccccccc+ccc
+c.....cG...GcG...Gc
+c.....c..0..c..0..c
+c.....c.0*0.+.0*0.c
+c.....c..0..c..0..c
+c.....cG...GcG...Gc
+c.....ccc+ccccccccc
+c.....cG...GcG...Gc
+c.....c..0..c..0..c
++.....c.0*0.+.0*0.c
+c.0.0.c..0..c..0..c
+cG...GcG...GcG...Gc
+ccccccccccccccccccc
+ENDMAP
+
+NAME:    minmay_nested_s
+ORIENT:  southwest
+DEPTH:   D:12-26
+SUBST:   c : cv
+SHUFFLE: ([{, )]}
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxx....0..........0..........0
+xxx............................@
+xx..............................
+xx.......0..........0..........0
+x........xxxxxxxxxxxxxxxxxxxxxxx
+x......xxxccccccccccccccccccccxx
+x.....xxxcc......0...........ccx
+x.....xxxc.......0...........)cx
+x0..0xxxxc..cccccccccccccccccccx
+x....xxxxc..ccccccccccccccccccxx
+x....xxxxc..0.........0......ccx
+x....xxxxcc.0.........0.......cx
+x....xxxxccccccccccccccccccc..cx
+x0..0xxxxccccccccccccccccccc..cx
+x.....xxxc|*9....0.........0..cx
+x.....xxxcc*9....0.........0.ccx
+x......xxxccccccccccccccccccccxx
+x........xxxxxxxxxxxxxxxxxxxxxxx
+xx.......0....0..0....0....xxxxx
+xx...........................xxx
+xxx...........................xx
+xxxxx....0....0..0....0.......xx
+xxxxxxxxxxxxxxxxxxxxxxx........x
+xcccccccccccccccccccccxxx......x
+xcc.0.........0....9*ccxxx.....x
+xc..0.........0....9*|cxxx.....x
+xc..cccccccccccccccccccxxxx0..0x
+xc..ccccccccccccccccccxxxxx....x
+xc.......0.........0.ccxxxx....x
+xcc......0.........0..cxxxx....x
+xccccccccccccccccccc..cxxxx....x
+xccccccccccccccccccc..cxxxx0..0x
+xc(...........0.......cxxx.....x
+xcc...........0......ccxxx.....x
+xxccccccccccccccccccccxxx......x
+xxxxxxxxxxxxxxxxxxxxxxx........x
+xx|*$$$$..8...9.......0.......xx
+x|**$$$$8...9.................xx
+x|**$$$$8...9................xxx
+xx|*$$$$..8...9.......0....xxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   minmay_twisted_water
+ORIENT: north
+DEPTH:  D:9-20
+SUBST:  W = wW
+# Only the dragon can fly; depth is consistent with dragon1_lemuel.
+MONS:   ice statue, patrolling ice dragon, frost giant, ice beast
+KMONS:  w = w:490 nothing / ice beast
+KFEAT:  w = w
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx*xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxWxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxwwxxxx*xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxwwwwxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxwwwxxxWWxxxWwxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxwwxwwwwxx*xxwxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxwwwwwxxxxxwwxxxxxxxxxxxwwW.xxxxx
+xxxxxxxxxxxxx..xxwwwwwxxxwwwxxxxxxxxwwwwwWWWwxxx
+xxxxxxxxxxx.....Wwwxwwwwwwwwxxxxxxwwwwwwwwwwwwxx
+xxxxxxxxxxx.....xwwxwwwwwxxxxxxxxwwwwwwwwwwwwwxx
+xxxxxxxxxxxx.3.xxxwxxwwxxxxxxxxxxwwwwwwwwwwwwwwx
+xxxxxxxxxxxxWWWxxxwxxxxxxxxxxxxxwwwwwwxxxwwwwwwx
+xxxxxxxxxxxwwwwxxxwwxxxxxxxxxxxxwwwxxxxxxxxwwwwx
+xxxxxxxxxxwwwwxxxxwwwxxxxxxxxxxwwwxxxxxxxxxwwwwx
+xxxxxxxxxxxwwwwwwwwwwxxxxxxxxwwwwxxxx**|xxwwwwxx
+xxxxxxxxxxxxxwwwwwwwwwwxxxwwwwwwxxxxWW2*xxwwwwxx
+xxxxxxxxxxxxxwwwwwwwwwwwwwwwwwwxxxxxwwWWxwwwwwxx
+xxxxxxxxxxxxWwwwwwwwwwwwwwwwwwwxxxxxwwwwwwwwwxxx
+xxxxxxxxxxx.Wwwwwwwwwwwwwwwwwwxxxxxxxwwwwwwwxxxx
+xxxxxxxxxxxWWwwwwwwwwwwwwwwwwwxxxxxxxxxwwwxxxxxx
+xxxxxxxxxxxxwwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxwwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxwwwwwWWWwwwwwwxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxwwwwwwW1Wwwwwwwxxxxxxxxxxxxxxxxxxx
+xx*Wxxx*xxwwwwwwwwwwWWWwwwwwwwxxxxxxxxxxxxxxxxxx
+xxxWxxWWxxwwwwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxx
+xxxwxxwxxwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxxx
+xxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxx
+xxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwW.xxxxxxxxxxxxxx
+xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwWWWwwxxxxxxxxxxx
+xwwxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
+xWxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxx
+x*xxxWwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxx
+xxxx.Wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxx
+xxxxxWwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxx
+xxxxxwwwwwwwwwwwwww...........wwwwwwwwwwwwwwwwwx
+xxxwwwwwww..........................wwwwwwwwwwwx
+xwwwww..................................wwwww...
+................................................
+ENDMAP
