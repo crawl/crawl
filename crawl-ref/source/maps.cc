@@ -22,7 +22,6 @@
 #include "env.h"
 #include "enum.h"
 #include "files.h"
-#include "flood_find.h"
 #ifdef USE_TILE
 #include "initfile.h"
 #endif
