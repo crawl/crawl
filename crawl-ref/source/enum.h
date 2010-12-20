@@ -3704,6 +3704,12 @@ enum tile_flags
     TILE_FLAG_SANCTUARY  = 0x14000000,
     TILE_FLAG_MISC_FLOOR = 0x14000000,
 
+    // Kraken tentacle overlays.
+    TILE_FLAG_KRAKEN_NW  = 0x08000000,
+    TILE_FLAG_KRAKEN_NE  = 0x20000000,
+    TILE_FLAG_KRAKEN_SE  = 0x40000000,
+    TILE_FLAG_KRAKEN_SW  = 0x80000000,
+
     // General
     TILE_FLAG_MASK       = 0x000007FF,
 };

@@ -512,6 +512,18 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
         for (int i = 0; i < cell.num_dngn_overlay; ++i)
             add_dngn_tile(cell.dngn_overlay[i], x, y);
 
+        if (!(bg & TILE_FLAG_UNSEEN))
+        {
+            if (bg & TILE_FLAG_KRAKEN_NW)
+                m_buf_feat.add(TILE_KRAKEN_OVERLAY_NW, x, y);
+            if (bg & TILE_FLAG_KRAKEN_NE)
+                m_buf_feat.add(TILE_KRAKEN_OVERLAY_NE, x, y);
+            if (bg & TILE_FLAG_KRAKEN_SE)
+                m_buf_feat.add(TILE_KRAKEN_OVERLAY_SE, x, y);
+            if (bg & TILE_FLAG_KRAKEN_SW)
+                m_buf_feat.add(TILE_KRAKEN_OVERLAY_SW, x, y);
+        }
+
         if (bg & TILE_FLAG_HALO)
             m_buf_feat.add(TILE_HALO, x, y);
 

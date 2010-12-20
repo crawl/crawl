@@ -415,3 +415,8 @@ dc-misc/mold_small2
 dc-misc/mold_small3
 dc-misc/mold_small4
 effect/silenced SILENCED
+%shrink 0
+dc-mon/kraken/corner_piece_NW KRAKEN_OVERLAY_NW
+dc-mon/kraken/corner_piece_NE KRAKEN_OVERLAY_NE
+dc-mon/kraken/corner_piece_SE KRAKEN_OVERLAY_SE
+dc-mon/kraken/corner_piece_SW KRAKEN_OVERLAY_SW

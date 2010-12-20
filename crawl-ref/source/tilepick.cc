@@ -36,6 +36,7 @@
 #include "tiledef-unrand.h"
 #include "tilemcache.h"
 #include "traps.h"
+#include "viewgeom.h"
 
 // This should not be changed.
 COMPILE_CHECK(TILE_DNGN_UNSEEN == 0, c0);
@@ -1835,6 +1836,101 @@ static bool _tentacle_pos_unknown(const monster *tentacle,
     return (false);
 }
 
+enum main_dir
+{
+    NORTH = 0,
+    EAST,
+    SOUTH,
+    WEST
+};
+
+static void _add_tentacle_overlay(const coord_def pos,
+                                  const main_dir dir)
+{
+    coord_def next = pos;
+    switch (dir)
+    {
+        case NORTH: next += coord_def( 0, -1); break;
+        case EAST:  next += coord_def( 1,  0); break;
+        case SOUTH: next += coord_def( 0,  1); break;
+        case WEST:  next += coord_def(-1,  0); break;
+        default:
+            ASSERT(false);
+    }
+    if (!in_bounds(next))
+        return;
+
+    tile_flags flag;
+    switch (dir)
+    {
+        case NORTH: flag = TILE_FLAG_KRAKEN_SW; break; // SW
+        case EAST:  flag = TILE_FLAG_KRAKEN_NW; break; // NW
+        case SOUTH: flag = TILE_FLAG_KRAKEN_NE; break; // NE
+        case WEST:  flag = TILE_FLAG_KRAKEN_SE; break; // SE
+        default:
+            ASSERT(false);
+    }
+    env.tile_bg(grid2show(next)) |= flag;
+}
+
+static void _handle_tentacle_overlay(const coord_def pos,
+                                     const tileidx_t tile)
+{
+    switch (tile)
+    {
+    case TILEP_MONS_KRAKEN_TENTACLE_NW:
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW:
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_NW:
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_NW:
+        _add_tentacle_overlay(pos, NORTH);
+        break;
+    case TILEP_MONS_KRAKEN_TENTACLE_NE:
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE:
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_NE:
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_NE:
+        _add_tentacle_overlay(pos, EAST);
+        break;
+    case TILEP_MONS_KRAKEN_TENTACLE_SE:
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SE:
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_SE:
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_SE:
+        _add_tentacle_overlay(pos, SOUTH);
+        break;
+    case TILEP_MONS_KRAKEN_TENTACLE_SW:
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SW:
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_SW:
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_SW:
+        _add_tentacle_overlay(pos, WEST);
+        break;
+    // diagonals
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW_SE:
+        _add_tentacle_overlay(pos, NORTH);
+        _add_tentacle_overlay(pos, SOUTH);
+        break;
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_SW:
+        _add_tentacle_overlay(pos, EAST);
+        _add_tentacle_overlay(pos, WEST);
+        break;
+    // other
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_NW:
+        _add_tentacle_overlay(pos, NORTH);
+        _add_tentacle_overlay(pos, EAST);
+        break;
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_SE:
+        _add_tentacle_overlay(pos, EAST);
+        _add_tentacle_overlay(pos, SOUTH);
+        break;
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SE_SW:
+        _add_tentacle_overlay(pos, SOUTH);
+        _add_tentacle_overlay(pos, WEST);
+        break;
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW_SW:
+        _add_tentacle_overlay(pos, NORTH);
+        _add_tentacle_overlay(pos, WEST);
+        break;
+    }
+}
+
 static tileidx_t _tileidx_tentacle(const monster *mon)
 {
     ASSERT(mon->type == MONS_KRAKEN_TENTACLE
@@ -2040,6 +2136,7 @@ static tileidx_t _tileidx_tentacle(const monster *mon)
         || n_pos.x == t_pos.x && n_pos.y < t_pos.y
            && t_pos.x > h_pos.x && t_pos.y < h_pos.y)
     {
+        _add_tentacle_overlay(t_pos, WEST);
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_SW;
     }
     if (h_pos.x == t_pos.x && h_pos.y < t_pos.y
@@ -2177,8 +2274,11 @@ static tileidx_t _tileidx_monster_no_props(const monster* mon)
 
         case MONS_KRAKEN_TENTACLE:
         case MONS_KRAKEN_TENTACLE_SEGMENT:
-            return _tileidx_tentacle(mon);
-
+        {
+            const tileidx_t t = _tileidx_tentacle(mon);
+            _handle_tentacle_overlay(mon->pos(), t);
+            return t;
+        }
         default:
             return _tileidx_monster_base(type, in_water, mon->colour,
                                          mon->number, tile_num);
