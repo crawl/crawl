@@ -42,6 +42,7 @@ void TabbedRegion::set_tab_region(int idx, GridRegion *reg, tileidx_t tile_tab)
         inf.ofs_y = 0;
         inf.min_y = 0;
         inf.max_y = 0;
+        inf.enabled = true;
         m_tabs.push_back(inf);
     }
 
@@ -87,6 +88,9 @@ void TabbedRegion::activate_tab(int idx)
     if (invalid_index(idx))
         return;
 
+    if (!m_tabs[idx].enabled)
+        return;
+
     if (m_active == idx)
         return;
 
@@ -116,9 +120,29 @@ bool TabbedRegion::invalid_index(int idx) const
     return (idx < 0 || (int)m_tabs.size() <= idx);
 }
 
+void TabbedRegion::enable_tab(int idx)
+{
+    if (invalid_index(idx))
+        return;
+
+    m_tabs[idx].enabled = true;
+    m_dirty = true;
+}
+
+void TabbedRegion::disable_tab(int idx)
+{
+    if (invalid_index(idx))
+        return;
+
+    m_tabs[idx].enabled = false;
+    m_dirty = true;
+}
+
 bool TabbedRegion::active_is_valid() const
 {
     if (invalid_index(m_active))
+        return (false);
+    if (!m_tabs[m_active].enabled)
         return (false);
     if (!m_tabs[m_active].reg)
         return (false);
@@ -150,7 +174,9 @@ void TabbedRegion::pack_buffers()
     for (int i = 0; i < (int)m_tabs.size(); ++i)
     {
         int ofs;
-        if (m_active == i)
+        if (!m_tabs[i].enabled)
+            continue;
+        else if (m_active == i)
             ofs = TAB_OFS_SELECTED;
         else if (m_mouse_tab == i)
             ofs = TAB_OFS_MOUSEOVER;
@@ -208,7 +234,7 @@ void TabbedRegion::on_resize()
 
     for (size_t i = 0; i < m_tabs.size(); ++i)
     {
-        if (!m_tabs[i].reg)
+        if (!m_tabs[i].reg || !m_tabs[i].enabled)
             continue;
 
         m_tabs[i].reg->place(reg_sx, reg_sy);
