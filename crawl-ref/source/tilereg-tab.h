@@ -30,6 +30,8 @@ public:
     void activate_tab(int idx);
     int active_tab() const;
     int num_tabs() const;
+    void enable_tab(int idx);
+    void disable_tab(int idx);
 
     virtual void update();
     virtual void clear();
@@ -63,6 +65,7 @@ protected:
         int ofs_y;
         int min_y;
         int max_y;
+        bool enabled;
     };
     std::vector<TabInfo> m_tabs;
 };
