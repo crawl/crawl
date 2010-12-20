@@ -47,13 +47,23 @@ A: To survive and to win, obviously. For this you need to find the fabled Orb of
 
 However, if you're new to the game, you really shouldn't worry about this. Just try to delve as deeply as possible and have fun exploring the many side branches in Crawl with various characters of different species, skill sets, and religions.
 %%%%
+Q:userdir
+
+I can't find my save files, morgue and character dumps? Where are they?
+%%%%
+A:userdir
+
+On Macs, they are now stored in ~/Library/Application Support/Dungeon Crawl Stone Soup (or similar).
+%%%%
 Q:drop
 
 How can I drop/pick up only part of a stack?
 %%%%
 A:drop
 
-A: Press 'd' (or ','/'g'), followed by a number (the amount), and finally the item's letter. For pickup, this is only possible when choosing items from a menu, i.e. ',,' or 'gg'. Stacks that are selected only in part are marked with '#' rather than '+'.
+A: When choosing items to drop or pick up from a menu, you can select part of a stack by first entering a number (the desired amount), followed by the item slot. Stacks that are selected only in part are marked with '#' rather than '+'.
+
+If you want to pick up part of a single-item stack, you can use the 'g' command, which will prompt you for the quantity, but otherwise behaves the same as ','.
 %%%%
 Q:roguelike difference
 
@@ -65,10 +75,10 @@ A: First, you might want to read the philosophy section in the manual ('?N') to 
 
 As for specific differences, the most important are probably the following:
 * Species is *much* more important than the character background (or "class").
-* Bones files only contain ghosts, never the dead character's equipment.
+* Bones files only contain ghosts, never their equipment or cause of death.
 * You cannot sell items to shops or elsewhere.
 * Resistances can be gained via mutations or items, never through eating.
-* For most gods in Crawl, prayer doesn't have any effect at all. Where it does, it has both benefits and drawbacks. Check '^' to find out more.
+* Praying is mostly used to offer items or corpses to gods who'll accept them. To make use of divine powers use the 'a'bility command.
 * There are inevitable deaths, but new players can win without spoilers, if they learn from their mistakes. Very good players win streaks.
 
 Also, our aim is to give Crawl a really smooth interface, so you should really read through the command list ('??') some time. The most intriguing "newish" commands are probably the following:
@@ -84,13 +94,13 @@ How can I avoid dying all the time? Can you give me some playing tips?
 %%%%
 A:survival
 
-A: If you've got trouble even reaching the Temple, you might want to try out the hints mode for some general playing hints.
+A: If you've got trouble even reaching the Temple, you might want to try a game or two in hints mode for some general playing hints.
 
 Also, there are easy playing combinations and more challenging ones (marked in dark grey on the selection screen). If you are new to Crawl, sticking to the easier ones is advisable. In general, treat each new monster you meet with utmost caution and keep an eye on your hit points and magic.
 
-For specific hints dealing with a particular character, you can press '#' in-game to create a "character dump" in your morgue directory that you can then post on e.g. the rec.games.roguelike.misc group or in the Something Awful forum, so other players can comment on your equipment, skills or spell selection.
+For specific hints dealing with a particular character, you can press '#' in-game to create a "character dump" in your morgue directory that you can then post e.g. in the Stonesoup forum (https://crawl.develz.org/tavern/) or on the rec.games.roguelike.misc group, so other players can comment on your equipment, skills or spell selection.
 
-Please try to trim your dump by removing stuff unnecessary for this task (such as the extensive Vanquished list). If you join the ##crawl channel of the freenode IRC, you will find helpful souls who will even watch you and give hints should you play on one of the public servers.
+Please try to trim your dump by removing stuff unnecessary for this task (such as the extensive Vanquished list). If you're playing online on one of the public servers, you can join the ##crawl channel of the freenode IRC, where you will find helpful souls who will even watch you and give hints.
 %%%%
 Q:downstairs
 
@@ -110,7 +120,10 @@ A:stuck
 
 A: Hopefully not. Search all the walls with '5' in case there's a secret door. If you really can't find any, it could be a bug and need fixing, so please report it on our Mantis tracker: http://crawl.develz.org/mantis/
 
-Be sure to upload your save file! (If you're playing online, you'll need to ask the admin to upload your save file, and can continue playing once they do so.)
+If you're playing locally, be sure to upload your save file!
+
+If you're playing online, please create a copy of your save file for the developers to access before you continue playing. On CDO, you can do this from the main menu; on CAO you need to use the !copysave IRC command: !copysave username reason.
+Don't forget to include the server and your username in your bug report!
 
 In the meantime, you can try to escape with digging, disintegration or teleportation.
 %%%%
@@ -158,7 +171,7 @@ A:weapons
 
 A: "Better" depends on a number of factors, such as your weapon skills, whether it's one- or two-handed, the randart properties, the weapon brand, and the monsters you're about to face. In general, switching from a weapon type at which you are already highly skilled to another one that you have no skill in is a waste of time. The brands may greatly differ in damage output, but you can get a good idea by bashing a few comparatively harmless monsters with each and comparing the results.
 
-Of the enchantments, the second value (damage) is usually more important than the first (accuracy), unless you hardly ever manage to hit with a weapon.
+Of the enchantments, the second value (damage) is usually much more important than the first (accuracy), unless you hardly ever manage to hit with a weapon. The delay in swinging a weapon can be reduced by the corresponding weapon skill.
 %%%%
 Q:religion
 
@@ -166,9 +179,11 @@ Which gods would you recommend to a beginning player?
 %%%%
 A:religion
 
-A: The easiest gods to play are probably Trog (for pure fighters), Vehumet or Sif Muna (for spellcasters), Beogh (for orcs), and Xom (for general fun).
+A: The easiest gods to play are probably Trog (for pure fighters), Vehumet or Sif Muna (for spellcasters), Yredelemnul (for ally-based play), and Okawaru (for pretty much everyone). Also, while unreliable, Xom can be a lot of fun.
 
-Whenever you encounter an altar, be sure to read the corresponding god's description and take your time in deciding whether to pick this deity or not.
+Whenever you encounter an altar, be sure to read the corresponding god's description and take your time in deciding whether to pick this deity or not. As a follower, you can reread your god's description, now more detailed via the '!' toggle, on the '^' screen.
+
+You're guaranteed to find altars to almost every god on the first nine levels of the main dungeon.
 %%%%
 Q:ghosts
 
@@ -189,16 +204,6 @@ I went down these stairs and got killed instantly! Is this a bug?
 A:instadeath
 
 A: Probably not. While your death might be due to an ill-placed vault (this would be a bug), it is generally just really bad luck. We believe that a game is more fun if the risk of death is real. This means that such instant deaths cannot be fully avoided, as Crawl relies on randomness for posing challenges. It is important to realize that for highly skilled players, the margin of such deaths is really slim...
-%%%%
-Q:zombified
-
-My zombies refuse to follow me into the next level. Is this a bug?
-%%%%
-A:zombified
-
-A: No, it's a deliberate design decision. As of version 0.5, zombies, skeletons and simulacra are considered too stupid to manoeuvre along staircases. We realize that this weakens Necromancers, but we consider the interface improvement of zombie herding's becoming unfeasible to be more important. Interestingly, this makes Necromancy and Yredelemnul more fun than before.
-
-Keep in mind that the same also applies to hostile undead of the same kind!
 %%%%
 Q:abyss
 
@@ -251,11 +256,21 @@ A: If you play online on http://crawl.akrasiac.org or http://crawl.develz.org, y
 
 Check docs/ssh_guide.txt or http://crawl.develz.org/wordpress/howto for an explanation about how to play online.
 
-You can also chat in the Crawl channel (irc.freenode.net, ##crawl), or discuss in the Something Awful forum or the rec.games.roguelike.misc newsgroup.
+You can also chat in the Crawl channel (irc.freenode.net, ##crawl), or discuss in the Stonesoup forum (https://crawl.develz.org/tavern/), or in one of the other forums linked on the website.
 %%%%
 ##############################################
 # Questions about the development process.
 ##############################################
+Q:version
+
+When will development reach the "stable" version 1.0?
+%%%%
+A:version
+
+A: Actually, by now we consider Stonesoup to be reasonably stable for a game of such active development, so please don't get hung up about the 0.X versioning and give it a try.
+
+We've mostly kept the versioning for historic reasons and because it might cause undue confusion. We might decide to change that at some point, but maybe we won't.
+%%%%
 Q:beta
 
 Is there a way for me to play the new version before it is released?
@@ -264,7 +279,7 @@ A:beta
 
 A: There certainly is! You can play "trunk" (what will eventually become the next version) online on http://crawl.develz.org, or you can download Windows and Mac binaries from the same site. Note that trunk may be buggy, and that some changes may invalidate your saved games. If that doesn't bother you, go ahead and play!
 
-Be sure to leave some feedback/suggestions/bug reports on the Mantis tracker: http://crawl.develz.org/mantis/, and Mantis wiki: http://crawl.develz.org/wiki/doku.php?id=start
+Be sure to reports bugs on our bug tracker (http://crawl.develz.org/mantis/) and to leave some feedback/suggestions on the development wiki (http://crawl.develz.org/wiki).
 
 When doing so, please mention the version (see '?v') you're currently playing, in case the bug's already been fixed or the feature already implemented.
 %%%%
@@ -282,7 +297,9 @@ and give as much information as you can:
   (If you're not sure, you can check in-game with '?v'.)
 * Console or tiles?
 
-Sometimes a screenshot can be helpful. For crashes or monsters/items/levels behaving oddly, we probably need a save file. To be on the safe side, attach the entire zipped or tarballed save of the character in question. If there are error messages, please write them down. Short of a save file, a guide on how to reproduce the crash (or bug) can be useful; you can use wizard mode for this.
+For crashes or monsters/items/levels behaving oddly, we probably need a save file. If you're playing online, please create a copy of your save file for the developers to access before you continue playing. On CDO, you can do this from the main menu; on CAO you need to use the !copysave IRC command: !copysave username reason. Don't forget to include the server and your username in your bug report!
+
+Sometimes a screenshot can be helpful. If there are error messages, please write them down. Short of a save file, a guide on how to reproduce the crash (or bug) can be useful; you can use wizard mode for this.
 
 Thanks in advance!
 %%%%
@@ -348,7 +365,7 @@ A: There are several areas where you can get creative and outside help is much a
 
 Also, if you'd like to write a patch but don't know how to go about it, read patch_guide.txt in the docs/develop/ directory.
 
-If you've got some cool addition, you can send it over the mailing list, or post it as a Mantis item. You can also help us by giving feedback on the most recent version or trunk (available via git, Windows binaries downloadable from http://crawl.develz.org/trunk/).
+If you've got some cool addition, you can send it over the mailing list, or post it as a Mantis item. You can also help us by giving feedback on the most recent version or trunk (available via git, Windows and Mac binaries downloadable from http://crawl.develz.org/trunk/).
 
 Thanks a lot for your support!
 %%%%
@@ -381,25 +398,10 @@ Can I play Tiles online?
 %%%%
 A:tiles online
 
-A: Sadly, no, that's not possible at the moment. We are planning to change that, but so far we haven't even decided how to go about it, and so it's still far off.
+A: For 0.6, a tile-based interface is available at http://crawl.chaosforge.org/index.php?title=NetTiles, though it is missing some features of the official, local Tiles version.
+For more recent versions, no, that's not possible at the moment. We are working on changing that, but it'll take a while.
 
 If you can, do give the console version a try: playing online is certainly worth it.
-%%%%
-Q:tiles graphics
-
-Is there a way for me to replace some of the tiles with different ones?
-%%%%
-A:tiles graphics
-
-A: It depends. If all you want are minor modifications such as colour changes, you can directly modify the *.png files in the dat/tiles/ directory.
-
-Otherwise, you'll need to be able to compile the game. In this case you can either directly replace the tiles in the rltiles/ subdirectories, or change their paths in the dc-xxxx.txt files. For the compilation to be successful, you may also need to delete or rename the *.png files in rltiles/. Upon compilation, the newly rolled *.png files are copied into the dat/tiles/ directory which is where the game accesses the tiles it needs. You can then share these files with other players, so they can use your tileset without having to compile the game.
-
-If you've created some nice new tiles or variations of existing ones you'd like to share, you might want to send them to one of the Tiles developers or submit them as a Mantis item: http://crawl.develz.org/mantis/
-
-See http://crawl.develz.org/wiki/doku.php?id=dcss:help:tiles_creation or docs/develop/tiles_creation.txt for a somewhat more detailed explanation.
-
-Thanks in advance!
 %%%%
 Q:tiles options
 
@@ -407,5 +409,5 @@ Is there a way to modify the size of the tiles screen, the font, etc.?
 %%%%
 A:tiles options
 
-A: Yes. Play around with the options in settings/tiles_options.txt until you are satisfied. See docs/options_guide.txt for some explanations.
+A: Yes: Play around with the options in settings/tiles_options.txt until you are satisfied. See docs/options_guide.txt for some explanations.
 %%%%
