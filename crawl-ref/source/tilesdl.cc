@@ -920,12 +920,13 @@ bool TilesFramework::layout_statcol(bool message_overlay, bool show_gold_turns)
     int lines = (m_region_spl->get_max_slots() - 1) / m_region_tab->mx + 1;
     int delta_y = m_region_tab->dy * lines + tab_margin;
 
-    if (delta_y < m_region_tab->sy - m_region_map->ey)
+    if (delta_y < m_region_tab->sy - m_region_map->ey && you.spell_no > 0)
     {
         m_layers[LAYER_NORMAL].m_regions.push_back(m_region_tsp);
         m_region_tsp->place(inv_col, m_region_tab->sy - delta_y);
         m_region_tsp->resize(m_region_tab->mx, lines);
         m_region_tsp->enable_tab(0);
+        m_region_tsp->activate_tab(0);
         m_region_tab->disable_tab(TAB_SPELL);
     }
     else
