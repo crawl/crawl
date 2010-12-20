@@ -234,11 +234,12 @@ void TabbedRegion::on_resize()
 
     for (size_t i = 0; i < m_tabs.size(); ++i)
     {
-        if (!m_tabs[i].reg || !m_tabs[i].enabled)
+        if (!m_tabs[i].reg)
             continue;
 
         m_tabs[i].reg->place(reg_sx, reg_sy);
-        m_tabs[i].reg->resize(mx, my);
+        if (m_tabs[i].enabled)
+            m_tabs[i].reg->resize(mx, my);
     }
 }
 
