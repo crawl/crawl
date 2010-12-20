@@ -3,9 +3,103 @@
 ################################################################################
 
 ##############################################################################
-# Non-ending vaults
+# Shoals entry vaults
 ##############################################################################
 
+NAME:   shoals_dummy_entry
+TAGS:   shoals_entry
+KFEAT:  O = enter_shoals
+MAP
+O
+ENDMAP
+
+NAME:   minmay_shoals_entry_lonely_mermaid
+TAGS:   shoals_entry no_monster_gen
+ORIENT: float
+KMONS:  1 = mermaid
+KFEAT:  1 = w
+SUBST:  Y = W.
+SUBST:  y = Ww
+KFEAT:  O = enter_shoals
+MAP
+     xx...@...xx
+   xxxWY.....YWxxx
+ xxxyWWWY...YWWWyxxx
+xxwyWWWWxxxxxWWWWywxx
+xwwyOWyxx   xxyW1ywwx
+xwwwyyxx     xxyywwwx
+xxwwwxx       xxwwwxx
+ xxxxx         xxxxx
+ENDMAP
+
+NAME:   minmay_shoals_entry_hut
+TAGS:   shoals_entry
+MONS:   snapping turtle
+SUBST:  W = WWWw, w = wwwW
+TILE:   x = wall_vines
+KFEAT:  O = enter_shoals
+MAP
+  WWWWWWW
+ WWwwwwwWW
+WWwxxxxxwWW
+Wwxx1..xxwW
+Wwx.....xwW
+Wwx..O..+.@
+Wwx.....xwW
+Wwxx...xxwW
+WWwxxxxxwWW
+ WWwwwwwWW
+  WWWWWWW
+ENDMAP
+
+NAME:   minmay_shoals_entry_centaurs
+TAGS:   shoals_entry
+MONS:   centaur / nothing w:5, plant / nothing w:20
+KFEAT:  O = enter_shoals
+MAP
+   .......
+  .2222222.
+ .222...222.
+.222.222...2.
+.22.2222222.2
+.2.22.112222.
+.2.221O1222.2
+.2.22.12.22.2
+.22.2222.222.
+.222....2222.
+ .222222222.
+  .22.2..2.
+   ..2.22.
+ENDMAP
+
+NAME:   minmay_shoals_entry_beasts
+TAGS:   shoals_entry
+MONS:   hippogriff / manticore / griffon / nothing w:60
+KFEAT:  O = enter_shoals
+MAP
+111
+1O1
+111
+ENDMAP
+
+NAME:   minmay_shoals_entry_sharks
+TAGS:   shoals_entry
+KMONS:  w = shark / nothing w:50
+KFEAT:  w = w
+KFEAT:  O = enter_shoals
+MAP
+ WWWWW
+WWwwwWW
+WwwwWwW
+WwwOwwW
+WwwwwwW
+WWwwwWW
+ WWWWW
+ENDMAP
+
+##############################################################################
+# Non-ending non-entry vaults
+##############################################################################
 
 ###########################
 # Shoal Ruins - nothing special, just some flavor (Enne)
@@ -223,6 +317,7 @@ x.0.0.x
 xx.0.xx
  xxAxx
 ENDMAP
+
 ################################################################################
 # Shoal hangout of Ilsuiw. Using PLACE: makes this quite likely to turn up.
 # The hut itself may not contain Ilsuiw if she had other engagements.
