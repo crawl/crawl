@@ -313,7 +313,7 @@ A: Sorry, but no. At least not on ideas alone.
 
 All of the devteam members submitted a number of code intensive patches and/or took over responsibility over an important side project before joining. A good way to become indispensable is to help us with patches or vaults, etc.
 
-Please add your ideas in the appropriate section of the Mantis wiki: http://crawl.develz.org/wiki/doku.php?id=start
+Please add your ideas in the appropriate section of the Mantis wiki: http://crawl.develz.org/wiki
 
 If they catch the interest of at least one coder, chances are they'll make it into the game.
 
