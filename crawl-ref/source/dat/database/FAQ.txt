@@ -49,7 +49,7 @@ However, if you're new to the game, you really shouldn't worry about this. Just 
 %%%%
 Q:userdir
 
-I can't find my save files, morgue and character dumps? Where are they?
+I can't find my save files, morgue and character dumps. Where are they?
 %%%%
 A:userdir
 
