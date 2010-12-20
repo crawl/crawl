@@ -19,6 +19,10 @@ public:
     virtual int       mindex() const = 0;
     virtual actor_type atype() const = 0;
 
+    virtual bool is_player() const
+    {
+        return atype() == ACT_PLAYER;
+    }
     virtual monster* as_monster() = 0;
     virtual player* as_player() = 0;
     virtual const monster* as_monster() const = 0;
@@ -225,6 +229,7 @@ public:
     virtual bool is_insubstantial() const = 0;
     virtual int res_acid() const = 0;
     virtual int res_fire() const = 0;
+    virtual int res_holy_fire() const;
     virtual int res_steam() const = 0;
     virtual int res_cold() const = 0;
     virtual int res_elec() const = 0;

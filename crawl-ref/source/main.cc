@@ -2725,8 +2725,9 @@ static void _player_reacts()
             you_teleport_now(false, true); // to new area of the Abyss
     }
 
+    actor_apply_cloud(&you);
     if (env.cgrid(you.pos()) != EMPTY_CLOUD)
-        in_a_cloud();
+        actor_apply_cloud(&you);
 
     slime_wall_damage(&you, you.time_taken);
 
