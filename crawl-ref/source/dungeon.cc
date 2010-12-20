@@ -123,9 +123,7 @@ static void _place_specific_stair(dungeon_feature_type stair,
 static void _place_branch_entrances(int dlevel, level_area_type level_type);
 static void _place_extra_vaults();
 static void _place_chance_vaults();
-static void _place_minivaults(const std::string &tag = "",
-                              int fewest = -1, int most = -1,
-                              bool force = false);
+static void _place_minivaults(void);
 static int _place_uniques(int level_number, level_area_type level_type);
 static void _place_traps(int level_number);
 static void _place_fog_machines(int level_number);
@@ -2650,27 +2648,9 @@ static void _place_chance_vaults()
     }
 }
 
-static void _place_minivaults(const std::string &tag, int lo, int hi,
-                              bool force)
+static void _place_minivaults(void)
 {
     const level_id curr = level_id::current();
-
-    if (lo == -1)
-        lo = hi = 1;
-
-    int nvaults = random_range(lo, hi);
-    if (!tag.empty())
-    {
-        for (int i = 0; i < nvaults; ++i)
-        {
-            const map_def *vault = random_map_for_tag(tag, true);
-            if (!vault)
-                return;
-
-            _build_secondary_vault(you.absdepth0, vault);
-        }
-        return;
-    }
 
     if (use_random_maps)
     {
