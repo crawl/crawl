@@ -1224,3 +1224,44 @@ MAP
     ...................
         ...........
 ENDMAP
+
+################################################################################
+# See https://crawl.develz.org/wiki/doku.php?id=dcss:brainstorm:branch:forest.
+#
+NAME:   minmay_lair_end_enchanted_forest
+PLACE:  Lair:$
+ORIENT: northwest
+MONS:   black bear / bear / grizzly bear, wolf, spriggan
+MONS:   spriggan rider / spriggan druid
+SUBST:  T : T:20 .:1 t:1
+SUBST:  T = t.
+SUBST:  2 = 2., 3 = 3., 4 = 4., . = .:190 1
+MAP
+ttttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttT.I.Ttttttt....ttttttttt.....ttTTtttttTT
+ttttttttt3....TTT....ttT...TTT....ttT.2222TTtt..@
+tttttttTT.3.3....TTttttttT..3...TttttttTT222..ttT
+tttttT.....4..3TtttttttttT3...3ttttttttt22ttttttt
+ttttt..ttT3.3.TtttttttttT....3.tttttttt..tttttttT
+tttt.ttttttttttttttttttt....tt..TttT...TT.tttttt
+tttT2ttttttttttttttttT...TTttttt.....ttttT.Tttt
+ttT22tttT.4TtttttttT....tttttttttTTttttttt..ttT
+tt22ttt..3..tttttt..TTT.ttttttttttttttttttt.tt
+tt22tttT..3.ttttT.Tttttt.22tttttttttttttttT.tt
+tt2tttttt..TtttT2TtttttttT22TttttttttttttT.ttt
+tt2ttttttt.TtTT22tttttttttT222ttttttttttt.tttt
+tt..tttttTT..222Ttttttttttttt22ttTTTTtt..TtttT
+ttT.tttt.....TTT222TttttttttttT...TT...TttttT
+ttt..tt...TTttttttt..TTttttttttt..3...Tttttt
+tttT....TtttttttttttT@   TTttttt34.3.ttttttT
+ttttT..tttttttttttttT      TTttttT..tttttT
+ttttT..TtttttttttttT          ttttttttt
+ttttt...ttttttttttT            ttttttt
+tttttT..TttttttT                 TTT
+ttttttt.@ttT
+ttttttT
+tttT
+tT
+t
+ENDMAP
