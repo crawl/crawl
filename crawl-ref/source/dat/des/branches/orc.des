@@ -464,7 +464,7 @@ ENDMAP
 ###################################
 # mage tower -- either orc with assistants, or ogre with guards
 NAME:    mines4_lemuel
-TAGS:    mini_float no_rotate
+TAGS:    no_rotate
 SUBST:   ? = +=
 SUBST:   d = $d
 SUBST:   I = IG
@@ -486,7 +486,6 @@ ENDMAP
 ###################################
 # warg stables, with goblin stableboy
 NAME:  mines5_lemuel
-TAGS:  mini_float
 SUBST: ?: wx
 MONS:  warg / wolf,goblin
 MAP
@@ -539,7 +538,6 @@ ENDMAP
 # hidden treasure chamber
 #
 NAME: mines2_lemuel
-TAGS: mini_float
 SUBST: ? = x@
 MAP
   ?x=x?
@@ -554,7 +552,6 @@ ENDMAP
 # treasure chamber with oklob plant
 #
 NAME:  mines3_lemuel
-TAGS:  mini_float
 SUBST: ? = +=.
 SUBST: ! = x@
 SUBST: $ = $:30 *
