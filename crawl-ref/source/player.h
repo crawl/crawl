@@ -25,6 +25,7 @@
 #include "tiledoll.h"
 #endif
 
+typedef FixedVector<int, NUM_DURATIONS> durations_t;
 class player : public actor
 {
 public:
@@ -93,7 +94,7 @@ public:
 
   int absdepth0; // offset by one (-1 == 0, 0 == 1, etc.) for display
 
-  FixedVector<int, NUM_DURATIONS> duration;
+  durations_t duration;
   int rotting;
   int berserk_penalty;                // penalty for moving while berserk
 
@@ -542,6 +543,7 @@ public:
     bool is_artificial() const;
     bool is_unbreathing() const;
     bool is_insubstantial() const;
+    bool is_cloud_immune(cloud_type) const;
     int res_acid() const;
     int res_fire() const;
     int res_steam() const;

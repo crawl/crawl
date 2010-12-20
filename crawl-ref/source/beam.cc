@@ -3766,6 +3766,8 @@ bool bolt::damage_ignores_armour() const
 bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
                             std::vector<std::string>& messages)
 {
+    preac = postac = final = 0;
+
     // [ds] Changed how tracers determined damage: the old tracer
     // model took the average damage potential, subtracted the average
     // AC damage reduction and called that the average damage output.

@@ -84,6 +84,16 @@ bool actor::handle_trap()
     return (trap != NULL);
 }
 
+
+int actor::res_holy_fire() const
+{
+    if (is_evil() || is_unholy())
+        return (-1);
+    else if (is_holy())
+        return (3);
+    return (0);
+}
+
 int actor::check_res_magic(int power)
 {
     const int mrs = res_magic();
