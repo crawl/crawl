@@ -338,14 +338,14 @@ bool TilesFramework::initialise()
     m_region_skl  = new SkillRegion(init);
 
     m_region_tab->set_tab_region(TAB_ITEM, m_region_inv, TILEG_TAB_ITEM);
-    //m_region_tab->set_tab_region(TAB_SPELL, m_region_spl, TILEG_TAB_SPELL);
+    m_region_tab->set_tab_region(TAB_SPELL, m_region_spl, TILEG_TAB_SPELL);
     m_region_tab->set_tab_region(TAB_MEMORISE, m_region_mem, TILEG_TAB_MEMORISE);
     m_region_tab->set_tab_region(TAB_MONSTER, m_region_mon, TILEG_TAB_MONSTER);
     m_region_tab->set_tab_region(TAB_SKILL, m_region_skl, TILEG_TAB_SKILL);
     m_region_tab->activate_tab(TAB_ITEM);
 
     m_region_tsp->set_tab_region(0, m_region_spl, TILEG_TAB_SPELL);
-    m_region_tsp->activate_tab(0);
+    m_region_tsp->disable_tab(0);
 
     m_region_msg  = new MessageRegion(m_fonts[m_msg_font].font);
     m_region_stat = new StatRegion(m_fonts[stat_font].font);
@@ -925,9 +925,15 @@ bool TilesFramework::layout_statcol(bool message_overlay, bool show_gold_turns)
         m_layers[LAYER_NORMAL].m_regions.push_back(m_region_tsp);
         m_region_tsp->place(inv_col, m_region_tab->sy - delta_y);
         m_region_tsp->resize(m_region_tab->mx, lines);
+        m_region_tsp->enable_tab(0);
+        m_region_tab->disable_tab(TAB_SPELL);
     }
     else
-        m_region_tab->set_tab_region(TAB_SPELL, m_region_spl, TILEG_TAB_SPELL);
+    {
+        m_region_tsp->disable_tab(0);
+        m_region_tab->enable_tab(TAB_SPELL);
+    }
+
 
     int num_items = m_region_tab->mx * (m_region_tab->my - 1);
     return (num_items >= ENDOFPACK);
