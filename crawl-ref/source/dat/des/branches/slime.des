@@ -3,7 +3,7 @@
 ###############################################################################
 
 ##############################################################################
-# Slime Pit specific non-ending vaults
+# Slime Pit entry vaults
 ##############################################################################
 
 # Weight balancer
@@ -49,9 +49,109 @@ c111m.
 ccccc
 ENDMAP
 
+NAME:   minmay_slime_entry_eyes
+TAGS:   slime_entry ruin_lair
+WEIGHT: 2
+MONS:   eye of devastation, eye of draining / giant eyeball
+KFEAT:  O = enter_slime_pits
+MAP
+ ....   ....
+..xx..x..xx..
+.xxxx.x.xxxx.
+.xxx..x..xxx.
+..x.x...x.x..
+ ...........
+ xxx.1O2.xxx
+ ...........
+..x.x...x.x..
+.xxx..x..xxx.
+.xxxx.x.xxxx.
+..xx..x..xx..
+ ....   ....
+ENDMAP
+
+NAME:   minmay_slime_entry_pillars
+TAGS:   slime_entry ruin_lair
+MONS:   giant amoeba / brown ooze
+KFEAT:  O = enter_slime_pits
+MAP
+...........
+.ccc...ccc.
+.ccc.1.ccc.
+.ccc...ccc.
+...........
+..1..O..1..
+...........
+.ccc...ccc.
+.ccc.1.ccc.
+.ccc...ccc.
+...........
+ENDMAP
+
+# In-game the boxes rarely stay closed due to ruination; this is intentional.
+NAME:   minmay_slime_entry_jelly_boxes
+TAGS:   slime_entry ruin_lair
+WEIGHT: 5
+MONS:   jelly / ooze w:1 / nothing w:1
+KFEAT:  O = enter_slime_pits
+MAP
+.............
+.xxxxx.xxxxx.
+.xxx1x.x11xx.
+.xx11x.xx1xx.
+.xx1x...x1xx.
+.xxxx....xxx.
+......O......
+.xxxx...xxxx.
+.xx1.x.x.1xx.
+.x11x.xx11xx.
+.xx1x.xxxxxx.
+.xxxxx.xxxxx.
+.............
+ENDMAP
+
+NAME:   minmay_slime_entry_oklob_open
+TAGS:   slime_entry
+WEIGHT: 8
+MONS:   oklob plant / nothing w:20
+KFEAT:  O = enter_slime_pits
+MAP
+ .....
+.......
+..111..
+..1O1..
+..111..
+.......
+ .....
+ENDMAP
+
+NAME:   minmay_slime_entry_oklob_enclosed
+TAGS:   slime_entry ruin_lair
+ORIENT: northeast
+WEIGHT: 2
+MONS:   oklob plant / nothing w:20
+KFEAT:  O = enter_slime_pits
+MAP
+xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxx......xxxxxx
+xxxxxx...........xxxx
+xxx11.......xx....xxx
+xxx11.....xxxx....xxx
+xxxO11..xxxxx....xxxx
+xxxx11xxxxxx.....xxxx
+xxxxxxxxxxx.....xxxxx
+xxxxxxxxxx.....xxxxxx
+xxxxxxxx.....xxxxxxxx
+xxxxxxx.@..xxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Slime Pit specific non-ending non-entry vaults
+##############################################################################
+
 ################################################################################
 # Slime Pit
-#
+################################################################################
 NAME:    slime_pit
 PLACE:   Slime:6
 ORIENT:  encompass

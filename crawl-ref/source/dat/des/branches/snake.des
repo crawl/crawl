@@ -2,6 +2,123 @@
 # snake.des: All maps and branch endings relating to the Snake Pit.
 ###############################################################################
 
+##############################################################################
+# Snake Pit entry vaults
+##############################################################################
+
+NAME:   dummy_snake_entry
+TAGS:   snake_entry
+KFEAT:  O = enter_snake_pit
+MAP
+O
+ENDMAP
+
+NAME:   minmay_snake_entry_guardpost_small
+TAGS:   snake_entry
+ORIENT: float
+MONS:   naga, naga / nothing w:3
+KFEAT:  O = enter_snake_pit
+MAP
+ccc.@.ccc
+c.......c
+c.2...2.c
+.........
+@...O...@
+.........
+c.1...2.c
+c.......c
+ccc.@.ccc
+ENDMAP
+
+NAME:   minmay_snake_entry_guardpost_medium
+TAGS:   snake_entry
+WEIGHT: 5
+ORIENT: float
+MONS:   naga, naga / nothing
+KFEAT:  O = enter_snake_pit
+MAP
+   ccccccc
+ ccc.....ccc
+cc2.......2cc
+c...c2.1c...c
+@...c.O.c...@
+c...c1.2c...c
+cc2.......2cc
+ ccc.....ccc
+   ccccccc
+ENDMAP
+
+NAME:   minmay_snake_entry_guardpost_large
+TAGS:   snake_entry
+WEIGHT: 2
+ORIENT: float
+MONS:   naga warrior, naga / nothing
+KFEAT:  O = enter_snake_pit
+MAP
+c@ccccccc
+c.......cc
+c..c.c..2cc
+c.........cc
+c..c.c.c..2cc
+c......2....cc
+cc2..c1O2c..2cc
+ cc....2......c
+  cc2..c.c.c..c
+   cc.........c
+    cc2..c.c..c
+     cc.......c
+      ccccccc@c
+ENDMAP
+
+NAME:   minmay_snake_entry_six_corridors
+TAGS:   snake_entry ruin_lair
+ORIENT: float
+DEPTH:  Lair:5-
+MONS:   small snake, snake, water moccasin, viper, black mamba
+KMONS:  P = plant / fungus w:1 / nothing
+SUBST:  1 = 1., 2 = 2., 3 = 3.
+SUBST:  1 = 1222233334, 2 = 122333345, 3 = 33455
+KFEAT:  O = enter_snake_pit
+MAP
+xxxx.@1xxxxxxP@xxxxx
+xxxx1.PxxxxxP..xxxxx
+xxxxx..xxxxx1.xxxxxx
+xxxxxP..xxxx..xxxxxx
+xxxxxP.1xxxx2..xxxxx
+xxxxxx..Pxxxx1Pxxxxx
+xxxxxxx2.xxxP.xxxxxx
+xxxxxxxP1xx1..xxxxxx
+xxxxxxxx...3.xxxxxxx
+xxxxxxxP1..P1.xxxxxx
+xx21xxP..PO.P..2xx1P
+P.....1.3.1.xx.....@
+@.1PxxxP..xxxx.Px1P.
+xxxxxxxx.1xxxx2xxxxx
+xxxxxxxx..Pxx..xxxxx
+xxxxxxxx..PxxP.1xxxx
+xxxxxxx1.2xxxx..xxxx
+xxxxxxxP.xxxxxx1..Px
+xxxxxxx.1xxxxxxxP...
+xxxxxx.@.Pxxxxxxxx.@
+ENDMAP
+
+NAME:   minmay_snake_entry_spellcaster
+TAGS:   snake_entry
+ORIENT: float
+DEPTH:  Lair:5-
+WEIGHT: 2
+MONS:   naga mage / guardian serpent
+KFEAT:  O = enter_snake_pit
+MAP
+...
+.O1
+...
+ENDMAP
+
+##############################################################################
+# Snake Pit specific non-ending non-entry vaults
+##############################################################################
+
 NAME:   minmay_snake_pond
 DEPTH:  Snake
 MONS:   small snake w:3 / snake / water moccasin
