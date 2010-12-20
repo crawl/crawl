@@ -3271,6 +3271,10 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     case MONS_SPHINX:
         return TILE_CORPSE_SPHINX;
 
+    // beasts ('I')
+    case MONS_SKY_BEAST:
+        return TILE_CORPSE_SKY_BEAST;
+        
     // jellies ('J')
     case MONS_GIANT_AMOEBA:
         return TILE_CORPSE_GIANT_AMOEBA;

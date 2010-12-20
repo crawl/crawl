@@ -258,6 +258,9 @@ minotaur CORPSE_MINOTAUR
 sphinx CORPSE_SPHINX
 kenku CORPSE_KENKU
 
+## Sky beast ('I')
+sky_beast CORPSE_SKY_BEAST
+
 ## Jellies ('J')
 %back dc-misc/blood_green
 giant_amoeba CORPSE_GIANT_AMOEBA
