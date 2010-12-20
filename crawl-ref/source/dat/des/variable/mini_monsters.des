@@ -66,7 +66,7 @@ ENDMAP
 
 NAME:    eino_jars
 DEPTH:   D:4-14
-TAGS:    mini_float extra luniq_mini
+TAGS:    extra luniq_mini
 SHUFFLE: 11%
 : if you.absdepth() >7 then
 MONS:    killer bee / nothing w:5
@@ -330,7 +330,6 @@ MAP
 ENDMAP
 
 NAME:  minmay_rats_cheese
-TAGS:  mini_float
 DEPTH: D:2-3
 MONS:  rat
 ITEM:  cheese
@@ -351,7 +350,6 @@ xxxxxxxxxxxxx
 ENDMAP
 
 NAME:  minmay_rat_hole
-TAGS:  mini_float
 DEPTH: D:2-4
 MONS:  rat / grey rat w:1
 ITEM:  cheese w:30 / bread ration / meat ration / nothing w:60
@@ -369,7 +367,7 @@ xxxx111xx
 ENDMAP
 
 NAME:  minmay_snake_closets
-TAGS:  mini_float no_monster_gen no_item_gen
+TAGS:  no_monster_gen no_item_gen
 DEPTH: D:2-4
 MONS:  snake / small snake
 ITEM:  any scroll / any potion
@@ -616,7 +614,7 @@ ENDMAP
 ###############################################################################
 
 NAME:    minmay_goblin_outpost
-TAGS:    mini_float no_pool_fixup
+TAGS:    no_pool_fixup
 DEPTH:   D:2-4
 MONS:    goblin / hobgoblin w:5, goblin; sling . stone q:20
 SUBST:   y = .WWw, Y = ...W, . = .....1
@@ -637,7 +635,7 @@ xxxxxxxxx
 ENDMAP
 
 NAME:  minmay_goblin_kobold_house
-TAGS:  mini_float no_monster_gen
+TAGS:  no_monster_gen
 DEPTH: D:2-4
 MONS:  goblin / hobgoblin, kobold
 SUBST: . = 1%......
@@ -691,7 +689,6 @@ MAP
 ENDMAP
 
 NAME:  minmay_orc_keep
-TAGS:  mini_float
 DEPTH: D:8-, Orc
 : if you.absdepth() > 24 then
 MONS:  orc knight, orc warlord, orc sorcerer / orc high priest
@@ -720,7 +717,6 @@ ENDMAP
 
 NAME:   minmay_ogre_servants
 DEPTH:  D:3-6
-TAGS:   mini_float
 MONS:   ogre
 NSUBST: " = 6:" / *:'
 KITEM:  ' = meat ration
@@ -736,7 +732,6 @@ ENDMAP
 # Darts of dispersal
 NAME:   minmay_kobolds_dispersive
 DEPTH:  D:6-12
-TAGS:   mini_float
 WEIGHT: 5
 MONS:   kobold; dart ego:dispersal q:2 / w:3 big kobold; dart ego:dispersal q:4
 MAP
@@ -749,7 +744,6 @@ ENDMAP
 # Darts of explosion
 NAME:   minmay_kobolds_explosive
 DEPTH:  D:8-14
-TAGS:   mini_float
 WEIGHT: 5
 MONS:   kobold; dart ego:exploding q:2 / w:3 big kobold; dart ego:exploding q:4
 MAP
@@ -784,7 +778,6 @@ ENDMAP
 
 # Very unpleasant kobold minivault
 NAME:   minmay_kobolds_curare
-TAGS:   mini_float
 WEIGHT: 5
 DEPTH:  D:12-18
 MONS:   kobold; blowgun . needle ego:curare q:1 / \
@@ -820,7 +813,7 @@ ENDMAP
 NAME:   corexii_checkpoint_a
 DEPTH:  D, Elf
 WEIGHT: 7
-TAGS:   no_monster_gen no_item_gen allow_dup extra luniq_mini mini_float
+TAGS:   no_monster_gen no_item_gen allow_dup extra luniq_mini
 NSUBST: 1 = 2:1 / *:.
 : if you.branch() == "Elf" then
 MONS:   elf
@@ -839,7 +832,7 @@ ENDMAP
 NAME:    corexii_checkpoint_b
 DEPTH:   D, Elf
 WEIGHT:  3
-TAGS:    no_monster_gen no_item_gen allow_dup extra luniq_mini mini_float
+TAGS:    no_monster_gen no_item_gen allow_dup extra luniq_mini
 SHUFFLE: mA
 SUBST:   A = x
 NSUBST:  1 = 2:1 / *:.
@@ -1080,7 +1073,6 @@ ENDMAP
 ################################################################################
 
 NAME:   minmay_hunger
-TAGS:   mini_float
 DEPTH:  D:10-16
 WEIGHT: 5
 MONS:   hungry ghost
@@ -1096,7 +1088,6 @@ ccc+ccc
 ENDMAP
 
 NAME:  minmay_nine_imps
-TAGS:  mini_float
 DEPTH: D:7-14
 MONS:  imp / white imp w:3 / shadow imp w:1
 MAP
@@ -1108,7 +1099,6 @@ xx+xx
 ENDMAP
 
 NAME:    minmay_room_of_horrors
-TAGS:    mini_float
 DEPTH:   D:16-
 MONS:    small abomination, large abomination, unseen horror / chaos spawn
 KFEAT:   _ = enter_abyss
@@ -1321,7 +1311,6 @@ MAP
 ENDMAP
 
 NAME:  minmay_brain_eaters
-TAGS:  mini_float
 DEPTH: D:10-18
 MONS:  brain worm, neqoxec
 MAP
@@ -1566,7 +1555,6 @@ WWWWWWWWWWWWWW
 ENDMAP
 
 NAME:  minmay_archer_statue_crystal
-TAGS:  mini_float
 DEPTH: D:10-, Vault, Elf
 MONS:  statue name:archer tile:mons_statue_archer name_adjective; \
        longbow ego:frost | longbow ego:flame . arrow q:40
@@ -1596,7 +1584,6 @@ MAP
 ENDMAP
 
 NAME:  minmay_more_statues
-TAGS:  mini_float
 DEPTH: D:12-26
 MONS:  ice statue w:5 / silver statue / orange crystal statue
 MAP
@@ -1998,7 +1985,6 @@ ENDMAP
 
 # Evil grid
 NAME:   minmay_evil_grid
-TAGS:   mini_float
 DEPTH:  D:8-
 NSUBST: A = 7:+ / *:c
 NSUBST: B = 1:= / *:c

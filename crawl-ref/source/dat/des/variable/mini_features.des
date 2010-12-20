@@ -296,7 +296,7 @@ ENDMAP
 NAME:   corexii_corridor_pit
 DEPTH:  D
 TAGS:   no_pool_fixup no_monster_gen no_item_gen
-TAGS:   allow_dup extra luniq_mini mini_float
+TAGS:   allow_dup extra luniq_mini
 : if crawl.random2(5) == 0 then
 :   subst("l = W")
 :   subst("= = x")
@@ -327,7 +327,7 @@ ENDMAP
 NAME:   corexii_hall_statues_deadend
 DEPTH:  D, Elf, Crypt, Snake
 WEIGHT: 1
-TAGS:   extra mini_float allow_dup serial_corexii_hall
+TAGS:   extra allow_dup serial_corexii_hall
 SUBST:  T = T:2 V:2 G:1
 NSUBST: ? = 1:% / *:.
 MAP
@@ -343,7 +343,7 @@ ENDMAP
 NAME:   corexii_hall_statues_i
 DEPTH:  D, Elf, Crypt, Snake
 WEIGHT: 2
-TAGS:   extra mini_float allow_dup serial_corexii_hall
+TAGS:   extra allow_dup serial_corexii_hall
 SUBST:  T = T:2 V:2 G:1
 SUBST:  T = T:1 G:4, T = T V
 MAP
@@ -359,7 +359,7 @@ ENDMAP
 NAME:   corexii_hall_statues_l
 DEPTH:  D, Elf, Crypt, Snake
 WEIGHT: 2
-TAGS:   extra mini_float allow_dup serial_corexii_hall
+TAGS:   extra allow_dup serial_corexii_hall
 SUBST:  T = T:1 G:2, T = T V
 MAP
 xx@@@xx
@@ -380,7 +380,7 @@ ENDMAP
 NAME:   corexii_hall_statues_s
 DEPTH:  D, Elf, Crypt, Snake
 WEIGHT: 1
-TAGS:   extra mini_float allow_dup serial_corexii_hall
+TAGS:   extra allow_dup serial_corexii_hall
 SUBST:  T = T:4 G:1, T = T V
 MAP
 xx@@@xx
@@ -399,7 +399,7 @@ ENDMAP
 NAME:   corexii_hall_statues_u
 DEPTH:  D, Elf, Crypt, Snake
 WEIGHT: 1
-TAGS:   extra mini_float allow_dup serial_corexii_hall
+TAGS:   extra allow_dup serial_corexii_hall
 SUBST:  T = T:4 G:1, T = T V
 MAP
 xx@@@xxxxx@@@xx
@@ -416,7 +416,7 @@ ENDMAP
 NAME:   corexii_hall_statues_t
 DEPTH:  D, Elf, Crypt, Snake
 WEIGHT: 1
-TAGS:   extra mini_float allow_dup serial_corexii_hall
+TAGS:   extra allow_dup serial_corexii_hall
 SUBST:  T = T:4 G:1, T = T V
 SUBST:  T = T:2 V:2 G:1
 MAP
@@ -438,7 +438,7 @@ ENDMAP
 NAME:   corexii_hall_statues_x
 DEPTH:  D, Elf, Crypt, Snake
 WEIGHT: 2
-TAGS:   extra mini_float allow_dup serial_corexii_hall
+TAGS:   extra allow_dup serial_corexii_hall
 SUBST:  T = T:3 V:3 G:1 .:3
 MAP
       xx@@@xx
@@ -517,7 +517,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_crystal_room
-TAGS:   extra luniq_mini mini_float
+TAGS:   extra luniq_mini
 DEPTH:  D, Elf
 NSUBST: ? = 1:b / *:?
 SUBST:  ? = bbbbb@
@@ -532,7 +532,7 @@ b?b?b?b?b
 ENDMAP
 
 NAME:    minmay_hedge_maze
-TAGS:    extra luniq_mini mini_float
+TAGS:    extra luniq_mini
 DEPTH:   D, Lair
 MONS:    bush
 SHUFFLE: ABC
@@ -594,7 +594,7 @@ MAP
 ENDMAP
 
 NAME:  minmay_liquid_box
-TAGS:  extra luniq_mini mini_float no_monster_gen
+TAGS:  extra luniq_mini no_monster_gen
 ITEM:  potion of water / nothing
 DEPTH: D
 SUBST: w : wWWld
@@ -607,7 +607,7 @@ xx+xx
 ENDMAP
 
 NAME:  minmay_fountain_box
-TAGS:  extra luniq_mini mini_float
+TAGS:  extra luniq_mini
 DEPTH: D, Elf
 KMASK: T = no_monster_gen
 KMASK: U = no_monster_gen
@@ -625,7 +625,7 @@ xxxx+xxxx
 ENDMAP
 
 NAME:  minmay_tree_intersection
-TAGS:  extra luniq_mini mini_float
+TAGS:  extra luniq_mini
 DEPTH: D
 MAP
 xxx@xxx
@@ -731,7 +731,7 @@ x.x.x.x.x
 ENDMAP
 
 NAME:  minmay_misc_feat_encased
-TAGS:  extra mini_float luniq_mini
+TAGS:  extra luniq_mini
 DEPTH: D
 SUBST: c : bcvm
 SUBST: @ : +@
@@ -746,7 +746,7 @@ x@xxxxx
 ENDMAP
 
 NAME:  minmay_misc_feat_rugged
-TAGS:  extra mini_float luniq_mini
+TAGS:  extra luniq_mini
 DEPTH: D
 SUBST: A = x..., B = x.., C = x., D = xx.
 KPROP: BCD = no_rtele_into
@@ -789,7 +789,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_misc_feat_tower
-TAGS:   extra mini_float luniq_mini
+TAGS:   extra luniq_mini
 DEPTH:  D
 NSUBST: ? = 1:@ / *:?
 SUBST:  ? = @...
@@ -898,7 +898,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_misc_feat_ornament
-TAGS:   extra mini_float luniq_mini
+TAGS:   extra luniq_mini
 DEPTH:  D, Elf, Crypt
 MAP
 x@xxxxxxx@x
@@ -913,7 +913,7 @@ x@xxxxxxx@x
 ENDMAP
 
 NAME:   minmay_misc_feat_hallway
-TAGS:   extra mini_float luniq_mini
+TAGS:   extra luniq_mini
 DEPTH:  D, Crypt
 SUBST:  G : ..GGxb
 MAP
@@ -929,7 +929,7 @@ xxx@xxx
 ENDMAP
 
 NAME:   minmay_misc_feat_alley
-TAGS:   extra mini_float luniq_mini
+TAGS:   extra luniq_mini
 DEPTH:  D, Elf, Crypt
 MAP
 xx@xx@xx
@@ -1388,7 +1388,7 @@ ENDMAP
 
 
 NAME:  minmay_trapped_gold
-TAGS:  extra luniq_mini mini_float no_monster_gen
+TAGS:  extra luniq_mini no_monster_gen
 DEPTH: D:16-, Crypt
 KFEAT: a = axe trap / bolt trap
 KFEAT: b = blade trap
@@ -1424,7 +1424,7 @@ xxxx
 ENDMAP
 
 NAME:  minmay_bad_closet
-TAGS:  extra mini_float
+TAGS:  extra
 DEPTH: D:2-12
 : if you.absdepth() > 4 then
 ITEM:  scroll of immolation / potion of degeneration / potion of decay / \
@@ -1441,7 +1441,7 @@ xx+x
 ENDMAP
 
 NAME:    minmay_variable_closet
-TAGS:    extra mini_float allow_dup luniq_mini
+TAGS:    extra allow_dup luniq_mini
 DEPTH:   D:9-27, Vault
 ITEM:    any weapon, any missile, any armour, any food, any scroll
 ITEM:    any jewellery, any potion, any book
@@ -1460,7 +1460,7 @@ ENDMAP
 
 NAME:   secret_library_closet
 DEPTH:  D, Vault, Elf, Crypt, Snake, Spider, Dwarf, Orc
-TAGS:   mini_float allow_dup extra luniq_mini
+TAGS:   allow_dup extra luniq_mini
 ITEM:   any book w:20 / any scroll / nothing
 MAP
 x=xx
@@ -1482,7 +1482,7 @@ xx...xx
 ENDMAP
 
 NAME:   eino_tiny_chamber_secret
-TAGS:   mini_float allow_dup extra luniq_mini
+TAGS:   allow_dup extra luniq_mini
 DEPTH:  D:2-27, Elf, Vault, Crypt
 MAP
 xxxxx

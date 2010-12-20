@@ -405,7 +405,7 @@ ENDMAP
 NAME:   nemelex_altar_shiori
 DEPTH:  !Lair, !Orc
 TAGS:   no_pool_fixup no_monster_gen no_item_gen
-TAGS:   generate_awake patrolling mini_float no_rotate
+TAGS:   generate_awake patrolling no_rotate
 TAGS:   layout_rooms layout_city layout_open layout_cross
 KFEAT:  _ = altar_nemelex_xobeh
 SUBST:  b:aa. , a:n. , d:c. , c:nn. , f:ee. , e:nn. , h:g. , g:n.
