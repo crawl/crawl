@@ -274,8 +274,7 @@ const map_mask *Vault_Placement_Mask = NULL;
 
 bool Generating_Level = false;
 
-static int can_create_vault = true;
-static bool use_random_maps  = true;
+static bool use_random_maps = true;
 static bool dgn_check_connectivity = false;
 static int  dgn_zones = 0;
 
@@ -1122,7 +1121,7 @@ bool dgn_ensure_vault_placed(bool vault_success,
     if (!vault_success)
         throw dgn_veto_exception("Vault placement failure.");
     else if (disable_further_vaults)
-        can_create_vault = false;
+        use_random_maps = false;
     return (vault_success);
 }
 
@@ -1203,8 +1202,7 @@ void dgn_reset_level(bool enable_random_maps)
     level_clear_vault_memory();
     dgn_colour_grid.reset(NULL);
 
-    can_create_vault = true;
-    use_random_maps  = enable_random_maps;
+    use_random_maps = enable_random_maps;
     dgn_check_connectivity = false;
     dgn_zones        = 0;
 
@@ -1872,13 +1870,6 @@ static void _build_overflow_temples(int level_number)
 
     if (temples.size() == 0)
         return;
-
-    if (!can_create_vault)
-    {
-        mpr("WARNING: Overriding can_create_vault",
-            MSGCH_DIAGNOSTICS);
-        can_create_vault = true;
-    }
 
     for (unsigned int i = 0; i < temples.size(); i++)
     {
@@ -2675,7 +2666,7 @@ static bool _builder_normal(int level_number)
 {
     const map_def *vault = NULL;
 
-    if (use_random_maps && can_create_vault)
+    if (use_random_maps)
     {
         vault = random_map_in_depth(level_id::current());
     }
@@ -3166,9 +3157,7 @@ static void _place_extra_vaults()
 {
     while (true)
     {
-        if (!player_in_branch(BRANCH_MAIN_DUNGEON)
-            && use_random_maps
-            && can_create_vault)
+        if (!player_in_branch(BRANCH_MAIN_DUNGEON) && use_random_maps)
         {
             const map_def *vault = random_map_in_depth(level_id::current());
 
@@ -3181,7 +3170,7 @@ static void _place_extra_vaults()
                 const map_def &map(*vault);
                 if (map.has_tag("extra"))
                     continue;
-                can_create_vault = false;
+                use_random_maps = false;
             }
         }
         break;
