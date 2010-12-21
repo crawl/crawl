@@ -388,24 +388,6 @@ xxxx+xxxxx...xxxxx+xxxx
    xxxxxxx.@.xxxxxxx
 ENDMAP
 
-NAME:    doghouse_eino
-DEPTH:   D:4-8
-TAGS:    extra luniq_mini
-SHUFFLE: 1?T
-SUBST:   T : T V:2
-SUBST:   ? : 1:2 .
-MONS:    hound / w:1 nothing / w:2 jackal
-KMASK:   T = no_monster_gen
-MAP
-.......
-.xx+xx.
-.x...x.
-.x?..x.
-.x1.Tx.
-.xxxxx.
-.......
-ENDMAP
-
 # This vault can be highly OOD, which is why lindwurms are used in the
 # first place; unlike most dragon-types, lindwurms are flightless.
 NAME:   minmay_lindwurm_lava
