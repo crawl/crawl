@@ -53,7 +53,12 @@ void GridRegion::clear()
 
 void GridRegion::on_resize()
 {
-    delete[] m_flavour;
+    if (m_flavour)
+    {
+        delete[] m_flavour;
+        m_flavour = NULL;
+    }
+
     if (mx * my <= 0)
         return;
 

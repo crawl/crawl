@@ -345,7 +345,6 @@ bool TilesFramework::initialise()
     m_region_tab->activate_tab(TAB_ITEM);
 
     m_region_tsp->set_tab_region(0, m_region_spl, TILEG_TAB_SPELL);
-    m_region_tsp->disable_tab(0);
 
     m_region_msg  = new MessageRegion(m_fonts[m_msg_font].font);
     m_region_stat = new StatRegion(m_fonts[stat_font].font);
@@ -922,12 +921,12 @@ bool TilesFramework::layout_statcol(bool message_overlay, bool show_gold_turns)
 
     if (delta_y < m_region_tab->sy - m_region_map->ey && you.spell_no > 0)
     {
+        m_region_tab->disable_tab(TAB_SPELL);
+        m_region_tsp->enable_tab(0);
+        m_region_tsp->activate_tab(0);
         m_layers[LAYER_NORMAL].m_regions.push_back(m_region_tsp);
         m_region_tsp->place(inv_col, m_region_tab->sy - delta_y);
         m_region_tsp->resize(m_region_tab->mx, lines);
-        m_region_tsp->enable_tab(0);
-        m_region_tsp->activate_tab(0);
-        m_region_tab->disable_tab(TAB_SPELL);
     }
     else
     {
