@@ -5701,8 +5701,7 @@ static void _plan_main(int level_number, int force_plan)
                  (force_plan == 2) ? _plan_2(level_number) :
                  (force_plan == 3) ? _plan_3(level_number) :
                  (force_plan == 4) ? _plan_4(NUM_FEATURES) :
-                 (force_plan == 5) ? (one_chance_in(9) ? _plan_5(level_number)
-                                                       : _plan_3(level_number)) :
+                 (force_plan == 5) ? _plan_5(level_number) :
                  (force_plan == 6) ? _plan_6(level_number)
                                    : _plan_3(level_number));
 
