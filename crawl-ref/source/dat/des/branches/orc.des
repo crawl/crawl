@@ -416,7 +416,7 @@ xxxxxxxxxxxxxxxxxxxx.xx
 ENDMAP
 
 #######################
-# Haunted orc entrance
+# Haunted orc entrance II
 #
 NAME:   zombieorc2_lemuel
 TAGS:   orc_entry
@@ -442,6 +442,82 @@ x.............x
 x11...111...11x
 x21....I....12x
 xxxxx..@..xxxxx
+ENDMAP
+
+#######################
+# Guarded by dogs
+#
+NAME:   minmay_orc_entry_guard_dogs
+TAGS:   orc_entry
+WEIGHT: 5
+ORIENT: float
+MONS:   patrolling warg / nothing w:2
+KFEAT:  O = enter_orcish_mines
+MAP
+1.1
+.O.
+1.1
+ENDMAP
+
+#######################
+# Small temple
+#
+NAME:   minmay_orc_entry_temple_small
+TAGS:   orc_entry
+ORIENT: float
+MONS:   orc w:40 / orc warrior / orc wizard, patrolling orc priest
+SUBST:  " = 1...
+KFEAT:  _ = altar_beogh
+KFEAT:  O = enter_orcish_mines
+MAP
+ccccccc
+c"""""c
+c"""""c
+c"2_2"c
+c"""""c
+c"""""c
+ccc+ccc
+cI"""Ic
+ .""". 
+ ..O..
+ .....
+ENDMAP
+
+#######################
+# Large temple
+NAME:   minmay_orc_entry_temple_large
+TAGS:   orc_entry
+WEIGHT: 1
+ORIENT: float
+MONS:   orc w:40 / orc warrior / orc wizard, patrolling orc priest
+SUBST:  " = 1.......
+SUBST:  ' = $.
+KFEAT:  _ = altar_beogh
+KFEAT:  O = enter_orcish_mines
+MAP
+ccccc   ccccc
+c'''c   c'''c
+c'''c   c'''c
+c'''c   c'''c
+cc+ccccccc+cc
+c"""""""""""c
+c"""""""""""c
+c"""""""""""c
+c"""I"""I"""c
+c"""""2"""""c
+c""""2_2""""c
+c"""""2"""""c
+c"""I"""I"""c
+c"""""""""""c
+ccc"""""""ccc
+ccc"""""""ccc
+cccccc+cccccc
+cccccI.Iccccc
+ccccI...Icccc
+cccI.....Iccc
+   .......
+   ...O...
+   .......
 ENDMAP
 
 
@@ -600,4 +676,148 @@ xXX.65556Xx
 xxXX.6.6XXx
 xxxXX..XXxx
  xxxx@@@xx
+ENDMAP
+
+##################################################
+# Orcish barracks (minmay)
+#
+NAME:   minmay_orc_barracks
+TAGS:   mini_float
+DEPTH:  Orc:2-
+MONS:   orc / orc warrior w:2, orc knight / orc warlord
+SUBST:  c : cx
+MAP
+ccccccccccccccccccccc
+c1.1.1.1.1.1.1.1c...c
++...............+.2.c
+c1.1.1.1.1.1.1.1c...c
+ccccccccccccccccccccc
+ENDMAP
+
+##################################################
+# A temple (minmay)
+#
+NAME:   minmay_orc_temple_a
+TAGS:   mini_float
+DEPTH:  Orc
+MONS:   orc, patrolling orc priest
+KFEAT:  _ = altar_beogh
+MAP
+ccccccc
+c..2..c
+c2._.2c
+c.....c
+ccc+ccc
+ I...I
+ .111.
+  .1.
+ENDMAP
+
+##################################################
+# Another temple (minmay)
+#
+NAME:   minmay_orc_temple_b
+TAGS:   mini_float
+DEPTH:  Orc
+MONS:   orc / nothing w:40, patrolling orc priest / nothing w:5
+KFEAT:  _ = altar_beogh
+MAP
+  ccccccc
+  cI222Ic
+  c.....c
+  c2._.2c
+  c.....c
+  cI...Ic
+ccccc+ccccc
+c.........c
+c.c11111c.c
+c..11111..c
+c.c11111c.c
+c..11111..c
+c.c11111c.c
+c..11111..c
+c.c11111c.c
+c..11111..c
+c.c11111c.c
+c.........c
+cccc+++cccc
+ ccI...Icc
+  ..0....
+   ...0.
+    .0.
+ENDMAP
+
+##################################################
+# Still another temple (minmay)
+#
+NAME:   minmay_orc_temple_c
+TAGS:   mini_float
+DEPTH:  Orc:2-
+MONS:   orc, orc priest, orc high priest
+SUBST:  . = 1 .:200
+SUBST:  . = 0 .:200
+SUBST:  " = .
+KFEAT:  _ = altar_beogh
+MAP
+ccccccccccccccccccc
+c.................c
+c.................c
+c..I..c..c..c..I..c
+c.................c
+c.................c
+c..c..cc+++cc..c..c
+c.....c""2""c.....c
+c.....c2"""2c.....c
+c..c..+""_""+..c..c
+c.....c2"""2c.....c
+c.....cI"3"Ic.....c
+c..c..ccccccc..c..c
+c.................c
+c.................c
+c..I..c..c..c..I..c
+c.................c
+c.................c
+cccccccc+++cccccccc
+     .........
+     .I.2.2.I.
+     .........
+      .......
+        ...
+ENDMAP
+
+##################################################
+# Treasure chamber (minmay)
+#
+NAME:   minmay_orc_treasury
+TAGS:   mini_float
+DEPTH:  Orc:3-
+MONS:   orc warlord band, orc knight band
+SUBST:  $ = $:100 *|
+MAP
+vvvvvvvvvvvvvvvvvvvvvvv
+v$$$$$$$$v......9v||||v
+v$$$$$$$$+.......vvvv+v
+v$$$$$$$$v...2........v
+v$$$vvvvvv............v
+v$$vv.......9....v..1.v
+v$vv............vv....v
+vvv...9.........vv....v
+v........1......vv....v
+v..2.....v......vv...9v
+v.......vvv.....vv....v
+v........v.9.....v....v
+v.....................v
+vv...................vv
+ vv......vvvvv......vv
+  vv....vvvvvvv....vv
+   vv++vvvvvvvvv++vv
+    .........0.....
+    ....v.v.v.v.0..
+    .0.............
+    ...............
+     ......0....0.
+     ...0.........
+      ...........
+       ......0..
+         .....
 ENDMAP
