@@ -551,31 +551,30 @@ NAME: layout_misc
 ORIENT: encompass
 TAGS: layout allow_dup
 {{
-    function random_coord(g)
-        return crawl.random2(g - 20) + 10
+    function random_coord(max_x, max_y)
+        return crawl.random2(max_x - 20) + 10,
+               crawl.random2(max_y - 20) + 10
     end
 
     local gxm, gym = dgn.max_bounds()
-    local rooms = crawl.random_range(15, 25)
+    local corridors = crawl.random_range(15, 25)
 
     extend_map { width = gxm, height = gym, fill = 'x' }
 
-    local x = random_coord(gxm)
-    local y = random_coord(gym)
+    local x, y = random_coord(gxm, gym)
     local new_x, new_y
 
-    while rooms > 0 do
-        new_x = random_coord(gxm)
-        new_y = random_coord(gym)
+    while corridors > 0 do
+        new_x, new_y = random_coord(gxm, gym)
 
         join_the_dots { x1 = x, y1 = y, x2 = new_x, y2 = new_y }
 
         x, y = new_x, new_y
-        rooms = rooms - 1
+        corridors = corridors - 1
     end
 
     if not crawl.one_chance_in(4) then
-        spotty_map { boxy = crawl.coinflip(), iterations = 100 }
+        spotty_map { boxy = true, iterations = 100 }
     end
 }}
 MAP
