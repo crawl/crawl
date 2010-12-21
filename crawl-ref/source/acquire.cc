@@ -1196,12 +1196,18 @@ int acquirement_create_item(object_class_type class_wanted,
             const equipment_type eq = get_armour_slot(doodad);
             const special_armour_type sparm = get_armour_ego_type(doodad);
 
-            if (you.seen_armour[doodad.sub_type] & (1 << sparm)
-                && agent != GOD_XOM
-                && x_chance_in_y(MAX_ACQ_TRIES - item_tries, MAX_ACQ_TRIES + 5))
+            if (agent != GOD_XOM
+                  && you.seen_armour[doodad.sub_type] & (1 << sparm)
+                  && x_chance_in_y(MAX_ACQ_TRIES - item_tries, MAX_ACQ_TRIES + 5)
+                || !divine
+                   && you.seen_armour[doodad.sub_type]
+                   && !one_chance_in(3)
+                   && item_tries < 20)
             {
                 // We have seen the exact item already, it's very unlikely
                 // extras will do any good.
+                // For scroll acquirement, prefer base items not seen before
+                // as well, even if you didn't see the exact brand yet.
                 destroy_item(thing_created, true);
                 thing_created = NON_ITEM;
                 continue;
