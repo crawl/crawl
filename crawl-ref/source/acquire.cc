@@ -1131,7 +1131,8 @@ int acquirement_create_item(object_class_type class_wanted,
                          || agent == GOD_TROG);
     int thing_created = NON_ITEM;
     int quant = 1;
-    for (int item_tries = 0; item_tries < 40; item_tries++)
+#define MAX_ACQ_TRIES 40
+    for (int item_tries = 0; item_tries < MAX_ACQ_TRIES; item_tries++)
     {
         int type_wanted = _find_acquirement_subtype(class_wanted, quant,
                                                     divine, agent);
@@ -1171,7 +1172,7 @@ int acquirement_create_item(object_class_type class_wanted,
                         & (1<<get_weapon_brand(doodad))
                    || doodad.base_type == OBJ_ARMOUR
                      && you.seen_armour[doodad.sub_type]
-                        & (1<<get_weapon_brand(doodad)))
+                        & (1<<get_armour_ego_type(doodad)))
                && !one_chance_in(5))
         {
             reroll_brand(doodad, MAKE_GOOD_ITEM);
@@ -1182,55 +1183,42 @@ int acquirement_create_item(object_class_type class_wanted,
         if (doodad.base_type == OBJ_ARMOUR && !is_artefact(doodad))
         {
             const equipment_type eq = get_armour_slot(doodad);
+            const special_armour_type sparm = get_armour_ego_type(doodad);
+
+            if (you.seen_armour[doodad.sub_type] & (1 << sparm)
+                && agent != GOD_XOM
+                && x_chance_in_y(MAX_ACQ_TRIES - item_tries, MAX_ACQ_TRIES + 5))
+            {
+                // We have seen the exact item already, it's very unlikely
+                // extras will do any good.
+                destroy_item(thing_created, true);
+                thing_created = NON_ITEM;
+                continue;
+            }
 
             // Don't try to replace an item if it would already fill a
             // currently unfilled secondary armour slot.
-            if (eq == EQ_BODY_ARMOUR || you.equip[eq] != -1)
+            if (eq == EQ_BODY_ARMOUR || you.equip[eq] != -1
+                && _is_armour_plain(doodad))
             {
-                const special_armour_type sparm = get_armour_ego_type(doodad);
-                bool is_plain     = _is_armour_plain(doodad);
-                bool is_redundant = false;
-
-                // If the created item is an ego item, check whether we're
-                // already wearing an item with this ego in the same slot, and
-                // whether the enchantment is worse than that of the current
-                // item. (For armour, only consider items of the same subtype.)
-                // If so, try filling an unfilled equipment slot after all.
-                if (!is_plain && agent != GOD_XOM)
+                if (_try_give_plain_armour(doodad))
                 {
-                    if (you.equip[eq] != -1
-                        && (eq != EQ_BODY_ARMOUR
-                            || doodad.sub_type == you.inv[you.equip[eq]].sub_type)
-                        && sparm == get_armour_ego_type(you.inv[you.equip[eq]])
-                        && doodad.plus <= you.inv[you.equip[eq]].plus)
-                    {
-                        // Ego type is cleared later.
-                        is_redundant = true;
-                    }
+                    // Make sure the item is plain.
+                    doodad.special = SPARM_NORMAL;
+
+                    // Only Xom gives negatively enchanted items (75% if not 0).
+                    if (doodad.plus < 0 && agent != GOD_XOM)
+                        doodad.plus = 0;
+                    else if (doodad.plus > 0 && coinflip())
+                        doodad.plus *= -1;
                 }
-
-                if (is_plain || is_redundant)
+                else if (agent != GOD_XOM && one_chance_in(3))
                 {
-                    if (_try_give_plain_armour(doodad))
-                    {
-                        // Make sure the item is plain.
-                        doodad.special = SPARM_NORMAL;
-
-                        // Okawaru shouldn't hand out negatively enchanted
-                        // plain items.
-                        if (agent == GOD_OKAWARU && doodad.plus < 0)
-                            doodad.plus = 0;
-                        else if (agent == GOD_XOM && doodad.plus > 0)
-                            doodad.plus *= -1;
-                    }
-                    else if (is_plain && agent != GOD_XOM && one_chance_in(3))
-                    {
-                        // If the item is plain and there aren't any
-                        // unfilled slots, we might want to roll again.
-                        destroy_item(thing_created, true);
-                        thing_created = NON_ITEM;
-                        continue;
-                    }
+                    // If the item is plain and there aren't any
+                    // unfilled slots, we might want to roll again.
+                    destroy_item(thing_created, true);
+                    thing_created = NON_ITEM;
+                    continue;
                 }
             }
         }
