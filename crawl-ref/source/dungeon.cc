@@ -2219,29 +2219,19 @@ static void _dgn_set_floor_colours()
 
 static void _check_doors()
 {
-    for (int x = 1; x < GXM-1; x++)
-        for (int y = 1; y < GYM-1; y++)
-        {
-            if (!feat_is_closed_door(grd[x][y]))
-                continue;
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        if (!feat_is_closed_door(grd(*ri)))
+            continue;
 
-            int solid_count = 0;
+        int solid_count = 0;
 
-            if (feat_is_solid(grd[x - 1][y]))
+        for (radius_iterator rai(*ri, 1, NULL, C_POINTY, true); rai; ++rai)
+            if (feat_is_solid(grd(*rai)))
                 solid_count++;
 
-            if (feat_is_solid(grd[x + 1][y]))
-                solid_count++;
-
-            if (feat_is_solid(grd[x][y - 1]))
-                solid_count++;
-
-            if (feat_is_solid(grd[x][y + 1]))
-                solid_count++;
-
-            grd[x][y] = (solid_count < 2 ? DNGN_FLOOR
-                                         : DNGN_CLOSED_DOOR);
-        }
+        grd(*ri) = (solid_count < 2 ? DNGN_FLOOR : DNGN_CLOSED_DOOR);
+    }
 }
 
 static void _hide_doors()
