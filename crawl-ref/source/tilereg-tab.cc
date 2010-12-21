@@ -238,8 +238,7 @@ void TabbedRegion::on_resize()
             continue;
 
         m_tabs[i].reg->place(reg_sx, reg_sy);
-        if (m_tabs[i].enabled)
-            m_tabs[i].reg->resize(mx, my);
+        m_tabs[i].reg->resize(mx, my);
     }
 }
 
