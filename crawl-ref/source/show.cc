@@ -316,7 +316,9 @@ void show_update_at(const coord_def &gp, bool terrain_only)
     if (!in_bounds(gp))
         return;
 
-    _update_item_at(gp);
+    const monster* mons = monster_at(gp);
+    if (mons && mons->alive())
+        _update_monster(mons);
 
     const int cloud = env.cgrid(gp);
     if (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_NONE
@@ -325,9 +327,7 @@ void show_update_at(const coord_def &gp, bool terrain_only)
         _update_cloud(cloud);
     }
 
-    const monster* mons = monster_at(gp);
-    if (mons && mons->alive())
-        _update_monster(mons);
+    _update_item_at(gp);
 }
 
 void show_init(bool terrain_only)
