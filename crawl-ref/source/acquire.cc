@@ -80,8 +80,8 @@ static armour_type _pick_wearable_armour(const armour_type arm)
         {
             if (you.species == SP_SPRIGGAN)
                 result = ARM_BUCKLER;
-            else if (coinflip()) // giant races: 50/50 shield/large shield
-                result = ARM_LARGE_SHIELD;
+            else if (x_chance_in_y(5 + you.skills[SK_SHIELDS], 20))
+                result = ARM_LARGE_SHIELD; // prefer big shields for giant races
         }
         else if (arm == NUM_ARMOURS)
         {
@@ -92,16 +92,26 @@ static armour_type _pick_wearable_armour(const armour_type arm)
     case SP_NAGA:
         if (arm == ARM_BOOTS || arm == ARM_CENTAUR_BARDING)
             result = ARM_NAGA_BARDING;
+        if (arm == ARM_SHIELD && x_chance_in_y(5 + you.skills[SK_SHIELDS], 20))
+            result = ARM_LARGE_SHIELD; // nagas have bonuses to big shields
         break;
 
     case SP_CENTAUR:
         if (arm == ARM_BOOTS || arm == ARM_NAGA_BARDING)
             result = ARM_CENTAUR_BARDING;
+        if (arm == ARM_SHIELD && x_chance_in_y(5 + you.skills[SK_SHIELDS], 20))
+            result = ARM_LARGE_SHIELD; // so have centaurs
         break;
 
     default:
         if (arm == ARM_CENTAUR_BARDING || arm == ARM_NAGA_BARDING)
             result = ARM_BOOTS;
+        if (arm == ARM_SHIELD)
+            if (x_chance_in_y(15 - you.skills[SK_SHIELDS], 20))
+                result = ARM_BUCKLER;
+            else if (x_chance_in_y(you.skills[SK_SHIELDS] - 10, 15)
+                     && you.species != SP_KOBOLD && you.species != SP_HALFLING)
+                result = ARM_LARGE_SHIELD;
         break;
     }
 
