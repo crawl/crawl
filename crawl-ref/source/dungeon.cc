@@ -2236,35 +2236,23 @@ static void _check_doors()
 
 static void _hide_doors()
 {
-    unsigned int dx = 0, dy = 0;     // loop variables
-    unsigned int wall_count = 0;     // clarifies inner loop {dlb}
-
-    for (dx = 1; dx < GXM-1; dx++)
-        for (dy = 1; dy < GYM-1; dy++)
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        // Only one out of four doors are candidates for hiding. {gdl}
+        if (grd(*ri) == DNGN_CLOSED_DOOR && one_chance_in(4)
+            && !map_masked(*ri, MMT_NO_DOOR))
         {
-            // Only one out of four doors are candidates for hiding. {gdl}
-            if (grd[dx][dy] == DNGN_CLOSED_DOOR && one_chance_in(4)
-                && !map_masked(coord_def(dx, dy), MMT_NO_DOOR))
-            {
-                wall_count = 0;
+            int wall_count = 0;
 
-                if (grd[dx - 1][dy] == DNGN_ROCK_WALL)
+            for (radius_iterator rai(*ri, 1, NULL, C_POINTY, true); rai; ++rai)
+                if (grd(*rai) == DNGN_ROCK_WALL)
                     wall_count++;
 
-                if (grd[dx + 1][dy] == DNGN_ROCK_WALL)
-                    wall_count++;
-
-                if (grd[dx][dy - 1] == DNGN_ROCK_WALL)
-                    wall_count++;
-
-                if (grd[dx][dy + 1] == DNGN_ROCK_WALL)
-                    wall_count++;
-
-                // If door is attached to more than one wall, hide it. {dlb}
-                if (wall_count > 1)
-                    grd[dx][dy] = DNGN_SECRET_DOOR;
-            }
+            // If door is attached to more than one wall, hide it. {dlb}
+            if (wall_count > 1)
+                grd(*ri) = DNGN_SECRET_DOOR;
         }
+    }
 }
 
 static int _count_feature_in_box(int x0, int y0, int x1, int y1,
