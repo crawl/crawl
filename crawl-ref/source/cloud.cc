@@ -1018,10 +1018,10 @@ static int _cloud_damage_output(actor *actor,
                                 int resist,
                                 int base_timescaled_damage)
 {
-    const int resisted_damage =
+    const int resist_adjusted_damage =
         resist_adjust_damage(actor, flavour, resist,
                              base_timescaled_damage, true);
-    return std::max(0, resisted_damage - random2(actor->armour_class()));
+    return std::max(0, resist_adjusted_damage - random2(actor->armour_class()));
 }
 
 static int _actor_cloud_damage(actor *act,
@@ -1093,12 +1093,12 @@ int actor_apply_cloud(actor *act)
 
     const bool side_effects =
         _actor_apply_cloud_side_effects(act, cloud, final_damage);
+
+    if (!player && (side_effects || final_damage > 0))
+        behaviour_event(mons, ME_DISTURB, MHITNOT, act->pos());
+
     if (final_damage)
     {
-        if (!player && (side_effects || final_damage > 0))
-            behaviour_event(act->as_monster(), ME_DISTURB, MHITNOT,
-                            act->pos());
-
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "%s %s %d damage from cloud: %s.",
              act->name(DESC_CAP_THE).c_str(),
