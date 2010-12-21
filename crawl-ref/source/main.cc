@@ -2726,8 +2726,6 @@ static void _player_reacts()
     }
 
     actor_apply_cloud(&you);
-    if (env.cgrid(you.pos()) != EMPTY_CLOUD)
-        actor_apply_cloud(&you);
 
     slime_wall_damage(&you, you.time_taken);
 
