@@ -171,6 +171,7 @@ int item_mass(const item_def &item);
 size_type item_size(const item_def &item);
 equipment_type get_item_slot(object_class_type type, int sub_type);
 equipment_type get_item_slot(const item_def& item);
+bool in_shop(const item_def &item);
 
 std::string item_base_name(const item_def &item);
 std::string item_base_name (object_class_type type, int sub_type);
