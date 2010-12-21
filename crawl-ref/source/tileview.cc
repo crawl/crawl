@@ -613,6 +613,9 @@ void tile_draw_floor()
 // Called from item() in view.cc
 void tile_place_item(const coord_def &gc, const item_def &item)
 {
+    if (env.tile_fg(gc))
+        return;
+
     tileidx_t t = tileidx_item(item);
     if (item.link != NON_ITEM)
         t |= TILE_FLAG_S_UNDER;
@@ -640,7 +643,7 @@ void tile_place_monster(const coord_def &gc, const monster* mon)
 
     const coord_def ep = grid2show(gc);
 
-    tileidx_t t = tileidx_monster(mon);
+    tileidx_t t    = tileidx_monster(mon);
     tileidx_t t0   = t & TILE_FLAG_MASK;
     tileidx_t flag = t & (~TILE_FLAG_MASK);
 
@@ -708,6 +711,9 @@ void tile_place_monster(const coord_def &gc, const monster* mon)
 void tile_place_cloud(const coord_def &gc, const cloud_struct &cl)
 {
     const coord_def ep = grid2show(gc);
+    if (env.tile_fg(ep) != 0)
+        return;
+
     const monster* mon = monster_at(gc);
     bool disturbance = false;
 
