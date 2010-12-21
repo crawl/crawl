@@ -62,6 +62,254 @@ mmmm
 ENDMAP
 
 ##############################################################################
+# Kobold bridge 
+# Could perhaps use colour.
+#
+NAME:   minmay_kobold_bridge
+TAGS:   no_monster_gen
+DEPTH:  D:1-2
+ORIENT: float
+WEIGHT: 3
+MONS:   kobold / nothing w:3
+MAP
+xxxxxx@xxxxxx
+xxxx.....xxxx
+xxx.......xxx
+xxxw.....wxxx
+xxxww..1wwxxx
+xxxww...wwxxx
+xxxww1..wwxxx
+xxxww..1wwxxx
+xxxww.1.wwxxx
+xxxww...wwxxx
+xxxww1..wwxxx
+xxxw.....wxxx
+xxx.......xxx
+xxxx.....xxxx
+xxxxxx@xxxxxx
+ENDMAP
+
+##############################################################################
+# Rooms
+#
+NAME:    minmay_opposing_rooms
+DEPTH:   D:4-
+ORIENT:  float
+SHUFFLE: 0%
+MAP
+xxxxxxxxxxxxxxxxxxxxx
+xxxx........xxx%.%xxx
+xx......x...xx....%xx
+xx..9..xx...x......%x
+x......xx...+.......x
+@....xxxx...x......%x
+xxxxxxxxx...xx....%xx
+xxx0.0xxx...xxx%.%xxx
+xx0....xx...xxxxxxxxx
+x0......x...xxxx....@
+x.......+...xx......x
+x0......x...xx..9..xx
+xx0....xx...x......xx
+xxx0.0xxx........xxxx
+xxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Klotski a.k.a. what we learned from the elders.
+#
+NAME:    minmay_klotski
+SHUFFLE: }])>
+DEPTH:   D:6-12
+ORIENT:  float
+SUBST:   0 = 0.., 9 = 9., 8 = 88.
+MONS:    bush
+MAP
+xxxxxxxxxxxxxxxxxxxxx
+x....+.........+...9x
+x1...x...0.0...x....x
+x...1x..0.0.0..x.0..x
+x1...x.0.....0.x..0.x
+x...1x..0...0..x.0..x
+x1...x.0.....0.x..0.x
+x...1x.........x.0..x
+x1...x.9.9.9.9.x....x
+x...1x8.8...8.8x9...x
+x+xxxxxxxx+xxxxxxxx+x
+x...9x$$$$$$$$$xG...x
+x.0..x$$$$$$$$$x....x
+x..0.x$$$$$$$$$x....x
+x.0..x$$$$$$$$$x....x
+x..0.xxxxxxxxxxx....x
+x.0..+....x0...+....x
+x..0.x..T.x.0..x....x
+x.0..x.T..x..0.x....x
+x9...x....x...0x...Gx
+xxxxxxxxx+x+xxxxxxxxx
+     x....x....x
+     x....x....x
+     x....x....x
+     x}...x...]x
+     xxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Statue pair
+#
+NAME:    minmay_separated_statues
+DEPTH:   D:8-16
+ORIENT:  float
+MONS:    silver statue, orange crystal statue, ice statue
+SHUFFLE: 123
+MAP
+     ......
+    ......xx
+   xxx.....xx
+  xx*xx.....xx
+ xx...xx.....xx
+xx*.1..xx..2.*xx
+ xx.....xx...xx
+  xx.....xx*xx
+   xx.....xxx
+    xx......
+     ......
+ENDMAP
+
+##############################################################################
+# Statue gallery
+#
+NAME:    minmay_statue_hallways
+DEPTH:   D:8-
+ORIENT:  float
+MONS:    orange crystal statue / silver statue / ice statue
+MAP
+       xxx            xxx            xxx
+       x1x            x1x            x1x
+       x*x            x|x            x*x
+      xx.xx          xx.xx          xx.xx
+      x...x          x...x          x...x
+     xx...xx        xx...xx        xx...xx
+   xxx.....xxx    xxx.....xxx    xxx.....xxx
+xxxx.........xxxxxx.........xxxxxx.........xxxx
+@.............................................@
+...............................................
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+...............................................
+@.............................................@
+xxxx.........xxxxxx.........xxxxxx.........xxxx
+   xxx.....xxx    xxx.....xxx    xxx.....xxx
+     xx...xx        xx...xx        xx...xx
+      x...x          x...x          x...x
+      xx.xx          xx.xx          xx.xx
+       x*x            x|x            x*x
+       x1x            x1x            x1x
+       xxx            xxx            xxx
+ENDMAP
+
+##############################################################################
+# Stone golems
+#
+NAME:   minmay_stone_box
+DEPTH:  D:10-16
+ORIENT: float
+KMONS:  " = stone golem
+KITEM:  " = any scroll / any potion
+MAP
+cccccccccc
+c{......>c
+c........c
+c........c
+c...""...c
+c...""...c
+c........c
+c........c
+c<......}c
+cccccccccc
+ENDMAP
+
+##############################################################################
+# Wavy paths in crystal walls
+#
+NAME:   minmay_wavy_crystal
+DEPTH:  D:10-
+ORIENT: float
+MAP
+bbbbbbbbbbbb@.@bbbbbb
+@...bbbbbbbb...bbbbbb
+......bbbbbb...bbbbbb
+@......bbbbb...bbbbbb
+bbbb...bbbbb...bbbbbb
+bbbbb...bbbbb...bbbbb
+bbbbb...bbbbb.....bbb
+bbbbb...bbbbbb.....bb
+bbbbb...bbb..bbb...bb
+bbbbb...bb9bb.bb....b
+bbbbb...bb|bb.bb....b
+bbbbbb...bbb.bb....bb
+bbbbbb.............bb
+bbbbbbb...........bbb
+bbbbbbbbb.......bbbbb
+bbbbbb..bbb...bbb..bb
+bbbbb.bb9bb...bb9bb.b
+bbbbb.bb|bb...bb|bb.b
+bbbbbb.bbb.....bbb.bb
+@...................@
+............b........
+@.........bbbbb.....@
+bbbbbbbbbbbbbbbbbbbbb
+ENDMAP
+
+##############################################################################
+# A traditional vault
+#
+NAME:    minmay_two_paths
+ORIENT:  float
+DEPTH:   D:12-26
+MAP
+cccccccccccccccc
+c.9.c......c.9.c
+c.c.c.c88c.c.c.c
+c.c.c.c$$c.c.c.c
+c.c.c.c%%c.c.c.c
+c.c.c.c**c.c.c.c
+c.c.9.c||c.9.c.c
+c.cccccccccccc.c
+c.cccccccccccc.c
+c.9.c......c.9.c
+c.c.c.c..c.c.c.c
+c.c.c.c..c.c.c.c
+c.c.c.c..c.c.c.c
+c.c.c.c..c.c.c.c
+c9c.9.c00c.9.c9c
+ccccccc..ccccccc
+ENDMAP
+
+##############################################################################
+# Skeleton sneak attack
+#
+NAME:   minmay_skeletal_surprise
+TAGS:   no_monster_gen no_item_gen
+DEPTH:  D:18-26
+ORIENT: float
+MONS:   skeletal warrior
+KMONS:  $ = skeletal warrior / large skeleton / bone dragon w:1 / nothing w:40
+KITEM:  $ = $
+MAP
+ccccccccccccc
+c$$$ccccc$$$c
+c$$$ccccc$$$c
+c$$$ccccc$$$c
+cccc1ccc1cccc
+ccccc...ccccc
+ccccc.}.ccccc
+ccccc...ccccc
+cccc1ccc1cccc
+c$$$ccccc$$$c
+c$$$ccccc$$$c
+c$$$ccccc$$$c
+ccccccccccccc
+ENDMAP
+
+##############################################################################
 # Cavepeople
 #
 NAME:   erik_1
