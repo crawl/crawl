@@ -268,11 +268,12 @@ static armour_type _acquirement_armour_subtype(bool divine)
                     if (x_chance_in_y(weight, total))
                         result = armours[i];
                 }
-                // ... so we override it for heavy meleers, who get 50% plates.
-                // (Should it be more?  A scale mail is wasted acquirement, even
-                // if it's any but most über randart).
-                if (random2(you.skills[SK_SPELLCASTING] + you.skills[SK_DODGING])
-                    < random2(you.skills[SK_ARMOUR]) && coinflip())
+                // ... so we override it for heavy meleers, who get mostly plates.
+                // A scale mail is wasted acquirement, even if it's any but most
+                // über randart).
+                if (random2(you.skills[SK_SPELLCASTING] * 3
+                            + you.skills[SK_DODGING])
+                    < random2(you.skills[SK_ARMOUR] * 2))
                 {
                     result = one_chance_in(4) ? ARM_CRYSTAL_PLATE_MAIL :
                                                 ARM_PLATE_MAIL;
