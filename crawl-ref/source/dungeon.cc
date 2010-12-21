@@ -2307,38 +2307,34 @@ int count_neighbours(int x, int y, dungeon_feature_type feat)
 // shallow. Checks each water space.
 static void _prepare_water(int level_number)
 {
-    int i, j, k, l;                    // loop variables {dlb}
     dungeon_feature_type which_grid;   // code compaction {dlb}
 
-    for (i = 1; i < (GXM - 1); i++)
-        for (j = 1; j < (GYM - 1); j++)
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        if (map_masked(*ri, MMT_NO_POOL))
+            continue;
+
+        if (grd(*ri) == DNGN_DEEP_WATER)
         {
-            if (map_masked(coord_def(i, j), MMT_NO_POOL))
-                continue;
-
-            if (grd[i][j] == DNGN_DEEP_WATER)
+            for (adjacent_iterator ai(*ri); ai; ++ai)
             {
-                for (k = -1; k < 2; k++)
-                    for (l = -1; l < 2; l++)
-                        if (k != 0 || l != 0)
-                        {
-                            which_grid = grd[i + k][j + l];
+                which_grid = grd(*ai);
 
-                            // must come first {dlb}
-                            if (which_grid == DNGN_SHALLOW_WATER
-                                && one_chance_in(8 + level_number))
-                            {
-                                grd[i][j] = DNGN_SHALLOW_WATER;
-                            }
-                            else if (which_grid >= DNGN_FLOOR
-                                     && x_chance_in_y(80 - level_number * 4,
-                                                      100))
-                            {
-                                grd[i][j] = DNGN_SHALLOW_WATER;
-                            }
-                        }
+                // must come first {dlb}
+                if (which_grid == DNGN_SHALLOW_WATER
+                    && one_chance_in(8 + level_number))
+                {
+                    grd(*ri) = DNGN_SHALLOW_WATER;
+                }
+                else if (which_grid >= DNGN_FLOOR
+                         && x_chance_in_y(80 - level_number * 4,
+                                          100))
+                {
+                    grd(*ri) = DNGN_SHALLOW_WATER;
+                }
             }
         }
+    }
 }                               // end prepare_water()
 
 static void _pan_level(int level_number)
