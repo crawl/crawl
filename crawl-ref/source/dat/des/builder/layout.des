@@ -556,17 +556,21 @@ TAGS: layout allow_dup
     end
 
     local gxm, gym = dgn.max_bounds()
-    local rooms = 5 + crawl.random2(20)
+    local rooms = crawl.random_range(15, 25)
 
     extend_map { width = gxm, height = gym, fill = 'x' }
 
+    local x = random_coord(gxm)
+    local y = random_coord(gym)
+    local new_x, new_y
+
     while rooms > 0 do
-        join_the_dots {
-            x1 = random_coord(gxm),
-            y1 = random_coord(gym),
-            x2 = random_coord(gxm),
-            y2 = random_coord(gym)
-        }
+        new_x = random_coord(gxm)
+        new_y = random_coord(gym)
+
+        join_the_dots { x1 = x, y1 = y, x2 = new_x, y2 = new_y }
+
+        x, y = new_x, new_y
         rooms = rooms - 1
     end
 
