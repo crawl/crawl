@@ -1103,6 +1103,24 @@ static int _weapon_brand_quality(int brand, bool range)
     }
 }
 
+static int _is_armour_plain(const item_def &item)
+{
+    ASSERT(item.base_type == OBJ_ARMOUR);
+    if (is_artefact(item))
+        return false;
+
+    if (item.sub_type != ARM_ANIMAL_SKIN
+        && item.sub_type >= ARM_MIN_UNBRANDED
+        && item.sub_type <= ARM_MAX_UNBRANDED)
+    {
+        // These are always interesting, even with no brand.
+        // May still be redundant, but that has another check.
+        return false;
+    }
+
+    return (get_armour_ego_type(item) == SPARM_NORMAL);
+}
+
 int acquirement_create_item(object_class_type class_wanted,
                             int agent, bool quiet,
                             const coord_def &pos, bool debug)
@@ -1170,7 +1188,7 @@ int acquirement_create_item(object_class_type class_wanted,
             if (eq == EQ_BODY_ARMOUR || you.equip[eq] != -1)
             {
                 const special_armour_type sparm = get_armour_ego_type(doodad);
-                bool is_plain     = (sparm == SPARM_NORMAL);
+                bool is_plain     = _is_armour_plain(doodad);
                 bool is_redundant = false;
 
                 // If the created item is an ego item, check whether we're
