@@ -139,7 +139,7 @@ Ctrl + Shift + left mouseclick
 Alt + left mouseclick      Evoke item at target (monster or player).
                            Item is chosen from menu after target is
                            clicked.
-                           Ctrl-Shift is a synonym to Alt for those systems 
+                           Ctrl-Shift is a synonym to Alt for those systems
                            where the Alt key doesn't work in Crawl.
 
 

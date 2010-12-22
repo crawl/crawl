@@ -2078,4 +2078,3 @@ Stone Soup 0.1 (20060918)
 * Jelly pits
 * Missile weapons are stronger.
 * Evocations no longer increases max MP.
-
