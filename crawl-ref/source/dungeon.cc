@@ -6179,18 +6179,12 @@ static void _labyrinth_place_entry_point(const dgn_region &region,
         env.markers.add(new map_feature_marker(p, DNGN_ENTER_LABYRINTH));
 }
 
-static bool _is_deadend(const coord_def pos)
+static bool _is_deadend(const coord_def& pos)
 {
-    std::vector<coord_def> dirs;
-    dirs.push_back(coord_def(0, -1));
-    dirs.push_back(coord_def(1,  0));
-    dirs.push_back(coord_def(0,  1));
-    dirs.push_back(coord_def(-1, 0));
-
     int count_neighbours = 0;
-    for (unsigned int i = 0; i < dirs.size(); i++)
+    for (orth_adjacent_iterator ni(pos); ni; ++ni)
     {
-        coord_def p = pos + dirs[i];
+        const coord_def& p = *ni;
         if (!in_bounds(p))
             continue;
 
@@ -6294,21 +6288,15 @@ static bool _find_random_nonmetal_wall(const dgn_region &region,
     return (false);
 }
 
-static bool _grid_has_wall_neighbours(const coord_def pos, const coord_def dir)
+static bool _grid_has_wall_neighbours(const coord_def& pos, const coord_def& origin)
 {
-    std::vector<coord_def> dirs;
-    dirs.push_back(coord_def(0, -1));
-    dirs.push_back(coord_def(1,  0));
-    dirs.push_back(coord_def(0,  1));
-    dirs.push_back(coord_def(-1, 0));
-
-    for (unsigned int i = 0; i < dirs.size(); i++)
+    for (orth_adjacent_iterator ni(pos); ni; ++ni)
     {
-        coord_def p = pos + dirs[i];
+        const coord_def& p = *ni;
         if (!in_bounds(p))
             continue;
 
-        if (dirs[i] == dir)
+        if (p == origin)
             continue;
 
         if (grd(p) == DNGN_ROCK_WALL || grd(p) == DNGN_STONE_WALL)
@@ -6317,20 +6305,14 @@ static bool _grid_has_wall_neighbours(const coord_def pos, const coord_def dir)
     return (false);
 }
 
-static void _vitrify_wall_neighbours(const coord_def pos)
+static void _vitrify_wall_neighbours(const coord_def& pos)
 {
     // This hinges on clear wall types having the same order as non-clear ones!
     const int clear_plus = DNGN_CLEAR_ROCK_WALL - DNGN_ROCK_WALL;
 
-    std::vector<coord_def> dirs;
-    dirs.push_back(coord_def(0, -1));
-    dirs.push_back(coord_def(1,  0));
-    dirs.push_back(coord_def(0,  1));
-    dirs.push_back(coord_def(-1, 0));
-
-    for (unsigned int i = 0; i < dirs.size(); i++)
+    for (orth_adjacent_iterator ni(pos); ni; ++ni)
     {
-        coord_def p = pos + dirs[i];
+        const coord_def& p = *ni;
         if (!in_bounds(p))
             continue;
 
@@ -6344,7 +6326,7 @@ static void _vitrify_wall_neighbours(const coord_def pos)
 #ifdef WIZARD
             env.pgrid(p) |= FPROP_HIGHLIGHT;
 #endif
-            if (one_chance_in(3) || _grid_has_wall_neighbours(p, dirs[i]))
+            if (one_chance_in(3) || _grid_has_wall_neighbours(p, pos))
                 _vitrify_wall_neighbours(p);
         }
     }
