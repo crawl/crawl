@@ -1121,29 +1121,25 @@ static int dgn_floor_halo(lua_State *ls)
         return 0;
     }
 
-    for (int y = 0; y < GYM; ++y)
-        for (int x = 0; x < GXM; ++x)
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        if (grd(*ri) == target)
         {
-            const dungeon_feature_type feat = grd[x][y];
-            if (feat == target)
+            for (adjacent_iterator ai(*ri, false); ai; ++ai)
             {
+                if (!map_bounds(*ai))
+                    continue;
 
-                for (int i = -1; i <= 1; i++)
-                    for (int j = -1; j <= 1; j++)
-                    {
-                        if (!map_bounds(x+i, y+j))
-                            continue;
+                const dungeon_feature_type feat2 = grd(*ai);
 
-                        const dungeon_feature_type feat2 = grd[x+i][y+j];
-
-                        if (feat2 == DNGN_FLOOR
-                            || feat2 == DNGN_UNDISCOVERED_TRAP)
-                        {
-                            env.grid_colours[x+i][y+j] = colour;
-                        }
-                    }
+                if (feat2 == DNGN_FLOOR
+                    || feat2 == DNGN_UNDISCOVERED_TRAP)
+                {
+                    env.grid_colours(*ai) = colour;
+                }
             }
         }
+    }
 
 #ifdef USE_TILE
     unsigned int tile = get_tile_idx(ls, 3);
