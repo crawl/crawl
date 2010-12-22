@@ -9,6 +9,7 @@
 #include "cloud.h"
 #include "colour.h"
 #include "coord.h"
+#include "coordit.h"
 #include "directn.h"
 #include "dungeon.h"
 #include "dgn-shoals.h"
@@ -1065,26 +1066,22 @@ static int dgn_fixup_stairs(lua_State *ls)
     if (up_feat == DNGN_UNSEEN && down_feat == DNGN_UNSEEN)
         return 0;
 
-    for (int y = 0; y < GYM; ++y)
+    for (rectangle_iterator ri(0); ri; ++ri)
     {
-        for (int x = 0; x < GXM; ++x)
+        const dungeon_feature_type feat = grd(*ri);
+        if (feat_is_stone_stair(feat) || feat_is_escape_hatch(feat))
         {
-            const dungeon_feature_type feat = grd[x][y];
-            if (feat_is_stone_stair(feat) || feat_is_escape_hatch(feat))
+            dungeon_feature_type new_feat = DNGN_UNSEEN;
+
+            if (feat_stair_direction(feat) == CMD_GO_DOWNSTAIRS)
+                new_feat = down_feat;
+            else
+                new_feat = up_feat;
+
+            if (new_feat != DNGN_UNSEEN)
             {
-                dungeon_feature_type new_feat = DNGN_UNSEEN;
-
-                if (feat_stair_direction(feat) == CMD_GO_DOWNSTAIRS)
-                    new_feat = down_feat;
-                else
-                    new_feat = up_feat;
-
-                if (new_feat != DNGN_UNSEEN)
-                {
-                    grd[x][y] = new_feat;
-                    env.markers.add(new map_feature_marker(coord_def(x, y),
-                                                           new_feat));
-                }
+                grd(*ri) = new_feat;
+                env.markers.add(new map_feature_marker(*ri, new_feat));
             }
         }
     }
