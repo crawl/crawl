@@ -62,7 +62,7 @@ mmmm
 ENDMAP
 
 ##############################################################################
-# Kobold bridge 
+# Kobold bridge
 # Could perhaps use colour.
 #
 NAME:   minmay_kobold_bridge
@@ -1746,4 +1746,3 @@ c.LLlllllLL.c
 c..LLlllLL..c
 ccccccccccccc
 ENDMAP
-

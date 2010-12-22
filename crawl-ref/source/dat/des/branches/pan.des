@@ -312,7 +312,7 @@ KMONS:     d = draconian annihilator
 KMONS:     e = deep elf annihilator
 COLOUR:    c = white
 KFEAT:     S = deep_water
-NSUBST:    D = 1:S / *:w  
+NSUBST:    D = 1:S / *:w
 epilogue{{
   crawl.mpr("You sense a powerful magical presence. It is not pleased.")
   pan_lord_warning(_G)

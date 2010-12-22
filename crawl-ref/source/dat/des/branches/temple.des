@@ -936,7 +936,7 @@ ENDMAP
 #
 # Altars are to be placed as B glyphs, and should not be modified a la SUBST
 # or SHUFFLE. You could place any number of altars between one and the number
-# of guaranteed gods. However, don't make temple maps with less than six 
+# of guaranteed gods. However, don't make temple maps with less than six
 # altars.
 # Guaranteed gods not present in a temple will get altars in the dungeon.
 # See altar.des.
@@ -947,9 +947,9 @@ ENDMAP
 # used for variety and (more often) to allow differing numbers of altars.
 
 ##########################################################################
-# Circular temples 
+# Circular temples
 #   Total weight: 65 = 40+10+5+5+5
-#   The classical shape, so highest weight. 
+#   The classical shape, so highest weight.
 #   Several versions, to accomodate differing numbers of gods.
 #   Stones walls, so grey colour. (The versions with a pool change colour.)
 
@@ -960,31 +960,31 @@ WEIGHT: 40
 TAGS:   no_rotate
 ORIENT: encompass
 MAP
-               ccccccccccccc                
-           ccccc.....<.....ccccc            
-        cccc...................cccc         
-      ccc.........................ccc       
-    ccc..............B..............ccc     
-   cc.........B.............B.........cc    
-  cc...................................cc   
- cc.....................................cc  
- c........B.....................B........c  
-cc.................T...T.................cc 
-c.........................................c 
-c.........................................c 
-c(......B.......T.........T.......B......{c 
-c.........................................c 
-c.........................................c 
-cc.................T...T.................cc 
- c........B.....................B........c  
- cc.....................................cc  
-  cc...................................cc   
-   cc.........B.............B.........cc    
-    ccc..............B..............ccc     
-      ccc.........................ccc       
-        cccc...................cccc         
-           ccccc.....[.....ccccc            
-               ccccccccccccc                
+               ccccccccccccc
+           ccccc.....<.....ccccc
+        cccc...................cccc
+      ccc.........................ccc
+    ccc..............B..............ccc
+   cc.........B.............B.........cc
+  cc...................................cc
+ cc.....................................cc
+ c........B.....................B........c
+cc.................T...T.................cc
+c.........................................c
+c.........................................c
+c(......B.......T.........T.......B......{c
+c.........................................c
+c.........................................c
+cc.................T...T.................cc
+ c........B.....................B........c
+ cc.....................................cc
+  cc...................................cc
+   cc.........B.............B.........cc
+    ccc..............B..............ccc
+      ccc.........................ccc
+        cccc...................cccc
+           ccccc.....[.....ccccc
+               ccccccccccccc
 ENDMAP
 
 # 6 gods
@@ -1003,13 +1003,13 @@ MAP
   cc...................................cc
  cc.....................................cc
  c........B.....................B........c
-cc.................T...T.................cc 
-c.........................................c 
-c.........................................c 
-c(......G.......T.........T.......G......{c 
-c.........................................c 
-c.........................................c 
-cc.................T...T.................cc 
+cc.................T...T.................cc
+c.........................................c
+c.........................................c
+c(......G.......T.........T.......G......{c
+c.........................................c
+c.........................................c
+cc.................T...T.................cc
  c........B.....................B........c
  cc.....................................cc
   cc...................................cc
@@ -1087,31 +1087,31 @@ COLOUR: m = blue
 COLOUR: c = blue
 :end
 MAP
-               ccccccccccccc                
-           ccccc...........ccccc            
-        cccc...................cccc         
-      ccc............A............ccc       
-    ccc.......B.............B.......ccc     
-   cc.................................cc    
-  cc.....C........mmmmmmm........C.....cc   
- cc............mmmmwwwwwmmmm............cc  
- c...........mmmwwwwwwwwwwwmmm...........c  
-cc....B.....mmwwwwwwwWwwwwwwwmm.....B....cc 
-c..........mmwwwwwwwwwwwwwwwwwmm..........c 
-c..........mwwwwwwwwwwwwwwwwwwwm..........c 
-c....A.....mwwwwWwwwwwwwwwWwwwwm.....A....c 
-c..........mwwwwwwwwwwwwwwwwwwwm..........c 
-c..........mmwwwwwwwwwwwwwwwwwmm..........c 
-cc....B.....mmwwwwwwwWwwwwwwwmm.....B....cc 
- c...........mmmmwwwwwwwwwwmmm...........c  
- cc.............mmmwwwwwmmmm............cc  
-  cc.....C........mmmmmmm........C.....cc   
-   cc.................................cc    
-    ccc.......B.............B.......ccc     
-      ccc............A............ccc       
-        cccc...................cccc         
-           ccccc...........ccccc            
-               ccccccccccccc               
+               ccccccccccccc
+           ccccc...........ccccc
+        cccc...................cccc
+      ccc............A............ccc
+    ccc.......B.............B.......ccc
+   cc.................................cc
+  cc.....C........mmmmmmm........C.....cc
+ cc............mmmmwwwwwmmmm............cc
+ c...........mmmwwwwwwwwwwwmmm...........c
+cc....B.....mmwwwwwwwWwwwwwwwmm.....B....cc
+c..........mmwwwwwwwwwwwwwwwwwmm..........c
+c..........mwwwwwwwwwwwwwwwwwwwm..........c
+c....A.....mwwwwWwwwwwwwwwWwwwwm.....A....c
+c..........mwwwwwwwwwwwwwwwwwwwm..........c
+c..........mmwwwwwwwwwwwwwwwwwmm..........c
+cc....B.....mmwwwwwwwWwwwwwwwmm.....B....cc
+ c...........mmmmwwwwwwwwwwmmm...........c
+ cc.............mmmwwwwwmmmm............cc
+  cc.....C........mmmmmmm........C.....cc
+   cc.................................cc
+    ccc.......B.............B.......ccc
+      ccc............A............ccc
+        cccc...................cccc
+           ccccc...........ccccc
+               ccccccccccccc
 ENDMAP
 
 # 16 gods
@@ -1148,31 +1148,31 @@ COLOUR: m = blue
 COLOUR: c = blue
 :end
 MAP
-               ccccccccccccc                
-           ccccc...........ccccc            
-        cccc...................cccc         
-      ccc............T............ccc       
-    ccc.......B.............B.......ccc     
-   cc.................................cc    
-  cc.....A........mmmmmmm........A.....cc   
- cc............mmmmwwwwwmmmm............cc  
- c...........mmmwwwwwwwwwwwmmm...........c  
-cc....B.....mmwwwwwwwWwwwwwwwmm.....B....cc 
-c..........mmwwwwwwwwwwwwwwwwwmm..........c 
-c..........mwwwwwwwwwwwwwwwwwwwm..........c 
-c....T.....mwwwwWwwwwwwwwwWwwwwm.....T....c 
-c..........mwwwwwwwwwwwwwwwwwwwm..........c 
-c..........mmwwwwwwwwwwwwwwwwwmm..........c 
-cc....B.....mmwwwwwwwWwwwwwwwmm.....B....cc 
- c...........mmmmwwwwwwwwwwmmm...........c  
- cc.............mmmwwwwwmmmm............cc  
-  cc.....T........mmmmmmm........T.....cc   
-   cc.................................cc    
-    ccc.......B.............B.......ccc     
-      ccc............A............ccc       
-        cccc...................cccc         
-           ccccc...........ccccc            
-               ccccccccccccc              
+               ccccccccccccc
+           ccccc...........ccccc
+        cccc...................cccc
+      ccc............T............ccc
+    ccc.......B.............B.......ccc
+   cc.................................cc
+  cc.....A........mmmmmmm........A.....cc
+ cc............mmmmwwwwwmmmm............cc
+ c...........mmmwwwwwwwwwwwmmm...........c
+cc....B.....mmwwwwwwwWwwwwwwwmm.....B....cc
+c..........mmwwwwwwwwwwwwwwwwwmm..........c
+c..........mwwwwwwwwwwwwwwwwwwwm..........c
+c....T.....mwwwwWwwwwwwwwwWwwwwm.....T....c
+c..........mwwwwwwwwwwwwwwwwwwwm..........c
+c..........mmwwwwwwwwwwwwwwwwwmm..........c
+cc....B.....mmwwwwwwwWwwwwwwwmm.....B....cc
+ c...........mmmmwwwwwwwwwwmmm...........c
+ cc.............mmmwwwwwmmmm............cc
+  cc.....T........mmmmmmm........T.....cc
+   cc.................................cc
+    ccc.......B.............B.......ccc
+      ccc............A............ccc
+        cccc...................cccc
+           ccccc...........ccccc
+               ccccccccccccc
 ENDMAP
 
 
@@ -1876,8 +1876,8 @@ MAP
    xx..xxxxxxxxxxx..(.....[..xxxxxxxxxxx..xx
   xx..xxxxxxxxxxxx.....X.....xxxxxxxxxxxx..xx
   x..xxxxxxxxxxxxx...........xxxxxxxxxxxxx..x
- xx..xxx.....xxxxxx....{....xxxxxx.....xxx..xx 
- x..+x..B......xxxxxx.....xxxxxx......B..x+..x 
+ xx..xxx.....xxxxxx....{....xxxxxx.....xxx..xx
+ x..+x..B......xxxxxx.....xxxxxx......B..x+..x
 xx..x...........xxxxxxxxxxxxxxx...........x..xx
 x..xx.....X..B..xxxxxxxxxxxxxxx..B..X.....xx..x
 x..xx...........xxxxxxxxxxxxxxx...........xx..x
@@ -1887,11 +1887,11 @@ x..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..x
 x..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..x
 x..xxxxxxxxxx.....xxxxxxxxxxx.....xxxxxxxxxx..x
 xx..xxxxxxx......B..xxxxxxx..B......xxxxxxx..xx
- x..xxxxxx.B.........xxxxx.........B.xxxxxx..x 
- xx..xxxxx.....X.....xxxxx.....X.....xxxxx..xx 
-  x..xxxxx...........xxxxx...........xxxxx..x  
-  xx..xxxxx......B..xxxxxxx..B......xxxxx..xx  
-   xx..xxxxxx.....xxxxxxxxxxx.....xxxxxx..xx   
+ x..xxxxxx.B.........xxxxx.........B.xxxxxx..x
+ xx..xxxxx.....X.....xxxxx.....X.....xxxxx..xx
+  x..xxxxx...........xxxxx...........xxxxx..x
+  xx..xxxxx......B..xxxxxxx..B......xxxxx..xx
+   xx..xxxxxx.....xxxxxxxxxxx.....xxxxxx..xx
     xx...xxx+xxxxxxxxxxxxxxxxxxxxx+xxx...xx
      xxx....xxxxxxxxxxxxxxxxxxxxxxx....xxx
        xxx........xxxxxxxxxxx........xxx
@@ -2013,23 +2013,23 @@ MAP
       vvvvv..........................vvvvv
     vvv.....vvv.vvvvvvv.vvvvvvv.vvvv.....vvv
     v...vvvvv.....vvv.....vvv.....vvvvvv...v
- vvvv.vvvvvv...B...v...B...v...B...vvvvvvv.vvv  
-vv.....vvvvv.......v.......v.......vvvvv.....vv 
-v.......vvvvv.....vvv.....vvv.....vvvvv.......v 
-v..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..v 
-v........vvvvvv.vvvvvvv.vvvvvvv.vvvvvv........v 
-vv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vv 
- vvv.vvvv.............................vvvv.vvv  
+ vvvv.vvvvvv...B...v...B...v...B...vvvvvvv.vvv
+vv.....vvvvv.......v.......v.......vvvvv.....vv
+v.......vvvvv.....vvv.....vvv.....vvvvv.......v
+v..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..v
+v........vvvvvv.vvvvvvv.vvvvvvv.vvvvvv........v
+vv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vv
+ vvv.vvvv.............................vvvv.vvv
   v..vvvv.............................vvvv..v
   v.vvvvv...T......(...{...[......T...vvvvv.v
   v..vvvv.............................vvvv..v
- vvv.vvvv.............................vvvv.vvv  
-vv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vv 
-v........vvvvvv.vvvvvvv.vvvvvvv.vvvvvv........v 
-v..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..v 
-v.......vvvvv.....vvv.....vvv.....vvvvv.......v 
-vv.....vvvvv.......v.......v.......vvvvv.....vv 
- vvvv.vvvvvv...B...v...B...v...B...vvvvvv.vvvv  
+ vvv.vvvv.............................vvvv.vvv
+vv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vv
+v........vvvvvv.vvvvvvv.vvvvvvv.vvvvvv........v
+v..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..v
+v.......vvvvv.....vvv.....vvv.....vvvvv.......v
+vv.....vvvvv.......v.......v.......vvvvv.....vv
+ vvvv.vvvvvv...B...v...B...v...B...vvvvvv.vvvv
     v...vvvvv.....vvv.....vvv.....vvvvv...v
     vvv.....vvv.vvvvvvv.vvvvvvv.vvv.....vvv
       vvvvv.........................vvvvv
@@ -2047,24 +2047,24 @@ MAP
       vvvvv..................................vvvvv
     vvv.....vvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvv.....vvv
     v...vvvvv.....vvv.....vvv.....vvv.....vvvvvv...v
- vvvv.vvvvvv...B...v...B...v...B...v...B...vvvvvvv.vvv  
-vv.....vvvvv.......v.......v.......v.......vvvvv.....vv 
-v.......vvvvv.....vvv.....vvv.....vvv.....vvvvv.......v 
-v..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..v 
-v........vvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvv........v 
-vv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vv 
- vvv.vvvv.....................................vvvv.vvv  
-  v..vvvv.....................................vvvv..v   
-  v.vvvvv......T.......(...{...[.......T......vvvvv.v   
-  v..vvvv.....................................vvvv..v   
- vvv.vvvv.....................................vvvv.vvv  
-vv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vv 
-v........vvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvv........v 
-v..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..v 
-v.......vvvvv.....vvv.....vvv.....vvv.....vvvvv.......v 
-vv.....vvvvv.......v.......v.......v.......vvvvv.....vv 
- vvvv.vvvvvv...B...v...B...v...B...v...B...vvvvvv.vvvv  
-    v...vvvvv.....vvv.....vvv.....vvv.....vvvvv...v     
+ vvvv.vvvvvv...B...v...B...v...B...v...B...vvvvvvv.vvv
+vv.....vvvvv.......v.......v.......v.......vvvvv.....vv
+v.......vvvvv.....vvv.....vvv.....vvv.....vvvvv.......v
+v..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..v
+v........vvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvv........v
+vv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vv
+ vvv.vvvv.....................................vvvv.vvv
+  v..vvvv.....................................vvvv..v
+  v.vvvvv......T.......(...{...[.......T......vvvvv.v
+  v..vvvv.....................................vvvv..v
+ vvv.vvvv.....................................vvvv.vvv
+vv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vv
+v........vvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvv........v
+v..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..v
+v.......vvvvv.....vvv.....vvv.....vvv.....vvvvv.......v
+vv.....vvvvv.......v.......v.......v.......vvvvv.....vv
+ vvvv.vvvvvv...B...v...B...v...B...v...B...vvvvvv.vvvv
+    v...vvvvv.....vvv.....vvv.....vvv.....vvvvv...v
     vvv.....vvv.vvvvvvv.vvvvvvv.vvvvvvv.vvv.....vvv
       vvvvv.................................vvvvv
           vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -2080,27 +2080,27 @@ MAP
           vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
       vvvvv..........................................vvvvv
     vvv.....vvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvv.....vvv
-    v...vvvvv.....vvv.....vvv.....vvv.....vvv.....vvvvvv...vv   
- vvvv.vvvvvv...B...v...B...v...B...v...B...v...B...vvvvvvv.vvv  
-vv.....vvvvv.......v.......v.......v.......v.......vvvvv.....vv 
-v.......vvvvv.....vvv.....vvv.....vvv.....vvv.....vvvvv.......v 
-v..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..v 
-v........vvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvv........v 
-vv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vv 
- vvv.vvvv.............................................vvvv.vvv  
-  v..vvvv.............................................vvvv..v   
-  v.vvvvv........T.........(...{...[.........T........vvvvv.v   
-  v..vvvv.............................................vvvv..v   
- vvv.vvvv.............................................vvvv.vvv  
-vv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vv 
-v........vvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvv........v 
-v..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..v 
-v.......vvvvv.....vvv.....vvv.....vvv.....vvv.....vvvvv.......v 
-vv.....vvvvv.......v.......v.......v.......v.......vvvvv.....vv 
- vvvv.vvvvvv...B...v...B...v...B...v...B...v...B...vvvvvv.vvvv  
-    v...vvvvv.....vvv.....vvv.....vvv.....vvv.....vvvvv...v     
-    vvv.....vvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvv.....vvv     
-      vvvvv.........................................vvvvv       
+    v...vvvvv.....vvv.....vvv.....vvv.....vvv.....vvvvvv...vv
+ vvvv.vvvvvv...B...v...B...v...B...v...B...v...B...vvvvvvv.vvv
+vv.....vvvvv.......v.......v.......v.......v.......vvvvv.....vv
+v.......vvvvv.....vvv.....vvv.....vvv.....vvv.....vvvvv.......v
+v..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..v
+v........vvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvv........v
+vv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vv
+ vvv.vvvv.............................................vvvv.vvv
+  v..vvvv.............................................vvvv..v
+  v.vvvvv........T.........(...{...[.........T........vvvvv.v
+  v..vvvv.............................................vvvv..v
+ vvv.vvvv.............................................vvvv.vvv
+vv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vv
+v........vvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvv........v
+v..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..v
+v.......vvvvv.....vvv.....vvv.....vvv.....vvv.....vvvvv.......v
+vv.....vvvvv.......v.......v.......v.......v.......vvvvv.....vv
+ vvvv.vvvvvv...B...v...B...v...B...v...B...v...B...vvvvvv.vvvv
+    v...vvvvv.....vvv.....vvv.....vvv.....vvv.....vvvvv...v
+    vvv.....vvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvv.....vvv
+      vvvvv.........................................vvvvv
           vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
 
@@ -2233,23 +2233,23 @@ COLOUR:  c = red
 MAP
        cccc    ccc
       cclccccccclcc
-   ccccl.lcclccl.lcccc   
-  cclll...c...c...lllcc  
-  clll..B.G...G.B..lllc  
-  cll.......B.......llc  
- ccl.................lcc 
+   ccccl.lcclccl.lcccc
+  cclll...c...c...lllcc
+  clll..B.G...G.B..lllc
+  cll.......B.......llc
+ ccl.................lcc
 ccl...................lcc
 cl..B...............B..lc
 ccl...................lcc
- cccG...............Gccc 
- cc..........[........cc 
- cl..B.....(.......B..lc 
- cc..........{........cc 
- cccG...............Gccc 
+ cccG...............Gccc
+ cc..........[........cc
+ cl..B.....(.......B..lc
+ cc..........{........cc
+ cccG...............Gccc
 ccl...................lcc
 cl..B...............B..lc
 ccl...................lcc
- ccl.................lcc 
+ ccl.................lcc
   cll.......B.......llc
   clll..B.G...G.B..lllc
   cclll...c...c...lllcc
@@ -2272,12 +2272,12 @@ MAP
   ccccl.lcclccl.lcccc
  cclll...c...c...lllcc
  clll..B.G...G.B..lllc
- cll.......B.......llc  
- cl.................lc  
- ccG...............Gccc 
-cc...................cc 
-cl..B....{.(.[....B..lc 
-cc...................cc 
+ cll.......B.......llc
+ cl.................lc
+ ccG...............Gccc
+cc...................cc
+cl..B....{.(.[....B..lc
+cc...................cc
  ccG...............Gcc
  cl.................lc
  cll.......B.......llc
@@ -2304,27 +2304,27 @@ TAGS:   no_rotate
 ORIENT: encompass
 WEIGHT: 1
 MAP
-       bbb               bbb       
-     bbb.bb             bb.bbb     
-    bb....bb           bb....bb    
-   bb......bbb       bbb......bb   
-  bb.....B...bb     bb...B.....bb  
- bb..B........bbb bbb........B..bb 
- bb.........B...bbb...B.........bb 
+       bbb               bbb
+     bbb.bb             bb.bbb
+    bb....bb           bb....bb
+   bb......bbb       bbb......bb
+  bb.....B...bb     bb...B.....bb
+ bb..B........bbb bbb........B..bb
+ bb.........B...bbb...B.........bb
 bb....B..........b..........B....bb
 bb........B...{.....[...B........bb
- bbbbbbbb........b........bbbbbbbb 
-        bbbbbbbb...bbbbbbbb        
-              bb.(.bb              
-             bb.....bb             
-            bb..B.B..bb            
-           bb.........bb           
-          bb...........bb          
-         bb....B...B....bb         
-        bb.......B.......bb        
-         bbb...........bbb         
-           bbbb.....bbbb           
-              bbbbbbb             
+ bbbbbbbb........b........bbbbbbbb
+        bbbbbbbb...bbbbbbbb
+              bb.(.bb
+             bb.....bb
+            bb..B.B..bb
+           bb.........bb
+          bb...........bb
+         bb....B...B....bb
+        bb.......B.......bb
+         bbb...........bbb
+           bbbb.....bbbb
+              bbbbbbb
 ENDMAP
 
 # 9 gods
@@ -2334,27 +2334,27 @@ TAGS:   no_rotate
 ORIENT: encompass
 WEIGHT: 1
 MAP
-       bbb               bbb       
-     bbb.bb             bb.bbb     
-    bb....bb           bb....bb    
-   bb......bbb       bbb......bb   
-  bb.....B...bb     bb...B.....bb  
- bb..B........bbb bbb........B..bb 
- bb.............bbb.............bb 
+       bbb               bbb
+     bbb.bb             bb.bbb
+    bb....bb           bb....bb
+   bb......bbb       bbb......bb
+  bb.....B...bb     bb...B.....bb
+ bb..B........bbb bbb........B..bb
+ bb.............bbb.............bb
 bb....B....T.....b.....T....B....bb
 bb............{.....[............bb
- bbbbbbbb........b........bbbbbbbb 
-        bbbbbbbb...bbbbbbbb        
-              bb.(.bb              
-             bb.....bb             
-            bb.......bb            
-           bb....T....bb           
-          bb...........bb          
-         bb....B...B....bb         
-        bb.......B.......bb        
-         bbb...........bbb         
-           bbbb.....bbbb           
-              bbbbbbb            
+ bbbbbbbb........b........bbbbbbbb
+        bbbbbbbb...bbbbbbbb
+              bb.(.bb
+             bb.....bb
+            bb.......bb
+           bb....T....bb
+          bb...........bb
+         bb....B...B....bb
+        bb.......B.......bb
+         bbb...........bbb
+           bbbb.....bbbb
+              bbbbbbb
 ENDMAP
 
 # 12 gods.
@@ -2372,25 +2372,25 @@ MAP
       b...bbbbbbbbb...b
       bbbb.bbbbbbb.bbbb
          bb.bbbbb.bb
- bbbbb    bb.bbb.bb    bbbbb 
- b...b     bb...bb     b...b 
- b.B.b      b.B.b      b.B.b 
- b...bb     b...b     bb...b 
- bb.b.bb    bb.bb    bb.b.bb 
- bb.bb.bb   bb.bb   bb.bb.bb 
- b.bbbb.bb  b...b  bb.bbbb.b 
+ bbbbb    bb.bbb.bb    bbbbb
+ b...b     bb...bb     b...b
+ b.B.b      b.B.b      b.B.b
+ b...bb     b...b     bb...b
+ bb.b.bb    bb.bb    bb.b.bb
+ bb.bb.bb   bb.bb   bb.bb.bb
+ b.bbbb.bb  b...b  bb.bbbb.b
 bb.bbbbb.bbbb.[.bbbb.bbbbb.bb
 b.bbbbbbb...b...b...bbbbbbb.b
 b.bbbbbbb.B...{...B.bbbbbbb.b
 b.bbbbbbb...b...b...bbbbbbb.b
 bb.bbbbb.bbbb.(.bbbb.bbbbb.bb
- b.bbbb.bb  b...b  bb.bbbb.b 
- bb.bb.bb   bb.bb   bb.bb.bb 
- bb.b.bb    bb.bb    bb.b.bb 
- b...bb     b...b     bb...b 
- b.B.b      b.B.b      b.B.b 
- b...b     bb...bb     b...b 
- bbbbb    bb.bbb.bb    bbbbb 
+ b.bbbb.bb  b...b  bb.bbbb.b
+ bb.bb.bb   bb.bb   bb.bb.bb
+ bb.b.bb    bb.bb    bb.b.bb
+ b...bb     b...b     bb...b
+ b.B.b      b.B.b      b.B.b
+ b...b     bb...bb     b...b
+ bbbbb    bb.bbb.bb    bbbbb
          bb.bbbbb.bb
       bbbb.bbbbbbb.bbbb
       b...bbbbbbbbb...b
