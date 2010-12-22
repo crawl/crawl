@@ -1166,6 +1166,197 @@ MAP
  xxxxxxxxxxxxxxxxxx
 ENDMAP
 
+NAME:   minmay_stone_trees_small
+TAGS:   extra luniq_mini ruin_lair
+DEPTH:  D, Vault, Lair
+WEIGHT: 6
+MAP
+.......
+..ttt..
+.tccct.
+.tccct.
+.tccct.
+..ttt..
+.......
+ENDMAP
+
+NAME:   minmay_stone_trees_medium
+TAGS:   extra luniq_mini ruin_lair
+DEPTH:  D, Vault, Lair
+WEIGHT: 3
+MAP
+.............
+..ttt...ttt..
+.tccct.tccct.
+.tccct.tccct.
+.tccct.tccct.
+..ttt.t.ttt..
+.....ttt.....
+..ttt.t.ttt..
+.tccct.tccct.
+.tccct.tccct.
+.tccct.tccct.
+..ttt...ttt..
+.............
+ENDMAP
+
+NAME:   minmay_stone_trees_large
+TAGS:   extra luniq_mini ruin_lair
+DEPTH:  D, Vault, Lair
+WEIGHT: 1
+SUBST:  T = t.
+MAP
+...................
+..ttt...ttt...ttt..
+.tccct.tccct.tccct.
+.tccctTtccctTtccct.
+.tccct.tccct.tccct.
+..ttt...ttt...ttt..
+...T.....T.....T...
+..ttt...ttt...ttt..
+.tccct.tccct.tccct.
+.tccctTtccctTtccct.
+.tccct.tccct.tccct.
+..ttt...ttt...ttt..
+...T.....T.....T...
+..ttt...ttt...ttt..
+.tccct.tccct.tccct.
+.tccctTtccctTtccct.
+.tccct.tccct.tccct.
+..ttt...ttt...ttt..
+...................
+ENDMAP
+
+NAME:   minmay_crystal_water
+TAGS:   extra no_monster_gen luniq_mini
+DEPTH:  D
+MAP
+wwwwwwwww
+wbwwwwwbw
+wbwbbbwbw
+wbwwwwwbw
+wwwwwwwww
+ENDMAP
+
+NAME:   minmay_holes
+TAGS:   extra luniq_mini
+DEPTH:  D, Lair
+KFEAT:  ^ = known shaft trap
+SUBST:  . = . ^:1, ' = . ^:2, " = . ^:4
+WEIGHT: 15
+MAP
+     ....
+   ........
+  ..........
+ ....''''....
+ ...''''''...
+...'''""'''...
+...''""""''...
+...''""""''...
+...'''""'''...
+ ...''''''...
+ ....''''....
+  ..........
+   ........
+     ....
+ENDMAP
+
+NAME:   minmay_splitting_lines
+TAGS:   extra luniq_mini
+DEPTH:  D
+WEIGHT: 5
+MAP
+.....................
+.....x...x.x...x.....
+......x.x...x.x......
+...x...x.....x...x...
+....x..x.....x..x....
+.x...xxx.....xxx...x.
+..x..x..x...x..x..x..
+...xxx...x.x...xxx...
+..x...x...x...x...x..
+.x.....x..x..x.....x.
+........xxxxx........
+.x.....x..x..x.....x.
+..x...x...x...x...x..
+...xxx...x.x...xxx...
+..x..x..x...x..x..x..
+.x...xxx.....xxx...x.
+....x..x.....x..x....
+...x...x.....x...x...
+......x.x...x.x......
+.....x...x.x...x.....
+.....................
+ENDMAP
+
+NAME:   minmay_curled_crystal
+TAGS:   extra luniq_mini
+DEPTH:  D, Elf
+WEIGHT: 3
+MAP
+................
+..bb........bb..
+.b..b......b..b.
+.b............b.
+..bbbbbbbbbbbb..
+................
+ENDMAP
+
+NAME:    minmay_parallelograms
+DEPTH:   D
+WEIGHT:  2
+SHUFFLE: EFGH
+SUBST:   B : xx., C : xx., D : xx., E : xx., F : xx., G : xx., H : xx.
+MAP
+...........         ...........
+.xx.xxxxxx..       ..BBBBBB.BB.
+..xx.....xx..     ..BB.....BB..
+ ..xx.EEE.xx..   ..BB.FFF.BB..
+  ..xx.EEE.xx.. ..BB.FFF.BB..
+   ..xx.....xx...BB.....BB..
+    ..xxxxxx.xx.BB.BBBBBB..
+     .....................
+    ..CCCCCC.CC.DD.DDDDDD..
+   ..CC.....CC...DD.....DD..
+  ..CC.HHH.CC.. ..DD.GGG.DD..
+ ..CC.HHH.CC..   ..DD.GGG.DD..
+..CC.....CC..     ..DD.....DD..
+.CC.CCCCCC..       ..DDDDDD.DD.
+...........         ...........
+ENDMAP
+
+NAME:    minmay_large_rounded_square
+DEPTH:   D, Vault, Crypt
+WEIGHT:  1
+SUBST:   x : x c:2 v:1 b:1
+MAP
+     ..............
+   ...xxxxxxxxxxxx...
+  ..xxxxxxxxxxxxxxxx..
+ ..xxxxxxxxxxxxxxxxxx..
+ .xxxxxxxxxxxxxxxxxxxx.
+..xxxxxxxxxxxxxxxxxxxx..
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+..xxxxxxxxxxxxxxxxxxxx..
+ .xxxxxxxxxxxxxxxxxxxx.
+ ..xxxxxxxxxxxxxxxxxx..
+  ..xxxxxxxxxxxxxxxx..
+   ...xxxxxxxxxxxx...
+     ..............
+ENDMAP
+
+
 #####################################################################
 #
 # <<2>> Inaccessible items
