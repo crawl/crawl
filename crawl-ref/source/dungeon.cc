@@ -2462,7 +2462,7 @@ static void _portal_vault_level(int level_number)
         dlua.callfn(i->second.c_str(), 0, 0);
 }
 
-static bool _place_portal_vault(const std::string &tag, int dlevel)
+static bool _place_vault_by_tag(const std::string &tag, int dlevel)
 {
     const map_def *vault = random_map_for_tag(tag, true);
     if (!vault)
@@ -3109,7 +3109,7 @@ static void _place_specific_stair(dungeon_feature_type stair,
                                   int dlevel,
                                   bool vault_only)
 {
-    if ((tag.empty() || !_place_portal_vault(tag, dlevel)) && !vault_only)
+    if ((tag.empty() || !_place_vault_by_tag(tag, dlevel)) && !vault_only)
         _place_specific_feature(stair);
 }
 
