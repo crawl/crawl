@@ -309,6 +309,138 @@ c$$$ccccc$$$c
 ccccccccccccc
 ENDMAP
 
+
+################################################################################
+# Staircase flavor vaults.  I am not sure if the "extra" tag works as intended,
+# or even does anything all - no other floating vaults have that tag. --minmay
+#
+NAME:    minmay_staircase_windowed_small
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+ORIENT:  float
+WEIGHT:  5
+SHUFFLE: )]}([{
+SUBST:   ? = cn
+SUBST:   c : c x:2 v:1 b:1
+SUBST:   n : n:18 G:1 .:1
+SUBST:   G : ...G
+MAP
+ccccccccc
+cG.GcG.Gc
+c...+.).c
+cG..c...c
+cc+cc?n?c
+cG..c...
+c...+...
+cG.Gc...
+ccccc
+ENDMAP
+
+NAME:    minmay_staircase_windowed_large
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+ORIENT:  float
+WEIGHT:  5
+SHUFFLE: )]}([{
+SUBST:   c : c x:2 v:1 b:1
+SUBST:   n : n:18 G:1 .:1
+SUBST:   G : ...G
+MAP
+ccccccccccccc
+cG...GcG...Gc
+c.....c.....c
+c.....+..)..c
+c.....c.....c
+cG...GcG...Gc
+ccc+ccccnnncc
+cG...Gc.....
+c.....c.....
+c.....+.....
+c.....c.....
+cG...Gc.....
+ccccccc
+ENDMAP
+
+NAME:    minmay_staircase_statues
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+ORIENT:  float
+WEIGHT:  5
+SHUFFLE: )]}([{
+MAP
+G.G
+.).
+G.G
+ENDMAP
+
+NAME:    minmay_staircase_statues_hall_small
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+ORIENT:  float
+WEIGHT:  3
+SHUFFLE: )]}([{
+SUBST:   c : c x:2 v:1 b:1
+MAP
+   ccccc
+   cG.Gc
+   c...c
+cccc...cccc
+cG.......Gc
+c.).......+
+cG.......Gc
+cccc...cccc
+   c...c
+   cG.Gc
+   ccccc
+ENDMAP
+
+NAME:    minmay_staircase_statues_hall_large
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+ORIENT:  float
+WEIGHT:  2
+SHUFFLE: )]}([{, AB
+SUBST:   A = .
+SUBST:   B = G
+SUBST:   C = G.
+SUBST:   c : c x:2 v:1 b:1
+MAP
+     ccccccc
+     cB.A.Bc
+     c.....c
+     c.....c
+     c.....c
+cccccc.....cccccc
+cB.............Bc
+c................
+cA.)....C.......@
+c................
+cB.............Bc
+cccccc.....cccccc
+     c.....c
+     c.....c
+     c.....c
+     cB.A.Bc
+     ccccccc
+ENDMAP
+
+NAME:    minmay_staircase_bubble
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+ORIENT:  float
+SUBST:   m = mmmm.
+MAP
+ .......
+..bb.bb..
+.bb...bb.
+.b.....b.
+.m..)..m.
+.b.....b.
+.bb...bb.
+..bbmbb..
+ .......
+ENDMAP
+
 ##############################################################################
 # Cavepeople
 #
