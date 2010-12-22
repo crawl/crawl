@@ -458,8 +458,6 @@ TAGS: layout allow_dup
     extend_map{width = gxm, height = gym, fill = 'x'}
     fill_area{fill = 'x'}
 
-
-    local temp_rand
     local wall_type_room
     local wall_type
     local rooms = {}
@@ -489,9 +487,7 @@ TAGS: layout allow_dup
             b1 = xs + 11 - crawl.random2avg(5, 2);
             b2 = ys + 11 - crawl.random2avg(5, 2);
 
-            temp_rand = crawl.random2(280);
-
-            if temp_rand > 39 and is_valid_coord {x=a1, y=a2} and is_valid_coord{x=b1, y=b2} then
+            if crawl.x_chance_in_y(6, 7) and is_valid_coord {x=a1, y=a2} and is_valid_coord{x=b1, y=b2} then
                 wall_type_room = crawl.random_element {
                     [wall_type] = 216,
                     ['c'] = 9,
