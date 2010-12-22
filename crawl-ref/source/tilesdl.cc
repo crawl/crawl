@@ -916,7 +916,7 @@ bool TilesFramework::layout_statcol(bool message_overlay, bool show_gold_turns)
     m_region_tab->place(inv_col, self_inv_y);
 
     // Integer divison rounded up
-    int lines = (m_region_spl->get_max_slots() - 1) / m_region_tab->mx + 1;
+    int lines = (you.spell_no - 1) / m_region_tab->mx + 1;
     int delta_y = m_region_tab->dy * lines + tab_margin;
 
     if (delta_y < m_region_tab->sy - m_region_map->ey && you.spell_no > 0)
