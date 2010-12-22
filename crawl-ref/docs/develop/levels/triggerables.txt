@@ -102,7 +102,7 @@ to collapse, etc).
 "Triggerer" is regularly used in randomised functions to determine whether or
 not the function is actually being fired. For example, if the Triggerer is not
 of the "turns" type and "countdown" subtype; see the WarningMachines in
-dat/clua/lm_fog.lua for examples of functions being triggered randomly, and 
+dat/clua/lm_fog.lua for examples of functions being triggered randomly, and
 being triggered a certain number of turns before a FogMachine is fired).
 
 Finally, "marker" is usually used to determine the position of the Triggerable
@@ -119,7 +119,7 @@ It also optionally takes the following parameters: "repeated" which defaults to
 'false': a non-repeated Triggerable will be removed after its first firing, and
 will not be subsequently fired.
 
-"props". A table consisting of one or more properties. In this instance takes 
+"props". A table consisting of one or more properties. In this instance takes
 the "single_random_slave" parameter, which is linked into Master and Slave
 mechanics (see Section F).
 
@@ -329,7 +329,7 @@ KFEAT:  " = .
 
 {{
 
-** In this vault, killing one of the name skeletal warriors causes part of the 
+** In this vault, killing one of the name skeletal warriors causes part of the
 ** wall to slide back. These sections of wall have to be individually marker as
 ** such.
 -- First off, slave marker magic.

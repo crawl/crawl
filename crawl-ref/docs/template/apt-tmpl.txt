@@ -16,7 +16,7 @@ are the aptitude values shown in version 0.6 and older.)
  -5  (238)  abysmal aptitude
  -4  (200)  very poor aptitude (learning half as fast as Humans)
  -3  (168)  poor aptitude
- -2  (141)  bad aptitude 
+ -2  (141)  bad aptitude
  -1  (119)  slightly disfavoured aptitude
   0  (100)  standard aptitude (Humans)
  +1   (84)  slightly favoured aptitude
@@ -25,7 +25,7 @@ are the aptitude values shown in version 0.6 and older.)
  +4   (50)  outstanding aptitude (learning twice as fast as Humans)
  +5   (42)  exceptional aptitude
 
-Please note that many things affect how quickly a character will actually 
+Please note that many things affect how quickly a character will actually
 learn a skill. Thus, the numbers below are good enough for comparisons among
 species, but not necessarily among skills.
 

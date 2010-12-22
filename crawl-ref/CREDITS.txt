@@ -60,4 +60,3 @@ John Greenberg               Eva Myers                 Evan Williams
 GreyKnight                   Wille Mäntylä             Jeremey Wilson
 Joshua Gross                 Erkki Nurmi               Yelve Yakut
 Brian Haase                  Mattias Nyberg            Zooko
-

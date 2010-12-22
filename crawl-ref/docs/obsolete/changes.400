@@ -629,9 +629,9 @@ matter what: Ice Beast, Blade Hands, or Dragon)... that's a bug.
                redraw_screen () is called. But it's problem under
                DOS because redraw_screen() is defined only under
                PLAIN_TERM.
-	    See stuff.cc - there is
-		#ifdef PLAIN_TERM
-		void redraw_screen( void );
+            See stuff.cc - there is
+                #ifdef PLAIN_TERM
+                void redraw_screen( void );
 
 > got rid of all of the plain_term() wrappers around redraw_screen.
 > instead,  redraw_screen() becomes a no-op for non-plain term systems.
