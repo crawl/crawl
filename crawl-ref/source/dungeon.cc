@@ -3142,18 +3142,14 @@ static void _place_branch_entrances(int dlevel, level_area_type level_type)
     if (level_type != LEVEL_DUNGEON)
         return;
 
-    if (player_in_branch(BRANCH_MAIN_DUNGEON))
+    if (player_in_branch(BRANCH_MAIN_DUNGEON) && at_branch_bottom())
     {
-        // level 26: replaces all down stairs with staircases to Zot:
-        if (dlevel == 26)
+        for (rectangle_iterator ri(1); ri; ++ri)
         {
-            for (rectangle_iterator ri(1); ri; ++ri)
+            if (grd(*ri) >= DNGN_STONE_STAIRS_DOWN_I
+                && grd(*ri) <= DNGN_ESCAPE_HATCH_DOWN)
             {
-                if (grd(*ri) >= DNGN_STONE_STAIRS_DOWN_I
-                    && grd(*ri) <= DNGN_ESCAPE_HATCH_DOWN)
-                {
-                    grd(*ri) = DNGN_ENTER_ZOT;
-                }
+                grd(*ri) = DNGN_ENTER_ZOT;
             }
         }
     }
