@@ -1,6 +1,8 @@
 #include "AppHdr.h"
 #include "env.h"
 #include "rng.h"
+#include "dgn-voronoi.h"
+#include "dgn-perlin.h"
 #include <locale.h>
 
 static wchar_t dchar(dungeon_feature_type g)
@@ -15,6 +17,10 @@ static wchar_t dchar(dungeon_feature_type g)
         return 0x2588;
     case DNGN_STONE_ARCH:
         return 0x2229;
+    case DNGN_DEEP_WATER:
+        return 0x2248;
+    case DNGN_SHALLOW_WATER:
+        return '~';
     default:
         return '?';
     }
@@ -34,7 +40,8 @@ int main()
 {
     setlocale(LC_CTYPE, "");
     grd.init(DNGN_ROCK_WALL);
-//    seed_rng();
+    seed_rng();
+    layout_perlin();
     draw();
     return 0;
 }
