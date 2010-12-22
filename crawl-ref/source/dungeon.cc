@@ -768,23 +768,19 @@ static bool _dgn_fill_zone(
             if (iswanted && iswanted(c))
                 ret = true;
 
-            for (int yi = -1; yi <= 1; ++yi)
-                for (int xi = -1; xi <= 1; ++xi)
+            for (adjacent_iterator ai(c); ai; ++ai)
+            {
+                const coord_def& cp = *ai;
+                if (!map_bounds(cp)
+                    || travel_point_distance[cp.x][cp.y] || !passable(cp))
                 {
-                    if (!xi && !yi)
-                        continue;
-
-                    const coord_def cp(c.x + xi, c.y + yi);
-                    if (!map_bounds(cp)
-                        || travel_point_distance[cp.x][cp.y] || !passable(cp))
-                    {
-                        continue;
-                    }
-
-                    travel_point_distance[cp.x][cp.y] = zone;
-                    record_point(cp);
-                    points[!cur].push_back(cp);
+                    continue;
                 }
+
+                travel_point_distance[cp.x][cp.y] = zone;
+                record_point(cp);
+                points[!cur].push_back(cp);
+            }
         }
 
         points[cur].clear();
