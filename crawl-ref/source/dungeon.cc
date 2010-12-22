@@ -5614,7 +5614,7 @@ static bool _connect_spotty(const coord_def& from)
 
         // Flatten orthogonal neighbours, and add new neighbours to border.
         flatten.insert(cur);
-        for (radius_iterator ai(cur, 1, C_POINTY, NULL, true); ai; ++ai)
+        for (orth_adjacent_iterator ai(cur); ai; ++ai)
         {
             if (map_masked(*ai, MMT_VAULT))
                 continue;
