@@ -98,6 +98,16 @@ end
 # Vestibule entries
 ##############################################################################
 
+# This replaces the hardcoded placement of a hell entrance on D:21-27.
+NAME:   hell_entry
+TAGS:   extra allow_dup luniq
+DEPTH:  D:21-27
+CHANCE: 100%
+KFEAT:  O = enter_hell
+MAP
+O
+ENDMAP
+
 default-depth: D:12-26
 
 ##############################################################################
