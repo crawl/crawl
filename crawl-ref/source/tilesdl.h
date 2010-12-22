@@ -184,12 +184,12 @@ protected:
     MessageRegion   *m_region_msg;
     MapRegion       *m_region_map;
     TabbedRegion    *m_region_tab;
-    TabbedRegion    *m_region_tsp;
     InventoryRegion *m_region_inv;
     SpellRegion     *m_region_spl;
     MemoriseRegion  *m_region_mem;
     MonsterRegion   *m_region_mon;
     SkillRegion     *m_region_skl;
+    TabbedRegion    *m_region_tab_spl;
 
     // Full-screen CRT layer
     CRTRegion       *m_region_crt;
