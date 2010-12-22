@@ -5995,24 +5995,20 @@ static void _labyrinth_place_exit(const coord_def &end)
 // entirely by non-floor.
 static bool _has_no_floor_neighbours(const coord_def &pos, bool recurse = false)
 {
-    for (int x = -1; x <= 1; x++)
-        for (int y = -1; y <= 1; y++)
+    for (adjacent_iterator ai(pos); ai; ++ai)
+    {
+        const coord_def& p = *ai;
+        if (!in_bounds(p))
+            return (true);
+
+        if (recurse)
         {
-            if (x == 0 && y == 0)
-                continue;
-
-            const coord_def p = pos + coord_def(x, y);
-            if (!in_bounds(p))
-                return (true);
-
-            if (recurse)
-            {
-                if (grd(p) == DNGN_FLOOR)
-                    return (false);
-            }
-            else if (_has_no_floor_neighbours(p, true))
-                return (true);
+            if (grd(p) == DNGN_FLOOR)
+               return (false);
         }
+        else if (_has_no_floor_neighbours(p, true))
+            return (true);
+    }
 
     return (recurse);
 }
