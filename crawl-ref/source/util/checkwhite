@@ -10,11 +10,12 @@ while(<FLIST>)
     next if /\.(png|ttf|ico|icns|fig|tex|eps|pdf)$/i;
     next if /\.(sln|vim|pbxproj|vsprops|plist)$/i;
     next if /\.(rb|pl)$/i;
-    next if /Makefile/i;
     next if /vcproj/;
+    next if /^\.gitmodules$/;
     next if /\.(lex|tab)\./;
     next if !/\./;
-    my $tab = /\.(rb|pl|Makefile)$/i; # Allow tabs for these files.
+    my $tab = /\.(rb|pl|sh)$/i; # Allow tabs for these files.
+    $tab = 1 if /Makefile/i;    # ... and for makefiles.
     undef local $/;
     open F, "<$_" or die "Can't open $_";
     my $file = $_;
