@@ -1135,6 +1135,7 @@ void TilesFramework::update_inventory()
         return;
 
     m_region_tab->update();
+    m_region_tab_spl->update();
 }
 
 void TilesFramework::toggle_inventory_display()
