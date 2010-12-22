@@ -311,8 +311,7 @@ ENDMAP
 
 
 ################################################################################
-# Staircase flavor vaults.  I am not sure if the "extra" tag works as intended,
-# or even does anything all - no other floating vaults have that tag. --minmay
+# Staircase flavor vaults.
 #
 NAME:    minmay_staircase_windowed_small
 TAGS:    extra luniq_staircase
