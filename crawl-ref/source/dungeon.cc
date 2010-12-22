@@ -2462,14 +2462,9 @@ static void _portal_vault_level(int level_number)
         dlua.callfn(i->second.c_str(), 0, 0);
 }
 
-static const map_def *_random_portal_vault(const std::string &tag)
-{
-    return random_map_for_tag(tag, true);
-}
-
 static bool _place_portal_vault(const std::string &tag, int dlevel)
 {
-    const map_def *vault = _random_portal_vault(tag);
+    const map_def *vault = random_map_for_tag(tag, true);
     if (!vault)
         return (false);
 
