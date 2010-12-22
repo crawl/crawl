@@ -2226,7 +2226,7 @@ static void _check_doors()
 
         int solid_count = 0;
 
-        for (radius_iterator rai(*ri, 1, NULL, C_POINTY, true); rai; ++rai)
+        for (orth_adjacent_iterator rai(*ri); rai; ++rai)
             if (feat_is_solid(grd(*rai)))
                 solid_count++;
 
@@ -2244,7 +2244,7 @@ static void _hide_doors()
         {
             int wall_count = 0;
 
-            for (radius_iterator rai(*ri, 1, NULL, C_POINTY, true); rai; ++rai)
+            for (orth_adjacent_iterator rai(*ri); rai; ++rai)
                 if (grd(*rai) == DNGN_ROCK_WALL)
                     wall_count++;
 
