@@ -17,7 +17,7 @@
 
 TabbedRegion::TabbedRegion(const TileRegionInit &init) :
     GridRegion(init),
-    m_active(0),
+    m_active(-1),
     m_mouse_tab(-1),
     m_buf_gui(&init.im->m_textures[TEX_GUI])
 {
@@ -135,6 +135,13 @@ void TabbedRegion::disable_tab(int idx)
         return;
 
     m_tabs[idx].enabled = false;
+
+    if (m_active == idx)
+       m_active = (idx + 1) % (int)m_tabs.size();
+
+    if (m_active == idx)
+        m_active = -1;
+
     m_dirty = true;
 }
 
