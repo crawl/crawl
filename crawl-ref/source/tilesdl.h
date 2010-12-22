@@ -191,6 +191,7 @@ protected:
     MonsterRegion   *m_region_mon;
     SkillRegion     *m_region_skl;
     TabbedRegion    *m_region_tab_spl;
+    TabbedRegion    *m_region_tab_mon;
 
     // Full-screen CRT layer
     CRTRegion       *m_region_crt;
