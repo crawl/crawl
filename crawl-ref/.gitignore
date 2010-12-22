@@ -37,7 +37,8 @@ DEADJOE
 *.sw[nop]
 
 # Generated documentation
-docs/aptitudes.txt
+/docs/aptitudes.txt
+/docs/FAQ.html
 
 # Crawl generated junk
 arena.result
