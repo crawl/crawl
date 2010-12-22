@@ -95,11 +95,6 @@ struct dist_feat
         }
 };
 
-const struct coord_def OrthCompass[4] =
-{
-    coord_def(0, -1), coord_def(0, 1), coord_def(-1, 0), coord_def(1, 0)
-};
-
 // DUNGEON BUILDERS
 static bool _build_level_vetoable(int level_number, level_area_type level_type,
                                   bool enable_random_maps);
