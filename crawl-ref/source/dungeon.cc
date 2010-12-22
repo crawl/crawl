@@ -1438,8 +1438,8 @@ static void _fixup_misplaced_items()
 
 static void _fixup_branch_stairs()
 {
-    // Top level of branch levels - replaces up stairs
-    // with stairs back to dungeon or wherever:
+    // Top level of branch levels - replaces up stairs with stairs back to
+    // dungeon or wherever:
     if (your_branch().exit_stairs != NUM_FEATURES
         && player_branch_depth() == 1
         && you.level_type == LEVEL_DUNGEON)
@@ -1458,15 +1458,20 @@ static void _fixup_branch_stairs()
         }
     }
 
+    // Bottom level of branch - wipes out down stairs, or, in case of the main
+    // dungeon, replaces them with Zot entrances.
+    dungeon_feature_type feat = DNGN_FLOOR;
+    if (player_in_branch(BRANCH_MAIN_DUNGEON))
+        feat = DNGN_ENTER_ZOT;
+
     if (at_branch_bottom() && you.level_type == LEVEL_DUNGEON)
     {
-        // Bottom level of branch - wipes out down stairs.
         for (rectangle_iterator ri(1); ri; ++ri)
         {
             if (grd(*ri) >= DNGN_STONE_STAIRS_DOWN_I
                 && grd(*ri) <= DNGN_ESCAPE_HATCH_DOWN)
             {
-                grd(*ri) = DNGN_FLOOR;
+                grd(*ri) = feat;
             }
         }
     }
@@ -3141,18 +3146,6 @@ static void _place_branch_entrances(int dlevel, level_area_type level_type)
 {
     if (level_type != LEVEL_DUNGEON)
         return;
-
-    if (player_in_branch(BRANCH_MAIN_DUNGEON) && at_branch_bottom())
-    {
-        for (rectangle_iterator ri(1); ri; ++ri)
-        {
-            if (grd(*ri) >= DNGN_STONE_STAIRS_DOWN_I
-                && grd(*ri) <= DNGN_ESCAPE_HATCH_DOWN)
-            {
-                grd(*ri) = DNGN_ENTER_ZOT;
-            }
-        }
-    }
 
     // Place actual branch entrances.
     for (int i = 0; i < NUM_BRANCHES; ++i)
