@@ -727,7 +727,7 @@ int TilesFramework::getch_ck()
 }
 
 static const int map_margin      = 2;
-static const int tab_margin      = 5;
+static const int tab_margin      = 15;
 static const int map_stat_margin = 4;
 static const int crt_width       = 80;
 static const int crt_height      = 30;
