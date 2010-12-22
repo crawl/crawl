@@ -300,11 +300,8 @@ bool add_spell_to_memory(spell_type spell)
     take_note(Note(NOTE_LEARN_SPELL, spell));
 
 #ifdef USE_TILE
-    if (you.spell_no == 1)
-    {
-        tiles.resize();
-        redraw_screen();
-    }
+    tiles.do_layout();
+    redraw_screen();
 #endif
 
     return (true);
@@ -325,12 +322,9 @@ bool del_spell_from_memory_by_slot(int slot)
 
     you.spell_no--;
 
-    #ifdef USE_TILE
-    if (you.spell_no == 0)
-    {
-        tiles.resize();
-        redraw_screen();
-    }
+#ifdef USE_TILE
+    tiles.do_layout();
+    redraw_screen();
 #endif
 
     return (true);

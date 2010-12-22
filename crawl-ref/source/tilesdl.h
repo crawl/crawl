@@ -93,6 +93,7 @@ public:
     void load_dungeon(const coord_def &gc);
     int getch_ck();
     void resize();
+    void do_layout();
     void calculate_default_options();
     void clrscr();
 
@@ -207,7 +208,6 @@ protected:
     int m_msg_font;
     int m_tip_font;
 
-    void do_layout();
     bool layout_statcol(bool message_overlay, bool show_gold_turns);
 
     ImageManager *m_image;
