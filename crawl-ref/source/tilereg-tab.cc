@@ -28,6 +28,34 @@ TabbedRegion::~TabbedRegion()
 {
 }
 
+void TabbedRegion::set_icon_pos(int idx)
+{
+    if (!m_tabs[idx].enabled)
+        return;
+
+    int start_y = 0;
+
+    for (int i = 0; i < (int)m_tabs.size(); ++i)
+    {
+        if (i == idx || !m_tabs[i].reg)
+            continue;
+        start_y = std::max(m_tabs[i].max_y + 1, start_y);
+    }
+    m_tabs[idx].min_y = start_y;
+    m_tabs[idx].max_y = start_y + m_tabs[idx].height;
+}
+
+void TabbedRegion::reset_icons(int from_idx)
+{
+    for (int i = from_idx; i < (int)m_tabs.size(); ++i)
+    {
+        m_tabs[i].min_y = 0;
+        m_tabs[i].max_y = 0;
+    }
+    for (int i = from_idx; i < (int)m_tabs.size(); ++i)
+        set_icon_pos(i);
+}
+
 void TabbedRegion::set_tab_region(int idx, GridRegion *reg, tileidx_t tile_tab)
 {
     ASSERT(idx >= 0);
@@ -42,20 +70,12 @@ void TabbedRegion::set_tab_region(int idx, GridRegion *reg, tileidx_t tile_tab)
         inf.ofs_y = 0;
         inf.min_y = 0;
         inf.max_y = 0;
+        inf.height = 0;
         inf.enabled = true;
         m_tabs.push_back(inf);
     }
 
-    int start_y = 0;
-    for (int i = 0; i < (int)m_tabs.size(); ++i)
-    {
-        if (!m_tabs[i].reg)
-            continue;
-        start_y = std::max(m_tabs[i].max_y + 1, start_y);
-    }
-
     const tile_info &inf = tile_gui_info(tile_tab);
-    int max_height = inf.height;
     ox = std::max((int)inf.width, ox);
 
     // All tabs should be the same size.
@@ -69,8 +89,8 @@ void TabbedRegion::set_tab_region(int idx, GridRegion *reg, tileidx_t tile_tab)
     ASSERT((int)m_tabs.size() > idx);
     m_tabs[idx].reg = reg;
     m_tabs[idx].tile_tab = tile_tab;
-    m_tabs[idx].min_y = start_y;
-    m_tabs[idx].max_y = start_y + max_height;
+    m_tabs[idx].height = inf.height;
+    set_icon_pos(idx);
 
     recalculate();
 }
@@ -122,16 +142,19 @@ bool TabbedRegion::invalid_index(int idx) const
 
 void TabbedRegion::enable_tab(int idx)
 {
-    if (invalid_index(idx))
+    if (invalid_index(idx) || m_tabs[idx].enabled)
         return;
 
     m_tabs[idx].enabled = true;
+
+    reset_icons(idx);
+
     m_dirty = true;
 }
 
 void TabbedRegion::disable_tab(int idx)
 {
-    if (invalid_index(idx))
+    if (invalid_index(idx) || !m_tabs[idx].enabled)
         return;
 
     m_tabs[idx].enabled = false;
@@ -141,6 +164,8 @@ void TabbedRegion::disable_tab(int idx)
 
     if (m_active == idx)
         m_active = -1;
+
+    reset_icons(idx);
 
     m_dirty = true;
 }
