@@ -857,7 +857,7 @@ LIBS += $(CONTRIB_LIBS) $(EXTRA_LIBS)
 
 DOC_BASE        := ../docs
 DOC_TEMPLATES   := $(DOC_BASE)/template
-GENERATED_DOCS  := $(DOC_BASE)/aptitudes.txt
+GENERATED_DOCS  := $(DOC_BASE)/aptitudes.txt $(DOC_BASE)/FAQ.html
 GENERATED_FILES := art-data.h $(RLTILES)/dc-unrand.txt
 
 GAME_DEPENDS  := $(DESTTILEFILES) $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS)
@@ -942,6 +942,9 @@ version.o: build.h compflag.h
 $(DOC_BASE)/aptitudes.txt: $(DOC_TEMPLATES)/apt-tmpl.txt player.cc aptitudes.h \
 						   util/gen-apt.pl
 	$(QUIET_GEN)./util/gen-apt.pl $@ $^
+
+$(DOC_BASE)/FAQ.html: dat/database/FAQ.txt util/FAQ2html.pl
+	$(QUIET_GEN)./util/FAQ2html.pl $< $@
 
 ##########################################################################
 # The level compiler
