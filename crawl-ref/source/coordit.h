@@ -86,6 +86,14 @@ public:
     radius_iterator(pos, 1, C_SQUARE, NULL, _exclude_center) {}
 };
 
+class orth_adjacent_iterator : public radius_iterator
+{
+public:
+    explicit orth_adjacent_iterator(const coord_def& pos,
+                                    bool _exclude_center = true) :
+    radius_iterator(pos, 1, C_POINTY, NULL, _exclude_center) {}
+};
+
 /* distance_iterator: Iterates over coordinates in integer ranges.  Unlike other
  *                  iterators, it tries hard to not favorize any particular
  *                  direction (unless fair = false, when it saves some CPU).
