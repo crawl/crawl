@@ -3144,10 +3144,6 @@ static void _place_branch_entrances(int dlevel, level_area_type level_type)
 
     if (player_in_branch(BRANCH_MAIN_DUNGEON))
     {
-        // stair to HELL
-        if (dlevel >= 20 && dlevel <= 27)
-            _place_specific_stair(DNGN_ENTER_HELL, "hell_entry", dlevel);
-
         // stair to PANDEMONIUM
         if (dlevel >= 20 && dlevel <= 50 && (dlevel == 23 || one_chance_in(4)))
             _place_specific_stair(DNGN_ENTER_PANDEMONIUM, "pan_entry", dlevel);
