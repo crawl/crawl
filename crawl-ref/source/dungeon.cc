@@ -3144,10 +3144,6 @@ static void _place_branch_entrances(int dlevel, level_area_type level_type)
 
     if (player_in_branch(BRANCH_MAIN_DUNGEON))
     {
-        // stairs to ABYSS
-        if (dlevel >= 20 && dlevel <= 30 && (dlevel == 24 || one_chance_in(3)))
-            _place_specific_stair(DNGN_ENTER_ABYSS, "abyss_entry", dlevel);
-
         // level 26: replaces all down stairs with staircases to Zot:
         if (dlevel == 26)
         {
