@@ -761,6 +761,24 @@ x111x
 xx+xx
 ENDMAP
 
+# Humans defending their loot
+NAME:   minmay_ruffians
+DEPTH:  D:6-10
+MONS:   human; club | mace w:3 . animal skin | leather armour
+MONS:   human; sling . stone | sling bullet w:3 . animal skin | leather armour
+SUBST:  1 = 112.
+KMONS:  3 = human; flail | spiked flail w:3 . ring mail | scale mail
+KITEM:  3 = %
+MAP
+.........
+.1.1.1...
+.........
+.x+xxx.1.
+.x%%3x...
+.xxxxx.1.
+.........
+ENDMAP
+
 # Necromancer has a house with a fridge (and a nice garden) (Eino)
 NAME:  eino_house_with_fridge
 DEPTH: D:8-20, Lair:2-, Vault:1-4
@@ -964,6 +982,29 @@ MAP
  .........
 ENDMAP
 
+NAME:   minmay_rotating_lava
+TAGS:   no_monster_gen
+DEPTH:  D:10-16
+MONS:   hell hound, hell knight band, hell knight
+MAP
+...............
+.ccccccccccccc.
+.c.....3.....c.
+.c.ccccccccc.c.
+.c.c......1c.c.
+.c.c.cclcc.c.c.
+.c.c.c...c1l.c.
+.c.c2c.3.c.l.c.
+.c.c.c***c1l.c.
+.c.c.ccccc.c.c.
+.c.c......1c.c.
+.c.ccccccccc.c.
+.c...1.1.1...c.
+.cccclllllcccc.
+...............
+ENDMAP
+
+
 ################################################################################
 #
 # <<4>> Demons and undead
@@ -1039,6 +1080,20 @@ MAP
 .pccnnnccc+cccnnnccp.
 .pp.....pPPPp.....pp.
 .........ppp.........
+ENDMAP
+
+NAME:   minmay_beelzebubs_servants
+DEPTH:  D:6-12
+MONS:   hairy devil / nothing, giant blowfly / nothing
+MAP
+........................
+..xxxx....xxxx....xxxx..
+.xx1.xx..xx**xx..xx.1xx.
+.x21................12x.
+.x21................12x.
+.xx1.xx..xx**xx..xx.1xx.
+..xxxx....xxxx....xxxx..
+........................
 ENDMAP
 
 ################################################################################
@@ -1494,6 +1549,7 @@ c.....c.....c.....c
 cccbcccc.@.ccccbccc
 ENDMAP
 
+
 ###################################################################
 #
 # <<6>> Other monsters
@@ -1654,6 +1710,24 @@ MAP
 ...........
 ENDMAP
 
+NAME:   minmay_acid_items
+TAGS:   no_monster_gen no_item_gen no_trap_gen
+DEPTH:  D:14-26
+MONS:   ooze / jelly / brown ooze / death ooze / giant amoeba / azure jelly
+MONS:   acid blob
+KPROP:  | = no_tele_into
+MAP
+  ...........
+ ..mmmmmmmmm..
+..mm1112111mm..
+.mm11mmmmm11mm.
+.m11mm|||mm11m.
+.mm11mmmmm11mm.
+..mm1112111mm..
+ ..mmmmmmmmm..
+  ...........
+ENDMAP
+
 
 ###################################################################
 #
@@ -1661,6 +1735,127 @@ ENDMAP
 #       Either using 8, 9, 0 glyphs or just many choices.
 #
 ###################################################################
+
+NAME:   minmay_circled_x
+DEPTH:  D:1-2
+WEIGHT: 3
+MAP
+     ......
+   ...xxxx...
+  ..xx....xx..
+ ..x........x..
+ .x.x......x.x.
+..x..x....x..x..
+.x....x%%x....x.
+.x....0xx0....x.
+.x....0xx0....x.
+.x....x%%x....x.
+..x..x....x..x..
+ .x.x......x.x.
+ ..x........x..
+  ..xx....xx..
+   ...xxxx...
+     ......
+ENDMAP
+
+NAME:   minmay_three_crescents
+DEPTH:  D:1-4
+WEIGHT: 3
+MAP
+ .....
+..xxx..
+.xx%xx..
+.x%.0......
+.xx0...xxx..
+..x.....0xx.
+ ........%x.
+..x.....0xx.
+.xx0...xxx..
+.x%.0......
+.xx%xx.
+..xxx..
+ .....
+ENDMAP
+
+# vault rotation makes the jar with loot unknown
+NAME:   minmay_mini_jars
+DEPTH:  D:2-4
+WEIGHT: 3
+MAP
+..........
+.x.x++x.x.
+...x00x...
+.xxxxxxxx.
+.+0x%%00+.
+.+0x%%00+.
+.xxxxxxxx.
+...x00x...
+.x.x++x.x.
+..........
+ENDMAP
+
+NAME:   minmay_divided_ellipse
+DEPTH:  D:2-6
+WEIGHT: 5
+MAP
+      .......
+   ....xx+xx....
+ ...xxxx...xxxx...
+..xxx%0x...x0%xxx..
+.xx0x0.x0.0x.0x0xx.
+.+.%x..x.0.x..x%.+.
+.xx0x..x...x..x0xx.
+..xxx..x9.9x..xxx..
+ ...xx+x%*%x+xx...
+   ....xxxxx....
+      .......
+ENDMAP
+
+NAME:   minmay_hollow_rounded_squares
+DEPTH:  D:4-
+SUBST:  0 = 0., x : x c:2 v:1 b:1
+MAP
+ ........
+..xxxxxx..
+.xx.00.xx.
+.x0xxxx0x.
+.x.0.x0xx........
+.x0x.xx.+.xx==xx..
+.x0xx9xxxxxG..Gxx.
+.xx*x.|xxxG....Gx.
+..xxxxxx.x*.8..|x.
+..xxxxxx.x|..8.*x.
+.xx0.9|xxxG....Gx.
+.x..xxxxxxxG..Gxx.
+.x0xx0x.+.xx==xx..
+.x0x*x0.x........
+.x.xxxx0x.
+.xx.00.xx.
+..xxxxxx..
+ ........
+ENDMAP
+
+NAME:   minmay_pinched_square
+DEPTH:  D:8-, Vault
+MAP
+.......   .......
+.xxx.........xxx.
+.x|xxxx...xxxx|x.
+.xx9..xxxxx..9xx.
+..x.....0.....x..
+..x..x..0..x..x..
+..xx..xx.xx..xx..
+ ..x..xx.xx..x..
+ ..x00..8xx00x..
+ ..x..xxxxx..x..
+..xx..xxxxx..xx..
+..x..x..0..x.0x..
+..x.....0...0.x..
+.xx9..xxxxx0..xx.
+.x|xxxx...xxxx.x.
+.xxx.........xx..
+.......   .......
+ENDMAP
 
 NAME:  minmay_ominous_box
 TAGS:  extra luniq_mini
@@ -1934,6 +2129,40 @@ MAP
 .v???d???v.
 .vvnvvvnvv.
 .....@.....
+ENDMAP
+
+NAME:   minmay_librarian
+TAGS:   mini_float no_monster_gen no_item_gen no_trap_gen
+DEPTH:  D:9-27
+: if you.absdepth() > 24 then
+MONS:   ancient lich w:50 / greater mummy
+ITEM:   any scroll w:6 / any book
+: elseif you.absdepth() > 20 then
+MONS:   lich w:60 / draconian annihilator w:20 / \
+        draconian scorcher / draconian shifter
+ITEM:   any scroll / any book
+: elseif you.absdepth() > 15 then
+MONS:   deep elf annihilator w:30 / deep elf sorcerer w:20 / \
+        deep elf demonologist / deep elf death mage
+ITEM:   any scroll / any book w:6
+: else
+MONS:   wizard w:50 / necromancer w:20 / deep elf mage w:20  / \
+        deep elf summoner / deep elf conjurer / orc sorcerer / \
+        ogre mage / naga mage / vampire mage / kobold demonologist w:5
+ITEM:   any scroll / any book w:3
+: end
+MAP
+xxxxxxxxxxxxx
+xd....1....dx
+xx.........xx
+xd.........dx
+xx.........xx
+xd.........dx
+xx.........xx
+xd.........dx
+xx.........xx
+xd.........dx
+xxxxxx+xxxxxx
 ENDMAP
 
 
