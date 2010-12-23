@@ -3231,30 +3231,6 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
         if (dir_x == 0 && dir_y == 0)
             continue;
 
-        if (x_ps < X_BOUND_1 + 3)
-        {
-            dir_x = 1;
-            dir_y = 0;
-        }
-
-        if (y_ps < Y_BOUND_1 + 3)
-        {
-            dir_y = 1;
-            dir_x = 0;
-        }
-
-        if (x_ps > (X_BOUND_2 - 3))
-        {
-            dir_x = -1;
-            dir_y = 0;
-        }
-
-        if (y_ps > (Y_BOUND_2 - 3))
-        {
-            dir_y = -1;
-            dir_x = 0;
-        }
-
         // Corridor length... change only when going vertical?
         if (dir_x == 0 || length == 0)
             length = random2(corrlength) + 2;
