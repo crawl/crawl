@@ -3201,7 +3201,7 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
     begin = pos;
 
     // wander
-    do                          // (while finish < no_corr)
+    while (finish < no_corr)
     {
         dir.reset();
 
@@ -3250,7 +3250,6 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
 
         finish++;
     }
-    while (finish < no_corr);
 
     // assign end position
     end = pos;
