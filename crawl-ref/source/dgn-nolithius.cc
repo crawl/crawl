@@ -4,7 +4,7 @@
 #include "coordit.h"
 #include "perlin.h"
 #include "random.h"
-#include "dgn-perlin.h"
+#include "dgn-nolithius.h"
 
 typedef FixedArray<int, GXM, GYM> heightmap_t;
 
@@ -72,7 +72,7 @@ static void _roiling_part(heightmap_t& rmap)
 
 #define MAX_HEIGHT 100
 
-void layout_perlin()
+void layout_nolithius()
 {
     heightmap_t height;
     _roiling_part(height);
