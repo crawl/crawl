@@ -3175,7 +3175,6 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
     int x_ps, y_ps;                         // end point
     int finish = 0;
     int length = 0;
-    int temp_rand;
 
     // temp positions
     int dir_x = 0;
@@ -3209,25 +3208,21 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
         if (y_ps > 55)
             dir_y2 = -1;
 
-        temp_rand = random2(10);
-
         // Put something in to make it go to parts of map it isn't in now.
         if (coinflip())
         {
-            if (dir_x2 != 0 && temp_rand < 6)
+            if (dir_x2 != 0 && x_chance_in_y(3, 5))
                 dir_x = dir_x2;
-
-            if (dir_x2 == 0 || temp_rand >= 6)
+            else
                 dir_x = (coinflip()? -1 : 1);
 
             dir_y = 0;
         }
         else
         {
-            if (dir_y2 != 0 && temp_rand < 6)
+            if (dir_y2 != 0 && x_chance_in_y(3, 5))
                 dir_y = dir_y2;
-
-            if (dir_y2 == 0 || temp_rand >= 6)
+            else
                 dir_y = (coinflip()? -1 : 1);
 
             dir_x = 0;
@@ -3268,30 +3263,28 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
 
         for (bi = 0; bi < length; bi++)
         {
-            // Below, I've changed the values of the unimportant variable from
-            // 0 to random2(3) - 1 to avoid getting stuck on the "stuck!" bit.
             if (x_ps < X_BOUND_1 + 4)
             {
-                dir_y = 0;      //random2(3) - 1;
+                dir_y = 0;
                 dir_x = 1;
             }
 
             if (x_ps > (X_BOUND_2 - 4))
             {
-                dir_y = 0;      //random2(3) - 1;
+                dir_y = 0;
                 dir_x = -1;
             }
 
             if (y_ps < Y_BOUND_1 + 4)
             {
                 dir_y = 1;
-                dir_x = 0;      //random2(3) - 1;
+                dir_x = 0;
             }
 
             if (y_ps > (Y_BOUND_2 - 4))
             {
                 dir_y = -1;
-                dir_x = 0;      //random2(3) - 1;
+                dir_x = 0;
             }
 
             // See if we stop due to intersection with another corridor/room.
