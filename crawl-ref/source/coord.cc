@@ -71,3 +71,21 @@ coord_def random_in_bounds()
     return coord_def(random_range(MAPGEN_BORDER, GXM - MAPGEN_BORDER - 1),
                      random_range(MAPGEN_BORDER, GYM - MAPGEN_BORDER - 1));
 }
+
+const coord_def& coord_def::step(int dir)
+{
+    switch(dir)
+    {
+    case 0:      y--; break;
+    case 1: x--; y--; break;
+    case 2: x--;      break;
+    case 3: x--; y++; break;
+    case 4:      y++; break;
+    case 5: x++; y++; break;
+    case 6: x++;      break;
+    case 7: x++; y--; break;
+    default:
+        ASSERT(!"invalid step direction");
+    }
+    return *this;
+}

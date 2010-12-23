@@ -191,6 +191,8 @@ struct coord_def
     {
         return (xi == x && yi == y);
     }
+
+    const coord_def& step(int dir);
 };
 const coord_def INVALID_COORD(-1, -1);
 
