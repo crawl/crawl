@@ -267,7 +267,6 @@ SkillMenuEntry::SkillMenuEntry(coord_def coord, MenuFreeform* ff)
 #ifdef USE_TILE
     if (is_set(SKMF_SKILL_ICONS))
     {
-        m_name->set_tile_height();
         m_level->set_tile_height();
         m_progress->set_tile_height();
         m_aptitude->set_tile_height();

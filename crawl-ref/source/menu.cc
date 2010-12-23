@@ -2489,6 +2489,13 @@ MenuItem* MenuItem::get_link_down() const
 }
 
 #ifdef USE_TILE
+int MenuItem::get_vertical_offset() const
+{
+    return m_unit_height_pixels / 2 - tiles.get_crt_font()->char_height() / 2;
+}
+#endif
+
+#ifdef USE_TILE
 TextItem::TextItem() : m_font_buf(tiles.get_crt_font())
 #else
 TextItem::TextItem()
@@ -2532,7 +2539,7 @@ void TextItem::render()
         m_font_buf.clear();
         // TODO: handle m_bg_colour
         m_font_buf.add(m_render_text, term_colours[m_fg_colour],
-                       m_min_coord.x, m_min_coord.y);
+                       m_min_coord.x, m_min_coord.y + get_vertical_offset());
         m_dirty = false;
     }
     m_font_buf.draw();
@@ -2657,7 +2664,7 @@ void FormattedTextItem::render()
         textcolor(m_fg_colour);
         m_font_buf.add(formatted_string::parse_string(m_render_text, true,
                                                       NULL, m_fg_colour),
-                       m_min_coord.x, m_min_coord.y);
+                       m_min_coord.x, m_min_coord.y + get_vertical_offset());
         m_dirty = false;
     }
     m_font_buf.draw();
@@ -2703,6 +2710,7 @@ void TextTileItem::set_bounds(const coord_def &min_coord, const coord_def &max_c
     m_max_coord.x = (max_coord.x - 1) * m_unit_width_pixels;
     m_min_coord.y = (min_coord.y - 1) * TILE_Y;
     m_max_coord.y = (max_coord.y - 1) * TILE_Y;
+    set_tile_height();
 }
 
 void TextTileItem::render()
@@ -2724,11 +2732,10 @@ void TextTileItem::render()
         }
         // center the text
         // TODO wrap / chop the text
-        const int y_coord = (m_max_coord.y - m_min_coord.y) / 2
-                            - m_unit_height_pixels / 2;
         const int tile_offset = (m_tiles.size() > 0) ? 32 : 0;
         m_font_buf.add(m_text, term_colours[m_fg_colour],
-                       m_min_coord.x + tile_offset, m_min_coord.y + y_coord);
+                       m_min_coord.x + tile_offset,
+                       m_min_coord.y + get_vertical_offset());
 
 
         m_dirty = false;
