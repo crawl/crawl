@@ -3184,27 +3184,21 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
                         int intersect_chance, int no_corr,
                         coord_def& begin, coord_def& end)
 {
-    int x_start, y_start;                   // begin point
-    int x_ps, y_ps;                         // end point
     int finish = 0;
     int length = 0;
 
-    // temp positions
+    coord_def pos;
     coord_def dir(0, 0);
 
     do
     {
-        x_start = xs + random2(xr);
-        y_start = ys + random2(yr);
+        pos.x = xs + random2(xr);
+        pos.y = ys + random2(yr);
     }
-    while (grd[x_start][y_start] != DNGN_ROCK_WALL
-           && grd[x_start][y_start] != DNGN_FLOOR);
+    while (grd(pos) != DNGN_ROCK_WALL && grd(pos) != DNGN_FLOOR);
 
     // assign begin position
-    begin.set(x_start, y_start);
-
-    x_ps = x_start;
-    y_ps = y_start;
+    begin = pos;
 
     // wander
     do                          // (while finish < no_corr)
@@ -3213,9 +3207,9 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
 
         // Put something in to make it go to parts of map it isn't in now.
         if (coinflip())
-            dir.x = _trail_random_dir(x_ps, GXM, 15);
+            dir.x = _trail_random_dir(pos.x, GXM, 15);
         else
-            dir.y = _trail_random_dir(y_ps, GYM, 15);
+            dir.y = _trail_random_dir(pos.y, GYM, 15);
 
         if (dir.x == 0 && dir.y == 0)
             continue;
@@ -3224,37 +3218,34 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
         if (dir.x == 0 || length == 0)
             length = random2(corrlength) + 2;
 
-        int bi = 0;
-
-        for (bi = 0; bi < length; bi++)
+        for (int bi = 0; bi < length; bi++)
         {
-            if (x_ps < X_BOUND_1 + 4)
+            if (pos.x < X_BOUND_1 + 4)
                 dir.set(1, 0);
 
-            if (x_ps > (X_BOUND_2 - 4))
+            if (pos.x > (X_BOUND_2 - 4))
                 dir.set(-1, 0);
 
-            if (y_ps < Y_BOUND_1 + 4)
+            if (pos.y < Y_BOUND_1 + 4)
                 dir.set(0, 1);
 
-            if (y_ps > (Y_BOUND_2 - 4))
+            if (pos.y > (Y_BOUND_2 - 4))
                 dir.set(0, -1);
 
             // See if we stop due to intersection with another corridor/room.
-            if (grd[x_ps + 2 * dir.x][y_ps + 2 * dir.y] == DNGN_FLOOR
+            if (grd(pos + dir * 2) == DNGN_FLOOR
                 && !one_chance_in(intersect_chance))
             {
                 break;
             }
 
-            x_ps += dir.x;
-            y_ps += dir.y;
+            pos += dir;
 
-            if (grd[x_ps][y_ps] == DNGN_ROCK_WALL)
-                grd[x_ps][y_ps] = DNGN_FLOOR;
+            if (grd(pos) == DNGN_ROCK_WALL)
+                grd(pos) = DNGN_FLOOR;
         }
 
-        if (finish == no_corr - 1 && grd[x_ps][y_ps] != DNGN_FLOOR)
+        if (finish == no_corr - 1 && grd(pos) != DNGN_FLOOR)
             finish -= 2;
 
         finish++;
@@ -3262,7 +3253,7 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
     while (finish < no_corr);
 
     // assign end position
-    end.set(x_ps, y_ps);
+    end = pos;
 }
 
 static int _good_door_spot(int x, int y)
