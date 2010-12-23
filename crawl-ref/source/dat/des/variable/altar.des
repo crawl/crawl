@@ -1656,25 +1656,32 @@ ENDMAP
 
 ### Variable overflow altars ##################################################
 
-NAME:   lemuel_zombie_altar
+NAME:   lemuel_zombie_altar_kiku
 DEPTH:  D:2-18, Crypt
-TAGS:   no_pool_fixup uniq_zombie_altar no_monster_gen
-: local god = ""
-: if crawl.coinflip() then god = "kikubaaqudgha" else god = "yredelemnul" end
-: tags("temple_overflow_" .. god, "uniq_altar_" .. god)
-: kfeat("_ = altar_" .. god)
-#
-: if crawl.coinflip() then
+TAGS:   no_pool_fixup uniq_zombie_altar no_monster_gen temple_overflow_kikubaaqudgha
+KFEAT:  _ = altar_kikubaaqudgha
 MONS:   rat zombie / giant bat zombie / nothing w:200
 KMONS:  w = giant goldfish zombie / big fish zombie / nothing w:200
 KFEAT:  w = deep_water
-: else
+MAP
+xxxxxxxxxxxxxxxx
+xxxxwwwwwwwwxxxx
+xxxx11111111xxxx
+@............._x
+xxxx11111111xxxx
+xxxxwwwwwwwwxxxx
+xxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   lemuel_zombie_altar_yred
+DEPTH:  D:2-18, Crypt
+TAGS:   no_pool_fixup uniq_zombie_altar no_monster_gen temple_overflow_yredelemnul
+KFEAT:  _ = altar_yredelemnul
 SUBST:  1 : 1Ww
 SUBST:  1 = WWw
 NSUBST: w = 2:1 / *:w
 KMONS:  1 = giant goldfish zombie / big fish zombie
 KFEAT:  1 = deep_water
-: end
 MAP
 xxxxxxxxxxxxxxxx
 xxxxwwwwwwwwxxxx
