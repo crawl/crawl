@@ -8,6 +8,18 @@
 
 typedef FixedArray<int, GXM, GYM> heightmap_t;
 
+static int _edge_dist(coord_def c)
+{
+    // Assumes that the map = screen.
+    // If that changes, please update this function.
+    int d = INT_MAX;
+    d = std::min(d, c.x);
+    d = std::min(d, c.y);
+    d = std::min(d, GXM - 1 - c.x);
+    d = std::min(d, GYM - 1 - c.y);
+    return d;
+}
+
 static void _roiling_part(heightmap_t& rmap)
 {
     rmap.init(0);
@@ -42,8 +54,20 @@ static void _roiling_part(heightmap_t& rmap)
             }
         }
     }
-
     // note: max is almost always 85±1 for these parameters
+
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        switch (_edge_dist(*ri))
+        {
+        case 1:
+            rmap(*ri) = rmap(*ri) * 3 / 4;
+            break;
+        case 2:
+            rmap(*ri) = rmap(*ri) * 7 / 8;
+            break;
+        }
+    }
 }
 
 #define MAX_HEIGHT 100
