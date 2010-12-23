@@ -88,7 +88,7 @@ The contents of this text are:
                 flush.failure, flush.command, flush.message,
                 additional_macro_file, bindkey
 4-o     Tiles Options.
-                tile_show_items, tile_title_screen, tile_menu_icons,
+                tile_show_items, tile_skip_title, tile_menu_icons,
                 tile_player_col, tile_monster_col, tile_neutral_col,
                 tile_peaceful_col, tile_friendly_col, tile_plant_col,
                 tile_item_col, tile_unseen_col, tile_floor_col, tile_wall_col,
@@ -1677,9 +1677,10 @@ tile_show_items = <glyphs>
         inventory.  By default, its value is "!?/%=([)x}+\".
         Items with glyphs not in the list will be shown last.
 
-tile_title_screen = true
-        When this is set to true, the graphical title screen will be
-        displayed.
+tile_skip_title = false
+        When this is set to true, you won't be prompted for a key at the title
+        screen when the game has finished loading and will be taken directly to
+        the starting menu.
 
 tile_menu_icons = true
         Causes inventory menus and a few other ones to include tiled icons
