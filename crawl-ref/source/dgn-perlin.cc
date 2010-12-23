@@ -88,6 +88,8 @@ void layout_perlin()
             grd(*ri) = DNGN_DEEP_WATER;
         else if (h < h0)
             grd(*ri) = DNGN_SHALLOW_WATER;
+        else if (h > h0 + 6)
+            grd(*ri) = DNGN_TREE;
         else
             grd(*ri) = DNGN_FLOOR;
     }
