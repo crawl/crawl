@@ -436,7 +436,11 @@ std::string SkillMenuEntry::_get_prefix()
 
     const int sign = (you.skills[m_sk] == 0 || you.skills[m_sk] == 27) ? ' '
                                     : (you.practise_skill[m_sk]) ? '+' : '-';
+#ifdef USE_TILE
     return make_stringf(" %c %c", letter, sign);
+#else
+    return make_stringf("%c %c", letter, sign);
+#endif
 }
 
 void SkillMenuEntry::_set_level()
@@ -587,7 +591,7 @@ void SkillMenuEntry::_set_points()
 }
 #endif
 
-#define MIN_COLS            80
+#define MIN_COLS            78
 #define MIN_LINES           24
 #define TILES_COL            6
 #define CURRENT_ACTION_SIZE 24
