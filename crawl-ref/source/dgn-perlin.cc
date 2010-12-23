@@ -6,11 +6,13 @@
 #include "random.h"
 #include "dgn-perlin.h"
 
+typedef FixedArray<int, GXM, GYM> heightmap_t;
+
 #define MAX_HEIGHT 100
 
 void layout_perlin()
 {
-    int height[GXM][GYM];
+    heightmap_t height;
     int buckets[MAX_HEIGHT + 1];
     for (int i = 0; i <= MAX_HEIGHT; i++)
         buckets[i] = 0;
@@ -22,7 +24,7 @@ void layout_perlin()
         double H = perlin(ri->x, ri->y, z);
         int h = (H + 1) * MAX_HEIGHT / 2; // from -1..1 to 0..100 ints
         ASSERT(h >= 0 && h <= MAX_HEIGHT);
-        height[ri->x][ri->y] = h;
+        height(*ri) = h;
         buckets[h]++;
         area++; // currently constant, might change later
     }
@@ -39,7 +41,7 @@ void layout_perlin()
 
     for (rectangle_iterator ri(1); ri; ++ri)
     {
-        int h = height[ri->x][ri->y];
+        int h = height(*ri);
         if (h < h0 - 16)
             grd(*ri) = DNGN_DEEP_WATER;
         else if (h < h0)
