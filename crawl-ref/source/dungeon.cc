@@ -128,8 +128,7 @@ static void _hide_doors();
 static void _make_trail(int xs, int xr, int ys, int yr,int corrlength,
                         int intersect_chance,
                         int no_corr,
-                        int &xbegin, int &ybegin,
-                        int &xend, int &yend);
+                        coord_def& begin, coord_def& end);
 static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel);
 static void _place_pool(dungeon_feature_type pool_type, uint8_t pool_x1,
                         uint8_t pool_y1, uint8_t pool_x2,
@@ -2725,29 +2724,30 @@ static bool _builder_basic(int level_number)
                                       : 30 + random2(200));
     int intersect_chance = (one_chance_in(20) ? 400 : random2(20));
 
-    int xbegin = -1, ybegin = -1, xend = -1, yend = -1;
+    coord_def begin(-1, -1);
+    coord_def end(-1, -1);
 
     _make_trail(35, 30, 35, 20, corrlength, intersect_chance, no_corr,
-                 xbegin, ybegin, xend, yend);
+                 begin, end);
 
-    grd[xbegin][ybegin] = DNGN_STONE_STAIRS_DOWN_I;
-    grd[xend][yend]     = DNGN_STONE_STAIRS_UP_I;
+    grd(begin) = DNGN_STONE_STAIRS_DOWN_I;
+    grd(end)   = DNGN_STONE_STAIRS_UP_I;
 
-    xbegin = -1, ybegin = -1, xend = -1, yend = -1;
+    begin.set(-1, -1); end.set(-1, -1);
 
     _make_trail(10, 15, 10, 15, corrlength, intersect_chance, no_corr,
-                 xbegin, ybegin, xend, yend);
+                 begin, end);
 
-    grd[xbegin][ybegin] = DNGN_STONE_STAIRS_DOWN_II;
-    grd[xend][yend]     = DNGN_STONE_STAIRS_UP_II;
+    grd(begin) = DNGN_STONE_STAIRS_DOWN_II;
+    grd(end)   = DNGN_STONE_STAIRS_UP_II;
 
-    xbegin = -1, ybegin = -1, xend = -1, yend = -1;
+    begin.set(-1, -1); end.set(-1, -1);
 
     _make_trail(50, 20, 10, 15, corrlength, intersect_chance, no_corr,
-                 xbegin, ybegin, xend, yend);
+                 begin, end);
 
-    grd[xbegin][ybegin] = DNGN_STONE_STAIRS_DOWN_III;
-    grd[xend][yend]     = DNGN_STONE_STAIRS_UP_III;
+    grd(begin) = DNGN_STONE_STAIRS_DOWN_III;
+    grd(end)   = DNGN_STONE_STAIRS_UP_III;
 
     // Generate a random dead-end that /may/ have a shaft.  Good luck!
     if (is_valid_shaft_level() && !one_chance_in(4)) // 3/4 times
@@ -2758,27 +2758,26 @@ static bool _builder_basic(int level_number)
         // with making this trap the first trap.
         // If we aren't careful, we'll trigger an assert in _place_traps().
 
-        xbegin = -1, ybegin = -1, xend = -1, yend = -1;
+        begin.set(-1, -1); end.set(-1, -1);
 
         _make_trail(50, 20, 40, 20, corrlength, intersect_chance, no_corr,
-                     xbegin, ybegin, xend, yend);
+                     begin, end);
 
         dprf("Placing shaft trail...");
-        if (!one_chance_in(3) && !map_masked(coord_def(xend, yend), MMT_NO_TRAP)) // 2/3 chance it ends in a shaft
+        if (!one_chance_in(3) && !map_masked(end, MMT_NO_TRAP)) // 2/3 chance it ends in a shaft
         {
             trap_def& ts(env.trap[0]);
             ts.type = TRAP_SHAFT;
-            ts.pos.x = xend;
-            ts.pos.y = yend;
-            grd[xend][yend] = DNGN_UNDISCOVERED_TRAP;
-            env.tgrid[xend][yend] = 0;
+            ts.pos = end;
+            grd(end) = DNGN_UNDISCOVERED_TRAP;
+            env.tgrid(end) = 0;
             if (shaft_known(level_number, false))
                 ts.reveal();
             dprf("Trail ends in shaft.");
         }
         else
         {
-            grd[xend][yend] = DNGN_FLOOR;
+            grd(end) = DNGN_FLOOR;
             dprf("Trail does not end in shaft.");
         }
     }
@@ -3183,8 +3182,7 @@ static int _trail_random_dir(int pos, int bound, int margin)
 
 static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
                         int intersect_chance, int no_corr,
-                        int &xbegin, int &ybegin,
-                        int &xend, int &yend)
+                        coord_def& begin, coord_def& end)
 {
     int x_start, y_start;                   // begin point
     int x_ps, y_ps;                         // end point
@@ -3204,7 +3202,7 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
            && grd[x_start][y_start] != DNGN_FLOOR);
 
     // assign begin position
-    xbegin = x_start; ybegin = y_start;
+    begin.set(x_start, y_start);
 
     x_ps = x_start;
     y_ps = y_start;
@@ -3281,7 +3279,7 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
     while (finish < no_corr);
 
     // assign end position
-    xend = x_ps, yend = y_ps;
+    end.set(x_ps, y_ps);
 }
 
 static int _good_door_spot(int x, int y)
