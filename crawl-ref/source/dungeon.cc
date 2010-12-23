@@ -3166,6 +3166,21 @@ static void _place_branch_entrances(int dlevel, level_area_type level_type)
     }
 }
 
+static int _trail_random_dir(int pos, int bound, int margin)
+{
+    int dir = 0;
+
+    if (pos < margin)
+        dir = 1;
+    else if (pos > bound - margin)
+        dir = -1;
+
+    if (dir == 0 || x_chance_in_y(2, 5))
+        dir = coinflip() ? -1 : 1;
+
+    return dir;
+}
+
 static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
                         int intersect_chance, int no_corr,
                         int &xbegin, int &ybegin,
@@ -3179,7 +3194,6 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
     // temp positions
     int dir_x = 0;
     int dir_y = 0;
-    int dir_x2, dir_y2;
 
     do
     {
@@ -3198,34 +3212,16 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
     // wander
     do                          // (while finish < no_corr)
     {
-        dir_x2 = ((x_ps < 15) ? 1 : 0);
-
-        if (x_ps > 65)
-            dir_x2 = -1;
-
-        dir_y2 = ((y_ps < 15) ? 1 : 0);
-
-        if (y_ps > 55)
-            dir_y2 = -1;
-
         // Put something in to make it go to parts of map it isn't in now.
         if (coinflip())
         {
-            if (dir_x2 != 0 && x_chance_in_y(3, 5))
-                dir_x = dir_x2;
-            else
-                dir_x = (coinflip()? -1 : 1);
-
+            dir_x = _trail_random_dir(x_ps, GXM, 15);
             dir_y = 0;
         }
         else
         {
-            if (dir_y2 != 0 && x_chance_in_y(3, 5))
-                dir_y = dir_y2;
-            else
-                dir_y = (coinflip()? -1 : 1);
-
             dir_x = 0;
+            dir_y = _trail_random_dir(y_ps, GYM, 15);
         }
 
         if (dir_x == 0 && dir_y == 0)
