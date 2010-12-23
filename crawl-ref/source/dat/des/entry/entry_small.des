@@ -2822,3 +2822,70 @@ xxxx[..xxxx
     x~x
     x+x
 ENDMAP
+
+##############################################################
+# A simple fortress with semi-secret doors.
+NAME:    saegor_entry_fortress
+TAGS:    entry no_monster_gen no_pool_fixup
+ORIENT:  float
+SHUFFLE: {[(
+MONS:    place:D:1 zombie
+KPROP:   W = no_rtele_into
+MAP
+wwwwwwwwwcccccwwwwwwwww
+wcccccccwcWtWcwcccccccw
+wc[...GccccGccccG...>cw
+wc.....=.......=.....cw
+wcG...GccGc+cGccG...Gcw
+wccc+cccccc=cccccc+cccw
+wcWc.cctt.....ttcc.cWcw
+wttG.ctW...1...Wtc.Gttw
+wcWc.Gc.........cG.cWcw
+wccc.cc...WtW...cc.cccw
+@=+..=+...tGt...+=..=+@
+wccc.cc...WtW...cc.cccw
+wcWc.Gc.........cG.cWcw
+wttG.ctW...*...Wtc.Gttw
+wcWc.cctt.....ttcc.cWcw
+wccc+cccccc+cccccc+cccw
+wcG...GccGc=cGccG...Gcw
+wc.....+.......=.....cw
+wc(...GccccGccccG...{cw
+wcccccccwcWtWcwcccccccw
+wwwwwwwwwcccccwwwwwwwww
+ENDMAP
+
+##############################################################
+# A small-room entry with wooden doors and big ring of trees
+# and rocks.
+NAME:    saegor_entry_under_anarchy
+TAGS:    entry no_trap_gen no_monster_gen
+ORIENT:  float
+SHUFFLE: {[(
+NSUBST:  @ = 3:@ / *:X
+SUBST:   X = tc w:1
+COLOUR:  # = lightgreen / green / yellow:1
+NSUBST:  p = 2:+ / *:c
+COLOUR:  + : brown
+SUBST:   # = .. 1:1
+MONS:    plant
+KPROP:   w = no_rtele_into
+MAP
+   xxx @@@ xxx
+   XXXX@.@XXXX
+  @@XXX.X.XXX@@
+xX@...........@Xx
+xXX...........XXx
+xXX..ccpppcc..XXx
+xXX..c#####c..XXx
+@X...p##{##p...X@
+@.X..p#####p..X.@
+@X...p#[#(#p...X@
+xXX..c#####c..XXx
+xXX..ccpppcc..XXx
+xXX...........XXx
+xX@...........@Xx
+  @@XXX.X.XXX@@
+   XXXX@.@XXXX
+   xxx @@@ xxx
+ENDMAP
