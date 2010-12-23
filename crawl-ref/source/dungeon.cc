@@ -3190,8 +3190,7 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
     int length = 0;
 
     // temp positions
-    int dir_x = 0;
-    int dir_y = 0;
+    coord_def dir(0, 0);
 
     do
     {
@@ -3210,23 +3209,19 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
     // wander
     do                          // (while finish < no_corr)
     {
+        dir.reset();
+
         // Put something in to make it go to parts of map it isn't in now.
         if (coinflip())
-        {
-            dir_x = _trail_random_dir(x_ps, GXM, 15);
-            dir_y = 0;
-        }
+            dir.x = _trail_random_dir(x_ps, GXM, 15);
         else
-        {
-            dir_x = 0;
-            dir_y = _trail_random_dir(y_ps, GYM, 15);
-        }
+            dir.y = _trail_random_dir(y_ps, GYM, 15);
 
-        if (dir_x == 0 && dir_y == 0)
+        if (dir.x == 0 && dir.y == 0)
             continue;
 
         // Corridor length... change only when going vertical?
-        if (dir_x == 0 || length == 0)
+        if (dir.x == 0 || length == 0)
             length = random2(corrlength) + 2;
 
         int bi = 0;
@@ -3234,38 +3229,26 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
         for (bi = 0; bi < length; bi++)
         {
             if (x_ps < X_BOUND_1 + 4)
-            {
-                dir_y = 0;
-                dir_x = 1;
-            }
+                dir.set(1, 0);
 
             if (x_ps > (X_BOUND_2 - 4))
-            {
-                dir_y = 0;
-                dir_x = -1;
-            }
+                dir.set(-1, 0);
 
             if (y_ps < Y_BOUND_1 + 4)
-            {
-                dir_y = 1;
-                dir_x = 0;
-            }
+                dir.set(0, 1);
 
             if (y_ps > (Y_BOUND_2 - 4))
-            {
-                dir_y = -1;
-                dir_x = 0;
-            }
+                dir.set(0, -1);
 
             // See if we stop due to intersection with another corridor/room.
-            if (grd[x_ps + 2 * dir_x][y_ps + 2 * dir_y] == DNGN_FLOOR
+            if (grd[x_ps + 2 * dir.x][y_ps + 2 * dir.y] == DNGN_FLOOR
                 && !one_chance_in(intersect_chance))
             {
                 break;
             }
 
-            x_ps += dir_x;
-            y_ps += dir_y;
+            x_ps += dir.x;
+            y_ps += dir.y;
 
             if (grd[x_ps][y_ps] == DNGN_ROCK_WALL)
                 grd[x_ps][y_ps] = DNGN_FLOOR;
