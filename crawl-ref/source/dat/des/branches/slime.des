@@ -164,6 +164,7 @@ SUBST:   " : " .:3,  " = .c
 NSUBST:  P = O / *|
 KMASK:   |O* = no_monster_gen
 KPROP:   |O* = no_jiyva
+KPROP:   |O* = no_rtele_into
 KFEAT:   Z = altar_jiyva
 KITEM:   O = slimy rune of Zot
 KITEM:   * = star_item
