@@ -103,8 +103,6 @@ void layout_nolithius()
         if (covered >= area * 6 / 10)
             break;
     }
-    printf("Water level %d, covered = %d/%d\n", h0, covered, area);
-
     for (rectangle_iterator ri(1); ri; ++ri)
     {
         int h = height(*ri);
