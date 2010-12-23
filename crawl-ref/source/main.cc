@@ -21,6 +21,8 @@ static wchar_t dchar(dungeon_feature_type g)
         return 0x2248;
     case DNGN_SHALLOW_WATER:
         return '~';
+    case DNGN_TREE:
+        return 0x2663;
     default:
         return '?';
     }
