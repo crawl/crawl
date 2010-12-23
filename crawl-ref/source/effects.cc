@@ -28,14 +28,16 @@
 #include "coordit.h"
 #include "delay.h"
 #include "dgn-shoals.h"
-#include "directn.h"
 #include "dgnevent.h"
+#include "directn.h"
+#include "dungeon.h"
 #include "env.h"
 #include "exercise.h"
 #include "fight.h"
-#include "fprop.h"
 #include "food.h"
+#include "fprop.h"
 #include "godpassive.h"
+#include "hints.h"
 #include "hiscores.h"
 #include "invent.h"
 #include "it_use2.h"
@@ -46,13 +48,13 @@
 #include "makeitem.h"
 #include "map_knowledge.h"
 #include "message.h"
+#include "mgen_data.h"
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-iter.h"
-#include "mon-place.h"
-#include "mgen_data.h"
 #include "mon-pathfind.h"
+#include "mon-place.h"
 #include "mon-project.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
@@ -60,9 +62,10 @@
 #include "notes.h"
 #include "ouch.h"
 #include "place.h"
-#include "player.h"
 #include "player-stats.h"
+#include "player.h"
 #include "religion.h"
+#include "shout.h"
 #include "skills.h"
 #include "spl-clouds.h"
 #include "spl-miscast.h"
@@ -74,8 +77,6 @@
 #include "terrain.h"
 #include "traps.h"
 #include "travel.h"
-#include "hints.h"
-#include "shout.h"
 #include "viewchar.h"
 #include "xom.h"
 
@@ -1617,7 +1618,7 @@ void change_labyrinth(bool msg)
                 continue;
 
             // Skip on grids inside vaults so as not to disrupt them.
-            if (testbits(env.pgrid(*ri), FPROP_VAULT))
+            if (map_masked(*ri, MMT_VAULT))
                 continue;
 
             // Make sure we don't accidentally create "ugly" dead-ends.
