@@ -92,6 +92,8 @@ struct game_state
     // This is global because the monster pane uses this when
     // drawing.
     bool mlist_targeting;
+#else
+    bool title_screen;
 #endif
 
     // Range beyond which view should be darkend, -1 == disabled.

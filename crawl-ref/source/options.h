@@ -321,7 +321,7 @@ public:
 
 #ifdef USE_TILE
     char        tile_show_items[20]; // show which item types in tile inventory
-    bool        tile_title_screen;   // display title screen?
+    bool        tile_skip_title;     // wait for a key at title screen?
     bool        tile_menu_icons;     // display icons in menus?
     // minimap colours
     char        tile_player_col;

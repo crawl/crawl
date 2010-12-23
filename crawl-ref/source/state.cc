@@ -38,6 +38,8 @@ game_state::game_state()
       level_annotation_shown(false),
 #ifndef USE_TILE
       mlist_targeting(false),
+#else
+      title_screen(true),
 #endif
       darken_range(-1), unsaved_macros(false), mon_act(NULL)
 {

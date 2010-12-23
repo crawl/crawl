@@ -927,7 +927,7 @@ void game_options::reset_options()
 
 #ifdef USE_TILE
     strcpy(tile_show_items, "!?/%=([)x}+\\_.");
-    tile_title_screen    = true;
+    tile_skip_title      = false;
     tile_menu_icons      = true;
 
     // minimap colours
@@ -3161,7 +3161,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         strncpy(tile_show_items, field.c_str(), 18);
     }
-    else BOOL_OPTION(tile_title_screen);
+    else BOOL_OPTION(tile_skip_title);
     else BOOL_OPTION(tile_menu_icons);
     else if (key == "tile_player_col")
     {

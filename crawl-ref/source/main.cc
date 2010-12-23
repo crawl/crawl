@@ -306,7 +306,7 @@ static void _reset_game()
 #ifdef USE_TILE
     // [ds] Don't show the title screen again, just go back to
     // the menu.
-    Options.tile_title_screen = false;
+    crawl_state.title_screen = false;
     tiles.clear_text_tags(TAG_NAMED_MONSTER);
 #endif
 }

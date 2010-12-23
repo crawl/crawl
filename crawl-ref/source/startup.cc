@@ -113,7 +113,7 @@ static void _initialize()
     // may take awhile and it's better if the player can look at a pretty
     // screen while this happens.
     if (!crawl_state.map_stat_gen && !crawl_state.test
-        && Options.tile_title_screen)
+        && crawl_state.title_screen)
     {
         tiles.draw_title();
         tiles.update_title_msg("Loading Databases...");
@@ -123,7 +123,7 @@ static void _initialize()
     // Initialise internal databases.
     databaseSystemInit();
 #ifdef USE_TILE
-    if (Options.tile_title_screen)
+    if (crawl_state.title_screen)
         tiles.update_title_msg("Loading Spells and Features...");
 #endif
 
@@ -131,7 +131,7 @@ static void _initialize()
     init_spell_name_cache();
     init_spell_rarities();
 #ifdef USE_TILE
-    if (Options.tile_title_screen)
+    if (crawl_state.title_screen)
         tiles.update_title_msg("Loading maps...");
 #endif
 
@@ -147,7 +147,7 @@ static void _initialize()
     // System initialisation stuff.
     textbackground(0);
 #ifdef USE_TILE
-    if (Options.tile_title_screen)
+    if (!Options.tile_skip_title)
     {
         tiles.update_title_msg("Loading complete, press any key to start.");
         tiles.hide_title();
