@@ -6212,7 +6212,7 @@ static void _vitrify_wall_neighbours(const coord_def& pos)
             continue;
 
         // Don't vitrify vault grids
-        if (testbits(env.pgrid(p), FPROP_VAULT))
+        if (map_masked(p, MMT_VAULT))
             continue;
 
         if (grd(p) == DNGN_ROCK_WALL || grd(p) == DNGN_STONE_WALL)
@@ -7699,7 +7699,6 @@ void vault_placement::apply_grid()
                 dungeon_terrain_changed(*ri, newgrid, true, true);
                 remove_markers_and_listeners_at(*ri);
             }
-            env.pgrid(*ri) |= FPROP_VAULT;
         }
 
         map.map.apply_overlays(pos);
