@@ -589,6 +589,7 @@ protected:
     // Holds the conversion values to translate unit values to pixel values
     unsigned int m_unit_width_pixels;
     unsigned int m_unit_height_pixels;
+    int get_vertical_offset() const;
 #endif
 
     int m_item_id;
