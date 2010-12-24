@@ -851,7 +851,10 @@ static void _herd_wander_target(monster * mon, dungeon_feature_type can_move)
 
 static bool _herd_ok(monster * mon)
 {
-    bool ok = false;
+    bool in_bounds = false;
+    bool intermediate_range = false;
+    int intermediate_thresh = LOS_RADIUS + HERD_COMFORT_RANGE;
+
     for (monster_iterator mit(mon); mit; ++mit)
     {
         if (mit->mindex() == mon->mindex())
@@ -859,14 +862,20 @@ static bool _herd_ok(monster * mon)
 
         if (mons_genus(mit->type) == mons_genus(mon->type) )
         {
-            if (grid_distance(mit->pos(), mon->pos()) < HERD_COMFORT_RANGE)
+            int g_dist = grid_distance(mit->pos(), mon->pos());
+            if (g_dist < HERD_COMFORT_RANGE)
             {
-                ok = true;
+                in_bounds = true;
                 break;
+            }
+            else if (g_dist < intermediate_thresh)
+            {
+                intermediate_range = true;
             }
         }
     }
-    return ok;
+
+    return in_bounds || !intermediate_range;
 }
 
 void check_wander_target(monster* mon, bool isPacified,
