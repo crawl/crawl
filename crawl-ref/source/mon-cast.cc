@@ -1482,7 +1482,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
                 // Monsters are limited casting it, too.
                 if (spell_cast == SPELL_MALIGN_GATEWAY
-                    && count_malign_gateways() >= 1)
+                    && !can_cast_malign_gateway())
                 {
                     spell_cast = SPELL_NO_SPELL;
                     continue;
@@ -2838,6 +2838,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         return;
 
     case SPELL_MALIGN_GATEWAY:
+        if (!can_cast_malign_gateway())
+            dprf("ERROR: %s can't cast malign gateway, but is casting anyway! Counted %d gateways.", mons->name(DESC_CAP_THE).c_str(), count_malign_gateways());
         cast_malign_gateway(mons, 200);
         return;
 
