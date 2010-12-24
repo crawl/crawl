@@ -186,9 +186,7 @@ static bool _build_secondary_vault(int level_number, const map_def *vault,
 
 static bool _build_primary_vault(int level_number, const map_def *vault);
 
-static void _build_postvault_level(
-    map_section_type placed_vault_orientation,
-    vault_placement &place);
+static void _build_postvault_level(vault_placement &place);
 static bool _build_vault_impl(int level_number,
                               const map_def *vault,
                               bool build_only = false,
@@ -4033,7 +4031,7 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
     {
         if (!is_layout)
         {
-            _build_postvault_level(placed_vault_orientation, place);
+            _build_postvault_level(place);
         }
 
         dgn_place_stone_stairs(true);
@@ -4049,9 +4047,7 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
     return (true);
 }                               // end build_vaults()
 
-static void _build_postvault_level(
-    map_section_type placed_vault_orientation,
-    vault_placement &place)
+static void _build_postvault_level(vault_placement &place)
 {
     // Does this level require Dis treatment (metal wallification)?
     // XXX: Change this so the level definition can explicitly state what
@@ -4066,14 +4062,7 @@ static void _build_postvault_level(
     }
     else
     {
-        int nrooms = random_range(15, 90);
-
-        // Try harder for floating vaults, which tend to complicate room
-        // building somewhat.
-        if (placed_vault_orientation == MAP_FLOAT)
-            nrooms += 10;
-
-        _build_rooms(nrooms);
+        _build_rooms(random_range(25, 100));
 
         // Excavate and connect the vault to the rest of the level.
         place.connect();
