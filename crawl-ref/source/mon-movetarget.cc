@@ -7,6 +7,7 @@
 #include "env.h"
 #include "fprop.h"
 #include "mon-behv.h"
+#include "mon-iter.h"
 #include "mon-pathfind.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
@@ -802,12 +803,84 @@ void set_random_target(monster* mon)
     }
 }
 
+static void _herd_wander_target(monster * mon, dungeon_feature_type can_move)
+{
+    //std::set<coord_def> posit;
+
+    std::map<coord_def, int> posit;
+    const los_base * mon_los = mon->get_los();
+
+    for (monster_iterator mit(mon); mit; ++mit)
+    {
+        if (mit->mindex() == mon->mindex()
+            || mons_genus(mit->type) != mons_genus(mon->type))
+        {
+            continue;
+        }
+
+        for (radius_iterator rad_it(mit->pos(), HERD_COMFORT_RANGE,
+                                    C_SQUARE, mon_los); rad_it; ++rad_it)
+        {
+            //posit.insert(*rad_it);
+            if (!posit.insert(std::make_pair(*rad_it, 1)).second)
+            {
+                posit[*rad_it]++;
+            }
+        }
+    }
+
+    if (posit.empty())
+        return set_random_target(mon);
+
+    int max_val = 0;
+    for (std::map<coord_def, int>::iterator i = posit.begin(); i != posit.end(); i++)
+    {
+        if (i->second > max_val)
+        {
+            max_val = i->second;
+        }
+    }
+
+    std::vector<coord_def> options;
+
+    for (std::map<coord_def, int>::iterator i = posit.begin(); i != posit.end(); i++)
+    {
+        if (i->second == max_val)
+            options.push_back(i->first);
+    }
+
+    int idx = random2(options.size());
+    mon->target = options[idx];
+
+}
+
+static bool _herd_ok(monster * mon)
+{
+    bool ok = false;
+    for (monster_iterator mit(mon); mit; ++mit)
+    {
+        if (mit->mindex() == mon->mindex())
+            continue;
+
+        if (mons_genus(mit->type) == mons_genus(mon->type) )
+        {
+            if (grid_distance(mit->pos(), mon->pos()) < HERD_COMFORT_RANGE)
+            {
+                ok = true;
+                break;
+            }
+        }
+    }
+    return ok;
+}
+
 void check_wander_target(monster* mon, bool isPacified,
                          dungeon_feature_type can_move)
 {
     // default wander behaviour
     if (mon->pos() == mon->target
-        || mons_is_batty(mon) || !isPacified && one_chance_in(20))
+        || mons_is_batty(mon) || !isPacified && one_chance_in(20)
+        || herd_monster(mon) && !_herd_ok(mon))
     {
         bool need_target = true;
 
@@ -833,7 +906,12 @@ void check_wander_target(monster* mon, bool isPacified,
         // wandering monsters at least appear to have some sort of
         // attention span.  -- bwr
         if (need_target)
-            set_random_target(mon);
+        {
+            if (herd_monster(mon))
+                _herd_wander_target(mon, can_move);
+            else
+                set_random_target(mon);
+        }
     }
 }
 
