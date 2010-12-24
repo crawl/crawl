@@ -2608,7 +2608,7 @@ yyreduce:
                      lc_map.main.add(
                          yylineno,
                          make_stringf("depth_weight(\"%s\", %d)",
-                                      quote_lua_string((yyvsp[(2) - (2)].text)), (yyvsp[(1) - (2)].f)));
+                                      quote_lua_string((yyvsp[(2) - (2)].text)), (int)(yyvsp[(1) - (2)].f)));
                  }
     break;
 
@@ -2619,7 +2619,7 @@ yyreduce:
     {
                      lc_map.main.add(
                          yylineno,
-                         make_stringf("weight(%d)", (yyvsp[(1) - (1)].f)));
+                         make_stringf("weight(%d)", (int)(yyvsp[(1) - (1)].f)));
                  }
     break;
 
