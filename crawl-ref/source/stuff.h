@@ -53,7 +53,7 @@ void end(int exit_code, bool print_err = false,
 void game_ended();
 void game_ended_with_error(const std::string &message);
 
-void print_error_screen(const char *message, ...);
+bool print_error_screen(const char *message, ...);
 void redraw_screen();
 
 void canned_msg(canned_message_type which_message);

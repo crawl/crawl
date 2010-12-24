@@ -381,10 +381,6 @@ bool CrawlIsCrashing = false;
 void end(int exit_code, bool print_error, const char *format, ...)
 {
     std::string error = print_error? strerror(errno) : "";
-
-    cio_cleanup();
-    databaseSystemShutdown();
-
     if (format)
     {
         va_list arg;
@@ -397,13 +393,23 @@ void end(int exit_code, bool print_error, const char *format, ...)
             error = std::string(buffer);
         else
             error = std::string(buffer) + ": " + error;
+
+        if (!error.empty() && error[error.length() - 1] != '\n')
+            error += "\n";
     }
+
+    bool need_pause = true;
+    if (!error.empty())
+    {
+        if (print_error_screen("%s", error.c_str()))
+            need_pause = false;
+    }
+
+    cio_cleanup();
+    databaseSystemShutdown();
 
     if (!error.empty())
     {
-        if (error[error.length() - 1] != '\n')
-            error += "\n";
-
         fprintf(stderr, "%s", error.c_str());
         error.clear();
     }
@@ -411,7 +417,7 @@ void end(int exit_code, bool print_error, const char *format, ...)
 #if (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)) \
      || defined(TARGET_OS_DOS) \
      || defined(DGL_PAUSE_AFTER_ERROR)
-    if (exit_code && !crawl_state.game_is_arena()
+    if (need_pause && exit_code && !crawl_state.game_is_arena()
         && !crawl_state.seen_hups && !crawl_state.test)
     {
         fprintf(stderr, "Hit Enter to continue...\n");
@@ -460,10 +466,10 @@ void game_ended_with_error(const std::string &message)
 
 // Print error message on the screen.
 // Ugly, but better than not showing anything at all. (jpeg)
-void print_error_screen(const char *message, ...)
+bool print_error_screen(const char *message, ...)
 {
-    if (!crawl_state.io_inited)
-        return;
+    if (!crawl_state.io_inited || crawl_state.seen_hups)
+        return false;
 
     // Get complete error message.
     std::string error_msg;
@@ -477,7 +483,7 @@ void print_error_screen(const char *message, ...)
         error_msg = std::string(buffer);
     }
     if (error_msg.empty())
-        return;
+        return false;
 
     // Escape '<'.
     // NOTE: This assumes that the error message doesn't contain
@@ -499,6 +505,7 @@ void print_error_screen(const char *message, ...)
     clrscr();
     formatted_string::parse_string(error_msg, false).display();
     getchm();
+    return true;
 }
 
 void redraw_screen(void)

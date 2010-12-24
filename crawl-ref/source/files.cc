@@ -2211,10 +2211,7 @@ static bool _restore_tagged_chunk(package *save, const std::string name,
         }
         else
         {
-            char msg[128];
-            snprintf(msg, sizeof(msg), "\n%s  %s\n", complaint, reason.c_str());
-            print_error_screen(msg);
-            end(-1, false, msg);
+            end(-1, false, "\n%s %s\n", complaint, reason.c_str());
         }
     }
 
