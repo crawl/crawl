@@ -184,6 +184,8 @@ orb_of_destruction3
 ball_lightning MONS_BALL_LIGHTNING /*'*'*/
 %sdir dc-mon/undead
 death_cob MONS_DEATH_COB /*'%'*/
+%sdir dc-mon/holy
+silver_star MONS_SILVER_STAR /*'*'*/
 
 ### Demonic monsters
 ## Arch demons ('&')
