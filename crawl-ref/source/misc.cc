@@ -1840,16 +1840,17 @@ std::vector<map_malign_gateway_marker*> get_malign_gateways ()
 
 void timeout_malign_gateways (int duration)
 {
-    if (!duration)
-        return;
-
+    // Passing 0 should allow us to just touch the gateway and see
+    // if it should decay. This, in theory, should resolve the one
+    // turn delay between it timing out and being recastable. -due
     std::vector<map_malign_gateway_marker*> markers = get_malign_gateways();
 
     for (int i = 0, size = markers.size(); i < size; ++i)
     {
         map_malign_gateway_marker *mmark = markers[i];
 
-        mmark->duration -= duration;
+        if (duration)
+            mmark->duration -= duration;
 
         if (mmark->duration > 0)
         {

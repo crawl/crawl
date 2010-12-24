@@ -1126,6 +1126,8 @@ bool cast_shadow_creatures(god_type god)
 
 bool can_cast_malign_gateway()
 {
+    timeout_malign_gateways(0);
+
     return count_malign_gateways() < 1;
 }
 
