@@ -126,7 +126,9 @@ std::string item_def::name(description_level_type descrip,
 
     if (base_type == OBJ_CORPSES && is_named_corpse(*this)
         && !(((corpse_flags = props[CORPSE_NAME_TYPE_KEY].get_int())
-             & MF_NAME_SPECIES) && !(corpse_flags & MF_NAME_DEFINITE))
+               & MF_NAME_SPECIES)
+             && !(corpse_flags & MF_NAME_DEFINITE))
+             && !(corpse_flags & MF_NAME_SUFFIX)
         && !starts_with(get_corpse_name(*this), "shaped "))
     {
         switch (descrip)
@@ -1890,12 +1892,9 @@ std::string item_def::name_aux(description_level_type desc,
             buff << "corpse bug";
 
         if (!_name.empty() && !shaped && name_type != MF_NAME_ADJECTIVE
-            && !(name_flags & MF_NAME_SPECIES))
+            && !(name_flags & MF_NAME_SPECIES) && name_type != MF_NAME_SUFFIX)
         {
-            if (name_type == MF_NAME_SUFFIX)
-                buff << " " << _name;
-            else
-                buff << " of " << _name;
+            buff << " of " << _name;
         }
         break;
     }
