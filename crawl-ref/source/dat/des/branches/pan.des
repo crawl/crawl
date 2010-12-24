@@ -70,20 +70,11 @@ colour.add_colour("disco", function(rand, x, y)
 end)
 }}
 
-# 25% chance to appear on D:21-27, and guaranteed on D:24.  Would be nice to do
-# this with a single vault, but I don't see a way to.
+# 25% chance to appear on D:21-27, and guaranteed on D:24.
 NAME: pan_entry
 TAGS: extra allow_dup
-DEPTH: D:21-27, !D:24
-CHANCE: 25%
-KFEAT: O = enter_pandemonium
-MAP
-O
-ENDMAP
-
-NAME: pan_entry_guaranteed
-TAGS: extra
-PLACE: D:24
+DEPTH: D:21-27
+CHANCE: 100% (D:24), 25%
 KFEAT: O = enter_pandemonium
 MAP
 O
