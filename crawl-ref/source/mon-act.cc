@@ -3827,6 +3827,12 @@ static bool _monster_move(monster* mons)
     if (mmov.x || mmov.y || (mons->confused() && one_chance_in(6)))
         return (_do_move_monster(mons, mmov));
 
+    if (mons_is_wandering(mons))
+    {
+        // trigger a re-evaluation of our wander target on our next move -cao
+        mons->target = mons->pos();
+    }
+
     return (ret);
 }
 
