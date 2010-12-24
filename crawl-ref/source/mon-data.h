@@ -3816,7 +3816,7 @@ static monsterentry mondata[] = {
 // yaks, sheep and elephants ('Y')
 {
     MONS_SHEEP, 'Y', LIGHTGREY, "sheep",
-    M_WARM_BLOOD,
+    M_WARM_BLOOD | M_HERD,
     MR_NO_FLAGS,
     900, 10, MONS_SHEEP, MONS_SHEEP, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 13}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
