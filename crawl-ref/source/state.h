@@ -56,6 +56,7 @@ struct game_state
     bool arena_suspended;   // Set if the arena has been temporarily
                             // suspended.
 
+    bool dump_maps;         // Dump map Lua to stderr on fresh parse.
     bool test;              // Set if we want to run self-tests and exit.
     bool script;            // Set if we want to run a Lua script and exit.
     bool build_db;          // Set if we want to rebuild the db and exit.

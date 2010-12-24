@@ -210,22 +210,20 @@ DEPTH:    For random vaults, branch entry vaults, and minivaults, this
           have no DEPTH: constraint. Note that maps without a DEPTH: constraint
           cannot be selected as random vaults or minivaults.
 
-CHANCE:   <priority>:<roll> or <roll>
+CHANCE:   <priority>:<roll> or <roll> [ (<depth-ranges>) ]
 
           CHANCE allows you to control the probability that your map
           is used on any given level with an absolute roll.
 
           There are two ways to specify the CHANCE roll:
 
-          CHANCE: 500
+          CHANCE: 501
           or
-          CHANCE: 5%
+          CHANCE: 5.01%
 
           If specified as a raw number, the chance of selecting the
           vault is <number> in 10000. If specified as a percentage,
           the chance of selecting the vault is <perc> * 100 in 10000.
-          Note that CHANCE accepts only integers, no fractions or
-          decimals.
 
           CHANCE is useful for random vaults with a DEPTH (or
           default-depth) setting that want to ensure a certain chance
@@ -244,7 +242,7 @@ CHANCE:   <priority>:<roll> or <roll>
           This specifies a CHANCE of 80%, which means the dummy will
           be used in 80% of vault placement attempts.
 
-          The Lua equivalent of the two CHANCE forms is:
+          The Lua equivalent of the two simple CHANCE forms is:
 
           : chance(<number>)
           : chance(<priority>, <number>)
@@ -273,12 +271,44 @@ CHANCE:   <priority>:<roll> or <roll>
           tagged chance_xxx, then one map of that set will be used
           when the chance is met.
 
+          In some cases you'd like to set a different CHANCE based on where
+          the vault is being placed. For instance:
+
+          NAME: ziggurat_portal
+          CHANCE: 5% (Pan), 2% (D:*, Lair:2-4), 3%
+
+          If you specify a depth range in parentheses after a chance
+          spec, that spec applies only in that depth range. Each
+          chance's depth range will be checked in the order specified,
+          with the exception of the default chance (3% in this example)
+          which is always checked last.
+
+          The Lua equivalent of depth-constrained CHANCE:
+          CHANCE: 2% (D:*, Lair:2-4), 0 : 50% (Geh)
+          is as:
+          : depth_chance("D:*, Lair:2-4", 200)
+          : depth_chance("Geh", 0, 5000)
+
+
 WEIGHT:   (number with 10 being default)
           For entry vaults and any other vaults randomly picked from among
           a set, this type of line affects the likelihood of the given vault
           being picked in a given game. The default WEIGHT: is 10. The
           likelihood of a vault getting picked is:
           [vault's WEIGHT: / sum of all WEIGHT:s of vaults of that type]
+
+          As with CHANCE, you may constrain weights to apply only in certain
+          depths:
+
+          WEIGHT: 100 (D:2-4), 20 (Crypt, Zot)
+
+          (Note that the default weight is always 10 unless explicitly
+          changed)
+
+          The Lua equivalent of a depth-constrained WEIGHT:
+          WEIGHT: 100 (D:2-4)
+          is
+          : depth_weight("D:2-4", 100)
 
 PLACE:    Used to specify certain special levels. Existing special levels
           include most branch ends.

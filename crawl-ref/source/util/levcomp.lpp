@@ -44,7 +44,8 @@ static void clean()
 // Enter a new state, first clearing yylval of junk.
 #define CBEGIN(x) do { BEGIN(x); clean(); } while (0)
 
-static void post_proc_text(char *text, bool trim_right, int strip_trailing)
+static void post_proc_text(char *text, bool trim_right,
+                           int strip_trailing, int strip_leading)
 {
     char *s = NULL;
     if (trim_right)
@@ -60,23 +61,34 @@ static void post_proc_text(char *text, bool trim_right, int strip_trailing)
         while (s >= text && --strip_trailing >= 0)
             *s-- = 0;
     }
+    if (strip_leading)
+    {
+        const int original_length = strlen(text);
+        if (original_length > strip_leading)
+            memmove(text, text + strip_leading,
+                    original_length - strip_leading);
+        if (original_length >= strip_leading)
+            text[original_length - strip_leading] = 0;
+    }
 }
 
-static char *copy_text(bool trim_right, int strip_trailing)
+static char *copy_text(bool trim_right, int strip_trailing, int strip_leading)
 {
     char *newstring = NULL;
     if ((yylval.text = newstring = strdup(yytext)))
     {
         alloced = true;
-        post_proc_text(newstring, trim_right, strip_trailing);
+        post_proc_text(newstring, trim_right, strip_trailing, strip_leading);
     }
     return (newstring);
 }
 
-static void settext(bool trim_right = false, int strip_trailing = 0)
+static void settext(bool trim_right = false,
+                    int strip_trailing = 0,
+                    int strip_leading = 0)
 {
     clean();
-    char *newstring = copy_text(trim_right, strip_trailing);
+    char *newstring = copy_text(trim_right, strip_trailing, strip_leading);
     yylval.text = newstring;
 }
 
@@ -107,7 +119,7 @@ static void cattext(bool trim_right = false, int strip_trailing = 0)
         alloced = true;
         strcpy(newbuf, yylval.text);
         strcat(newbuf, yytext);
-        post_proc_text(newbuf, trim_right, strip_trailing);
+        post_proc_text(newbuf, trim_right, strip_trailing, 0);
         if (was_alloced)
             free((void*) yylval.text);
         yylval.text = newbuf;
@@ -271,11 +283,17 @@ SUBVAULT:           { CBEGIN(ARGUMENT); return SUBVAULT; }
 :                   return COLON;
 
 %                   return PERC;
+-                   return DASH;
 
-[+-]?[0-9]+         {
+[+-]?[.][0-9]+|[+-]?[0-9]+[.]?[0-9]* {
                         clean();
-                        yylval.i = atoi(yytext);
-                        return INTEGER;
+                        yylval.f = strtod(yytext, NULL);
+                        return NUMBER;
+                    }
+
+\([^\r\n)]*\)       {
+                        settext(true, 1, 1);
+                        return STRING;
                     }
 
 [\ \t]+             ;

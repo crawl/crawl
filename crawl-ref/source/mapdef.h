@@ -802,8 +802,6 @@ private:
     feature_spec parse_trap(std::string s, int weight);
 };
 
-typedef std::vector<level_range> depth_ranges;
-
 class map_def;
 class dlua_set_map
 {
@@ -833,6 +831,137 @@ struct map_file_place
     {
         filename.clear();
         lineno = 0;
+    }
+};
+
+const int DEFAULT_CHANCE_PRIORITY = 100;
+struct map_chance
+{
+    int chance_priority;
+    int chance;
+    map_chance() : chance_priority(-1), chance(-1) { }
+    map_chance(int _priority, int _chance)
+        : chance_priority(_priority), chance(_chance) { }
+    map_chance(int _chance)
+        : chance_priority(DEFAULT_CHANCE_PRIORITY), chance(_chance) { }
+    bool valid() const { return chance_priority >= 0 && chance >= 0; }
+    bool dummy_chance() const { return chance_priority == 0 && chance >= 0; }
+    std::string describe() const;
+    // Returns true if the vault makes the random CHANCE_ROLL.
+    bool roll() const;
+    void write(writer &) const;
+    void read(reader &);
+};
+
+// For the bison parser's token union:
+struct map_chance_pair
+{
+   int priority;
+   int chance;
+};
+
+typedef std::vector<level_range> depth_ranges_v;
+class depth_ranges
+{
+private:
+    depth_ranges_v depths;
+public:
+    static depth_ranges parse_depth_ranges(
+        const std::string &depth_ranges_string);
+    void read(reader &);
+    void write(writer &) const;
+    void clear() { depths.clear(); }
+    bool empty() const { return depths.empty(); }
+    bool is_usable_in(const level_id &lid) const;
+    void add_depth(const level_range &range) { depths.push_back(range); }
+    void add_depths(const depth_ranges &other_ranges);
+    std::string describe() const;
+};
+
+template <typename X>
+struct depth_range_X
+{
+    depth_ranges depths;
+    X depth_thing;
+    depth_range_X() : depths(), depth_thing() { }
+    depth_range_X(const std::string &depth_range_string, const X &thing)
+        : depths(depth_ranges::parse_depth_ranges(depth_range_string)),
+          depth_thing(thing)
+    {
+    }
+    bool is_usable_in(const level_id &lid) const
+    {
+        return depths.is_usable_in(lid);
+    }
+    template <typename reader_fn_type>
+    static depth_range_X read(reader &inf, reader_fn_type reader_fn)
+    {
+        depth_range_X range_x;
+        range_x.depths.read(inf);
+        range_x.depth_thing = reader_fn(inf);
+        return range_x;
+    }
+    template <typename writer_fn_type>
+    void write(writer &outf, writer_fn_type writer_fn) const
+    {
+        depths.write(outf);
+        writer_fn(outf, depth_thing);
+    }
+};
+
+template <typename X>
+class depth_ranges_X
+{
+private:
+    typedef std::vector<depth_range_X<X> > depth_range_X_v;
+
+    X default_thing;
+    depth_range_X_v depth_range_Xs;
+public:
+    depth_ranges_X() : default_thing(), depth_range_Xs() { }
+    depth_ranges_X(const X &_default_thing)
+        : default_thing(_default_thing), depth_range_Xs() { }
+    void clear(const X &_default_X = X())
+    {
+        depth_range_Xs.clear();
+        set_default(_default_X);
+    }
+    void set_default(const X &_default_X)
+    {
+        default_thing = _default_X;
+    }
+    X get_default() const { return default_thing; }
+    void add_range(const std::string &depth_range_string,
+                   const X &thing)
+    {
+        depth_range_Xs.push_back(depth_range_X<X>(depth_range_string, thing));
+    }
+    X depth_value(const level_id &lid) const
+    {
+        typename depth_range_X_v::const_iterator i = depth_range_Xs.begin();
+        for ( ; i != depth_range_Xs.end(); ++i)
+            if (i->is_usable_in(lid))
+                return i->depth_thing;
+        return default_thing;
+    }
+    template <typename reader_fn_type>
+    static depth_ranges_X read(reader &inf, reader_fn_type reader_fn)
+    {
+        depth_ranges_X ranges;
+        ranges.clear(reader_fn(inf));
+        const int count = unmarshallShort(inf);
+        for (int i = 0; i < count; ++i)
+            ranges.depth_range_Xs.push_back(
+                depth_range_X<X>::read(inf, reader_fn));
+        return ranges;
+    }
+    template <typename writer_fn_type>
+    void write(writer &outf, writer_fn_type writer_fn) const
+    {
+        writer_fn(outf, default_thing);
+        marshallShort(outf, depth_range_Xs.size());
+        for (int i = 0, size = depth_range_Xs.size(); i < size; ++i)
+            depth_range_Xs[i].write(outf, writer_fn);
     }
 };
 
@@ -873,9 +1002,9 @@ public:
     depth_ranges     depths;
     map_section_type orient;
 
-    int              chance_priority;
-    int              chance;
-    int              weight;
+    depth_ranges_X<map_chance> _chance;
+    depth_ranges_X<int> _weight;
+
     int              weight_depth_mult;
     int              weight_depth_div;
 
@@ -922,11 +1051,15 @@ public:
 
     std::string desc_or_name() const;
 
+    std::string describe() const;
     void init();
     void reinit();
 
     void load();
     void strip();
+
+    int weight(const level_id &lid) const;
+    map_chance chance(const level_id &lid) const;
 
     bool in_map(const coord_def &p) const;
 
@@ -983,8 +1116,7 @@ public:
 
     bool has_depth() const;
     void add_depth(const level_range &depth);
-    void add_depths(depth_ranges::const_iterator s,
-                    depth_ranges::const_iterator e);
+    void add_depths(const depth_ranges &depth);
 
     bool can_dock(map_section_type) const;
     coord_def dock_pos(map_section_type) const;
