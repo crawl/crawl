@@ -1,5 +1,5 @@
 YACC := bison -y
-LEX  := flex
+LEX  := flex --nounput
 RM   ?= rm -f
 
 ifneq ($(findstring $(MAKEFLAGS),s),s)
