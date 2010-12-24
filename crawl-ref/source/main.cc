@@ -453,6 +453,9 @@ static void _show_commandline_options_help()
     puts("  -test            run test cases in ./test");
     puts("  -script <name>   run script matching <name> in ./scripts");
 #endif
+    puts("");
+    puts("Miscellaneous options:");
+    puts("  -dump-maps       write map Lua to stderr when parsing .des files");
 }
 
 static void _wanderer_startup_message()

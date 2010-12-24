@@ -3546,6 +3546,7 @@ enum commandline_option_type
     CLO_MACRO,
     CLO_MAPSTAT,
     CLO_ARENA,
+    CLO_DUMP_MAPS,
     CLO_TEST,
     CLO_SCRIPT,
     CLO_BUILDDB,
@@ -3567,9 +3568,10 @@ enum commandline_option_type
 static const char *cmd_ops[] = {
     "scores", "name", "species", "background", "plain", "dir", "rc",
     "rcdir", "tscores", "vscores", "scorefile", "morgue", "macro",
-    "mapstat", "arena", "test", "script", "builddb", "help", "version",
-    "seed", "save-version", "sprint", "extra-opt-first", "extra-opt-last",
-    "sprint-map", "edit-save", "print-charset", "zotdef",
+    "mapstat", "arena", "dump-maps", "test", "script", "builddb",
+    "help", "version", "seed", "save-version", "sprint",
+    "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
+    "print-charset", "zotdef",
 };
 
 static const int num_cmd_ops = CLO_NOPS;
@@ -3989,6 +3991,10 @@ bool parse_args(int argc, char **argv, bool rc_only)
                     Options.game.arena_teams = next_arg;
                 nextUsed = true;
             }
+            break;
+
+        case CLO_DUMP_MAPS:
+            crawl_state.dump_maps = true;
             break;
 
         case CLO_TEST:

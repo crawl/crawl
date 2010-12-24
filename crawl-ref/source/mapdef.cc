@@ -1976,18 +1976,105 @@ dlua_set_map::~dlua_set_map()
 }
 
 ///////////////////////////////////////////////
+// map_chance
+
+std::string map_chance::describe() const
+{
+    return make_stringf("%d:%d", chance_priority, chance);
+}
+
+bool map_chance::roll() const
+{
+    return random2(CHANCE_ROLL) < chance;
+}
+
+void map_chance::write(writer &outf) const
+{
+    marshallInt(outf, chance_priority);
+    marshallInt(outf, chance);
+}
+
+void map_chance::read(reader &inf)
+{
+    chance_priority = unmarshallInt(inf);
+    chance = unmarshallInt(inf);
+}
+
+///////////////////////////////////////////////
+// depth_ranges
+
+void depth_ranges::write(writer& outf) const
+{
+    marshallShort(outf, depths.size());
+    for (int i = 0, sz = depths.size(); i < sz; ++i)
+        depths[i].write(outf);
+}
+
+void depth_ranges::read(reader &inf)
+{
+    depths.clear();
+    const int nranges = unmarshallShort(inf);
+    for (int i = 0; i < nranges; ++i)
+    {
+        level_range lr;
+        lr.read(inf);
+        depths.push_back(lr);
+    }
+}
+
+depth_ranges depth_ranges::parse_depth_ranges(
+    const std::string &depth_range_string)
+{
+    depth_ranges ranges;
+    const std::vector<std::string> frags =
+        split_string(",", depth_range_string);
+    for (int j = 0, size = frags.size(); j < size; ++j)
+        ranges.depths.push_back(level_range::parse(frags[j]));
+    return ranges;
+}
+
+bool depth_ranges::is_usable_in(const level_id &lid) const
+{
+    bool any_matched = false;
+    for (int i = 0, sz = depths.size(); i < sz; ++i)
+    {
+        const level_range &lr = depths[i];
+        if (lr.matches(lid))
+        {
+            if (lr.deny)
+                return (false);
+            any_matched = true;
+        }
+    }
+    return (any_matched);
+}
+
+void depth_ranges::add_depths(const depth_ranges &other_depths)
+{
+    depths.insert(depths.end(),
+                  other_depths.depths.begin(),
+                  other_depths.depths.end());
+}
+
+std::string depth_ranges::describe() const
+{
+    return (comma_separated_line(depths.begin(), depths.end(), ", ", ", "));
+}
+
+///////////////////////////////////////////////
 // map_def
 //
 
+const int DEFAULT_MAP_WEIGHT = 10;
 map_def::map_def()
-    : name(), description(), tags(), place(), depths(), orient(), chance(),
-      weight(), weight_depth_mult(), weight_depth_div(), welcome_messages(),
-      map(), mons(), items(), random_mons(), prelude("dlprelude"),
-      mapchunk("dlmapchunk"), main("dlmain"),
+    : name(), description(), tags(), place(), depths(), orient(), _chance(),
+      _weight(DEFAULT_MAP_WEIGHT), weight_depth_mult(), weight_depth_div(),
+      welcome_messages(), map(), mons(), items(), random_mons(),
+      prelude("dlprelude"), mapchunk("dlmapchunk"), main("dlmain"),
       validate("dlvalidate"), veto("dlveto"), epilogue("dlepilogue"),
-      rock_colour(BLACK), floor_colour(BLACK), rock_tile(0), floor_tile(0),
-      border_fill_type(DNGN_ROCK_WALL), index_only(false), cache_offset(0L),
-      validating_map_flag(false)
+      rock_colour(BLACK), floor_colour(BLACK), rock_tile(0),
+      floor_tile(0), border_fill_type(DNGN_ROCK_WALL),
+      index_only(false), cache_offset(0L), validating_map_flag(false)
 {
     init();
 }
@@ -2035,19 +2122,13 @@ void map_def::reinit()
     // vault is picked, and all other vaults are ignored for that
     // random selection. weight is ignored if the vault is chosen
     // based on its chance.
-    chance = 0;
-
-    // If multiple alternative vaults have a chance, the order in which
-    // they're tested is based on chance_priority: higher priority vaults
-    // are checked first. Vaults with the same priority are tested in
-    // unspecified order.
-    chance_priority = 0;
+    _chance.clear();
 
     // Weight for this map. When selecting a map, if no map with a
     // nonzero chance is picked, one of the other eligible vaults is
     // picked with a probability of weight / (sum of weights of all
     // eligible vaults).
-    weight = 10;
+    _weight.clear(DEFAULT_MAP_WEIGHT);
 
     // How to modify weight based on absolte dungeon depth.  This
     // needs to be done in the C++ code since the map's lua code doesnt'
@@ -2144,6 +2225,30 @@ void map_def::read_full(reader& inf, bool check_cache_version)
     epilogue.read(inf);
 }
 
+int map_def::weight(const level_id &lid) const
+{
+    const int base_weight = _weight.depth_value(lid);
+    return (base_weight
+            + lid.absdepth() * weight_depth_mult / weight_depth_div);
+}
+
+map_chance map_def::chance(const level_id &lid) const
+{
+    return _chance.depth_value(lid);
+}
+
+std::string map_def::describe() const
+{
+    return make_stringf("Map: %s\n%s%s%s%s%s%s",
+                        name.c_str(),
+                        prelude.describe("prelude").c_str(),
+                        mapchunk.describe("mapchunk").c_str(),
+                        main.describe("main").c_str(),
+                        validate.describe("validate").c_str(),
+                        veto.describe("veto").c_str(),
+                        epilogue.describe("epilogue").c_str());
+}
+
 void map_def::strip()
 {
     if (index_only)
@@ -2201,6 +2306,18 @@ void map_def::write_maplines(writer &outf) const
     map.write_maplines(outf);
 }
 
+static void _marshall_map_chance(writer &th, const map_chance &chance)
+{
+    chance.write(th);
+}
+
+static map_chance _unmarshall_map_chance(reader &th)
+{
+    map_chance chance;
+    chance.read(th);
+    return chance;
+}
+
 void map_def::write_index(writer& outf) const
 {
     if (!cache_offset)
@@ -2212,9 +2329,8 @@ void map_def::write_index(writer& outf) const
     marshallShort(outf, orient);
     // XXX: This is a hack. See the comment in l_dgn.cc.
     marshallShort(outf, static_cast<short>(border_fill_type));
-    marshallInt(outf, chance_priority);
-    marshallInt(outf, chance);
-    marshallInt(outf, weight);
+    _chance.write(outf, _marshall_map_chance);
+    _weight.write(outf, marshallInt);
     marshallInt(outf, cache_offset);
     marshallString4(outf, tags);
     place.save(outf);
@@ -2231,39 +2347,40 @@ void map_def::read_index(reader& inf)
 {
     unmarshallString4(inf, name);
     unmarshallString4(inf, place_loaded_from.filename);
-    place_loaded_from.lineno   = unmarshallInt(inf);
-    orient       = static_cast<map_section_type>(unmarshallShort(inf));
+    place_loaded_from.lineno = unmarshallInt(inf);
+    orient = static_cast<map_section_type>(unmarshallShort(inf));
     // XXX: Hack. See the comment in l_dgn.cc.
     border_fill_type =
         static_cast<dungeon_feature_type>(unmarshallShort(inf));
-    chance_priority = unmarshallInt(inf);
-    chance       = unmarshallInt(inf);
-    weight       = unmarshallInt(inf);
+
+    const bool simple_chance_weight =
+        inf.getMinorVersion() < TAG_MINOR_RANGE_CHANCES;
+    if (simple_chance_weight)
+    {
+        _chance.clear(_unmarshall_map_chance(inf));
+        _weight.clear(unmarshallInt(inf));
+    }
+    else
+    {
+        _chance.read(inf, _unmarshall_map_chance);
+        _weight.read(inf, unmarshallInt);
+    }
     cache_offset = unmarshallInt(inf);
     unmarshallString4(inf, tags);
     place.load(inf);
     read_depth_ranges(inf);
     prelude.read(inf);
-    index_only   = true;
+    index_only = true;
 }
 
 void map_def::write_depth_ranges(writer& outf) const
 {
-    marshallShort(outf, depths.size());
-    for (int i = 0, sz = depths.size(); i < sz; ++i)
-        depths[i].write(outf);
+    depths.write(outf);
 }
 
 void map_def::read_depth_ranges(reader& inf)
 {
-    depths.clear();
-    const int nranges = unmarshallShort(inf);
-    for (int i = 0; i < nranges; ++i)
-    {
-        level_range lr;
-        lr.read(inf);
-        depths.push_back(lr);
-    }
+    depths.read(inf);
 }
 
 void map_def::set_file(const std::string &s)
@@ -2538,8 +2655,7 @@ std::string map_def::validate_map_def(const depth_ranges &default_depths)
     run_lua_epilogue(true);
 
     if (!has_depth() && !lc_default_depths.empty())
-        add_depths(lc_default_depths.begin(),
-                   lc_default_depths.end());
+        depths.add_depths(lc_default_depths);
 
     if ((place.branch == BRANCH_ECUMENICAL_TEMPLE
          && place.level_type == LEVEL_DUNGEON)
@@ -2641,29 +2757,12 @@ std::string map_def::validate_map_def(const depth_ranges &default_depths)
 
 bool map_def::is_usable_in(const level_id &lid) const
 {
-    bool any_matched = false;
-    for (int i = 0, sz = depths.size(); i < sz; ++i)
-    {
-        const level_range &lr = depths[i];
-        if (lr.matches(lid))
-        {
-            if (lr.deny)
-                return (false);
-            any_matched = true;
-        }
-    }
-    return (any_matched);
+    return depths.is_usable_in(lid);
 }
 
 void map_def::add_depth(const level_range &range)
 {
-    depths.push_back(range);
-}
-
-void map_def::add_depths(depth_ranges::const_iterator s,
-                         depth_ranges::const_iterator e)
-{
-    depths.insert(depths.end(), s, e);
+    depths.add_depth(range);
 }
 
 bool map_def::has_depth() const

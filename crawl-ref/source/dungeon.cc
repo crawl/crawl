@@ -2593,12 +2593,13 @@ static bool _builder_by_branch(int level_number)
 // Place vaults with CHANCE: that want to be placed on this level.
 static void _place_chance_vaults()
 {
-    const mapref_vector maps = random_chance_maps_in_depth(level_id::current());
+    const level_id &lid(level_id::current());
+    const mapref_vector maps = random_chance_maps_in_depth(lid);
     for (int i = 0, size = maps.size(); i < size; ++i)
     {
         const map_def *map = maps[i];
-        dprf("Placing CHANCE vault: %s (%d:%d)",
-             map->name.c_str(), map->chance_priority, map->chance);
+        dprf("Placing CHANCE vault: %s (%s)",
+             map->name.c_str(), map->chance(lid).describe().c_str());
         _build_secondary_vault(you.absdepth0, map);
     }
 }

@@ -28,26 +28,14 @@ void yyerror(const char *e)
     end(1);
 }
 
-level_range set_range(const char *s, int start, int end)
-{
-    try
-    {
-        lc_range.set(s, start, end);
-    }
-    catch (const std::string &err)
-    {
-        yyerror(err.c_str());
-    }
-    return (lc_range);
-}
-
 %}
 
 %union
 {
     int i;
+    double f;
     const char *text;
-    raw_range range;
+    map_chance_pair chance;
 }
 
 /* Two harmless shift/reduce conflicts */
@@ -59,10 +47,13 @@ level_range set_range(const char *s, int start, int end)
 %token <i>      LFLOORCOL LROCKCOL LFLOORTILE LROCKTILE FTILE RTILE TILE
 %token <i>      SUBVAULT FHEIGHT DESC
 
-%token <i>      COMMA COLON PERC INTEGER CHARACTER
+%token <i>      COMMA COLON PERC DASH CHARACTER
+%token <f>      NUMBER
 
 %token <text>   STRING MAP_LINE MONSTER_NAME ITEM_INFO
 %token <text>   LUA_LINE
+%type <chance>  chance_num
+%type <i>       chance_roll
 
 %%
 
@@ -111,6 +102,7 @@ level           : name map_specs
 
                     std::string err =
                         lc_map.validate_map_def(lc_default_depths);
+                    dump_map(lc_map);
                     if (!err.empty())
                         yyerror(err.c_str());
                     add_parsed_map(lc_map);
@@ -592,42 +584,70 @@ depth           : DEPTH {}
                 }
                 ;
 
-chance          : CHANCE INTEGER COLON INTEGER PERC
+chance          : CHANCE chance_specifiers { }
+                | CHANCE { }
+                ;
+
+chance_specifiers : chance_specifiers COMMA chance_specifier
+                  | chance_specifier;
+
+chance_roll     : NUMBER PERC
                 {
-                    lc_map.main.add(
-                        yylineno,
-                        make_stringf("chance(%d, %d)", $2, $4 * 100));
+                    $$ = $1 * 100;
                 }
-                |
-                CHANCE INTEGER COLON INTEGER
+                | NUMBER
                 {
-                    lc_map.main.add(
-                        yylineno,
-                        make_stringf("chance(%d, %d)", $2, $4));
+                    $$ = $1;
                 }
-                |
-                CHANCE INTEGER PERC
+
+chance_num      : NUMBER COLON chance_roll
                 {
-                    lc_map.main.add(
-                        yylineno,
-                        make_stringf("chance(%d)", $2 * 100));
+                    $$.priority = $1;
+                    $$.chance   = $3;
                 }
-                |
-                CHANCE INTEGER
+                | chance_roll
                 {
-                    lc_map.main.add(
-                        yylineno,
-                        make_stringf("chance(%d)", $2));
+                    $$.priority = DEFAULT_CHANCE_PRIORITY;
+                    $$.chance   = $1;
                 }
                 ;
 
-weight          : WEIGHT INTEGER
+chance_specifier : chance_num STRING
                 {
                     lc_map.main.add(
                         yylineno,
-                        make_stringf("weight(%d)", $2));
+                        make_stringf("depth_chance(\"%s\", %d, %d)",
+                                     quote_lua_string($2).c_str(),
+                                     $1.priority, $1.chance));
+                }
+                | chance_num
+                {
+                    lc_map.main.add(
+                        yylineno,
+                        make_stringf("chance(%d, %d)",
+                                     $1.priority, $1.chance));
                 }
                 ;
+
+weight          : WEIGHT weight_specifiers;
+
+weight_specifiers : weight_specifiers COMMA weight_specifier
+                  | weight_specifier;
+
+weight_specifier : NUMBER STRING
+                 {
+                     lc_map.main.add(
+                         yylineno,
+                         make_stringf("depth_weight(\"%s\", %d)",
+                                      quote_lua_string($2), $1));
+                 }
+                 | NUMBER
+                 {
+                     lc_map.main.add(
+                         yylineno,
+                         make_stringf("weight(%d)", $1));
+                 }
+                 ;
 
 orientation     : ORIENT {}
                 | ORIENT STRING

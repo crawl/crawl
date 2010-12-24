@@ -638,16 +638,6 @@ mapref_vector find_maps_for_tag(const std::string tag,
     return (maps);
 }
 
-int weight_map_vector (std::vector<map_def> maps)
-{
-    int weights = 0;
-
-    for (std::vector<map_def>::iterator mi = maps.begin(); mi != maps.end(); ++mi)
-        weights += mi->weight;
-
-    return (weights);
-}
-
 struct map_selector
 {
 private:
@@ -751,20 +741,28 @@ bool map_selector::accept(const map_def &mapdef) const
                 && vault_unforbidden(mapdef));
 
     case DEPTH:
+    {
+        const map_chance chance(mapdef.chance(place));
         return (mapdef.is_minivault() == mini
-                && (!mapdef.chance || !mapdef.chance_priority)
+                && (!chance.valid() || chance.dummy_chance())
                 && depth_selectable(mapdef)
                 && vault_unforbidden(mapdef));
+    }
 
     case DEPTH_AND_CHANCE:
-        return (// Only vaults with valid chance and chance priority
-                (mapdef.chance > 0 && mapdef.chance_priority > 0)
+    {
+        const map_chance chance(mapdef.chance(place));
+        // Only vaults with valid chance
+        return (chance.valid()
+                && !chance.dummy_chance()
                 && depth_selectable(mapdef)
                 && vault_unforbidden(mapdef));
+    }
 
     case TAG:
         return (mapdef.has_tag(tag)
-                && (!check_depth || !mapdef.has_depth()
+                && (!check_depth
+                    || !mapdef.has_depth()
                     || mapdef.is_usable_in(place))
                 && _map_matches_species(mapdef)
                 && map_matches_layout_type(mapdef)
@@ -783,9 +781,9 @@ void map_selector::announce(const map_def *vault) const
         if (sel == DEPTH_AND_CHANCE)
         {
             mprf(MSGCH_DIAGNOSTICS,
-                 "[CHANCE+DEPTH] Found map %s for %s (%d:%d)",
+                 "[CHANCE+DEPTH] Found map %s for %s (%s)",
                  vault->name.c_str(), place.describe().c_str(),
-                 vault->chance_priority, vault->chance);
+                 vault->chance(place).describe().c_str());
         }
         else
         {
@@ -835,9 +833,10 @@ static vault_indices _eligible_maps_for_selector(const map_selector &sel)
 static const map_def *_random_map_by_selector(const map_selector &sel);
 
 static bool _vault_chance_new(const map_def &map,
+                              const level_id &place,
                               std::set<std::string> &chance_tags)
 {
-    if (map.chance > 0)
+    if (map.chance(place).valid())
     {
         // There may be several alternatives for a portal
         // vault that want to be governed by one common
@@ -860,7 +859,8 @@ class vault_chance_roll_iterator
 {
 public:
     vault_chance_roll_iterator(const mapref_vector &_maps)
-        : maps(_maps), current(_maps.begin()), end(_maps.end())
+        : maps(_maps), place(level_id::current()),
+          current(_maps.begin()), end(_maps.end())
     {
         find_valid();
     }
@@ -886,12 +886,13 @@ public:
 private:
     void find_valid()
     {
-        while (current != end && random2(CHANCE_ROLL) >= (*current)->chance)
+        while (current != end && !(*current)->chance(place).roll())
             ++current;
     }
 
 private:
     const std::vector<const map_def *> &maps;
+    level_id place;
     mapref_vector::const_iterator current;
     mapref_vector::const_iterator end;
 };
@@ -927,8 +928,11 @@ _random_chance_maps_in_list(const map_selector &sel,
     for (unsigned f = 0, size = filtered.size(); f < size; ++f)
     {
         const int i = filtered[f];
-        if (!sel.ignore_chance && _vault_chance_new(vdefs[i], chance_tags))
+        if (!sel.ignore_chance
+            && _vault_chance_new(vdefs[i], sel.place, chance_tags))
+        {
             chance.push_back(&vdefs[i]);
+        }
     }
 
     for (vault_chance_roll_iterator vc(chance); vc; ++vc)
@@ -960,9 +964,9 @@ _random_map_in_list(const map_selector &sel,
     for (unsigned f = 0, size = filtered.size(); f < size; ++f)
     {
         const int i = filtered[f];
-        if (!sel.ignore_chance && vdefs[i].chance)
+        if (!sel.ignore_chance && vdefs[i].chance(sel.place).valid())
         {
-            if (_vault_chance_new(vdefs[i], chance_tags))
+            if (_vault_chance_new(vdefs[i], sel.place, chance_tags))
                 chance.push_back(&vdefs[i]);
         }
         else
@@ -984,12 +988,12 @@ _random_map_in_list(const map_selector &sel,
         if (sel.place.level_type == LEVEL_DUNGEON && sel.place.is_valid())
             absdepth = sel.place.absdepth();
 
+        const level_id &here(level_id::current());
         for (mapref_vector::const_iterator i = eligible.begin();
              i != eligible.end(); ++i)
         {
             const map_def &map(**i);
-            const int weight = map.weight
-                + absdepth * map.weight_depth_mult / map.weight_depth_div;
+            const int weight = map.weight(here);
 
             if (weight <= 0)
                 continue;
@@ -1330,6 +1334,13 @@ void reread_maps()
     vdefs.clear();
     map_files_read.clear();
     read_maps();
+}
+
+void dump_map(const map_def &map)
+{
+    if (crawl_state.dump_maps)
+        fprintf(stderr, "\n----------------------------------------\n%s\n",
+                map.describe().c_str());
 }
 
 void add_parsed_map(const map_def &md)
