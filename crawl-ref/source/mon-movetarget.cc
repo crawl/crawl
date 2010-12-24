@@ -805,53 +805,48 @@ void set_random_target(monster* mon)
 
 static void _herd_wander_target(monster * mon, dungeon_feature_type can_move)
 {
-    //std::set<coord_def> posit;
+    std::vector<monster_iterator> friends;
+    std::map<int, std::vector<coord_def> > distance_positions;
 
-    std::map<coord_def, int> posit;
-    const los_base * mon_los = mon->get_los();
+    int dist_thresh = LOS_RADIUS + HERD_COMFORT_RANGE;
 
-    for (monster_iterator mit(mon); mit; ++mit)
+    for (monster_iterator mit; mit; ++mit)
     {
         if (mit->mindex() == mon->mindex()
-            || mons_genus(mit->type) != mons_genus(mon->type))
+            || mons_genus(mit->type) != mons_genus(mon->type)
+            || grid_distance(mit->pos(), mon->pos()) > dist_thresh)
         {
             continue;
         }
 
-        for (radius_iterator rad_it(mit->pos(), HERD_COMFORT_RANGE,
-                                    C_SQUARE, mon_los); rad_it; ++rad_it)
-        {
-            //posit.insert(*rad_it);
-            if (!posit.insert(std::make_pair(*rad_it, 1)).second)
-            {
-                posit[*rad_it]++;
-            }
-        }
+        friends.push_back(mit);
     }
 
-    if (posit.empty())
+    if (friends.empty())
         return set_random_target(mon);
 
-    int max_val = 0;
-    for (std::map<coord_def, int>::iterator i = posit.begin(); i != posit.end(); i++)
+    for (radius_iterator r_it(mon->get_los_no_trans(), true) ; r_it; ++r_it)
     {
-        if (i->second > max_val)
+        int count = 0;
+        for (unsigned i = 0; i < friends.size(); i++)
         {
-            max_val = i->second;
+            if (grid_distance(friends[i]->pos(), *r_it) < HERD_COMFORT_RANGE
+                && friends[i]->see_cell_no_trans(*r_it))
+            {
+                count++;
+            }
         }
+        if (count > 0)
+            distance_positions[count].push_back(*r_it);
     }
+    std::map<int, std::vector<coord_def> >::reverse_iterator back =
+        distance_positions.rbegin();
 
-    std::vector<coord_def> options;
+    if (back == distance_positions.rend())
+        return set_random_target(mon);
 
-    for (std::map<coord_def, int>::iterator i = posit.begin(); i != posit.end(); i++)
-    {
-        if (i->second == max_val)
-            options.push_back(i->first);
-    }
 
-    int idx = random2(options.size());
-    mon->target = options[idx];
-
+    mon->target = back->second[random2(back->second.size())];
 }
 
 static bool _herd_ok(monster * mon)
