@@ -399,7 +399,7 @@ void end(int exit_code, bool print_error, const char *format, ...)
     }
 
     bool need_pause = true;
-    if (!error.empty())
+    if (exit_code && !error.empty())
     {
         if (print_error_screen("%s", error.c_str()))
             need_pause = false;
