@@ -462,6 +462,9 @@ void game_ended_with_error(const std::string &message)
 // Ugly, but better than not showing anything at all. (jpeg)
 void print_error_screen(const char *message, ...)
 {
+    if (!crawl_state.io_inited)
+        return;
+
     // Get complete error message.
     std::string error_msg;
     {
