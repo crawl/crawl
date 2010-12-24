@@ -639,7 +639,7 @@ weight_specifier : NUMBER STRING
                      lc_map.main.add(
                          yylineno,
                          make_stringf("depth_weight(\"%s\", %d)",
-                                      quote_lua_string($2), (int)$1));
+                                      quote_lua_string($2).c_str(), (int)$1));
                  }
                  | NUMBER
                  {
