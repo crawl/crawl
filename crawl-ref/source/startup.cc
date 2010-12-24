@@ -503,7 +503,11 @@ static void _show_startup_menu(newgame_def* ng_choice,
     std::vector<player_save_info> chars = find_all_saved_characters();
     const int num_saves = chars.size();
 
+#ifdef USE_TILE
+    const int max_col    = tiles.get_crt()->mx;
+#else
     const int max_col    = get_number_of_cols() - 1;
+#endif
     const int max_line   = get_number_of_lines() - 1;
     const int help_start = _misc_text_start_y(num_saves);
     const int help_end   = help_start + NUM_HELP_LINES + 1;
