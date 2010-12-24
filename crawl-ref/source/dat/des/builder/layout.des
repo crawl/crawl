@@ -614,25 +614,16 @@ ORIENT: encompass
 TAGS: layout allow_dup
 {{
     function make_inner_room(room, feat, treasure)
-        make_box {
+        local inner_room = {
             x1 = room.x1 + 1, y1 = room.y1 + 1,
             x2 = room.x2 - 1, y2 = room.y2 - 1,
-            wall = feat
+            wall = feat, number = 1
         }
 
-        make_box_doors {
-            x1 = room.x1 + 1, y1 = room.y1 + 1,
-            x2 = room.x2 - 1, y2 = room.y2 - 1,
-            number = 1
-        }
+        if treasure then inner_room.floor = '*' end
 
-        if treasure then
-            fill_area {
-                x1 = room.x1 + 2, y1 = room.y1 + 2,
-                x2 = room.x2 - 2, y2 = room.y2 - 2,
-                fill = '*'
-            }
-        end
+        make_box(inner_room)
+        make_box_doors(inner_room)
     end
 
     function sign(a)
