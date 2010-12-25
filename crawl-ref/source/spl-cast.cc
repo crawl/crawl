@@ -2008,7 +2008,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_CORPSE_ROT:
-        corpse_rot();
+        corpse_rot(&you);
         break;
 
     case SPELL_FULSOME_DISTILLATION:

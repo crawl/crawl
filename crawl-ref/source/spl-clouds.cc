@@ -233,9 +233,15 @@ void manage_fire_shield(int delay)
             place_cloud(CLOUD_FIRE, *ai, 1 + random2(6), KC_YOU);
 }
 
-void corpse_rot()
+void corpse_rot(actor* caster)
 {
-    for (radius_iterator ri(you.pos(), 6, C_ROUND, you.get_los_no_trans());
+    kill_category kc = KC_YOU;
+
+    if (caster->atype() != ACT_PLAYER)
+        kc = caster->as_monster()->kill_alignment();
+
+    for (radius_iterator ri(caster->pos(), 6, C_ROUND, caster->atype() == ACT_PLAYER ? you.get_los_no_trans()
+                                                                                    : caster->get_los());
          ri; ++ri)
     {
         if (!is_sanctuary(*ri) && env.cgrid(*ri) == EMPTY_CLOUD)
@@ -248,14 +254,14 @@ void corpse_rot()
                     else
                         turn_corpse_into_skeleton(*si);
 
-                    place_cloud(CLOUD_MIASMA, *ri, 4+random2avg(16, 3), KC_YOU);
+                    place_cloud(CLOUD_MIASMA, *ri, 4+random2avg(16, 3), kc);
 
                     // Don't look for more corpses here.
                     break;
                 }
     }
 
-    if (you.can_smell())
+    if (you.can_smell() && you.can_see(caster))
         mpr("You smell decay.");
 
     // Should make zombies decay into skeletons?
