@@ -29,7 +29,8 @@ enum tag_minor_version
     TAG_MINOR_RANGE_CHANCES  = 19, // Map depths and chances are ranges.
     TAG_MINOR_MONSTER_ID     = 20, // Monsters get globally unique serial ids.
     TAG_MINOR_FIX_MG         = 21, // Fix malign gateways.
-    TAG_MINOR_VERSION        = 21, // Current version.  (Keep equal to max.)
+    TAG_MINOR_CLOUD_BLAME    = 22, // Store the monster guilty of a cloud.
+    TAG_MINOR_VERSION        = 22, // Current version.  (Keep equal to max.)
 };
 
 #endif
