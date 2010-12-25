@@ -2546,6 +2546,22 @@ bool mon_special_ability(monster* mons, bolt & beem)
         }
         break;
 
+    case MONS_BOG_MUMMY:
+    {
+        if (one_chance_in(8))
+        {
+            // A hacky way of making these rot regularly.
+            if (mons->has_ench(ENCH_ROT))
+                break;
+
+            mon_enchant rot = mon_enchant(ENCH_ROT, 0, KC_OTHER, 10);
+            mons->add_ench(rot);
+
+            if (mons->visible_to(&you))
+                simple_monster_message(mons, " begins to rapidly decay!");
+        }
+    }
+
     case MONS_AGATE_SNAIL:
     case MONS_SNAPPING_TURTLE:
     case MONS_ALLIGATOR_SNAPPING_TURTLE:

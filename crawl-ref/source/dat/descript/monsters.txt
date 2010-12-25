@@ -446,6 +446,10 @@ bone dragon
 
 A huge undead abomination, pieced together from the broken bones of many dragons.
 %%%%
+bog mummy
+
+An undead figure preserved by the brackish waters of a bog. Though it has been reanimated by some unknown magic, this magic is not enough to prevent its decaying. It radiates a malignant curse upon all who offend it.
+%%%%
 boring beetle
 
 A large brown beetle with huge, rock-crushing mandibles.

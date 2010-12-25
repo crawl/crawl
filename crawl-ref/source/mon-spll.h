@@ -1595,6 +1595,17 @@
       }
     },
 
+    {  MST_BOG_MUMMY,
+      {
+       SPELL_THROW_FROST,
+       SPELL_SLOW,
+       SPELL_NO_SPELL,
+       SPELL_CORPSE_ROT,
+       SPELL_CORPSE_ROT,
+       SPELL_NO_SPELL
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,
