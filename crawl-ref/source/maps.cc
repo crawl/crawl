@@ -374,13 +374,11 @@ bool map_safe_vault_place(const map_def &map,
 
         // Also check adjacent squares for collisions, because being next
         // to another vault may block off one of this vault's exits.
-        for (int y = -1; y <= 1; ++y)
-            for (int x = -1; x <= 1; ++x)
-            {
-                const coord_def vp(x + cp.x, y + cp.y);
-                if (map_bounds(vp) && (env.level_map_mask(vp) & MMT_VAULT))
-                    return (false);
-            }
+        for (adjacent_iterator ai(cp); ai; ++ai)
+        {
+            if (map_bounds(*ai) && (env.level_map_mask(*ai) & MMT_VAULT))
+                return (false);
+        }
 
         // Don't overwrite features other than floor, rock wall, doors,
         // nor water, if !water_ok.
