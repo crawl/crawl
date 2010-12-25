@@ -388,6 +388,7 @@ MONS:    spectral swamp drake / swamp drake zombie
 MONS:    death drake / plant / w:5 oklob plant
 MONS:    insubstantial wisp
 MONS:    phantom
+MONS:    bog mummy
 SHUFFLE: OX
 MARKER:  Y = lua:fog_machine { cloud_type = "foul pestilence", \
              pow_min = 8, pow_max = 12, delay_min = 20, delay_max = 30, \
@@ -404,11 +405,11 @@ KFEAT:   ? = deep_water
 KFEAT:   ! = deep_water
 SUBST:   X=. , Y:w , 6=66. , 1=13 , .=W... , "=tc, '=.w
 MAP
-    ?w......w?w"tt     tt
-    w?ww..ww?wwc"tt   ttt
+    ?w7.....w?w"tt     tt
+    w?ww.7ww?wwc"tt   ttt
     "wWWwww?w?cc"ttt tttt
    '""cWw?w?ccc"ttttttttt
-   't"c..wwcccc"""ttttttt
+   't"c7.wwcccc"""ttttttt
    tttc...ccccccccccc"ttt
   ttt"cc....cccc6666c"ttt
   ttt"cc....cccO6666cc"tt

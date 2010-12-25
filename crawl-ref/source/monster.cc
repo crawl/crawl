@@ -4408,7 +4408,12 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_ROT:
         if (!quiet)
-            simple_monster_message(this, " is no longer rotting.");
+        {
+            if (this->type == MONS_BOG_MUMMY)
+                simple_monster_message(this, "'s decay slows.");
+            else
+                simple_monster_message(this, " is no longer rotting.");
+        }
         break;
 
     case ENCH_HELD:
