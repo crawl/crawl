@@ -184,12 +184,8 @@ static bool _build_secondary_vault(int level_number, const map_def *vault,
                                    bool make_no_exits = false,
                                    const coord_def &where = coord_def(-1, -1));
 
-static bool _build_primary_vault(int level_number, const map_def *vault);
-
-static void _build_postvault_level(vault_placement &place);
 static bool _build_vault_impl(int level_number,
                               const map_def *vault,
-                              bool build_only = false,
                               bool check_collisions = false,
                               bool make_no_exits = false,
                               const coord_def &where = coord_def(-1, -1));
@@ -204,6 +200,7 @@ static void _vault_grid_mapspec(vault_placement &place, const coord_def& where,
                                 keyed_mapspec& mapsp);
 
 static const map_def *_dgn_random_map_for_place(bool minivault);
+static const map_def *_random_primary_vault(void);
 static void _dgn_load_colour_grid();
 static void _dgn_map_colour_fixup();
 
@@ -2051,7 +2048,15 @@ static void _ruin_level(Iterator ri,
 
 static void _build_dungeon_level(int level_number, level_area_type level_type)
 {
-    _build_layout_skeleton(level_number, level_type);
+    const map_def *primary_vault = _random_primary_vault();
+    if (!primary_vault || primary_vault->orient != MAP_ENCOMPASS)
+        _build_layout_skeleton(level_number, level_type);
+
+    if (primary_vault)
+    {
+        _ensure_vault_placed_ex(_build_secondary_vault(level_number,
+                                primary_vault, true), primary_vault);
+    }
 
     if (you.level_type == LEVEL_LABYRINTH
         || you.level_type == LEVEL_PORTAL_VAULT)
@@ -2311,9 +2316,8 @@ static void _prepare_water(int level_number)
 static void _pan_level(int level_number)
 {
     int which_demon = -1;
-    // Could do spotty_level, but that doesn't always put all paired
-    // stairs reachable from each other which isn't a problem in normal
-    // dungeon but could be in Pandemonium.
+    const map_def *vault;
+
     if (one_chance_in(4))
     {
         do
@@ -2337,22 +2341,20 @@ static void _pan_level(int level_number)
             "mnoleg", "lom_lobon", "cerebov", "gloorx_vloq"
         };
 
-        const map_def *vault =
-            random_map_for_tag(pandemon_level_names[which_demon], false);
-
+        vault = random_map_for_tag(pandemon_level_names[which_demon], false);
         ASSERT(vault);
 
-        dgn_ensure_vault_placed(_build_primary_vault(level_number, vault),
-                                 true);
+        _plan_main(level_number, 3);
     }
     else
     {
-        _plan_main(level_number, 0);
-        const map_def *vault = random_map_for_tag("pan", true);
+        vault = random_map_for_tag("pan", true);
         ASSERT(vault);
 
-        _build_secondary_vault(level_number, vault);
+        _plan_main(level_number, 0);
     }
+
+    _build_secondary_vault(level_number, vault);
 }
 
 // Take care of labyrinth, abyss, pandemonium. Returns false if we should skip
@@ -2442,7 +2444,7 @@ static void _portal_vault_level(int level_number)
             dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL,
                              vault->border_fill_type);
 
-        dgn_ensure_vault_placed(_build_primary_vault(level_number, vault),
+        dgn_ensure_vault_placed(_build_secondary_vault(level_number, vault, true),
                                  true);
     }
     else
@@ -2527,6 +2529,16 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
     return (vault);
 }
 
+static const map_def *_random_primary_vault(void)
+{
+    const map_def *vault = _dgn_random_map_for_place(false);
+
+    if (!vault && use_random_maps)
+        vault = random_map_in_depth(level_id::current());
+
+    return vault;
+}
+
 static int _setup_temple_altars(CrawlHashTable &temple)
 {
     _current_temple_hash = &temple; // XXX: hack!
@@ -2545,16 +2557,6 @@ static int _setup_temple_altars(CrawlHashTable &temple)
 // otherwise.
 static bool _builder_by_branch(int level_number)
 {
-    const map_def *vault = _dgn_random_map_for_place(false);
-
-    if (vault)
-    {
-        env.level_build_method += " random_map_for_place";
-        _ensure_vault_placed_ex(_build_primary_vault(level_number, vault),
-                                 vault);
-        return false;
-    }
-
     switch (you.where_are_you)
     {
     case BRANCH_HIVE:
@@ -2580,6 +2582,11 @@ static bool _builder_by_branch(int level_number)
             _city_level(level_number);
         else
             _plan_main(level_number, 4);
+        return false;
+
+    case BRANCH_HALL_OF_ZOT:
+    case BRANCH_HALL_OF_BLADES:
+        _plan_main(level_number, 3);
         return false;
 
     default:
@@ -2627,25 +2634,6 @@ static void _place_minivaults(void)
 // Returns false if we should dispense with city building, true otherwise.
 static bool _builder_normal(int level_number)
 {
-    const map_def *vault = NULL;
-
-    if (use_random_maps)
-    {
-        vault = random_map_in_depth(level_id::current());
-    }
-
-    // We'll accept any kind of primary vault in the main dungeon, but only
-    // ORIENT: encompass primary vaults in other branches. Other kinds of vaults
-    // can still be placed in other branches as secondary vaults.
-    if (vault && (player_in_branch(BRANCH_MAIN_DUNGEON)
-               || vault->orient == MAP_ENCOMPASS))
-    {
-        env.level_build_method += " random_map_in_depth";
-        _ensure_vault_placed_ex(_build_primary_vault(level_number, vault),
-                                 vault);
-        return false;
-    }
-
     if (level_number > 7 && level_number < 23)
     {
         if (one_chance_in(16))
@@ -3647,63 +3635,6 @@ static bool _may_overwrite_pos(coord_def c)
     return (!monster_at(c) && igrd(c) == NON_ITEM);
 }
 
-static void _build_rooms(int nrooms)
-{
-    env.level_build_method += " build_rooms";
-    env.level_layout_types.insert("rooms");
-
-    int which_room = 0;
-    const bool exclusive = !one_chance_in(10);
-
-    // Where did this magic number come from?
-    const int maxrooms = 30;
-    dgn_region rom[maxrooms];
-
-    for (int i = 0; i < nrooms; i++)
-    {
-        dgn_region &myroom = rom[which_room];
-
-        int overlap_tries = 200;
-        do
-        {
-            myroom.size.set(3 + random2(8), 3 + random2(8));
-            myroom.pos.set(
-                random_range(MAPGEN_BORDER,
-                             GXM - MAPGEN_BORDER - 1 - myroom.size.x),
-                random_range(MAPGEN_BORDER,
-                             GYM - MAPGEN_BORDER - 1 - myroom.size.y));
-        }
-        while (_find_forbidden_in_area(myroom, MMT_VAULT)
-               && overlap_tries-- > 0);
-
-        if (overlap_tries < 0)
-            continue;
-
-        const coord_def end = myroom.end();
-
-        if (i > 0 && exclusive
-         && _count_antifeature_in_box(myroom.pos.x - 1, myroom.pos.y - 1,
-                                      end.x, end.y, DNGN_ROCK_WALL))
-        {
-            continue;
-        }
-
-        dgn_replace_area(myroom.pos, end, DNGN_ROCK_WALL, DNGN_FLOOR);
-
-        if (which_room > 0)
-        {
-            _join_the_dots(myroom.random_edge_point(),
-                           rom[which_room - 1].random_edge_point(),
-                           MMT_VAULT);
-        }
-
-        which_room++;
-
-        if (which_room >= maxrooms)
-            break;
-    }
-}
-
 static void _connect_vault_exit(const coord_def& exit)
 {
     flood_find<feature_grid, coord_predicate> ff(env.grid, in_bounds, true,
@@ -3938,7 +3869,7 @@ static bool _build_secondary_vault(int level_number, const map_def *vault,
                                    const coord_def &where)
 {
     const int map_index = env.level_vaults.size();
-    if (_build_vault_impl(level_number, vault, true, !clobber, no_exits, where))
+    if (_build_vault_impl(level_number, vault, !clobber, no_exits, where))
     {
         if (!no_exits)
         {
@@ -3951,26 +3882,11 @@ static bool _build_secondary_vault(int level_number, const map_def *vault,
     return (false);
 }
 
-// Builds a primary vault - i.e. a vault that is built before anything
-// else on the level. After placing the vault, rooms and corridors
-// will be constructed on the level and the vault exits will be
-// connected to corridors.
-//
-// If portions of the level are already generated at this point, use
-// _build_secondary_vault or dgn_place_map instead.
-//
-// NOTE: minivaults can never be placed as primary vaults.
-//
-static bool _build_primary_vault(int level_number, const map_def *vault)
-{
-    return _build_vault_impl(level_number, vault);
-}
-
 // Builds a vault or minivault. Do not use this function directly: always
 // prefer _build_secondary_vault or _build_primary_vault.
 static bool _build_vault_impl(int level_number, const map_def *vault,
-                              bool build_only, bool check_collisions,
-                              bool make_no_exits, const coord_def &where)
+                              bool check_collisions, bool make_no_exits,
+                              const coord_def &where)
 {
     if (dgn_check_connectivity && !dgn_zones)
         dgn_zones = dgn_count_disconnected_zones(false);
@@ -4024,19 +3940,6 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
         mapgen_report_map_use(place.map);
 #endif
 
-    const bool is_layout = place.map.has_tag("layout");
-    // If the map takes the whole screen or we were only requested to
-    // build the vault, our work is done.
-    if (!build_only && (placed_vault_orientation != MAP_ENCOMPASS || is_layout))
-    {
-        if (!is_layout)
-        {
-            _build_postvault_level(place);
-        }
-
-        dgn_place_stone_stairs(true);
-    }
-
     // Fire any post-place hooks defined for this map; any failure
     // here is an automatic veto. Note that the post-place hook must
     // be run only after _build_postvault_level.
@@ -4046,28 +3949,6 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
 
     return (true);
 }                               // end build_vaults()
-
-static void _build_postvault_level(vault_placement &place)
-{
-    // Does this level require Dis treatment (metal wallification)?
-    // XXX: Change this so the level definition can explicitly state what
-    // kind of wallification it wants.
-    if (place.map.has_tag("dis"))
-    {
-        _plan_4(DNGN_METAL_WALL);
-    }
-    else if (player_in_branch(BRANCH_SWAMP))
-    {
-        dgn_build_swamp_level(place.level_number);
-    }
-    else
-    {
-        _build_rooms(random_range(25, 100));
-
-        // Excavate and connect the vault to the rest of the level.
-        place.connect();
-    }
-}
 
 static const object_class_type _acquirement_item_classes[] = {
     OBJ_WEAPONS,
@@ -5610,7 +5491,10 @@ static void _place_layout_vault(int level_number, const char *name,
     const map_def *vault = find_map_by_name(make_stringf("layout_%s", name));
     ASSERT(vault);
 
-    dgn_ensure_vault_placed(_build_primary_vault(level_number, vault), false);
+    dgn_ensure_vault_placed(_build_secondary_vault(level_number, vault, true),
+                            false);
+
+    dgn_place_stone_stairs(true);
 }
 
 static bool _plan_1(int level_number)
