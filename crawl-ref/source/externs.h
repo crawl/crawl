@@ -269,7 +269,7 @@ struct run_check_dir
 };
 
 typedef uint32_t mid_t;
-#define MID_PLAYER ((mid_t)0xffffffff)
+#define MID_PLAYER      ((mid_t)0xffffffff)
 
 struct cloud_struct
 {
@@ -279,6 +279,7 @@ struct cloud_struct
     uint8_t       spread_rate;
     kill_category whose;
     killer_type   killer;
+    mid_t         source;
     int           colour;
     std::string   name;
     std::string   tile;

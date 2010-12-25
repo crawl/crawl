@@ -2189,6 +2189,7 @@ static void tag_construct_level(writer &th)
         marshallByte(th, env.cloud[i].spread_rate);
         marshallByte(th, env.cloud[i].whose);
         marshallByte(th, env.cloud[i].killer);
+        marshallInt(th, env.cloud[i].source);
         marshallShort(th, env.cloud[i].colour);
         marshallString(th, env.cloud[i].name);
         marshallString(th, env.cloud[i].tile);
@@ -2798,6 +2799,12 @@ static void tag_read_level(reader &th, int minorVersion)
         env.cloud[i].spread_rate = unmarshallUByte(th);
         env.cloud[i].whose = static_cast<kill_category>(unmarshallUByte(th));
         env.cloud[i].killer = static_cast<killer_type>(unmarshallUByte(th));
+#if TAG_MAJOR_VERSION == 31
+        if (minorVersion < TAG_MINOR_CLOUD_BLAME)
+            env.cloud[i].source = 0;
+        else
+#endif
+        env.cloud[i].source = unmarshallInt(th);
         env.cloud[i].colour = unmarshallShort(th);
         env.cloud[i].name = unmarshallString(th);
         env.cloud[i].tile = unmarshallString(th);
