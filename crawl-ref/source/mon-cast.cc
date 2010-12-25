@@ -1045,6 +1045,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_HOLIES:
     case SPELL_SUMMON_GREATER_HOLY:
     case SPELL_REGENERATION:
+    case SPELL_CORPSE_ROT:
         return (true);
     default:
         if (check_validity)
@@ -2877,6 +2878,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_DRAIN_LIFE:
         _mons_drain_life(mons);
+        return;
+
+    case SPELL_CORPSE_ROT:
+        corpse_rot(mons);
         return;
 
     case SPELL_SUMMON_GREATER_DEMON:

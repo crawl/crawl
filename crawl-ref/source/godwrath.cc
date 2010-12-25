@@ -462,7 +462,7 @@ static bool _kikubaaqudgha_retribution()
         kiku_receive_corpses(you.experience_level * 4, you.pos());
 
         if (coinflip())
-            corpse_rot();
+            corpse_rot(&you);
     }
 
     if (coinflip())

@@ -21,7 +21,7 @@ int cast_big_c(int pow, cloud_type cty, kill_category whose, bolt &beam);
 void cast_ring_of_flames(int power);
 void manage_fire_shield(int delay);
 
-void corpse_rot();
+void corpse_rot(actor* caster);
 
 int make_a_normal_cloud(coord_def where, int pow, int spread_rate,
                         cloud_type ctype, kill_category,
