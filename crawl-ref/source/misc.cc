@@ -1870,19 +1870,23 @@ void timeout_malign_gateways (int duration)
             else if (!mmark->monster_summoned && !mons)
             {
                 bool is_player = mmark->is_player;
-                actor* caster = mmark->caster;
-                if (caster == NULL)
+                actor* caster = 0;
+                if (is_player)
                     caster = &you;
 
-                int tentacle_idx = create_monster(mgen_data(MONS_ELDRITCH_TENTACLE,
-                                                            (is_player) ? BEH_FRIENDLY : attitude_creation_behavior(mmark->caster->attitude),
-                                                            caster,
-                                                            0,
-                                                            0,
-                                                            mmark->pos,
-                                                            MHITNOT,
-                                                            MG_FORCE_PLACE,
-                                                            mmark->god));
+                mgen_data mg = mgen_data(MONS_ELDRITCH_TENTACLE,
+                                         mmark->behaviour,
+                                         caster,
+                                         0,
+                                         0,
+                                         mmark->pos,
+                                         MHITNOT,
+                                         MG_FORCE_PLACE,
+                                         mmark->god);
+                if (!is_player)
+                    mg.non_actor_summoner = mmark->summoner_string;
+
+                int tentacle_idx = create_monster(mg);
 
                 if (tentacle_idx >= 0)
                 {

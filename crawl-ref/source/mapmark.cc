@@ -613,10 +613,10 @@ std::string map_tomb_marker::debug_describe() const
 // map_malign_gateway_marker
 
 map_malign_gateway_marker::map_malign_gateway_marker(const coord_def &p,
-                                 int dur, bool ip, monster* mon, god_type gd,
-                                 int pow)
+                                 int dur, bool ip, std::string sum, beh_type b,
+                                 god_type gd, int pow)
     : map_marker(MAT_MALIGN, p), duration(dur), is_player(ip), monster_summoned(false),
-      caster(mon), god(gd), power(pow)
+      summoner_string(sum), behaviour(b), god(gd), power(pow)
 {
 }
 
@@ -626,30 +626,49 @@ void map_malign_gateway_marker::write(writer &out) const
     marshallShort(out, duration);
     marshallBoolean(out, is_player);
     marshallBoolean(out, monster_summoned);
-    if (!is_player)
-        marshallMonster(out, *caster);
-    marshallByte(out, god);
+    marshallString(out, summoner_string);
+    marshallUByte(out, behaviour);
+    marshallUByte(out, god);
     marshallShort(out, power);
 }
 
 void map_malign_gateway_marker::read(reader &in)
 {
+    int minorVersion = in.getMinorVersion();
+
     map_marker::read(in);
     duration  = unmarshallShort(in);
     is_player = unmarshallBoolean(in);
 
 #if TAG_MAJOR_VERSION == 31
-    int minorVersion = in.getMinorVersion();
     if (minorVersion < TAG_MINOR_MALIGN)
         monster_summoned = true;
     else
 #endif
     monster_summoned = unmarshallBoolean(in);
-
-    if (!is_player)
-        unmarshallMonster(in, *caster);
+#if TAG_MAJOR_VERSION == 31
+    if (minorVersion < TAG_MINOR_FIX_MG)
+    {
+        summoner_string = "";
+        behaviour = BEH_HOSTILE;
+    }
     else
-        caster = NULL;
+    {
+#endif
+    summoner_string = unmarshallString(in);
+    behaviour = static_cast<beh_type>(unmarshallUByte(in));
+#if TAG_MAJOR_VERSION == 31
+    }
+#endif
+
+#if TAG_MAJOR_VERSION == 31
+    if (!is_player && minorVersion < TAG_MINOR_FIX_MG)
+    {
+        monster caster;
+        unmarshallMonster(in, caster);
+    }
+#endif
+
     god       = static_cast<god_type>(unmarshallByte(in));
     power     = unmarshallShort(in);
 }
@@ -663,7 +682,7 @@ map_marker *map_malign_gateway_marker::read(reader &in, map_marker_type)
 
 map_marker *map_malign_gateway_marker::clone() const
 {
-    map_malign_gateway_marker *mark = new map_malign_gateway_marker(pos, duration, is_player, caster, god, power);
+    map_malign_gateway_marker *mark = new map_malign_gateway_marker(pos, duration, is_player, summoner_string, behaviour, god, power);
     return (mark);
 }
 
