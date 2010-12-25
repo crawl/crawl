@@ -434,7 +434,6 @@ public:
                               bool include_melded=false) const;
 
     // actor
-    monster_type id() const;
     int mindex() const;
     int       get_experience_level() const;
     actor_type atype() const { return ACT_PLAYER; }

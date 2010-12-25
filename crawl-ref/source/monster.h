@@ -69,7 +69,6 @@ public:
     // Possibly some of these should be moved into the hash table
     std::string mname;
 
-    monster_type type;
     int hit_points;
     int max_hit_points;
     int hit_dice;
@@ -216,7 +215,6 @@ public:
     actor *get_foe() const;
 
     // actor interface
-    monster_type id() const;
     int mindex() const;
     int       get_experience_level() const;
     god_type  deity() const;

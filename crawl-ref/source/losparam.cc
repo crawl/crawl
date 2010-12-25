@@ -60,7 +60,7 @@ static bool mons_block_immob(const monster* mons)
     if (crawl_state.game_is_zotdef())
         return (false);
 
-    switch (mons->id())
+    switch (mons->type)
     {
     case MONS_BUSH:
     case MONS_PLANT:
