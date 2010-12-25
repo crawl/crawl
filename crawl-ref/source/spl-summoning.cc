@@ -1131,16 +1131,17 @@ bool can_cast_malign_gateway()
     return count_malign_gateways() < 1;
 }
 
-bool cast_malign_gateway(actor * caster, int pow, god_type god)
+coord_def find_gateway_location (actor* caster, bool (*environment_checker)(dungeon_feature_type))
 {
-    bool success = false;
     coord_def point = coord_def(0, 0);
+
+    bool xray = you.xray_vision;
+    you.xray_vision = false;
 
     unsigned compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
     std::random_shuffle(compass_idx, compass_idx + 8);
 
-    bool xray = you.xray_vision;
-    you.xray_vision = false;
+    bool check_environment = (environment_checker != NULL);
 
     for (unsigned i = 0; i < 8; ++i)
     {
@@ -1153,8 +1154,7 @@ bool cast_malign_gateway(actor * caster, int pow, god_type god)
         for (int t = 0; t < tries; t++)
         {
             test = caster->pos() + (delta * (2+t+random2(4)));
-            if (!in_bounds(test) || !(env.grid(test) == DNGN_FLOOR
-                                       || env.grid(test) == DNGN_SHALLOW_WATER)
+            if (!in_bounds(test) || check_environment && !feat_is_test(test, environment_checker)
                 || actor_at(test) || count_neighbours_with_func(test, &feat_is_solid) != 0
                 || !caster->see_cell(test))
             {
@@ -1168,10 +1168,26 @@ bool cast_malign_gateway(actor * caster, int pow, god_type god)
         if (!found_spot)
             continue;
 
-        bool is_player = caster->atype() == ACT_PLAYER;
+        point = test;
+        break;
+    }
 
+    you.xray_vision = xray;
+
+    return (point);
+}
+
+bool cast_malign_gateway(actor * caster, int pow, god_type god)
+{
+    coord_def point = find_gateway_location(caster);
+    bool success = (point != coord_def(0, 0));
+
+    bool is_player = (caster->atype() == ACT_PLAYER);
+
+    if (success)
+    {
         const int malign_gateway_duration = BASELINE_DELAY * (random2(5) + 5);
-        env.markers.add(new map_malign_gateway_marker(test,
+        env.markers.add(new map_malign_gateway_marker(point,
                                 malign_gateway_duration,
                                 is_player,
                                 is_player ? "" : caster->as_monster()->full_name(DESC_NOCAP_A, true),
@@ -1179,18 +1195,8 @@ bool cast_malign_gateway(actor * caster, int pow, god_type god)
                                 god,
                                 pow));
         env.markers.clear_need_activate();
-        env.grid(test) = DNGN_TEMP_PORTAL;
+        env.grid(point) = DNGN_TEMP_PORTAL;
 
-        point = test;
-        success = true;
-
-        break;
-    }
-
-    you.xray_vision = xray;
-
-    if (success)
-    {
         noisy(10, point);
         mpr("The dungeon shakes, a horrible noise fills the air, and a portal to some otherworldly place is opened!", MSGCH_WARN);
 

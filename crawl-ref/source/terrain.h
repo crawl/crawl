@@ -29,6 +29,8 @@ private:
 actor* actor_at(const coord_def& c);
 
 int count_neighbours_with_func (const coord_def& c, bool (*checker)(dungeon_feature_type));
+bool feat_is_test (dungeon_feature_type feat, bool (*checker)(dungeon_feature_type));
+bool feat_is_test (const coord_def& c, bool (*checker)(dungeon_feature_type));
 
 bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
                        dungeon_feature_type terrain);
@@ -36,6 +38,7 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
 bool cell_is_solid(int x, int y);
 bool cell_is_solid(const coord_def &c);
 
+bool feat_is_malign_gateway_suitable (dungeon_feature_type feat);
 bool feat_is_wall(dungeon_feature_type feat);
 bool feat_is_opaque(dungeon_feature_type feat);
 bool feat_is_solid(dungeon_feature_type feat);
