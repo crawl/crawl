@@ -163,7 +163,7 @@ static void _diamond_rooms(int level_number);
 static void _pick_float_exits(vault_placement &place,
                               std::vector<coord_def> &targets);
 static bool _connect_spotty(const coord_def& from);
-static void _connect_vault_exit(const coord_def& exit);
+static bool _connect_vault_exit(const coord_def& exit);
 
 // ITEM & SHOP FUNCTIONS
 static void _place_shops(int level_number);
@@ -3629,7 +3629,7 @@ static bool _may_overwrite_pos(coord_def c)
     return (!monster_at(c) && igrd(c) == NON_ITEM);
 }
 
-static void _connect_vault_exit(const coord_def& exit)
+static bool _connect_vault_exit(const coord_def& exit)
 {
     flood_find<feature_grid, coord_predicate> ff(env.grid, in_bounds, true,
                                                  false);
@@ -3638,7 +3638,9 @@ static void _connect_vault_exit(const coord_def& exit)
     coord_def target = ff.find_first_from(exit, env.level_map_mask);
 
     if (in_bounds(target))
-        _join_the_dots(exit, target, MMT_VAULT);
+        return _join_the_dots(exit, target, MMT_VAULT);
+
+    return false;
 }
 
 static bool _grid_needs_exit(const coord_def& c)
@@ -7569,7 +7571,8 @@ void vault_placement::connect(bool spotty) const
         if (spotty && _connect_spotty(*i))
             continue;
 
-        _connect_vault_exit(*i);
+        if (!_connect_vault_exit(*i))
+            dprf("Warning: failed to connect vault exit (%d;%d).", i->x, i->y);
     }
 }
 
