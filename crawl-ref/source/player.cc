@@ -5138,6 +5138,7 @@ void player::init()
     char_class       = JOB_UNKNOWN;
     class_name.clear();
     type             = MONS_PLAYER;
+    mid              = MID_PLAYER;
 
 #ifdef WIZARD
     wizard = (Options.wiz_mode == WIZ_YES) ? true : false;
@@ -5312,6 +5313,7 @@ void player::init()
 
     clinging = 0;
     zotdef_wave_name.clear();
+    last_mid = 0;
 
 
     // Non-saved UI state:
