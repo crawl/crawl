@@ -66,6 +66,21 @@ int count_neighbours_with_func (const coord_def& c, bool (*checker)(dungeon_feat
     return count;
 }
 
+bool feat_is_test (dungeon_feature_type feat, bool (*checker)(dungeon_feature_type))
+{
+    return (checker(feat));
+}
+
+bool feat_is_test (const coord_def& c, bool (*checker)(dungeon_feature_type))
+{
+    return (checker(grd(c)));
+}
+
+bool feat_is_malign_gateway_suitable (dungeon_feature_type feat)
+{
+    return (feat == DNGN_FLOOR || feat == DNGN_SHALLOW_WATER);
+}
+
 bool feat_is_wall(dungeon_feature_type feat)
 {
     return (feat >= DNGN_MINWALL && feat <= DNGN_MAXWALL);
