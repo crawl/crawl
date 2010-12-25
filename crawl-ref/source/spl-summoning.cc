@@ -1165,13 +1165,16 @@ bool cast_malign_gateway(actor * caster, int pow, god_type god)
         if (!found_spot)
             continue;
 
+        bool is_player = caster->atype() == ACT_PLAYER;
+
         const int malign_gateway_duration = BASELINE_DELAY * (random2(5) + 5);
         env.markers.add(new map_malign_gateway_marker(test,
-                                            malign_gateway_duration,
-                                            caster->atype() == ACT_PLAYER,
-                                            caster->atype() == ACT_PLAYER ? NULL : caster->as_monster(),
-                                            god,
-                                            pow));
+                                malign_gateway_duration,
+                                is_player,
+                                is_player ? "" : caster->as_monster()->full_name(DESC_NOCAP_A, true),
+                                is_player ? BEH_FRIENDLY : attitude_creation_behavior(caster->as_monster()->attitude),
+                                god,
+                                pow));
         env.markers.clear_need_activate();
         env.grid(test) = DNGN_TEMP_PORTAL;
 
