@@ -1612,13 +1612,9 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
         // Add extra stairs to get to exactly three.
         for (int s = num_stairs; s < 3; s++)
         {
-            coord_def gc;
-            do
-            {
-                gc.x = random2(GXM);
-                gc.y = random2(GYM);
-            }
-            while (grd(gc) != DNGN_FLOOR);
+            coord_def gc = _dgn_random_point_in_bounds(DNGN_FLOOR, MMT_VAULT,
+                                                       DNGN_UNSEEN);
+
             dprf("add stair %d at pos(%d, %d)", s, gc.x, gc.y);
             // base gets fixed up to be the right stone stair below...
             grd(gc) = base;
