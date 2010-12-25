@@ -1139,6 +1139,9 @@ bool cast_malign_gateway(actor * caster, int pow, god_type god)
     unsigned compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
     std::random_shuffle(compass_idx, compass_idx + 8);
 
+    bool xray = you.xray_vision;
+    you.xray_vision = false;
+
     for (unsigned i = 0; i < 8; ++i)
     {
         coord_def delta = Compass[compass_idx[i]];
@@ -1184,6 +1187,8 @@ bool cast_malign_gateway(actor * caster, int pow, god_type god)
         break;
     }
 
+    you.xray_vision = xray;
+
     if (success)
     {
         noisy(10, point);
@@ -1201,7 +1206,7 @@ bool cast_malign_gateway(actor * caster, int pow, god_type god)
     else if (caster->atype() == ACT_PLAYER)
     {
         // We don't care if monsters fail to cast it.
-        mpr("Such a gateway cannot be opened in such a cramped space!");
+        mpr("A gateway cannot be opened in this cramped space!");
     }
 
     return (success);
