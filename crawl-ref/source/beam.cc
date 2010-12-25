@@ -885,8 +885,8 @@ void bolt::fire_wall_effect()
                 emit_message(MSGCH_PLAIN, "The wax bubbles and burns!");
             else if (you.can_smell())
                 emit_message(MSGCH_PLAIN, "You smell burning wax.");
-            place_cloud(CLOUD_FIRE, pos(), random2(10)+15,
-                        whose_kill(), killer());
+            ASSERT(agent()); // if this is wrong, please preserve friendliness of kc
+            place_cloud(CLOUD_FIRE, pos(), random2(10)+15, agent());
             obvious_effect = true;
         }
     }
@@ -905,8 +905,8 @@ void bolt::fire_wall_effect()
                 did_god_conduct(DID_KILL_PLANT, 1, effect_known);
             else if (whose_kill() == KC_FRIENDLY)
                 did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1, effect_known);
-            place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25,
-                        whose_kill(), killer(), 5);
+            ASSERT(agent());
+            place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25, agent());
             obvious_effect = true;
         }
     }
@@ -2348,46 +2348,31 @@ void bolt::affect_endpoint()
     }
 
     if (name == "noxious blast")
-    {
-        big_cloud(CLOUD_STINK, whose_kill(), killer(), pos(), 0,
-                  7 + random2(5));
-    }
+        big_cloud(CLOUD_STINK, agent(), pos(), 0, 7 + random2(5));
 
     if (name == "blast of poison")
-    {
-        big_cloud(CLOUD_POISON, whose_kill(), killer(), pos(), 0,
-                  7 + random2(5));
-    }
+        big_cloud(CLOUD_POISON, agent(), pos(), 0, 7 + random2(5));
 
     if (origin_spell == SPELL_HOLY_BREATH)
-    {
-        big_cloud(CLOUD_HOLY_FLAMES, whose_kill(), killer(), pos(), 0,
-                  7 + random2(5));
-    }
+        big_cloud(CLOUD_HOLY_FLAMES, agent(), pos(), 0, 7 + random2(5));
 
     if (origin_spell == SPELL_FIRE_BREATH && is_big_cloud)
-    {
-        big_cloud(CLOUD_FIRE, whose_kill(), killer(), pos(), 0,
-                    7 + random2(5));
-    }
+        big_cloud(CLOUD_FIRE, agent(), pos(), 0, 7 + random2(5));
 
     if (name == "foul vapour")
     {
         // death drake; swamp drakes handled earlier
         ASSERT(flavour == BEAM_MIASMA);
-        big_cloud(CLOUD_MIASMA, whose_kill(), killer(), pos(), 0, 9);
+        big_cloud(CLOUD_MIASMA, agent(), pos(), 0, 9);
     }
 
     if (name == "freezing blast")
-    {
-        big_cloud(CLOUD_COLD, whose_kill(), killer(), pos(),
-                  random_range(10, 15), 9);
-    }
+        big_cloud(CLOUD_COLD, agent(), pos(), random_range(10, 15), 9);
 
     if ((name == "fiery breath" && you.species == SP_RED_DRACONIAN)
         || name == "searing blast") // monster and player red draconian breath abilities
     {
-        place_cloud(CLOUD_FIRE, pos(), 5 + random2(5), whose_kill(), killer());
+        place_cloud(CLOUD_FIRE, pos(), 5 + random2(5), agent());
     }
 }
 
@@ -2620,42 +2605,41 @@ void bolt::affect_place_clouds()
     const dungeon_feature_type feat = grd(p);
 
     if (name == "blast of poison")
-        place_cloud(CLOUD_POISON, p, random2(4) + 2, whose_kill(), killer());
+        place_cloud(CLOUD_POISON, p, random2(4) + 2, agent());
 
     if (origin_spell == SPELL_HOLY_BREATH)
-        place_cloud(CLOUD_HOLY_FLAMES, p, random2(4) + 2, whose_kill(), killer());
+        place_cloud(CLOUD_HOLY_FLAMES, p, random2(4) + 2, agent());
 
     if (origin_spell == SPELL_FIRE_BREATH && is_big_cloud)
-        place_cloud(CLOUD_FIRE, p,random2(4) + 2, whose_kill(), killer());
+        place_cloud(CLOUD_FIRE, p,random2(4) + 2, agent());
 
     // Fire/cold over water/lava
     if (feat == DNGN_LAVA && flavour == BEAM_COLD
         || feat_is_watery(feat) && is_fiery())
     {
-        place_cloud(CLOUD_STEAM, p, 2 + random2(5), whose_kill(), killer());
+        place_cloud(CLOUD_STEAM, p, 2 + random2(5), agent());
     }
 
     if (feat_is_watery(feat) && flavour == BEAM_COLD
         && damage.num * damage.size > 35)
     {
-        place_cloud(CLOUD_COLD, p, damage.num * damage.size / 30 + 1,
-                    whose_kill(), killer());
+        place_cloud(CLOUD_COLD, p, damage.num * damage.size / 30 + 1, agent());
     }
 
     if (name == "great blast of cold")
-        place_cloud(CLOUD_COLD, p, random2(5) + 3, whose_kill(), killer());
+        place_cloud(CLOUD_COLD, p, random2(5) + 3, agent());
 
     if (name == "ball of steam")
-        place_cloud(CLOUD_STEAM, p, random2(5) + 2, whose_kill(), killer());
+        place_cloud(CLOUD_STEAM, p, random2(5) + 2, agent());
 
     if (flavour == BEAM_MIASMA)
-        place_cloud(CLOUD_MIASMA, p, random2(5) + 2, whose_kill(), killer());
+        place_cloud(CLOUD_MIASMA, p, random2(5) + 2, agent());
 
     if (name == "poison gas")
-        place_cloud(CLOUD_POISON, p, random2(4) + 3, whose_kill(), killer());
+        place_cloud(CLOUD_POISON, p, random2(4) + 3, agent());
 
     if (name == "blast of choking fumes")
-        place_cloud(CLOUD_STINK, p, random2(4) + 3, whose_kill(), killer());
+        place_cloud(CLOUD_STINK, p, random2(4) + 3, agent());
 }
 
 void bolt::affect_place_explosion_clouds()
@@ -2666,7 +2650,7 @@ void bolt::affect_place_explosion_clouds()
     if (grd(p) == DNGN_LAVA && flavour == BEAM_COLD
         || feat_is_watery(grd(p)) && is_fiery())
     {
-        place_cloud(CLOUD_STEAM, p, 2 + random2(5), whose_kill(), killer());
+        place_cloud(CLOUD_STEAM, p, 2 + random2(5), agent());
         return;
     }
 
@@ -2712,17 +2696,17 @@ void bolt::affect_place_explosion_clouds()
             break;
         }
 
-        place_cloud(cl_type, p, duration, whose_kill(), killer());
+        place_cloud(cl_type, p, duration, agent());
     }
 
     // then check for more specific explosion cloud types.
     if (name == "ice storm")
-        place_cloud(CLOUD_COLD, p, 2 + random2avg(5,2), whose_kill(), killer());
+        place_cloud(CLOUD_COLD, p, 2 + random2avg(5,2), agent());
 
     if (name == "stinking cloud")
     {
         const int duration =  1 + random2(4) + random2((ench_power / 50) + 1);
-        place_cloud(CLOUD_STINK, p, duration, whose_kill(), killer());
+        place_cloud(CLOUD_STINK, p, duration, agent());
     }
 
     if (name == "great blast of fire")
@@ -2732,7 +2716,7 @@ void bolt::affect_place_explosion_clouds()
         if (duration > 20)
             duration = 20 + random2(4);
 
-        place_cloud(CLOUD_FIRE, p, duration, whose_kill(), killer());
+        place_cloud(CLOUD_FIRE, p, duration, agent());
 
         if (grd(p) == DNGN_FLOOR && !monster_at(p) && one_chance_in(4))
         {

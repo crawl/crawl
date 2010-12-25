@@ -130,7 +130,7 @@ void MiscastEffect::init()
 
     source_known = target_known = false;
 
-    act_source = NULL;
+    act_source = guilty = NULL;
 
     const bool death_curse = (cause.find("death curse") != std::string::npos);
 
@@ -153,6 +153,7 @@ void MiscastEffect::init()
         kc           = KC_YOU;
         kt           = KILL_YOU_MISSILE;
         act_source   = &you;
+        guilty       = &you;
         source_known = true;
     }
     else if (!invalid_monster_index(kill_source))
@@ -160,7 +161,7 @@ void MiscastEffect::init()
         monster* mon_source = &menv[kill_source];
         ASSERT(mon_source->type != -1);
 
-        act_source = mon_source;
+        act_source = guilty = mon_source;
 
         if (death_curse && target->atype() == ACT_MONSTER
             && target_as_monster()->confused_by_you())
@@ -208,7 +209,7 @@ void MiscastEffect::init()
             }
         }
         else if (source == MISC_KNOWN_MISCAST)
-            source_known = true;
+            source_known = true, guilty = &you;
         else if (source == MISC_UNKNOWN_MISCAST)
             source_known = false;
         else
@@ -571,7 +572,7 @@ bool MiscastEffect::_big_cloud(cloud_type cl_type, int cloud_pow, int size,
         return (false);
 
     do_msg(true);
-    big_cloud(cl_type, kc, kt, target->pos(), cloud_pow, size, spread_rate);
+    big_cloud(cl_type, guilty, target->pos(), cloud_pow, size, spread_rate);
 
     return (true);
 }
@@ -2670,7 +2671,7 @@ void MiscastEffect::_poison(int severity)
             mon_msg_seen   = "Noxious gasses pour from @the_monster@'s "
                              "@hands@!";
             mon_msg_unseen = "Noxious gasses pour forth from the thin air!";
-            place_cloud(CLOUD_STINK, target->pos(), 2 + random2(4), kc, kt);
+            place_cloud(CLOUD_STINK, target->pos(), 2 + random2(4), guilty);
             break;
         }
         break;

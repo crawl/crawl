@@ -2536,9 +2536,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             if (mons->invisible())
             {
                 mons->del_ench(ENCH_INVIS);
-                place_cloud(CLOUD_RAIN, mons->pos(),
-                            2, mons->kill_alignment(),
-                            KILL_MON_MISSILE);
+                place_cloud(CLOUD_RAIN, mons->pos(), 2, mons);
             }
             // Otherwise, go invisible.
             else

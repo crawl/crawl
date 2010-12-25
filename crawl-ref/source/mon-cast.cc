@@ -2431,7 +2431,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         if (!feat_is_watery(grd(mons->pos())))
             return;
 
-        big_cloud(CLOUD_INK, mons->kill_alignment(), mons->pos(), 30, 30);
+        big_cloud(CLOUD_INK, mons, mons->pos(), 30, 30);
 
         simple_monster_message(
             mons,

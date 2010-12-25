@@ -1533,7 +1533,7 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
     if (victim->atype() == ACT_PLAYER)
     {
         // Leave a purple cloud.
-        place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), KC_YOU);
+        place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), &you);
 
         victim->moveto(pos);
         canned_msg(MSG_YOU_BLINK);
@@ -1548,8 +1548,7 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
         mon->move_to_pos(pos);
 
         // Leave a purple cloud.
-        place_cloud(CLOUD_TLOC_ENERGY, oldpos, 1 + random2(3),
-                    victim->kill_alignment());
+        place_cloud(CLOUD_TLOC_ENERGY, oldpos, 1 + random2(3), victim);
 
         mon->apply_location_effects(oldpos);
         mon->check_redraw(oldpos);
@@ -4773,7 +4772,7 @@ void read_scroll(int slot)
 
     case SCR_FOG:
         mpr("The scroll dissolves into smoke.");
-        big_cloud(random_smoke_type(), KC_YOU, you.pos(), 50, 8 + random2(8));
+        big_cloud(random_smoke_type(), &you, you.pos(), 50, 8 + random2(8));
         break;
 
     case SCR_MAGIC_MAPPING:

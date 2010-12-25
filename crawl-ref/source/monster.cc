@@ -2598,12 +2598,12 @@ void monster::banish(const std::string &)
                            MSGCH_BANISHMENT);
     monster_die(this, KILL_RESET, NON_MONSTER);
 
-    place_cloud(CLOUD_TLOC_ENERGY, old_pos, 5 + random2(8), KC_OTHER);
+    place_cloud(CLOUD_TLOC_ENERGY, old_pos, 5 + random2(8), 0);
     for (adjacent_iterator ai(old_pos); ai; ++ai)
         if (!feat_is_solid(grd(*ai)) && env.cgrid(*ai) == EMPTY_CLOUD
             && coinflip())
         {
-            place_cloud(CLOUD_TLOC_ENERGY, *ai, 1 + random2(8), KC_OTHER);
+            place_cloud(CLOUD_TLOC_ENERGY, *ai, 1 + random2(8), 0);
         }
 }
 
@@ -6277,8 +6277,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     else if (type == MONS_BUSH && flavour == BEAM_FIRE
              && damage>8 && x_chance_in_y(damage, 20))
     {
-        place_cloud(CLOUD_FIRE, pos(), 20+random2(15),
-                    actor_kill_alignment(oppressor), 5);
+        place_cloud(CLOUD_FIRE, pos(), 20+random2(15), oppressor, 5);
     }
     else if (type == MONS_SPRIGGAN_RIDER)
     {

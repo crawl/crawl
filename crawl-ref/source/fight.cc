@@ -2766,7 +2766,7 @@ void melee_attack::chaos_affects_attacker()
     if (weapon && one_chance_in(1000))
     {
         mprf("Smoke pours forth from %s!", wep_name(DESC_NOCAP_YOUR).c_str());
-        big_cloud(random_smoke_type(), KC_OTHER, attacker->pos(), 20,
+        big_cloud(random_smoke_type(), &you, attacker->pos(), 20,
                   4 + random2(8));
 #ifdef NOTE_DEBUG_CHAOS_EFFECTS
         take_note(Note(NOTE_MESSAGE, 0, 0,

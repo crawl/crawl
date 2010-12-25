@@ -291,11 +291,7 @@ move_again:
         return (false);
 
     if (!no_trail)
-    {
-        place_cloud(CLOUD_MAGIC_TRAIL, mon.pos(),
-                    2 + random2(3), mon.kill_alignment(),
-                    KILL_MON_MISSILE);
-    }
+        place_cloud(CLOUD_MAGIC_TRAIL, mon.pos(), 2 + random2(3), &mon);
 
     actor *victim = actor_at(pos);
     if (cell_is_solid(pos) || victim)

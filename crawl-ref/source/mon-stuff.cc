@@ -1281,10 +1281,7 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
         simple_monster_message(mons, (prefix + msg).c_str());
 
     if (cloud != CLOUD_NONE)
-    {
-        place_cloud(cloud, mons->pos(), 1 + random2(3),
-                    mons->kill_alignment(), KILL_MON_MISSILE);
-    }
+        place_cloud(cloud, mons->pos(), 1 + random2(3), mons);
 }
 
 void mons_relocated(monster* mons)
@@ -1662,8 +1659,7 @@ int monster_die(monster* mons, killer_type killer,
         if (mons->type == MONS_FIRE_VORTEX && !wizard && !mons_reset
             && !submerged)
         {
-            place_cloud(CLOUD_FIRE, mons->pos(), 2 + random2(4),
-                        mons->kill_alignment(), KILL_MON_MISSILE);
+            place_cloud(CLOUD_FIRE, mons->pos(), 2 + random2(4), mons);
         }
 
         if (killer == KILL_RESET)
@@ -1680,10 +1676,7 @@ int monster_die(monster* mons, killer_type killer,
         }
 
         if (!wizard && !mons_reset && !submerged)
-        {
-            place_cloud(CLOUD_COLD, mons->pos(), 2 + random2(4),
-                        mons->kill_alignment(), KILL_MON_MISSILE);
-        }
+            place_cloud(CLOUD_COLD, mons->pos(), 2 + random2(4), mons);
 
         if (killer == KILL_RESET)
             killer = KILL_DISMISSED;
@@ -4131,10 +4124,7 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     // XXX: If silent is true, this is not an actual teleport, but
     //      the game moving a monster out of the way.
     if (!silent)
-    {
-        place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3),
-                    mons->kill_alignment(), KILL_MON_MISSILE);
-    }
+        place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3), mons);
 
     mons->check_redraw(oldplace);
     mons->apply_location_effects(oldplace);

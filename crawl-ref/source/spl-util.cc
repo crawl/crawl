@@ -82,8 +82,7 @@ static int spell_list[NUM_SPELLS];
 static struct spell_desc *_seekspell(spell_type spellid);
 static bool _cloud_helper(cloud_func func, const coord_def& where,
                           int pow, int spread_rate,
-                          cloud_type ctype, kill_category whose,
-                          killer_type killer, int colour,
+                          cloud_type ctype, const actor *agent, int colour,
                           std::string name, std::string tile);
 
 //
@@ -747,7 +746,7 @@ int apply_area_within_radius(cell_func cf, const coord_def& where,
 // This ought to work okay for small clouds.
 void apply_area_cloud(cloud_func func, const coord_def& where,
                        int pow, int number, cloud_type ctype,
-                       kill_category whose, killer_type killer,
+                       const actor *agent,
                        int spread_rate, int colour, std::string name,
                        std::string tile)
 {
@@ -757,8 +756,8 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
     int good_squares = 0;
     int neighbours[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
-    if (number && _cloud_helper(func, where, pow, spread_rate, ctype, whose,
-                                killer, colour, name, tile))
+    if (number && _cloud_helper(func, where, pow, spread_rate, ctype, agent,
+                                colour, name, tile))
         number--;
 
     if (number == 0)
@@ -778,7 +777,7 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
         {
             const int aux = arrs[m][i];
             if (_cloud_helper(func, where + Compass[aux],
-                               pow, spread_rate, ctype, whose, killer, colour,
+                               pow, spread_rate, ctype, agent, colour,
                                name, tile))
             {
                 number--;
@@ -804,8 +803,8 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
         int spread = number / good_squares;
         number -= spread;
         good_squares--;
-        apply_area_cloud(func, where + Compass[j], pow, spread, ctype, whose,
-                         killer, spread_rate, colour, name, tile);
+        apply_area_cloud(func, where + Compass[j], pow, spread, ctype, agent,
+                         spread_rate, colour, name, tile);
     }
 }
 
@@ -979,16 +978,14 @@ bool is_valid_spell(spell_type spell)
 
 static bool _cloud_helper(cloud_func func, const coord_def& where,
                           int pow, int spread_rate,
-                          cloud_type ctype, kill_category whose,
-                          killer_type killer, int colour, std::string name,
-                          std::string tile)
+                          cloud_type ctype, const actor* agent, int colour,
+                          std::string name, std::string tile)
 {
     if (in_bounds(where)
         && !feat_is_solid(grd(where))
         && env.cgrid(where) == EMPTY_CLOUD)
     {
-        func(where, pow, spread_rate, ctype, whose, killer, colour, name,
-             tile);
+        func(where, pow, spread_rate, ctype, agent, colour, name, tile);
         return (true);
     }
 

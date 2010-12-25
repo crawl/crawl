@@ -1073,7 +1073,7 @@ static int _ignite_poison_objects(coord_def where, int pow, int, actor *)
     if (strength > 0)
     {
         place_cloud(CLOUD_FIRE, where,
-                    strength + roll_dice(3, strength / 4), KC_YOU);
+                    strength + roll_dice(3, strength / 4), &you);
     }
 
     return (strength);
@@ -1178,7 +1178,7 @@ void cast_ignite_poison(int pow)
             CLOUD_FIRE, you.pos(),
             random2(totalstrength / 4 + 1) + random2(totalstrength / 4 + 1) +
             random2(totalstrength / 4 + 1) + random2(totalstrength / 4 + 1) + 1,
-            KC_YOU);
+            &you);
     }
 
     int damage = 0;
@@ -1930,8 +1930,7 @@ void tornado_damage(int dur)
                 || env.cloud[env.cgrid(*dam_i)].type == CLOUD_TORNADO)
                 && x_chance_in_y(pow, 20))
             {
-                place_cloud(CLOUD_TORNADO, *dam_i, 2 + random2(2),
-                            KILL_YOU_MISSILE);
+                place_cloud(CLOUD_TORNADO, *dam_i, 2 + random2(2), &you);
             }
             clouds.push_back(*dam_i);
             swap_clouds(clouds[random2(clouds.size())], *dam_i);

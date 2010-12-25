@@ -1294,17 +1294,15 @@ static int lua_cloud_pow_max;
 static int lua_cloud_pow_rolls;
 
 static int make_a_lua_cloud(coord_def where, int garbage, int spread_rate,
-                            cloud_type ctype, kill_category whose,
-                            killer_type killer, int colour, std::string name,
-                            std::string tile)
+                            cloud_type ctype, const actor *agent, int colour,
+                            std::string name, std::string tile)
 {
     UNUSED(garbage);
 
     const int pow = random_range(lua_cloud_pow_min,
                                  lua_cloud_pow_max,
                                  lua_cloud_pow_rolls);
-    place_cloud(ctype, where, pow, whose, killer, spread_rate, colour, name,
-                 tile);
+    place_cloud(ctype, where, pow, agent, spread_rate, colour, name, tile);
     return 1;
 }
 
@@ -1375,7 +1373,7 @@ static int dgn_apply_area_cloud(lua_State *ls)
         return (0);
     }
 
-    if (kc == KC_NCATEGORIES)
+    if (kc == KC_NCATEGORIES || kc != KC_OTHER)
     {
         std::string error = "Invalid kill category '";
         error += kname;
@@ -1392,8 +1390,7 @@ static int dgn_apply_area_cloud(lua_State *ls)
     }
 
     apply_area_cloud(make_a_lua_cloud, coord_def(x, y), 0, size,
-                     ctype, kc, cloud_struct::whose_to_killer(kc),
-                     spread_rate, colour, name, tile);
+                     ctype, 0, spread_rate, colour, name, tile);
 
     return (0);
 }
@@ -1403,9 +1400,7 @@ static int dgn_delete_cloud(lua_State *ls)
     COORDS(c, 1, 2);
 
     if (in_bounds(c) && env.cgrid(c) != EMPTY_CLOUD)
-    {
         delete_cloud(env.cgrid(c));
-    }
 
     return (0);
 }
@@ -1443,7 +1438,7 @@ static int dgn_place_cloud(lua_State *ls)
         return (0);
     }
 
-    if (kc == KC_NCATEGORIES)
+    if (kc == KC_NCATEGORIES || kc != KC_OTHER)
     {
         std::string error = "Invalid kill category '";
         error += kname;
@@ -1459,7 +1454,7 @@ static int dgn_place_cloud(lua_State *ls)
         return (0);
     }
 
-    place_cloud(ctype, coord_def(x, y), cl_range, kc, spread_rate, colour, name, tile);
+    place_cloud(ctype, coord_def(x, y), cl_range, 0, spread_rate, colour, name, tile);
 
     return (0);
 }
