@@ -3914,7 +3914,7 @@ static void _move_player(coord_def move)
         else if (you.duration[DUR_COLOUR_SMOKE_TRAIL])
         {
             check_place_cloud(CLOUD_MAGIC_TRAIL, you.pos(),
-                random_range(3, 10), KC_OTHER, 0, ETC_RANDOM);
+                random_range(3, 10), &you, 0, ETC_RANDOM);
         }
 
         you.time_taken *= player_movement_speed();

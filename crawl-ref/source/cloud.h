@@ -37,30 +37,13 @@ void move_cloud_to(coord_def src, coord_def dest);
 void swap_clouds(coord_def p1, coord_def p2);
 
 void check_place_cloud(cloud_type cl_type, const coord_def& p, int lifetime,
-                        kill_category whose, int spread_rate = -1,
-                        int colour = -1, std::string name = "",
-                        std::string tile = "");
-void check_place_cloud(cloud_type cl_type, const coord_def& p, int lifetime,
-                        killer_type killer, int spread_rate = -1,
-                        int colour = -1, std::string name = "",
-                        std::string tile = "");
-void check_place_cloud(cloud_type cl_type, const coord_def& p, int lifetime,
-                        kill_category whose, killer_type killer,
-                        int spread_rate = -1,
-                        int colour = -1, std::string name = "",
-                        std::string tile = "");
+                       const actor *agent, int spread_rate = -1,
+                       int colour = -1,
+                       std::string name = "", std::string tile = "");
 void place_cloud(cloud_type cl_type, const coord_def& ctarget,
-                  int cl_range, kill_category whose, int spread_rate = -1,
-                  int colour = -1, std::string name = "",
-                  std::string tile = "");
-void place_cloud(cloud_type cl_type, const coord_def& ctarget,
-                  int cl_range, killer_type killer, int spread_rate = -1,
-                  int colour = -1, std::string name = "",
-                  std::string tile = "");
-void place_cloud(cloud_type cl_type, const coord_def& ctarget,
-                  int cl_range, kill_category whose, killer_type killer,
-                  int spread_rate = -1, int colour = -1, std::string name = "",
-                  std::string tile = "");
+                 int cl_range, const actor *agent,
+                 int spread_rate = -1, int colour = -1, std::string name = "",
+                 std::string tile = "");
 
 void manage_clouds(void);
 

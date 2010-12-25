@@ -742,7 +742,7 @@ bool trog_burn_spellbooks()
             }
 
             const int duration = std::min(4 + count + random2(rarity/2), 23);
-            place_cloud(CLOUD_FIRE, *ri, duration, KC_YOU);
+            place_cloud(CLOUD_FIRE, *ri, duration, &you);
 
             mprf(MSGCH_GOD, "The spellbook%s burst%s into flames.",
                  count == 1 ? ""  : "s",
@@ -1872,7 +1872,7 @@ int fedhas_rain(const coord_def &target)
 
             if (x_chance_in_y(expected, 20))
             {
-                place_cloud(CLOUD_RAIN, *rad, 10, KC_YOU);
+                place_cloud(CLOUD_RAIN, *rad, 10, &you);
 
                 processed_count++;
             }

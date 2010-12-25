@@ -113,7 +113,7 @@ bool conjure_flame(int pow, const coord_def& where)
     else
     {
         const int durat = std::min(5 + (random2(pow)/2) + (random2(pow)/2), 23);
-        place_cloud(CLOUD_FIRE, where, durat, KC_YOU);
+        place_cloud(CLOUD_FIRE, where, durat, &you);
         mpr("The fire roars!");
     }
     noisy(2, where);
@@ -160,35 +160,19 @@ bool stinking_cloud(int pow, bolt &beem)
     return (true);
 }
 
-int cast_big_c(int pow, cloud_type cty, kill_category whose, bolt &beam)
+int cast_big_c(int pow, cloud_type cty, const actor *caster, bolt &beam)
 {
-    big_cloud(cty, whose, beam.target, pow, 8 + random2(3), -1);
+    big_cloud(cty, caster, beam.target, pow, 8 + random2(3), -1);
     noisy(2, beam.target);
     return (1);
 }
 
-void big_cloud(cloud_type cl_type, kill_category whose,
-               const coord_def& where, int pow, int size, int spread_rate,
-               int colour, std::string name, std::string tile)
-{
-    big_cloud(cl_type, whose, cloud_struct::whose_to_killer(whose),
-              where, pow, size, spread_rate, colour, name, tile);
-}
-
-void big_cloud(cloud_type cl_type, killer_type killer,
-               const coord_def& where, int pow, int size, int spread_rate,
-               int colour, std::string name, std::string tile)
-{
-    big_cloud(cl_type, cloud_struct::killer_to_whose(killer), killer,
-              where, pow, size, spread_rate, colour, name, tile);
-}
-
-void big_cloud(cloud_type cl_type, kill_category whose, killer_type killer,
+void big_cloud(cloud_type cl_type, const actor *agent,
                const coord_def& where, int pow, int size, int spread_rate,
                int colour, std::string name, std::string tile)
 {
     apply_area_cloud(make_a_normal_cloud, where, pow, size,
-                     cl_type, whose, killer, spread_rate, colour, name, tile);
+                     cl_type, agent, spread_rate, colour, name, tile);
 }
 
 void cast_ring_of_flames(int power)
@@ -230,16 +214,11 @@ void manage_fire_shield(int delay)
     // Place fire clouds all around you
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
         if (!feat_is_solid(grd(*ai)) && env.cgrid(*ai) == EMPTY_CLOUD)
-            place_cloud(CLOUD_FIRE, *ai, 1 + random2(6), KC_YOU);
+            place_cloud(CLOUD_FIRE, *ai, 1 + random2(6), &you);
 }
 
 void corpse_rot(actor* caster)
 {
-    kill_category kc = KC_YOU;
-
-    if (caster->atype() != ACT_PLAYER)
-        kc = caster->as_monster()->kill_alignment();
-
     for (radius_iterator ri(caster->pos(), 6, C_ROUND, caster->atype() == ACT_PLAYER ? you.get_los_no_trans()
                                                                                     : caster->get_los());
          ri; ++ri)
@@ -254,7 +233,7 @@ void corpse_rot(actor* caster)
                     else
                         turn_corpse_into_skeleton(*si);
 
-                    place_cloud(CLOUD_MIASMA, *ri, 4+random2avg(16, 3), kc);
+                    place_cloud(CLOUD_MIASMA, *ri, 4+random2avg(16, 3),caster);
 
                     // Don't look for more corpses here.
                     break;
@@ -268,16 +247,12 @@ void corpse_rot(actor* caster)
 }
 
 int make_a_normal_cloud(coord_def where, int pow, int spread_rate,
-                        cloud_type ctype, kill_category whose,
-                        killer_type killer, int colour, std::string name,
-                        std::string tile)
+                        cloud_type ctype, const actor *agent, int colour,
+                        std::string name, std::string tile)
 {
-    if (killer == KILL_NONE)
-        killer = cloud_struct::whose_to_killer(whose);
-
     place_cloud(ctype, where,
-                 (3 + random2(pow / 4) + random2(pow / 4) + random2(pow / 4)),
-                 whose, killer, spread_rate, colour, name, tile);
+                (3 + random2(pow / 4) + random2(pow / 4) + random2(pow / 4)),
+                agent, spread_rate, colour, name, tile);
 
     return 1;
 }
@@ -566,7 +541,7 @@ int holy_flames(monster* caster, actor* defender)
             continue;
         }
 
-        place_cloud(CLOUD_HOLY_FLAMES, *ai, caster->hit_dice * 5, KILL_MON);
+        place_cloud(CLOUD_HOLY_FLAMES, *ai, caster->hit_dice * 5, caster);
 
         cloud_count++;
     }

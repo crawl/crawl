@@ -512,10 +512,9 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             if (triggerer.move_to_pos(to))
             {
                 if (you_trigger)
-                    place_cloud(CLOUD_TLOC_ENERGY, p, 1 + random2(3), KC_YOU);
+                    place_cloud(CLOUD_TLOC_ENERGY, p, 1 + random2(3), &you);
                 else
-                    place_cloud(CLOUD_TLOC_ENERGY, p, 1 + random2(3),
-                                m->kill_alignment(), KILL_MON_MISSILE);
+                    place_cloud(CLOUD_TLOC_ENERGY, p, 1 + random2(3), m);
                 trap_destroyed = true;
                 know_trap_destroyed = you_trigger;
             }

@@ -2588,11 +2588,7 @@ static bool _monster_eat_item(monster* mons, bool nearby)
         }
 
         if (death_ooze_ate_corpse)
-        {
-            place_cloud (CLOUD_MIASMA, mons->pos(),
-                          4 + random2(5), mons->kill_alignment(),
-                          KILL_MON_MISSILE);
-        }
+            place_cloud(CLOUD_MIASMA, mons->pos(), 4 + random2(5), mons);
 
         if (death_ooze_ate_good)
             simple_monster_message(mons, " twists violently!");
@@ -3780,18 +3776,11 @@ static bool _monster_move(monster* mons)
         if (mons_genus(mons->type) == MONS_EFREET
             || mons->type == MONS_FIRE_ELEMENTAL)
         {
-            place_cloud(CLOUD_FIRE, mons->pos(),
-                         2 + random2(4), mons->kill_alignment(),
-                         KILL_MON_MISSILE);
+            place_cloud(CLOUD_FIRE, mons->pos(), 2 + random2(4), mons);
         }
 
-        if (mons->type == MONS_ROTTING_DEVIL
-            || mons->type == MONS_CURSE_TOE)
-        {
-            place_cloud(CLOUD_MIASMA, mons->pos(),
-                         2 + random2(3), mons->kill_alignment(),
-                         KILL_MON_MISSILE);
-        }
+        if (mons->type == MONS_ROTTING_DEVIL || mons->type == MONS_CURSE_TOE)
+            place_cloud(CLOUD_MIASMA, mons->pos(), 2 + random2(3), mons);
 
         // Commented out, but left in as an example of gloom. {due}
         //if (mons->type == MONS_SHADOW)

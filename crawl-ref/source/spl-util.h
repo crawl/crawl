@@ -95,9 +95,8 @@ const char* spelltype_long_name(int which_spelltype);
 typedef int cell_func(coord_def where, int pow, int aux, actor *agent);
 typedef int monster_func(monster* mon, int pow);
 typedef int cloud_func(coord_def where, int pow, int spreadrate,
-                       cloud_type type, kill_category whose,
-                       killer_type killer, int colour, std::string name,
-                       std::string tile);
+                       cloud_type type, const actor* agent, int colour,
+                       std::string name, std::string tile);
 
 int apply_area_visible(cell_func cf, int power,
                        bool pass_through_trans = false, actor *agent = NULL);
@@ -123,7 +122,7 @@ int apply_area_within_radius(cell_func cf,  const coord_def& where,
 
 void apply_area_cloud(cloud_func func, const coord_def& where,
                       int pow, int number, cloud_type ctype,
-                      kill_category kc, killer_type killer,
+                      const actor *agent,
                       int spread_rate = -1, int colour = -1,
                       std::string name = "", std::string tile = "");
 
