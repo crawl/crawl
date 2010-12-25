@@ -1002,8 +1002,11 @@ public:
     depth_ranges     depths;
     map_section_type orient;
 
-    depth_ranges_X<map_chance> _chance;
-    depth_ranges_X<int> _weight;
+    typedef depth_ranges_X<map_chance> range_chance_t;
+    typedef depth_ranges_X<int> range_weight_t;
+
+    range_chance_t   _chance;
+    range_weight_t   _weight;
 
     int              weight_depth_mult;
     int              weight_depth_div;

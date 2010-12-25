@@ -2362,8 +2362,8 @@ void map_def::read_index(reader& inf)
     }
     else
     {
-        _chance.read(inf, _unmarshall_map_chance);
-        _weight.read(inf, unmarshallInt);
+        _chance = range_chance_t::read(inf, _unmarshall_map_chance);
+        _weight = range_weight_t::read(inf, unmarshallInt);
     }
     cache_offset = unmarshallInt(inf);
     unmarshallString4(inf, tags);
