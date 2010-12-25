@@ -977,6 +977,7 @@ static void tag_construct_you(writer &th)
 {
     int i, j;
 
+    marshallInt(th, you.last_mid);
     marshallByte(th, you.piety);
     marshallByte(th, you.rotting);
     marshallShort(th, you.pet_target);
@@ -1571,6 +1572,12 @@ static void tag_read_you(reader &th, int minorVersion)
     int i,j;
     int count;
 
+#if TAG_MAJOR_VERSION == 31
+    if (minorVersion < TAG_MINOR_MONSTER_ID)
+        you.last_mid = 0;
+    else
+#endif
+    you.last_mid          = unmarshallInt(th);
     you.piety             = unmarshallByte(th);
     you.rotting           = unmarshallByte(th);
     you.pet_target        = unmarshallShort(th);
@@ -2489,6 +2496,7 @@ void marshallMonster(writer &th, const monster& m)
     }
 
     marshallShort(th, m.type);
+    marshallInt(th, m.mid);
     marshallString(th, m.mname);
     marshallByte(th, m.ac);
     marshallByte(th, m.ev);
@@ -2900,6 +2908,12 @@ void unmarshallMonster(reader &th, monster& m)
     if (m.type == MONS_NO_MONSTER)
         return;
 
+#if TAG_MAJOR_VERSION == 31
+    if (th.getMinorVersion() < TAG_MINOR_MONSTER_ID)
+        m.mid = ++you.last_mid;
+    else
+#endif
+    m.mid             = unmarshallInt(th);
     m.mname           = unmarshallString(th, 100);
     m.ac              = unmarshallByte(th);
     m.ev              = unmarshallByte(th);

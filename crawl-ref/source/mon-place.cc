@@ -1424,6 +1424,7 @@ static int _place_monster_aux(const mgen_data &mg,
     }
 
     // Now, actually create the monster. (Wheeee!)
+    mon->mid          = ++you.last_mid;
     mon->type         = mg.cls;
     mon->base_monster = mg.base_type;
     mon->number       = mg.number;

@@ -16,6 +16,7 @@ public:
     virtual ~actor();
 
     monster_type type;
+    mid_t        mid;
     virtual int       mindex() const = 0;
     virtual actor_type atype() const = 0;
 

@@ -268,6 +268,9 @@ struct run_check_dir
     coord_def delta;
 };
 
+typedef uint32_t mid_t;
+#define MID_PLAYER ((mid_t)0xffffffff)
+
 struct cloud_struct
 {
     coord_def     pos;
