@@ -567,7 +567,9 @@ monster_type pick_random_monster(const level_id &place, int power,
                       arena_veto_random_monster(mon_type)) ||
                      (crawl_state.game_is_sprint() &&
                       sprint_veto_random_abyss_monster(mon_type)) ||
-                     (force_mobile && mons_class_is_stationary(mon_type)));
+                     (force_mobile && (mons_class_is_stationary(mon_type)
+                       || mons_is_mimic(mon_type))
+                     ));
 
             if (count == 2000)
                 return (MONS_PROGRAM_BUG);
