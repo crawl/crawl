@@ -433,6 +433,8 @@ int scan_mon_inv_randarts(const monster* mon,
 bool player_or_mon_in_sanct(const monster* mons);
 
 int get_dist_to_nearest_monster();
+actor *actor_by_mid(mid_t m);
+monster *monster_by_mid(mid_t m);
 
 bool mons_is_tentacle(int mc);
 

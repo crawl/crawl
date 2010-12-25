@@ -4317,6 +4317,21 @@ int get_dist_to_nearest_monster()
     return (minRange);
 }
 
+actor *actor_by_mid(mid_t m)
+{
+    if (m == MID_PLAYER)
+        return &you;
+    return monster_by_mid(m);
+}
+
+monster *monster_by_mid(mid_t m)
+{
+    for (int i = 0; i < MAX_MONSTERS; i++)
+        if (menv[i].mid == m && menv[i].alive())
+            return &menv[i];
+    return 0;
+}
+
 bool mons_is_tentacle(int mc)
 {
     return (mc == MONS_KRAKEN_TENTACLE
