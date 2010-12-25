@@ -23,11 +23,6 @@
 #include "traps.h"
 #include "viewgeom.h"
 
-monster_type player::id() const
-{
-    return (MONS_PLAYER);
-}
-
 int player::mindex() const
 {
     return (MHITYOU);
@@ -346,9 +341,9 @@ static std::string _pronoun_you(description_level_type desc)
     }
 }
 
-std::string player::name(description_level_type type, bool) const
+std::string player::name(description_level_type dt, bool) const
 {
-    return (_pronoun_you(type));
+    return (_pronoun_you(dt));
 }
 
 std::string player::pronoun(pronoun_type pro, bool) const

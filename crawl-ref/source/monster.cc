@@ -67,7 +67,7 @@ static mon_spellbook mspell_list[] = {
 #define smc get_monster_data(mc)
 
 monster::monster()
-    : type(MONS_NO_MONSTER), hit_points(0), max_hit_points(0), hit_dice(0),
+    : hit_points(0), max_hit_points(0), hit_dice(0),
       ac(0), ev(0), speed(0), speed_increment(0), target(), patrol_point(),
       travel_target(MTRAV_NONE), inv(NON_ITEM), spells(),
       attitude(ATT_HOSTILE), behaviour(BEH_WANDER), foe(MHITYOU),
@@ -76,6 +76,7 @@ monster::monster()
       god(GOD_NO_GOD), ghost(), seen_context(""), props()
 
 {
+    type = MONS_NO_MONSTER;
     travel_path.clear();
     if (crawl_state.game_is_arena())
         foe = MHITNOT;
@@ -2459,11 +2460,6 @@ std::string monster::arm_name(bool plural, bool *can_plural) const
    return (str);
 }
 
-monster_type monster::id() const
-{
-    return (type);
-}
-
 int monster::mindex() const
 {
     return (this - menv.buffer());
@@ -3562,7 +3558,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         if (flavour == BEAM_NUKE || flavour == BEAM_DISINTEGRATION)
         {
             if (can_bleed())
-                blood_spray(pos(), id(), amount / 5);
+                blood_spray(pos(), type, amount / 5);
 
             if (!alive())
                 flags |= MF_EXPLODE_KILL;

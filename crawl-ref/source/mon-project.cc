@@ -306,7 +306,7 @@ move_again:
         monster* mons = (victim && victim->atype() == ACT_MONSTER) ?
             (monster*) victim : 0;
 
-        if (mons && mons_is_projectile(victim->id()))
+        if (mons && mons_is_projectile(victim->type))
         {
             if (mon.observable())
                 mpr("The orbs collide in a blinding explosion!");

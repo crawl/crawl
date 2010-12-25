@@ -5137,6 +5137,7 @@ void player::init()
     species          = SP_UNKNOWN;
     char_class       = JOB_UNKNOWN;
     class_name.clear();
+    type             = MONS_PLAYER;
 
 #ifdef WIZARD
     wizard = (Options.wiz_mode == WIZ_YES) ? true : false;
@@ -6213,9 +6214,7 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
     }
 
     if ((flavour == BEAM_NUKE || flavour == BEAM_DISINTEGRATION) && can_bleed())
-    {
-        blood_spray(pos(), id(), amount / 5);
-    }
+        blood_spray(pos(), type, amount / 5);
 
     return (amount);
 }
