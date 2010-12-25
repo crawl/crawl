@@ -576,9 +576,6 @@ function dgn.place_maps(parameters)
       if map_placed_ok then
         n_placed = n_placed + 1
       else
-        if parameters.die_on_error == nil then
-          parameters.die_on_error = true
-        end
         if not parameters.die_on_error then
           return nil
         end
