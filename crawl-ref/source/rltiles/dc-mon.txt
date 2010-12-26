@@ -516,6 +516,7 @@ shedu MONS_SHEDU
 ## Beasts ('I')
 %sdir dc-mon
 ice_beast MONS_ICE_BEAST
+%sdir dc-mon/nonliving
 sky_beast MONS_SKY_BEAST
 
 ## Jellies ('J')
