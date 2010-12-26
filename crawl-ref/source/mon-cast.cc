@@ -1489,6 +1489,18 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                     continue;
                 }
 
+                // Monsters shouldn't cast BiA before going berserk.
+                // Thematically, they are berserkers, they rush into
+                // battle without thinking. Stopping before berserk to
+                // ask your god for a few friends seems like too
+                // complicated a thought.
+                if (spell_cast == SPELL_BROTHERS_IN_ARMS
+                    && !mons->props.exists("went_berserk"))
+                {
+                    spell_cast = SPELL_NO_SPELL;
+                    continue;
+                }
+
                 // beam-type spells requiring tracers
                 if (spell_needs_tracer(spell_cast))
                 {
@@ -2358,6 +2370,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         return;
 
     case SPELL_BERSERKER_RAGE:
+        mons->props["went_berserk"] = bool(true);
         mons->go_berserk(true);
         return;
 
@@ -2370,13 +2383,6 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         mons->add_ench(mon_enchant(ENCH_RAISED_MR, 0, KC_OTHER, dur));
         mons->add_ench(mon_enchant(ENCH_REGENERATION, 0, KC_OTHER, dur));
         dprf("Trog's Hand cast (dur: %d aut)", dur);
-        return;
-    }
-
-    case SPELL_BROTHERS_IN_ARMS:
-    {
-        const int power = (mons->hit_dice * 20) + random2(mons->hit_dice * 5) - random2(mons->hit_dice * 5);
-        summon_berserker(power, mons);
         return;
     }
 
@@ -2863,6 +2869,29 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                               2 + random2(2)
                                 + random2(mons->hit_dice / 4 + 1), god);
         return;
+
+    case SPELL_BROTHERS_IN_ARMS:
+    {
+        const int power = (mons->hit_dice * 20) + random2(mons->hit_dice * 5) - random2(mons->hit_dice * 5);
+        monster_type to_summon;
+
+        if (mons->type == MONS_SPRIGGAN_BERSERKER)
+        {
+            monster_type berserkers[4] = { MONS_BLACK_BEAR, MONS_BEAR, MONS_GRIZZLY_BEAR,
+                                           MONS_POLAR_BEAR };
+            to_summon = RANDOM_ELEMENT(berserkers);
+        }
+        else /* if (mons->type == MONS_DEEP_DWARF_BERSERKER) */
+        {
+            monster_type berserkers[8] = { MONS_BLACK_BEAR, MONS_GRIZZLY_BEAR, MONS_OGRE,
+                                           MONS_TROLL, MONS_HILL_GIANT, MONS_DEEP_TROLL,
+                                           MONS_ROCK_TROLL, MONS_TWO_HEADED_OGRE};
+            to_summon = RANDOM_ELEMENT(berserkers);
+        }
+
+        summon_berserker(power, mons, to_summon);
+        return;
+    }
 
     case SPELL_SYMBOL_OF_TORMENT:
         torment(mons->mindex(), mons->pos());
