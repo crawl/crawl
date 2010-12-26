@@ -1279,21 +1279,21 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
         if (book == BOOK_NECRONOMICON)
         {
             mpr("The pages of the Necronomicon glow with a dark malevolence...");
-            MiscastEffect(&you, MISC_KNOWN_MISCAST, SPTYP_NECROMANCY,
+            MiscastEffect(&you, MISC_MISCAST, SPTYP_NECROMANCY,
                            8, random2avg(88, 3),
                            "reading the Necronomicon");
         }
         else if (book == BOOK_DEMONOLOGY)
         {
             mpr("This book does not appreciate being disturbed by one of your ineptitude!");
-            MiscastEffect(&you, MISC_KNOWN_MISCAST, SPTYP_SUMMONING,
+            MiscastEffect(&you, MISC_MISCAST, SPTYP_SUMMONING,
                            7, random2avg(88, 3),
                            "reading the book of Demonology");
         }
         else if (book == BOOK_ANNIHILATIONS)
         {
             mpr("This book does not appreciate being disturbed by one of your ineptitude!");
-            MiscastEffect(&you, MISC_KNOWN_MISCAST, SPTYP_CONJURATION,
+            MiscastEffect(&you, MISC_MISCAST, SPTYP_CONJURATION,
                            8, random2avg(88, 3),
                            "reading the book of Annihilations");
         }

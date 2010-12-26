@@ -65,8 +65,7 @@ enum extra_monster_index_type
     ZOT_TRAP_MISCAST,
     WIELD_MISCAST,
     MELEE_MISCAST,
-    MISC_KNOWN_MISCAST,
-    MISC_UNKNOWN_MISCAST,
+    MISC_MISCAST,
 };
 
 // number of monster enchantments
