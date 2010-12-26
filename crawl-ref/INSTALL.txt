@@ -109,7 +109,7 @@ Stone Soup 0.6 includes Lua 5.1.4 in its source tree. Crawl uses Lua for
 dungeon generation.  In addition, Crawl has a (rudimentary) Lua interface
 for users to run scripts which can do things such as conditionalise parts of
 the .crawlrc/init.txt.  Such user Lua scripts are enabled by default, but
-can be turned off by removing -DCLUA_BINDINGS from your makefile.
+can be turned off by appending NO_LUA_BINDINGS=y to the make invocation.
 
 Unicode support needs libncursesw and its header files; these are usually
 available in your operating system's package-management system.  Unicode is
@@ -120,17 +120,6 @@ libncursesw).
 
 Building on Unix (Linux, *BSD, Solaris, etc.)
 ---------------------------------------------
-
-Security:
-
-If you have untrusted local users, we highly recommend you do not install
-Crawl setgid or setuid.  Just running "make install" will install Crawl
-setgid games, do *not* do this unless you're sure you trust your users.
-
-If you have untrusted users, you can use a chrooted game launcher such as
-dgamelaunch or compile with SAVEDIR=~/.crawl/, in which case each user has
-his or her own save directory and bones are not shared.
-
 
 To install or not to install:
 
@@ -190,21 +179,17 @@ Building:
   If you would rather, you can go to the source/contrib directory and type
   'make', and the required libraries should be built for you.
 
-* If you want to install Crawl for multiple users, you can add the savegame
-  path and game data path to the 'make' command line.  For instance:
-
-    make prefix=/usr/games/crawl SAVEDIR=saves/ DATADIR=data/
-
-  Please note that SAVEDIR and DATADIR are relative to 'prefix'.
-
-  Of course, you should make sure that SAVEDIR and DATADIR reference the
-  appropriate directories.  This is not necessary if only one user is going
-  to play Crawl.
+* If you want to install Crawl system-wide rather than play from the build
+  directory, you need to specify a directory to hold the save and data files.
+  Specifying a prefix of /usr or /usr/local will default SAVEDIR to
+  "~/.crawl" and DATADIR to share/crawl (relative to the prefix).
+  SAVEDIR must be writeable and owned by the user running crawl, so except
+  for special cases it should be inside "~" (home directory).
 
 * If you're installing Crawl for multiple users, run 'make install' as root.
   Crawl will be copied into the directory specified by 'prefix' (see above).
-  The save and data directories will be created if necessary, and the level
-  layout and help files will be copied to the data directory.
+  The data directory will be created if necessary, and the level layout,
+  tile and help files will be copied there.
 
 * If you do not want players to be able to script Crawl with Lua, add
   'NO_LUA_BINDINGS=y' to the 'make' command-line.
@@ -241,10 +226,8 @@ for various reasons.
   build configurations are intended for development and may not result in a
   binary that can be distributed to others.
 
-* If you'd like users to be able to script Crawl with Lua, you can edit
-  AppHdr.h, uncomment
-        // #define CLUA_BINDINGS
-  and rebuild to compile with Lua support. See the section on Lua for more
+* If you would like users to be unable to script Crawl with Lua, you can
+  specify NO_LUA_BINDINGS=y when building. See the section on Lua for more
   information.
 
 
@@ -419,13 +402,16 @@ Lua
 
 Security on multiuser systems (Unix):
 
-Enabling Lua user scripts is unsuitable for Crawl installed setuid or setgid
-- we have not audited the user scripting interface for security.  If you're
-not planning to install Crawl setuid/setgid (not running set[ug]id is a good
-idea in general), you can enable the Lua user-script bindings safely.
+As of 0.8, setuid and setgid installs are no longer supported, thus any
+previous concerns are no longer applicable.  Lua user scripts are sandboxed
+and should be generally safe even on public servers (besides increasing the
+attack surface).
 
-As of 0.3, the Lua source is included with Crawl. The only step needed to
-enable user-scripts is to uncomment CLUA_BINDINGS in AppHdr.h.
+As of 0.3, the Lua source is included with Crawl.  It will be used if you
+don't have Lua headers installed.  Note that we don't provide security
+support for Lua, and thus if you run a public server or a kiosk, it is
+strongly recommended to use system Lua which does receive security updates
+from whatever distribution you use.
 
 
 PCRE
