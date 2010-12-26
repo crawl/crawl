@@ -1883,6 +1883,7 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
     int tsk_points = you.skill_points[tsk];
     int fsk_ct_points = you.ct_skill_points[fsk];
     int tsk_ct_points = you.ct_skill_points[tsk];
+    int total_skill_points = you.total_skill_points;
 
 #ifdef DEBUG_DIAGNOSTICS
     if (!simu && you.ct_skill_points[fsk] > 0)
@@ -1955,6 +1956,7 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
         you.skill_points[tsk] = tsk_points;
         you.ct_skill_points[fsk] = fsk_ct_points;
         you.ct_skill_points[tsk] = tsk_ct_points;
+        you.total_skill_points = total_skill_points;
     }
     else
     {
