@@ -2365,6 +2365,12 @@ void bolt::affect_endpoint()
                   7 + random2(5));
     }
 
+    if (origin_spell == SPELL_FIRE_BREATH && is_big_cloud)
+    {
+        big_cloud(CLOUD_FIRE, whose_kill(), killer(), pos(), 0,
+                    7 + random2(5));
+    }
+
     if (name == "foul vapour")
     {
         // death drake; swamp drakes handled earlier
@@ -2618,6 +2624,9 @@ void bolt::affect_place_clouds()
 
     if (origin_spell == SPELL_HOLY_BREATH)
         place_cloud(CLOUD_HOLY_FLAMES, p, random2(4) + 2, whose_kill(), killer());
+
+    if (origin_spell == SPELL_FIRE_BREATH && is_big_cloud)
+        place_cloud(CLOUD_FIRE, p,random2(4) + 2, whose_kill(), killer());
 
     // Fire/cold over water/lava
     if (feat == DNGN_LAVA && flavour == BEAM_COLD

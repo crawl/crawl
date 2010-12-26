@@ -294,7 +294,7 @@ PLACE:   Swamp:5
 TAGS:    no_pool_fixup no_rotate
 ORIENT:  float
 MONS:    dragon, mottled dragon / hydra, fire drake / swamp drake / steam dragon
-MONS:    fire drake / lindwurm w:3
+MONS:    fire drake / lindwurm w:3 / fire crab w:3
 SHUFFLE: OX
 SUBST:   S = llw, L = ll.
 SUBST:   ' = t., " = t
