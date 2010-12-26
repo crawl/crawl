@@ -733,6 +733,10 @@ fiend
 
 One of the most fearsome denizens of any Hell. A huge and powerful demon wreathed in hellfire, with great scaly wings.
 %%%%
+fire crab
+
+These crabs are prized for their brilliantly jewelled shells. The rarity of these shells is only enhanced by the vicious, fiery nature of the animal, and their almost supernatural ability to expel massive quantities of flames.
+%%%%
 fire elemental
 
 A spirit drawn from the elemental plane of fire, which exists in this world as a brilliant column of raging flames.

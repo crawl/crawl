@@ -1983,6 +1983,18 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
 },
 
+{
+    MONS_FIRECRAB, 't', LIGHTRED, "fire crab",
+    M_NO_SKELETON,
+    MR_VUL_POISON | mrd(MR_RES_FIRE, 3),
+    320, 13, MONS_FIRECRAB, MONS_FIRECRAB, MH_NATURAL, -4,
+    { {AT_BITE, AF_FIRE, 15}, {AT_CLAW, AF_FIRE, 15}, AT_NO_ATK, AT_NO_ATK },
+    { 8, 4, 5, 0 },
+    9, 6, MST_NO_SPELLS, CE_POISON_CONTAM, Z_SMALL, S_SILENT,
+    I_INSECT, HT_LAND, FL_NONE, 11, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL
+},
+
 // ugly things ('u')
 {
     MONS_UGLY_THING, 'u', BLACK, "ugly thing",
