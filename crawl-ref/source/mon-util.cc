@@ -4351,3 +4351,24 @@ void init_anon()
     mon.attitude = ATT_FRIENDLY;
     mon.hit_points = mon.max_hit_points = 1000;
 }
+
+actor *find_agent(mid_t m, kill_category kc)
+{
+    actor *agent = actor_by_mid(m);
+    if (agent)
+        return agent;
+    switch (kc)
+    {
+    case KC_YOU:
+        // shouldn't happen, there ought to be a valid mid
+        return &you;
+    case KC_FRIENDLY:
+        return &menv[ANON_FRIENDLY_MONSTER];
+    case KC_OTHER:
+        // currently hostile dead/gone monsters are no different from env
+        return 0;
+    case KC_NCATEGORIES:
+        ASSERT(false);
+        return 0;
+    }
+}
