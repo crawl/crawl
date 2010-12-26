@@ -437,5 +437,6 @@ actor *actor_by_mid(mid_t m);
 monster *monster_by_mid(mid_t m);
 
 bool mons_is_tentacle(int mc);
+void init_anon();
 
 #endif

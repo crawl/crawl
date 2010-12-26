@@ -1214,6 +1214,7 @@ void dgn_reset_level(bool enable_random_maps)
     // Reset all monsters.
     for (int i = 0; i < MAX_MONSTERS; i++)
         menv[i].reset();
+    init_anon();
 
     env.mons_alloc.init(MONS_NO_MONSTER);
 

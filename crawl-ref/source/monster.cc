@@ -3516,7 +3516,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
                    bool cleanup_dead)
 {
     const int initial_damage = amount;
-    if (mons_is_projectile(type))
+    if (mons_is_projectile(type) || mindex() == ANON_FRIENDLY_MONSTER)
         return (0);
 
     if (alive())

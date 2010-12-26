@@ -4326,6 +4326,8 @@ actor *actor_by_mid(mid_t m)
 
 monster *monster_by_mid(mid_t m)
 {
+    if (m == MID_ANON_FRIEND)
+        return &menv[ANON_FRIENDLY_MONSTER];
     for (int i = 0; i < MAX_MONSTERS; i++)
         if (menv[i].mid == m && menv[i].alive())
             return &menv[i];
@@ -4338,4 +4340,14 @@ bool mons_is_tentacle(int mc)
             || mc == MONS_KRAKEN_TENTACLE_SEGMENT
             || mc == MONS_ELDRITCH_TENTACLE
             || mc == MONS_ELDRITCH_TENTACLE_SEGMENT);
+}
+
+void init_anon()
+{
+    monster &mon = menv[ANON_FRIENDLY_MONSTER];
+    mon.reset();
+    mon.type = MONS_PROGRAM_BUG;
+    mon.mid = MID_ANON_FRIEND;
+    mon.attitude = ATT_FRIENDLY;
+    mon.hit_points = mon.max_hit_points = 1000;
 }
