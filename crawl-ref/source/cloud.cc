@@ -1076,20 +1076,13 @@ int actor_apply_cloud(actor *act)
              final_damage,
              cloud.cloud_name().c_str());
 #endif
+        actor *oppressor = find_agent(cloud.source, cloud.whose);
 
         if (player)
-            ouch(final_damage, cl, KILLED_BY_CLOUD,
-                 cloud.cloud_name("", true).c_str());
+            ouch(final_damage, oppressor? oppressor->mindex() : NON_MONSTER,
+                 KILLED_BY_CLOUD, cloud.cloud_name("", true).c_str());
         else
-        {
-            mons->hurt(NULL, final_damage, BEAM_MISSILE, false);
-
-            if (mons->hit_points < 1)
-            {
-                mon_enchant death_ench(ENCH_NONE, 0, cloud.whose);
-                monster_die(mons, cloud.killer, death_ench.kill_agent());
-            }
-        }
+            mons->hurt(oppressor, final_damage, BEAM_MISSILE);
     }
 
     return final_damage;

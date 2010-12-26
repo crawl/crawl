@@ -438,5 +438,6 @@ monster *monster_by_mid(mid_t m);
 
 bool mons_is_tentacle(int mc);
 void init_anon();
+actor *find_agent(mid_t m, kill_category kc);
 
 #endif
