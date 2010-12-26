@@ -1368,7 +1368,7 @@ int mons_lair_level(int mcls)
     case MONS_DEATH_YAK:
     case MONS_SPINY_WORM:
     case MONS_STAIR_MIMIC:
-    case MONS_FIRECRAB;
+    case MONS_FIRECRAB:
         mlev += 7;
         break;
 
