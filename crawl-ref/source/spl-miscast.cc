@@ -189,8 +189,7 @@ void MiscastEffect::init()
     else
     {
         ASSERT(source == ZOT_TRAP_MISCAST
-               || source == MISC_KNOWN_MISCAST
-               || source == MISC_UNKNOWN_MISCAST
+               || source == MISC_MISCAST
                || (source < 0 && -source < NUM_GODS));
 
         act_source = target;
@@ -208,10 +207,8 @@ void MiscastEffect::init()
                 kt = KILL_YOU_CONF;
             }
         }
-        else if (source == MISC_KNOWN_MISCAST)
+        else if (source == MISC_MISCAST)
             source_known = true, guilty = &you;
-        else if (source == MISC_UNKNOWN_MISCAST)
-            source_known = false;
         else
             source_known = true;
     }
