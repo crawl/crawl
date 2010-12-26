@@ -937,7 +937,7 @@ int mons_standard_rare(int mcls)
     case MONS_VERY_UGLY_THING:
     case MONS_WIZARD:
     case MONS_HARPY:
-    case MONS_FIRECRAP:
+    case MONS_FIRECRAB:
         return 20;
 
     case MONS_BORING_BEETLE:
