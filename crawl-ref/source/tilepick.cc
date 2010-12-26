@@ -925,6 +925,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_SNAPPING_TURTLE;
     case MONS_ALLIGATOR_SNAPPING_TURTLE:
         return TILEP_MONS_ALLIGATOR_SNAPPING_TURTLE;
+    case MONS_FIRECRAB:
+        return TILEP_TODO;
 
     // ugly things ('u')
     case MONS_UGLY_THING:
@@ -1182,6 +1184,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_GREATER_MUMMY;
     case MONS_MUMMY_PRIEST:
         return TILEP_MONS_MUMMY_PRIEST;
+    case MONS_BOG_MUMMY:
+        return TILEP_MONS_BOG_MUMMY;
 
     // nagas ('N')
     case MONS_NAGA:
