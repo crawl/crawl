@@ -270,6 +270,9 @@ struct run_check_dir
 
 typedef uint32_t mid_t;
 #define MID_PLAYER      ((mid_t)0xffffffff)
+// the numbers are meaningless, there's just plenty of space for gods, env,
+// and whatever else we want to have, while keeping all monster ids smaller.
+#define MID_ANON_FRIEND ((mid_t)0xffff0000)
 
 struct cloud_struct
 {
