@@ -713,47 +713,52 @@ static void _make_mons_berserk_summon(monster* mon)
 }
 
 // This is actually one of Trog's wrath effects.
-bool summon_berserker(int pow, actor *caster)
+bool summon_berserker(int pow, actor *caster, monster_type override_mons)
 {
     monster_type mon = MONS_PROGRAM_BUG;
 
     const int dur = std::min(2 + (random2(pow) / 4), 6);
 
-    if (pow <= 100)
-    {
-        // bears
-        mon = (coinflip()) ? MONS_BLACK_BEAR : MONS_GRIZZLY_BEAR;
-    }
-    else if (pow <= 140)
-    {
-        // ogres
-        mon = (one_chance_in(3) ? MONS_TWO_HEADED_OGRE : MONS_OGRE);
-    }
-    else if (pow <= 180)
-    {
-        // trolls
-        switch (random2(8))
-        {
-        case 0:
-            mon = MONS_DEEP_TROLL;
-            break;
-        case 1:
-        case 2:
-            mon = MONS_IRON_TROLL;
-            break;
-        case 3:
-        case 4:
-            mon = MONS_ROCK_TROLL;
-            break;
-        default:
-            mon = MONS_TROLL;
-            break;
-        }
-    }
+    if (override_mons != MONS_PROGRAM_BUG)
+        mon = override_mons;
     else
     {
-        // giants
-        mon = (coinflip()) ? MONS_HILL_GIANT : MONS_STONE_GIANT;
+        if (pow <= 100)
+        {
+            // bears
+            mon = (coinflip()) ? MONS_BLACK_BEAR : MONS_GRIZZLY_BEAR;
+        }
+        else if (pow <= 140)
+        {
+            // ogres
+            mon = (one_chance_in(3) ? MONS_TWO_HEADED_OGRE : MONS_OGRE);
+        }
+        else if (pow <= 180)
+        {
+            // trolls
+            switch (random2(8))
+            {
+            case 0:
+                mon = MONS_DEEP_TROLL;
+                break;
+            case 1:
+            case 2:
+                mon = MONS_IRON_TROLL;
+                break;
+            case 3:
+            case 4:
+                mon = MONS_ROCK_TROLL;
+                break;
+            default:
+                mon = MONS_TROLL;
+                break;
+            }
+        }
+        else
+        {
+            // giants
+            mon = (coinflip()) ? MONS_HILL_GIANT : MONS_STONE_GIANT;
+        }
     }
 
     mgen_data mg(mon, caster ? BEH_COPY : BEH_HOSTILE, caster, dur, 0,
