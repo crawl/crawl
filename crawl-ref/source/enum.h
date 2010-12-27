@@ -632,6 +632,10 @@ enum command_type
 
     CMD_ANNOTATE_LEVEL,
 
+#ifdef CLUA_BINDINGS
+    CMD_AUTOFIGHT,
+#endif
+
 #ifdef USE_TILE
     CMD_EDIT_PLAYER_TILE,
     CMD_MIN_TILE = CMD_EDIT_PLAYER_TILE,
