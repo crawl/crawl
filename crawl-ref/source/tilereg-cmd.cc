@@ -115,10 +115,10 @@ bool CommandRegion::update_alt_text(std::string &alt)
     const std::string desc = get_command_description(cmd, false);
     if (desc.empty())
         return (false);
-    
+
     describe_info inf;
     inf.body << desc;
-        
+
     alt_desc_proc proc(crawl_view.msgsz.x, crawl_view.msgsz.y);
     process_description<alt_desc_proc>(proc, inf);
     proc.get_string(alt);
@@ -165,7 +165,7 @@ static bool _command_not_applicable(const command_type cmd)
     case CMD_DISPLAY_RELIGION:
         return (you.religion == GOD_NO_GOD);
     case CMD_PRAY:
-        return (you.religion == GOD_NO_GOD 
+        return (you.religion == GOD_NO_GOD
                 && !feat_is_altar(grd(you.pos())));
     case CMD_USE_ABILITY:
         return (your_talents(false).empty());
