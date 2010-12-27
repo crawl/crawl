@@ -90,8 +90,10 @@ std::string get_skill_description(skill_type skill, bool need_title = false);
 
 void describe_skill(skill_type skill);
 
+#ifdef USE_TILE
 std::string get_command_description(const command_type cmd, 
                                     bool terse);
+#endif
 
 void print_description(const std::string &desc);
 void print_description(const describe_info &inf);

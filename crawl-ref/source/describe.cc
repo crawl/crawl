@@ -4589,6 +4589,7 @@ void describe_skill(skill_type skill)
     wait_for_keypress();
 }
 
+#ifdef USE_TILE
 std::string get_command_description(const command_type cmd, bool terse)
 {
     std::string lookup = command_to_name(cmd);
@@ -4602,6 +4603,7 @@ std::string get_command_description(const command_type cmd, bool terse)
 
     return result.substr(0, result.length() - 1);
 }
+#endif
 
 void alt_desc_proc::nextline()
 {
