@@ -1746,3 +1746,64 @@ c.LLlllllLL.c
 c..LLlllLL..c
 ccccccccccccc
 ENDMAP
+
+#############################################################################
+# The Elephants' Graveyard (by Mu.)
+#
+NAME:   elephants_graveyard_mu
+ORIENT: float
+TAGS:   no_monster_gen no_rotate no_vmirror
+DEPTH:  D:13-26, Lair:1-7
+
+  # next: we generate more dire elephants at greater depths
+  # we also turn the shallow water into deep water at the lowest depths,
+  # just in case elephants are ever allowed to drown the unwary
+: if you.absdepth() < 18 then
+MONS:   elephant, fungus, plant
+: elseif you.absdepth() < 22 then
+MONS:   elephant / dire elephant, fungus, plant
+: else
+MONS:   w:1 elephant / dire elephant, fungus, plant
+SUBST: W : w
+:end
+
+: dgn.delayed_decay(_G, '%', 'w:1 elephant corpse / w:5 elephant skeleton / nothing')
+SUBST:  . = .:69 1:1
+SUBST:  P = 3
+SUBST:  a = .2
+SUBST:  b = 23
+SUBST:  c = 3tt
+
+MAP
+............................
+............................
+............................
+............................
+........tttttttttttt........
+......tttccccccccccttt......
+.....ttcccbbbbbbbbccctt.....
+....ttccbbbaaaaaabbbcctt....
+....tccbbaaa...1aaabbcct....
+...ttcbbaa...%%...aabbctt...
+..ttccbaa..%%%%%%..aabcctt..
+..tccbba..%%%%%%%%..abbcct..
+..tcbbaa.%%.PPP%%%%.aabbct..
+..tcbaa..%%.PWPP%%%..aabct..
+..tcba1.%%%11WPP%%%%..abct..
+..tcba.%%%%11WWP%%%%%.abct..
+..tcba.%%%%.WWWP%%%%%.abct..
+..tcba..%%%.WWWP%%%%1.abct..
+..tcbaa.1%%..WWP.%%..aabct..
+..tcbbaa.%%%..WP.%%.aabbct..
+..tccbba..%%%.WW....abbcct..
+..ttccbaa......WW..aabcctt..
+...ttcbbaa......W.aabbctt...
+....tccbbaaaa..aaaabbcct....
+....ttccbbbba..abbbbcctt....
+.....ttccccca..accccctt.....
+......tttttta..atttttt......
+............................
+............1..1............
+............................
+.............@@.............
+ENDMAP
