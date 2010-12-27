@@ -1549,7 +1549,7 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
                         break;
 
                     if (preserve_vault_stairs
-                        && (env.level_map_mask(stair_list[s2]) & MMT_VAULT))
+                        && map_masked(stair_list[s2], MMT_VAULT))
                     {
                         continue;
                     }
@@ -1587,8 +1587,7 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
                     int start = remove;
                     do
                     {
-                        if (!(env.level_map_mask(stair_list[remove])
-                              & MMT_VAULT))
+                        if (!map_masked(stair_list[remove], MMT_VAULT))
                             break;
                         remove = (remove + 1) % num_stairs;
                     }
@@ -1624,7 +1623,7 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
             coord_def gc = _dgn_random_point_in_bounds(DNGN_FLOOR, MMT_VAULT,
                                                        DNGN_UNSEEN);
 
-            dprf("add stair %d at pos(%d, %d)", s, gc.x, gc.y);
+            dprf("Adding stair %d at (%d,%d)", s, gc.x, gc.y);
             // base gets fixed up to be the right stone stair below...
             grd(gc) = base;
             stair_list[num_stairs++] = gc;
