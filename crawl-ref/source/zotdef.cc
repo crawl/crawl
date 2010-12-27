@@ -946,7 +946,12 @@ bool create_trap(trap_type spec_type)
         mpr("You can't create a trap there!");
         return (false);
     }
-    return place_specific_trap(abild.target, spec_type);
+    bool result = place_specific_trap(abild.target, spec_type);
+
+    if (result)
+        grd(abild.target) = env.trap[env.tgrid(abild.target)].category();
+
+    return result;
 }
 
 bool create_zotdef_ally(monster_type mtyp, const char *successmsg)
