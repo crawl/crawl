@@ -23,6 +23,7 @@
 #include "tiledef-main.h"
 #include "tilefont.h"
 #include "tilereg.h"
+#include "tilereg-cmd.h"
 #include "tilereg-crt.h"
 #include "tilereg-dgn.h"
 #include "tilereg-doll.h"
@@ -337,6 +338,7 @@ bool TilesFramework::initialise()
     m_region_mem  = new MemoriseRegion(init);
     m_region_mon  = new MonsterRegion(init);
     m_region_skl  = new SkillRegion(init);
+    m_region_cmd  = new CommandRegion(init);
     m_region_tab_spl  = new TabbedRegion(init);
     m_region_tab_mon  = new TabbedRegion(init);
 
@@ -345,6 +347,7 @@ bool TilesFramework::initialise()
     m_region_tab->set_tab_region(TAB_MEMORISE, m_region_mem, TILEG_TAB_MEMORISE);
     m_region_tab->set_tab_region(TAB_MONSTER, m_region_mon, TILEG_TAB_MONSTER);
     m_region_tab->set_tab_region(TAB_SKILL, m_region_skl, TILEG_TAB_SKILL);
+    m_region_tab->set_tab_region(TAB_COMMAND, m_region_cmd, TILEG_TAB_COMMAND);
     m_region_tab->activate_tab(TAB_ITEM);
 
     m_region_tab_spl->set_tab_region(0, m_region_spl, TILEG_TAB_SPELL);

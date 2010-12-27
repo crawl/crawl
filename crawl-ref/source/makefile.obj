@@ -230,6 +230,7 @@ tilemcache.o \
 tilepick.o \
 tilepick-p.o \
 tilereg.o \
+tilereg-cmd.o \
 tilereg-crt.o \
 tilereg-dgn.o \
 tilereg-doll.o \
