@@ -68,7 +68,9 @@ static TextDB AllDBs[] =
             "descript/skills.txt",
             "descript/ability.txt",
             "descript/cards.txt",
+#ifdef USE_TILE
             "descript/commands.txt",
+#endif            
             NULL),
 
     TextDB("gamestart",
