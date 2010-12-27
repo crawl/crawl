@@ -179,11 +179,16 @@ static bool _octa_room(dgn_region& region, int oblique_max,
 static void _roguey_level(int level_number);
 
 // VAULT FUNCTIONS
-static bool _build_vault(int level_number,
-                         const map_def *vault,
-                         bool check_collisions = false,
-                         bool make_no_exits = false,
-                         const coord_def &where = coord_def(-1, -1));
+static bool _build_secondary_vault(int level_number, const map_def *vault,
+                                   bool clobber = false,
+                                   bool make_no_exits = false,
+                                   const coord_def &where = coord_def(-1, -1));
+
+static bool _build_vault_impl(int level_number,
+                              const map_def *vault,
+                              bool check_collisions = false,
+                              bool make_no_exits = false,
+                              const coord_def &where = coord_def(-1, -1));
 
 static void _vault_grid(vault_placement &,
                         int vgrid,
@@ -1930,7 +1935,7 @@ static void _build_overflow_temples(int level_number)
             return;
 
         if (!dgn_ensure_vault_placed(
-                _build_vault(level_number, vault, true),
+                _build_secondary_vault(level_number, vault),
                 false))
         {
 #ifdef DEBUG_TEMPLES
@@ -2046,8 +2051,8 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
 
     if (primary_vault)
     {
-        _ensure_vault_placed_ex(_build_vault(level_number, primary_vault),
-                                primary_vault);
+        _ensure_vault_placed_ex(_build_secondary_vault(level_number,
+                                primary_vault, true), primary_vault);
     }
 
     if (you.level_type == LEVEL_LABYRINTH
@@ -2346,7 +2351,7 @@ static void _pan_level(int level_number)
         _plan_main(level_number, 0);
     }
 
-    _build_vault(level_number, vault, true);
+    _build_secondary_vault(level_number, vault);
 }
 
 // Take care of labyrinth, abyss, pandemonium. Returns false if we should skip
@@ -2436,7 +2441,8 @@ static void _portal_vault_level(int level_number)
             dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL,
                              vault->border_fill_type);
 
-        dgn_ensure_vault_placed(_build_vault(level_number, vault), true);
+        dgn_ensure_vault_placed(_build_secondary_vault(level_number, vault, true),
+                                 true);
     }
     else
     {
@@ -2463,7 +2469,7 @@ static bool _place_vault_by_tag(const std::string &tag, int dlevel)
     if (!vault)
         return (false);
 
-    return _build_vault(dlevel, vault, true);
+    return _build_secondary_vault(dlevel, vault);
 }
 
 static const map_def *_dgn_random_map_for_place(bool minivault)
@@ -2596,7 +2602,7 @@ static void _place_chance_vaults()
         const map_def *map = maps[i];
         dprf("Placing CHANCE vault: %s (%s)",
              map->name.c_str(), map->chance(lid).describe().c_str());
-        _build_vault(you.absdepth0, map, true);
+        _build_secondary_vault(you.absdepth0, map);
     }
 }
 
@@ -2609,14 +2615,14 @@ static void _place_minivaults(void)
         const map_def *vault = NULL;
 
         if ((vault = random_map_for_place(level_id::current(), true)))
-            _build_vault(you.absdepth0, vault, true);
+            _build_secondary_vault(you.absdepth0, vault);
 
         int tries = 0;
         do
         {
             vault = random_map_in_depth(level_id::current(), true);
             if (vault)
-                _build_vault(you.absdepth0, vault, true);
+                _build_secondary_vault(you.absdepth0, vault);
         } // if ALL maps eligible are "extra" but fail to place, we'd be screwed
         while (vault && vault->has_tag("extra") && tries++ < 10000);
     }
@@ -3107,7 +3113,7 @@ static void _place_extra_vaults()
             if (!vault || vault->orient == MAP_ENCOMPASS)
                 break;
 
-            if (vault && _build_vault(you.absdepth0, vault, true))
+            if (vault && _build_secondary_vault(you.absdepth0, vault))
             {
                 const map_def &map(*vault);
                 if (map.has_tag("extra"))
@@ -3751,7 +3757,8 @@ bool dgn_place_map(const map_def *mdef,
     }
 
     const int map_index = env.level_vaults.size();
-    did_map = _build_vault(you.absdepth0, mdef, !clobber, make_no_exits, where);
+    did_map = _build_secondary_vault(you.absdepth0, mdef, clobber,
+                                     make_no_exits, where);
 
     // Activate any markers within the map.
     if (did_map && !Generating_Level)
@@ -3854,10 +3861,31 @@ static void _ruin_vault(const vault_placement &vp)
     _ruin_level(vault_place_iterator(vp), 0, 12, 0);
 }
 
-// Builds a vault or minivault.
-static bool _build_vault(int level_number, const map_def *vault,
-                         bool check_collisions, bool make_no_exits,
-                         const coord_def &where)
+// Places a vault somewhere in an already built level if possible.
+// Returns true if the vault was successfully placed.
+static bool _build_secondary_vault(int level_number, const map_def *vault,
+                                   bool clobber, bool no_exits,
+                                   const coord_def &where)
+{
+    const int map_index = env.level_vaults.size();
+    if (_build_vault_impl(level_number, vault, !clobber, no_exits, where))
+    {
+        if (!no_exits)
+        {
+            const vault_placement &vp = *env.level_vaults[map_index];
+            ASSERT(vault->name == vp.map.name);
+            vp.connect(player_in_branch(BRANCH_ORCISH_MINES));
+        }
+        return (true);
+    }
+    return (false);
+}
+
+// Builds a vault or minivault. Do not use this function directly: always
+// prefer _build_secondary_vault or _build_primary_vault.
+static bool _build_vault_impl(int level_number, const map_def *vault,
+                              bool check_collisions, bool make_no_exits,
+                              const coord_def &where)
 {
     if (dgn_check_connectivity && !dgn_zones)
         dgn_zones = dgn_count_disconnected_zones(false);
@@ -3905,11 +3933,6 @@ static bool _build_vault(int level_number, const map_def *vault,
     // Must do this only after target_connections is finalised, or the vault
     // exits will not be correctly set.
     dgn_register_place(place, true);
-
-    // Can't do this before dgn_register_place, or the connectivity code might
-    // overwrite the vault.
-    if (!make_no_exits)
-        place.connect(player_in_branch(BRANCH_ORCISH_MINES));
 
 #ifdef DEBUG_DIAGNOSTICS
     if (crawl_state.map_stat_gen)
@@ -5467,7 +5490,8 @@ static void _place_layout_vault(int level_number, const char *name,
     const map_def *vault = find_map_by_name(make_stringf("layout_%s", name));
     ASSERT(vault);
 
-    dgn_ensure_vault_placed(_build_vault(level_number, vault), false);
+    dgn_ensure_vault_placed(_build_secondary_vault(level_number, vault, true),
+                            false);
 
     dgn_place_stone_stairs(true);
 }
@@ -5866,7 +5890,7 @@ static void _place_extra_lab_minivaults(int level_number)
             break;
 
         vaults_used.insert(vault);
-        if (!_build_vault(level_number, vault, true))
+        if (!_build_secondary_vault(level_number, vault))
             break;
     }
 }
@@ -6120,7 +6144,7 @@ static void _labyrinth_level(int level_number)
     coord_def end;
     _labyrinth_build_maze(end, lab);
 
-    if (!vault || !_build_vault(level_number, vault, true))
+    if (!vault || !_build_secondary_vault(level_number, vault))
     {
         vault = NULL;
         _labyrinth_place_exit(end);
