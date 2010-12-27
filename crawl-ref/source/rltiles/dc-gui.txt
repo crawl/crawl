@@ -12,6 +12,8 @@ dc-dngn/dngn_unseen
 
 %include dc-skills.txt
 
+%include dc-commands.txt
+
 dc-misc/todo TODO
 dc-misc/error ERROR
 
