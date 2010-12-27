@@ -103,6 +103,8 @@ static bool _do_ability(const ability_def& abil);
 static void _pay_ability_costs(const ability_def& abil, int xpcost);
 static std::string _describe_talent(const talent& tal);
 static int _scale_piety_cost(ability_type abil, int original_cost);
+static std::string _zd_mons_description_for_ability (const ability_def &abil);
+static monster_type _monster_for_ability (const ability_def& abil);
 
 // this all needs to be split into data/util/show files
 // and the struct mechanism here needs to be rewritten (again)
@@ -463,7 +465,7 @@ std::string print_abilities()
     return text;
 }
 
-int count_relevant_monsters(const ability_def& abil)
+static monster_type _monster_for_ability (const ability_def& abil)
 {
     monster_type mtyp = MONS_PROGRAM_BUG;
     switch(abil.ability)
@@ -483,6 +485,39 @@ int count_relevant_monsters(const ability_def& abil)
             mprf("DEBUG: NO RELEVANT MONSTER FOR %d", abil.ability);
             break;
     }
+    return mtyp;
+}
+
+static std::string _zd_mons_description_for_ability (const ability_def &abil)
+{
+    switch (abil.ability)
+    {
+    case ABIL_MAKE_PLANT:
+        return ("Tendrils and shoots erupt from the earth and gnarl into the form of a plant.");
+    case ABIL_MAKE_OKLOB_SAPLING:
+        return ("A rhizome shoots up through the ground and merges with vitriolic spirits in the atmosphere.");
+    case ABIL_MAKE_OKLOB_PLANT:
+        return ("A rhizome shoots up through the ground and merges with vitriolic spirits in the atmosphere.");
+    case ABIL_MAKE_BURNING_BUSH:
+        return ("Blackened shoots writhe from the ground and burst into flame!");
+    case ABIL_MAKE_ICE_STATUE:
+        return ("Water vapor collects and crystallizes into an icy humanoid shape.");
+    case ABIL_MAKE_OCS:
+        return ("Quartz juts from the ground and forms a humanoid shape. You smell citrus.");
+    case ABIL_MAKE_SILVER_STATUE:
+        return ("Droplets of mercury fall from the ceiling and turn to silver, congealing into a humanoid shape.");
+    case ABIL_MAKE_CURSE_SKULL:
+        return ("You sculpt a terrible being from the primitive principle of evil.");
+    case ABIL_MAKE_ELECTRIC_EEL:
+        return ("You fashion an electric eel.");
+    default:
+        return ("");
+    }
+}
+
+int count_relevant_monsters(const ability_def& abil)
+{
+    monster_type mtyp = _monster_for_ability(abil);
     if (mtyp == MONS_PROGRAM_BUG)
         return 0;
     return count_monsters(mtyp, true);        /* Friendly ones only */
@@ -1640,7 +1675,6 @@ static bool _do_ability(const ability_def& abil)
     args.needs_path = false;
     args.may_target_monster = false;
 
-
     // Note: the costs will not be applied until after this switch
     // statement... it's assumed that only failures have returned! - bwr
     switch (abil.ability)
@@ -1664,113 +1698,47 @@ static bool _do_ability(const ability_def& abil)
             place_monster(mgen_data(MONS_FUNGUS, BEH_FRIENDLY, &you, 0, 0, *ai,
                           you.pet_target), true);
         }
-        break; // //
+        break;
 
+    /* Begin ZotDef allies */
     case ABIL_MAKE_PLANT:
-        if (!create_zotdef_ally(MONS_PLANT,
-              "Tendrils and shoots erupt from the earth and gnarl into the form of a plant."))
-            return false;
-        break; // //
-
     case ABIL_MAKE_OKLOB_SAPLING:
-        if (!create_zotdef_ally(MONS_OKLOB_SAPLING,
-            "A rhizome shoots up through the ground and merges with vitriolic spirits in the atmosphere."))
-            return false;
-        break; // //
-
     case ABIL_MAKE_OKLOB_PLANT:
-        if (!create_zotdef_ally(MONS_OKLOB_PLANT,
-            "A rhizome shoots up through the ground and merges with vitriolic spirits in the atmosphere."))
-            return false;
-        break; // //
-
     case ABIL_MAKE_BURNING_BUSH:
-        if (!create_zotdef_ally(MONS_BURNING_BUSH,
-            "Blackened shoots writhe from the ground and burst into flame!"))
-            return false;
-        break; // //
-
-    case ABIL_MAKE_DART_TRAP:
-        if (!create_trap(TRAP_DART)) return false;
-        break; // //
-
     case ABIL_MAKE_ICE_STATUE:
-        if (!create_zotdef_ally(MONS_ICE_STATUE,
-            "Water vapor collects and crystallizes into an icy humanoid shape."))
-            return false;
-        break; // //
-
     case ABIL_MAKE_OCS:
-        if (!create_zotdef_ally(MONS_ORANGE_STATUE,
-            "Quartz juts from the ground and forms a humanoid shape. You smell citrus."))
-            return false;
-        break; // //
-
     case ABIL_MAKE_SILVER_STATUE:
-        if (!create_zotdef_ally(MONS_SILVER_STATUE,
-            "Droplets of mercury fall from the ceiling and turn to silver, congealing into a humanoid shape."))
-            return false;
-        break; // //
-
     case ABIL_MAKE_CURSE_SKULL:
-        if (!create_zotdef_ally(MONS_CURSE_SKULL,
-            "You sculpt a terrible being from the primitive principle of evil."))
-            return false;
-        break; // //
+    case ABIL_MAKE_ELECTRIC_EEL:
+        if (!create_zotdef_ally(_monster_for_ability(abil), _zd_mons_description_for_ability(abil).c_str()))
+            return (false);
+        break;
+    /* End ZotDef Allies */
 
     case ABIL_MAKE_TELEPORT:
         you_teleport_now(true, true);
         break; // //
 
-    case ABIL_MAKE_ARROW_TRAP:
-        if (!create_trap(TRAP_ARROW))
-            return false;
-        break; // //
-
-    case ABIL_MAKE_BOLT_TRAP:
-        if (!create_trap(TRAP_BOLT))
-            return false;
-        break; // //
-
-    case ABIL_MAKE_SPEAR_TRAP:
-        if (!create_trap(TRAP_SPEAR))
-            return false;
-        break; // //
-
-    case ABIL_MAKE_AXE_TRAP:
-        if (!create_trap(TRAP_AXE))
-            return false;
-        break; // //
-
-    case ABIL_MAKE_NEEDLE_TRAP:
-        if (!create_trap(TRAP_NEEDLE))
-            return false;
-        break; // //
-
-    case ABIL_MAKE_NET_TRAP:
-        if (!create_trap(TRAP_NET))
-            return false;
-        break; // //
-
+    /* ZotDef traps */
     case ABIL_MAKE_TELEPORT_TRAP:
         if (you.pos().distance_from(orb_position()) < 10)
         {
             mpr("Radiation from the Orb interferes with the trap's magic!");
             return false;
         }
-        if (!create_trap(TRAP_TELEPORT))
-             return false;
-        break; // //
-
+    case ABIL_MAKE_DART_TRAP:
+    case ABIL_MAKE_ARROW_TRAP:
+    case ABIL_MAKE_BOLT_TRAP:
+    case ABIL_MAKE_SPEAR_TRAP:
+    case ABIL_MAKE_AXE_TRAP:
+    case ABIL_MAKE_NEEDLE_TRAP:
+    case ABIL_MAKE_NET_TRAP:
     case ABIL_MAKE_ALARM_TRAP:
-        if (!create_trap(TRAP_ALARM))
-            return false;
-        break; // //
-
     case ABIL_MAKE_BLADE_TRAP:
-        if (!create_trap(TRAP_BLADE))
+        if (!create_trap(trap_for_ability(abil)))
             return false;
-        break; // //
+        break;
+    /* End ZotDef traps */
 
     case ABIL_MAKE_OKLOB_CIRCLE:
         args.top_prompt = "Center oklob circle where?";
@@ -1799,12 +1767,6 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_MAKE_WATER:
         create_pond(you.pos(), 3, false); // //
         break;
-
-    case ABIL_MAKE_ELECTRIC_EEL:
-        if (!create_zotdef_ally(MONS_ELECTRIC_EEL,
-            "You make an electric eel."))
-            return false;
-        break; // //
 
     case ABIL_MAKE_BAZAAR:
     {
