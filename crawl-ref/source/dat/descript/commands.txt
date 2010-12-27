@@ -1,0 +1,125 @@
+%%%%
+CMD_REST
+
+Heal and search a bit
+%%%%
+CMD_REST verbose
+
+Spend up to 100 turns for regenerating health, recharging magic, and/or searching. Resting is interrupted as soon as a hostile monster comes into view.
+%%%%
+CMD_EXPLORE
+
+Autoexplore the current level
+%%%%
+CMD_EXPLORE verbose
+
+Lets your character travel on autopilot towards unexplored areas of the current level and collect items subject to autopickup on the way. Travel stops as soon as a hostile monster comes into view, and also to announce items or features found.
+%%%%
+CMD_INTERLEVEL_TRAVEL
+
+Travel to distant levels
+%%%%
+CMD_INTERLEVEL_TRAVEL verbose
+
+Autotravel to distant levels. Travel is interrupted by monsters coming into view.
+%%%%
+CMD_USE_ABILITY
+
+Use divine or innate abilities
+%%%%
+CMD_PRAY
+
+Pray to your god
+%%%%
+CMD_PRAY verbose
+
+If your god likes sacrifices, this will offer a corpse or other item. Also, if you're standing on an altar this allows you to join the corresponding god. For some gods, praying also has other special effects.
+%%%%
+CMD_SEARCH_STASHES
+
+Search for items/features
+%%%%
+CMD_SEARCH_STASHES verbose
+
+Search for items or features seen elsewhere, then travel there.
+%%%%
+CMD_REPLAY_MESSAGES
+
+Reread recent messages
+%%%%
+CMD_RESISTS_SCREEN
+
+Display character's overview
+%%%%
+CMD_RESISTS_SCREEN verbose
+
+Displays information about known resistances, abilities, equipment stats, etc.
+%%%%
+CMD_DISPLAY_OVERMAP
+
+Display dungeon overmap
+%%%%
+CMD_DISPLAY_OVERMAP verbose
+
+Displays location of branch entries, shops and other features you've encountered so far.
+%%%%
+CMD_DISPLAY_RELIGION
+
+Display religious status
+%%%%
+CMD_DISPLAY_RELIGION verbose
+
+Displays your god's likes and dislikes, conduct, and your current religious standing and divine abilities.
+%%%%
+CMD_DISPLAY_MUTATIONS
+
+Display mutations
+%%%%
+CMD_DISPLAY_SKILLS
+
+Manage skills
+%%%%
+CMD_DISPLAY_CHARACTER_STATUS
+
+Display character's status
+%%%%
+CMD_DISPLAY_CHARACTER_STATUS verbose
+
+Displays active enchantments and a few other things.
+%%%%
+CMD_DISPLAY_KNOWN_OBJECTS
+
+List discovered item types
+%%%%
+CMD_SAVE_GAME_NOW
+
+Save and exit
+%%%%
+CMD_SAVE_GAME_NOW verbose
+
+Saves the game for later and exits. Once you resume the game, the save file is deleted again.
+%%%%
+CMD_EDIT_PLAYER_TILE
+
+Modify the player tile
+%%%%
+CMD_EDIT_PLAYER_TILE verbose
+
+Modify equipment and species tile displayed in the player doll.
+%%%%
+CMD_DISPLAY_COMMANDS
+
+Game help
+%%%%
+CMD_DISPLAY_COMMANDS verbose
+
+List of commands, options, etc.
+%%%%
+CMD_CHARACTER_DUMP
+
+Dump character progress
+%%%%
+CMD_CHARACTER_DUMP verbose
+
+Dump a huge amount of information about your character into a file 'playername.txt' in the morgue directory, to peruse at your leasure. This includes main stats, equipment, spells, skills, notes, etc.
+%%%%
