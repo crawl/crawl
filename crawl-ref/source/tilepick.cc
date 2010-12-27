@@ -4151,6 +4151,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_DEMONIC_HORDE:            return TILEG_DEMONIC_HORDE;
     case SPELL_SUMMON_GREATER_DEMON:     return TILEG_SUMMON_GREATER_DEMON;
     case SPELL_SUMMON_HORRIBLE_THINGS:   return TILEG_SUMMON_HORRIBLE_THINGS;
+    case SPELL_MALIGN_GATEWAY:           return TILEG_MALIGN_GATEWAY;
 
     // Necromancy
     case SPELL_ANIMATE_SKELETON:         return TILEG_ANIMATE_SKELETON;

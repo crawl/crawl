@@ -141,6 +141,7 @@ abjuration ABJURATION
 call_canine_familiar CALL_CANINE_FAMILIAR
 call_imp CALL_IMP
 demonic_horde DEMONIC_HORDE
+malign_gateway MALIGN_GATEWAY
 recall RECALL
 sticks_to_snakes STICKS_TO_SNAKES
 summon_butterflies SUMMON_BUTTERFLIES
