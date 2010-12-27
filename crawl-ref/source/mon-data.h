@@ -307,6 +307,18 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY
 },
 
+{
+    MONS_RAVEN, 'b', BLUE, "raven",
+    M_SENSE_INVIS,
+    MR_NO_FLAGS,
+    250, 8, MONS_RAVEN, MONS_RAVEN, MH_NATURAL, -2,
+    { {AT_PECK, AF_PLAIN, 8}, {AT_CLAW, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK },
+    { 9, 5, 3, 0 },
+    1, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_CAW,
+    I_ANIMAL, HT_LAND, FL_FLY, 20, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_CORPSES, SIZE_MEDIUM
+},
+
 // centaurs ('c')
 {
     MONS_CENTAUR, 'c', BROWN, "centaur",

@@ -21,6 +21,7 @@ butterfly3
 butterfly4
 butterfly5
 butterfly6
+raven MONS_RAVEN
 
 ## Hounds and hogs ('h')
 jackal MONS_JACKAL

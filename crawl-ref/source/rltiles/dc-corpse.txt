@@ -22,6 +22,7 @@ queen_ant CORPSE_QUEEN_ANT
 butterfly CORPSE_BUTTERFLY
 %back dc-misc/blood_puddle_red dc-misc/blood_puddle_red1 dc-misc/blood_puddle_red2 dc-misc/blood_puddle_red3 dc-misc/blood_puddle_red4
 giant_bat CORPSE_GIANT_BAT
+raven CORPSE_RAVEN
 
 ## Hounds and hogs ('h')
 jackal CORPSE_JACKAL

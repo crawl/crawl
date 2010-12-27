@@ -3961,6 +3961,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         "growls",
         "hisses",
         "sneers",       // S_DEMON_TAUNT
+        "caws",
         "buggily says", // NUM_SHOUTS
         "breathes",     // S_VERY_SOFT
         "whispers",     // S_SOFT

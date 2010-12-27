@@ -224,6 +224,7 @@ enum shout_type
     S_GROWL,                // for bears
     S_HISS,                 // for snakes and lizards
     S_DEMON_TAUNT,          // for pandemonium lords
+    S_CAW,                  // for ravens
     NUM_SHOUTS,
 
     // Loudness setting for shouts that are only defined in dat/shout.txt
