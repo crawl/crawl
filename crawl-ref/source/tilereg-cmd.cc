@@ -84,9 +84,14 @@ bool CommandRegion::update_tip_text(std::string& tip)
         return (false);
 
     const command_type cmd = (command_type) m_items[item_idx].idx;
-    tip = make_stringf("[L-Click] %s (%%)",
+    tip = make_stringf("[L-Click] %s",
                        get_command_description(cmd, true).c_str());
-    insert_commands(tip, cmd);
+
+    if (command_to_key(cmd) != '\0')
+    {
+        tip += " (%)";
+        insert_commands(tip, cmd);
+    }
 
     // tip += "\n[R-Click] Describe";
 
@@ -178,6 +183,9 @@ static const command_type _common_commands[] =
 {
     // action commands
     CMD_REST, CMD_EXPLORE, CMD_INTERLEVEL_TRAVEL,
+#ifdef CLUA_BINDINGS
+    CMD_AUTOFIGHT,
+#endif
     CMD_USE_ABILITY, CMD_PRAY, CMD_SEARCH_STASHES,
 
     // informational commands

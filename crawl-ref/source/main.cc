@@ -1681,7 +1681,12 @@ void process_command(command_type cmd)
     case CMD_RUN_DOWN_RIGHT:_start_running(RDIR_DOWN_RIGHT, RMODE_START); break;
     case CMD_RUN_RIGHT:     _start_running(RDIR_RIGHT, RMODE_START);     break;
 
-    case CMD_REST: _do_rest(); break;
+#ifdef CLUA_BINDINGS
+    case CMD_AUTOFIGHT:
+        clua.callfn("hit_closest", 1, 1);
+        break;
+#endif
+    case CMD_REST:            _do_rest(); break;
 
     case CMD_GO_UPSTAIRS:     _go_upstairs();    break;
     case CMD_GO_DOWNSTAIRS:   _go_downstairs();  break;
