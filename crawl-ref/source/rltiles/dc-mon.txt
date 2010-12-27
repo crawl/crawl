@@ -63,6 +63,9 @@ quokka MONS_QUOKKA
 grey_rat MONS_GREY_RAT
 green_rat MONS_GREEN_RAT
 orange_rat MONS_ORANGE_RAT
+%rim 0
+porcupine MONS_PORCUPINE
+%rim 1
 
 ## Spiders and insects ('s')
 giant_centipede MONS_GIANT_CENTIPEDE
@@ -85,6 +88,9 @@ alligator_baby MONS_BABY_ALLIGATOR
 alligator MONS_ALLIGATOR
 snapping_turtle MONS_SNAPPING_TURTLE
 alligator_snapping_turtle MONS_ALLIGATOR_SNAPPING_TURTLE
+%rim 0
+firecrab MONS_FIRECRAB
+%rim 1
 
 ## Worms and larvae ('w')
 killer_bee_larva MONS_ANT_LARVA
