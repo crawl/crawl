@@ -4368,6 +4368,7 @@ actor *find_agent(mid_t m, kill_category kc)
         // currently hostile dead/gone monsters are no different from env
         return 0;
     case KC_NCATEGORIES:
+    default:
         ASSERT(false);
         return 0;
     }
