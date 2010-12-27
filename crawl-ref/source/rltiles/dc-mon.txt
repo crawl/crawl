@@ -829,7 +829,7 @@ lich_form_humanoid TRAN_LICH_HUMANOID
 lich_form_centaur TRAN_LICH_CENTAUR
 lich_form_naga TRAN_LICH_NAGA
 %syn TRAN_LICH_EQUIP_LAST
-dc-mon/undead/skeletons/skeleton_quadruped_small TRAN_LICH_FELID
+lich_form_felid TRAN_LICH_FELID
 
 %sdir dc-misc
 unseen_monster MONS_UNKNOWN
