@@ -386,9 +386,9 @@ tileidx_t tileidx_player()
         {
             switch (you.species)
             {
-            case SP_CENTAUR: ch = TILEP_TRAN_LICH_CENTAUR; break;
-            case SP_NAGA:    ch = TILEP_TRAN_LICH_NAGA; break;
-            case SP_CAT:     ch = TILEP_TRAN_LICH_FELID; break;
+            case SP_CENTAUR: ch = TILEP_TRAN_LICH_CENTAUR;  break;
+            case SP_NAGA:    ch = TILEP_TRAN_LICH_NAGA;     break;
+            case SP_CAT:     ch = TILEP_TRAN_LICH_FELID;    break;
             default:         ch = TILEP_TRAN_LICH_HUMANOID; break;
             }
             break;
