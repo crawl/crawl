@@ -121,7 +121,6 @@ bool SkillRegion::update_tip_text(std::string& tip)
         return (false);
 
     const int flag = m_items[item_idx].flag;
-    std::vector<command_type> cmd;
     if (flag & TILEI_FLAG_INVALID)
         tip = "You don't have this skill yet.";
     else

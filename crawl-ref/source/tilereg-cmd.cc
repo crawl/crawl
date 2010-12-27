@@ -14,6 +14,8 @@
 #include "enum.h"
 #include "libutil.h"
 #include "macro.h"
+#include "misc.h"
+#include "tiledef-dngn.h"
 #include "tiledef-icons.h"
 #include "tilepick.h"
 
@@ -77,14 +79,11 @@ bool CommandRegion::update_tip_text(std::string& tip)
     if (item_idx >= m_items.size() || m_items[item_idx].empty())
         return (false);
 
-    const int flag = m_items[item_idx].flag;
-    if (flag & TILEI_FLAG_INVALID)
-        tip = "This command is currently not available.";
-    else
-    {
-        // TODO: Map command -> action description.
-        tip = "[L-Click] Do this";
-    }
+    // TODO: Map command -> action description.
+    const command_type cmd = (command_type) m_items[item_idx].idx;
+    tip = make_stringf("[L-Click] %s (%%)",
+                       command_to_name(cmd).c_str());
+    insert_commands(tip, cmd);
 
     // tip += "\n[R-Click] Describe";
 
@@ -110,6 +109,8 @@ void CommandRegion::pack_buffers()
             if (i >= (int)m_items.size())
                 break;
 
+            m_buf.add_dngn_tile(TILE_ITEM_SLOT, x, y);
+
             InventoryTile &item = m_items[i++];
             if (item.flag & TILEI_FLAG_INVALID)
                 m_buf.add_icons_tile(TILEI_MESH, x, y);
@@ -123,16 +124,26 @@ void CommandRegion::pack_buffers()
     }
 }
 
-static bool _command_not_applicable(const command_type)
+static bool _command_not_applicable(const command_type cmd)
 {
-    return (false);
+    switch (cmd)
+    {
+    case CMD_REST:
+    case CMD_EXPLORE:
+    case CMD_INTERLEVEL_TRAVEL:
+        return (!i_feel_safe(false));
+    case CMD_DISPLAY_RELIGION:
+        return (you.religion == GOD_NO_GOD);
+    default:
+        return (false);
+    }
 }
 
 static const command_type _common_commands[] =
 {
     // action commands
-    CMD_REST, CMD_USE_ABILITY, CMD_PRAY,
-    CMD_EXPLORE, CMD_INTERLEVEL_TRAVEL, CMD_SEARCH_STASHES,
+    CMD_REST, CMD_EXPLORE, CMD_INTERLEVEL_TRAVEL,
+    CMD_USE_ABILITY, CMD_PRAY, CMD_SEARCH_STASHES,
 
     // informational commands
     CMD_REPLAY_MESSAGES, CMD_RESISTS_SCREEN, CMD_DISPLAY_OVERMAP,

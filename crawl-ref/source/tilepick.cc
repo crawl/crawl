@@ -4130,12 +4130,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_ISKENDERUNS_MYSTIC_BLAST: return TILEG_ISKENDERUNS_MYSTIC_BLAST;
     case SPELL_IOOD:                     return TILEG_IOOD;
 
-    // Divination (soon to be obsolete, or moved to abilities)
-    case SPELL_DETECT_SECRET_DOORS:      return TILEG_DETECT_SECRET_DOORS;
-    case SPELL_DETECT_TRAPS:             return TILEG_DETECT_TRAPS;
-    case SPELL_DETECT_ITEMS:             return TILEG_DETECT_ITEMS;
-    case SPELL_DETECT_CREATURES:         return TILEG_DETECT_CREATURES;
-
     // --------------------------------------------
     // Rods and abilities (tiles needed for later)
     // Abilities
@@ -4235,7 +4229,39 @@ tileidx_t tileidx_skill(skill_type skill, bool active)
 
 tileidx_t tileidx_command(const command_type cmd)
 {
-	return TILEG_TODO;
+    switch (cmd)
+    {
+    case CMD_REST:
+        return TILEG_CMD_REST;
+    case CMD_EXPLORE:
+        return TILEG_CMD_EXPLORE;
+    case CMD_INTERLEVEL_TRAVEL:
+        return TILEG_CMD_INTERLEVEL_TRAVEL;
+    case CMD_SEARCH_STASHES:
+        return TILEG_CMD_SEARCH_STASHES;
+    case CMD_REPLAY_MESSAGES:
+        return TILEG_CMD_REPLAY_MESSAGES;
+    case CMD_RESISTS_SCREEN:
+        return TILEG_CMD_RESISTS_SCREEN;
+    case CMD_DISPLAY_OVERMAP:
+        return TILEG_CMD_DISPLAY_OVERMAP;
+    case CMD_DISPLAY_RELIGION:
+        return TILEG_CMD_DISPLAY_RELIGION;
+    case CMD_DISPLAY_MUTATIONS:
+        return TILEG_CMD_DISPLAY_MUTATIONS;
+    case CMD_DISPLAY_SKILLS:
+        return TILEG_CMD_DISPLAY_SKILLS;
+    case CMD_DISPLAY_CHARACTER_STATUS:
+        return TILEG_CMD_DISPLAY_CHARACTER_STATUS;
+    case CMD_SAVE_GAME_NOW:
+        return TILEG_CMD_SAVE_GAME_NOW;
+    case CMD_EDIT_PLAYER_TILE:
+        return TILEG_CMD_EDIT_PLAYER_TILE;
+    case CMD_DISPLAY_COMMANDS:
+        return TILEG_CMD_DISPLAY_COMMANDS;
+    default:
+        return TILEG_TODO;
+    }
 }
 
 tileidx_t tileidx_known_brand(const item_def &item)
