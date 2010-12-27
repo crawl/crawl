@@ -65,6 +65,7 @@ quokka CORPSE_QUOKKA
 grey_rat CORPSE_GREY_RAT
 green_rat CORPSE_GREEN_RAT
 orange_rat CORPSE_ORANGE_RAT
+porcupine CORPSE_PORCUPINE
 
 ## Spiders and insects ('s')
 %back dc-misc/blood_green
@@ -89,6 +90,7 @@ alligator_baby CORPSE_BABY_ALLIGATOR
 alligator CORPSE_ALLIGATOR
 snapping_turtle CORPSE_SNAPPING_TURTLE
 alligator_snapping_turtle CORPSE_ALLIGATOR_SNAPPING_TURTLE
+firecrab CORPSE_FIRECRAB
 
 ## Worms ('w')
 %back dc-misc/blood_green
