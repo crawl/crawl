@@ -1962,6 +1962,7 @@ static tileidx_t _tileidx_tentacle(const monster *mon)
 
     const bool head_in_water =
                     (head.type == MONS_KRAKEN
+                     || head.type == MONS_ZOMBIE_LARGE
                      || _tentacle_pos_unknown(&head, mon->pos()));
 
     // Tentacle end only requires checking of head position.
