@@ -2340,6 +2340,9 @@ enum monster_type                      // (int) menv[].type
     MONS_LABORATORY_RAT,
     MONS_PORCUPINE,
 
+    // Another set of uniques and monsters!
+    MONS_RAVEN,
+
     // Testing monsters
     MONS_TEST_SPAWNER,
 
