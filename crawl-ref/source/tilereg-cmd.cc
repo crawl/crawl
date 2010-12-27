@@ -9,15 +9,19 @@
 
 #include "tilereg-cmd.h"
 
+#include "abl-show.h"
 #include "cio.h"
 #include "command.h"
 #include "enum.h"
+#include "env.h"
 #include "libutil.h"
 #include "macro.h"
 #include "misc.h"
+#include "terrain.h"
 #include "tiledef-dngn.h"
 #include "tiledef-icons.h"
 #include "tilepick.h"
+#include "viewgeom.h"
 
 CommandRegion::CommandRegion(const TileRegionInit &init) : GridRegion(init)
 {
@@ -41,7 +45,7 @@ void CommandRegion::draw_tag()
 
     const command_type cmd = (command_type) idx;
 
-    draw_desc(command_to_name(cmd).c_str());
+    draw_desc(get_command_description(cmd, true).c_str());
 }
 
 int CommandRegion::handle_mouse(MouseEvent &event)
@@ -79,10 +83,9 @@ bool CommandRegion::update_tip_text(std::string& tip)
     if (item_idx >= m_items.size() || m_items[item_idx].empty())
         return (false);
 
-    // TODO: Map command -> action description.
     const command_type cmd = (command_type) m_items[item_idx].idx;
     tip = make_stringf("[L-Click] %s (%%)",
-                       command_to_name(cmd).c_str());
+                       get_command_description(cmd, true).c_str());
     insert_commands(tip, cmd);
 
     // tip += "\n[R-Click] Describe";
@@ -90,10 +93,37 @@ bool CommandRegion::update_tip_text(std::string& tip)
     return (true);
 }
 
-// There are no command descriptions.
 bool CommandRegion::update_alt_text(std::string &alt)
 {
-    return (false);
+    if (m_cursor == NO_CURSOR)
+        return (false);
+
+    unsigned int item_idx = cursor_index();
+    if (item_idx >= m_items.size() || m_items[item_idx].empty())
+        return (false);
+
+    if (m_last_clicked_item >= 0
+        && item_idx == (unsigned int) m_last_clicked_item)
+    {
+        return (false);
+    }
+
+    int idx = m_items[item_idx].idx;
+
+    const command_type cmd = (command_type) idx;
+
+    const std::string desc = get_command_description(cmd, false);
+    if (desc.empty())
+        return (false);
+    
+    describe_info inf;
+    inf.body << desc;
+        
+    alt_desc_proc proc(crawl_view.msgsz.x, crawl_view.msgsz.y);
+    process_description<alt_desc_proc>(proc, inf);
+    proc.get_string(alt);
+
+    return (true);
 }
 
 void CommandRegion::pack_buffers()
@@ -134,6 +164,11 @@ static bool _command_not_applicable(const command_type cmd)
         return (!i_feel_safe(false));
     case CMD_DISPLAY_RELIGION:
         return (you.religion == GOD_NO_GOD);
+    case CMD_PRAY:
+        return (you.religion == GOD_NO_GOD 
+                && !feat_is_altar(grd(you.pos())));
+    case CMD_USE_ABILITY:
+        return (your_talents(false).empty());
     default:
         return (false);
     }

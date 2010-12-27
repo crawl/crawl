@@ -4589,6 +4589,20 @@ void describe_skill(skill_type skill)
     wait_for_keypress();
 }
 
+std::string get_command_description(const command_type cmd, bool terse)
+{
+    std::string lookup = command_to_name(cmd);
+
+    if (!terse)
+        lookup += " verbose";
+
+    const std::string result = getLongDescription(lookup);
+    if (terse && result.empty())
+        return command_to_name(cmd);
+
+    return result.substr(0, result.length() - 1);
+}
+
 void alt_desc_proc::nextline()
 {
     ostr << "\n";
