@@ -31,6 +31,7 @@ DungeonCellBuffer::DungeonCellBuffer(ImageManager *im) :
     m_buf_main(&im->m_textures[TEX_DEFAULT]),
     m_buf_spells(&im->m_textures[TEX_GUI]),
     m_buf_skills(&im->m_textures[TEX_GUI]),
+    m_buf_commands(&im->m_textures[TEX_GUI]),
     m_buf_icons(&im->m_textures[TEX_ICONS])
 {
 }
@@ -127,6 +128,11 @@ void DungeonCellBuffer::add_skill_tile(int tileidx, int x, int y)
     m_buf_skills.add(tileidx, x, y);
 }
 
+void DungeonCellBuffer::add_command_tile(int tileidx, int x, int y)
+{
+    m_buf_commands.add(tileidx, x, y);
+}
+
 void DungeonCellBuffer::add_icons_tile(int tileidx, int x, int y)
 {
     m_buf_icons.add(tileidx, x, y);
@@ -148,6 +154,7 @@ void DungeonCellBuffer::clear()
     m_buf_main.clear();
     m_buf_spells.clear();
     m_buf_skills.clear();
+    m_buf_commands.draw();
     m_buf_icons.clear();
 }
 
@@ -161,6 +168,7 @@ void DungeonCellBuffer::draw()
     m_buf_doll.draw();
     m_buf_skills.draw();
     m_buf_spells.draw();
+    m_buf_commands.draw();
     m_buf_icons.draw();
 }
 

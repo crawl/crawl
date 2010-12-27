@@ -24,6 +24,7 @@ class MemoriseRegion;
 class ActorRegion;
 class MonsterRegion;
 class SkillRegion;
+class CommandRegion;
 class ActorRegion;
 class TabbedRegion;
 class MapRegion;
@@ -159,6 +160,7 @@ protected:
         TAB_MEMORISE,
         TAB_MONSTER,
         TAB_SKILL,
+        TAB_COMMAND,
         TAB_MAX,
     };
 
@@ -190,6 +192,7 @@ protected:
     MemoriseRegion  *m_region_mem;
     MonsterRegion   *m_region_mon;
     SkillRegion     *m_region_skl;
+    CommandRegion   *m_region_cmd;
     TabbedRegion    *m_region_tab_spl;
     TabbedRegion    *m_region_tab_mon;
 

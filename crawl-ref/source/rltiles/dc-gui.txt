@@ -85,3 +85,16 @@ dc-misc/error ERROR
 %compose tab_selected
 %compose tab_label_skill
 %finish
+
+%start
+%compose tab_unselected
+%compose tab_label_command
+%finish TAB_COMMAND
+%start
+%compose tab_mouseover
+%compose tab_label_command
+%finish
+%start
+%compose tab_selected
+%compose tab_label_command
+%finish

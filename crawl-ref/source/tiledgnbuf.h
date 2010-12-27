@@ -49,6 +49,7 @@ public:
     void add_main_tile(int tileidx, int x, int y, int ox, int oy);
     void add_spell_tile(int tileidx, int x, int y);
     void add_skill_tile(int tileidx, int x, int y);
+    void add_command_tile(int tileidx, int x, int y);
     void add_icons_tile(int tileidx, int x, int y);
     void add_icons_tile(int tileidx, int x, int y, int ox, int oy);
 
@@ -73,6 +74,7 @@ protected:
     TileBuffer m_buf_main;
     TileBuffer m_buf_spells;
     TileBuffer m_buf_skills;
+    TileBuffer m_buf_commands;
     TileBuffer m_buf_icons;
 };
 

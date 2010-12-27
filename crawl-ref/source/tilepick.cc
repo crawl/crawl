@@ -4223,6 +4223,11 @@ tileidx_t tileidx_skill(skill_type skill, bool active)
     return ch;
 }
 
+tileidx_t tileidx_command(const command_type cmd)
+{
+	return TILEG_TODO;
+}
+
 tileidx_t tileidx_known_brand(const item_def &item)
 {
     if (!item_type_known(item))
