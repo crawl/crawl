@@ -41,6 +41,7 @@
 #include "tilereg-text.h"
 #include "tilereg-title.h"
 #include "tilesdl.h"
+#include "tileview.h"
 #include "travel.h"
 #include "view.h"
 #include "viewgeom.h"
@@ -912,6 +913,8 @@ bool TilesFramework::layout_statcol(bool message_overlay, bool show_gold_turns)
     int inv_col = std::max(m_region_tile->ex, m_region_msg->ex);
     if (message_overlay)
         inv_col = m_region_stat->sx;
+
+    tile_new_level(false, false);
 
     m_region_tab->place(inv_col, m_region_map->ey);
     m_region_tab->resize_to_fit(m_windowsz.x - m_region_tab->sx,
