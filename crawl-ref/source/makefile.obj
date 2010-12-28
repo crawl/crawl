@@ -185,6 +185,7 @@ spl-monench.o \
 spl-other.o \
 spl-selfench.o \
 spl-summoning.o \
+spl-tornado.o \
 spl-transloc.o \
 spl-util.o \
 spl-wpnench.o \
