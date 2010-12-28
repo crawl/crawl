@@ -572,7 +572,8 @@ function lugonu_item (data, triggerable, triggerer, marker, ev)
          / potion of gain intelligence q:2-3 / potion of gain strength q:2-3 / potion of gain dexterity q:2-3 \
          / potion of cure mutation q:2-3 / wand of draining w:7 / wand of polymorph other w:14 \
          / amulet of resist mutation",
-         ["No God"]="manual of Invocations / amulet of Faith"
+         Ashenzari="scroll of detect curse q:5-10 / scroll of remove curse q:5-10",
+         ["No God"]="manual of Invocations / amulet of Faith",
        }
          data.triggered = true
          if item[you.god()] == "no" then return else
