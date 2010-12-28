@@ -340,12 +340,13 @@ static void _unequip_artefact_effect(const item_def &item,
         you.attribute[ATTR_NOISES] = 0;
 
     if (proprt[ARTP_LEVITATE] != 0
-        && you.duration[DUR_LEVITATION] > 2
+        && you.duration[DUR_LEVITATION]
         && !you.attribute[ATTR_LEV_UNCANCELLABLE]
         && !you.permanent_levitation()
         && !player_evokable_levitation())
     {
-        you.duration[DUR_LEVITATION] = 1;
+        you.duration[DUR_LEVITATION] = 0;
+        land_player();
     }
 
     if (proprt[ARTP_INVISIBLE] != 0
@@ -1018,11 +1019,9 @@ static void _unequip_armour_effect(item_def& item, bool meld)
         break;
 
     case SPARM_LEVITATION:
-        if (you.duration[DUR_LEVITATION] && !you.attribute[ATTR_LEV_UNCANCELLABLE]
-            && !player_evokable_levitation())
-        {
-            you.duration[DUR_LEVITATION] = 1;
-        }
+        if (you.species != SP_KENKU || you.experience_level < 15)
+            you.attribute[ATTR_PERM_LEVITATION] = 0;
+        land_player();
         break;
 
     case SPARM_MAGIC_RESISTANCE:
@@ -1291,7 +1290,7 @@ static void _equip_jewellery_effect(item_def &item)
         break;
 
     case AMU_CONTROLLED_FLIGHT:
-        if (you.duration[DUR_LEVITATION]
+        if (you.is_levitating()
             && !extrinsic_amulet_effect(AMU_CONTROLLED_FLIGHT))
         {
             ident = ID_KNOWN_TYPE;
@@ -1464,7 +1463,8 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg)
             && !you.attribute[ATTR_LEV_UNCANCELLABLE]
             && !player_evokable_levitation())
         {
-            you.duration[DUR_LEVITATION] = 1;
+            you.duration[DUR_LEVITATION] = 0;
+            land_player();
         }
         break;
 

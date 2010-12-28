@@ -378,17 +378,7 @@ void cast_fly(int power)
     burden_change();
 
     if (!was_levitating)
-    {
-        if (you.fishtail)
-        {
-            mpr("Your tail turns into legs as you fly out of the water.");
-            merfolk_stop_swimming();
-        }
-        else if (you.light_flight())
-            mpr("You swoop lightly up into the air.");
-        else
-            mpr("You fly up into the air.");
-    }
+        float_player(true);
     else
         mpr("You feel more buoyant.");
 }

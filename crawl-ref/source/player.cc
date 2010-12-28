@@ -5042,28 +5042,27 @@ void dec_disease_player(int delay)
     }
 }
 
-void levitate_player(int pow)
+void float_player(bool fly)
 {
-    bool standing = !you.airborne();
-    mprf(MSGCH_DURATION,
-         "You feel %s buoyant.", standing ? "very" : "more");
-
-    if (standing)
+    if (you.fishtail)
     {
-        if (you.fishtail)
-        {
-            mpr("Your tail turns into legs as you levitate out of the water.");
-            merfolk_stop_swimming();
-        }
-        else
-            mpr("You gently float upwards from the floor.");
+        mprf("Your tail turns into legs as you %s out of the water.",
+             fly ? "fly" : "levitate");
+        merfolk_stop_swimming();
     }
+    else if (you.light_flight())
+        mpr("You swoop lightly up into the air.");
+    else if (fly)
+        mpr("You fly up into the air.");
+    else
+        mpr("You gently float upwards from the floor.");
 
     // Amulet of Controlled Flight can auto-ID.
-    if (!you.duration[DUR_LEVITATION]
-        && wearing_amulet(AMU_CONTROLLED_FLIGHT)
+    if (wearing_amulet(AMU_CONTROLLED_FLIGHT)
         && !extrinsic_amulet_effect(AMU_CONTROLLED_FLIGHT))
     {
+        // it's important to do this only if the amulet is not identified yet,
+        // or you'd get spammed
         item_def& amu(you.inv[you.equip[EQ_AMULET]]);
         if (!is_artefact(amu) && !item_type_known(amu))
         {
@@ -5074,9 +5073,35 @@ void levitate_player(int pow)
         }
     }
 
+    burden_change();
+}
+
+void levitate_player(int pow)
+{
+    bool standing = !you.airborne();
+    mprf(MSGCH_DURATION,
+         "You feel %s buoyant.", standing ? "very" : "more");
+
     you.increase_duration(DUR_LEVITATION, 25 + random2(pow), 100);
 
+    if (standing)
+        float_player(false);
+}
+
+bool land_player()
+{
+    // there was another source keeping you aloft
+    if (you.airborne())
+        return false;
+
+    mpr("You float gracefully downwards.");
     burden_change();
+    // Landing kills controlled flight.
+    you.duration[DUR_CONTROLLED_FLIGHT] = 0;
+    you.attribute[ATTR_LEV_UNCANCELLABLE] = 0;
+    // Re-enter the terrain.
+    move_player_to_grid(you.pos(), false, true);
+    return true;
 }
 
 int count_worn_ego(int which_ego)
@@ -5453,7 +5478,7 @@ player::~player()
 
 bool player::is_levitating() const
 {
-    return (duration[DUR_LEVITATION]);
+    return duration[DUR_LEVITATION] || you.attribute[ATTR_PERM_LEVITATION];
 }
 
 bool player::is_wall_clinging() const
@@ -6133,19 +6158,14 @@ flight_type player::flight_mode() const
 
 bool player::permanent_levitation() const
 {
-    // Boots of levitation keep you with DUR_LEVITATION >= 2 at
-    // all times. This is so that you can evoke stop-levitation
-    // in order to actually cancel levitation (by setting
-    // DUR_LEVITATION to 1.) Note that antimagic() won't do this.
-    return (airborne() && player_equip_ego_type(EQ_BOOTS, SPARM_LEVITATION)
-            && duration[DUR_LEVITATION] > 1);
+    return you.attribute[ATTR_PERM_LEVITATION]
+           && player_equip_ego_type(EQ_BOOTS, SPARM_LEVITATION);
 }
 
 bool player::permanent_flight() const
 {
-    return (airborne() && wearing_amulet(AMU_CONTROLLED_FLIGHT)
-            && species == SP_KENKU && experience_level >= 15
-            && duration[DUR_LEVITATION] > 1);
+    return you.attribute[ATTR_PERM_LEVITATION]
+           && species == SP_KENKU && experience_level >= 15;
 }
 
 bool player::light_flight() const
