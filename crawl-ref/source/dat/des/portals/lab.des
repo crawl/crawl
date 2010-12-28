@@ -294,6 +294,16 @@ MAP
 ENDMAP
 
 ############################################################################
+# Labyrinth furniture
+NAME:    lab_statue
+TAGS:    lab allow_dup
+MAP
+...
+.G.
+...
+ENDMAP
+
+############################################################################
 # Teaser: inaccessible loot
 NAME:  labyrinth_glass_1
 TAGS:  lab allow_dup
@@ -383,6 +393,18 @@ TAGS:   lab allow_dup generate_awake
 WEIGHT: 40
 KFEAT:  x = .
 KMONS:  x = hungry ghost
+MAP
+x
+ENDMAP
+
+############################################################################
+# The remains of a previous adventurer.
+# No items. Maybe the minotaur got them.
+NAME:   labyrinth_skeletal_remains
+TAGS:   lab allow_dup
+WEIGHT: 40
+KFEAT:  x = .
+: dgn.delayed_decay(_G, 'x', 'human skeleton / troll skeleton / centaur skeleton / ogre skeleton')
 MAP
 x
 ENDMAP
