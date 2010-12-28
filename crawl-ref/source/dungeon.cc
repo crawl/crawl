@@ -4855,22 +4855,18 @@ typedef std::set<coord_def, coord_comparator> coord_set;
 static void _jtd_init_surrounds(coord_set &coords, uint32_t mapmask,
                                 const coord_def &c)
 {
-    for (int yi = -1; yi <= 1; ++yi)
-        for (int xi = -1; xi <= 1; ++xi)
+    for (orth_adjacent_iterator ai(c); ai; ++ai)
+    {
+        if (!in_bounds(*ai) || travel_point_distance[ai->x][ai->y]
+            || map_masked(*ai, mapmask))
         {
-            if (!xi == !yi)
-                continue;
-
-            const coord_def cx(c.x + xi, c.y + yi);
-            if (!in_bounds(cx) || travel_point_distance[cx.x][cx.y]
-                || map_masked(cx, mapmask))
-            {
-                continue;
-            }
-            coords.insert(cx);
-
-            travel_point_distance[cx.x][cx.y] = (-xi + 2) * 4 + (-yi + 2);
+            continue;
         }
+        coords.insert(*ai);
+
+        const coord_def dp = *ai - c;
+        travel_point_distance[ai->x][ai->y] = (-dp.x + 2) * 4 + (-dp.y + 2);
+    }
 }
 
 static bool _join_the_dots_pathfind(coord_set &coords,
