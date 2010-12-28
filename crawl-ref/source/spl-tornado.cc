@@ -162,8 +162,7 @@ void cancel_tornado()
         return;
 
     dprf("Aborting tornado.");
-    if (you.duration[DUR_TORNADO] == you.duration[DUR_LEVITATION]
-        && !you.permanent_levitation() && !you.permanent_flight())
+    if (you.duration[DUR_TORNADO] == you.duration[DUR_LEVITATION])
     {
         you.duration[DUR_LEVITATION] = 0;
         you.duration[DUR_CONTROLLED_FLIGHT] = 0;
