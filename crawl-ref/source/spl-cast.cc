@@ -1896,6 +1896,12 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_FLY:
+        if (liquefied(you.pos()) && !you.airborne() && !you.clinging)
+        {
+            mprf(MSGCH_WARN, "Such puny magic can't pull you from the ground!");
+            return (SPRET_ABORT);
+        }
+
         cast_fly(powc);
         break;
 
