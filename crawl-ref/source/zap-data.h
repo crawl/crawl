@@ -395,7 +395,7 @@
     "sticky flame",
     100,
     new dicedef_calculator<2, 3, 1, 12>,
-    new tohit_calculator<11, 1, 10>,
+    new tohit_calculator<AUTOMATIC_HIT>,
     RED,
     false,
     BEAM_FIRE,

@@ -622,7 +622,7 @@ void tome_of_power(int slot)
              (temp_rand >  9) ? SPELL_VENOM_BOLT :
              (temp_rand >  8) ? SPELL_BOLT_OF_DRAINING :
              (temp_rand >  7) ? SPELL_BOLT_OF_INACCURACY :
-             (temp_rand >  6) ? SPELL_STICKY_FLAME :
+             (temp_rand >  6) ? SPELL_STICKY_FLAME_RANGE :
              (temp_rand >  5) ? SPELL_TELEPORT_SELF :
              (temp_rand >  4) ? SPELL_CIGOTUVIS_DEGENERATION :
              (temp_rand >  3) ? SPELL_POLYMORPH_OTHER :
