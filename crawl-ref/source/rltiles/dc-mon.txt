@@ -441,6 +441,7 @@ cherub MONS_CHERUB
 %sdir dc-mon/unique
 polyphemus MONS_POLYPHEMUS
 chuck MONS_CHUCK
+iron_giant MONS_IRON_GIANT
 antaeus MONS_ANTAEUS
 %sdir dc-mon
 hill_giant MONS_HILL_GIANT
