@@ -1040,6 +1040,8 @@ int spell_range(spell_type spell, int pow, bool real_cast, bool player_spell)
     if (player_spell
         && vehumet_supports_spell(spell)
         && you.religion == GOD_VEHUMET
+        && spell != SPELL_STICKY_FLAME
+        && spell != SPELL_FREEZE
         && !player_under_penance()
         && you.piety >= piety_breakpoint(2))
     {
