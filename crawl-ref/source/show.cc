@@ -134,6 +134,9 @@ static void _update_feat_at(const coord_def &gp)
     if (silenced(gp))
         env.map_knowledge(gp).flags |= MAP_SILENCED;
 
+    if (liquefied(gp, false))
+        env.map_knowledge(gp).flags |= MAP_LIQUEFIED;
+
     if (is_sanctuary(gp))
     {
         if (testbits(env.pgrid(gp), FPROP_SANCTUARY_1))

@@ -1046,6 +1046,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_GREATER_HOLY:
     case SPELL_REGENERATION:
     case SPELL_CORPSE_ROT:
+    case SPELL_LEDAS_LIQUEFACTION:
         return (true);
     default:
         if (check_validity)
@@ -2297,7 +2298,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     if (spell_cast == SPELL_CANTRIP
         || spell_cast == SPELL_VAMPIRIC_DRAINING
         || spell_cast == SPELL_MIRROR_DAMAGE
-        || spell_cast == SPELL_DRAIN_LIFE)
+        || spell_cast == SPELL_DRAIN_LIFE
+        || spell_cast == SPELL_LEDAS_LIQUEFACTION)
     {
         do_noise = false;       // Spell itself does the messaging.
     }
@@ -2907,6 +2909,18 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_DRAIN_LIFE:
         _mons_drain_life(mons);
+        return;
+
+    case SPELL_LEDAS_LIQUEFACTION:
+        if (!mons->has_ench(ENCH_LIQUEFYING))
+        {
+            mprf("%s liquefies the ground around %s!", mons->name(DESC_CAP_THE).c_str(),
+                mons->pronoun(PRONOUN_REFLEXIVE).c_str());
+            flash_view_delay(BROWN, 80);
+        }
+
+        mons->add_ench(ENCH_LIQUEFYING);
+        invalidate_agrid(true);
         return;
 
     case SPELL_CORPSE_ROT:

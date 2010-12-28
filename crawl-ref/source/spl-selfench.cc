@@ -24,6 +24,7 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "transform.h"
+#include "view.h"
 
 int allowed_deaths_door_hp(void)
 {
@@ -158,26 +159,6 @@ void extension(int pow)
 
     if (you.duration[DUR_SLOW] && _know_spell(SPELL_SLOW)) // heh heh
         potion_effect(POT_SLOWING, pow);
-
-/*  Removed.
-    if (you.duration[DUR_MIGHT])
-    {
-        potion_effect(POT_MIGHT, pow);
-        contamination++;
-    }
-
-    if (you.duration[DUR_BRILLIANCE])
-    {
-        potion_effect(POT_BRILLIANCE, pow);
-        contamination++;
-    }
-
-    if (you.duration[DUR_AGILITY])
-    {
-        potion_effect(POT_AGILITY, pow);
-        contamination++;
-    }
-*/
 
     if (you.duration[DUR_LEVITATION] && !you.duration[DUR_CONTROLLED_FLIGHT]
         && _know_spell(SPELL_LEVITATION))
@@ -518,4 +499,16 @@ void cast_silence(int pow)
         you.update_beholders();
 
     learned_something_new(HINT_YOU_SILENCE);
+}
+
+void cast_liquefaction(int pow)
+{
+    flash_view_delay(BROWN, 80);
+    flash_view_delay(YELLOW, 80);
+    flash_view_delay(BROWN, 140);
+
+    mpr("The ground around you becomes liquefied!");
+
+    you.increase_duration(DUR_LIQUEFYING, 10 + random2avg(pow, 2), 100);
+    invalidate_agrid(true);
 }

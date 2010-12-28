@@ -2,6 +2,7 @@
 
 #include "status.h"
 
+#include "areas.h"
 #include "misc.h"
 #include "mutation.h"
 #include "player.h"
@@ -117,6 +118,9 @@ static duration_def duration_data[] =
     { DUR_TORNADO, true,
       LIGHTGREY, "Tornado", "tornado",
       "You are in the eye of a mighty hurricane." },
+    { DUR_LIQUEFYING, false,
+      YELLOW, "Liquid", "liquefying",
+      "The ground has become liquefied beneath your feet." },
 };
 
 static int duration_index[NUM_DURATIONS];
@@ -578,6 +582,13 @@ static void _describe_speed(status_info* inf)
         inf->short_text = "hasted";
         inf->long_text = "Your actions are hasted.";
         _mark_expiring(inf, dur_expiring(DUR_HASTE));
+    }
+    if (liquefied(you.pos()) && !you.airborne() && !you.clinging)
+    {
+        inf->light_colour = BROWN;
+        inf->light_text   = "Slow";
+        inf->short_text   = "slowed movement";
+        inf->long_text    = "Your movement is slowed in this liquid ground.";
     }
 }
 

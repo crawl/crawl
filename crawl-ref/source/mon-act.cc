@@ -1880,6 +1880,18 @@ void handle_monster_move(monster* mons)
     mons->hit_points = std::min(mons->max_hit_points,
                                    mons->hit_points);
 
+    // This seems to need to go here to actually get monsters to slow down.
+    // XXX: Replace with a new ENCH_LIQUEFIED_GROUND or something.
+    if (liquefied(mons->pos()) && !mons->airborne() && !mons->is_insubstantial())
+    {
+        mon_enchant me = mon_enchant(ENCH_SLOW, 0, KC_OTHER, 20);
+        if (mons->has_ench(ENCH_SLOW))
+            mons->update_ench(me);
+        else
+            mons->add_ench(me);
+        mons->calc_speed();
+    }
+
     fedhas_neutralise(mons);
 
     // Monster just summoned (or just took stairs), skip this action.

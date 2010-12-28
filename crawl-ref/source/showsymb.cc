@@ -99,6 +99,8 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell, bool colored)
         }
         else if (cell.flags & MAP_SILENCED)
             colour = CYAN;
+        else if (cell.flags & MAP_LIQUEFIED)
+            colour = ETC_LIQUEFIED;
     }
     return (colour);
 }

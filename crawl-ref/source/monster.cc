@@ -3968,6 +3968,12 @@ bool monster::add_ench(const mon_enchant &ench)
         return (false);
     }
 
+    if (ench.ench == ENCH_LEVITATION && has_ench(ENCH_LIQUEFYING))
+    {
+        del_ench(ENCH_LIQUEFYING);
+        invalidate_agrid();
+    }
+
     mon_enchant_list::iterator i = enchantments.find(ench.ench);
     bool new_enchantment = false;
     mon_enchant *added = NULL;
@@ -4107,6 +4113,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
             learned_something_new(HINT_MONSTER_FRIENDLY, pos());
         break;
 
+    case ENCH_LIQUEFYING:
     case ENCH_SILENCE:
         invalidate_agrid(true);
         break;
@@ -4271,7 +4278,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_SLOW:
-        if (!quiet)
+        if (!quiet && !(liquefied(pos()) && !airborne() && !is_insubstantial()))
             simple_monster_message(this, " is no longer moving slowly.");
         calc_speed();
         break;
@@ -4517,6 +4524,13 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " emerges from its shell.");
         break;
 
+    case ENCH_LIQUEFYING:
+        invalidate_agrid();
+
+        if (!quiet)
+            simple_monster_message(this, " is no longer liquefying the ground.");
+        break;
+
     case ENCH_LEVITATION:
         apply_location_effects(pos(), me.killer(), me.kill_agent());
         break;
@@ -4620,7 +4634,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_LOWERED_MR: case ENCH_SOUL_RIPE: case ENCH_BLEED:
         case ENCH_ANTIMAGIC: case ENCH_FEAR_INSPIRING:
         case ENCH_REGENERATION: case ENCH_RAISED_MR: case ENCH_MIRROR_DAMAGE:
-        case ENCH_STONESKIN:
+        case ENCH_STONESKIN: case ENCH_LIQUEFYING:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -4806,6 +4820,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_FEAR_INSPIRING:
     case ENCH_LIFE_TIMER:
     case ENCH_LEVITATION:
+    case ENCH_LIQUEFYING:
         decay_enchantment(me);
         break;
 
@@ -5499,12 +5514,19 @@ void monster::calc_speed()
 {
     speed = mons_real_base_speed(type);
 
-    if (has_ench(ENCH_BERSERK) || has_ench(ENCH_INSANE))
+    bool is_liquefied = (liquefied(pos()) && !airborne() && !is_insubstantial());
+
+    // Going berserk on liquid ground doesn't speed you up any.
+    if (!is_liquefied && (has_ench(ENCH_BERSERK) || has_ench(ENCH_INSANE)))
         speed *= 2;
     else if (has_ench(ENCH_HASTE))
         speed = haste_mul(speed);
-    if (has_ench(ENCH_SLOW))
+    if (has_ench(ENCH_SLOW) || (is_liquefied && !has_ench(ENCH_LIQUEFYING)))
         speed = haste_div(speed);
+    // If the monster cast it, it has more control and is there not
+    // as slow as when the player casts it.
+    else if (is_liquefied && has_ench(ENCH_LIQUEFYING))
+        speed -= 2;
 }
 
 // Check speed and speed_increment sanity.
@@ -6357,7 +6379,7 @@ static const char *enchant_names[] =
     "tethered", "severed", "antimagic", "fading_away", "preparing_resurrect", "regen",
     "magic_res", "mirror_dam", "stoneskin", "fear inspiring", "temporarily pacified",
     "withdrawn", "attached", "guardian_timer", "levitation", "helpless",
-    "buggy",
+    "liquefying", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -6471,6 +6493,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_STONESKIN:
         cturn = 1000 / _mod_speed(25, mons->speed);
         break;
+    case ENCH_LIQUEFYING:
     case ENCH_SILENCE:
     case ENCH_REGENERATION:
     case ENCH_RAISED_MR:
