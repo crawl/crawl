@@ -6189,7 +6189,7 @@ static bool _grid_has_wall_neighbours(const coord_def& pos,
     return (false);
 }
 
-static void _vitrify_wall_neighbours(const coord_def& pos)
+static void _vitrify_wall_neighbours(const coord_def& pos, bool first)
 {
     // This hinges on clear wall types having the same order as non-clear ones!
     const int clear_plus = DNGN_CLEAR_ROCK_WALL - DNGN_ROCK_WALL;
@@ -6210,12 +6210,14 @@ static void _vitrify_wall_neighbours(const coord_def& pos)
 #ifdef WIZARD
             env.pgrid(p) |= FPROP_HIGHLIGHT;
 #endif
-            // Always continue vitrification if there are neighbours
-            // other than the one continuing in the same direction.
-            if (one_chance_in(3)
+            // Always continue vitrification if there are adjacent
+            // walls other than continuing in the same direction.
+            // Otherwise, there's still a 40% chance of continuing.
+            // Also, always do more than one iteration.
+            if (first || x_chance_in_y(2,5)
                 || _grid_has_wall_neighbours(p, p + (p - pos)))
             {
-                _vitrify_wall_neighbours(p);
+                _vitrify_wall_neighbours(p, false);
             }
         }
     }
@@ -6224,9 +6226,10 @@ static void _vitrify_wall_neighbours(const coord_def& pos)
 // Turns some connected rock or stone walls into the transparent versions.
 static void _labyrinth_add_glass_walls(const dgn_region &region)
 {
-    int glass_num = random2(3) + random2(4);
-    if (!glass_num)
-        return;
+    int glass_num = 2 + random2(6);
+
+    if (one_chance_in(3)) // Potentially lots of glass.
+        glass_num += random2(7);
 
     // This hinges on clear wall types having the same order as non-clear ones!
     const int clear_plus = DNGN_CLEAR_ROCK_WALL - DNGN_ROCK_WALL;
@@ -6244,7 +6247,7 @@ static void _labyrinth_add_glass_walls(const dgn_region &region)
 #ifdef WIZARD
         env.pgrid(pos) |= FPROP_HIGHLIGHT;
 #endif
-        _vitrify_wall_neighbours(pos);
+        _vitrify_wall_neighbours(pos, true);
     }
 }
 
