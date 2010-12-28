@@ -2051,10 +2051,14 @@ static bool _do_ability(const ability_def& abil)
 
     // Fly (kenku) - eventually becomes permanent (see main.cc).
     case ABIL_FLY:
-        cast_fly(you.experience_level * 4);
-
-        if (you.experience_level > 14)
+        if (you.experience_level < 15)
+            cast_fly(you.experience_level * 4);
+        else
+        {
+            you.attribute[ATTR_PERM_LEVITATION] = 1;
+            float_player(true);
             mpr("You feel very comfortable in the air.");
+        }
         break;
 
     // Fly (Draconians, or anything else with wings).
@@ -2095,18 +2099,31 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_EVOKE_LEVITATE:           // ring, boots, randarts
-        levitate_player(2 * you.skills[SK_EVOCATIONS] + 30);
+        if (player_equip_ego_type(EQ_BOOTS, SPARM_LEVITATION))
+        {
+            bool standing = !you.airborne();
+            you.attribute[ATTR_PERM_LEVITATION] = 1;
+            if (standing)
+                float_player(false);
+            else
+                mpr("You feel more buoyant.");
+        }
+        else
+            levitate_player(2 * you.skills[SK_EVOCATIONS] + 30);
         break;
 
     case ABIL_EVOKE_STOP_LEVITATING:
         ASSERT(!you.attribute[ATTR_LEV_UNCANCELLABLE]);
-        mpr("You feel heavy.");
-        you.duration[DUR_LEVITATION] = 1;
+        you.duration[DUR_LEVITATION] = 0;
+        // cancels all sources at once: boots + kenku
+        you.attribute[ATTR_PERM_LEVITATION] = 0;
+        land_player();
         break;
 
     case ABIL_STOP_FLYING:
-        mpr("You feel heavy.");
-        you.duration[DUR_LEVITATION] = 1;
+        you.duration[DUR_LEVITATION] = 0;
+        you.attribute[ATTR_PERM_LEVITATION] = 0;
+        land_player();
         break;
 
     case ABIL_END_TRANSFORMATION:
@@ -2985,21 +3002,25 @@ std::vector<talent> your_talents(bool check_confused)
     if (you.species == SP_VAMPIRE && you.experience_level >= 6)
         _add_talent(talents, ABIL_BOTTLE_BLOOD, false);
 
-    if (!you.airborne() && !form_changed_physiology())
+    if (you.species == SP_KENKU
+        && !you.attribute[ATTR_PERM_LEVITATION]
+        && you.experience_level >= 5
+        && (you.experience_level >= 15 || !you.airborne())
+        && !form_changed_physiology())
     {
         // Kenku can fly, but only from the ground
         // (until level 15, when it becomes permanent until revoked).
         // jmf: "upgrade" for draconians -- expensive flight
-        if (you.species == SP_KENKU && you.experience_level >= 5)
-            _add_talent(talents, ABIL_FLY, check_confused);
-        else if (player_genus(GENPC_DRACONIAN)
-                 && player_mutation_level(MUT_BIG_WINGS))
-        {
-            _add_talent(talents, ABIL_FLY_II, check_confused);
-        }
+        _add_talent(talents, ABIL_FLY, check_confused);
+    }
+    else if (player_mutation_level(MUT_BIG_WINGS) && !you.airborne()
+             && !form_changed_physiology())
+    {
+        ASSERT(player_genus(GENPC_DRACONIAN));
+        _add_talent(talents, ABIL_FLY_II, check_confused);
     }
 
-    if (you.airborne() && !form_changed_physiology()
+    if (you.attribute[ATTR_PERM_LEVITATION] && !form_changed_physiology()
         && you.species == SP_KENKU && you.experience_level >= 5)
     {
         _add_talent(talents, ABIL_STOP_FLYING, check_confused);
@@ -3119,19 +3140,24 @@ std::vector<talent> your_talents(bool check_confused)
             _add_talent(talents, ABIL_EVOKE_TURN_INVISIBLE, check_confused);
     }
 
-    // Note: This ability only applies to this counter.
     if (player_evokable_levitation())
     {
         // Has no effect on permanently flying Kenku.
-        if (!you.permanent_flight() && !you.attribute[ATTR_LEV_UNCANCELLABLE])
+        if (!you.permanent_flight())
         {
+            // You can still evoke perm levitation if you have temporary one.
+            if (!you.is_levitating()
+                || !you.attribute[ATTR_PERM_LEVITATION]
+                   && player_equip_ego_type(EQ_BOOTS, SPARM_LEVITATION))
+            {
+                _add_talent(talents, ABIL_EVOKE_LEVITATE, check_confused);
+            }
             // Now you can only turn levitation off if you have an
             // activatable item.  Potions and miscast effects will
             // have to time out (this makes the miscast effect actually
             // a bit annoying). -- bwr
-            _add_talent(talents, you.duration[DUR_LEVITATION] ?
-                        ABIL_EVOKE_STOP_LEVITATING : ABIL_EVOKE_LEVITATE,
-                        check_confused);
+            if (you.is_levitating() && !you.attribute[ATTR_LEV_UNCANCELLABLE])
+                _add_talent(talents, ABIL_EVOKE_STOP_LEVITATING, check_confused);
         }
     }
 

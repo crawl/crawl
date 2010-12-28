@@ -2457,34 +2457,18 @@ static void _decrement_durations()
         if (!you.permanent_levitation() && !you.permanent_flight())
         {
             if (_decrement_a_duration(DUR_LEVITATION, delay,
-                                      "You float gracefully downwards.",
+                                      0,
                                       random2(6),
                                       "You are starting to lose your buoyancy!"))
             {
-                burden_change();
-                // Landing kills controlled flight.
-                you.duration[DUR_CONTROLLED_FLIGHT] = 0;
-                you.attribute[ATTR_LEV_UNCANCELLABLE] = 0;
-                // Re-enter the terrain.
-                move_player_to_grid(you.pos(), false, true);
+                land_player();
             }
         }
-        else
+        else if ((you.duration[DUR_LEVITATION] -= delay) <= 0)
         {
             // Just time out potions/spells/miscasts.
-            if (you.attribute[ATTR_LEV_UNCANCELLABLE]
-                && (you.duration[DUR_LEVITATION] -= delay) <= 0)
-            {
-                you.attribute[ATTR_LEV_UNCANCELLABLE] = 0;
-            }
-
-            if (!you.attribute[ATTR_LEV_UNCANCELLABLE])
-            {
-                // With permanent levitation, keep the duration above
-                // the expiration threshold.
-                you.duration[DUR_LEVITATION]
-                    = 2 * get_expiration_threshold(DUR_LEVITATION);
-            }
+            you.attribute[ATTR_LEV_UNCANCELLABLE] = 0;
+            you.duration[DUR_LEVITATION] = 0;
         }
     }
 

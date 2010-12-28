@@ -1210,10 +1210,8 @@ bool spell_is_useless(spell_type spell, bool transient)
     case SPELL_LEVITATION:
     case SPELL_FLY:
         if (you.species == SP_KENKU && you.experience_level >= 15)
-        {
             return (true);
-        }
-        if (transient && you.duration[DUR_LEVITATION] > 0)
+        if (transient && you.is_levitating())
             return (true);
         break;
     case SPELL_REGENERATION:
