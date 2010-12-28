@@ -6171,7 +6171,8 @@ static bool _find_random_nonmetal_wall(const dgn_region &region,
     return (false);
 }
 
-static bool _grid_has_wall_neighbours(const coord_def& pos, const coord_def& origin)
+static bool _grid_has_wall_neighbours(const coord_def& pos,
+                                      const coord_def& next_samedir)
 {
     for (orth_adjacent_iterator ni(pos); ni; ++ni)
     {
@@ -6179,7 +6180,7 @@ static bool _grid_has_wall_neighbours(const coord_def& pos, const coord_def& ori
         if (!in_bounds(p))
             continue;
 
-        if (p == origin)
+        if (p == next_samedir)
             continue;
 
         if (grd(p) == DNGN_ROCK_WALL || grd(p) == DNGN_STONE_WALL)
@@ -6209,8 +6210,13 @@ static void _vitrify_wall_neighbours(const coord_def& pos)
 #ifdef WIZARD
             env.pgrid(p) |= FPROP_HIGHLIGHT;
 #endif
-            if (one_chance_in(3) && _grid_has_wall_neighbours(p, pos))
+            // Always continue vitrification if there are neighbours
+            // other than the one continuing in the same direction.
+            if (one_chance_in(3)
+                || _grid_has_wall_neighbours(p, p + (p - pos)))
+            {
                 _vitrify_wall_neighbours(p);
+            }
         }
     }
 }
