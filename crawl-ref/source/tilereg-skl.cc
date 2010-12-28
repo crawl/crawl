@@ -212,7 +212,7 @@ void SkillRegion::pack_buffers()
                 m_buf.add_icons_tile(TILEI_MESH, x, y);
 
             if (item.quantity > 0)
-                draw_number(x, y, item.quantity);
+                draw_number(x, y, item.quantity, true);
 
             const int apt = species_apt(skill, you.species);
             m_buf.add_icons_tile(_get_aptitude_tile(apt), x, y);
