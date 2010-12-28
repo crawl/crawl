@@ -2848,21 +2848,19 @@ static void _builder_extras(int level_number)
     else if (level_number > 8 && one_chance_in(12))
     {
         _build_lake((river_type != DNGN_SHALLOW_WATER) ? river_type
-                                                        : DNGN_DEEP_WATER);
+                                                       : DNGN_DEEP_WATER);
     }
 }
 
-// Used to nuke shafts placed in corridors on low levels - it's just too
-// nasty otherwise.
+// Used to nuke shafts placed in corridors on low levels - it's just
+// too nasty otherwise.
+// Well, actually this just checks if it's next to a non-passable 
+// square. (jpeg)
 static bool _shaft_is_in_corridor(const coord_def& c)
 {
-    const coord_def adjs[] = { coord_def(-1,0), coord_def(1,0),
-                               coord_def(0,-1), coord_def(0,1) };
-
-    for (unsigned int i = 0; i < ARRAYSZ(adjs); ++i)
+    for (orth_adjacent_iterator ai(c); ai; ++ai)
     {
-        const coord_def spot = c + adjs[i];
-        if (!in_bounds(spot) || grd(spot) < DNGN_SHALLOW_WATER)
+        if (!in_bounds(*ai) || grd(*ai) < DNGN_MOVEMENT_MIN)
             return (true);
     }
     return (false);
