@@ -314,6 +314,35 @@ x.x.x.x.x..
 .x.x.x.x.xc
 ENDMAP
 
+NAME:   enter_wizlab_7
+TAGS:   uniq_wizlab no_item_gen no_monster_gen chance_wizlab
+CHANCE: 5%
+ORIENT: float
+KFEAT:  abcd : floor
+KFEAT:  ABCD : rock_wall
+COLOUR: Aa : yellow
+COLOUR: Bb : green
+COLOUR: Cc : blue
+COLOUR: Dd : magenta
+: wizlab_portal(_G)
+MAP
+xxxxxxxxxxxxx
+x...........@
+x.xxxxxxxxxxx
+xaAbbbbbbbbax
+xaAcBBBBBBAax
+xaAcCddddcAax
+xaAcCdDDCcAax
+xaAcCdOdCcAax
+xaAcCDDdCcAax
+xaAcddddCcAax
+xaABBBBBBcAax
+xabbbbbbbbAax
+xxxxxxxxxxx.x
+@...........x
+xxxxxxxxxxxxx
+ENDMAP
+
 #
 #
 ###############################################################################
