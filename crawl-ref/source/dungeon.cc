@@ -1815,7 +1815,7 @@ static void _dgn_verify_connectivity(unsigned nvaults)
 
     if (!_add_connecting_escape_hatches())
     {
-        throw dgn_veto_exception("Failed to get connecting escape hatches.");
+        throw dgn_veto_exception("Failed to add connecting escape hatches.");
     }
 
     // XXX: Interlevel connectivity fixup relies on being the last
