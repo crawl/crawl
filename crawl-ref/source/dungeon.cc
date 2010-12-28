@@ -1363,6 +1363,9 @@ static void _fixup_walls()
 
     dungeon_feature_type wall_type = DNGN_ROCK_WALL;
 
+    if (you.level_type != LEVEL_DUNGEON)
+        return;
+
     switch (you.where_are_you)
     {
     case BRANCH_DIS:
