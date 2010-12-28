@@ -652,6 +652,7 @@ bool vehumet_supports_spell(spell_type spell)
         || spell == SPELL_SANDBLAST
         || spell == SPELL_AIRSTRIKE
         || spell == SPELL_TORNADO
+        || spell == SPELL_FREEZE
         || spell == SPELL_IGNITE_POISON
         || spell == SPELL_OZOCUBUS_REFRIGERATION)
         // Toxic Radiance does no direct damage
