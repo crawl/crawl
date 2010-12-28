@@ -1387,6 +1387,17 @@ int get_cloud_colour(int cloudno)
     return (which_colour);
 }
 
+coord_def get_cloud_originator(const coord_def& pos)
+{
+    int cl;
+    if (!in_bounds(pos) || (cl = env.cgrid(pos)) == EMPTY_CLOUD)
+        return coord_def();
+    const actor *agent = actor_by_mid(env.cloud[cl].source);
+    if (!agent)
+        return coord_def();
+    return agent->pos();
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Fog machine stuff
 

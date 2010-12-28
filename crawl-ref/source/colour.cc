@@ -3,6 +3,7 @@
 #include "colour.h"
 
 #include "areas.h"
+#include "cloud.h"
 #include "dgn-height.h"
 #include "env.h"
 #include "libutil.h"
@@ -209,11 +210,18 @@ static int _etc_tree(int, const coord_def& loc)
 
 static int _etc_tornado(int, const coord_def& loc)
 {
-    int x = loc.x - you.pos().x;
-    int y = loc.y - you.pos().y;
-    double dir = atan2(x, y)/PI;
-    double dist = sqrt(x*x + y*y);
-    bool phase = ((int)floor(dir*2 + dist*0.33 + (you.frame_no % 54)/2.7))&1;
+    bool phase;
+    coord_def center = get_cloud_originator(loc);
+    if (center.origin())
+        phase = coinflip(); // source died/went away
+    else
+    {
+        int x = loc.x - center.x;
+        int y = loc.y - center.y;
+        double dir = atan2(x, y)/PI;
+        double dist = sqrt(x*x + y*y);
+        phase = ((int)floor(dir*2 + dist*0.33 + (you.frame_no % 54)/2.7))&1;
+    }
 
     switch(grd(loc))
     {

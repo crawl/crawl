@@ -61,11 +61,12 @@ int actor_apply_cloud(actor *act);
 std::string cloud_name_at_index(int cloudno);
 std::string cloud_type_name(cloud_type type, bool terse = true);
 int get_cloud_colour(int cloudno);
+coord_def get_cloud_originator(const coord_def& pos);
 
 bool is_damaging_cloud(cloud_type type, bool temp = false);
 bool is_harmless_cloud(cloud_type type);
 bool in_what_cloud (cloud_type type);
-cloud_type in_what_cloud ();
+cloud_type in_what_cloud();
 
 // fog generator
 void place_fog_machine(fog_machine_type fm_type, cloud_type cl_type,
