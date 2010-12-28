@@ -683,7 +683,7 @@ KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
 #       statues in statue_cache aren't, so I'm taking that as a precedent.
 KMONS:  G = statue name:firespitter name_adjective \
         tile:mons_firespitter_statue generate_awake \
-        spells:throw_flame;sticky_flame;.;bolt_of_magma;fireball;.
+        spells:throw_flame;sticky_flame_range;.;bolt_of_magma;fireball;.
 MARKER: G = lua:MonPropsMarker:new { description = "Statue of a large head of a humanoid. Its mouth is blackened with scorch-marks. There is a faint ember glow in its empty eyes." }
 #       Loot: 12 items, 6 gold.
 :       volcano_setup(_G, false, true)
@@ -708,7 +708,7 @@ KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
 :       fiery_guardians(_G)
 KMONS:  F = statue name:firespitter name_adjective \
         tile:mons_firespitter_statue generate_awake \
-        spells:throw_flame;sticky_flame;.;bolt_of_magma;fireball;.
+        spells:throw_flame;sticky_flame_range;.;bolt_of_magma;fireball;.
 MARKER: F = lua:MonPropsMarker:new { description = "Statue of a large head of a humanoid. Its mouth is blackened with scorch-marks. There is a faint ember glow in its empty eyes." }
 #       Loot: 10 items.
 :       volcano_setup(_G, false, true)

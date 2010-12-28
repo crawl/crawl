@@ -1550,7 +1550,7 @@ int exper_value(const monster* mon)
             case SPELL_LIGHTNING_BOLT:
             case SPELL_BOLT_OF_DRAINING:
             case SPELL_VENOM_BOLT:
-            case SPELL_STICKY_FLAME:
+            case SPELL_STICKY_FLAME_RANGE:
             case SPELL_DISINTEGRATE:
             case SPELL_SUMMON_GREATER_DEMON:
             case SPELL_BANISHMENT:

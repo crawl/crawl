@@ -881,7 +881,7 @@ struct spell_desc
      SPFLAG_DIR_OR_TARGET,
      4,
      100,
-     5, 5,
+     1, 1,
      0,
      NULL,
      true,
@@ -2374,6 +2374,20 @@ struct spell_desc
      5,
      0,
      LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+// Monster version of the spell (with full range)
+{
+    SPELL_STICKY_FLAME_RANGE, "Sticky Flame Range",
+     SPTYP_CONJURATION | SPTYP_FIRE,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
+     4,
+     100,
+     5, 5,
      0,
      NULL,
      true,

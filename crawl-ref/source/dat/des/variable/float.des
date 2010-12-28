@@ -1371,7 +1371,7 @@ KMONS:  7 = fire vortex
 : if you.in_branch("elf") then
 KMONS:  Z = col:gila deep elf sorcerer \
         name:deep_elf_elementalist n_rpl n_des \
-        spells:iron_shot;summon_air_elementals;sticky_flame;\
+        spells:iron_shot;summon_air_elementals;sticky_flame_range;\
         summon_water_elementals;haste;blink actual_spells \
         ; robe ego:fire_resistance race:elven | \
         robe ego:cold_resistance race:elven | \
@@ -1380,7 +1380,7 @@ KMONS:  Z = col:gila deep elf sorcerer \
 : else
 KMONS:  Z = col:gila wizard hd:15 name_descriptor \
         name:master_elementalist name_replace \
-        spells:iron_shot;summon_air_elementals;sticky_flame;\
+        spells:iron_shot;summon_air_elementals;sticky_flame_range;\
         summon_water_elementals;haste;blink actual_spells \
         ; robe ego:fire_resistance | robe ego:cold_resistance | \
         robe ego:resistance \

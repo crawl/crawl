@@ -3297,6 +3297,7 @@ enum spell_type
     SPELL_NOXIOUS_CLOUD,
 #endif
     SPELL_TORNADO,
+    SPELL_STICKY_FLAME_RANGE,
 
     NUM_SPELLS
 };

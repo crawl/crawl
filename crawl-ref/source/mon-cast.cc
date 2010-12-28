@@ -586,7 +586,7 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_STICKY_FLAME_SPLASH:
-    case SPELL_STICKY_FLAME:
+    case SPELL_STICKY_FLAME_RANGE:
         beam.colour   = RED;
         beam.name     = "sticky flame";
         beam.damage   = dice_def(3, 3 + power / 50);

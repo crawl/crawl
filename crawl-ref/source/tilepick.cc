@@ -4239,6 +4239,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_DRACONIAN_BREATH:
     case SPELL_WATER_ELEMENTALS:
     case SPELL_PORKALATOR:
+    case SPELL_STICKY_FLAME_RANGE:
     default:
         return TILEG_ERROR;
     }
