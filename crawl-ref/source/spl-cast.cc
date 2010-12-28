@@ -1527,6 +1527,27 @@ static spret_type _do_cast(spell_type spell, int powc,
         cast_shatter(powc);
         break;
 
+    case SPELL_LEDAS_LIQUEFACTION:
+        if (you.airborne() || you.clinging
+            || !feat_has_solid_floor(grd(you.pos())) || feat_is_staircase(grd(you.pos()))
+            || feat_is_altar(grd(you.pos())))
+        {
+            if (you.airborne() || you.clinging)
+                mprf("You can't cast this spell without touching the ground.");
+            else
+                mprf("You need to be on clear, solid ground to cast this spell.");
+            return (SPRET_ABORT);
+        }
+
+        if (you.duration[DUR_LIQUEFYING] || liquefied(you.pos()))
+        {
+            mprf("The ground here is already liquefied! You'll have to wait.");
+            return (SPRET_ABORT);
+        }
+
+        cast_liquefaction(powc);
+        break;
+
     case SPELL_SYMBOL_OF_TORMENT:
         torment(TORMENT_SPELL, you.pos());
         break;
@@ -1864,6 +1885,12 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_LEVITATION:
+        if (liquefied(you.pos()) && !you.airborne() && !you.clinging)
+        {
+            mprf(MSGCH_WARN, "Such puny magic can't pull you from the ground!");
+            return (SPRET_ABORT);
+        }
+
         you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
         levitate_player(powc);
         break;

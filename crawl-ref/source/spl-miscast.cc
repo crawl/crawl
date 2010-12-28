@@ -957,10 +957,16 @@ void MiscastEffect::_enchantment(int severity)
         switch (random2(crawl_state.game_is_arena() ? 1 : 2))
         {
         case 0:
-            if (target->atype() == ACT_PLAYER)
+            if (target->atype() == ACT_PLAYER && !liquefied(you.pos()) && !you.airborne() && !you.clinging)
             {
                 you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
                 levitate_player(20);
+            }
+            else if (target->atype() == ACT_PLAYER)
+            {
+                // Reasoning: miscasts to get levitation to escape the effects of
+                // liquefaction = cheap.
+                random_uselessness();
             }
             else
             {

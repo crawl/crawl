@@ -22,5 +22,6 @@ void cast_teleport_control(int power);
 bool cast_selective_amnesia();
 void cast_see_invisible(int pow);
 void cast_silence(int pow);
+void cast_liquefaction(int pow);
 
 #endif

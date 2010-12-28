@@ -7,6 +7,7 @@
 
 #include "player.h"
 
+#include "areas.h"
 #include "artefact.h"
 #include "dgnevent.h"
 #include "env.h"
@@ -436,12 +437,12 @@ std::string player::arm_name(bool plural, bool *can_plural) const
 bool player::fumbles_attack(bool verbose)
 {
     // Fumbling in shallow water.
-    if (floundering())
+    if (floundering() || (liquefied(pos()) && !airborne() && !clinging))
     {
         if (x_chance_in_y(4, dex()) || one_chance_in(5))
         {
             if (verbose)
-                mpr("Unstable footing causes you to fumble your attack.");
+                mpr("Your unstable footing causes you to fumble your attack.");
             return (true);
         }
     }

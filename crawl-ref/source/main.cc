@@ -2053,6 +2053,10 @@ static void _decrement_durations()
     // Possible reduction of silence radius.
     if (you.duration[DUR_SILENCE])
         invalidate_agrid();
+    // and liquefying radius.
+    if (you.duration[DUR_LIQUEFYING])
+        invalidate_agrid();
+
     if (_decrement_a_duration(DUR_SILENCE, delay, "Your hearing returns."))
         you.attribute[ATTR_WAS_SILENCED] = 0;
 
@@ -2323,6 +2327,11 @@ static void _decrement_durations()
     dec_slow_player(delay);
     dec_exhaust_player(delay);
     dec_haste_player(delay);
+
+    if (_decrement_a_duration(DUR_LIQUEFYING, delay, "The ground is no longer liquid beneath you."))
+    {
+        invalidate_agrid();
+    }
 
     if (_decrement_a_duration(DUR_MIGHT, delay,
                               "You feel a little less mighty now."))

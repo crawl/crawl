@@ -2,6 +2,7 @@
 
 #include "colour.h"
 
+#include "areas.h"
 #include "dgn-height.h"
 #include "env.h"
 #include "libutil.h"
@@ -166,6 +167,33 @@ static int _etc_waves(int, const coord_def& loc)
     else
         return CYAN;
 }
+
+static int _etc_liquefied(int, const coord_def& loc)
+{
+    static int turns = you.num_turns;
+    static coord_def centre = find_centre_for(loc, AREA_LIQUID);
+
+    if (turns != you.num_turns || (centre-loc).abs() > 15)
+    {
+        centre = find_centre_for(loc, AREA_LIQUID);
+        turns = you.num_turns;
+    }
+
+    if (centre.origin())
+        return BROWN;
+
+    int x = loc.x - centre.x;
+    int y = loc.y - centre.y;
+    double dir = atan2(x, y)/PI;
+    double dist = sqrt(x*x + y*y);
+    bool phase = ((int)floor(dir*2 + dist*0.33 + (you.frame_no % 54)/2.7))&1;
+
+    if (player_in_branch(BRANCH_SWAMP))
+        return phase ? LIGHTRED : RED;
+    else
+        return phase ? YELLOW : BROWN;
+}
+
 
 static int _etc_tree(int, const coord_def& loc)
 {
@@ -482,6 +510,9 @@ void init_element_colours()
                        ));
     add_element_colour(new element_colour_calc(
                             ETC_TORNADO, "tornado", _etc_tornado
+                       ));
+    add_element_colour(new element_colour_calc(
+                            ETC_LIQUEFIED, "liquefied", _etc_liquefied
                        ));
     add_element_colour(new element_colour_calc(
                             ETC_RANDOM, "random", _etc_random

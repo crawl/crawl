@@ -9,6 +9,7 @@
 
 #include "mon-info.h"
 
+#include "areas.h"
 #include "artefact.h"
 #include "coord.h"
 #include "env.h"
@@ -349,6 +350,8 @@ monster_info::monster_info(const monster* m, int milev)
         mb |= ULL1 << MB_STABBABLE;
     if (mons_looks_distracted(m))
         mb |= ULL1 << MB_DISTRACTED;
+    if (liquefied(m->pos()) && !m->airborne() && !m->is_insubstantial())
+        mb |= ULL1 << MB_SLOWED;
 
     dam = mons_get_damage_level(m);
 

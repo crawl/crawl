@@ -1319,6 +1319,7 @@ enum duration_type
     DUR_MIRROR_DAMAGE,
     DUR_SCRYING,
     DUR_TORNADO,
+    DUR_LIQUEFYING,
 
     NUM_DURATIONS
 };
@@ -1390,6 +1391,7 @@ enum enchant_type
     ENCH_LIFE_TIMER,    // Minimum time demonic guardian must exist.
     ENCH_LEVITATION,
     ENCH_HELPLESS,
+    ENCH_LIQUEFYING,
 
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
@@ -3298,6 +3300,7 @@ enum spell_type
 #endif
     SPELL_TORNADO,
     SPELL_STICKY_FLAME_RANGE,
+    SPELL_LEDAS_LIQUEFACTION,
 
     NUM_SPELLS
 };

@@ -1939,6 +1939,10 @@ int player_movement_speed(bool ignore_burden)
     else if (you.fishtail)
         mv = 6;
 
+    // moving on liquefied ground takes longer
+    if (liquefied(you.pos()) && !you.airborne() && !you.clinging)
+        mv += 3;
+
     // armour
     if (player_equip_ego_type(EQ_BOOTS, SPARM_RUNNING))
         mv -= 2;
