@@ -4597,9 +4597,18 @@ std::string get_command_description(const command_type cmd, bool terse)
     if (!terse)
         lookup += " verbose";
 
-    const std::string result = getLongDescription(lookup);
-    if (terse && result.empty())
+    std::string result = getLongDescription(lookup);
+    if (result.empty())
+    {
+        if (!terse)
+        {
+            // Try for the terse description.
+            result = get_command_description(cmd, true);
+            if (!result.empty())
+                return result + ".";
+        }
         return command_to_name(cmd);
+    }
 
     return result.substr(0, result.length() - 1);
 }
