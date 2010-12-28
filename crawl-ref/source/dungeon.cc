@@ -6209,7 +6209,7 @@ static void _vitrify_wall_neighbours(const coord_def& pos)
 #ifdef WIZARD
             env.pgrid(p) |= FPROP_HIGHLIGHT;
 #endif
-            if (one_chance_in(3) || _grid_has_wall_neighbours(p, pos))
+            if (one_chance_in(3) && _grid_has_wall_neighbours(p, pos))
                 _vitrify_wall_neighbours(p);
         }
     }
