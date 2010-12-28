@@ -186,7 +186,7 @@ static int _etc_liquefied(int, const coord_def& loc)
     int y = loc.y - centre.y;
     double dir = atan2(x, y)/PI;
     double dist = sqrt(x*x + y*y);
-    bool phase = ((int)floor(dir*2 + dist*0.33 + (you.frame_no % 54)/2.7))&1;
+    bool phase = ((int)floor(dir*0.3 + dist*0.5 + (you.frame_no % 54)/2.7))&1;
 
     if (player_in_branch(BRANCH_SWAMP))
         return phase ? LIGHTRED : RED;
