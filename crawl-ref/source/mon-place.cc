@@ -2468,11 +2468,6 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         band_size = 2 + random2(4);
         break;
 
-    case MONS_GREY_RAT:
-        band = BAND_GREY_RATS;
-        band_size = 4 + random2(6);
-        break;
-
     case MONS_GREEN_RAT:
         band = BAND_GREEN_RATS;
         band_size = 4 + random2(6);
@@ -2904,9 +2899,6 @@ static monster_type _band_member(band_type band, int power)
         break;
     case BAND_WAR_DOGS:
         mon_type = MONS_WAR_DOG;
-        break;
-    case BAND_GREY_RATS:
-        mon_type = MONS_GREY_RAT;
         break;
     case BAND_GREEN_RATS:
         mon_type = MONS_GREEN_RAT;

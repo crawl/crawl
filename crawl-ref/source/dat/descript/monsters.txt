@@ -1391,6 +1391,10 @@ polar bear
 
 A large and very strong bear covered in glistening white fur. If provoked, it may become angry!
 %%%%
+porcupine
+
+While it may look cute and harmless, its bite is painful and its spikes are sharp!
+%%%%
 program bug
 
 A ravenous and incredibly buggy monster. Please report its existence to the DevTeam.

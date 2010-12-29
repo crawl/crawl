@@ -2628,7 +2628,7 @@ ORIENT:  float
 SHUFFLE: 12
 MONS:    centaur / centaur warrior / yaktaur / yaktaur captain
 MONS:    ettin / frost giant / hill giant / stone giant / fire giant
-MONS:    rat / green rat / orange rat / grey rat / quokka
+MONS:    rat / green rat / orange rat / quokka
 MONS:    giant ant / soldier ant
 MONS:    spiny worm / ant larva / worm
 MONS:    lindwurm / gila monster / komodo dragon
