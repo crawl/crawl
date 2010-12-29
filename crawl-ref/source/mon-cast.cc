@@ -171,7 +171,6 @@ static bool _flavour_benefits_monster(beam_type flavour, monster& monster)
 }
 
 // Find an allied monster to cast a beneficial beam spell at.
-// Only used for haste other at the moment.
 static bool _set_allied_target(monster* caster, bolt & pbolt)
 {
     monster* selected_target = NULL;
@@ -1460,7 +1459,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                     spell_cast = hspell_pass[random2(5)];
                 }
 
-                if (spell_cast == SPELL_NO_SPELL)
+                // XXX: Resurrect is a do-nothing spell. Remove it!
+                if (spell_cast == SPELL_NO_SPELL || spell_cast == SPELL_RESURRECT)
                     continue;
 
                 // Setup the spell.
@@ -1470,7 +1470,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 // resurrect, or sacrifice itself for.
                 if ((spell_cast == SPELL_HASTE_OTHER
                      || spell_cast == SPELL_HEAL_OTHER
-                     || spell_cast == SPELL_RESURRECT
                      || spell_cast == SPELL_SACRIFICE)
                         && !_set_allied_target(mons, beem))
                 {
