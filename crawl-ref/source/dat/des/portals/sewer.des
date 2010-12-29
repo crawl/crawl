@@ -156,6 +156,32 @@ xWOW1WWWWW@
 xxxxxxxxxx
 ENDMAP
 
+NAME:   portal_sewer_entry_e
+TAGS:   uniq_sewer no_monster_gen chance_sewer
+CHANCE: 8%
+: sewer_portal(_G)
+ORIENT: northwest
+NSUBST: X = 2:X / / *:x
+SUBST:  X = ++=
+SUBST:  w = WW.
+NSUBST: W = 8:1 / *:W
+SUBST:  1 = 111W
+KMONS:  1 = rat w:20 / grey rat w:20 / green rat/ small snake / snake w:2 / \
+            giant cockroach / giant mite / worm w:3
+KFEAT:  1 = W
+COLOUR: W = green / cyan w:5
+MAP
+xxxxxxxxx
+xWWWXWww.
+xWOWXWww.
+xWWWXWww.
+xXXXXWw..
+xWWWWWw..
+xwwwww...
+xwww.....
+x........
+ENDMAP
+
 # The actual portal vaults #####################################
 default-depth:
 
@@ -480,7 +506,7 @@ ENDMAP
 
 ## BIG BADDIE (Purgy) ######################################################
 
-# Threat is mostly a single larger creature, often Purgy. Combined weight 20.
+# Threat is mostly a single larger creature, often Purgy. Combined weight 30.
 
 NAME:     sewer_big_baddie
 TAGS:     sewer no_item_gen no_monster_gen
@@ -579,9 +605,92 @@ cccc.......ccccc
   ccccccccccc
 ENDMAP
 
+############################################################################
+# Purgy island. by co
+# Purgy lives on this island, he appears in one of three places, if he is 
+# outside the loot room, you can get the loot without fighting him 
+# (if you are sneaky enough). Not much to walk on here, if you manage to 
+# confuse Purge he will probably drown. Some stone walls from the secret room
+# can be seen from the island.
+#
+NAME:    sewer_co_purgy_island
+TAGS:    sewer no_item_gen no_monster_gen no_pool_fixup
+ORIENT:  encompass
+#      Placing Purgy, he appear in one of three places.
+SHUFFLE: PQR
+KMONS:   P = Purgy
+SUBST:   Q = .
+SUBST:   R = .
+#      lesser monsters.
+KFEAT:   1 = w
+COLOUR:  1 = green
+KMONS:   1 = giant newt / small snake w:5 / \
+         generate_awake giant newt / generate_awake small snake w:5 / \
+         snake w:4 / big fish w:3 / nothing w:6
+#      loot
+SUBST:   e = !!!!????%
+KITEM:   ? = potion of levitation q:2 w:15 / potion of healing /\
+         potion of heal wounds / potion of might / potion of magic /\
+         potion of speed w:5 / potion of brilliance w:5
+KITEM:   ! =  scroll of teleportation / scroll of fear w:5 /\
+         scroll of blinking w:3 / scroll of magic mapping w:3 /\
+         scroll of recharging w:2 / scroll of fog w:3
+#      Randomized enviroment
+SUBST:   . = .WW
+SUBST:   X = xx.
+SUBST:   Y = xw
+: sewer_setup(_G)
+epilogue{{
+sewer_milestone(_G)
+}}
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxcccxxxx
+xxxxxxxxxxxxxxYYxxxYYYxxxxYYYxxxxxxcc.ccxxx
+xxxxxxxxxxxxxYwwYYwwwwwYYwwwwccccccc.e.ccxx
+xxxxxxxxxxYwwwwwwwwwwwwwwwwwwwwwww..*<*.cxx
+xxxxxxxxxxYwwwwwwwwwwwwwwwwwwccccccc.e.ccxx
+xxxxxxxxYYwwwwwwwwwwwwwwwwwwwwYxxxxcc.ccxxx
+xxxxxxxYwwwwwwwwwwwwwwwwwww1wwwYxxxxcccxxxx
+xxxxxxYwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxxx
+xxxxxxwwwww1wwwww....wwwwwwwwwwwwYxxxxxxxxx
+xxxxxYwwwwwwwww..XXXX..wwwwwwwwwwwYxxxxxxxx
+xxxxxwww1wwwww.XXxxxxXXQ.wwwwwww1wwwYxxxxxx
+xxxxYwwwwwww...XxxxxxxxxX..wwwwwwwwwwxxxxxx
+xxxxYwwwwww.XXXxxxxxxxxxxxX..wwwwwwwwYxxxxx
+xxxYwwwwww.XxxxxxxxxxxxxxxxxX.wwwwwwwwYxxxx
+xxxYwwwww.XxxxxxxxxxxxxxxxxxxX.wwwwwwwwYxxx
+xxxxYwwww.XxxxxxxxxxxxxxxxxxxX.wwwwwwwwYxxx
+xxxxYwwwww.XxxxxxxxcccccxxxxxX.wwwwwwwYxxxx
+xxxYwwwwww.Xxxxxxxxceeeccccccc.wwwwwwwYxxxx
+xxxYwwwwwww.Xxxxxxxce<....P...wwwwwwwwYxxxx
+xxYwwwwwwwwwAXxxxxxceeeccccccc.wwwwwwwYxxxx
+xxYwwww1wwww<XxxxxxcccccxxxxxX.wwwwwwwYxxxx
+xxxYwwwwwww.XxxxxxxxxxxxxxxxxxX.wwwwwwYxxxx
+xxxxwwwwww.XxxxxxxxxxxxxxxxxxxX.wwwwwwYxxxx
+xxxxYwwwwww.XXxxxxxxxxxxxxxxxX.wwwwwwwwYxxx
+xxxYwwwwwwww..XXxxxxxxxxxxxxX.wwwwwwwwYxxxx
+xxxYwwwwwwww..XXxxxxxxxxxxXXX.wwwwwwwwYxxxx
+xxxxwwwwwwwwww..XxxxxxxxxX...wwwwwwwwwwYxxx
+xxxxYwwww1wwwwww.XxxxxxXX.wwwwwwwwwwwwwYxxx
+xxxxxwwwwwwwwwww.XxxxxXR.wwwwwwwwwwwwwYxxxx
+xxxxYwwwwwwwwwwww.XXXX.wwwwwww1wwwwwYYxxxxx
+xxxxxYwwwwwwwwwwww....wwwwwwwwwwwwwYxxxxxxx
+xxxxxxYwwwwwwwwwwwwwwwwwwwwwwwwwwwYxxxxxxxx
+xxxxxxYwwwwwwwwwwwwwwwwww1wwwwwwwYxxxxxxxxx
+xxxxxxYwwwwwwwwwwwwwwwwwwwwwwwwYYxxxxxxxxxx
+xxxxxxxYwwwwwwwwwwwwwwwwwwwwwwYxxxxxxxxxxxx
+xxxxxxxYwwwwwwwwwwwwwwwwwwwwwYxxxxxxxxxxxxx
+xxxxxxxxYxYwwwwwwYYwwwwwwwYYwYxxxxxxxxxxxxx
+xxxxxxxxxxxxYYYYxxxYYYxYYYxxYYxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
 ### OTHER #####################################################################
 
-# Other sorts of Sewer maps, each weighted 10. (Total 20).
+# Other sorts of Sewer maps, each weighted 10. (Total 60).
 
 ###############################################################################
 # If you can get to the middle, there are four doors to try; two will give you
@@ -595,18 +704,18 @@ SUBST:    Q = 4, E = 5, D : fgh, S = $
 NSUBST:   f = 1:f / *:'
 NSUBST:   g = 2:g / *:'
 NSUBST:   h = 3:h / *:'
-# some random monsters I: flying or big fish
+#       some random monsters I: flying or big fish
 NSUBST:   w = 4:" / *:w
 KFEAT:    " = w
 KMONS:    " = big fish w:2 / giant bat / giant mosquito w:2 / nothing
 COLOUR:   " = green
-# some random monsters II: standard Sewers set
+#       some random monsters II: standard Sewers set
 NSUBST:   W = 4:? / *:W
 KFEAT:    ? = W
 KMONS:    ? = giant bat / giant newt / small snake / ooze w:2 / worm w:2 / \
           snake w:1 / giant mosquito w:2
 COLOUR:   ? = lightgreen
-# a little more random shallow water
+#       a little more random shallow water
 SUBST:    - = W..
 : sewer_setup(_G)
 MONS:     giant bat / giant newt / small snake / ooze w:2 / worm w:2 / \
@@ -616,14 +725,14 @@ MONS:     giant bat / giant mosquito w:2 / nothing w:2
 MONS:     patrolling jackal
 MONS:     worm / nothing w:3
 MONS:     ooze / nothing w:2
-# chances are good you'll find something to cross the deep water
+#       chances are good you'll find something to cross the deep water
 SHUFFLE:  de
 ITEM:     scroll of fear / scroll of fog / scroll of teleportation w:50 / \
           scroll of blinking / scroll of identify / nothing
 ITEM:     potion of levitation w:50 / potion of invisibility / \
           potion of might w:3 / potion of agility w:4 / \
           potion of brilliance w:3 / nothing
-# possibly rather generous loot, if you get to the center
+#       possibly rather generous loot, if you get to the center
 ITEM:     scroll of vulnerability / scroll of identify / wizard hat / \
           potion of magic / potion of brilliance / potion of resistance
 ITEM:     scroll of identify / scroll of recharging / potion of invisibility / \
@@ -712,7 +821,7 @@ OOOnnnnnnnnnJnnnscccccccccccccc  cccccccccccccccc ccccccccccwhwwwwwwwWwwwww2..c
 OOOnnnnnnnnnnnns.+.....+...%Wwc  c1.....cc$$$.1McccwwWWWgWWWWWWWW..W..WW.Www..c
 OOOnnnnnnnnHnnsW.ccccccc...%*Wc  c.ccccc.c.1.W.NcccwWWccccccccccccc11cccc.gwWwcc
 OOOnnnnnnnnnnnsW.ccc.1cc...%*Wc  c2cwwcc.ccccWcccwwwc.c           cccc  cc..WWwc
-OOOnnnnnnnnnJnsW.ccc..cc...|WWc ccwWgcwc.cGgwWWWWWWcc.c                  ccccwwc
+OOOnnnnnnnnnJnsW.ccc..cc...*WWc ccwWgcwc.cGgwWWWWWWcc.c                  ccccwwc
 OOOnnnnnnnnnnssWWccc1.cc<..WwccccwgWccwc.chwgWW..1....c            cccccccccccwc
 OOOnnnnnnnnsssWWWWWc.1ccccccccwwwWW.1cwWWcWWW..2ccccccc            cGwwwwwwwwwwc
 OOOnnnnnnnsssWWWWWWWWsswwswwwhcWW..1ccccWWWW1..cc                  ccccccccccccc
@@ -734,3 +843,354 @@ OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
 OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
 OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
 ENDMAP
+
+############################################################################
+# 15 rooms, by co
+# All rooms will always be accessable, except the room in the center, which
+# is surrounded by deep water.
+#
+NAME:    sewer_co_15_rooms
+TAGS:    sewer no_item_gen no_monster_gen no_pool_fixup
+ORIENT:  encompass
+MONS:    kobold / w:7 big kobold
+MONS:    kobold / snake / small snake / w:7 worm / w:7 ooze / \
+         rat / green rat / grey rat
+SUBST:   . = W..
+SUBST:   X = xx.
+SUBST:   2 = 222..
+#      generate path to center
+SHUFFLE: BC/DE/GF/IH
+SUBST:   B = w, C = W
+SUBST:   DGI = c, EFH = x
+#      generate path to the first cave.
+SHUFFLE: JK/LM
+SUBST:   JK = .
+SUBST:   M = x, L = c
+#      generate path to the second cave.
+SHUFFLE: PN/QR
+SUBST:   PN = .
+SUBST:   Q = x, R = c
+#      generate a paths between the big rooms.
+SHUFFLE: yZzSsUuTgY
+SUBST:   y = w
+SUBST:   hVZzSsUuTgY = W
+#      loot
+SUBST:   e = !!!!?????
+KITEM:   ? = potion of levitation w:5 / potion of levitation q:2 w:5 /\
+         potion of healing / potion of heal wounds / potion of might /\
+         potion of magic / potion of speed w:5 / potion of brilliance w:5
+KITEM:   ! =  scroll of teleportation / scroll of fear w:5 /\
+         scroll of blinking w:3 / scroll of magic mapping w:3 /\
+         scroll of recharging w:2 / scroll of fog w:3
+: sewer_setup(_G)
+epilogue{{
+sewer_milestone(_G)
+}}
+MAP
+xxxxxxxxxxxxcccxxxxxxxcccxxxxxxxxxxxx
+xxxxxxxxxxxcccccxxxxxcccccxxxxxxxxxxx
+xxxxxxxxxxcc...ccxxxcc...ccxxxxXXXxxx
+xxxxxxxxxxc.2...ccccc...2.cxxxx.1.Xxx
+xxxxxxxxxxc..2..yyyyy..2..NPPP.e.1Xxx
+xxxxxxxxxxc...2.ccccc.2...cxxxX.e.Xxx
+xxxxxxxxxxcc...ccxxxcc...ccxxxxX.xxxx
+xxxxxxxxxxxccZccxxxxxcczccxxxxxxQxxxx
+xxxxxxxxxxxxcZcxxxxxxxczcxxxxxxxQxxxx
+xxxxxxxxxxxxcZcxxxxxxxczcxxxxxxxQxxxx
+xxcccccxxxxccZccxxxxxcczccxxxxccRccxx
+xcc...ccxxcc...ccxxxcc...ccxxcc...ccx
+cc.2...cccc.A...ccccc.e...cccc...2.cc
+cc..2..SSSS..<.WwwwwwW....ssss..2..cc
+cc...2.cccc.....ccBcc...e.cccc.2...cc
+xcc...ccxxcc.W.ccxCxcc.W.ccxxcc...ccx
+xxccUccxxxxccwccxx.xxccwccxxxxccuccxx
+xxxcUcxxxxxxcwcxx1e.xxcwcxxxxxxcucxxx
+xxxcUcxxxxxxcwDE.e<e.FGwcxxxxxxcucxxx
+xxxcUcxxxxxxcwcxx.e1xxcwcxxxxxxcucxxx
+xxccUccxxxxccwccxx.xxccwccxxxxccuccxx
+xcc...ccxxcc.W.ccxHxcc.W.ccxxcc...ccx
+cc...2.cccc.e...ccIcc.....cccc.2...cc
+cc..2..TTTT....WwwwwwW.<..gggg..2..cc
+cc.2...cccc...e.ccccc.....cccc...2.cc
+xcc...ccxxcc...ccxxxcc...ccxxcc...ccx
+xxccJccxxxxccVccxxxxxcchccxxxxcccccxx
+xxxxKxxxxxxxcVcxxxxxxxchcxxxxxxxxxxxx
+xxxxKxxxxxxxcVcxxxxxxxchcxxxxxxxxxxxx
+xxxxKxxxxxxccVccxxxxxcchccxxxxxxxxxxx
+xxxx.Xxxxxcc...ccxxxcc...ccxxxxxxxxxx
+xxX.e.Xxxxc...2.ccccc.2...cxxxxxxxxxx
+xxX1.e.MMML..2..YYYYY..2..cxxxxxxxxxx
+xxX.1.xxxxc.2...ccccc...2.cxxxxxxxxxx
+xxxXXXxxxxcc...ccxxxcc...ccxxxxxxxxxx
+xxxxxxxxxxxcccccxxxxxcccccxxxxxxxxxxx
+xxxxxxxxxxxxcccxxxxxxxcccxxxxxxxxxxxx
+ENDMAP
+
+############################################################################
+# Tree sewer. by co
+# This sewer is structured as a tree, in the sense that there are no loops.
+# At each endpoint there is  monster or loot.
+# At least you won't go in circles...
+#
+NAME:   sewer_co_tree
+TAGS:   sewer no_item_gen no_monster_gen no_pool_fixup
+ORIENT: encompass
+MONS:   kobold / big kobold
+MONS:   snake / small snake / worm
+MONS:   ooze / rat / green rat / grey rat
+# less water in the middle, more at the endpoints.
+SUBST:  ~ = WWWW.
+SUBST:  - = WW...
+SUBST:  " = W...
+NSUBST: ? = 4=ef / *=112233
+KITEM:  e = potion of healing / potion of heal wounds / potion of might /\
+        potion of magic / potion of speed w:5 / potion of brilliance w:5 
+KITEM:  f = scroll of teleportation / scroll of fear w:5 /\
+        scroll of blinking w:3 / scroll of magic mapping w:3 /\
+        scroll of recharging w:2 / scroll of fog w:3
+: sewer_setup(_G)
+epilogue{{
+sewer_milestone(_G)
+}}
+MAP
+xxxxxxxxxxxxxxcccccccccccccccccccccxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxc?c?c?c?cxxxc?c?c?c?cxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcWcWcWcWcxxxcWcWcWcWcxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcWcWcWcWcxxxcWcWcWcWcxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcWcWcWcWcxxxcWcWcWcWcxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx~~~x~~~xxxxx~~~x~~~xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx~xxx~xxxxxxx~xxx~xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx~xxx~xxxxxxx~xxx~xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx~xxx~xxxxxxx~xxx~xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx~~~~~xxxxxxx~~~~~xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx~~~xxxxxxxxx~~~xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx-~-xxxxxxxxx-~-xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx-~-xxxxxxxxx-~-xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx-~-xxxxxxxxx-~-xxxxxxxxxxxxxxxxx
+cccccxxxxxxxxxxxx-~--xxxxxxx--~-xxxxxxxxxxxxccccc
+c?WWW~xxxxxxxxxxx-~~--xxxxx--~~-xxxxxxxxxxx~WWW?c
+ccccc~~~~~xxxxxxxx--~-~~~~~-~--xxxxxxxx~~~~~ccccc
+c?WWW~xxx~~-----xxxx-~~~~~~~-xxxx-----~~xxx~WWW?c
+cccccxxxx~~~~~~~-xxxx---~---xxxx-~~~~~~~xxxxccccc
+c?WWW~xxx~~----~-xxxx~--~--~xxxx-~----~~xxx~WWW?c
+ccccc~~~~~xxxx--~-xx~---~---~xx-~--xxxx~~~~~ccccc
+c?WWW~xxxxxxxxx--~-~----~----~-~--xxxxxxxxx~WWW?c
+cccccxxxxxxxxxxx~~-----"""-----~~xxxxxxxxxxxccccc
+cxxxxxxxxxxxxxxx~~----"..."----~~xxxxxxxxxxxxxxxc
+cxxxxxxxxxxxxxxx~~~~~~"A.<"~~~~~~xxxxxxxxxxxxxxxc
+cxxxxxxxxxxxxxxx~~----"..."----~~xxxxxxxxxxxxxxxc
+cccccxxxxxxxxxxx~~-----"""-----~~xxxxxxxxxxxccccc
+c?WWW~xxxxxxxxx--~-~----~----~-~--xxxxxxxxx~WWW?c
+ccccc~~~~~xxxx--~-xx~---~---~xx-~--xxxx~~~~~ccccc
+c?WWW~xxx~~----~-xxxx~--~--~xxxx-~----~~xxx~WWW?c
+cccccxxxx~~~~~~~-xxxx~--~---xxxx-~~~~~~~xxxxccccc
+c?WWW~xxx~~-----xxxx-~~~~~~~-xxxx-----~~xxx~WWW?c
+ccccc~~~~~xxxxxxxx--~-~~~~~-~--xxxxxxxx~~~~~ccccc
+c?WWW~xxxxxxxxxxx-~~--xxxxx--~~-xxxxxxxxxxx~WWW?c
+cccccxxxxxxxxxxxx-~--xxxxxxx--~-xxxxxxxxxxxxccccc
+xxxxxxxxxxxxxxxxx-~-xxxxxxxxx-~-xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx-~-xxxxxxxxx-~-xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx-~-xxxxxxxxx-~-xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx~~~xxxxxxxxx~~~xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx~~~~~xxxxxxx~~~~~xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx~xxx~xxxxxxx~xxx~xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx~xxx~xxxxxxx~xxx~xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx~xxx~xxxxxxx~xxx~xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx~~~x~~~xxxxx~~~x~~~xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcWcWcWcWcxxxcWcWcWcWcxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcWcWcWcWcxxxcWcWcWcWcxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcWcWcWcWcxxxcWcWcWcWcxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxc?c?c?c?cxxxc?c?c?c?cxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccccccccccccccccccxxxxxxxxxxxxxx
+ENDMAP
+
+############################################################################
+# Cracked pipes. by co
+# Most of the time the player will move between the pipes through cracks
+# these will be filled with rats. Only two of the paths will be generated
+# each map, but all three pipes will be accessable on all instances.
+# One map in three, will end in harder rat nest containing a dangerous
+# orange rat. The rat nest also contains cheese and more loot.
+#
+NAME:    sewer_co_cracked_pipes
+TAGS:    sewer no_item_gen no_monster_gen no_pool_fixup no_rotate no_vmirror
+ORIENT:  encompass
+#      water creatures
+MONS:    giant newt / small snake w:5 / \
+         generate_awake giant newt / generate_awake small snake w:5 / \
+         snake w:2 / nothing w:4
+KMONS:   2 = snake / big fish
+KFEAT:   2 = W
+COLOUR:  2 = green
+#      loot
+SUBST:   e = !!!!!?????%
+KITEM:   ? = potion of healing / potion of heal wounds / potion of might /\
+         potion of magic / potion of speed w:5 / potion of brilliance w:5
+KITEM:   ! =  scroll of teleportation / scroll of fear w:5 /\
+         scroll of blinking w:3 / scroll of magic mapping w:3 /\
+         scroll of recharging w:2 / scroll of fog w:3
+#      generate first path.
+SHUFFLE: BC/DE/FG
+NSUBST:  B = 1:. / *:c
+NSUBST:  C = 1:. / *:c
+SUBST:   DEFG = c
+#      generate second path.
+SHUFFLE: HI/JK/LM
+NSUBST:  H = 1:. / *:c
+NSUBST:  I = 1:. / *:c
+SUBST:   LMKJ = c
+#      randomize enviroment
+SUBST:   . = .W
+SUBST:   V = .WWWW
+SUBST:   X = xx"
+#      Sometimes there's a ratnest in the end.
+: if crawl.one_chance_in(3) then
+NSUBST:  Y = 2:. /*:c
+KMONS:   Z = nothing w:60 / rat w:2 / grey rat / green rat w:7
+KITEM:   Z = cheese w:2 / nothing
+KMONS:   R = orange rat
+KFEAT:   ' = .
+: else
+SUBST:   Y = c
+KFEAT:   Z = x
+KFEAT:   R = x
+KFEAT:   ' = x
+: end
+#      rat path
+KPROP:   " = no_tele_into
+KMONS:   " = nothing w:50 / rat / grey rat / green rat w:5
+KPROP:   w = no_tele_into
+: sewer_setup(_G)
+epilogue{{
+sewer_milestone(_G)
+}}
+MAP
+                        xxxxxxxxxxxxx
+                        xxxxx''xxxxxx
+                        xxx'eeeee'xxx
+                        xxxZZZZZZZ'xx
+                        xx'ZZZRZZZZ'x
+                        x'ZZZZZZZZ'xx
+                        x''ZZZZ''''xx
+                        xx''''xx'x'xx
+                        xx'xx'xx''xxx
+                        x'xx'xxxxx'xx
+                        x'xxx''x''xxx
+                        xx''x'x''xxxx
+ xxxxxxxxxxxxxxxxxxxxxxxxxxx'x'x'xxxxxxxxxxxxxxxxx
+ xcccccccccccccccccccccccccYYYYYYYcccccccccccccccx
+ xwwwwwwwwmwWe.....1......VVVVVVVVV......1.....<cx
+ xwwwwwwwwmwWe.........1..VVVVVVVVV.1..........ecx
+ xccccccccccccIIIIIIccccccccccKccccccMMMcccccMMMcx
+ xxxxxxxxxxxxxx"xx"xxxxxxxxxxcVcxxxxxx"xxxxxxx"xxx
+             xxx""xxxxxxxxxxxcVcxxxxxxx"xXxxx"xx  
+             xXxx"xxxxxxxxxxxcVcxxxxxxxx"xX""Xx   
+             xx""x"xxxxxxxxxxc2cxxxxxxxxx"x"xxx   
+             x"xxXxxxXxXxxxxxcVcxxxxxxxxxX"x"xx   
+             xx""""x"x"xxxxxxcVcxxxxxxxxx"xXx"xx  
+             xXxxxx"x"x"xxxxxcVcxxxxxxxxxx"xxx"x  
+ xxxxxxxxxxxxxxxxx"xxxxx"xxxxcVcxxxxxxxxxxx"Xx"xxxxxxxxxxxxx 
+ xcccccccccccccccHHHcccHHHccccJcccccccccccLLLLLLcccccccccccx 
+ xwwwwwwwwmwWe....1.......VVVVVVVVV........1...eWwmwwwwwwwwx 
+ xwwwwwwwwmwWe.........1..VVVVVVVVV..1.........eWwmwwwwwwwwx 
+ xccccccccccCCCccCCCccccccccccEccccccccccGGGcGGGcccccccccccx 
+ xxxxxxxxxxxx"xxxx"xxxxxxxxxxcVcxxxxxxxxxx"xxx"xxxxxxxxxxxxx 
+          xxxx"xx"xxxxxxxxxxxcVcxxxxxxxxxxx"x"xx
+          xxxx"x"xxxxxxxxxxxxcVcxxxxxxxxxxxx""Xx
+          xX""x"xXxxxxxxxxxxxc2cxxxxxxxXx"xX"xxx
+          xxxx"xxxxxxxxxxxxxxcVcxxxxxxxx"xx"x"xx
+           xxx""xXxXxxxxxxxxxcVcxxxxxxxx"x"xxx"x
+           xxXxx"""xxxxxxxxxxcVcxxxxxxxxx"xxxXxx
+           xxxx"xxx"xxxxxxxxxcVcxxxxxxxx"x"xxxxxxxxxxxxxxxxx 
+           xccBBBcBBBcccccccccDccccccccFFFFFcccccccccccccccx 
+           xc<............VVVVVVVVV.........1..eWwmwwwwwwwwx 
+           xcA........1...VVVVVVVVV.....1......eWwmwwwwwwwwx 
+           xcccccccccccccccccccccccccccccccccccccccccccccccx 
+           xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ENDMAP
+
+############################################################################
+# Scannered pipes. by co
+# The loot is often at the end of the pipes, with guarding monsters.
+#
+NAME:    sewer_co_scattered_pipes
+TAGS:    sewer no_item_gen no_monster_gen no_pool_fixup
+ORIENT:  encompass
+KMONS:   P = plant / nothing
+KFEAT:   P = W / .
+COLOUR:  P = green
+#      pipe monsters.
+KFEAT:   1 = W
+COLOUR:  1 = green
+KMONS:   1 = giant newt / small snake w:5 /  generate_awake small snake w:5 / \
+         snake w:7 / big fish w:5 
+SUBST:   1 = 1111W
+#      other monsters
+KMONS:   2 = jackal / kobold, w:5 big kobold / w:5 green rat, w:7 grey rat, rat
+SUBST:   2 = 222222W.
+#      loot
+SUBST:   e = !!!?????%WWW
+KFEAT:   !?% = W
+COLOUR:  !?% = green
+KITEM:   ? = potion of healing / potion of heal wounds / potion of might /\
+         potion of magic / potion of speed w:5 / potion of brilliance w:5
+KITEM:   ! =  scroll of teleportation / scroll of fear w:5 /\
+         scroll of blinking w:3 / scroll of magic mapping w:3 /\
+         scroll of recharging w:2 / scroll of fog w:3
+SUBST:   . = .W
+SUBST:   X = x.
+SUBST:   Y = xxw
+#
+NSUBST:  B = 1:< / *:.
+: sewer_setup(_G)
+epilogue{{
+sewer_milestone(_G)
+}}
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxYxcccxxcccYYYxxxxxYYYxxxxxxxxxxxxxxx
+xxxxxxYYwwcecwwcccwwwwYYYwwwwwYYYYwYxxxxxxxx
+xxxxxYwwwwcWcwwcccwwwwwwwwwwwwwwwwwwwYxxxxxx
+xxxxYwwwwwcWcwwcccwwwwwwwwwwwwwwwwwwwwYxxxxx
+xxxxwwwww.cWcPPcccwwwwwwwwwwwwwwwwwwwwwYxxxx
+xxxxww....cWcPPcecwwwwwwwwwwwwwwwwwwwwwYxxxx
+xxxX...A<.PPPPxcWcccccccc.wwwwwwwwwwwwwwYxxx
+xxx........PxxxcWceW1WWWW..wwwwwwwwwwwwwYxxx
+xxx..Pcccccccccc1cccccccc..wwwwwww...wwwwYxx
+xxxPPPWWWWW1WWecWPxxexxxX..wwwwww..e..wwwYxx
+xxxPPPccccccccccWcPx2xxx...wwwwww.2B2.wwwYxx
+xxx.....XxxxxxxcWc..xxxX...wwwwww..P..wwwYxx
+xxxX.....XxxxxxcWcxxxxX....wwwwww.PPP.wwwYxx
+xxxxX.....XxxxxcWcxxxX....wwwwwww.cWc.wwwYxx
+xxxxX..2.....XxcWcxxX.....wwwwwwwwcWcwwwwYxx
+xxxx....cWc....cWcX.......wwwwwwwwcWcwwwwYxx
+xxxP.2..cWc..........2..Pccccccccwc1cwwwYxxx
+xxxPP...c1c...P..2.....P.PwwwwwwwwcWcwwwYxxx
+xxxPPP..cWc..PPP.......PPccccccccwcWcwwwwYxx
+xxxXPPP.cec2.cWc.......P.wwwwwwwwwcWcwwwYxxx
+xxxX.cccccccccWc.......P.wwwwwwwwwcWcwwwwYxx
+xxxX.WWWW1WWecWc......P..wwwwwwwwwcWcwwwwxxx
+xxxX.cccccccccWc.2...P..wwwwwwwwwPcWc.wwwYxx
+xxxXXxxX.2.xPP1c....P...wwwwwwwwPPPPPP..wYxx
+xxxxxxx.e.xPxcWc...PPPccccccccccccPPP...Xxxx
+xxxxxxxxXXxxxcWc....PPWWWWW1WWW1WWPP..2.Xxxx
+xxxxxxxxxxxxxcWc..2..PccccccccccccP..e..Xxxx
+xxxX...XxxxxxcWc........wwwwwwww........Xxxx
+xxX.2...Xxxx............wwwwwwww....PP..Xxxx
+xxX...PcccccccccccPP....wwwwwwww.2.PPP.Xxxxx
+xxX2ePPWWWWW1WWWWWP...wwwwwwwww....cWcXxxxxx
+xxX..P.ccccccccccc.Pwwwwwwwwwww..XXcWcxxxxxx
+xxxX....wwwwwwwwwwwwwwwwwwwwwww.XxxcWcxxxxxx
+xxxYwwwwwwwwwwwwwwwwwwwwwwwwwwYxxxxc1cxxxxxx
+xxxYwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxcWcxxxxxx
+xxxYwwwwwwwwwwwwwwwwwwwwwwwwwYxxxX.cWc.Xxxxx
+xxxxYwwwwwwwwwwwwwwwwwwwwwwwYxxxX..PPP..Xxxx
+xxxxxwwwwwwwwwwwwwwwwwwwwwwxxxxxX..PB.2.Xxxx
+xxxxxYwwwwwwwwwwwwwwwwwwwwYxxxxxX.2..e..Xxxx
+xxxxxxYwwwwwwYYYYwwwYYYwwYxxxxxxxX.....Xxxxx
+xxxxxxxYYYxYYxxxxYYYxxxYYxxxxxxxxxxXXXxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
