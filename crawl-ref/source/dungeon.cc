@@ -114,7 +114,7 @@ static void _builder_monsters(int level_number, level_area_type level_type,
                               int mon_wanted);
 static void _place_specific_stair(dungeon_feature_type stair,
                                   const std::string &tag = "",
-                                  int dl = 0, bool vault_only = false);
+                                  int dl = 0);
 static void _place_branch_entrances(int dlevel, level_area_type level_type);
 static void _place_extra_vaults();
 static void _place_chance_vaults();
@@ -2457,15 +2457,6 @@ static void _portal_vault_level(int level_number)
         dlua.callfn(i->second.c_str(), 0, 0);
 }
 
-static bool _place_vault_by_tag(const std::string &tag, int dlevel)
-{
-    const map_def *vault = random_map_for_tag(tag, true);
-    if (!vault)
-        return (false);
-
-    return _build_secondary_vault(dlevel, vault);
-}
-
 static const map_def *_dgn_random_map_for_place(bool minivault)
 {
     if (!minivault && player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
@@ -3098,37 +3089,21 @@ static void _place_specific_feature(dungeon_feature_type feat)
         throw dgn_veto_exception("Cannot place specific feature.");
 }
 
-static void _place_specific_stair(dungeon_feature_type stair,
-                                  const std::string &tag,
-                                  int dlevel,
-                                  bool vault_only)
+static bool _place_vault_by_tag(const std::string &tag, int dlevel)
 {
-    if ((tag.empty() || !_place_vault_by_tag(tag, dlevel)) && !vault_only)
-        _place_specific_feature(stair);
+    const map_def *vault = random_map_for_tag(tag, true);
+    if (!vault)
+        return (false);
+
+    return _build_secondary_vault(dlevel, vault);
 }
 
-static void _place_extra_vaults()
+static void _place_specific_stair(dungeon_feature_type stair,
+                                  const std::string &tag,
+                                  int dlevel)
 {
-    while (true)
-    {
-        if (!player_in_branch(BRANCH_MAIN_DUNGEON) && use_random_maps)
-        {
-            const map_def *vault = random_map_in_depth(level_id::current());
-
-            // Encompass vaults can't be used as secondaries.
-            if (!vault || vault->orient == MAP_ENCOMPASS)
-                break;
-
-            if (vault && _build_secondary_vault(you.absdepth0, vault))
-            {
-                const map_def &map(*vault);
-                if (map.has_tag("extra"))
-                    continue;
-                use_random_maps = false;
-            }
-        }
-        break;
-    }
+    if (tag.empty() || !_place_vault_by_tag(tag, dlevel))
+        _place_specific_feature(stair);
 }
 
 static void _place_branch_entrances(int dlevel, level_area_type level_type)
@@ -3152,6 +3127,30 @@ static void _place_branch_entrances(int dlevel, level_area_type level_type)
 
             _place_specific_stair(branches[i].entry_stairs, entry_tag, dlevel);
         }
+    }
+}
+
+static void _place_extra_vaults()
+{
+    while (true)
+    {
+        if (!player_in_branch(BRANCH_MAIN_DUNGEON) && use_random_maps)
+        {
+            const map_def *vault = random_map_in_depth(level_id::current());
+
+            // Encompass vaults can't be used as secondaries.
+            if (!vault || vault->orient == MAP_ENCOMPASS)
+                break;
+
+            if (vault && _build_secondary_vault(you.absdepth0, vault))
+            {
+                const map_def &map(*vault);
+                if (map.has_tag("extra"))
+                    continue;
+                use_random_maps = false;
+            }
+        }
+        break;
     }
 }
 
