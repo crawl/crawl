@@ -497,7 +497,7 @@ KITEM:   + = damaged eveningstar, damaged short sword, \
 KITEM:   & = damaged hammer / nothing
 MONS:    fungus, plant
 MONS:    giant mite, scorpion
-MONS:    rat / grey rat, green rat / orange rat
+MONS:    rat / porcupine, green rat / orange rat
 MONS:    giant bat
 SHUFFLE: ?!+
 SUBST:   c:cccvvb , b=cc.
@@ -783,7 +783,7 @@ ENDMAP
 NAME:    vampire
 ORIENT:  float
 DEPTH:   D:12-26, Vault, Crypt
-MONS:    rat / grey rat / w:6 green rat / w:3 orange rat / w:20 giant bat
+MONS:    rat / porcupine / w:6 green rat / w:3 orange rat / w:20 giant bat
 MONS:    flying skull, human zombie
 MONS:    vampire, vampire mage, vampire knight
 KITEM:   > = any good_item

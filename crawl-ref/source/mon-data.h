@@ -1780,6 +1780,18 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LITTLE
 },
 
+{
+    MONS_PORCUPINE, 'r', BLUE, "porcupine",
+    M_WARM_BLOOD,
+    MR_NO_FLAGS,
+    220, 26, MONS_RAT, MONS_PORCUPINE, MH_NATURAL, -3,
+    { {AT_BITE, AF_PLAIN, 7}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 2, 3, 6, 0 },
+    2, 12, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SILENT,
+    I_ANIMAL, HT_LAND, FL_NONE, 12, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY
+},
+
 // spiders and insects ('s')
 {
     MONS_GIANT_COCKROACH, 's', BROWN, "giant cockroach",

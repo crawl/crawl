@@ -1297,7 +1297,7 @@ int mons_lair_level(int mcls)
 
     case MONS_GIANT_FROG:
     case MONS_GILA_MONSTER:
-    case MONS_GREY_RAT:
+    case MONS_PORCUPINE:
     case MONS_HOUND:
     case MONS_BLACK_BEAR:
     case MONS_WORM:
@@ -1389,7 +1389,7 @@ int mons_lair_rare(int mcls)
     case MONS_GIANT_BAT:
     case MONS_GIANT_TOAD:
     case MONS_GIANT_FROG:
-    case MONS_GREY_RAT:
+    case MONS_PORCUPINE:
     case MONS_QUOKKA:
         return 99;
 
