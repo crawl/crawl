@@ -583,10 +583,10 @@ static void _describe_speed(status_info* inf)
         inf->long_text = "Your actions are hasted.";
         _mark_expiring(inf, dur_expiring(DUR_HASTE));
     }
-    if (liquefied(you.pos()) && !you.airborne() && !you.clinging)
+    if (liquefied(you.pos(), true) && !you.airborne() && !you.clinging)
     {
         inf->light_colour = BROWN;
-        inf->light_text   = "Slow";
+        inf->light_text   = "SlowM";
         inf->short_text   = "slowed movement";
         inf->long_text    = "Your movement is slowed in this liquid ground.";
     }

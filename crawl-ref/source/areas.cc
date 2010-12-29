@@ -133,10 +133,10 @@ static void _update_agrid()
             {
                 dungeon_feature_type f = grd(*ri);
 
-                _set_agrid_flag(*ri, APROP_ACTUAL_LIQUID);
+                _set_agrid_flag(*ri, APROP_LIQUID);
 
-                if (feat_has_solid_floor(f) && !feat_is_staircase(f) && !feat_is_altar(f))
-                    _set_agrid_flag(*ri, APROP_LIQUID);
+                if (feat_has_solid_floor(f))
+                    _set_agrid_flag(*ri, APROP_ACTUAL_LIQUID);
             }
             no_areas = false;
         }
