@@ -1,0 +1,52 @@
+lua {{
+MAX_RANDOM_SHOPS = 5
+
+-- If a level gets shops, how many there are.
+-- Just one most of the time; expected value is 1.42.
+function num_shops()
+    if crawl.x_chance_in_y(5, 6) then
+        return 1
+    else
+        return crawl.random_range(2, MAX_RANDOM_SHOPS)
+    end
+end
+}}
+
+NAME: serial_shops
+TAGS: allow_dup extra luniq
+DEPTH: 4-
+CHANCE: 20% (D)
+CHANCE: 30% (Orc)
+CHANCE: 40% (Elf)
+CHANCE: 20% (Shoals)
+CHANCE: 20% (Snake)
+CHANCE: 40% (Vault)
+CHANCE: 20% (Forest)
+CHANCE: 20% (Spider)
+CHANCE: 30% (Dwarf)
+CHANCE: 0
+{{
+hook("post_place", function()
+    local num = num_shops()
+
+    if you.absdepth() > 10 and you.absdepth() <= 27
+      and crawl.one_chance_in(30 - (you.absdepth() - 1))
+    then
+        dgn.place_maps { tag = "bzr_entry", count = 1 }
+        num = num - 1
+    end
+
+    dgn.place_maps { name = "shop", count = num }
+end)
+}}
+MAP
+ENDMAP
+
+NAME:   shop
+TAGS:   allow_dup extra
+DEPTH:  4-
+WEIGHT: 0
+KFEAT:  O = any shop
+MAP
+O
+ENDMAP
