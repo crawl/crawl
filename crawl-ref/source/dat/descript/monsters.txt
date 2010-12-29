@@ -161,6 +161,10 @@ Jessica
 
 An evil apprentice sorceress. She entered the dungeon hoping to find a quiet, secluded place where she could study the darker arts without being disturbed.
 %%%%
+Jory
+
+Once a simple village peasant, Jory found himself transformed in undeath into a powerful creature. Through the countless centuries unlived since, he has honed his skills in combat and magic, massed great wealth and many possessions, and now resides in a stonily quiet Tower of Silence. He's not about to let any puny adventurers ruin of his hard work, so beware those who encounter him!
+%%%%
 Joseph
 
 Looks like a mercenary.
@@ -1526,7 +1530,7 @@ A disturbing creature with the power to change its form. It is very rarely obser
 %%%%
 shedu
 
-A divine guardians that travels always as a pair, it has the ability to resurrect its mate from death.
+These dangerous divine guardians always travel in pairs. Each has the ability to heal the other and, if the worst is to occur, can even resurrect it.
 %%%%
 sheep
 
